@@ -28,148 +28,524 @@
 #include <MSound/MSoundBGM.hpp>
 
 namespace {
-// TODO: the ROM's body is a single `blr`; whatever the neck callback used to
-// do was optimised away (Koopa.cpp still has a 0x9d4-byte version).
-int KoopaNeckCallBack(J3DNode*, int) { return 1; }
+int KoopaNeckCallBack(J3DNode*, int);
 } // namespace
 
 // ---------------------------------------------------------------------------
-// TLimitKoopaManager
+// Nerves
 // ---------------------------------------------------------------------------
 
-void TLimitKoopaManager::loadAfter()
+BOOL TNerveLimitKoopaHipDropJump::execute(TSpineBase<TLiveActor>* spine) const
 {
-	JDrama::TNameRef::loadAfter();
-	// TODO: particle ids 0x1C0..0x1C3 and 0x1F3 have no enumerand in
-	// include/System/Particles.hpp yet; naming them is a shared-header change.
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_a.jpa", 0x1C0);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_b.jpa", 0x1C1);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_c.jpa", 0x1C2);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_d.jpa", 0x1C3);
-	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_e.jpa", 0x1F3);
+	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
+
+	koopa->mAcceleration.set(0.0f, -koopa->getGravityY(), 0.0f);
+
+	if (koopa->mLanded) {
+		spine->pushAfterCurrent(&TNerveLimitKoopaWait::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
-void TLimitKoopaManager::load(JSUMemoryInputStream& stream)
+BOOL TNerveLimitKoopaHipDropStart::execute(TSpineBase<TLiveActor>* spine) const
 {
-	TEnemyManager::load(stream);
-	unk38 = new TLimitKoopaParams("/enemy/limitkoopa.prm");
+	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_JUMP_START, 2.0f);
+		koopa->mHipDropTimer = 30;
+	}
+
+	if (koopa->mHipDropTimer <= 0) {
+		koopa->startHipDrop();
+		koopa->mLanded = false;
+		spine->pushAfterCurrent(&TNerveLimitKoopaHipDropJump::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
-void TLimitKoopaManager::createModelData()
+// TODO: 71.9%. Both TDirectionCalc locals and the two makeDirection calls are
+// in place; the residual is the d2r/r2d `this` setup noted in calcRootMatrix
+// plus the 0x30-byte frame gap it drags along.
+BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 {
-	static const TModelDataLoadEntry entry[] = {
-		{ "koopa_model.bmd", 0x14240000, 0 },
-		{ nullptr, 0, 0 },
-	};
+	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
 
-	createModelDataArray(entry);
+	if (spine->getTime() == 0) {
+		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_WAIT, 2.0f);
+		koopa->mWaitTimer = 240;
+	}
+
+	TDirectionCalc toMario;
+	JGeometry::TVec3<f32> delta;
+	delta.sub(SMS_GetMarioPos(), koopa->mPosition);
+	delta.y = 0.0f;
+	toMario.makeDirection(delta);
+
+	TLimitKoopaParams* params
+	    = (TLimitKoopaParams*)((TEnemyManager*)koopa->mManager)
+	          ->getSaveParam();
+	// TODO: the ROM calls TDirectionCalc::d2r and ::r2d without setting a
+	// `this`, so they are static members in the original. KoopaJr.hpp
+	// declares them non-static and is shared with koopajr.cpp, so the extra
+	// address setup stays until that header may be changed.
+	koopa->mBodyDirection = koopa->mBodyDirection.calcTurnDirection(
+	    toMario.get(),
+	    koopa->mBodyDirection.d2r(params->rotationSpeed.get()));
+
+	TDirectionCalc facing;
+	JGeometry::TVec3<f32> toMario2(SMS_GetMarioPos().x - koopa->mPosition.x,
+	                               SMS_GetMarioPos().y - koopa->mPosition.y,
+	                               SMS_GetMarioPos().z - koopa->mPosition.z);
+	toMario2.y = 0.0f;
+	facing.makeDirection(toMario2);
+
+	if (koopa->mBodyDirection.absDirection(facing.get()) <= 0.31415927f
+	    && koopa->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
+		spine->pushAfterCurrent(&TNerveLimitKoopaHipDropStart::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
-// The Corona Mountain Bowser is placed by the scene, never spawned.
-TSpineEnemy* TLimitKoopaManager::createEnemyInstance() { return nullptr; }
+BOOL TNerveLimitKoopaTumble::execute(TSpineBase<TLiveActor>* spine) const
+{
+	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
+	f32 rate           = koopa->getParam()->tumbleSpeed.get();
+	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_TUMBLE, rate);
+	if (koopa->getAnmEnd())
+		return TRUE;
+	return FALSE;
+}
 
-TLimitKoopaManager::TLimitKoopaManager(const char* name)
-    : TEnemyManager(name)
+// TODO: UNUSED (0x6c), body not reconstructed.
+BOOL TNerveLimitKoopaFall::execute(TSpineBase<TLiveActor>*) const
+{
+	return FALSE;
+}
+
+// TODO: UNUSED (0x170), body not reconstructed.
+BOOL TNerveLimitKoopaFlame::execute(TSpineBase<TLiveActor>*) const
+{
+	return FALSE;
+}
+
+BOOL TNerveLimitKoopaStagger::execute(TSpineBase<TLiveActor>* spine) const
+{
+	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
+	f32 rate           = koopa->getParam()->staggerSpeed.get();
+	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_STAGGER, rate);
+	if (koopa->getAnmEnd())
+		return TRUE;
+	return FALSE;
+}
+
+BOOL TNerveLimitKoopaGetShowered::execute(TSpineBase<TLiveActor>* spine) const
+{
+	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
+	f32 rate           = koopa->getParam()->waterhitSpeed.get();
+	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_SHOWERED, rate);
+	if (koopa->getAnmEnd())
+		return TRUE;
+	return FALSE;
+}
+
+BOOL TNerveLimitKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
+{
+	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
+
+	switch (koopa->getAnmIndex()) {
+	case TLimitKoopa::LIMITKOOPA_ANM_DOWN:
+		if (koopa->getAnmEnd())
+			koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_DOWN_WAIT,
+			                 koopa->getParam()->tumbleWeight.get());
+		break;
+	case TLimitKoopa::LIMITKOOPA_ANM_DOWN_WAIT:
+		if (koopa->getAnmEnd())
+			koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_GET_UP,
+			                 koopa->getParam()->tumbleWeight.get());
+		break;
+	case TLimitKoopa::LIMITKOOPA_ANM_GET_UP:
+		if (koopa->getAnmEnd())
+			return TRUE;
+		break;
+	default:
+		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_DOWN,
+		                 koopa->getParam()->tumbleWeight.get());
+		break;
+	}
+
+	return FALSE;
+}
+
+// ---------------------------------------------------------------------------
+// TLimitKoopaParts and its four hit boxes
+// ---------------------------------------------------------------------------
+TLimitKoopaParts::TLimitKoopaParts(const char* name, u32 actor_type,
+                                   TLimitKoopa* owner, f32 radius)
+    : TLiveActor(name)
+    , mOwner(owner)
+{
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(this);
+	initHitActor(actor_type, 5, 0x80000000, radius, radius, radius, radius);
+	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+}
+
+void TLimitKoopaParts::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	TLiveActor::perform(cue, graphics);
+
+	if (cue & CUE_MOVE) {
+		for (int i = 0; i < mColCount; i++)
+			attack_(mCollisions[i]);
+	}
+}
+
+// TODO: UNUSED (0x84), body not reconstructed.
+void TLimitKoopaParts::set(const JGeometry::TVec3<f32>&, f32, f32) { }
+
+// TODO: UNUSED (0x28), body not reconstructed.
+void TLimitKoopaParts::remove() { }
+
+TLimitKoopaFlame::TLimitKoopaFlame(TLimitKoopa* owner)
+    : TLimitKoopaParts("クッパの吐く炎", 0x08000030, owner, 100.0f)
 {
 }
 
+BOOL TLimitKoopaFlame::receiveMessage(THitActor*, u32 message)
+{
+	// TODO: the ROM compares the message signed (cmpwi), which a u32
+	// parameter cannot produce here.
+	return message == HIT_MESSAGE_SPRAYED_BY_WATER ? FALSE : TRUE;
+}
+
+void TLimitKoopaFlame::attack_(THitActor* other)
+{
+	if (other->receiveMessage(this, HIT_MESSAGE_UNKA)) {
+		TLimitKoopa* koopa = mOwner;
+		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_FLAME,
+		                 koopa->getParam()->fireSpeed.get());
+	}
+}
+
+TLimitKoopaHand::TLimitKoopaHand(TLimitKoopa* owner)
+    : TLimitKoopaParts("クッパの手", 0x08000032, owner, 100.0f)
+{
+}
+
+BOOL TLimitKoopaHand::receiveMessage(THitActor*, u32) { return TRUE; }
+
+void TLimitKoopaHand::attack_(THitActor* other)
+{
+	other->receiveMessage(this, HIT_MESSAGE_ATTACK);
+}
+
+TLimitKoopaHead::TLimitKoopaHead(TLimitKoopa* owner)
+    : TLimitKoopaParts("クッパの頭", 0x08000031, owner, 100.0f)
+{
+}
+
+// TODO: 73.8%. The three nerve comparisons and the two pushes are in the
+// ROM's order, but it compares the message signed and keeps one more of the
+// theNerve() guards expanded than our build does.
+BOOL TLimitKoopaHead::receiveMessage(THitActor*, u32 message)
+{
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		TLimitKoopa* koopa = mOwner;
+		if (koopa->mSpine->getCurrentNerve()
+		        != &TNerveLimitKoopaTumble::theNerve()
+		    && koopa->mSpine->getCurrentNerve()
+		           != &TNerveLimitKoopaGetDown::theNerve()) {
+			if (koopa->mSpine->getCurrentNerve()
+			    == &TNerveLimitKoopaStagger::theNerve())
+				koopa->mSpine->setNext(
+				    &TNerveLimitKoopaGetShowered::theNerve());
+			koopa->mSpine->pushNerve(
+			    &TNerveLimitKoopaGetShowered::theNerve());
+		}
+	}
+	return TRUE;
+}
+
+void TLimitKoopaHead::attack_(THitActor* other)
+{
+	other->receiveMessage(this, HIT_MESSAGE_ATTACK);
+}
+
+TLimitKoopaBody::TLimitKoopaBody(TLimitKoopa* owner)
+    : TLimitKoopaParts("クッパの体", 0x08000033, owner, 100.0f)
+{
+}
+
+BOOL TLimitKoopaBody::receiveMessage(THitActor*, u32) { return TRUE; }
+
+void TLimitKoopaBody::attack_(THitActor* other)
+{
+	other->receiveMessage(this, HIT_MESSAGE_ATTACK);
+}
+
+namespace {
+// TODO: the ROM's body is a single `blr`; whatever the neck callback used
+// to do was optimised away (Koopa.cpp still has a 0x9d4-byte version).
+int KoopaNeckCallBack(J3DNode*, int) { return 1; }
+} // namespace
 // ---------------------------------------------------------------------------
 // TLimitKoopa
 // ---------------------------------------------------------------------------
 
-// UNUSED (0xc).
-TLimitKoopaParams* TLimitKoopa::getParam() const
+TLimitKoopa::TLimitKoopa(const char* name)
+    : TSpineEnemy(name)
+    , mBodyDirection()
 {
-	return (TLimitKoopaParams*)((TEnemyManager*)mManager)->getSaveParam();
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	offLiveFlag(LIVE_FLAG_UNK100);
+	onLiveFlag(LIVE_FLAG_UNK10);
+	mScaledBodyRadius = 1600.0f;
 }
 
-// UNUSED (0x4c).
-void TLimitKoopa::updateTimers()
+void TLimitKoopa::load(JSUMemoryInputStream& stream)
 {
-	if (mWaitTimer > 0)
-		mWaitTimer--;
-	if (mHipDropTimer > 0)
-		mHipDropTimer--;
-	if (mFlameTimer > 0)
-		mFlameTimer--;
+	TSpineEnemy::load(stream);
 }
 
-// TODO: UNUSED (0x68), body not reconstructed.
-void TLimitKoopa::checkMarioWhichSide() { }
-
-// UNUSED (0x1c).
-MtxPtr TLimitKoopa::getHeadMtx() const
+// TODO: 88.5%. The four allocation loops are right; the residual is the
+// name-ref group lookup, which the ROM spells out as a searchF on the
+// generator root rather than through the search<T> template.
+void TLimitKoopa::loadAfter()
 {
-	return getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
+	JDrama::TNameRef::loadAfter();
+
+	for (int i = 0; i < 10; i++)
+		mFlames[i] = new TLimitKoopaFlame(this);
+
+	for (int i = 0; i < 2; i++)
+		mHands[i] = new TLimitKoopaHand(this);
+
+	mHead = new TLimitKoopaHead(this);
+	mBody = new TLimitKoopaBody(this);
 }
 
-// UNUSED (0x48).
-BOOL TLimitKoopa::getAnmEnd() const
+// TODO: 91.8%.
+void TLimitKoopa::init(TLiveManager* manager)
 {
-	return getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr);
+	mBodyRadius = 800.0f;
+	mHeadHeight = 2000.0f;
+	TSpineEnemy::init(manager);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	mSpine->initWith(&TNerveLimitKoopaWait::theNerve());
+
+	MActorAnmBck* bck = getMActor()->getAnmBck();
+	if (bck)
+		bck->initSimpleMotionBlend(0x10);
+
+	unk170 = 0.0f;
+	reset();
+
+	JUTNameTab* joints = getModel()->getModelData()->getJointName();
+	// TODO: the ROM walks every joint name here and does nothing with them.
+	for (u16 i = 0; i < joints->getResNameTable()->mEntryNum; i++) { }
+
+	mAgoJntIndex  = joints->getIndex("ago");
+	mHeadJntIndex = joints->getIndex("head");
+	mNeckJntIndex = joints->getIndex("neck");
+
+	J3DJoint* neck = getModel()->getModelData()->getJointNodePointer(
+	    mHeadJntIndex);
+	neck->setCallBack(&KoopaNeckCallBack);
+	neck->setCallBackUserData(this);
 }
 
-// TODO: UNUSED (0x90), body not reconstructed.
-void TLimitKoopa::fall() { }
-
-// UNUSED (0x2c).
-f32 TLimitKoopa::getAnmFrame() const
+void TLimitKoopa::reset()
 {
-	return getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+	TSpineEnemy::reset();
+	changeBck(LIMITKOOPA_ANM_RESET, getParam()->waitSpeed.get());
+	mSpine->reset();
+	mWaitTimer     = 0;
+	mHipDropTimer  = 0;
+	mFlameTimer    = 0;
+	mLanded        = true;
+	mBodyDirection.mDirection = 0.0f;
 }
 
-// UNUSED (0x8).
-BOOL TLimitKoopa::isTumbling() const { return FALSE; }
+// TODO: UNUSED (0x2c), body not reconstructed.
+void TLimitKoopa::resetLimitKoopa() { }
 
-// TODO: UNUSED (0x240), body not reconstructed.
-void TLimitKoopa::stagger(bool) { }
-
-// TODO: UNUSED (0x23c), body not reconstructed.
-void TLimitKoopa::getShowered() { }
-
-// TODO: UNUSED (0x2a0), body not reconstructed.
-void TLimitKoopa::getDown() { }
-
-// TODO: UNUSED (0xe8), body not reconstructed.
-JGeometry::TVec3<f32> TLimitKoopa::getNeckFocus() const
+// TODO: 78.4%. The five particle emitters and the timer block are in place;
+// the ROM reaches TVec3::set<f32>(const&) out of line for four of the five
+// setGlobalScale calls and expands it for the first, which our build does not
+// reproduce (the same per-call-site divergence as bind()).
+void TLimitKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	return JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+	TSpineEnemy::perform(cue, graphics);
+
+	for (int i = 0; i < 10; i++)
+		mFlames[i]->perform(cue, graphics);
+	mHead->perform(cue, graphics);
+	mHands[0]->perform(cue, graphics);
+	mHands[1]->perform(cue, graphics);
+	mBody->perform(cue, graphics);
+
+	if (cue & CUE_MOVE) {
+		setUpHitActors();
+		updateTimers();
+	}
+
+	if (cue & CUE_CALC_ANIM) {
+		if (getAnmIndex() == LIMITKOOPA_ANM_JUMP
+		    || (getAnmIndex() == LIMITKOOPA_ANM_JUMP_START
+		        && getAnmFrame() >= 127.0f)) {
+			f32 scale = getParam()->flameScale.get();
+			JGeometry::TVec3<f32> flameScale(scale, scale, scale);
+
+			JPABaseEmitter* emitter
+			    = gpMarioParticleManager->emitAndBindToMtxPtr(
+			        0x1F3, getHeadMtx(), 3, this);
+			if (emitter)
+				emitter->setGlobalScale(flameScale);
+
+			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+			    0x1C3, getHeadMtx(), 1, this);
+			if (emitter)
+				emitter->setGlobalScale(flameScale);
+
+			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+			    0x1C2, getHeadMtx(), 1, this);
+			if (emitter)
+				emitter->setGlobalScale(flameScale);
+
+			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+			    0x1C1, getHeadMtx(), 1, this);
+			if (emitter)
+				emitter->setGlobalScale(flameScale);
+
+			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+			    0x1C0, getHeadMtx(), 1, this);
+			if (emitter)
+				emitter->setGlobalScale(flameScale);
+		}
+	}
 }
 
-// TODO: UNUSED (0x48), body not reconstructed.
-BOOL TLimitKoopa::isFlaming() const { return FALSE; }
-
-// TODO: UNUSED (0x180), body not reconstructed.
-JGeometry::TVec3<f32> TLimitKoopa::getFlameDir() const
+// TODO: 74.7%. The ROM calls JGeometry::TVec3<f32>::sub(a, b) out of line for
+// the last step and our build expands it either spelling, which also makes
+// this a leaf where the ROM saves LR. Same per-call-site TVec3 inlining
+// divergence as in killer.cpp's TFlyEnemy::fly.
+void TLimitKoopa::bind()
 {
-	return JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> nextPos(mPosition);
+	nextPos.add(mLinearVelocity);
+	nextPos.add(mVelocity);
+	mVelocity.add(mAcceleration);
+
+	mGroundHeight = 3500.0f;
+	mGroundHeight += 1.0f;
+	if (nextPos.y <= 0.05f + mGroundHeight) {
+		nextPos.y = mGroundHeight;
+		mLanded   = true;
+		mAcceleration.set(0.0f, 0.0f, 0.0f);
+		mVelocity.set(0.0f, 0.0f, 0.0f);
+	}
+
+	JGeometry::TVec3<f32> step(nextPos);
+	step.sub(mPosition);
+	mLinearVelocity = step;
 }
 
-// TODO: UNUSED (0x84), body not reconstructed.
-BOOL TLimitKoopa::isBreathing() const { return FALSE; }
+// TODO: UNUSED (0x20), body not reconstructed.
+void TLimitKoopa::moveStop() { }
 
-// TODO: UNUSED (0x3c), body not reconstructed.
-BOOL TLimitKoopa::endsAnm() const { return FALSE; }
-
-// UNUSED (0x28).
-int TLimitKoopa::getAnmIndex() const
+// TODO: 77.1%, and the ROM calls this from
+// TNerveLimitKoopaHipDropStart::execute while MWCC still inlines it here.
+// Naming the launch-speed fetch and splitting the goal construction (the two
+// statement-budget levers that worked on TFruitsBoat::setBckTrack) both left
+// the decision unchanged, so the deciding statement has not been found.
+void TLimitKoopa::startHipDrop()
 {
-	return getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
+	// One local carries the jump: first the straight-up launch speed, then the
+	// velocity the jump solver returns. Reusing it is what keeps the vector in
+	// memory instead of being promoted into registers.
+	JGeometry::TVec3<f32> velocity(0.0f, 1.0f, 0.0f);
+	velocity.scale(getParam()->hipDropInitialSpeedY.get());
+
+	JGeometry::TVec3<f32> target(SMS_GetMarioPos());
+	target.y = mGroundHeight;
+
+	JGeometry::TVec3<f32> goal(mPosition.x + (target.x - mPosition.x),
+	                           mPosition.y + (target.y - mPosition.y),
+	                           mPosition.z + (target.z - mPosition.z));
+
+	velocity = calcVelocityToJumpToY(goal, velocity.y,
+	                                 getParam()->hipDropGravityY.get());
+	if (velocity.length() > 200.0f) {
+		velocity.normalize();
+		velocity.scale(200.0f);
+	}
+
+	mVelocity = velocity;
 }
 
-// UNUSED (0x78). Every nerve in this unit selects its animation through this,
-// which is why the pattern below repeats in each execute().
-void TLimitKoopa::changeBck(int index, f32 rate)
+// TODO: UNUSED (0x4c), body not reconstructed.
+void TLimitKoopa::moveHipDrop() { }
+
+// TODO: UNUSED (0xc0), body not reconstructed.
+void TLimitKoopa::moveTurn() { }
+
+// TODO: UNUSED (0xb4), body not reconstructed.
+BOOL TLimitKoopa::finishedTurn() { return FALSE; }
+
+// TODO: UNUSED (0x94), body not reconstructed.
+void TLimitKoopa::calcTargetDirection() { }
+
+// TODO: UNUSED (0x5c), body not reconstructed.
+f32 TLimitKoopa::makeDirection(f32) { return 0.0f; }
+
+f32 TLimitKoopa::getGravityY() const
 {
-	MActor* actor = mMActor;
-	if (!actor->checkCurBckFromIndex(index))
-		actor->setBckFromIndex(index);
-	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
+	return getParam()->hipDropGravityY.get();
 }
 
-// TODO: UNUSED (0x70), body not reconstructed.
-void TLimitKoopa::setAnimationIndex(int) { }
+BOOL TLimitKoopa::receiveMessage(THitActor* sender, u32 message)
+{
+	return TSpineEnemy::receiveMessage(sender, message);
+}
 
+// TODO: 94.0%, instruction-identical apart from the TDirectionCalc `this`
+// setup described below and an 8-byte frame gap.
+void TLimitKoopa::calcRootMatrix()
+{
+	TLimitKoopaParams* params = getParam();
+	f32 scale                 = params->bodyScale.get();
+	mScaling.x                = scale;
+	mScaling.y                = scale;
+	mScaling.z                = scale;
+	// TODO: the ROM leaves the parameter pointer in r3 across this call, so
+	// r2d never receives a `this`. That reads as a static member in the
+	// original; TDirectionCalc lives in the shared KoopaJr.hpp, so the
+	// declaration is left alone here.
+	mRotation.y = mBodyDirection.r2d(mBodyDirection.get());
+	TSpineEnemy::calcRootMatrix();
+}
+
+// TODO: UNUSED (0x78), body not reconstructed.
+void TLimitKoopa::stopFlame() { }
+
+// TODO: UNUSED (0x1b8), body not reconstructed.
+void TLimitKoopa::breathFlame() { }
+
+// TODO: 69.2%. The flame loop's matrix reads and the "no flames" branch's
+// unrolled flag stores are close but the parameter fetch order inside the
+// loop is not established yet.
 void TLimitKoopa::setUpHitActors()
 {
 	MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
@@ -235,482 +611,135 @@ void TLimitKoopa::setUpHitActors()
 	head->calcEntryRadius();
 }
 
-// TODO: UNUSED (0x1b8), body not reconstructed.
-void TLimitKoopa::breathFlame() { }
+// TODO: UNUSED (0x70), body not reconstructed.
+void TLimitKoopa::setAnimationIndex(int) { }
 
-// TODO: UNUSED (0x78), body not reconstructed.
-void TLimitKoopa::stopFlame() { }
-
-void TLimitKoopa::calcRootMatrix()
+// UNUSED (0x78). Every nerve in this unit selects its animation through this,
+// which is why the pattern below repeats in each execute().
+void TLimitKoopa::changeBck(int index, f32 rate)
 {
-	TLimitKoopaParams* params = getParam();
-	f32 scale                 = params->bodyScale.get();
-	mScaling.x                = scale;
-	mScaling.y                = scale;
-	mScaling.z                = scale;
-	// TODO: the ROM leaves the parameter pointer in r3 across this call, so
-	// r2d never receives a `this`. That reads as a static member in the
-	// original; TDirectionCalc lives in the shared KoopaJr.hpp, so the
-	// declaration is left alone here.
-	mRotation.y = mBodyDirection.r2d(mBodyDirection.get());
-	TSpineEnemy::calcRootMatrix();
+	MActor* actor = mMActor;
+	if (!actor->checkCurBckFromIndex(index))
+		actor->setBckFromIndex(index);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
 }
 
-BOOL TLimitKoopa::receiveMessage(THitActor* sender, u32 message)
+// UNUSED (0x28).
+int TLimitKoopa::getAnmIndex() const
 {
-	return TSpineEnemy::receiveMessage(sender, message);
+	return getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 }
 
-f32 TLimitKoopa::getGravityY() const
-{
-	return getParam()->hipDropGravityY.get();
-}
-
-// TODO: UNUSED (0x5c), body not reconstructed.
-f32 TLimitKoopa::makeDirection(f32) { return 0.0f; }
-
-// TODO: UNUSED (0x94), body not reconstructed.
-void TLimitKoopa::calcTargetDirection() { }
-
-// TODO: UNUSED (0xb4), body not reconstructed.
-BOOL TLimitKoopa::finishedTurn() { return FALSE; }
-
-// TODO: UNUSED (0xc0), body not reconstructed.
-void TLimitKoopa::moveTurn() { }
-
-// TODO: UNUSED (0x4c), body not reconstructed.
-void TLimitKoopa::moveHipDrop() { }
-
-void TLimitKoopa::startHipDrop()
-{
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-	up.scale(getParam()->hipDropInitialSpeedY.get());
-
-	JGeometry::TVec3<f32> target(SMS_GetMarioPos());
-	target.y = mGroundHeight;
-
-	JGeometry::TVec3<f32> goal(mPosition.x + (target.x - mPosition.x),
-	                           mPosition.y + (target.y - mPosition.y),
-	                           mPosition.z + (target.z - mPosition.z));
-
-	JGeometry::TVec3<f32> velocity
-	    = calcVelocityToJumpToY(goal, up.y, getParam()->hipDropGravityY.get());
-	if (velocity.length() > 200.0f) {
-		velocity.normalize();
-		velocity.scale(200.0f);
-	}
-
-	mVelocity = velocity;
-}
-
-// TODO: UNUSED (0x20), body not reconstructed.
-void TLimitKoopa::moveStop() { }
-
-void TLimitKoopa::bind()
-{
-	JGeometry::TVec3<f32> nextPos(mPosition);
-	nextPos.add(mLinearVelocity);
-	nextPos.add(mVelocity);
-	mVelocity.add(mAcceleration);
-
-	mGroundHeight = 3500.0f;
-	mGroundHeight += 1.0f;
-	if (nextPos.y <= 0.05f + mGroundHeight) {
-		nextPos.y = mGroundHeight;
-		mLanded   = true;
-		mAcceleration.set(0.0f, 0.0f, 0.0f);
-		mVelocity.set(0.0f, 0.0f, 0.0f);
-	}
-
-	JGeometry::TVec3<f32> step(nextPos);
-	step.sub(mPosition);
-	mLinearVelocity = step;
-}
-
-void TLimitKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
-{
-	TSpineEnemy::perform(cue, graphics);
-
-	for (int i = 0; i < 10; i++)
-		mFlames[i]->perform(cue, graphics);
-	mHead->perform(cue, graphics);
-	mHands[0]->perform(cue, graphics);
-	mHands[1]->perform(cue, graphics);
-	mBody->perform(cue, graphics);
-
-	if (cue & CUE_MOVE) {
-		setUpHitActors();
-		updateTimers();
-	}
-
-	if (cue & CUE_CALC_ANIM) {
-		if (getAnmIndex() == LIMITKOOPA_ANM_JUMP
-		    || (getAnmIndex() == LIMITKOOPA_ANM_JUMP_START
-		        && getAnmFrame() >= 127.0f)) {
-			f32 scale = getParam()->flameScale.get();
-			JGeometry::TVec3<f32> flameScale(scale, scale, scale);
-
-			JPABaseEmitter* emitter
-			    = gpMarioParticleManager->emitAndBindToMtxPtr(
-			        0x1F3, getHeadMtx(), 3, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x1C3, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x1C2, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x1C1, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x1C0, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-		}
-	}
-}
-
-// TODO: UNUSED (0x2c), body not reconstructed.
-void TLimitKoopa::resetLimitKoopa() { }
-
-void TLimitKoopa::reset()
-{
-	TSpineEnemy::reset();
-	changeBck(LIMITKOOPA_ANM_RESET, getParam()->staggerSpeed.get());
-	mSpine->reset();
-	mWaitTimer     = 0;
-	mHipDropTimer  = 0;
-	mFlameTimer    = 0;
-	mLanded        = true;
-	mBodyDirection = TDirectionCalc(0.0f);
-}
-
-void TLimitKoopa::init(TLiveManager* manager)
-{
-	mBodyRadius = 800.0f;
-	mHeadHeight = 2000.0f;
-	TSpineEnemy::init(manager);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
-	mSpine->initWith(&TNerveLimitKoopaWait::theNerve());
-
-	MActorAnmBck* bck = getMActor()->getAnmBck();
-	if (bck)
-		bck->initSimpleMotionBlend(0x10);
-
-	unk170 = 0.0f;
-	reset();
-
-	JUTNameTab* joints = getModel()->getModelData()->getJointName();
-	// TODO: the ROM walks every joint name here and does nothing with them.
-	for (u16 i = 0; i < joints->getResNameTable()->mEntryNum; i++) { }
-
-	mAgoJntIndex  = joints->getIndex("ago");
-	mHeadJntIndex = joints->getIndex("head");
-	mNeckJntIndex = joints->getIndex("neck");
-
-	J3DJoint* neck = getModel()->getModelData()->getJointNodePointer(
-	    mHeadJntIndex);
-	neck->setCallBack(&KoopaNeckCallBack);
-	neck->setCallBackUserData(this);
-}
-
-void TLimitKoopa::loadAfter()
-{
-	JDrama::TNameRef::loadAfter();
-
-	for (int i = 0; i < 10; i++)
-		mFlames[i] = new TLimitKoopaFlame(this);
-
-	for (int i = 0; i < 2; i++)
-		mHands[i] = new TLimitKoopaHand(this);
-
-	mHead = new TLimitKoopaHead(this);
-	mBody = new TLimitKoopaBody(this);
-}
-
-void TLimitKoopa::load(JSUMemoryInputStream& stream)
-{
-	TSpineEnemy::load(stream);
-}
-
-TLimitKoopa::TLimitKoopa(const char* name)
-    : TSpineEnemy(name)
-    , mBodyDirection()
-{
-	onLiveFlag(LIVE_FLAG_AIRBORNE);
-	offLiveFlag(LIVE_FLAG_UNK100);
-	onLiveFlag(LIVE_FLAG_UNK10);
-	mScaledBodyRadius = 1600.0f;
-}
-
-// ---------------------------------------------------------------------------
-// TLimitKoopaParts and its four hit boxes
-// ---------------------------------------------------------------------------
-
-void TLimitKoopaBody::attack_(THitActor* other)
-{
-	other->receiveMessage(this, HIT_MESSAGE_ATTACK);
-}
-
-BOOL TLimitKoopaBody::receiveMessage(THitActor*, u32) { return TRUE; }
-
-void TLimitKoopaHead::attack_(THitActor* other)
-{
-	other->receiveMessage(this, HIT_MESSAGE_ATTACK);
-}
-
-BOOL TLimitKoopaHead::receiveMessage(THitActor*, u32 message)
-{
-	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		TLimitKoopa* koopa = mOwner;
-		if (koopa->mSpine->getCurrentNerve()
-		        != &TNerveLimitKoopaTumble::theNerve()
-		    && koopa->mSpine->getCurrentNerve()
-		           != &TNerveLimitKoopaGetDown::theNerve()) {
-			if (koopa->mSpine->getCurrentNerve()
-			    == &TNerveLimitKoopaStagger::theNerve())
-				koopa->mSpine->setNext(
-				    &TNerveLimitKoopaGetShowered::theNerve());
-			koopa->mSpine->pushNerve(
-			    &TNerveLimitKoopaGetShowered::theNerve());
-		}
-	}
-	return TRUE;
-}
-
-void TLimitKoopaHand::attack_(THitActor* other)
-{
-	other->receiveMessage(this, HIT_MESSAGE_ATTACK);
-}
-
-BOOL TLimitKoopaHand::receiveMessage(THitActor*, u32) { return TRUE; }
-
-void TLimitKoopaFlame::attack_(THitActor* other)
-{
-	if (other->receiveMessage(this, HIT_MESSAGE_UNKA)) {
-		TLimitKoopa* koopa = mOwner;
-		MActor* actor      = koopa->getMActor();
-		f32 rate = ((TLimitKoopaParams*)((TEnemyManager*)koopa->mManager)->getSaveParam())
-		               ->fireSpeed.get();
-		if (!actor->checkCurBckFromIndex(TLimitKoopa::LIMITKOOPA_ANM_FLAME))
-			actor->setBckFromIndex(TLimitKoopa::LIMITKOOPA_ANM_FLAME);
-		koopa->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
-	}
-}
-
-BOOL TLimitKoopaFlame::receiveMessage(THitActor*, u32 message)
-{
-	if (message != HIT_MESSAGE_SPRAYED_BY_WATER)
-		return TRUE;
-	return FALSE;
-}
-
-void TLimitKoopaParts::perform(u32 cue, JDrama::TGraphics* graphics)
-{
-	TLiveActor::perform(cue, graphics);
-
-	if (cue & CUE_MOVE) {
-		for (int i = 0; i < mColCount; i++)
-			attack_(mCollisions[i]);
-	}
-}
+// TODO: UNUSED (0x3c), body not reconstructed.
+BOOL TLimitKoopa::endsAnm() const { return FALSE; }
 
 // TODO: UNUSED (0x84), body not reconstructed.
-void TLimitKoopaParts::set(const JGeometry::TVec3<f32>&, f32, f32) { }
+BOOL TLimitKoopa::isBreathing() const { return FALSE; }
 
-// TODO: UNUSED (0x28), body not reconstructed.
-void TLimitKoopaParts::remove() { }
-
-TLimitKoopaParts::TLimitKoopaParts(const char* name, u32 actor_type,
-                                   TLimitKoopa* owner, f32 radius)
-    : TLiveActor(name)
-    , mOwner(owner)
+// TODO: UNUSED (0x180), body not reconstructed.
+JGeometry::TVec3<f32> TLimitKoopa::getFlameDir() const
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-	    ->getChildren()
-	    .push_back(this);
-	initHitActor(actor_type, 5, 0x80000000, radius, radius, radius, radius);
-	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
-	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	return JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 }
 
-TLimitKoopaFlame::TLimitKoopaFlame(TLimitKoopa* owner)
-    : TLimitKoopaParts("クッパの吐く炎", 0x08000030, owner, 100.0f)
+// TODO: UNUSED (0x48), body not reconstructed.
+BOOL TLimitKoopa::isFlaming() const { return FALSE; }
+
+// TODO: UNUSED (0xe8), body not reconstructed.
+JGeometry::TVec3<f32> TLimitKoopa::getNeckFocus() const
 {
+	return JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 }
 
-TLimitKoopaHand::TLimitKoopaHand(TLimitKoopa* owner)
-    : TLimitKoopaParts("クッパの手", 0x08000032, owner, 100.0f)
+// TODO: UNUSED (0x2a0), body not reconstructed.
+void TLimitKoopa::getDown() { }
+
+// TODO: UNUSED (0x23c), body not reconstructed.
+void TLimitKoopa::getShowered() { }
+
+// TODO: UNUSED (0x240), body not reconstructed.
+void TLimitKoopa::stagger(bool) { }
+
+// UNUSED (0x8).
+BOOL TLimitKoopa::isTumbling() const { return FALSE; }
+
+// UNUSED (0x2c).
+f32 TLimitKoopa::getAnmFrame() const
 {
+	return getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 }
 
-TLimitKoopaHead::TLimitKoopaHead(TLimitKoopa* owner)
-    : TLimitKoopaParts("クッパの頭", 0x08000031, owner, 100.0f)
+// TODO: UNUSED (0x90), body not reconstructed.
+void TLimitKoopa::fall() { }
+
+// UNUSED (0x48).
+BOOL TLimitKoopa::getAnmEnd() const
 {
+	return getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr);
 }
 
-TLimitKoopaBody::TLimitKoopaBody(TLimitKoopa* owner)
-    : TLimitKoopaParts("クッパの体", 0x08000033, owner, 100.0f)
+// UNUSED (0x1c).
+MtxPtr TLimitKoopa::getHeadMtx() const
 {
+	return getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
+}
+
+// TODO: UNUSED (0x68), body not reconstructed.
+void TLimitKoopa::checkMarioWhichSide() { }
+
+// UNUSED (0x4c).
+void TLimitKoopa::updateTimers()
+{
+	if (mWaitTimer > 0)
+		mWaitTimer--;
+	if (mHipDropTimer > 0)
+		mHipDropTimer--;
+	if (mFlameTimer > 0)
+		mFlameTimer--;
+}
+
+// UNUSED (0xc).
+TLimitKoopaParams* TLimitKoopa::getParam() const
+{
+	return (TLimitKoopaParams*)((TEnemyManager*)mManager)->getSaveParam();
 }
 
 // ---------------------------------------------------------------------------
-// Nerves
+// TLimitKoopaManager
 // ---------------------------------------------------------------------------
 
-BOOL TNerveLimitKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
+TLimitKoopaManager::TLimitKoopaManager(const char* name)
+    : TEnemyManager(name)
 {
-	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-
-	switch (koopa->getAnmIndex()) {
-	case TLimitKoopa::LIMITKOOPA_ANM_DOWN:
-		if (koopa->getAnmEnd())
-			koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_DOWN_WAIT,
-			                 koopa->getParam()->tumbleWeight.get());
-		break;
-	case TLimitKoopa::LIMITKOOPA_ANM_DOWN_WAIT:
-		if (koopa->getAnmEnd())
-			koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_GET_UP,
-			                 koopa->getParam()->tumbleWeight.get());
-		break;
-	case TLimitKoopa::LIMITKOOPA_ANM_GET_UP:
-		if (koopa->getAnmEnd())
-			return TRUE;
-		break;
-	default:
-		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_DOWN,
-		                 koopa->getParam()->tumbleWeight.get());
-		break;
-	}
-
-	return FALSE;
 }
 
-BOOL TNerveLimitKoopaGetShowered::execute(TSpineBase<TLiveActor>* spine) const
+// The Corona Mountain Bowser is placed by the scene, never spawned.
+TSpineEnemy* TLimitKoopaManager::createEnemyInstance() { return nullptr; }
+
+void TLimitKoopaManager::createModelData()
 {
-	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_SHOWERED,
-	                 koopa->getParam()->waterhitSpeed.get());
-	if (koopa->getAnmEnd())
-		return TRUE;
-	return FALSE;
+	static const TModelDataLoadEntry entry[] = {
+		{ "koopa_model.bmd", 0x14240000, 0 },
+		{ nullptr, 0, 0 },
+	};
+
+	createModelDataArray(entry);
 }
 
-BOOL TNerveLimitKoopaStagger::execute(TSpineBase<TLiveActor>* spine) const
+void TLimitKoopaManager::load(JSUMemoryInputStream& stream)
 {
-	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_STAGGER,
-	                 koopa->getParam()->staggerSpeed.get());
-	if (koopa->getAnmEnd())
-		return TRUE;
-	return FALSE;
+	TEnemyManager::load(stream);
+	unk38 = new TLimitKoopaParams("/enemy/limitkoopa.prm");
 }
 
-// TODO: UNUSED (0x170), body not reconstructed.
-BOOL TNerveLimitKoopaFlame::execute(TSpineBase<TLiveActor>*) const
+void TLimitKoopaManager::loadAfter()
 {
-	return FALSE;
-}
-
-// TODO: UNUSED (0x6c), body not reconstructed.
-BOOL TNerveLimitKoopaFall::execute(TSpineBase<TLiveActor>*) const
-{
-	return FALSE;
-}
-
-BOOL TNerveLimitKoopaTumble::execute(TSpineBase<TLiveActor>* spine) const
-{
-	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_TUMBLE,
-	                 koopa->getParam()->tumbleSpeed.get());
-	if (koopa->getAnmEnd())
-		return TRUE;
-	return FALSE;
-}
-
-BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
-{
-	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-
-	if (spine->getTime() == 0) {
-		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_WAIT, 2.0f);
-		koopa->mWaitTimer = 240;
-	}
-
-	TDirectionCalc toMario;
-	JGeometry::TVec3<f32> delta;
-	delta.sub(SMS_GetMarioPos(), koopa->mPosition);
-	delta.y = 0.0f;
-	toMario.makeDirection(delta);
-
-	TLimitKoopaParams* params
-	    = (TLimitKoopaParams*)((TEnemyManager*)koopa->mManager)
-	          ->getSaveParam();
-	// TODO: the ROM calls TDirectionCalc::d2r and ::r2d without setting a
-	// `this`, so they are static members in the original. KoopaJr.hpp
-	// declares them non-static and is shared with koopajr.cpp, so the extra
-	// address setup stays until that header may be changed.
-	koopa->mBodyDirection = koopa->mBodyDirection.calcTurnDirection(
-	    toMario.get(),
-	    koopa->mBodyDirection.d2r(params->rotationSpeed.get()));
-
-	TDirectionCalc facing;
-	JGeometry::TVec3<f32> toMario2(SMS_GetMarioPos().x - koopa->mPosition.x,
-	                               SMS_GetMarioPos().y - koopa->mPosition.y,
-	                               SMS_GetMarioPos().z - koopa->mPosition.z);
-	toMario2.y = 0.0f;
-	facing.makeDirection(toMario2);
-
-	if (koopa->mBodyDirection.absDirection(facing.get()) <= 0.31415927f
-	    && koopa->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
-		spine->pushAfterCurrent(&TNerveLimitKoopaHipDropStart::theNerve());
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-BOOL TNerveLimitKoopaHipDropStart::execute(TSpineBase<TLiveActor>* spine) const
-{
-	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-
-	if (spine->getTime() == 0) {
-		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_JUMP_START, 2.0f);
-		koopa->mHipDropTimer = 30;
-	}
-
-	if (koopa->mHipDropTimer <= 0) {
-		koopa->startHipDrop();
-		koopa->mLanded = false;
-		spine->pushAfterCurrent(&TNerveLimitKoopaHipDropJump::theNerve());
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-BOOL TNerveLimitKoopaHipDropJump::execute(TSpineBase<TLiveActor>* spine) const
-{
-	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-
-	koopa->mAcceleration.set(0.0f, -koopa->getGravityY(), 0.0f);
-
-	if (koopa->mLanded) {
-		spine->pushAfterCurrent(&TNerveLimitKoopaWait::theNerve());
-		return TRUE;
-	}
-
-	return FALSE;
+	JDrama::TNameRef::loadAfter();
+	// TODO: particle ids 0x1C0..0x1C3 and 0x1F3 have no enumerand in
+	// include/System/Particles.hpp yet; naming them is a shared-header change.
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_a.jpa", 0x1C0);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_b.jpa", 0x1C1);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_c.jpa", 0x1C2);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_d.jpa", 0x1C3);
+	SMS_LoadParticle("/scene/koopa/jpa/ms_kp_fire_e.jpa", 0x1F3);
 }
