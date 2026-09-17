@@ -28,6 +28,29 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+typedef JGeometry::TPosition3<
+    JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
+    TBeeHiveMtx;
+
+// TODO: this stands in for `TPosition3<T>::setSQT(scale, quat, trans)`, a
+// sibling of the setQT already in JSystem/JGeometry/JGPosition3.hpp. The ROM
+// calls TRotation3::setSQ out of line from calcRootMatrix, which only happens
+// when the call sits one inline level deeper than the function body -- and the
+// same TU calls identity33() and SMatrix34C's empty constructor out of line,
+// which is what declaring the matrix as TPosition3 (three nested trivial
+// constructors) produces. Move this into JGPosition3.hpp as a member and
+// delete it; that header was out of scope for the batch that found it.
+// With the member instead of this wrapper the codegen is identical
+// (calcRootMatrix 18.6% -> 71.5%, setSQ emitted and exact).
+static inline void SetSQT(TBeeHiveMtx& mtx,
+                          const JGeometry::TVec3<f32>& scale,
+                          const JGeometry::TQuat4<f32>& quat,
+                          const JGeometry::TVec3<f32>& trans)
+{
+	mtx.setSQ(scale, quat);
+	mtx.setTrans(trans);
+}
+
 // TODO: this stands in for a member the original surely had --
 // `TRealoidActor::checkFlag(int) const`, declared next to onFlag/offFlag in
 // Animal/fishoid.hpp, mirroring TLiveActor::checkLiveFlag and
@@ -60,7 +83,7 @@ bool SMS_IsMarioInWater()
 
 void SMS_EmitWaterHitParticleAndSound(JGeometry::TVec3<f32>* position)
 {
-	JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
+	JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
 	    mtx;
 	mtx.identity33();
 	mtx.ref(0, 3) = position->x;
@@ -94,14 +117,6 @@ TBee::TBee(MActor* actor, TBeeHive* hive)
     : TRealoidActor(actor)
 {
 	mBeeHive = hive;
-}
-
-// TODO: incorrect size. Map records 0xfc bytes for this UNUSED symbol and no
-// emitted code resembles it, so the body below is a guess: a bee that has
-// reached Mario tells the hive and takes itself out of the swarm.
-void TBee::behaveToEat()
-{
-	mBeeHive->receiveMessageFromChild(this);
 }
 
 void TBee::init()
@@ -138,6 +153,14 @@ BOOL TBee::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	return FALSE;
+}
+
+// TODO: incorrect size. Map records 0xfc bytes for this UNUSED symbol and no
+// emitted code resembles it, so the body below is a guess: a bee that has
+// reached Mario tells the hive and takes itself out of the swarm.
+void TBee::behaveToEat()
+{
+	mBeeHive->receiveMessageFromChild(this);
 }
 
 TBeeHive::TBeeHive(const char* name)
@@ -450,13 +473,8 @@ void TBeeHive::calcRootMatrix()
 	quat.mul(mRotation168);
 	quat.mul(swing);
 
-	JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
-	    rot;
-	rot.setSQ(mScaling, quat);
-
-	rot.ref(0, 3) = mPosition.x;
-	rot.ref(1, 3) = mPosition.y;
-	rot.ref(2, 3) = mPosition.z;
+	TBeeHiveMtx rot;
+	SetSQT(rot, mScaling, quat, mPosition);
 	rot.ref(1, 3) += 120.0f;
 
 	MTXCopy(rot, getModel()->getBaseTRMtx());
