@@ -1772,8 +1772,10 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		if (!initialized) {
 			sphere_glist_p = tmp_data;
 			initialized    = 1;
-			sphere_pos_t   = tmp_data + 1000;
+			sphere_pos_t   = (u8*)sphere_glist_p + 0x760;
 		}
+
+		Vec shinePos = (Vec) { 0.0f, 3600.0f, -7458.0f };
 
 		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(unk5E44 - 1));
 		f32 f31 = unk5E0C;
@@ -1783,19 +1785,19 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 
 		ReInitializeGX();
 
+		Mtx local_c8;
 		Mtx afStack_f8;
 		MTXIdentity(afStack_f8);
 
-		Mtx local_c8;
-		local_c8[2][1] = 0.0;
-		local_c8[2][0] = 0.0;
-		local_c8[1][2] = 0.0;
-		local_c8[1][0] = 0.0;
-		local_c8[0][2] = 0.0;
-		local_c8[0][1] = 0.0;
-		local_c8[0][3] = 0.0;
-		local_c8[1][3] = 3600.0;
-		local_c8[2][3] = -7458.0;
+		local_c8[2][1] = 0.0f;
+		local_c8[2][0] = 0.0f;
+		local_c8[1][2] = 0.0f;
+		local_c8[1][0] = 0.0f;
+		local_c8[0][2] = 0.0f;
+		local_c8[0][1] = 0.0f;
+		local_c8[0][3] = shinePos.x;
+		local_c8[1][3] = shinePos.y;
+		local_c8[2][3] = shinePos.z;
 
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
