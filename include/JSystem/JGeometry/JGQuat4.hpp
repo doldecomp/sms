@@ -37,12 +37,11 @@ public:
 
 	void conjugate() { this->xyz().negate(); }
 
-	// TODO: the two mul are definitely not correct ATM
 	void mul(const TQuat4& other)
 	{
 		// clang-format off
 		T _x = this->w * other.x + this->x * other.w + this->y * other.z - this->z * other.y;
-		T _y = this->w * other.y + this->y * other.w + this->x * other.z - this->z * other.x;
+		T _y = this->w * other.y + this->y * other.w + this->z * other.x - this->x * other.z;
 		T _z = this->w * other.z + this->z * other.w + this->x * other.y - this->y * other.x;
 		T _w = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
 		// clang-format on
