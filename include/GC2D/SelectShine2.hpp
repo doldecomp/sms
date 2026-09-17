@@ -4,6 +4,8 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <dolphin/mtx.h>
 
 class J3DAnmColor;
 class J3DDrawBuffer;
@@ -26,13 +28,25 @@ public:
 	TSelectShine(J3DModelData* model_data, J3DAnmColor* anm_color,
 	             JPAEmitterManager* emitter_manager,
 	             JGeometry::TVec3<f32>& position, s16 angle, u8 type,
-	             f32 bound_phase, f32 bound_height, f32 bound_speed);
+	             f32 bound_phase, f32 bound_speed, f32 bound_height);
 	virtual ~TSelectShine() { }
 	virtual void move();
 
 	f32 makeNewPosition(f32 t, f32 start, f32 middle, f32 end);
 
 	J3DModel* getModel() { return mModel; }
+
+	// perform() loads mShines[i] once and keeps it in a non-volatile register
+	// across both matrix calls, which only happens when `this` comes from an
+	// inlined member. No map symbol names it, so it was a header inline.
+	void setAngle(s16 new_angle)
+	{
+		MtxPtr mtx = getModel()->getBaseTRMtx();
+		Mtx rot;
+		MTXRotRad(rot, 'y', 0.017453292f * (f32)(new_angle - mAngle));
+		MTXConcat(mtx, rot, mtx);
+		mAngle = new_angle;
+	}
 
 	// Type 2 has no emitters at all and type 1 only the third one, so both
 	// guards are needed at every site. No map symbol names these, so they were

@@ -18,23 +18,26 @@
 
 JGeometry::TVec3<f32> TSelectShineManager::cCenter(300.0f, 160.0f, -9000.0f);
 
+// The member initialiser list is what puts the mPositions array construction
+// after every scalar store; assigning in the body emits __construct_array
+// first.
 TSelectShineManager::TSelectShineManager(const char* name)
     : JDrama::TViewObj(name)
+    , mOpaBuffer(nullptr)
+    , mXluBuffer(nullptr)
+    , unk78(0.0f)
+    , unk7C(0.0f)
+    , mShineNum(0)
+    , unk90(0.0f)
+    , unk94(0.0f)
+    , unk98(0)
+    , mScroll(0)
+    , mScrollSpeed(0.0f)
+    , mIncreasing(false)
+    , mDecreasing(false)
+    , unkA6(0)
+    , mClosed(false)
 {
-	mOpaBuffer   = nullptr;
-	mXluBuffer   = nullptr;
-	unk78        = 0.0f;
-	unk7C        = 0.0f;
-	mShineNum    = 0;
-	unk90        = 0.0f;
-	unk94        = 0.0f;
-	unk98        = 0;
-	mScroll      = 0;
-	mScrollSpeed = 0.0f;
-	mIncreasing  = false;
-	mDecreasing  = false;
-	unkA6        = 0;
-	mClosed      = false;
 }
 
 void TSelectShineManager::initData(u8* shine_states, u8 shine_num, u8 index,
@@ -49,7 +52,8 @@ void TSelectShineManager::initData(u8* shine_states, u8 shine_num, u8 index,
 	void* anmRes   = JKRGetResource("/select/shine_menu.bpk");
 
 	J3DModelData* modelData = J3DModelLoaderDataBase::load(
-	    modelRes, J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	    modelRes, J3DMLF_MaterialColorLightOn | J3DMLF_MaterialPEFull
+	                  | J3DMLF_MaterialUseIndirect
 	                  | (4 << J3DMLF_TevStageNumShift));
 	J3DAnmColor* anmColor = (J3DAnmColor*)J3DAnmLoaderDataBase::load(anmRes);
 	anmColor->searchUpdateMaterialID(modelData);
@@ -64,7 +68,8 @@ void TSelectShineManager::initData(u8* shine_states, u8 shine_num, u8 index,
 	void* emptyAnmRes   = JKRGetResource("/select/shine_menu_empty.bpk");
 
 	J3DModelData* emptyModelData = J3DModelLoaderDataBase::load(
-	    emptyModelRes, J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	    emptyModelRes, J3DMLF_MaterialColorLightOn | J3DMLF_MaterialPEFull
+	                       | J3DMLF_MaterialUseIndirect
 	                       | (4 << J3DMLF_TevStageNumShift));
 	J3DAnmColor* emptyAnmColor
 	    = (J3DAnmColor*)J3DAnmLoaderDataBase::load(emptyAnmRes);
@@ -92,11 +97,11 @@ void TSelectShineManager::initData(u8* shine_states, u8 shine_num, u8 index,
 		if (shine_states[i] == 3) {
 			mShines[i] = new TSelectShine(
 			    modelData, anmColor, emitter_manager, pos, angle, 0,
-			    (f32)(int)(4000.0f * MsRandF()) / 1000.0f, 10.0f, 0.01f);
+			    (f32)(int)(4000.0f * MsRandF()) / 1000.0f, 0.01f, 10.0f);
 		} else if (shine_states[i] == 1 || shine_states[i] == 2) {
 			mShines[i] = new TSelectShine(
 			    emptyModelData, emptyAnmColor, emitter_manager, pos, angle, 1,
-			    (f32)(int)(4000.0f * MsRandF()) / 1000.0f, 10.0f, 0.01f);
+			    (f32)(int)(4000.0f * MsRandF()) / 1000.0f, 0.01f, 10.0f);
 		} else {
 			mShines[i] = nullptr;
 		}
@@ -105,23 +110,29 @@ void TSelectShineManager::initData(u8* shine_states, u8 shine_num, u8 index,
 	mShines[mIndex]->playEmitters();
 }
 
+// TODO: open, needs a shared-header change. Retail copies the TVec2 with
+// lfs/stfs at all three points here (into operator-'s by-value argument, out
+// of its returned reference, and into `toCenter`), which needs the float copy
+// constructor and operator= that JGVec2.hpp currently keeps commented out
+// ("seems like SMS didn't have them yet?"). This TU is the evidence that it
+// did. Ours copies with lwz/stw, which also leaves the UNUSED body 0x20 over
+// the map's 0x88.
 s16 TSelectShineManager::getAngle(const JGeometry::TVec3<f32>& position)
 {
 	JGeometry::TVec2<f32> toCenter(300.0f, 1300.0f);
 	toCenter = toCenter - JGeometry::TVec2<f32>(position.x, position.z);
-	JGeometry::TVec2<f32> forward(0.0f, 1.0f);
 	return (s16)(57.295776f
-	             * fabsf(atan2f(toCenter.cross(forward),
-	                            toCenter.dot(forward))));
+	             * fabsf(atan2f(
+	                 toCenter.cross(JGeometry::TVec2<f32>(0.0f, 1.0f)),
+	                 toCenter.dot(JGeometry::TVec2<f32>(0.0f, 1.0f)))));
 }
 
 JGeometry::TVec3<f32> TSelectShineManager::getPosition(s16 angle)
 {
 	s16 shortAngle = (s16)(57.295776f * (f32)angle);
-	JGeometry::TVec3<f32> pos;
-	pos.set(cCenter.x + 1500.0f * JMASSin(shortAngle), cCenter.y,
-	        cCenter.z + 9000.0f * JMASCos(shortAngle));
-	return pos;
+	return JGeometry::TVec3<f32>(cCenter.x + 1500.0f * JMASSin(shortAngle),
+	                             cCenter.y,
+	                             cCenter.z + 9000.0f * JMASCos(shortAngle));
 }
 
 void TSelectShineManager::startClose()
@@ -129,10 +140,10 @@ void TSelectShineManager::startClose()
 	mShines[mIndex]->mSpinning = false;
 
 	for (int i = 0; i < 8; ++i) {
-		if (mShines[i] != nullptr && i != mIndex
-		    && !mShines[i]->mDisappearing) {
-			mShines[i]->mDisappearing = true;
-			mShines[i]->mAppearing    = false;
+		TSelectShine* shine = mShines[i];
+		if (shine != nullptr && i != mIndex && !shine->mDisappearing) {
+			shine->mDisappearing = true;
+			shine->mAppearing    = false;
 		}
 	}
 
@@ -143,9 +154,9 @@ void TSelectShineManager::startIncrease(int count)
 {
 	mShines[mIndex]->stopEmitters();
 
-	mDecreasing  = true;
-	mScrollSpeed = count * 40 / 10;
-	mIndex -= count;
+	mIncreasing  = true;
+	mScrollSpeed = count * -40 / 10;
+	mIndex += count;
 
 	mShines[mIndex]->playEmitters();
 }
@@ -154,9 +165,9 @@ void TSelectShineManager::startDecrease(int count)
 {
 	mShines[mIndex]->stopEmitters();
 
-	mIncreasing  = true;
-	mScrollSpeed = count * -40 / 10;
-	mIndex += count;
+	mDecreasing  = true;
+	mScrollSpeed = count * 40 / 10;
+	mIndex -= count;
 
 	mShines[mIndex]->playEmitters();
 }
@@ -179,6 +190,13 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 				mDecreasing = false;
 			}
 
+			// TODO: retail calls TVec3::add, TVec2::sub, TVec3::set<f>,
+			// JMASSin and JMASCos out of line inside this loop while
+			// inlining every one of them in initData, which has the same
+			// expressions at the same depth. Same per-call-site inlining
+			// puzzle as the MapObjBall table in docs/catalog/codegen-tells.md;
+			// it also costs one 12-byte temporary between getPosition's
+			// result and `pos` (frame 0x1c8 against 0x220).
 			for (int i = 0; i < mShineNum; ++i) {
 				JGeometry::TVec3<f32> pos = getPosition(mScroll + i * 40);
 				mShines[i]->mPosition     = pos;
@@ -188,12 +206,7 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 				if (pos.x > cCenter.x)
 					angle *= -1;
 
-				Mtx spin;
-				MTXRotRad(spin, 'y',
-				          0.017453292f * (f32)(angle - mShines[i]->mAngle));
-				MTXConcat(mShines[i]->getModel()->getBaseTRMtx(), spin,
-				          mShines[i]->getModel()->getBaseTRMtx());
-				mShines[i]->mAngle = angle;
+				mShines[i]->setAngle(angle);
 			}
 		}
 	}
@@ -221,7 +234,7 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 TSelectShine::TSelectShine(J3DModelData* model_data, J3DAnmColor* anm_color,
                            JPAEmitterManager* emitter_manager,
                            JGeometry::TVec3<f32>& position, s16 angle, u8 type,
-                           f32 bound_phase, f32 bound_height, f32 bound_speed)
+                           f32 bound_phase, f32 bound_speed, f32 bound_height)
 {
 	mSpinning       = false;
 	mBoundTimer     = 0.0f;
@@ -257,6 +270,9 @@ TSelectShine::TSelectShine(J3DModelData* model_data, J3DAnmColor* anm_color,
 	mBoundTimer     = bound_phase;
 	mSpinSpeed      = 3;
 
+	// TODO: instruction-identical from here on; the frame is 0x108 against
+	// our 0xd8, i.e. one 48-byte (Mtx-sized) inline-expansion temporary in
+	// retail that no spelling of this body has reproduced.
 	MtxPtr mtx = mModel->getBaseTRMtx();
 	mtx[0][3]  = mPosition.x;
 	mtx[1][3]  = mPosition.y;
@@ -288,17 +304,17 @@ void TSelectShine::move()
 {
 	f32 newY;
 	if (mBoundTimer < 1.0f) {
-		newY = makeNewPosition(mBoundTimer, 0.0f, 0.9f * mBoundHeight,
+		newY = makeNewPosition(mBoundTimer, 0.0f, mBoundHeight * 0.9f,
 		                       mBoundHeight);
 	} else if (mBoundTimer < 2.0f) {
 		newY = makeNewPosition(mBoundTimer - 1.0f, mBoundHeight,
-		                       0.9f * mBoundHeight, 0.0f);
+		                       mBoundHeight * 0.9f, 0.0f);
 	} else if (mBoundTimer < 3.0f) {
-		newY = makeNewPosition(mBoundTimer - 2.0f, 0.0f, 0.9f * -mBoundHeight,
+		newY = makeNewPosition(mBoundTimer - 2.0f, 0.0f, -mBoundHeight * 0.9f,
 		                       -mBoundHeight);
 	} else if (mBoundTimer < 4.0f) {
 		newY = makeNewPosition(mBoundTimer - 3.0f, -mBoundHeight,
-		                       0.9f * -mBoundHeight, 0.0f);
+		                       -mBoundHeight * 0.9f, 0.0f);
 	}
 	mOffset.y = newY;
 
@@ -309,6 +325,8 @@ void TSelectShine::move()
 	mtx[2][3]                 = pos.z;
 
 	s16 frame = (s16)(-0.05f * pos.z);
+	// TODO: retail keeps pos.z in the register it stored into the matrix; both
+	// `pos.z` and a readback of mtx[2][3] re-load it here (one extra lfs).
 	if (frame < 30)
 		frame = 30;
 
