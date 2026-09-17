@@ -65,10 +65,14 @@ If you see the redundant `beq +8; b end`, join the conditions.
 The diff shows a single `~ beq {target}`; compare branch targets, not just opcodes (`TNerveChuuHanaStick` needed `else if`).
 
 **Switches.** Decode case *destinations* and branch intervals, not just compared constants.
+The comparison tree's pivot tells you the case set: with cases {0,1,2}+default MWCC pivots on 1 and adds a `cmpwi r0,3`; with {0,1,2,3}+default it pivots on 2 and folds the high side into one compare. A `default` that skips the code after the switch is `case 3: default: goto <after>;` (`fruitsboat`, three switches); a `const char*` local with `default: anm = nullptr` leaves a `li r0,0` and a null test.
 Moving one case ID gives the wrong comparison tree; moving the whole original interval restores tree and registers (TMario `checkCollision`, `receiveMessage`).
 
 **Loops.**
 - An index loop over a fixed-size member array unrolls (`getUnusedSeed` 344 bytes vs map 48); a pointer loop does not, and a separate `T** end = &mSeeds[16];` before the loop makes MWCC compute the end before the begin and keep `this` in the lower register (`TYumbo::perform` 93.1 -> 100).
+- Inside an `&&` chain, `fcmpo` + bare `bge`/`ble` wants `!(a < b)` / `!(a > b)`; `a >= b` and `a <= b` always add `cror` (`setGroundCollision` 94.8 -> exact).
+- A surviving multiply by literal `1.0f` proves an inline boundary: a TU-local `MsGetVecFromRotY(rot, len)` called with 1.0 and 300.0 reproduces both sites (`fruitsboat`), but it must call `JMASSin(DEG2SHORTANGLE(x))`, not `JMASin(x)`, whose extra wrapper level pushes the table lookup out of line in the bigger caller.
+- `&mMemberVec` instead of the `operator Vec*()` conversion fixes argument-setup order (`MTXRotAxisRad(roll, &mRollAxis, ...)` set `r3` before `r4`).
 - `fcmpo` + bare `bge` means the source tested the other way: `if (x < limit) { ...; } return false;`, whereas `if (x >= limit) return false;` gives `cror eq,gt,eq` + `bne`.
 - Timer loops over a reversed order: ascending `i = 0..7` with `mBodies[7 - i]` times `i` matches; counting down leaves runtime arithmetic after unrolling (boss get-up timers).
 - `fabs(mBodies[i]->mRotation.z)` compared directly, then assigned to the member, fully unrolls; a local `angle` breaks it (`getBodyMaxRotateZ`).
@@ -102,6 +106,8 @@ Do not force these with `#pragma dont_inline` or pasted bodies; leave the functi
 
 **`fmodf` / `mod`.** The binary calls `std::fmodf` and `TUtil<f32>::mod` out of line everywhere (`koopajr`, `MapObjCorona`, `wireTrap`), with the same 0x5c body: return `x` if `|y| > |x|`, else `x - y * (f32)(s64)(u64)(x / y)`.
 `TUtil<f32>::mod` carries that body in `JGUtil.hpp`; `std::fmodf` keeps the `::fmod` wrapper because the body there inlines everywhere.
+
+**One statement flips the decision both ways.** `TFruitsBoat::setBckTrack` (0x118, called in the ROM) was being inlined into `load`; naming one param fetch (`f32 speed; speed = ...->getSLBckMoveSpeed();`) pushed it over the budget and took `load` 29.9 -> 100.
 
 **Paying the statement budget with wrappers.** A size-exact UNUSED body that is *called* instead of inlined can be fixed without changing its codegen: `TRocket::checkTrigger` (0x148) was refused at ~15 statements; replacing two `if (gpMSound->gateCheck(id)) MSoundSE::startSoundActor(...)` pairs with `gpMSound->startSoundActor(...)` took it under the limit with identical instructions (`TNerveRocketPossessedNozzle::execute` 55.7 -> 99.3).
 
