@@ -438,9 +438,7 @@ void TBeeHive::controlSound()
 	if (num == 0)
 		return;
 
-	f32 x     = 0.0f;
-	f32 y     = 0.0f;
-	f32 z     = 0.0f;
+	JGeometry::TVec3<f32> sum(0.0f, 0.0f, 0.0f);
 	int alive = 0;
 
 	for (int i = 0; i < num; ++i) {
@@ -449,16 +447,16 @@ void TBeeHive::controlSound()
 			continue;
 
 		alive += 1;
-		x += bee->mPosition.x;
-		y += bee->mPosition.y;
-		z += bee->mPosition.z;
+		sum.x += bee->mPosition.x;
+		sum.y += bee->mPosition.y;
+		sum.z += bee->mPosition.z;
 	}
 
 	if (alive == 0)
 		return;
 
-	f32 scale = 1.0f / alive;
-	mBeeCenter.set(x * scale, y * scale, z * scale);
+	sum.scale(1.0f / alive);
+	mBeeCenter.set(sum.x, sum.y, sum.z);
 
 	gpMSound->startBeeSe(mBeeCenter, alive);
 }
@@ -563,10 +561,17 @@ void TBeeHive::prepareFall()
 	mVelocity   = velocity;
 }
 
-// TODO: incorrect size. Map records 0x24 bytes; this body is 0x14, so the
-// original also did something else here (or the helper is dead and the nerve
-// spells the swing step out itself, as it does today).
-void TBeeHive::doFall() { mSwingAngle += mSwingSpeed; }
+// UNUSED (0x24), and dead: TNerveBeeHiveFall::execute spells the swing step
+// and the landing test out itself -- it branches straight on the airborne flag
+// instead of materialising a bool, which an inlined bool-returning helper
+// always does. The shape is taken from doWait()/doScaling(), the unit's other
+// two "advance the state and say whether it is over" helpers; that is also
+// what makes the body the map's 0x24 rather than 0x14.
+bool TBeeHive::doFall()
+{
+	mSwingAngle += mSwingSpeed;
+	return !checkLiveFlag(LIVE_FLAG_AIRBORNE);
+}
 
 void TBeeHive::appearBee(int index)
 {

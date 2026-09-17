@@ -55,7 +55,7 @@ public:
 	void prepareWait();
 	bool doWait();
 	void prepareFall();
-	void doFall();
+	bool doFall();
 	void appearBee(int index);
 	void disappearBee(int index);
 	void decrimentBee();
