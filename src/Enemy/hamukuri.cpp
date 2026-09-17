@@ -932,54 +932,62 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 	local_3c.x += -mVelocity.x * 20.0f;
 	local_3c.z += -mVelocity.z * 20.0f;
 
-	// TODO: control flow all over the place, definitely inlines needed
-
-	TSmallEnemy* holder = getManager()->getHolder(mInstanceIndex);
-	if (holder == nullptr && mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
-	    && mGroundPlane->isPool() && mGroundPlane->isWaterSurface()) {
-		mPosition = SMS_GetMarioPos();
-		mVelocity.set(0.0f, 10.0f, 0.0f);
-		offLiveFlag(LIVE_FLAG_UNK10);
-	} else {
-		mPosition = local_3c;
-		mPosition.y += 100.0f;
-		param_1->mPosition.y = mPosition.y;
-
-		if (param_1->receiveMessage(this, HIT_MESSAGE_TAKE)) {
-			onLiveFlag(LIVE_FLAG_DEAD);
+	THamuKuri* holder = (THamuKuri*)getManager()->getHolder(mInstanceIndex);
+	if (holder == nullptr) {
+		// The negated `&&` chain is what puts the `holder = this` block first,
+		// as the ROM has it; the `||` spelling emits the water branch first.
+		if (!getGroundPlane()->isIllegalData() && !getGroundPlane()->isPool()
+		    && !mGroundPlane->isWaterSurface()) {
+			holder = this;
 		} else {
-			reset();
-			onHaveCap();
-			mHeldObject = param_1;
-			onLiveFlag(LIVE_FLAG_HIDDEN);
-			offLiveFlag(LIVE_FLAG_DEAD);
-			offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-			onHitFlag(HIT_FLAG_NO_COLLISION);
-			getManager()->unk70 = this;
-
-			// TODO: this is an inline
-			int uVar11 = unk124->getCurGraphIndex();
-
-			int count  = MsRandF(2, 3);
-			int uVar10 = -1;
-			for (int i = 0; i < count; ++i) {
-				int next = unk124->unk0->getRandomNextIndex(uVar11, uVar10,
-				                                            0xffffffff);
-				uVar10   = uVar11;
-				uVar11   = next;
-			}
-
-			if (uVar11 < 0)
-				uVar11 = 0;
-
-			JGeometry::TVec3<f32> VStack_60;
-			unk124->getGraph()->getGraphNode(uVar11).getPoint(&VStack_60);
-
-			JGeometry::TVec3<f32> local_6c
-			    = calcVelocityToJumpToY(VStack_60, mCapSpeed, getGravityY());
-			onLiveFlag(LIVE_FLAG_AIRBORNE);
-			mVelocity = local_6c;
+			param_1->mPosition = SMS_GetMarioPos();
+			param_1->mVelocity.set(0.0f, 10.0f, 0.0f);
+			param_1->offLiveFlag(LIVE_FLAG_UNK10);
+			return;
 		}
+	}
+
+	holder->mPosition = local_3c;
+	holder->mPosition.y += 100.0f;
+	param_1->mPosition.y = holder->mPosition.y;
+
+	if (param_1->receiveMessage(holder, HIT_MESSAGE_TAKE)) {
+		holder->reset();
+		holder->onHaveCap();
+		holder->mHeldObject = param_1;
+		holder->onLiveFlag(LIVE_FLAG_HIDDEN);
+		holder->offLiveFlag(LIVE_FLAG_DEAD);
+		holder->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+		holder->onHitFlag(HIT_FLAG_NO_COLLISION);
+		getManager()->unk70 = holder;
+
+		int uVar11 = getTracer()->getCurGraphIndex();
+
+		int uVar10 = -1;
+		TMsRange<s32> hops(2, 3);
+		int count = hops.rand();
+		for (int i = 0; i < count; ++i) {
+			int next = getTracer()->getGraph()->getRandomNextIndex(uVar11, uVar10,
+			                                                  0xffffffff);
+			uVar10   = uVar11;
+			uVar11   = next;
+		}
+
+		if (uVar11 < 0)
+			uVar11 = 0;
+
+		// TODO: instruction-exact with the right frame; the ROM lays the four
+		// aggregates out as local_3c, local_6c, hops, VStack_60 and declaring
+		// local_6c that early only grows the frame.
+		JGeometry::TVec3<f32> VStack_60;
+		getTracer()->getGraph()->getGraphNode(uVar11).getPoint(&VStack_60);
+
+		JGeometry::TVec3<f32> local_6c = calcVelocityToJumpToY(
+		    VStack_60, mCapSpeed, holder->getGravityY());
+		holder->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		holder->mVelocity = local_6c;
+	} else {
+		holder->onLiveFlag(LIVE_FLAG_DEAD);
 	}
 }
 

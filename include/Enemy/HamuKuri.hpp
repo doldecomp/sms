@@ -267,7 +267,10 @@ public:
 	static f32 mLandAnmFrameNum;
 
 	// fabricated
-	THamuKuriManager* getManager() { return (THamuKuriManager*)mManager; }
+	THamuKuriManager* getManager()
+	{
+		return (THamuKuriManager*)TLiveActor::getManager();
+	}
 	bool isUnk198() const { return unk198 ? true : false; }
 
 public:
