@@ -618,36 +618,38 @@ void TBWBinder::bind(TLiveActor* actor)
 	if (!actor->isAirborne()) {
 		TGraphTracer* tracer   = ((TSpineEnemy*)actor)->getTracer();
 		const TGraphWeb* graph = tracer->getGraph();
-		int curr               = tracer->getCurGraphIndex();
-		int prev               = tracer->getPrevIndex();
-		if (graph && curr >= 0 && prev >= 0 && curr != prev) {
-			const TGraphNode* nodes = graph->unk0;
+		if (graph) {
+			int curr = tracer->getCurGraphIndex();
+			int prev = tracer->getPrevIndex();
+			if (curr >= 0 && prev >= 0 && curr != prev) {
+				const TGraphNode* nodes = graph->unk0;
 
-			JGeometry::TVec3<f32> link;
-			JGeometry::TVec3<f32> back;
-			nodes[curr].getPoint(link);
-			nodes[prev].getPoint(back);
+				JGeometry::TVec3<f32> link;
+				JGeometry::TVec3<f32> back;
+				nodes[curr].getPoint(link);
+				nodes[prev].getPoint(back);
 
-			link.x -= back.x;
-			link.y -= back.y;
-			link.z -= back.z;
-			VECNormalize(link, link);
+				link.x -= back.x;
+				link.y -= back.y;
+				link.z -= back.z;
+				VECNormalize(link, link);
 
-			f32 along = 0.0f;
-			f32 lsq   = link.squared();
-			if (lsq != 0.0f)
-				along = velocity.dot(link) / lsq;
+				f32 along = 0.0f;
+				f32 lsq   = link.squared();
+				if (lsq != 0.0f)
+					along = velocity.dot(link) / lsq;
 
-			f32 step = along;
-			if (along < 0.0f) {
-				if (along > -3.0f)
-					step = -3.0f;
-			} else if (along > 0.0f && along < 3.0f) {
-				step = 3.0f;
+				f32 step = along;
+				if (along < 0.0f) {
+					if (along > -3.0f)
+						step = -3.0f;
+				} else if (along > 0.0f && along < 3.0f) {
+					step = 3.0f;
+				}
+
+				velocity = link;
+				velocity.scale(step);
 			}
-
-			velocity = link;
-			velocity.scale(step);
 		}
 	}
 
@@ -685,7 +687,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		JGeometry::TVec3<f32> origin(here);
 		there.add(velocity);
 
-		JGeometry::TVec3<f32> tail = leash->getRope()->mPoints[0].unk0;
+		JGeometry::TVec3<f32> tail = leash->getRope()->mPoints[3].unkC;
 		there.sub(tail);
 
 		if (VECMag(there) > 860.0f) {
@@ -1179,7 +1181,7 @@ void TBossWanwan::control()
 		mLinearVelocity.add(mPullVelocity);
 
 		JGeometry::TVec3<f32> toTail(mPosition);
-		toTail -= mLeash->getRope()->mPoints[0].unk0;
+		toTail -= mLeash->getRope()->mPoints[3].unkC;
 
 		f32 yaw  = MsWrap(MsGetRotFromZaxisY(toTail), 0.0f, 360.0f);
 		f32 turn = MsAngleDiff(yaw, mRotation.y);
