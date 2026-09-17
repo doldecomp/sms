@@ -10,6 +10,7 @@
 #include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/MapObjSirena.hpp>
 #include <Strategic/HitActor.hpp>
+#include <Strategic/Spine.hpp>
 
 class TBossTelesa;
 class TCoin;
@@ -94,7 +95,7 @@ public:
 	TBossTelesaKillSmallEnemy(const char* name = "ボステレサ雑魚敵死コリジョン")
 	    : THitActor(name)
 	    , mOwner(nullptr)
-	    , unk6C(0)
+	    , unk6C(false)
 	{
 	}
 
@@ -104,7 +105,7 @@ public:
 
 public:
 	/* 0x68 */ TBossTelesa* mOwner;
-	/* 0x6C */ int unk6C;
+	/* 0x6C */ bool unk6C;
 };
 
 /// The slot machine the boss plays with. Three drums, driven by TSlotDrum.

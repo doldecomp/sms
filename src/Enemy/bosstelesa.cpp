@@ -1,6 +1,7 @@
 #include <Enemy/BossTelesaObj.hpp>
 #include <Enemy/BossTelesa.hpp>
 #include <Enemy/Conductor.hpp>
+#include <Enemy/HamuKuri.hpp>
 #include <Enemy/Telesa.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
@@ -434,7 +435,23 @@ void TBossTelesaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 BOOL TBossTelesaBody::receiveMessage(THitActor* sender, u32 message)
 {
-	return false;
+	TBossTelesa* boss = mOwner;
+
+	if (message == HIT_MESSAGE_TRAMPLE) {
+		if (!sender->isActorType(0x80000001)) {
+			if (boss->mSpine->getCurrentNerve()
+			    == &TNerveBossTelesaPrepareSlot::theNerve())
+				boss->mSpine->pushNerve(&TNerveBossTelesaSpit::theNerve());
+		}
+	}
+
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		if (boss->mSpine->getCurrentNerve()
+		    == &TNerveBossTelesaPrepareSlot::theNerve())
+			boss->mSpine->pushNerve(&TNerveBossTelesaFreeze::theNerve());
+	}
+
+	return true;
 }
 
 // TODO: incorrect size. Map records 160 bytes.
@@ -445,10 +462,43 @@ bool TBossTelesaTongue::checkHit() { return false; }
 
 BOOL TBossTelesaTongue::receiveMessage(THitActor* sender, u32 message)
 {
-	return false;
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		TBossTelesa* boss = mOwner;
+		if (boss->mSpine->getCurrentNerve()
+		    == &TNerveBossTelesaAppear::theNerve()) {
+			// TODO: the ROM reaches TNerveBase<TLiveActor>'s constructor one
+			// inline level deeper here (a `bl` where we expand the vtable
+			// store); same at both push sites in TBossTelesaBody.
+			boss->mSpine->pushNerve(&TNerveBossTelesaSlotStart::theNerve());
+		}
+	}
+
+	return true;
 }
 
-void TBossTelesaKillSmallEnemy::checkHit() { }
+void TBossTelesaKillSmallEnemy::checkHit()
+{
+	unk6C = false;
+
+	for (int i = 0; i < mColCount; ++i) {
+		THitActor* actor = mCollisions[i];
+		if (actor->checkActorType(ACTOR_TYPE_ENEMY)) {
+			if (actor->getActorType() == 0x10000013)
+				((THamuKuri*)actor)->selectCapHolder();
+
+			((TLiveActor*)actor)->kill();
+		}
+	}
+
+	JGeometry::TVec3<f32> toMario = *gpMarioPos;
+	toMario.sub(mPosition);
+	toMario.y = 0.0f;
+
+	if (MsVECMag2(toMario) < 300.0f) {
+		mOwner->forceHide();
+		unk6C = true;
+	}
+}
 
 void TTelesaSlot::initMapObj() { }
 
