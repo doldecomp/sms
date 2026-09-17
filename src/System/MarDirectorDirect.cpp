@@ -471,8 +471,6 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 
 		gpApplication.mFader->startWipe(unkE4, 0.4f, 0.0f);
 		SMSRumbleMgr->reset();
-		if (gpApplication.mCurrArea.unk0 == 1)
-			THPPlayerPlay();
 		break;
 
 	case STATE_UNK1:
@@ -517,11 +515,11 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 			THPPlayerPlay();
 		switch (unk261) {
 		case 3:
-			mConsole->startAppearBalloon(0xE0048, true);
+			mConsole->startAppearBalloon(0x4B, true);
 			break;
 
 		case 4:
-			mConsole->startAppearBalloon(0xE0049, true);
+			mConsole->startAppearBalloon(0x4C, true);
 			break;
 		}
 		break;
@@ -1196,17 +1194,13 @@ JStage::TObject* TMarDirector::JSGFindObject(const char* param_1,
                                              JStage::TEObject param_2) const
 {
 	if (strcmp("cam_int1", param_1) == 0) {
-		JDrama::TCamera* cam
-		    = (JDrama::TCamera*)const_cast<TMarDirector*>(this)->search(
-		        "camera 1");
-		return cam;
+		TMarDirector* self = const_cast<TMarDirector*>(this);
+		return (JDrama::TCamera*)self->search("camera 1");
 	}
 
 	if (strcmp("mario", param_1) == 0) {
-		JDrama::TActor* mario
-		    = (JDrama::TActor*)const_cast<TMarDirector*>(this)->search(
-		        "マリオ");
-		return mario;
+		TMarDirector* self = const_cast<TMarDirector*>(this);
+		return (JDrama::TActor*)self->search("マリオ");
 	}
 
 	return JDrama::TDirector::JSGFindObject(param_1, param_2);
