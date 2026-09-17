@@ -1,17 +1,313 @@
 #include <Enemy/BathtubPeach.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <Map/Map.hpp>
+#include <MoveBG/MapObjCorona.hpp>
+#include <Player/MarioAccess.hpp>
 #include <Strategic/LiveActor.hpp>
+#include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
+#include <JSystem/JMath.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: no nerve body below is reconstructed; each carries its map size.
-// Defining them emits theNerve() and the destructor, both compiler-generated.
+// The .bck table of ahiru_peach has 22 entries and only the last one carries a
+// sound; the two animations the nerves actually select (0 and 1) have none, so
+// changeAnm() ends up calling setAnmSound(nullptr) for both.
+static const char* bathtubpeach_bastable[] = {
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	"/scene/bathtubpeach/bas/peach_wait.bas",
+	nullptr,
+};
 
-// TODO: incorrect size. Map records 1324 bytes.
-DEFINE_NERVE(TNervePeachEscape, TLiveActor) { return FALSE; }
+// Both nerve classes are TU-local and define every member in the class body:
+// the map lists their execute() and their compiler-generated destructor as
+// weak, and theNerve()'s singleton shows up only as the
+// nerve$localstatic0$/init$localstatic1$ pair, i.e. it was inlined away
+// everywhere. That rules out DECLARE_NERVE/DEFINE_NERVE, whose theNerve() is a
+// global symbol with a static called `instance`.
 
-// TODO: incorrect size. Map records 240 bytes.
-DEFINE_NERVE(TNervePeachStagger, TLiveActor) { return FALSE; }
+// Plays the "knocked about" animation once while the tub is tumbling, then
+// hands control back to the escape nerve.
+class TNervePeachStagger : public TNerveBase<TLiveActor> {
+public:
+	static const TNervePeachStagger& theNerve()
+	{
+		static TNervePeachStagger nerve;
+		return nerve;
+	}
+
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const
+	{
+		TBathtubPeach* peach = (TBathtubPeach*)spine->getBody();
+
+		peach->changeAnm(0, 0, 0.5f);
+
+		return peach->getMActor()->curAnmEndsNext(ANM_TYPE_BCK,
+		                                          nullptr)
+		           ? TRUE
+		           : FALSE;
+	}
+};
+
+// Paddles around the rim of the bathtub so as to stay `angle` degrees away
+// from Mario, always facing him.
+class TNervePeachEscape : public TNerveBase<TLiveActor> {
+public:
+	static const TNervePeachEscape& theNerve()
+	{
+		static TNervePeachEscape nerve;
+		return nerve;
+	}
+
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const
+	{
+		TBathtubPeach* peach = (TBathtubPeach*)spine->getBody();
+		TBathtub* bathtub = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+
+		if (bathtub->unk29A)
+			return FALSE;
+
+		if (!(spine->getTime() & 4)) {
+			if (bathtub->getBathtubData().unk64)
+				spine->pushNerve(&TNervePeachStagger::theNerve());
+			return FALSE;
+		}
+
+		peach->changeAnm(1, 1, 0.5f);
+
+		Mtx* tubMtx = bathtub->getRootJointMtx();
+		f32 tubX    = (*tubMtx)[0][3];
+		f32 tubZ    = (*tubMtx)[2][3];
+
+		JGeometry::TVec3<f32> marioPos = *gpMarioPos;
+		f32 marioAngle                 = (360.0f / 65536.0f)
+		                 * matan(marioPos.z - tubZ, marioPos.x - tubX);
+		f32 peachAngle = (360.0f / 65536.0f)
+		                 * matan(peach->mPosition.z - tubZ,
+		                         peach->mPosition.x - tubX);
+
+		f32 goalAngle;
+		if (-180.0f
+		        + std::fmodf(
+		            360.0f + ((peachAngle - marioAngle) - -180.0f), 360.0f)
+		    < 0.0f)
+			goalAngle
+			    = -180.0f
+			      + std::fmodf(360.0f
+			                       + ((marioAngle
+			                           - peach->getParam()->angle.get())
+			                          - -180.0f),
+			                   360.0f);
+		else
+			goalAngle
+			    = -180.0f
+			      + std::fmodf(360.0f
+			                       + ((marioAngle
+			                           + peach->getParam()->angle.get())
+			                          - -180.0f),
+			                   360.0f);
+
+		JGeometry::TVec2<f32> dir(
+		    peach->getParam()->radius.get()
+		            * JMASSin(DEG2SHORTANGLE(goalAngle))
+		        + tubX - peach->mPosition.x,
+		    peach->getParam()->radius.get()
+		            * JMASCos(DEG2SHORTANGLE(goalAngle))
+		        + tubZ - peach->mPosition.z);
+
+		f32 speed = peach->getParam()->speed.get();
+		if (dir.squared() >= speed * speed)
+			dir.setLength(peach->getParam()->speed.get());
+
+		peach->mPosition.x += dir.x;
+		peach->mPosition.z += dir.y;
+
+		peach->faceTo(*gpMarioPos, peach->getParam()->turnSpeed2.get());
+
+		return FALSE;
+	}
+};
+
+TBathtubPeach::TBathtubPeach(const char* name)
+    : TSpineEnemy(name)
+{
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	offLiveFlag(LIVE_FLAG_UNK100);
+	offLiveFlag(LIVE_FLAG_UNK10);
+}
+
+// TODO: UNUSED, 0xc4 in the map. The escape nerve pastes this body verbatim
+// rather than calling it (same shape as TFruitsBoat::rowToCurPathNode), so the
+// only evidence is the size.
+void TBathtubPeach::goTo(const JGeometry::TVec3<f32>& goal)
+{
+	JGeometry::TVec2<f32> dir(goal.x - mPosition.x, goal.z - mPosition.z);
+
+	f32 speed = getParam()->speed.get();
+	if (dir.squared() >= speed * speed)
+		dir.setLength(getParam()->speed.get());
+
+	mPosition.x += dir.x;
+	mPosition.z += dir.y;
+}
+
+// Turns mRotation.y towards `target` by at most `turn_speed` degrees. UNUSED,
+// 0x12c in the map, and inlined into the escape nerve.
+void TBathtubPeach::faceTo(const JGeometry::TVec3<f32>& target, f32 turn_speed)
+{
+	f32 dz = target.z - mPosition.z;
+	f32 dx = target.x - mPosition.x;
+
+	if (dx * dx + dz * dz <= JGeometry::TUtil<f32>::epsilon())
+		return;
+
+	f32 goal = (360.0f / 65536.0f) * matan(dz, dx) - 90.0f;
+	f32 diff = -180.0f
+	           + std::fmodf(360.0f + ((goal - mRotation.y) - -180.0f), 360.0f);
+
+	if (diff < -turn_speed)
+		mRotation.y
+		    = -180.0f
+		      + std::fmodf(
+		          360.0f + ((mRotation.y - turn_speed) - -180.0f), 360.0f);
+	else if (diff > turn_speed)
+		mRotation.y
+		    = -180.0f
+		      + std::fmodf(
+		          360.0f + ((mRotation.y + turn_speed) - -180.0f), 360.0f);
+	else
+		mRotation.y = goal;
+}
+
+// Switches the model onto bck/btp `bck`/`btp` at `rate` times the game's
+// animation speed, re-pointing the animation sound at the new .bas. UNUSED,
+// 0xe0 in the map, inlined into reset() and both nerves.
+void TBathtubPeach::changeAnm(int bck, int btp, f32 rate)
+{
+	if (!getMActor()->checkCurBckFromIndex(bck)) {
+		getMActor()->setBckFromIndex(bck);
+		setAnmSound(getBasNameTable() ? getBasNameTable()[bck] : nullptr);
+	}
+
+	if (getMActor()->getCurAnmIdx(ANM_TYPE_BTP) != btp)
+		getMActor()->setBtpFromIndex(btp);
+
+	getMActor()
+	    ->getFrameCtrl(ANM_TYPE_BCK)
+	    ->setRate(rate * (2.0f * SMSGetAnmFrameRate()));
+}
+
+const char** TBathtubPeach::getBasNameTable() const
+{
+	return bathtubpeach_bastable;
+}
+
+void TBathtubPeach::init(TLiveManager* live_manager)
+{
+	TSpineEnemy::init(live_manager);
+
+	mSpine->initWith(&TNervePeachEscape::theNerve());
+
+	initAnmSound();
+	reset();
+
+	mScaling.setAll(2.0f);
+}
+
+void TBathtubPeach::reset()
+{
+	// TODO: this really does scale the placed position rather than the
+	// scaling; the stage file must store her position in a larger unit than
+	// the tub's own space.
+	mPosition.scale(0.21f);
+
+	mBathtubBinder.init(50.0f, 50.0f, 50.0f, 50.0f, 0.0f);
+
+	unk130 = 0;
+	mScaling.setAll(1.5f);
+	mBinder = &mBathtubBinder;
+
+	TSpineEnemy::reset();
+
+	changeAnm(1, 1, 0.5f);
+}
+
+void TBathtubPeach::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	TSpineEnemy::perform(cue, graphics);
+}
+
+Mtx* TBathtubPeach::getRootJointMtx() const
+{
+	return (Mtx*)getModel()->getBaseTRMtx();
+}
+
+BOOL TBathtubPeach::receiveMessage(THitActor* sender, u32 message)
+{
+	return TSpineEnemy::receiveMessage(sender, message);
+}
+
+void TBathtubPeach::calcRootMatrix()
+{
+	TBathtub* bathtub = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+
+	if (bathtub && bathtub->unk29A)
+		MTXCopy(bathtub->getPeachMtxInDemo(), getModel()->getBaseTRMtx());
+	else
+		TLiveActor::calcRootMatrix();
+}
+
+// UNUSED, 0xc in the map.
+TBathtubPeachParams* TBathtubPeach::getParam() const
+{
+	return (TBathtubPeachParams*)((TEnemyManager*)mManager)->getSaveParam();
+}
+
+TBathtubPeachManager::TBathtubPeachManager(const char* name)
+    : TEnemyManager(name)
+{
+}
+
+TSpineEnemy* TBathtubPeachManager::createEnemyInstance() { return nullptr; }
+
+void TBathtubPeachManager::createModelData()
+{
+	static const TModelDataLoadEntry entry[] = {
+		{ "ahiru_peach.bmd", 0x14240000, 0 },
+		{ nullptr, 0, 0 },
+	};
+	createModelDataArray(entry);
+}
+
+void TBathtubPeachManager::load(JSUMemoryInputStream& stream)
+{
+	TEnemyManager::load(stream);
+	unk38 = new TBathtubPeachParams("/enemy/bathtubpeach.prm");
+}
