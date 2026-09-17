@@ -337,7 +337,7 @@ void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 
 		if (wasFixedMode) {
 			if (unk11C & 1) {
-				mPreviousTarget = mCurrentTarget = mTargetBeforeFixedMode;
+				restoreTargetBeforeFixedMode_();
 				killHeightPan_();
 			} else {
 				calcNowTargetFromPosAndAt_(mPosition, mTarget);

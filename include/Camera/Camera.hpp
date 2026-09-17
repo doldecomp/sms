@@ -196,6 +196,21 @@ private:
 	// normalize) one step deeper than calcExternalData_'s own body, while the
 	// MsClamp of the X-rotation ratio is one step shallower and still expands.
 	// Fully inlined at both sites, so the map carries no symbol for it.
+	// Fabricated name; the body is measured. changeCamModeSub_ restores the
+	// pre-fixed-mode target with a chained assignment whose *inner*
+	// TTargetCamera::operator= the ROM leaves out of line as the weak 0x74
+	// symbol the map lists for CameraChange.cpp, while inlining the outer one
+	// off the returned reference. The inner operator= of a chain sits one
+	// level deeper than the outer, so the eight-statement body is at depth 2
+	// when the statement is written inline in changeCamModeSub_ -- inside the
+	// measured allowance -- and at depth 3 through one wrapper, which is where
+	// it turns into the call (changeCamModeSub_ 88.8 -> 97.1%). Something has
+	// to supply that level; a helper for the restore is the least invented
+	// thing that does.
+	void restoreTargetBeforeFixedMode_()
+	{
+		mPreviousTarget = mCurrentTarget = mTargetBeforeFixedMode;
+	}
 	void calcLookatPolar_()
 	{
 		CLBCrossToPolar(mTarget, mPosition, &unk256, &unk258);
@@ -314,10 +329,19 @@ public:
 
 		int getThing() const
 		{
+			// The two branches share one load, and the map's
+			// codegen needs `unk4 - 1` computed before the shift,
+			// which only this spelling gives: `return unk8[0];` /
+			// `return unk8[unk4 - 1];` folds the -1 into the
+			// displacement, and a named index turns the load into
+			// `lwzx`.
+			const int* p;
 			if (unk4 <= 0)
-				return (int)unk8; // what
+				p = unk8;
+			else
+				p = &unk8[unk4 - 1];
 
-			return unk8[unk4 - 1];
+			return *p;
 		}
 
 		void popThing()
