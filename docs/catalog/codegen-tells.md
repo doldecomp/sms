@@ -204,6 +204,20 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `tinkoopa` and `elecNokonoko`
+
+- A deeply inlined param read must skip the params class's wrapper: at depth 3 `p->getSLFoo()` pushes `TParamT<T>::get()` out of line and emits a stray `bl`; `p->mSLFoo.get()` is one level shallower (`TNerveTinKoopaBreak::execute` 96.0 -> 99.2). This is a codegen lever, not only a frame one.
+- Sequential `cmpwi` on a dense small case set is an `if`/`else if` chain, not a `switch` (which builds a pivot tree): five sites in `tinkoopa`, `startBreaking` 82 -> 99.8. An empty trailing `else if (x == N) { }` keeps the ROM's dead compare at some sites.
+- Each accessor level on an array of pointers costs a 4-byte temporary: `mLaunchSchedule->getOrder(i++)` gave 0xa8 vs 0x28; the raw `mOrders[i++]` 99.6; naming the element 100, which also pushed `makeLaunchSchedule` over the inline budget so `init` stopped absorbing it.
+- A materialised bool means the predicate is the `if`/`return` inline: `bool hasCarapace() { if (mHasCarapace == 0) return true; return false; }` took two functions to exact; `return a == b;` folds to a bare compare. One site (`sendAttackMsgToMario`) wants the bare compare.
+- `setGoalPath(actor)` vs `setGoalPath(position)`: `TPathNode(THitActor*)` stores the actor, then the zero vector, then conditionally the actor's position; `TPathNode(const TVec3&)` stores a null (`Collect` nerve 84.9 -> 95.9).
+- A discarded call whose body starts with a null test leaves the loads behind: `mKillerManager->getActiveObjNum();` as a statement is the ROM's `lwz; lwz; cmplwi 0` with no branch.
+- `operator-` is the lever that puts `TVec3::sub` out of line (three levels: `operator-` -> `operator-=` -> `sub`) where `.sub()` or `-=` expand; it also moved `TUtil<f32>::sqrt` to a call in `TElecCarapace::shoot`.
+- Open shape: the ROM copies a goal point into a local, subtracts `mPosition` in place **with stores**, and still calls `TUtil<f32>::sqrt`; `distance()` gets the call without the stores, `d -= p; d.length()` the stores without the call (three `elecNokonoko` sites).
+- A dead function must not introduce string literals: giving an UNUSED debug printer `OSReport` calls added 100 bytes of `.rodata` and shifted every later string. The map also says whether `static const TModelDataLoadEntry entry[]` (`.rodata`) or unqualified `static` (`.data`) was used per TU.
+- The rogue-include block is not always last: `tinkoopa` needs `InfectiousStrings.hpp` and the MSound pair **before** `Map/MapCollisionEntry.hpp`, or the two `setUpTrans` literals land ahead of `MtxCalcTypeName`.
+- Open: `TTinKoopa::hitParts` (99% alone) inlines into both `receiveMessage`s, three statements under the budget; `TTinKoopa::emitTinKoopaEffects` (769 instructions) is exact and 120 bytes short of frame.
+
 ## Rules from `MapObjMamma` and `MapObjMonte`
 
 - `TMatrix34<T>::identity()`'s chained assignments give a fixed 12-store order (`[2][3],[1][3],[0][3]; [1][2],[0][2]; [2][1],[0][1]; [2][0],[1][0]; [2][2],[1][1],[0][0]`): that order means a `TMatrix34<SMatrix34C<f32>>` local plus `identity()`, not `PSMTXIdentity`.
