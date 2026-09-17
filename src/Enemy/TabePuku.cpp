@@ -1,32 +1,690 @@
 #include <Enemy/TabePukuNerve.hpp>
+#include <Enemy/Graph.hpp>
+#include <Enemy/PathNode.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/ObjModel.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
+#include <Map/Map.hpp>
+#include <Map/MapData.hpp>
+#include <Map/MapCollisionData.hpp>
+#include <Player/MarioAccess.hpp>
+#include <System/Application.hpp>
+#include <System/Particles.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/JParticle/JPAEmitter.hpp>
+#include <Strategic/Strategy.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
+#include <MSound/SoundEffects.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: no nerve body below is reconstructed; each carries its map size.
-// Defining them emits theNerve() and the destructor, both compiler-generated.
+// The three .bck slots of the tabepuku model, in the alphabetical order the
+// model data indexes them; tabepuku_bastable names all three.
+enum {
+	TABEPUKU_ANM_CHASE  = 0,
+	TABEPUKU_ANM_SEARCH = 1,
+	TABEPUKU_ANM_SWIM   = 2,
+};
 
-// TODO: incorrect size. Map records 912 bytes.
-DEFINE_NERVE(TNerveTabePukuAttack, TLiveActor) { return FALSE; }
+static const char* tabepuku_bastable[] = {
+	"/scene/tabepuku/bas/pukupuku_chase.bas",
+	"/scene/tabepuku/bas/pukupuku_search.bas",
+	"/scene/tabepuku/bas/pukupuku_swim.bas",
+};
 
-// TODO: incorrect size. Map records 248 bytes.
-DEFINE_NERVE(TNerveTabePukuBite, TLiveActor) { return FALSE; }
+namespace {
+// Dead: nothing in the translation unit reads it. It has to sit in .sbss with
+// a dynamic initialiser in __sinit_TabePuku_cpp, which is what the inline
+// PI() call buys -- a plain 0.3926991f literal lands in .sdata instead. The
+// value is pi/8, i.e. 22.5 degrees.
+f32 cAngleMax = JGeometry::TUtil<f32>::PI() / 8.0f;
+}
 
-// TODO: incorrect size. Map records 452 bytes.
-DEFINE_NERVE(TNerveTabePukuDive, TLiveActor) { return FALSE; }
+TTabePukuParams::TTabePukuParams(const char* prm)
+    : TSmallEnemyParams(prm)
+    , PARAM_INIT(mMarchSpeed, 0.15f)
+    , PARAM_INIT(mAttackSpeed, 0.22f)
+    , PARAM_INIT(mDiveSpeed, 0.4f)
+    , PARAM_INIT(mWaterFric, 0.95f)
+    , PARAM_INIT(mTurnSlerpRate, 0.05f)
+    , PARAM_INIT(mApartHeight, 500.0f)
+    , PARAM_INIT(mCorrectY, -40.0f)
+    , PARAM_INIT(mCorrectZ, 150.0f)
+    , PARAM_INIT(mTerritoryRange, 1000.0f)
+    , PARAM_INIT(mDragLength, 2500.0f)
+{
+	TParams::load(mPrmPath);
+}
 
-// TODO: incorrect size. Map records 864 bytes.
-DEFINE_NERVE(TNerveTabePukuDrag, TLiveActor) { return FALSE; }
+// UNUSED, 0x60 in the map.
+TTPHitActor::TTPHitActor(TTabePuku& owner)
+    : THitActor("\x83\x5e\x83\x78\x83\x76\x83\x4e\x97\x70\x93\x96\x82\xbd\x82"
+                "\xe8")
+    , mOwner(&owner)
+{
+}
 
-// TODO: incorrect size. Map records 680 bytes.
-DEFINE_NERVE(TNerveTabePukuFound, TLiveActor) { return FALSE; }
+void TTPHitActor::init()
+{
+	initHitActor(0x10000035, 1, -0x80000000, 10.0f, 10.0f, 10.0f, 10.0f);
 
-// TODO: incorrect size. Map records 488 bytes.
-DEFINE_NERVE(TNerveTabePukuGraphWander, TLiveActor) { return FALSE; }
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 
-// TODO: incorrect size. Map records 516 bytes.
-DEFINE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor) { return FALSE; }
+	TIdxGroupObj* group = JDrama::TNameRefGen::search<TIdxGroupObj>(
+	    "\x93\x47\x83\x4f\x83\x8b\x81\x5b\x83\x76");
+	group->getChildren().push_back(this);
+}
+
+BOOL TTPHitActor::receiveMessage(THitActor* sender, u32 message)
+{
+	return mOwner->receiveMessage(sender, message);
+}
+
+// UNUSED, 0x124 in the map: the bite volume tracks the body's own attack and
+// damage extents.
+void TTPHitActor::updateObjCollision()
+{
+	setHitParams(mOwner->getSaveParams()->getSLAttackRadius(),
+	             mOwner->getSaveParams()->getSLAttackHeight(),
+	             mOwner->getSaveParams()->getSLDamageRadius(),
+	             mOwner->getSaveParams()->getSLDamageHeight());
+}
+
+void TTPHitActor::updateTerrainCollsion()
+{
+	TTabePuku* owner = mOwner;
+
+	JGeometry::TQuat4<f32> quat = owner->mQuat;
+	JGeometry::TVec3<f32> up;
+	quat.getYDir(up);
+
+	mCheckHeight = getAttackHeight();
+	mCheckRadius = getAttackRadius();
+
+	f32 sink = (2.0f / 3.0f) * getAttackHeight();
+	if (mOwner->getHeldObject()) {
+		sink += mOwner->getHeldObject()->getDamageHeight();
+		mCheckHeight += mOwner->getHeldObject()->getDamageHeight();
+		mCheckRadius += mOwner->getHeldObject()->getDamageRadius();
+	}
+
+	f32 lift = 0.5f * getAttackHeight();
+	JGeometry::TVec3<f32> down(0.0f, -1.0f, 0.0f);
+	down.scale(sink);
+
+	JGeometry::TVec3<f32> pos(up.x * lift + mOwner->mPosition.x + down.x,
+	                          up.y * lift + mOwner->mPosition.y + down.y,
+	                          up.z * lift + mOwner->mPosition.z + down.z);
+
+	JGeometry::TVec3<f32> moved(pos);
+	moved.sub(mPosition);
+	mVelocity = moved;
+	mPosition = pos;
+}
+
+void TTPHitActor::bind()
+{
+	JGeometry::TVec3<f32> pos(mPosition);
+	pos.add(mVelocity);
+
+	TTabePuku* owner = mOwner;
+	JGeometry::TVec3<f32> velocity = owner->mVelocity;
+	pos.add(velocity);
+	pos.add(owner->mLinearVelocity);
+
+	mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
+	    pos.x, pos.y + mCheckHeight, pos.z, &mGroundPlane);
+	mGroundHeight += 1.0f;
+
+	if (pos.y <= 0.05f + mGroundHeight) {
+		mAirborne = false;
+
+		// Push the mouth back out along the plane it sank into, then sit it
+		// exactly on the ground.
+		JGeometry::TVec3<f32> onGround(pos.x, mGroundHeight, pos.z);
+		f32 push = 1.0f
+		    - (mGroundPlane->getNormal().dot(pos)
+		       - mGroundPlane->getNormal().dot(onGround));
+		if (push > 0.0f)
+			pos.scaleAdd(push, pos, mGroundPlane->getNormal());
+		pos.y = mGroundHeight;
+	} else {
+		mAirborne = true;
+	}
+
+	// Keep the top of the bite volume under the water plane at y = 0.
+	if (0.0f <= pos.y + mCheckHeight)
+		pos.y = -mCheckHeight;
+
+	TBGWallCheckRecord record(pos, mCheckRadius, 1, 0);
+	mTouchedWall = gpMap->isTouchedWallsAndMoveXZ(&record);
+	pos.x        = record.mCenter.x;
+	pos.z        = record.mCenter.z;
+
+	JGeometry::TVec3<f32> moved(pos);
+	moved.sub(mPosition);
+	mVelocity = moved;
+	mPosition = pos;
+}
+
+// UNUSED, 0x94 in the map.
+void TTPHitActor::checkHitActors()
+{
+	THitActor** end = &mCollisions[mColCount];
+	for (THitActor** col = mCollisions; col != end; col++) {
+		if ((*col)->mActorType != 0x80000001)
+			continue;
+		mOwner->attackToMario();
+	}
+}
+
+TTabePuku::TTabePuku(const char* name)
+    : TSmallEnemy(name)
+{
+	onLiveFlag(LIVE_FLAG_UNK1000);
+}
+
+void TTabePuku::init(TLiveManager* live_manager)
+{
+	mManager = live_manager;
+	mManager->manageActor(this);
+	setMActorAndKeeper();
+
+	mSpine->initWith(&TNerveTabePukuGraphWander::theNerve());
+
+	initCollision();
+	initParams();
+	initAnmSound();
+}
+
+void TTabePuku::reset() { mScaledBodyRadius = 130.0f; }
+
+// UNUSED, 0xcc in the map.
+void TTabePuku::initCollision()
+{
+	initHitActor(0x10000035, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+
+	mMouthHit = new TTPHitActor(*this);
+	mMouthHit->init();
+	mMouthHit->mPosition = mPosition;
+}
+
+// UNUSED, 0x78 in the map.
+void TTabePuku::initParams()
+{
+	mQuat.set(SMS_Eular2Quat(mRotation));
+	mMouthJointIndex
+	    = (u16)getModel()->getModelData()->getJointName()->getIndex(
+	        "jnt_mouth_up");
+}
+
+void TTabePuku::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	mMouthHit->perform(cue, graphics);
+	TSmallEnemy::perform(cue, graphics);
+}
+
+void TTabePuku::control()
+{
+	TLiveActor::control();
+	mMouthHit->checkHitActors();
+	updateSound();
+}
+
+// UNUSED, 0x110 in the map.
+void TTabePuku::updateSound()
+{
+	if (isBiting())
+		gpMSound->startSoundActor(MSD_SE_EN_TOBIPUKU_CHEW, &mPosition, 0,
+		                          nullptr, 0, 4);
+}
+
+void TTabePuku::bind()
+{
+	mMouthHit->updateObjCollision();
+	mMouthHit->updateTerrainCollsion();
+	mMouthHit->bind();
+
+	mLinearVelocity = mMouthHit->mVelocity;
+	mTouchedWall    = mMouthHit->mTouchedWall;
+
+	if (mMouthHit->mAirborne)
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
+	else
+		offLiveFlag(LIVE_FLAG_AIRBORNE);
+
+	mGroundPlane  = mMouthHit->mGroundPlane;
+	mGroundHeight = mMouthHit->mGroundHeight;
+}
+
+void TTabePuku::calcRootMatrix()
+{
+	if (isTaken()) {
+		TSpineEnemy::calcRootMatrix();
+		return;
+	}
+
+	JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
+	    mtx;
+	mtx.setQuat(mQuat);
+	mtx.setTrans(mPosition);
+
+	getModel()->setBaseScale(mScaling);
+	MTXCopy(mtx, getModel()->getBaseTRMtx());
+
+	emitEffects();
+}
+
+// UNUSED, 0x134 in the map: the bubble trail out of the mouth joint. Deeper
+// water gives it a longer life, and the attack nerve thickens it.
+void TTabePuku::emitEffects()
+{
+	// TODO: 0x178 is ms_puku_awa.jpa; System/Particles.hpp is missing the
+	// PARTICLE_MS_PUKU_AWA name for it, and the cast is only here because this
+	// batch may not touch that header.
+	JPABaseEmitter* emitter = SMS_EasyEmitParticle(
+	    (E_SMS_EFFECT_LOOP_NORMAL)0x178,
+	    getModel()->getAnmMtx(mMouthJointIndex), this,
+	    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+	if (!emitter)
+		return;
+
+	f32 depth = -mPosition.y / 100.0f;
+	if (depth <= 0.0f)
+		depth = 0.0f;
+
+	int life = (int)depth * 20 + 2;
+	if (life > 200)
+		life = 200;
+	emitter->setLifeTime(life);
+
+	if (isAttacking())
+		emitter->setRate(0.1f);
+}
+
+BOOL TTabePuku::receiveMessage(THitActor* sender, u32 message)
+{
+	switch (message) {
+	case HIT_MESSAGE_TRAMPLE:
+	case HIT_MESSAGE_HIP_DROP:
+		return FALSE;
+	default:
+		return TSmallEnemy::receiveMessage(sender, message);
+	}
+}
+
+MtxPtr TTabePuku::getTakingMtx()
+{
+	mTakingMtx.setQuat(mQuat);
+
+	JGeometry::TVec3<f32> zdir;
+	mTakingMtx.getZDir(zdir);
+	JGeometry::TVec3<f32> ydir;
+	mTakingMtx.getYDir(ydir);
+
+	JGeometry::TVec3<f32> mouth;
+	mouth.scaleAdd(getSaveParams()->getCorrectZ(), mPosition, zdir);
+	mouth.scaleAdd(getSaveParams()->getCorrectY(), mouth, ydir);
+	mTakingMtx.setTrans(mouth);
+
+	return mTakingMtx;
+}
+
+const char** TTabePuku::getBasNameTable() const { return tabepuku_bastable; }
+
+void TTabePuku::attackToMario()
+{
+	if (isBiting())
+		return;
+
+	if (isGraphWander())
+		return;
+
+	if (SMS_SendMessageToMario(this, HIT_MESSAGE_TAKE)) {
+		mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
+		mSpine->reset();
+		mSpine->setNext(&TNerveTabePukuBite::theNerve());
+	}
+}
+
+void TTabePuku::behaveToWater(THitActor* water) { }
+
+void TTabePuku::forceKill() { }
+
+bool TTabePuku::isFindMario(f32 rate) { return isFindMarioFromParam(rate); }
+
+bool TTabePuku::doKeepDistance() { return !(isAttacking() || isBiting()); }
+
+// UNUSED, 0x1c4 in the map: Mario got too high, too far from the goal, or the
+// puku has wandered outside the territory around its graph.
+bool TTabePuku::isMissMario() const
+{
+	if (fabsf(gpMarioPos->y - mPosition.y)
+	    > getSaveParams()->getSLGiveUpHeight())
+		return true;
+
+	f32 giveUpLength = getSaveParams()->getSLGiveUpLength();
+	JGeometry::TVec3<f32> toGoal(unk104.getPoint());
+	toGoal.sub(mPosition);
+	if (toGoal.length() > giveUpLength)
+		return true;
+
+	JGeometry::TVec3<f32> onLink(
+	    // TODO: TSpineEnemy::getTracer() has no const overload, so this reads
+	    // the member directly. Adding one is a shared-header change.
+	    unk124->getGraph()->getNearestPosOnGraphLink(mPosition));
+	onLink.sub(mPosition);
+
+	f32 range = getSaveParams()->getTerritoryRange();
+	if (range * range <= onLink.squared())
+		return true;
+	return false;
+}
+
+// UNUSED, 0x3c in the map.
+bool TTabePuku::isTouchedPlane() const
+{
+	if (isAirborne() && !mTouchedWall)
+		return false;
+	return true;
+}
+
+// UNUSED, 0xac in the map.
+bool TTabePuku::isGraphWander() const
+{
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	return nerve == &TNerveTabePukuGraphWander::theNerve()
+	    || nerve == &TNerveTabePukuRecoverGraph::theNerve();
+}
+
+// UNUSED, 0x90 in the map.
+bool TTabePuku::isAttacking() const
+{
+	return mSpine->getLatestNerve() == &TNerveTabePukuAttack::theNerve();
+}
+
+// UNUSED, 0xd0 in the map.
+bool TTabePuku::isBiting() const
+{
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	return nerve == &TNerveTabePukuBite::theNerve()
+	    || nerve == &TNerveTabePukuDive::theNerve()
+	    || nerve == &TNerveTabePukuDrag::theNerve();
+}
+
+// UNUSED, 0xb8 in the map: swim at the current path node, biased by an offset
+// the nerves pick (straight at it while wandering, above it while chasing).
+void TTabePuku::swimToCurPathNode(const JGeometry::TVec3<f32>& offset)
+{
+	JGeometry::TVec3<f32> dir(unk104.getPoint());
+	dir.sub(mPosition);
+	dir.add(offset);
+	swimTo(dir);
+}
+
+// UNUSED, 0x4 in the map: empty in retail too.
+void TTabePuku::doBite() { }
+
+// UNUSED, 0x68 in the map.
+void TTabePuku::prepareDive()
+{
+	mDiveStartY = mPosition.y;
+	setBckAnm(TABEPUKU_ANM_SWIM);
+	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(2.0f
+	                                                 * SMSGetAnmFrameRate());
+	mMarchSpeed = getSaveParams()->getDiveSpeed();
+}
+
+// UNUSED, 0xbc in the map.
+bool TTabePuku::doDive()
+{
+	swimTo(JGeometry::TVec3<f32>(0.0f, mGroundHeight - mPosition.y, 0.0f));
+
+	if (mPosition.y - mDiveStartY < -getSaveParams()->getApartHeight())
+		return true;
+
+	if (mPosition.y - mGroundHeight < 200.0f)
+		return true;
+
+	if (!isAirborne())
+		return true;
+
+	return false;
+}
+
+// UNUSED, 0x17c in the map: pick a random horizontal direction to drag Mario
+// in and head off in it from where the puku is now.
+void TTabePuku::prepareDrag()
+{
+	mDragDir.set(0.0f, 0.0f, 1.0f);
+
+	JGeometry::TQuat4<f32> spin;
+	spin.setEulerY(MsRandF() * 6.2831855f);
+	spin.rotate(mDragDir, mDragDir);
+
+	setGoalPath(mPosition);
+	mMarchSpeed = getSaveParams()->getDiveSpeed();
+}
+
+// UNUSED, 0x12c in the map.
+bool TTabePuku::doDrag()
+{
+	if (!mTouchedWall && isAirborne()) {
+		JGeometry::TVec3<f32> toGoal(unk104.getPoint());
+		toGoal.sub(mPosition);
+		if (toGoal.length() <= getSaveParams()->getDragLength())
+			return false;
+	}
+
+	detach();
+	return true;
+}
+
+void TTabePuku::swimTo(const JGeometry::TVec3<f32>& dir)
+{
+	JGeometry::TVec3<f32> d(dir);
+
+	if (JGeometry::TUtil<f32>::epsilonEquals(0.0f, d.squared(),
+	        JGeometry::TUtil<f32>::epsilon())) {
+		setMomentumFromQuat();
+		return;
+	}
+
+	d.normalize();
+
+	JGeometry::TVec3<f32> zaxis(0.0f, 0.0f, 1.0f);
+	JGeometry::TQuat4<f32> target;
+	if (JGeometry::TUtil<f32>::epsilonEquals(-1.0f, d.dot(zaxis),
+	        JGeometry::TUtil<f32>::epsilon()))
+		target.setEulerY(JGeometry::TUtil<f32>::PI());
+	else
+		target.setRotate(zaxis, d);
+
+	mQuat.slerp(target, getSaveParams()->getTurnSlerpRate());
+	mQuat.normalize();
+
+	setMomentumFromQuat();
+}
+
+// UNUSED, 0x1d4 in the map: swim along the quaternion's forward axis, with the
+// old velocity damped by the water friction.
+void TTabePuku::setMomentumFromQuat()
+{
+	JGeometry::TVec3<f32> forward;
+	mQuat.getZDir(forward);
+	forward.scale(mMarchSpeed);
+
+	JGeometry::TVec3<f32> velocity = mVelocity;
+	velocity.scale(getSaveParams()->getWaterFric());
+	velocity.add(forward);
+	mVelocity = velocity;
+
+	mRotation.y = MsGetRotFromZaxisY(velocity);
+}
+
+// UNUSED, 0x38 in the map.
+void TTabePuku::detach()
+{
+	SMS_SendMessageToMario(this, HIT_MESSAGE_UNK8);
+	mHeldObject = nullptr;
+}
+
+TTabePukuManager::TTabePukuManager(const char* name)
+    : TSmallEnemyManager(name)
+{
+}
+
+void TTabePukuManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new TTabePukuParams("/enemy/tabepuku.prm");
+	TSmallEnemyManager::load(stream);
+}
+
+void TTabePukuManager::createModelData()
+{
+	static TModelDataLoadEntry entry[] = {
+		{ "tabepuku.bmd", 0x10210000, 0 },
+		{ nullptr, 0, 0 },
+	};
+	createModelDataArray(entry);
+}
+
+DEFINE_NERVE(TNerveTabePukuGraphWander, TLiveActor)
+{
+	TTabePuku* puku = (TTabePuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->getTracer()->reset();
+		puku->goToShortestNextGraphNode();
+		puku->setBckAnm(TABEPUKU_ANM_SWIM);
+		puku->mMarchSpeed = puku->getSaveParams()->getMarchSpeed();
+	}
+
+	if (puku->isReachedToGoal())
+		puku->goToRandomNextGraphNode();
+
+	if (puku->isFindMario(1.0f)) {
+		spine->pushAfterCurrent(&TNerveTabePukuFound::theNerve());
+		return TRUE;
+	}
+
+	puku->swimToCurPathNode(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveTabePukuFound, TLiveActor)
+{
+	TTabePuku* puku = (TTabePuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->setBckAnm(TABEPUKU_ANM_SEARCH);
+		puku->mMarchSpeed = 0.0f;
+	}
+
+	puku->setMomentumFromQuat();
+
+	if (puku->checkCurAnmEnd(ANM_TYPE_BCK)) {
+		spine->pushAfterCurrent(&TNerveTabePukuAttack::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor)
+{
+	TTabePuku* puku = (TTabePuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->getTracer()->reset();
+		puku->getTracer()->reset2();
+		puku->goToShortestNextGraphNode();
+		puku->mMarchSpeed = puku->getSaveParams()->getMarchSpeed();
+	}
+
+	if (puku->isReachedToGoal()) {
+		spine->pushAfterCurrent(&TNerveTabePukuGraphWander::theNerve());
+		return TRUE;
+	}
+
+	// Aim far above the node while stuck on the ground or a wall, so the puku
+	// climbs off it before swimming on.
+	f32 rise = puku->isTouchedPlane() ? 10000.0f : 0.0f;
+	puku->swimToCurPathNode(JGeometry::TVec3<f32>(0.0f, rise, 0.0f));
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveTabePukuAttack, TLiveActor)
+{
+	TTabePuku* puku = (TTabePuku*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		puku->setBckAnm(TABEPUKU_ANM_CHASE);
+		puku->setGoalPathMario();
+		puku->mMarchSpeed = puku->getSaveParams()->getAttackSpeed();
+	}
+
+	if (puku->isMissMario() || puku->mTouchedWall) {
+		spine->pushAfterCurrent(&TNerveTabePukuRecoverGraph::theNerve());
+		return TRUE;
+	}
+
+	puku->swimToCurPathNode(JGeometry::TVec3<f32>(0.0f, 150.0f, 0.0f));
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveTabePukuBite, TLiveActor)
+{
+	TTabePuku* puku = (TTabePuku*)spine->getBody();
+
+	puku->doBite();
+	puku->setBckAnm(TABEPUKU_ANM_SWIM);
+	gpMSound->startSoundActor(MSD_SE_EN_TOBIPUKU_BITE, &puku->mPosition, 0,
+	                          nullptr, 0, 4);
+
+	spine->pushAfterCurrent(&TNerveTabePukuDive::theNerve());
+	return TRUE;
+}
+
+DEFINE_NERVE(TNerveTabePukuDive, TLiveActor)
+{
+	TTabePuku* puku = (TTabePuku*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		puku->prepareDive();
+
+	if (puku->doDive()) {
+		spine->pushAfterCurrent(&TNerveTabePukuDrag::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveTabePukuDrag, TLiveActor)
+{
+	TTabePuku* puku = (TTabePuku*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		puku->prepareDrag();
+
+	puku->swimTo(puku->mDragDir);
+
+	if (puku->doDrag()) {
+		spine->pushAfterCurrent(&TNerveTabePukuRecoverGraph::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
