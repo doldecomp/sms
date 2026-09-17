@@ -334,23 +334,6 @@ static inline void processBalloonTextStep(TGCConsole2* console)
 	}
 }
 
-// fabricated
-static inline bool startLifeMeterDisappear(TGCConsole2* console, u16 frame)
-{
-	if (console->unk38 || console->unk4C)
-		return false;
-
-	console->unk4C = 1;
-	console->unk1C4->setPanePosition(
-	    40, JUTPoint(0, 0),
-	    JUTPoint(0, (-(console->unk1C4->unk4.y2 + 1)
-	                 - console->unk174->getPane()->getHeight())
-	                    >> 1),
-	    JUTPoint(0, -(console->unk1C4->unk4.y2 + 1)
-	                    - console->unk174->getPane()->getHeight()));
-	console->unk84 = frame;
-	return true;
-}
 
 
 // fabricated. Only startInsertLife() uses this shape; the copy inside
@@ -490,15 +473,15 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 			console->unk18 = 2;
 			console->unk38 = 0;
 		}
-		if (airTimeout && startLifeMeterDisappear(console, 1))
+		if (airTimeout && console->startDisappearLife(1))
 			console->unk18 = 3;
 		break;
 	case 2:
 		if (console->unk1CC[0] == 8) {
-			if (startLifeMeterDisappear(console, 0))
+			if (console->startDisappearLife(0))
 				console->unk18 = 3;
 		} else if (airTimeout) {
-			if (startLifeMeterDisappear(console, 0))
+			if (console->startDisappearLife(0))
 				console->unk18 = 3;
 		}
 		break;
@@ -533,7 +516,7 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	case 7:
 		if (!gpMarioOriginal->isUnderWater()) {
 			if (console->unk1CC[0] == 8) {
-				if (startLifeMeterDisappear(console, 0))
+				if (console->startDisappearLife(0))
 					console->unk18 = 6;
 			} else if (console->unk1CC[0] != console->unk1C) {
 				console->startAppearLife(1);
@@ -2003,11 +1986,13 @@ void TGCConsole2::loadAfter()
 	unk52C->hide();
 
 	unk528->setFont(gpSystemFont);
-	unk52C->setFont(gpSystemFont);
 
-	int fontHeight = gpSystemFont->getHeight();
-	unk528->setFontSize(fontHeight, unk528->mBounds.getHeight());
-	unk52C->setFontSize(fontHeight, unk52C->mBounds.getHeight());
+	JUTRect textBounds(unk528->mBounds);
+	unk528->setFontSize(gpSystemFont->getWidth() << 10,
+	                    textBounds.getHeight());
+	unk52C->setFont(gpSystemFont);
+	unk52C->setFontSize(gpSystemFont->getWidth() << 10,
+	                    textBounds.getHeight());
 
 	JUTRect telopBounds(unk524->getPane()->mBounds);
 	JUTRect telopPaneBounds(unk520->getPane()->mBounds);
@@ -2109,7 +2094,7 @@ void TGCConsole2::startCameraDemo()
 	unk50 = 1;
 
 	startDisappearTelop();
-	startLifeMeterDisappear(this, 120);
+	startDisappearLife(120);
 
 	unk18 = 10;
 	unk48 = 0;
@@ -2147,6 +2132,11 @@ void TGCConsole2::startCameraDemo()
 	unkB6 = 0;
 }
 
+// TODO: UNUSED, 0xe0 in the map (56 instructions), and nothing in the TU
+// resembles it. It sits between startCameraDemo() and endCameraDemo() in source
+// order, so it is most likely the "put the tank panes back where they started"
+// counterpart of startDisappearTank(), but there is no call site to confirm the
+// pane set or the timings, so it stays a stub rather than a guess.
 void TGCConsole2::resetMoveTank() { }
 
 void TGCConsole2::endCameraDemo()
@@ -2388,7 +2378,25 @@ bool TGCConsole2::startAppearLife(int param_1)
 	return true;
 }
 
-void TGCConsole2::startDisappearLife(int) { }
+// UNUSED (0xf0 in the map): the life meter's slide-off, inlined at all four
+// sites in perform() and once in startCameraDemo().
+bool TGCConsole2::startDisappearLife(int frame)
+{
+	if (unk38 || unk4C)
+		return false;
+
+	unk4C = 1;
+	unk1C4->setPanePosition(
+	    40, JUTPoint(0, 0),
+	    JUTPoint(0, (-(unk1C4->unk4.y2 + 1) - unk174->getPane()->getHeight())
+	                    >> 1),
+	    JUTPoint(0, -(unk1C4->unk4.y2 + 1) - unk174->getPane()->getHeight()));
+	unk84 = frame;
+	// TODO: 0xec against the map's 0xf0. The inline sites are exact, so the
+	// original body has one more instruction here; separate `if`s for the two
+	// guards give 0xf4 and a named offset local 0xc4, so it is neither.
+	return true;
+}
 
 void TGCConsole2::startDownLeftBot()
 {
@@ -2416,7 +2424,29 @@ void TGCConsole2::startDownLeftBot()
 	}
 }
 
-void TGCConsole2::startUpLeftBot() { }
+// UNUSED (0x94 in the map): the counterpart of startDownLeftBot(), written out
+// inside endCameraDemo().
+void TGCConsole2::startUpLeftBot()
+{
+	unk40 = 1;
+	unk41 = 0;
+	unk59 = 1;
+
+	if (unk51C) {
+		startInsertTimer();
+		unk51C = 0;
+	}
+
+	if (unk448) {
+		startAppearRedCoin();
+		unk448 = 0;
+	}
+
+	if (unk426) {
+		startInsertJetBalloon();
+		unk426 = 0;
+	}
+}
 
 void TGCConsole2::startAppearTelop(bool param_1)
 {

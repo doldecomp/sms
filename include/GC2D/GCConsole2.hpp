@@ -52,7 +52,7 @@ public:
 	void startInsertLife(int);
 	void resetLife(int);
 	bool startAppearLife(int);
-	void startDisappearLife(int);
+	bool startDisappearLife(int);
 	void startDownLeftBot();
 	void startUpLeftBot();
 	void startAppearTelop(bool);
