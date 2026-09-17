@@ -95,6 +95,11 @@ const u32 cRumbleToggleItems[] = {
 	'sel0',
 };
 
+const u32 cSubtitleToggleItems[] = {
+	'sel6',
+	'sel5',
+};
+
 const u32 cSoundToggleItems[] = {
 	'sel3',
 	'sel2',
@@ -147,46 +152,12 @@ int TArrowControl::calcMoveX(int phase) const
 	int iVar3 = phase < 50 ? phase : 100 - phase;
 	f32 fVar1 = iVar3 / 50.0f;
 	f32 fVar2 = 1.0f - fVar1;
-	return fVar1 * 8.0f * fVar1 + fVar2 * -8.0f * fVar2 + fVar1 * fVar2;
+	// TODO: the accumulation order is the ROM's, but MWCC still expands
+	// JUTRect::JUTRect(int, int, int, int) here where the ROM calls the weak
+	// copy; the remaining diff in movementOption is that call plus the
+	// register pair holding the int-to-float magic constant.
+	return fVar2 * -8.0f * fVar2 + fVar1 * fVar2 + fVar1 * 8.0f * fVar1;
 }
-
-TBalloonControl::TBalloonControl(int size)
-    : unk4(size)
-    , unk8(0)
-{
-	unk0 = new UnknownBalloonControlStruct[size];
-}
-
-void TBalloonControl::add(TExPane* pane)
-{
-	if (unk4 > unk8) {
-		unk0[unk8].unk0 = pane;
-		unk0[unk8].unk4 = pane->getPane()->getAlpha();
-		++unk8;
-	}
-}
-
-void TBalloonControl::setupAnm()
-{
-	mFrameCtrl.init((unk8 + 1) * 120.0f);
-	mFrameCtrl.setAttribute(J3DFrameCtrl::ATTR_LOOP);
-	unk20 = 0;
-	for (int i = 0; i < unk8; ++i)
-		unk0[i].unk0->getPane()->setAlpha(0);
-	mFrameCtrl.setRate(1.0f);
-}
-
-void TBalloonControl::startAnm() { mFrameCtrl.setRate(1.0f); }
-
-void TBalloonControl::stopAnm()
-{
-	mFrameCtrl.setRate(0.0f);
-	mFrameCtrl.reset();
-	for (int i = 0; i < unk8; ++i)
-		unk0[i].unk0->getPane()->setAlpha(0);
-}
-
-void TBalloonControl::update() { }
 
 TPaneScalingControl::TPaneScalingControl(J2DPane* pane)
     : mPane(pane)
@@ -216,7 +187,10 @@ void TPaneScalingControl::update()
 	int iVar5  = mInitialBounds.getHeight();
 
 	f32 progress = (f32)mFrameCtrl.getFrame() / (f32)mFrameCtrl.getEnd();
-	f32 fVar2    = mAmplitude * JMASin(RAD_TO_DEG(progress * (2 * M_PI)));
+	// TODO: not RAD_TO_DEG(): math.h adds 0.000005f to the factor, which lands
+	// one ULP above the ROM's 57.295776f (`180.0f / M_PI` exactly). The fudge
+	// looks wrong, but removing it from math.h is a repo-wide change.
+	f32 fVar2 = mAmplitude * JMASin(progress * TAU * (180.0f / M_PI));
 
 	int uVar6 = fVar2 * iVar10;
 	int uVar1 = fVar2 * iVar5;
@@ -298,7 +272,7 @@ TToggleControl::TToggleControl(J2DScreen* screen)
 
 void TToggleControl::setupToggle(const u32* tags, int num_tags)
 {
-	mItems.set(tags, num_tags);
+	mItems.set((u32*)tags, num_tags);
 	for (const u32* it = mItems.begin(); it != mItems.end(); ++it)
 		mScreen->search(*it)->hide();
 	mCurItem = mItems.begin();
@@ -329,12 +303,6 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 	mParentPane   = new TExPane(mScreen, 'oya1');
 	mInitialAlpha = mParentPane->getPane()->getAlpha();
 
-	unkC = new TBalloonControl(3);
-	unkC->add(new TExPane(mScreen, 'bub0'));
-	unkC->add(new TExPane(mScreen, 'bub1'));
-	unkC->add(new TExPane(mScreen, 'bub2'));
-	unkC->setupAnm();
-
 	// The speech bubble around the on/off text that pulsates
 	// when this setting is selected.
 	mSelectionBubble = new TPaneScalingControl(mScreen->search('me_0'));
@@ -361,7 +329,6 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 	setState(STATE_INACTIVE);
 }
 
-#pragma dont_inline on
 void TOptionRumbleUnit::update()
 {
 	switch (mState) {
@@ -383,7 +350,6 @@ void TOptionRumbleUnit::update()
 		break;
 	}
 }
-#pragma dont_inline off
 
 void TOptionRumbleUnit::checkRumble()
 {
@@ -469,14 +435,12 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		mParentPane->getPane()->setAlpha(150);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mSelectionBubble->stopAnm();
-		unkC->stopAnm();
 		mShouldRumble = false;
 		break;
 
 	case STATE_DEACTIVATING:
 		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-		unkC->stopAnm();
 		mShouldRumble = false;
 		break;
 
@@ -484,8 +448,6 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		mParentPane->getPane()->setAlpha(mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
 		mSelectionBubble->startAnm();
-		unkC->setupAnm();
-		unkC->startAnm();
 		adjustView();
 		break;
 	}
@@ -500,16 +462,125 @@ void TOptionRumbleUnit::setInfluencedAlphaRecursive(J2DPane* pane, bool flag)
 	}
 }
 
+// ---------------------------------------------------------------------------
+// TOptionSubtitleUnit is US only: the Japanese release has no subtitle option.
+// Its setState() is small enough (nine statements) that MWCC inlines it at
+// every call site, which is why activate()/deactivate() are 0xb8/0x1e0 in the
+// map where the rumble unit's are 0x24/0x60.
+// ---------------------------------------------------------------------------
+
+TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
+    : mScreen(screen)
+{
+	mParentPane   = new TExPane(mScreen, 'txp2');
+	mInitialAlpha = mParentPane->getPane()->getAlpha();
+
+	// The speech bubble around the on/off text that pulsates
+	// when this setting is selected.
+	mSelectionBubble = new TPaneScalingControl(mScreen->search('me_2'));
+	mSelectionBubble->setupAnm(0.05f, 1.0f);
+	mSelectionBubble->stopAnm();
+
+	// The text that says on/off for subtitles in the options menu.
+	mSelectionText = new TToggleControl(mScreen);
+	mSelectionText->setupToggle(cSubtitleToggleItems,
+	                            ARRAY_COUNT(cSubtitleToggleItems));
+
+	setState(STATE_INACTIVE);
+}
+
+void TOptionSubtitleUnit::update()
+{
+	switch (mState) {
+	case STATE_DEACTIVATING:
+		mParentPane->update();
+		// fade-out animation is done
+		if (mParentPane->getPane()->getAlpha() == 150)
+			setState(STATE_INACTIVE);
+		break;
+
+	case STATE_ACTIVE:
+		mParentPane->update();
+		mSelectionBubble->update();
+		break;
+
+	case STATE_INACTIVE:
+		break;
+	}
+}
+
+void TOptionSubtitleUnit::toggle()
+{
+	mSelectionText->toggle();
+	// TODO: the ROM discards this read. Whatever applied the new value here
+	// was removed, and only the dead `bl ArrayWrapper<Ul>::begin()` inside
+	// TOptionControl::checkInput's copy is left of it. adjust() cannot be
+	// where it sat: the map gives adjust() four bytes, i.e. an empty body.
+	getValue();
+	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0, nullptr, 0);
+}
+
+void TOptionSubtitleUnit::adjust() { }
+
+void TOptionSubtitleUnit::show() { }
+
+void TOptionSubtitleUnit::hide() { }
+
+void TOptionSubtitleUnit::deactivate(bool force)
+{
+	if (force)
+		setState(TOptionSubtitleUnit::STATE_INACTIVE);
+	else
+		setState(TOptionSubtitleUnit::STATE_DEACTIVATING);
+}
+
+void TOptionSubtitleUnit::activate()
+{
+	setState(TOptionSubtitleUnit::STATE_ACTIVE);
+}
+
+void TOptionSubtitleUnit::setValue(TOptionSubtitleUnit::SubtitleType value)
+{
+	mSelectionText->setNumber(value);
+}
+
+void TOptionSubtitleUnit::setState(TOptionSubtitleUnit::State state)
+{
+	mState = state;
+	switch (state) {
+	case STATE_INACTIVE:
+		mParentPane->getPane()->setAlpha(150);
+		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
+		mSelectionBubble->stopAnm();
+		break;
+
+	case STATE_DEACTIVATING:
+		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
+		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
+		break;
+
+	case STATE_ACTIVE:
+		mParentPane->getPane()->setAlpha(mInitialAlpha);
+		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
+		mSelectionBubble->startAnm();
+		break;
+	}
+}
+
+void TOptionSubtitleUnit::setInfluencedAlphaRecursive(J2DPane* pane, bool flag)
+{
+	for (JSUTreeIterator<J2DPane> it = pane->getPaneTree()->getFirstChild();
+	     it != pane->getPaneTree()->getEndChild(); ++it) {
+		it->setInfluenceAlpha(flag);
+		setInfluencedAlphaRecursive(it.getObject(), flag);
+	}
+}
+
 TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
     : mScreen(screen)
 {
 	mParentPane   = new TExPane(mScreen, 'oya2');
 	mInitialAlpha = mParentPane->getPane()->getAlpha();
-
-	unkC = new TBalloonControl(2);
-	unkC->add(new TExPane(mScreen, 'bub3'));
-	unkC->add(new TExPane(mScreen, 'bub4'));
-	unkC->setupAnm();
 
 	// The speech bubble around the mono/stereo/surround text that pulsates
 	// when this setting is selected.
@@ -517,8 +588,21 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 	mSelectionBubble->setupAnm(0.05f, 1.0f);
 	mSelectionBubble->stopAnm();
 
-	// These 3 are for the animation of a pianta (monte) vibing to the speakers
-	initMonoAnm();
+	// These 3 are for the animation of a pianta (monte) vibing to the speakers.
+	// initMonoAnm() is UNUSED in the map and size-exact, but its body has to be
+	// written out here: behind the call TPatternAnmControl::hide() sits one
+	// level too deep and becomes a bl the ROM does not have.
+	TPatternAnmControl** ary = mMonoAnimations;
+
+	ary[0] = new TPatternAnmControl(mScreen);
+	ary[0]->set(cMonoMonteAnm, ARRAY_COUNT(cMonoMonteAnm));
+	ary[0]->setupAnm();
+
+	ary[1] = new TPatternAnmControl(mScreen);
+	ary[1]->set(cMonoSpeakerAnm, ARRAY_COUNT(cMonoSpeakerAnm));
+	ary[1]->setupAnm();
+
+	mMonteIcons[0].set(mMonoAnimations, ARRAY_COUNT(mMonoAnimations));
 	initSteleoAnm();
 	initSurroundAnm();
 
@@ -595,7 +679,6 @@ void TOptionSoundUnit::initSurroundAnm()
 	mMonteIcons[2].set(mSurroundAnimations, ARRAY_COUNT(mSurroundAnimations));
 }
 
-#pragma dont_inline on
 void TOptionSoundUnit::update()
 {
 	switch (mState) {
@@ -616,7 +699,6 @@ void TOptionSoundUnit::update()
 		break;
 	}
 }
-#pragma dont_inline off
 
 void TOptionSoundUnit::updatePatternAnm()
 {
@@ -634,7 +716,7 @@ void TOptionSoundUnit::updatePatternAnm()
 void TOptionSoundUnit::foreachPatternAnm(ArrayWrapper<TPatternAnmControl*>& ary,
                                          void (TPatternAnmControl::*ptmf)())
 {
-	for (TPatternAnmControl** it = ary.mData; it != ary.mData + ary.mSize; ++it)
+	for (TPatternAnmControl** it = ary.begin(); it != ary.end(); ++it)
 		((*it)->*ptmf)();
 }
 
@@ -714,22 +796,18 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 		mParentPane->getPane()->setAlpha(150);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mSelectionBubble->stopAnm();
-		unkC->stopAnm();
 		stopSound();
 		break;
 
 	case STATE_DEACTIVATING:
 		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-		unkC->stopAnm();
 		break;
 
 	case STATE_ACTIVE:
 		mParentPane->getPane()->setAlpha(mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
 		mSelectionBubble->startAnm();
-		unkC->setupAnm();
-		unkC->startAnm();
 		adjustView();
 		adjustSound();
 		break;
@@ -792,13 +870,14 @@ void TOptionControl::load()
 	textBoxB->setFont((JUTFont*)gpSystemFont);
 	mBackArrow    = new TArrowControl(mScreen->search('yaji'));
 	mRumbleOption = new TOptionRumbleUnit(mScreen);
-	mSoundOption  = new TOptionSoundUnit(mScreen);
+	mSoundOption    = new TOptionSoundUnit(mScreen);
+	mSubtitleOption = new TOptionSubtitleUnit(mScreen);
 	setType(SELECT_TYPE_RUMBLE_OPTION, true);
 	loadSetting();
-	mWasJumping = false;
+	mWasJumping   = false;
+	mStickNeutral = true;
 }
 
-#pragma dont_inline on
 void TOptionControl::loadSetting()
 {
 	switch (TFlagManager::getInstance()->getFlag(0xA0000)) {
@@ -822,11 +901,28 @@ void TOptionControl::loadSetting()
 		break;
 	}
 
+	switch (TFlagManager::getInstance()->getFlag(0x90001)) {
+	case 0:
+		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_UNK0);
+		break;
+	case 1:
+		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_UNK1);
+		break;
+	}
+
 	resetChangedSetting();
 }
-#pragma dont_inline off
 
-void TOptionControl::movementCommon() { }
+// UNUSED in the map (0x6a0): it exists to give the three unit update()s an
+// extra inline level. Inlined into movementOption they sit at depth 2, where
+// MWCC refuses them and emits the ROM's three `bl`s; spelled out in
+// movementOption they would all expand.
+void TOptionControl::movementCommon()
+{
+	mRumbleOption->update();
+	mSoundOption->update();
+	mSubtitleOption->update();
+}
 
 void TOptionControl::draw(J2DOrthoGraph* graph) { mScreen->draw(0, 0, graph); }
 
@@ -835,6 +931,7 @@ bool TOptionControl::movementCard2Option()
 {
 	if (gpCameraOption->unk12 == 0) {
 		mRumbleOption->mShouldRumble = false;
+		mScreen->search('txp2')->show();
 		mScreen->search('oya0')->show();
 		mScreen->search('oya1')->show();
 		mScreen->search('oya2')->show();
@@ -849,8 +946,7 @@ bool TOptionControl::movementCard2Option()
 bool TOptionControl::movementOption()
 {
 	mBackArrow->update();
-	mRumbleOption->update();
-	mSoundOption->update();
+	movementCommon();
 
 	checkInput();
 	writeValue();
@@ -863,8 +959,6 @@ bool TOptionControl::movementOption()
 	return false;
 }
 
-static inline void fake(TOptionSoundUnit* unit) { int v = unit->getValue(); }
-
 // mario walks back from the options screen to the card select screen
 bool TOptionControl::movementOption2Card()
 {
@@ -873,8 +967,10 @@ bool TOptionControl::movementOption2Card()
 		mScreen->search('oya1')->hide();
 		mScreen->search('oya2')->hide();
 
-		if (mInitialRumbleValue == mRumbleOption->getValue())
-			fake(mSoundOption);
+		// TODO: the ROM discards this result; whatever the original did
+		// with it was removed, leaving the rumble compare and the dead
+		// TOptionSoundUnit::getValue() call behind.
+		isChangedSetting();
 
 		return true;
 	}
@@ -891,10 +987,17 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		case SELECT_TYPE_RUMBLE_OPTION:
 			mRumbleOption->activate();
 			mSoundOption->deactivate(initial_options_entry);
+			mSubtitleOption->deactivate(initial_options_entry);
 			break;
 		case SELECT_TYPE_SOUND_OPTION:
 			mRumbleOption->deactivate(initial_options_entry);
 			mSoundOption->activate();
+			mSubtitleOption->deactivate(initial_options_entry);
+			break;
+		case SELECT_TYPE_SUBTITLE_OPTION:
+			mSubtitleOption->activate();
+			mRumbleOption->deactivate(initial_options_entry);
+			mSoundOption->deactivate(initial_options_entry);
 			break;
 		}
 
@@ -913,16 +1016,45 @@ void TOptionControl::toggleCurType()
 	case SELECT_TYPE_SOUND_OPTION:
 		mSoundOption->toggle();
 		break;
+	case SELECT_TYPE_SUBTITLE_OPTION:
+		mSubtitleOption->toggle();
+		break;
 	}
 }
 
 void TOptionControl::checkInput()
 {
-	f32 fVar1 = gpMarDirector->unk18[0]->getMainStickInDir(0.0f, 1.0f);
-	if (fVar1 >= 0.75f)
-		setType(SELECT_TYPE_RUMBLE_OPTION, false);
-	else if (fVar1 <= -0.75f)
-		setType(SELECT_TYPE_SOUND_OPTION, false);
+	f32 fVar1       = gpMarDirector->unk18[0]->getMainStickInDir(0.0f, 1.0f);
+	SelectType type = mSelectedOption;
+	if (0.75f <= fVar1) {
+		if (mStickNeutral) {
+			mStickNeutral = false;
+			switch (type) {
+			case SELECT_TYPE_RUMBLE_OPTION:
+			case SELECT_TYPE_SOUND_OPTION:
+				setType(SELECT_TYPE_RUMBLE_OPTION, false);
+				break;
+			case SELECT_TYPE_SUBTITLE_OPTION:
+				setType(SELECT_TYPE_SOUND_OPTION, false);
+				break;
+			}
+		}
+	} else if (fVar1 <= -0.75f) {
+		if (mStickNeutral) {
+			mStickNeutral = false;
+			switch (type) {
+			case SELECT_TYPE_RUMBLE_OPTION:
+				setType(SELECT_TYPE_SOUND_OPTION, false);
+				break;
+			case SELECT_TYPE_SOUND_OPTION:
+			case SELECT_TYPE_SUBTITLE_OPTION:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			}
+		}
+	} else {
+		mStickNeutral = true;
+	}
 
 	bool jumping = SMS_IsMarioStatusTypeJumping();
 	if (!mWasJumping && jumping)
@@ -934,14 +1066,20 @@ void TOptionControl::writeValue()
 {
 	TFlagManager::getInstance()->setFlag(0x90000, mRumbleOption->getValue());
 	TFlagManager::getInstance()->setFlag(0xA0000, mSoundOption->getValue());
+	TFlagManager::getInstance()->setFlag(0x90001,
+	                                     mSubtitleOption->getValue());
 }
 
 bool TOptionControl::isChangedSetting() const
 {
-	bool result = true;
+	bool result = true, soundResult = true;
 
 	if (mInitialRumbleValue == mRumbleOption->getValue()
 	    && mInitialSoundValue == mSoundOption->getValue())
+		soundResult = false;
+
+	if (!soundResult
+	    && mInitialSubtitleValue == mSubtitleOption->getValue())
 		result = false;
 
 	return result;
@@ -949,6 +1087,7 @@ bool TOptionControl::isChangedSetting() const
 
 void TOptionControl::resetChangedSetting()
 {
-	mInitialRumbleValue = mRumbleOption->getValue();
-	mInitialSoundValue  = mSoundOption->getValue();
+	mInitialRumbleValue   = mRumbleOption->getValue();
+	mInitialSoundValue    = mSoundOption->getValue();
+	mInitialSubtitleValue = mSubtitleOption->getValue();
 }
