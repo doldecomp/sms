@@ -45,6 +45,12 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <Map/MapCollisionEntry.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DCluster.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
+#include <Map/Map.hpp>
+#include <Strategic/ObjManager.hpp>
+#include <Strategic/Strategy.hpp>
 
 static const char* btelesa_bastable[] = {
 	"/scene/btelesa/bas/btelesa_appear.bas",
@@ -828,9 +834,238 @@ TBossTelesa::TBossTelesa(const char* name)
 {
 }
 
-void TBossTelesa::init(TLiveManager* live_manager) { }
+void TBossTelesa::init(TLiveManager* live_manager)
+{
+	mManager = live_manager;
+	live_manager->manageActor(this);
 
-void TBossTelesa::loadAfter() { }
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("btelesa.bmd", 3);
+
+	onLiveFlag(LIVE_FLAG_DEAD);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+
+	TSpineEnemyParams* params = getSaveParam();
+	if (params) {
+		mBodyRadius       = params->mSLBodyRadius.get();
+		mWallRadius       = params->mSLWallRadius.get();
+		mHeadHeight       = params->mSLHeadHeight.get();
+		mScaledBodyRadius = mBodyScale * mBodyRadius;
+		mHitPoints        = getMaxHitPoints();
+	}
+
+	initHitActor(0, 5, 0x98000000, mBodyRadius, mHeadHeight, mBodyRadius,
+	             mHeadHeight);
+	mGroundPlane = TMap::getIllegalCheckData();
+
+	setGoalPathMario();
+	initAnmSound();
+
+	mParams    = (TBossTelesaSaveLoadParams*)getSaveParam();
+	mActorType = 0x08000013;
+	onHitFlag(0xD0000000);
+
+	mSpine->initWith(&TNerveBossTelesaFallDemo::theNerve());
+	onLiveFlag(LIVE_FLAG_UNK8);
+
+	getMActor()->setLightType(LIGHT_TYPE_OBJECT);
+	getMActor()->unk40 = true;
+	getMActor()->initNormalMotionBlend();
+
+	J3DModel* model = getMActor()->getModel();
+	if (model->getSkinDeform() == nullptr) {
+		J3DSkinDeform* deform = new J3DSkinDeform;
+		model->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	}
+
+	getMActor()->resetDL();
+
+	unk348.r = unk348.g = unk348.b = unk348.a = 0xFF;
+	unk34C.r = unk34C.g = unk34C.b = unk34C.a = mNormalAlpha;
+
+	for (int i = 0; i < getMActor()->getModel()->getModelData()->getMaterialNum();
+	     ++i) {
+		if (i
+		    == getModel()->getModelData()->getMaterialName()->getIndex(
+		        "_mat_body"))
+			SMS_InitPacket_TwoTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
+			                            &unk34C, GX_KCOLOR1, &unk348);
+		else
+			SMS_InitPacket_OneTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
+			                            &unk34C);
+	}
+
+	reset();
+
+	// The roulette the boss starts on doubles as its home position.
+	for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
+		if (gpMapObjManager->getObj(i)->isActorType(0x4000019A)) {
+			unk154    = 0;
+			unk158    = 0;
+			mPosition = gpMapObjManager->getObj(i)->mPosition;
+		}
+	}
+
+	// A leftover: the loop has no body.
+	if (mInstanceIndex == 0) {
+		for (u8 i = 0; i < getMActor()->getModel()->getModelData()->getJointNum();
+		     ++i) {
+		}
+	}
+
+	mBody = new TBossTelesaBody;
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(mBody);
+	mBody->initHitActor(0x08000013, 5, 0xD1000000, 350.0f, 550.0f, 300.0f,
+	                    500.0f);
+	mBody->mOwner = this;
+	mBody->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	mTongue = new TBossTelesaTongue;
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(mTongue);
+	mTongue->initHitActor(0x08000013, 5, 0xC0000000, 180.0f, 350.0f, 180.0f,
+	                      350.0f);
+	mTongue->mOwner = this;
+	mTongue->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	mKillSmallEnemy = new TBossTelesaKillSmallEnemy;
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	    ->getChildren()
+	    .push_back(mKillSmallEnemy);
+	mKillSmallEnemy->initHitActor(0x1000000C, 5, 0x10000000, 400.0f, 300.0f,
+	                              400.0f, 300.0f);
+	mKillSmallEnemy->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mKillSmallEnemy->mOwner = this;
+
+	getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
+
+	TScreenTexture* screenTexture
+	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
+	                     "H_ma_rak_dummy",
+	                     *screenTexture->getTexture()->getTexInfo());
+
+	mMarioHP = SMS_GetMarioHP();
+}
+
+void TBossTelesa::loadAfter()
+{
+	if (gpMapObjManager->getObjNumWithActorType(0x4000019A)) {
+		int found = 0;
+		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
+			TMapObjBase* obj = (TMapObjBase*)gpMapObjManager->getObj(i);
+			if (obj->isActorType(0x4000019A))
+				mRoulettes[found++] = (TRoulette*)obj;
+		}
+	}
+
+	if (gpMapObjManager->getObjNumWithActorType(0x400001A6)) {
+		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
+			TTelesaSlot* slot = (TTelesaSlot*)gpMapObjManager->getObj(i);
+			if (slot->isActorType(0x400001A6)) {
+				mSlot         = slot;
+				mSlot->mOwner = this;
+			}
+		}
+	}
+
+	int fruit = 0;
+	for (int i = 0; i < 6; ++i)
+		mFruits[fruit++]
+		    = TMapObjBaseManager::newAndRegisterObj("FruitCoconut");
+	for (int i = 0; i < 6; ++i)
+		mFruits[fruit++] = TMapObjBaseManager::newAndRegisterObj("FruitPapaya");
+	for (int i = 0; i < 2; ++i)
+		mFruits[fruit++] = TMapObjBaseManager::newAndRegisterObj("FruitPine");
+	for (int i = 0; i < 6; ++i)
+		mFruits[fruit++] = TMapObjBaseManager::newAndRegisterObj("FruitDurian");
+
+	for (int i = 0; i < 20; ++i) {
+		mFruits[i]->unkF8 |= TMapObjBase::MAP_OBJ_FLAG_UNK4000000;
+		mFruits[i]->makeObjDead();
+	}
+
+	mPeppers[0] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 0");
+	mPeppers[1] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 1");
+	mPeppers[2] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 2");
+	mPeppers[3] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 3");
+	mPeppers[4] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 4");
+	mPeppers[5] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 5");
+	mPeppers[6] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 6");
+	mPeppers[7] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 7");
+	mPeppers[8] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 8");
+	mPeppers[9] = JDrama::TNameRefGen::search<TMapObjBase>("唐辛子 9");
+
+	for (int i = 0; i < 10; ++i)
+		mPeppers[i]->makeObjDead();
+
+	mCoins[0] = JDrama::TNameRefGen::search<TCoin>("コイン 0");
+	mCoins[1] = JDrama::TNameRefGen::search<TCoin>("コイン 1");
+	mCoins[2] = JDrama::TNameRefGen::search<TCoin>("コイン 2");
+	mCoins[3] = JDrama::TNameRefGen::search<TCoin>("コイン 3");
+	mCoins[4] = JDrama::TNameRefGen::search<TCoin>("コイン 4");
+	mCoins[5] = JDrama::TNameRefGen::search<TCoin>("コイン 5");
+	mCoins[6] = JDrama::TNameRefGen::search<TCoin>("コイン 6");
+	mCoins[7] = JDrama::TNameRefGen::search<TCoin>("コイン 7");
+	mCoins[8] = JDrama::TNameRefGen::search<TCoin>("コイン 8");
+	mCoins[9] = JDrama::TNameRefGen::search<TCoin>("コイン 9");
+
+	for (int i = 0; i < 10; ++i)
+		mCoins[i]->makeObjDead();
+
+	mSlot->mRollSp[0] = 0.0f;
+	mSlot->mRollSp[1] = 0.0f;
+	mSlot->mRollSp[2] = 0.0f;
+
+	mTelesaManager
+	    = JDrama::TNameRefGen::search<TTelesaManager>("テレサマネージャー");
+
+	for (int i = 0; i < 5; ++i)
+		TMapObjBaseManager::newAndRegisterObj("bottle_large");
+
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit.jpa", 0xD7);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_pe.jpa", 0xD8);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_gr.jpa", 0xD9);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_or.jpa", 0xDA);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_damage.jpa", 0xDB);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down.jpa", 0xDC);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_pe.jpa", 0xDD);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_gr.jpa", 0xDE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_or.jpa", 0xDF);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_hit.jpa", 0xE0);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fubuki.jpa", 0xE1);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare1.jpa", 0x19E);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare2.jpa", 0x19F);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare3.jpa", 0x1A0);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_ase.jpa", 0x1A1);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_a.jpa", 0x1A2);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_b.jpa", 0x1A3);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_d.jpa", 0x1A4);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_a.jpa", 0x1A5);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_b.jpa", 0x1A6);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_glow.jpa", 0x1A7);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_c.jpa", 0x1F0);
+
+	void* frameRes
+	    = JKRFileLoader::getGlbResource("/scene/btelesa/srot_waku.bmd");
+	SDLModelData* frameModel = new SDLModelData(
+	    J3DModelLoaderDataBase::load(frameRes, 0x10220000));
+	mSlotFrame = new TSharedParts(mSlot, 0, frameModel, 3);
+
+	TLiveActor* firstGesso = JDrama::TNameRefGen::search<TLiveActor>("ゲッソー 0");
+	if (firstGesso)
+		firstGesso->onLiveFlag(LIVE_FLAG_DEAD);
+
+	TLiveActor* secondGesso
+	    = JDrama::TNameRefGen::search<TLiveActor>("ゲッソー 1");
+	if (secondGesso)
+		secondGesso->onLiveFlag(LIVE_FLAG_DEAD);
+
+	JDrama::TNameRef::loadAfter();
+}
 
 void TBossTelesa::reset()
 {
