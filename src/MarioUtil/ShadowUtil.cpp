@@ -305,7 +305,15 @@ void TAlphaShadowQuad::reset()
 	mNext          = nullptr;
 }
 
-TModelShadow::TModelShadow(SDLModelData* param_1, void* param_2, int param_3) {
+TModelShadow::TModelShadow(SDLModelData* param_1, void* param_2, int param_3)
+{
+	// TODO: fabricated. UNUSED (map size 0x2e8), so no assembly survives; the
+	// one thing the map proves is that this TU instantiates
+	// J3DMtxCalcBasicAnm (its vtable, destructor and calc, plus
+	// J3DMtxCalcBasic::init and the five adjustor thunks, are weak symbols
+	// this object supplies).
+	J3DMtxCalcBasicAnm* mtxCalc = new J3DMtxCalcBasicAnm(nullptr);
+	(void)mtxCalc;
 }
 
 void TModelShadow::update() { }
