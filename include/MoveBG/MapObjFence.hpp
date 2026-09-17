@@ -2,96 +2,207 @@
 #define MOVE_BG_MAP_OBJ_FENCE_HPP
 
 #include <MoveBG/MapObjBase.hpp>
+#include <JSystem/JMath.hpp>
 
-// TODO: mark virtual methods as such
+class TGraphTracer;
+class TMapObjMessenger;
+class TRevolvingFenceInner;
 
+// TODO: this belongs in MarioUtil/MathUtil.hpp next to MsMtxSetRotRPH. It is
+// weak in the map and emitted only in MapObjFence.o, so it is a header inline;
+// it lives here because this batch may not edit shared headers. Move it when
+// another unit needs it.
+inline void MsMtxSetRotY(MtxPtr mtx, f32 degrees)
+{
+	f32 sin = JMASin(degrees);
+	f32 cos = JMACos(degrees);
+
+	mtx[0][0] = cos;
+	mtx[0][1] = 0.0f;
+	mtx[0][2] = sin;
+	mtx[0][3] = 0.0f;
+
+	mtx[1][0] = 0.0f;
+	mtx[1][1] = 1.0f;
+	mtx[1][2] = 0.0f;
+	mtx[1][3] = 0.0f;
+
+	mtx[2][0] = -sin;
+	mtx[2][1] = 0.0f;
+	mtx[2][2] = cos;
+	mtx[2][3] = 0.0f;
+}
+
+/// Plain fence panel. Only reacts to being punched by shaking its model.
+/// Every subclass shares the "bamboo" name test that picks the bamboo
+/// collision variants.
 class TFence : public TMapObjBase {
 public:
-	BOOL receiveMessage(THitActor* sender, u32 message);
-	void initMapCollisionData();
-	void initMapObj();
 	TFence(const char* name = "フェンス")
 	    : TMapObjBase(name)
-	    , unk138(0)
+	    , mIsBamboo(0)
 	{
 	}
 
+	virtual ~TFence() { }
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void initMapObj();
+	virtual void initMapCollisionData();
+
 public:
-	/* 0x138 */ u8 unk138;
+	/// Set by initMapObj when the placement name contains "bamboo".
+	/* 0x138 */ u8 mIsBamboo;
 };
 
+/// The visible frame of a revolving fence. It owns the inner panel that
+/// actually turns and forwards the punch shake to it.
 class TRevolvingFenceOuter : public TFence {
 public:
-	BOOL receiveMessage(THitActor* sender, u32 message);
-	void initMapCollisionData();
 	TRevolvingFenceOuter(const char* name = "フェンス外側")
 	    : TFence(name)
+	    , mInner(nullptr)
 	{
 	}
+
+	virtual ~TRevolvingFenceOuter() { }
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void initMapCollisionData();
+
+public:
+	/* 0x13C */ TRevolvingFenceInner* mInner;
 };
 
+/// The turning panel of a revolving fence. An upright one (mIsWall) spins
+/// about Y under controlWall; one lying flat plays a roll animation instead.
 class TRevolvingFenceInner : public TFence {
 public:
-	BOOL receiveMessage(THitActor* sender, u32 message);
+	TRevolvingFenceInner(const char* name = "フェンス内側")
+	    : TFence(name)
+	    , mAngle(0.0f)
+	    , mIsWall(1)
+	{
+	}
+
+	virtual ~TRevolvingFenceInner() { }
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void setGroundCollision();
+	virtual void control();
+	virtual void initMapObj();
+	virtual void initMapCollisionData();
+
 	void calcCurrentMtx();
 	void controlWall();
 	void controlGroundRoof();
-	void setGroundCollision();
-	void control();
-	void initMapCollisionData();
-	void initMapObj();
 
-	TRevolvingFenceInner(const char* name = "フェンス内側")
-	    : TFence(name)
-	    , unk13C(0.0f)
-	    , unk140(1)
-	{
-	}
+	enum {
+		STATE_WAIT_FRONT = 1,
+		STATE_WAIT_BACK  = 2,
+		/// Turning towards the back side, positive direction.
+		STATE_TURN_TO_BACK_CW = 3,
+		/// Turning back to the front side, positive direction.
+		STATE_TURN_TO_FRONT_CW = 4,
+		/// Turning towards the back side, negative direction.
+		STATE_TURN_TO_BACK_CCW = 5,
+		/// Turning back to the front side, negative direction.
+		STATE_TURN_TO_FRONT_CCW = 6,
+	};
+
+	static f32 mSpeed;
 
 public:
-	/* 0x13C */ f32 unk13C;
-	/* 0x140 */ u8 unk140;
+	/// Degrees turned away from the initial yaw.
+	/* 0x13C */ f32 mAngle;
+	/// True when the panel stands upright, i.e. it spins instead of rolling.
+	/* 0x140 */ u8 mIsWall;
 };
 
+/// Water-driven revolving fence, vertical variant. A water hit starts it
+/// turning; it waits at -90 degrees and then swings back.
 class TFenceWater : public TFence {
 public:
-	void draw() const;
-	BOOL receiveMessage(THitActor* sender, u32 message);
-	void changeStatusToGo();
-	void changeStatusToWait();
-	void controlRotation();
-	void control();
-	void initMapCollisionData();
-	void initMapObj();
 	TFenceWater(const char* name = "水回転フェンス（垂直）")
 	    : TFence(name)
+	    , mTurnSpeed(0.0f)
+	    , mTurnAngle(0.0f)
+	    , mMessenger(nullptr)
 	{
 	}
+
+	virtual ~TFenceWater() { }
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void control();
+	virtual void initMapObj();
+	virtual void initMapCollisionData();
+	virtual void draw() const;
+	virtual void changeStatusToGo();
+	virtual void changeStatusToWait();
+
+	void controlRotation();
+
+	enum {
+		STATE_WAIT   = 1,
+		STATE_GO     = 2,
+		STATE_TURNED = 3,
+		STATE_BACK   = 4,
+	};
+
+	static f32 mWaterAccel;
+	static f32 mBackSpeed;
+	static int mTurnedWaitTime;
+
+public:
+	/// Degrees per frame the panel currently turns.
+	/* 0x13C */ f32 mTurnSpeed;
+	/// Degrees turned away from the initial rotation, 0 down to -90.
+	/* 0x140 */ f32 mTurnAngle;
+	/// Hit box that carries the water message, parked one radius away.
+	/* 0x144 */ TMapObjMessenger* mMessenger;
 };
 
+/// Water-driven revolving fence, horizontal variant. It builds its own
+/// matrix because the spin happens about Z rather than Y.
 class TFenceWaterH : public TFenceWater {
 public:
-	void control();
-	void changeStatusToGo();
-	void changeStatusToWait();
 	TFenceWaterH(const char* name = "水回転フェンス（水平）")
 	    : TFenceWater(name)
 	{
 	}
+
+	virtual ~TFenceWaterH() { }
+	virtual void control();
+	virtual void changeStatusToGo();
+	virtual void changeStatusToWait();
 };
 
+/// Fence that rides a rail graph when punched and falls off the world at the
+/// end of it, respawning at its initial position.
 class TRailFence : public TFence {
 public:
-	BOOL receiveMessage(THitActor* sender, u32 message);
+	TRailFence(const char* name = "レールフェンス");
+
+	virtual ~TRailFence() { }
+	virtual void load(JSUMemoryInputStream&);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void control();
+	virtual void initMapCollisionData();
+
 	void falling();
 	void goOnRail();
-	void control();
-	void initMapCollisionData();
-	void load(JSUMemoryInputStream&);
-	TRailFence(const char* name = "レールフェンス")
-	    : TFence(name)
-	{
-	}
+
+	enum {
+		STATE_WAIT    = 1,
+		STATE_RUN     = 2,
+		STATE_AT_GOAL = 3,
+		STATE_FALL    = 4,
+	};
+
+	static f32 mFallHeight;
+	static int mWaitTime;
+
+public:
+	/* 0x13C */ TGraphTracer* mTracer;
+	/// Units per frame along the rail.
+	/* 0x140 */ f32 mMoveSpeed;
 };
 
 #endif
