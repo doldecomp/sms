@@ -128,15 +128,19 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
 	group->getChildren().push_back(this);
 }
 
-// UNUSED, 0xa8 in the map. TODO: no call site of this shape is left in the
-// unit; the body is a guess from what the ball does when it reaches the
-// ground in move().
+// UNUSED, 0xa8 in the map: move() inlines it when the ball reaches the ground.
 void TBPPolDrop::drop()
 {
-	mState = BOSSPAKU_POLDROP_STAMPED;
-	mVelocity.set(0.0f, 0.0f, 0.0f);
+	mState      = BOSSPAKU_POLDROP_STAMPED;
+	mVelocity.z = mVelocity.y = mVelocity.x = 0.0f;
 	mStampMActor->setBck("pollut_ball_stamp");
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	gpMarioParticleManager->emit(BOSSPAKKUN_JPA_POLLUT_BALL_HIT, &mPosition, 0,
+	                             nullptr);
+	if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_POLLUT_GND))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_BSPAKU_POLLUT_GND,
+		                                          &mPosition, 0, nullptr, 0,
+		                                          4);
+	mOwner->rumblePad(2, mPosition);
 }
 
 void TBPPolDrop::move()
@@ -167,15 +171,7 @@ void TBPPolDrop::move()
 			mGroundY = groundY;
 
 			if (pos.y < groundY) {
-				mState = BOSSPAKU_POLDROP_STAMPED;
-				mVelocity.z = mVelocity.y = mVelocity.x = 0.0f;
-				mStampMActor->setBck("pollut_ball_stamp");
-				gpMarioParticleManager->emit(
-				    BOSSPAKKUN_JPA_POLLUT_BALL_HIT, &mPosition, 0, nullptr);
-				if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_POLLUT_GND))
-					MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_BSPAKU_POLLUT_GND,
-					                          &mPosition, 0, nullptr, 0, 4);
-				mOwner->rumblePad(2, mPosition);
+				drop();
 				pos.y = groundY;
 				onHitFlag(HIT_FLAG_NO_COLLISION);
 				return;
@@ -291,16 +287,22 @@ TBPVomit::TBPVomit(TBossPakkun* owner, const char* name)
 {
 }
 
-// UNUSED, 0xc4 in the map. TODO: the Vomit nerve is not reconstructed yet, so
-// the shape here is a guess: start both models' animations at the boss's mouth.
+// UNUSED, 0xc4 in the map: the Vomit nerve inlines it. Both models are parked
+// on the boss's own base matrix and scale, so the puddle lands at its feet.
 void TBPVomit::vomit()
 {
 	mMActor->setBckFromIndex(0);
-	mStampMActor->setBckFromIndex(0);
+	mStampMActor->setBckFromIndex(1);
+
+	MtxPtr base = mOwner->getModel()->getBaseTRMtx();
+	MTXCopy(base, mMActor->getModel()->getBaseTRMtx());
+	mMActor->getModel()->setBaseScale(mOwner->mScaling);
+	MTXCopy(base, mStampMActor->getModel()->getBaseTRMtx());
+	mStampMActor->getModel()->setBaseScale(mOwner->mScaling);
 }
 
-// UNUSED, 0x3c in the map. TODO: a guess -- the puddle is finished once its
-// BCK has run out.
+// UNUSED, 0x3c in the map: perform() inlines it once the puddle animation has
+// run out. TODO: one instruction over the map's size.
 void TBPVomit::vomitFinished()
 {
 	mMActor->setBckFromIndex(-1);
@@ -313,8 +315,7 @@ void TBPVomit::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if ((cue & 2) && mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		mMActor->setBckFromIndex(-1);
-		mStampMActor->setBckFromIndex(-1);
+		vomitFinished();
 		return;
 	}
 
@@ -937,9 +938,15 @@ BOOL TBossPakkun::checkMarioRiding()
 	return FALSE;
 }
 
-// UNUSED, 0x48 in the map. TODO: a guess; the BGM the second fight starts is
-// not established yet.
-void TBossPakkun::startBGM() { }
+// UNUSED, 0x48 in the map: the Fly nerve inlines it. The flag makes sure the
+// boss battle theme only starts once.
+void TBossPakkun::startBGM()
+{
+	if (!unk1CC) {
+		MSBgm::startBGM(0x8001000D);
+		unk1CC = 1;
+	}
+}
 
 void TBossPakkun::rumblePad(int kind, const JGeometry::TVec3<f32>& from)
 {
@@ -996,8 +1003,15 @@ bool TBossPakkun::is2ndFightNow() const
 // TODO: not reconstructed. Map size 0xec.
 void TBossPakkun::ignoreWaterCheck() { }
 
-// TODO: not reconstructed. Map size 0x58.
-void TBossPakkun::startTornadoBlur() { }
+// UNUSED, 0x58 in the map: the Tornado nerve inlines it. unk194 and unk1A0 are
+// the two hand joints perform() samples while the tornado animation plays.
+void TBossPakkun::startTornadoBlur()
+{
+	gpMarioParticleManager->emitAndBindToPosPtr(BOSSPAKKUN_JPA_MS_BOPA_BLUR1,
+	                                            &unk194, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(BOSSPAKKUN_JPA_MS_BOPA_BLUR1,
+	                                            &unk1A0, 0, nullptr);
+}
 
 // UNUSED, 0xa4 in the map: the StompReact, TumbleOut and PreDie nerves all
 // spell it out. Spits the swallowed water back out and starts the belly
@@ -1114,8 +1128,8 @@ void TBossPakkun::launchPolDrop()
 	mPolDrop->launch(from, velocity);
 }
 
-// TODO: not reconstructed. Map size 0xc4.
-void TBossPakkun::launchTornado() { }
+// UNUSED, 0xc4 in the map: the Tornado nerve inlines it.
+void TBossPakkun::launchTornado() { mTornado->launch(*gpMarioPos); }
 
 // UNUSED, 0x6c in the map: the PreDie nerve spells it out. The slugs the boss
 // spat out go with it.
@@ -1177,8 +1191,26 @@ void TBossPakkun::changeBck(int index)
 	setAnmSound(table == nullptr ? nullptr : table[index]);
 }
 
-// TODO: not reconstructed. Map size 0x130.
-void TBossPakkun::flyToCurPathNode(f32 speed, f32 turn_speed) { }
+// UNUSED, 0x130 in the map: the Fly nerve inlines it.
+void TBossPakkun::flyToCurPathNode(f32 speed, f32 turn_speed)
+{
+	turnToCurPathNode(turn_speed);
+
+	JGeometry::TVec3<f32> step = getUnkF4().getPoint();
+	step.x -= mPosition.x;
+	step.y -= mPosition.y;
+	step.z -= mPosition.z;
+	VECNormalize(step, step);
+	step.x *= speed;
+	step.y *= speed;
+	step.z *= speed;
+
+	JGeometry::TVec3<f32> velocity = mLinearVelocity;
+	velocity.x += step.x;
+	velocity.y += step.y;
+	velocity.z += step.z;
+	mLinearVelocity = velocity;
+}
 
 const char** TBossPakkun::getBasNameTable() const { return bosspakkun_bastable; }
 
@@ -1596,17 +1628,7 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 			boss->mState = BOSSPAKU_STATE_NORMAL;
 			boss->changeBck(BOSSPAKU_BCK_POLLUT_END);
 
-			TBPVomit* vomit = boss->mVomit;
-			vomit->mMActor->setBckFromIndex(0);
-			vomit->mStampMActor->setBckFromIndex(1);
-
-			MtxPtr base = vomit->mOwner->getModel()->getBaseTRMtx();
-			MTXCopy(base, vomit->mMActor->getModel()->getBaseTRMtx());
-			vomit->mMActor->getModel()->setBaseScale(vomit->mOwner->mScaling);
-			MTXCopy(base, vomit->mStampMActor->getModel()->getBaseTRMtx());
-			vomit->mStampMActor->getModel()->setBaseScale(
-			    vomit->mOwner->mScaling);
-
+			boss->mVomit->vomit();
 			boss->rumblePad(1, boss->mPosition);
 		} else {
 			// showMessage(0) spelled out: the ROM folds the mask for the
@@ -1639,14 +1661,11 @@ DEFINE_NERVE(TNerveBPTornado, TLiveActor)
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
 		    BOSSPAKKUN_JPA_MS_BOPA_SWING1, boss->getModel()->getAnmMtx(3), 0,
 		    boss);
-		gpMarioParticleManager->emitAndBindToPosPtr(
-		    BOSSPAKKUN_JPA_MS_BOPA_BLUR1, &boss->unk194, 0, nullptr);
-		gpMarioParticleManager->emitAndBindToPosPtr(
-		    BOSSPAKKUN_JPA_MS_BOPA_BLUR1, &boss->unk1A0, 0, nullptr);
+		boss->startTornadoBlur();
 	}
 
 	if (spine->getTime() == 150)
-		boss->mTornado->launch(*gpMarioPos);
+		boss->launchTornado();
 
 	if (actor->isCurAnmAlreadyEnd(ANM_TYPE_BCK))
 		return TRUE;
@@ -1991,10 +2010,7 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 	if (spine->getTime() == 0) {
 		boss->changeBck(BOSSPAKU_BCK_FLY);
 		boss->goToRandomNextGraphNode();
-		if (!boss->unk1CC) {
-			MSBgm::startBGM(0x8001000D);
-			boss->unk1CC = 1;
-		}
+		boss->startBGM();
 	}
 
 	JGeometry::TVec3<f32> toGoal = boss->getUnk104().getPoint();
@@ -2016,22 +2032,7 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 
 	f32 turn  = boss->mTurnSpeed;
 	f32 speed = boss->getSaveParam2()->mSLFlySpeed.get();
-	boss->turnToCurPathNode(turn);
-
-	JGeometry::TVec3<f32> step = boss->getUnkF4().getPoint();
-	step.x -= boss->mPosition.x;
-	step.y -= boss->mPosition.y;
-	step.z -= boss->mPosition.z;
-	VECNormalize(step, step);
-	step.x *= speed;
-	step.y *= speed;
-	step.z *= speed;
-
-	JGeometry::TVec3<f32> velocity = boss->mLinearVelocity;
-	velocity.x += step.x;
-	velocity.y += step.y;
-	velocity.z += step.z;
-	boss->mLinearVelocity = velocity;
+	boss->flyToCurPathNode(speed, turn);
 
 	return FALSE;
 }
