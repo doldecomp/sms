@@ -905,6 +905,14 @@ f32 TKoopa::getNeckFocus() const
 	f32 focus          = 1.0f;
 
 	switch (index) {
+	case KOOPA_ANM_FIRST:
+		focus = 0.0f;
+		if (frame >= 164.0f)
+			focus = (frame - 164.0f) / (end - 164.0f);
+		break;
+	case KOOPA_ANM_FALL:
+		focus = 0.0f;
+		break;
 	case KOOPA_ANM_DOWN:
 		if (frame <= 40.0f)
 			focus = 1.0f - frame / 40.0f;
@@ -914,11 +922,35 @@ f32 TKoopa::getNeckFocus() const
 	case KOOPA_ANM_DOWN_WAIT:
 		focus = 0.0f;
 		break;
-	case KOOPA_ANM_FALL:
-		focus = 0.0f;
+	case KOOPA_ANM_GETUP:
+		if (frame <= 125.0f)
+			focus = 0.0f;
+		else
+			focus = (frame - 125.0f) / (end - 125.0f);
 		break;
-	case KOOPA_ANM_FIRE_END:
-		focus = frame / end;
+	case KOOPA_ANM_STAGGER:
+		if (frame <= 30.0f)
+			focus = 1.0f - frame / 30.0f;
+		else if (frame <= 65.0f)
+			focus = 0.0f;
+		else
+			focus = (frame - 65.0f) / (end - 65.0f);
+		break;
+	case KOOPA_ANM_HIPDROP:
+		if (frame <= 30.0f)
+			focus = 1.0f - frame / 30.0f;
+		else if (frame <= 170.0f)
+			focus = 0.0f;
+		else
+			focus = (frame - 170.0f) / (end - 170.0f);
+		break;
+	case KOOPA_ANM_WATERHIT:
+		if (frame <= 20.0f)
+			focus = 1.0f - frame / 20.0f;
+		else if (frame <= 40.0f)
+			focus = 0.0f;
+		else
+			focus = (frame - 40.0f) / (end - 40.0f);
 		break;
 	case KOOPA_ANM_FIRE_LOOP:
 		focus = 0.0f;
@@ -929,35 +961,17 @@ f32 TKoopa::getNeckFocus() const
 		else
 			focus = 0.0f;
 		break;
-	case KOOPA_ANM_FIRST:
-		if (frame >= 164.0f)
-			focus = (frame - 164.0f) / (end - 164.0f);
-		break;
-	case KOOPA_ANM_GETUP:
-		if (frame <= 125.0f)
-			focus = 0.0f;
-		else
-			focus = (frame - 125.0f) / (end - 125.0f);
-		break;
-	case KOOPA_ANM_HIPDROP:
-		if (frame <= 30.0f)
-			focus = 1.0f - frame / 30.0f;
-		else if (frame <= 170.0f)
-			focus = 0.0f;
-		else
-			focus = (frame - 170.0f) / (end - 170.0f);
-		break;
-	case KOOPA_ANM_STAGGER:
-		if (frame <= 30.0f)
-			focus = 1.0f - frame / 30.0f;
-		else if (frame <= 65.0f)
-			focus = 0.0f;
-		else
-			focus = (frame - 65.0f) / (end - 65.0f);
+	case KOOPA_ANM_FIRE_END:
+		focus = frame / end;
 		break;
 	case KOOPA_ANM_WAIT:
-		if (frame <= 200.0f)
+		// A chain of `if (...) break;` tests: the two that leave the head
+		// fully free have no body at all, which is what gives the ROM's
+		// unfused `bne +8; b end` there.
+		if (frame <= 200.0f) {
+			focus = 1.0f;
 			break;
+		}
 		if (frame <= 255.0f) {
 			focus = 1.0f - (frame - 200.0f) / 55.0f;
 			break;
@@ -970,8 +984,10 @@ f32 TKoopa::getNeckFocus() const
 			focus = (frame - 330.0f) / 60.0f;
 			break;
 		}
-		if (frame <= 440.0f)
+		if (frame <= 440.0f) {
+			focus = 1.0f;
 			break;
+		}
 		if (frame <= 480.0f) {
 			focus = 1.0f - (frame - 440.0f) / 40.0f;
 			break;
@@ -982,14 +998,6 @@ f32 TKoopa::getNeckFocus() const
 		}
 		if (frame <= 615.0f)
 			focus = (frame - 555.0f) / 60.0f;
-		break;
-	case KOOPA_ANM_WATERHIT:
-		if (frame <= 20.0f)
-			focus = 1.0f - frame / 20.0f;
-		else if (frame <= 40.0f)
-			focus = 0.0f;
-		else
-			focus = (frame - 40.0f) / (end - 40.0f);
 		break;
 	}
 
@@ -1021,9 +1029,8 @@ void TKoopa::getDown()
 
 BOOL TKoopa::effectsTumble() const
 {
-	TSpineBase<TLiveActor>* spine = mSpine;
-	if (&TNerveKoopaTumble::theNerve() == spine->getCurrentNerve()) {
-		int time = spine->getTime();
+	if (&TNerveKoopaTumble::theNerve() == mSpine->getCurrentNerve()) {
+		int time = mSpine->getTime();
 		if (time < 900 && time > 190)
 			return TRUE;
 	}
@@ -1148,10 +1155,8 @@ void TKoopa::updateAnmSound()
 		mAnmSoundPos.y = mPosition.y;
 		mAnmSoundPos.z = mPosition.z;
 	} else {
-		MtxPtr mtx     = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
-		mAnmSoundPos.x = mtx[0][3];
-		mAnmSoundPos.y = mtx[1][3];
-		mAnmSoundPos.z = mtx[2][3];
+		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
+		mAnmSoundPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	}
 
 	if (mAnmSound && mAnmSoundPath) {
