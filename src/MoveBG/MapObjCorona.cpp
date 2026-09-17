@@ -220,7 +220,7 @@ BOOL TBathtubGrip::receiveMessage(THitActor* sender, u32 message)
 			return false;
 		if (!unk249)
 			return false;
-		unk138[0] = *gpMarioPos;
+		unk138[0].set(*gpMarioPos);
 		if (gpMSound->gateCheck(MSD_SE_OBJ_SUPERBLOCK_BREAK))
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    MSD_SE_OBJ_SUPERBLOCK_BREAK, &unk138[0], 0, nullptr, 0, 4);
@@ -399,7 +399,12 @@ void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
 	if (unk250 > unk16C->hipdropRelease.get())
 		return;
 	// Same discarded direction as quake().
-	// TODO: body exact, frame 0x88 against retail's 0x98 (a 16-byte local).
+	// TODO: the body is instruction-exact; the frame is 0x88 against retail's
+	// 0x98. A single uninitialised 16-byte aggregate declared here takes it to
+	// 100.0% with no instruction change, but the byte count is the only
+	// evidence for it, so per docs/catalog/frame-gaps.md it stays unwritten.
+	// The same 16 bytes are what keep retail's two receiveMessage callers from
+	// inlining hipdrop, which is where the rest of this unit's loss is.
 	JGeometry::TVec3<f32> dir;
 	dir.sub(pos, getInitialPosition());
 	dir.y = 0.0f;
@@ -1152,8 +1157,12 @@ void TBathtub::load(JSUMemoryInputStream& stream)
 	unk298 = 1;
 }
 
-// TODO: The original calls SMatrix33R's constructor for mBathtubData.unk18.
-// Correct that shared matrix type together with its water-physics consumers.
+// TODO: retail calls the empty 4-byte __ct__Q29JGeometry13SMatrix33R<f>Fv for
+// mBathtubData.unk18 (addi r3, this, 0x188; bl); our chain
+// TBathtubData -> TRotation3 -> TMatrix33 -> SMatrix33R expands it at depth 4,
+// so the weak symbol never appears. Retail's chain must be one level deeper,
+// which would mean unk18 is a TPosition3<TMatrix33<SMatrix33R<f32> > >; not
+// changed because that declaration lives in Map/BathWaterManager.hpp.
 TBathtub::TBathtub(const char* name)
     : TMapObjBase(name)
     , unk164(nullptr)
@@ -1201,8 +1210,14 @@ int TBathtub::getNumKillerLaunchable() const
 
 bool TBathtub::isKillerAttackable() const { return unk248 <= 0; }
 
-// Unused; TODO: size 0x84 in the map, our guess compiles smaller.
-bool TBathtub::isBreaking() const { return getNumGripsDead() >= 4; }
+// Unused
+bool TBathtub::isBreaking() const
+{
+	for (int i = 0; i < 5; ++i)
+		if (unk168[i]->unk248)
+			return true;
+	return false;
+}
 
 int TBathtub::getNumKillerBurstable() const
 {
