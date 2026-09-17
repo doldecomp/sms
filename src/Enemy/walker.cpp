@@ -68,13 +68,12 @@ void TWalker::reset()
 
 void TWalker::bind(TLiveActor* param_1)
 {
-	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
-
 	if (unk28 == 1 && unk2C != nullptr) {
-		unk2C->bind(enemy);
+		unk2C->bind(param_1);
 		return;
 	}
 
+	TSpineEnemy* enemy             = (TSpineEnemy*)param_1;
 	JGeometry::TVec3<f32> lv       = enemy->mLinearVelocity;
 	JGeometry::TVec3<f32> local_30 = enemy->mPosition;
 	local_30 += lv;
@@ -109,11 +108,11 @@ void TWalker::bind(TLiveActor* param_1)
 				const TBGCheckData* local_44;
 				if (enemy->checkLiveFlag(LIVE_FLAG_UNK1000)) {
 					dVar16 = gpMap->checkGroundIgnoreWaterSurface(
-					    local_30.x, local_30.y + enemy->getHeadHeight(),
+					    local_30.x, enemy->mPosition.y + enemy->getHeadHeight(),
 					    local_30.z, &local_44);
 				} else {
 					dVar16 = gpMap->checkGround(
-					    local_30.x, local_30.y + enemy->getHeadHeight(),
+					    local_30.x, enemy->mPosition.y + enemy->getHeadHeight(),
 					    local_30.z, &local_44);
 				}
 				dVar16 += 1.0f;
@@ -247,9 +246,11 @@ void TWalker::bind(TLiveActor* param_1)
 		}
 	}
 
-	JGeometry::TVec3<f32> local_218 = local_70.mCenter;
-	local_218.y                     = local_30.y;
-	enemy->mLinearVelocity          = local_218 - enemy->mPosition;
+	JGeometry::TVec3<f32> local_218;
+	local_218.x            = local_70.mCenter.x;
+	local_218.y            = local_30.y;
+	local_218.z            = local_70.mCenter.z;
+	enemy->mLinearVelocity = local_218 - enemy->mPosition;
 }
 
 void TWalker::setMode(int param_1)

@@ -13,6 +13,8 @@ public:
 	void control();
 	void load(JSUMemoryInputStream&);
 	TCraneRotY(const char* name = "Ｙ軸回転クレーン");
+
+	static u32 mWaitTime;
 };
 
 class TCraneUpDown : public TMapObjBase {
@@ -20,6 +22,9 @@ public:
 	void control();
 	void initMapObj();
 	TCraneUpDown(const char* name = "上下クレーン");
+
+	static f32 mRotSpeed;
+	static u32 mWaitTime;
 };
 
 class TCraneCargo : public TLeanBlock {
@@ -39,6 +44,15 @@ public:
 	void calc();
 	void loadAfter();
 	TRiccoWatermill(const char* name = "リコ水車");
+
+	static f32 mRotAccel;
+	static f32 mRotSpeedMaxUp;
+	static f32 mRotSpeedMaxDown;
+	static f32 mRotDown;
+	static f32 mSubmarineMoveRate;
+	static f32 mSubmarineMaxTransY;
+	static f32 mSubmarineBottomTransY;
+	static u32 mWaitTime;
 };
 
 class TSurfGesoObj : public TItem {
@@ -61,6 +75,10 @@ public:
 	void fireObj();
 	void loadAfter();
 	TFruitLauncher(const char* name = "フルーツ発射口");
+
+	static f32 mObjSpeedXZ;
+	static f32 mObjSpeedY;
+	static u32 mFruitLiveTime;
 };
 
 #endif

@@ -94,15 +94,14 @@ bool TWallAtGraph::init(const TGraphWeb* param_1,
 	unk0   = new TPartition3f[sz];
 
 	for (int i = 0; i < sz; ++i) {
-		JGeometry::TVec3<f32> diff
-		    = param_1->indexToPoint(i + 1 - ((i + 1) / sz) * sz);
+		JGeometry::TVec3<f32> diff = param_1->indexToPoint((i + 1) % sz);
 		diff -= param_1->indexToPoint(i);
 
 		JGeometry::TVec3<f32> local_54 = param_2;
 		local_54 -= param_1->indexToPoint(i);
 
 		JGeometry::TVec3<f32> local_70;
-		local_70.cross(param_3, diff);
+		local_70.cross2(param_3, diff);
 		local_70.normalize();
 		if (local_70.dot(local_54) < 0.0f)
 			local_70.negate();
@@ -175,8 +174,9 @@ void TKumokun::initCollision()
 
 void TKumokun::initAttachPlane()
 {
-	TBGWallCheckRecord record(mPosition.x, mPosition.y, mPosition.z, 100.0f, 1,
-	                          0);
+	TBGWallCheckRecord record;
+	record.set(mPosition.x, mPosition.y + mHeadHeight, mPosition.z, 100.0f, 1,
+	           0);
 
 	const TBGCheckData* wall = gpMap->isTouchedWallsAndMoveXZ(&record)
 	                               ? record.mResultWalls[0]
@@ -298,10 +298,8 @@ bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
 {
 	bool result = false;
 
-	JGeometry::TVec3<f32> normal = getPlaneNormal();
-
-	JGeometry::TVec3<f32> local_30;
-	local_30.scaleAdd(100.0f, normal, param_3);
+	JGeometry::TVec3<f32> local_30 = getPlaneNormal();
+	local_30.scaleAdd(100.0f, param_3, local_30);
 
 	JGeometry::TVec3<f32> local_3C = local_30;
 	local_3C += param_4;
@@ -352,7 +350,7 @@ bool TKumokun::checkOnMovingFloor(JGeometry::TVec3<f32>* param_1,
 
 	JGeometry::TVec3<f32> local_1C = param_3;
 	JGeometry::TVec3<f32> local_98 = local_1C;
-	JGeometry::TVec3<f32> local_8C = local_98;
+	JGeometry::TVec3<f32> local_8C = local_1C;
 
 	local_8C += param_4;
 
@@ -360,9 +358,10 @@ bool TKumokun::checkOnMovingFloor(JGeometry::TVec3<f32>* param_1,
 	local_80 *= -10.0f;
 	local_8C += local_80;
 
+	const TBGCheckData* local_7C;
 	f32 yTmp   = local_8C.y;
 	f32 dVar10 = gpMap->checkGround(local_8C.x, yTmp + mHeadHeight, local_8C.z,
-	                                param_2);
+	                                &local_7C);
 	dVar10 += 1.0f;
 	if (yTmp <= dVar10 + 0.05f) {
 		if (30.0f < dVar10 - yTmp) {
@@ -402,9 +401,13 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 
 	JGeometry::TVec3<f32> local_C0 = getPlaneNormal();
 	local_C0 *= -mHeadHeight / 2.0f;
+	f32 fVar31 = local_C0.y;
+	f32 fVar30 = local_C0.z;
 
 	JGeometry::TVec3<f32> local_b4 = param_3;
-	local_b4 += local_C0;
+	local_b4.x += local_C0.x;
+	local_b4.y += fVar31;
+	local_b4.z += fVar30;
 
 	JGeometry::TVec3<f32> local_A8 = local_b4;
 	local_A8 += param_4;
@@ -418,9 +421,9 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 	    = gpMap->checkRoof(local_A8.x, yTmp - mHeadHeight, local_A8.z, param_2);
 	dVar10 -= 1.0f;
 	if (yTmp > dVar10 - 0.05f) {
-		local_A8.y = yTmp;
-	} else if (mHeadHeight < dVar10 - yTmp) {
-		local_A8.y = yTmp;
+		local_A8.y = dVar10;
+	} else if (dVar10 - yTmp < mHeadHeight) {
+		local_A8.y = dVar10;
 	} else {
 		uVar7 = true;
 		local_A8.set(local_b4);
@@ -437,7 +440,9 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 		local_A8.z = local_8C.z;
 	}
 
-	local_A8 -= local_C0;
+	local_A8.x -= local_C0.x;
+	local_A8.y -= fVar31;
+	local_A8.z -= fVar30;
 
 	param_1->set(local_A8);
 	param_1->sub(param_3);
@@ -447,7 +452,7 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 
 void TKumokun::bindOnFlying()
 {
-	bool hit = false;
+	BOOL hit = false;
 
 	JGeometry::TVec3<f32> local_74 = mPosition;
 	local_74 += mLinearVelocity;
@@ -658,6 +663,7 @@ void TKumokun::calcRootMatrix()
 		return;
 	}
 
+	MtxPtr baseMtx;
 	JGeometry::TVec3<f32> offset(0.0f);
 
 	if (isOnWall() || isOnRoof())
@@ -672,9 +678,10 @@ void TKumokun::calcRootMatrix()
 	getModel()->setBaseTRMtx(mtx);
 
 	if (isFlying()) {
+		baseMtx = getModel()->getBaseTRMtx();
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        PARTICLE_MS_KIL_SMOKE, getModel()->getBaseTRMtx(), 1, this)) {
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_KIL_SMOKE,
+		                                                  baseMtx, 1, this)) {
 			emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f));
 			emitter->setGlobalAlpha(128);
 		}
@@ -747,13 +754,12 @@ void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 	local_C4.y = 0.0f;
 	local_C4.normalize();
 
-	JGeometry::TVec3<f32> forward(0.0f, 0.0f, 1.0f);
-
 	JGeometry::TQuat4<f32> local_A4;
-	if (is_antiparallel(local_C4, forward)) {
+	if (is_antiparallel(local_C4, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f))) {
 		local_A4.setEulerY(JGeometry::TUtil<f32>::PI());
 	} else {
-		local_A4.setRotate(forward, local_C4, 1.0f);
+		local_A4.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f), local_C4,
+		                   1.0f);
 	}
 
 	local_b4.mul(local_A4);
@@ -786,15 +792,14 @@ void TKumokun::decideTargetOnGraph() { }
 JGeometry::TVec3<f32>
 TKumokun::rotateGoalDirToLocal(const JGeometry::TVec3<f32>& param_1) const
 {
-	JGeometry::TVec3<f32> diff = param_1;
-	diff -= mPosition;
+	JGeometry::TVec3<f32> result = param_1;
+	result -= mPosition;
 
 	// unit quat, conj = inv
 	JGeometry::TQuat4<f32> inv = getQuat();
 	inv.conjugate();
 
-	JGeometry::TVec3<f32> result;
-	inv.rotate(diff, result);
+	inv.rotate(result, result);
 
 	return result;
 }
@@ -933,11 +938,11 @@ JGeometry::TVec3<f32> TKumokun::getPlaneNormal() const
 const TBGCheckData* TKumokun::checkWallPlane(JGeometry::TVec3<f32>* param_1,
                                              f32 param_2, f32 param_3)
 {
+	const TBGCheckData* wall = nullptr;
 	TBGWallCheckRecord record(param_1->x, param_1->y + param_2, param_1->z,
 	                          param_3, 1, 0);
 
-	const TBGCheckData* wall = nullptr;
-	if (gpMap->isTouchedWallsAndMoveXZ(&record))
+	if (gpMap->isTouchedWallsAndMoveXZ(&record) > 0)
 		wall = record.mResultWalls[0];
 
 	param_1->x = record.mCenter.x;
@@ -970,9 +975,9 @@ const TBGCheckData* TKumokun::checkRoofPlane(JGeometry::TVec3<f32>* param_1,
 	const TBGCheckData* roof = nullptr;
 	f32 y                    = param_1->y;
 	f32 dVar6 = gpMap->checkRoof(param_1->x, y, param_1->z, &roof);
-	f32 fVar8 = dVar6 - 1.0f - y;
-	if (0.0f <= fVar8 && fVar8 < param_2)
-		param_1->y = fVar8;
+	dVar6 -= 1.0f;
+	if (0.0f <= dVar6 - y && dVar6 - y < param_2)
+		param_1->y = dVar6;
 	else
 		roof = nullptr;
 
@@ -1032,7 +1037,7 @@ void TKumokunManager::load(JSUMemoryInputStream& stream)
 
 	params->mSLAttackRadius.set(60);
 	params->mSLAttackHeight.set(50);
-	params->mSLDamageRadius.set(60);
+	params->mSLDamageRadius.set(65);
 	params->mSLDamageHeight.set(70);
 	TSmallEnemyManager::load(stream);
 }

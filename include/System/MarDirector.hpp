@@ -126,7 +126,7 @@ public:
 
 	void setup2();
 	int thpInit();
-	static void loadParticleMario();
+	void loadParticleMario();
 	void loadParticle();
 	void initLoadParticle();
 	int loadResource();

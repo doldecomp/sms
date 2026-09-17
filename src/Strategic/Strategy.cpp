@@ -21,7 +21,7 @@ TStrategy::TStrategy(const char* name)
 void TStrategy::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	new TObjHitCheck();
+	TObjHitCheck* hitCheck = new TObjHitCheck();
 
 	int count = stream.readU32();
 	for (int i = 0; i < count; ++i) {

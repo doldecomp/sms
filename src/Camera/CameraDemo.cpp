@@ -59,37 +59,29 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 			unk2B0->updateDemo(&unk124, &unk148, &mUp, &mFovy);
 
 			if (mCameraDemo->unk4 != 0.0f) {
-				s16 angle = CLBDegToShortAngle(mCameraDemo->unk4);
+				u16 angle = CLBDegToShortAngle(mCameraDemo->unk4);
 
 				JGeometry::TVec3<f32> origin(0.0f, 0.0f, 0.0f);
 				if (mCameraDemo->unk0 != nullptr)
 					origin = *mCameraDemo->unk0;
 
-				{
-					JGeometry::TVec3<f32> result = origin;
-					f32 dx                       = unk124.x - origin.x;
-					f32 dy                       = unk124.y - origin.y;
-					f32 dz                       = unk124.z - origin.z;
-					f32 sn                       = JMASSin(angle);
-					f32 cs                       = JMASCos(angle);
-					result.x += dx * cs + dz * sn;
-					result.y += dy;
-					result.z += -dx * sn + dz * cs;
-					unk124 = result;
-				}
+				f32 originZ = origin.z;
+				f32 originY = origin.y;
+				JGeometry::TVec3<f32> result(unk124.x - origin.x,
+				                             unk124.y - originY,
+				                             unk124.z - originZ);
+				f32 x    = result.x;
+				result.x = x * JMASCos(angle) + result.z * JMASSin(angle);
+				result.z = -x * JMASSin(angle) + result.z * JMASCos(angle);
+				unk124   = origin + result;
 
-				{
-					JGeometry::TVec3<f32> result = origin;
-					f32 dx                       = unk148.x - origin.x;
-					f32 dy                       = unk148.y - origin.y;
-					f32 dz                       = unk148.z - origin.z;
-					f32 sn                       = JMASSin(angle);
-					f32 cs                       = JMASCos(angle);
-					result.x += dx * cs + dz * sn;
-					result.y += dy;
-					result.z += -dx * sn + dz * cs;
-					unk148 = result;
-				}
+				JGeometry::TVec3<f32> result2(unk148.x - origin.x,
+				                              unk148.y - originY,
+				                              unk148.z - originZ);
+				f32 x2    = result2.x;
+				result2.x = x2 * JMASCos(angle) + result2.z * JMASSin(angle);
+				result2.z = -x2 * JMASSin(angle) + result2.z * JMASCos(angle);
+				unk148    = origin + result2;
 
 				f32 ux = mUp.x;
 				f32 uz = mUp.z;
@@ -120,8 +112,9 @@ void CPolarSubCamera::updateGateDemoCamera_()
 	f32 fovy;
 	unk2B0->updateDemo(nullptr, nullptr, nullptr, &fovy);
 
-	int v = mInbetween->getUnk4();
-	if (unk70 != mCameraDemo->unk8 && v > 0)
+	int v  = mInbetween->getUnk4();
+	bool b = unk70 != mCameraDemo->unk8;
+	if (b && v > 0)
 		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)v);
 	else
 		mFovy = fovy;

@@ -21,8 +21,9 @@ f32 TMapCheckGroundPlane::checkPlaneGround(f32 x, f32 y, f32 z,
 
 	// TODO: making the return type an int here makes it match better,
 	// but breaks other places...
-	int tileX = worldToGrid(x);
-	int tileZ = worldToGrid(z);
+	int tileX_ = worldToGrid(x);
+	int tileX  = tileX_;
+	int tileZ  = worldToGrid(z);
 
 	f32 inTileX = x - gridToWorld(tileX);
 	f32 inTileZ = z - gridToWorld(tileZ);

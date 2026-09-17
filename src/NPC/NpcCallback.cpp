@@ -13,11 +13,14 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 		if (gpCurrentNpc == nullptr)
 			return FALSE;
 
-		bool shouldRun = gpCurrentNpc->mNeckJointIndex != -1
-		                 && !gpCurrentNpc->checkLiveFlag2(
-		                     LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT);
+		bool shouldRun = false;
+		if (gpCurrentNpc->mNeckJointIndex != -1) {
+			if (!gpCurrentNpc->checkLiveFlag(LIVE_FLAG_HIDDEN
+			                                 | LIVE_FLAG_CLIPPED_OUT))
+				shouldRun = true;
+		}
 
-		if (shouldRun) {
+		if (shouldRun ? true : false) {
 			J3DJoint* joint = (J3DJoint*)param_1;
 			MtxPtr currMtx  = j3dSys.getModel()->getAnmMtx(joint->getJntNo());
 
@@ -40,16 +43,17 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 			if (useTracking) {
 				JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 				marioPos.y += 85.0f;
+				f32 marioY = marioPos.y;
 
 				JGeometry::TVec3<f32> toMario(marioPos.x - currMtx[0][3],
-				                              marioPos.y - currMtx[1][3],
+				                              marioY - currMtx[1][3],
 				                              marioPos.z - currMtx[2][3]);
 
 				f32 dist2 = toMario.squared();
 				if (dist2 > 0.001f
 				    && dist2 < CLBSquared<f32>(gpCurrentNpc->mIndividualParams
 				                                   ->mNeckTurnSearchDist.get())
-				    && fabs(marioPos.y - currMtx[1][3])
+				    && fabs(marioY - currMtx[1][3])
 				           < gpCurrentNpc->mIndividualParams
 				                 ->mNeckTurnSearchHeight.get()) {
 
@@ -57,15 +61,17 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					    currMtx[0][1], currMtx[1][1], currMtx[2][1]);
 					MsVECNormalize(&toMario, &toMario);
 
-					local_148 = MsGetRotFromZaxis(toMario)
-					            - MsGetRotFromZaxis(neckForward);
+					const JGeometry::TVec3<f32>& neckRot
+					    = MsGetRotFromZaxis(neckForward);
+					local_148 = neckRot - MsGetRotFromZaxis(toMario);
 				} else {
 					local_148.zero();
 				}
 
 				s16 tmp = CLBDegToShortAngle(local_148.y);
-				s16 maxNeckY
-				    = gpCurrentNpc->mIndividualParams->mNeckMaxAngleY.get();
+				const TParamT<s16> maxAngleY
+				    = gpCurrentNpc->mIndividualParams->mNeckMaxAngleY;
+				s16 maxNeckY = maxAngleY.get();
 				s16 minNeckY = -maxNeckY;
 
 				r28 = MsClamp<s16>(tmp, minNeckY, maxNeckY);

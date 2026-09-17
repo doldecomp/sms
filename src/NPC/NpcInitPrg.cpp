@@ -410,7 +410,8 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 		J3DModelData* modelData = model->getModelData();
 		JUTNameTab* matNameTab  = modelData->getMaterialName();
 		for (u16 i = 0, e = modelData->getMaterialNum(); i < e; ++i) {
-			if (strcmp(matNameTab->getName(i), cEyeMaterialName) != 0) {
+			const char* name = matNameTab->getName(i);
+			if (strcmp(name, cEyeMaterialName) != 0) {
 				J3DMaterial* mat = modelData->getMaterialNodePointer(i);
 				J3DShapePacket* shape
 				    = model->getShapePacket(mat->getShape()->getIndex());

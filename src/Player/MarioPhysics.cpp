@@ -27,14 +27,14 @@ void TMario::playerRefrection(int param_1)
 void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
                           f32 param_3)
 {
-	f32 dz = mPosition.z - target.z;
-	f32 dx = mPosition.x - target.x;
-
 	f32 thresh = param_3 + (param_2 + unk15C);
-	f32 dist   = MsSqrtf(dx * dx + dz * dz);
+	f32 dx;
+	f32 dz   = mPosition.z - target.z;
+	dx       = mPosition.x - target.x;
+	f32 dist = MsSqrtf(dx * dx + dz * dz);
 
 	if (dist == 0.0f)
-		dist = 1.0f;
+		dist = dx = 1.0f;
 
 	if (!(dist < thresh))
 		return;
@@ -78,12 +78,14 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 	JGeometry::TVec3<f32> diff = newPos - mPosition;
 
 	f32 step = diff.length();
-	if (50.0f < step)
-		step = 50.0f;
+	if (step > 0.0f) {
+		if (50.0f < step)
+			step = 50.0f;
 
-	diff.normalize();
+		diff.normalize();
 
-	mPosition += diff * step;
+		mPosition += diff * step;
+	}
 }
 
 void TMario::keepDistance(const THitActor& actor, f32 param_2)
@@ -98,14 +100,17 @@ void TMario::checkDescent()
 	if (mHeldObject == nullptr && !onYoshi())
 		active = true;
 
-	if (active != true)
+	if ((s32)active != true)
 		return;
 
 	if (!(mForwardVel < descentSp))
 		return;
 
-	TBGWallCheckRecord rec(mPosition.x, mPosition.y - 10.0f, mPosition.z,
-	                       descentSp, 1, 0);
+	JGeometry::TVec3<f32> center;
+	center.x = mPosition.x;
+	center.y = mPosition.y - 10.0f;
+	center.z = mPosition.z;
+	TBGWallCheckRecord rec(center.x, center.y, center.z, descentSp, 1, 0);
 	if (!gpMap->isTouchedWallsAndMoveXZ(&rec))
 		return;
 
@@ -139,15 +144,15 @@ int TMario::checkGroundAtWalking(Vec* v)
 	checkWallPlane(v, 30.0f, 0.5f * unk15C);
 	TBGCheckData* wall = checkWallPlane(v, 60.0f, unk15C);
 
-	f32 floorY;
+	const TBGCheckData* roof;
 	const TBGCheckData* ground;
+	f32 floorY;
 	if (checkStatusType(0x10000)) {
 		floorY = gpMap->checkGround(v->x, v->y + 30.0f, v->z, &ground);
 	} else {
 		checkGroundPlane(v->x, v->y + 30.0f, v->z, &floorY, &ground);
 	}
 
-	const TBGCheckData* roof;
 	f32 roofY  = gpMap->checkRoof(v->x, mPosition.y + 80.0f, v->z, &roof);
 	mWallPlane = wall;
 
@@ -295,7 +300,9 @@ BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
 	if (mVel.y > 0.0f)
 		return false;
 
-	if ((curr.x - prev.x) * mVel.x + (curr.z - prev.z) * mVel.z > 0.0f)
+	f32 dz = curr.z - prev.z;
+	f32 dx = curr.x - prev.x;
+	if (dx * mVel.x + dz * mVel.z > 0.0f)
 		return false;
 
 	JGeometry::TVec3<f32> newPos;
@@ -305,7 +312,8 @@ BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
 	const TBGCheckData* ground;
 	checkGroundPlane(newPos.x, curr.y + 160.0f, newPos.z, &newPos.y, &ground);
 
-	if (newPos.y - curr.y <= 100.0f)
+	BOOL isLow = newPos.y - curr.y <= 100.0f;
+	if (isLow)
 		return false;
 
 	if (mFloorPosition.x < newPos.y + 160.0f)
@@ -424,7 +432,9 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 			else
 				wallCode = 0;
 		}
-	} else if (wall1Passable == 0 || wall2Passable == 0) {
+	}
+
+	if (wall1Passable == 0 || wall2Passable == 0) {
 		mWallPlane = wall1 != nullptr ? wall1 : wall2;
 		s16 diff   = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
 		           - (mFaceAngle.y + 0x8000);

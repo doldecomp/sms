@@ -240,7 +240,7 @@ void TMBindShadowBody::entryDrawShadow()
 {
 	f32 eps = JGeometry::TUtil<f32>::epsilon();
 
-	if (gpMarioPos->epsilonEquals(mActor->mPosition, eps)) {
+	if (mActor->mPosition.epsilonEquals(*gpMarioPos, eps)) {
 		if (!gpBindShadowManager->unk65) {
 			gpBindShadowManager->unk65 = true;
 			calc();
@@ -396,7 +396,7 @@ void TMBindShadowManager::reset()
 
 void TMBindShadowManager::initEntry(TMBindShadowBody* param_1)
 {
-	mBodyList.push_back(param_1);
+	mBodyList.insert(mBodyList.end(), param_1);
 }
 
 void TMBindShadowManager::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -509,7 +509,6 @@ static inline void loadPosMtxImm(MtxPtr mtx)
 void TMBindShadowManager::drawShadowVolume(bool param_1,
                                            TAlphaShadowQuad* param_2)
 {
-	f32 height = 50.0f;
 	if (param_2->mRequest->mShadowType == SHADOW_TYPE_SQUARE) {
 		if (param_2->mSquareOutline == nullptr) {
 			SMS_SettingDrawShape(mModelDatas[2]->getModelData(), 0);
@@ -517,6 +516,7 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 		} else {
 			int topIndices[9]    = { 2, 1, 0, 3, 2, 0, 4, 3, 0 };
 			int bottomIndices[9] = { 0, 1, 2, 0, 2, 3, 0, 3, 4 };
+			f32 height           = 50.0f;
 
 			GXClearVtxDesc();
 			GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -1342,15 +1342,10 @@ void TMBindShadowManager::calcVtx()
 
 			f32 h1 = foot.y - foot.y;
 			f32 h2 = head.y - foot.y;
-			JGeometry::TVec3<f32> projectedFoot;
-			projectedFoot.set(foot.x - light.x * h1, foot.y,
-			                  foot.z - light.z * h1);
-			JGeometry::TVec3<f32> projectedHead;
-			projectedHead.set(head.x - light.x * h2, foot.y,
-			                  head.z - light.z * h2);
-			request->mPosition.set(0.5f * (projectedHead.x + projectedFoot.x),
-			                       0.5f * (projectedFoot.y + projectedHead.y),
-			                       0.5f * (projectedHead.z + projectedFoot.z));
+			request->mPosition.set(
+			    0.5f * ((head.x - light.x * h2) + (foot.x - light.x * h1)),
+			    0.5f * (foot.y + foot.y),
+			    0.5f * ((head.z - light.z * h2) + (foot.z - light.z * h1)));
 		}
 
 		JGeometry::TVec3<f32> pos = request->mPosition;
@@ -1380,7 +1375,8 @@ void TMBindShadowManager::calcVtx()
 			radius = request->mRadiusZ;
 
 		f32 treeScale = 1.0f;
-		f32 sx        = 0.08f * request->mRadiusX;
+		f32 sxValue   = 0.08f * request->mRadiusX;
+		f32 sx        = sxValue;
 		f32 sy        = 0.08f * request->mRadiusZ;
 		f32 sz        = 0.08f * (radius * shrink);
 
@@ -1513,8 +1509,8 @@ void TMBindShadowManager::calcVtx()
 	if (mTestSw)
 		return;
 
-	TAlphaShadowQuad* quads       = mQuads;
 	TAlphaShadowBlendQuad* blends = mBlendQuads;
+	TAlphaShadowQuad* quads       = mQuads;
 	TAlphaShadowQuadAry* arrays   = mQuadArys;
 
 	for (int i = 0; i < mQuadAryNum; i++) {

@@ -169,7 +169,7 @@ void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_DRAW) {
 		if (cue & CUE_UNK40000000) {
 			SMS_DrawInit();
-			JPADrawInfo drawInfo(graphics->getViewMtx());
+			JPADrawInfo drawInfo = JPADrawInfo(graphics->getViewMtx());
 			drawInfo.setFovy(gpCamera->getFovy());
 			drawInfo.setAspect(gpCamera->getAspect());
 			unk3B8->draw(&drawInfo, 2);
@@ -241,17 +241,18 @@ JPABaseEmitter* TMarioParticleManager::emitWithRotate(
     s32 param_1, const JGeometry::TVec3<f32>* param_2, s16 param_3, s16 param_4,
     s16 param_5, u8 param_6, const void* param_7)
 {
+	JPABaseEmitter* emitter;
 
 	if (param_6 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_6, 0, nullptr, nullptr)) {
+		if (emitter = unk3B8->createSimpleEmitterID(*param_2, param_1, param_6,
+		                                            0, nullptr, nullptr)) {
 			emitter->setRotation(param_3, param_4, param_5);
 			return emitter;
 		}
 
 	if (param_6 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_6, 0, nullptr, nullptr)) {
+		if (emitter = unk3B8->createSimpleEmitterID(*param_2, param_1, param_6,
+		                                            0, nullptr, nullptr)) {
 			emitter->setRotation(param_3, param_4, param_5);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
@@ -453,21 +454,22 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtx(s32 param_1,
                                                         u8 param_3,
                                                         const void* param_4)
 {
+	JPABaseEmitter* emitter;
 	JGeometry::TVec3<f32> local_24;
 	local_24.x = param_2[0][3];
 	local_24.y = param_2[1][3];
 	local_24.z = param_2[2][3];
 
 	if (param_3 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
+		if (emitter = unk3B8->createSimpleEmitterID(local_24, param_1, param_3,
+		                                            0, nullptr, nullptr)) {
 			emitter->setGlobalRTMatrix(param_2);
 			return emitter;
 		}
 
 	if (param_3 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
+		if (emitter = unk3B8->createSimpleEmitterID(local_24, param_1, param_3,
+		                                            0, nullptr, nullptr)) {
 			emitter->setGlobalRTMatrix(param_2);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
@@ -485,14 +487,14 @@ JPABaseEmitter* TMarioParticleManager::emitParticleCallBack(
 {
 	if (param_3 == 1) {
 		int type    = param_1 - 253;
-		int idx     = getAvailableIdx(type, param_3, param_4);
+		int idx     = getAvailableIdx(type, param_3, param_5);
 		TInfo* info = &unk10[type][idx];
 		info->onFlag(INFO_FLAG_UNK4);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
 		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->unk0 = param_5;
 		if (info->mEmitter == nullptr)
 			emitTry(param_1, info, param_3);
 		if (info->mEmitter != nullptr) {
@@ -503,14 +505,14 @@ JPABaseEmitter* TMarioParticleManager::emitParticleCallBack(
 
 	if (param_3 == 3) {
 		int type    = param_1 - 486;
-		int idx     = getAvailableIdx(type, param_3, param_4);
+		int idx     = getAvailableIdx(type, param_3, param_5);
 		TInfo* info = &unk368[type][idx];
 		info->onFlag(INFO_FLAG_UNK4);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
 		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->unk0 = param_5;
 		if (info->mEmitter == nullptr)
 			emitTry(param_1, info, param_3);
 		if (info->mEmitter != nullptr) {
@@ -554,7 +556,7 @@ void TMarioParticleManager::emitTry(s32 param_1,
 					    &emitterCallBackBindToSRTMtxPtr);
 				else
 					param_2->mEmitter->setEmitterCallBackPtr(
-					    &emitterCallBackBindToMtxPtr);
+					    &emitterCallBackBindToSRTMtxPtr);
 			}
 		} else {
 			param_2->mEmitter = unk3B8->createSimpleEmitterID(
@@ -601,45 +603,43 @@ void SMSSetEmitterPolColor(JPABaseEmitter* param_1, int param_2)
 	if (param_2 < 0 || param_2 > 7)
 		return;
 
-	int value;
-
 	if (param_2 == 6) {
 		switch (gpMarDirector->mMap) {
 		case 1:
 			if (gpMarDirector->unk7D == 5) {
-				value = 3;
+				param_2 = 3;
 				break;
 			}
 			// FALLTHROUGH
 
 		case 2:
 		case 55:
-			value = 2;
+			param_2 = 2;
 			break;
 
 		case 9:
 		case 0:
 		case 57:
-			value = 1;
+			param_2 = 1;
 			break;
 
 		case 3:
-			value = 3;
+			param_2 = 3;
 			break;
 
 		case 8:
-			value = 4;
+			param_2 = 4;
 			break;
 
 		case 6:
 		case 7:
 		case 14:
 		case 56:
-			value = 5;
+			param_2 = 5;
 			break;
 
 		default:
-			value = 0;
+			param_2 = 0;
 			break;
 		}
 	}
@@ -656,9 +656,9 @@ void SMSSetEmitterPolColor(JPABaseEmitter* param_1, int param_2)
 		{ 0xB7, 0x24, 0x08, 0xFF }, { 0x00, 0x73, 0x6C, 0xFF },
 	};
 
-	param_1->setGlobalPrmColor(prmarray[value].r, prmarray[value].g,
-	                           prmarray[value].b);
+	param_1->setGlobalPrmColor(prmarray[param_2].r, prmarray[param_2].g,
+	                           prmarray[param_2].b);
 
-	param_1->setGlobalEnvColor(envarray[value].r, envarray[value].g,
-	                           envarray[value].b);
+	param_1->setGlobalEnvColor(envarray[param_2].r, envarray[param_2].g,
+	                           envarray[param_2].b);
 }

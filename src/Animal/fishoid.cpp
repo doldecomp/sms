@@ -239,7 +239,7 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 	unk150->mMaxPitch          = 5.0f;
 	unk150->mAlignmentStrength = 0.5f;
 
-	unk150->mFleeTarget = (THitActor*)gpMarioAddress;
+	unk150->setFleeTarget((THitActor*)gpMarioAddress);
 
 	unk150->mFleeRadius   = 400.0f;
 	unk150->mFleeStrength = 3.0f;

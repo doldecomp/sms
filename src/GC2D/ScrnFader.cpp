@@ -60,11 +60,11 @@ void draw_wipe_box(const JDrama::TRect& param_1, JUtility::TColor param_2)
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
 		               GX_LO_NOOP);
 
-	f32 w = param_2.a * (param_1.getWidth() >> 1) / 255.0f;
-	f32 h = param_2.a * (param_1.getHeight() >> 1) / 255.0f;
-
-	JUTRect local_4c(param_1.x1 + int(w), param_1.y1 + int(h),
-	                 param_1.x2 - int(w), param_1.y2 - int(h));
+	JUTRect local_4c(
+	    param_1.x1 + int(param_2.a * (param_1.getWidth() >> 1) / 255.0f),
+	    param_1.y1 + int(param_2.a * (param_1.getHeight() >> 1) / 255.0f),
+	    param_1.x2 - int(param_2.a * (param_1.getWidth() >> 1) / 255.0f),
+	    param_1.y2 - int(param_2.a * (param_1.getHeight() >> 1) / 255.0f));
 
 	u32 color = 0xff;
 	GXBegin(GX_QUADS, GX_VTXFMT0, 0x10);
@@ -163,7 +163,8 @@ void TSMSFader::updateRequest()
 	if (mWipeRequest.unk0 == UNK30_UNK_18)
 		return;
 
-	f32 fVar1 = mWipeRequest.unk8 - 1.0f / mRate;
+	f32 fVar1 = mWipeRequest.unk8;
+	fVar1 -= 1.0f / mRate;
 	if (fVar1 < 0.0f)
 		fVar1 = 0.0f;
 	mWipeRequest.unk8 = fVar1;
@@ -382,14 +383,11 @@ void TSMSFader::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	s32 local_1c = stream.readS32();
+	startFadein(stream.readS32());
 
-	startFadein(local_1c);
+	u32 local_18 = stream.readU32();
 
-	u32 local_18;
-	stream >> local_18;
-
-	setColor(JUtility::TColor(local_18 >> 24, local_18 >> 16 & 0xFF,
+	setColor(JUtility::TColor(local_18 >> 24, u8(local_18 >> 16),
 	                          local_18 >> 8 & 0xFF, local_18 & 0xFF));
 }
 

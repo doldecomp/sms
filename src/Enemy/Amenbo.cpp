@@ -63,7 +63,7 @@ void TAmenbo::init(TLiveManager* manager)
 	mOutOfWaterDeathTimer  = 0;
 	for (int i = 0; i < 4; ++i) {
 		unk1EC[i].mJointIdx
-		    = getModel()->getModelData()->getMaterialName()->getIndex(
+		    = getModel()->getModelData()->getJointName()->getIndex(
 		        cJointNames[i]);
 	}
 }
@@ -96,9 +96,9 @@ void TAmenbo::bind()
 		return;
 
 	JGeometry::TVec3<f32> local_14 = mPosition;
+	local_14.y += mHeadHeight;
 	local_14 += mLinearVelocity;
 	local_14 += mVelocity;
-	local_14.y += mHeadHeight;
 
 	mVelocity.y -= getGravityY();
 
@@ -138,10 +138,12 @@ void TAmenbo::bind()
 void TAmenbo::control()
 {
 	if (mWaterGunHitCooldown > 0)
-		mWaterGunHitCooldown--;
+		mWaterGunHitCooldown = mWaterGunHitCooldown - 1;
 
-	if (mSearchDisableCooldown > 0)
-		mSearchDisableCooldown--;
+	if (mSearchDisableCooldown > 0) {
+		int cooldown           = mSearchDisableCooldown - 1;
+		mSearchDisableCooldown = cooldown;
+	}
 
 	updateCollision();
 
@@ -172,7 +174,7 @@ void TAmenbo::checkMarioWaterIn()
 	JGeometry::TVec3<f32> local_60;
 
 	if (!isOverTerritory(&local_60) && mSearchDisableCooldown <= 0) {
-		if (isFreeze() && isChangedBlock()) {
+		if (isFreeze() && !isChangedBlock()) {
 			decideTargetOnFingingMario();
 			mSpine->reset();
 			mSpine->setNext(&TNerveAmenboTurn::theNerve());
@@ -248,7 +250,8 @@ bool TAmenbo::doKeepDistance() { return !isAttacking(); }
 
 void TAmenbo::attackToMario()
 {
-	if (isAttacking())
+	BOOL attacking = isAttacking();
+	if (attacking)
 		sendAttackMsgToMario();
 }
 
@@ -326,7 +329,7 @@ void TAmenbo::doAdjustTarget()
 	vel *= 0.9f;
 	mVelocity = vel;
 
-	unk1E0 = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() / 63;
+	unk1E0 = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() * (1.0f / 63.0f);
 
 	if (1.0f <= unk1E0)
 		unk1E0 = 1.0f;
@@ -434,7 +437,7 @@ bool TAmenbo::isOverTerritory(JGeometry::TVec3<f32>* param_1) const
 	*param_1 -= mPosition;
 	param_1->y = 0.0f;
 	f32 range  = getSaveParam2()->mTerritoryRange.get();
-	return param_1->squared() < range * range;
+	return range * range > param_1->squared();
 }
 
 bool TAmenbo::isAttacking() const

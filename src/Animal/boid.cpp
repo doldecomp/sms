@@ -196,6 +196,7 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 
 JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 {
+	JGeometry::TVec3<f32> away;
 	JGeometry::TVec3<f32> force = boid->mSeparationForce;
 	force += boid->mAlignmentForce * mAlignmentStrength;
 	force += boid->mCohesionForce;
@@ -210,7 +211,7 @@ JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 	if (0.0f < mFleeRadius) {
 		f32 tmp = mFleeRadius;
 
-		JGeometry::TVec3<f32> away = boid->mPosition;
+		away = boid->mPosition;
 		away -= mFleeTarget.getPoint();
 		f32 d2 = away.squared();
 		if (0.0f < d2 && d2 < tmp * tmp) {

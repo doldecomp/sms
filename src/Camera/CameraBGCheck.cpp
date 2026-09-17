@@ -38,14 +38,16 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 		}
 
 		JGeometry::TVec3<f32> local_120[18];
-		S16Vec SStack_134[9];
+		S16Vec SStack_134;
 
-		CLBCalcNearNinePos(local_120, SStack_134, unk124, unk148,
+		CLBCalcNearNinePos(local_120, &SStack_134, unk124, unk148,
 		                   getFinalAngleZ(), mNear, mFovy, mAspect);
 
 		f32 fVar1 = unk2C4;
-		for (int i = 0; i < 9; ++i) {
+		for (int i = 0; i < 9; i += 3) {
 			local_120[9 + i].scaleAdd(fVar1, local_120[i], unk25C);
+			local_120[10 + i].scaleAdd(fVar1, local_120[1 + i], unk25C);
+			local_120[11 + i].scaleAdd(fVar1, local_120[2 + i], unk25C);
 		}
 
 		f32 tmp = unk2C0;
@@ -53,10 +55,10 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 			for (int j = 0; j < 2; ++j) {
 				f32 fVar2 = 0.0f;
 				for (int k = 0; k < 2; ++k) {
-					JGeometry::TVec3<f32> local_12C(local_120[j * 9 + i].x,
-					                                local_120[j * 9 + i].y
+					JGeometry::TVec3<f32> local_12C(local_120[i + j * 9].x,
+					                                local_120[i + j * 9].y
 					                                    - fVar2 + -78.0f,
-					                                local_120[j * 9 + i].z);
+					                                local_120[i + j * 9].z);
 					const TBGCheckData* local_138;
 					gpMap->checkGroundIgnoreWaterSurface(local_12C, &local_138);
 					if (local_138 && local_138->isOob()) {
@@ -87,9 +89,11 @@ bool CPolarSubCamera::isNeedGroundCheck_()
 	} else if (mMode != CAMERA_MODE_SLIDER
 	           && (isNormalCameraSpecifyMode(mMode)
 	               || isTowerCameraSpecifyMode(mMode))) {
-		f32 a = mCurrentParams->mDistMin * JMASSin(mCurrentParams->mXAngleMin);
+		f32 a = mCurrentParams->mDistMin;
+		a *= JMASSin(mCurrentParams->mXAngleMin);
 		f32 b = mCurrentParams->mDistMax * JMASSin(mCurrentParams->mXAngleMax);
-		f32 distY = mPosition.y - mTarget.y;
+		f32 distY = mPosition.y;
+		distY -= mTarget.y;
 		if (a > b)
 			b = a;
 		if (distY > 1.25f * b) {
@@ -153,12 +157,13 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 				TBGCheckData* wall = record.mResultWalls[i];
 				if (should_clip_fabricated(wall)) {
 					JGeometry::TVec3<f32> posArg = mCurrentTarget.mPosition;
-					JGeometry::TVec3<f32> posCam = posArg;
+					Vec posCam                   = posArg;
 
-					f32 sd = posCam.dot(wall->getNormal())
+					f32 sd = posCam.x * wall->getNormal().x
+					         + posCam.y * wall->getNormal().y
+					         + posCam.z * wall->getNormal().z
 					         + wall->getPlaneDistance();
-					f32 absSd = sd >= 0.0f ? sd : -sd;
-					if (absSd < radius) {
+					if ((sd >= 0.0f ? sd : -sd) < radius) {
 						moved      = true;
 						f32 pushSd = (radius - sd)
 						             * mSaveEx->mSLWallRevisionRatio.get();
@@ -197,11 +202,11 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 	}
 
 	if (skipCheck || should_clip_fabricated(roof)) {
-		if (mCurrentTarget.mPosition.y
-		    > roofHeight - mSaveEx->mSLRoofHeight.get()) {
-			mCurrentTarget.mPosition.y
-			    = roofHeight - mSaveEx->mSLRoofHeight.get();
-			moved = true;
+		f32 currentY  = mCurrentTarget.mPosition.y;
+		f32 roofLimit = roofHeight - mSaveEx->mSLRoofHeight.get();
+		if (currentY > roofLimit) {
+			mCurrentTarget.mPosition.y = roofLimit;
+			moved                      = true;
 		}
 	}
 	return moved;

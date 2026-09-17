@@ -22,15 +22,17 @@ void TPollutionManager::stampModel(J3DModel* model)
 
 void TPollutionManager::stamp(u16 stamp_type, f32 x, f32 y, f32 z, f32 size)
 {
+	TPollutionLayer* layer;
 	for (int i = 0; i < getJointModelNum(); ++i) {
-		TPollutionLayer* layer = getLayer(i);
+		layer = getLayer(i);
 		layer->stamp(stamp_type, x, y, z, size);
 	}
 }
 
 void TPollutionManager::clean(f32 x, f32 y, f32 z, f32 size)
 {
-	if (gpMarDirector->getCurrentMap() == 1 && y < -10.0f)
+	bool result = gpMarDirector->getCurrentMap() == 1;
+	if (result && y < -10.0f)
 		return;
 
 	stamp(0, x, y, z, size);

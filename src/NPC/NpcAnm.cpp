@@ -80,8 +80,9 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 	if (unk168 != nullptr && isPartsAnmNpc()) {
 		switch (mActorType) {
 		case 0x4000018: {
-			bool bVar8 = checkUnk1D8(UNK1D8_FLAG_UNK1);
-			if (MActor* mactor = unk168->getPartsMActor(0, 0)) {
+			bool bVar8     = checkUnk1D8(UNK1D8_FLAG_UNK1);
+			MActor* mactor = unk168->getPartsMActor(0, 0);
+			if (mactor != nullptr) {
 				int iVar7;
 				switch (param_1) {
 				case NPC_ANM_KIND_UNK5:
@@ -102,7 +103,8 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 					mactor->setBckFromIndex(iVar7);
 			}
 
-			if (MActor* mactor = unk168->getPartsMActor(3, 0)) {
+			mactor = unk168->getPartsMActor(3, 0);
+			if (mactor != nullptr) {
 				int iVar7;
 
 				switch (param_1) {
@@ -133,7 +135,8 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 					mactor->setBckFromIndex(iVar7);
 			}
 
-			if (MActor* mactor = unk168->getPartsMActor(4, 0)) {
+			mactor = unk168->getPartsMActor(4, 0);
+			if (mactor != nullptr) {
 				int iVar7;
 				switch (param_1) {
 				case NPC_ANM_KIND_UNK5:
@@ -324,10 +327,9 @@ void TBaseNPC::walkAnmRateChange_()
 			if (dVar13 > dVar10)
 				dVar13 = dVar10;
 
-			f32 dVar131 = MsClamp(
-			    CLBCalcRatio(mIndividualParams->mSLMinMarchSpeed.get(), dVar10,
-			                 dVar13),
-			    0.0f, 1.0f);
+			f32 fVar2 = mIndividualParams->mSLMinMarchSpeed.get();
+			f32 dVar131
+			    = MsClamp(CLBCalcRatio(fVar2, dVar10, dVar13), 0.0f, 1.0f);
 
 			f32 dVar132 = CLBLinearInbetween(fVar1, dVar12, dVar131);
 
@@ -371,8 +373,9 @@ EnumNpcAnmKind TBaseNPC::getNpcWaitAnmBase_()
 void TBaseNPC::npcWaitIn()
 {
 	EnumNpcAnmKind kind = NPC_ANM_KIND_UNK1;
+	bool canSelectWait  = !checkActionFlag(NPC_ACTION_UNK400);
 
-	if (!checkActionFlag(NPC_ACTION_UNK400)) {
+	if (canSelectWait) {
 		if (!isClean()) {
 			kind = NPC_ANM_KIND_DIRTY;
 		} else if (checkActionFlag(NPC_ACTION_HAPPY)) {
@@ -385,7 +388,8 @@ void TBaseNPC::npcWaitIn()
 				kind = NPC_ANM_KIND_UNK12;
 			}
 		} else {
-			if (!unk124->unk0->isDummy()) {
+			const TGraphWeb* graph = unk124->getGraph();
+			if (!graph->isDummy()) {
 				if (mSpine->getLatestNerve()
 				    == &TNerveNPCGraphWait::theNerve()) {
 					if (!gpMarDirector->isThing())
@@ -411,8 +415,10 @@ bool TBaseNPC::npcRecoverFromSinking()
 {
 	bool result = false;
 
-	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
-		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
+	bool bVar2 = checkLiveFlag(LIVE_FLAG_UNK8000000);
+	if (!bVar2) {
+		bool bVar3 = mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f);
+		if (bVar3) {
 			onLiveFlag(LIVE_FLAG_UNK8000000);
 			f32 dVar6 = getGravityY();
 			f32 fVar1 = 0.0f;
@@ -519,7 +525,7 @@ void TBaseNPC::npcTalkOut()
 			}
 		}
 
-		offLiveFlag(LIVE_FLAG_UNK8000);
+		offLiveFlag(LIVE_FLAG_UNK80000);
 		changeNerveFromTalk_();
 		if (mThrowCtrl == nullptr && mActorType == 0x4000006)
 			requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_ON);
@@ -972,8 +978,8 @@ void TBaseNPC::sunflowerReviveIn()
 bool TBaseNPC::sunflowerReviving()
 {
 	bool result = false;
-	if (checkUnk1D8(UNK1D8_FLAG_UNK2)
-	    && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
+	bool bVar1  = checkUnk1D8(UNK1D8_FLAG_UNK2);
+	if (bVar1 && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
 		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 			offUnk1D8(UNK1D8_FLAG_UNK2);
 			if (checkLiveFlag(LIVE_FLAG_UNK80000)) {

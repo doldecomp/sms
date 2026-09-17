@@ -100,8 +100,8 @@ f32 MSBgmXFade::scExp[18] = {
 
 void MSBgmXFade::xFadeBgm(f32 param_1)
 {
-	// TODO: some stupid trick with casting the second param?
-	u8 tmp = getTiming(param_1, nullptr);
+	u32 timing[2];
+	u8 tmp = getTiming(param_1, timing);
 
 	bool b = tmp >= 1 && tmp <= 16;
 	if (b) {

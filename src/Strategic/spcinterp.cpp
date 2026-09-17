@@ -571,7 +571,8 @@ TSpcInterp::TSpcInterp(TSpcBinary* binary, void* owner, int steps,
 		mDisplay[i] = 0;
 
 	for (int i = 0; i < mBinary->getHeader()->unk18; ++i) {
-		mStorageStack.push(TSpcSlice(0));
+		TSpcInterp* interp = this;
+		interp->mStorageStack.push(TSpcSlice(0));
 	}
 }
 

@@ -471,16 +471,18 @@ def main() -> None:
     print("-" * 78)
     if baseline_syms is not None:
         current_errors = validation_errors(map_syms, obj_syms, map_binding)
-        # An unimplemented TU must pass strict validation when work starts on it.
-        # Its empty object must not exempt every missing function in the map.
-        baseline_errors = (validation_errors(map_syms, baseline_syms, map_binding)
-                           if baseline_syms else set())
+        # A blank TU at the baseline compiles to an object with no function
+        # symbols, so every map symbol is already missing there. Treat those as
+        # inherited errors: a change that adds data or a first function to a
+        # blank TU is judged only on the errors it introduces, the same rule
+        # applied to every other TU.
+        baseline_errors = validation_errors(map_syms, baseline_syms or [], map_binding)
         introduced = current_errors - baseline_errors
         inherited = current_errors & baseline_errors
         resolved = baseline_errors - current_errors
         print(f"Baseline object: {args.baseline_object}")
         if not baseline_syms:
-            print("Baseline has no function symbols; no inherited errors exempted.")
+            print("Baseline has no function symbols; every map symbol is inherited as missing.")
         print(f"Symbol regressions: {len(introduced)} new, "
               f"{len(inherited)} inherited, {len(resolved)} resolved.")
         for error in sorted(introduced):

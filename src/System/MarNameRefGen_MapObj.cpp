@@ -38,6 +38,11 @@
 #include "MoveBG/WoodBarrel.hpp"
 #include <System/MarNameRefGen.hpp>
 
+inline TCoverFruit::TCoverFruit(const char* name)
+    : TMapObjBase(name)
+{
+}
+
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 {
 	if (strcmp(name, "MapObjBase") == 0)

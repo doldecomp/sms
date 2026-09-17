@@ -96,25 +96,26 @@ TObjHitCheck::checkWaterWithActorsInList(const JGeometry::TVec3<f32>& pos,
 #pragma dont_inline on
 void TObjHitCheck::checkWater()
 {
-	f32 fVar2 = TModelWaterManager::mStaticHitActor.getEntryRadius();
+	THitActor** particleHitActors = gpModelWaterManager->getParticleUnk2514();
 
 	const JGeometry::TVec3<f32>* particlePositions
 	    = gpModelWaterManager->getParticlePositions();
-	THitActor** particleHitActors = gpModelWaterManager->getParticleUnk2514();
+	f32 fVar2 = TModelWaterManager::mStaticHitActor.getEntryRadius();
+	const JGeometry::TVec3<f32>* pos;
 
 	for (int i = 0; i < gpModelWaterManager->getParticleCount(); ++i) {
 		if (!gpModelWaterManager->checkFlagBottom4Bits(i, 0x1))
 			continue;
 
-		const JGeometry::TVec3<f32>& pos = particlePositions[i];
+		pos = &particlePositions[i];
 
 		u32 e;
-		u32 j = getTableIndex(pos, fVar2, &e);
+		u32 j = getTableIndex(*pos, fVar2, &e);
 
 		TObjCheckList& list = unk0[j];
 
 		if (j != e)
-			particleHitActors[i] = checkWaterWithActorsInList(pos, list.unk0);
+			particleHitActors[i] = checkWaterWithActorsInList(*pos, list.unk0);
 	}
 }
 #pragma dont_inline off
@@ -149,7 +150,7 @@ u32 TObjHitCheck::getTableIndex(const JGeometry::TVec3<f32>& pos,
 void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 {
 	TIdxGroupObj::iterator end = group->getChildren().end();
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	for (TIdxGroupObj::iterator it = group->getChildren().begin(); !(it == end);
 	     ++it) {
 		(*it)->mColCount = 0;
 
@@ -200,7 +201,7 @@ void TObjHitCheck::clearGroup(TIdxGroupObj* group)
 {
 	TIdxGroupObj::iterator end = group->getChildren().end();
 
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	for (TIdxGroupObj::iterator it = group->getChildren().begin(); !(it == end);
 	     ++it)
 		(*it)->mColCount = 0;
 }
@@ -210,7 +211,7 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 	TIdxGroupObj::iterator end = group->getChildren().end();
 	THitActor* mario           = (THitActor*)gpMarioAddress;
 
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	for (TIdxGroupObj::iterator it = group->getChildren().begin(); !(it == end);
 	     ++it) {
 		(*it)->mColCount = 0;
 		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
@@ -218,7 +219,7 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 
 		if (checkDistance((*it)->mPosition, (*it)->getAttackRadius(),
 		                  (*it)->getAttackHeight(), mario->mPosition,
-		                  mario->getAttackRadius(), mario->getAttackHeight())) {
+		                  mario->getDamageRadius(), mario->getDamageHeight())) {
 			suffererIsInAttackArea(*it, mario);
 		}
 	}
@@ -233,20 +234,20 @@ void TObjHitCheck::checkActorsHit()
 	if (!(gpStrategy->unk50 & 0x800))
 		entryGroup(gpStrategy->unk10[3]);
 	if (!(gpStrategy->unk50 & 0x100))
-		entryGroup(gpStrategy->unk10[7]);
+		checkAndEntryGroup(gpStrategy->unk10[7]);
 	if (!(gpStrategy->unk50 & 0x200))
-		entryGroup(gpStrategy->unk10[8]);
+		checkAndEntryGroup(gpStrategy->unk10[8]);
 	if (!(gpStrategy->unk50 & 0x400))
-		entryGroup(gpStrategy->unk10[9]);
+		checkAndEntryGroup(gpStrategy->unk10[9]);
 	if (!(gpStrategy->unk50 & 0x40))
-		entryGroup(gpStrategy->unk10[6]);
+		checkAndEntryGroup(gpStrategy->unk10[6]);
 
 	if (!(gpStrategy->unk50 & 0x80)
 	    && gpModelWaterManager->askDoWaterHitCheck())
 		checkWater();
 
 	if (!(gpStrategy->unk50 & 0x800))
-		checkGroupPlayer(gpStrategy->unk10[3]);
+		checkGroupPlayer(gpStrategy->unk10[5]);
 }
 
 void TObjHitCheck::clearHitNum()

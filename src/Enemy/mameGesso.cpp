@@ -86,7 +86,7 @@ void TMameGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (int i = 0; i < mObjNum; i++) {
 		if (!(cue & CUE_MOVE))
 			continue;
-		TMameGesso* gesso = getObj(i);
+		TMameGesso* gesso = (TMameGesso*)TSmallEnemyManager::getObj(i);
 		if (gesso->checkLiveFlag(LIVE_FLAG_DEAD) && gesso->unk1D2) {
 			gesso->unk1CC += 1;
 			if (gesso->unk1CC > gesso->unk194->mSLGenerateInterval.get()) {
@@ -178,8 +178,7 @@ void TMameGesso::reset()
 {
 	TWalkerEnemy::reset();
 
-	// TODO: still don't know the real rand function/class...
-	unk1CC    = MsRandF(0, unk194->mSLGenerateInterval.get());
+	unk1CC    = TMsRange<s32>(0, unk194->mSLGenerateInterval.get()).rand();
 	unk1D0    = 0;
 	unk1E8    = 0.0f;
 	unk1EC    = 1;
@@ -388,15 +387,20 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 				    local_34, returnJumpSp, self->getGravityY());
 				self->mPosition.y += 2.0f;
 				self->setVelocity(vel);
-				self->onHitFlag(LIVE_FLAG_AIRBORNE);
+				self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			}
 		}
 	}
 
 	if (self->unk1EC != 0) {
-		// TODO: one more condition that is kind of like
-		// mGroundPlane->isWaterSurface() but not really
-		if (!self->isReachedToGoal() || self->isAirborne()) {
+		if ((!self->isReachedToGoal() || self->isAirborne())
+		    && !(self->getGroundPlane()->mBGType == BG_TYPE_WATER
+		         || self->getGroundPlane()->mBGType == BG_TYPE_DAMAGING_WATER
+		         || self->getGroundPlane()->mBGType == BG_TYPE_SEA_WATER
+		         || self->getGroundPlane()->mBGType
+		                == BG_TYPE_DAMAGING_SEA_WATER
+		         || self->getGroundPlane()->mBGType == BG_TYPE_POOL
+		         || self->getGroundPlane()->mBGType == BG_TYPE_INDOOR_POOL)) {
 			if (!self->isAirborne())
 				self->walkBehavior(2, 1.0f);
 			else
@@ -543,14 +547,15 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 	if (spine->getTime() == 0) {
 		TMameGessoSaveLoadParams* params = self->getSaveLoadParam();
 
-		f32 thrownRateXZ = params->mSLThrownRateXZ.get();
-
 		// TODO: ugly matching
-		s16 angle = *gpMarioAngleY & 0xffff;
-		JGeometry::TVec3<f32> vel(
-		    thrownRateXZ * *gpMarioThrowPower * JMASSin(angle),
-		    params->mSLThrownVY.get(),
-		    thrownRateXZ * *gpMarioThrowPower * JMASCos(angle));
+		s16 angle        = *gpMarioAngleY & 0xffff;
+		f32 throwPower   = *gpMarioThrowPower;
+		f32 velX         = throwPower * JMASSin(angle);
+		f32 velZ         = throwPower * JMASCos(angle);
+		f32 thrownRateXZ = params->mSLThrownRateXZ.get();
+		JGeometry::TVec3<f32> vel(thrownRateXZ * velX,
+		                          params->mSLThrownVY.get(),
+		                          thrownRateXZ * velZ);
 
 		self->setVelocity(vel);
 

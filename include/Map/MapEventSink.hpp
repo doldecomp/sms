@@ -91,9 +91,6 @@ class TMapEventSinkBianco : public TMapEventSinkInPollutionReset {
 public:
 	TMapEventSinkBianco(const char* name = "イベント（建物沈むビアンコ）")
 	    : TMapEventSinkInPollutionReset(name)
-	    , unk64(nullptr)
-	    , mGateKeeper(nullptr)
-	    , unk7C(0)
 	{
 	}
 

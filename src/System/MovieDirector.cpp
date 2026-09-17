@@ -22,6 +22,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 const char* TMovieDirector::getStreamMovieName(u32 idx)
 {
@@ -76,8 +77,8 @@ int TMovieDirector::rsetup()
 	JKRMemArchive* subtitleArc = new JKRMemArchive;
 	subtitleArc->mountFixed(subtitleArcBlob, MBF_0);
 
-	if (gpApplication.getMovie() < 20) {
-		if (gpApplication.getMovie() < 16) {
+	if ((s32)gpApplication.getMovie() < 20) {
+		if ((s32)gpApplication.getMovie() < 16) {
 			(void)gpApplication.getMovie();
 		} else {
 			void* arcBlob
@@ -115,11 +116,11 @@ int TMovieDirector::rsetup()
 	unk2C->init(movie);
 	group2d->getChildren().push_back(unk2C);
 
-	if (gpApplication.getMovie() < 20) {
-		if (gpApplication.getMovie() < 16) {
+	if ((s32)gpApplication.getMovie() < 20) {
+		if ((s32)gpApplication.getMovie() < 16) {
 			(void)gpApplication.getMovie();
 		} else {
-			unk24 = new TCardSave;
+			unk24 = new TCardSave("card save");
 			unk24->initData(unk20);
 			group2d->getChildren().push_back(unk24);
 		}
@@ -141,7 +142,7 @@ int TMovieDirector::rsetup()
 	screen->assignCamera(camera);
 	screen->assignViewObj(group2d);
 
-	THPPlayerInit(0);
+	THPPlayerInit();
 	THPPlayerOpen(movie, 0);
 	u32 mem = THPPlayerCalcNeedMemory();
 	THPPlayerSetBuffer(new (0x20) u8[mem]);
@@ -160,12 +161,16 @@ int TMovieDirector::rsetup()
 	THPVideoInfo videoInfo;
 	THPPlayerGetVideoInfo(&videoInfo);
 
-	// TODO: Huh? TBox2 or something?
-	thpRender->setParams(SMSGetGameRenderWidth() - videoInfo.xSize / 2,
-	                     SMSGetGameRenderHeight() - videoInfo.ySize / 2,
-	                     videoInfo.xSize, videoInfo.ySize);
+	JGeometry::TBox2<u32> renderRect;
+	renderRect.i.y = (SMSGetGameRenderHeight() - videoInfo.ySize) / 2;
+	renderRect.i.x = (SMSGetGameRenderWidth() - videoInfo.xSize) / 2;
+	renderRect.f.x = videoInfo.xSize;
+	renderRect.f.y = videoInfo.ySize;
 
 	DVDChangeDir("/");
+
+	thpRender->setParams(renderRect.i.x, renderRect.i.y, renderRect.f.x,
+	                     renderRect.f.y);
 
 	return 0;
 }
@@ -180,7 +185,8 @@ TMovieDirector::~TMovieDirector()
 	    = (JKRMemArchive*)JKRFileLoader::getVolume("subtitle"))
 		arc->unmountFixed();
 
-	SMSGetMSound()->stopAllSound();
+	MSound* sound = gpMSound;
+	sound->stopAllSound();
 	THPPlayerStop();
 	THPPlayerClose();
 	THPPlayerQuit();

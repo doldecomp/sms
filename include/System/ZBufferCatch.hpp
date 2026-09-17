@@ -5,20 +5,14 @@
 
 class TAlphaCatch : public JDrama::TViewObj {
 public:
-	TAlphaCatch(const char* name = "<AlphaCatch>")
-	    : JDrama::TViewObj(name)
-	{
-	}
+	TAlphaCatch() { }
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TZBufferCatch : public JDrama::TViewObj {
 public:
-	TZBufferCatch(const char* name = "<ZBufferCatch>")
-	    : JDrama::TViewObj(name)
-	{
-	}
+	TZBufferCatch() { }
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
