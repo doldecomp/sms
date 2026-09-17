@@ -32,20 +32,6 @@ typedef JGeometry::TPosition3<
     JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
     TBeeHiveMtx;
 
-// TODO: this stands in for a member the original surely had --
-// `TRealoidActor::checkFlag(int) const`, declared next to onFlag/offFlag in
-// Animal/fishoid.hpp, mirroring TLiveActor::checkLiveFlag and
-// THitActor::checkHitFlag. Reading the flags through a *const* inline is what
-// keeps the second mFlags load that the ROM has in every on/offFlag following
-// a test (appearBee, disappearBee, receiveMessageFromChild, controlCollision,
-// controlSound); see "const on an inline's pointer parameter also defeats CSE"
-// in docs/AGENT_MATCHING_TIPS.md. Move it to fishoid.hpp as a method and
-// delete this -- that header was out of scope for the batch that found it.
-static inline bool checkRealoidFlag(const TRealoidActor* actor, int flag)
-{
-	return (actor->mFlags & flag) != 0;
-}
-
 namespace {
 
 // 67.5 degrees. The initialiser goes through halfPI(), so it cannot be folded
@@ -252,7 +238,7 @@ void TBeeHive::setBoidParamOnMarioWaterIn()
 
 void TBeeHive::receiveMessageFromChild(TBee* child)
 {
-	if (checkRealoidFlag(child, TRealoidActor::FLAG_UNK4))
+	if (child->checkFlag(TRealoidActor::FLAG_UNK4))
 		return;
 
 	child->onFlag(TRealoidActor::FLAG_UNK4);
@@ -421,7 +407,7 @@ void TBeeHive::controlCollision()
 		next = 0;
 
 	TRealoidActor* nextBee = unk154[next];
-	if (!checkRealoidFlag(nextBee, TRealoidActor::FLAG_UNK2_OR_UNK4))
+	if (!nextBee->checkFlag(TRealoidActor::FLAG_UNK2_OR_UNK4))
 		nextBee->offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 }
 
@@ -436,7 +422,7 @@ void TBeeHive::controlSound()
 
 	for (int i = 0; i < num; ++i) {
 		TRealoidActor* bee = unk154[i];
-		if (checkRealoidFlag(bee, TRealoidActor::FLAG_UNK2_OR_UNK4))
+		if (bee->checkFlag(TRealoidActor::FLAG_UNK2_OR_UNK4))
 			continue;
 
 		alive += 1;
@@ -576,9 +562,9 @@ void TBeeHive::appearBee(int index)
 {
 	TRealoidActor* bee = unk154[index];
 
-	if (checkRealoidFlag(bee, TRealoidActor::FLAG_UNK4))
+	if (bee->checkFlag(TRealoidActor::FLAG_UNK4))
 		return;
-	if (!checkRealoidFlag(bee, TRealoidActor::FLAG_UNK2))
+	if (!bee->checkFlag(TRealoidActor::FLAG_UNK2))
 		return;
 
 	bee->offFlag(TRealoidActor::FLAG_UNK2);
@@ -591,7 +577,7 @@ void TBeeHive::disappearBee(int index)
 {
 	TRealoidActor* bee = unk154[index];
 
-	if (checkRealoidFlag(bee, TRealoidActor::FLAG_UNK2))
+	if (bee->checkFlag(TRealoidActor::FLAG_UNK2))
 		return;
 
 	bee->onFlag(TRealoidActor::FLAG_UNK2);

@@ -41,6 +41,7 @@ public:
 	void calcRootMatrix(TBoid*);
 	void calcRootMatrixOnTaking();
 
+	bool checkFlag(int flag) const { return mFlags & flag; }
 	void onFlag(int flag) { mFlags |= flag; }
 	void offFlag(int flag) { mFlags &= ~flag; }
 
