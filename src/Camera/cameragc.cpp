@@ -928,7 +928,19 @@ void CPolarSubCamera::calcExternalData_()
 	                 0.0f, 1.0f);
 }
 
-// TODO: this should be weak/inline
+// TODO: 99.9%, frame 0x100 against the ROM's 0x120 (32 bytes of
+// inline-expansion temporaries), and every remaining difference is an r1
+// displacement shifted by it.
+//
+// The map also lists this and calcSlopeAngleX_ as **weak** symbols of this TU
+// while every other CPolarSubCamera method here is global, so both were
+// declared inline somewhere -- but `inline` is not the mechanism. Measured:
+// adding `inline` to either declaration in Camera.hpp makes MWCC expand the
+// 0x468 body into perform (perform and calcPosAndAt_ drop to 0% and 75.5%,
+// unit 95.3 -> 70.0), which is exactly what the depth-1 no-limit rule
+// predicts. So whatever gives these two weak linkage also suppresses
+// inlining, and nothing in the catalog explains that pair yet. Leaving them
+// global costs only the BINDING check, not instructions.
 void CPolarSubCamera::ctrlGameCamera_()
 {
 	if (!(unk64 & CAMERA_FLAG_DEAD_DEMO))
