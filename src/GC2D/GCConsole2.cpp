@@ -241,96 +241,81 @@ static inline void writeBalloonColor(TGCConsole2* console, const char* text,
 // fabricated
 static inline void processBalloonTextStep(TGCConsole2* console)
 {
-	JSUMemoryInputStream* input   = (JSUMemoryInputStream*)console->unk3D4;
-	JSUMemoryOutputStream* output = (JSUMemoryOutputStream*)console->unk3D8;
+	// The streams are read out of the members at every use; holding them in
+	// locals removes the reloads the ROM has.
+	if (((JSUMemoryInputStream*)console->unk3D4)->getAvailable() != 0
+	    && ((JSUMemoryOutputStream*)console->unk3D8)->getAvailable() != 0) {
+		for (int i = 0; i < 2; ++i) {
+			u8 value;
+			console->unk3D4->read(&value, 1);
 
-	if (input->getAvailable() == 0 || output->getAvailable() == 0) {
-		console->unk10 = 3;
-		return;
-	}
-
-	for (int i = 0; i < 2; ++i) {
-		u8 value;
-		input->read(&value, 1);
-
-		if (value == 0x1A) {
-			u8 skip;
-			input->read(&skip, 1);
-			input->seek((s32)skip - 2, JSUStreamSeekFrom_CUR);
-			continue;
-		}
-
-		if (value == 0) {
-			writeBalloonTextByte(console, value);
-			console->unk10 = 3;
-			continue;
-		}
-
-		if (value >= 0x80) {
-			u8 trail;
-			input->read(&trail, 1);
-			u8 color[4];
-			u16 code = ((u16)value << 8) | trail;
-			bool hasColor;
-			switch (code) {
-			case 0x817B:
-				color[0] = 0xDC;
-				color[1] = 0xDC;
-				color[2] = 0xDC;
-				color[3] = 0xFF;
-				hasColor = true;
-				break;
-			case 0x8184:
-			case 0x8185:
-				color[0] = 0xFF;
-				color[1] = 0xFF;
-				color[2] = 0x00;
-				color[3] = 0xFF;
-				hasColor = true;
-				break;
-			case 0x8191:
-				color[0] = 0x6E;
-				color[1] = 0xE6;
-				color[2] = 0xFF;
-				color[3] = 0xFF;
-				hasColor = true;
-				break;
-			case 0x8194:
-				color[0] = 0xFF;
-				color[1] = 0xA0;
-				color[2] = 0x64;
-				color[3] = 0xFF;
-				hasColor = true;
-				break;
-			case 0x8196:
-			case 0x8197:
-				color[0] = 0x64;
-				color[1] = 0xFF;
-				color[2] = 0x64;
-				color[3] = 0xFF;
-				hasColor = true;
-				break;
-			default:
-				hasColor = false;
+			switch (value) {
+			case 0x1A: {
+				u8 skip;
+				console->unk3D4->read(&skip, 1);
+				((JSUMemoryInputStream*)console->unk3D4)
+				    ->seek((s32)skip - 2, JSUStreamSeekFrom_CUR);
 				break;
 			}
-			if (hasColor) {
+			case 0:
+				console->unk10 = 3;
+				// FALLTHROUGH: the terminator is written out like a newline.
+			case 0x0A:
+				writeBalloonTextByte(console, value);
+				break;
+			default: {
+				// The US script marks a coloured word with a single ASCII byte;
+				// the Japanese script used two-byte Shift-JIS punctuation for the
+				// same job, so this switch is region specific.
+				JUtility::TColor color;
+				bool hasColor = true;
+
+				switch (value) {
+				case '@':
+					color.set(0x64, 0xFF, 0x64, 0xFF);
+					break;
+				case '#':
+					color.set(0xFF, 0xA0, 0x64, 0xFF);
+					break;
+				case '%':
+					color.set(0xFF, 0xFF, 0x00, 0xFF);
+					break;
+				case '+':
+				case '<':
+				case '>':
+				case 0xA5:
+					color.set(0xDC, 0xDC, 0xDC, 0xFF);
+					break;
+				case '$':
+					color.set(0x6E, 0xE6, 0xFF, 0xFF);
+					break;
+				default:
+					hasColor = false;
+					break;
+				}
+
 				char buffer[0xff];
-				snprintf(buffer, 0xff,
-				         "\033GM[0]\033CC[%02x%02x%02x]\033FX[28]\033FY[28]"
-				         "\033SH[3]\033CD[4]",
-				         color[0], color[1], color[2]);
-				writeBalloonColor(console, buffer, 0x2B);
+				if (hasColor) {
+					snprintf(buffer, 0xff,
+					         "\033GM[0]\033CC[%02x%02x%02x]\033FX[30]\033FY[26]"
+					         "\033SH[3]\033CD[4]",
+					         color.r, color.g, color.b);
+					writeBalloonColor(console, buffer, 0x2B);
+				}
+
+				writeBalloonTextByte(console, value);
+
+				if (hasColor) {
+					snprintf(buffer, 0xff,
+					         "\033GM[0]\033CC\033FX\033FY\033SH\033CU[4]");
+					writeBalloonColor(console, buffer, 0x18);
+				}
+				break;
 			}
-			writeBalloonTextByte(console, value);
-			writeBalloonTextByte(console, trail);
-			if (hasColor)
-				writeBalloonColor(console,
-				                  "\033GM[0]\033CC\033FX\033FY\033SH\033CU[4]",
-				                  0x18);
-		} else {
-			writeBalloonTextByte(console, value);
+			}
 		}
+	} else {
+		console->unk10 = 3;
 	}
 }
 
