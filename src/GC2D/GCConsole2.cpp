@@ -3298,7 +3298,17 @@ u32* TGCConsole2::checkDolpic8()
 	return news;
 }
 
-void TGCConsole2::changeNum(TBlendPane*, int, int) { }
+// UNUSED (0x138 in the map): the shared "blend a counter digit in and puff a
+// particle over it" step, inlined at all five countShine() sites.
+void TGCConsole2::changeNum(TBlendPane* pane, int digit, int frames)
+{
+	pane->setPaneBlend(frames, unkE0[digit], nullptr);
+
+	JUTRect bounds(pane->getPane()->mGlobalBounds);
+	JGeometry::TVec3<f32> position(bounds.x1 + bounds.getWidth() * 0.5f,
+	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
+}
 
 void TGCConsole2::setTimer(s32 param_1)
 {
@@ -3370,6 +3380,161 @@ void TGCConsole2::setTimer(s32 param_1)
 	}
 
 	unk4FC = param_1;
+}
+
+// TODO: 128 bytes of frame short (0x228 vs 0x2a8). The ROM leaves an 80-byte
+// hole between the dead JUTRect and the five inlined changeNum() locals -- one
+// extra 16-byte rect per expansion -- plus 48 bytes below them, and the surplus
+// register pressure is why the ROM recomputes `value % 10` at two sites instead
+// of parking it in a callee-saved register as we do.
+void TGCConsole2::countShine()
+{
+	int shines    = TFlagManager::getInstance()->getFlag(0x40000);
+	int blueTotal = TFlagManager::getInstance()->getFlag(0x40001);
+
+	if (unk8A == 0 && (int)unk64 != shines)
+		unk8A = 1;
+
+	if (unk8A != 0) {
+		if (unk8A > 0xFB) {
+			int spentBlueCoins = 0;
+			for (int flag = 0x46; flag < 0x56; ++flag)
+				if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
+					++spentBlueCoins;
+
+			for (int flag = 0x6C; flag <= 0x73; ++flag)
+				if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
+					++spentBlueCoins;
+
+			if (unk170 != blueTotal - spentBlueCoins * 10) {
+				--unk170;
+				if (unk170 < 0) {
+					unk170 = 0;
+					// TODO: SoundEffects.hpp has no name for 0x405C yet; it
+					// is the blue coin counter tick.
+				} else if (SMSGetMSound()->gateCheck(0x405C)) {
+					MSoundSESystem::MSoundSE::startSoundSystemSE(0x405C, 0,
+					                                             nullptr, 0);
+				}
+				// Spelled out rather than routed through the shared digit
+				// helper: every changeTexture call invalidates the cached
+				// load, so the original re-reads unk170 per digit.
+				if (unk170 < 100) {
+					setDigitPane(unk154[0], unkE0, (int)(unk170 * 0.1f));
+					setDigitPane(unk154[1], unkE0, unk170 % 10);
+					if (unk154[2]->getPane()->isVisible())
+						unk154[2]->getPane()->hide();
+				} else {
+					setDigitPane(unk154[0], unkE0, (int)(unk170 * 0.01f));
+
+					int remainder = unk170 - (int)(unk170 * 0.01f) * 100;
+					setDigitPane(unk154[1], unkE0, (int)(remainder * 0.1f));
+					setDigitPane(unk154[2], unkE0, remainder % 10);
+					if (!unk154[2]->getPane()->isVisible())
+						unk154[2]->getPane()->show();
+				}
+			}
+		}
+
+		if (unk8A == 0xFC) {
+			int value = unk64;
+			// TODO: dead 16-byte local the original still zeroes before the
+			// digit updates; each emitter site builds its own rect instead.
+			JUTRect rect(0, 0, 0, 0);
+
+			if (value < 100) {
+				if (unk134[2]->getPane()->isVisible())
+					unk134[2]->getPane()->hide();
+
+				if (value % 10 == 0)
+					changeNum(unk134[0], value / 10, 10);
+
+				changeNum(unk134[1], value % 10, 10);
+			} else {
+				if (value % 100 == 0) {
+					changeNum(unk134[0], value / 100, 10);
+					if (!unk134[0]->getPane()->isVisible())
+						unk134[0]->getPane()->show();
+				}
+
+				value -= (int)(value * 0.01f) * 100;
+
+				if (value % 10 == 0)
+					changeNum(unk134[1], value / 10, 10);
+
+				if (!unk134[2]->getPane()->isVisible())
+					unk134[2]->getPane()->show();
+
+				changeNum(unk134[2], value % 10, 10);
+			}
+		} else if (unk8A == 0x106) {
+			if (shines > (int)unk64) {
+				++unk64;
+				unk8A = 0xFB;
+			}
+		} else if (!unk34 && !unk35) {
+			unk134[0]->update();
+			unk134[1]->update();
+			unk134[2]->update();
+		}
+
+		++unk8A;
+	}
+}
+
+// TODO: 64 bytes of frame short (0x120 vs 0x160); the instructions match
+// except for the callee-saved numbering that follows from it.
+void TGCConsole2::countBlueCoin()
+{
+	int blueTotal = TFlagManager::getInstance()->getFlag(0x40001);
+
+	if ((int)unk168 != blueTotal) {
+		++unk168;
+
+		int spentBlueCoins = 0;
+		for (int flag = 0x46; flag < 0x56; ++flag)
+			if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
+				++spentBlueCoins;
+
+		for (int flag = 0x6C; flag < 0x74; ++flag)
+			if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
+				++spentBlueCoins;
+
+		int blueCoins = unk168 - spentBlueCoins * 10;
+		if (blueCoins < 0)
+			blueCoins = 0;
+
+		setBlueCoinDigits(unk154, unkE0, blueCoins);
+		if (unk160->getPane()->isVisible()) {
+			JUTRect bounds(unk154[1]->getPane()->mGlobalBounds);
+			JGeometry::TVec3<f32> position;
+			position.x = bounds.x1 + bounds.getWidth() * 0.5f;
+			position.y = bounds.y1 + bounds.getHeight() * 0.5f;
+			position.z = 0.0f;
+			gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr,
+			                                   nullptr);
+
+			if (blueCoins % 10 == 0) {
+				bounds   = unk154[0]->getPane()->mGlobalBounds;
+				position.x = bounds.x1 + bounds.getWidth() * 0.5f;
+				position.y = bounds.y1 + bounds.getHeight() * 0.5f;
+				position.z = 0.0f;
+				gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr,
+				                                   nullptr);
+			}
+		} else {
+			startAppearStar();
+		}
+
+		unk170 = blueCoins;
+		unk16C = 1;
+	}
+
+	if (unk16C != 0) {
+		++unk16C;
+		if (unk16C > 0x190)
+			unk16C = 0;
+	}
 }
 
 void TGCConsole2::startMoveTimer(int param_1)
