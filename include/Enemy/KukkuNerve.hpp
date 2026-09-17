@@ -159,6 +159,16 @@ public:
 	virtual void createModelData();
 
 	void initCoins();
+
+	// TODO: unknown. The only evidence that this member exists at all is
+	// MarNameRefGen_Enemy's `new 0x64` in front of
+	// __ct__13TKukkuManagerFPCc (TKazekunManager, the other member-less
+	// TSmallEnemyManager, is allocated at 0x60), and nothing in Kukku.o or
+	// MarNameRefGen_Enemy.o touches 0x60. The constructor does not
+	// initialise it and initCoins() is UNUSED at 0x4, i.e. an empty body, so
+	// whatever read it was dead-stripped. Name and type are guesses; only
+	// the size is proven.
+	/* 0x60 */ u32 unk60;
 };
 
 DECLARE_NERVE(TNerveKukkuFall, TLiveActor)

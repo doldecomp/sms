@@ -218,6 +218,15 @@ public:
 	/* 0x1B0 */ int mHeadJntIndex;
 	/* 0x1B4 */ int mNeckJntIndex;
 	/* 0x1B8 */ int mAgoJntIndex;
+	// TODO: unknown, 0xc bytes. The only evidence is
+	// MarNameRefGen_BossEnemy's `new 0x1c8` in front of
+	// __ct__11TLimitKoopaFPCc; nothing in limitkoopa.o touches 0x1bc..0x1c7
+	// on a TLimitKoopa (the hits at those offsets there are
+	// TLimitKoopaParams' own TParamRTs and gParticleFlagLoaded). 0xc is
+	// exactly a TVec3<f32> and getFlameDir() (UNUSED, 0x180) returns one by
+	// value, but resetLimitKoopa() (UNUSED, 0x2c) is the only body that could
+	// prove it and it is not reconstructed yet, so this stays a placeholder.
+	/* 0x1BC */ u8 unk1BC[0xc];
 };
 
 class TLiveActor;

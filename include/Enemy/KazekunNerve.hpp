@@ -99,6 +99,14 @@ public:
 	/* 0x1A0 */ JGeometry::TQuat4<f32> mQuat;
 	// How many frames to stay gone before searching for Mario again.
 	/* 0x1B0 */ int mSleepTime;
+	// TODO: unknown, 0x20 bytes. The only evidence is MarNameRefGen_Enemy's
+	// `new 0x1d4` in front of __ct__8TKazekunFPCc; the constructor stores
+	// nothing past mSleepTime and neither Kazekun.o nor MarNameRefGen_Enemy.o
+	// (the only two objects that mention TKazekun) loads or stores anything
+	// between 0x1b4 and 0x1d3, so the code that used these went away with
+	// doAttack/getAroundQuat and the rest of the UNUSED list. Split it up as
+	// soon as one access turns up.
+	/* 0x1B4 */ u8 unk1B4[0x20];
 };
 
 class TKazekunManager : public TSmallEnemyManager {
