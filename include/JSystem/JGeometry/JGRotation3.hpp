@@ -204,6 +204,31 @@ public:
 		quat.w = 0.5f / scale * (this->at(1, 0) - this->at(0, 1));
 	}
 
+	// TODO: 91.0% against the only copy the ROM emits (weak in BeeHive.o,
+	// 0x100). Everything is structurally right -- the nine products, the two
+	// shared `1 - 2*n*n` terms and all nine stores -- but retail loads the
+	// quaternion as qt.y, qt.z, qt.x, qt.w and we load qt.y, qt.z, qt.w, qt.x,
+	// so the four `2.0f * qt.n` CSEs are created in a different order and every
+	// float register downstream is renumbered (1 `<`/`>` pair for the scale.x
+	// load and a three-instruction rotation near the end). Source order of the
+	// statements does move it, so this is not purely a scheduling artefact, but
+	// nothing tried reaches the retail order:
+	//
+	//   body spelling                                        setSQ
+	//   as below                                              91.0
+	//   squares reordered y, z, x                              91.0
+	//   all six permutations of the xy/yz/xz group             91.0
+	//   w group as wx,wz,wy / wz,wx,wy / wz,wy,wx              91.2
+	//   w group as wy,wx,wz / wy,wz,wx                         91.0
+	//   w products declared before the xy/yz/xz group          85.5
+	//   named `f32 x2 = 2.0f * qt.x;` ... (xyzw order)         72.6
+	//   the same four named 2*n in y, z, x, w order            69.8
+	//   `1 - 2x*x` spelled per element instead of shared       90.2
+	//   no locals at all, everything inline in the refs     inlined
+	//
+	// The last row is why the locals have to stay: without them the body is
+	// under the statement budget and MWCC inlines it into TBeeHive::calcRootMatrix,
+	// which the ROM does not (calc 75.5 -> 24.1). Leaving the 91.0 spelling.
 	void setSQ(const JGeometry::TVec3<f32>& scale,
 	           const JGeometry::TQuat4<f32>& qt)
 	{
