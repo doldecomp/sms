@@ -29,233 +29,233 @@ s16 CPolarSubCamera::getCameraInbetweenFrame_(int param_1)
 	if (param_1 == -1)
 		param_1 = unk60->getThing();
 
-	int iVar3 = 1;
+	s16 frames = 1;
 	if (mMode < CAMERA_MODE_REPRODUCE_DEMO
 	    && param_1 < CAMERA_MODE_REPRODUCE_DEMO) {
 		TCamSaveKindParam* pTVar4 = mSaveKindParam[mMode];
 		switch (param_1) {
 		case CAMERA_MODE_FOLLOW:
-			iVar3 = pTVar4->mSLInbetFollow.get();
+			frames = pTVar4->mSLInbetFollow.get();
 			break;
 		case CAMERA_MODE_PARALLEL:
-			iVar3 = pTVar4->mSLInbetParallel.get();
+			frames = pTVar4->mSLInbetParallel.get();
 			break;
 		case CAMERA_MODE_MULTI_PLAYER:
-			iVar3 = pTVar4->mSLInbetMultiPlayer.get();
+			frames = pTVar4->mSLInbetMultiPlayer.get();
 			break;
 		case CAMERA_MODE_WALL_JUMP:
-			iVar3 = pTVar4->mSLInbetWallJump.get();
+			frames = pTVar4->mSLInbetWallJump.get();
 			break;
 		case CAMERA_MODE_HIP_ATTACK:
-			iVar3 = pTVar4->mSLInbetHipAttack.get();
+			frames = pTVar4->mSLInbetHipAttack.get();
 			break;
 		case CAMERA_MODE_ROCKET_JUMP:
-			iVar3 = pTVar4->mSLInbetRocketJump.get();
+			frames = pTVar4->mSLInbetRocketJump.get();
 			break;
 		case CAMERA_MODE_WIRE:
-			iVar3 = pTVar4->mSLInbetWire.get();
+			frames = pTVar4->mSLInbetWire.get();
 			break;
 		case CAMERA_MODE_L_NORMAL:
-			iVar3 = pTVar4->mSLInbetLNormal.get();
+			frames = pTVar4->mSLInbetLNormal.get();
 			break;
 		case CAMERA_MODE_MARE_UNDER_GROUND:
-			iVar3 = pTVar4->mSLInbetMareUnderGround.get();
+			frames = pTVar4->mSLInbetMareUnderGround.get();
 			break;
 		case CAMERA_MODE_DEFINITE_D2:
-			iVar3 = pTVar4->mSLInbetDefiniteD2.get();
+			frames = pTVar4->mSLInbetDefiniteD2.get();
 			break;
 		case CAMERA_MODE_TALK_E:
-			iVar3 = pTVar4->mSLInbetTalkE.get();
+			frames = pTVar4->mSLInbetTalkE.get();
 			break;
 		case CAMERA_MODE_LEAN_MIRROR:
-			iVar3 = pTVar4->mSLInbetLeanMirror.get();
+			frames = pTVar4->mSLInbetLeanMirror.get();
 			break;
 		case CAMERA_MODE_TALK_A:
-			iVar3 = pTVar4->mSLInbetTalkA.get();
+			frames = pTVar4->mSLInbetTalkA.get();
 			break;
 		case CAMERA_MODE_UNDER_GROUND:
-			iVar3 = pTVar4->mSLInbetUnderGround.get();
+			frames = pTVar4->mSLInbetUnderGround.get();
 			break;
 		case CAMERA_MODE_INDOOR:
-			iVar3 = pTVar4->mSLInbetIndoor.get();
+			frames = pTVar4->mSLInbetIndoor.get();
 			break;
 		case CAMERA_MODE_HANG:
-			iVar3 = pTVar4->mSLInbetHang.get();
+			frames = pTVar4->mSLInbetHang.get();
 			break;
 		case CAMERA_MODE_WIRE_HANG:
-			iVar3 = pTVar4->mSLInbetWireHang.get();
+			frames = pTVar4->mSLInbetWireHang.get();
 			break;
 		case CAMERA_MODE_SAND_BIRD:
-			iVar3 = pTVar4->mSLInbetSandBird.get();
+			frames = pTVar4->mSLInbetSandBird.get();
 			break;
 		case CAMERA_MODE_HOVERING:
-			iVar3 = pTVar4->mSLInbetHovering.get();
+			frames = pTVar4->mSLInbetHovering.get();
 			break;
 		case CAMERA_MODE_JUMP_CODE:
-			iVar3 = pTVar4->mSLInbetJumpCode.get();
+			frames = pTVar4->mSLInbetJumpCode.get();
 			break;
 		case CAMERA_MODE_DELFINO:
-			iVar3 = pTVar4->mSLInbetDelfino.get();
+			frames = pTVar4->mSLInbetDelfino.get();
 			break;
 		case CAMERA_MODE_CLIMB:
-			iVar3 = pTVar4->mSLInbetClimb.get();
+			frames = pTVar4->mSLInbetClimb.get();
 			break;
 		case CAMERA_MODE_FIX_A:
-			iVar3 = pTVar4->mSLInbetFixA.get();
+			frames = pTVar4->mSLInbetFixA.get();
 			break;
 		case CAMERA_MODE_FIX_B:
-			iVar3 = pTVar4->mSLInbetFixB.get();
+			frames = pTVar4->mSLInbetFixB.get();
 			break;
 		case CAMERA_MODE_FIX_C:
-			iVar3 = pTVar4->mSLInbetFixC.get();
+			frames = pTVar4->mSLInbetFixC.get();
 			break;
 		case CAMERA_MODE_FIX_D:
-			iVar3 = pTVar4->mSLInbetFixD.get();
+			frames = pTVar4->mSLInbetFixD.get();
 			break;
 		case CAMERA_MODE_FIX_E:
-			iVar3 = pTVar4->mSLInbetFixE.get();
+			frames = pTVar4->mSLInbetFixE.get();
 			break;
 		case CAMERA_MODE_FIX_F:
-			iVar3 = pTVar4->mSLInbetFixF.get();
+			frames = pTVar4->mSLInbetFixF.get();
 			break;
 		case CAMERA_MODE_FIX_G:
-			iVar3 = pTVar4->mSLInbetFixG.get();
+			frames = pTVar4->mSLInbetFixG.get();
 			break;
 		case CAMERA_MODE_FIX_H:
-			iVar3 = pTVar4->mSLInbetFixH.get();
+			frames = pTVar4->mSLInbetFixH.get();
 			break;
 		case CAMERA_MODE_DEFINITE_A:
-			iVar3 = pTVar4->mSLInbetDefiniteA.get();
+			frames = pTVar4->mSLInbetDefiniteA.get();
 			break;
 		case CAMERA_MODE_DEFINITE_B:
-			iVar3 = pTVar4->mSLInbetDefiniteB.get();
+			frames = pTVar4->mSLInbetDefiniteB.get();
 			break;
 		case CAMERA_MODE_DEFINITE_C:
-			iVar3 = pTVar4->mSLInbetDefiniteC.get();
+			frames = pTVar4->mSLInbetDefiniteC.get();
 			break;
 		case CAMERA_MODE_DEFINITE_D:
-			iVar3 = pTVar4->mSLInbetDefiniteD.get();
+			frames = pTVar4->mSLInbetDefiniteD.get();
 			break;
 		case CAMERA_MODE_DEFINITE_E:
-			iVar3 = pTVar4->mSLInbetDefiniteE.get();
+			frames = pTVar4->mSLInbetDefiniteE.get();
 			break;
 		case CAMERA_MODE_DEFINITE_F:
-			iVar3 = pTVar4->mSLInbetDefiniteF.get();
+			frames = pTVar4->mSLInbetDefiniteF.get();
 			break;
 		case CAMERA_MODE_DEFINITE_G:
-			iVar3 = pTVar4->mSLInbetDefiniteG.get();
+			frames = pTVar4->mSLInbetDefiniteG.get();
 			break;
 		case CAMERA_MODE_DEFINITE_H:
-			iVar3 = pTVar4->mSLInbetDefiniteH.get();
+			frames = pTVar4->mSLInbetDefiniteH.get();
 			break;
 		case CAMERA_MODE_EX_MAP_0:
-			iVar3 = pTVar4->mSLInbetExMap0.get();
+			frames = pTVar4->mSLInbetExMap0.get();
 			break;
 		case CAMERA_MODE_TOWER_A:
-			iVar3 = pTVar4->mSLInbetTowerA.get();
+			frames = pTVar4->mSLInbetTowerA.get();
 			break;
 		case CAMERA_MODE_TOWER_B:
-			iVar3 = pTVar4->mSLInbetTowerB.get();
+			frames = pTVar4->mSLInbetTowerB.get();
 			break;
 		case CAMERA_MODE_TOWER_C:
-			iVar3 = pTVar4->mSLInbetTowerC.get();
+			frames = pTVar4->mSLInbetTowerC.get();
 			break;
 		case CAMERA_MODE_SLIDER:
-			iVar3 = pTVar4->mSLInbetSlider.get();
+			frames = pTVar4->mSLInbetSlider.get();
 			break;
 		case CAMERA_MODE_DIVING:
-			iVar3 = pTVar4->mSLInbetDiving.get();
+			frames = pTVar4->mSLInbetDiving.get();
 			break;
 		case CAMERA_MODE_TURBO:
-			iVar3 = pTVar4->mSLInbetTurbo.get();
+			frames = pTVar4->mSLInbetTurbo.get();
 			break;
 		case CAMERA_MODE_TALK_B:
-			iVar3 = pTVar4->mSLInbetTalkB.get();
+			frames = pTVar4->mSLInbetTalkB.get();
 			break;
 		case CAMERA_MODE_JET_COASTER:
-			iVar3 = pTVar4->mSLInbetJetCoaster.get();
+			frames = pTVar4->mSLInbetJetCoaster.get();
 			break;
 		case CAMERA_MODE_PARALLEL_B:
-			iVar3 = pTVar4->mSLInbetParallelB.get();
+			frames = pTVar4->mSLInbetParallelB.get();
 			break;
 		case CAMERA_MODE_SURFING:
-			iVar3 = pTVar4->mSLInbetSurfing.get();
+			frames = pTVar4->mSLInbetSurfing.get();
 			break;
 		case CAMERA_MODE_SWIMMING:
-			iVar3 = pTVar4->mSLInbetSwimming.get();
+			frames = pTVar4->mSLInbetSwimming.get();
 			break;
 		case CAMERA_MODE_CLIMB_JUMP:
-			iVar3 = pTVar4->mSLInbetClimbJump.get();
+			frames = pTVar4->mSLInbetClimbJump.get();
 			break;
 		case CAMERA_MODE_LOOK_DOWN:
-			iVar3 = pTVar4->mSLInbetLookDown.get();
+			frames = pTVar4->mSLInbetLookDown.get();
 			break;
 		case CAMERA_MODE_RAIL_FENCE:
-			iVar3 = pTVar4->mSLInbetRailFence.get();
+			frames = pTVar4->mSLInbetRailFence.get();
 			break;
 		case CAMERA_MODE_FOLLOW_B:
-			iVar3 = pTVar4->mSLInbetFollowB.get();
+			frames = pTVar4->mSLInbetFollowB.get();
 			break;
 		case CAMERA_MODE_FOLLOW_C:
-			iVar3 = pTVar4->mSLInbetFollowC.get();
+			frames = pTVar4->mSLInbetFollowC.get();
 			break;
 		case CAMERA_MODE_TOWER_D:
-			iVar3 = pTVar4->mSLInbetTowerD.get();
+			frames = pTVar4->mSLInbetTowerD.get();
 			break;
 		case CAMERA_MODE_DELFINO_ATTIC:
-			iVar3 = pTVar4->mSLInbetDelfinoAttic.get();
+			frames = pTVar4->mSLInbetDelfinoAttic.get();
 			break;
 		case CAMERA_MODE_BOSS_GESO:
-			iVar3 = pTVar4->mSLInbetBossGeso.get();
+			frames = pTVar4->mSLInbetBossGeso.get();
 			break;
 		case CAMERA_MODE_FIX_I:
-			iVar3 = pTVar4->mSLInbetFixI.get();
+			frames = pTVar4->mSLInbetFixI.get();
 			break;
 		case CAMERA_MODE_DEFINITE_I:
-			iVar3 = pTVar4->mSLInbetDefiniteI.get();
+			frames = pTVar4->mSLInbetDefiniteI.get();
 			break;
 		case CAMERA_MODE_FENCE:
-			iVar3 = pTVar4->mSLInbetFence.get();
+			frames = pTVar4->mSLInbetFence.get();
 			break;
 		case CAMERA_MODE_MONTE_FENCE:
-			iVar3 = pTVar4->mSLInbetMonteFence.get();
+			frames = pTVar4->mSLInbetMonteFence.get();
 			break;
 		case CAMERA_MODE_MONTE_HANG:
-			iVar3 = pTVar4->mSLInbetMonteHang.get();
+			frames = pTVar4->mSLInbetMonteHang.get();
 			break;
 		case CAMERA_MODE_TALK_C:
-			iVar3 = pTVar4->mSLInbetTalkC.get();
+			frames = pTVar4->mSLInbetTalkC.get();
 			break;
 		case CAMERA_MODE_TALK_D:
-			iVar3 = pTVar4->mSLInbetTalkD.get();
+			frames = pTVar4->mSLInbetTalkD.get();
 			break;
 		case CAMERA_MODE_TOWER_E:
-			iVar3 = pTVar4->mSLInbetTowerE.get();
+			frames = pTVar4->mSLInbetTowerE.get();
 			break;
 		case CAMERA_MODE_DELFINO_B:
-			iVar3 = pTVar4->mSLInbetDelfinoB.get();
+			frames = pTVar4->mSLInbetDelfinoB.get();
 			break;
 		case CAMERA_MODE_CANCAN:
-			iVar3 = pTVar4->mSLInbetCancan.get();
+			frames = pTVar4->mSLInbetCancan.get();
 			break;
 		case CAMERA_MODE_AQUATIC_TURBO:
-			iVar3 = pTVar4->mSLInbetAquaticTurbo.get();
+			frames = pTVar4->mSLInbetAquaticTurbo.get();
 			break;
 		case CAMERA_MODE_FOLLOW_D:
-			iVar3 = pTVar4->mSLInbetFollowD.get();
+			frames = pTVar4->mSLInbetFollowD.get();
 			break;
 		case CAMERA_MODE_FOLLOW_E:
-			iVar3 = pTVar4->mSLInbetFollowE.get();
+			frames = pTVar4->mSLInbetFollowE.get();
 			break;
 		case CAMERA_MODE_PARALLEL_C:
-			iVar3 = pTVar4->mSLInbetParallelC.get();
+			frames = pTVar4->mSLInbetParallelC.get();
 			break;
 		case CAMERA_MODE_PARALLEL_D:
-			iVar3 = pTVar4->mSLInbetParallelD.get();
+			frames = pTVar4->mSLInbetParallelD.get();
 			break;
 		}
 	}
-	return iVar3;
+	return frames;
 }
 
 void CPolarSubCamera::setUpToLButtonCamera_(int param_1)
@@ -432,8 +432,12 @@ void CPolarSubCamera::changeCamModeSpecifyCamMapTool_(
 {
 	int newMode = tool->getCameraMode();
 	if (mMode != newMode || unk70 != tool) {
-		unk74 = unk70;
-		unk70 = tool;
+		// Naming the outgoing tool is what carries the last 8 bytes of this
+		// frame; the sibling changeCamModeSpecifyCamMapToolAndFrame_, which
+		// has no getCameraInbetweenFrame_ call, matches without it.
+		const TCameraMapTool* prev = unk70;
+		unk74                      = prev;
+		unk70                      = tool;
 		changeCamModeSub_(newMode, getCameraInbetweenFrame_(newMode), true);
 	}
 }
