@@ -1337,6 +1337,16 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 		++console->unk55C;
 }
 
+// fabricated. The guard has to sit behind a wrapper: called straight from
+// perform() MWCC expands startAppearTank() (292 bytes) inline, while the ROM
+// keeps the `bl`; one extra level is enough to push it back out of line.
+static inline void updateTankAppear(TGCConsole2* console)
+{
+	if (!console->unk46 && SMS_CheckMarioFlag(0x10000) && !console->unk45
+	    && !console->unk50)
+		console->startAppearTank();
+}
+
 // fabricated
 static inline void updateWaterTankState(TGCConsole2* console)
 {
@@ -4464,8 +4474,7 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		updateShineAppearState(this);
 		updateWaterGaugeFill(this);
 
-		if (!unk46 && SMS_CheckMarioFlag(0x10000) && !unk45 && !unk50)
-			startAppearTank();
+		updateTankAppear(this);
 		updateWaterTankState(this);
 
 		updateLifeMeterBlink(this);
