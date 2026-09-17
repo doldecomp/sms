@@ -102,10 +102,12 @@ Several agents can work at once, each in its own git worktree, as long as they e
 `build/` and `orig/` are untracked, so a bare `git worktree add` cannot build; use the helper instead:
 
 ```bash
-tools/worktree.sh add <name>      # ../sms-wt/<name> on branch wt/<name>, built, with a baseline (~1 min)
-tools/worktree.sh merge <name>    # rebase wt/<name> onto the current branch and fast-forward it in
+tools/worktree.sh add <name>              # ../sms-wt/<name> on branch wt/<name>, built, with a baseline (~1 min)
+tools/worktree.sh land <name> <unit>...   # merge, then changes_all, DOL SHA-1 and symbol order in one report
 tools/worktree.sh remove <name>
 ```
+
+Unit agents are briefed by `docs/BATCH_BRIEF.md`; a spawn message only names the worktree, the units and the scratch directory.
 
 Inside a worktree every command in this guide works unchanged: `build/venv/bin/ninja`, `decomp-diff.py`, `validate-symbol-order.py` and `ninja baseline`/`changes_all` all run against that worktree's own `build/GMSE01`.
 The toolchain and disc files are shared read-only symlinks.

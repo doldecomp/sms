@@ -6,6 +6,8 @@
 #                                             take a baseline
 #   tools/worktree.sh merge <name>            rebase wt/<name> onto the current branch and
 #                                             fast-forward it in; verification is the caller's job
+#   tools/worktree.sh land <name> <unit>...   merge, then run changes_all, the DOL SHA-1 check
+#                                             and symbol order for each unit; exit 1 if red
 #   tools/worktree.sh remove <name>           remove the worktree and its branch
 #   tools/worktree.sh list
 #
@@ -75,6 +77,36 @@ merge)
 	git -C "$path" rebase "$target"
 	git -C "$ROOT" merge --ff-only "wt/$name"
 	echo "merged wt/$name into $target; now run ninja changes_all and the DOL SHA-1 check here"
+	;;
+land)
+	# land <name> <unit>...: merge, then verify in the main checkout and print
+	# a compact report. Exit 1 on any regression or a DOL mismatch.
+	[ -n "$name" ] || usage
+	shift 2
+	"$0" merge "$name" >/dev/null
+	cd "$ROOT"
+	echo "== merged $(git log --oneline -1)"
+	grep -n 'pragma dont_inline\|trash\[\|pad\[' $(git diff --name-only HEAD@{1} HEAD -- 'src/*' 'include/*') 2>/dev/null \
+		| grep -v '^\S*:\s*//' && echo "!! suspicious padding/pragma above" || true
+	rc=0
+	build/venv/bin/ninja changes_all 2>&1 | awk -F'|' '
+		/->/ { split($3, a, "->"); gsub(/[ %]/, "", a[1]); gsub(/[ %]/, "", a[2]); n++
+		       if (a[2] + 0 < a[1] + 0) { r++; print "REGRESSION:", $0 } }
+		END { printf "== changes_all: %d changed lines, %d regressions\n", n, r + 0; exit (r + 0) > 0 }' || rc=1
+	sha=$(sha1sum build/GMSE01/mario.dol | cut -d' ' -f1)
+	if [ "$sha" = "$(cat config/$VERSION/build.sha1 | cut -d' ' -f1)" ]; then
+		echo "== DOL sha1 OK"
+	else
+		echo "== DOL sha1 MISMATCH: $sha"; rc=1
+	fi
+	for u in "$@"; do
+		printf '== symbol order %s: ' "$u"
+		NM=build/binutils/powerpc-eabi-nm build/venv/bin/python3 tools/validate-symbol-order.py \
+			-u "$u" --map "orig/$VERSION/files/marioUS.MAP" 2>&1 | grep 'RESULT\|MISSING\|^  - ' | tr '\n' ' '
+		echo
+	done
+	build/venv/bin/ninja 2>&1 | grep -E '^  (All|Game)'
+	exit $rc
 	;;
 remove)
 	[ -n "$name" ] || usage
