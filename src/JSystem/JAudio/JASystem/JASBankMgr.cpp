@@ -9,6 +9,7 @@
 #include <JSystem/JAudio/JASystem/JASRate.hpp>
 #include <JSystem/JAudio/JASystem/JASInst.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBank.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 
 namespace JASystem {
 namespace BankMgr {
@@ -56,17 +57,20 @@ namespace BankMgr {
 		return sBankArray[bankIndex];
 	}
 
-	u16 getPhysicalNumber(u16 virtualNumber)
-	{
-		return sVir2PhyTable[virtualNumber];
-	}
+	u16 getPhysicalNumber(u16 vir_id) { return sVir2PhyTable[vir_id]; }
 
-	void setVir2PhyTable(u32 tableAddr, int size)
+	void setVir2PhyTable(u32 vir_id, int banknum)
 	{
-		if (tableAddr == 0xFFFF)
+		if (vir_id == 0xFFFF)
 			return;
 
-		sVir2PhyTable[tableAddr] = size;
+		JUT_ASSERT(vir_id < sTableSize);
+
+		if (sVir2PhyTable[vir_id] != 0xFFFF)
+			JUT_REPORT_MSG("Warning : Duplicated Bank vir_id ID %d (%d,%d)\n",
+			               vir_id, sVir2PhyTable[vir_id], banknum);
+
+		sVir2PhyTable[vir_id] = banknum;
 	}
 
 	bool assignWaveBank(int bankIndex, int waveBankIndex)
@@ -79,7 +83,7 @@ namespace BankMgr {
 		if (!waveBank)
 			return false;
 
-		bank->unk4 = waveBank;
+		bank->assignWaveBank(waveBank);
 		return true;
 	}
 
@@ -114,7 +118,7 @@ namespace BankMgr {
 		if (!inst->getParam(param_4, param_5, &instParam))
 			return nullptr;
 
-		TWaveBank* waveBank = bank->unk4;
+		TWaveBank* waveBank = bank->getWaveBank();
 		if (!waveBank)
 			return nullptr;
 
@@ -138,21 +142,23 @@ namespace BankMgr {
 		case 0x80:
 			chanKey |= 0xff;
 			break;
-		case 0x40:
-			chanKey |= instParam.unk3C << 0x10;
+		case 0x40: {
+			u32 keymap = instParam.unk3C;
+			keymap <<= 0x10;
+			chanKey |= keymap;
 			break;
+		}
 		}
 
 		TChannel* chan = param_1->getLogicalChannel(chanKey);
 		if (!chan)
 			return nullptr;
 
-		// TODO: WTF?
-		chan->unk10 = (Driver::Wave_*)waveInfo;
-		chan->unk14 = (u32)wave;
-		chan->unkC  = instParam.mSourceType;
-		chan->unk0  = param_5;
-		chan->unk1  = param_4;
+		chan->mWaveData        = (Driver::Wave_*)waveInfo;
+		chan->unk14            = (u32)wave;
+		chan->mLogicalChanType = instParam.mSourceType;
+		chan->unk0             = param_5;
+		chan->unk1             = param_4;
 		chan->unk48
 		    = instParam.mPitch * (waveInfo->unk4 / Kernel::getDacRate());
 		chan->unk50 = chan->unk48 * instParam.mEffectPitch;
@@ -200,12 +206,12 @@ namespace BankMgr {
 		if (!channel)
 			return nullptr;
 
-		channel->unk14 = param_2;
-		channel->unkC  = 2;
-		channel->unk0  = param_4;
-		channel->unk1  = param_3;
-		channel->unk48 = 16736.016f / Kernel::getDacRate();
-		channel->unk50 = channel->unk48;
+		channel->unk14            = param_2;
+		channel->mLogicalChanType = 2;
+		channel->unk0             = param_4;
+		channel->unk1             = param_3;
+		channel->unk48            = 16736.016f / Kernel::getDacRate();
+		channel->unk50            = channel->unk48;
 
 		s32 var1 = param_3;
 		if (var1 < 0)
@@ -245,10 +251,10 @@ namespace BankMgr {
 		channel->unk30 = param_4;
 		channel->unk34 = channel->unk30;
 		s32 var;
-		if (channel->unkC == 2)
+		if (channel->mLogicalChanType == 2)
 			var = param_2;
 		else
-			var = (param_2 + 0x3C) - channel->unk10->unk2;
+			var = (param_2 + 0x3C) - channel->mWaveData->mKey;
 
 		if (var < 0)
 			var = 0;

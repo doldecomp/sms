@@ -30,6 +30,11 @@ public:
 
 class TBoardNpcManager : public TLiveManager {
 public:
+	TBoardNpcManager()
+	    : TLiveManager("?")
+	{
+	}
+
 	virtual void createModelData();
 	virtual void clipActors(JDrama::TGraphics*);
 };
@@ -93,14 +98,20 @@ public:
 
 class TMonteMSpecialManager : public TMonteMBaseManager {
 public:
-	TMonteMSpecialManager();
+	TMonteMSpecialManager()
+	    : TMonteMBaseManager("?")
+	{
+	}
 
 	void createAnmData();
 };
 
 class TMonteWSpecialManager : public TMonteWBaseManager {
 public:
-	TMonteWSpecialManager();
+	TMonteWSpecialManager()
+	    : TMonteWBaseManager("?")
+	{
+	}
 
 	void createAnmData();
 };
@@ -129,51 +140,88 @@ public:
 	virtual void createModelData();
 };
 
+class TMareMManager : public TMareMBaseManager {
+public:
+	TMareMManager()
+	    : TMareMBaseManager("?")
+	{
+	}
+};
+
 class TMareMAManager : public TMareMBaseManager {
 public:
-	TMareMAManager();
+	TMareMAManager()
+	    : TMareMBaseManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
 class TMareMBManager : public TMareMBaseManager {
 public:
-	TMareMBManager();
+	TMareMBManager()
+	    : TMareMBaseManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
 class TMareMCManager : public TMareMBaseManager {
 public:
-	TMareMCManager();
+	TMareMCManager()
+	    : TMareMBaseManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
 class TMareMDManager : public TMareMBaseManager {
 public:
-	TMareMDManager();
+	TMareMDManager()
+	    : TMareMBaseManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
+class TMareWManager : public TMareWBaseManager {
+public:
+	TMareWManager()
+	    : TMareWBaseManager("?")
+	{
+	}
+};
+
 class TMareWAManager : public TMareWBaseManager {
 public:
-	TMareWAManager();
+	TMareWAManager()
+	    : TMareWBaseManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
 class TMareWBManager : public TMareWBaseManager {
 public:
-	TMareWBManager();
+	TMareWBManager()
+	    : TMareWBaseManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
 class TKinopioManager : public TNPCManager {
 public:
-	TKinopioManager();
+	TKinopioManager()
+	    : TNPCManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -181,7 +229,10 @@ public:
 
 class TKinojiiManager : public TNPCManager {
 public:
-	TKinojiiManager();
+	TKinojiiManager()
+	    : TNPCManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -189,7 +240,10 @@ public:
 
 class TPeachManager : public TNPCManager {
 public:
-	TPeachManager();
+	TPeachManager()
+	    : TNPCManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -197,7 +251,10 @@ public:
 
 class TRaccoonDogManager : public TNPCManager {
 public:
-	TRaccoonDogManager();
+	TRaccoonDogManager()
+	    : TNPCManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -205,7 +262,10 @@ public:
 
 class TSunflowerLManager : public TNPCManager {
 public:
-	TSunflowerLManager();
+	TSunflowerLManager()
+	    : TNPCManager("?")
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -213,70 +273,95 @@ public:
 
 class TSunflowerSManager : public TNPCManager {
 public:
-	TSunflowerSManager();
+	TSunflowerSManager()
+	    : TNPCManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };
 
 class TMonteMManager : public TMonteMBaseManager {
 public:
-	TMonteMManager();
+	TMonteMManager()
+	    : TMonteMBaseManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };
 
 class TMonteMAManager : public TMonteMBaseManager {
 public:
-	TMonteMAManager();
+	TMonteMAManager()
+	    : TMonteMBaseManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };
 
 class TMonteMBManager : public TMonteMBaseManager {
 public:
-	TMonteMBManager();
+	TMonteMBManager()
+	    : TMonteMBaseManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };
 
 class TMonteMCManager : public TMonteMBaseManager {
 public:
-	TMonteMCManager();
+	TMonteMCManager()
+	    : TMonteMBaseManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };
 
 class TMonteMDManager : public TMonteMBaseManager {
 public:
-	TMonteMDManager();
+	TMonteMDManager()
+	    : TMonteMBaseManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };
 
 class TMonteMEManager : public TMonteMSpecialManager {
 public:
-	TMonteMEManager();
-
 	virtual void createModelData();
 };
 
 class TMonteWManager : public TMonteWBaseManager {
 public:
-	TMonteWManager();
+	TMonteWManager()
+	    : TMonteWBaseManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };
 
 class TMonteWAManager : public TMonteWBaseManager {
 public:
-	TMonteWAManager();
+	TMonteWAManager()
+	    : TMonteWBaseManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };
 
 class TMonteWBManager : public TMonteWBaseManager {
 public:
-	TMonteWBManager();
+	TMonteWBManager()
+	    : TMonteWBaseManager("?")
+	{
+	}
 
 	virtual void createModelData();
 };

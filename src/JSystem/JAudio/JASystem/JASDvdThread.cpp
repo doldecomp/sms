@@ -50,7 +50,7 @@ namespace Dvd {
 	static s32 dvdReadMutex(DVDFileInfo*, void*, s32, s32, char*);
 	static void doError(TDvdCall*, u32);
 	static void doFinish(TDvdCall*, u32);
-	static bool dvdThreadCheckBack(void*);
+	static s32 dvdThreadCheckBack(void*);
 	static void allocDvdBuffer();
 	static void writeBufferSize(u8*, u32, u32);
 	static void updateBuffer();
@@ -383,16 +383,16 @@ u32 Dvd::loadFileDvdT(char* path, void* buffer)
 	else
 		return done;
 }
-s32 Dvd::checkPassDvdT(u32 param1, u32* param2, void (*callback)(u32))
+s32 Dvd::checkPassDvdT(u32 scene_set_id, u32* param2, void (*callback)(u32))
 {
 	TDvdCall callData;
 	TDvdCall* call = &callData;
 
-	callData.unk0  = param1;
+	callData.unk0  = scene_set_id;
 	callData.unk30 = param2;
 	callData.unk34 = callback;
 
-	addTask((s32 (*)(void*))&dvdThreadCheckBack, call, 0x38);
+	addTask(&dvdThreadCheckBack, call, 0x38);
 	return 0;
 }
 s32 Dvd::checkFile(char* path)
@@ -530,7 +530,7 @@ static void Dvd::doFinish(TDvdCall* call, u32 param)
 		call->unk34(call->unk0);
 }
 
-static bool Dvd::dvdThreadCheckBack(void* param)
+static s32 Dvd::dvdThreadCheckBack(void* param)
 {
 	TDvdCall* call = (TDvdCall*)param;
 	u32 thing      = call->unk0;

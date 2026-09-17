@@ -2,6 +2,7 @@
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/JAudio/JAInterface/JAIInter.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 
 u8 JAIGlobalParameter::distanceParameterMoveTime   = 0x03;
 u8 JAIGlobalParameter::audioSystemThreadPriority   = 0x02;
@@ -65,8 +66,8 @@ void JAIGlobalParameter::setParamAudioDvdThreadPriority(u8 value)
 void JAIGlobalParameter::setParamInitFileLoadSwitch(u8) { }
 void JAIGlobalParameter::setParamInitDataPointer(void* value)
 {
-	JAIBasic::basic->unk4C = (u8*)value;
-	JAIBasic::basic->unk13 = 4;
+	JAIBasic::getInterface()->mInitDataPointer    = (u8*)value;
+	JAIBasic::getInterface()->mInitFileLoadSwitch = 4;
 }
 void JAIGlobalParameter::setParamInterfaceHeapSize(u32 value)
 {
@@ -118,12 +119,18 @@ void JAIGlobalParameter::setParamSeDistanceFxParameter(u16 value)
 {
 	seDistanceFxParameter = value;
 }
-void JAIGlobalParameter::setParamInitDataLoadOffFlag(bool) { }
-void JAIGlobalParameter::setParamStreamUseOffFlag(bool) { }
+void JAIGlobalParameter::setParamInitDataLoadOffFlag(bool value)
+{
+	JAIBasic::getInterface()->unk1C.mInitDataLoadOff = value;
+}
+void JAIGlobalParameter::setParamStreamUseOffFlag(bool value)
+{
+	JAIBasic::getInterface()->unk1C.mStreamUseOff = value;
+}
 void JAIGlobalParameter::setParamStreamDecodedBufferBlocks(u32) { }
 void JAIGlobalParameter::setParamStreamInsideBufferCut(bool value)
 {
-	JAIBasic::basic->unk1C.flag7 = value;
+	JAIBasic::getInterface()->unk1C.mStreamInsideBufferCut = value;
 }
 void JAIGlobalParameter::setParamAutoHeapRoomSize(u32 value)
 {
@@ -175,8 +182,14 @@ void JAIGlobalParameter::setParamSequenceArchivesFileName(char* value)
 {
 	sequenceArchivesFileName = value;
 }
-void JAIGlobalParameter::setParamSeqEntryCancelFlag(bool) { }
-void JAIGlobalParameter::setParamStreamEntryCancelFlag(bool) { }
+void JAIGlobalParameter::setParamSeqEntryCancelFlag(bool value)
+{
+	JAIBasic::getInterface()->unk1C.mSeqEntryCancel = value;
+}
+void JAIGlobalParameter::setParamStreamEntryCancelFlag(bool value)
+{
+	JAIBasic::getInterface()->unk1C.mStreamEntryCancel = value;
+}
 void JAIGlobalParameter::setParamDopplarMoveTime(u32 value)
 {
 	dopplarMoveTime = value;
@@ -251,8 +264,12 @@ void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
 		r31 = 2;
 		r30 = 1;
 		break;
+	default:
+		JUT_ASSERT_MSG(false, "JAIGlobalParameter::setParamSoundOutputMode "
+		                      "出力モードが不正です。\n");
+		break;
 	}
-	JAIBasic::basic->unk14 = value;
+	JAIBasic::getInterface()->mSoundOutputMode = value;
 	JASystem::Driver::setOutputMode(r31);
 	JAInter::StreamLib::setOutputMode(r30);
 }
@@ -274,7 +291,7 @@ u32 JAIGlobalParameter::getParamInterfaceHeapSize()
 
 u32 JAIGlobalParameter::getParamSeCategoryMax()
 {
-	return JAIBasic::basic->unk0->unk88.unk1;
+	return JAIBasic::getInterface()->unk0->mSeTable.mCategoryMax;
 }
 
 u32 JAIGlobalParameter::getParamSoundSceneMax() { return soundSceneMax; }

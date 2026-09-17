@@ -133,7 +133,8 @@ void TEnemyManager::createEnemies(int count)
 		if (!enemy)
 			continue;
 
-		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")->add(enemy);
+		static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+		    ->add(enemy);
 
 		enemy->init(this);
 	}

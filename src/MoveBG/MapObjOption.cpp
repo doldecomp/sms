@@ -12,12 +12,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-static void dummy(Vec* v)
-{
-	*v = (Vec) { 0.0f, 0.0f, 0.0f };
-	*v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
-
 void TFileLoadBlock::makeBlockNoCard() { }
 
 void TFileLoadBlock::makeBlockNormal()
@@ -68,20 +62,20 @@ void TFileLoadBlock::loadAfter()
 	TMapObjBase::loadAfter();
 
 	if (unk138 == 0) {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＢ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＣ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＢ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＣ"));
 	} else if (unk138 == 1) {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＡ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＣ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＡ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＣ"));
 	} else {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＡ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＢ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＡ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＢ"));
 	}
 }
 

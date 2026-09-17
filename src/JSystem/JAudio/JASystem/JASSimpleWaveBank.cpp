@@ -5,46 +5,46 @@
 namespace JASystem {
 
 TSimpleWaveBank::TSimpleWaveBank()
-    : unk8(0)
-    , unkC(0)
-    , unk10(0)
-    , unk40(0)
+    : mWaveTable(0)
+    , mWaveTableSize(0)
+    , mWaveArcFileName(0)
+    , mLoadFlag(0)
 {
 }
 
 TSimpleWaveBank::~TSimpleWaveBank()
 {
-	delete[] unk8;
-	delete[] unk10;
+	delete[] mWaveTable;
+	delete[] mWaveArcFileName;
 }
 
 void TSimpleWaveBank::setWaveTableSize(u32 size)
 {
-	delete[] unk8;
-	unk8 = new (TWaveBank::getCurrentHeap(), 0) TWaveHandle[size];
-	unkC = size;
+	delete[] mWaveTable;
+	mWaveTable     = new (TWaveBank::getCurrentHeap(), 0) TWaveHandle[size];
+	mWaveTableSize = size;
 }
 
 TSimpleWaveBank::TWaveHandle* TSimpleWaveBank::getWaveHandle(u32 i) const
 {
-	if (i >= unkC)
+	if (i >= mWaveTableSize)
 		return nullptr;
-	return &unk8[i];
+	return &mWaveTable[i];
 }
 
 void TSimpleWaveBank::setWaveInfo(u32 i, const TWaveInfo& info)
 {
-	unk8[i].mWaveInfo       = info;
-	unk8[i].mWaveInfo.unk24 = &unk40;
-	unk8[i].mHeap           = &unk14;
+	mWaveTable[i].mWaveInfo              = info;
+	mWaveTable[i].mWaveInfo.mLoadFlagPtr = &mLoadFlag;
+	mWaveTable[i].mHeap                  = &mHeap;
 }
 
 void TSimpleWaveBank::setWaveArcFileName(const char* name)
 {
-	delete[] unk10;
-	u32 len = strlen(name);
-	unk10   = new (TWaveBank::getCurrentHeap(), 0) char[len + 1];
-	strcpy(unk10, name);
+	delete[] mWaveArcFileName;
+	u32 len          = strlen(name);
+	mWaveArcFileName = new (TWaveBank::getCurrentHeap(), 0) char[len + 1];
+	strcpy(mWaveArcFileName, name);
 }
 
 } // namespace JASystem

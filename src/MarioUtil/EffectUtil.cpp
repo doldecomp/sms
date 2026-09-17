@@ -57,13 +57,12 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
                                    const JGeometry::TVec3<float>& arg1,
                                    bool arg2)
 {
-	if ((gpMarDirector->unk58 % 20) != 0)
+	if ((gpMarDirector->mMoveTickCount % 20) != 0)
 		return;
 
 	using namespace JGeometry;
 
-	const TVec3<f32> fwd(1.f, 0.0f, 0.0f);
-
+	const TVec3<f32> fwd(1.0f, 0.0f, 0.0f);
 	TVec3<f32> B;
 	B.cross(fwd, arg1);
 
@@ -71,27 +70,16 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
 
 	TVec3<f32> C;
 	C.cross(arg1, B);
-	TVec3<f32> Cnorm;
-	Cnorm.normalize(C);
-	TVec3<f32> Bnorm;
-	Bnorm.normalize(B);
+	C.normalize();
+	B.normalize();
 
-	matrix.mMtx[0][0] = Cnorm.x;
-	matrix.mMtx[1][0] = Cnorm.y;
-	matrix.mMtx[2][0] = Cnorm.z;
-	matrix.mMtx[0][1] = arg1.x;
-	matrix.mMtx[1][1] = arg1.y;
-	matrix.mMtx[2][1] = arg1.z;
-	matrix.mMtx[0][2] = Bnorm.x;
-	matrix.mMtx[1][2] = Bnorm.y;
-	matrix.mMtx[2][2] = Bnorm.z;
-	matrix.mMtx[0][3] = arg0.x;
-	matrix.mMtx[1][3] = arg0.y;
-	matrix.mMtx[2][3] = arg0.z;
+	matrix.setXYZDir(C, arg1, B);
+	matrix.setTrans(arg0);
 
-	if (arg2) {
-		gpMarioParticleManager->emitAndBindToMtx(0x1D8, matrix.mMtx, 2U,
-		                                         nullptr);
-	}
-	gpMarioParticleManager->emitAndBindToMtx(0x1D9, matrix.mMtx, 2U, nullptr);
+	if (arg2)
+		gpMarioParticleManager->emitAndBindToMtx(PARTICLE_MS_MARI_RAKUBALL,
+		                                         matrix.mMtx, 2U, nullptr);
+
+	gpMarioParticleManager->emitAndBindToMtx(PARTICLE_MS_MARI_RAKUHAMON,
+	                                         matrix.mMtx, 2U, nullptr);
 }

@@ -61,7 +61,7 @@ bool TCameraMarioData::isMarioGoDown() const
 {
 	bool result = false;
 	if (mFrameMoveDistVertical != 0.0f
-	    && gpMarioPos->y - gpMarioOriginal->unk29C.y < 0.0f)
+	    && gpMarioPos->y - gpMarioOriginal->mPrevPosition.y < 0.0f)
 		result = true;
 	return result;
 }

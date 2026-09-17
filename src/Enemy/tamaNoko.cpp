@@ -82,23 +82,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 						JGeometry::TVec3<f32> local_88(0.0f, 0.0f, 350.0f);
 						Mtx local_b8;
 
-						f32 s = JMASin((i + 1) * 72.0f);
-						f32 c = JMACos((i + 1) * 72.0f);
-
-						local_b8[0][0] = c;
-						local_b8[0][1] = 0.0f;
-						local_b8[0][2] = s;
-						local_b8[0][3] = 0.0f;
-
-						local_b8[1][0] = 0.0f;
-						local_b8[1][1] = 1.0f;
-						local_b8[1][2] = 0.0f;
-						local_b8[1][3] = 0.0f;
-
-						local_b8[2][0] = -s;
-						local_b8[2][1] = 0.0f;
-						local_b8[2][3] = 0.0f;
-						local_b8[2][2] = c;
+						MsMtxSetRotY(local_b8, (i + 1) * 72.0f);
 
 						MTXMultVec(local_b8, &local_88, &unk20);
 
@@ -522,20 +506,20 @@ void TTamaNoko::requestShadow()
 				local_38.y = mGroundHeight;
 				local_38.z = actor->getModel()->getAnmMtx(1)[2][3];
 				if (!isAirborne())
-					local_2c.unk1D = 0;
+					local_2c.mNeedsGroundCheck = 0;
 			} else {
 				local_38 = mPosition;
 				if (!isAirborne()) {
-					local_2c.unk1D = 0;
-					local_38.y     = mGroundHeight;
+					local_2c.mNeedsGroundCheck = 0;
+					local_38.y                 = mGroundHeight;
 				}
 			}
 
-			local_2c.unk0  = local_38;
-			local_2c.unkC  = mScaledBodyRadius;
-			local_2c.unk10 = local_2c.unkC;
-			local_2c.unk1C = getShadowType();
-			local_2c.unk14 = mRotation.y;
+			local_2c.mPosition   = local_38;
+			local_2c.mRadiusX    = mScaledBodyRadius;
+			local_2c.mRadiusZ    = local_2c.mRadiusX;
+			local_2c.mShadowType = getShadowType();
+			local_2c.mRotationY  = mRotation.y;
 			if (checkLiveFlag(LIVE_FLAG_UNK400)) {
 				gpBindShadowManager->forceRequest(local_2c, getActorType());
 			} else {

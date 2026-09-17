@@ -15,78 +15,86 @@ u32 TDSPChannel::smnUse         = 0;
 u32 TDSPChannel::smnFree        = 0x40;
 static f32 DSP_LIMIT_RATIO      = 1.1f;
 
-void TDSPChannel::init(u8 param)
+void TDSPChannel::init(u8 number)
 {
-	unk0  = param;
-	unk1  = 1;
-	unk8  = 0;
-	unk6  = 0;
-	unk10 = nullptr;
-	unk3  = 0;
-	unk4  = 0;
-	unkC  = DSPInterface::getDSPHandle(param);
+	mNumber       = number;
+	mStatus       = 1;
+	mSign         = 0;
+	mCBInterval   = 0;
+	mCallback     = nullptr;
+	mPriority     = 0;
+	mPriorityTime = 0;
+	mDSPHandle    = DSPInterface::getDSPHandle(number);
 }
 
-BOOL TDSPChannel::allocate(u32 param)
+BOOL TDSPChannel::allocate(uintptr_t sign)
 {
-	if (!isUnk1One())
+	if (!isFree())
 		return false;
 
-	unk1 = 0;
-	unk8 = param;
-	unk3 = 1;
-	unkC->allocInit();
+	mStatus   = 0;
+	mSign     = sign;
+	mPriority = 1;
+	mDSPHandle->allocInit();
 	return true;
 }
 
 void TDSPChannel::free()
 {
-	unk1  = 1;
-	unk3  = 0;
-	unk10 = nullptr;
-	unk8  = 0;
+	mStatus   = 1;
+	mPriority = 0;
+	mCallback = nullptr;
+	mSign     = 0;
 }
 
 bool TDSPChannel::forceStop()
 {
-	if (unk1 == 2)
+	if (mStatus == 2)
 		return false;
 
-	if (unk1 == 1)
+	if (mStatus == 1)
 		return false;
 
-	if (unkC->unk0 == 0)
+	if (mDSPHandle->enabled == 0)
 		return false;
 
 	smnUse--;
-	unkC->unk10A = 1;
-	unkC->flushChannel();
-	unk1 = 2;
+	mDSPHandle->endRequested = 1;
+	mDSPHandle->flushChannel();
+	mStatus = 2;
 	return true;
 }
 
 void TDSPChannel::forceDelete()
 {
-	unk8  = 0;
-	unk3  = 0;
-	unk10 = nullptr;
+	mSign     = 0;
+	mPriority = 0;
+	mCallback = nullptr;
 }
 
 void TDSPChannel::play()
 {
-	unkC->playStart();
-	unkC->flushChannel();
+	mDSPHandle->playStart();
+	mDSPHandle->flushChannel();
 }
 
 void TDSPChannel::stop()
 {
-	unkC->unk0 = 0;
-	unkC->flushChannel();
+	mDSPHandle->enabled = 0;
+	mDSPHandle->flushChannel();
 }
 
-void TDSPChannel::pause() { }
+void TDSPChannel::pause()
+{
+	mDSPHandle->useConstantSample = 1;
+	mDSPHandle->flushChannel();
+}
 
-void TDSPChannel::restart() { }
+void TDSPChannel::restart()
+{
+	mDSPHandle->useConstantSample = 0;
+	mDSPHandle->flushChannel();
+}
 
 TDSPChannel* TDSPChannel::getHandle(u32 handle) { return &DSPCH[handle]; }
 
@@ -103,14 +111,14 @@ void TDSPChannel::initAll()
 	first = 0;
 }
 
-TDSPChannel* TDSPChannel::alloc(u32 param1, u32 param2)
+TDSPChannel* TDSPChannel::alloc(u32 param1, uintptr_t sign)
 {
 	if (param1)
 		return nullptr;
 
 	u32 i = 0;
 	do {
-		if (DSPCH[i].isUnk1One() && DSPCH[i].allocate(param2)) {
+		if (DSPCH[i].isFree() && DSPCH[i].allocate(sign)) {
 			smnFree--;
 			smnUse++;
 			return &DSPCH[i];
@@ -121,18 +129,18 @@ TDSPChannel* TDSPChannel::alloc(u32 param1, u32 param2)
 	return nullptr;
 }
 
-int TDSPChannel::free(TDSPChannel* channel, u32 param)
+int TDSPChannel::free(TDSPChannel* channel, uintptr_t sign)
 {
 	if (!channel)
 		return -1;
 
-	if (!(channel->unk8 == param ? TRUE : FALSE))
+	if (!channel->checkSign(sign))
 		return -2;
 
-	if (channel->unk1 == 0)
+	if (channel->mStatus == 0)
 		smnUse--;
 
-	if (channel->unk1 != 1)
+	if (channel->mStatus != 1)
 		smnFree++;
 
 	channel->free();
@@ -145,21 +153,21 @@ JASystem::TDSPChannel* TDSPChannel::getLower()
 	u8 r30  = 0;
 	u32 r29 = 0;
 	for (u8 i = 0; i < 64; i++) {
-		TDSPChannel* dspch = &DSPCH[i];
-		if (dspch->unk1 == 2)
+		if (DSPCH[i].mStatus == 2)
 			continue;
 
-		if (dspch->unk1 == 1 ? TRUE : FALSE) {
+		if (DSPCH[i].isFree()) {
 			r30 = i;
 			break;
 		}
 
-		if (dspch->unk10) {
-			if (dspch->unk3 <= r31) {
-				if (dspch->unk3 != r31 || dspch->unkC->unk10C >= r29) {
-					r29 = dspch->unkC->unk10C;
+		if (DSPCH[i].mCallback) {
+			TDSPChannel* chan = &DSPCH[i];
+			if (chan->mPriority <= r31) {
+				if (chan->mPriority != r31 || chan->mDSPHandle->unk10C >= r29) {
+					r29 = chan->mDSPHandle->unk10C;
 					r30 = i;
-					r31 = dspch->unk3;
+					r31 = chan->mPriority;
 				}
 			}
 		}
@@ -173,15 +181,15 @@ JASystem::TDSPChannel* TDSPChannel::getLowerActive()
 	u8 r28  = 0;
 	u32 r27 = 0;
 	for (u8 i = 0; i < 64; i++) {
-		TDSPChannel* dspch = &DSPCH[i];
-		if (dspch->unk1 == 2 || dspch->unk1 == 1)
+		if (DSPCH[i].mStatus == 2 || DSPCH[i].mStatus == 1)
 			continue;
 
-		if (dspch->unk3 <= r29) {
-			if (dspch->unk3 != r29 || dspch->unkC->unk10C >= r27) {
-				r27 = dspch->unkC->unk10C;
+		TDSPChannel* dspch = &DSPCH[i];
+		if (dspch->mPriority <= r29) {
+			if (dspch->mPriority != r29 || dspch->mDSPHandle->unk10C >= r27) {
+				r27 = dspch->mDSPHandle->unk10C;
 				r28 = i;
-				r29 = dspch->unk3;
+				r29 = dspch->mPriority;
 			}
 		}
 	}
@@ -191,12 +199,12 @@ JASystem::TDSPChannel* TDSPChannel::getLowerActive()
 BOOL TDSPChannel::breakLower(u8 param)
 {
 	TDSPChannel* dspch = getLower();
-	if (dspch->unk3 > param)
+	if (dspch->mPriority > param)
 		return false;
 
-	if (!(dspch->unk1 == 1 ? TRUE : FALSE)) {
-		if (dspch->unk10)
-			dspch->unk6 = dspch->unk10(dspch, 3);
+	if (!dspch->isFree()) {
+		if (dspch->mCallback)
+			dspch->onUpdate(3);
 
 		dspch->forceStop();
 	} else {
@@ -208,12 +216,12 @@ BOOL TDSPChannel::breakLower(u8 param)
 BOOL TDSPChannel::breakLowerActive(u8 param)
 {
 	TDSPChannel* dspch = getLowerActive();
-	if (dspch->unk3 > param)
+	if (dspch->mPriority > param)
 		return false;
 
-	if (!dspch->isUnk1One()) {
-		if (dspch->unk10)
-			dspch->unk6 = dspch->unk10(dspch, 3);
+	if (!dspch->isFree()) {
+		if (dspch->mCallback)
+			dspch->onUpdate(3);
 
 		dspch->forceStop();
 	} else {
@@ -233,44 +241,42 @@ void TDSPChannel::updateAll()
 {
 	DSPInterface::DSPBuffer* dspBuffer;
 	{
-		OSTick time = OSGetTick();
-		u32 var2;
-		OSTick var3   = time - old_time;
+		OSTick time   = OSGetTick();
+		OSTick delta  = time - old_time;
 		old_time      = time;
-		var2          = 7 - AudioThread::getDSPSyncCount();
-		history[var2] = var3;
+		u32 var2      = 7 - AudioThread::getDSPSyncCount();
+		history[var2] = delta;
 		if (var2)
-			if (f32(history[0]) / var3 < DSP_LIMIT_RATIO)
+			if (f32(history[0]) / delta < DSP_LIMIT_RATIO)
 				breakLowerActive(126);
 	}
 
 	for (u32 i = 0; i < 64; i++) {
-		dspBuffer               = DSPCH[i].unkC;
 		TDSPChannel* dspChannel = &DSPCH[i];
-		if (dspChannel->unk1 == 1)
+		dspBuffer               = dspChannel->mDSPHandle;
+		if (dspChannel->getStatus() == 1)
 			continue;
 
-		if (dspBuffer->unk2 != 0) {
-			if (dspChannel->unk10)
-				dspChannel->unk6 = dspChannel->unk10(dspChannel, 2);
+		if (dspBuffer->isFinish()) {
+			if (dspChannel->mCallback)
+				dspChannel->onUpdate(2);
 
-			dspBuffer->unk2 = 0;
-			dspBuffer->unk0 = 0;
+			dspBuffer->replyFinishRequest();
 			dspBuffer->flushChannel();
 		}
-		if (dspBuffer->unk10A == 0) {
+		if (dspBuffer->endRequested == 0) {
 			dspBuffer->unk10C++;
-			if (dspBuffer->unk10C == dspChannel->unk4 && dspChannel->unk10)
-				dspChannel->unk10(dspChannel, 4);
+			if (dspBuffer->unk10C == dspChannel->getPriorityTime()
+			    && dspChannel->mCallback)
+				dspChannel->mCallback(dspChannel, 4);
 		}
-		if (dspChannel->unk10) {
-			dspChannel->unk6--;
+		if (dspChannel->mCallback) {
+			dspChannel->decCBInterval();
 
-			if (dspChannel->unk6 == 0) {
-				dspChannel->unk6 = dspChannel->unk10(dspChannel, 0);
-				if (dspChannel->unk6 == 0) {
-					dspBuffer->unk2 = 0;
-					dspBuffer->unk0 = 0;
+			if (dspChannel->getCBInterval() == 0) {
+				dspChannel->onUpdate(0);
+				if (dspChannel->getCBInterval() == 0) {
+					dspBuffer->replyFinishRequest();
 					Driver::DSPQueue::deQueue(1);
 					dspBuffer->flushChannel();
 				}

@@ -33,8 +33,8 @@ TMap* gpMap;
 static void initMonte()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("マップグループ");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search("マップグループ"));
 
 	TMapStaticObj* obj = new TMapStaticObj("水インダイレクト");
 	obj->init("SeaIndirect");
@@ -59,8 +59,8 @@ static void initMonte()
 static void initMare()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("マップグループ");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search("マップグループ"));
 
 	if (gpMarDirector->getCurrentStage() == 5) {
 		TMapStaticObj* gate = new TMapStaticObj("マーレ５ＥＸゲート");
@@ -117,11 +117,10 @@ static void initPinnaParco()
 static void initStageCommon()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >(
-	        "インダイレクトシーン");
-	JDrama::TNameRefGen::search<JDrama::TViewObjPtrListT<JDrama::TViewObj> >(
-	    "マップグループ");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search("インダイレクトシーン"));
+	static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	    JDrama::TNameRefGen::search("マップグループ"));
 
 	if (gpMarDirector->getCurrentMap() == 4
 	    || gpMarDirector->getCurrentMap() == 3

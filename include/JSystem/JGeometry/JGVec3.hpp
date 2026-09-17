@@ -356,7 +356,15 @@ public:
 			z = min.z;
 	}
 
-	// fabricated but based on SMG minus the epsilon parameter
+	// from SMG
+	bool epsilonEquals(const TVec3& other, f32 eps) const
+	{
+		return TUtil<f32>::epsilonEquals(x, other.x, eps)
+		       && TUtil<f32>::epsilonEquals(y, other.y, eps)
+		       && TUtil<f32>::epsilonEquals(z, other.z, eps);
+	}
+
+	// fabricated
 	bool epsilonEquals(const TVec3& other) const
 	{
 		return TUtil<f32>::epsilonEquals(x, other.x)

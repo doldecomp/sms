@@ -36,7 +36,7 @@ void TButterfly::init()
 	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 
 	TIdxGroupObj* group
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	group->getChildren().push_back(this);
 }
 

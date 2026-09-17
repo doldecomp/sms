@@ -4,74 +4,74 @@
 namespace JASystem {
 
 TBasicWaveBank::TBasicWaveBank()
-    : unk4(nullptr)
-    , unk8(0)
-    , unkC(nullptr)
-    , unk10(0)
+    : mWaveTable(nullptr)
+    , mWaveTableSize(0)
+    , mWaveGroups(nullptr)
+    , mWaveGroupCount(0)
 {
 }
 
 TBasicWaveBank::~TBasicWaveBank()
 {
-	delete[] unk4;
-	delete[] unkC;
+	delete[] mWaveTable;
+	delete[] mWaveGroups;
 }
 
 TBasicWaveBank::TWaveGroup* TBasicWaveBank::getWaveGroup(int index)
 {
-	if (index >= unk10)
+	if (index >= mWaveGroupCount)
 		return nullptr;
-	return &unkC[index];
+	return &mWaveGroups[index];
 }
 
 void TBasicWaveBank::setGroupCount(u32 count)
 {
-	delete[] unkC;
-	unk10 = count;
-	unkC  = new (TWaveBank::getCurrentHeap(), 0) TWaveGroup[count];
+	delete[] mWaveGroups;
+	mWaveGroupCount = count;
+	mWaveGroups     = new (TWaveBank::getCurrentHeap(), 0) TWaveGroup[count];
 }
 
 void TBasicWaveBank::setWaveTableSize(u32 size)
 {
-	delete[] unk4;
-	unk4 = new (TWaveBank::getCurrentHeap(), 0) TWaveInfo*[size];
-	Calc::bzero(unk4, size * sizeof(TWaveInfo*));
-	unk8 = size;
+	delete[] mWaveTable;
+	mWaveTable = new (TWaveBank::getCurrentHeap(), 0) TWaveInfo*[size];
+	Calc::bzero(mWaveTable, size * sizeof(TWaveInfo*));
+	mWaveTableSize = size;
 }
 
 void TBasicWaveBank::incWaveTable(const TWaveGroup* group)
 {
 	TWaveInfo* waveInfo;
 
-	for (int i = 0; i < group->unk38; i++) {
-		waveInfo          = &group->unk34[i];
-		TWaveInfo** entry = &unk4[waveInfo->unk34];
-		waveInfo->mNext   = nullptr;
-		waveInfo->mPrev   = *entry;
-		if (*entry)
-			(*entry)->mNext = waveInfo;
+	for (int i = 0; i < group->mWaveCount; i++) {
+		waveInfo         = &group->mWaves[i];
+		TWaveInfo** slot = &mWaveTable[waveInfo->mWaveID];
+		waveInfo->mNext  = nullptr;
+		waveInfo->mPrev  = *slot;
+		if (*slot)
+			(*slot)->mNext = waveInfo;
 
-		*entry = waveInfo;
+		*slot = waveInfo;
 	}
 }
 
 void TBasicWaveBank::decWaveTable(const TWaveGroup* group)
 {
-	for (int i = 0; i < group->unk38; i++) {
-		TWaveInfo* needle    = &group->unk34[i];
-		TWaveInfo** haystack = &unk4[needle->unk34];
+	for (int i = 0; i < group->mWaveCount; i++) {
+		TWaveInfo* wave     = &group->mWaves[i];
+		TWaveInfo** headPtr = &mWaveTable[wave->mWaveID];
 
-		for (TWaveInfo* ptr = *haystack; ptr; ptr = ptr->mPrev) {
-			if (ptr != needle)
+		for (TWaveInfo* it = *headPtr; it; it = it->mPrev) {
+			if (it != wave)
 				continue;
 
-			if (ptr->mNext == nullptr)
-				*haystack = ptr->mPrev;
+			if (it->mNext == nullptr)
+				*headPtr = it->mPrev;
 			else
-				ptr->mNext->mPrev = ptr->mPrev;
+				it->mNext->mPrev = it->mPrev;
 
-			if (ptr->mPrev != nullptr)
-				ptr->mPrev->mNext = ptr->mNext;
+			if (it->mPrev != nullptr)
+				it->mPrev->mNext = it->mNext;
 
 			break;
 		}
@@ -80,10 +80,10 @@ void TBasicWaveBank::decWaveTable(const TWaveGroup* group)
 
 TBasicWaveBank::TWaveHandle* TBasicWaveBank::getWaveHandle(u32 id) const
 {
-	if (id >= unk8)
+	if (id >= mWaveTableSize)
 		return nullptr;
 
-	TWaveInfo* info = unk4[id];
+	TWaveInfo* info = mWaveTable[id];
 	if (info)
 		return &info->mWaveHandle;
 
@@ -91,44 +91,44 @@ TBasicWaveBank::TWaveHandle* TBasicWaveBank::getWaveHandle(u32 id) const
 }
 
 TBasicWaveBank::TWaveGroup::TWaveGroup()
-    : unk30(0)
-    , unk34(0)
-    , unk38(0)
-    , unk3C(0)
+    : mLoadFlag(0)
+    , mWaves(0)
+    , mWaveCount(0)
+    , mWaveArcFileName(0)
 {
 }
 
 TBasicWaveBank::TWaveGroup::~TWaveGroup()
 {
-	delete[] unk34;
-	delete[] unk3C;
+	delete[] mWaves;
+	delete[] mWaveArcFileName;
 }
 
 void TBasicWaveBank::TWaveGroup::setWaveArcFileName(const char* name)
 {
-	delete[] unk3C;
-	u32 len = strlen(name);
-	unk3C   = new (TWaveBank::getCurrentHeap(), 0) char[len + 1];
-	strcpy(unk3C, name);
+	delete[] mWaveArcFileName;
+	u32 len          = strlen(name);
+	mWaveArcFileName = new (TWaveBank::getCurrentHeap(), 0) char[len + 1];
+	strcpy(mWaveArcFileName, name);
 }
 
 void TBasicWaveBank::TWaveGroup::setWaveCount(u32 count)
 {
-	delete[] unk34;
-	unk38 = count;
-	unk34 = new (TWaveBank::getCurrentHeap(), 0) TWaveInfo[count];
+	delete[] mWaves;
+	mWaveCount = count;
+	mWaves     = new (TWaveBank::getCurrentHeap(), 0) TWaveInfo[count];
 	for (int i = 0; i < count; ++i) {
-		unk34[i].mWaveHandle.unk30      = &unk4;
-		unk34[i].mWaveHandle.unk4.unk24 = &unk30;
+		mWaves[i].mWaveHandle.mHeap                  = &mHeap;
+		mWaves[i].mWaveHandle.mWaveInfo.mLoadFlagPtr = &mLoadFlag;
 	}
 }
 
 void TBasicWaveBank::TWaveGroup::setWaveInfo(int index, u32 id,
                                              const JASystem::TWaveInfo& info)
 {
-	unk34[index].unk34                  = id;
-	unk34[index].mWaveHandle.unk4       = info;
-	unk34[index].mWaveHandle.unk4.unk24 = &unk30;
+	mWaves[index].mWaveID                            = id;
+	mWaves[index].mWaveHandle.mWaveInfo              = info;
+	mWaves[index].mWaveHandle.mWaveInfo.mLoadFlagPtr = &mLoadFlag;
 }
 
 } // namespace JASystem

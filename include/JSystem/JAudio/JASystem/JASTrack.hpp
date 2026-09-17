@@ -53,11 +53,18 @@ public:
 	public:
 		TOuterParam();
 		void initExtBuffer();
-		void setParam(u8, f32);
+		void setParam(u8 param, f32 value);
 		void onSwitch(u16);
 		bool checkOuterSwitch(u16);
 		s16 getIntFirFilter(u8);
+
+		f32 getVolume() const { return mVolume; }
+		f32 getPitch() const { return mPitch; }
+		f32 getFxVol() const { return mFxmix; }
+		f32 getDolby() const { return mDolby; }
+		f32 getPan() const { return mPan; }
 		f32 getTempo() const { return mTempo; }
+
 		u16 getOuterUpdate();
 		void setOuterUpdate(u16);
 		void setOuterSwitch(u16);
@@ -185,7 +192,7 @@ public:
 	int noteOn(u8 note, s32 velocity, s32 length, s32 delay);
 	bool noteOff(u8 note, u16 release);
 	int gateOn(u8 note, s32 velocity, s32 length, s32 delay);
-	void checkNoteStop(s32 param);
+	bool checkNoteStop(s32 param);
 	void releaseChannelAll();
 	void flushAll();
 	void flushRelease();
@@ -196,7 +203,7 @@ public:
 	void unPauseTrack(u8 flag);
 	void unPauseTrackAll();
 	void setInterrupt(u16 interrupt);
-	void tryInterrupt();
+	bool tryInterrupt();
 	void setInnerMemory(u8 param);
 	void setBankNumber(u8 bank);
 	bool assignExtBuffer(TOuterParam* buffer);
@@ -243,9 +250,22 @@ public:
 	static u16 (*sCallBackFunc)(TTrack*, u16);
 	static u8 sOscTable[];
 
-	// from tp (I think)
+	// From tww
+	TTrack* getParent() { return mParent; }
 	TTrack* getChild(int index) { return mChildren[index]; }
 	TOuterParam* getOuterParam() { return mOuterParam; }
+	TSeqCtrl* getSeq() { return &mSeqCtrl; }
+
+	u8 checkImport(int i) const { return mTrackPort.checkImport(i); }
+	u8 checkExport(int i) const { return mTrackPort.checkExport(i); }
+
+	void setPanPower(int i, u16 power) { mRegisterParam.setPanPower(i, power); }
+	void setPauseStatus(u8 status) { mPauseStatus = status; }
+	void setTranspose(s32 transpose) { mTranspose = transpose; }
+	void setVolumeMode(u8 mode) { mVolumeMode = mode; }
+
+	// fabricated
+	u32 getTrackRoute() const { return mTrackRoute; }
 
 public:
 	/* 0x0 */ TSeqCtrl mSeqCtrl;
@@ -259,7 +279,7 @@ public:
 	/* 0x2C0 */ TTrack* mParent;
 	/* 0x2C4 */ TTrack* mChildren[16];
 	/* 0x304 */ TOuterParam* mOuterParam;
-	/* 0x308 */ u32 unk308;
+	/* 0x308 */ u32 mTrackRoute;
 	/* 0x30C */ TOscillator::Osc_ mOscData[2];
 	/* 0x33C */ TOscillator mOscillators[2];
 	/* 0x37C */ s16 mAdsTable[12];

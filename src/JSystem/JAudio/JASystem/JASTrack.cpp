@@ -30,7 +30,7 @@ u8 TTrack::sOscTable[5]
 TTrack::TTrack()
     : mParent(0)
     , mOuterParam(0)
-    , unk308(0)
+    , mTrackRoute(0)
     , mConnectName(0)
 {
 	mTickCounter = 0.0f;
@@ -77,7 +77,17 @@ TTrack::TTrack()
 
 void TTrack::setInterrupt(u16 interrupt) { mIntrMgr.request(interrupt); }
 
-void TTrack::tryInterrupt() { }
+bool TTrack::tryInterrupt()
+{
+	if (mSeqCtrl.isIntr())
+		return false;
+
+	void* intr = mIntrMgr.checkIntr();
+	if (intr == nullptr)
+		return false;
+
+	return mSeqCtrl.callIntr(intr);
+}
 
 void TTrack::setBankNumber(u8 bank) { }
 
@@ -132,7 +142,13 @@ f32 TTrack::getDolby() const
 
 u8 TTrack::getNoteStatus(u8 note) { return 0; }
 
-void TTrack::releaseChannelAll() { }
+void TTrack::releaseChannelAll()
+{
+	if (mParent)
+		mParent->mChannelUpdater.receiveAllChannels(&mChannelUpdater);
+	else
+		ChGlobal::releaseAll(&mChannelUpdater);
+}
 
 void TTrack::flushAll()
 {
@@ -185,7 +201,7 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 			break;
 		}
 		r30 = &r24->mChannelUpdater;
-		r3  = r3->mParent;
+		r3  = r3->getParent();
 	}
 
 	if (unk3BC == 4) {
@@ -228,8 +244,8 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 	mNoteMgr.unk20[index] = chan->unkC6;
 
 	chan->setPanPower(
-	    mRegisterParam.getPanPower(0), mRegisterParam.getPanPower(1),
-	    mRegisterParam.getPanPower(2), mRegisterParam.getPanPower(3));
+	    mRegisterParam.getPanPowerBank(), mRegisterParam.getPanPowerExt(),
+	    mRegisterParam.getPanPowerOsc(), mRegisterParam.getPanPowerParent());
 
 	for (u8 i = 0; i < 2; ++i) {
 		u32 someThing = mOscMode[i];
@@ -283,7 +299,17 @@ int TTrack::gateOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 	return 0;
 }
 
-void TTrack::checkNoteStop(s32 param) { }
+bool TTrack::checkNoteStop(s32 param)
+{
+	TChannel* chan = mNoteMgr.getChannel(param);
+	if (chan == nullptr)
+		return true;
+
+	if (chan->unk1 == 0xff)
+		return true;
+
+	return false;
+}
 
 void TTrack::oscSetupFull(u8 param_1, u32 param_2, u32 param_3)
 {
@@ -373,7 +399,7 @@ void TTrack::oscSetupSimple(u8 param_1)
 
 void TTrack::updateTrackAll()
 {
-	f32 fVar6 = mRegisterParam.getPanPower(3) / 32767.0f;
+	f32 fVar6 = mRegisterParam.getPanPowerParent() / 32767.0f;
 	f32 curVolume;
 	f32 curPitch;
 	f32 curFxmix;
@@ -415,21 +441,21 @@ void TTrack::updateTrackAll()
 
 	if (mOuterParam) {
 		if (mOuterParam->checkOuterSwitch(UPDATE_Volume))
-			curVolume *= mOuterParam->mVolume;
+			curVolume *= mOuterParam->getVolume();
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Pitch))
-			curPitch *= mOuterParam->mPitch;
+			curPitch *= mOuterParam->getPitch();
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Fxmix))
-			curFxmix = panCalc(curFxmix, mOuterParam->mFxmix, fVar6,
+			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar6,
 			                   mPanSwitchExt[1]);
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Dolby))
-			curDolby = panCalc(curDolby, mOuterParam->mDolby, fVar6,
+			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar6,
 			                   mPanSwitchExt[2]);
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Pan))
-			curPan = panCalc(curPan, mOuterParam->mPan, fVar6,
+			curPan = panCalc(curPan, mOuterParam->getPan(), fVar6,
 			                 mPanSwitchParent[0]);
 	}
 
@@ -440,7 +466,7 @@ void TTrack::updateTrackAll()
 		mChannelUpdater.mFxmix  = curFxmix;
 		mChannelUpdater.mDolby  = curDolby;
 	} else {
-		f32 fVar6               = mRegisterParam.getPanPower(4) / 32767.0f;
+		f32 fVar6               = mRegisterParam.getPanPowerTrack() / 32767.0f;
 		mChannelUpdater.mVolume = mParent->mChannelUpdater.mVolume * curVolume;
 		mChannelUpdater.mPitch  = mParent->mChannelUpdater.mPitch * curPitch;
 		mChannelUpdater.mPan    = panCalc(curPan, mParent->mChannelUpdater.mPan,
@@ -476,7 +502,7 @@ void TTrack::updateTrack(u32 param)
 	f32 curPan;
 	f32 curFxmix;
 	f32 curDolby;
-	f32 fVar3 = mRegisterParam.getPanPower(3) / 32767.0f;
+	f32 fVar3 = mRegisterParam.getPanPowerParent() / 32767.0f;
 
 	if (unk3BC == 4)
 		return;
@@ -507,7 +533,7 @@ void TTrack::updateTrack(u32 param)
 			curVolume = 0.0f;
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Volume))
-			curVolume *= mOuterParam->mVolume;
+			curVolume *= mOuterParam->getVolume();
 
 		if (mPause && (mPauseStatus & 1))
 			curVolume *= mTimedParam.mInnerParam.unk100.mCurrentValue;
@@ -518,22 +544,22 @@ void TTrack::updateTrack(u32 param)
 		    mTimedParam.mInnerParam.mPitch.mCurrentValue, mRegisterParam.unkE);
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Pitch))
-			curPitch *= mOuterParam->mPitch;
+			curPitch *= mOuterParam->getPitch();
 	}
 
 	if (param & UPDATE_Pan) {
 		curPan = mTimedParam.mInnerParam.mPan.mCurrentValue;
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Pan))
-			curPan
-			    = panCalc(curPan, mOuterParam->mPan, fVar3, mPanSwitchExt[0]);
+			curPan = panCalc(curPan, mOuterParam->getPan(), fVar3,
+			                 mPanSwitchExt[0]);
 	}
 
 	if (param & UPDATE_Fxmix) {
 		curFxmix = mTimedParam.mInnerParam.mFxmix.mCurrentValue;
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Fxmix))
-			curFxmix = panCalc(curFxmix, mOuterParam->mFxmix, fVar3,
+			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar3,
 			                   mPanSwitchExt[1]);
 	}
 
@@ -541,7 +567,7 @@ void TTrack::updateTrack(u32 param)
 		curDolby = mTimedParam.mInnerParam.mDolby.mCurrentValue;
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Dolby))
-			curDolby = panCalc(curDolby, mOuterParam->mDolby, fVar3,
+			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar3,
 			                   mPanSwitchExt[2]);
 	}
 
@@ -601,7 +627,7 @@ void TTrack::updateTrack(u32 param)
 		if (param & UPDATE_Dolby)
 			mChannelUpdater.mDolby = curDolby;
 	} else {
-		fVar3 = mRegisterParam.getPanPower(4) / 32767.0f;
+		fVar3 = mRegisterParam.getPanPowerTrack() / 32767.0f;
 		if (param & UPDATE_Volume)
 			mChannelUpdater.mVolume
 			    = mParent->mChannelUpdater.mVolume * curVolume;
@@ -708,27 +734,15 @@ s8 TTrack::mainProc()
 
 	s32 retcode;
 	do {
-		if (!(mSeqCtrl.mPreviousFilePtr != 0 ? true : false)) {
-			void* intr = mIntrMgr.checkIntr();
-			if (intr != nullptr)
-				mSeqCtrl.callIntr(intr);
-		}
+		tryInterrupt();
 
 		if (mPause != 0 && (mPauseStatus & 2))
 			goto bail; // TODO: is this goto real? looks quite real to me
 
 		if (mSeqCtrl.getWait() == -1) {
-			TChannel* chan = mNoteMgr.getChannel(0);
-			bool b;
-			if (chan == nullptr)
-				b = true;
-			else if (chan->unk1 == 0xff)
-				b = true;
-			else
-				b = false;
-			if (!b)
+			if (!checkNoteStop(0))
 				break;
-			mSeqCtrl.mWaitTimer = 0;
+			mSeqCtrl.wait(0);
 		}
 
 		if (mSeqCtrl.getWait() > 0) {
@@ -948,7 +962,7 @@ void TTrack::writeRegParam(u8 param)
 	}
 
 	case 0x3:
-		mRegisterParam.unk0[3] = uVar5 - r24;
+		mRegisterParam.setFlag(uVar5 - r24);
 		return;
 	case 0xB:
 		r24 = uVar5 - r24;
@@ -1031,7 +1045,7 @@ void TTrack::writeRegParam(u8 param)
 	case 0x29:
 	case 0x2A:
 	case 0x2B:
-		mRegisterParam.unk20[bVar1 - 0x28] = r25;
+		mRegisterParam.setAddress(bVar1 - 0x28, r25);
 		return;
 
 	default:
@@ -1040,7 +1054,7 @@ void TTrack::writeRegParam(u8 param)
 	}
 
 	mRegisterParam.unk0[bVar1] = r24;
-	mRegisterParam.unk0[3]     = uVar6;
+	mRegisterParam.setFlag(uVar6);
 
 	if (bVar1 == 6) {
 		for (int i = 0; i < 2; i++) {
@@ -1064,8 +1078,8 @@ int TTrack::setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode)
 	if (result == -1)
 		return -1;
 
-	unk308 = result;
-	unk3BC = 3;
+	mTrackRoute = result;
+	unk3BC      = 3;
 	initTrack(data, 0, nullptr);
 	mChannelUpdater.initAllocChannel(0);
 	mTickCounter = 0.0f;
@@ -1093,7 +1107,12 @@ bool TTrack::startSeq()
 	return true;
 }
 
-void TTrack::stopSeqMain() { }
+void TTrack::stopSeqMain()
+{
+	updateSeq(0, true);
+	closeTrack();
+	TrackMgr::deAllocRoot(this);
+}
 
 bool TTrack::stopSeq()
 {
@@ -1123,6 +1142,8 @@ void TTrack::allNoteOff()
 	else
 		for (u8 i = 0; i < 8; ++i)
 			noteOff(i, 0);
+
+	mNoteMgr.init();
 }
 
 bool TTrack::closeTrack()
@@ -1131,8 +1152,6 @@ bool TTrack::closeTrack()
 		return false;
 
 	allNoteOff();
-
-	mNoteMgr.init();
 	mSeqState = 0;
 
 	if (mInnerMemory == 1)
@@ -1146,10 +1165,7 @@ bool TTrack::closeTrack()
 
 	mMute = 0;
 
-	if (mParent)
-		mParent->mChannelUpdater.receiveAllChannels(&mChannelUpdater);
-	else
-		ChGlobal::releaseAll(&mChannelUpdater);
+	releaseChannelAll();
 
 	if (mConnected) {
 		TrackMgr::unRegistTrack(this);
@@ -1245,8 +1261,8 @@ void TTrack::initTrack(void* data, u32 size, TTrack* parent)
 
 int TTrack::startTrack(TTrack* parent, u8 param2, u8 param3, u32 param4)
 {
-	unk308 = (((parent->unk308 << 4) | param2) & 0xfffffff)
-	         | ((parent->unk308 & 0xf0000000) + 0x10000000);
+	mTrackRoute = (((parent->mTrackRoute << 4) | param2) & 0xfffffff)
+	              | ((parent->mTrackRoute & 0xf0000000) + 0x10000000);
 
 	mConnectName = 0;
 	unk3BC       = param3;
@@ -1305,7 +1321,7 @@ u32 TTrack::readReg32(u8 reg)
 	case 0x29:
 	case 0x2A:
 	case 0x2B:
-		result = mRegisterParam.getReg32(reg - 0x28);
+		result = mRegisterParam.getAddress(reg - 0x28);
 		break;
 
 	case 0x23:
@@ -1376,9 +1392,7 @@ u16 TTrack::readRegDirect(u8 reg)
 		break;
 
 	case 48:
-		result = mSeqCtrl.mLoopIndex == 0
-		             ? (u16)0
-		             : mSeqCtrl.mLoopTimers[mSeqCtrl.mLoopIndex - 1];
+		result = mSeqCtrl.getLoopCount();
 		break;
 
 	default:
@@ -1412,7 +1426,7 @@ void TTrack::writeRegDirect(u8 reg, u16 value)
 		top                    = value >> 8;
 		uVar1                  = Player::extend8to16(top);
 		mRegisterParam.unk0[0] = top;
-		mRegisterParam.unk0[3] = uVar1;
+		mRegisterParam.setFlag(uVar1);
 
 		r4    = value;
 		value = value & 0xff;
@@ -1426,7 +1440,7 @@ void TTrack::writeRegDirect(u8 reg, u16 value)
 	}
 
 	mRegisterParam.unk0[r30] = value;
-	mRegisterParam.unk0[3]   = r4;
+	mRegisterParam.setFlag(r4);
 }
 
 void TTrack::setTrackExtPanPower(f32 power) { }
@@ -1457,7 +1471,7 @@ TTrack* TTrack::routeTrack(u32 route)
 	TTrack* found  = this;
 	u32 iterations = route >> 28;
 	for (int i = 0; i < iterations; ++i, route >>= 4) {
-		found = found->mChildren[route & 0xF];
+		found = found->getChild(route & 0xF);
 
 		if (found)
 			continue;
@@ -1587,9 +1601,7 @@ s32 TTrack::rootCallback(void* param)
 	TTrack* self = static_cast<TTrack*>(param);
 	if (self && self->mSeqState != 0) {
 		if (self->mSeqState == 3) {
-			self->updateSeq(0, true);
-			self->closeTrack();
-			TrackMgr::deAllocRoot(self);
+			self->stopSeqMain();
 			return -1;
 		} else {
 			self->mTickCounter += self->mTickRate;
@@ -1602,9 +1614,7 @@ s32 TTrack::rootCallback(void* param)
 					if ((int)self->mainProc() != -1)
 						continue;
 
-					self->updateSeq(0, true);
-					self->closeTrack();
-					TrackMgr::deAllocRoot(self);
+					self->stopSeqMain();
 					return -1;
 				}
 			}

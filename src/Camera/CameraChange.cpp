@@ -24,7 +24,7 @@ s16 CPolarSubCamera::getCameraInbetweenFrame_(int param_1)
 	if (param_1 == -1)
 		param_1 = unk60->getThing();
 
-	int iVar3 = 1;
+	s16 iVar3 = 1;
 	if (mMode < CAMERA_MODE_REPRODUCE_DEMO
 	    && param_1 < CAMERA_MODE_REPRODUCE_DEMO) {
 		TCamSaveKindParam* pTVar4 = mSaveKindParam[mMode];
@@ -455,10 +455,10 @@ void CPolarSubCamera::execFrontRotate_()
 		unk64 &= ~CAMERA_FLAG_UNK10;
 		unk64 |= CAMERA_FLAG_UNK4;
 		unk274 = *gpMarioAngleY - 0x8000;
-		if (unk120->checkFrameMeaning(0x4000)) {
+		if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y)) {
 			unk276 = mSaveEx->mYButtonRotateChase.get();
 			unk64 |= CAMERA_FLAG_UNK8;
-		} else if (unk120->checkFrameMeaning(0x8000)) {
+		} else if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_CAM_L)) {
 			unk276 = mSaveEx->mLButtonRotateChase.get();
 			unk64 &= ~CAMERA_FLAG_UNK8;
 			SMSGetMSound()->startSoundSystemSE(0x4826, 0, nullptr, 0);
@@ -592,14 +592,17 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 	    || gpCameraMario->isMarioClimb(SMS_GetMarioStatus())) {
 		if (isLButtonCameraSpecifyMode(mMode))
 			doLButtonCameraOff_(true);
-		if (unk120->checkFrameMeaning(0x8000))
+		if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_CAM_L))
 			execFrontRotate_();
 	} else {
 		if (isLButtonCameraSpecifyMode(mMode)) {
 			if (SMS_GetMarioStatus() & MARIO_STATUS_FLAG_UNK20000) {
 				doLButtonCameraOff_(true);
 			} else if (!isLButtonCameraInbetween()
-			           && unk120->checkFrameMeaning(0x14000) && unk282 == 0) {
+			           && unk120->checkFrameMeaning(
+			               TMarioGamePad::MEANING_Y
+			               | TMarioGamePad::MEANING_CAM_AB)
+			           && unk282 == 0) {
 				doLButtonCameraOff_(false);
 			}
 		} else if (isNormalCameraSpecifyMode(mMode)
@@ -607,9 +610,11 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 			if (unk64 & CAMERA_FLAG_UNK10) {
 				unk64 &= ~CAMERA_FLAG_UNK10;
 				doLButtonCameraOn_();
-			} else if (unk120->checkFrameMeaning(0xC000)) {
+			} else if (unk120->checkFrameMeaning(
+			               TMarioGamePad::MEANING_Y
+			               | TMarioGamePad::MEANING_CAM_L)) {
 				bool doCheck = true;
-				if (unk120->checkFrameMeaning(0x4000)) {
+				if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y)) {
 					if (unk282 != 0)
 						doCheck = false;
 					else

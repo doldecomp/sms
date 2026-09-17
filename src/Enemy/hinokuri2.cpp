@@ -397,24 +397,8 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 			local_44[2][2] = scale;
 			local_44[2][3] = 0.0;
 
-			f32 s = JMASin(gpCurHinokuri->unk198);
-			f32 c = JMACos(gpCurHinokuri->unk198);
-
 			Mtx local_74;
-			local_74[0][0] = c;
-			local_74[0][1] = 0.0;
-			local_74[0][2] = s;
-			local_74[0][3] = 0.0;
-
-			local_74[1][0] = 0.0;
-			local_74[1][1] = 1.0;
-			local_74[1][2] = 0.0;
-			local_74[1][3] = 0.0;
-
-			local_74[2][0] = -s;
-			local_74[2][1] = 0.0;
-			local_74[2][2] = c;
-			local_74[2][3] = 0.0;
+			MsMtxSetRotY(local_74, gpCurHinokuri->unk198);
 
 			MTXConcat(mA, local_74, mA);
 			MTXConcat(mA, local_44, mA);
@@ -422,22 +406,7 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 			MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
 		} else {
 			Mtx local_a4;
-			f32 s          = JMASin(gpCurHinokuri->unk198);
-			f32 c          = JMACos(gpCurHinokuri->unk198);
-			local_a4[0][0] = c;
-			local_a4[0][1] = 0.0;
-			local_a4[0][2] = s;
-			local_a4[0][3] = 0.0;
-
-			local_a4[1][0] = 0.0;
-			local_a4[1][1] = 1.0;
-			local_a4[1][2] = 0.0;
-			local_a4[1][3] = 0.0;
-
-			local_a4[2][0] = -s;
-			local_a4[2][1] = 0.0;
-			local_a4[2][2] = c;
-			local_a4[2][3] = 0.0;
+			MsMtxSetRotY(local_a4, gpCurHinokuri->unk198);
 
 			MTXConcat(mA, local_a4, mA);
 			MTXConcat(J3DSys::mCurrentMtx, local_a4, J3DSys::mCurrentMtx);
@@ -498,7 +467,7 @@ void THinokuri2::init(TLiveManager* param_1)
 	unk150 = new TMBindShadowBody(this, getModel(), 1.0f);
 
 	TIdxGroupObj* enemiesGrp
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	enemiesGrp->getChildren().push_back(mHead);
 	enemiesGrp->getChildren().push_back(mBody);
 	enemiesGrp->getChildren().push_back(unk178);
@@ -925,7 +894,7 @@ void THinokuri2::moveObject()
 		unk194 = 1.0f;
 	}
 
-	if (gpMarDirector->unk58 % 600 == 0)
+	if (gpMarDirector->mMoveTickCount % 600 == 0)
 		generateEnemy();
 
 	doShortCut();

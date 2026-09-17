@@ -475,10 +475,14 @@ void TCardLoad::setupScoreScreen()
 void TCardLoad::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	unk278[0] = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＡ");
-	unk278[1] = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＢ");
-	unk278[2] = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＣ");
-	unk284 = JDrama::TNameRefGen::search<TMapObjOptionWall>("オプション用壁");
+	unk278[0] = static_cast<TFileLoadBlock*>(
+	    JDrama::TNameRefGen::search("ロードブロックＡ"));
+	unk278[1] = static_cast<TFileLoadBlock*>(
+	    JDrama::TNameRefGen::search("ロードブロックＢ"));
+	unk278[2] = static_cast<TFileLoadBlock*>(
+	    JDrama::TNameRefGen::search("ロードブロックＣ"));
+	unk284 = static_cast<TMapObjOptionWall*>(
+	    JDrama::TNameRefGen::search("オプション用壁"));
 }
 
 void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -613,8 +617,8 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		} break;
 		case 1:
-			if (unk38->checkFrameMeaning(0x20)
-			    || unk38->checkFrameMeaning(0x40)) {
+			if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
+			    || unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 				                                   nullptr, 0);
 				unkB8 = 1;
@@ -624,7 +628,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		case 6:
 			if (unk754->movementCard2Option()) {
-				unk38->offFlag(0x1);
+				unk38->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 				unk14 = 2;
 			} else if (gpCameraOption->unk0 & 1) {
 				unk14 = 7;
@@ -643,7 +647,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				if (unk754->movementOption2Card()) {
 					unk284->onCollision();
 					unk14 = 0;
-					unk38->onFlag(0x1);
+					unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 					if (unk754->isChangedSetting()) {
 						gpCardManager->getBookmarkInfos(unk40);
 						unk1C = PROGRESS_UNK32;
@@ -674,7 +678,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			titleDraw();
 			if (unk18 >= 4) {
 				if (unk18 >= 4 && unkBC >= 100 && gpCameraOption->unkA == 0
-				    && (unk38->checkFrameMeaning(0x20)
+				    && (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
 				        || unk38->getTrigger() & 0x1000)) {
 					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
 					                                   nullptr, 0);
@@ -685,7 +689,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				unkF0->update();
 				unkF4->update();
 				unkBC += 1;
-			} else if (unk38->checkFrameMeaning(0x20)
+			} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
 			           || unk38->getTrigger() & 0x1000) {
 				unkF0->setPaneAlpha(10, 255, unkF0->getPane()->getAlpha());
 				unkF4->setPaneAlpha(10, 255, unkF4->getPane()->getAlpha());
@@ -713,7 +717,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (gpCameraOption->unkA == 0)
 				unk14 = 3;
 
-			if (unk38->checkFrameMeaning(0x20)
+			if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
 			    || unk38->getTrigger() & 0x1000) {
 				unkF0->setPaneAlpha(10, 255, unkF0->getPane()->getAlpha());
 				unkF4->setPaneAlpha(10, 255, unkF4->getPane()->getAlpha());
@@ -729,7 +733,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		case 10:
 			MSBgm::startBGM(MSD_BGM_CHUBOSS2);
-			unk38->onFlag(0x1);
+			unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			gpMarioOriginal->offFlag(MARIO_FLAG_GAME_OVER);
 			unk14 = 9;
 			unk18 = 1;
@@ -1018,11 +1022,12 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 
 	case 2: {
 		s8 old = unkB7;
-		if (unk38->checkFrameMeaning(0x8)) {
+		if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT)) {
 			unkB7 = 0;
-		} else if (unk38->checkFrameMeaning(0x10)) {
+		} else if (unk38->checkFrameMeaning(
+		               TMarioGamePad::MEANING_MENU_RIGHT)) {
 			unkB7 = 1;
-		} else if (unk38->checkFrameMeaning(0x20)) {
+		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 			if (old == 0)
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 				                                   nullptr, 0);
@@ -1030,7 +1035,7 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 				                                   nullptr, 0);
 			unk10 = 3;
-		} else if (unk38->checkFrameMeaning(0x40)) {
+		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
 			unkB7 = 1;
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 			                                   nullptr, 0);
@@ -1202,15 +1207,16 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 	case 2: {
 		s8 old = unkB7;
-		if (unk38->checkFrameMeaning(0x8)) {
+		if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT)) {
 			unkB7 = 0;
-		} else if (unk38->checkFrameMeaning(0x10)) {
+		} else if (unk38->checkFrameMeaning(
+		               TMarioGamePad::MEANING_MENU_RIGHT)) {
 			unkB7 = 1;
-		} else if (unk38->checkFrameMeaning(0x20)) {
+		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
-		} else if (unk38->checkFrameMeaning(0x40)) {
+		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
 			unkB7 = 1;
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 			                                   nullptr, 0);
@@ -1321,7 +1327,9 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		break;
 
 	case 2:
-		if (unkB4 <= 600 && unk38->checkFrameMeaning(0x60)) {
+		if (unkB4 <= 600
+		    && unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A
+		                                | TMarioGamePad::MEANING_MENU_B)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
@@ -1429,7 +1437,9 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 
 	case 2: {
 		int b4 = unkB4;
-		if (b4 <= 600 && unk38->checkFrameMeaning(0x60)) {
+		if (b4 <= 600
+		    && unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A
+		                                | TMarioGamePad::MEANING_MENU_B)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
@@ -1504,7 +1514,8 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 	} break;
 
 	case 2:
-		if (unk38->checkFrameMeaning(0x20) || unkB0 != -1)
+		if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
+		    || unkB0 != -1)
 			unk10 = 3;
 		break;
 
@@ -1785,7 +1796,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 		break;
 
 	case 3:
-		unk38->onFlag(0x1);
+		unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		unk2A0->hide();
 		unk288->setCenteredSize(30, 0, 0, unk28C.getWidth(),
 		                        unk28C.getHeight());
@@ -1826,7 +1837,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 			unk278[unkB1]->makeBlockNormal();
 		result = unkB0;
 		if (unk14 == 0)
-			unk38->offFlag(0x1);
+			unk38->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		if (unkB0 != -1)
 			unk1C = param_1;
 		else
@@ -1945,7 +1956,7 @@ s8 TCardLoad::selectFunction()
 	} break;
 
 	case 2:
-		if (unk38->checkFrameMeaning(0x20)) {
+		if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 			if (bVar1 == 0)
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0,
 				                                   nullptr, 0);
@@ -1953,7 +1964,7 @@ s8 TCardLoad::selectFunction()
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 				                                   nullptr, 0);
 			unk10 = 3;
-		} else if (unk38->checkFrameMeaning(0x4)) {
+		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_DOWN)) {
 			TCardBookmarkInfo* bm = &unk40[unkB0];
 			if (bm->unk18 == 0)
 				unkB6 = 0;
@@ -1961,7 +1972,7 @@ s8 TCardLoad::selectFunction()
 				unkB6 = bVar1 + 1;
 			if (unkB6 > 3)
 				unkB6 = 0;
-		} else if (unk38->checkFrameMeaning(0x2)) {
+		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_UP)) {
 			TCardBookmarkInfo* bm = &unk40[unkB0];
 			if (bm->unk18 == 0)
 				unkB6 = 0;
@@ -1969,7 +1980,7 @@ s8 TCardLoad::selectFunction()
 				unkB6 = bVar1 - 1;
 			if (unkB6 < 0)
 				unkB6 = 3;
-		} else if (unk38->checkFrameMeaning(0x40)) {
+		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
 			unkB6 = -1;
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 			                                   nullptr, 0);
@@ -2111,7 +2122,7 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNK0:
-		unk38->onFlag(0x1);
+		unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		gpCardManager->getBookmarkInfos(unk40);
 		unk1C = PROGRESS_UNK2;
 		break;
@@ -2591,7 +2602,7 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNKD:
 		case PROGRESS_UNK10:
 		case PROGRESS_UNK2D:
-			unk38->onFlag(0x1);
+			unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			unk275 = 0;
 			break;
 		}
@@ -2600,7 +2611,7 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNK1C:
 			unk284->onCollision();
 			unk275 = 0;
-			unk38->offFlag(0x1);
+			unk38->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			break;
 
 		case PROGRESS_UNK13:
@@ -2612,7 +2623,7 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNK10:
 		case PROGRESS_UNK2D:
 			unk275 = 1;
-			unk38->offFlag(0x1);
+			unk38->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			break;
 		}
 

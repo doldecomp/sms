@@ -51,7 +51,7 @@ TSelectDir::~TSelectDir()
 	if (arc)
 		arc->unmountFixed();
 
-	unk18->offFlag(1);
+	unk18->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 }
 
 void TSelectDir::setup(JDrama::TDisplay* display, TMarioGamePad* gamePad,
@@ -110,7 +110,7 @@ int TSelectDir::rsetup()
 	group3D->getChildren().push_back(unk28);
 	groupGrad->getChildren().push_back(unk24);
 
-	unk18->mFlags   = 1;
+	unk18->mFlags   = TMarioGamePad::PAD_FLAG_MENU_INPUT;
 	unk20->mGamePad = unk18;
 
 	JPAResourceManager* resourceManager2D = new JPAResourceManager(9, 0x200, 0);

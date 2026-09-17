@@ -36,7 +36,7 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 		TInstEffect* effect = perc->mEffects[i];
 		if (effect) {
 			f32 y = effect->getY(key, param_2);
-			switch (effect->unk4) {
+			switch (effect->mTarget) {
 			case 0:
 				param_3->mEffectVolume *= y;
 				break;
