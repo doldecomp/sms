@@ -282,9 +282,9 @@ The compiler hoists constant loads (`lfs`, `lfd` from SDA/SDA2) before loops. Th
 
 If the target hoists a constant (e.g., `lfd f28, @5181@sda21`) before a loop but our build does not, it means the compiler sees a different code structure. This is usually a symptom of a deeper structural mismatch in the loop body or inlined functions, not fixable by just moving the load.
 
-## Function-local statics with non-trivial initializers: `init$NNN` is the guard
+## Function-local statics with an initializer: `init$NNN` is the guard
 
-When a function-local `static` has a non-trivial initializer that has to run at first call — typically a constructor call like `static JGeometry::TVec3<f32> pos(1815.0f, 1500.0f, 1550.0f);` — MWCC emits **two symbols in `.sbss`**:
+When a function-local `static` has *any* initializer — a constructor call like `static JGeometry::TVec3<f32> pos(1815.0f, 1500.0f, 1550.0f);`, but equally a plain `static int total_use_size = 0;` — MWCC emits **two symbols in `.sbss`**:
 
 - The variable itself (e.g. `pos$NNN`), sized for the type (a Vec is 12 bytes).
 - A 1-byte construction guard named `init$NNN` (note the literal name `init`, regardless of what your source variable is called).
@@ -301,9 +301,15 @@ stb   r0, init$NNN@sda21       ; mark constructed
 .L_skip_init:
 ```
 
-So when the target shows an `init$NNN` byte that is loaded with `lbz` + `extsb.` and tested, **don't** model it as a plain `static bool foo;` in your source — model it as the *guard* for some other static local with a real constructor. Pick the source statement that produces the matching initializer body (commonly a `JGeometry::TVec3<f32>(x, y, z)` if the init code writes three floats).
+So when the target shows an `init$NNN` byte that is loaded with `lbz` + `extsb.` and tested, **don't** model it as a plain `static bool foo;` in your source — model it as the *guard* for another static local in the same function. Pick the source statement that produces the matching initializer body (commonly a `JGeometry::TVec3<f32>(x, y, z)` if the init code writes three floats, and a bare `= 0` if it writes one word or nothing at all).
 
-Aggregate-initialized PODs (`static Vec pos = { 1.0f, 2.0f, 3.0f };`) and zero-initialized statics (`static Vec pos;`) do NOT produce a guard — they sit in `.data` / `.bss` with no first-call check. The `init$NNN` pattern only appears when MWCC needs to run constructor code at first entry.
+What decides it is the *presence* of an initializer, not whether the initializer is non-trivial.
+Measured on `TMapObjFlag::init` (`MoveBG/MapObjFlag.cpp`), whose only static is `static int total_use_size = 0;`: the map carries both `total_use_size$2279` and `init$2280`, and the function loads the guard with `lbz`/`extsb.` exactly as above.
+Dropping the `= 0` removes the guard from our object (`init$2280` goes MISSING) and takes `init` from 99.8% to 96.0%; `= 5` keeps it.
+So a *scalar* static with a constant initializer still gets a guard, and a target showing `init$NNN` next to a 4-byte `.sbss` word does not imply a constructor — it can be `static int x = 0;`.
+
+Only a static with **no** initializer at all (`static Vec pos;`, `static int n;`) skips the guard: it sits in `.bss` with no first-call check.
+Aggregate-initialized PODs (`static Vec pos = { 1.0f, 2.0f, 3.0f };`) go to `.data` and have not been measured here; do not assume either way.
 
 ## Default arguments vs. spelling them out changes inlining
 
