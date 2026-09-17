@@ -179,7 +179,7 @@ void TBWLeashNode::calcMatrix()
 	mtx[1][3] = 30.0f + pos.y;
 	mtx[2][3] = pos.z;
 
-	mPosition.set(pos.x, pos.y, pos.z);
+	mPosition = pos;
 }
 
 void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -980,7 +980,7 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if ((u32)type == 0x4000005A) {
+	if (sender->isActorType(0x4000005A)) {
 		sender->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		mHitPoints    = 0;
 		mSparkRequest += 1;
@@ -1113,7 +1113,7 @@ void TBossWanwan::reverseNextGraphNode()
 	int prev             = tracer->getPrevIndex();
 
 	JGeometry::TVec3<f32> toMario = *gpMarioPos;
-	toMario -= mPosition;
+	toMario.sub(mPosition);
 
 	getTracer()->mPrevIdx = tracer->getGraph()->getAimToDirNextIndex(
 	    prev, tracer->getCurGraphIndex(), toMario, mPosition, -1);
@@ -1486,7 +1486,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		ctrl->setRate(SMSGetAnmFrameRate());
 	}
 
-	if (!boss->mIsPicketPlanted && boss->isHeadPulled()) {
+	if (boss->mIsPicketPlanted == 0 && boss->isHeadPulled()) {
 		TGraphTracer* tracer   = boss->getTracer();
 		const TGraphWeb* graph = tracer->getGraph();
 		int prev               = tracer->getPrevIndex();
