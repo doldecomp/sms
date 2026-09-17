@@ -386,18 +386,18 @@ void TTalk2D2::setMessageID(u32 message_id, u32 flags)
 
 	if (loader->getMessageData() != nullptr) {
 		JMSMesgEntry* entry
-		    = (JMSMesgEntry*)loader->getMessageEntry(mMessageID);
+		    = (JMSMesgEntry*)loader->getMessageEntry((u16)mMessageID);
 		if (entry == nullptr) {
 			mMessageID = 4;
 			loader     = mSysMessage;
-			entry = (JMSMesgEntry*)loader->getMessageEntry(mMessageID);
+			entry = (JMSMesgEntry*)loader->getMessageEntry((u16)mMessageID);
 		}
 		setupTextBox(loader->getMessageData(), entry);
 	} else {
 		mMessageID = 3;
 		loader     = mSysMessage;
 		setupTextBox(loader->getMessageData(),
-		             (JMSMesgEntry*)loader->getMessageEntry(mMessageID));
+		             (JMSMesgEntry*)loader->getMessageEntry((u16)mMessageID));
 	}
 	mCurMessage = loader;
 	mCharTimer  = 0;
@@ -715,13 +715,36 @@ void TTalk2D2::checkBoardControler()
 	if (mIsLastPage) {
 		if (mForceClose
 		    || (mGamePad->mEnabledFrameMeaning
-		        & (TMarioGamePad::MEANING_0x20000
-		           | TMarioGamePad::MEANING_0x40000))) {
+		        & TMarioGamePad::MEANING_0x20000)
+		    || (mGamePad->mEnabledFrameMeaning
+		        & TMarioGamePad::MEANING_0x40000)) {
 			gpMSound->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0, nullptr,
 			                             0);
 			mBoardBound->setPanePosition(60, JUTPoint(0, 0), JUTPoint(0, 0),
 			                             JUTPoint(0, -600));
-			closeTalkWindow();
+			// TODO: closeTalkWindow()'s body, spelled out.  Calling the
+			// helper is size-exact, but it shrinks checkBoardControler
+			// enough for MWCC to inline the whole of it into perform(),
+			// which retail calls out of line; with the statements spelled
+			// out the per-callee budget refuses the expansion.  Same
+			// pattern as TBombHei::bombIn in docs/catalog.
+			if (mFlags & 1) {
+				if (mMessageID == 0x1e) {
+					gpMSound->startSoundSystemSE(MSD_SE_SY_RACE_START, 0,
+					                             nullptr, 0);
+				} else if (mIsBoard) {
+					gpMSound->startSoundSystemSE(MSD_SE_SY_2D_OUT, 0, nullptr,
+					                             0);
+					gpMSound->talkModeOut();
+				} else {
+					gpMSound->talkModeOut();
+				}
+				gpCamera->makeMtxForPrevTalk();
+				gpMarDirector->getConsole()->startAppearTelop(false);
+				SMSRumbleMgr->finishPause();
+				mIsTalking = false;
+			}
+			mTalkMode = TALK_MODE_CLOSING;
 		}
 	} else if (mGamePad->mEnabledFrameMeaning
 	           & (TMarioGamePad::MEANING_0x20000
@@ -828,8 +851,9 @@ void TTalk2D2::checkControler()
 		if (mIsLastPage) {
 			if (mForceClose
 			    || (mGamePad->mEnabledFrameMeaning
-			        & (TMarioGamePad::MEANING_0x20000
-			           | TMarioGamePad::MEANING_0x40000))) {
+			        & TMarioGamePad::MEANING_0x20000)
+			    || (mGamePad->mEnabledFrameMeaning
+			        & TMarioGamePad::MEANING_0x40000)) {
 				gpMSound->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 				                             nullptr, 0);
 				closeTalkWindow();
@@ -957,7 +981,7 @@ bool TTalk2D2::eraseNormalWindow()
 		}
 
 		setupTextBox(mCurMessage->getMessageData(),
-		             (JMSMesgEntry*)mCurMessage->getMessageEntry(mMessageID));
+		             (JMSMesgEntry*)mCurMessage->getMessageEntry((u16)mMessageID));
 		mFastForward = false;
 		mAlphaStep   = 0x40;
 		done         = true;
@@ -978,7 +1002,7 @@ bool TTalk2D2::eraseBoardWindow()
 	if (alpha < 0) {
 		alpha = 0;
 		setupTextBox(mCurMessage->getMessageData(),
-		             (JMSMesgEntry*)mCurMessage->getMessageEntry(mMessageID));
+		             (JMSMesgEntry*)mCurMessage->getMessageEntry((u16)mMessageID));
 		mCharColor = 0xffffffff;
 		done       = true;
 		mCharIndex = 0;
@@ -1002,172 +1026,186 @@ void TTalk2D2::appearBoardBoxWindow()
 
 void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((cue & CUE_MOVE) && gpMarDirector->unk124 == 2) {
-		switch (mTalkMode) {
-		case TALK_MODE_WAIT_CAMERA:
-			if (gpCamera->isThing()) {
-				mWaitTimer = 20;
-				mTalkMode  = TALK_MODE_WAIT_OPEN;
-			}
-			break;
-
-		case TALK_MODE_OPENING: {
-			bool opened;
-			if (mIsBoard)
-				opened = openBoardWindow();
-			else
-				opened = openNormalWindow();
-			if (opened)
-				mTalkMode = TALK_MODE_OPEN;
-			break;
-		}
-
-		case TALK_MODE_OPEN:
-			if (mIsBoard) {
-				moveBoardWindow();
-				checkBoardControler();
-			} else {
-				moveTalkWindow();
-				checkControler();
-			}
-			break;
-
-		case TALK_MODE_CLOSING: {
-			bool closed;
-			if (mIsBoard) {
-				closed = false;
-				if (mBoardBound->update())
-					closed = true;
-			} else {
-				closed = closeNormalWindow();
-			}
-			if (closed) {
-				if (mFlags & 1)
-					mTalkMode = TALK_MODE_IDLE;
-				else
-					mTalkMode = TALK_MODE_READY;
-			}
-			break;
-		}
-
-		case TALK_MODE_ERASING: {
-			bool erased;
-			if (mIsBoard)
-				erased = eraseBoardWindow();
-			else
-				erased = eraseNormalWindow();
-			if (erased) {
-				if (mIsBoard)
-					mTalkMode = TALK_MODE_BOARD_APPEAR;
-				else
-					mTalkMode = TALK_MODE_OPENING;
-			}
-			break;
-		}
-
-		case TALK_MODE_BOARD_APPEAR: {
-			bool done = false;
-			s16 alpha = mBoardTextBox->getAlpha() + 4;
-			if ((u16)alpha > 255) {
-				alpha = 255;
-				done  = true;
-			}
-			mBoardTextBox->setAlpha(alpha);
-			if (done)
-				mTalkMode = TALK_MODE_OPEN;
-			break;
-		}
-		}
-	}
-
-	if ((cue & CUE_CALC_ANIM) && gpMarDirector->unk124 == 2) {
-		switch (mTalkMode) {
-		case TALK_MODE_WAIT_OPEN:
-			mWaitTimer--;
-			if (mWaitTimer < 0) {
-				mCharIndex = 0;
-				mTalkMode  = TALK_MODE_OPENING;
-			}
-			break;
-
-		case TALK_MODE_ERASING: {
-			s16 alpha = mBasePane->getAlpha() - 16;
-			if (alpha < 0) {
-				mLineProgress[0] = 1.0f;
-				alpha            = 255;
-				mBackPane[0]->hide();
-				mCharCursor[0] = 0;
-				mCursor[0]->hide();
-				mLineProgress[1] = 2.0f;
-				mBackPane[1]->hide();
-				mCharCursor[1] = 0;
-				mCursor[1]->hide();
-				mLineProgress[2] = 3.0f;
-				mBackPane[2]->hide();
-				mCharCursor[2] = 0;
-				mCursor[2]->hide();
-
-				for (int i = 0; i < CHAR_NUM; i++) {
-					if (mCharBox[i] != nullptr)
-						mCharBox[i]->hide();
+	if (cue & CUE_MOVE) {
+		// TODO: retail compares TMarDirector's game mode with a signed
+		// `cmpwi` and branches to the body, which is the shape of a switch
+		// with one case, not of `unk124 == 2` on a `u8`.  Either the field
+		// is really an enum in MarDirector.hpp or the game mode was reached
+		// through an accessor; both are shared-header changes.
+		switch (gpMarDirector->unk124) {
+		case 2:
+			switch (mTalkMode) {
+			case TALK_MODE_WAIT_CAMERA:
+				if (gpCamera->isThing()) {
+					mWaitTimer = 20;
+					mTalkMode  = TALK_MODE_WAIT_OPEN;
 				}
+				break;
 
-				setupTextBox(
-				    mCurMessage->getMessageData(),
-				    (JMSMesgEntry*)mCurMessage->getMessageEntry(mMessageID));
-				mFastForward = false;
-				mAlphaStep   = 0x40;
-				mCharColor   = 0xffffffff;
-				mCharColor   = 0xffffffff;
-				mCharIndex   = 0;
-				mCharTimer   = 0;
-				mTalkMode    = TALK_MODE_OPENING;
+			case TALK_MODE_OPENING:
+				if (mIsBoard ? openBoardWindow() : openNormalWindow())
+					mTalkMode = TALK_MODE_OPEN;
+				break;
+
+			case TALK_MODE_OPEN:
+				if (mIsBoard) {
+					moveBoardWindow();
+					checkBoardControler();
+				} else {
+					moveTalkWindow();
+					checkControler();
+				}
+				break;
+
+			case TALK_MODE_CLOSING: {
+				// closeBoardWindow()'s body; see checkBoardControler() for
+				// why the helpers are spelled out at their call sites.
+				bool closed;
+				if (mIsBoard) {
+					closed = false;
+					if (mBoardBound->update())
+						closed = true;
+				} else {
+					closed = closeNormalWindow();
+				}
+				if (closed) {
+					if (mFlags & 1)
+						mTalkMode = TALK_MODE_IDLE;
+					else
+						mTalkMode = TALK_MODE_READY;
+				}
+				break;
 			}
-			mBasePane->setAlpha(alpha);
+
+			case TALK_MODE_ERASING:
+				if (mIsBoard ? eraseBoardWindow() : eraseNormalWindow()) {
+					if (mIsBoard)
+						mTalkMode = TALK_MODE_BOARD_APPEAR;
+					else
+						mTalkMode = TALK_MODE_OPENING;
+				}
+				break;
+
+			case TALK_MODE_BOARD_APPEAR: {
+				// appearBoardBoxWindow()'s body.
+				bool done = false;
+				s16 alpha = mBoardTextBox->getAlpha() + 4;
+				if ((u16)alpha > 255) {
+					alpha = 255;
+					done  = true;
+				}
+				mBoardTextBox->setAlpha(alpha);
+				if (done)
+					mTalkMode = TALK_MODE_OPEN;
+				break;
+			}
+			}
 			break;
-		}
 		}
 	}
 
-	if ((cue & CUE_DRAW) && gpMarDirector->unk124 == 2) {
-		ReInitializeGX();
-		SMS_DrawInit();
+	if (cue & CUE_CALC_ANIM) {
+		switch (gpMarDirector->unk124) {
+		case 2:
+			switch (mTalkMode) {
+			case TALK_MODE_WAIT_OPEN:
+				mWaitTimer--;
+				if (mWaitTimer < 0) {
+					mCharIndex = 0;
+					mTalkMode  = TALK_MODE_OPENING;
+				}
+				break;
 
-		J2DOrthoGraph ortho(graphics->getViewport());
-		ortho.setup2D();
+			case TALK_MODE_ERASING: {
+				// eraseNormalWindow()'s body again, with the window left
+				// fully opaque for the next page instead of returning.
+				s16 alpha = mBasePane->getAlpha() - 16;
+				if (alpha < 0) {
+					mLineProgress[0] = 1.0f;
+					alpha            = 255;
+					mBackPane[0]->hide();
+					mCharCursor[0] = 0;
+					mCursor[0]->hide();
+					mLineProgress[1] = 2.0f;
+					mBackPane[1]->hide();
+					mCharCursor[1] = 0;
+					mCursor[1]->hide();
+					mLineProgress[2] = 3.0f;
+					mBackPane[2]->hide();
+					mCharCursor[2] = 0;
+					mCursor[2]->hide();
 
-		if (mNeedsPrepass) {
-			mBackPane[0]->show();
-			mBackPane[1]->show();
-			mBackPane[2]->show();
-			J2DPane* root = mScreen->search('ROOT');
-			root->setAlpha(0);
-			mScreen->draw(0, 0, &ortho);
-			root->setAlpha(255);
-			ortho.setup2D();
-			mNeedsPrepass = false;
-			mBackPane[0]->hide();
-			mBackPane[1]->hide();
-			mBackPane[2]->hide();
-		}
+					for (int i = 0; i < CHAR_NUM; i++) {
+						if (mCharBox[i] != nullptr)
+							mCharBox[i]->hide();
+					}
 
-		switch (mTalkMode) {
-		case TALK_MODE_OPENING:
-			for (s8 i = 0; i <= mCurrentLine; i++)
-				openWindow(i, mLineProgress[i]);
-			// fall through
-		case TALK_MODE_OPEN:
-		case TALK_MODE_CLOSING:
-		case TALK_MODE_ERASING:
-			ortho.setup2D();
-			if (mIsBoard) {
-				mBoardScreen->draw(0, 0, &ortho);
-			} else {
-				mBasePane->move(mBaseX, mBaseY);
-				mBasePane->mRotation = mBaseRotation;
-				mScreen->draw(0, 0, &ortho);
+					setupTextBox(mCurMessage->getMessageData(),
+					             (JMSMesgEntry*)mCurMessage->getMessageEntry(
+					                 (u16)mMessageID));
+					mFastForward = false;
+					mAlphaStep   = 0x40;
+					mCharColor   = 0xffffffff;
+					mCharColor   = 0xffffffff;
+					mCharIndex   = 0;
+					mCharTimer   = 0;
+					mTalkMode    = TALK_MODE_OPENING;
+				}
+				mBasePane->setAlpha(alpha);
+				break;
+			}
+
+			case TALK_MODE_WAIT_CAMERA:
+				break;
 			}
 			break;
+		}
+	}
+
+	if (cue & CUE_DRAW) {
+		switch (gpMarDirector->unk124) {
+		case 2: {
+			ReInitializeGX();
+			SMS_DrawInit();
+
+			J2DOrthoGraph ortho(graphics->getViewport());
+			ortho.setup2D();
+
+			if (mNeedsPrepass) {
+				mBackPane[0]->show();
+				mBackPane[1]->show();
+				mBackPane[2]->show();
+				J2DPane* root = mScreen->search('ROOT');
+				root->setAlpha(0);
+				mScreen->draw(0, 0, &ortho);
+				root->setAlpha(255);
+				ortho.setup2D();
+				mNeedsPrepass = false;
+				mBackPane[0]->hide();
+				mBackPane[1]->hide();
+				mBackPane[2]->hide();
+			}
+
+			switch (mTalkMode) {
+			case TALK_MODE_OPENING:
+				for (s8 i = 0; i <= mCurrentLine; i++)
+					openWindow(i, mLineProgress[i]);
+				// fall through
+			case TALK_MODE_OPEN:
+			case TALK_MODE_CLOSING:
+			case TALK_MODE_ERASING:
+				ortho.setup2D();
+				if (mIsBoard) {
+					mBoardScreen->draw(0, 0, &ortho);
+				} else {
+					mBasePane->move(mBaseX, mBaseY);
+					mBasePane->mRotation = mBaseRotation;
+					mScreen->draw(0, 0, &ortho);
+				}
+				break;
+			}
+			break;
+		}
 		}
 	}
 }
