@@ -208,6 +208,21 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `bossgesso`
+
+- A missing base-class initialiser shows as a string in the wrong section: omitting `THitActor(name)` never emits the TU's `"胴体"` (`.sdata2`) and adds an extra `"HitActor"` in `.rodata`. Literals of 8 bytes or less land in `.sdata2`, longer in `.rodata`.
+- A covariant override of a virtual accessor silently steals its vtable slot and, spelled `return (T*)getSaveParam();`, recurses forever; visible only as a 99% vtable. Use the established `getSaveParam2()` name.
+- `startAppearBalloon` takes small message ids (`idx = id == 0x25 ? 3 : id - 3; flag = id == 3 ? 0 : 1 << idx`), not `0xE00NN`.
+- `TPosition3f`, not `TMtx34f`, when retail calls the empty `SMatrix34C<f>` ctor for a member (`init` 97 -> 99.9; the map's single `TPosition3<...>` ctor reference corroborates).
+- `member = a - b;` keeps `TVec3::sub` out of line where `d = a; d -= b; member = d;` expands it (`bind` 87 -> 99.6).
+- `if (a < N || pred()) return;` gives `blt RET` plus the unfused `clrlwi.; beq CONT; b RET`; two `if`s fuse both.
+- A named local for an inline's argument defers the arithmetic into the callee: `f32 s = p->mSLSightAngle.get(); inSightAngle(0.5f * s)` puts the `fmuls` at the comparison (four functions 96 -> 99.6+). The params `getSLFoo()` wrapper had no frame effect here, so the `bombhei` ±8 rule is per site.
+- The `getLatestNerve()` wrapper vs `mSpine->getLatestNerve()` chooses evaluation order in a nerve comparison: wrapper emits the `theNerve()` guard first, the direct read the spine load first; both occur in one TU (`doAttackShoot` 89 -> 99.6).
+- A jump table indexing the raw value with no bias needs `case 0: case 1: case 4: break;` present to be an 8-entry table.
+- `setGoalPath(const TPathNode&)` with a `TVec3` argument is one 16-byte `{null, vector}` temporary copied into both path members plus a zero store at the count field.
+- `TBossGessoTentacle::isThing()`'s `subi 3; cmplwi 1` merge after peeling `6` is an optimiser artefact (bombhei class); grouping, nested ifs and a switch all fail.
+- Open header items: `MSStageCubeFade` needs `static MSStageCubeFade* smInstance;` and `static void setBgmVolumeForce();` (map symbols; `BeakDamage` nerve 87 -> 96 measured); `SMS_GetMarioPos()` (8 B weak) is `bl`-ed inside retail's inlined `doAttackGuard`; `lenFromToeToMario` fuses `x * x` into `y * y` with `fmadds` where a stack-homed local leaves three `fmuls`.
+
 ## Rules from `bosspakkun`
 
 - Constant-first nerve identity tests: `&Nerve::theNerve() == spine->getLatestNerve()` is this TU's spelling; the natural order hoists the `mSpine`/`getLatestNerve` loads above the `theNerve()` static-init guard (`setGroundCollision` 56 -> 72 from the swap alone; applied to 14 sites). A named `const TNerveBase*` local flips the `cmplw` operands the other way.
