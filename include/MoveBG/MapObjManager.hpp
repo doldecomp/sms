@@ -22,7 +22,8 @@ public:
 	virtual void createModelData();
 	virtual void clipActors(JDrama::TGraphics*);
 
-	int getObjNumWithActorType(u32) const;
+	// u32, not int: bosstelesa's loadAfter compares the result with cmplwi.
+	u32 getObjNumWithActorType(u32) const;
 	static u32 getActorTypeByEventID(u32);
 	static TMapObjBase* newAndRegisterObjByEventID(u32, const char*);
 	static TMapObjBase*
