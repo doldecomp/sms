@@ -156,6 +156,13 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Name `JMASin`/`JMACos` results before storing into a local `Mtx`:** `jmaSinTable` is an `f32*`, so each matrix store invalidates the cached table pointer and MWCC re-reads it per use.
 - **Nested-call argument order:** in `MsAtan2(a.dot(b), MsVECMag2(c))` the second argument's call is evaluated first; naming the dot product in a local forces it before the inner call.
 
+## Rules from `BathtubPeach`
+
+- `JDrama::TNameRefGen::search<T>()`'s internal `static_cast` makes the assigned local a propagated temporary, so later basic blocks re-read it out of `r3`; `(T*)search2(...)` gives the local a register home and reproduces the ROM's reads through `r31`/`r28` (two sites; supports the doubt in `JDRNameRefGen.hpp` that `search` was a template).
+- Ternary direction: `cond; bne <load>; b <join>` with the zero hoisted above is `x == nullptr ? nullptr : x[i]`; `x ? x[i] : nullptr` gives a plain `beq` and folds the false arm.
+- A weak `TVec2`/`TVec3` member listed in the map for one TU is a depth measurement: `nerve -> goTo -> setLength -> setLength -> squared -> dot` puts `dot` at level five and out of line, while the same `dot` at level three in the same function inlines. `TVec2` needs the two `setLength` forwarders `TVec3` has (open header fix in `JGVec2.hpp`).
+- `MsWrap<f>__Ffff`'s retail body is the loop version (0x48, `Animal/boid.o`); the recurring `l + std::fmodf((r - l) + (t - l), r - l)` in `koopajr`, `MapObjCorona`, `BathtubPeach` is a different, always-inlined helper. `std::fmodf` itself must be a declaration with the 0x5c body in a `.cpp` (open fix in `math.h`); the current inline wrapper expands to `bl fmod` + `frsp` + a double load at every site.
+
 ## Rules from `bombhei`
 
 - Range merging in the `TBGCheckData` predicates is context-dependent within one TU: the same inlined `isWaterSurface()` peels `0x100` and merges `0x101..0x105` in one nerve, peels `0x100`/`0x101` in `forceKill`, and `isPool()`'s `0x104/0x105` are left unmerged there. A merge-shape mismatch on these predicates is an optimiser artefact, not evidence of a different helper.

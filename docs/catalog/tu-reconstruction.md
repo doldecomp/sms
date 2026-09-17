@@ -45,6 +45,7 @@ An effect owner argument of `this + sizeof(T)` or `this + 2 * sizeof(T)` is the 
 
 If every string offset in a unit is off by a constant, a shared header supplies the prefix.
 - `System/DummyStrings.hpp`: 12 zero bytes plus the 20-byte Shift-JIS memory-error string (UNUSED `SMS_NO_MEMORY_MESSAGE`). Fixed `SelectDir` (+688 data bytes) and both boss save-param constructors (32 bytes before the first param name).
+- `Map/MapCollisionManager.hpp` (via `MapCollisionEntry.hpp`'s `setUpTrans`) contributes a 12-byte zero vector and a 12-byte one vector to `.rodata` right after the `InfectiousStrings` block. A unit whose every string offset is 0x18 low is missing exactly this include (present in 24 Enemy TUs; `BathtubPeach` `@2852`/`@2854`, `fruitsboat` `@2333`/`@2335`).
 - `M3DUtil/InfectiousStrings.hpp` has a 0xE0-byte prefix; it must precede `SunModel` in `MarNameRefGen_Map`.
 - A header can also add unwanted data: `StageUtil.hpp` emits static shine/scenario tables even when only `SMS_isMultiPlayerMap` is used, shifting TMario's vtable by 0x168. Declare the one function directly instead.
 - Trailing zero bytes in `.sdata2` can come from linker alignment; no dummy definition needed.

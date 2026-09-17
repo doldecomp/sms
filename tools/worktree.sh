@@ -49,6 +49,9 @@ add)
 	# which the fresh checkout just gave a new mtime. Touch the shared outputs
 	# so ninja does not re-download them through the symlinks.
 	touch "$ROOT"/build/tools/* "$ROOT"/build/compilers "$ROOT"/build/binutils
+	# Touching alone is not enough: ninja also treats an output with no
+	# entry in .ninja_log as dirty, so seed the log from the main checkout.
+	[ -f "$ROOT/.ninja_log" ] && cp "$ROOT/.ninja_log" "$path/.ninja_log"
 	echo "== building $path (first build compiles every unit)"
 	build/venv/bin/ninja
 	build/venv/bin/ninja baseline
