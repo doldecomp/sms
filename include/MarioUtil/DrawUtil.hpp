@@ -13,7 +13,10 @@ extern TSilhouette* gpSilhouetteManager;
 
 class TSilhouette : public JDrama::TViewObj {
 public:
-	TSilhouette() { }
+	TSilhouette(const char* name = "<TSilhouette>")
+	    : JDrama::TViewObj(name)
+	{
+	}
 
 	void calcSilhouetteBorder();
 	void setting(MtxPtr);

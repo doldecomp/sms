@@ -22,19 +22,50 @@ JPAEmitterManager* gpEmitterManager4D2;
 
 int TMarDirector::loadResource()
 {
-	TMarioParticleManager* this_00 = new TMarioParticleManager;
+	gpMarioParticleManager = new TMarioParticleManager;
 
-	gpMarioParticleManager = this_00;
+	int particleNum = 1000;
+	int emitterNum  = 0x100;
+	int effectNum   = 0x20;
 
-	int lVar10 = 100;
-	int iVar9  = 100;
+	switch (gpMarDirector->getCurrentMap()) {
+	case 33:
+		particleNum = 3000;
+		effectNum   = 120;
+		break;
+	case 5:
+		if (gpMarDirector->getCurrentStage() == 1)
+			particleNum = 1500;
+		break;
+	case 58:
+		particleNum = 4000;
+		break;
+	case 56:
+	case 57:
+		particleNum = 3000;
+		break;
+	case 59:
+		break;
+	case 9:
+		if (gpMarDirector->getCurrentStage() == 0)
+			particleNum = 1500;
+		break;
+	case 52:
+		particleNum = 3000;
+		break;
+	case 4:
+		if (gpMarDirector->getCurrentStage() == 2)
+			particleNum = 3000;
+		break;
+	case 60:
+		particleNum = 5000;
+		break;
+	}
 
-	// TODO: giant switch, can't be bothered right now, sorry
-
-	this_00->createEffectInfoAry(iVar9);
+	gpMarioParticleManager->createEffectInfoAry(effectNum);
 	gpResourceManager = new JPAResourceManager(0x201, 0x800, nullptr);
-	// gpMarioParticleManager->unk3B8 =
-	new JPAEmitterManager(gpResourceManager, lVar10, 0x100, 0x200, nullptr);
+	gpMarioParticleManager->unk3B8 = new JPAEmitterManager(
+	    gpResourceManager, particleNum, emitterNum, emitterNum * 2, nullptr);
 	gpEmitterManager4D2
 	    = new JPAEmitterManager(nullptr, 200, 0x20, 0x40, nullptr);
 	loadParticle();
@@ -57,11 +88,11 @@ int TMarDirector::loadResource()
 			return 1;
 	}
 
-	void* paramsBlob = new (0x20) char[0x80000];
+	void* paramsBlob = new (-0x20) char[0x80000];
 	if (!SMSLoadArchive("/data/params.arc", paramsBlob, 0x80000, nullptr))
 		return 1;
 
-	JKRMemArchive* paramsArch = new (0x20) JKRMemArchive;
+	JKRMemArchive* paramsArch = new (-0x20) JKRMemArchive;
 	if (!paramsArch->mountFixed(paramsBlob, MBF_0))
 		return 1;
 
@@ -78,11 +109,10 @@ int TMarDirector::loadResource()
 
 	unkD4 = new (0x20) char[0x64000];
 	unkD8 = new JKRMemArchive;
-	if (mMap == 1) {
-		int errc = thpInit();
-		if (errc)
-			return errc;
-	}
+
+	int errc = thpInit();
+	if (errc)
+		return errc;
 
 	return 0;
 }
@@ -229,7 +259,7 @@ void TMarDirector::loadParticle()
 	gpResourceManager->load("ms_2d_get_b.jpa", 0x1ff);
 	gpResourceManager->load("ms_2d_elecflash.jpa", 0x200);
 
-	// gpEmitterManager4D2->unkA4 = gpResourceManager;
+	gpEmitterManager4D2->unkA4[0] = gpResourceManager;
 	this_00->unmountFixed();
 
 	if (mMap == 4 && unk7D == 2) {
@@ -364,15 +394,17 @@ void TMarDirector::loadParticleMario()
 	SMS_LoadParticle("ms_mpk_fire_c.jpa", 0x1f8);
 }
 
-// TODO: size mismatch
 int TMarDirector::thpInit()
 {
-	THPPlayerInit();
-	if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
-		return 1;
-	THPPlayerSetBuffer(new (0x20) u8[THPPlayerCalcNeedMemory()]);
-	if (!THPPlayerPrepare(0, 1, 0))
-		return 1;
+	if (mMap == 1) {
+		THPPlayerInit(0);
+		if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
+			return 1;
+		u32 sz = THPPlayerCalcNeedMemory();
+		THPPlayerSetBuffer(new (0x20) u8[sz]);
+		if (!THPPlayerPrepare(0, 1, 0))
+			return 1;
+	}
 
 	return 0;
 }

@@ -141,7 +141,7 @@ int TMovieDirector::rsetup()
 	screen->assignCamera(camera);
 	screen->assignViewObj(group2d);
 
-	THPPlayerInit();
+	THPPlayerInit(0);
 	THPPlayerOpen(movie, 0);
 	u32 mem = THPPlayerCalcNeedMemory();
 	THPPlayerSetBuffer(new (0x20) u8[mem]);
@@ -180,7 +180,7 @@ TMovieDirector::~TMovieDirector()
 	    = (JKRMemArchive*)JKRFileLoader::getVolume("subtitle"))
 		arc->unmountFixed();
 
-	gpMSound->stopAllSound();
+	SMSGetMSound()->stopAllSound();
 	THPPlayerStop();
 	THPPlayerClose();
 	THPPlayerQuit();

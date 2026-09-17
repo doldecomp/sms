@@ -2,13 +2,16 @@
 #include <System/MarDirector.hpp>
 #include <System/FlagManager.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <MSound/MSModBgm.hpp>
 #include <MSound/MSHandle.hpp>
 #include <MarioUtil/MapUtil.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Camera/CubeMapTool.hpp>
 #include <Player/MarioAccess.hpp>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 MSStage* MSStage::smMSStage;
 
