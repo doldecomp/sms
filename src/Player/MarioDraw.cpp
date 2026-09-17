@@ -745,9 +745,27 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
+// UNUSED (0x24). TODO: incorrect size (4 vs 0x24). It is almost certainly
+// `return mMarioEffect->getJumpIntoWaterModelData();` (TMarioEffect's own
+// UNUSED copy is 0x10, i.e. one member chain), but writing it needs
+// <Player/MarioEffect.hpp> in this TU, and adding an include here moves the
+// unit's .bss and __sinit. Left as a stub rather than risk that.
 void TMario::getJumpIntoWaterModelData() { }
 
-void TMario::getHeadRot() { }
+// UNUSED (0x7c). Dead: MarioHeadCtrl's default branch carries the same block
+// written out. Size-exact only when the params *struct* is the local and the
+// member is read at the use site.
+s16 TMario::getHeadRot()
+{
+	s16* bodyAngle = &unkFC;
+	TBodyAngleParams* params;
+	if (isUpperPumpingStyle()) {
+		params = &mBodyAngleParamsWaterGun;
+	} else {
+		params = &mBodyAngleParamsFree;
+	}
+	return -bodyAngle[2] * params->mHeadRot.get();
+}
 
 Mtx* TMario::getRootAnmMtx() { return (Mtx*)mModel->getModel()->getAnmMtx(0); }
 

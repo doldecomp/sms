@@ -692,7 +692,7 @@ public:
 
 	// Draw stuff
 	void getJumpIntoWaterModelData();
-	void getHeadRot();
+	s16 getHeadRot();
 	Mtx* getRootAnmMtx();
 	MtxPtr getCenterAnmMtx();
 	f32 getPumpFrame() const;
