@@ -11,10 +11,10 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 36.05% | 3.74% | 96 / 385 |
+| Game | 36.10% | 3.74% | 96 / 385 |
 | JSystem | 87.11% | 61.61% | 166 / 198 |
 | SDK | 95.07% | 92.22% | 142 / 149 |
-| All | 47.32% | 18.02% | 404 / 732 |
+| All | 47.36% | 18.02% | 404 / 732 |
 
 9,072 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
@@ -49,6 +49,9 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `GC2D/Option` | 99.08% | 24 / 42 |
 | `GC2D/GCConsole2` | 92.31% | 34 / 70 |
 | `System/EventWatcher` | 99.24% | 47 / 99 |
+| `Camera/CameraChange` | 98.64% | 15 / 18 |
+| `Camera/cameragc` | 95.28% | 49 / 61 |
+| `Camera/cameralib` | 86.22% | 12 / 17 |
 | `System/MarNameRefGen_Enemy` | 100% | 3 / 5 |
 | `System/MarNameRefGen_BossEnemy` | 98.48% | 0 / 3 |
 | `GC2D/Talk2D2` | 97.82% | 5 / 24 |
