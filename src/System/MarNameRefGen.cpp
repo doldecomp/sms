@@ -1,5 +1,17 @@
 #include <System/MarNameRefGen.hpp>
 
+// rogue includes needed for matching the .rodata string pool: retail's blob
+// opens with the System/DummyStrings.hpp pair, then the four
+// M3DUtil/InfectiousStrings.hpp mtx-calc names, then the pollution-texture
+// pair below.
+#include <M3DUtil/InfectiousStrings.hpp>
+
+// TODO: retail has these two as (object,local) here as well, from the same
+// unidentified shared Player header as in the other nineteen TUs that carry
+// them; parked so the leading .rodata block lines up.
+static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
 #include <JSystem/JDrama/JDRSmJ3DScn.hpp>
 #include <System/StageEventInfo.hpp>
 #include <System/TalkCursor.hpp>
