@@ -6,7 +6,6 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/FlagManager.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
@@ -25,6 +24,8 @@
 
 // rogue includes needed for matching sinit & rodata
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 // TMonumentShine
 
@@ -403,6 +404,10 @@ void TMareGate::loadAfter()
 	}
 }
 
+// TWeathercock
+
+void TWeathercock::control() { TMapObjTurn::control(); }
+
 // TDemoCannon
 
 void TDemoCannon::loadAfter()
@@ -445,10 +450,6 @@ void TDemoCannon::initMapObj()
 void TDemoCannon::startDemo()
 {
 	unk14C = 1;
-
-	MSound* sound = gpMSound;
-	s16 hp        = SMS_GetMarioHP();
-	sound->startMarioVoice(30911, hp, 0);
 
 	mMActor->setBck("democannon_dpt");
 	unk138->getMActor()->setBck("democannon_dom");
@@ -497,6 +498,21 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (frameCtrl->getFrame() > 175.0f) {
 		MtxPtr mtx = unk13C->getMActor()->getModel()->getAnmMtx(0);
 		gpMarioParticleManager->emitAndBindToMtxPtr(358, mtx, 1, this);
+
+		frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+		if (frameCtrl->checkPass(204.0f)) {
+			MSound* sound = gpMSound;
+			s16 hp        = SMS_GetMarioHP();
+			sound->startMarioVoice(30911, hp, 0);
+
+			// TODO: MSound::checkMarioVoicePlaying is declared to return
+			// void*; every caller treats it as a JAISound*, so the shared
+			// header should probably say so and drop this cast.
+			JAISound* voice
+			    = (JAISound*)gpMSound->checkMarioVoicePlaying(0);
+			if (voice)
+				voice->setVolume(0.0f, 60, 0);
+		}
 	}
 }
 
