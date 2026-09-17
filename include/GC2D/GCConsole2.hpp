@@ -255,14 +255,19 @@ public:
 	/* 0x398 */ TBoundPane* unk398;
 	/* 0x39C */ TBoundPane* unk39C[3];
 	/* 0x3A8 */ TExPane* unk3A8;
+	/* 0x3AC */ u8 unk3AC;
 #if defined(VERSION_GMSE01)
-	/* 0x3AC */ u8 unk3AC[2];
-	// TODO: recover the US timer/flag users; some still use unk3AC[1].
+	// The US build inserts a halfword and a byte here, which pushes the
+	// "appear animation belongs to the camera demo" flag from 0x3AD to 0x3B0
+	// and every later member by four bytes.
+	// TODO: recover what the US halfword at 0x3AE and byte at 0x3AD hold.
+	/* 0x3AD */ u8 unk3AD_US;
 	/* 0x3AE */ u16 unk3AE_US;
-	/* 0x3B0 */ u8 unk3B0_US;
+	/* 0x3B0 */ u8 mAppearFromDemo;
 	// Following names/offset comments retain the Japanese layout; US is +4.
 #else
-	/* 0x3AC */ u8 unk3AC[0x4];
+	/* 0x3AD */ u8 mAppearFromDemo;
+	/* 0x3AE */ u8 unk3AE[2];
 #endif
 	/* 0x3B0 */ J2DWindow* unk3B0;
 	/* 0x3B4 */ J2DTextBox* unk3B4;

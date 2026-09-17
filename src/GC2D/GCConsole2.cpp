@@ -678,10 +678,10 @@ static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
 static inline void updateMarioLifeCounter(TGCConsole2* console)
 {
 	int lives = TFlagManager::smInstance->getFlag(0x20001);
-	if (lives > console->unk3AC[0]) {
+	if (lives > console->unk3AC) {
 		if (lives > 99)
 			lives = 99;
-		console->unk3AC[0] = lives;
+		console->unk3AC = lives;
 		setTwoDigits(console->unk39C, console->unkE0, lives);
 		console->startAppearMario(false);
 	}
@@ -954,107 +954,8 @@ static inline void updateCounterState(TGCConsole2* console)
 		console->unk30 = 0;
 	}
 
-	int blueTotal = flags->getFlag(0x40001);
-	if ((int)console->unk168 != blueTotal) {
-		++console->unk168;
-
-		int spentBlueCoins = 0;
-		for (int flag = 0x46; flag < 0x56; ++flag)
-			if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
-				++spentBlueCoins;
-
-		for (int flag = 0x6C; flag <= 0x73; ++flag)
-			if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
-				++spentBlueCoins;
-		int blueValue = console->unk168 - spentBlueCoins * 10;
-		if (blueValue < 0)
-			blueValue = 0;
-
-		setBlueCoinDigits(console->unk154, console->unkE0, blueValue);
-		if (console->unk160->getPane()->isVisible()) {
-			emitCounterParticle(console->unk154[1]);
-			if (blueValue % 10 == 0)
-				emitCounterParticle(console->unk154[0]);
-		} else {
-			console->startAppearStar();
-		}
-		console->unk170 = blueValue;
-		console->unk16C = 1;
-	}
-
-	if (console->unk16C != 0) {
-		++console->unk16C;
-		if (console->unk16C > 0x190)
-			console->unk16C = 0;
-	}
-
-	int shines = flags->getFlag(0x40000);
-	if (console->unk8A == 0 && (int)console->unk64 != shines)
-		console->unk8A = 1;
-
-	if (console->unk8A != 0) {
-		if (console->unk8A > 0xFB) {
-			int spentBlueCoins = 0;
-			for (int flag = 0x46; flag < 0x56; ++flag)
-				if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
-					++spentBlueCoins;
-
-			for (int flag = 0x6C; flag <= 0x73; ++flag)
-				if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
-					++spentBlueCoins;
-			int target = blueTotal - spentBlueCoins * 10;
-			if (console->unk170 != target) {
-				--console->unk170;
-				if (console->unk170 < 0) {
-					console->unk170 = 0;
-				} else if (SMSGetMSound()->gateCheck(0x4850)) {
-					MSoundSESystem::MSoundSE::startSoundSystemSE(0x4850, 0,
-					                                             nullptr, 0);
-				}
-				setBlueCoinDigits(console->unk154, console->unkE0,
-				                  console->unk170);
-			}
-		}
-
-		if (console->unk8A == 0xFC) {
-			int value = console->unk64;
-
-			if (value < 100) {
-				console->unk134[2]->getPane()->hide();
-
-				if (value % 10 == 0)
-					setBlendDigit(console->unk134[0], console->unkE0,
-					              value / 10);
-
-				setBlendDigit(console->unk134[1], console->unkE0, value % 10);
-			} else {
-				int hundreds = value / 100;
-				if (value % 100 == 0) {
-					setBlendDigit(console->unk134[0], console->unkE0, hundreds);
-					console->unk134[0]->getPane()->show();
-				}
-
-				value -= hundreds * 100;
-				if (value % 10 == 0)
-					setBlendDigit(console->unk134[1], console->unkE0,
-					              value / 10);
-
-				console->unk134[2]->getPane()->show();
-				setBlendDigit(console->unk134[2], console->unkE0, value % 10);
-			}
-		} else if (console->unk8A == 0x106) {
-			if (shines > (int)console->unk64) {
-				++console->unk64;
-				console->unk8A = 0xFB;
-			}
-		} else if (!console->unk34 && !console->unk35) {
-			console->unk134[0]->update();
-			console->unk134[1]->update();
-			console->unk134[2]->update();
-		}
-
-		++console->unk8A;
-	}
+	console->countBlueCoin();
+	console->countShine();
 }
 
 // fabricated
@@ -1421,7 +1322,7 @@ static inline void updateCoinAppearState(TGCConsole2* console)
 static inline void updateMarioAppearState(TGCConsole2* console)
 {
 	if (console->unk3A && console->processAppearMario(console->unk70++)) {
-		if (console->unk3AC[1]) {
+		if (console->mAppearFromDemo) {
 			if (console->unk70 == 0xc8) {
 				int lives = TFlagManager::smInstance->getFlag(0x20001);
 				if (lives > 99)
@@ -1432,7 +1333,7 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 				console->unk3A = 0;
 			}
 		} else {
-			console->unk3AC[1] = 0;
+			console->mAppearFromDemo = 0;
 			console->unk70     = 0;
 		}
 	}
@@ -1723,7 +1624,7 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk398(nullptr)
 #if defined(VERSION_GMSE01)
     , unk3AE_US(0)
-    , unk3B0_US(0)
+    , mAppearFromDemo(0)
 #endif
     , unk3CC(0)
     , unk3D0(nullptr)
@@ -2056,7 +1957,7 @@ void TGCConsole2::loadAfter()
 	int lives = TFlagManager::smInstance->getFlag(0x20001);
 	if (lives > 99)
 		lives = 99;
-	unk3AC[0] = lives;
+	unk3AC = lives;
 	setTwoDigits(unk39C, unkE0, lives);
 
 	unk39 = 1;
@@ -2976,7 +2877,7 @@ void TGCConsole2::startAppearMario(bool param_1)
 	}
 
 	unk3A     = 1;
-	unk3AC[1] = param_1;
+	mAppearFromDemo = param_1;
 	unk3B     = 0;
 	unk59     = 1;
 	unk70     = 0;
@@ -4376,7 +4277,7 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 	if (flags & 1) {
 		if (!unk50) {
 			if (gpCamera->isDemoCamera() || SMS_CheckMarioFlag(0x400)
-			    || (!unk3AC[1] && TFlagManager::smInstance->getBool(0x30002)))
+			    || (!mAppearFromDemo && TFlagManager::smInstance->getBool(0x30002)))
 				startCameraDemo();
 		} else if (!gpCamera->isDemoCamera() && !SMS_CheckMarioFlag(0x400)) {
 			endCameraDemo();
