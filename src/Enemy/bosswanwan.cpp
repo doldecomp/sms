@@ -433,7 +433,8 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mHolder) {
 			TRope* rope2 = mOwner->getLeash()->getRope();
 
-			JGeometry::TVec3<f32> zDir(mHolder->mPosition);
+			JGeometry::TVec3<f32> zDir;
+			zDir.set(mHolder->mPosition);
 			zDir -= rope2->mPoints[0].unkC;
 
 			JGeometry::TVec3<f32> yDir(0.0f, 1.0f, 0.0f);
@@ -466,13 +467,14 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		J3DModel* model = mMActor->getModel();
-		MTXIdentity(model->getBaseTRMtx());
+		MtxPtr mtx = mMActor->getModel()->getBaseTRMtx();
+		MTXIdentity(mtx);
 
 		// Aim the stake along the last three rope points so it lies flat when
 		// it has been pulled out.
 		TRope* rope = mOwner->getLeash()->getRope();
-		JGeometry::TVec3<f32> zDir(mPosition);
+		JGeometry::TVec3<f32> zDir;
+		zDir.set(mPosition);
 		zDir -= rope->mPoints[rope->mNumPoints - 3].unkC;
 		if (zDir.isZero())
 			zDir.set(0.0f, 0.0f, 1.0f);
@@ -489,27 +491,31 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 		zDir.cross(xDir, yDir);
 		VECNormalize(zDir, zDir);
 
-		MtxPtr mtx = model->getBaseTRMtx();
-		mtx[0][0]  = xDir.x;
-		mtx[1][0]  = xDir.y;
-		mtx[2][0]  = xDir.z;
-		mtx[0][1]  = yDir.x;
-		mtx[1][1]  = yDir.y;
-		mtx[2][1]  = yDir.z;
-		mtx[0][2]  = zDir.x;
-		mtx[1][2]  = zDir.y;
-		mtx[2][2]  = zDir.z;
-		mtx[0][3]  = mPosition.x;
-		mtx[1][3]  = mPosition.y;
-		mtx[2][3]  = mPosition.z;
+		mtx[0][0] = xDir.x;
+		mtx[1][0] = xDir.y;
+		mtx[2][0] = xDir.z;
+		mtx[0][1] = yDir.x;
+		mtx[1][1] = yDir.y;
+		mtx[2][1] = yDir.z;
+		mtx[0][2] = zDir.x;
+		mtx[1][2] = zDir.y;
+		mtx[2][2] = zDir.z;
+		mtx[0][3] = mPosition.x;
+		mtx[1][3] = mPosition.y;
+		mtx[2][3] = mPosition.z;
 
 		// Planted, the stake stands proud of the ground.
 		if (mOwner->mIsPicketPlanted == 0)
 			mtx[1][3] += 70.0f;
 
-		f32 back = mHolder != nullptr ? 50.0f : 60.0f;
-		mtx[0][3] = -(back * zDir.x - mtx[0][3]);
-		mtx[2][3] = -(back * zDir.z - mtx[2][3]);
+		// Held, the stake trails a little closer to Mario's hand.
+		if (isTaken()) {
+			mtx[0][3] -= 50.0f * zDir.x;
+			mtx[2][3] -= 50.0f * zDir.z;
+		} else {
+			mtx[0][3] -= 60.0f * zDir.x;
+			mtx[2][3] -= 60.0f * zDir.z;
+		}
 	}
 
 	mMActor->perform(cue, graphics);
