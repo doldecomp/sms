@@ -966,9 +966,6 @@ static inline void updateCounterState(TGCConsole2* console)
 	} else {
 		console->unk30 = 0;
 	}
-
-	console->countBlueCoin();
-	console->countShine();
 }
 
 // fabricated
@@ -4385,8 +4382,8 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		}
 
 		updateLifeMeterState(this);
+		updateCounterState(this);
 		updateStarHudAutoHide(this);
-		updateShineAppearState(this);
 
 		if (unk35) {
 			bool done = true;
@@ -4410,14 +4407,10 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 			}
 		}
 
+		countBlueCoin();
+		countShine();
+		updateShineAppearState(this);
 		updateWaterGaugeFill(this);
-		updateCounterState(this);
-		updateJetAppearState(this);
-
-		updateRedCoinCounter(this);
-		updateRedCoinAppearState(this);
-		updateTimerAppearState(this);
-		updateTelopState(this, flags);
 
 		if (!unk46 && SMS_CheckMarioFlag(0x10000) && !unk45 && !unk50)
 			startAppearTank();
@@ -4438,6 +4431,12 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		updateMarioAppearState(this);
 
 		updateMarioLifeCounter(this);
+
+		updateTelopState(this, flags);
+		updateJetAppearState(this);
+		updateRedCoinCounter(this);
+		updateRedCoinAppearState(this);
+		updateTimerAppearState(this);
 
 		if (!unk3F && unk4A)
 			setTimer(-1);
