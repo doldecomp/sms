@@ -1644,11 +1644,19 @@ void TBossTelesa::flashItem(int timer)
 	}
 }
 
-// TODO: incorrect size. Map records 48 bytes.
-void TBossTelesa::onAllCollision() { }
+void TBossTelesa::onAllCollision()
+{
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+	mBody->onHitFlag(HIT_FLAG_NO_COLLISION);
+	mTongue->onHitFlag(HIT_FLAG_NO_COLLISION);
+}
 
-// TODO: incorrect size. Map records 48 bytes.
-void TBossTelesa::offAllCollision() { }
+void TBossTelesa::offAllCollision()
+{
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	mBody->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mTongue->offHitFlag(HIT_FLAG_NO_COLLISION);
+}
 
 const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
 
@@ -2130,9 +2138,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 		if (boss->unk350)
 			boss->decHitPoints();
 
-		boss->onHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->mBody->onHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->mTongue->onHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->onAllCollision();
 
 		if (boss->mHitPoints) {
 			if (boss->unk350) {
@@ -2196,9 +2202,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->offLiveFlag(0x10000);
 			boss->mHolder = nullptr;
 
-			boss->onHitFlag(HIT_FLAG_NO_COLLISION);
-			boss->mBody->onHitFlag(HIT_FLAG_NO_COLLISION);
-			boss->mTongue->onHitFlag(HIT_FLAG_NO_COLLISION);
+			boss->onAllCollision();
 
 			boss->stopAnmSound();
 			spine->reset();
@@ -2231,9 +2235,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	SMS_ResetDamageFogEffect(boss->getMActor()->getModel()->getModelData());
 
 	if (boss->getMActor()->checkCurBckFromIndex(6)) {
-		boss->offHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->mBody->offHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->mTongue->offHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->offAllCollision();
 
 		boss->setBckAnm(15);
 		boss->getMActor()->setBtpFromIndex(2);
@@ -2276,9 +2278,7 @@ DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 	}
 
 	if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
-		boss->onHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->mBody->onHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->mTongue->onHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->onAllCollision();
 
 		SMSRumbleMgr->start(0x14, 0xF, (f32*)nullptr);
 		boss->rouletteStart();
@@ -2348,9 +2348,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		boss->mSlot->mScaling.set(1.0f, 1.0f, 1.0f);
 		boss->mSlot->randomReset();
 
-		boss->offHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->mBody->offHitFlag(HIT_FLAG_NO_COLLISION);
-		boss->mTongue->offHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->offAllCollision();
 	} else if (boss->checkCurAnmEnd(ANM_TYPE_BCK)
 	           && !boss->getMActor()->checkCurBckFromIndex(15)) {
 		boss->setBckAnm(15);
@@ -2562,9 +2560,7 @@ DEFINE_NERVE(TNerveBossTelesaFallDemo, TLiveActor)
 		toMario.sub(*gpMarioPos);
 
 		if (boss->slotFall()) {
-			boss->offHitFlag(HIT_FLAG_NO_COLLISION);
-			boss->mBody->offHitFlag(HIT_FLAG_NO_COLLISION);
-			boss->mTongue->offHitFlag(HIT_FLAG_NO_COLLISION);
+			boss->offAllCollision();
 
 			spine->reset();
 			spine->setNext(&TNerveBossTelesaHideWait::theNerve());
