@@ -79,6 +79,25 @@ extern inline double sqrt(double x)
 	return HUGE_VALF;
 }
 
+/* Audited against the map: sqrtf is the *only* float entry point that MSL
+ * defines in this header and that C translation units therefore need a body
+ * for. The others resolve as follows.
+ *
+ *   sinf/cosf/tanf  real out-of-line globals (trigf.c, linked at 0x8033c7e4,
+ *                   0x8033c650, 0x8033c5cc); the prototypes above are all a C
+ *                   unit needs. GXDraw.c, mtx.c and mtx44.c match on them.
+ *   atan2f          same, inverse_trig.c at 0x8033c4f4.
+ *   powf            same, exponentialsf.c at 0x8033c9b8.
+ *   fmodf           never emitted unqualified; the map's only copy is the weak
+ *                   fmodf__3stdFff in wireTrap.cpp, so no C unit ever sees it,
+ *                   and `fmod` itself is a prototype with no definition
+ *                   anywhere in the image.
+ *   fabsf / fabs    already declared inline outside this guard, and the map
+ *                   proves C units get them: fabsf__Ff is weak in
+ *                   hyperbolicsf.c and fabs__Fd weak in e_asin.c, both .c
+ *                   files, both matching.
+ *
+ * So there is nothing else to move out of namespace std. */
 #ifndef __cplusplus
 #define _MSL_HAS_SQRTF
 /* In C++ this lives in namespace std (MAnmSound.cpp carries the weak copy).
