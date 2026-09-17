@@ -108,7 +108,7 @@ public:
 	void startChorobeiShout();
 	void gateOpen();
 	void killShootAct();
-	BOOL isObject();
+	bool isObject();
 	void turnToGoal();
 	void startMarioDemo();
 	void startDemo();

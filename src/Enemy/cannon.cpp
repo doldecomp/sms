@@ -874,11 +874,11 @@ void TCannon::startMarioDemo() { }
 // UNUSED, 0x2c in the map.
 void TCannon::turnToGoal() { walkToCurPathNode(0.0f, mTurnSpeed, 0.0f); }
 
-BOOL TCannon::isObject()
+bool TCannon::isObject()
 {
 	if (isBckAnm(4) && checkCurAnmEnd(0))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 // UNUSED, 0x3c in the map. TODO: no call site survives.

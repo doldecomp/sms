@@ -1113,9 +1113,6 @@ void TMareCork::loadAfter()
 
 void TMareCork::moveObject()
 {
-	// TODO: the ROM masks isObject()'s result with clrlwi, so
-	// TCannon::isObject() returns bool, not the BOOL that Enemy/Cannon.hpp
-	// declares. That is a shared-header change this batch must not make.
 	if (mCannon->isObject() && !mIsBlownOut) {
 		getMActor()->setBck("marecork");
 		setAnmSound("/scene/mapObj/marecork.bas");
