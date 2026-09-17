@@ -54,6 +54,22 @@ public:
 	MActor* getMActor(const char* name) const;
 	MActor* createAndRegister(SDLModelData* model_data, u32 model_flags);
 	MActorAnmData* getMActorAnmData() const { return mActorAnmData; }
+	// The map links the const overload (weak, 0x8, from bossgesso.cpp) and has
+	// no non-const one, and retail `bl`s it at every
+	// getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr() site in
+	// bosswanwan and bossgesso while a single accessor expands there. This
+	// pair is the inline level that accounts for it: every one of those sites
+	// holds a non-const keeper, so it goes through this forwarder and the
+	// const one lands one level deeper, out of line, without pushing
+	// getUnk2C() out with it. Spelling the conversion as a named
+	// `const TMActorKeeper*` local instead of the cast costs
+	// TSirenabossWall::initMapObj and TSirenaCasinoRoof::initMapObj their
+	// exact match, and putting the level on TLiveActor instead is worth about
+	// two points less everywhere.
+	MActorAnmData* getMActorAnmData()
+	{
+		return static_cast<const TMActorKeeper*>(this)->getMActorAnmData();
+	}
 
 	const TModelDataKeeper* getModelDataKeeper() const
 	{

@@ -32,12 +32,8 @@
 // header and the other two read boss->mSpine directly. Spine.hpp itself is
 // right as it stands.
 //
-// TODO: two shared-header gaps hold this unit back and neither can be fixed
-// from here:
-//   * TMActorKeeper::getMActorAnmData() (in-class, weak, 0x8, emitted from
-//     Enemy/bossgesso.o) is likewise a `bl` in retail at all seven
-//     changeBck sites and expands for us: the "caller size gates
-//     two-instruction accessors" case from docs/catalog/codegen-tells.md.
+// TODO: one shared-header gap holds this unit back and it cannot be fixed from
+// here:
 //   * MsPerpendicFootToLineR in MarioUtil/MathUtil.hpp is 73% against its
 //     retail body; TBWBinder::bind is its only caller here.
 
