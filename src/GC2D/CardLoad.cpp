@@ -2095,8 +2095,6 @@ void TCardLoad::setSelected(u8 param_1)
 
 void TCardLoad::changeScene()
 {
-	// TODO: instruction stream matches; the frame is 0x1e0 in the original,
-	// 0x178 here.
 	TEProgress prevUnk1C = unk1C;
 	int prevUnk0         = unk10;
 	switch (prevUnk1C) {
