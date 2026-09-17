@@ -706,7 +706,7 @@ public:
 	u32 getTrampleCt();
 	void calcBodyPos(JGeometry::TVec3<f32>*);
 	MtxPtr getTakenMtx();
-	void getRailMtx() const;
+	MtxPtr getRailMtx() const;
 	f32 getCurrentFrame(int);
 	J3DFrameCtrl& getMotionFrameCtrl();
 	BOOL isLast1AnimeFrame();

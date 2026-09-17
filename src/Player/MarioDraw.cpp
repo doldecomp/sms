@@ -839,9 +839,27 @@ u32 TMario::getTrampleCt()
 	return 0;
 }
 
+// UNUSED (0x2c -- calcBodyPos). Dead. Size-exact with a constant joint index;
+// TODO: the index itself is a guess (1 is the root's first child, i.e. the
+// body), since no call site survives to name it.
+void TMario::calcBodyPos(JGeometry::TVec3<f32>* param_1)
+{
+	MtxPtr mtx = getRootAnmMtx()[1];
+	param_1->set(mtx[0][3], mtx[1][3], mtx[2][3]);
+}
+
 MtxPtr TMario::getTakingMtx() { return getRootAnmMtx()[mJointIdHandR]; }
 
 MtxPtr TMario::getTakenMtx() { return mModel->unk8->getBaseTRMtx(); }
+
+// UNUSED (0x10 -- getRailMtx). Dead; four instructions, so it is a single
+// member chain. TODO: the cart's base matrix is the rail's own output (see
+// calcBaseMtxTorocco), but `mPinaRail->getModel()->getAnmMtx(0)` is the same
+// size and cannot be ruled out.
+MtxPtr TMario::getRailMtx() const
+{
+	return mTorocco->getModel()->getBaseTRMtx();
+}
 
 f32 TMario::getCurrentFrame(int idx)
 {
