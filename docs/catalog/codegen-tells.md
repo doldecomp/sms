@@ -225,6 +225,17 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `hamukuri`
+
+- A one-more-level `getManager()` forwarder is a per-class frame lever: `(THamuKuriManager*)TLiveActor::getManager()` instead of `(THamuKuriManager*)mManager` took `makeCapFly` from a 64-byte gap to exact and made three more functions exact in one edit.
+- `MsRandF(lo, hi)` is never the original; it is `TMsRange<T>`: literal bounds stored to the stack and reloaded, with `range = mMax - mMin` computed before `rand()`, is a local `TMsRange<f32> r(0, 1); x = r.rand();` (four sites; three functions to exact). `MsRandF(l, r)` contracts to `fmadds` and never materialises the bounds.
+- A float flag tested for truthiness, not against `0.0f`: `if (!unk21C)` gives `fcmpu <value>, <0.0>`; `== 0.0f` gives the operands the other way (six sites in `walkBehavior`; per expression).
+- An UNUSED bool predicate a caller "pastes" is usually meant to be *called*, and the call is the frame lever: `canGoForSearchActor()`/`isSerialWallDie()` kept every instruction and took `setSearchHamuKuri` (708 B) to exact; `releaseCap()` is a call in two `setDeadAnm`s and pasted in `setCrashAnm` (per site).
+- `setGoalPath((THitActor*)gpMarioAddress)` directly, not `setGoalPathMario()`: the wrapper puts the `TPathNode` temporary in the expansion region, the direct call in the named-local region.
+- The params getter wrapper is a +8 lever only sometimes (`moveObject` exact, `bind`/`forceRoll`/`generateBody` unmoved); routing every param read through a cached `getSaveLoadParam()` converted three exact functions into +8 ones, so the pakkun rule is per TU.
+- Open: ~35 instruction-identical functions with 8/16/24-byte short frames and no identifiable cause; minimal case `THaneHamuKuri::attackToMario` (two statements: `SMSGetMSound()->startSoundActor(...)` plus one virtual call, ROM 16 bytes of temporaries vs our 8; named `MSound*`, an extra wrapper level and accessor reads all moved nothing).
+- Open header items: `JGVec3.hpp`'s `operator*(TVec3, f32)` should return `const TVec3&` like its neighbours (fixes `forceRoll` 90 -> 99.7 but regresses ~15 functions in 8 units; per-site story needed); `checkLiveFlag(u32) const` blocks CSE with the non-const `onLiveFlag` (all three `isHitValid`s load `mLiveFlag` once; a non-const overload would fix it).
+
 ## Rules from `ShadowUtil` and `ModelWaterManager` (GX)
 
 - Per-component member assignment vs `set(x, y, z)` is a frame lever, not just store order: `set()` on a stack array element reserved three slots per call (`calcDrawVtx` 48 bytes over), and per-component stores also force the member re-reads retail has.
