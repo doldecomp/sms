@@ -945,6 +945,21 @@ void TMario::changeHand(int idx)
 	flagOnAllShapes(mRHand4ndModel->getModelData(), J3DShpFlag_Visible);
 }
 
+// UNUSED (0x90 -- changeHandByRate). Dead: `calcAnim` carries the same block
+// written out.
+void TMario::changeHandByRate(f32 rate)
+{
+	if (rate < 0.3f) {
+		changeHand(2);
+	}
+	if (0.3f <= rate && rate <= 0.7f) {
+		changeHand(1);
+	}
+	if (0.7f < rate) {
+		changeHand(0);
+	}
+}
+
 f32 TMario::setAnimation(int anm_id, f32 rate)
 {
 	// volatile u32 padding[37];
@@ -1997,7 +2012,8 @@ void TMario::addUpper()
 	}
 }
 
-// UNUSED (0x90). Dead: `calcAnim` carries the same block written out.
+// UNUSED (0x90 -- removeCallBack). Dead: `calcAnim` carries the same block
+// written out.
 void TMario::removeCallBack()
 {
 	gpMarioForCallBack      = nullptr;
