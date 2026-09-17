@@ -101,6 +101,27 @@ public:
 	const TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 	f32 getGroundHeight() const { return mGroundHeight; }
 	// TODO: which one is real?
+	//
+	// TODO: a non-const checkLiveFlag(u32) overload is ruled out. The const
+	// `this` does block CSE with the non-const onLiveFlag/offLiveFlag, so the
+	// three hamukuri isHitValid overrides read mLiveFlag raw to get retail's
+	// single load, but adding the overload here costs far more than it buys
+	// (measured whole-tree, 375 call sites in 87 files):
+	//
+	//   | spelling                                        | up | down |
+	//   | ----------------------------------------------- | -- | ---- |
+	//   | non-const forwarder to the const body           |  2 |   32 |
+	//   | non-const body `return mLiveFlag & flag;`        |  0 |   17 |
+	//
+	// The forwarder's extra inline level moves frames and registers all over
+	// (TBEelTears::perform 99.8 -> 84.9, THanaSambo::moveObject 99.9 -> 87.6,
+	// TLiveManager::clipActorsAux and five other exact functions broken); the
+	// direct body keeps the level but hands the CSE to every site that
+	// currently reproduces retail's two loads (TTelesa::kill, TChuuHana::kill,
+	// TWireTrap::kill, THamuKuriManager::setSearchHamuKuri all 100 -> ~98,
+	// MapObjBall data 83 -> 12). Neither trial improved any hamukuri function:
+	// isHitValid's residue there is an 8-byte frame gap, not the flag load.
+	// So the sharing is a per-site property and the raw read is the local fix.
 	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
 	bool checkLiveFlag2(u32 flag) const
 	{
