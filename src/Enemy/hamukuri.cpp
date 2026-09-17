@@ -1103,9 +1103,41 @@ void THamuKuri::setCrashAnm()
 		getManager()->setUnk6C(1);
 }
 
-void THamuKuri::setWallDeadEffect() { }
+// UNUSED (0x130). The wall-death particle burst that
+// TNerveHamuKuriWallDie::execute performs on its first frame.
+void THamuKuri::setWallDeadEffect()
+{
+	JGeometry::TVec3<f32> local_34;
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+		local_34 = getPosition();
+	} else {
+		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(1);
+		local_34.x = mtx[0][3];
+		local_34.y = mtx[1][3];
+		local_34.z = mtx[2][3];
+	}
 
-void THamuKuri::setAppearAnm() { }
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
+	        PARTICLE_MS_ENM_WALLHIT, &local_34, 0,
+	        DEG2SHORTANGLE(mRotation.y), 0, 0, nullptr)) {
+		emitter->setGlobalScale(mScaling);
+	}
+
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
+	        PARTICLE_MS_ENM_WALLHIT_O, &mPosition, 0,
+	        DEG2SHORTANGLE(getRotation().y), 0, 0, nullptr)) {
+		SMSSetEmitterPolColor(emitter, 6);
+	}
+
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_HAMUKURI_CRUSHED, &mPosition, 0,
+	                                nullptr, 0, 4);
+}
+
+// UNUSED (0x30): the same single virtual setBckAnm call as setGenerateAnm
+// (also 0x30). Slot 0 is the first .bck alphabetically, and the two unnamed
+// slots below "down" in hamukurianm_bastable are appear (0) and crash (1),
+// with setCrashAnm already using 1.
+void THamuKuri::setAppearAnm() { setBckAnm(0); }
 
 void THamuKuri::walkBehavior(int param_1, f32 param_2)
 {
@@ -2197,9 +2229,24 @@ void TBossDangoHamuKuri::generateBody()
 	newHamu->offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
-void TBossDangoHamuKuri::isNowAttack() { }
+// UNUSED (0x44 each): one comparison against an out-of-line theNerve(), which
+// is exactly 17 instructions; the walker nerve set has both an Attack and a
+// Generate nerve and nothing else fits the names.
+bool TBossDangoHamuKuri::isNowAttack()
+{
+	if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve())
+		return true;
 
-void TBossDangoHamuKuri::isNowGenerate() { }
+	return false;
+}
+
+bool TBossDangoHamuKuri::isNowGenerate()
+{
+	if (mSpine->getCurrentNerve() == &TNerveWalkerGenerate::theNerve())
+		return true;
+
+	return false;
+}
 
 TFireHamuKuri::TFireHamuKuri(const char* name)
     : THamuKuri(name)
@@ -2231,21 +2278,8 @@ void TFireHamuKuri::behaveToWater(THitActor* param_1)
 		mVelocity = local_20;
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		mPosition.y += 5.0f;
-		if (mHitPoints == 0) {
-			unk210 = 0;
-			unk1A2 = 1;
-			unk150 |= 0x2;
-			unk150 &= ~0x1;
-			unk214 = 1;
-			SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEKURI_COOL, &mPosition,
-			                                0, nullptr, 0, 4);
-			if (JPABaseEmitter* emitter
-			    = gpMarioParticleManager->emitAndBindToMtxPtr(
-			        PARTICLE_MS_MOE_FIRE_OFF,
-			        mMActor->getModel()->getAnmMtx(unk1AC), 0, nullptr)) {
-				emitter->setGlobalScale(mScaling);
-			}
-		}
+		if (mHitPoints == 0)
+			dieFire();
 		mSprayedByWaterCooldown = 20;
 		return;
 	}
@@ -2388,7 +2422,23 @@ void TFireHamuKuri::setWalkAnm() { setBckAnm(14); }
 
 void TFireHamuKuri::genFire() { }
 
-void TFireHamuKuri::dieFire() { }
+// UNUSED (0xe8): the fire going out, as TFireHamuKuri::behaveToWater performs
+// it when the last hit point is gone.
+void TFireHamuKuri::dieFire()
+{
+	unk210 = 0;
+	unk1A2 = 1;
+	unk150 |= 0x2;
+	unk150 &= ~0x1;
+	unk214 = 1;
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEKURI_COOL, &mPosition, 0,
+	                                nullptr, 0, 4);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+	        PARTICLE_MS_MOE_FIRE_OFF,
+	        mMActor->getModel()->getAnmMtx(unk1AC), 0, nullptr)) {
+		emitter->setGlobalScale(mScaling);
+	}
+}
 
 void TFireHamuKuri::sendAttackMsgToMario()
 {
@@ -2621,31 +2671,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setCrashAnm();
-		JGeometry::TVec3<f32> local_34;
-		if (self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-			local_34 = self->getPosition();
-		} else {
-			MtxPtr mtx = self->getMActor()->getModel()->getAnmMtx(1);
-			local_34.x = mtx[0][3];
-			local_34.y = mtx[1][3];
-			local_34.z = mtx[2][3];
-		}
-
-		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
-		        PARTICLE_MS_ENM_WALLHIT, &local_34, 0,
-		        DEG2SHORTANGLE(self->mRotation.y), 0, 0, nullptr)) {
-			emitter->setGlobalScale(self->mScaling);
-		}
-
-		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
-		        PARTICLE_MS_ENM_WALLHIT_O, &self->mPosition, 0,
-		        DEG2SHORTANGLE(self->getRotation().y), 0, 0, nullptr)) {
-			SMSSetEmitterPolColor(emitter, 6);
-		}
-
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_HAMUKURI_CRUSHED,
-		                                &self->mPosition, 0, nullptr, 0, 4);
-
+		self->setWallDeadEffect();
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->mHitPoints = 0;
 	} else {

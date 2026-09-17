@@ -437,8 +437,8 @@ public:
 
 	bool isDead();
 	void generateBody();
-	void isNowAttack();
-	void isNowGenerate();
+	bool isNowAttack();
+	bool isNowGenerate();
 
 public:
 	/* 0x238 */ int unk238;
