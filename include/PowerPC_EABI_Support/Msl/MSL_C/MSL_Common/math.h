@@ -94,12 +94,46 @@ inline float atan2(float x, float y) { return atan2f(x, y); }
 namespace std {
 inline float fabsf(float f) { return ::fabsf(f); }
 inline float abs(float f) { return ::fabs(f); }
-// The binary never inlines this: wireTrap.cpp, MapObjCorona.cpp and
-// koopajr.cpp each carry a weak 0x5c copy and call it. That copy's body is
-// the same as JGeometry::TUtil<f32>::mod (compare magnitudes, divide,
-// truncate through u64, subtract). Writing that body here inlines it
-// everywhere under our flags and scores worse than this wrapper, so the
-// wrapper stays until the inlining difference is understood.
+// The ROM never inlines this: wireTrap.cpp carries the surviving weak 0x5c
+// copy and koopajr.cpp, Koopa.cpp, MapObjCorona.cpp and BathtubPeach.cpp all
+// call it. That copy's body is the same as JGeometry::TUtil<f32>::mod:
+//
+//     if (::fabsf(y) > ::fabsf(x))
+//         return x;
+//     return x - y * (float)(long long)(unsigned long long)(x / y);
+//
+// which compiles to exactly 0x5c under our flags. It is *not* spelled here,
+// because writing it makes MWCC inline it at every call site we have and every
+// probe gets worse (TNervePeachEscape::execute 93.5% -> 79.0%).
+//
+// TODO: the blocker is inline depth, not the spelling. Measured in a scratch TU
+// with the game flags (-O4,p -inline auto,deferred), varying only the callee's
+// compiled size and the number of inline wrappers between it and a real
+// function:
+//
+//     body size | depth 2 | depth 3 | depth 4
+//     ----------+---------+---------+--------
+//       0x5c    | inline  | inline  | CALL
+//       0x6c    | inline  | inline  | CALL
+//       0x74    | inline  | CALL    | CALL
+//       0x84    | inline  | CALL    | CALL
+//       0x8c    | CALL    | CALL    | CALL
+//
+// So MWCC's per-expansion size allowance shrinks with depth, and a 0x5c body is
+// only refused from depth four down. Everything that could be changed here was
+// tried and none of it moves the decision: plain `inline`, `extern inline`, the
+// body split into three, five or seven statements, and a named `long long`
+// temporary. Caller size is irrelevant too -- a 0x7bf8 caller still inlines it
+// at depth one.
+//
+// The fix therefore is not in this header: our call sites reach std::fmodf at
+// depth two (nerve -> faceTo -> std::fmodf), and the ROM's reach it at depth
+// four, so two inline wrappers are missing above it. The shape of those
+// wrappers is visible in the ROM: every site computes
+// `l + std::fmodf((r - l) + (t - l), r - l)`, i.e. a wrap-into-[l,r) helper
+// distinct from MathUtil.hpp's loop-based MsWrap<f> (0x48, Animal/boid.o).
+// Recovering that helper pair belongs with the four .cpp files that call it.
+// #pragma dont_inline is not an acceptable stand-in.
 inline float fmodf(float x, float y) { return ::fmod(x, y); }
 inline float atan2f(float y, float x) { return ::atan2((double)y, (double)x); }
 inline float sinf(float x) { return ::sin((double)x); }

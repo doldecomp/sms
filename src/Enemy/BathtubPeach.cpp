@@ -93,9 +93,15 @@ public:
 // this function. Our std::fmodf is an `inline` wrapper around ::fmod, so every
 // site expands to `bl fmod` plus an `frsp` and an extra `lfd` of the double
 // 360.0. That accounts for the whole residual, including the float-register
-// renumbering and the frame gap. `#pragma dont_inline` does not help (explicit
-// `inline` wins) and giving it the real 0x5c body inlines it too; it needs a
-// declaration in the header with the body in a .cpp.
+// renumbering and the frame gap.
+//
+// The spelling of std::fmodf is not the blocker -- the header's TODO has the
+// measured table. MWCC refuses a 0x5c body only from inline depth four down,
+// and this nerve reaches it at depth two (nerve -> faceTo -> std::fmodf), so
+// two inline wrappers are missing above it. The ROM computes
+// `l + std::fmodf((r - l) + (t - l), r - l)` at each of the three sites below,
+// so the pair is a wrap-into-[l,r) helper plus whatever faceTo called to get
+// the [-180,180) range; neither is MathUtil.hpp's loop-based MsWrap<f>.
 //
 // The TVec2::setLength forwarders this nerve also needed are in place now (see
 // JGVec2.hpp): that level of nesting is what puts TVec2::dot at inline depth
