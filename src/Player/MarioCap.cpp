@@ -124,9 +124,11 @@ void TMarioCap::addDirty() { }
 
 void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	// Unused stack space
-	// volatile u32 padding[42];
-
+	// TODO: frame 0x178 vs 0x1e0. mMario->getStatus() bought 48 and
+	// getPrevPosition() 16. Two of the thirteen stack slots (the 0x1ac and
+	// 0x174 groups) are 8 and 52 bytes closer to the frame top than retail's,
+	// so this one is not purely a low-region gap: named locals are missing in
+	// the CALC_ANIM branch as well.
 	if ((cue & CUE_CALC_ANIM) != 0) {
 		if (mMario->mAnimationId == TMario::ANIM_DEMO_GATE_OUT_GET2) {
 			J3DFrameCtrl& frameCtrl = mMario->getMotionFrameCtrl();
@@ -149,15 +151,15 @@ void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 			// Missing a copy of TVec3, i still suspect that operations should
 			// do a copy
 			f32 distance = JGeometry::TVec3<f32>(mMario->mPosition
-			                                     - mMario->mPrevPosition)
+			                                     - mMario->getPrevPosition())
 			                   .length();
-			if (mMario->mStatus == MARIO_STATUS_SURF && distance > 20.0f) {
+			if (mMario->getStatus() == MARIO_STATUS_SURF && distance > 20.0f) {
 				doTremble = true;
 			}
-			if (mMario->mStatus == 0x281089A) {
+			if (mMario->getStatus() == 0x281089A) {
 				doTremble = true;
 			}
-			if (mMario->mStatus == 0x81089B) {
+			if (mMario->getStatus() == 0x81089B) {
 				doTremble = true;
 			}
 
@@ -165,7 +167,7 @@ void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 			    && distance > 20.0f) {
 				doTremble = true;
 			}
-			if (mMario->mStatus == MARIO_STATUS_DIVE) {
+			if (mMario->getStatus() == MARIO_STATUS_DIVE) {
 				doTremble = false;
 			}
 
@@ -218,10 +220,10 @@ void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_ENTRY) != 0) {
 		unkC->entry();
-		if (isModelActive(2)) {
+		if (isModelActive(E_CAP_MODEL_HELMET)) {
 			unk10[2]->entry();
 		}
-		if (isModelActive(4)) {
+		if (isModelActive(E_CAP_MODEL_SUNGLASSES)) {
 			unk10[3]->entry();
 		}
 	}
