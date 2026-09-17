@@ -292,9 +292,8 @@ void TSandBombBase::explode()
 	emitter->setGlobalParticleScale(effectScale);
 	emitter->setGlobalDynamicsScale(effectScale);
 
-	// TODO: CameraShake.hpp lacks a name for mode 0xD.
 	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
-		gpCameraShake->startShake((EnumCamShakeMode)0xD, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_SAND_BOMB_APPEAR, 1.0f);
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBOMB_BANG, &mPosition, 0, nullptr,
 	                          0, 4);
@@ -495,9 +494,8 @@ void TSandCastle::explode()
 	emitter->setGlobalParticleScale(effectScale);
 	emitter->setGlobalDynamicsScale(effectScale);
 
-	// TODO: CameraShake.hpp lacks a name for mode 0xD.
 	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
-		gpCameraShake->startShake((EnumCamShakeMode)0xD, 1.0f);
+		gpCameraShake->startShake(CAM_SHAKE_MODE_SAND_BOMB_APPEAR, 1.0f);
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBOMB_BANG, &mPosition, 0, nullptr,
 	                          0, 4);

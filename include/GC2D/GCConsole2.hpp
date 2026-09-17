@@ -24,6 +24,18 @@ class TBathtub;
 class TBossEel;
 class TConsoleStr;
 
+// Balloon message ids passed to TGCConsole2::startAppearBalloon(). The ids
+// below 0x40 index the shared balloon table; the 0xE#### ones are a separate
+// group. Only the ids a caller's context pins down are named.
+// fabricated: the names come from the functions that raise each message in
+// tinkoopa.cpp, not from anything in the binary.
+enum EnumBalloonMessage {
+	BALLOON_MSG_TINKOOPA_KILLER_APPROACHING = 0x9,
+	BALLOON_MSG_TINKOOPA_LAP                = 0xA,
+	BALLOON_MSG_TINKOOPA_FIRST_FLAME        = 0xB,
+	BALLOON_MSG_TINKOOPA_PARTS_HIT          = 0x24,
+};
+
 class TGCConsole2 : public JDrama::TViewObj {
 public:
 	TGCConsole2(const char* name = "<TGCConsole2>");

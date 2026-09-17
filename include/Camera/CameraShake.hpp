@@ -5,22 +5,28 @@
 
 class TCamSaveShake;
 
+// TCameraShake indexes mShakeData directly with the mode, so
+// TCameraShake::mCamShakeNameSave in src/Camera/CamShakeDefine.cpp is the
+// authority on what every mode is: entry N is mode N's .prm file. The UNK
+// names below are still to be resolved from it.
 enum EnumCamShakeMode {
-	CAM_SHAKE_MODE_UNK2  = 0x2,
-	CAM_SHAKE_MODE_UNK3  = 0x3,
-	CAM_SHAKE_MODE_UNK4  = 0x4,
-	CAM_SHAKE_MODE_UNK5  = 0x5,
-	CAM_SHAKE_MODE_UNK6  = 0x6,
-	CAM_SHAKE_MODE_UNK7  = 0x7,
-	CAM_SHAKE_MODE_UNK12 = 0x12,
-	CAM_SHAKE_MODE_UNK13 = 0x13,
-	CAM_SHAKE_MODE_UNK14 = 0x14,
-	CAM_SHAKE_MODE_UNK15 = 0x15,
-	CAM_SHAKE_MODE_UNK1B = 0x1B,
-	CAM_SHAKE_MODE_UNK1C = 0x1C,
-	CAM_SHAKE_MODE_UNK1D = 0x1D,
-	CAM_SHAKE_MODE_UNK1E = 0x1E,
-	CAM_SHAKE_MODE_UNK24 = 0x24,
+	CAM_SHAKE_MODE_UNK2 = 0x2,
+	CAM_SHAKE_MODE_UNK3 = 0x3,
+	CAM_SHAKE_MODE_UNK4 = 0x4,
+	CAM_SHAKE_MODE_UNK5 = 0x5,
+	CAM_SHAKE_MODE_UNK6 = 0x6,
+	CAM_SHAKE_MODE_UNK7 = 0x7,
+	// mCamShakeNameSave[0xD] is "/Camera/shakeSandBombAppear.prm".
+	CAM_SHAKE_MODE_SAND_BOMB_APPEAR = 0xD,
+	CAM_SHAKE_MODE_UNK12            = 0x12,
+	CAM_SHAKE_MODE_UNK13            = 0x13,
+	CAM_SHAKE_MODE_UNK14            = 0x14,
+	CAM_SHAKE_MODE_UNK15            = 0x15,
+	CAM_SHAKE_MODE_UNK1B            = 0x1B,
+	CAM_SHAKE_MODE_UNK1C            = 0x1C,
+	CAM_SHAKE_MODE_UNK1D            = 0x1D,
+	CAM_SHAKE_MODE_UNK1E            = 0x1E,
+	CAM_SHAKE_MODE_UNK24            = 0x24,
 };
 
 class TCameraShake;

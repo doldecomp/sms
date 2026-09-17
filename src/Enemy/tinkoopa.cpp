@@ -75,14 +75,6 @@ enum {
 	TINKOOPA_JOINT_NUM          = 15,
 };
 
-// TODO: the balloon ids the fight starts are not named in GCConsole2.hpp yet.
-enum {
-	TINKOOPA_MESSAGE_KILLER_APPROACHING = 0x9,
-	TINKOOPA_MESSAGE_LAP                = 0xA,
-	TINKOOPA_MESSAGE_FIRST_FLAME        = 0xB,
-	TINKOOPA_MESSAGE_PARTS_HIT          = 0x24,
-};
-
 static const char* tinkoopa_bastable[] = {
 	"/scene/tinkoopa/bas/tinkoopa_break1.bas",
 	"/scene/tinkoopa/bas/tinkoopa_break2.bas",
@@ -1065,7 +1057,7 @@ void TTinKoopa::hitParts()
 	if (mSpine->getCurrentNerve() != &TNerveTinKoopaBreak::theNerve()) {
 		if (mSpine->getCurrentNerve() != &TNerveTinKoopaDamage::theNerve()
 		    && mDamageStage != 4) {
-			startTinKoopaMessage(TINKOOPA_MESSAGE_PARTS_HIT);
+			startTinKoopaMessage(BALLOON_MSG_TINKOOPA_PARTS_HIT);
 
 			mPartsHitPoints--;
 			if (mPartsHitPoints <= 0)
@@ -1135,7 +1127,7 @@ void TTinKoopa::checkTinKoopaMessage()
 	if (mTruckMActor) {
 		J3DFrameCtrl* ctrl = mTruckMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (mLap == 0 && ctrl->checkPass(300.0f))
-			startTinKoopaMessage(TINKOOPA_MESSAGE_LAP);
+			startTinKoopaMessage(BALLOON_MSG_TINKOOPA_LAP);
 	}
 
 	checkTinKoopaFirstFlameMessage();
@@ -1151,7 +1143,7 @@ void TTinKoopa::checkTinKoopaKillerApproachingMessage()
 		if (checkKillerApproachingFromBack(
 		        killer, *gpMarioPos,
 		        getSaveParams()->getSLKillerApproachingDistance()))
-			startTinKoopaMessage(TINKOOPA_MESSAGE_KILLER_APPROACHING);
+			startTinKoopaMessage(BALLOON_MSG_TINKOOPA_KILLER_APPROACHING);
 	}
 }
 
@@ -1171,7 +1163,7 @@ void TTinKoopa::checkTinKoopaFirstRocketMessage()
 		return;
 
 	if (mTruckMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(2600.0f)) {
-		startTinKoopaMessage(TINKOOPA_MESSAGE_FIRST_FLAME);
+		startTinKoopaMessage(BALLOON_MSG_TINKOOPA_FIRST_FLAME);
 		mFirstFlameMessageDone = true;
 	}
 }
@@ -1190,11 +1182,11 @@ void TTinKoopa::checkTinKoopaFirstFlameMessage()
 	J3DFrameCtrl* ctrl = mTruckMActor->getFrameCtrl(ANM_TYPE_BCK);
 	if (mDamageStage == 0) {
 		if (ctrl->checkPass(2600.0f)) {
-			startTinKoopaMessage(TINKOOPA_MESSAGE_FIRST_FLAME);
+			startTinKoopaMessage(BALLOON_MSG_TINKOOPA_FIRST_FLAME);
 			mFirstFlameMessageDone = true;
 		}
 	} else if (ctrl->checkPass(3100.0f)) {
-		startTinKoopaMessage(TINKOOPA_MESSAGE_FIRST_FLAME);
+		startTinKoopaMessage(BALLOON_MSG_TINKOOPA_FIRST_FLAME);
 		mFirstFlameMessageDone = true;
 	}
 }
