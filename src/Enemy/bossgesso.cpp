@@ -174,6 +174,7 @@ BOOL TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	unkA4 += delta;
 
 	mPosition = where_to;
+	return FALSE;
 }
 
 BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
@@ -206,8 +207,9 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 			mHolder = actor;
 
 			if (mOwner->unk190.color.a != 0)
-				mOwner->showMessage(0xE0028);
+				mOwner->showMessage(0x25);
 
+			mOwner->unk1A0 = 1;
 			return true;
 		}
 
@@ -894,6 +896,8 @@ void TBossGesso::gotBeakDamage()
 		mSpine->setNext(&TNerveBGBeakDamage::theNerve());
 		mSpine->pushAfterCurrent(&TNerveBGWait::theNerve());
 	}
+
+	unk1A0 = 1;
 }
 
 void TBossGesso::changeAllTentacleState(int param_1)
@@ -1898,11 +1902,11 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_ASE, self->getModel()->getAnmMtx(47), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_ASE, self->getModel()->getAnmMtx(47), 1, self);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 1, self);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 1, self);
 
 	if (self->mBeak->mHolder != nullptr) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
