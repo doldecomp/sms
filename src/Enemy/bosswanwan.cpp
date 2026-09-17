@@ -19,6 +19,8 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/Application.hpp>
 #include <System/Particles.hpp>
+#include <System/BaseParam.hpp>
+#include <System/ParamInst.hpp>
 #include <JSystem/JGeometry/JGUtil.hpp>
 
 /*
@@ -31,9 +33,40 @@ Need to setup global position like:
     TVec3<float>).
 */
 // Maybe they are just declared here, but filled on runtime
+
+static const char* bwanwan_bastable[] = {
+	"/scene/bwanwan/bas/bwanwan_bark.bas",
+	"/scene/bwanwan/bas/bwanwan_shake.bas",
+	"/scene/bwanwan/bas/bwanwan_wait.bas",
+	"/scene/bwanwan/bas/bwanwan_wait2.bas",
+};
+
 JGeometry::TVec3<f32> BW_BATH_POS     = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 JGeometry::TVec3<f32> BW_PICKET_START = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 JGeometry::TVec3<f32> BW_HEAD_START   = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+
+TBWParams::TBWParams(const char* path)
+    : TSpineEnemyParams(path)
+    , PARAM_INIT(mSLMarchSpeed, 6.0f)
+    , PARAM_INIT(mSLShakeLengthMax, 3000.0f)
+    , PARAM_INIT(mSLShakeLengthMaxHP0, 2000.0f)
+    , PARAM_INIT(mSLTurnSpeed, 1.0f)
+    , PARAM_INIT(mSLLeashNodeLen, 120.0f)
+    , PARAM_INIT(mSLPicketHeight, 100.0f)
+    , PARAM_INIT(mSLPicketRadius, 100.0f)
+    , PARAM_INIT(mSLChainHitHeight, 100.0f)
+    , PARAM_INIT(mSLChainHitRadius, 100.0f)
+    , PARAM_INIT(mSLChainGroundRadius, 60.0f)
+    , PARAM_INIT(mSLPullLimit, 1.0f)
+    , PARAM_INIT(mSLAttackSpeed, 10.0f)
+    , PARAM_INIT(mSLStunTimer, 4000)
+    , PARAM_INIT(mSLSearchLength, 10000.0f)
+    , PARAM_INIT(mSLSearchAngle, 60.0f)
+    , PARAM_INIT(mSLBWHitPointMax, 255)
+    , PARAM_INIT(mSLHeadGap, 150.0f)
+{
+	TParams::load(mPrmPath);
+}
 
 void TBossWanwan::kill() { return; }
 
@@ -147,7 +180,30 @@ TSpineEnemy* TBossWanwanManager::createEnemyInstance()
 	return new TBossWanwan;
 }
 
-void TBossWanwanManager::createModelData() { }
+void TBossWanwanManager::createModelData()
+{
+	static const TModelDataLoadEntry entry[] = {
+		{ "bwanwan_body.bmd", 0, 0 },
+		{ "bwanwan_chain.bmd", 0, 0 },
+		{ "bwanwan_picket.bmd", 0, 0 },
+	};
+
+	createModelDataArray(entry);
+}
+
+void TBossWanwanManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new TBWParams("/enemy/bosswanwan.prm");
+	TEnemyManager::load(stream);
+	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_jump_rock.jpa", 0xad);
+	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_jump_smoke.jpa", 0xae);
+	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_downyuge.jpa", 0xb0);
+	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_hibana.jpa", 0xaf);
+	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_deadyuge.jpa", 0xb1);
+	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_yugami.jpa", 0x1ee);
+	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_hityuge.jpa", 0x167);
+	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_kira.jpa", 0x168);
+}
 
 void TBWLeashNode::calcTemperature()
 {
@@ -181,4 +237,14 @@ void TBWLeashNode::calcTemperature()
 	if (this->mTemperature > 1.0f) {
 		this->mTemperature = 1.0f;
 	}
+}
+
+void TBWLeashNode::calcMatrix()
+{
+	/* Too difficult for now
+	f32 ivar4 = this->mLeash->unk4 + 2;
+	if (mIndex < (this->mLeash->unk4 - 1)) {
+	    f32 var = ivar4 + (mIndex + 1) * 0x2c + 0xc;
+	}
+	*/
 }

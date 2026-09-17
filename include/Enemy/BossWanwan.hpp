@@ -47,11 +47,11 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	TBWLeashNode* getNode(s32 idx) const { return mNodes[idx]; } // fabricated
 
-	u32 unk0; // fabr
-	u32 unk1; // fabr
-	u32 unk2; // fabr
-	f32 unk3; // fabr
-	f32 unk4; // fabr
+	/* 0x4  */ u32 unk0; // fabr
+	/* 0x8  */ u32 unk1; // fabr
+	/* 0xc  */ u32 unk2; // fabr
+	/* 0x10 */ f32 unk3; // fabr
+	/* 0x14 */ f32 unk4; // fabr
 	/* 0x18 */ TBWLeashNode** mNodes;
 };
 
