@@ -1199,18 +1199,22 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 
 void TBigWatermelon::control()
 {
+	JGeometry::TVec3<f32> scale;
+	JGeometry::TVec3<f32> vel;
+	Mtx held;
+
 	TMapObjGeneral::control();
 	if (unk194 != 0)
 		unk194 -= 1;
 
 	if (isState(STATE_HOLDING)) {
-		Mtx held;
 		MTXCopy(mHolder->getTakingMtx(), held);
 		held[1][3] += unk190;
-		MTXCopy(held, getModel()->getAnmMtx(0));
+		MtxPtr anm = getModel()->getAnmMtx(0);
+		MTXCopy(held, anm);
 	} else {
-		JGeometry::TVec3<f32> vel(mVelocity);
-		if (!vel.isZero() || mGroundPlane->getActor())
+		vel = getVelocity();
+		if (!vel.isZero() || getGroundPlane()->getActor())
 			calcCurrentMtx();
 	}
 
@@ -1222,8 +1226,8 @@ void TBigWatermelon::control()
 		{
 			// Sitting on a rising sand pillar lifts the watermelon with it,
 			// the same way TResetFruit::control does.
-			const TLiveActor* owner = mGroundPlane->getActor();
-			if (mPosition.y < mGroundHeight + 200.0f && owner) {
+			const TLiveActor* owner = getGroundPlane()->getActor();
+			if (mPosition.y < getGroundHeight() + 200.0f && owner) {
 				// TODO: the original tests the same type twice here, as it
 				// also does in TResetFruit::control.
 				if (owner->isActorType(0x400000CD)
@@ -1245,7 +1249,7 @@ void TBigWatermelon::control()
 
 	case STATE_BROKEN:
 		if (!isStateTimerEngaged()) {
-			JGeometry::TVec3<f32> scale(1.0f, 1.0f, 1.0f);
+			scale.set(1.0f, 1.0f, 1.0f);
 			emitAndScale(0x6B, 0, &mPosition, scale);
 			emitAndScale(0x6C, 0, &mPosition, scale);
 			mStateTimer = 30;
@@ -1510,7 +1514,7 @@ void TResetFruit::control()
 
 			// Sitting on a rising sand pillar lifts the fruit with it.
 			if (mPosition.y < mGroundHeight + 200.0f) {
-				const TLiveActor* owner = mGroundPlane->getActor();
+				const TLiveActor* owner = getGroundPlane()->getActor();
 				// TODO: the original tests the same type twice here.
 				if (owner->isActorType(0x400000CD)
 				    || owner->isActorType(0x400000CD)) {
