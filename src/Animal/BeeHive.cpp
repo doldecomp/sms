@@ -133,7 +133,7 @@ BOOL TBee::receiveMessage(THitActor* sender, u32 message)
 		}
 		break;
 	case HIT_MESSAGE_UNKB:
-		mBeeHive->receiveMessageFromChild(this);
+		behaveToEat();
 		return TRUE;
 	}
 
