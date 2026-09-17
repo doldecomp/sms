@@ -22,9 +22,11 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// The .bck table of ahiru_peach has 22 entries and only the last one carries a
-// sound; the two animations the nerves actually select (0 and 1) have none, so
-// changeAnm() ends up calling setAnmSound(nullptr) for both.
+// 23 slots, of which only index 21 names a .bas -- the rest of ahiru_peach's
+// .bck animations are silent. The two the nerves actually select (0 for the
+// stagger, 1 for the paddle) are among them, so changeAnm() ends up calling
+// setAnmSound(nullptr) both times. The map gives the table's size (0x5c) but
+// no names for the silent slots.
 static const char* bathtubpeach_bastable[] = {
 	nullptr,
 	nullptr,
