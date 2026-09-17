@@ -430,8 +430,9 @@ void TBGBinder::bind(TLiveActor* param_1)
 {
 	TBossGesso* gesso = (TBossGesso*)param_1;
 
-	JGeometry::TVec3<f32> local_3c = gesso->mPosition;
-	local_3c += gesso->mLinearVelocity;
+	JGeometry::TVec3<f32> linearVel = gesso->mLinearVelocity;
+	JGeometry::TVec3<f32> local_3c  = gesso->mPosition;
+	local_3c += linearVel;
 
 	if (gesso->isAirborne()) {
 		JGeometry::TVec3<f32> local_48 = gesso->mVelocity;
@@ -445,10 +446,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 	if (gesso->getLatestNerve() == &TNerveBGDie::theNerve()
 	    && gesso->getMActor()->checkCurBckFromIndex(6)) {
 
-		// TODO: defo an inline
-		JGeometry::TVec3<f32> local_b4 = local_3c;
-		local_b4 -= gesso->mPosition;
-		gesso->mLinearVelocity = local_b4;
+		gesso->mLinearVelocity = local_3c - gesso->mPosition;
 
 		if (gpMarDirector->mMap != 9
 		    && gesso->mPosition.y - local_3c.y > 0.0f) {
@@ -523,10 +521,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 		gesso->mGroundHeight = fVar1;
 		gesso->mGroundPlane  = local_60;
 
-		// TODO: defo an inline
-		JGeometry::TVec3<f32> local_c0 = local_3c;
-		local_c0 -= gesso->mPosition;
-		gesso->mLinearVelocity = local_c0;
+		gesso->mLinearVelocity = local_3c - gesso->mPosition;
 	}
 }
 
