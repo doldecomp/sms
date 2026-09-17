@@ -54,6 +54,15 @@ static const char* Kazekun_bastable[] = {
 // which is wrong -- the map shows one global copy, here. That header has to be
 // reduced to a declaration, but it is out of scope for this batch, so this TU
 // deliberately does not include it.
+//
+// TODO: 91.3%. Every instruction matches except that retail keeps zAxis.y and
+// zAxis.z in f30/f31 across the xAxis inv_sqrt call while we reload them from
+// the stack, and its frame is 0xd0 against our 0xb0. The 0x20 is two extra
+// callee-saved FPR slots plus 0x10 of inline temporaries, so retail's body
+// creates four more bound temporaries than this spelling does; adding them via
+// TUtil<f32>::one() in the two fallbacks buys 8 of the 32 bytes and changes no
+// instruction. cross2, setLength(1.0f), setXYZDir and declaring all three axes
+// up front were all tried and are no better.
 void SMS_CalcToDirMatrix(TPosition3f& mtx, const JGeometry::TVec3<f32>& dir,
                          const JGeometry::TVec3<f32>& up)
 {
@@ -105,7 +114,10 @@ void TKazekun::init(TLiveManager* live_manager)
 
 void TKazekun::reset()
 {
-	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
+	// The identity quaternion's w comes from TUtil<f32>::one() rather than a
+	// literal: its inlined return value is the 4-byte temporary that sits
+	// below the by-value getHomePosition() copy in the retail frame.
+	mQuat.set(0.0f, 0.0f, 0.0f, JGeometry::TUtil<f32>::one());
 
 	mPosition.set(getHomePosition());
 
@@ -136,6 +148,11 @@ void TKazekun::initParticle()
 	                 KAZEKUN_JPA_MS_KAZE_BLUR);
 }
 
+// TODO: 98.1%, and the only difference is the frame: 0x68 in retail against
+// our 0x70, i.e. we build 8 bytes more inline temporaries before the local
+// matrix. setTrans(x, y, z), getMActor()->getModel() and checkTakeFlag in
+// place of isTaken() are all worse, so the extra pair sits inside one of the
+// inlined helpers (hasWind or updateEffect), not here.
 void TKazekun::calcRootMatrix()
 {
 	if (isTaken()) {
@@ -171,6 +188,9 @@ bool TKazekun::isHitWater() const
 }
 
 // UNUSED, 0xf0 in the map.
+// TODO: incorrect size -- this compiles to 0xf4, exactly one instruction more
+// than the map, and identical to isHitWater above. Something distinguishes the
+// two in the original; see the note on attackToMario.
 bool TKazekun::isDamage() const
 {
 	TSpineBase<TLiveActor>* spine = mSpine;
@@ -192,6 +212,13 @@ bool TKazekun::hasWind() const
 
 const char** TKazekun::getBasNameTable() const { return Kazekun_bastable; }
 
+// TODO: 93.8%. The two differing instructions are inside the inlined
+// TNerveKazekunTurn::theNerve(): retail emits `bl TNerveBase<TLiveActor>::
+// TNerveBase()` for the singleton's base constructor while we expand it. The
+// same construction at the same nesting depth *is* expanded in behaveToWater
+// (which matches), so the decision is not depth alone -- isDamage is 0xf0 in
+// the map against isHitWater's 0xf4 even though both read as the same three
+// nerve comparisons, and that missing instruction is probably the cause.
 void TKazekun::attackToMario()
 {
 	if (isDamage())
@@ -221,8 +248,8 @@ void TKazekun::updateEffect()
 bool TKazekun::isGiveUpAround() const
 {
 	f32 dy = gpMarioPos->y - mHomePosition.y;
-	return dy < -getSaveParams()->getLostOffsetYDown()
-	    || getSaveParams()->getLostOffsetYUp() < dy;
+	return dy < -getSaveParams()->mLostOffsetYDown.get()
+	    || getSaveParams()->mLostOffsetYUp.get() < dy;
 }
 
 // UNUSED, 0x38 in the map.
@@ -238,6 +265,11 @@ void TKazekun::setDeadAnm()
 	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 }
 
+// TODO: 93.5%. No structural differences left; the residual is a 0x30 frame
+// overshoot and the instruction scheduling inside the inlined TQuat4::mul that
+// follows from it. Rewriting JGeometry::TQuat4<f32>::rotate with scalar locals
+// (see the TODO in JGQuat4.hpp) does not close it here and regresses six other
+// callers, so it is left alone.
 void TKazekun::flyAroundMario()
 {
 	JGeometry::TVec3<f32> toMario(*gpMarioPos);
@@ -264,6 +296,11 @@ void TKazekun::flyAroundMario()
 }
 
 // UNUSED, 0xc0 in the map.
+// TODO: incorrect size -- 0xbc, one instruction short. The params pointer has
+// to be named for the virtual getSaveParam() call to land before dir.dot(dir),
+// and dir.length() is what puts both dot and TUtil<f32>::sqrt out of line at
+// the flyAroundMario call site, so the shape is right and the missing
+// instruction is somewhere in the clamp.
 f32 TKazekun::getAroundRate(const JGeometry::TVec3<f32>& dir) const
 {
 	TKazekunParams* params = getSaveParams();
@@ -275,6 +312,7 @@ f32 TKazekun::getAroundRate(const JGeometry::TVec3<f32>& dir) const
 // `dir`, banked `rate` of the way from a full right angle (rate 0) to straight
 // at `dir` (rate 2). The rotation axis is the frame's own up vector, which is
 // what makes the spirit bank into the turn instead of yawing flat.
+// TODO: incorrect size -- 0x3dc against the map's 0x3d8, one instruction over.
 void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
                              const JGeometry::TVec3<f32>& dir, f32 rate)
 {
@@ -296,6 +334,14 @@ void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
 	quat.mul(quat, around);
 }
 
+// TODO: 76.8%. Two known differences. First, retail *calls*
+// JGeometry::TUtil<f32>::sqrt for velocity.length() at the end while we expand
+// it; the same callee is called from flyAroundMario, where it sits one inline
+// level deeper, so length() here is reached through a wrapper we have not
+// found (set(), a named speed local, squared() and TVec3(mVelocity) all make no
+// difference). Second, retail materialises &mQuat in r30 before the tumble
+// block and reads the quaternion through it for spin.mul, where we fold the
+// 0x1a0 into each load; a TQuat4& local for mQuat does not reproduce it.
 bool TKazekun::doAttackPose(bool start)
 {
 	JGeometry::TVec3<f32> toMario(*gpMarioPos);
@@ -338,6 +384,9 @@ bool TKazekun::doAttackPose(bool start)
 // false, to keep easing the facing towards the flight direction. Only the
 // charge gets the full right angle (rate 2), which MWCC folds getAroundQuat's
 // angle down to sinf/cosf(0).
+// TODO: incorrect size -- 0x4d0 against the map's 0x4b0, eight instructions
+// over. The inlined copies in the nerve are only eight bytes of frame off, so
+// the surplus is in this out-of-line copy's own expansion of getAroundQuat.
 void TKazekun::doAttack(bool start)
 {
 	if (start) {
@@ -361,6 +410,13 @@ void TKazekun::doAttack(bool start)
 }
 
 // UNUSED, 0x4c in the map: the spirit is invisible between attack runs.
+// TODO: incorrect size -- this is 0x2c, eight instructions short of the map's
+// 0x4c, yet all three call sites (reset, the Appear nerve and the Wait nerve)
+// match byte-for-byte with just this flag pair, so the inlined body is right
+// and the out-of-line copy did something more. The map also lists a weak
+// SMS_EasyEmitParticle<E_SMS_EFFECT_LOOP_INDIRECT> instantiation for this TU
+// that nothing in the reconstruction accounts for; this function and doAttack
+// are the only places it can hide.
 void TKazekun::setVisible(bool visible)
 {
 	if (visible)
@@ -508,6 +564,13 @@ DEFINE_NERVE(TNerveKazekunPreAttack, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 98.9%. No structural differences; the frame is 0x1f0 in retail against
+// our 0x1e8 and the eight bytes renumber the float registers inside the second
+// inlined TQuat4::mul. toGoal.sub(getPosition()) and a named attack-speed local
+// each restore the size but shift every local by four bytes, which is worse.
+// Also unexplained: JGeometry::TRotation3<...>::getQuat is 99.5% here (an f3/f4
+// swap in its own TUtil<f32>::sqrt), which is a JGRotation3.hpp problem, not a
+// Kazekun one.
 DEFINE_NERVE(TNerveKazekunAttack, TLiveActor)
 {
 	TKazekun* kazekun = (TKazekun*)spine->getBody();
@@ -566,6 +629,9 @@ DEFINE_NERVE(TNerveKazekunWait, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 99.9%. The zero-velocity temporary sits at 0x38 in retail and 0x34
+// here, so retail builds one more four-byte inline temporary ahead of it; the
+// frame size itself already agrees.
 DEFINE_NERVE(TNerveKazekunHitWater, TLiveActor)
 {
 	TKazekun* kazekun = (TKazekun*)spine->getBody();
