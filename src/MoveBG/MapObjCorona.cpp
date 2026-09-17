@@ -1157,12 +1157,6 @@ void TBathtub::load(JSUMemoryInputStream& stream)
 	unk298 = 1;
 }
 
-// TODO: retail calls the empty 4-byte __ct__Q29JGeometry13SMatrix33R<f>Fv for
-// mBathtubData.unk18 (addi r3, this, 0x188; bl); our chain
-// TBathtubData -> TRotation3 -> TMatrix33 -> SMatrix33R expands it at depth 4,
-// so the weak symbol never appears. Retail's chain must be one level deeper,
-// which would mean unk18 is a TPosition3<TMatrix33<SMatrix33R<f32> > >; not
-// changed because that declaration lives in Map/BathWaterManager.hpp.
 TBathtub::TBathtub(const char* name)
     : TMapObjBase(name)
     , unk164(nullptr)

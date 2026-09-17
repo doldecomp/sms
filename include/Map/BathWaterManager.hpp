@@ -3,6 +3,7 @@
 
 #include <Strategic/HitActor.hpp>
 #include <JSystem/JMath.hpp>
+#include <JSystem/JGeometry/JGPosition3.hpp>
 #include <System/Params.hpp>
 #include <System/ParamInst.hpp>
 
@@ -37,7 +38,10 @@ public:
 		result = mPos;
 
 		// unk18's at()/ref() are row-major (SMatrix33R), so at(i, n) walks
-		// axis n's components: X here, then Z, then Y.
+		// axis n's components: X here, then Z, then Y. The ROM's offsets
+		// settle the convention -- the sin term reads 0x18/0x1c/0x20 and the
+		// cos term 0x30/0x34/0x38, i.e. contiguous rows of mMtx, which is
+		// at(0, n)/at(1, n)/at(2, n) and not the transpose.
 		f32 s = amp * sinf(angle);
 		result.x += unk18.at(0, 0) * s;
 		result.y += unk18.at(1, 0) * s;
@@ -65,7 +69,10 @@ public:
 public:
 	/* 0x00 */ JGeometry::TVec3<f32> mPos;
 	/* 0x0C */ JGeometry::TVec3<f32> unk0C;
-	/* 0x18 */ JGeometry::TRotation3<JGeometry::TMatrix33<
+	// TPosition3, not TRotation3: the extra (empty) inheritance level is what
+	// puts the 4-byte SMatrix33R<f32> constructor out of line, as the map's
+	// weak __ct__Q29JGeometry13SMatrix33R<f>Fv in MapObjCorona.cpp shows.
+	/* 0x18 */ JGeometry::TPosition3<JGeometry::TMatrix33<
 	    JGeometry::SMatrix33R<f32> > > unk18;
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
