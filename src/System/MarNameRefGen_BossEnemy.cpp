@@ -1,57 +1,93 @@
+// This object's .rodata blob opens with the System/DummyStrings.hpp pair, then
+// two TU-local pollution-texture names, then the four MActorMtxCalcType
+// strings; without all three blocks every string offset in the factory is
+// 0x34 or 0xE0 low.
+// rogue includes needed for matching the .rodata string pool and __sinit
+#include <System/DummyStrings.hpp>
+
+// TODO: retail has these two as (object,local) in MarNameRefGen.cpp,
+// MarNameRefGen_BossEnemy.cpp, MarDirectorPreEntry.cpp, emario.cpp,
+// enemyMario.cpp, cameragc.cpp, MapObjFence.cpp and every Player TU, i.e. they
+// came from a shared Player header rather than from each .cpp (the copies in
+// src/Player/*.cpp are open-coded).  Parked here until that header is
+// identified, because their 0x34 bytes sit between the DummyStrings pair and
+// the MActorMtxCalcType names and shift every later string offset.
+static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+#include <M3DUtil/InfectiousStrings.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 #include "Enemy/BathtubKiller.hpp"
 #include "Enemy/BossGesso.hpp"
 #include "Enemy/CoasterKiller.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Enemy/EnemyManager.hpp"
 #include "Enemy/Hinokuri2.hpp"
+#include <Enemy/BathtubPeach.hpp>
+#include <Enemy/BossEel.hpp>
+#include <Enemy/BossHanachan.hpp>
+#include <Enemy/BossManta.hpp>
+#include <Enemy/BossPakkun.hpp>
+#include <Enemy/BossTelesaObj.hpp>
+#include <Enemy/BossWanwan.hpp>
+#include <Enemy/Emario.hpp>
+#include <Enemy/Koopa.hpp>
+#include <Enemy/KoopaJr.hpp>
+#include <Enemy/LimitKoopa.hpp>
+#include <Enemy/LimitKoopaJr.hpp>
+#include <Enemy/TinKoopa.hpp>
 #include <System/MarNameRefGen.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
+	if (strcmp(name, "EMario") == 0)
+		return new TEMario("マリオモドキ");
 
-	// TODO:
-	// if ( strcmp( name, "EMario" ) == 0 )
-	//     return new TEMario("マリオモドキ");
+	// TODO: blocked on a one-word shared-header bug, not on this unit:
+	// Enemy/Emario.hpp declares TEMarioManager with `class` and never opens a
+	// `public:` section, so its constructor is private and this branch does
+	// not compile.  Retail's branch is
+	//   new TEMarioManager("典型敵マネージャ")   -- new 0x54,
+	// out-of-line __ct__14TEMarioManagerFPCc.
 
-	// TODO:
-	// if ( strcmp( name, "EMarioManager" ) == 0 )
-	//     return new TEMarioManager("典型敵マネージャ");
+	if (strcmp(name, "BossHanachan") == 0)
+		return new TBossHanachan("?");
 
-	// TODO:
-	// if ( strcmp( name, "BossHanachan" ) == 0 )
-	//     return new TBossHanachan("?");
+	if (strcmp(name, "BossHanachanManager") == 0)
+		return new TBossHanachanManager("?");
 
-	// TODO:
-	// if ( strcmp( name, "BossHanachanManager" ) == 0 )
-	//     return new TBossHanachanManager("?");
+	// TODO: blocked on a shared-header collision, not on this unit.
+	// DECLARE_NERVE(TNerveSBH_Fall) and DECLARE_NERVE(TNerveSBH_SleepContinue)
+	// appear in BOTH Enemy/BossHanachan.hpp (lines 317-318) and
+	// Enemy/SleepBossHanachan.hpp (lines 34-35), so the two headers cannot be
+	// included together ("class tag redefined").  The nerves are defined in
+	// Enemy/SleepBossHanachan.cpp, so the BossHanachan.hpp pair are the strays
+	// and should be deleted there; this unit needs both headers for the four
+	// Hanachan branches.  Retail's two branches are:
+	//   new TSleepBossHanachan("?")          -- new 0x160, in-class ctor:
+	//       TSpineEnemy(name), mShinePosition(0, 0, 0), mMirrorActor(nullptr)
+	//       (the TVec3 set<f> there is this TU's third map symbol)
+	//   new TSleepBossHanachanManager("?")   -- new 0x58, in-class ctor:
+	//       TEnemyManager(name) then
+	//       mSaveParams = new TDemoBossHanachanSaveParams(
+	//           "/enemy/sleepBossHanachan.prm")   -- inner new 0x30
 
-	// TODO:
-	// if (strcmp(name, "SleepBossHanachan") == 0)
-	// 	return new TSleepBossHanachan("?");
+	if (strcmp(name, "BossEel") == 0)
+		return new TBossEel("?");
 
-	// TODO:
-	// if (strcmp(name, "SleepBossHanachanManager") == 0)
-	// 	return new TDemoBossHanachanManager("?");
+	if (strcmp(name, "BossEelManager") == 0)
+		return new TBossEelManager("?");
 
-	// TODO:
-	// if ( strcmp( name, "BossEel" ) == 0 )
-	//     return new TBossEel;
+	if (strcmp(name, "BEelTearsManager") == 0)
+		return new TBEelTearsManager("めおとウナギ涙マネージャー");
 
-	// TODO:
-	// if (strcmp(name, "BossEelManager") == 0)
-	// 	return new TBossEelManager("?");
+	if (strcmp(name, "Koopa") == 0)
+		return new TKoopa;
 
-	// TODO:
-	// if ( strcmp( name, "BEelTearsManager" ) == 0 )
-	//     return new TBEelTearsManager("めおとウナギ涙マネージャー");
-
-	// TODO:
-	// if ( strcmp( name, "Koopa" ) == 0 )
-	//     return new TKoopa("クッパ");
-
-	// TODO:
-	// if ( strcmp( name, "KoopaManager" ) == 0 )
-	//     return new TKoopaManager("クッパマネージャー");
+	if (strcmp(name, "KoopaManager") == 0)
+		return new TKoopaManager;
 
 	if (strcmp(name, "HinoKuri2") == 0)
 		return new THinokuri2;
@@ -65,13 +101,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BossGessoManager") == 0)
 		return new TBossGessoManager;
 
-	// TODO:
-	// if ( strcmp( name, "TinKoopa" ) == 0 )
-	//     return new TTinKoopa("メカクッパ");
+	if (strcmp(name, "TinKoopa") == 0)
+		return new TTinKoopa("メカクッパ");
 
-	// TODO:
-	// if ( strcmp( name, "TinKoopaManager" ) == 0 )
-	//     return new TTinKoopaManager("メカクッパマネージャ");
+	if (strcmp(name, "TinKoopaManager") == 0)
+		return new TTinKoopaManager("メカクッパマネージャ");
 
 	if (strcmp(name, "CoasterKillerManager") == 0)
 		return new TCoasterKillerManager;
@@ -79,102 +113,77 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "CoasterKiller") == 0)
 		return new TCoasterKiller;
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrManager" ) == 0 )
-	//     return new TKoopaJrManager("クッパジュニアマネージャー");
+	if (strcmp(name, "KoopaJrManager") == 0)
+		return new TKoopaJrManager("クッパジュニアマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJr" ) == 0 )
-	//     return new TKoopaJr("クッパジュニア");
+	if (strcmp(name, "KoopaJr") == 0)
+		return new TKoopaJr("クッパジュニア");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrSubmarineManager" ) == 0 )
-	//     return new
-	//     TKoopaJrSubmarineManager("クッパジュニアサブマリンマネージャー");
+	if (strcmp(name, "KoopaJrSubmarineManager") == 0)
+		return new TKoopaJrSubmarineManager("クッパジュニアサブマリンマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrSubmarine" ) == 0 )
-	//     return new TKoopaJrSubmarine("クッパジュニアサブマリン");
+	if (strcmp(name, "KoopaJrSubmarine") == 0)
+		return new TKoopaJrSubmarine("クッパジュニアサブマリン");
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopaJrManager" ) == 0 )
-	//     return new
-	//     TLimitKoopaJrManager("リミットクッパジュニアマネージャー");
+	if (strcmp(name, "LimitKoopaJrManager") == 0)
+		return new TLimitKoopaJrManager;
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopaJr" ) == 0 )
-	//     return new TLimitKoopaJr("リミットクッパジュニア");
+	if (strcmp(name, "LimitKoopaJr") == 0)
+		return new TLimitKoopaJr;
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopaManager" ) == 0 )
-	//     return new TLimitKoopaManager("クッパマネージャー");
+	if (strcmp(name, "LimitKoopaManager") == 0)
+		return new TLimitKoopaManager;
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopa" ) == 0 )
-	//     return new TLimitKoopa("クッパ");
+	if (strcmp(name, "LimitKoopa") == 0)
+		return new TLimitKoopa;
 
-	// TODO:
-	// if ( strcmp( name, "BathtubKillerManager" ) == 0 )
-	//     return new TBathtubKillerManager("バスタブキラーマネージャー");
+	if (strcmp(name, "BathtubKillerManager") == 0)
+		return new TBathtubKillerManager;
 
 	if (strcmp(name, "BathtubKiller") == 0)
 		return new TBathtubKiller;
 
-	// TODO:
-	// if ( strcmp( name, "BathtubPeachManager" ) == 0 )
-	//     return new TBathtubPeachManager("バスタブピーチマネージャー");
+	if (strcmp(name, "BathtubPeachManager") == 0)
+		return new TBathtubPeachManager("バスタブピーチマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "BathtubPeach" ) == 0 )
-	//     return new TBathtubPeach("バスタブピーチ");
+	if (strcmp(name, "BathtubPeach") == 0)
+		return new TBathtubPeach("バスタブピーチ");
 
-	// TODO:
-	// if ( strcmp( name, "BossWanwan" ) == 0 )
-	//     return new TBossWanwan("ボスワンワン");
+	if (strcmp(name, "BossWanwan") == 0)
+		return new TBossWanwan;
 
-	// TODO:
-	// if ( strcmp( name, "BossWanwanManager" ) == 0 )
-	//     return new TBossWanwanManager("ボスワンワンマネージャ");
+	if (strcmp(name, "BossWanwanManager") == 0)
+		return new TBossWanwanManager("ボスワンワンマネージャ");
 
-	// TODO:
-	// if ( strcmp( name, "BossPakkun" ) == 0 )
-	//     return new TBossPakkun("ボスパックン改");
+	if (strcmp(name, "BossPakkun") == 0)
+		return new TBossPakkun;
 
-	// TODO:
-	// if ( strcmp( name, "KBossPakkun" ) == 0 )
-	//     return new TBossPakkun("ボスパックン軽");
+	if (strcmp(name, "KBossPakkun") == 0)
+		return new TBossPakkun("ボスパックン軽");
 
-	// TODO:
-	// if ( strcmp( name, "BossPakkunManager" ) == 0 )
-	//     return new TBossPakkunManager("ボスパックンマネージャー", 0);
+	if (strcmp(name, "BossPakkunManager") == 0)
+		return new TBossPakkunManager;
 
-	// TODO:
-	// if ( strcmp( name, "KBossPakkunManager" ) == 0 )
-	//     return new TBossPakkunManager("ボスパックン軽マネージャ", 1);
+	if (strcmp(name, "KBossPakkunManager") == 0)
+		return new TBossPakkunManager("ボスパックン軽マネージャ", 1);
 
-	// TODO:
-	// if ( strcmp( name, "BossTelesa" ) == 0 )
-	//     return new TBossTelesa("ボステレサ");
+	if (strcmp(name, "BossTelesa") == 0)
+		return new TBossTelesa;
 
-	// TODO:
-	// if ( strcmp( name, "BossTelesaManager" ) == 0 )
-	//     return new TBossTelesaManager("ボステレサマネージャー");
+	if (strcmp(name, "BossTelesaManager") == 0)
+		return new TBossTelesaManager;
 
-	// TODO:
-	// if ( strcmp( name, "BubbleManager" ) == 0 )
-	//     return new TBubbleManager("バブルマネージャー");
+	if (strcmp(name, "BubbleManager") == 0)
+		return new TBubbleManager;
 
-	// TODO:
-	// if ( strcmp( name, "OilBall" ) == 0 )
-	//     return new TBEelTears("油ダマ");
+	if (strcmp(name, "OilBall") == 0)
+		return new TOilBall("油ダマ");
 
-	// TODO:
-	// if ( strcmp( name, "BossManta" ) == 0 )
-	//     return new TBossManta("ボスマンタ");
+	if (strcmp(name, "BossManta") == 0)
+		return new TBossManta;
 
-	// TODO:
-	// if ( strcmp( name, "BossMantaManager" ) == 0 )
-	//     return new TBossMantaManager("ボスマンタマネージャ");
+	if (strcmp(name, "BossMantaManager") == 0)
+		return new TBossMantaManager("ボスマンタマネージャ");
 
 	return nullptr;
 }
