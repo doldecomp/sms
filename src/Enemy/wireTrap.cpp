@@ -72,7 +72,6 @@ void TWireTrap::init(TLiveManager* live_manager)
 
 	mBinder = (TBinder*)new TWireBinder();
 
-	mSpine->reset();
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
 
 	initCollision();
@@ -132,6 +131,17 @@ void TWireTrap::initWire()
 	mSpine->reset();
 	mSpine->setNext(getNerveFromMode(mMoveMode));
 
+	// The 1.0f factors are live loads from .sdata2 in the ROM, not folded
+	// constants, so they came through TUtil<f32>::one() rather than a
+	// literal.
+	// TODO: retail materialises `facing` on the stack and reaches it with a
+	// call to the local out-of-line copy of TVec3::set<f32>(f,f,f) (map:
+	// `set<f>__Q29JGeometry8TVec3<f>Ffff`, local, 0x10). Here the
+	// constructor's set() is expanded instead and the vector is scalarised
+	// away, which costs load about nine instructions. Spelling the vector as
+	// an unnamed temporary receiver -- `TVec3<f32>(...).dot(...)` -- does
+	// materialise it (load 80.4% -> 87.4%) but still expands set(), so it is
+	// not the mechanism and the readable form is kept.
 	JGeometry::TVec3<f32> facing(
 	    JGeometry::TUtil<f32>::one() * JMASin(mRotation.y), 0.0f,
 	    JGeometry::TUtil<f32>::one() * JMACos(mRotation.y));
@@ -187,8 +197,8 @@ BOOL TWireTrap::receiveMessage(THitActor* sender, u32 message)
 // pushing it the way the jet came from.
 void TWireTrap::behaveHitWater(THitActor* sender)
 {
-	JGeometry::TVec3<f32> scale(1.0f, 1.0f, 1.0f);
-	SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &mPosition, nullptr, scale);
+	SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &mPosition, nullptr,
+	                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 
 	SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 	                              0.0f, 0, 0, 4);
@@ -216,12 +226,10 @@ void TWireTrap::kill()
 		mSpine->reset();
 		mSpine->setNext(&TNerveWaitForever<TLiveActor>::theNerve());
 
-		JGeometry::TVec3<f32> scaleA(1.0f, 1.0f, 1.0f);
 		SMS_EasyEmitParticle(PARTICLE_MS_ENM_DISAP_A, &mPosition, nullptr,
-		                     scaleA);
-		JGeometry::TVec3<f32> scaleB(1.0f, 1.0f, 1.0f);
+		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		SMS_EasyEmitParticle(PARTICLE_MS_ENM_DISAP_B, &mPosition, nullptr,
-		                     scaleB);
+		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -453,10 +461,17 @@ void TWireTrap::checkHitActors()
 			hisMomentum *= trap->mMoveDir * hisRate;
 			hisMomentum *= trap->mSpeed;
 
+			// TODO: retail expands both of these inline (behaveHitWireTrap
+			// is UNUSED, and the second expansion's momenta are both read
+			// off `trap`, which is why the partner argument is `trap` and
+			// not `this` -- it reads like a copy-paste slip the original
+			// kept). MWCC here inlines the first call and refuses the
+			// second, so both stay calls and this function sits at 32%.
+			// Pasting the body out twice reaches 64% but is not source, and
+			// still leaves retail's twelve out-of-line TVec3::scale calls
+			// expanded. See behaveHitWireTrap: at 0x294 it is 0x3c over the
+			// map's 0x258, exactly the two scale expansions the ROM calls.
 			behaveHitWireTrap(trap, myMomentum, hisMomentum);
-			// TODO: retail passes `trap` here too, so the momenta the second
-			// expansion recomputes are both the partner's. Kept because the
-			// ROM does it; it reads like a copy-paste slip for `this`.
 			trap->behaveHitWireTrap(trap, hisMomentum, myMomentum);
 			break;
 		}
