@@ -335,7 +335,8 @@ void TBGEyeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 }
 
 TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
-    : mOwner(owner)
+    : THitActor(name)
+    , mOwner(owner)
     , mJointIndex(joint_index)
 {
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
@@ -716,8 +717,8 @@ f32 TBossGesso::lenFromToeToMario()
 
 void TBossGesso::showMessage(u32 param_1)
 {
-	u32 idx  = param_1 == 0xE0028 ? 3 : param_1 - 0xE0003;
-	u32 flag = param_1 == 0xE0003 ? 0 : 1 << idx;
+	u32 idx  = param_1 == 0x25 ? 3 : param_1 - 3;
+	u32 flag = param_1 == 3 ? 0 : 1 << idx;
 
 	if ((unk198 & flag) == 0)
 		gpMarDirector->getConsole()->startAppearBalloon(param_1, true);
@@ -863,6 +864,8 @@ void TBossGesso::gotTentacleDamage()
 	mSpine->reset();
 	mSpine->setNext(&TNerveBGTentacleDamage::theNerve());
 	mSpine->pushAfterCurrent(&TNerveBGWait::theNerve());
+
+	unk1A0 = 1;
 }
 
 void TBossGesso::gotEyeDamage()
