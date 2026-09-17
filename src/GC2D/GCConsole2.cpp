@@ -874,6 +874,33 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 				if (console->unkD4[2]->getPane()->isVisible())
 					console->unkD4[2]->getPane()->hide();
 			}
+		} else {
+			// Counting down: the same digit updates, but the carry lands on
+			// 99/9 instead of 00/0 and there are no particles.
+			if (console->unk6C >= 100) {
+				if (console->unk6C % 100 == 99)
+					setDigitPane(console->unkD4[0], console->unkE0,
+					             console->unk6C / 100);
+
+				int rest
+				    = console->unk6C - (int)(console->unk6C * 0.01f) * 100;
+				if (rest % 10 == 9)
+					setDigitPane(console->unkD4[1], console->unkE0, rest / 10);
+
+				if (!console->unkD4[2]->getPane()->isVisible())
+					console->unkD4[2]->getPane()->show();
+				setDigitPane(console->unkD4[2], console->unkE0, rest % 10);
+			} else {
+				if (console->unk6C % 10 == 9)
+					setDigitPane(console->unkD4[0], console->unkE0,
+					             console->unk6C / 10);
+
+				setDigitPane(console->unkD4[1], console->unkE0,
+				             console->unk6C % 10);
+
+				if (console->unkD4[2]->getPane()->isVisible())
+					console->unkD4[2]->getPane()->hide();
+			}
 		}
 		++console->unk68;
 	}
