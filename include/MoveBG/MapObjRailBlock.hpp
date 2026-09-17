@@ -44,13 +44,13 @@ public:
 class TNormalLift : public TRailMapObj {
 public:
 	TNormalLift(const char* name = "ノーマルリフト");
-	void resetPosition();
-	void load(JSUMemoryInputStream&);
-	void readRailFlag();
-	void initMapObj();
-	void control();
-	void setGroundCollision();
-	void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void resetPosition();
+	virtual void load(JSUMemoryInputStream&);
+	virtual void readRailFlag();
+	virtual void initMapObj();
+	virtual void control();
+	virtual void setGroundCollision();
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x150 */ u16 unk150;
@@ -62,10 +62,10 @@ public:
 class TRailBlock : public TRailMapObj {
 public:
 	TRailBlock(const char* name = "移動板");
-	void initMapObj();
-	Mtx* getRootJointMtx() const;
-	void calcRootMatrix();
-	void control();
+	virtual void initMapObj();
+	virtual Mtx* getRootJointMtx() const;
+	virtual void calcRootMatrix();
+	virtual void control();
 
 public:
 	/* 0x150 */ f32 unk150;
@@ -79,11 +79,11 @@ public:
 class TRollBlock : public TMapObjBase {
 public:
 	TRollBlock(const char* name = "回転板");
-	void load(JSUMemoryInputStream&);
-	void setGroundCollision();
-	Mtx* getRootJointMtx() const;
-	void calcRootMatrix();
-	void control();
+	virtual void load(JSUMemoryInputStream&);
+	virtual void setGroundCollision();
+	virtual Mtx* getRootJointMtx() const;
+	virtual void calcRootMatrix();
+	virtual void control();
 
 public:
 	/* 0x138 */ f32 unk138;
@@ -93,8 +93,8 @@ public:
 class TWoodBlock : public TNormalLift {
 public:
 	TWoodBlock(const char* name = "木のブロック");
-	BOOL calcRecycle();
-	void load(JSUMemoryInputStream&);
+	virtual BOOL calcRecycle();
+	virtual void load(JSUMemoryInputStream&);
 
 public:
 	/* 0x15C */ GXColorS10 unk15C;

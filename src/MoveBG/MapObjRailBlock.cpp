@@ -30,8 +30,16 @@ TRailMapObj::TRailMapObj(const char* name)
 {
 }
 
+// TODO: the pragma is the only thing keeping this a `bl` where
+// TRailMapObj::load reaches it at depth 1, and it is pre-existing. Removing it
+// takes load 100% -> 0%. The depth-1 allowance is fourteen statements, so
+// retail's body had fifteen or more; this reconstruction counts about seven
+// (the `new`, the graph store, setTo, the position copy, moveToShortestNext,
+// onRailFlag and resetStep), and it is already 99.9% instruction-exact, so the
+// missing statements have to be spellings that cost no code -- naming the
+// findNearestNodeIndex result, the node and its rail node, and so on. Not
+// resolved here.
 #pragma dont_inline on
-// TODO: weird stack frame issues here D:
 void TRailMapObj::initGraphTracer(TGraphWeb* graph)
 {
 	unk138 = new TGraphTracer;
@@ -175,7 +183,8 @@ void TRailMapObj::resetPosition()
 	unk148    = 0;
 	unk14A    = 180;
 	unk14C    = 1;
-	unk138->setToNearest(mPosition);
+	TGraphTracer* tracer = unk138;
+	tracer->setToNearest(mPosition);
 	readRailFlag();
 }
 
@@ -543,6 +552,14 @@ void TRollBlock::calcRootMatrix()
 {
 	J3DModel* model = getModel();
 	MtxPtr mtx      = model->getBaseTRMtx();
+	// TODO: 8 bytes of frame short (0x88 vs 0x90) and the local matrix sits
+	// at 0x20 where retail has it at 0x2c, so the whole residue is the low
+	// region. Reading mPosition through getPosition() moves it: three reads
+	// give the matrix its 0x2c but overshoot the frame to 0x98, two give the
+	// exact frame and 0x28, and one bound reference gives the frame and
+	// leaves the matrix at 0x20. None is exact and a mixture of raw and
+	// accessor reads of one member is not plausible source, so this keeps
+	// the plain reads.
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z,
 	               mInitialRotation.x, mInitialRotation.y, mInitialRotation.z);
 	model->setBaseScale(mScaling);
