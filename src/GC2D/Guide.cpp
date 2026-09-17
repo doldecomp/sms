@@ -57,9 +57,10 @@ void TGuide::load(JSUMemoryInputStream& stream)
 {
 	unkC5 = 0;
 	JDrama::TNameRef::load(stream);
-	setup(gpMarDirector->unkD8);
+	JKRMemArchive* archive = gpMarDirector->unkD8;
+	setup(archive);
 
-	mScreen = new J2DSetScreen("guide_1.blo", gpMarDirector->unkD8);
+	mScreen = new J2DSetScreen("guide_1.blo", archive);
 
 	((J2DTextBox*)mScreen->search('a_ic'))->setFont((JUTFont*)gpSystemFont);
 	((J2DTextBox*)mScreen->search('a_tx'))->setFont((JUTFont*)gpSystemFont);
@@ -80,19 +81,19 @@ void TGuide::load(JSUMemoryInputStream& stream)
 
 	mShineIcon = mScreen->search('ss_i');
 	for (int i = 0; i < 2; ++i)
-		mShineDigits[i] = (J2DPicture*)mScreen->search('ss_1' + (i << 16));
+		mShineDigits[i] = (J2DPicture*)mScreen->search('ss_1' + i);
 
 	mEtcShineIcon = mScreen->search('sq_i');
 	for (int i = 0; i < 2; ++i)
-		mEtcShineMarks[i] = mScreen->search('sq_1' + (i << 16));
+		mEtcShineMarks[i] = mScreen->search('sq_1' + i);
 
 	for (int i = 0; i < 3; ++i)
-		mCoinDigits[i] = (J2DPicture*)mScreen->search('sc_1' + (i << 16));
+		mCoinDigits[i] = (J2DPicture*)mScreen->search('sc_1' + i);
 
 	mCoinIcon = mScreen->search('sc_s');
 
 	for (int i = 0; i < 2; ++i)
-		mBlueCoinDigits[i] = (J2DPicture*)mScreen->search('sb_1' + (i << 16));
+		mBlueCoinDigits[i] = (J2DPicture*)mScreen->search('sb_1' + i);
 
 	JUTTexture* cursorTexture = new JUTTexture(
 	    (const ResTIMG*)JKRGetResource("/guide/timg/guide_cursor_2.bti"));
@@ -104,7 +105,7 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	}
 
 	for (int i = 0; i < 13; ++i) {
-		u32 tag           = ((i / 10) << 8) + '00' + i % 10;
+		u32 tag           = ((i / 10) << 8) + (i % 10 + '00');
 		mStagePanes[i]    = mScreen->search(tag);
 		mPanelsA[i]       = new TExPane(mScreen, (tag << 16) + '_0');
 		mPanelRects[i]    = mPanelsA[i]->getPane()->mBounds;
@@ -164,7 +165,7 @@ void TGuide::load(JSUMemoryInputStream& stream)
 
 	void* bmg = JKRGetResource("/guide/guidemess.bmg");
 	for (int i = 0; i < 13; ++i) {
-		u32 tag = (((i / 10) << 24) + '00' + ((i % 10) << 16)) << 0;
+		u32 tag = (((i / 10) << 24) + ('00' << 16)) + ((i % 10) << 16);
 
 		J2DTextBox* title = (J2DTextBox*)mScreen->search(tag + '_3');
 		SMSMakeTextBuffer(title, 30);
@@ -189,8 +190,7 @@ void TGuide::resetObjects()
 	int total = 0;
 	for (u32 i = 0; i < 13; ++i) {
 		if (i < 10) {
-			TStageScore& score = mScores[i];
-			score.unk0         = 0;
+			mScores[i].unk0         = 0;
 
 			int shines = 0;
 			if (i != 0 && i != 1) {
@@ -198,8 +198,9 @@ void TGuide::resetObjects()
 					if (SMS_isGetShine(i, j, false))
 						shines++;
 			}
-			score.mShineNum = shines < 100 ? shines : 99;
-			total += score.mShineNum;
+			int num              = shines < 100 ? shines : 99;
+			mScores[i].mShineNum = num;
+			total += num;
 
 			int etcShines = 0;
 			if (i != 0 && i != 1) {
@@ -210,16 +211,16 @@ void TGuide::resetObjects()
 			}
 			if (etcShines >= 10)
 				etcShines = 9;
-			score.mEtcShineNum = etcShines;
+			mScores[i].mEtcShineNum = etcShines;
 			total += etcShines;
 
 			u16 coins = TFlagManager::getInstance()->getFlag(0x20005 + i);
 			if (coins >= 1000)
 				coins = 999;
-			score.mCoinNum = coins;
+			mScores[i].mCoinNum = coins;
 
-			score.mHasFirstEtcShine = SMS_isGetShine(i, 0, true);
-			if (score.mHasFirstEtcShine)
+			mScores[i].mHasFirstEtcShine = SMS_isGetShine(i, 0, true);
+			if (mScores[i].mHasFirstEtcShine)
 				total++;
 
 			int blueCoins = 0;
@@ -231,7 +232,7 @@ void TGuide::resetObjects()
 			}
 			if (blueCoins >= 1000)
 				blueCoins = 999;
-			score.mBlueCoinNum = blueCoins;
+			mScores[i].mBlueCoinNum = blueCoins;
 
 			if (TFlagManager::getInstance()->getBool(0x103A5 + i)) {
 				mPointPanes[i]->mVisible = true;
@@ -552,6 +553,12 @@ void TGuide::linkSelect()
 }
 
 // UNUSED; inlined into linkSelect for all nine decorative panes.
+//
+// The `u16 t` copy is load-bearing, not cosmetic: mTimer is a u16 and retail
+// feeds it straight into the unsigned `% period`, with no sign extension
+// anywhere in linkSelect. Spelling the modulo on the s16 parameter the map
+// gives adds an extsh at every one of the eleven inline sites (linkSelect
+// 87.9% -> 93.7%). All five helpers share the shape.
 void TGuide::changePattern(J2DPicture* pane, s16 timer, u32 period)
 {
 	u16 t = timer;
@@ -593,11 +600,12 @@ void TGuide::rotatePattern(J2DPicture* pane, s16 timer, u32 period, s16 angle)
 // UNUSED
 void TGuide::shinePattern(TBoundPane* pane, s16 timer, u32 period)
 {
-	u16 t = timer;
-	if (t % period == 0)
+	u16 t       = timer;
+	u32 phase   = t % period;
+	if (phase == 0)
 		pane->setPanePosition(45, JUTPoint(0, 0), JUTPoint(0, -5),
 		                      JUTPoint(0, 0));
-	else if (t % period == 45)
+	else if (phase == 45)
 		pane->setPanePosition(45, JUTPoint(0, 0), JUTPoint(0, 5),
 		                      JUTPoint(0, 0));
 }
@@ -668,14 +676,13 @@ void TGuide::changeBotStatus(int stage)
 		return;
 	}
 
-	TStageScore& score = mScores[stage];
-	if (score.unk0 == 0) {
+	if (mScores[stage].unk0 == 0) {
 		mStageNameBox->mVisible = true;
 		mShineIcon->mVisible    = true;
 		strncpy(mStageNameBox->getStringPtr(),
 		        SMSGetMessageData(mStageNameBmg, stage), 26);
 
-		int shines = score.mShineNum;
+		int shines = mScores[stage].mShineNum;
 		if (shines < 0)
 			shines = 0;
 		if (shines > 99)
@@ -692,11 +699,11 @@ void TGuide::changeBotStatus(int stage)
 			    mNumberTextures[shines % 10]->mTexInfo, 0);
 		}
 
-		if (stage <= 1 || score.mEtcShineNum == 0) {
+		if (stage <= 1 || mScores[stage].mEtcShineNum == 0) {
 			mEtcShineIcon->mVisible     = false;
 			mEtcShineMarks[0]->mVisible = false;
 			mEtcShineMarks[1]->mVisible = false;
-		} else if (score.mEtcShineNum == 1) {
+		} else if (mScores[stage].mEtcShineNum == 1) {
 			mEtcShineIcon->mVisible     = true;
 			mEtcShineMarks[0]->mVisible = true;
 			mEtcShineMarks[1]->mVisible = false;
@@ -706,7 +713,7 @@ void TGuide::changeBotStatus(int stage)
 			mEtcShineMarks[1]->mVisible = true;
 		}
 
-		int coins = score.mCoinNum;
+		int coins = mScores[stage].mCoinNum;
 		if (coins < 0)
 			coins = 0;
 		if (coins > 999)
@@ -728,12 +735,12 @@ void TGuide::changeBotStatus(int stage)
 			    mNumberTextures[coins % 10]->mTexInfo, 0);
 		}
 
-		if (score.mHasFirstEtcShine)
+		if (mScores[stage].mHasFirstEtcShine)
 			mCoinIcon->mVisible = true;
 		else
 			mCoinIcon->mVisible = false;
 
-		int blueCoins = score.mBlueCoinNum;
+		int blueCoins = mScores[stage].mBlueCoinNum;
 		if (blueCoins < 0)
 			blueCoins = 0;
 		if (blueCoins > 99)
@@ -762,7 +769,7 @@ void TGuide::changeBotStatus(int stage)
 		mStageNameBox->mVisible = true;
 		mShineIcon->mVisible    = false;
 
-		int blueCoins = score.mBlueCoinNum;
+		int blueCoins = mScores[stage].mBlueCoinNum;
 		if (blueCoins < 0)
 			blueCoins = 0;
 		if (blueCoins > 99)
@@ -788,6 +795,9 @@ void TGuide::changeBotStatus(int stage)
 	}
 }
 
+// TODO: all the arithmetic matches; retail reads gpMarioPos->z before
+// storing the scaled x and keeps 0.5f in f4 across the marker-bounds loads,
+// where ours reloads. Frame 0x100 against our 0x78.
 void TGuide::placeMario()
 {
 	if ((u8)SMS_getShineStage(gpMarDirector->mMap) != 1) {
@@ -882,6 +892,14 @@ void TGuide::disappearGuidePane(int stage)
 	mState = STATE_DISAPPEAR;
 }
 
+// TODO: open. Retail *calls* TExPane::setPaneAlpha, setPaneSize and
+// setPaneOffset from here and from appearGuidePane -- setPaneSize and
+// setPaneAlpha are the two weak symbols the map puts in this TU -- while
+// inlining all three inside linkSelect's mmarkPattern. Ours expands them
+// everywhere, which is the only remaining difference in this function. They
+// are inline members of GC2D/ExPane.hpp, a shared header, so the fix is not
+// local to this unit; see the wireTrap rule in docs/catalog/codegen-tells.md
+// about MWCC refusing to inline once the caller is large enough.
 void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (setup_wait != 0) {
