@@ -385,10 +385,10 @@ void TFruitsBoat::moveObject()
 	rot.x                     = 0.5f * rot.x;
 
 	// TODO: the ROM re-reads rot.x from the stack after the MsWrap call, which
-	// only happens when MsAngleDiff's first parameter is a reference: with
-	// `inline f32 MsAngleDiff(const f32& alpha, f32 beta)` in
-	// MarioUtil/MathUtil.hpp (where it is already marked fabricated) this
-	// block becomes byte-exact. Left alone here because that header is shared.
+	// a `const f32&` first parameter on MsAngleDiff would produce -- but that
+	// signature was tried in MathUtil.hpp and regresses nine functions in six
+	// other units (the table is next to the declaration there), so the reload
+	// has to come from this call site's own shape instead.
 	f32 pitchStep = MsAngleDiff(rot.x, mRotation.x);
 	// TODO: the 1.0f/-1.0f limits live in .sdata, which only a const-reference
 	// parameter produces, so the original clamped with std::min/std::max --

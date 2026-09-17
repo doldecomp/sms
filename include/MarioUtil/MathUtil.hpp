@@ -139,6 +139,23 @@ template <class T> inline T MsClamp(T t, T l, T r)
 }
 
 // fabricated
+//
+// TODO: `const f32& alpha` was tried, because the ROM re-reads rot.x from the
+// stack after the inlined MsWrap in TFruitsBoat::moveObject's pitch block and a
+// reference is what produces that reload (moveObject 93.95% -> 94.28%,
+// fruitsboat 98.40% -> 98.49%). It is wrong: by value is what every other
+// caller wants, and the reference costs
+//     TAnimalBase::getRotationFlyToDir  100.00% -> 95.51%
+//     TAnimalBase::execWalk              78.97% -> 75.90%
+//     TSpineEnemy::turnToCurPathNode     99.89% -> 97.04%
+//     THinokuri2::moveObject             99.13% -> 98.28%
+//     TNerveHino2Turn::execute           96.76% -> 94.60%
+//     TNerveFireWanwanTurn::execute      99.13% -> 94.70%
+//     TBGTentacle::decideOwnState        99.86% -> 95.17%
+//     TMonumentShine::control            97.00% -> 89.38%
+//     TLiveActor::calcRideMomentum       99.73% -> 93.67%
+// so the reload at the fruitsboat site comes from that call site's own shape,
+// not from this signature.
 inline f32 MsAngleDiff(f32 alpha, f32 beta)
 {
 	return alpha - MsWrap(beta, alpha - 180.0f, alpha + 180.0f);
