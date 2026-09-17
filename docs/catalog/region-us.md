@@ -27,6 +27,11 @@ Telop font size is `gpSystemFont->getWidth() << 10` with one shared `JUTRect` (t
 Life sounds: `0x480C` under water, `0x4823` on land, `0x4801` on gain; segment colours are `setWhite` only.
 `memset(p, 0, 0x400)` is inlined by retail as an 8-byte `stb` loop where we `bl memset` (`string.h` declares it `__declspec(section ".init")`; open).
 
+## `Option`, `ConsoleStr`, `StageUtil`
+
+- `TOptionSubtitleUnit` (a third option row: panes `txp2`/`me_2`/`sel6`/`sel5`) exists only in the US build; `TBalloonControl` does not exist in it at all (`new TOptionRumbleUnit` asks 0x24, not 0x28).
+- The US message bank has no ids 8/9, so `scScenarioNameTable` skips them and every later scenario group shifts down by two (now under `VERSION_GMSE01` in `StageUtil.hpp`; `ConsoleStr` data 49 -> 100, `PauseMenu2` 35 -> 76).
+
 ## Strings and IDs
 
 - `ProgSelect`: US strings are five named mutable arrays, not Japanese literals. Width 360 and X 145 are US draw arguments.

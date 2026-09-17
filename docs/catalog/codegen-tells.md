@@ -225,6 +225,17 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Settled in header round 7
+
+- A `const` accessor can *cause* a CSE: `MActor::getCurBckAnmPtr` non-const (as the map says) with raw `mMActor` on both halves of a statement shares the member load; routing the receiver through `getMActor()` restores retail's two independent reads (`TChuuHana::setBckAnm` 95.7 -> 99.8). The const-accessor rule is about the re-read and cuts both ways.
+- `TKukku::updateRotation` closed: the three statements retail's 15+ budget implied are `v.length()` split into `v.squared()` + `TUtil<f32>::sqrt(sq)` (also -8 of frame) and the two banking factors named per component because the ROM expands `isFalling()` twice (nerves 0 -> 68 and 42 -> 93). Real statements readable off the asm, not throwaways.
+- `TPosition3` over `TRotation3` for a **3x3** member puts the empty `SMatrix33R<f>` ctor out of line (the map's weak 4-byte symbol is the tell), companion to the `SMatrix34C`/`BeeHive` case; the ROM's `getPos` loads contiguous rows `0x18/0x1c/0x20` for the sin term, i.e. `at(0,n)/at(1,n)/at(2,n)`.
+- A `bl` to a global accessor whose result is immediately overwritten by `mr r3, rN` is a discarded receiver in front of an inherited static member (`SMSGetMSound()->setParamSoundOutputMode(mode)`); it proves `MSound : JAIGlobalParameter`. The same TU inlines the call away elsewhere, so its absence is not evidence against the spelling.
+- `RAD_TO_DEG` is exactly `180.0f / M_PI` (`0x42652ee0`); the old `+ 0.000005f` was one ULP off. `ExPane::setCenteredSize` is correct (name fabricated, body right; inlined everywhere so no map symbol).
+- `SMS_getNormalStage()` stays `u16`: `u32` gives the map's UNUSED 0x18 but loses three of four call sites; a case where the UNUSED *size* loses to call-site evidence.
+- Ruled out: `JUtility::TColor(const GXColor&)` or `set(const GXColor&)` (costs `JSGSetColor` and `TMapObjElasticCode::draw` their exact match; both halves of the copy are load-bearing). MSL C-mode audit: `sinf/cosf/tanf/atan2f/powf` are real globals, `fmod` is never defined, `fabsf/fabs` are already inline for C; `sqrtf` was the only one.
+- `turnToCurPathNode` returns `BOOL` (three sites, all up). `MSStageCubeFade`'s statics exist (`BeakDamage` 88 -> 97).
+
 ## Rules from `GCConsole2` (GC2D)
 
 - `TFlagManager::getInstance()` vs `smInstance->` is a codegen lever: the accessor materialises the pointer into `r0` and adds `mr r3, r0` at a function's first call (`checkDolpic8` 96 -> 99 with `smInstance`); per function.
