@@ -726,7 +726,10 @@ void TKoopaJrSubmarine::makeCollisionPositions()
 		y += mtx[1][3];
 		z += mtx[2][3];
 	}
-	mRearBody->mPosition.set(0.5f * x, 0.5f * y, 0.5f * z);
+	x *= 0.5f;
+	y *= 0.5f;
+	z *= 0.5f;
+	mRearBody->mPosition.set(x, y, z);
 	getJointTransByIndex(TKoopaJr_getJointIndex(0), &mFrontBody->mPosition);
 }
 
@@ -917,7 +920,9 @@ bool TKoopaJrSubmarine::checkKillerLaunch()
 	        == &TNerveKoopaJrSubmarineLaunchKiller::theNerve()
 	    && mKillerIndex < mKillerNum && mKillerTimer <= 0) {
 		launchKiller();
-		if (mKillerTypes[mKillerIndex] == 2)
+		// The signed compare is what says the type went through an int.
+		int type = mKillerTypes[mKillerIndex];
+		if (type == 2)
 			mKillerTimer = getSaveParams()->mSLKillerIntervalFast.get();
 		else
 			mKillerTimer = getSaveParams()->mSLKillerInterval.get();
@@ -1019,6 +1024,9 @@ void TKoopaJrSubmarine::emitKoopaJrSubmarineEffects() { }
 // UNUSED, 0x1c in the map.
 void TKoopaJrSubmarine::updateTimers()
 {
+	// TODO: perform()'s inlined copy materialises the timer's address
+	// (addi r4, this, 0x150) before the store; an int& local reproduces
+	// that but adds a stack round trip, and a pointer local folds back.
 	if (mKillerTimer > 0)
 		--mKillerTimer;
 }
