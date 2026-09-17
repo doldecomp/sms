@@ -1497,7 +1497,7 @@ void TResetFruit::rotting()
 		mHolder              = nullptr;
 	}
 
-	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
+	mVelocity.z = mVelocity.y = mVelocity.x = 0.0f;
 	mState                                  = STATE_ROTTING;
 }
 
@@ -1507,7 +1507,7 @@ void TResetFruit::control()
 	case STATE_NORMAL:
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 		for (int i = 0; i < mColCount; ++i)
-			touchActor(mCollisions[i]);
+			TResetFruit::touchActor(mCollisions[i]);
 		if (mGroundPlane->getActor())
 			calcCurrentMtx();
 		break;
@@ -1522,8 +1522,8 @@ void TResetFruit::control()
 				offLiveFlag(LIVE_FLAG_UNK10);
 
 			// Sitting on a rising sand pillar lifts the fruit with it.
+			const TLiveActor* owner = getGroundPlane()->getActor();
 			if (mPosition.y < mGroundHeight + 200.0f) {
-				const TLiveActor* owner = getGroundPlane()->getActor();
 				// TODO: the original tests the same type twice here.
 				if (owner->isActorType(0x400000CD)
 				    || owner->isActorType(0x400000CD)) {
@@ -1570,7 +1570,7 @@ void TResetFruit::control()
 	case STATE_ROTTING:
 		// Sink into the ground, restore the original scale, puff smoke and
 		// sleep until the respawn timer runs out.
-		mPosition.y += mBodyRadius * -0.5f;
+		mPosition.y += mBodyRadius / 2.0f;
 		mScaling.x = mInitialScaling.x;
 		mScaling.y = mInitialScaling.y;
 		mScaling.z = mInitialScaling.z;
