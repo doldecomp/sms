@@ -80,9 +80,16 @@ Moving one case ID gives the wrong comparison tree; moving the whole original in
 
 ## Inlining
 
-**Depth limit.** With `-O4,p -inline auto,deferred`, a small inline expands through four wrapper levels and is called at the fifth; a body the size of `std::fmodf` (about 20 instructions, two runtime calls) expands through three and becomes a weak out-of-line copy at the fourth.
-Declaration form and caller size make no difference (eighty `normalize()` expansions in one function all inline).
-That is why `TUtil<f32>::inv_sqrt` (under `normalize` -> `setLength`) is always called while `sqrt` under `length()` expands.
+**Depth limit: the per-expansion size allowance shrinks with depth.** Measured in a scratch TU with the game flags, varying only callee size and wrapper levels:
+
+| body size | depth 2 | depth 3 | depth 4 |
+| --- | --- | --- | --- |
+| 0x5c / 0x6c | inline | inline | **call** |
+| 0x74 / 0x84 | inline | **call** | call |
+| 0x8c | **call** | call | call |
+
+Very small bodies expand through four levels and are called at the fifth. Declaration form (`inline`, `extern inline`, in-class, statement count) and caller size make no difference (a 0x7bf8 caller still inlines a 0x5c body at depth 1; eighty `normalize()` expansions in one function all inline).
+That is why `TUtil<f32>::inv_sqrt` (under `normalize` -> `setLength`) is always called while `sqrt` under `length()` expands, and why `std::fmodf`/`TUtil<f32>::mod` (0x5c) are calls in the ROM: their sites reach them at depth 4, ours at depth 2 (`nerve -> faceTo -> fmodf`), so two inline wrappers are missing above them. Every ROM site computes `l + std::fmodf((r - l) + (t - l), r - l)`, a wrap-into-`[l, r)` helper distinct from the loop-based `MsWrap<f>`; recovering it is `.cpp` work in `koopajr`, `Koopa`, `BathtubPeach`, `MapObjCorona`, `wireTrap`. The header keeps the `::fmod` wrapper. This likely also explains the per-call-site tables from `MapObjBall` and `amiNoko` below.
 
 **Depth is measured from the innermost expression, not the statement.** An inline call nested inside another inline's argument sits one level deeper: `q.setEulerY(-(k * MsGetRotFromZaxisY(dir)))` pushes `MsGetRotFromZaxisY` past its limit and emits a weak out-of-line copy the retail object lacks; hoisting it into `f32 yawRad = ...; q.setEulerY(yawRad);` restores the expansion. One-line forwarders count too: `q.rotate(dir)` forwards to `rotate(dir, dir)`, so call the two-argument form directly (`TYumbo::shotSeeds` 66 -> 95.7). Symptom: a weak symbol in your object for a header inline the map shows nowhere in the TU. `MsGetRotFromZaxisY` expands exactly one level, so a caller cannot reach it through any wrapper (`TYumbo::lookatMario`, UNUSED and size-exact, is not what the nerves call; they spell its body out).
 
@@ -225,7 +232,8 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - Default-construct then assign fields separately; the by-value constructor emits integer copies (Beam partition).
 - Normalising cross-products in place saves a float register (EffectUtil).
 - **A `TVec3` array defeats scalar replacement where three separate locals do not.** Three named column vectors get promoted to registers and their `squared()` products fuse; the same three as `TVec3<f32> dir[3]` with constant indices get a stack home, are read back with `lfs`, and stay unfused (`TRocket::calcRootMatrix` 85.2 -> 96.7). Contiguous 12-byte slots in the target are the tell. `mtx.getXDir(v)` does not force the memory home, and an unrolled loop fails when the body has `length()`.
-- `JGeometry::TRotation3::getXDir/getYDir/getZDir` use `dst.set(at(0,0), at(1,0), at(2,0))`, which batches the loads; the ROM interleaves `lfs`/`stfs`, so the original bodies were per-component (`popo` and `rocket` `calcRootMatrix` work around it locally; open shared fix in `JGRotation3.hpp`).
+- `JGeometry::TRotation3::getXDir/getYDir/getZDir` batch their loads with `set(x, y, z)`, and that **is** the real body: `JPABaseEmitter::calcEmitterGlobalParams` batches the three `lfs` before the stores and drops 98.5 -> 93.0 with per-component bodies. `popo` and `rocket` `calcRootMatrix` read the columns out themselves.
+- A float literal in **`.sdata`** rather than `.sdata2` was materialised to bind to a `const T&` parameter; that is how `std::min`/`std::max` were identified in `fruitsboat`. This project's `std::min`/`max` take `const T&`, **return `T`** (a `const T&` return makes MWCC select the address and spill the argument) and compare `a > b` (gives `fcmpo a, b` + bare `ble`).
 - Particle scale vectors are unnamed temporaries: `SMS_EasyEmitParticle(id, &mPosition, nullptr, TVec3<f32>(1, 1, 1))` matches; a named `scale` local lands below the other locals (`TWireTrap::kill`).
 - `TSpineBase::initWith` already clears the vertebrae; a separate `mSpine->reset()` before it adds three instructions.
 - `calcRootMatrix` levers (`wireTrap`): the up vector as an unnamed `TVec3<f32>(0, 1, 0)`; in-place `quat.mul(quat, spin)` instead of a third quaternion (-16); a named `J3DModel* model = getModel()` before `MTXCopy` (-8); declare `mtx`, then the quaternions, then the vectors.
