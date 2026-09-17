@@ -1313,7 +1313,7 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 			J3DFrameCtrl* ctrl
 			    = mMActor->getFrameCtrl(ANM_TYPE_BRK);
 			if (ctrl && ctrl->getFrame() > 0.5f * (f32)ctrl->getEnd()) {
-				mJumpSmokePos.set(mPosition.x, mPosition.y, mPosition.z);
+				mJumpSmokePos = mPosition;
 				mJumpSmokePos.y += 500.0f;
 				gpMarioParticleManager->emitAndBindToPosPtr(
 				    BWANWAN_JPA_MS_BWAN_KIRA, &mJumpSmokePos, 1, this);
@@ -1378,14 +1378,14 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 					if (mCoolDownTimer > 2400) {
 						if (mSpine->getLatestNerve()
 						    != &TNerveBWBark::theNerve())
-							mSpine->pushNerve(&TNerveBWBark::theNerve());
+							mSpine->setNext(&TNerveBWBark::theNerve());
 					}
 				}
 			} else {
 				if (gpMarDirector->unk58 % 20 == 0) {
-					u8 hp = getHitPoints();
-					if (hp < getSaveParam2()->mSLBWHitPointMax.get())
-						mHitPoints = hp + 1;
+					if (getHitPoints()
+					    < getSaveParam2()->mSLBWHitPointMax.get())
+						mHitPoints = getHitPoints() + 1;
 				}
 				mCoolDownTimer = 0;
 			}
@@ -1395,11 +1395,9 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		if (mSpine->getLatestNerve() == &TNerveBWGraphWander::theNerve()
 		    && mPicket->isTaken()) {
-			f32 pull = mPullVelocity.squared();
-			if (pull > 0.0f)
-				pull = JGeometry::TUtil<f32>::sqrt(pull);
+			f32 pull = mPullVelocity.length();
 			gpMSound->startSoundActorWithInfo(
-			    MSD_SE_BS_WANWAN_M_DRAG, mLeash->getRope()->mPoints[10].unkC,
+			    MSD_SE_BS_WANWAN_M_DRAG, mLeash->getRope()->mPoints[6].unkC,
 			    nullptr, pull, 0, 0, nullptr, 0, 4);
 		}
 	}
