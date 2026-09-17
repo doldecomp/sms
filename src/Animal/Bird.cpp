@@ -1,38 +1,835 @@
 #include <Animal/BirdNerve.hpp>
+#include <Animal/AnimalBase.hpp>
+#include <Enemy/Graph.hpp>
+#include <Enemy/WireBinder.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
+#include <JSystem/JGeometry/JGQuat4.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <M3DUtil/MActorAnm.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
+#include <Map/Map.hpp>
+#include <MoveBG/Item.hpp>
+#include <MoveBG/ItemManager.hpp>
+#include <MoveBG/MapObjBase.hpp>
+#include <MoveBG/MapObjManager.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/MSoundSE.hpp>
+#include <MSound/SoundEffects.hpp>
+#include <Player/MarioAccess.hpp>
 #include <Strategic/LiveActor.hpp>
+#include <Strategic/ObjManager.hpp>
+#include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
+#include <System/Application.hpp>
+#include <System/FlagManager.hpp>
+#include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
+#include <math.h>
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: no nerve body below is reconstructed; each carries its map size.
-// Defining them emits theNerve() and the destructor, both compiler-generated.
+// The .bas table: only fly/open/start/stop are named, the rest of the model's
+// .bck slots have no ambient sound.
+static const char* bird_bastable[] = {
+	nullptr,
+	"/scene/bird/bas/bird_fly.bas",
+	"/scene/bird/bas/bird_open.bas",
+	nullptr,
+	nullptr,
+	"/scene/bird/bas/bird_start.bas",
+	"/scene/bird/bas/bird_stop.bas",
+	nullptr,
+	nullptr,
+};
 
-// TODO: incorrect size. Map records 700 bytes.
-DEFINE_NERVE(TNerveAnimalBirdActionOnGround, TLiveActor) { return FALSE; }
+namespace {
 
-// TODO: incorrect size. Map records 312 bytes.
-DEFINE_NERVE(TNerveAnimalBirdChangeToCoin, TLiveActor) { return FALSE; }
+// The animations the ActionOnGround nerve picks between; index 8 (walk) is
+// special-cased into the WalkOnGround nerve instead of being played here.
+const int cRandomAnims[] = { 7, 4, 0, 2, 8 };
 
-// TODO: incorrect size. Map records 700 bytes.
-DEFINE_NERVE(TNerveAnimalBirdComeback, TLiveActor) { return FALSE; }
+// Body tint per mColorIndex: blue coin, yellow coin (the default), shine and
+// red coin.
+const GXColorS10 cColorTable[] = {
+	{ 0, 100, 255, 0 },
+	{ 0, 200, 0, 0 },
+	{ 255, 200, 0, 0 },
+	{ 255, 0, 0, 0 },
+};
 
-// TODO: incorrect size. Map records 800 bytes.
-DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor) { return FALSE; }
+const char* const cMatName = "_mat_body1";
 
-// TODO: incorrect size. Map records 692 bytes.
-DEFINE_NERVE(TNerveAnimalBirdLanding, TLiveActor) { return FALSE; }
+} // namespace
 
-// TODO: incorrect size. Map records 624 bytes.
-DEFINE_NERVE(TNerveAnimalBirdPreLanding, TLiveActor) { return FALSE; }
+TAnimalBird::TAnimalBird(const char* name)
+    : TSpineEnemy(name)
+{
+	mItem       = nullptr;
+	mWireBinder = nullptr;
+}
 
-// TODO: incorrect size. Map records 368 bytes.
-DEFINE_NERVE(TNerveAnimalBirdTakeoff, TLiveActor) { return FALSE; }
+void TAnimalBird::init(TLiveManager* live_manager)
+{
+	mManager = live_manager;
+	mManager->manageActor(this);
 
-// TODO: incorrect size. Map records 680 bytes.
-DEFINE_NERVE(TNerveAnimalBirdWaitOnGround, TLiveActor) { return FALSE; }
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("bird_man.bmd", 0);
 
-// TODO: incorrect size. Map records 896 bytes.
-DEFINE_NERVE(TNerveAnimalBirdWalkOnGround, TLiveActor) { return FALSE; }
+	mSpine->initWith(&TNerveAnimalBirdWaitOnGround::theNerve());
+
+	initParams();
+	initCollision();
+	initAnmSound();
+}
+
+// TODO: incorrect size. Map records 108 bytes for this and our body is
+// slightly different; the two getModel() calls and the (u16) narrowing of the
+// name index are what load() shows.
+void TAnimalBird::initTevColor(const GXColorS10* color)
+{
+	s32 index = getModel()->getModelData()->getMaterialName()->getIndex(
+	    cMatName);
+	SMS_InitPacket_OneTevColor(getModel(), index, GX_TEVREG1, color);
+}
+
+void TAnimalBird::initCollision()
+{
+	initHitActor(0x10000032, 0, 0, 50.0f, 50.0f, 70.0f, 80.0f);
+	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	mScaledBodyRadius = 35.0f;
+}
+
+void TAnimalBird::initParams()
+{
+	mHomePosition.x = mPosition.x;
+	mHomePosition.y = mPosition.y;
+	mHomePosition.z = mPosition.z;
+	mHomePosition.y += 90.0f;
+
+	mHomeRotation.x = mRotation.x;
+	mHomeRotation.y = mRotation.y;
+	mHomeRotation.z = mRotation.z;
+
+	mHitPoints      = getMaxHitPoints();
+	mWaterHitTimer  = 0;
+	mFloatingTimer  = 0;
+	mTurnDir        = 1.0f;
+	offLiveFlag(LIVE_FLAG_AIRBORNE);
+	mPowerRate = 1.0f - 0.1f * (MsRandF() - 0.5f);
+
+	if (TWireBinder::isOnWire(mPosition)) {
+		mWireBinder = new TWireBinder;
+		mWireBinder->init(mPosition);
+	}
+}
+
+void TAnimalBird::load(JSUMemoryInputStream& stream)
+{
+	TSpineEnemy::load(stream);
+
+	s32 eventID;
+	stream.read(&eventID, 4);
+
+	if (eventID >= 0)
+		mItem = TMapObjBaseManager::newAndRegisterObjByEventID(eventID, "鳥用");
+	else
+		mItem = TMapObjBaseManager::newAndRegisterObjByEventID(100, "");
+
+	switch (mItem->getActorType()) {
+	default:
+		mColorIndex = 1;
+		break;
+	case 0x20000013:
+		mColorIndex = 2;
+		break;
+	case 0x2000000F:
+		mColorIndex = 3;
+		break;
+	case 0x20000010:
+		mColorIndex = 0;
+		checkNotAppear(eventID);
+		break;
+	}
+
+	initTevColor(&cColorTable[mColorIndex]);
+}
+
+void TAnimalBird::loadAfter()
+{
+	JDrama::TNameRef::loadAfter();
+	MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_BIRD_DOL_FLYING1,
+	                                          &mPosition);
+	MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_BIRD_DOL_CHUN,
+	                                          &mPosition);
+}
+
+BOOL TAnimalBird::receiveMessage(THitActor* sender, u32 message)
+{
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return FALSE;
+
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                     nullptr,
+		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition,
+		                        0, 0.0f, 0, 0, 4);
+		behaveHitWater();
+		return TRUE;
+	}
+
+	if (message == HIT_MESSAGE_TAKE && mHolder == nullptr) {
+		onHitFlag(HIT_FLAG_NO_COLLISION);
+		mHolder = (TTakeActor*)sender;
+		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                     nullptr,
+		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		return TRUE;
+	}
+
+	if ((message == HIT_MESSAGE_PUT || message == HIT_MESSAGE_THROWN)
+	    && mHolder == (TTakeActor*)sender) {
+		mHolder = nullptr;
+		offHitFlag(HIT_FLAG_NO_COLLISION);
+		return TRUE;
+	}
+
+	switch (message) {
+	case HIT_MESSAGE_UNKB:
+		mHolder = nullptr;
+		if (isChanged() == false) {
+			mSpine->reset();
+			mSpine->setNext(&TNerveAnimalBirdChangeToCoin::theNerve());
+		} else {
+			kill();
+		}
+		return TRUE;
+
+	case HIT_MESSAGE_TRAMPLE:
+		if (sender->isActorType(0x1000000D)) {
+			if (isChanged() == false) {
+				mSpine->reset();
+				mSpine->setNext(&TNerveAnimalBirdChangeToCoin::theNerve());
+			} else {
+				receiveMessage(this, HIT_MESSAGE_SPRAYED_BY_WATER);
+			}
+			return TRUE;
+		}
+
+	default:
+		return TSpineEnemy::receiveMessage(sender, message);
+	}
+}
+
+void TAnimalBird::calcRootMatrix()
+{
+	if (mHolder != nullptr) {
+		MtxPtr mtx = mHolder->getTakingMtx();
+		MTXCopy(mtx, getModel()->getBaseTRMtx());
+	} else {
+		TSpineEnemy::calcRootMatrix();
+	}
+
+	getModel()->getBaseTRMtx()[1][3] += 35.0f;
+}
+
+void TAnimalBird::moveObject()
+{
+	if (mWaterHitTimer > 0)
+		mWaterHitTimer -= 1;
+
+	checkFalling();
+	checkChangeToItem();
+	updateSound();
+
+	TLiveActor::moveObject();
+}
+
+void TAnimalBird::bind()
+{
+	if (isCheckWithWireBinder() == false)
+		TLiveActor::bind();
+	else
+		mWireBinder->bind(this);
+}
+
+const char** TAnimalBird::getBasNameTable() const { return bird_bastable; }
+
+void TAnimalBird::behaveHitWater()
+{
+	if (mWaterHitTimer <= 0) {
+		mWaterHitTimer = getSaveParams()->mWaterproofTimerMax.get();
+		if (checkLiveFlag(LIVE_FLAG_AIRBORNE))
+			decHitPoints();
+	}
+}
+
+// TODO: incorrect size. Map records 244 bytes; ours is smaller because retail
+// expands theNerve() and getLatestNerve() here while our out-of-line copy
+// keeps them as calls. The predicate itself is what bind() and moveObject()
+// show.
+bool TAnimalBird::isOnGroundNerve() const
+{
+	return mSpine->getLatestNerve()
+	        == &TNerveAnimalBirdWaitOnGround::theNerve()
+	    || mSpine->getLatestNerve()
+	        == &TNerveAnimalBirdActionOnGround::theNerve()
+	    || mSpine->getLatestNerve()
+	        == &TNerveAnimalBirdWalkOnGround::theNerve();
+}
+
+// TODO: incorrect size. Map records 408 bytes.
+void TAnimalBird::checkFalling()
+{
+	if (isOnGroundNerve()) {
+		if (checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+			s32 limit = getSaveParams()->mFloatingTimerMax.get();
+			mFloatingTimer += 1;
+			if (limit < mFloatingTimer) {
+				mSpine->reset();
+				mSpine->setNext(&TNerveAnimalBirdTakeoff::theNerve());
+			}
+		} else {
+			mFloatingTimer = 0;
+		}
+	}
+}
+
+// TODO: incorrect size. Map records 272 bytes.
+void TAnimalBird::checkChangeToItem()
+{
+	if (isChangeToItem()) {
+		mSpine->reset();
+		mSpine->setNext(&TNerveAnimalBirdChangeToCoin::theNerve());
+	}
+}
+
+void TAnimalBird::checkNotAppear(s32 event_id)
+{
+	if (TFlagManager::getInstance()->getBlueCoinFlag(
+	        gpMarDirector->getCurrentMap(), event_id))
+		onLiveFlag(LIVE_FLAG_DEAD);
+}
+
+// TODO: incorrect size. Map records 428 bytes.
+void TAnimalBird::updateSound()
+{
+	if (isFlying())
+		gpMSound->startSeRandPlay(MSD_SE_OBJ_BIRD_DOL_FLYING1,
+		                          mInstanceIndex);
+
+	if (isOnGroundNerve())
+		gpMSound->startSeRandPlay(MSD_SE_OBJ_BIRD_DOL_CHUN, mInstanceIndex);
+}
+
+bool TAnimalBird::isWantToFly() const
+{
+	return (mWaterHitTimer > 0 || isFindMario()) && MsRandF() < 0.5f;
+}
+
+bool TAnimalBird::isWantToAction() const
+{
+	s32 over = mSpine->getTime() - getSaveParams()->mActionTimer.get();
+	if (over < 0)
+		return false;
+
+	f32 chance = (f32)over / (f32)getSaveParams()->mActionTimerAdd.get();
+	return MsRandF() < chance;
+}
+
+bool TAnimalBird::isWantToRest() const
+{
+	return getSaveParams()->mWalkTimer.get() < mSpine->getTime();
+}
+
+bool TAnimalBird::isFindMario() const
+{
+	if (getSaveParams()->mSearchHeight.get()
+	    < fabsf(SMS_GetMarioPos().y - mPosition.y))
+		return false;
+
+	f32 rate = mPowerRate;
+	return isInSight(SMS_GetMarioPos(),
+	                 rate * getSaveParams()->mSearchLength.get(),
+	                 rate * getSaveParams()->mSearchAngle.get(),
+	                 rate * getSaveParams()->mSearchAware.get())
+	    ? true
+	    : false;
+}
+
+bool TAnimalBird::isChangeToItem() const
+{
+	return !isChanged() && getHitPoints() == 0;
+}
+
+bool TAnimalBird::isGroundShaken() const { return false; }
+
+// TODO: incorrect size. Map records 212 bytes.
+bool TAnimalBird::isCheckWithWireBinder() const
+{
+	return mWireBinder != nullptr
+	    && (isOnGroundNerve()
+	        || mSpine->getLatestNerve()
+	            == &TNerveAnimalBirdPreLanding::theNerve());
+}
+
+bool TAnimalBird::isChanged() const
+{
+	return mSpine->getLatestNerve()
+	    == &TNerveAnimalBirdChangeToCoin::theNerve();
+}
+
+bool TAnimalBird::isFlying() const
+{
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	return nerve == &TNerveAnimalBirdGraphWander::theNerve()
+	    || nerve == &TNerveAnimalBirdComeback::theNerve();
+}
+
+// TODO: incorrect size. Map records 284 bytes.
+void TAnimalBird::doDropCoin()
+{
+	TMapObjBase* item = mItem;
+	if (item->isActorType(0x2000000E))
+		item = gpItemManager->makeObjAppear(0x2000000E);
+
+	if (item != nullptr) {
+		item->appear();
+		item->JSGSetTranslation(mPosition);
+		item->mVelocity.set(0.0f, -10.0f, 0.0f);
+		item->offLiveFlag(LIVE_FLAG_UNK10);
+		item->onLiveFlag(LIVE_FLAG_AIRBORNE);
+	}
+}
+
+void TAnimalBird::doFlyToCurPathNode()
+{
+	JGeometry::TVec3<f32> toGoal = getUnkF4().getPoint();
+	toGoal.sub(mPosition);
+
+	f32 distance = toGoal.length();
+	if (distance < 100.0f)
+		return;
+
+	f32 marchSpeed = getMyMarchSpeed() * SMSGetAnmFrameRate();
+	f32 turnRate  = getSaveParams()->mTurnSpeed.get();
+	f32 turnSpeed = turnRate * SMSGetAnmFrameRate();
+
+	if (distance <= 2.0f * calcMinimumTurnRadius(marchSpeed, turnSpeed))
+		turnSpeed = calcTurnSpeedToReach(marchSpeed, 0.5f * distance);
+
+	TAnimalBase::getRotationFlyToDir(&mRotation, toGoal, marchSpeed,
+	                                 turnSpeed);
+
+	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
+	JGeometry::TVec3<f32> velocity(0.0f, 0.0f, marchSpeed);
+	quat.rotate(velocity, velocity);
+	velocity.scale(1.0f - getWaterDamageRate());
+	velocity.y -= getWaterPowerY();
+	mLinearVelocity = velocity;
+}
+
+// TODO: incorrect size. Map records 408 bytes.
+void TAnimalBird::doWalk()
+{
+	mGravity = 0.15f;
+
+	f32 torque
+	    = getSaveParams()->mWalkingTorqueY.get() * SMSGetAnmFrameRate();
+	mRotation.y = MsAngleWrap(mTurnDir * torque + mRotation.y);
+
+	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
+	JGeometry::TVec3<f32> velocity(0.0f, 0.0f,
+	                               getSaveParams()->mWalkingSpeed.get());
+	quat.rotate(velocity, velocity);
+	mLinearVelocity = velocity;
+}
+
+bool TAnimalBird::doLanding(bool takeoff)
+{
+	if (takeoff) {
+		f32 marchSpeed = getMyMarchSpeed() * SMSGetAnmFrameRate();
+		JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
+		JGeometry::TVec3<f32> velocity(0.0f, 0.0f, marchSpeed);
+		quat.rotate(velocity, velocity);
+		velocity.y = 0.0f;
+		mVelocity  = velocity;
+	}
+
+	bool landed = false;
+
+	JGeometry::TVec3<f32> acceleration;
+	acceleration.zero();
+
+	getFootGroundHeight();
+
+	if (checkLiveFlag(LIVE_FLAG_AIRBORNE))
+		acceleration.y = -getSaveParams()->mLandingGravityY.get();
+	else
+		landed = true;
+
+	mRotation.x = mHomeRotation.x;
+	mRotation.z = mHomeRotation.z;
+
+	f32 torque
+	    = getSaveParams()->mLandingTorqueY.get() * SMSGetAnmFrameRate();
+	f32 turn = JGeometry::TUtil<f32>::clamp(
+	    MsAngleDiff(mHomeRotation.y, mRotation.y), -torque, torque);
+	mRotation.y = MsAngleWrap(mRotation.y + turn);
+
+	mLinearVelocity = acceleration;
+
+	JGeometry::TVec3<f32> velocity = mVelocity;
+	JGeometry::TVec3<f32> forward(0.0f, 0.0f, velocity.length());
+	forward.scale(getSaveParams()->mLandingFric.get());
+	SMS_Eular2Quat(mRotation).rotate(forward, forward);
+	mVelocity = forward;
+
+	return landed && fabsf(turn) < 0.01f;
+}
+
+// TODO: incorrect size. Map records 388 bytes.
+void TAnimalBird::doGotoRandomNextGraphNode()
+{
+	goToRandomNextGraphNode();
+
+	JGeometry::TVec3<f32> goal = getUnk104().getPoint();
+	goal.x += 200.0f * (MsRandF() - 0.5f);
+	goal.y += 200.0f * (MsRandF() - 0.5f);
+	goal.z += 200.0f * (MsRandF() - 0.5f);
+
+	setGoalPath(TPathNode(goal));
+}
+
+void TAnimalBird::setGoalToComeback() { setGoalPath(TPathNode(mHomePosition)); }
+
+void TAnimalBird::setParamsOnFloating()
+{
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	mGravity       = 0.0f;
+	mFloatingTimer = 0;
+}
+
+void TAnimalBird::setParamsOnLanding() { }
+
+void TAnimalBird::setBckAnm(int index)
+{
+	getMActor()->setBckFromIndex(index);
+	setCurAnmSound();
+}
+
+f32 TAnimalBird::getMyMarchSpeed() const
+{
+	return mPowerRate * getSaveParams()->mMarchSpeed.get();
+}
+
+f32 TAnimalBird::getWaterDamageRate() const
+{
+	return (f32)mWaterHitTimer
+	    / (f32)getSaveParams()->mWaterproofTimerMax.get();
+}
+
+f32 TAnimalBird::getWaterPowerY() const
+{
+	return getSaveParams()->mWaterPowerY.get() * getWaterDamageRate();
+}
+
+f32 TAnimalBird::getFootGroundHeight()
+{
+	JGeometry::TVec3<f32> point;
+
+	if (mWireBinder != nullptr) {
+		mWireBinder->getPoint(&point, mHomePosition);
+		return point.y;
+	}
+
+	return gpMap->checkGround(mPosition, &mGroundPlane);
+}
+
+TAnimalBirdParams::TAnimalBirdParams(const char* prm)
+    : TSpineEnemyParams(prm)
+    , PARAM_INIT(mMarchSpeed, 5.0f)
+    , PARAM_INIT(mTurnSpeed, 0.1f)
+    , PARAM_INIT(mReturnTimer, 1800)
+    , PARAM_INIT(mSearchLength, 800.0f)
+    , PARAM_INIT(mSearchHeight, 600.0f)
+    , PARAM_INIT(mSearchAware, 400.0f)
+    , PARAM_INIT(mSearchAngle, 90.0f)
+    , PARAM_INIT(mActionTimer, 100)
+    , PARAM_INIT(mWaterproofTimerMax, 45)
+    , PARAM_INIT(mFloatingTimerMax, 30)
+    , PARAM_INIT(mLandingGravityY, 1.0f)
+    , PARAM_INIT(mLandingTorqueY, 2.0f)
+    , PARAM_INIT(mWalkingTorqueY, 0.5f)
+    , PARAM_INIT(mWalkingSpeed, 2.0f)
+    , PARAM_INIT(mWalkTimer, 100)
+    , PARAM_INIT(mLandingFric, 0.95f)
+    , PARAM_INIT(mActionTimerAdd, 300)
+    , PARAM_INIT(mWaterPowerY, 15.0f)
+{
+	TParams::load(mPrmPath);
+}
+
+TAnimalBirdManager::TAnimalBirdManager(const char* name)
+    : TEnemyManager(name)
+{
+}
+
+void TAnimalBirdManager::load(JSUMemoryInputStream& stream)
+{
+	unk38 = new TAnimalBirdParams("/Animal/bird.prm");
+	TEnemyManager::load(stream);
+}
+
+void TAnimalBirdManager::loadAfter()
+{
+	JDrama::TNameRef::loadAfter();
+	MSoundSESystem::MSRandPlay::createRandPlayVec(
+	    MSD_SE_OBJ_BIRD_DOL_FLYING1, mObjNum);
+	MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_OBJ_BIRD_DOL_CHUN,
+	                                              mObjNum);
+}
+
+void TAnimalBirdManager::createModelData()
+{
+	static const TModelDataLoadEntry entry[] = {
+		{ "bird_man.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ nullptr, 0, 0 },
+	};
+
+	createModelDataArray(entry);
+}
+
+DEFINE_NERVE(TNerveAnimalBirdWaitOnGround, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	if (spine->getTime() == 0)
+		bird->setBckAnm(TAnimalBird::BIRD_ANM_WAIT);
+
+	if (bird->isWantToFly()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdTakeoff::theNerve());
+		return TRUE;
+	}
+
+	if (bird->checkCurAnmEnd(0)) {
+		if (bird->isWantToAction()) {
+			spine->pushAfterCurrent(
+			    &TNerveAnimalBirdActionOnGround::theNerve());
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveAnimalBirdActionOnGround, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		int anm = cRandomAnims[(int)(5.0f * MsRandF())];
+		if (anm == TAnimalBird::BIRD_ANM_WALK) {
+			spine->pushAfterCurrent(
+			    &TNerveAnimalBirdWalkOnGround::theNerve());
+			return TRUE;
+		}
+
+		MActor* actor = bird->getMActor();
+		if (!actor->checkCurBckFromIndex(anm))
+			actor->setBckFromIndex(anm);
+	}
+
+	if (bird->isWantToFly()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdTakeoff::theNerve());
+		return TRUE;
+	}
+
+	if (bird->checkCurAnmEnd(0)) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdWaitOnGround::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveAnimalBirdWalkOnGround, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		bird->mTurnDir *= -1.0f;
+		bird->setBckAnm(TAnimalBird::BIRD_ANM_WALK);
+	}
+
+	if (bird->isWantToFly()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdTakeoff::theNerve());
+		return TRUE;
+	}
+
+	bird->doWalk();
+
+	if (bird->isWantToRest()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdWaitOnGround::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveAnimalBirdTakeoff, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		bird->setBckAnm(TAnimalBird::BIRD_ANM_START);
+		bird->setParamsOnFloating();
+		J3DFrameCtrl* ctrl = bird->getMActor()->getFrameCtrl(0);
+		ctrl->setRate(3.0f * ctrl->getRate());
+		gpMSound->startSoundActor(MSD_SE_OBJ_BIRD_DOL_TO_FLY1,
+		                          &bird->mPosition, 0, nullptr, 0, 4);
+	}
+
+	if (bird->checkCurAnmEnd(0)) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdGraphWander::theNerve());
+		bird->setParamsOnFloating();
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		bird->mVelocity.zero();
+		bird->getTracer()->reset();
+		bird->goToShortestNextGraphNode();
+	}
+
+	if (spine->getTime() == 0 || bird->isReachedToGoal()) {
+		bird->doGotoRandomNextGraphNode();
+
+		if (bird->mPosition.y <= bird->getUnkF4().getPoint().y)
+			bird->setBckAnm(TAnimalBird::BIRD_ANM_FLY);
+		else
+			bird->setBckAnm(TAnimalBird::BIRD_ANM_STOP);
+	}
+
+	bird->checkCurAnmEnd(0);
+
+	if (bird->getSaveParams()->mReturnTimer.get() < spine->getTime()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdComeback::theNerve());
+		return TRUE;
+	}
+
+	bird->doFlyToCurPathNode();
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveAnimalBirdChangeToCoin, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		bird->onLiveFlag(LIVE_FLAG_DEAD);
+
+		if (bird->mItem->isActorType(0x20000013)) {
+			bird->mItem->JSGSetTranslation(bird->mPosition);
+			((TShine*)bird->mItem)->appearWithDemo("鳥シャインカメラ");
+		} else {
+			bird->doDropCoin();
+		}
+	}
+
+	return TRUE;
+}
+
+DEFINE_NERVE(TNerveAnimalBirdComeback, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		bird->setGoalToComeback();
+		bird->setBckAnm(TAnimalBird::BIRD_ANM_FLY);
+	}
+
+	bird->doFlyToCurPathNode();
+
+	if (bird->isFindMario()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdGraphWander::theNerve());
+		return TRUE;
+	}
+
+	if (bird->isReachedToGoal()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdPreLanding::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveAnimalBirdPreLanding, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	if (spine->getTime() == 0) {
+		bird->setBckAnm(TAnimalBird::BIRD_ANM_STOP);
+		J3DFrameCtrl* ctrl = bird->getMActor()->getFrameCtrl(0);
+		ctrl->setRate(1.5f * ctrl->getRate());
+		bird->doLanding(true);
+	}
+
+	if (bird->isFindMario()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdGraphWander::theNerve());
+		return TRUE;
+	}
+
+	if (bird->doLanding(false)) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdLanding::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+DEFINE_NERVE(TNerveAnimalBirdLanding, TLiveActor)
+{
+	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
+
+	J3DFrameCtrl* ctrl = bird->getMActor()->getFrameCtrl(0);
+
+	if (spine->getTime() == 0) {
+		bird->mVelocity.zero();
+		bird->setBckAnm(TAnimalBird::BIRD_ANM_START);
+		ctrl->setAttribute(J3DFrameCtrl::ATTR_ONCE_AND_RESET);
+		ctrl->setFrame(ctrl->getEnd());
+		ctrl->setRate(-1.0f * ctrl->getRate());
+	}
+
+	if (bird->isFindMario()) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdGraphWander::theNerve());
+		return TRUE;
+	}
+
+	if (ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)) {
+		spine->pushAfterCurrent(&TNerveAnimalBirdWaitOnGround::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
