@@ -600,22 +600,17 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 			                              footMtx[2][3], &checkData);
 			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 
-				// A lot of stuff is not matching with these copies
-				Vec currentMtxDir;
-				currentMtxDir.x = J3DSys::mCurrentMtx[0][0];
-				currentMtxDir.y = J3DSys::mCurrentMtx[1][0];
-				currentMtxDir.z = J3DSys::mCurrentMtx[2][0];
-
-				Vec normalDir;
-				normalDir.x = -checkData->getNormal().x;
-				normalDir.y = -checkData->getNormal().y;
-				normalDir.z = -checkData->getNormal().z;
-
-				Vec currentNormalCross1;
+				Vec currentMtxDir = { J3DSys::mCurrentMtx[0][0],
+					                  J3DSys::mCurrentMtx[1][0],
+					                  J3DSys::mCurrentMtx[2][0] };
+				Vec normalDir     = { -checkData->getNormal().x,
+					                  -checkData->getNormal().y,
+					                  -checkData->getNormal().z };
 				Vec currentNormalCross2;
+				Vec currentNormalCross1;
 				PSVECCrossProduct(&currentMtxDir, &normalDir,
 				                  &currentNormalCross1);
-				PSVECCrossProduct(&normalDir, &currentMtxDir,
+				PSVECCrossProduct(&normalDir, &currentNormalCross1,
 				                  &currentNormalCross2);
 				PSVECNormalize(&currentNormalCross1, &currentNormalCross1);
 				PSVECNormalize(&currentNormalCross2, &currentNormalCross2);
@@ -724,22 +719,17 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 			                              footMtx[2][3], &checkData);
 			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 
-				// A lot of stuff is not matching with these copies
-				Vec currentMtxDir;
-				currentMtxDir.x = J3DSys::mCurrentMtx[0][0];
-				currentMtxDir.y = J3DSys::mCurrentMtx[1][0];
-				currentMtxDir.z = J3DSys::mCurrentMtx[2][0];
-
-				Vec normalDir;
-				normalDir.x = -checkData->getNormal().x;
-				normalDir.y = -checkData->getNormal().y;
-				normalDir.z = -checkData->getNormal().z;
-
-				Vec currentNormalCross1;
+				Vec currentMtxDir = { J3DSys::mCurrentMtx[0][0],
+					                  J3DSys::mCurrentMtx[1][0],
+					                  J3DSys::mCurrentMtx[2][0] };
+				Vec normalDir     = { -checkData->getNormal().x,
+					                  -checkData->getNormal().y,
+					                  -checkData->getNormal().z };
 				Vec currentNormalCross2;
+				Vec currentNormalCross1;
 				PSVECCrossProduct(&currentMtxDir, &normalDir,
 				                  &currentNormalCross1);
-				PSVECCrossProduct(&normalDir, &currentMtxDir,
+				PSVECCrossProduct(&normalDir, &currentNormalCross1,
 				                  &currentNormalCross2);
 				PSVECNormalize(&currentNormalCross1, &currentNormalCross1);
 				PSVECNormalize(&currentNormalCross2, &currentNormalCross2);
