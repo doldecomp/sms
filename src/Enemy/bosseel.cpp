@@ -317,8 +317,7 @@ void TBEelTears::setMActorAndKeeper()
 
 void TBEelTears::moveObject()
 {
-	TBEelTearsSaveLoadParams* params = mTearsParams;
-	f32 liveHeight                   = params->mSLTearsLiveHeight.get();
+	f32 liveHeight = mTearsParams->mSLTearsLiveHeight.get();
 	mVelocity.x *= 0.9f;
 	mVelocity.z *= 0.9f;
 	mPosition.x += mVelocity.x;
@@ -332,10 +331,10 @@ void TBEelTears::moveObject()
 	}
 
 	f32 scale        = mScaling.x;
-	s32 attackRadius = params->mSLTearsAttackRadius.get();
-	s32 attackHeight = params->mSLTearsAttackHeight.get();
-	s32 damageRadius = params->mSLTearsDamageRadius.get();
-	s32 damageHeight = params->mSLTearsDamageHeight.get();
+	s32 attackRadius = mTearsParams->mSLTearsAttackRadius.get();
+	s32 attackHeight = mTearsParams->mSLTearsAttackHeight.get();
+	s32 damageRadius = mTearsParams->mSLTearsDamageRadius.get();
+	s32 damageHeight = mTearsParams->mSLTearsDamageHeight.get();
 	setHitParams(attackRadius * scale, attackHeight * scale,
 	             damageRadius * scale, damageHeight * scale);
 
@@ -436,8 +435,7 @@ BOOL TBEelTears::receiveMessage(THitActor*, u32 message)
 			mSpine->pushNerve(&TNerveBEelTearsWaterHit::theNerve());
 
 		if (mSpine->getCurrentNerve() == &TNerveBEelTearsWaterHit::theNerve()) {
-			MActor* actor = mMActor;
-			actor->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
+			getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		}
 		return true;
 	}
@@ -1193,6 +1191,18 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// TODO: retail calls this instead of expanding it into TNerveBossEelDie, and
+// the honest lever for that is the statement budget, not a pragma. Measured in
+// a scratch TU with the game flags: a plain callee reached at depth 1 inlines up
+// to a cost of 14 and is called at 15, where every statement costs 1, an `else`
+// costs 1, a `for`/`while` costs 1 for itself plus its init and increment
+// expressions plus one extra for being a loop, and statements a callee gains by
+// expanding its own inlines cost nothing. This body costs 10 (two stores, the
+// `for` at 4, four loop statements), so it still expands; the original therefore
+// spelled about five more statements here that leave no trace in the 0xcc bytes.
+// Named locals for `mCoins[i]` and the `getMActor()->getModel()->getAnmMtx(0)`
+// chain would buy three of the five, but nothing in the asm chooses them, so the
+// pragma stays until better evidence turns up.
 #pragma dont_inline on
 void TBossEelHeartCoin::generate(JGeometry::TVec3<f32>& position)
 {
@@ -1640,6 +1650,18 @@ void TBossEel::shedTears(MtxPtr spawnMtx)
 	tears->mVelocity = direction;
 }
 
+// TODO: retail calls this from TNerveBossEelSleepOnBottom::execute and
+// TBossEelTooth::receiveMessage instead of expanding it, so the body must cost
+// 15 statements under the measured depth-1 budget (see the note on
+// TBossEelHeartCoin::generate). This spelling costs 13: one store, the outer
+// if/else at 6, and the four trailing statements. Writing the index selection as
+// two if/else pairs reaches 15 and makes both callers match with no pragma, but
+// it replaces retail's "default then override" codegen (`li r3,0` hoisted above
+// the toggle test, then a conditional `li r3,1`) and drops this function to
+// 91.3%, so the pragma is the smaller lie until the real two statements turn up.
+// Also short by 0x30 of frame (0x28 vs 0x58) with every instruction matching; an
+// unreferenced `Mtx` local does not grow it here, so the missing locals belong to
+// an inline expansion, most likely TBossEelEye::setBckAnm's accessor chain.
 #pragma dont_inline on
 void TBossEel::forceShedTears(bool rearEyes)
 {
