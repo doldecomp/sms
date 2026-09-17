@@ -461,23 +461,7 @@ BOOL TMario::jumpCatch()
 		break;
 
 	case 1: {
-		bool isStrong = true;
-		if (checkUnk114(UNK114_FLAG_UNK100) == true)
-			isStrong = false;
-
-		if (unk2A8.y - mPosition.y <= mDeParams.mDamageFallHeight.get())
-			isStrong = false;
-
-		if (onYoshi())
-			isStrong = false;
-
-		if (mGroundPlane->isThing4())
-			isStrong = false;
-
-		if (mVel.y > -70.0f)
-			isStrong = false;
-
-		if (isStrong && checkFlag(MARIO_FLAG_ON_SAND)) {
+		if (askStrongGroundTouch() && checkFlag(MARIO_FLAG_ON_SAND)) {
 			sinkInSandEffect();
 			changePlayerStatus(MARIO_STATUS_FOOT_DOWN, 1, false);
 		} else {
