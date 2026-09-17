@@ -92,7 +92,8 @@ f32 TFlyEnemy::getGravityY() const
 {
 	if (mSpine->getCurrentNerve() == &TNerveFlyEnemyChaseFly::theNerve())
 		return mGravityY;
-	return mFlyParams->mSLNormalFlyGravityY.get();
+	f32 gravity = mFlyParams->getSLNormalFlyGravityY();
+	return gravity;
 }
 
 void TFlyEnemy::reset()
@@ -105,6 +106,10 @@ void TFlyEnemy::reset()
 	unk1A5     = false;
 }
 
+// TODO: 90.2%. Instruction-identical apart from the final
+// JGeometry::TVec3<f32>::sub, which the ROM calls out of line and our build
+// expands -- the per-call-site TVec3 inlining divergence recorded in
+// docs/catalog/codegen-tells.md. The 40-byte frame gap follows from it.
 void TFlyEnemy::fly()
 {
 	JGeometry::TVec3<f32> nextPos = mPosition;
@@ -144,6 +149,8 @@ void TFlyEnemy::fly()
 	mLinearVelocity = step;
 }
 
+// TODO: 98.7%, instruction-identical; our frame is 8 bytes bigger, i.e. one
+// inline-expansion temporary too many.
 void TFlyEnemy::calcChaseParam()
 {
 	JGeometry::TVec3<f32> toMario(SMS_GetMarioPos().x - mPosition.x,
@@ -212,13 +219,16 @@ void TFlyEnemy::flyMove()
 	// TODO: the magnitude is computed and discarded; debug leftover.
 	VECMag((Vec*)&toGoal);
 
-	f32 diff
-	    = MsAngleDiff(MsAngleWrap(MsGetRotFromZaxisY(toGoal)), mRotation.y);
-	if (diff > 0.0f)
-		diff = diff > mTurnSpeed ? mTurnSpeed : diff;
-	else if (!(diff > -mTurnSpeed))
-		diff = -mTurnSpeed;
-	mRotation.y = MsAngleWrap(mRotation.y + diff);
+	f32 goalYaw = MsAngleWrap(MsGetRotFromZaxisY(toGoal));
+	f32 diff    = MsAngleDiff(goalYaw, mRotation.y);
+	f32 turn;
+	if (diff > 0.0f) {
+		turn = diff > mTurnSpeed ? mTurnSpeed : diff;
+	} else {
+		diff = diff > -mTurnSpeed ? diff : -mTurnSpeed;
+		turn = diff;
+	}
+	mRotation.y = MsAngleWrap(mRotation.y + turn);
 
 	JGeometry::TVec3<f32> linear = mLinearVelocity;
 	f32 yaw                      = mRotation.y;
@@ -229,6 +239,9 @@ void TFlyEnemy::flyMove()
 	mLinearVelocity = linear;
 }
 
+// TODO: 99.4%. Frame exact; the distance test allocates f0/f1 the other way
+// round and the MsGetRotFromZaxis call sets up r3 before r4, so the velocity
+// copy sits above the returned rotation instead of below it.
 DEFINE_NERVE(TNerveFlyEnemyNormalFly, TLiveActor)
 {
 	TFlyEnemy* flyEnemy = (TFlyEnemy*)spine->getBody();
@@ -238,7 +251,7 @@ DEFINE_NERVE(TNerveFlyEnemyNormalFly, TLiveActor)
 
 	if (flyEnemy->unk1A4 && flyEnemy->mFlyTime > 500) {
 		flyEnemy->updateSquareToMario();
-		f32 chaseDist = flyEnemy->mFlyParams->mSLChaseDist.get();
+		f32 chaseDist = flyEnemy->mFlyParams->getSLChaseDist();
 		if (flyEnemy->getDistToMarioSquared() < chaseDist * chaseDist) {
 			spine->pushAfterCurrent(&TNerveFlyEnemyChaseFly::theNerve());
 			return TRUE;
@@ -246,7 +259,7 @@ DEFINE_NERVE(TNerveFlyEnemyNormalFly, TLiveActor)
 	} else if (!flyEnemy->mIsGold && flyEnemy->isFindMario(1.0f)
 	           && flyEnemy->mFlyTime > 100) {
 		flyEnemy->updateSquareToMario();
-		f32 chaseDist = flyEnemy->mFlyParams->mSLChaseDist.get();
+		f32 chaseDist = flyEnemy->mFlyParams->getSLChaseDist();
 		if (flyEnemy->getDistToMarioSquared() < chaseDist * chaseDist) {
 			spine->pushAfterCurrent(&TNerveFlyEnemyChaseFly::theNerve());
 			return TRUE;
@@ -262,6 +275,13 @@ DEFINE_NERVE(TNerveFlyEnemyNormalFly, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 95.0%. Two residuals. (1) The ROM calls MsSin, MsCos and
+// TVec3::set<f32> out of line from the pasted flyMove body while our build
+// expands them and emits weak JMASSin/JMASCos instead; adding
+// MsGetVecFromRotY bought one level and a second fabricated wrapper is not
+// justified, so this is the MapObjBall-class per-call-site inlining
+// divergence. (2) The frame is 24 bytes short and one `fmr` is missing from
+// the negative turn clamp.
 DEFINE_NERVE(TNerveFlyEnemyChaseFly, TLiveActor)
 {
 	TFlyEnemy* flyEnemy = (TFlyEnemy*)spine->getBody();
@@ -274,10 +294,10 @@ DEFINE_NERVE(TNerveFlyEnemyChaseFly, TLiveActor)
 
 	f32 rate = 1.0f;
 	if (!flyEnemy->unk1A5) {
+		f32 marchSpeedSq
+		    = flyEnemy->getMarchSpeed() * flyEnemy->getMarchSpeed();
 		flyEnemy->unk1A8.y = 0.1f;
-		rate = flyEnemy->unk1A8.length()
-		       / (flyEnemy->getMarchSpeed() * flyEnemy->getMarchSpeed())
-		       * TFlyEnemy::mTestSp;
+		rate = flyEnemy->unk1A8.length() / marchSpeedSq * TFlyEnemy::mTestSp;
 	} else if (flyEnemy->mFlyState == TFlyEnemy::FLY_STATE_NORMAL) {
 		rate = 2.0f;
 	}
@@ -305,15 +325,20 @@ DEFINE_NERVE(TNerveFlyEnemyChaseFly, TLiveActor)
 		toGoal.sub(flyEnemy->mPosition);
 		VECMag((Vec*)&toGoal);
 
-		f32 diff = MsAngleDiff(MsAngleWrap(MsGetRotFromZaxisY(toGoal)),
-		                       flyEnemy->mRotation.y);
-		if (diff > 0.0f)
-			diff = diff > flyEnemy->getTurnSpeed() ? flyEnemy->getTurnSpeed()
-			                                       : diff;
-		else if (!(diff > -flyEnemy->getTurnSpeed()))
-			diff = -flyEnemy->getTurnSpeed();
-		flyEnemy->mRotation.y
-		    = MsAngleWrap(flyEnemy->mRotation.y + diff);
+		f32 goalYaw = MsAngleWrap(MsGetRotFromZaxisY(toGoal));
+		f32 diff    = MsAngleDiff(goalYaw, flyEnemy->mRotation.y);
+		f32 turn;
+		if (diff > 0.0f) {
+			turn = diff > flyEnemy->getTurnSpeed()
+			           ? flyEnemy->getTurnSpeed()
+			           : diff;
+		} else {
+			diff = diff > -flyEnemy->getTurnSpeed()
+			           ? diff
+			           : -flyEnemy->getTurnSpeed();
+			turn = diff;
+		}
+		flyEnemy->mRotation.y = MsAngleWrap(flyEnemy->mRotation.y + turn);
 
 		JGeometry::TVec3<f32> linear = flyEnemy->mLinearVelocity;
 		f32 yaw                      = flyEnemy->mRotation.y;
@@ -385,6 +410,9 @@ TSpineEnemy* TKillerManager::createEnemyInstance() { return new TKiller; }
 
 // The rolling killer spins its body joint around Z on top of whatever the
 // animation produced, then re-applies the body scale.
+// TODO: 93.0%. Instruction-identical; the ROM keeps the roll matrix's address
+// in r31 across the two MTXConcat pairs and has 4 more bytes below it, so the
+// local it declared after the matrix is still missing.
 static int KillerBodyCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -451,8 +479,10 @@ void TKiller::init(TLiveManager* manager)
 	onHitFlag(HIT_FLAG_UNK40000000);
 
 	J3DModel* model = getMActor()->getModel();
-	if (!model->getSkinDeform())
-		model->setSkinDeform(new J3DSkinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	if (!model->getSkinDeform()) {
+		J3DSkinDeform* deform = new J3DSkinDeform;
+		model->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	}
 
 	getMActor()->resetDL();
 
@@ -517,6 +547,9 @@ void TKiller::behaveToWater(THitActor* water)
 	}
 }
 
+// TODO: 91.7%. Same instructions in the same order; the ROM hoists the
+// scatter matrix's address into r31 across the loop and we recompute it, which
+// shifts every callee-saved register by one and leaves the frame 8 short.
 void TKiller::genEventCoin()
 {
 	int coinNum = 2;
@@ -631,12 +664,14 @@ bool TKiller::isCollidMove(THitActor* other)
 	return true;
 }
 
+// TODO: 99.7%. Frame exact; the ROM parks the save-param pointer in r5 and we
+// use r4.
 void TKiller::flyBehavior()
 {
-	mTurnSpeed = mKillerParams->mSLTurnSpeedLow.get();
+	mTurnSpeed = mKillerParams->getSLTurnSpeedLow();
 
-	if (mSpine->getTime() > mKillerParams->mSLChaseTimer.get())
-		mGravityY -= mKillerParams->mSLWaterAddGravityY.get();
+	if (mSpine->getTime() > mKillerParams->getSLChaseTimer())
+		mGravityY -= mKillerParams->getSLWaterAddGravityY();
 
 	if (checkCurAnmEnd(KILLER_ANM_DOWN1)) {
 		if (isBckAnm(KILLER_ANM_SEARCH1))
@@ -646,6 +681,9 @@ void TKiller::flyBehavior()
 	mRollAngle += 2.5f;
 }
 
+// TODO: 99.9%, frame 0x20 against the ROM's 0x28. TBombHei::changeOut and
+// TSmallEnemy::changeOut are the same code and are 8 bytes short in exactly
+// the same way; see docs/catalog/frame-gaps.md.
 void TKiller::changeOut()
 {
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
@@ -700,6 +738,7 @@ void TKiller::setColorType()
 	}
 }
 
+// TODO: 99.9%, instruction-identical with a 16-byte frame gap.
 void TKiller::bind()
 {
 	if (mSpine->getCurrentNerve() == &TNerveFlyEnemyChaseFly::theNerve()
@@ -717,11 +756,11 @@ void TKiller::bind()
 			TBGWallCheckRecord record(mPosition.x, mPosition.y + mHeadHeight,
 			                          mPosition.z, 2.0f * mBodyRadius, 1, 0);
 			if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
-				TLiveActor* rider
-				    = (TLiveActor*)record.mResultWalls[0]->getActor();
+				const TLiveActor* rider
+				    = record.mResultWalls[0]->getActor();
 				if (rider) {
 					if (rider->isActorType(0x4000000A))
-						rider->kill();
+						((TLiveActor*)rider)->kill();
 				}
 				mSpine->pushNerve(&TNerveKillerExplosion::theNerve());
 			}
@@ -741,6 +780,7 @@ void TKiller::bind()
 	}
 }
 
+// TODO: 99.9%, instruction-identical with a 32-byte frame gap.
 void TKiller::calcRootMatrix()
 {
 	if (gpMarDirector->checkUnk4CFlag(0xF)) {
@@ -823,6 +863,7 @@ void TKiller::calcRootMatrix()
 	TSpineEnemy::calcRootMatrix();
 }
 
+// TODO: 99.8%. One float-register difference on the search-length fetch.
 bool TKiller::isFindMario(f32 rate)
 {
 	TSmallEnemyParams* params = getSaveParams();
@@ -848,6 +889,7 @@ bool TKiller::isFindMario(f32 rate)
 	return false;
 }
 
+// TODO: 99.9%, instruction-identical; our frame is 8 bytes bigger.
 DEFINE_NERVE(TNerveKillerExplosion, TLiveActor)
 {
 	TKiller* killer = (TKiller*)spine->getBody();
