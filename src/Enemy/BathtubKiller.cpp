@@ -34,6 +34,19 @@
 // batch is not allowed to make.
 #define PARTICLE_MAP_MS_KP_KILL_SMOKE 0x1BD
 
+// TODO: the residual in behaveToWater (54.5%), receiveMessage (58.9%),
+// isCollidMove (67.2%), bind (76.1%) and perform (78.6%) is one MWCC inlining
+// artifact, not a source difference: every instruction of those bodies matches,
+// but the ROM keeps `theNerve()` a `bl` at most comparison sites and emits
+// `bl TNerveBase<TLiveActor>::TNerveBase()` inside the expansions it does make,
+// while our build expands `theNerve()` at every site with the base constructor
+// folded in. The decision is emergent -- the ROM inlines the first comparison
+// in attackToMario/isCollidMove/bind and calls it in receiveMessage and
+// behaveToWater from identical source -- so it is not a depth or wrapper
+// question. Ruled out: a TU-local `isCurrentNerve(spine, nerve)` wrapper
+// (52.3%, the expansion survives), and the ROM's own `theNerve` is byte-exact,
+// so the callee is not the difference.
+//
 // TODO: every site that asks "am I already dying?" spells the two-nerve test
 // out, because the map records no symbol for a helper that would hold it --
 // neither a weak TBathtubKiller method nor a TSpineBase one. A header inline
@@ -156,8 +169,8 @@ TBathtubKillerParams::TBathtubKillerParams(const char* prm)
 
 TBathtubKiller::TBathtubKiller(const char* name)
     : TSmallEnemy(name)
+    , unk1CC(nullptr)
 {
-	unk1CC = nullptr;
 }
 
 void TBathtubKiller::init(TLiveManager* manager)
@@ -462,12 +475,13 @@ f32 TBathtubKiller::getBathtubY()
 
 void TBathtubKiller::makeInitialVelocity(JGeometry::TVec3<f32> velocity)
 {
+	f32 speed = velocity.length();
 	f32 speedMax = getSaveParam2()->mSLFlyingSpeedMax.get();
-	if (velocity.length() > speedMax) {
+	if (speed > speedMax) {
 		velocity.normalize();
 		velocity.scale(speedMax);
 	}
-	mVelocity.set(velocity.x, velocity.y, velocity.z);
+	mVelocity.set(velocity);
 
 	velocity.normalize();
 	JGeometry::TVec3<f32> forward;
@@ -516,8 +530,9 @@ void TBathtubKiller::moveStraight()
 	JGeometry::TVec3<f32> dir;
 	mQuat.getZDir(dir);
 	dir.y = 0.0f;
-	dir.setLength(1.0f);
-	mVelocity.scale(mPersonality.mChaseSpeed, dir);
+	dir.normalize();
+	dir.scale(mPersonality.mChaseSpeed);
+	mVelocity.set(dir);
 	makeVelocityQuat();
 }
 
@@ -745,6 +760,16 @@ void TBathtubKiller::setDeadBathtubKillerAnm()
 	unk1E0 = unk1D8;
 }
 
+// TODO: the ROM materialises each timer's address in its own register before
+// the test (`addi r4, r30, 0x208`; the load still folds to `0x208(r30)` but the
+// store goes through `0(r4)`), and the map's updateTimers is 20 bytes -- exactly
+// five instructions, one per timer -- larger than the direct form below. A
+// TU-static helper taking the timer by `int&` or by `int*` (both spellings
+// tried, including read-into-a-local-then-store) is folded straight back by
+// MWCC and changes nothing. The remaining hypothesis is that 0x208..0x218 are
+// one `int mTimers[5]` member and this is a fully unrolled loop over it, whose
+// indexed element addresses would survive; that needs the array to be plausible
+// at the fifteen sites that use the five timers by name, which it is not yet.
 void TBathtubKiller::updateTimers()
 {
 	if (unk208 > 0)
@@ -790,7 +815,9 @@ bool TBathtubKiller::isAboided()
 	f32 diffY = fabsf(marioPos.y - myPos.y);
 	marioPos.y = 0.0f;
 	myPos.y = 0.0f;
-	f32 distXZ = marioPos.distance(myPos);
+	JGeometry::TVec3<f32> toMario;
+	toMario.sub(marioPos, myPos);
+	f32 distXZ = toMario.length();
 
 	if (diffY > getSaveParam2()->mSLAboidDistanceY.get())
 		if (distXZ <= getSaveParam2()->mSLAboidDistance.get())
@@ -805,8 +832,11 @@ bool TBathtubKiller::isAboided()
 		return true;
 	}
 
-	JGeometry::TVec3<f32> toMario;
-	toMario.sub(marioPos, myPos);
+	// TODO: 86.6%. The ROM keeps the three differences in f27-f29 across the
+	// parameter fetches and spills them into the vector only here, so its
+	// `sub` is scalarised and this store pair is deferred; ours stores at the
+	// `sub` above. `distance()` plus a three-argument constructor here defers
+	// the stores but loses the CSE (83.6%).
 	toMario.normalize();
 	TDirectionCalc marioDir(toMario);
 
