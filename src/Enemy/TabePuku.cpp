@@ -100,6 +100,9 @@ void TTPHitActor::updateObjCollision()
 	             mOwner->getSaveParams()->getSLDamageHeight());
 }
 
+// TODO: 86.7%. Residual: retail loads the 2/3 constant before anything else
+// and keeps the owner position base in one register with lfsu; the rest is
+// float register numbering plus the isHolding() BOOL note below.
 void TTPHitActor::updateTerrainCollsion()
 {
 	TTabePuku* owner = mOwner;
@@ -108,11 +111,15 @@ void TTPHitActor::updateTerrainCollsion()
 	JGeometry::TVec3<f32> up;
 	quat.getYDir(up);
 
-	mCheckHeight = getAttackHeight();
+	f32 height   = getAttackHeight();
+	mCheckHeight = height;
 	mCheckRadius = getAttackRadius();
 
-	f32 sink = (2.0f / 3.0f) * getAttackHeight();
-	if (mOwner->getHeldObject()) {
+	f32 sink = (2.0f / 3.0f) * height;
+	// TODO: retail materialises this test as a BOOL (li 1 / li 0 / cmpwi),
+	// which means TTakeActor::isHolding() returned BOOL, not bool. Changing
+	// that is a shared-header fix in Strategic/TakeActor.hpp.
+	if (mOwner->isHolding()) {
 		sink += mOwner->getHeldObject()->getDamageHeight();
 		mCheckHeight += mOwner->getHeldObject()->getDamageHeight();
 		mCheckRadius += mOwner->getHeldObject()->getDamageRadius();
@@ -120,11 +127,11 @@ void TTPHitActor::updateTerrainCollsion()
 
 	f32 lift = 0.5f * getAttackHeight();
 	JGeometry::TVec3<f32> down(0.0f, -1.0f, 0.0f);
-	down.scale(sink);
 
-	JGeometry::TVec3<f32> pos(up.x * lift + mOwner->mPosition.x + down.x,
-	                          up.y * lift + mOwner->mPosition.y + down.y,
-	                          up.z * lift + mOwner->mPosition.z + down.z);
+	JGeometry::TVec3<f32> pos;
+	pos.x = up.x * lift + mOwner->mPosition.x + down.x * sink;
+	pos.y = up.y * lift + mOwner->mPosition.y + down.y * sink;
+	pos.z = up.z * lift + mOwner->mPosition.z + down.z * sink;
 
 	JGeometry::TVec3<f32> moved(pos);
 	moved.sub(mPosition);
@@ -132,6 +139,10 @@ void TTPHitActor::updateTerrainCollsion()
 	mPosition = pos;
 }
 
+// TODO: 76.7%. The two dot products fuse their x and z terms into fmadds in
+// retail while ours common-subexpressions them into one fmuls each, and the
+// closing TVec3::sub() is a `bl` in retail but expands here (the known
+// per-call-site TVec3::sub problem in docs/catalog/codegen-tells.md).
 void TTPHitActor::bind()
 {
 	JGeometry::TVec3<f32> pos(mPosition);
@@ -142,21 +153,24 @@ void TTPHitActor::bind()
 	pos.add(velocity);
 	pos.add(owner->mLinearVelocity);
 
+	f32 y = pos.y;
+	f32 z = pos.z;
+
 	mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
-	    pos.x, pos.y + mCheckHeight, pos.z, &mGroundPlane);
+	    pos.x, y + mCheckHeight, z, &mGroundPlane);
 	mGroundHeight += 1.0f;
 
-	if (pos.y <= 0.05f + mGroundHeight) {
+	if (y <= 0.05f + mGroundHeight) {
 		mAirborne = false;
 
 		// Push the mouth back out along the plane it sank into, then sit it
 		// exactly on the ground.
-		JGeometry::TVec3<f32> onGround(pos.x, mGroundHeight, pos.z);
-		f32 push = 1.0f
-		    - (mGroundPlane->getNormal().dot(pos)
-		       - mGroundPlane->getNormal().dot(onGround));
+		const JGeometry::TVec3<f32>& normal = mGroundPlane->getNormal();
+		JGeometry::TVec3<f32> sunk(pos.x, y, z);
+		JGeometry::TVec3<f32> onGround(pos.x, mGroundHeight, z);
+		f32 push = 1.0f - (normal.dot(sunk) - normal.dot(onGround));
 		if (push > 0.0f)
-			pos.scaleAdd(push, pos, mGroundPlane->getNormal());
+			pos.scaleAdd(push, pos, normal);
 		pos.y = mGroundHeight;
 	} else {
 		mAirborne = true;
@@ -166,7 +180,11 @@ void TTPHitActor::bind()
 	if (0.0f <= pos.y + mCheckHeight)
 		pos.y = -mCheckHeight;
 
-	TBGWallCheckRecord record(pos, mCheckRadius, 1, 0);
+	TBGWallCheckRecord record;
+	record.mCenter.set(pos);
+	record.mRadius      = mCheckRadius;
+	record.mMaxResults  = 1;
+	record.mFlags       = 0;
 	mTouchedWall = gpMap->isTouchedWallsAndMoveXZ(&record);
 	pos.x        = record.mCenter.x;
 	pos.z        = record.mCenter.z;
@@ -177,11 +195,16 @@ void TTPHitActor::bind()
 	mPosition = pos;
 }
 
-// UNUSED, 0x94 in the map.
+// UNUSED, 0x94 in the map; ours is 0x84 because retail hoists the Mario actor
+// type into a register (see the TODO below).
 void TTPHitActor::checkHitActors()
 {
 	THitActor** end = &mCollisions[mColCount];
 	for (THitActor** col = mCollisions; col != end; col++) {
+		// TODO: retail hoists 0x80000001 into a register before the loop and
+		// compares with a signed cmpw, so the constant was not a literal here.
+		// (s32)/-0x7FFFFFFF/(ACTOR_TYPE_PLAYER | 1) all still give the
+		// addis+cmplwi equality trick.
 		if ((*col)->mActorType != 0x80000001)
 			continue;
 		mOwner->attackToMario();
@@ -235,6 +258,8 @@ void TTabePuku::perform(u32 cue, JDrama::TGraphics* graphics)
 	TSmallEnemy::perform(cue, graphics);
 }
 
+// TODO: 81.7%. checkHitActors() is instruction-identical apart from the
+// actor-type compare (see its body) and the register/frame fallout.
 void TTabePuku::control()
 {
 	TLiveActor::control();
@@ -277,11 +302,18 @@ void TTabePuku::calcRootMatrix()
 
 	JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
 	    mtx;
-	mtx.setQuat(mQuat);
-	mtx.setTrans(mPosition);
+	// setQT() is the one-line forwarder that keeps setQuat() a `bl` here; at
+	// depth 1 MWCC expands setQuat whatever way it is spelled.
+	mtx.setQT(mQuat, mPosition);
 
 	getModel()->setBaseScale(mScaling);
-	MTXCopy(mtx, getModel()->getBaseTRMtx());
+
+	MtxPtr src      = mtx;
+	J3DModel* model = getModel();
+	// TODO: 99.0%. Retail copies the model pointer and adds getBaseTRMtx()'s
+	// 0x20 in a second instruction; naming that pointer as well reproduces the
+	// pair but moves every local up four bytes.
+	MTXCopy(src, model->getBaseTRMtx());
 
 	emitEffects();
 }
@@ -324,6 +356,7 @@ BOOL TTabePuku::receiveMessage(THitActor* sender, u32 message)
 	}
 }
 
+// TODO: 93.1%. Frame and register numbering only.
 MtxPtr TTabePuku::getTakingMtx()
 {
 	mTakingMtx.setQuat(mQuat);
@@ -368,6 +401,10 @@ bool TTabePuku::doKeepDistance() { return !(isAttacking() || isBiting()); }
 
 // UNUSED, 0x1c4 in the map: Mario got too high, too far from the goal, or the
 // puku has wandered outside the territory around its graph.
+// TODO: ours is 0x1f0 and the Attack nerve stalls at 82.6% for the same
+// reason: retail calls TVec3::sub()/dot()/TUtil<f32>::sqrt() out of line here
+// and our build expands sub(). That is the open per-call-site inlining problem
+// in docs/catalog/codegen-tells.md, not a shape difference.
 bool TTabePuku::isMissMario() const
 {
 	if (fabsf(gpMarioPos->y - mPosition.y)
@@ -451,13 +488,8 @@ bool TTabePuku::doDive()
 {
 	swimTo(JGeometry::TVec3<f32>(0.0f, mGroundHeight - mPosition.y, 0.0f));
 
-	if (mPosition.y - mDiveStartY < -getSaveParams()->getApartHeight())
-		return true;
-
-	if (mPosition.y - mGroundHeight < 200.0f)
-		return true;
-
-	if (!isAirborne())
+	if (mPosition.y - mDiveStartY < -getSaveParams()->getApartHeight()
+	    || mPosition.y - mGroundHeight < 200.0f || !isAirborne())
 		return true;
 
 	return false;
@@ -483,7 +515,9 @@ bool TTabePuku::doDrag()
 	if (!mTouchedWall && isAirborne()) {
 		JGeometry::TVec3<f32> toGoal(unk104.getPoint());
 		toGoal.sub(mPosition);
-		if (toGoal.length() <= getSaveParams()->getDragLength())
+		// Written inverted because retail branches on a bare `bge`; the
+		// direct `length() <= getDragLength()` adds a cror.
+		if (!(getSaveParams()->getDragLength() < toGoal.length()))
 			return false;
 	}
 
@@ -491,13 +525,28 @@ bool TTabePuku::doDrag()
 	return true;
 }
 
+// TODO: 94.0%, and all of it is a 0x80 frame gap plus the float register
+// numbering that follows from it. Every instruction matches.
 void TTabePuku::swimTo(const JGeometry::TVec3<f32>& dir)
 {
 	JGeometry::TVec3<f32> d(dir);
 
-	if (JGeometry::TUtil<f32>::epsilonEquals(0.0f, d.squared(),
+	if (JGeometry::TUtil<f32>::epsilonEquals(0.0f, dir.squared(),
 	        JGeometry::TUtil<f32>::epsilon())) {
-		setMomentumFromQuat();
+		// setMomentumFromQuat() spelled out: retail inlines
+		// MsGetRotFromZaxisY() at both of these sites, which only happens with
+		// the body one level shallower, so the UNUSED helper is not what this
+		// function calls.
+		JGeometry::TVec3<f32> forward;
+		mQuat.getZDir(forward);
+		forward.scale(mMarchSpeed);
+
+		JGeometry::TVec3<f32> velocity = mVelocity;
+		velocity.scale(getSaveParams()->getWaterFric());
+		velocity.add(forward);
+		mVelocity = velocity;
+
+		mRotation.y = MsGetRotFromZaxisY(velocity);
 		return;
 	}
 
@@ -509,12 +558,22 @@ void TTabePuku::swimTo(const JGeometry::TVec3<f32>& dir)
 	        JGeometry::TUtil<f32>::epsilon()))
 		target.setEulerY(JGeometry::TUtil<f32>::PI());
 	else
-		target.setRotate(zaxis, d);
+		target.setRotate(zaxis, d, JGeometry::TUtil<f32>::one());
 
 	mQuat.slerp(target, getSaveParams()->getTurnSlerpRate());
 	mQuat.normalize();
 
-	setMomentumFromQuat();
+	// setMomentumFromQuat() spelled out again, for the same reason.
+	JGeometry::TVec3<f32> forward;
+	mQuat.getZDir(forward);
+	forward.scale(mMarchSpeed);
+
+	JGeometry::TVec3<f32> velocity = mVelocity;
+	velocity.scale(getSaveParams()->getWaterFric());
+	velocity.add(forward);
+	mVelocity = velocity;
+
+	mRotation.y = MsGetRotFromZaxisY(velocity);
 }
 
 // UNUSED, 0x1d4 in the map: swim along the quaternion's forward axis, with the
@@ -553,7 +612,7 @@ void TTabePukuManager::load(JSUMemoryInputStream& stream)
 
 void TTabePukuManager::createModelData()
 {
-	static TModelDataLoadEntry entry[] = {
+	static const TModelDataLoadEntry entry[] = {
 		{ "tabepuku.bmd", 0x10210000, 0 },
 		{ nullptr, 0, 0 },
 	};
@@ -592,7 +651,17 @@ DEFINE_NERVE(TNerveTabePukuFound, TLiveActor)
 		puku->mMarchSpeed = 0.0f;
 	}
 
-	puku->setMomentumFromQuat();
+	// setMomentumFromQuat() spelled out, as in swimTo().
+	JGeometry::TVec3<f32> forward;
+	puku->mQuat.getZDir(forward);
+	forward.scale(puku->mMarchSpeed);
+
+	JGeometry::TVec3<f32> velocity = puku->mVelocity;
+	velocity.scale(puku->getSaveParams()->getWaterFric());
+	velocity.add(forward);
+	puku->mVelocity = velocity;
+
+	puku->mRotation.y = MsGetRotFromZaxisY(velocity);
 
 	if (puku->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveTabePukuAttack::theNerve());
@@ -602,6 +671,9 @@ DEFINE_NERVE(TNerveTabePukuFound, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 89.5%. Instruction-identical apart from r30/r31 being swapped (retail
+// puts the spine in the lower register here but the higher one in
+// TNerveTabePukuGraphWander) and a 0x18 frame gap.
 DEFINE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor)
 {
 	TTabePuku* puku = (TTabePuku*)spine->getBody();
@@ -672,12 +744,28 @@ DEFINE_NERVE(TNerveTabePukuDive, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 62.2%. Retail's inlined TQuat4::rotate() gives its first TQuat4
+// temporary a stack home and calls the empty JGeometry::TVec4<f32>::TVec4()
+// out of line (the map emits it weak in this object); our build scalarises
+// both temporaries and never emits that constructor, which is a shared-header
+// question about JGVec4.hpp, not about this nerve.
 DEFINE_NERVE(TNerveTabePukuDrag, TLiveActor)
 {
 	TTabePuku* puku = (TTabePuku*)spine->getBody();
 
-	if (spine->getTime() == 0)
-		puku->prepareDrag();
+	if (spine->getTime() == 0) {
+		// prepareDrag() spelled out: retail inlines TQuat4::rotate() here,
+		// which only happens when the body sits at inline depth 1, so the
+		// out-of-line helper cannot be the thing this nerve calls.
+		puku->mDragDir.set(0.0f, 0.0f, 1.0f);
+
+		JGeometry::TQuat4<f32> spin;
+		spin.setEulerY(MsRandF() * 6.2831855f);
+		spin.rotate(puku->mDragDir, puku->mDragDir);
+
+		puku->setGoalPath(puku->mPosition);
+		puku->mMarchSpeed = puku->getSaveParams()->getDiveSpeed();
+	}
 
 	puku->swimTo(puku->mDragDir);
 
