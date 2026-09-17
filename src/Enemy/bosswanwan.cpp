@@ -616,36 +616,38 @@ void TBWBinder::bind(TLiveActor* actor)
 	// Slide the boss along the graph link it is walking on, at three units a
 	// frame minimum so it never stalls.
 	if (!actor->isAirborne()) {
-		TGraphTracer* tracer = ((TSpineEnemy*)actor)->getTracer();
-		if (tracer->getGraph()) {
-			int curr = tracer->getCurGraphIndex();
-			int prev = tracer->getPrevIndex();
-			if (curr >= 0 && prev >= 0 && curr != prev) {
-				const TGraphWeb* graph = tracer->getGraph();
-				Vec from;
-				Vec to;
-				graph->getGraphNode(curr).getPoint(&from);
-				graph->getGraphNode(prev).getPoint(&to);
+		TGraphTracer* tracer   = ((TSpineEnemy*)actor)->getTracer();
+		const TGraphWeb* graph = tracer->getGraph();
+		int curr               = tracer->getCurGraphIndex();
+		int prev               = tracer->getPrevIndex();
+		if (graph && curr >= 0 && prev >= 0 && curr != prev) {
+			const TGraphNode* nodes = graph->unk0;
 
-				JGeometry::TVec3<f32> link(from.x - to.x, from.y - to.y,
-				                           from.z - to.z);
-				VECNormalize(link, link);
+			JGeometry::TVec3<f32> link;
+			JGeometry::TVec3<f32> back;
+			nodes[curr].getPoint(link);
+			nodes[prev].getPoint(back);
 
-				f32 along = 0.0f;
-				f32 lsq   = link.squared();
-				if (lsq != 0.0f)
-					along = velocity.dot(link) / lsq;
+			link.x -= back.x;
+			link.y -= back.y;
+			link.z -= back.z;
+			VECNormalize(link, link);
 
-				if (along < 0.0f) {
-					if (along > -3.0f)
-						along = -3.0f;
-				} else if (along > 0.0f && along < 3.0f) {
-					along = 3.0f;
-				}
+			f32 along = 0.0f;
+			f32 lsq   = link.squared();
+			if (lsq != 0.0f)
+				along = velocity.dot(link) / lsq;
 
-				velocity = link;
-				velocity.scale(along);
+			f32 step = along;
+			if (along < 0.0f) {
+				if (along > -3.0f)
+					step = -3.0f;
+			} else if (along > 0.0f && along < 3.0f) {
+				step = 3.0f;
 			}
+
+			velocity = link;
+			velocity.scale(step);
 		}
 	}
 
@@ -664,8 +666,7 @@ void TBWBinder::bind(TLiveActor* actor)
 
 			roll *= 2.0f;
 			if (boss->mIsRolling) {
-				boss->mRollAngle
-				    = MsWrap(boss->mRollAngle + roll, 0.0f, 360.0f);
+				boss->mRollAngle = MsAngleWrap(boss->mRollAngle + roll);
 			} else if (boss->mRollAngle != 0.0f) {
 				f32 wrapped = boss->mRollAngle + roll;
 				if (wrapped > 360.0f)
@@ -692,22 +693,28 @@ void TBWBinder::bind(TLiveActor* actor)
 			there.scale(860.0f);
 			there.add(tail);
 			there.sub(origin);
-			velocity.set(there.x, there.y, there.z);
+			velocity = there;
 		}
 	}
 
 	// Pull the boss back onto the link it should be standing on.
 	if (!actor->isAirborne()) {
-		TGraphTracer* tracer   = ((TSpineEnemy*)actor)->getTracer();
-		const TGraphWeb* graph = tracer->getGraph();
-		Vec curr;
-		Vec prev;
-		graph->getGraphNode(tracer->getCurGraphIndex()).getPoint(&curr);
-		graph->getGraphNode(tracer->getPrevIndex()).getPoint(&prev);
+		TGraphTracer* tracer      = ((TSpineEnemy*)actor)->getTracer();
+		const TGraphNode* nodes   = tracer->getGraph()->unk0;
+		const TGraphNode* backOne = &nodes[tracer->getPrevIndex()];
 
-		JGeometry::TVec3<f32> foot = MsPerpendicFootToLineR(
-		    *(JGeometry::TVec3<f32>*)&prev, *(JGeometry::TVec3<f32>*)&curr,
-		    actor->mPosition);
+		JGeometry::TVec3<f32> ahead;
+		JGeometry::TVec3<f32> behind;
+		nodes[tracer->getCurGraphIndex()].getPoint(ahead);
+		backOne->getPoint(behind);
+
+		JGeometry::TVec3<f32> foot
+		    = MsPerpendicFootToLineR(behind, ahead, actor->mPosition);
+
+		// The link vector the original computed here and never used.
+		ahead.x -= behind.x;
+		ahead.y -= behind.y;
+		ahead.z -= behind.z;
 
 		JGeometry::TVec3<f32> toFoot(foot);
 		toFoot.sub(actor->mPosition);
