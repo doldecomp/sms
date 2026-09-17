@@ -493,9 +493,9 @@ void TBPTornado::perform(u32 cue, JDrama::TGraphics* graphics)
 		toMario.z -= gpMarioPos->z;
 		f32 dist = toMario.length();
 		if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_TORNADO))
-			MSoundSESystem::MSoundSE::startSoundActorWithInfo(MSD_SE_BS_BSPAKU_TORNADO,
-			                                  &mPosition, nullptr, dist, 0, 0,
-			                                  nullptr, 0, 4);
+			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
+			    MSD_SE_BS_BSPAKU_TORNADO, &mPosition, nullptr, dist, 0, 0,
+			    nullptr, 0, 4);
 	}
 
 	mMActor->perform(cue, graphics);
@@ -598,7 +598,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 
 void TBPHeadHit::throwActor(THitActor* actor)
 {
-	if (actor->isActorType(ACTOR_TYPE_PLAYER | 1)
+	if (actor->getActorType() == 0x80000001
 	    && mOwner->getMActor()->checkCurBckFromIndex(BOSSPAKU_BCK_HEAD)) {
 		static JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 
