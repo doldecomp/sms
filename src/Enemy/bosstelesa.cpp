@@ -1,23 +1,30 @@
 #include <Enemy/BossTelesaObj.hpp>
 #include <Enemy/BossTelesa.hpp>
+#include <Camera/Camera.hpp>
 #include <Camera/CameraShake.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/HamuKuri.hpp>
 #include <Enemy/Telesa.hpp>
+#include <GC2D/GCConsole2.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DCluster.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DPacket.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
-#include <JSystem/JParticle/JPAEmitter.hpp>
-#include <JSystem/JUtility/JUTTexture.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/JGeometry/JGMatrix34.hpp>
 #include <JSystem/JMath.hpp>
+#include <JSystem/JParticle/JPAEmitter.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
+#include <JSystem/JUtility/JUTTexture.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MSound/BackgroundMusic.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
+#include <Map/Map.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/LightUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -26,19 +33,19 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <MarioUtil/TexUtil.hpp>
-#include <GC2D/GCConsole2.hpp>
 #include <MoveBG/Item.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Strategic/LiveActor.hpp>
-#include <System/MarDirector.hpp>
+#include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/SharedParts.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/Strategy.hpp>
+#include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
 
 // rogue includes needed for matching sinit & bss
@@ -46,12 +53,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <Map/MapCollisionEntry.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DCluster.hpp>
-#include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
-#include <JSystem/JUtility/JUTNameTab.hpp>
-#include <Map/Map.hpp>
-#include <Strategic/ObjManager.hpp>
-#include <Strategic/Strategy.hpp>
 
 static const char* btelesa_bastable[] = {
 	"/scene/btelesa/bas/btelesa_appear.bas",
@@ -1086,7 +1087,158 @@ void TBossTelesa::reset()
 	                                   true, nullptr, 0, nullptr, 0);
 }
 
-void TBossTelesa::moveObject() { }
+void TBossTelesa::moveObject()
+{
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+
+	JGeometry::TVec3<f32> cameraPos;
+	cameraPos.set(gpCamera->unk124);
+
+	JGeometry::TVec3<f32> toCamera = *gpMarioPos - cameraPos;
+	if (toCamera.length() < mCameraMoveLimit) {
+		unk360 += mCameraMoveSp * (gpMarioPos->y - gpCamera->unk148.y);
+		gpCamera->unk290 = unk360;
+	} else if (fabsf(unk360) > 1.0f) {
+		unk360           = unk360 * mCameraMoveSp;
+		gpCamera->unk290 = unk360;
+	}
+
+	if (SMS_CheckMarioFlag(0x400))
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1, &mPosition, 0,
+		                          nullptr, 0, 4);
+
+	if (mSpine->getCurrentNerve() == &TNerveBossTelesaFallDemo::theNerve()) {
+		if (mRoulettes[0]->mPosition.y > 5.0f + mRoulettes[1]->mPosition.y) {
+			mSlot->mPosition = mRoulettes[0]->mPosition;
+			mSlot->mPosition.y += 300.0f;
+		}
+	}
+
+	if (mSpine->getCurrentNerve()
+	    != &TNerveBossTelesaPrepareSlot::theNerve()) {
+		getMActor()->setFrameRate(0.0f, ANM_TYPE_BTP);
+		getMActor()->getFrameCtrl(ANM_TYPE_BTP)->setFrame(0.0f);
+	}
+
+	if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()) {
+		u8 maxHitPoints = getMaxHitPoints();
+		u8 alpha = mNormalAlpha + (maxHitPoints - mHitPoints) * 30;
+		if (alpha > 254)
+			alpha = 254;
+		else if (alpha < 0)
+			alpha = 0;
+
+		if ((getMActor()->checkCurBckFromIndex(7)
+		     && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 50.0f)
+		    || getMActor()->checkCurBckFromIndex(6)) {
+			if (unk34C.a > alpha)
+				unk34C.a -= 1;
+		} else {
+			if (unk34C.a < 255)
+				unk34C.a += 1;
+		}
+	}
+
+	int spinning = 0;
+
+	JGeometry::TVec3<f32> soundCameraPos;
+	soundCameraPos.set(gpCamera->unk124);
+	JGeometry::TVec3<f32> soundToCamera = *gpMarioPos - soundCameraPos;
+
+	mSoundPos = mRoulettes[0]->mPosition;
+	mSoundPos.x += 0.67f * soundToCamera.x;
+	mSoundPos.z += 0.67f * soundToCamera.z;
+
+	for (int i = 0; i < 3; ++i) {
+		if (mRoulettes[i]->unk13C != 0.0f)
+			spinning += 1;
+	}
+
+	switch (spinning) {
+	case 1:
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE1, &mSoundPos, 0,
+		                          nullptr, 0, 4);
+		break;
+
+	case 2:
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE2, &mSoundPos, 0,
+		                          nullptr, 0, 4);
+		break;
+
+	case 3:
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE3, &mSoundPos, 0,
+		                          nullptr, 0, 4);
+		break;
+	}
+
+	mLinearVelocity.zero();
+	mAngularVelocity.zero();
+
+	control();
+
+	for (int i = 0; i < mColCount; ++i) {
+		if (mCollisions[i]->isActorType(0x80000001))
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+	}
+
+	bind();
+
+	mPosition.x += mLinearVelocity.x;
+	mPosition.y += mLinearVelocity.y;
+	mPosition.z += mLinearVelocity.z;
+	mPosition.y = 300.0f + mGroundHeight;
+
+	f32 blend = unk168 - 0.05f;
+	if (blend > 1.0f)
+		blend = 1.0f;
+	else if (blend < 0.0f)
+		blend = 0.0f;
+
+	unk168 = blend;
+	getMActor()->setMotionBlendRatioForBck(unk168);
+
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+		mBody->mPosition           = mPosition;
+		mTongue->mPosition         = mPosition;
+		mKillSmallEnemy->mPosition = mPosition;
+	} else {
+		MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(1);
+
+		mBody->mPosition.set(headMtx[0][3], headMtx[1][3] - 200.0f,
+		                     headMtx[2][3]);
+		mKillSmallEnemy->mPosition.set(headMtx[0][3], mPosition.y - 350.0f,
+		                               headMtx[2][3]);
+
+		MtxPtr tongueMtx = getMActor()->getModel()->getAnmMtx(7);
+		mTongue->mPosition.set(tongueMtx[0][3], tongueMtx[1][3] - 350.0f,
+		                       tongueMtx[2][3]);
+	}
+
+	TBossTelesaBody* body = mBody;
+	body->unk6C           = false;
+	for (int i = 0; i < body->mColCount; ++i) {
+		THitActor* other = body->mCollisions[i];
+		if (other->isActorType(0x80000001))
+			SMS_SendMessageToMario(body, HIT_MESSAGE_ATTACK);
+		else
+			body->mOwner->checkHitObject(other);
+	}
+
+	TBossTelesaTongue* tongue = mTongue;
+	for (int i = 0; i < tongue->mColCount; ++i) {
+		THitActor* other = tongue->mCollisions[i];
+		if (other->isActorType(0x80000001)) {
+			SMS_SendMessageToMario(tongue, HIT_MESSAGE_ATTACK);
+		} else if (other->isActorType(0x40000395)) {
+			tongue->mOwner->setSpicy((TLiveActor*)other);
+		} else if (100.0f + tongue->mPosition.y < other->mPosition.y) {
+			tongue->mOwner->checkHitObject(other);
+		}
+	}
+
+	mKillSmallEnemy->checkHit();
+}
 
 void TBossTelesa::kill()
 {
@@ -1101,8 +1253,15 @@ MtxPtr TBossTelesa::getTakingMtx()
 	return unk278;
 }
 
-// TODO: incorrect size. Map records 472 bytes.
-void TBossTelesa::prepareGenerate() { }
+// TODO: incorrect size. Map records 472 bytes. Only the table is recovered:
+// xzTable$3483 has no reference anywhere in the ROM's .text, which is what a
+// dead function's static looks like, and the literal numbering puts it in this
+// part of the file.
+void TBossTelesa::prepareGenerate()
+{
+	static const f32 xzTable[8]
+	    = { 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f };
+}
 
 void TBossTelesa::calcRootMatrix()
 {
@@ -1641,7 +1800,225 @@ bool TBossTelesa::checkSlotResult()
 	return false;
 }
 
-void TBossTelesa::generateSlotItem() { }
+void TBossTelesa::generateSlotItem()
+{
+	static const char* manNameTable[] = {
+		"バブルマネージャー",     "ハムクリマネージャー",
+		"ヤキグリマネージャー",   "ボム兵マネージャー",
+		"ポイハナマネージャー",   "電気ノコノコマネージャー",
+		"ポポマネージャー",       "ゲッソーマネージャー",
+		"とびプクマネージャー",
+	};
+
+	unk368       = 0;
+	mSlotItemNum = 0;
+	unk1A8       = mSlot->getSlotResult();
+
+	int itemNum     = mParams->mSLSlotItemNum.get();
+	int result      = unk1A8;
+	MtxPtr mouthMtx = getMActor()->getModel()->getAnmMtx(5);
+	f32 step        = 120.0f / (f32)itemNum;
+	f32 halfSpread  = step * (f32)itemNum * 0.5f;
+
+	if (result == 2) {
+		int num = mParams->mSLSlotFruitNum.get();
+		if (num > 20)
+			num = 20;
+
+		TMsRange<s32> startRange(0, num);
+		int slot = startRange.rand();
+
+		for (int i = 0; i < num; ++i) {
+			if (mFruits[i]->mHolder != nullptr)
+				continue;
+
+			JGeometry::TVec3<f32> velocity(0.0f, 0.0f, 200.0f);
+			Mtx mtx;
+			MsMtxSetRotRPH(mtx, mRotation.x,
+			               ((160.0f / (f32)num) * (f32)slot)
+			                   + (mRotation.y - halfSpread),
+			               mRotation.z);
+
+			slot = MsWrap(slot + i, 0, num);
+
+			MTXMultVec(mtx, velocity, velocity);
+
+			JGeometry::TVec3<f32> direction;
+			MsVECNormalize(velocity, direction);
+
+			TMsRange<f32> speedRange(6.0f, 10.0f);
+
+			if (i == 0 || i == 4) {
+				mPeppers[i]->makeObjAppeared();
+				mPeppers[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
+
+				f32 speedZ = direction.z * speedRange.rand();
+				mPeppers[i]->mVelocity.x = direction.x * speedRange.rand();
+				mPeppers[i]->mVelocity.y = -2.0f;
+				mPeppers[i]->mVelocity.z = speedZ;
+				mPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+
+				if (i == 0) {
+					f32 fastZ = 2.0f * (direction.z * speedRange.rand());
+					mPeppers[i]->mVelocity.x
+					    = 2.0f * (direction.x * speedRange.rand());
+					mPeppers[i]->mVelocity.y = -2.0f;
+					mPeppers[i]->mVelocity.z = fastZ;
+					mPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				}
+
+				mPeppers[i]->mRotation.set(0.0f, 90.0f, 0.0f);
+				mSlotItems[mSlotItemNum] = mPeppers[i];
+			} else {
+				mFruits[i]->makeObjAppeared();
+				mFruits[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
+
+				f32 speedZ = direction.z * speedRange.rand();
+				mFruits[i]->mVelocity.x = direction.x * speedRange.rand();
+				mFruits[i]->mVelocity.y = -2.0f;
+				mFruits[i]->mVelocity.z = speedZ;
+				mFruits[i]->offLiveFlag(LIVE_FLAG_UNK10);
+
+				mSlotItems[mSlotItemNum] = mFruits[i];
+			}
+
+			mSlotItems[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
+			mSlotItems[i]->mScaling.set(1.5f, 1.5f, 1.5f);
+			mSlotItems[mSlotItemNum]->mPosition.set(
+			    mouthMtx[0][3] + velocity.x, mouthMtx[1][3] - 50.0f,
+			    mouthMtx[2][3] + velocity.z);
+
+			mSlotItemNum += 1;
+		}
+
+		return;
+	}
+
+	if (result == 0) {
+		int num = mParams->mSLSlotFruitNum.get();
+		if (num > 10)
+			num = 10;
+
+		f32 coinStep = 120.0f / (f32)num;
+
+		if (unk370)
+			unk370 -= 1;
+		else
+			unk370 = 0;
+
+		for (int i = 0; i < num; ++i) {
+			if (i >= 10)
+				return;
+
+			JGeometry::TVec3<f32> velocity(0.0f, 0.0f, 250.0f);
+			Mtx mtx;
+			MsMtxSetRotRPH(mtx, mRotation.x,
+			               (coinStep * (f32)i)
+			                   + (mRotation.y - (coinStep * (f32)num * 0.5f)),
+			               mRotation.z);
+			MTXMultVec(mtx, velocity, velocity);
+			MsVECNormalize(velocity, velocity);
+
+			TMsRange<f32> speedRange(0.8f, 3.5f);
+			velocity.y = 10.0f;
+
+			f32 baseSpeed = mParams->mSL1stBubbleSp.get();
+			velocity.x    = velocity.x * (baseSpeed * speedRange.rand());
+			velocity.z *= baseSpeed * speedRange.rand();
+
+			TMapObjBase* coin = gpItemManager->makeObjAppeared(0x2000000E);
+			coin->mPosition.set(mouthMtx[0][3], mouthMtx[1][3] - 250.0f,
+			                    mouthMtx[2][3]);
+			coin->mVelocity.x = velocity.x;
+			coin->mVelocity.y = velocity.y;
+			coin->mVelocity.z = velocity.z;
+			coin->offLiveFlag(LIVE_FLAG_UNK10);
+			coin->mRotation.set(0.0f, 0.0f, 0.0f);
+			((TItem*)coin)->killByTimer(960);
+
+			mSlotItems[mSlotItemNum] = mCoins[i];
+			mSlotItems[mSlotItemNum]->offLiveFlag(LIVE_FLAG_HIDDEN);
+			mSlotItemNum += 1;
+		}
+
+		return;
+	}
+
+	int count        = itemNum;
+	int managerIndex = 0;
+
+	switch (result) {
+	case 3:
+		break;
+
+	case -1:
+		count *= 2;
+		managerIndex = 0;
+		break;
+
+	case 1:
+		if (mHitPoints > 2)
+			managerIndex = 1;
+		else
+			managerIndex = 2;
+		break;
+	}
+
+	int lastManager = 7;
+	if (mHitPoints == 1)
+		lastManager = 8;
+
+	TMsRange<s32> managerRange(1, lastManager);
+	int manager = managerRange.rand();
+
+	for (int i = 0; i < count; ++i) {
+		if (unk1A8 == 3) {
+			if (i % 2 == 0)
+				manager += 1;
+			if (manager > lastManager)
+				manager = 1;
+
+			managerIndex = manager;
+		}
+
+		TSpineEnemy* enemy = gpConductor->makeOneEnemyAppear(
+		    mPosition, manNameTable[managerIndex], 2);
+		if (!enemy)
+			continue;
+
+		if (managerIndex != 0) {
+			mSlotItems[mSlotItemNum] = enemy;
+			mSlotItemNum += 1;
+		}
+
+		JGeometry::TVec3<f32> velocity(0.0f, 0.0f, 200.0f);
+		Mtx mtx;
+		MsMtxSetRotRPH(mtx, mRotation.x,
+		               (step * (f32)i) + (mRotation.y - halfSpread),
+		               mRotation.z);
+		MTXMultVec(mtx, velocity, velocity);
+		MsVECNormalize(velocity, velocity);
+		velocity.y = 2.0f;
+
+		f32 baseSpeed = mParams->mSL1stBubbleSp.get();
+		TMsRange<f32> speedRange(0.5f, 1.0f);
+		velocity.x = velocity.x * (baseSpeed * speedRange.rand());
+		velocity.y = velocity.y * (2.0f + speedRange.rand());
+		velocity.z *= baseSpeed * speedRange.rand();
+
+		enemy->mPosition.set(mouthMtx[0][3], mouthMtx[1][3] - 250.0f,
+		                     mouthMtx[2][3]);
+		enemy->mVelocity.x = velocity.x;
+		enemy->mVelocity.y = velocity.y;
+		enemy->mVelocity.z = velocity.z;
+		enemy->mPosition.y += 10.0f;
+		enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+		MTXCopy(mouthMtx, enemy->getMActor()->getModel()->getBaseTRMtx());
+		enemy->getMActor()->calc();
+		((TWalkerEnemy*)enemy)->initAttacker(this);
+	}
+}
 
 // TODO: incorrect size. Map records 136 bytes.
 void TBossTelesa::fruitCollisionOn() { }
@@ -2020,6 +2397,8 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 
 	if (boss->slotStop())
 		return TRUE;
+
+	boss->unk364 = boss->unk364 * 0.99f;
 
 	return FALSE;
 }
