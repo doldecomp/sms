@@ -1450,8 +1450,95 @@ void TBossPakkunManager::load(JSUMemoryInputStream& stream)
 // map records for its execute. Defining them does emit theNerve() and the
 // destructor, both compiler-generated, which is what matches so far.
 
-// TODO: incorrect size. Map records 3088 bytes.
-DEFINE_NERVE(TNerveBPWait, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBPWait, TLiveActor)
+{
+	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+
+	JGeometry::TVec3<f32> toMario = boss->mPosition;
+	toMario.x -= gpMarioPos->x;
+	toMario.y -= gpMarioPos->y;
+	toMario.z -= gpMarioPos->z;
+
+	f32 reach = boss->getSaveParam2()->mSLSwingLength.get();
+	if (toMario.squared() < reach * reach) {
+		// Mario is within head-swinging range. If the boss is already facing
+		// him it swings; otherwise it spits and turns towards him.
+		JGeometry::TVec3<f32> toMarioBack(-toMario.x, -toMario.y, -toMario.z);
+		JGeometry::TVec3<f32> facing = toMarioBack;
+
+		f32 angle = BPGetRotFromZaxisY(facing.x, facing.z);
+		if (fabsf(MsAngleDiff(angle, boss->mRotation.y)) < 60.0f) {
+			spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+			spine->pushAfterCurrent(&TNerveBPSwing::theNerve());
+			return TRUE;
+		}
+
+		spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+		spine->pushAfterCurrent(&TNerveBPVomit::theNerve());
+
+		TPathNode node(*gpMarioPos);
+		node.unk4.y = 0.0f;
+		boss->unk114.push(boss->unkF4);
+		boss->unkF4 = node;
+
+		spine->pushAfterCurrent(&TNerveBPPivot::theNerve());
+		return TRUE;
+	}
+
+	if (spine->getTime() == 0)
+		boss->changeBck(BOSSPAKU_BCK_WAIT);
+
+	if (spine->getTime() >= boss->getSaveParam2()->mSLWaitFrameStg0.get()
+	    && boss->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
+		if (gpMarDirector->mMap == 2
+		    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
+			if (!boss->mVomitArea)
+				boss->mVomitArea = (TAreaCylinderManager*)gpConductor->search(
+				    "ゲロエリアマネージャー");
+
+			if (boss->mVomitArea && boss->mVomitArea->contain(*gpMarioPos)) {
+				if (!SMS_GetMarioGroundPlane()->isWaterSurface()) {
+					spine->pushAfterCurrent(&TNerveBPCannon::theNerve());
+					return TRUE;
+				}
+			}
+
+			spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+			return TRUE;
+		}
+
+		if (gpMarDirector->unk7D == 4) {
+			f32 prop = boss->getSaveParam2()->mSLTornadoProp.get();
+			if (boss->mTornado->mState != BOSSPAKU_TORNADO_DEAD
+			    || MsRandF() < prop) {
+				spine->pushAfterCurrent(&TNerveBPTakeOff::theNerve());
+				spine->pushAfterCurrent(&TNerveBPVomit::theNerve());
+			} else if (boss->mTornado->mState == BOSSPAKU_TORNADO_DEAD) {
+				spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+				spine->pushAfterCurrent(&TNerveBPTornado::theNerve());
+			} else {
+				spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+			}
+			return TRUE;
+		}
+
+		spine->pushAfterCurrent(&TNerveBPWait::theNerve());
+		spine->pushAfterCurrent(&TNerveBPVomit::theNerve());
+
+		JGeometry::TVec3<f32> goal = boss->mPosition;
+		goal.x += 10000.0f * (MsRandF() - 0.5f);
+		goal.z += 10000.0f * (MsRandF() - 0.5f);
+
+		TPathNode node(goal);
+		boss->unk114.push(boss->unkF4);
+		boss->unkF4 = node;
+
+		spine->pushAfterCurrent(&TNerveBPPivot::theNerve());
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBPCannon, TLiveActor)
 {
