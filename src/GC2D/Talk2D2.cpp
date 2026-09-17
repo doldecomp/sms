@@ -530,21 +530,34 @@ void TTalk2D2::makeBoxLine(s8 line, char* text)
 
 		if (text != nullptr) {
 			char* dst = mCharBox[idx]->getStringPtr();
-			dst[0]    = text[src];
-			if ((u8)text[src] >= 0x80) {
+			char* p   = &text[src];
+			dst[0]    = p[0];
+			if ((u8)p[0] >= 0x80) {
 				src += 2;
-				dst[1] = text[src + 1 - 2];
+				dst[1] = p[1];
 			} else {
 				dst[1] = '\0';
 				src += 1;
 			}
 		}
 
-		int code = mCharBox[idx]->getStringPtr()[0];
+		char* str = mCharBox[idx]->getStringPtr();
+		// TODO: retail has a dead `>= 0x80` arm here that compiles to a
+		// self-move of the already-loaded byte; presumably the two-byte
+		// Shift-JIS code the width lookup wants was assembled there and the
+		// expression was lost (or folded).  Reproduced as written.
+		u16 code = str[0];
+		if (code >= 0x80)
+			code = str[0];
 		if (code == 0)
 			break;
 
-		t += mCharStep * (0.7f * ((JUTFont*)gpSystemFont)->getWidth(code) + 4.0f);
+		// getWidth(int) would return an int and convert with the signed
+		// magic; retail converts the raw u8 width, so the entry is read
+		// here instead of going through the wrapper.
+		JUTFont::TWidth width;
+		gpSystemFont->getWidthEntry(code, &width);
+		t += mCharStep * (0.7f * width.field_0x1 + 4.0f);
 
 		f32 curX;
 		f32 curY;
@@ -554,15 +567,23 @@ void TTalk2D2::makeBoxLine(s8 line, char* text)
 		if (curX > 0.0f)
 			angle *= -1.0f;
 
-		f32 midX = 0.5f * (prevX + curX);
-		f32 midY = 0.5f * (prevY + curY);
-		f32 rotX = -midX + (prevX * cosf(angle) - prevY * sinf(angle)) + midX;
-		f32 rotY = -midY + (prevX * sinf(angle) + prevY * cosf(angle)) + midY;
+		// Rotate the glyph's anchor about the midpoint of the segment it
+		// sits on.  The -0.5f and +0.5f terms cancel in exact arithmetic
+		// but retail emits both, so they were written out.
+		f32 sumX     = prevX + curX;
+		f32 sumY     = prevY + curY;
+		f32 negHalfX = -0.5f * sumX;
+		f32 negHalfY = -0.5f * sumY;
+		f32 halfX    = 0.5f * sumX;
+		f32 halfY    = 0.5f * sumY;
+		f32 cos      = cosf(angle);
+		f32 sin      = sinf(angle);
+		f32 rotX     = negHalfX + (prevX * cos + prevY * -sin) + halfX;
+		f32 rotY     = negHalfY + (prevX * sin + prevY * cos) + halfY;
 
-		mCharBox[idx]->move((s16)(rotX + (rotX > 0.0f ? 0.5f : -0.5f)),
-		                    -40
-		                        - (s16)(rotY
-		                                + (rotY > 0.0f ? 0.5f : -0.5f)));
+		s16 x = rotX + (rotX > 0.0f ? 0.5f : -0.5f);
+		s16 y = rotY + (rotY > 0.0f ? 0.5f : -0.5f);
+		mCharBox[idx]->move(x, -40 - y);
 		mCharBox[idx]->setBasePosition(J2DBasePosition_4);
 		mCharBox[idx]->mRotation = 180.0f * angle / 3.1415927f;
 		mLinePane[line]->mPaneTree.appendChild(&mCharBox[idx]->mPaneTree);
