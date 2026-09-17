@@ -203,8 +203,9 @@ BOOL TAnimalBird::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	switch (message) {
-	case HIT_MESSAGE_UNKB:
+	// Two more equality tests rather than a switch: the ROM compares 0xB and
+	// then 0 with plain cmplwi and no pivot tree.
+	if (message == HIT_MESSAGE_UNKB) {
 		mHolder = nullptr;
 		if (isChanged() == false) {
 			mSpine->reset();
@@ -213,8 +214,9 @@ BOOL TAnimalBird::receiveMessage(THitActor* sender, u32 message)
 			kill();
 		}
 		return TRUE;
+	}
 
-	case HIT_MESSAGE_TRAMPLE:
+	if (message == HIT_MESSAGE_TRAMPLE) {
 		if (sender->isActorType(0x1000000D)) {
 			if (isChanged() == false) {
 				mSpine->reset();
@@ -224,10 +226,9 @@ BOOL TAnimalBird::receiveMessage(THitActor* sender, u32 message)
 			}
 			return TRUE;
 		}
-
-	default:
-		return TSpineEnemy::receiveMessage(sender, message);
 	}
+
+	return TSpineEnemy::receiveMessage(sender, message);
 }
 
 void TAnimalBird::calcRootMatrix()
@@ -279,11 +280,14 @@ void TAnimalBird::behaveHitWater()
 // show.
 bool TAnimalBird::isOnGroundNerve() const
 {
-	return mSpine->getLatestNerve()
+	// The spine goes into a local: the ROM keeps it in one register across
+	// the three theNerve() calls instead of re-reading the member.
+	TSpineBase<TLiveActor>* spine = mSpine;
+	return spine->getLatestNerve()
 	        == &TNerveAnimalBirdWaitOnGround::theNerve()
-	    || mSpine->getLatestNerve()
+	    || spine->getLatestNerve()
 	        == &TNerveAnimalBirdActionOnGround::theNerve()
-	    || mSpine->getLatestNerve()
+	    || spine->getLatestNerve()
 	        == &TNerveAnimalBirdWalkOnGround::theNerve();
 }
 
@@ -292,9 +296,8 @@ void TAnimalBird::checkFalling()
 {
 	if (isOnGroundNerve()) {
 		if (checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
-			s32 limit = getSaveParams()->mFloatingTimerMax.get();
-			mFloatingTimer += 1;
-			if (limit < mFloatingTimer) {
+			if (getSaveParams()->mFloatingTimerMax.get()
+			    < ++mFloatingTimer) {
 				mSpine->reset();
 				mSpine->setNext(&TNerveAnimalBirdTakeoff::theNerve());
 			}
@@ -357,13 +360,10 @@ bool TAnimalBird::isFindMario() const
 	    < fabsf(SMS_GetMarioPos().y - mPosition.y))
 		return false;
 
-	f32 rate = mPowerRate;
 	return isInSight(SMS_GetMarioPos(),
-	                 rate * getSaveParams()->mSearchLength.get(),
-	                 rate * getSaveParams()->mSearchAngle.get(),
-	                 rate * getSaveParams()->mSearchAware.get())
-	    ? true
-	    : false;
+	                 mPowerRate * getSaveParams()->mSearchLength.get(),
+	                 mPowerRate * getSaveParams()->mSearchAngle.get(),
+	                 mPowerRate * getSaveParams()->mSearchAware.get());
 }
 
 bool TAnimalBird::isChangeToItem() const
@@ -445,7 +445,7 @@ void TAnimalBird::doWalk()
 
 	f32 torque
 	    = getSaveParams()->mWalkingTorqueY.get() * SMSGetAnmFrameRate();
-	mRotation.y = MsAngleWrap(mTurnDir * torque + mRotation.y);
+	mRotation.y = MsWrap(mTurnDir * torque + mRotation.y, 0.0f, 360.0f);
 
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
 	JGeometry::TVec3<f32> velocity(0.0f, 0.0f,
@@ -459,8 +459,9 @@ bool TAnimalBird::doLanding(bool takeoff)
 	if (takeoff) {
 		f32 marchSpeed = getMyMarchSpeed() * SMSGetAnmFrameRate();
 		JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
-		JGeometry::TVec3<f32> velocity(0.0f, 0.0f, marchSpeed);
-		quat.rotate(velocity, velocity);
+		JGeometry::TVec3<f32> dir(0.0f, 0.0f, marchSpeed);
+		JGeometry::TVec3<f32> velocity;
+		quat.rotate(dir, velocity);
 		velocity.y = 0.0f;
 		mVelocity  = velocity;
 	}
@@ -480,11 +481,11 @@ bool TAnimalBird::doLanding(bool takeoff)
 	mRotation.x = mHomeRotation.x;
 	mRotation.z = mHomeRotation.z;
 
-	f32 torque
-	    = getSaveParams()->mLandingTorqueY.get() * SMSGetAnmFrameRate();
-	f32 turn = JGeometry::TUtil<f32>::clamp(
+	f32 torqueRate = getSaveParams()->mLandingTorqueY.get();
+	f32 torque     = torqueRate * SMSGetAnmFrameRate();
+	f32 turn       = JGeometry::TUtil<f32>::clamp(
 	    MsAngleDiff(mHomeRotation.y, mRotation.y), -torque, torque);
-	mRotation.y = MsAngleWrap(mRotation.y + turn);
+	mRotation.y = MsWrap(mRotation.y + turn, 0.0f, 360.0f);
 
 	mLinearVelocity = acceleration;
 
@@ -679,7 +680,22 @@ DEFINE_NERVE(TNerveAnimalBirdWalkOnGround, TLiveActor)
 		return TRUE;
 	}
 
-	bird->doWalk();
+	// doWalk()'s body spelled out: behind the call, TQuat4::rotate sits at
+	// depth 2 and the ROM's inlined expansion (plus its out-of-line
+	// TVec4<f32>::TVec4 call) turns into a bl. The UNUSED doWalk copy is
+	// size-exact on its own, so the original pasted this here.
+	bird->mGravity = 0.15f;
+
+	f32 torque
+	    = bird->getSaveParams()->mWalkingTorqueY.get() * SMSGetAnmFrameRate();
+	bird->mRotation.y
+	    = MsWrap(bird->mTurnDir * torque + bird->mRotation.y, 0.0f, 360.0f);
+
+	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(bird->mRotation);
+	JGeometry::TVec3<f32> velocity(
+	    0.0f, 0.0f, bird->getSaveParams()->mWalkingSpeed.get());
+	quat.rotate(velocity, velocity);
+	bird->mLinearVelocity = velocity;
 
 	if (bird->isWantToRest()) {
 		spine->pushAfterCurrent(&TNerveAnimalBirdWaitOnGround::theNerve());
