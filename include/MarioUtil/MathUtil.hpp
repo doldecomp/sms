@@ -234,6 +234,11 @@ template <class T> inline T MsClamp(T t, T l, T r)
 //     TLiveActor::calcRideMomentum       99.73% -> 93.67%
 // so the reload at the fruitsboat site comes from that call site's own shape,
 // not from this signature.
+// Also ruled out: spelling the upper bound `180.0f + alpha` instead of
+// `alpha + 180.0f`. MWCC normalises a commutative float add, so it is not one
+// instruction different anywhere in the tree, and TAnimalBird::doLanding's
+// residual (85.8%) is a 0x18 frame gap with a float-register permutation, not
+// an operand order here.
 inline f32 MsAngleDiff(f32 alpha, f32 beta)
 {
 	return alpha - MsWrap(beta, alpha - 180.0f, alpha + 180.0f);

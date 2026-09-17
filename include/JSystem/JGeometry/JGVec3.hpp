@@ -280,7 +280,23 @@ public:
 		return x * other.x + y * other.y + z * other.z;
 	}
 
-	// Incorrect!!!
+	// TODO: the store order is wrong somewhere. TLimitKoopaJr::moveRun's
+	// retail code stores x and y, reloads b.x, then computes and stores z,
+	// while this shape computes all three and then stores all three. But the
+	// 96 call sites in the tree overwhelmingly prefer the shape below; all
+	// three alternatives were measured over the whole tree and every one of
+	// them regresses and nothing improves:
+	//
+	//   x = ...; y = ...; z = ...;   (no temporaries)
+	//       JPADrawExecStripeCross 96.85 -> 92.80, DirBillBoard 98.43 ->
+	//       94.02, SMS_EmitSinkInPollutionEffect 98.75 -> 95.29, and 12 more
+	//   two temporaries, z assigned directly
+	//       StripeCross 96.85 -> 94.20, DirBillBoard 98.43 -> 94.68, 13 more
+	//   set(_x, _y, _z) in one expression (i.e. cross2's shape)
+	//       JPAVecToRotaMtx 56.86 -> 54.72, JPAConvectionField::affect
+	//       94.46 -> 92.33, 10 more
+	//
+	// So moveRun's order comes from that call site, not from here.
 	void cross(const TVec3& a, const TVec3& b)
 	{
 		f32 _x = a.y * b.z - a.z * b.y;

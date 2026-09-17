@@ -211,8 +211,10 @@ void TLimitKoopaJr::checkNerve()
 
 // TODO: 77.7%. The arithmetic and call order match; what is left is the frame
 // (0x118 vs 0xf0), the batched vs interleaved stores of the new position, and
-// JGVec3.hpp's cross() store order, which is flagged "Incorrect!!!" in that
-// header and is not this unit's to change.
+// cross()'s store order: retail stores forward.x and forward.y, reloads
+// offset.x, then computes and stores forward.z. That is not JGVec3.hpp's to
+// fix -- all three alternative shapes were measured there and each regresses
+// a dozen other call sites, so the order has to come from this site.
 void TLimitKoopaJr::moveRun()
 {
 	f32 angleVelocity
