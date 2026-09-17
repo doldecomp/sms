@@ -67,7 +67,11 @@ public:
 
 private:
 	/* 0x70 */ TBossGesso* mOwner;
-	/* 0x74 */ TMtx34f unk74;
+	// TPosition3f, not TMtx34f: retail's init calls the empty
+	// SMatrix34C<f>::SMatrix34C() out of line for this member, which only
+	// happens at the extra derivation level (map: one
+	// __ct__Q29JGeometry64TPosition3<...>Fv reference).
+	/* 0x74 */ TPosition3f unk74;
 	/* 0xA4 */ JGeometry::TVec3<f32> unkA4;
 };
 
