@@ -47,6 +47,17 @@ static const char* bwanwan_bastable[] = {
 	nullptr,
 };
 
+// fabricated: TBWBinder::bind and the graph-wander nerve both keep the
+// multiplication by a literal 1.0f and both call TVec3::set<f32> out of line,
+// which only happens one inline level below the direction vector, so the
+// forward vector was built by a helper taking a length. It is local to the TU
+// because the map lists no symbol for it anywhere.
+static inline JGeometry::TVec3<f32> MsGetVecFromRotY(f32 rot_y, f32 length)
+{
+	return JGeometry::TVec3<f32>(length * JMASSin(DEG2SHORTANGLE(rot_y)), 0.0f,
+	                             length * JMASCos(DEG2SHORTANGLE(rot_y)));
+}
+
 TBWParams::TBWParams(const char* path)
     : TSpineEnemyParams(path)
     , PARAM_INIT(mSLMarchSpeed, 6.0f)
@@ -557,27 +568,27 @@ void TBWBinder::bind(TLiveActor* actor)
 
 	if (boss->mSpine->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
 	    || boss->mSpine->getLatestNerve() == &TNerveBWDie::theNerve()) {
-		JGeometry::TVec3<f32> moved(next);
-		moved.sub(actor->mPosition);
-		actor->mLinearVelocity.set(moved.x, moved.y, moved.z);
+		actor->mLinearVelocity = next - actor->mPosition;
 		return;
 	}
 
 	if (actor->isAirborne()) {
+		f32 nextY = next.y;
+		f32 nextZ = next.z;
+
 		const TBGCheckData* ground;
-		f32 height
-		    = gpMap->checkGround(next.x, next.y + boss->getHeadHeight(),
-		                         next.z, &ground)
-		      + 1.0f;
+		f32 height = gpMap->checkGround(next.x, nextY + boss->getHeadHeight(),
+		                                nextZ, &ground)
+		             + 1.0f;
 
 		// When falling, also probe from where the boss is now, so it cannot
 		// drop through a ledge it is still standing on.
-		if (actor->mPosition.y > next.y && !ground->isEnemyThrough()) {
+		if (actor->mPosition.y > nextY && !ground->isEnemyThrough()) {
 			const TBGCheckData* ground2;
 			f32 height2 = gpMap->checkGround(next.x,
 			                                 actor->mPosition.y
 			                                     + boss->getHeadHeight(),
-			                                 next.z, &ground2)
+			                                 nextZ, &ground2)
 			              + 1.0f;
 			if (height2 > height) {
 				height = height2;
@@ -588,7 +599,8 @@ void TBWBinder::bind(TLiveActor* actor)
 		if (next.y <= height && !ground->checkFlag(BG_CHECK_FLAG_ILLEGAL)
 		    && !ground->isEnemyThrough()) {
 			next.y = height;
-			actor->mVelocity.set(0.0f, 0.0f, 0.0f);
+			JGeometry::TVec3<f32> stopped(0.0f, 0.0f, 0.0f);
+			actor->mVelocity = stopped;
 			actor->offLiveFlag(LIVE_FLAG_AIRBORNE);
 			actor->offLiveFlag(LIVE_FLAG_UNK8000);
 		} else {
@@ -599,9 +611,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		actor->mGroundPlane  = ground;
 	}
 
-	JGeometry::TVec3<f32> moved(next);
-	moved.sub(actor->mPosition);
-	velocity.set(moved.x, moved.y, moved.z);
+	velocity = next - actor->mPosition;
 
 	// Slide the boss along the graph link it is walking on, at three units a
 	// frame minimum so it never stalls.
@@ -633,7 +643,7 @@ void TBWBinder::bind(TLiveActor* actor)
 					along = 3.0f;
 				}
 
-				velocity.set(link.x, link.y, link.z);
+				velocity = link;
 				velocity.scale(along);
 			}
 		}
@@ -646,10 +656,9 @@ void TBWBinder::bind(TLiveActor* actor)
 		if (dist != 0.0f) {
 			f32 roll = 360.0f * (dist / 3141.5928f);
 
-			JGeometry::TVec3<f32> facing;
-			facing.set(MsSin(actor->mRotation.y) * 1.0f, 0.0f,
-			           MsCos(actor->mRotation.y) * 1.0f);
-			JGeometry::TVec3<f32> dir(facing);
+			JGeometry::TVec3<f32> facing
+			    = MsGetVecFromRotY(actor->mRotation.y, 1.0f);
+			JGeometry::TVec3<f32> dir = facing;
 			if (dir.dot(velocity) < 0.0f)
 				roll = -roll;
 
@@ -1117,8 +1126,7 @@ void TBossWanwan::rollNextGraphNode()
 	int prev               = tracer->getPrevIndex();
 	const TGraphWeb* graph = tracer->getGraph();
 
-	JGeometry::TVec3<f32> facing;
-	facing.set(MsSin(mRotation.y) * 1.0f, 0.0f, MsCos(mRotation.y) * 1.0f);
+	JGeometry::TVec3<f32> facing = MsGetVecFromRotY(mRotation.y, 1.0f);
 
 	getTracer()->moveTo(
 	    graph->getEscapeDirLimited(prev, curr, facing, mPosition, 100.0f, -1));
@@ -1518,9 +1526,8 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 			    && gpMarDirector->unk58 >= 14400)
 				boss->showMessage(BALLOON_MSG_BWANWAN_LEAD_TO_HOT);
 
-			JGeometry::TVec3<f32> facing;
-			facing.set(MsSin(boss->mRotation.y) * 1.0f, 0.0f,
-			           MsCos(boss->mRotation.y) * 1.0f);
+			JGeometry::TVec3<f32> facing
+			    = MsGetVecFromRotY(boss->mRotation.y, 1.0f);
 			boss->getTracer()->moveTo(graph->getEscapeDirLimited(
 			    prev, curr, facing, boss->mPosition, 100.0f, -1));
 			boss->setGoalPathFromGraph();
