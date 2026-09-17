@@ -177,7 +177,9 @@ public:
 		TParamRT<f32> mWaistPitch;
 		TParamRT<s16> mWaistRollMax;
 		TParamRT<s16> mWaistPitchMax;
-		TParamRT<s32> mRoll;
+		// f32, not s32: its PARAM_INIT default is -0.45f and both
+		// TMario::calcBaseMtx branches read it with lfs.
+		TParamRT<f32> mRoll;
 		TParamRT<f32> mPitch;
 		TParamRT<s16> mRollMax;
 		TParamRT<s16> mPitchMax;

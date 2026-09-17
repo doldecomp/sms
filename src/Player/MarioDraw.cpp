@@ -1581,7 +1581,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		return;
 	}
 
-	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
 		J3DTransformInfo ti;
 		ti.mScale.x     = 1.0f;
 		ti.mScale.y     = 1.0f;
@@ -1599,7 +1599,6 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		return;
 	}
 
-	// Swimming
 	if (mHolder != nullptr && mHolder->getTakingMtx() != nullptr) {
 		MTXCopy(mHolder->getTakingMtx(), mtx);
 		return;
@@ -1646,7 +1645,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		v2.sub(p3, p2);
 
 		JGeometry::TVec3<f32> cross;
-		cross.cross(v2, v1);
+		cross.cross2(v2, v1);
 		cross.normalize();
 
 		f32 d = cross.dot(p1);
@@ -1660,21 +1659,24 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		axis.cross(ncross, forward);
 		MsVECNormalize(&axis, &axis);
 
+		// The ROM crosses with the *unnormalised* up vector and normalises
+		// it only afterwards: `bin` never has its address taken, so it stays
+		// in f30/f31/f28, while `ncross` is the one that goes to memory.
 		JGeometry::TVec3<f32> bin;
 		bin.cross(axis, ncross);
-		MsVECNormalize(&bin, &bin);
+		MsVECNormalize(&ncross, &ncross);
 
 		mtx[0][0] = axis.x;
 		mtx[0][1] = ncross.x;
-		mtx[0][2] = bin.z;
+		mtx[0][2] = bin.x;
 		mtx[0][3] = mPosition.x;
 		mtx[1][0] = axis.y;
 		mtx[1][1] = ncross.y;
-		mtx[1][2] = bin.x;
+		mtx[1][2] = bin.y;
 		mtx[1][3] = (avgY < mPosition.y) ? mPosition.y : avgY;
 		mtx[2][0] = axis.z;
 		mtx[2][1] = ncross.z;
-		mtx[2][2] = bin.y;
+		mtx[2][2] = bin.z;
 		mtx[2][3] = mPosition.z;
 		(void)d;
 	} else {
@@ -1694,54 +1696,54 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
 			// Use water-side surf params
-			s16 rMax = mSurfingParamsWaterRed.mPitchMax.get();
-			s16 pMax = mSurfingParamsWaterRed.mPitchMax.get();
+			s16 pitchMax  = mSurfingParamsWaterRed.mPitchMax.get();
+			f32 pitchRate = mSurfingParamsWaterRed.mPitch.get();
+			f32 rollRate  = mSurfingParamsWaterRed.mRoll.get();
+			s16 rollMax   = mSurfingParamsWaterRed.mRollMax.get();
 
-			f32 rollScale  = mSurfingParamsWaterRed.mPitch.get();
-			f32 pitchScale = mSurfingParamsWaterRed.mWaistRoll.get();
+			s16 pitch = (s16)(mForwardVel * pitchRate);
+			s16 delta = mFaceAngle.y - unk9C;
+			s16 roll  = (s16)((f32)delta * mForwardVel * rollRate);
+			if (pitch > pitchMax)
+				pitch = pitchMax;
+			if (pitch < -pitchMax)
+				pitch = -pitchMax;
 
-			s16 limitR = (s16)(mForwardVel * rollScale);
-			s16 delta  = mFaceAngle.y - unk9C;
-			s16 limitP = (s16)((f32)delta * mForwardVel * pitchScale);
-			if (limitR > rMax)
-				limitR = rMax;
-			if (limitR < -rMax)
-				limitR = -rMax;
+			if (roll > rollMax)
+				roll = rollMax;
+			if (roll < -rollMax)
+				roll = -rollMax;
 
-			if (limitP > pMax)
-				limitP = pMax;
-			if (limitP < -pMax)
-				limitP = -pMax;
-
-			unk414.y = ((f32)limitR - unk414.y)
+			unk414.y = ((f32)pitch - unk414.y)
 			               * mSurfingParamsWaterRed.mAngleChangeRate.get()
 			           + unk414.y;
-			unk414.x = ((f32)limitP - unk414.x)
+			unk414.x = ((f32)roll - unk414.x)
 			               * mSurfingParamsWaterRed.mAngleChangeRate.get()
 			           + unk414.x;
 		} else {
 			// Use ground-side surf params
-			s16 rMax       = mSurfingParamsGroundRed.mRollMax.get();
-			s16 pMax       = mSurfingParamsGroundRed.mPitchMax.get();
-			f32 rollScale  = mSurfingParamsGroundRed.mWaistRoll.get();
-			f32 pitchScale = mSurfingParamsGroundRed.mPitch.get();
+			s16 pitchMax  = mSurfingParamsGroundRed.mPitchMax.get();
+			f32 pitchRate = mSurfingParamsGroundRed.mPitch.get();
+			f32 rollRate  = mSurfingParamsGroundRed.mRoll.get();
+			s16 rollMax   = mSurfingParamsGroundRed.mRollMax.get();
 
-			s16 limitR = (s16)(mForwardVel * rollScale);
-			s16 delta  = mFaceAngle.y - unk9C;
-			s16 limitP = (s16)((f32)delta * mForwardVel * pitchScale);
-			if (limitR > rMax)
-				limitR = rMax;
-			if (limitR < -rMax)
-				limitR = -rMax;
-			if (limitP > pMax)
-				limitP = pMax;
-			if (limitP < -pMax)
-				limitP = -pMax;
+			s16 pitch = (s16)(mForwardVel * pitchRate);
+			s16 delta = mFaceAngle.y - unk9C;
+			s16 roll  = (s16)((f32)delta * mForwardVel * rollRate);
+			if (pitch > pitchMax)
+				pitch = pitchMax;
+			if (pitch < -pitchMax)
+				pitch = -pitchMax;
 
-			unk414.y = ((f32)limitR - unk414.y)
+			if (roll > rollMax)
+				roll = rollMax;
+			if (roll < -rollMax)
+				roll = -rollMax;
+
+			unk414.y = ((f32)pitch - unk414.y)
 			               * mSurfingParamsGroundRed.mAngleChangeRate.get()
 			           + unk414.y;
-			unk414.x = ((f32)limitP - unk414.x)
+			unk414.x = ((f32)roll - unk414.x)
 			               * mSurfingParamsGroundRed.mAngleChangeRate.get()
 			           + unk414.x;
 		}
