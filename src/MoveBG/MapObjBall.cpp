@@ -1442,12 +1442,22 @@ BOOL TResetFruit::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if (!isState(STATE_NORMAL) && !isState(STATE_HOLDING)
-	    && !isState(STATE_LIVING))
-		return FALSE;
+	if (isState(STATE_NORMAL) || isState(STATE_HOLDING)
+	    || isState(STATE_LIVING)) {
+		// Qualified so that TResetFruit::touchActor expands here as it does
+		// in control(); the virtual call cannot be inlined.
+		TResetFruit::touchActor(sender);
 
-	touchActor(sender);
-	return TMapObjBall::receiveMessage(sender, message);
+		BOOL handled = TMapObjBall::receiveMessage(sender, message);
+		// Putting the fruit down starts its countdown.
+		if (message == HIT_MESSAGE_PUT) {
+			if (isState(STATE_NORMAL))
+				mState = STATE_LIVING;
+		}
+		return handled;
+	}
+
+	return FALSE;
 }
 
 void TMapObjBall::calcCurrentMtx()
