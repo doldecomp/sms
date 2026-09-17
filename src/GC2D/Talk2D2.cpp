@@ -325,7 +325,7 @@ void TTalk2D2::setMessageID(u32 message_id, u32 flags)
 
 	if (npc->checkActionFlag(0x200)) {
 		if (npc->isMonte()) {
-			if (npc->isMonteW()) {
+			if (npc->isNormalMonteW() || npc->isSpecialMonteW()) {
 				if (npc->isChild())
 					mMessageID = 0x31;
 				else
@@ -336,7 +336,7 @@ void TTalk2D2::setMessageID(u32 message_id, u32 flags)
 				mMessageID = 0x28;
 			}
 		} else if (npc->isMare()) {
-			if (npc->isMareW()) {
+			if (npc->isNormalMareW() || npc->isSpecialMareW()) {
 				if (npc->isChild())
 					mMessageID = 0x32;
 				else
@@ -465,8 +465,8 @@ void TTalk2D2::openTalkWindow(TBaseNPC* npc)
 		gpCamera->makeMtxForTalk(npc);
 
 	if (mIsBoard) {
-		mBoardBound->setPanePosition(60, JUTPoint(0, 80), JUTPoint(0, 80),
-		                             JUTPoint(0, -800));
+		mBoardBound->setPanePosition(60, JUTPoint(0, -800), JUTPoint(0, 80),
+		                             JUTPoint(0, 80));
 		mBoardBound->update();
 		mBoardCursor->setAlpha(0);
 		mTalkMode = TALK_MODE_OPENING;
@@ -700,8 +700,9 @@ bool TTalk2D2::openNormalWindow()
 
 void TTalk2D2::moveBoardWindow()
 {
-	if (mBoardCursor->getAlpha() < 255) {
-		s32 alpha = mBoardCursor->getAlpha() + 4;
+	int alpha = mBoardCursor->getAlpha();
+	if (alpha < 255) {
+		alpha += 4;
 		if (alpha > 255) {
 			mBoardCursorOn->setAlpha(0);
 			alpha = 255;
@@ -718,21 +719,21 @@ void TTalk2D2::moveBoardWindow()
 	else
 		cursor = mBoardCursorOff;
 
-	s32 alpha = cursor->getAlpha();
+	int blink = cursor->getAlpha();
 	if (mCursorBlinkUp) {
-		alpha += 4;
-		if (alpha > 255) {
+		blink += 4;
+		if (blink > 255) {
 			mCursorBlinkUp = false;
-			alpha          = 255;
+			blink          = 255;
 		}
 	} else {
-		alpha -= 4;
-		if (alpha < 0) {
+		blink -= 4;
+		if (blink < 0) {
 			mCursorBlinkUp = true;
-			alpha          = 0;
+			blink          = 0;
 		}
 	}
-	cursor->setAlpha(alpha);
+	cursor->setAlpha(blink);
 }
 
 void TTalk2D2::checkBoardControler()
@@ -787,13 +788,14 @@ void TTalk2D2::moveTalkWindow()
 		if (mCharCursor[i] > mLineLength[i])
 			continue;
 
-		int idx = mCharCursor[i] + i * LINE_LENGTH;
-		if (mCharBox[idx]->isVisible()) {
-			s16 alpha = mCharBox[idx]->getAlpha() + mAlphaStep;
+		int idx         = mCharCursor[i] + i * LINE_LENGTH;
+		J2DTextBox* box = mCharBox[idx];
+		if (box->isVisible()) {
+			s16 alpha   = box->getAlpha() + mAlphaStep;
 			s16 clamped = alpha;
 			if (clamped > 255)
 				clamped = 255;
-			mCharBox[idx]->setAlpha(clamped);
+			box->setAlpha(clamped);
 			if (alpha >= 255)
 				mCharCursor[i]++;
 		} else if (mCharTimer <= 0) {
