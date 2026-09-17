@@ -250,7 +250,7 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 		unk74 = fromPolar(
 		    gpMarioOriginal->getIntendedYaw(),
 		    gpMarioOriginal->getIntendedMag()
-		        * mOwner->mOwner->getSaveParam()->getSLTentacleStretch());
+		        * mOwner->mOwner->getSaveParam2()->getSLTentacleStretch());
 
 		JGeometry::TVec3<f32> local_44 = mOwner->getOwner()->getPosition();
 		local_44 -= local_EC;
@@ -985,12 +985,12 @@ void TBGTentacle::moveConstraint()
 		}
 		int iVar10;
 		if (mOwner->beakHeld()) {
-			iVar10 = mOwner->getSaveParam()->mSLBeakHoming.value;
+			iVar10 = mOwner->getSaveParam2()->mSLBeakHoming.value;
 		} else {
 			if (mOwner->getAttackMode() == 2) {
-				iVar10 = mOwner->getSaveParam()->mSLUnisonHoming.value;
+				iVar10 = mOwner->getSaveParam2()->mSLUnisonHoming.value;
 			} else {
-				iVar10 = mOwner->getSaveParam()->mSLSingleHoming.value;
+				iVar10 = mOwner->getSaveParam2()->mSLSingleHoming.value;
 			}
 		}
 
@@ -1071,7 +1071,7 @@ void TBGTentacle::decideOwnState()
 		}
 
 		if (mState == 5
-		    && mTimeInCurrentState >= mOwner->getSaveParam()->getSLStunTime()) {
+		    && mTimeInCurrentState >= mOwner->getSaveParam2()->getSLStunTime()) {
 			if (mOwner->getAttackMode() == 6)
 				changeStateAndFixNodes(9);
 			else
@@ -1082,7 +1082,7 @@ void TBGTentacle::decideOwnState()
 	case 0:
 	case 2:
 		if (mState == 2
-		    && mTimeInCurrentState >= mOwner->getSaveParam()->getSLRestTime()) {
+		    && mTimeInCurrentState >= mOwner->getSaveParam2()->getSLRestTime()) {
 			if (mOwner->getAttackMode() == 6)
 				changeStateAndFixNodes(9);
 			else
@@ -1091,7 +1091,7 @@ void TBGTentacle::decideOwnState()
 		break;
 
 	case 4: {
-		int amputeeTime = mOwner->getSaveParam()->getSLAmputeeTime();
+		int amputeeTime = mOwner->getSaveParam2()->getSLAmputeeTime();
 		if (mTimeInCurrentState >= amputeeTime) {
 			changeStateAndFixNodes(6);
 			break;
@@ -1116,7 +1116,7 @@ void TBGTentacle::checkDamage()
 		if (mOwner->getAttackMode() == 6)
 			gpMarDirector->fireStreamingMovie(10);
 
-		mOwner->unk1A8 = mOwner->getSaveParam()->mSLAmputeeWait.get();
+		mOwner->unk1A8 = mOwner->getSaveParam2()->mSLAmputeeWait.get();
 		changeStateAndFixNodes(4);
 	}
 }
@@ -1155,10 +1155,10 @@ void TBGTentacle::calcAtkParticleAndSE()
 		}
 	}
 
-	f32 fVar2 = mOwner->getSaveParam()->mSLBlurScale.value;
+	f32 fVar2 = mOwner->getSaveParam2()->mSLBlurScale.value;
 	int iVar5 = unk80->checkCurBckFromIndex(23)
 	                ? 7
-	                : mOwner->getSaveParam()->mSLBlurJoint.get();
+	                : mOwner->getSaveParam2()->mSLBlurJoint.get();
 
 	unk80->getModel()->setAnmMtx(3, unk50);
 	MTXScaleApply(unk50, unk50, fVar2, fVar2, fVar2);
@@ -1417,7 +1417,7 @@ void TBGTentacle::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mState == 4) {
 			if (mTimeInCurrentState
-			        >= mOwner->getSaveParam()->getSLAmputeeTime() - 240
+			        >= mOwner->getSaveParam2()->getSLAmputeeTime() - 240
 			    && mTimeInCurrentState % 6 >= 3) {
 				cue &= ~CUE_ENTRY;
 			}
@@ -1426,7 +1426,7 @@ void TBGTentacle::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_MOVE) && mState == 4
 	    && mTimeInCurrentState
-	           < mOwner->getSaveParam()->getSLAmputeeTime() - 240) {
+	           < mOwner->getSaveParam2()->getSLAmputeeTime() - 240) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND,
 		                                &mTakeHit->mPosition, 0, nullptr, 0, 4);
 	}
