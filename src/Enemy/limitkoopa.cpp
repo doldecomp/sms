@@ -466,10 +466,11 @@ void TLimitKoopa::bind()
 void TLimitKoopa::moveStop() { }
 
 // TODO: 77.1%, and the ROM calls this from
-// TNerveLimitKoopaHipDropStart::execute while MWCC still inlines it here.
-// Naming the launch-speed fetch and splitting the goal construction (the two
-// statement-budget levers that worked on TFruitsBoat::setBckTrack) both left
-// the decision unchanged, so the deciding statement has not been found.
+// TNerveLimitKoopaHipDropStart::execute while MWCC still inlines it here,
+// which is why that nerve scores 0%. Naming the launch-speed fetch, the
+// gravity fetch and the length, and splitting the goal construction
+// per-component, all left the inline decision unchanged, so the statement
+// budget is not the lever for a callee this size with a single call site.
 void TLimitKoopa::startHipDrop()
 {
 	// One local carries the jump: first the straight-up launch speed, then the
