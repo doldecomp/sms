@@ -111,7 +111,31 @@ void TMario::doJumping()
 	setJumpingAttackArea();
 }
 
-void TMario::askStrongGroundTouch() { }
+// UNUSED (0x168 in the map): jumpingBasic's landing-strength test, which
+// it inlines in full.
+bool TMario::askStrongGroundTouch()
+{
+	bool isStrong = true;
+	if (checkUnk114(UNK114_FLAG_UNK100) == true)
+		isStrong = false;
+
+	if (unk2A8.y - mPosition.y <= mDeParams.mDamageFallHeight.get())
+		isStrong = false;
+
+	if (onYoshi())
+		isStrong = false;
+
+	if (mGroundPlane->isThing4())
+		isStrong = false;
+
+	if (mVel.y > -70.0f)
+		isStrong = false;
+
+	if (!isMario())
+		isStrong = false;
+
+	return isStrong;
+}
 
 BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 {
@@ -128,23 +152,7 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 
 		bool didTrample = false;
 
-		bool isStrong = true;
-		if (checkUnk114(UNK114_FLAG_UNK100) == true)
-			isStrong = false;
-
-		if (unk2A8.y - mPosition.y <= mDeParams.mDamageFallHeight.get())
-			isStrong = false;
-
-		if (onYoshi())
-			isStrong = false;
-
-		if (mGroundPlane->isThing4())
-			isStrong = false;
-
-		if (mVel.y > -70.0f)
-			isStrong = false;
-
-		if (isStrong) {
+		if (askStrongGroundTouch()) {
 			if (checkFlag(MARIO_FLAG_ON_SAND)) {
 				sinkInSandEffect();
 				return changePlayerStatus(MARIO_STATUS_FOOT_DOWN, 0, 0);
@@ -524,18 +532,24 @@ BOOL TMario::jumpDownCommon(int param_1, int animation, float velocity)
 		changePlayerStatus(param_1, mStatusArg, 0);
 		break;
 	case 2:
-		setAnimation(ANIM_BKDWN, 1.0f);
-		playerRefrection(0);
-		if (mVel.y > 0.0f)
-			mVel.y = 0.0f;
-
+		checkWallJumping();
 		setPlayerVelocity(-velocity);
 		break;
 	}
 	return result;
 }
 
-void TMario::checkWallJumping() { }
+// UNUSED (0x60 in the map): jumpDownCommon's wall-hit reaction, factored
+// out; it takes no argument, so the velocity flip stays at the call site.
+// TODO: 84 bytes against the map's 0x60, so three instructions of the body
+// are still missing; jumpDownCommon matches either way.
+void TMario::checkWallJumping()
+{
+	setAnimation(ANIM_BKDWN, 1.0f);
+	playerRefrection(0);
+	if (mVel.y > 0.0f)
+		mVel.y = 0.0f;
+}
 
 BOOL TMario::jumpShortBackDown()
 {

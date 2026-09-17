@@ -781,7 +781,7 @@ public:
 	void doSpinJumping();
 	void setJumpingAttackArea();
 	void doJumping();
-	void askStrongGroundTouch();
+	bool askStrongGroundTouch();
 	BOOL jumpingBasic(int, int, int);
 	BOOL considerJumpRotate();
 	BOOL checkBackTrig();
