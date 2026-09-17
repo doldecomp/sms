@@ -1028,8 +1028,9 @@ void TBossWanwan::takeBath()
 
 	mHits[0]->onHitFlag(HIT_FLAG_NO_COLLISION);
 	mHits[1]->onHitFlag(HIT_FLAG_NO_COLLISION);
-	for (int i = 0; i < mLeash->getRope()->mNumPoints; ++i)
-		mLeash->getNode(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
+	TBWLeash* leash = mLeash;
+	for (int i = 0; i < leash->getRope()->mNumPoints; ++i)
+		leash->getNode(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
 	mPicket->onHitFlag(HIT_FLAG_NO_COLLISION);
 
 	changeBck(BWANWAN_BCK_DOWN);
@@ -1526,12 +1527,12 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		if (VECMag(toNode) < 400.0f)
 			boss->reverseNextGraphNode();
 
-		boss->slideToCurPathNode(
-		    3.0f
-		        * (((f32)boss->getHitPoints()
-		            / (f32)boss->getSaveParam2()->mSLBWHitPointMax.get())
-		           * boss->getMarchSpeed()),
-		    boss->getTurnSpeed());
+		f32 speed
+		    = 3.0f
+		      * (((f32)boss->getHitPoints()
+		          / (f32)boss->getSaveParam2()->mSLBWHitPointMax.get())
+		         * boss->getMarchSpeed());
+		boss->slideToCurPathNode(speed, boss->getTurnSpeed());
 		return FALSE;
 	}
 
@@ -1567,7 +1568,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 	boss->mIsRolling = 0;
 	f32 heat = (f32)boss->getHitPoints()
 	           / (f32)boss->getSaveParam2()->mSLBWHitPointMax.get();
-	if (boss->getPicket()->isTaken())
+	if (boss->getPicket()->getHolder())
 		taken = 1;
 
 	if (taken) {
@@ -1779,8 +1780,9 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0) {
-		boss->setVelocityAndFlag10(0.0f, 0.0f, 0.0f);
-		boss->mLinearVelocity.set(0.0f, 0.0f, 0.0f);
+		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+		boss->mVelocity       = zero;
+		boss->mLinearVelocity = zero;
 		boss->onLiveFlag(LIVE_FLAG_UNK10);
 		boss->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		gpMarioParticleManager->emit(BWANWAN_JPA_MS_BWAN_DEADYUGE,
@@ -1819,8 +1821,9 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 
 		boss->mHits[0]->onHitFlag(HIT_FLAG_NO_COLLISION);
 		boss->mHits[1]->onHitFlag(HIT_FLAG_NO_COLLISION);
-		for (int i = 0; i < boss->getLeash()->getRope()->mNumPoints; ++i)
-			boss->getLeash()->getNode(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
+		TBWLeash* leash = boss->getLeash();
+		for (int i = 0; i < leash->getRope()->mNumPoints; ++i)
+			leash->getNode(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
 		boss->getPicket()->onHitFlag(HIT_FLAG_NO_COLLISION);
 
 		boss->changeBck(BWANWAN_BCK_DOWN);
