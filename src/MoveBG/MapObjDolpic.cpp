@@ -145,7 +145,7 @@ void TMonumentShine::control()
 		if (unk144 == 2) {
 			if (unk148 > 0) {
 				f32 diff
-				    = MsAngleDiff(mRotation.y, mInitialRotation.y + 360.0f);
+				    = MsAngleDiff(mInitialRotation.y + 360.0f, mRotation.y);
 				if (diff > 0.1f)
 					diff = 0.1f;
 				if (0.0f == diff)
@@ -153,7 +153,7 @@ void TMonumentShine::control()
 				mAngularVelocity.y += diff;
 			} else {
 				f32 diff
-				    = MsAngleDiff(mRotation.y, mInitialRotation.y - 360.0f);
+				    = MsAngleDiff(mInitialRotation.y - 360.0f, mRotation.y);
 				if (diff < -0.1f)
 					diff = -0.1f;
 				if (0.0f == diff)
@@ -169,10 +169,8 @@ void TMonumentShine::control()
 				}
 			} else {
 				mAngularVelocity.y -= 0.1f;
-				f32 step = 360.0f;
-				f32 zero = 0.0f;
-				while (mRotation.y + mAngularVelocity.y < zero) {
-					mRotation.y += step;
+				while (mRotation.y + mAngularVelocity.y < 0.0f) {
+					mRotation.y += 360.0f;
 					unk144++;
 				}
 			}
@@ -182,8 +180,7 @@ void TMonumentShine::control()
 		f32 limit = 360.0f;
 		while (rot >= limit)
 			rot -= limit;
-		f32 zero = 0.0f;
-		while (rot < zero)
+		while (rot < 0.0f)
 			rot += limit;
 		mRotation.y = rot;
 	}
@@ -391,6 +388,12 @@ void TMareGate::control()
 {
 	TMapObjBase::control();
 
+	// TODO: 8 bytes of frame short (0x18 vs 0x20) with every instruction
+	// exact. Trials: `&getPosition()` for `&mPosition` lands the frame but
+	// hoists `addi r31, this, 0x10` above `gateCheck`; a second
+	// `SMSGetMSound()` for the handle argument also lands the frame but
+	// hoists `addi r31, sound, 0x7c`. Both levers are +8; neither keeps the
+	// argument setup at the call the way retail does.
 	MSound* sound = SMSGetMSound();
 	sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
 	                       &sound->unk7C, 0, 4);
@@ -424,8 +427,8 @@ void TDemoCannon::initMapObj()
 {
 	TMapObjBase::initMapObj();
 
-	mMActor->setBck("democannon_dpt");
-	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+	getMActor()->setBck("democannon_dpt");
+	J3DFrameCtrl* frameCtrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	frameCtrl->setFrame(frameCtrl->getEnd());
 
 	void* res
@@ -433,17 +436,18 @@ void TDemoCannon::initMapObj()
 	SDLModelData* sdlData = new SDLModelData(J3DModelLoaderDataBase::load(
 	    res, J3DMLF_MaterialPEFull | (5 << J3DMLF_TevStageNumShift)));
 
-	JUTNameTab* jointName = mMActor->getModel()->getModelData()->getJointName();
+	JUTNameTab* jointName
+	    = getMActor()->getModel()->getModelData()->getJointName();
 
 	TSharedParts* parts = new TSharedParts(this, jointName->getIndex("nullA"),
 	                                       sdlData, 3, "<TSharedParts>");
 	unk138              = parts;
 
-	res = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_mario.bmd");
-	SDLModelData* sdlData2 = new SDLModelData(J3DModelLoaderDataBase::load(
+	res     = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_mario.bmd");
+	sdlData = new SDLModelData(J3DModelLoaderDataBase::load(
 	    res, J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift)));
 
-	parts  = new TSharedParts(this, 0, sdlData2, 3, "<TSharedParts>");
+	parts  = new TSharedParts(this, 0, sdlData, 3, "<TSharedParts>");
 	unk13C = parts;
 }
 
