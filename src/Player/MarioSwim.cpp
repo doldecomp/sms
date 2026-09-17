@@ -8,7 +8,15 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TMario::isSwimWaiting() { }
+// UNUSED (0x1c in the map): a status predicate. No live caller inlines it
+// (MarioSwim is instruction-exact throughout without it), so only the map
+// size constrains the body.
+bool TMario::isSwimWaiting()
+{
+	if (getStatus() == MARIO_STATUS_SWIM_WAIT)
+		return true;
+	return false;
+}
 
 void TMario::doSwimming()
 {

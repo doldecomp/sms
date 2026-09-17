@@ -1141,7 +1141,7 @@ public:
 	BOOL waitMain();
 
 	// Swim stuff
-	void isSwimWaiting();
+	bool isSwimWaiting();
 	void doSwimming();
 	BOOL checkSwimJump();
 	BOOL checkSwimToHangFence();
