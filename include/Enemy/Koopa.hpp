@@ -219,9 +219,11 @@ public:
 	BOOL isTumbling() const;
 	void stagger(bool force);
 	bool getShowered();
-	BOOL effectsTumble() const;
+	// Both are bool, not BOOL: TBathtub::getNumKillerBurstable and
+	// getNumKillerLaunchable mask the result with clrlwi. after the bl.
+	bool effectsTumble() const;
 	void getDown();
-	BOOL allowsLaunch() const;
+	bool allowsLaunch() const;
 	f32 getNeckFocus() const;
 	bool isProvoking() const;
 	bool isFlaming() const;

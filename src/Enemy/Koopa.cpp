@@ -1028,11 +1028,11 @@ f32 TKoopa::getNeckFocus() const
 	return focus;
 }
 
-BOOL TKoopa::allowsLaunch() const
+bool TKoopa::allowsLaunch() const
 {
 	if (&TNerveKoopaTumble::theNerve() == mSpine->getCurrentNerve())
-		return FALSE;
-	return TRUE;
+		return false;
+	return true;
 }
 
 void TKoopa::getDown()
@@ -1051,14 +1051,14 @@ void TKoopa::getDown()
 	mSpine->pushNerve(&TNerveKoopaGetDown::theNerve());
 }
 
-BOOL TKoopa::effectsTumble() const
+bool TKoopa::effectsTumble() const
 {
 	if (&TNerveKoopaTumble::theNerve() == mSpine->getCurrentNerve()) {
 		int time = mSpine->getTime();
 		if (time < 900 && time > 190)
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
 bool TKoopa::getShowered()
