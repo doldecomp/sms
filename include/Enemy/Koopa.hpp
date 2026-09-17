@@ -199,12 +199,12 @@ public:
 	void getDown();
 	BOOL allowsLaunch() const;
 	f32 getNeckFocus() const;
-	BOOL isProvoking() const;
+	bool isProvoking() const;
 	BOOL isFlaming() const;
 	f32 getFlameDirRate() const;
 	void setIgnoreMario(long ignore);
 	BOOL ignoresMario() const;
-	BOOL isBreathing() const;
+	bool isBreathing() const;
 	void laugh();
 	BOOL endsAnm() const;
 	int getAnmIndex() const;

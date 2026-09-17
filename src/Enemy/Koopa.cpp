@@ -518,42 +518,39 @@ void TKoopaFlame::control()
 
 	mLength += mSpeed;
 
-	f32 height = mHeight;
 	f32 length = mLength;
+	JGeometry::TVec3<f32> position;
+	position.x = mDirection.x * length + mStartPos.x;
+	position.y = mDirection.y * length + mStartPos.y;
+	position.z = mDirection.z * length + mStartPos.z;
 	f32 radius = mRadius;
-	if (height == 0.0f)
+	f32 height = mHeight;
+	if (height <= 0.0f)
 		height = 2.0f * radius;
 
-	mPosition.x = mDirection.x * length + mStartPos.x;
-	mPosition.y = mDirection.y * length + mStartPos.y;
-	mPosition.z = mDirection.z * length + mStartPos.z;
-	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
-	offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
-	mAttackRadius = radius;
-	mAttackHeight = height;
-	mDamageRadius = radius;
-	mDamageHeight = height;
-	calcEntryRadius();
+	set(position, radius, height);
 }
 
 BOOL TKoopaFlame::receiveMessage(THitActor*, u32 message)
 {
-	if (message != HIT_MESSAGE_SPRAYED_BY_WATER)
-		return TRUE;
-	return FALSE;
+	// A switch is what gives the ROM's signed compare; a plain `==` on the
+	// u32 parameter emits cmplwi.
+	switch (message) {
+	case HIT_MESSAGE_SPRAYED_BY_WATER:
+		return FALSE;
+	}
+	return TRUE;
 }
 
 void TKoopaFlame::attack_(THitActor* other)
 {
 	if (other->receiveMessage(this, HIT_MESSAGE_UNKA)
 	    && other == (THitActor*)gpMarioAddress) {
-		SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f),
-		               mOwner->getParam()->flameJump.get());
+		f32 jump = mOwner->getParam()->flameJump.get();
+		SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), jump);
 		mOwner->mLaughPending = true;
-		TKoopa* koopa         = mOwner;
-		koopa->changeAnm(TKoopa::KOOPA_ANM_FIRE_END, 0,
-		                 koopa->getParam()->fireSpeed.get());
+		mOwner->changeAnm(TKoopa::KOOPA_ANM_FIRE_END, 0,
+		                  mOwner->getParam()->fireSpeed.get());
 		mOwner->mWaitTimer = 240;
 	}
 }
@@ -739,10 +736,39 @@ void TKoopa::resetFlame_()
 
 void TKoopa::setUpHitActors()
 {
-	if (isBreathing())
-		breathFlame();
-	else
-		resetFlame_();
+	// breathFlame() and resetFlame_() are both UNUSED and both spelled out
+	// here: behind a call MWCC refuses to expand a 0x1c0-byte body, while the
+	// ROM has them inline (same pasted-UNUSED pattern as TFlyEnemy::flyMove
+	// and TAnimalBird::doWalk).
+	if (isBreathing()) {
+		int spent    = -1;
+		bool tooNear = false;
+		for (int i = 0; i < 10; i++) {
+			TKoopaFlame* flame = mFlames[i];
+			if (!flame->isAlive())
+				spent = i;
+			else if (flame->getLength()
+			         < 2.0f * getParam()->flameRadius.get())
+				tooNear = true;
+		}
+
+		if (!tooNear && spent >= 0) {
+			MtxPtr mtx = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
+			JGeometry::TVec3<f32> position(mtx[0][3], mtx[1][3] - 500.0f,
+			                               mtx[2][3]);
+			JGeometry::TVec3<f32> direction(mtx[0][0], 0.0f, mtx[2][0]);
+			direction.normalize();
+
+			TKoopaParams* params = getParam();
+			mFlames[spent]->fire(position, direction,
+			                     params->flameVelocity.get(), 4000.0f,
+			                     params->flameRadius.get(),
+			                     params->flameHeight.get());
+		}
+	} else {
+		for (int i = 0; i < 10; i++)
+			mFlames[i]->resetFlame();
+	}
 
 	MtxPtr agoMtx = getMActor()->getModel()->getAnmMtx(mAgoJntIndex);
 	f32 headRadius = getParam()->headRadius.get();
@@ -757,12 +783,12 @@ void TKoopa::changeAnm(int bck_index, int btp_index, f32 rate)
 	if (!getMActor()->checkCurBckFromIndex(bck_index)) {
 		getMActor()->setBckFromIndex(bck_index);
 		const char** table = getBasNameTable();
-		setAnmSound(table ? table[bck_index] : nullptr);
+		setAnmSound(table == nullptr ? nullptr : table[bck_index]);
 	}
 	if (btp_index != getMActor()->getCurAnmIdx(ANM_TYPE_BTP))
 		getMActor()->setBtpFromIndex(btp_index);
-	getMActor()->getFrameCtrl(ANM_TYPE_BCK)
-	    ->setRate(rate * SMSGetAnmFrameRate() * 0.5f);
+	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+	ctrl->setRate(rate * SMSGetAnmFrameRate() * 0.5f);
 }
 
 // UNUSED (0x28).
@@ -784,13 +810,15 @@ void TKoopa::laugh()
 	}
 }
 
-// TODO: UNUSED (0x84). The map size fits one inlined theNerve() guard plus
-// the Flame nerve's extra vtable store, which is what this spelling gives.
-BOOL TKoopa::isBreathing() const
+// UNUSED (0x84). Flames come out for the whole of the loop animation and for
+// the tail of the start animation. setUpHitActors and perform both expand it.
+bool TKoopa::isBreathing() const
 {
-	if (mSpine->getCurrentNerve() == &TNerveKoopaFlame::theNerve())
-		return TRUE;
-	return FALSE;
+	if (getAnmIndex() == KOOPA_ANM_FIRE_LOOP)
+		return true;
+	if (getAnmIndex() == KOOPA_ANM_FIRE_START && getAnmFrame() >= 85.0f)
+		return true;
+	return false;
 }
 
 // TODO: UNUSED (0x20). setIgnoreMario's two instructions and this accessor's
@@ -840,19 +868,30 @@ f32 TKoopa::getFlameDirRate() const
 
 BOOL TKoopa::isFlaming() const
 {
-	int index = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
-	if (index == KOOPA_ANM_FIRE_END || index == KOOPA_ANM_FIRE_LOOP
-	    || index == KOOPA_ANM_FIRE_START)
+	// Written as a switch: the `||` chain folds into the subi/cmplwi range
+	// test, while the ROM keeps the switch's two-compare tree.
+	switch (getMActor()->getCurAnmIdx(ANM_TYPE_BCK)) {
+	case KOOPA_ANM_FIRE_END:
+	case KOOPA_ANM_FIRE_LOOP:
+	case KOOPA_ANM_FIRE_START:
 		return TRUE;
+	}
 	return FALSE;
 }
 
-// UNUSED (0x78) -- one inlined theNerve() guard and the compare.
-BOOL TKoopa::isProvoking() const
+// UNUSED (0x78). The stretch of the intro roar (koopa_first, the animation
+// TNerveKoopaProvoke plays) during which the mouth is open; perform() spits
+// flames for it just as it does while breathing.
+bool TKoopa::isProvoking() const
 {
-	if (mSpine->getCurrentNerve() == &TNerveKoopaProvoke::theNerve())
-		return TRUE;
-	return FALSE;
+	if (getAnmIndex() == KOOPA_ANM_FIRST) {
+		f32 frame = getAnmFrame();
+		if (68.0f <= frame) {
+			if (frame <= 164.0f)
+				return true;
+		}
+	}
+	return false;
 }
 
 // How far the head has turned towards Mario over the course of the current
@@ -1235,10 +1274,10 @@ void TKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		f32 frame = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 		bool inTumbleWindow = false;
+		bool tumbles        = false;
 		if (mSpine->getCurrentNerve() == &TNerveKoopaTumble::theNerve()
 		    && frame >= getParam()->tumbleStartFrame.get())
 			inTumbleWindow = true;
-		bool tumbles = false;
 		if (inTumbleWindow && frame <= getParam()->tumbleEndFrame.get())
 			tumbles = true;
 		if (tumbles) {
@@ -1250,24 +1289,7 @@ void TKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		bool flames = false;
-		if (getAnmIndex() == KOOPA_ANM_FIRE_LOOP)
-			flames = true;
-		else if (getAnmIndex() == KOOPA_ANM_FIRE_START
-		         && getAnmFrame() >= 85.0f)
-			flames = true;
-
-		if (!flames) {
-			bool endFlames = false;
-			f32 frame       = getAnmFrame();
-			if (getAnmIndex() == KOOPA_ANM_FIRE_END && frame >= 68.0f
-			    && frame >= 164.0f)
-				endFlames = true;
-			if (endFlames)
-				flames = true;
-		}
-
-		if (flames) {
+		if (isBreathing() || isProvoking()) {
 			getMActor()->calc();
 
 			f32 scale = getParam()->flameScale.get();
