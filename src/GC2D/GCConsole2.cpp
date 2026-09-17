@@ -113,10 +113,13 @@ static inline u32 getPressureFlashColor(u8 frame)
 }
 
 // fabricated
-static inline bool isMountedYoshi(TMario* mario)
+// fabricated. This is TYoshi::onYoshi() without the anti-inline padding that
+// header carries: the ROM expands it here with no null test on mYoshi.
+static inline BOOL isMountedYoshi(TMario* mario)
 {
-	TYoshi* yoshi = mario->mYoshi;
-	return yoshi != nullptr && yoshi->mState == TYoshi::STATE_MOUNTED;
+	if (mario->mYoshi->mState == TYoshi::STATE_MOUNTED)
+		return TRUE;
+	return FALSE;
 }
 
 // fabricated
@@ -1449,14 +1452,21 @@ static inline void drawWaterOrJuice(TGCConsole2* console, J2DOrthoGraph& graph)
 	if (isMountedYoshi(gpMarioOriginal)) {
 		switch (gpModelWaterManager->unk5D5F) {
 		case 1:
-			console->drawJuice(graph, console->unkA2);
+			console->drawJuice(graph, (console->unkA2.r << 24) + (console->unkA2.g << 16)
+			                          + (console->unkA2.b << 8)
+			                          + console->unkA2.a);
 			break;
 		case 2:
-			console->drawJuice(graph, console->unkA6);
+			console->drawJuice(graph, (console->unkA6.r << 24) + (console->unkA6.g << 16)
+			                          + (console->unkA6.b << 8)
+			                          + console->unkA6.a);
 			break;
 		case 3:
-			console->drawJuice(graph, console->unkAA);
+			console->drawJuice(graph, (console->unkAA.r << 24) + (console->unkAA.g << 16)
+			                          + (console->unkAA.b << 8)
+			                          + console->unkAA.a);
 			break;
+		case 0:
 		default:
 			console->drawJuice(graph, 0);
 			break;
