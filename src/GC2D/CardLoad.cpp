@@ -15,7 +15,6 @@
 #include <System/MarDirector.hpp>
 #include <System/FlagManager.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <GC2D/Option.hpp>
 #include <GC2D/ExPane.hpp>
 #include <GC2D/MessageUtil.hpp>
@@ -25,6 +24,7 @@
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
 TCardLoad* gpCardLoad;
@@ -291,7 +291,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	unk580 = (J2DTextBox*)unk28->search('m_6b');
 	makeBuffer(unk580, 0x400);
 
-	int local_90[] = { 2, 3, 4, 5, 6, 7, 8 };
+	int local_90[] = { 2, 3, 4, 5, 6, 8, 7 };
 
 	for (int i = 0; i < 7; ++i) {
 		unk584[i].unk0 = (J2DPicture*)unk28->search('st_0' + i);
@@ -345,22 +345,21 @@ void TCardLoad::setupScoreScreen()
 		unk750->show();
 	}
 
-	int iVar8      = 0;
-	int local_90[] = { 2, 3, 4, 5, 6, 8, 7 };
+	u16 iVar8      = 0;
+	int local_90[] = { 2, 3, 4, 5, 6, 7, 8 };
 
 	for (int i = 0; i < 7; ++i) {
-		int shineCount = 0;
+		u8 shineCount = 0;
 
 		if (TFlagManager::getInstance()->getBool(0x103A5 + local_90[i]))
-			unk584[i].unk0->hide();
-		else
 			unk584[i].unk0->show();
+		else
+			unk584[i].unk0->hide();
 
 		for (int j = 0; j < 8; ++j)
 			if (SMS_isGetShine(local_90[i], j, false))
 				++shineCount;
 
-		shineCount &= 0xff;
 		iVar8 += shineCount;
 
 		for (int j = 0; j < 8; ++j) {
@@ -375,7 +374,7 @@ void TCardLoad::setupScoreScreen()
 		}
 
 		for (int j = 0; j < 2; ++j) {
-			if (SMS_isGetShine(local_90[i], j, true)) {
+			if (SMS_isGetShine(local_90[i], j + 1, true)) {
 				iVar8 += 1;
 				unk584[i].unk30[j]->show();
 			} else {
@@ -418,7 +417,7 @@ void TCardLoad::setupScoreScreen()
 		asdf += 1;
 	if (TFlagManager::getInstance()->getBool(0x10058))
 		asdf += 1;
-	u16 kek = iVar8 + asdf;
+	iVar8 += asdf;
 	if (asdf > 9)
 		asdf = 9;
 	const ResTIMG* pRVar4 = unkC8[asdf % 10]->getTexInfo();
@@ -431,7 +430,7 @@ void TCardLoad::setupScoreScreen()
 	unk2C->search('st_7')->setAlpha(255);
 	if (SMS_isGetShine(1, 0, true)) {
 		unk2C->search('sh7a')->show();
-		kek += 1;
+		iVar8 += 1;
 	} else {
 		unk2C->search('sh7a')->hide();
 	}
@@ -453,20 +452,19 @@ void TCardLoad::setupScoreScreen()
 		thing -= thing / 100 * 100;
 		((J2DPicture*)unk2C->search('n_7b'))
 		    ->changeTexture(unkC8[thing / 10]->getTexInfo(), 0);
-		thing %= 10;
 		((J2DPicture*)unk2C->search('n_7c'))
-		    ->changeTexture(unkC8[thing]->getTexInfo(), 0);
+		    ->changeTexture(unkC8[thing % 10]->getTexInfo(), 0);
 	}
 
-	int asdf2 = TFlagManager::getInstance()->getFlag(0x40000) - kek;
+	int asdf2 = TFlagManager::getInstance()->getFlag(0x40000) - iVar8;
 	if (asdf2 > 100)
 		asdf2 = 99;
 	if (asdf2 < 0)
 		asdf2 = 0;
-	const ResTIMG* pRVar42 = unkC8[asdf2 / 10]->getTexInfo();
-	((J2DPicture*)unk2C->search('\0n_d'))->changeTexture(pRVar42, 0);
-	const ResTIMG* pRVar43 = unkC8[asdf2 % 10]->getTexInfo();
-	((J2DPicture*)unk2C->search('\0n_e'))->changeTexture(pRVar43, 0);
+	((J2DPicture*)unk2C->search('\0n_d'))
+	    ->changeTexture(unkC8[asdf2 / 10]->getTexInfo(), 0);
+	((J2DPicture*)unk2C->search('\0n_e'))
+	    ->changeTexture(unkC8[asdf2 % 10]->getTexInfo(), 0);
 
 	unk744->setAlpha(0);
 	unk740->setAlpha(0);
@@ -1304,7 +1302,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 s8 TCardLoad::waitForAnyKey(TEProgress progress)
 {
-	int result = -1;
+	s8 result = -1;
 
 	switch (unk10) {
 	case 0: {
@@ -1327,8 +1325,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		break;
 
 	case 2:
-		if (unkB4 <= 600
-		    && unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A
+		if (unkB4 > 600
+		    || unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A
 		                                | TMarioGamePad::MEANING_MENU_B)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
@@ -1339,8 +1337,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		break;
 
 	case 3: {
-		unk568->setCenteredSize(20, unk56C.getWidth(), unk56C.getHeight(), 0,
-		                        0);
+		unk568->setCenteredSize(20, 0, 0, unk56C.getWidth(),
+		                        unk56C.getHeight());
 		unk580->hide();
 		unkB4 = 0;
 		unk10 = 4;
@@ -2367,7 +2365,7 @@ void TCardLoad::changeScene()
 					unk378[unkB0][i]->getPane()->hide();
 				JUTRect local_6c = unk348[unkB0];
 				unk33C[unkB0]->updatePaneSize(30, local_6c.getWidth(), 0);
-				unk33C[unkB0]->updatePaneOffset(30, local_6c.getWidth(), 0);
+				unk33C[unkB0]->updatePaneOffset(30, 0, local_6c.getHeight());
 				unk10 = 4;
 			}
 
