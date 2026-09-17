@@ -23,6 +23,10 @@
 #include <dolphin/gx.h>
 #include <math.h>
 
+// rogue include: the 12 zero bytes and the Shift-JIS memory-error string are
+// the object's first two .rodata entries (@1490/@1809).
+#include <System/DummyStrings.hpp>
+
 TMBindShadowParts::TMBindShadowParts(J3DModel* param_1, u8 param_2,
                                      TMBindShadowBody* param_3, f32 param_4)
     : mMinRadius(0.01f)
@@ -303,7 +307,19 @@ void TModelShadow::update() { }
 
 void TModelShadow::calc(int param_1, JDrama::TGraphics* param_2) { }
 
-void TModelShadow::draw(int param_1, JDrama::TGraphics* param_2) { }
+void TModelShadow::draw(int param_1, JDrama::TGraphics* param_2)
+{
+	// TODO: fabricated. UNUSED (map size 0x428), so no assembly survives.
+	// The only recoverable part is the pair of corner tables: they are the
+	// object's @1974/@1975 .rodata entries (16 bytes each, immediately before
+	// drawShadowVolume's index tables), and an aggregate initialiser's
+	// template is emitted at parse time even when the function is not, which
+	// is why they are in the retail .rodata blob at all.
+	f32 cornerX[4] = { 1.0f, 1.0f, -1.0f, -1.0f };
+	f32 cornerZ[4] = { 1.0f, -1.0f, 1.0f, -1.0f };
+	(void)cornerX;
+	(void)cornerZ;
+}
 
 TMBindShadowManager* gpBindShadowManager;
 
@@ -1048,6 +1064,13 @@ static inline void initShadowGX(const GXColor& color,
 
 void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 {
+	// TODO: instruction-identical but the frame is 0x128 against retail's
+	// 0xf8. Three dead 4-byte slots come from the named GXColor locals and
+	// the second initShadowGX colour temporary sits 0x18 lower than retail's
+	// (0x64 vs 0x7c). Trials that failed: dropping the JUtility::TColor cast
+	// (-2 instructions per site), a compound literal as the cast's argument
+	// or as a named TColor's initialiser (+6 instructions), `const` on the
+	// GXColor locals (no change).
 	if (!mTestSw) {
 		initShadowGX(mShadowColor, param_2);
 
@@ -1071,8 +1094,8 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 
 			TAlphaShadowBlendQuad* blend = mQuadArys[i].mBlendHead;
 
-			JGeometry::TVec3<f32> max;
 			JGeometry::TVec3<f32> min;
+			JGeometry::TVec3<f32> max;
 
 			min.set(blend->mMin.x, blend->mMin.y - blend->mMax.y,
 			        blend->mMin.z);
