@@ -1,6 +1,7 @@
 #ifndef MOVE_BG_MAP_OBJ_BASE_HPP
 #define MOVE_BG_MAP_OBJ_BASE_HPP
 
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <Strategic/LiveActor.hpp>
 
 class J3DJoint;
@@ -145,9 +146,18 @@ public:
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual MtxPtr getTakingMtx();
+	// The six trivial bodies below, plus getRadiusAtY, setModelMtx and
+	// getHitObjNumMax, are all weak in the map and read out of
+	// bosstelesa.cpp's copies at 0x800C6E94 onwards.
+	virtual MtxPtr getTakingMtx()
+	{
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40))
+			return nullptr;
+
+		return TLiveActor::getTakingMtx();
+	}
 	virtual void ensureTakeSituation();
-	virtual f32 getRadiusAtY(f32) const;
+	virtual f32 getRadiusAtY(f32) const { return mBodyRadius; }
 	virtual Mtx* getRootJointMtx() const;
 	virtual void calcRootMatrix();
 	virtual void setGroundCollision();
@@ -166,23 +176,23 @@ public:
 	virtual void updateObjMtx();
 	virtual void setUpCurrentMapCollision();
 	virtual void setObjHitData(u16);
-	virtual void setModelMtx(MtxPtr);
+	virtual void setModelMtx(MtxPtr mtx) { getModel()->setAnmMtx(0, mtx); }
 	virtual void initMapObj();
-	virtual void loadBeforeInit(JSUMemoryInputStream&);
+	virtual void loadBeforeInit(JSUMemoryInputStream&) { }
 	virtual void initMapCollisionData();
 	virtual void makeMActors();
 	virtual u32 getSDLModelFlag() const;
 	virtual void checkIllegalAttr() const;
-	virtual void calc();
-	virtual void draw() const;
-	virtual void dead();
+	virtual void calc() { }
+	virtual void draw() const { }
+	virtual void dead() { }
 	virtual void touchActor(THitActor*);
 	virtual void touchPlayer(THitActor*);
-	virtual u32 touchWater(THitActor*);
+	virtual u32 touchWater(THitActor*) { return 0; }
 	virtual void touchEnemy(THitActor*);
 	virtual void touchBoss(THitActor*);
 	virtual void makeObjDefault();
-	virtual u16 getHitObjNumMax();
+	virtual u16 getHitObjNumMax() { return 5; }
 	virtual f32 getDepthAtFloating() { return 0.0f; }
 
 	void initAndRegister(const char*);
