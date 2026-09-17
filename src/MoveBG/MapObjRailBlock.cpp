@@ -7,6 +7,7 @@
 #include <System/Particles.hpp>
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/LightUtil.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
@@ -14,6 +15,8 @@
 #include <Enemy/Conductor.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/JMath.hpp>
+#include <math.h>
 
 TRailMapObj::TRailMapObj(const char* name)
     : TMapObjBase(name)
@@ -376,7 +379,124 @@ void TRailBlock::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-void TRailBlock::control() { }
+void TRailBlock::control()
+{
+	TMapObjBase::control();
+	setDamageParams(300.0f, 50.0f);
+	checkMarioRiding();
+
+	if (!calcRecycle() && !checkRailFlag(2)) {
+		if (moveToNextNode(getUnk144())) {
+			TGraphTracer* tracer = unk138;
+			TGraphWeb* web       = tracer->getGraph();
+
+			if (web->getGraphNode(tracer->getCurGraphIndex())
+			        .getRailNode()
+			        ->mFlags
+			    & 0x1000) {
+				unk14A = 180;
+				unk148 = 2;
+			}
+
+			unk138->moveToShortestNext();
+
+			// TODO: TRailNode::mSpeed is declared s16 in Enemy/Graph.hpp,
+			// but the ROM reads it with `lhz` and converts it with the
+			// unsigned 0x4330 trick, exactly like the u16 mPitch/mYaw/mRoll
+			// beside it; the shared header should make it u16 and this cast
+			// should go.
+			u32 speed = (u16)unk138->getCurrent().getRailNode()->mSpeed;
+			if (speed != 0xffff)
+				unk144 = 0.01f * speed;
+
+			resetStep(getUnk144());
+
+			if (checkRailFlag(2)) {
+				MTXIdentity(unk174);
+				unk168.zero();
+			} else {
+				unk168 = unk15C;
+
+				Mtx mtx;
+				MsMtxSetRotRPH(mtx, unk168.x, unk168.y, unk168.z);
+				MTXConcat(mtx, unk174, unk174);
+				unk168.zero();
+
+				JGeometry::TVec3<f32> xDir;
+				xDir.x = unk174[0][0];
+				xDir.y = unk174[1][0];
+				xDir.z = unk174[2][0];
+
+				JGeometry::TVec3<f32> yDir;
+				yDir.x = unk174[0][1];
+				yDir.y = unk174[1][1];
+				yDir.z = unk174[2][1];
+
+				JGeometry::TVec3<f32> zDir;
+				zDir.x = unk174[0][2];
+				zDir.y = unk174[1][2];
+				zDir.z = unk174[2][2];
+
+				VECNormalize(&xDir, &xDir);
+				VECNormalize(&yDir, &yDir);
+				VECNormalize(&zDir, &zDir);
+
+				xDir.x -= 1.0f;
+				yDir.y -= 1.0f;
+				zDir.z -= 1.0f;
+
+				if (fabsf(xDir.x) < 0.02f && fabsf(xDir.y) < 0.02f
+				    && fabsf(xDir.z) < 0.02f && fabsf(yDir.x) < 0.02f
+				    && fabsf(yDir.y) < 0.02f && fabsf(yDir.z) < 0.02f
+				    && fabsf(zDir.x) < 0.02f && fabsf(zDir.y) < 0.02f
+				    && fabsf(zDir.z) < 0.02f)
+					MTXIdentity(unk174);
+			}
+
+			JGeometry::TVec3<f32> point;
+			TGraphNode& node = web->getGraphNode(unk138->getCurGraphIndex());
+			node.getPoint(point);
+
+			f32 frames = VECDistance(&mPosition, &point) / unk144;
+
+			TRailNode* rail = node.getRailNode();
+			unk15C.set(rail->mPitch, rail->mYaw, rail->mRoll);
+
+			unk150 = MsAngleDiff(unk15C.x, unk168.x) / frames;
+			unk154 = MsAngleDiff(unk15C.y, unk168.y) / frames;
+			unk158 = MsAngleDiff(unk15C.z, unk168.z) / frames;
+		} else {
+			mRotation.x += unk150;
+			mRotation.y += unk154;
+			mRotation.z += unk158;
+
+			unk168.x += unk150;
+			unk168.y += unk154;
+			unk168.z += unk158;
+
+			f32 pitch = mRotation.x;
+			while (pitch >= 360.0f)
+				pitch -= 360.0f;
+			while (pitch < 0.0f)
+				pitch += 360.0f;
+			mRotation.x = pitch;
+
+			f32 yaw = mRotation.y;
+			while (yaw >= 360.0f)
+				yaw -= 360.0f;
+			while (yaw < 0.0f)
+				yaw += 360.0f;
+			mRotation.y = yaw;
+
+			f32 roll = mRotation.z;
+			while (roll >= 360.0f)
+				roll -= 360.0f;
+			while (roll < 0.0f)
+				roll += 360.0f;
+			mRotation.z = roll;
+		}
+	}
+}
 
 TRollBlock::TRollBlock(const char* name)
     : TMapObjBase(name)
@@ -411,7 +531,33 @@ Mtx* TRollBlock::getRootJointMtx() const
 	return (Mtx*)getModel()->getAnmMtx(0);
 }
 
-void TRollBlock::calcRootMatrix() { }
+void TRollBlock::calcRootMatrix()
+{
+	J3DModel* model = getModel();
+	MtxPtr mtx      = model->getBaseTRMtx();
+	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z,
+	               mInitialRotation.x, mInitialRotation.y, mInitialRotation.z);
+	model->setBaseScale(mScaling);
+
+	f32 sinRoll = JMASin(unk138);
+	f32 cosRoll = JMACos(unk138);
+
+	Mtx roll;
+	roll[0][0] = cosRoll;
+	roll[0][1] = -sinRoll;
+	roll[0][2] = 0.0f;
+	roll[0][3] = 0.0f;
+	roll[1][0] = sinRoll;
+	roll[1][1] = cosRoll;
+	roll[1][2] = 0.0f;
+	roll[1][3] = 0.0f;
+	roll[2][0] = 0.0f;
+	roll[2][1] = 0.0f;
+	roll[2][2] = 1.0f;
+	roll[2][3] = 0.0f;
+
+	MTXConcat(mtx, roll, mtx);
+}
 
 void TRollBlock::control()
 {
