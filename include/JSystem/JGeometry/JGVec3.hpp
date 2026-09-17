@@ -120,6 +120,38 @@ public:
 		z = v.z;
 	}
 
+	// TODO: retail emits set<f>__Q29JGeometry8TVec3<f>Ffff as an *internal*
+	// (local) 0x10-byte symbol in 58 objects and calls it from some sites
+	// while expanding it at others. This in-class member template already
+	// gives that exact name and that exact `local` linkage - our build emits
+	// it in 43 objects and `Kazekun` matches it byte for byte - so the
+	// structure of this declaration is not the problem. What is still missing
+	// is the *per-call-site* inline decision: the units that list the symbol
+	// MISSING (`wireTrap`, `killer`, ...) expand it everywhere, so the fix
+	// belongs at the one call site per TU that retail leaves out of line, not
+	// here. Structures tried against MWCC 1.2.5 with the game flags:
+	//
+	//   in-class member template (this one)   local, but always inlinable
+	//   out-of-class `template <class TY> void TVec3<f32>::set(...)`
+	//                                         error: illegal function definition
+	//   ... same, qualified as JGeometry::TVec3<float>::set
+	//                                         error: illegal function definition
+	//   ... same, through a `typedef TVec3<f32>` qualifier
+	//                                         error: illegal function definition
+	//   explicit `template <> void TVec3<f32>::set<f32>(...)` out of class
+	//                                         error: unimplemented C++ feature
+	//   member template on the *primary* template, body out of class
+	//   (`template <class T> template <class TY> void TVec3<T>::set(...)`)
+	//                                         compiles, right mangled name,
+	//                                         never inlined - but **weak**,
+	//                                         not local, and it would stop
+	//                                         every site from expanding
+	//   non-template `void set(f32, f32, f32)` defined out of class
+	//                                         wrong name (`set__...Ffff`),
+	//                                         global linkage
+	//
+	// Do not reach for the primary-template form: weak linkage plus
+	// never-inline is further from retail than what is here now.
 	template <class TY> void set(TY x_, TY y_, TY z_)
 	{
 		x = x_;
