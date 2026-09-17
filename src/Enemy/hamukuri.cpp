@@ -292,7 +292,7 @@ void THamuKuriManager::requestSerialKill(THamuKuri* param_1)
 
 	THamuKuriSaveLoadParams* params = (THamuKuriSaveLoadParams*)unk38;
 
-	s32 trampleBonusNum = params->mSLTrampleBonusNum.get();
+	s32 trampleBonusNum = params->getTrampleBonusNum();
 
 	for (int i = 0; i < getActiveObjNum(); ++i) {
 		THamuKuri* obj = (THamuKuri*)unk18[i];
@@ -1175,8 +1175,17 @@ bool THamuKuri::isHitValid(u32 param_1)
 		return true;
 	}
 
-	if (checkLiveFlag(LIVE_FLAG_HIDDEN))
+	// Raw read, not checkLiveFlag(): that accessor is const, so MWCC will not
+	// share its load with the non-const onLiveFlag below, and the ROM loads
+	// mLiveFlag exactly once here.
+	if (mLiveFlag & LIVE_FLAG_HIDDEN)
 		return false;
+
+	// Dead in TFireHamuKuri's override (which returns early on the same
+	// message), but the store is in the ROM for all three overrides, so the
+	// original really did test the message here.
+	if (param_1 == 11)
+		onLiveFlag(LIVE_FLAG_HIDDEN);
 
 	return true;
 }
@@ -1557,12 +1566,15 @@ bool THaneHamuKuri::isCollidMove(THitActor* param_1)
 	return TSmallEnemy::isCollidMove(param_1);
 }
 
-bool THaneHamuKuri::isHitValid(u32)
+bool THaneHamuKuri::isHitValid(u32 param_1)
 {
-	if (checkLiveFlag(LIVE_FLAG_HIDDEN))
+	if (mLiveFlag & LIVE_FLAG_HIDDEN)
 		return false;
-	else
-		return true;
+
+	if (param_1 == 11)
+		onLiveFlag(LIVE_FLAG_HIDDEN);
+
+	return true;
 }
 
 void THaneHamuKuri::resetFlyParam() { }
@@ -2285,6 +2297,11 @@ void TFireHamuKuri::walkBehavior(int param_1, f32 param_2)
 	}
 }
 
+// TODO: instruction-exact except that MWCC inlines
+// THamuKuriManager::requestSerialKill here while the ROM `bl`s it -- yet the
+// ROM *does* inline the same callee into THamuKuri::isHitValid at the same
+// depth. Ruled out: a TFireHamuKuri-side getManager() forwarder, the raw
+// ((THamuKuriManager*)mManager) receiver, and reordering the guards.
 bool TFireHamuKuri::isHitValid(u32 param_1)
 {
 	if (param_1 == 11)
@@ -2298,8 +2315,17 @@ bool TFireHamuKuri::isHitValid(u32 param_1)
 		return true;
 	}
 
-	if (checkLiveFlag(LIVE_FLAG_HIDDEN))
+	// Raw read, not checkLiveFlag(): that accessor is const, so MWCC will not
+	// share its load with the non-const onLiveFlag below, and the ROM loads
+	// mLiveFlag exactly once here.
+	if (mLiveFlag & LIVE_FLAG_HIDDEN)
 		return false;
+
+	// Dead in TFireHamuKuri's override (which returns early on the same
+	// message), but the store is in the ROM for all three overrides, so the
+	// original really did test the message here.
+	if (param_1 == 11)
+		onLiveFlag(LIVE_FLAG_HIDDEN);
 
 	return true;
 }

@@ -24,6 +24,7 @@ class THamuKuriSaveLoadParams : public TWalkerEnemyParams {
 public:
 	THamuKuriSaveLoadParams(const char* path);
 
+	s32 getTrampleBonusNum() const { return mSLTrampleBonusNum.get(); }
 	s32 getCrashBonusNum() const { return mSLCrashBonusNum.get(); }
 	s32 getSerialCrashFrame() const { return mSLSerialCrashFrame.get(); }
 
