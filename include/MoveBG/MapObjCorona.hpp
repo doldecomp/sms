@@ -36,8 +36,10 @@ public:
 	void startDemo();
 	bool allowsTumble() const;
 	bool getNearGrip(const JGeometry::TVec3<f32>&, f32, f32*) const;
-	u8 getNextJuncture(const JGeometry::TVec3<f32>&,
-	                   const JGeometry::TVec3<f32>&) const;
+	// f32, not u8: it returns unk13C[index] in f1, and TKoopa::mTargetDir is
+	// an f32.
+	f32 getNextJuncture(const JGeometry::TVec3<f32>&,
+	                    const JGeometry::TVec3<f32>&) const;
 	// u8, not BOOL: the three TKoopa callers keep the result in a u8 local and
 	// test it twice, and retail reloads it as a byte both times.
 	u8 getNextGrip(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
@@ -49,7 +51,7 @@ public:
 	bool isBreaking() const;                                // Unused
 	bool isKillerLaunchable() const;                        // Unused
 	void showMessage(u32);                                  // Unused
-	u8 getNearJuncture(const JGeometry::TVec3<f32>&) const; // Unused
+	f32 getNearJuncture(const JGeometry::TVec3<f32>&) const; // Unused
 	MtxPtr getKoopaMtxInDemo();                             // Unused
 	MtxPtr getWaterMtx(int);                                // Unused
 	MtxPtr getShineEffectMtx();                             // Unused

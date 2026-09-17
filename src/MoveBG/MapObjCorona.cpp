@@ -347,7 +347,13 @@ void TBathtubGrip::control()
 	}
 }
 
-void TBathtub::loadAfter() { }
+void TBathtub::loadAfter()
+{
+	SMS_LoadParticle("/scene/map/map/ms_lkp_yuge1.jpa", 0x1BE);
+	SMS_LoadParticle("/scene/map/map/ms_kp_funsui.jpa", 0x1BF);
+	SMS_LoadParticle("/scene/map/map/ms_kp_break_a.jpa", 0xF6);
+	SMS_LoadParticle("/scene/map/map/ms_kp_break_b.jpa", 0xF7);
+}
 
 void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
 {
@@ -553,26 +559,63 @@ void TBathtub::calcRootMatrix() { }
 void QuatRotate(JGeometry::TQuat4<f32>&, const JGeometry::TVec3<f32>&) { }
 
 namespace {
-void getDir(MtxPtr, const JGeometry::TVec3<f32>&) { }
-
-void getDir(MtxPtr, const JGeometry::TVec3<f32>&,
-            const JGeometry::TVec3<f32>&) { }
-}
-
-// Unused
-u8 TBathtub::getNearJuncture(const JGeometry::TVec3<f32>&) const { return 0; }
-
-// TODO: Match the matrix projection helpers and local stack layout.
-bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 tolerance,
-                          f32* gripAngle) const
+/// Yaw of `pos` inside the frame of `mtx`, measured about the matrix's Y axis.
+s16 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos)
 {
-	const TPosition3f& matrix = *(TPosition3f*)getRootJointMtx();
+	const TPosition3f& matrix = *(TPosition3f*)mtx;
 	JGeometry::TVec3<f32> x, z, origin, relative;
 	matrix.getXDir(x);
 	matrix.getZDir(z);
 	matrix.getTrans(origin);
 	relative.sub(pos, origin);
-	f32 angle = (360.0f / 65536.0f) * matan(z.dot(relative), x.dot(relative));
+	f32 dz = z.dot(relative);
+	f32 dx = x.dot(relative);
+	return matan(dz, dx);
+}
+
+/// Same, but the point is first pushed sideways by the part of `offset` that
+/// is tangential to the radius, so a moving target leads the grip it will
+/// reach rather than the one it stands on.
+s16 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos,
+           const JGeometry::TVec3<f32>& offset)
+{
+	const TPosition3f& matrix = *(TPosition3f*)mtx;
+	JGeometry::TVec3<f32> x, z, origin, relative, radial, tangent;
+	matrix.getXDir(x);
+	matrix.getZDir(z);
+	matrix.getTrans(origin);
+	relative.sub(pos, origin);
+	radial.setLength(relative, 1.0f);
+	tangent.scaleAdd(-radial.dot(offset), offset, radial);
+	relative.add(tangent);
+	return matan(z.dot(relative), x.dot(relative));
+}
+}
+
+// Unused
+f32 TBathtub::getNearJuncture(const JGeometry::TVec3<f32>& pos) const
+{
+	s16 dir     = getDir(*getRootJointMtx(), pos);
+	f32 angle   = (360.0f / 65536.0f) * dir;
+	f32 nearest = 360.0f;
+	int index   = 0;
+	for (int i = 0; i < 5; ++i) {
+		f32 difference = fabsf(-180.0f
+		    + std::fmodf(360.0f + ((unk13C[i] - angle) - -180.0f), 360.0f));
+		if (difference < nearest) {
+			index   = i;
+			nearest = difference;
+		}
+	}
+	return unk13C[index];
+}
+
+// TODO: Match the matrix projection helpers and local stack layout.
+bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 tolerance,
+                          f32* gripAngle) const
+{
+	s16 dir     = getDir(*getRootJointMtx(), pos);
+	f32 angle   = (360.0f / 65536.0f) * dir;
 	f32 nearest = 360.0f;
 	int index = 0;
 	for (int i = 0; i < 5; ++i) {
@@ -590,16 +633,45 @@ bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 tolerance,
 	return false;
 }
 
-u8 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>&,
-                             const JGeometry::TVec3<f32>&) const
+f32 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>& pos,
+                              const JGeometry::TVec3<f32>& offset) const
 {
-	return 0;
+	s16 dir     = getDir(*getRootJointMtx(), pos, offset);
+	f32 angle   = (360.0f / 65536.0f) * dir;
+	f32 nearest = 360.0f;
+	int index   = 0;
+	for (int i = 0; i < 5; ++i) {
+		f32 difference = fabsf(-180.0f
+		    + std::fmodf(360.0f + ((unk13C[i] - angle) - -180.0f), 360.0f));
+		if (difference < nearest) {
+			index   = i;
+			nearest = difference;
+		}
+	}
+	return unk13C[index];
 }
 
-u8 TBathtub::getNextGrip(const JGeometry::TVec3<f32>&,
-                         const JGeometry::TVec3<f32>&, f32, f32*) const
+u8 TBathtub::getNextGrip(const JGeometry::TVec3<f32>& pos,
+                         const JGeometry::TVec3<f32>& offset, f32 tolerance,
+                         f32* gripAngle) const
 {
-	return 0;
+	s16 dir     = getDir(*getRootJointMtx(), pos, offset);
+	f32 angle   = (360.0f / 65536.0f) * dir;
+	f32 nearest = 360.0f;
+	int index   = 0;
+	for (int i = 0; i < 5; ++i) {
+		f32 difference = fabsf(-180.0f
+		    + std::fmodf(360.0f + ((unk150[i] - angle) - -180.0f), 360.0f));
+		if (difference < nearest) {
+			index   = i;
+			nearest = difference;
+		}
+	}
+	if (nearest < tolerance) {
+		*gripAngle = unk150[index];
+		return true;
+	}
+	return false;
 }
 
 // Unused
