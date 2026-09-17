@@ -1396,7 +1396,6 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXSetDstAlpha(GX_FALSE, 0);
 }
 
-void init_sphere_glist() { }
 
 extern "C" void ReInitializeGX();
 
@@ -1766,8 +1765,15 @@ static u8 tmp_data[0x10CC] ATTRIBUTE_ALIGN(32) = {
 	0xE0, 0xF5, 0x7C, 0x2D, 0x00, 0x00, 0xF1, 0xDD, 0x7F, 0x37, 0x00, 0x00,
 	0x00, 0x00, 0x7F, 0xFF
 };
+
 static void* sphere_glist_p;
 static void* sphere_pos_t;
+
+void init_sphere_glist()
+{
+	sphere_glist_p = tmp_data;
+	sphere_pos_t   = (u8*)sphere_glist_p + 0x760;
+}
 
 void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 {
