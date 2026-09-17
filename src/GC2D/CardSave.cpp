@@ -324,8 +324,8 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 
 	switch (unk10) {
 	case 0:
-		setMessage(unkA0, 0x200, (u16)cMessageID[unk310]);
-		setMessage(unkA4, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unkA0, 0x200, getCurMessageID());
+		setMessage(unkA4, 0x200, getCurMessageID());
 		setMessage(unkD8, 0x200, 0);
 		setMessage(unkDC, 0x200, 0);
 
@@ -417,8 +417,8 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 
 	switch (unk10) {
 	case 0:
-		setMessage(unkF4, 0x200, (u16)cMessageID[unk310]);
-		setMessage(unkF8, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unkF4, 0x200, getCurMessageID());
+		setMessage(unkF8, 0x200, getCurMessageID());
 
 		unk134->hide();
 		unk138->hide();
@@ -606,8 +606,8 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			unk10 = 5;
 		}
 
-		setMessage(unk12C, 0x200, (u16)cMessageID[unk310]);
-		setMessage(unk130, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unk12C, 0x200, getCurMessageID());
+		setMessage(unk130, 0x200, getCurMessageID());
 
 		unk134->hide();
 		unk138->hide();
@@ -840,8 +840,8 @@ s8 TCardSave::drawMessage(TEProgress param_1)
 	s8 result = -1;
 	switch (unk10) {
 	case 0:
-		setMessage(unk174, 0x200, (u16)cMessageID[unk310]);
-		setMessage(unk178, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unk174, 0x200, getCurMessageID());
+		setMessage(unk178, 0x200, getCurMessageID());
 		unk178->hide();
 		unk160->getPane()->show();
 		unk160->setCenteredSize(20, unk164.getWidth(), unk164.getHeight(), 0,
@@ -882,8 +882,8 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 			unk10 = 5;
 		}
 
-		setMessage(unk12C, 0x200, (u16)cMessageID[unk310]);
-		setMessage(unk130, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unk12C, 0x200, getCurMessageID());
+		setMessage(unk130, 0x200, getCurMessageID());
 
 		unk134->hide();
 		unk138->hide();
@@ -959,8 +959,8 @@ s8 TCardSave::waitForAnyKey(TEProgress param_1)
 
 	switch (unk10) {
 	case 0:
-		setMessage(unk174, 0x200, (u16)cMessageID[unk310]);
-		setMessage(unk178, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unk174, 0x200, getCurMessageID());
+		setMessage(unk178, 0x200, getCurMessageID());
 		unk178->hide();
 		unk160->getPane()->show();
 		unk160->setCenteredSize(20, unk164.getWidth(), unk164.getHeight(), 0,
@@ -1374,8 +1374,8 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 
 	switch (unk10) {
 	case 0:
-		setMessage(unk12C, 0x200, (u16)cMessageID[unk310]);
-		setMessage(unk130, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unk12C, 0x200, getCurMessageID());
+		setMessage(unk130, 0x200, getCurMessageID());
 
 		unkF8->hide();
 		unk128->hide();

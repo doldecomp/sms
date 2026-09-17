@@ -48,6 +48,7 @@ public:
 	static u32 cMessageID[];
 
 	// fabricated
+	u16 getCurMessageID() { return cMessageID[unk310]; }
 	TCardBookmarkInfo& getBookmarkInfo() { return unk278[unk2EA]; }
 
 public:
