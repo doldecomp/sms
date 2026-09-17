@@ -399,5 +399,6 @@
   "Map/PollutionEvent.cpp",
   "Enemy/enemyinterp.cpp",
   "Enemy/egggen.cpp",
-  "Camera/CameraTalk.cpp"
+  "Camera/CameraTalk.cpp",
+  "Map/MapCollisionEntry.cpp"
 ]

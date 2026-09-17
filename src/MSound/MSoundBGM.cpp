@@ -7,6 +7,23 @@
 MSBgm* MSBgm::smBgmInTrack[3];
 f32 MSBgm::smMainVolume = 0.75f;
 
+// TODO: every instruction matches; only the frame differs (target 0x48, ours
+// 0x28), so the original reserved 25..32 bytes of locals the optimiser never
+// touched. `volatile char trash[25..32]` reaches 100% with no instruction
+// change, which confirms the body is right, but no plausible declaration
+// accounts for the bytes yet. Measured, instruction-neutral shapes (frame in
+// brackets): naming the allocation `MSBgm* bgm = new MSBgm(i)` [0x30];
+// clearing the tracks with `for (u32 i = 0; i < 3; ++i) smBgmInTrack[i] = 0`,
+// which MWCC unrolls into the same three stores [0x38]; naming the table owner
+// (`JAIData* data = MSGMSound->unk0`, or a `JAISoundTable&` reference) [+8 on
+// top of the above, 0x40]. Beyond three such locals MWCC reuses the slots, so
+// 0x40 is the ceiling for scalar naming: the remaining 8 bytes need a real
+// aggregate or address-taken local. Ruled out: `u32` vs `u16` count, `int` vs
+// `u32` loop indices, a shared loop index, a single-iteration category loop, a
+// named sound id, and `MSBgm** tracks = smBgmInTrack` (changes instructions).
+// The UNUSED symbols in this TU (the four node destructors, which our build
+// already emits at the exact map sizes, and the mute/pause/volume stubs) are
+// not callable from here, so no missing inline explains the gap either.
 void MSBgm::init()
 {
 	u16 count = MSGMSound->unk0->mSeTable.mSoundMax[16];

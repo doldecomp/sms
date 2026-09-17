@@ -63,6 +63,10 @@ public:
 	void offFlag(u16 flag) { mFlags &= ~flag; }
 	s32 getUnk8() const { return mKind; }
 	u32 getUnkC() const { return mCheckDataNum; }
+	// fabricated name. Needed by TMapCollisionMove::init, which only matches
+	// when the check-data array is reached through an accessor; see the
+	// comment on that function.
+	TBGCheckData* getCheckDatas() { return mCheckDatas; }
 	void setUpMtx(MtxPtr mtx)
 	{
 		setMtx(mtx);

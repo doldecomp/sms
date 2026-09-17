@@ -178,6 +178,12 @@ void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& param_1)
 	TMapCollisionBase::updateTrans(param_1);
 }
 
+// Every member read here goes through an accessor, and that is load-bearing.
+// `allocCheckData(getUnkC())` is what makes the count load precede the
+// `gpMapCollisionData` load (reading `mCheckDataNum` directly swaps them), and
+// each inlined accessor leaves a dead temporary on the stack, which is what
+// gives the function its 0x38 frame. Reading the members directly compiles to
+// the same instructions with a 0x28 frame.
 void TMapCollisionMove::init(u32 param_1, u16 bg_type, s16 data,
                              const TLiveActor* actor)
 {
@@ -185,9 +191,9 @@ void TMapCollisionMove::init(u32 param_1, u16 bg_type, s16 data,
 	mCheckDataNum = param_1;
 	mCheckDatas   = gpMapCollisionData->allocCheckData(getUnkC());
 	for (int i = 0; i < getUnkC(); ++i) {
-		mCheckDatas[i].mBGType = bg_type;
-		mCheckDatas[i].mData   = data;
-		mCheckDatas[i].mActor  = actor;
+		getCheckDatas()[i].mBGType = bg_type;
+		getCheckDatas()[i].mData   = data;
+		getCheckDatas()[i].mActor  = actor;
 	}
 }
 
