@@ -45,6 +45,31 @@ static const char* koopajrsubmarine_bastable[] = { nullptr };
 
 #define TWO_PI 6.2831855f
 
+// Fabricated, but the ROM's shape: every wrap in this file computes
+// `l + mod((r - l) + (t - l), r - l)`, keeping the `t - l` subtraction and
+// the `l +` that a literal zero bound would let MWCC fold. Two levels are
+// needed rather than one because JGeometry::TUtil<f32>::mod and std::fmodf
+// are calls at every ROM site here, which only happens at depth four.
+static inline f32 WrapDirection(f32 t, f32 l, f32 r)
+{
+	return l + JGeometry::TUtil<f32>::mod((r - l) + (t - l), r - l);
+}
+
+static inline f32 WrapRadian(f32 t) { return WrapDirection(t, 0.0f, TWO_PI); }
+
+// The same pair over std::fmodf: calcNearerDirection and calcTurnDirection
+// wrap with it where normalize() uses TUtil<f32>::mod, so the two families
+// cannot share one helper.
+static inline f32 WrapDirectionF(f32 t, f32 l, f32 r)
+{
+	return l + std::fmodf((r - l) + (t - l), r - l);
+}
+
+static inline f32 WrapRadianF(f32 t)
+{
+	return WrapDirectionF(t, 0.0f, TWO_PI);
+}
+
 // ---------------------------------------------------------------------------
 // TDirectionCalc
 // ---------------------------------------------------------------------------
@@ -59,18 +84,13 @@ TDirectionCalc::TDirectionCalc(JGeometry::TVec3<f32> dir)
 }
 
 // UNUSED, 0x4c in the map. Wraps the stored direction into [0, 2pi).
-void TDirectionCalc::normalize()
-{
-	mDirection = 0.0f
-	             + JGeometry::TUtil<f32>::mod(TWO_PI + (mDirection - 0.0f),
-	                                          TWO_PI);
-}
+void TDirectionCalc::normalize() { mDirection = WrapRadian(mDirection); }
 
 // Brings dir within pi of the stored direction, so that a turn towards it
 // takes the shorter way round.
 f32 TDirectionCalc::calcNearerDirection(f32 dir)
 {
-	mDirection = 0.0f + std::fmodf(TWO_PI + (mDirection - 0.0f), TWO_PI);
+	mDirection = WrapRadianF(mDirection);
 	if (dir >= mDirection) {
 		f32 diff = dir - mDirection;
 		if (TWO_PI - diff < diff)
@@ -104,7 +124,7 @@ f32 TDirectionCalc::sub(f32 dir)
 // Returns the stored direction turned towards dir by at most step.
 f32 TDirectionCalc::calcTurnDirection(f32 dir, f32 step)
 {
-	mDirection = 0.0f + std::fmodf(TWO_PI + (mDirection - 0.0f), TWO_PI);
+	mDirection = WrapRadianF(mDirection);
 	normalize();
 	if (dir >= mDirection) {
 		f32 diff = dir - mDirection;
@@ -143,7 +163,13 @@ JGeometry::TVec3<f32> TDirectionCalc::calcDirectionVector()
 	return JGeometry::TVec3<f32>(sinf(mDirection), 0.0f, cosf(mDirection));
 }
 
-f32 TDirectionCalc::absDirection(f32 dir) { return fabsf(sub(dir)); }
+f32 TDirectionCalc::absDirection(f32 dir)
+{
+	// The named result puts sub() at depth 1, where the original expands it;
+	// fabsf(sub(dir)) nests it one level deeper and leaves a bl.
+	f32 diff = sub(dir);
+	return fabsf(diff);
+}
 
 f32 TDirectionCalc::d2r(f32 deg) { return 3.1415927f * deg / 180.0f; }
 
