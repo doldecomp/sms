@@ -159,13 +159,13 @@ public:
 	J3DMaterial* getMaterial() const { return mpMaterial; }
 	void setMaterial(J3DMaterial* pMaterial)
 	{
-		J3D_ASSERT_NULLPTR(646, pMaterial != nullptr);
+		J3D_ASSERT_NULLPTR(pMaterial != nullptr);
 		mpMaterial = pMaterial;
 	}
 
 	void setTexture(J3DTexture* pTexture)
 	{
-		J3D_ASSERT_NULLPTR(651, pTexture != nullptr);
+		J3D_ASSERT_NULLPTR(pTexture != nullptr);
 		mTexture = pTexture;
 	}
 

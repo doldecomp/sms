@@ -128,7 +128,7 @@ bool TMario::isTakeSituation(THitActor* object)
 
 bool TMario::canTake(THitActor* object)
 {
-	return mGamePad->checkMeaning(TMarioGamePad::MEANING_0x100)
+	return mGamePad->checkMeaning(TMarioGamePad::MEANING_B)
 	       && isTakeSituation(object);
 }
 

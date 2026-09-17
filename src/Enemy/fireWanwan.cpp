@@ -514,7 +514,7 @@ void TFireWanwanTailHit::init()
 		actor->getModel()->calc();
 	}
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(0x10000028, 0, 0, 0.0f, 0.0f, 30.0f, 200.0f);
@@ -1447,7 +1447,7 @@ bool TFireWanwan::isWalking() const
 bool TFireWanwan::isWandering() const
 {
 	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
-	return nerve == &TNerveFireWanwanRecover::theNerve()
+	return nerve == &TNerveFireWanwanRecoverGraph::theNerve()
 	       || nerve == &TNerveFireWanwanTurn::theNerve() || isWalking();
 }
 

@@ -91,6 +91,9 @@ class TMapEventSinkBianco : public TMapEventSinkInPollutionReset {
 public:
 	TMapEventSinkBianco(const char* name = "イベント（建物沈むビアンコ）")
 	    : TMapEventSinkInPollutionReset(name)
+	    , unk64(nullptr)
+	    , mGateKeeper(nullptr)
+	    , unk7C(0)
 	{
 	}
 
@@ -113,7 +116,11 @@ public:
 class TMapEventSinkShadowMario : public TMapEventSink {
 public:
 	TMapEventSinkShadowMario(const char* name = "建物沈む（影マリオ）")
-	    : TMapEventSink(name) { };
+	    : TMapEventSink(name)
+	    , unk64(nullptr)
+	    , unk68(nullptr)
+	{
+	}
 
 	virtual void loadAfter();
 

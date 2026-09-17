@@ -9,7 +9,7 @@ class TEnemyMario;
 
 class TEMario : public TSpineEnemy {
 public:
-	TEMario(const char* name);
+	TEMario(const char* name = "マリオモドキ");
 
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
@@ -36,7 +36,8 @@ public:
 };
 
 class TEMarioManager : public TEnemyManager {
-	TEMarioManager(const char* name);
+public:
+	TEMarioManager(const char* name = "典型敵マネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual TSpineEnemy* createEnemyInstance();

@@ -150,7 +150,7 @@ void TPoiHana::init(TLiveManager* param_1)
 	unk19C = (TPoihanaSaveLoadParams*)getSaveParam();
 	unk1BC = new TPoiHanaCollision;
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(unk1BC);
 

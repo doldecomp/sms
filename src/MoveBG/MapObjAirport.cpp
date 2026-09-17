@@ -26,7 +26,8 @@ void TAirportSwitch::breaking()
 void TAirportSwitch::loadAfter()
 {
 	TMapObjGeneral::loadAfter();
-	unk148 = JDrama::TNameRefGen::search<TAirportPool>("AirportPool");
+	unk148 = static_cast<TAirportPool*>(
+	    JDrama::TNameRefGen::search("AirportPool"));
 }
 
 TAirportSwitch::TAirportSwitch(const char* name)
@@ -82,8 +83,8 @@ void TAirportEventSink::loadAfter()
 {
 	TMapEventSinkInPollutionReset::loadAfter();
 
-	unk6C = JDrama::TNameRefGen::search<TGateKeeperBase>(
-	    "ゲートキーパー（ビアンコ）");
+	unk6C = static_cast<TGateKeeperBase*>(
+	    JDrama::TNameRefGen::search("ゲートキーパー（ビアンコ）"));
 	unk40 = 720;
 	unk44 = 480;
 	unk48 = 60;

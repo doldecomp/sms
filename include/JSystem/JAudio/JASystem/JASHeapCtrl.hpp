@@ -28,14 +28,15 @@ namespace Kernel {
 		void show(u32);
 		void moveChildren(s32);
 
-		void* getUnk8() const { return unk8; }
+		void* getBase() const { return mBase; }
+		bool isAllocated() const { return mBase; }
 
 	public:
 		/* 0x0 */ u8 unk0;
 		/* 0x1 */ u8 unk1;
 		/* 0x2 */ u16 unk2;
 		/* 0x4 */ u32 unk4;
-		/* 0x8 */ u8* unk8;
+		/* 0x8 */ u8* mBase;
 		/* 0xC */ u32 unkC;
 		/* 0x10 */ u32 unk10;
 		/* 0x14 */ THeap* unk14;

@@ -33,12 +33,23 @@ namespace HardStream {
 		TPlayList* getList() { return mList; }
 		void setList(TPlayList* list) { mList = list; }
 
+		u16 getPlayArea() { return mPlayArea; }
+		void setPlayArea(u16 area) { mPlayArea = area; }
+
+		u8 getRestart() { return mRestart; }
+		void setRestart(u8 restart) { mRestart = restart; }
+
+		u8 getState() { return mState; }
+		void setState(u8 state) { mState = state; }
+
+		u32 getLastAddrBefore() { return unk44[unk4C ^ 1]; }
+
 	public:
 		/* 0x00 */ int unk0;
 		/* 0x04 */ TPlayList* mList;
-		/* 0x08 */ u16 unk8;
-		/* 0x0A */ u8 unkA;
-		/* 0x0B */ u8 unkB;
+		/* 0x08 */ u16 mPlayArea;
+		/* 0x0A */ u8 mRestart;
+		/* 0x0B */ u8 mState;
 		/* 0x0C */ f32 unkC;
 		/* 0x10 */ f32 unk10;
 		/* 0x14 */ u32 unk14;

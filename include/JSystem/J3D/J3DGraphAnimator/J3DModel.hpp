@@ -95,7 +95,7 @@ public:
 
 	J3DMaterial* getMaterialNodePointer(u16 idx) const
 	{
-		J3D_ASSERT_RANGE(92, idx < mMaterialNum);
+		J3D_ASSERT_RANGE(idx < mMaterialNum);
 		return mMaterials[idx];
 	}
 	void setTexture(J3DTexture* texture) { unkAC = texture; }

@@ -598,9 +598,8 @@ void THideObjPictureTwin::loadAfter()
 		buffer2[len + 2] = buffer[2];
 		buffer2[len + 3] = buffer[3];
 
-		THideObjPictureTwin* hitActor
-		    = JDrama::TNameRefGen::getInstance()->search<THideObjPictureTwin>(
-		        buffer2);
+		THideObjPictureTwin* hitActor = static_cast<THideObjPictureTwin*>(
+		    JDrama::TNameRefGen::search(buffer2));
 		unk174         = hitActor;
 		unk174->unk174 = this;
 	}

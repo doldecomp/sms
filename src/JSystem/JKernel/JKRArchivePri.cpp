@@ -1,5 +1,6 @@
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <ctype.h>
 
 u32 JKRArchive::sCurrentDirID;
@@ -29,7 +30,10 @@ JKRArchive::JKRArchive(s32 entryNumber, JKRArchive::EMountMode mountMode)
 	}
 }
 
-JKRArchive::JKRArchive(const char* p1, JKRArchive::EMountMode mountMode) { }
+JKRArchive::JKRArchive(const char* p1, JKRArchive::EMountMode mountMode)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
 
 JKRArchive::~JKRArchive() { }
 
@@ -85,6 +89,7 @@ JKRArchive::SDIDirEntry* JKRArchive::findDirectory(const char* name,
 
 JKRArchive::SDIFileEntry* JKRArchive::findTypeResource(u32 type, u32 id) const
 {
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 	return nullptr;
 }
 
@@ -199,7 +204,7 @@ JKRArchive::SDIFileEntry* JKRArchive::findIdResource(u16 id) const
 	return nullptr;
 }
 
-JKRArchive::CArcName::CArcName() { }
+JKRArchive::CArcName::CArcName() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 void JKRArchive::CArcName::store(const char* name)
 {

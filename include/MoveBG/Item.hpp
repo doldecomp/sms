@@ -52,7 +52,11 @@ public:
 
 class TFlowerCoin : public TCoin {
 public:
-	TFlowerCoin(const char* name = "コイン(フラワー用)");
+	TFlowerCoin(const char* name = "コイン(フラワー用)")
+	    : TCoin(name)
+	    , unk158(0)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 

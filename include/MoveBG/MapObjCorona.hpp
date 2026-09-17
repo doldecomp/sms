@@ -16,7 +16,7 @@ public:
 	void loadAfter();
 	void hipdrop(const JGeometry::TVec3<f32>&);
 	void quake(const JGeometry::TVec3<f32>&);
-	u8 getNumGripsDead() const;
+	int getNumGripsDead() const;
 	void tumble(f32, f32);
 	MtxPtr getTakingMtx();
 	MtxPtr getSubmarineMtxInDemo();

@@ -282,6 +282,7 @@ public:
 	u8 getScaleCompensate() const { return mScaleCompensate; }
 	J3DMaterial* getMesh() { return mMesh; }
 	u8 getMtxType() const { return (mKind & 0xF0) >> 4; }
+	u8 getKind() const { return mKind & 0xF; }
 	void setMtxType(u8 type) { mKind = (mKind & ~0xF0) | (type << 4); }
 
 	/// Sets an MtxCalc override for this joint's subtree

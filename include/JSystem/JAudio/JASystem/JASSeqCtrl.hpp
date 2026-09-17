@@ -18,12 +18,11 @@ public:
 	u32 read24();
 	u32 read32();
 
-	// Inlines taken from TWW, probably fabricated
-
 	u8 getByte(u32 offset) const { return mRawFilePtr[offset]; }
 	u8 readByte() { return *mCurrentFilePtr++; }
 
 	u8* getBase() { return mRawFilePtr; }
+	u8* getAddr(u32 offset) { return mRawFilePtr + offset; }
 
 	void call(u32 offset)
 	{
@@ -43,7 +42,16 @@ public:
 	}
 
 	void wait(s32 timer) { mWaitTimer = timer; }
+	s32 getWait() const { return mWaitTimer; }
 
+	u16 getLoopCount() const
+	{
+		if (mLoopIndex == 0)
+			return 0;
+		return mLoopTimers[mLoopIndex - 1];
+	}
+
+	bool isIntr() const { return mPreviousFilePtr != 0 ? true : false; }
 	void clrIntr() { mPreviousFilePtr = 0; }
 
 public:

@@ -735,7 +735,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			mSelectShineAnimFrame++;
 		} break;
 		case MENU_INPUT_LOOP: {
-			if (mGamePad->checkFrameMeaning(0x20)) {
+			if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SHINE_SELECT, 0,
 				                                   nullptr, 0);
 
@@ -777,7 +777,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 				emitter->createEmitter(emitterPos, 8, nullptr, nullptr);
 
 				mMenuState = DISAPPEAR_MENU;
-			} else if (mGamePad->checkFrameMeaning(0x8)) {
+			} else if (mGamePad->checkFrameMeaning(
+			               TMarioGamePad::MEANING_MENU_LEFT)) {
 				if (getPrevIndex() != -1) {
 					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SHINE_CURSOR,
 					                                   0, nullptr, 0);
@@ -852,7 +853,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 					mMenuState = MENU_ANIM_LOOP;
 				}
-			} else if (mGamePad->checkFrameMeaning(0x10)) {
+			} else if (mGamePad->checkFrameMeaning(
+			               TMarioGamePad::MEANING_MENU_RIGHT)) {
 				if (getNextIndex() != -1) {
 					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SHINE_CURSOR,
 					                                   0, nullptr, 0);

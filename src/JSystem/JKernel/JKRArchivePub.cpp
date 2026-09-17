@@ -68,6 +68,13 @@ JKRArchive* JKRArchive::mount(const char* path,
 	return archive;
 }
 
+JKRArchive* JKRArchive::mount(void* ptr, JKRHeap* heap,
+                              EMountDirection mountDirection)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
+
 bool JKRArchive::becomeCurrent(const char* path)
 {
 	SDIDirEntry* dirEntry;
@@ -159,6 +166,54 @@ void* JKRArchive::getResource(u32 type, const char* path)
 	return nullptr;
 }
 
+void* JKRArchive::getIdxResource(u32 index)
+{
+	JUT_ASSERT(isMounted());
+
+	SDIFileEntry* fileEntry = findIdxResource(index);
+	if (fileEntry) {
+		return fetchResource(fileEntry, nullptr);
+	}
+
+	return nullptr;
+}
+
+void* JKRArchive::getResource(u16 id)
+{
+	JUT_ASSERT(isMounted());
+
+	SDIFileEntry* fileEntry = findIdResource(id);
+	if (fileEntry) {
+		return fetchResource(fileEntry, nullptr);
+	}
+
+	return nullptr;
+}
+
+size_t JKRArchive::readTypeResource(void* buffer, u32 bufferSize, u32 type,
+                                    const char* name, JKRArchive* archive)
+{
+	size_t readSize = 0;
+
+	if (archive) {
+		return archive->readResource(buffer, bufferSize, type, name);
+	}
+
+	JSUList<JKRFileLoader>& volumeList = getVolumeList();
+	JSUListIterator<JKRFileLoader> iterator;
+	for (iterator = volumeList.getFirst(); iterator != volumeList.getEnd();
+	     ++iterator) {
+		if (iterator->getVolumeType() == 'RARC') {
+			readSize = iterator->readResource(buffer, bufferSize, type, name);
+			if (readSize != 0) {
+				break;
+			}
+		}
+	}
+
+	return readSize;
+}
+
 size_t JKRArchive::readResource(void* buffer, u32 bufferSize, u32 type,
                                 const char* path)
 {
@@ -189,6 +244,34 @@ size_t JKRArchive::readResource(void* buffer, u32 bufferSize, const char* path)
 		fileEntry = findFsResource(path, getCurrentDirID());
 	}
 
+	if (fileEntry) {
+		u32 resourceSize;
+		fetchResource(buffer, bufferSize, fileEntry, &resourceSize);
+		return resourceSize;
+	}
+
+	return 0;
+}
+
+size_t JKRArchive::readIdxResource(void* buffer, u32 bufferSize, u32 index)
+{
+	JUT_ASSERT(isMounted());
+
+	SDIFileEntry* fileEntry = findIdxResource(index);
+	if (fileEntry) {
+		u32 resourceSize;
+		fetchResource(buffer, bufferSize, fileEntry, &resourceSize);
+		return resourceSize;
+	}
+
+	return 0;
+}
+
+size_t JKRArchive::readResource(void* buffer, u32 bufferSize, u16 id)
+{
+	JUT_ASSERT(isMounted());
+
+	SDIFileEntry* fileEntry = findIdResource(id);
 	if (fileEntry) {
 		u32 resourceSize;
 		fetchResource(buffer, bufferSize, fileEntry, &resourceSize);
@@ -246,6 +329,39 @@ s32 JKRArchive::getResSize(const void* resource) const
 	return fileEntry->mSize;
 }
 
+u32 JKRArchive::countResource(u32 type, const JKRArchive* archive)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
+u32 JKRArchive::countResource() const
+{
+	u32 count = 0;
+	for (int i = 0; i < mArcInfoBlock->num_file_entries; i++) {
+		if ((mFileEntries[i].mFlagsAndNameOffset >> 24) & 1) {
+			count++;
+		}
+	}
+	return count;
+}
+
+u32 JKRArchive::countResource(u32 type) const
+{
+	SDIDirEntry* dirEntry = findResType(type);
+	if (dirEntry) {
+		int count = 0;
+		for (int i = dirEntry->mFirstIdx;
+		     i < dirEntry->mFirstIdx + dirEntry->mNum; i++) {
+			if ((mFileEntries[i].mFlagsAndNameOffset >> 24) & 1) {
+				count++;
+			}
+		}
+		return count;
+	}
+	return 0;
+}
+
 u32 JKRArchive::countFile(const char* path) const
 {
 	SDIDirEntry* dirEntry;
@@ -285,4 +401,24 @@ JKRFileFinder* JKRArchive::getFirstFile(const char* path) const
 	}
 
 	return nullptr;
+}
+
+JKRArcFinder* JKRArchive::getFirstResource(u32 type) const
+{
+	SDIDirEntry* dirEntry = findResType(type);
+	if (dirEntry && (getFileAttribute(dirEntry->mFirstIdx) & 1)) {
+		return new (JKRHeap::sSystemHeap, 0) JKRArcFinder(
+		    (JKRArchive*)this, dirEntry->mFirstIdx, countResource(type));
+	}
+	return new (JKRHeap::sSystemHeap, 0) JKRArcFinder((JKRArchive*)this, 0, 0);
+}
+
+u32 JKRArchive::getFileAttribute(u32 index) const
+{
+	SDIFileEntry* fileEntry = findIdxResource(index);
+	if (fileEntry) {
+		return fileEntry->mFlagsAndNameOffset >> 24;
+	}
+
+	return 0;
 }

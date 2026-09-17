@@ -185,7 +185,7 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, JKRAramBlock* block,
 		return mainRamToAram(buf, u32(0), alignedSize, expandSwitch, fileSize,
 		                     heap, id);
 	}
-	u32 blockSize = block->mSize;
+	u32 blockSize = block->getSize();
 	if (expandSwitch == 1) {
 		fileSize = fileSize >= blockSize ? blockSize : fileSize;
 	}
@@ -197,11 +197,13 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, JKRAramBlock* block,
 void JKRAram::mainRamToAram_Async(u8*, u32, u32, JKRExpandSwitch, u32, JKRHeap*,
                                   void (*)(u32), int)
 {
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }
 
 void JKRAram::mainRamToAram_Async(u8*, JKRAramBlock*, u32, JKRExpandSwitch, u32,
                                   JKRHeap*, void (*)(u32), int)
 {
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }
 
 u8* JKRAram::aramToMainRam(u32 address, u8* buf, u32 p3,
@@ -304,18 +306,23 @@ u8* JKRAram::aramToMainRam(JKRAramBlock* block, u8* buf, u32 p3, u32 p4,
 void JKRAram::aramToMainRam_Async(u32, u8*, u32, JKRExpandSwitch, u32, JKRHeap*,
                                   void (*)(u32), int)
 {
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }
 
 void JKRAram::aramToMainRam_Async(JKRAramBlock*, u8*, u32, u32, JKRExpandSwitch,
                                   u32, JKRHeap*, void (*)(u32), int)
 {
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }
 
-void JKRAram::aramSync(JKRAMCommand*, int) { }
+void JKRAram::aramSync(JKRAMCommand*, int)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
 
-void JKRAram::aramSyncAll(int) { }
+void JKRAram::aramSyncAll(int) { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
-void JKRAram::countLeftSync() { }
+void JKRAram::countLeftSync() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 static void dummy()
 {
@@ -342,12 +349,12 @@ int JKRDecompressFromAramToMainRam(u32 src, void* dst, u32 srcLength,
 {
 	// TODO: what is 0x400?
 	szpBuf = (u8*)JKRAllocFromSysHeap(0x400, 32);
-	JUT_ASSERT(VERSION_SELECT(1091, 1077, 1077), szpBuf != nullptr);
+	JUT_ASSERT(szpBuf != nullptr);
 
 	szpEnd = szpBuf + 0x400;
 	if (offset != 0) {
 		refBuf = (u8*)JKRAllocFromSysHeap(0x1120, 0);
-		JUT_ASSERT(VERSION_SELECT(1100, 1086, 1086), refBuf != nullptr);
+		JUT_ASSERT(refBuf != nullptr);
 		refEnd     = refBuf + 0x1120;
 		refCurrent = refBuf;
 	} else {
@@ -508,7 +515,7 @@ static u8* nextSrcData(u8* current)
 	if (transSize > transLeft) {
 		transSize = transLeft;
 	}
-	JUT_ASSERT(VERSION_SELECT(1376, 1361, 1361), transSize > 0);
+	JUT_ASSERT(transSize > 0);
 
 	JKRAramPcs(1, (u32)(srcAddress + srcOffset), ((u32)dest + left),
 	           ALIGN_NEXT(transSize, 0x20), nullptr);

@@ -10,28 +10,28 @@
 class JAICamera {
 public:
 	JAICamera()
-	    : unk0(nullptr)
-	    , unk4(nullptr)
-	    , unk8(nullptr)
+	    : mPosition(nullptr)
+	    , mPrevPosition(nullptr)
+	    , nViewMtx(nullptr)
 	{
 	}
 	JAICamera(VecPtr param_1, VecPtr param_2, MtxPtr param_3)
-	    : unk0(param_1)
-	    , unk4(param_2)
-	    , unk8(param_3)
+	    : mPosition(param_1)
+	    , mPrevPosition(param_2)
+	    , nViewMtx(param_3)
 	{
 	}
 
 	Vec toCamSpace(Vec in) const
 	{
 		Vec out;
-		MTXMultVec(unk8, &in, &out);
+		MTXMultVec(nViewMtx, &in, &out);
 		return out;
 	}
 
-	/* 0x0 */ VecPtr unk0;
-	/* 0x4 */ VecPtr unk4;
-	/* 0x8 */ MtxPtr unk8;
+	/* 0x0 */ VecPtr mPosition;
+	/* 0x4 */ VecPtr mPrevPosition;
+	/* 0x8 */ MtxPtr nViewMtx;
 };
 
 extern JAICamera JAInullCamera;
@@ -39,7 +39,7 @@ extern JAICamera JAInullCamera;
 class JAIActor;
 class JAILinkBuffer;
 class JAIDummyVec;
-class JAISoundTable;
+struct JAISoundTable;
 
 class JAIBasic {
 public:
@@ -50,17 +50,17 @@ public:
 	~JAIBasic();
 
 	virtual void initStream();
-	virtual JAISound* makeSound(u32 param);
-	virtual u16 getMapInfoFxline(u32 param);
-	virtual u32 getMapInfoGround(u32 param);
-	virtual f32 getMapInfoFxParameter(u32 param);
+	virtual JAISound* makeSound(u32 count);
+	virtual u16 getMapInfoFxline(u32 ground_no);
+	virtual u32 getMapInfoGround(u32 ground_no);
+	virtual f32 getMapInfoFxParameter(u32 ground_no);
 	virtual void sendPlayingSeCommand();
 	virtual void sendSeAllParameter(JAISound* sound);
 	virtual void setSeExtParameter(JAISound* sound);
 	virtual void setRegisterTrackCallback();
 	virtual void checkStream();
 	virtual void checkNextFrameSe();
-	virtual void loadGroupWave(s32 param1, s32 param2);
+	virtual void loadGroupWave(s32 bank_id, s32 group_no);
 
 	void initDriver(JKRSolidHeap* heap, u32 param1, u8 param2);
 	void initInterface(u8 param);
@@ -70,12 +70,12 @@ public:
 	BOOL checkInitListFile();
 	void* loadDVDFile(char* filename);
 	BOOL checkInitDataFile();
-	void loadTmpDVDFile(char* filename, unsigned char** buffer);
+	void loadTmpDVDFile(char* filename, u8** buffer);
 	void checkInitDataOnMemory();
-	void* transInitDataFile(unsigned char* buffer, u32 size);
+	void* transInitDataFile(u8* buffer, u32 size);
 	void* allocHeap(u32 size);
 	void initBankWave();
-	void deleteTmpDVDFile(unsigned char** buffer);
+	void deleteTmpDVDFile(u8** buffer);
 	void setWaveScene();
 	void initAllocParameter();
 	void initNullData();
@@ -87,54 +87,52 @@ public:
 	void readInitSoundData();
 	void loadFirstStayWave();
 	void loadSecondStayWave();
-	void setSceneSetFinishCallback(s32 param1, s32 param2);
-	static void finishSceneSet(u32 param);
-	void loadSceneWave(s32 param1, s32 param2);
-	bool checkSceneWaveOnMemory(s32 param1, s32 param2);
-	void getWaveGroupNumber(s32 param);
-	void getWaveLoadStatus(s32 param);
+	void setSceneSetFinishCallback(s32 bank_id, s32 group_no);
+	static void finishSceneSet(u32 id);
+	void loadSceneWave(s32 bank_id, s32 group_no);
+	bool checkSceneWaveOnMemory(s32 bank_id, s32 group_no);
+	s32 getWaveGroupNumber(s32 param);
+	s32 getWaveLoadStatus(s32 param);
 	void checkAllWaveLoadStatus();
 	void setInitFileLoadSwitch(u8 flag);
 	void startFrameInterfaceWork();
 	void processFrameWork();
 	void checkDummyPositionBuffer();
-	void startSoundVec(u32 id, JAISound** sound, Vec* pos, u32 param1,
-	                   u32 param2, u8 param3);
-	void startSoundVecReturnHandle(u32 id, Vec* pos, u32 param1, u32 param2,
-	                               u8 param3);
-	void startSoundActor(u32 id, JAISound** sound, JAIActor* actor, u32 param,
-	                     u8 flag);
-	JAISound* startSoundActorReturnHandle(u32 id, JAIActor* actor, u32 param,
-	                                      u8 flag);
-	void startSoundDirectID(u32 id, JAISound** sound, JAIActor* actor,
-	                        u32 param, u8 flag);
-	void startSoundIndirectID(u32 id, JAISound** sound, JAIActor* actor,
-	                          u32 param, u8 flag);
-	void startSoundBasic(u32 id, JAISound** sound, JAIActor* actor, u32 param,
-	                     u8 flag, void* data);
-	void getPlayingSoundHandle(JAISound** sound, u32 param);
-	void stopSoundHandle(JAISound* sound, u32 param);
+	void startSoundVec(u32, JAISoundHandle*, Vec*, u32, u32, u8);
+	JAISoundHandle startSoundVecReturnHandle(u32, Vec*, u32, u32, u8);
+	void startSoundActor(u32 id, JAISoundHandle* out_handle, JAIActor* actor,
+	                     u32 fade, u8 camera_idx);
+	JAISoundHandle startSoundActorReturnHandle(u32 id, JAIActor* actor,
+	                                           u32 fade, u8 camera_idx);
+	void startSoundDirectID(u32 id, JAISoundHandle* out_handle, JAIActor* actor,
+	                        u32 fade, u8 camera_idx);
+	void startSoundIndirectID(u32 id, JAISoundHandle* out_handle,
+	                          JAIActor* actor, u32 fade, u8 camera_idx);
+	void startSoundBasic(u32 id, JAISoundHandle* out_handle, JAIActor* actor,
+	                     u32 fade, u8 camera_idx, void* info);
+	void getPlayingSoundHandle(JAISoundHandle*, u32);
+	void stopSoundHandle(JAISoundHandle sound, u32 fadeout);
 	u32 changeIDToCategory(u32 id);
-	void stopPlayingObjectSe(void* obj);
-	void stopPlayingIDObjectSe(u32 id, void* obj);
-	void stopPlayingCategorySe(u8 category);
-	void stopPlayingCategoryObjectSe(u8 category, void* obj);
-	void stopAllSe(void* obj);
-	void stopAllSe(u8 param);
-	void stopAllSe(u8 param, void* obj);
-	void stopAllSeq(void* obj);
-	void stopAllStream(void* obj);
-	void stopActorSoundOneBuffer(void* actor, JAISound* sound);
-	void stopIDSoundOneBuffer(u32 id, JAISound* sound);
-	void stopIDActorSoundOneBuffer(u32 id, void* actor, JAISound* sound);
-	void stopAllSound(void* obj);
-	void getPlayingSoundLinkHeadPointer(u32 param);
-	void stopAllSound(u32 param);
-	void stopAllSound(u32 param, void* obj);
-	void deleteObject(void* obj);
-	void releaseSoundHandle(JAISound* sound);
-	JAISound* getControllerHandle(JAILinkBuffer* buffer);
-	void releaseControllerHandle(JAILinkBuffer* buffer, JAISound* sound);
+	void stopPlayingObjectSe(void*);
+	void stopPlayingIDObjectSe(u32, void*);
+	void stopPlayingCategorySe(u8);
+	void stopPlayingCategoryObjectSe(u8, void*);
+	void stopAllSe(void*);
+	void stopAllSe(u8 category);
+	void stopAllSe(u8, void*);
+	void stopAllSeq(void*);
+	void stopAllStream(void*);
+	void stopActorSoundOneBuffer(void*, JAISound*);
+	void stopIDSoundOneBuffer(u32, JAISound*);
+	void stopIDActorSoundOneBuffer(u32, void*, JAISound*);
+	void stopAllSound(void*);
+	void getPlayingSoundLinkHeadPointer(u32);
+	void stopAllSound(u32);
+	void stopAllSound(u32, void*);
+	void deleteObject(void*);
+	void releaseSoundHandle(JAISoundHandle);
+	JAISoundHandle getControllerHandle(JAILinkBuffer* buffer);
+	void releaseControllerHandle(JAILinkBuffer* buffer, JAISoundHandle handle);
 	JAIStreamParameter* getStreamParameter();
 	void releaseStreamParameterPointer(JAIStreamParameter* param);
 	JAISeqParameter* getSeqParametermeterPointer();
@@ -144,40 +142,40 @@ public:
 	void getDummyVecPointer();
 	void releaseDummyVecPointer(JAIDummyVec* vec);
 	void getGameFrameCounter();
-	void setPauseFlagAll(u8 flag);
-	void checkPlayingSoundTrack(u32 param);
-	void changeSoundScene(u32 scene);
-	void allocDvdBuffer(unsigned char* buffer, u32 param1, u32 param2);
-	void deallocDvdBuffer(unsigned char* buffer);
+	void setPauseFlagAll(u8);
+	void checkPlayingSoundTrack(u32);
+	void changeSoundScene(u32);
+	void allocDvdBuffer(u8*, u32, u32);
+	void deallocDvdBuffer(u8*);
 	void getSeInfoMode();
 	void getSeInfoStartPointer();
 	void getSeInfoCategoryMax();
 	JAISoundTable* getInfoPointerFromID(u32 id);
 	u32 getInfoFormat(JAISoundTable* table, u32 id);
-	void setSeCancelSwitch(u8 param1, u8 param2);
+	void setSeCancelSwitch(u8, u8);
 	void setSeCategoryVolume(u8 category, u8 volume);
 	static u16 setParameterSeqSync(JASystem::TTrack* track, u16 param);
-	JAISoundInfo* getSoundInfoFromID(u32 id);
-	u8 getSeqTrackNumber(void* param);
-	u8 getSoundPrioity(void* param);
-	u32 getSoundSwBit(void* param);
-	u32 routeToTrack(u32 param);
-	void allocStreamBuffer(void* buffer, s32 size);
+	JAISoundInfo* getSoundInfoFromID(u32 sound_id);
+	u8 getSeqTrackNumber(void* info);
+	u8 getSoundPrioity(void* info);
+	u32 getSoundSwBit(void* info);
+	u32 routeToTrack(u32 route);
+	void allocStreamBuffer(void*, s32);
 	void deallocStreamBuffer();
-	int loadArcSeqData(u32 param, bool flag);
+	int loadArcSeqData(u32 sound_id, bool flag);
 	void setSeqMuteFromSeStart(JAISound* sound);
 	void clearSeqMuteFromSeStop(JAISound* sound);
 	void checkSeMovePara();
 	void releaseSeRegist(JAISound* sound);
 	void checkEntriedSeq();
-	void checkPlayingSeqTrack(unsigned long trackID);
+	void checkPlayingSeqTrack(u32 trackID);
 	void checkPlayingSeq();
 	void checkStoppedSeq();
 	void checkStartedSeq();
 	void checkFadeoutSeq();
 	void checkReadSeq();
 	void checkSeqWave();
-	static void checkDvdLoadArc(unsigned long arcID);
+	static void checkDvdLoadArc(u32 arcID);
 	void stopSeq(JAISound* sound);
 	void checkEntriedStream();
 	void checkWaitStream();
@@ -186,76 +184,109 @@ public:
 
 	static JAIBasic* basic;
 
+	static JAIBasic* getInterface() { return basic; }
+
 public:
-	/* 0x8 */ JAICamera* unk8;
-	/* 0xC */ JKRSolidHeap* unkC;
-	/* 0x10 */ u8 unk10;
+	/* 0x8 */ JAICamera* mAudioCameras;
+	/* 0xC */ JKRSolidHeap* mInterfaceHeap;
+	/* 0x10 */ u8 mSoundScene;
 	/* 0x11 */ u8 unk11;
 	/* 0x12 */ u8 unk12;
-	/* 0x13 */ u8 unk13;
-	/* 0x14 */ u8 unk14;
+	/* 0x13 */ u8 mInitFileLoadSwitch;
+	/* 0x14 */ u8 mSoundOutputMode;
 	/* 0x15 */ u8 unk15;
 	/* 0x16 */ char unk16[2];
-	/* 0x18 */ u8* unk18;
+	/* 0x18 */ u8* mSeCancelSwitch;
 	/* 0x1C */ struct {
-		u8 flag1 : 1;
-		u8 flag2 : 1;
-		u8 flag3 : 1;
-		u8 flag4 : 1;
-		u8 flag5 : 1;
-		u8 flag6 : 1;
-		u8 flag7 : 1;
-		u8 flag8 : 1;
+		u8 mFirstStayWaveLoaded : 1;
+		u8 mSecondStayWaveLoaded : 1;
+		u8 mInitDataLoadOff : 1;
+		u8 mSeqEntryCancel : 1;
+		u8 mStreamEntryCancel : 1;
+		u8 mStreamUseOff : 1;
+		u8 mStreamInsideBufferCut : 1;
 	} unk1C;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ u32 unk24;
-	/* 0x28 */ f32* unk28;
-	/* 0x2C */ u32 unk2C;
+	/* 0x28 */ f32* mSeCategoryVolume;
+	/* 0x2C */ u32 mSeqArchiveHandle;
 	/* 0x30 */ u32 unk30;
-	/* 0x34 */ u32 unk34;
-	/* 0x38 */ JAISound* unk38;
+	/* 0x34 */ u32 mFinishedSceneSet;
+	/* 0x38 */ JAISound* mSeSequence;
 
-	struct FabricatedUnk3CStruct {
-		char unk0[1]; // TODO: is this just a size 0x30 str or nah?
-		char unk1[0x2F];
+	struct FabricatedFileNameEntry {
+		/* 0x0 */ char mFileName[0x30];
 	};
-	/* 0x3C */ FabricatedUnk3CStruct* unk3C;
 
-	// TODO: same as unk3C?
-	struct FabricatedUnk40Struct {
-		char unk0[1];
-		char unk1[0x2F];
-	};
-	/* 0x40 */ FabricatedUnk40Struct* unk40;
+	/* 0x3C */ FabricatedFileNameEntry* mBankFileList;
+	/* 0x40 */ FabricatedFileNameEntry* mWaveBankFileList;
 	/* 0x44 */ u32 unk44;
 	/* 0x48 */ u32 unk48;
-	/* 0x4C */ u8* unk4C;
+	/* 0x4C */ u8* mInitDataPointer;
 
-	// TODO: same as Unk54 struct?
-	struct FabricatedUnk50Struct {
-		void* unk0;
-		char unk4[0x4];
-		int unk8;
+	struct FabricatedBankEntry {
+		/* 0x0 */ void* mBankData;
+		/* 0x4 */ char unk4[0x4];
+		/* 0x8 */ int mWaveBankNumber;
 	};
 
-	/* 0x50 */ FabricatedUnk50Struct* unk50;
+	/* 0x50 */ FabricatedBankEntry* mBankList;
 
-	struct FabricatedUnk54Struct {
-		void* unk0;
-		u32 unk4;
-		u32 unk8;
+	enum {
+		WAVE_LOAD_TIMING_FIRST_STAY  = 0,
+		WAVE_LOAD_TIMING_SECOND_STAY = 1,
+		WAVE_LOAD_TIMING_SCENE       = 2,
 	};
 
-	/* 0x54 */ FabricatedUnk54Struct* unk54;
-	/* 0x58 */ u8** unk58; // TODO: wrong type
-	/* 0x5C */ u32 unk5C;
-	/* 0x60 */ s32* unk60;
-	/* 0x64 */ s32* unk64;
-	/* 0x68 */ u8** unk68; // TODO: might be pair of u8s actually
-	/* 0x6C */ u32* unk6C; // TODO: wrong type
+	struct FabricatedWaveBankEntry {
+		/* 0x0 */ void* mWaveBankData;
+		/* 0x4 */ u32 unk4;
+		/* 0x8 */ u32 mLoadTiming;
+	};
+
+	/* 0x54 */ FabricatedWaveBankEntry* mWaveBankList;
+
+	struct FabricatedSeqArchiveHeader {
+		/* 0x0 */ u8* mData;
+		/* 0x4 */ u32 mSize;
+	};
+
+	/* 0x58 */ FabricatedSeqArchiveHeader* mSeqArchiveHeader;
+
+	struct FabricatedStreamListHeader {
+		/* 0x0 */ JAIData::FabricatedStreamEntry* mData;
+		/* 0x4 */ u32 mSize;
+	};
+
+	/* 0x5C */ FabricatedStreamListHeader* mStreamListHeader;
+	/* 0x60 */ s32* mWaveGroupNumber;
+
+	enum {
+		WAVE_LOAD_STATUS_NOT_LOADED = 0,
+		WAVE_LOAD_STATUS_LOADING    = 1,
+		WAVE_LOAD_STATUS_LOADED     = 2,
+	};
+
+	/* 0x64 */ s32* mWaveLoadStatus;
+
+	struct FabricatedSoundSceneTable {
+		/* 0x0 */ u32 mSceneMax;
+		/* 0x4 */ JAICategoryInfo* mSceneData[];
+	};
+
+	// Points at FabricatedSoundSceneTable::mSceneData.
+	/* 0x68 */ JAICategoryInfo** mSoundSceneList;
+
+	struct FabricatedFxSceneTable {
+		/* 0x0 */ u32 mSceneMax;
+		/* 0x4 */ u32 mBufferMax[4];
+		/* 0x14 */ u32 mSceneOffset[];
+	};
+
+	/* 0x6C */ FabricatedFxSceneTable* mFxSceneTable;
 	/* 0x70 */ u32 unk70;
 	/* 0x74 */ char unk74[0x4];
-	/* 0x78 */ u32 unk78;
+	/* 0x78 */ u8* unk78;
 	/* 0x7C */ JAISound* unk7C;
 	/* 0x80 */ JAISound* unk80;
 	/* 0x84 */ u32 unk84;

@@ -8,14 +8,14 @@ public:
 	JKRMemArchive();
 	JKRMemArchive(s32, EMountDirection);
 	JKRMemArchive(void*, u32, JKRMemBreakFlag);
-	JKRMemArchive(const char*, EMountDirection); // unused
+	JKRMemArchive(const char*, EMountDirection);
 
-	virtual ~JKRMemArchive();                                       // _08
-	virtual void removeResourceAll();                               // _24
-	virtual bool removeResource(void*);                             // _28
-	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize); // _40
+	virtual ~JKRMemArchive();
+	virtual void removeResourceAll();
+	virtual bool removeResource(void*);
+	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize);
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
-	                            SDIFileEntry* entry, u32* resSize); // _44
+	                            SDIFileEntry* entry, u32* resSize);
 
 	bool open(s32, EMountDirection);
 	bool open(void*, u32, JKRMemBreakFlag);
@@ -28,12 +28,11 @@ public:
 	void unmountFixed();
 	void open(const char*, EMountDirection);
 
-	// _00     = VTBL
-	// _00-_60 = JKRArchive
-	SArcHeader* mArcHeader; // _60
-	u8* mArchiveData;       // _64
-	bool mIsOpen;           // _68
-	u8 field_0x6d[3];       // _69
+private:
+	/* 0x60 */ SArcHeader* mArcHeader;
+	/* 0x64 */ u8* mArchiveData;
+	/* 0x68 */ bool mIsOpen;
+	/* 0x69 */ u8 field_0x6d[3];
 };
 
 #endif

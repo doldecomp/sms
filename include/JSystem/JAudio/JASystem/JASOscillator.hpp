@@ -11,12 +11,12 @@ public:
 	~TOscillator() { }
 
 	struct Osc_ {
-		/* 0x00 */ u8 unk0;
-		/* 0x04 */ f32 unk4;
-		/* 0x08 */ s16* unk8;
-		/* 0x0C */ s16* unkC;
-		/* 0x10 */ f32 unk10;
-		/* 0x14 */ f32 unk14;
+		/* 0x00 */ u8 mTarget;
+		/* 0x04 */ f32 mRate;
+		/* 0x08 */ s16* mAdsTable;
+		/* 0x0C */ s16* mRelTable;
+		/* 0x10 */ f32 mWidth;
+		/* 0x14 */ f32 mVertex;
 	};
 
 	bool release();
@@ -28,6 +28,7 @@ public:
 	f32 calc(s16*);
 
 	const Osc_* getOsc() const { return mOsc; }
+	u8 getTarget() const { return mOsc->mTarget; }
 	void setOsc(const Osc_* osc) { mOsc = osc; }
 	BOOL isOsc() { return mOsc != NULL ? TRUE : FALSE; }
 	void releaseDirect(u16 param_0) { mDirectRelease = param_0; }

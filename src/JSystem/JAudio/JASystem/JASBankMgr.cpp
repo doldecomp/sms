@@ -2,12 +2,14 @@
 #include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
 #include <JSystem/JAudio/JASystem/JASBNKParser.hpp>
+#include <JSystem/JAudio/JASystem/JASWSParser.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBankMgr.hpp>
 #include <JSystem/JAudio/JASystem/JASChannelMgr.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverTables.hpp>
 #include <JSystem/JAudio/JASystem/JASRate.hpp>
 #include <JSystem/JAudio/JASystem/JASInst.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBank.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 
 namespace JASystem {
 namespace BankMgr {
@@ -55,17 +57,20 @@ namespace BankMgr {
 		return sBankArray[bankIndex];
 	}
 
-	u16 getPhysicalNumber(u16 virtualNumber)
-	{
-		return sVir2PhyTable[virtualNumber];
-	}
+	u16 getPhysicalNumber(u16 vir_id) { return sVir2PhyTable[vir_id]; }
 
-	void setVir2PhyTable(u32 tableAddr, int size)
+	void setVir2PhyTable(u32 vir_id, int banknum)
 	{
-		if (tableAddr == 0xFFFF)
+		if (vir_id == 0xFFFF)
 			return;
 
-		sVir2PhyTable[tableAddr] = size;
+		JUT_ASSERT(vir_id < sTableSize);
+
+		if (sVir2PhyTable[vir_id] != 0xFFFF)
+			JUT_REPORT_MSG("Warning : Duplicated Bank vir_id ID %d (%d,%d)\n",
+			               vir_id, sVir2PhyTable[vir_id], banknum);
+
+		sVir2PhyTable[vir_id] = banknum;
 	}
 
 	bool assignWaveBank(int bankIndex, int waveBankIndex)
@@ -78,7 +83,7 @@ namespace BankMgr {
 		if (!waveBank)
 			return false;
 
-		bank->unk4 = waveBank;
+		bank->assignWaveBank(waveBank);
 		return true;
 	}
 
@@ -113,11 +118,11 @@ namespace BankMgr {
 		if (!inst->getParam(param_4, param_5, &instParam))
 			return nullptr;
 
-		TWaveBank* waveBank = bank->unk4;
+		TWaveBank* waveBank = bank->getWaveBank();
 		if (!waveBank)
 			return nullptr;
 
-		TWaveHandle* waveHndl = waveBank->getWaveHandle(instParam.unk4);
+		TWaveHandle* waveHndl = waveBank->getWaveHandle(instParam.mWaveId);
 		if (!waveHndl)
 			return nullptr;
 
@@ -137,24 +142,27 @@ namespace BankMgr {
 		case 0x80:
 			chanKey |= 0xff;
 			break;
-		case 0x40:
-			chanKey |= instParam.unk3C << 0x10;
+		case 0x40: {
+			u32 keymap = instParam.unk3C;
+			keymap <<= 0x10;
+			chanKey |= keymap;
 			break;
+		}
 		}
 
 		TChannel* chan = param_1->getLogicalChannel(chanKey);
 		if (!chan)
 			return nullptr;
 
-		// TODO: WTF?
-		chan->unk10 = (Driver::Wave_*)waveInfo;
-		chan->unk14 = (u32)wave;
-		chan->unkC  = instParam.unk0;
-		chan->unk0  = param_5;
-		chan->unk1  = param_4;
-		chan->unk48 = instParam.unk14 * (waveInfo->unk4 / Kernel::getDacRate());
-		chan->unk50 = chan->unk48 * instParam.unk18;
-		if (instParam.unk38 == 0) {
+		chan->mWaveData        = (Driver::Wave_*)waveInfo;
+		chan->unk14            = (u32)wave;
+		chan->mLogicalChanType = instParam.mSourceType;
+		chan->unk0             = param_5;
+		chan->unk1             = param_4;
+		chan->unk48
+		    = instParam.mPitch * (waveInfo->unk4 / Kernel::getDacRate());
+		chan->unk50 = chan->unk48 * instParam.mEffectPitch;
+		if (instParam.mFixedPitch == 0) {
 			int var = (param_4 + 0x3C) - waveInfo->unk2;
 			if (var < 0)
 				var = 0;
@@ -162,21 +170,21 @@ namespace BankMgr {
 				var = 0x7f;
 			chan->unk50 *= Driver::C5BASE_PITCHTABLE[var];
 		}
-		chan->unk4C = instParam.unk10;
+		chan->unk4C = instParam.mVolume;
 		chan->unk54 = chan->unk0 / 127.0f;
 		chan->unk54 = chan->unk4C * (chan->unk54 * chan->unk54);
-		chan->unk54 *= instParam.unk18;
+		chan->unk54 *= instParam.mEffectVolume;
 
-		chan->unk68.mSound = instParam.unk20;
-		chan->unk74.mSound = instParam.unk24;
-		chan->unk80.mSound = instParam.unk28;
+		chan->unk68[0].mSound = instParam.mPan;
+		chan->unk68[1].mSound = instParam.mFxmix;
+		chan->unk68[2].mSound = instParam.mDolby;
 
-		chan->unk68.mSound = clamp01(chan->unk68.mSound);
-		chan->unk74.mSound = clamp01(chan->unk74.mSound);
+		for (int i = 0; i < 2; ++i)
+			chan->unk68[i].mSound = clamp01(chan->unk68[i].mSound);
 
-		chan->unk68.mEffect = instParam.unk2C;
-		chan->unk74.mEffect = instParam.unk30;
-		chan->unk80.mEffect = instParam.unk34;
+		chan->unk68[0].mEffect = instParam.mEffectPan;
+		chan->unk68[1].mEffect = instParam.mEffectFxmix;
+		chan->unk68[2].mEffect = instParam.mEffectDolby;
 
 		chan->unk8C = 1.0f;
 		chan->unk90 = 1.0f;
@@ -184,7 +192,7 @@ namespace BankMgr {
 		for (u32 i = 0; i < instParam.mOscCount; ++i)
 			chan->setOscInit(i, instParam.mOscData[i]);
 
-		chan->directReleaseOsc(0, instParam.unk3A);
+		chan->directReleaseOsc(0, instParam.mRelease);
 		if (!chan->play(param_6))
 			return nullptr;
 
@@ -198,12 +206,12 @@ namespace BankMgr {
 		if (!channel)
 			return nullptr;
 
-		channel->unk14 = param_2;
-		channel->unkC  = 2;
-		channel->unk0  = param_4;
-		channel->unk1  = param_3;
-		channel->unk48 = 16736.016f / Kernel::getDacRate();
-		channel->unk50 = channel->unk48;
+		channel->unk14            = param_2;
+		channel->mLogicalChanType = 2;
+		channel->unk0             = param_4;
+		channel->unk1             = param_3;
+		channel->unk48            = 16736.016f / Kernel::getDacRate();
+		channel->unk50            = channel->unk48;
 
 		s32 var1 = param_3;
 		if (var1 < 0)
@@ -217,12 +225,12 @@ namespace BankMgr {
 		channel->unk54 = channel->unk0 / 127.0f;
 		channel->unk54 = channel->unk4C * (channel->unk54 * channel->unk54);
 
-		channel->unk68.mSound  = 0.5f;
-		channel->unk74.mSound  = 0.0f;
-		channel->unk80.mSound  = 0.0f;
-		channel->unk68.mEffect = 0.5f;
-		channel->unk74.mEffect = 0.0f;
-		channel->unk80.mEffect = 0.0f;
+		channel->unk68[0].mSound  = 0.5f;
+		channel->unk68[1].mSound  = 0.0f;
+		channel->unk68[2].mSound  = 0.0f;
+		channel->unk68[0].mEffect = 0.5f;
+		channel->unk68[1].mEffect = 0.0f;
+		channel->unk68[2].mEffect = 0.0f;
 
 		channel->unk8C = 1.0f;
 		channel->unk90 = 1.0f;
@@ -243,10 +251,10 @@ namespace BankMgr {
 		channel->unk30 = param_4;
 		channel->unk34 = channel->unk30;
 		s32 var;
-		if (channel->unkC == 2)
+		if (channel->mLogicalChanType == 2)
 			var = param_2;
 		else
-			var = (param_2 + 0x3C) - channel->unk10->unk2;
+			var = (param_2 + 0x3C) - channel->mWaveData->mKey;
 
 		if (var < 0)
 			var = 0;
@@ -261,7 +269,7 @@ namespace BankMgr {
 		channel->unk54 = channel->unk4C * (channel->unk54 * channel->unk54);
 	}
 
-	u32 getUsedHeapSize() { return 0; }
+	u32 getUsedHeapSize() { return BNKParser::getUsedHeapSize(); }
 
 } // namespace BankMgr
 } // namespace JASystem

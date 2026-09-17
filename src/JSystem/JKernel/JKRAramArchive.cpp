@@ -54,13 +54,24 @@ JKRAramArchive::~JKRAramArchive()
 	}
 }
 
-void JKRAramArchive::fixedInit(s32 entryNum) { }
+void JKRAramArchive::fixedInit(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
 
-bool JKRAramArchive::mountFixed(s32 entryNum) { return false; }
+bool JKRAramArchive::mountFixed(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return false;
+}
 
-bool JKRAramArchive::mountFixed(const char* path) { return false; }
+bool JKRAramArchive::mountFixed(const char* path)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return false;
+}
 
-void JKRAramArchive::unmountFixed() { }
+void JKRAramArchive::unmountFixed() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 bool JKRAramArchive::open(s32 entryNum, EMountDirection mountDirection)
 {
@@ -172,15 +183,35 @@ void* JKRAramArchive::fetchResource(void* buffer, u32 bufferSize,
 	return buffer;
 }
 
-u32 JKRAramArchive::getAramAddress_Entry(SDIFileEntry* fileEntry) { return 0; }
+u32 JKRAramArchive::getAramAddress_Entry(SDIFileEntry* fileEntry)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
 
-u32 JKRAramArchive::getAramAddress(const char* file) { return 0; }
+u32 JKRAramArchive::getAramAddress(const char* file)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
 
-u32 JKRAramArchive::getAramAddress(u32 param_1, const char* file) { return 0; }
+u32 JKRAramArchive::getAramAddress(u32 param_1, const char* file)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
 
-u32 JKRAramArchive::getAramAddress(u16 idx) { return 0; }
+u32 JKRAramArchive::getAramAddress(u16 idx)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
 
-u32 JKRAramArchive::getIdxAramAddress(u32 idx) { return 0; }
+u32 JKRAramArchive::getIdxAramAddress(u32 idx)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
 
 u32 JKRAramArchive::fetchResource_subroutine(u32 srcAram, u32 srcLength,
                                              u8* dst, u32 dstLength,
@@ -219,7 +250,7 @@ u32 JKRAramArchive::fetchResource_subroutine(u32 entryNum, u32 length,
 	switch (compression) {
 	case JKR_COMPRESSION_NONE:
 		buffer = (u8*)JKRAllocFromHeap(pHeap, alignedLen, 0x20);
-		JUT_ASSERT(677, buffer != NULL);
+		JUT_ASSERT(buffer != NULL);
 		JKRAramToMainRam(entryNum, buffer, alignedLen, EXPAND_SWITCH_DEFAULT,
 		                 alignedLen, nullptr, -1, nullptr);
 		*out = buffer;
@@ -237,7 +268,7 @@ u32 JKRAramArchive::fetchResource_subroutine(u32 entryNum, u32 length,
 
 		buffer
 		    = (u8*)JKRAllocFromHeap(pHeap, decompressedLen, sizeof(SArcHeader));
-		JUT_ASSERT(703, buffer);
+		JUT_ASSERT(buffer);
 		JKRAramToMainRam(entryNum, buffer, alignedLen, EXPAND_SWITCH_DECOMPRESS,
 		                 decompressedLen, pHeap, -1, &readLen);
 		*out = buffer;

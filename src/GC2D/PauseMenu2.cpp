@@ -133,7 +133,8 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 void TPauseMenu2::loadAfter()
 {
 	// "Save data"
-	mCardSave = JDrama::TNameRefGen::search<TCardSave>("データセーブ");
+	mCardSave
+	    = static_cast<TCardSave*>(JDrama::TNameRefGen::search("データセーブ"));
 
 	mItemColor = mMenuItems[0]->getWhite();
 
@@ -286,7 +287,7 @@ void TPauseMenu2::disappearWindow()
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->mState == TMarDirector::STATE_UNK5) {
+	if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU) {
 		if (mState == MENU_SAVING) {
 			if (cue & CUE_MOVE) {
 				if (mCardSave->unk2DF != 0) {
@@ -327,7 +328,9 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 					break;
 				case MENU_OPEN: {
 					s32 curSelectedItem = mSelectedItem;
-					if (mGamePad->checkFrameMeaning(0x21)) {
+					if (mGamePad->checkFrameMeaning(
+					        TMarioGamePad::MEANING_START
+					        | TMarioGamePad::MEANING_MENU_A)) {
 						// Confirm currently selected item.
 						switch (curSelectedItem) {
 						case 0:
@@ -356,12 +359,14 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 						default:
 							break;
 						}
-					} else if (mGamePad->checkFrameMeaning(0x40)) {
+					} else if (mGamePad->checkFrameMeaning(
+					               TMarioGamePad::MEANING_MENU_B)) {
 						// Close pause menu by pressing B.
 						mPressedB = true;
 						mFadeAnim = 0.0f;
 						setDrawEnd();
-					} else if (mGamePad->checkFrameMeaning(0x4)) {
+					} else if (mGamePad->checkFrameMeaning(
+					               TMarioGamePad::MEANING_MENU_DOWN)) {
 						// Select the next item.
 						if (mNumItems > 2) {
 							mSelectedItem = curSelectedItem < (mNumItems - 1)
@@ -389,7 +394,8 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 								    mEmitter);
 							}
 						}
-					} else if (mGamePad->checkFrameMeaning(0x2)) {
+					} else if (mGamePad->checkFrameMeaning(
+					               TMarioGamePad::MEANING_MENU_UP)) {
 						// Select the previous item.
 						if (mNumItems > 2) {
 							mSelectedItem = (curSelectedItem == 0u)
