@@ -9,6 +9,7 @@
 #include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
+#include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
 #include <MSound/MSSceneWave.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
@@ -56,7 +57,13 @@ namespace MSMarioPosVolume {
 f32 getDistFromMario(const Vec&);
 }
 
-class MSound : public JAIBasic {
+// JAIGlobalParameter carries nothing but statics, and MSound inherits them:
+// TOptionSoundUnit::adjust reads `setting.mOutputMode` into a register, calls
+// the weak SMSGetMSound() and throws the result away, then calls
+// setParamSoundOutputMode with the pre-loaded argument -- i.e. a discarded
+// receiver in front of an inherited static member
+// (TOptionControl::checkInput, 0x801838E8).
+class MSound : public JAIBasic, public JAIGlobalParameter {
 public:
 	MSound(JKRHeap*, JKRHeap*, u32, u8*, u8*, u32);
 	~MSound() { }

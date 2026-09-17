@@ -729,7 +729,11 @@ void TOptionSoundUnit::adjust()
 	adjustView();
 	const FabricatedSoundSettings& setting
 	    = cSoundSettings[mSelectionText->getNumber()];
-	JAIGlobalParameter::setParamSoundOutputMode(setting.mOutputMode);
+	// TODO: retail keeps SMSGetMSound() a `bl` here (the discarded receiver is
+	// visible in checkInput) and inlines it away in loadSetting's three
+	// copies; our build inlines the global read at both, so the dead call is
+	// missing. Per-site accessor inlining, not a spelling problem.
+	SMSGetMSound()->setParamSoundOutputMode(setting.mOutputMode);
 }
 
 void TOptionSoundUnit::show() { }
