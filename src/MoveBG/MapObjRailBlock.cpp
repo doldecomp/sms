@@ -510,22 +510,8 @@ void TRollBlock::calcRootMatrix()
 	               rotY, rotZ);
 	model->setBaseScale(mScaling);
 
-	f32 sinV = JMASin(unk138);
-	f32 cosV = JMACos(unk138);
-
 	Mtx rot;
-	rot[0][0] = cosV;
-	rot[0][1] = -sinV;
-	rot[0][2] = 0.0f;
-	rot[0][3] = 0.0f;
-	rot[1][0] = sinV;
-	rot[1][1] = cosV;
-	rot[1][2] = 0.0f;
-	rot[1][3] = 0.0f;
-	rot[2][0] = 0.0f;
-	rot[2][1] = 0.0f;
-	rot[2][2] = 1.0f;
-	rot[2][3] = 0.0f;
+	MsMtxSetRotZ(rot, unk138);
 	MTXConcat(mtx, rot, mtx);
 }
 
