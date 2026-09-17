@@ -1034,37 +1034,44 @@ void TKoopaJrSubmarine::makeRelativeAngle()
 {
 	f32 flameDir
 	    = TDirectionCalc::d2r(mKoopaJr->mKoopa->getFlameDirDegree());
-	f32 flameDiff = fabsf(mDirection.get()
-	                      - mDirection.calcNearerDirection(flameDir));
+	f32 nearerFlame = mDirection.calcNearerDirection(flameDir);
+	f32 flameDiff   = fabsf(mDirection.get() - nearerFlame);
 
-	JGeometry::TVec3<f32> toMario(*gpMarioPos);
-	toMario.sub(mKoopaJr->mBathtub->mPosition);
-	toMario.y    = 0.0f;
-	f32 marioDir = atan2f(toMario.x, toMario.z);
-	f32 target   = mDirection.get();
-	f32 marioDiff
-	    = fabsf(mDirection.get() - mDirection.calcNearerDirection(marioDir));
+	JGeometry::TVec3<f32> toMario;
+	toMario.sub(*gpMarioPos, mKoopaJr->mBathtub->mPosition);
+	toMario.y = 0.0f;
+	// The by-value TVec3 parameter is the copy the ROM makes before atan2f.
+	f32 marioDir    = TDirectionCalc(toMario).get();
+	f32 nearerMario = mDirection.calcNearerDirection(marioDir);
+	f32 target      = mDirection.get();
+	f32 marioDiff   = fabsf(target - nearerMario);
 
 	if (mKoopaJr->mKoopa->isFlaming()
 	    && flameDiff <= getSaveParams()->aboidKoopaFlameAngle.get())
-		target = flameDir + 3.1415927f;
+		target = flameDir + JGeometry::TUtil<f32>::PI();
 	else if (marioDiff > getSaveParams()->traceMarioAngle.get())
 		target = marioDir;
 
-	f32 step = TDirectionCalc::d2r(getSaveParams()->mSLRoundAngleVelocity.get());
+	// Degrees to radians written out, constant first: d2r() would be an
+	// fmuls plus an fdivs where the ROM has one fmuls by pi/180.
+	f32 step
+	    = 0.017453294f * getSaveParams()->mSLRoundAngleVelocity.get();
 	mDirection.normalize();
 	f32 dir = mDirection.calcNearerDirection(target);
+	f32 turned;
 	if (dir > mDirection.get()) {
 		f32 diff = dir - mDirection.get();
 		if (diff < step)
 			step = diff;
-		mDirection.mDirection = mDirection.get() + step;
+		turned = mDirection.get();
+		turned += step;
 	} else {
 		f32 diff = mDirection.get() - dir;
 		if (diff < step)
 			step = diff;
-		mDirection.mDirection = mDirection.get() - step;
+		turned = mDirection.get() - step;
 	}
+	mDirection.mDirection = turned;
 }
 
 // Accelerates towards the point mRoundDistance out from the tub's centre
