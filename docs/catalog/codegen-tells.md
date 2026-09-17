@@ -204,6 +204,19 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `pakkun`
+
+- A `const` accessor can *cost* a match in a constant multiply: `3.0f * self->getTurnSpeed()` loads the member into the destination register; `3.0f * self->mTurnSpeed` loads the constant first (Hide nerve 99.2 -> 100).
+- `TBGCheckData::getNormal()` restores per-use re-reads that raw `mNormal` CSEs away (`behaveToHitWall` 84 -> 100, with `-(1.5f * v.dot(n))` + `+=`: the `fneg` is the tell).
+- Two `getSaveParam` families: `bl TSpineEnemy::getSaveParam()` is the non-virtual `getSaveParam2()`; `lwz 0(this); lwz 0x108; blrl` is the virtual `TSmallEnemy::getSaveParams()`. Shadowing `getSaveParams()` in a derived class hides the virtual; a separate `getSaveLoadParam()` for the cached pointer is correct and worth +8 of frame over the raw member.
+- An explicit base call can be what an UNUSED helper exists for: `TPakkunSeed::seedSet` is `TEnemyAttachment::set(); mScaling.x = mScaling.y = mScaling.z = unk164;`, exactly 0x3c (a virtual dispatch would be 0x48).
+- Chained-assignment direction is readable: `stfs 0x2c, 0x28, 0x24` is `x = y = z = v`.
+- A named `MtxPtr` for a hand-built local matrix keeps its address in `r31` across two `MTXConcat`s (+8 of frame); at other sites in the same file retail recomputes `addi r4, r1, N`, so per site.
+- `getMActor()->getModel()` inside a loop body reloads the model from `mMActor` where `mMActor->getModel()` CSEs it from the condition (`init` 98 -> 99.9).
+- `else if` chain with one trailing `return FALSE` vs early returns is visible as shared vs duplicated `li r3,0`; a null test merged into an `||` guard shares the `li r3,1` exit.
+- `TPakkun::onShootCurve` (0xfc) is size-exact yet pasted at all three lob sites (pasted-UNUSED again).
+- Open header items: `TSmallEnemy::initAttacker` is `(func,weak)` + `UNREFERENCED DUPLICATE`, i.e. defined in the header, not `smallenemy.cpp`; `TSpineEnemy::getMaxHitPoints()` returns `u8` (proven by a `clrlwi` and a `divwu`) but the header change costs `TEffectEnemy::perform` and `TFireWanwan::moveObject`, so it needs a sweep; the duplicate pakkun nerve stubs in `bosspakkun.cpp` must go when `pakkun.o` links (their `.sbss` match is vacuous).
+
 ## Rules from `Koopa`
 
 - Get the shared animation setter exact first: `J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(t); ctrl->setRate(expr);` (the chained form evaluates `expr` first) plus `table == nullptr ? nullptr : table[i]` took `TKoopa::changeAnm` 76 -> 100, and because it inlines at ~15 sites the unit went 22 -> 84% in one edit.
