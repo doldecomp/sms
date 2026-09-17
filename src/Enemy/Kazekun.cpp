@@ -250,53 +250,49 @@ void TKazekun::flyAroundMario()
 	    * 0.0025f;
 	toMario.y = 0.0f;
 
-	f32 rate = getAroundRate(toMario);
-
-	JGeometry::TQuat4<f32> quat = mQuat;
-	getAroundQuat(quat, toMario, rate);
+	JGeometry::TQuat4<f32> quat;
+	getAroundQuat(quat, toMario, getAroundRate(toMario));
 	mQuat = quat;
 
-	JGeometry::TVec3<f32> vel(0.0f, 0.0f, 1.0f);
-	quat.rotate(vel);
+	JGeometry::TVec3<f32> vel;
+	vel.set(0.0f, 0.0f, 1.0f);
+	quat.rotate(vel, vel);
 	vel.y = f31;
 	vel.scale(1.0f + fabsf(f31));
 	vel.scale(getSaveParams()->getAroundSpeed());
-	mLinearVelocity.set(vel);
+	mLinearVelocity = vel;
 }
 
 // UNUSED, 0xc0 in the map.
 f32 TKazekun::getAroundRate(const JGeometry::TVec3<f32>& dir) const
 {
-	f32 rate = JGeometry::TUtil<f32>::sqrt(dir.dot(dir))
-	    / getSaveParams()->mAroundDist.get();
+	TKazekunParams* params = getSaveParams();
+	f32 rate               = dir.length() / params->mAroundDist.get();
 	return rate < 0.0f ? 0.0f : (rate > 2.0f ? 2.0f : rate);
 }
 
-// UNUSED, 0x3d8 in the map: slerps `quat` a tenth of the way towards the
-// heading that flies around `dir` at `rate` (0 = straight at Mario, 2 = a full
-// right angle off).
+// UNUSED, 0x3d8 in the map: turns `quat` into the heading that flies around
+// `dir`, banked `rate` of the way from a full right angle (rate 0) to straight
+// at `dir` (rate 2). The rotation axis is the frame's own up vector, which is
+// what makes the spirit bank into the turn instead of yawing flat.
 void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
                              const JGeometry::TVec3<f32>& dir, f32 rate)
 {
 	TPosition3f mtx;
-	JGeometry::TVec3<f32> up;
-	up.set(0.0f, 1.0f, 0.0f);
+	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 	SMS_CalcToDirMatrix(mtx, dir, up);
-
-	JGeometry::TQuat4<f32> target;
-	mtx.getQuat(target);
+	mtx.getQuat(quat);
 
 	f32 halfAngle = 0.5f * ((2.0f - rate) * 1.5707964f);
+
 	JGeometry::TVec3<f32> axis;
-	axis.set(mtx.at(0, 1), mtx.at(1, 1), mtx.at(2, 1));
+	mtx.getYDir(axis);
 
 	JGeometry::TQuat4<f32> around;
 	around.xyz().scale(sinf(halfAngle), axis);
 	around.w = cosf(halfAngle);
 
-	target.mul(around);
-	quat.slerp(target, 0.1f);
-	quat.normalize();
+	quat.mul(quat, around);
 }
 
 void TKazekun::doAttackPose(bool start)
