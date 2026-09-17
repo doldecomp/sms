@@ -26,37 +26,10 @@ class TWaterEmitInfo;
 // three more actors carry the attacks: TBPPolDrop (the lobbed pollution ball),
 // TBPVomit (the puddle it throws up) and TBPTornado (the spiralling twister).
 
-// Particle ids this unit loads. Each .jpa path sits next to its id in
-// TBossPakkunManager::load.
-// TODO: these belong in System/Particles.hpp's EnumParticle, in the 0xA9-0xAC
-// and 0x15D-0x164 gaps; this header only holds them because a batch may not
-// edit shared headers.
-enum {
-	BOSSPAKKUN_JPA_MS_BOPA_BLUR1    = 0xA9,
-	BOSSPAKKUN_JPA_MS_BOPA_DOWN     = 0xAA,
-	BOSSPAKKUN_JPA_MS_BOPA_SWING1   = 0xAB,
-	BOSSPAKKUN_JPA_MS_BOPA_SWING2   = 0xAC,
-	BOSSPAKKUN_JPA_MS_BOPA_WATHIT   = 0x15D,
-	BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W = 0x15E,
-	BOSSPAKKUN_JPA_MS_BOPA_ASE      = 0x15F,
-	BOSSPAKKUN_JPA_MS_BOPA_BLUR2    = 0x160,
-	BOSSPAKKUN_JPA_MS_BOPA_JITA     = 0x161,
-	BOSSPAKKUN_JPA_MS_BOPA_TR_ROCK  = 0x162,
-	BOSSPAKKUN_JPA_MS_BOPA_TR_SMOKE = 0x163,
-	BOSSPAKKUN_JPA_MS_BOPA_TR_WEED  = 0x164,
-};
-
 // The four camera shakes this boss uses. TCameraShake::mCamShakeNameSave
 // (src/Camera/CamShakeDefine.cpp) names entries 0x0E-0x11
 // "/Camera/shakeBopaDown.prm", "shakeBopaPopo.prm", "shakeBopaGetup.prm" and
 // "shakeBopaDownLoop.prm", and "Bopa" is this boss.
-
-// The splash the pollution ball makes when it lands. Unnamed in
-// System/Particles.hpp (it sits in the 0x52 hole next to PARTICLE_MS_POI_SAND).
-// TODO: belongs in EnumParticle.
-enum {
-	BOSSPAKKUN_JPA_POLLUT_BALL_HIT = 0x52,
-};
 
 // BCK slot indices into bosspakkun_bastable. The table names 21 of the 30
 // slots; the .bck files are indexed alphabetically, so the gaps can be read off

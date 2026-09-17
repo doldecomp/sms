@@ -134,7 +134,7 @@ void TBPPolDrop::drop()
 	mState      = BOSSPAKU_POLDROP_STAMPED;
 	mVelocity.z = mVelocity.y = mVelocity.x = 0.0f;
 	mStampMActor->setBck("pollut_ball_stamp");
-	gpMarioParticleManager->emit(BOSSPAKKUN_JPA_POLLUT_BALL_HIT, &mPosition, 0,
+	gpMarioParticleManager->emit(PARTICLE_MS_OSENDAN, &mPosition, 0,
 	                             nullptr);
 	if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_POLLUT_GND))
 		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_BSPAKU_POLLUT_GND,
