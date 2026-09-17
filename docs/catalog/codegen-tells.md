@@ -204,6 +204,17 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `TabePuku` and `Kukku`
+
+- An actor-type equality test against `0x80000001` is a `switch`, not an `if`: retail hoists the constant and compares with signed `cmpw`; every `if` spelling (literal, `(s32)` cast, `-0x7FFFFFFF`, `| 1`, hoisted `int` local) folds into the `addis`/`cmplwi` trick. `switch (x) { case 0x80000001: ... }` matches (`TTPHitActor::checkHitActors` size-exact; `TTabePuku::control` 82 -> 99.9).
+- `TPosition3::translation()` is one level too deep for `identity33()`: spell `identity33(); setTrans(pos);` out to get retail's nine inline stores.
+- Naming the `MTXCopy` *destination* as well as `src`/`model` shifts every local by four bytes; name only the source and the model.
+- Two more pasted-UNUSED cases: `TTabePuku::setMomentumFromQuat` (0x1d4) and `prepareDrag` (0x17c) are size-exact but pasted into their callers, where retail inlines `MsGetRotFromZaxisY`/`TQuat4::rotate` one level shallower.
+- `.sdata2` diagnoses helper forms before any diff: only `+epsilon` present means `epsilonEquals(a, b, TUtil<f32>::epsilon())` (the two-argument overload allocates both signs); `setEulerY(TUtil<f32>::PI())` keeps `0.5f * pi` as a multiply and allocates `3.1415927f`, where a bare literal folds to a `halfPI` retail lacks.
+- A dead `.sbss` scalar with a `__sinit` store needs a non-constant initialiser: `TUtil<f32>::PI() / 8.0f` lands in `.sbss`; `0.3926991f`, `3.1415927f / 8.0f` and a `const f32` intermediate all fold into `.sdata`.
+- `if (getHitTimer() > 0) mHitTimer--;` reproduces two loads of the field where the raw read CSEs them (`TKukku::control` 92 -> 100), second confirmation of the const-accessor rule.
+- Open, now the dominant residual: size-exact helpers (`TKukku::updateRotation` 0x248, `calcMomentum` 0x11c) inline into nerves where retail calls them, at the same depth; naming factors, splitting returns, routing through UNUSED helpers all failed. Also `__ct__Q29JGeometry8TVec4<f>Fv` is weak in `TabePuku.o`, `coasterkiller`, `fireWanwan`, `Bird`: retail calls the empty `TVec4` constructor for `TQuat4::rotate`'s first temporary, which also gives it a stack home; our build scalarises both temporaries (`TNerveTabePukuDrag::execute` 62%).
+
 ## Rules from `Bird` and `limitkoopajr`
 
 - `JGPosition3::setQT(quat, trans)` is the level that keeps `TRotation3::setQuat` a `bl`; `setQuat` + `setTrans` written out expand (`TLimitKoopaJr::calcRootMatrix` 39 -> 98). `TQuat4::rotate(v, v)` is the form the ROM inlines; the one-argument forwarder emits a weak copy and a `bl` (`doFlyToCurPathNode` 78.5 -> 95.3).
