@@ -789,24 +789,15 @@ void TBossWanwanMtxCalc::calc(u16 joint)
 	if (joint != 1)
 		return;
 
-	// Roll the body around its own forward axis.
+	// Roll the body around its own forward axis. The zero fill is one chained
+	// assignment, which is why the stores run column by column.
 	Mtx roll;
-	roll[0][0] = 0.0f;
-	roll[0][1] = 0.0f;
-	roll[0][2] = 0.0f;
-	roll[0][3] = 0.0f;
-	roll[1][0] = 0.0f;
-	roll[1][1] = 0.0f;
-	roll[1][2] = 0.0f;
-	roll[1][3] = 0.0f;
-	roll[2][0] = 0.0f;
-	roll[2][1] = 0.0f;
-	roll[2][2] = 0.0f;
-	roll[2][3] = 0.0f;
+	roll[0][0] = roll[1][0] = roll[2][0] = roll[0][1] = roll[1][1]
+	    = roll[2][1] = roll[0][2] = roll[1][2] = roll[2][2] = roll[0][3]
+	    = roll[1][3] = roll[2][3] = 0.0f;
 
-	s16 angle = DEG2SHORTANGLE(mOwner->mRollAngle);
-	f32 s     = JMASSin(angle);
-	f32 c     = JMASCos(angle);
+	f32 s = JMASSin(DEG2SHORTANGLE(mOwner->mRollAngle));
+	f32 c = JMASCos(DEG2SHORTANGLE(mOwner->mRollAngle));
 
 	roll[0][0] = 1.0f;
 	roll[0][1] = 0.0f;
