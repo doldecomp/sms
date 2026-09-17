@@ -180,17 +180,15 @@ void TMapObjBall::put()
 
 void TMapObjBall::hold(TTakeActor* param_1)
 {
-	// A ball still moving fast cannot be picked up.
-	// TODO: the original calls JGeometry::TUtil<f32>::sqrt out of line here
-	// (it is emitted weak from boid.cpp); our build inlines it. That is an
-	// -inline deferred budget decision taken over the whole TU, so it may
-	// settle once the rest of MapObjBall.cpp is written.
-	JGeometry::TVec3<f32> vel(mVelocity);
-	if (vel.length() > 10.0f)
+	// A ball still moving fast cannot be picked up. The unnamed temporary
+	// is what keeps JGeometry::TUtil<f32>::sqrt out of line, as the ROM has
+	// it (weak from boid.cpp): a named copy puts sqrt one level shallower
+	// and expands it.
+	if (JGeometry::TVec3<f32>(getVelocity()).length() > 10.0f)
 		return;
 
 	TMapObjGeneral::hold(param_1);
-	mVelocity.set(0.0f, 0.0f, 0.0f);
+	mVelocity.zero();
 }
 
 void TMapObjBall::kicked()
@@ -758,12 +756,11 @@ void TResetFruit::makeObjAppeared()
 
 void TResetFruit::hold(TTakeActor* param_1)
 {
-	JGeometry::TVec3<f32> vel(mVelocity);
-	if (vel.length() > 10.0f)
+	if (JGeometry::TVec3<f32>(mVelocity).length() > 10.0f)
 		return;
 
 	TMapObjBall::hold(param_1);
-	mVelocity.set(0.0f, 0.0f, 0.0f);
+	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
 
 	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000)) {
