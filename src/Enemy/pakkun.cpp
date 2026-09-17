@@ -376,9 +376,9 @@ void TPakkun::init(TLiveManager* manager)
 		                     "H_ma_rak_dummy", *dummy);
 	}
 
-	for (u16 i = 0; i < mMActor->getModel()->getModelData()->getMaterialNum();
-	     i++) {
-		SMS_InitPacket_OneTevKColor(mMActor->getModel(), i, GX_KCOLOR0,
+	for (u16 i = 0;
+	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); i++) {
+		SMS_InitPacket_OneTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
 		                            &mBodyColor);
 	}
 
@@ -672,7 +672,7 @@ void TPakkunSeed::appear()
 {
 	unk150                   = SEED_STATE_HELD;
 	mPakkun->mSeedHitWall    = 0;
-	mScaling.z = mScaling.y = mScaling.x = 0.5f;
+	mScaling.x = mScaling.y = mScaling.z = 0.5f;
 }
 
 void TPakkunSeed::shoot()
@@ -830,6 +830,10 @@ void TStayPakkun::genRandomItem()
 	gpModelWaterManager->emitRequest(*manager->mRipWater);
 
 	if (SMS_GetMarioWaterGun()->mCurrentWater * 4
+	    // TODO: the original loads the nozzle's mAmountMax value directly;
+	    // getMaxWater()'s extra inline level binds the reference TParamRT::
+	    // get() returns first. Spelling the read out at the call site with
+	    // the const cast costs 8 bytes of frame instead.
 	    < SMS_GetMarioWaterGun()->getMaxWater()) {
 		gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
 		                             0x20000002, true);
@@ -838,18 +842,17 @@ void TStayPakkun::genRandomItem()
 		genEventCoin();
 	}
 
-	JGeometry::TVec3<f32> scale(1.5f, 1.5f, 1.5f);
 	// TODO: name 0xA1 in System/Particles.hpp; it pairs with
 	// PARTICLE_MS_POPO_BOMB_B.
 	JPABaseEmitter* emitter
 	    = gpMarioParticleManager->emit(0xA1, &mEffectPos, 0, nullptr);
 	if (emitter)
-		emitter->setGlobalScale(scale);
+		emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
 
 	emitter = gpMarioParticleManager->emit(PARTICLE_MS_POPO_BOMB_B,
 	                                       &mEffectPos, 0, nullptr);
 	if (emitter)
-		emitter->setGlobalScale(scale);
+		emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
 }
 
 void TStayPakkun::calcRootMatrix()
@@ -865,7 +868,9 @@ void TStayPakkun::setBehavior()
 	if (isBckAnm(PAKKUN_ANM_UNK4))
 		mHitPoints--;
 
-	mBodyColor.a = mHitPoints * 255 / getMaxHitPoints();
+	// TODO: the same u8 truncation of getMaxHitPoints as in
+	// PakkunRootCallback; here it is what makes the division signed.
+	mBodyColor.a = mHitPoints * 255 / (u8)getMaxHitPoints();
 	mExplosionScale
 	    = 1.0f
 	      + TPakkunManager::mRootExplosionScaleRate * (255 - mBodyColor.a)
@@ -1116,6 +1121,9 @@ DEFINE_NERVE(TNervePakkunAppear, TLiveActor)
 		self->offHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
+	// TODO: the original compares this result and throws it away (a dead
+	// cmpwi we do not reproduce); an empty if and a bool local both fail to
+	// bring it back.
 	self->getMActor()->getFrameCtrl(0)->checkPass(100.0f);
 
 	if (self->checkCurAnmEnd(0)) {
@@ -1185,15 +1193,11 @@ DEFINE_NERVE(TNervePakkunFreeze, TLiveActor)
 		if (self->isBckAnm(PAKKUN_ANM_UNK6)) {
 			if (self->unsetUnk165())
 				self->setBckAnm(PAKKUN_ANM_UNK4);
+		} else if (self->unsetUnk165()) {
+			self->setBckAnm(PAKKUN_ANM_UNK4);
+		} else if (self->isBckAnm(PAKKUN_ANM_UNK4)) {
+			self->setBckAnm(PAKKUN_ANM_UNK5);
 		} else {
-			if (self->unsetUnk165()) {
-				self->setBckAnm(PAKKUN_ANM_UNK4);
-				return FALSE;
-			}
-			if (self->isBckAnm(PAKKUN_ANM_UNK4)) {
-				self->setBckAnm(PAKKUN_ANM_UNK5);
-				return FALSE;
-			}
 			return TRUE;
 		}
 	}
