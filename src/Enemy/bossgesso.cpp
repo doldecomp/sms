@@ -73,6 +73,22 @@ const char* bgeso_bastable[] = {
 
 static void getAttackModeStr(int) { }
 
+// fabricated: a TBGTentacle predicate over the same state set as the one
+// changeAllTentacleState() tests, but with the comparisons emitted in the
+// order 4, 6, 3 and with no 3/4 range merge, so it cannot be that helper.
+// Parked here rather than in BossGessoTentacle.hpp, which belongs to
+// bgtentacle.cpp.
+// TODO: find the real name; `canTake` and `isAttacking` are the only named
+// TBGTentacle predicates in the map and neither fits.
+static inline BOOL isTentacleBusy(TBGTentacle* tentacle)
+{
+	if (tentacle->mState == 4 || tentacle->mState == 6
+	    || tentacle->mState == 3)
+		return true;
+
+	return false;
+}
+
 static BOOL isNozzleWater(THitActor* param_1)
 {
 	if (!param_1->isActorType(0x1000001))
@@ -768,10 +784,18 @@ void TBossGesso::changeAttackMode(int new_mode)
 	mAttackMode              = new_mode;
 	mTimeInCurrentAttackMode = 0;
 	switch (mAttackMode) {
-	case ASTATE_GUARD:
-		// TODO: wrong, this should only use 2 tentacles, not all
-		changeAllTentacleState(10);
+	case ASTATE_SINGLE:
+	case ASTATE_DOUBLE:
+	case ASTATE_SKIP_ROPE:
 		break;
+
+	case ASTATE_GUARD: {
+		static int idx[2] = { 1, 3 };
+		for (int i = 0; i < 2; ++i)
+			if (!isTentacleBusy(mTentacles[idx[i]]))
+				mTentacles[idx[i]]->changeStateAndFixNodes(10);
+		break;
+	}
 
 	case ASTATE_UNISON:
 		changeAllTentacleState(0);
@@ -946,10 +970,8 @@ void TBossGesso::doAttackSingle()
 	if (getLatestNerve() != &TNerveBGPollute::theNerve())
 		stopPollute();
 
-	if (gpMarDirector->unk58 < 0x1E0)
-		return;
-
-	if (gpMarDirector->isTalkOrDemoModeNow())
+	if (gpMarDirector->unk58 < 0x1E0
+	    || gpMarDirector->isTalkOrDemoModeNow())
 		return;
 
 	if (unk1A8 > 0) {
@@ -973,8 +995,8 @@ void TBossGesso::doAttackSingle()
 		static const int idxarray[2] = { 1, 3 };
 		TBGTentacle* tentacle        = mTentacles[idxarray[i]];
 
-		if (inSightAngle(0.5f * getSaveParam2()->mSLSightAngle.get())
-		    && tentacle->mState == 0) {
+		f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+		if (inSightAngle(0.5f * sightAngle) && tentacle->mState == 0) {
 			JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 			delta -= tentacle->getFirstNode()->getPosition();
 
@@ -1058,6 +1080,11 @@ void TBossGesso::doAttackSingle()
 		f32 shootRadius2 = getSaveParam2()->mSLShootRadius.get();
 		shootRadius2 *= shootRadius2;
 
+		// TODO: retail expands TVec3::sub and MsGetRotFromZaxisY inside this
+		// one inSightAngle() expansion while keeping them as calls at the
+		// three other sites in this function; MsWrap stays a call at all
+		// four. Spelling the body out here reproduces the two expansions but
+		// also expands MsWrap, which is worse, so the call stands.
 		if (mTimeInCurrentAttackMode > getSaveParam2()->mSLUnisonInter.get()
 		    && distToMario2 < shootRadius2 && inSightAngle(30.0f))
 			changeAttackMode(ASTATE_SHOOT);
@@ -1065,40 +1092,43 @@ void TBossGesso::doAttackSingle()
 		return;
 	}
 
-	if (is2ndFightNow()
-	    && inSightAngle(0.5f * getSaveParam2()->mSLSightAngle.get())
-	    && mTimeInCurrentAttackMode > getSaveParam2()->mSLUnisonInter.get()) {
-		changeAttackMode(ASTATE_ROLL);
-		unk195 = 0;
+	if (is2ndFightNow()) {
+		f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+		if (inSightAngle(0.5f * sightAngle)
+		    && mTimeInCurrentAttackMode
+		        > getSaveParam2()->mSLUnisonInter.get()) {
+			changeAttackMode(ASTATE_ROLL);
+			unk195 = 0;
+		}
 	}
 }
 
 void TBossGesso::doAttackDouble()
 {
-	if (mBeak->getHolder() != nullptr || tentacleHeld()) {
+	if (mBeak->mHolder != nullptr || tentacleHeld()) {
 		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
 
-	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
-	delta -= mPosition;
+	JGeometry::TVec3<f32> delta = mPosition;
+	delta -= SMS_GetMarioPos();
 
-	f32 doubleAttackLen2 = getSaveParam2()->mSLUnisonAttackLen.value;
+	f32 doubleAttackLen2 = getSaveParam2()->mSLDoubleAttackLen.get();
 	doubleAttackLen2 *= doubleAttackLen2;
 
-	if (inSightAngle(getSaveParam2()->mSLSightAngle.get() * 0.5f)
+	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	if (inSightAngle(0.5f * sightAngle)
 	    && delta.squared() < doubleAttackLen2) {
 
 		for (int i = 0; i < 2; ++i) {
-			static const int idxarray[] = { 0, 2 };
-			TBGTentacle* tentacle       = mTentacles[idxarray[i]];
-			if (tentacle->mState == 0) {
+			static const int idxarray[2] = { 0, 2 };
+			TBGTentacle* tentacle        = mTentacles[idxarray[i]];
+			if (tentacle->mState == 0)
 				tentacle->changeStateAndFixNodes(1);
-			}
 		}
 	}
 
-	if (mBeak->getHolder() != nullptr)
+	if (mBeak->mHolder != nullptr)
 		return;
 
 	if (!mTentacles[3]->isThing2() || !mTentacles[1]->isThing2())
@@ -1107,20 +1137,21 @@ void TBossGesso::doAttackDouble()
 
 void TBossGesso::doAttackSkipRope()
 {
-	if (mBeak->getHolder() != nullptr) {
+	if (mBeak->mHolder != nullptr) {
 		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
 
-	if (mBeak->getHolder() == nullptr && !tentacleHeld()) {
+	if (mBeak->mHolder == nullptr && !tentacleHeld()) {
 		changeAttackMode(ASTATE_SINGLE);
 		return;
 	}
 
-	if (inSightAngle(getSaveParam2()->mSLSightAngle.get() * 0.5f)) {
+	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	if (inSightAngle(0.5f * sightAngle)) {
 		for (int i = 0; i < 2; ++i) {
-			static const int idxarray[] = { 0, 2 };
-			TBGTentacle* tentacle       = mTentacles[idxarray[i]];
+			static const int idxarray[2] = { 0, 2 };
+			TBGTentacle* tentacle        = mTentacles[idxarray[i]];
 			if (tentacle->mState != 2 && tentacle->mState != 1
 			    && tentacle->mState != 4 && tentacle->mState != 5
 			    && tentacle->mState != 3 && tentacle->mState != 6) {
@@ -1132,17 +1163,19 @@ void TBossGesso::doAttackSkipRope()
 
 void TBossGesso::doAttackUnison()
 {
-	if (mBeak->getHolder() != nullptr) {
+	if (mBeak->mHolder != nullptr) {
 		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
+
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 	delta -= mPosition;
 
-	f32 unisonAttackLen2 = getSaveParam2()->mSLUnisonAttackLen.value;
+	f32 unisonAttackLen2 = getSaveParam2()->mSLUnisonAttackLen.get();
 	unisonAttackLen2 *= unisonAttackLen2;
 
-	if (inSightAngle(getSaveParam2()->mSLSightAngle.get() * 0.5f)
+	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	if (inSightAngle(0.5f * sightAngle)
 	    && gpMarioOriginal->isTouchGround4cm()
 	    && delta.squared() < unisonAttackLen2) {
 
@@ -1174,7 +1207,7 @@ void TBossGesso::doAttackUnison()
 
 void TBossGesso::doAttackShoot()
 {
-	if (mBeak->getHolder() != nullptr) {
+	if (mBeak->mHolder != nullptr) {
 		changeAttackMode(ASTATE_SINGLE);
 		return;
 	}
@@ -1185,42 +1218,45 @@ void TBossGesso::doAttackShoot()
 		return;
 	}
 
-	if (inSightAngle(getSaveParam2()->mSLSightAngle.get() * 0.5f)) {
+	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	if (inSightAngle(0.5f * sightAngle)) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 		delta -= mPosition;
 
 		f32 singleAttackLen = getSaveParam2()->mSLSingleAttackLen.get();
-		if (delta.squared() < singleAttackLen * singleAttackLen) {
+		if (delta.squared() < singleAttackLen * singleAttackLen)
 			changeAttackMode(ASTATE_SINGLE);
-		}
 	}
 }
 
-// TODO: inline seems sus here, probably needed cuz inSight is wrong
+// TODO: retail inlines this whole body into moveObject's ASTATE_GUARD case and
+// keeps doAttackShoot a `bl`; our build does the opposite (moveObject 84.9%).
+// The out-of-line copy here is 584 bytes against the map's 580, so we are one
+// instruction over the budget that decides it. Four spellings of the guard
+// chain (nested ifs, merged `&&` with returns, `||` around the body, inline
+// sight-angle argument) all compile to 584, and three statement-adders in
+// doAttackShoot left it inlined, so the missing instruction is elsewhere.
 void TBossGesso::doAttackGuard()
 {
-	if (mBeak->getHolder() != nullptr) {
+	if (mBeak->mHolder != nullptr) {
 		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
 
-	// TODO: inSight inline is definitely wrong...
-	if (inSightAngle(getSaveParam2()->mSLSightAngle.get() * 0.5f)) {
-		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
-		delta -= mPosition;
+	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	if (!inSightAngle(0.5f * sightAngle))
+		return;
 
-		f32 guardLen = getSaveParam2()->mSLGuardLen.get();
-		if (!(guardLen * guardLen < delta.squared())) {
-			if (!mTentacles[3]->isThing2())
-				return;
+	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
+	delta -= mPosition;
 
-			if (!mTentacles[1]->isThing2())
-				return;
-		}
+	f32 guardLen = getSaveParam2()->mSLGuardLen.get();
+	if (!(guardLen * guardLen < delta.squared())
+	    && (!mTentacles[3]->isThing2() || !mTentacles[1]->isThing2()))
+		return;
 
-		changeAllTentacleState(0);
-		changeAttackMode(ASTATE_SINGLE);
-	}
+	changeAllTentacleState(0);
+	changeAttackMode(ASTATE_SINGLE);
 }
 
 void TBossGesso::doAttackRoll()
