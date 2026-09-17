@@ -14,15 +14,14 @@
  * Hx_FrBufferMorf all become byte-exact) and lifts the unit from 50.9% to
  * roughly 84% fuzzy. The flag change is out of scope for this batch.
  *
- * TODO: the sqrtf() calls below are out of line here but inlined in retail
- * (frsqrte plus three Newton steps, a volatile float and an frsp -- exactly
- * MSL's `extern inline float sqrtf`). This tree's
- * PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h only declares that body
- * inside `namespace std`, i.e. behind `#ifdef __cplusplus`, so a C TU gets the
- * prototype and a call. Making it visible in C mode as well turns
- * Hxs_FrBufferMorf2 byte-exact and lifts Hxs1_Test2 70.7 -> 88.5,
- * Hxs1_Test1 68.6 -> 80.3, Hxs2_Circle 43.4 -> 56.3 and Hxs1_Circle
- * 48.1 -> 50.6. Shared-header change, so not made here.
+ * The sqrtf() calls below now inline as retail does (frsqrte plus three Newton
+ * steps, a volatile float and an frsp). math.h used to carry that body only
+ * inside `namespace std`, behind `#ifdef __cplusplus`, so a C TU got a call;
+ * it now defines the same body as a plain global in C mode, which is also how
+ * the map names this TU's copies of its two local statics
+ * (_half$localstatic0$sqrtf__Ff, with no std qualifier). That lifted
+ * Hxs1_Test2 70.7 -> 88.5, Hxs1_Test1 68.6 -> 80.3, Hxs2_Circle 43.4 -> 56.3
+ * and Hxs1_Circle 48.1 -> 50.6.
  *
  * @details Everything lives in one file-scope work struct.  TScrnFader calls
  * Hx_ResetWipe() once with the display size, Hx_ProvideResource() to hand over

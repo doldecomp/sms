@@ -2,6 +2,8 @@
 
 #pragma cplusplus on
 
+/* math.h already carries MSL's own copy when it is in scope. */
+#ifndef _MSL_HAS_SQRTF
 extern inline float sqrtf(float x)
 {
 	volatile float y;
@@ -15,6 +17,7 @@ extern inline float sqrtf(float x)
 	}
 	return x;
 }
+#endif
 
 extern inline float sqrt(float x)
 {

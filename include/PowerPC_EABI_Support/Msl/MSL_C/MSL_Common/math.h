@@ -81,6 +81,30 @@ extern inline double sqrt(double x)
 	return HUGE_VALF;
 }
 
+#ifndef __cplusplus
+#define _MSL_HAS_SQRTF
+/* In C++ this lives in namespace std (MAnmSound.cpp carries the weak copy).
+ * C has no namespaces, so the same body is a plain global there, and that is
+ * how the map records it: hx_wiper.c's local statics are named
+ * _half$localstatic0$sqrtf__Ff and _three$localstatic1$sqrtf__Ff, with no std
+ * qualifier. */
+extern inline float sqrtf(float x)
+{
+	const double _half  = .5;
+	const double _three = 3.0;
+	volatile float y;
+	if (x > 0.0f) {
+		double guess = __frsqrte((double)x);
+		guess        = _half * guess * (_three - guess * guess * x);
+		guess        = _half * guess * (_three - guess * guess * x);
+		guess        = _half * guess * (_three - guess * guess * x);
+		y            = (float)(x * guess);
+		return y;
+	}
+	return x;
+}
+#endif
+
 #ifdef __cplusplus
 };
 
