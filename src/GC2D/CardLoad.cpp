@@ -47,15 +47,15 @@ static void loadBookmark()
 }
 
 u32 TCardLoad::cMessageID[] = {
-	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000E,    0x10012,    0x10013,
-	0x10004,    0x10005,    0x10006,    0x10018,    0x1001F,    0x10017,
-	0x10011,    0x1000F,    0x10001,    0x1000A,    0x10010,    0x1001D,
-	0x10015,    0x1001A,    0xFFFFFFFF, 0x10008,    0xFFFFFFFF, 0xFFFFFFFF,
-	0xFFFFFFFF, 0xFFFFFFFF, 0x10007,    0xFFFFFFFF, 0x1001B,    0x10003,
-	0x10002,    0x1000B,    0x1001E,    0x10016,    0x10000,    0xFFFFFFFF,
-	0x10009,    0x10009,    0x10014,    0x1001C,    0xFFFFFFFF, 0xFFFFFFFF,
-	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000D,    0xFFFFFFFF, 0x10019,
-	0x0,        0x0,        0x0,        0x0,        0x0,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x10010,    0x10014,    0x10015,
+	0x10005,    0x10006,    0x10007,    0x1001A,    0x10022,    0x10019,
+	0x10013,    0x10011,    0x10002,    0x1000B,    0x10012,    0x10020,
+	0x10017,    0x1001D,    0xFFFFFFFF, 0x10009,    0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0x10008,    0xFFFFFFFF, 0x1001E,    0x10004,
+	0x10003,    0x1000C,    0x10021,    0x10018,    0x10001,    0xFFFFFFFF,
+	0x1000A,    0x1000A,    0x10016,    0x1001F,    0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000F,    0xFFFFFFFF, 0x1001C,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000E,
 };
 
 TCardLoad::TCardLoad(const char* name)
@@ -291,7 +291,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	unk580 = (J2DTextBox*)unk28->search('m_6b');
 	makeBuffer(unk580, 0x400);
 
-	int local_90[] = { 2, 3, 4, 5, 6, 7, 8 };
+	int local_90[] = { 2, 3, 4, 5, 6, 8, 7 };
 
 	for (int i = 0; i < 7; ++i) {
 		unk584[i].unk0 = (J2DPicture*)unk28->search('st_0' + i);
@@ -346,7 +346,7 @@ void TCardLoad::setupScoreScreen()
 	}
 
 	int iVar8      = 0;
-	int local_90[] = { 2, 3, 4, 5, 6, 8, 7 };
+	int local_90[] = { 2, 3, 4, 5, 6, 7, 8 };
 
 	for (int i = 0; i < 7; ++i) {
 		int shineCount = 0;
@@ -2149,7 +2149,8 @@ void TCardLoad::changeScene()
 	case PROGRESS_UNKC:
 	case PROGRESS_UNKD:
 	case PROGRESS_UNK10:
-	case PROGRESS_UNK2D: {
+	case PROGRESS_UNK2D:
+	case PROGRESS_UNK35: {
 		int rc = gpCardManager->getLastStatus();
 		if (rc != CARD_RESULT_NOCARD) {
 			waitForStart(PROGRESS_UNK1A);
@@ -2166,12 +2167,12 @@ void TCardLoad::changeScene()
 	case PROGRESS_UNK7: {
 		int rc = gpCardManager->getLastStatus();
 		if (rc == CARD_RESULT_READY) {
-			waitForChoice(PROGRESS_UNK8, PROGRESS_UNK4, 1);
+			waitForChoice(PROGRESS_UNK8, PROGRESS_UNK35, 1);
 			gpCardManager->probe();
 		} else if (rc != CARD_RESULT_BUSY) {
 			if (unk10 < 3)
 				unk10 = 3;
-			if (waitForChoice(PROGRESS_UNK8, PROGRESS_UNK4, 1) != -1)
+			if (waitForChoice(PROGRESS_UNK8, PROGRESS_UNK35, 1) != -1)
 				unk1C = changeMode(rc);
 		}
 	} break;
@@ -2179,7 +2180,7 @@ void TCardLoad::changeScene()
 	case PROGRESS_UNK8: {
 		int rc = gpCardManager->getLastStatus();
 		if (rc == CARD_RESULT_READY) {
-			s8 choice = waitForChoice(PROGRESS_UNK9, PROGRESS_UNK4, 1);
+			s8 choice = waitForChoice(PROGRESS_UNK9, PROGRESS_UNK35, 1);
 			if (choice == 0)
 				gpCardManager->format();
 			if (choice == -1)
@@ -2187,7 +2188,7 @@ void TCardLoad::changeScene()
 		} else if (rc != CARD_RESULT_BUSY) {
 			if (unk10 < 3)
 				unk10 = 3;
-			if (waitForChoice(PROGRESS_UNK9, PROGRESS_UNK4, 1) != -1)
+			if (waitForChoice(PROGRESS_UNK9, PROGRESS_UNK35, 1) != -1)
 				unk1C = changeMode(rc);
 		}
 	} break;
@@ -2215,9 +2216,13 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNKA:
-	case PROGRESS_UNKB:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 			gpCardManager->getBookmarkInfos(unk40);
+		break;
+
+	case PROGRESS_UNKB:
+		if (waitForAnyKey(PROGRESS_UNK2) != -1)
+			unk1C = changeMode(gpCardManager->getLastStatus());
 		break;
 
 	case PROGRESS_UNK1A: {
@@ -2249,7 +2254,7 @@ void TCardLoad::changeScene()
 		if (rc != CARD_RESULT_BUSY) {
 			if (rc == CARD_RESULT_READY) {
 				if (unk10 == 2)
-					unk10 = 4;
+					unk10 = 3;
 				drawMessage(PROGRESS_UNK11);
 				gpCardManager->probe();
 				if (unk10 == 5)
@@ -2257,7 +2262,7 @@ void TCardLoad::changeScene()
 					                                   nullptr, 0);
 			} else {
 				if (unk10 == 2)
-					unk10 = 4;
+					unk10 = 3;
 				drawMessage(PROGRESS_UNK12);
 			}
 		} else {
@@ -2267,9 +2272,13 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNK11:
-	case PROGRESS_UNK12:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 			gpCardManager->getBookmarkInfos(unk40);
+		break;
+
+	case PROGRESS_UNK12:
+		if (waitForAnyKey(PROGRESS_UNK2) != -1)
+			unk1C = changeMode(gpCardManager->getLastStatus());
 		break;
 
 	case PROGRESS_UNK13: {
@@ -2355,7 +2364,8 @@ void TCardLoad::changeScene()
 					unk378[unkB0][i]->getPane()->hide();
 				JUTRect local_6c = unk348[unkB0];
 				unk33C[unkB0]->updatePaneSize(30, local_6c.getWidth(), 0);
-				unk33C[unkB0]->updatePaneOffset(30, local_6c.getWidth(), 0);
+				unk33C[unkB0]->updatePaneOffset(30, 0,
+				                                local_6c.getHeight());
 				unk10 = 4;
 			}
 
@@ -2405,9 +2415,13 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNK20:
-	case PROGRESS_UNK21:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 			gpCardManager->getBookmarkInfos(unk40);
+		break;
+
+	case PROGRESS_UNK21:
+		if (waitForAnyKeyBM(PROGRESS_UNK2) != -1)
+			unk1C = changeMode(gpCardManager->getLastStatus());
 		break;
 
 	case PROGRESS_UNK1D: {
@@ -2502,12 +2516,24 @@ void TCardLoad::changeScene()
 		}
 	} break;
 
-	case PROGRESS_UNK26:
 	case PROGRESS_UNK27: {
 		int rc = gpCardManager->probe();
 		if (rc == CARD_RESULT_READY) {
 			if (waitForAnyKeyBM(PROGRESS_UNK2) != -1)
 				gpCardManager->getBookmarkInfos(unk40);
+		} else if (rc != CARD_RESULT_BUSY) {
+			if (waitForAnyKeyBM(PROGRESS_UNK0) != -1)
+				unk1C = changeMode(rc);
+		}
+	} break;
+
+	// The ROM really does compile both arms of this to the same code; the
+	// duplication is in the original source, not a reconstruction artefact.
+	case PROGRESS_UNK26: {
+		int rc = gpCardManager->getLastStatus();
+		if (rc == CARD_RESULT_READY) {
+			if (waitForAnyKeyBM(PROGRESS_UNK0) != -1)
+				unk1C = changeMode(rc);
 		} else if (rc != CARD_RESULT_BUSY) {
 			if (waitForAnyKeyBM(PROGRESS_UNK0) != -1)
 				unk1C = changeMode(rc);
@@ -2578,6 +2604,7 @@ void TCardLoad::changeScene()
 		unk24 = 0;
 		unk20 = unk1C;
 		unk10 = 0;
+		unkB4 = 0;
 		switch (prevUnk1C) {
 		case PROGRESS_UNK1C:
 			unk284->offCollision();
@@ -2590,6 +2617,7 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNKD:
 		case PROGRESS_UNK10:
 		case PROGRESS_UNK2D:
+		case PROGRESS_UNK35:
 			unk38->onFlag(0x1);
 			unk275 = 0;
 			break;
@@ -2610,6 +2638,7 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNKD:
 		case PROGRESS_UNK10:
 		case PROGRESS_UNK2D:
+		case PROGRESS_UNK35:
 			unk275 = 1;
 			unk38->offFlag(0x1);
 			break;
