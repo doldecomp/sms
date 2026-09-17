@@ -242,6 +242,7 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_KIL_SMOKE               = 0x174,
 	PARTICLE_MS_DNK_SHIBIRE_A           = 0x17D,
 	PARTICLE_MS_DNK_HIBANA              = 0x17E,
+	PARTICLE_MS_BOMB_LIMIT              = 0x17F,
 	PARTICLE_MS_AMN_BIRI                = 0x180,
 	PARTICLE_MS_AMN_SPARK_L             = 0x181,
 	PARTICLE_MS_AMN_SPARK_R             = 0x182,

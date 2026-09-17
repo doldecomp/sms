@@ -42,14 +42,6 @@ enum {
 	BOMBHEI_ANM_STOP_DOWN1 = 6, // "nejibomb_stop_down1"
 };
 
-// TODO: this particle id has no name in include/System/Particles.hpp yet; it
-// belongs there next to EXPLOSION_JPA_MS_BOMB_SMOKE. This batch is only
-// allowed to touch bombhei's own two files, so it lives here for now. The
-// name is a guess from the call sites, not from the binary.
-enum {
-	BOMBHEI_JPA_MS_BOMB_FUSE = 0x17F,
-};
-
 static const char* bombhei_bastable[] = {
 	"/scene/bombhei/bas/downnejibomb_down1.bas",
 	nullptr,
@@ -511,7 +503,7 @@ DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 
 	bombHei->walkBehavior(2, 0.6f);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BOMBHEI_JPA_MS_BOMB_FUSE,
+	    PARTICLE_MS_BOMB_LIMIT,
 	    bombHei->getMActor()->getModel()->getAnmMtx(1), 1, bombHei);
 
 	return FALSE;
@@ -559,7 +551,7 @@ DEFINE_NERVE(TNerveBombHeiWaitExplosion, TLiveActor)
 			                          &bombHei->mPosition, 0, nullptr, 0, 4);
 
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    BOMBHEI_JPA_MS_BOMB_FUSE,
+		    PARTICLE_MS_BOMB_LIMIT,
 		    bombHei->getMActor()->getModel()->getAnmMtx(1), 1, bombHei);
 	}
 
