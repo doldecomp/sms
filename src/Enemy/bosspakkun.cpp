@@ -122,7 +122,7 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
 	unk6C.zero();
 	initHitActor(0x800000F, 1, 0x80000000, 0.0f, 0.0f, 100.0f, 200.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 }
@@ -132,7 +132,7 @@ void TBPPolDrop::drop()
 	unk80 = 2;
 	unk6C.zero();
 	unk7C->setBck("pollut_ball_stamp");
-	gpMarioParticleManager->emit(0x52, &mPosition, 0, nullptr);
+	gpMarioParticleManager->emit(PARTICLE_MS_OSENDAN, &mPosition, 0, nullptr);
 	SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_POLLUT_GND, &mPosition, 0,
 	                                nullptr, 0, 4);
 	mOwner->rumblePad(2, mPosition);
@@ -228,8 +228,7 @@ void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
 		}
 	}
 
-	u32 calcAnim = flags & CUE_CALC_ANIM;
-	if (calcAnim) {
+	if (flags & CUE_CALC_ANIM) {
 		MtxPtr mtx = unk78->getModel()->getBaseTRMtx();
 		MTXIdentity(mtx);
 		mtx[0][3] = mPosition.x;
@@ -251,17 +250,16 @@ void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
 
 		if (flags & CUE_CALC_VIEW) {
 			TCircleShadowRequest request;
-			request.unk0  = mPosition;
-			request.unkC  = 400.0f;
-			request.unk10 = 400.0f;
-			request.unk14 = 0.0f;
-			request.unk1C = 0;
+			request.mPosition  = mPosition;
+			request.mRadiusX   = 400.0f;
+			request.mRadiusZ   = 400.0f;
+			request.mRotationY = 0.0f;
 			gpBindShadowManager->request(request, 0);
 		}
 	}
 
 	if (unk80 == 2) {
-		if (calcAnim)
+		if (flags & CUE_CALC_ANIM)
 			unk7C->calcAnm();
 		if (flags & CUE_ENTRY)
 			gpPollution->stampModel(unk7C->getModel());
@@ -299,13 +297,12 @@ void TBPVomit::perform(u32 flags, JDrama::TGraphics* graphics)
 	if (unk14->getCurAnmIdx(ANM_TYPE_BCK) < 0)
 		return;
 
-	u32 calcAnim = flags & CUE_CALC_ANIM;
-	if (calcAnim && unk14->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	if (flags & CUE_CALC_ANIM && unk14->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		vomitFinished();
 		return;
 	}
 
-	if (calcAnim)
+	if (flags & CUE_CALC_ANIM)
 		unk18->calcAnm();
 
 	if (flags & CUE_ENTRY)
@@ -367,9 +364,8 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 			f32 radius
 			    = unk94
 			      * mOwner->getBossPakkunParams()->mSLTornadoRollSpeed.get();
-			JGeometry::TVec3<f32> direction;
-			direction = unk70;
-			direction.sub(unk7C);
+			JGeometry::TVec3<f32> direction = unk70;
+			direction -= unk7C;
 			if (PSVECMag(&direction) < 100.0f) {
 				vanish();
 				return;
@@ -423,27 +419,26 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 	}
 
 	if (flags & CUE_CALC_ANIM) {
-		MtxPtr mtx = mActor->getModel()->getBaseTRMtx();
-		JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0x162, mtx, 1, this);
+		MtxPtr mtx              = mActor->getModel()->getBaseTRMtx();
+		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_ROCK, mtx, 1, this);
 		if (emitter)
 			emitter->setGlobalScale(mScaling);
 
-		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(0x163, mtx, 1,
-		                                                      (u8*)this + 1);
+		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_SMOKE, mtx, 1, (u8*)this + 1);
 		if (emitter)
 			emitter->setGlobalScale(mScaling);
 
-		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(0x164, mtx, 1,
-		                                                      (u8*)this + 2);
+		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_WEED, mtx, 1, (u8*)this + 2);
 		if (emitter)
 			emitter->setGlobalScale(mScaling);
 	}
 
 	if (flags & CUE_CALC_ANIM) {
-		JGeometry::TVec3<f32> toMario;
-		toMario = mPosition;
-		toMario.sub(*gpMarioPos);
+		JGeometry::TVec3<f32> toMario = mPosition;
+		toMario -= SMS_GetMarioPos();
 		SMSGetMSound()->startSoundActorWithInfo(
 		    MSD_SE_BS_BSPAKU_TORNADO, &mPosition, nullptr, toMario.length(), 0,
 		    0, nullptr, 0, 4);
@@ -676,22 +671,8 @@ void TBossPakkunMtxCalc::calcHeadDir(u16 jointIndex)
 	headRotation += turn;
 	mOwner->unk184 = headRotation;
 
-	f32 s = JMASin(headRotation);
-	f32 c = JMACos(headRotation);
-
 	Mtx rotation;
-	rotation[0][0] = 1.0f;
-	rotation[0][1] = 0.0f;
-	rotation[0][2] = 0.0f;
-	rotation[0][3] = 0.0f;
-	rotation[1][0] = 0.0f;
-	rotation[1][1] = c;
-	rotation[1][2] = -s;
-	rotation[1][3] = 0.0f;
-	rotation[2][0] = 0.0f;
-	rotation[2][1] = s;
-	rotation[2][2] = c;
-	rotation[2][3] = 0.0f;
+	MsMtxSetRotX(rotation, headRotation);
 
 	MTXConcat(headMtx, rotation, headMtx);
 	MTXConcat(J3DSys::mCurrentMtx, rotation, J3DSys::mCurrentMtx);
@@ -772,7 +753,7 @@ void TBossPakkun::init(TLiveManager* manager)
 	}
 
 	TIdxGroupObj* group
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	initHitActor(0x800000F, 1, 0x80000000, 80.0f, 300.0f, 80.0f, 300.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 
@@ -924,8 +905,10 @@ void TBossPakkun::ignoreWaterCheck() { }
 
 void TBossPakkun::startTornadoBlur()
 {
-	gpMarioParticleManager->emitAndBindToPosPtr(0xa9, &unk194, 0, nullptr);
-	gpMarioParticleManager->emitAndBindToPosPtr(0xa9, &unk1A0, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(
+	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_BLUR1, &unk194, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(
+	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_BLUR1, &unk1A0, 0, nullptr);
 }
 
 void TBossPakkun::resetWaterMark()
@@ -1039,8 +1022,8 @@ void TBossPakkun::launchTornado() { mTornado->launch(*gpMarioPos); }
 
 void TBossPakkun::killSmallEnemies()
 {
-	TNameKuriManager* manager
-	    = JDrama::TNameRefGen::search<TNameKuriManager>("ナメクリマネージャー");
+	TNameKuriManager* manager = static_cast<TNameKuriManager*>(
+	    JDrama::TNameRefGen::search("ナメクリマネージャー"));
 	if (manager != nullptr)
 		manager->killChildren();
 }
@@ -1243,16 +1226,19 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 		    || mMActor->checkCurBckFromIndex(13)
 		    || mMActor->checkCurBckFromIndex(12)) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x160, getModel()->getAnmMtx(38), 1, this);
+			    SCENE_BOSSPAKKUN_JPA_MS_BOPA_BLUR2, getModel()->getAnmMtx(38),
+			    1, this);
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x160, getModel()->getAnmMtx(46), 1, (u8*)this + 1);
+			    SCENE_BOSSPAKKUN_JPA_MS_BOPA_BLUR2, getModel()->getAnmMtx(46),
+			    1, (u8*)this + 1);
 		}
 
 		if (mMActor->checkCurBckFromIndex(11)
 		    || mMActor->checkCurBckFromIndex(6)
 		    || mMActor->checkCurBckFromIndex(26)) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x15F, getModel()->getAnmMtx(20), 1, (u8*)this + 1);
+			    SCENE_BOSSPAKKUN_JPA_MS_BOPA_ASE, getModel()->getAnmMtx(20), 1,
+			    (u8*)this + 1);
 		}
 	}
 
@@ -1308,18 +1294,29 @@ TBossPakkunManager::TBossPakkunManager(const char* name, int value)
 
 void TBossPakkunManager::initJParticle()
 {
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_blur1.jpa", 0xa9);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_down.jpa", 0xaa);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_swing1.jpa", 0xab);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_swing2.jpa", 0xac);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_wathit.jpa", 0x15d);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_wathit_w.jpa", 0x15e);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_blur1.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_BLUR1);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_down.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_DOWN);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_swing1.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING1);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_swing2.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING2);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_wathit.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_WATHIT);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_wathit_w.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W);
 	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_ase.jpa", 0x15f);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_blur2.jpa", 0x160);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_jita.jpa", 0x161);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_rock.jpa", 0x162);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_smoke.jpa", 0x163);
-	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_weed.jpa", 0x164);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_blur2.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_BLUR2);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_jita.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_JITA);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_rock.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_ROCK);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_smoke.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_SMOKE);
+	SMS_LoadParticle("/scene/bosspakkun/jpa/ms_bopa_tr_weed.jpa",
+	                 SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_WEED);
 }
 
 void TBossPakkunManager::createModelData()
@@ -1518,8 +1515,8 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 	}
 
 	if (actor->checkCurBckFromIndex(20)) {
-		JGeometry::TVec3<f32> wind(JMASin(boss->mRotation.y), 0.0f,
-		                           JMACos(boss->mRotation.y));
+		JGeometry::TVec3<f32> wind(MsSin(boss->mRotation.y), 0.0f,
+		                           MsCos(boss->mRotation.y));
 		gpModelWaterManager->wind(wind);
 	}
 	return false;
@@ -1532,7 +1529,8 @@ DEFINE_NERVE(TNerveBPTornado, TLiveActor)
 	if (spine->getTime() == 0) {
 		boss->changeBck(24);
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
-		    0xab, boss->getModel()->getAnmMtx(3), 0, boss);
+		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING1, boss->getModel()->getAnmMtx(3),
+		    0, boss);
 		boss->startTornadoBlur();
 	}
 	if (spine->getTime() == 150)
@@ -1577,8 +1575,10 @@ DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
 	}
 
 	MtxPtr jointMtx = boss->getModel()->getAnmMtx(18);
-	gpMarioParticleManager->emitAndBindToMtxPtr(0x15d, jointMtx, 1, boss);
-	gpMarioParticleManager->emitAndBindToMtxPtr(0x15e, jointMtx, 1, boss);
+	gpMarioParticleManager->emitAndBindToMtxPtr(
+	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_WATHIT, jointMtx, 1, boss);
+	gpMarioParticleManager->emitAndBindToMtxPtr(
+	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W, jointMtx, 1, boss);
 
 	if (boss->unk170 != 0) {
 		boss->changeBck(26);
@@ -1600,7 +1600,8 @@ DEFINE_NERVE(TNerveBPTumbleIn, TLiveActor)
 
 	if (spine->getTime() == 336) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0xaa, boss->getModel()->getAnmMtx(14), 0, boss);
+		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_DOWN, boss->getModel()->getAnmMtx(14),
+		    0, boss);
 	}
 	if (spine->getTime() == 348) {
 		gpCameraShake->startShake(static_cast<EnumCamShakeMode>(0xe), 1.0f);
@@ -1623,7 +1624,8 @@ DEFINE_NERVE(TNerveBPTumble, TLiveActor)
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x161, boss->getModel()->getAnmMtx(0), 1, boss);
+	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_JITA, boss->getModel()->getAnmMtx(0), 1,
+	    boss);
 	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x11), 1.0f);
 	if ((spine->getTime() / 60) % 2 != 0)
 		boss->rumblePad(0, boss->mPosition);
@@ -1700,7 +1702,8 @@ DEFINE_NERVE(TNerveBPSwing, TLiveActor)
 		boss->changeBck(15);
 	if (spine->getTime() == 0) {
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
-		    0xAC, boss->getModel()->getAnmMtx(18), 0, boss);
+		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING2,
+		    boss->getModel()->getAnmMtx(18), 0, boss);
 	}
 	if (actor->curAnmEndsNext(0, nullptr))
 		return true;
