@@ -137,9 +137,16 @@ public:
 	// fabricated
 	u8 getCurrentMap() { return mMap; }
 	u8 getCurrentStage() { return unk7D; }
+	// The const qualifier is load-bearing: the ROM re-reads unk4C/unk4E for
+	// every on/off after testing it, which only happens when the test goes
+	// through a const-qualified inline and the modify through a non-const one
+	// (MarDirectorDirect::updateGameMode, 0x802979B4).
 	bool checkUnk4CFlag(int flag) const { return unk4C & flag; }
 	void onUnk4CFlag(int flag) { unk4C |= flag; }
 	void offUnk4CFlag(int flag) { unk4C &= ~flag; }
+	bool checkUnk4EFlag(int flag) const { return unk4E & flag; }
+	void onUnk4EFlag(int flag) { unk4E |= flag; }
+	void offUnk4EFlag(int flag) { unk4E &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
 	bool isTalkModeNow() const { return unk124 == 1 || unk124 == 2; }
