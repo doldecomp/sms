@@ -504,16 +504,10 @@ bool TBeeHive::doWait()
 
 	if (mSwingAngle < -mSwingAngleMax || mSwingAngleMax < mSwingAngle) {
 		mSwingAngleMax += getSaveParams()->mAngleMaxAdd.get();
-		mSwingAngleMax
-		    = mSwingAngleMax < 0.0f
-		          ? 0.0f
-		          : (mSwingAngleMax > JGeometry::TUtil<f32>::halfPI()
-		                 ? JGeometry::TUtil<f32>::halfPI()
-		                 : mSwingAngleMax);
-		mSwingAngle = mSwingAngle < -mSwingAngleMax
-		                  ? -mSwingAngleMax
-		                  : (mSwingAngle > mSwingAngleMax ? mSwingAngleMax
-		                                                  : mSwingAngle);
+		mSwingAngleMax = JGeometry::TUtil<f32>::clamp(
+		    mSwingAngleMax, 0.0f, JGeometry::TUtil<f32>::halfPI());
+		mSwingAngle = JGeometry::TUtil<f32>::clamp(
+		    mSwingAngle, -mSwingAngleMax, mSwingAngleMax);
 		mSwingSpeed = 0.0f;
 
 		gpMSound->startSoundActorWithInfo(MSD_SE_EN_BEENEST_SWING, &mPosition,
