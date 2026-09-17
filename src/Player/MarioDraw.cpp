@@ -1745,6 +1745,16 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		JGeometry::TVec3<f32> v2;
 		v2.sub(p3, p2);
 
+		// TODO: the ROM calls both TVec3::set<f>(f,f,f) (the local
+		// instantiation this TU is missing; emitted immediately after
+		// calcBaseMtx, i.e. this is the first site in codegen order that
+		// needs it out of line) and TVec3::setLength(const TVec3&, f32) here,
+		// which is what gives `cross` a stack home, keeps `d` below it and
+		// leaves the ROM's dot product in memory. We expand both, so `cross`
+		// is scalarised. cross2's one-expression set() is the ROM's shape
+		// (+0.6 over cross()'s named temporaries) but still inlines, and so
+		// does the set() written out at depth 1. Same family as the
+		// per-call-site set<f> problem in the catalog.
 		JGeometry::TVec3<f32> cross;
 		cross.cross2(v2, v1);
 		cross.normalize();
@@ -2416,3 +2426,18 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 		}
 	}
 }
+
+// UNUSED (0xfc). TODO: incorrect size (4 vs 0xfc) -- a stub, not a
+// reconstruction. Evidence for the body, for whoever picks it up:
+// `TMario::mEffectParams` (TEffectParams: mDashInc 1/30, mDashDec 1/60,
+// mDashMaxBlendInBlur 0xb4, mDashMaxBlendInIris, mDashBlendScale 0.2f) is
+// read by nothing else in the tree, and `TAfterEffect` (MarioUtil/ScreenUtil)
+// has exactly the matching sinks: unk15 (mode 2 == dash blur), unk1B/unk1C
+// (the blur and iris blend targets that setBlurDefaultValue resets from
+// unk19/unk1A), unk50 (the blur amount calcDashBlurValue decays) and unk54
+// (the decay step). So this almost certainly ramps a 0..1 blend on
+// mDashInc/mDashDec while the turbo nozzle is spraying and writes it into
+// gpAfterEffect scaled by those three params. What is missing is the TMario
+// member that holds the blend: no existing field fits, and inventing one in
+// Mario.hpp on this evidence alone is not justified. 63 instructions.
+void TMario::thinkDashEffect() { }
