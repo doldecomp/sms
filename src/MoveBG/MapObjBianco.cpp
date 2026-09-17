@@ -40,6 +40,45 @@ static f32 sSpeed = 0.05f;
 /// Phase offset shared by the big windmill's blocks; never written.
 static f32 sAngleAdd;
 
+/// Fabricated: the two rotation matrices this file fills by hand. No helper
+/// survives in the map, so it was not a real out-of-line function; this shape
+/// is what MWCC emits at every call site.
+static void setMtxRotZ(MtxPtr mtx, f32 degrees)
+{
+	f32 sin   = JMASSin((s16)(182.04445f * degrees));
+	f32 cos   = JMASCos((s16)(182.04445f * degrees));
+	mtx[0][0] = cos;
+	mtx[0][1] = -sin;
+	mtx[0][2] = 0.0f;
+	mtx[0][3] = 0.0f;
+	mtx[1][0] = sin;
+	mtx[1][1] = cos;
+	mtx[1][2] = 0.0f;
+	mtx[1][3] = 0.0f;
+	mtx[2][0] = 0.0f;
+	mtx[2][1] = 0.0f;
+	mtx[2][2] = 1.0f;
+	mtx[2][3] = 0.0f;
+}
+
+static void setMtxRotY(MtxPtr mtx, f32 degrees)
+{
+	f32 sin   = JMASSin((s16)(182.04445f * degrees));
+	f32 cos   = JMASCos((s16)(182.04445f * degrees));
+	mtx[0][0] = cos;
+	mtx[0][1] = 0.0f;
+	mtx[0][2] = sin;
+	mtx[0][3] = 0.0f;
+	mtx[1][0] = 0.0f;
+	mtx[1][1] = 1.0f;
+	mtx[1][2] = 0.0f;
+	mtx[1][3] = 0.0f;
+	mtx[2][0] = -sin;
+	mtx[2][1] = 0.0f;
+	mtx[2][2] = cos;
+	mtx[2][3] = 0.0f;
+}
+
 void TBigWindmill::control()
 {
 	TMapObjBase::control();
@@ -421,7 +460,8 @@ void TLeafBoat::touchActor(THitActor* other)
 void TLeafBoat::touchWall(JGeometry::TVec3<f32>* pos,
                           TBGWallCheckRecord* record)
 {
-	for (int i = 0; i < record->mResultWallsNum; ++i) {
+	int num = record->mResultWallsNum;
+	for (int i = 0; i < num; ++i) {
 		const TBGCheckData* wall = record->mResultWalls[i];
 
 		JGeometry::TVec3<f32> vel(mVelocity);
@@ -469,9 +509,12 @@ void TLeafBoat::bind()
 	if (gpMap->isTouchedWallsAndMoveXZ(&record))
 		touchWall(&next, &record);
 
+	// TODO: the ROM calls JGeometry::TVec3<f32>::sub out of line here; MWCC
+	// expands it for us. Same open per-call-site inlining problem as
+	// MapObjBall (docs/catalog/codegen-tells.md).
 	JGeometry::TVec3<f32> delta(next);
 	delta.sub(mPosition);
-	mLinearVelocity.set(delta.x, delta.y, delta.z);
+	mLinearVelocity = delta;
 
 	// Standing on the deck counts as an attack so the boat can carry Mario.
 	f32 marioY = gpMarioPos->y;
@@ -585,6 +628,9 @@ void TLeafBoatRotten::control()
 	}
 
 	switch (mState) {
+	case 1:
+		break;
+
 	case 2: {
 		// Fade from white to the rotten tint over the remaining lifetime.
 		f32 rate = (f32)mStateTimer / (f32)mRottenTime;
@@ -605,8 +651,7 @@ void TLeafBoatRotten::control()
 		mAlpha -= mAlphaDownSpeed;
 		mColor.a = (u8)(s32)mAlpha;
 		if (mAlpha < mCollisionRemoveAlpha) {
-			if (!getMapCollisionManager()->getUnk8()->checkFlag(
-			        TMapCollisionBase::FLAG_NEEDS_SETUP))
+			if (getMapCollisionManager()->getUnk8()->isSetUp())
 				removeMapCollision();
 		}
 		if (mAlpha <= 0.0f) {
@@ -712,6 +757,9 @@ void TLampSeesawMain::control()
 	TMapObjBase::control();
 
 	switch (mState) {
+	case 1:
+		break;
+
 	case 2:
 		move();
 		if (fabsf(mSpeed) < mMinSpeed)
@@ -741,8 +789,8 @@ void TLampSeesawMain::loadAfter()
 {
 	// The partner is named after this object with the "（主）" suffix replaced;
 	// the four bytes after the shared prefix are copied across verbatim.
-	const char* name = getName();
 	int prefix       = strlen("ランプシーソーＡ");
+	const char* name = getName();
 	char buffer[64];
 	u8 c0 = name[prefix];
 	u8 c1 = name[prefix + 1];
@@ -873,13 +921,14 @@ void TBellWatermill::control()
 {
 	TMapObjBase::control();
 
-	f32 speed = unk158;
-	if (speed != 0.0f || mRiseSpeed != 0.0f || mHeight != 0.0f) {
-		f32 max = mRotSpeedMax;
+	if (unk158 != 0.0f || mRiseSpeed != 0.0f || mHeight != 0.0f) {
+		f32 speed = unk158;
+		f32 max   = mRotSpeedMax;
+		f32 min   = -max;
 		if (speed > max)
 			speed = max;
-		else if (speed < -max)
-			speed = -max;
+		else if (speed < min)
+			speed = min;
 
 		unk154 += speed;
 		unk154 = MsWrap(unk154, 0.0f, 360.0f);
@@ -892,9 +941,8 @@ void TBellWatermill::control()
 			unk158 = 0.0f;
 
 		if (!mSprayedThisFrame) {
-			f32 cur = unk158;
-			if (cur != 0.0f)
-				unk158 = cur - unk160;
+			if (unk158 != 0.0f)
+				unk158 = unk158 - unk160;
 		}
 
 		// Below the rest height the wheel bounces back up instead of falling.
@@ -925,8 +973,9 @@ void TBellWatermill::control()
 					TMapObjBase* coin
 					    = gpItemManager->makeObjAppeared(0x2000000E);
 					if (coin != nullptr) {
-						coin->mPosition.set(mPosition.x, mPosition.y,
-						                    mPosition.z);
+						coin->mPosition.x = mPosition.x;
+						coin->mPosition.y = mPosition.y;
+						coin->mPosition.z = mPosition.z;
 						coin->mVelocity.set(10.0f, 100.0f * MsRandF() + 10.0f,
 						                    10.0f * MsRandF() - 5.0f);
 						coin->offLiveFlag(LIVE_FLAG_UNK10);
@@ -936,39 +985,21 @@ void TBellWatermill::control()
 			}
 		}
 
-		mPosition.y        = mHeight + mInitialPosition.y + mYOffset;
-		mSprayedThisFrame  = false;
-		mRotation.z        = unk154;
+		mPosition.y       = mHeight + mInitialPosition.y + mYOffset;
+		mSprayedThisFrame = false;
+		mRotation.z       = unk154;
 
+		// The Z matrix really is built once before the branch and again in
+		// both arms; the ROM has all three copies.
 		Mtx spin;
-		spin[0][0] = JMASCos((s16)(182.04445f * mRotation.z));
-		spin[0][1] = -JMASSin((s16)(182.04445f * mRotation.z));
-		spin[0][2] = 0.0f;
-		spin[0][3] = 0.0f;
-		spin[1][0] = JMASSin((s16)(182.04445f * mRotation.z));
-		spin[1][1] = JMASCos((s16)(182.04445f * mRotation.z));
-		spin[1][2] = 0.0f;
-		spin[1][3] = 0.0f;
-		spin[2][0] = 0.0f;
-		spin[2][1] = 0.0f;
-		spin[2][2] = 1.0f;
-		spin[2][3] = 0.0f;
-
+		setMtxRotZ(spin, mRotation.z);
 		if (mRotation.y != 0.0f) {
 			Mtx yaw;
-			yaw[0][0] = JMASCos((s16)(182.04445f * mRotation.y));
-			yaw[0][1] = 0.0f;
-			yaw[0][2] = JMASSin((s16)(182.04445f * mRotation.y));
-			yaw[0][3] = 0.0f;
-			yaw[1][0] = 0.0f;
-			yaw[1][1] = 1.0f;
-			yaw[1][2] = 0.0f;
-			yaw[1][3] = 0.0f;
-			yaw[2][0] = -JMASSin((s16)(182.04445f * mRotation.y));
-			yaw[2][1] = 0.0f;
-			yaw[2][2] = JMASCos((s16)(182.04445f * mRotation.y));
-			yaw[2][3] = 0.0f;
+			setMtxRotZ(spin, mRotation.z);
+			setMtxRotY(yaw, mRotation.y);
 			MTXConcat(yaw, spin, spin);
+		} else {
+			setMtxRotZ(spin, mRotation.z);
 		}
 
 		spin[0][3] = mPosition.x;
@@ -1027,8 +1058,10 @@ void TWoodLog::control()
 	Mtx inverse;
 	MTXInverse(getModel()->getAnmMtx(0), inverse);
 
-	JGeometry::TVec3<f32> marioPos(gpMarioPos->x, gpMarioPos->y,
-	                               gpMarioPos->z);
+	JGeometry::TVec3<f32> marioPos;
+	marioPos.x = gpMarioPos->x;
+	marioPos.y = gpMarioPos->y;
+	marioPos.z = gpMarioPos->z;
 	JGeometry::TVec3<f32> local;
 	MTXMultVec(inverse, marioPos, local);
 
