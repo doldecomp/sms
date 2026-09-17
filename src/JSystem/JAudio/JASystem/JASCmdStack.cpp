@@ -3,52 +3,52 @@
 #include <dolphin/os.h>
 #include <types.h>
 
+static JASystem::Kernel::TPortHead cmd_once;
+static JASystem::Kernel::TPortHead cmd_stay;
+
 namespace JASystem {
 
 namespace Kernel {
-
-	JASystem::Kernel::TPortHead cmd_once;
-	JASystem::Kernel::TPortHead cmd_stay;
 
 	static s32 portCmdMain(void* data);
 	static TPortCmd* getPortCmd(TPortHead* head);
 
 	TPortCmd::TPortCmd()
 	{
-		unk0 = nullptr;
-		unk4 = nullptr;
-		unk8 = nullptr;
-		unkC = nullptr;
+		mHead = nullptr;
+		mNext = nullptr;
+		mFunc = nullptr;
+		mArgs = nullptr;
 	}
 
 	BOOL TPortCmd::addPortCmdOnce() { return addPortCmd(&cmd_once); }
 
 	BOOL TPortCmd::addPortCmdStay() { return addPortCmd(&cmd_stay); }
 
-	BOOL TPortCmd::setPortCmd(PortCallback func, TPortArgs* args)
+	BOOL TPortCmd::setPortCmd(PortCallback cb, TPortArgs* args)
 	{
-		unk8 = func;
-		unkC = args;
-		unk0 = nullptr;
+		mFunc = cb;
+		mArgs = args;
+		mHead = nullptr;
 		return true;
 	}
 
 	BOOL TPortCmd::addPortCmd(TPortHead* head)
 	{
 		BOOL enable = OSDisableInterrupts();
-		if (unk0) {
+		if (mHead) {
 			OSRestoreInterrupts(enable);
 			return false;
 		}
 
 		if (head->unk4)
-			head->unk4->unk4 = this;
+			head->unk4->mNext = this;
 		else
 			head->unk0 = this;
 
 		head->unk4 = this;
-		unk4       = nullptr;
-		unk0       = head;
+		mNext      = nullptr;
+		mHead      = head;
 		OSRestoreInterrupts(enable);
 		return true;
 	}
@@ -64,7 +64,7 @@ namespace Kernel {
 			if (!cmd)
 				break;
 
-			cmd->unk8(cmd->unkC);
+			cmd->getFunc()(cmd->getArgs());
 		}
 	}
 
@@ -75,9 +75,9 @@ namespace Kernel {
 			if (!cmd)
 				break;
 
-			cmd->unk8(cmd->unkC);
+			cmd->getFunc()(cmd->getArgs());
 
-			cmd = cmd->unk4;
+			cmd = cmd->getNext();
 		}
 	}
 
@@ -101,21 +101,17 @@ namespace Kernel {
 		if (head->unk0) {
 			TPortCmd* r31 = head->unk0;
 			r30           = r31;
-			head->unk0    = r31->unk4;
+			head->unk0    = r31->mNext;
 			if (!head->unk0)
 				head->unk4 = nullptr;
 
-			r31->unk0 = nullptr;
+			r31->mHead = nullptr;
 		}
 		return r30;
 	}
 
 	static s32 portCmdMain(void* data)
 	{
-		// TODO: inlines inside of portCmdProc*
-		// (but does it matter?)
-		char trash[0x30];
-
 		portCmdProcOnce(&cmd_once);
 		portCmdProcStay(&cmd_stay);
 		return 0;

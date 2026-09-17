@@ -113,7 +113,7 @@ void TMario::emitSweat(s16 rot)
 void TMario::emitSweatSometimes()
 {
 	s16 angle = mFaceAngle.y;
-	if (!(gpMarDirector->unk58 & 0xF))
+	if (!(gpMarDirector->mMoveTickCount & 0xF))
 		emitSweat(angle);
 }
 

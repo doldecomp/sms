@@ -73,7 +73,7 @@ public:
 	// from tp
 	JPAResourceManager* getResourceManager(u8 res_mgr_id)
 	{
-		JUT_ASSERT(147, res_mgr_id < 8);
+		JUT_ASSERT(res_mgr_id < 8);
 		return unkA4[res_mgr_id];
 	}
 

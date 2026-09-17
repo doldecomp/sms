@@ -345,9 +345,9 @@ void TApplication::initialize_nlogoAfter()
 		u32 lVar3 = JKRGetRootHeap()->getSize(bufStageArcBin);
 		JSUMemoryInputStream stream(bufStageArcBin, lVar3);
 		JDrama::TNameRefGen::getInstance()->load(stream);
-		unk30 = JDrama::TNameRefGen::search<
-		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> > >(
-		    "ステージ毎シナリオアーカイブ名群");
+		unk30 = static_cast<
+		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >*>(
+		    JDrama::TNameRefGen::search("ステージ毎シナリオアーカイブ名群"));
 
 		delete JDrama::TNameRefGen::instance;
 		JDrama::TNameRefGen::instance = nullptr;
@@ -603,7 +603,7 @@ int TApplication::gameLoop()
 		TMarioGamePad::read();
 		for (int i = 0; i < 4; i++) {
 			mGamePads[i]->updateMeaning();
-			mGamePads[i]->onFlag(0x40);
+			mGamePads[i]->onFlag(TMarioGamePad::PAD_FLAG_0x40);
 		}
 
 		if (int dvderr = drawDVDErr()) {

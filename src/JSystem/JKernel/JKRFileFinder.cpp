@@ -32,3 +32,34 @@ bool JKRArcFinder::findNextFile()
 	}
 	return mIsAvailable;
 }
+
+JKRDvdFinder::JKRDvdFinder(const char* directory)
+    : JKRFileFinder()
+{
+	mIsDvdOpen   = DVDOpenDir((char*)directory, &mDir);
+	mIsAvailable = mIsDvdOpen;
+	findNextFile();
+}
+
+JKRDvdFinder::~JKRDvdFinder()
+{
+	if (mIsDvdOpen) {
+		DVDCloseDir(&mDir);
+	}
+}
+
+bool JKRDvdFinder::findNextFile()
+{
+	if (mIsAvailable) {
+		DVDDirEntry dirEntry;
+		mIsAvailable = DVDReadDir(&mDir, &dirEntry);
+		if (mIsAvailable) {
+			mIsDir               = dirEntry.isDir != 0;
+			mBase.mFileName      = dirEntry.name;
+			mBase.mFileIndex     = dirEntry.entryNum;
+			mBase.mFileID        = 0;
+			mBase.mFileTypeFlags = mIsDir ? 2 : 1;
+		}
+	}
+	return mIsAvailable;
+}

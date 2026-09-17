@@ -341,7 +341,7 @@ u16 TYoshi::changeHand()
 	}
 
 	if ((status & MARIO_STATUS_FLAG_UNK8000) ? true : false) {
-		if (mMario->mGamePad->checkMeaning(0x2000)) {
+		if (mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_L)) {
 			E_SIDEWALK_TYPE type;
 			f32 a, b;
 			mMario->getSideWalkValues(&type, &a, &b);
@@ -354,7 +354,7 @@ u16 TYoshi::changeHand()
 				return 17;
 			}
 		}
-		if (mMario->mGamePad->checkMeaning(0x400))
+		if (mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_R))
 			return 13;
 	}
 
@@ -543,7 +543,7 @@ void TYoshi::thinkAnimation()
 	} else {
 		bool sliding = (status & MARIO_STATUS_FLAG_UNK8000) ? true : false;
 		if (sliding) {
-			if (mMario->mGamePad->checkMeaning(0x2000)) {
+			if (mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_L)) {
 				E_SIDEWALK_TYPE type;
 				f32 dummy;
 				mMario->getSideWalkValues(&type, &nextFrame, &dummy);
@@ -558,7 +558,8 @@ void TYoshi::thinkAnimation()
 					newIdx = 17;
 					break;
 				}
-			} else if (mMario->mGamePad->checkMeaning(0x400)) {
+			} else if (mMario->mGamePad->checkMeaning(
+			               TMarioGamePad::MEANING_R)) {
 				newIdx = 13;
 			} else {
 				goto walking;
@@ -795,7 +796,7 @@ void TYoshi::thinkHoldOut()
 	switch (mFlutterState) {
 	case 0:
 		if (mMario->mVel.y < mMaxVSpdStartFlutter
-		    && mMario->mGamePad->checkMeaning(0x80))
+		    && mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_A))
 			mFlutterState = 1;
 		break;
 	case 1:
@@ -812,7 +813,7 @@ void TYoshi::thinkHoldOut()
 			mFlutterState = 2;
 		}
 
-		if (!mMario->mGamePad->checkMeaning(0x80))
+		if (!mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_A))
 			mFlutterState = 2;
 		break;
 	case 2:
@@ -884,7 +885,7 @@ void TYoshi::movement()
 		mTranslation = mMario->mPosition;
 		mEggRotSpeed = mMario->mFaceAngle.y;
 
-		if (mMario->mGamePad->checkMeaning(0x100)) {
+		if (mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_B)) {
 			emitTongue();
 		}
 		if (unkC <= 0)
@@ -1137,8 +1138,8 @@ void TYoshi::entry()
 	mTongue->entry();
 
 	TCircleShadowRequest shadowRequest;
-	shadowRequest.unk0 = mTranslation;
-	shadowRequest.unkC = shadowRequest.unk10 = unk114;
+	shadowRequest.mPosition = mTranslation;
+	shadowRequest.mRadiusX = shadowRequest.mRadiusZ = unk114;
 
 	gpBindShadowManager->request(shadowRequest, 0);
 	gpQuestionManager->request(mTranslation, unk114);

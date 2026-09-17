@@ -9,7 +9,7 @@ class TMapCollisionWarp;
 
 class TDolpicEventBiancoGate : public TMapEvent {
 public:
-	TDolpicEventBiancoGate(const char*);
+	TDolpicEventBiancoGate(const char* name = "イベント（ビアンコゲート）");
 
 	virtual void loadAfter();
 	virtual bool isFinishedAll() const;
@@ -23,7 +23,8 @@ public:
 
 class TDolpicEventRiccoMammaGate : public TMapEvent {
 public:
-	TDolpicEventRiccoMammaGate(const char*);
+	TDolpicEventRiccoMammaGate(const char* name
+	                           = "イベント（リコ、マンマゲート）");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

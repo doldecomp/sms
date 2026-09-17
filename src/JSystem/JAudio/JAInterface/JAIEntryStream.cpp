@@ -3,31 +3,32 @@
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 
-void JAIStreamEntry::storeBuffer(JAISound** sound, JAIActor* actor, u32 param_3,
-                                 u32 param_4, u8 param_5, void* param_6)
+void JAIStreamEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
+                                 u32 sound_id, u32 fade, u8 camera_idx,
+                                 void* info)
 {
-	JAISound* controller;
+	JAISoundHandle sound;
 
 	JAIData* data = unk0->unk0;
-	if (checkSoundHandle(sound, param_3, param_6))
+	if (checkSoundHandle(out_handle, sound_id, info))
 		return;
 
-	controller = unk0->getControllerHandle(&data->unk21C);
-	if (!controller) {
-		*sound = nullptr;
-		return;
-	}
-
-	controller->unk38 = unk0->getStreamParameter();
-	if (controller->unk38 == 0) {
-		*sound = nullptr;
+	sound = unk0->getControllerHandle(&data->mStreamControlBuffer);
+	if (!sound) {
+		*out_handle = nullptr;
 		return;
 	}
 
-	data->initStreamParameter(controller->getStreamParameter());
-	controller->unk1         = 1;
-	controller->unk2         = 10;
-	unk0->unk0->unk184->unk2 = 0;
-	initSoundParameter(controller, sound, actor, param_3, param_4, param_5,
-	                   param_6);
+	sound->setCustomParameterPointer(unk0->getStreamParameter());
+	if (sound->mCustomParameter == 0) {
+		*out_handle = nullptr;
+		return;
+	}
+
+	data->initStreamParameter(sound->getStreamParameter());
+	sound->mState                           = SOUNDSTATE_Stored;
+	sound->mWaitTimer                       = 10;
+	unk0->unk0->mStreamUpdate->mPrepareFlag = false;
+	initSoundParameter(sound, out_handle, actor, sound_id, fade, camera_idx,
+	                   info);
 }

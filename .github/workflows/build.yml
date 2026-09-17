@@ -28,6 +28,7 @@ jobs:
 
     # Determine which .cpp files changed (PR: vs base branch; push: vs prev commit)
     - name: Changed .cpp files
+      id: changes
       run: |
         if [ "${{ github.event_name }}" = "pull_request" ]; then
           base="${{ github.event.pull_request.base.sha }}"
@@ -46,6 +47,7 @@ jobs:
           : > changed_cpp.txt
         fi
         echo "Changed .cpp files:"; cat changed_cpp.txt
+        echo "base=$base" >> "$GITHUB_OUTPUT"
 
     # Normalize file mod times
     - name: Restore timestamps
@@ -89,7 +91,27 @@ jobs:
         name: ${{ matrix.version }}_report
         path: build/${{ matrix.version }}/report.json
 
-    # Validate map symbol presence/order/linkage for each changed .cpp
+    # Build the same sources at the base revision. Some TUs already have strict
+    # map-validation errors; CI must reject new errors, not inherited debt.
+    - name: Build symbol-validation baseline
+      if: steps.changes.outputs.base != ''
+      env:
+        BASE: ${{ steps.changes.outputs.base }}
+      run: |
+        if [ ! -s changed_cpp.txt ]; then
+          exit 0
+        fi
+        baseline="$RUNNER_TEMP/symbol-baseline"
+        git worktree add --detach "$baseline" "$BASE"
+        mkdir -p "$baseline/orig"
+        cp -a /orig/. "$baseline/orig/"
+        cd "$baseline"
+        python configure.py --map --version ${{ matrix.version }} \
+          --binutils /binutils --compilers /compilers
+        ninja all_source
+
+    # Validate map symbol presence/order/linkage for each changed .cpp.
+    # Keep the full diagnostics; only errors absent from the base fail this job.
     - name: Validate symbol order
       run: |
         if [ ! -s changed_cpp.txt ]; then
@@ -106,4 +128,9 @@ jobs:
         fi
         export NM
         echo "Using nm: $NM"
-        python tools/check-changed-symbol-order.py $(cat changed_cpp.txt)
+        if [ -d "$RUNNER_TEMP/symbol-baseline" ]; then
+          python tools/check-changed-symbol-order.py \
+            --baseline-dir "$RUNNER_TEMP/symbol-baseline" $(cat changed_cpp.txt)
+        else
+          python tools/check-changed-symbol-order.py $(cat changed_cpp.txt)
+        fi

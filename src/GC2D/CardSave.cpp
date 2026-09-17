@@ -274,7 +274,8 @@ void TCardSave::initData(TMarioGamePad* param_1)
 	unk14->search(0x6d61736b)->hide();
 	unk2E4 = JKRGetResource("/common/2d/savemessage.bmg");
 	if (!unk18)
-		unk2D8 = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
+		unk2D8 = static_cast<TPauseMenu2*>(
+		    JDrama::TNameRefGen::search("ポーズメニュー"));
 	unk270 = param_1;
 }
 
@@ -359,7 +360,7 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 	}
 
 	case 2:
-		if (unk270->mEnabledFrameMeaning & 0x20) {
+		if (unk270->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
 
 			unk48->setCenteredSize(20, 0, 0, unk4C.getWidth(),
@@ -467,7 +468,7 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 		s8 old    = unk2E9;
 		u32 input = unk270->mEnabledFrameMeaning;
 
-		if (input & 0x20) {
+		if (input & TMarioGamePad::MEANING_MENU_A) {
 			if (unk44 != nullptr)
 				gpEmitterManager4D2->forceDeleteEmitter(unk44);
 
@@ -484,7 +485,7 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			unk10 = 3;
 			unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(),
 			                       unkE4.getHeight());
-		} else if (input & 0x40) {
+		} else if (input & TMarioGamePad::MEANING_MENU_B) {
 			if (unk44 != nullptr)
 				gpEmitterManager4D2->forceDeleteEmitter(unk44);
 
@@ -498,9 +499,9 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(),
 			                       unkE4.getHeight());
 			unk2E9 = 1;
-		} else if (input & 0x8) {
+		} else if (input & TMarioGamePad::MEANING_MENU_LEFT) {
 			unk2E9 = 0;
-		} else if (input & 0x10) {
+		} else if (input & TMarioGamePad::MEANING_MENU_RIGHT) {
 			unk2E9 = 1;
 		}
 
@@ -701,7 +702,7 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		s8 old    = unk2E9;
 		u32 input = unk270->mEnabledFrameMeaning;
 
-		if (input & 0x20) {
+		if (input & TMarioGamePad::MEANING_MENU_A) {
 			if (unk44 != nullptr)
 				gpEmitterManager4D2->forceDeleteEmitter(unk44);
 
@@ -722,9 +723,9 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			unk10 = 3;
 			unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(),
 			                       unkE4.getHeight());
-		} else if (input & 0x8) {
+		} else if (input & TMarioGamePad::MEANING_MENU_LEFT) {
 			unk2E9 = 0;
-		} else if (input & 0x10) {
+		} else if (input & TMarioGamePad::MEANING_MENU_RIGHT) {
 			unk2E9 = 1;
 		}
 
@@ -954,7 +955,7 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 
 s8 TCardSave::waitForAnyKey(TEProgress param_1)
 {
-	s32 result = -1;
+	s8 result = -1;
 
 	switch (unk10) {
 	case 0:
@@ -1034,12 +1035,12 @@ s8 TCardSave::waitForSelectOver()
 		s8 oldSelect = unk2E9;
 		u32 input    = unk270->mEnabledFrameMeaning;
 
-		if (input & 0x20) {
+		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
 			unk10 = 4;
-		} else if (input & 0x2) {
+		} else if (input & TMarioGamePad::MEANING_MENU_UP) {
 			unk2E9 = 0;
-		} else if (input & 0x4) {
+		} else if (input & TMarioGamePad::MEANING_MENU_DOWN) {
 			unk2E9 = 1;
 		}
 
@@ -1148,12 +1149,12 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		s8 oldSelect = unk2E9;
 		u32 input    = unk270->mEnabledFrameMeaning;
 
-		if (input & 0x20) {
+		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
 			unk10 = 4;
-		} else if (input & 0x2) {
+		} else if (input & TMarioGamePad::MEANING_MENU_UP) {
 			unk2E9 = 0;
-		} else if (input & 0x4) {
+		} else if (input & TMarioGamePad::MEANING_MENU_DOWN) {
 			unk2E9 = 1;
 		}
 
@@ -1299,14 +1300,14 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		u8 oldSelect = unk2E9;
 		u32 input    = unk270->mEnabledFrameMeaning;
 
-		if (input & 0x20) {
+		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
 			unk10 = 4;
-		} else if (input & 0x2) {
+		} else if (input & TMarioGamePad::MEANING_MENU_UP) {
 			if (oldSelect > 0) {
 				unk2E9 = oldSelect - 1;
 			}
-		} else if (input & 0x4) {
+		} else if (input & TMarioGamePad::MEANING_MENU_DOWN) {
 			if (oldSelect < 2) {
 				unk2E9 = oldSelect + 1;
 			}
@@ -1484,7 +1485,7 @@ void TCardSave::execMovement_()
 	TEProgress prevState = unk310;
 	s32 prevMode         = unk10;
 
-	unk270->onFlag(0x1);
+	unk270->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 
 	switch (unk310) {
 	case PROGRESS_UNK0:
@@ -1505,7 +1506,7 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNK1:
 	case PROGRESS_UNK19:
-		unk270->offFlag(0x1);
+		unk270->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		gpCardManager->unmount();
 
 		if (!unk18 && unk308 == 0)

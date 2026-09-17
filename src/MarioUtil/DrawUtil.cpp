@@ -426,7 +426,7 @@ void SMS_AddDamageFogEffect(J3DModelData* param_1,
 
 	f32 startBase = -700.0f;
 	f32 endBase   = 500.0f;
-	f32 s         = JMASSin((s16)(gpMarDirector->unk58 * 0x888));
+	f32 s         = JMASSin((s16)(gpMarDirector->mMoveTickCount * 0x888));
 	f32 startOsc  = (-400.0f - startBase) * s;
 	f32 endOsc    = (800.0f - endBase) * s;
 

@@ -18,6 +18,16 @@ namespace Driver {
 	u8 getUpdateInterval();
 
 	void setDSPQueueNum(u32);
+
+	inline f32 Clamp01(f32 value)
+	{
+		if (value <= 0.0f)
+			return 0.0f;
+		if (value >= 1.0f)
+			return 1.0f;
+		return value;
+	}
+
 } // namespace Driver
 
 } // namespace JASystem

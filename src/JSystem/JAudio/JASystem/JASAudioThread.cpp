@@ -164,5 +164,7 @@ namespace AudioThread {
 		}
 	}
 
+	void bootDSP() { }
+
 } // namespace AudioThread
 } // namespace JASystem

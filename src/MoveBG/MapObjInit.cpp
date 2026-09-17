@@ -11014,10 +11014,10 @@ void TMapObjBase::initBckMoveData()
 		    JKRGetResource(move->unk0));
 
 		J3DModelData* data         = mMActor->getModel()->getModelData();
-		data->mJointNodePointer[0] = data->getJointNodePointer(1);
+		J3DJoint* joint            = data->getJointNodePointer(1);
+		data->mJointNodePointer[0] = joint;
 
-		J3DTransformInfo& info
-		    = data->getJointNodePointer(0)->getTransformInfo();
+		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
 		info.mScale.z     = 1.0f;
@@ -11027,7 +11027,8 @@ void TMapObjBase::initBckMoveData()
 		info.mTranslate.x = 0.0f;
 		info.mTranslate.y = 0.0f;
 		info.mTranslate.z = 0.0f;
-		move->unk8        = new J3DFrameCtrl(move->unk4->getFrameMax());
+		data->getJointNodePointer(0)->setTransformInfo(info);
+		move->unk8 = new J3DFrameCtrl(move->unk4->getFrameMax());
 		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
 		move->unk8->setRate(SMSGetAnmFrameRate());
 	}
@@ -11137,7 +11138,8 @@ void TMapObjBase::initActorData()
 	mMapObjData = sObjDataTable[i];
 	unkF8       = mMapObjData->unk34;
 
-	mManager = JDrama::TNameRefGen::search<TLiveManager>(mMapObjData->unk8);
+	mManager = static_cast<TLiveManager*>(
+	    JDrama::TNameRefGen::search(mMapObjData->unk8));
 	mManager->manageActor(this);
 	if (mMapObjData->mHit)
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
@@ -11171,8 +11173,8 @@ void TMapObjBase::initMapObj()
 		mLiveFlag |= LIVE_FLAG_UNK8;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000) && !isActorType(0x40000084)) {
-		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
-		    "スクリーンテクスチャ");
+		TScreenTexture* ref = static_cast<TScreenTexture*>(
+		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
 		mMActor->setLightType(LIGHT_TYPE_INDIRECT);

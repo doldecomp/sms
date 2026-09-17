@@ -13,7 +13,7 @@ void JDrama::TActor::load(JSUMemoryInputStream& stream)
 	char str[0x50];
 	stream.readString(str, 0x50);
 
-	unk3C = TNameRefGen::search<TCharacter>(str);
+	unk3C = static_cast<TCharacter*>(TNameRefGen::search(str));
 
 	TLightMap* lightMap = new TLightMap;
 
