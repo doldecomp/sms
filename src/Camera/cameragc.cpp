@@ -1,6 +1,5 @@
 #include <Camera/Camera.hpp>
 #include <MarioUtil/MathUtil.hpp>
-#include <System/StageUtil.hpp>
 #include <System/MarDirector.hpp>
 #include <Camera/cameralib.hpp>
 #include <Camera/CameraBck.hpp>
@@ -19,6 +18,13 @@
 #include <macros.h>
 #include <stdio.h>
 
+// Declared rather than included from <System/StageUtil.hpp>: that header
+// carries the shine/scenario/normal-stage tables as file statics, and the map
+// lists none of them for this TU.
+bool SMS_isMultiPlayerMap();
+bool SMS_isExMap();
+bool SMS_isOptionMap();
+
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
@@ -33,6 +39,15 @@ const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 CPolarSubCamera* gpCamera;
+
+// The map has all three of these in this TU's .sdata ahead of cStartCamName,
+// with MarDirectorEvent.cpp, CameraDemo.cpp and CameraBck.cpp carrying
+// unreferenced duplicates.
+const char* cCameraBckNameShineGetInside
+    = "/common/camera/camera_demo_shine_get_inside";
+const char* cCameraBckNameShineGetOutside
+    = "/common/camera/camera_demo_shine_get_outside";
+const char* cCameraBckNameGate = "/common/camera/camera_demo_gate_in";
 
 const char* cStartCamName          = "開始カメラ";
 const char* cStartAfterCamName     = "開始後カメラ";
@@ -102,6 +117,14 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
 	int stage = gpMarDirector->getCurrentStage();
+	// TODO: two unknowns keep this constructor off an exact match.
+	// (1) The ROM leaves the stage test unmerged (`cmplwi 0; beq body;
+	//     cmplwi 1; bne end`) where MWCC folds ours into `cmplwi 1; bgt`.
+	//     Ruled out: repeating `getCurrentStage()` per term (CSEd and still
+	//     folded), a two-label `switch (stage) { case 0: case 1: }` (builds a
+	//     range tree), nesting the map test, and `s16`/`u8` stage types.
+	// (2) Frame 0x40 against the ROM's 0x58 -- 24 bytes of inline-expansion
+	//     temporaries below the `this` copy at 0x28 (ours at 0x14).
 	if (gpMarDirector->getCurrentMap() == 58 && (stage == 0 || stage == 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
@@ -121,6 +144,11 @@ void CPolarSubCamera::startJetCoasterCam1()
 {
 	unk2B0->startDemo(cJetCoasterCam1BckName, nullptr);
 	unk2B0->setFrame(gpMarDirector->unk58 * 0.5f);
+	// TODO: JetCoasterDemoCallBack, which inlines this body, is
+	// instruction-identical with frame 0x20 against retail's 0x30: 16 bytes
+	// missing from the inline-expansion region, i.e. four temporaries this
+	// helper's retail body bound and ours does not. SMSGetMarDirector() over
+	// gpMarDirector here is worth zero.
 }
 
 static s32 JetCoasterDemoCallBack(u32 param_1, u32 param_2)
@@ -870,6 +898,10 @@ void CPolarSubCamera::ctrlGameCamera_()
 	if (unk282 != 0)
 		unk282 -= 1;
 
+	// The stack layout says `code` was declared before `marPos`: retail puts
+	// it at 0xf8 and `marPos` at 0xec, and offsets increase in reverse
+	// declaration order.
+	int code;
 	JGeometry::TVec3<f32> marPos = *gpMarioPos;
 	f32 yOffset;
 	if (isNormalDeadDemo()) {
@@ -893,7 +925,6 @@ void CPolarSubCamera::ctrlGameCamera_()
 			if (!gpMarDirector->isTalkModeNow())
 				changeCamMode_(mInitialMode);
 		} else if (!isSimpleDemoCamera()) {
-			int code;
 			if (controlByCameraCode_(&code))
 				execCameraModeChangeProc_(code);
 		}

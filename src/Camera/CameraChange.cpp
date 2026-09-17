@@ -9,13 +9,18 @@
 #include <Camera/CameraMapTool.hpp>
 #include <Camera/camerasave.hpp>
 #include <Camera/CameraKindParam.hpp>
-#include <System/StageUtil.hpp>
 #include <System/MarDirector.hpp>
 #include <Camera/CameraMarioData.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+// Declared rather than included from <System/StageUtil.hpp>: that header
+// carries the shine/scenario/normal-stage tables as file statics, and the map
+// lists none of them for this TU.
+bool SMS_isMultiPlayerMap();
+bool SMS_isExMap();
 
 void CPolarSubCamera::getLButtonCameraModeByNozzle_() { }
 
