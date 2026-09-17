@@ -157,7 +157,14 @@ public:
 
 class TSamboFlowerManager : public TEnemyManager {
 public:
-	TSamboFlowerManager(const char* name);
+	TSamboFlowerManager(const char* name)
+	    : TEnemyManager(name)
+	    , mCoinUnits(nullptr)
+	    , mCoinUnitNum(0)
+	    , unk5C(0)
+	    , mLeaves(nullptr)
+	{
+	}
 
 	virtual ~TSamboFlowerManager() { }
 	virtual void load(JSUMemoryInputStream&);

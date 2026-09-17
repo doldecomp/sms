@@ -9,6 +9,7 @@
 #include <Enemy/BossWanwan.hpp>
 #include <Enemy/BossEel.hpp>
 #include <Enemy/BossHanachan.hpp>
+#include <Enemy/SleepBossHanachan.hpp>
 #include <Enemy/TypicalEnemy.hpp>
 #include <Animal/AnimalNerve.hpp>
 #include <NPC/NpcNerve.hpp>

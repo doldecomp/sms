@@ -28,6 +28,7 @@ static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 #include <Enemy/BathtubPeach.hpp>
 #include <Enemy/BossEel.hpp>
 #include <Enemy/BossHanachan.hpp>
+#include <Enemy/SleepBossHanachan.hpp>
 #include <Enemy/BossManta.hpp>
 #include <Enemy/BossPakkun.hpp>
 #include <Enemy/BossTelesaObj.hpp>
@@ -67,12 +68,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "EMario") == 0)
 		return new TEMario("マリオモドキ");
 
-	// TODO: blocked on a one-word shared-header bug, not on this unit:
-	// Enemy/Emario.hpp declares TEMarioManager with `class` and never opens a
-	// `public:` section, so its constructor is private and this branch does
-	// not compile.  Retail's branch is
-	//   new TEMarioManager("典型敵マネージャ")   -- new 0x54,
-	// out-of-line __ct__14TEMarioManagerFPCc.
+	if (strcmp(name, "EMarioManager") == 0)
+		return new TEMarioManager("典型敵マネージャ");
 
 	if (strcmp(name, "BossHanachan") == 0)
 		return new TBossHanachan("?");
@@ -80,21 +77,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BossHanachanManager") == 0)
 		return new TBossHanachanManager("?");
 
-	// TODO: blocked on a shared-header collision, not on this unit.
-	// DECLARE_NERVE(TNerveSBH_Fall) and DECLARE_NERVE(TNerveSBH_SleepContinue)
-	// appear in BOTH Enemy/BossHanachan.hpp (lines 317-318) and
-	// Enemy/SleepBossHanachan.hpp (lines 34-35), so the two headers cannot be
-	// included together ("class tag redefined").  The nerves are defined in
-	// Enemy/SleepBossHanachan.cpp, so the BossHanachan.hpp pair are the strays
-	// and should be deleted there; this unit needs both headers for the four
-	// Hanachan branches.  Retail's two branches are:
-	//   new TSleepBossHanachan("?")          -- new 0x160, in-class ctor:
-	//       TSpineEnemy(name), mShinePosition(0, 0, 0), mMirrorActor(nullptr)
-	//       (the TVec3 set<f> there is this TU's third map symbol)
-	//   new TSleepBossHanachanManager("?")   -- new 0x58, in-class ctor:
-	//       TEnemyManager(name) then
-	//       mSaveParams = new TDemoBossHanachanSaveParams(
-	//           "/enemy/sleepBossHanachan.prm")   -- inner new 0x30
+	if (strcmp(name, "SleepBossHanachan") == 0)
+		return new TSleepBossHanachan("?");
+
+	if (strcmp(name, "SleepBossHanachanManager") == 0)
+		return new TSleepBossHanachanManager("?");
 
 	if (strcmp(name, "BossEel") == 0)
 		return new TBossEel("?");

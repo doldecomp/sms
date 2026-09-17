@@ -36,6 +36,7 @@ public:
 };
 
 class TEMarioManager : public TEnemyManager {
+public:
 	TEMarioManager(const char* name);
 
 	virtual void load(JSUMemoryInputStream&);

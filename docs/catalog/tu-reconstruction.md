@@ -45,6 +45,14 @@ A unit's `_bastable` names only some animation slots, but the model's `.bck` fil
 
 An effect owner argument of `this + sizeof(T)` or `this + 2 * sizeof(T)` is the original's `this + 1` / `this + 2`, giving each looping emitter a distinct key; it also confirms the class size (`TAmiNoko::emitEffects`, 0x214).
 
+## Factories are a complete oracle for class shape
+
+Per `MarNameRefGen_*` branch: `li r3, N; bl __nw__` gives `sizeof`; `bl __ct__X` names the class whose constructor is **out of line**; a following `lis/addi __vt__Y; stw 0(obj)` (plus `addi r0, r3, 0x24; stw r0, 0x20(obj)` for a second vptr) proves Y's constructor was in-class and names Y; a derived constructor absent from the whole map confirms it. Intermediate vptr stores survive, so an abstract middle class is visible, and a member allocation stored *between* the base vptr store and the derived one proves the `new` lives in the base constructor's body. Script it: join the string pool to the `addi r4, r31, off` / `li r4, @NNNN@sda21` keys and the ladder falls out (22 in-class constructors recovered in `_Enemy`, 28 in `_NPC`; the measured 14-header patch made `_NPC` fully matching and linked).
+A missing brace in a long `if` ladder is diagnosed from the data section: `.rodata` simply ends at the last reachable branch's string while `.text` still scores 90%. Compare section sizes before reading a diff.
+Marker subclasses: a weak `__vt__X` + `__dt__XFv` in one TU, byte-identical to the base's vtable apart from the destructor slot, is a marker subclass with an in-class constructor and implicit destructor; declaring it in the `.cpp` reproduces both symbols (four for four).
+`MarNameRefGen_BossEnemy` needs a third string-pool block: TU-local `static const char cDirtyFileName[]`/`cDirtyTexName[]` (0x34) between `DummyStrings` and `InfectiousStrings`; the map has that pair `(object,local)` in every Player TU plus a handful of others, so it comes from a still-unidentified shared Player header.
+Sizes the factories prove wrong in current headers: `TKazekunManager` 0x64 (not 0x60), `TKazekun` 0x1d4 (not 0x1b4), `TLimitKoopa` 0x1c8 (not 0x1bc). `LimitKoopa.hpp`'s nine inline `theNerve()` bodies cost every includer 12 bytes of `.bss` each (`MarNameRefGen_BossEnemy`'s `__sinit` is 0x6c off); split them into a `LimitKoopaNerve.hpp`.
+
 ## MoveBG: names, sizes and depth from the factory
 
 - For classes whose constructor is inlined everywhere (no `__ct__` in the map), `MarNameRefGen_MapObj.cpp`'s string pool pairs the lookup name with the Japanese default in adjacent `@NNNN` objects, and `li r3, 0xNNN; bl __nw__` at each site gives `sizeof` (every name and size in `MapObjMamma`/`MapObjMonte`, including copy-pasted defaults and classes that add no fields).

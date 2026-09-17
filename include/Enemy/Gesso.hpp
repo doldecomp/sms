@@ -196,7 +196,10 @@ public:
 
 class TSurfGesso : public TGesso {
 public:
-	TSurfGesso(const char* name = "サーフゲッソー");
+	TSurfGesso(const char* name = "サーフゲッソー")
+	    : TGesso(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -205,7 +208,10 @@ public:
 
 class TLandGesso : public TGesso {
 public:
-	TLandGesso(const char* name = "平地ゲッソー");
+	TLandGesso(const char* name = "平地ゲッソー")
+	    : TGesso(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };

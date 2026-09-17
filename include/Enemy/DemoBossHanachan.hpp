@@ -19,21 +19,27 @@ public:
 	void initBase(TLiveManager*, u32);
 };
 
-class TDemoBossHanachanManager : public TEnemyManager {
-public:
-	virtual ~TDemoBossHanachanManager() { }
-	virtual void clipEnemies(JDrama::TGraphics*);
-
-public:
-	/* 0x54 */ TDemoBossHanachanSaveParams* mSaveParams;
-};
-
 class TDemoBossHanachanSaveParams : public TParams {
 public:
 	TDemoBossHanachanSaveParams(const char*);
 
 	/* 0x08 */ TParamRT<f32> mSLViewClipFar;
 	/* 0x1C */ TParamRT<f32> mSLViewClipRadius;
+};
+
+class TDemoBossHanachanManager : public TEnemyManager {
+public:
+	TDemoBossHanachanManager(const char* name, const char* prm)
+	    : TEnemyManager(name)
+	{
+		mSaveParams = new TDemoBossHanachanSaveParams(prm);
+	}
+
+	virtual ~TDemoBossHanachanManager() { }
+	virtual void clipEnemies(JDrama::TGraphics*);
+
+public:
+	/* 0x54 */ TDemoBossHanachanSaveParams* mSaveParams;
 };
 
 #endif

@@ -10,6 +10,8 @@ class TSleepBossHanachan : public TDemoBossHanachan {
 public:
 	TSleepBossHanachan(const char* name)
 	    : TDemoBossHanachan(name)
+	    , mShinePosition(0.0f, 0.0f, 0.0f)
+	    , mMirrorActor(nullptr)
 	{
 	}
 
@@ -27,6 +29,11 @@ public:
 
 class TSleepBossHanachanManager : public TDemoBossHanachanManager {
 public:
+	TSleepBossHanachanManager(const char* name)
+	    : TDemoBossHanachanManager(name, "/enemy/sleepBossHanachan.prm")
+	{
+	}
+
 	virtual ~TSleepBossHanachanManager() { }
 	virtual void createModelData();
 };

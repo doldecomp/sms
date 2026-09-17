@@ -20,7 +20,10 @@ public:
 
 class TMewManager : public TAnimalManagerBase {
 public:
-	TMewManager(const char* name = "?");
+	TMewManager(const char* name = "?")
+	    : TAnimalManagerBase(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();

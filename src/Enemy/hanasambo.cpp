@@ -399,11 +399,6 @@ void TSamboFlowerManager::dropLeaf(JGeometry::TVec3<f32>& position,
 	}
 }
 
-TSamboFlowerManager::TSamboFlowerManager(const char* name)
-    : TEnemyManager(name)
-{
-}
-
 void TSamboFlower::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);

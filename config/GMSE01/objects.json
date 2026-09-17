@@ -401,5 +401,6 @@
   "Enemy/egggen.cpp",
   "Camera/CameraTalk.cpp",
   "Map/MapCollisionEntry.cpp",
-  "Strategic/HitActor.cpp"
+  "Strategic/HitActor.cpp",
+  "System/MarNameRefGen_NPC.cpp"
 ]

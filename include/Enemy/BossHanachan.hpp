@@ -314,8 +314,6 @@ public:
 	/* 0x1C0 */ TBossHanachanChangeSaveParams* mChangeParams;
 };
 
-DECLARE_NERVE(TNerveSBH_Fall, TLiveActor);
-DECLARE_NERVE(TNerveSBH_SleepContinue, TLiveActor);
 DECLARE_NERVE(TNerveBossHanachanDead, TLiveActor);
 DECLARE_NERVE(TNerveBossHanachanSnort, TLiveActor);
 DECLARE_NERVE(TNerveBossHanachanDamage, TLiveActor);

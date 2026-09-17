@@ -121,7 +121,10 @@ public:
 
 class TStayPakkun : public TPakkun {
 public:
-	TStayPakkun(const char* name);
+	TStayPakkun(const char* name)
+	    : TPakkun(name)
+	{
+	}
 
 	// Declared in vtable order; TStayPakkun adds no new slots.
 	virtual ~TStayPakkun() { }
