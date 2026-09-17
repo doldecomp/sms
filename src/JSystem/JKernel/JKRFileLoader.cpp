@@ -123,9 +123,9 @@ bool JKRFileLoader::detachResource(void* resource, JKRFileLoader* fileLoader)
 	return false;
 }
 
-long JKRFileLoader::getResSize(void* resourceBuffer, JKRFileLoader* fileLoader)
+s32 JKRFileLoader::getResSize(void* resourceBuffer, JKRFileLoader* fileLoader)
 {
-	long ret = -1; // TODO: this feels wrong, but it matches, so whatever?
+	s32 ret = -1; // TODO: this feels wrong, but it matches, so whatever?
 
 	if (fileLoader != nullptr)
 		return fileLoader->getResSize(resourceBuffer);

@@ -26,7 +26,7 @@ public:
 	virtual void removeResourceAll()                       = 0;
 	virtual bool removeResource(void*)                     = 0;
 	virtual bool detachResource(void*)                     = 0;
-	virtual long getResSize(const void*) const             = 0;
+	virtual s32 getResSize(const void*) const              = 0;
 	virtual u32 countFile(const char*) const               = 0;
 	virtual JKRFileFinder* getFirstFile(const char*) const = 0;
 
@@ -37,7 +37,7 @@ public:
 
 	static void* getGlbResource(const char*);
 	static void* getGlbResource(const char*, JKRFileLoader* fileLoader);
-	static long getResSize(void* resourceBuffer, JKRFileLoader* fileLoader);
+	static s32 getResSize(void* resourceBuffer, JKRFileLoader* fileLoader);
 	static size_t readGlbResource(void* resourceBuffer, u32 bufferSize,
 	                              const char* path);
 	static size_t readGlbResource(void* resourceBuffer, u32 bufferSize,

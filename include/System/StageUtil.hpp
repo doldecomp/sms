@@ -97,7 +97,7 @@ static s16 SMS_getShineID(u32 stage, u32 scenario, bool is_etc_shine)
 // size matches
 static bool SMS_isGetShine(u32 stage, u32 scenario, bool is_etc_shine)
 {
-	s32 shineId = SMS_getShineID(stage, scenario, is_etc_shine);
+	s16 shineId = SMS_getShineID(stage, scenario, is_etc_shine);
 	if (shineId == -1)
 		return false;
 	return TFlagManager::getInstance()->getShineFlag(shineId);
