@@ -299,7 +299,7 @@ int TMarDirector::changeState()
 
 	case STATE_UNK1:
 		if (unk4E & 4) {
-			if (mConsole->unk94->unk2BC == 4) {
+			if (mConsole->unk94->unk2B8 == 4) {
 				nextState = STATE_UNK3;
 				unk4E &= ~0x4;
 			}
@@ -320,9 +320,9 @@ int TMarDirector::changeState()
 
 	case STATE_UNK3:
 		if (gpApplication.mCurrArea.unk0 == 1) {
-			if (mConsole->unk94->unk2BC == 6)
+			if (mConsole->unk94->unk2B8 == 6)
 				nextState = STATE_UNK2;
-		} else if (mConsole->unk94->unk2BC == 6
+		} else if (mConsole->unk94->unk2B8 == 6
 		           && !gpMarioOriginal->checkStatusType(
 		               MARIO_STATUS_FLAG_UNK1000)) {
 			nextState = STATE_UNK4;
