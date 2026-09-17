@@ -236,6 +236,29 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - Ruled out: `JUtility::TColor(const GXColor&)` or `set(const GXColor&)` (costs `JSGSetColor` and `TMapObjElasticCode::draw` their exact match; both halves of the copy are load-bearing). MSL C-mode audit: `sinf/cosf/tanf/atan2f/powf` are real globals, `fmod` is never defined, `fabsf/fabs` are already inline for C; `sqrtf` was the only one.
 - `turnToCurPathNode` returns `BOOL` (three sites, all up). `MSStageCubeFade`'s statics exist (`BeakDamage` 88 -> 97).
 
+## Rules from Player sweep 2
+
+- Bounded re-dispatch loops: `li rN, 0` in the pre-header plus `addi rN,rN,1; cmpwi rN,K; bgt exit` above the loop test is `if (++passes > K) break;`; two `addi`s around the `cmpwi` mean two increments (`for (i = 0; ...; i++) { if (++i > 4) break; }`, the `for` increment hoisted above the `bgt`).
+- `fmadds` fusion needs register operands: `sqrtf(a*a + b*b)` over raw loads gives two `fmuls` + `fadds`; naming the components in `f32` locals fuses the *left* multiply with the right one's `fmuls` as the addend; first declared gets the higher FPR. Swapping terms only changes load order; the accumulate form does not fuse.
+- `const T& x = obj->getStruct();` keeps a by-value return's temp out of the named-local region (tell: a 12-byte slot below the lowest named local); `T x = ...` adds a second temp and a word-wise copy.
+- A struct-returning virtual is `r3` = hidden return pointer, `r4` = `this` (`lwz r12, 0(r4)` with `addi r3, r1, N` is not an out-parameter call). Decode the vtable before naming the slot.
+- `Vec v = { a, b, c };` with non-constant elements emits an all-zero 12-byte `.rodata` template, block-copies it, then stores the components (six such objects in `MarioDraw`).
+- Repeated `(u8)(s32)` float-to-byte conversions get hoisted (once, before the blocks); param `.get()`s do not, only their addresses (`addi r3, this, 0x2358` + `lbz`).
+- The `-8/+8` for a branching bool predicate vs `return a == b;` reproduces exactly (`isSwimWaiting` 0x1c vs 0x14).
+- A `weak` in-class body that retail *calls* at depth 1 exists: `TYoshi::onYoshi()` (0x1c, emitted from `MarioMove.o`, called by `TMario::onYoshi`). The statement-count table's "no limit at depth 1 for `inline`" has at least this exception; open.
+
+## Rules from `MapObjDolpic` and `MapObjRailBlock`
+
+- `__sinit`'s JAL-list order is reverse include order, and a duplicate include inverts it: an early `MSound/MSoundBGM.hpp` put `MSBgm` last where retail has it first (`__sinit` 9.7 -> 100 by removing it; the pair must be the *last two* rogue includes with no earlier copy). Check every nonmatching `__sinit` for an early `MSoundBGM.hpp`.
+- `getMActor()` over `mMActor` permutes callee-saved registers with no frame change (`TDemoCannon::initMapObj` 99.2 -> 100): a codegen lever, not a frame one. Likewise a named pointer local is worth zero bytes but can fix allocation (`TGraphTracer* tracer = unk138;` put `this` in r30 and the tracer in r31 as retail).
+- `MsAngleDiff` takes the goal first: the bounds `alpha - 180`/`180 + alpha` are built from the *first* argument, so the asm says which is `alpha` (`TMonumentShine::control` 97 -> 100).
+- A named fetch is exactly one statement and that decides a call: `TRailMapObj::load` at nine statements inlined into `TWoodBlock::load` (depth 2, allowance nine); a named `TGraphWeb* graph` makes ten and `TWoodBlock::load` went 45 -> 100 with `TRailMapObj::load` byte-identical. Cleanest confirmation of the statement table in the *adding* direction.
+- `TPosition3f` for a scratch matrix, second confirmation (`TNormalLift::setGroundCollision` 96 -> 100 with the out-of-line copy still exact).
+- `&getPosition()` is a +8 frame lever that hoists the address; `getPosition().x/y/z` is +8/+16 with no instruction change; `unk8` raw over `getUnk8()` is -8. All per site.
+- "Distance then step" blocks use one vector: copy the return buffer into a named displacement and subtract `mPosition` in place; the two-vector `sub(a, b)` spelling costs ~15 instructions.
+- An unsigned 0x4330 conversion identifies a `u16` field (`TRailNode::mSpeed` at +0x12 is `u16`, not `s16`; open header item), and `TVec3::set(pitch, yaw, roll)` batches the three loads.
+- Open header items: `TGraphTracer::traceSpline` returns `BOOL` (bare `mr r30, r3`), `checkMarioVoicePlaying` returns `JAISound*`. `TRailMapObj::initGraphTracer` still needs its pre-existing `#pragma dont_inline`: retail's body had 15+ statements, ours ~7 at 99.9% (removing the pragma drops `load` to 0).
+
 ## Rules from `GCConsole2` (GC2D)
 
 - `TFlagManager::getInstance()` vs `smInstance->` is a codegen lever: the accessor materialises the pointer into `r0` and adds `mr r3, r0` at a function's first call (`checkDolpic8` 96 -> 99 with `smInstance`); per function.
