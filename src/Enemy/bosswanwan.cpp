@@ -303,20 +303,18 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 				mOwner->mIsLeashStretched = 1;
 			}
 
-			f32 yaw  = MsAngleWrap(180.0f + MsGetRotFromZaxisY(toTail));
+			f32 yaw
+			    = MsWrap(180.0f + MsGetRotFromZaxisY(toTail), 0.0f, 360.0f);
 			f32 turn = MsAngleDiff(yaw, mOwner->mRotation.y);
 			if (turn > 0.0f) {
 				f32 limit = 1.5f * mOwner->getTurnSpeed();
-				if (turn <= limit)
-					limit = turn;
-				turn = limit;
+				turn      = turn > limit ? limit : turn;
 			} else {
 				f32 limit = 1.5f * -mOwner->getTurnSpeed();
-				if (turn <= limit)
-					turn = limit;
+				turn      = turn > limit ? turn : limit;
 			}
 			mOwner->mRotation.y
-			    = MsAngleWrap(mOwner->mRotation.y + turn);
+			    = MsWrap(mOwner->mRotation.y + turn, 0.0f, 360.0f);
 		}
 	}
 
@@ -909,9 +907,7 @@ void TBossWanwan::shakeCamera(int mode)
 	if (!SMS_IsMarioTouchGround4cm())
 		return;
 
-	f32 dist = getDistToMarioSquared();
-	if (dist > 0.0f)
-		dist = JGeometry::TUtil<f32>::sqrt(dist);
+	f32 dist = MsSqrtf(getDistToMarioSquared());
 
 	f32 hotRange  = getSaveParam2()->mSLShakeLengthMax.get();
 	f32 coolRange = getSaveParam2()->mSLShakeLengthMaxHP0.get();
@@ -1140,22 +1136,25 @@ void TBossWanwan::slideToCurPathNode(f32 march_speed, f32 turn_speed)
 
 	f32 dist = VECMag(toGoal);
 
-	f32 yaw  = MsAngleWrap(MsGetRotFromZaxisY(toGoal));
-	f32 turn = MsAngleDiff(yaw, mRotation.y);
-	if (turn > 0.0f) {
-		if (turn > turn_speed)
-			turn = turn_speed;
+	f32 yaw  = MsWrap(MsGetRotFromZaxisY(toGoal), 0.0f, 360.0f);
+	f32 diff = MsAngleDiff(yaw, mRotation.y);
+
+	f32 turn;
+	if (diff > 0.0f) {
+		if (diff > turn_speed)
+			diff = turn_speed;
+		turn = diff;
 	} else {
-		if (turn <= -turn_speed)
-			turn = -turn_speed;
+		diff = diff > -turn_speed ? diff : -turn_speed;
+		turn = diff;
 	}
-	mRotation.y = MsAngleWrap(mRotation.y + turn);
+	mRotation.y = MsWrap(mRotation.y + turn, 0.0f, 360.0f);
 
 	JGeometry::TVec3<f32> velocity = mLinearVelocity;
 	if (dist > 0.0f)
 		toGoal.scale(march_speed / dist);
 	velocity.add(toGoal);
-	mLinearVelocity.set(velocity.x, velocity.y, velocity.z);
+	mLinearVelocity = velocity;
 }
 
 void TBossWanwan::control()
@@ -1168,19 +1167,16 @@ void TBossWanwan::control()
 		JGeometry::TVec3<f32> toTail(mPosition);
 		toTail -= mLeash->getRope()->mPoints[0].unk0;
 
-		f32 yaw  = MsAngleWrap(MsGetRotFromZaxisY(toTail));
+		f32 yaw  = MsWrap(MsGetRotFromZaxisY(toTail), 0.0f, 360.0f);
 		f32 turn = MsAngleDiff(yaw, mRotation.y);
 		if (turn > 0.0f) {
 			f32 limit = 4.0f * getTurnSpeed();
-			if (turn <= limit)
-				limit = turn;
-			turn = limit;
+			turn      = turn > limit ? limit : turn;
 		} else {
 			f32 limit = 4.0f * -getTurnSpeed();
-			if (turn <= limit)
-				turn = limit;
+			turn      = turn > limit ? turn : limit;
 		}
-		mRotation.y = MsAngleWrap(mRotation.y + turn);
+		mRotation.y = MsWrap(mRotation.y + turn, 0.0f, 360.0f);
 	}
 
 	mPullVelocity.set(0.0f, 0.0f, 0.0f);
