@@ -237,8 +237,8 @@ public:
 	/* 0x195 */ s8 unk195;
 	/* 0x196 */ s8 unk196;
 	/* 0x198 */ u32 unk198;
-	/* 0x19C */ u32 unk19C;
-	/* 0x1A0 */ u8 unk1A0;
+	/* 0x19C */ int unk19C;
+	/* 0x1A0 */ s8 unk1A0;
 	/* 0x1A1 */ s8 unk1A1;
 	/* 0x1A4 */ f32 unk1A4;
 	/* 0x1A8 */ int unk1A8;

@@ -694,6 +694,12 @@ void TBossGesso::definiteRumble() { }
 
 void TBossGesso::continuousRumble() { }
 
+// TODO: retail keeps this a `bl` inside perform while our build expands it
+// there (perform's largest remaining loss); splitting the two locals'
+// initialisations, naming the tentacle and replacing the `continue` with a
+// guarded block all leave the decision unchanged. The body itself differs only
+// in one contraction: retail fuses `x * x` into `y * y` with an `fmadds` that
+// our `squared()`/`dot()` spelling does not produce.
 f32 TBossGesso::lenFromToeToMario()
 {
 	f32 min = 100000.0f;
@@ -724,7 +730,30 @@ void TBossGesso::showMessage(u32 param_1)
 	unk198 |= flag;
 }
 
-void TBossGesso::checkTakeMsg() { }
+// TODO: the map size is 0x11c (284 bytes) and this body compiles to less; the
+// best candidates for the remainder are the CUE_MOVE rumble/timer block that
+// follows it in perform and the CUE_CALC_ANIM pull-sound block above it, and
+// neither reads as part of "check take message". Keeping showMessage() a `bl`
+// (retail) is why the block sits behind a call at all.
+void TBossGesso::checkTakeMsg()
+{
+	if (unk1A0)
+		return;
+
+	if (is2ndFightNow())
+		return;
+
+	JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
+	toMario -= mPosition;
+
+	if (toMario.squared() < 4000000.0f) {
+		unk19C++;
+		if (unk19C >= 1200) {
+			showMessage(4);
+			unk1A0 = 1;
+		}
+	}
+}
 
 void TBossGesso::changeBck(int param_1)
 {
@@ -1394,7 +1423,21 @@ void TBossGesso::calcRootMatrix()
 	TSpineEnemy::calcRootMatrix();
 }
 
-void TBossGesso::performInContainer(u32, JDrama::TGraphics*) { }
+void TBossGesso::performInContainer(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_CALC_ANIM) {
+		if (JDrama::TNameRefGen::search<THitActor>("container") == nullptr) {
+			changeAttackMode(ASTATE_SINGLE);
+		} else if (mTentacles[0]->mState != 4) {
+			JGeometry::TVec3<f32> pos(11603.0f, 2114.3f, 2411.4f);
+			mTentacles[0]->mNodes[0].setPosition(pos);
+			pos.x = 11510.0f;
+			mTentacles[0]->mNodes[1].setPosition(pos);
+		}
+	}
+
+	mTentacles[0]->testPerform(cue, graphics);
+}
 
 void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -1408,18 +1451,7 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		if (!unk1A0 && !is2ndFightNow() && mAttackMode == 6) {
-			JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
-			toMario -= mPosition;
-
-			if (toMario.squared() < 4000000.0f) {
-				unk19C++;
-				if (unk19C >= 1200) {
-					showMessage(0xE0004);
-					unk1A0 = 1;
-				}
-			}
-		}
+		checkTakeMsg();
 
 		if (mBeak->getHolder() != nullptr
 		    && mTimeInCurrentAttackMode % 4 == 0) {
@@ -1434,24 +1466,12 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (mAttackMode == 6) {
-		if (cue & CUE_CALC_ANIM) {
-			if (JDrama::TNameRefGen::search<THitActor>("container")
-			    == nullptr) {
-				changeAttackMode(0);
-			} else if (mTentacles[0]->mState != 4) {
-				JGeometry::TVec3<f32> pos(11603.0f, 2114.3f, 2411.4f);
-				mTentacles[0]->mNodes[0].setPosition(pos);
-				pos.x = 11510.0f;
-				mTentacles[0]->mNodes[1].setPosition(pos);
-			}
-		}
-
-		mTentacles[0]->testPerform(cue, graphics);
+		performInContainer(cue, graphics);
 		return;
 	}
 
 	if (cue & CUE_ENTRY) {
-		if (mSpine->getLatestNerve() == &TNerveBGBeakDamage::theNerve()) {
+		if (getLatestNerve() == &TNerveBGBeakDamage::theNerve()) {
 			SMS_AddDamageFogEffect(mMActor->getModel()->getModelData(),
 			                       mPosition, graphics);
 		} else {
@@ -1485,8 +1505,12 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 		TCircleShadowRequest request;
 
 		MtxPtr joint = mMActor->getModel()->getAnmMtx(1);
-		request.mPosition
-		    = JGeometry::TVec3<f32>(joint[0][3], mPosition.y, joint[2][3]);
+
+		JGeometry::TVec3<f32> shadowPos;
+		shadowPos.x      = joint[0][3];
+		shadowPos.y      = mPosition.y;
+		shadowPos.z      = joint[2][3];
+		request.mPosition = shadowPos;
 
 		JGeometry::TVec3<f32> right(joint[0][0], joint[1][0], joint[2][0]);
 		JGeometry::TVec3<f32> front(joint[0][2], joint[1][2], joint[2][2]);
@@ -1543,7 +1567,7 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	for (int i = 0; i < TENTACLE_NUM; ++i) {
 		if (cue & CUE_ENTRY) {
-			if (mSpine->getLatestNerve() == &TNerveBGBeakDamage::theNerve()) {
+			if (getLatestNerve() == &TNerveBGBeakDamage::theNerve()) {
 				mTentacles[i]->unk2C->offMakeDL();
 				SMS_AddDamageFogEffect(
 				    mTentacles[i]->unk2C->getModel()->getModelData(), mPosition,
@@ -1568,13 +1592,10 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		if (mBeak->getHolder() != nullptr && unk190.color.a == 0) {
-			int left  = mTentacles[1]->mState;
-			int right = mTentacles[3]->mState;
-
-			if (!((left == 4 || left == 6 || left == 3)
-			      && (right == 4 || right == 6 || right == 3))) {
-				gpMarDirector->mConsole->startAppearBalloon(0xE0003, true);
+		if (mBeak->mHolder != nullptr && unk190.color.a == 0) {
+			if (!(isTentacleBusy(mTentacles[1])
+			      && isTentacleBusy(mTentacles[3]))) {
+				gpMarDirector->mConsole->startAppearBalloon(3, true);
 			}
 		}
 	}
