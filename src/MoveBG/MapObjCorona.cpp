@@ -28,8 +28,8 @@
 #include <math.h>
 
 // These game sound headers emit the lists present in this TU's static init.
-#include <MSound/MSoundBGM.hpp>
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TBathtubParams::TBathtubParams()
     : TParams("/MapObj/bathtub.prm")
