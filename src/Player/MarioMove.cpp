@@ -1853,6 +1853,7 @@ void TMario::checkPlayerAction(JDrama::TGraphics* graphics)
 void TMario::stateMachine()
 {
 	int result = 1;
+	int passes = 0;
 	while (result != 0) {
 		switch (mStatus & MARIO_STATUS_TYPE_MASK) {
 		case MARIO_STATUS_TYPE_WAITING:
@@ -1877,6 +1878,11 @@ void TMario::stateMachine()
 			result = actnMain();
 			break;
 		}
+
+		// The state handlers can hand control to another state, so the ROM
+		// gives up after ten passes rather than spinning.
+		if (++passes > 10)
+			break;
 	}
 }
 
