@@ -395,6 +395,33 @@ TFireWanwanTailNode::TFireWanwanTailNode(MActor* actor)
 {
 }
 
+// fabricated: the unguarded to-dir frame TFireWanwanTailNode::perform expands.
+// It is not
+// SMS_CalcToDirMatrix: the global copy of that (Kazekun.cpp, 0x23c) tests each
+// axis with isZero() and falls back to a unit axis, and calling it here drops
+// perform 97.3% -> 37.8%. TFireWanwanTailHit::perform does call the global and
+// gains 73.4% -> 92.4% from it, so the two sites really do use different code.
+// TODO: the map has no symbol for this helper at all, not even UNUSED, so
+// whether the original was a static like this or seven statements written out
+// in perform is unknown; written out in place the function is 63.6%, because
+// the `up` temporary then binds one inline level shallower.
+static inline void CalcToDirMatrixNoGuard(TPosition3f& mtx,
+                                          const JGeometry::TVec3<f32>& dir,
+                                          const JGeometry::TVec3<f32>& up)
+{
+	JGeometry::TVec3<f32> xDir;
+	xDir.cross(up, dir);
+	xDir.setLength(xDir, 1.0f);
+
+	JGeometry::TVec3<f32> yDir;
+	yDir.cross(dir, xDir);
+	yDir.setLength(yDir, 1.0f);
+
+	mtx.setXDir(xDir);
+	mtx.setYDir(yDir);
+	mtx.setZDir(dir);
+}
+
 void TFireWanwanTailNode::setBarAnmMtx(MtxPtr mtx)
 {
 	mMActor->getModel()->setAnmMtx(mJointIdx, mtx);
@@ -408,8 +435,8 @@ void TFireWanwanTailNode::perform(u32 cue, JDrama::TGraphics* graphics,
 	if (cue & CUE_CALC_ANIM) {
 		TPosition3f mtx;
 
-		SMS_CalcToDirMatrix(mtx, param_4,
-		                    JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+		CalcToDirMatrixNoGuard(mtx, param_4,
+		                       JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 
 		mtx.setTrans(param_3);
 

@@ -4,6 +4,7 @@
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <Player/MarioAccess.hpp>
@@ -49,11 +50,6 @@ static const char* Kazekun_bastable[] = {
 // Builds an orthonormal frame whose Z axis points along `dir`, using `up` as
 // the hint for the other two. The map has this as a global function living in
 // this TU; wireTrap and fireWanwan call it out of line.
-//
-// TODO: include/MarioUtil/MtxUtil.hpp currently *defines* this as an inline,
-// which is wrong -- the map shows one global copy, here. That header has to be
-// reduced to a declaration, but it is out of scope for this batch, so this TU
-// deliberately does not include it.
 //
 // TODO: 91.3%. Every instruction matches except that retail keeps zAxis.y and
 // zAxis.z in f30/f31 across the xAxis inv_sqrt call while we reload them from

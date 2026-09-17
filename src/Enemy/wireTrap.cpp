@@ -6,6 +6,7 @@
 #include <Strategic/ObjModel.hpp>
 #include <Map/MapWire.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <JSystem/JMath.hpp>
@@ -34,14 +35,6 @@ enum {
 	WIRETRAP_JPA_MS_WRT_BIRI_A = 0x190,
 	WIRETRAP_JPA_MS_WRT_BIRI_B = 0x191,
 };
-
-// TODO: MtxUtil.hpp defines SMS_CalcToDirMatrix inline, but the map shows it
-// as a global function emitted from Kazekun.cpp, and the ROM calls it here.
-// Declaring it locally is the only way to get the call without editing
-// MarioUtil/MtxUtil.hpp (move the body to Kazekun.cpp and leave a declaration
-// in the header).
-void SMS_CalcToDirMatrix(TPosition3f&, const JGeometry::TVec3<f32>&,
-                         const JGeometry::TVec3<f32>&);
 
 namespace {
 // The one material of wire_trap.bmd whose TEV colour the mode tints.
