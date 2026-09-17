@@ -259,9 +259,11 @@ void THamuKuriManager::setSearchHamuKuri()
 			f32 canSearchDist = params->mSLCanSearchDist.get();
 
 			TMapObjBase* pTVar18 = nullptr;
-			f32 fVar1            = canSearchDist * canSearchDist;
+			f32 fVar1            = canSearchDist;
+			fVar1 *= canSearchDist;
 
-			for (int i = 0; i < unk68; ++i) {
+			int objNum = unk68;
+			for (int i = 0; i < objNum; ++i) {
 				TMapObjBase* uVar16 = unk64[i];
 				if (uVar16->checkLiveFlag(LIVE_FLAG_DEAD
 				                          | LIVE_FLAG_CLIPPED_OUT))
@@ -275,8 +277,8 @@ void THamuKuriManager::setSearchHamuKuri()
 				f32 len_sq = tmp.squared();
 
 				if (len_sq < fVar1) {
-					pTVar18 = uVar16;
 					fVar1   = len_sq;
+					pTVar18 = uVar16;
 				}
 			}
 
@@ -379,6 +381,7 @@ void THaneHamuKuriManager::createAnmData() { TObjManager::createAnmData(); }
 
 TDoroHaneKuriManager::TDoroHaneKuriManager(const char* name)
     : THaneHamuKuriManager(name)
+    , unk74(nullptr)
 {
 }
 
@@ -1269,6 +1272,12 @@ void THamuKuri::forceRoll(JGeometry::TVec3<f32> param_1, bool param_2)
 
 	MsVECNormalize(&local_20, &local_20);
 
+	// TODO: the ROM makes two copies here (into operator*'s by-value parameter
+	// and back); ours makes three because JGVec3.hpp's operator*(TVec3, f32)
+	// returns by value where operator-/operator+ return `const TVec3&`.
+	// Ruled out: making operator* return `const TVec3&` too -- it fixes this
+	// site but regresses ~15 functions across boid, telesa, beam, MapObjMare,
+	// MarioMove, MarioPhysics and Tongue.
 	if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 		local_20 = local_20 * unk1F4->mSLWaterAttackCoeff.get();
 	} else {
@@ -2082,6 +2091,7 @@ void TDangoHamuKuri::swingBody()
 
 TBossDangoHamuKuri::TBossDangoHamuKuri(const char* name)
     : TDangoHamuKuri(name)
+    , unk238(0)
 {
 }
 
@@ -2713,9 +2723,8 @@ DEFINE_NERVE(TNerveDangoHamuKuriWait, TLiveActor)
 
 	if (spine->getTime() < 2) {
 		self->setWaitAnm();
-		self->getMActor()
-		    ->getFrameCtrl(ANM_TYPE_BCK)
-		    ->setFrame(MsRandF(0.0f, 30.0f));
+		TMsRange<f32> frame(0.0f, 30.0f);
+		self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(frame.rand());
 	}
 
 	return false;
