@@ -128,8 +128,7 @@ void TMapObjBall::rebound(JGeometry::TVec3<f32>* param_1)
 
 void TMapObjBall::touchGround(JGeometry::TVec3<f32>* param_1)
 {
-	JGeometry::TVec3<f32> vel(mVelocity);
-	f32 speed = abs(vel.length());
+	f32 speed = abs(JGeometry::TVec3<f32>(getVelocity()).length());
 	if (speed > 0.05f) {
 		if (isActorType(0x400000D0)) {
 			// Big and small rolling samples, same split as rebound().
@@ -161,19 +160,19 @@ void TMapObjBall::touchGround(JGeometry::TVec3<f32>* param_1)
 	if (mVelocity.y > -unk188) {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.y = 0.0f;
-		param_1->y  = mGroundHeight;
+		param_1->y  = getGroundHeight();
 	} else {
 		rebound(param_1);
 	}
 
 	// Rolling downhill: the ground normal drags the ball along.
-	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
-		mVelocity.x += unk180 * mGroundPlane->mNormal.x;
-		mVelocity.z += unk180 * mGroundPlane->mNormal.z;
+	if (!isAirborne()) {
+		mVelocity.x += unk180 * getGroundPlane()->getNormal().x;
+		mVelocity.z += unk180 * getGroundPlane()->getNormal().z;
 	}
 
-	mVelocity.x *= mMapObjData->mPhysical->unk4->unk10;
-	mVelocity.z *= mMapObjData->mPhysical->unk4->unk10;
+	mVelocity.x *= getMapObjData()->mPhysical->unk4->unk10;
+	mVelocity.z *= getMapObjData()->mPhysical->unk4->unk10;
 }
 
 void TMapObjBall::put()
