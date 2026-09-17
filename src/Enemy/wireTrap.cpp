@@ -282,7 +282,15 @@ void TWireTrap::calcRootMatrix()
 	SMS_CalcToDirMatrix(mtx, dir, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 	mtx.getQuat(quat);
 
-	// The sparking body spins around its own Z axis as it slides.
+	// The sparking body spins around its own Z axis as it slides. The
+	// redundant `- 0.0f` / `0.0f +` are in the ROM, so the wrap was written
+	// against a zero lower bound rather than simplified away.
+	// TODO: the ROM calls a weak std::fmodf whose body is the
+	// JGeometry::TUtil<f32>::mod one (compare magnitudes, divide, truncate
+	// through u64, subtract). MSL_Common/math.h still forwards std::fmodf to
+	// the double ::fmod here, so this emits `bl fmod` and the unit is short
+	// the 0x5c copy the map lists. Fixing that header is the open shared
+	// change; see docs/catalog/codegen-tells.md.
 	mRotation.z += -17.75f;
 	mRotation.z = 0.0f + std::fmodf(360.0f + (mRotation.z - 0.0f), 360.0f);
 
