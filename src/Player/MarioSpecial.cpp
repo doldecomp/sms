@@ -21,7 +21,7 @@ void TMario::barJumpSetting() { }
 BOOL TMario::barWait()
 {
 	if (mHolder == nullptr)
-		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 
 	if (mInput & 0x2) {
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
@@ -34,7 +34,7 @@ BOOL TMario::barWait()
 	mPosition.y = mHolder->mPosition.y + mHolderHeightDiff;
 	mPosition.z = mHolder->mPosition.z;
 
-	if ((mInput & 0x10000) || mHolderHeightDiff > 100.0f) {
+	if ((mInput & 0x8000) || mHolderHeightDiff <= 100.0f) {
 		setPlayerVelocity(-2.0f);
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
 		mPosition.z -= 200.0f * JMASCos(mFaceAngle.y);
@@ -44,6 +44,9 @@ BOOL TMario::barWait()
 	if (unk108->mStickV > 16.0f)
 		return changePlayerStatus(MARIO_STATUS_BAR_CLIMB, 0, false);
 
+	// TODO: barWait's remaining difference is one fmadds operand order below
+	// (retail puts mStickV first; both source orders give the constant first)
+	// plus frame 0x80 vs 0xa8.
 	if (unk108->mStickV < -16.0f) {
 		mVel.y += unk108->mStickV * 0.001953125f;
 		mPosition.y += mVel.y;
@@ -647,6 +650,18 @@ BOOL TMario::taken()
 	return 0;
 }
 
+// TODO (shared header, not changed here): where this body is *inlined* --
+// wireWait, wireSWait, wireHanging, wireRolling, hanging -- retail is one
+// inline level shallower than we are. Retail calls TVec3::operator*=(f32) and
+// TVec3::TVec3(const TVec3&) there and inlines `scale`; we inline operator*=
+// and the copy constructor and call `scale`. The standalone copy below agrees
+// with retail, so the expression is right and only the depth allowance
+// differs: at depth 4 JGVec3.hpp's two-statement operator*= still expands for
+// us. That is ~78 extra instructions in wireWait and ~140 in wireHanging and
+// wireRolling. Fixing it means making operator*= (and the copy constructor)
+// one statement heavier in include/JSystem/JGeometry/JGVec3.hpp, which needs a
+// full changes_all sweep. `outPos->set(...)` instead of `*outPos = ...` was
+// tried and is worse (90.7% here, wireWait 67.0 -> 60.6).
 void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 {
 	JGeometry::TVec3<f32> start   = mWireStartPos;
@@ -663,7 +678,9 @@ void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 	Mtx concat;
 	MTXConcat(rotB, rotA, concat);
 
-	JGeometry::TVec3<f32> sagVec(0.0f, -mWireSag * 1.0f, 0.0f);
+	JGeometry::TVec3<f32> sagVec(0.0f,
+	                             -mWireSag * JGeometry::TUtil<f32>::one(),
+	                             0.0f);
 	MTXMultVec(concat, &sagVec, &sagVec);
 
 	outPos->x += sagVec.x;
@@ -963,7 +980,7 @@ BOOL TMario::wireHanging()
 	}
 
 	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
-	    && mWaterGun->canSpray()) {
+	    && mWaterGun->isEmitting()) {
 		s16 rotSp;
 		if (mWaterGun == nullptr) {
 			rotSp = 0;
@@ -1049,7 +1066,7 @@ BOOL TMario::wireRolling()
 	}
 
 	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
-	    && mWaterGun->canSpray()) {
+	    && mWaterGun->isEmitting()) {
 		s16 rotSp;
 		if (mWaterGun == nullptr) {
 			rotSp = 0;
