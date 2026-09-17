@@ -211,7 +211,7 @@ void TRailMapObj::setGroundCollision()
 
 	if (unk14A != 0
 	    && (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2) || getColNum() != 0)) {
-		TMtx34f mtx;
+		TPosition3f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
 		if (TMapCollisionBase* col = mMapCollisionManager->unk8)
 			col->moveMtx(mtx);
@@ -286,20 +286,21 @@ void TNormalLift::readRailFlag()
 {
 	TRailMapObj::readRailFlag();
 
-	TGraphWeb* graph = unk138->unk0;
+	TGraphWeb* graph = unk138->getGraph();
 
-	if (!unk138->unk0)
+	if (!graph)
 		return;
 
-	if (!graph->isDummy())
+	if (graph->isDummy())
 		return;
 
-	TRailNode* railNode = graph->getCurrentNode().getRailNode();
-	if (railNode->mFlags & 0x800) {
-		unk150 = railNode->mPitch;
-	}
-	if (railNode->mFlags & 0x1000) {
-		u16 roll = railNode->mRoll;
+	TGraphNode& node = graph->getGraphNode(unk138->getCurGraphIndex());
+
+	if (node.getRailNode()->mFlags & 0x800)
+		unk150 = node.getRailNode()->mPitch;
+
+	if (node.getRailNode()->mFlags & 0x1000) {
+		u16 roll = node.getRailNode()->mRoll;
 		if (roll == 0xffff)
 			roll = 0;
 		unk152 = roll;
@@ -529,7 +530,7 @@ void TRollBlock::setGroundCollision()
 		return;
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	if (TMapCollisionBase* col = mMapCollisionManager->getUnk8())
+	if (TMapCollisionBase* col = mMapCollisionManager->unk8)
 		col->moveMtx(mtx);
 }
 
