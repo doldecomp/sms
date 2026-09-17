@@ -23,17 +23,12 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
+// rogue includes needed for matching the string pool, sinit & bss
+#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <math.h>
 #include <stdlib.h>
-
-// The submarine's joints: the KoopaJr seat and the four killer launchers.
-static const char* TKoopaJr_jointNameTable[] = {
-	"KoopaJr_null",   "killer_null00", "killer_null03",
-	"killer_null01", "killer_null04",
-};
-static int TKoopaJr_jointIndexTable[5];
 
 static const char* koopajr_bastable[] = {
 	"/scene/koopajr/bas/koopajr_damage.bas",
@@ -42,6 +37,13 @@ static const char* koopajr_bastable[] = {
 };
 
 static const char* koopajrsubmarine_bastable[] = { nullptr };
+
+// The submarine's joints: the KoopaJr seat and the four killer launchers.
+static const char* TKoopaJr_jointNameTable[] = {
+	"KoopaJr_null",   "killer_null00", "killer_null03",
+	"killer_null01", "killer_null04",
+};
+static int TKoopaJr_jointIndexTable[5];
 
 #define TWO_PI 6.2831855f
 
@@ -590,7 +592,7 @@ TKoopaJrManager::TKoopaJrManager(const char* name)
 
 void TKoopaJrManager::createModelData()
 {
-	static TModelDataLoadEntry entry[] = {
+	static const TModelDataLoadEntry entry[] = {
 		{ "koopajr_model.bmd", 0, 0 },
 		{ nullptr },
 	};
@@ -1179,7 +1181,7 @@ TKoopaJrSubmarineManager::TKoopaJrSubmarineManager(const char* name)
 
 void TKoopaJrSubmarineManager::createModelData()
 {
-	static TModelDataLoadEntry entry[] = {
+	static const TModelDataLoadEntry entry[] = {
 		{ "LastKoopaJrSubmarine.bmd", 0, 0 },
 		{ nullptr },
 	};
