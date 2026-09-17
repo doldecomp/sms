@@ -17,7 +17,7 @@ void TMario::hitNormal(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y) {
-		if (mStatus == MARIO_STATUS_HIP_DROP) {
+		if (getStatus() == MARIO_STATUS_HIP_DROP) {
 			if (actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP)) {
 				if (actor->isActorType(0x8000001)) {
 					changePlayerTriJump();
@@ -37,8 +37,9 @@ void TMario::hitNormal(THitActor* actor)
 		return;
 	}
 
-	if (mStatus == MARIO_STATUS_CATCH || mStatus == MARIO_STATUS_OIL_SLIP
-	    || mStatus == MARIO_STATUS_JUMP_CATCH) {
+	if (getStatus() == MARIO_STATUS_CATCH
+	    || getStatus() == MARIO_STATUS_OIL_SLIP
+	    || getStatus() == MARIO_STATUS_JUMP_CATCH) {
 		actor->receiveMessage(this, HIT_MESSAGE_PUNCH);
 		actor->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 	}
@@ -151,7 +152,7 @@ void TMario::hangPole(THitActor* actor)
 	if (!checkStatusType(MARIO_STATUS_FLAG_UNK100000)) {
 		// TODO: dirty, needs inlines
 		u8 canHang = 0;
-		if (mHeldObject == nullptr && !onYoshi())
+		if (getHeldObject() == nullptr && !onYoshi())
 			canHang = 1;
 
 		u8 inHangStatus;
@@ -159,7 +160,7 @@ void TMario::hangPole(THitActor* actor)
 			inHangStatus = 0;
 		} else {
 			// TODO: inlines
-			u32 statLo = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
+			u32 statLo = getStatus() & MARIO_STATUS_TYPE_AND_ID_MASK;
 			if (statLo >= 0x80 && statLo <= 0x9F) {
 				inHangStatus = 1;
 			} else {
@@ -171,8 +172,8 @@ void TMario::hangPole(THitActor* actor)
 		}
 
 		if (inHangStatus == 1) {
-			f32 dz   = actor->mPosition.z - mPosition.z;
 			f32 dx   = actor->mPosition.x - mPosition.x;
+			f32 dz   = actor->mPosition.z - mPosition.z;
 			f32 dist = std::sqrtf(dx * dx + dz * dz);
 			if (dist == 0.0f)
 				dist = 1.0f;
@@ -263,9 +264,9 @@ void TMario::checkCollision()
 			f32 dist = std::sqrtf(dx * dx + dz * dz);
 
 			if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && !isHolding()
-			    && mVel.y < 0.0f && yt.y < mPosition.y && mStatus != 0x89C
-			    && mStatus != MARIO_STATUS_THROWN_DOWN
-			    && mStatus != MARIO_STATUS_BACK_JUMP && dist < 180.0f) {
+			    && mVel.y < 0.0f && yt.y < mPosition.y && getStatus() != 0x89C
+			    && getStatus() != MARIO_STATUS_THROWN_DOWN
+			    && getStatus() != MARIO_STATUS_BACK_JUMP && dist < 180.0f) {
 				mPosition       = mYoshi->getTranslation();
 				mFaceAngle.y    = mYoshi->mEggRotSpeed;
 				mModelFaceAngle = mFaceAngle.y;
@@ -290,24 +291,25 @@ void TMario::checkCollision()
 		}
 	}
 
-	for (s32 i = 0; i < (s32)mColCount; i++) {
-		if (mCollisions[i]->checkActorType(ACTOR_TYPE_UNK4000000)) {
-			hitNpc(mCollisions[i]);
+	for (s32 i = 0; i < (s32)getColNum(); i++) {
+		u32 colType = getCollision(i)->getActorType();
+		if (getCollision(i)->checkActorType(ACTOR_TYPE_UNK4000000)) {
+			hitNpc(getCollision(i));
 			continue;
 		}
 
-		switch (mCollisions[i]->getActorType()) {
+		switch (colType) {
 		// Other mario (enemy mario?)
 		case 0x80000001:
-			hitMario(mCollisions[i]);
-			keepDistance(*mCollisions[i], 0.0f);
+			hitMario(getCollision(i));
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		// Some item?
 		case 0x20000008:
 		case 0x2000000A:
 		case 0x2000000C:
-			hitNormal(mCollisions[i]);
+			hitNormal(getCollision(i));
 			break;
 
 		// Most crap: namekuri, hamukuri, etc
@@ -340,53 +342,56 @@ void TMario::checkCollision()
 		case 0x10000031:
 		case 0x10000037:
 		case 0x4000019A:
-			hitNormal(mCollisions[i]);
+			hitNormal(getCollision(i));
 			break;
 
 		// ???
 		case 0x8000011:
-			hitHipDrop(mCollisions[i]);
+			hitHipDrop(getCollision(i));
 			break;
 
 		// Kumokun
 		case 0x1000002C:
-			hitNormal(mCollisions[i]);
-			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
-				keepDistance(*mCollisions[i], 0.0f);
+			hitNormal(getCollision(i));
+			if (((TSmallEnemy*)getCollision(i))->doKeepDistance())
+				keepDistance(*getCollision(i), 0.0f);
 			// fall through
 
 		// ???
 		case 0x10000021:
+			// The one site in this loop that reads the array directly: the
+			// accessor puts the base address in r3 instead of r4 here, which
+			// is the last difference in the function.
 			hitHipDrop(mCollisions[i]);
 			// fall through
 
 		// Amiking
 		case 0x10000034:
-			if (mStatus == MARIO_STATUS_FENCE_PUNCH
+			if (getStatus() == MARIO_STATUS_FENCE_PUNCH
 			    && 5.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 9.0f) {
-				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_PUNCH);
+				getCollision(i)->receiveMessage(this, HIT_MESSAGE_PUNCH);
 			}
-			if (mStatus == MARIO_STATUS_KICK_ROOF
+			if (getStatus() == MARIO_STATUS_KICK_ROOF
 			    && 9.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 13.0f) {
-				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_PUNCH);
+				getCollision(i)->receiveMessage(this, HIT_MESSAGE_PUNCH);
 			}
 			break;
 
 		// Tama noko and something else
 		case 0x10000018:
 		case 0x1000001E:
-			hitPickUpEnemy(mCollisions[i]);
+			hitPickUpEnemy(getCollision(i));
 			break;
 
 		// Mame gesso
 		case 0x10000008: {
-			TSmallEnemy* enemy = (TSmallEnemy*)mCollisions[i];
+			TSmallEnemy* enemy = (TSmallEnemy*)getCollision(i);
 			if (enemy->doKeepDistance())
-				keepDistance(*mCollisions[i], 0.0f);
+				keepDistance(*getCollision(i), 0.0f);
 			else
-				hitPickUpEnemy(mCollisions[i]);
+				hitPickUpEnemy(getCollision(i));
 			break;
 		}
 
@@ -395,7 +400,7 @@ void TMario::checkCollision()
 		case 0x8000023:
 		case 0x10000033:
 		case 0x400001A6:
-			keepDistance(*mCollisions[i], 0.0f);
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		// P: hitNormal + virt[0x19C] check + keepDist
@@ -404,14 +409,14 @@ void TMario::checkCollision()
 		case 0x10000015:
 		case 0x1000002A:
 		case 0x1000002D:
-			hitNormal(mCollisions[i]);
-			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
-				keepDistance(*mCollisions[i], 0.0f);
+			hitNormal(getCollision(i));
+			if (((TSmallEnemy*)getCollision(i))->doKeepDistance())
+				keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		// A3: hitNormal (placed between P and R2 for body emission order)
 		case 0x10000016:
-			hitNormal(mCollisions[i]);
+			hitNormal(getCollision(i));
 			break;
 
 		// ???
@@ -423,7 +428,7 @@ void TMario::checkCollision()
 		case 0x8000015:
 		case 0x10000027:
 		case 0x10000035:
-			keepDistance(*mCollisions[i], 0.0f);
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		// Damaging parts of boss gesso and other stuff
@@ -431,7 +436,7 @@ void TMario::checkCollision()
 		case 0x8000005:
 		case 0x8000007:
 		case 0x10000022:
-			keepDistance(*mCollisions[i], 0.0f);
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		// Enemies with pull-able parts --
@@ -441,29 +446,29 @@ void TMario::checkCollision()
 		case 0x800000D:
 		case 0x8000083:
 		case 0x10000028:
-			hitNoKeepPull(mCollisions[i]);
+			hitNoKeepPull(getCollision(i));
 			break;
 
 		// Nozzle box
 		case 0x20000068:
-			hitNormal(mCollisions[i]);
-			keepDistance(*mCollisions[i], 0.0f);
+			hitNormal(getCollision(i));
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		// Football, balloon ball, coconut
 		case 0x40000064:
-			hitPushup(mCollisions[i]);
+			hitPushup(getCollision(i));
 			break;
 
 		// ???
 		case 0x40000002:
-			hitBrakable(mCollisions[i]);
+			hitBrakable(getCollision(i));
 			break;
 
 		// Water & oil barrels
 		case 0x4000005A:
 		case 0x4000005C:
-			hitBarrel(mCollisions[i]);
+			hitBarrel(getCollision(i));
 			break;
 
 		// Misc default-ish stuff -- just don't clip inside
@@ -485,7 +490,7 @@ void TMario::checkCollision()
 		case 0x40000233:
 		case 0x40000264:
 		case 0x40000396:
-			keepDistance(*mCollisions[i], 0.0f);
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		// Poles, trees, etc -- "climbable" stuff
@@ -505,12 +510,12 @@ void TMario::checkCollision()
 		case 0x400000BB:
 		case 0x40000244:
 		case 0x40000246:
-			hangPole(mCollisions[i]);
+			hangPole(getCollision(i));
 			break;
 
 		// jump base
 		case 0x40000017:
-			hitJumpBase(mCollisions[i]);
+			hitJumpBase(getCollision(i));
 			break;
 
 		// fruits
@@ -519,17 +524,17 @@ void TMario::checkCollision()
 		case 0x40000392:
 		case 0x40000394:
 		case 0x40000395:
-			hitWantToTake(mCollisions[i]);
+			hitWantToTake(getCollision(i));
 			break;
 
 		// durian fruit
 		case 0x40000393:
-			hitPushup(mCollisions[i]);
+			hitPushup(getCollision(i));
 			break;
 
 		// various breakable blocks
 		case 0x400002BC:
-			hitBrakable(mCollisions[i]);
+			hitBrakable(getCollision(i));
 			break;
 
 		// empty cases
