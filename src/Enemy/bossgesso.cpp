@@ -546,7 +546,7 @@ void TBGCork::crush()
 		return;
 
 	unk8->setBckFromIndex(8);
-	unk4->getModel()->setBaseTRMtx(unk8->getModel()->getBaseTRMtx());
+	unk8->getModel()->setBaseTRMtx(unk4->getModel()->getBaseTRMtx());
 	unkC = 1;
 }
 
@@ -1819,8 +1819,31 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		ctrl4->setFrame(0.0f);
 
 		spine->pushAfterCurrent(&TNerveBGPollute::theNerve());
-		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59)
+		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
 			MSBgm::startBGM(MSD_BGM_CHUBOSS_MANTA);
+
+			// TODO: retail restores the cube BGM volume here, which needs two
+			// declarations this unit may not add to
+			// System/MSoundMainSide.hpp (not its header):
+			//     static MSStageCubeFade* smInstance;
+			//     static void setBgmVolumeForce();
+			// (mangled smInstance__15MSStageCubeFade and
+			// setBgmVolumeForce__15MSStageCubeFadeFv in the map). With them
+			// declared, this block takes the nerve 87.3% -> 96.1% and is the
+			// only user of the unit's missing `@5198` (75.0f):
+			//
+			//   if (gpCubeSoundChange != nullptr) {
+			//       TVec3<f32> earPos = SMS_GetMarioPos();
+			//       earPos.y += 75.0f;
+			//       if (gpCubeSoundChange->getInCubeNo(earPos) == -1) {
+			//           MSBgm::setTrackVolume(1, 0.0f, 0, 0);
+			//           return true;
+			//       }
+			//   }
+			//   if (gpMarDirector->mMap == 59
+			//       && MSStageCubeFade::smInstance != nullptr)
+			//       MSStageCubeFade::setBgmVolumeForce();
+		}
 
 		return true;
 	}
