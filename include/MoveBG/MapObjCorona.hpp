@@ -92,11 +92,9 @@ public:
 	/* 0x270 */ int mDuckJntIdx;
 	/* 0x274 */ int mJuniorJntIdx;
 	/* 0x278 */ int mKoopaJntIdx;
-	/* 0x27C */ int mWater4JntIdx;
-	/* 0x280 */ int mWater5JntIdx;
-	/* 0x284 */ int mWater1JntIdx;
-	/* 0x288 */ int mWater2JntIdx;
-	/* 0x28C */ int mWater3JntIdx;
+	/// The five water-spout joints, indexed by grip, hence the shuffled
+	/// order they are filled in: water4, water5, water1, water2, water3.
+	/* 0x27C */ int mWaterJntIdx[5];
 	/* 0x290 */ int unk290;
 	/* 0x294 */ int unk294;
 	/* 0x298 */ u8 unk298;

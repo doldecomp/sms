@@ -475,13 +475,22 @@ MtxPtr TBathtub::getTakingMtx()
 }
 
 // Unused
-MtxPtr TBathtub::getShineMtx() { return nullptr; }
+MtxPtr TBathtub::getShineMtx()
+{
+	return mMActor->getModel()->getAnmMtx(mStarJntIdx);
+}
 
 // Unused
-MtxPtr TBathtub::getShineEffectMtx() { return nullptr; }
+MtxPtr TBathtub::getShineEffectMtx()
+{
+	return unk29C->getModel()->getAnmMtx(mShineBodyJntIdx);
+}
 
 // Unused
-MtxPtr TBathtub::getWaterMtx(int) { return nullptr; }
+MtxPtr TBathtub::getWaterMtx(int index)
+{
+	return mMActor->getModel()->getAnmMtx(mWaterJntIdx[index]);
+}
 
 MtxPtr TBathtub::getSubmarineMtxInDemo()
 {
@@ -494,7 +503,10 @@ MtxPtr TBathtub::getPeachMtxInDemo()
 }
 
 // Unused
-MtxPtr TBathtub::getKoopaMtxInDemo() { return nullptr; }
+MtxPtr TBathtub::getKoopaMtxInDemo()
+{
+	return mMActor->getModel()->getAnmMtx(mKoopaJntIdx);
+}
 
 MtxPtr TBathtub::getKoopaJrMtxInDemo()
 {
@@ -593,11 +605,178 @@ void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-void TBathtub::control() { }
+void TBathtub::control()
+{
+	if (unk29A) {
+		if (mMActor->curAnmEndsNext(0, nullptr)) {
+			switch (unk294++) {
+			case 0:
+				startBck("bath_overturn2");
+				break;
+			case 1:
+				startBck("bath_overturn3");
+				break;
+			}
+		}
+		JPABaseEmitter* shineEmitter
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(0x128,
+		        unk29C->getModel()->getAnmMtx(mShineBodyJntIdx), 1, this);
+		if (shineEmitter)
+			shineEmitter->setGlobalScale(
+			    JGeometry::TVec3<f32>(3.0f, 3.0f, 3.0f));
+		JPABaseEmitter* shineEmitter2
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(0x129,
+		        unk29C->getModel()->getAnmMtx(mShineBodyJntIdx), 1, this);
+		if (shineEmitter2)
+			shineEmitter2->setGlobalScale(
+			    JGeometry::TVec3<f32>(3.0f, 3.0f, 3.0f));
 
-void TBathtub::calcBathtubData() { }
+		MtxPtr starMtx = mMActor->getModel()->getAnmMtx(mStarJntIdx);
+		unk200.set(starMtx[0][3], starMtx[1][3], starMtx[2][3]);
+		if (gpMSound->gateCheck(MSD_SE_SHINE_EXIST))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_SHINE_EXIST, &unk200, 0, nullptr, 0, 4);
+		calcRootMatrix();
+		calcBathtubData();
+		for (int i = 0; i < 30; ++i)
+			unk164[i]->remove();
+		TTakeActor* mario = (TTakeActor*)SMS_GetMarioHitActor();
+		if (mario->receiveMessage(this, HIT_MESSAGE_TAKE))
+			mHeldObject = mario;
+		gpMarioOriginal->mFaceAngle.y = 0x7FFF;
+		if (unk290 > 0)
+			unk290--;
+		return;
+	}
 
-void TBathtub::setupCollisions_() { }
+	if (unk24C > 0)
+		unk24C--;
+	if (unk248 > 0)
+		unk248--;
+	if (unk250 > unk16C->hipdropRelease.get() || (marioIsOn() && !mHeldObject)) {
+		f32 weight = unk16C->marioWeight.get();
+		if (unk250 > 0)
+			weight += unk16C->marioDropWeight.get();
+		if (!(weight <= 0.0000000001f)) {
+			static JGeometry::TVec3<f32> yDown(0.0f, -1.0f, 0.0f);
+			JGeometry::TVec3<f32> lever;
+			lever.sub(*gpMarioPos, mPosition);
+			JGeometry::TVec3<f32> torque;
+			torque.cross(lever, yDown);
+			torque.scale(0.00000001f * weight);
+			mAngleVel.add(torque);
+		}
+	}
+	updatePosture_();
+	calcRootMatrix();
+	TMapObjBase::control();
+	calcBathtubData();
+	getModel()->calc();
+	JGeometry::TVec3<f32> up;
+	mBathtubData.unk18.getYDir(up);
+	if (mBathtubData.unk0C.dot(up) > 0.995f)
+		gpMarioParticleManager->emit(0x1BE, &unk1F4, 1, this);
+	for (int i = 0; i < 5; ++i) {
+		if (unk168[i]->unk248) {
+			MtxPtr mtx = mMActor->getModel()->getAnmMtx(mWaterJntIdx[i]);
+			gpMarioParticleManager->emitAndBindToMtxPtr(0x1BF, mtx, 1, mtx);
+		}
+	}
+	if (!mHeldObject) {
+		setupCollisions_();
+	} else {
+		for (int i = 0; i < 30; ++i)
+			unk164[i]->remove();
+	}
+}
+
+void TBathtub::calcBathtubData()
+{
+	const TPosition3f& mtx = *(TPosition3f*)getRootJointMtx();
+	JGeometry::TVec3<f32> dir;
+	mtx.getXDir(dir);
+	mBathtubData.unk18.setXDir(dir);
+	mtx.getYDir(dir);
+	mBathtubData.unk18.setYDir(dir);
+	mtx.getZDir(dir);
+	mBathtubData.unk18.setZDir(dir);
+	mtx.getTrans(mBathtubData.mPos);
+
+	f32 upY  = mBathtubData.unk18.at(1, 1);
+	f32 tilt = JGeometry::TUtil<f32>::sqrt(1.0f - upY * upY);
+	mBathtubData.unk44
+	    = mBathtubData.unk3C * JGeometry::max(unk16C->watermark.get(), tilt);
+	mBathtubData.unk48 = unk16C->outerHeight.get();
+	mBathtubData.unk0C.x = mBathtubData.unk18.at(0, 1);
+	mBathtubData.unk0C.y = mBathtubData.unk18.at(1, 1);
+	mBathtubData.unk0C.z = mBathtubData.unk18.at(2, 1);
+	mBathtubData.unk58.zero();
+
+	TKoopa* koopa
+	    = JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70");
+	if (koopa->effectsTumble() || unk24C > 0) {
+		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+		JGeometry::TVec3<f32> axis;
+		axis.cross(up, mBathtubData.unk0C);
+		axis.normalize();
+		if (!axis.isZero()) {
+			JGeometry::TQuat4<f32> shake;
+			shake.setRotate(
+			    axis, unk16C->maxAngle.get() * 6.2831855f / 360.0f);
+			shake.rotate(mBathtubData.unk0C, mBathtubData.unk0C);
+			mBathtubData.unk58.set(0.0f, unk16C->shake.get(), 0.0f);
+		}
+	} else {
+		mBathtubData.unk0C.set(0.0f, 1.0f, 0.0f);
+	}
+
+	if (unk250 < unk254 / 2 && unk258 > 0)
+		mBathtubData.unk64 = 1;
+	else
+		mBathtubData.unk64 = 0;
+	mBathtubData.unk65 = unk29A;
+	unk1F4 = mBathtubData.getThing();
+}
+
+void TBathtub::setupCollisions_()
+{
+	JGeometry::TVec3<f32> xDir, zDir, d;
+	mBathtubData.unk18.getXDir(xDir);
+	mBathtubData.unk18.getZDir(zDir);
+	d.sub(*gpMarioPos, mBathtubData.mPos);
+	f32 lz = zDir.dot(d);
+	f32 lx = xDir.dot(d);
+	if (gpMarioPos->y < 300.0f || lx * lx + lz * lz < 0.01f) {
+		for (int i = 0; i < 30; ++i)
+			unk164[i]->remove();
+		for (int i = 0; i < 5; ++i)
+			unk168[i]->unk24B = 0;
+		return;
+	}
+
+	f32 angle = atan2f(lx, lz);
+	if (angle < 0.0f)
+		angle += 6.2831855f;
+	f32 slot = angle * 4.774648f;
+	if (slot < 0.0f)
+		slot += 30.0f;
+	int base = ((int)(0.5f + slot - 1.0f) + 30) % 30;
+	for (int i = 0; i < 2; ++i) {
+		int index = (i + base) % 30;
+		JGeometry::TPosition3<TMtx34f> local;
+		local.setEularY((f32)(index + 1) * 6.2831855f / 30.0f - 3.1415927f);
+		local.setTrans(0.0f, 0.0f, 0.0f);
+		TSMtx34f mtx;
+		ConcatMtx34(mtx, *(TSMtx34f*)getModel()->getBaseTRMtx(), local);
+		unk164[index]->moveMtx(mtx);
+		unk164[index]->setUp();
+	}
+	for (int i = 2; i < 30; ++i)
+		unk164[(i + base) % 30]->remove();
+	for (int i = 0; i < 5; ++i)
+		unk168[i]->unk24B = 0;
+	unk168[((int)(5.0f * angle / 6.2831855f) + 10) % 5]->unk24B = 1;
+}
 
 // Unused
 
@@ -606,9 +785,40 @@ namespace {
 BOOL CameraDemoCallBack(u32, u32) { return false; }
 }
 
-void TBathtub::startDemo() { }
+void TBathtub::startDemo()
+{
+	if (unk29A)
+		return;
+	MSBgm::stopTrackBGMs(7, 10);
+	if (!(unk2A0 & 0x20))
+		gpMarDirector->getConsole()->startAppearBalloon(0x23, true);
+	unk2A0 |= 0x20;
+	unk290 = 10;
+	for (int i = 0; i < 5; ++i)
+		unk168[i]->kill();
+	unk168[2]->reset();
+	unk168[2]->startBreak(0, 2, unk16C->animSpeed1.get());
+	unkF8 |= MAP_OBJ_FLAG_UNK8;
+	unkF8 &= ~MAP_OBJ_FLAG_UNK100;
+	startBck("bath_overturn1");
+	TTakeActor* mario = (TTakeActor*)SMS_GetMarioHitActor();
+	if (mario->receiveMessage(this, HIT_MESSAGE_TAKE))
+		mHeldObject = mario;
+	gpMarioOriginal->mFaceAngle.y = 0x7FFF;
+	gpMarDirector->fireStartDemoCamera("koopa_last2", &mPosition, -1,
+	    mRotation.y, false, nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
+	gpMarDirector->fireStreamingMovie(0xE);
+	JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70")
+	    ->fall();
+	unk29A = 1;
+}
 
-void TBathtub::removeCollisions_() { }
+// Unused
+void TBathtub::removeCollisions_()
+{
+	for (int i = 0; i < 30; ++i)
+		unk164[i]->remove();
+}
 
 // TODO: Match the local-space position helpers and their stack layout.
 bool TBathtub::allowsTumble() const
@@ -616,38 +826,44 @@ bool TBathtub::allowsTumble() const
 	JGeometry::TVec3<f32> pos = *gpMarioPos;
 	f32 angle;
 	if (getNearGrip(pos, 18.0f, &angle)) {
-		JGeometry::TVec3<f32> relative;
+		JGeometry::TVec3<f32> xDir, yDir, zDir, relative;
+		mBathtubData.unk18.getXDir(xDir);
+		mBathtubData.unk18.getYDir(yDir);
+		mBathtubData.unk18.getZDir(zDir);
 		relative.sub(pos, mBathtubData.mPos);
+		// TODO: retail calls the local TVec3<f>::set<f> here and we still
+		// expand it; same open per-call-site problem as MapObjBall.
 		JGeometry::TVec3<f32> local;
-		mBathtubData.unk18.mult(relative, local);
+		local = JGeometry::TVec3<f32>(
+		    xDir.dot(relative), yDir.dot(relative), zDir.dot(relative));
 		local.y = 0.0f;
 		f32 distance = local.length();
 		if (distance < 4200.0f)
 			return false;
-		if (distance > 4700.0f) {
-			if (mBathtubData.unk18.at(1, 1) > 0.99f) {
-				TBathtubKillerManager* manager
-				    = JDrama::TNameRefGen::search<TBathtubKillerManager>(
-				        "バスタブキラーマネージャー");
-				u32 status = SMS_GetMarioStatus();
-				if (status == MARIO_STATUS_HIP_DROP)
-					return false;
-				if (status == MARIO_STATUS_ROCKET)
-					return false;
-				if (status == MARIO_STATUS_ROCKET_LANDING)
-					return false;
-				const TWaterGun* gun = gpMarioOriginal->mWaterGun;
-				if (gun) {
-					TNozzleTrigger* nozzle = (TNozzleTrigger*)gun->getCurrentNozzle();
-					if (nozzle && nozzle->getNozzleKind() == 1
-					    && nozzle->unk388 > 0.0f)
-						return false;
-				}
-				return manager->countActiveKillers() == 0;
-			}
+		if (4700.0f >= distance)
+			return true;
+		if (mBathtubData.unk18.at(1, 1) <= 0.99f)
 			return false;
+
+		TBathtubKillerManager* manager
+		    = JDrama::TNameRefGen::search<TBathtubKillerManager>(
+	        "バスタブキラーマネージャー");
+		u32 status = SMS_GetMarioStatus();
+		if (status == MARIO_STATUS_HIP_DROP)
+			return false;
+		if (status == MARIO_STATUS_ROCKET)
+			return false;
+		if (status == MARIO_STATUS_ROCKET_LANDING)
+			return false;
+		const TWaterGun* gun = gpMarioOriginal->mWaterGun;
+		if (gun) {
+			TNozzleTrigger* nozzle
+			    = (TNozzleTrigger*)gun->getCurrentNozzle();
+			if (nozzle && nozzle->getNozzleKind() == 1
+			    && nozzle->unk388 > 0.0f)
+				return false;
 		}
-		return true;
+		return manager->countActiveKillers() == 0;
 	}
 	return false;
 }
@@ -784,8 +1000,14 @@ u8 TBathtub::getNextGrip(const JGeometry::TVec3<f32>& pos,
 	return false;
 }
 
-// Unused
-void TBathtub::showMessage(u32) { }
+// Unused; TODO: no call site survives, so the bit-per-message shape is a
+// guess constrained only by the map's 0x64.
+void TBathtub::showMessage(u32 message)
+{
+	if (!(unk2A0 & (1 << message)))
+		gpMarDirector->getConsole()->startAppearBalloon(message, true);
+	unk2A0 |= 1 << message;
+}
 
 void TBathtub::updatePosture_()
 {
@@ -908,11 +1130,11 @@ void TBathtub::load(JSUMemoryInputStream& stream)
 	JUTNameTab* names = getModel()->getModelData()->getJointName();
 	mMarioJntIdx     = names->getIndex("mario");
 	mStarJntIdx      = names->getIndex("star");
-	mWater4JntIdx    = names->getIndex("water4");
-	mWater5JntIdx    = names->getIndex("water5");
-	mWater1JntIdx    = names->getIndex("water1");
-	mWater2JntIdx    = names->getIndex("water2");
-	mWater3JntIdx    = names->getIndex("water3");
+	mWaterJntIdx[0]  = names->getIndex("water4");
+	mWaterJntIdx[1]  = names->getIndex("water5");
+	mWaterJntIdx[2]  = names->getIndex("water1");
+	mWaterJntIdx[3]  = names->getIndex("water2");
+	mWaterJntIdx[4]  = names->getIndex("water3");
 	mDuckJntIdx      = names->getIndex("ahiru");
 	mSubmarineJntIdx = names->getIndex("submarin");
 	mJuniorJntIdx    = names->getIndex("Jr");

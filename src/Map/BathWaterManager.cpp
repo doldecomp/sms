@@ -247,8 +247,8 @@ public:
 		                 const JGeometry::TVec3<f32>& grav2, int& count,
 		                 JGeometry::TVec3<f32>& accum)
 		{
-			JGeometry::TVec3<f32> m(data.unk18.at(1, 0), data.unk18.at(1, 1),
-			                        data.unk18.at(1, 2));
+			JGeometry::TVec3<f32> m(data.unk18.at(0, 1), data.unk18.at(1, 1),
+			                        data.unk18.at(2, 1));
 			JGeometry::TVec3<f32> delta;
 			delta.sub(unk0, data.mPos);
 			f32 outerR = data.unk40 + radius;
@@ -1763,7 +1763,7 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 {
 
 	JGeometry::TVec3<f32> axis;
-	axis.set(data.unk18.at(1, 0), 0.0f, data.unk18.at(1, 2));
+	axis.set(data.unk18.at(0, 1), 0.0f, data.unk18.at(2, 1));
 
 	if (axis.isZero())
 		return false;

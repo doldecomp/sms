@@ -36,20 +36,22 @@ public:
 		JGeometry::TVec3<f32> result;
 		result = mPos;
 
+		// unk18's at()/ref() are row-major (SMatrix33R), so at(i, n) walks
+		// axis n's components: X here, then Z, then Y.
 		f32 s = amp * sinf(angle);
 		result.x += unk18.at(0, 0) * s;
-		result.y += unk18.at(0, 1) * s;
-		result.z += unk18.at(0, 2) * s;
+		result.y += unk18.at(1, 0) * s;
+		result.z += unk18.at(2, 0) * s;
 
 		f32 c = amp * cosf(angle);
-		result.x += unk18.at(2, 0) * c;
-		result.y += unk18.at(2, 1) * c;
+		result.x += unk18.at(0, 2) * c;
+		result.y += unk18.at(1, 2) * c;
 		result.z += unk18.at(2, 2) * c;
 
 		f32 yScale = (1.0f - t) * -(unk44 - h);
-		result.x += unk18.at(1, 0) * yScale;
+		result.x += unk18.at(0, 1) * yScale;
 		result.y += unk18.at(1, 1) * yScale;
-		result.z += unk18.at(1, 2) * yScale;
+		result.z += unk18.at(2, 1) * yScale;
 
 		return result;
 	}
@@ -63,7 +65,8 @@ public:
 public:
 	/* 0x00 */ JGeometry::TVec3<f32> mPos;
 	/* 0x0C */ JGeometry::TVec3<f32> unk0C;
-	/* 0x18 */ JGeometry::TRotation3<TMtx33f> unk18;
+	/* 0x18 */ JGeometry::TRotation3<JGeometry::TMatrix33<
+	    JGeometry::SMatrix33R<f32> > > unk18;
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ f32 unk44;
