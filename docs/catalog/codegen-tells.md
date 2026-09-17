@@ -97,6 +97,8 @@ That is why `TUtil<f32>::inv_sqrt` (under `normalize` -> `setLength`) is always 
 Same-size reconstructions with one more statement are refused: a dead `d.y = 0.0f;` flips it to a call, an empty `;` does not, and replacing two statements with `d.sub(v)` flips it back despite more code.
 When a size-matched UNUSED function is called instead of inlined, look for a cheaper spelling of its body.
 
+**Lead for the per-call-site puzzle (from `bosstelesa`, unprobed):** with `-inline deferred` a callee may be inlinable only once its own code has been generated, i.e. only if it is defined *later* in the source than the caller. That single rule predicts `bosstelesa`'s calls (`slotFall`, `randomReset`, `forceAllItemKill`, `forceHide`) and inlines (`initMapObj`, `rouletteStart`, `getSlotResult`) correctly, and size is demonstrably not the criterion there (retail inlines `fanfale` at 496 bytes and calls `getSlotResult` at 140). Probe it in a scratch TU before relying on it.
+
 **Per-call-site differences (open).** In `MapObjBall` the original inlines differently from us *per call site*:
 
 | Callee | Original | Ours |
@@ -203,6 +205,18 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Out-param reassignment inside the guard:** `mGroundPlane = plane; if (mGroundPlane) { plane = mGroundPlane; ... }` lets MWCC forward the register; reassigning before the test reloads.
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
+
+## Rules from `bosstelesa`
+
+- Three `rand()` results into one vector: per-component `v.x = r.rand(); v.y = ...` stores each result straight to its slot as retail does; the constructor form batches (`TBubble::split` 85 -> 100). A `TMsRange` used in a loop is declared *before* the loop.
+- A member typed `TPosition3f`/`TMatrix34` forces the inner matrix ctor out of line (`bl __ct__TMatrix34<SMatrix34C<f>>`) and gives the `new` result its stack home (`createEnemyInstance` 71 -> 100). `TPosition3::translation(x, y, z)` puts `identity33()` at depth 2 where retail calls it here, while `TabePuku` wanted it spelled out: both directions occur, per site.
+- `SMatrix34C<f32>` member, not `Mtx`, keeps `gekko_ps_copy12` a `bl` through `set(ConstArrType*)` (`getTakingMtx` 7.5 -> 100).
+- `u32& flag = mLiveFlag` before a dead test reproduces retail's materialised `addi rN, obj, 0xf0` (`flashItem` 83 -> 96); it backfires when the test immediately follows (MWCC fuses it into `lwzu`).
+- Repeated `x[i] != 0.0f` tests are an unrolled loop (hoisted constant, base reloaded per iteration), not three ifs (`isForceRestart` size-exact only as a loop).
+- Dead code is real: `rouletteStart` opens with an unused spin-count loop (90 -> 99.5 written out); two nerves build a Mario-relative vector they never read.
+- Three more UNUSED-as-level instances: `fanfale` (496, size-exact) must be called so `getSlotResult` stays a `bl`; `getDrumResult` (44) is what `getSlotResult` calls; `slotStart`/`slotStop` are the `checkPass(53.0f)` body and the `isRollDrum` guard.
+- A nerve pushed via `pushNerve` reaches `TNerveBase`'s ctor one level deeper than the same nerve in a comparison (retail `bl`s it). `default: return;` with two ids sharing a case in a fruit switch. `TNerveBubbleLive::theNerve()` sits before `TBubble::appendItem` in the map, so that nerve cannot come from `DEFINE_NERVE`; its halves are spelled out around the helpers.
+- Open header items: nine `TMapObjBase` virtuals are declared only (`getRadiusAtY`, `getTakingMtx`, `setModelMtx`, `loadBeforeInit`, `calc`, `draw`, `dead`, `getHitObjNumMax`, `touchWater`); the map has them weak (8/52/56/4/4/4/4/8/8) in `bosstelesa.cpp`, bodies readable at 0x800C6E94 onwards; `MActor::getBckAnmPtr()` is really `getCurBckAnmPtr()` (UNUSED 0x1c); `getObjNumWithActorType` returns `u32`.
 
 ## Rules from `Talk2D2` and `hx_wiper` (GC2D)
 
