@@ -90,9 +90,6 @@ void TAnimalBird::init(TLiveManager* live_manager)
 	initAnmSound();
 }
 
-// TODO: incorrect size. Map records 108 bytes for this and our body is
-// slightly different; the two getModel() calls and the (u16) narrowing of the
-// name index are what load() shows.
 void TAnimalBird::initTevColor(const GXColorS10* color)
 {
 	s32 index = getModel()->getModelData()->getMaterialName()->getIndex(
@@ -163,6 +160,9 @@ void TAnimalBird::load(JSUMemoryInputStream& stream)
 	initTevColor(&cColorTable[mColorIndex]);
 }
 
+// TODO: 99.7%, instruction-identical, frame 0x30 vs our 0x18. Same 24-byte
+// gap shape as TAnimalBirdManager::loadAfter (32 there); no evidence for the
+// locals that would fill either.
 void TAnimalBird::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
@@ -274,10 +274,6 @@ void TAnimalBird::behaveHitWater()
 	}
 }
 
-// TODO: incorrect size. Map records 244 bytes; ours is smaller because retail
-// expands theNerve() and getLatestNerve() here while our out-of-line copy
-// keeps them as calls. The predicate itself is what bind() and moveObject()
-// show.
 bool TAnimalBird::isOnGroundNerve() const
 {
 	// The spine goes into a local: the ROM keeps it in one register across
@@ -291,7 +287,6 @@ bool TAnimalBird::isOnGroundNerve() const
 	        == &TNerveAnimalBirdWalkOnGround::theNerve();
 }
 
-// TODO: incorrect size. Map records 408 bytes.
 void TAnimalBird::checkFalling()
 {
 	if (isOnGroundNerve()) {
@@ -307,7 +302,6 @@ void TAnimalBird::checkFalling()
 	}
 }
 
-// TODO: incorrect size. Map records 272 bytes.
 void TAnimalBird::checkChangeToItem()
 {
 	if (isChangeToItem()) {
@@ -323,7 +317,6 @@ void TAnimalBird::checkNotAppear(s32 event_id)
 		onLiveFlag(LIVE_FLAG_DEAD);
 }
 
-// TODO: incorrect size. Map records 428 bytes.
 void TAnimalBird::updateSound()
 {
 	if (isFlying())
@@ -366,6 +359,8 @@ bool TAnimalBird::isFindMario() const
 	                 mPowerRate * getSaveParams()->mSearchAware.get());
 }
 
+// TODO: incorrect size. Map records 152 bytes; the early-return spelling is
+// 24 bytes bigger still and costs moveObject two points.
 bool TAnimalBird::isChangeToItem() const
 {
 	return !isChanged() && getHitPoints() == 0;
@@ -373,7 +368,6 @@ bool TAnimalBird::isChangeToItem() const
 
 bool TAnimalBird::isGroundShaken() const { return false; }
 
-// TODO: incorrect size. Map records 212 bytes.
 bool TAnimalBird::isCheckWithWireBinder() const
 {
 	return mWireBinder != nullptr
@@ -395,22 +389,31 @@ bool TAnimalBird::isFlying() const
 	    || nerve == &TNerveAnimalBirdComeback::theNerve();
 }
 
-// TODO: incorrect size. Map records 284 bytes.
 void TAnimalBird::doDropCoin()
 {
 	TMapObjBase* item = mItem;
-	if (item->isActorType(0x2000000E))
-		item = gpItemManager->makeObjAppear(0x2000000E);
-
-	if (item != nullptr) {
-		item->appear();
+	if (item->isActorType(0x20000013)) {
 		item->JSGSetTranslation(mPosition);
-		item->mVelocity.set(0.0f, -10.0f, 0.0f);
-		item->offLiveFlag(LIVE_FLAG_UNK10);
-		item->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		((TShine*)mItem)->appearWithDemo("鳥シャインカメラ");
+	} else {
+		TMapObjBase* obj;
+		if (item->isActorType(0x2000000E))
+			obj = gpItemManager->makeObjAppear(0x2000000E);
+		else
+			obj = item;
+
+		if (obj != nullptr) {
+			obj->appear();
+			obj->JSGSetTranslation(mPosition);
+			obj->mVelocity.set(0.0f, -10.0f, 0.0f);
+			obj->offLiveFlag(LIVE_FLAG_UNK10);
+			obj->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		}
 	}
 }
 
+// TODO: 95.3%. Instruction-identical except the quaternion temporary's
+// register numbering inside the inlined rotate; frame exact.
 void TAnimalBird::doFlyToCurPathNode()
 {
 	JGeometry::TVec3<f32> toGoal = getUnkF4().getPoint();
@@ -438,7 +441,6 @@ void TAnimalBird::doFlyToCurPathNode()
 	mLinearVelocity = velocity;
 }
 
-// TODO: incorrect size. Map records 408 bytes.
 void TAnimalBird::doWalk()
 {
 	mGravity = 0.15f;
@@ -454,6 +456,13 @@ void TAnimalBird::doWalk()
 	mLinearVelocity = velocity;
 }
 
+// TODO: 85.8%. Two residuals. (1) Retail never computes the rotated y of the
+// take-off velocity: with `velocity.y = 0.0f` right after the rotate MWCC is
+// expected to kill the dead store and its arithmetic, and ours keeps four
+// fmadds plus the frame they need (0x170 vs 0x158). (2) `velocity.length()`
+// expands TUtil<f32>::sqrt here while retail calls it -- the same per-call-site
+// inconsistency the catalog records for MapObjBall and amiNoko; a named speed
+// local changes nothing.
 bool TAnimalBird::doLanding(bool takeoff)
 {
 	if (takeoff) {
@@ -666,6 +675,12 @@ DEFINE_NERVE(TNerveAnimalBirdActionOnGround, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 75.9%. Retail's inlined TQuat4::rotate keeps its TQuat4 temporary in
+// memory and calls both TVec4<f32>::TVec4() and the TU-local
+// set<f>__Q29JGeometry8TVec3<f>Ffff; that local instantiation is the open
+// JGVec3.hpp problem in docs/catalog (our in-class member template always
+// expands), so the quaternion temporary is scalarised here and the whole
+// expansion renumbers.
 DEFINE_NERVE(TNerveAnimalBirdWalkOnGround, TLiveActor)
 {
 	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
@@ -732,7 +747,7 @@ DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor)
 	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		bird->mVelocity.zero();
+		bird->setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 		bird->getTracer()->reset();
 		bird->goToShortestNextGraphNode();
 	}
@@ -764,11 +779,26 @@ DEFINE_NERVE(TNerveAnimalBirdChangeToCoin, TLiveActor)
 	if (spine->getTime() == 0) {
 		bird->onLiveFlag(LIVE_FLAG_DEAD);
 
-		if (bird->mItem->isActorType(0x20000013)) {
-			bird->mItem->JSGSetTranslation(bird->mPosition);
+		TMapObjBase* item = bird->mItem;
+		if (item->isActorType(0x20000013)) {
+			item->JSGSetTranslation(bird->mPosition);
 			((TShine*)bird->mItem)->appearWithDemo("鳥シャインカメラ");
 		} else {
-			bird->doDropCoin();
+			// doDropCoin()'s body spelled out: the ROM reads mItem and its
+			// actor type once and shares both with the shine test above.
+			TMapObjBase* obj;
+			if (item->isActorType(0x2000000E))
+				obj = gpItemManager->makeObjAppear(0x2000000E);
+			else
+				obj = item;
+
+			if (obj != nullptr) {
+				obj->appear();
+				obj->JSGSetTranslation(bird->mPosition);
+				obj->mVelocity.set(0.0f, -10.0f, 0.0f);
+				obj->offLiveFlag(LIVE_FLAG_UNK10);
+				obj->onLiveFlag(LIVE_FLAG_AIRBORNE);
+			}
 		}
 	}
 
@@ -830,7 +860,7 @@ DEFINE_NERVE(TNerveAnimalBirdLanding, TLiveActor)
 	J3DFrameCtrl* ctrl = bird->getMActor()->getFrameCtrl(0);
 
 	if (spine->getTime() == 0) {
-		bird->mVelocity.zero();
+		bird->setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 		bird->setBckAnm(TAnimalBird::BIRD_ANM_START);
 		ctrl->setAttribute(J3DFrameCtrl::ATTR_ONCE_AND_RESET);
 		ctrl->setFrame(ctrl->getEnd());
