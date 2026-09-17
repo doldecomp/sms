@@ -113,10 +113,10 @@ public:
 	void moveTalkWindow();
 	void checkControler();
 	bool closeNormalWindow();
-	void closeBoardWindow();
+	bool closeBoardWindow();
 	bool eraseNormalWindow();
 	bool eraseBoardWindow();
-	void appearBoardBoxWindow();
+	bool appearBoardBoxWindow();
 	void makeLine(f32*, f32*, f32, JUTPoint&, JUTPoint&, JUTPoint&);
 	void setupBoardTextBox(const void*, JMSMesgEntry*);
 	void setupTextBox(const void*, JMSMesgEntry*);

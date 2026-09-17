@@ -10,7 +10,6 @@
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
 #include <MarioUtil/DrawUtil.hpp>
-#include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/ReinitGX.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MoveBG/MapObjHide.hpp>
@@ -20,6 +19,7 @@
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
+#include <JSystem/JGeometry/JGUtil.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
@@ -256,8 +256,9 @@ void TTalk2D2::loadAfter()
 		f32 x;
 		f32 y;
 		makeLine(&x, &y, t, start, ctrl, end);
-		length += MsSqrtf((x - f3f4x) * (x - f3f4x)
-		                  + (y - f3f4y) * (y - f3f4y));
+		f32 dx = x - f3f4x;
+		f32 dy = y - f3f4y;
+		length += JGeometry::TUtil<f32>::sqrt(dx * dx + dy * dy);
 		f3f4x = x;
 		f3f4y = y;
 	}
@@ -298,7 +299,7 @@ void TTalk2D2::loadAfter()
 	for (int i = 0; i < 93; i++)
 		select[i] = ' ';
 	select[93] = '\0';
-	mSelectTextBox->setString("%s", select);
+	mSelectTextBox->setString(select);
 
 	setupTextBox(mSysMessage->getMessageData(),
 	             (JMSMesgEntry*)mSysMessage->getMessageEntry(3));
@@ -641,8 +642,11 @@ bool TTalk2D2::openNormalWindow()
 			mLineProgress[i] -= mProgressStep;
 		}
 
+		// Hold a line closed until the last character of the one above it
+		// has appeared.
 		if (mLineProgress[i] < 1.0f && i != 0
-		    && !mCharBox[mCharCursor[i] + (i - 1) * LINE_LENGTH]->isVisible())
+		    && !mCharBox[mLineLength[i - 1] + (i - 1) * LINE_LENGTH]
+		            ->isVisible())
 			mLineProgress[i] = 1.0f;
 
 		if (mCharCursor[i] == 0 && mLineProgress[i] < mLineDelay) {
@@ -662,7 +666,7 @@ bool TTalk2D2::openNormalWindow()
 		if (mCharCursor[i] == 0)
 			continue;
 
-		u16 idx = mCharCursor[i] + i * LINE_LENGTH;
+		int idx = mCharCursor[i] + i * LINE_LENGTH;
 		while (mCharCursor[i] <= mLineLength[i]) {
 			if (mCharBox[idx]->isVisible()) {
 				s16 alpha = mCharBox[idx]->getAlpha() + mAlphaStep;
@@ -970,11 +974,12 @@ bool TTalk2D2::closeNormalWindow()
 	return done;
 }
 
-void TTalk2D2::closeBoardWindow()
+bool TTalk2D2::closeBoardWindow()
 {
 	bool done = false;
 	if (mBoardBound->update())
 		done = true;
+	return done;
 }
 
 bool TTalk2D2::eraseNormalWindow()
@@ -1035,7 +1040,7 @@ bool TTalk2D2::eraseBoardWindow()
 	return done;
 }
 
-void TTalk2D2::appearBoardBoxWindow()
+bool TTalk2D2::appearBoardBoxWindow()
 {
 	bool done = false;
 	s16 alpha = mBoardTextBox->getAlpha() + 4;
@@ -1044,6 +1049,7 @@ void TTalk2D2::appearBoardBoxWindow()
 		done  = true;
 	}
 	mBoardTextBox->setAlpha(alpha);
+	return done;
 }
 
 void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
