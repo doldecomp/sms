@@ -14,6 +14,16 @@
  * Hx_FrBufferMorf all become byte-exact) and lifts the unit from 50.9% to
  * roughly 84% fuzzy. The flag change is out of scope for this batch.
  *
+ * TODO: the sqrtf() calls below are out of line here but inlined in retail
+ * (frsqrte plus three Newton steps, a volatile float and an frsp -- exactly
+ * MSL's `extern inline float sqrtf`). This tree's
+ * PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h only declares that body
+ * inside `namespace std`, i.e. behind `#ifdef __cplusplus`, so a C TU gets the
+ * prototype and a call. Making it visible in C mode as well turns
+ * Hxs_FrBufferMorf2 byte-exact and lifts Hxs1_Test2 70.7 -> 88.5,
+ * Hxs1_Test1 68.6 -> 80.3, Hxs2_Circle 43.4 -> 56.3 and Hxs1_Circle
+ * 48.1 -> 50.6. Shared-header change, so not made here.
+ *
  * @details Everything lives in one file-scope work struct.  TScrnFader calls
  * Hx_ResetWipe() once with the display size, Hx_ProvideResource() to hand over
  * a .bti when a wipe needs one, Hx_StartWipe() to pick a pattern, then
@@ -1198,31 +1208,33 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 	f32 v2 = y2 / sy;
 	f32 u1 = x1 / sx;
 	f32 u2 = x2 / sx;
-	f32 ox = -((sx * 0.5f) - (f32)(hx.width >> 1));
-	f32 oy = -((sy * 0.5f) - (f32)(hx.height >> 1)) - 32.0f;
+	f32 ox = (f32)(hx.width >> 1) - (sx * 0.5f);
+	f32 oy = ((f32)(hx.height >> 1) - (sy * 0.5f)) - 32.0f;
 	Vec d;
 
-	d.x = u2 - u1;
-	d.y = -(v2 - v1);
+	// The pen stroke is a quad two units wide around the segment, so the
+	// offset is the segment's normal: (-dv, du).
+	d.y = u2 - u1;
+	d.x = -(v2 - v1);
 	d.z = 0.0f;
 
-	if ((d.x != 0.0f) || (d.y != 0.0f)) {
+	if ((0.0f != d.y) || (0.0f != d.x)) {
 		VECNormalize(&d, &d);
 		VECScale(&d, &d, 0.08f);
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-		GXPosition3f32((sx * (u1 + d.y)) + ox, (sy * (v1 + d.x)) + oy, 0.0f);
+		GXPosition3f32((sx * (u1 + d.x)) + ox, (sy * (v1 + d.y)) + oy, 0.0f);
 		GXColor1u32(0);
-		GXTexCoord2f32(u1 + d.y, v1 + d.x);
-		GXPosition3f32((sx * (u2 + d.y)) + ox, (sy * (v2 + d.x)) + oy, 0.0f);
+		GXTexCoord2f32(u1 + d.x, v1 + d.y);
+		GXPosition3f32((sx * (u2 + d.x)) + ox, (sy * (v2 + d.y)) + oy, 0.0f);
 		GXColor1u32(0);
-		GXTexCoord2f32(u2 + d.y, v2 + d.x);
-		GXPosition3f32((sx * (u2 - d.y)) + ox, (sy * (v2 - d.x)) + oy, 0.0f);
+		GXTexCoord2f32(u2 + d.x, v2 + d.y);
+		GXPosition3f32((sx * (u2 - d.x)) + ox, (sy * (v2 - d.y)) + oy, 0.0f);
 		GXColor1u32(0);
-		GXTexCoord2f32(u2 - d.y, v2 - d.x);
-		GXPosition3f32((sx * (u1 - d.y)) + ox, (sy * (v1 - d.x)) + oy, 0.0f);
+		GXTexCoord2f32(u2 - d.x, v2 - d.y);
+		GXPosition3f32((sx * (u1 - d.x)) + ox, (sy * (v1 - d.y)) + oy, 0.0f);
 		GXColor1u32(0);
-		GXTexCoord2f32(u1 - d.y, v1 - d.x);
+		GXTexCoord2f32(u1 - d.x, v1 - d.y);
 	}
 }
 
