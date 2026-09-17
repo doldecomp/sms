@@ -1180,7 +1180,7 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 
 	// Once it is falling, touching anything at all bursts it.
 	if (!isState(STATE_NORMAL)) {
-		JGeometry::TVec3<f32> vel(mVelocity);
+		JGeometry::TVec3<f32> vel(getVelocity());
 		if (vel.y < 0.0f) {
 			kill();
 			return;
@@ -1188,6 +1188,10 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 	}
 
 	if (param_1->isActorType(0x80000001)) {
+		// TODO: 97.3%. The ROM batches the fourth component load before the
+		// first fsubs here; distance()'s doubled subtraction, a named
+		// squared() and sqrt(squared(other)) all schedule it later. The
+		// frame is also 16 bytes short after getVelocity() above.
 		if (mPosition.distance(param_1->mPosition) < 0.6f * mBodyRadius) {
 			kill();
 			return;
@@ -1196,15 +1200,37 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 
 	// A moving poihana bounces it back up instead.
 	if (param_1->isActorType(0x10000015) && ((TPoiHana*)param_1)->isMoving()) {
-		f32 vy = mVelocity.y;
-		if (abs(vy) < mMapObjData->mPhysical->unk4->unkC) {
-			mVelocity.y = vy + 30.0f;
-			mState      = STATE_LIVING;
+		if (abs(mVelocity.y) < mMapObjData->mPhysical->unk4->unkC) {
+			mVelocity.y += 30.0f;
+			mState = STATE_LIVING;
 		}
 		return;
 	}
 
-	TMapObjBall::touchActor(param_1);
+	// TMapObjBall::touchActor's body is written out here rather than called,
+	// exactly as TBigWatermelon::control writes out TMapObjBall::control's:
+	// the ROM's tail is that body followed by a bl to boundByActor.
+	if (unk194 != 0)
+		return;
+	if (isState(STATE_HOLDING))
+		return;
+	if (isHideObj(param_1))
+		return;
+	if (param_1->isActorType(0x08000083))
+		return;
+	if (param_1->isActorType(0x400000CA))
+		return;
+	if (param_1->isActorType(0x400000CC))
+		return;
+
+	if (param_1->isActorType(0x80000001)) {
+		if (!isActorType(0x400000D0) && SMS_GetMarioSpeedY() != 0.0f) {
+			kicked();
+			return;
+		}
+	}
+
+	boundByActor(param_1);
 }
 
 void TBigWatermelon::control()
