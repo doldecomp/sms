@@ -291,10 +291,12 @@ void TCogwheel::control()
 	mPot->mPosition.y   = mPosition.y - (mRopeLength - mPlateRopeLength);
 
 	f32 speed = fabsf(mSpeed);
-	if (speed > 0.01f)
+	if (speed > 0.01f) {
+		f32 volume = 10.0f * speed;
 		gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_MR_TSUBO_PULL, &mPosition,
-		                                  nullptr, 10.0f * speed, 0, 0,
-		                                  nullptr, 0, 4);
+		                                  nullptr, volume, 0, 0, nullptr, 0,
+		                                  4);
+	}
 }
 
 void TCogwheel::initMapObj()
@@ -740,6 +742,9 @@ void TMapObjPuncher::control()
 	TMapObjBase::control();
 
 	switch (mState) {
+	case 1:
+		break;
+
 	case 2:
 		soundBas(MSD_SE_OBJ_PUNCHER_RETURN, 101.0f,
 		         getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate());
@@ -1109,6 +1114,9 @@ void TMareCork::loadAfter()
 
 void TMareCork::moveObject()
 {
+	// TODO: the ROM masks isObject()'s result with clrlwi, so
+	// TCannon::isObject() returns bool, not the BOOL that Enemy/Cannon.hpp
+	// declares. That is a shared-header change this batch must not make.
 	if (mCannon->isObject() && !mIsBlownOut) {
 		getMActor()->setBck("marecork");
 		setAnmSound("/scene/mapObj/marecork.bas");
