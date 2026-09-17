@@ -694,10 +694,7 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 		f32 sinYaw = sinf(yaw);
 		f32 cosYaw = cosf(yaw);
 		// TODO: mtx = Ry(yaw) * mtx, written out with the literal factors.
-		(void)sinYaw;
-		(void)cosYaw;
 		// TODO: mtx = mtx * Rz(pitch), likewise.
-		(void)pitch;
 	}
 
 	// TODO: the aim below is an outline only. The ROM normalises `focus` in
