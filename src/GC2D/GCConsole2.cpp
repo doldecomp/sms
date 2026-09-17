@@ -798,6 +798,21 @@ static inline void updateRedCoinCounter(TGCConsole2* console)
 	}
 }
 
+// fabricated: the coin counter's "swap the digit texture and puff a particle
+// over it" step. The five sites in updateCoinCounterAnimation share one JUTRect
+// and one position vector, so both are passed in.
+static inline void changeCoinNum(TBoundPane* pane, JUTTexture** textures,
+                                 int digit, JUTRect& bounds,
+                                 JGeometry::TVec3<f32>& position)
+{
+	((J2DPicture*)pane->getPane())
+	    ->changeTexture(textures[digit]->getTexInfo(), 0);
+	bounds = pane->getPane()->mGlobalBounds;
+	position.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
+}
+
 // fabricated
 static inline void updateCoinCounterAnimation(TGCConsole2* console)
 {
@@ -828,19 +843,36 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 		}
 
 		console->unk6C = display;
-		setCounterDigits(console->unkD4, console->unkE0, display);
 
 		if (incrementing) {
-			if (display >= 100) {
-				if (display % 100 == 0)
-					emitCounterParticle(console->unkD4[0]);
-				if (display % 10 == 0)
-					emitCounterParticle(console->unkD4[1]);
-				emitCounterParticle(console->unkD4[2]);
+			JUTRect bounds(0, 0, 0, 0);
+			JGeometry::TVec3<f32> position;
+
+			if (console->unk6C >= 100) {
+				if (console->unk6C % 100 == 0)
+					changeCoinNum(console->unkD4[0], console->unkE0,
+					              console->unk6C / 100, bounds, position);
+
+				int rest
+				    = console->unk6C - (int)(console->unk6C * 0.01f) * 100;
+				if (rest % 10 == 0)
+					changeCoinNum(console->unkD4[1], console->unkE0, rest / 10,
+					              bounds, position);
+
+				if (!console->unkD4[2]->getPane()->isVisible())
+					console->unkD4[2]->getPane()->show();
+				changeCoinNum(console->unkD4[2], console->unkE0, rest % 10,
+				              bounds, position);
 			} else {
-				if (display % 10 == 0)
-					emitCounterParticle(console->unkD4[0]);
-				emitCounterParticle(console->unkD4[1]);
+				if (console->unk6C % 10 == 0)
+					changeCoinNum(console->unkD4[0], console->unkE0,
+					              console->unk6C / 10, bounds, position);
+
+				changeCoinNum(console->unkD4[1], console->unkE0,
+				              console->unk6C % 10, bounds, position);
+
+				if (console->unkD4[2]->getPane()->isVisible())
+					console->unkD4[2]->getPane()->hide();
 			}
 		}
 		++console->unk68;
@@ -1302,19 +1334,12 @@ static inline void updateWaterTankState(TGCConsole2* console)
 	}
 
 	if (console->unk4B) {
-		bool done = true;
-		if (!console->unk2F8->update())
-			done = false;
-		if (!console->unk26C->update())
-			done = false;
-		if (!console->unk270->update())
-			done = false;
-		if (!console->unk274->update())
-			done = false;
+		u8 done = 1;
+		done    = done & console->unk2F8->update();
+		done    = done & console->unk274->update();
+		done    = done & console->unk270->update();
+		done    = done & console->unk26C->update();
 		if (done) {
-			console->unk2F8->getPane()->hide();
-			console->unk274->getPane()->hide();
-			console->unk29C->getPane()->hide();
 			console->unk4B = 0;
 			console->unk46 = 0;
 		}
