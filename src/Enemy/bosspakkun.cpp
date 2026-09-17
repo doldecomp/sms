@@ -123,9 +123,9 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
 	initHitActor(0x800000F, 1, 0x80000000, 0.0f, 0.0f, 100.0f, 200.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	group->getChildren().push_back(this);
 }
 
 // UNUSED, 0xa8 in the map. TODO: no call site of this shape is left in the
@@ -870,8 +870,11 @@ void TBossPakkun::init(TLiveManager* manager)
 	mPolDrop      = new TBPPolDrop(this, "<TBPPolDrop>");
 	MActor* stamp = mMActorKeeper->createMActor("pollut_ball_stamp.bmd", 0);
 	MActor* ball  = mMActorKeeper->createMActor("pollut_ball.bmd", 0);
-	mPolDrop->mBallMActor  = ball;
-	mPolDrop->mStampMActor = stamp;
+
+	TBPPolDrop* drop  = mPolDrop;
+	drop->mBallMActor = ball;
+	// The stamp model is the one the pollution map takes its imprint from.
+	drop->mStampMActor = stamp;
 
 	ResTIMG* rak = (ResTIMG*)JKRFileLoader::getGlbResource(
 	    "/scene/map/pollution/H_ma_rak.bti");
@@ -883,8 +886,11 @@ void TBossPakkun::init(TLiveManager* manager)
 		mVomit = new TBPVomit(this, "<TBPVomit>");
 		MActor* white
 		    = mMActorKeeper->createMActor("bosspakuPollut_white.bmd", 0);
-		mVomit->mMActor = mMActorKeeper->createMActor("bosspakuPollut.bmd", 0);
-		mVomit->mStampMActor = white;
+		MActor* pollut = mMActorKeeper->createMActor("bosspakuPollut.bmd", 0);
+
+		TBPVomit* vomit      = mVomit;
+		vomit->mMActor       = pollut;
+		vomit->mStampMActor  = white;
 
 		mTornado = new TBPTornado(this, "<TBPTornado>");
 		group->getChildren().push_back(mTornado);
@@ -953,6 +959,8 @@ void TBossPakkun::rumblePad(int kind, const JGeometry::TVec3<f32>& from)
 		break;
 	case 1:
 		power *= 0.7f;
+		break;
+	default:
 		break;
 	}
 
@@ -2133,7 +2141,7 @@ DEFINE_NERVE(TNerveBPFall, TLiveActor)
 		if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 			boss->changeBck(BOSSPAKU_BCK_FALL_LOOP);
 	} else if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FALL_LOOP)) {
-		if (!boss->checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+		if (!boss->isAirborne()) {
 			boss->changeBck(BOSSPAKU_BCK_FALL_END);
 			gpCameraShake->startShake(
 			    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_POPO, 1.0f);
