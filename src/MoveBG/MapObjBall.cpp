@@ -1098,52 +1098,50 @@ void TBigWatermelon::kill()
 
 void TResetFruit::kicked()
 {
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000))
-		return;
-	if (isState(STATE_HOLDING))
-		return;
-
-	// TODO: 84.5%. The original leaves this last guard's branch unfused,
-	// which usually means a disjunction, but joining it to either of the
-	// two checks above costs two points rather than gaining.
-	f32 marioSpeedY = SMS_GetMarioSpeedY();
-	if (marioSpeedY < 0.0f)
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) || isState(STATE_HOLDING)
+	    || SMS_GetMarioSpeedY() < 0.0f)
 		return;
 
 	JGeometry::TVec3<f32> vel(mVelocity);
-	if (JGeometry::TVec3<f32>(vel).y > 0.0f)
-		return;
-
-	// Already in the air and heading away from Mario: leave it alone.
-	if (checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+	if (JGeometry::TVec3<f32>(vel).y <= 0.0f) {
+		// Already in the air and heading away from Mario: leave it alone.
 		JGeometry::TVec3<f32> away(vel);
-		if (away.x * (SMS_GetMarioPos().x - mPosition.x) + away.y * 0.0f
-		        + away.z * (SMS_GetMarioPos().z - mPosition.z)
-		    > 0.0f)
-			return;
+		BOOL airborne = checkLiveFlag(LIVE_FLAG_AIRBORNE);
+		f32 toward    = away.x * (SMS_GetMarioPos().x - mPosition.x)
+		    + away.y * 0.0f
+		    + away.z * (SMS_GetMarioPos().z - mPosition.z);
+		// TODO: 91.4%. The ROM materialises the airborne flag into a byte
+		// and tests it with cmpwi, i.e. the predicate went through an
+		// int/BOOL; neither checkLiveFlag nor isAirborne reproduces that
+		// here, and the ROM also reloads the 0.0f for the comparison
+		// instead of keeping it in a register.
+		if (airborne) {
+			if (toward > 0.0f)
+				return;
+		}
+
+		if (JGeometry::TVec3<f32>(vel).y == 0.0f) {
+			mVelocity.y = unk178;
+		} else {
+			mVelocity.y = unk174 * SMS_GetMarioSpeedY()
+			    - unk160 * JGeometry::TVec3<f32>(vel).y;
+		}
+
+		mVelocity.x += unk170 * SMS_GetMarioSpeedX();
+		mVelocity.z += unk170 * SMS_GetMarioSpeedZ();
+
+		f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+		if (abs(mVelocity.x) < minSpeed && abs(mVelocity.z) < minSpeed) {
+			mVelocity.x = 2.0f * MsRandF() - 1.0f;
+			mVelocity.z = 2.0f * MsRandF() - 1.0f;
+		}
+
+		unk194 = 10;
+		offLiveFlag(LIVE_FLAG_UNK10);
+		SMS_GetMarioHitActor()->receiveMessage(this, HIT_MESSAGE_ATTACK);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
-
-	if (JGeometry::TVec3<f32>(vel).y == 0.0f) {
-		mVelocity.y = unk178;
-	} else {
-		mVelocity.y = unk174 * marioSpeedY
-		    - unk160 * JGeometry::TVec3<f32>(vel).y;
-	}
-
-	mVelocity.x += unk170 * SMS_GetMarioSpeedX();
-	mVelocity.z += unk170 * SMS_GetMarioSpeedZ();
-
-	f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
-	if (abs(mVelocity.x) < minSpeed && abs(mVelocity.z) < minSpeed) {
-		mVelocity.x = 2.0f * MsRandF() - 1.0f;
-		mVelocity.z = 2.0f * MsRandF() - 1.0f;
-	}
-
-	unk194 = 10;
-	offLiveFlag(LIVE_FLAG_UNK10);
-	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
-	SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
-	                                nullptr, 0, 4);
 }
 
 void TResetFruit::perform(u32 cue, JDrama::TGraphics* graphics)
