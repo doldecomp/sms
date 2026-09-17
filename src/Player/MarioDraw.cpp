@@ -581,11 +581,23 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
+			// TODO: the ROM copies each `Vec x = { a, b, c }` out of the
+			// aggregate-initialisation temporary into the named variable
+			// (temp at 0xa4/0x8c, variable at 0xe0/0xc8), where MWCC elides
+			// that copy for us; spelling the copies out by hand reaches
+			// 93.4% but only by inventing two temporaries. A named MtxPtr
+			// for mCurrentMtx (an aliasing lever) changes nothing, and the
+			// frame is 0x78 short, so more locals are missing besides.
 			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 
 				Vec currentMtxDir = { J3DSys::mCurrentMtx[0][0],
 					                  J3DSys::mCurrentMtx[1][0],
 					                  J3DSys::mCurrentMtx[2][0] };
+				// Dead: its all-zero 12-byte .rodata template is emitted
+				// (@3170/@3195) but nothing reads it.
+				Vec currentMtxUp  = { J3DSys::mCurrentMtx[0][1],
+					                  J3DSys::mCurrentMtx[1][1],
+					                  J3DSys::mCurrentMtx[2][1] };
 				Vec normalDir     = { -checkData->getNormal().x,
 					                  -checkData->getNormal().y,
 					                  -checkData->getNormal().z };
@@ -616,7 +628,10 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 
 				footMtx[0][1] = normalDir.x;
 				footMtx[1][1] = normalDir.y;
-				footMtx[2][1] = normalDir.z;
+				// The ROM really stores the third component at [2][2], one
+				// row over, so footMtx[2][1] is never written and the
+				// [2][2] store below overwrites this one.
+				footMtx[2][2] = normalDir.z;
 
 				footMtx[0][2] = currentNormalCross1.x;
 				footMtx[1][2] = currentNormalCross1.y;
@@ -668,11 +683,23 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
+			// TODO: the ROM copies each `Vec x = { a, b, c }` out of the
+			// aggregate-initialisation temporary into the named variable
+			// (temp at 0xa4/0x8c, variable at 0xe0/0xc8), where MWCC elides
+			// that copy for us; spelling the copies out by hand reaches
+			// 93.4% but only by inventing two temporaries. A named MtxPtr
+			// for mCurrentMtx (an aliasing lever) changes nothing, and the
+			// frame is 0x78 short, so more locals are missing besides.
 			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 
 				Vec currentMtxDir = { J3DSys::mCurrentMtx[0][0],
 					                  J3DSys::mCurrentMtx[1][0],
 					                  J3DSys::mCurrentMtx[2][0] };
+				// Dead: its all-zero 12-byte .rodata template is emitted
+				// (@3170/@3195) but nothing reads it.
+				Vec currentMtxUp  = { J3DSys::mCurrentMtx[0][1],
+					                  J3DSys::mCurrentMtx[1][1],
+					                  J3DSys::mCurrentMtx[2][1] };
 				Vec normalDir     = { -checkData->getNormal().x,
 					                  -checkData->getNormal().y,
 					                  -checkData->getNormal().z };
@@ -703,7 +730,10 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 
 				footMtx[0][1] = normalDir.x;
 				footMtx[1][1] = normalDir.y;
-				footMtx[2][1] = normalDir.z;
+				// The ROM really stores the third component at [2][2], one
+				// row over, so footMtx[2][1] is never written and the
+				// [2][2] store below overwrites this one.
+				footMtx[2][2] = normalDir.z;
 
 				footMtx[0][2] = currentNormalCross1.x;
 				footMtx[1][2] = currentNormalCross1.y;
