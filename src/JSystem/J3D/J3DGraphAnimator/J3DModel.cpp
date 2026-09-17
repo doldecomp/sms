@@ -405,7 +405,7 @@ int J3DModelData::setTexMtxAnimator(J3DAnmTextureSRTKey* anm,
                                     J3DTexMtxAnm* tex_anm,
                                     J3DTexMtxAnm* dual_anm_r)
 {
-	J3D_ASSERT_NULLPTR(532, anm != nullptr);
+	J3D_ASSERT_NULLPTR(anm != nullptr);
 
 	int ret         = 0;
 	u16 materialNum = anm->getUpdateMaterialNum();
@@ -521,8 +521,8 @@ void J3DModel::initialize()
 void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
                               u32 mtxNum)
 {
-	J3D_ASSERT_NULLPTR(83, pModelData != nullptr);
-	J3D_ASSERT_NONZEROARG(84, mtxNum != 0);
+	J3D_ASSERT_NULLPTR(pModelData != nullptr);
+	J3D_ASSERT_NONZEROARG(mtxNum != 0);
 
 	mModelData = pModelData;
 	if (pModelData->getJointNum()) {

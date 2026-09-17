@@ -57,7 +57,7 @@ typedef struct THPPlayer {
 
 extern THPPlayer ActivePlayer;
 
-BOOL THPPlayerInit();
+BOOL THPPlayerInit(s32);
 void THPPlayerQuit();
 BOOL THPPlayerOpen(const char* fileName, BOOL onMemory);
 BOOL THPPlayerClose();

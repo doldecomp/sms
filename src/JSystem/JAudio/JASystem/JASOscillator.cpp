@@ -46,7 +46,7 @@ void TOscillator::initStart()
 {
 	mState         = 2;
 	mDirectRelease = 0;
-	if (mOsc == nullptr || !mOsc->unk8) {
+	if (mOsc == nullptr || !mOsc->mAdsTable) {
 		mPhase = 0.0f;
 		return;
 	}
@@ -54,7 +54,7 @@ void TOscillator::initStart()
 	mReleaseRate   = 0.0f;
 	mTargetPhase   = 0.0f;
 	mDirectRelease = 0;
-	mReleaseRate -= mOsc->unk4;
+	mReleaseRate -= mOsc->mRate;
 }
 
 f32 TOscillator::getOffset()
@@ -68,7 +68,7 @@ f32 TOscillator::getOffset()
 	case 0:
 		return 1.0f;
 	case 3:
-		return mOsc->unk14 + (mPhase * mOsc->unk10);
+		return mOsc->mVertex + (mPhase * mOsc->mWidth);
 
 	case 1:
 		mState = 2;
@@ -76,11 +76,11 @@ f32 TOscillator::getOffset()
 	default:
 		s16* var_r4;
 		if (mState == 4) {
-			var_r4 = mOsc->unkC;
+			var_r4 = mOsc->mRelTable;
 		} else if (mState == 5) {
 			var_r4 = Driver::FORCE_STOP_TABLE;
 		} else {
-			var_r4 = mOsc->unk8;
+			var_r4 = mOsc->mAdsTable;
 		}
 
 		if (var_r4 == nullptr && mState != 6) {
@@ -91,7 +91,7 @@ f32 TOscillator::getOffset()
 		if (mState == 5) {
 			mReleaseRate -= 1.0f;
 		} else {
-			mReleaseRate -= mOsc->unk4;
+			mReleaseRate -= mOsc->mRate;
 		}
 
 		return calc(var_r4);
@@ -113,7 +113,7 @@ f32 TOscillator::getOffsetNoCount()
 		break;
 	}
 
-	return mPhase * mOsc->unk10 + mOsc->unk14;
+	return mPhase * mOsc->mWidth + mOsc->mVertex;
 }
 
 bool TOscillator::forceStop()
@@ -133,13 +133,13 @@ bool TOscillator::release()
 	if (mState == 5)
 		return false;
 
-	if (mOsc->unk8 != mOsc->unkC) {
+	if (mOsc->mAdsTable != mOsc->mRelTable) {
 		unk6         = 0;
 		mReleaseRate = 0.0f;
 		mTargetPhase = mPhase;
 	}
 
-	if (mOsc->unkC == nullptr && mDirectRelease == 0)
+	if (mOsc->mRelTable == nullptr && mDirectRelease == 0)
 		mDirectRelease = 0x10;
 
 	if (mDirectRelease != 0) {
@@ -193,7 +193,7 @@ f32 TOscillator::calc(s16* table)
 
 		if (envMode == 14) {
 			mState = 3;
-			return mOsc->unk14 + mPhase * mOsc->unk10;
+			return mOsc->mVertex + mPhase * mOsc->mWidth;
 		}
 
 		unk5 = envMode;
@@ -217,8 +217,8 @@ f32 TOscillator::calc(s16* table)
 		unk6 += 1;
 	}
 
-	if (mOsc->unk10 == 0.0f)
-		return mOsc->unk14;
+	if (mOsc->mWidth == 0.0f)
+		return mOsc->mVertex;
 
 	f32 temp_f31 = 0.0f;
 	f32 newPhase;
@@ -273,7 +273,7 @@ f32 TOscillator::calc(s16* table)
 		}
 	}
 
-	return newPhase * mOsc->unk10 + mOsc->unk14;
+	return newPhase * mOsc->mWidth + mOsc->mVertex;
 }
 
 } // namespace JASystem

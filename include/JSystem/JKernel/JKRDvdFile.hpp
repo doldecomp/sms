@@ -18,6 +18,7 @@ struct JKRDvdFileInfo : DVDFileInfo {
 class JKRDvdFile : public JKRFile {
 public:
 	JKRDvdFile();
+	JKRDvdFile(const char* filename);
 	JKRDvdFile(s32 entrynum);
 
 	virtual ~JKRDvdFile();
@@ -31,6 +32,11 @@ public:
 	virtual s32 getFileSize() const { return mDvdFileInfo.length; }
 	virtual bool open(s32 entrynum);
 	DVDFileInfo* getFileInfo() { return &mDvdFileInfo; }
+
+	int readDataAsync(void* data, s32 length, s32 offset);
+	int writeDataAsync(const void* data, s32 length, s32 offset);
+	bool check();
+	static void* load(const char* filename, JKRHeap* heap);
 
 	s32 sync();
 	static void doneProcess(s32 result, DVDFileInfo* info);

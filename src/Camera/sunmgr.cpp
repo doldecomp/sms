@@ -48,11 +48,13 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 	unk18.set(col1);
 	unk1C.set(col2);
 
-	TSunModel* sun = JDrama::TNameRefGen::search<TSunModel>("太陽モデル");
+	TSunModel* sun
+	    = static_cast<TSunModel*>(JDrama::TNameRefGen::search("太陽モデル"));
 	if (sun != nullptr) {
 		unk14 = 1;
 	} else {
-		sun = JDrama::TNameRefGen::search<TSunModel>("夕日モデル");
+		sun = static_cast<TSunModel*>(
+		    JDrama::TNameRefGen::search("夕日モデル"));
 		if (sun != nullptr) {
 			unk14 = 1;
 			unk15 |= 0x2;

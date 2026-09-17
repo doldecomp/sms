@@ -93,9 +93,9 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
-	/* 0x10 */ MSSceneSE* unk10;
-	/* 0x14 */ TGraphWeb* unk14;
-	/* 0x18 */ u32 unk18;
+	/* 0x10 */ MSSceneSE* mSceneSE;
+	/* 0x14 */ TGraphWeb* mGraph;
+	/* 0x18 */ u32 mSoundID;
 };
 
 #endif

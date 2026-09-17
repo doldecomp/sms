@@ -11,7 +11,7 @@ class TWaveBank;
 class TBank {
 public:
 	TBank()
-	    : unk4(nullptr)
+	    : mWaveBank(nullptr)
 	{
 	}
 
@@ -21,11 +21,14 @@ public:
 
 	static JKRHeap* getCurrentHeap();
 
+	TWaveBank* getWaveBank() const { return mWaveBank; }
+	void assignWaveBank(TWaveBank* bank) { mWaveBank = bank; }
+
 private:
 	static JKRHeap* sCurrentHeap;
 
 public:
-	/* 0x4 */ TWaveBank* unk4;
+	/* 0x4 */ TWaveBank* mWaveBank;
 };
 
 } // namespace JASystem

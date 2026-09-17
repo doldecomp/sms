@@ -112,7 +112,7 @@ void TAnimalBase::initNoLoad_(TAnimalBase* other)
 	other->mGroundPlane = TMap::getIllegalCheckData();
 	other->init(mManager);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(other);
 }

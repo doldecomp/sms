@@ -30,7 +30,13 @@ template <> struct TUtil<f32> {
 	static f32 PI() { return 3.14159265358979323846f; }
 	static f32 halfPI() { return 1.5707963267948966f; }
 
-	// fabricated but based on SMG minus the epsilon parameter
+	// from SMG
+	static bool epsilonEquals(f32 param_1, f32 param_2, f32 eps)
+	{
+		return -eps <= param_2 - param_1 && param_2 - param_1 <= eps;
+	}
+
+	// fabricated
 	static bool epsilonEquals(f32 param_1, f32 param_2)
 	{
 		return -epsilon() <= param_2 - param_1

@@ -95,13 +95,13 @@ TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
 	             mOwner->mTearsParams->mSLTearsDropAttackHeight.get(),
 	             mOwner->mTearsParams->mSLTearsDropDamageRadius.get(),
 	             mOwner->mTearsParams->mSLTearsDropDamageHeight.get());
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	mActive = false;
 
-	TScreenTexture* screenTexture
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* screenTexture = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* textureInfo = screenTexture->getTexture()->getTexInfo();
 	new J3DSkinDeform;
 	MActor* actor = mSharedParts->getMActor();
@@ -278,8 +278,8 @@ void TBEelTears::init(TLiveManager* manager)
 	mTearsParams = static_cast<TBEelTearsSaveLoadParams*>(getSaveParam());
 	mSpine->initWith(&TNerveBEelTearsGenerate::theNerve());
 
-	TScreenTexture* screenTexture
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* screenTexture = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG& screenTexInfo = *screenTexture->getTexture()->getTexInfo();
 
 	J3DSkinDeform* deform = new J3DSkinDeform;
@@ -299,7 +299,7 @@ void TBEelTears::init(TLiveManager* manager)
 	mBodyScale = mTearsParams->mBodyScaleRange.rand();
 
 	TIdxGroupObj* enemyGroup
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	mRecoverCollision = new TBossEelTearsRecoverCollision(
 	    mMActor->getModel()->getAnmMtx(0), "回復コリジョン");
 	mRecoverCollision->initCollision();
@@ -789,7 +789,8 @@ TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
 	             mOwner->getBossEelParams().mSLToothDamageRadius.get(),
 	             mOwner->getBossEelParams().mSLToothDamageHeight.get());
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -979,7 +980,7 @@ TBossEelVortex::TBossEelVortex(TBossEel* owner, const char* name)
 	             mOwner->getBossEelParams().mSLVortexAttackHeight.get(),
 	             mOwner->getBossEelParams().mSLVortexDamageRadius.get(),
 	             mOwner->getBossEelParams().mSLVortexDamageHeight.get());
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -1417,7 +1418,7 @@ void TBossEel::init(TLiveManager* manager)
 	                             mSaveParams->mSLHeadDamageRadius.get(),
 	                             mSaveParams->mSLHeadDamageHeight.get());
 	TIdxGroupObj* enemyGroup
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	enemyGroup->getChildren().push_back(mHeadCollision);
 	mHeadCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
 

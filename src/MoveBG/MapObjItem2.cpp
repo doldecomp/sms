@@ -93,9 +93,9 @@ void TMushroom1up::control()
 		}
 
 		JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
-		pos.x += 1.5f * (50.0f * JMACos(5.0f * t));
+		pos.x += 1.5f * (50.0f * MsCos(5.0f * t));
 		pos.y += 200.0f;
-		pos.z += 1.5f * (50.0f * JMASin(5.0f * t));
+		pos.z += 1.5f * (50.0f * MsSin(5.0f * t));
 		mPosition.set(pos);
 
 		mScaling.set(1.5f, 1.5f, 1.5f);
@@ -145,7 +145,7 @@ void TMushroom1up::control()
 void TMushroom1up::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk139 != 2 && mStateTimer < 240 && (cue & CUE_ENTRY)
-	    && gpMarDirector->unk58 % 6 > 2)
+	    && gpMarDirector->mMoveTickCount % 6 > 2)
 		cue &= ~CUE_ENTRY;
 
 	if ((cue & CUE_MOVE) && unk13A == 0 && unk139 != 2 && mStateTimer <= 0)

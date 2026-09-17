@@ -126,7 +126,7 @@ public:
 
 	void setup2();
 	int thpInit();
-	void loadParticleMario();
+	static void loadParticleMario();
 	void loadParticle();
 	void initLoadParticle();
 	int loadResource();
@@ -172,17 +172,17 @@ public:
 
 public:
 	enum {
-		STATE_UNK0  = 0,
-		STATE_UNK1  = 1,
-		STATE_UNK2  = 2,
-		STATE_UNK3  = 3,
-		STATE_UNK4  = 4,
-		STATE_UNK5  = 5,
-		STATE_UNK7  = 7,
-		STATE_UNK9  = 9,
-		STATE_UNK10 = 10,
-		STATE_UNK11 = 11,
-		STATE_UNK12 = 12,
+		STATE_UNK0       = 0,
+		STATE_UNK1       = 1,
+		STATE_UNK2       = 2,
+		STATE_UNK3       = 3,
+		STATE_UNK4       = 4,
+		STATE_PAUSE_MENU = 5,
+		STATE_UNK7       = 7,
+		STATE_UNK9       = 9,
+		STATE_GUIDE      = 10,
+		STATE_CARD_SAVE  = 11,
+		STATE_UNK12      = 12,
 	};
 
 	/* 0x18 */ TMarioGamePad** unk18;
@@ -202,8 +202,8 @@ public:
 	/* 0x4E */ u16 unk4E;
 	/* 0x50 */ u16 unk50;
 	/* 0x54 */ int unk54;
-	/* 0x58 */ int unk58;
-	/* 0x5C */ int unk5C;
+	/* 0x58 */ int mMoveTickCount;
+	/* 0x5C */ int mTickCount;
 	/* 0x60 */ int unk60;
 	/* 0x64 */ u8 mState;
 	/* 0x68 */ u32 unk68;

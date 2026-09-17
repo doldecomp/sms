@@ -210,6 +210,56 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* dvdFile, u8* dst,
 	return nullptr;
 }
 
+void* JKRDvdRipper::loadToMainRAMAsync(const char* name, u8* dst,
+                                       JKRExpandSwitch expandSwitch,
+                                       u32 dstLength, JKRHeap* heap)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
+
+void* JKRDvdRipper::loadToMainRAMAsync(s32 entryNumber, u8* dst,
+                                       JKRExpandSwitch expandSwitch,
+                                       u32 dstLength, JKRHeap* heap)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
+
+void* JKRDvdRipper::loadToMainRAMAsync(JKRDvdFile* dvdFile, u8* dst,
+                                       JKRExpandSwitch expandSwitch,
+                                       u32 dstLength, JKRHeap* heap)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
+
+void JKRDvdRipper::doneProcess(s32 result, DVDFileInfo* info)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+bool JKRDvdRipper::sync(JKRDMCommand* command, int isNonBlocking)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return false;
+}
+
+void JKRDvdRipper::syncAll(int isNonBlocking)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+void JKRDvdRipper::countLeftSync() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
+JKRDMCommand::JKRDMCommand()
+    : mLink(this)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+JKRDMCommand::~JKRDMCommand() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
 JSUList<JKRDMCommand> JKRDvdRipper::sDvdAsyncList;
 u32 JKRDvdRipper::szpBufferSize = 0x00000400;
 static u8* szpBuf;
@@ -231,12 +281,12 @@ int JKRDecompressFromDVD(JKRDvdFile* dvdFile, void* dst, u32 fileSize,
 	u32 result = 0;
 
 	szpBuf = (u8*)JKRAllocFromSysHeap(JKRDvdRipper::getSzpBufferSize(), -0x20);
-	JUT_ASSERT(913, szpBuf != nullptr);
+	JUT_ASSERT(szpBuf != nullptr);
 
 	szpEnd = szpBuf + JKRDvdRipper::getSzpBufferSize();
 	if (inFileOffset != 0) {
 		refBuf = (u8*)JKRAllocFromSysHeap(0x1120, -4);
-		JUT_ASSERT(922, refBuf != nullptr);
+		JUT_ASSERT(refBuf != nullptr);
 		refEnd     = refBuf + 0x1120;
 		refCurrent = refBuf;
 	} else {
@@ -409,7 +459,7 @@ static u8* nextSrcData(u8* src)
 	if (transSize > transLeft) {
 		transSize = transLeft;
 	}
-	JUT_ASSERT(VERSION_SELECT(1228, 1176, 1176), transSize > 0);
+	JUT_ASSERT(transSize > 0);
 
 	while (true) {
 		s32 result = DVDReadPrio(srcFile->getFileInfo(), (buf + limit),

@@ -188,24 +188,8 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 	if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		MtxPtr mA = mOwner->getMActor()->getModel()->getAnmMtx(1);
 
-		f32 s = JMASin(mOwner->unk1AC);
-		f32 c = JMACos(mOwner->unk1AC);
-
 		Mtx local_4c;
-		local_4c[0][0] = 1.0f;
-		local_4c[0][1] = 0.0f;
-		local_4c[0][2] = 0.0f;
-		local_4c[0][3] = 0.0f;
-
-		local_4c[1][0] = 0.0f;
-		local_4c[1][1] = c;
-		local_4c[1][2] = -s;
-		local_4c[1][3] = 0.0f;
-
-		local_4c[2][0] = 0.0f;
-		local_4c[2][1] = s;
-		local_4c[2][2] = c;
-		local_4c[2][3] = 0.0f;
+		MsMtxSetRotX(local_4c, mOwner->unk1AC);
 
 		MTXConcat(mA, local_4c, mA);
 
@@ -244,24 +228,8 @@ BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 
-		f32 s = JMASin(gpCurNameKuri->unk1AC);
-		f32 c = JMACos(gpCurNameKuri->unk1AC);
-
 		Mtx local_48;
-		local_48[0][0] = 1.0f;
-		local_48[0][1] = 0.0f;
-		local_48[0][2] = 0.0f;
-		local_48[0][3] = 0.0f;
-
-		local_48[1][0] = 0.0f;
-		local_48[1][1] = c;
-		local_48[1][2] = -s;
-		local_48[1][3] = 0.0f;
-
-		local_48[2][0] = 0.0f;
-		local_48[2][1] = s;
-		local_48[2][2] = c;
-		local_48[2][3] = 0.0f;
+		MsMtxSetRotX(local_48, gpCurNameKuri->unk1AC);
 
 		MTXConcat(mA, local_48, mA);
 		MTXConcat(J3DSys::mCurrentMtx, local_48, J3DSys::mCurrentMtx);
@@ -336,8 +304,8 @@ void TNameKuri::init(TLiveManager* param_1)
 	getMActor()->setJointCallback(1, &NameKuriScaleCallback);
 	getMActor()->resetDL();
 	getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 
 	SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
 	                     "H_ma_rak_dummy", *tex->getTexture()->getTexInfo());
@@ -396,31 +364,13 @@ void TNameKuri::calcRootMatrix()
 
 		f32 angle = (1.0f - getWalker()->unk2C->unk10) * 90.0f;
 
-		f32 s = JMASin(angle);
-		f32 c = JMACos(angle);
-
 		Mtx local_7c;
-
-		local_7c[0][0] = 1.0f;
-		local_7c[1][0] = 0.0f;
-		local_7c[2][0] = 0.0f;
-
-		local_7c[0][1] = 0.0f;
-		local_7c[1][1] = c;
-		local_7c[2][1] = s;
-
-		local_7c[0][2] = 0.0f;
-		local_7c[1][2] = -s;
-		local_7c[2][2] = c;
-
-		local_7c[0][3] = 0.0f;
-		local_7c[1][3] = 0.0f;
-		local_7c[2][3] = 0.0f;
+		MsMtxSetRotX(local_7c, angle);
 
 		MTXConcat(anmMtx, local_7c, anmMtx);
 	} else {
-		JGeometry::TVec3<f32> local_88(JMASin(mRotation.y), 0.0f,
-		                               JMACos(mRotation.y));
+		JGeometry::TVec3<f32> local_88(MsSin(mRotation.y), 0.0f,
+		                               MsCos(mRotation.y));
 
 		JGeometry::TVec3<f32> normal = unk138->getNormal();
 
@@ -761,7 +711,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->unk1BC.r = self->unk1BC.g = self->unk1BC.b = sVar5;
 			} else {
 				s16 col
-				    = abs(JMASin(colorChangeRate * spine->getTime())) * 255.0f;
+				    = abs(MsSin(colorChangeRate * spine->getTime())) * 255.0f;
 				self->unk1BC.r = self->unk1BC.g = self->unk1BC.b = col;
 			}
 

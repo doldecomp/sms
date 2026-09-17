@@ -39,7 +39,7 @@ class TFlagManager {
 public:
 	TFlagManager();
 	void addUseFlag(u32, u16);
-	void getUseFlag(u32);
+	u16 getUseFlag(u32);
 	bool isRegistered(u32, u16);
 
 	static TFlagManager* get() { return spFManager; }

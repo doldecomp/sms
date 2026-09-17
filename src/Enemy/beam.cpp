@@ -13,7 +13,7 @@ static void coneInPlane(const JGeometry::TVec3<f32>& origin, f32 angle,
 {
 	// Scale perpendicular component by cone opening
 	JGeometry::TVec3<f32> dir = offsetDir;
-	dir.scale(JMASin(angle));
+	dir.scale(MsSin(angle));
 
 	// Add the axis direction to get the final ray direction
 	dir += axis;
@@ -97,8 +97,8 @@ void TConeBeam::calcVertices(int count)
 
 	if (mBGCheckData == nullptr) {
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 s = mScale * JMASin(i * (360.0f / mVtxCount)) / 2.0f;
-			f32 c = mScale * JMACos(i * (360.0f / mVtxCount)) / 2.0f;
+			f32 s = mScale * MsSin(i * (360.0f / mVtxCount)) / 2.0f;
+			f32 c = mScale * MsCos(i * (360.0f / mVtxCount)) / 2.0f;
 
 			JGeometry::TVec3<f32> local_11c;
 			local_11c.zero();
@@ -120,8 +120,8 @@ void TConeBeam::calcVertices(int count)
 		PSVECNormalize(&local_128, &local_128);
 
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 sinA = JMASin(i * (360.0f / mVtxCount));
-			f32 cosA = JMACos(i * (360.0f / mVtxCount));
+			f32 sinA = MsSin(i * (360.0f / mVtxCount));
+			f32 cosA = MsCos(i * (360.0f / mVtxCount));
 
 			JGeometry::TVec3<f32> local_ec;
 			local_ec.zero();

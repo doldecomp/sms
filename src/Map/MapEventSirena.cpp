@@ -48,7 +48,8 @@ bool TMapEventSirenaSink::watch()
 void TMapEventSirenaSink::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	unk40 = JDrama::TNameRefGen::search<TCameraMapTool>("ホテル上げカメラ")
+	unk40 = static_cast<TCameraMapTool*>(
+	            JDrama::TNameRefGen::search("ホテル上げカメラ"))
 	            ->getDemoLengthFrames();
 	unk44   = 240;
 	unk48   = 240;

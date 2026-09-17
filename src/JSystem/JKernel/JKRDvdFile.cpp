@@ -1,4 +1,5 @@
 #include <JSystem/JKernel/JKRDvdFile.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/JSupport/JSUInputStream.hpp>
 #include <macros.h>
 
@@ -8,6 +9,17 @@ JKRDvdFile::JKRDvdFile()
     : mLink(this)
 {
 	initiate();
+}
+
+JKRDvdFile::JKRDvdFile(const char* filename)
+    : mLink(this)
+{
+	initiate();
+	mFileOpen = open(filename);
+
+	if (isAvailable()) {
+		return;
+	}
 }
 
 JKRDvdFile::JKRDvdFile(s32 entrynum)
@@ -101,7 +113,34 @@ int JKRDvdFile::readData(void* data, s32 length, s32 ofs)
 	return ret;
 }
 
+int JKRDvdFile::readDataAsync(void* data, s32 length, s32 ofs)
+{
+	length = ALIGN_NEXT(length, 32);
+
+	OSLockMutex(&mDvdMutex);
+	int ret;
+
+	if (mDvdThread != nullptr) {
+		OSUnlockMutex(&mDvdMutex);
+		ret = -1;
+	} else {
+		mDvdThread = OSGetCurrentThread();
+		ret        = -1;
+		if (DVDReadAsync(&mDvdFileInfo, data, length, ofs,
+		                 JKRDvdFile::doneProcess)) {
+			ret = sync();
+		}
+
+		mDvdThread = nullptr;
+		OSUnlockMutex(&mDvdMutex);
+	}
+
+	return ret;
+}
+
 int JKRDvdFile::writeData(const void*, s32, s32) { return -1; }
+
+int JKRDvdFile::writeDataAsync(const void*, s32, s32) { return -1; }
 
 s32 JKRDvdFile::sync()
 {
@@ -118,4 +157,16 @@ void JKRDvdFile::doneProcess(s32 result, DVDFileInfo* info)
 {
 	OSSendMessage(&static_cast<JKRDvdFileInfo*>(info)->mFile->mDvdMessageQueue,
 	              (OSMessage)result, OS_MESSAGE_NOBLOCK);
+}
+
+bool JKRDvdFile::check()
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return false;
+}
+
+void* JKRDvdFile::load(const char* filename, JKRHeap* heap)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
 }

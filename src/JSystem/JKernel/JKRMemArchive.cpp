@@ -5,7 +5,7 @@
 #include <JSystem/JUtility/JUTAssert.hpp>
 #include <string.h>
 
-JKRMemArchive::JKRMemArchive() { }
+JKRMemArchive::JKRMemArchive() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 JKRMemArchive::JKRMemArchive(s32 entryNum,
                              JKRArchive::EMountDirection mountDirection)
@@ -37,6 +37,12 @@ JKRMemArchive::JKRMemArchive(void* buffer, u32 bufferSize,
 	mIsMounted = true;
 }
 
+JKRMemArchive::JKRMemArchive(const char* path, EMountDirection mountDirection)
+    : JKRArchive(0, MOUNT_MEM)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
 JKRMemArchive::~JKRMemArchive()
 {
 	if (mIsMounted == true) {
@@ -64,6 +70,16 @@ void JKRMemArchive::fixedInit(s32 param_1)
 	setCurrentDirID(0);
 }
 
+void JKRMemArchive::mountFixed(s32 entryNum, EMountDirection mountDirection)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+void JKRMemArchive::mountFixed(const char* path, EMountDirection mountDirection)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
 bool JKRMemArchive::mountFixed(void* param_1, JKRMemBreakFlag param_2)
 {
 	if (check_mount_already((s32)param_1)) {
@@ -83,8 +99,8 @@ bool JKRMemArchive::mountFixed(void* param_1, JKRMemBreakFlag param_2)
 
 void JKRMemArchive::unmountFixed()
 {
-	JUT_ASSERT(337, isMounted());
-	JUT_ASSERT(340, mMountCount == 1);
+	JUT_ASSERT(isMounted());
+	JUT_ASSERT(mMountCount == 1);
 	if (sCurrentVolume == this) {
 		sCurrentVolume = nullptr;
 	}
@@ -122,7 +138,7 @@ bool JKRMemArchive::open(s32 entryNum,
 	if (!mArcHeader) {
 		mMountMode = UNKNOWN_MOUNT_MODE;
 	} else {
-		JUT_ASSERT(418, mArcHeader->signature == 'RARC');
+		JUT_ASSERT(mArcHeader->signature == 'RARC');
 		mArcInfoBlock
 		    = (SArcDataInfo*)((u8*)mArcHeader + mArcHeader->header_length);
 		mDirectories = (SDIDirEntry*)((u8*)&mArcInfoBlock->num_nodes
@@ -143,7 +159,7 @@ bool JKRMemArchive::open(s32 entryNum,
 bool JKRMemArchive::open(void* buffer, u32 bufferSize, JKRMemBreakFlag flag)
 {
 	mArcHeader = (SArcHeader*)buffer;
-	JUT_ASSERT(471, mArcHeader->signature == 'RARC');
+	JUT_ASSERT(mArcHeader->signature == 'RARC');
 	mArcInfoBlock
 	    = (SArcDataInfo*)((u8*)mArcHeader + mArcHeader->header_length);
 	mDirectories = (SDIDirEntry*)((u8*)&mArcInfoBlock->num_nodes
@@ -160,9 +176,14 @@ bool JKRMemArchive::open(void* buffer, u32 bufferSize, JKRMemBreakFlag flag)
 	return true;
 }
 
+void JKRMemArchive::open(const char* path, EMountDirection mountDirection)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
 void* JKRMemArchive::fetchResource(SDIFileEntry* fileEntry, u32* resourceSize)
 {
-	JUT_ASSERT(535, isMounted());
+	JUT_ASSERT(isMounted());
 	if (!fileEntry->mData) {
 		fileEntry->mData = mArchiveData + fileEntry->mDataOffset;
 	}
@@ -177,7 +198,7 @@ void* JKRMemArchive::fetchResource(SDIFileEntry* fileEntry, u32* resourceSize)
 void* JKRMemArchive::fetchResource(void* buffer, u32 bufferSize,
                                    SDIFileEntry* fileEntry, u32* resourceSize)
 {
-	JUT_ASSERT(575, isMounted());
+	JUT_ASSERT(isMounted());
 	bufferSize    = ALIGN_PREV(bufferSize, 0x20);
 	u32 srcLength = ALIGN_NEXT(fileEntry->mSize, 0x20);
 	if (srcLength > bufferSize) {
@@ -203,7 +224,7 @@ void* JKRMemArchive::fetchResource(void* buffer, u32 bufferSize,
 
 void JKRMemArchive::removeResourceAll()
 {
-	JUT_ASSERT(622, isMounted());
+	JUT_ASSERT(isMounted());
 
 	if (mArcInfoBlock == nullptr)
 		return;
@@ -223,7 +244,7 @@ void JKRMemArchive::removeResourceAll()
 
 bool JKRMemArchive::removeResource(void* resource)
 {
-	JUT_ASSERT(653, isMounted());
+	JUT_ASSERT(isMounted());
 
 	SDIFileEntry* fileEntry = findPtrResource(resource);
 	if (!fileEntry)

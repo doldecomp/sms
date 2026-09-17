@@ -34,8 +34,8 @@ void TMapObjSeaIndirect::init()
 	        | J3DMLF_UseUniqueMaterials | (1 << J3DMLF_TevStageNumShift));
 
 	unk44->setBtk("underwater");
-	TScreenTexture* ref
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* ref = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img = ref->getTexture()->getTexInfo();
 	unk44->getModel()->getModelData()->getTexture()->setResTIMG(1, *img);
 }

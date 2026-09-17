@@ -1003,8 +1003,8 @@ public:
 		init_tobj_resource(&unk800F4,
 		                   JKRGetResource("/scene/map/map/mesh.bti"));
 
-		TScreenTexture* tex = JDrama::TNameRefGen::search<TScreenTexture>(
-		    "スクリーンテクスチャ");
+		TScreenTexture* tex = static_cast<TScreenTexture*>(
+		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 
 		unk80148->getTexture()->setResTIMG(1, *tex->getTexture()->getTexInfo());
 		unk80148->getMaterialNodePointer(0)->makeDisplayList();
@@ -1658,8 +1658,8 @@ void TBathWaterMeshRenderer::calcCoord()
 
 void TBathWaterManager::loadAfter()
 {
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	unk28[0] = new TBathWaterFlatRenderer(unk18);
 	unk28[1] = new TBathWaterMeshRenderer(unk18, tex->getTexture());
 	unk30    = unk28[1];
@@ -1673,7 +1673,8 @@ void TBathWaterManager::wave(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&,
 void TBathWaterManager::initializeIfYet_()
 {
 	if (unk24 == nullptr) {
-		TBathtub* bathtub = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+		TBathtub* bathtub
+		    = static_cast<TBathtub*>(JDrama::TNameRefGen::search("バスタブ"));
 		if (bathtub && bathtub->unk298) {
 			const TBathtubData& data = bathtub->getBathtubData();
 			for (int actor = 0; actor < 2; ++actor) {

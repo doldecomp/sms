@@ -1,21 +1,19 @@
-#include "Enemy/BathtubKiller.hpp"
-#include "Enemy/BossGesso.hpp"
-#include "Enemy/CoasterKiller.hpp"
-#include "Enemy/Enemy.hpp"
-#include "Enemy/EnemyManager.hpp"
-#include "Enemy/Hinokuri2.hpp"
+#include <Enemy/BathtubKiller.hpp>
+#include <Enemy/BossGesso.hpp>
+#include <Enemy/CoasterKiller.hpp>
+#include <Enemy/Emario.hpp>
+#include <Enemy/BossEel.hpp>
+#include <Enemy/BossManta.hpp>
+#include <Enemy/Hinokuri2.hpp>
 #include <System/MarNameRefGen.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
+	if (strcmp(name, "EMario") == 0)
+		return new TEMario;
 
-	// TODO:
-	// if ( strcmp( name, "EMario" ) == 0 )
-	//     return new TEMario("マリオモドキ");
-
-	// TODO:
-	// if ( strcmp( name, "EMarioManager" ) == 0 )
-	//     return new TEMarioManager("典型敵マネージャ");
+	if (strcmp(name, "EMarioManager") == 0)
+		return new TEMarioManager;
 
 	// TODO:
 	// if ( strcmp( name, "BossHanachan" ) == 0 )
@@ -33,17 +31,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if (strcmp(name, "SleepBossHanachanManager") == 0)
 	// 	return new TDemoBossHanachanManager("?");
 
-	// TODO:
-	// if ( strcmp( name, "BossEel" ) == 0 )
-	//     return new TBossEel;
+	if (strcmp(name, "BossEel") == 0)
+		return new TBossEel;
 
-	// TODO:
-	// if (strcmp(name, "BossEelManager") == 0)
-	// 	return new TBossEelManager("?");
+	if (strcmp(name, "BossEelManager") == 0)
+		return new TBossEelManager("?");
 
-	// TODO:
-	// if ( strcmp( name, "BEelTearsManager" ) == 0 )
-	//     return new TBEelTearsManager("めおとウナギ涙マネージャー");
+	if (strcmp(name, "BEelTearsManager") == 0)
+		return new TBEelTearsManager("めおとウナギ涙マネージャー");
 
 	// TODO:
 	// if ( strcmp( name, "Koopa" ) == 0 )
@@ -113,9 +108,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if ( strcmp( name, "LimitKoopa" ) == 0 )
 	//     return new TLimitKoopa("クッパ");
 
-	// TODO:
-	// if ( strcmp( name, "BathtubKillerManager" ) == 0 )
-	//     return new TBathtubKillerManager("バスタブキラーマネージャー");
+	if (strcmp(name, "BathtubKillerManager") == 0)
+		return new TBathtubKillerManager;
 
 	if (strcmp(name, "BathtubKiller") == 0)
 		return new TBathtubKiller;
@@ -164,17 +158,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if ( strcmp( name, "BubbleManager" ) == 0 )
 	//     return new TBubbleManager("バブルマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "OilBall" ) == 0 )
-	//     return new TBEelTears("油ダマ");
+	if (strcmp(name, "OilBall") == 0)
+		return new TOilBall;
 
-	// TODO:
-	// if ( strcmp( name, "BossManta" ) == 0 )
-	//     return new TBossManta("ボスマンタ");
+	if (strcmp(name, "BossManta") == 0)
+		return new TBossManta;
 
-	// TODO:
-	// if ( strcmp( name, "BossMantaManager" ) == 0 )
-	//     return new TBossMantaManager("ボスマンタマネージャ");
+	if (strcmp(name, "BossMantaManager") == 0)
+		return new TBossMantaManager;
 
 	return nullptr;
 }

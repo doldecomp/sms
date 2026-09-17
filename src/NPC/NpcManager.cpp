@@ -91,8 +91,8 @@ void TMareJellyFishManager::createModelData()
 
 	const ResTIMG* realTex
 	    = (const ResTIMG*)JKRFileLoader::getGlbResource(cJellyFishRealTexName);
-	TScreenTexture* screenTex
-	    = JDrama::TNameRefGen::search<TScreenTexture>(cScreenTexViewObjName);
+	TScreenTexture* screenTex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search(cScreenTexViewObjName));
 	const ResTIMG* screenTexInfo = screenTex->getTexture()->getTexInfo();
 
 	J3DModelData* modelData;

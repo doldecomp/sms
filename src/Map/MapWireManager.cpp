@@ -57,8 +57,8 @@ void TMapWireActor::init(TMapWireActorManager* manager)
 	initHitActor(0x40000098, 1, -0x80000000, TMapWireActor::mCommonAttackRadius,
 	             TMapWireActor::mCommonAttackHeight, 0.0f, 0.0f);
 
-	TIdxGroupObj* group
-	    = JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ");
+	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("アイテムグループ"));
 	group->getChildren().push_back(this);
 }
 

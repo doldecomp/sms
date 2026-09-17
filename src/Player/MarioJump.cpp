@@ -250,7 +250,7 @@ BOOL TMario::considerJumpRotate()
 BOOL TMario::checkBackTrig()
 {
 	if (mInput & 0x8000) {
-		if (mGamePad->mEnabledFrameMeaning & 0x2000) {
+		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_L)) {
 			return changePlayerStatus(MARIO_STATUS_HIP_DROP, 0, 0);
 		}
 		if (onYoshi() == 0) {
@@ -418,7 +418,7 @@ BOOL TMario::jumpWall()
 BOOL TMario::jumpCatch()
 {
 	if ((mInput & 0x8000) != 0
-	    && ((mGamePad->mEnabledFrameMeaning & 0x2000) != 0)) {
+	    && (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_L))) {
 		return changePlayerStatus(MARIO_STATUS_HIP_DROP, 0, false);
 	}
 	setAnimation(ANIM_SLDCT, 1.0);
@@ -1028,7 +1028,7 @@ BOOL TMario::rotateJumping()
 	else
 		mModelFaceAngle = -(mStatusTimer * 4096);
 
-	if (!(gpMarDirector->unk58 & 0x3F))
+	if (!(gpMarDirector->mMoveTickCount & 0x3F))
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
 
 	return 0;

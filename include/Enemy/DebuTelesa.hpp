@@ -10,7 +10,7 @@ public:
 
 class TDebuTelesa : public TSmallEnemy {
 public:
-	TDebuTelesa(const char* name);
+	TDebuTelesa(const char* name = "デブテルサ");
 
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager* manager);
@@ -38,7 +38,7 @@ public:
 
 class TDebuTelesaManager : public TSmallEnemyManager {
 public:
-	TDebuTelesaManager(const char* name);
+	TDebuTelesaManager(const char* name = "デブテルサマネージャー");
 
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();

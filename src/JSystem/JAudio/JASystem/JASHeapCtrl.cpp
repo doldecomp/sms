@@ -9,7 +9,7 @@ namespace Kernel {
 	u32 global_id = 0;
 
 	THeap::THeap()
-	    : unk8(0)
+	    : mBase(0)
 	    , unkC(0)
 	    , unk10(0)
 	{
@@ -35,10 +35,10 @@ namespace Kernel {
 
 	BOOL THeap::selfAlloc(THeap* param_1, u32 param_2, u32 param_3)
 	{
-		if (unk8 != 0 && unk8 != (u8*)0xffffffff)
+		if (mBase != 0 && mBase != (u8*)0xffffffff)
 			return 0;
 
-		unk8  = (u8*)param_3;
+		mBase = (u8*)param_3;
 		unk10 = param_2;
 		unkC  = 0;
 		unk0  = 0;
@@ -50,10 +50,10 @@ namespace Kernel {
 		if (param_1->unk14 == nullptr) {
 			param_1->unk14 = this;
 			mNext          = nullptr;
-			param_1->unkC  = unk10 + (unk8 - param_1->unk8);
+			param_1->unkC  = unk10 + (mBase - param_1->mBase);
 		} else {
 			THeap* it = param_1->unk14;
-			if (unk8 < param_1->unk14->unk8) {
+			if (mBase < param_1->unk14->mBase) {
 				mNext          = param_1->unk14;
 				param_1->unk14 = this;
 			} else {
@@ -61,11 +61,11 @@ namespace Kernel {
 					if (!it->mNext) {
 						mNext         = nullptr;
 						it->mNext     = this;
-						param_1->unkC = unk10 + (unk8 - param_1->unk8);
+						param_1->unkC = unk10 + (mBase - param_1->mBase);
 						break;
 					}
 
-					if (unk8 < it->mNext->unk8) {
+					if (mBase < it->mNext->mBase) {
 						mNext     = it->mNext;
 						it->mNext = this;
 						break;
@@ -84,7 +84,7 @@ namespace Kernel {
 
 	void THeap::initMotherHeap(u32 param_1, u32 param_2, u8 param_3)
 	{
-		unk8  = (u8*)ALIGN_NEXT(param_1, 0x20);
+		mBase = (u8*)ALIGN_NEXT(param_1, 0x20);
 		unkC  = 0;
 		unk10 = param_2 - (param_1 & 0x1F);
 		unk4  = global_id++;
@@ -110,29 +110,29 @@ namespace Kernel {
 
 		targetSize = ALIGN_NEXT(param_2, 0x20);
 
-		if (param_1->unk8 == 0)
+		if (param_1->mBase == 0)
 			return false;
 
-		if (unk8 != 0 && unk8 != (void*)0xffffffff)
+		if (mBase != 0 && mBase != (void*)0xffffffff)
 			return false;
 
 		if (param_1->unk10 - param_1->unkC < targetSize) {
 			bestCandidateLeftover = 0xfffffff;
 			bestCandidate         = nullptr;
-			uVar3                 = param_1->unk8;
+			uVar3                 = param_1->mBase;
 
 			for (it = param_1->unk14;; it = it->mNext) {
 				if (!it)
 					break;
 
-				u32 availSpace = it->unk8 - uVar3;
+				u32 availSpace = it->mBase - uVar3;
 				if (availSpace >= targetSize
 				    && availSpace - targetSize < bestCandidateLeftover) {
 					bestCandidate         = it;
 					in_r11                = uVar3;
 					bestCandidateLeftover = availSpace - targetSize;
 				}
-				uVar3 = it->unk8 + it->unk10;
+				uVar3 = it->mBase + it->unk10;
 			}
 
 			if (bestCandidate == nullptr)
@@ -152,7 +152,7 @@ namespace Kernel {
 				}
 			}
 
-			unk8  = in_r11;
+			mBase = in_r11;
 			unk10 = targetSize;
 			unkC  = 0;
 			unk0  = 0;
@@ -164,7 +164,7 @@ namespace Kernel {
 			return true;
 		}
 
-		unk8  = param_1->unk8 + param_1->unkC;
+		mBase = param_1->mBase + param_1->unkC;
 		unk10 = targetSize;
 		unkC  = 0;
 		unk0  = 0;
@@ -197,14 +197,14 @@ namespace Kernel {
 		if (!allocHeapCheck(param_1, param_2))
 			return nullptr;
 
-		return unk8;
+		return mBase;
 	}
 
 	BOOL THeap::free()
 	{
 		THeap* it;
 
-		if (unk8 == 0)
+		if (mBase == 0)
 			return false;
 
 		for (it = unk14; it != nullptr;) {
@@ -229,7 +229,7 @@ namespace Kernel {
 			} else {
 				for (it = unk18->unk14;; it = it->mNext) {
 					if (it == nullptr) {
-						unk8 = 0;
+						mBase = 0;
 						return false;
 					}
 
@@ -239,7 +239,7 @@ namespace Kernel {
 					it->mNext = mNext;
 
 					if (mNext == nullptr)
-						unk18->unkC = (it->unk8 + it->unk10) - unk18->unk8;
+						unk18->unkC = (it->mBase + it->unk10) - unk18->mBase;
 
 					break;
 				}
@@ -267,7 +267,7 @@ namespace Kernel {
 			unk28 = 0;
 		}
 
-		unk8 = 0;
+		mBase = 0;
 		return true;
 	}
 

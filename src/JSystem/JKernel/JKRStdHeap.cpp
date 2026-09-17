@@ -1,6 +1,13 @@
 #include <JSystem/JKernel/JKRStdHeap.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/JUtility/JUTConsole.hpp>
 #include <macros.h>
+
+JKRStdHeap* JKRStdHeap::createRoot(int param_1, bool errorFlag)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
 
 JKRStdHeap* JKRStdHeap::create(u32 size, JKRHeap* parent, bool errorFlag)
 {
@@ -19,6 +26,8 @@ JKRStdHeap* JKRStdHeap::create(u32 size, JKRHeap* parent, bool errorFlag)
 	    JKRStdHeap(dataPtr, alignedSize - expHeapSize, parent, errorFlag);
 }
 
+void JKRStdHeap::destroy() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
 JKRStdHeap::JKRStdHeap(void* data, u32 size, JKRHeap* parent, bool errorFlag)
     : JKRHeap(data, size, parent, errorFlag)
 {
@@ -30,6 +39,12 @@ JKRStdHeap::~JKRStdHeap()
 	dispose();
 	if (mHeapId != -1)
 		OSDestroyHeap(mHeapId);
+}
+
+void* JKRStdHeap::allocFixed(void* param_1, void* param_2)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
 }
 
 void* JKRStdHeap::alloc(u32 size, int alignment)

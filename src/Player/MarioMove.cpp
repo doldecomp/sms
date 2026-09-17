@@ -124,7 +124,7 @@ BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 	mPosition                    = pos;
 
 	unk160 += offset;
-	unk29C += offset;
+	mPrevPosition += offset;
 	mWireStartPos += offset;
 	mWireEndPos += offset;
 	unk2A8 += offset;
@@ -1094,8 +1094,8 @@ void TMario::checkGraffito()
 		break;
 	case POLLUTION_TYPE_GLASS_WALL:
 		if (isDirty == 1) {
-			mPosition.x = unk29C.x;
-			mPosition.z = unk29C.z;
+			mPosition.x = mPrevPosition.x;
+			mPosition.z = mPrevPosition.z;
 		}
 		break;
 
@@ -1223,7 +1223,8 @@ void TMario::checkSink()
 				             * mGraffitoParams.mSinkDmgDepth.get();
 			}
 
-			if (gpMarDirector->unk58 % mGraffitoParams.mSinkDmgTime.get()
+			if (gpMarDirector->mMoveTickCount
+			        % mGraffitoParams.mSinkDmgTime.get()
 			    == 0) {
 				floorDamageExec(1, 3, 0, mMotorParams.mMotorReturn.get());
 			}
@@ -1329,25 +1330,25 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mInput      = (TMarioControllerWork::Buttons)0;
 	unk108->mFrameInput = (TMarioControllerWork::Buttons)0;
 
-	if (mGamePad->mMeaning & 0x80)
+	if (mGamePad->checkMeaning(TMarioGamePad::MEANING_A))
 		unk108->mInput |= TMarioControllerWork::A;
 
-	if (mGamePad->mEnabledFrameMeaning & 0x80)
+	if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_A))
 		unk108->mFrameInput |= TMarioControllerWork::A;
 
-	if (mGamePad->mMeaning & 0x100)
+	if (mGamePad->checkMeaning(TMarioGamePad::MEANING_B))
 		unk108->mInput |= TMarioControllerWork::B;
 
-	if (mGamePad->mEnabledFrameMeaning & 0x100)
+	if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_B))
 		unk108->mFrameInput |= TMarioControllerWork::B;
 
-	if (mGamePad->mMeaning & 0x400)
+	if (mGamePad->checkMeaning(TMarioGamePad::MEANING_R))
 		unk108->mInput |= TMarioControllerWork::R;
 
-	if (mGamePad->mEnabledFrameMeaning & 0x400)
+	if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_R))
 		unk108->mFrameInput |= TMarioControllerWork::R;
 
-	if (mGamePad->mEnabledFrameMeaning & 0x1000)
+	if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_Z))
 		unk108->mFrameInput |= TMarioControllerWork::UNK10;
 
 	unk108->mAnalogRU8 = mGamePad->mCompSPos[3];
@@ -1562,10 +1563,10 @@ void TMario::checkController(JDrama::TGraphics*)
 	if (mIntendedMag > 0.0f)
 		mInput |= 0x1;
 
-	if (mGamePad->mEnabledFrameMeaning & 0x80)
+	if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_A))
 		mInput |= 0x2;
 
-	if (mGamePad->mMeaning & 0x80)
+	if (mGamePad->checkMeaning(TMarioGamePad::MEANING_A))
 		mInput |= 0x80;
 
 	if (unk108->mInput & 0x200)
@@ -1576,7 +1577,7 @@ void TMario::checkController(JDrama::TGraphics*)
 		mInput |= 0x2000;
 	}
 
-	if ((mGamePad->mEnabledFrameMeaning & 0x2000)
+	if ((mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_L))
 	    || (unk108->mFrameInput & 0x40)) {
 		if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) == true)
 			mInput |= 0x8000;
@@ -1584,9 +1585,10 @@ void TMario::checkController(JDrama::TGraphics*)
 
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		if (!checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
-			if ((mGamePad->mMeaning & 0x400) || (mGamePad->mMeaning & 0x2000))
+			if ((mGamePad->checkMeaning(TMarioGamePad::MEANING_R))
+			    || (mGamePad->checkMeaning(TMarioGamePad::MEANING_L)))
 				mInput |= 0x200;
-			if (mGamePad->mEnabledFrameMeaning & 0x400)
+			if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_R))
 				mInput |= 0x100;
 		}
 	}
@@ -2055,7 +2057,7 @@ void TMario::thinkWaterSurface()
 		}
 	}
 
-	f32 dy = mPosition.y - unk29C.y;
+	f32 dy = mPosition.y - mPrevPosition.y;
 	if (dy > 0.0f)
 		dy = 0.0f;
 
@@ -2288,7 +2290,7 @@ void TMario::getOffYoshi(bool fly)
 
 void TMario::checkYoshiGetOff()
 {
-	if (onYoshi() && mGamePad->checkFrameMeaning(0x200000))
+	if (onYoshi() && mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_X))
 		getOffYoshi(false);
 }
 
@@ -2415,7 +2417,7 @@ void TMario::gunExec()
 		mWaterGun->resetWaterToFull();
 
 	if (mStatus != MARIO_STATUS_BACK_JUMP && mStatus != MARIO_STATUS_THROWN_DOWN
-	    && mGamePad->checkFrameMeaning(0x200000) && !onYoshi()
+	    && mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_X) && !onYoshi()
 	    && mStatus != MARIO_STATUS_TOROCCO)
 		mWaterGun->changeBackup();
 
@@ -2437,8 +2439,8 @@ void TMario::gunExec()
 
 void TMario::playerControl(JDrama::TGraphics* param_1)
 {
-	unk9C  = mFaceAngle.y;
-	unk29C = mPosition;
+	unk9C         = mFaceAngle.y;
+	mPrevPosition = mPosition;
 	offUnk114(UNK114_FLAG_PROFILE);
 
 	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)

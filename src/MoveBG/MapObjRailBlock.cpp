@@ -9,6 +9,7 @@
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/LightUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Conductor.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
@@ -140,13 +141,13 @@ BOOL TRailMapObj::calcRecycle()
 		if (unk14A > 0) {
 			--unk14A;
 			if (unk14A < 90) {
-				int uVar2 = gpMarDirector->unk58 / 4;
+				int uVar2 = gpMarDirector->mMoveTickCount / 4;
 				if (uVar2 % 2 > 0)
 					unk14C = 1;
 				else
 					unk14C = 0;
 			} else {
-				int uVar2 = gpMarDirector->unk58 / 4;
+				int uVar2 = gpMarDirector->mMoveTickCount / 4;
 				if (uVar2 % 4 > 0)
 					unk14C = 1;
 				else
@@ -207,7 +208,7 @@ void TRailMapObj::setGroundCollision()
 	}
 }
 
-u32 TRailMapObj::getShadowType() { return 1; }
+u32 TRailMapObj::getShadowType() { return SHADOW_TYPE_SQUARE; }
 
 void TRailMapObj::readRailFlag()
 {

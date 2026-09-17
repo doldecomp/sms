@@ -43,7 +43,7 @@ void TNpcCoin::requestAppearCoin(const Vec& param_1, f32 param_2, int param_3)
 {
 	unk4 = param_3;
 	unk8.set(param_1);
-	unk14.set(0.0f, JMASin(75), JMACos(75));
+	unk14.set(0.0f, MsSin(75), MsCos(75));
 	s16 sangle = CLBDegToShortAngle(param_2);
 	f32 x      = unk14.x;
 	unk14.x    = x * JMASCos(sangle) + unk14.z * JMASSin(sangle);

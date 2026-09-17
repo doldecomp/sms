@@ -166,7 +166,7 @@ TMario::TMario()
 	MTXIdentity(unk250);
 	unk280        = mPosition;
 	unk28C        = mRotation;
-	unk29C        = mPosition;
+	mPrevPosition = mPosition;
 	unk2A8        = mPosition;
 	unk2B4        = mFaceAngle;
 	mOobKillTimer = 0;
@@ -351,10 +351,10 @@ void TMario::loadAfter()
 	initParticle();
 
 	if (isMario())
-		SMSGetMSound()->setPlayerInfo(&mPosition, &unk29C,
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
 		                              mModel->getModel()->getAnmMtx(1), true);
 	else
-		SMSGetMSound()->setPlayerInfo(&mPosition, &unk29C,
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
 		                              mModel->getModel()->getAnmMtx(1), false);
 
 	finalDrawInitialize();

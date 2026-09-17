@@ -21,6 +21,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 TMenuDirector::TMenuDirector()
     : unk18(0)
@@ -40,7 +41,7 @@ TMenuDirector::TMenuDirector()
 
 TMenuDirector::~TMenuDirector()
 {
-	unk2C->offFlag(0x1);
+	unk2C->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("title");
 	if (arc)
 		arc->unmountFixed();
@@ -59,7 +60,7 @@ void TMenuDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 {
 	unk14         = new JDrama::TDStageGroup(param_1);
 	unk2C         = param_2;
-	unk2C->mFlags = 1;
+	unk2C->mFlags = TMarioGamePad::PAD_FLAG_MENU_INPUT;
 	OSCreateThread(&gSetupThread, &setupThreadFunc, this,
 	               gpSetupThreadStack + 0x10000, 0x10000, 0x11, 0);
 	OSResumeThread(&gSetupThread);

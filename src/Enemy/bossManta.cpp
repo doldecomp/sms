@@ -456,7 +456,8 @@ void TBossManta::init(TLiveManager* manager)
 	calcRootMatrix();
 	kill();
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -829,8 +830,8 @@ void TBossMantaManager::TMantaBattleState::update()
 	}
 	case 3:
 		if (sDefeatSE == nullptr) {
-			JDrama::TNameRefGen::search<TMapEventSirenaSink>(
-			    "イベント（ホテル沈む）")
+			static_cast<TMapEventSirenaSink*>(
+			    JDrama::TNameRefGen::search("イベント（ホテル沈む）"))
 			    ->unk64
 			    = true;
 			mState++;
@@ -959,7 +960,8 @@ TBossMantaAdditionalCollision::TBossMantaAdditionalCollision(const char* name)
 	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->insert(this);
 }
 
@@ -1049,7 +1051,8 @@ void TBossMantaManager::loadAfter()
 	for (int i = 0; i < 7; ++i) {
 		char name[0x40];
 		snprintf(name, 0x40, "palmOugi %d", i);
-		TLiveActor* palm = JDrama::TNameRefGen::search<TLiveActor>(name);
+		TLiveActor* palm
+		    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search(name));
 		unk74[i].set(palm->mPosition.x, 0.0f, palm->mPosition.z);
 	}
 
@@ -1320,7 +1323,8 @@ void TBossMantaManager::createEnemy()
 {
 	TSpineEnemy* enemy = createEnemyInstance();
 	if (enemy != nullptr) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+		static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search("オブジェクトグループ"))
 		    ->getChildren()
 		    .push_back(enemy);
 		enemy->init(this);

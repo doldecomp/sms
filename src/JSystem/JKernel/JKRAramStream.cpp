@@ -1,5 +1,6 @@
 #include <JSystem/JKernel/JKRAramStream.hpp>
 #include <JSystem/JKernel/JKRAramPiece.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <JSystem/JSupport/JSUFileInputStream.hpp>
 #include <dolphin/os.h>
 #include <macros.h>
@@ -126,6 +127,13 @@ u8* JKRAramStream::transBuffer;
 u32 JKRAramStream::transSize;
 JKRHeap* JKRAramStream::transHeap;
 
+JKRAramStreamCommand* JKRAramStream::write_StreamToAram_Async(
+    JSUFileInputStream* stream, JKRAramBlock* block, u32 size, u32 offset)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return nullptr;
+}
+
 JKRAramStreamCommand*
 JKRAramStream::write_StreamToAram_Async(JSUFileInputStream* stream, u32 addr,
                                         u32 size, u32 offset)
@@ -174,6 +182,20 @@ JKRAramStreamCommand* JKRAramStream::sync(JKRAramStreamCommand* command,
 			return command;
 		}
 	}
+}
+
+u32 JKRAramStream::write_StreamToAram(JSUFileInputStream* stream,
+                                      JKRAramBlock* block, u32 size, u32 offset)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
+u32 JKRAramStream::write_StreamToAram(JSUFileInputStream* stream, u32 addr,
+                                      u32 size, u32 offset)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
 }
 
 void JKRAramStream::setTransBuffer(u8* buffer, u32 bufferSize, JKRHeap* heap)
