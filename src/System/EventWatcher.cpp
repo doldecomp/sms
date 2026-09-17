@@ -322,6 +322,29 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
+// TODO: 92.8%, and this is the clearest case of a family that shares one
+// unexplained cause. Every builtin whose pushed value comes out of an
+// *inlined* accessor is short of low-region temporaries and reads the value
+// one instruction later than we do -- retail stores the slice's type word
+// first and only then loads the member:
+//
+//   evGetTalkMode          0x30 vs 0x38   push(gpTalk2D->getTalkMode())
+//   evGetTalkSelectedValue 0x30 vs 0x38   push(gpTalk2D->getSelectedValue())
+//   evGetTalkNPC           0x30 vs 0x38   push of getTalkingNPC()
+//   evGetTalkNPCName       frame equal, slice 4 low
+//   evGetRestTime          0x28 vs 0x30   push(getRestTime())
+//   evIsTalkModeNow        frame equal, slice 4 low
+//
+// Every builtin whose value comes from an out-of-line `bl` matches exactly
+// with no such temporaries (evGetPollutionLevel, evIsGraffitoCoverage0,
+// evGetSystemFlag, evGetTime), so the missing temporaries belong to the
+// accessor side, not to push(). Measured on evGetTalkMode, all still 0x30:
+// `interp->push(TSpcSlice((int)gpTalk2D->getTalkMode()))`, a named `int`
+// holding the mode, a named `u32` plus the cast at the push, and a
+// `static inline SMSGetTalk2D()` accessor for the global. The raw field
+// `gpTalk2D->mTalkMode` goes the wrong way (0x20), which does show that
+// `getTalkMode()` itself is worth 0x10 here, so retail is one level deeper
+// still.
 static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
@@ -475,6 +498,9 @@ static void evSetPollutionIncreaseCount(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// TODO: 96.1%. Same family as evGetTalkMode -- see the table there. The one
+// instruction out of place is the `lwz unk120` that retail issues after the
+// slice's type word is stored.
 static void evGetRestTime(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
@@ -967,7 +993,13 @@ static void evStartMareBottleDemo(TSpcTypedInterp<TEventWatcher>* interp,
 	obj->getMActor()->setBck("exbottle_bottle_in");
 
 	// The original keeps Mario in a register across both statements: the
-	// store to mPosition would otherwise force a reload of the global.
+	// store to mPosition would otherwise force a reload of the global
+	// (measured: the bare global adds an `lwz gpMarioOriginal` and 8 bytes of
+	// frame, 98.0% -> 96.9%).
+	// TODO: 98.0%. Two instructions are swapped: retail keeps the position's
+	// x word in r3 and only materialises `this` afterwards, with
+	// `addi r3, r7, 0`, while we emit `mr r3, r7` before the stores. A
+	// `TMario&` local instead of the pointer changes nothing.
 	TMario* mario    = gpMarioOriginal;
 	mario->mPosition = obj->mPosition;
 	mario->changePlayerStatus(MARIO_STATUS_BOTTLE_IN, 0, true);
@@ -1160,6 +1192,11 @@ static void evSetCollision(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
+// TODO: 99.9%, every instruction matching; our frame is 0xe8 against retail's
+// 0xe0, with the whole 8-byte excess below the conversion temporaries.
+// Measured: naming the vector (`TVec3<f32> pos(x, y, z)`) leaves the frame at
+// 0xe8, and popping into `f32` locals instead of `int` takes it to 0xd8 but
+// rewrites 23 instructions.
 static void evWarpMario(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(4, &arg_num);
