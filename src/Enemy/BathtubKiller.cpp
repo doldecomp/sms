@@ -27,13 +27,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// The killer's own smoke trail. There is no name for 0x1BD in
-// System/Particles.hpp (the enum has a hole between TINKOOPA_JPA_MS_MKP_FIRE_B
-// = 0x1BC and KOOPA_JPA_MS_KP_FIRE_A = 0x1C0); adding
-// `PARTICLE_MAP_MS_KP_KILL_SMOKE = 0x1BD` there is a shared-header change this
-// batch is not allowed to make.
-#define PARTICLE_MAP_MS_KP_KILL_SMOKE 0x1BD
-
 // TODO: the residual in behaveToWater (54.5%), receiveMessage (58.9%),
 // isCollidMove (67.2%), bind (76.1%) and perform (78.6%) is one MWCC inlining
 // artifact, not a source difference: every instruction of those bodies matches,
@@ -441,7 +434,7 @@ void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 				unk1D4 = 0;
 				unk220.setQT(mQuat, mPosition);
 				gpMarioParticleManager->emitAndBindToMtxPtr(
-				    PARTICLE_MAP_MS_KP_KILL_SMOKE, unk220, 1, this);
+				    MAP_MAP_MS_KP_KILL_SMOKE, unk220, 1, this);
 			}
 			f32 distToMario = mPosition.distance(*gpMarioPos);
 			gpMSound->startSoundActorWithInfo(MSD_SE_EN_KILLER_FLY,
@@ -1015,8 +1008,8 @@ void TBathtubKillerManager::loadAfter()
 	// TODO: 90.6%. The residual is scheduling inside the inlined
 	// SMS_LoadParticle: the ROM hoists the flag's address and the stored `1`
 	// into r30/r31 before the test, ours materialises the `1` after the load
-	// call. Particles.hpp is a shared header, so it is not touched here.
-	SMS_LoadParticle(loopFilenames[0], PARTICLE_MAP_MS_KP_KILL_SMOKE);
+	// call.
+	SMS_LoadParticle(loopFilenames[0], MAP_MAP_MS_KP_KILL_SMOKE);
 }
 
 void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32> position)

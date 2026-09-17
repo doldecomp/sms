@@ -56,6 +56,14 @@ public:
 		mWhite = white;
 	}
 
+	// The gradient pair, alongside JUTFont::setGradColor. Retail builds the
+	// two TColor temporaries on the stack exactly as by-value parameters do.
+	void setGradColor(JUtility::TColor char_color, JUtility::TColor grad_color)
+	{
+		mCharColor = char_color;
+		mGradColor = grad_color;
+	}
+
 public:
 	/* 0xEC */ JUTFont* mFont;
 	/* 0xF0 */ JUtility::TColor mCharColor;

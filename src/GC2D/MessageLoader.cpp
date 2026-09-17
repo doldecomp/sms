@@ -84,9 +84,9 @@ void* TMessageLoader::parseBlock(u32 param_1, u32 param_2, void* param_3)
 	return result;
 }
 
-TMessageLoader::EntryInfo* TMessageLoader::getMessageEntry(u32 param_1)
+JMSMesgEntry* TMessageLoader::getMessageEntry(u32 param_1)
 {
-	EntryInfo* result;
+	JMSMesgEntry* result;
 	if (u16(param_1) >= unk0)
 		result = nullptr;
 	else
@@ -107,7 +107,7 @@ int TMessageLoader::readInfoBlock(void* data)
 	local_38.skip(2);
 
 	for (int i = 0; i < unk0; ++i)
-		local_38.read(&unk8[i], sizeof(EntryInfo));
+		local_38.read(&unk8[i], sizeof(JMSMesgEntry));
 
 	return length;
 }

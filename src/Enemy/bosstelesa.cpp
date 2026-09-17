@@ -1028,28 +1028,50 @@ void TBossTelesa::loadAfter()
 	for (int i = 0; i < 5; ++i)
 		TMapObjBaseManager::newAndRegisterObj("bottle_large");
 
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit.jpa", 0xD7);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_pe.jpa", 0xD8);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_gr.jpa", 0xD9);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_or.jpa", 0xDA);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_damage.jpa", 0xDB);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down.jpa", 0xDC);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_pe.jpa", 0xDD);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_gr.jpa", 0xDE);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_or.jpa", 0xDF);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_hit.jpa", 0xE0);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fubuki.jpa", 0xE1);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare1.jpa", 0x19E);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare2.jpa", 0x19F);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare3.jpa", 0x1A0);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_ase.jpa", 0x1A1);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_a.jpa", 0x1A2);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_b.jpa", 0x1A3);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_d.jpa", 0x1A4);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_a.jpa", 0x1A5);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_b.jpa", 0x1A6);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_glow.jpa", 0x1A7);
-	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_c.jpa", 0x1F0);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit.jpa",
+	    BTELESA_JPA_MS_BTLS_FHIT);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_pe.jpa",
+	    BTELESA_JPA_MS_BTLS_FHIT_PE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_gr.jpa",
+	    BTELESA_JPA_MS_BTLS_FHIT_GR);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit_or.jpa",
+	    BTELESA_JPA_MS_BTLS_FHIT_OR);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_damage.jpa",
+	    BTELESA_JPA_MS_BTLS_DAMAGE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down.jpa",
+	    BTELESA_JPA_MS_BTLS_DOWN);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_pe.jpa",
+	    BTELESA_JPA_MS_BTLS_DOWN_PE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_gr.jpa",
+	    BTELESA_JPA_MS_BTLS_DOWN_GR);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_down_or.jpa",
+	    BTELESA_JPA_MS_BTLS_DOWN_OR);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_hit.jpa",
+	    BTELESA_JPA_MS_BTLS_SPICY_HIT);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fubuki.jpa",
+	    BTELESA_JPA_MS_BTLS_FUBUKI);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare1.jpa",
+	    BTELESA_JPA_MS_BTLS_YODARE1);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare2.jpa",
+	    BTELESA_JPA_MS_BTLS_YODARE2);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_yodare3.jpa",
+	    BTELESA_JPA_MS_BTLS_YODARE3);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_ase.jpa",
+	    BTELESA_JPA_MS_BTLS_ASE);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_a.jpa",
+	    BTELESA_JPA_MS_BTLS_SPICY_A);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_b.jpa",
+	    BTELESA_JPA_MS_BTLS_SPICY_B);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_d.jpa",
+	    BTELESA_JPA_MS_BTLS_SPICY_D);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_a.jpa",
+	    BTELESA_JPA_MS_BTLS_CHIKA_A);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_chika_b.jpa",
+	    BTELESA_JPA_MS_BTLS_CHIKA_B);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_glow.jpa",
+	    BTELESA_JPA_MS_BTLS_GLOW);
+	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_spicy_c.jpa",
+	    BTELESA_JPA_MS_BTLS_SPICY_C);
 
 	void* frameRes
 	    = JKRFileLoader::getGlbResource("/scene/btelesa/srot_waku.bmd");
@@ -1319,46 +1341,47 @@ void TBossTelesa::calcRootMatrix()
 	}
 
 	unk374.set(0.0f, 0.0f, 0.0f);
-	gpMarioParticleManager->emit(0x1A5, &unk374, 1, this);
-	gpMarioParticleManager->emit(0x1A6, &unk374, 1, this);
+	gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_CHIKA_A, &unk374, 1, this);
+	gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_CHIKA_B, &unk374, 1, this);
 
 	MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(1);
 	unk374.set(headMtx[0][3], headMtx[1][3], headMtx[2][3]);
-	gpMarioParticleManager->emitAndBindToPosPtr(0x1A7, &unk374, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(BTELESA_JPA_MS_BTLS_GLOW,
+	    &unk374, 1, this);
 
 	if (!getMActor()->checkCurBckFromIndex(4)
 	    && !getMActor()->checkCurBckFromIndex(6)
 	    && !getMActor()->checkCurBckFromIndex(12)
 	    && !getMActor()->checkCurBckFromIndex(13)
 	    && !getMActor()->checkCurBckFromIndex(3)) {
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x19E, getMActor()->getModel()->getAnmMtx(5), 1, this);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x19F, getMActor()->getModel()->getAnmMtx(5), 1, this);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A0, getMActor()->getModel()->getAnmMtx(10), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_YODARE1,
+		    getMActor()->getModel()->getAnmMtx(5), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_YODARE2,
+		    getMActor()->getModel()->getAnmMtx(5), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_YODARE3,
+		    getMActor()->getModel()->getAnmMtx(10), 1, this);
 	}
 
 	if (getMActor()->checkCurBckFromIndex(1)
 	    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < 20.0f) {
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0xE0, getMActor()->getModel()->getAnmMtx(5), 0, nullptr);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_SPICY_HIT,
+		    getMActor()->getModel()->getAnmMtx(5), 0, nullptr);
 	}
 
 	if (getMActor()->checkCurBckFromIndex(12)) {
 		gpMSound->startSoundActor(MSD_SE_BS_TELESA_FIRE, &mPosition, 0,
 		                          nullptr, 0, 4);
 
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A1, getMActor()->getModel()->getAnmMtx(1), 1, this);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A2, getMActor()->getModel()->getAnmMtx(9), 1, this);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A3, getMActor()->getModel()->getAnmMtx(9), 1, this);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1A4, getMActor()->getModel()->getAnmMtx(9), 1, this);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x1F0, getMActor()->getModel()->getAnmMtx(9), 3, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_ASE,
+		    getMActor()->getModel()->getAnmMtx(1), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_SPICY_A,
+		    getMActor()->getModel()->getAnmMtx(9), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_SPICY_B,
+		    getMActor()->getModel()->getAnmMtx(9), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_SPICY_D,
+		    getMActor()->getModel()->getAnmMtx(9), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_SPICY_C,
+		    getMActor()->getModel()->getAnmMtx(9), 3, this);
 	}
 
 	if (getMActor()->checkCurBckFromIndex(14)
@@ -1422,7 +1445,7 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 		unk348.r = 0xE6;
 		unk348.g = 0x64;
 		unk348.b = 0xB4;
-		unk380   = 0xD8; // ms_btls_fhit_pe
+		unk380   = BTELESA_JPA_MS_BTLS_FHIT_PE;
 		kill();
 		break;
 
@@ -1431,7 +1454,7 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 		unk348.r = 0xE6;
 		unk348.g = 0xB4;
 		unk348.b = 0;
-		unk380   = 0xDA; // ms_btls_fhit_or
+		unk380   = BTELESA_JPA_MS_BTLS_FHIT_OR;
 		kill();
 		break;
 
@@ -1439,7 +1462,7 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 		unk348.r = 0x96;
 		unk348.g = 0x32;
 		unk348.b = 0xE6;
-		unk380   = 0xD9; // ms_btls_fhit_gr
+		unk380   = BTELESA_JPA_MS_BTLS_FHIT_GR;
 		kill();
 		break;
 
@@ -1464,13 +1487,14 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 	}
 
 	unk374 = actor->mPosition;
-	gpMarioParticleManager->emit(0xD7, &unk374, 0, nullptr);
+	gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_FHIT, &unk374, 0, nullptr);
 
 	if (unk380 >= 0)
 		gpMarioParticleManager->emit(unk380, &unk374, 0, nullptr);
 
 	if (unk350)
-		gpMarioParticleManager->emit(0xDB, &unk374, 0, nullptr); // damage
+		gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_DAMAGE, &unk374, 0,
+		    nullptr);
 	else
 		gpMSound->startSoundActor(MSD_SE_BS_TELESA_FRUIT_HIT, &mPosition, 0,
 		                          nullptr, 0, 4);
@@ -2112,7 +2136,7 @@ void TBossTelesa::fanfale()
 {
 	if (mSlot->getSlotResult() == 2 || mSlot->getSlotResult() == 0) {
 		unk374.set(0.0f, 0.0f, 0.0f);
-		gpMarioParticleManager->emit(0xE1, &unk374, 0, nullptr);
+		gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_FUBUKI, &unk374, 0, nullptr);
 
 		if (mSlot->getSlotResult() == 2)
 			gpMSound->startSoundActor(MSD_SE_BS_TELESA_FANFALE_1, &mPosition, 0,
@@ -2172,14 +2196,18 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			MtxPtr headMtx = boss->getMActor()->getModel()->getAnmMtx(1);
 			boss->unk374.set(headMtx[0][3], headMtx[1][3], headMtx[2][3]);
 
-			gpMarioParticleManager->emit(0xDC, &boss->unk374, 0, nullptr);
+			gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_DOWN,
+			    &boss->unk374, 0, nullptr);
 
-			if (boss->unk380 == 0xD8)
-				gpMarioParticleManager->emit(0xDD, &boss->unk374, 0, nullptr);
-			else if (boss->unk380 == 0xD9)
-				gpMarioParticleManager->emit(0xDE, &boss->unk374, 0, nullptr);
+			if (boss->unk380 == BTELESA_JPA_MS_BTLS_FHIT_PE)
+				gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_DOWN_PE,
+				    &boss->unk374, 0, nullptr);
+			else if (boss->unk380 == BTELESA_JPA_MS_BTLS_FHIT_GR)
+				gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_DOWN_GR,
+				    &boss->unk374, 0, nullptr);
 			else
-				gpMarioParticleManager->emit(0xDF, &boss->unk374, 0, nullptr);
+				gpMarioParticleManager->emit(BTELESA_JPA_MS_BTLS_DOWN_OR,
+				    &boss->unk374, 0, nullptr);
 
 			boss->forceAllItemKill();
 

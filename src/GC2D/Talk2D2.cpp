@@ -40,23 +40,6 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <System/DummyStrings.hpp>
 
-/**
- * @brief Set a text box's two gradient colours.
- *
- * @details TODO: this is J2DTextBox::setGradColor(TColor, TColor), which
- * belongs in JSystem/J2D/J2DTextBox.hpp next to setBlackWhite (retail builds
- * the two by-value TColor temporaries on the stack exactly as an out-of-line
- * pair of by-value parameters would). Parked here so the shared J2D header
- * stays untouched for now.
- */
-static inline void SMSSetTextBoxGradColor(J2DTextBox* box,
-                                          JUtility::TColor char_color,
-                                          JUtility::TColor grad_color)
-{
-	box->mCharColor = char_color;
-	box->mGradColor = grad_color;
-}
-
 TTalk2D2* gpTalk2D;
 
 /**
@@ -301,8 +284,7 @@ void TTalk2D2::loadAfter()
 	select[93] = '\0';
 	mSelectTextBox->setString(select);
 
-	setupTextBox(mSysMessage->getMessageData(),
-	             (JMSMesgEntry*)mSysMessage->getMessageEntry(3));
+	setupTextBox(mSysMessage->getMessageData(), mSysMessage->getMessageEntry(3));
 	mCurMessage = mSysMessage;
 
 	const char* names[10] = {
@@ -386,19 +368,18 @@ void TTalk2D2::setMessageID(u32 message_id, u32 flags)
 		loader = mSysMessage;
 
 	if (loader->getMessageData() != nullptr) {
-		JMSMesgEntry* entry
-		    = (JMSMesgEntry*)loader->getMessageEntry((u16)mMessageID);
+		JMSMesgEntry* entry = loader->getMessageEntry((u16)mMessageID);
 		if (entry == nullptr) {
 			mMessageID = 4;
 			loader     = mSysMessage;
-			entry = (JMSMesgEntry*)loader->getMessageEntry((u16)mMessageID);
+			entry = loader->getMessageEntry((u16)mMessageID);
 		}
 		setupTextBox(loader->getMessageData(), entry);
 	} else {
 		mMessageID = 3;
 		loader     = mSysMessage;
 		setupTextBox(loader->getMessageData(),
-		             (JMSMesgEntry*)loader->getMessageEntry((u16)mMessageID));
+		    loader->getMessageEntry((u16)mMessageID));
 	}
 	mCurMessage = loader;
 	mCharTimer  = 0;
@@ -1010,7 +991,7 @@ bool TTalk2D2::eraseNormalWindow()
 		}
 
 		setupTextBox(mCurMessage->getMessageData(),
-		             (JMSMesgEntry*)mCurMessage->getMessageEntry((u16)mMessageID));
+		    mCurMessage->getMessageEntry((u16)mMessageID));
 		mFastForward = false;
 		mAlphaStep   = 0x40;
 		done         = true;
@@ -1031,7 +1012,7 @@ bool TTalk2D2::eraseBoardWindow()
 	if (alpha < 0) {
 		alpha = 0;
 		setupTextBox(mCurMessage->getMessageData(),
-		             (JMSMesgEntry*)mCurMessage->getMessageEntry((u16)mMessageID));
+		    mCurMessage->getMessageEntry((u16)mMessageID));
 		mCharColor = 0xffffffff;
 		done       = true;
 		mCharIndex = 0;
@@ -1057,11 +1038,10 @@ bool TTalk2D2::appearBoardBoxWindow()
 void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
-		// TODO: retail compares TMarDirector's game mode with a signed
-		// `cmpwi` and branches to the body, which is the shape of a switch
-		// with one case, not of `unk124 == 2` on a `u8`.  Either the field
-		// is really an enum in MarDirector.hpp or the game mode was reached
-		// through an accessor; both are shared-header changes.
+		// The one-case switch is the right shape and the field really is a
+		// u8: retail loads it with `lbz` and compares with `cmpwi 2`, which
+		// is what this reproduces exactly. (An int or an -enum int at 0x124
+		// is impossible anyway, since unk125 and unk126 follow it.)
 		switch (gpMarDirector->unk124) {
 		case 2:
 			switch (mTalkMode) {
@@ -1171,8 +1151,7 @@ void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
 					}
 
 					setupTextBox(mCurMessage->getMessageData(),
-					             (JMSMesgEntry*)mCurMessage->getMessageEntry(
-					                 (u16)mMessageID));
+					    mCurMessage->getMessageEntry((u16)mMessageID));
 					mFastForward = false;
 					mAlphaStep   = 0x40;
 					mCharColor   = 0xffffffff;
@@ -1371,7 +1350,7 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 			}
 
 			u16 idx = col + line * LINE_LENGTH;
-			SMSSetTextBoxGradColor(mCharBox[idx], mCharColor, mCharColor);
+			mCharBox[idx]->setGradColor(mCharColor, mCharColor);
 			mCharBox[idx]->setBlackWhite(mCharColor & 0xffffff00,
 			                             mCharColor);
 			mCharDelays[mCharIndex] = mCharDelay;
@@ -1517,9 +1496,8 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 			    "%d", (u16)hundreds % 10);
 
 			for (int i = 0; i < 8; i++) {
-				SMSSetTextBoxGradColor(
-				    mCharBox[*col + i + *line * LINE_LENGTH], mCharColor,
-				    mCharColor);
+				mCharBox[*col + i + *line * LINE_LENGTH]->setGradColor(
+				    mCharColor, mCharColor);
 				mCharBox[*col + i + *line * LINE_LENGTH]->setBlackWhite(
 				    mCharColor & 0xffffff00, mCharColor);
 				mCharDelays[i + *col + *line * LINE_LENGTH] = mCharDelay;

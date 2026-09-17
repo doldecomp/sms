@@ -2447,7 +2447,7 @@ void TGCConsole2::startAppearTelop(bool param_1)
 		// TODO: needs regswapping
 		const u8* messageText
 		    = &unk530->getMessageData()[unk530->unk8[unk570[unk558] & 0xffff]
-		                                    .unk0];
+		                                    .mTextOffset];
 
 		snprintf(unk528->getStringPtr(), 0x3ff, "%s", messageText);
 		snprintf(unk52C->getStringPtr(), 0x3ff, "%s", messageText);
@@ -2657,7 +2657,7 @@ bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
 
 bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 {
-	TMessageLoader::EntryInfo* entry
+	JMSMesgEntry* entry
 	    = unk3D0->getMessageEntry(messageID & 0xffff);
 
 	if (entry->unk4 <= unk3F0)
@@ -2695,7 +2695,7 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	((JSUMemoryOutputStream*)unk3D8)->setBuffer(unk3B4->getStringPtr(), 0x400);
 	((JSUMemoryOutputStream*)unk3DC)->setBuffer(unk3B8->getStringPtr(), 0x400);
 
-	const u8* messageText = unk3D0->getMessageData() + entry->unk0;
+	const u8* messageText = unk3D0->getMessageData() + entry->mTextOffset;
 	((JSUMemoryInputStream*)unk3D4)->setBuffer(messageText, 0x400);
 
 	unk3E0 = messageID;
@@ -2712,7 +2712,7 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	unk14 = 0;
 	unk10 = 1;
 
-	s32 soundID = scNozzleSoundList[(u8)entry->unk8[0]];
+	s32 soundID = scNozzleSoundList[entry->mVoiceIndex];
 	if (soundID != -1 && SMSGetMSound()->gateCheck(soundID))
 		MSoundSESystem::MSoundSE::startSoundSystemSE(soundID, 0, nullptr, 0);
 

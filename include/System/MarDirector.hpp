@@ -238,6 +238,8 @@ public:
 	/* 0xE4 */ u32 unkE4;
 	/* 0xE8 */ OSStopwatch unkE8;
 	/* 0x120 */ int unk120;
+	// A u8, confirmed: every reader loads it with `lbz` and compares with a
+	// signed `cmpwi`, including TTalk2D2::perform's one-case switch.
 	/* 0x124 */ u8 unk124; // Game state, paused, shine animation, 2=talking
 	/* 0x125 */ u8 unk125;
 	/* 0x126 */ u8 unk126; // Next game state

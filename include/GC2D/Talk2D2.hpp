@@ -2,6 +2,7 @@
 #define GC2D_TALK_2D_2_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <GC2D/MessageLoader.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
 
 class JUTPoint;
@@ -12,34 +13,10 @@ class JUTTexture;
 class TBaseNPC;
 class TBoundPane;
 class TMarioGamePad;
-class TMessageLoader;
 
 class TTalk2D2;
 
 extern TTalk2D2* gpTalk2D;
-
-/**
- * @brief One entry of a JMessage (.bmg) INF1 block.
- *
- * @details TMessageLoader hands these out; only the byte offset of the
- * message text inside the DAT1 block and the voice-clip index are used
- * here.
- *
- * TODO: this is JSystem's own message-entry type and belongs next to the
- * rest of JMessage, not in a GC2D header. TMessageLoader::EntryInfo in
- * GC2D/MessageLoader.hpp is the same struct under a fabricated name, so
- * getMessageEntry() should return a JMSMesgEntry* and this declaration
- * should move out; that is a shared-header change, hence the casts in
- * Talk2D2.cpp.
- */
-class JMSMesgEntry {
-public:
-	/* 0x0 */ u32 mTextOffset;
-	/* 0x4 */ s16 unk4;
-	/* 0x6 */ s16 unk6;
-	/* 0x8 */ u8 mVoiceIndex;
-	/* 0x9 */ u8 unk9[3];
-};
 
 /**
  * @brief The NPC conversation window ("message_2.blo" / the sign board).

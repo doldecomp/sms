@@ -111,7 +111,7 @@ void TMovieSubTitle::hide()
 	unk14->hide();
 }
 
-const TMessageLoader::EntryInfo* TMovieSubTitle::getCurEntry() const
+const JMSMesgEntry* TMovieSubTitle::getCurEntry() const
 {
 	if (unk20->getMessageNum() <= unk24)
 		return nullptr;
@@ -122,7 +122,7 @@ const TMessageLoader::EntryInfo* TMovieSubTitle::getCurEntry() const
 void TMovieSubTitle::setCurMessage()
 {
 	const char* msg
-	    = (const char*)(unk20->getMessageData() + getCurEntry()->unk0);
+	    = (const char*)(unk20->getMessageData() + getCurEntry()->mTextOffset);
 
 	snprintf(unk18->getStringPtr(), 256, "%s", msg);
 	snprintf(unk1C->getStringPtr(), 256, "%s", msg);
