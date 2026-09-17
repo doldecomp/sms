@@ -519,68 +519,70 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
 		return mOwner->receiveMessage(sender, message);
 
-	s8 state = mOwner->mState;
+	TBossPakkun* boss = mOwner;
+	int state         = boss->mState;
+
 	if (state == BOSSPAKU_STATE_FLYING) {
-		// Sprayed while flying, or Mario himself hit the head: drop out of
-		// the sky.
-		if (sender->isActorType(0x1000000D)
-		    || sender->isActorType(0x80000001)) {
-			mOwner->mState = BOSSPAKU_STATE_NORMAL;
-			mOwner->mSpine->reset();
-			mOwner->mSpine->setNext(&TNerveBPFall::theNerve());
+		// Sprayed while flying -- either by the nozzle's own hit actor or by
+		// a water-gun droplet: drop out of the sky.
+		if (sender->getActorType() == 0x1000000D
+		    || sender->getActorType() == 0x1000001) {
+			boss->mState = BOSSPAKU_STATE_NORMAL;
+			boss->mSpine->reset();
+			boss->mSpine->setNext(&TNerveBPFall::theNerve());
 			if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_FALL))
 				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_BS_BSPAKU_FALL, &mOwner->mPosition, 0, nullptr, 0,
-				    4);
+				    MSD_SE_BS_BSPAKU_FALL, &boss->mPosition, 0, nullptr, 0, 4);
 			return TRUE;
 		}
 	}
 
-	if (state == BOSSPAKU_STATE_UNK2) {
-		if (!sender->isActorType(0x80000001))
+	if (state != BOSSPAKU_STATE_UNK2) {
+		if (boss->is2ndFightNow()) {
+			if (&TNerveBPFly::theNerve() == boss->mSpine->getLatestNerve())
+				boss->showMessage(2);
+		}
+
+		if (sender->getActorType() == 0x1000001)
 			return TRUE;
-		if (message != HIT_MESSAGE_SPRAYED_BY_WATER)
-			return TRUE;
 
-		JGeometry::TVec3<f32> toMario = *gpMarioPos;
-		toMario.x -= mPosition.x;
-		toMario.y -= mPosition.y;
-		toMario.z -= mPosition.z;
+		return FALSE;
+	}
 
-		// The wrapped copy is thrown away: a ROM bug of the same family as
-		// TMapObjFence::controlWall's discarded MsWrap.
-		MsAngleWrap(BPGetRotFromZaxisY(toMario.x, toMario.z));
-		f32 angle = BPGetRotFromZaxisY(toMario.x, toMario.z);
-		f32 diff  = MsAngleDiff(angle, mOwner->mRotation.y);
+	if (sender->getActorType() != 0x1000001)
+		return TRUE;
+	if (message != HIT_MESSAGE_SPRAYED_BY_WATER)
+		return TRUE;
 
-		if (fabsf(diff)
-		    < 0.5f * mOwner->getSaveParam2()->mSLDamageAngle.get()) {
-			if (!mOwner->unk17C) {
-				mOwner->unk170 += 1;
-				if (mOwner->mWaterMark
-				    < mOwner->getSaveParam2()->mSLWaterMarkLimit.get())
-					mOwner->mWaterMark += 1;
-				mOwner->unk174
-				    = mOwner->getSaveParam2()->mSLWaterHitTimer.get();
+	JGeometry::TVec3<f32> toMario = *gpMarioPos;
+	toMario.x -= mPosition.x;
+	toMario.y -= mPosition.y;
+	toMario.z -= mPosition.z;
 
-				if (&TNerveBPSwallow::theNerve() != mOwner->mSpine->getLatestNerve()) {
-					mOwner->mSpine->reset();
-					mOwner->mSpine->setNext(&TNerveBPSwallow::theNerve());
-				}
+	// The wrapped value is overwritten before it is ever read: the ROM
+	// computes the head-to-Mario yaw twice here.
+	f32 angle = MsAngleWrap(BPGetRotFromZaxisY(toMario.x, toMario.z));
+	angle     = BPGetRotFromZaxisY(toMario.x, toMario.z);
+	f32 diff  = MsAngleDiff(angle, mOwner->mRotation.y);
+
+	if (fabsf(diff) < 0.5f * mOwner->getSaveParam2()->mSLDamageAngle.get()) {
+		boss = mOwner;
+		if (!boss->unk17C) {
+			boss->unk170 += 1;
+			if (boss->mWaterMark
+			    < boss->getSaveParam2()->mSLWaterMarkLimit.get())
+				boss->mWaterMark += 1;
+			boss->unk174 = boss->getSaveParam2()->mSLWaterHitTimer.get();
+
+			if (&TNerveBPSwallow::theNerve()
+			    != boss->mSpine->getLatestNerve()) {
+				boss->mSpine->reset();
+				boss->mSpine->setNext(&TNerveBPSwallow::theNerve());
 			}
 		}
-		return TRUE;
 	}
 
-	if (mOwner->is2ndFightNow()) {
-		if (&TNerveBPFly::theNerve() == mOwner->mSpine->getLatestNerve())
-			mOwner->showMessage(2);
-	}
-
-	if (sender->isActorType(0x80000001))
-		return TRUE;
-
-	return FALSE;
+	return TRUE;
 }
 
 void TBPHeadHit::throwActor(THitActor* actor)
@@ -648,13 +650,14 @@ BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
 		return mOwner->receiveMessage(sender, message);
 
-	if (sender->isActorType(ACTOR_TYPE_ENEMY | 1))
+	u32 type = sender->getActorType();
+	if (type == 0x1000001)
 		return FALSE;
 
 	if (mOwner->mState != BOSSPAKU_STATE_BELLY_UP)
 		return TRUE;
 
-	if (sender->isActorType(ACTOR_TYPE_PLAYER | 1)) {
+	if (type == 0x80000001) {
 		if (message == HIT_MESSAGE_HIP_DROP)
 			mOwner->gotHipDropDamage();
 		else if (message == HIT_MESSAGE_TRAMPLE) {
@@ -1177,14 +1180,14 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32 message)
 		return FALSE;
 
 	if (&TNerveBPSleep::theNerve() == mSpine->getLatestNerve()) {
-		if (sender->isActorType(0x1000000D)) {
+		if (sender->getActorType() == 0x1000000D) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPBreakSleep::theNerve());
 			return TRUE;
 		}
 	} else if (mState == BOSSPAKU_STATE_FLYING) {
-		if (sender->isActorType(0x1000000D)
-		    || sender->isActorType(ACTOR_TYPE_PLAYER | 0x1000001)) {
+		if (sender->getActorType() == 0x1000000D
+		    || sender->getActorType() == 0x1000001) {
 			if (mPosition.y - 300.0f > sender->mPosition.y)
 				return TRUE;
 			if (1500.0f + mPosition.y < sender->mPosition.y)
