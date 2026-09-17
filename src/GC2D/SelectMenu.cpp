@@ -584,7 +584,7 @@ void TSelectMenu::startMove()
 	JPAEmitterManager* emitter = mSelectDir->unk30;
 	mSelectShineMgr->initData(mShineUnlockStates, mNumUnlockedShines,
 	                          mSelectedShine, emitter);
-	mSelectShineMgr->mRumbleOption[mSelectedShine]->mShouldRumble = true;
+	mSelectShineMgr->mShines[mSelectedShine]->mSpinning = true;
 }
 
 void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
@@ -821,8 +821,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
 					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
 
-					mSelectShineMgr->mRumbleOption[mSelectedShine]
-					    ->mShouldRumble
+					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
 					    = false;
 
 					mSelectedShine = prevIndex;
@@ -836,8 +835,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
 					mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
 
-					mSelectShineMgr->mRumbleOption[mSelectedShine]
-					    ->mShouldRumble
+					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
 					    = true;
 
 					if (mNumUnlockedShines > 1) {
@@ -893,8 +891,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
 
-					mSelectShineMgr->mRumbleOption[mSelectedShine]
-					    ->mShouldRumble
+					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
 					    = false;
 					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
 					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
@@ -907,8 +904,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					    mScenarioBmg2, SMS_getNormalStage(shineID));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
-					mSelectShineMgr->mRumbleOption[mSelectedShine]
-					    ->mShouldRumble
+					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
 					    = true;
 
 					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
