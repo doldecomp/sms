@@ -26,6 +26,7 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <MoveBG/Item.hpp>
@@ -1103,7 +1104,115 @@ MtxPtr TBossTelesa::getTakingMtx()
 // TODO: incorrect size. Map records 472 bytes.
 void TBossTelesa::prepareGenerate() { }
 
-void TBossTelesa::calcRootMatrix() { }
+void TBossTelesa::calcRootMatrix()
+{
+	getMActor()->getModel()->setBaseScale(mScaling);
+
+	f32 hosei = unk364;
+	if (hosei > 0.0f)
+		hosei = 0.0f;
+	else if (hosei < mBaseHoseiPosY)
+		hosei = mBaseHoseiPosY;
+
+	TPosition3f mtx;
+	Mtx rotation;
+
+	mtx.translation(mPosition.x,
+	                mPosition.y + mParams->mSLTransYOffset.get() + hosei,
+	                mPosition.z);
+	MsMtxSetRotRPH(rotation, mRotation.x, mRotation.y, mRotation.z);
+	MTXConcat(mtx, rotation, mtx);
+	MTXCopy(mtx, getMActor()->getModel()->getBaseTRMtx());
+
+	// The slot machine hangs off whichever joint the current animation uses.
+	if (mSlot) {
+		mSlot->mRotation = mRotation;
+
+		f32 offsetY = -700.0f;
+		MtxPtr jointMtx;
+
+		if (getMActor()->checkCurBckFromIndex(4)
+		    || getMActor()->checkCurBckFromIndex(0)
+		    || getMActor()->checkCurBckFromIndex(2)
+		    || getMActor()->checkCurBckFromIndex(5)) {
+			jointMtx = getMActor()->getModel()->getAnmMtx(1);
+			if (!getMActor()->checkCurBckFromIndex(0))
+				offsetY = -2400.0f;
+		} else {
+			jointMtx = getMActor()->getModel()->getAnmMtx(0);
+		}
+
+		mSlot->mPosition.x = jointMtx[0][3];
+		mSlot->mPosition.y = unk364 + (jointMtx[1][3] + offsetY);
+		mSlot->mPosition.z = jointMtx[2][3];
+	}
+
+	for (u16 i = 0;
+	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); ++i) {
+		Mtx effectMtx;
+		SMS_GetLightPerspectiveForEffectMtx(effectMtx);
+		getMActor()
+		    ->getModel()
+		    ->getModelData()
+		    ->getMaterialNodePointer(i)
+		    ->getTexMtx(1)
+		    ->setEffectMtx(effectMtx);
+	}
+
+	unk374.set(0.0f, 0.0f, 0.0f);
+	gpMarioParticleManager->emit(0x1A5, &unk374, 1, this);
+	gpMarioParticleManager->emit(0x1A6, &unk374, 1, this);
+
+	MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(1);
+	unk374.set(headMtx[0][3], headMtx[1][3], headMtx[2][3]);
+	gpMarioParticleManager->emitAndBindToPosPtr(0x1A7, &unk374, 1, this);
+
+	if (!getMActor()->checkCurBckFromIndex(4)
+	    && !getMActor()->checkCurBckFromIndex(6)
+	    && !getMActor()->checkCurBckFromIndex(12)
+	    && !getMActor()->checkCurBckFromIndex(13)
+	    && !getMActor()->checkCurBckFromIndex(3)) {
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x19E, getMActor()->getModel()->getAnmMtx(5), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x19F, getMActor()->getModel()->getAnmMtx(5), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x1A0, getMActor()->getModel()->getAnmMtx(10), 1, this);
+	}
+
+	if (getMActor()->checkCurBckFromIndex(1)
+	    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < 20.0f) {
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0xE0, getMActor()->getModel()->getAnmMtx(5), 0, nullptr);
+	}
+
+	if (getMActor()->checkCurBckFromIndex(12)) {
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_FIRE, &mPosition, 0,
+		                          nullptr, 0, 4);
+
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x1A1, getMActor()->getModel()->getAnmMtx(1), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x1A2, getMActor()->getModel()->getAnmMtx(9), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x1A3, getMActor()->getModel()->getAnmMtx(9), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x1A4, getMActor()->getModel()->getAnmMtx(9), 1, this);
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0x1F0, getMActor()->getModel()->getAnmMtx(9), 3, this);
+	}
+
+	if (getMActor()->checkCurBckFromIndex(14)
+	    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(40.0f)) {
+		if (mSpine->getCurrentNerve()
+		    == &TNerveBossTelesaSpitSlotItem::theNerve()) {
+			generateSlotItem();
+			return;
+		}
+
+		genAttacker();
+	}
+}
 
 void TBossTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
