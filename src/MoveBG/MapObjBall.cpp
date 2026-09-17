@@ -1,3 +1,13 @@
+// TODO: the definitions in this file are not in the map's order. The map's
+// .text layout reversed (this TU is -inline deferred) wants, per class and
+// in this sequence: all of TMapObjBall's methods from touchRoof down to its
+// constructor; then TResetFruit's from checkGroundCollision down to its
+// constructor, with pick/living/waitEffect/rotting between kicked and
+// breaking; then TRandomFruit, TCoverFruit and finally TBigWatermelon from
+// touchWaterSurface down to its constructor. Definition order does not
+// decide any inlining here (measured), but it does fix the .rodata and
+// .sdata2 literal pools, so the reshuffle belongs in its own change with
+// the data percentages watched.
 #include <MoveBG/MapObjBall.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <System/FlagManager.hpp>

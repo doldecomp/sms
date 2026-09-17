@@ -1198,11 +1198,21 @@ void TKoopaJrSubmarineManager::createModelData()
 
 void TKoopaJrSubmarineManager::load(JSUMemoryInputStream& stream)
 {
+	// Same discarded query as loadAfter(), once before and once after the
+	// params are built.
+	getActiveObjNum();
 	TEnemyManager::load(stream);
 	unk38 = new TKoopaJrSubmarineParams("/enemy/koopajrsubmarine.prm");
+	getActiveObjNum();
 }
 
-void TKoopaJrSubmarineManager::loadAfter() { JDrama::TNameRef::loadAfter(); }
+void TKoopaJrSubmarineManager::loadAfter()
+{
+	JDrama::TNameRef::loadAfter();
+	// The discarded call is real: its body opens with a null test on the
+	// params, which is the dead lwz/cmplwi the ROM leaves here.
+	getActiveObjNum();
+}
 
 TSpineEnemy* TKoopaJrSubmarineManager::createEnemyInstance()
 {
