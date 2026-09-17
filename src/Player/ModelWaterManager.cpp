@@ -730,15 +730,8 @@ void TModelWaterManager::move()
 void TModelWaterManager::calcWorldMinMax()
 {
 	if (mParticleCount == 0) {
-		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-
-		unk5D70.x = marioPos.x;
-		unk5D70.y = marioPos.y;
-		unk5D70.z = marioPos.z;
-
-		unk5D7C.x = marioPos.x;
-		unk5D7C.y = marioPos.y;
-		unk5D7C.z = marioPos.z;
+		unk5D70 = *gpMarioPos;
+		unk5D7C = *gpMarioPos;
 
 		unk5D70.x -= 1.0f;
 		unk5D70.y -= 1.0f;
@@ -750,29 +743,37 @@ void TModelWaterManager::calcWorldMinMax()
 		return;
 	}
 
-	JGeometry::TVec3<f32> fVar789 = mParticlePositionSOA[0];
-	fVar789.x -= 1.0f;
-	fVar789.y -= 1.0f;
-	fVar789.z -= 1.0f;
-	JGeometry::TVec3<f32> fVar123 = mParticlePositionSOA[0];
-	fVar789.x += 1.0f;
-	fVar789.y += 1.0f;
-	fVar789.z += 1.0f;
-	for (int i = 0; i < mParticleCount; ++i) {
-		fVar789.setMax(mParticlePositionSOA[i]);
-		fVar123.setMin(mParticlePositionSOA[i]);
+	f32 minX = mParticlePositionSOA[0].x - 1.0f;
+	f32 minY = mParticlePositionSOA[0].y - 1.0f;
+	f32 minZ = mParticlePositionSOA[0].z - 1.0f;
+	f32 maxX = 1.0f + mParticlePositionSOA[0].x;
+	f32 maxY = 1.0f + mParticlePositionSOA[0].y;
+	f32 maxZ = 1.0f + mParticlePositionSOA[0].z;
+
+	for (int i = 1; i < mParticleCount; i++) {
+		if (minX > mParticlePositionSOA[i].x)
+			minX = mParticlePositionSOA[i].x;
+		if (minY > mParticlePositionSOA[i].y)
+			minY = mParticlePositionSOA[i].y;
+		if (minZ > mParticlePositionSOA[i].z)
+			minZ = mParticlePositionSOA[i].z;
+		if (maxX < mParticlePositionSOA[i].x)
+			maxX = mParticlePositionSOA[i].x;
+		if (maxY < mParticlePositionSOA[i].y)
+			maxY = mParticlePositionSOA[i].y;
+		if (maxZ < mParticlePositionSOA[i].z)
+			maxZ = mParticlePositionSOA[i].z;
 	}
 
-	unk5D70.x = fVar789.x - 200.0f;
-	unk5D70.y = fVar789.y - 200.0f;
-	unk5D70.z = fVar789.z - 200.0f;
+	unk5D70.x = minX - 200.0f;
+	unk5D70.y = minY - 200.0f;
+	unk5D70.z = minZ - 200.0f;
 
-	unk5D7C.x = fVar123.x + 200.0f;
-	unk5D7C.y = fVar123.y + 200.0f;
-	unk5D7C.z = fVar123.z + 200.0f;
+	unk5D7C.x = 200.0f + maxX;
+	unk5D7C.y = 200.0f + maxY;
+	unk5D7C.z = 200.0f + maxZ;
 }
 
-#pragma dont_inline on
 // TODO: instruction-identical and the frame matches at 0xe0, but every local
 // sits 12 bytes low: retail has one more 12-byte inline-expansion temporary
 // below `viewVel` (temporaries grow up from 0xc), so `vtx` lands at 0x54 there
@@ -851,7 +852,6 @@ void TModelWaterManager::calcDrawVtx(MtxPtr viewMtx)
 
 	unk5D30->setEnd();
 }
-#pragma dont_inline off
 
 void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
                                          const JGeometry::TVec3<f32>& param_3,
