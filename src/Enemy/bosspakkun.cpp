@@ -30,6 +30,7 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
+#include <Player/MarioStatus.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
 #include <System/TargetArrow.hpp>
@@ -224,16 +225,16 @@ void TBPPolDrop::move()
 	mPosition = pos;
 }
 
-// UNUSED, 0xd0 in the map: TBossPakkun::launchPolDrop spells it out.
+// UNUSED, 0xd0 in the map: TBossPakkun::launchPolDrop inlines it.
 void TBPPolDrop::launch(const JGeometry::TVec3<f32>& from,
                         const JGeometry::TVec3<f32>& velocity)
 {
 	mVelocity = velocity;
 	mPosition = from;
 	mScaling.set(1.0f, 1.0f, 1.0f);
-	mRotation.z = mRotation.y = mRotation.x = 0.0f;
-	mState                                 = BOSSPAKU_POLDROP_FLYING;
-	mFlyTimer                              = 0;
+	mRotation.x = mRotation.y = mRotation.z = 0.0f;
+	mState                                  = BOSSPAKU_POLDROP_FLYING;
+	mFlyTimer                               = 0;
 	mBallMActor->setBck("pollut_ball");
 	mBallMActor->setBtk("pollut_ball_01");
 	mBallMActor->setBtk("pollut_ball_02");
@@ -882,10 +883,15 @@ void TBossPakkun::init(TLiveManager* manager)
 		mSpine->initWith(&TNerveBPWait::theNerve());
 	}
 
-	mPolDrop = new TBPPolDrop(this, "<TBPPolDrop>");
+	// TODO: retail keeps this constructor a `bl`; our build inlines all 79
+	// instructions of it here. Moving the member initialisers into the body
+	// (+7 statements) and naming the `new` result both left the decision
+	// unchanged, so this is the caller-size inlining family, not a statement
+	// budget. It is the whole of init's residual.
+	mPolDrop      = new TBPPolDrop(this, "<TBPPolDrop>");
 	MActor* stamp = mMActorKeeper->createMActor("pollut_ball_stamp.bmd", 0);
-	mPolDrop->mBallMActor
-	    = mMActorKeeper->createMActor("pollut_ball.bmd", 0);
+	MActor* ball  = mMActorKeeper->createMActor("pollut_ball.bmd", 0);
+	mPolDrop->mBallMActor  = ball;
 	mPolDrop->mStampMActor = stamp;
 
 	ResTIMG* rak = (ResTIMG*)JKRFileLoader::getGlbResource(
@@ -925,18 +931,20 @@ BOOL TBossPakkun::checkMarioRiding()
 	const TBGCheckData* plane = SMS_GetMarioGrPlane();
 
 	if (!mIsMarioRiding) {
-		if (plane && plane->getActor() == this && SMS_IsMarioTouchGround4cm()
-		    && (SMS_GetMarioStatus() & 0x200)
-		    && !(SMS_GetMarioStatus() & 0x200000)) {
-			mIsMarioRiding = 1;
-			return TRUE;
+		if (plane && plane->getActor() == this
+		    && SMS_IsMarioTouchGround4cm()) {
+			u32 status = SMS_GetMarioStatus();
+			if ((status & MARIO_STATUS_FLAG_UNK200)
+			    && !(status & MARIO_STATUS_FLAG_UNK200000)) {
+				mIsMarioRiding = 1;
+				return TRUE;
+			}
 		}
-	} else if (plane && plane->getActor() == this
-	           && SMS_IsMarioTouchGround4cm()) {
-		return FALSE;
+	} else if (!(plane && plane->getActor() == this
+	             && SMS_IsMarioTouchGround4cm())) {
+		mIsMarioRiding = 0;
 	}
 
-	mIsMarioRiding = 0;
 	return FALSE;
 }
 
@@ -1084,10 +1092,12 @@ void TBossPakkun::launchPolDrop()
 		getJointTransByIndex(0x12, &from);
 	}
 
-	JGeometry::TVec3<f32> front;
+	// Aim a little ahead of Mario, in the direction he is facing.
 	f32 marioYaw = gpMarioOriginal->mRotation.y;
 	f32 reach    = getSaveParam2()->mSLPollBallFront.get();
-	front.set(reach * MsCos(marioYaw), 0.0f, reach * MsSin(marioYaw));
+
+	JGeometry::TVec3<f32> front;
+	front.set(reach * MsSin(marioYaw), 0.0f, reach * MsCos(marioYaw));
 
 	JGeometry::TVec3<f32> goal = front;
 	goal.x += gpMarioPos->x;
@@ -1098,17 +1108,7 @@ void TBossPakkun::launchPolDrop()
 	SMSCalcJumpVelocityXZ(goal, from, getSaveParam2()->mSLPollBallSpeed.get(),
 	                      0.1f, &velocity);
 
-	mPolDrop->mVelocity = velocity;
-	mPolDrop->mPosition = from;
-	mPolDrop->mScaling.set(1.0f, 1.0f, 1.0f);
-	mPolDrop->mRotation.z = mPolDrop->mRotation.y = mPolDrop->mRotation.x
-	    = 0.0f;
-	mPolDrop->mState     = BOSSPAKU_POLDROP_FLYING;
-	mPolDrop->mFlyTimer  = 0;
-	mPolDrop->mBallMActor->setBck("pollut_ball");
-	mPolDrop->mBallMActor->setBtk("pollut_ball_01");
-	mPolDrop->mBallMActor->setBtk("pollut_ball_02");
-	mPolDrop->mGroundY = from.y;
+	mPolDrop->launch(from, velocity);
 }
 
 // TODO: not reconstructed. Map size 0xc4.
@@ -1667,10 +1667,10 @@ DEFINE_NERVE(TNerveBPPivot, TLiveActor)
 	toMario.y -= gpMarioPos->y;
 	toMario.z -= gpMarioPos->z;
 
+	f32 reach = boss->getSaveParam2()->mSLSwingLength.get();
+
 	f32 turn;
-	if (toMario.squared()
-	    < boss->getSaveParam2()->mSLSwingLength.get()
-	          * boss->getSaveParam2()->mSLSwingLength.get())
+	if (toMario.squared() < reach * reach)
 		turn = boss->getSaveParam2()->mSLPivotSpeedAware.get();
 	else
 		turn = boss->getSaveParam2()->mSLPivotSpeed.get();
