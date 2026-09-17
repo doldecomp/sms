@@ -49,8 +49,18 @@ void TMario::doSlipJumping() { }
 // TODO: UNUSED, 0x148 in the map. Fully inlined; body still unknown.
 void TMario::doSpinJumping() { }
 
-// TODO: UNUSED, 0x7c in the map. Fully inlined; body still unknown.
-void TMario::setJumpingAttackArea() { }
+// UNUSED (0x7c in the map): the trample/pushup attack box both doJumping
+// and boardJumping set before running jumpProcess.
+void TMario::setJumpingAttackArea()
+{
+	if (mVel.y < 0.0f) {
+		setAttackRadius(mDeParams.mTrampleRadius.get());
+		setAttackHeight(mDeParams.mAttackHeight.get());
+	} else {
+		setAttackRadius(mDeParams.mPushupRadius.get());
+		setAttackHeight(mDeParams.mPushupHeight.get());
+	}
+}
 
 void TMario::doJumping()
 {
@@ -98,13 +108,7 @@ void TMario::doJumping()
 	mVel.x = mSlideVelX;
 	mVel.z = mSlideVelZ;
 
-	if (mVel.y < 0.0f) {
-		setAttackRadius(mDeParams.mTrampleRadius.get());
-		setAttackHeight(mDeParams.mAttackHeight.get());
-	} else {
-		setAttackRadius(mDeParams.mPushupRadius.get());
-		setAttackHeight(mDeParams.mPushupHeight.get());
-	}
+	setJumpingAttackArea();
 }
 
 void TMario::askStrongGroundTouch() { }
@@ -878,13 +882,7 @@ BOOL TMario::rotateBroadJumping()
 BOOL TMario::boardJumping()
 {
 	setAnimation(ANIM_RIDE_SHELL, 1.0f);
-	if (mVel.y < 0.0f) {
-		setAttackRadius(mDeParams.mTrampleRadius.get());
-		setAttackHeight(mDeParams.mAttackHeight.get());
-	} else {
-		setAttackRadius(mDeParams.mPushupRadius.get());
-		setAttackHeight(mDeParams.mPushupHeight.get());
-	}
+	setJumpingAttackArea();
 	switch (jumpProcess(0)) {
 	case 1:
 		if (mVel.y < 0.0f)
@@ -894,6 +892,7 @@ BOOL TMario::boardJumping()
 		if (mWallPlane == nullptr) {
 			setPlayerVelocity(0.0f);
 			loserExec();
+			gpMSound->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
 		} else {
 			s16 diff
 			    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
@@ -902,6 +901,7 @@ BOOL TMario::boardJumping()
 			if ((diff < -max || max < diff)
 			    && mForwardVel > mSurfingParamsWaterRed.mClashSpeed.get()) {
 				loserExec();
+				gpMSound->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
 			} else {
 				setPlayerVelocity(0.0f);
 			}
