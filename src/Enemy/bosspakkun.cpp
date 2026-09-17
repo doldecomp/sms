@@ -867,11 +867,6 @@ void TBossPakkun::init(TLiveManager* manager)
 		mSpine->initWith(&TNerveBPWait::theNerve());
 	}
 
-	// TODO: retail keeps this constructor a `bl`; our build inlines all 79
-	// instructions of it here. Moving the member initialisers into the body
-	// (+7 statements) and naming the `new` result both left the decision
-	// unchanged, so this is the caller-size inlining family, not a statement
-	// budget. It is the whole of init's residual.
 	mPolDrop      = new TBPPolDrop(this, "<TBPPolDrop>");
 	MActor* stamp = mMActorKeeper->createMActor("pollut_ball_stamp.bmd", 0);
 	MActor* ball  = mMActorKeeper->createMActor("pollut_ball.bmd", 0);
@@ -893,9 +888,9 @@ void TBossPakkun::init(TLiveManager* manager)
 		    = mMActorKeeper->createMActor("bosspakuPollut_white.bmd", 0);
 		MActor* pollut = mMActorKeeper->createMActor("bosspakuPollut.bmd", 0);
 
-		TBPVomit* vomit      = mVomit;
-		vomit->mMActor       = pollut;
-		vomit->mStampMActor  = white;
+		TBPVomit* vomit     = mVomit;
+		vomit->mMActor      = pollut;
+		vomit->mStampMActor = white;
 
 		mTornado = new TBPTornado(this, "<TBPTornado>");
 		group->getChildren().push_back(mTornado);
@@ -1000,7 +995,9 @@ bool TBossPakkun::is2ndFightNow() const
 	return false;
 }
 
-// TODO: not reconstructed. Map size 0xec.
+// UNUSED, 0xec in the map, and genuinely dead: no call site of this shape is
+// left anywhere in the unit once every function is reconstructed.
+// TODO: body unknown.
 void TBossPakkun::ignoreWaterCheck() { }
 
 // UNUSED, 0x58 in the map: the Tornado nerve inlines it. unk194 and unk1A0 are
@@ -1047,10 +1044,15 @@ BOOL TBossPakkun::inArea(const JGeometry::TVec3<f32>& pos)
 	return mVomitArea->contain(pos);
 }
 
-// TODO: not reconstructed. Map size 0xd0.
+// UNUSED, 0xd0 in the map, and genuinely dead: the flying damage reaction now
+// lives in TBPHeadHit::receiveMessage's BOSSPAKU_STATE_FLYING arm, which is
+// its own code rather than an expansion of this.
+// TODO: body unknown.
 void TBossPakkun::gotFlyingDamage() { }
 
-// TODO: not reconstructed. Map size 0x160.
+// UNUSED, 0x160 in the map, and genuinely dead: the spray reaction now lives
+// in TBPHeadHit::receiveMessage's BOSSPAKU_STATE_UNK2 arm.
+// TODO: body unknown.
 void TBossPakkun::gotWaterDamage() { }
 
 void TBossPakkun::gotHipDropDamage()
@@ -1480,10 +1482,6 @@ void TBossPakkunManager::load(JSUMemoryInputStream& stream)
 	if (!mIsLightVersion)
 		initJParticle();
 }
-
-// TODO: none of these nerve bodies is reconstructed. Each carries the size the
-// map records for its execute. Defining them does emit theNerve() and the
-// destructor, both compiler-generated, which is what matches so far.
 
 DEFINE_NERVE(TNerveBPWait, TLiveActor)
 {
