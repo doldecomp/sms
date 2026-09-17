@@ -104,7 +104,12 @@ public:
 	/* 0x222 */ u8 unk222[11];
 	/* 0x22E */ u16 unk22E[TITLE_PANE_COUNT];
 	/* 0x248 (GMSE01: 0x266) */ u8 unk248[TITLE_PANE_COUNT];
-#if !defined(VERSION_GMSE01)
+	// unk258 sits flush against the pointer that follows it in both
+	// regions, which leaves a hole above the flag array: three bytes in the
+	// Japanese layout, two in the US one.
+#if defined(VERSION_GMSE01)
+	/* 0x278 */ char unk278_[0x27A - 0x278];
+#else
 	/* 0x255 */ char unk255[0x258 - 0x255];
 #endif
 	// Offsets below use the original layout; add 0x20 for GMSE01.

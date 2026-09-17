@@ -122,7 +122,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		unk222[i] = 4;
 	}
 
-	for (int i = 0; i < 13; ++i) {
+	for (int i = 0; i < TITLE_PANE_COUNT; ++i) {
 		unk22E[i] = 400 * i;
 		unk248[i] = 4;
 	}
@@ -144,7 +144,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		unk124[i] = unkF8[i]->getPane()->getBounds();
 	}
 
-	for (int i = 0; i < 13; ++i) {
+	for (int i = 0; i < TITLE_PANE_COUNT; ++i) {
 		int key;
 		if (i < 9)
 			key = 'p_01' + i;
@@ -689,7 +689,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			           || unk38->getTrigger() & 0x1000) {
 				unkF0->setPaneAlpha(10, 255, unkF0->getPane()->getAlpha());
 				unkF4->setPaneAlpha(10, 255, unkF4->getPane()->getAlpha());
-				for (int i = 0; i < 13; ++i)
+				for (int i = 0; i < TITLE_PANE_COUNT; ++i)
 					unk1D4[i]->getPane()->setAlpha(0);
 				unk258 = 0;
 				if (unk18 < 4)
@@ -717,7 +717,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			    || unk38->getTrigger() & 0x1000) {
 				unkF0->setPaneAlpha(10, 255, unkF0->getPane()->getAlpha());
 				unkF4->setPaneAlpha(10, 255, unkF4->getPane()->getAlpha());
-				for (int i = 0; i < 13; ++i)
+				for (int i = 0; i < TITLE_PANE_COUNT; ++i)
 					unk1D4[i]->getPane()->setAlpha(0);
 				unk258 = 0;
 				unkBC  = 0;
@@ -792,7 +792,7 @@ bool TCardLoad::titleDraw()
 		break;
 
 	case 1:
-		for (int i = 0; i < 13; ++i) {
+		for (int i = 0; i < TITLE_PANE_COUNT; ++i) {
 			switch (unk248[i]) {
 			case 4:
 				if (unk258 > unk22E[i]) {
@@ -811,9 +811,9 @@ bool TCardLoad::titleDraw()
 				break;
 
 			case 1:
-				if (i == 12) {
+				if (i == TITLE_PANE_COUNT - 1) {
 					unk258 = 0;
-					for (int j = 0; j < 13; ++j)
+					for (int j = 0; j < TITLE_PANE_COUNT; ++j)
 						unk1D4[j]->setPaneAlpha(40, 255, 180);
 					unk18 = 3;
 				}
@@ -827,7 +827,7 @@ bool TCardLoad::titleDraw()
 	case 3:
 		if (unk258 > 160) {
 			bool any = true;
-			for (int i = 0; i < 13; ++i) {
+			for (int i = 0; i < TITLE_PANE_COUNT; ++i) {
 				any &= unk1D4[i]->update();
 				JUtility::TColor col
 				    = ((J2DPicture*)unk1D4[i]->getPane())->mBlack;
@@ -840,7 +840,7 @@ bool TCardLoad::titleDraw()
 			}
 
 			if (any) {
-				for (int i = 0; i < 13; ++i)
+				for (int i = 0; i < TITLE_PANE_COUNT; ++i)
 					unk1D4[i]->setPaneAlpha(140, 0, 255);
 				unk258 = 0;
 				unk18  = 2;
@@ -853,7 +853,8 @@ bool TCardLoad::titleDraw()
 		u16 alpha = unkF0->getPane()->getAlpha() + 1;
 		if (alpha > 255) {
 			bool any = true;
-			for (int i = 0; i < 13; ++i)
+			alpha    = 255;
+			for (int i = 0; i < TITLE_PANE_COUNT; ++i)
 				any &= unk1D4[i]->update();
 			if (any) {
 				unkBC = 0;
@@ -865,7 +866,7 @@ bool TCardLoad::titleDraw()
 	} break;
 
 	case 4: {
-		for (int i = 0; i < 13; ++i) {
+		for (int i = 0; i < 11; ++i) {
 			switch (unk222[i]) {
 			case 0:
 				if (unkF8[i]->update()) {
@@ -879,7 +880,7 @@ bool TCardLoad::titleDraw()
 				if (unk20C[i] > 500) {
 					JUTRect bounds = unkF8[i]->getPane()->getBounds();
 					unkF8[i]->setPaneAlpha(25, 0, 255);
-					unk222[i] = 3;
+					unk222[i] = 2;
 				}
 				break;
 
@@ -896,8 +897,9 @@ bool TCardLoad::titleDraw()
 					JUTRect local_124 = unkF8[i]->getPane()->getBounds();
 
 					unkF8[i]->setCenteredSize(
-					    25, local_124.getWidth() * 2, local_124.getHeight() * 2,
-					    local_124.getWidth(), local_124.getHeight());
+					    25, local_124.getWidth(), local_124.getHeight(),
+					    local_124.getWidth() * 2,
+					    local_124.getHeight() * 2);
 
 					unkF8[i]->setPaneAlpha(25, 255, 0);
 					unk222[i] = 0;
@@ -920,8 +922,11 @@ bool TCardLoad::titleDraw()
 		++unk258;
 	} break;
 
-	case 5:
-	case 6:
+	// The ROM dispatches this switch through an 8-entry jump table, which
+	// MWCC only emits when the label set has a gap: a contiguous
+	// `case 5: case 6: case 7:` group folds into the default's range test
+	// and gives a compare tree instead. Whether 5 and 6 carried labels of
+	// their own is unknowable -- they reach the same block as the default.
 	case 7:
 		break;
 	}
