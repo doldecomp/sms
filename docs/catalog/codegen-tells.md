@@ -227,6 +227,15 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Settled in header round 8
+
+- **A two-`return` body is refused expansion on the right of a short-circuit `&&`; the equivalent single-`return` ternary always expands.** Both compile to the same seven instructions, so the map's weak 0x1c symbol plus a `bl` at depth 1 is the tell, and the fix is the `if (c) return TRUE; return FALSE;` spelling (`TYoshi::onYoshi`; `TMario::onYoshi` 22 -> 100, the `(void)0` hack gone). Depth and statement count are both ruled out for this case; in an if-condition the same body still expands. This qualifies the "no limit at depth 1 for `inline`" row.
+- `memset` is never inlined by MWCC 1.2.5, with or without its `.init` declspec. An inlined zero-fill in ROM game code is a hand-written loop: pointer-walk plus countdown (`for (int i = n; i != 0; --i) *p++ = 0;`) gives one 8-store body with `ctr = n/8`; an indexed loop gives eight bodies with `ctr = n/64` (`TGCConsole2::perform` 86.5 -> 87.3).
+- Reordering a TU can leave `.rodata`/`.sdata2` untouched (`MapObjBall`'s pools did not move); the gain shows in compiler-generated destructors. A literal-pool mismatch is not evidence of wrong definition order.
+- A factory's `new` size is standalone proof of tail members nothing reads (`TKukkuManager` 0x64, `TKazekun` 0x1d4, `TLimitKoopa` 0x1c8; `getNameRef_Enemy` 8,392 B to exact). Nine inline `theNerve()` bodies were exactly `MarNameRefGen_BossEnemy`'s 0x6c `__sinit` gap (`LimitKoopaNerve.hpp` split).
+- `TGraphTracer::traceSpline` returns `BOOL`, `TRailNode::mSpeed` is `u16`, `checkMarioVoicePlaying` returns `JAISound*`.
+- Ruled out: a non-const `checkLiveFlag` overload (375 sites; 2 up / 32 down as a forwarder, 0 / 17 as a body; `hamukuri::isHitValid`'s residue is a frame gap, not the load). The `cDirtyFileName`/`cDirtyTexName` pair has no natural carrier header (include-closure intersection is empty): it is a rogue carrier like `DummyStrings.hpp`, ordered after `InfectiousStrings`' names in most TUs and before them in `MarNameRefGen_BossEnemy`.
+
 ## Settled in header round 7
 
 - A `const` accessor can *cause* a CSE: `MActor::getCurBckAnmPtr` non-const (as the map says) with raw `mMActor` on both halves of a statement shares the member load; routing the receiver through `getMActor()` restores retail's two independent reads (`TChuuHana::setBckAnm` 95.7 -> 99.8). The const-accessor rule is about the re-read and cuts both ways.
