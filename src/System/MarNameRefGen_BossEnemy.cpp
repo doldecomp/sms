@@ -41,9 +41,9 @@ static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 #include <Enemy/TinKoopa.hpp>
 #include <System/MarNameRefGen.hpp>
 
-// TODO: shared-header items this unit needs, none of them fixable here.
-// Measured together (with the two blocked branches below restored): this
-// function 85.9% -> 98.7%, this object's data 9.6% -> 100%, zero regressions.
+// TODO: shared-header items this unit still needs, none of them fixable here.
+// (The LimitKoopa.hpp pair is done: sizeof(TLimitKoopa) is 0x1c8, and the nine
+// nerves moved to LimitKoopaNerve.hpp, which closed __sinit's 0x6c gap.)
 //   Enemy/DemoBossHanachan.hpp  TDemoBossHanachanManager(name, prm) is
 //       in-class and its body does mSaveParams = new
 //       TDemoBossHanachanSaveParams(prm) -- retail stores 0x54 *before* the
@@ -54,12 +54,6 @@ static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 //       has mShinePosition(0, 0, 0) and mMirrorActor(nullptr), and
 //       TSleepBossHanachanManager needs an in-class (name) constructor
 //   Enemy/BossEel.hpp           TOilBall is in-class (: TBEelTears(name))
-//   Enemy/LimitKoopa.hpp        sizeof(TLimitKoopa) is 0x1c8, not 0x1bc; and
-//       its nine nerves have inline theNerve() bodies in that header, so every
-//       includer pays 12 bytes of .bss per nerve -- retail's object has none
-//       of them, which is the whole 0x6c offset gap left in __sinit here.
-//       Splitting the nerve declarations into a LimitKoopaNerve.hpp that
-//       includes LimitKoopa.hpp is the established fix.
 //   JGeometry               retail *calls* TVec3<f>::set<f>(0, 0, 0) for
 //       mShinePosition (it is this TU's second map symbol, 0x10); our build
 //       expands it. Same family as the other set<f> call-vs-expand cases.

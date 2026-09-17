@@ -598,6 +598,10 @@ enum MSoundSEId {
 	MSD_SE_SY_SHINE_CURSOR      = 0x4856,
 	MSD_SE_SY_DONCHO_OPEN       = 0x4857,
 	MSD_SE_SY_PANELPUZZLE_OPEN  = 0x4058,
+	// fabricated name: TGCConsole2::countShine gate-checks and starts this
+	// once per frame while the blue-coin total ticks down toward its target,
+	// so it is the counter's tick.
+	MSD_SE_SY_BLUECOIN_COUNT    = 0x405C,
 	MSD_SE_MA_INTO_DOKAN        = 0x4859,
 	MSD_SE_EV_GLOBAL_SEA_L      = 0x5000,
 	MSD_SE_EV_GLOBAL_SEA_R      = 0x5001,

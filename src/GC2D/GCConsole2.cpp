@@ -1410,8 +1410,20 @@ static inline bool updateBalloonAppearState(TGCConsole2* console)
 		return false;
 
 	console->unk10 = 2;
-	memset(console->unk3B8->getStringPtr(), 0, 0x400);
-	memset(console->unk3B4->getStringPtr(), 0, 0x400);
+	// Not memset(): MWCC 1.2.5 never expands memset inline (the
+	// __declspec(section ".init") on its declaration makes no difference,
+	// probed both ways), while a pointer-walking countdown loop unrolls to
+	// exactly retail's `li r0,0x80; mtctr; li r0,0; 8*stb; addi r3,r3,8;
+	// bdnz` -- byte-identical in a scratch TU. An index-based loop gets
+	// unrolled a second time (ctr 0x10, eight bodies) and does not match.
+	char* buffer = console->unk3B8->getStringPtr();
+	for (int i = 0x400; i != 0; --i)
+		*buffer++ = 0;
+
+	buffer = console->unk3B4->getStringPtr();
+	for (int i = 0x400; i != 0; --i)
+		*buffer++ = 0;
+
 	console->unk3B8->show();
 	return true;
 }
@@ -3416,11 +3428,10 @@ void TGCConsole2::countShine()
 				--unk170;
 				if (unk170 < 0) {
 					unk170 = 0;
-					// TODO: SoundEffects.hpp has no name for 0x405C yet; it
-					// is the blue coin counter tick.
-				} else if (SMSGetMSound()->gateCheck(0x405C)) {
-					MSoundSESystem::MSoundSE::startSoundSystemSE(0x405C, 0,
-					                                             nullptr, 0);
+				} else if (SMSGetMSound()->gateCheck(
+				               MSD_SE_SY_BLUECOIN_COUNT)) {
+					MSoundSESystem::MSoundSE::startSoundSystemSE(
+					    MSD_SE_SY_BLUECOIN_COUNT, 0, nullptr, 0);
 				}
 				// Spelled out rather than routed through the shared digit
 				// helper: every changeTexture call invalidates the cached
