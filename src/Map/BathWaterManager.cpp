@@ -1061,29 +1061,7 @@ public:
 		unk800AC = unk80134->meshTexWidth.get() & ~3;
 		unk800B0 = 1.0f / (f32)unk800AC;
 
-		// Half-stripped crap
-		JGeometry::TVec3<f32> v1;
-		v1.set(data.getThing());
-		if (data.unk3C * data.unk3C - data.unk44 * data.unk44 <= 0)
-			(void)(data.unk3C * data.unk3C - data.unk44 * data.unk44);
-
-		JGeometry::TVec3<f32> v2;
-		v2.set(data.getThing());
-
-		f32 ey = v2.y + R3;
-		JGeometry::TVec3<f32> v3;
-		v3.set(data.getThing());
-
-		JGeometry::TVec3<f32> dir(v3.x - v2.x, (v3.y + negR) - ey, v3.z - v2.z);
-		JGeometry::TVec3<f32> up(0.0f, 0.0f, -1.0f);
-		tmpFake(dir, up);
-
-		unk80020.ref(0, 3) = -unk80020.at(0, 0) * v2.x - unk80020.at(0, 1) * ey
-		                     - unk80020.at(0, 2) * v2.z;
-		unk80020.ref(1, 3) = -unk80020.at(1, 0) * v2.x - unk80020.at(1, 1) * ey
-		                     - unk80020.at(1, 2) * v2.z;
-		unk80020.ref(2, 3) = -unk80020.at(2, 0) * v2.x - unk80020.at(2, 1) * ey
-		                     - unk80020.at(2, 2) * v2.z;
+		calcHeightMapView(data);
 
 		MtxPtr projMtx = gpCamera->unk16C;
 		j3dSys.drawInit();
@@ -1091,17 +1069,22 @@ public:
 		              (f32)SMSGetGameRenderHeight(), 0.0f, 1.0f);
 
 		TProjection3f proj;
-		f32 halfW = 0.5f * unk80134->meshWidth.get();
+		f32 meshWidth = unk80134->meshWidth.get();
+		f32 halfW     = 0.5f * meshWidth;
+		// TODO: JGProjection.hpp's orthographic() takes (t, b, l, r, n, f)
+		// like C_MTXOrtho, but the ROM evaluates the height-dependent
+		// argument before the width-dependent one. Arguments go right to
+		// left, so the real signature is (l, r, t, b, n, f) -- swapping it
+		// (and this call with it) takes prerender 85.3% -> 86.7% and fixes
+		// the fnmsubs/fmsubs signs of both pairs. Shared header, so it is
+		// only reported here. Its body also needs `+ n` on mMtx[0][3] and
+		// mMtx[1][3]: the ROM's fmadds adds the near literal to both, which
+		// is dead here because every caller passes 0.0f.
 		proj.orthographic(
 		    halfW,
-		    halfW
-		        - unk800B0
-		              * (unk80134->meshWidth.get()
-		                 * (f32)SMSGetGameRenderHeight()),
+		    halfW - unk800B0 * (meshWidth * (f32)SMSGetGameRenderHeight()),
 		    -halfW,
-		    unk800B0
-		            * (unk80134->meshWidth.get() * (f32)SMSGetGameRenderWidth())
-		        - halfW,
+		    unk800B0 * (meshWidth * (f32)SMSGetGameRenderWidth()) - halfW,
 		    0.0f, R3 - negR);
 
 		GXSetProjection(proj.mMtx, GX_ORTHOGRAPHIC);
@@ -1127,7 +1110,7 @@ public:
 		GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 		                GX_TRUE, GX_TEVPREV);
 		GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
-		GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+		GXSetZMode(GX_TRUE, GX_LESS, GX_TRUE);
 		GXSetBlendMode(GX_BM_NONE, GX_BL_ZERO, GX_BL_ZERO, GX_LO_NOOP);
 		GXSetColorUpdate(GX_FALSE);
 		GXSetAlphaUpdate(GX_FALSE);
@@ -1496,10 +1479,39 @@ public:
 		return unk20[i][j].y + unk80050.at(1, 3);
 	}
 
-	void tmpFake(const JGeometry::TVec3<f32>& dir,
-	             const JGeometry::TVec3<f32>& up)
+	// Never emitted, so the map cannot name it; the tell that it is a function
+	// and not the block written out is that the ROM computes -unk3C and
+	// 3 * unk3C a second time here, while prerender's own pair stays live for
+	// the projection depth and the cap. Its depth is also what keeps
+	// setLookDir a `bl`.
+	void calcHeightMapView(const TBathtubData& data)
 	{
+		f32 negR = -data.unk3C;
+		f32 R3   = 3.0f * data.unk3C;
+
+		// Half-stripped crap
+		JGeometry::TVec3<f32> v1;
+		v1.set(data.getThing());
+		if (data.unk3C * data.unk3C - data.unk44 * data.unk44 <= 0)
+			(void)(data.unk3C * data.unk3C - data.unk44 * data.unk44);
+
+		JGeometry::TVec3<f32> v2;
+		v2.set(data.getThing());
+
+		f32 ey = v2.y + R3;
+		JGeometry::TVec3<f32> v3;
+		v3.set(data.getThing());
+
+		JGeometry::TVec3<f32> dir(v3.x - v2.x, (v3.y + negR) - ey, v3.z - v2.z);
+		JGeometry::TVec3<f32> up(0.0f, 0.0f, -1.0f);
 		unk80020.setLookDir(dir, up);
+
+		unk80020.ref(0, 3) = -unk80020.at(0, 0) * v2.x - unk80020.at(0, 1) * ey
+		                     - unk80020.at(0, 2) * v2.z;
+		unk80020.ref(1, 3) = -unk80020.at(1, 0) * v2.x - unk80020.at(1, 1) * ey
+		                     - unk80020.at(1, 2) * v2.z;
+		unk80020.ref(2, 3) = -unk80020.at(2, 0) * v2.x - unk80020.at(2, 1) * ey
+		                     - unk80020.at(2, 2) * v2.z;
 	}
 
 public:
