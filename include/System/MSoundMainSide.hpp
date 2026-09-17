@@ -18,9 +18,19 @@ public:
 	static MSStage* smMSStage;
 };
 
-class MSSTageSimpleEnvironmentMonte {
+// Dead in the shipped game: the whole class is UNUSED in the map, vtable
+// included, but it still has to be compiled for the .data layout.
+class MSSTageSimpleEnvironmentMonte : public MSStage {
 public:
-	void proc();
+	MSSTageSimpleEnvironmentMonte()
+	    : unk4(MSD_SE_ENV_MONTE_UPPER_WIND)
+	{
+	}
+
+	virtual void proc();
+
+public:
+	/* 0x4 */ u32 unk4;
 };
 
 class MSSTageSimpleEnvironment : public MSStage {

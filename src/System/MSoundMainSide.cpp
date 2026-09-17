@@ -90,15 +90,27 @@ int MSMainProc::getMonteVillageActorArea(const Vec& param_1)
 	return result;
 }
 
-void MSMainProc::entranceDemoWipeInEnd() { }
+// UNUSED, 0x10: four instructions, and the only flag of the array nothing
+// else raises is the one endStageEntranceDemo clears.
+void MSMainProc::entranceDemoWipeInEnd() { gpMSound->unkC8[4] = 1; }
 
 void MSMainProc::toInnerCameraDemo() { gpMSound->unkC8[2] = 1; }
 
 void MSMainProc::fromInnerCameraDemo() { gpMSound->unkC8[2] = 0; }
 
-void MSMainProc::toTHPDemo() { }
+// UNUSED, 0x38 and 0x34: the demo enter/leave pair of
+// startStageEntranceDemo/endStageEntranceDemo on the one free flag slot.
+void MSMainProc::toTHPDemo()
+{
+	gpMSound->demoModeIn(MSStageInfo::volOffCategory, false);
+	gpMSound->unkC8[3] = 1;
+}
 
-void MSMainProc::fromTHPDemo() { }
+void MSMainProc::fromTHPDemo()
+{
+	gpMSound->demoModeOut(false);
+	gpMSound->unkC8[3] = 0;
+}
 
 void MSMainProc::toTalkingCameraDemo()
 {
@@ -170,6 +182,8 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 	MSStageInfo::volOffCategory            = 0x1c7;
 	MSStageInfo::distFadeStageToKage       = 1;
 
+	MSStageCubeFadeDouble::smInstance = nullptr;
+
 	bool bVar2 = false;
 
 	switch (param_1) {
@@ -217,6 +231,8 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 		}
 		break;
 	case 2:
+		MSoundSESystem::MSRandPlay::createRandPlayVec(
+		    MSD_SE_OBJ_BIRD_BIA_1, 8);
 		MSStageInfo::msStg    = MSBgm::getSceneNo(MSD_BGM_MAMMA);
 		MSStageInfo::stageBgm = MSD_BGM_MAMMA;
 		switch (param_2) {
@@ -310,8 +326,24 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::distFadeStageToKage       = 0;
 		}
 		break;
-	case 8:
-		switch (param_2) {
+	case 8: {
+		int scenario = param_2;
+
+		// Even episodes get the night ambience, odd ones the day set.
+		switch (scenario) {
+		case 0:
+		case 2:
+		case 4:
+		case 6:
+			MSoundSESystem::MSRandPlay::createRandPlayVec(
+			    MSD_SE_OBJ_MONTE_NIGHT_A1, 5);
+			break;
+		default:
+			MSoundSESystem::MSRandPlay::createRandPlayVec(
+			    MSD_SE_OBJ_MONTE_DAY_A1, 5);
+			break;
+		}
+		switch (scenario) {
 		case 5:
 			MSStageInfo::msStg    = MSBgm::getSceneNo(MSD_BGM_MERRY_GO_ROUND);
 			MSStageInfo::stageBgm = MSD_BGM_MERRY_GO_ROUND;
@@ -328,12 +360,14 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::volOffCategory -= 0x83;
 			MSStageInfo::fadeEvent  = 1;
 			MSStageInfo::switchBgm2 = 0xfffffff0;
+		} else if (param_2 == 1) {
+			break;
 		} else {
 			MSStageInfo::switchBgm  = 0xfffffff0;
 			MSStageInfo::fadeEvent  = 2;
 			MSStageInfo::switchBgm2 = 0xfffffff0;
 
-			switch (param_2) {
+			switch (scenario) {
 			case 7:
 				MSStageInfo::cubeFadeUsePan = 0;
 				MSStageInfo::cubeFadeRatio  = 0.28f;
@@ -353,6 +387,7 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			}
 		}
 		break;
+	}
 	case 9:
 		MSStageInfo::msStg    = MSBgm::getSceneNo(MSD_BGM_CORONA);
 		MSStageInfo::stageBgm = MSD_BGM_CORONA;
@@ -389,6 +424,8 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::stageBgmSilent            = MSD_BGM_MARE_SEA;
 			MSStageInfo::stageBgmSilentStartStatus = 2;
 			MSStageInfo::distFadeStageToKage       = 0;
+		} else if (param_2 == 6) {
+			// Episode 6 keeps the plain Mare Sea setup.
 		} else {
 			MSStageInfo::stageBgmSilent            = MSD_BGM_SCENARIO_SELECT;
 			MSStageInfo::cubeFadeRatio             = 0.12f;
@@ -398,7 +435,7 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::switchBgm2                = 0xfffffff0;
 			MSStageInfo::cubeFadeUsePan            = 1;
 		}
-		if (param_2 == 7)
+		if (param_2 == 6 || param_2 == 7)
 			MSStageInfo::stageBgm = 0xfffffff0;
 		break;
 	case 14:
@@ -501,6 +538,7 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 		break;
 	case 57:
 		MSStageInfo::msStg    = MSBgm::getSceneNo(MSD_BGM_MAP_SELECT);
+		bVar2                 = true;
 		MSStageInfo::stageBgm = MSD_BGM_MAP_SELECT;
 		break;
 	case 58:
@@ -537,6 +575,9 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 		SMSGetMSound()->enterStage(MSStageInfo::msStg, param_1, param_2);
 	}
 	MSSeCallBack::setWaterCameraFir(bVar2);
+#if defined(VERSION_GMSE01)
+	gpMSound->mWaterFilterOverride = bVar2;
+#endif
 	if (MSStageInfo::stageBgmSilent != 0xfffffff0
 	    && MSStageInfo::stageBgmSilentStartStatus == 0
 	    && SMSGetMSound()->unkCF != 0) {
@@ -1093,4 +1134,8 @@ void MSSTageSimpleEnvironment::proc()
 		MSoundSESystem::MSoundSE::startSoundSystemSE(unk4, 0, nullptr, 0);
 }
 
-void MSSTageSimpleEnvironmentMonte::proc() { }
+void MSSTageSimpleEnvironmentMonte::proc()
+{
+	if (unk4 != 0xffffffff)
+		MSoundSESystem::MSoundSE::startSoundSystemSE(unk4, 0, nullptr, 0);
+}
