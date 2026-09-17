@@ -1592,14 +1592,13 @@ DEFINE_NERVE(TNerveBWRoll, TLiveActor)
 
 	if (boss->isReachedToGoal()) {
 		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
-		boss->getMActor()
-		    ->getFrameCtrl(ANM_TYPE_BCK)
-		    ->setRate(SMSGetAnmFrameRate());
+		J3DFrameCtrl* ctrl = boss->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+		ctrl->setRate(SMSGetAnmFrameRate());
 		return TRUE;
 	}
 
-	boss->walkToCurPathNode(boss->getSaveParam2()->mSLAttackSpeed.get(),
-	                        boss->getTurnSpeed(), 0.0f);
+	f32 speed = boss->getSaveParam2()->mSLAttackSpeed.get();
+	boss->walkToCurPathNode(speed, boss->getTurnSpeed(), 0.0f);
 	return FALSE;
 }
 
