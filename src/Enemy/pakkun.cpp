@@ -86,6 +86,10 @@ static int PakkunRootCallback(J3DNode* node, int param);
 static int PakkunRootCallback2(J3DNode* node, int param);
 
 // The seed spins about its own axis while it flies.
+// TODO: 8 bytes of frame short, and the 0.0f/1.0f the matrix is filled with
+// are hoisted above the sine table lookups instead of loaded at their first
+// use. MsSin/MsCos, swapping the sine and cosine locals and naming the model
+// all leave it unchanged.
 static int PakkunSeedCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -123,6 +127,8 @@ static int PakkunSeedCallback(J3DNode* node, int param)
 
 // The head swells as the stay pakkun takes damage. The y and z axes are
 // stretched half again as much once it is past its original size.
+// TODO: instruction-identical bar the u8 note below, 32 bytes of frame short.
+// PakkunRootCallback2 and TPakkun::init are short by the same 32 and 24.
 static int PakkunRootCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -369,8 +375,8 @@ void TPakkun::init(TLiveManager* manager)
 	mSeed->loadInit(this, "seed.bmd");
 	mSeed->unk164 = mBodyScale;
 
-	const ResTIMG* dummy
-	    = (const ResTIMG*)JKRFileLoader::getGlbResource("/scene/map/pollution/H_ma_rak.bti");
+	const ResTIMG* dummy = (const ResTIMG*)JKRFileLoader::getGlbResource(
+	    "/scene/map/pollution/H_ma_rak.bti");
 	if (dummy) {
 		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
 		                     "H_ma_rak_dummy", *dummy);
@@ -415,6 +421,8 @@ bool TPakkun::isHideEnd() const
 	return false;
 }
 
+// TODO: instruction-identical but with cue/graphics/this in r30/r29/r31
+// where the original uses r31/r30/r29 -- pure callee-saved renumbering.
 void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK200))
@@ -451,16 +459,22 @@ void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-// TODO: dead code, and 0x98 bytes is bigger than one particle emission. The
-// smoke puff that hides the seed swap is the best reading of the name.
+// The goop puff the plant throws up while it moves through dirty ground.
+// TNerveStayPakkunAppear spells the same block out, which is where the shape
+// comes from; adding the pollution test in front of it gives 0x94 against the
+// map's 0x98, so one statement is still missing. The two-emit form the hide
+// nerve uses instead is 0xac, too big.
+// TODO: 4 bytes short.
 void TPakkun::createPakkunSmoke(JGeometry::TVec3<f32>& pos)
 {
-	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(PARTICLE_MS_GENE_HIT, &pos, 1, this);
-	if (emitter) {
-		JGeometry::TVec3<f32> scale(1.5f, 1.5f, 1.5f);
-		emitter->setGlobalScale(scale);
-		SMSSetEmitterPolColor(emitter, 6);
+	if (gpPollution->isPolluted(pos.x, pos.y, pos.z)) {
+		JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		    PARTICLE_MS_GENE_HIT, &pos, 1, this);
+		if (emitter) {
+			emitter->setGlobalScale(
+			    JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
+			SMSSetEmitterPolColor(emitter, 6);
+		}
 	}
 }
 
@@ -789,6 +803,11 @@ void TPakkunSeed::forceKill()
 	}
 }
 
+// TODO: the original calls JGeometry::TVec3<f>::set<f>(0, 0, 0) out of line
+// from TPathNode(THitActor*) here, while TPakkun::load two functions up
+// expands it. docs/catalog/codegen-tells.md rules out spelling the zero as
+// an initialiser in PathNode.hpp (it fixes this site and regresses about
+// fifteen other units), so the whole 20% gap stays per-call-site.
 void TStayPakkun::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
@@ -985,6 +1004,12 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 
 // The plant is out of the ground and turning to face Mario; it decides here
 // whether to spit, to lob or to duck back down.
+// TODO: all three distance tests below call JGeometry::TUtil<f32>::sqrt in
+// the original and expand it here, which is the whole residual gap. Same
+// shape as the three open elecNokonoko sites in
+// docs/catalog/codegen-tells.md: the goal point is copied to a local,
+// subtracted in place with stores, and sqrt is still a bl. length(),
+// squared() and an explicit sqrt() all expand at this depth.
 DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 {
 	TPakkun* self = (TPakkun*)spine->getBody();
