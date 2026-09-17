@@ -694,6 +694,8 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		}
 		if (mMap != 0xf)
 			mConsole->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
+		if (currSeq.unk0 == 1)
+			THPPlayerPlay();
 		break;
 
 	case 4:
@@ -751,9 +753,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		    ->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide")->unkC.off(
 		    CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
-		if (gpMSound->gateCheck(MSD_SE_SY_WIPE_IN))
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr,
-			                                   0);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr, 0);
 		gpApplication.mFader->startWipe(6, 1.0f, 0.0f);
 		unk78->setup(nullptr);
 		unk78->startMoveCursor();
@@ -766,6 +766,13 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		unkAC->mCardSave->init(unk261);
 		for (int i = 0; i < 4; ++i)
 			JUTGamePad::CRumble::stopMotor(unk18[i]->mPortNum);
+		switch (unk261) {
+		case 3:
+		case 4:
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_DELIGHT, 0,
+			                                   nullptr, 0);
+			break;
+		}
 		unk18[0]->onFlag(0x1);
 		break;
 
