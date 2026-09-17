@@ -63,8 +63,9 @@ static THauntLeg* gpCurHauntLeg;
 // the matrix J3D is currently building with) get an extra spin about Z.
 static int HauntLegCallback(J3DNode* node, int param)
 {
-	if (param == 0 && gpCurHauntLeg != nullptr
-	    && gpCurHauntLeg->isUseCallBack()) {
+	if (param == 0 && gpCurHauntLeg != nullptr) {
+		if (!gpCurHauntLeg->isUseCallBack())
+			return 1;
 		MtxPtr jointMtx = gpCurHauntLeg->getMActor()->getModel()->getAnmMtx(
 		    ((J3DJoint*)node)->getJntNo());
 		Mtx spin;
@@ -214,6 +215,14 @@ void THauntLeg::reset()
 // The leg walks on whatever surface it is standing on rather than on the XZ
 // plane: the frame's Y axis is the ground (or, while it is web-climbing, the
 // wall) normal, and the spider mode tilts it forward as the climb ramps up.
+//
+// TODO: 85.1%, and every instruction of both branches matches. The ROM keeps
+// the Y-axis vector's .y and .z in f30/f31 across both MsVECNormalize calls and
+// only re-reads its .x; ours reloads all three, because MsVECNormalize takes
+// non-const `Vec*` and the second argument could alias. The difference is
+// register allocation driven by the frame (0x178 against our 0x128): retail has
+// 60 more bytes of inline-expansion temporaries below the named locals, whose
+// declaration order and stack order this code already reproduces.
 void THauntLeg::calcRootMatrix()
 {
 	gpCurHauntLeg = this;
@@ -324,6 +333,7 @@ bool THauntLeg::isCollidMove(THitActor* other)
 		if (((TTakeActor*)other)->mHolder == nullptr || other != unk19C) {
 			unk19C = other;
 			mSpine->setNext(&TNerveHauntLegHaunt::theNerve());
+			return false;
 		}
 	}
 	return false;
@@ -331,6 +341,11 @@ bool THauntLeg::isCollidMove(THitActor* other)
 
 const char** THauntLeg::getBasNameTable() const { return hauntleg_bastable; }
 
+// TODO: 99.6% -- the frame is 8 bytes over (0xa0 against 0x98), i.e. one
+// 8-byte inline temporary too many somewhere in the two
+// getMActor()->getModel()->getBaseTRMtx() chains. Reading mMActor directly is
+// worse, and a named J3DModel* or MtxPtr does not move the frame at all.
+//
 // Mario grabs the leg by its third joint, except while it is clipped out --
 // then there is no animated matrix, so the base matrix is re-pointed at the
 // leg's own position instead.
@@ -338,11 +353,11 @@ MtxPtr THauntLeg::getTakingMtx()
 {
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		TPosition3f mtx;
-		mtx.translation(mPosition);
-		MTXCopy(mtx, getModel()->getBaseTRMtx());
-		return getModel()->getBaseTRMtx();
+		mtx.translation(mPosition.x, mPosition.y, mPosition.z);
+		MTXCopy(mtx, getMActor()->getModel()->getBaseTRMtx());
+		return getMActor()->getModel()->getBaseTRMtx();
 	}
-	return getModel()->getAnmMtx(2);
+	return getMActor()->getModel()->getAnmMtx(2);
 }
 
 // TODO: UNUSED (0x8c) and reconstructed from HauntLegCallback, its only
@@ -350,9 +365,19 @@ MtxPtr THauntLeg::getTakingMtx()
 // included, and the size agrees.
 bool THauntLeg::isUseCallBack()
 {
-	return mSpine->getCurrentNerve() == &TNerveHauntLegHaunt::theNerve();
+	if (mSpine->getCurrentNerve() == &TNerveHauntLegHaunt::theNerve())
+		return true;
+	return false;
 }
 
+// TODO: 95.8%. The only instruction difference is the jump speed: retail binds
+// the 10.0f argument to f31 before the getGravityY() call and moves it into f1
+// afterwards, while we rematerialise it from .sdata2 after the call, and retail
+// saves f31 where we do not. A literal is safe to repeat so MWCC never binds it
+// for us; naming it in a local does not help either, because a read of an
+// unmodified local is safe too. The frame is 16 bytes short, which is the f31
+// slot plus one more object.
+//
 // Two hops: the first launches the leg at the object it has decided to possess,
 // the second lands on it and asks to be picked up. Missing twice hands the leg
 // back to the wander nerve.
@@ -372,9 +397,9 @@ DEFINE_NERVE(TNerveHauntLegHaunt, TLiveActor)
 			leg->mVelocity = leg->mJumpVelocity;
 			leg->mPosition.y += 10.0f;
 			leg->unk199 = 0;
-			if (JGeometry::TVec3<f32>(leg->mPosition - leg->unk19C->mPosition)
-			        .length()
-			    < 200.0f) {
+			JGeometry::TVec3<f32> toTarget
+			    = leg->mPosition - leg->unk19C->mPosition;
+			if (toTarget.length() < 200.0f) {
 				THitActor* target = leg->unk19C;
 				if (((TTakeActor*)target)->mHolder == nullptr
 				    && target->receiveMessage(leg, HIT_MESSAGE_TAKE)) {
