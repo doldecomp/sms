@@ -7,14 +7,14 @@ Per-batch history through batch 69 is archived in [docs/progress/history.md](doc
 
 ## Current numbers
 
-Measured from `build/GMSE01/report.json` on 2026-09-16 after batch 2 of the goal run.
+Measured from `build/GMSE01/report.json` on 2026-09-16 after batch 5 of the goal run (HitActor linked).
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 29.34% | 3.57% | 94 / 385 |
+| Game | 29.35% | 3.60% | 95 / 385 |
 | JSystem | 87.11% | 61.61% | 166 / 198 |
 | SDK | 95.07% | 92.22% | 142 / 149 |
-| All | 42.02% | 17.89% | 402 / 732 |
+| All | 42.02% | 17.91% | 403 / 732 |
 
 9,072 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
@@ -45,7 +45,7 @@ Most remaining differences in these units are frame gaps and per-call-site inlin
 
 - **The branch exists only on this disk.** No fork is configured. This is the outstanding risk and needs a remote from the user.
 - `Camera/CameraInbetween` matches but will not link: `docs/catalog/linking.md`.
-- Units one function from linking (`MSoundBGM`, `HitActor`, `MarioAccess`): `docs/catalog/frame-gaps.md`.
+- Units one function from linking (`MSoundBGM`, `MarioAccess`): `docs/catalog/frame-gaps.md`.
 - About 200 nerve bodies, and most enemy and MoveBG methods, are unwritten.
 
 ## Local artifacts

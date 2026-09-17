@@ -400,5 +400,6 @@
   "Enemy/enemyinterp.cpp",
   "Enemy/egggen.cpp",
   "Camera/CameraTalk.cpp",
-  "Map/MapCollisionEntry.cpp"
+  "Map/MapCollisionEntry.cpp",
+  "Strategic/HitActor.cpp"
 ]
