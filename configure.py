@@ -148,7 +148,7 @@ config.compilers_tag = "20251118"
 config.dtk_tag = "v1.8.4"
 config.objdiff_tag = "v3.8.1"
 config.sjiswrap_tag = "v1.2.2"
-config.wibo_tag = "1.2.0"
+config.wibo_tag = "1.1.0"
 
 # Project
 config.config_path = Path("config") / config.version / "config.yml"
