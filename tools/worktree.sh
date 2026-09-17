@@ -44,14 +44,19 @@ add)
 	done
 
 	cd "$path"
-	build/venv/bin/python3 configure.py --version "$VERSION"
-	# The tool outputs are ninja targets that depend on tools/download_tool.py,
-	# which the fresh checkout just gave a new mtime. Touch the shared outputs
-	# so ninja does not re-download them through the symlinks.
-	touch "$ROOT"/build/tools/* "$ROOT"/build/compilers "$ROOT"/build/binutils
-	# Touching alone is not enough: ninja also treats an output with no
-	# entry in .ninja_log as dirty, so seed the log from the main checkout.
+	# Configure with the main tree's python by its real path: configure.py
+	# bakes sys.executable into every command line, and ninja rebuilds any
+	# output whose recorded command differs, so a worktree-relative python
+	# path would make it re-download the shared tools through the symlinks.
+	"$ROOT/build/venv/bin/python3" configure.py --version "$VERSION"
+	# For the same reason the checkout's download_tool.py must not look newer
+	# than the tools, and the worktree needs the main tree's build log.
+	touch -r "$ROOT/tools/download_tool.py" "$path/tools/download_tool.py"
 	[ -f "$ROOT/.ninja_log" ] && cp "$ROOT/.ninja_log" "$path/.ninja_log"
+	if build/venv/bin/ninja -n build/tools/dtk build/compilers 2>&1 | grep -q TOOL; then
+		echo "refusing to build: ninja wants to re-download the shared tools" >&2
+		exit 1
+	fi
 	echo "== building $path (first build compiles every unit)"
 	build/venv/bin/ninja
 	build/venv/bin/ninja baseline
