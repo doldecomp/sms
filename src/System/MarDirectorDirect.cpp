@@ -873,7 +873,7 @@ u8 TMarDirector::updateGameMode()
 		if (unk4C & 0x40) {
 			unk126 = 4;
 		} else {
-			if (unkB0->unk248 == 0)
+			if (unkB0->getTalkMode() == TTalk2D2::TALK_MODE_IDLE)
 				unk126 = 0;
 		}
 		break;
