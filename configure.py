@@ -1130,7 +1130,9 @@ config.libs = [
             PCHObject(NonMatching, "GC2D/SunGlass.cpp"),
             PCHObject(Matching, "GC2D/ShineFader.cpp"),
             PCHObject(NonMatching, "GC2D/ProgSelect.cpp"),
-            Object(NonMatching, "GC2D/hx_wiper.c"),
+            # Retail inlined nothing in this C unit (an empty Hx_Warning is still
+            # called); measured 9 -> 16 exact functions with auto-inlining off.
+            Object(NonMatching, "GC2D/hx_wiper.c", extra_cflags=["-inline noauto"]),
             PCHObject(NonMatching, "GC2D/MovieSubtitle.cpp"),
             PCHObject(NonMatching, "GC2D/Option.cpp"),
             PCHObject(NonMatching, "GC2D/MovieRumble.cpp"),
