@@ -20,7 +20,10 @@ static const f32 DEGREES_TO_RADIANS    = 0.017453294f; // pi/180
 // points on CLBCalcNearNinePos, which inlines it. The real names are unknown
 // -- nothing weak or UNUSED in the map covers them -- so they are parked here
 // rather than in cameralib.hpp.
-static void normalizeInner1(JGeometry::TVec3<f32>& vec) { vec.normalize(); }
+static void normalizeInner1(JGeometry::TVec3<f32>& vec)
+{
+	vec.setLength(1.0f);
+}
 static void normalizeInner2(JGeometry::TVec3<f32>& vec)
 {
 	normalizeInner1(vec);
@@ -45,6 +48,9 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 	mtxT.mult33(in, *vec);
 }
 
+// TODO: 98.7%. Frame 0x40 against 0x58 -- 24 bytes, and the ROM's locals start
+// at 0x38 where ours start at 0x24 -- plus the float register numbering that
+// follows.
 void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
                    const f32 (*view_mtx)[4], const Vec& world_pos,
                    u32* out_depth, bool disable_z_clip)
@@ -179,6 +185,12 @@ void CLBRotatePosAndUp(s16 sAngle1, s16 sAngle2,
 	RotateAboutAxis(axis2, -angle2, param_7);
 }
 
+// TODO: 98.5%. Instruction-identical apart from the frame (0x58 against the
+// ROM's 0x98) and the float register pair that the three
+// `fneg`/literal-load/multiply triples pick. 64 bytes of uninitialised locals
+// close the frame (validated with padding, which is not committed) but the
+// byte count is the only evidence for what they were, so per
+// docs/catalog/frame-gaps.md the gap is left alone.
 bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
                       const Vec& param_3, const Vec& param_4)
 {
@@ -234,6 +246,8 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 	return result;
 }
 
+// TODO: 98.4%, the same shape as CLBIsPointInCube below: frame 0x70 against
+// 0xb0 (64 bytes) and the float registers of the three rotation blocks.
 void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
                              const Vec& param_3, const Vec& param_4,
                              f32* param_5, f32* param_6, f32* param_7)
@@ -337,6 +351,36 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
 	mtx[2][3] = translate.z;
 }
 
+// TODO: fabricated. CLBCalcNearNinePos transforms the camera-space up and
+// right vectors identically, and the ROM *calls* TRotation3::setRotate at both
+// sites (the map's weak 0x154 copy) while our spelled-out blocks expand it,
+// which needs the statement to sit one inline level down.
+static inline void
+CLBRotateVecByEulerAndRoll(JGeometry::TVec3<f32>* vec, const S16Vec& euler,
+                           const JGeometry::TVec3<f32>& axis, f32 roll)
+{
+	f32 sinX = JMASSin(euler.x);
+	f32 cosX = JMASCos(euler.x);
+	f32 sinY = JMASSin(euler.y);
+	f32 cosY = JMASCos(euler.y);
+
+	// This transformation appears to be the following:
+	// [ cosY, 0, sinY]   [1,   0,     0 ]
+	// [   0,  1,   0 ] * [0, cosX, -sinX]
+	// [-sinY, 0, cosY]   [0, sinX,  cosX]
+	vec->set(vec->x * cosY + (vec->y * sinX + vec->z * cosX) * sinY,
+	         vec->y * cosX - vec->z * sinX,
+	         -vec->x * sinY + (vec->y * sinX + vec->z * cosX) * cosY);
+
+	JGeometry::TRotation3<TMtx33f> mtxT;
+
+	mtxT.identity33();
+	mtxT.setRotate(axis, roll);
+
+	JGeometry::TVec3<f32> in(*vec);
+	mtxT.mult33(in, *vec);
+}
+
 // UNUSED in the map (0x154); ours is 0x150. The body is CLBCalcNearNinePos'
 // own head: the name, the argument list (NinePos' minus the near-plane
 // dimensions), the emission position (between setRotate and
@@ -361,6 +405,13 @@ void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_center, S16Vec* out_euler,
 	out_euler->z   = roll;
 }
 
+// TODO: 65.6% would need MsSqrtf out of line inside the inlined
+// CLBCalcNearClipAngle -- the ROM's only remaining call-structure difference
+// here -- but that takes two more inline levels above it (measured: +2.3
+// points on this function) and nothing in the map names them, while the
+// standalone ClipAngle's 0x150-against-0x154 says its own body *does* expand
+// MsSqrtf. The rest is the frame (0x208 against 0x1f0) and the float register
+// numbering that follows it.
 void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
                         const JGeometry::TVec3<f32>& origin,
                         const JGeometry::TVec3<f32>& lookat, s16 roll,
@@ -370,10 +421,6 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 
 	JGeometry::TVec3<f32> fVar16;
 	JGeometry::TVec3<f32> fVar19;
-
-	JGeometry::TRotation3<TMtx33f> local_118;
-
-	JGeometry::TRotation3<TMtx33f> local_e4;
 
 	JGeometry::TVec3<f32> local_a8;
 	JGeometry::TVec3<f32> local_90;
@@ -393,48 +440,9 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 
 	fVar16.z = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 
-	// Basically transform the up/right vectors from cam space into world space.
-	// TODO: Definitely inlines...
-
-	{
-		f32 sinX = JMASSin(out_euler->x);
-		f32 cosX = JMASCos(out_euler->x);
-		f32 sinY = JMASSin(out_euler->y);
-		f32 cosY = JMASCos(out_euler->y);
-
-		// This transformation appears to be the following:
-		// [ cosY, 0, sinY]   [1,   0,     0 ]
-		// [   0,  1,   0 ] * [0, cosX, -sinX]
-		// [-sinY, 0, cosY]   [0, sinX,  cosX]
-		local_68.set(local_68.x * cosY
-		                 + (local_68.y * sinX + local_68.z * cosX) * sinY,
-		             local_68.y * cosX - local_68.z * sinX,
-		             -local_68.x * sinY
-		                 + (local_68.y * sinX + local_68.z * cosX) * cosY);
-
-		local_e4.identity33();
-		local_e4.setRotate(local_80, fVar16.z);
-
-		local_e4.mult33(local_68);
-	}
-
-	{
-		f32 sinX = JMASSin(out_euler->x);
-		f32 cosX = JMASCos(out_euler->x);
-		f32 sinY = JMASSin(out_euler->y);
-		f32 cosY = JMASCos(out_euler->y);
-
-		local_74.set(local_74.x * cosY
-		                 + (local_74.y * sinX + local_74.z * cosX) * sinY,
-		             local_74.y * cosX - local_74.z * sinX,
-		             -local_74.x * sinY
-		                 + (local_74.y * sinX + local_74.z * cosX) * cosY);
-
-		local_118.identity33();
-		local_118.setRotate(local_80, fVar16.z);
-
-		local_118.mult33(local_74);
-	}
+	// Transform the up/right vectors from cam space into world space.
+	CLBRotateVecByEulerAndRoll(&local_68, *out_euler, local_80, fVar16.z);
+	CLBRotateVecByEulerAndRoll(&local_74, *out_euler, local_80, fVar16.z);
 
 	f32 fVar3 = near_dims.y * 0.5f;
 	f32 fVar5 = near_dims.x * 0.5f;
