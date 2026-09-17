@@ -187,10 +187,7 @@ void TPaneScalingControl::update()
 	int iVar5  = mInitialBounds.getHeight();
 
 	f32 progress = (f32)mFrameCtrl.getFrame() / (f32)mFrameCtrl.getEnd();
-	// TODO: not RAD_TO_DEG(): math.h adds 0.000005f to the factor, which lands
-	// one ULP above the ROM's 57.295776f (`180.0f / M_PI` exactly). The fudge
-	// looks wrong, but removing it from math.h is a repo-wide change.
-	f32 fVar2 = mAmplitude * JMASin(progress * TAU * (180.0f / M_PI));
+	f32 fVar2 = mAmplitude * JMASin(RAD_TO_DEG(progress * TAU));
 
 	int uVar6 = fVar2 * iVar10;
 	int uVar1 = fVar2 * iVar5;
