@@ -628,7 +628,12 @@ void TPopo::calcRootMatrix()
 			MTXCopy(SMS_GetMarioWaterGun()->getEmitMtx(0), (MtxPtr)mtx);
 			// TODO: the original keeps each column vector on the stack and
 			// squares it from memory (unfused); every spelling tried here is
-			// scalar-replaced and fused instead.
+			// scalar-replaced and fused instead. Making
+			// TRotation3::getXDir/getYDir/getZDir assign per component -- which
+			// is what the interleaved lfs/stfs here asks for -- gains 0.05
+			// points and costs JPABaseEmitter::calcEmitterGlobalParams 5.6, so
+			// the columns have to be read out here instead (rocket.cpp already
+			// does that; see the note on getXDir in JGRotation3.hpp).
 			JGeometry::TVec3<f32> col0;
 			mtx.getXDir(col0);
 			f32 len0 = col0.length();

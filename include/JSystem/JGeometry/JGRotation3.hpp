@@ -251,6 +251,18 @@ public:
 		this->ref(1, 0) = y;
 		this->ref(2, 0) = z;
 	}
+	// `set(x, y, z)` and not three per-component assignments: it batches the
+	// three loads ahead of the stores, which is what
+	// JPABaseEmitter::calcEmitterGlobalParams does when it reads the three
+	// emitter axes out of eio.unkCC.
+	//
+	// TODO: the per-component spelling was tried, because TPopo::calcRootMatrix
+	// and TRocket::calcRootMatrix want the interleaved lfs/stfs it produces,
+	// and it is wrong: those two gain almost nothing (TPopo::calcRootMatrix
+	// 87.39% -> 87.44%, PopoPossessedCallback 87.34% -> 87.40%) while
+	// calcEmitterGlobalParams loses 98.54% -> 92.97% on exactly those loads.
+	// So popo and rocket read the columns out themselves rather than calling
+	// these, and their .cpp workarounds stay.
 	void getXDir(JGeometry::TVec3<f32>& param_1) const
 	{
 		param_1.set(this->at(0, 0), this->at(1, 0), this->at(2, 0));
