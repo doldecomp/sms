@@ -397,12 +397,19 @@ void TKukku::doFlyToCurPathNode()
 	mLinearVelocity = calcMomentum(getSaveParams()->getMarchSpeed());
 }
 
-// TODO: 99.8%, a pure 0x18 frame gap. The bigger open problem is that both
-// nerves *expand* this function while retail calls it: no statement-count
-// lever tried here (naming the two isFalling() factors, splitting the early
-// return) flips MWCC's depth-1 decision, and the same is true of
-// calcMomentum(). That is what holds TNerveKukkuGraphWander and
-// TNerveKukkuRecoverGraph down.
+// TODO: 99.8%, and our frame is 0x18 *larger* than the target's 0x70.
+// The bigger open problem is that both nerves expand this function while
+// retail calls it at depth 1 (`mr r3, r30; bl updateRotation`), which by the
+// measured budget in docs/catalog/codegen-tells.md means retail's body had at
+// least 15 counted statements; this one has 12. Four throwaway counted
+// statements confirm the mechanism and the prize: TNerveKukkuRecoverGraph
+// 0.0 -> 67.7% and TNerveKukkuGraphWander 42.0 -> 92.9%, with this function
+// still at 99.8%. Three or four *real* statements are needed, and they must
+// cost no frame, since the frame is already over. Splitting an initialised
+// declaration does not help (`f32 x; x = e;` counts the same as `f32 x = e;`),
+// and neither does an uninitialised declaration or an empty statement.
+// Likely candidates, unverified: a named calcMinimumTurnRadius() result, and
+// the two isFalling() factors written as their own statements.
 void TKukku::updateRotation()
 {
 	JGeometry::TVec3<f32> toGoal(getUnkF4().getPoint());
@@ -428,7 +435,11 @@ void TKukku::updateRotation()
 }
 
 // TODO: 92.9%. Size-exact against the map but expanded at every call site,
-// where retail calls it; see the note on updateRotation().
+// where retail calls it (`addi r3, r1, 0x30; bl calcMomentum`). Four
+// statements is far under the 14-statement depth-1 budget, so retail's body
+// cannot have been these three JGeometry calls: 0x11c is 71 instructions, so
+// the original spelled the Euler-to-quaternion conversion and the rotate out
+// component by component. See the note on updateRotation().
 JGeometry::TVec3<f32> TKukku::calcMomentum(f32 speed)
 {
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);

@@ -99,7 +99,24 @@ When a size-matched UNUSED function is called instead of inlined, look for a che
 
 **Tiny accessors: steer with one relative level, never a global change.** Retail's call/inline split of `getLatestNerve` (0x1c) and `getMActorAnmData` (0x8) is per site and even per compare within one function (`TKazekun::attackToMario` inlines the first and `bl`s the next two), so no `Spine.hpp`/`ObjModel.hpp` change can be right. Two proven shapes add exactly one level above the accessor and leave the rest of the chain alone: a one-line forwarder on the owning class (`TBossGesso`/`TBossWanwan`/`TBossHanachan::getLatestNerve()`; `TBWPicket::moveRequest` 78 -> 99.8, `BossHanachanParts` data to 100), and an ordinary const/non-const overload pair when the sites hold a non-const receiver (`TMActorKeeper::getMActorAnmData`; fifteen boss nerves up, no call-site edits). Anti-pattern: a wrapper that folds in the next link (`getMActorAnmData()->getUnk2C()`) pushes that link out too and emits a weak symbol the map lacks; the extra symbol is the tell. Convert `this` for a const forwarder with a `static_cast`, not a named `const T*` local (that costs two exact `MapObjSirena` functions).
 
-**Lead for the per-call-site puzzle (from `bosstelesa`, unprobed):** with `-inline deferred` a callee may be inlinable only once its own code has been generated, i.e. only if it is defined *later* in the source than the caller. That single rule predicts `bosstelesa`'s calls (`slotFall`, `randomReset`, `forceAllItemKill`, `forceHide`) and inlines (`initMapObj`, `rouletteStart`, `getSlotResult`) correctly, and size is demonstrably not the criterion there (retail inlines `fanfale` at 496 bytes and calls `getSlotResult` at 140). Probe it in a scratch TU before relying on it.
+**Definition order is irrelevant; the budget is a statement count, not a byte count.** Measured in a scratch TU with the game flags, varying definition order, callee size, statement count, wrapper levels, call-site count and declaration form. The `bosstelesa` lead — that `-inline deferred` inlines only a callee defined *later* than its caller — is **refuted**, and it is backwards: order only ever matters with `deferred` *off*, and then it is the *earlier* definition that inlines.
+
+| callee, reached at depth | plain (no `inline`) | `inline` / in-class body |
+| --- | --- | --- |
+| 1 (direct call from the emitted function) | **14 statements** | **no limit** (measured to 79 statements / 0x1014 bytes) |
+| 2 | 9 statements | 9 statements |
+| 3 | 6 statements | 6 statements |
+| 4 | 2 statements | 2 statements |
+| 5 | never | never |
+
+Byte size does not enter into it: at depth 1 a 0x4c body and a 0x278 body both inline at 13 statements and both become calls at 15. The byte thresholds in the depth table above are that table's bodies' statement counts in disguise. What counts as one statement: an expression statement, and an initialised declaration. What is free: an uninitialised declaration, an empty `;`, a bare `{ }`, `return <local>;`, and — the useful one — **splitting an initialised declaration** (`f32 x; x = e;` counts exactly as much as `f32 x = e;`). Statements a callee gains by expanding *its own* inlines do not count either; each nested callee is re-judged against the allowance for the depth it lands at.
+
+Everything else measured had **no** effect: definition order (48 pairs), call-site count (1 vs 2), caller size, `inline` vs `extern inline` vs `static inline` vs in-class, and return by value of a 12-byte struct.
+
+Two consequences:
+
+- **Definition order in a TU is not an inlining lever.** The map's reversed emission order fixes definition order, and that is all it fixes; it never decides what can inline. Do not reorder a TU hoping to move a call/inline decision.
+- **A retail inline bigger than its depth allowance was declared `inline`.** That is the whole explanation of `bosstelesa`: `fanfale` (UNUSED 0x1f0) inlines because it was an in-class or `inline` definition reached at depth 1, where the keyword removes the limit entirely; `getSlotResult` (0x8c, emitted) is called because it is a plain out-of-line method over 14 statements. Read it the other way too: a plain method that retail *calls* at depth 1 must have had 15 or more statements, which is a hard lower bound on a reconstruction. `TKukku::updateRotation` is the open case — retail calls it at depth 1, our 12-statement body expands, and four throwaway statements take `TNerveKukkuRecoverGraph::execute` 0.0 -> 67.7% and `TNerveKukkuGraphWander::execute` 42.0 -> 92.9% while leaving `updateRotation` itself at 99.8%. Its frame is already 0x18 over, so the missing statements have to be ones that need no stack slot.
 
 **Per-call-site differences (open).** In `MapObjBall` the original inlines differently from us *per call site*:
 
