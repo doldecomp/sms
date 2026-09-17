@@ -54,7 +54,7 @@ BOOL TNerveLimitKoopaHipDropStart::execute(TSpineBase<TLiveActor>* spine) const
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_JUMP_START, 2.0f);
+		koopa->changeBck(KOOPA_ANM_FIRE_START, 2.0f);
 		koopa->mHipDropTimer = 30;
 	}
 
@@ -76,7 +76,7 @@ BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_WAIT, 2.0f);
+		koopa->changeBck(KOOPA_ANM_TURN_L, 2.0f);
 		koopa->mWaitTimer = 240;
 	}
 
@@ -117,7 +117,7 @@ BOOL TNerveLimitKoopaTumble::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
 	f32 rate           = koopa->getParam()->tumbleSpeed.get();
-	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_TUMBLE, rate);
+	koopa->changeBck(KOOPA_ANM_HIPDROP, rate);
 	if (koopa->getAnmEnd())
 		return TRUE;
 	return FALSE;
@@ -139,7 +139,7 @@ BOOL TNerveLimitKoopaStagger::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
 	f32 rate           = koopa->getParam()->staggerSpeed.get();
-	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_STAGGER, rate);
+	koopa->changeBck(KOOPA_ANM_STAGGER, rate);
 	if (koopa->getAnmEnd())
 		return TRUE;
 	return FALSE;
@@ -149,7 +149,7 @@ BOOL TNerveLimitKoopaGetShowered::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
 	f32 rate           = koopa->getParam()->waterhitSpeed.get();
-	koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_SHOWERED, rate);
+	koopa->changeBck(KOOPA_ANM_WATERHIT, rate);
 	if (koopa->getAnmEnd())
 		return TRUE;
 	return FALSE;
@@ -160,22 +160,22 @@ BOOL TNerveLimitKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
 
 	switch (koopa->getAnmIndex()) {
-	case TLimitKoopa::LIMITKOOPA_ANM_DOWN:
+	case KOOPA_ANM_DOWN:
 		if (koopa->getAnmEnd())
-			koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_DOWN_WAIT,
+			koopa->changeBck(KOOPA_ANM_DOWN_WAIT,
 			                 koopa->getParam()->tumbleWeight.get());
 		break;
-	case TLimitKoopa::LIMITKOOPA_ANM_DOWN_WAIT:
+	case KOOPA_ANM_DOWN_WAIT:
 		if (koopa->getAnmEnd())
-			koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_GET_UP,
+			koopa->changeBck(KOOPA_ANM_GETUP,
 			                 koopa->getParam()->tumbleWeight.get());
 		break;
-	case TLimitKoopa::LIMITKOOPA_ANM_GET_UP:
+	case KOOPA_ANM_GETUP:
 		if (koopa->getAnmEnd())
 			return TRUE;
 		break;
 	default:
-		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_DOWN,
+		koopa->changeBck(KOOPA_ANM_DOWN,
 		                 koopa->getParam()->tumbleWeight.get());
 		break;
 	}
@@ -232,7 +232,7 @@ void TLimitKoopaFlame::attack_(THitActor* other)
 {
 	if (other->receiveMessage(this, HIT_MESSAGE_UNKA)) {
 		TLimitKoopa* koopa = mOwner;
-		koopa->changeBck(TLimitKoopa::LIMITKOOPA_ANM_FLAME,
+		koopa->changeBck(KOOPA_ANM_FIRE_END,
 		                 koopa->getParam()->fireSpeed.get());
 	}
 }
@@ -369,7 +369,7 @@ void TLimitKoopa::init(TLiveManager* manager)
 void TLimitKoopa::reset()
 {
 	TSpineEnemy::reset();
-	changeBck(LIMITKOOPA_ANM_RESET, getParam()->waitSpeed.get());
+	changeBck(KOOPA_ANM_WAIT, getParam()->waitSpeed.get());
 	mSpine->reset();
 	mWaitTimer     = 0;
 	mHipDropTimer  = 0;
@@ -402,8 +402,8 @@ void TLimitKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		if (getAnmIndex() == LIMITKOOPA_ANM_JUMP
-		    || (getAnmIndex() == LIMITKOOPA_ANM_JUMP_START
+		if (getAnmIndex() == KOOPA_ANM_FIRE_LOOP
+		    || (getAnmIndex() == KOOPA_ANM_FIRE_START
 		        && getAnmFrame() >= 127.0f)) {
 			f32 scale = getParam()->flameScale.get();
 			JGeometry::TVec3<f32> flameScale(scale, scale, scale);
@@ -551,11 +551,11 @@ void TLimitKoopa::setUpHitActors()
 {
 	MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
 
-	if (getAnmIndex() == LIMITKOOPA_ANM_JUMP
-	    || (getAnmIndex() == LIMITKOOPA_ANM_JUMP_START
+	if (getAnmIndex() == KOOPA_ANM_FIRE_LOOP
+	    || (getAnmIndex() == KOOPA_ANM_FIRE_START
 	        && getAnmFrame() >= 127.0f)) {
 		f32 spread = 1.0f;
-		if (getAnmIndex() == LIMITKOOPA_ANM_JUMP_START) {
+		if (getAnmIndex() == KOOPA_ANM_FIRE_START) {
 					J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			spread = (ctrl->getFrame() - 125.0f)
 			         / ((f32)ctrl->getEnd() - 125.0f);
@@ -646,11 +646,10 @@ JGeometry::TVec3<f32> TLimitKoopa::getFlameDir() const
 // TODO: UNUSED (0x48), body not reconstructed.
 BOOL TLimitKoopa::isFlaming() const { return FALSE; }
 
-// TODO: UNUSED (0xe8), body not reconstructed.
-JGeometry::TVec3<f32> TLimitKoopa::getNeckFocus() const
-{
-	return JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
-}
+// TODO: UNUSED (0xe8), body not reconstructed. TKoopa::getNeckFocus() returns
+// f32 (the yaw the neck callback aims at) and this is the same boss on the same
+// model, so this one does too.
+f32 TLimitKoopa::getNeckFocus() const { return 0.0f; }
 
 // TODO: UNUSED (0x2a0), body not reconstructed.
 void TLimitKoopa::getDown() { }

@@ -3,6 +3,7 @@
 
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
+#include <Enemy/Koopa.hpp>
 #include <Enemy/KoopaJr.hpp>
 #include <Strategic/Nerve.hpp>
 #include <System/ParamInst.hpp>
@@ -182,7 +183,7 @@ public:
 	void stagger(bool);
 	void getShowered();
 	void getDown();
-	JGeometry::TVec3<f32> getNeckFocus() const;
+	f32 getNeckFocus() const;
 	BOOL isFlaming() const;
 	JGeometry::TVec3<f32> getFlameDir() const;
 	BOOL isBreathing() const;
@@ -201,20 +202,6 @@ public:
 	void startHipDrop();
 	void moveStop();
 	void resetLimitKoopa();
-
-	enum {
-		LIMITKOOPA_ANM_DOWN       = 0,
-		LIMITKOOPA_ANM_DOWN_WAIT  = 1,
-		LIMITKOOPA_ANM_FLAME      = 3,
-		LIMITKOOPA_ANM_JUMP       = 4,
-		LIMITKOOPA_ANM_JUMP_START = 5,
-		LIMITKOOPA_ANM_GET_UP     = 7,
-		LIMITKOOPA_ANM_TUMBLE     = 8,
-		LIMITKOOPA_ANM_STAGGER    = 9,
-		LIMITKOOPA_ANM_WAIT       = 0xA,
-		LIMITKOOPA_ANM_RESET      = 0xC,
-		LIMITKOOPA_ANM_SHOWERED   = 0xE,
-	};
 
 	/* 0x150 */ int mWaitTimer;
 	/* 0x154 */ int mHipDropTimer;

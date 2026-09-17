@@ -74,7 +74,7 @@ BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 	TKoopa* koopa = (TKoopa*)spine->getBody();
 
 	if (koopa->mWaitTimer > 0) {
-		koopa->changeAnm(TKoopa::KOOPA_ANM_WAIT, 1,
+		koopa->changeAnm(KOOPA_ANM_WAIT, 1,
 		                 koopa->getParam()->waitSpeed.get());
 		return FALSE;
 	}
@@ -122,7 +122,7 @@ BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 			break;
 		default:
 		case 0:
-			koopa->changeAnm(TKoopa::KOOPA_ANM_WAIT, 1,
+			koopa->changeAnm(KOOPA_ANM_WAIT, 1,
 			                 koopa->getParam()->waitSpeed.get());
 			if (koopa->canTumble()) {
 				if (bathtub->allowsTumble())
@@ -157,7 +157,7 @@ BOOL TNerveKoopaTumble::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
 
-	koopa->changeAnm(TKoopa::KOOPA_ANM_HIPDROP, 0,
+	koopa->changeAnm(KOOPA_ANM_HIPDROP, 0,
 	                 koopa->getParam()->tumbleSpeed.get());
 	koopa->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
@@ -187,8 +187,7 @@ BOOL TNerveKoopaFall::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
 
-	koopa->changeAnm(TKoopa::KOOPA_ANM_FALL, 0,
-	                 koopa->getParam()->fallSpeed.get());
+	koopa->changeAnm(KOOPA_ANM_FALL, 0, koopa->getParam()->fallSpeed.get());
 	return FALSE;
 }
 
@@ -197,16 +196,16 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 	TKoopa* koopa = (TKoopa*)spine->getBody();
 
 	switch (koopa->getAnmIndex()) {
-	case TKoopa::KOOPA_ANM_FIRE_START:
+	case KOOPA_ANM_FIRE_START:
 		if (koopa->getAnmEnd()) {
-			koopa->changeAnm(TKoopa::KOOPA_ANM_FIRE_LOOP, 0, 2.0f);
+			koopa->changeAnm(KOOPA_ANM_FIRE_LOOP, 0, 2.0f);
 			spine->setNext(&TNerveKoopaFlame::theNerve());
 		} else {
 			koopa->mLaughPending = false;
 		}
 		break;
 
-	case TKoopa::KOOPA_ANM_FIRE_END:
+	case KOOPA_ANM_FIRE_END:
 		if (koopa->getAnmEnd()) {
 			koopa->laugh();
 
@@ -267,7 +266,7 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 					koopa->mTurnsLeft
 					    = KOOPA_WRAP_DEGREES(toMario - koopa->mTargetDir)
 					      < 0.0f;
-					koopa->changeAnm(TKoopa::KOOPA_ANM_FIRE_START, 0,
+					koopa->changeAnm(KOOPA_ANM_FIRE_START, 0,
 					                 koopa->getParam()->fireSpeed.get());
 					spine->setNext(&TNerveKoopaFlame::theNerve());
 					break;
@@ -277,7 +276,7 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 		}
 		break;
 
-	case TKoopa::KOOPA_ANM_FIRE_LOOP: {
+	case KOOPA_ANM_FIRE_LOOP: {
 		int time = spine->getTime();
 		if (time >= koopa->getParam()->flameFocusEndStep.get()) {
 			if (!(time & 7)) {
@@ -322,12 +321,12 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 					side = 0;
 
 				if (onGrip || side != 0)
-					koopa->changeAnm(TKoopa::KOOPA_ANM_FIRE_END, 0,
+					koopa->changeAnm(KOOPA_ANM_FIRE_END, 0,
 					                 params->fireSpeed.get());
 			} else if (koopa->getAnmEnd()) {
 				TKoopaParams* params = koopa->getParam();
 				if (spine->getTime() >= params->flameFocusEndStep.get())
-					koopa->changeAnm(TKoopa::KOOPA_ANM_FIRE_END, 0,
+					koopa->changeAnm(KOOPA_ANM_FIRE_END, 0,
 					                 params->fireSpeed.get());
 			}
 		}
@@ -335,7 +334,7 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 	}
 
 	default:
-		koopa->changeAnm(TKoopa::KOOPA_ANM_FIRE_START, 0,
+		koopa->changeAnm(KOOPA_ANM_FIRE_START, 0,
 		                 koopa->getParam()->fireSpeed.get());
 		break;
 	}
@@ -347,7 +346,7 @@ BOOL TNerveKoopaProvoke::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
 
-	koopa->changeAnm(TKoopa::KOOPA_ANM_FIRST, 0, 2.0f);
+	koopa->changeAnm(KOOPA_ANM_FIRST, 0, 2.0f);
 	if (koopa->getAnmEnd()) {
 		spine->setNext(&TNerveKoopaWait::theNerve());
 		return FALSE;
@@ -360,7 +359,7 @@ BOOL TNerveKoopaStagger::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
 
-	koopa->changeAnm(TKoopa::KOOPA_ANM_STAGGER, 0,
+	koopa->changeAnm(KOOPA_ANM_STAGGER, 0,
 	                 koopa->getParam()->staggerSpeed.get());
 	if (koopa->getAnmEnd())
 		return TRUE;
@@ -371,7 +370,7 @@ BOOL TNerveKoopaGetShowered::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
 
-	koopa->changeAnm(TKoopa::KOOPA_ANM_WATERHIT, 0,
+	koopa->changeAnm(KOOPA_ANM_WATERHIT, 0,
 	                 koopa->getParam()->waterhitSpeed.get());
 	if (koopa->getAnmEnd())
 		return TRUE;
@@ -383,30 +382,30 @@ BOOL TNerveKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
 	TKoopa* koopa = (TKoopa*)spine->getBody();
 
 	switch (koopa->getAnmIndex()) {
-	case TKoopa::KOOPA_ANM_DOWN:
+	case KOOPA_ANM_DOWN:
 		if (koopa->getAnmEnd())
-			koopa->changeAnm(TKoopa::KOOPA_ANM_DOWN_WAIT, 0,
+			koopa->changeAnm(KOOPA_ANM_DOWN_WAIT, 0,
 			                 koopa->getParam()->downSpeed.get());
 		break;
 
-	case TKoopa::KOOPA_ANM_DOWN_WAIT: {
+	case KOOPA_ANM_DOWN_WAIT: {
 		TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 		int time          = spine->getTime();
 		f32 downStep      = koopa->getParam()->downStep.get();
 		if (!((f32)(time * (bathtub->getNumGripsDead() + 2)) < downStep)
 		    && koopa->getAnmEnd())
-			koopa->changeAnm(TKoopa::KOOPA_ANM_GETUP, 0,
+			koopa->changeAnm(KOOPA_ANM_GETUP, 0,
 			                 koopa->getParam()->downSpeed.get());
 		break;
 	}
 
-	case TKoopa::KOOPA_ANM_GETUP:
+	case KOOPA_ANM_GETUP:
 		if (koopa->getAnmEnd())
 			return TRUE;
 		break;
 
 	default: {
-		koopa->changeAnm(TKoopa::KOOPA_ANM_DOWN, 0,
+		koopa->changeAnm(KOOPA_ANM_DOWN, 0,
 		                 koopa->getParam()->downSpeed.get());
 		static TBathtub* bathtub
 		    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
@@ -551,7 +550,7 @@ void TKoopaFlame::attack_(THitActor* other)
 		f32 jump = mOwner->getParam()->flameJump.get();
 		SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), jump);
 		mOwner->mLaughPending = true;
-		mOwner->changeAnm(TKoopa::KOOPA_ANM_FIRE_END, 0,
+		mOwner->changeAnm(KOOPA_ANM_FIRE_END, 0,
 		                  mOwner->getParam()->fireSpeed.get());
 		mOwner->mWaitTimer = 240;
 	}
@@ -1368,9 +1367,9 @@ BOOL TKoopa::receiveMessage(THitActor* sender, u32 message)
 // Y rotation, with the origin pushed 1500 units down the tub's up axis.
 //
 // JGeometry::TMatrix34<T>::concat(a, b) now carries exactly these twelve terms,
-// but it takes both operands as const T&, and here the left one is the bathtub's
-// joint matrix, an MtxPtr with no JGeometry wrapper to bind to. Hence the terms
-// stay written out; nothing but a cast would let the call be used.
+// but it takes both operands as const T&, and here the left one is the
+// bathtub's joint matrix, an MtxPtr with no JGeometry wrapper to bind to. Hence
+// the terms stay written out; nothing but a cast would let the call be used.
 void TKoopa::calcRootMatrix()
 {
 	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");

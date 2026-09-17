@@ -7,6 +7,30 @@
 #include <Strategic/Spine.hpp>
 #include <System/ParamInst.hpp>
 
+// koopa_model.bmd's .bck slots. The names come from koopa_bastable (in
+// Koopa.cpp), whose entries are the matching .bas paths; slots 1 and 13 have no
+// .bas and are filled in alphabetically. TLimitKoopaManager loads the same
+// .bmd, so limitkoopa.cpp indexes the same slots -- note that its .prm names do
+// not line up with the .bas names: its "tumble" nerve plays HIPDROP and its
+// hip-drop start plays FIRE_START.
+enum {
+	KOOPA_ANM_DOWN       = 0,
+	KOOPA_ANM_DOWN_WAIT  = 1,
+	KOOPA_ANM_FALL       = 2,
+	KOOPA_ANM_FIRE_END   = 3,
+	KOOPA_ANM_FIRE_LOOP  = 4,
+	KOOPA_ANM_FIRE_START = 5,
+	KOOPA_ANM_FIRST      = 6,
+	KOOPA_ANM_GETUP      = 7,
+	KOOPA_ANM_HIPDROP    = 8,
+	KOOPA_ANM_STAGGER    = 9,
+	KOOPA_ANM_TURN_L     = 0xA,
+	KOOPA_ANM_TURN_R     = 0xB,
+	KOOPA_ANM_WAIT       = 0xC,
+	KOOPA_ANM_UNK13      = 0xD,
+	KOOPA_ANM_WATERHIT   = 0xE,
+};
+
 class TKoopa;
 class J3DNode;
 
@@ -234,27 +258,6 @@ public:
 		          360.0f + ((mRotation.y + delta) - -180.0f), 360.0f);
 		return true;
 	}
-
-	// koopa_model.bmd's .bck slots. The names come from koopa_bastable, whose
-	// entries are the matching .bas paths; slots 1 and 13 have no .bas and are
-	// filled in alphabetically.
-	enum {
-		KOOPA_ANM_DOWN       = 0,
-		KOOPA_ANM_DOWN_WAIT  = 1,
-		KOOPA_ANM_FALL       = 2,
-		KOOPA_ANM_FIRE_END   = 3,
-		KOOPA_ANM_FIRE_LOOP  = 4,
-		KOOPA_ANM_FIRE_START = 5,
-		KOOPA_ANM_FIRST      = 6,
-		KOOPA_ANM_GETUP      = 7,
-		KOOPA_ANM_HIPDROP    = 8,
-		KOOPA_ANM_STAGGER    = 9,
-		KOOPA_ANM_TURN_L     = 0xA,
-		KOOPA_ANM_TURN_R     = 0xB,
-		KOOPA_ANM_WAIT       = 0xC,
-		KOOPA_ANM_UNK13      = 0xD,
-		KOOPA_ANM_WATERHIT   = 0xE,
-	};
 
 	/* 0x150 */ f32 mTargetDir;
 	/* 0x154 */ bool mTurnsLeft;
