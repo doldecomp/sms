@@ -52,7 +52,7 @@ TWaterEmitInfo::TWaterEmitInfo(const char* name)
     , PARAM_INIT(mDirTremble, 0.0f)
     , PARAM_INIT(mPow, 0.0f)
     , PARAM_INIT(mPowTremble, 0.0f)
-    , PARAM_INIT(mSize, 0.0f)
+    , PARAM_INIT(mSize, 17.0f)
     , PARAM_INIT(mSizeTremble, 0.0f)
     , PARAM_INIT(mHitRadius, 0.0f)
     , PARAM_INIT(mHitHeight, 0.0f)
@@ -232,7 +232,7 @@ f32 TModelWaterManager::getWPGravity(int i) const
 		return mWaterParticleTypes[mParticleTypeSOA[i]]->mGravity.get();
 }
 
-void TModelWaterManager::getWaterAlpha() const { }
+u8 TModelWaterManager::getWaterAlpha() const { return unk5D65; }
 
 bool TModelWaterManager::askHitWaterParticleOnGround(
     const JGeometry::TVec3<f32>& param_1)
@@ -1896,6 +1896,10 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 	}
 }
 
+// TODO: the frame matches at 0xc8 now that the UNUSED 8-byte getWaterAlpha()
+// accessor supplies the missing temporary, but retail's dead accessor slot is
+// the *highest* of the temp region (0x40) while ours is the lowest (0x24), so
+// every GXColor temporary below it sits 4 bytes high.
 void TModelWaterManager::drawRefracAndSpec() const
 {
 
@@ -1931,7 +1935,7 @@ void TModelWaterManager::drawRefracAndSpec() const
 	unk5D34->load(GX_TEXMAP0);
 	unk5D38->load(GX_TEXMAP1);
 	unk5D3C->load(GX_TEXMAP2);
-	GXSetTevColor(GX_TEVREG0, (GXColor) { 0, 0, 0, unk5D65 });
+	GXSetTevColor(GX_TEVREG0, (GXColor) { 0, 0, 0, getWaterAlpha() });
 	GXSetNumTevStages(2);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO,

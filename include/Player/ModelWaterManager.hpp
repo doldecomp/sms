@@ -81,7 +81,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	f32 getWPGravity(int) const;
-	void getWaterAlpha() const;
+	u8 getWaterAlpha() const;
 	bool askHitWaterParticleOnGround(const JGeometry::TVec3<f32>&);
 	void makeEmit(const TWaterEmitInfo&);
 	u8 emitRequest(const TWaterEmitInfo&);
