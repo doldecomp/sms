@@ -22,50 +22,50 @@ JPAEmitterManager* gpEmitterManager4D2;
 
 int TMarDirector::loadResource()
 {
-	gpMarioParticleManager = new TMarioParticleManager;
+	TMarioParticleManager* this_00 = new TMarioParticleManager;
 
-	int particleNum = 1000;
-	int emitterNum  = 0x100;
-	int effectNum   = 0x20;
+	gpMarioParticleManager = this_00;
 
-	switch (gpMarDirector->getCurrentMap()) {
+	int lVar10 = 1000;
+	int uVar8  = 0x100;
+	int iVar9  = 0x20;
+
+	switch (gpMarDirector->mMap) {
 	case 33:
-		particleNum = 3000;
-		effectNum   = 120;
+		lVar10 = 3000;
+		iVar9  = 120;
 		break;
 	case 5:
-		if (gpMarDirector->getCurrentStage() == 1)
-			particleNum = 1500;
+		if (gpMarDirector->unk7D == 1)
+			lVar10 = 1500;
 		break;
 	case 58:
-		particleNum = 4000;
+		lVar10 = 4000;
 		break;
 	case 56:
 	case 57:
-		particleNum = 3000;
-		break;
-	case 59:
+		lVar10 = 3000;
 		break;
 	case 9:
-		if (gpMarDirector->getCurrentStage() == 0)
-			particleNum = 1500;
+		if (gpMarDirector->unk7D == 0)
+			lVar10 = 1500;
 		break;
 	case 52:
-		particleNum = 3000;
+		lVar10 = 3000;
 		break;
 	case 4:
-		if (gpMarDirector->getCurrentStage() == 2)
-			particleNum = 3000;
+		if (gpMarDirector->unk7D == 2)
+			lVar10 = 3000;
 		break;
 	case 60:
-		particleNum = 5000;
+		lVar10 = 5000;
 		break;
 	}
 
-	gpMarioParticleManager->createEffectInfoAry(effectNum);
+	gpMarioParticleManager->createEffectInfoAry(iVar9);
 	gpResourceManager = new JPAResourceManager(0x201, 0x800, nullptr);
 	gpMarioParticleManager->unk3B8 = new JPAEmitterManager(
-	    gpResourceManager, particleNum, emitterNum, emitterNum * 2, nullptr);
+	    gpResourceManager, lVar10, 0x100, uVar8 * 2, nullptr);
 	gpEmitterManager4D2
 	    = new JPAEmitterManager(nullptr, 200, 0x20, 0x40, nullptr);
 	loadParticle();
@@ -109,10 +109,11 @@ int TMarDirector::loadResource()
 
 	unkD4 = new (0x20) char[0x64000];
 	unkD8 = new JKRMemArchive;
-
-	int errc = thpInit();
-	if (errc)
-		return errc;
+	if (mMap == 1) {
+		int errc = thpInit();
+		if (errc)
+			return errc;
+	}
 
 	return 0;
 }
@@ -125,9 +126,9 @@ void TMarDirector::initLoadParticle()
 
 void TMarDirector::loadParticle()
 {
-	void* pvVar1 = new (0x20) char[0x200000];
+	void* pvVar1 = new (-0x20) char[0x200000];
 	SMSLoadArchive("/data/particle.arc", pvVar1, 0x200000, nullptr);
-	JKRMemArchive* this_00 = new (0x20) JKRMemArchive;
+	JKRMemArchive* this_00 = new (-0x20) JKRMemArchive;
 	this_00->mountFixed(pvVar1, MBF_0);
 	this_00->becomeCurrent("/");
 	loadParticleMario();
@@ -394,17 +395,15 @@ void TMarDirector::loadParticleMario()
 	SMS_LoadParticle("ms_mpk_fire_c.jpa", 0x1f8);
 }
 
+// TODO: size mismatch
 int TMarDirector::thpInit()
 {
-	if (mMap == 1) {
-		THPPlayerInit(0);
-		if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
-			return 1;
-		u32 sz = THPPlayerCalcNeedMemory();
-		THPPlayerSetBuffer(new (0x20) u8[sz]);
-		if (!THPPlayerPrepare(0, 1, 0))
-			return 1;
-	}
+	THPPlayerInit();
+	if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
+		return 1;
+	THPPlayerSetBuffer((u8*)::operator new[](THPPlayerCalcNeedMemory(), 0x20));
+	if (!THPPlayerPrepare(0, 1, 0))
+		return 1;
 
 	return 0;
 }

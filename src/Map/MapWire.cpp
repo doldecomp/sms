@@ -40,25 +40,26 @@ f32 TMapWire::mDrawHeight     = 6.0f;
 
 void TMapWire::drawLower() const
 {
-	f32 xOffset = mDrawAxes.x * mDrawWidth;
-	f32 zOffset = mDrawAxes.y * mDrawWidth;
+	JGeometry::TVec2<f32> drawOffset = mDrawAxes;
+	drawOffset.scale(mDrawWidth);
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
-	GXPosition3f32(mStartPoint.x - xOffset, mStartPoint.y,
-	               mStartPoint.z - zOffset);
+	GXPosition3f32(mStartPoint.x - drawOffset.x, mStartPoint.y,
+	               mStartPoint.z - drawOffset.y);
 	GXPosition3f32(mStartPoint.x, mStartPoint.y - mDrawHeight, mStartPoint.z);
 
 	for (int i = 0; i < mNumActiveMapWirePoints; i++) {
-		GXPosition3f32(mMapWirePoints[i].mPosition.x - xOffset,
+		GXPosition3f32(mMapWirePoints[i].mPosition.x - drawOffset.x,
 		               mMapWirePoints[i].mPosition.y,
-		               mMapWirePoints[i].mPosition.z - zOffset);
+		               mMapWirePoints[i].mPosition.z - drawOffset.y);
 		GXPosition3f32(mMapWirePoints[i].mPosition.x,
 		               mMapWirePoints[i].mPosition.y - mDrawHeight,
 		               mMapWirePoints[i].mPosition.z);
 	}
 
-	GXPosition3f32(mEndPoint.x - xOffset, mEndPoint.y, mEndPoint.z - zOffset);
+	GXPosition3f32(mEndPoint.x - drawOffset.x, mEndPoint.y,
+	               mEndPoint.z - drawOffset.y);
 	GXPosition3f32(mEndPoint.x, mEndPoint.y - mDrawHeight, mEndPoint.z);
 
 	GXEnd();
@@ -66,47 +67,50 @@ void TMapWire::drawLower() const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
 	GXPosition3f32(mStartPoint.x, mStartPoint.y - mDrawHeight, mStartPoint.z);
-	GXPosition3f32(mStartPoint.x + xOffset, mStartPoint.y,
-	               mStartPoint.z + zOffset);
+	GXPosition3f32(mStartPoint.x + drawOffset.x, mStartPoint.y,
+	               mStartPoint.z + drawOffset.y);
 
 	for (int i = 0; i < mNumActiveMapWirePoints; i++) {
 		GXPosition3f32(mMapWirePoints[i].mPosition.x,
 		               mMapWirePoints[i].mPosition.y - mDrawHeight,
 		               mMapWirePoints[i].mPosition.z);
-		GXPosition3f32(mMapWirePoints[i].mPosition.x + xOffset,
+		GXPosition3f32(mMapWirePoints[i].mPosition.x + drawOffset.x,
 		               mMapWirePoints[i].mPosition.y,
-		               mMapWirePoints[i].mPosition.z + zOffset);
+		               mMapWirePoints[i].mPosition.z + drawOffset.y);
 	}
 
 	GXPosition3f32(mEndPoint.x, mEndPoint.y - mDrawHeight, mEndPoint.z);
-	GXPosition3f32(mEndPoint.x + xOffset, mEndPoint.y, mEndPoint.z + zOffset);
+	GXPosition3f32(mEndPoint.x + drawOffset.x, mEndPoint.y,
+	               mEndPoint.z + drawOffset.y);
 
 	GXEnd();
 }
 
 void TMapWire::drawUpper() const
 {
-	f32 xOffset = mDrawAxes.x * mDrawWidth;
-	f32 zOffset = mDrawAxes.y * mDrawWidth;
+	JGeometry::TVec2<f32> drawOffset = mDrawAxes;
+	drawOffset.scale(mDrawWidth);
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
-	GXPosition3f32(mStartPoint.x + xOffset, mStartPoint.y,
-	               mStartPoint.z + zOffset);
-	GXPosition3f32(mStartPoint.x - xOffset, mStartPoint.y,
-	               mStartPoint.z - zOffset);
+	GXPosition3f32(mStartPoint.x + drawOffset.x, mStartPoint.y,
+	               mStartPoint.z + drawOffset.y);
+	GXPosition3f32(mStartPoint.x - drawOffset.x, mStartPoint.y,
+	               mStartPoint.z - drawOffset.y);
 
 	for (int index = 0; index < mNumActiveMapWirePoints; index++) {
-		GXPosition3f32(mMapWirePoints[index].mPosition.x + xOffset,
+		GXPosition3f32(mMapWirePoints[index].mPosition.x + drawOffset.x,
 		               mMapWirePoints[index].mPosition.y,
-		               mMapWirePoints[index].mPosition.z + zOffset);
-		GXPosition3f32(mMapWirePoints[index].mPosition.x - xOffset,
+		               mMapWirePoints[index].mPosition.z + drawOffset.y);
+		GXPosition3f32(mMapWirePoints[index].mPosition.x - drawOffset.x,
 		               mMapWirePoints[index].mPosition.y,
-		               mMapWirePoints[index].mPosition.z - zOffset);
+		               mMapWirePoints[index].mPosition.z - drawOffset.y);
 	}
 
-	GXPosition3f32(mEndPoint.x + xOffset, mEndPoint.y, mEndPoint.z + zOffset);
-	GXPosition3f32(mEndPoint.x - xOffset, mEndPoint.y, mEndPoint.z - zOffset);
+	GXPosition3f32(mEndPoint.x + drawOffset.x, mEndPoint.y,
+	               mEndPoint.z + drawOffset.y);
+	GXPosition3f32(mEndPoint.x - drawOffset.x, mEndPoint.y,
+	               mEndPoint.z - drawOffset.y);
 
 	GXEnd();
 }
@@ -141,13 +145,11 @@ void TMapWire::getPointPosAtReleased(f32 pos, JGeometry::TVec3<f32>* out) const
 
 	// TODO: fix this inlining issue
 	f32 power = fake_getPointPowerAtReleased(this, pos);
-	// TODO: Regswaps for these calculations?
-	f32 yAdjusted
-	    = linePoint.y
-	      + (1.0f - mBounceRemainingPower) * (defaultPoint.y - linePoint.y)
-	      + power * mHangOrBouncePoint.y;
-
-	out->set(linePoint.x, yAdjusted, linePoint.z);
+	out->x    = linePoint.x;
+	out->y    = linePoint.y
+	         + (1.0f - mBounceRemainingPower) * (defaultPoint.y - linePoint.y)
+	         + power * mHangOrBouncePoint.y;
+	out->z = linePoint.z;
 }
 
 void TMapWire::updatePointAtReleased(int index)
@@ -169,7 +171,11 @@ void TMapWire::updateMovePointAtReleased() { }
 void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
 {
 	point->mPosOnWire = pos;
-	getPointPosAtReleased(pos, &point->mPosition);
+
+	JGeometry::TVec3<f32> outPoint;
+	getPointPosAtReleased(pos, &outPoint);
+	point->mPosition.set(outPoint.x, outPoint.y, outPoint.z);
+
 	point->mPosReturnRate = (point->mDefaultPosOnWire - pos) / 1000.0f;
 }
 
@@ -200,15 +206,14 @@ void TMapWire::release()
 
 	if (mNumMapWirePoints - halfNumPoints != 0) {
 		f32 posAdvancePerPoint
-		    = (1.0f - mHangPos) / (mNumActiveMapWirePoints - halfNumPoints);
+		    = (1.0f - mHangPos) / (mNumMapWirePoints - halfNumPoints);
 
 		for (int i = halfNumPoints; i < mNumActiveMapWirePoints; i++) {
-			TMapWirePoint* mapWirePoint = &mMapWirePoints[i];
-			mapWirePoint->reset();
+			mMapWirePoints[i].reset();
 
 			initPointAtJustReleased(posAdvancePerPoint * (i - halfNumPoints + 1)
 			                            + mHangPos,
-			                        mapWirePoint);
+			                        &mMapWirePoints[i]);
 		}
 	}
 
@@ -318,9 +323,9 @@ void TMapWire::move()
 			}
 			bounceFinished = false;
 
-			mHangOrBouncePoint.y = mBounceAmplitude
-			                       * JMASCos(mMoveTimer * 32768.0f)
-			                       * mBounceRemainingPower;
+			f32 bounceCos = JMASCos(mMoveTimer * 32768.0f);
+			mHangOrBouncePoint.y
+			    = bounceCos * mBounceAmplitude * mBounceRemainingPower;
 		}
 
 		if (bounceFinished) {
@@ -353,9 +358,8 @@ f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
 	JGeometry::TVec3<f32> perpPoint
 	    = MsPerpendicFootToLineR(flatStart, flatEnd, point);
 
-	f32 totalLength   = (flatEnd - flatStart).length();
-	f32 partialLength = (perpPoint - flatStart).length();
-	return partialLength / totalLength;
+	return JGeometry::TVec3<f32>(perpPoint - flatStart).length()
+	       / JGeometry::TVec3<f32>(flatEnd - flatStart).length();
 }
 
 /**
@@ -366,9 +370,9 @@ f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
  */
 void TMapWire::getPointPosOnLine(f32 pos, JGeometry::TVec3<f32>* out) const
 {
-	out->x = mStartPoint.x + pos * mWireSpan.x;
-	out->y = mStartPoint.y + pos * mWireSpan.y;
-	out->z = mStartPoint.z + pos * mWireSpan.z;
+	out->x = mStartPoint.x + mWireSpan.x * pos;
+	out->y = mStartPoint.y + mWireSpan.y * pos;
+	out->z = mStartPoint.z + mWireSpan.z * pos;
 }
 
 void TMapWire::getPointPosOnWire(f32 pos, JGeometry::TVec3<f32>* out) const
@@ -476,18 +480,18 @@ void TMapWire::init(const TCubeGeneralInfo* cubeInfo)
 	                       | (1 << J3DMLF_TevStageNumShift),
 	                   1);
 
-	Mtx mtx;
-
-	MsMtxSetXYZRPH(mtx, mStartPoint.x, mStartPoint.y, mStartPoint.z,
+	Mtx startMtx;
+	MsMtxSetXYZRPH(startMtx, mStartPoint.x, mStartPoint.y, mStartPoint.z,
 	               cubeInfo->getUnk18().x, cubeInfo->getUnk18().y,
 	               cubeInfo->getUnk18().z);
-	mStartFittingModel->setBaseTRMtx(mtx);
+	mStartFittingModel->setBaseTRMtx(startMtx);
 	mStartFittingModel->calc();
 
-	MsMtxSetXYZRPH(mtx, mEndPoint.x, mEndPoint.y, mEndPoint.z,
+	Mtx endMtx;
+	MsMtxSetXYZRPH(endMtx, mEndPoint.x, mEndPoint.y, mEndPoint.z,
 	               cubeInfo->getUnk18().x, cubeInfo->getUnk18().y + 180.0f,
 	               cubeInfo->getUnk18().z);
-	mEndFittingModel->setBaseTRMtx(mtx);
+	mEndFittingModel->setBaseTRMtx(endMtx);
 	mEndFittingModel->calc();
 
 	gpMapObjManager->entryStaticDrawBufferSun(mStartFittingModel);

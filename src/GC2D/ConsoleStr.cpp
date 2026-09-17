@@ -84,7 +84,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	if (gpMarDirector->mMap != 15) {
 		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
 
-		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
+		s16 uVar2 = SMS_getShineID(uVar1, (u8)uVar9, false);
 
 		const void* puVar15;
 		if (pvVar10 == nullptr || uVar2 == -1)
@@ -361,12 +361,10 @@ bool TConsoleStr::processReady(int param_1)
 	for (int i = 0; i < 5; ++i) {
 		if (param_1 == i * 10) {
 			JUTRect local_d8 = unk27C[i]->getPane()->getBounds();
-			unk27C[i]->setPaneSize(
+			unk27C[i]->setCenteredSize(
 			    0x1E, local_d8.getWidth(), local_d8.getHeight(),
 			    local_d8.getWidth() + 80, local_d8.getHeight() + 80);
-			// TODO: wrong args
-			unk27C[i]->setPaneOffset(0x1E, 0, 0, 0, 0);
-		} else if (param_1 >= i * 10 + 30) {
+		} else if (param_1 < i * 10 + 30) {
 			unk27C[i]->update();
 			u16 alpha = unk27C[i]->getPane()->getAlpha();
 			alpha += 9;
@@ -377,11 +375,9 @@ bool TConsoleStr::processReady(int param_1)
 			if (param_1 == i * 10 + 130) {
 				JUTRect local_e8 = unk27C[i]->getPane()->getBounds();
 
-				unk27C[i]->setPaneSize(
+				unk27C[i]->setCenteredSize(
 				    0x1E, local_e8.getWidth() - 20, local_e8.getHeight() - 20,
 				    local_e8.getWidth(), local_e8.getHeight());
-				// TODO: wrong args
-				unk27C[i]->setPaneOffset(0x1E, 0, 0, 0, 0);
 			} else if (param_1 < i * 10 + 160) {
 				unk27C[i]->update();
 				s16 alpha = unk27C[i]->getPane()->getAlpha();
@@ -475,14 +471,16 @@ bool TConsoleStr::processShineGet(int param_1)
 		}
 
 		if (param_1 < i * 6 + 40) {
-			u16 alpha = unk244[i]->getPane()->getAlpha() + 7;
+			u16 alpha = unk244[i]->getPane()->getAlpha();
+			alpha += 7;
 			if (alpha > 0xff)
 				alpha = 0xff;
 			unk244[i]->getPane()->setAlpha(alpha);
 		}
 
 		if (param_1 > i * 6 + 200) {
-			s16 alpha = unk244[i]->getPane()->getAlpha() - 7;
+			s16 alpha = unk244[i]->getPane()->getAlpha();
+			alpha -= 7;
 			if (alpha < 0)
 				alpha = 0;
 			unk244[i]->getPane()->setAlpha(alpha);
@@ -524,6 +522,7 @@ bool TConsoleStr::processMiss(int param_1)
 		}
 
 		if (param_1 == i * 10 + 60) {
+			unk268[i]->getPane()->mRotation = 0.0f;
 			unk268[i]->setPanePosition(0x28, JUTPoint(0, 30), JUTPoint(0, -80),
 			                           JUTPoint(0, -80));
 		}
@@ -533,12 +532,12 @@ bool TConsoleStr::processMiss(int param_1)
 			                           JUTPoint(0, 0));
 		}
 
-		if (param_1 == i * 10 + 300) {
+		else if (param_1 == i * 10 + 300) {
 			unk268[i]->setPanePosition(0x1E, JUTPoint(0, 0), JUTPoint(0, 0),
 			                           JUTPoint(0, 150));
 		}
 
-		if (param_1 < i * 10) {
+		if (param_1 < i * 10 + 60) {
 			u16 alpha = unk268[i]->getPane()->getAlpha();
 			alpha += 12;
 			if (alpha > 0xff)
@@ -554,7 +553,7 @@ bool TConsoleStr::processMiss(int param_1)
 				result = false;
 			}
 		} else {
-			if (param_1 < i * 10) {
+			if (param_1 < i * 10 + 60) {
 				unk268[i]->getPane()->mRotation = (i - param_1) * 6;
 			}
 
@@ -605,33 +604,42 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		unk2A0[1]->hide();
 
 		JUTRect local_74 = unk290[0]->getPane()->getBounds();
-		unk290[0]->setPaneSize(0x2D, local_74.getWidth(), 0,
-		                       local_74.getHeight(), 0);
-		unk290[0]->setPaneAlpha(30, 100, 255);
+		int local_64     = 224;
+		unk290[0]->setPaneSize(0x2D, local_74.getWidth(), local_64,
+		                       local_74.getWidth(), 0);
+		unk290[0]->setPaneAlpha(45, 255, 0);
 
+		local_74 = unk290[1]->getPane()->getBounds();
 		unk290[1]->setPaneOffset(0x2D, 0, 224 - local_74.y1, 0,
 		                         465 - unk290[1]->getInitialBounds().y1);
-		unk290[1]->setPaneSize(0x2D, local_74.getWidth(), 0,
-		                       local_74.getHeight(), 0);
-		unk290[1]->setPaneAlpha(30, 100, 255);
+		unk290[1]->setPaneSize(0x2D, local_74.getWidth(),
+		                       local_64
+		                           + (465 - unk290[1]->getInitialBounds().y1),
+		                       local_74.getWidth(), 0);
+		unk290[1]->setPaneAlpha(45, 255, 0);
 
 		unk2BC = 8;
 		unk2B8 = 4;
 		unk2A8 = 1;
-	} else if (unk2BC == 1) {
+	} else {
+		if (unk2BC != 1) {
+			unk2A8 = 1;
+			return;
+		}
+
 		unk2BC           = 2;
 		JUTRect local_88 = unk290[0]->getPane()->getBounds();
-		unk290[0]->setPaneSize(0x2D, local_88.getWidth(), 0,
+		int local_78     = 224;
+		unk290[0]->setPaneSize(0x2D, local_88.getWidth(), local_78,
 		                       local_88.getWidth(), local_88.getHeight());
-		unk290[0]->setPaneAlpha(30, 100, 255);
+		unk290[0]->setPaneAlpha(45, 255, unk290[0]->getPane()->getAlpha());
 
+		local_88 = unk290[1]->getPane()->getBounds();
 		unk290[1]->setPaneOffset(0x2D, 0, 224 - local_88.y1, 0,
 		                         465 - unk290[1]->getInitialBounds().y1);
-		unk290[1]->setPaneSize(0x2D, local_88.getWidth(), 0,
-		                       local_88.getHeight(), 0);
-		unk290[1]->setPaneAlpha(30, 100, 255);
-	} else {
-		unk2A8 = 1;
+		unk290[1]->setPaneSize(0x2D, local_88.getWidth(), 465 - local_78 - 1,
+		                       local_88.getWidth(), local_88.getHeight());
+		unk290[1]->setPaneAlpha(45, 255, unk290[1]->getPane()->getAlpha());
 	}
 }
 

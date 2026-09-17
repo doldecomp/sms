@@ -106,11 +106,11 @@ s32 TCardManager::decideUseSector(TCardManager::TCriteria* criteria)
 	if (criteria[1].getState() == TCriteria::STATE_CHECKSUM_BAD)
 		return 0;
 
-	s32 idx;
+	bool idx;
 	if (criteria[0].getWriteCount() >= criteria[1].getWriteCount())
-		idx = 0;
+		idx = false;
 	else
-		idx = 1;
+		idx = true;
 	return idx;
 }
 #pragma dont_inline off
@@ -152,7 +152,9 @@ void TCardManager::copyTo(TCardManager::TCriteria* param_1,
 		param_2->unk0 = 0;
 		JSUMemoryInputStream stream(param_1[sector].getPreviewBytes(), 0x1C);
 
-		param_2->unk4  = stream.readU32();
+		u32 val4;
+		stream.read(&val4, sizeof(val4));
+		param_2->unk4  = val4;
 		param_2->unk8  = stream.readU64();
 		param_2->unk10 = stream.readU64();
 		param_2->unk18 = stream.readU32();
@@ -437,11 +439,10 @@ s32 TCardManager::filledInitData_(CARDFileInfo* file)
 	sector->setCheckSum(0);
 
 	for (int i = 1; i < ARRAY_COUNT(mSectorCriteria); ++i) {
-		TCriteria* crit = &mSectorCriteria[i];
-		if (crit->getState() != TCriteria::STATE_EMPTY)
+		if (mSectorCriteria[i].getState() != TCriteria::STATE_EMPTY)
 			continue;
 
-		s32 errc = writeCardSector_(file, i, sector, crit);
+		s32 errc = writeCardSector_(file, i, sector, &mSectorCriteria[i]);
 
 		if (errc != 0)
 			return errc;
@@ -463,12 +464,13 @@ s32 TCardManager::setCardStat_(CARDFileInfo* file)
 		CARDSetBannerFormat(&stat, CARD_STAT_BANNER_C8);
 		CARDSetIconAnim(&stat, CARD_STAT_ANIM_LOOP);
 
-		CARDSetIconFormat(&stat, 0, CARD_STAT_ICON_C8);
-		CARDSetIconSpeed(&stat, 0, CARD_STAT_SPEED_SLOW);
-		CARDSetIconFormat(&stat, 1, CARD_STAT_ICON_C8);
-		CARDSetIconSpeed(&stat, 1, CARD_STAT_SPEED_SLOW);
+		int i;
+		for (i = 0; i < 2; ++i) {
+			CARDSetIconFormat(&stat, i, CARD_STAT_ICON_C8);
+			CARDSetIconSpeed(&stat, i, CARD_STAT_SPEED_SLOW);
+		}
 
-		for (u16 i = 2; i < CARD_ICON_MAX; ++i) {
+		for (; i < CARD_ICON_MAX; ++i) {
 			CARDSetIconFormat(&stat, i, CARD_STAT_ICON_NONE);
 			CARDSetIconSpeed(&stat, i, CARD_STAT_SPEED_END);
 		}
@@ -563,8 +565,8 @@ s32 TCardManager::getBookmarkInfos_()
 					    != TCriteria::STATE_UNREAD)
 						continue;
 
-					result = ((TCardSector*)mSector)
-					             ->read(&info, i, &mSectorCriteria[i]);
+					TCardSector* sector = (TCardSector*)mSector;
+					result = sector->read(&info, i, &mSectorCriteria[i]);
 					if (result != CARD_RESULT_READY)
 						break;
 				}

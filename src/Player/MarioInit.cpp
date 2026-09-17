@@ -6,7 +6,6 @@
 #include <Player/Yoshi.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
-#include <System/StageUtil.hpp>
 #include <System/MarioGamePad.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <Map/Map.hpp>
@@ -16,6 +15,8 @@
 #include <MSound/MSoundBGM.hpp>
 
 // TODO: stuff from other rogue includes
+bool SMS_isMultiPlayerMap();
+
 static JGeometry::TVec3<f32> cDeformedTerrainCenter(0.0f, 5000.0f, 0.0f);
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
@@ -53,7 +54,7 @@ TMario::TMario()
     , mSlipParamsYoshi("/Mario/SlipParamYoshi.prm")
     , mUpperBodyParams("/Mario/UpperBody.prm")
     , mDmgParamsEnemyCommon("/Mario/DmgEnemyCommon.prm")
-    , mDmgParamsHamakuri("/Mario/DmgHamakuri.prm")
+    , mDmgParamsHamakuri("/Mario/DmgHamukuri.prm")
     , mDmgParamsNamekuri("/Mario/DmgNamekuri.prm")
     , mDmgParamsHinokuri("/Mario/DmgHinokuri.prm")
     , mDmgParamsFire("/Mario/DmgFire.prm")
@@ -300,7 +301,7 @@ TMario::TMario()
 	mWireSfxDelay    = 20;
 	mWireQueuedSfxID = 0;
 
-	unk54E             = 0x4000;
+	unk54E             = 0x400;
 	mWireSwingPosAngle = 0x4000;
 	mWireSwingNegAngle = 0xC000;
 
@@ -350,12 +351,13 @@ void TMario::loadAfter()
 
 	initParticle();
 
-	if (isMario())
-		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              mModel->getModel()->getAnmMtx(1), true);
-	else
-		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              mModel->getModel()->getAnmMtx(1), false);
+	if (isMario()) {
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(1);
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition, mtx, true);
+	} else {
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(1);
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition, mtx, false);
+	}
 
 	finalDrawInitialize();
 	initMirrorModel();
@@ -458,7 +460,7 @@ void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
 
 TMario::TDeParams::TDeParams()
     : TParams("/Mario/Mario.prm")
-    , PARAM_INIT(mHpMax, 8)
+    , mHpMax(this, 8, JDrama::TNameRef::calcKeyCode("mHPMax"), "mHPMax")
     , PARAM_INIT(mRunningMax, 45.0f)
     , PARAM_INIT(mDashMax, 60.0f)
     , PARAM_INIT(mDashAcc, 0.5f)
@@ -932,10 +934,10 @@ TMario::TEParams::TEParams(const char* prm)
     , PARAM_INIT(mDamage, 1)
     , PARAM_INIT(mDownType, 0)
     , PARAM_INIT(mWaterEmit, 0)
-    , PARAM_INIT(mMotor, 0)
-    , PARAM_INIT(mMinSpeed, 0.0f)
+    , PARAM_INIT(mMotor, 25)
+    , PARAM_INIT(mMinSpeed, 16.0f)
     , PARAM_INIT(mDirty, 0.0f)
-    , PARAM_INIT(mInvincibleTime, 0)
+    , PARAM_INIT(mInvincibleTime, 300)
 {
 	TParams::load(mPrmPath);
 }
@@ -948,7 +950,7 @@ TMario::TAutoDemoParams::TAutoDemoParams()
     , PARAM_INIT(mWarpInTremble, 15.0f)
     , PARAM_INIT(mWarpInVecBase, 0.3f)
     , PARAM_INIT(mWarpTransTremble, 50.0f)
-    , PARAM_INIT(mReadRotSp, 0x400f)
+    , PARAM_INIT(mReadRotSp, 0x400)
 {
 	TParams::load(mPrmPath);
 }

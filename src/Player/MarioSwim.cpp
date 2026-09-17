@@ -34,7 +34,8 @@ void TMario::doSwimming()
 		rotMaxF = (f32)mSwimParams.mSwimmingRotSpMax.get();
 	}
 
-	s16 rotSp    = mForwardVel / 32.0f * (rotMaxF - rotMinF) + rotMinF;
+	f32 rotRange = rotMaxF - rotMinF;
+	s16 rotSp    = mForwardVel * rotRange * 0.03125f + rotMinF;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 
@@ -81,10 +82,10 @@ void TMario::doSwimming()
 	if (mFloorPosition.z > mFloorPosition.y + 400.0f
 	    && mPosition.y < mFloorPosition.y + 100.0f
 	    && mStatus != MARIO_STATUS_SWIM_WAIT) {
-		unk1B4   = mPosition;
-		unk1B4.y = mFloorPosition.y;
+		mFootprintPos   = mPosition;
+		mFootprintPos.y = mFloorPosition.y;
 		gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_SEASMOKE,
-		                                            &unk1B4, 1, this);
+		                                            &mFootprintPos, 1, this);
 	}
 
 	if (mPosition.y < mFloorPosition.y + 35.0f)
@@ -116,7 +117,8 @@ BOOL TMario::checkSwimJump()
 			}
 		}
 
-		if (mIntendedMag == 0.0f)
+		bool doSwimUp = mIntendedMag == 0.0f;
+		if (doSwimUp)
 			return changePlayerStatus(MARIO_STATUS_SWIM_UP, 0, false);
 		return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 	}

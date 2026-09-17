@@ -55,6 +55,11 @@ public:
 	void loadAfter();
 	void initMapObj();
 	TShellCup(const char* name = "シェルカップ");
+
+	static f32 mOpenRotMax;
+	static f32 mShellDamageRot;
+	static f32 mWaterOpenAccel;
+	static f32 mCloseAccel;
 };
 
 class TMerrygoround : public TMapObjBase {
@@ -63,6 +68,8 @@ public:
 	void draw() const;
 	void initMapObj();
 	TMerrygoround(const char* name = "メリーゴーランド");
+
+	static f32 mRotSpeed;
 };
 
 class TChangeStageMerrygoround : public TMapObjChangeStage {

@@ -75,7 +75,8 @@ void TMapObjPlane::draw()
 	for (int z = 0; z < mExtents - 1; ++z) {
 		f32 fVar1 = unkFC;
 
-		f32 worldZ = mCollision->gridToWorld(z);
+		f32 worldZ     = mCollision->gridToWorld(z);
+		f32 nextWorldZ = worldZ + fVar1;
 
 		GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mExtents * 2);
 		for (int x = 0; x < mExtents; ++x) {
@@ -85,16 +86,16 @@ void TMapObjPlane::draw()
 			GXNormal3f32(normalAt(x, z).x, normalAt(x, z).y, normalAt(x, z).z);
 			GXTexCoord2f32(getTexPos(x), getTexPos(z));
 
-			GXPosition3f32(worldX, heightAt(x, z + 1), worldZ + fVar1);
+			GXPosition3f32(worldX, heightAt(x, z + 1), nextWorldZ);
 			GXNormal3f32(normalAt(x, z + 1).x, normalAt(x, z + 1).y,
 			             normalAt(x, z + 1).z);
-			GXPosition2f32(getTexPos(x), getTexPos(z + 1));
+			GXTexCoord2f32(getTexPos(x), getTexPos(z + 1));
 		}
 		GXEnd();
 	}
 }
 
-f32 TMapObjPlane::getTexPos(f32 v) const { return mTexScale * v; }
+f32 TMapObjPlane::getTexPos(f32 v) const { return v * mTexScale; }
 
 void TMapObjPlane::updateCheckData(int x, int z)
 {
@@ -102,8 +103,8 @@ void TMapObjPlane::updateCheckData(int x, int z)
 		return;
 
 	f32 x1 = mCollision->gridToWorld(x);
-	f32 z1 = mCollision->gridToWorld(z);
 	f32 x2 = mCollision->gridToWorld(x + 1);
+	f32 z1 = mCollision->gridToWorld(z);
 	f32 z2 = mCollision->gridToWorld(z + 1);
 
 	JGeometry::TVec3<f32> local_64(x1, heightAt(x, z) + 2.0f, z1);
@@ -133,27 +134,27 @@ void TMapObjPlane::calcNrm(int x, int z)
 	// cross producting is occurring.
 
 	JGeometry::TVec3<f32> local_9c;
-	local_9c.x = (h0N - hN0) * 0.0f - (fVar7 - 0.0f) * (hN0 - h00);
-	local_9c.y = (fVar7 - 0.0f) * (fVar7 - 0.0f) - (0.0f - fVar7) * 0.0f;
-	local_9c.z = (0.0f - fVar7) * (hN0 - h00) - (h0N - hN0) * (fVar7 - 0.0f);
+	local_9c.x = (fVar7 - 0.0f) * (hN0 - h00) - (h0N - hN0) * 0.0f;
+	local_9c.y = (0.0f - fVar7) * 0.0f - (fVar7 - 0.0f) * (fVar7 - 0.0f);
+	local_9c.z = (h0N - hN0) * (fVar7 - 0.0f) - (0.0f - fVar7) * (hN0 - h00);
 	local_9c.normalize();
 
 	JGeometry::TVec3<f32> local_a8;
-	local_a8.x = (hP0 - h0N) * (fVar7 - 0.0f) - (0.0f - fVar7) * (h0N - h00);
-	local_a8.z = (fVar1 - 0.0f) * (h0N - h00) - (hP0 - h0N) * 0.0f;
-	local_a8.y = (0.0f - fVar7) * 0.0f - (fVar1 - 0.0f) * (fVar7 - 0.0f);
+	local_a8.x = (0.0f - fVar7) * (h0N - h00) - (hP0 - h0N) * (fVar7 - 0.0f);
+	local_a8.y = (fVar1 - 0.0f) * (fVar7 - 0.0f) - (0.0f - fVar7) * 0.0f;
+	local_a8.z = (hP0 - h0N) * 0.0f - (fVar1 - 0.0f) * (h0N - h00);
 	local_a8.normalize();
 
 	JGeometry::TVec3<f32> local_b4;
-	local_b4.x = (hN0 - h0P) * (fVar1 - 0.0f) - (0.0f - fVar1) * (h0P - h00);
-	local_b4.z = (fVar7 - 0.0f) * (h0P - h00) - (hN0 - h0P) * 0.0f;
-	local_b4.y = (0.0f - fVar1) * 0.0f - (fVar7 - 0.0f) * (fVar1 - 0.0f);
+	local_b4.x = (0.0f - fVar1) * (h0P - h00) - (hN0 - h0P) * (fVar1 - 0.0f);
+	local_b4.y = (fVar7 - 0.0f) * (fVar1 - 0.0f) - (0.0f - fVar1) * 0.0f;
+	local_b4.z = (hN0 - h0P) * 0.0f - (fVar7 - 0.0f) * (h0P - h00);
 	local_b4.normalize();
 
 	JGeometry::TVec3<f32> local_c0;
-	local_c0.x = (h0P - hP0) * 0.0f - h0N * (hP0 - h00);
-	local_c0.y = h0N * h0N - (0.0f - fVar1) * 0.0f;
-	local_c0.z = (0.0f - fVar1) * (hP0 - h00) - (h0P - hP0) * h0N;
+	local_c0.x = (fVar1 - 0.0f) * (hP0 - h00) - (h0P - hP0) * 0.0f;
+	local_c0.y = (0.0f - fVar1) * 0.0f - (fVar1 - 0.0f) * (fVar1 - 0.0f);
+	local_c0.z = (h0P - hP0) * (fVar1 - 0.0f) - (0.0f - fVar1) * (hP0 - h00);
 	local_c0.normalize();
 
 	mNormalMap[x + z * mExtents] = local_9c + local_a8 + local_b4 + local_c0;
@@ -228,8 +229,8 @@ void TMapObjPlane::perform(u32 cue, JDrama::TGraphics*)
 
 void TMapObjPlane::makeMountain()
 {
-	int width = (unk118[0x15] << 24) + (unk118[0x14] << 16)
-	            + (unk118[0x13] << 8) + unk118[0x12];
+	int tmp   = (unk118[0x15] << 24) + (unk118[0x14] << 16);
+	int width = tmp + (unk118[0x13] << 8) + unk118[0x12];
 
 	int height = (unk118[0x19] << 24) + (unk118[0x18] << 16)
 	             + (unk118[0x17] << 8) + unk118[0x16];

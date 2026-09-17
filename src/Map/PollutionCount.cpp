@@ -309,7 +309,8 @@ void TPollutionCounterLayer::drawPollutionLayer(int layer_index) const
 	drawBlack(img->width, img->height);
 	loadPollutionLayer((u8*)img + img->imageDataOffset, img->width, img->height,
 	                   GX_TEXMAP0);
-	initGXforPollutionLayer(layer->mPollutionType, layer->mFlags,
+	u16 flags = layer->mFlags;
+	initGXforPollutionLayer(layer->mPollutionType, flags,
 	                        layer->mPerFrameChangeThreshold,
 	                        layer->mPerFrameChangeDelta);
 
@@ -345,7 +346,7 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 		              GX_AF_NONE);
 
-		if (mJointObjStampTaskQueue[i].unk0 == 0) {
+		if (info.unk0 == 0) {
 			GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, 0xff });
 		} else {
 			GXSetChanMatColor(GX_COLOR0A0,
@@ -369,9 +370,8 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		GXLoadPosMtxImm(local_6c, GX_PNMTX0);
 
 		j3dSys.setVtxPos(layer->getModelData()->getVtxPosArray());
-		for (int j = 0; j < mJointObjStampTaskQueue[i].mJointObj->getShapeNum();
-		     ++j)
-			drawShape(mJointObjStampTaskQueue[i].mJointObj->getShape(j));
+		for (int j = 0; j < info.mJointObj->getShapeNum(); ++j)
+			drawShape(info.mJointObj->getShape(j));
 	}
 }
 
@@ -508,7 +508,9 @@ void TPollutionCounterLayer::drawRevivalTexStamp(int layer_index) const
 	GXSetNumTexGens(0);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
 	GXSetNumChans(1);
-	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0x14 });
+	GXColor color;
+	color = (GXColor) { 0xff, 0xff, 0xff, 0x14 };
+	GXSetChanMatColor(GX_COLOR0A0, color);
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
@@ -669,8 +671,10 @@ void TPollutionCounterLayer::calcViewMtx()
 		TPollutionLayer* layer = gpPollution->getLayer(i);
 
 		TPosition3f local_a4;
-		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinX,
-		                        layer->mMinZ, &local_a4);
+		f32 z = layer->mMinZ;
+		f32 x = layer->mMinX;
+		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, z, x,
+		                        &local_a4);
 
 		j3dSys.setViewMtx(local_a4);
 		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], 0);

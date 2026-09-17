@@ -130,6 +130,7 @@ void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 {
 	char fullAnmPath[256];
 	int fullAnmPathLength;
+	int i;
 
 	if (*anm_folder != '/')
 		fullAnmPathLength
@@ -151,7 +152,7 @@ void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 	} while (finder->findNextFile());
 
 	if (additional_files != nullptr)
-		for (int i = 0; i == 0 || additional_files[i] != nullptr; ++i)
+		for (i = 0; i == 0 || additional_files[i] != nullptr; ++i)
 			addFileNum(additional_files[i]);
 
 	delete fileFinder;
@@ -183,7 +184,7 @@ void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 	} while (fileFinder->findNextFile());
 
 	if (additional_files != nullptr && *additional_files != nullptr) {
-		for (int i = 0; i == 0 || additional_files[i] != nullptr; ++i)
+		for (i = 0; i == 0 || additional_files[i] != nullptr; ++i)
 			addFileTable(additional_files[i]);
 	}
 

@@ -30,6 +30,14 @@ public:
 	void setGroundCollision();
 	void initMapObj();
 	THangingBridgeBoard(const char*);
+
+	static f32 mMarioAccelY;
+	static f32 mMarioHipDropAccelY;
+	static f32 mReturnAccelRate;
+	static f32 mSpeedDownRate;
+	static f32 mRopeWidthX;
+	static f32 mRopeWidthZ;
+	static f32 mTexPosRate;
 };
 
 class THangingBridge : public JDrama::TViewObj {
@@ -49,6 +57,11 @@ public:
 	void initMonte();
 	void loadAfter();
 	THangingBridge(const char* name = "つり橋");
+
+	static f32 mRopeWidthBetweenBoards;
+	static f32 mRopeWidthBetweenBoardsY;
+	static int mPointNumBetweenBoards;
+	static f32 mBetweenBoardsTexPosRate;
 };
 
 class TSwingBoard : public TMapObjBase {
@@ -61,6 +74,13 @@ public:
 	void control();
 	void load(JSUMemoryInputStream&);
 	TSwingBoard(const char* name = "つり橋");
+
+	static f32 mBoardWidth;
+	static f32 mRopeWidthX;
+	static f32 mRopeWidthZ;
+	static f32 mTexPosRate;
+	static f32 mReturnAccelRate;
+	static f32 mSpeedDownRate;
 };
 
 class TGoalFlag : public TMapObjBase {
@@ -81,6 +101,9 @@ public:
 	void appear();
 	void initMapObj();
 	TFluff(const char*);
+
+	static f32 mScaleUpSpeed;
+	static f32 mScaleDownSpeed;
 };
 
 class TFluffManager : public TMapObjBase {
@@ -95,6 +118,8 @@ public:
 	void loadAfter();
 	void load(JSUMemoryInputStream&);
 	TFluffManager(const char* name = "特別な綿毛");
+
+	static f32 mWindMin;
 };
 
 #endif

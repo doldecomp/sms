@@ -685,7 +685,8 @@ void TMario::soundHitBound() { }
 
 void TMario::soundTorocco()
 {
-	f32 len = JGeometry::TVec3<f32>(mPosition - mToroccoPos).length();
+	const JGeometry::TVec3<f32>& delta = mPosition - mToroccoPos;
+	f32 len                            = JGeometry::TVec3<f32>(delta).length();
 	SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_JET_COASTER, &mPosition,
 	                                        nullptr, len, 0, 0, nullptr, 0, 4);
 }
@@ -710,13 +711,16 @@ u32 TMario::startVoice(u32 param_1)
 	if (onYoshi())
 		return 0;
 
-	return SMSGetMSound()->startMarioVoice(param_1, mHealth, getVoiceStatus());
+	MSound* sound = SMSGetMSound();
+	return sound->startMarioVoice(param_1, mHealth, getVoiceStatus());
 }
 
 u32 TMario::startVoiceIfNoVoice(u32 param_1)
 {
-	if (SMSGetMSound()->getMarioVoiceID(0) == -1)
-		return startVoice(param_1);
+	if (SMSGetMSound()->getMarioVoiceID(0) == -1) {
+		u32 result = startVoice(param_1);
+		return result;
+	}
 
 	return 0;
 }

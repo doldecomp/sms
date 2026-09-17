@@ -34,6 +34,9 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
+
+static u32 scNormalStageTable[] = { 0, 1, 2, 3, 4, 13, 6, 8, 9, 10 };
 
 // fabricated and not matching
 inline void bzero(void* pDst, u32 len)
@@ -162,15 +165,12 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 
 		if (nextCycle) {
-			// TODO: This doesn't fully match.
-			mRgbAnimCycle[0]++;
-			mRgbAnimCycle[0] = (mRgbAnimCycle[0] >= 6) ? 0 : mRgbAnimCycle[0];
-
-			mRgbAnimCycle[1]++;
-			mRgbAnimCycle[1] = (mRgbAnimCycle[1] >= 6) ? 0 : mRgbAnimCycle[1];
-
-			mRgbAnimCycle[2]++;
-			mRgbAnimCycle[2] = (mRgbAnimCycle[2] >= 6) ? 0 : mRgbAnimCycle[2];
+			for (s32 i = 0; i < 3; i++) {
+				mRgbAnimCycle[i]++;
+				if (mRgbAnimCycle[i] >= 6) {
+					mRgbAnimCycle[i] = 0;
+				}
+			}
 		}
 	}
 
@@ -293,7 +293,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		return;
 	}
 
-	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", nullptr);
+	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", pArch);
 	mLetterBoxTop    = new TExPane(mMenuScreen, 'msk1');
 	mLetterBoxBottom = new TExPane(mMenuScreen, 'msk2');
 	mStageName       = (J2DTextBox*)mMenuScreen->search('map');
@@ -311,7 +311,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 
 	for (s32 i = 0; i < 8; i++) {
 		char buf[254];
-		snprintf(buf, sizeof(buf), "/select/timg/sc_number_%d.bti", i);
+		snprintf(buf, sizeof(buf), "/select/timg/sc_number_%d.bti", i + 1);
 		mScenarioTex[i] = new JUTTexture((const ResTIMG*)JKRGetResource(buf));
 	}
 
@@ -345,8 +345,19 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	volatile s32 const unkArr[]
 	    = { 0x0, 0x0, 0x2, 0x3, 0x4, 0x5, 0x6, 0x0, 0x7, 0x8, 0x0 };
 
-	u8* const stages[] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		                   nullptr, nullptr, nullptr, nullptr, nullptr };
+	const u8* const stages[] = {
+		nullptr,
+		nullptr,
+		scShineTableBiancoEtc,
+		scShineTableRiccoEtc,
+		scShineTableMammaEtc,
+		scShineTablePinnaEtc,
+		scShineTableSirenaEtc,
+		nullptr,
+		scShineTableMonteEtc,
+		scShineTableMareEtc,
+		nullptr,
+	};
 
 	s32 numCoins = TFlagManager::getInstance()->getFlag(SMS_getShineStage(stage)
 	                                                    + 0x20005);
@@ -429,7 +440,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		    = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'b');
 		mStageBannerShadow->getPane()->show();
 
-		mScenarioBmg = JKRGetResource("/common/2d/scenarioname.bmg");
+		mScenarioBmg = JKRGetResource("/common/2d/stagename.bmg");
 
 		strncpy(mStageName->getStringPtr(),
 		        SMSGetMessageData(mScenarioBmg, tags[mStage] & 0xFFFF), 0x11);
@@ -470,8 +481,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		if (mNumUnlockedShines < 8) {
 			// TODO: I tried matching this as best as I could but the compiler
 			// keeps unrolling the loops and I'm running out of ideas...
-			bzero(mShineUnlockStates + mNumUnlockedShines,
-			      8 - mNumUnlockedShines);
+			memset(mShineUnlockStates + mNumUnlockedShines, 0,
+			       8 - mNumUnlockedShines);
 		}
 
 		// Show arrows if we have more than one shine unlocked.
@@ -1074,20 +1085,12 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					updated = false;
 				}
 
-				// These are probably inlined functions.
-				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha = var1;
+				JUtility::TColor col1(0, 0, 0, var1);
+				JUtility::TColor col2(0, 0, 0, var1);
+				JUtility::TColor col3(0, 0, 0, var2);
+				JUtility::TColor col4(0, 0, 0, var2);
 				((J2DPicture*)mLetterBoxTop->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
+				    ->setCornerColor(col1, col2, col3, col4);
 			}
 
 			{
@@ -1111,19 +1114,12 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					updated = false;
 				}
 
-				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha = var1;
+				JUtility::TColor col1(0, 0, 0, var1);
+				JUtility::TColor col2(0, 0, 0, var1);
+				JUtility::TColor col3(0, 0, 0, var2);
+				JUtility::TColor col4(0, 0, 0, var2);
 				((J2DPicture*)mLetterBoxBottom->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
+				    ->setCornerColor(col1, col2, col3, col4);
 
 				if (updated) {
 					mMenuState            = WAIT_BEFORE_CLOSE;
@@ -1146,7 +1142,6 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			ReInitializeGX();
 			SMS_DrawInit();
 			J2DOrthoGraph graph(gfx->getViewport());
-			graph.setup2D();
 			graph.setup2D();
 			mMenuScreen->draw(0, 0, &graph);
 		}

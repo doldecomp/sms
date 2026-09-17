@@ -106,10 +106,12 @@ void TSplashManager::makeDL(JDrama::TGraphics* param_1) const
 		GXColor color
 		    = (GXColor) { 0xff, 0xff, 0xff, splash->unk10 * 255 / unk648 };
 
+		f32 fVar2;
 		thing[0].set(pos.x - fVar1, pos.y + fVar1, pos.z);
 		thing[1].set(pos.x + fVar1, pos.y + fVar1, pos.z);
 		thing[2].set(pos.x + fVar1, pos.y - fVar1, pos.z);
-		thing[3].set(pos.x - fVar1, pos.y - fVar1, pos.z);
+		fVar2 = pos.y - fVar1;
+		thing[3].set(pos.x - fVar1, fVar2, pos.z);
 
 		unk640->requestCol(thing, color, splash->unk11);
 	}

@@ -10,6 +10,7 @@
 
 // rogue
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 using namespace MSoundSESystem;
 
@@ -54,8 +55,8 @@ f32 MSRandVol::getRandVol(u32 param_1)
 	f32 d = JALCalc::getRandom(
 	            mAmplitudes[param_1 >> MSSeSwBit_RandomVolumeAmplitudeShift & 3]
 	                * mAmplitude,
-	            mCSlopes[param_1 >> MSSeSwBit_RandomVolumeCSlopeShift & 3],
-	            mPSlopes[param_1 >> MSSeSwBit_RandomVolumePSlopeShift & 3])
+	            mCSlopes[param_1 >> MSSeSwBit_RandomVolumePSlopeShift & 3],
+	            mPSlopes[param_1 >> MSSeSwBit_RandomVolumeCSlopeShift & 3])
 	        + 1.0f;
 
 	f32 x = d < 0.0f ? 0.0f : d;
@@ -472,11 +473,6 @@ JAISound* MSoundSE::startSoundSystemSE(u32 id, u32 param_2,
 	return sound;
 }
 
-static f32 vecLength(const Vec& vec)
-{
-	return std::sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-}
-
 void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
                                        Vec* param_3, f32 param_4, u32 param_5,
                                        u32 ground_no,
@@ -486,7 +482,7 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 	f32 fVar7 = param_4;
 	switch (id) {
 	case MSD_SE_BS_BSPAKU_POLLUT_IMI:
-		fVar7 = position->y;
+		param_4 = position->y;
 		break;
 
 	case MSD_SE_OBJ_ROPE_CLEAK_A:
@@ -494,11 +490,11 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 	case MSD_SE_OBJ_ROPE_CLEAK_ROLL:
 	case MSD_SE_OBJ_ROPE_CLEAK_HALFA:
 	case MSD_SE_OBJ_ROPE_CLEAK_HALFB:
-		fVar7 = std::fabs(fVar7);
+		param_4 = std::fabs(param_4);
 		break;
 
 	case MSD_SE_OBJ_JET_COASTER_IMI:
-		fVar7 = position->y;
+		param_4 = position->y;
 		break;
 
 	case MSD_SE_OBJ_MA_MIRROR_MOVE:
@@ -506,8 +502,8 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 
 	case MSD_SE_IT_EGG_BOUND:
 	case MSD_SE_IT_DRIAN_BOUND:
-		fVar7 = vecLength(*param_3);
-		fVar7 = std::fabs(fVar7);
+		param_4 = VECMag(param_3);
+		param_4 = std::fabs(param_4);
 		break;
 
 	case MSD_SE_MA_KICK_ENEMY:
@@ -518,7 +514,7 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 		break;
 	}
 
-	if (JALSystem::gateCheckFunc(id, fVar7) != true) {
+	if (JALSystem::gateCheckFunc(id, param_4) != true) {
 		JAIActor actor(position, position, position, ground_no);
 		JAISound* sound
 		    = startSoundActorInner(id, out_handle, &actor, fade, camera_idx);
@@ -533,13 +529,13 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 			}
 
 			case MSD_SE_OBJ_JET_COASTER_IMI:
-				f32 d = JALCalc::linearTransform(param_4, 0.0f, 20.0f, 0.0f,
-				                                 1.0f, true);
+				f32 d = JALCalc::linearTransform(fVar7, 0.0f, 20.0f, 0.0f, 1.0f,
+				                                 true);
 				sound->setVolume(d, 0, 0);
 				break;
 			}
 
-			JALSystem::processModFunc(sound, fVar7, 0, 0);
+			JALSystem::processModFunc(sound, param_4, 0, 0);
 		}
 	}
 }
@@ -550,14 +546,16 @@ bool MSoundSE::checkSoundArea(u32 param_1, const Vec& param_2)
 
 	switch (param_1) {
 	case 7: {
+		Vec vec1;
 		Vec vec = *MSGMSound->unkAC[0].mPosition;
 		vec.y += 75.0f;
-		Vec vec1  = vec;
+		vec1      = vec;
 		int iVar2 = gpCubeCamera->getInCubeNo(vec1);
 
+		Vec vec3;
 		Vec vec2 = param_2;
 		vec2.y += 75.0f;
-		Vec vec3  = vec2;
+		vec3      = vec2;
 		int iVar3 = gpCubeCamera->getInCubeNo(vec3);
 
 		if (iVar3 != -1) {

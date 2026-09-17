@@ -10,9 +10,8 @@ extern TTargetArrow* gpTargetArrow;
 
 class TTargetArrow : public JDrama::TViewObj {
 public:
-	TTargetArrow(const char* name = "?")
-	    : JDrama::TViewObj(name)
-	    , unk10(nullptr)
+	TTargetArrow()
+	    : unk10(nullptr)
 	    , unk14(0)
 	{
 	}

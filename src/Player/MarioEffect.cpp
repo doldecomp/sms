@@ -36,9 +36,9 @@ void TMarioEffect::init(TMario* mario)
 	    = JKRFileLoader::getGlbResource("/mario/04_tobikomi/04_tobikomi.bmd");
 	u32 flag = J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift);
 	for (int i = 0; i < 2; ++i) {
-		J3DModel* model = new J3DModel(
-		    J3DModelLoaderDataBase::load(tobikomiBmd, flag), 0, 1);
-		unk74[i]->setModel(model, 0);
+		unk74[i]->setModel(
+		    new J3DModel(J3DModelLoaderDataBase::load(tobikomiBmd, flag), 0, 1),
+		    0);
 	}
 
 	MActorAnmData* anmDataWaterboost = new MActorAnmData;
@@ -49,12 +49,12 @@ void TMarioEffect::init(TMario* mario)
 
 	void* waterboostBmd = JKRFileLoader::getGlbResource(
 	    "/mario/01_waterboost/01_waterboost.bmd");
-	J3DModel* waterboostModel
-	    = new J3DModel(J3DModelLoaderDataBase::load(
-	                       waterboostBmd, J3DMLF_MaterialPEFull
-	                                          | (4 << J3DMLF_TevStageNumShift)),
-	                   0, 1);
-	unk80->setModel(waterboostModel, 0);
+	unk80->setModel(
+	    new J3DModel(J3DModelLoaderDataBase::load(
+	                     waterboostBmd, J3DMLF_MaterialPEFull
+	                                        | (4 << J3DMLF_TevStageNumShift)),
+	                 0, 1),
+	    0);
 	unk80->setBck("01_waterboost_in");
 	unk80->setBtk("01_waterboost");
 	unk80->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
@@ -67,7 +67,7 @@ void TMarioEffect::setJumpIntoWaterEffect()
 {
 	f32 absVelY = unk68->mVel.y;
 	if (absVelY < 0.0f)
-		absVelY = -absVelY;
+		absVelY = -unk68->mVel.y;
 
 	if (absVelY < unk68->mWaterEffectParams.mJumpIntoMdlEffectSpY.get())
 		return;
@@ -75,15 +75,20 @@ void TMarioEffect::setJumpIntoWaterEffect()
 	if (unk68->mFloorPosition.z - unk68->mFloorPosition.y < 50.0f)
 		return;
 
-	int idx = getThing();
+	int idx = -1;
+	if (unk6C[0] == 0)
+		idx = 0;
+	if (unk6C[1] == 0)
+		idx = 1;
 	if (idx < 0)
 		return;
 
 	Mtx localMtx;
 	MTXCopy(unk68->unk220, localMtx);
 
-	f32 minY = unk68->mWaterEffectParams.mJumpIntoMinY.get();
-	f32 maxY = unk68->mWaterEffectParams.mJumpIntoMaxY.get();
+	TMario* mario = unk68;
+	f32 minY      = mario->mWaterEffectParams.mJumpIntoMinY.get();
+	f32 maxY      = mario->mWaterEffectParams.mJumpIntoMaxY.get();
 
 	f32 ratio;
 	if (absVelY < minY)
@@ -122,7 +127,11 @@ void TMarioEffect::setJumpIntoWaterEffect()
 
 void TMarioEffect::setJumpIntoWaterEffectSmall()
 {
-	int idx = getThing();
+	int idx = -1;
+	if (unk6C[0] == 0)
+		idx = 0;
+	if (unk6C[1] == 0)
+		idx = 1;
 	if (idx < 0)
 		return;
 

@@ -13,7 +13,8 @@ void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 	mSavedModeBeforeTalk = mMode;
 
 	int r31 = CAMERA_MODE_TALK_A;
-	switch (param_1->getActorType()) {
+	int r30 = param_1->getActorType();
+	switch (r30) {
 	case 0x400001B:
 		r31 = CAMERA_MODE_TALK_C;
 		break;

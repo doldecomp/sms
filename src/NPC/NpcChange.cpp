@@ -217,13 +217,8 @@ void TBaseNPC::releaseTaken_()
 {
 	f32 fVar1 = mPtrSaveNormal->mThrowSpeedXZ.get();
 	s16 uVar4 = CLBDegToShortAngle(unk158->mRotation.y);
-	f32 fVar2 = mPtrSaveNormal->mThrowSpeedY.get();
-	f32 s     = JMASSin(uVar4);
-	f32 c     = JMASCos(uVar4);
-
-	mVelocity.x = fVar1 * s;
-	mVelocity.y = fVar2;
-	mVelocity.z = fVar1 * c;
+	mVelocity.set(fVar1 * JMASSin(uVar4), mPtrSaveNormal->mThrowSpeedY.get(),
+	              fVar1 * JMASCos(uVar4));
 
 	onLiveFlag(LIVE_FLAG_UNK10000000);
 
@@ -324,7 +319,7 @@ void TBaseNPC::behaveToBeTrampled_()
 	case NPC_ANM_KIND_UNK7: {
 		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
 		const TNerveBase<TLiveActor>* latest  = mSpine->getLatestNerve();
-		if (latest == &TNerveNPCWet::theNerve()) {
+		if (current == &TNerveNPCWet::theNerve()) {
 			mSpine->pushNerve(&TNerveNPCWet::theNerve());
 			mSpine->setNext(nullptr);
 		} else if (current == nullptr && latest == &TNerveNPCWet::theNerve())
@@ -348,8 +343,8 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		if (gpMarDirector->isTalkOrDemoModeNow())
 			return;
 
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
-		                             nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+		                             &param_1->mPosition, 0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 		                              0.0f, 0, 0, 4);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_FIRE_FIGHTING))
@@ -464,7 +459,7 @@ void TBaseNPC::changeNerveProc_()
 		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
-			if (isSunflowerReviving() && isNerveCanGoToTalk()
+			if (isNerveCanGoToTalk()
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
@@ -585,8 +580,10 @@ void TBaseNPC::changeNerveProc_()
 void TBaseNPC::setPosAndInitAfterSinkBottom()
 {
 	JGeometry::TVec3<f32> pos = unk194;
+	f32 y                     = pos.y;
+	f32 z                     = pos.z;
 
-	bool cVar8 = gpPollution->isPolluted(pos.x, pos.y, pos.z);
+	bool cVar8 = gpPollution->isPolluted(pos.x, y, z);
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
 	            | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000
 	            | LIVE_FLAG_UNK40000 | LIVE_FLAG_UNK400000
@@ -613,7 +610,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
 		           | LIVE_FLAG_SINK_BOTTOM);
 		unk1C4 = mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
-		    pos.x, pos.y + getHeadHeight(), pos.z, &mGroundPlane);
+		    pos.x, y + getHeadHeight(), z, &mGroundPlane);
 		pos.y = unk1C4 - mIndividualParams->mSinkHeight.get();
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {

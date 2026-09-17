@@ -48,6 +48,8 @@ public:
 	{
 	}
 
+	static f32 mSpeed;
+
 public:
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ u8 unk140;
@@ -67,6 +69,10 @@ public:
 	    : TFence(name)
 	{
 	}
+
+	static f32 mWaterAccel;
+	static f32 mBackSpeed;
+	static int mTurnedWaitTime;
 };
 
 class TFenceWaterH : public TFenceWater {
@@ -92,6 +98,9 @@ public:
 	    : TFence(name)
 	{
 	}
+
+	static f32 mFallHeight;
+	static int mWaitTime;
 };
 
 #endif

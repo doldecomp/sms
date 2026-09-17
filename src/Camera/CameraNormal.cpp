@@ -57,7 +57,7 @@ void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 	TStagePositionInfo* info = (TStagePositionInfo*)gpPositionHolder->searchF(
 	    JDrama::TNameRef::calcKeyCode(name), name);
 	if (info != nullptr) {
-		*result = info->unkC;
+		*result = info->getPosition();
 	} else {
 		result->x = 0.0f;
 		result->y = 0.0f;
@@ -138,7 +138,7 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 					f32 f29;
 					f32 f30;
 
-					s16 sVar9 = *gpMarioAngleY - 0x8000;
+					int sVar9 = *gpMarioAngleY - 0x8000;
 					switch (mMode) {
 					case CAMERA_MODE_DIVING:
 					case CAMERA_MODE_HOVERING:

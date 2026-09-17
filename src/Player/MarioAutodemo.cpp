@@ -198,7 +198,7 @@ BOOL TMario::warpIn()
 
 		// Possibly TVec3 inaccuracies?
 		JGeometry::TVec3<f32> marioDist = holderPosOffset - mPosition;
-		mPosition                       = marioDist * 0.02f + mPosition;
+		mPosition                       = mPosition + marioDist * 0.02f;
 
 		f32 dist
 		    = mAutoDemoParams.mWarpInTremble.get() - marioDist.length() * 0.1f;
@@ -221,7 +221,7 @@ BOOL TMario::warpIn()
 			offUnk114(UNK114_FLAG_VISIBLE);
 			rumbleStart(0x15, 0x14);
 		}
-		if (mAutoDemoParams.mWarpInBallsTime.get() > (f32)mStatusTimer) {
+		if ((f32)mStatusTimer < mAutoDemoParams.mWarpInBallsTime.get()) {
 			mStatusTimer = 0;
 			unk468       = mAutoDemoParams.mWarpInVecBase.get();
 			mStatusState = 2;

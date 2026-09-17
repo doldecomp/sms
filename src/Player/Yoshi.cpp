@@ -241,10 +241,10 @@ void TYoshi::init(TMario* param_1)
 	mBodyAnmSoundTable[16] = JKRGetResource("/yoshi/bas/yoshi_sidewalk_l.bas");
 	mBodyAnmSoundTable[17] = JKRGetResource("/yoshi/bas/yoshi_sidewalk_r.bas");
 	mBodyAnmSoundTable[18] = JKRGetResource("/yoshi/bas/yoshi_slide_end.bas");
-	mBodyAnmSoundTable[20] = JKRGetResource("/yoshi/bas/yoshi_wait.bas");
-	mBodyAnmSoundTable[21] = JKRGetResource("/yoshi/bas/yoshi_wait_alone.bas");
-	mBodyAnmSoundTable[22] = JKRGetResource("/yoshi/bas/yoshi_walk.bas");
-	mBodyAnmSoundTable[23] = JKRGetResource("/yoshi/bas/yoshi_water_die.bas");
+	mBodyAnmSoundTable[22] = JKRGetResource("/yoshi/bas/yoshi_wait.bas");
+	mBodyAnmSoundTable[23] = JKRGetResource("/yoshi/bas/yoshi_wait_alone.bas");
+	mBodyAnmSoundTable[24] = JKRGetResource("/yoshi/bas/yoshi_walk.bas");
+	mBodyAnmSoundTable[25] = JKRGetResource("/yoshi/bas/yoshi_water_die.bas");
 	// clang-format on
 
 	changeAnimation(0x17);
@@ -392,15 +392,17 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 	mLastTranslation = pos;
 	mTranslation     = pos;
 	mTranslation.y += 1.0f;
-	mEggRotSpeed = DEG2SHORTANGLE(yrot);
-	mState       = STATE_UNK2;
+	s16 eggRotSpeed = DEG2SHORTANGLE(yrot);
+	mEggRotSpeed    = eggRotSpeed;
+	mState          = STATE_UNK2;
 
 	changeAnimation(0);
 
-	TTakeActor* fruit = (TTakeActor*)egg->getFruit();
+	THitActor* fruit      = egg->getFruit();
+	TTakeActor* takeActor = (TTakeActor*)fruit;
 	if (mMario->getHeldObject() == fruit) {
-		fruit->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_UNK8);
-		fruit->mHolder      = nullptr;
+		takeActor->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_UNK8);
+		takeActor->mHolder  = nullptr;
 		mMario->mHeldObject = nullptr;
 	}
 
@@ -419,7 +421,7 @@ bool TYoshi::disappear()
 		if (mState == STATE_MOUNTED)
 			mMario->getOffYoshi(true);
 
-		if (mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
+		if (mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER) != 0) {
 			mState = STATE_DROWNING;
 			changeAnimation(MSD_SE_PO_SPREAD);
 		} else {
@@ -626,27 +628,8 @@ void TYoshi::thinkUpper()
 
 	J3DJoint* joint
 	    = mActor->getModel()->getModelData()->getJointNodePointer(18);
-	const TWaterGun* waterGun = mMario->mWaterGun;
-
-	bool shouldUseEatMtx = false;
-
-	if (mTongue->mState != TYoshiTongue::STATE_IDLE
-	    && waterGun->mCurrentWater != 0) {
-		if (waterGun->getCurrentNozzle()->getNozzleKind() == 1) {
-			if (((TNozzleTrigger*)waterGun->getCurrentNozzle())->unk385
-			    == TNozzleTrigger::ACTIVE)
-				shouldUseEatMtx = true;
-			else
-				shouldUseEatMtx = false;
-		} else {
-			if (waterGun->getCurrentNozzle()->unk378 > 0.0f)
-				shouldUseEatMtx = true;
-			else
-				shouldUseEatMtx = false;
-		}
-	}
-
-	if (shouldUseEatMtx) {
+	if (mTongue->mState == TYoshiTongue::STATE_IDLE
+	    && mMario->mWaterGun->isEmitting()) {
 		if (joint->getMtxCalc() != unk54) {
 			unk5C.setFrame(unk5C.getStart());
 			unk5C.setRate(1.0f);
@@ -658,14 +641,14 @@ void TYoshi::thinkUpper()
 
 		unk4C->setFrame(unk5C.getFrame());
 	} else {
-		if (joint->getMtxCalc() == unk58) {
+		if (joint->getMtxCalc() == unk54) {
 			unk5C.setFrame(unk5C.getStart());
 			unk5C.setRate(1.0f);
 			unk5C.setEnd(unk50->getFrameMax());
 			unk5C.setFrame(0.0f);
 			joint->setMtxCalc(unk58);
 			mBodyAnmSound->initAnmSound(mBodyAnmSoundTable[4], 1, 0.0f);
-		} else if (joint->getMtxCalc() != unk58) {
+		} else if (joint->getMtxCalc() == unk58) {
 			if (unk5C.checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 			                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
 				joint->setMtxCalc(nullptr);
@@ -692,8 +675,6 @@ void TYoshi::emitTongue()
 			break;
 		++tries;
 	} while (tries < 10);
-
-	unkDC = 3;
 }
 
 void TYoshi::doSearch()
@@ -720,6 +701,7 @@ void TYoshi::doSearch()
 		mEggRotSpeed = prev + delta;
 		if (delta > -256 && delta < 256) {
 			emitTongue();
+			unkDC = 3;
 			changeAnimation(3);
 		}
 		break;
@@ -728,6 +710,7 @@ void TYoshi::doSearch()
 	case 2:
 		if (mTongue->findTarget(false, true) != nullptr) {
 			emitTongue();
+			unkDC = 3;
 		} else {
 			unkDE = (s16)((f32)(unkEA - unkE8) * MsRandF() + (f32)unkE8);
 			unkDC = 0;
@@ -1049,11 +1032,12 @@ void TYoshi::calcAnim()
 	}
 
 	u32 soundFlags = mMario->mSoundFlags;
+	f32 rate       = mActor->getFrameCtrl(ANM_TYPE_BCK)->getRate();
+	MActor* actor  = mActor;
 
 	mBodyAnmSound->animeLoop(&mTranslation,
-	                         mActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame(),
-	                         mActor->getFrameCtrl(ANM_TYPE_BCK)->getRate(),
-	                         soundFlags + 0x10000000, 4);
+	                         actor->getFrameCtrl(ANM_TYPE_BCK)->getFrame(),
+	                         rate, soundFlags + 0x10000000, 4);
 	mTongueAnmSound->animeLoop(&unkFC, unk5C.getFrame(), unk5C.getRate(),
 	                           soundFlags + 0x10000000, 4);
 }
@@ -1073,12 +1057,14 @@ void TYoshi::entry()
 	if (!isHatched())
 		return;
 
+	s32 tmp;
 	bool bVar1 = true;
 	if (mState == STATE_UNMOUNTED || mState == STATE_MOUNTED) {
-		if (unkC >= 360 && unkC < 600 && !(unkC & 0x10))
+		tmp = unkC;
+		if (tmp >= 360 && tmp < 600 && !(tmp & 0x10))
 			bVar1 = false;
 
-		if (unkC < 360 && !(unkC & 0x8))
+		if (unkC < 360 && !(tmp & 0x8))
 			bVar1 = false;
 	}
 
@@ -1098,39 +1084,29 @@ void TYoshi::entry()
 	s16 g = (s16)unk84.y;
 	s16 b = (s16)unk84.z;
 
+	GXColorS10 tevColor;
+	tevColor.r = r;
+	tevColor.g = g;
+	tevColor.b = b;
+	tevColor.a = 0xFF;
+
 	J3DModelData* modelData = mActor->getModel()->getModelData();
 	for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
-		J3DGXColorS10 tevColor;
-		tevColor.color.r = r;
-		tevColor.color.g = g;
-		tevColor.color.b = b;
-		tevColor.color.a = 0xFF;
-		modelData->getMaterialNodePointer(i)->setTevColor(2, &tevColor);
+		modelData->getMaterialNodePointer(i)->getTevBlock()->setTevColor(
+		    2, tevColor);
 	}
 
-	{
-		J3DGXColorS10 tevColor;
-		tevColor.color.r = r;
-		tevColor.color.g = g;
-		tevColor.color.b = b;
-		tevColor.color.a = 0xFF;
-		mMirrorModels[0]
-		    ->getModelData()
-		    ->getMaterialNodePointer(0)
-		    ->setTevColor(2, &tevColor);
-	}
+	mMirrorModels[0]
+	    ->getModelData()
+	    ->getMaterialNodePointer(0)
+	    ->getTevBlock()
+	    ->setTevColor(2, tevColor);
 
-	{
-		J3DGXColorS10 tevColor;
-		tevColor.color.r = r;
-		tevColor.color.g = g;
-		tevColor.color.b = b;
-		tevColor.color.a = 0xFF;
-		mMirrorModels[1]
-		    ->getModelData()
-		    ->getMaterialNodePointer(0)
-		    ->setTevColor(2, &tevColor);
-	}
+	mMirrorModels[1]
+	    ->getModelData()
+	    ->getMaterialNodePointer(0)
+	    ->getTevBlock()
+	    ->setTevColor(2, tevColor);
 
 	mActor->entry();
 	mMirrorModels[0]->entry();

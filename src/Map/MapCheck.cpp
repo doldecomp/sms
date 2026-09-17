@@ -175,15 +175,19 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
                                      const TBGCheckList* head,
                                      const TBGCheckData** result)
 {
+	param_4 &= 0x4;
 	while (head) {
 		const TBGCheckData* data = head->unk8;
 		head                     = head->mNext;
 
-		if (param_4 & 0x4 && data->isWaterThrough())
+		if ((s32)param_4 != 0 && data->isWaterThrough())
 			continue;
 
-		if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-		        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
+		f32 x1 = data->mPoint1.x;
+		f32 z1 = data->mPoint1.z;
+
+		if ((z1 - z) * (data->mPoint2.x - x1)
+		        - (x1 - x) * (data->mPoint2.z - z1)
 		    > 1.0f)
 			continue;
 
@@ -192,8 +196,8 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
 		    > 1.0f)
 			continue;
 
-		if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-		        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
+		if ((data->mPoint3.z - z) * (x1 - data->mPoint3.x)
+		        - (data->mPoint3.x - x) * (z1 - data->mPoint3.z)
 		    > 1.0f)
 			continue;
 
@@ -244,6 +248,8 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
                                        const TBGCheckList* head,
                                        const TBGCheckData** result)
 {
+	s32 ignoreWaterThrough = flags & IGNORE_WATER_THROUGH;
+	s32 ignoreWaterSurface = flags & IGNORE_WATER_SURFACE;
 	while (head) {
 		const TBGCheckData* data = head->unk8;
 		head                     = head->getNext();
@@ -251,14 +257,17 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 		if (data->mMinY > y)
 			continue;
 
-		if ((flags & IGNORE_WATER_THROUGH) && data->isWaterThrough())
+		if ((s32)ignoreWaterThrough != 0 && data->isWaterThrough())
 			continue;
 
-		if ((flags & IGNORE_WATER_SURFACE) && data->isWaterSurface())
+		if ((s32)ignoreWaterSurface != 0 && data->isWaterSurface())
 			continue;
 
-		if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-		        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
+		f32 x1 = data->mPoint1.x;
+		f32 z1 = data->mPoint1.z;
+
+		if ((z1 - z) * (data->mPoint2.x - x1)
+		        - (x1 - x) * (data->mPoint2.z - z1)
 		    < -1.0f)
 			continue;
 
@@ -267,8 +276,8 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 		    < -1.0f)
 			continue;
 
-		if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-		        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
+		if ((data->mPoint3.z - z) * (x1 - data->mPoint3.x)
+		        - (data->mPoint3.x - x) * (z1 - data->mPoint3.z)
 		    < -1.0f)
 			continue;
 
@@ -289,22 +298,25 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
                                    const TBGCheckData** result) const
 {
-	if (x < -mGridExtentX || mGridExtentX <= x || z < -mGridExtentY
-	    || mGridExtentY <= z) {
+	JGeometry::TVec2<f32> position(x, z);
+	if (position.x < -mGridExtentX || mGridExtentX <= position.x
+	    || position.y < -mGridExtentY || mGridExtentY <= position.y) {
 		*result = &mIllegalCheckData;
 		return -32767.0f;
 	}
 
-	int gridX = (x + mGridExtentX) * (1.0f / 1024);
-	int gridZ = (z + mGridExtentY) * (1.0f / 1024);
+	int gridX = (position.x + mGridExtentX) * (1.0f / 1024);
+	int gridZ = (position.y + mGridExtentY) * (1.0f / 1024);
 
 	const TBGCheckData* local_60;
-	f32 dVar5 = checkGroundList(
-	    x, y, z, flags, getGridRoot18(gridX, gridZ).getRoofList(), &local_60);
+	f32 dVar5 = checkGroundList(x, y, z, flags,
+	                            getGridRoot18(gridX, gridZ).unk0[0].getNext(),
+	                            &local_60);
 
 	const TBGCheckData* local_64;
-	f32 dVar6 = checkGroundList(
-	    x, y, z, flags, getGridRoot14(gridX, gridZ).getRoofList(), &local_64);
+	f32 dVar6 = checkGroundList(x, y, z, flags,
+	                            getGridRoot14(gridX, gridZ).unk0[0].getNext(),
+	                            &local_64);
 
 	if (mGroundPlane != nullptr) {
 		const TBGCheckData* local_68;
@@ -378,7 +390,8 @@ static bool bgIntersectLine(const TBGCheckData* data,
 
 	f32 angleSum = 0.0f;
 
-	angleSum += fabsf(angle_between(a, b));
+	f32 angle = angle_between(a, b);
+	angleSum += fabsf(angle);
 	angleSum += fabsf(angle_between(b, c));
 	angleSum += fabsf(angle_between(c, a));
 
@@ -413,8 +426,9 @@ static bool LineInLineXZ(const JGeometry::TVec2<f32>& a0,
                          const JGeometry::TVec2<f32>& b0,
                          const JGeometry::TVec2<f32>& b1)
 {
-	if ((b0 - a0).cross(a1 - a0) * (b1 - a0).cross(a1 - a0) <= 0.0f
-	    && (a0 - b0).cross(b1 - b0) * (a1 - b0).cross(b1 - b0) <= 0.0f)
+	f32 value = (b0 - a0).cross(a1 - a0) * (b1 - a0).cross(a1 - a0);
+	if (value <= 0.0f
+	    && (a1 - b0).cross(b1 - b0) * (a0 - b0).cross(b1 - b0) <= 0.0f)
 		return true;
 
 	return false;
@@ -424,8 +438,8 @@ const TBGCheckData* TMapCollisionData::intersectLine(
     const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
     bool front_only, JGeometry::TVec3<f32>* hit_pos) const
 {
-	JGeometry::TVec2<int> start2d(start.x, start.z);
 	JGeometry::TVec2<int> end2d(end.x, end.z);
+	JGeometry::TVec2<int> start2d(start.x, start.z);
 
 	int minXi = start2d.x;
 	int maxXi = end2d.x;
@@ -442,9 +456,9 @@ const TBGCheckData* TMapCollisionData::intersectLine(
 	}
 
 	int minGridZ = (int)((minZi + mGridExtentY) * (1.0f / 1024));
-	int minGridX = (int)((minXi + mGridExtentX) * (1.0f / 1024));
-	int maxGridX = (int)((maxXi + mGridExtentX) * (1.0f / 1024));
 	int maxGridZ = (int)((maxZi + mGridExtentY) * (1.0f / 1024));
+	int maxGridX = (int)((maxXi + mGridExtentX) * (1.0f / 1024));
+	int minGridX = (int)((minXi + mGridExtentX) * (1.0f / 1024));
 
 	for (int gridZ = minGridZ; gridZ <= maxGridZ; ++gridZ) {
 		for (int gridX = minGridX; gridX <= maxGridX; ++gridX) {

@@ -51,9 +51,10 @@ void MAnmSound::startAnimSound(void* interface, u32 id,
 			break;
 
 		case 7: {
-			u32 bVar2 = actor->mGroundNumber >> 24;
-			u32 a     = bVar2 & 0xF;
-			u8 b      = bVar2 >> 4;
+			u32 ground = actor->mGroundNumber;
+			u32 bVar2  = ground >> 24;
+			u32 a      = bVar2 & 0xF;
+			u8 b       = bVar2 >> 4;
 			MSGMSound->startMarioVoice(id, a, b);
 			return;
 		}
@@ -95,7 +96,7 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 		if (ptr->mEntries[mDataCounter].unk10 & 0xFFFF0000) {
 			if (ptr->mEntries[mDataCounter].unk10 & 0xFF000000) {
 				u32 uVar5 = mLoopCount;
-				u32 uVar6 = (uVar5 >> 24) + 1;
+				u32 uVar6 = (ptr->mEntries[mDataCounter].unk10 >> 24) + 1;
 				if (uVar5 != 0) {
 					u32 uVar3 = uVar5 + unk98 % uVar6;
 					if (uVar3 % uVar6 != 0)

@@ -343,8 +343,8 @@ void TPollutionLayer::initLayerInfo(const TPollutionLayerInfo* param_1)
 
 void TPollutionLayer::initPollutionTex(const char* depth_tex_name)
 {
-	const TPollutionLayerInfo* info
-	    = ((TPollutionManager*)mManager)->getLayerInfo(mIndexInParent);
+	TPollutionManager* manager      = (TPollutionManager*)mManager;
+	const TPollutionLayerInfo* info = manager->getLayerInfo(mIndexInParent);
 	initLayerInfo(info);
 	mPos.init(this, info->mVerticalOffset, info->mTexelSize, info->mHeightMap,
 	          info->mLog2Width, info->mLog2Height);

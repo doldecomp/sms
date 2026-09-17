@@ -505,25 +505,26 @@ void TBaseNPC::moveObject()
 		mCoinCtrl->updateCoin();
 
 	if (mBalloonCtrl != nullptr) {
-		int prev = mBalloonCtrl->unk0;
-		if (!gpMarDirector->isTalkOrDemoModeNow()
-		    && mBalloonCtrl->updateBalloon()) {
-			if (mHolder != nullptr) {
-				switch (prev) {
-				case 0xE004F:
-					mBalloonCtrl->setNextMessage(0xE0051, 0x1C20);
-					break;
-				case 0xE0050:
-					break;
-				case 0xE0051:
-					mBalloonCtrl->setNextMessage(0xE004F, 0x1C20);
-					break;
-				}
-			} else {
-				switch (prev) {
-				case 0xE0050:
-					mBalloonCtrl->setNextMessage(0xE0050, 0x1C20);
-					break;
+		if (!gpMarDirector->isTalkOrDemoModeNow()) {
+			int prev = mBalloonCtrl->unk0;
+			if (mBalloonCtrl->updateBalloon()) {
+				if (mHolder != nullptr) {
+					switch (prev) {
+					case 0xE004F:
+						mBalloonCtrl->setNextMessage(0xE0051, 0x1C20);
+						break;
+					case 0xE0050:
+						break;
+					case 0xE0051:
+						mBalloonCtrl->setNextMessage(0xE004F, 0x1C20);
+						break;
+					}
+				} else {
+					switch (prev) {
+					case 0xE0050:
+						mBalloonCtrl->setNextMessage(0xE0050, 0x1C20);
+						break;
+					}
 				}
 			}
 		}
@@ -669,7 +670,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		                  gpCamera->unk148.x - gpCamera->unk124.x);
 		JGeometry::TVec3<f32> local_4C = gpCamera->unk124;
 		if (!MsIsInSight(local_4C, SHORTANGLE2DEG(angle), mPosition,
-		                 farClip + 500.0f, 3.46875f, 4.28125f)) {
+		                 farClip + 500.0f, 120.0f, 800.0f)) {
 			updateSquareToMario();
 			bVar5 = false;
 		}

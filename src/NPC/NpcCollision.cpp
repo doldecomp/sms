@@ -69,16 +69,13 @@ void TBaseNPC::execNpcObjCollision_()
 				local_4C.z = 0.0f;
 			}
 		} else {
-			f32 dVar8;
-			if (mAttackRadius + mCollisions[i]->mDamageRadius
-			        - MsVECMag2(local_4C)
-			    >= 0.0f) {
-				dVar8 = mAttackRadius + mCollisions[i]->mDamageRadius
-				        - MsVECMag2(local_4C);
-			} else {
-				dVar8 = -(mAttackRadius + mCollisions[i]->mDamageRadius
-				          - MsVECMag2(local_4C));
-			}
+			f32 dVar8 = mAttackRadius + mCollisions[i]->mDamageRadius
+			                        - MsVECMag2(local_4C)
+			                    >= 0.0f
+			                ? mAttackRadius + mCollisions[i]->mDamageRadius
+			                      - MsVECMag2(local_4C)
+			                : -(mAttackRadius + mCollisions[i]->mDamageRadius
+			                    - MsVECMag2(local_4C));
 
 			if (dVar8 < 0.001f)
 				dVar8 = 0.001f;
@@ -97,17 +94,19 @@ void TBaseNPC::execNpcObjCollision_()
 void TBaseNPC::setVariableDamageRadius_()
 {
 	const TNpcInitInfo* initInfo = SMSGetNpcInitData(mActorType - 0x4000001);
-	f32 fVar6                    = mScaling.x * initInfo->mDamageRadius;
+	f32 fVar6                    = initInfo->mDamageRadius;
+	fVar6                        = mScaling.x * fVar6;
+	f32 fVar7                    = fVar6;
 	if (isBeTrampledNpc() && !SMS_IsMarioTouchGround4cm()
 	    && SMS_GetMarioPos().y > mPosition.y) {
 		JGeometry::TVec3<f32> diff;
-		diff.sub(mPosition, SMS_GetMarioPos());
+		diff.sub(SMS_GetMarioPos(), mPosition);
 		diff.y = 0.0f;
 		if (diff.squared() < CLBSquared(fVar6 * 3.0f))
-			fVar6 = mIndividualParams->mSLDamageRadiusSmall.get();
+			fVar7 = mIndividualParams->mSLDamageRadiusSmall.get();
 	}
 
-	mDamageRadius = fVar6;
+	mDamageRadius = fVar7;
 	calcEntryRadius();
 }
 

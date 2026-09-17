@@ -25,13 +25,15 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 
 	mtxT.identity();
 	mtxT.setRotate(param_axis, angle);
-	mtxT.mult33(*vec);
+	JGeometry::TVec3<f32> old = *vec;
+	mtxT.mult33(old, *vec);
 }
 
 void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
                    const f32 (*view_mtx)[4], const Vec& world_pos,
                    u32* out_depth, bool disable_z_clip)
 {
+	JGeometry::TVec3<f32> projPos;
 	Vec camSpacePos;
 
 	MTXMultVec((MtxPtr)view_mtx, (Vec*)&world_pos, &camSpacePos);
@@ -43,19 +45,21 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
 
 	f32 perspectiveFactor = 1.0f / -camSpacePos.z;
 
-	f32 z = proj_mtx[2][2] * camSpacePos.z + proj_mtx[2][3];
-	z *= perspectiveFactor;
-	if (!disable_z_clip && (z > 0.0f || z < -1.0f)) {
+	projPos.z = proj_mtx[2][2] * camSpacePos.z + proj_mtx[2][3];
+	projPos.z *= perspectiveFactor;
+	if (!disable_z_clip && (projPos.z > 0.0f || projPos.z < -1.0f)) {
 		out_ndc_pos->x = out_ndc_pos->y = 10000.0f;
 		return;
 	}
 
-	f32 x = proj_mtx[0][0] * camSpacePos.x + proj_mtx[0][2] * camSpacePos.z;
-	f32 y = proj_mtx[1][1] * camSpacePos.y + proj_mtx[1][2] * camSpacePos.z;
-	out_ndc_pos->set(x * perspectiveFactor, y * perspectiveFactor);
+	projPos.set(proj_mtx[0][0] * camSpacePos.x + proj_mtx[0][2] * camSpacePos.z,
+	            proj_mtx[1][1] * camSpacePos.y + proj_mtx[1][2] * camSpacePos.z,
+	            projPos.z);
+	out_ndc_pos->set(projPos.x * perspectiveFactor,
+	                 projPos.y * perspectiveFactor);
 
 	if (out_depth != nullptr)
-		*out_depth = CLBLinearInbetween<u32>(0, 0xffffff, z + 1.0f);
+		*out_depth = CLBLinearInbetween<u32>(0, 0xffffff, projPos.z + 1.0f);
 }
 
 BOOL CLBChaseAngleDecrease(s16* value, s16 desired, s16 ratio)
@@ -175,7 +179,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 
 	if (param_3.y != 0.0f || param_3.x != 0.0f || param_3.z != 0.0f) {
 		if (param_3.z != 0.0f) {
-			s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
+			s16 zAngle = CLBDegToShortAngle(-param_3.z);
 			f32 cosZ   = JMASCos(zAngle);
 			f32 sinZ   = JMASSin(zAngle);
 
@@ -186,7 +190,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 		}
 
 		if (param_3.y != 0.0f) {
-			s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
+			s16 yAngle = CLBDegToShortAngle(-param_3.y);
 			f32 cosY   = JMASCos(yAngle);
 			f32 sinY   = JMASSin(yAngle);
 
@@ -197,7 +201,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 		}
 
 		if (param_3.x != 0.0f) {
-			s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
+			s16 xAngle = CLBDegToShortAngle(-param_3.x);
 			f32 cosX   = JMASCos(xAngle);
 			f32 sinX   = JMASSin(xAngle);
 
@@ -226,7 +230,7 @@ void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
 	f32 dz = param_1.z - param_2.z;
 
 	if (param_3.z != 0) {
-		s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
+		s16 zAngle = CLBDegToShortAngle(-param_3.z);
 		f32 cosZ   = JMASCos(zAngle);
 		f32 sinZ   = JMASSin(zAngle);
 
@@ -237,7 +241,7 @@ void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
 	}
 
 	if (param_3.y != 0) {
-		s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
+		s16 yAngle = CLBDegToShortAngle(-param_3.y);
 		f32 cosY   = JMASCos(yAngle);
 		f32 sinY   = JMASSin(yAngle);
 
@@ -248,7 +252,7 @@ void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
 	}
 
 	if (param_3.x != 0) {
-		s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
+		s16 xAngle = CLBDegToShortAngle(-param_3.x);
 		f32 cosX   = JMASCos(xAngle);
 		f32 sinX   = JMASSin(xAngle);
 
@@ -374,11 +378,12 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 		// [ cosY, 0, sinY]   [1,   0,     0 ]
 		// [   0,  1,   0 ] * [0, cosX, -sinX]
 		// [-sinY, 0, cosY]   [0, sinX,  cosX]
-		local_68.set(local_68.x * cosY
-		                 + (local_68.y * sinX + local_68.z * cosX) * sinY,
-		             local_68.y * cosX - local_68.z * sinX,
-		             -local_68.x * sinY
-		                 + (local_68.y * sinX + local_68.z * cosX) * cosY);
+		f32 y      = local_68.y;
+		local_68.y = y * cosX - local_68.z * sinX;
+		local_68.z = y * sinX + local_68.z * cosX;
+		f32 x      = local_68.x;
+		local_68.x = x * cosY + local_68.z * sinY;
+		local_68.z = -x * sinY + local_68.z * cosY;
 
 		local_e4.identity33();
 		local_e4.setRotate(local_80, fVar16.z);
@@ -392,11 +397,12 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 		f32 sinY = JMASSin(out_euler->y);
 		f32 cosY = JMASCos(out_euler->y);
 
-		local_74.set(local_74.x * cosY
-		                 + (local_74.y * sinX + local_74.z * cosX) * sinY,
-		             local_74.y * cosX - local_74.z * sinX,
-		             -local_74.x * sinY
-		                 + (local_74.y * sinX + local_74.z * cosX) * cosY);
+		f32 y      = local_74.y;
+		local_74.y = y * cosX - local_74.z * sinX;
+		local_74.z = y * sinX + local_74.z * cosX;
+		f32 x      = local_74.x;
+		local_74.x = x * cosY + local_74.z * sinY;
+		local_74.z = -x * sinY + local_74.z * cosY;
 
 		local_118.identity33();
 		local_118.setRotate(local_80, fVar16.z);

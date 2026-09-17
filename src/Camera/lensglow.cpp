@@ -51,20 +51,24 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 		unk6C = 10.0f;
 	}
 
-	char buf[0x100];
-	snprintf(buf, sizeof(buf), "%s/%s", base, "glow.bmd");
-	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf),
+	union {
+		u64 alignment;
+		char data[0x100];
+	} buf;
+	snprintf(buf.data, sizeof(buf.data), "%s/%s", base, "glow.bmd");
+	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf.data),
 	                                     J3DMLF_MaterialPEFull
 	                                         | (2 << J3DMLF_TevStageNumShift));
 	unk14 = new J3DModel(unk10, 0, 1);
 
-	snprintf(buf, sizeof(buf), "%s/%s", base, "glow.btk");
-	unk18
-	    = (J3DAnmTextureSRTKey*)J3DAnmLoaderDataBase::load(JKRGetResource(buf));
+	snprintf(buf.data, sizeof(buf.data), "%s/%s", base, "glow.btk");
+	unk18 = (J3DAnmTextureSRTKey*)J3DAnmLoaderDataBase::load(
+	    JKRGetResource(buf.data));
 	unk18->searchUpdateMaterialID(unk10);
 
-	snprintf(buf, sizeof(buf), "%s/%s", base, "glow.brk");
-	unk30 = (J3DAnmTevRegKey*)J3DAnmLoaderDataBase::load(JKRGetResource(buf));
+	snprintf(buf.data, sizeof(buf.data), "%s/%s", base, "glow.brk");
+	unk30 = (J3DAnmTevRegKey*)J3DAnmLoaderDataBase::load(
+	    JKRGetResource(buf.data));
 	unk30->searchUpdateMaterialID(unk10);
 
 	u16 i;
