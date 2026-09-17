@@ -1637,9 +1637,10 @@ DEFINE_NERVE(TNerveBWJump, TLiveActor)
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		boss->setVelocity(boss->calcVelocityToJumpToY(
-		    boss->getUnk104().getPoint(), boss->getTracer()->unkC,
-		    boss->getGravityY()));
+		const JGeometry::TVec3<f32>& goal = boss->getUnk104().getPoint();
+		f32 speed = boss->getTracer()->unkC;
+		boss->setVelocity(
+		    boss->calcVelocityToJumpToY(goal, speed, boss->getGravityY()));
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->mIsRolling = 0;
 	}
@@ -1710,9 +1711,10 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		boss->setVelocity(boss->calcVelocityToJumpToY(BW_BATH_POS, 10.0f,
-		                                              boss->getGravityY()));
+		JGeometry::TVec3<f32> velocity = boss->calcVelocityToJumpToY(
+		    BW_BATH_POS, 10.0f, boss->getGravityY());
 		boss->setGoalPath(TPathNode(BW_BATH_POS));
+		boss->mVelocity = velocity;
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->mIsRolling = 0;
 	}
@@ -1823,9 +1825,10 @@ DEFINE_NERVE(TNerveBWJumpAway, TLiveActor)
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		boss->setVelocity(boss->calcVelocityToJumpToY(BW_HEAD_START, 40.0f,
-		                                              boss->getGravityY()));
+		JGeometry::TVec3<f32> velocity = boss->calcVelocityToJumpToY(
+		    BW_HEAD_START, 40.0f, boss->getGravityY());
 		boss->setGoalPath(TPathNode(BW_HEAD_START));
+		boss->mVelocity = velocity;
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->mIsRolling = 0;
 	}
@@ -1872,9 +1875,11 @@ DEFINE_NERVE(TNerveBWFall, TLiveActor)
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		boss->setVelocity(boss->calcVelocityToJumpToY(
-		    boss->getPicket()->mPosition, 5.0f, boss->getGravityY()));
-		boss->setGoalPath(TPathNode(boss->getPicket()->mPosition));
+		const JGeometry::TVec3<f32>& picket = boss->getPicket()->mPosition;
+		JGeometry::TVec3<f32> velocity = boss->calcVelocityToJumpToY(
+		    picket, 5.0f, boss->getGravityY());
+		boss->setGoalPath(TPathNode(picket));
+		boss->mVelocity = velocity;
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->mIsRolling = 0;
 	}
