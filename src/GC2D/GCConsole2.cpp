@@ -352,7 +352,10 @@ static inline bool startLifeMeterDisappear(TGCConsole2* console, u16 frame)
 	return true;
 }
 
-// fabricated
+
+// fabricated. Only startInsertLife() uses this shape; the copy inside
+// updateLifeMeterState() goes through J2DPicture::setWhite instead, which is
+// where the ROM's eight out-of-line JUtility::TColor::set calls come from.
 static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
 {
 	if (console->unk1CC[0] >= 4) {
@@ -388,6 +391,20 @@ static inline void playLifeChangeSound(u32 sound)
 	if (gpMarDirector->mState == TMarDirector::STATE_UNK4
 	    && gpMarDirector->unk124 == 0) {
 		SMSGetMSound()->startSoundSystemSE(sound, 0, nullptr, 0);
+	}
+}
+
+// fabricated: the losing-a-segment sound picks a different id under water, and
+// the ROM tests the director state once before choosing, so this cannot be
+// playLifeChangeSound(airMode ? ... : ...).
+static inline void playLifeLostSound(bool airMode)
+{
+	if (gpMarDirector->mState == TMarDirector::STATE_UNK4
+	    && gpMarDirector->unk124 == 0) {
+		if (airMode)
+			SMSGetMSound()->startSoundSystemSE(0x480C, 0, nullptr, 0);
+		else
+			SMSGetMSound()->startSoundSystemSE(0x4823, 0, nullptr, 0);
 	}
 }
 
@@ -575,7 +592,8 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 			++console->unk1CC[0];
 			console->unk17C[console->unk1CC[0] * 2]->show();
 			playLifeChangeSound(0x4801);
-		} else if (console->unk1CC[0] > 0) {
+		} else if (console->unk1CC[0] != amount) {
+			playLifeLostSound(airMode);
 			console->unk17C[console->unk1CC[0] * 2]->hide();
 			console->unk17C[console->unk1CC[0] * 2]->setBounds(
 			    JUTRect(console->unk1D0[console->unk1CC[0]].x1,
@@ -588,32 +606,44 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 			            console->unk1D0[console->unk1CC[0]].x2,
 			            console->unk1D0[console->unk1CC[0]].y2));
 			--console->unk1CC[0];
-			playLifeChangeSound(0x4823);
+
+			if (console->unk1CC[0] == 0) {
+				console->unk17C[0]->hide();
+				console->unk17C[0]->setBounds(JUTRect(console->unk1D0[0].x1,
+				                                      console->unk1D0[0].y1,
+				                                      console->unk1D0[0].x2,
+				                                      console->unk1D0[0].y2));
+				console->unk17C[1]->setBounds(JUTRect(console->unk1D0[0].x1,
+				                                      console->unk1D0[0].y1,
+				                                      console->unk1D0[0].x2,
+				                                      console->unk1D0[0].y2));
+			}
 		}
+
 		console->unk1C = console->unk1CC[0];
 		if (console->unk1CC[0] >= 4) {
 			if (airMode) {
-				((J2DPicture*)console->unk178->getPane())->mWhite = 0x00FFFFFF;
-				((J2DPicture*)console->unk178->getPane())->mBlack = 0x003CFF00;
-				((J2DPicture*)console->unk17C[0])->mWhite         = 0x00FFFFFF;
-				((J2DPicture*)console->unk17C[0])->mBlack         = 0x003CFF00;
+				((J2DPicture*)console->unk178->getPane())
+				    ->setWhite(JUtility::TColor(0, 255, 255, 255));
+				((J2DPicture*)console->unk17C[0])
+				    ->setWhite(JUtility::TColor(0, 255, 255, 255));
 			} else {
-				((J2DPicture*)console->unk178->getPane())->mWhite = 0xFFFFFFFF;
-				((J2DPicture*)console->unk178->getPane())->mBlack = 0;
-				((J2DPicture*)console->unk17C[0])->mWhite         = 0xFFFFFFFF;
-				((J2DPicture*)console->unk17C[0])->mBlack         = 0;
+				((J2DPicture*)console->unk178->getPane())
+				    ->setWhite(JUtility::TColor(255, 255, 255, 255));
+				((J2DPicture*)console->unk17C[0])
+				    ->setWhite(JUtility::TColor(255, 255, 255, 255));
 			}
 		} else {
 			if (airMode) {
-				((J2DPicture*)console->unk178->getPane())->mWhite = 0x0010FFFF;
-				((J2DPicture*)console->unk178->getPane())->mBlack = 0x003CFF00;
-				((J2DPicture*)console->unk17C[0])->mWhite         = 0x0010FFFF;
-				((J2DPicture*)console->unk17C[0])->mBlack         = 0x003CFF00;
+				((J2DPicture*)console->unk178->getPane())
+				    ->setWhite(JUtility::TColor(0, 160, 255, 255));
+				((J2DPicture*)console->unk17C[0])
+				    ->setWhite(JUtility::TColor(0, 128, 128, 255));
 			} else {
-				((J2DPicture*)console->unk178->getPane())->mWhite = 0x7F7F7FFF;
-				((J2DPicture*)console->unk178->getPane())->mBlack = 0;
-				((J2DPicture*)console->unk17C[0])->mWhite         = 0x7F7F7FFF;
-				((J2DPicture*)console->unk17C[0])->mBlack         = 0;
+				((J2DPicture*)console->unk178->getPane())
+				    ->setWhite(JUtility::TColor(128, 128, 128, 255));
+				((J2DPicture*)console->unk17C[0])
+				    ->setWhite(JUtility::TColor(128, 128, 128, 255));
 			}
 		}
 	}
