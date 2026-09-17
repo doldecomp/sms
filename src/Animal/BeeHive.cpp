@@ -395,8 +395,9 @@ void TBeeHive::controlCollision()
 	if (num <= index)
 		index = 0;
 
-	mCheckBeeIndex += 1;
-	if (num <= mCheckBeeIndex)
+	int bumped     = mCheckBeeIndex + 1;
+	mCheckBeeIndex = bumped;
+	if (num <= bumped)
 		mCheckBeeIndex = 0;
 
 	int next = mCheckBeeIndex;
@@ -480,7 +481,8 @@ bool TBeeHive::doWait()
 {
 	f32 prevSpeed = mSwingSpeed;
 
-	mSwingSpeed += mSwingAngle * -getSaveParams()->mRebound.get();
+	f32 accel = mSwingAngle * -getSaveParams()->mRebound.get();
+	mSwingSpeed = mSwingSpeed + accel;
 	mSwingSpeed *= getSaveParams()->mDecay.get();
 	mSwingAngle += mSwingSpeed;
 
@@ -504,7 +506,8 @@ bool TBeeHive::doWait()
 	}
 
 	// The swing just crossed its turning point: creak once per half period.
-	if (!JGeometry::TUtil<f32>::epsilonEquals(0.0f, mSwingSpeed)
+	if (!JGeometry::TUtil<f32>::epsilonEquals(
+	        0.0f, mSwingSpeed, JGeometry::TUtil<f32>::epsilon())
 	    && prevSpeed * mSwingSpeed <= 0.0f) {
 		gpMSound->startSoundActorWithInfo(MSD_SE_EN_BEENEST_SWING, &mPosition,
 		                                  nullptr, fabsf(mSwingAngle), 0, 0,
@@ -517,8 +520,8 @@ bool TBeeHive::doWait()
 	JGeometry::TVec3<f32> toMario = *gpMarioPos;
 	toMario.sub(mPosition);
 
-	if (toMario.squared() <= getSaveParams()->mSearchRange.get()
-	                             * getSaveParams()->mSearchRange.get())
+	f32 range = getSaveParams()->mSearchRange.get();
+	if (toMario.squared() <= range * range)
 		setBoidParamOnAttacking();
 	else
 		setBoidParamOnWaiting();
@@ -696,8 +699,9 @@ JGeometry::TVec3<f32> TBeeHive::getCenterOfGravity() const
 	JGeometry::TVec3<f32> center;
 	center.set(0.0f, 0.0f, 0.0f);
 
+	TBoidLeader* leader = unk150;
 	for (int i = 0; i < num; ++i)
-		center.add(unk150->getBoid(i)->mPosition);
+		center.add(leader->getBoid(i)->mPosition);
 
 	center.scale(1.0f / num);
 	return center;
