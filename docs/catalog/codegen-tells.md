@@ -204,6 +204,17 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `killer` and `limitkoopa`
+
+- Chained assignment reproduces reverse-order field stores (right to left): `mEyesColor.r = mEyesColor.g = mEyesColor.b = 0;` stores b, g, r.
+- `JUTNameTab::getIndex` results belong in `s32` locals: the ROM masks with `clrlwi` at each use, not at the assignment (`setMActorAndKeeper` 78.9 -> 100).
+- Vector copy from a global has three shapes: `v = *gpMarioPos` (integer words), `v.set(*gpMarioPos)` (interleaved `lfs`/`stfs`), `TVec3<f32> v(p.x, p.y, p.z)` (batched loads, and a `y` already in a register is reused).
+- A `new` result wants a named local when it is the callee's *second* argument (`setSkinDeform(deform, flag)` sets `r4` first as the ROM does).
+- A three-term `||` guard merges the early returns into one `li r3,1; b`; `(a || b)` plus a separate `if` gives two blocks; three `if`s give three.
+- Turn clamps: `turn = diff > limit ? limit : diff;` in the positive arm and `diff = diff > -limit ? diff : -limit; turn = diff;` in the negative arm give the two-branch shape.
+- Statement budget does not generalise to large single-call-site callees: `TLimitKoopa::startHipDrop` (0x208, called in the ROM) stayed inlined through every lever that worked on `setBckTrack`.
+- Another pasted-UNUSED case: `TFlyEnemy::flyMove` (0x2bc) is not called from the chase nerve; pasting it took the nerve 49.4 -> 91.0. `MsSin`/`MsCos`/`TVec3::set<f>` still expand where the ROM calls them (same class as `MapObjBall`; see the local `set<f>` lead above).
+
 ## Rules from `BeeHive`
 
 - A `const` accessor restores a second member load: a named `u32 flags = obj->mFlags;` does not reproduce the ROM's re-read of `mFlags` in the `on/offFlag` after a test; only reading through a const-qualified inline does (`appearBee` 85.6 -> 100). `TRealoidActor` needs `bool checkFlag(int) const` (open fix in `fishoid.hpp`).

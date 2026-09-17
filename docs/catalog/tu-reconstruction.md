@@ -59,6 +59,13 @@ If every string offset in a unit is off by a constant, a shared header supplies 
 `__sinit_effectEnemy_cpp`, `__sinit_seal_cpp`, the hauntLeg and BossHanachanNerve `__sinit`s are all 764 bytes and match with no code: add `MSound/MSSetSound.hpp` and `MSound/MSoundBGM.hpp` as rogue includes next to `M3DUtil/InfectiousStrings.hpp`.
 The body is JAL sound-list registration from the include set, typically the largest function in the unit. Try it first.
 
+## Nerve shapes from the map
+
+- `nerve$localstatic0$theNerve__X` / `init$localstatic1$theNerve__X` (instead of `instance$NNNN` / `init$NNNN`) means `theNerve()` was an **inline** function written out in the header with a local static named `nerve`, not `DEFINE_NERVE` (all ten `limitkoopa` nerves).
+- A nerve vtable of `{0, 0, dtor, 0}` with no `execute` is an abstract intermediate nerve; the derived nerves' destructors walking its vtable identify the children (`TNerveLimitKoopaWait`/`Tumble` under `TNerveLimitKoopaTurn`).
+- Wrong global definition order can show as a **data-layout** mismatch rather than an order failure: in map order (not reversed) MWCC shared one `lis` between two vtables and four destructors stalled at 83.9%.
+- `TParamRT<T>::set(const T&)` parks its literal in `.sdata`: standalone 4-byte `@NNNN` `.sdata` objects next to a params class are post-`load()` overrides, not statics.
+
 ## Reordering a TU mechanically
 
 `validate-symbol-order.py` says the order is wrong but not what to write.
