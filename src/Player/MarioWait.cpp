@@ -96,9 +96,8 @@ BOOL TMario::waitingCommonEvents()
 	if (mInput & 0x1) {
 		s16 diff      = mIntendedYaw - mFaceAngle.y;
 		s16 rotSp     = mDeParams.mWaitingRotSp.get();
-		s16 converged = IConverge(diff, 0, rotSp, rotSp);
-		mFaceAngle.y  = mIntendedYaw - converged;
-		if (mIntendedMag > mControllerParams.mStartToWalkLevel.get()) {
+		mFaceAngle.y  = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
+		if (getIntendedMag() > mControllerParams.mStartToWalkLevel.get()) {
 			emitSmoke(mFaceAngle.y);
 			return changePlayerStatus(MARIO_STATUS_RUN, 0, false);
 		}
@@ -144,6 +143,11 @@ void TMario::changeMontemanWaitingAnim()
 	mStatusState |= 0x2;
 }
 
+// TODO: frame 0x30 vs 0x40. Accessor temporaries saturate at two here: any
+// single one of getIntendedMag(), getHealth(), getPreviousStatus(),
+// SMSGetMarDirector() or getGroundPlane() is worth 8, any pair of them 16, and
+// a third adds nothing. The last 8 bytes need an aggregate or address-taken
+// local, for which there is no evidence.
 BOOL TMario::waiting()
 {
 	if (waitingCommonEvents())
@@ -151,7 +155,8 @@ BOOL TMario::waiting()
 
 	if (isMario() && isUpperState(UPPER_STATE_IDLE) && canSleep()
 	    && mAnimationId == ANIM_WAIT && isAnimeLoopOrStop()
-	    && mGroundPlane != nullptr && mGroundPlane->getNormal().y > 0.99f) {
+	    && getGroundPlane() != nullptr
+	    && getGroundPlane()->getNormal().y > 0.99f) {
 		mStatusTimer += 1;
 		if (mStatusTimer >= 10)
 			return changePlayerStatus(MARIO_STATUS_SLEEPY, 0, false);
@@ -180,7 +185,7 @@ BOOL TMario::waiting()
 			if (mAnimationId == ANIM_DAMAGE_WAIT_START && isLast1AnimeFrame())
 				setAnimation(ANIM_DAMAGE_WAIT, 1.0f);
 		}
-	} else if (mIntendedMag == 0.0f) {
+	} else if (getIntendedMag() == 0.0f) {
 		setAnimation(ANIM_WAIT, 1.0f);
 	} else {
 		setAnimation(ANIM_PIVOT, 1.0f);
@@ -225,9 +230,9 @@ BOOL TMario::sleeping()
 	if ((mInput & 0xa41f) || unk108->mAnalogR > 0.0f
 	    || unk108->mAnalogL > 0.0f) {
 		if (mStatusState == 0)
-			startSoundActor(MSD_SE_MV12_REACT_03);
+			startVoice(MSD_SE_MV12_REACT_03);
 		else
-			startSoundActor(MSD_SE_MV17_EXERT_REACT_02);
+			startVoice(MSD_SE_MV17_EXERT_REACT_02);
 		return changePlayerStatus(MARIO_STATUS_WAKEUP, mStatusState, false);
 	}
 
