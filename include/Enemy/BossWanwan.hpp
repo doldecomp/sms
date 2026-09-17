@@ -2,6 +2,7 @@
 #define ENEMY_BOSS_WANWAN_HPP
 
 #include <Strategic/Binder.hpp>
+#include <Strategic/Spine.hpp>
 #include <Strategic/Nerve.hpp>
 #include <Strategic/TakeActor.hpp>
 #include <M3DUtil/M3UJoint.hpp>
@@ -232,6 +233,16 @@ public:
 	void changeBck(int);
 	void releasePicket();
 	void takeBath();
+
+	// fabricated, and the inline level is the point of it: retail calls
+	// TSpineBase<TLiveActor>::getLatestNerve() (weak, 0x1c, linked from
+	// Animal/Bird.o) from TBWPicket::moveRequest, while a direct
+	// mOwner->mSpine->getLatestNerve() expands it. TBossGesso has the same
+	// one-line forwarder for the same reason; see the note in bosswanwan.cpp.
+	const TNerveBase<TLiveActor>* getLatestNerve() const
+	{
+		return mSpine->getLatestNerve();
+	}
 
 	// fabricated
 	TBWParams* getSaveParam2() const { return (TBWParams*)getSaveParam(); }

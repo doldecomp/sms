@@ -25,13 +25,15 @@
 #include <Enemy/EffectObj.hpp>
 #include <Enemy/Graph.hpp>
 
-// TODO: three shared-header gaps hold this unit back and none of them can be
-// fixed from here:
-//   * TSpineBase<T>::getLatestNerve() is in-class (weak, 0x1c, emitted from
-//     Animal/Bird.o in retail) but retail *calls* it from every nerve compare
-//     in this TU while we expand it, which also reorders the theNerve() guard
-//     against the spine read. Costs TBWPicket::moveRequest, TBWBinder::bind,
-//     TBossWanwan::perform and the GraphWander and Stun nerves.
+// On TSpineBase<T>::getLatestNerve(): retail inlines it in TBossWanwan::perform
+// (five sites) and TBWBinder::bind (two), and *calls* it in
+// TBWPicket::moveRequest (two). The difference is one inline level, so
+// moveRequest goes through the TBossWanwan::getLatestNerve() forwarder in the
+// header and the other two read boss->mSpine directly. Spine.hpp itself is
+// right as it stands.
+//
+// TODO: two shared-header gaps hold this unit back and neither can be fixed
+// from here:
 //   * TMActorKeeper::getMActorAnmData() (in-class, weak, 0x8, emitted from
 //     Enemy/bossgesso.o) is likewise a `bl` in retail at all seven
 //     changeBck sites and expands for us: the "caller size gates
@@ -423,8 +425,8 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 
 BOOL TBWPicket::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
-	if (mOwner->mSpine->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
-	    || mOwner->mSpine->getLatestNerve() == &TNerveBWDie::theNerve())
+	if (mOwner->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
+	    || mOwner->getLatestNerve() == &TNerveBWDie::theNerve())
 		return FALSE;
 
 	if (mOwner->getHitPoints() != 0)

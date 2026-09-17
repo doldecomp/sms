@@ -219,7 +219,7 @@ void TBossHanachanPartsBase::setDamageFog_(JDrama::TGraphics* graphics)
 	J3DModelData* data = mMActor->getModel()->getModelData();
 	u16 materialCount = data->getMaterialNum();
 	JGeometry::TVec3<f32> position(unk108[0][3], unk108[1][3], unk108[2][3]);
-	if (unkFC->mSpine->getLatestNerve() == &TNerveBossHanachanDamage::theNerve()) {
+	if (unkFC->getLatestNerve() == &TNerveBossHanachanDamage::theNerve()) {
 		SMS_AddDamageFogEffect(data, position, graphics);
 		if (isBody)
 			for (u16 i = 0; i < materialCount; ++i)
@@ -297,7 +297,7 @@ void TBossHanachanPartsBase::calcRotateZWhenGetUp_()
 bool TBossHanachanPartsBase::isReactToTrampleOrHipDrop_() const
 {
 	bool result = false;
-	const TNerveBase<TLiveActor>* nerve = unkFC->mSpine->getLatestNerve();
+	const TNerveBase<TLiveActor>* nerve = unkFC->getLatestNerve();
 	if (nerve == &TNerveBossHanachanTumble::theNerve()
 	    || nerve == &TNerveBossHanachanDown::theNerve()) {
 		if (getActorType() == 0x08000015) {

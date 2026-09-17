@@ -1,6 +1,7 @@
 #ifndef ENEMY_BOSS_HANACHAN_HPP
 #define ENEMY_BOSS_HANACHAN_HPP
 
+#include <Strategic/Spine.hpp>
 #include <Strategic/Nerve.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <Enemy/Enemy.hpp>
@@ -280,6 +281,16 @@ public:
 	void setTumbleBckRate_(TBossHanachanPartsBase*);
 	void setHeadAndBodyAnm(EnumBossHanachanAnmKind,
 	                       EnumBossHanachanStopMotionBlendOnOff);
+	// fabricated, and the inline level is the point of it: retail calls
+	// TSpineBase<TLiveActor>::getLatestNerve() (weak, 0x1c) from both hit
+	// handlers and from setDamageFog_, while a direct
+	// unkFC->mSpine->getLatestNerve() expands it. TBossGesso and TBossWanwan
+	// carry the same one-line forwarder.
+	const TNerveBase<TLiveActor>* getLatestNerve() const
+	{
+		return mSpine->getLatestNerve();
+	}
+
 	void emitCamShake_();
 	void emitOneTimeSandPillar_(TBossHanachanPartsBody*);
 	void emitParticle_();
