@@ -5,6 +5,7 @@
 #include <Strategic/Nerve.hpp>
 #include <Strategic/TakeActor.hpp>
 #include <M3DUtil/M3UJoint.hpp>
+#include <JSystem/JGeometry.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
@@ -158,7 +159,7 @@ public:
 
 public:
 	/* 0x70 */ TBossWanwan* mOwner;
-	/* 0x74 */ Mtx mTakingMtx;
+	/* 0x74 */ JGeometry::SMatrix34C<f32> mTakingMtx;
 	/* 0xA4 */ MActor* mMActor;
 };
 

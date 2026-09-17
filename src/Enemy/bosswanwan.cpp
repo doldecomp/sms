@@ -449,18 +449,18 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 			zDir.cross(xDir, yDir);
 			VECNormalize(zDir, zDir);
 
-			mTakingMtx[0][0] = xDir.x;
-			mTakingMtx[1][0] = xDir.y;
-			mTakingMtx[2][0] = xDir.z;
-			mTakingMtx[0][1] = yDir.x;
-			mTakingMtx[1][1] = yDir.y;
-			mTakingMtx[2][1] = yDir.z;
-			mTakingMtx[0][2] = zDir.x;
-			mTakingMtx[1][2] = zDir.y;
-			mTakingMtx[2][2] = zDir.z;
-			mTakingMtx[0][3] = mPosition.x;
-			mTakingMtx[1][3] = mPosition.y;
-			mTakingMtx[2][3] = mPosition.z;
+			mTakingMtx.ref(0, 0) = xDir.x;
+			mTakingMtx.ref(1, 0) = xDir.y;
+			mTakingMtx.ref(2, 0) = xDir.z;
+			mTakingMtx.ref(0, 1) = yDir.x;
+			mTakingMtx.ref(1, 1) = yDir.y;
+			mTakingMtx.ref(2, 1) = yDir.z;
+			mTakingMtx.ref(0, 2) = zDir.x;
+			mTakingMtx.ref(1, 2) = zDir.y;
+			mTakingMtx.ref(2, 2) = zDir.z;
+			mTakingMtx.ref(0, 3) = mPosition.x;
+			mTakingMtx.ref(1, 3) = mPosition.y;
+			mTakingMtx.ref(2, 3) = mPosition.z;
 
 			mHolder->moveRequest(mPosition);
 		}
@@ -749,6 +749,7 @@ TBossWanwanMtxCalc::TBossWanwanMtxCalc(TBossWanwan* owner)
     : M3UMtxCalcSIAnmBlendQuat(false)
     , mOwner(owner)
 {
+	mMotionBlendRatio = 0.0f;
 }
 
 // UNUSED, 0x50 in the map: inlined into TBossWanwan::changeBck.
@@ -789,28 +790,17 @@ void TBossWanwanMtxCalc::calc(u16 joint)
 	if (joint != 1)
 		return;
 
-	// Roll the body around its own forward axis. The zero fill is one chained
-	// assignment, which is why the stores run column by column.
-	Mtx roll;
-	roll[0][0] = roll[1][0] = roll[2][0] = roll[0][1] = roll[1][1]
-	    = roll[2][1] = roll[0][2] = roll[1][2] = roll[2][2] = roll[0][3]
-	    = roll[1][3] = roll[2][3] = 0.0f;
+	// Roll the body around its own forward axis.
+	JGeometry::SMatrix34C<f32> scratch;
+	MtxPtr roll = scratch;
+	scratch.zero();
 
 	f32 s = JMASSin(DEG2SHORTANGLE(mOwner->mRollAngle));
 	f32 c = JMASCos(DEG2SHORTANGLE(mOwner->mRollAngle));
 
-	roll[0][0] = 1.0f;
-	roll[0][1] = 0.0f;
-	roll[0][2] = 0.0f;
-	roll[0][3] = 0.0f;
-	roll[1][0] = 0.0f;
-	roll[1][1] = c;
-	roll[1][2] = -s;
-	roll[1][3] = 0.0f;
-	roll[2][0] = 0.0f;
-	roll[2][1] = s;
-	roll[2][2] = c;
-	roll[2][3] = 0.0f;
+	scratch.set(1.0f, 0.0f, 0.0f, 0.0f, //
+	            0.0f, c, -s, 0.0f,      //
+	            0.0f, s, c, 0.0f);
 
 	MtxPtr anm = mOwner->getModel()->getAnmMtx(joint);
 	MTXConcat(anm, roll, anm);
@@ -879,10 +869,10 @@ void TBossWanwan::init(TLiveManager* live_manager)
 	mHits[1]->initHitActor(0x0800000B, 3, 0xA0000000, 300.0f, 500.0f, 270.0f,
 	                       500.0f);
 
+	TIdxGroupObj* group = JDrama::TNameRefGen::search<TIdxGroupObj>(
+	    "敵グループ");
 	for (int i = 0; i < 2; ++i) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-		    ->getChildren()
-		    .push_back(mHits[i]);
+		group->getChildren().push_back(mHits[i]);
 		mHits[i]->offHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
