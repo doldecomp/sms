@@ -24,10 +24,10 @@
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <MoveBG/ItemManager.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSModBgm.hpp>
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <MSound/MSModBgm.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/Mario.hpp>
