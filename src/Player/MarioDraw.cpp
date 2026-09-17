@@ -405,29 +405,26 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	Mtx transform;
 	if (param_2 == 0) {
 		if (gpMarioForCallBack->mStatus == MARIO_STATUS_READ_BILLBOARD) {
-			if (gpMarDirector->unkA0 == nullptr)
+			TBaseNPC* npc = gpMarDirector->getTalkingNPC();
+			if (npc == nullptr)
 				return 0;
 
-			JGeometry::TVec3<f32> npcResetToPos;
-			gpMarDirector->unkA0->resetToPosition(npcResetToPos);
-			JGeometry::TVec3<f32> pos;
-			pos.x = gpMarioForCallBack->mPosition.x;
-			pos.y = gpMarioForCallBack->mPosition.y + 112.0f;
-			pos.z = gpMarioForCallBack->mPosition.z;
-			JGeometry::TVec3<f32> other = npcResetToPos - pos;
+			const JGeometry::TVec3<f32>& npcFocus = npc->getFocalPoint();
+			JGeometry::TVec3<f32> pos = gpMarioForCallBack->mPosition;
+			pos.y += 112.0f;
+			JGeometry::TVec3<f32> other = npcFocus - pos;
 
-			f32 mult = std::sqrtf(other.x * other.x + other.z * other.z);
+			f32 x    = other.x;
+			f32 z    = other.z;
+			f32 mult = std::sqrtf(x * x + z * z);
 
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
-		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_ROCKET) {
-			if (gpMarioForCallBack->mWaterGun->canSpray() == true) {
-
-				s16 headAngle = gpMarioForCallBack->mUpperBodyParams
-				                    .mHoverHeadAngle.get();
-				MsMtxSetRotRPH(transform, 0.0f, 0.0f,
-				               SHORTANGLE2DEG(headAngle));
-			}
+		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_ROCKET
+		           && gpMarioForCallBack->mWaterGun->isEmitting() == true) {
+			s16 headAngle
+			    = gpMarioForCallBack->mUpperBodyParams.mHoverHeadAngle.get();
+			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
 		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_WAIT
 		           && (gpMarioForCallBack->unk370
 		                       > gpMarioForCallBack->mDeParams.mFeelDeep.get()
@@ -444,14 +441,18 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 		} else {
 
 			TMario* mario = gpMarioForCallBack;
-			f32 anmSpeed;
+			// TODO: unkFC..unk102 are one s16 array in TMario; the ROM
+			// forms &unkFC once and indexes it (as MarioWaistCtrl does
+			// too). Needs a Mario.hpp change to spell properly.
+			s16* bodyAngle = &mario->unkFC;
+			f32 headRot;
 			if (mario->fabricatedIsPumping()) {
-				anmSpeed = mario->mUpperBodyParams.mPumpAnmSpeed.get();
+				headRot = mario->mBodyAngleParamsWaterGun.mHeadRot.get();
 			} else {
-				anmSpeed = mario->mDirtyParams.mSlipAnmSpeed.get();
+				headRot = mario->mBodyAngleParamsFree.mHeadRot.get();
 			}
 
-			s16 headAngle = mario->unk100 * anmSpeed;
+			s16 headAngle = -bodyAngle[2] * headRot;
 			MsMtxSetRotRPH(transform, 0.0f, SHORTANGLE2DEG(headAngle), 0.0f);
 			const TWaterGun* gun = gpMarioForCallBack->mWaterGun;
 			s16 gunAngle         = gun->getCurrentNozzle()->getGunAngle() / 2;
