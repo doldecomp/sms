@@ -47,6 +47,20 @@
 #include <Camera/CameraMapTool.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.tpp>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
+
+const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+static void dummy(Vec* v)
+{
+	*v = (Vec) { 0.0f, 0.0f, 0.0f };
+	*v = (Vec) { 1.0f, 1.0f, 1.0f };
+}
+
 namespace JDrama {
 template class TViewObjPtrListT<THitActor, TViewObj>;
 }
