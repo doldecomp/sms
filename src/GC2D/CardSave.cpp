@@ -955,7 +955,7 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 
 s8 TCardSave::waitForAnyKey(TEProgress param_1)
 {
-	s32 result = -1;
+	s8 result = -1;
 
 	switch (unk10) {
 	case 0:
