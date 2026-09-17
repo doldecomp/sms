@@ -200,7 +200,7 @@ public:
 	BOOL allowsLaunch() const;
 	f32 getNeckFocus() const;
 	bool isProvoking() const;
-	BOOL isFlaming() const;
+	bool isFlaming() const;
 	f32 getFlameDirRate() const;
 	void setIgnoreMario(long ignore);
 	BOOL ignoresMario() const;
