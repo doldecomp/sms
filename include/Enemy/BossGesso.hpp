@@ -157,7 +157,7 @@ public:
 	void showMessage(u32);
 	void checkTakeMsg();
 	void changeBck(int);
-	bool inSightAngle(f32);
+	BOOL inSightAngle(f32);
 	f32 inSight();
 	BOOL is2ndFightNow() const;
 	void stopIfRoll();
@@ -172,9 +172,9 @@ public:
 	void launchPolDrop();
 	void setEyeDamageBtp(int);
 	BOOL tentacleHeld() const;
-	void tentacleAttack();
+	BOOL tentacleAttack();
 	BOOL beakHeld() const;
-	void tentacleWait();
+	BOOL tentacleWait();
 	void doAttackSingle();
 	void doAttackDouble();
 	void doAttackSkipRope();
@@ -184,8 +184,10 @@ public:
 	void doAttackRoll();
 	void performInContainer(u32, JDrama::TGraphics*);
 
-	// fabricated
-	TBossGessoParams* getSaveParam() const
+	// fabricated; retail dispatches through TSpineEnemy's virtual
+	// getSaveParam() at every site and casts the result, so this must not
+	// override the virtual (that would claim vtable slot 0x108).
+	TBossGessoParams* getSaveParam2() const
 	{
 		return (TBossGessoParams*)getSaveParam();
 	}
@@ -205,13 +207,13 @@ public:
 	f32 getAttackSpeed() const
 	{
 		if (mAttackMode == 2)
-			return getSaveParam()->mSLUnisonAttackSpeed.get();
+			return getSaveParam2()->mSLUnisonAttackSpeed.get();
 
 		if (mAttackMode == 1)
-			return getSaveParam()->mSLDoubleAttackSpeed.get();
+			return getSaveParam2()->mSLDoubleAttackSpeed.get();
 
 		if (mAttackMode == 4)
-			return getSaveParam()->mSLSkipRopeAttackSpeed.get();
+			return getSaveParam2()->mSLSkipRopeAttackSpeed.get();
 
 		return 1.0f;
 	}
