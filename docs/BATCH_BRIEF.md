@@ -34,6 +34,7 @@ Every command in `CLAUDE.md` works unchanged inside the worktree (`build/venv/bi
 ## Rules
 
 - Edit only your units' `.cpp` files and their own headers. Any other header change: leave a `// TODO:` describing it and report it; do not make it.
+- If your unit needs a helper that belongs in a shared header (the map shows it weak, i.e. a header inline), park it as `static inline` **in your `.cpp`**, never in your unit's header: two units parking the same name in two headers broke the build for every TU that includes both.
 - No stack padding (`volatile char trash[]`, `u32 pad[]`), no `#pragma dont_inline`, no reinterpret casts, no fakematches. Temporary padding to confirm a body is otherwise exact is fine if removed.
 - One change at a time; rebuild and re-diff.
 - Do not run `ninja baseline` (one is saved in your worktree). Do not edit `configure.py` or `config/GMSE01/objects.json`; if a unit becomes fully matching in code and data, say so in the report.

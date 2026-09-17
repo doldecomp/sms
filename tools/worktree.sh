@@ -89,6 +89,10 @@ land)
 	grep -n 'pragma dont_inline\|trash\[\|pad\[' $(git diff --name-only HEAD@{1} HEAD -- 'src/*' 'include/*') 2>/dev/null \
 		| grep -v '^\S*:\s*//' && echo "!! suspicious padding/pragma above" || true
 	rc=0
+	if ! build/venv/bin/ninja >/dev/null 2>&1; then
+		echo "== BUILD FAILED after merge:"; build/venv/bin/ninja 2>&1 | grep -iE 'error|FAILED' -A3 | head -20
+		exit 1
+	fi
 	build/venv/bin/ninja changes_all 2>&1 | awk -F'|' '
 		/->/ { split($3, a, "->"); gsub(/[ %]/, "", a[1]); gsub(/[ %]/, "", a[2]); n++
 		       if (a[2] + 0 < a[1] + 0) { r++; print "REGRESSION:", $0 } }

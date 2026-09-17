@@ -2,9 +2,6 @@
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/MapObjBall.hpp>
 #include <MoveBG/MapObjManager.hpp>
-// TODO: only for MsMtxSetRotX/MsMtxSetRotY, which the map proves are header
-// inlines but which cannot go in MarioUtil/MathUtil.hpp in this batch.
-#include <MoveBG/MapObjPinna.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorUtil.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>

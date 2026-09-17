@@ -8,31 +8,6 @@ class TGraphTracer;
 class TMapObjMessenger;
 class TRevolvingFenceInner;
 
-// TODO: this belongs in MarioUtil/MathUtil.hpp next to MsMtxSetRotRPH. It is
-// weak in the map and emitted only in MapObjFence.o, so it is a header inline;
-// it lives here because this batch may not edit shared headers. Move it when
-// another unit needs it.
-inline void MsMtxSetRotY(MtxPtr mtx, f32 degrees)
-{
-	f32 sin = JMASin(degrees);
-	f32 cos = JMACos(degrees);
-
-	mtx[0][0] = cos;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = sin;
-	mtx[0][3] = 0.0f;
-
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = 1.0f;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-
-	mtx[2][0] = -sin;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = cos;
-	mtx[2][3] = 0.0f;
-}
-
 /// Plain fence panel. Only reacts to being punched by shaking its model.
 /// Every subclass shares the "bamboo" name test that picks the bamboo
 /// collision variants.

@@ -5,60 +5,11 @@
 #include <MoveBG/MapObjGeneral.hpp>
 #include <MoveBG/MapObjTown.hpp>
 #include <JSystem/JMath.hpp>
+#include <MarioUtil/MathUtil.hpp>
 
 class TCoin;
 class TMapCollisionMove;
 class J3DJoint;
-
-// TODO: these two weak helpers really belong next to MsMtxSetRotRPH in
-// MarioUtil/MathUtil.hpp -- the map shows MsMtxSetRotX emitted weak out of
-// MapObjPinna.cpp, which is what a header inline does, and nothing about
-// either of them is Pinna-specific (TCraneUpDown::control in MapObjRicco.cpp
-// expands both). They live here only because this batch may not touch shared
-// headers; move them (and drop the JMath include) when MathUtil.hpp is open.
-inline void MsMtxSetRotX(MtxPtr mtx, f32 angle)
-{
-	// jmaSinTable is an f32*, so every store below would invalidate the cached
-	// table pointer: both lookups have to be named up front.
-	f32 sin = JMASSin(DEG2SHORTANGLE(angle));
-	f32 cos = JMASCos(DEG2SHORTANGLE(angle));
-
-	mtx[0][0] = 1.0f;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = cos;
-	mtx[1][2] = -sin;
-	mtx[1][3] = 0.0f;
-
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = sin;
-	mtx[2][2] = cos;
-	mtx[2][3] = 0.0f;
-}
-
-inline void MsMtxSetRotY(MtxPtr mtx, f32 angle)
-{
-	f32 sin = JMASSin(DEG2SHORTANGLE(angle));
-	f32 cos = JMASCos(DEG2SHORTANGLE(angle));
-
-	mtx[0][0] = cos;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = sin;
-	mtx[0][3] = 0.0f;
-
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = 1.0f;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-
-	mtx[2][0] = -sin;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = cos;
-	mtx[2][3] = 0.0f;
-}
 
 /// One gondola-carrying big wheel; the gondolas themselves are separate
 /// "FerrisGondola" objects whose matrices this object copies out of its own
