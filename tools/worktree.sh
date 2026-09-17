@@ -86,8 +86,9 @@ land)
 	"$0" merge "$name" >/dev/null
 	cd "$ROOT"
 	echo "== merged $(git log --oneline -1)"
-	grep -n 'pragma dont_inline\|trash\[\|pad\[' $(git diff --name-only HEAD@{1} HEAD -- 'src/*' 'include/*') 2>/dev/null \
-		| grep -v '^\S*:\s*//' && echo "!! suspicious padding/pragma above" || true
+	# Only lines the merge *added*: pre-existing pragmas in touched files are not news.
+	git diff HEAD@{1} HEAD -- 'src/*' 'include/*' | grep -n '^+.*\(pragma dont_inline\|trash\[\|pad\[\)' \
+		| grep -v '^[0-9]*:+\s*//' && echo "!! suspicious padding/pragma ADDED above" || true
 	rc=0
 	if ! build/venv/bin/ninja >/dev/null 2>&1; then
 		echo "== BUILD FAILED after merge:"; build/venv/bin/ninja 2>&1 | grep -iE 'error|FAILED' -A3 | head -20
