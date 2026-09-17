@@ -563,11 +563,11 @@ BOOL TMario::waitMain()
 	int result = 0;
 
 	checkEnforceJump();
-	checkCollision();
+	checkReturn();
 	setNormalAttackArea();
 
-	if (mHeldObject != nullptr && (mInput & 0x2000 ? true : false)) {
-		switch (mHeldObject->getActorType()) {
+	if (getHeldObject() != nullptr && (mInput & 0x2000 ? true : false)) {
+		switch (getHeldObject()->getActorType()) {
 		case 0x80000001:
 			changePlayerStatus(MARIO_STATUS_PITCHING, 0, false);
 			break;
