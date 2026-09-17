@@ -19,8 +19,10 @@ public:
 	TDirectionCalc(f32 direction);
 	TDirectionCalc(JGeometry::TVec3<f32> dir);
 
-	f32 r2d(f32 rad);
-	f32 d2r(f32 deg);
+	// static: the ROM's call sites set only f1 and leave r3 holding whatever
+	// the previous call returned.
+	static f32 r2d(f32 rad);
+	static f32 d2r(f32 deg);
 	f32 absDirection(f32 dir);
 	JGeometry::TVec3<f32> calcDirectionVector();
 	void makeDirection(JGeometry::TVec3<f32> dir);

@@ -95,7 +95,7 @@ BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 	// address setup stays until that header may be changed.
 	koopa->mBodyDirection = koopa->mBodyDirection.calcTurnDirection(
 	    toMario.get(),
-	    koopa->mBodyDirection.d2r(params->rotationSpeed.get()));
+	    TDirectionCalc::d2r(params->rotationSpeed.get()));
 
 	TDirectionCalc facing;
 	JGeometry::TVec3<f32> toMario2(SMS_GetMarioPos().x - koopa->mPosition.x,
@@ -534,7 +534,7 @@ void TLimitKoopa::calcRootMatrix()
 	// r2d never receives a `this`. That reads as a static member in the
 	// original; TDirectionCalc lives in the shared KoopaJr.hpp, so the
 	// declaration is left alone here.
-	mRotation.y = mBodyDirection.r2d(mBodyDirection.get());
+	mRotation.y = TDirectionCalc::r2d(mBodyDirection.get());
 	TSpineEnemy::calcRootMatrix();
 }
 

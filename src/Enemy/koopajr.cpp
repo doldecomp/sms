@@ -435,7 +435,7 @@ void TKoopaJr::checkNerve()
 		JGeometry::TVec3<f32> toMario(*gpMarioPos);
 		toMario.sub(mPosition);
 		toMario.y   = 0.0f;
-		mRotation.y = TDirectionCalc().r2d(atan2f(toMario.x, toMario.z));
+		mRotation.y = TDirectionCalc::r2d(atan2f(toMario.x, toMario.z));
 	}
 }
 
@@ -992,7 +992,7 @@ const char** TKoopaJrSubmarine::getBasNameTable() const
 void TKoopaJrSubmarine::makeRelativeAngle()
 {
 	f32 flameDir
-	    = mDirection.d2r(mKoopaJr->mKoopa->getFlameDirDegree());
+	    = TDirectionCalc::d2r(mKoopaJr->mKoopa->getFlameDirDegree());
 	f32 flameDiff = fabsf(mDirection.get()
 	                      - mDirection.calcNearerDirection(flameDir));
 
@@ -1010,7 +1010,7 @@ void TKoopaJrSubmarine::makeRelativeAngle()
 	else if (marioDiff > getSaveParams()->traceMarioAngle.get())
 		target = marioDir;
 
-	f32 step = mDirection.d2r(getSaveParams()->mSLRoundAngleVelocity.get());
+	f32 step = TDirectionCalc::d2r(getSaveParams()->mSLRoundAngleVelocity.get());
 	mDirection.normalize();
 	f32 dir = mDirection.calcNearerDirection(target);
 	if (dir > mDirection.get()) {
@@ -1058,7 +1058,7 @@ void TKoopaJrSubmarine::makeDirection()
 		v.normalize();
 		mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
 		    atan2f(v.x, v.z),
-		    mBodyDirection.d2r(getSaveParams()->mSLRotationSpeed.get()));
+		    TDirectionCalc::d2r(getSaveParams()->mSLRotationSpeed.get()));
 	}
 }
 
