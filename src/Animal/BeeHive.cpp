@@ -236,6 +236,18 @@ void TBeeHive::setBoidBaseParams()
 	unk150->mAlignmentStrength = 0.001f;
 }
 
+// TODO: the three setBoidParam* helpers, and every nerve that inlines them,
+// are one call short: the ROM calls `JGeometry::TVec3<f>::set<f>(f,f,f)` out of
+// line for the TPathNode's zero initialiser, while we store the three zeros in
+// place. Writing Enemy/PathNode.hpp's `TPathNode(THitActor*)` as
+// `TPathNode(THitActor* actor) : unk4(0.0f, 0.0f, 0.0f)` puts the set() one
+// inline level deeper and reproduces the call (Attack 95.6 -> 98.5, Break
+// 94.0 -> 97.9, MarioWaterIn 94.5 -> 98.2, doWait 91.6 -> 92.8) -- but the same
+// change regresses about fifteen other units that construct TPathNodes
+// (fishoid, Butterfly, gesso, hamukuri, namekuri, smallEnemy, walkerEnemy,
+// bossgesso, telesa ...), so it is not a global fix. Whatever the original
+// wrote, its effect is per-call-site; do not push the member initialiser into
+// the shared header on this unit's evidence alone.
 void TBeeHive::setBoidParamOnAttacking()
 {
 	setBoidBaseParams();
@@ -461,6 +473,17 @@ void TBeeHive::controlSound()
 	gpMSound->startBeeSe(mBeeCenter, alive);
 }
 
+// TODO: blocked on a shared header. `JGeometry::TQuat4<f>::mul(const TQuat4&)`
+// in JSystem/JGeometry/JGQuat4.hpp has a sign error in its y component: it
+// computes `w*oy + y*ow + x*oz - z*ox`, and the two products the ROM emits here
+// are `+ z*ox - x*oz`. The two-argument mul() right next to it already has the
+// correct Hamilton product, and the one-argument body carries a "definitely not
+// correct ATM" TODO, so the fix is to mirror the two-argument spelling:
+//   T _y = this->w * other.y + this->y * other.w + this->z * other.x
+//          - this->x * other.z;
+// Until that lands both quaternion products below compute the wrong y and the
+// register allocation diverges from there; the rest of the function (the two
+// muls, setSQ out of line, the translation and the MTXCopy) is in place.
 void TBeeHive::calcRootMatrix()
 {
 	JGeometry::TQuat4<f32> quat = mBaseRotation;
@@ -524,6 +547,10 @@ bool TBeeHive::doWait()
 		                                  nullptr, 0, 4);
 	}
 
+	// TODO: the inlined slerp() below folds `1.0f - param_2` to 0.99f in the
+	// epsilon branch but recomputes it with an fsubs in the acos branch, where
+	// the ROM loads the folded constant in both. That is inside
+	// JGeometry::TQuat4<f>::slerp in JGQuat4.hpp, not here.
 	mRotation168.slerp(mGoalRotation, 0.01f);
 	mRotation168.normalize();
 
@@ -686,6 +713,10 @@ bool TBeeHive::isMissMario() const
 // UNUSED (0x2d4). receiveMessage() inlines this, and it has to: the extra
 // inline level is what keeps normalize()'s dot/inv_sqrt/scale and setRotate
 // out of line there, exactly as the ROM has them.
+// TODO: our body is 0x2e0, twelve bytes over the map. The out-of-line
+// TQuat4<f>::setRotate copy this TU emits is also 98.8% and differs only by a
+// permutation of f28..f31 around the inlined cross()/length(), i.e. inside
+// JGQuat4.hpp, not here.
 void TBeeHive::setShakePower(const JGeometry::TVec3<f32>& to_mario)
 {
 	if (isFalling())
