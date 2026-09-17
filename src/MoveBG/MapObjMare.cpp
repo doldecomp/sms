@@ -33,11 +33,6 @@
 #include <MSound/MSoundBGM.hpp>
 
 // TODO: shared-header changes this unit wants but must not make:
-//  * MapObjBase.hpp's TMapObjBase::getObjCollisionHeightOffset() is declared
-//    `void ... { }`. The retail weak copy emitted into this object
-//    (0x801d8914, 8 bytes) is `lfs f1, 0x108(r3); blr`, i.e.
-//    `f32 getObjCollisionHeightOffset() const { return mYOffset; }`, and
-//    TMuddyBoat::bind calls it out of line three times.
 //  * Particles.hpp has no names for the six ids this unit loads:
 //    0x148/0x149 "/scene/mapObj/mareFallSplash.jpa" pair,
 //    0x14A "/scene/mapObj/mareFallSmoke.jpa",
@@ -840,13 +835,17 @@ void TMuddyBoat::touchWall(JGeometry::TVec3<f32>* pos,
 {
 	f32 z = -(record.mResultWalls[0]->mNormal.z * (50.0f + record.mRadius)
 	          - record.mCenter.z);
-	// TODO: the ROM calls TMapObjBase::getObjCollisionHeightOffset() here
-	// (three real bl's in bind()); that accessor needs the header fix noted at
-	// the top of this file before it can be spelled.
+	// TODO: retail emits the weak getObjCollisionHeightOffset() into this
+	// object and `bl`s it three times from bind(); ours still expands it
+	// (`lfs 0x108`). That is the caller-size rule, not a wrong spelling: our
+	// bind() frame is 0x140 against retail's 0x270, and MWCC stops inlining
+	// two-instruction accessors only once the caller is big enough. It should
+	// fall out when bind()'s missing locals are recovered.
+	f32 yOffset  = getObjCollisionHeightOffset();
 	mEffectPos.x = -(record.mResultWalls[0]->mNormal.x
 	                     * (50.0f + record.mRadius)
 	                 - record.mCenter.x);
-	mEffectPos.y = 100.0f + (mPosition.y - mYOffset);
+	mEffectPos.y = 100.0f + (mPosition.y - yOffset);
 	mEffectPos.z = z;
 
 	*pos = mPosition;

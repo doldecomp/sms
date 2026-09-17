@@ -317,7 +317,7 @@ public:
 	static void loadHideObjInfo(JSUMemoryInputStream&, s32*, f32*, f32*, s32*);
 	static bool isDemo();
 	static bool isHideObj(THitActor*);
-	void getObjCollisionHeightOffset() const { }
+	f32 getObjCollisionHeightOffset() const { return mYOffset; }
 
 	// fabricated
 	bool checkMapObjFlag(u32 flag) const { return unkF8 & flag; }
