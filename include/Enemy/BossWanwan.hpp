@@ -11,6 +11,8 @@
 
 class TLiveActor;
 class TBossWanwan;
+class TBWLeash;
+class TBWLeashNode;
 
 class TBWHit : public THitActor {
 public:
@@ -42,8 +44,8 @@ public:
 class TBWLeash : public THitActor {
 public:
 	TBWLeash(TBossWanwan*, int, const char*);
-
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	TBWLeashNode** mNodes;
 };
 
 class TBWLeashNode : public THitActor {
@@ -53,6 +55,13 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void calcMatrix();
 	virtual void calcTemperature();
+
+private:
+	// THitActor ends at 0x68
+	TBWLeash* mLeash; // +0x68
+	f32 mTemperature; // +0x6C
+	f32 unk0;         // +0x70
+	u32 mIndex;       // +0x74
 };
 
 class TBWParams : public TSpineEnemyParams {
@@ -106,7 +115,7 @@ private:
 	/* 0x1A8 */ u32 mWaterHitCount;
 	/* 0x1AC */ u32 mDistToMarioSquared;
 	/* 0x1B0 */ TBWParams* mParams;
-	/* 0x18C */ u8 msInvincible;
+	/* 0x18C */ u8 msInvincible; // fabricated
 };
 
 class TBossWanwanMtxCalc : public J3DMtxCalcSoftimageAnm {
