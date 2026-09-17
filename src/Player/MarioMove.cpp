@@ -85,7 +85,8 @@ bool TMario::isInvincible() const
 bool TMario::isWallInFront() const
 {
 	if (mWallPlane != nullptr) {
-		s16 diff = getWallAngle() - mFaceAngle.y;
+		s16 wallAngle = getWallAngle();
+		s16 diff      = wallAngle - mFaceAngle.y;
 		if (diff < -0x71C7 || diff > 0x71C7)
 			return true;
 	}
@@ -2284,7 +2285,6 @@ void TMario::getOffYoshi(bool fly)
 
 	setAnimation(ANIM_JUMP, 1.0f);
 	unk78 &= ~0x100;
-	mPosition.y += 100.0f;
 	mForwardVel = -8.0f;
 
 	mWaterGun->changeNozzle(TWaterGun::Hover, true);
