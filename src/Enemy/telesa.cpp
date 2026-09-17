@@ -288,10 +288,11 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
 				                   &pTStack_5c);
 				Mtx afStack_58;
-				MsMtxSetXYZRPH(afStack_58, mPosition.x, mPosition.y,
+				MtxPtr afStackPtr = afStack_58;
+				MsMtxSetXYZRPH(afStackPtr, mPosition.x, mPosition.y,
 				               mPosition.z, mRotation.x, mRotation.y,
 				               mRotation.z);
-				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
+				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStackPtr);
 				mImitatedBmd->getMActor()->getModel()->setBaseScale(
 				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 			}
