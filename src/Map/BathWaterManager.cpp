@@ -1595,14 +1595,19 @@ void TBathWaterMeshRenderer::makeNormalMap()
 
 	for (int r = 0; r < unk800AC; ++r) {
 		for (int c = 0; c < unk800AC; ++c) {
-			f32 a  = unk20[r > 0 ? r - 1 : 0][c].y;
-			f32 b  = unk20[r < unk800AC - 1 ? r + 1 : r][c].y;
-			f32 a2 = unk20[r][c > 0 ? c - 1 : 0].y;
-			f32 b2 = unk20[r][c < unk800AC - 1 ? c + 1 : c].y;
+			// The row difference is taken inline but the column one is named,
+			// and the two products are written the opposite way round. That
+			// asymmetry is what the ROM's register use and its 0x80 frame ask
+			// for: four named heights give the wrong float registers here, and
+			// naming both differences costs 8 bytes of frame.
+			f32 prevRow = unk20[r > 0 ? r - 1 : 0][c].y;
+			f32 nextRow = unk20[r < unk800AC - 1 ? r + 1 : r][c].y;
+			f32 prevCol = unk20[r][c > 0 ? c - 1 : 0].y;
+			f32 dCol = unk20[r][c < unk800AC - 1 ? c + 1 : c].y - prevCol;
 
-			unk30020[r][c].x = scale * (b - a);
+			unk30020[r][c].x = scale * (nextRow - prevRow);
 			unk30020[r][c].y = scale * scale;
-			unk30020[r][c].z = scale * (b2 - a2);
+			unk30020[r][c].z = dCol * scale;
 			unk30020[r][c].normalize();
 		}
 	}
