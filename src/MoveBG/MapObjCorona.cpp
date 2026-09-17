@@ -271,7 +271,42 @@ Mtx* TBathtubGrip::getRootJointMtx() const
 	return (Mtx*)getModel()->getBaseTRMtx();
 }
 
-void TBathtubGrip::calcRootMatrix() { }
+// TODO: JGeometry::TMatrix34<T>::concat(a, b) in JGMatrix34.hpp has its
+// indices transposed (a known open header item), so the correct body is
+// parked here, as this batch may not edit that header. Once concat is fixed
+// this becomes dst.concat(a, b).
+static inline void ConcatMtx34(TSMtx34f& dst, const TSMtx34f& a,
+    const TSMtx34f& b)
+{
+	dst.set(
+	    // clang-format off
+	    a.at(0, 0) * b.at(0, 0) + a.at(0, 1) * b.at(1, 0) + a.at(0, 2) * b.at(2, 0),
+	    a.at(0, 0) * b.at(0, 1) + a.at(0, 1) * b.at(1, 1) + a.at(0, 2) * b.at(2, 1),
+	    a.at(0, 0) * b.at(0, 2) + a.at(0, 1) * b.at(1, 2) + a.at(0, 2) * b.at(2, 2),
+	    a.at(0, 3) + (a.at(0, 0) * b.at(0, 3) + a.at(0, 1) * b.at(1, 3) + a.at(0, 2) * b.at(2, 3)),
+
+	    a.at(1, 0) * b.at(0, 0) + a.at(1, 1) * b.at(1, 0) + a.at(1, 2) * b.at(2, 0),
+	    a.at(1, 0) * b.at(0, 1) + a.at(1, 1) * b.at(1, 1) + a.at(1, 2) * b.at(2, 1),
+	    a.at(1, 0) * b.at(0, 2) + a.at(1, 1) * b.at(1, 2) + a.at(1, 2) * b.at(2, 2),
+	    a.at(1, 3) + (a.at(1, 0) * b.at(0, 3) + a.at(1, 1) * b.at(1, 3) + a.at(1, 2) * b.at(2, 3)),
+
+	    a.at(2, 0) * b.at(0, 0) + a.at(2, 1) * b.at(1, 0) + a.at(2, 2) * b.at(2, 0),
+	    a.at(2, 0) * b.at(0, 1) + a.at(2, 1) * b.at(1, 1) + a.at(2, 2) * b.at(2, 1),
+	    a.at(2, 0) * b.at(0, 2) + a.at(2, 1) * b.at(1, 2) + a.at(2, 2) * b.at(2, 2),
+	    a.at(2, 3) + (a.at(2, 0) * b.at(0, 3) + a.at(2, 1) * b.at(1, 3) + a.at(2, 2) * b.at(2, 3))
+	    // clang-format on
+	);
+}
+
+void TBathtubGrip::calcRootMatrix()
+{
+	MtxPtr dst = getModel()->getBaseTRMtx();
+	JGeometry::TPosition3<TMtx34f> local;
+	MsMtxSetRotRPH(local, 0.0f, unk24C, 0.0f);
+	local.setTrans(0.0f, 0.0f, 0.0f);
+	ConcatMtx34(*(TSMtx34f*)dst, *(TSMtx34f*)mBathtub->getRootJointMtx(),
+	    local);
+}
 
 // Unused
 bool TBathtubGrip::marioIsOn() const { return false; }
@@ -553,7 +588,18 @@ bool TBathtub::allowsTumble() const
 	return false;
 }
 
-void TBathtub::calcRootMatrix() { }
+void TBathtub::calcRootMatrix()
+{
+	if (unk29A) {
+		TPosition3f* mtx = (TPosition3f*)getModel()->getBaseTRMtx();
+		MsMtxSetRotRPH(*mtx, 0.0f, mRotation.y, 0.0f);
+		mtx->setTrans(mPosition);
+	} else {
+		TPosition3f& mtx = *(TPosition3f*)getModel()->getBaseTRMtx();
+		mtx.setQuat(mQuat);
+		mtx.setTrans(mPosition);
+	}
+}
 
 // Unused; TODO: Recover quaternion and direction helpers from their callers.
 void QuatRotate(JGeometry::TQuat4<f32>&, const JGeometry::TVec3<f32>&) { }
