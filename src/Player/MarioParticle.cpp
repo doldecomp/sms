@@ -426,10 +426,17 @@ void TWarpInCallBack::execute(JPABaseEmitter* emitter,
 	// inner result directly in the next parameter slot. Nothing in between was
 	// found: not a TU-local `mulVec(const TVec3&, f32)` copying into a local
 	// (39.1%, NRVO drops a copy), not `f(TVec3, f32)` by value, not `*=` on
-	// fresh copies (one copy per step). A member `TVec3 operator*(f32) const`
-	// in JGVec3.hpp, instead of the by-value `friend`, is the spelling whose
-	// expansion has exactly retail's six slots -- a shared-header change, so
-	// it is reported rather than made.
+	// fresh copies (one copy per step).
+	// Header round 25 measured the two spellings that do give six slots: a
+	// `const TVec3&` return on the by-value `friend`, and a member
+	// `const TVec3& operator*(f32) const`. Either takes this function to
+	// 92.47% with the frame exact, but both are tree-wide losses that drop
+	// four weak out-of-line copies to MISSING -- see the trial table at
+	// `operator*` in JGVec3.hpp. The member form with the *by-value* return
+	// (the shape batch 149 proposed) is inert here: MWCC 1.2.5 does no NRVO,
+	// so the return temporary survives and the slot count stays nine.
+	// The remaining 12 bytes are therefore a return-type question in the
+	// shared header, not a local one.
 	JGeometry::TVec3<f32>* vel = (JGeometry::TVec3<f32>*)emitter->getUserWork();
 
 	f32 timer = (f32)gpMarioOriginal->mStatusTimer;

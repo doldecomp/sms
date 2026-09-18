@@ -342,6 +342,27 @@ public:
 	}
 
 	// @fabricated
+	// The by-value return is what the tree wants, even though the slot
+	// arithmetic of individual call sites argues for the `const TVec3&`
+	// spelling its two siblings above use (header round 25). Both
+	//     friend const TVec3& operator*(TVec3 fst, f32 snd)
+	//     const TVec3& operator*(f32 other) const   // TVec3 r = *this; ...
+	// drop the by-value return temporary, leaving one scale target plus one
+	// copy-out per step -- exactly retail's six 12-byte slots in
+	// TWarpInCallBack::execute, which goes 73.92 -> 92.47, with
+	// TEffectColumWater::generate 91.95 -> 99.79, THamuKuri::forceRoll
+	// 90.23 -> 99.66, TRope::moveHead 93.60 -> 99.80, SMS_MakeJointsToArc
+	// 84.56 -> 88.83 and ~8 more. Tree-wide both are a net loss (97.44 ->
+	// 97.42) and, worse, they drop weak out-of-line copies to MISSING:
+	// `div`, `dot` and `TUtil<f>::sqrt` in boid (98.06 -> 90.95) and
+	// `__ami__` in Tongue, plus TTamaNoko::landEffect 94.64 -> 82.84,
+	// TWalker::bind 92.34 -> 86.02, TConeBeam::calcVertices 95.67 -> 88.33,
+	// TMapObjPuncher::touchPlayer 99.72 -> 92.57 and ~10 more. So the
+	// reference return is right only where the caller spells `a * f`; the
+	// regressing units must spell their products some other way, and the
+	// return type cannot be settled until those are respelled.
+	// The member form alone (by-value return, no argument level) is inert on
+	// TWarpInCallBack and +0.01 total, but still loses `__ami__`.
 	friend TVec3 operator*(TVec3 fst, f32 snd)
 	{
 		fst *= snd;
