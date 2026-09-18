@@ -26,8 +26,13 @@ public:
 	// depressed
 	enum SPRAYSTATE { INACTIVE = 0, ACTIVE = 1, DEAD = 2 };
 
+	// The field is a byte, so its own compares are `cmplwi`; the widening
+	// accessor is what gives the ROM's `lbz` + `cmpwi` at the sites that
+	// read the state from outside the nozzle.
+	s32 getSprayState() const { return unk385; }
+
 	/* 0x384 */ bool unk384; // mRumbleOnCharge
-	/* 0x385 */ s8 unk385;   // mSprayState, Current spray state
+	/* 0x385 */ u8 unk385;   // mSprayState, Current spray state
 	/* 0x386 */ s16 unk386;  // Quarter frames left of spray (i think)
 	/* 0x388 */ f32 unk388;  // mTriggerFill - How far the trigger has gotten
 	/* 0x38C */ u32 unk38C;  // mSoundID - The sound to play when triggering

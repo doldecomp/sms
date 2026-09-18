@@ -467,7 +467,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		return;
 	}
 
-	if ((u8)unk385 == TNozzleTrigger::ACTIVE) {
+	if (unk385 == TNozzleTrigger::ACTIVE) {
 		unk386 -= 1;
 
 		// Very likely an inline
@@ -487,7 +487,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	if ((unk384 == true
 	     && (controllerWork.mFrameInput & TMarioControllerWork::A) != 0
 	     && (controllerWork.mInput & TMarioControllerWork::R) != 0)
-		    && (u8)unk385 == TNozzleTrigger::INACTIVE) {
+		    && unk385 == TNozzleTrigger::INACTIVE) {
 		unk385 = TNozzleTrigger::ACTIVE;
 		if (unk38C != 0xffffffff) {
 			u32 soundId;
@@ -514,7 +514,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 	if (canSpray == true) {
 		unk388 += 150.0f * controllerWork.mAnalogR;
-		if (!unk384 && (u8)unk385 == TNozzleTrigger::INACTIVE) {
+		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
 			if (gpMarDirector->unk58 % (int)mFludd->mMario->unk568 == 0)
 				SMSRumbleMgr->start(20, (int)mFludd->mMario->unk564,
 				                    (f32*)nullptr);
@@ -526,7 +526,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	}
 
 	if (canSpray == true && !unk384
-	    && (u8)unk385 == TNozzleTrigger::INACTIVE
+	    && unk385 == TNozzleTrigger::INACTIVE
 	    && controllerWork.mAnalogR > 0.0f && prevPressure < unk388) {
 		SMSGetMSound()->startSoundActor(MSD_SE_SY_NEWP_AIR_TAME,
 		                                mFludd->mEmitPos[0], 0, nullptr, 0, 4);
@@ -534,7 +534,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 	if (unk388 > mEmitParams.mInsidePressureMax.get()) {
 		unk388 = mEmitParams.mInsidePressureMax.get();
-		if (!unk384 && (u8)unk385 == TNozzleTrigger::INACTIVE) {
+		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
 			unk385      = TNozzleTrigger::ACTIVE;
 			unk386      = mEmitParams.mTriggerTime.get();
 			u32 soundId = unk38C;
@@ -552,7 +552,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		}
 	}
 
-	if ((u8)unk385 == TNozzleTrigger::DEAD) {
+	if (unk385 == TNozzleTrigger::DEAD) {
 		unk388 = 0.0f;
 		if (controllerWork.mAnalogR == 0.0f) {
 			unk385 = TNozzleTrigger::INACTIVE;
@@ -564,7 +564,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 void TNozzleTrigger::emit(int param_1)
 {
-	if (mFludd->mCurrentWater > 0 && (u8)unk385 == TNozzleTrigger::ACTIVE) {
+	if (mFludd->mCurrentWater > 0 && unk385 == TNozzleTrigger::ACTIVE) {
 		TWaterEmitInfo* emitInfo = mFludd->mEmitInfo;
 		emitCommon(param_1, emitInfo);
 
@@ -794,7 +794,7 @@ void TNozzleDeform::emit(int param_1)
 		return;
 	}
 
-	if (mBomb.unk385 == TNozzleTrigger::INACTIVE && unk378 > 0.0f) {
+	if (mBomb.getSprayState() == TNozzleTrigger::INACTIVE && unk378 > 0.0f) {
 		TWaterEmitInfo* emitInfo = mFludd->mEmitInfo;
 		emitCommon(param_1, emitInfo);
 
@@ -1559,7 +1559,7 @@ bool TWaterGun::isEmitting()
 
 	if (self->getCurrentNozzle()->getNozzleKind() == 1) {
 		TNozzleTrigger* trig = (TNozzleTrigger*)self->getCurrentNozzle();
-		if (trig->unk385 == TNozzleTrigger::ACTIVE)
+		if (trig->getSprayState() == TNozzleTrigger::ACTIVE)
 			return true;
 		return false;
 	}

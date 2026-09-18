@@ -632,7 +632,8 @@ void TYoshi::thinkUpper()
 	if (mTongue->mState != TYoshiTongue::STATE_IDLE
 	    && waterGun->mCurrentWater != 0) {
 		if (waterGun->getCurrentNozzle()->getNozzleKind() == 1) {
-			if (((TNozzleTrigger*)waterGun->getCurrentNozzle())->unk385
+			if (((TNozzleTrigger*)waterGun->getCurrentNozzle())
+			        ->getSprayState()
 			    == TNozzleTrigger::ACTIVE)
 				shouldUseEatMtx = true;
 			else

@@ -1516,7 +1516,7 @@ void TMario::checkController(JDrama::TGraphics*)
 					if (!checkFlag(MARIO_FLAG_FLUDD_EMITTING)
 					    && ((TNozzleTrigger*)((const TWaterGun*)mWaterGun)
 					            ->getCurrentNozzle())
-					               ->unk385
+					               ->getSprayState()
 					           == TNozzleTrigger::ACTIVE) {
 						onFlag(MARIO_FLAG_FLUDD_EMITTING);
 						startSoundActor(MSD_SE_PO_SNIPER_TRIGGER);

@@ -231,7 +231,7 @@ public:
 
 		if (getCurrentNozzle()->getNozzleKind() == 1) {
 			TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
-			if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE)
+			if (triggerNozzle->getSprayState() == TNozzleTrigger::ACTIVE)
 				return true;
 
 			return false;
@@ -270,7 +270,7 @@ public:
 	// Fabricated
 	bool checkCurrentNozzleTriggerSprayState(s32 pState) const
 	{
-		return ((TNozzleTrigger*)getCurrentNozzle())->unk385 == pState;
+		return ((TNozzleTrigger*)getCurrentNozzle())->getSprayState() == pState;
 	}
 
 	// Fabricated (maybe should be indexed?)
