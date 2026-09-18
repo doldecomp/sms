@@ -1166,20 +1166,9 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 	return false;
 }
 
-// Binding level worth +8 of low region, landing
-// TNerveTelesaFreeze::execute's frame at 0x40 (batch 124).
-static inline bool TelesaIsBckAnmL0(const TTelesa* p, int i)
-{
-	bool bckAnm = p->isBckAnm(i);
-	return bckAnm;
-}
-
-static inline bool TelesaIsBckAnm(const TTelesa* p, int i)
-{
-	bool bckAnm = TelesaIsBckAnmL0(p, i);
-	return bckAnm;
-}
-
+// Frame 0x40, exact: the two TU-local `isBckAnm` binding levels this used to
+// need came out in header round 28, when `setGoalPathMario()` gained its own
+// pointer binding in Enemy.hpp (each of those levels was 4 bytes of pool).
 DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 {
 
@@ -1189,7 +1178,7 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 		self->setBckAnm(5);
 		self->setGoalPathMario();
 	} else if (self->checkCurAnmEnd(0)) {
-		if (TelesaIsBckAnm(self, 4)) {
+		if (self->isBckAnm(4)) {
 			if (!self->isFlying()) {
 				self->unk1C8 = 0;
 				self->offHitFlag(HIT_FLAG_UNK10000000);

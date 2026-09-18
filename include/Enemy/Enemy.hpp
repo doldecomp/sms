@@ -131,7 +131,18 @@ public:
 	}
 
 	// fabricated TODO: remove
-	void setGoalPathMario() { setGoalPath((THitActor*)gpMarioAddress); }
+	// The Mario pointer is bound into a named local rather than cast inside
+	// the argument: that pointer binding is worth 4 bytes of low region (see
+	// frame-gaps.md, batch 142's return-type table) and is what seven callers
+	// tree-wide want -- TGesso::behaveToFindMario, TNerveHaneHamuKuriUpWait,
+	// TPakkun::load, TNervePakkunShoot, TNerveFireWanwanAttack,
+	// TNerveBombHeiAttack and TNervePopoWait all go byte-exact with it and 4
+	// short without it (header round 28).
+	void setGoalPathMario()
+	{
+		THitActor* mario = (THitActor*)gpMarioAddress;
+		setGoalPath(mario);
+	}
 	void setGoalPath(const TPathNode& point)
 	{
 		unkF4  = point;

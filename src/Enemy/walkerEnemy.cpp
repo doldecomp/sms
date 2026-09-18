@@ -199,18 +199,13 @@ static inline bool WalkerEnemyCheckUnk150(const TWalkerEnemy* p, u32 i)
 // knows is a *pointer* binding (batch 142: reference 8, pointer 4, void 0),
 // so one pointer rather than the bool is bound below the temp; a pointer
 // binder on the Mario global itself overshoots (+12, temp 0x44).
-// That 4 was then found, but it lives in the *shared* header and so is only
-// reported, not made here: spelling Enemy.hpp's `setGoalPathMario()` as
-//     THitActor* mario = (THitActor*)gpMarioAddress; setGoalPath(mario);
-// (a pointer binding, worth 4 by batch 142's return-type table) lands SEVEN
-// functions byte-exact tree-wide -- TGesso::behaveToFindMario,
-// TNerveHaneHamuKuriUpWait, TPakkun::load, TNervePakkunShoot,
-// TNerveFireWanwanAttack, TNerveBombHeiAttack and TNervePopoWait -- and moves
-// total matched_code 53.91% -> 53.95%. It costs two: TNerveWalkerTraceMario
-// (frame 0x60 -> ours 0x68) and telesa's TNerveTelesaFreeze (0x40 -> 0x48)
-// both go 8 over, so those two carry a lever of their own that has to come
-// out at the same time. Here it moves the temp 0x2c -> 0x30 (the predicted
-// +4) but the frame 0x50 -> 0x58, so this function still wants one more 4.
+// That 4 was then found and is now in the shared header: `setGoalPathMario()`
+// binds `THitActor* mario` before calling `setGoalPath`, which is the +4 that
+// lands seven callers tree-wide (header round 28). Here it moves the temp
+// 0x2c -> 0x30 (the predicted +4) but the frame 0x50 -> 0x58, so this function
+// is now 4 short of pool *and* 8 over on frame at the same time -- the two no
+// longer track each other, so the residue is a high-region item 12 too big
+// rather than one more pool step.
 void TWalkerEnemy::behaveToFindMario()
 {
 	if (WalkerEnemyCheckUnk150(this, 2)) {
@@ -414,7 +409,10 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 	}
 
 	f32 giveUpHeight = self->getSaveParam2()->mSLGiveUpHeight.get();
-	if (abs(SMS_GetMarioPos().y - self->getPosition().y) > giveUpHeight)
+	// Raw `mPosition`, not `getPosition()`: the accessor is worth 4 bytes of
+	// pool here, which this function no longer needs now that
+	// `setGoalPathMario()` carries its own pointer binding. Frame 0x60, exact.
+	if (abs(SMS_GetMarioPos().y - self->mPosition.y) > giveUpHeight)
 		return true;
 
 	self->walkBehavior(2, 3.0f);
