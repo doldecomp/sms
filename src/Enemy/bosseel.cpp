@@ -1112,10 +1112,14 @@ TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
 	getMActor()->setMotionBlendRatioForBck(mBlendRatio);
 }
 
+// TODO: instruction-exact (32 bytes of throwaway locals reach 100%), 0x28 short
+// of frame. Retail's eyeMtx sits at the very top of the local region, which is
+// why the `const TBossEel* owner = getOwner();` local had to go: its cast takes
+// a slot above the matrix. The remaining 0x28 is all below the matrix, i.e. in
+// the inline-temporary region, and no accessor lever found here moves it.
 void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	const TBossEel* owner = getOwner();
-	if (owner->mLiveFlag
+	if (getOwner()->mLiveFlag
 	    & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))
 		return;
 
@@ -1125,16 +1129,18 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    BOSSEEL_JPA_MS_MEO_EYEBLUR, &mBlurPosition, 1, this);
 		if (emitter)
-			emitter->setGlobalScale(owner->mScaling);
+			emitter->setGlobalScale(getOwner()->mScaling);
 
 		Mtx eyeMtx;
 		MTXCopy(getConnectedMtx(), eyeMtx);
-		getMActor()->getModel()->setBaseTRMtx(eyeMtx);
-		if (mCopyConnectedMtx == 0)
-			MTXCopy(eyeMtx, mBlendMtx);
+		MtxPtr mtx = eyeMtx;
+		getMActor()->getModel()->setBaseTRMtx(mtx);
+		if (mCopyConnectedMtx == 0) {
+			MtxPtr blendMtx = mBlendMtx;
+			MTXCopy(mtx, blendMtx);
+		}
 
-		mBlendRatio
-		    = JGeometry::TUtil<f32>::clamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
+		mBlendRatio = MsClamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
 		getMActor()->setMotionBlendRatioForBck(mBlendRatio);
 		if (mAnimationMode == 1
 		    && getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
