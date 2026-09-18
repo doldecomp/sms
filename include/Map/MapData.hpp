@@ -492,4 +492,30 @@ public:
 	/* 0x44 */ const TLiveActor* mActor; // who we are attached to
 };
 
+// fabricated. The one inline level that flips TBGCheckData::isWaterSurface()
+// out of line: it is a weak header inline (emitted in BeeHive.o, 0x34) that
+// nine TUs compile an out-of-line duplicate of, so those sites sit one level
+// below their function. Spelling `data->isWaterSurface()` at such a site
+// expands the 13-instruction body instead. The real name is unrecoverable --
+// an inline that expands everywhere leaves no map symbol.
+//
+// Retail's twelve `bl isWaterSurface` sites, against ours (`objdump` on our
+// object vs the dtk asm): BeeHive 3/2 (our extra is in the TU-local
+// SMS_IsMarioInWater, which retail expands), ShadowUtil 2/2, smallEnemy 2/2,
+// gesso 1/1, MapCheck 1/1, enemyAttachment 1/1, fireWanwan 2/1 (our extra is
+// in `doAttack`), Amenbo 1/0 (retail's weak duplicate has no surviving call,
+// so its refusal was dead-stripped), Yoshi 0/2.
+//
+// Only enemyAttachment's `generatePolluteModel` uses the level today. Rejected
+// (reverted): routing TYoshi::movement's two sites through it, separately and
+// together (93.5% -> 91.3 / 91.8 / 89.6, frame unmoved at 0x188 vs 0x240).
+// That function is 184 bytes of frame and 134 diffs away, so its refusals
+// cannot be isolated until the body is closer; the second site is a plain
+// depth-1 `if`, which means retail's whole `isHatched()` block is one inlined
+// level down rather than a level on the predicate.
+inline bool SMS_IsWaterSurface(const TBGCheckData* data)
+{
+	return data->isWaterSurface();
+}
+
 #endif

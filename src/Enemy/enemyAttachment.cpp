@@ -230,17 +230,6 @@ void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk18[i]->perform(cue, graphics);
 }
 
-// TODO: fabricated inline level. Retail calls TBGCheckData::isWaterSurface()
-// out of line here (it is a weak header inline emitted in BeeHive.o), which
-// only happens when the call sits one level below the guard; spelling
-// `check->isWaterSurface()` directly expands it and costs 13 instructions.
-// The real helper is unrecoverable from the map (enemyAttachment.cpp lists no
-// UNUSED symbol but `generate`), so it is parked here.
-static inline bool EnemyAttachmentIsWaterSurface(const TBGCheckData* check)
-{
-	return check->isWaterSurface();
-}
-
 // TODO: frame 0x90 vs retail's 0x98, and the two locals are allocated in the
 // opposite order: retail has `check` at 0x3c immediately below the 48-byte
 // matrix at 0x40, ours has the matrix at 0x2c with `check` above it at 0x60.
@@ -272,7 +261,7 @@ void TEnemyPolluteModelManager::generatePolluteModel(
 	const TBGCheckData* check;
 	gpMap->checkGround(param_1, &check);
 	if (!check->checkFlag(BG_CHECK_FLAG_ILLEGAL)
-	    && !EnemyAttachmentIsWaterSurface(check))
+	    && !SMS_IsWaterSurface(check))
 		model->generate(param_1, param_2);
 
 	++unk10;
