@@ -1196,11 +1196,16 @@ public:
 		s16 r28              = SMSGetGameRenderWidth();
 		s16 r29              = SMSGetGameRenderHeight();
 		clearEFB_alpha(0, 0, 0, 0, 0);
-		MtxPtr mtx = gpCamera->unk1EC.mMtx;
-		s16 r23    = SMSGetGameRenderWidth();
-		s16 r24    = SMSGetGameRenderHeight();
+		// The global is read a second time here and held across the two
+		// render-size calls, so both this matrix and the projection below
+		// come from one pointer (half-stripped duplicated setup: the render
+		// size is fetched twice as well).
+		CPolarSubCamera* cam2 = gpCamera;
+		MtxPtr mtx            = cam2->unk1EC.mMtx;
+		s16 r23               = SMSGetGameRenderWidth();
+		s16 r24               = SMSGetGameRenderHeight();
 
-		GXSetProjection(cam->getUnk16C(), GX_PERSPECTIVE);
+		GXSetProjection(cam2->getUnk16C(), GX_PERSPECTIVE);
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
@@ -1396,7 +1401,7 @@ public:
 		                               unk80134->kRegB.get(),
 		                               unk80134->kRegA.get(),
 		                           });
-		GXSetTevColor(GX_TEVREG1, (GXColor) {
+		GXSetTevColor(GX_TEVREG0, (GXColor) {
 		                              unk80134->regR.get(),
 		                              unk80134->regG.get(),
 		                              unk80134->regB.get(),
