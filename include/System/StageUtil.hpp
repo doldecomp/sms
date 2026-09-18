@@ -13,6 +13,14 @@ bool SMS_isExMap();
 bool SMS_isExMap(u8); // UNUSED
 
 // Yep, static data in a header. Cool. Free match%
+//
+// This interleaved order (main table, then its *Etc sibling) is retail's, and
+// Guide.o pins it: it is the only includer where both groups survive
+// dead-stripping, and its .sdata2 block is byte-identical to ours over all
+// sixteen tables. ConsoleStr and PauseMenu2 look like retail grouped the eight
+// main tables instead, but that is only because the *Etc tables are
+// dead-stripped there, which also happens to ours -- objdiff scores them as
+// harmless extras. Do not regroup them.
 
 static const u8 scShineTableAirport[]   = { 0x56 };
 static const u8 scShineTableDolpicEtc[] = { 0x6B };
