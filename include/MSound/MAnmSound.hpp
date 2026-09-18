@@ -36,15 +36,28 @@ public:
 	// subobject, JAIAnimeSound's vtable store, the `extsh. r4` delete branch,
 	// epilogue.
 	//
-	// The map's 0x60 is 24 instructions, i.e. exactly one more. The byte-exact
-	// __dt__24TSpineBase<10TLiveActor>Fv (also 0x60) shows what that one
-	// instruction is: where its inlined base subobject sits at `this + 4` it
-	// emits `addic. r0, r31, 0x4` before the store and branches on that,
-	// whereas a subobject at offset 0 reuses the entry `mr.`'s cr0 and gets a
-	// bare `beq` -- which is what we emit. So MAnmSound (or JAIAnimeSound)
-	// still has one polymorphic subobject at a nonzero offset that this
-	// declaration does not model: a second base, or an intermediate class
-	// between the two. Nothing in the map names it yet.
+	// The map's 0x60 is 24 instructions, i.e. exactly one more. Round 13 read
+	// that as the `addic. r0, r31, <off>` that __dt__24TSpineBase<10TLiveActor>Fv
+	// (also 0x60) emits for an inlined base subobject at `this + 4`, and
+	// looked for a second base or an intermediate class. **Header round 15
+	// refutes that**:
+	//   - __vt__9MAnmSound is 0x10, exactly the size of __vt__13JAIAnimeSound,
+	//     and holds the usual two zero words plus startAnimSound and
+	//     setSpeedModifySound. MWCC puts the vtable pointer after the
+	//     introducing class's own data (hence the stores at 0x94), and a
+	//     second polymorphic base would add a vtable segment, so MAnmSound
+	//     adds no virtual of its own and has one polymorphic base at offset 0.
+	//     There is no nonzero-offset subobject to find.
+	//   - __ct__9MAnmSoundFP6MSound (0x44, byte-exact) calls
+	//     __ct__13JAIAnimeSoundFv, stores the vtable at 0x94 and zero at 0x90,
+	//     and **never stores its MSound* parameter**, so MAnmSound has no data
+	//     members and the destructor body has nothing to destroy.
+	// The one extra instruction is therefore a *fresh* null test before the
+	// base vptr store instead of a reuse of the entry `mr.`'s cr0. Giving the
+	// body `stop()` does produce exactly that tell (`cmplwi r30, 0` after the
+	// `bl` clobbers cr0) but costs 29 instructions, and any cr0 clobber costs
+	// an instruction of its own, so a one-instruction delta cannot come from
+	// that route either. Open, with no candidate left in the map.
 	~MAnmSound() { }
 
 	virtual void startAnimSound(void* interface, u32 id,
