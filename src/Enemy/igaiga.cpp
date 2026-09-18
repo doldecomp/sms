@@ -1215,8 +1215,7 @@ void TGorogoro::setDeadAnm()
 		emitter->setGlobalScale(mScaling);
 
 	setBckAnm(0);
-	SMSGetMSound()->startSoundActor(MSD_SE_BS_KRPAKU_DOWN, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_KRPAKU_DOWN, &mPosition);
 }
 
 void TGorogoro::setMeltAnm()

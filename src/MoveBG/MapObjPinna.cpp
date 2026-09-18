@@ -758,7 +758,7 @@ void TBalloonKoopaJr::kill()
 
 	TFlagManager::smInstance->incFlag(0x60001, 1);
 
-	SMSGetMSound()->startSoundActor(0x28B8, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(0x28B8, &mPosition);
 }
 
 void TBalloonKoopaJr::load(JSUMemoryInputStream& stream)

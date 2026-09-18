@@ -745,8 +745,7 @@ DEFINE_NERVE(TNerveAnimalBirdTakeoff, TLiveActor)
 		bird->setParamsOnFloating();
 		J3DFrameCtrl* ctrl = bird->getMActor()->getFrameCtrl(0);
 		ctrl->setRate(3.0f * ctrl->getRate());
-		gpMSound->startSoundActor(MSD_SE_OBJ_BIRD_DOL_TO_FLY1,
-		                          &bird->mPosition, 0, nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_BIRD_DOL_TO_FLY1, &bird->mPosition);
 	}
 
 	if (bird->checkCurAnmEnd(0)) {

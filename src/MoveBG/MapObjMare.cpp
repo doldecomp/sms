@@ -1155,8 +1155,7 @@ void TMareCork::drawObject(JDrama::TGraphics* graphics)
 	if (mIsBlownOut
 	    && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 250.0f) {
 		mSoundPos.set(2773.0f, 8618.0f, 7006.0f);
-		gpMSound->startSoundActor(MSD_SE_ENV_FALL_JET_LEVEL, &mSoundPos, 0,
-		                          nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_ENV_FALL_JET_LEVEL, &mSoundPos);
 
 		gpMarioParticleManager->emitAndBindToPosPtr(
 		    MAP_MAP_MS_MARE_GUNWAT_A, &mEffectPos, 1, this);

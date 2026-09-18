@@ -511,8 +511,7 @@ void TTobiPuku::behaveToWater(THitActor* param_1)
 	if (mSpine->getCurrentNerve() == &TNerveTobiPukuHitWater::theNerve())
 		return;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_FLY, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_FLY, &mPosition);
 	mSpine->pushNerve(&TNerveTobiPukuHitWater::theNerve());
 }
 
@@ -769,8 +768,7 @@ void TMoePuku::hitWater()
 	}
 
 	// The burning pukupuku hitting water reuses the wanwan sizzle.
-	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition);
 }
 
 bool TMoePuku::isPichiEffect() { return isBckAnm(PUKU_ANM_PICHI) ? true : false; }

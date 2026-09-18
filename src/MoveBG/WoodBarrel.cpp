@@ -87,13 +87,7 @@ void TWoodBarrel::appear()
 	makeObjAppeared();
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ENM_DISAP_A_W,
 	                                            &mPosition, 0, nullptr);
-	// TODO: 8 bytes of frame short (0x18 vs 0x20). The missing slot is the
-	// named JAISound* result inside MSound::startSoundActor (closure batch
-	// 74's table lists this function under the wrapper form); every
-	// zero-instruction lever here is +0 and `&getPosition()` buys the frame
-	// at the cost of an extra instruction. Closes with that header change.
-	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0, nullptr,
-	                                0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition);
 }
 
 void TWoodBarrel::touchWall(JGeometry::TVec3<f32>*, TBGWallCheckRecord*)

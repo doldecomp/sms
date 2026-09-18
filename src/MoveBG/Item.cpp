@@ -46,8 +46,7 @@ void TItem::appeared()
 			mContainer->receiveMessage(this, HIT_MESSAGE_UNK5);
 
 		if (isActorType(0x2000000f) || isActorType(0x20000010)) {
-			SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN_DISAPPEAR,
-			                                &mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN_DISAPPEAR, &mPosition);
 		}
 	}
 

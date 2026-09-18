@@ -141,57 +141,58 @@ public:
 
 	// Fabricated, very likely due to real startSoundSystemSE.
 	//
-	// Header round 13 re-measured batch 74's "bind the callee's result"
-	// proposal (`JAISound* sound = nullptr; if (gateCheck(id)) sound =
-	// MSoundSE::startSoundActor(...); return sound;`) and REJECTED it.
-	// Whole-tree: 53 functions improve, 37 of them to byte-exact (TDebuTelesa::
-	// receiveMessage, THamuKuri::behaveToFindMario, TSmallEnemy::
-	// setAfterDeadEffect, TMapObjBase::startSound, TMario::stayWall, ...), but
-	// three byte-exact functions regress, and two of them cannot be recovered:
+	// The return type is real: MSoundSE::startSoundActor returns JAISound*,
+	// and handing it straight back is codegen-neutral (measured whole-tree:
+	// not one function moved), so this body still binds exactly *two* 4-byte
+	// values at a call site, `this` (the gpMSound load) and `position` (the
+	// address computation). Constant arguments bind nothing.
 	//
-	//   TMapEventSink::control  100 -> 99.95 (frame 0x48 -> 0x50)
-	//   TNerveKazekunPreAttack::execute  100 -> 99.77
-	//   TBGPolDrop::move  100 -> 99.80 (recoverable, see below)
-	//
-	// The slot arithmetic is decisive. TMapEventSink::control's vector
-	// temporary sits at r1+0x28 + 4 * (number of 4-byte bindings this inline
-	// makes at the site), measured: 0x28 with the call spelled raw, 0x2c with
-	// one call-site binding, 0x30 with this wrapper as written (`this` +
-	// `position`), 0x34 with the result local added. Retail's temporary is at
-	// 0x30 in a byte-exact function, so retail's wrapper makes exactly *two*
-	// bindings here -- there is no room for a third, and no compensating error
-	// is possible in a function that already matches byte for byte. The same
-	// reading holds for TNerveKazekunPreAttack::execute (0x68 / 0x6c / 0x70).
-	//
-	// A single body cannot serve both groups, so the 4 bytes the 37 improving
-	// sites want are *not* in this function; they must come from a second
-	// inlined level between those sites and this one (a per-class sound helper
-	// that inlined everywhere and so left no map symbol, in the shape of the
-	// emitted TMario::startSoundActor(u32) and TMapObjBase::startSound(u16)).
-	// That is the lead to chase, not this body.
-	//
-	// Call-site spellings tried at the three regressing sites, all with the
-	// result-binding body in place:
-	//   raw `if (gpMSound->gateCheck(id)) MSoundSE::startSoundActor(...)`
-	//       -- 4 bytes short at all three (and it moves the position argument's
-	//          evaluation after the gate, losing r30 at TMapEventSink);
-	//   raw + `const Vec* pos` named before the gate -- restores the argument
-	//       order (r30 back) but still 4 short at TMapEventSink; actively worse
-	//       at Kazekun (98.7) and TBGPolDrop (97.3), which evaluate the address
-	//       after the gate;
-	//   raw + `JAISound* sound = nullptr;` named at the site -- recovers
-	//       TBGPolDrop::move to byte-exact, but adds nothing at TMapEventSink:
-	//       a call-site named pointer is register-allocated, whereas an inlined
-	//       wrapper's binding always takes a slot. That asymmetry is why no raw
-	//       spelling can imitate the wrapper's frame;
-	//   `gpMSound->` vs `SMSGetMSound()->` receiver -- codegen-identical here.
-	// See docs/catalog/frame-gaps.md, "Closure batch 74", for the site table.
-	void startSoundActor(u32 id, const Vec* position, u32 ground_no,
-	                     JAISoundHandle* out_handle, u32 fade, u8 camera_idx)
+	// That count is pinned by a byte-exact caller and must not grow. At a site
+	// with no low-region slack each value an inlined callee binds pushes the
+	// caller's next temporary up by 4, so a byte-exact caller *counts* the
+	// bindings: TMapEventSink::control's vector temporary sits at r1+0x30 =
+	// 0x28 + two bindings, and TNerveKazekunPreAttack::execute reads the same
+	// way (0x68 / 0x6c / 0x70). Binding the result here (batch 74's proposal)
+	// would make 0x34 and break both; that is why it was rejected in header
+	// round 13. Eleven sites need this exact two-binding body.
+	JAISound* startSoundActor(u32 id, const Vec* position, u32 ground_no,
+	                          JAISoundHandle* out_handle, u32 fade,
+	                          u8 camera_idx)
 	{
 		if (gateCheck(id))
-			MSoundSESystem::MSoundSE::startSoundActor(
+			return MSoundSESystem::MSoundSE::startSoundActor(
 			    id, position, ground_no, out_handle, fade, camera_idx);
+		return nullptr;
+	}
+
+	// Fabricated. The two-argument form is the second inlined level batch 82
+	// went looking for: the 4 bytes that ~37 sound sites are short of live
+	// here, not in the six-argument body, so spelling the common
+	// `(id, position, 0, nullptr, 0, 4)` call short pays for them at exactly
+	// the sites that use it and leaves the eleven six-argument sites alone.
+	// 26 functions in 20 units go byte-exact this way with nothing regressing
+	// (DebuTelesa and WoodBarrel become 100/100 units).
+	//
+	// The slot is the *binding*, not the level: measured in a scratch TU, a
+	// plain forwarder, a `const Vec&`/`const TVec3<f32>&` parameter and a
+	// member wrapper that binds only `this` are all worth +0, and so is a
+	// bound-but-dead local; only binding the callee's JAISound* and keeping it
+	// live by returning it reserves the 4 bytes (a dead 4-byte *non-trivial*
+	// local in the same place is codegen-identical, which is how the size was
+	// confirmed). Hence `JAISound* sound = ...; return sound;` rather than a
+	// direct `return`, which is worth nothing.
+	//
+	// Apply it per site, never per file: a function with several sound sites
+	// in mutually exclusive branches pays per expansion and overshoots
+	// (TBellDolpic::control +0x10 for four sites, TRoulette::switchStop,
+	// TDptMonteFence::touchPlayer and TMapObjBase::startSound +8 for two,
+	// TFireWanwan::receiveMessage and TNerveKazekunHitWater::execute +8 for
+	// one). Those want the binding one level deeper and stay open.
+	// See docs/catalog/frame-gaps.md, "Closure batch 82", for the site table.
+	JAISound* startSoundActor(u32 id, const Vec* position)
+	{
+		JAISound* sound = startSoundActor(id, position, 0, nullptr, 0, 4);
+		return sound;
 	}
 
 	void startSoundActorWithInfo(u32 id, const Vec* position, Vec* param_3,

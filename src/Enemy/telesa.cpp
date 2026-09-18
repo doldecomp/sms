@@ -716,8 +716,7 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 	unk150 &= ~0x40;
 	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition);
 }
 
 void TTelesa::setAttacker()

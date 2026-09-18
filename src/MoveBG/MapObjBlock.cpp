@@ -384,8 +384,7 @@ BOOL TSuperHipDropBlock::receiveMessage(THitActor* sender, u32 message)
 		if (mMonteBlockBroken)
 			TFlagManager::getInstance()->setBool(true, 0x1038C);
 
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition,
-		                                0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition);
 		return TRUE;
 	}
 	return FALSE;

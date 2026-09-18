@@ -438,6 +438,81 @@ instructions, the Animal carrier's 12 bytes need not be an explicitly dead
 object — a named by-value 12-byte result inside such a wrapper would read the
 same. Untested.
 
+## Closure batch 82: the sound sites' second level is a two-argument `startSoundActor`
+
+Batch 74 found that ~37 sound sites are 4 bytes short and that a named
+`JAISound*` result inside `MSound::startSoundActor` supplies them; header round
+13 rejected putting it there, because `TMapEventSink::control` is byte-exact
+with its vector temporary at `0x28 + 4 * bindings = 0x30`, i.e. exactly two
+bindings (`this`, `position`).
+The missing 4 bytes are one level up: a **two-argument overload** in
+`include/MSound/MSound.hpp` that carries the four constant arguments and binds
+the callee's result,
+
+```cpp
+JAISound* startSoundActor(u32 id, const Vec* position)
+{
+	JAISound* sound = startSoundActor(id, position, 0, nullptr, 0, 4);
+	return sound;
+}
+```
+
+so a site pays the 4 bytes only by spelling the short form.
+The six-argument body keeps its two bindings and the eleven sites that need
+them stay byte-exact; making it return `JAISound*` with a direct `return` is
+codegen-neutral whole-tree (zero functions moved), which is how the return type
+was confirmed.
+
+**The slot is the binding, not the level.** Measured in `smallEnemy` against
+`generateEffectColumWater` (0x18 vs 0x20) and `setAfterDeadEffect`:
+
+| second level between the site and `MSound::startSoundActor` | result |
+| --- | --- |
+| plain forwarder `(u32, const Vec*)` | +0 |
+| forwarder taking `const Vec&` or `const JGeometry::TVec3<f32>&` | +0 |
+| member wrapper `(u32 id)` binding only `this` (the `TMario::startSoundActor` shape) | +0 |
+| binds the result, discards it, returns `void` | +0 |
+| **binds the result and returns it** | **+8, both exact** |
+| dead 4-byte **non-trivial** local | +8, both exact (sizes the slot) |
+| `JAISoundHandle handle = ...; releaseSoundHandle(handle)` | new instructions |
+
+A constant argument binds nothing, `this` and a `&member` address each bind 4,
+so a member wrapper cannot be the carrier: its only fresh value is already the
+inner call's.
+That also retires the "per-class `startSound`-style helper" lead — the map's
+only two, `startSoundActor__6TMarioFUl` and `startSound__11TMapObjBaseFUs`, are
+emitted, and `TMario::startSoundActor` is byte-exact at frame 0x20 with one
+raw expansion, which pins the six-argument body's two bindings a second time.
+
+**Apply it per site, never per file.** A function with several sound sites in
+mutually exclusive branches pays per expansion and overshoots, so those stay on
+the six-argument spelling: `TBellDolpic::control` +0x10 (four sites),
+`TRoulette::switchStop`, `TDptMonteFence::touchPlayer`,
+`TMapObjBase::startSound` +8 (two sites each), and the single-site
+`TFireWanwan::receiveMessage`, `TNerveKazekunHitWater::execute` and
+`TTelesa::changeByJuice` (already 8 over). Those want the binding one level
+deeper and are still open.
+
+Landed (26 functions byte-exact, no regressions, DOL unchanged):
+`TDebuTelesa::receiveMessage`, `THamuKuri::behaveToFindMario`,
+`THaneHamuKuri::attackToMario`, `THinokuri2::updateAnmSound`,
+`TStayPakkun::setBehavior`, `TSmallEnemy::setAfterDeadEffect` and
+`generateEffectColumWater`, `TTelesa::initItemAttacker`,
+`TTobiPuku::behaveToWater`, `TMoePuku::hitWater`, `TGorogoro::setDeadAnm`,
+`TTamaNoko::setAfterDeadEffect`, `TBombHei::walkBehavior`,
+`TGessoPolluteObj::calcRootMatrix`, `TEffectEnemy::setDeadAnm` (its fabricated
+`effectPos` deleted), `TBossHanachan::emitOneTimeSandPillar_`,
+`TNerveAnimalBirdTakeoff::execute`, `TWoodBarrel::appear`, `TItem::appeared`,
+`TSuperHipDropBlock::receiveMessage`, `TPanelRevolve::receiveMessage`,
+`TBalloonKoopaJr::kill`, `TMareCork::drawObject`,
+`TBigWatermelon::touchWaterSurface`, `TMapObjNail::receiveMessage`,
+`TBreakHideObj::receiveMessage`, `TMario::stayWall`.
+`Enemy/DebuTelesa` and `MoveBG/WoodBarrel` are now 100/100 and ready to
+source-link.
+`TMareGate::control` passes a real handle (`&sound->unk7C`) so the
+two-argument overload cannot reach it; it needs a three-argument sibling or the
+deeper carrier.
+
 ## Closure batch 78
 
 - **A four-corner quad is readable off the store offsets**: twelve `stfs` to consecutive slots with two CSE'd sums is `TVec3 vtx[4]` at function scope plus `vtx[i].set(x±size, y±size, z+size)` in the loop (the `TSplashManager::makeDL` idiom); the twelve by-value `set` parameter temporaries are ~48 bytes of low region (`TQuestionManager::makeDL` 84 -> 100; question linked; its `#pragma dont_inline` was masking a 19-statement body).

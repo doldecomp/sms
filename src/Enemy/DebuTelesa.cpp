@@ -82,8 +82,7 @@ BOOL TDebuTelesa::receiveMessage(THitActor* sender, u32 message)
 		return false;
 
 	case HIT_MESSAGE_UNKB:
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_DB_TELSA_EATEN, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_DB_TELSA_EATEN, &mPosition);
 		break;
 	}
 

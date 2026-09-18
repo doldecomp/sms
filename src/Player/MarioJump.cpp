@@ -634,8 +634,7 @@ BOOL TMario::stayWall()
 	setAnimation(ANIM_WSLD, 1.0f);
 	if (mVel.y < -10.0f) {
 		wallSlipEffect();
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_WALL, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_WALL, &mPosition);
 	}
 
 	return false;

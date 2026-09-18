@@ -315,8 +315,7 @@ f32 TBombHei::getGravityY() const
 // worse), so the missing two stack objects are still unexplained.
 void TBombHei::walkBehavior(int param_1, f32 speed)
 {
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_BOMBHEI_ZENMAI, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_BOMBHEI_ZENMAI, &mPosition);
 	TWalkerEnemy::walkBehavior(param_1, speed);
 }
 

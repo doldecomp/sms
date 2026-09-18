@@ -606,8 +606,7 @@ void TTamaNoko::setAfterDeadEffect()
 
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TAMA_FLOWER,
 	                                            &mPosition, 0, nullptr);
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition);
 }
 
 const char** TTamaNoko::getBasNameTable() const { return tamaNoko_bastable; }

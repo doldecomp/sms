@@ -423,8 +423,7 @@ void TSmallEnemy::setAfterDeadEffect()
 		emitter->setGlobalScale(mScaling);
 	}
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition);
 }
 
 void TSmallEnemy::generateItem()
@@ -851,8 +850,7 @@ void TSmallEnemy::generateEffectColumWater()
 
 	enemy->generate(mPosition, mScaling);
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER, &mPosition);
 }
 
 void TSmallEnemy::setBckAnm(int index)

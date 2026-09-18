@@ -123,23 +123,8 @@ void TEffectEnemy::sendAttackMsgToMario()
 
 void TEffectEnemy::setDeadAnm()
 {
-	// TODO: fabricated. Retail's frame is 8 bytes larger than the three
-	// statements below need and references no extra slot, so only the byte
-	// count is evidence for this scratch vector; any 8-byte local closes the
-	// gap (f64, u32[2] and this TVec3 all give the exact 31 instructions).
-	// Batch 74 found the honest object: the 8 bytes belong to
-	// MSound::startSoundActor, whose retail body bound the callee's JAISound*
-	// return to a named local. This site should therefore call the wrapper
-	// (`gpMSound->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
-	// nullptr, 0, 4)`) and drop this vector, once that header change lands --
-	// it needs ten other call sites converted to the raw spelling first. See
-	// docs/catalog/frame-gaps.md, "Closure batch 74".
-	JGeometry::TVec3<f32> effectPos;
 	gpMarioParticleManager->emitAndBindToPosPtr(0x8B, &mPosition, 0, nullptr);
-	if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_TO_COOL)) {
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0, nullptr, 0, 4);
-	}
+	gpMSound->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition);
 	onLiveFlag(LIVE_FLAG_UNK20000);
 }
 

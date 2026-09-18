@@ -149,9 +149,7 @@ void TBossHanachan::emitOneTimeSandPillar_(TBossHanachanPartsBody* part)
 	mSandPillarActor->setBtkFromIndex(2);
 	mSandPillarActor->setBrkFromIndex(2);
 	gpCameraShake->startShake((EnumCamShakeMode)8, 1.0f);
-	if (gpMSound->gateCheck(0x2884))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    0x2884, &mSandPillarPosition, 0, nullptr, 0, 4);
+	gpMSound->startSoundActor(0x2884, &mSandPillarPosition);
 }
 
 void TBossHanachan::emitCamShake_()

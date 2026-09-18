@@ -991,8 +991,7 @@ void TGessoPolluteObj::calcRootMatrix()
 	if (unk168 != 0)
 		return;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_GESO_GERO_FLY, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_GESO_GERO_FLY, &mPosition);
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_GESO_KISEKI,
 	                                            &mPosition, 1, this);
 }

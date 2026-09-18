@@ -1401,8 +1401,7 @@ void TCoverFruit::loadAfter()
 void TBigWatermelon::touchWaterSurface()
 {
 	emitColumnWater();
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition);
 	kill();
 }
 

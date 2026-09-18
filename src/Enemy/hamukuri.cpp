@@ -840,8 +840,7 @@ bool THamuKuri::canGoForSearchActor()
 void THamuKuri::behaveToFindMario()
 {
 	TWalkerEnemy::behaveToFindMario();
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_HMKRI_VO_ATTACK, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_HMKRI_VO_ATTACK, &mPosition);
 }
 
 void THamuKuri::attackToMario()
@@ -1587,8 +1586,7 @@ BOOL THaneHamuKuri::isReachedToGoal() const
 
 void THaneHamuKuri::attackToMario()
 {
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_HANEKURI_ATTACK, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_HANEKURI_ATTACK, &mPosition);
 	sendAttackMsgToMario();
 }
 

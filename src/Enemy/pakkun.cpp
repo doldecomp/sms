@@ -889,8 +889,7 @@ void TStayPakkun::setBehavior()
 	            / 255.0f;
 
 	if (mHitPoints < 2) {
-		gpMSound->startSoundActor(MSD_SE_EN_PAKKUN_RIP, &mPosition, 0, nullptr,
-		                          0, 4);
+		gpMSound->startSoundActor(MSD_SE_EN_PAKKUN_RIP, &mPosition);
 		mHitPoints = 1;
 		kill();
 	}

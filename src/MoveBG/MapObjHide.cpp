@@ -635,8 +635,7 @@ BOOL TBreakHideObj::receiveMessage(THitActor* sender, u32 message)
 		if (isActorType(0x400002C3)) {
 			emitAndScale(0x6B, 0, &mPosition);
 			emitAndScale(0x6C, 0, &mPosition);
-			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATERMELON_BLOCK,
-			                                &mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATERMELON_BLOCK, &mPosition);
 		}
 		kill();
 		return TRUE;
