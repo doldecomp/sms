@@ -206,23 +206,23 @@ int TMenuDirector::direct()
 						code = 'st_a';
 					J2DTextBox* box = (J2DTextBox*)unk3C->search(code);
 					if (i < 6)
-						snprintf(box->getStringPtr(), 22, "ビーチ %d", i);
+						snprintf(box->getStringPtr(), 22, "Beach %d", i);
 					else
-						snprintf(box->getStringPtr(), 22, "ホテル %d", i - 6);
+						snprintf(box->getStringPtr(), 22, "Hotel %d", i - 6);
 				}
 
 				snprintf(((J2DTextBox*)unk3C->search('st_f'))->getStringPtr(),
-				         22, "ビーチ 6");
+				         22, "Beach 6");
 				snprintf(((J2DTextBox*)unk3C->search('st_g'))->getStringPtr(),
-				         22, "ビーチ 7");
+				         22, "Beach 7");
 				snprintf(((J2DTextBox*)unk3C->search('st_h'))->getStringPtr(),
-				         22, "ホテル 4");
+				         22, "Hotel 4");
 				snprintf(((J2DTextBox*)unk3C->search('st_i'))->getStringPtr(),
-				         22, "カジノ 0");
+				         22, "Casino 0");
 				snprintf(((J2DTextBox*)unk3C->search('st_j'))->getStringPtr(),
-				         22, "カジノ 1");
+				         22, "Casino 1");
 				snprintf(((J2DTextBox*)unk3C->search('st_k'))->getStringPtr(),
-				         22, "ボス");
+				         22, "Boss");
 			} else if (unk40->unk2C == 5) {
 				for (int i = 0; i < 10; ++i) {
 					int code = i + 'st_1';
@@ -230,26 +230,26 @@ int TMenuDirector::direct()
 						code = 'st_a';
 					J2DTextBox* box = (J2DTextBox*)unk3C->search(code);
 					if (i < 4)
-						snprintf(box->getStringPtr(), 22, "ビーチサイド %d", i);
+						snprintf(box->getStringPtr(), 22, "Beach %d", i);
 					else
-						snprintf(box->getStringPtr(), 22, "ピンナパーコ %d",
+						snprintf(box->getStringPtr(), 22, "Park %d",
 						         i - 4);
 				}
 
 				snprintf(((J2DTextBox*)unk3C->search('st_b'))->getStringPtr(),
-				         22, "ピンナパーコ 6");
+				         22, "Park 6");
 				snprintf(((J2DTextBox*)unk3C->search('st_c'))->getStringPtr(),
-				         22, "ピンナパーコ 7");
+				         22, "Park 7");
 				snprintf(((J2DTextBox*)unk3C->search('st_d'))->getStringPtr(),
-				         22, "ビーチサイド 4");
+				         22, "Beach 4");
 				snprintf(((J2DTextBox*)unk3C->search('st_h'))->getStringPtr(),
-				         22, "ボス 0");
+				         22, "Boss 0");
 				snprintf(((J2DTextBox*)unk3C->search('st_i'))->getStringPtr(),
-				         22, "ボス 1");
+				         22, "Boss 1");
 				snprintf(((J2DTextBox*)unk3C->search('st_j'))->getStringPtr(),
-				         22, "デモ 0");
+				         22, "Demo 0");
 				snprintf(((J2DTextBox*)unk3C->search('st_k'))->getStringPtr(),
-				         22, "デモ 1");
+				         22, "Demo 1");
 			} else if (unk40->unk2C == 8) {
 				for (int i = 0; i < 10; ++i) {
 					int code = i + 'st_1';
@@ -257,11 +257,11 @@ int TMenuDirector::direct()
 						code = 'st_a';
 					J2DTextBox* box = (J2DTextBox*)unk3C->search(code);
 					if (i < 8)
-						snprintf(box->getStringPtr(), 22, "マーレ %d", i);
+						snprintf(box->getStringPtr(), 22, "Noki %d", i);
 					if (i == 8)
-						snprintf(box->getStringPtr(), 22, "カイテイ");
+						snprintf(box->getStringPtr(), 22, "sea bottom");
 					if (i == 9)
-						snprintf(box->getStringPtr(), 22, "ボス");
+						snprintf(box->getStringPtr(), 22, "Boss");
 				}
 			} else if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12) {
 				for (int i = 0; i < 20; ++i) {
@@ -301,7 +301,7 @@ int TMenuDirector::direct()
 					J2DTextBox* box = (J2DTextBox*)unk3C->search(code);
 
 					if (i < 10)
-						snprintf(box->getStringPtr(), 22, "%02d シーン %d", i,
+						snprintf(box->getStringPtr(), 22, "%02d scene %d", i,
 						         i);
 					else
 						snprintf(box->getStringPtr(), 22, "%02d EX %d", i,

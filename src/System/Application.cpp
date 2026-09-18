@@ -361,7 +361,7 @@ void TApplication::initialize_nlogoAfter()
 	gpCardManager->mIcons
 	    = (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1;
 	gpCardManager->mBanner
-	    = (ResTIMG*)piVar2->getResource("/card/mariobnr_jpn.bti") + 1;
+	    = (ResTIMG*)piVar2->getResource("/card/mariobnr.bti") + 1;
 
 	int status;
 	while ((status = gpCardManager->getLastStatus()) == -1)
@@ -688,48 +688,51 @@ int TApplication::drawDVDErr()
 	switch (DVDGetDriveStatus()) {
 	case -1:
 		snprintf(message, 512,
-		         "エラーが発生しました。\n"
-		         "本体のパワーボタンを押して電源をOFFにし\n"
-		         "本体の取扱説明書の指示に従ってください。");
+		         "An error has occurred. Turn the\n"
+		         "power OFF and check the\n"
+		         "NINTENDO GAMECUBE\x99\n"
+		         "Instruction Booklet for further instructions.");
 		error = 'em_1';
 		break;
 
 	case 11:
 		snprintf(message, 512,
-		         "ディスクを読めませんでした。\n"
-		         "くわしくは、本体の取扱説明書を\n"
-		         "お読みください。");
+		         "The Disc could not be read.\n"
+		         "Please read the NINTENDO GAMECUBE\x99\n"
+		         "Instruction Booklet for\n"
+		         "more information.\n");
 		error = 'em_2';
 		break;
 
 	case 1:
 		if (DVDCheckDisk() == 0) {
-			snprintf(message, 512, "ディスクを読み込んでいます。");
+			snprintf(message, 512, "Reading Disc...");
 			error = 'em_3';
 		}
 		break;
 
 	case 5:
 		snprintf(message, 512,
-		         "ディスクカバーが開いています。\n"
-		         "ゲームを続ける場合は\n"
-		         "ディスクカバーを閉めてください。");
+		         "The Disc Cover is open.\n"
+		         "To continue playing,\n"
+		         "please close the\n"
+		         "Disc Cover.");
 		error = 'em_4';
 		break;
 
 	case 4:
 		snprintf(message, 512,
-		         "「スーパーマリオサンシャイン」の\n"
-		         "ディスクをセットしてください。");
+		         "Please insert a Super Mario Sunshine\n"
+		         "Game Disc.");
 		error = 'em_5';
 		break;
 
 	case 6:
 		snprintf(message, 512,
-		         "このディスクは、「スーパーマリオサンシャイン」の\n"
-		         "ディスクではありません。\n"
-		         "「スーパーマリオサンシャイン」の\n"
-		         "ディスクをセットしてください。 ");
+		         "This Disc is not\n"
+		         "Super Mario Sunshine.\n"
+		         "Please insert a Super\n"
+		         "Mario Sunshine Game Disc.");
 		error = 'em_6';
 		break;
 	}
@@ -781,6 +784,11 @@ int TApplication::drawDVDErr()
 		if (gpSystemFont != nullptr)
 			font = gpSystemFont;
 		J2DPrint print(font, 0);
+		// TODO: retail parks both colours in one 8-byte `@2485`
+		// (ffff00ff ffff00ff) and copies it through two by-value parameter
+		// temporaries before landing on unk44/unk48, so the two assignments
+		// were one call taking a colour pair by value. Our two separate
+		// compound literals give two 4-byte objects instead.
 		print.unk44  = (GXColor) { 0xff, 0xff, 0, 0xff };
 		print.unk48  = (GXColor) { 0xff, 0xff, 0, 0xff };
 		f32 msgWidth = print.getWidth(message);
