@@ -73,7 +73,10 @@ public:
 	{
 		reset();
 	}
-	virtual ~TMarioGamePad();
+	// Weak in the map (0x64, emitted in Application.cpp) together with
+	// __vt__13TMarioGamePad (0xc), so the body is a header inline; with it
+	// declared only, Application.o referenced the vtable as an external.
+	virtual ~TMarioGamePad() { }
 
 	enum PadMeanings {
 		MEANING_0x1      = 0x1,
