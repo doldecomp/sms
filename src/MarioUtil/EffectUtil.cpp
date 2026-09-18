@@ -92,6 +92,23 @@ static inline TMarioParticleManager* EffectUtilGetParticleManager()
 // `SMSGetMarDirector()` over the raw `gpMarDirector` read is +4 of low region
 // (it is +0 on its own -- levers interact, so measure it last), and the parked
 // EffectUtilGetParticleManager() binding level above is +8 per emit site.
+// Batch 131 located the rule behind the rotation: the callee-saved FPR a
+// scalar-replaced vector component gets is ranked by the *declaration order of
+// cross()'s three temporaries*, with f31 going to the last-declared one. Our
+// `_x, _y, _z` therefore gives f31 to z (ascending) and retail's descending
+// ranking means retail declares `_z, _y, _x`. Measured with a TU-local clone of
+// cross() (frame-neutral at both sites): `_z, _y, _x` with the stores left in
+// x/y/z order reproduces retail's ranking in *both* groups exactly (B.x f31,
+// B.y f30, B.z f29; C.x f27, C.y f26, C.z f25) and drops the marker count
+// 17 -> 13, leaving only the first cross's schedule (our `_x` fmsubs sinks past
+// the `_y` fnmsubs, +1 instruction) and the volatile f1/f2/f4/f5 permutation
+// that follows from it. All 12 (declaration order x {6 store orders}) and the
+// other four declaration orders were measured: only `_z, _y, _x` ranks both
+// groups right, reversing the *stores* alone fixes C.x only, and assigning the
+// three expressions straight into `d->` costs 2-3 instructions and 8 of frame.
+// This is a JGVec3.hpp item for a header round -- the TODO at cross() records
+// store-order and temporary-count variants but never the declaration order
+// with the stores held fixed, so it has not been measured tree-wide.
 // Rejected: spelling the first cross out with its three temporaries and
 // storing z, y, x (98.2, and it moves the 0.0f constant into f31); declaring
 // `C` before the matrix (moves the matrix to 0x3c); normalizing B before C
