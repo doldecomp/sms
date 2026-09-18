@@ -466,11 +466,19 @@ void TOptionRumbleUnit::setInfluencedAlphaRecursive(J2DPane* pane, bool flag)
 // map where the rumble unit's are 0x24/0x60.
 // ---------------------------------------------------------------------------
 
+// Binding level worth +8 of low region, landing
+// TOptionSubtitleUnit::TOptionSubtitleUnit's frame at 0x1a0 (batch 121).
+static inline J2DPane* OptionGetPane(const TExPane* p)
+{
+	J2DPane* pane = p->getPane();
+	return pane;
+}
+
 TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
     : mScreen(screen)
 {
 	mParentPane   = new TExPane(mScreen, 'txp2');
-	mInitialAlpha = getParentPane()->getPane()->getAlpha();
+	mInitialAlpha = OptionGetPane(mParentPane)->getAlpha();
 
 	// The speech bubble around the on/off text that pulsates
 	// when this setting is selected.

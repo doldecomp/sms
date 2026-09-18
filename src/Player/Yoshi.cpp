@@ -413,9 +413,17 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 	return true;
 }
 
+// Binding level worth +8 of low region, landing TYoshi::disappear's frame at
+// 0x20 (batch 121).
+static inline BOOL YoshiIsHatched(const TYoshi* p)
+{
+	BOOL hatched = p->isHatched();
+	return hatched;
+}
+
 bool TYoshi::disappear()
 {
-	if (isHatched()) {
+	if (YoshiIsHatched(this)) {
 		if (mState == STATE_MOUNTED)
 			mMario->getOffYoshi(true);
 

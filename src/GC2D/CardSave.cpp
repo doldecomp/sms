@@ -1016,6 +1016,14 @@ s8 TCardSave::drawMessage(TEProgress param_1)
 	return result;
 }
 
+// Binding level worth +8 of low region, landing TCardSave::drawMessageBM's
+// frame at 0x168 (batch 121).
+static inline TCardBookmarkInfo& CardSaveGetBookmarkInfo(TCardSave* p)
+{
+	TCardBookmarkInfo& bookmarkInfo = p->getBookmarkInfo();
+	return bookmarkInfo;
+}
+
 s8 TCardSave::drawMessageBM(TEProgress param_1)
 {
 
@@ -1053,8 +1061,8 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 			unk154[unk2EA]->show();
 			unk150->show();
 
-			if (getUnk308() == 0 || getUnk308() == 6 || getUnk308() == 8) {
-				if (getBookmarkInfo().unk0 == 1) {
+			if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
+				if (CardSaveGetBookmarkInfo(this).unk0 == 1) {
 					setMessage(unk124, 0x14, 0);
 					setMessage(unk128, 0x14, 0);
 					unk128->show();
@@ -1147,13 +1155,21 @@ s8 TCardSave::waitForAnyKey(TEProgress param_1)
 	return result;
 }
 
+// Binding level worth +16 of low region, landing
+// TCardSave::waitForSelectOver's frame at 0x138 (batch 121).
+static inline J2DPane* CardSaveGetPane(const TExPane* p)
+{
+	J2DPane* pane = p->getPane();
+	return pane;
+}
+
 s8 TCardSave::waitForSelectOver()
 {
 	s8 result = -1;
 
 	switch (getUnk10()) {
 	case 0:
-		unk240->getPane()->show();
+		CardSaveGetPane(unk240)->show();
 		unk240->setCenteredSize(20, unk244.getWidth(), unk244.getHeight(), 0,
 		                        0);
 		unk264[0]->hide();
@@ -1212,7 +1228,7 @@ s8 TCardSave::waitForSelectOver()
 
 	case 3:
 		if (unk240->update()) {
-			unk240->getPane()->hide();
+			CardSaveGetPane(unk240)->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1228,6 +1244,14 @@ s8 TCardSave::waitForSelectOver()
 	}
 
 	return result;
+}
+
+// Binding level worth +16 of low region, landing TCardSave::waitForSelect2's
+// frame at 0x148 (batch 121).
+static inline int CardSaveGetHeight(const JUTRect* p)
+{
+	int height = p->getHeight();
+	return height;
 }
 
 s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
@@ -1260,7 +1284,8 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 
 		unk194->hide();
 		unk17C->getPane()->show();
-		unk17C->setCenteredSize(20, unk180.getWidth(), unk180.getHeight(), 0,
+		unk17C->setCenteredSize(20, unk180.getWidth(),
+		                        CardSaveGetHeight(&unk180), 0,
 		                        0);
 
 		unk198[0][1]->hide();

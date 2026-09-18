@@ -2162,11 +2162,19 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level worth +16 of low region, landing TMario::calcView's frame at
+// 0x28 (batch 121).
+static inline M3UModelMario* MarioDrawGetM3UModel(const TMario* p)
+{
+	M3UModelMario* m3UModel = p->getM3UModel();
+	return m3UModel;
+}
+
 void TMario::calcView(JDrama::TGraphics* graphics)
 {
 	// volatile u32 padding[4];
 	MTXCopy(graphics->mViewMtx, j3dSys.mViewMtx);
-	getM3UModel()->unk8->viewCalc();
+	MarioDrawGetM3UModel(this)->unk8->viewCalc();
 	if (mHandModels[0][0] != nullptr) {
 		mHandModels[0][0]->viewCalc();
 		mHandModels[0][1]->viewCalc();

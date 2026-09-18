@@ -477,6 +477,22 @@ void TBaseNPC::npcTalkIn()
 	resetToWait_();
 }
 
+// Binding level worth +16 of low region, landing TBaseNPC::npcTalking's
+// frame at 0x50 (batch 121).
+static inline int NpcAnmGetCurrentAnmKind(const TLodAnm* p)
+{
+	int currentAnmKind = p->getCurrentAnmKind();
+	return currentAnmKind;
+}
+
+// Binding level worth +16 of low region, landing TBaseNPC::npcTalking's
+// frame at 0x50 (batch 121).
+static inline const TGraphWeb* NpcAnmGetGraph(const TGraphTracer* p)
+{
+	const TGraphWeb* graph = p->getGraph();
+	return graph;
+}
+
 void TBaseNPC::npcTalking()
 {
 	if (isSunflowerReviving()) {
@@ -487,7 +503,7 @@ void TBaseNPC::npcTalking()
 	if (isTurnToMarioWhenTalk()) {
 		SMS_GoRotate(mPosition, SMS_GetMarioPos(), getTurnSpeed(),
 		             &mRotation.y);
-		if (!unk124->getGraph()->isDummy())
+		if (!NpcAnmGetGraph(unk124)->isDummy())
 			onUnk1DA(UNK1DA_FLAG_UNK1);
 	}
 
@@ -495,7 +511,7 @@ void TBaseNPC::npcTalking()
 	if (mActorType == 0x4000018 && checkUnk1D8(UNK1D8_FLAG_UNK2))
 		bVar1 = true;
 
-	if (bVar1 && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A
+	if (bVar1 && NpcAnmGetCurrentAnmKind(unkD0) == NPC_ANM_KIND_UNK1A
 	    && mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		peachTiredOut_();
 	}

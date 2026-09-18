@@ -339,6 +339,14 @@ BOOL TMario::swimPDown()
 	return 0;
 }
 
+// Binding level worth +8 of low region, landing TMario::swimMain's frame at
+// 0x68 (batch 121).
+static inline u32 MarioSwimGetStatus(const TMario* p)
+{
+	u32 status = p->getStatus();
+	return status;
+}
+
 // TODO: frame 0x60 vs 0x68 -- 8 bytes of locals still missing. getStatus() for
 // the three mStatus reads here and getIntendedMag() inside the inlined
 // checkSwimToHangFence each bought 8; naming checkSwimJump()'s result and
@@ -362,7 +370,7 @@ BOOL TMario::swimMain()
 	unk2A8.y = mFloorPosition.z;
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
-		if (getStatus() != MARIO_STATUS_SWIM_PADDLE_START
+		if (MarioSwimGetStatus(this) != MARIO_STATUS_SWIM_PADDLE_START
 		    && getStatus() != MARIO_STATUS_SWIM_PADDLE)
 			return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 

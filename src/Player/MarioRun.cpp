@@ -315,11 +315,20 @@ f32 TMario::getSlideStickMult()
 	return mSlipParamsNormal.mStickSlideMult.get();
 }
 
+// Binding level worth +16 of low region, landing TMario::slideProcess's
+// frame at 0x88 (batch 121).
+static inline const JGeometry::TVec3<f32>&
+MarioRunGetNormal(const TBGCheckData* p)
+{
+	const JGeometry::TVec3<f32>& normal = p->getNormal();
+	return normal;
+}
+
 void TMario::slideProcess(f32 baseAcc, f32 friction)
 {
 	const TBGCheckData* ground = mGroundPlane;
 
-	s16 dirAng = matan(ground->getNormal().z, ground->getNormal().x);
+	s16 dirAng = matan(MarioRunGetNormal(ground).z, ground->getNormal().x);
 
 	f32 mag = MsSqrtf(ground->getNormal().x * ground->getNormal().x
 	                  + ground->getNormal().z * ground->getNormal().z);
