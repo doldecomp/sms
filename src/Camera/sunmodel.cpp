@@ -236,13 +236,31 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 			chase3 = unk88;
 		CLBChaseGeneralConstantSpecifySpeed<f32>(&unkAC, unkB0, chase3);
 
+		// Retail loads all six operands before storing any component, which
+		// `dir.sub(mPosition, camPos)` cannot do (it stores each component as
+		// soon as it is computed): the three differences are arguments of
+		// `set`, so they are all evaluated before the body runs.
+		const Vec& camPos = SMSGetCamera()->getUnk124();
 		JGeometry::TVec3<f32> dir;
-		dir.sub(mPosition, SMSGetCamera()->getUnk124());
+		dir.set(mPosition.x - camPos.x, mPosition.y - camPos.y,
+		        mPosition.z - camPos.z);
 		MsVECNormalize(&dir, &dir);
 
-		JGeometry::TVec3<f32> camPos;
-		camPos.set(SMSGetCamera()->getUnk124());
-		unk198.scaleAdd(250000.0f, camPos, dir);
+		// TODO: retail reaches `bl TVec3<f32>::set(const Vec&)` here (header
+		// round 24): the copy of the camera position is an out-of-line call,
+		// which a 3-statement in-class member only becomes at inline depth 4,
+		// and the argument is a `const Vec&`, not the `const TVec3<f32>&`
+		// that getUnk124() returns - so retail read the camera position
+		// through a Vec-typed accessor sitting three inline levels above this
+		// statement. Measured with a placeholder three-deep static-inline
+		// chain: this function goes 92.2% -> 97.4% with every instruction
+		// matching and only the 0x10 of low region the chain does not
+		// reserve left over (0xd0 against retail's 0xe0), so the shape is
+		// right but the accessor's real name and split are not recoverable
+		// yet. Two levels (set at depth 3) still inlines it: 95.1%.
+		JGeometry::TVec3<f32> sunPos;
+		sunPos.set(SMSGetCamera()->getUnk124());
+		unk198.scaleAdd(250000.0f, sunPos, dir);
 
 		if (unk64)
 			unk64->mPosition = unk198;
