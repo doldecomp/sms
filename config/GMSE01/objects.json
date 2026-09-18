@@ -454,5 +454,6 @@
   "Enemy/bgpoldrop.cpp",
   "NPC/NpcColor.cpp",
   "Player/MarioWait.cpp",
-  "Player/MarioSwim.cpp"
+  "Player/MarioSwim.cpp",
+  "JSystem/JParticle/JPAParticle.cpp"
 ]
