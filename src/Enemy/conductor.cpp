@@ -19,6 +19,8 @@
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
 
+TConductor* gpConductor;
+
 TConductor::TCondParams::TCondParams()
     : TParams("/conductor.prm")
     , PARAM_INIT(mEnemyFarClip, 5000.0f)
