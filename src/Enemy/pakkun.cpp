@@ -673,10 +673,7 @@ void TPakkunSeed::forceKill()
 
 void TStayPakkun::load(JSUMemoryInputStream& stream)
 {
-	TSmallEnemy::load(stream);
-	reset();
-
-	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+	TPakkun::load(stream);
 	unk199 = 1;
 }
 
