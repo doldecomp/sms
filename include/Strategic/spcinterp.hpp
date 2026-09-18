@@ -371,7 +371,7 @@ public:
 class TSpcInterp {
 public:
 	/* 0x0 */ TSpcBinary* mBinary;
-	/* 0x4 */ u32 mStepsToDo;
+	/* 0x4 */ s32 mStepsToDo;
 	/* 0x8 */ u32 mProgramCounter;
 	/* 0xC */ s32 mStepsLeft;
 	/* 0x10 */ void* unk10;

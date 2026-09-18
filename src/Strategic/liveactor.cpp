@@ -3,6 +3,7 @@
 #include <Strategic/question.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/Binder.hpp>
+#include <Strategic/spcinterp.hpp>
 #include <System/MarDirector.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -36,7 +37,7 @@ TLiveActor::TLiveActor(const char* name)
 	mAnmSoundPath  = nullptr;
 	mBinder        = nullptr;
 	mSpine         = nullptr;
-	unk90          = nullptr;
+	mSpcInterp     = nullptr;
 
 	mLinearVelocity.setAll(0.0f);
 	mAngularVelocity.setAll(0.0f);
@@ -229,19 +230,23 @@ void TLiveActor::bind()
 
 void TLiveActor::control()
 {
-	// TODO: what is unk90???
-	if (unk90 == nullptr || *(int*)((char*)unk90 + 4) == 0) {
+	// unk90 is the actor's SPC script interpreter: the guard reads its
+	// mStepsToDo (0x4) and the calls go through its vtable at 0x5c slot 0x10,
+	// which is TSpcInterp::update(). While a script has steps queued it drives
+	// the actor instead of the spine, except that a spine that is not idle
+	// still gets its own update.
+	if (mSpcInterp == nullptr || mSpcInterp->mStepsToDo == 0) {
 		if (mSpine)
 			mSpine->update();
 	} else {
 		if (!mSpine) {
-			if (unk90 && *(int*)((char*)unk90 + 4) != 0) {
-				// call on unk90
-			}
-		} else if (mSpine->isIdle()) {
-			// call on unk90
-		} else {
+			if (mSpcInterp && mSpcInterp->mStepsToDo != 0)
+				mSpcInterp->update();
+		} else if (mSpine->getCurrentNerve() != nullptr
+		           || mSpine->getVertebraeCount() > 0) {
 			mSpine->update();
+		} else {
+			mSpcInterp->update();
 		}
 	}
 }
