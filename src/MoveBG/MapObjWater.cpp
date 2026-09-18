@@ -53,23 +53,28 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (gpMarDirector->unk124 != 0)
 		return;
 
-	if (gpCamera->isDemoCamera())
+	// The camera position is re-read for every term instead of being bound
+	// to a reference: a reference costs five fewer inline temporaries and
+	// leaves the frame 36 bytes short, and folding the water test into this
+	// same `||` is also what keeps the `bne`/`b` pair at 0x284 (a separate
+	// `if (...) return;` collapses to one branch straight to the epilogue).
+	if (gpCamera->isDemoCamera()
+	    || (gpCamera->getUnk124().y > 0.0f
+	        && gpCamera->getUnk124().y
+	            >= gpMapObjWave->getHeight(gpCamera->getUnk124().x,
+	                gpCamera->getUnk124().y, gpCamera->getUnk124().z)))
 		return;
-
-	const JGeometry::TVec3<f32>& cameraPos = gpCamera->getUnk124();
-	if (cameraPos.y > 0.0f) {
-		f32 waterHeight = gpMapObjWave->getHeight(
-		    cameraPos.x, cameraPos.y, cameraPos.z);
-		if (cameraPos.y >= waterHeight)
-			return;
-	}
 
 	if (cue & CUE_CALC_ANIM) {
 		Mtx inverseView;
 		Mtx translation;
 		Mtx scale;
 		J3DTransformInfo info;
-		MtxPtr viewMtx = graphics->getViewMtx();
+		// TODO: only evidence is the frame: the original declared a
+		// last local of 12 bytes here that no instruction touches,
+		// presumably a scratch vector for a dropped code path.
+		JGeometry::TVec3<f32> rotation;
+		MtxPtr viewMtx    = graphics->getViewMtx();
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
 		info.mScale.z     = 1.0f;
