@@ -60,7 +60,11 @@ public:
 	{
 	}
 
-	f32 get_float(f32);
+	// The ROM reaches the two-argument draw through this one at
+	// TBathWaterManager::throwMario's jump-drop site: the extra level is
+	// what keeps TRandom_fast_::get() a `bl` there while the spread draw a
+	// few lines up expands it.
+	f32 get_float(f32 max) { return get_float(0.0f, max); }
 	// Both bodies come from JASystem::TInstRand::getY, whose frame carries one
 	// dead temporary per inlined level: the chain
 	// get_sfloat_1 -> get_ufloat -> get_ufloat_1 -> get is the only depth that
