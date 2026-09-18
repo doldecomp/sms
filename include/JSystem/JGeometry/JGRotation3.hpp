@@ -409,6 +409,15 @@ public:
 		);
 	}
 
+	// Ruled out: a `multTranspose33(const TVec3&, TVec3&)` companion for the
+	// row-major world-to-local multiply that TBathtubData::getLocalPos spells
+	// out. The ROM has TVec3<f>::set<f> write straight into getLocalPos's
+	// by-value return temporary, so any out-param form needs a named local
+	// plus a copy: out-param 93.3 -> 87.0%, a by-value-returning overload
+	// 93.3 -> 66.7%, in-place `multTranspose33(diff, diff)` 93.3 -> 81.2%
+	// (TBathWaterManager::throwMario, batch 62). The multiply stays written
+	// out at that one call site.
+	//
 	// Ruled out: forwarding as `TVec3<f32> tmp(param_1); mult33(tmp, param_1);`
 	// so that the aliasing call reloads its operands from a copy. cameralib's
 	// RotateAboutAxis does want that copy, but it is the only caller that
