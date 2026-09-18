@@ -450,5 +450,7 @@
   "Animal/AnimalManager.cpp",
   "System/SnapTimeObj.cpp",
   "Map/PollutionPos.cpp",
-  "System/TalkCursor.cpp"
+  "System/TalkCursor.cpp",
+  "Enemy/bgpoldrop.cpp",
+  "NPC/NpcColor.cpp"
 ]
