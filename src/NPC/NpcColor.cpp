@@ -27,6 +27,18 @@ static void InitChangeTwoColor_Base(J3DModel* model, u16 material,
 		                           GX_TEVREG2, color2);
 }
 
+// TODO: every instruction matches; the frame is 8 bytes too big (0x40 vs
+// 0x38). Bisected to one statement: binding `operator new`'s result to a
+// local in case 0. With the whole `new` removed the frame is exactly 0x38, so
+// every other level in this function is already right, and with the `new` and
+// no field stores at all it is already 0x40 -- the eight bytes are the result
+// slot, not the colour copy. Retail calls the same `operator new(4)` and pays
+// nothing for it. Rejected: `new GXColor` without parentheses, explicit
+// `(GXColor*)operator new(sizeof(GXColor))`, a `void*` intermediate,
+// `GXColor& c = *new GXColor()`, `register`, declaring the pointer at
+// function scope, declaring all three pointers C-style at the top, casting
+// each field store, spelling the two InitChange*_Base helpers out at all four
+// call sites, and `param1->mModel` instead of `getModel()`.
 void SMS_InitChangeNpcColor(const MActor* param1,
                             const TColorChangeInfo* param2, s16 param3,
                             const GXColor* param4)
