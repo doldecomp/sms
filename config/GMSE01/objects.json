@@ -452,6 +452,8 @@
   "dolphin/os/OSStopwatch.c",
   "dolphin/os/OSSync.c",
   "dolphin/os/OSTime.c",
+  "dolphin/os/__start.c",
+  "dolphin/os/OSThread.c",
   "dolphin/os/__ppc_eabi_init.cpp",
   "dolphin/pad/Pad.c",
   "dolphin/pad/Padclamp.c",
