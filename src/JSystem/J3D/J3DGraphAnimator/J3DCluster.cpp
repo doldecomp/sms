@@ -66,6 +66,18 @@ void J3DDeformer::deform(J3DModel* model, u16 idx)
 	}
 }
 
+// TODO: 99.7%. Two residues, no instruction is missing or extra.
+// (1) frame 0x118 vs 0x110, and it is two independent 4-byte gaps, not one 8:
+//     the named block matches from `pos[3]` up to `sign[2]` (28 bytes for the
+//     two `Vec deform`s), but retail has 16 bytes between `sign[2]` and the
+//     u16-to-f32 conversion slot where we have 12, and 4 more bytes of temp
+//     pool below `pos[3]` (100 vs 96). Replacing the first `Vec deform` with
+//     three `f32`s costs 8, so the `Vec` spelling is right and something else
+//     is missing.
+// (2) the position loop's sign multiplies schedule the two `rlwinm` bit
+//     extracts in the opposite order (retail computes the y index at 0x5f0 and
+//     the z index at 0x604, we do the reverse) with r6/r7/r8/r9 rotated
+//     accordingly in the normal loop as well.
 void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 {
 	if (checkFlag(2) && model->getModelData()->isDeformableVertexFormat()) {
@@ -329,6 +341,16 @@ void J3DSkinDeform::initMtxIndexArray(J3DModelData* modelData)
 
 				u16 useMtxIdxBuf[10];
 				for (s32 k = 0; k < vtxCount; k++) {
+					// TODO: the only residue in this function is the operand
+					// order of this one `add`: retail emits
+					// `add r4, dl, vtxSize*k`, we emit the reverse, and the
+					// following `addi r4, r4, 3` and the three indexed loads
+					// all match. Every other spelling costs an extra
+					// instruction (`dl + 3 + vtxSize * k`,
+					// `&dl[vtxSize * k] + 3`, `(dl + vtxSize * k) + 3`) or
+					// perturbs the frame (a named `int ofs`); `vtx += ...`,
+					// `dl + (3 + ...)` and `&dl[vtxSize * k + 3]` are all
+					// identical to this one.
 					u8* vtx     = &dl[3 + vtxSize * k];
 					u8 pnmtxIdx = ((u32)(*(u8*)&vtx[pnmtxIdxOffs])) / 3;
 					u16 posIdx  = *(u16*)&vtx[posOffs];
