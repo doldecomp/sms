@@ -367,6 +367,19 @@ public:
 	//       100.00 -> 95.32, TFruitsBoat::moveObject 93.95 -> 93.58,
 	//       TWalker::bind 90.36 -> 90.22 and ~10 more
 	//
+	//   the same three temporaries declared z, y, x, stores still x, y, z
+	//       (header round 22, following batch 131's TU-local clone, which
+	//       measured 17 -> 13 markers on SMS_EmitSinkInPollutionEffect). The
+	//       clone's result does not transfer to the real member: the same
+	//       function goes 99.06 -> 97.62, JPAConvectionField::affect 94.46 ->
+	//       92.33, bgIntersectLine 89.74 -> 86.31, TQuat4<f>::setRotate 98.79
+	//       -> 97.25 and ~25 more, against 8 tenth-of-a-point gains
+	//       (TWallAtGraph::init 99.29 -> 99.64, TKumokun::initAttachPlane
+	//       91.02 -> 92.00, TAmiNoko::calcRootMatrix 92.16 -> 92.66), total
+	//       97.40 -> 97.39 and no function newly matched. The callee-saved
+	//       FPR ranking a clone sees is a property of the clone's own
+	//       expansion, not of the declaration order here.
+	//
 	// So moveRun's order comes from that call site, not from here.
 	// Same conclusion from TBGTentacle::setAttackTarget (batch 62), where
 	// the whole residue is this: retail computes _x and _y from shared
