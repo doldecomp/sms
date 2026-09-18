@@ -12,6 +12,8 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: 99.8%. Instruction-exact; frame 0x58 vs 0x40 (24 dead bytes), no
+// referenced local. See initModel().
 void TMapWarp::changeModel(int i)
 {
 	if (unk8 == i)
@@ -25,6 +27,18 @@ void TMapWarp::changeModel(int i)
 
 void TMapWarp::warp(int) { }
 
+// TODO: 99.8% (66.4% before closure batch 83). Three fixes got it there: the
+// warp-point index is a named `int no = checkData->getData();` so that MWCC
+// caches `no * 0x14` in a callee-saved register while re-reading the `unk4`
+// member after each virtual call; `unk8` is the *left* operand of both
+// inequality tests; and the warp destination is `SMS_GetMarioPos() + unk4[no]
+// .unk8` bound to a named local (the by-value left operand of operator+ is
+// retail's three-word copy in front of `bl TVec3::add`, and the named result is
+// the second copy at 0xe8) rather than an in-place `+=`. The stream vector is
+// zero-initialised and then has `.z` overwritten (`stfs` to the same slot
+// twice), not built by the three-argument constructor.
+// Residue: frame 0x170 vs 0x158, 24 dead bytes, plus `addi r5, r4, 0` where we
+// emit `mr r5, r4` for MTXMultVec's duplicated out-pointer.
 void TMapWarp::watchToWarp()
 {
 	const TBGCheckData* checkData;
@@ -32,29 +46,27 @@ void TMapWarp::watchToWarp()
 	                                     gpMarioPos->z, &checkData);
 
 	if (checkData->isWarp()) {
-		int warp = unk4[checkData->getData()].unk0;
-		if (warp != unk8) {
+		int no   = checkData->getData();
+		int warp = unk4[no].unk0;
+		if (unk8 != warp) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
 			gpMap->getModelManager()->getJointModel(0)->getChild(warp)->awake();
-			unk8 = warp;
+			unk8 = unk4[no].unk0;
 
-			// TODO: inlines
-			JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-			marioPos += unk4[checkData->getData()].unk8;
-			SMS_MarioWarpRequest(marioPos,
+			JGeometry::TVec3<f32> warpPos
+			    = SMS_GetMarioPos() + unk4[no].unk8;
+			SMS_MarioWarpRequest(warpPos,
 			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
 		}
 	}
 
 	if (checkData->isMapChange()) {
-		if (checkData->getData() != unk8) {
+		int no = checkData->getData();
+		if (unk8 != no) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
-			gpMap->getModelManager()
-			    ->getJointModel(0)
-			    ->getChild(checkData->getData())
-			    ->awake();
+			gpMap->getModelManager()->getJointModel(0)->getChild(no)->awake();
 
-			unk8 = checkData->getData();
+			unk8 = no;
 		}
 	}
 
@@ -67,7 +79,8 @@ void TMapWarp::watchToWarp()
 	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info->unk18.x, info->unk18.y,
 	               info->unk18.z);
 
-	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info->unk40 * 0.01f);
+	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, 0.0f);
+	vec2.z = 0.01f * info->unk40;
 	MTXMultVec(mtx, &vec2, &vec2);
 	if ((info->unk38 == 0 ? true : false) || (info->unk38 == 1 ? true : false))
 		SMS_FlowMoveMario(vec2);
@@ -75,6 +88,10 @@ void TMapWarp::watchToWarp()
 		SMS_WindMoveMario(vec2);
 }
 
+// TODO: 99.8%. Instruction-exact; frame 0x58 vs 0x48 (16 dead bytes) with no
+// referenced local at all. changeModel() below has the same shape at 24 bytes;
+// both are pure `gpMap->getModelManager()->getJointModel(0)->getChild(i)`
+// chains, so the two counts differ by one accessor level per extra site.
 void TMapWarp::initModel()
 {
 	// TODO: inlines
@@ -87,16 +104,13 @@ void TMapWarp::initModel()
 			    ->sleep();
 }
 
-void getWarpPointNo(const char*) { }
-
-void loadWarpPointPos(JSUMemoryInputStream&, int, Vec*) { }
-
-void TMapWarp::init(JSUMemoryInputStream& stream)
+int getWarpPointNo(const char* name)
 {
-	// Fabricated
+	// Fabricated struct; the entries themselves are the map's 0x98-byte
+	// point_name_table$2630.
 	struct NameTableEntry {
-		const char* unk0;
-		u32 unk4;
+		const char* mName;
+		u32 mNo;
 	};
 	static const NameTableEntry point_name_table[] = {
 		{ "warpA1", 0 },  { "warpA0", 1 },  { "warpB1", 2 },  { "warpB0", 3 },
@@ -106,6 +120,42 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 		{ "warpI1", 16 }, { "warpI0", 17 }, { nullptr, 0 },
 	};
 
+	u32 needle = 0;
+	while (strcmp(point_name_table[needle].mName, name) != 0)
+		++needle;
+	return point_name_table[needle].mNo;
+}
+
+void loadWarpPointPos(JSUMemoryInputStream& stream, int no, Vec* positions)
+{
+	stream >> positions[no].x;
+	stream >> positions[no].y;
+	stream >> positions[no].z;
+
+	u32 dummy;
+	stream >> dummy;
+	stream >> dummy;
+	stream >> dummy;
+	stream >> dummy;
+	stream >> dummy;
+	stream >> dummy;
+}
+
+// TODO: 93.8%. The whole residue is one register-allocation shape: retail
+// copies the stream pointer into five extra callee-saved registers
+// (`addi r27/r30/r26/r29/r28, r25, 0` right after the first loop) and
+// precomputes `&pos.y`/`&pos.z` into two more before the first
+// JSUInputStream::read, so the nine reads in the name loop take their receiver
+// from six different registers; ours keeps the stream in r31 and recomputes
+// each address at its call. Restoring getWarpPointNo() and loadWarpPointPos()
+// (closure batch 83) did not change it -- both inline to exactly the code that
+// was spelled out here -- so the missing construct is above the loop, not in
+// them. loadWarpPointPos's own UNUSED copy is 0xc4 against the map's 0x12c, so
+// about 26 instructions of its body are still unrecovered; the inlined
+// expansion is complete, which means the out-of-line copy differs (index math
+// per component, or a bounds test).
+void TMapWarp::init(JSUMemoryInputStream& stream)
+{
 	unk0 = stream.readU32();
 	if (!unk0)
 		return;
@@ -125,22 +175,7 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 	int cnt = unk0 * 2;
 	for (int i = 0; i < cnt; ++i) {
 		const char* str = stream.readString();
-		u32 needle      = 0;
-		while (strcmp(point_name_table[needle].unk0, str) != 0)
-			++needle;
-
-		u32 idx = point_name_table[needle].unk4;
-		stream >> local_130[idx].x;
-		stream >> local_130[idx].y;
-		stream >> local_130[idx].z;
-
-		u32 dummy;
-		stream >> dummy;
-		stream >> dummy;
-		stream >> dummy;
-		stream >> dummy;
-		stream >> dummy;
-		stream >> dummy;
+		loadWarpPointPos(stream, getWarpPointNo(str), local_130);
 	}
 
 	for (int i = 0; i < unk0; ++i) {
