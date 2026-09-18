@@ -777,6 +777,28 @@ void TEnemyMario::emWalkAround()
 	setStickToAngle(mFaceAngle.y, 0.5f);
 }
 
+// TODO (batch 62): this arm is what makes TEnemyMario::consider 95% and 0x30
+// of frame too big, and the cause is inline *depth*, not spelling. Retail's
+// consider inlines this function and reaches, in this one block,
+//   bl TPathNode::getPoint() const     (weak 0x1c, 3 cost)
+//   bl TVec3<f>::sub(const TVec3&)     (3 statements)
+//   bl TVec3<f>::dot(const TVec3&)     (1 statement)
+//   bl TUtil<f>::sqrt(f32)             (4 statements)
+// while TVec3<f>::squared() is expanded around the `dot`. Against the measured
+// allowances (14/9/6/2/never) only one depth satisfies all five at once: the
+// statements must sit in a body expanded at depth 2, so their calls are at
+// depth 3 -- length() at 3 (expands), squared() at 4 (expands), dot() at 5
+// (never), sqrt() at 4 (refused), `-=` at 3 (expands) with sub() at 4
+// (refused), and getPoint() at 4 because it is the *argument* of the copy
+// construction at depth 3. So there is one more inlined helper between this
+// function and the distance test, which we have not identified.
+// Measured here: writing the block the retail way but at depth 1 -- a
+// word-wise-copied `TVec3 toNode = ...getPoint(); toNode -= ...mPosition;
+// if (toNode.length() < 100.0f)` -- takes consider 95.02 -> 90.16 and grows
+// this function to 528 against the map's 0x1cc, so the spelling is only
+// right once the missing level exists. Two `bl TGraphTracer::getGraph()`
+// (weak 0x8, 1 statement) in a later arm of consider need depth 5, i.e. that
+// arm is deeper again.
 void TEnemyMario::emWalkGraph()
 {
 	if ((mEMario->getUnk104().getPoint() - mEMario->mPosition).length()
