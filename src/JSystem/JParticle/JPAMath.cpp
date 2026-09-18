@@ -267,6 +267,12 @@ void JPAGetRMtxSTVecElement(MtxPtr param_1, MtxPtr param_2,
 // values are an inlined callee's locals, on which declaration order is inert,
 // and spelling JPAGetSVecElement's body as param_2.set(...) reorders the stores
 // and shrinks both callers, so the rotation is still open.
+// FPR re-pass 172: the ranking does not fit research 171 either. Retail is
+// x f31, *z f30, y f29*; neither the reverse order rule for an inlined
+// callee's temps nor the forward order rule for the function's own named
+// locals puts x above a reversed {z, y}. The sibling JPAGetRMtxSTVecElement
+// shares this body with a reference parameter in place of the local and is
+// byte-exact, which pins JPAGetSVecElement: any change there breaks it.
 void JPAGetRMtxTVecElement(MtxPtr param_1, MtxPtr param_2,
                            JGeometry::TVec3<f32>& param_3)
 {

@@ -1311,9 +1311,10 @@ void TBossMantaManager::updateMantaEscape()
 
 	// Retail keeps a single 12-byte vector at 0x1c, stores 0.0f into its y
 	// in place and then hoists that y and z into f31/f30 for both loops,
-	// reloading only x per iteration.  Research batch 86: only a named f32
-	// local of this function's own body gets a callee-saved FPR, and the
-	// last-declared one gets f31, so marioY is declared before marioZ.
+	// reloading only x per iteration.  Research batches 86 and 171: only a
+	// named f32 local of this function's own body gets a callee-saved FPR,
+	// and they are handed out f31-down in *forward* declaration order, so
+	// marioY is declared before marioZ.
 	// TVec3::distance cannot be used here: passing the flattened vector to
 	// an inlined callee by const& suppresses the promotion, which is why the
 	// two loops go through the TU-local distanceTo() above -- it also

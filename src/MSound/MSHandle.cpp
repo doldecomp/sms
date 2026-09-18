@@ -191,7 +191,10 @@ void MSHandle::setSeDistanceDolby(u8 moveTime)
 
 // TODO: pure FPR permutation (a known-open residue class). Retail merges the
 // four if/else results for dVar2 into f0 and the clamp result into f2; we use
-// f3 and f0. Every instruction and the frame are exact.
+// f3 and f0. Every instruction and the frame are exact. FPR re-pass 172
+// classified it as a *volatile* block trade: both values are already named
+// locals, which research 171 establishes as the only knob on f0-f13, so there
+// is nothing left to spell differently here.
 f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 {
 	f32 dVar2 = dist <= 0.0f ? 0.0f : MSACos(-pos.z / dist);

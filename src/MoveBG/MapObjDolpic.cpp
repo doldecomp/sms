@@ -265,6 +265,12 @@ void TBellDolpic::calcRootMatrix()
 // *equal* (@3200 == our @1513, @3201 == our @1512), so the literal order is
 // already right and this is not the pool-order problem the differing ids
 // suggest -- it is codegen-tells.md's known-open FPR permutation.
+// FPR re-pass 172: both clusters are volatile-FPR *block* trades, which
+// research 171 says have no source handle. In the rand() chain retail keeps
+// both literals in f1/f0 and chains each product into the literal's register
+// where we load them into f2/f3 and accumulate into f0; writing the products
+// as `0.000030517578f * (f32)r` and `14400.0f * tmp` is byte-identical, and
+// un-naming the whole chain is 30 markers with the frame 8 bytes short.
 void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 {
 	if (fabsf(unk150) > 0.01f)

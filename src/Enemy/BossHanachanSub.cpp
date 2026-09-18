@@ -52,6 +52,16 @@ f32 BHSCalcCentrifugalForce(const JGeometry::TVec3<f32>& first,
 // field assignments. Measured worse: declaring `sine` before `cosine`
 // (94.0 -> 92.6, it permutes f3/f4 as well), writing the zero term as
 // `sine * distance.z` (93.5), putting the `distance.z` terms first (86.7).
+// FPR re-pass 172 settled where the 8 bytes are *not*: naming the two results
+// (`f32 revisedX`/`revisedZ` before the two stores) lands this frame exactly
+// at 0x58 and removes all nine operand markers (94.0 -> 94.3, only the one
+// swapped load left), but it costs +8 at the inlined site in
+// TSphereLink::setDegreeZAndRevisionPosXZ, which is frame-exact at 0xa8
+// without it (98.2 -> 98.1, 18 -> 37 markers). One body cannot do both, so
+// retail's extra 8 bytes belong to the out-of-line copy's own dead region --
+// all 52 bytes of it are unreferenced in both builds -- and not to the body.
+// Also re-measured: un-naming `cosine`/`sine` does land 0x58 but recomputes
+// both table reads (66.9).
 void BHSCalcRevisionDistXZByRotateZ(f32 degreeY, f32 degreeZ, f32 scale,
                                   f32* resultX, f32* resultZ)
 {
