@@ -21,7 +21,7 @@ public:
 
 public:
 	/* 0x44 */ bool unk44;
-	/* 0x48 */ TRotation3f unk48;
+	/* 0x48 */ TPosition3f unk48;
 };
 
 class TEffectPinnaFunsui : public TSimpleEffect {
