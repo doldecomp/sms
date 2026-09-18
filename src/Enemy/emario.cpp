@@ -112,7 +112,12 @@ void TEMario::loadAfter()
 // (closure batch 83, 97.8 -> 99.9): two different receiver expressions stop
 // MWCC CSE-ing the J3DModel, so retail re-derives it with `lwz r3, 4(r3)` from
 // the cached mMActor and leaves mMActor itself in r3 for the setBtk call.
-// Residue: frame 0x88 vs 0x60, 40 dead bytes, no referenced local at all.
+// Residue: frame 0x88 vs 0x60, 40 dead bytes, no referenced local at all --
+// a pure dead-low-region gap, so the only zero-instruction lever for it is an
+// uninitialised non-trivial class local inside one of the inlined callees
+// (TMActorKeeper's ctor / createMActorFromDefaultBmd / SMS_InitPacket_Fog /
+// gpScreenTexture->replace). emario's own map entry has no UNUSED helper to
+// carry it, so every candidate is in a shared header: parked, not guessed.
 void TEMario::init(TLiveManager* manager)
 {
 	if (!manager) {
@@ -272,6 +277,14 @@ void TEMario::forceDisappear() { mEnemyMario->startDisappear(9); }
 // the helper's body `TUtil<f32>::sqrt(diff.squared())` instead of
 // `diff.length()` is codegen-identical, so the extra pair is most likely the
 // `const TVec3&` binding of squared()/dot() per expansion.
+// Closure batch: the slot geometry is retail low region 0xc..0x9c against ours
+// 0xc..0xd0 (52 bytes more) with the *named* block larger in retail
+// (0x9c..0xfc against 0xd0..0x114) -- the same intra-statement allocation-order
+// difference frame-gaps.md batch 142 records for `a = b - c` / `bl TVec3::sub`,
+// a known-open class. The counter/bool register swap is not block scope:
+// declaring `s32 i;` at function scope and writing `for (i = 0; ...)` is
+// byte-identical, which confirms "block scope is inert everywhere", so
+// retail's r29 = i above r28 = the `cue & CUE_MOVE` bool has another cause.
 void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK40)) {
