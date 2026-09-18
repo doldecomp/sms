@@ -5,6 +5,10 @@
 
 namespace JDrama {
 
+// Definition order here is inert (measured in header round 22): an explicit
+// instantiation emits the members in reverse *declaration* order, so the
+// emission order lives in JDRViewObjPtrList.hpp. These are kept in the same
+// order as the declarations only for readability.
 template <class T, class U>
 void TViewObjPtrListT<T, U>::load(JSUMemoryInputStream& stream)
 {
@@ -21,6 +25,12 @@ void TViewObjPtrListT<T, U>::load(JSUMemoryInputStream& stream)
 	}
 }
 
+template <class T, class U>
+void TViewObjPtrListT<T, U>::loadSuper(JSUMemoryInputStream& stream)
+{
+	TNameRef::load(stream);
+}
+
 template <class T, class U> void TViewObjPtrListT<T, U>::loadAfter()
 {
 	loadAfterSuper();
@@ -29,6 +39,11 @@ template <class T, class U> void TViewObjPtrListT<T, U>::loadAfter()
 
 	for (I it = getChildren().begin(); it != getChildren().end(); ++it)
 		(*it)->loadAfter();
+}
+
+template <class T, class U> void TViewObjPtrListT<T, U>::loadAfterSuper()
+{
+	TNameRef::loadAfter();
 }
 
 template <class T, class U>
@@ -55,17 +70,6 @@ void TViewObjPtrListT<T, U>::perform(u32 cue, TGraphics* graphics)
 
 	for (I it = getChildren().begin(); it != getChildren().end(); ++it)
 		(*it)->testPerform(cue, graphics);
-}
-
-template <class T, class U>
-void TViewObjPtrListT<T, U>::loadSuper(JSUMemoryInputStream& stream)
-{
-	TNameRef::load(stream);
-}
-
-template <class T, class U> void TViewObjPtrListT<T, U>::loadAfterSuper()
-{
-	TNameRef::loadAfter();
 }
 
 } // namespace JDrama

@@ -17,12 +17,19 @@ public:
 	{
 	}
 
+	// Declaration order is the map's, reversed: MarNameRefGen.cpp's explicit
+	// instantiation emits these in reverse *declaration* order (definition
+	// order in the .tpp is inert, measured in header round 22), and retail
+	// emits perform, searchF, loadAfterSuper, loadAfter, loadSuper, load.
+	// `loadSuper`/`loadAfterSuper` are the only new virtuals here, so their
+	// relative order is what the vtable tail sees; the other four are
+	// overrides and their positions are free.
 	virtual void load(JSUMemoryInputStream& stream);
+	virtual void loadSuper(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
+	virtual void loadAfterSuper();
 	virtual TNameRef* searchF(u16 key, const char* name);
 	virtual void perform(u32 cue, TGraphics* graphics);
-	virtual void loadSuper(JSUMemoryInputStream& stream);
-	virtual void loadAfterSuper();
 
 	// surprisingly, real.
 	JGadget::TList_pointer<T*>& getChildren() { return *this; }

@@ -67,15 +67,30 @@
 #include <Strategic/NameRefPtrAry.tpp>
 #include <Strategic/NameRefAry.tpp>
 
+// The order is the map's, read off the .text layout and reversed (the TU is
+// -inline deferred, so emission is reverse source order): retail emits the
+// groups StagePositionInfo, PtrAry<CubeGeneralInfo>, TViewObjPtrListT,
+// CameraMapTool, PtrAry<Ary<ScenarioArchiveName>>, ScenarioArchiveName,
+// PtrAry<StageEventInfo> and finally Ary<StageEventInfo> -- the last of which
+// is still implicit, instantiated by getNameRef itself, and already lands in
+// the right place. With this order and the declaration order in
+// JDRViewObjPtrList.hpp, validate-symbol-order.py passes the unit outright
+// (18/18 UNUSED sizes included). Do not sort these.
+//
+// PtrAry<StageEventInfo>'s three members are UNUSED in the map: retail's
+// object defined them and the linker stripped them, which is exactly what an
+// explicit instantiation of an unreferenced specialisation gives.
+template class TNameRefPtrAryT<TStageEventInfo>;
+template class TNameRefAryT<TScenarioArchiveName>;
+template class TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >;
+template class TNameRefAryT<TCameraMapTool>;
+
 namespace JDrama {
 template class TViewObjPtrListT<THitActor, TViewObj>;
 }
 
 template class TNameRefPtrAryT<TCubeGeneralInfo>;
-template class TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >;
 template class TNameRefAryT<TStagePositionInfo>;
-template class TNameRefAryT<TCameraMapTool>;
-template class TNameRefAryT<TScenarioArchiveName>;
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 {
