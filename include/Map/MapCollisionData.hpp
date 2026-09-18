@@ -204,6 +204,9 @@ public:
 	// TBGCheckListWarp* getWarpNode(int i) { return &unk30[i]; }
 
 public:
+	// fabricated: header round 20 accessor candidates
+	f32 getGridExtentX() const { return mGridExtentX; }
+
 	/* 0x0 */ f32 mGridExtentX;
 	/* 0x4 */ f32 mGridExtentY;
 	/* 0x8 */ int unk8;

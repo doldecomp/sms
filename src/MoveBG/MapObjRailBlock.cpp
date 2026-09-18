@@ -291,7 +291,7 @@ void TNormalLift::readRailFlag()
 {
 	TRailMapObj::readRailFlag();
 
-	TGraphWeb* graph = unk138->getGraph();
+	TGraphWeb* graph = getTracer()->getGraph();
 
 	if (!graph)
 		return;
@@ -299,7 +299,7 @@ void TNormalLift::readRailFlag()
 	if (graph->isDummy())
 		return;
 
-	TGraphNode& node = graph->getGraphNode(unk138->getCurGraphIndex());
+	TGraphNode& node = graph->getGraphNode(getTracer()->getCurGraphIndex());
 
 	if (node.getRailNode()->mFlags & 0x800)
 		unk150 = node.getRailNode()->mPitch;

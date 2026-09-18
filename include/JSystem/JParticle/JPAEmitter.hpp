@@ -320,6 +320,10 @@ public:
 		VOLUME_TYPE_LINE,
 	};
 
+	// fabricated: header round 20 accessor candidates
+	u8 getVolumeType() const { return mVolumeType; }
+	u16 getVolumeSubdivision() const { return mVolumeSubdivision; }
+
 	/* 0x0 */ JSULink<JPABaseEmitter> unk0;
 	/* 0x10 */ JPAFrameManager unk10;
 	/* 0x18 */ JPAFrameManager unk18;

@@ -670,7 +670,7 @@ int JPABaseEmitter::calcCreateParticle()
 				numToCreate = 0;
 			}
 		} else {
-			if (mVolumeType == VOLUME_TYPE_SPHERE) {
+			if (getVolumeType() == VOLUME_TYPE_SPHERE) {
 
 				eio.mSphereParticlesEmittedForCurrentLayer = 0;
 				eio.mSphereCurrentPitch                    = 0;
@@ -680,7 +680,7 @@ int JPABaseEmitter::calcCreateParticle()
 				eio.mSphereParticlesInCurrentLayer         = 0;
 
 				numToCreate = 2;
-				for (int i = 0; i < mVolumeSubdivision; ++i) {
+				for (int i = 0; i < getVolumeSubdivision(); ++i) {
 					numToCreate += eio.mSphereParticlesInCurrentLayer;
 					eio.mSphereParticlesInCurrentLayer += 4;
 					numToCreate += eio.mSphereParticlesInCurrentLayer;
@@ -691,10 +691,11 @@ int JPABaseEmitter::calcCreateParticle()
 				    = (s16)((s32)(65536.0f * mVolumeYawSweep)
 				            / eio.mSphereParticlesInCurrentLayer);
 				// 90 degrees divided by the number of layers
-				eio.mSpherePitchStep = (s16)(65536 / 4 / mVolumeSubdivision);
-			} else if (mVolumeType == VOLUME_TYPE_CIRCLE
-			           || mVolumeType == VOLUME_TYPE_LINE) {
-				numToCreate = mVolumeSubdivision;
+				eio.mSpherePitchStep
+				    = (s16)(65536 / 4 / getVolumeSubdivision());
+			} else if (getVolumeType() == VOLUME_TYPE_CIRCLE
+			           || getVolumeType() == VOLUME_TYPE_LINE) {
+				numToCreate = getVolumeSubdivision();
 			}
 		}
 

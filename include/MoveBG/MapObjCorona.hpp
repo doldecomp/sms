@@ -62,6 +62,9 @@ public:
 	const TBathtubData& getBathtubData() const { return mBathtubData; }
 
 public:
+	// fabricated: header round 20 accessor candidates
+	TBathtubParams* getUnk16C() const { return unk16C; }
+
 	/* 0x138 */ MActorAnmData* unk138;
 	/* 0x13C */ f32 unk13C[5];
 	/* 0x150 */ f32 unk150[5];

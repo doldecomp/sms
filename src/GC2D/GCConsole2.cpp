@@ -2301,7 +2301,7 @@ void TGCConsole2::startAppearCoin()
 	unk88 = 0;
 
 	unk108->getPane()->show();
-	unk108->setPaneOffset(unk98, 0, unk26A, 0,
+	unk108->setPaneOffset(unk98, 0, getUnk26A(), 0,
 	                      -(unk108->mInitialBounds.y2 + 1));
 
 	unkC8->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
@@ -2805,10 +2805,10 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 
 void TGCConsole2::startDisappearStar()
 {
-	int offset = -(unk140->mInitialBounds.y2 + 1);
-	unk140->updatePaneOffset(40, 0, offset + unk26A);
+	int offset = -(getUnk140()->mInitialBounds.y2 + 1);
+	getUnk140()->updatePaneOffset(40, 0, offset + getUnk26A());
 	unk160->updatePaneOffset(40, 0, -(unk160->mInitialBounds.y2 + 1));
-	unk108->updatePaneOffset(40, 0, unk26A);
+	unk108->updatePaneOffset(40, 0, getUnk26A());
 
 	unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 	unk164->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
@@ -2826,7 +2826,7 @@ void TGCConsole2::startAppearStar()
 
 	if (unk35) {
 		unk140->getPane()->hide();
-		unk160->getPane()->hide();
+		getUnk160()->getPane()->hide();
 		unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 		unk164->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 		unk35 = 0;
@@ -2841,8 +2841,9 @@ void TGCConsole2::startAppearStar()
 	for (int i = 0; i < 3; ++i)
 		unk134[i]->getPane()->hide();
 
-	unk160->setPaneOffset(40, 0, 0, 0, -(unk160->mInitialBounds.y2 + 1));
-	unk160->getPane()->show();
+	getUnk160()->setPaneOffset(40, 0, 0, 0,
+	                           -(getUnk160()->mInitialBounds.y2 + 1));
+	getUnk160()->getPane()->show();
 	unk148->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
 	unk14C->getPane()->hide();
@@ -4123,7 +4124,7 @@ bool TGCConsole2::processAppearBalloon()
 		unk3B0->setAlpha(alpha);
 	} else {
 		JUTRect bounds = unk3B0->getBounds();
-		int nextHeight = unk3CC + bounds.getHeight();
+		int nextHeight = getUnk3CC() + bounds.getHeight();
 		int maxHeight  = unk3BC.getHeight();
 
 		if (nextHeight > maxHeight) {

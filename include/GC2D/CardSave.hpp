@@ -54,6 +54,11 @@ public:
 	TCardBookmarkInfo& getBookmarkInfo() { return unk278[unk2EA]; }
 
 public:
+	// fabricated: header round 20 accessor candidates
+	int getUnk10() const { return unk10; }
+	s8 getUnk2E9() const { return unk2E9; }
+	int getUnk308() const { return unk308; }
+
 	/* 0x10 */ int unk10;
 	/* 0x14 */ J2DScreen* unk14;
 	/* 0x18 */ bool unk18;

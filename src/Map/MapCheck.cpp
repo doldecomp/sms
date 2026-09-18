@@ -214,13 +214,13 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
 f32 TMapCollisionData::checkRoof(f32 x, f32 y, f32 z, u8 flags,
                                  const TBGCheckData** result) const
 {
-	if (x < -mGridExtentX || mGridExtentX <= x || z < -mGridExtentY
+	if (x < -getGridExtentX() || getGridExtentX() <= x || z < -mGridExtentY
 	    || mGridExtentY <= z) {
 		*result = &mIllegalCheckData;
 		return 9999999.0f;
 	}
 
-	int gridX = (x + mGridExtentX) * (1.0f / 1024);
+	int gridX = (x + getGridExtentX()) * (1.0f / 1024);
 	int gridZ = (z + mGridExtentY) * (1.0f / 1024);
 
 	const TBGCheckData* local_4c;

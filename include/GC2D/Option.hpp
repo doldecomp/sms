@@ -211,6 +211,9 @@ public:
 	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
 
 public:
+	// fabricated: header round 20 accessor candidates
+	TExPane* getParentPane() const { return mParentPane; }
+
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
@@ -307,6 +310,11 @@ public:
 	void resetChangedSetting();
 
 public:
+	// fabricated: header round 20 accessor candidates
+	TOptionRumbleUnit* getRumbleOption() const { return mRumbleOption; }
+	TOptionSoundUnit* getSoundOption() const { return mSoundOption; }
+	TOptionSubtitleUnit* getSubtitleOption() const { return mSubtitleOption; }
+
 	/* 0x0 */ J2DSetScreen* mScreen;
 	/* 0x4 */ TArrowControl* mBackArrow;
 	/* 0x8 */ TOptionRumbleUnit* mRumbleOption;

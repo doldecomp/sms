@@ -1123,7 +1123,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 
 	SMS_SettingDrawShape(unk5D48, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
-		if ((mParticleFlagSOA[i] & 0xf) == 2 && -unk5D2C < unk2D14[i][2][3]) {
+		if ((getParticleFlagSOA()[i] & 0xf) == 2
+		    && -unk5D2C < unk2D14[i][2][3]) {
 			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			GXSetCullMode(GX_CULL_BACK);
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
@@ -1136,7 +1137,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 
 	SMS_SettingDrawShape(unk5D4C, 0);
 	for (int i = 0; i < mParticleCount; ++i) {
-		if ((mParticleFlagSOA[i] & 0xf) == 3 && -unk5D2C < unk2D14[i][2][3]) {
+		if ((getParticleFlagSOA()[i] & 0xf) == 3
+		    && -unk5D2C < unk2D14[i][2][3]) {
 			GXLoadPosMtxImm(unk2D14[i], GX_PNMTX0);
 			GXSetCullMode(GX_CULL_BACK);
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);

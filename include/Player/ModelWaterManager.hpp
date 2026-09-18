@@ -154,6 +154,9 @@ public:
 	enum { SLOT_NUM = 256 };
 
 public:
+	// fabricated: header round 20 accessor candidates
+	u16* getParticleFlagSOA() { return mParticleFlagSOA; }
+
 	/* 0x10 */ s16 unk10;
 	/* 0x12 */ u16 mParticleCount;
 	/* 0x14 */ f32 mParticleLifetimeSOA[SLOT_NUM];

@@ -470,7 +470,7 @@ TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
     : mScreen(screen)
 {
 	mParentPane   = new TExPane(mScreen, 'txp2');
-	mInitialAlpha = mParentPane->getPane()->getAlpha();
+	mInitialAlpha = getParentPane()->getPane()->getAlpha();
 
 	// The speech bubble around the on/off text that pulsates
 	// when this setting is selected.
@@ -1088,7 +1088,7 @@ bool TOptionControl::isChangedSetting() const
 
 void TOptionControl::resetChangedSetting()
 {
-	mInitialRumbleValue   = mRumbleOption->getValue();
-	mInitialSoundValue    = mSoundOption->getValue();
-	mInitialSubtitleValue = mSubtitleOption->getValue();
+	mInitialRumbleValue   = getRumbleOption()->getValue();
+	mInitialSoundValue    = getSoundOption()->getValue();
+	mInitialSubtitleValue = getSubtitleOption()->getValue();
 }

@@ -411,7 +411,7 @@ void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
 {
 	if (unk29A)
 		return;
-	if (unk250 > unk16C->hipdropRelease.get())
+	if (unk250 > getUnk16C()->hipdropRelease.get())
 		return;
 	// Same discarded direction as quake().
 	// TODO: the body is instruction-exact; the frame is 0x88 against retail's
@@ -424,10 +424,10 @@ void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
 	dir.sub(pos, getInitialPosition());
 	dir.y = 0.0f;
 	dir.normalize();
-	unk250 = unk16C->hipdropRelease.get();
-	unk258 = unk16C->hipdropRecover.get();
-	unk25C = unk16C->hipdropRecover.get();
-	unk254 = unk16C->hipdropRelease.get();
+	unk250 = getUnk16C()->hipdropRelease.get();
+	unk258 = getUnk16C()->hipdropRecover.get();
+	unk25C = getUnk16C()->hipdropRecover.get();
+	unk254 = getUnk16C()->hipdropRelease.get();
 	JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70")
 	    ->stagger(false);
 }

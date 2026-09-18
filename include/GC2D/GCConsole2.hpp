@@ -112,6 +112,12 @@ public:
 	static JUTPoint cCoinBotPoint;
 
 public:
+	// fabricated: header round 20 accessor candidates
+	TExPane* getUnk140() { return unk140; }
+	TExPane* getUnk160() { return unk160; }
+	s16 getUnk26A() const { return unk26A; }
+	s16 getUnk3CC() const { return unk3CC; }
+
 	/* 0x10 */ int unk10;
 	/* 0x14 */ u32 unk14;
 	/* 0x18 */ int unk18;

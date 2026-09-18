@@ -1021,7 +1021,7 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 
 	s8 result = -1;
 
-	switch (unk10) {
+	switch (getUnk10()) {
 	case 0:
 		if (unk2EA == -1) {
 			unk10 = 5;
@@ -1053,7 +1053,7 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 			unk154[unk2EA]->show();
 			unk150->show();
 
-			if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
+			if (getUnk308() == 0 || getUnk308() == 6 || getUnk308() == 8) {
 				if (getBookmarkInfo().unk0 == 1) {
 					setMessage(unk124, 0x14, 0);
 					setMessage(unk128, 0x14, 0);
@@ -1151,7 +1151,7 @@ s8 TCardSave::waitForSelectOver()
 {
 	s8 result = -1;
 
-	switch (unk10) {
+	switch (getUnk10()) {
 	case 0:
 		unk240->getPane()->show();
 		unk240->setCenteredSize(20, unk244.getWidth(), unk244.getHeight(), 0,
@@ -1177,7 +1177,7 @@ s8 TCardSave::waitForSelectOver()
 		break;
 
 	case 2: {
-		s8 oldSelect = unk2E9;
+		s8 oldSelect = getUnk2E9();
 		u32 input    = unk270->mEnabledFrameMeaning;
 
 		if (input & 0x20) {
@@ -1189,13 +1189,13 @@ s8 TCardSave::waitForSelectOver()
 			unk2E9 = 1;
 		}
 
-		if (oldSelect != unk2E9) {
+		if (oldSelect != getUnk2E9()) {
 			gpMSound->startSoundSystemSE(0x481EU, 0, nullptr, 0);
 
 			unk254[oldSelect][0]->hide();
 			unk254[oldSelect][1]->hide();
-			unk254[unk2E9][0]->show();
-			unk254[unk2E9][1]->show();
+			unk254[getUnk2E9()][0]->show();
+			unk254[getUnk2E9()][1]->show();
 		}
 		break;
 	}
@@ -1205,8 +1205,8 @@ s8 TCardSave::waitForSelectOver()
 		                        unk244.getHeight());
 		unk264[0]->hide();
 		unk264[1]->hide();
-		unk254[unk2E9][0]->hide();
-		unk254[unk2E9][1]->hide();
+		unk254[getUnk2E9()][0]->hide();
+		unk254[getUnk2E9()][1]->hide();
 		unk10 = 3;
 		break;
 
@@ -1218,12 +1218,12 @@ s8 TCardSave::waitForSelectOver()
 		break;
 
 	case 5:
-		if (unk2E9 == 0) {
+		if (getUnk2E9() == 0) {
 			unk310 = PROGRESS_UNK1;
 		} else {
 			unk310 = PROGRESS_UNK19;
 		}
-		result = unk2E9;
+		result = getUnk2E9();
 		break;
 	}
 
@@ -1234,10 +1234,10 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 {
 	s8 result = -1;
 
-	switch (unk10) {
+	switch (getUnk10()) {
 	case 0: {
 		u32 messageID = cMessageID[unk310];
-		switch (unk308) {
+		switch (getUnk308()) {
 		case 1:
 			messageID = 0x24;
 			break;
@@ -1291,7 +1291,7 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		break;
 
 	case 2: {
-		s8 oldSelect = unk2E9;
+		s8 oldSelect = getUnk2E9();
 		u32 input    = unk270->mEnabledFrameMeaning;
 
 		if (input & 0x20) {
@@ -1303,13 +1303,13 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 			unk2E9 = 1;
 		}
 
-		if (oldSelect != unk2E9) {
+		if (oldSelect != getUnk2E9()) {
 			gpMSound->startSoundSystemSE(0x481EU, 0, nullptr, 0);
 
 			unk1A8[oldSelect][0]->hide();
 			unk1A8[oldSelect][1]->hide();
-			unk1A8[unk2E9][0]->show();
-			unk1A8[unk2E9][1]->show();
+			unk1A8[getUnk2E9()][0]->show();
+			unk1A8[getUnk2E9()][1]->show();
 
 			unk2F8 = 0;
 			unk2F9 = 1;
@@ -1324,8 +1324,8 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 
 		unk198[0][1]->hide();
 		unk198[1][1]->hide();
-		unk1A8[unk2E9][0]->hide();
-		unk1A8[unk2E9][1]->hide();
+		unk1A8[getUnk2E9()][0]->hide();
+		unk1A8[getUnk2E9()][1]->hide();
 
 		unk10 = 3;
 		break;
@@ -1338,12 +1338,12 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		break;
 
 	case 5:
-		if (unk2E9 == 0) {
+		if (getUnk2E9() == 0) {
 			unk310 = param_1;
 		} else {
 			unk310 = param_2;
 		}
-		result = unk2E9;
+		result = getUnk2E9();
 		break;
 	}
 

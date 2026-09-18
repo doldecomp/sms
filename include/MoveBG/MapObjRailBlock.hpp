@@ -53,6 +53,9 @@ public:
 	}
 
 public:
+	// fabricated: header round 20 accessor candidates
+	TGraphTracer* getTracer() const { return unk138; }
+
 	/* 0x138 */ TGraphTracer* unk138;
 	/* 0x13C */ int unk13C;
 	/* 0x140 */ u32 unk140;
