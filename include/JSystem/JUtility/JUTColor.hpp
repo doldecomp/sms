@@ -33,7 +33,32 @@ struct TColor : public GXColor {
 	// match, and drawShadow's remaining 24 bytes are not this. Left by value.
 	TColor(GXColor color) { set(color); }
 
+	// Kept commented out. The copy has to stay implicit/trivial: writing it
+	// out explicitly costs JUTFont, J2DPicture, J2DPrint, J2DTextBox,
+	// J2DWindow, J2DGrafContext, JUTConsole, JDREfbCtrl and JDRLighting
+	// their exact functions (nine units off 100%, DOL broken) and does not
+	// move TMenuPlane::perform at all.
 	// TColor(const TColor& other) { *(GXColor*)this = *(GXColor*)&other; }
+	//
+	// Open: the `x = c.get()` conversion temporary is 4 bytes wide for retail
+	// and 8 for us. TMenuPlane::perform (GC2D/Menu) holds four of them at an
+	// 8-byte stride (0x78/0x80/0x88/0x90, frame 0x98) where retail uses a
+	// 4-byte stride (0x64/0x68/0x6c/0x70, frame 0x78), and TMenuPlane's ctor
+	// has three more. Everything else in both functions is instruction-exact,
+	// so the whole gap is the stride. Measured and rejected in round 14, all
+	// whole-tree with the DOL checked:
+	//   - explicit copy ctor (above): nine units regress, Menu unmoved.
+	//   - `TColor& operator=(const GXColor&)`: Menu 99.5 -> 85.3 and
+	//     J2DPrint/J2DScreen/J2DTextBox/J2DWindow/JUTConsole/JDRFrmGXSet/
+	//     JDRLighting regress -- the sites really do want the TColor
+	//     conversion, not a GXColor assignment.
+	//   - `TColor get() const` instead of `GXColor get() const`: Menu
+	//     unmoved, J2DPicture::setTevMode and TMenuPlane's ctor regress.
+	//   - at the call site, `mCharColor = unk24` (no `.get()`) removes the
+	//     temporary entirely and leaves perform a leaf function (85.3%), and
+	//     `mCharColor.set(unk24.get())` is also 85.3%.
+	// So the temporary is the get()-plus-conversion chain in both builds and
+	// only its width differs; nothing spellable in this class changes that.
 
 	operator u32() const { return toUInt32(); }
 	u32 toUInt32() const { return *(u32*)&r; }
