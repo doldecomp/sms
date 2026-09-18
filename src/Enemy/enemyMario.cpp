@@ -805,17 +805,29 @@ void TEnemyMario::emWalkAround()
 // (refused), and getPoint() at 4 because it is the *argument* of the copy
 // construction at depth 3. So there is one more inlined helper between this
 // function and the distance test, which we have not identified.
-// Measured here: writing the block the retail way but at depth 1 -- a
-// word-wise-copied `TVec3 toNode = ...getPoint(); toNode -= ...mPosition;
-// if (toNode.length() < 100.0f)` -- takes consider 95.02 -> 90.16 and grows
-// this function to 528 against the map's 0x1cc, so the spelling is only
-// right once the missing level exists. Two `bl TGraphTracer::getGraph()`
-// (weak 0x8, 1 statement) in a later arm of consider need depth 5, i.e. that
-// arm is deeper again.
+// Found: the missing level is a named-distance helper between this function
+// and the test, exactly like batch 146's `getDistFromMario` lever. With the
+// difference and the length inside it, length() lands at depth 3, sqrt() and
+// getPoint() at 4 and dot() at 5, which is the whole set of retail `bl`s:
+// consider 95.02 -> 96.44 and the weak `getPoint__9TPathNodeCFv` goes
+// MISSING -> 100%, with no regression anywhere. Retail's own name for it is
+// unrecoverable (no map symbol), and it belongs on TSpineEnemy next to
+// getUnk104, so it is parked TU-local here.
+// Still open: `bl TVec3::sub` (retail) against our expanded copy inside the
+// helper, and two `bl TGraphTracer::getGraph()` (weak 0x8, 1 statement) in a
+// later arm of consider that need depth 5, i.e. that arm is deeper again.
+// (emWalkGraph's own emitted size is now 448 against the map's 0x1cc = 460,
+// down from 528, which corroborates the level.)
+// fabricated
+static inline f32 EMarioDistToNextNode(TEMario* em)
+{
+	JGeometry::TVec3<f32> toNode = em->getUnk104().getPoint() - em->mPosition;
+	return toNode.length();
+}
+
 void TEnemyMario::emWalkGraph()
 {
-	if ((mEMario->getUnk104().getPoint() - mEMario->mPosition).length()
-	    < 100.0f) {
+	if (EMarioDistToNextNode(mEMario) < 100.0f) {
 		if (mDistanceToMario > 3000.0f)
 			mEMario->goToRandomNextGraphNode();
 		else
