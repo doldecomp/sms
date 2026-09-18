@@ -308,7 +308,8 @@ void TFireWanwanManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (!gpMap->isInArea(wanwan->mPosition.x, wanwan->mPosition.z)
 		    || (wanwan->getGroundPlane()
 		        && wanwan->getGroundPlane()->isDeathPlane())) {
-			wanwan->kill();
+			// vtable slot 0xfc, not kill()'s 0xe4
+			wanwan->reset();
 		}
 	}
 
@@ -332,7 +333,7 @@ void TFireWanwanManager::checkBalloonHelpBoss22()
 		f32 helpRange22 = getWanwanParams()->mBoss22HelpRange.get();
 		if (diff.squared() < helpRange22 * helpRange22) {
 			mBoss22BalloonWasShown = true;
-			gpMarDirector->getConsole()->startAppearBalloon(0xE0016, true);
+			gpMarDirector->getConsole()->startAppearBalloon(0x16, true);
 		}
 	}
 }
@@ -343,7 +344,7 @@ void TFireWanwanManager::checkBalloonHelpBoss23()
 	    && getWanwanParams()->mBoss23TimerMax.get() > unk64) {
 		if (++unk64 >= getWanwanParams()->mBoss23TimerMax.get()) {
 			unk64 = getWanwanParams()->mBoss23TimerMax.get();
-			gpMarDirector->getConsole()->startAppearBalloon(0xE0017, true);
+			gpMarDirector->getConsole()->startAppearBalloon(0x17, true);
 		}
 	}
 }
@@ -351,7 +352,7 @@ void TFireWanwanManager::checkBalloonHelpBoss23()
 void TFireWanwanManager::checkBalloonHelpBoss24()
 {
 	if (mWanwanRecoversBeforeHelpBalloon == 0) {
-		gpMarDirector->getConsole()->startAppearBalloon(0xE0018, true);
+		gpMarDirector->getConsole()->startAppearBalloon(0x18, true);
 		mWanwanRecoversBeforeHelpBalloon = -1;
 	}
 }
@@ -2070,7 +2071,7 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 		manager->mWanwanRecoversBeforeHelpBalloon = -1;
 
 		if (++manager->mWanwansKilled == manager->getActiveObjNum()) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xE0019, true);
+			gpMarDirector->getConsole()->startAppearBalloon(0x19, true);
 		}
 
 		self->stopTriggerSound();
