@@ -150,10 +150,20 @@ public:
 
 		unk114.clear();
 	}
+	// The popped node is bound to a const reference, not assigned straight
+	// out of the call: that consumed reference binding is 4 bytes of low
+	// region (frame-gaps.md, header round 26), which is what
+	// TNerveBPFlyPivot::execute wants (99.77 -> 100). The by-value form
+	// (`TPathNode next = unk114.pop();`) is far worse -- it adds the whole
+	// 16-byte copy and costs five functions including this one's beneficiary
+	// (BPFlyPivot 99.77 -> 81.16, TNerveWalkerEscape 99.86 -> 90.77) -- and
+	// the unbound form leaves BPFlyPivot 4 short. Header round 29.
 	void switchNextGoalPath()
 	{
-		if (!unk114.empty())
-			unkF4 = unk114.pop();
+		if (!unk114.empty()) {
+			const TPathNode& next = unk114.pop();
+			unkF4                 = next;
+		}
 	}
 
 	void decHitPoints()
