@@ -31,4 +31,12 @@ public:
 
 extern TCameraOption* gpCameraOption;
 
+// The house global-accessor idiom (cf. SMSGetCamera, SMSGetMarDirector,
+// SMSGetPollution). Each read routed through this level is +4 bytes of
+// low-region frame with no instruction change; in
+// CPolarSubCamera::ctrlOptionCamera_ the four guard reads plus the four
+// chaseOptionCamera_ arguments - eight sites - are exactly the 32 bytes
+// retail's frame has over the raw spelling.
+inline TCameraOption* SMSGetCameraOption() { return gpCameraOption; }
+
 #endif

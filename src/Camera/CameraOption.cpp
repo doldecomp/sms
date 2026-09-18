@@ -13,16 +13,6 @@ static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 TCameraOption* gpCameraOption;
 const char* cLoadCamName = "左サイドカメラ";
 
-// Parked here, not in <Camera/CameraOption.hpp>, because a header batch is
-// running: the house global-accessor idiom (cf. SMSGetCamera,
-// SMSGetMarDirector, SMSGetPollution). Promotion to the header is a header
-// item. Measured: each read routed through this level is +4 bytes of
-// low-region frame in ctrlOptionCamera_ with no instruction change, and the
-// four guard reads plus the four chaseOptionCamera_ arguments - eight sites -
-// are exactly the 32 bytes retail's frame has over the raw spelling. The
-// in-place decrements and the unk0/unk10/mFovY accesses stay raw.
-static inline TCameraOption* SMSGetCameraOption() { return gpCameraOption; }
-
 void CPolarSubCamera::chaseOptionCamera_(f32 param_1)
 {
 	CLBChaseConstantSpecifyFrame<f32>(&mPosition.x, mCurrentTarget.mPosition.x,
