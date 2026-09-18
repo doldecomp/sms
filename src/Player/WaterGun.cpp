@@ -1174,7 +1174,7 @@ void TWaterGun::init()
 			                     *mFluddModel->getModel()
 			                          ->getModelData()
 			                          ->getTexture()
-			                          ->getResTIMG(0));
+			                          ->getResTIMG(1));
 
 			mNozzleList[i]->unk380->initDL();
 
