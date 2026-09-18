@@ -20,24 +20,16 @@ public:
 	          f32 height_offset);
 	void float_(TLiveActor*);
 
-	// Pulls a point back inside the tub's inner circle. Always inlined: the
-	// map records no symbol for it, and float_ expands it three times.
-	void clampToTub(f32* x, f32* z, f32 margin) const
-	{
-		const TBathtubData& data = mBathtub->getBathtubData();
-		JGeometry::TVec3<f32> center = data.getThing();
-		f32 radius = JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-		                                         - data.unk44 * data.unk44)
-		             - margin;
-		f32 dz  = *z - center.z;
-		f32 dx  = *x - center.x;
-		f32 lsq = dx * dx + dz * dz;
-		if (lsq > radius * radius) {
-			f32 scale = radius * JGeometry::TUtil<f32>::inv_sqrt(lsq);
-			*x        = scale * dx + center.x;
-			*z        = scale * dz + center.z;
-		}
-	}
+	// UNUSED in the map at 0x164, inlined at all three float_ sites. It takes
+	// the point by reference: that is what lets the third site share one tub
+	// centre between the circle clamp and the floor clamp on y, and at the
+	// first two sites the y clamp is dead-code-eliminated because nothing
+	// reads the sampled point's y.
+	void constrain_(JGeometry::TVec3<f32>& pos, f32 margin);
+
+	// Fabricated. The accessor level is the last 8 bytes of float_'s
+	// 0x178 frame.
+	f32 getFrontMargin() const { return mFrontMargin; }
 
 public:
 	/* 0x04 */ TBathtub* mBathtub;        // "バスタブ"
