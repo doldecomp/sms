@@ -1724,8 +1724,10 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		if (mStatus != MARIO_STATUS_RUN || mFreezeTimer == 0)
+		if (mStatus != MARIO_STATUS_RUN || mFreezeTimer == 0) {
 			calcAnim(CUE_CALC_ANIM, graphics);
+			animSound();
+		}
 
 		if (mSpecialModel != nullptr) {
 			for (u16 i = 0;
@@ -1735,6 +1737,7 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			mSpecialModel->calcWeightEnvelopeMtx();
 		} else {
 			emarioActor->calcAnm();
+			animSound();
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
 				emarioModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
