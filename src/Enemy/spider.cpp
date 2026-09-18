@@ -14,8 +14,40 @@ TSpider::TSpider()
 
 TSpider::~TSpider() { }
 
-// TODO: Instructions/registers match; recover the original 0x158 frame
-// (currently 0x120) through the original vector/inlining structure.
+// TODO: all 349 instructions and every register match; the only differences in
+// the whole function are `r1` displacements. Frame 0x120 against the ROM's
+// 0x158, and the slot map says exactly where the 60 missing bytes of locals sit
+// (ROM offset -> ours):
+//
+//   0x8 -0x40  outgoing arguments, 56 bytes (ours 60: we are +4 here)
+//   0x114/0x108/0xfc/0xf8/0xf4  the five named locals, in declaration order
+//                               downward - local_114, local_50, local_5C and
+//                               the two TBGCheckData pointers. Exact.
+//   0xe8-0xf4  12 bytes of alignment below them; we have it too
+//   0xc8/0xbc/0xb0  TBGWallCheckRecord, local_bc, normal. Exact.
+//   0xa4-0xb0  12 bytes we do NOT have
+//   0x98/0x8c/0x80  the three TVec3<f32>(0,0,0) setVelocity temporaries
+//   0x4c-0x80  52 bytes we do NOT have
+//   0x40       operator-'s return buffer for the final mLinearVelocity store
+//
+// So the temporary pool is allocated downward in expansion order and the two
+// holes are dead temporaries: one 12-byte slot allocated *before* the first
+// setVelocity temporary, and 52 bytes between the last setVelocity temporary
+// and operator-'s buffer.
+//
+// Measured with a TU-local wrapper around setVelocity carrying an
+// uninitialised non-trivial local: the cost is exactly sizeof x 4 expansions
+// (4 B -> +0x10, 8 -> +0x20, 12 -> +0x30, 16 -> +0x40, 20 -> +0x50), so no
+// single dead local in setVelocity can pay 56; a 12-byte one gets to 0x150.
+// Rejected: setVelocity by value (0x128, 355 instructions), mVelocity.set(0,0,0)
+// in place of setVelocity (0xf8, 19 structural diffs), and a named delta with
+// sub() in place of operator- (0x110, 360 instructions).
+//
+// Best next hypothesis: the 52-byte hole is one 48-byte object plus 4 bytes of
+// alignment (nothing else in the pool is 4-aligned at 0x4c), i.e. a scratch Mtx
+// in an inlined callee between local_bc.sub() and the final operator-; and the
+// 12-byte hole above the setVelocity temporaries is a fourth TVec3 temporary
+// from the `param_1->setVelocity(local_5C)` site in the airborne branch.
 void TSpider::bind(TLiveActor* param_1)
 {
 	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
