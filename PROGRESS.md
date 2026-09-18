@@ -11,7 +11,7 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 36.30% | 3.74% | 96 / 385 |
+| Game | 36.31% | 3.74% | 96 / 385 |
 | JSystem | 87.11% | 61.61% | 166 / 198 |
 | SDK | 95.07% | 92.22% | 142 / 149 |
 | All | 47.52% | 18.02% | 404 / 732 |
