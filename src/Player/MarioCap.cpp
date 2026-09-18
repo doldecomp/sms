@@ -141,10 +141,18 @@ void TMarioCap::addDirty() { }
 void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// TODO: frame 0x178 vs 0x1e0. mMario->getStatus() bought 48 and
-	// getPrevPosition() 16. Two of the thirteen stack slots (the 0x1ac and
-	// 0x174 groups) are 8 and 52 bytes closer to the frame top than retail's,
-	// so this one is not purely a low-region gap: named locals are missing in
-	// the CALC_ANIM branch as well.
+	// getPrevPosition() 16. Closure batch 120 read the slot map and this is
+	// **not** an accessor-lever gap: it is the batch-113/116 `a = b - c`
+	// pool-ordering residue. The two referenced vector slots are the
+	// `operator-` by-value left-operand copy and the explicit
+	// `TVec3<f32>(...)` whose `.length()` is taken, and retail spaces them 56
+	// bytes apart (0x174 and 0x1ac) where we pack them 12 apart (0x140,
+	// 0x14c); the 44 bytes retail keeps *between* them are the statement's
+	// level bytes, which our build hoists to the bottom of the pool (52 bytes
+	// below the first vector). The f64 conversion pair is 8 further down in
+	// retail than the packing accounts for. 52 + 44 + 8 = the whole 104-byte
+	// gap, so this function closes with the `bl sub` census and not on its
+	// own -- do not spend accessor levers on it.
 	if ((cue & CUE_CALC_ANIM) != 0) {
 		if (mMario->mAnimationId == TMario::ANIM_DEMO_GATE_OUT_GET2) {
 			J3DFrameCtrl& frameCtrl = mMario->getMotionFrameCtrl();
