@@ -1135,6 +1135,9 @@ DEFINE_NERVE(TNerveSmallEnemyChange, TLiveActor)
 		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->getPosition(),
 		                                            0, nullptr);
 	}
+	// Frozen again every frame, not just on the first: the ROM has the same
+	// call a second time outside the `getTime() == 0` block.
+	self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 	self->scalingChangeActor();
 	if (self->changeMove() || spine->getTime() > changeTime) {
 		self->changeOut();
