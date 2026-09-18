@@ -508,7 +508,7 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
 
 BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
+	if (&TNerveBPSleep::theNerve() == mOwner->getLatestNerve())
 		return mOwner->receiveMessage(sender, message);
 
 	TBossPakkun* boss = mOwner;
@@ -531,7 +531,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 
 	if (state != BOSSPAKU_STATE_UNK2) {
 		if (boss->is2ndFightNow()) {
-			if (&TNerveBPFly::theNerve() == boss->mSpine->getLatestNerve())
+			if (&TNerveBPFly::theNerve() == boss->getLatestNerve())
 				boss->showMessage(2);
 		}
 
@@ -566,8 +566,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 				boss->mWaterMark += 1;
 			boss->unk174 = boss->getSaveParam2()->mSLWaterHitTimer.get();
 
-			if (&TNerveBPSwallow::theNerve()
-			    != boss->mSpine->getLatestNerve()) {
+			if (&TNerveBPSwallow::theNerve() != boss->getLatestNerve()) {
 				boss->mSpine->reset();
 				boss->mSpine->setNext(&TNerveBPSwallow::theNerve());
 			}

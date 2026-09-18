@@ -4,6 +4,7 @@
 #include <Strategic/TakeActor.hpp>
 #include <Strategic/LiveManager.hpp>
 #include <Strategic/Nerve.hpp>
+#include <Strategic/Spine.hpp>
 
 // TODO: where should this live?
 struct TLodAnmIndex;
@@ -137,6 +138,17 @@ public:
 	TMActorKeeper* getActorKeeper() { return mMActorKeeper; }
 	TLiveManager* getManager() { return mManager; }
 	TSpineBase<TLiveActor>* getSpine() const { return mSpine; }
+	// fabricated. One inline level above TSpineBase::getLatestNerve(), whose
+	// two-`return` body then refuses to expand: the ROM `bl`s
+	// getLatestNerve() from evCheckLatestNerve4Npc while expanding the
+	// one-word getCurrentNerve() in evCheckCurNerve4Npc, so the latest-nerve
+	// read sits one level deeper than the current-nerve read. Adding it is
+	// codegen-neutral tree-wide; it pays at TBPHeadHit::receiveMessage
+	// (87.7 -> 89.9) and TBWBinder::bind (88.6 -> 91.4).
+	const TNerveBase<TLiveActor>* getLatestNerve() const
+	{
+		return mSpine->getLatestNerve();
+	}
 	s16 getInstanceIndex() const { return mInstanceIndex; }
 	MAnmSound* getAnmSound() { return mAnmSound; }
 	TMapCollisionManager* getMapCollisionManager()

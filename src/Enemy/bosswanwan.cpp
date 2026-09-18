@@ -584,8 +584,8 @@ void TBWBinder::bind(TLiveActor* actor)
 		actor->mVelocity = speed;
 	}
 
-	if (boss->mSpine->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
-	    || boss->mSpine->getLatestNerve() == &TNerveBWDie::theNerve()) {
+	if (boss->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
+	    || boss->getLatestNerve() == &TNerveBWDie::theNerve()) {
 		actor->mLinearVelocity = next - actor->mPosition;
 		return;
 	}
