@@ -103,6 +103,14 @@ void TMonumentShine::hitByWater(THitActor* actor)
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMonumentShine::receiveMessage (batch 127).
+static inline TItemManager* MapObjDolpicGetItemManager()
+{
+	TItemManager* itemManager = gpItemManager;
+	return itemManager;
+}
+
 BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->isActorType(0x01000001)) {
@@ -120,7 +128,7 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 		unk138.a = (u8)(unk13C * 100 / 1000);
 
 		if (unk13C == 0) {
-			gpItemManager->makeShineAppearWithDemo(
+			MapObjDolpicGetItemManager()->makeShineAppearWithDemo(
 			    "シャイン（モニュメントシャイン用）",
 			    "モニュメントシャインカメラ", mPosition.x, mPosition.y,
 			    mPosition.z);
@@ -270,6 +278,14 @@ void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 
 void TBellDolpic::touchPlayer(THitActor* actor) { ring(actor->mPosition); }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TBellDolpic::receiveMessage (batch 127).
+static inline int MapObjDolpicUnk154(const TBellDolpic* p)
+{
+	int v154 = p->unk154;
+	return v154;
+}
+
 BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->isActorType(0x80000001)) {
@@ -280,7 +296,7 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
 
-		if (unk154 == 0)
+		if (MapObjDolpicUnk154(this) == 0)
 			return 1;
 
 		unk154 = unk154 - 1;
@@ -308,6 +324,14 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	return 0;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TBellDolpic::control (batch 127).
+static inline f32 MapObjDolpicUnk14C(const TBellDolpic* p)
+{
+	f32 v14C = p->unk14C;
+	return v14C;
 }
 
 // TODO: frame 0x48 vs retail's 0x58; every instruction is exact. The four
@@ -338,7 +362,7 @@ void TBellDolpic::control()
 
 	TMapObjBase::control();
 
-	f32 sinVal = -JMASin(unk14C);
+	f32 sinVal = -JMASin(MapObjDolpicUnk14C(this));
 	unk150     = 0.01f * sinVal + unk150;
 
 	unk14C = unk14C + unk150;

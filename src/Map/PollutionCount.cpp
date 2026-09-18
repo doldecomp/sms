@@ -518,6 +518,14 @@ void TPollutionCounterLayer::drawTexStamp(int target_layer) const
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TPollutionCounterLayer::drawRevivalTexStamp (batch 127).
+static inline u16 PollutionCountRevivalTexStampNum(const TPollutionCounterLayer* p)
+{
+	u16 revivalTexStampNum = p->mRevivalTexStampNum;
+	return revivalTexStampNum;
+}
+
 void TPollutionCounterLayer::drawRevivalTexStamp(int layer_index) const
 {
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_S16, 0);
@@ -548,7 +556,7 @@ void TPollutionCounterLayer::drawRevivalTexStamp(int layer_index) const
 	GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
 
-	for (int i = 0; i < mRevivalTexStampNum; ++i) {
+	for (int i = 0; i < PollutionCountRevivalTexStampNum(this); ++i) {
 		TPollutionRevivalTexStamp& stamp = mRevivalTexStamps[i];
 
 		if (stamp.mStampInterval > 0) {

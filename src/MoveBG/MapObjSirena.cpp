@@ -143,9 +143,17 @@ void TRoulette::setRollSp(f32 sp)
 	unk150->unk6C = 0;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TRoulette::switchStop (batch 127).
+static inline TRouletteSw* MapObjSirenaUnk150(const TRoulette* p)
+{
+	TRouletteSw* v150 = p->unk150;
+	return v150;
+}
+
 void TRoulette::switchStop()
 {
-	if (unk150->unk6C != 0) {
+	if (MapObjSirenaUnk150(this)->unk6C != 0) {
 		if (SMS_GetMarioPos().y < 20.0f + SMS_GetMarioGrLevel()
 		    && unk13C != 0.0f) {
 			unk150->unk6C = 0;
@@ -497,9 +505,17 @@ void TItemSlotDrum::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TItemSlotDrum::touchWater (batch 127).
+static inline bool MapObjSirenaUnk194(const TItemSlotDrum* p)
+{
+	bool v194 = p->unk194;
+	return v194;
+}
+
 u32 TItemSlotDrum::touchWater(THitActor* water)
 {
-	if (unk194 || !unk1A2)
+	if (MapObjSirenaUnk194(this) || !unk1A2)
 		return 1;
 
 	unk1A4 = TMsRange<s32>(100, 150).rand();

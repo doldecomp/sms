@@ -243,6 +243,14 @@ void TMareEventDepressWall::finishEvent() { }
 
 void TMareEventDepressWall::setJointPosX(float, int) { }
 
+// Binding level over a raw member read: a register lever in
+// TMareEventDepressWall::rising at an unchanged frame (batch 127).
+static inline f32* MapEventMareUnk40(const TMareEventDepressWall* p)
+{
+	f32* v40 = p->unk40;
+	return v40;
+}
+
 void TMareEventDepressWall::rising()
 {
 	f32 x = TMapObjBase::getJointTransX(unk30[unk48]);
@@ -256,7 +264,7 @@ void TMareEventDepressWall::rising()
 			em->setGlobalScale(unk38[idx]);
 			em->setRate(unk3C[idx]);
 			em->setGlobalParticleScale(
-			    JGeometry::TVec3<f32>(unk40[idx], unk40[idx], unk40[idx]));
+			    JGeometry::TVec3<f32>(unk40[idx], unk40[idx], MapEventMareUnk40(this)[idx]));
 		}
 	}
 

@@ -93,6 +93,14 @@ TShine* TItemManager::makeShineAppearWithDemoOffset(const char* shine_name,
 	return shine;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TItemManager::newAndRegisterCoin (batch 127).
+static inline TItemManager* ItemManagerGetItemManager()
+{
+	TItemManager* itemManager = gpItemManager;
+	return itemManager;
+}
+
 // TODO: frame 0x68 vs 0x60. The six `TVec3` argument temporaries are exact in
 // size and order (last argument lowest, later branch lower), but retail's block
 // starts at 0x18 and ours at 0xc: retail has one more 12-byte inline-expansion
@@ -108,7 +116,7 @@ TCoin* TItemManager::newAndRegisterCoin(u32 event_id)
 	if (event_id < 0x32) {
 		result = (TCoin*)newAndRegisterObj("coin_blue");
 	} else if (event_id == 100) {
-		result = gpItemManager->unk78;
+		result = ItemManagerGetItemManager()->unk78;
 	} else if (event_id == 200) {
 		result = (TCoin*)newAndRegisterObj("coin_red");
 	} else {

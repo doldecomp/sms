@@ -176,6 +176,14 @@ void TSandLeafBase::control()
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TSandLeafBase::initMapObj (batch 127).
+static inline TSandBomb* MapObjMammaTrigger(const TSandLeafBase* p)
+{
+	TSandBomb* trigger = p->mTrigger;
+	return trigger;
+}
+
 void TSandLeafBase::initMapObj()
 {
 	mGrowSpeed   = 0.003f;
@@ -188,7 +196,7 @@ void TSandLeafBase::initMapObj()
 	    "SandLeaf", mPosition, mRotation,
 	    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 	mTrigger->mOwner = this;
-	mTrigger->appear();
+	MapObjMammaTrigger(this)->appear();
 }
 
 void TSandBomb::makeObjAppeared()

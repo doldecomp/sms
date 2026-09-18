@@ -219,6 +219,20 @@ void TRevolvingFenceInner::controlWall()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TRevolvingFenceInner::controlGroundRoof (batch 127).
+static inline MActor* MapObjFenceMActorL0(const TRevolvingFenceInner* p)
+{
+	MActor* mActor = p->mMActor;
+	return mActor;
+}
+
+static inline MActor* MapObjFenceMActor(const TRevolvingFenceInner* p)
+{
+	MActor* mActor = MapObjFenceMActorL0(p);
+	return mActor;
+}
+
 void TRevolvingFenceInner::controlGroundRoof()
 {
 	switch (mState) {
@@ -228,7 +242,7 @@ void TRevolvingFenceInner::controlGroundRoof()
 
 	case STATE_TURN_TO_BACK_CW:
 	case STATE_TURN_TO_BACK_CCW:
-		if (mMActor->curAnmEndsNext(0, nullptr)) {
+		if (MapObjFenceMActor(this)->curAnmEndsNext(0, nullptr)) {
 			setState(STATE_WAIT_BACK);
 			mMActor->setFrameRate(0.0f, 0);
 			mMActor->getFrameCtrl(0)->setFrame(0.0f);

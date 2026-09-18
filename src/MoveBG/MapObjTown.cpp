@@ -293,15 +293,31 @@ void TMapObjBillboard::swing(THitActor* param_1)
 
 void TMapObjBillboard::touchActor(THitActor* param_1) { swing(param_1); }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMapObjBillboard::touchWater (batch 127).
+static inline TMapObjBase* MapObjTownHiddenObj(const TMapObjBillboard* p)
+{
+	TMapObjBase* hiddenObj = p->mHiddenObj;
+	return hiddenObj;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TMapObjBillboard::touchWater (batch 127).
+static inline bool MapObjTownAllowReveal(const TMapObjBillboard* p)
+{
+	bool allowReveal = p->mAllowReveal;
+	return allowReveal;
+}
+
 u32 TMapObjBillboard::touchWater(THitActor* param_1)
 {
 	swing(param_1);
-	if (mHiddenObj && mAllowReveal) {
+	if (MapObjTownHiddenObj(this) && MapObjTownAllowReveal(this)) {
 		JGeometry::TVec3<f32> rot = mRotation;
 		JGeometry::TVec3<f32> pos = mPosition;
 		rot.y -= 90.0f;
 		pos.y += mYOffset;
-		TMapObjBase* obj = mHiddenObj;
+		TMapObjBase* obj = MapObjTownHiddenObj(this);
 		if (obj->isActorType(0x2000000E))
 			obj = gpItemManager->makeObjAppear(0x2000000E);
 		if (obj) {
@@ -314,12 +330,20 @@ u32 TMapObjBillboard::touchWater(THitActor* param_1)
 	return 1;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMapObjChangeStage::touchPlayer (batch 127).
+static inline MSound* MapObjTownGetMSound()
+{
+	MSound* mSound = gpMSound;
+	return mSound;
+}
+
 void TMapObjChangeStage::touchPlayer(THitActor*)
 {
 	gpMarDirector->setNextStage(unk138, nullptr);
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mColCount = 0;
-	gpMSound->startSoundActor(MSD_SE_MA_WARP_EX, &mPosition, 0, nullptr, 0, 4);
+	MapObjTownGetMSound()->startSoundActor(MSD_SE_MA_WARP_EX, &mPosition, 0, nullptr, 0, 4);
 }
 
 void TMapObjChangeStage::load(JSUMemoryInputStream& stream)
@@ -518,6 +542,20 @@ void TMapObjSwitch::registerObjInfo(THideObjInfo* info)
 	unk13C += 1;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMapObjSwitch::load (batch 127).
+static inline s32 MapObjTownUnk138L0(const TMapObjSwitch* p)
+{
+	s32 v138 = p->unk138;
+	return v138;
+}
+
+static inline s32 MapObjTownUnk138(const TMapObjSwitch* p)
+{
+	s32 v138 = MapObjTownUnk138L0(p);
+	return v138;
+}
+
 void TMapObjSwitch::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
@@ -538,7 +576,7 @@ void TMapObjSwitch::load(JSUMemoryInputStream& stream)
 	unk148.b = (u8)b;
 
 	unk138 = 100;
-	unk144 = new THideObjInfo*[unk138];
+	unk144 = new THideObjInfo*[MapObjTownUnk138(this)];
 
 	SMS_LoadParticle("/scene/mapObj/ms_watcoin_hit.jpa", 0x57);
 }

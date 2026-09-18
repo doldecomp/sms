@@ -286,6 +286,14 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 	return 9999999.0f;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMapCollisionData::checkGround (batch 127).
+static inline TMapCheckGroundPlane* MapCheckGroundPlane(const TMapCollisionData* p)
+{
+	TMapCheckGroundPlane* groundPlane = p->mGroundPlane;
+	return groundPlane;
+}
+
 f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
                                    const TBGCheckData** result) const
 {
@@ -306,9 +314,9 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 	f32 dVar6 = checkGroundList(
 	    x, y, z, flags, getGridRoot14(gridX, gridZ).getRoofList(), &local_64);
 
-	if (mGroundPlane != nullptr) {
+	if (MapCheckGroundPlane(this) != nullptr) {
 		const TBGCheckData* local_68;
-		f32 dVar7 = mGroundPlane->checkPlaneGround(x, y, z, &local_68);
+		f32 dVar7 = MapCheckGroundPlane(this)->checkPlaneGround(x, y, z, &local_68);
 		if (dVar7 > dVar6) {
 			local_64 = local_68;
 			dVar6    = dVar7;

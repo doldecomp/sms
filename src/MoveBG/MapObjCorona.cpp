@@ -84,11 +84,19 @@ TBathtubGripPartsHard::TBathtubGripPartsHard(int index, TBathtubGrip* grip)
 {
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TBathtubGripParts::getRootJointMtx (batch 127).
+static inline TBathtubGrip* MapObjCoronaGrip(const TBathtubGripParts* p)
+{
+	TBathtubGrip* grip = p->mGrip;
+	return grip;
+}
+
 // TODO: The original has a larger stack frame; matrix lookup instructions match.
 Mtx* TBathtubGripParts::getRootJointMtx() const
 {
-	int joint = mGrip->mJointIndices[mIndex];
-	return (Mtx*)mGrip->getModel()->getAnmMtx(joint);
+	int joint = MapObjCoronaGrip(this)->mJointIndices[mIndex];
+	return (Mtx*)MapObjCoronaGrip(this)->getModel()->getAnmMtx(joint);
 }
 
 BOOL TBathtubGripPartsFragile::receiveMessage(THitActor* sender, u32 message)
@@ -350,6 +358,14 @@ void TBathtubGrip::setupCollisions_()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TBathtubGrip::control (batch 127).
+static inline TBathtub* MapObjCoronaBathtub(const TBathtubGrip* p)
+{
+	TBathtub* bathtub = p->mBathtub;
+	return bathtub;
+}
+
 // TODO: Match the stack frame used by the inlined grip helpers.
 void TBathtubGrip::control()
 {
@@ -364,7 +380,7 @@ void TBathtubGrip::control()
 		setupCollisions_();
 	if (unk248) {
 		if (animIsFinished()) {
-			if (mBathtub->unk16C->resetGrip.get()) {
+			if (MapObjCoronaBathtub(this)->unk16C->resetGrip.get()) {
 				reset();
 				return;
 			}

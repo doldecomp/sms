@@ -701,6 +701,14 @@ TWireBell::TWireBell(const char* name)
 	mWirePos.set(0.0f, 0.0f, 0.0f);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMapObjPuncher::touchPlayer (batch 127).
+static inline JGeometry::TVec3<f32>* MapObjMareGetMarioPos()
+{
+	JGeometry::TVec3<f32>* marioPos = gpMarioPos;
+	return marioPos;
+}
+
 void TMapObjPuncher::touchPlayer(THitActor* player)
 {
 	awake();
@@ -709,7 +717,7 @@ void TMapObjPuncher::touchPlayer(THitActor* player)
 	JGeometry::TVec3<f32> dir;
 	makeVecToLocalZ(1.0f, &dir);
 
-	JGeometry::TVec3<f32> dest(*gpMarioPos);
+	JGeometry::TVec3<f32> dest(*MapObjMareGetMarioPos());
 	dest += dir * 100.0f;
 	SMS_MarioMoveRequest(dest);
 	SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
@@ -798,6 +806,14 @@ void TMuddyBoat::moveByWater()
 
 void TMuddyBoat::calcRootMatrix() { }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMuddyBoat::kill (batch 127).
+static inline MSound* MapObjMareGetMSound()
+{
+	MSound* mSound = gpMSound;
+	return mSound;
+}
+
 void TMuddyBoat::kill()
 {
 	mSpeed     = 0.0f;
@@ -805,7 +821,7 @@ void TMuddyBoat::kill()
 
 	SMS_EasyEmitParticle(PARTICLE_MS_M_AMIATTACK, &mEffectPos, nullptr,
 	                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-	gpMSound->startSoundActor(MSD_SE_OBJ_DORO_BROKEN, &mPosition, 0, nullptr,
+	MapObjMareGetMSound()->startSoundActor(MSD_SE_OBJ_DORO_BROKEN, &mPosition, 0, nullptr,
 	                          0, 4);
 
 	MTXCopy(getModel()->getAnmMtx(0), getModel()->getBaseTRMtx());
@@ -1083,6 +1099,14 @@ TMuddyBoat::TMuddyBoat(const char* name)
 	unk17C = 0.0f;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMareFall::calc (batch 127).
+static inline TMarioParticleManager* MapObjMareGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 void TMareFall::calc()
 {
 	gpMSound->startSoundActor(MSD_SE_GE_FALL, &mPosition, 0, nullptr, 0, 4);
@@ -1090,8 +1114,8 @@ void TMareFall::calc()
 	                          nullptr, 0, 4);
 
 	// TODO: Particles.hpp has no names for these two; they are
-	gpMarioParticleManager->emit(MAPOBJ_MAREFALLSPLASH, &mPosition, 1, this);
-	gpMarioParticleManager->emit(MAPOBJ_MAREFALLSMOKE, &mPosition, 1, this);
+	MapObjMareGetMarioParticleManager()->emit(MAPOBJ_MAREFALLSPLASH, &mPosition, 1, this);
+	MapObjMareGetMarioParticleManager()->emit(MAPOBJ_MAREFALLSMOKE, &mPosition, 1, this);
 }
 
 void TMareFall::load(JSUMemoryInputStream& stream)
@@ -1180,12 +1204,20 @@ void TMareCork::drawObject(JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMareEventPoint::receiveMessage (batch 127).
+static inline TModelWaterManager* MapObjMareGetModelWaterManager()
+{
+	TModelWaterManager* modelWaterManager = gpModelWaterManager;
+	return modelWaterManager;
+}
+
 BOOL TMareEventPoint::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		// Only clean water counts, and only once the spray has slowed down
 		// enough to be a deliberate hose rather than a passing jet.
-		if (!gpModelWaterManager->checkFlagBottom4Bits(
+		if (!MapObjMareGetModelWaterManager()->checkFlagBottom4Bits(
 		        TMapObjBase::getWaterID(sender), 1)) {
 			if (TMapObjBase::getWaterPlane(sender) != nullptr
 			    && TMapObjBase::getWaterPlane(sender)->mNormal.y < 0.1f) {

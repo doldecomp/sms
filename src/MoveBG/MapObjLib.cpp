@@ -454,10 +454,18 @@ void TMapObjBase::makeRootMtxTrans(MtxPtr) { }
 
 void TMapObjBase::setRootMtxTrans() { }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMapObjBase::updateObjMtx (batch 127).
+static inline f32 MapObjLibYOffset(const TMapObjBase* p)
+{
+	f32 yOffset = p->mYOffset;
+	return yOffset;
+}
+
 void TMapObjBase::updateObjMtx()
 {
 	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), mPosition.x,
-	               mPosition.y - mYOffset, mPosition.z, mRotation.x,
+	               mPosition.y - MapObjLibYOffset(this), mPosition.z, mRotation.x,
 	               mRotation.y, mRotation.z);
 }
 

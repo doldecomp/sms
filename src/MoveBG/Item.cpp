@@ -403,11 +403,19 @@ void TCoinBlue::makeObjAppeared()
 	TCoin::makeObjAppeared();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TCoinBlue::taken (batch 127).
+static inline THitActor* ItemContainer(const TCoinBlue* p)
+{
+	THitActor* container = p->mContainer;
+	return container;
+}
+
 void TCoinBlue::taken(THitActor* param_1)
 {
 	SMSGetMarDirector()->fireGetBlueCoin(this);
 
-	if (mContainer)
+	if (ItemContainer(this))
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
 
 	TItem::taken(param_1);

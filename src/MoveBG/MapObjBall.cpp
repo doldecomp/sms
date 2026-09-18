@@ -796,6 +796,22 @@ void TResetFruit::waitingToAppear()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TResetFruit::makeObjWaitingToAppear (batch 127).
+static inline TMarDirector* MapObjBallGetMarDirector()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TResetFruit::makeObjWaitingToAppear (batch 127).
+static inline u8 MapObjBallUnk1A4(const TResetFruit* p)
+{
+	u8 v1A4 = p->unk1A4;
+	return v1A4;
+}
+
 void TResetFruit::makeObjWaitingToAppear()
 {
 	mState = STATE_LIVING;
@@ -809,7 +825,7 @@ void TResetFruit::makeObjWaitingToAppear()
 	mState = STATE_WAITING_TO_APPEAR;
 
 	// On the map where these are a one-shot, do not queue a respawn.
-	if (gpMarDirector->mMap == 3 && unk1A4)
+	if (MapObjBallGetMarDirector()->mMap == 3 && MapObjBallUnk1A4(this))
 		makeObjDead();
 }
 
@@ -1505,6 +1521,14 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 	boundByActor(param_1);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TBigWatermelon::kill (batch 127).
+static inline TWaterEmitInfo* MapObjBallUnk198(const TBigWatermelon* p)
+{
+	TWaterEmitInfo* v198 = p->unk198;
+	return v198;
+}
+
 void TBigWatermelon::kill()
 {
 	emitAndScale(0x5D, 0, &mPosition);
@@ -1516,7 +1540,7 @@ void TBigWatermelon::kill()
 	emitAndScale(0x6C, 0, &mPosition, scale);
 
 	// Splash the juice through the water manager.
-	unk198->mPos.value = mPosition;
+	MapObjBallUnk198(this)->mPos.value = mPosition;
 	gpModelWaterManager->emitRequest(*unk198);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATERMELON_BLOCK, &mPosition, 0,

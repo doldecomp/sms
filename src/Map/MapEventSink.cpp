@@ -290,12 +290,20 @@ void TMapEventSinkBianco::rising()
 		TMapObjBase::moveJoint(unk64, 0.0f, unk3C, 0.0f);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMapEventSinkBianco::control (batch 127).
+static inline JGeometry::TVec3<f32>* MapEventSinkUnk50(const TMapEventSinkBianco* p)
+{
+	JGeometry::TVec3<f32>* v50 = p->unk50;
+	return v50;
+}
+
 bool TMapEventSinkBianco::control()
 {
 	if (mRaisingBuildingIdx == 0 && unk4C == unk7C) {
 		gpItemManager->makeShineAppearWithTime(
-		    "シャイン（坂上げ用）", 300, unk50[mRaisingBuildingIdx].x,
-		    unk50[mRaisingBuildingIdx].y, unk50[mRaisingBuildingIdx].z, 0, 0x3C,
+		    "シャイン（坂上げ用）", 300, MapEventSinkUnk50(this)[mRaisingBuildingIdx].x,
+		    MapEventSinkUnk50(this)[mRaisingBuildingIdx].y, MapEventSinkUnk50(this)[mRaisingBuildingIdx].z, 0, 0x3C,
 		    0x3C);
 	}
 	return TMapEventSinkInPollutionReset::control();

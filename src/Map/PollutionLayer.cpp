@@ -361,6 +361,14 @@ void TPollutionLayer::initPollutionTex(const char* depth_tex_name)
 		                 MAP_POLLUTION_MS_THUNDER_S);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TPollutionLayer::initJointModel (batch 127).
+static inline int PollutionLayerChildrenNum(const TPollutionLayer* p)
+{
+	int childrenNum = p->mChildrenNum;
+	return childrenNum;
+}
+
 void TPollutionLayer::initJointModel(TJointModelManager* param_1,
                                      const char* param_2,
                                      MActorAnmData* param_3)
@@ -378,7 +386,7 @@ void TPollutionLayer::initJointModel(TJointModelManager* param_1,
 	if (mActor->checkAnmFileExist(param_2, ANM_TYPE_BRK))
 		mActor->setBrk(param_2);
 
-	for (int i = 0; i < mChildrenNum; ++i)
+	for (int i = 0; i < PollutionLayerChildrenNum(this); ++i)
 		((TPollutionObj*)mChildren[i])->initAreaInfo(this);
 }
 

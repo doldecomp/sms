@@ -45,6 +45,14 @@ BOOL TJumpMushroom::receiveMessage(THitActor* sender, u32 message)
 	return TRUE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TJumpMushroom::load (batch 127).
+static inline TMapCollisionManager* MapObjMonteMapCollisionManager(const TJumpMushroom* p)
+{
+	TMapCollisionManager* mapCollisionManager = p->mMapCollisionManager;
+	return mapCollisionManager;
+}
+
 void TJumpMushroom::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
@@ -52,7 +60,7 @@ void TJumpMushroom::load(JSUMemoryInputStream& stream)
 	s32 data;
 	stream >> data;
 	if (mMapCollisionManager)
-		mMapCollisionManager->unk8->setAllData((s16)data);
+		MapObjMonteMapCollisionManager(this)->unk8->setAllData((s16)data);
 }
 
 f32 THangingBridgeBoard::mMarioAccelY        = 0.15f;
@@ -971,10 +979,18 @@ void TFluff::move()
 		gpMarioPos->y -= mFallSpeed;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TFluff::kill (batch 127).
+static inline TTakeActor* MapObjMonteHeldObject(const TFluff* p)
+{
+	TTakeActor* heldObject = p->mHeldObject;
+	return heldObject;
+}
+
 void TFluff::kill()
 {
 	if (mHeldObject) {
-		mHeldObject->receiveMessage(this, 8);
+		MapObjMonteHeldObject(this)->receiveMessage(this, 8);
 		mHeldObject->mHolder = nullptr;
 		mHeldObject          = nullptr;
 	}
