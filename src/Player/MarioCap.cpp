@@ -11,6 +11,9 @@
 
 #include <Player/MarioDirtyStrings.hpp>
 
+// The four mModel reads in this constructor stay raw: TMario::getM3UModel()
+// costs it 99.01 -> 98.89 (measured in header round 16), even though the same
+// level is what MarioDraw's setAnimation and MarioInit's loadAfter want.
 TMarioCap::TMarioCap(TMario* mario)
 {
 	// Unused stack space

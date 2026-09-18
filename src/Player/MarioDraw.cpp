@@ -541,7 +541,7 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 
 		if (CheckMarioFootPosCtrl()) {
 
-			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
+			MtxPtr footMtx = gpMarioForCallBack->getM3UModel()->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdChnFootR);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
@@ -569,7 +569,7 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 
 		if (CheckMarioFootPosCtrl()) {
 
-			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
+			MtxPtr footMtx = gpMarioForCallBack->getM3UModel()->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdFootR);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
@@ -643,7 +643,7 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 
 		if (CheckMarioFootPosCtrl()) {
 
-			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
+			MtxPtr footMtx = gpMarioForCallBack->getM3UModel()->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdChnFootL);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
@@ -671,7 +671,7 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 
 		if (CheckMarioFootPosCtrl()) {
 
-			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
+			MtxPtr footMtx = gpMarioForCallBack->getM3UModel()->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdFootL);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
@@ -760,14 +760,14 @@ s16 TMario::getHeadRot()
 	return -bodyAngle[2] * params->mHeadRot.get();
 }
 
-Mtx* TMario::getRootAnmMtx() { return (Mtx*)mModel->getModel()->getAnmMtx(0); }
+Mtx* TMario::getRootAnmMtx() { return (Mtx*)getM3UModel()->getModel()->getAnmMtx(0); }
 
 MtxPtr TMario::getCenterAnmMtx()
 {
-	return mModel->getModel()->getAnmMtx(mJointIdCenter);
+	return getM3UModel()->getModel()->getAnmMtx(mJointIdCenter);
 }
 
-f32 TMario::getPumpFrame() const { return mModel->getFrameCtrl(1).getFrame(); }
+f32 TMario::getPumpFrame() const { return getM3UModel()->getFrameCtrl(1).getFrame(); }
 
 s16 TMario::getWallAngle() const
 {
@@ -817,7 +817,7 @@ void TMario::takeOffGlass()
 
 void TMario::setPositions()
 {
-	MtxPtr root = mModel->getModel()->getAnmMtx(1);
+	MtxPtr root = getM3UModel()->getModel()->getAnmMtx(1);
 	unk160.x    = root[0][3];
 	unk160.y    = root[1][3];
 	unk160.z    = root[2][3];
@@ -826,12 +826,12 @@ void TMario::setPositions()
 	mHeadPos.y = mHeadMtx[1][3];
 	mHeadPos.z = mHeadMtx[2][3];
 
-	MtxPtr centerMtx = mModel->getModel()->getAnmMtx(mJointIdCenter);
+	MtxPtr centerMtx = getM3UModel()->getModel()->getAnmMtx(mJointIdCenter);
 	mCenterPos.x     = centerMtx[0][3];
 	mCenterPos.y     = centerMtx[1][3];
 	mCenterPos.z     = centerMtx[2][3];
 
-	MtxPtr rightHandMtx = mModel->getModel()->getAnmMtx(mJointIdHandR);
+	MtxPtr rightHandMtx = getM3UModel()->getModel()->getAnmMtx(mJointIdHandR);
 	mRightHandPos.x     = rightHandMtx[0][3];
 	mRightHandPos.y     = rightHandMtx[1][3];
 	mRightHandPos.z     = rightHandMtx[2][3];
@@ -861,7 +861,7 @@ void TMario::calcBodyPos(JGeometry::TVec3<f32>* param_1)
 
 MtxPtr TMario::getTakingMtx() { return getRootAnmMtx()[mJointIdHandR]; }
 
-MtxPtr TMario::getTakenMtx() { return mModel->unk8->getBaseTRMtx(); }
+MtxPtr TMario::getTakenMtx() { return getM3UModel()->unk8->getBaseTRMtx(); }
 
 // UNUSED (0x10 -- getRailMtx). Dead; four instructions, so it is a single
 // member chain. TODO: the cart's base matrix is the rail's own output (see
@@ -874,10 +874,10 @@ MtxPtr TMario::getRailMtx() const
 
 f32 TMario::getCurrentFrame(int idx)
 {
-	return mModel->getFrameCtrl(idx).getFrame();
+	return getM3UModel()->getFrameCtrl(idx).getFrame();
 }
 
-J3DFrameCtrl& TMario::getMotionFrameCtrl() { return mModel->getFrameCtrl(0); }
+J3DFrameCtrl& TMario::getMotionFrameCtrl() { return getM3UModel()->getFrameCtrl(0); }
 
 BOOL TMario::isLast1AnimeFrame()
 {
@@ -919,9 +919,9 @@ void TMario::changeHand(int idx)
 	default:
 	case 0:
 		// 100% an inline
-		mModel->unk8->getModelData()->getShapeNodePointer(5)->offFlag(
+		getM3UModel()->unk8->getModelData()->getShapeNodePointer(5)->offFlag(
 		    J3DShpFlag_Visible);
-		mModel->unk8->getModelData()->getShapeNodePointer(6)->offFlag(
+		getM3UModel()->unk8->getModelData()->getShapeNodePointer(6)->offFlag(
 		    J3DShpFlag_Visible);
 		flagOnAllShapes(mHandModels[0][0]->getModelData(), J3DShpFlag_Visible);
 		flagOnAllShapes(mHandModels[0][1]->getModelData(), J3DShpFlag_Visible);
@@ -930,9 +930,9 @@ void TMario::changeHand(int idx)
 		break;
 	case 1:
 		// 100% an inline
-		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
+		getM3UModel()->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
 		    J3DShpFlag_Visible);
-		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
+		getM3UModel()->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
 		    J3DShpFlag_Visible);
 		flagOffAllShapes(mHandModels[0][0]->getModelData(), J3DShpFlag_Visible);
 		flagOffAllShapes(mHandModels[0][1]->getModelData(), J3DShpFlag_Visible);
@@ -941,9 +941,9 @@ void TMario::changeHand(int idx)
 		break;
 	case 2:
 		// 100% an inline
-		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
+		getM3UModel()->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
 		    J3DShpFlag_Visible);
-		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
+		getM3UModel()->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
 		    J3DShpFlag_Visible);
 		flagOnAllShapes(mHandModels[0][0]->getModelData(), J3DShpFlag_Visible);
 		flagOnAllShapes(mHandModels[0][1]->getModelData(), J3DShpFlag_Visible);
@@ -1059,18 +1059,18 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 		mAnimationId = anm_id;
 
 		if (onYoshi()) {
-			mModel->changeMtxCalcSIAnmBQAnmTransform(0, 0, anm_id);
-			mModel->unk20->unk18->mMotionBlendRatio = 0.0f;
+			getM3UModel()->changeMtxCalcSIAnmBQAnmTransform(0, 0, anm_id);
+			getM3UModel()->unk20->unk18->mMotionBlendRatio = 0.0f;
 			getMotionFrameCtrl().setAttribute(
-			    mModel->unk4->unk4[anm_id]->getAttribute());
+			    getM3UModel()->unk4->unk4[anm_id]->getAttribute());
 			changeHand(0);
 			mAnmSound->stop();
 		} else {
-			mModel->changeMtxCalcSIAnmBQAnmTransform(
+			getM3UModel()->changeMtxCalcSIAnmBQAnmTransform(
 			    0, 0, gMarioAnimeData[anm_id].unk0);
-			mModel->unk20->unk18->mMotionBlendRatio = 0.0f;
+			getM3UModel()->unk20->unk18->mMotionBlendRatio = 0.0f;
 			getMotionFrameCtrl().setAttribute(
-			    mModel->unk4->unk4[gMarioAnimeData[anm_id].unk0]
+			    getM3UModel()->unk4->unk4[gMarioAnimeData[anm_id].unk0]
 			        ->getAttribute());
 
 			int unk1 = gMarioAnimeData[anm_id].unk4;
@@ -1079,7 +1079,7 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 				unk1 = 8;
 
 			if (unk1 < 0x18)
-				mModel->changeAnmTexPattern(0, unk1);
+				getM3UModel()->changeAnmTexPattern(0, unk1);
 
 			u16 r0 = gMarioAnimeData[anm_id].unk0;
 			u32 unk; // SoundId?
@@ -1094,7 +1094,7 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 		}
 	}
 	getMotionFrameCtrl().setRate(rate * 0.5f);
-	mModel->getFrameCtrl(2).setRate(rate * 0.5f);
+	getM3UModel()->getFrameCtrl(2).setRate(rate * 0.5f);
 	return getCurrentFrame(0);
 }
 
@@ -1106,7 +1106,7 @@ f32 TMario::setReverseAnimation(int anm_id, f32 rate)
 		// Tried using existing functions, but couldn make it match
 		// I suspect there might be another inline?
 		// Maybe a reset FrameCtrl or something
-		J3DFrameCtrl* frameCtrl       = mModel->unkC;
+		J3DFrameCtrl* frameCtrl       = getM3UModel()->unkC;
 		J3DFrameCtrl& motionFrameCtrl = frameCtrl[0];
 		motionFrameCtrl.setRate(rate * -0.5f);
 		motionFrameCtrl.setFrame(motionFrameCtrl.getEnd() - 0.1f);
@@ -1326,20 +1326,20 @@ void TMario::initModel()
 	transformInfo.mTranslate.z = mPosition.z;
 	Mtx transform;
 	J3DGetTranslateRotateMtx(transformInfo, transform);
-	mModel->unk8->setBaseTRMtx(transform);
+	getM3UModel()->unk8->setBaseTRMtx(transform);
 
-	mModel->updateInMotion();
+	getM3UModel()->updateInMotion();
 
-	mModel->unk8->calc();
+	getM3UModel()->unk8->calc();
 
 	if (mHandModels[0][0] != nullptr) {
 		// Possibly inline since this exact same thing exists in
 		// TMario::calcAnim
-		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
-		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
-		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
-		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
-		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][0]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][1]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandL));
+		mHandModels[1][0]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[1][1]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandL));
+		mRHand4ndModel->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
 
 		mHandModels[0][0]->calc();
 		mHandModels[0][1]->calc();
@@ -1440,10 +1440,10 @@ void TMario::initModel()
 	mtxTypes[1]                     = 0;
 	mtxTypes[2]                     = 0;
 	mMultiMtxEffect->mMtxEffectType = mtxTypes;
-	mMultiMtxEffect->setup(mModel->unk8, "Mario");
+	mMultiMtxEffect->setup(getM3UModel()->unk8, "Mario");
 
 	mTrembleModelEffect = new TTrembleModelEffect();
-	mTrembleModelEffect->init(mModel->unk8);
+	mTrembleModelEffect->init(getM3UModel()->unk8);
 
 	unk3A4 = new SampleCtrlModelData(mBodyModelData);
 }
@@ -1457,7 +1457,7 @@ void TMario::initMirrorModel()
 		mCap->createMirrorCap();
 
 	TMirrorActor* mirrorActor = new TMirrorActor("マリオin鏡");
-	mirrorActor->init(mModel->getModel(), 4);
+	mirrorActor->init(getM3UModel()->getModel(), 4);
 
 	for (int handIdx = 0; handIdx < 2; ++handIdx) {
 		for (int modelIdx = 0; modelIdx < 2; ++modelIdx) {
@@ -1472,6 +1472,13 @@ void TMario::initMirrorModel()
 	}
 }
 
+// The three mModel reads here stay raw: routing them through getM3UModel()
+// costs this exact function (100 -> 99.87). Same for setUpperDamageRun and
+// entryModels below, and for all four sites in TMarioCap::TMarioCap. The
+// accessor level is a per-site lever, and in this file the sites that want it
+// are setAnimation (94.8 -> 96.0), setReverseAnimation, calcAnim (frame 0x2a0
+// -> 0x2e0 against retail's 0x328), initModel, addUpper, addDamageFog,
+// calcAnimBody/calcAnimHands and MarioFoot*Ctrl.
 void TMario::finalDrawInitialize()
 {
 	changeHand(0);
@@ -1892,19 +1899,19 @@ void TMario::calcAnimBody(u32 param_1, JDrama::TGraphics* graphics)
 	Mtx baseMtx;
 	calcBaseMtx(baseMtx);
 	considerWaist();
-	MTXCopy(baseMtx, mModel->unk8->getBaseTRMtx());
-	mModel->perform(param_1, graphics);
+	MTXCopy(baseMtx, getM3UModel()->unk8->getBaseTRMtx());
+	getM3UModel()->perform(param_1, graphics);
 }
 
 // UNUSED (0x148). Dead: `calcAnim` carries the same block written out.
 void TMario::calcAnimHands()
 {
 	if (mHandModels[0][0] != nullptr) {
-		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
-		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
-		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
-		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
-		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][0]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][1]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandL));
+		mHandModels[1][0]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[1][1]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandL));
+		mRHand4ndModel->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
 
 		mHandModels[0][0]->calc();
 		mHandModels[0][1]->calc();
@@ -1918,7 +1925,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 {
 	// volatile u32 padding[27];
 	gpMarioForCallBack      = this;
-	J3DModelData* modelData = mModel->unk8->getModelData();
+	J3DModelData* modelData = getM3UModel()->unk8->getModelData();
 	if (isMario()) {
 		modelData->getJointNodePointer(mJointIdHead)
 		    ->setCallBack(MarioHeadCtrl);
@@ -1981,6 +1988,8 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	}
 }
 
+// Raw reads: the accessor costs this exact function (see
+// finalDrawInitialize).
 void TMario::setUpperDamageRun()
 {
 	J3DFrameCtrl& frameCtrl = mModel->getFrameCtrl(1);
@@ -1995,27 +2004,27 @@ void TMario::setUpperDamageRun()
 void TMario::addUpper()
 {
 	// volatile u32 padding[17];
-	J3DFrameCtrl& frameCtrl = mModel->getFrameCtrl(1);
+	J3DFrameCtrl& frameCtrl = getM3UModel()->getFrameCtrl(1);
 	if (mUpperState != UPPER_STATE_FIXED_ANIMATION) {
 		switch (mUpperState) {
 		case UPPER_STATE_PUMPING:
 		case UPPER_STATE_HOLDING_PUMP:
 			if (onYoshi()) {
-				mModel->unk24[1].unk3 = -1;
+				getM3UModel()->unk24[1].unk3 = -1;
 				return;
 			}
 			if (gMarioAnimeData[mAnimationId].unk2 != 0xC8) {
-				mModel->unk24[1].unk3 = 1;
-				mModel->changeMtxCalcSIAnmBQAnmTransform(
+				getM3UModel()->unk24[1].unk3 = 1;
+				getM3UModel()->changeMtxCalcSIAnmBQAnmTransform(
 				    1, 0, gMarioAnimeData[mAnimationId].unk2);
 			}
 			break;
 		case UPPER_STATE_HOLDING_OBJECT:
-			mModel->unk24[1].unk3 = 1;
-			mModel->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x4b);
+			getM3UModel()->unk24[1].unk3 = 1;
+			getM3UModel()->changeMtxCalcSIAnmBQAnmTransform(1, 0, 0x4b);
 			break;
 		case UPPER_STATE_IDLE:
-			mModel->unk24[1].unk3 = -1;
+			getM3UModel()->unk24[1].unk3 = -1;
 			break;
 		}
 
@@ -2045,7 +2054,7 @@ void TMario::addUpper()
 void TMario::removeCallBack()
 {
 	gpMarioForCallBack      = nullptr;
-	J3DModelData* modelData = mModel->unk8->getModelData();
+	J3DModelData* modelData = getM3UModel()->unk8->getModelData();
 	modelData->getJointNodePointer(mJointIdHead)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdChest)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdChnFootR)->setCallBack(nullptr);
@@ -2061,11 +2070,11 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	Mtx baseMtx;
 	calcBaseMtx(baseMtx);
 	considerWaist();
-	MTXCopy(baseMtx, mModel->unk8->getBaseTRMtx());
-	mModel->perform(param_1, graphics);
+	MTXCopy(baseMtx, getM3UModel()->unk8->getBaseTRMtx());
+	getM3UModel()->perform(param_1, graphics);
 	gpMarioForCallBack = nullptr;
 
-	J3DModelData* modelData = mModel->unk8->getModelData();
+	J3DModelData* modelData = getM3UModel()->unk8->getModelData();
 	modelData->getJointNodePointer(mJointIdHead)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdChest)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdChnFootR)->setCallBack(nullptr);
@@ -2074,11 +2083,11 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
 
 	if (mHandModels[0][0] != nullptr) {
-		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
-		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
-		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
-		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
-		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][0]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][1]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandL));
+		mHandModels[1][0]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[1][1]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandL));
+		mRHand4ndModel->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
 
 		mHandModels[0][0]->calc();
 		mHandModels[0][1]->calc();
@@ -2088,14 +2097,14 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (mCap != nullptr) {
-		mCap->unkC->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdMHead));
-		mCap->unk10[2]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHead));
-		mCap->unk10[3]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdMHead));
+		mCap->unkC->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdMHead));
+		mCap->unk10[2]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHead));
+		mCap->unk10[3]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdMHead));
 		mCap->perform(CUE_CALC_ANIM, graphics);
 	}
 
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
-		mSurfGesso->getModel()->setBaseTRMtx(mModel->unk8->getBaseTRMtx());
+		mSurfGesso->getModel()->setBaseTRMtx(getM3UModel()->unk8->getBaseTRMtx());
 		mSurfGesso->perform(CUE_CALC_ANIM, graphics);
 	}
 
@@ -2131,9 +2140,9 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (mAnimationId == ANIM_DEMO_GATE_OUT_GET2) {
-		mModel->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
+		getM3UModel()->unk8->getModelData()->getShapeNodePointer(5)->onFlag(
 		    J3DShpFlag_Visible);
-		mModel->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
+		getM3UModel()->unk8->getModelData()->getShapeNodePointer(6)->onFlag(
 		    J3DShpFlag_Visible);
 		flagOnAllShapes(mHandModels[0][0]->getModelData(), J3DShpFlag_Visible);
 		flagOnAllShapes(mHandModels[0][1]->getModelData(), J3DShpFlag_Visible);
@@ -2156,7 +2165,7 @@ void TMario::calcView(JDrama::TGraphics* graphics)
 {
 	// volatile u32 padding[4];
 	MTXCopy(graphics->mViewMtx, j3dSys.mViewMtx);
-	mModel->unk8->viewCalc();
+	getM3UModel()->unk8->viewCalc();
 	if (mHandModels[0][0] != nullptr) {
 		mHandModels[0][0]->viewCalc();
 		mHandModels[0][1]->viewCalc();
@@ -2178,6 +2187,8 @@ void TMario::calcView(JDrama::TGraphics* graphics)
 	}
 }
 
+// Raw read: the accessor costs this exact function (see
+// finalDrawInitialize).
 void TMario::entryModels(JDrama::TGraphics* graphics)
 {
 	mModel->perform(CUE_ENTRY, graphics);
@@ -2361,14 +2372,14 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 
 	if (check == true) {
 		// Very likely an inline since it is duplicated
-		J3DModelData* modelData = mModel->getModel()->getModelData();
+		J3DModelData* modelData = getM3UModel()->getModel()->getModelData();
 		for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
 			J3DFog* fog
 			    = modelData->getMaterialNodePointer(i)->getPEBlock()->getFog();
 			fog->mColor = fogColor;
 		}
 
-		SMS_AddDamageFogEffect(mModel->getModel()->getModelData(), mPosition,
+		SMS_AddDamageFogEffect(getM3UModel()->getModel()->getModelData(), mPosition,
 		                       graphics);
 
 		if (mCap != nullptr) {
@@ -2404,7 +2415,7 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 		}
 
 	} else {
-		SMS_ResetDamageFogEffect(mModel->unk8->getModelData());
+		SMS_ResetDamageFogEffect(getM3UModel()->unk8->getModelData());
 		if (mCap != nullptr) {
 			SMS_ResetDamageFogEffect(mCap->unkC->getModelData());
 		}
