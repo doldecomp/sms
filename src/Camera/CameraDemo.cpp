@@ -52,6 +52,22 @@ void CPolarSubCamera::endSimpleDemoCamera_()
 	}
 }
 
+// TODO: 93.2% (57.8% before closure batch 83). The rotation blocks are now
+// retail's shape: each offset is a three-argument TVec3 constructor over the
+// component differences (a `sub(a, b)` call interleaves the stfs where retail
+// batches the three fsubs), only the x component is named so that MWCC CSEs
+// `-x` into retail's early `fneg`, JMASSin/JMASCos are spelled out at every
+// use (naming `sn`/`cs` loads each table entry once where retail reloads them
+// four times from two CSE'd addresses), and the write-back is `origin +
+// offset`, whose by-value left operand is retail's three-word copy in front of
+// `bl TVec3::add`. What is left: retail keeps `origin.y` in f31 and `origin.z`
+// in f30 across both `bl add` calls and reloads only `origin.x` per block, so
+// its frame is 0xc8 to our 0xb8 -- exactly the two FPR saves, the local area
+// being the same size -- and the two `operator+` temporaries sit at 0x58/0x4c
+// instead of 0x7c/0x70, i.e. three more 12-byte temporaries are expanded ahead
+// of them. The same "x reloaded, y and z promoted to callee-saved FPRs"
+// asymmetry blocks TMapCollisionBase::updateTrans in Map/MapMakeData.cpp; it
+// is one unexplained MWCC pattern, not two.
 void CPolarSubCamera::updateDemoCamera_(bool param_1)
 {
 	if (param_1) {
@@ -65,36 +81,29 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 				if (mCameraDemo->unk0 != nullptr)
 					origin = *mCameraDemo->unk0;
 
-				{
-					JGeometry::TVec3<f32> result = origin;
-					f32 dx                       = unk124.x - origin.x;
-					f32 dy                       = unk124.y - origin.y;
-					f32 dz                       = unk124.z - origin.z;
-					f32 sn                       = JMASSin(angle);
-					f32 cs                       = JMASCos(angle);
-					result.x += dx * cs + dz * sn;
-					result.y += dy;
-					result.z += -dx * sn + dz * cs;
-					unk124 = result;
-				}
+				JGeometry::TVec3<f32> posOffset(unk124.x - origin.x,
+				                                unk124.y - origin.y,
+				                                unk124.z - origin.z);
+				f32 posX    = posOffset.x;
+				posOffset.x = posX * JMASCos(angle)
+				              + posOffset.z * JMASSin(angle);
+				posOffset.z = -posX * JMASSin(angle)
+				              + posOffset.z * JMASCos(angle);
+				unk124 = origin + posOffset;
 
-				{
-					JGeometry::TVec3<f32> result = origin;
-					f32 dx                       = unk148.x - origin.x;
-					f32 dy                       = unk148.y - origin.y;
-					f32 dz                       = unk148.z - origin.z;
-					f32 sn                       = JMASSin(angle);
-					f32 cs                       = JMASCos(angle);
-					result.x += dx * cs + dz * sn;
-					result.y += dy;
-					result.z += -dx * sn + dz * cs;
-					unk148 = result;
-				}
+				JGeometry::TVec3<f32> atOffset(unk148.x - origin.x,
+				                               unk148.y - origin.y,
+				                               unk148.z - origin.z);
+				f32 atX    = atOffset.x;
+				atOffset.x = atX * JMASCos(angle)
+				             + atOffset.z * JMASSin(angle);
+				atOffset.z = -atX * JMASSin(angle)
+				             + atOffset.z * JMASCos(angle);
+				unk148 = origin + atOffset;
 
-				f32 ux = mUp.x;
-				f32 uz = mUp.z;
-				mUp.x  = ux * JMASCos(angle) + uz * JMASSin(angle);
-				mUp.z  = -ux * JMASSin(angle) + uz * JMASCos(angle);
+				f32 upX = mUp.x;
+				mUp.x   = upX * JMASCos(angle) + mUp.z * JMASSin(angle);
+				mUp.z   = -upX * JMASSin(angle) + mUp.z * JMASCos(angle);
 			}
 
 			calcFinalPosAndAt_();
@@ -115,6 +124,11 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 	}
 }
 
+// TODO: 99.9%. Instruction-exact and the frame is right (0x30); only `fovy`
+// sits 4 bytes low (0x18 vs 0x1c), i.e. we have one 4-byte temporary too many
+// between it and the int-to-float magic pair at 0x20. Removing an inline level
+// around `mInbetween->getUnk4()` or the `(f32)v` conversion is the lever to
+// try; a +4 low step is never an accessor (those come in 8s).
 void CPolarSubCamera::updateGateDemoCamera_()
 {
 	f32 fovy;
@@ -133,6 +147,9 @@ void CPolarSubCamera::updateGateDemoCamera_()
 			changeCamModeSpecifyCamMapToolAndFrame_(mCameraDemo->unk8, 120);
 }
 
+// TODO: 99.8%. Instruction-exact; frame 0xa0 vs 0x98 with the 0x80-byte name
+// buffer at 0x14 instead of 0x10, so retail has 4 dead bytes below the buffer
+// and 4 of alignment above it.
 void CPolarSubCamera::startGateDemoCamera(const JDrama::TActor* actor)
 {
 	char buf[0x80];
@@ -216,6 +233,13 @@ int CPolarSubCamera::getRestDemoFrames() const
 	return mCameraDemo->mRemainingFrames;
 }
 
+// TODO: 99.9%. Every instruction matches; frame 0x50 vs 0x30 with `diff` the
+// only referenced local (0x30 vs 0x14), so retail has 28 dead bytes below it
+// and 4 above. Dead-low-region family with no carrier identified: the only
+// inlined callees here are MsVECMag2, MsClamp and the CameraInbetween call,
+// and this TU's UNUSED list (getTotalDemoFrames, endSimpleDemoCamera_,
+// endReproduceDemoCamera_, restartReproduceDemoCamera_ 0x44 still empty,
+// startReproduceDemoCamera_) contains nothing this function reaches.
 void CPolarSubCamera::ctrlNormalDeadDemo_()
 {
 	mCurrentTarget.mTarget.set(gpCameraMario->unk0);
