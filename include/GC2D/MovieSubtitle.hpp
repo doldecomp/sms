@@ -28,6 +28,8 @@ public:
 	void makeBmgName(char*, int, const char*);
 	void draw(JDrama::TGraphics*);
 
+	J2DSetScreen* getScreen() const { return unk14; }
+
 public:
 	/* 0x10 */ const TTHPRender* unk10;
 	/* 0x14 */ J2DSetScreen* unk14;

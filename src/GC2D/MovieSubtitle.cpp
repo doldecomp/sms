@@ -39,7 +39,7 @@ TMovieSubTitle::TMovieSubTitle(const TTHPRender* param_1)
 // TMovieSubTitle::setupResource (batch 127).
 static inline J2DSetScreen* MovieSubtitleUnk14(const TMovieSubTitle* p)
 {
-	J2DSetScreen* v14 = p->unk14;
+	J2DSetScreen* v14 = p->getScreen();
 	return v14;
 }
 
@@ -57,49 +57,36 @@ void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 
 	char buffer[256];
 
-	// TODO: setupResource is instruction-identical but eight bytes of frame
-	// short (0x140 vs 0x138), and the missing bytes sit *below* `buffer`:
-	// retail puts `buffer` at 0x28(r1), we put it at 0x1c(r1), so there is a
-	// 12-byte object between the inline-temporary region and `buffer` that we
-	// do not reproduce. Measured: a `char[9..12]` declared right after
-	// `buffer` reaches 100% with no instruction change; `char[5..8]` gives the
-	// right frame but leaves `buffer` 4 bytes low; `char[13..16]` overshoots to
-	// 0x148; anything declared *before* `buffer` never lands. Nothing in the
-	// function wants a second buffer, and the two .blo names and ".bmg" are
-	// all .rodata/.sdata2 literals, so the 12 bytes are more likely one more
-	// inline expansion (the temp region is 32 bytes in retail, 20 in ours)
-	// than a named local. Rejected: naming the movie id, naming unk14 before
-	// the two search() calls (97.2%), a `char* blank` alias for the memset
-	// (98.1%), sizeof instead of ARRAY_COUNT, and moving `buffer` to the top
-	// of the body (all no change).
+	// Closed by re-pass 172.  The last 4 bytes of low region are a
+	// **nested direct-return fork**: `MovieSubtitleUnk14`'s binding now reads
+	// the member through `TMovieSubTitle::getScreen()` instead of `p->unk14`
+	// directly, which is +4 on top of the binding's +8 and puts `buffer` at
+	// retail's 0x28 with zero instruction change.  Batch 170's ladder said the
+	// nested fork had to be over a global or a file-local static; it is in fact
+	// +4 over a plain **member** read too, and the fork has to be nested inside
+	// the binding (spelled at the call site it is +0).
 	//
-	// Batch 151 re-measured the residue after the batch-127 binding landed:
-	// the frame is now **exact** (0x140 both sides) and the only difference
-	// left is that `buffer` sits at 0x24 instead of 0x28, i.e. the low region
-	// is 24 bytes against retail's 28 and the 4 bytes come back as alignment
-	// slack above `buffer`. So the object wanted is a **4-byte** one, and no
-	// 4-byte lever is known to exist: a binding written into a new
-	// `TMovieSubTitle::getScreen()` accessor is +8, not the +4 that batch 143
-	// measured for u16 reads (so that rule is u16-specific and does not
-	// generalise to a pointer member); two of them is +0x10; a global fork
-	// over `gpApplication` is +0 both as `&gpApplication` and as a `u32`
-	// wrapper, while the binding form of the same wrapper is +8; a pointer
-	// level inside `is_longheight_movie` (a hand-rolled `std::find` returning
-	// the iterator, which the loop shape suggests retail wrote) is +8 plus one
-	// instruction; and a binding inside `hide()` is +4 but drops `perform`
-	// from 100% to 98.5%, so it cannot be spent here.
+	// Earlier history, all still true.  Batch 127's binding took the frame from
+	// 0x138 to the exact 0x140 and left `buffer` at 0x24; batch 129 sized the
+	// missing object from the callee side (one uninitialised non-trivial 12-byte
+	// local in the UNUSED `makeBmgName` lands it exactly, 8 bytes gives the
+	// frame but `buffer` 0x24, 16 overshoots to 0x148) but no 12-byte class is a
+	// candidate in a string-building helper.
 	//
-	// Closure batch 129 sized the object from the callee side: **one
-	// uninitialised non-trivial 12-byte local in the UNUSED
-	// TMovieSubTitle::makeBmgName below takes this function to exact**
-	// (`buffer` 0x28, frame 0x140, zero instruction change, and makeBmgName's
-	// own byte size unchanged -- only its dead frame grows, which an UNUSED
-	// symbol does not constrain). An 8-byte one lands the frame but leaves
-	// `buffer` at 0x24; a 16-byte one overshoots to 0x148. So the carrier is
-	// legal and the size is pinned at 12, but there is no candidate object: a
-	// string-building helper wants no 12-byte class, and every 12-byte type in
-	// reach (JGeometry::TVec3<f32>) is nonsense here. Left out for want of a
-	// candidate, exactly as MSBgmXFade::getTimingForce is.
+	// Exhausted spellings for the missing 4, measured here and in batches
+	// 127/129/151: a binding inside a new `getScreen()` accessor is +8 and two
+	// of them +0x10; a fork over `gpApplication` at the call site is +0 both as
+	// `&gpApplication` and as a `u32` wrapper, and so is the same fork nested
+	// one level deep (`get_movie_id()` over `get_application()`); a fork over
+	// the file-local `cLongHeightMovieIdList` inside `is_longheight_movie` is +0
+	// (a bool-returning host does not price it); a pointer level inside
+	// `is_longheight_movie` is +8 plus one instruction; a consumed pointer
+	// binding inside `hide()` is +4 and does close this function, but it pays
+	// the same +4 into `perform`'s chain (the `J2DOrthoGraph` temp moves 0x54 ->
+	// 0x58), so it cannot be spent here; naming the movie id, naming `unk14`
+	// before the two `search()` calls, a `char* blank` alias for the memset,
+	// `sizeof` instead of `ARRAY_COUNT`, and moving `buffer` to the top of the
+	// body are all inert.
 
 	// inline?
 	memset(buffer, ' ', ARRAY_COUNT(buffer));

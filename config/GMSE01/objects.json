@@ -41,6 +41,7 @@
   "GC2D/HelpActor.cpp",
   "GC2D/MessageLoader.cpp",
   "GC2D/MessageUtil.cpp",
+  "GC2D/MovieSubtitle.cpp",
   "GC2D/ProgSelect.cpp",
   "GC2D/ScrnFader.cpp",
   "GC2D/ShineFader.cpp",
