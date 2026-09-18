@@ -33,6 +33,17 @@ public:
 	int getIndex(const char* name) const;
 	SDLModelData* getNthData(int n) const;
 	SDLModelData* createAndKeepData(const char* name, u32 flags);
+	// fabricated. One inline level above createAndKeepData, and the only
+	// user is TMActorKeeper::createMActor: it puts loadModelData and
+	// registerDataAndJoinNewNode at depth 3 there, where MWCC refuses them
+	// exactly as retail does, while createAndKeepData's own emitted copy
+	// still expands both at depth 1. Without the level createMActor inlines
+	// loadModelData (frame 0x1a8 vs 0xa0) and then refuses createAndRegister.
+	// Fully inlined everywhere, so the map has no symbol to name it from.
+	SDLModelData* keepModelData(const char* name, u32 flags)
+	{
+		return createAndKeepData(name, flags);
+	}
 	static SDLModelData* loadModelData(const char* name, u32 flags,
 	                                   const char* folder);
 

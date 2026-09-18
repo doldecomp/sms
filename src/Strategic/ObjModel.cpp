@@ -145,22 +145,6 @@ MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 	return createAndRegister(data, flags);
 }
 
-// One inline level above TModelDataKeeper::createAndKeepData, parked here as a
-// TU-local helper because it is fully inlined everywhere and so has no map
-// symbol to name it from. It is what puts loadModelData and
-// registerDataAndJoinNewNode at depth 3 in createMActor, where MWCC refuses
-// them exactly as retail does, while createAndKeepData's own emitted copy
-// still expands both at depth 1. Without the level createMActor inlines
-// loadModelData (frame 0x1a8 vs 0xa0) and then refuses createAndRegister.
-// TODO: promote to a TModelDataKeeper member in Strategic/ObjModel.hpp once its
-// real name is known; only createMActor needs it, so it stays out of the
-// header while a header batch is running.
-static inline SDLModelData*
-ObjModelKeepModelData(TModelDataKeeper* keeper, const char* name, u32 flags)
-{
-	return keeper->createAndKeepData(name, flags);
-}
-
 MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
 	TModelDataKeeper* keeper = getModelDataKeeper();
@@ -168,8 +152,7 @@ MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 	int index = keeper->getIndex(model_data_name);
 
 	if (index < 0) {
-		ObjModelKeepModelData(keeper, model_data_name,
-	                      getModelLoaderFlags());
+		keeper->keepModelData(model_data_name, getModelLoaderFlags());
 		index = keeper->getIndex(model_data_name);
 	}
 
