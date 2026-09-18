@@ -127,6 +127,10 @@ void TEnemyMario::initValues()
 	unk468 = 0.0f;
 	unk46C = 0.0f;
 
+	// TODO: shared-header item. The map has __dt__9MAnmSoundFv as an UNUSED
+	// symbol of this TU (0x60), so MAnmSound's destructor was written in
+	// MAnmSound.hpp and every TU that instantiates one carries a copy; ours
+	// only references the out-of-line copy in MAnmSound.cpp.
 	mAnmSound = new MAnmSound(SMSGetMSound());
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 	unk4EC          = 0;
@@ -185,6 +189,10 @@ void TEnemyMario::initModel()
 		}
 	}
 
+	// TODO: shared-header item. __ct__24M3UMtxCalcSIAnmBlendQuatFv is weak in
+	// retail's enemyMario.o (0x24) because __construct_new_array needs its
+	// address; that means the default constructor was defined in the class
+	// body, while ours only references M3UMtxCalc.cpp's copy.
 	M3UMtxCalcSIAnmBlendQuat* anmBlendQuat = new M3UMtxCalcSIAnmBlendQuat[2];
 	anmBlendQuat[0].mMotionBlendRatio      = 0.0f;
 	J3DFrameCtrl* frameCtrl                = new J3DFrameCtrl[3];
@@ -1357,6 +1365,11 @@ void TEnemyMario::emGetPad()
 // TODO: Reconstruct the retail deferred-inline boundaries that emit the
 // TMatrix34/TRotation3 constructors and TPathNode::getPoint without changing
 // shared JGeometry/Graph code generation.
+// TODO: retail's consider() has a 0x50-byte larger frame and *calls* three
+// header inlines this TU never emits: TGraphTracer::getGraph() twice and
+// TPathNode::getPoint() once (both weak in retail's object, both MISSING in
+// ours). That is the caller-size family, so they should come back on their own
+// once the missing locals are found; do not add wrapper levels for them.
 void TEnemyMario::consider()
 {
 	switch (mEMDoing) {
