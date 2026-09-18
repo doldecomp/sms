@@ -289,7 +289,36 @@ void TMapStaticObj::initUnique()
 		getModel()->calc();
 		getModel()->viewCalc();
 		getModel()->entry();
+	} else if (strcmp(mActorName, "SoundObjRiver") == 0) {
+		if (gpMarDirector->getCurrentMap() == 13)
+			mSoundId = MSD_SE_OBJ_FOUNTAIN;
+	} else if (strcmp(mActorName, "MareFalls") == 0) {
+		switch (gpMarDirector->getCurrentMap()) {
+		case 8:
+			switch (gpMarDirector->getCurrentStage()) {
+			case 0:
+			case 2:
+			case 4:
+			case 6:
+				mSoundId        = MSD_SE_OBJ_MONTE_NIGHT_A1;
+				mRandPlayHandle = 0;
+				break;
+			default:
+				mSoundId        = MSD_SE_OBJ_MONTE_DAY_A1;
+				mRandPlayHandle = 0;
+				break;
+			}
+			break;
+		case 2:
+			mSoundId        = MSD_SE_OBJ_BIRD_BIA_1;
+			mRandPlayHandle = 0;
+			break;
+		}
 	}
+
+	if (mRandPlayHandle == 0)
+		mRandPlayHandle = MSoundSESystem::MSRandPlay::registerTrans(mSoundId,
+		                                                            &mPosition);
 }
 
 void TMapStaticObj::initMapCollision(const char* name)
@@ -411,6 +440,7 @@ TMapStaticObj::TMapStaticObj(const char* name)
     , mMActor(nullptr)
     , mCollisionManager(nullptr)
     , mSoundId(-1)
+    , mRandPlayHandle(0)
 {
 }
 
