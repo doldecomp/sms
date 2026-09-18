@@ -109,6 +109,29 @@ bool CPolarSubCamera::removeMultiPlayer(const JGeometry::TVec3<f32>* param_1)
 // registers).  Left out because an unused local is not evidence on its own;
 // the real body is presumably the copy-and-subtract form above in a spelling
 // that our compiler scalar-replaces.
+//
+// Batch 131 narrowed what is left to two items and found a lever pair. The
+// helper's reserved size is **16, not 12**: with the dead vector here the
+// caller's `center` lands 4 low (0x38 against retail's 0x3c), and a named
+// `f32 maxDist = MsSqrtf(maxSqDist);` in the caller supplies exactly those 4
+// (it is +0 on its own -- the pair is what pays, as in batch 118). Together
+// they take the function 99.2 -> 99.5% and 61 markers -> 6, with the frame,
+// `center`, the accumulate loop, the int-to-float conversion buffer and both
+// CLB calls all exact. The two survivors are:
+//   * the MsSqrtf store/reload temp sits at 0x28 in retail and 0x18 here, i.e.
+//     retail's pool holds 16 bytes above that temp and 32 below it and ours
+//     holds 32 above and 16 below -- a pure pool *ordering* swap (the 16 bytes
+//     belong to expansions after the sqrt, not before it). Moving the dead
+//     vector into a TU-local level around `MsClamp` (224 insns) or around
+//     `mCurrentTarget.mTarget.set(center)` (51 markers) does not move it.
+//   * the `fmr f31, f0` below.
+// Measured and rejected for the 16: pointer parameters (+0), a second level
+// above the helper (+8), `u8 pad[4]` or a dead `f32` next to the vector (+0 --
+// only a class object counts, and `f32 diff[4]` is dropped entirely, per
+// header round 21), `TVec3 diff(a.x - b.x, ...)` plus `squared()` (lands every
+// slot including the MsSqrtf temp, but costs the 7 store/reload instructions
+// the note above describes), and binding levels over `mCurrentParams`,
+// `unk2BC` and `mAtOffsetY` (+8/+0x10/+0x18, all overshooting).
 static inline f32 sqDistance(const JGeometry::TVec3<f32>& a,
                              const JGeometry::TVec3<f32>& b)
 {
