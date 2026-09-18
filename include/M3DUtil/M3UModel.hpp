@@ -26,6 +26,11 @@ public:
 	// Fabricated
 	J3DTexNoAnm* getTexNoAnm(u8 idx) { return unkC[idx]; }
 
+	// Fabricated; getMtxCalc() above returns the address of one of these two.
+	J3DMtxCalcBasicAnm& getMtxCalcBasicAnm(u8 idx) { return unk10[idx]; }
+	// Fabricated
+	J3DMtxCalcSoftimageAnm& getMtxCalcSIAnm(u8 idx) { return unk14[idx]; }
+
 public:
 	/* 0x4 */ J3DAnmTransform** unk4;
 	/* 0x8 */ J3DAnmTexPattern** unk8;

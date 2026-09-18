@@ -37,13 +37,13 @@ void M3UModel::changeAnmTexPattern(int param_1, u8 param_2)
 	ctrl.setFrame(0.0f);
 }
 
-// TODO: 99.9%. Every instruction matches; the frame is 0x28 short of 0x80.
-//
 // frameCtrl must be declared before anmTrans even though anmTrans is used
 // first: the declaration order decides which of the two index chains gets
 // r3/r0 and which gets r5/r4, and the other order swaps them all.
-// getFrameCtrl() does not belong here either -- it re-breaks that allocation,
-// though the rest of the file does use it.
+// getFrameCtrl() does not belong here either -- it turns the `mr r3, r25`
+// receiver copy into an `addi`, though the rest of the file does use it.
+// The frame's last 0x28 bytes are the temporaries of getModel() (8) and of
+// the two mtx-calc accessors (16 each).
 void M3UModel::updateInMotion()
 {
 	for (int i = 0; i < unk10; i++) {
@@ -52,7 +52,8 @@ void M3UModel::updateInMotion()
 		J3DAnmTransform* anmTrans = unk4->unk4[info.mAnmTransformIdx];
 		frameCtrl.update();
 
-		J3DJoint* jnt = unk8->getModelData()->getJointNodePointer(info.mJntIdx);
+		J3DJoint* jnt
+		    = getModel()->getModelData()->getJointNodePointer(info.mJntIdx);
 		if (info.mMtxCalcIdx == 0xff) {
 			jnt->setMtxCalc(nullptr);
 			continue;
@@ -61,10 +62,11 @@ void M3UModel::updateInMotion()
 
 		switch (info.mAnmType) {
 		case 0:
-			unk4->unk10[info.mMtxCalcIdx].setAnmTransform(anmTrans);
+			unk4->getMtxCalcBasicAnm(info.mMtxCalcIdx)
+			    .setAnmTransform(anmTrans);
 			break;
 		case 1:
-			unk4->unk14[info.mMtxCalcIdx].setAnmTransform(anmTrans);
+			unk4->getMtxCalcSIAnm(info.mMtxCalcIdx).setAnmTransform(anmTrans);
 			break;
 		}
 
