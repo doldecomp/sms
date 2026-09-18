@@ -38,25 +38,25 @@ void TBaseNPC::execNpcObjCollision_()
 		if (isNerveWalk()) {
 			bVar2 = false;
 		} else {
-			if (!mCollisions[i]->checkActorType(0x4000000))
+			if (!getCollision(i)->checkActorType(0x4000000))
 				continue;
 
-			if (!((TBaseNPC*)mCollisions[i])->isNerveWalk())
+			if (!((TBaseNPC*)getCollision(i))->isNerveWalk())
 				continue;
 
 			bVar2 = true;
 		}
 
 		JGeometry::TVec3<f32> local_4C(
-		    getPosition().x - mCollisions[i]->mPosition.x, 0.0f,
-		    getPosition().z - mCollisions[i]->mPosition.z);
+		    getPosition().x - getCollision(i)->getPosition().x, 0.0f,
+		    getPosition().z - getCollision(i)->getPosition().z);
 
 		if (bVar2)
 			local_4C.negate();
 
 		if (local_4C.squared() <= JGeometry::TUtil<f32>::epsilon()) {
 			f32 diffY = getPosition().y;
-			diffY -= mCollisions[i]->mPosition.y;
+			diffY -= getCollision(i)->mPosition.y;
 
 			f32 absY = diffY >= 0.0f ? diffY : -diffY;
 
@@ -89,7 +89,7 @@ void TBaseNPC::execNpcObjCollision_()
 		}
 
 		if (bVar2) {
-			mCollisions[i]->mPosition += local_4C;
+			getCollision(i)->mPosition += local_4C;
 		} else {
 			mLinearVelocity += local_4C;
 		}
@@ -107,15 +107,15 @@ NpcCollisionGetPosition(const TBaseNPC* p)
 
 void TBaseNPC::setVariableDamageRadius_()
 {
-	const TNpcInitInfo* initInfo = SMSGetNpcInitData(mActorType - 0x4000001);
-	// TODO: 24 bytes of low region short (0x70 vs 0x58). getScaling().x and
-	// getPosition().y are +8 each and the ladder then saturates
-	// (getActorType(), setDamageRadius(), a named CLBSquared result, a named
-	// squared() result are all +0); getPosition() inside the sub() is a
-	// third +8 but costs 0.2 of score. The one remaining `~` is fmuls'
-	// operand order, which no spelling of the product moved.
-	f32 base                     = getScaling().x * initInfo->mDamageRadius;
-	f32 fVar6                    = base;
+	// Exact. The product's `fmuls` operand order is what the missing
+	// `initInfo` local was hiding: with the lookup inlined into the product
+	// the scaling load lands in f0 and retail's `fmuls f30, f0, f1` comes
+	// out. `mActorType` and `getActorType()` are interchangeable here, and
+	// swapping the factors or splitting the product into `base *= ...` all
+	// cost 0.1-0.4.
+	f32 base = getScaling().x
+	           * SMSGetNpcInitData(mActorType - 0x4000001)->mDamageRadius;
+	f32 fVar6 = base;
 	if (isBeTrampledNpc() && !SMS_IsMarioTouchGround4cm()
 	    && SMS_GetMarioPos().y > NpcCollisionGetPosition(this).y) {
 		JGeometry::TVec3<f32> diff;
@@ -131,12 +131,21 @@ void TBaseNPC::setVariableDamageRadius_()
 
 void TBaseNPC::bind()
 {
-	// TODO: frame size and every named local are right; the only residue is
-	// the 12-byte argument temporary of `nextPos - mPosition`, which retail
-	// puts at 0x10(r1) (the bottom of the low region) and we put at 0x28(r1),
-	// just under nextPos. Rejected: a named or const-reference `diff` local,
-	// `nextPos -= mPosition`, and a `diff.sub(nextPos, mPosition)` call (all
-	// 89-95%).
+	// TODO: 99.9%, frame 0x48 exact, one `~`: the 12-byte argument temporary
+	// of `nextPos - mPosition`. Retail allocates it at the bottom of the low
+	// region (0x10, with 0xc..0x10 lost to 8-byte alignment) and then the
+	// other 24 bytes of region above it; we get the same 24 bytes at
+	// 0xc..0x28 and the temporary at 0x28, directly under nextPos. So the
+	// residue is allocation *order*, not size: retail allocates the last
+	// statement's temporary first, as MWCC does for the three scale steps of
+	// MarioParticle's TWarpInCallBack, and here we allocate forward. Dropping
+	// the statement entirely leaves frame 0x30, so the 24 bytes come from the
+	// earlier statements either way. Rejected, all frame-neutral or worse: a
+	// named or const-reference `diff` local, `nextPos -= mPosition`,
+	// `diff.sub(nextPos, mPosition)` (89-95%), `nextPos - getPosition()` and
+	// the TU-local binding position (99.6%), `add()` for the two `+=`
+	// (identical), `mGroundPlane` for `getGroundPlane()` (99.8%), and a dead
+	// named `TVec3` after nextPos (+16 of frame).
 	JGeometry::TVec3<f32> nextPos = mPosition;
 	nextPos += mLinearVelocity;
 	nextPos += mVelocity;
