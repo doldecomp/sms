@@ -295,8 +295,20 @@ public:
 	//   set(_x, _y, _z) in one expression (i.e. cross2's shape)
 	//       JPAVecToRotaMtx 56.86 -> 54.72, JPAConvectionField::affect
 	//       94.46 -> 92.33, 10 more
+	//   three temporaries, then set(_x, _y, _z) (batch 62)
+	//       nine tenth-of-a-point gains against TBPHeadHit::throwActor
+	//       100.00 -> 95.32, TFruitsBoat::moveObject 93.95 -> 93.58,
+	//       TWalker::bind 90.36 -> 90.22 and ~10 more
 	//
 	// So moveRun's order comes from that call site, not from here.
+	// Same conclusion from TBGTentacle::setAttackTarget (batch 62), where
+	// the whole residue is this: retail computes _x and _y from shared
+	// loads, stores both, then *reloads* the operand's x for _z, because
+	// the store to a sibling TVec3 local invalidates it. Only a body that
+	// computes z after the x/y stores can do that, and that is exactly the
+	// second trial above -- so the reload is a property of the aliasing
+	// call sites, and the JPA sites that want all three computed first are
+	// the majority.
 	void cross(const TVec3& a, const TVec3& b)
 	{
 		f32 _x = a.y * b.z - a.z * b.y;
