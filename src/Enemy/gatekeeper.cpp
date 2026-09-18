@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <Enemy/GateKeeper.hpp>
 #include <JSystem/JMath.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -252,11 +253,14 @@ void TBGKMtxCalc::calc(u16 param_1)
 				f32 cur = MsWrap(cur2, -180.0f, 180.0f);
 
 				f32 delta = MsAngleDiff(yaw, cur);
+				// std::min/std::max rather than a ternary: the
+				// const-reference parameters are what put 3.0f
+				// and -3.0f in .sdata instead of .sdata2.
 				f32 turn;
 				if (0.0f < delta)
-					turn = 3.0f > delta ? delta : 3.0f;
+					turn = std::min(3.0f, delta);
 				else
-					turn = -3.0f > delta ? -3.0f : delta;
+					turn = std::max(-3.0f, delta);
 
 				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
 				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);
