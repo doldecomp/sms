@@ -73,6 +73,29 @@
 //       table at the declaration in JGVec3.hpp). The level has to come from
 //       somewhere in this unit's own chain, and an initialiser list leaves
 //       no room for one in SleepBossHanachan.hpp.
+// Retail leaves `TVec3<f>::set<f>(0, 0, 0)` -- TSleepBossHanachan's
+// mShinePosition initialiser -- out of line here, which the depth budget only
+// does from depth 4 down; through `new TSleepBossHanachan` the member template
+// sits at depth 3 and expands.  The missing level belongs in JGeometry (retail
+// defines set<f> out of class, non-inline, which is not expressible in MWCC
+// 1.2.5 from an in-class member template -- see the trial table in
+// JGVec3.hpp), so it is parked here as a TU-local level instead: that is the
+// smallest change that reaches only this call site.  Binding the result is the
+// +8 of low region retail spends on spilling the object across the constructor
+// call (frame 0x30 -> 0x38, exact).  Measured and rejected, all frame 0x40 and
+// seven lost instructions: a second nested helper, binding `name` as well,
+// binding the result twice, and giving TSleepBossHanachanManager the same
+// helper.
+// TODO: the last two markers are the two spill slots' positions -- retail puts
+// this object's at 0x1c and the manager's at 0x14, ours at 0x14 and 0x18, so
+// retail reserves 8 dead bytes below this expansion's temp that one binding
+// does not buy.
+static inline TSleepBossHanachan* newSleepBossHanachan(const char* name)
+{
+	TSleepBossHanachan* actor = new TSleepBossHanachan(name);
+	return actor;
+}
+
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
 	if (strcmp(name, "EMario") == 0)
@@ -88,7 +111,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 		return new TBossHanachanManager("?");
 
 	if (strcmp(name, "SleepBossHanachan") == 0)
-		return new TSleepBossHanachan("?");
+		return newSleepBossHanachan("?");
 
 	if (strcmp(name, "SleepBossHanachanManager") == 0)
 		return new TSleepBossHanachanManager("?");
