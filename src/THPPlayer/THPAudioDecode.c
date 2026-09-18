@@ -119,6 +119,28 @@ static void* AudioDecoder(void* arg)
 // (store before it, store after the increment) is +2 instructions.
 // The same group swap is open in TMapObjRevivalPollution::loadAfter
 // (src/MoveBG/MapObjPollution.cpp).
+//
+// Closure batch 115 measured the probe's cost exactly and looked for a
+// zero-instruction use. With `readBuffer.frameNumber = frame = 0;` the diff is
+// **one** instruction: an extra `stw r31, 0x14(r1)` emitted where the `frame =
+// 0` statement sits, i.e. before the `lwz r28, 0xbc(r29)` readSize load; the
+// other 44 instructions and the frame are exact. Retail has *no* pre-loop use
+// of `frame` at all (its pre-loop block is `li r31, 0`, the two `addi` hoists,
+// the readSize load and `stw r3, 0x10(r1)`), so the probe is a symptom, not
+// the source shape.
+// A use that folds away does not rank the local: `readSize =
+// ActivePlayer.initReadSize + frame;` and `readBuffer.ptr = (u8*)arg + frame;`
+// are both constant-folded to the baseline object (46 instructions, rotation
+// unchanged), so MWCC's ranking is computed after folding.
+// Position matters: moving `readBuffer.frameNumber = frame = 0;` *after* the
+// ActivePlayer read is 85.8% and 47 instructions (the `li` then lands between
+// the two address hoists), confirming that only a use ahead of the first
+// ActivePlayer access lifts the local.
+// Naming the two globals as source locals (`THPPlayer* player`, `OSThread*
+// thread`) never reaches retail's order either: three declaration orders give
+// 83.0% at 47 instructions and the three with `frame` declared after both give
+// 90.8% at 45, but none is instruction-exact, so the address temporaries are
+// genuinely compiler-generated in retail.
 static void* AudioDecoderForOnMemory(void* arg)
 {
 	s32 frame;

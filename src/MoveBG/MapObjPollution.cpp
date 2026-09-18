@@ -111,6 +111,20 @@ void TRevivalPolluter::pollute() { }
 //    `li`/`mr` pair moves). So the loop temporaries' creation point, not the
 //    counter's live range, is what differs here; look for a source shape that
 //    makes MWCC create them after the loop's source variables.
+//    Closure batch 115 tried the batch-110 binding level in every position and
+//    it is a pure frame lever here, never a register one: a `static inline`
+//    binding `&obj->unk14[i]` is +8 (0x38 -> 0x40), one binding `obj->unk14`
+//    is +8, the two nested is +0x10 (0x48), and none of the three moves a
+//    single register -- `this` stays in r28, `i` in r29, the byte offset in
+//    r31 and the element in r30. A two-parameter `void` level wrapping the
+//    whole loop body is +0 and equally inert. The only spelling that moves
+//    anything is still the named reference element (`TRevivalPolluter&
+//    polluter = unk14[i];` in the loop body), which rotates by one to
+//    [offset r31, i r30, element r29, this r28] -- the wrong direction, since
+//    retail wants the two *source* values on top ([i r31, this r30, offset
+//    r29, element r28]). So the ranking is not reachable through inline
+//    levels at all, and the lead stays "make MWCC create the loop temporaries
+//    after the loop's source variables".
 void TRevivalPolluter::registerPolluteTex()
 {
 	// TODO: inlines make me cry
