@@ -45,6 +45,9 @@ public:
 	/* 0x2C */ TMovieRumble* unk2C;
 	/* 0x30 */ JDrama::TFlagT<u16> unk30;
 	/* 0x34 */ TEndingString* unk34;
+	// The ROM's `new` size is 0x3c and the constructor zeroes 0x38 next to
+	// 0x34, so one more pointer-sized member lives here.
+	/* 0x38 */ void* unk38;
 };
 
 #endif

@@ -93,6 +93,10 @@ void TMario::keepDistance(const THitActor& actor, f32 param_2)
 
 void TMario::checkDescent()
 {
+	// TODO: retail's test of `active` is a *signed* `cmpwi r0, 1` after the
+	// same `clrlwi r0, r29, 24`, so the flag is a byte promoted to int
+	// somewhere MWCC cannot prove is 0/1. Refuted: `!= TRUE` and `u8 active`
+	// (both still `cmplwi`). The frame is also 16 bytes short.
 	bool active   = false;
 	f32 descentSp = mHangingParams.mDescentSp.get();
 	if (mHeldObject == nullptr && !onYoshi())

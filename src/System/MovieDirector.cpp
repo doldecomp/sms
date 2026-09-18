@@ -157,6 +157,8 @@ TMovieDirector::TMovieDirector()
     , unk20(nullptr)
     , unk24(nullptr)
     , unk30(0)
+    , unk34(nullptr)
+    , unk38(nullptr)
 {
 }
 
