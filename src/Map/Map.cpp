@@ -3,7 +3,6 @@
 #include <Map/MapModel.hpp>
 #include <Map/MapWarp.hpp>
 #include <Map/MapXlu.hpp>
-#include <Map/MapCollisionEntry.hpp>
 #include <Map/MapStaticObject.hpp>
 #include <Map/MapEventMare.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -27,6 +26,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 TMap* gpMap;
 
@@ -83,19 +83,19 @@ static void initMare()
 
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init1stEvent();
 		group->getChildren().push_back(event);
 	}
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init2ndEvent();
 		group->getChildren().push_back(event);
 	}
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init3rdEvent();
 		group->getChildren().push_back(event);
 	}
