@@ -2,6 +2,21 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <M3DUtil/MActor.hpp>
 
+// TODO: float-register permutation only (99.1%). Retail keeps the ratio in f1
+// and the per-component base in f2; we get f2/f1, the instruction stream and
+// the 0x20 frame are otherwise identical. An inline ratio accessor
+// (`f32 getPosInbetweenRatio() const`) restores every register but costs
+// exactly 8 bytes of frame, and there is no room: the function is a leaf whose
+// only temporaries are the two int->double conversion doubles at 0x10 and 0x18.
+// Measured inline-expansion temp cost here: `this` alone or one parameter +8,
+// two parameters +16, so no accessor shape can be free. Also tried with no
+// effect: operand swap in the product, `progress * diff` in the three
+// components, split declaration, `const f32`, casts on either operand or the
+// whole product, and declaring `progress` before the decrement. Worse:
+// `(1.0f / frame) * timer` and `1.0f / frame * timer` (98.1%, swaps the two
+// conversion slots), a named `rate` local (+8), the rate-only accessor (+8),
+// `mCurrentPos = *cur_pos` over `set()` (77.2%), and spelling the accessor out
+// at all three components (recomputes, 45.9%).
 void TNpcInbetween::execPosInbetween(JGeometry::TVec3<f32>* cur_pos)
 {
 	mCurrentPos.set(*cur_pos);
