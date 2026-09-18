@@ -402,30 +402,7 @@ void TNozzleBase::animation(int param_1)
 		if (!mactor->checkCurBckFromIndex(2))
 			mactor->setBckFromIndex(2);
 
-		TWaterGun* fludd     = mFludd;
-		bool updateAnimation = false;
-		if (fludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else if (!updateAnimation) {
-			updateAnimation = true;
-			int nozzleKind  = fludd->getCurrentNozzle()->getNozzleKind();
-			if (nozzleKind == 1) {
-				TNozzleTrigger* trigger
-				    = (TNozzleTrigger*)fludd->getCurrentNozzle();
-				if (trigger->unk385 == TNozzleTrigger::ACTIVE) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-
-			} else if (fludd->getCurrentNozzle()->unk378 > 0.0f) {
-				updateAnimation = true;
-			} else {
-				updateAnimation = false;
-			}
-		}
-
-		if (updateAnimation)
+		if (mFludd->isEmitting())
 			return;
 
 		unk36C = 2;
@@ -437,30 +414,7 @@ void TNozzleBase::animation(int param_1)
 		if (!mactor->checkCurBckFromIndex(3))
 			mactor->setBckFromIndex(3);
 
-		TWaterGun* fludd     = mFludd;
-		bool updateAnimation = false;
-		if (fludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else if (!updateAnimation) {
-			updateAnimation = true;
-			u32 nozzleKind  = fludd->getCurrentNozzle()->getNozzleKind();
-			if (nozzleKind == 1) {
-				TNozzleTrigger* trigger
-				    = (TNozzleTrigger*)fludd->getCurrentNozzle();
-				if (trigger->unk385 == TNozzleTrigger::ACTIVE) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-
-			} else if (fludd->getCurrentNozzle()->unk378 > 0.0f) {
-				updateAnimation = true;
-			} else {
-				updateAnimation = false;
-			}
-		}
-
-		if (updateAnimation == true)
+		if (mFludd->isEmitting())
 			unk36C = 0;
 		break;
 	}
@@ -759,29 +713,7 @@ void TNozzleTrigger::animation(int param_1)
 		if (!mactor->checkCurBckFromIndex(bckIdle))
 			mactor->setBckFromIndex(bckIdle);
 
-		u8 updateAnimation;
-		TWaterGun* fludd = mFludd;
-		if (fludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else {
-			if (fludd->getNozzle(fludd->mCurrentNozzle)->getNozzleKind() == 1) {
-				if (((TNozzleTrigger*)fludd->getNozzle(fludd->mCurrentNozzle))
-				        ->unk385
-				    == ACTIVE) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-			} else {
-				if (fludd->getNozzle(fludd->mCurrentNozzle)->unk378 > 0.0f) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-			}
-		}
-
-		if (!updateAnimation)
+		if (!mFludd->isEmitting())
 			unk36C = 2;
 
 		break;
@@ -792,29 +724,7 @@ void TNozzleTrigger::animation(int param_1)
 		if (!mactor->checkCurBckFromIndex(bckStart))
 			mactor->setBckFromIndex(bckStart);
 
-		u8 updateAnimation;
-		TWaterGun* fludd = mFludd;
-		if (fludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else {
-			if (fludd->getNozzle(fludd->mCurrentNozzle)->getNozzleKind() == 1) {
-				if (((TNozzleTrigger*)fludd->getNozzle(fludd->mCurrentNozzle))
-				        ->unk385
-				    == ACTIVE) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-			} else {
-				if (fludd->getNozzle(fludd->mCurrentNozzle)->unk378 > 0.0f) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-			}
-		}
-
-		if (updateAnimation == true)
+		if (mFludd->isEmitting())
 			unk36C = 0;
 
 		break;
@@ -1071,25 +981,7 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(5))
 			mactor->setBckFromIndex(5);
 
-		bool updateAnimation = false;
-		if (mFludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else if (mFludd->getNozzle(mFludd->mCurrentNozzle)->getNozzleKind()
-		           == 1) {
-			if (((TNozzleTrigger*)mFludd->getNozzle(mFludd->mCurrentNozzle))
-			        ->unk385
-			    == TNozzleTrigger::ACTIVE)
-				updateAnimation = true;
-			else
-				updateAnimation = false;
-		} else {
-			if (mFludd->getNozzle(mFludd->mCurrentNozzle)->unk378 > 0.0f)
-				updateAnimation = true;
-			else
-				updateAnimation = false;
-		}
-
-		if (!updateAnimation)
+		if (!mFludd->isEmitting())
 			unk36C = 8;
 
 		break;
@@ -1099,23 +991,7 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(6))
 			mactor->setBckFromIndex(6);
 
-		bool updateAnimation = false;
-		if (mFludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else if (mFludd->getCurrentNozzle()->getNozzleKind() == 1) {
-			if (((TNozzleTrigger*)mFludd->getCurrentNozzle())->unk385
-			    == TNozzleTrigger::ACTIVE)
-				updateAnimation = true;
-			else
-				updateAnimation = false;
-		} else {
-			if (mFludd->getCurrentNozzle()->unk378 > 0.0f)
-				updateAnimation = true;
-			else
-				updateAnimation = false;
-		}
-
-		if (updateAnimation == true)
+		if (mFludd->isEmitting())
 			unk36C = 2;
 
 		bool finished           = false;
