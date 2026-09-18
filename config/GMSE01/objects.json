@@ -430,5 +430,6 @@
   "GC2D/MessageLoader.cpp",
   "Player/MarioUpper.cpp",
   "Map/Sky.cpp",
-  "NPC/NpcCoin.cpp"
+  "NPC/NpcCoin.cpp",
+  "Strategic/question.cpp"
 ]
