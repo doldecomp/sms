@@ -43,6 +43,20 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 	getSpine()->initWith(&TNerveWalkerGenerate::theNerve());
 }
 
+// TODO: park for a shared header. `TPathNode::getPoint()` spelled with a
+// direct `unk0->mPosition` read instead of `unk0->getPosition()` is what this
+// function's 8-byte temp pool wants (frame 0x20 vs 0x30, 100% exact); the same
+// spelling also closes `TFireWanwan::isMissMario` and `TNerveBPTouchDown`, but
+// costs `TNerveBPTakeOff` and ~20 small fuzzy drops, so it cannot go into
+// PathNode.hpp unilaterally. Parked TU-locally here.
+static inline const JGeometry::TVec3<f32>& WalkerPathPoint(const TPathNode& node)
+{
+	if (node.unk0 != 0)
+		return node.unk0->mPosition;
+
+	return node.unk4;
+}
+
 // TODO: fake
 static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 {
@@ -51,6 +65,17 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
+// TODO: every instruction matches; the frame is 0x60 against retail's 0x88, a
+// uniform 40 bytes of dead pool below the `polarXZ` return temp (retail 0x50,
+// ours 0x30). The same 40 bytes are missing from TNerveWalkerEscape::execute,
+// and both functions are the two places in this TU with a bare
+// `getSaveParam();` statement whose result is discarded -- MWCC keeps the
+// virtual call and dead-strips the load, so retail's real statement there can
+// be anything whose values are all dead. 40 = 32 of pool + 8 of padding, which
+// is the signature of two 16-byte non-trivial class locals (TPathNode is 16 and
+// has a user constructor) inside an inlined callee. Finding that callee is one
+// research item for both functions; see docs/catalog/frame-gaps.md, "The dead
+// low region".
 void TWalkerEnemy::moveObject()
 {
 	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
@@ -74,7 +99,7 @@ void TWalkerEnemy::moveObject()
 		mVelocity.z = local.z;
 		mSpine->pushNerve(&TNerveSmallEnemyJump::theNerve());
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
-		mRotation.y += 5.0f;
+		mPosition.y += 5.0f;
 	}
 }
 
@@ -97,10 +122,16 @@ void TWalkerEnemy::reset()
 
 	mMarchSpeed = getSaveParam2()->unk324.rand();
 
-	((TWalker*)mBinder)->reset();
-	mSpine->reset();
+	getWalker()->reset();
+	getSpine()->reset();
 	mSpine->setNext(mSpine->getDefault());
-	setGoalPathMario();
+
+	// The node is a named local and the `getSpine()` above carries the +4 of
+	// pool that puts it at 0x38: `setGoalPathMario()` lands the temp at 0x20,
+	// the named node alone at 0x34, and routing `setNext` through `getSpine()`
+	// as well overshoots the frame to 0x68.
+	TPathNode node((THitActor*)gpMarioAddress);
+	setGoalPath(node);
 }
 
 void TWalkerEnemy::walkBehavior(int param_1, float param_2)
@@ -139,6 +170,15 @@ static inline bool WalkerEnemyCheckUnk150(const TWalkerEnemy* p, u32 i)
 	return unk150;
 }
 
+// TODO: frame-exact at 0x50, but the `setGoalPath` TPathNode temp sits at 0x2c
+// and retail's at 0x34, i.e. eight bytes of pool short with the frame already
+// right (there are twelve bytes of slack above the temp, so a +8 pool item
+// costs no frame). Measured, all with `WalkerEnemyCheckUnk150` in place:
+// `setGoalPathMario()` 0x2c; a named `TPathNode node(...)` + `setGoalPath(node)`
+// 0x38; the same as an unnamed `setGoalPath(TPathNode(...))` temp 0x38 (so the
+// spelled-out constructor is +12, not +8); dropping the binding out of
+// `WalkerEnemyCheckUnk150` is -8 on both temp and frame; `getSpine()` on the
+// three `pushAfterCurrent`s overshoots to frame 0x60.
 void TWalkerEnemy::behaveToFindMario()
 {
 	if (WalkerEnemyCheckUnk150(this, 2)) {
@@ -170,9 +210,9 @@ static inline f32 dist(const JGeometry::TVec3<f32>& a,
 
 bool TWalkerEnemy::isResignationAttack()
 {
-	f32 fVar1 = getSaveParam2()->getSLGiveUpLength();
+	f32 fVar1 = getSaveParam2()->mSLGiveUpLength.get();
 
-	if (dist(unk104.getPoint(), mPosition) > fVar1)
+	if (dist(WalkerPathPoint(unk104), mPosition) > fVar1)
 		return true;
 	else
 		return false;
@@ -180,7 +220,7 @@ bool TWalkerEnemy::isResignationAttack()
 
 bool TWalkerEnemy::isReachedToGoalXZ()
 {
-	JGeometry::TVec3<f32> tmp = getUnk104().getPoint();
+	JGeometry::TVec3<f32> tmp = WalkerPathPoint(getUnk104());
 	tmp -= mPosition;
 	tmp.y = 0.0f;
 
@@ -286,6 +326,10 @@ DEFINE_NERVE(TNerveWalkerPostAttack, TLiveActor)
 	return false;
 }
 
+// TODO: instruction-exact; frame 0x48 against retail's 0x70, the same missing
+// 40 bytes as TWalkerEnemy::moveObject and the same dead `getSaveParam();`
+// statement. `switchNextGoalPath()` in place of the two spelled-out statements
+// is frame-neutral here.
 DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 {
 	TWalkerEnemy* self = (TWalkerEnemy*)spine->getBody();
@@ -300,8 +344,7 @@ DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 	self->getSaveParam();
 	self->getSaveParam();
 	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)) {
-		if (!self->unk114.empty())
-			self->unkF4 = self->unk114.pop();
+		self->switchNextGoalPath();
 		return true;
 	}
 
