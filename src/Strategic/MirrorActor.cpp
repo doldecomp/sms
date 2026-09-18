@@ -19,14 +19,14 @@
 // in-mirror flag rather than a recomputation.
 u8 TMirrorActor::isInMirror() const { return unk18; }
 
-static inline const int& MirrorActor_getMirrorNo(const TMirrorModelManager* mgr)
-{
-	return mgr->unk18;
-}
-
+// Parked, not promoted to TMirrorModelManager::isUnk18Present(): retail's
+// frame for checkIsInMirror needs the 8 bytes an inlined free function's
+// pointer parameter binds. A member predicate written over getUnk18() is +16
+// (0x70 vs 0x68) and the direct field test is +0 (0x60); see the trial table
+// at the declaration in include/Map/MapMirror.hpp.
 static inline bool MirrorActor_isMirrorNoPresent(const TMirrorModelManager* mgr)
 {
-	return MirrorActor_getMirrorNo(mgr) != -1 ? true : false;
+	return mgr->getUnk18() != -1 ? true : false;
 }
 
 void TMirrorActor::checkIsInMirror()
@@ -60,7 +60,7 @@ void TMirrorActor::checkIsInMirror()
 	}
 
 	int uVar4 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_18));
-	if (uVar4 != MirrorActor_getMirrorNo(gpMirrorModelManager)) {
+	if (uVar4 != gpMirrorModelManager->getUnk18()) {
 		unk18 = 0;
 	} else if (!MirrorActor_isMirrorNoPresent(gpMirrorModelManager)
 	           && !(unk1A & 4) && !(unk1A & 0x20)) {

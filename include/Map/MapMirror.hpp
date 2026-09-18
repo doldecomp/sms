@@ -96,7 +96,18 @@ public:
 
 	// fabricated
 	MActorAnmData* getUnk20() { return unk20; }
-	bool isUnk18Present() { return unk18 != -1 ? true : false; }
+	// TMirrorActor::checkIsInMirror reads the mirror number through a
+	// reference (`addi r5, r5, 0x18` then `lwz r4, 0(r4)`), so the accessor
+	// returns `const int&`.
+	const int& getUnk18() const { return unk18; }
+	// One level only: writing this as `getUnk18() != -1` costs 8 bytes of
+	// frame at every expansion and takes TMirrorActor::checkIsInMirror from
+	// 0x68 to 0x70 (100 -> 99.88, instructions unchanged); the one-level form
+	// alone gives 0x60. Retail's +8 there is the *parameter binding* of an
+	// inlined free function taking the manager by pointer, not a second
+	// accessor level -- which is why MirrorActor.cpp still parks
+	// MirrorActor_isMirrorNoPresent() instead of using a member predicate.
+	bool isUnk18Present() const { return unk18 != -1 ? true : false; }
 
 public:
 	/* 0x10 */ int unk10;
