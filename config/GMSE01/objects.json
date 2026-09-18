@@ -412,5 +412,7 @@
   "MarioUtil/ModelUtil.cpp",
   "Enemy/enemytable.cpp",
   "Strategic/Strategy.cpp",
-  "Map/MapXlu.cpp"
+  "Map/MapXlu.cpp",
+  "MoveBG/MapObjAirport.cpp",
+  "Map/MapEventSirena.cpp"
 ]
