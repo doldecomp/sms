@@ -297,7 +297,12 @@ void TYoshiTongue::movement()
 			JGeometry::TVec3<f32> tpos = target->mPosition;
 			tpos.y += 0.5f * target->mDamageHeight;
 			JGeometry::TVec3<f32> step = (tpos - mTipPos) * mExtendAmount;
-			mTipPos += step;
+			// `a = a + b` rather than `a += b` at exactly these two sites:
+			// operator= is one inline level and the sum nested in its
+			// argument two more, which is the depth-4 allowance the map's
+			// out-of-line TVec3::add measures. The three other advances here
+			// keep `+=`, which is what retail expands.
+			mTipPos = mTipPos + step;
 			mInitialVelocity = step;
 
 			JGeometry::TVec3<f32> rem = tpos - mTipPos;
@@ -326,7 +331,7 @@ void TYoshiTongue::movement()
 		JGeometry::TVec3<f32> diff = (mTipPos - mHeadPos) * mRetractAmount;
 
 		mTipPos = mHeadPos;
-		mTipPos += diff;
+		mTipPos = mTipPos + diff;
 		break;
 	}
 
