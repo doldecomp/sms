@@ -403,5 +403,11 @@
   "Map/MapCollisionEntry.cpp",
   "Strategic/HitActor.cpp",
   "System/MarNameRefGen_Enemy.cpp",
-  "System/MarNameRefGen_NPC.cpp"
+  "System/MarNameRefGen_NPC.cpp",
+  "MoveBG/MapObjFloat.cpp",
+  "M3DUtil/M3UModel.cpp",
+  "Player/MarioBlend.cpp",
+  "Camera/CameraMarioData.cpp",
+  "Camera/CameraCodeControl.cpp",
+  "MarioUtil/ModelUtil.cpp"
 ]
