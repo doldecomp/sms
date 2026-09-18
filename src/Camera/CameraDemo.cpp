@@ -110,6 +110,14 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 				             + atOffset.z * JMASCos(angle);
 				unk148 = origin + atOffset;
 
+				// TODO: updateDemoCamera_ is 99.7% with the frame exact.
+				// Two residues: retail loads each member of unk124/unk148
+				// immediately before its subtrahend (0x124, 0xa0, 0x128,
+				// 0xa4, ...) while we load the two named scalars one slot
+				// early, and our two 12-byte `origin + offset` temporaries
+				// sit 0x24 higher than retail's (0x7c/0x70 vs 0x58/0x4c)
+				// although the total frame matches, so there is a 36-byte
+				// hole elsewhere in the low region.
 				f32 upX = mUp.x;
 				mUp.x   = upX * JMASCos(angle) + mUp.z * JMASSin(angle);
 				mUp.z   = -upX * JMASSin(angle) + mUp.z * JMASCos(angle);
@@ -144,7 +152,7 @@ void CPolarSubCamera::updateGateDemoCamera_()
 	unk2B0->updateDemo(nullptr, nullptr, nullptr, &fovy);
 
 	int v = mInbetween->getUnk4();
-	if (unk70 != mCameraDemo->unk8 && v > 0)
+	if (getUnk70() != mCameraDemo->unk8 && v > 0)
 		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)v);
 	else
 		mFovy = fovy;
@@ -156,14 +164,12 @@ void CPolarSubCamera::updateGateDemoCamera_()
 			changeCamModeSpecifyCamMapToolAndFrame_(mCameraDemo->unk8, 120);
 }
 
-// TODO: 99.8%. Instruction-exact; frame 0xa0 vs 0x98 with the 0x80-byte name
-// buffer at 0x14 instead of 0x10, so retail has 4 dead bytes below the buffer
-// and 4 of alignment above it.
 void CPolarSubCamera::startGateDemoCamera(const JDrama::TActor* actor)
 {
 	char buf[0x80];
 
-	snprintf(buf, 0x80, "%s前カメラ", actor->getName());
+	const char* name = actor->getName();
+	snprintf(buf, 0x80, "%s前カメラ", name);
 	TCameraMapTool* tool = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(buf), buf);
 	if (tool) {
@@ -249,6 +255,17 @@ int CPolarSubCamera::getRestDemoFrames() const
 // and this TU's UNUSED list (getTotalDemoFrames, endSimpleDemoCamera_,
 // endReproduceDemoCamera_, restartReproduceDemoCamera_ 0x44 still empty,
 // startReproduceDemoCamera_) contains nothing this function reaches.
+// TODO: 99.9%, every instruction exact, frame 0x30 vs 0x50.  The named region
+// is identical relative to the frame top (the int->float magic pair highest,
+// then `diff`), so all 32 bytes are inline-temp/outgoing-parameter area below
+// `diff`: retail's locals start at 0x30 (0x8-0x2f, the standard 32-byte
+// outgoing-parameter area plus 4 of alignment), ours at 0x14.  Ruled out
+// (closure batch 90): a by-value `Vec` parameter on the vector overload of
+// CLBChaseDecrease, which is the only construct here that could reserve a
+// parameter area of that size -- it is +16 but emits retail's missing
+// three-word copy (90.0%, +6 instructions), so cameralib.hpp's `const Vec&`
+// is right.  MsVECMag2 and all three CLBChaseDecrease calls are already `bl`s
+// in both builds.
 void CPolarSubCamera::ctrlNormalDeadDemo_()
 {
 	mCurrentTarget.mTarget.set(gpCameraMario->unk0);
