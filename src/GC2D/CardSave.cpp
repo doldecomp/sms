@@ -498,7 +498,8 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 
 		if (unk310 == PROGRESS_UNK4 || unk310 == PROGRESS_UNK3
 		    || unk310 == PROGRESS_UNK5 || unk310 == PROGRESS_UNKC
-		    || unk310 == PROGRESS_UNKD || unk310 == PROGRESS_UNK2D) {
+		    || unk310 == PROGRESS_UNKD || unk310 == PROGRESS_UNK2D
+		    || unk310 == PROGRESS_UNK35) {
 			unkC4->getPane()->show();
 		} else {
 			unkC4->getPane()->hide();
@@ -1256,23 +1257,23 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		u32 messageID = cMessageID[unk310];
 		switch (unk308) {
 		case 1:
-			messageID = 0x1C;
+			messageID = 0x24;
 			break;
 		case 2:
-			messageID = 0x1D;
+			messageID = 0x25;
 			break;
 		case 3:
-			messageID = 0x1E;
+			messageID = 0x26;
 			break;
 		case 4:
-			messageID = 0x1F;
+			messageID = 0x27;
 			break;
 		case 5:
-			messageID = 0x20;
+			messageID = 0x28;
 			break;
 		}
 
-		setMessage(unk190, 0x200, (u16)messageID);
+		setMessageC(unk190, messageID, 0x200);
 		setMessage(unk194, 0x200, (u16)messageID);
 
 		unk194->hide();
