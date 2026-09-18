@@ -127,6 +127,22 @@ u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 // operand orders of the product, a named intermediate, `*=`, and a binding
 // level on unk160.
 //
+// Closure batch 129 split the permutation in two and solved half of it on
+// paper. **Naming the product** -- `f32 baseRadius = 300.0f;
+// baseRadius = baseRadius * getScaling().x; mDamageRadius = baseRadius *
+// unk160;` -- puts the literal in retail's f2 and both `fmuls` destinations on
+// target, leaving only the two member loads swapped (retail `lfs f0, 0x24` /
+// `lfs f1, 0x160`, ours f1/f0). Every remaining spelling leaves exactly that
+// swap: `*=` for the second multiply (it moves the destination to f2 instead),
+// `unk160 * baseRadius`, a named `f32 radiusScale = unk160` (+8 of frame, or
+// frame-exact paired with `node.checkFlag(0x1000)`'s -8), a named
+// `f32 scale = getScaling().x` (+8), raw `mScaling.x` (-8), and
+// `300.0f * (getScaling().x * unk160)` (which reorders the loads themselves).
+// So the two adjacent member loads are allocated in the opposite order to
+// retail's and no source order reaches it; the natural single-expression
+// spelling is kept below because the named-product form is no closer by
+// marker count and reads worse.
+//
 // The 56 bytes of dead low region this body was missing are five inline
 // expansions, each a member read through one level that binds its result.
 // Measured from the 0x90 base: `mMapCollisionManager` +8, `checkRailFlag`
