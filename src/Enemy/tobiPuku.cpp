@@ -364,9 +364,9 @@ void TTobiPuku::reset()
 	mSpine->initWith(&TNerveTobiPukuGenerate::theNerve());
 	unk1AD          = 1;
 	unk194          = 0;
-	mLandDelta      = mPosition;
+	mLandDelta      = getPosition();
 	mLandPos        = mLandDelta;
-	mSwimBaseY      = mPosition.y;
+	mSwimBaseY      = getPosition().y;
 }
 
 void TTobiPuku::moveObject()
@@ -873,7 +873,7 @@ void TMoePuku::generateEffectColumWater()
 	        mPosition, "エフェクト水柱マネージャー", 0);
 
 	if (enemy)
-		enemy->generate(mPosition, mScaling);
+		enemy->generate(getPosition(), mScaling);
 
 	if (mSpine->getCurrentNerve() != &TNerveTobiPukuGenerate::theNerve())
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEPUKU_TOWATER, &mPosition,
@@ -886,7 +886,7 @@ void TMoePuku::generateEffectColumWater()
 	JPABaseEmitter* emitter
 	    = gpMarioParticleManager->emit(0x1D4, &mPosition, 2, nullptr);
 	if (emitter)
-		emitter->setGlobalScale(mScaling);
+		emitter->setGlobalScale(getScaling());
 }
 
 const char** TMoePuku::getBasNameTable() const { return moepuku_bastable; }

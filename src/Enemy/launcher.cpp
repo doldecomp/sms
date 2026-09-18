@@ -375,18 +375,18 @@ const char** TCommonLauncher::getBasNameTable() const
 void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSpineEnemy::perform(cue, graphics);
-	if ((cue & CUE_CALC_ANIM) && mMActor->checkCurBckFromIndex(1)) {
-		MtxPtr mtx = mMActor->getModel()->getAnmMtx(0);
+	if ((cue & CUE_CALC_ANIM) && getMActor()->checkCurBckFromIndex(1)) {
+		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(0);
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_GENE_HIT,
 		                                                  mtx, 1, this)) {
 			SMSSetEmitterPolColor(emitter, 6);
-			emitter->setGlobalScale(mScaling);
+			emitter->setGlobalScale(getScaling());
 		}
 	}
 
-	if ((cue & CUE_MOVE) && mState == STATE_NORMAL && mHitPoints < 5) {
+	if ((cue & CUE_MOVE) && mState == STATE_NORMAL && getHitPoints() < 5) {
 		mRegenTimer += 1;
 		if (mRegenTimer > 1200) {
 			mRegenTimer = 0;
@@ -395,7 +395,7 @@ void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		for (int i = 0; i < mColCount; ++i)
+		for (int i = 0; i < getColNum(); ++i)
 			if (mCollisions[i]->isActorType(0x80000001))
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}

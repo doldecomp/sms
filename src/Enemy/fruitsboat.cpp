@@ -276,7 +276,7 @@ void TFruitsBoat::init(TLiveManager* manager)
 		break;
 	}
 
-	mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+	mMapCollisionManager->setUpUnk8TRS(getPosition(), getRotation(), mScaling);
 
 	mSpine->initWith(&TNerveFruitsBoatGraphWander::theNerve());
 

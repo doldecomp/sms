@@ -587,8 +587,8 @@ void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model)
 {
 	unk160        = host;
 	mMActorKeeper = new TMActorKeeper(unk160->getManager(), 1);
-	mMActorKeeper->mModelLoaderFlags = 0x10220000;
-	mMActor       = mMActorKeeper->createMActor(model, 3);
+	getActorKeeper()->mModelLoaderFlags = 0x10220000;
+	mMActor       = getActorKeeper()->createMActor(model, 3);
 	mPakkun       = (TPakkun*)unk160;
 
 	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
@@ -600,8 +600,8 @@ void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model)
 	unk150       = SEED_STATE_DEAD;
 	mGroundPlane = gpMap->getIllegalCheckData();
 
-	mMActor->getModel()->getModelData()->getJointNodePointer(0)->setCallBack(
-	    PakkunSeedCallback);
+	getMActor()->getModel()->getModelData()->getJointNodePointer(0)
+	    ->setCallBack(PakkunSeedCallback);
 }
 
 void TPakkunSeed::moveObject()
@@ -610,7 +610,7 @@ void TPakkunSeed::moveObject()
 	if (unk168 == 0) {
 		mSpinAngle = MsWrap(5.0f + mSpinAngle, 0.0f, 360.0f);
 		if (mPosition.y > 20.0f + mGroundHeight) {
-			JGeometry::TVec3<f32> vel = mVelocity;
+			JGeometry::TVec3<f32> vel = getVelocity();
 			mRotation.x               = MsGetRotFromZaxis(vel).x;
 		}
 	} else {
@@ -785,8 +785,8 @@ void TPakkunSeed::seedSet()
 
 void TPakkunSeed::forceKill()
 {
-	if (mGroundPlane->isPool() || mGroundPlane->isIllegalData()
-	    || !gpMap->isInArea(mPosition.x, mPosition.z)) {
+	if (getGroundPlane()->isPool() || getGroundPlane()->isIllegalData()
+	    || !gpMap->isInArea(getPosition().x, getPosition().z)) {
 		kill();
 		if (mPakkun->mIsStay == 0) {
 			if (unk160->checkLiveFlag(LIVE_FLAG_HIDDEN)) {

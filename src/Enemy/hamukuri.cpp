@@ -663,12 +663,13 @@ void THamuKuri::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("default.bmd", 3);
 	int idx       = getModel()->getModelData()->getMaterialName()->getIndex(
         "_mat_body_top1");
-	SMS_InitPacket_OneTevKColor(mMActor->getModel(), idx, GX_KCOLOR0, &unk1FC);
+	SMS_InitPacket_OneTevKColor(getMActor()->getModel(), idx, GX_KCOLOR0,
+	                            &unk1FC);
 	unk1FC.a = 0x80;
 	ResTIMG* img
 	    = (ResTIMG*)JKRGetResource("/scene/map/pollution/H_ma_rak.bti");
 	if (img != nullptr)
-		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
+		SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
 		                     "H_ma_rak_dummy", *img);
 	else
 		unk1FC.a = 0;
@@ -901,7 +902,7 @@ void THamuKuri::moveObject()
 
 void THamuKuri::setBehavior()
 {
-	if (isAirborne() && mPosition.y > mGroundHeight + 250.0f
+	if (isAirborne() && getPosition().y > getGroundHeight() + 250.0f
 	    && mSpine->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
 		unk1F0 = 1;
 	}
@@ -1555,11 +1556,11 @@ void THaneHamuKuri::bind()
 	JGeometry::TVec3<f32> local_18 = mPosition;
 	local_18.y -= unk234 + unk210;
 	local_18 += mLinearVelocity;
-	local_18 += mVelocity;
+	local_18 += getVelocity();
 
 	mVelocity.y -= getGravityY();
 
-	if (mVelocity.y < mVelocityMinY)
+	if (getVelocity().y < mVelocityMinY)
 		mVelocity.y = mVelocityMinY;
 
 	if (unk214 == 0.0f) {
@@ -1669,8 +1670,8 @@ void TDoroHaneKuri::init(TLiveManager* param_1)
 	unk238     = (THaneHamuKuriSaveLoadParams*)getSaveParam();
 	unk188     = 0.0f;
 
-	if (mInstanceIndex == 0) {
-		((TDoroHaneKuriManager*)mManager)->createHige();
+	if (getInstanceIndex() == 0) {
+		((TDoroHaneKuriManager*)getManager())->createHige();
 
 		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); i++)
 			(void)0; // assert?
@@ -1774,8 +1775,8 @@ void THaneHamuKuri2::sendAttackMsgToMario()
 
 void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
 {
-	f32 flyBaseFrequency = unk22C->mSLFlyBaseFrequency.get();
-	f32 flyBaseAmplitude = unk22C->mSLFlyBaseAmplitude.get();
+	f32 flyBaseFrequency = getSaveLoadParam()->mSLFlyBaseFrequency.get();
+	f32 flyBaseAmplitude = getSaveLoadParam()->mSLFlyBaseAmplitude.get();
 
 	unk20C += 1.0f;
 
@@ -1894,8 +1895,8 @@ void TDangoHamuKuri::attackToMario()
 
 MtxPtr TDangoHamuKuri::getTakingMtx()
 {
-	mMActor->calc();
-	MtxPtr mtx = mMActor->getModel()->getAnmMtx(unk1AC);
+	getMActor()->calc();
+	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(unk1AC);
 	f32 fVar2  = 0.0f;
 	if (mBoss == this)
 		fVar2 = 40.0f;
@@ -2300,12 +2301,12 @@ void TFireHamuKuri::reset()
 
 void TFireHamuKuri::setMActorAndKeeper()
 {
-	mMActorKeeper = new TMActorKeeper(mManager, 1);
-	mMActor       = mMActorKeeper->createMActor("default.bmd", 3);
+	mMActorKeeper = new TMActorKeeper(getManager(), 1);
+	mMActor       = getActorKeeper()->createMActor("default.bmd", 3);
 	ResTIMG* img
 	    = (ResTIMG*)JKRGetResource("/scene/map/pollution/H_ma_rak.bti");
 	if (img)
-		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
+		SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
 		                     "H_ma_rak_dummy", *img);
 }
 
@@ -2321,26 +2322,26 @@ void TFireHamuKuri::calcRootMatrix()
 	if (unk210 && !checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        PARTICLE_MS_MOE_FIRE_C, mMActor->getModel()->getAnmMtx(unk1AC),
-		        3, this)) {
+		        PARTICLE_MS_MOE_FIRE_C,
+		        getMActor()->getModel()->getAnmMtx(unk1AC), 3, this)) {
 			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        PARTICLE_MS_MOE_FIRE_A, mMActor->getModel()->getAnmMtx(unk1AC),
-		        1, this)) {
+		        PARTICLE_MS_MOE_FIRE_A,
+		        getMActor()->getModel()->getAnmMtx(unk1AC), 1, this)) {
 			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        PARTICLE_MS_MOE_FIRE_B, mMActor->getModel()->getAnmMtx(unk1AC),
-		        1, this)) {
+		        PARTICLE_MS_MOE_FIRE_B,
+		        getMActor()->getModel()->getAnmMtx(unk1AC), 1, this)) {
 			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        PARTICLE_MS_MOE_FIRE_D, mMActor->getModel()->getAnmMtx(unk1AC),
-		        1, this)) {
+		        PARTICLE_MS_MOE_FIRE_D,
+		        getMActor()->getModel()->getAnmMtx(unk1AC), 1, this)) {
 			emitter->setGlobalScale(mScaling);
 		}
 	}
@@ -2485,8 +2486,8 @@ void TDoroHamuKuri::init(TLiveManager* param_1)
 	mActorType = 0x10000013;
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
 
-	if (mInstanceIndex == 0) {
-		((TDoroHamuKuriManager*)mManager)->createHige();
+	if (getInstanceIndex() == 0) {
+		((TDoroHamuKuriManager*)getManager())->createHige();
 	}
 }
 

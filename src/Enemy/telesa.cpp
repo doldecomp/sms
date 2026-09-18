@@ -349,9 +349,10 @@ void TTelesa::setBehavior()
 void TTelesa::attackToMario()
 {
 	if (checkLiveFlag(LIVE_FLAG_HIDDEN)
-	    || !(mPosition.y + mAttackHeight - 50.0f < SMS_GetMarioPos().y)) {
+	    || !(getPosition().y + getAttackHeight() - 50.0f
+	         < SMS_GetMarioPos().y)) {
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
-		if (unk184) {
+		if (getUnk184()) {
 			if (mSpine->getCurrentNerve()
 			    != &TNerveWalkerPostAttack::theNerve())
 				; // huh???
@@ -365,14 +366,15 @@ void TTelesa::behaveToWater(THitActor* param_1)
 	if (mSpine->getCurrentNerve() != &TNerveTelesaFreeze::theNerve()
 	    && mSpine->getCurrentNerve() != &TNerveTelesaImitate::theNerve()) {
 		f32 fVar2 = 2.0f;
-		if (unk184)
+		if (getUnk184())
 			fVar2 = 30.0f;
-		JGeometry::TVec3<f32> local_20(mPosition.x - SMS_GetMarioPos().x, fVar2,
-		                               mPosition.z - SMS_GetMarioPos().z);
+		JGeometry::TVec3<f32> local_20(
+		    getPosition().x - SMS_GetMarioPos().x, fVar2,
+		    getPosition().z - SMS_GetMarioPos().z);
 		mPosition.y += 2.0f;
 		MsVECNormalize(&local_20, &local_20);
 		f32 fVar1 = 5.0f;
-		if (unk184) {
+		if (getUnk184()) {
 			fVar1 = unk194->mSLTelesaPowerByWater.get();
 			mPosition.y += 30.0f;
 		}
@@ -542,13 +544,14 @@ bool TTelesa::changeByJuice()
 			return true;
 
 		mJuiceBlock = (TJuiceBlock*)gpMapObjManager->makeObjAppear(
-		    mPosition.x, mPosition.y, mPosition.z, 0x400002C4, true);
+		    getPosition().x, getPosition().y, getPosition().z, 0x400002C4,
+		    true);
 		if (mJuiceBlock == nullptr)
 			return false;
 
 		mJuiceBlock->mScaling.set(1.0f, 1.0f, 1.0f);
 		mJuiceBlock->unk140.set(0.1f, 0.1f, 0.1f);
-		mJuiceBlock->mRotation.y = mRotation.y;
+		mJuiceBlock->mRotation.y = getRotation().y;
 		mJuiceBlock->offLiveFlag(LIVE_FLAG_HIDDEN);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		onLiveFlag(LIVE_FLAG_HIDDEN);

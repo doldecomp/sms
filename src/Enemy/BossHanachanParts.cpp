@@ -216,7 +216,7 @@ void TBossHanachanPartsBase::setDamageFog_(JDrama::TGraphics* graphics)
 	bool isBody = true;
 	if (getActorType() == 0x08000014)
 		isBody = false;
-	J3DModelData* data = mMActor->getModel()->getModelData();
+	J3DModelData* data = getMActor()->getModel()->getModelData();
 	u16 materialCount = data->getMaterialNum();
 	JGeometry::TVec3<f32> position(unk108[0][3], unk108[1][3], unk108[2][3]);
 	if (unkFC->getLatestNerve() == &TNerveBossHanachanDamage::theNerve()) {
@@ -225,7 +225,7 @@ void TBossHanachanPartsBase::setDamageFog_(JDrama::TGraphics* graphics)
 			for (u16 i = 0; i < materialCount; ++i)
 				data->getMaterialNodePointer(i)->change();
 		if (unk10C == 0)
-			mMActor->getModel()->unlock();
+			getMActor()->getModel()->unlock();
 	} else {
 		SMS_ResetDamageFogEffect(data);
 	}

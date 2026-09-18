@@ -471,11 +471,11 @@ void TNameKuri::moveObject()
 {
 	TWalkerEnemy::moveObject();
 
-	JGeometry::TVec3<f32> local_50 = mVelocity;
+	JGeometry::TVec3<f32> local_50 = getVelocity();
 	if (local_50.y < 0.0f
 	    && (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
 	        || mSpine->getCurrentNerve() == &TNerveWalkerEscape::theNerve())
-	    && mPosition.y - mGroundHeight > unk1A4->mSLLandHeight.get()) {
+	    && mPosition.y - mGroundHeight > getSaveParams()->mSLLandHeight.get()) {
 		mSpine->pushNerve(&TNerveNameKuriLand::theNerve());
 	}
 
@@ -485,7 +485,7 @@ void TNameKuri::moveObject()
 
 	if (!checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 		++unk194;
-		int aliveTime = unk1A4->mSLAliveTime.get();
+		int aliveTime = getSaveParams()->mSLAliveTime.get();
 		if (unk194 + 100 > aliveTime && mScaling.x < mBodyScale * 2.0f) {
 			mScaling.x = mScaling.y = mScaling.z *= 1.01f;
 		}
@@ -610,14 +610,14 @@ void TNameKuri::reset()
 	unk194 = 0;
 	unk198 = 0;
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-	mScaling.setAll(mBodyScale);
+	mScaling.setAll(getBodyScale());
 
 	unk1BC.a = 0;
 	unk1BC.b = 0;
 	unk1BC.g = 0;
 	unk1BC.r = 0;
 
-	unk1C4 = nameKuriTevColorData[((TNameKuriManager*)mManager)
+	unk1C4 = nameKuriTevColorData[((TNameKuriManager*)getManager())
 	                                  ->getNextColorIdx()];
 
 	offLiveFlag(LIVE_FLAG_UNK10);

@@ -696,10 +696,10 @@ void TBGTentacle::beatNode(int index, const JGeometry::TVec3<f32>& param_2)
 	mNodes[index].setVelocity(param_2);
 
 	f32 fVar1;
-	if (mState == 4)
-		fVar1 = mParams->mDamageReflectProp.get();
+	if (getState() == 4)
+		fVar1 = getParams()->mDamageReflectProp.get();
 	else
-		fVar1 = mParams->mReflectProp.get();
+		fVar1 = getParams()->mReflectProp.get();
 
 	for (int i = index + 1; i < mNodeNum; ++i) {
 		mNodes[i].calcVelocity(this, &mNodes[i - 1], fVar1);
@@ -1109,7 +1109,7 @@ void TBGTentacle::moveConstraint()
 
 void TBGTentacle::decideOwnState()
 {
-	switch (mState) {
+	switch (getState()) {
 	case 1:
 		if (unk80->curAnmEndsNext())
 			changeStateAndFixNodes(2);
@@ -1123,7 +1123,7 @@ void TBGTentacle::decideOwnState()
 			changeStateAndFixNodes(2);
 		}
 
-		if (mState == 5
+		if (getState() == 5
 		    && mTimeInCurrentState >= mOwner->getSaveParam2()->getSLStunTime()) {
 			if (mOwner->getAttackMode() == 6)
 				changeStateAndFixNodes(9);
@@ -1134,7 +1134,7 @@ void TBGTentacle::decideOwnState()
 
 	case 0:
 	case 2:
-		if (mState == 2
+		if (getState() == 2
 		    && mTimeInCurrentState >= mOwner->getSaveParam2()->getSLRestTime()) {
 			if (mOwner->getAttackMode() == 6)
 				changeStateAndFixNodes(9);

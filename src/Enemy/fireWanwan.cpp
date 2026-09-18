@@ -767,7 +767,7 @@ void TFireWanwan::init(TLiveManager* manager)
 	TPosition3f mtx;
 	mtx.translation(mPosition);
 	getModel()->setBaseTRMtx(mtx);
-	getModel()->setBaseScale(mScaling);
+	getModel()->setBaseScale(getScaling());
 	getModel()->calc();
 
 	unk194 = new TFireWanwanTailHit(*this);
@@ -1739,7 +1739,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 
 	mGroundPlane = local_30;
 	if (actualPoint.y <= mGroundHeight + 0.05f) {
-		if (mGroundPlane->isIllegalData()) {
+		if (getGroundPlane()->isIllegalData()) {
 			reset();
 			return;
 		}
@@ -1747,7 +1747,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		if (isFlying() || isDefeat()) {
 			JGeometry::TVec3<f32> normal;
-			normal.set(mGroundPlane->getNormal());
+			normal.set(getGroundPlane()->getNormal());
 			f32 fVar4 = 1.0f
 			            - (normal.dot(actualPoint)
 			               - normal.dot(JGeometry::TVec3<f32>(

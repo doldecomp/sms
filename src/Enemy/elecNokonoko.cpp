@@ -360,17 +360,17 @@ BOOL TElecNokonoko::receiveMessage(THitActor* sender, u32 message)
 	if (message == HIT_MESSAGE_UNKD || message == HIT_MESSAGE_UNKB) {
 		onLiveFlag(LIVE_FLAG_DEAD);
 		kill();
-		mCarapace->kill();
+		getCarapace()->kill();
 	}
 
-	if (message == HIT_MESSAGE_TAKE && mHolder == nullptr) {
+	if (message == HIT_MESSAGE_TAKE && getHolder() == nullptr) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mHolder = (TTakeActor*)sender;
 		return TRUE;
 	}
 
 	if ((message == HIT_MESSAGE_PUT || message == HIT_MESSAGE_THROWN)
-	    && mHolder == sender) {
+	    && getHolder() == sender) {
 		mHolder = nullptr;
 		return TRUE;
 	}
@@ -391,7 +391,7 @@ BOOL TElecNokonoko::receiveMessage(THitActor* sender, u32 message)
 		if (!changeByJuice())
 			behaveToWater(sender);
 		else
-			mCarapace->kill();
+			getCarapace()->kill();
 		return TRUE;
 	}
 

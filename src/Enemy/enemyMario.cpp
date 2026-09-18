@@ -132,7 +132,7 @@ void TEnemyMario::initValues()
 	mBlendLogicOp   = 10;
 	mWaterWakeAlpha = 0;
 
-	unk390 = new TMBindShadowBody(this, mModel->getModel(), 1.0f);
+	unk390 = new TMBindShadowBody(this, getM3UModel()->getModel(), 1.0f);
 }
 
 void TEnemyMario::initModel()
@@ -1497,7 +1497,7 @@ void TEnemyMario::hitWater(THitActor* sender)
 	if (mSpecialModel != nullptr)
 		return;
 
-	if (mSettingParams->mInvincibleFlag.get())
+	if (getSettingsParams()->mInvincibleFlag.get())
 		return;
 
 	switch (mEMDoing) {
@@ -1520,9 +1520,10 @@ void TEnemyMario::hitWater(THitActor* sender)
 			break;
 		}
 
-		if (mStatus == MARIO_STATUS_RUN && canSleep()) {
-			if (mHeldObject != nullptr) {
-				((TLiveActor*)mHeldObject)->offLiveFlag(LIVE_FLAG_UNK100000);
+		if (getStatus() == MARIO_STATUS_RUN && canSleep()) {
+			if (getHeldObject() != nullptr) {
+				((TLiveActor*)getHeldObject())
+				    ->offLiveFlag(LIVE_FLAG_UNK100000);
 				dropObject();
 			}
 			changeEMDoing(EM_DOING_PRE_DOWN_ANIMATION);

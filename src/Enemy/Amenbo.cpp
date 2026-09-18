@@ -44,9 +44,9 @@ TAmenbo::TAmenbo(const char* name)
 void TAmenbo::init(TLiveManager* manager)
 {
 	mManager = manager;
-	mManager->manageActor(this);
-	mMActorKeeper = new TMActorKeeper(mManager, 1);
-	mMActor       = mMActorKeeper->createMActor("amenbo_model1.bmd", 0);
+	getManager()->manageActor(this);
+	mMActorKeeper = new TMActorKeeper(getManager(), 1);
+	mMActor       = getActorKeeper()->createMActor("amenbo_model1.bmd", 0);
 
 	mSpine->initWith(&TNerveAmenboWalk::theNerve());
 
@@ -55,7 +55,7 @@ void TAmenbo::init(TLiveManager* manager)
 	initAnmSound();
 	unk1E8 = new TMirrorActor("アメンボくんin鏡");
 	unk1E8->init(getModel(), 0x18);
-	mInitialPosition.set(mPosition);
+	mInitialPosition.set(getPosition());
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 	mIsChasingMario        = false;
 	mWaterGunHitCooldown   = 0;

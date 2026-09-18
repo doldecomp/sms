@@ -1006,7 +1006,7 @@ void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 			J3DShape* shape
 			    = getModel()->getModelData()->getShapeNodePointer(i);
 			if (shape) {
-				if (mLevel == 0 || mLevel == 2)
+				if (getLevel() == 0 || getLevel() == 2)
 					shape->onFlag(J3DShpFlag_Visible);
 				else
 					shape->offFlag(J3DShpFlag_Visible);
@@ -1027,7 +1027,7 @@ void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
-		if (mLevel == 2 || unk1A4->unk4 == 2) {
+		if (getLevel() == 2 || unk1A4->unk4 == 2) {
 			if (cue & CUE_CALC_ANIM) {
 				unk1A4->setMatrix(getModel()->getAnmMtx(0x17));
 			}
