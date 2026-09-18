@@ -117,6 +117,26 @@ static inline const Vec& JAIActorTrans(JAIActor* actor)
 	return *actor->mTranslation;
 }
 
+// Research batch 146: retail's `bl std::sqrtf` inside getDistFromMario is a
+// depth measurement, not the "weak plus bl" refusal it was filed as. The
+// measured budget is 14 / 9 / 6 / 2 / never at depths 1-5 and math.h's body
+// costs exactly 8, so it expands at depths 1 and 2 and is called from depth 3.
+// getDistFromMario is UNUSED 0x104 (expanded everywhere), so reaching the ROM
+// needs one inline level between it and this function.
+// Refuted for the level: a helper that wraps the distance *and*
+// MSHandle::calcVolume together (89.9%, 153 instructions, 9 deletions -- the
+// compare has to stay in this body), and `const Vec& pos` bound here instead
+// of passed straight through (31 deletions, the level collapses). The named
+// `dist` pays 8 of the 16 bytes of frame this body is still short; a second
+// stacked level pays 16 and overshoots to 0x98, so retail's 0x90 wants one
+// +16 binding in a single level, which nothing natural here supplies.
+static inline f32 MarioDistance(JAIActor* actor)
+{
+	f32 dist = MSMarioPosVolume::getDistFromMario(JAIActorTrans(actor));
+
+	return dist;
+}
+
 void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
                                   JAISound** out_handle, JAIActor* actor,
                                   u8 camera_idx)
@@ -169,8 +189,7 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 
 				f32 dVar10 = 1.0f;
 
-				f32 fVar11
-				    = MSMarioPosVolume::getDistFromMario(JAIActorTrans(actor));
+				f32 fVar11 = MarioDistance(actor);
 
 				if (fVar11 != 0.0f)
 					dVar10 = MSHandle::calcVolume(
