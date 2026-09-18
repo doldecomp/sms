@@ -256,6 +256,9 @@ binding for linked symbols.
 Upstream CI runs it through `tools/check-changed-symbol-order.py`; there is no CI
 here, so run it yourself on each changed unit as part of the checklist below.
 
+`tools/check-weak-defined.py` is the whole-tree companion: it lists every `(func,weak)`/`(object,weak)` symbol in the map's closure section that no object under `build/GMSE01/src/` defines, split into `NOBODY` (no body in our tree at all — the link hazard that externalises a class's vtable) and `INLINED` (body exists in a header, retail kept an out-of-line copy — a caller inline-refusal lead).
+Same overrides: `NM=build/binutils/powerpc-eabi-nm build/venv/bin/python3 tools/check-weak-defined.py`.
+
 ### Always prefer using `m2c` for from-scratch decompilation
 
 [`m2c`](https://github.com/matt-kempster/m2c) produces a rough C-style draft decompilation of a function or an entire translation unit, and is the right starting point for new functions (as opposed to matching ones that are already very close).
