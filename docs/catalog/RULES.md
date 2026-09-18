@@ -73,9 +73,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - So "x reloaded, y/z preserved" means retail named exactly those two components, at zero frame cost (codegen-tells.md: "batch 83").
 - Last-declared local gets f31; declare it at the statement that first reads it or it loads early and costs an `fmr` (codegen-tells.md: "batch 90").
 - A non-void return with no `return` reserves r3 for the whole body (frame-gaps.md: "batch 120").
-- Callee-saved GPRs go out r31 down in reverse introduction order: pool/base temps, then locals, then parameters, `this` last; use counts, first-use order and liveness are inert (frame-gaps.md: "Research batch 144").
+- Callee-saved GPRs go out r31 down in reverse introduction order: pool/base temps, then locals, then parameters, `this` last, inner-block locals after `this`; use counts, first-use order and liveness are inert (frame-gaps.md: "Research batch 144", "batch 145").
 - How many **named scalar locals** the frame holds decides whether the pool base outranks `this`; grouping four of them into an array closed `TSunMgr::load` at zero frame cost (frame-gaps.md: "Research batch 144").
-- Known-open: the `this`-vs-pool-base callee-saved swap (three instances left) and zero-frame rotations; `M3UMtxCalcBlendAux`'s rotation moves with declaration order but never lands (frame-gaps.md: "Research batch 144").
+- Declaration order is a knob **only** among function-scope named locals in callee-saved registers; it is inert on `this`, parameters, pool/constant temps and inner-block locals, and block scope is inert everywhere (frame-gaps.md: "batch 145").
+- Known-open: the `this`-vs-pool-base callee-saved swap and zero-frame rotations; `M3UMtxCalcBlendAux` moves with declaration order but never lands, and `TRKSuppAccessFile` (all 120 orders) plus `emitParticle_`, `checkNextFrameSe`, `partsPerform` (fully inert) are exhausted (frame-gaps.md: "batch 145").
 
 ## Float and pool
 
@@ -90,6 +91,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 
 ## Data and layout
 
+- A rogue-include header that defines string literals must be included where retail's `.rodata` puts them, not spelled out in the `.cpp`: `DummyStrings.hpp` above `SunModel.hpp` linked sunmgr (linking.md: "batch 145").
 - Rogue-include prefixes: 12 zero bytes + a 20-byte Shift-JIS string = `DummyStrings.hpp`; + four `MActorMtxCalcType_*` = `InfectiousStrings.hpp`; fifteen 12-byte `.bss` + a 764-byte `__sinit` = the MSound pair (linking.md: "Data sweep batch 93").
 - `MapCollisionEntry.hpp` adds a 12-byte zero and one vector and must come **after** `InfectiousStrings.hpp`; offsets 0x18 low = missing it (linking.md: "Data sweep batch 93").
 - `__sinit`'s JAL list is reverse include order: read it off the target before ordering `MSSetSound.hpp` against `MSoundBGM.hpp` (codegen-tells.md: "`MapObjCorona`").
@@ -103,6 +105,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Weak emission order is most-derived-class-first then declaration order in each class, so an override's declaration position is a free lever (linking.md: "Header round 14").
 - A weak map symbol nothing defines is a missing header inline that silently externalises the class's vtable: fatal, invisible to objdiff. `check-weak-defined.py` lists them, NOBODY first (linking.md: "Header round 16").
 - Re-link to diagnose: a shrunken section names the object starting early; identical section tables mean **content**, so `cmp -l` the DOLs (linking.md: "Structural batch 97").
+- Before reading a section table, discount dtk's `gap_NN_*` fillers, dropped weak duplicates (the map's `>>>` lines) and dead-strippable `.sdata`/`.sbss`: only `.rodata` is unstrippable, so its order is what blocks (linking.md: "batch 145").
 - A unit that matches but shortens `.sdata2` has a pool-order problem, and pool order is evidence about UNUSED stub bodies (linking.md: "Batch 72").
 - Run `validate-symbol-order.py` before proposing a link: it catches missing UNUSED symbols and BINDING errors objdiff cannot see (linking.md: "Batch 72").
 - Editing a shared header linked units depend on (`PollutionPos.hpp`, `MActor::getModel()`) breaks the DOL even when scores improve (frame-gaps.md: "batch 110").

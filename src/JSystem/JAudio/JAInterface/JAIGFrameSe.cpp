@@ -14,8 +14,17 @@
 // dummyZeroVec r29->r21, 0x7fffffff r28->r20, the 0x4330 magic r30->r22,
 // maxPlaying r26->r29, r18->r31, r21/r22/r23/r25 -> r25/r26/r27/r30), i.e. a
 // different spill-priority order over the twelve locals declared up front.
-// Not attempted: rescoping those declarations, which is a research-sized
-// search over this 470-instruction function.
+// Batch 145 read the rotation properly and it is not a permutation of the
+// locals: retail puts all four base/constant temps on top (r31 &candidates,
+// r30 the 0x4330 magic, r29 &JAIConst::dummyZeroVec, r28 0x7fffffff) with
+// `this` at r24 below both parameters -- batch 144's ranking verbatim -- while
+// we put the same four at the bottom (r23-r20). The pool block and the local
+// block trade places wholesale, so the only known mover is the named-scalar
+// count, and all twelve locals are load-bearing (`k` is read after its loop,
+// `j`/`l` are assigned their bounds as early exits). Measured inert: 25
+// declaration orders (reverse, all eleven rotations, twelve random) and eight
+// relocations of subsets into the `for (i...)` body, all 129 markers.
+// See docs/catalog/frame-gaps.md, "batch 145".
 void JAIBasic::checkNextFrameSe()
 {
 	JAISound sound;

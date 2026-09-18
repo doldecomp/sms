@@ -299,7 +299,15 @@ void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 			if (unk60->isJellyFishMare() && i == 11) {
 				MActor* mactor = (*it)->getMActor();
 				// TODO: still 40 bytes of frame short of the ROM after
-				// the 4x4 fix (0xd0 vs 0xf8).
+				// the 4x4 fix (0xd0 vs 0xf8): 24 bytes below `mtx` and
+				// 16 above it. The register permutation on top of that
+				// is retail ranking these inner-block locals *below*
+				// `this` (r23 starglowMatIdx, r22 j, r21 matNum, under
+				// r24 this / r25 param_1 / r26 param_2) where we lift
+				// matNum and j above the parameters. Declaration order
+				// is inert on it -- `u16 j` at four positions and `mtx`
+				// ahead of `mactor` all give 31 markers (batch 145,
+				// docs/catalog/frame-gaps.md).
 				Mtx44 mtx;
 				SMS_GetLightPerspectiveForEffectMtx(mtx);
 				J3DModelData* data = mactor->getModel()->getModelData();

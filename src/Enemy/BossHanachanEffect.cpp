@@ -57,6 +57,11 @@ void TBossHanachan::staticLoadParticle()
 // permutes the three loop counters with it; that is the `this`-vs-pool-base
 // swap of docs/catalog/frame-gaps.md, "pass 131". Fix the 4 bytes first --
 // it is shared with emitCamShake_, so one construct explains both.
+// Batch 145 measured the declaration knob here and it is inert: a shared
+// `int i` hoisted to function scope, `int i` plus `int foot` hoisted, a
+// block-scoped `int i` for the first two loops and `position` declared above
+// `waterHeight` all give exactly the same 103 markers. Declaration order
+// cannot reach a `this`-versus-local swap (frame-gaps.md, "batch 145").
 void TBossHanachan::emitParticle_()
 {
 	const TNerveBase<TLiveActor>* nerve = getLatestNerve();

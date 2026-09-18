@@ -246,14 +246,12 @@ f32* TDSPChannel::getHistory() { return (f32*)history; }
 // (`TDSPChannel* channel = &DSPCH[index]; return channel;`) used for the loop's
 // `&DSPCH[i]` the last +8 -- the three together give frame 0x50 at 138
 // instructions. They were not committed: they are three fabricated levers in a
-// header other JAudio TUs include, and the object then still scores *lower*
-// (99.7%) because the last difference is a register: retail keeps `delta` (and
-// the `TDSPChannel*` of the inlined `breakLowerActive`, which shares its range)
-// in r29 where we use r28, the two registers the loop reuses for its element
-// offset and its `dspChannel`. Since the loop is byte-exact in both, the
-// allocator ranks the pre-loop range against the loop's, and nothing in the
-// block moves it: an unbraced block, a split `OSTick delta;` declaration and
-// `dspBuffer` declared inside the loop are all neutral or worse.
+// header other JAudio TUs include, and it is the header that has to change.
+// Batch 145 re-measured the function and the register half of this note is
+// stale: `delta` is r29 on both sides now, and all 17 remaining markers are r1
+// displacements (no opcode, insert or delete), so the 24 bytes are all that is
+// left. Neutral or worse in the block: an unbraced block, a split
+// `OSTick delta;` declaration, `dspBuffer` declared inside the loop.
 // Worth +0 here: a binding inside `onUpdate` or `getStatus`. A `getDSPHandle()`
 // accessor lands the frame too but perturbs 29 instructions.
 void TDSPChannel::updateAll()

@@ -13,10 +13,14 @@
    `bufferId` at 0x10/0x14 (they are address-taken by TRKGetFreeBuffer) -- is
    identical, so this is purely how the allocator ranks the loop-long `done`
    against the reply-only `replyBuffer`.
-   Declaration order is a lever but no order fixes it: `replyBuffer` first,
-   immediately after `error`, after `replyBufferId` or block-scoped inside
-   `if (need_reply)` all go to 28 differing operands, `buffer`/`replyBuffer`
-   swapped to 23, and its present position (fourth of ten) is the best at 13.
+   Declaration order is a lever but no order fixes it, and batch 145 exhausted
+   it: all 120 orders of the five register-held locals (`done`, `exit`,
+   `error`, `replyBuffer`, `length`; the other five declarations are
+   address-taken and stack-homed) were built, and the order below is the unique
+   minimum at 12 differing operands -- every other order gives 19, 20, 23, 27
+   or 28. Do not re-sweep it. Declaration order only ranks function-scope
+   locals against each other, which is why it reorders this pair but never
+   reaches retail's ranking (docs/catalog/frame-gaps.md, "batch 145").
    Codegen-neutral: dropping the `(TRKBuffer*)` cast on TRKGetBuffer's `void*`,
    `done = done + length`, a named `remain` for `*count - done`, and extra
    parentheses in the `while`. Worse: reordering the `while` conditions (19) and
