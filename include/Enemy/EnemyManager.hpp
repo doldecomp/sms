@@ -63,6 +63,16 @@ public:
 
 	// fabricated
 	TSpineEnemyParams* getSaveParam() const { return unk38; }
+	// Ruled out (header round 12): casting TObjManager::getObj()'s result
+	// directly, i.e. dropping the TLiveManager::getObj() level. That is what
+	// TAnimalManagerBase::clipEnemies wants (a 4-byte temporary that shifts
+	// all its locals), and it is parked as a TU-local helper there, but
+	// applied here it loses five exact functions --
+	// TEnemyManager::updateAnmSoundShared, killChildrenWithin,
+	// THamuKuriManager::setSearchHamuKuri, checkSerialKill,
+	// TBEelTearsManager::perform -- plus THauntLegManager::initSetEnemies and
+	// TRocketManager::initSetEnemies, for total matched_code -0.02. The
+	// TLiveManager level is the majority spelling.
 	TSpineEnemy* getObj(int i) { return (TSpineEnemy*)TLiveManager::getObj(i); }
 	const TSpineEnemy* getObj(int i) const
 	{
