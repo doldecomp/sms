@@ -676,8 +676,7 @@ void TStayPakkun::load(JSUMemoryInputStream& stream)
 	TSmallEnemy::load(stream);
 	reset();
 
-	TPathNode marioNode((THitActor*)gpMarioAddress);
-	setGoalPath(marioNode);
+	setGoalPathMario();
 	unk199 = 1;
 }
 
