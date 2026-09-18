@@ -472,11 +472,20 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TItemSlotDrum;
 
 	// TODO: the map keeps TTelesaSlot's in-class constructor as a weak
-	// out-of-line copy (0x98) *and* calls it here, so MWCC refused the
-	// expansion at this site. We still expand it, which costs one extra
-	// callee-saved register for the rest of the ladder. The lever is the
-	// caller's remaining expansion budget (we are still ~0x170 short of the
-	// map's 0x3734), not the callee's declaration.
+	// out-of-line copy (0x98) *and* calls it here (the `bl` is straight
+	// after `__nw__FUl`, so at depth 1), so MWCC refused the expansion at
+	// this site. We still expand it, which costs one extra callee-saved
+	// register for the rest of the ladder.
+	// Batch 104 probed the caller-budget reading and everything else it
+	// could think of, and all of it expands: an in-class constructor has no
+	// statement limit at depth 1 (1..30 measured); a base initialiser, two
+	// bases, a vtable, a virtual destructor, an array-of-class member
+	// needing `__construct_array` and a defaulted `const char*` argument all
+	// together still expand; and a `new` ladder with 256 distinct in-class
+	// constructors and 2571 inlined instructions expands every one of them.
+	// The one shape that does give weak-plus-`bl` is a member of a class
+	// *template* defined outside the class body, which TTelesaSlot is not.
+	// Still open; see codegen-tells.md, research batch 104.
 	if (strcmp(name, "TelesaSlot") == 0)
 		return new TTelesaSlot("btelesaSlot");
 

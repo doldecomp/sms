@@ -884,3 +884,41 @@ Also measured there: a `const` accessor causes a CSE (retail reloads `mActorType
 - **`JDrama::TNameRefGen::search<T>` is fabricated; the real entry point is `search2` with the cast at the call site**: the template's `static_cast` shows as `addi rD, rS, 0` where retail has `mr`, and costs 8 bytes of frame (`makeShineAppearWith*` x3 closed). 306 `search<T>` sites across ~40 units — a sweep item.
 - **`SMS_GetLightPerspectiveForEffectMtx` writes `mtx[3][*]`, so every caller's buffer must be `Mtx44` (64 bytes)**: eight other callers (`bosseel`, `namekuri`, `bosstelesa`, `telesa`, `Shimmer`, `MapStaticObject`, `NpcParts`, BathWaterManager's `TProjection3f`) declare a 48-byte `Mtx` — a real stack overflow and exactly their 16-byte frame gap (Shimmer carries a fabricated `Vec lightPos` to pay 12 of it). Sweep item.
 - Two +4-low levers stack (`SMSGetMarDirector()` fork plus one `const TVec3&` accessor read for the first `setScale` only, `TTelesaBlock::perform`); lever pairs, fourth confirmation (`getMapObjData()` + `getInitialScaling()`). **The dead-scalar C-style declaration block is a three-unit idiom** (`TAreaCylinder::load`, `TMapWireManager::load`, `TMario::canSleep`) and its position is load-bearing: declared last it lands below the address-taken locals. **A parked accessor can need a strict subset of its sites** (`getGamePad()` at four of five reads in `squating`). `NpcWalkTurn`: one inline level between `isCanWalk` and the unnamed vector's ctor (a squared-XZ helper inside `isCanWalk`) reaches the map's local `TVec3::set<f>` by `bl` (symbol order PASS). `TMapWireManager::getPosInWire` allocates retail's eight 12-byte slots 16 lower with two permuted: a term-order problem.
+
+## Research batch 104: why retail calls a weak header body where we expand it
+
+The "weak symbol emitted *and* `bl`-ed at a site we expand" family splits in two, and the larger half is not a new mechanism.
+
+**The whole `JGeometry::TVec3<f>` family is the depth table, and each retail `bl` is a depth measurement.**
+Every one of the 22 `TVec3<f>` member symbols in the map is weak, emitted once and called, and the members are in-class after all: `div__Q29JGeometry8TVec3<f>Ff` (weak, 0x30, `boid.cpp`) *expands* `scale` inside its own body, which no never-inline reading can produce.
+Measured against the real `JGVec3.hpp` with the game flags, with one-statement forwarders as the levels:
+
+| member | statements | expands through | first `bl` |
+| --- | --- | --- | --- |
+| `scale(f)`, `scale(f, const&)`, `sub`, `add`, `set(const&)`, `set(f,f,f)`, `negate` | 3 | depth 3 | **depth 4** |
+| `dot`, `operator=` | 1 | depth 4 | **depth 5** |
+
+That is exactly the published allowance (2 at depth 4, never at depth 5), so a retail `bl` to a three-statement vector member says the site sits **three inline levels** above it and a one-statement member says four — the same reading batch 97 got from `TVec3::set(const Vec&)` at depth 4 under `TLensFlare::perform`.
+Census for planning: `set<f>(f,f,f)` 184 retail call sites, `sub` 130, `scale(f)` 64, `dot` 49, `add` 40, `scale(f, const&)` 40, `set<f>(const&)` 23, `setMin`/`setMax` 10 each, `setLength(const&, f)` 9.
+`TTamaNoko::landEffect`'s four sites and `TRope::moveHead` are depth-4 sites; a `bl scale` bracketed by a copy in and a copy out is a by-value hand-off through those levels.
+
+**Do not make the vector members never-inline to get those `bl`s.** Trial, reverted: moving `scale`'s body out of the class as a primary-template member (see the next rule) gives `landEffect` 57.2 -> 82.8 and `TIgaiga::setMeltAnm` 84.4 -> 96.1 and costs **217 functions**, including byte-exact `JPAParticle::calcVelocity`, `TBeeHive::controlSound`, three `CubeMapTool` loads and `div` itself (100 -> 19.6); total fuzzy 97.27 -> 96.99.
+
+**New rule — a member of a class *template* defined outside the class body without `inline` is never inlined, at any depth, in any caller.**
+MWCC 1.2.5 instantiates one weak out-of-line copy per TU and emits a `bl` at every site.
+This is the only source shape that produces "weak plus a `bl` everywhere", and it is invisible in the map, so it has to be inferred from the call sites.
+
+| callee | site | linkage of the callee |
+| --- | --- | --- |
+| class template, body in class | expands | none emitted |
+| class template, body out of class, `inline` | expands | none emitted |
+| class template, body out of class, no `inline` | **`bl`** | **weak** |
+| explicit specialisation (`template <> struct T<f32>`), body out of class, no `inline` | expands | global |
+| explicit specialisation, body out of class, `inline` or `template <>`-qualified | expands | weak / none |
+| non-template class, body out of class in the same TU | expands | global |
+
+Corollaries: a weak symbol called at **depth 1 from a plain emitted function** cannot be reached by any call-site or depth change, only by moving the definition out of the class body of a class template; and an explicit specialisation can never be spelled to produce it, so `TVec3<f32>` would have to become the primary template (`template <class T> class TVec3 : public Vec`, s16 kept as a specialisation after a forward declaration) for the shape to be available at all.
+In-class **member** templates are a third category: their instantiations are `local`, not weak, and stay inlinable per site — which is what the map shows for `set<f>`/`__ct<f>` and why `JGVec3.hpp` keeps them in class.
+
+**Ruled out for the two remaining depth-1 refusals** (`TTelesaSlot::TTelesaSlot(const char*)`, weak 0x98, `bl` straight after `__nw__FUl` in `getNameRef_MapObj`; `std::sqrtf`, weak 0x64, `bl` with the squared sum computed in `MSoundSE::startSoundActorWithInfo` itself).
+Each was probed in a scratch TU with the game flags and each **inlines**, so none of these is the lever: callee statement count for an in-class constructor (1 to 30 statements, no limit at depth 1); a base-class initialiser, two base classes, a vtable and a virtual destructor, an array-of-class member needing `__construct_array`, and a defaulted `const char*` argument (all together, still expanded); caller size (64 expansions, 1732 inlined instructions) and distinct-callee count (256 different in-class constructors in one `new` ladder, all expanded); callee body content (`u64`/`s64` conversions that emit their own runtime `bl`, a `%` runtime call, a `static` local, a `while`/`do` loop, an `__frsqrte` chain, a `volatile` local, a call to an external function); definition order and `-inline deferred` order (definition after the call site, and a callee calling an inline defined later); float-register pressure at the site (up to 18 live `f32` locals across it); and a by-value or by-reference inlined parameter as the receiver.

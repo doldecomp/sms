@@ -162,6 +162,18 @@ public:
 	//
 	// Do not reach for the primary-template form: weak linkage plus
 	// never-inline is further from retail than what is here now.
+	//
+	// Batch 104 measured that last row on the *non*-template members too and
+	// it is wrong for them as well. Every `TVec3<f>` member the map lists is
+	// weak, emitted once and called, but they are all in-class: retail's own
+	// `div` (weak 0x30, boid.cpp) expands `scale` inside its body. The `bl`s
+	// are the ordinary depth allowance - a three-statement member goes out of
+	// line at depth 4 and a one-statement member at depth 5 - so a retail
+	// `bl` to one of these is a measurement of the *call site's* depth, not a
+	// property of this header. Moving `scale` out as a primary-template
+	// member does reproduce those `bl`s (tamaNoko's `landEffect` 57 -> 83,
+	// `TIgaiga::setMeltAnm` 84 -> 96) and costs 217 other functions,
+	// `div` itself among them. Fix the missing inline levels in the .cpp.
 	template <class TY> void set(TY x_, TY y_, TY z_)
 	{
 		x = x_;

@@ -555,6 +555,15 @@ void TTamaNoko::requestShadow()
 // *calls* JGeometry::TVec3<f>::scale(f) (weak, boid.cpp holds the surviving
 // copy) at all four sites; we expand it, which costs 42 instructions. The
 // literal and the temporaries are right, the inline decision is not.
+// Batch 104 measured why: `scale(f)` is three statements, so it expands
+// through depth 3 and is a `bl` from depth 4 down. All four sites are
+// therefore *three inline levels* below this body, and the copy before the
+// `bl` plus the copy after it (which feeds setGlobalScale) are by-value
+// hand-offs through those levels. The levels are shared - 22 TUs and 64 ROM
+// sites call `scale` this way - so they belong in a header (Particles.hpp
+// already carries an emit-then-setGlobalScale helper), not in three
+// throwaway statics here. Forcing the `bl` by moving `scale` out of the
+// class body costs 217 functions project-wide; see codegen-tells.md.
 void TTamaNoko::landEffect()
 {
 	if (mGroundPlane->isSand()) {

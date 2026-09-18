@@ -475,6 +475,13 @@ JAISound* MSoundSE::startSoundSystemSE(u32 id, u32 param_2,
 	return sound;
 }
 
+// TODO: the ROM computes this squared sum in startSoundActorWithInfo itself
+// and then `bl`s std::sqrtf (weak 0x64, MAnmSound.cpp holds the copy). Our
+// std::sqrtf body is seven statements, so it expands through depth 2 and is a
+// `bl` from depth 3 down - this one wrapper only reaches depth 2, and the
+// site needs two. Batch 104 ruled out the callee's `volatile` local, its
+// `__frsqrte` chain, `extern inline` vs `inline`, caller size and float
+// register pressure (18 live locals across the site) as the refusal.
 static f32 vecLength(const Vec& vec)
 {
 	return std::sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
