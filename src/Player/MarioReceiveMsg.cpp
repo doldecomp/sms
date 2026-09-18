@@ -34,18 +34,6 @@ bool TMario::getNozzle(THitActor* sender, TWaterGun::TNozzleType type)
 	return TRUE;
 }
 
-// Parked stand-in for the global accessor MoveBG/MapObjManager.hpp is missing
-// (`SMSGetMapObjManager()`): a binding level over the raw `gpMapObjManager`
-// read is worth 8 bytes of low region per expansion, and the three mutually
-// exclusive surf-squid branches pay it each, which is exactly the 32 bytes
-// TMario::getGesso's frame was short (0x30 -> 0x50, byte-exact). Reported as a
-// header item; it lives here because MapObjManager.hpp is shared.
-static inline TMapObjManager* MarioReceiveMsgGetMapObjManager()
-{
-	TMapObjManager* manager = gpMapObjManager;
-	return manager;
-}
-
 void TMario::getGesso(THitActor* param_1)
 {
 	if (getStatus() != 0x10000) {
@@ -56,19 +44,19 @@ void TMario::getGesso(THitActor* param_1)
 		emitGetEffect();
 		switch (param_1->getActorType()) {
 		case 0x400000C5:
-			mSurfGesso     = MarioReceiveMsgGetMapObjManager()->mRedGesso;
+			mSurfGesso     = SMSGetMapObjManager()->mRedGesso;
 			mSurfGessoType = SURF_GESSO_TYPE_RED;
 			break;
 
 		case 0x400000C6:
-			mSurfGesso     = MarioReceiveMsgGetMapObjManager()->mYellowGesso;
+			mSurfGesso     = SMSGetMapObjManager()->mYellowGesso;
 			mSurfGessoType = SURF_GESSO_TYPE_YELLOW;
 			break;
 
 		default:
 		case 0x400000C7:
 			mSurfGessoType = SURF_GESSO_TYPE_GREEN;
-			mSurfGesso     = MarioReceiveMsgGetMapObjManager()->mGreenGesso;
+			mSurfGesso     = SMSGetMapObjManager()->mGreenGesso;
 			break;
 		}
 		mSurfGesso->setBck("surfgeso_run1");

@@ -111,4 +111,14 @@ public:
 	/* 0xD0 */ Vec unkD0;
 };
 
+// The binding is load-bearing, unlike the other SMSGet* globals: every
+// expansion of this accessor reserves 8 bytes of low region for the named
+// pointer, which is what TMario::getGesso's three mutually exclusive
+// surf-squid branches pay (frame 0x30 -> 0x50, byte-exact). Header round 21.
+inline TMapObjManager* SMSGetMapObjManager()
+{
+	TMapObjManager* manager = gpMapObjManager;
+	return manager;
+}
+
 #endif
