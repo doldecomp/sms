@@ -905,6 +905,15 @@ void TCannon::gateOpen()
 
 void TCannon::startChorobeiShout() { }
 
+// Reproduces retail's out-of-line `bl JGeometry::TVec3<f>::sub` in
+// TNerveCannonSearch::execute: the subtraction sits one inline level down.
+static inline f32 CannonRotYToPoint(const JGeometry::TVec3<f32>& from,
+                                    const JGeometry::TVec3<f32>& to)
+{
+	JGeometry::TVec3<f32> diff = to - from;
+	return MsGetRotFromZaxis(diff).y;
+}
+
 DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
 {
 	TCannon* cannon = (TCannon*)spine->getBody();
@@ -976,9 +985,8 @@ DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 
 	if (gpApplication.mCurrArea.unk0 == 5
 	    && gpMarDirector->mState == TMarDirector::STATE_UNK1) {
-		JGeometry::TVec3<f32> toMario(*gpMarioPos);
-		toMario.sub(cannon->mPosition);
-		cannon->mRotation.y = MsGetRotFromZaxis(toMario).y;
+		cannon->mRotation.y
+		    = CannonRotYToPoint(cannon->mPosition, *gpMarioPos);
 	} else {
 		cannon->turnToGoal();
 	}
