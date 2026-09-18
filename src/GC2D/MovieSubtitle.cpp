@@ -72,6 +72,18 @@ void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 	// the two search() calls (97.2%), a `char* blank` alias for the memset
 	// (98.1%), sizeof instead of ARRAY_COUNT, and moving `buffer` to the top
 	// of the body (all no change).
+	//
+	// Closure batch 129 sized the object from the callee side: **one
+	// uninitialised non-trivial 12-byte local in the UNUSED
+	// TMovieSubTitle::makeBmgName below takes this function to exact**
+	// (`buffer` 0x28, frame 0x140, zero instruction change, and makeBmgName's
+	// own byte size unchanged -- only its dead frame grows, which an UNUSED
+	// symbol does not constrain). An 8-byte one lands the frame but leaves
+	// `buffer` at 0x24; a 16-byte one overshoots to 0x148. So the carrier is
+	// legal and the size is pinned at 12, but there is no candidate object: a
+	// string-building helper wants no 12-byte class, and every 12-byte type in
+	// reach (JGeometry::TVec3<f32>) is nonsense here. Left out for want of a
+	// candidate, exactly as MSBgmXFade::getTimingForce is.
 
 	// inline?
 	memset(buffer, ' ', ARRAY_COUNT(buffer));
