@@ -714,7 +714,10 @@ void TBossGesso::continuousRumble()
 // initialisations, naming the tentacle and replacing the `continue` with a
 // guarded block all leave the decision unchanged. The body itself differs only
 // in one contraction: retail fuses `x * x` into `y * y` with an `fmadds` that
-// our `squared()`/`dot()` spelling does not produce.
+// our `squared()`/`dot()` spelling does not produce. The literal pool confirms
+// the expansion independently: retail's 100000.0f is @7822, the highest id in
+// the TU, because this function alone requests it, while ours lands it near
+// perform's own literals.
 f32 TBossGesso::lenFromToeToMario()
 {
 	f32 min = 100000.0f;
@@ -2035,9 +2038,8 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->changeAllTentacleState(8);
 
 		JGeometry::TVec3<f32> local_24;
-		local_24.x = self->mPosition.x;
-		local_24.y = -5000.0f;
-		local_24.z = 7000.0f + self->mPosition.z;
+		local_24.set(self->mPosition.x, -5000.0f,
+		             7000.0f + self->mPosition.z);
 
 		self->setGoalPath(local_24);
 
