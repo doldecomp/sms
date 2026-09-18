@@ -198,11 +198,20 @@ void TEnemyPolluteModelManager::init(TLiveActor* param_1)
 	unk18 = new TEnemyPolluteModel*[unk14];
 }
 
+// The far-clip fetch reads `unk84` directly and goes through the params
+// class's own wrapper: the frame is a three-rung ladder and only this
+// combination lands retail's 0x60 with the argument loads in order.
+// Measured, each against the same baseline: `getCondParams()` over raw
+// `unk84` +0x10, `mEnemyFarClip.get()` over `getEnemyFarClip()` -8, a named
+// `farClip` +8, and `gpCamera->getFovy()`/`getAspect()` +8 each. Every other
+// pair that lands 0x60 misplaces exactly one of the four argument loads, and
+// the 100.0f has to be a named local (a literal argument inside the loop is
+// reloaded per iteration where retail does `fmr f1, f31`).
 void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		f32 f31     = 100.0f;
-		f32 farClip = gpConductor->getCondParams().mEnemyFarClip.get();
+		f32 farClip = gpConductor->unk84.getEnemyFarClip();
 		SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
 		                                   gpCamera->getAspect(),
 		                                   graphics->getNearPlane(), farClip);
@@ -232,6 +241,29 @@ static inline bool EnemyAttachmentIsWaterSurface(const TBGCheckData* check)
 	return check->isWaterSurface();
 }
 
+// TODO: frame 0x90 vs retail's 0x98, and the two locals are allocated in the
+// opposite order: retail has `check` at 0x3c immediately below the 48-byte
+// matrix at 0x40, ours has the matrix at 0x2c with `check` above it at 0x60.
+// Measured (each variant one build, instructions otherwise identical):
+//   - `check` moved into an inlined predicate helper: 94.4%, check rises to
+//     0x64 and the bool materialises (+5 instructions). Wrong direction.
+//   - `generate`'s body spelled out here with a block-scope `TPosition3f mtx`
+//     declared after `check` (the duplicated-source reading): byte-identical
+//     layout to calling `generate`, so an inlined callee's local and a
+//     block-scope local are allocated the same way -- both below every
+//     function-scope local.
+//   - the same with `TPosition3f mtx` declared at function scope *before*
+//     `check`: retail's slot *order* appears (check below the matrix), and
+//     adding one dead 12-byte local declared last makes the frame 0x98 and
+//     *every* r1 displacement exact (98.0%). The only residue is then the two
+//     instructions `bl SMatrix34C()` / `addi r3, r1, 0x40`: a function-scope
+//     matrix has its empty ctor inlined away, while retail (like our
+//     block-scope spelling) calls it at the use site.
+// So retail's shape is "matrix allocated as the first function-scope local but
+// constructed lazily at its use", which no spelling measured reproduces, plus
+// 12 bytes of dead low region. Reverted to calling `generate` (99.7%) because
+// the duplicated body scores lower and the 12-byte local has no evidence
+// beyond its size.
 void TEnemyPolluteModelManager::generatePolluteModel(
     JGeometry::TVec3<f32>& param_1, JGeometry::TVec3<f32>& param_2)
 {
@@ -280,6 +312,13 @@ void TEnemyPolluteModel::perform(u32 cue, JDrama::TGraphics* graphics)
 		gpPollution->stampModel(unk10->unk18->getModel());
 }
 
+// TODO: UNUSED 0x178 in the map, ours 0xf8 (32 instructions short). The body
+// cannot be missing statements: `generatePolluteModel` inlines it and every
+// instruction of that expansion matches, so anything added here would show up
+// there. The out-of-line copy differs only in inlining depth -- retail's copy
+// expands `identity33` (0x30, twelve instructions, called twice here) at its
+// depth-2 site while ours refuses it, which accounts for ~20 of the 32
+// instructions. Do not fabricate statements to close the size.
 void TEnemyPolluteModel::generate(JGeometry::TVec3<f32>& param_1,
                                   JGeometry::TVec3<f32>& param_2)
 {
