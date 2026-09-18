@@ -436,5 +436,6 @@
   "THPPlayer/THPPlayer.c",
   "MoveBG/MapObjEx.cpp",
   "Enemy/DebuTelesa.cpp",
-  "Enemy/generator.cpp"
+  "Enemy/generator.cpp",
+  "MoveBG/WoodBarrel.cpp"
 ]

@@ -21,10 +21,17 @@ public:
 	virtual void bind();
 	virtual void kill();
 	virtual void appear();
-	virtual void checkIllegalAttr() const { }
 	virtual void touchPlayer(THitActor*);
 	virtual u32 touchWater(THitActor*);
 	virtual u32 getLivingTime() const { return mNormalLivingTime; }
+	// checkIllegalAttr is an override of TMapObjBase's slot, so its position
+	// in this list costs no vtable slot -- but it does decide the order MWCC
+	// flushes the weak inherited bodies in, most-derived class first and then
+	// declaration order within each class. Retail's WoodBarrel.o emits
+	// getLivingTime before checkIllegalAttr, so the declaration has to sit
+	// here rather than next to kill()/appear(); with it there, WoodBarrel.o
+	// swapped the pair and linking it changed the DOL.
+	virtual void checkIllegalAttr() const { }
 	virtual int getFlushTime() const { return mNormalFlushTime; }
 	virtual bool isPollutedGround(const JGeometry::TVec3<f32>&) const;
 	virtual void work();
