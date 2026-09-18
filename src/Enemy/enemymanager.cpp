@@ -542,15 +542,24 @@ static inline MActor* EnemymanagerGetMActor(const TSpineEnemy* p)
 // of the call. Declaration-order permutations of `f`, `afStack_5C` and `wtf`
 // (six tried earlier) do not move it, and dropping `wtf` loses two
 // instructions retail has.
-// Open lead from validate-symbol-order: the map lists an UNUSED
-// `TPosition3<TMatrix34<SMatrix34C<f>>>::TPosition3()` in this TU, so one of
-// its matrix locals (this one, or copyFromShared's pair, or a local of the
-// unreconstructed UNUSED createCopyAnmMtx 0x15c / setScale 0x48) is a
-// TPosition3f rather than a raw Mtx -- which would also explain why the
-// scratch is taken through a separate MtxPtr. Spelling `afStack_5C` as
-// TPosition3f is codegen-identical here (96.1%, same five markers) but does
-// not define the symbol: JGPosition3.hpp's in-class empty default ctor is
-// elided, so whatever makes retail emit it lives in that shared header.
+// Closed (header round 24): the UNUSED
+// `TPosition3<TMatrix34<SMatrix34C<f>>>::TPosition3()` is not a missing
+// definition and is not a lead for this function. JGPosition3.hpp already
+// spells it in-class with an empty body, which is exactly the map's 4 bytes
+// (one `blr`), and a weak in-class body that every site inlines leaves no
+// symbol -- so nothing about it can be "defined" anywhere. What the map
+// records is a weak out-of-line copy that survived compilation and was then
+// dead-stripped, and its emission slot places it between createCopyAnmMtx and
+// countLivingEnemy, i.e. immediately after the function that referenced it.
+// That reference has to be an array construction: `new TPosition3f[n]` passes
+// the constructor's *address* to __construct_array, which forces the
+// out-of-line copy, and because createCopyAnmMtx (UNUSED, 0x15c) is itself
+// dead both references die with it. So the real finding is about that stub:
+// createCopyAnmMtx allocates the `unk48` buffer as an array of TPosition3f,
+// and `unk48` is therefore a TPosition3f array rather than the `Mtx**` we
+// declare. Spelling `afStack_5C` as TPosition3f is codegen-identical here
+// (96.1%, same five markers), so the r27/r28 swap has to come from somewhere
+// else.
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 {
 	if (unk4C != EnemymanagerGetMActor(enemy)->getCurAnmIdx(ANM_TYPE_BCK))
