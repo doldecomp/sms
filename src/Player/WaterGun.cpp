@@ -328,23 +328,14 @@ void TNozzleBase::emit(int param_1)
 		if (emittedWater != 0) {
 			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
 
-			f32 emitReactionPow = mEmitParams.mReactionPow.get();
-			f32 reactionPow     = refEmitPow * emitReactionPow;
-
-			// TODO: This section doesn't quite match here nor in derived
-			// classes. There may be some weird inlining going on here?
-			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
-			f32 dirX           = emitInfo->mDir.get().x;
-			f32 dirZ           = emitInfo->mDir.get().z;
-			f32 cosAngle       = JMASCos(faceAngleY);
-			f32 sinAngle       = JMASSin(faceAngleY);
-			f32 directionScale = (-dirX * sinAngle - dirZ * cosAngle);
-
-			f32 velocity = reactionPow * directionScale;
-
-			mFludd->mMario->addVelocity(velocity);
-
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
+
+			f32 reactionPow
+			    = refEmitPow * mEmitParams.mReactionPow.get();
+			mFludd->mMario->addVelocity(
+			    (-dirVec.x * JMASSin(mFludd->mMario->mFaceAngle.y)
+			     - dirVec.z * JMASCos(mFludd->mMario->mFaceAngle.y))
+			    * reactionPow);
 
 			mFludd->mMario->mVel.x -= dirVec.x * reactionPow;
 			mFludd->mMario->mVel.z -= dirVec.z * reactionPow;
@@ -617,6 +608,10 @@ void TNozzleTrigger::emit(int param_1)
 			f32 reaction
 			    = pressure * (reactionPow - reactionPowMin) + reactionPowMin;
 
+			// TODO: retail reads mFaceAngle.y with `lhz` and re-derives the
+			// sin/cos table index twice, i.e. no named s16 angle and no CSE.
+			// Spelling it that way (as in TNozzleBase::emit) costs 0x20 of
+			// frame here and nets -2%, so the named locals stay.
 			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
 			f32 dirX           = emitInfo->mDir.get().x;
 			f32 dirZ           = emitInfo->mDir.get().z;
@@ -874,6 +869,10 @@ void TNozzleDeform::emit(int param_1)
 			f32 reaction
 			    = localUnk378 * (reactionPow - reactionPowMin) + reactionPowMin;
 
+			// TODO: retail reads mFaceAngle.y with `lhz` and re-derives the
+			// sin/cos table index twice, i.e. no named s16 angle and no CSE.
+			// Spelling it that way (as in TNozzleBase::emit) costs 0x20 of
+			// frame here and nets -2%, so the named locals stay.
 			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
 			f32 dirX           = emitInfo->mDir.get().x;
 			f32 dirZ           = emitInfo->mDir.get().z;
