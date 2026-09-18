@@ -11,8 +11,14 @@ public:
 
 	static f32 mDownHeight;
 
+	// TODO: name inferred, not from the map: the counter is bumped once per
+	// hip-drop and the nail stops sinking at 3, one mDownHeight step each
+	// time. Reading it through the accessor is what gives receiveMessage its
+	// frame (0x28; the raw member is 0x20).
+	int getDownCount() const { return mDownCount; }
+
 public:
-	/* 0x150 */ s32 unk150;
+	/* 0x150 */ s32 mDownCount;
 };
 
 class TJointCoin : public TMapObjBase {
@@ -26,6 +32,12 @@ public:
 	virtual TMapObjBase* makeObj(const char*, u16);
 
 	TJointCoin(const char* name = "ジョイントコイン");
+
+	// TODO: names inferred, not from the map. control() needs both of these
+	// reads to go through accessors for its frame (0x50; either one alone, or
+	// neither, gives 0x48).
+	int getObjNum() const { return unk13C; }
+	u16 getJointIndex(int i) const { return unk144[i]; }
 
 public:
 	/* 0x138 */ MActor* unk138;

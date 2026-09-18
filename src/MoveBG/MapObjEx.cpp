@@ -24,7 +24,7 @@ f32 TMapObjNail::mDownHeight = 50.0f;
 BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP && !isStateTimerEngaged()
-	    && unk150 < 3) {
+	    && getDownCount() < 3) {
 		mPosition.y -= mDownHeight;
 		removeMapCollision();
 		setUpCurrentMapCollision();
@@ -33,8 +33,8 @@ BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 		                                nullptr, 0, 4);
 
 		mStateTimer = 120;
-		++unk150;
-		if (unk150 == 3 && mHiddenObj != nullptr) {
+		++mDownCount;
+		if (mDownCount == 3 && mHiddenObj != nullptr) {
 			TMapObjBase* obj = mHiddenObj;
 			if (obj->isActorType(0x2000000e))
 				obj = gpItemManager->makeObjAppear(0x2000000e);
@@ -49,7 +49,7 @@ BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 
 TMapObjNail::TMapObjNail(const char* name)
     : THideObjBase(name)
-    , unk150(0)
+    , mDownCount(0)
 {
 }
 
@@ -63,9 +63,9 @@ void TJointCoin::control()
 	mMActor->frameUpdate();
 	mMActor->calc();
 
-	for (int i = 0; i < unk13C; ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		TMapObjBase* obj = unk140[i];
-		u16 idx          = unk144[i];
+		u16 idx          = getJointIndex(i);
 
 		MtxPtr mtx = getModel()->getAnmMtx(idx);
 		if (obj->mMActor)
@@ -93,7 +93,8 @@ TMapObjBase* TJointCoin::makeObj(const char* name, u16 i)
 		pTVar2->onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	}
 
-	unk140[unk13C]->makeObjAppeared();
+	TMapObjBase* obj = unk140[unk13C];
+	obj->makeObjAppeared();
 	unk140[unk13C]->onMapObjFlag(MAP_OBJ_FLAG_UNK100);
 	unk140[unk13C]->offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	unk140[unk13C]->offLiveFlag(LIVE_FLAG_UNK100);
