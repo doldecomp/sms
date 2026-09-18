@@ -24,13 +24,15 @@ void TBaseNPC::setHappyEffectMtxPtr_(const JUTNameTab* tab)
 		jointName = monte;
 	else if (isNormalMare())
 		jointName = mare;
-	else if (mActorType == 0x4000016)
+	else if (getActorType() == 0x4000016)
 		jointName = kinoppio;
 	else
 		jointName = nullptr;
 
-	if (jointName != nullptr)
-		mHappyEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
+	if (jointName != nullptr) {
+		s32 jointIdx       = tab->getIndex(jointName);
+		mHappyEffectMtxPtr = getModel()->getAnmMtx((u16)jointIdx);
+	}
 }
 
 void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
@@ -50,33 +52,39 @@ void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
 		break;
 	}
 
-	if (jointName)
-		mNoteEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
+	if (jointName) {
+		s32 jointIdx      = tab->getIndex(jointName);
+		mNoteEffectMtxPtr = getModel()->getAnmMtx((u16)jointIdx);
+	}
 }
 
 void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 {
 	const char* koshiNullJoint = "koshi_null";
+	const char* koshiJoint     = "koshi";
 	const char* bodyJoint      = "jnt_body";
 	const char* leftFootJoint  = "footL_jnt";
 	const char* rightFootJoint = "footR_jnt";
-	const char* koshiJoint     = "koshi";
 
 	const char* pcVar5;
 	if (isNormalMonte()) {
-		unk200 = getModel()->getAnmMtx(tab->getIndex(leftFootJoint));
-		unk204 = getModel()->getAnmMtx(tab->getIndex(rightFootJoint));
-		pcVar5 = koshiNullJoint;
+		s32 leftFootIdx  = tab->getIndex(leftFootJoint);
+		unk200           = getModel()->getAnmMtx((u16)leftFootIdx);
+		s32 rightFootIdx = tab->getIndex(rightFootJoint);
+		unk204           = getModel()->getAnmMtx((u16)rightFootIdx);
+		pcVar5           = koshiNullJoint;
 	} else if (isNormalMare()) {
 		pcVar5 = koshiJoint;
-	} else if (mActorType == 0x4000016) {
+	} else if (getActorType() == 0x4000016) {
 		pcVar5 = bodyJoint;
 	} else {
 		pcVar5 = nullptr;
 	}
 
-	if (pcVar5)
-		mPollutionEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(pcVar5));
+	if (pcVar5) {
+		s32 jointIdx           = tab->getIndex(pcVar5);
+		mPollutionEffectMtxPtr = getModel()->getAnmMtx((u16)jointIdx);
+	}
 }
 
 void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
@@ -90,8 +98,8 @@ void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
 		model  = getModel();
 		pcVar3 = "yashi_jnt";
 	}
-	mSmokeEffectMtxPtr = model->getAnmMtx(
-	    model->getModelData()->getJointName()->getIndex(pcVar3));
+	u16 jointIdx = model->getModelData()->getJointName()->getIndex(pcVar3);
+	mSmokeEffectMtxPtr = model->getAnmMtx(jointIdx);
 }
 
 static bool IsCheckPassFrame(J3DFrameCtrl* param_1, const f32* param_2)
@@ -228,6 +236,17 @@ inline bool TBaseNPC::isPolWaitREffectEmitTime_() const
 	                        sCheckFrameMonte);
 }
 
+// TODO: frame-exact (0xf0) and instruction-exact, but 75 slot offsets still
+// differ. Retail's 12-byte pool runs 0x68, 0x78, 0x84, <12-byte hole at 0x90>,
+// 0x9c, 0xa8, 0xb4, 0xc0, 0xcc; ours runs 0x5c, <24-byte hole>, 0x80, 0x8c,
+// 0x98, 0xa4, 0xb0, 0xbc, 0xc8. So retail puts the third block's `scale`
+// (0x78) *below* that block's getEffectScale_ return buffer (0x84) while every
+// declaration order we tried puts it at the top of the pool, and retail keeps
+// a 12-byte hole above the second block's buffer. `doEmit` is r30 in retail
+// and r29 here. Frame reached 0xf0 with the accessor levers below
+// (getActorType x3 = +16 saturating, SMSGetMarDirector()->getCurrentMap() =
+// +16, getPosition() at the y guard = +8 and at mWaveParticlePos.set = +8);
+// declaration-order permutations of dVar11/doEmit/scale move nothing.
 void TBaseNPC::emitParticle_()
 {
 	if (mSmokeEffectMtxPtr != nullptr && checkActionFlag(NPC_ACTION_BURNING)) {
@@ -247,7 +266,7 @@ void TBaseNPC::emitParticle_()
 	}
 
 	if (mNoteEffectMtxPtr != nullptr
-	    && (mActorType != 0x4000012
+	    && (getActorType() != 0x4000012
 	        || unkD0->getCurrentAnmKind() != NPC_ANM_KIND_UNK5)) {
 		JGeometry::TVec3<f32> scale = getEffectScale_();
 		scale *= 0.75f;
@@ -257,15 +276,16 @@ void TBaseNPC::emitParticle_()
 		SMS_EasyEmitParticle(PARTICLE_MS_YNB_ONPU, &unk1F0, this, scale);
 	}
 
-	if (mActorType == 0x4000007 || gpMarDirector->mMap == 4) {
+	if (getActorType() == 0x4000007
+	    || SMSGetMarDirector()->getCurrentMap() == 4) {
 		f32 dVar11                  = 0.0f;
 		bool doEmit                 = false;
 		JGeometry::TVec3<f32> scale = getEffectScale_();
 
-		if (mActorType == 0x4000007) {
+		if (getActorType() == 0x4000007) {
 			doEmit = true;
 			scale *= 1.5f;
-		} else if (mPosition.y <= 30.0f
+		} else if (getPosition().y <= 30.0f
 		           && (mLinearVelocity.x != 0.0f
 		               || mLinearVelocity.z != 0.0f)) {
 			dVar11 = gpMapObjWave->getWaveHeight(mPosition.x, mPosition.z);
@@ -274,7 +294,7 @@ void TBaseNPC::emitParticle_()
 		}
 
 		if (doEmit) {
-			mWaveParticlePos.set(mPosition.x, dVar11, mPosition.z);
+			mWaveParticlePos.set(getPosition().x, dVar11, getPosition().z);
 			SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &mWaveParticlePos,
 			                     this, scale);
 			SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_A, &mWaveParticlePos,
