@@ -136,14 +136,13 @@ public:
 	virtual ~TMoePuku();
 
 	// Overrides of base virtuals; these occupy inherited slots.
-	virtual void initAttacker(THitActor*);
-	virtual BOOL isInhibitedForceMove();
 	virtual void generateEffectColumWater();
-	virtual void walkBehavior(int, f32);
 	virtual void calcRootMatrix();
 
-	// New virtuals, declared in the order the vtable lists them
-	// (0x1b8 onwards).
+	// Overrides of TTobiPuku's animation-state virtuals, in vtable
+	// order. The map lists no TMoePuku copy of initAttacker,
+	// isInhibitedForceMove, walkBehavior, isReachedToGoalXZ,
+	// getGravityY or genEventCoin, so TMoePuku inherits those.
 	virtual bool isPichiEffect();
 	virtual BOOL isJumpBck();
 	virtual BOOL isDeadBck();
@@ -160,11 +159,8 @@ public:
 	virtual void setDownLandAnm();
 	virtual void setFallEndLandAnm();
 	virtual void swimEffect();
-	virtual bool isReachedToGoalXZ();
 	virtual void hitWater();
 	virtual const char** getBasNameTable() const;
-	virtual f32 getGravityY() const;
-	void genEventCoin();
 
 
 	// Overrides the base slot at 0x154.
@@ -217,7 +213,7 @@ public:
 	TTobiPukuManager(const char* name);
 
 	virtual ~TTobiPukuManager();
-	virtual TLiveActor* createEnemyInstance();
+	virtual TSpineEnemy* createEnemyInstance();
 	virtual void load(JSUMemoryInputStream&);
 };
 
@@ -229,7 +225,7 @@ public:
 	}
 
 	virtual ~TMoePukuManager();
-	virtual TLiveActor* createEnemyInstance();
+	virtual TSpineEnemy* createEnemyInstance();
 };
 
 class TTobiPukuLaunchPadManager : public TSmallEnemyManager {
@@ -239,7 +235,7 @@ public:
 	/* 0x60 */ u8 unk60;
 
 	virtual ~TTobiPukuLaunchPadManager();
-	virtual TLiveActor* createEnemyInstance();
+	virtual TSpineEnemy* createEnemyInstance();
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
@@ -252,7 +248,7 @@ public:
 	}
 
 	virtual ~TMoePukuLaunchPadManager();
-	virtual TLiveActor* createEnemyInstance();
+	virtual TSpineEnemy* createEnemyInstance();
 };
 
 
@@ -269,6 +265,5 @@ DECLARE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 DECLARE_NERVE(TNerveTobiPukuFly, TLiveActor)
 DECLARE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 
-extern TMoePuku* gpCurTobiPuku;
 
 #endif

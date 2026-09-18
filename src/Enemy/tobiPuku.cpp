@@ -47,6 +47,10 @@ static const char* pukupuku_bastable[] = {
 	nullptr,
 	"/scene/pukupuku/bas/pukupuku_fall_end_land.bas",
 	nullptr,
+	nullptr,
+	"/scene/pukupuku/bas/pukupuku_pitipiti.bas",
+	"/scene/pukupuku/bas/pukupuku_swim.bas",
+	nullptr,
 };
 
 static const char* moepuku_bastable[] = {
@@ -56,6 +60,10 @@ static const char* moepuku_bastable[] = {
 	"/scene/moepuku/bas/moepuku_down_land.bas",
 	nullptr,
 	"/scene/moepuku/bas/moepuku_fall_end_land.bas",
+	nullptr,
+	nullptr,
+	"/scene/moepuku/bas/moepuku_pitipiti.bas",
+	nullptr,
 	nullptr,
 };
 
@@ -94,15 +102,15 @@ TTobiPukuLaunchPadSaveLoadParams::TTobiPukuLaunchPadSaveLoadParams(
 {
 }
 
-f32 TTobiPuku::mLandAngle;
+f32 TTobiPuku::mLandAngle = 90.0f;
 
-u8 TTobiPuku::mBoundSw;
+u8 TTobiPuku::mBoundSw = 1;
 
-f32 TTobiPuku::mBoundVelocityY;
+f32 TTobiPuku::mBoundVelocityY = 0.8f;
 
-u8 TTobiPuku::mReturnLaunchSw;
+u8 TTobiPuku::mReturnLaunchSw = 1;
 
-TMoePuku* gpCurTobiPuku;
+static TMoePuku* gpCurTobiPuku;
 
 static int TobiPukuRollCallback(J3DNode* node, int param);
 
@@ -180,7 +188,7 @@ void TTobiPukuLaunchPadManager::load(JSUMemoryInputStream& stream)
 	TSmallEnemyManager::load(stream);
 }
 
-TLiveActor* TTobiPukuLaunchPadManager::createEnemyInstance()
+TSpineEnemy* TTobiPukuLaunchPadManager::createEnemyInstance()
 {
 	return new TTobiPukuLaunchPad("とびプク発射台");
 }
@@ -193,7 +201,7 @@ void TTobiPukuLaunchPadManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 TTobiPukuLaunchPad::~TTobiPukuLaunchPad() { }
 
-TLiveActor* TMoePukuLaunchPadManager::createEnemyInstance()
+TSpineEnemy* TMoePukuLaunchPadManager::createEnemyInstance()
 {
 	return new TMoePukuLaunchPad("モエプク発射台");
 }
@@ -209,12 +217,12 @@ void TTobiPukuManager::load(JSUMemoryInputStream& stream)
 	TSmallEnemyManager::load(stream);
 }
 
-TLiveActor* TTobiPukuManager::createEnemyInstance()
+TSpineEnemy* TTobiPukuManager::createEnemyInstance()
 {
 	return new TTobiPuku("とびプク");
 }
 
-TLiveActor* TMoePukuManager::createEnemyInstance()
+TSpineEnemy* TMoePukuManager::createEnemyInstance()
 {
 	return new TMoePuku("モエプク");
 }
