@@ -760,3 +760,31 @@ Retail is **(4, 12)**; the stock header is **(16, 0)**.
 - **Stack arrays' offsets read off their declaration order** (named locals descend from the top, first declared highest; `TMapWarp::init`, 93.8 -> 97.2 with the frame exact). `readU32()` gives each expansion its own low temp; one named `u32` + `operator>>` shares one slot placed above the named block. Each chained `>>` continuation is 8 low bytes and one loop-hoisted `addi rN, rStream, 0`; groupings "3,3"/"4,2"/"5,1" are codegen-identical, only the count is evidence (`loadWarpPointPos`: six).
 - **A flat pointer walk with `++slot` in the `for`'s third clause is the only spelling giving an unroll-by-8 `bdnz` with ctr = 3** (`TNpcParts` ctor 84.8 -> 94.2, 24 slots).
 - Parked shared-header need: `MActor::initSimpleMotionBlend` wants a `frame = -1` defaulted wrapper resolving to `TBaseNPC::mPtrSaveNormal->mMotionBlendFrame` (retail keeps a dead `li r4, -1; cmpwi r4, -1`); a TU-local `static inline` does not reproduce it, since MWCC folds the default through one level, so a second inlined level is involved. riccohook `init` +8 sits *between* two sub-expansions of an inlined JGadget insert (every binding lever puts it at the bottom instead); `emitCamShake_`'s residue is MsSqrtf's `volatile float y` at 0x44 vs 0x40.
+## Research batch 142 (2026-09-18): the `a = b - c` slot is an allocation-*order* difference, and retail's geometry needs dead bindings
+
+Model: `TCoasterEnemy::bind` rebuilt in a scratch TU (private `JGVec3.hpp`, game flags, a `Model` with `mPosition` 0x10 / `mLinearVelocity` 0x94 / `mVelocity` 0xac), which reproduces our object byte for byte.
+Geometry is written **(below, above)** = pool bytes under and over the live `bl sub` temp; retail is **(4, 12)** and the stock header **(16, 0)**, both frame 0x40 with the named local at 0x28 and 55 instructions.
+
+- **Retail's instruction stream holds one 12-byte temp and twelve copy instructions — exactly ours — so batch 119's "two 12-byte slots per statement, from a by-value return" is wrong as a *source* hypothesis.**
+  Both builds reserve the same 28 pool bytes (12 temp + 16 dead); retail puts 4 of the dead bytes below the temp and 12 above, we put all 16 below.
+  The residue is an allocation **order** difference inside one statement, not a missing slot.
+  Every by-value return still costs +6 (61 against 55), reconfirmed on three spellings.
+- **The `below` ladder is finer than batch 116's "8 per reference return": the callee's return type prices it — reference 8, pointer 4, void 0 — and the prices are additive over the levels inside `operator-`.**
+  So `TVec3* operator-=` gives below 12 and `void` gives 8; the by-value-parameter family (`operator-(TVec3 fst, const TVec3&)`) has a floor of 8 because `operator-`'s own reference return is always 8.
+- **below 4 needs a named result *and* both inner steps void-returning**, and it is reachable with `operator-=` and `operator=` left alone:
+  `friend const TVec3& operator-(const TVec3& fst, const TVec3& snd) { TVec3 r; *(Vec*)&r = *(const Vec*)&fst; r.subV(snd); return r; }` plus `void subV(const TVec3& o) { sub(o); }` gives (4, 4) at 55 instructions.
+  A raw `Vec` assignment is the only free copy: `r = fst` costs 8, `r.set(fst)` and `r.set<f32>(fst)` cost 4 (the derived-to-base conversion), `TVec3 r(fst)` costs 4.
+- **The `above` region is fed only by a binding declared *after* the subtraction and never used, at 4 bytes each.**
+  Two of them land retail exactly — (4, 12), frame 0x40, temp 0x10, named 0x28, 55 instructions — and `const TVec3*`, `const TVec3&`, `Vec*`, `const f32*` and a pointer to `snd` are interchangeable.
+  Any binding that is *consumed* (returned through, or used as the `sub` receiver) costs 4 **below** as well and misses.
+  A dead trivial POD (`u8[4..16]`, `f64`, `Vec`) is worth 0 here; a dead `TVec3` after the subtraction is (+4, +12), before it (+12, +0).
+- **The prize is measured and real, and it is still not committable.**
+  The exact-geometry shape is **+9 functions to 100%** (`TEnemyAttachment::bind`, `TChuuHana::bind` and `attackToMario`, `TAmiNoko::bind`, `TKoopaJrSubmarine::bind`, `TCoasterEnemy::bind`, `TLimitKoopa::bind`, `TLeanMirror::loadAfter`, `TLiveActor::bind`), 24 improved against 17 regressed, matched_code 53.57 -> 53.67, total fuzzy flat at 97.40.
+  Reverted: the two bindings are dead padding, and routing `operator-` past `operator-=` drops `__ami__` (weak 0x34, Tongue.cpp) from 100% to MISSING, with `TMario::isTakeSituation` and `toroccoEffect` 100 -> 99.8 and `TSphereLink::moveHead` 85.7 -> 82.2.
+  Read it as the size of the bounty, not as a lever.
+- **Also refuted here, all slot-identical to the stock (16, 0) at 55 instructions.**
+  The **declaration order** of `sub`, `operator-=`, `operator=`, the copy constructor and `operator-` inside the class body (eight permutations, completely inert).
+  The whole caller side: the site as `setLinearVelocity(a - b)`, `m = a - b`, `m.set(a - b)` or `TVec3 d = a - b`, a setter body of `m.set(v)`, a setter taking `TVec3` by value, a setter with two levels, and a setter calling `operator=` explicitly — none of it moves the temp.
+  `operator=` returning `const TVec3&`, `TVec3*` or `void`, or with a memberwise or `set`-forwarding body; `sub` declared out of class with `inline`; `operator-` returning `TVec3&`; a member `operator-`; `return *fst.subP(snd)`.
+- Census notes: retail's `below` is 4 only for the nine single-statement minimal-frame functions, and over all 130 sites it takes 57 distinct values from 4 to 760, because retail allocates per statement in source order — so "temp at the floor + 4" is not a universal target, the *intra-statement* order is.
+  `__mi__` appears nowhere in the map (0 hits), so `operator-` is inline at all 130 sites and its shape cannot be read off a symbol size.

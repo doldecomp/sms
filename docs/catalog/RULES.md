@@ -117,7 +117,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 
 ## Known-open residue classes (stop spending budget)
 
-- The `a = b - c` / `bl TVec3::sub` residue: retail allocates per statement with a by-value return slot per temp, and every by-value spelling costs +6 instructions (frame-gaps.md: "batch 119").
+- The `a = b - c` / `bl TVec3::sub` residue is an intra-statement allocation **order** difference, not a by-value return slot; by-value still costs +6 (frame-gaps.md: "batch 142").
+- Inline-temp price by return type: reference 8, pointer 4, void 0, additive over the levels; a *consumed* binding is 4 below the temp, a *dead* one 4 above (frame-gaps.md: "batch 142").
+- Retail's (4, 12) needs two dead bindings after the subtraction, worth +9 exact functions but dropping `__ami__` to MISSING: bounty, not lever (frame-gaps.md: "batch 142").
+- not: declaration order inside the class, the entire caller side, `operator=`'s return type, `sub` out of class with `inline` — inert for the temp (frame-gaps.md: "batch 142").
 - not: a user `~TVec3() {}` to collapse the prefix — prefix 0 but total fuzzy 97.36 -> 95.87 (frame-gaps.md: "batch 119").
 - Per-call-site inline splits with no lever: the `MapObjBall`/`amiNoko` `sqrt` sites, Koopa's five identical blocks (codegen-tells.md: "Inlining").
 - `theNerve()` expansion is emergent per function from identical source: a 54-79% residual with every instruction matching (codegen-tells.md: "`BathtubKiller`").
