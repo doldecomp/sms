@@ -52,54 +52,43 @@ TCameraShake::TCamShakeInfo* TCameraShake::getUseShakeData_()
 	return best;
 }
 
-// TODO: startShake and keepShake are frame-exact (0x50) and down to one FPR
-// pair each, inside this inlined body: retail does `lfs f3, 0x2c(r31)` then
-// `fmuls f3, f3, f31`, i.e. it loads the amp straight into the multiply's
-// destination register, while we load it into f1 and write f3. Only the *first*
-// of the three expansions differs; the Y and Z ones coalesce the same way
-// retail does, so it is a per-expansion allocation artifact with no source
-// handle left. Rejected (all measured): `f32 a = amp; a *= scale;` and its
-// `a = a * scale` variant (both push this helper out of line, 32%/66%),
-// `scale * amp` (99.5/99.8), declaring `v` before `a` (inert), named amp/vel
-// locals in setShakeAngleAll_ (+0x18), fetching mShakeData[mode] twice instead
-// of naming `save` (+8), moving the `duration` fetch inside the guard (77
-// instructions), reordering the three stores, dropping `#pragma strength off`
-// (inert), and a TU-local by-value getter around the velocity read (99.7).
-// The signature is pinned by the map (all five parameters by value).
+// Both parameters are modified in place rather than copied into locals: that
+// is what makes retail load the amplitude straight into the multiply's
+// destination register (`lfs f3, 0x2c(r31); fmuls f3, f3, f31`) instead of
+// loading it into a scratch register first, and it also drops two statements,
+// which is what keeps this body inlinable at depth 2 (the `f32 a = amp;
+// a *= scale;` split pushed it out of line). Research batch 172.
 void TCameraShake::setShakeAngleOne_(TCameraShake::TCamShakeAngle* angle,
                                      f32 amp, s16 vel, u16 duration, f32 scale)
 {
-	f32 a = amp * scale;
-	s16 v = vel;
+	amp *= scale;
 	if (scale < 0.0f) {
-		a = -a;
-		v = -v;
+		amp = -amp;
+		vel = -vel;
 	}
-	angle->mAmp = a;
-	angle->mDec = a * (1.0f / (f32)duration);
-	angle->mVel = v;
+	angle->mAmp = amp;
+	angle->mDec = amp * (1.0f / (f32)duration);
+	angle->mVel = vel;
 }
 
 void TCameraShake::setShakeAngleAll_(TCameraShake::TCamShakeInfo* info,
                                      const TCamSaveShake* save, u16 duration,
                                      f32 scale)
 {
-	// The velocities are read directly and the amplitudes through get():
-	// TParamT<T>::get() is fabricated as returning `const T&`, and a
-	// reference return reserves an inline temporary per expansion, so this
-	// mixture is what reproduces retail's frame (all six through get() is
-	// 0x60 against retail's 0x50, all six direct is 0x48). Header round 24
-	// measured the shared-header alternative and it is refuted: a by-value
-	// get() for the integer instantiations is total matched_code
-	// 53.73 -> 53.24 tree-wide (53.61 for s32 alone, 52.94 for every T), so
-	// the reference return is retail's and this mixture is a site-level
-	// spelling, not a symptom of the header.
+	// All six parameters are read through get(): TParamT<T>::get() is
+	// fabricated as returning `const T&`, and a reference return reserves an
+	// inline temporary per expansion, which is what reproduces retail's 0x50
+	// frame in both callers (reading the velocities through `.value` instead
+	// is 0x48). Header round 24 measured the shared-header alternative and it
+	// is refuted: a by-value get() for the integer instantiations is total
+	// matched_code 53.73 -> 53.24 tree-wide (53.61 for s32 alone, 52.94 for
+	// every T), so the reference return is retail's.
 	setShakeAngleOne_(&info->mAngleX, save->mShakeAmpX.get(),
-	                  save->mShakeVelX.value, duration, scale);
+	                  save->mShakeVelX.get(), duration, scale);
 	setShakeAngleOne_(&info->mAngleY, save->mShakeAmpY.get(),
-	                  save->mShakeVelY.value, duration, scale);
+	                  save->mShakeVelY.get(), duration, scale);
 	setShakeAngleOne_(&info->mAngleZ, save->mShakeAmpZ.get(),
-	                  save->mShakeVelZ.value, duration, scale);
+	                  save->mShakeVelZ.get(), duration, scale);
 }
 
 void TCameraShake::startShake(EnumCamShakeMode mode, f32 scale)
