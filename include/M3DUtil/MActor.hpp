@@ -106,6 +106,11 @@ public:
 	// fabricated
 	MActorAnmBase* getUnk28(int i) { return mAnmByType[i]; }
 	MActorAnmBck* getAnmBck() { return mAnmBck; }
+	// Rejected (header round 20): writing this to bind its result
+	// (`J3DModel* model = mModel; return model;`) is the level
+	// TTalkCursor::associateNPC's parked `TalkCursorModel` stands in for, but
+	// it breaks the DOL -- source-linked TUs read the model through it and
+	// their codegen moves. The binding has to stay per call site.
 	J3DModel* getModel() const { return mModel; }
 	void unmarkUnk40() { unk40 = false; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(ANM_TYPE_BCK, nullptr); }

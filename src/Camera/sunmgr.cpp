@@ -98,9 +98,10 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 // real `SMS_GetMarioX()`/`SMS_GetMarioZ()` (+8 for the pair), `SMSGetMSound()`
 // (+8) and the BGM handle at its three sites (+8 each) reach retail's 0x60
 // exactly at 107 instructions.
-// The two parked helpers stand in for accessors that bind -- `MSound::getBgm()`
-// over `unk7C` most obviously -- but `MSound/MSound.hpp` is shared with
-// source-linked TUs, so they live here and are reported.
+// Header round 20 promoted the BGM level to `MSound::getBgm()` in
+// `MSound/MSound.hpp` (codegen-identical to the parked `static inline` it
+// replaced, whole-tree). `SunMgrGetMSound` is a global-accessor fork and stays
+// TU-local.
 // Other measured levels, all +8 each and interchangeable with the above:
 // `gpCamera->isThing2()`, `gpSunModel->isInBounds(0.3f)`. Worth zero:
 // `gpMarDirector->setNextStage(9, nullptr)` behind a level.
@@ -112,12 +113,6 @@ static inline MSound* SunMgrGetMSound()
 {
 	MSound* sound = SMSGetMSound();
 	return sound;
-}
-
-static inline JAISound* SunMgrGetBgm(MSound* sound)
-{
-	JAISound* bgm = sound->unk7C;
-	return bgm;
 }
 
 void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -138,9 +133,9 @@ void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (dx * dx + dz * dz < 160000.0f && gpSunModel->isInBounds(0.3f)) {
 		gpMarDirector->setNextStage(9, nullptr);
 		MSound* sound = SunMgrGetMSound();
-		if (SunMgrGetBgm(sound) != nullptr) {
-			SunMgrGetBgm(sound)->setVolume(0.0f, 100, 0);
-			SunMgrGetBgm(sound)->setPitch(1.3f, 100, 0);
+		if (sound->getBgm() != nullptr) {
+			sound->getBgm()->setVolume(0.0f, 100, 0);
+			sound->getBgm()->setPitch(1.3f, 100, 0);
 		}
 	}
 }

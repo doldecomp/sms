@@ -178,14 +178,24 @@ public:
 		inst->crTimeAry()[1].append(tick, param_1);
 	}
 
-	static void endTimer()
+	// fabricated name (no map symbol: every TTimeRec timer helper is fully
+	// inlined). `endTimer()` forwarding to this shared body is the inline
+	// level TSnapTimeObj::perform's parked `SnapTimeObjEndTimer` supplied,
+	// promoted in header round 20: codegen-identical for the two source-linked
+	// callers (TLiveManager::perform, TObjManager::perform) and for
+	// TSnapTimeObj::perform itself, and it takes TEnemyManager::performShared
+	// 94.82 -> 94.84. `startTimer(u32)` keeps its own copy of the body -- see
+	// the trial table at its declaration.
+	static void appendTime(u32 col)
 	{
 		TTimeRec* inst = instance();
 		if (!inst)
 			return;
 		OSTick tick = OSGetTick();
-		inst->crTimeAry()[0].append(tick, 0);
+		inst->crTimeAry()[0].append(tick, col);
 	}
+
+	static void endTimer() { appendTime(0); }
 
 	static TTimeRec* instance() { return _instance; }
 

@@ -60,6 +60,9 @@ u32 TRideCloud::touchWater(THitActor*)
 // place of the binding `if`. `mtx.set(*(const TMtx34f*)...)` also lands it (it
 // routes through the `set(const SMatrix34C&)` overload, whose extra conversion
 // binding is the same +4) but needs a reinterpret cast.
+// Stays parked: a binding override of `getMapCollisionManager()` on
+// TMapObjBase costs three other MoveBG functions (trial table at its
+// declaration in MoveBG/MapObjBase.hpp).
 static inline TMapCollisionManager* RideCloudCollisionManager(TRideCloud* cloud)
 {
 	TMapCollisionManager* manager = cloud->mMapCollisionManager;
@@ -134,25 +137,16 @@ u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 // `SMS_GetMarioSpeedY()` alone (+8 paired with the collision-manager level).
 // Worse: a binding level on `MsClamp<f32>` (+2 instructions),
 // `node.checkFlag()` over `getRailNode()->mFlags` (-8).
-// As in setGroundCollision these stand in for accessors that bind their
-// result on TMapObjBase/TRailMapObj/TGraphTracer, whose headers are shared
-// with source-linked TUs, so they are parked here and reported.
+// Header round 20 promoted the two graph levels to `TRailMapObj::getGraph()`
+// and `getCurrentNode()` in `MoveBG/MapObjRailBlock.hpp` (codegen-identical to
+// the parked helpers they replaced, whole-tree). The rail-flag level has to
+// stay parked: the trial tables at `TRailMapObj::checkRailFlag` and
+// `TMapObjBase::getUnkF4` record why binding inside those bodies is not the
+// same as a level above them.
 static inline bool RideCloudRailFlag(TRideCloud* cloud, u32 flag)
 {
 	bool set = cloud->checkRailFlag(flag);
 	return set;
-}
-
-static inline TGraphWeb* RideCloudGraph(TRideCloud* cloud)
-{
-	TGraphWeb* graph = cloud->unk138->getGraph();
-	return graph;
-}
-
-static inline TGraphNode& RideCloudCurrentNode(TRideCloud* cloud)
-{
-	TGraphNode& node = cloud->unk138->getCurrent();
-	return node;
 }
 
 void TRideCloud::control()
@@ -192,12 +186,12 @@ void TRideCloud::control()
 			// across moveToNextNode/moveTo and reads the node array
 			// back out of it for node2, where re-reading unk138->unk0
 			// costs an extra load and one callee-saved register.
-			TGraphWeb* graph = RideCloudGraph(this);
+			TGraphWeb* graph = getGraph();
 			if (!graph || graph->isDummy())
 				return;
 
 			if (moveToNextNode(unk15C)) {
-				TGraphNode& node = RideCloudCurrentNode(this);
+				TGraphNode& node = getCurrentNode();
 
 				if ((node.getRailNode()->mFlags & 0x1000)) {
 					unk14A = 180;

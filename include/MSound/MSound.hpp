@@ -276,6 +276,15 @@ public:
 	// over the two sites).
 	MSModBgm* getModBgm() { return unk98; }
 
+	// fabricated. The named local is the binding closure batch 110 measured
+	// at TSunMgr::perform, where the BGM handle is read through a level that
+	// binds its result (+8 at each of the three sites).
+	JAISound* getBgm()
+	{
+		JAISound* bgm = unk7C;
+		return bgm;
+	}
+
 public:
 #if defined(VERSION_GMSE01)
 	/* 0x98 */ u8 mWaterFilterOverride;

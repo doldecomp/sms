@@ -359,6 +359,16 @@ public:
 
 	const char* getUnkF4() { return unkF4; }
 
+	// Rejected (header round 20): a binding override of
+	// TLiveActor::getMapCollisionManager() here
+	// (`TMapCollisionManager* manager = mMapCollisionManager; return manager;`)
+	// is the level TRideCloud::setGroundCollision's parked
+	// `RideCloudCollisionManager` stands in for, but every TMapObjBase
+	// subclass that spells `getMapCollisionManager()` pays the binding too:
+	// TLeafBoatRotten::control 100 -> 99.79, TMapObjTree::initMapObj
+	// 99.86 -> 99.79, TBiancoWatermillVertical::setGroundCollision
+	// 96.21 -> 96.03. The binding is per call site; the helper stays parked.
+
 public:
 	enum {
 		MAP_OBJ_FLAG_UNK1                  = 0x1,

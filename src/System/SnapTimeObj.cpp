@@ -22,18 +22,19 @@
 //   a named `u32` for `unk10`, an early return, a
 //     named `u16` for `unk14`, a copy of `cue`         0x34 (inert or worse)
 //   a parked `static inline` taking `this` for `unk10` 0x34, 11 diffs
-// Header-side history (all inside TimeRec.hpp, all rejected there): the trial
-// table at `startTimer(u32)`'s declaration, plus round 18's compensating pair
-// (the named `timeArray` in `endTimer` cancelled by removing it from the
+// Header round 20 promoted that level into TimeRec.hpp: `endTimer()` now
+// forwards to a shared `appendTime(u32)` body, which is codegen-identical here
+// and for the two source-linked `startTimer`/`endTimer` callers. Earlier
+// header-side history (all rejected there): the trial table at
+// `startTimer(u32)`'s declaration, plus round 18's compensating pair (the
+// named `timeArray` in `endTimer` cancelled by removing it from the
 // four-argument `startTimer`), which lands the slot but leaves +8 of frame.
-static inline void SnapTimeObjEndTimer() { TTimeRec::endTimer(); }
-
 void TSnapTimeObj::perform(u32 cue, JDrama::TGraphics*)
 {
 	if ((unk14 & 1)) {
 		if ((cue & CUE_DRAW_INIT) != 0) {
 			TTimeRec::snapGxTimeStatic(0);
-			SnapTimeObjEndTimer();
+			TTimeRec::endTimer();
 		}
 		if ((cue & CUE_DRAW) != 0) {
 			TTimeRec::startTimer(unk10);
