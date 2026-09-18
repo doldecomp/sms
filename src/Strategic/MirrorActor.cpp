@@ -129,6 +129,15 @@ void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 // (92.5%), and dropping the named `mirrorScene` (every pair moves +4 and pair
 // 3 +8, so the pairs are not rigidly anchored: pair 2 then lands on retail's
 // 0xa4/0xa8 while the gaps grow to 24 and 16).
+// Research batch 133 measured the whole push_back chain on an isolated model
+// and ruled the header out: `TList_pointer<T>::insert`'s own frame was 16
+// bytes over (an implicit derived-from-base conversion on its `return`, now
+// fixed and exact), but that leaves this function byte-identical. The three
+// pairs here are the `end()` chain, the derived iterator's construction and
+// `insert`'s argument/sret group; their sizes are already retail's and only
+// the two gaps between them are 8 bytes too wide each. Nothing in
+// std-list.hpp moves them -- see docs/catalog/frame-gaps.md, batch 133, for
+// the twenty-odd spellings measured.
 void TMirrorActor::init(J3DModel* param_1, u16 param_2)
 {
 	unk1A = param_2;

@@ -48,6 +48,13 @@ TSeal::TSeal(const char* name)
 // JGadget push_back temp-pool grouping that blocks SDLModel::entry and
 // TMirrorActor::init (std-list.hpp research item); the scratch Mtx of the
 // inlined setUpUnk8TRS rides along on it.
+// Research batch 133: the extra word is not a header spelling. The isolated
+// model (`TList_pointer<T*>::insert` forced out of line) had its own 16-byte
+// frame excess from an implicit derived-from-base conversion on its `return`,
+// which is now fixed and exact, and that change leaves this function
+// byte-identical. Also rejected here: `getChildren().push_back(this)` and
+// `insert(this)` at the site, and every `const&`/named-temporary/implicit
+// begin-end spelling in std-list.hpp (docs/catalog/frame-gaps.md, batch 133).
 void TSeal::init(TLiveManager* manager)
 {
 	mManager = manager;

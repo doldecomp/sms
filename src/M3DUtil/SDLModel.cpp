@@ -342,6 +342,19 @@ static inline u32 SDLModelCheckSdlFlag(const SDLModel* p, u32 i)
 // cannot carry a dead local. Still a std-list.hpp research item; `++it`
 // is left unapplied because on its own it costs 16 bytes of frame.
 //
+// Research batch 133 settled which word that is: respelling
+// `TList::iterator::operator++(int)` so that it builds its result straight
+// from the node (`TNode_* p = p_; p_ = p_->pNext_; return iterator(p);`), with
+// no `iterator copy` local at all, is byte-identical to the stock body and the
+// extra word survives -- it is post-increment's **by-value return slot**, not
+// its copy. Retail has no such word, so retail's list walks are `++it`; the
+// spelling stays `it++` here only because the frame it leaves is exact and
+// this function is nonmatching either way. The leftover "+20 low / -4 high,
+// +16 frame" translation is the same signature that an *implicit*
+// derived-from-base conversion on a `return` produces (std-list.hpp's
+// `TList_pointer<T>::insert`, closed in the same batch), but nothing on the
+// entry side of this function supplies it.
+//
 // TMirrorActor::init has the same shape (frame exact at 0xd8, first pair 16
 // low, second pair 8 low, the two named locals and the argument word in place),
 // which is why header round 15 looked for one shared cause in std-list.hpp.

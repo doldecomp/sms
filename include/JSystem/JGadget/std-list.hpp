@@ -273,9 +273,19 @@ public:
 	iterator begin() { return iterator(Base::begin()); }
 	iterator end() { return iterator(Base::end()); }
 
+	// The conversion of TList_pointer_void::insert's result to this
+	// iterator type must be spelled explicitly, exactly as begin() and
+	// end() above spell theirs. An *implicit* derived-from-base conversion
+	// on a return statement reserves 16 extra bytes at the bottom of the
+	// frame in MWCC 1.2.5 (research batch 133): with `return Base::insert(
+	// where, what);` this function is 19 instructions and frame 0x40 with
+	// its three pool words at 0x2c/0x30/0x34, against retail's 0x30 and
+	// 0x18/0x1c/0x20 (the emitted weak copy lives in MapWireManager.cpp).
+	// Naming the result instead (`iterator r(Base::insert(...)); return r;`)
+	// is 0x48, worse still.
 	iterator insert(iterator where, const T& what)
 	{
-		return Base::insert(where, what);
+		return iterator(Base::insert(where, what));
 	}
 
 	void push_front(const T& what) { insert(begin(), what); }

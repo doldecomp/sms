@@ -33,6 +33,19 @@ void TPerformList::forEachPerform(
 // is right; a dead 36-40 byte non-trivial local in it would land 0xe8 (it is
 // UNUSED, so a legal carrier) but nothing in a list walk motivates one and it
 // would not fix the grouping either.
+// Research batch 133 mapped every slot. All thirteen are the iterator copies
+// of the two three-deep begin()/end() chains plus the four by-value
+// comparison parameters, and reading the pool downward both builds start
+// [4] +12 and share the top group; retail then has {b2,b1,e2,e1,it}
+// contiguous and a 12-byte gap between `operator!=`'s parameter pair and
+// `operator==`'s, where we have a 4-byte gap higher up and none at the
+// bottom. Only two constructs split that bottom [4] into retail's
+// [2]+12 [2] shape, and both change the slot *count*: deleting the derived
+// iterator's `operator==` (13 slots, but the gap is 8 and the two top groups
+// then go wrong) or its `operator!=` (11 slots). `++it`, `const&` parameters
+// on either level's operators, explicit by-value slicing in `operator==`, and
+// explicit conversions on the `operator++(int)` returns were all measured and
+// none of them produce it -- see docs/catalog/frame-gaps.md, batch 133.
 void TPerformList::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	forEachPerform(getChildren().begin(), getChildren().end(), graphics, cue);

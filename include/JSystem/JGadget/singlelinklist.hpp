@@ -133,6 +133,18 @@ public:
 			return old;
 		}
 
+		// Both of these must exist and both must take their operands by
+		// value: `TPerformList::perform` references exactly thirteen
+		// iterator slots, of which four are these two calls' parameter
+		// copies. Deleting `operator==` here (so `a == b` finds the base's
+		// through an implicit derived-to-base conversion) keeps the count at
+		// thirteen and is the only spelling that splits retail's bottom pool
+		// group the right way, but the gap it leaves is 8 where retail has 12
+		// and the two upper groups then go wrong; deleting `operator!=`
+		// instead drops to eleven slots. Taking `const iterator&`, slicing
+		// by value with an explicit `TSingleNodeLinkList::iterator(a)`, and
+		// spelling `operator!=` without going through `operator==` were all
+		// measured on that function and are worse (research batch 133).
 		friend bool operator==(iterator a, iterator b)
 		{
 			return (TSingleNodeLinkList::iterator&)a
