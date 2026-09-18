@@ -1563,8 +1563,12 @@ MtxPtr TBossEel::getTakingMtx() { return mMActor->getModel()->getAnmMtx(7); }
 
 void TBossEel::calcAndSetCollisionCubeBite_()
 {
+	// Element [1], not [0]: retail's expansion of this body inside
+	// TBossEel::perform reads `lwz r3,4(r3)` off the begin() result, while the
+	// eel's other two mouth-cube sites read +0. The manager is built with two
+	// cubes.
 	TCubeGeneralInfo* mouthCube
-	    = *mMouthCubeManager->unk14->getChildren().begin();
+	    = mMouthCubeManager->unk14->getChildren().begin()[1];
 	mouthCube->unk18.set(mRotation);
 	mouthCube->unkC.set(mPosition.x, mPosition.y + 1900.0f, mPosition.z);
 	mouthCube->unk24.set(1100.0f, 1000.0f, 1100.0f);

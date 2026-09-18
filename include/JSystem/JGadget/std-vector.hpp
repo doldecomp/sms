@@ -329,6 +329,50 @@ public:
 
 	size_t size() const { return Base::size(); }
 
+	// TODO: the ROM `bl`s JGadget::TVector<void*>::begin() (weak 0x8, `lwz
+	// r3,4(r3)`, emitted only from bosseel.cpp and MSoundMainSide.cpp) at
+	// exactly two places: TBossEel::perform's inlined
+	// calcAndSetCollisionCubeBite_ -- which reads element **[1]**, `lwz
+	// r3,4(r3)` after the call, while every other eel site reads [0] -- and
+	// MSStageCubeFade::calcParamRatioInCube, also reached one inline deep,
+	// with a variable index (`slwi r0,rN,2; lwzx`). Every shallower site folds
+	// the chain to a single `lwz 0x10`. So the call needs one or two more
+	// inline levels than `getChildren() -> TVector_pointer<T>::begin() ->
+	// TVector<void*>::begin()` gives, and adding them here is a shared-header
+	// change. Measured (each line is a full `ninja changes_all`):
+	//
+	//   begin()/end() facades here:         MSoundMainSide gains retail's
+	//     `addi 0xc` but no `bl`; TCubeManagerBase ctor -0.5. No `bl`.
+	//   + a probe level inside
+	//     TVector_pointer<T>::begin():      the `bl` appears -- so six levels
+	//     are needed from the emitted caller, and no plausible member supplies
+	//     the sixth.
+	//   TVector<T>::operator[] as
+	//     `begin()[u]` (+ the two deep
+	//     sites respelled `getChildren()[i]`):
+	//                                       no `bl`, but a +4 inline temporary
+	//     everywhere operator[] is used: MarNameRefGen 48.85 -> 57.60 (four
+	//     TNameRefAryT::load exact), DrawSyncManager 19.27 -> 21.77,
+	//     CubeManagerBase 29.12 -> 34.04 (isInCube exact), total matched_code
+	//     47.39 -> 47.43 -- against TMapObjWave::updateHeightAndAlpha 100 ->
+	//     99.96 (its named locals shift +4 inside an unchanged 0x70 frame; a
+	//     `*getChildren().begin()[i]` respelling there gives 0x68 instead, 8
+	//     short) and TApplication::mountStageArchive 87.27 -> 87.17 (the
+	//     target's `lwzx` becomes `add`+`lwz`).
+	//   operator[] facade here forwarding
+	//     to `Base::operator[](i)`:         isInCube exact, but the same
+	//     MapObjWave and mountStageArchive drops; total matched_code -0.02.
+	//   operator[] facade here forwarding
+	//     to `Base::begin()[i]`:            mountStageArchive 87.27 -> 94.05,
+	//     isInAreaCube 82.04 -> 82.45, but CPolarSubCamera::controlByCameraCode_
+	//     99.88 -> 98.10 (the target's `add`+`lwz 0` becomes `lwzx`), and none
+	//     of `&(*unk14)[i]`, `*(begin() + i)`, `begin()[i]` or
+	//     `&getChildren()[i]` recovers it.
+	//
+	// Nothing measured produces the `bl` without a regression, so the header
+	// is left alone. The `[1]` index in calcAndSetCollisionCubeBite_ is a real
+	// finding and holds independently of the inlining question.
+
 	iterator insert(iterator where, const value_type& what);
 	void insert(iterator, size_t, const value_type&);
 
