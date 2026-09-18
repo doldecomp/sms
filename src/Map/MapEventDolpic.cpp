@@ -1,7 +1,6 @@
 #include <Map/MapEventDolpic.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapModel.hpp>
-#include <Map/MapCollisionEntry.hpp>
 #include <Map/PollutionManager.hpp>
 #include <MoveBG/MapObjBase.hpp>
 #include <Camera/CameraShake.hpp>
@@ -23,6 +22,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+// MapCollisionEntry's setUpTrans compound literals emit the zero/one
+// vector pair at parse time; retail has them after the InfectiousStrings
+// block, so this include must stay below it (docs/catalog/linking.md).
+#include <Map/MapCollisionEntry.hpp>
 
 bool TDolpicEventBiancoGate::isFinishedAll() const
 {

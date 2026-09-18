@@ -415,6 +415,7 @@
   "Strategic/Strategy.cpp",
   "Map/MapXlu.cpp",
   "MoveBG/MapObjAirport.cpp",
+  "Map/MapEventDolpic.cpp",
   "Map/MapEventSirena.cpp",
   "MoveBG/MapObjWater.cpp",
   "Map/MapModel.cpp",
