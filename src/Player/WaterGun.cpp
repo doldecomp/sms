@@ -1493,8 +1493,8 @@ void TWaterGun::movement()
 		unk1CD2 += mNozzleList[mCurrentNozzle]->unk378
 		           * mWatergunParams.mNozzleAngleYSpeed.get();
 		unk1CD2 *= mWatergunParams.mNozzleAngleYBrake.get();
-		if (mWatergunParams.mHoverRotMax.get() < unk1CD2) {
-			unk1CD2 = mWatergunParams.mHoverRotMax.get();
+		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
+			unk1CD2 = mWatergunParams.mNozzleAngleYSpeedMax.get();
 		}
 		unk1CD0 = unk1CD0 + unk1CD2;
 	} else {
@@ -1557,6 +1557,14 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	MsMtxSetRotRPH(temp, 0.0f, 0.0f, angleDegrees);
 
 	MTXConcat(mtx, temp, result);
+	// TODO: `temp` sits at 0x20 where retail has 0x1c: the low
+	// (inline-temporary) region is 4 bytes over, while the frame total is
+	// already right (retail's 4 bytes are alignment padding under the
+	// doubles). Measured low-region sizes for the model fetch:
+	// `mFluddModel->mModel` 8, `getModel()` 12, `mFluddModel->getModel()`
+	// 20, `getModel()` forwarding to `MActor::getModel()` 24; retail wants
+	// 16. Dropping the named `angleDegrees` gives exactly 16 but permutes
+	// f3/f4/f5 (95.7%).
 	mFluddModel->getModel()->setBaseTRMtx(result);
 }
 
@@ -1775,8 +1783,8 @@ void TWaterGun::rotateProp(f32 rotation)
 	if (mCurrentNozzle == 5) {
 		unk1CD2 += rotation * mWatergunParams.mNozzleAngleYSpeed.get();
 		unk1CD2 *= mWatergunParams.mNozzleAngleYBrake.get();
-		if (mWatergunParams.mHoverRotMax.get() < unk1CD2) {
-			unk1CD2 = mWatergunParams.mHoverRotMax.get();
+		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
+			unk1CD2 = mWatergunParams.mNozzleAngleYSpeedMax.get();
 		}
 		unk1CD0 = unk1CD0 + unk1CD2;
 	} else {
