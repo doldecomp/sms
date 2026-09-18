@@ -44,9 +44,29 @@ public:
 	                       const JGeometry::TVec3<f32>& velocity);
 	virtual TSpineEnemyParams* getSaveParam() const;
 	virtual f32 getPhaseShift() const { return 0.0f; }
+	// The copy-and-subtract distance helper. The map has no symbol for it,
+	// so retail had it as an inline that expanded everywhere; it is kept in
+	// class here because the only site is an in-class virtual. It is the
+	// level that reaches the map's out-of-line `TVec3<f32>::sub`, `::dot`
+	// and `TUtil<f32>::sqrt` at a copy-and-subtract distance test, which
+	// `TVec3::distance()` cannot do (`isReachedToGoal` 67.46 -> 99.74,
+	// TFishoid's weak copy 98.79 -> 99.93 in header round 22; writing the
+	// three statements into `isReachedToGoal` itself instead loses the level
+	// and scores 60.80). The same body is parked TU-locally as
+	// AnimalNerve.cpp's `calcDist`, emario's `EMarioCalcDist`,
+	// elecNokonoko's `ElecDistTo` and TabePuku's `TabePukuLength`; see the
+	// note on `TVec3::distance()` in JGVec3.hpp for why that member cannot
+	// carry it.
+	static f32 calcDist(JGeometry::TVec3<f32> a,
+	                    const JGeometry::TVec3<f32>& b)
+	{
+		a.sub(b);
+		return JGeometry::TUtil<f32>::sqrt(a.squared());
+	}
+
 	virtual BOOL isReachedToGoal() const
 	{
-		return unk104.getPoint().distance(mPosition) < 100.0f ? TRUE : FALSE;
+		return calcDist(unk104.getPoint(), mPosition) < 100.0f ? TRUE : FALSE;
 	}
 
 	void calcEnemyRootMatrix();
