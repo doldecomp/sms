@@ -9,6 +9,7 @@
 class TMario;
 class TEggYoshi;
 class TYoshiTongue;
+class TBGCheckData;
 class J3DModel;
 class MAnmSound;
 class JAIAnimeSound;
@@ -42,6 +43,8 @@ public:
 	MtxPtr getMtxPtrFootL() const;
 	MtxPtr getMtxPtrFootR() const;
 	void getOff(bool knockedOff);
+	f32 checkGroundYoshi(const JGeometry::TVec3<f32>&, f32*,
+	                     const TBGCheckData**);
 	void init(TMario*);
 	void initInLoadAfter();
 	void kill();

@@ -45,7 +45,8 @@ static const GXColor bodyColor[4] = {
 
 void TYoshi::startVoice(u32 param_1) { }
 
-BOOL YoshiHeadCtrl(J3DNode* param_1, int param_2)
+// (func,local) in the map's closure.
+static BOOL YoshiHeadCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 		const TWaterGun* waterGun = SMS_GetMarioWaterGun();
@@ -819,6 +820,20 @@ void TYoshi::thinkHoldOut()
 		mFlutterTimer = 0;
 		break;
 	}
+}
+
+// TODO: incorrect size (map 0x140, eighty instructions -- far more than the
+// three statements below, so the dead body also swallowed the plane test and
+// the disappear()/land branch that movement() runs twice around it). The
+// signature is read off the mangled name, and the pair of checkGround +
+// setLightData blocks in movement() (the egg-drop arm and the unmounted arm)
+// is what it was factored out of. Left uncalled so movement() is unchanged.
+f32 TYoshi::checkGroundYoshi(const JGeometry::TVec3<f32>& pos, f32* out_y,
+                             const TBGCheckData** out_plane)
+{
+	*out_y = gpMap->checkGround(pos.x, 200.0f + pos.y, pos.z, out_plane);
+	mActor->setLightData(*out_plane, mTranslation);
+	return *out_y;
 }
 
 void TYoshi::movement()
