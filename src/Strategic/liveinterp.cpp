@@ -347,7 +347,7 @@ const TNerveBase<TLiveActor>* NerveGetByIndex(int param_1)
 	}
 }
 
-void linSetBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linSetBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
@@ -359,9 +359,9 @@ void linSetBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->push();
 }
 
-void linSetSubBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
+static void linSetSubBck(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num) { }
 
-void linSetBpk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linSetBpk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
@@ -373,7 +373,7 @@ void linSetBpk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->push();
 }
 
-void linSetBtp(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linSetBtp(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
@@ -385,7 +385,7 @@ void linSetBtp(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->push();
 }
 
-void linSetBtk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linSetBtk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
@@ -397,7 +397,7 @@ void linSetBtk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->push();
 }
 
-void linSetBlk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linSetBlk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
@@ -409,7 +409,7 @@ void linSetBlk(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->push();
 }
 
-void linSetBls(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linSetBls(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TSpcSlice arg = interp->pop();
@@ -421,7 +421,7 @@ void linSetBls(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->push();
 }
 
-void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
 	TLiveActor* owner = interp->getOwner();
@@ -462,7 +462,7 @@ void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 //     the case labels in the source (012, 102, 120, 210) changes nothing, which
 //     matches the catalog's finding that MWCC block placement is not source
 //     order.
-void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
 	TLiveActor* owner = interp->getOwner();
@@ -551,7 +551,7 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	}
 }
 
-void linSetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linSetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(3, &arg_num);
 	TLiveActor* owner = interp->getOwner();
@@ -609,7 +609,7 @@ void linSetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->push();
 }
 
-void linPushNerve(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
+static void linPushNerve(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TLiveActor* owner = interp->getOwner();
