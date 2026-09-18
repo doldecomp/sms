@@ -332,7 +332,7 @@ void TPakkun::setDeadAnm()
 }
 
 // UNUSED
-bool TPakkun::isHideEnd() const { return unk194->isUnk150Zero(); }
+bool TPakkun::isHideEnd() const { return false; }
 
 void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -598,11 +598,7 @@ void TPakkunSeed::rebirth()
 		unk158 = 0;
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 
-		TSmallEnemyManager* manager = (TSmallEnemyManager*)unk16C->getManager();
-		gpPollution->stamp(manager->getUnk58(), mPosition.x, mPosition.y,
-		                   mPosition.z,
-		                   32.0f * manager->getSaveParam2()->getSLStampRange()
-		                       * unk16C->unk158);
+		unk16C->seedPollute(mPosition);
 
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_PAKKUN_SEED_SINK, &mPosition,
 		                                0, nullptr, 0, 4);
@@ -843,8 +839,7 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 
 	// Possibly inlined check?
 	if (seed->unk150 == PAKKUN_SEED_STATE_APPEAR ? true : false) {
-		seed->TEnemyAttachment::set();
-		seed->mScaling.x = seed->mScaling.y = seed->mScaling.z = seed->unk164;
+		seed->seedSet();
 
 		if (spine->getTime() % 5 == 0) {
 			self->updateSquareToMario();
@@ -914,15 +909,7 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 				} else {
 					self->unk1B0               = 0;
 					JGeometry::TVec3<f32> goal = self->unk104.getPoint();
-					self->setGoalPath(TPathNode(goal));
-					f32 speed   = self->unk1A0->mSLSeedSpeedC.get();
-					f32 gravity = self->unk1A0->mSLSeedGravityC.get();
-					JGeometry::TVec3<f32> velocity
-					    = self->calcVelocityToJumpToY(goal, speed, gravity);
-					self->unk198 = 1;
-					self->unk194->setVelocity(velocity);
-					self->unk194->mRotation.set(TPakkunManager::mTestFlyAngX,
-					                            0.0f, 0.0f);
+					self->onShootCurve(goal);
 				}
 				return true;
 			}
@@ -944,29 +931,13 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 				goal.x           = goal.x * moveDistance + self->mPosition.x;
 				goal.z           = goal.z * moveDistance + self->mPosition.z;
 
-				self->setGoalPath(TPathNode(goal));
-				f32 speed   = self->unk1A0->mSLSeedSpeedC.get();
-				f32 gravity = self->unk1A0->mSLSeedGravityC.get();
-				JGeometry::TVec3<f32> velocity
-				    = self->calcVelocityToJumpToY(goal, speed, gravity);
-				self->unk198 = 1;
-				self->unk194->setVelocity(velocity);
-				self->unk194->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f,
-				                            0.0f);
+				self->onShootCurve(goal);
 			} else {
 				f32 circle = self->unk1A0->mSLMarioCircle.get();
 				goal.x += circle * JMASCos(angle);
 				goal.z += circle * JMASSin(angle);
 
-				self->setGoalPath(TPathNode(goal));
-				f32 speed   = self->unk1A0->mSLSeedSpeedC.get();
-				f32 gravity = self->unk1A0->mSLSeedGravityC.get();
-				JGeometry::TVec3<f32> velocity
-				    = self->calcVelocityToJumpToY(goal, speed, gravity);
-				self->unk198 = 1;
-				self->unk194->setVelocity(velocity);
-				self->unk194->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f,
-				                            0.0f);
+				self->onShootCurve(goal);
 			}
 			return true;
 		}
