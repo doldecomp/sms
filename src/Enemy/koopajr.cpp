@@ -25,6 +25,7 @@
 #include <MSound/SoundEffects.hpp>
 // rogue includes needed for matching the string pool, sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionManager.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <math.h>
