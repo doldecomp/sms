@@ -117,6 +117,21 @@ void JPAGetZRotateMtx(s16 z, MtxPtr dst)
 	*ptr++ = 0.0f;
 }
 
+// TODO: 62% and structurally open (batch 152).  Retail's `axis` is
+// *memory-resident*: the cross product's three results are stored to
+// 0x14..0x1c(r1), reloaded for the sum of squares, written again by the
+// zero/scale branch and loaded once more for the matrix, which is why retail
+// reloads a.y/b.y for the dot product (the stores invalidate them) and why
+// x*y and z*x survive in f31/f30 across the dst stores.  Anything that keeps
+// the vector in registers -- every spelling of cross(), a POD `Vec`, an
+// `f32[3]`, an explicit `&axis` passed to a static helper -- costs those 19
+// instructions.  Only a pointer variable aliasing the local (`f32* p =
+// &axis.x`) reproduces it, and that plus named x/y/z locals and the products
+// written inline gets to 111 instructions against retail's 109, with retail's
+// sum of squares still contracted into two fmadds (so its operands are
+// locals, not member reads: `axis.x * axis.x + ...` on a memory vector keeps
+// three fmuls apart).  The `if (sin <= epsilon())` order below is confirmed
+// (cror eq,lt,eq then bne, 56.9 -> 62.3).
 void JPAVecToRotaMtx(MtxPtr dst, JGeometry::TVec3<f32> a,
                      JGeometry::TVec3<f32> b)
 {
@@ -127,10 +142,10 @@ void JPAVecToRotaMtx(MtxPtr dst, JGeometry::TVec3<f32> a,
 	f32 cos = a.dot(b);
 	f32 sin = JGeometry::TUtil<f32>::sqrt(sq);
 
-	if (sin > JGeometry::TUtil<f32>::epsilon()) {
-		axis.scale(__fres(sin));
-	} else {
+	if (sin <= JGeometry::TUtil<f32>::epsilon()) {
 		axis.zero();
+	} else {
+		axis.scale(__fres(sin));
 	}
 
 	f32 oneMinusCos = 1.0f - cos;
@@ -172,6 +187,14 @@ s16 JPAConvertFloatToFix(f32) { }
 void JPAConvertFixVecToFloatVec(JGeometry::TVec3<f32>& param_1,
                                 const JGeometry::TVec3<s16>& param_2)
 {
+	// The uninitialised vector is what retail's frame says: without a
+	// 12-byte class local reserving 16 bytes of dead low region the three
+	// inlined JPAConvertFixToFloat conversion temporaries sit at 0x10 rather
+	// than retail's 0x20 (frame 0x28 against 0x38).  With it every
+	// instruction matches; writing the results through it instead
+	// (`v.x = ...; param_1 = v;`) costs the copy.
+	JGeometry::TVec3<f32> v;
+
 	param_1.x = JPAConvertFixToFloat(param_2.x);
 	param_1.y = JPAConvertFixToFloat(param_2.y);
 	param_1.z = JPAConvertFixToFloat(param_2.z);
@@ -187,21 +210,24 @@ void JPABound(JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,
 {
 }
 
-void JPAGetSVecElement(MtxPtr, JGeometry::TVec3<f32>&) { }
+void JPAGetSVecElement(MtxPtr param_1, JGeometry::TVec3<f32>& param_2)
+{
+	param_2.x = std::sqrtf(param_1[0][0] * param_1[0][0]
+	                       + param_1[1][0] * param_1[1][0]
+	                       + param_1[2][0] * param_1[2][0]);
+	param_2.y = std::sqrtf(param_1[0][1] * param_1[0][1]
+	                       + param_1[1][1] * param_1[1][1]
+	                       + param_1[2][1] * param_1[2][1]);
+	param_2.z = std::sqrtf(param_1[0][2] * param_1[0][2]
+	                       + param_1[1][2] * param_1[1][2]
+	                       + param_1[2][2] * param_1[2][2]);
+}
 
 void JPAGetRMtxSTVecElement(MtxPtr param_1, MtxPtr param_2,
                             JGeometry::TVec3<f32>& param_3,
                             JGeometry::TVec3<f32>& param_4)
 {
-	param_3.x = std::sqrtf(param_1[0][0] * param_1[0][0]
-	                       + param_1[1][0] * param_1[1][0]
-	                       + param_1[2][0] * param_1[2][0]);
-	param_3.y = std::sqrtf(param_1[0][1] * param_1[0][1]
-	                       + param_1[1][1] * param_1[1][1]
-	                       + param_1[2][1] * param_1[2][1]);
-	param_3.z = std::sqrtf(param_1[0][2] * param_1[0][2]
-	                       + param_1[1][2] * param_1[1][2]
-	                       + param_1[2][2] * param_1[2][2]);
+	JPAGetSVecElement(param_1, param_3);
 
 	MTXIdentity(param_2);
 	if (param_3.x != 0.0f) {
@@ -223,20 +249,17 @@ void JPAGetRMtxSTVecElement(MtxPtr param_1, MtxPtr param_2,
 	param_4.set(param_1[0][3], param_1[1][3], param_1[2][3]);
 }
 
+// TODO: every instruction and the frame match; retail holds scale.y in f29 and
+// scale.z in f30 where we hold y in f30 and z in f29 (24 operands).  The three
+// values are an inlined callee's locals, on which declaration order is inert,
+// and spelling JPAGetSVecElement's body as param_2.set(...) reorders the stores
+// and shrinks both callers, so the rotation is still open.
 void JPAGetRMtxTVecElement(MtxPtr param_1, MtxPtr param_2,
                            JGeometry::TVec3<f32>& param_3)
 {
 	JGeometry::TVec3<f32> scale;
 
-	scale.x = std::sqrtf(param_1[0][0] * param_1[0][0]
-	                     + param_1[1][0] * param_1[1][0]
-	                     + param_1[2][0] * param_1[2][0]);
-	scale.y = std::sqrtf(param_1[0][1] * param_1[0][1]
-	                     + param_1[1][1] * param_1[1][1]
-	                     + param_1[2][1] * param_1[2][1]);
-	scale.z = std::sqrtf(param_1[0][2] * param_1[0][2]
-	                     + param_1[1][2] * param_1[1][2]
-	                     + param_1[2][2] * param_1[2][2]);
+	JPAGetSVecElement(param_1, scale);
 
 	MTXIdentity(param_2);
 	if (scale.x != 0.0f) {
@@ -258,7 +281,33 @@ void JPAGetRMtxTVecElement(MtxPtr param_1, MtxPtr param_2,
 	param_3.set(param_1[0][3], param_1[1][3], param_1[2][3]);
 }
 
-void JPAGetRMtxElement(MtxPtr, MtxPtr) { }
+// Reconstructed from the map size (0x24c, exact): the normalisation half of
+// JPAGetRMtxTVecElement without the translation tail.  Retail inlined it
+// nowhere (it is 588 bytes), so only the size vouches for it.
+void JPAGetRMtxElement(MtxPtr param_1, MtxPtr param_2)
+{
+	JGeometry::TVec3<f32> scale;
+
+	JPAGetSVecElement(param_1, scale);
+
+	MTXIdentity(param_2);
+	if (scale.x != 0.0f) {
+		param_2[0][0] = param_1[0][0] / scale.x;
+		param_2[1][0] = param_1[1][0] / scale.x;
+		param_2[2][0] = param_1[2][0] / scale.x;
+	}
+	if (scale.y != 0.0f) {
+		param_2[0][1] = param_1[0][1] / scale.y;
+		param_2[1][1] = param_1[1][1] / scale.y;
+		param_2[2][1] = param_1[2][1] / scale.y;
+	}
+	if (scale.z != 0.0f) {
+		param_2[0][2] = param_1[0][2] / scale.z;
+		param_2[1][2] = param_1[1][2] / scale.z;
+		param_2[2][2] = param_1[2][2] / scale.z;
+	}
+
+}
 
 void JPAGetRTMtxElement(MtxPtr, MtxPtr) { }
 
