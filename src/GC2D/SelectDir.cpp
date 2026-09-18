@@ -95,6 +95,20 @@ int TSelectDir::rsetup()
 	// total gap is only 56 bytes. A per-object slot map (grouping the deltas
 	// by the source construct each slot belongs to) is the prerequisite for
 	// any lever work here; do not spend lever trials on it before that.
+	// Closure re-pass (batch 161) built that map and the residue is the
+	// known-open JGadget pool word.  Sorting the 233 single-displacement
+	// markers by *our* offset, the delta rises monotonically in 4-byte steps
+	// through the low pool -- our slots run 0x204/0x208, 0x20c-0x21c,
+	// 0x220-0x230, 0x234-0x244, 0x248-0x258, 0x25c... at a stride of 0x14,
+	// where retail's run 0x220/0x224, 0x22c-0x23c, 0x244-0x254, 0x25c-0x26c,
+	// 0x274-0x284, 0x28c... at a stride of 0x18.  Each group is one
+	// `getChildren().push_back()` expansion: the iterator/insert pair stores
+	// five words on both sides, but retail reserves six (0x14 rounded up to
+	// 8), so every expansion costs us four bytes.  The `.28`/`.32` cluster of
+	// deltas is just how many expansions precede a slot; the remaining bands
+	// (0x34 and 0x38 near the top) are the same accumulation after the last
+	// expansion.  RULES.md lists this as the JGadget pool-word class, so no
+	// lever trials here until that class is solved for the tree.
 	void* arcData = SMSLoadArchive("/data/select.arc", 0, 0, 0);
 
 	JKRMemArchive* archive = new JKRMemArchive;
