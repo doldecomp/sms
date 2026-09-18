@@ -112,6 +112,23 @@ bool MSSetSoundGrp::startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
 // float-register permutation in the `unk28`/`unk2C`/`unk44..unk4C`
 // linearTransform block. All register-permutation-class residue, not
 // pursued further this batch.
+//
+// Closure batch 128 added negative results. The r23/r24 assignment is not a
+// declaration-order property at all: splitting the declarations from the
+// assignments (`u32 uVar7; u32 bVar1; ... uVar7 = ...;`, in either order, with
+// the reads left exactly where they are) is byte-identical to the current
+// form, so neither the batch-123 "reorder the declarations" trial nor the
+// declare-before-the-call rule applies here. The other structural item is the
+// duplicated `li r0, 1` at the end of the `bVar2` chain: retail reaches one
+// shared `li r0, 1` both from `param_8 == nullptr` and from the
+// `candidate->unk18` compare, and our ternary emits a second copy plus a
+// branch. Every restructuring is worse, and all of them *add* instructions
+// where the ternary keeps retail's 470: `param_8 == nullptr || (...)` as one
+// boolean expression 96.0% (476 instructions), an `if`/`else if` chain 94.3%
+// (480), swapping the outer ternary arms 98.1% (unchanged), spelling the
+// innermost arm `!(uVar7 < candidate->unk18)` 97.9%. The ternary is right and
+// the merge is an allocator/branch-folding difference downstream of the same
+// register permutation.
 template <typename T>
 bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
                                         u32 param_3, f32 param_4, u32 param_5,
