@@ -66,7 +66,10 @@ public:
 
 class TIceBlock : public TMapObjBase {
 public:
-	TIceBlock(const char* name = "アイスブロック");
+	TIceBlock(const char* name = "アイスブロック")
+	    : TMapObjBase(name)
+	{
+	}
 	virtual void initMapObj();
 	virtual void calc();
 	virtual void control();
@@ -81,7 +84,10 @@ public:
 
 class TBrickBlock : public THideObjBase {
 public:
-	TBrickBlock(const char* name = "レンガブロック");
+	TBrickBlock(const char* name = "レンガブロック")
+	    : THideObjBase(name)
+	{
+	}
 	virtual void initMapObj();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void kill();
@@ -123,7 +129,11 @@ public:
 
 class TSuperHipDropBlock : public TBreakHideObj {
 public:
-	TSuperHipDropBlock(const char* name = "スーパーヒップドロップブロック");
+	TSuperHipDropBlock(const char* name = "スーパーヒップドロップブロック")
+	    : TBreakHideObj(name)
+	    , mMonteBlockBroken(false)
+	{
+	}
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 

@@ -29,7 +29,10 @@ public:
 
 class THideObj : public THideObjBase {
 public:
-	THideObj(const char* name = "隠しオブジェ");
+	THideObj(const char* name = "隠しオブジェ")
+	    : THideObjBase(name)
+	{
+	}
 
 	virtual void touchPlayer(THitActor*);
 };
@@ -37,7 +40,10 @@ public:
 /// Reveals the hidden object upon being sprayed by water
 class TWaterHitHideObj : public THideObjBase {
 public:
-	TWaterHitHideObj(const char* name = "水ヒットオブジェ");
+	TWaterHitHideObj(const char* name = "水ヒットオブジェ")
+	    : THideObjBase(name)
+	{
+	}
 	virtual void load(JSUMemoryInputStream&);
 	virtual u32 touchWater(THitActor*);
 };
@@ -45,7 +51,10 @@ public:
 /// Reveals the hidden object upon touching a fruit
 class TFruitHitHideObj : public THideObjBase {
 public:
-	TFruitHitHideObj(const char* name = "水ヒットオブジェ");
+	TFruitHitHideObj(const char* name = "水ヒットオブジェ")
+	    : THideObjBase(name)
+	{
+	}
 	virtual void load(JSUMemoryInputStream&);
 	virtual void touchActor(THitActor*);
 	virtual void touchFruit(THitActor*);
@@ -54,7 +63,11 @@ public:
 /// Reveals the hidden object upon having a fruit put inside of it
 class TFruitBasket : public TFruitHitHideObj {
 public:
-	TFruitBasket(const char* name = "バスケット");
+	TFruitBasket(const char* name = "バスケット")
+	    : TFruitHitHideObj(name)
+	    , unk150(0)
+	{
+	}
 	virtual void loadAfter();
 	virtual void touchFruit(THitActor*);
 	virtual void countFruit(THitActor*);
@@ -79,7 +92,10 @@ public:
 /// Reveals the hidden object upon being hip-dropped by Mario
 class THipDropHideObj : public THideObjBase {
 public:
-	THipDropHideObj(const char* name = "ヒップドロップオブジェ");
+	THipDropHideObj(const char* name = "ヒップドロップオブジェ")
+	    : THideObjBase(name)
+	{
+	}
 	virtual void touchPlayer(THitActor*);
 };
 

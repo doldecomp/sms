@@ -112,7 +112,10 @@ public:
 
 class TCoverFruit : public TMapObjBase {
 public:
-	TCoverFruit(const char* name = "フタのフルーツ");
+	TCoverFruit(const char* name = "フタのフルーツ")
+	    : TMapObjBase(name)
+	{
+	}
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 

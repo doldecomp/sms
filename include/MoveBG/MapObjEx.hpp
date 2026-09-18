@@ -51,7 +51,10 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void control();
 
-	TMapObjSteam(const char* name = "水蒸気");
+	TMapObjSteam(const char* name = "水蒸気")
+	    : THideObjBase(name)
+	{
+	}
 };
 
 #endif

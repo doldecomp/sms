@@ -77,7 +77,13 @@ public:
 	virtual void control();
 	virtual void draw() const;
 
-	TMapObjElasticCode(const char* name = "ゴムひも");
+	TMapObjElasticCode(const char* name = "ゴムひも")
+	    : TMapObjBase(name)
+	    , mHoldWeight(0.0f)
+	    , mSpringRate(0.0f)
+	    , mSpeedDecay(0.0f)
+	{
+	}
 
 public:
 	/* 0x138 */ f32 mHoldWeight;
