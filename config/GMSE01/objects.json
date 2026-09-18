@@ -455,5 +455,8 @@
   "NPC/NpcColor.cpp",
   "Player/MarioWait.cpp",
   "Player/MarioSwim.cpp",
-  "JSystem/JParticle/JPAParticle.cpp"
+  "JSystem/JParticle/JPAParticle.cpp",
+  "MoveBG/ItemManager.cpp",
+  "NPC/NpcManager.cpp",
+  "JSystem/JDrama/JDRDisplay.cpp"
 ]
