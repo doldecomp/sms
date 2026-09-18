@@ -49,6 +49,19 @@ THitActor* SMS_GetMarioHitActor() { return (THitActor*)gpMarioAddress; }
 
 TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
 
+// TODO: incorrect size (map 0x24, i.e. the same nine instructions as
+// SMS_IsMarioStatusHipDrop) if MARIO_STATUS_WAIT is not the constant; the
+// SMS_IsMarioStatus<X> family all compare mStatus to one exact status, and
+// WAIT is the only "waiting" status in the enum.
+bool SMS_IsMarioStatusWaiting()
+{
+	if (gpMarioOriginal->mStatus == MARIO_STATUS_WAIT) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 bool SMS_IsMarioStatusTypeJumping()
 {
 	return gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING);
@@ -68,6 +81,14 @@ bool SMS_IsMarioStatusHipDrop()
 	}
 }
 
+// TODO: body unknown. The map gives 0x24, the same nine instructions as
+// SMS_IsMarioStatusHipDrop, so this is `mStatus == MARIO_STATUS_HIP_DROP_END`
+// -- but that enumerator's value is not recoverable: nothing in the ROM
+// compares a status against 0x8008AA (the value next to HIP_DROP's 0x8008A9),
+// and no other unexplained `subis rX, rY, 0x80` constant exists. Left empty
+// rather than guessed.
+bool SMS_IsMarioStatusHipDropEnd() { }
+
 bool SMS_IsMarioStatusThrownDown()
 {
 	if (gpMarioOriginal->mStatus == MARIO_STATUS_THROWN_DOWN) {
@@ -86,6 +107,31 @@ bool SMS_IsMarioStatusElecDamage()
 	}
 }
 
+// TODO: body unknown, for the same reason as SMS_IsMarioStatusHipDropEnd:
+// MARIO_STATUS_HIP_DROP_END has no recoverable value. The map's 0x28 is one
+// instruction more than SMS_IsMarioOpeningDoor's two-status compare, which
+// this would otherwise be with the global load replaced by the argument.
+bool SMS_IsStatusHipDropOrHipDropEnd(THitActor* actor) { }
+
+// TODO: incorrect size (map 0x38, ours 0x30). isWearingCap() lives in
+// MarioDraw.cpp so it stays a `bl`, and 0x38 is 14 instructions: 7 of frame
+// (mflr/stw/stwu + lwz/addi/mtlr/blr), the gpMarioOriginal load, the call and
+// five left over. `!bool` is clrlwi/cntlzw/srwi (three, what we get); five is
+// the clrlwi/neg/subic/subfe/clrlwi normalise that `!!` emits (cf.
+// SMS_IsMarioDashing). Writing `!!isWearingCap()` is size-exact and
+// semantically backwards, so it is rejected as a fakematch. The other body
+// that lands on 14 is a direct `!mCap->isModelActive(E_CAP_MODEL_HAT)` --
+// global load, mCap load, argument, call, three-instruction negate -- but
+// which model index is a guess, so the readable spelling is kept.
+bool SMS_IsMarioNoCap() { return !gpMarioOriginal->isWearingCap(); }
+
+// The aloha shirt is MARIO_FLAG_HAS_SHIRT; the map's 0x34 is the same
+// thirteen instructions as SMS_IsMarioDashing, the other checkFlag wrapper.
+bool SMS_IsMarioWearingAloha()
+{
+	return !!gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_SHIRT);
+}
+
 bool SMS_IsMarioHeadSlideAttack()
 {
 	if (gpMarioOriginal->mStatus == MARIO_STATUS_CATCH
@@ -98,6 +144,12 @@ bool SMS_IsMarioHeadSlideAttack()
 
 s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
 
+// TODO: the offset is a guess. The map's 0xc forces exactly the three
+// instructions of SMS_GetMarioHP (global load, 16-bit member load, blr), and
+// unk122 is the only unnamed halfword adjacent to mHealth, but naming it
+// mHealthMax belongs in Mario.hpp and was not done here.
+s16 SMS_GetMarioHPMax() { return gpMarioOriginal->unk122; }
+
 f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
 
 f32 SMS_GetMarioGrLevel() { return gpMarioOriginal->mFloorPosition.y; }
@@ -108,6 +160,15 @@ f32 SMS_GetMarioGravity()
 }
 
 TWaterGun* SMS_GetMarioWaterGun() { return gpMarioOriginal->mWaterGun; }
+
+// TODO: incorrect size (map 0x24). The wrapper is the same size as
+// TMario::getJumpIntoWaterModelData (UNUSED 0x24, MarioDraw.cpp), which is
+// what gets inlined here; that body is still an empty stub, and the return
+// type is unknown (TMarioEffect's own getJumpIntoWaterModelData returns int).
+void SMS_GetMarioJumpIntoWaterModelData()
+{
+	gpMarioOriginal->getJumpIntoWaterModelData();
+}
 
 bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
 {
@@ -129,6 +190,11 @@ bool SMS_IsMarioTouchGround4cm()
 	else
 		return false;
 }
+
+// TODO: incorrect size (map 0x34). TMario::isSpeedZero is UNUSED at 0x38 in
+// MarioMove.cpp and still an empty stub there, so the inlined body -- and this
+// wrapper's return type -- cannot be reached from this TU yet.
+void SMS_IsMarioSpeedZero() { gpMarioOriginal->isSpeedZero(); }
 
 // TODO: 93.8%, and the only function keeping MarioAccess.cpp from being
 // source-linked. The original loads mHolder twice -- once into r0 for the null
@@ -212,6 +278,11 @@ void SMS_WindMoveMario(const JGeometry::TVec3<float>& vec)
 	gpMarioOriginal->windMove(vec);
 }
 
+// TODO: body unknown. The map's 0x14 is five instructions, i.e. a global
+// load, index scaling and one indexed load, but no member of TMario is named
+// or shaped like a "work" array and nothing in the ROM calls this.
+void SMS_GetMarioWork(int index) { }
+
 u32 SMS_GetMarioStatus() { return gpMarioOriginal->mStatus; }
 
 const TBGCheckData* SMS_GetMarioGrPlane()
@@ -230,6 +301,21 @@ const TBGCheckData* SMS_GetMarioRfPlane()
 }
 
 u32 SMS_GetMarioStatus(THitActor* actor) { return ((TMario*)actor)->mStatus; }
+
+// Same shape as SMS_IsMarioTouchGround4cm(), one instruction shorter
+// (map 0x40 against 0x44) because the argument replaces the gpMarioOriginal
+// load.
+bool SMS_IsMarioTouchGround4cm(THitActor* actor)
+{
+	if (((TMario*)actor)->isTouchGround4cm())
+		return true;
+	else
+		return false;
+}
+
+// Same shape as SMS_GetMarioStatus(THitActor*), which the map also gives as
+// 0x8: one load off the argument and a blr.
+f32 SMS_GetMarioSpeedY(THitActor* actor) { return ((TMario*)actor)->mVel.y; }
 
 bool SMS_IsMarioFencing() { return gpMarioOriginal->isFencing(); }
 

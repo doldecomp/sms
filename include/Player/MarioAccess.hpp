@@ -31,8 +31,8 @@ inline bool SMS_CheckMarioFlag(u32 flag)
 
 bool SMS_IsMarioRoofing();
 bool SMS_IsMarioFencing();
-void SMS_GetMarioSpeedY(THitActor*);
-void SMS_IsMarioTouchGround4cm(THitActor*);
+f32 SMS_GetMarioSpeedY(THitActor*);
+bool SMS_IsMarioTouchGround4cm(THitActor*);
 u32 SMS_GetMarioStatus(THitActor*);
 const TBGCheckData* SMS_GetMarioRfPlane();
 const TBGCheckData* SMS_GetMarioWlPlane();
