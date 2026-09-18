@@ -37,3 +37,5 @@ Life sounds: `0x480C` under water, `0x4823` on land, `0x4801` on gain; segment c
 - `ProgSelect`: US strings are five named mutable arrays, not Japanese literals. Width 360 and X 145 are US draw arguments.
 - `HelpActor`: help ID base is `0x33`; `0xE0030` is non-US only.
 - `Application`: shorter disc-error strings shift downstream `.rodata`; see `linking.md`.
+
+- **US debug strings are English where the JP source is Japanese** (batch 100): all 21 `TMenuDirector::setFixedStageValue` stage names (`Beach %d`, `Hotel %d`, `Casino 0/1`, `Park %d`, `Noki %d`, `sea bottom`, `%02d scene %d`, ...), the six Application disc-error messages (raw `\x99` inside "NINTENDO GAMECUBE") and the banner path `/card/mariobnr.bti` (not `_jpn`). A unit whose only nonmatching data rows are Shift-JIS strings in a debug menu should be checked against the target `.rodata` first.
