@@ -943,9 +943,9 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	    = &mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex);
 	JGeometry::TVec3<f32> currentPoint;
 	currentNode->getPoint(&currentPoint);
-	mPosition.x += 0.05f * (currentPoint.x - mPosition.x);
-	mPosition.z += 0.05f * (currentPoint.z - mPosition.z);
-	mPosition.y += 0.05f * (currentPoint.y - mPosition.y);
+	mPosition.x = mPosition.x + 0.05f * (currentPoint.x - mPosition.x);
+	mPosition.z = mPosition.z + 0.05f * (currentPoint.z - mPosition.z);
+	mPosition.y = mPosition.y + 0.05f * (currentPoint.y - mPosition.y);
 
 	if (mStatus != MARIO_STATUS_WAIT)
 		if (canJumpToNode())
