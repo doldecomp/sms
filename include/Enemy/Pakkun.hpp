@@ -35,26 +35,10 @@ enum TPakkunAnimation {
 	PAKKUN_ANM_WAIT          = 9,
 };
 
-// Fabricated
-class TPakkunParams : public TSmallEnemyParams {
+class TPakkunSaveLoadParams : public TSmallEnemyParams {
 public:
-	TPakkunParams(const char* path)
-	    : TSmallEnemyParams(path)
-	    , PARAM_INIT(mSLReadyTime, 100)
-	    , PARAM_INIT(mSLShootRange, 1000.0f)
-	    , PARAM_INIT(mSLSeedGravityS, 0.01f)
-	    , PARAM_INIT(mSLSeedSpeedS, 5.0f)
-	    , PARAM_INIT(mSLSeedGravityC, 0.01f)
-	    , PARAM_INIT(mSLSeedSpeedC, 10.0f)
-	    , PARAM_INIT(mSLMarioCircle, 400.0f)
-	    , PARAM_INIT(mSLLimitMove, 1000.0f)
-	    , PARAM_INIT(mSLMoveDist, 1200.0f)
-	    , PARAM_INIT(mSLGenerateSeedTime, 300)
-	    , PARAM_INIT(mSLGenerateSeedDist, 300.0f)
-	    , PARAM_INIT(mSLDamageHideTime, 300)
-	{
-		TParams::load(mPrmPath);
-	}
+	// UNUSED
+	TPakkunSaveLoadParams(const char* path);
 
 	/* 0x2D4 */ TParamRT<s32> mSLReadyTime;
 	/* 0x2E8 */ TParamRT<f32> mSLShootRange;
@@ -72,12 +56,8 @@ public:
 
 class TPakkunSeed : public TEnemyAttachment {
 public:
-	TPakkunSeed(const char* name = "パックン種")
-	    : TEnemyAttachment(name)
-	    , unk16C(nullptr)
-	    , unk170(0.0f)
-	{
-	}
+	// UNUSED
+	TPakkunSeed(const char* name = "パックン種");
 
 	virtual void calcRootMatrix();
 	virtual void moveObject();
@@ -91,6 +71,8 @@ public:
 	virtual void forceKill();
 	virtual f32 getNowGravity();
 	virtual void shoot();
+	// UNUSED
+	void seedSet();
 
 public:
 	/* 0x16C */ class TPakkun* unk16C;
@@ -119,6 +101,12 @@ public:
 	virtual void shoot();
 
 	void onShootLiner(JGeometry::TVec3<f32>&);
+	// UNUSED
+	void onShootCurve(JGeometry::TVec3<f32>&);
+	// UNUSED
+	void seedPollute(JGeometry::TVec3<f32>&);
+	// UNUSED
+	bool isHideEnd() const;
 
 	static u8 mHeadJntIndex;
 
@@ -128,7 +116,7 @@ public:
 	/* 0x199 */ u8 unk199;
 	/* 0x19A */ u8 unk19A[2];
 	/* 0x19C */ TPakkunSeed** unk19C;
-	/* 0x1A0 */ TPakkunParams* unk1A0;
+	/* 0x1A0 */ TPakkunSaveLoadParams* unk1A0;
 	/* 0x1A4 */ JGeometry::TVec3<f32> unk1A4;
 	/* 0x1B0 */ bool unk1B0;
 	/* 0x1B1 */ bool unk1B1;
@@ -145,7 +133,7 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void kill();
-	virtual TPakkunParams* getSaveParam() const;
+	virtual TPakkunSaveLoadParams* getSaveParam() const;
 	virtual void genRandomItem();
 	virtual void reset();
 	virtual void setBehavior();
@@ -171,7 +159,7 @@ public:
 	static f32 mIgnoreHitWaterY;
 
 public:
-	/* 0x60 */ TPakkunParams* unk60;
+	/* 0x60 */ TPakkunSaveLoadParams* unk60;
 	/* 0x64 */ TWaterEmitInfo* unk64;
 	/* 0x68 */ TWaterEmitInfo* unk68;
 };

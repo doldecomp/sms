@@ -145,6 +145,25 @@ static const char* pakkun_bastable[] = {
 	nullptr,
 };
 
+// UNUSED
+TPakkunSaveLoadParams::TPakkunSaveLoadParams(const char* path)
+    : TSmallEnemyParams(path)
+    , PARAM_INIT(mSLReadyTime, 100)
+    , PARAM_INIT(mSLShootRange, 1000.0f)
+    , PARAM_INIT(mSLSeedGravityS, 0.01f)
+    , PARAM_INIT(mSLSeedSpeedS, 5.0f)
+    , PARAM_INIT(mSLSeedGravityC, 0.01f)
+    , PARAM_INIT(mSLSeedSpeedC, 10.0f)
+    , PARAM_INIT(mSLMarioCircle, 400.0f)
+    , PARAM_INIT(mSLLimitMove, 1000.0f)
+    , PARAM_INIT(mSLMoveDist, 1200.0f)
+    , PARAM_INIT(mSLGenerateSeedTime, 300)
+    , PARAM_INIT(mSLGenerateSeedDist, 300.0f)
+    , PARAM_INIT(mSLDamageHideTime, 300)
+{
+	TParams::load(mPrmPath);
+}
+
 TPakkunManager::TPakkunManager(const char* name)
     : TSmallEnemyManager(name)
     , unk64(nullptr)
@@ -158,8 +177,8 @@ TPakkunManager::TPakkunManager(const char* name)
 void TPakkunManager::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemyManager::load(stream);
-	unk38 = new TPakkunParams("/enemy/pakkun.prm");
-	unk60 = new TPakkunParams("/enemy/staypakkun.prm");
+	unk38 = new TPakkunSaveLoadParams("/enemy/pakkun.prm");
+	unk60 = new TPakkunSaveLoadParams("/enemy/staypakkun.prm");
 	unk64 = new TWaterEmitInfo("/enemy/pakkunwater.prm");
 	unk68 = new TWaterEmitInfo("/enemy/pakkunhide.prm");
 }
@@ -257,7 +276,7 @@ void TPakkun::init(TLiveManager* manager)
 	TSmallEnemy::init(manager);
 	mActorType = ACTOR_TYPE_ENEMY | 4;
 	unk150     = 17;
-	unk1A0     = (TPakkunParams*)getSaveParam();
+	unk1A0     = (TPakkunSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNervePakkunGenerate::theNerve());
 
 	TPathNode marioNode((THitActor*)gpMarioAddress);
@@ -312,6 +331,9 @@ void TPakkun::setDeadAnm()
 	}
 }
 
+// UNUSED
+bool TPakkun::isHideEnd() const { return unk194->isUnk150Zero(); }
+
 void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!checkLiveFlag(LIVE_FLAG_UNK200)) {
@@ -349,6 +371,15 @@ void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// UNUSED
+void TPakkun::seedPollute(JGeometry::TVec3<f32>& position)
+{
+	TSmallEnemyManager* manager = (TSmallEnemyManager*)getManager();
+	gpPollution->stamp(manager->getUnk58(), position.x, position.y, position.z,
+	                   32.0f * manager->getSaveParam2()->getSLStampRange()
+	                       * unk158);
+}
+
 void TPakkun::onShootLiner(JGeometry::TVec3<f32>& direction)
 {
 	JGeometry::TVec3<f32> goal = mPosition;
@@ -366,6 +397,19 @@ void TPakkun::onShootLiner(JGeometry::TVec3<f32>& direction)
 	direction.y = -5.0f;
 	direction.z *= speed;
 	unk194->setVelocity(direction);
+}
+
+// UNUSED
+void TPakkun::onShootCurve(JGeometry::TVec3<f32>& goal)
+{
+	setGoalPath(TPathNode(goal));
+	f32 speed   = unk1A0->mSLSeedSpeedC.get();
+	f32 gravity = unk1A0->mSLSeedGravityC.get();
+	JGeometry::TVec3<f32> velocity
+	    = calcVelocityToJumpToY(goal, speed, gravity);
+	unk198 = 1;
+	unk194->setVelocity(velocity);
+	unk194->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f, 0.0f);
 }
 
 void TPakkun::behaveToWater(THitActor* hit_actor)
@@ -413,6 +457,14 @@ void TPakkun::shootIn()
 void TPakkun::shoot() { unk194->shoot(); }
 
 const char** TPakkun::getBasNameTable() const { return pakkun_bastable; }
+
+// UNUSED
+TPakkunSeed::TPakkunSeed(const char* name)
+    : TEnemyAttachment(name)
+    , unk16C(nullptr)
+    , unk170(0.0f)
+{
+}
 
 void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model_name)
 {
@@ -501,8 +553,9 @@ void TPakkunSeed::behaveToHitGround()
 
 f32 TPakkunSeed::getNowGravity()
 {
-	TPakkunParams* params = (TPakkunParams*)unk16C->getSaveParam();
-	f32 gravity           = params->mSLSeedGravityS.get();
+	TPakkunSaveLoadParams* params
+	    = (TPakkunSaveLoadParams*)unk16C->getSaveParam();
+	f32 gravity = params->mSLSeedGravityS.get();
 	if (unk150 == PAKKUN_SEED_STATE_CIRCLE) {
 		gravity = params->mSLSeedGravityC.get();
 	}
@@ -596,6 +649,13 @@ void TPakkunSeed::set()
 	mPosition.x = mtx[0][3];
 	mPosition.y = mtx[1][3] - 50.0f;
 	mPosition.z = mtx[2][3];
+}
+
+// UNUSED
+void TPakkunSeed::seedSet()
+{
+	TEnemyAttachment::set();
+	mScaling.x = mScaling.y = mScaling.z = unk164;
 }
 
 void TPakkunSeed::forceKill()
@@ -758,7 +818,7 @@ void TStayPakkun::kill()
 
 void TStayPakkun::shoot() { unk194->shoot(); }
 
-TPakkunParams* TStayPakkun::getSaveParam() const
+TPakkunSaveLoadParams* TStayPakkun::getSaveParam() const
 {
 	return ((TPakkunManager*)mManager)->unk60;
 }
