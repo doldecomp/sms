@@ -432,5 +432,7 @@
   "Map/Sky.cpp",
   "NPC/NpcCoin.cpp",
   "Strategic/question.cpp",
-  "GC2D/BoundPane.cpp"
+  "GC2D/BoundPane.cpp",
+  "THPPlayer/THPPlayer.c",
+  "MoveBG/MapObjEx.cpp"
 ]
