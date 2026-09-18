@@ -395,6 +395,18 @@ public:
 
 	f32 squared() const { return dot(*this); }
 
+	// The summed form is right: `-fp_contract on` folds it into two `fmadds`,
+	// which is what TShine::calc (the only user of this overload) wants.
+	// Ruled out in header round 16: three named squares
+	// (`f32 sqX = dx * dx; ... return sqX + sqY + sqZ;`), which keeps the
+	// three `fmuls` apart. Retail has that uncontracted shape at
+	// CPolarSubCamera::getNoticeActor_'s two notice-distance sites and at
+	// ctrlMultiPlayerCamera_'s inner loop, but spelling it here costs
+	// TShine::calc (99.9 -> 95.5) and the Camera sites also need the helper to
+	// be its own inline level, so they keep a TU-local one (see
+	// CameraNoticeSquaredDist). The map has no squared-distance symbol at all
+	// and only `CLBSquared<f>__Ff` (weak, 8 bytes, CameraNotice.cpp), so
+	// nothing supports a shared helper.
 	f32 squared(const TVec3& other) const
 	{
 		f32 dx = x - other.x;

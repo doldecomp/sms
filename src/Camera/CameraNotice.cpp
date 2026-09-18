@@ -26,11 +26,18 @@ static const char* sNoticeActorManagerName[] = {
 
 const char* bossGesoViewObjName = "ボスゲッソー";
 
-// Parked TU-local: both notice-distance sites keep their three products apart
-// (`fmuls` x3 + `fadds` x2) where JGeometry::TVec3<f32>::squared(const TVec3&)
-// contracts them into `fmadds`, so retail reached the squared distance through
-// a helper with three named squares rather than through `squared()`. Promotion
-// (as a TVec3 member or a MathUtil free function) is a header item.
+// TU-local and staying that way (decided in header round 16). Both
+// notice-distance sites keep their three products apart (`fmuls` x3 +
+// `fadds` x2) where JGeometry::TVec3<f32>::squared(const TVec3&) contracts
+// them into `fmadds`, and the helper has to be its own inline level. Trials on
+// getNoticeActor_ (79.7% with the form below):
+//   * three named squares spelled out at both sites, no helper: 77.2%
+//   * helper body using CLBSquared<f32> for each square: 71.3%
+//   * three named squares in TVec3::squared(const TVec3&) itself: costs
+//     TShine::calc (99.9 -> 95.5), the only user of that overload
+// The map offers no squared-distance symbol anywhere and only
+// `CLBSquared<f>__Ff` (weak, 8 bytes, from this TU), so there is no evidence
+// for a shared header helper; CameraMultiPlayer's inner loop parks its own.
 static inline f32 CameraNoticeSquaredDist(const JGeometry::TVec3<f32>& a,
                                           const JGeometry::TVec3<f32>& b)
 {
