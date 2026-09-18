@@ -113,6 +113,16 @@ BOOL TMario::barWait()
 
 BOOL TMario::barClimb()
 {
+	// TODO: instructions exact, frame 0x60 vs retail's 0x80. Routing every
+	// `mHolder->` read through `getHolder()` reaches 0x80 exactly, but the
+	// five `mPosition.y + mHolderHeightDiff` sites then pair f0/f1 the other
+	// way round from retail (retail puts the first-loaded operand in f0) and
+	// swapping the addition's operands changes nothing. Accessor steps
+	// measured here: the null test plus the two `getActorType()` receivers
+	// +8, `SMSGetMarDirector()` over `gpMarDirector` +8 (kept), the .x/.z
+	// copies plus the subtraction +8 together, and the five fadds sites the
+	// remaining 0x18. `mHolder->getPosition().y` is +16 per site and flips
+	// the same registers.
 	if (mHolder == nullptr)
 		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 
@@ -147,15 +157,15 @@ BOOL TMario::barClimb()
 		setAnimation(ANIM_TREE_CLIMB, v * rate + 1.0f);
 	}
 
-	if (mHolder->getActorType() == 0x40000039) {
+	if (getHolder()->getActorType() == 0x40000039) {
 		if (mHolderHeightDiff > 500.0f) {
 			mHolderHeightDiff = 500.0f;
 			mPosition.y       = mHolder->mPosition.y + mHolderHeightDiff;
 		}
 	}
 
-	if (mHolder->getActorType() == 0x40000246) {
-		u8 state = gpMarDirector->mMap;
+	if (getHolder()->getActorType() == 0x40000246) {
+		u8 state = SMSGetMarDirector()->mMap;
 		if (state == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;
