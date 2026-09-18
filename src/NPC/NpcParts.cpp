@@ -53,15 +53,19 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(unk60->getActorType() - 0x4000001);
 
-	// Retail clears the array with one flat 24-element loop (unrolled by eight
-	// over three `bdnz` iterations), not as a nested 2x12 walk.
-	// TODO: 32 instructions short of retail's 268. The residue is the inner
-	// loop's addressing: retail walks `initInfo->unk4` and `unk0` with byte
-	// offsets kept in callee-saved registers and spills initInfo to the stack,
-	// where we recompute indices.
-	TSharedParts** slot = &unk0[0][0];
-	for (int i = 0; i < 2 * 12; ++i)
-		slot[i] = nullptr;
+	// TODO: the clearing loop. Retail walks a copied base pointer
+	// (`addi r3, r20, 0`) in eight-store steps of 0x20 over a `bdnz` with
+	// ctr = 3, i.e. a 24-trip loop unrolled by eight with no remainder path.
+	// Measured: a flat `slot[i] = nullptr` / `*slot++ = nullptr` over 24, and
+	// the same body in an inlined `static inline` helper taking the pointer
+	// and the count, all get *fully* unrolled into 24 stores at constant
+	// offsets off `this` (79.8%); this nested 2x12 walk is the only spelling
+	// that keeps a real loop, and it unrolls the 12-trip inner loop by eight
+	// with a remainder path (82.6%, and 83.5% with the if/else below).
+	// Whatever retail wrote, MWCC could not fold the base address there.
+	for (int j = 0; j < 2; ++j)
+		for (int i = 0; i < 12; ++i)
+			unk0[j][i] = nullptr;
 
 	for (int i = 0; i < 12; ++i) {
 		const TNpcModelData* iVar10 = initInfo->unk4[i];
@@ -78,29 +82,40 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 			if (j >= unk60->getManager()->unk28)
 				break;
 
-			const TNpcModelData* puVar6 = &initInfo->unk4[i][j];
-			const char* puVar3          = puVar6->unk8[0];
+			const char* puVar3 = initInfo->unk4[i]->unk8[j];
 			if (puVar3 == nullptr)
 				continue;
 
-			int iVar6 = strcmp(puVar6->unk0, cNpcPartsNameRootJoint) == 0
-			                ? -1
-			                : unk60->mMActorKeeper->getMActor(j)
-			                      ->getModel()
-			                      ->getModelData()
-			                      ->getJointName()
-			                      ->getIndex(initInfo->unk4[i + j]->unk0);
+			// TODO: header item. Retail reads the joint name with the same
+			// `j * 4` byte offset it uses for `unk8[j]` (`lwzx r4, r4, r28`
+			// straight off `initInfo->unk4[i]`), so TNpcModelData's first two
+			// words are one `const char* unk0[2]` -- a per-MActor-slot joint
+			// name -- not `const char* unk0; u32 unk4;`. The data tables in
+			// NpcInitData.cpp keep the same bytes under brace elision, and
+			// NpcManager already spells the sibling array `modelData->unk8[j]`.
+			// Until NpcInitData.hpp is fixed the `[j]` cannot be written here.
+			int iVar6;
+			if (strcmp(initInfo->unk4[i]->unk0, cNpcPartsNameRootJoint)
+			    == 0) {
+				iVar6 = -1;
+			} else {
+				iVar6 = unk60->mMActorKeeper->getMActor(j)
+				            ->getModel()
+				            ->getModelData()
+				            ->getJointName()
+				            ->getIndex(initInfo->unk4[i]->unk0);
+			}
 
 			TNPCManager* manager    = (TNPCManager*)unk60->getManager();
 			SDLModelData* modelData = manager->getPartsSDLModelData(puVar3);
-			unk0[i][j] = new TSharedParts(unk60, iVar6, modelData, 3);
-			if (initInfo->unk4[j]->unk2B)
-				SMS_UnifyMaterial(unk0[i][j]->getMActor()->getModel());
+			unk0[j][i] = new TSharedParts(unk60, iVar6, modelData, 3);
+			if (initInfo->unk4[i]->unk2B)
+				SMS_UnifyMaterial(unk0[j][i]->getMActor()->getModel());
 
 			switch (unk60->getActorType()) {
 			case 0x4000018:
 				if (j != 0 || (i != 3 && i != 4)) {
-					TSharedParts* parts = unk0[i][j];
+					TSharedParts* parts = unk0[j][i];
 
 					J3DModelData* pJVar17
 					    = parts->getMActor()->getModel()->getModelData();
@@ -123,7 +138,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 						if (iVar6 == -1)
 							iVar6 = TBaseNPC::mPtrSaveNormal->mMotionBlendFrame
 							            .get();
-						unk0[i][j]->getMActor()->initSimpleMotionBlend(iVar6);
+						unk0[j][i]->getMActor()->initSimpleMotionBlend(iVar6);
 						break;
 					}
 				}
@@ -131,7 +146,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 
 			case 0x4000010:
 				if (i == 0 && j == 9)
-					unk0[i][j]->getMActor()->initSimpleMotionBlend(20);
+					unk0[j][i]->getMActor()->initSimpleMotionBlend(20);
 				break;
 
 			case 0x4000015:
@@ -140,21 +155,21 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 					if (iVar6 == -1)
 						iVar6
 						    = TBaseNPC::mPtrSaveNormal->mMotionBlendFrame.get();
-					unk0[i][j]->getMActor()->initSimpleMotionBlend(iVar6);
+					unk0[j][i]->getMActor()->initSimpleMotionBlend(iVar6);
 				}
 				break;
 			}
 
 			for (int k = 0; k < 3; ++k) {
 				const TColorChangeInfo* ccInfo
-				    = initInfo->unk4[i][j].unk10[k].unk0;
+				    = initInfo->unk4[i]->unk10[k].unk0;
 				if (ccInfo != nullptr)
-					SMS_InitChangeNpcColor(unk0[i][j]->getMActor(), ccInfo,
+					SMS_InitChangeNpcColor(unk0[j][i]->getMActor(), ccInfo,
 					                       param3, param4);
 			}
 
 			if (param4 != nullptr) {
-				J3DModel* pJVar18     = unk0[i][j]->getMActor()->getModel();
+				J3DModel* pJVar18     = unk0[j][i]->getMActor()->getModel();
 				J3DModelData* pJVar15 = pJVar18->getModelData();
 				u16 matNum            = pJVar15->getMaterialNum();
 				for (u16 k = 0; k < matNum; ++k) {
@@ -168,7 +183,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 				}
 			}
 
-			unk0[i][j]->getMActor()->setLightType(LIGHT_TYPE_OBJECT);
+			unk0[j][i]->getMActor()->setLightType(LIGHT_TYPE_OBJECT);
 		}
 	}
 }
