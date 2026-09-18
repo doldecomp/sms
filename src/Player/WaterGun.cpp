@@ -1050,9 +1050,7 @@ TWaterGun::TWaterGun(TMario* mario)
                          this)
     , mNozzleHover("hover_wg", "/Mario/WaterGun/NozzleTrgHover.prm", this)
     , mNozzleTurbo("back_wg", "/Mario/WaterGun/NozzleTrgTurbo.prm", this)
-    , mWatergunParams("/Mario/WaterGun.prm")
 {
-	mWatergunParams.load(mWatergunParams.mPrmPath);
 	mMario = mario;
 }
 
@@ -1268,6 +1266,26 @@ void TWaterGun::init()
 }
 
 void TWaterGun::initInLoadAfter() { }
+
+// Defined here, not in the header: the map places this UNUSED 0x1f8 body
+// between getEmitMtx and finalDrawInitialize in emission order, i.e. right
+// after initInLoadAfter in source order, and that is what numbers the .prm
+// path and the nine PARAM_INIT names @4093-@4107 -- before createGunBody's
+// model paths and after calcAnimation's animation names.
+TWaterGun::TDeParams::TDeParams()
+    : TParams("/Mario/WaterGun.prm")
+    , PARAM_INIT(mRocketHeight, 1500.0f)
+    , PARAM_INIT(mHHoverHeight, 160.0f)
+    , PARAM_INIT(mLAngleNormal, 60.0f)
+    , PARAM_INIT(mNozzleAngleYSpeed, 1.0f)
+    , PARAM_INIT(mNozzleAngleYBrake, 0.995f)
+    , PARAM_INIT(mNozzleAngleYSpeedMax, 0x2000)
+    , PARAM_INIT(mHoverRotMax, 0x2000)
+    , PARAM_INIT(mHoverSmooth, 0.05f)
+    , PARAM_INIT(mChangeSpeed, 0.1f)
+{
+	TParams::load(mPrmPath);
+}
 
 // TODO: Do i really need to explcitly say this?
 #pragma dont_inline on
