@@ -186,6 +186,15 @@ public:
 
 	static JAIBasic* getInterface() { return basic; }
 
+	// Fabricated name. The level it adds over a raw unk0 read is the fourth
+	// +8 lever MSBgm::init needs (three levers on the JAIData/JAISoundTable
+	// side saturate at 0x40 across all 72 spellings the old trial table
+	// measured; retail wants 0x48 at the same 34 instructions, and the fourth
+	// lever has to be on a class the first three do not touch). Every other
+	// JAIBasic::unk0 reader in the tree matches on the raw member, so the
+	// accessor is applied per site.
+	JAIData* getData() { return unk0; }
+
 public:
 	/* 0x8 */ JAICamera* mAudioCameras;
 	/* 0xC */ JKRSolidHeap* mInterfaceHeap;

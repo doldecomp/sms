@@ -11,19 +11,12 @@ f32 MSBgm::smMainVolume = 0.75f;
 // the other three do not touch: naming the `JAIData*`, binding the
 // `JAISoundTable&` and writing the track clears as a loop saturate at 0x40
 // (all 72 combinations of the older trial table did), and the extra level on
-// `JAIBasic::unk0` supplies the last 8 bytes. `JAIBasic::getData()` as a real
-// member accessor lands the same 0x48 at the same 34 instructions, but
-// JAIBasic.hpp is shared, so the level is parked here as a TU-local
-// `static inline` and reported instead. (Binding the helper's own result
-// inside it is a further +8 and overshoots to 0x50.)
-static inline JAIData* MSBgmGetAudioData(JAIBasic* basic)
-{
-	return basic->unk0;
-}
-
+// `JAIBasic::unk0` -- now `JAIBasic::getData()` -- supplies the last 8 bytes.
+// (Binding the accessor's own result inside it is a further +8 and overshoots
+// to 0x50.)
 void MSBgm::init()
 {
-	JAIData* data        = MSBgmGetAudioData(MSGMSound);
+	JAIData* data        = MSGMSound->getData();
 	JAISoundTable& table = data->mSeTable;
 	u16 count            = table.mSoundMax[16];
 	for (u32 i = 1; i < count; ++i)
