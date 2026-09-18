@@ -50,14 +50,14 @@ static void drawBlack(u16 param_1, u16 param_2)
 void TPollutionCounterBase::setCallback(int param_1) const
 {
 	TDrawSyncManager::smInstance->pushBreakPoint();
-	GXSetDrawSync(getCounterNo(param_1));
+	GXSetDrawSync(getTokenNo(param_1));
 	TDrawSyncManager::smInstance->pushBreakPoint();
 	GXSetDrawSync(0);
 }
 
 void TPollutionCounterBase::drawSyncCallback(u16 param_1)
 {
-	int token = getTokenNo(param_1);
+	int token = getCounterNo(param_1);
 	u32 discard;
 	GXReadPixMetric(&discard, &discard, &discard, &discard, mCounters[token],
 	                &discard);
@@ -73,6 +73,14 @@ void TPollutionCounterBase::initCounters(int max_counters)
 		mCounters[i]     = nullptr;
 		mPolygonCount[i] = 0;
 	}
+}
+
+TPollutionCounterBase::TPollutionCounterBase()
+    : mCounterCapacity(0)
+    , mCounterNum(0)
+    , mCounters(nullptr)
+    , mPolygonCount(nullptr)
+{
 }
 
 void loadPollutionLayer(const u8* param_1, u16 param_2, u16 param_3,
@@ -309,7 +317,8 @@ void TPollutionCounterLayer::drawPollutionLayer(int layer_index) const
 	drawBlack(img->width, img->height);
 	loadPollutionLayer((u8*)img + img->imageDataOffset, img->width, img->height,
 	                   GX_TEXMAP0);
-	initGXforPollutionLayer(layer->mPollutionType, layer->mFlags,
+	u16 flags = layer->mFlags;
+	initGXforPollutionLayer(layer->mPollutionType, flags,
 	                        layer->mPerFrameChangeThreshold,
 	                        layer->mPerFrameChangeDelta);
 
@@ -319,14 +328,19 @@ void TPollutionCounterLayer::drawPollutionLayer(int layer_index) const
 	setCallback(layer_index);
 }
 
-static void makeWorldToPollutionMtx(f32 scale, f32 x, f32 z, TPosition3f* mtx)
+// The two translations really are crossed: the row that scales world X takes
+// -min_z and the row that scales world Z takes -min_x. Both call sites agree,
+// and the parameter order (min_z ahead of min_x) is what puts the two negated
+// products in retail's float registers at the inline sites.
+static void makeWorldToPollutionMtx(f32 scale, f32 min_z, f32 min_x,
+                                    TPosition3f* mtx)
 {
 	mtx->zero();
 
 	mtx->mMtx[0][0] = scale;
-	mtx->mMtx[0][3] = -z * scale;
+	mtx->mMtx[0][3] = -min_z * scale;
 	mtx->mMtx[1][2] = scale;
-	mtx->mMtx[1][3] = -x * scale;
+	mtx->mMtx[1][3] = -min_x * scale;
 }
 
 void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
@@ -345,7 +359,7 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 		              GX_AF_NONE);
 
-		if (mJointObjStampTaskQueue[i].unk0 == 0) {
+		if (info.unk0 == 0) {
 			GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, 0xff });
 		} else {
 			GXSetChanMatColor(GX_COLOR0A0,
@@ -364,14 +378,13 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		                GX_TEVPREV);
 
 		TPosition3f local_6c;
-		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinX,
-		                        layer->mMinZ, &local_6c);
+		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinZ,
+		                        layer->mMinX, &local_6c);
 		GXLoadPosMtxImm(local_6c, GX_PNMTX0);
 
 		j3dSys.setVtxPos(layer->getModelData()->getVtxPosArray());
-		for (int j = 0; j < mJointObjStampTaskQueue[i].mJointObj->getShapeNum();
-		     ++j)
-			drawShape(mJointObjStampTaskQueue[i].mJointObj->getShape(j));
+		for (int j = 0; j < info.mJointObj->getShapeNum(); ++j)
+			drawShape(info.mJointObj->getShape(j));
 	}
 }
 
@@ -599,8 +612,18 @@ void TPollutionCounterLayer::cleanProhibitArea(int param_1) const
 	GXEnd();
 }
 
-void TPollutionCounterLayer::drawModelStamp(int) { }
+// TODO: the map's UNUSED size is 0x5c and this body compiles to 0x20, so
+// fifteen instructions are unrecovered. countTexDegree is byte-identical with
+// the block spelled in place, so the call site is what the symbol's existence
+// proves, not the body.
+void TPollutionCounterLayer::drawModelStamp(int layer_index)
+{
+	drawModelStamp(layer_index);
+}
 
+// TODO: every instruction matches; the frame is 0x68 against retail's 0xc0, so
+// 88 bytes of low region are unaccounted for (the inlined drawPollutionLayer /
+// drawTexStamp / drawRevivalTexStamp chain).
 void TPollutionCounterLayer::countTexDegree(int layer_index)
 {
 	if (!mIsLayerEnabled[layer_index])
@@ -669,8 +692,8 @@ void TPollutionCounterLayer::calcViewMtx()
 		TPollutionLayer* layer = gpPollution->getLayer(i);
 
 		TPosition3f local_a4;
-		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinX,
-		                        layer->mMinZ, &local_a4);
+		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinZ,
+		                        layer->mMinX, &local_a4);
 
 		j3dSys.setViewMtx(local_a4);
 		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], 0);

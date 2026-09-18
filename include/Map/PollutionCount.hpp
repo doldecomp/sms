@@ -12,20 +12,16 @@ class ResTIMG;
 
 class TPollutionCounterBase : public TDrawSyncCallback {
 public:
-	TPollutionCounterBase()
-	    : mCounterCapacity(0)
-	    , mCounterNum(0)
-	    , mCounters(nullptr)
-	    , mPolygonCount(nullptr)
-	{
-	}
+	// Defined out of line in PollutionCount.cpp: the map lists it UNUSED, and
+	// an UNUSED symbol is never weak, so it cannot be a header inline.
+	TPollutionCounterBase();
 
 	void setCallback(int) const;
 	void drawSyncCallback(u16);
 	void initCounters(int);
 
-	virtual int getTokenNo(int) const   = 0;
-	virtual u16 getCounterNo(u32) const = 0;
+	virtual int getCounterNo(u32) const = 0;
+	virtual u16 getTokenNo(int) const   = 0;
 
 public:
 	/* 0x4 */ int mCounterCapacity;
@@ -38,8 +34,8 @@ class TPollutionCounterObj : public TPollutionCounterBase {
 public:
 	TPollutionCounterObj();
 
-	virtual int getTokenNo(int param_1) const { return param_1 + 0x92; }
-	virtual u16 getCounterNo(u32 param_1) const { return param_1 - 0x92; }
+	virtual int getCounterNo(u32 param_1) const { return param_1 - 0x92; }
+	virtual u16 getTokenNo(int param_1) const { return param_1 + 0x92; }
 
 	void draw(int index) const;
 	void countObjDegree() const;
@@ -140,8 +136,8 @@ class TPollutionCounterLayer : public TPollutionCounterBase {
 public:
 	TPollutionCounterLayer();
 
-	virtual int getTokenNo(int param_1) const { return param_1 + 0x7E; }
-	virtual u16 getCounterNo(u32 param_1) const { return param_1 - 0x7E; }
+	virtual int getCounterNo(u32 param_1) const { return param_1 - 0x7E; }
+	virtual u16 getTokenNo(int param_1) const { return param_1 + 0x7E; }
 
 	void drawPollutionLayer(int) const;
 	void drawJointObjStamp(int) const;
