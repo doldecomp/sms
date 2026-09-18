@@ -231,13 +231,7 @@ static void SetFogBase(const J3DFogInfo* fog)
 // SMS_InitPacket_* helpers. The user area's first word is the packet type; the
 // jump table in .data has eleven entries, so types 0-10 all exist even though
 // type 4 (a nested display list) has no SMS_InitPacket_* constructor here.
-//
-// TODO: retail ends with `li r3, 1`, so the real signature returns
-// BOOL/int. J3DCallBackPacket::CallbackT in
-// include/JSystem/J3D/J3DGraphBase/J3DPacket.hpp is declared
-// `void (*)(J3DCallBackPacket*, int)`; changing it to return BOOL is a shared
-// header item and is the last instruction of this function.
-static void ShapePacketCallBackFunc(J3DCallBackPacket* packet, int phase)
+static BOOL ShapePacketCallBackFunc(J3DCallBackPacket* packet, int phase)
 {
 	static const GXColor sFogOffColor = { 0, 0, 0, 0 };
 
@@ -336,6 +330,8 @@ static void ShapePacketCallBackFunc(J3DCallBackPacket* packet, int phase)
 			break;
 		}
 	}
+
+	return TRUE;
 }
 
 static J3DShapePacket* InitPacket_Sub(J3DModel* model, u16 mat_idx)

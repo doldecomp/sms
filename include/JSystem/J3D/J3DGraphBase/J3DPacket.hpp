@@ -76,7 +76,10 @@ protected:
 
 class J3DCallBackPacket : public J3DPacket {
 public:
-	typedef void (*CallbackT)(J3DCallBackPacket*, int);
+	// The retail callback `ShapePacketCallBackFunc` (src/MarioUtil/PacketUtil.cpp)
+	// ends in `li r3, 1`, so the callback returns a value; J3DNode.hpp's sibling
+	// `J3DNodeCallBack` typedef spells that return type `BOOL`.
+	typedef BOOL (*CallbackT)(J3DCallBackPacket*, int);
 
 	J3DCallBackPacket() { mpCallBack = nullptr; }
 
