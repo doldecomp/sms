@@ -23,13 +23,14 @@ void TMirrorCamera::makeMirrorViewMtx() { }
 void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
-		C_MTXPerspective(graphics->mProjMtx.mMtx, unk80 * gpCamera->mFovy,
-		                 gpCamera->mAspect, gpCamera->mNear, gpCamera->mFar);
+		Mtx44Ptr projMtx = graphics->mProjMtx.mMtx;
+		C_MTXPerspective(projMtx, unk80 * gpCamera->mFovy, gpCamera->mAspect,
+		                 gpCamera->mNear, gpCamera->mFar);
 		MTXCopy(unk30, graphics->mViewMtx);
 		graphics->mNearPlane = gpCamera->mNear;
 		graphics->mFarPlane  = gpCamera->mFar;
 		if (cue & CUE_SET_PROJECTION)
-			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
+			GXSetProjection(projMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
 	}
 }
