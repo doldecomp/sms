@@ -55,3 +55,4 @@
 | 176 | structural pass II (Opus, NEW policy) | 269,103 | 130 | 2,070 | 25 | 4 exact (3 real bugs) |
 | 177 | execShake + countTexDegree (Opus, NEW policy) | 240,853 | 65 | 3,705 | 25 | 0 closed; 2 real fixes; both diagnosed |
 | 175 | 4-byte lever re-pass (Opus, NEW policy) | 338,839 | 161 | 2,105 | 38 | 2 linked (MovieSubtitle, MarDirectorPreEntry), fishoid clipBoids exact |
+| 178 | reloc-target pass III, big units (Opus, NEW policy) | 415,597 | 223 | 1,864 | 42 | 13 functions up (30-40 pts each), 0 exact, 0 linked |
