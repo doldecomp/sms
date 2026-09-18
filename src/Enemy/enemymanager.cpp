@@ -53,7 +53,11 @@ void TSharedMActorSet::init(MActorAnmData* param_1, J3DModelData* param_2,
 	unk8 = unk0[0]->getCurAnmIdx(ANM_TYPE_BCK);
 }
 
-void TSharedMActorSet::calcAnm() { }
+void TSharedMActorSet::calcAnm()
+{
+	for (int i = 0; i < unk4; ++i)
+		unk0[i]->calcAnm();
+}
 
 void TSharedMActorSet::setScale(const JGeometry::TVec3<f32>&) { }
 
@@ -127,8 +131,14 @@ void TEnemyManager::createEnemies(int count)
 	if (count < 0)
 		return;
 
+	// TODO: 8 bytes of frame short (0xa8 against retail's 0xb0) and the two
+	// temp groups need +8 and +12 respectively, i.e. one +8 low lever plus
+	// 4 bytes between the groups. Making the loop body a call to the UNUSED
+	// createEnemy() (map 0xf8) is not it -- that costs five structural
+	// differences; search2 with the cast is codegen-identical; push_back
+	// instead of add() lands the frame but breaks the body; a TU-local
+	// binding level on getObjNum() overshoots by 24.
 	for (int i = 0; i < count; ++i) {
-		// TODO: createEnemy() but size won't match :(
 
 		TSpineEnemy* enemy = createEnemyInstance();
 
@@ -222,8 +232,13 @@ static inline J3DModelData* EnemymanagerGetModelData(J3DModel* p)
 
 void TEnemyManager::copyFromShared()
 {
-	Mtx afStack_88;
-	MTXCopy(j3dSys.getViewMtx(), afStack_88);
+	// The concat scratch is declared before the saved view matrix on purpose:
+	// retail puts the saved view at 0x78 and the concat result at 0xa8, and
+	// function-scope named locals are allocated downward from the frame top in
+	// declaration order, so the concat matrix has to come first.
+	Mtx concatMtx;
+	Mtx viewMtx;
+	MTXCopy(j3dSys.getViewMtx(), viewMtx);
 
 	s32 r29 = getActiveObjNum();
 
@@ -243,9 +258,8 @@ void TEnemyManager::copyFromShared()
 			MtxPtr src = enemy->getModel()->getBaseTRMtx();
 			MTXScaleApply(src, src, enemy->mScaling.x, enemy->mScaling.y,
 			              enemy->mScaling.z);
-			Mtx afStack_58;
-			MTXConcat(afStack_88, src, afStack_58);
-			j3dSys.setViewMtx(afStack_58);
+			MTXConcat(viewMtx, src, concatMtx);
+			j3dSys.setViewMtx(concatMtx);
 
 			model->viewCalc();
 
@@ -264,17 +278,19 @@ void TEnemyManager::copyFromShared()
 		}
 	}
 
-	j3dSys.setViewMtx(afStack_88);
+	j3dSys.setViewMtx(viewMtx);
 }
 
 void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 {
-	TTimeRec::startTimer();
+	if (unk30 & 1)
+		TTimeRec::startTimer();
 
 	int num2     = getActiveObjNum();
 	int aliveNum = 0;
 	for (int i = 0; i < num2; ++i)
-		if (!getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
+		if (!((TSpineEnemy*)TObjManager::getObj(i))
+		         ->checkLiveFlag(LIVE_FLAG_DEAD))
 			++aliveNum;
 
 	if (aliveNum <= 0) {
@@ -286,8 +302,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & CUE_CALC_ANIM) {
 		clipEnemies(param_2);
 		for (int i = 0; i < unk44; ++i)
-			for (int j = 0; j < unk40[i].unk4; ++j)
-				unk40[i].unk0[j]->calcAnm();
+			unk40[i].calcAnm();
 		setSharedFlags();
 		updateAnmSoundShared();
 	}
@@ -372,12 +387,17 @@ void TEnemyManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	int num = getActiveObjNum();
-	if (cue & CUE_MOVE) {
-		for (int i = num; i < mObjNum; ++i)
-			getObj(i)->onLiveFlag(LIVE_FLAG_DEAD);
-	} else {
-		for (s32 i = num; i < mObjNum; ++i)
-			; // TODO: debug print or something?
+	// The cue test is inside the loop: MWCC unswitches it and leaves the
+	// dead getObj() load out of the other copy, which is why retail has two
+	// loops over the same range and only one of them touches the object.
+	for (int i = num; i < mObjNum; ++i) {
+		// One accessor level shallower than getObj(i): the three-level
+		// TEnemyManager::getObj costs 8 bytes of frame here (0xa8 against
+		// retail's 0xa0), and the THitActor* spelling without the cast
+		// loses the register assignment.
+		TSpineEnemy* enemy = (TSpineEnemy*)TObjManager::getObj(i);
+		if (cue & CUE_MOVE)
+			enemy->onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
 	for (int i = 0; i < num; ++i)
@@ -482,9 +502,23 @@ int TEnemyManager::countLivingEnemy() const
 
 void TEnemyManager::createCopyAnmMtx(int) { }
 
+// Binding level worth +8 of low region; with getScaling() above it this lands
+// copyAnmMtx's frame at retail's 0xc0 (base 0xb0). Applied at one site only --
+// the level saturates per receiver, so any single site does it.
+static inline MActor* EnemymanagerGetMActor(const TSpineEnemy* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
+// TODO: frame-exact, but retail keeps the scaled animation-frame index in r27
+// and the scratch matrix pointer in r28 while we have them the other way
+// round, which costs the slwi/lfs/addi ordering at 0x88 too. Declaration-order
+// permutations of `f`, `afStack_5C` and `wtf` (six tried) do not move it, and
+// dropping `wtf` loses two instructions retail has.
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 {
-	if (unk4C != enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK))
+	if (unk4C != EnemymanagerGetMActor(enemy)->getCurAnmIdx(ANM_TYPE_BCK))
 		return false;
 
 	int f = enemy->getCurAnmFrameNo(ANM_TYPE_BCK);
@@ -496,7 +530,7 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 	MtxPtr wtf = afStack_5C;
 	MtxPtr mtx = enemy->getMActor()->getModel()->getBaseTRMtx();
 
-	const JGeometry::TVec3<f32>& v = enemy->mScaling;
+	const JGeometry::TVec3<f32>& v = enemy->getScaling();
 	mtx[0][0] *= v.x;
 	mtx[0][1] *= v.y;
 	mtx[0][2] *= v.z;
