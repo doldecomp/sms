@@ -101,6 +101,7 @@
   "JSystem/JAudio/JASystem/JASChannelMgr.cpp",
   "JSystem/JAudio/JASystem/JASCmdStack.cpp",
   "JSystem/JAudio/JASystem/JASDSPBuf.cpp",
+  "JSystem/JAudio/JASystem/JASDSPChannel.cpp",
   "JSystem/JAudio/JASystem/JASDSPInterface.cpp",
   "JSystem/JAudio/JASystem/JASDriverIF.cpp",
   "JSystem/JAudio/JASystem/JASDrumSet.cpp",

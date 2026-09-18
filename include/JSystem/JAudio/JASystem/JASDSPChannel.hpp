@@ -46,12 +46,23 @@ public:
 	u8 getPriority() { return mPriority; }
 	void setPriority(u8 priority) { mPriority = priority; }
 
-	u16 getPriorityTime() { return mPriorityTime; }
+	// The bindings in the two u16 accessors below, and decCBInterval()'s
+	// composition out of them, are the inline temporaries TDSPChannel::updateAll
+	// is built on; see the note there.
+	u16 getPriorityTime()
+	{
+		u16 time = mPriorityTime;
+		return time;
+	}
 	void setPriorityTime(u16 time) { mPriorityTime = time; }
 
-	u16 getCBInterval() { return mCBInterval; }
+	u16 getCBInterval()
+	{
+		u16 interval = mCBInterval;
+		return interval;
+	}
 	void setCBInterval(u16 interval) { mCBInterval = interval; }
-	void decCBInterval() { mCBInterval--; }
+	void decCBInterval() { setCBInterval(getCBInterval() - 1); }
 
 	TChannel* getLogicalChannel()
 	{

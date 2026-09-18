@@ -237,23 +237,15 @@ static OSTick old_time;
 
 f32* TDSPChannel::getHistory() { return (f32*)history; }
 
-// TODO: all 138 instructions match; the residue is frame 0x38 against retail's
-// 0x50, i.e. 24 bytes of dead low region below the two int-to-float conversion
-// pairs (retail parks them at 0x30/0x38, ours at 0x18/0x20), plus one
-// callee-saved register.
-// Measured: a binding level inside `getCBInterval()` is +8, one inside
-// `getPriorityTime()` +8, and a static indexed `getChannel(u32)` accessor
-// (`TDSPChannel* channel = &DSPCH[index]; return channel;`) used for the loop's
-// `&DSPCH[i]` the last +8 -- the three together give frame 0x50 at 138
-// instructions. They were not committed: they are three fabricated levers in a
-// header other JAudio TUs include, and it is the header that has to change.
-// Batch 145 re-measured the function and the register half of this note is
-// stale: `delta` is r29 on both sides now, and all 17 remaining markers are r1
-// displacements (no opcode, insert or delete), so the 24 bytes are all that is
-// left. Neutral or worse in the block: an unbraced block, a split
-// `OSTick delta;` declaration, `dspBuffer` declared inside the loop.
-// Worth +0 here: a binding inside `onUpdate` or `getStatus`. A `getDSPHandle()`
-// accessor lands the frame too but perturbs 29 instructions.
+// Frame 0x50 is reached by three inline-temporary expansions of the u16
+// accessors: `getCBInterval()` and `getPriorityTime()` each bind their member
+// into a named local, and `decCBInterval()` is spelled as
+// `setCBInterval(getCBInterval() - 1)`, which expands `getCBInterval()` a third
+// time. Worth +0 here (tried, all register- and frame-neutral): bindings in
+// `getStatus()`, `getPriority()`, `onUpdate()`, `DSPBuffer::isFinish()` and a
+// `u16` accessor over `DSPBuffer::endRequested`. A binding inside the static
+// `getHandle(u32)` used for the loop's `&DSPCH[i]` also lands the frame, but it
+// introduces a fourth callee-saved register and pushes `delta` from r29 to r28.
 void TDSPChannel::updateAll()
 {
 	DSPInterface::DSPBuffer* dspBuffer;
