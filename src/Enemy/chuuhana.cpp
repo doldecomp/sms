@@ -384,6 +384,7 @@ void TChuuHana::behaveToWater(THitActor* param_1)
 		MsVECNormalize(away, away);
 		away.scale(unk1B4->mSLGetWaterPow.get());
 		margeVelocity(away);
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		mPosition.y += 10.0f;
 		return;
 	}
@@ -471,8 +472,7 @@ void TChuuHana::moveObject()
 	// Track the height range over the last mSLCheckFrame frames; a big
 	// enough swing means it is being stretched and must react.
 	if (unk1A0 == 0) {
-		unk19C = mPosition.y;
-		unk198 = mPosition.y;
+		unk198 = unk19C = mPosition.y;
 		unk1A8 = 0.0f;
 	} else {
 		unk1A0++;
@@ -494,23 +494,19 @@ void TChuuHana::moveObject()
 				    == &TNerveChuuHanaKeepBalance::theNerve())
 					setBckAnm(7);
 				unk1A0 = 1;
-				unk19C = mPosition.y;
-				unk198 = mPosition.y;
+				unk198 = unk19C = mPosition.y;
 			}
 		}
 	}
 
 	// A grounded roll rides the ground normal.
-	if (isRolling()) {
-		if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
-			f32 pow = unk1B4->mSLGetGroundPow.get();
-			JGeometry::TVec3<f32> push(pow * mGroundPlane->mNormal.x, 0.0f,
-			                           pow * mGroundPlane->mNormal.z);
-			JGeometry::TVec3<f32> vel(mVelocity);
-			if (!JGeometry::TVec3<f32>(JGeometry::TVec3<f32>(vel)).isZero())
-				VECAdd(&vel, &push, &vel);
-			vel.y     = 0.0f;
-			mVelocity = vel;
+	if (mSpine->getCurrentNerve() == &TNerveChuuHanaRoll::theNerve()) {
+		if (!isAirborne()) {
+			const JGeometry::TVec3<f32>& normal = mGroundPlane->getNormal();
+			JGeometry::TVec3<f32> push(
+			    unk1B4->mSLGetGroundPow.get() * normal.x, 0.0f,
+			    unk1B4->mSLGetGroundPow.get() * normal.z);
+			margeVelocity(push);
 			mPosition.y += 5.0f;
 			onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
@@ -522,7 +518,7 @@ void TChuuHana::moveObject()
 	unk1EC = mLinearVelocity;
 
 	// Standing on nothing, or on something that is not its mirror: die.
-	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)
+	if (!isAirborne()
 	    && (mGroundPlane->getActor() == nullptr
 	        || mGroundPlane->getActor() != unk218))
 		kill();
@@ -635,16 +631,20 @@ void TChuuHana::bind()
 	mLinearVelocity = moved;
 }
 
-// UNUSED, 0xc4 in the map: add a push into the velocity and pop up.
-// TODO: the guard is still wrong (behaveToWater 63.8%, this body 0xd4 vs the
-// map's 0xc4).  Retail re-reads mVelocity a second time into a low-region
-// temporary, copies that into *two* adjacent 12-byte locals, computes
-// `<copy1>.z * .z + <copy2>.x * .x` (two terms, contracted, y folded away),
-// compares it `<= 0.0f` and then *discards* the result: the branch and the
+// UNUSED, 0xc4 in the map: add a push into the velocity.  Inlined into
+// behaveToWater's Roll branch and moveObject's grounded-roll branch; the
+// onLiveFlag(AIRBORNE) and the position bump belong to the call sites, which
+// order them differently (behaveToWater flags then bumps, moveObject bumps
+// then flags), so neither can be part of this body.
+// TODO: 0xc8 against the map's 0xc4, one instruction over, and both callers
+// stop at ~95-97% here.  Retail re-reads mVelocity into a low-region
+// temporary, copies it into *two* adjacent 12-byte locals, computes
+// `<copy1>.z * .z + <copy2>.x * .x` (two contracted terms, the y folded
+// away), compares it `<= 0.0f` and discards the result -- the branch and the
 // Newton step of TUtil<f32>::sqrt are both gone, which is what a discarded
-// length() leaves behind.  With one nesting level TVec3::dot stays a `bl`
-// here whatever the depth, and the two-term shape means the vector whose
-// length is taken had a statically zero y.  The VECAdd is unconditional.
+// length() leaves.  One nesting level is 0xb0 and leaves TVec3::dot a `bl`;
+// two is 0xc8 and still calls dot.  The two-term shape says the vector whose
+// length is taken had a statically zero y.
 void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& push)
 {
 	JGeometry::TVec3<f32> vel(mVelocity);
@@ -652,7 +652,6 @@ void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& push)
 	VECAdd(&vel, &push, &vel);
 	vel.y     = 0.0f;
 	mVelocity = vel;
-	onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
 BOOL TChuuHana::receiveMessage(THitActor* sender, u32 message)
