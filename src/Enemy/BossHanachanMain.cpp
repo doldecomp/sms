@@ -301,15 +301,15 @@ void TBossHanachan::moveObject()
 
 void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (mLiveFlag & 0x201)
+	if (checkLiveFlag(0x201))
 		return;
-	if (mLiveFlag & 0x40000) {
+	if (checkLiveFlag(0x40000)) {
 		if ((cue & 1) && (graphics->unk0 & 2)) {
 			if (gpMSound->gateCheck(0x6010))
 				MSoundSESystem::MSoundSE::startSoundActor(0x6010, &mPosition,
 				                                        0, nullptr, 0, 4);
 			if (!gpMarDirector->isThing()
-			    && ((mLiveFlag & 0x100000)
+			    && (checkLiveFlag(0x100000)
 			        || !gpMSound->unk98->modBgm(1, 1))) {
 				mLiveFlag |= 0x41;
 				gpItemManager->makeShineAppearWithDemo(
@@ -327,12 +327,13 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			mAngularVelocity.zero();
 			if ((graphics->unk0 & 2)
 			    && mSpine->getLatestNerve() == &TNerveBossHanachanDead::theNerve()
-			    && !(mLiveFlag & 0x100000)) {
+			    && !checkLiveFlag(0x100000)) {
 				mLiveFlag |= 0x100000;
 				MSBgm::stopTrackBGM(1, 30);
 			}
 		} else {
-			if (!(mLiveFlag & 0x80000) && mHitPoints == 3 && mMarchSpeed != 0.0f
+			if (!checkLiveFlag(0x80000) && mHitPoints == 3
+			    && mMarchSpeed != 0.0f
 			    && mSpine->getLatestNerve() != &TNerveBossHanachanTumble::theNerve()) {
 				if (unk1B8 == -1 && gpMarDirector->mState == 4) {
 					unk1B8 = 7200;
@@ -585,7 +586,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			if ((graphics->unk0 & 2) && nerve == &TNerveBossHanachanDead::theNerve()) {
 				if (gpMSound->gateCheck(0x6010))
 					MSoundSESystem::MSoundSE::startSoundActor(0x6010, &mPosition, 0, nullptr, 0, 4);
-				if (!(mLiveFlag & 0x100000))
+				if (!checkLiveFlag(0x100000))
 					gpMSound->unk98->modBgm(1, 1);
 			}
 		}
@@ -657,7 +658,8 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			emitParticle_();
 			emitCamShake_();
 		}
-		if ((mLiveFlag & 0x10000) && mSandPillarActor->curAnmEndsNext(0, nullptr))
+		if (checkLiveFlag(0x10000)
+		    && mSandPillarActor->curAnmEndsNext(0, nullptr))
 			mLiveFlag &= ~0x10000;
 		if (!gpMarDirector->isThing())
 			changeAnmRateAndFrameUpdate_();
@@ -697,7 +699,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 		for (int i = 0; i < 8; ++i)
 			mBodies[i]->getMActor()->viewCalc();
 	}
-	if (mLiveFlag & 0x10000)
+	if (checkLiveFlag(0x10000))
 		mSandPillarActor->perform(cue, graphics);
 }
 
