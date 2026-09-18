@@ -380,8 +380,12 @@ public:
 				f32 twoR = 2.0f * dropRadius;
 				f32 sep2 = 4.0f * (dropRadius * dropRadius);
 				for (TDrop* a = bw->unk88; a < end2; a++) {
-					for (TDrop* b = a + bw->unk8C->intersects.get(); b < end2;
-					     b += bw->unk8C->intersects.get()) {
+					// A do-while, not a for: the ROM enters the body before
+					// the first test, so the last live drop always gets
+					// pushed against the one just past the end (harmless --
+					// the array holds unk70 entries, not unk74).
+					TDrop* b = a + bw->unk8C->intersects.get();
+					do {
 						JGeometry::TVec3<f32> local_2D8;
 						local_2D8.sub(b->unk0, a->unk0);
 						(void)&local_2D8;
@@ -394,9 +398,7 @@ public:
 
 							f32 half = (twoR - dist) / 2.0f;
 
-							local_2D8.x = local_2E4.x * half;
-							local_2D8.y = local_2E4.y * half;
-							local_2D8.z = local_2E4.z * half;
+							local_2D8.scale(half, local_2E4);
 
 							f32 hny = half * local_2E4.y;
 
@@ -420,7 +422,8 @@ public:
 							local_2E4.negate();
 							a->unk30.extend(local_2E4);
 						}
-					}
+						b += bw->unk8C->intersects.get();
+					} while (b < end2);
 				}
 			}
 
@@ -1724,12 +1727,15 @@ void TBathWaterManager::initializeIfYet_()
 	if (unk24 == nullptr) {
 		TBathtub* bathtub = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
 		if (bathtub && bathtub->unk298) {
-			const TBathtubData& data = bathtub->getBathtubData();
+			// Fetched per call and not held in one reference: the ROM hoists
+			// two separate `this + 0x170` values into two registers.
 			for (int actor = 0; actor < 2; ++actor) {
-				unk20[actor]->initialize(unk14[actor], data);
+				unk20[actor]->initialize(unk14[actor],
+				                         bathtub->getBathtubData());
 
 				for (int iter = 0; iter < 200; iter++)
-					TBathWater::TDrop::calcWaterModel(unk20[actor], data);
+					TBathWater::TDrop::calcWaterModel(
+					    unk20[actor], bathtub->getBathtubData());
 			}
 			unk24 = bathtub;
 		}
