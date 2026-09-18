@@ -723,3 +723,8 @@ Also measured there: a `const` accessor causes a CSE (retail reloads `mActorType
 - **An inlined accessor raises its receiver's register priority.** `TMapObjFloatOnSea::initMapObj`: with the raw member MWCC gave `this` the lowest callee-saved register, a one-step rotation of r27-r31 with relative order preserved; `getUnkF4()` put `this` back in r31 (97.6 -> 100). Loop spelling, index type and declaration order were all inert. A pure rotation of the callee-saved set means a member read that should go through its accessor, not a restructured loop.
 - `SMS_RideMoveByGroundActor`: `riding_info->unk0->getRotation().y` on the first rotation read only (the ROM reloads the second raw), plus named `prevYaw`/`yaw`. `SMS_DumpJ3DModel` is an empty UNUSED 4-byte body between `TMultiBtk::update` and `SMS_RideMoveByGroundActor`.
 - `calcAndSetMarioData`: name the two distances before storing them; `getPrevPosition()` is load-bearing (-8 raw); a named nozzle local inlines `getCurrentNozzle`, which retail calls.
+
+## Closure batch 61 tells
+
+- Container loop shape (`TStageEnemyInfoTable::getMatchedInfo`): `getChildren().begin()/end()` rather than the inherited `begin()/end()` makes MWCC keep `&pBegin_`/`&pEnd_` in registers (four callee-saved instead of three); the end named in the same for-init declarator list (`T** it = ..., **last = ...`) hoists its load out of the loop, a separate statement loads end first; dropping a named `*it` local was the last 16 bytes of frame.
+- The map wants `__dt__Q27JGadget35TVector_pointer<P15TStageEnemyInfo>Fv`: `JGadget::TVector_pointer`'s template argument is the pointer type, not the pointee (header item for NameRefPtrAry.hpp / std-vector.hpp).
