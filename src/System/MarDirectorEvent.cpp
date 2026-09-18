@@ -248,6 +248,9 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		}
 		break;
 
+	// The jump table spans 0..12, so 12 is a real case label sharing the
+	// default handling; without it MWCC emits a 12-entry table.
+	case 12:
 	default:
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
