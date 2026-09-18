@@ -118,6 +118,9 @@ public:
 	void endKillerShoot();
 	void killerShoot();
 	void updateAttachPos();
+
+	// fabricated
+	TChorobei* getChorobei() const { return mChorobei; }
 	void hitHead(TBombHei*);
 	void bombScaleUp();
 	void bombShoot();

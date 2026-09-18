@@ -406,11 +406,15 @@ void TCannon::moveObject()
 	}
 	mChorobei->checkHit();
 
+	// The slot order (the zeroing vector above `vel`) says both were
+	// function-scope locals and the zero one was declared first.
+	JGeometry::TVec3<f32> zeroVel;
 	JGeometry::TVec3<f32> vel(mVelocity);
 	mPosition.y += vel.y;
 	mVelocity.y -= getGravityY();
-	if (getPosition().y < mInitialPos.y) {
-		mVelocity   = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+	if (mPosition.y < mInitialPos.y) {
+		zeroVel.set(0.0f, 0.0f, 0.0f);
+		mVelocity   = zeroVel;
 		mPosition.y = mInitialPos.y;
 	}
 
@@ -935,17 +939,17 @@ DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 	TCannon* cannon = (TCannon*)spine->getBody();
 
 	cannon->updateSquareToMario();
-	f32 dist = cannon->mDistToMarioSquared;
+	f32 dist = cannon->getDistToMarioSquared();
 	if (spine->getTime() == 0) {
 		f32 bombDist = cannon->getSaveParams()->getSLBombDist();
 		if (dist < bombDist * bombDist)
 			cannon->setGoalPathMario();
-		cannon->mChorobei->setBckAnm(0x13);
+		cannon->getChorobei()->setBckAnm(0x13);
 	}
 
-	if (cannon->mChorobei->mParts->getMActor()->curAnmEndsNext()
-	    && cannon->mChorobei->mParts->getMActor()->checkCurBckFromIndex(0x13))
-		cannon->mChorobei->setBckAnm(0x12);
+	if (cannon->getChorobei()->mParts->getMActor()->curAnmEndsNext()
+	    && cannon->getChorobei()->mParts->getMActor()->checkCurBckFromIndex(0x13))
+		cannon->getChorobei()->setBckAnm(0x12);
 
 	f32 hideDist = cannon->getSaveParams()->getSLHideDist();
 	if (dist < hideDist * hideDist) {
