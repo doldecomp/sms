@@ -136,6 +136,10 @@ Options:
 - `--no-collapse` — disable match-run collapsing and show every instruction
 - `--range 100-300` — only show instructions at hex offsets 0x100–0x300
 
+`tools/check-relocs.py` finds what `decomp-diff.py` structurally cannot: a relocation pointing at the **wrong symbol** renders with an identical opcode and identical operands, so objdiff scores it 100% and `changes_all` never flags it.
+`python3 tools/check-relocs.py [--mode virt|calls|reloc|all] [-u <unit substring>] [--category game|sdk|jsystem] [--tsv <file>]` ranks the flagged sites over every unlinked unit, smallest bytes-left first: `virt` is a `blrl`-count asymmetry (a devirtualised call, i.e. an explicitly qualified `Base::virtual()`), `calls` a per-function `bl`-target set difference (a wrong or missing callee), `reloc` a relocation-target name mismatch per paired instruction index.
+Literal-pool ids, section-relative names and names differing only in their `$<digits>` suffix are filtered as legitimate renumbering, so every remaining row is a real candidate; read it together with the function's `--clusters` diff.
+
 ### Using `validate-symbol-order.py` (symbols vs the map)
 
 `tools/validate-symbol-order.py` checks a single TU's **function symbols**
