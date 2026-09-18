@@ -5,18 +5,26 @@
 #include <NPC/NpcNerve.hpp>
 #include <Camera/cameralib.hpp>
 
-// TODO: retail *calls* JGeometry::TVec3<f32>::set<f32>(f32, f32, f32) from the
-// unnamed vector's constructor here (the map lists the weak 16-byte symbol for
-// this TU and execWalk's inlined copy has the `bl`), so retail reaches `set`
-// one level deeper than we do - isCanWalk itself is probably inlined at depth 2
-// in execWalk. `getPosition()` in the difference expressions does not move it.
+// The map emits JGeometry::TVec3<f32>::set<f32>(f32, f32, f32) as a local
+// 16-byte instantiation for this TU and execWalk's inlined copy of isCanWalk
+// reaches it with a `bl`, so retail has one inline level between isCanWalk and
+// the unnamed vector's constructor: that puts `set` (three statements) at
+// depth 4, where the allowance is two. Spelling the level as a squared-XZ
+// helper reproduces the call (execWalk 95.8 -> 97.7 and the MISSING symbol is
+// gone); a level *above* isCanWalk instead pushes TPathNode::getPoint() out of
+// line too, which retail expands. Parked here rather than in a shared header
+// because the map has no symbol for it.
+static inline f32 NpcWalkTurnSquaredXZ(const JGeometry::TVec3<f32>& a,
+                                       const JGeometry::TVec3<f32>& b)
+{
+	return JGeometry::TVec3<f32>(a.x - b.x, 0.0f, a.z - b.z).squared();
+}
+
 bool TBaseNPC::isCanWalk() const
 {
 	bool result = true;
 	JGeometry::TVec3<f32> target = unkF4.getPoint();
-	if (JGeometry::TVec3<f32>(target.x - mPosition.x, 0.0f,
-	                          target.z - mPosition.z).squared()
-	    < CLBSquared(10.0f))
+	if (NpcWalkTurnSquaredXZ(target, mPosition) < CLBSquared(10.0f))
 		result = false;
 	return result;
 }
@@ -41,7 +49,15 @@ void TBaseNPC::execWalk(bool param_1)
 		// reading .z/.x (0xdc -> 0xfc -> 0x10c), and execWalk's frame only
 		// reaches 0x130 with both. The source spelling that produces two
 		// copies is unknown; a named copy plus one conversion temporary
-		// reproduces the shape but is surely not what was written.
+		// reproduces the shape but is surely not what was written. New
+		// evidence: retail's three objects sit in the *temp pool* in
+		// ascending creation order, where a named local puts two of them in
+		// the named region above it, so neither vector was a named local.
+		// `MsGetRotFromZaxisY(TVec3(TVec3(getUnkF4().getPoint() -
+		// mPosition)))` reproduces that placement at the same 97.7%, one
+		// unnested temporary drops to 92.7% (frame 0x110), and a TU-local
+		// copy of MsGetRotFromZaxisY taking its axis *by value* is 95.3%
+		// (frame 0x120), so the by-value header spelling is ruled out.
 		JGeometry::TVec3<f32> direction = getUnkF4().getPoint();
 		direction -= mPosition;
 		JGeometry::TVec3<f32> copy;
@@ -91,17 +107,27 @@ void TBaseNPC::execWalk(bool param_1)
 		walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
 }
 
-// TODO: frame 0x60 vs 0x58, one `fmr f2, f0` retail has and we lack (a second
-// variable holding MsGetRotFromZaxis(...).y) and a swapped `fcmpu`. Spelling it
-// as two locals with the compare reversed is worse (99.0 -> 97.3), and
-// getUnkF4() here is worse too (97.9): this site wants the raw member where
-// execWalk wants the accessor.
+// The compare really is `mRotation.y == targetYaw` (retail's `fcmpu cr0, f3,
+// f0` puts the member first); reversing it costs nothing and is the ROM's
+// operand order.
+// TODO: frame 0x60 vs 0x58 and one `fmr f2, f0` retail has and we lack (it
+// loads the returned `.y` into f0 for the compare and copies it into f2, which
+// the MsWrap loop then consumes, so retail read the value twice and MWCC
+// CSE'd it). Spelling the difference unnamed
+// (`MsGetRotFromZaxis(unkF4.getPoint() - mPosition).y`) reproduces retail's
+// slot *structure* -- both objects in the temp pool with the struct-return
+// slot above the difference, where a named local puts the return slot below --
+// but leaves every vector offset 4 low (0x58 frame, 98.8%); `getUnkF4()` or
+// `getPosition()` on top of that lands 0x60 and the exact offsets at the cost
+// of one extra instruction and an r3/r4 argument swap (98.0/97.0). Naming the
+// returned vector instead is 78.9%. Two locals with the compare reversed was
+// 97.3.
 bool TBaseNPC::execUTurn()
 {
 	JGeometry::TVec3<f32> local_24 = unkF4.getPoint();
 	local_24 -= mPosition;
 	f32 targetYaw = MsGetRotFromZaxis(local_24).y;
-	if (targetYaw == mRotation.y)
+	if (mRotation.y == targetYaw)
 		return true;
 
 	if (!isClean() || checkActionFlag(NPC_ACTION_HAPPY))
@@ -128,10 +154,18 @@ bool TBaseNPC::execUTurn()
 	return result;
 }
 
-// TODO: frame 0x50 vs 0x40, uniform +0x10 on every slot (low region). Naming
-// the param fetch makes it worse (0x38), `getRotation().y` for angle1 adds an
-// instruction (99.7 -> 96.9). Two more accessor levels are needed somewhere in
-// the CLBDegToShortAngle / CLBChaseGeneralConstantSpecifySpeed chain.
+// TODO: frame 0x50 vs 0x40, 12 of the 16 bytes below `angle1` (0x30 vs 0x24)
+// and 4 above it. Naming the param fetch makes it worse (0x38),
+// `getRotation().y` for angle1 adds an instruction (99.7 -> 96.9). A
+// `const JGeometry::TVec3<f32>& getUnk1A0() const` level (parked as a TU-local
+// free function for the trial; the real one belongs in the shared
+// NpcBase.hpp) is **+8 with no instruction change at the angle2 site alone**
+// (0x40 -> 0x48) and saturates there: at the compare site or the tail
+// assignment it is +0 and costs 1-3 instructions, and a params rung
+// (`mIndividualParams->mFirstStateTurnSpeed.get()` behind a wrapper) or
+// splitting the three `s16` declarations from their assignments are both +0.
+// So the remaining 8 bytes are a different level in the CLBDegToShortAngle /
+// CLBChaseGeneralConstantSpecifySpeed chain.
 bool TBaseNPC::execTurnToFirstState()
 {
 	if (mRotation.y == unk1A0.y)
