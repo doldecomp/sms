@@ -232,6 +232,26 @@ private:
 	void ctrlMultiPlayerCamera_();
 	void ctrlTalkCamera_();
 	void calcTowerCenterPos_(Vec* result);
+
+	// The tower half of ctrlNormalOrTowerCamera_'s name. It has to exist and
+	// be inlined: the map makes calcTowerCenterPos_ weak with a
+	// `sPositionNameTable$localstatic0$` static, which only an inline member
+	// gets, and an inline callee has no statement budget at depth 1, so
+	// retail's single `bl calcTowerCenterPos_` can only sit at depth 2 -- one
+	// inlined level above it. An in-class body has no budget at depth 1
+	// either, so this wrapper expands and pushes its callee down one.
+	void ctrlTowerCamera_(f32 stickX)
+	{
+		if (stickX != 0.0f) {
+			rotateY_ByStickX_(stickX);
+			execInvalidAutoChase_();
+			unk64 |= CAMERA_FLAG_UNK80;
+		} else if (!(unk64 & CAMERA_FLAG_UNK80) && !isMarioCrabWalk_()) {
+			Vec v;
+			calcTowerCenterPos_(&v);
+			calcNoticeTargetYrot_(v);
+		}
+	}
 	void ctrlNormalOrTowerCamera_();
 	TLiveActor* getNoticeActor_();
 	void execNoticeOnOffProc_(CPolarSubCamera::EnumNoticeOnOffMode);

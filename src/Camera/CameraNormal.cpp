@@ -21,24 +21,19 @@ static const char* MtxCalcTypeName[] = {
 	"MActorMtxCalcType_User ユーザー定義",
 };
 
-// TODO: this should be an inline that doesn't get inlined,
-// but it actually gets inlined :(
-// TODO: the map lists this function as **weak** and its function-local static
-// as `sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec`
-// -- the mangling MWCC uses only inside an inline function (an ordinary one
-// gets `$NNN`, which is what we emit), so retail defined this body inside the
-// class in <Camera/Camera.hpp>. Measured here: `inline` on the out-of-class
-// definition does give weak linkage and the `$localstatic0$` name, but it also
-// makes MWCC expand the body into the one call site (there is no statement
-// budget for an `inline` callee at depth 1), dropping
-// ctrlNormalOrTowerCamera_ from 98.1% to 78.4%. Retail's single
-// `bl calcTowerCenterPos_` therefore sits at depth >= 2, i.e. the tower branch
-// of ctrlNormalOrTowerCamera_ is itself an inlined private member (the name
-// "NormalOrTower" suggests `ctrlTowerCamera_`). Declaring that wrapper is a
-// shared-header item; until then this stays a plain out-of-line member and
-// `sPositionNameTable` keeps the wrong mangling, which is the unit's whole
-// remaining data gap.
-void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
+// `inline` here is what the map asks for: the symbol is weak and its
+// function-local static is spelled
+// `sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec`,
+// the mangling MWCC uses only inside an inline function (an ordinary one gets
+// `$NNN`). On its own `inline` also expanded the body into
+// ctrlNormalOrTowerCamera_'s tower branch (98.1 -> 78.4), because an inline
+// callee has no statement budget at depth 1; the in-class
+// CPolarSubCamera::ctrlTowerCamera_ wrapper added in <Camera/Camera.hpp> puts
+// this body at depth 2, where the budget is 9 statements and it is a `bl`
+// again. Unit data 93.3 -> 100 with the weak mangling.
+// TODO: every instruction is exact; the residue is 8 bytes of low-region
+// frame (0x18 vs 0x20) with no candidate object left in the body.
+inline void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 {
 	static const char* sPositionNameTable[5] = {
 		"塔カメラＡ中心", "塔カメラＢ中心", "塔カメラＣ中心",
@@ -119,17 +114,7 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 				}
 			}
 		} else if (isTowerCameraSpecifyMode(mMode)) {
-			if (fVar2 != 0.0f) {
-				rotateY_ByStickX_(fVar2);
-				execInvalidAutoChase_();
-				unk64 |= CAMERA_FLAG_UNK80;
-			} else {
-				if (!(unk64 & CAMERA_FLAG_UNK80) && !isMarioCrabWalk_()) {
-					Vec v;
-					calcTowerCenterPos_(&v);
-					calcNoticeTargetYrot_(v);
-				}
-			}
+			ctrlTowerCamera_(fVar2);
 		} else if (fVar2 != 0.0f) {
 			rotateY_ByStickX_(fVar2);
 			execInvalidAutoChase_();
