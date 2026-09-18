@@ -417,10 +417,7 @@ void TBGAttackHit::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		mPosition = mOwner->mSpline->getPoint(mPosOnSpline);
 
-		if (mOwner->mTakeHit->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
-		        && mOwner->isThing3()
-		    || mOwner->getState() == 1
-		    || mOwner->mOwner->getAttackMode() == 7) {
+		if (mOwner->isAttackable()) {
 			for (int i = 0; i < mColCount; ++i) {
 				THitActor* col = mCollisions[i];
 				if (gpMarioOriginal->isRoofing())
