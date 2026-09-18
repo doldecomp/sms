@@ -325,6 +325,15 @@ void TWireTrap::moveObject()
 // MWCC expands `TVec3::scale` there, while the ROM calls it out of line from
 // every nerve. Going through `operator*=` restores that call and took the
 // three moving nerves from 66-91% to 99%.
+//
+// TODO: the last residue in all three nerves is that retail calls
+// `TWireTrap::getWireDir()` out of line from here (one `bl`, 0xc, byte-exact)
+// while MWCC expands it into its own two accessor calls, and that its frame is
+// 16 bytes deeper. getWireDir sits at inline depth three here, where a
+// one-statement body always fits, so two more levels are missing above it.
+// Measured and rejected: a `const TVec3&` binding of getWireDir() before the
+// copy (99.5/99.0/98.4 -> 98.5/96.2/93.2) and `momentum.set(getWireDir())`
+// (-> 97.9/93.3/96.2).
 void TWireTrap::calcMomentum()
 {
 	JGeometry::TVec3<f32> momentum = getWireDir();

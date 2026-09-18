@@ -779,11 +779,18 @@ void TTelesa::setFirstAttackPoint()
 	JGeometry::TVec3<f32> pos = mPosition;
 
 	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
+	// The sine goes on x and the cosine on z: retail's AttackMario nerve
+	// indexes jmaSinTable for the x term and jmaCosTable for the z term, and
+	// this body stays size-exact at the map's 0x118 either way. Writing the
+	// two lookups inline instead of naming them costs 0x20 of size and takes
+	// the nerve from 96.9% to 92.4%, so the locals are real; the last residue
+	// is that retail's second `lfsx` sits after the x store where MWCC hoists
+	// both up front.
 	f32 s = JMASin(mRotation.y);
 	f32 c = JMACos(mRotation.y);
 
-	pos.x += c * 1000.0f;
-	pos.z += s * 1000.0f;
+	pos.x += s * 1000.0f;
+	pos.z += c * 1000.0f;
 
 	setGoalPath(TPathNode(pos));
 }
