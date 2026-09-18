@@ -80,9 +80,37 @@ void TMapCollisionMove::setList()
 //    order) and *descending* in the emitted copy (0x78/0x6c/0x60, i.e. named
 //    body locals, which grow down in declaration order).  That is the same
 //    source in two regions, so the batched-vs-interleaved load order is a
-//    context property of those two regions rather than two spellings, and the
-//    lever is whatever makes the emitted copy schedule its loads one at a
-//    time -- most likely the 40 missing low bytes.
+//    context property of those two regions rather than two spellings.
+//
+// Closure batch (this one) settled which spelling is right and took the frame
+// off the table as the lever.
+//  * The map decides it: updateCheckData is UNUSED at 0xf0 and *inlines*
+//    setCheckData (our 0xf0 copy has the vertex construction plus `bl
+//    setVertex` and `bl addCheckDataToGrid` in the loop).  Any spelling at 15
+//    statements -- which is what nine per-component assignments cost -- makes
+//    it a `bl` and updateCheckData 0x6c.  So setCheckData must stay at or
+//    under the depth-1 budget, i.e. the three-argument constructor, and the
+//    interleaved schedule of the *emitted* copy is a scheduling artefact of
+//    that copy alone (retail mixes setVertex's first `lwz` into the p2
+//    construction; in initAllCheckData and updateCheckData setVertex is a
+//    `bl` and there is nothing to interleave with).
+//  * The missing bytes are not the cause of the schedule.  A dead
+//    non-trivial 24-byte local, whether block-scoped in this body or in
+//    setVertex's body, lands the frame at retail's 0x98 exactly and leaves
+//    all nine copies batched (92.3%, 24 operand-only marks).  Neither
+//    carrier is legal: a local here is paid twice by initAllCheckData's two
+//    mutually exclusive expansions (0xd0 -> 0x100) and one in setVertex
+//    grows its byte-exact out-of-line copy (0x40 -> 0x58).  Sizes 8/12/16/32/40
+//    all miss.
+//  * Also rejected, measured: `p1 = verts[indices[0]]` through the implicit
+//    Vec -> TVec3 conversion (frame lands 0x98 exactly, but the conversion
+//    temporaries cost instructions, 71%); `TVec3 p1(*(const Vec*)p1raw)` or
+//    `p1.set(*(const Vec*)p1raw)` (one statement each, so still inlined, and
+//    they *do* produce retail's interleaved schedule -- setCheckData 99.8%,
+//    frame only -- but then initAllCheckData's two expansions interleave too
+//    and it drops to 78.9%, and updateCheckData's size rules the spelling
+//    out); three unnamed `TVec3` temporaries in the setVertex call (87.4%,
+//    updateCheckData 252); `TVec3<f32> p[3]` (87.7%).
 void TMapCollisionBase::setCheckData(const f32* vertices, const s16* indices,
                                      TBGCheckData* param_3, int kind)
 {
@@ -137,6 +165,12 @@ void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 //     32-byte outgoing area above 0xc, and ours start at 0x20 (20 bytes).
 // Both together give 0x70 exactly (0xc + 32 pool + 36 named + 32 saved), so
 // the two holes are the whole residue; neither has a source-level name yet.
+// Re-measured this batch: unchanged, and the 12-byte hole between the
+// operator- temporary (retail 0x2c, ours 0x20) and delta (retail 0x44, ours
+// 0x2c) is the batch-119 dead-pool sizing law from both sides at once -- a
+// dead named `TVec3` declared after delta pays the upper 12 and a dead
+// non-trivial 12-byte local in an inlined callee the lower 12.  Nothing in
+// the body names either, so it stays open rather than padded.
 void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> delta = param_1 - mPrevTranslation;
