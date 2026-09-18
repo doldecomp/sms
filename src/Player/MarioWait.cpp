@@ -21,6 +21,11 @@ BOOL TMario::startTalking()
 	return 0;
 }
 
+// TODO: frame 0x30 vs 0x38, and the `gnd` out-parameter sits at 0x14 where
+// retail has 0x18: +4 of low region below it plus +4 in the named block.
+// Accessor levers step by 8, so neither half is an accessor; moving `gnd`'s
+// declaration first or above `groundY` and naming `mFloorPosition.y` all
+// leave the slot at 0x14 (the last breaks the body).
 bool TMario::canSleep()
 {
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER | MARIO_FLAG_IN_WATER))
@@ -97,13 +102,14 @@ BOOL TMario::waitingCommonEvents()
 		s16 diff      = mIntendedYaw - mFaceAngle.y;
 		s16 rotSp     = mDeParams.mWaitingRotSp.get();
 		mFaceAngle.y  = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
-		if (getIntendedMag() > mControllerParams.mStartToWalkLevel.get()) {
+		f32 mag = getIntendedMag();
+		if (mag > mControllerParams.mStartToWalkLevel.get()) {
 			emitSmoke(mFaceAngle.y);
 			return changePlayerStatus(MARIO_STATUS_RUN, 0, false);
 		}
 	}
 
-	if (checkFlag(MARIO_FLAG_IS_PERFORMING))
+	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		return changePlayerStatus(MARIO_STATUS_RUN, 0, false);
 
 	if (canSquat()) {
@@ -111,12 +117,12 @@ BOOL TMario::waitingCommonEvents()
 		return changePlayerStatus(MARIO_STATUS_SQUAT, 0, false);
 	}
 
-	if (mInput & 0x10000)
+	if (mInput & 0x8000)
 		return changePlayerStatus(MARIO_STATUS_TAKE_POSE, 0, false);
 
 	if (rocketCheck()) {
-		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHHoverHeight.get();
+		unk314 = mFloorPosition.y
+		    + getFludd()->mWatergunParams.mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
@@ -125,6 +131,11 @@ BOOL TMario::waitingCommonEvents()
 	return 0;
 }
 
+// TODO: frame 0x28 vs 0x30 with no referenced stack slot at all -- the "last
+// 8 bytes" family. Every callee (waitProcess, setAnimation, onYoshi,
+// curAnmEndsNext, isLast1AnimeFrame, changePlayerStatus) is a real `bl`, so
+// there is no inlined callee to carry a dead 8-byte local and no positional
+// evidence for one in the body.
 void TMario::stopCommon(int anim_id, int status_on_end)
 {
 	waitProcess();
@@ -312,8 +323,16 @@ void TMario::getSideWalkValues(E_SIDEWALK_TYPE* type, f32* val1, f32* val2)
 
 BOOL TMario::squating()
 {
-	// TODO: instruction structure matches; frame 0x70 vs original 0xA0
-	// and sideways-movement/conversion slots still differ.
+	// TODO: every instruction matches and every referenced slot is a uniform
+	// 0x30 below retail's, so the whole residue is low region (48 bytes).
+	// Measured from the raw-member baseline 0x70 (target 0xa0):
+	// getFludd() at every mWaterGun site +16, getCurrentNozzleIndex() +8,
+	// checkMeaning() at the three mMeaning tests +8 -- all applied here for
+	// 0x90. checkCurrentNozzleRocketType(1) over the spelled-out nozzle
+	// param read is +0. The last 16 bytes have no lever left in this TU:
+	// mInput, mFloorPosition, mFaceAngle, the three params classes and
+	// mGamePad->mCompSPos have no accessor, and getSideWalkValues is a real
+	// out-of-line call, so it cannot carry them.
 	if (mInput & 0x4)
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 
@@ -326,28 +345,28 @@ BOOL TMario::squating()
 	if (!(mInput & 0x4000) && !(mInput & 0x200))
 		return changePlayerStatus(MARIO_STATUS_SQUAT_STANDUP, 0, false);
 
-	if (mWaterGun == nullptr || !checkFlag(MARIO_FLAG_HAS_FLUDD))
+	if (getFludd() == nullptr || !checkFlag(MARIO_FLAG_HAS_FLUDD))
 		return changePlayerStatus(MARIO_STATUS_SQUAT_STANDUP, 0, false);
 
 	if (mInput & 0x2) {
-		if ((mGamePad->mMeaning & TMarioGamePad::MEANING_0x400)
-		    && mWaterGun != nullptr && (int)mWaterGun->mCurrentNozzle == 0) {
+		if (mGamePad->checkMeaning(TMarioGamePad::MEANING_0x400)
+		    && getFludd() != nullptr && getFludd()->getCurrentNozzleIndex() == 0) {
 			rumbleStart(0x15, mMotorParams.mMotorHipDrop.get());
 			return changePlayerStatus(MARIO_STATUS_BACK_JUMP, 0, false);
 		}
 	}
 
-	if (((const TWaterGun*)mWaterGun)
+	if (((const TWaterGun*)getFludd())
 	            ->getCurrentNozzle()
 	            ->mEmitParams.mRocketType.get()
 	        == 1
-	    && mWaterGun->isEmitting()) {
-		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHHoverHeight.get();
+	    && getFludd()->isEmitting()) {
+		unk314 = mFloorPosition.y
+		    + getFludd()->mWatergunParams.mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
-	if (mGamePad->mMeaning & TMarioGamePad::MEANING_0x2000) {
+	if (mGamePad->checkMeaning(TMarioGamePad::MEANING_0x2000)) {
 		E_SIDEWALK_TYPE type;
 		f32 v1, v2;
 		getSideWalkValues(&type, &v1, &v2);
@@ -365,7 +384,7 @@ BOOL TMario::squating()
 
 		mPosition.x += v2 * JMASCos(mFaceAngle.y);
 		mPosition.z -= v2 * JMASSin(mFaceAngle.y);
-	} else if (mGamePad->mMeaning & TMarioGamePad::MEANING_0x400) {
+	} else if (mGamePad->checkMeaning(TMarioGamePad::MEANING_0x400)) {
 		f32 absH      = fabsf(mGamePad->mCompSPos[0]);
 		bool positive = true;
 		if (mGamePad->mCompSPos[0] < 0.0f)
