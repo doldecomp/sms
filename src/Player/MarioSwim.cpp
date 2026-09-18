@@ -42,7 +42,7 @@ void TMario::doSwimming()
 		rotMaxF = (f32)mSwimParams.mSwimmingRotSpMax.get();
 	}
 
-	s16 rotSp    = mForwardVel * (rotMaxF - rotMinF) / 32.0f + rotMinF;
+	s16 rotSp    = mForwardVel * (rotMaxF - rotMinF) * 0.03125f + rotMinF;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 
@@ -221,7 +221,8 @@ BOOL TMario::swimPaddle()
 	setAnimation(ANIM_PADDLE_SWIM, anmRate);
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
-		setPlayerVelocity(mDeParams.mDashMax.get());
+		f32 dashMax = mDeParams.mDashMax.get();
+		setPlayerVelocity(dashMax);
 		startSoundActor(MSD_SE_PO_SPREAD);
 		startSoundActor(MSD_SE_MA_SURF_WATER);
 	}
@@ -339,20 +340,6 @@ BOOL TMario::swimPDown()
 	return 0;
 }
 
-// Binding level worth +8 of low region, landing TMario::swimMain's frame at
-// 0x68 (batch 121).
-static inline u32 MarioSwimGetStatus(const TMario* p)
-{
-	u32 status = p->getStatus();
-	return status;
-}
-
-// TODO: frame 0x60 vs 0x68 -- 8 bytes of locals still missing. getStatus() for
-// the three mStatus reads here and getIntendedMag() inside the inlined
-// checkSwimToHangFence each bought 8; naming checkSwimJump()'s result and
-// jumpProcess()'s result in doSwimming bought nothing (scalar slots saturate).
-// The residue is probably a local in one of the eleven UNUSED swim* bodies
-// inlined below, all of which are size-exact against the map.
 BOOL TMario::swimMain()
 {
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
@@ -363,8 +350,9 @@ BOOL TMario::swimMain()
 
 	int result = checkSwimToHangFence();
 
-	f32 limit = mFloorPosition.z - mSwimParams.mFloatHeight.get();
-	if (mPosition.y >= limit)
+	f32 floatHeight = mSwimParams.mFloatHeight.get();
+	f32 limit       = mFloorPosition.z - floatHeight;
+	if (getPosition().y >= limit)
 		mPosition.y = limit;
 
 	unk2A8.y = mFloorPosition.z;
