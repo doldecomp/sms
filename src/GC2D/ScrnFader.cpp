@@ -60,8 +60,16 @@ void draw_wipe_box(const JDrama::TRect& param_1, JUtility::TColor param_2)
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
 		               GX_LO_NOOP);
 
-	f32 w = param_2.a * (param_1.getWidth() >> 1) / 255.0f;
+	// The height term is computed first in retail (the y2/y1 loads and the
+	// first int-to-float magic pair come before the x pair), so `h` is
+	// declared first: 93.8 -> 94.1. TODO: the residue is a uniform 8-byte
+	// frame gap (0x90 vs 0x88; every double temp and the JUTRect at 0x44 vs
+	// 0x3c move together) plus the scheduling of the two int-to-float pairs,
+	// where retail parks both 0x43300000 high words before either `lfd` and
+	// we interleave the second one. Rejected: a named `u8 alpha` (no change),
+	// `int h`/`int w` instead of `f32` (90.8%, one extra instruction).
 	f32 h = param_2.a * (param_1.getHeight() >> 1) / 255.0f;
+	f32 w = param_2.a * (param_1.getWidth() >> 1) / 255.0f;
 
 	JUTRect local_4c(param_1.x1 + int(w), param_1.y1 + int(h),
 	                 param_1.x2 - int(w), param_1.y2 - int(h));
@@ -163,7 +171,12 @@ void TSMSFader::updateRequest()
 	if (mWipeRequest.unk0 == UNK30_UNK_18)
 		return;
 
-	f32 fVar1 = mWipeRequest.unk8 - 1.0f / mRate;
+	// Split declaration and subtraction: retail subtracts into the register
+	// that holds unk8 (`fsubs f2, f2, f1`), the one-expression form subtracts
+	// into the divide's register. This is updateRequest's own body but it is
+	// inlined into update(), which is where the difference shows.
+	f32 fVar1 = mWipeRequest.unk8;
+	fVar1 -= 1.0f / mRate;
 	if (fVar1 < 0.0f)
 		fVar1 = 0.0f;
 	mWipeRequest.unk8 = fVar1;
@@ -382,6 +395,16 @@ void TSMSFader::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
+	// TODO: instruction-identical apart from one extrwi/stb pair's order, and
+	// the frame size is right (0x40), but the three stack temporaries are
+	// laid out differently: retail has the first read's destination at 0x24,
+	// the second at 0x28 and the TColor argument temporary at 0x2c, while we
+	// get 0x20 / 0x2c / 0x24. Rejected: both reads as `stream >> x` with the
+	// locals declared at the top (0x38 frame, 96.5%), declaring both locals
+	// at the top with readS32 for the first (no change), readU32 for the
+	// second (96.7%). Retail's adjacent pair suggests both destinations were
+	// named locals declared in the reverse order (colour first), which would
+	// put the colour at 0x28 and the frame count at 0x24.
 	s32 local_1c = stream.readS32();
 
 	startFadein(local_1c);
