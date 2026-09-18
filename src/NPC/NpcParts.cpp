@@ -26,8 +26,24 @@ const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 const char* cPeachPartsTextureName = "H_peach_main_dummy";
 const char* cPeachHostTextureName  = "H_peach_main_s3tc";
 
-void SetMActorAnmFrame(MActor* param_1, f32 param_2, bool param_3, bool param_4)
+void SetMActorAnmFrame(MActor* actor, f32 frame, bool set_bck, bool set_btp)
 {
+	if (actor == nullptr)
+		return;
+
+	J3DFrameCtrl* ctrl;
+
+	if (set_bck) {
+		ctrl = actor->getFrameCtrl(ANM_TYPE_BCK);
+		if (ctrl)
+			ctrl->setFrame(frame);
+	}
+
+	if (set_btp) {
+		ctrl = actor->getFrameCtrl(ANM_TYPE_BTP);
+		if (ctrl)
+			ctrl->setFrame(frame);
+	}
 }
 
 TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
@@ -37,9 +53,15 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(unk60->getActorType() - 0x4000001);
 
-	for (int i = 0; i < 2; ++i)
-		for (int j = 0; j < 12; ++j)
-			unk0[i][j] = nullptr;
+	// Retail clears the array with one flat 24-element loop (unrolled by eight
+	// over three `bdnz` iterations), not as a nested 2x12 walk.
+	// TODO: 32 instructions short of retail's 268. The residue is the inner
+	// loop's addressing: retail walks `initInfo->unk4` and `unk0` with byte
+	// offsets kept in callee-saved registers and spills initInfo to the stack,
+	// where we recompute indices.
+	TSharedParts** slot = &unk0[0][0];
+	for (int i = 0; i < 2 * 12; ++i)
+		slot[i] = nullptr;
 
 	for (int i = 0; i < 12; ++i) {
 		const TNpcModelData* iVar10 = initInfo->unk4[i];
@@ -153,10 +175,11 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 
 void TNpcParts::addJellyFishParts(f32 param_1)
 {
-	TSharedParts** slot = &unk0[5][1];
+	TSharedParts** slot = &unk0[0][11];
 
 	int iVar2 = gpMareJellyFishManager->getModelDataKeeper()->getModelDataNum();
-	int iVar3 = MsRandF() * iVar2;
+	f32 fVar1 = MsRandF() * iVar2;
+	int iVar3 = fVar1;
 
 	SDLModelData* data
 	    = gpMareJellyFishManager->getModelDataKeeper()->getNthData(iVar3);
@@ -177,31 +200,18 @@ void TNpcParts::addJellyFishParts(f32 param_1)
 void TNpcParts::setPartsAnmFrame(f32 param_1)
 {
 	switch (unk60->getActorType()) {
-	case 0x4000010: {
-		if (MActor* mactor = getPartsMActor(9, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
-	} break;
+	case 0x4000010:
+		SetMActorAnmFrame(getPartsMActor(9, 0), param_1, true, false);
+		break;
 
-	case 0x4000015: {
-		if (MActor* mactor = getPartsMActor(10, 0)) {
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BTP))
-				ctrl->setFrame(param_1);
-		}
-	} break;
+	case 0x4000015:
+		SetMActorAnmFrame(getPartsMActor(10, 0), param_1, true, true);
+		break;
 
 	case 0x4000018:
-		if (MActor* mactor = getPartsMActor(0, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
-		if (MActor* mactor = getPartsMActor(3, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
-		if (MActor* mactor = getPartsMActor(4, 0))
-			if (J3DFrameCtrl* ctrl = mactor->getFrameCtrl(ANM_TYPE_BCK))
-				ctrl->setFrame(param_1);
+		SetMActorAnmFrame(getPartsMActor(0, 0), param_1, true, false);
+		SetMActorAnmFrame(getPartsMActor(3, 0), param_1, true, false);
+		SetMActorAnmFrame(getPartsMActor(4, 0), param_1, true, false);
 		break;
 	}
 }
@@ -218,11 +228,15 @@ void TNpcParts::partsFrameUpdate()
 {
 	int i = 0;
 
-	TSharedParts** it = unk0[unk60->getLodAnm()->unk8];
+	TLodAnm* lodAnm   = unk60->getLodAnm();
+	int lod           = lodAnm->unk8;
+	TSharedParts** it = unk0[lod];
 
 	for (; i < 12; i++, ++it)
-		if (*it)
-			(*it)->getMActor()->frameUpdate();
+		if (*it) {
+			MActor* mactor = (*it)->getMActor();
+			mactor->frameUpdate();
+		}
 }
 
 void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
