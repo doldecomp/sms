@@ -140,7 +140,9 @@ void TCardSave::initData(TMarioGamePad* param_1)
 			snprintf(acStack_48, 0x28, "/game_6/timg/coin_number_%d.bti", i);
 		}
 
-		unk1C[i] = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
+		JUTTexture* texture
+		    = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
+		unk1C[i] = texture;
 	}
 	unk48 = new TExPane(unk14, 0x775f30);
 	unk4C = unk48->getPane()->getBounds();
@@ -275,6 +277,62 @@ void TCardSave::initData(TMarioGamePad* param_1)
 	unk2E4 = JKRGetResource("/common/2d/savemessage.bmg");
 	if (!unk18)
 		unk2D8 = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
+
+	// The default caption of every save-menu row. The panes are not kept:
+	// the rows that can change their text later look them up again. There is
+	// no `sm6` group.
+	J2DTextBox* upper;
+	J2DTextBox* lower;
+
+	upper = (J2DTextBox*)unk14->search('sm1a');
+	lower = (J2DTextBox*)unk14->search('sm1b');
+	makeBuffer(upper, 0x80);
+	makeBuffer(lower, 0x80);
+	setMessage(upper, 0x80, 0x1C);
+	setMessage(lower, 0x80, 0x1C);
+
+	upper = (J2DTextBox*)unk14->search('sm2a');
+	lower = (J2DTextBox*)unk14->search('sm2b');
+	makeBuffer(upper, 0x80);
+	makeBuffer(lower, 0x80);
+	setMessage(upper, 0x80, 0x1D);
+	setMessage(lower, 0x80, 0x1D);
+
+	upper = (J2DTextBox*)unk14->search('sm3a');
+	lower = (J2DTextBox*)unk14->search('sm3b');
+	makeBuffer(upper, 0x80);
+	makeBuffer(lower, 0x80);
+	setMessage(upper, 0x80, 0x1C);
+	setMessage(lower, 0x80, 0x1C);
+
+	upper = (J2DTextBox*)unk14->search('sm4a');
+	lower = (J2DTextBox*)unk14->search('sm4b');
+	makeBuffer(upper, 0x80);
+	makeBuffer(lower, 0x80);
+	setMessage(upper, 0x80, 0x1E);
+	setMessage(lower, 0x80, 0x1E);
+
+	upper = (J2DTextBox*)unk14->search('sm5a');
+	lower = (J2DTextBox*)unk14->search('sm5b');
+	makeBuffer(upper, 0x80);
+	makeBuffer(lower, 0x80);
+	setMessage(upper, 0x80, 0x1D);
+	setMessage(lower, 0x80, 0x1D);
+
+	upper = (J2DTextBox*)unk14->search('sm7a');
+	lower = (J2DTextBox*)unk14->search('sm7b');
+	makeBuffer(upper, 0x80);
+	makeBuffer(lower, 0x80);
+	setMessage(upper, 0x80, 0x1F);
+	setMessage(lower, 0x80, 0x1F);
+
+	upper = (J2DTextBox*)unk14->search('sm8a');
+	lower = (J2DTextBox*)unk14->search('sm8b');
+	makeBuffer(upper, 0x80);
+	makeBuffer(lower, 0x80);
+	setMessage(upper, 0x80, 0x20);
+	setMessage(lower, 0x80, 0x20);
+
 	unk270 = param_1;
 }
 
