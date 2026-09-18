@@ -22,7 +22,20 @@ enum TPakkunSeedState {
 	PAKKUN_SEED_STATE_CIRCLE = 4,
 };
 
-// TODO: The original class name needs to be recovered from mario.MAP.
+enum TPakkunAnimation {
+	PAKKUN_ANM_CRUSH_TO_HIDE = 0,
+	PAKKUN_ANM_DAMAGE        = 1,
+	PAKKUN_ANM_DOWN          = 2,
+	PAKKUN_ANM_HIDE          = 3,
+	PAKKUN_ANM_UNK4          = 4,
+	PAKKUN_ANM_UNK5          = 5,
+	PAKKUN_ANM_UNK6          = 6,
+	PAKKUN_ANM_SET           = 7,
+	PAKKUN_ANM_SHOOT         = 8,
+	PAKKUN_ANM_WAIT          = 9,
+};
+
+// Fabricated
 class TPakkunParams : public TSmallEnemyParams {
 public:
 	TPakkunParams(const char* path)
@@ -117,8 +130,8 @@ public:
 	/* 0x19C */ TPakkunSeed** unk19C;
 	/* 0x1A0 */ TPakkunParams* unk1A0;
 	/* 0x1A4 */ JGeometry::TVec3<f32> unk1A4;
-	/* 0x1B0 */ u8 unk1B0;
-	/* 0x1B1 */ u8 unk1B1;
+	/* 0x1B0 */ bool unk1B0;
+	/* 0x1B1 */ bool unk1B1;
 	/* 0x1B2 */ GXColor unk1B2;
 	/* 0x1B6 */ u8 unk1B6[2];
 	/* 0x1B8 */ f32 unk1B8;
