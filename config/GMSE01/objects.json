@@ -379,6 +379,7 @@
   "dolphin/amcstubs/AmcExi2Stubs.c",
   "dolphin/ar/ar.c",
   "dolphin/ar/arq.c",
+  "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk.c",
   "dolphin/base/PPCArch.c",
   "dolphin/card/CARDBios.c",
   "dolphin/card/CARDBlock.c",

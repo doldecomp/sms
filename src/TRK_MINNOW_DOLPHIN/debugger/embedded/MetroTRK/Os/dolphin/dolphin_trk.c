@@ -29,6 +29,14 @@ static u32 TRK_ISR_OFFSETS[15] = { PPC_SystemReset,
 
 __declspec(section ".init") void __TRK_reset(void) { __TRK_copy_vectors(); }
 
+// The debugger stack top is the linker script's _db_stack_addr, so it is
+// region-specific; marioUS.MAP gives 0x804297e8 for GMSE01.
+#if defined(VERSION_GMSE01)
+#define TRK_DB_STACK_ADDR 0x804297e8
+#else
+#define TRK_DB_STACK_ADDR 0x80426008
+#endif
+
 asm void InitMetroTRK()
 {
 #ifdef __MWERKS__ // clang-format off
@@ -64,8 +72,8 @@ asm void InitMetroTRK()
 	mtspr  0x3f2, r0
 	mtspr  0x3f5, r0
 	//Restore stack pointer
-	lis r1, 0x80426008@h
-	ori r1, r1, 0x80426008@l
+	lis r1, TRK_DB_STACK_ADDR@h
+	ori r1, r1, TRK_DB_STACK_ADDR@l
 	mr r3, r5
 	bl InitMetroTRKCommTable //Initialize comm table
 	/*
