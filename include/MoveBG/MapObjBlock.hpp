@@ -97,6 +97,7 @@ public:
 	}
 
 	virtual void kill();
+	virtual void touchActor(THitActor* actor);
 	virtual void moveObject();
 	virtual void initMapObj();
 

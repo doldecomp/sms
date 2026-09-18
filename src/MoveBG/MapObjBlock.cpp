@@ -337,6 +337,15 @@ void TJuiceBlock::kill()
 	makeObjDead();
 }
 
+void TJuiceBlock::touchActor(THitActor* actor)
+{
+	// 0x400002C6 is the juice block's own MapObjInit type word, so a block
+	// only dies to another map object that is not a second juice block.
+	if (actor->checkActorType(ACTOR_TYPE_UNK40000000)
+	    && !actor->isActorType(0x400002C6))
+		kill();
+}
+
 void TTelesaBlock::initMapObj() { TMapObjBase::initMapObj(); }
 
 void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
