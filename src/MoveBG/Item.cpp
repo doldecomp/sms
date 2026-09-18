@@ -776,6 +776,10 @@ void TShine::appearSimple(int param_1)
 
 	SMSGetMSound()->startSoundActor(MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr,
 	                                0, 4);
+	MSBgm::startBGM(MSD_BGM_SHINE_APPEAR);
+
+	// TODO: 99.9%. Only the frame is 16 bytes short of retail's 0x30, and with
+	// it the `this`/param_1 pair sits in r30/r31 the other way round.
 
 	mStateTimer = unk174;
 	mState      = STATE_UNKB;
