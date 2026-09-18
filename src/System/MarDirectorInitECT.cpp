@@ -291,6 +291,20 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 // `ECTSearchViewObjList` binding the cast result) -- a pointer return is worth
 // +4 elsewhere but is +8 here, overshooting to 0x88 and adding an
 // instruction (99.8 -> 97.2). No +4 lever is known for this pool.
+// Re-pass 172 found a measurable step but not the closure. A console-only
+// three-level stack -- a fork over `TNameRefGen::instance`
+// (`ECTRootNameRef()`), a fork `ECTRootSearch()` calling `search` through it,
+// and the existing binder on top -- takes this function from 17 markers to
+// **6** with the frame still exact: every slot up to 0x54 then matches and the
+// only residue left is the `TList_pointer_void::insert` sub-block sitting 4
+// bytes high (0x4c/0x48/0x44 against retail's 0x48/0x44/0x40), i.e. the
+// research-161 JGadget stride, not a shortage. It was not committed because it
+// is two fabricated helpers for a function that still does not close; retry it
+// together with the JGadget grouping. Also measured: routing the site through
+// the root-ref fork with no extra fork is +0; the same stack with the top level
+// a fork instead of a binder is 0x78 (22 markers) and with `ECTRootSearch`
+// binding instead of forking 0x88 (22 markers); a plain redundant fork over
+// `search2` under the binder gives 11 markers.
 void TMarDirector::setupPerformList_console()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* list
