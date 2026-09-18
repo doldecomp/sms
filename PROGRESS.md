@@ -102,6 +102,10 @@ Most remaining differences in these units are frame gaps and per-call-site inlin
 - `Camera/CameraInbetween` matches but will not link: `docs/catalog/linking.md`.
 - Units one function from linking (`MSoundBGM`, `MarioAccess`): `docs/catalog/frame-gaps.md`.
 - About 200 nerve bodies, and most enemy and MoveBG methods, are unwritten.
+- **The `a = b - c` pool residue is the single largest open lever**: all 102 retail
+  `bl TVec3::sub` sites are nonmatching, 40 of them at >= 99.3%, for one shared
+  slot-placement difference. Research batch 113 in `docs/catalog/frame-gaps.md`
+  narrows it to 12 bytes, 8 of which are the `operator-=` inline level.
 
 ## Local artifacts
 

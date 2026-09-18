@@ -250,6 +250,18 @@ public:
 		add(other);
 		return *this;
 	}
+	// The `TVec3&` return is settled (research batch 113). Spelling this
+	// `void` is what the `a = b - c` pool residue wants -- it drops the
+	// `operator-` parameter temporary 8 bytes, halfway to retail's slot -- but
+	// it breaks this member's own out-of-line copy: `__ami__` (weak, 0x34,
+	// Tongue.cpp) is 100% with the reference return and 98.5% without it,
+	// because retail loads `other.x` before `this->x` and only the
+	// `return *this;` body orders the two `lfs` that way. Project-wide the
+	// `void` spelling is -1 function and ~35 regressions (koopajr/limitkoopa
+	// `bind`, `TLeanMirror::loadAfter`, `TLiveActor::bind`, `TBaseNPC::bind`,
+	// `TChuuHana::bind`, `TFlyEnemy::fly`, ... all -0.1 to -0.4), so the 8
+	// bytes have to come from somewhere else. See docs/catalog/frame-gaps.md,
+	// "Research batch 113".
 	TVec3& operator-=(const TVec3& other)
 	{
 		sub(other);
