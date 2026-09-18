@@ -1,6 +1,6 @@
 # Orchestration guide
 
-Read by the orchestrating session only; agents do not need it.
+Read by the orchestrating session only; agents do not need it. `docs/HANDOFF.md` carries the previous orchestrator's judgement, yields per batch type and open leads; append to its state log when you stop.
 `STRATEGY.md` is the work order, `PROGRESS.md` the numbers, `docs/TIMELINE.md` the history.
 
 ### Parallel agents and worktrees
