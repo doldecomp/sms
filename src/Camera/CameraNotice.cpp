@@ -26,6 +26,25 @@ static const char* sNoticeActorManagerName[] = {
 
 const char* bossGesoViewObjName = "ボスゲッソー";
 
+// Parked TU-local: both notice-distance sites keep their three products apart
+// (`fmuls` x3 + `fadds` x2) where JGeometry::TVec3<f32>::squared(const TVec3&)
+// contracts them into `fmadds`, so retail reached the squared distance through
+// a helper with three named squares rather than through `squared()`. Promotion
+// (as a TVec3 member or a MathUtil free function) is a header item.
+static inline f32 CameraNoticeSquaredDist(const JGeometry::TVec3<f32>& a,
+                                          const JGeometry::TVec3<f32>& b)
+{
+	f32 dx = a.x - b.x;
+	f32 dy = a.y - b.y;
+	f32 dz = a.z - b.z;
+
+	f32 sqX = dx * dx;
+	f32 sqY = dy * dy;
+	f32 sqZ = dz * dz;
+
+	return sqX + sqY + sqZ;
+}
+
 void CPolarSubCamera::setNoticeInfo()
 {
 	unk2A0       = new TLiveActor*[0x10];
@@ -46,29 +65,49 @@ void CPolarSubCamera::setNoticeInfo()
 	unk2A8 = JDrama::TNameRefGen::search<TLiveActor>(bossGesoViewObjName);
 }
 
+// TODO (closure batch 87): 79.7%, up from 73.2%. Restored here: the clip range
+// is [-ratio, +ratio] (retail's `fneg` off the single param read, hoisted above
+// CLBCalc2DFPos), the clip test is a **three**-bool ladder whose result is then
+// normalised again (`inClipY ? true : false`), and the squared distance goes
+// through a helper with three named squares instead of TVec3::squared(), which
+// contracts to `fmadds`. What is left:
+//   - frame 0xf0 vs 0xc8, and retail saves f27 and r25 where we start at f28
+//     and r26: retail hoists **both** `this + 0x16c` and `this + 0x1ec` into
+//     callee-saved registers before the loop (we only hoist 0x1ec), so two
+//     named matrix locals are missing.
+//   - at the first site MWCC schedules our `bl CLBSquared` before the three
+//     `fmuls`; retail evaluates the whole distance first. Naming the
+//     CLBSquared result as well (`f32 offDist2 = ...`) costs an instruction and
+//     does not move it.
 TLiveActor* CPolarSubCamera::getNoticeActor_()
 {
 	if (mNoticeActor != nullptr && !mNoticeActor->checkLiveFlag(LIVE_FLAG_DEAD)
 	    && !mNoticeActor->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 
-		if (mNoticeActor->mPosition.squared(*gpMarioPos)
-		    < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
+		f32 noticeDist2
+		    = CameraNoticeSquaredDist(mNoticeActor->mPosition, *gpMarioPos);
+		if (noticeDist2 < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
+			f32 clipMax = mSaveNotice->mOffClipRatio.get();
+
 			JGeometry::TVec2<f32> clipPos;
 			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, mNoticeActor->mPosition,
 			              nullptr, false);
 
 			// TODO: inline
-			f32 clipMax  = mSaveNotice->mOffClipRatio.get();
-			f32 clipMin  = mSaveNotice->mOffClipRatio.get();
-			bool inClipX = false;
-			bool inClipY = false;
+			f32 clipMin     = -clipMax;
+			bool inClipX    = false;
+			bool overClipMinY = false;
+			bool inClipY    = false;
 			if (clipMin <= clipPos.x && clipPos.x <= clipMax)
 				inClipX = true;
 
-			if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax)
+			if (inClipX && clipMin <= clipPos.y)
+				overClipMinY = true;
+
+			if (overClipMinY && clipPos.y <= clipMax)
 				inClipY = true;
 
-			if (inClipY)
+			if (inClipY ? true : false)
 				return mNoticeActor;
 		}
 	}
@@ -84,7 +123,8 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (mNoticeActor != nullptr && unk2A0[i] == mNoticeActor)
 			continue;
 
-		f32 dist2 = unk2A0[i]->mPosition.squared(*gpMarioPos);
+		f32 dist2
+		    = CameraNoticeSquaredDist(unk2A0[i]->mPosition, *gpMarioPos);
 		if (dist2 >= closestDist2)
 			continue;
 
@@ -94,7 +134,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 
 		// TODO: inline
 		f32 clipMax  = mSaveNotice->mOnClipRatio.get();
-		f32 clipMin  = mSaveNotice->mOnClipRatio.get();
+		f32 clipMin  = -clipMax;
 		bool inClipX = false;
 		bool inClipY = false;
 		if (clipMin <= clipPos.x && clipPos.x <= clipMax) {
@@ -106,7 +146,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (!inClipY)
 			continue;
 
-		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(*gpMarioAngleY),
+		if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(*gpMarioAngleY),
 		                 unk2A0[i]->mPosition, dist2,
 		                 mSaveNotice->mOnDegree.get(), -1.0f))
 			continue;
@@ -144,6 +184,14 @@ void CPolarSubCamera::execNoticeOnOffProc_(EnumNoticeOnOffMode mode)
 	}
 }
 
+// TODO (closure batch 87): 92.0%, data now exact. The angle factor is
+// `|angle| * (2.0f / 65536.0f)` (a 0..1 fraction of a half turn), not
+// DEG2SHORTANGLE(1.0f) -- the old 182.04445f literal was displacing the whole
+// `.sdata2` pool. What is left: frame 0xa8 vs 0x88 (low region), the
+// `fmadds` pair for `dir * 500 + marioPos` has its two terms swapped against
+// retail, and the `ang - mCurrentTarget.mYaw` block sign-extends once where
+// retail extends at every s16-typed use (the same `extsh` family as
+// CameraNormal's ctrlNormalOrTowerCamera_).
 void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 {
 	Vec mPos     = gpCameraMario->unk0;
@@ -165,7 +213,7 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 		int absAngle = ang - mCurrentTarget.mYaw >= 0
 		                   ? ang - mCurrentTarget.mYaw
 		                   : -(ang - mCurrentTarget.mYaw);
-		f32 ratio    = DEG2SHORTANGLE(1.0f) * (f32)absAngle;
+		f32 ratio    = (f32)absAngle * (2.0f / 65536.0f);
 
 		f32 chase;
 		if (dist2 > farClip2) {
@@ -204,6 +252,10 @@ void CPolarSubCamera::getNozzleTopPos_(JGeometry::TVec3<f32>* out) const
 	}
 }
 
+// TODO (closure batch 87): pure frame gap, 0x70 vs 0x40. The one named local
+// (a scratch Vec) sits at 0x34 in retail and 0x10 here, so 36 of the 48 bytes
+// are low region (inline-expansion temporaries) and 12 sit above the vector.
+// getNozzleTopPos_ is the same shape at 0x58 vs 0x40.
 void CPolarSubCamera::ctrlLButtonCamera_()
 {
 	f32 stickX = -unk120->mCompSPos[4];
