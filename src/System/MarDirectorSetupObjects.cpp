@@ -33,6 +33,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;

@@ -10,6 +10,7 @@
 #include <MarioUtil/PacketUtil.hpp>
 
 #include <Player/MarioDirtyStrings.hpp>
+#include <System/DummyStrings.hpp>
 
 // The four mModel reads in this constructor stay raw: TMario::getM3UModel()
 // costs it 99.01 -> 98.89 (measured in header round 16), even though the same
