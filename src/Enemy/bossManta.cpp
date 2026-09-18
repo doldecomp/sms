@@ -712,17 +712,25 @@ f32 TBossManta::getPolluteRadius()
 
 void TBossManta::updateAttractor()
 {
-	JGeometry::TVec3<f32> local_108 = mPosition;
-	local_108 -= unk158;
+	// TODO: 93.9%. Every instruction matches except that retail computes
+	// pusher.squared() once and keeps it in f24 across the two length()
+	// calls and normalize(); we recompute the dot product three times.
+	// The frame is 0x18 short: 8 of that is the extra saved FPR the CSE
+	// needs, the other 0x10 is four missing inline temporaries in the low
+	// region. The mario-delta squared() also loads x,y,z where retail
+	// loads x,z,y and keeps y/z in f5/f6 for the later accumulate.
+	JGeometry::TVec3<f32> local_108 = unk158;
+	local_108 -= mPosition;
 	local_108.y = 0.0f;
 	local_108.normalize();
 	local_108 *= getSaveParams()->mSLAttractorPower.get();
 
 	JGeometry::TVec3<f32> facing = unk170;
-	facing *= getSaveParams()->mSLPusherPower.get();
+	facing *= getSaveParams()->mSLEscapeLookPoint.get();
 
 	JGeometry::TVec3<f32> selfPos = mPosition;
 	selfPos += facing;
+	selfPos.y = 0.0f;
 
 	for (int i = 0; i < getManager()->getActiveObjNum(); ++i) {
 		TBossManta* other = (TBossManta*)getManager()->getObj(i);
@@ -731,23 +739,22 @@ void TBossManta::updateAttractor()
 		    || other->getInstanceIndex() == getInstanceIndex())
 			continue;
 
-		JGeometry::TVec3<f32> otherFacing = other->unk170;
-		otherFacing *= getSaveParams()->mSLPusherPower.get();
+		JGeometry::TVec3<f32> pusher = selfPos;
 
-		JGeometry::TVec3<f32> otherPos = mPosition;
+		JGeometry::TVec3<f32> otherFacing = other->unk170;
+		otherFacing *= getSaveParams()->mSLEscapeLookedPoint.get();
+
+		JGeometry::TVec3<f32> otherPos = other->mPosition;
 		otherPos += otherFacing;
 
-		JGeometry::TVec3<f32> delta;
-		delta.sub(selfPos, otherPos);
-		delta.y = 0.0f;
+		pusher -= otherPos;
+		pusher.y = 0.0f;
 
-		if (0.1f < delta.length()
-		    && delta.length() < getSaveParams()->mSLEscapeRegion.get()) {
-			JGeometry::TVec3<f32> thing;
-			thing.set(delta);
-			thing.normalize();
-			thing *= getSaveParams()->mSLPusherPower.get() / thing.length();
-			local_108 += thing;
+		if (0.1f < pusher.length()
+		    && pusher.length() < getSaveParams()->mSLEscapeRegion.get()) {
+			pusher.normalize();
+			pusher *= getSaveParams()->mSLPusherPower.get() / pusher.length();
+			local_108 += pusher;
 		}
 	}
 
