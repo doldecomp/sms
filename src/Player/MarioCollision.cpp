@@ -273,6 +273,26 @@ void TMario::floorDamageExec(const TMario::TEParams& params)
 	           params.mInvincibleTime.get());
 }
 
+// Where this body is *inlined* (damageExec) retail `bl`s JGVec3.hpp's copy
+// constructor twice and operator*=(f32), while inlining `scale` inside
+// operator*='s own emitted body -- the product sits at inline depth 5. A bare
+// `mPosition + offset * 50.0f` only reaches depth 4, where a one-statement
+// weak body still expands (batch 146's budget table). The emitted copy of
+// calcDamagePos, in contrast, `bl`s only `scale`, so the level cannot be
+// above the statement or above the function; it has to sit on the scaled
+// offset alone. Returning by value keeps the emitted copy's frame exact (a
+// `const TVec3&` return costs it 16 bytes). MarioSpecial's getOnWirePosAngle
+// is the same shape with the same fix.
+// TODO: two unrelated TUs wanting the identical forwarder suggests the real
+// construct is a shared inline (MarioUtil/MathUtil.hpp); parked TU-local
+// because that header is shared with linked units.
+// fabricated
+static inline JGeometry::TVec3<f32>
+MarioCollisionVecScaled(const JGeometry::TVec3<f32>& v, f32 scale)
+{
+	return v * scale;
+}
+
 // Closest i got, but i think this is wrong, but probably functionally
 // equivalent? I kinda suspect they didn't use this many helper functions? The
 // double epsilon check confused me
@@ -284,7 +304,7 @@ void TMario::calcDamagePos(const JGeometry::TVec3<f32>& pos)
 		return;
 	}
 	offset.normalize();
-	mDamagePos = mPosition + offset * 50.0f;
+	mDamagePos = mPosition + MarioCollisionVecScaled(offset, 50.0f);
 }
 
 void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
