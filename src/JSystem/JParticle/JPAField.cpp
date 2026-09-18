@@ -50,6 +50,24 @@ bool JPABaseField::checkMaxDistance(JGeometry::TVec3<f32>& param_1,
 	return result;
 }
 
+// TODO: 95.3%.  Every instruction is the right one; the whole residue is that
+// retail *re-loads* `unk54` in each of the four flag blocks (0x198, 0x1d8,
+// 0x22c) while we load it once and keep it in r4, which also pushes `cutOff`
+// from retail's r4 into r5.  Structural pass 167 measured, and refuted, the
+// obvious levers: `const` on `checkStatus` (inert), a `u8` instead of a `bool`
+// for `cutOff` (inert), and a TU-local `static inline` taking `this` by
+// pointer (inert -- MWCC sees through it and still CSEs).  A probe TU
+// (scratchpad `probe2.cpp`) shows that exactly one spelling reproduces
+// retail's shape -- `volatile u16 unk54` gives four per-site `lhz` with
+// in-place masks and the same bool materialisation, and closes this function
+// (95.27 -> 100.00, whole-tree fuzzy unchanged) -- but it is *not* the answer:
+// with `volatile` JPAAirField::affect goes 96.55 -> 95.74 because retail
+// demonstrably CSEs the same member there (`lhz r3, 0x54(r3)` at 0x978 reused
+// at 0x998).  So the member is not volatile and the difference is a per-
+// function CSE decision: two reads two blocks apart are shared, four reads
+// spread over ~50 instructions are not.  A bitfield is also refuted: bitfield
+// reads rotate the bit to 31 (`rlwinm. r0,r0,28,31,31`) and do not materialise
+// a bool, while retail masks in place and materialises.
 f32 JPABaseField::calcFieldFadeScale(f32 progress)
 {
 	bool cutOff = false;
@@ -178,6 +196,17 @@ void JPAAirField::set()
 			unk58.set(unk18);
 	}
 }
+// TODO: 96.5%.  Three residues, none of them a wrong statement: (1) the x
+// component of the `diff.sub(...)` pair loads the subtrahend first in retail
+// (`0x58(r30)` then `0x20(r31)`) and the minuend first for us, with the `0x5c`
+// load one slot early -- a schedule difference inside the shared `cross`/`sub`
+// body, whose spelling was already measured tree-wide in JGVec3.hpp; (2) an
+// f4/f5 swap around the inlined `inv_sqrt`; (3) `vec` sits at 0x28(r1) in
+// retail against our 0x20 although the frame total matches at 0x68, i.e.
+// retail has 8 more bytes of low region below it.  Structural pass 167 tried
+// hoisting `vec` to function scope: that puts it at 0x38 (too high, retail is
+// 0x28), so retail's `vec` is block-scoped as written here and the 8 bytes are
+// an inline temp, not a declaration.
 void JPAAirField::affect(JPAParticle* particle)
 {
 	if (checkStatus(STATUS_AIR_CONE)) {

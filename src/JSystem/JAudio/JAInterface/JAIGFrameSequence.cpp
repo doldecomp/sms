@@ -154,6 +154,26 @@ void JAIBasic::checkEntriedSeq()
 	}
 }
 
+// TODO: 99.6%.  All 936 instructions match; the only residue is 8 bytes of
+// frame (0xa0 against retail's 0x98).  Structural pass 167 mapped both low
+// regions from every `(r1)` access.  Retail: 4 dead bytes at 0xc, the f32
+// store/reload temp at 0x10, `readVal` in a four-byte slot at 0x14 (the u16
+// lands at 0x16, big-endian low half), then the four eight-byte int-to-float
+// conversion slots at 0x18/0x20/0x28/0x30, `stmw r19` at 0x3c.  Ours: 8 dead
+// bytes at 0xc, the f32 at 0x14, `readVal` in a two-byte slot at 0x18, six
+// bytes of alignment padding, the four conversion slots at 0x20..0x3f.  So the
+// single difference is 4 dead bytes at the bottom of the low region, which
+// alignment then doubles.  Measured: dropping the `r30` reference gives the
+// exact frame 0x98 but costs the r19 register and rotates every callee-saved
+// assignment (96.8%, ~452 operand diffs), so the reference is real -- retail
+// computes it as `addi r30, r26, 8` -- and costs 4 bytes here.  Inert (all
+// leave 0xa0 and the same 35 markers): a `u32*` instead of the `u32&`, a
+// `JAISoundHandle*` instead of the `JAISoundHandle&`, dropping the
+// `JAISound* snd = sound` copy, and declaring `readVal` at block or function
+// scope.  Hoisting `seqParam` above the `mPauseMode` test is worse (99.2%,
+// 937 instructions).  The remaining 4 bytes are a second dead binding-sized
+// slot we have and retail does not; `JAISoundHandle` is only a typedef for
+// `JAISound*`, so no accessor temp is involved.
 void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 {
 	JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[trackID];

@@ -188,6 +188,19 @@ void JPABaseEmitter::getEmitterGlobalTranslation(JGeometry::TVec3<f32>& vec)
 	local_3c.mult(mTrans, vec);
 }
 
+// TODO: 98.5%.  Two clusters.  The first (0xad4..0xb30) is a systematic f1/f2
+// swap across the `getTrans`/`getXDir`/`getYDir`/`getZDir` reads; that is the
+// three-temporary `set(a, b, c)` shape in the shared JGRotation3.hpp, whose
+// per-component alternative was already measured tree-wide and refuted there
+// (see the note above `getXDir`).  The second (0xbc8..0xc04) is two extra
+// loads: retail keeps `local_90.y`/`.z` in f2/f3 from the `eio.unk3C.set(...)`
+// copy and reuses them in `local_90 == local_84`, while we reload 0x8c/0x90.
+// Structural pass 167 refuted both rewrites of that statement: the explicit
+// three-argument `eio.unk3C.set(local_90.x, local_90.y, local_90.z)` costs a
+// temp (98.54 -> 96.28, frame 0x118 -> 0x120) and `eio.unk3C = local_90` is
+// worse still (95.34, five opcode diffs).  `operator==` being non-`const` is
+// inert.  So the source statement is right and the residue is the same
+// per-function CSE decision as JPABaseField::calcFieldFadeScale.
 void JPABaseEmitter::calcEmitterGlobalParams()
 {
 	JPAEmitterInfo& eio = JPAEmitterInfoObj;

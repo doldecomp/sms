@@ -132,6 +132,19 @@ void JPAGetZRotateMtx(s16 z, MtxPtr dst)
 // locals, not member reads: `axis.x * axis.x + ...` on a memory vector keeps
 // three fmuls apart).  The `if (sin <= epsilon())` order below is confirmed
 // (cror eq,lt,eq then bne, 56.9 -> 62.3).
+// TODO: 62.3%.  The shape is right (cross, squared, dot, `TUtil<f32>::sqrt`,
+// zero-or-scale, then the nine matrix products) but retail's `axis` lives in
+// *memory* at 0x14..0x1f: it stores the three cross components, reloads them
+// for `squared()`, zeroes them in z, y, x order and multiplies them in place
+// in the `__fres` branch, while our `axis` is scalar-replaced into FPRs
+// throughout (frame 0x38 against retail's 0x30).  Structural pass 167 confirmed
+// that MWCC's scalar replacement is not blocked by taking the address through
+// an inlined helper (a TU-local `static inline f32 f(TVec3<f32>*)` wrapping
+// `squared()` changes nothing), so the blocker in retail is something else;
+// the z, y, x zero order does match our `zero()` (`x = y = z = 0.0f` evaluates
+// right to left), so the local really is a `TVec3<f32>` and not an array.
+// Note that JGVec3.hpp's `cross` body is the tree-wide-measured shape, so the
+// next step here is a mechanism for the memory residency, not a new `cross`.
 void JPAVecToRotaMtx(MtxPtr dst, JGeometry::TVec3<f32> a,
                      JGeometry::TVec3<f32> b)
 {
