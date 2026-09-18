@@ -118,14 +118,6 @@ TBubble::TBubble(const char* name)
 {
 }
 
-// Binding level worth +8 of low region, landing TBubble::init's frame at
-// 0x78 (batch 121).
-static inline J3DModel* BosstelesaGetModel(const MActor* p)
-{
-	J3DModel* model = p->getModel();
-	return model;
-}
-
 void TBubble::init(TLiveManager* live_manager)
 {
 	TWalkerEnemy::init(live_manager);
@@ -140,7 +132,7 @@ void TBubble::init(TLiveManager* live_manager)
 	TScreenTexture* screenTexture
 	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
 	const ResTIMG* textureInfo = screenTexture->getTexture()->getTexInfo();
-	SMS_ChangeTextureAll(BosstelesaGetModel(getMActor())->getModelData(),
+	SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
 	                     "H_ma_rak_dummy", *textureInfo);
 }
 

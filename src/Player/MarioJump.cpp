@@ -876,22 +876,6 @@ BOOL TMario::rotateBroadJumping()
 	return 0;
 }
 
-// Binding level worth +16 of low region, landing TMario::boardJumping's
-// frame at 0x60 (batch 121).
-static inline const JGeometry::TVec3<f32>&
-MarioJumpGetNormalInner(const TBGCheckData* p)
-{
-	const JGeometry::TVec3<f32>& normal = p->getNormal();
-	return normal;
-}
-
-static inline const JGeometry::TVec3<f32>&
-MarioJumpGetNormal(const TBGCheckData* p)
-{
-	const JGeometry::TVec3<f32>& normal = MarioJumpGetNormalInner(p);
-	return normal;
-}
-
 BOOL TMario::boardJumping()
 {
 	setAnimation(ANIM_RIDE_SHELL, 1.0f);
@@ -907,10 +891,9 @@ BOOL TMario::boardJumping()
 			loserExec();
 			gpMSound->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
 		} else {
-			s16 diff
-			    = matan(MarioJumpGetNormal(mWallPlane).z,
-			            mWallPlane->getNormal().x)
-			      - mFaceAngle.y;
+			s16 diff = matan(getWallPlane()->getNormal().z,
+			                 getWallPlane()->getNormal().x)
+			           - mFaceAngle.y;
 			s16 max = mSurfingParamsWaterRed.mClashAngle.get();
 			if ((diff < -max || max < diff)
 			    && mForwardVel > mSurfingParamsWaterRed.mClashSpeed.get()) {

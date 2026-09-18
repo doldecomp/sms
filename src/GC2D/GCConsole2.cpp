@@ -2290,17 +2290,9 @@ void TGCConsole2::startDisappearTank()
 	unk26C->setPanePosition(40, start, mid, end);
 }
 
-// Binding level worth +8 of low region, landing
-// TGCConsole2::startAppearCoin's frame at 0x98 (batch 121).
-static inline J2DPane* GCConsole2GetPane(const TExPane* p)
-{
-	J2DPane* pane = p->getPane();
-	return pane;
-}
-
 void TGCConsole2::startAppearCoin()
 {
-	if (GCConsole2GetPane(unk108)->isVisible()) {
+	if (unk108->getPane()->isVisible()) {
 		return;
 	}
 
@@ -2402,25 +2394,9 @@ void TGCConsole2::resetLife(int param_1)
 	}
 }
 
-// Binding level worth +16 of low region, landing
-// TGCConsole2::startAppearLife's frame at 0x2c8 (batch 121).
-static inline s16 GCConsole2GetHealth(const TMario* p)
-{
-	s16 health = p->getHealth();
-	return health;
-}
-
-// Binding level worth +16 of low region, landing
-// TGCConsole2::startAppearLife's frame at 0x2c8 (batch 121).
-static inline J2DPane* GCConsole2GetPane(const TBoundPane* p)
-{
-	J2DPane* pane = p->getPane();
-	return pane;
-}
-
 bool TGCConsole2::startAppearLife(int param_1)
 {
-	if (unk38 || unk50 || GCConsole2GetHealth(gpMarioOriginal) == 0)
+	if (unk38 || unk50 || gpMarioOriginal->getHealth() == 0)
 		return false;
 
 	if (param_1 == 0) {
@@ -2455,7 +2431,7 @@ bool TGCConsole2::startAppearLife(int param_1)
 
 	unk38 = 1;
 	unk84 = 0;
-	GCConsole2GetPane(unk1C4)->add(unk1C8, unk1CA);
+	unk1C4->getPane()->add(unk1C8, unk1CA);
 	return true;
 }
 
@@ -4136,14 +4112,6 @@ bool TGCConsole2::processAppearTimer(int param_1)
 	return isFinished;
 }
 
-// Binding level worth +8 of low region, landing
-// TGCConsole2::processAppearBalloon's frame at 0x68 (batch 121).
-static inline const JUTRect& GCConsole2GetBounds(const J2DWindow* p)
-{
-	const JUTRect& bounds = p->getBounds();
-	return bounds;
-}
-
 bool TGCConsole2::processAppearBalloon()
 {
 	bool isFinished = false;
@@ -4155,8 +4123,8 @@ bool TGCConsole2::processAppearBalloon()
 			alpha = 0xFF;
 		unk3B0->setAlpha(alpha);
 	} else {
-		JUTRect bounds = GCConsole2GetBounds(unk3B0);
-		int nextHeight = unk3CC + bounds.getHeight();
+		JUTRect bounds = unk3B0->getBounds();
+		int nextHeight = getUnk3CC() + bounds.getHeight();
 		int maxHeight  = unk3BC.getHeight();
 
 		if (nextHeight > maxHeight) {
@@ -4173,14 +4141,6 @@ bool TGCConsole2::processAppearBalloon()
 	return isFinished;
 }
 
-// Binding level worth +8 of low region, landing
-// TGCConsole2::processDisappearBalloon's frame at 0x88 (batch 121).
-static inline const JUTRect& GCConsole2GetContentsBounds(const J2DWindow* p)
-{
-	const JUTRect& contentsBounds = p->getContentsBounds();
-	return contentsBounds;
-}
-
 bool TGCConsole2::processDisappearBalloon()
 {
 	bool isFinished = false;
@@ -4188,7 +4148,7 @@ bool TGCConsole2::processDisappearBalloon()
 	JUTRect bounds = unk3B0->getBounds();
 	int height     = bounds.getHeight();
 
-	JUTRect contents  = GCConsole2GetContentsBounds(unk3B0);
+	JUTRect contents  = unk3B0->getContentsBounds();
 	int contentHeight = contents.getHeight();
 
 	if (contentHeight > 0) {
