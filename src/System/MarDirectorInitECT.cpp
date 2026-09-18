@@ -131,19 +131,19 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 	return mirrorTex;
 }
 
-// TODO: 97.5%. **Header item, measured, not applied here because
-// include/System/MarDirector.hpp is shared.** `initECDisp` is a *static*
-// member in the ROM, like its neighbours `initECTMir`, `initECTGft` and
-// `preEntry`: retail's prologue clobbers r4 with the `.rodata` base
-// immediately and keeps r3 and r5, so the `TPerformList*` the whole body uses
-// as `push_back`'s receiver arrives in **r3**, which can only happen with no
-// `this`. With `static void initECDisp(...)` in the header the three
-// parameter registers line up and `insert`'s receiver becomes the *third*
-// parameter (r5), so the body's two `param_2->insert(...)` calls become
-// `param_3->insert(...)` and `param_2` is genuinely unused.
-// Measured whole-tree: zero regressions, initECDisp 97.50 -> 97.55, and the
-// single caller `TMarDirector::setupObjects` 98.00 -> 98.08 (the `this`
-// argument it no longer has to set up). Apply the pair together.
+// TODO: 97.55%. `initECDisp` is a *static* member in the ROM, like its
+// neighbours `initECTMir`, `initECTGft` and `preEntry`: retail's prologue
+// clobbers r4 with the `.rodata` base immediately and keeps r3 and r5, so the
+// `TPerformList*` the whole body uses as `push_back`'s receiver arrives in
+// **r3**, which can only happen with no `this`. The single call site sets only
+// r3/r4/r5 (`lwz r3, 0x24(r30)` / `lwz r4, 0xa60(r1)` / `mr r5, r28`), which
+// confirms the three-parameter static shape. With `static` the parameter
+// registers line up and `insert`'s receiver is the *third* parameter (r5), so
+// the five `insert` calls go through `param_3` and `param_2` is genuinely
+// unused in this revision. Applied in header round 20 (batch 117): zero
+// regressions whole-tree, initECDisp 97.50 -> 97.55 and the single caller
+// `TMarDirector::setupObjects` 98.00 -> 98.08 (the `this` argument it no
+// longer has to set up).
 //
 // What is left after that is 112 bytes of frame (0x300 vs 0x370) and one
 // extra callee-saved register: retail saves r20-r31 (`stmw r20`) where we
@@ -159,7 +159,7 @@ void TMarDirector::initECDisp(
 	JDrama::TEfbCtrlDisp* stageDisp = new JDrama::TEfbCtrlDisp("stageDisp");
 	stageDisp->JDrama::TEfbCtrl::setSrcRect(JDrama::TRect(
 	    0, 0, (u16)SMSGetGameRenderWidth(), (u16)SMSGetGameRenderHeight()));
-	param_2->insert(stageDisp);
+	param_3->insert(stageDisp);
 
 	JDrama::TViewObj* composite3
 	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("合成3");
@@ -175,16 +175,16 @@ void TMarDirector::initECDisp(
 
 	if (sunModel) {
 		lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
-		param_2->insert(lensGlow);
+		param_3->insert(lensGlow);
 		lensFlare = new TLensFlare("レンズフレア");
-		param_2->insert(lensFlare);
+		param_3->insert(lensFlare);
 	} else {
 		sunModel = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("夕日モデル");
 		if (sunModel) {
 			lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
-			param_2->insert(lensGlow);
+			param_3->insert(lensGlow);
 			lensFlare = new TLensFlare("レンズフレア");
-			param_2->insert(lensFlare);
+			param_3->insert(lensFlare);
 		}
 	}
 
