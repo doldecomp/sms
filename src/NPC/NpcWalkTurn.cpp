@@ -163,17 +163,18 @@ NpcWalkTurnGetUnk1A0(const TBaseNPC* p)
 	return unk1A0;
 }
 
-// TODO: frame 0x50 vs 0x40, 12 of the 16 bytes below `angle1` (0x30 vs 0x24)
-// and 4 above it. Naming the param fetch makes it worse (0x38),
-// `getRotation().y` for angle1 adds an instruction (99.7 -> 96.9). A
-// `getUnk1A0()` level (promoted to NpcBase.hpp in header round 18) is **+8
-// with no instruction change at the angle2 site alone** (0x40 -> 0x48, applied
-// below) and saturates there: at the compare site or the tail
-// assignment it is +0 and costs 1-3 instructions, and a params rung
-// (`mIndividualParams->mFirstStateTurnSpeed.get()` behind a wrapper) or
-// splitting the three `s16` declarations from their assignments are both +0.
-// So the remaining 8 bytes are a different level in the CLBDegToShortAngle /
-// CLBChaseGeneralConstantSpecifySpeed chain.
+// The `getUnk1A0()` level at the angle2 site alone is +8 with no instruction
+// change (frame 0x48 -> 0x50, which is exact) and saturates there: at the
+// compare site or the tail assignment it is +0 and costs 1-3 instructions.
+// TODO: 99.9%, frame 0x50 exact, one `~`: `angle1`'s slot, the only named
+// local whose address is taken, is at 0x34 where retail has 0x30, with the
+// same saved-register boundary above it -- so retail's named region is 4 bytes
+// bigger and its low region 4 bytes smaller, at equal totals. Nothing found
+// that reserves those 4 bytes above `angle1`: not `BOOL result` (93.6%), not
+// an `s16 angles[3]` group (85.9%, all three then spill), not a named
+// `TNpcSaveIndividual*` before it (+0), not a named `f32` for the params
+// fetch (87.0%, frame 0x58), not `getRotation().y` for angle1 (96.9%), not
+// splitting the three `s16` declarations from their assignments (+0).
 bool TBaseNPC::execTurnToFirstState()
 {
 	if (mRotation.y == unk1A0.y)
