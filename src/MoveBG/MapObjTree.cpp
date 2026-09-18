@@ -92,7 +92,12 @@ int TMapObjTree::controlLeaf(int index)
 		leaf.mCollision->moveMtx(mtx);
 
 	// BUG: they probably meant to compare both angle and velocity here, but
-	// forgot to change it after copy-pasting?
+	// forgot to change it after copy-pasting? The magnitude the second term
+	// should have used is declared and never written, which is also the
+	// last four bytes of retail's frame: every local above it sits exactly
+	// 4 bytes higher there, and the slot is unreferenced. Positional
+	// evidence only, but it fits the copy-paste story.
+	f32 absAngularVelocity;
 	if (abs(leaf.mAngle) < mLeafTouchImpulse
 	    && abs(leaf.mAngle) < mLeafTouchImpulse)
 		return 1;
@@ -166,6 +171,16 @@ void TMapObjTree::initEach()
 	return;
 }
 
+// TODO: the only residue is the callee-saved register holding the leaf count
+// across `new TMapObjLeaf[mLeafNum]` (retail r25, ours r26; three `~`
+// instructions, frame exact). The count's live range ends before the two
+// format-string bases are materialised, and retail coalesces it with the
+// per-iteration `new` result while we coalesce it with the first string base.
+// Measured and rejected: a named s32/int, declaration-then-assignment, a named
+// `new` result, a named loop bound, named `const char*` locals for either
+// format string (in both orders, +2 instructions), a named collision pointer,
+// a named joint index, hoisting `char buffer[64]`, inverting the if/else, and
+// a TU-local binding level on the count (that one grows the frame).
 void TMapObjTree::initMapObj()
 {
 	TMapObjGeneral::initMapObj();
@@ -306,7 +321,7 @@ void TMapObjTreeScale::beSmall()
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	setObjHitData(0);
-	mDamageRadius = mAttackRadius;
+	mDamageRadius = getAttackRadius();
 	calcEntryRadius();
 	mDamageHeight = 30.0f;
 	calcEntryRadius();
@@ -315,6 +330,18 @@ void TMapObjTreeScale::beSmall()
 	mActorType = 0x4000003B;
 	mState     = STATE_SMALL;
 	SMS_HideAllShapePacket(getModel());
+}
+
+// TODO: this is JDrama::TNameRefGen::search2 with its result bound to a local
+// before returning; the binding is worth 8 bytes of loadAfter's frame and
+// getAttackRadius() below is the other half of the pair. Binding inside
+// search2 itself costs eighteen exact functions elsewhere (header round 19),
+// so it is parked here until the right carrier is found.
+static inline JDrama::TNameRef* MapObjTreeSearch(const char* name)
+{
+	JDrama::TNameRef* ref
+	    = JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(name);
+	return ref;
 }
 
 void TMapObjTreeScale::loadAfter()
@@ -327,9 +354,8 @@ void TMapObjTreeScale::loadAfter()
 	}
 
 	// Translated: "Event (Bianco terrain sinking)"
-	unk2E0 = (TMapEventSink*)JDrama::TNameRefGen::getInstance()
-	             ->getRootNameRef()
-	             ->search("イベント（地形沈むビアンコ）");
+	unk2E0 = (TMapEventSink*)MapObjTreeSearch(
+	    "イベント（地形沈むビアンコ）");
 }
 
 TMapObjTreeScale::TMapObjTreeScale(const char* name)
