@@ -1739,6 +1739,7 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNKC:
 	case PROGRESS_UNKD:
 	case PROGRESS_UNK2D:
+	case PROGRESS_UNK35:
 		if (gpCardManager->getLastStatus() != CARD_RESULT_NOCARD) {
 			waitForStop(PROGRESS_UNK1);
 			gpCardManager->probe();
@@ -1824,7 +1825,10 @@ void TCardSave::execMovement_()
 			if (r != -1)
 				gpCardManager->getBookmarkInfos(&unk278[0]);
 		} else {
-			if (unk178->isVisible()) {
+			// The state test is dead here -- this is `case PROGRESS_UNKA`, so
+			// unk310 cannot be PROGRESS_UNK2 -- but the ROM compiles it, so
+			// the original really did guard the row collapse with it.
+			if (unk310 == PROGRESS_UNK2 && unk178->isVisible()) {
 				unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
 				                        unk164.getHeight());
 				unk178->hide();
@@ -1835,7 +1839,7 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNKB:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
-			gpCardManager->getBookmarkInfos(&unk278[0]);
+			unk310 = changeMode(gpCardManager->getLastStatus());
 		break;
 
 	case PROGRESS_UNKE:
@@ -1869,13 +1873,17 @@ void TCardSave::execMovement_()
 					unk2E0++;
 				}
 			} else {
-				if (unk178->isVisible()) {
-					unk178->hide();
-					unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
-					                        unk164.getHeight());
-					unk10 = 3;
-				}
 				drawMessage(PROGRESS_UNK12);
+				if (unk2E0 > 0x12C) {
+					if (unk178->isVisible()) {
+						unk178->hide();
+						unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
+						                        unk164.getHeight());
+						unk10 = 3;
+					}
+				} else {
+					unk2E0++;
+				}
 			}
 		} else {
 			drawMessage(PROGRESS_UNK0);
@@ -1890,7 +1898,7 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNK12:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
-			gpCardManager->getBookmarkInfos(&unk278[0]);
+			unk310 = changeMode(gpCardManager->getLastStatus());
 		break;
 
 	case PROGRESS_UNK10:
@@ -2054,7 +2062,7 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNK18:
 		if (waitForAnyKeyBM(PROGRESS_UNK2) != -1)
-			gpCardManager->getBookmarkInfos(&unk278[0]);
+			unk310 = changeMode(gpCardManager->getLastStatus());
 		break;
 
 	case PROGRESS_UNK2A:
