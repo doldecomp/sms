@@ -99,6 +99,19 @@ bool MSSetSoundGrp::startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
 
 // Their original include structure was complete nonsense,
 // so this shall live here for now to avoid circular includes.
+//
+// TODO: 98.1%, both instantiations. `bVar1 += uVar5;` before the
+// `getPlayGameFrameCounter()` read (closure batch 123) is a real fix -- it
+// reproduces retail's in-place `add rX, rX, r3` and dropped the diff from 63
+// to 49 `~|<>` markers -- but retail still gives the longer-lived `uVar7`
+// (compared three times) the lower-numbered register and the shorter-lived
+// `bVar1 + uVar5` the higher one; ours does the opposite. Reordering the two
+// declarations (`uVar7` first) regresses badly (136 markers): the allocator
+// is not simply following declaration order here. Also open: a 4-byte
+// low-region gap under the first branch's `JAIActor local_94` temp, and a
+// float-register permutation in the `unk28`/`unk2C`/`unk44..unk4C`
+// linearTransform block. All register-permutation-class residue, not
+// pursued further this batch.
 template <typename T>
 bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
                                         u32 param_3, f32 param_4, u32 param_5,
@@ -154,8 +167,9 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 
 		u32 bVar1 = unk1D.get();
 		u32 uVar5 = JALCalc::getRandom_0_1() * unk1E.get();
+		bVar1 += uVar5;
 		u32 uVar7 = unk5C[unk5A]->getPlayGameFrameCounter();
-		if (uVar7 < bVar1 + uVar5) {
+		if (uVar7 < bVar1) {
 			bVar2 = false;
 		} else {
 			if (unk24.get() == 1 && uVar7 < unk1F.get() && f31 < unk20.get()) {
