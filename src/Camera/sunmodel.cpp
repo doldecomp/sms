@@ -285,12 +285,22 @@ inline void TSunModel::moveSun_()
 	// chains never reached the `bl` (see the trial list in JGVec3.hpp).
 	// TODO: 8 bytes of frame left (0xe8 against retail's 0xe0), and retail
 	// allocates `mtx` *below* this expansion's locals (mtx 0x78, dir 0xa8,
-	// the temporary 0xb4) while ours allocates it above (dir 0x7c, temp
-	// 0x88, mtx 0x94, then 4 bytes of pad).  Declaring `mtx` at function
-	// scope and moving its declaration are both inert, as the rules card
-	// says block scope is; a level around the CUE_CALC_ANIM body is the
-	// untested reading.  Moving these statements out of moveSun_ into
-	// perform (with a one-statement level left behind for
+	// the temporary 0xb4) while ours allocates it above (dir 0x80, temp
+	// 0x8c, mtx 0x98).  The 72-byte block itself is the same size on both
+	// sides, so the residue is two independent facts: 8 bytes of low region
+	// and the reversal inside the block.  Declaring `mtx` at function scope
+	// and moving its declaration are both inert, as the rules card says
+	// block scope is; re-pass II also measured a fabricated
+	// `SunModelCalcAnim(TSunModel*)` level around the whole CUE_CALC_ANIM
+	// body (the reading the previous TODO called untested) as **byte-for-
+	// byte inert**, so `mtx` is not steerable from the caller side at all
+	// and the reversal is what has to be understood first.  The frame half
+	// is cheap once it is: the `SMSGetCamera()` fork is +4 at each of its
+	// four read sites here (all four spelled `gpCamera->` gives 0xd8, i.e.
+	// -16), so two sites land 0xe0 exactly -- but no split of them is
+	// natural, and it does not move a single marker while the block is
+	// still reversed.  Moving these statements out of moveSun_ into perform
+	// (with a one-statement level left behind for
 	// calcDispRatioAndScreenPos_) loses the `bl` again, because the
 	// conversion then sits at depth 3.
 	unk198.scaleAdd(250000.0f, SMSGetCamera()->getUnk124Vec(), dir);

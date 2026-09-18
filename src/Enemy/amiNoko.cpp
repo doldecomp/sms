@@ -253,8 +253,22 @@ static inline const JGeometry::TVec3<f32>* AmiNokoUp(const TAmiNoko* p)
 	return up;
 }
 
-// TODO: instruction-identical, frame 16 bytes short; the byte count is the
-// only evidence for what the original declared, so it is left alone.
+// TODO: 99.7%, frame 0x60 exact (the AmiNokoUp binder above pays the 16
+// bytes). The whole residue is one volatile-FPR block trade: retail loads
+// mPosition.x/gpMarioPos->x/mPosition.z into f5/f4/f3 where we use f3/f1/f2,
+// with the identical load order, the identical `fsubs f31/f30` destinations
+// and matan's f1/f2 argument loads interleaved the same way in both. Retail's
+// block simply starts two registers higher, as if f1/f2 were reserved for the
+// pending matan call. Re-pass II measured and rejected, all with the frame
+// still exact: naming matan's discarded result (byte-identical), moving the
+// matan call above `toMario` (byte-identical), building `toMario` straight
+// from the two subtractions (evaluates z first -- right-to-left arguments --
+// and swaps f31/f30, 99.5), `SMS_GetMarioX()/SMS_GetMarioZ()` in place of
+// `gpMarioPos->` (two global forks, frame 0x68, 99.5) and a named
+// `const TVec3<f32>& up = mUp;` feeding both matan and the dot (one more
+// callee-saved GPR, frame 0x58, 95.7). Research 171 says naming is the only
+// knob on a volatile block and both values are already named, so this is the
+// block-trade class (cf. MSHandle::calcDolby).
 bool TAmiNoko::isHitValid(u32 message)
 {
 	if (message == HIT_MESSAGE_PUNCH || message == HIT_MESSAGE_HIP_DROP) {

@@ -332,50 +332,49 @@ void CLBRotatePosAndUp(s16, s16, const JGeometry::TVec3<f32>&,
                        const JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>*,
                        JGeometry::TVec3<f32>*);
 
+// The last addressable pixel index of the game render area.  Both are
+// parameterless binders over the real out-of-line Resolution.cpp accessors,
+// and that shape is what pays CLBScreenFPosToSPos's 8 bytes of dead pool: a
+// parameterless binder is +8 in the library price ladder (batch 170) and this
+// one is +4 per expansion, so the two of them land retail's frame exactly.
+// Returning the raw size and subtracting 1 at the call site instead keeps the
+// frame but reorders the 0.5f literal load against the `1.0f + x` add.
+static inline int CLBGameRenderWidthMax()
+{
+	extern u16 SMSGetGameRenderWidth();
+	u16 width = SMSGetGameRenderWidth();
+	return width - 1;
+}
+
+static inline int CLBGameRenderHeightMax()
+{
+	extern u16 SMSGetGameRenderHeight();
+	u16 height = SMSGetGameRenderHeight();
+	return height - 1;
+}
+
 inline void CLBScreenFPosToSPos(JGeometry::TVec2<s16>* out,
                                 const JGeometry::TVec2<f32>& in)
 {
-	// can't include Resolution.hpp because of troubles with MapDraw.cpp
-	extern u16 SMSGetGameRenderHeight();
-	extern u16 SMSGetGameRenderWidth();
-
-	// The externs are `u16`, as System/Resolution.hpp declares them: retail
-	// zero-extends the result (`clrlwi r3, r3, 16`) before the `- 1` and the
-	// signed int-to-float conversion, where an `s16` return gives `extsh`.
+	// The Resolution.cpp externs are `u16`, as System/Resolution.hpp
+	// declares them: retail zero-extends the result (`clrlwi r3, r3, 16`)
+	// before the `- 1` and the signed int-to-float conversion, where an
+	// `s16` return gives `extsh`.  Resolution.hpp itself cannot be included
+	// here because of troubles with MapDraw.cpp, so the declarations live in
+	// the two binders above.
 	f32 x = in.x;
-	// TODO: 98.0% in sunmodel, the only object that instantiates this body
-	// (the map has it as a 0x114 weak in sunmodel.cpp).  Every instruction
-	// matches in opcode and order; the residue is frame 0x30 against our
-	// 0x28 plus a rotation of the four volatile FPRs (retail takes f1 for
-	// the magic double, f2 for the scale and f3 for the sum, ours f3/f1/f0).
-	// Retail's dead pool below the int-to-float conversion pair is 0xc..0x17
-	// (12 bytes) against our 0xc..0xf (4), i.e. 8 dead bytes more, and the
-	// conversion pair sits at 0x18 instead of 0x10.  Header round 30: this
-	// function has no inlined callee at all in our spelling (both externs
-	// and CLBRoundf are `bl`s), so the 8 bytes cannot be an accessor's dead
-	// 4-byte temporaries -- there is nowhere for them to come from.  What
-	// fits the rules card exactly is one dead *8-byte non-trivial class*
-	// local of an inlined callee, and JGeometry::TVec2<f32> is exactly 8
-	// bytes with a user constructor, so retail expands one helper here that
-	// declares an uninitialised TVec2<f32>.  One more live value in that
-	// expansion is also the natural cause of the FPR rotation, so the two
-	// halves of the residue are one missing expansion, not two facts.
-	// Naming the half-size scale in each branch is inert; no candidate
-	// helper is recoverable from the map (TVec2<f32> has only `__ct__Fv`
-	// and `sub` as symbols game-wide), so this stays parked rather than
-	// fabricated.
 	if (x < -1.0f || 1.0f < x)
 		out->x = -1;
 	else
-		out->x = CLBRoundf<s16>((1.0f + x)
-		                        * (0.5f * (f32)(SMSGetGameRenderWidth() - 1)));
+		out->x = CLBRoundf<s16>(
+		    (1.0f + x) * (0.5f * (f32)CLBGameRenderWidthMax()));
 
 	f32 y = in.y;
 	if (y < -1.0f || 1.0f < y)
 		out->y = -1;
 	else
 		out->y = CLBRoundf<s16>(
-		    (y - 1.0f) * (-0.5f * (f32)(SMSGetGameRenderHeight() - 1)));
+		    (y - 1.0f) * (-0.5f * (f32)CLBGameRenderHeightMax()));
 }
 
 #endif
