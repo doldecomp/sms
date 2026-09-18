@@ -43,6 +43,46 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <Map/MapCollisionManager.hpp>
 
+// TODO (closure batch 114): 97.3%. The residue is entirely in the *inlined
+// constructors* of MoveBG classes, so every fix is an edit to another unit's
+// header and none of them were made here. Grouped by the class whose vtable
+// store precedes the diff:
+//
+// Missing member initialisations (the ROM's ctor body has them, ours does not;
+// the store order is descending, i.e. the batch-89 assignment chain
+// `m.x = m.y = m.z = v;`, not an initialiser list):
+//   TMapObjStartDemo   `stw 0, 0x138`
+//   TMapObjBillboard   `stw 0, 0x150`
+//   TTurboNozzleDoor   `stfs 0.0f` to 0x140, 0x13c, 0x138 (one TVec3)
+//   TBigWindmill       `stw 0, 0x148`
+//   TMapObjRootPakkun  `stw 0, 0x138`
+//   TMapObjPuncher     `stfs 0.0f, 0x138`
+//   TMareCork          `stw 0, 0x138` and `stb 0, 0x154`
+//   TMareEventPoint    `stw 0, 0x68`
+//   TPictureTelesa     `stb 0, 0x174`
+//
+// Extra member initialisations we emit and the ROM does not:
+//   TCraneUpDown       `stfs` to 0x140/0x144
+//   TFruitLauncher     `stw 0` to 0x138/0x13c/0x140
+//
+// Initialiser list vs assignment chain (we emit `bl TVec3::set<f>`, the ROM
+// three descending `stfs`): TBalloonKoopaJr's `mCenterPos(0,0,0)` at 0x148 and
+// TAmiKing's vector at 0x13c both want a ctor *body* chain instead.
+//
+// Called where the ROM inlines: TSandBlock::TSandBlock(const char*) and
+// THideObj's constructor are out-of-line for us and expanded there (their
+// bodies belong in the class).
+//
+// TMapObjSteam's name argument is `li r4, @5102@sda21` in the ROM and
+// `addi r4, r31, 0x104` here: its default name string lives in the small-data
+// pool, not the TU's .rodata block.
+//
+// Everything from 0x2580 on (~250 instructions of r30/r29 renaming plus the
+// 0x50-vs-0x60 frame) is one cascade from the missing
+// TTelesaSlot::TTelesaSlot(const char*): the extra callee-saved register it
+// needs renames the object pointer for the whole tail. That constructor's
+// depth-1 inlining refusal is the standing research item from batch 104, so it
+// is left alone here.
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 {
 	if (strcmp(name, "MapObjBase") == 0)
