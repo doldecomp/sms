@@ -73,6 +73,22 @@ void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 	// (98.1%), sizeof instead of ARRAY_COUNT, and moving `buffer` to the top
 	// of the body (all no change).
 	//
+	// Batch 151 re-measured the residue after the batch-127 binding landed:
+	// the frame is now **exact** (0x140 both sides) and the only difference
+	// left is that `buffer` sits at 0x24 instead of 0x28, i.e. the low region
+	// is 24 bytes against retail's 28 and the 4 bytes come back as alignment
+	// slack above `buffer`. So the object wanted is a **4-byte** one, and no
+	// 4-byte lever is known to exist: a binding written into a new
+	// `TMovieSubTitle::getScreen()` accessor is +8, not the +4 that batch 143
+	// measured for u16 reads (so that rule is u16-specific and does not
+	// generalise to a pointer member); two of them is +0x10; a global fork
+	// over `gpApplication` is +0 both as `&gpApplication` and as a `u32`
+	// wrapper, while the binding form of the same wrapper is +8; a pointer
+	// level inside `is_longheight_movie` (a hand-rolled `std::find` returning
+	// the iterator, which the loop shape suggests retail wrote) is +8 plus one
+	// instruction; and a binding inside `hide()` is +4 but drops `perform`
+	// from 100% to 98.5%, so it cannot be spent here.
+	//
 	// Closure batch 129 sized the object from the callee side: **one
 	// uninitialised non-trivial 12-byte local in the UNUSED
 	// TMovieSubTitle::makeBmgName below takes this function to exact**
@@ -168,6 +184,14 @@ void TMovieSubTitle::setCurMessage()
 	snprintf(unk1C->getStringPtr(), 256, "%s", msg);
 }
 
+// TODO: the map sizes this UNUSED body at 0x4c = 19 instructions and ours
+// compiles to 21, so two instructions of it are still wrong even though its
+// inlined image in setupResource is exact (sprintf with the format string in
+// .rodata, strrchr on '.', strcpy of the .sdata2 ".bmg"). The two extra are in
+// the out-of-line prologue/argument shuffle -- `this` takes r3, so `buffer`
+// has to be moved to r31 and back -- so the candidate is a body that does not
+// need `buffer` live across sprintf. Adding a `char* name = buffer;` binding
+// is +2 more instructions and breaks setupResource, so it is not that.
 void TMovieSubTitle::makeBmgName(char* buffer, int, const char* param_3)
 {
 	sprintf(buffer, "/subtitle/%s", param_3);

@@ -125,6 +125,20 @@ bool CPolarSubCamera::removeMultiPlayer(const JGeometry::TVec3<f32>* param_1)
 //     vector into a TU-local level around `MsClamp` (224 insns) or around
 //     `mCurrentTarget.mTarget.set(center)` (51 markers) does not move it.
 //   * the `fmr f31, f0` below.
+// Batch 151 retained that pair -- the dead-carrier rule now makes it legal --
+// and the function is 99.5%, frame 0x60 exact, five operand markers plus one
+// insert. It also decomposed the ordering residue: both sides hold 48 bytes of
+// low region, ours as [12][sqrt 4][32] and retail's as [28][sqrt 4][16], so
+// the dead vector's 16 bytes are being allocated *after* the MsSqrtf slot even
+// though the helper expands before it. Class-object locals of inlined callees
+// are therefore a separate, later sub-region than the scalar temps, and the 16
+// bytes retail holds below the slot have to be scalar inline temps of an
+// expansion at or before the sqrt. Rejected for that: the dead vector declared
+// last in the helper (identical), the dead vector moved into a TU-local
+// `accumulate()` level around `center += *it->unk0` (50 markers), and a
+// `TMultiPlayerData::getPos()` accessor returning `const TVec3&` at the two
+// inner-loop sites, which is +4 per use rather than the +8 the return-type
+// price predicts and lands 0x58 with 68 markers.
 // Measured and rejected for the 16: pointer parameters (+0), a second level
 // above the helper (+8), `u8 pad[4]` or a dead `f32` next to the vector (+0 --
 // only a class object counts, and `f32 diff[4]` is dropped entirely, per
@@ -135,6 +149,12 @@ bool CPolarSubCamera::removeMultiPlayer(const JGeometry::TVec3<f32>* param_1)
 static inline f32 sqDistance(const JGeometry::TVec3<f32>& a,
                              const JGeometry::TVec3<f32>& b)
 {
+	// Dead 16-byte carrier: retail's low region holds 16 bytes that our
+	// expansion of this helper does not reserve (batch 151; the rule is that a
+	// dead uninitialised non-trivial local of an inlined callee with no
+	// out-of-line copy is a zero-instruction frame lever, and a `TVec3`
+	// reserves 16 rather than its 12 bytes).
+	JGeometry::TVec3<f32> diff;
 	f32 x2 = (a.x - b.x) * (a.x - b.x);
 	f32 y2 = (a.y - b.y) * (a.y - b.y);
 	f32 z2 = (a.z - b.z) * (a.z - b.z);
@@ -182,7 +202,8 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 		// `MsClamp(1.5f * MsSqrtf(...) + 300.0f, min, max)` moves the copy
 		// rather than removing it (the clamp then runs in f0), and the
 		// if/else-if spelling reloads mDistMin in both arms (+2).
-		f32 camDistance = 1.5f * MsSqrtf(maxSqDist) + 300.0f;
+		f32 maxDist     = MsSqrtf(maxSqDist);
+		f32 camDistance = 1.5f * maxDist + 300.0f;
 		camDistance     = MsClamp(camDistance, mCurrentParams->mDistMin,
 		                          mCurrentParams->mDistMax);
 

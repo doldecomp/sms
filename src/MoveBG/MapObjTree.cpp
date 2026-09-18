@@ -192,6 +192,12 @@ void TMapObjTree::initEach()
 // count's live range with the loop's scratch register and we merge it with the
 // second format-string base; both merges are legal, so the tie-break is
 // allocator-internal and no source spelling found reaches it.
+// Batch 151 checked the residue against batch 144/145's ranking rule and it is
+// not reachable by either knob: the function holds exactly one function-scope
+// named scalar (`i`), so the named-scalar count that moves the pool-vs-`this`
+// boundary cannot be exercised, and declaration order is inert with a single
+// competitor. The frame is exact, so none of the new inline-temp price rules
+// applies either. Three operand-only markers, left as allocator-internal.
 void TMapObjTree::initMapObj()
 {
 	TMapObjGeneral::initMapObj();

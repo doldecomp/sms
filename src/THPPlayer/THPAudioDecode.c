@@ -141,6 +141,13 @@ static void* AudioDecoder(void* arg)
 // 83.0% at 47 instructions and the three with `frame` declared after both give
 // 90.8% at 45, but none is instruction-exact, so the address temporaries are
 // genuinely compiler-generated in retail.
+// Batch 151 tried batch 144's one new knob, the number of **named scalar
+// locals** the frame holds: hoisting the two inner-block locals (`remaining`,
+// `size`) to function scope, which takes the count from two to four, is worse
+// (13 -> 19 markers, still 46 instructions) and does not move `frame` above the
+// two address bases. With no third load-bearing scalar to add and no aggregate
+// to group, the knob is exhausted here too; the site stays in the pool-vs-local
+// group-swap class with `checkNextFrameSe` and `loadAfter`.
 static void* AudioDecoderForOnMemory(void* arg)
 {
 	s32 frame;

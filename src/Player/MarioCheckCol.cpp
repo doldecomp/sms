@@ -64,6 +64,12 @@ void TMario::hitNormal(THitActor* actor)
 		// keep the whole range in r7 and leave r4 a redundant copy. It is a
 		// coalescing decision on one volatile register; nothing measured
 		// reaches it.
+		// Batch 151: no new rule reaches it either -- the frame is exact
+		// (0x30) and the residue involves no callee-saved register, so the
+		// inline-temp price, u16 accessor and dead-carrier rules are all the
+		// wrong family, and batch 144's ranking rule only governs
+		// callee-saved allocation. This is the same volatile-coalescing class
+		// as TNpcInbetween::execPosInbetween's single `fmuls` destination.
 		TWaterHitActor* water = &TModelWaterManager::mStaticHitActor;
 		water->mPosition = mPosition;
 		water->mPosition.y += 80.0f;

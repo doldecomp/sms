@@ -46,6 +46,13 @@
 // So a free level exists but does not move the pair; the lever has to be
 // something that changes the *liveness ranking* of `1.0f / frame` against the
 // converted timer, not another inline level.
+// Batch 151: none of the new frame-price rules applies here -- the frame is
+// exact, so the inline-temp price by return type, the u16 accessor rungs and
+// the dead-local carriers are all the wrong family. What is left is a single
+// volatile-FPR destination choice between two dying temporaries (retail keeps
+// the older, we keep the newer), the same class as TMarioCheckCol::hitNormal's
+// coalescing residue, and it needs its own research batch rather than another
+// spelling here.
 void TNpcInbetween::execPosInbetween(JGeometry::TVec3<f32>* cur_pos)
 {
 	mCurrentPos.set(*cur_pos);
