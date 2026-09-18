@@ -55,7 +55,19 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 	// Also measured: a binding level on `getCurrentMap()` +0x10 but one extra
 	// diff, on `TFlagManager::getInstance()->getBool()` +0, on the
 	// position-holder search +0x10 and three extra instructions; `search2`
-	// with the cast at the call site is codegen-identical here. Splitting the
+	// with the cast at the call site is codegen-identical here.
+	// Batch 131 re-attacked the swap and found it invariant under every
+	// decomposition of the low region: a raw `gpMarDirector` plus a
+	// `getCurrentMap()` binding level reaches the same 0xb0 and the same 19
+	// diffs, and binding levels over the `unk14` read (+8), `gpPositionHolder`
+	// (+8, +4 insns), `cSunWarpPointName` (+0x10), `SMSGetMarDirector()` (+8),
+	// `TFlagManager::getInstance()` (+8) and the whole position search (+8)
+	// all move the frame without touching the ranking. Nor does moving
+	// `unk15 |= 1` after the position read (shortening `this`'s range costs
+	// three instructions) or naming the two search names (+7 insns). The pool
+	// temp outranking `this` is the fourth recorded instance of this swap
+	// (with TSunMgr::load, TJumpBase::control, MSoundStruct and TTobiPuku);
+	// no source-level lever is known. Splitting the
 	// chain differently gives 8 bytes per continuation exactly (4/1 and 3/2
 	// both 0x88, 2/2/1 0x80). `unk24.set(...)` over the assignment costs 3
 	// instructions. Rejected earlier: readU32() for the four inputs (0xa8 but
