@@ -318,15 +318,30 @@ static inline u32 SDLModelCheckSdlFlag(const SDLModel* p, u32 i)
 	return sdlFlag;
 }
 
-// TODO: instruction-exact, frame 0xa8 vs retail's 0xb8.  All eight referenced
-// slots belong to the inlined registerSDLModel() below (whose own out-of-line
-// copy is size-exact at 0x128): ours 0x4c/0x50/0x54/0x60/0x64/0x70/0x74/0x78
-// against retail's 0x5c/0x60/0x64/0x70/0x74/0x7c/0x80/0x84.
+// TODO: instruction-exact; the frame is now 0xb8 as retail (the two
+// SDLModelCheckSdlFlag binding levels below bought it) but the eight
+// referenced slots of the inlined registerSDLModel() are still misplaced:
+// ours 0x50/0x54/0x58/0x64/0x68/0x74/0x78/0x7c against retail's
+// 0x5c/0x60/0x64/0x70/0x74/0x7c/0x80/0x84.
 //
-// Read as slots above 0xc, retail is [80 dead][3][2 dead][2][1 dead][3] and we
-// are [64 dead][3][2 dead][2][2 dead][3]: retail has **four** more temporaries
-// at the very bottom and **one fewer** between the second and third group, so
-// this is a different expansion structure, not one missing object.
+// Read as (dead bytes above 0xc)[group sizes], retail is
+// [80][3][8][2][4][3][28 above] and we are [68][3][8][2][8][3][36 above]:
+// one extra 4-byte temporary in the second gap, 12 bytes missing at the
+// bottom and 8 bytes too many above the pool.
+//
+// Closure batch 129 sharpened this: **spelling the loop `++it` instead of
+// `it++` reproduces retail's grouping exactly** -- [60][3][8][2][4][3][32] --
+// i.e. the extra temporary in the second gap is post-increment's iterator
+// copy, and the residue collapses to a pure translation: the whole pool then
+// wants to sit 20 bytes higher with 4 bytes fewer above it (frame 0xa8 vs
+// 0xb8). `registerSDLModel`'s own out-of-line copy is unmoved by `++it`
+// (frame 0x98, still exact), so the lever is entry-side. Nothing measured
+// adds bytes strictly *below* the pool here: the flag binding-level pair is
+// (+4 slots, +16 frame), a further nested level does not compile against
+// the const receiver, and `registerSDLModel` is emitted and exact so it
+// cannot carry a dead local. Still a std-list.hpp research item; `++it`
+// is left unapplied because on its own it costs 16 bytes of frame.
+//
 // TMirrorActor::init has the same shape (frame exact at 0xd8, first pair 16
 // low, second pair 8 low, the two named locals and the argument word in place),
 // which is why header round 15 looked for one shared cause in std-list.hpp.
