@@ -7,6 +7,13 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// Only the map's size (0xc00) and the leading .bss position are evidence: the
+// final binary never reads it, and __sinit_MSoundScene_cpp only uses it as the
+// base register for the chain nodes that follow. 256 matches MSSceneSE's
+// mTrans[256], so this is the scratch position buffer those pointers index.
+// TODO: dimensions unconfirmed.
+Vec _posByCamera[256];
+
 MSSceneSE::MSSceneSE(u32 param_1)
 {
 	for (int i = 0; i < ARRAY_COUNT(mTrans); ++i)
