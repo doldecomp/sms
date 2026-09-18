@@ -517,6 +517,22 @@ void TBaseNPC::npcTalking()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TBaseNPC::npcTalkOut (batch 127).
+static inline int NpcAnmActorType(const TBaseNPC* p)
+{
+	int actorType = p->mActorType;
+	return actorType;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TBaseNPC::npcTalkOut (batch 127).
+static inline TNpcThrow* NpcAnmThrowCtrl(const TBaseNPC* p)
+{
+	TNpcThrow* throwCtrl = p->mThrowCtrl;
+	return throwCtrl;
+}
+
 void TBaseNPC::npcTalkOut()
 {
 	mTalkForbidCount = 60;
@@ -537,7 +553,7 @@ void TBaseNPC::npcTalkOut()
 
 		offLiveFlag(LIVE_FLAG_UNK8000);
 		changeNerveFromTalk_();
-		if (mThrowCtrl == nullptr && mActorType == 0x4000006)
+		if (NpcAnmThrowCtrl(this) == nullptr && NpcAnmActorType(this) == 0x4000006)
 			requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_ON);
 	}
 }

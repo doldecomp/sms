@@ -910,9 +910,17 @@ void TAmiKing::moveObject()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TAmiKing::calc (batch 127).
+static inline TMarioParticleManager* MapObjPinnaGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 void TAmiKing::calc()
 {
-	gpMarioParticleManager->emitAndBindToMtxPtr(
+	MapObjPinnaGetMarioParticleManager()->emitAndBindToMtxPtr(
 	    (E_SMS_EFFECT_LOOP_NORMAL)0x184, getModel()->getAnmMtx(0), 1, this);
 
 	if (mFlying == 0) {
@@ -928,7 +936,7 @@ void TAmiKing::calc()
 		mEffectPos.y += offset.y;
 		mEffectPos.z += offset.z;
 
-		JPABaseEmitter* zzz = gpMarioParticleManager->emitAndBindToPosPtr(
+		JPABaseEmitter* zzz = MapObjPinnaGetMarioParticleManager()->emitAndBindToPosPtr(
 		    PARTICLE_MS_POI_ZZZ, &mEffectPos, 1, this);
 		if (zzz)
 			zzz->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));

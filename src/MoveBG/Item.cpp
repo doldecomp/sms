@@ -1224,6 +1224,14 @@ void TItemNozzle::appearing()
 
 void TItemNozzle::control() { TMapObjGeneral::control(); }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TItemNozzle::calcRootMatrix (batch 127).
+static inline TTakeActor* ItemHolder(const TItemNozzle* p)
+{
+	TTakeActor* holder = p->mHolder;
+	return holder;
+}
+
 // TODO: all 66 instructions match; the frame is 0x28 against the map's 0x38,
 // so retail reached the holder matrix or the position store through 16 more
 // bytes of named/temporary slots than this spelling uses.
@@ -1239,8 +1247,8 @@ void TItemNozzle::calcRootMatrix()
 	// at either or both reads, a TU-local `static MtxPtr` helper binding the
 	// holder matrix or the anim matrix (named pointer locals are worth
 	// nothing), and `getMActor()->getModel()` (which also changes the call).
-	if (isState(6) && mHolder != nullptr) {
-		MtxPtr holderMtx = mHolder->getTakingMtx();
+	if (isState(6) && ItemHolder(this) != nullptr) {
+		MtxPtr holderMtx = ItemHolder(this)->getTakingMtx();
 		MtxPtr mtx       = getModel()->getAnmMtx(0);
 		MTXCopy(holderMtx, mtx);
 

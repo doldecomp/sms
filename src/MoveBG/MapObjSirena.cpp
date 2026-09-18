@@ -48,6 +48,14 @@ void TRouletteSw::perform(u32 cue, JDrama::TGraphics* graphics)
 	unk68->switchStop();
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TRoulette::TRoulette (batch 127).
+static inline TMarDirector* MapObjSirenaGetMarDirector()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
 TRoulette::TRoulette(const char* name)
     : TMapObjBase(name)
     , unk138(500.0f)
@@ -63,7 +71,7 @@ TRoulette::TRoulette(const char* name)
 	unk14C = 0;
 	unk14E = 255;
 	if (gpApplication.mCurrArea.getStage() == 14
-	    && gpMarDirector->getCurrentStage() == 1) {
+	    && MapObjSirenaGetMarDirector()->getCurrentStage() == 1) {
 		unk141 = 1;
 		unk14C = 255;
 	}

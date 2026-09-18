@@ -345,6 +345,14 @@ void TFenceWater::changeStatusToWait()
 	setState(STATE_WAIT);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TFenceWater::controlRotation (batch 127).
+static inline f32 MapObjFenceTurnAngle(const TFenceWater* p)
+{
+	f32 turnAngle = p->mTurnAngle;
+	return turnAngle;
+}
+
 void TFenceWater::controlRotation()
 {
 	switch (mState) {
@@ -353,7 +361,7 @@ void TFenceWater::controlRotation()
 
 	case STATE_GO:
 		mTurnAngle -= mTurnSpeed;
-		if (mTurnAngle <= -90.0f) {
+		if (MapObjFenceTurnAngle(this) <= -90.0f) {
 			mTurnAngle  = -90.0f;
 			mTurnSpeed  = 0.0f;
 			setState(STATE_TURNED);

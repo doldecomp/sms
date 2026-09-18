@@ -1097,6 +1097,14 @@ void TBathtub::updatePosture_()
 	mQuat.normalize();
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TBathtub::load (batch 127).
+static inline MActor* MapObjCoronaUnk29C(const TBathtub* p)
+{
+	MActor* v29C = p->unk29C;
+	return v29C;
+}
+
 void TBathtub::load(JSUMemoryInputStream& stream)
 {
 	unk24C = 0;
@@ -1189,7 +1197,7 @@ void TBathtub::load(JSUMemoryInputStream& stream)
 	    new J3DModel(J3DModelLoaderDataBase::load(resource, 0x10000000), 0, 1),
 	    0x10000000);
 	mShineBodyJntIdx
-	    = unk29C->getModel()->getModelData()->getJointName()->getIndex("body");
+	    = MapObjCoronaUnk29C(this)->getModel()->getModelData()->getJointName()->getIndex("body");
 	unk298 = 1;
 }
 

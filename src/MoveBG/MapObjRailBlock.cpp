@@ -40,11 +40,19 @@ TRailMapObj::TRailMapObj(const char* name)
 // findNearestNodeIndex result, the node and its rail node, and so on. Not
 // resolved here.
 #pragma dont_inline on
+// Binding level over a raw member read, worth +16 of low region in
+// TRailMapObj::initGraphTracer (batch 127).
+static inline TGraphTracer* MapObjRailBlockUnk138(const TRailMapObj* p)
+{
+	TGraphTracer* v138 = p->unk138;
+	return v138;
+}
+
 void TRailMapObj::initGraphTracer(TGraphWeb* graph)
 {
 	unk138 = new TGraphTracer;
 
-	unk138->unk0 = graph;
+	MapObjRailBlockUnk138(this)->unk0 = graph;
 	if (graph != nullptr && !graph->isDummy()) {
 		unk138->setTo(graph->findNearestNodeIndex(mPosition, 0xffffffff));
 		if (graph->unk14 != nullptr) {

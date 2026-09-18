@@ -88,6 +88,14 @@ void TMapObjGeneral::sink()
 	startSound(6);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMapObjGeneral::put (batch 127).
+static inline TMap* MapObjGeneralGetMap()
+{
+	TMap* map = gpMap;
+	return map;
+}
+
 void TMapObjGeneral::put()
 {
 	mHolder                    = nullptr;
@@ -103,7 +111,7 @@ void TMapObjGeneral::put()
 	                  * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f)
 	              + SMS_GetMarioPos().z;
 	offLiveFlag(LIVE_FLAG_UNK10);
-	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	mGroundHeight = MapObjGeneralGetMap()->checkGround(mPosition, &mGroundPlane);
 }
 
 void TMapObjGeneral::thrown()

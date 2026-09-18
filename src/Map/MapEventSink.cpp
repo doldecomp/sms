@@ -115,6 +115,22 @@ bool TMapEventSink::control()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMapEventSink::startControl (batch 127).
+static inline MActor* MapEventSinkActor(const TJointModel* p)
+{
+	MActor* actor = p->mActor;
+	return actor;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TMapEventSink::startControl (batch 127).
+static inline int MapEventSinkRaisingBuildingIdx(const TMapEventSink* p)
+{
+	int raisingBuildingIdx = p->mRaisingBuildingIdx;
+	return raisingBuildingIdx;
+}
+
 void TMapEventSink::startControl()
 {
 	unk18 = 2;
@@ -134,12 +150,12 @@ void TMapEventSink::startControl()
 	info.mTranslate.y -= dVar4;
 	unk30->setTransformInfo(info);
 
-	unk1C->mActor->mModel->calc();
+	MapEventSinkActor(unk1C)->mModel->calc();
 	int iVar3 = (unk40 - unk44) - unk48;
 	unk3C     = dVar4 / iVar3;
 	unk4C     = unk40;
 
-	unk5C[mRaisingBuildingIdx]->moveTrans(JGeometry::TVec3<f32>(
+	unk5C[MapEventSinkRaisingBuildingIdx(this)]->moveTrans(JGeometry::TVec3<f32>(
 	    info.mTranslate.x, info.mTranslate.y, info.mTranslate.z));
 }
 

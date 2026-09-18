@@ -131,6 +131,14 @@ void TSandLeafBase::grow()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TSandLeafBase::control (batch 127).
+static inline TMapCollisionManager* MapObjMammaMapCollisionManager(const TSandLeafBase* p)
+{
+	TMapCollisionManager* mapCollisionManager = p->mMapCollisionManager;
+	return mapCollisionManager;
+}
+
 void TSandLeafBase::control()
 {
 	TMapObjBase::control();
@@ -140,8 +148,8 @@ void TSandLeafBase::control()
 		SMSRumbleMgr->start(0x13, -1, &mPosition);
 		if (withering()) {
 			SMSRumbleMgr->stop(0x13);
-			mMapCollisionManager->changeCollision(0);
-			TMapCollisionManager* manager = mMapCollisionManager;
+			MapObjMammaMapCollisionManager(this)->changeCollision(0);
+			TMapCollisionManager* manager = MapObjMammaMapCollisionManager(this);
 			Mtx mtx;
 			MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z,
 			            mRotation.x, mRotation.y, mRotation.z, mScaling.x,
