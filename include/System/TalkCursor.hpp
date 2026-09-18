@@ -18,6 +18,15 @@ public:
 
 	void associateNPC(TBaseNPC*);
 
+	// fabricated. The named local is the binding closure batch 110 measured
+	// at TTalkCursor::loadAfter; a non-binding `return unk10;` is worth zero
+	// there.
+	MActor* getMActor()
+	{
+		MActor* actor = unk10;
+		return actor;
+	}
+
 public:
 	/* 0x10 */ MActor* unk10;
 };

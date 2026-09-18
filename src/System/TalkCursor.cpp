@@ -8,11 +8,9 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 
 // The 8 bytes of low region retail has here are one inline expansion: reading
-// `unk10` through a level that binds its result. This stands in for a
-// `TTalkCursor::getMActor()` accessor written as
-// `MActor* actor = unk10; return actor;`, but `System/TalkCursor.hpp` is
-// included by MarNameRefGen, MarDirectorEvent and MarDirectorSetup2, so it is
-// parked here and reported.
+// `unk10` through a level that binds its result. Header round 20 promoted that
+// level to `TTalkCursor::getMActor()` in the header (codegen-identical to the
+// parked `static inline` it replaced, whole-tree, with this TU still linked).
 // Also +8 and interchangeable with it (any one of them closes the function, and
 // they do not stack usefully): a binding level on `new MActorAnmData`, on
 // `new MActor(anmData)`, or on `JKRGetResource`. Worth zero: the same levels
@@ -24,19 +22,13 @@
 // non-binding `getMActor()`, naming the `new J3DModel` or loader results,
 // `unkC.setBit()`, `MActor* actor = new MActor(anmData); unk10 = actor;`, a
 // `setMActor()` setter, a named path string or loader-flag word.
-static inline MActor* TalkCursorMActor(TTalkCursor* cursor)
-{
-	MActor* actor = cursor->unk10;
-	return actor;
-}
-
 void TTalkCursor::loadAfter()
 {
 	MActorAnmData* anmData = new MActorAnmData;
 	anmData->init("/common/cursor_b", nullptr);
 	unk10 = new MActor(anmData);
 
-	MActor* actor = TalkCursorMActor(this);
+	MActor* actor = getMActor();
 	void* bmd     = JKRGetResource("/common/cursor_b/default.bmd");
 	actor->setModel(new J3DModel(J3DModelLoaderDataBase::load(
 	                                 bmd, J3DMLF_MaterialPEFull
