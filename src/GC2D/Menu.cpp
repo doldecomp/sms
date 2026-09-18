@@ -49,6 +49,17 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 {
 	// The loop bound below must be `int`: retail's `cmpw` is a signed
 	// compare against the `int` member, a `u32` index gives `cmplw`.
+	//
+	// TODO: besides the JUTColor temp stride described at perform(), the
+	// loop body has one structural residue. Retail reloads `this` from its
+	// 8(r1) spill slot into r6 at the top of the `mInfoTag == 0x13` block
+	// and then reads `unk28` *twice* -- once for `local_420[unk28]` and
+	// again for the `unk28 == 0` test, because the `stwx` between them
+	// invalidates the cached load. We keep `this` in r31 across the whole
+	// loop and therefore cache `unk28` in r3. Retail's r31 holds something
+	// else for the duration (it reloads `this` again after the loop), so
+	// there is one more value live in retail's loop than in ours; the
+	// candidate is a second iterator-derived local we have not identified.
 	J2DTextBox* local_420[256];
 
 	JSUTreeIterator<J2DPane> iterator;
