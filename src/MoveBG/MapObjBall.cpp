@@ -231,7 +231,15 @@ void TMapObjBall::kicked()
 	unk194 = 10;
 	offLiveFlag(LIVE_FLAG_UNK10);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
-	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+	// Spelled out rather than through SMS_SendMessageToMario(): retail calls
+	// SMS_GetMarioHitActor() and then dispatches receiveMessage through the
+	// vtable here, where the helper is a real `bl` in every other TU.
+	//
+	// TODO: every instruction now matches; the frame is 0xb8 against our 0x78.
+	// Retail parks the first TVec3 copy at 0xc and then a descending block of
+	// three 12-byte temporaries from 0x90, i.e. 0x40 bytes of low region we do
+	// not reserve between the two groups; ours are contiguous at 0x30-0x5f.
+	SMS_GetMarioHitActor()->receiveMessage(this, HIT_MESSAGE_ATTACK);
 
 	if (!isActorType(0x400000D0)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
