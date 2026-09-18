@@ -376,8 +376,8 @@ bool TBaseNPC::isPartsAnmNpc() const
 bool TBaseNPC::isNeedNeckStraight() const
 {
 	bool result = false;
-	int anmKind = unkD0->getCurrentAnmKind();
-	if ((mHolder != nullptr && mHolder == gpMarioAddress) || !isClean()
+	int anmKind = getLodAnm()->getCurrentAnmKind();
+	if ((getHolder() != nullptr && getHolder() == gpMarioAddress) || !isClean()
 	    || mActorType == 0x4000012
 	    || (mActorType == 0x4000019 && anmKind == NPC_ANM_KIND_UNK5)
 	    || (isMare() && anmKind == NPC_ANM_KIND_UNKC)

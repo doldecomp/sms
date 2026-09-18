@@ -164,7 +164,7 @@ public:
 	{
 		mLinearVelocity = v;
 	}
-	TLodAnm* getLodAnm() { return unkD0; }
+	TLodAnm* getLodAnm() const { return unkD0; }
 
 public:
 	/* 0x70 */ TLiveManager* mManager;

@@ -65,7 +65,7 @@ public:
 		return FALSE;
 	}
 	bool isHolding() const { return mHeldObject != nullptr ? true : false; }
-	TTakeActor* getHolder() { return mHolder; }
+	TTakeActor* getHolder() const { return mHolder; }
 	TTakeActor* getHeldObject() { return mHeldObject; }
 
 public:
