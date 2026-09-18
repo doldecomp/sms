@@ -420,5 +420,8 @@
   "Enemy/areacylinder.cpp",
   "Animal/Butterfly.cpp",
   "Map/Shimmer.cpp",
-  "GC2D/ProgSelect.cpp"
+  "GC2D/ProgSelect.cpp",
+  "JSystem/JUtility/JUTDirectPrint.cpp",
+  "JSystem/JAudio/JASystem/JASPlayer_impl.cpp",
+  "JSystem/dsptask.c"
 ]
