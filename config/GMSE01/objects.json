@@ -437,5 +437,7 @@
   "MoveBG/MapObjEx.cpp",
   "Enemy/DebuTelesa.cpp",
   "Enemy/generator.cpp",
-  "MoveBG/WoodBarrel.cpp"
+  "MoveBG/WoodBarrel.cpp",
+  "Camera/CameraOption.cpp",
+  "Player/MarioInit.cpp"
 ]
