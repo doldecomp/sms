@@ -898,7 +898,8 @@ void TResetFruit::touchActor(THitActor* param_1)
 		return;
 
 	// Being knocked about starts the countdown, unless it is being carried.
-	if (MapObjBallIsState(this, STATE_NORMAL) && !checkLiveFlag(LIVE_FLAG_UNK10))
+	if (MapObjBallIsState(this, STATE_NORMAL)
+	    && !checkLiveFlag(LIVE_FLAG_UNK10))
 		makeObjLiving();
 }
 

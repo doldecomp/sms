@@ -1657,7 +1657,8 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 		unk4CC[1]->hide();
 		unk4CC[2]->hide();
 
-		unk4AC->setCenteredSize(20, unk4B0.getWidth(), CardLoadGetHeight(&unk4B0), 0,
+		unk4AC->setCenteredSize(20, unk4B0.getWidth(),
+		                        CardLoadGetHeight(&unk4B0), 0,
 		                        0);
 		unk10 = 1;
 		break;

@@ -302,7 +302,8 @@ void TCannon::loadAfter()
 
 // Binding level worth +16 of low region, landing TCannon::init's frame at
 // 0x1a0 (batch 124).
-static inline f32 CannonGetSLChorobeiAttackHeight(const TCannonSaveLoadParams* p)
+static inline f32
+CannonGetSLChorobeiAttackHeight(const TCannonSaveLoadParams* p)
 {
 	f32 sLChorobeiAttackHeight = p->getSLChorobeiAttackHeight();
 	return sLChorobeiAttackHeight;
@@ -310,7 +311,8 @@ static inline f32 CannonGetSLChorobeiAttackHeight(const TCannonSaveLoadParams* p
 
 // Binding level worth +16 of low region, landing TCannon::init's frame at
 // 0x1a0 (batch 124).
-static inline f32 CannonGetSLChorobeiAttackRadius(const TCannonSaveLoadParams* p)
+static inline f32
+CannonGetSLChorobeiAttackRadius(const TCannonSaveLoadParams* p)
 {
 	f32 sLChorobeiAttackRadius = p->getSLChorobeiAttackRadius();
 	return sLChorobeiAttackRadius;

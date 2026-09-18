@@ -1264,7 +1264,8 @@ static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>* interp,
 	switch (p2) {
 	case 0:
 		if (p1 == 1)
-			EventWatcherGetConsole(SMSGetMarDirector())->startAppearJetBalloon(0, 8);
+			EventWatcherGetConsole(SMSGetMarDirector())
+			    ->startAppearJetBalloon(0, 8);
 		break;
 
 	case 1:

@@ -98,7 +98,8 @@ void TBaseNPC::execNpcObjCollision_()
 
 // Binding level worth +16 of low region, landing
 // TBaseNPC::setVariableDamageRadius_'s frame at 0x70 (batch 124).
-static inline const JGeometry::TVec3<f32>& NpcCollisionGetPosition(const TBaseNPC* p)
+static inline const JGeometry::TVec3<f32>&
+NpcCollisionGetPosition(const TBaseNPC* p)
 {
 	const JGeometry::TVec3<f32>& position = p->getPosition();
 	return position;
@@ -108,11 +109,11 @@ void TBaseNPC::setVariableDamageRadius_()
 {
 	const TNpcInitInfo* initInfo = SMSGetNpcInitData(mActorType - 0x4000001);
 	// TODO: 24 bytes of low region short (0x70 vs 0x58). getScaling().x and
-	// NpcCollisionGetPosition(this).y are +8 each and the ladder then saturates
+	// getPosition().y are +8 each and the ladder then saturates
 	// (getActorType(), setDamageRadius(), a named CLBSquared result, a named
-	// squared() result are all +0); NpcCollisionGetPosition(this) inside the sub() is a third
-	// +8 but costs 0.2 of score. The one remaining `~` is fmuls' operand
-	// order, which no spelling of the product moved.
+	// squared() result are all +0); getPosition() inside the sub() is a
+	// third +8 but costs 0.2 of score. The one remaining `~` is fmuls'
+	// operand order, which no spelling of the product moved.
 	f32 base                     = getScaling().x * initInfo->mDamageRadius;
 	f32 fVar6                    = base;
 	if (isBeTrampledNpc() && !SMS_IsMarioTouchGround4cm()

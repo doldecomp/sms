@@ -378,7 +378,8 @@ void MActor::update() { }
 
 // Binding level worth +8 of low region, landing MActor::entry's frame at
 // 0x50 (batch 124).
-static inline TLightWithDBSet* MActorGetLightSet(TLightWithDBSetManager* p, int i)
+static inline TLightWithDBSet*
+MActorGetLightSet(TLightWithDBSetManager* p, int i)
 {
 	TLightWithDBSet* lightSet = p->getLightSet(i);
 	return lightSet;
@@ -394,7 +395,8 @@ void MActor::entry()
 		if (mLightId < 0)
 			mLightId = 0;
 
-		MActorGetLightSet(gpLightManager, unk44)->changeLightDrawBuffer(mLightId);
+		MActorGetLightSet(gpLightManager, unk44)
+		    ->changeLightDrawBuffer(mLightId);
 
 		shouldResetLightDrawBuf = true;
 	}

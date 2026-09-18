@@ -227,7 +227,8 @@ JPABaseEmitter* JPAEmitterManager::createVolumeEmitter(JPADataBlock* block,
 
 // Binding level worth +16 of low region, landing
 // JPAEmitterManager::createEmitterBase's frame at 0xc8 (batch 124).
-static inline JPADataBlock* JPAEmitterManagerGetBaseEmitterBlock(JPADataBlockLinkInfo* p)
+static inline JPADataBlock*
+JPAEmitterManagerGetBaseEmitterBlock(JPADataBlockLinkInfo* p)
 {
 	JPADataBlock* baseEmitterBlock = p->getBaseEmitterBlock();
 	return baseEmitterBlock;
@@ -257,7 +258,8 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 			return nullptr;
 
 		JPADataBlockLinkInfo* linkInfo = emitterData->getLinkInfo()[0];
-		JPADataBlock* block            = JPAEmitterManagerGetBaseEmitterBlock(linkInfo);
+		JPADataBlock* block
+		    = JPAEmitterManagerGetBaseEmitterBlock(linkInfo);
 
 		JPABaseEmitter* emitter = createVolumeEmitter(block, param_2);
 

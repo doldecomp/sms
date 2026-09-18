@@ -156,7 +156,8 @@ bool TBaseNPC::execUTurn()
 
 // Binding level worth +8 of low region, landing
 // TBaseNPC::execTurnToFirstState's frame at 0x50 (batch 124).
-static inline const JGeometry::TVec3<f32>& NpcWalkTurnGetUnk1A0(const TBaseNPC* p)
+static inline const JGeometry::TVec3<f32>&
+NpcWalkTurnGetUnk1A0(const TBaseNPC* p)
 {
 	const JGeometry::TVec3<f32>& unk1A0 = p->getUnk1A0();
 	return unk1A0;

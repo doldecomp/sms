@@ -102,7 +102,10 @@ void THauntLegManager::initSetEnemies()
 		leg->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		leg->reset();
 		for (u16 j = 0;
-		     j < HauntLegGetMActor(leg)->getModel()->getModelData()->getMaterialNum();
+		     j < HauntLegGetMActor(leg)
+		             ->getModel()
+		             ->getModelData()
+		             ->getMaterialNum();
 		     ++j)
 			SMS_InitPacket_TwoTevColor(getObj(i)->getMActor()->getModel(), j,
 			                           GX_TEVREG0, &tevColorData1[colorIndex],

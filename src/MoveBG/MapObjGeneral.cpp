@@ -563,7 +563,8 @@ void TMapObjGeneral::bind()
 
 // Binding level worth +8 of low region, landing TMapObjGeneral::control's
 // frame at 0x20 (batch 124).
-static inline bool MapObjGeneralCheckMapObjFlagL0(const TMapObjGeneral* p, u32 i)
+static inline bool
+MapObjGeneralCheckMapObjFlagL0(const TMapObjGeneral* p, u32 i)
 {
 	bool mapObjFlag = p->checkMapObjFlag(i);
 	return mapObjFlag;
@@ -578,8 +579,9 @@ static inline bool MapObjGeneralCheckMapObjFlag(const TMapObjGeneral* p, u32 i)
 void TMapObjGeneral::control()
 {
 	TMapObjBase::control();
-	if (MapObjGeneralCheckMapObjFlag(this, MAP_OBJ_FLAG_CAN_SINK) && isState(STATE_NORMAL)
-	    && !isAirborne() && isPollutedGround(mPosition))
+	if (MapObjGeneralCheckMapObjFlag(this, MAP_OBJ_FLAG_CAN_SINK)
+	    && isState(STATE_NORMAL) && !isAirborne()
+	    && isPollutedGround(mPosition))
 		sink();
 
 	work();

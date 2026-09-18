@@ -543,7 +543,8 @@ void TLimitKoopa::calcRootMatrix()
 	// r2d never receives a `this`. That reads as a static member in the
 	// original; TDirectionCalc lives in the shared KoopaJr.hpp, so the
 	// declaration is left alone here.
-	mRotation.y = TDirectionCalc::r2d(LimitkoopaGetBodyDirection(&mBodyDirection));
+	mRotation.y
+	    = TDirectionCalc::r2d(LimitkoopaGetBodyDirection(&mBodyDirection));
 	TSpineEnemy::calcRootMatrix();
 }
 

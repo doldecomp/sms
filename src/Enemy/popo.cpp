@@ -925,7 +925,8 @@ DEFINE_NERVE(TNervePopoPossessedNozzle, TLiveActor)
 	if (popo->checkCurAnmEnd(0)) {
 		if (popo->unsetUnk165()) {
 			popo->setBckAnm(3);
-			PopoGetMActor(popo)->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTP);
+			PopoGetMActor(popo)->setFrameRate(SMSGetAnmFrameRate(),
+			                                  ANM_TYPE_BTP);
 		} else {
 			popo->setBckAnm(4);
 			popo->getMActor()->getFrameCtrl(ANM_TYPE_BTP)->setFrame(0.0f);

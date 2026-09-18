@@ -252,7 +252,8 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 	mNoteMgr.unk20[index] = chan->unkC6;
 
 	chan->setPanPower(
-	    JASTrackGetPanPowerBank(&mRegisterParam), mRegisterParam.getPanPowerExt(),
+	    JASTrackGetPanPowerBank(&mRegisterParam),
+	    mRegisterParam.getPanPowerExt(),
 	    mRegisterParam.getPanPowerOsc(), mRegisterParam.getPanPowerParent());
 
 	for (u8 i = 0; i < 2; ++i) {

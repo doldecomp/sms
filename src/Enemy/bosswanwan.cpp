@@ -421,7 +421,8 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 
 // Binding level worth +16 of low region, landing TBWPicket::moveRequest's
 // frame at 0x68 (batch 124).
-static inline const TNerveBase<TLiveActor>* BosswanwanGetLatestNerve(const TBossWanwan* p)
+static inline const TNerveBase<TLiveActor>*
+BosswanwanGetLatestNerve(const TBossWanwan* p)
 {
 	const TNerveBase<TLiveActor>* latestNerve = p->getLatestNerve();
 	return latestNerve;

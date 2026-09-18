@@ -343,7 +343,8 @@ static inline u32 SDLModelCheckSdlFlag(const SDLModel* p, u32 i)
 // instructions).
 void SDLModel::entry()
 {
-	if (!SDLModelCheckSdlFlag(this, FLAG_UNK8) || !SDLModelCheckSdlFlag(this, FLAG_UNK2) || !mSdlModelData
+	if (!SDLModelCheckSdlFlag(this, FLAG_UNK8)
+	    || !SDLModelCheckSdlFlag(this, FLAG_UNK2) || !mSdlModelData
 	    || (mSdlModelData->unk18 & 0x1)) {
 		offSdlFlag(FLAG_UNK1);
 		J3DModel::entry();
