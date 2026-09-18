@@ -981,6 +981,20 @@ DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveBGKAwakeDamage::execute's frame at 0x68 (batch 121).
+static inline u8 GatekeeperGetCurrentMapInner(TMarDirector* p)
+{
+	u8 currentMap = p->getCurrentMap();
+	return currentMap;
+}
+
+static inline u8 GatekeeperGetCurrentMap(TMarDirector* p)
+{
+	u8 currentMap = GatekeeperGetCurrentMapInner(p);
+	return currentMap;
+}
+
 DEFINE_NERVE(TNerveBGKAwakeDamage, TLiveActor)
 {
 	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
@@ -989,7 +1003,7 @@ DEFINE_NERVE(TNerveBGKAwakeDamage, TLiveActor)
 		self->changeBck(3);
 
 	if (self->curBckFinished()) {
-		if (gpMarDirector->getCurrentMap() == 0)
+		if (GatekeeperGetCurrentMap(gpMarDirector) == 0)
 			spine->pushAfterCurrent(&TNerveBGKWait2::theNerve());
 		else
 			spine->pushAfterCurrent(&TNerveBGKWait::theNerve());

@@ -1511,6 +1511,20 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 	fruit->makeObjDead();
 }
 
+// Binding level worth +16 of low region, landing TBossTelesa::setSpicy's
+// frame at 0x58 (batch 121).
+static inline TGCConsole2* BosstelesaGetConsoleInner(TMarDirector* p)
+{
+	TGCConsole2* console = p->getConsole();
+	return console;
+}
+
+static inline TGCConsole2* BosstelesaGetConsole(TMarDirector* p)
+{
+	TGCConsole2* console = BosstelesaGetConsoleInner(p);
+	return console;
+}
+
 void TBossTelesa::setSpicy(TLiveActor* actor)
 {
 	if (mSpine->getCurrentNerve() != &TNerveBossTelesaSpitSlotItem::theNerve()
@@ -1521,7 +1535,7 @@ void TBossTelesa::setSpicy(TLiveActor* actor)
 
 		if (unk35B) {
 			unk35B = false;
-			gpMarDirector->getConsole()->startAppearBalloon(0x11, true);
+			BosstelesaGetConsole(gpMarDirector)->startAppearBalloon(0x11, true);
 		}
 
 		actor->kill();
