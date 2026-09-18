@@ -351,7 +351,12 @@ void MActor::setLightData(const TBGCheckData* param_1,
 
 	mLightId = 0;
 	if (param_1->isShadow()) {
-		setLightID(param_1->getData());
+		f32 dist = param_2.x * param_1->mNormal.x
+		    + param_2.z * param_1->mNormal.z + param_1->mPlaneDistance;
+		f32 planeY = -dist / param_1->mNormal.y;
+
+		if (200.0f + planeY > param_2.y)
+			setLightID(param_1->getData());
 	}
 }
 
