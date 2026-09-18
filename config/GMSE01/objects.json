@@ -452,5 +452,6 @@
   "Map/PollutionPos.cpp",
   "System/TalkCursor.cpp",
   "Enemy/bgpoldrop.cpp",
-  "NPC/NpcColor.cpp"
+  "NPC/NpcColor.cpp",
+  "Player/MarioWait.cpp"
 ]
