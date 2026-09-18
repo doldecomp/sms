@@ -596,11 +596,23 @@ void TEnemyMario::initEnemyValues()
 	mMultiMtxEffect   = nullptr;
 }
 
+// TODO: body unknown (map 0x4c, nineteen instructions). Nothing in the TU
+// calls it and no surviving block has that shape; TEnemyMario dies by
+// changeEMDoing(EM_DOING_HIDE), not by kill().
 void TEnemyMario::kill() { }
 
 f32 TEnemyMario::getStickPower() { return 0.0f; }
 
-void TEnemyMario::setStickAgainstMario() { }
+// The map puts this immediately beside setStickToAngle (0x78 against this
+// 0x74), so it is the same two stores with the angle fixed to Mario's and no
+// power factor at all: calling `setStickToAngle(mAngleToMario, 1.0f)` instead
+// is 0x7c, because MWCC keeps both multiplies by the literal 1.0f, while
+// spelling the stores out lands on 0x74 exactly.
+void TEnemyMario::setStickAgainstMario()
+{
+	unk108->mStickHS16 = JMASSin(mAngleToMario) * getStickPower();
+	unk108->mStickVS16 = -JMASCos(mAngleToMario) * getStickPower();
+}
 
 void TEnemyMario::setStickToAngle(s16 angle, f32 power)
 {
