@@ -1323,6 +1323,13 @@ public:
 	// across the pair.
 	TWaterGun* getFludd() const { return mWaterGun; }
 
+	// Retail reads mModel through one extra inline level. It is worth exactly
+	// +8 bytes of low-region frame per site with no instruction change, and
+	// it is what closes TMario::loadAfter (0x40 -> 0x48, two sites) and
+	// TMario::initValues (0x38 -> 0x40). The lever is per site, so the raw
+	// `mModel->` spellings elsewhere are only converted where they measure.
+	M3UModelMario* getM3UModel() const { return mModel; }
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;

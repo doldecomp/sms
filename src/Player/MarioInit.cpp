@@ -338,19 +338,6 @@ void TMario::load(JSUMemoryInputStream& stream)
 	initValues();
 }
 
-// Parked here, not in the shared <Player/Mario.hpp>, because a header batch
-// is running. Retail reads mModel through one extra inline level: adding it
-// is worth exactly +8 bytes of low-region frame per site with no instruction
-// change, and it is what closes both TMario::loadAfter (0x40 -> 0x48, two
-// sites) and TMario::initValues (0x38 -> 0x40, one site). Promotion to
-// `M3UModelMario* TMario::getM3UModel() { return mModel; }` is a header item;
-// the ~40 raw `mModel->` sites in MarioDraw/MarioCap should then be measured
-// one at a time, since the lever is per site.
-static inline M3UModelMario* MarioInitGetM3UModel(TMario* mario)
-{
-	return mario->mModel;
-}
-
 void TMario::loadAfter()
 {
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD))
@@ -366,10 +353,10 @@ void TMario::loadAfter()
 
 	if (isMario())
 		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              MarioInitGetM3UModel(this)->getModel()->getAnmMtx(1), true);
+		                              getM3UModel()->getModel()->getAnmMtx(1), true);
 	else
 		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              MarioInitGetM3UModel(this)->getModel()->getAnmMtx(1), false);
+		                              getM3UModel()->getModel()->getAnmMtx(1), false);
 
 	finalDrawInitialize();
 	initMirrorModel();
@@ -440,7 +427,7 @@ void TMario::initValues()
 	             mDeParams.mAttackHeight.get(), mDeParams.mDamageRadius.get(),
 	             mDeParams.mDamageHeight.get());
 
-	unk390 = new TMBindShadowBody(this, MarioInitGetM3UModel(this)->getModel(), 1.0f);
+	unk390 = new TMBindShadowBody(this, getM3UModel()->getModel(), 1.0f);
 
 	unk92  = 0x11;
 	unkA2  = 0xAD;
