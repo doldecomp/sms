@@ -1192,9 +1192,10 @@ DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
 
 	// Ten frames in, launch back over the panel it left.
 	if (hana->getMActor()->getFrameCtrl(0)->checkPass(10.0f)) {
-		JGeometry::TVec3<f32> target(2.0f * hana->unk1F8.x - hana->mPosition.x,
-		                             2.0f * hana->unk1F8.y - hana->mPosition.y,
-		                             2.0f * hana->unk1F8.z - hana->mPosition.z);
+		JGeometry::TVec3<f32> target;
+		target.x = 2.0f * hana->unk1F8.x - hana->mPosition.x;
+		target.y = 2.0f * hana->unk1F8.y - hana->mPosition.y;
+		target.z = 2.0f * hana->unk1F8.z - hana->mPosition.z;
 		*hana->unk21C = 0;
 		target.y += hana->unk1B4->mSLJumpHeight.get();
 
