@@ -224,9 +224,29 @@ static void SetFogBase(const J3DFogInfo* fog)
 
 // TODO: frame 0xe8 vs retail's 0x178. All four inlined helpers' UNUSED sizes
 // are byte-exact (0x48/0x60/0x58/0x174), so the bodies are right; the residue
-// is 8 bytes of low region per inlined expansion (18 expansions = the 0x90
-// delta), the header-round-15 depth-surcharge shape. The register numbering
-// differences all follow from it.
+// is 8 bytes of low region per inlined expansion, the header-round-15
+// depth-surcharge shape. The register numbering differences all follow from it.
+//
+// Closure re-pass (batch 161) measured the shape exactly.  The four carriers
+// are the four functions the map marks UNUSED -- FifoSetChanMatColor,
+// FifoSetTevColorS10, FifoSetTevKColor and SetFogBase -- and they have
+// eighteen expansions here (1 + 9 + 6 + 2); FifoSetFog and FifoSetFogRangeAdj
+// are emitted and stay real `bl`s, so their three call sites pay nothing.
+// 18 * 8 = 0x90 = the whole gap.  A dead uninitialised non-trivial class local
+// in each of the four lands it: a 12-byte one gives +0xd8 (= 18 * 12, so the
+// price of a dead class local in an inlined callee is its *exact* sizeof here,
+// not sizeof rounded down to 8), an 8-byte one gives retail's 0x178 to the
+// byte with no instruction change (91.7% -> 91.9%, every stack displacement
+// exact).  So the missing thing is an 8-byte non-trivial class object in each
+// of the four bodies; nothing in a FIFO register writer or in
+// `SetFogBase(const J3DFogInfo*)` names one, so it stays open rather than
+// padded.  With the frame right the whole remaining residue is a volatile
+// register permutation inside the FifoSetTevColorS10 and FifoSetTevKColor
+// expansions (identical instruction sequence, r8/r9/r5 where we use r3/r4/r8,
+// 0x61 in r0 where we use r7); FifoSetChanMatColor's expansion then matches.
+// Also measured and rejected: writing regRA straight into `GXWGFifo.u32`
+// instead of binding it, the shape FifoSetFog uses two functions above --
+// frame 0x178 -> 0x150 and the permutation unchanged.
 //
 // Dispatches the per-packet colour/fog override recorded by the
 // SMS_InitPacket_* helpers. The user area's first word is the packet type; the
@@ -425,25 +445,21 @@ void SMS_InitPacket_CallDL(J3DModel* param_1, u16 param_2, u8* param_3,
 	packet->setCallback(&ShapePacketCallBackFunc);
 }
 
-// TODO: 93.1%, structural/register-order residue, not a frame gap (target
-// frame is 8 bytes *bigger* than ours here, the opposite of most gaps).
-// Both builds share one materialNode fetch for InitPacket_Sub's `getShape()`
-// (+4) and this function's `getPEBlock()` (+0x30) and do the mulli/add for
-// `packet` before the getFog() vtable call -- only the +4/+0x30 read order is
-// swapped (retail reads +0x30 first). Closure batch 123 trials, both worse:
-// moving the fog fetch before `packet = InitPacket_Sub(...)` (45.4%, breaks
-// the shared materialNode fetch entirely -- two independent chains, 47
-// instructions); naming `J3DMaterial* mat` and computing `fog` from it before
-// `packet` (65.6%, keeps one fetch but pushes the shape/index read after the
-// virtual call). The safest known state (this ordering) is kept.
+// Retail reads the PE block (+0x30) before the shape (+4) and still shares one
+// materialNode fetch with InitPacket_Sub, which pins the PE-block fetch *above*
+// the packet lookup; the named `peBlock` intermediate is the +8 of frame that
+// takes it from 0x68 to retail's 0x70 with no instruction change.  Moving the
+// whole fog fetch (the virtual call included) above `packet` splits the chain
+// in two (45.4%), and naming `J3DMaterial* mat` instead pushes the shape/index
+// read below the virtual call (65.6%); only the PE block moves.
 void SMS_InitPacket_Fog(J3DModel* param_1, u16 param_2)
 {
-	J3DShapePacket* packet = InitPacket_Sub(param_1, param_2);
+	J3DPEBlock* peBlock = param_1->getModelData()
+	                          ->getMaterialNodePointer(param_2)
+	                          ->getPEBlock();
 
-	J3DFog* fog = param_1->getModelData()
-	                  ->getMaterialNodePointer(param_2)
-	                  ->getPEBlock()
-	                  ->getFog();
+	J3DShapePacket* packet = InitPacket_Sub(param_1, param_2);
+	J3DFog* fog            = peBlock->getFog();
 
 	PacketUserData_Fog* userData = new PacketUserData_Fog;
 	userData->unk0               = 5;
@@ -509,10 +525,10 @@ void SMS_InitPacket_OneTevKColorAndFog(J3DModel* param_1, u16 param_2,
 		                      ->color;
 	}
 
-	J3DFog* fog = param_1->getModelData()
-	                  ->getMaterialNodePointer(param_2)
-	                  ->getPEBlock()
-	                  ->getFog();
+	J3DPEBlock* peBlock = param_1->getModelData()
+	                          ->getMaterialNodePointer(param_2)
+	                          ->getPEBlock();
+	J3DFog* fog         = peBlock->getFog();
 
 	userData->unk10 = 5;
 	userData->unk14 = fog;
