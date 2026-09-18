@@ -46,6 +46,12 @@ TSelectDir::TSelectDir()
 {
 }
 
+// TODO: 99.8%, pure frame gap (0x28 vs our 0x20), every instruction matches.
+// A dead trivial local of 8-12 bytes at the very bottom of the local area
+// (no other slot is referenced) reaches the target frame exactly (closure
+// batch 123 trial, `u8 dead[8];`/`[12]`, both reverted -- unnamed padding is
+// not committed per CLAUDE.md's fakematch rule). No plausible named object
+// found; `arc` itself is a pointer and costs nothing.
 TSelectDir::~TSelectDir()
 {
 	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("select");
@@ -207,6 +213,13 @@ void TSelectDir::changeOrder()
 	unk48->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 }
 
+// TODO: 99.8%, pure frame gap (0xd0 vs our 0x50, all 177 instructions
+// match). Every referenced stack slot -- the three JUtility::TColor
+// conversion temporaries and their strides -- shifts by the same 0x80, so
+// this is one big dead low-region carrier, not a stride problem (the TColor
+// stride itself matches between the three blocks: 4 then 8 bytes apart on
+// both sides). No candidate object found this batch; not pursued further
+// given JUTColor.hpp's own TODO already rules out touching the TColor ctor.
 int TSelectDir::direct()
 {
 	if (!unk38) {
