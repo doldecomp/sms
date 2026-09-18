@@ -687,6 +687,14 @@ void TKoopaJrSubmarine::reset()
 	resetKoopaJrSubmarine();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TKoopaJrSubmarine::resetKoopaJrSubmarine (batch 127).
+static inline TBathtubBinder* KoopajrBathtubBinder(const TKoopaJrSubmarine* p)
+{
+	TBathtubBinder* bathtubBinder = p->mBathtubBinder;
+	return bathtubBinder;
+}
+
 void TKoopaJrSubmarine::resetKoopaJrSubmarine()
 {
 	mSpine->reset();
@@ -710,7 +718,7 @@ void TKoopaJrSubmarine::resetKoopaJrSubmarine()
 	mWaveAmplitude            = 0.0f;
 	mWavePhase                = 0.0f;
 	f32 bottom = getSaveParams()->bottomHeight.get();
-	mBathtubBinder->init(150.0f, 100.0f, 150.0f, 100.0f, bottom);
+	KoopajrBathtubBinder(this)->init(150.0f, 100.0f, 150.0f, 100.0f, bottom);
 }
 
 void TKoopaJrSubmarine::perform(u32 cue, JDrama::TGraphics* graphics)

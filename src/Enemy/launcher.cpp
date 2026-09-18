@@ -266,6 +266,14 @@ void TCommonLauncher::changeBck(int param_1)
 
 void TCommonLauncher::stateInitial() { changeState(STATE_NORMAL); }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TCommonLauncher::stateHitByWater (batch 127).
+static inline MActor* LauncherMActor(const TCommonLauncher* p)
+{
+	MActor* mActor = p->mMActor;
+	return mActor;
+}
+
 void TCommonLauncher::stateHitByWater()
 {
 	if (mTicksSpentInCurState == 0) {
@@ -273,7 +281,7 @@ void TCommonLauncher::stateHitByWater()
 		decHitPoints();
 	}
 
-	if (mMActor->curAnmEndsNext()) {
+	if (LauncherMActor(this)->curAnmEndsNext()) {
 		if (mHitPoints == 0)
 			changeState(STATE_DIE);
 		else

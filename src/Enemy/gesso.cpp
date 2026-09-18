@@ -982,11 +982,19 @@ void TGessoPolluteObj::rebirth()
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TGessoPolluteObj::set (batch 127).
+static inline TSpineEnemy* GessoUnk160(const TGessoPolluteObj* p)
+{
+	TSpineEnemy* v160 = p->unk160;
+	return v160;
+}
+
 void TGessoPolluteObj::set()
 {
 	TEnemyAttachment::set();
 
-	if (unk160->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+	if (GessoUnk160(this)->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		mPosition.x = unk160->mPosition.x;
 		mPosition.y = unk160->mPosition.y + 200.0f;
 		mPosition.z = unk160->mPosition.z;

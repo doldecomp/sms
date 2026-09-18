@@ -622,9 +622,17 @@ void TTamaNoko::setAfterDeadEffect()
 
 const char** TTamaNoko::getBasNameTable() const { return tamaNoko_bastable; }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TTamaNoko::getGravityY (batch 127).
+static inline TSpineBase<TLiveActor>* TamaNokoSpine(const TTamaNoko* p)
+{
+	TSpineBase<TLiveActor>* spine = p->mSpine;
+	return spine;
+}
+
 f32 TTamaNoko::getGravityY() const
 {
-	if (mSpine->getCurrentNerve() == &TNerveTamaNokoAttack::theNerve())
+	if (TamaNokoSpine(this)->getCurrentNerve() == &TNerveTamaNokoAttack::theNerve())
 		return unk198->mSLAttackGravityY.get();
 
 	if (mSpine->getCurrentNerve() == &TNerveTamaNokoThrown::theNerve())

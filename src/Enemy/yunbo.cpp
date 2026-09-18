@@ -511,6 +511,14 @@ DEFINE_NERVE(TNerveYumboDancing, TLiveActor)
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveYumboHiding::execute (batch 127).
+static inline MSound* YunboGetMSound()
+{
+	MSound* mSound = gpMSound;
+	return mSound;
+}
+
 // TODO: instruction-identical, 8 bytes of frame short.
 DEFINE_NERVE(TNerveYumboHiding, TLiveActor)
 {
@@ -521,7 +529,7 @@ DEFINE_NERVE(TNerveYumboHiding, TLiveActor)
 		yumbo->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(
 		    3.0f * SMSGetAnmFrameRate());
 		yumbo->mHideEffectDone = false;
-		if (gpMSound->gateCheck(MSD_SE_EN_YUMBO_SINK))
+		if (YunboGetMSound()->gateCheck(MSD_SE_EN_YUMBO_SINK))
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    MSD_SE_EN_YUMBO_SINK, &yumbo->mPosition, 0, nullptr, 0, 4);
 	}

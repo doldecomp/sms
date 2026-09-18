@@ -1033,6 +1033,14 @@ void TGorogoro::init(TLiveManager* manager)
 	unk130 = 1;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TGorogoro::perform (batch 127).
+static inline MActor* IgaigaMActor(const TGorogoro* p)
+{
+	MActor* mActor = p->mMActor;
+	return mActor;
+}
+
 void TGorogoro::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSmallEnemy::perform(cue, graphics);
@@ -1042,10 +1050,10 @@ void TGorogoro::perform(u32 cue, JDrama::TGraphics* graphics)
 	    && gpMirrorModelManager->isInMirror(mPosition)) {
 		if (cue & CUE_CALC_ANIM) {
 			calcRootMatrix();
-			mMActor->calc();
+			IgaigaMActor(this)->calc();
 		}
 		if (cue & CUE_CALC_VIEW)
-			mMActor->viewCalc();
+			IgaigaMActor(this)->viewCalc();
 	}
 }
 

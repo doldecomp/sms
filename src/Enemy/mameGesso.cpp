@@ -657,6 +657,14 @@ DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 	return false;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveMameGessoWait::execute (batch 127).
+static inline s16 MameGessoInstanceIndex(const TMameGesso* p)
+{
+	s16 instanceIndex = p->mInstanceIndex;
+	return instanceIndex;
+}
+
 DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
@@ -668,7 +676,7 @@ DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 		int wait = self->getGroundPlane()->isWaterSurface()
 		               ? self->unk194->mSLWaitTimeInWater.get()
 		               : self->unk194->mSLWaitTimeOnGround.get();
-		if (spine->getTime() > wait + self->mInstanceIndex * 10) {
+		if (spine->getTime() > wait + MameGessoInstanceIndex(self) * 10) {
 			spine->pushAfterCurrent(
 			    &TNerveMameGessoGraphJumpWander::theNerve());
 			return true;

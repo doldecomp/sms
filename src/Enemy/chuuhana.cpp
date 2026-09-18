@@ -1194,6 +1194,14 @@ DEFINE_NERVE(TNerveChuuHanaAttack, TLiveActor)
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveChuuHanaJumpPrepare::execute (batch 127).
+static inline TChuuHanaSaveLoadParams* ChuuhanaUnk1B4(const TChuuHana* p)
+{
+	TChuuHanaSaveLoadParams* v1B4 = p->unk1B4;
+	return v1B4;
+}
+
 DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
 {
 	TChuuHana* hana = (TChuuHana*)spine->getBody();
@@ -1211,7 +1219,7 @@ DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
 		target.y = 2.0f * hana->unk1F8.y - hana->mPosition.y;
 		target.z = 2.0f * hana->unk1F8.z - hana->mPosition.z;
 		*hana->unk21C = 0;
-		target.y += hana->unk1B4->mSLJumpHeight.get();
+		target.y += ChuuhanaUnk1B4(hana)->mSLJumpHeight.get();
 
 		f32 speed = hana->unk1B4->mSLJumpSp.get();
 		JGeometry::TVec3<f32> vel

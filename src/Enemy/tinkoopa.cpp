@@ -1176,9 +1176,17 @@ void TTinKoopa::checkTinKoopaFirstRocketMessage()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TTinKoopa::checkTinKoopaFirstFlameMessage (batch 127).
+static inline MActor* TinkoopaTruckMActor(const TTinKoopa* p)
+{
+	MActor* truckMActor = p->mTruckMActor;
+	return truckMActor;
+}
+
 void TTinKoopa::checkTinKoopaFirstFlameMessage()
 {
-	if (!mTruckMActor)
+	if (!TinkoopaTruckMActor(this))
 		return;
 
 	if (mFirstFlameMessageDone)
@@ -1187,7 +1195,7 @@ void TTinKoopa::checkTinKoopaFirstFlameMessage()
 	if (mSpine->getCurrentNerve() != &TNerveTinKoopaWait::theNerve())
 		return;
 
-	J3DFrameCtrl* ctrl = mTruckMActor->getFrameCtrl(ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = TinkoopaTruckMActor(this)->getFrameCtrl(ANM_TYPE_BCK);
 	if (mDamageStage == 0) {
 		if (ctrl->checkPass(2600.0f)) {
 			startTinKoopaMessage(BALLOON_MSG_TINKOOPA_FIRST_FLAME);
@@ -1460,6 +1468,14 @@ DEFINE_NERVE(TNerveTinKoopaWait, TLiveActor)
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveTinKoopaDamage::execute (batch 127).
+static inline TCameraShake* TinkoopaGetCameraShake()
+{
+	TCameraShake* cameraShake = gpCameraShake;
+	return cameraShake;
+}
+
 DEFINE_NERVE(TNerveTinKoopaDamage, TLiveActor)
 {
 	TTinKoopa* tinKoopa = (TTinKoopa*)spine->getBody();
@@ -1472,7 +1488,7 @@ DEFINE_NERVE(TNerveTinKoopaDamage, TLiveActor)
 		    tinKoopa->getModel()->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_HEAD)),
 		    0, this);
-		gpCameraShake->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
+		TinkoopaGetCameraShake()->startShake(CAM_SHAKE_MODE_KILLER, 1.0f);
 	}
 
 	if (tinKoopa->getMActor()->checkCurBckFromIndex(

@@ -1084,6 +1084,22 @@ void TBossEelVortex::reset()
 	mTimer = 0;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TBossEelEye::TBossEelEye (batch 127).
+static inline SDLModel* BosseelBlendModel(const TBossEelEye* p)
+{
+	SDLModel* blendModel = p->mBlendModel;
+	return blendModel;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TBossEelEye::TBossEelEye (batch 127).
+static inline f32 BosseelBlendRatio(const TBossEelEye* p)
+{
+	f32 blendRatio = p->mBlendRatio;
+	return blendRatio;
+}
+
 TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
                          SDLModelData* modelData, u32 modelFlags,
                          const char* name)
@@ -1096,14 +1112,14 @@ TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
     , mBlurDuration(50)
 {
 	mBlendModel = new SDLModel(modelData, modelFlags, 1);
-	mBlendModel->getModelData()->getMaterialName()->getIndex("_mat7");
+	BosseelBlendModel(this)->getModelData()->getMaterialName()->getIndex("_mat7");
 	getMActor()->initNormalMotionBlend();
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	mAnimationMode    = 0;
 	mBlendRatio       = 1.0f;
 	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
 	getMActor()->setBckFromIndex(0);
-	getMActor()->setMotionBlendRatioForBck(mBlendRatio);
+	getMActor()->setMotionBlendRatioForBck(BosseelBlendRatio(this));
 }
 
 // TODO: instruction-exact (32 bytes of throwaway locals reach 100%), 0x28 short
@@ -2087,6 +2103,22 @@ void TBossEel::startMoguCamera()
 
 const char** TBossEel::getBasNameTable() const { return bosseel_bastable; }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TNerveBossEelWaitAppear::execute (batch 127).
+static inline TMarDirector* BosseelGetMarDirector()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TNerveBossEelWaitAppear::execute (batch 127).
+static inline TCubeManagerBase* BosseelMouthCubeManager(const TBossEel* p)
+{
+	TCubeManagerBase* mouthCubeManager = p->mMouthCubeManager;
+	return mouthCubeManager;
+}
+
 DEFINE_NERVE(TNerveBossEelWaitAppear, TLiveActor)
 {
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
@@ -2094,11 +2126,11 @@ DEFINE_NERVE(TNerveBossEelWaitAppear, TLiveActor)
 		eel->setBckAnm(10);
 
 	if (spine->getTime() == 2500)
-		gpMarDirector->getConsole()->startAppearBalloon(0x12, true);
+		BosseelGetMarDirector()->getConsole()->startAppearBalloon(0x12, true);
 
 	JGeometry::TVec3<f32> marioPosition = *gpMarioPos;
 	marioPosition.y += 75.0f;
-	if (eel->mMouthCubeManager->isInCube(marioPosition, (s32)0)) {
+	if (BosseelMouthCubeManager(eel)->isInCube(marioPosition, (s32)0)) {
 		spine->pushAfterCurrent(&TNerveBossEelFirstSpin::theNerve());
 		return true;
 	}

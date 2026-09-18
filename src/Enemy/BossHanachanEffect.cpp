@@ -159,6 +159,14 @@ void TBossHanachan::emitOneTimeSandPillar_(TBossHanachanPartsBody* part)
 	gpMSound->startSoundActor(0x2884, &mSandPillarPosition);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TBossHanachan::emitCamShake_ (batch 127).
+static inline TBossHanachanCommonSaveParams* BossHanachanEffectCommonParams(const TBossHanachan* p)
+{
+	TBossHanachanCommonSaveParams* commonParams = p->mCommonParams;
+	return commonParams;
+}
+
 // TODO: 99.9%, frame 0x78 vs 0x68. Every instruction and every register match;
 // 16 bytes of low region are missing. `getLatestNerve()` over
 // `mSpine->getLatestNerve()` bought the first 8. The hoisted `int j` is what
@@ -176,7 +184,7 @@ void TBossHanachan::emitCamShake_()
 		f32 ratio;
 		if (distance <= mCommonParams->mSLCamShakeMaxDist.get())
 			ratio = 1.0f;
-		else if (distance >= mCommonParams->mSLCamShakeZeroDist.get())
+		else if (distance >= BossHanachanEffectCommonParams(this)->mSLCamShakeZeroDist.get())
 			ratio = 0.0f;
 		else
 			ratio = MsClamp(CLBCalcRatio(mCommonParams->mSLCamShakeZeroDist.get(),

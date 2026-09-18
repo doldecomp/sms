@@ -658,6 +658,14 @@ DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 	return false;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TNervePoihanaThrow::execute (batch 127).
+static inline TMarioParticleManager* PoihanaGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 {
 	TPoiHana* self = (TPoiHana*)spine->getBody();
@@ -692,9 +700,9 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 		SMSRumbleMgr->start(0x15, 0xf, (float*)nullptr);
 		MtxPtr mtx
 		    = self->mMActor->getModel()->getAnmMtx(TPoiHana::mMouthJntIndex);
-		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_DMG_B, mtx, 0,
+		PoihanaGetMarioParticleManager()->emitAndBindToMtxPtr(PARTICLE_MS_DMG_B, mtx, 0,
 		                                            nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_AMIATTACK,
+		PoihanaGetMarioParticleManager()->emitAndBindToMtxPtr(PARTICLE_MS_M_AMIATTACK,
 		                                            mtx, 0, nullptr);
 	}
 

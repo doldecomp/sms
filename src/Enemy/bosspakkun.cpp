@@ -981,6 +981,14 @@ void TBossPakkun::rumblePad(int kind, const JGeometry::TVec3<f32>& from)
 	SMSRumbleMgr->start(8, &mRumblePower);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TBossPakkun::showMessage (batch 127).
+static inline TMarDirector* BosspakkunGetMarDirector()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
 void TBossPakkun::showMessage(u32 message)
 {
 	u32 mask;
@@ -990,7 +998,7 @@ void TBossPakkun::showMessage(u32 message)
 		mask = 1 << message;
 
 	if (!(mBalloonsShown & mask))
-		gpMarDirector->getConsole()->startAppearBalloon(message, true);
+		BosspakkunGetMarDirector()->getConsole()->startAppearBalloon(message, true);
 
 	mBalloonsShown |= mask;
 }
@@ -1707,6 +1715,14 @@ DEFINE_NERVE(TNerveBPPivot, TLiveActor)
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TNerveBPSwallow::execute (batch 127).
+static inline TMarioParticleManager* BosspakkunGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
@@ -1723,9 +1739,9 @@ DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
 	}
 
 	MtxPtr mouth = boss->getModel()->getAnmMtx(18);
-	gpMarioParticleManager->emitAndBindToMtxPtr(
+	BosspakkunGetMarioParticleManager()->emitAndBindToMtxPtr(
 	    BOSSPAKKUN_JPA_MS_BOPA_WATHIT, mouth, 1, boss);
-	gpMarioParticleManager->emitAndBindToMtxPtr(
+	BosspakkunGetMarioParticleManager()->emitAndBindToMtxPtr(
 	    BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W, mouth, 1, boss + 1);
 
 	if (boss->unk170 != 0) {
@@ -1737,6 +1753,14 @@ DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
 	boss->mState = BOSSPAKU_STATE_NORMAL;
 	spine->pushAfterCurrent(&TNerveBPWait::theNerve());
 	return TRUE;
+}
+
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveBPTumbleIn::execute (batch 127).
+static inline TCameraShake* BosspakkunGetCameraShake()
+{
+	TCameraShake* cameraShake = gpCameraShake;
+	return cameraShake;
 }
 
 DEFINE_NERVE(TNerveBPTumbleIn, TLiveActor)
@@ -1753,7 +1777,7 @@ DEFINE_NERVE(TNerveBPTumbleIn, TLiveActor)
 		    boss);
 
 	if (spine->getTime() == 348) {
-		gpCameraShake->startShake(
+		BosspakkunGetCameraShake()->startShake(
 		    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_DOWN, 1.0f);
 		boss->rumblePad(2, boss->mPosition);
 	}

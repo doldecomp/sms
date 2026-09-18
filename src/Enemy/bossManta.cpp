@@ -212,6 +212,14 @@ BOOL TNerveMantaMove::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveMantaHitWater::execute (batch 127).
+static inline s32 BossMantaGeneration(const TBossManta* p)
+{
+	s32 generation = p->mGeneration;
+	return generation;
+}
+
 BOOL TNerveMantaHitWater::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
@@ -245,7 +253,7 @@ BOOL TNerveMantaHitWater::execute(TSpineBase<TLiveActor>* spine) const
 		if (particles[self->mGeneration][j] > 0) {
 			for (int i = 0; i < effectCount; ++i) {
 				gpMarioParticleManager->emitAndBindToPosPtr(
-				    particles[self->mGeneration][j], &self->unk17C, 1,
+				    particles[BossMantaGeneration(self)][j], &self->unk17C, 1,
 				    (u8*)self + i * sizeof(TBossManta));
 				if (j == 2)
 					break;

@@ -1076,14 +1076,30 @@ void THamuKuri::setGenerateAnm() { setBckAnm(9); }
 
 void THamuKuri::setWalkAnm() { setBckAnm(4); }
 
+// Binding level over a raw member read, worth +16 of low region in
+// THamuKuri::setDeadAnm (batch 127).
+static inline TMarioParticleManager* HamukuriGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// THamuKuri::setDeadAnm (batch 127).
+static inline u8 HamukuriUnk184(const THamuKuri* p)
+{
+	u8 v184 = p->unk184;
+	return v184;
+}
+
 void THamuKuri::setDeadAnm()
 {
 	if (unk198)
 		releaseCap();
 
-	if (unk184) {
+	if (HamukuriUnk184(this)) {
 		onLiveFlag(LIVE_FLAG_UNK20000);
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A, &mPosition, 0,
+		HamukuriGetMarioParticleManager()->emit(PARTICLE_MS_ENM_DISAP_A, &mPosition, 0,
 		                             nullptr);
 	} else {
 		if (isBckAnm(3))
@@ -1753,9 +1769,17 @@ void TDoroHaneKuri::behaveToWater(THitActor*)
 		mSpine->pushNerve(&TNerveDoroHaneHitWater::theNerve());
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TDoroHaneKuri::setBehavior (batch 127).
+static inline TSpineBase<TLiveActor>* HamukuriSpine(const TDoroHaneKuri* p)
+{
+	TSpineBase<TLiveActor>* spine = p->mSpine;
+	return spine;
+}
+
 void TDoroHaneKuri::setBehavior()
 {
-	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
+	if (HamukuriSpine(this)->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
 		releaseCap();
 }
 

@@ -518,6 +518,14 @@ DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TNerveBombHeiWaitExplosion::execute (batch 127).
+static inline MSound* BombheiGetMSound()
+{
+	MSound* mSound = gpMSound;
+	return mSound;
+}
+
 // TODO: the frame is 0x68 against the ROM's 0x78.
 DEFINE_NERVE(TNerveBombHeiWaitExplosion, TLiveActor)
 {
@@ -556,7 +564,7 @@ DEFINE_NERVE(TNerveBombHeiWaitExplosion, TLiveActor)
 		                   ->getFrameCtrl(ANM_TYPE_BTP)
 		                   ->getFrame();
 		if (btpFrame % 40 == 0)
-			gpMSound->startSoundActor(MSD_SE_EN_BOMBHEI_COUNT,
+			BombheiGetMSound()->startSoundActor(MSD_SE_EN_BOMBHEI_COUNT,
 			                          &bombHei->mPosition, 0, nullptr, 0, 4);
 
 		gpMarioParticleManager->emitAndBindToMtxPtr(

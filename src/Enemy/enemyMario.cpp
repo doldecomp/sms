@@ -863,12 +863,20 @@ void TEnemyMario::emAppear()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TEnemyMario::startDisappear (batch 127).
+static inline TMarDirector* EnemyMarioGetMarDirector()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
 void TEnemyMario::startDisappear(u16 doing)
 {
 	mDisappearPosition = mPosition;
 
 	u8 currentMap      = gpMarDirector->getCurrentMap();
-	u8 currentStage    = gpMarDirector->getCurrentStage();
+	u8 currentStage    = EnemyMarioGetMarDirector()->getCurrentStage();
 	bool keepBossLives = false;
 	if (currentMap == 1 && currentStage == 1) {
 		keepBossLives = true;
