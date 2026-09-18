@@ -59,7 +59,12 @@ void TMovieRumble::movement()
 // is a getFrameNumber() in THPRender.hpp that binds its member before
 // returning it, but that header is shared with linked units, so the level is
 // parked TU-locally.
-// TODO: promote into TTHPRender::getFrameNumber() when THPRender can move.
+// Header round 23 tried the promotion and it loses: a binding written into
+// `TTHPRender::getFrameNumber()` itself is only +4 (batch 143's own-accessor
+// price), so `checkRumbleOff` falls to 99.97%, and it also breaks
+// `TMovieSubTitle::perform`, which expands the same accessor and is exact
+// without the binding. The level therefore stays TU-local: its +8 is a property
+// of the extra level, not of the accessor.
 static inline s32 MovieFrameNumber(const TTHPRender* render)
 {
 	s32 frame = render->getFrameNumber();

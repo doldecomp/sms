@@ -1,10 +1,14 @@
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapData.hpp>
 
-// TODO: promote to TBGCheckData as `const TVec3<f32>& getNormal() const`.
-static inline const JGeometry::TVec3<f32>& MapArea_getNormal(const TBGCheckData* d)
+// `TBGCheckData::getNormal()` already exists in MapData.hpp and returns exactly
+// this reference, so there is nothing to promote: this helper is a *second*
+// level over that accessor, and its +8 is what the callers below need. Reading
+// `d->getNormal()` directly drops the level.
+static inline const JGeometry::TVec3<f32>&
+MapArea_getNormal(const TBGCheckData* d)
 {
-	return d->mNormal;
+	return d->getNormal();
 }
 
 // The two cross products are one reused two-element array: that is the only
