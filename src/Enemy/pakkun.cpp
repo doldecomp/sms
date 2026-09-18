@@ -263,8 +263,13 @@ void TPakkunManager::createModelData()
 
 // TODO: the original calls TPakkun's constructor here; ours inlines it. The
 // ctor is byte-exact and this is its only call site, so it is the same case as
-// TLimitKoopa::startHipDrop in docs/catalog/codegen-tells.md -- no statement
-// or initialiser-list spelling flips the decision.
+// TLimitKoopa::startHipDrop in docs/catalog/codegen-tells.md. Correction to
+// the earlier note here: statement count *is* the lever -- exactly five more
+// statements in the ctor body flip it to a `bl` and land this function at
+// 100% (four or fewer make it worse, and moving the six member initialisers
+// from the list into the body is inert, so the list and the body cost the
+// same). What is missing is therefore five real statements in the ctor, and
+// the byte-exact 0x64 body leaves no room for them.
 TSpineEnemy* TPakkunManager::createEnemyInstance()
 {
 	return new TPakkun("パックン");

@@ -290,6 +290,17 @@ void* TApplication::setupThreadFuncLogo()
 	return nullptr;
 }
 
+// TODO: 0%. The ROM keeps this an 8-instruction forwarder while our build
+// expands all 57 instructions of setupThreadFuncLogo into it, so that body is
+// four statements under MWCC's 15-statement floor -- and it is already
+// byte-exact at 804 bytes, so the four statements have to be codegen-free.
+// Spelling the two ARAM waits as `while (true) { if (ready) break;
+// OSYieldThread(); }` is exactly +4 and lands this function at 100%, but it
+// turns the loops' bottom test into a top test and costs setupThreadFuncLogo
+// 100 -> 97.8, so it is not the shape. `JKRHeap* rootHeap =
+// JKRGetRootHeap();` is one defensible statement (retail holds the root heap
+// in callee-saved r28 across both SMSLoadArchive calls); three more are
+// missing.
 static void* SetupThreadFuncLogo(void* param)
 {
 	return ((TApplication*)param)->setupThreadFuncLogo();
