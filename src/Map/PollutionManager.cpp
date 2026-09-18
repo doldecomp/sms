@@ -30,7 +30,7 @@ void TPollutionManager::stamp(u16 stamp_type, f32 x, f32 y, f32 z, f32 size)
 
 void TPollutionManager::clean(f32 x, f32 y, f32 z, f32 size)
 {
-	if (gpMarDirector->getCurrentMap() == 1 && y < -10.0f)
+	if (SMSGetMarDirector()->getCurrentMap() == 1 && y < -10.0f)
 		return;
 
 	stamp(0, x, y, z, size);
@@ -84,6 +84,19 @@ static void dummy()
 	(Vec) { 1.0f, 1.0f, 1.0f };
 }
 
+// TODO: 96.4%. Instruction-identical, but our frame is 8 bytes too *big*
+// (0x38 vs 0x30) and r6-r9 come out one step rotated. The excess is in the
+// inlined getPollutionDegree expansion, not in this body: spelling the loop
+// out here instead of calling it gives 0x28 (8 too small, 86%), and
+// reaching the layer one level shallower inside getPollutionDegree
+// ((TPollutionLayer*)getJointModel(i) instead of getLayer(i)) lands this
+// frame exactly -- but costs getPollutionDegree's own emitted copy an
+// instruction (100% -> 94.5%), so it cannot be spelled that way here.
+// The remaining candidate is a const getLayer(i) that casts
+// mJointModels[i] directly (cast inside the accessor, one level instead of
+// two); that is a change to an accessor with ~25 sites in other units, so
+// it is reported, not made. Rejected here: dropping the ternary (90.8%),
+// if/return (no change), naming the degree or the result (+8 each).
 bool TPollutionManager::cleanedAll() const
 {
 	return getPollutionDegree() < TMapEventSink::mCleanedDegree ? true : false;
@@ -157,8 +170,8 @@ void TPollutionManager::initPollutionInfo()
 		mJointModelNum = info->mLayerCount;
 		setDataAddress(info);
 
-		if (gpMarDirector->getCurrentMap() == 0x9
-		    && gpMarDirector->getCurrentStage() != 0x7) {
+		if (SMSGetMarDirector()->getCurrentMap() == 0x9
+		    && SMSGetMarDirector()->getCurrentStage() != 0x7) {
 			static const char* mare_name_table[] = {
 				"pollution00", "pollution01", "pollution02", "pollution03",
 				"pollution04", "pollution05", "pollution06", "pollutionA",
@@ -179,13 +192,22 @@ void TPollutionManager::initPollutionInfo()
 	}
 }
 
+// TODO: 99.9%, instruction-identical, frame 0x58 vs 0x60 with no slot
+// referenced on either side. The accessor ladder is exhausted at 0x58:
+// `getJointModelNum()` for the guard and `SMSGetPollution()->getCounterObj()`
+// are +8 each and saturate, and the two `SMSGetMarDirector()` levels inside
+// the inlined initPollutionInfo are +8 (its UNUSED size stays 0xe0). Every
+// further +8 measured (SMSGetPollution() in front of getCounterLayer() at
+// any of its four sites, SMSGetPollutionLayer(i) at either registerLayer
+// argument) also adds an instruction, so the last 8 bytes are a
+// zero-instruction object, not another level.
 void TPollutionManager::load(JSUMemoryInputStream& stream)
 {
 	TJointModelManager::load(stream);
 
 	initPollutionInfo();
 
-	if (mJointModelNum != 0) {
+	if (getJointModelNum() != 0) {
 		mDefaultPolluteStampTex
 		    = (ResTIMG*)JKRGetResource("/common/map/pollute.bti");
 		mDefaultCleanStampTex
@@ -197,7 +219,7 @@ void TPollutionManager::load(JSUMemoryInputStream& stream)
 			getCounterLayer().registerLayer(getLayer(i),
 			                                &getLayer(i)->mCounter);
 
-		gpPollution->getCounterObj().init(30);
+		SMSGetPollution()->getCounterObj().init(30);
 
 		getCounterLayer().registerTexStamp(0, 0xff, mDefaultCleanStampTex);
 		getCounterLayer().registerTexStamp(1, 0xff, mDefaultPolluteStampTex);
