@@ -448,6 +448,15 @@ static void evSetHide4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// TODO (also evSetHide4LiveActor and evSetFlagNPCCanTaken): 99.95%, every
+// instruction and every referenced local slot exact, frame 8 bytes too big
+// (0xa0 vs 0x98) -- the mirror of the "last 8 bytes" family: eight unreferenced
+// bytes between our highest local and the register saves. Spelling the search
+// out as `getInstance()->getRootNameRef()->search(name)` removes exactly those
+// 8 (frame exact) but then shifts the slots 4-8 down, so the missing level is
+// one below search2, not at the call site. Naming the popped string is
+// load-bearing (the ROM keeps it in r27 and copies with `addi r3, r27, 0`);
+// inlining it into the search argument costs 1.2 points.
 static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
                                 u32 arg_num)
 {
