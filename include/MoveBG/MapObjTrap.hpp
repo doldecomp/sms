@@ -26,6 +26,9 @@ public:
 	virtual void control();
 	virtual void initMapObj();
 
+	// fabricated
+	int getSpikeState() const { return unk138; }
+
 public:
 	/* 0x138 */ int unk138;
 	/* 0x13C */ int unk13C;

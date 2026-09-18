@@ -43,9 +43,10 @@ void TLampTrapSpikeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	THitActor::perform(cue, graphics);
 	if (cue & CUE_MOVE) {
-		mPosition = unk68->mPosition;
+		mPosition = unk68->getPosition();
 		mPosition.y += 2300.0f;
-		if (unk68->unk138 == 2 || unk68->unk138 == 0 || unk68->unk138 == 1) {
+		int state = unk68->getSpikeState();
+		if (state == 2 || state == 0 || state == 1) {
 			for (int i = 0; i < getColNum(); ++i)
 				if (getCollision(i)->isActorType(-0x7fffffff))
 					SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
@@ -55,6 +56,9 @@ void TLampTrapSpikeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 
 TLampTrapSpike::TLampTrapSpike(const char* name)
     : TMapObjBase(name)
+    , unk138(3)
+    , unk13C(0)
+    , unk140(nullptr)
 {
 }
 
@@ -82,14 +86,14 @@ void TLampTrapSpike::control()
 
 	switch (thing) {
 	case 0: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
-			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			getMActor()->setBck("lamptrapspike_up");
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(SMSGetAnmFrameRate());
 		}
-		if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 2;
 		}
@@ -98,14 +102,14 @@ void TLampTrapSpike::control()
 	} break;
 
 	case 1: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
-			mMActor->setBck("lamptrapspike_down");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			getMActor()->setBck("lamptrapspike_down");
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.8f);
 		}
-		if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}
@@ -115,12 +119,12 @@ void TLampTrapSpike::control()
 
 	case 2:
 		if (unk13C == 0) {
-			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			getMActor()->setBck("lamptrapspike_up");
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(ctrl->getEnd());
 			ctrl->setRate(0.0f);
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCT_SET,
-			                                &mPosition, 0, nullptr, 0, 4);
+			                                &mPosition);
 		}
 		if (unk13C >= 360) {
 			unk13C = 0;
@@ -131,8 +135,8 @@ void TLampTrapSpike::control()
 
 	case 3:
 		if (unk13C == 0) {
-			mMActor->setBck("lamptrapspike_down");
-			if (J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK)) {
+			getMActor()->setBck("lamptrapspike_down");
+			if (J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK)) {
 				ctrl->setFrame(ctrl->getEnd());
 				ctrl->setRate(0.0f);
 			}
@@ -145,10 +149,10 @@ void TLampTrapSpike::control()
 		break;
 
 	case 4: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
-			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			getMActor()->setBck("lamptrapspike_up");
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.1f);
 		}
@@ -162,10 +166,10 @@ void TLampTrapSpike::control()
 
 	default:
 	case 5:
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
-			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			getMActor()->setBck("lamptrapspike_up");
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(-SMSGetAnmFrameRate());
 		}
