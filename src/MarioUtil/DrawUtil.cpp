@@ -424,6 +424,14 @@ void SMS_AddDamageFogEffect(J3DModelData* param_1,
 	Vec local_80;
 	MTXMultVec(param_3->getViewMtx(), param_2, &local_80);
 
+	// TODO: MWCC folds both differences to a single 300.0f here, but the
+	// target keeps four literals and subtracts at run time: @3041 -700,
+	// @3042 500, @3043 -400, @3044 800 (that is the whole .sdata2 delta
+	// for this TU, data 66.67%). Named peak locals do not stop the fold,
+	// so the subtraction must sit inside something whose operands MWCC
+	// will not constant-propagate -- most likely an inlined helper taking
+	// the base and peak as parameters. No such helper is UNUSED in the
+	// map for DrawUtil.cpp, so its shape is still unknown.
 	f32 startBase = -700.0f;
 	f32 endBase   = 500.0f;
 	f32 s         = JMASSin((s16)(gpMarDirector->unk58 * 0x888));
