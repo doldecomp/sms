@@ -33,19 +33,28 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 	initModDat();
 }
 
-// TODO: 74.5%. Fixed here: the Euler rotations are applied **Z, then Y, then
-// X** -- retail's first `sinf`/`cosf` pair takes `0x38(this)` (mRotation.z) and
-// the last takes `0x30` (mRotation.x), and we had the order reversed. The
-// remaining residue is the concat block itself: ~240 float operands permuted,
-// our frame 8 bytes bigger with one extra callee-saved FPR (retail saves
-// f21-f31, we save f20-f31), and the identity+translation matrix parked at
-// 0x140(r1) in retail against 0x170 in ours while `local_110` is at 0x110 in
-// both -- i.e. retail declares a fourth 48-byte matrix above it and we declare
-// that one first. Declaring `tmp` before it (with or without hoisting its
-// `identity()`) is worse (66.9%), so the block is a different shape, not just a
-// different declaration order. The `(void)&local_148;` below is an inherited
-// hack to force the matrix a stack home and should go when the block is
-// re-derived.
+// TODO: 74.5%.  Batch 152 pinned the shape down but did not commit it: the
+// three-matrix body below scores 74.06 against this one's 74.53, and a
+// per-function regression is not committable, so the finding lives here.  Retail's named
+// region is 0x110..0x1a4 -- exactly three 48-byte matrices, at 0x110 (the
+// concat destination), 0x140 (identity + translation) and 0x170 (the rotation
+// matrix, which never reaches memory) -- so the three concats reuse three
+// matrices and the last two are the one-argument in-place `concat(b)`.  The
+// four-matrix shape this function used to have put the translation matrix at
+// 0x170 and could not be right.  With three, our slots sit at exactly the same
+// relative positions, 0x30 lower, because the one difference left is 48 bytes
+// of *low* region: retail spills the in-place concat's twelve results to a
+// 48-byte temporary block (0xc..0x110 = 260 bytes against our 212) and
+// therefore needs only f21-f31, while we keep the twelve in registers and pay
+// f20 plus an extra 8 bytes of frame.  That also explains the one visible
+// register difference: retail reloads 0.0f after the sinf/cosf calls (f0/f6)
+// where we keep it in f31 across them.  The next step is a concat whose twelve
+// values are all live before the first store -- but `concat` lives in the
+// shared JGMatrix34.hpp, so it must be measured tree-wide, not changed here.
+// The Euler order Z, Y, X is confirmed by the first sinf argument (0x38 =
+// mRotation.z) and the last (0x30 = .x).  The `(void)&trans;` below is an
+// inherited hack: without it MWCC forwards the identity/setTrans stores and
+// the matrix never gets a stack home, which retail's 0x140 block contradicts.
 void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
