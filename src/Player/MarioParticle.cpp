@@ -98,11 +98,11 @@ void TMario::emitSweat(s16 rot)
 {
 	if (!checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
 	    && !checkFlag(MARIO_FLAG_IN_ANY_WATER) && !isUnderWater()) {
-		MtxPtr mtx = getM3UModel()->getModel()->getAnmMtx(mJointIdHead);
 		JGeometry::TVec3<f32> pos;
-		pos.x = mtx[0][3];
-		pos.y = mtx[1][3];
-		pos.z = mtx[2][3];
+		MtxPtr mtx = getM3UModel()->getModel()->getAnmMtx(mJointIdHead);
+		pos.x      = mtx[0][3];
+		pos.y      = mtx[1][3];
+		pos.z      = mtx[2][3];
 		gpMarioParticleManager->emitWithRotate(PARTICLE_MS_ASE, &pos, 0, rot, 0,
 		                                       0, nullptr);
 	}
@@ -125,8 +125,9 @@ void TMario::emitGetEffect()
 
 void TMario::emitGetWaterEffect()
 {
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, &unk160,
-	                                            0, nullptr);
+	JGeometry::TVec3<f32>* pos = &unk160;
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, pos, 0,
+	                                            nullptr);
 }
 
 void TMario::emitGetCoinEffect(JGeometry::TVec3<f32>* pos)
@@ -162,9 +163,10 @@ void TMario::rippleEffect()
 		SMS_EmitRipplePool(unk220, this);
 	} else {
 		SMS_EmitRippleSea(unk220, this);
-		if ((checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
-		    && mForwardVel > mParticleParams.mWaveEmitSpeed.get()) {
-			mWaterWakeAlpha = 0xFF;
+		if ((checkStatusType(MARIO_STATUS_FLAG_SWIMMING))) {
+			f32 waveEmitSpeed = mParticleParams.mWaveEmitSpeed.get();
+			if (mForwardVel > waveEmitSpeed)
+				mWaterWakeAlpha = 0xFF;
 		}
 	}
 }
@@ -705,7 +707,7 @@ void TMario::elecEndEffect()
 void TMario::kickRoofEffect()
 {
 	if (getMotionFrameCtrl().checkPass(8.0f)) {
-		MtxPtr mtx      = getM3UModel()->getModel()->getAnmMtx(mJointIdHead);
+		MtxPtr mtx      = getM3UModel()->getModel()->getAnmMtx(mJointIdChnFootR);
 		mFootprintPos.x = mtx[0][3];
 		mFootprintPos.y = mtx[1][3];
 		mFootprintPos.z = mtx[2][3];
@@ -754,7 +756,7 @@ void TMario::kickFruitEffect()
 		emitter->setGlobalScale(scale);
 		JGeometry::TVec3<f32> pos = mPosition;
 		pos.y += 30.0f;
-		emitter->setEmitterTranslation(pos);
+		emitter->setGlobalTranslation(pos);
 	}
 }
 
