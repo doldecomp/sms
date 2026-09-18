@@ -235,7 +235,7 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 
 void TNameIndParCallback::draw(JPABaseEmitter*, JPABaseParticle*) { }
 
-BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
+static BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 		if (gpCurNameKuri == nullptr || !gpCurNameKuri->isAttackJump())
@@ -270,7 +270,7 @@ BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 	return true;
 }
 
-BOOL NameKuriScaleCallback(J3DNode* param_1, int param_2)
+static BOOL NameKuriScaleCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 		if (gpCurNameKuri == nullptr || !gpCurNameKuri->isHitWaterJump())
@@ -533,6 +533,21 @@ void TNameKuri::setGenerateAnm()
 
 void TNameKuri::setWalkAnm() { setBckAnm(7); }
 
+// TODO: setDeadAnm and setMeltAnm share one 40-byte frame gap (0x40 vs 0x68)
+// with every instruction exact. Located with a trailing `volatile char
+// trash[40]`: the unnamed `setVelocity(TVec3(0,0,0))` temporary belongs at
+// 0x48 with 12 bytes *above* it (one named 12-byte local, dead, declared
+// before the zero vector) and 28 more bytes of low region *below* it.
+// Measured levers, none of which reproduces that split: the two-argument
+// startSoundActor +8; one parked binding level on
+// getMActor()->getModel()->getAnmMtx() +16, two nested levels +16 (they do not
+// stack here), the pair +0x20; getScaling() at the setGlobalScale sites -8;
+// &getPosition() at the sound site costs an instruction. SMS_EasyEmitParticle
+// for the two emit-then-scale blocks is codegen-identical (+0), so it is not
+// the carrier either. TNameKuri::init is short by the same 40 bytes and
+// initSetEnemies and TNerveNKFollowMario by 16, so the cause is probably one
+// shared inline this TU reaches (getMActor()'s chain is the only callee all of
+// them have).
 void TNameKuri::setDeadAnm()
 {
 	setBckAnm(0);
@@ -669,10 +684,15 @@ bool TNameKuri::isHitValid(u32 param_1)
 	if (param_1 == 15)
 		unk198 = 0;
 
-	if (checkLiveFlag(2))
+	// The raw read is load-bearing: the const checkLiveFlag() blocks the CSE
+	// retail has between this test and the onLiveFlag() below (one lwz).
+	if (mLiveFlag & LIVE_FLAG_HIDDEN)
 		return false;
-	else
-		return true;
+
+	if (param_1 == 11)
+		onLiveFlag(LIVE_FLAG_HIDDEN);
+
+	return true;
 }
 
 bool TNameKuri::isCollidMove(THitActor* param_1)
@@ -706,11 +726,12 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 {
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
-	if (self->isBckAnm(4) && self->checkCurAnmEnd(0))
-		return true;
-
-	if (!self->isAirborne())
+	if (self->isBckAnm(4)) {
+		if (self->checkCurAnmEnd(0))
+			return true;
+	} else if (!self->isAirborne()) {
 		self->setBckAnm(4);
+	}
 
 	return false;
 }
