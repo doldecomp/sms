@@ -1748,25 +1748,31 @@ void TBathWaterManager::throwMario(f32 param_1)
 {
 	const TBathtubData& data = unk24->getBathtubData();
 
-	JGeometry::TVec3<f32> diff;
-	diff.sub(SMS_GetMarioPos(), data.mPos);
-
-	JGeometry::TVec3<f32> local;
-	data.unk18.mult33(diff, local);
-
-	JGeometry::TVec3<f32> horiz;
-	horiz   = local;
-	horiz.y = 0.0f;
-
 	JGeometry::TVec3<f32> vel;
+	JGeometry::TVec3<f32> horiz = data.getLocalPos(SMS_GetMarioPos());
+	horiz.y                     = 0.0f;
+
+	// TODO: the ROM shares one `squared()` between this length() and the
+	// setLength() below; ours recomputes it (nine instructions). Naming the
+	// distance, naming the squared value and spelling length() out as
+	// TUtil<f32>::sqrt(horiz.squared()) all leave the recomputation.
 	if (horiz.length() < 4500.0) {
 		horiz.setLength(4150.0f);
 
+		// Local -> world, and only through the X and Z axes: the ROM never
+		// reads horiz.y here (it is the zero from above, but setLength has
+		// already stored it, so this is a source-level choice).
 		JGeometry::TVec3<f32> w;
-		data.unk18.mult33(horiz, w);
-		w += data.mPos;
+		w.x = data.unk18.mMtx[0][0] * horiz.x + data.mPos.x;
+		w.y = data.unk18.mMtx[0][1] * horiz.x + data.mPos.y;
+		w.z = data.unk18.mMtx[0][2] * horiz.x + data.mPos.z;
+		w.x += data.unk18.mMtx[2][0] * horiz.z;
+		w.y += data.unk18.mMtx[2][1] * horiz.z;
+		w.z += data.unk18.mMtx[2][2] * horiz.z;
 		w.y += 120.0f;
 
+		// TODO: frame 0x98 against the ROM's 0xb0. The instruction stream
+		// only differs in register numbering from here on.
 		f32 gravity = SMS_GetMarioGravity();
 		int count   = 1;
 		f32 vy      = 100.0f;
@@ -1781,9 +1787,11 @@ void TBathWaterManager::throwMario(f32 param_1)
 			count++;
 		}
 
-		vel.x = (w.x - gpMarioPos->x) / (f32)count;
-		vel.y = 100.0f;
-		vel.z = (w.z - gpMarioPos->z) / (f32)count;
+		f32 dx = w.x - gpMarioPos->x;
+		f32 dz = w.z - gpMarioPos->z;
+		vel.x  = dx / (f32)count;
+		vel.y  = 100.0f;
+		vel.z  = dz / (f32)count;
 	} else {
 		vel.x = 0.0f;
 		vel.y = param_1;

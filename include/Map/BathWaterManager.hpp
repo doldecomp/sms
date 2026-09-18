@@ -66,6 +66,26 @@ public:
 		return JGeometry::TVec3<f32>(mPos.x, mPos.y - unk44, mPos.z);
 	}
 
+	// fabricated, but it has to be a function and it has to return by value:
+	// TBathWaterManager::throwMario builds its local position through a
+	// by-value temporary that it then copies word-wise into a named vector,
+	// and only at this depth does the member template TVec3<f>::set<f> stay
+	// the `bl` the ROM has (constructor at depth 2, set<f> at depth 3).
+	// The projection is the transpose of TRotation3::mult33 because the
+	// bathtub's axes are this matrix's rows.
+	JGeometry::TVec3<f32> getLocalPos(const JGeometry::TVec3<f32>& pos) const
+	{
+		JGeometry::TVec3<f32> diff;
+		diff.sub(pos, mPos);
+		return JGeometry::TVec3<f32>(
+		    unk18.mMtx[0][0] * diff.x + unk18.mMtx[0][1] * diff.y
+		        + unk18.mMtx[0][2] * diff.z,
+		    unk18.mMtx[1][0] * diff.x + unk18.mMtx[1][1] * diff.y
+		        + unk18.mMtx[1][2] * diff.z,
+		    unk18.mMtx[2][0] * diff.x + unk18.mMtx[2][1] * diff.y
+		        + unk18.mMtx[2][2] * diff.z);
+	}
+
 public:
 	/* 0x00 */ JGeometry::TVec3<f32> mPos;
 	/* 0x0C */ JGeometry::TVec3<f32> unk0C;
