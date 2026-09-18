@@ -69,6 +69,12 @@ void TModelGate::loadAfter()
 		THPPlayerGetVideoInfo(&videoInfo);
 		u16 width       = videoInfo.xSize;
 		u16 height      = videoInfo.ySize;
+		// TODO: retail's halves are `extrwi rD, rS, 15, 16`, i.e.
+		// `(x >> 1) & 0x7fff` -- fifteen bits, so it knew the dividend
+		// was already 16-bit -- while `videoInfo.xSize / 2` on the u32
+		// field gives `extrwi rD, rS, 16, 15`. Deriving them from the
+		// `width`/`height` u16 locals is not it either (556 instructions
+		// against retail's 548: MWCC re-materialises the truncation).
 		u16 halfX       = videoInfo.xSize / 2;
 		u16 halfY       = videoInfo.ySize / 2;
 		J3DTexture* tex = unk78->getModel()->getModelData()->unkAC;
@@ -242,10 +248,18 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 
 	mBlurAlpha += mBlurAlphaRate * (target - mBlurAlpha);
 
-	// TODO: retail loads gpAfterEffect only after the alpha and the radius
-	// are computed, and copies viewDir into a fifth stack vector first, so
-	// these six stores were most likely one TAfterEffect method taking the
-	// direction by value. Adding it is a shared-header change.
+	// TODO (shared header, ScreenUtil.hpp): read off retail's tail, the last
+	// three fields are one `JGeometry::TVec3<f32>` member at 0x5C, not three
+	// f32s. Retail computes the alpha and the radius first, copies `viewDir`
+	// into a fifth 12-byte stack vector with interleaved lfs/stfs (i.e.
+	// `dir.set(viewDir)`), loads gpAfterEffect only then, and writes the
+	// member with three integer `lwz`/`stw` (i.e. a `TVec3` assignment).
+	// That accounts for 12 of the function's 48-byte frame gap; another 8 are
+	// a second `stfd` slot for the `(s16)(182.04445f * mRotation.y - ...)`
+	// conversion, which retail materialises twice from one `fctiwz`, and the
+	// remaining 28 are dead low region. A by-value TU-local setter was tried
+	// and is worse (157 -> 161 instructions); the honest fix is the TVec3
+	// member plus a setter on TAfterEffect.
 	gpAfterEffect->unk15 = 2;
 	gpAfterEffect->unk1C = (u8)(mBlurAlpha * (1.0f - gpCamera->unk270));
 	gpAfterEffect->unk50 = mBlurRadius;
@@ -264,7 +278,8 @@ BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
 
 	if (sender->mActorType == 0x01000001) {
 		JGeometry::TVec3<f32> localPos;
-		MTXMultVec(mInvCenterMtx, sender->mPosition, localPos);
+		MtxPtr invCenter = mInvCenterMtx;
+		MTXMultVec(invCenter, sender->getPosition(), localPos);
 		Mtx center;
 		MTXCopy(unk78->getModel()->getAnmMtx(unk72), center);
 
@@ -296,6 +311,28 @@ BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
 // retail keeps only the 8-byte 0.5/3.0 double pair (@3049/@3050, MWCC's
 // inline sqrt), so one of this function's square roots is spelled on floats
 // here and on doubles in retail.
+// Two thin levels, a stand-in for unreconstructed inline structure inside
+// perform (its frame is still 232 bytes short of retail's 0x220, so real
+// levels are missing): retail reaches JGeometry::TUtil<f32>::sqrt as a `bl`
+// here, which needs depth 4, and through length() alone the site is at depth
+// 2. Same idiom as the WrapDirection/WrapRadian pair in wireTrap and
+// MapObjCorona. 699 -> 689 instructions against retail's 682.
+static inline f32 ModelGateLengthInner(const JGeometry::TVec3<f32>& v)
+{
+	return v.length();
+}
+
+static inline f32 ModelGateLength(const JGeometry::TVec3<f32>& v)
+{
+	return ModelGateLengthInner(v);
+}
+
+// TODO: 232 bytes of frame short (0x138 against retail's 0x220) and retail
+// saves r23-r31 where we save r26-r31, so several inlined helpers are still
+// missing. @3054 is an 8-entry jump table whose grouping already matches and
+// whose addends are gated on this function's size (ours 0x698/0x650/... against
+// retail's 0x694/0x64c/...), so the unit's data score cannot reach 100% until
+// perform does.
 void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(mFlags & GATE_FLAG_ACTIVE))
@@ -323,12 +360,8 @@ void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 			toMario.x -= mPosition.x;
 			toMario.y -= mPosition.y;
 			toMario.z -= mPosition.z;
-			// TODO: retail calls JGeometry::TUtil<f32>::sqrt here; through
-			// length() it sits at depth 2 and MWCC expands it for us. Same
-			// per-call-site problem as the MapObjBall table in
-			// docs/catalog/codegen-tells.md.
 			JGeometry::TVec3<f32> dist(toMario);
-			if (dist.length() < 1000.0f) {
+			if (ModelGateLength(dist) < 1000.0f) {
 				mOpenRate += 0.01f;
 				if (mOpenRate > 1.0f) {
 					mOpenRate     = 1.0f;
