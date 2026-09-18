@@ -235,9 +235,21 @@ void TBombHei::setDeadAnm()
 	SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
 }
 
-// TODO: instruction-exact, frame 0x20 against the ROM's 0x30. Going through
-// SMSGetMarDirector() recovered 8 of the missing 24; the other two stack
-// objects are unaccounted for.
+// Two stacked binding levels over the address of mPosition, worth +16 of low
+// region in TBombHei::calcRootMatrix -- one level alone moves nothing there
+// (batch 130).
+static inline const JGeometry::TVec3<f32>* BombheiPositionL0(const TBombHei* p)
+{
+	const JGeometry::TVec3<f32>* position = &p->mPosition;
+	return position;
+}
+
+static inline const JGeometry::TVec3<f32>* BombheiPosition(const TBombHei* p)
+{
+	const JGeometry::TVec3<f32>* position = BombheiPositionL0(p);
+	return position;
+}
+
 void TBombHei::calcRootMatrix()
 {
 	TSpineEnemy::calcRootMatrix();
@@ -253,7 +265,7 @@ void TBombHei::calcRootMatrix()
 		    = (TEffectExplosion*)gpConductor->makeOneEnemyAppear(
 		        mPosition, "エフェクト爆発マネージャー", 1);
 		if (smoke)
-			smoke->generate(mPosition, mScaling);
+			smoke->generate(*BombheiPosition(this), mScaling);
 	}
 }
 

@@ -121,6 +121,12 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
 	}
 }
 
+// TODO: 99.75%, frame 0x80 against the ROM's 0x88. Binding the address of
+// mRotation at the `.y` read alone (batch 130) lands the frame exactly and
+// reaches 99.94%, but binding all three components, or a named
+// `const TVec3* rotation` local used for all three, is worse (99.8%), so the
+// measured lever is one arbitrary component of one read and is not the
+// original spelling. The missing 8 bytes are elsewhere.
 void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
                                            const JGeometry::TVec3<f32>& point,
                                            f32 speed, f32 y_speed) const
