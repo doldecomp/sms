@@ -38,6 +38,17 @@
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;
 
+// TODO: 90.6%. Structural, not a frame gap: the ROM compiles the outer switch
+// as a 16-entry jump table (`@3897`, `cmplwi r0, 0xf; bgt default; lwzx; bctr`)
+// where we get a compare tree pivoting on 9 and 1. Adding the missing labels
+// 9-14 as an empty group does not flip it (MWCC folds a case whose body is the
+// default's). The ROM also keeps `&gpApplication + 0xa` (mPrevArea) in a
+// callee-saved register from the top and saves r26 where we save r27, so the
+// inner getShineStage switch's operand is a named local or reference there.
+// 32 bytes of frame short as well (0x48 vs 0x68). The two 50% `.ctors` rows
+// (`@3810`, `@3898`) are this function's and setupObjects' jump tables; their
+// entries are branch targets inside the functions, so they only match once the
+// code does.
 void TMarDirector::decideMarioPosIdx()
 {
 	unkD0 = 0;
@@ -126,6 +137,16 @@ void TMarDirector::decideMarioPosIdx()
 	}
 }
 
+// TODO: 98.0%. The residue is one repeated shape, six sites: the ROM
+// materialises `<list> + 0x10` into a callee-saved register before each
+// `JGadget::TList<void*>::end()` (`addi r21, r27, 0x10`, `addi r20, r28,
+// 0x10`) where we pass a different base plus 0xc recomputed inline, so its
+// insert path goes through one more level -- the batch-89 `getChildren()`
+// lever -- than ours. The rest is the `mr` vs `addi rD, rS, 0` family: the ROM
+// has `mr. r20, r3` (assign-and-test on a `new` result) and `mr r3, r20` where
+// we emit the cast form, which fits batch 105's note that search2's ROM return
+// type is looser than JDrama::TNameRef* (the identity cast below is
+// load-bearing for exactly that reason).
 bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
@@ -309,7 +330,7 @@ bool TMarDirector::setupObjects()
 
 		JDrama::TLookAtCamera* cam
 		    = (JDrama::TLookAtCamera*)JDrama::TNameRefGen::search2("camera 1");
-		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
+		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.91346145f
 		               / (u16)SMSGetGameVideoHeight();
 	}
 
