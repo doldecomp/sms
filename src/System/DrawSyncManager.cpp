@@ -72,7 +72,19 @@ TDrawSyncManager* TDrawSyncManager::start(u32 param_1, u32 param_2, s32 param_3)
 	return smInstance;
 }
 
-void TDrawSyncManager::end() { }
+// UNUSED, 0x80 in the map: the counterpart of start(), never called by the
+// shipped game. The guard is what the size says -- with a bare
+// `delete smInstance; smInstance = nullptr;` this compiles to 0x78, and the
+// whole destructor below is expanded inline here, so the two sizes move
+// together (every destructor body measured lands end() exactly 8 bytes below
+// it).
+void TDrawSyncManager::end()
+{
+	if (smInstance != nullptr) {
+		delete smInstance;
+		smInstance = nullptr;
+	}
+}
 
 void TDrawSyncManager::drawSyncCallback(u16 param_1)
 {
@@ -130,7 +142,23 @@ TDrawSyncManager::TDrawSyncManager(u32 param_1, u32 param_2, s32 param_3)
 	OSResumeThread(&mProcessingThread);
 }
 
-TDrawSyncManager::~TDrawSyncManager() { }
+// UNUSED, 0x88 in the map, of which 0x68 is the inlined TVector destructor of
+// mCallbacks; the remaining 0x20 is this body. The shutdown message is the one
+// piece of direct evidence in the TU: threadFunc() leaves its loop only for a
+// message in [0x10000, 0x80000000), a range neither drawSyncCallbackSub() (a
+// u16 token) nor pushBreakPoint() (a FIFO pointer) can produce, so that range
+// exists purely to stop the thread -- and signalling it then joining is the
+// only pair that reproduces 0x20 exactly. Two size-equal alternatives are
+// rejected for having no evidence behind their stores:
+// `OSCancelThread(&mProcessingThread); delete mFifo; mFifo = nullptr;` plus
+// either `smInstance = nullptr;` or `mFlags = 0;`. Note that nothing here
+// frees mFifo, the thread stack or the message-queue buffer; any body that
+// does overshoots 0x88.
+TDrawSyncManager::~TDrawSyncManager()
+{
+	OSSendMessage(&mMessageQueue, (void*)0x10000, 1);
+	OSJoinThread(&mProcessingThread, nullptr);
+}
 
 // TODO: 99.6%. Instruction-exact and the frame is right (0x30); only the
 // 8-byte TDrawSyncTokenRange temporary sits 4 bytes low (0x24 vs retail's
