@@ -92,12 +92,10 @@ void TWalker::reset()
 //     0x338 against retail's 0x360 -- those return slots are the missing 40
 //     bytes (the pre-rewrite version hit 0x360 by accident with four named
 //     locals standing in for them).
-// (3) `TLiveActor::checkLiveFlag2` must return a 32-bit type, not `bool`:
-//     retail tests it with `cmpwi r4, 0` at both sites (0x138 and 0x5b0) where
-//     we emit `clrlwi. r0, r4, 24`, and at the first site retail reuses the zero
-//     it stored into `unk1C` instead of materialising `li r4, 0`.
-//     include/Strategic/LiveActor.hpp is owned by the header batch -- reported,
-//     not changed.
+// (3) done in header round 22: `TLiveActor::checkLiveFlag2` returns `BOOL`,
+//     which gives retail's `cmpwi r4, 0` at both sites (0x138 and 0x5b0).
+//     What is left at the first site is that retail reuses the zero it stored
+//     into `unk1C` instead of materialising `li r4, 0`.
 // Also inert: SMSGetMap() for the isTouchedWallsAndMoveXZ receiver and a named
 // TBGWallCheckRecord* for its argument (retail evaluates the argument address
 // before loading gpMap; neither spelling reproduces that).

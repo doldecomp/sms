@@ -124,9 +124,26 @@ public:
 	// isHitValid's residue there is an 8-byte frame gap, not the flag load.
 	// So the sharing is a per-site property and the raw read is the local fix.
 	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
-	bool checkLiveFlag2(u32 flag) const
+	// Returns a *signed 32-bit* value, not `bool`: retail tests it with
+	// `cmpwi rN, 0` where a `bool` return makes MWCC emit `clrlwi. r0, rN,
+	// 24` and a `u32` return `cmplwi rN, 0` (all three measured in header
+	// round 22 at TWalker::bind's two sites, 0x138 and 0x5b0). Worth
+	// TNerveSmallEnemyJump::execute 98.94 -> 99.82,
+	// TNerveSmallEnemyHitWaterJump::execute 99.29 -> 99.75,
+	// TMapObjGeneral::calcVelocity 99.38 -> 99.95, ::bind 99.28 -> 99.65 and
+	// TWalker::bind 92.19 -> 92.34.
+	//
+	// There is a bool-returning twin of this accessor that has no name yet:
+	// TBaseNPC::perform stores two flag tests into `bool` locals and retail
+	// narrows them with `clrlwi. r0, r3, 24`, which none of `bool` locals off
+	// this accessor (62.78), `BOOL` locals (64.15), `checkLiveFlag` (63.10)
+	// or a `? true : false` at the site (62.30) reproduces -- only the raw
+	// `mLiveFlag & flag ? true : false` written out there does, so that is
+	// what NpcBase.cpp spells. Do not "fix" those two sites to use an
+	// accessor before the twin is identified.
+	BOOL checkLiveFlag2(u32 flag) const
 	{
-		return mLiveFlag & flag ? true : false;
+		return mLiveFlag & flag ? TRUE : FALSE;
 	}
 	bool isAirborne() const
 	{

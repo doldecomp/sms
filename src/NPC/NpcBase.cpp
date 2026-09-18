@@ -733,9 +733,15 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		bool r31 = false;
 
-		bool bVar12 = checkLiveFlag2(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
-		                             | LIVE_FLAG_DEAD);
-		bool bVar6  = checkLiveFlag2(LIVE_FLAG_UNK1000000);
+		// Raw, not checkLiveFlag2: these two want the bool-returning twin of
+		// that accessor, which has no name yet. See the note on
+		// checkLiveFlag2 in Strategic/LiveActor.hpp for the four spellings
+		// that were measured here and lost.
+		bool bVar12 = mLiveFlag
+		        & (LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_DEAD)
+		    ? true
+		    : false;
+		bool bVar6 = mLiveFlag & LIVE_FLAG_UNK1000000 ? true : false;
 
 		if (bVar12) {
 			r31 = true;
