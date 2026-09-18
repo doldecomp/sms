@@ -1523,8 +1523,9 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 
 	if (spine->getTime() >= boss->getSaveParam2()->mSLWaitFrameStg0.get()
 	    && boss->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
-		if (gpMarDirector->mMap == 2
-		    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
+		if (SMSGetMarDirector()->mMap == 2
+		    && (SMSGetMarDirector()->unk7D == 0
+		        || SMSGetMarDirector()->unk7D == 1)) {
 			if (boss->inArea(*gpMarioPos)) {
 				if (!SMS_GetMarioGroundPlane()->isWaterSurface()) {
 					spine->pushAfterCurrent(&TNerveBPCannon::theNerve());

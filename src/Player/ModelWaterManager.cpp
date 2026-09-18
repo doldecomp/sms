@@ -1778,7 +1778,7 @@ void init_sphere_glist()
 void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 {
 
-	if (gpMarDirector->getCurrentMap() == 1) {
+	if (SMSGetMarDirector()->getCurrentMap() == 1) {
 		static bool initialized = false;
 		if (!initialized) {
 			sphere_glist_p = tmp_data;

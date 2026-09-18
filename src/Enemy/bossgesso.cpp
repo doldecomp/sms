@@ -1410,8 +1410,8 @@ void TBossGesso::reset()
 		mTentacles[i]->getFirstNode()->onUnk24();
 	}
 
-	if (gpMarDirector->getCurrentMap() == 3
-	    && gpMarDirector->getCurrentStage() == 0)
+	if (SMSGetMarDirector()->getCurrentMap() == 3
+	    && SMSGetMarDirector()->getCurrentStage() == 0)
 		changeAttackMode(ASTATE_UNK6);
 	else
 		changeAttackMode(ASTATE_SINGLE);

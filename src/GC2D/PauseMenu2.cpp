@@ -299,7 +299,7 @@ void TPauseMenu2::disappearWindow()
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->mState == TMarDirector::STATE_UNK5) {
+	if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK5) {
 		if (mState == MENU_SAVING) {
 			if (cue & CUE_MOVE) {
 				if (mCardSave->unk2DF != 0) {
@@ -347,7 +347,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							mSelectionConfirmed = true;
 							SMSRumbleMgr->finishPause();
 							gpMSound->pauseOff(0);
-							gpMarDirector->getConsole()->pauseOut();
+							SMSGetMarDirector()->getConsole()->pauseOut();
 							mFadeAnim = 0.0f;
 							mState    = MENU_APPEARING;
 							break;

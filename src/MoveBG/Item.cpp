@@ -302,7 +302,7 @@ void TCoin::loadAfter()
 	if (!gpMirrorModelManager->isInMirror(mPosition))
 		return;
 
-	if (gpMarDirector->getCurrentMap() == 2) {
+	if (SMSGetMarDirector()->getCurrentMap() == 2) {
 		const TBGCheckData* check;
 		gpMap->checkGround(mPosition, &check);
 		if (!check->isWaterSurface())
@@ -394,7 +394,7 @@ void TCoinBlue::load(JSUMemoryInputStream& stream)
 {
 	TCoin::load(stream);
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), getEventId()))
+	        SMSGetMarDirector()->getCurrentMap(), getEventId()))
 		makeObjDead();
 }
 

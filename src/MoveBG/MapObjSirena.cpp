@@ -852,7 +852,7 @@ void TDonchou::loadAfter()
 {
 	TMapObjBase::loadAfter();
 	if (gpApplication.mCurrArea.getStage() == 14
-	    && gpMarDirector->getCurrentStage() == 0) {
+	    && SMSGetMarDirector()->getCurrentStage() == 0) {
 		unk144 = JDrama::TNameRefGen::search<TSlotDrum>("srotdram");
 		unk148 = JDrama::TNameRefGen::search<TItemSlotDrum>("itemsrotdram");
 	}

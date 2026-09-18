@@ -787,7 +787,7 @@ void TSmallEnemy::kill()
 bool TSmallEnemy::isFindMario(float param_1)
 {
 	bool b = true;
-	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
+	if (SMSGetMarDirector()->unk124 != 3 && SMSGetMarDirector()->unk124 != 4)
 		b = false;
 	if (b)
 		return false;

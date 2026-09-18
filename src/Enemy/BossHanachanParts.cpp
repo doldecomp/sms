@@ -551,7 +551,7 @@ BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 
 BOOL TBossHanachanPartsHead::receiveMessage(THitActor*, u32 message)
 {
-	if (gpMarDirector->isThing())
+	if (SMSGetMarDirector()->isThing())
 		return FALSE;
 	bool received = false;
 	if (isReactToTrampleOrHipDrop_()) {

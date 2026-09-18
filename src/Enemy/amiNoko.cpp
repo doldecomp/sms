@@ -167,7 +167,7 @@ void TAmiNoko::init(TLiveManager* manager)
 	setWalkAnm();
 	onLiveFlag(LIVE_FLAG_UNK10);
 	initialGraphNode();
-	if (gpMarDirector->getCurrentMap() == 8)
+	if (SMSGetMarDirector()->getCurrentMap() == 8)
 		mUseAnmSet1 = 0;
 	unkE8   = 0;
 	mAmiHit = new TAmiHit(this, "アミノコ当り判定");

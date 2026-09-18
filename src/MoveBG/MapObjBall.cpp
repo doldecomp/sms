@@ -1634,9 +1634,10 @@ void TBigWatermelon::startEvent()
 		onLiveFlag(LIVE_FLAG_UNK10);
 		startAnim(7);
 
-		gpMarDirector->fireStartDemoCamera("スイカゴールカメラ", &mPosition, -1,
-		                                   0.0f, true, nullptr, 0, nullptr,
-		                                   JDrama::TFlagT<u16>(0));
+		SMSGetMarDirector()->fireStartDemoCamera("スイカゴールカメラ",
+		                                         &mPosition, -1, 0.0f, true,
+		                                         nullptr, 0, nullptr,
+		                                         JDrama::TFlagT<u16>(0));
 		gpItemManager->makeShineAppearWithDemoOffset(
 		    "シャイン（お化けスイカ用）", "スイカシャインカメラ", 0.0f, 0.0f,
 		    0.0f);

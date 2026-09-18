@@ -1801,8 +1801,9 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 		// TBossWanwan::takeBath (UNUSED, 0x184) is exactly this block, but
 		// MWCC will not expand it from here, so it is spelled out; see the
 		// comment on that function.
-		gpMarDirector->fireStartDemoCamera("bwanwan_down_camera", nullptr, -1,
-		                                   0.0f, true, nullptr, 0, nullptr, 0);
+		SMSGetMarDirector()->fireStartDemoCamera("bwanwan_down_camera", nullptr,
+		                                         -1, 0.0f, true, nullptr, 0,
+		                                         nullptr, 0);
 		boss->mIsRolling = 0;
 		boss->mRollAngle = 0.0f;
 		boss->mIsInBath  = 1;

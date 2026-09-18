@@ -2348,7 +2348,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_VOICE_LAST,
 		                                &eel->mPosition, 0, nullptr, 0, 4);
-		gpMarDirector->getConsole()->startAppearBalloon(0x14, true);
+		SMSGetMarDirector()->getConsole()->startAppearBalloon(0x14, true);
 		MSBgm::stopTrackBGMs(7, 10);
 		gpCameraShake->startShake(CAM_SHAKE_MODE_BEEL_DIE, 1.0f);
 		eel->setBckAnm(3);
@@ -2371,7 +2371,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 			if (SMS_SendMessageToMario(eel, 8)) {
 				eel->mHeldObject = nullptr;
 				SMS_SendMessageToMario(eel, 14);
-				gpMarDirector->fireEndDemoCamera();
+				SMSGetMarDirector()->fireEndDemoCamera();
 			}
 
 			JGeometry::TVec3<f32> marioPosition = *gpMarioPos;

@@ -99,7 +99,7 @@ void TFerrisWheel::initMapObj()
 	}
 
 	// The manta arena wants the wheel running much faster than usual.
-	if (gpMarDirector->getCurrentStage() == 2)
+	if (SMSGetMarDirector()->getCurrentStage() == 2)
 		mAnmRate = 10.0f;
 	else
 		mAnmRate = SMSGetAnmFrameRate() * 0.25f;
@@ -854,7 +854,7 @@ void TAmiKing::moveObject()
 
 			TFerrisWheel* wheel
 			    = JDrama::TNameRefGen::search<TFerrisWheel>("FerrisWheel");
-			gpMarDirector->fireStartDemoCamera(
+			SMSGetMarDirector()->fireStartDemoCamera(
 			    "観覧車正常化カメラ", &wheel->mPosition, -1, 0.0f, true,
 			    &TFerrisWheel::becomeCalmlyCallback,
 			    reinterpret_cast<u32>(wheel), nullptr,
@@ -886,7 +886,7 @@ void TAmiKing::moveObject()
 				getMActor()->setBck("amiking_flying1_start");
 				setAnmSound(nullptr);
 
-				gpMarDirector->fireStartDemoCamera(
+				SMSGetMarDirector()->fireStartDemoCamera(
 				    "観覧車ボス撃沈カメラ", &mPosition, -1, 0.0f, true, nullptr,
 				    0, nullptr, JDrama::TFlagT<u16>(0));
 			}

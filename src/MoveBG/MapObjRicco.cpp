@@ -491,7 +491,7 @@ void TFruitLauncher::fireObj()
 
 		fruit->offLiveFlag(LIVE_FLAG_UNK10);
 
-		gpMarDirector->fireStartDemoCamera(
+		SMSGetMarDirector()->fireStartDemoCamera(
 		    "フルーツタンクカメラカメラ", &fruit->mPosition, -1, 0.0f, true,
 		    nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
 

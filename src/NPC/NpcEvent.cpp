@@ -279,9 +279,9 @@ static void evFireStartDemoCamera(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	const char* cameraName = interp->pop().getDataString();
-	gpMarDirector->fireStartDemoCamera(cameraName, nullptr, -1, 0.0f, true,
-	                                   nullptr, 0, nullptr,
-	                                   JDrama::TFlagT<u16>());
+	SMSGetMarDirector()->fireStartDemoCamera(cameraName, nullptr, -1, 0.0f,
+	                                         true, nullptr, 0, nullptr,
+	                                         JDrama::TFlagT<u16>());
 	interp->push();
 }
 
@@ -289,7 +289,7 @@ static void evIsDemoMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 	int result = 0;
-	if (gpMarDirector->isDemoModeNow())
+	if (SMSGetMarDirector()->isDemoModeNow())
 		result = 1;
 	interp->push(result);
 }

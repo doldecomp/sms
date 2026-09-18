@@ -1105,8 +1105,9 @@ void TBossTelesa::reset()
 	             mParams->mSLDamageRadius.get(),
 	             mParams->mSLDamageHeight.get());
 
-	gpMarDirector->fireStartDemoCamera("btelesa_roll_camera", nullptr, -1, 0.0f,
-	                                   true, nullptr, 0, nullptr, 0);
+	SMSGetMarDirector()->fireStartDemoCamera("btelesa_roll_camera", nullptr,
+	                                         -1, 0.0f, true, nullptr, 0,
+	                                         nullptr, 0);
 }
 
 void TBossTelesa::moveObject()

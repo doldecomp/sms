@@ -811,7 +811,7 @@ void TBathtub::startDemo()
 		return;
 	MSBgm::stopTrackBGMs(7, 10);
 	if (!(unk2A0 & 0x20))
-		gpMarDirector->getConsole()->startAppearBalloon(0x23, true);
+		SMSGetMarDirector()->getConsole()->startAppearBalloon(0x23, true);
 	unk2A0 |= 0x20;
 	unk290 = 10;
 	for (int i = 0; i < 5; ++i)
@@ -825,9 +825,9 @@ void TBathtub::startDemo()
 	if (mario->receiveMessage(this, HIT_MESSAGE_TAKE))
 		mHeldObject = mario;
 	gpMarioOriginal->mFaceAngle.y = 0x7FFF;
-	gpMarDirector->fireStartDemoCamera("koopa_last2", &mPosition, -1,
+	SMSGetMarDirector()->fireStartDemoCamera("koopa_last2", &mPosition, -1,
 	    mRotation.y, false, nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
-	gpMarDirector->fireStreamingMovie(0xE);
+	SMSGetMarDirector()->fireStreamingMovie(0xE);
 	JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70")
 	    ->fall();
 	unk29A = 1;

@@ -1194,7 +1194,7 @@ void TTinKoopa::checkTinKoopaFirstFlameMessage()
 // UNUSED, 0x2c in the map.
 void TTinKoopa::startTinKoopaMessage(u32 id)
 {
-	gpMarDirector->getConsole()->startAppearBalloon(id, true);
+	SMSGetMarDirector()->getConsole()->startAppearBalloon(id, true);
 }
 
 // All 769 instructions match; only the frame does (0x240 against the ROM's

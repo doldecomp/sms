@@ -315,7 +315,7 @@ void TAnimalBird::checkChangeToItem()
 void TAnimalBird::checkNotAppear(s32 event_id)
 {
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), event_id))
+	        SMSGetMarDirector()->getCurrentMap(), event_id))
 		onLiveFlag(LIVE_FLAG_DEAD);
 }
 

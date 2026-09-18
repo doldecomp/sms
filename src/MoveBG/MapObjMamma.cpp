@@ -292,7 +292,7 @@ void TSandBombBase::explode()
 	emitter->setGlobalParticleScale(effectScale);
 	emitter->setGlobalDynamicsScale(effectScale);
 
-	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
+	if (SMSGetMarDirector()->unk124 != 3 && SMSGetMarDirector()->unk124 != 4)
 		gpCameraShake->startShake(CAM_SHAKE_MODE_SAND_BOMB_APPEAR, 1.0f);
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBOMB_BANG, &mPosition, 0, nullptr,
@@ -494,7 +494,7 @@ void TSandCastle::explode()
 	emitter->setGlobalParticleScale(effectScale);
 	emitter->setGlobalDynamicsScale(effectScale);
 
-	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
+	if (SMSGetMarDirector()->unk124 != 3 && SMSGetMarDirector()->unk124 != 4)
 		gpCameraShake->startShake(CAM_SHAKE_MODE_SAND_BOMB_APPEAR, 1.0f);
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBOMB_BANG, &mPosition, 0, nullptr,
@@ -526,9 +526,9 @@ void TSandCastle::waitBeforeExplode()
 {
 	mState      = STATE_WAIT_BOM;
 	mStateTimer = mExplodeWaitTime;
-	gpMarDirector->fireStartDemoCamera("mamma1_sandcastle", nullptr, -1, 0.0f,
-	                                   true, SandCastleCallBack, 0, nullptr,
-	                                   JDrama::TFlagT<u16>(0));
+	SMSGetMarDirector()->fireStartDemoCamera("mamma1_sandcastle", nullptr, -1,
+	                                         0.0f, true, SandCastleCallBack, 0,
+	                                         nullptr, JDrama::TFlagT<u16>(0));
 	mDemoFired = true;
 }
 
@@ -703,17 +703,17 @@ void TLeanMirror::release()
 	SMS_MarioMoveRequest(mMarioMovePos);
 
 	if (strcmp(unkF4, "mirrorS") == 0) {
-		gpMarDirector->fireStartDemoCamera(
+		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ぐらぐら鏡Ｓカメラ", &mShiningStone->mPosition,
 		    mGoTargetTime + mDemoWaitTime, 0.0f, true, nullptr, 0, nullptr,
 		    JDrama::TFlagT<u16>(0));
 	} else if (strcmp(unkF4, "mirrorM") == 0) {
-		gpMarDirector->fireStartDemoCamera(
+		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ぐらぐら鏡Ｍカメラ", &mShiningStone->mPosition,
 		    mGoTargetTime + mDemoWaitTime, 0.0f, true, nullptr, 0, nullptr,
 		    JDrama::TFlagT<u16>(0));
 	} else if (strcmp(unkF4, "mirrorL") == 0) {
-		gpMarDirector->fireStartDemoCamera(
+		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ぐらぐら鏡Ｌカメラ", &mShiningStone->mPosition,
 		    mGoTargetTime + mDemoWaitTime, 0.0f, true, nullptr, 0, nullptr,
 		    JDrama::TFlagT<u16>(0));
