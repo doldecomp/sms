@@ -14,7 +14,6 @@
   "Camera/CameraOption.cpp",
   "Camera/CameraSecureView.cpp",
   "Camera/CameraTalk.cpp",
-  "Camera/CubeManagerBase.o",
   "Camera/CubeMapTool.cpp",
   "Camera/camerasave.cpp",
   "Enemy/BossHanachanNerve.cpp",
