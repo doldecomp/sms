@@ -139,48 +139,59 @@ int getWarpPointNo(const char* name)
 
 void loadWarpPointPos(JSUMemoryInputStream& stream, int no, Vec* positions)
 {
-	stream >> positions[no].x;
-	stream >> positions[no].y;
-	stream >> positions[no].z;
+	Vec& pos = positions[no];
+	stream >> pos.x >> pos.y >> pos.z;
 
 	u32 dummy;
-	stream >> dummy;
-	stream >> dummy;
-	stream >> dummy;
-	stream >> dummy;
-	stream >> dummy;
-	stream >> dummy;
+	stream >> dummy >> dummy >> dummy;
+	stream >> dummy >> dummy >> dummy;
 }
 
-// TODO: 93.8%. The whole residue is one register-allocation shape: retail
-// copies the stream pointer into five extra callee-saved registers
-// (`addi r27/r30/r26/r29/r28, r25, 0` right after the first loop) and
-// precomputes `&pos.y`/`&pos.z` into two more before the first
-// JSUInputStream::read, so the nine reads in the name loop take their receiver
-// from six different registers; ours keeps the stream in r31 and recomputes
-// each address at its call. Restoring getWarpPointNo() and loadWarpPointPos()
-// (closure batch 83) did not change it -- both inline to exactly the code that
-// was spelled out here -- so the missing construct is above the loop, not in
-// them. loadWarpPointPos's own UNUSED copy is 0xc4 against the map's 0x12c, so
-// about 26 instructions of its body are still unrecovered; the inlined
-// expansion is complete, which means the out-of-line copy differs (index math
-// per component, or a bounds test).
+// TODO: 97.2%, frame exact, no missing/extra/opcode differences left. Closure
+// batch 136 found three constructs. (1) The three stack arrays are declared in
+// the order positions/warp/dest, not the reverse: named locals descend from
+// the top of the local area with the first declared highest, so this is what
+// puts them at 0x68/0xb8/0x108 as retail does. (2) The four pre-loop reads
+// share one slot at 0x1f8 *above* the arrays, which only happens if they go
+// through one named `u32 data` and `operator>>`; `stream.readU32()` gives each
+// expansion its own low-region temp (four slots, 32 bytes too few overall).
+// (3) `loadWarpPointPos` chains its reads: `stream >> x >> y >> z;` and two
+// `stream >> dummy >> dummy >> dummy;`. Each chained `>>` continuation is 8
+// bytes of low region and one hoisted `addi rN, rStream, 0` outside the name
+// loop, so retail's five copies and frame 0x238 both pin the count at six
+// continuations. "4,2" and "5,1" groupings are indistinguishable from "3,3",
+// so only the count is evidence.
+// Residue: every r1 displacement is 4 high because `Vec& pos = positions[no];`
+// costs a 4-byte low slot, and it is needed -- without it MWCC keeps the base
+// in a callee-saved register and computes `pos+4`/`pos+8` at each call, where
+// retail materialises all three addresses into r4/r20/r23 up front and lets
+// `li r5, 4` kill the base. `positions += no` and a `Vec*` local are both
+// worse or equal. Since a continuation is 8 bytes there is no combination that
+// pays for those 4, so one of the three constructs above is still spelled
+// slightly wrong. The rest is a zero-frame callee-saved rotation (`this` r31
+// vs r26, stream r25 vs r29). loadWarpPointPos's own UNUSED copy is still
+// 0xc4 against the map's 0x12c.
 void TMapWarp::init(JSUMemoryInputStream& stream)
 {
-	unk0 = stream.readU32();
+	u32 data;
+	stream >> data;
+	unk0 = data;
 	if (!unk0)
 		return;
 
-	unk8 = stream.readU32();
+	stream >> data;
+	unk8 = data;
 	unk4 = new TMapWarpInfo[unk0 * 2];
 
-	u32 local_1d0[20];
-	u32 local_180[20];
 	JGeometry::TVec3<f32> local_130[20];
+	u32 local_180[20];
+	u32 local_1d0[20];
 
 	for (int i = 0; i < unk0; ++i) {
-		local_1d0[i] = stream.readU32();
-		local_180[i] = stream.readU32();
+		stream >> data;
+		local_1d0[i] = data;
+		stream >> data;
+		local_180[i] = data;
 	}
 
 	int cnt = unk0 * 2;
