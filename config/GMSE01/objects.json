@@ -170,6 +170,7 @@
   "JSystem/JKernel/JKRThread.cpp",
   "JSystem/JMath.cpp",
   "JSystem/JAudio/JAInterface/JAIGlobalParameter.cpp",
+  "JSystem/JAudio/JAInterface/JAIGFrameStream.cpp",
   "JSystem/random.cpp",
   "JSystem/JParticle/JPADrawSetupTev.cpp",
   "JSystem/JParticle/JPAExTexShape.cpp",

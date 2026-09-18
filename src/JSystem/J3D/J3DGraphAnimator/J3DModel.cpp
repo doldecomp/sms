@@ -518,6 +518,16 @@ void J3DModel::initialize()
 	unk94          = nullptr;
 }
 
+// TODO: 99.8%, frame exact, all 312 instructions exact; eleven operands left in
+// two register clusters. (1) At the `addShapePacket` call retail holds the
+// material in r4 and `mShapePackets` in r5, we hold them the other way round;
+// spelling the shape chain inline instead of the named `J3DShape* shape` makes
+// it worse (16 operands). (2) In the non-shared-display-list branch retail's
+// `dlSize`/packet pair lives in r25/r24 where ours lives in r20/r21; both
+// builds use all of r20-r31, so these are two extra ranges the allocator
+// coalesced with different existing ones, and dropping either the `packet` or
+// the `mat` local does not move them (dropping `packet` costs five
+// instructions).
 void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
                               u32 mtxNum)
 {
@@ -569,11 +579,18 @@ void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
 			mMatPackets[i].addShapePacket(&mShapePackets[shape->getIndex()]);
 			mMatPackets[i].setTexture(pModelData->getTexture());
 
+			// The doubled `getMaterialNodePointer(i)` is deliberate: retail
+			// loads the material straight into r3 for `countDLSize` and keeps
+			// a copy in a callee-saved register for the outer call, which is
+			// what an unnamed receiver gives. A named `J3DMaterial* mat` is
+			// the other way round (load into the callee-saved register, copy
+			// into r3) and costs three more differing operands.
 			if (mdlFlags & 0x20000) {
-				J3DMaterial* mat = pModelData->getMaterialNodePointer(i);
-				u32 dlSize       = mat->countDLSize();
 				mMatPackets[i].setDisplayListObj(
-				    mat->newSharedDisplayList(dlSize));
+				    pModelData->getMaterialNodePointer(i)
+				        ->newSharedDisplayList(
+				            pModelData->getMaterialNodePointer(i)
+				                ->countDLSize()));
 			} else {
 				J3DMaterial* mat     = pModelData->getMaterialNodePointer(i);
 				u32 dlSize           = mat->countDLSize();

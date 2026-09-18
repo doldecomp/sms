@@ -702,6 +702,16 @@ namespace StreamLib {
 		dspch_deallockflag = true;
 	}
 
+	// NOTE: `callBack` is byte-exact only with `TDSPChannel::getNumber()` at
+	// exactly five of its twenty-four channel-number reads -- the four in the
+	// DVD-paused arm below plus the `getDSPHandle` one. Each accepting site is
+	// +8 of inline-temp pool and retail's pool is 32 bytes larger than the
+	// raw-member spelling's, so five sites (24 + 8) land the frame and every
+	// stack slot. The subset is *not* determined by the evidence: the
+	// pause-resumed arm or the four `setMixerVolume` calls in the final block
+	// give the identical object in place of the first four. Using the accessor
+	// at every site overshoots to 0x128. Do not "tidy" these back to
+	// `->mNumber` without re-measuring.
 	s32 callBack(void* param)
 	{
 		bool decoded = false;
@@ -752,11 +762,11 @@ namespace StreamLib {
 		s32 stat = DVDGetDriveStatus();
 		switch (stat) {
 		case 5:
-			JASystem::DSPInterface::setPauseFlag(assign_ch[0]->mNumber, 1);
-			JASystem::DSPInterface::setPauseFlag(assign_ch[1]->mNumber, 1);
+			JASystem::DSPInterface::setPauseFlag(assign_ch[0]->getNumber(), 1);
+			JASystem::DSPInterface::setPauseFlag(assign_ch[1]->getNumber(), 1);
 			outpause = 1;
-			JASystem::DSPInterface::flushChannel(assign_ch[0]->mNumber);
-			JASystem::DSPInterface::flushChannel(assign_ch[1]->mNumber);
+			JASystem::DSPInterface::flushChannel(assign_ch[0]->getNumber());
+			JASystem::DSPInterface::flushChannel(assign_ch[1]->getNumber());
 			break;
 		case 0:
 			if (oldstat != DVDGetDriveStatus()) {
@@ -777,7 +787,7 @@ namespace StreamLib {
 		BOOL needDecode;
 		if (movieframe != 0) {
 			JASystem::DSPInterface::DSPBuffer* buf
-			    = JASystem::DSPInterface::getDSPHandle(assign_ch[0]->mNumber);
+			    = JASystem::DSPInterface::getDSPHandle(assign_ch[0]->getNumber());
 			if (buf->isFinish()) {
 				if (adpcmbuf_state != 2) {
 					JASystem::TDSPChannel::free(assign_ch[0],
