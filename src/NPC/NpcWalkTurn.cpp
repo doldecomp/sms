@@ -5,6 +5,11 @@
 #include <NPC/NpcNerve.hpp>
 #include <Camera/cameralib.hpp>
 
+// TODO: retail *calls* JGeometry::TVec3<f32>::set<f32>(f32, f32, f32) from the
+// unnamed vector's constructor here (the map lists the weak 16-byte symbol for
+// this TU and execWalk's inlined copy has the `bl`), so retail reaches `set`
+// one level deeper than we do - isCanWalk itself is probably inlined at depth 2
+// in execWalk. `getPosition()` in the difference expressions does not move it.
 bool TBaseNPC::isCanWalk() const
 {
 	bool result = true;
@@ -30,15 +35,19 @@ void TBaseNPC::execWalk(bool param_1)
 		if (checkActionFlag(NPC_ACTION_RUN))
 			fVar1 = 6.0f;
 
-		SMS_GoRotate(mPosition, unkF4.getPoint(), fVar1, &mRotation.y);
+		SMS_GoRotate(mPosition, getUnkF4().getPoint(), fVar1, &mRotation.y);
 
-		// TODO: the original makes one more vector copy before computing yaw.
-		JGeometry::TVec3<f32> direction = unkF4.getPoint();
+		// TODO: retail makes *two* 12-byte copies of `direction` before
+		// reading .z/.x (0xdc -> 0xfc -> 0x10c), and execWalk's frame only
+		// reaches 0x130 with both. The source spelling that produces two
+		// copies is unknown; a named copy plus one conversion temporary
+		// reproduces the shape but is surely not what was written.
+		JGeometry::TVec3<f32> direction = getUnkF4().getPoint();
 		direction -= mPosition;
 		JGeometry::TVec3<f32> copy;
 		copy = direction;
 
-		f32 angle = MsGetRotFromZaxisY(copy);
+		f32 angle = MsGetRotFromZaxisY(JGeometry::TVec3<f32>(copy));
 		if (MsWrap(fabsf(mRotation.y - angle), 0.0f, 360.0f) < 0.001f)
 			offUnk1DA(UNK1DA_FLAG_UNK1);
 
@@ -82,6 +91,11 @@ void TBaseNPC::execWalk(bool param_1)
 		walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
 }
 
+// TODO: frame 0x60 vs 0x58, one `fmr f2, f0` retail has and we lack (a second
+// variable holding MsGetRotFromZaxis(...).y) and a swapped `fcmpu`. Spelling it
+// as two locals with the compare reversed is worse (99.0 -> 97.3), and
+// getUnkF4() here is worse too (97.9): this site wants the raw member where
+// execWalk wants the accessor.
 bool TBaseNPC::execUTurn()
 {
 	JGeometry::TVec3<f32> local_24 = unkF4.getPoint();
@@ -114,6 +128,10 @@ bool TBaseNPC::execUTurn()
 	return result;
 }
 
+// TODO: frame 0x50 vs 0x40, uniform +0x10 on every slot (low region). Naming
+// the param fetch makes it worse (0x38), `getRotation().y` for angle1 adds an
+// instruction (99.7 -> 96.9). Two more accessor levels are needed somewhere in
+// the CLBDegToShortAngle / CLBChaseGeneralConstantSpecifySpeed chain.
 bool TBaseNPC::execTurnToFirstState()
 {
 	if (mRotation.y == unk1A0.y)
@@ -142,7 +160,7 @@ bool TBaseNPC::isNeedTurnToFirstState() const
 
 	bool result = false;
 
-	switch (mActorType) {
+	switch (getActorType()) {
 	case 0x400001C:
 	case 0x400001D:
 	case 0x4000008:
@@ -152,7 +170,7 @@ bool TBaseNPC::isNeedTurnToFirstState() const
 		const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 		if ((nerve == &TNerveNPCWaitMarioApproach::theNerve()
 		     || nerve == &TNerveNPCTurnToMario::theNerve())
-		    && (mActorType == 0x4000006
+		    && (getActorType() == 0x4000006
 		        || !checkActionFlag(NPC_ACTION_UNK800 | NPC_ACTION_UNK400
 		                            | NPC_ACTION_UNK1))) {
 			result = true;
