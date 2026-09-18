@@ -13,7 +13,7 @@ inline void J3DGDWrite_u16(u16 param)
 	__GDWrite((u8)(param & 0xff));
 }
 
-inline void J3DGDWrite_u32(u32 param)
+static inline void J3DGDWrite_u32(u32 param)
 {
 	__GDWrite((u8)((param >> 24) & 0xff));
 	__GDWrite((u8)((param >> 16) & 0xff));

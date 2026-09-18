@@ -460,7 +460,8 @@ static f32 J3DGetKeyFrameInterpolationS(f32 frame, J3DAnmKeyTableBase* table,
 }
 
 template <typename T>
-f32 J3DGetKeyFrameInterpolation(f32 frame, J3DAnmKeyTableBase* table, T* data)
+static f32 J3DGetKeyFrameInterpolation(f32 frame, J3DAnmKeyTableBase* table,
+                                      T* data)
 {
 	if (table->mType == 0) {
 		if (frame < data[0]) {
