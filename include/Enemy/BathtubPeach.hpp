@@ -55,6 +55,14 @@ public:
 	void changeAnm(int bck, int btp, f32 rate);
 	TBathtubPeachParams* getParam() const;
 
+	// One inline level above getParam(), which is what puts
+	// TEnemyManager::getSaveParam() past its depth allowance at goTo's
+	// setLength argument: the ROM reads speed twice there, inlined for the
+	// comparison and through a real bl getSaveParam for the argument, and
+	// emits the weak getSaveParam__13TEnemyManagerCFv the map lists as a
+	// duplicate in this TU. Always inlined, so the map records no symbol.
+	f32 getSpeed() const { return getParam()->speed.get(); }
+
 public:
 	/* 0x150 */ TBathtubBinder mBathtubBinder;
 };

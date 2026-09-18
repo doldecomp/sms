@@ -86,7 +86,7 @@ public:
 // Paddles around the rim of the bathtub so as to stay `angle` degrees away
 // from Mario, always facing him.
 //
-// TODO: 93.5%. The remaining instruction differences all come from one shared
+// TODO: 94.2%. The remaining instruction differences all come from one shared
 // header, and they were measured rather than guessed:
 // include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h -- the ROM calls
 // fmodf__3stdFff (0x5c, emitted weak from wireTrap.cpp) at all six sites in
@@ -196,17 +196,25 @@ TBathtubPeach::TBathtubPeach(const char* name)
 // that one inline level is also what pushes TVec2::dot out of line there, which
 // is how we know the nerve calls goTo rather than spelling the body out.
 //
-// TODO: 0xc0 here against the map's 0xc4. The last 4 bytes are the second speed
-// fetch, which the ROM does twice (once inlined for the comparison, once
-// through an out-of-line TEnemyManager::getSaveParam() for the setLength
-// argument) and MWCC merges for us.
+// The ROM reads speed twice: inlined (lwz 0x38 / lfs 0xe0) for the comparison
+// and through a real `bl TEnemyManager::getSaveParam()` for the setLength
+// argument. Routing only the second one through getSpeed() -- one inline level
+// above getParam() -- reproduces both reads and the weak
+// getSaveParam__13TEnemyManagerCFv the map lists as a duplicate in this TU
+// (93.6 -> 94.2 on the nerve). getSpeed() itself leaves no symbol, as the map
+// requires. A getSpeed() on TBathtubPeachParams instead is worth nothing: the
+// level has to sit above getParam(), not below it.
+//
+// TODO: 0xc0 here against the map's 0xc4. In the standalone copy goTo is the
+// emitted function, so getSaveParam lands two levels shallower and MWCC merges
+// the two reads again; the missing 4 bytes are that second read.
 void TBathtubPeach::goTo(const JGeometry::TVec3<f32>& goal)
 {
 	JGeometry::TVec2<f32> dir(goal.x - mPosition.x, goal.z - mPosition.z);
 
 	f32 speed = getParam()->speed.get();
 	if (dir.squared() >= speed * speed)
-		dir.setLength(getParam()->speed.get());
+		dir.setLength(getSpeed());
 
 	mPosition.x += dir.x;
 	mPosition.z += dir.y;
