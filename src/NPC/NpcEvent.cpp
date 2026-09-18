@@ -147,7 +147,14 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	int result = 0;
-	// TODO: uuuh...
+	// TODO: the ROM's pop reads only the slice's data word
+	// (`lwz r0, [base + idx*8 + 4]`), stores it at 0x70 and copies it once
+	// more to 0x7c, i.e. it binds the popped value to a local it then never
+	// reads. Every spelling that reads only `.mData` (`.mData.asInt`,
+	// `.mData.asString`, `getDataString()`) is dead-stripped by MWCC and
+	// loses the two stores (92.7 -> 87.7); binding the whole slice
+	// (`TSpcSlice exceptNpc = interp->pop();`) keeps them but copies both
+	// words (87.7). Frame is also 40 bytes short. Open.
 	(void)interp->pop();
 
 	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
