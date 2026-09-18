@@ -15,6 +15,20 @@
 // extra level inside `crTimeAry()` (frame 0x58, colour 0x3c), a second
 // `instance()` in `endTimer`, a `TColor` temporary or an unnamed `OSGetTick()`
 // in `endTimer`, and a `TColor` argument at the `append` call.
+// The slot itself is recovered by giving `startTimer(u32)` the named
+// `TTimeArray* timeArray = inst->crTimeAry();` that the four-argument
+// `startTimer(u8,u8,u8,u8)` overload right above it already has: that puts the
+// colour at 0x38 exactly, but the extra local grows the frame to 0x58, so a
+// compensating -8 is still missing. Mirroring the four-argument overload in
+// `endTimer` too (the same named `timeArray`, plus `_instance` instead of
+// `instance()`) supplies it and makes this function byte-exact, but `endTimer`
+// is shared: it moves `TLiveManager::perform`'s and `TObjManager::perform`'s
+// colour slot from 0x34 down to 0x30 (both are source-linked at 100%) and
+// `TEnemyManager::perform`'s from 0x7c up to 0x80, which breaks the DOL. So
+// `endTimer` is right as it stands and the four missing bytes plus a -8 belong
+// to `startTimer(u32)`, whose only caller is this function. `_instance` or an
+// `inst`-first declaration inside `startTimer(u32)` is -4 but swaps r29/r30
+// here, and dropping the `inst` local re-reads `_instance`.
 void TSnapTimeObj::perform(u32 cue, JDrama::TGraphics*)
 {
 	if ((unk14 & 1)) {
