@@ -5,16 +5,7 @@
 
 class TNozzleTrigger : public TNozzleBase {
 public:
-	TNozzleTrigger(const char* name, const char* prm, TWaterGun* fludd)
-	    : TNozzleBase(name, prm, fludd)
-	{
-		unk38C = 0xffffffff;
-		unk384 = false;
-		unk385 = INACTIVE;
-		unk36C = 0;
-		unk386 = 0;
-		unk388 = 0.0f;
-	}
+	TNozzleTrigger(const char* name, const char* prm, TWaterGun* fludd);
 
 	virtual void init();
 	virtual s32 getNozzleKind() const { return 1; };

@@ -121,7 +121,18 @@ public:
 	BOOL suck();
 	void triggerPressureMovement(const TMarioControllerWork&);
 
-	J3DModel* getModel() { return mFluddModel->mModel; }
+	J3DModel* getModel();
+
+	// UNUSED in the map, so defined in WaterGun.cpp rather than here.
+	void createGunBody();
+	void entryAll();
+	void finalDrawInitialize();
+	void setEmitPt();
+	void getWaterGunAnmID(int);
+	void getWillBeEmitted();
+	u32 getMarioUpperStatus();
+	void startDashEffect();
+	void endDashEffect();
 
 	// Fabricated. Two spellings because the call sites disagree about the
 	// materialised result's type: TWaterGun::emit tests it with `clrlwi.`

@@ -122,6 +122,43 @@ TNozzleBmdData nozzleBmdData = {
 	},
 };
 
+// TNozzleTurbo and TNozzleButton are abandoned nozzle implementations. Every
+// one of their members is UNUSED in the map, as are both of their vtables, so
+// nothing in retail ever constructed one -- the turbo nozzle that shipped is
+// the TNozzleTrigger built with "/Mario/WaterGun/NozzleTrgTurbo.prm". They are
+// declared here rather than in a header because no other TU mentions them.
+// Both vtables are 0x28, exactly TNozzleBase's ten slots, so neither class
+// adds a virtual; the declaration order below is the vtable's.
+// TODO: TNozzleTurbo's constructor is 0xd0 against TNozzleButton's 0x44 and
+// TNozzleTrigger's 0x60, so it initialises considerably more state -- extra
+// members of its own, or a TNozzleTrigger base. Not decidable from the map.
+class TNozzleTurbo : public TNozzleBase {
+public:
+	TNozzleTurbo(const char* name, const char* prm, TWaterGun* fludd);
+
+	virtual s32 getNozzleKind() const;
+	virtual void movement(const TMarioControllerWork&);
+	virtual void animation(int);
+};
+
+class TNozzleButton : public TNozzleBase {
+public:
+	TNozzleButton(const char* name, const char* prm, TWaterGun* fludd);
+
+	virtual void init();
+	virtual s32 getNozzleKind() const;
+	virtual void movement(const TMarioControllerWork&);
+	virtual void emit(int);
+	virtual void animation(int);
+};
+
+// TODO: the constants are unknown. The map's 0x8 is one `li r3, N; blr` and is
+// satisfied by any value; the kinds in use are 0 (TNozzleBase), 1
+// (TNozzleTrigger) and 3 (TNozzleDeform), leaving 2 and 4 free.
+s32 TNozzleButton::getNozzleKind() const { return 0; }
+
+s32 TNozzleTurbo::getNozzleKind() const { return 0; }
+
 static BOOL NozzleCtrl(J3DNode* node, BOOL param_2)
 {
 	// TODO: Inlined stack space
@@ -446,6 +483,22 @@ void TNozzleBase::animation(int param_1)
 	}
 }
 
+// Moved out of NozzleTrigger.hpp: the map has this constructor as UNUSED in
+// this TU, and an UNUSED symbol is never emitted from an in-class body that
+// every call site inlines. -inline deferred still lets TWaterGun's
+// constructor inline it from here.
+TNozzleTrigger::TNozzleTrigger(const char* name, const char* prm,
+                               TWaterGun* fludd)
+    : TNozzleBase(name, prm, fludd)
+{
+	unk38C = 0xffffffff;
+	unk384 = false;
+	unk385 = INACTIVE;
+	unk36C = 0;
+	unk386 = 0;
+	unk388 = 0.0f;
+}
+
 void TNozzleTrigger::init()
 {
 	unk384 = false;
@@ -765,6 +818,35 @@ void TNozzleTrigger::animation(int param_1)
 	}
 }
 
+// TODO: body unknown (map 0x44, seventeen instructions -- more than the base
+// call and the vtable store alone, so at least one field is initialised).
+TNozzleButton::TNozzleButton(const char* name, const char* prm,
+                             TWaterGun* fludd)
+    : TNozzleBase(name, prm, fludd)
+{
+}
+
+// TODO: body unknown (map 0xc, three instructions).
+void TNozzleButton::init() { }
+
+// TODO: body unknown (map 0x28, ten instructions).
+void TNozzleButton::movement(const TMarioControllerWork& controllerWork) { }
+
+// Both are 0x4 in the map, i.e. a bare blr: the overrides exist only to make
+// the button nozzle inert.
+void TNozzleButton::animation(int param_1) { }
+
+void TNozzleButton::emit(int param_1) { }
+
+// Moved out of NozzleDeform.hpp for the same reason as TNozzleTrigger's.
+TNozzleDeform::TNozzleDeform(const char* name, const char* prm,
+                             TWaterGun* fludd)
+    : TNozzleBase(name, prm, fludd)
+    , mBomb(name, "/Mario/WaterGun/NozzleDeformBomb.prm", fludd)
+{
+	init();
+}
+
 void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 {
 	if (!mFludd->hasWater()) {
@@ -1041,6 +1123,18 @@ void TNozzleDeform::animation(int param)
 	}
 }
 
+// TODO: bodies unknown. The map gives 0xd0 / 0x134 / 0x4e4: real code, but
+// dead by the time the disc was mastered and with no inline site left in the
+// TU to recover it from.
+TNozzleTurbo::TNozzleTurbo(const char* name, const char* prm, TWaterGun* fludd)
+    : TNozzleBase(name, prm, fludd)
+{
+}
+
+void TNozzleTurbo::movement(const TMarioControllerWork& controllerWork) { }
+
+void TNozzleTurbo::animation(int param_1) { }
+
 TWaterGun::TWaterGun(TMario* mario)
     : mNozzleDeform("normal_wg", "/Mario/WaterGun/NozzleDeform.prm", this)
     , mNozzleRocket(nullptr, "/Mario/WaterGun/NozzleTrgRocket.prm", this)
@@ -1264,6 +1358,26 @@ void TWaterGun::init()
 	}
 }
 
+// Reconstructed from the model-creation block of init(), which is where the
+// "This is definitely an inlined function" comment above it already pointed.
+// Left uncalled so that init()'s codegen is unchanged; whether retail really
+// called it is what the size comparison is for.
+void TWaterGun::createGunBody()
+{
+	MActorAnmData* watergunAnmData = new MActorAnmData();
+	watergunAnmData->init("/mario/watergun2/body", nullptr);
+	mFluddModel = new MActor(watergunAnmData);
+
+	void* fluddModelData
+	    = JKRFileLoader::getGlbResource("/mario/watergun2/body/wg_mdl1.bmd");
+	J3DModel* fluddModel = new J3DModel(
+	    J3DModelLoaderDataBase::load(fluddModelData,
+	                                 J3DMLF_MaterialPEFull
+	                                     | (4 << J3DMLF_TevStageNumShift)),
+	    0, 1);
+	mFluddModel->setModel(fluddModel, 0);
+}
+
 void TWaterGun::initInLoadAfter() { }
 
 // Defined here, not in the header: the map places this UNUSED 0x1f8 body
@@ -1271,6 +1385,13 @@ void TWaterGun::initInLoadAfter() { }
 // after initInLoadAfter in source order, and that is what numbers the .prm
 // path and the nine PARAM_INIT names @4093-@4107 -- before createGunBody's
 // model paths and after calcAnimation's animation names.
+// TODO: bodies unknown (map 0x34 and 0x24). Both sit between initInLoadAfter
+// and the params constructor in the map's order, i.e. among the set-up
+// methods, but nothing in this TU or the callers that survive references them.
+void TWaterGun::entryAll() { }
+
+void TWaterGun::finalDrawInitialize() { }
+
 TWaterGun::TDeParams::TDeParams()
     : TParams("/Mario/WaterGun.prm")
     , PARAM_INIT(mRocketHeight, 1500.0f)
@@ -1319,6 +1440,32 @@ MtxPtr TWaterGun::getNozzleMtx()
 {
 	return mFluddModel->mModel->getAnmMtx(unk1CD8);
 }
+
+// Reconstructed from perform()'s CUE_CALC_ANIM block, the only place that
+// writes mEmitPos. Size-exact at 0xa4 for the loop alone: the
+// `unk380->getModel()->setBaseTRMtx(getModel()->getAnmMtx(unk1CD8))` that
+// precedes it in perform() is a separate 16-instruction step and does not
+// belong here. Left uncalled so that perform()'s codegen is unchanged.
+void TWaterGun::setEmitPt()
+{
+	for (s32 index = 0;
+	     index < nozzleBmdData.getEmitterCount(mCurrentNozzle); ++index) {
+		MtxPtr p1 = getEmitMtx(index);
+		if (p1 != nullptr) {
+			mEmitPos[index].x = p1[0][3];
+			mEmitPos[index].y = p1[1][3];
+			mEmitPos[index].z = p1[2][3];
+		}
+	}
+}
+
+// Moved out of WaterGun.hpp: the map has it UNUSED here, and nothing outside
+// this TU calls it (every other getModel() in Player is MActor's).
+J3DModel* TWaterGun::getModel() { return mFluddModel->mModel; }
+
+// TODO: body unknown (map 0x1c, seven instructions). calcAnimation() picks its
+// animations by name, so the id form has no surviving call site.
+void TWaterGun::getWaterGunAnmID(int index) { }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {
@@ -1624,6 +1771,10 @@ f32 TWaterGun::getPressureMax()
 
 // TODO: Figure out why inline happens
 #pragma dont_inline on
+// TODO: body unknown (map 0x90, thirty-six instructions). isEmitting() is the
+// surviving predicate of that shape but is a separate, larger symbol.
+void TWaterGun::getWillBeEmitted() { }
+
 void TWaterGun::getEmitPosDirSpeed(int index, JGeometry::TVec3<f32>* pos,
                                    JGeometry::TVec3<f32>* dir,
                                    JGeometry::TVec3<f32>* speed)
@@ -1661,6 +1812,14 @@ void TWaterGun::rotateProp(f32 rotation)
 		unk1CD2 = 0;
 		unk1CD0 = 0;
 	}
+}
+
+// Reconstructed from the head of calcAnimation(), whose `(mUpperState &
+// 0x8000) ? 0 : mUpperState` is exactly six instructions and exactly this
+// name. Left uncalled so that calcAnimation()'s codegen is unchanged.
+u32 TWaterGun::getMarioUpperStatus()
+{
+	return (mMario->mUpperState & 0x8000) != 0 ? 0 : mMario->mUpperState;
 }
 
 void TWaterGun::triggerPressureMovement(
@@ -1804,3 +1963,10 @@ void TWaterGun::changeBackup()
 		mSwitchToSecondNozzleSpeed = -mWatergunParams.mChangeSpeed.get();
 	}
 }
+
+// TODO: bodies unknown (map 0x28 each, ten instructions). The dash effect is
+// the turbo nozzle's, and TNozzleTrigger::movement is where it would be
+// started and stopped, but neither half survives as a recognisable block.
+void TWaterGun::startDashEffect() { }
+
+void TWaterGun::endDashEffect() { }
