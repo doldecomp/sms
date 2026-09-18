@@ -68,6 +68,16 @@ public:
 	}
 
 	// fabricated and fake and UB but it makes things match??
+	// The LEFT operand is by value, and that is settled (header round 12):
+	// binding it to a `const TVec3&` instead loses retail's three-word copy
+	// in front of `bl TVec3::sub` at every lvalue call site (NPCNeckCallBack).
+	// Ruled out: returning `TVec3` by value instead of the UB reference.
+	// Project-wide that is total fuzzy_match 96.90 -> 96.82: it wins
+	// TMapWire::setFootPointsAtHanged 92.43 -> 99.59, getPosInWire
+	// 85.94 -> 99.36 and two exact TVec3 helpers in MarioCollision, but loses
+	// CLBRotatePosAndUp 83.84 -> 75.16, TSpineEnemy::doShortCut 94.72 ->
+	// 84.75, THamuKuri::isResignationAttack 99.71 -> 89.54 and some thirty
+	// others.
 	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
 	{
 		fst -= snd;
