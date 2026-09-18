@@ -87,6 +87,38 @@ public:
 		timeArray->append(tick, col);
 	}
 
+	// Only TSnapTimeObj::perform reaches this overload, and there it is one
+	// stack word short: retail puts the reloaded colour at 0x38(r1), we put it
+	// at 0x34, inside an identically sized 0x50 frame and with identical
+	// instructions. Header round 11 mapped the frame instead of guessing:
+	// locals start at 0x28 (0x8..0x28 is MWCC's fixed 32-byte outgoing
+	// parameter area), the inlined `endTimer()` owns 0x28..0x34, and the
+	// colour is the next temporary. Both inlined `snapGxTimeStatic` calls
+	// contribute nothing (dropping either leaves 0x50/0x34). The region is
+	// 28 bytes and the colour's offset inside it is what moves, so the fix is
+	// +4 at constant region -- but every lever measured either moves the
+	// colour and the region together or neither:
+	//
+	//   named `TTimeArray* timeArray` (any spelling: pointer, reference,
+	//     `&crTimeAry()[0]`, hoisted above the null test)   0x58 / 0x38
+	//   `TColor color2(color)` copy                        0x58 / 0x38
+	//   named `u32` in `snapGxTimeStatic`                   0x58 / 0x38
+	//   `TTimeArray::Entry` temporary                       0x68 / --
+	//   `TColor color; color.set(p);`                      0x50 / 0x30
+	//   `_instance` instead of `instance()`                 0x50 / 0x34 (-8/-4
+	//     on top of the named timeArray, so the two cancel)
+	//   unused leading `f64`, `toUInt32()`, `instance()`
+	//     twice, declaration order, an extra level in
+	//     `snapGxTimeStatic`                                0x50 / 0x34
+	//
+	// Nothing measured is worth (-8, 0) or (0, +4). 0x38 is the first
+	// 8-byte-aligned slot above `endTimer`'s block, so retail's temporary is
+	// probably 8-byte aligned (the catalog's "one 8-byte object" family), but
+	// no 8-byte object in this body reproduces it. The 4 bytes cannot come
+	// from `endTimer`: giving it the same named `timeArray` -- with or without
+	// `_instance` -- puts this function at 100% and simultaneously moves
+	// TLiveManager::perform's and TObjManager::perform's colour slot, and both
+	// are source-linked at 100%, so it breaks the DOL. Left as it stands.
 	static void startTimer(u32 param_1)
 	{
 		JUtility::TColor color(param_1);
