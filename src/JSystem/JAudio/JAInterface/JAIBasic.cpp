@@ -610,6 +610,18 @@ void JAIBasic::initNullData()
 		              JAIConst::camMtx, i);
 }
 
+// TODO: every instruction matches but the frame is 0x28 against retail's 0x30.
+// The missing 8 bytes are one dead 8-byte non-trivial object in the inlined
+// `initAudioThread` (a scratch 8-byte class with a user destructor there gives
+// frame 0x30 at the same 30 instructions, and keeps initAudioThread's own
+// UNUSED size 0x78), but nothing in the function wants such an object, so it is
+// left unnamed. Ruled out: naming the two priority fetches as `u8` locals
+// (+0, they are trivial scalars of an inlined callee); a binding level over the
+// `JAIGlobalParameter` statics has no evidence either, since the map's
+// `getParam*ThreadPriority` are out-of-line globals (UNUSED 0x8) and retail
+// reads the statics directly with `lbz @sda21`. `TrackMgr::init`/`reset` and
+// `AudioThread::start`/`setPriority` all return void, so there is no call
+// result to bind.
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 aram_heap_size, u8 param_3)
 {
 	initAudioThread(heap, aram_heap_size, param_3);
