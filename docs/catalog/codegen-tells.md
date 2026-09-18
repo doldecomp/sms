@@ -227,6 +227,18 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `BathWaterManager`
+
+- A local's float register is handed out in declaration order; its int-to-float conversion temporary in assignment order. When the target's two orders disagree, the original declared the locals as a block and assigned afterwards (`clearEFB_alpha`, `draw_mist`: 99.8 -> 100 each).
+- `at()` puts a matrix element in the *second* multiply operand; a raw `mMtx[i][j]` read honours source order (`throwMario` frame exact, `getPos` all nine `fmadds`). `Mtx`/`Mtx44` locals: first declared gets the higher offset.
+- `TVec3<f>::set<f>` is a `bl` at depth 3, and a by-value-returning accessor is the level that gets you there (ctor at 2, `set<f>` at 3) and reproduces the word-wise copy of the return temporary (`throwMario` 70 -> 84).
+- An unnamed `TVec3<f32>(0, 1, 0)` temporary stays in memory so its 0.0/1.0 products survive; a named local is scalarised and they fold.
+- Removing a named local can close a frame gap (`warpTex` for `new JUTTexture(...)` was `loadAfter`'s whole 8 bytes).
+- `++x` in the condition avoids the member reload. A fetch invalidated by an intervening store tells you the source put it after that store (RNG seed store before `unk24->getBathtubData()`).
+- An UNUSED symbol defined in-class is dead-stripped from our object (`clearEFB` had to move out of class to exist). Four methods the map lists weak must stay out of class or MWCC inlines them into `render` (93.8 -> 51.3): the `TYoshi::onYoshi` family, and the unit's remaining ORDER/BINDING failure.
+- GX: `GXSetZMode` compares `GX_LESS` in both renderers; the mesh renderer's polygon colour goes to `GX_TEVREG0`. The drop-pair inner loop is a do-while (ROM behaviour).
+- Open header items: `TProjection3<T>::orthographic` takes `(l, r, t, b, n, f)` (height pair later, since arguments evaluate right to left; `prerender` 85 -> 87) and needs `+ n` on `mMtx[0][3]`/`[1][3]`; `TRandom_<T>::get_float(f32)` has no body and should be `return get_float(0.0f, max);` (the level that leaves `get()` a `bl` at depth 5); a named transposed 3x3 multiply for world-to-local on the row-major bathtub matrix (parked as `TBathtubData::getLocalPos`).
+
 ## Rules from `MSoundMainSide` and `MarDirectorDirect`
 
 - The const/non-const accessor pair is a re-read lever on plain integer flag words: `checkUnk4CFlag(int) const` with non-const `on/offUnk4CFlag` reproduces the load-per-modify at ten sites (`updateGameMode` 86 -> 91); with the test non-const MWCC CSEs its load into every modify. Routing only the modifies through accessors does nothing.
@@ -392,6 +404,16 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - Three more UNUSED-as-level instances: `fanfale` (496, size-exact) must be called so `getSlotResult` stays a `bl`; `getDrumResult` (44) is what `getSlotResult` calls; `slotStart`/`slotStop` are the `checkPass(53.0f)` body and the `isRollDrum` guard.
 - A nerve pushed via `pushNerve` reaches `TNerveBase`'s ctor one level deeper than the same nerve in a comparison (retail `bl`s it). `default: return;` with two ids sharing a case in a fruit switch. `TNerveBubbleLive::theNerve()` sits before `TBubble::appendItem` in the map, so that nerve cannot come from `DEFINE_NERVE`; its halves are spelled out around the helpers.
 - Open header items: nine `TMapObjBase` virtuals are declared only (`getRadiusAtY`, `getTakingMtx`, `setModelMtx`, `loadBeforeInit`, `calc`, `draw`, `dead`, `getHitObjNumMax`, `touchWater`); the map has them weak (8/52/56/4/4/4/4/8/8) in `bosstelesa.cpp`, bodies readable at 0x800C6E94 onwards; `MActor::getBckAnmPtr()` is really `getCurBckAnmPtr()` (UNUSED 0x1c); `getObjNumWithActorType` returns `u32`.
+
+## Rules from `CardLoad` and `CardSave` (GC2D)
+
+- **When MWCC emits a jump table** (scratch TU, game flags): at least 6 distinct case blocks *and* a label range of at least 8; otherwise a compare tree. A contiguous trailing group of empty cases (`case 5: case 6: case 7: break;`) folds into the default's range test and gives a tree, while an empty label with a gap below it (`case 7: break;`, labels {0,1,2,3,4,7}) keeps the 8-entry table (`titleDraw` 78 -> 98). `default:` on the empty group and an unsigned switch variable change nothing.
+- A `.data` jump table is a structural oracle: its entry count fixes the maximum label and each relocation names a block, so pairing the target's table against ours finds missing cases, wrongly merged groups and block order (`changeScene` 94.8 -> 99.96 in one edit; the `@NNNN` size delta is the first hint).
+- GC2D message text comes from the bank, not literals: `SMSGetMessageData(bmg, id)` before `getStringPtr()` in a `strncpy` is the `setMessage(box, size, id)` inline; an extra `.rodata` string shifting later offsets is the tell (36 sites; both pools byte-identical).
+- Accessor levers cut both ways: `SMSGetMarDirector()->getGamePad()` over `gpMarDirector->unk18[0]` is +16 (`TCardSave::load` exact); `->mPane->hide()` over `->getPane()->hide()` is -12 (the accessor on the opening `show()`, the raw member on the closing `hide()`). `s8 result = -1;` removes the `extsb` at an `s8` return; a named `s16 timer = unkB4; ... unkB4 = timer + 1;` removes a second `lha`.
+- The US title screen has 18 panes (`TITLE_PANE_COUNT`), giving the 9-way `mtctr 2` loop and moving the `u16` counter to 0x27A (`char unk278_[2]` under `VERSION_GMSE01`).
+- Dead code really in the ROM: `execMovement_`'s `PROGRESS_UNKA` guard that cannot hold; `changeScene`'s `PROGRESS_UNK26` if/else arms identical; `selectFunction`'s caption loop writing one shared box pair.
+- Open header items: `JSUOutputStream` needs a by-value `int write(u8)` (each write of the same byte gets its own slot); `JSURandomInputStream` needs `bool isDrained() const { return getLength() - getPosition() == 0; }` (retail reaches both through *virtual* calls on a local `JSUMemoryInputStream`, i.e. through the base; the fabricated `JSUMemoryInputStream::isNotDrained()` is on the wrong class); `StageUtil.hpp`'s two tables were function-local statics (retail `CardLoad.o` has neither); retail calls `JSUInputStream::JSUInputStream()` out of line inside the inlined `loadBookmark()` (the one MISSING symbol; declaring the ctor does not emit it).
 
 ## Rules from `Option` and `ConsoleStr` (GC2D)
 
