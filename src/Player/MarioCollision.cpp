@@ -269,7 +269,7 @@ void TMario::floorDamageExec(const TMario::TEParams& params)
 	mFloorHitActor.mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
 	damageExec(&mFloorHitActor, params.mDamage.get(), params.mDownType.get(),
 	           params.mWaterEmit.get(), params.mMinSpeed.get(),
-	           params.mMotor.get(), params.mDamage.get(),
+	           params.mMotor.get(), params.mDirty.get(),
 	           params.mInvincibleTime.get());
 }
 
@@ -307,28 +307,35 @@ void TMario::calcDamagePos(const JGeometry::TVec3<f32>& pos)
 	mDamagePos = mPosition + MarioCollisionVecScaled(offset, 50.0f);
 }
 
+// TODO: 97.4%. Three residues left.
+//  - Frame 0x130 against retail's 0x150 (the knockback vectors all sit 0x20
+//    low), and the first of retail's two `bl TVec3::TVec3(const TVec3&)` copies
+//    is still expanded inline here (six stores at 0x684) while the second one
+//    is called: the `MarioCalcDamagePos` level below is one short at that one
+//    site only.
+//  - `animOffset1`'s materialised bool lands in r0 and is then `mr`ed into
+//    r31, where retail materialises straight into r31.
+//  - `mr r3, r24` against our `addi r3, r24, 0` at the `onYoshi()` call.
 void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
                         int waterEmit, f32 knockbackSpeed, int rumbleFrames,
                         f32 pollutionAmount, s16 invincibilityFrames)
 {
 	// volatile u32 padding[10];
-	u32 animationTypes[16] = {
-		MARIO_STATUS_SAFE_BACK_DOWN,
-		MARIO_STATUS_SHORT_BACK_DOWN,
-		MARIO_STATUS_BACK_DOWN,
-		MARIO_STATUS_WAIT,
-		MARIO_STATUS_JUMP_SHORT_BACK_DOWN,
-		MARIO_STATUS_JUMP_SHORT_BACK_DOWN,
-		MARIO_STATUS_JUMP_BACK_DOWN,
-		MARIO_STATUS_WAIT,
-		MARIO_STATUS_SAFE_FORE_DOWN,
-		MARIO_STATUS_SHORT_FORE_DOWN,
-		MARIO_STATUS_FORE_DOWN,
-		MARIO_STATUS_WAIT,
-		MARIO_STATUS_JUMP_SHORT_FORE_DOWN,
-		MARIO_STATUS_JUMP_SHORT_FORE_DOWN,
-		MARIO_STATUS_JUMP_FORE_DOWN,
-		MARIO_STATUS_WAIT,
+	u32 animationTypes[2][2][4] = {
+		{
+		    { MARIO_STATUS_SAFE_BACK_DOWN, MARIO_STATUS_SHORT_BACK_DOWN,
+		      MARIO_STATUS_BACK_DOWN, MARIO_STATUS_WAIT },
+		    { MARIO_STATUS_JUMP_SHORT_BACK_DOWN,
+		      MARIO_STATUS_JUMP_SHORT_BACK_DOWN,
+		      MARIO_STATUS_JUMP_BACK_DOWN, MARIO_STATUS_WAIT },
+		},
+		{
+		    { MARIO_STATUS_SAFE_FORE_DOWN, MARIO_STATUS_SHORT_FORE_DOWN,
+		      MARIO_STATUS_FORE_DOWN, MARIO_STATUS_WAIT },
+		    { MARIO_STATUS_JUMP_SHORT_FORE_DOWN,
+		      MARIO_STATUS_JUMP_SHORT_FORE_DOWN,
+		      MARIO_STATUS_JUMP_FORE_DOWN, MARIO_STATUS_WAIT },
+		},
 	};
 
 	if (isInvincible())
@@ -372,7 +379,6 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			mFaceAngle.y += 0x8000;
 		}
 
-		// Inline?
 		bool canPlayAnimation = true;
 		if (mStatus == MARIO_STATUS_TOROCCO)
 			canPlayAnimation = false;
@@ -381,12 +387,12 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			canPlayAnimation = false;
 
 		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
-			canPlayAnimation = true;
+			canPlayAnimation = false;
 
-		if (canPlayAnimation) {
+		if (canPlayAnimation == TRUE) {
 			// I don't think this is correct, but was the closest i could get
-			u32 statusIdx = animationTypes[damageAnimType + animOffset1 * 4
-			                               + animOffset2 * 8];
+			u32 statusIdx
+			    = animationTypes[animOffset2][animOffset1][damageAnimType];
 			if (mHolder == nullptr || mHolder->isActorType(0x40000098)) {
 				// Knocked from a wire hang by damage?
 				changePlayerDropping(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
