@@ -197,9 +197,23 @@ void TMapStaticObj::calcUnique(JPABaseEmitter* emitter)
 void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
-		if (mSoundId != -1)
-			SMSGetMSound()->startSoundActor(mSoundId, &mPosition, 0, nullptr, 0,
-			                                4);
+		// An object with a rand-play index at 0x7c plays through
+		// MSRandPlay instead of the positional SE. The gateCheck is spelled
+		// out rather than routed through MSound::startSeRandPlay because the
+		// wrapper's inline temp costs 8 bytes of frame the ROM does not have.
+		//
+		// TODO: 99.3%. The ROM keeps mRandPlayHandle in r31 across the
+		// gateCheck call where we reload it; a named local (function-scope or
+		// block-scope, initialised or not) lands in r25 with an extra `addi`
+		// instead, so the carrier is something else.
+		if (mSoundId != -1) {
+			if (mRandPlayHandle == -1)
+				SMSGetMSound()->startSoundActor(mSoundId, &mPosition, 0,
+				                                nullptr, 0, 4);
+			else if (SMSGetMSound()->gateCheck(mSoundId))
+				MSoundSESystem::MSRandPlay::startSeRandPlay(mSoundId,
+				                                            mRandPlayHandle);
+		}
 
 		JPABaseEmitter* emitter = nullptr;
 		if (mActorData->mParticleType == 1)
