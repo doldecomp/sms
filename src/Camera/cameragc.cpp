@@ -401,24 +401,10 @@ void CPolarSubCamera::onMoveApproach_()
 	                           mCurrentParams->mDistMax, mCurrentTarget.unk28);
 }
 
-// TODO: the ROM reaches TMario::checkStatusType through an out-of-line `bl`
-// from every one of the five sites this helper is inlined into
-// (calcPosAndAt_ twice, calcSlopeAngleX_, and the two predicates below), and
-// emits it as the weak 0x1c symbol the map lists for this TU. Measured in this
-// worktree: with the call forced, isMarioCrabWalk_/isMarioAimWithGun_ go
-// 53.5 -> 99.8%, calcSlopeAngleX_ 94.9 -> 98.1%, calcPosAndAt_ 92.2 -> 94.1%
-// and the unit 95.3 -> 97.3%; the flat body below is then byte-exact bar the
-// call, since 0x50 (ours, leaf) + 0x18 of prologue/epilogue is the map's 0x68.
-// SOLVED, and it is not depth: checkStatusType sits on the right of a
-// short-circuit `&&` at all five sites, where MWCC refuses to expand a
-// two-`return` body (docs/catalog/codegen-tells.md, "Settled in header round
-// 8"). Spelling Player/Mario.hpp's body as `if (mStatus & flag) return true;
-// return false;` instead of the ternary -- the same seven instructions, and
-// the map's 0x1c -- gives checkStatusType 0 -> 100%,
-// isMarioAimWithGun_/isMarioCrabWalk_ 53.5 -> 99.8%, calcSlopeAngleX_ 94.9 ->
-// 98.1%, calcPosAndAt_ 92.2 -> 94.1% and this unit 95.28 -> 97.33%, with zero
-// regressions anywhere in the project. Only Mario.hpp needs the edit; it was
-// owned by another agent when this was measured.
+// TMario::checkStatusType is called out of line from the five sites this
+// helper is inlined into because it sits on the right of a short-circuit `&&`,
+// where MWCC refuses to expand a two-`return` body; Player/Mario.hpp spells
+// it that way (docs/catalog/codegen-tells.md, header round 8/9).
 bool CPolarSubCamera::isMarioReadyGun_() const
 {
 	return gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)

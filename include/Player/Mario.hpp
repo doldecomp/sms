@@ -1197,7 +1197,9 @@ public:
 	void startVoiceYoshi(u32);
 	bool checkStatusType(s32 flag) const
 	{
-		return mStatus & flag ? true : false;
+		if (mStatus & flag)
+			return true;
+		return false;
 	}
 
 	// fabricated
