@@ -8,8 +8,10 @@
 // See InfectiousStrings.hpp also
 static const char* dummy                 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE = "メモリが足りません\n";
-static const char cDirtyFileName[]       = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]        = "H_ma_rak_dummy";
+
+// rogue include: the pollution-texture pair sits immediately after the
+// DummyStrings pair in retail's .rodata blob (0x20 and 0x44).
+#include <Player/MarioDirtyStrings.hpp>
 
 void TMarDirector::preEntry(TPerformList* list)
 {
