@@ -16,26 +16,21 @@ u8 SMSAASamplePattern_aa[12][2] = {
 u8 SMSVFilter_non[7]     = { 0x0, 0x0, 0x15, 0x16, 0x15, 0x0, 0x0 };
 u8 SMSVFilter_flicker[7] = { 0x8, 0x8, 0xA, 0xC, 0xA, 0x8, 0x8 };
 
-// All four SMSSetup*RenderingInfo functions are instruction-exact and only
-// 8 bytes short of retail's frame (0x18/0x28/0x20/0x28 vs 0x20/0x30/0x28/0x38);
-// `volatile char trash[8]` in each body takes all four to 100%, so the bodies
-// are correct.
+// All four SMSSetup*RenderingInfo functions are instruction-exact and short
+// only in frame: GCLogo 0x18 vs 0x20, Movie 0x20 vs 0x28, Title 0x28 vs 0x30,
+// Game 0x28 vs 0x38. `volatile char trash[]` in each body takes all four to
+// 100%, so the bodies are correct.
 //
 // TODO: the missing object lives in JDrama::TDisplay::getRenderMode(), a header
 // inline with no map symbol (so it is invisible to validate-symbol-order, the
-// same shape as MSound::startSoundActor).  Measured: one dead 4-byte
-// non-trivial local there (`struct { ~S() {} u32 v; }`) closes all four
-// functions with **zero** instruction change and zero regressions anywhere else
-// in the tree (`ninja changes_all`: +4 functions to 100%, unit matched_code
-// 25.57% -> 100%, total matched_code 48.00 -> 48.03).  getRenderMode() is the
-// unique carrier: the emitted out-of-line SMSSetupTitleRenderMode (frame 0x20,
-// no locals) is 100% and does not call it, and the same probe local placed in
-// TDisplay::on/offFlag() instead lands only Title and Movie (GCLogo does not
-// move at all).  A real JDrama::TFlagT<u16> temporary in on/offFlag
-// (`unk64 = TFlagT<u16>(unk64.mValue | flag)`) closes GCLogo/Title/Movie with no
-// instruction change but leaves Game at 0x30.
-// What the 4-byte object *is* remains unnamed, so the header edit is left to a
-// header round rather than fabricated here.
+// same shape as MSound::startSoundActor). GCLogoRenderingInfo inlines nothing
+// else -- its 46 instructions are the accessor, the five `bl`s and offFlag --
+// which is what makes the accessor the unique carrier. One extra 4-byte object
+// bound inside it lands all four exactly (Game pays for it twice, hence +16
+// there), with zero instruction change and no regression elsewhere; header
+// round 15 confirmed that with two spellings and failed to find an honest one.
+// The trial table lives at the declaration in
+// include/JSystem/JDrama/JDRDisplay.hpp.
 
 JDrama::TRect SMSGetRederRect_Game()
 {

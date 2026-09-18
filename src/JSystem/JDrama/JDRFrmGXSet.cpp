@@ -2,6 +2,26 @@
 
 using namespace JDrama;
 
+// TODO: 96.8%. All 137 instructions match; the residue is frame 0xb8 vs
+// retail's 0x130 and a uniform one-step shift of the scratch registers (retail
+// r7/r8 for the display reads and r6 for `&graphics->unkFC`, ours r6/r7 and
+// r4, i.e. retail still has r4 -- `cue` -- allocated where we release it).
+//
+// The 0x78 gap is exactly **two** GXRenderModeObj objects: sizeof is 0x3c, and
+// two of them pack to 0x78 while one alone costs 0x40 (trailing alignment).
+// Measured in header round 15, all with 137 instructions unchanged:
+//   `GXRenderModeObj rmo = getRenderMode(); mRenderMode = rmo;`      0xf8
+//   a by-value `TGraphics::setRenderMode(GXRenderModeObj)` setter    0xf8
+//   the same setter taking `const GXRenderModeObj&`                  0xc0
+//   the named local *and* the by-value setter together              0x130 (exact)
+//   two chained named copies                                        0x130 (exact)
+// So retail copied the render mode twice on the way in. The natural single
+// source for that is a by-value *return* from TDisplay::getRenderMode() plus
+// one binding, but a by-value return cannot be what System/RenderModeObj uses
+// (`&param_1->getRenderMode()`), and a `TGraphics::setRenderMode` by-value
+// setter has no symbol in the map. Left as is rather than guessed; the
+// register shift is a separate, unexplained residue (a `getDisplay()` accessor
+// takes the frame to 0x170 and does not move it).
 void TFrmGXSet::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {
