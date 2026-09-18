@@ -1,8 +1,6 @@
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/MapObjGeneral.hpp>
 #include <MoveBG/MapObjBase.hpp>
-#include <Map/MapCollisionManager.hpp>
-#include <Map/MapCollisionEntry.hpp>
 #include <Map/MapData.hpp>
 #include <Map/Map.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -25,6 +23,8 @@
 #include <MSound/MSoundBGM.hpp>
 
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionManager.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
 	{ 0xFFFFFFFF, MSD_SE_IT_COMMON_APPEAR, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -2785,13 +2785,20 @@ static const TMapObjCollisionData JuiceBlock_map_collision_data[] = {
 static const TMapObjCollisionInfo JuiceBlock_map_collision_info
     = { 1, 1, JuiceBlock_map_collision_data };
 
+static const TMapObjHitDataTable JuiceBlock_hit_data_table[] = {
+	{ 200.0f, 100.0f, 200.0f, 100.0f },
+};
+
+static const TMapObjHitInfo JuiceBlock_obj_hit_info
+    = { 0x1, 0xC0000000, 0.0f, JuiceBlock_hit_data_table };
+
 static TMapObjData JuiceBlock_data = {
 	"JuiceBlock",
 	0x400002C6,
 	"地形オブジェマネージャー",
-	"オブジェクトグループ",
+	"敵グループ",
 	nullptr,
-	&no_data_obj_hit_info,
+	&JuiceBlock_obj_hit_info,
 	&JuiceBlock_map_collision_info,
 	nullptr,
 	nullptr,
@@ -6490,7 +6497,7 @@ static TMapObjData windmill_far_data = {
 };
 
 static const TMapObjHitDataTable MiniWindmill_hit_data_table[] = {
-	{ 0.0f, 0.0f, 20.0f, 6400.0f },
+	{ 0.0f, 0.0f, 10.0f, 1500.0f },
 };
 
 static const TMapObjHitInfo MiniWindmill_obj_hit_info
