@@ -17,6 +17,16 @@ JAISound* MSModBgm::modBgm(u8 param_1, u8 param_2)
 		break;
 	}
 
+	// TODO: 96.5%. Retail shares one zero register between the two
+	// statements of each reset: `li r31, 0` (the value that is both
+	// `sound` and the return value) is also the source of the `stb` into
+	// unk0, twice. We materialise 0 into r0 for the byte store and into
+	// r31 for the pointer, so we are two instructions long. Measured with
+	// no effect: swapping the two assignments (both sites), `unk0 = 0`,
+	// `unk0 = sound` after the null assignment, `bool`/`u8`/integer-zero
+	// spellings, and an early `return nullptr`. MWCC always sinks the
+	// pointer assignment below the member store, so the fix has to make
+	// the store's source depend on `sound`.
 	JAISound* sound = MSBgm::getHandle(param_2);
 	if (!sound) {
 		sound = nullptr;
@@ -100,7 +110,24 @@ f32 MSBgmXFade::scExp[18] = {
 
 void MSBgmXFade::xFadeBgm(f32 param_1)
 {
-	// TODO: some stupid trick with casting the second param?
+	// TODO: 99.4%. Two independent residues, both localised:
+	//  * frame 0x30 vs 0x38. No slot is referenced, so this is the dead
+	//    low region: an uninitialised **non-trivial 8-byte local of
+	//    getTiming** (the only inlined callee) takes the frame to 0x38
+	//    with no instruction change, and getTiming is UNUSED so its map
+	//    size is unaffected. Nothing in MSBgmXFade names such an object,
+	//    so it is left out rather than fabricated. Caller-side levers
+	//    measured: `u32 timing; getTiming(param_1, &timing)` +0 (a scalar
+	//    written by an inlined callee is dropped), named `f32` volumes
+	//    regress (+4 instructions).
+	//  * f0/f1 swap inside the inlined getTiming: retail parks `unk0` in
+	//    f1 (the vacated float-parameter register) and the per-iteration
+	//    `scTiming[i]` in f0; we do the opposite, which flips all four
+	//    `fcmpo` operand pairs. Naming the table element, reading `unk0`
+	//    raw in the conditions and every operand-order permutation of the
+	//    two comparisons were measured: none moves the allocation.
+	//    Probably a longer live range for `unk0` in the real body (see
+	//    getTiming's 0x60-vs-0x94 size gap below).
 	u8 tmp = getTiming(param_1, nullptr);
 
 	bool b = tmp >= 1 && tmp <= 16;
@@ -121,6 +148,11 @@ void MSBgmXFade::xFadeBgmForce(f32 param_1)
 	}
 }
 
+// TODO: map size 0x94, ours 0x60: thirteen instructions of the optional
+// `param_2` output are missing. It is invisible at the only call site
+// (xFadeBgm passes nullptr, so the stores fold away), so there is no
+// evidence for its contents; spelling it as two null-checked stores also
+// pushes the body out of line, which the UNUSED marker forbids.
 u8 MSBgmXFade::getTiming(f32 param_1, u32* param_2)
 {
 	f32 f1 = unk0;
@@ -134,6 +166,10 @@ u8 MSBgmXFade::getTiming(f32 param_1, u32* param_2)
 	return 0xff;
 }
 
+// TODO: an uninitialised non-trivial **4-byte** local here takes
+// MSBgmXFade::xFadeBgmForce from 99.8% to exact (frame 0x28 -> 0x30) with
+// no instruction change and no size change to this UNUSED body. Left out
+// for want of a candidate object; same family as getTiming's 8 bytes.
 u8 MSBgmXFade::getTimingForce(f32 param_1)
 {
 	for (u8 i = 0; i < 17; ++i)
