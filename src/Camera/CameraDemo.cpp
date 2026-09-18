@@ -110,14 +110,26 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 				             + atOffset.z * JMASCos(angle);
 				unk148 = origin + atOffset;
 
-				// TODO: updateDemoCamera_ is 99.7% with the frame exact.
-				// Two residues: retail loads each member of unk124/unk148
-				// immediately before its subtrahend (0x124, 0xa0, 0x128,
-				// 0xa4, ...) while we load the two named scalars one slot
-				// early, and our two 12-byte `origin + offset` temporaries
-				// sit 0x24 higher than retail's (0x7c/0x70 vs 0x58/0x4c)
-				// although the total frame matches, so there is a 36-byte
-				// hole elsewhere in the low region.
+				// TODO: updateDemoCamera_ is 99.7% with the frame exact
+				// (0xc8) and every referenced named slot exact: atOffset
+				// 0x88, posOffset 0x94, origin 0xa0.  Two residues, both
+				// below the named block.  (1) The two 12-byte `origin +
+				// offset` by-value temporaries sit at 0x7c/0x70 where
+				// retail has 0x58/0x4c -- same 12-byte spacing, so it is
+				// not batch 119's two-slots-per-statement geometry; retail
+				// simply allocates 36 bytes (three 12-byte objects) of pool
+				// between the named block and the first temporary that we
+				// do not, and has 36 fewer dead bytes underneath.  The
+				// expansions before the first `add` are updateDemo (a bl),
+				// CLBDegToShortAngle, origin's ctor and `= *unk0`, and the
+				// two three-argument offset constructors; none of them has
+				// a temporary in our build.  (2) Retail loads each
+				// unk124/unk148 component immediately before its
+				// subtrahend (0x128 then 0xa4, 0x12c then 0xa8) while we
+				// load origin's component first.  Measured and rejected:
+				// reading origin.y/origin.z raw instead of through the two
+				// named scalars (they lose their callee-saved FPRs
+				// entirely, 93.2%) and declaring y before z (99.6%).
 				f32 upX = mUp.x;
 				mUp.x   = upX * JMASCos(angle) + mUp.z * JMASSin(angle);
 				mUp.z   = -upX * JMASSin(angle) + mUp.z * JMASCos(angle);
