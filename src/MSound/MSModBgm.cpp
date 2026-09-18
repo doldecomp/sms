@@ -128,6 +128,16 @@ void MSBgmXFade::xFadeBgm(f32 param_1)
 	//    two comparisons were measured: none moves the allocation.
 	//    Probably a longer live range for `unk0` in the real body (see
 	//    getTiming's 0x60-vs-0x94 size gap below).
+	// Closure re-pass (batch 161): under the UNUSED-callee carrier rule
+	// both carriers are *legal* -- `getTiming` and `getTimingForce` are
+	// UNUSED, so neither has an out-of-line copy that a dead local could
+	// break, and a dead uninitialised local costs no instructions and no
+	// map size.  What is still missing is only a candidate object: a
+	// non-trivial class local of 4 or 8 bytes buys +8 either way, and
+	// nothing in a BGM crossfade timing search names one.  The most likely
+	// source of it is `getTiming`'s missing `param_2` output (0x60 against
+	// the map's 0x94), so reconstructing that body is the way in, not a
+	// lever hunt.
 	u8 tmp = getTiming(param_1, nullptr);
 
 	bool b = tmp >= 1 && tmp <= 16;
