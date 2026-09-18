@@ -60,8 +60,12 @@ f32 TMapObjFlag::mFlutterSpeed = 4.0f;
 // instead of retail's single "&arr[mNumZ - 1]" pointer; naming
 // `last0`/`last1` pointers took this from 94.0% (122 markers, several
 // structural) to instruction-exact, 63 markers left, all frame/register).
-// What remains is a pure 0x50-byte low-region gap (0x108 vs our 0xb8); no
-// candidate object found.
+// What remains is a pure 0x50-byte low-region gap (0x108 vs our 0xb8): batch
+// 128 confirmed every referenced slot is *exactly* 0x50 higher in retail
+// (0xa8/0xac/0xb0/0xb4/0xbc/0xd0..0x100 against our 0x58../0x80..0xb0), LR and
+// save slots included, so all 80 bytes are dead low region below every local
+// -- a missing set of inlined expansions (twelve GX writer sites plus
+// `j3dSys.getViewMtx()`), not a named object.
 void TMapObjFlag::draw()
 {
 	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > mtx;
@@ -109,7 +113,13 @@ void TMapObjFlag::draw()
 }
 
 // TODO: 99.8%, all instructions match, pure frame gap (0x38 vs our 0x30).
-// No candidate object found this batch.
+// Batch 128: every slot (the two int<->float magic doubles at 0x28/0x30 and
+// their word reads) is exactly 8 higher in retail, so the 8 bytes are dead
+// low region under the doubles. Rejected: naming the `JMASin` result, binding
+// `mVertices[y][z]` to a reference, folding the `MsWrap` into the `angle`
+// initialiser, naming `(f32)mNumZ`, and dead `f64`/`u32[2]` locals (all leave
+// the same 16 markers; the frame has slack above, so caller-scope dead
+// objects are absorbed).
 void TMapObjFlag::updateVertex()
 {
 	for (int y = 0; y < mNumY; y += mSkip) {
@@ -267,7 +277,17 @@ void TMapObjFlagManager::initDraw()
 // `mPosition`/`mRotation` form is kept. The call site already matches
 // MsMtxSetXYZRPH's f32-degree overload in MathUtil.hpp exactly, so the
 // remaining gap is scheduling inside that shared inline, not something this
-// call site controls.
+// call site controls. Batch 128 re-measured with marker counts (not the fuzzy
+// percentage) and confirms it: `getPosition()`/`getRotation()` singly are +8
+// of frame each and +24 together, `SMSGetMarDirector()->getCurrentMap()` +8,
+// and *none* of them moves the 37 markers. Retail loads the rotation
+// components z, y, x (right-to-left argument order) and gives their three
+// `fctiwz` conversion doubles *ascending* slots 0x80/0x88/0x90; ours loads y,
+// z, x and allocates 0x80/0x78/0x70 descending. Not reachable from the call
+// site: the s16 overload with explicit `(s16)(rot * 65536.0f / 360.0f)` casts,
+// `DEG2SHORTANGLE`, and three named `f32` locals in either order all leave 36
+// or 37 markers. The frame is 16 short and splits as +20 of low region below
+// the JUTTexture temporary minus 4 between it and the conversion doubles.
 void TMapObjFlagManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
@@ -367,21 +387,18 @@ void TMapObjFlagManager::registerObj(TMapObjFlag* flag, const char* name)
 	}
 }
 
-// TODO: 99.8%, all instructions match, pure frame gap (0x30 vs our 0x20).
-// A dead 16-byte local declared right after `buffer` (below it, so `buffer`
-// keeps its own offset) reaches the target frame exactly with zero
-// instruction change (closure batch 123 trial, reverted -- unnamed padding
-// is not committed per CLAUDE.md's fakematch rule). Widening `buffer`
-// itself only gets to 1 residual marker at any size 17-24, never 0, so the
-// object is separate from the read buffer. No plausible name found.
+// Closure batch 128: the 16 bytes batch 123 could only find as unnamed
+// padding are two named results -- `readString`'s returned buffer pointer
+// (+8) and the current map the switch runs on (+8). Exact.
 void TMapObjFlagManager::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
 
 	char buffer[8];
-	stream.readString(buffer, 8);
+	char* name = stream.readString(buffer, 8);
 
-	switch (gpMarDirector->mMap) {
+	u8 map = gpMarDirector->getCurrentMap();
+	switch (map) {
 	case 0:
 		TMapObjFlag::mFlutterSpeed = 16.0f;
 		break;
