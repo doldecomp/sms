@@ -778,10 +778,11 @@ bool TChuuHana::checkOnPanel()
 bool TChuuHana::willFall(long param_1)
 {
 	// The mirror it is standing on gets bigger with the instance index.
+	int index  = mInstanceIndex;
 	f32 radius = mSmallMirrorR;
-	if (mInstanceIndex > 0)
+	if (index > 0)
 		radius = mMediumMirrorR;
-	if (mInstanceIndex > 2)
+	if (index > 2)
 		radius = mLargeMirrorR;
 	if (param_1 == mCheckOnPanelTimeRoll)
 		radius += 250.0f;
