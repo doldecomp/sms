@@ -292,10 +292,10 @@ int TMario::barProcess()
 BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
                          const Vec& curr)
 {
-	if (mVel.y > 0.0f)
+	if (getVel().y > 0.0f)
 		return false;
 
-	if ((curr.x - prev.x) * mVel.x + (curr.z - prev.z) * mVel.z > 0.0f)
+	if ((curr.x - prev.x) * getVel().x + (curr.z - prev.z) * getVel().z > 0.0f)
 		return false;
 
 	JGeometry::TVec3<f32> newPos;

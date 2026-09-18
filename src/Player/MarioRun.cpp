@@ -824,7 +824,7 @@ BOOL TMario::turnning()
 		return changePlayerStatus(MARIO_STATUS_RUN, 0, false);
 
 	BOOL zeroed = false;
-	f32 v       = FConverge(mForwardVel, 0.0f, 4.0f, 4.0f);
+	f32 v       = FConverge(getForwardVel(), 0.0f, 4.0f, 4.0f);
 	mForwardVel = v;
 	if (v == 0.0f)
 		zeroed = true;
@@ -842,12 +842,12 @@ BOOL TMario::turnning()
 		break;
 	}
 
-	if (mForwardVel >= 18.0f) {
+	if (getForwardVel() >= 18.0f) {
 		setAnimation(ANIM_TURN, 1.0f);
 	} else {
 		setAnimation(ANIM_TRNED, 1.0f);
 		if (isLast1AnimeFrame()) {
-			f32 vel = mForwardVel;
+			f32 vel = getForwardVel();
 			if (vel > 0.0f) {
 				mFaceAngle.y = mIntendedYaw;
 				setPlayerVelocity(-vel);
@@ -867,10 +867,10 @@ BOOL TMario::turnEnd()
 	if (isThrowStart())
 		return 1;
 
-	if (mInput & 0x8)
+	if (getInput() & 0x8)
 		return changePlayerStatus(MARIO_STATUS_SLIP, 0, false);
 
-	if (mInput & 0x2)
+	if (getInput() & 0x2)
 		return changePlayerJumping(MARIO_STATUS_U_TURN_JUMP, 0);
 
 	if (considerRotateStart())
@@ -1385,7 +1385,7 @@ f32 TMario::downingCommon(int anim, f32 limit, int arg2)
 	if (animRate < limit) {
 		slopeProcess();
 		mForwardVel *= 0.96f;
-		if (mForwardVel * mForwardVel < 1.0f)
+		if (getForwardVel() * getForwardVel() < 1.0f)
 			setPlayerVelocity(0.0f);
 	} else {
 		if (mForwardVel >= 0.0f)
@@ -1489,11 +1489,11 @@ BOOL TMario::loserDown()
 {
 	slopeProcess();
 	mForwardVel *= 0.9f;
-	if (mForwardVel * mForwardVel < 1.0f)
+	if (getForwardVel() * getForwardVel() < 1.0f)
 		setPlayerVelocity(0.0f);
 
 	setAnimation(ANIM_DIE, 1.0f);
-	switch (mStatusState) {
+	switch (getStatusState()) {
 	case 0:
 		startVoice(MSD_SE_MV08A_DOWN_01);
 		mStatusState++;
@@ -1524,11 +1524,11 @@ BOOL TMario::jumpSlipCommon(s16 anim, u32 status)
 	if (mInput & 0x1) {
 		slopeProcess();
 		mForwardVel *= 0.98f;
-		if (mForwardVel * mForwardVel < 1.0f)
+		if (getForwardVel() * getForwardVel() < 1.0f)
 			setPlayerVelocity(0.0f);
 	} else {
-		if (mForwardVel >= 16.0f) {
-			mForwardVel = FConverge(mForwardVel, 0.0f, 4.0f, 4.0f);
+		if (getForwardVel() >= 16.0f) {
+			mForwardVel = FConverge(getForwardVel(), 0.0f, 4.0f, 4.0f);
 			slopeProcess();
 		} else {
 			mVel.y = 0.0f;

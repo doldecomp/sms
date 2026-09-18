@@ -754,7 +754,7 @@ BOOL TMario::changePlayerTriJump()
 		mModelFaceAngle = mFaceAngle.y;
 		if (mForwardVel > 0.0f) {
 			// TODO: inline
-			s16 a     = mSlopeAngle + 0x8000;
+			s16 a     = getSlopeAngle() + 0x8000;
 			s16 angle = mFaceAngle.y - a;
 			f32 x     = mForwardVel * JMASSin(angle);
 			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;
@@ -781,7 +781,7 @@ int TMario::changePlayerJumping(u32 param_1, u32 param_2)
 		mModelFaceAngle = mFaceAngle.y;
 		if (mForwardVel > 0.0f) {
 			// TODO: inline
-			s16 a     = mSlopeAngle + 0x8000;
+			s16 a     = getSlopeAngle() + 0x8000;
 			s16 angle = mFaceAngle.y - a;
 			f32 x     = mForwardVel * JMASSin(angle);
 			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;

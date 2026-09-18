@@ -449,7 +449,7 @@ BOOL TMario::jumpWall()
 
 BOOL TMario::jumpCatch()
 {
-	if ((mInput & 0x8000) != 0
+	if ((getInput() & 0x8000) != 0
 	    && ((mGamePad->mEnabledFrameMeaning & 0x2000) != 0)) {
 		return changePlayerStatus(MARIO_STATUS_HIP_DROP, 0, false);
 	}
@@ -471,10 +471,10 @@ BOOL TMario::jumpCatch()
 	}
 
 	case 2:
-		if (mWallPlane && mWallPlane->isFence())
+		if (getWallPlane() && getWallPlane()->isFence())
 			return changePlayerDropping(MARIO_STATUS_FENCE_JUMP_CATCH, 0);
 		playerRefrection(1);
-		if (mVel.y > 0.0f) {
+		if (getVel().y > 0.0f) {
 			mVel.y = 0.0f;
 		}
 		emitParticle(PARTICLE_MS_DMG_C);
@@ -670,7 +670,7 @@ BOOL TMario::catchStop()
 BOOL TMario::slipFalling()
 {
 	mStatusTimer += 1;
-	if (mStatusTimer > 120 && mPosition.y - mFloorPosition.y > 500.0f)
+	if (getStatusTimer() > 120 && mPosition.y - mFloorPosition.y > 500.0f)
 		return changePlayerStatus(MARIO_STATUS_LANDING, 1, false);
 
 	mForwardVel *= mJumpParams.mJumpSpeedBrake.get();
@@ -696,9 +696,9 @@ BOOL TMario::slipFalling()
 
 	switch (jumpProcess(0)) {
 	case 1:
-		if (mStatusState == 0 && mVel.y < 0.0f
+		if (mStatusState == 0 && getVel().y < 0.0f
 		    && mGroundPlane->getNormal().y >= 0.9848077f) {
-			mVel.y       = -mVel.y / 2.0f;
+			mVel.y       = -getVel().y / 2.0f;
 			mStatusState = 1;
 		} else {
 			changePlayerStatus(MARIO_STATUS_SLIP_FORE, 0, false);
@@ -706,7 +706,7 @@ BOOL TMario::slipFalling()
 		break;
 
 	case 2:
-		if (mVel.y > 0.0f)
+		if (getVel().y > 0.0f)
 			mVel.y = 0.0f;
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		changePlayerStatus(MARIO_STATUS_JUMP_SHORT_BACK_DOWN, 0, false);
@@ -882,18 +882,18 @@ BOOL TMario::boardJumping()
 	setJumpingAttackArea();
 	switch (jumpProcess(0)) {
 	case 1:
-		if (mVel.y < 0.0f)
+		if (getVel().y < 0.0f)
 			changePlayerStatus(MARIO_STATUS_SURF, 0, 0);
 		break;
 	case 2:
-		if (mWallPlane == nullptr) {
+		if (getWallPlane() == nullptr) {
 			setPlayerVelocity(0.0f);
 			loserExec();
 			gpMSound->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
 		} else {
-			s16 diff
-			    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
-			      - mFaceAngle.y;
+			s16 diff = matan(getWallPlane()->getNormal().z,
+			                 getWallPlane()->getNormal().x)
+			           - mFaceAngle.y;
 			s16 max = mSurfingParamsWaterRed.mClashAngle.get();
 			if ((diff < -max || max < diff)
 			    && mForwardVel > mSurfingParamsWaterRed.mClashSpeed.get()) {

@@ -1209,6 +1209,15 @@ public:
 	s16 getHealth() const { return mHealth; }
 	s16 getAir() const { return mAir; }
 
+	// fabricated: header round 20 accessor candidates (batch 117)
+	f32 getForwardVel() const { return mForwardVel; }
+	const JGeometry::TVec3<f32>& getVel() const { return mVel; }
+	u32 getInput() const { return mInput; }
+	u16 getStatusTimer() const { return mStatusTimer; }
+	s16 getSlopeAngle() const { return mSlopeAngle; }
+	u16 getStatusState() const { return mStatusState; }
+	const TBGCheckData* getWallPlane() const { return mWallPlane; }
+
 	// fabricated
 	bool isTouchGround4cm() const
 	{
