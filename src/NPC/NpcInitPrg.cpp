@@ -102,7 +102,8 @@ inline void TBaseNPC::setMtxEffect_()
 	mMultiMtxEffect->mBoneIDs       = boneIds;
 	mMultiMtxEffect->mMtxEffectType = mtxEffectTypes;
 
-	mMultiMtxEffect->setup(getModel(), pInfo->unk8);
+	J3DModel* model = getModel();
+	mMultiMtxEffect->setup(model, pInfo->unk8);
 	mMultiMtxEffect->flagOn(0x1);
 }
 
@@ -120,6 +121,18 @@ inline void TBaseNPC::initSinkNpc_()
 		sCheckPollutedStartCounter = 0;
 }
 
+// TODO: frame 0xf8 vs 0x168 -- every instruction and register is exact, so the
+// residue is 112 bytes of dead low region (retail references no stack slot at
+// all, leaving 0x130 dead bytes below the saves). Measured levers, all with no
+// instruction change: SMSGetMarDirector()->getCurrentMap() +0x10, getScaling().x
+// at the two mScaling reads +8, a named mSLHeadHeightNormal/mGravityY pair +8,
+// a named unk124->getGraph() +8, a named mWaitTurnSpeed +8 -- 48 of the 112 at
+// best, and getMActor()->getModel() for the joint-name fetch is +0x18 but costs
+// an instruction. Naming the setMtxEffect_ model fetch (below) was the register
+// fix, not a frame lever. The carrier is most likely a dead non-trivial local in
+// one of the inlined constructors (TNpcSink, TNpcUnk22CStruct, TMultiMtxEffect,
+// TNpcUnk230Struct, TNpcInbetween all have their ctors inlined here -- retail
+// emits __nw__ without a ctor bl for each).
 void TBaseNPC::init(TLiveManager* param_1)
 {
 	int iVar18 = mActorType - 0x4000001;
@@ -359,6 +372,19 @@ inline void TBaseNPC::initIndividualAnm_()
 	}
 }
 
+// TODO: 98.0% -- frame 0x158 vs 0x1f0 plus a whole-function callee-saved
+// renumbering (retail keeps `this` in r31, we get r29). Slot triage: the named
+// block (local_78 and the six double-conversion slots) and the ten stream-read
+// slots are each the right size and at the right distance from the frame top,
+// but retail has 164 dead bytes *below* the read pool where we have 152, and we
+// have 12 extra bytes between the read pool and the named block. The only real
+// instruction difference is in the colour-change double loop: retail loads
+// `initInfo->unk34[j][i]` twice with two different address associations --
+// (initInfo + i*4) + (j*8+0x34) for the test, (initInfo + j*8+0x34) + i*4 for
+// the argument -- so the two reads are spelled differently in the source and do
+// not CSE. Rejected: a named `row = initInfo->unk34[j]` used for the argument
+// (97.6), for the argument with the row fetched before the test (98.2), and for
+// the test with the raw expression as the argument (97.8, +8 frame).
 void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 {
 	int iVar15                         = mActorType - 0x4000001;
