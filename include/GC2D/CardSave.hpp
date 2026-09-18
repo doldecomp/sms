@@ -23,6 +23,7 @@ public:
 
 	void load(JSUMemoryInputStream& stream);
 	void initData(TMarioGamePad*);
+	void changeMessage(unsigned long, unsigned long, int);
 	void init(int);
 	void perform(unsigned long cue, JDrama::TGraphics* graphics);
 	void makeBuffer(J2DTextBox*, int);

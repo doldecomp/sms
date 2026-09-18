@@ -336,6 +336,11 @@ void TCardSave::initData(TMarioGamePad* param_1)
 	unk270 = param_1;
 }
 
+// TODO: UNUSED, 0xe8 bytes in the map. Dead in the shipped game, so there is
+// no call site to read the parameters off; only the mangled signature
+// (u32, u32, int) is known. Left as a stub so the symbol exists.
+void TCardSave::changeMessage(u32, u32, int) { }
+
 void TCardSave::init(int param_1)
 {
 	unk310 = PROGRESS_UNK0;
