@@ -1,46 +1,5 @@
 #include <Enemy/BossHanachan.hpp>
 
-// Accessors parked here for promotion to their owning classes: each one is an
-// inline level that `changeAnmRateAndFrameUpdate_` needs and that a raw member
-// read does not provide. Measured, from frame 0xc0 towards retail's 0x118:
-// getChangeParams() +32 (12 sites), the getSL* wrappers +24 (10 of the 12
-// sites; the two mSLWalkBckRate* ones must stay raw `.get()` or the
-// magnif/min loads swap float registers), getHead() +24, getMarchSpeed() +8 at
-// the two march-speed compares only (saturating; a third site is +0 and all
-// four sites cost 1.5 points), getSpine() the last +8. Rejected: getBody(i)
-// (+40, overshoots).
-// TODO: promote to TBossHanachan as `TBossHanachanChangeSaveParams*
-// getChangeParams() const`.
-static inline TBossHanachanChangeSaveParams* BHA_changeParams(
-    const TBossHanachan* boss)
-{
-	return boss->mChangeParams;
-}
-
-// TODO: promote to TBossHanachanChangeSaveParams as per-field getSL*
-// wrappers (`f32 getSLWalkAnmMarchSpeed() const { return
-// mSLWalkAnmMarchSpeed.get(); }` and so on).
-// TODO: promote to TBossHanachan as `getHead()`.
-static inline TBossHanachanPartsHead* BHA_head(const TBossHanachan* b)
-{
-	return b->mHead;
-}
-
-// TODO: promote to TBossHanachan (or TLiveActor) as `getSpine()`; TTinKoopa
-// already carries exactly this accessor.
-static inline TSpineBase<TLiveActor>* BHA_spine(const TBossHanachan* b)
-{
-	return b->mSpine;
-}
-
-// TODO: promote to TBossHanachan as `getMarchSpeed()`.
-static inline f32 BHA_marchSpeed(const TBossHanachan* b)
-{
-	return b->mMarchSpeed;
-}
-
-static inline f32 BHA_paramF(const TParamRT<f32>& p) { return p.get(); }
-static inline u8 BHA_paramB(const TParamRT<u8>& p) { return p.get(); }
 #include <Camera/cameralib.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <NPC/NpcInbetween.hpp>
@@ -61,7 +20,7 @@ void TBossHanachan::setHeadAndBodyAnm(
 		TBossHanachanPartsBody* body = mBodies[i];
 		if (body->setAnm_(anm, blend)) {
 			J3DFrameCtrl* bck = body->mMActor->getFrameCtrl(ANM_TYPE_BCK);
-			int frame = (i * BHA_paramB(BHA_changeParams(this)->mSLNormalBckFrameDiff))
+			int frame = (i * getChangeParams()->getSLNormalBckFrameDiff())
 			            % bck->getEnd();
 			f32 texFrame = frame;
 			bck->setFrame(frame);
@@ -102,7 +61,7 @@ void TBossHanachan::setTumbleAnm(EnumBossHanachanStopMotionBlendOnOff blend)
 
 void TBossHanachan::setAnmTimerWhenGetUp()
 {
-	u8 delay = BHA_paramB(BHA_changeParams(this)->mSLGetUpFrameDiff);
+	u8 delay = getChangeParams()->getSLGetUpFrameDiff();
 	for (int i = 0; i < 8; ++i)
 		mBodies[7 - i]->unk10C = delay * i;
 	mHead->unk10C = delay * 8;
@@ -110,7 +69,7 @@ void TBossHanachan::setAnmTimerWhenGetUp()
 
 void TBossHanachan::setAnmTimerWhenSnort()
 {
-	u8 delay = BHA_paramB(BHA_changeParams(this)->mSLSnortFrameDiff);
+	u8 delay = getChangeParams()->getSLSnortFrameDiff();
 	mHead->unk10C = 0;
 	for (int i = 0; i < 8; ++i)
 		mBodies[i]->unk10C = delay * (i + 1);
@@ -118,7 +77,7 @@ void TBossHanachan::setAnmTimerWhenSnort()
 
 void TBossHanachan::setAnmTimerWhenDamage()
 {
-	u8 delay = BHA_paramB(BHA_changeParams(this)->mSLDamageFrameDiff);
+	u8 delay = getChangeParams()->getSLDamageFrameDiff();
 	for (int i = 0; i < 8; ++i)
 		mBodies[i]->unk10C = delay * CLBAbs(mWeakBodyIndex - i);
 	mHead->unk10C = delay * CLBAbs(mWeakBodyIndex + 1);
@@ -126,7 +85,7 @@ void TBossHanachan::setAnmTimerWhenDamage()
 
 void TBossHanachan::setAnmTimerWhenDead()
 {
-	u8 delay = BHA_paramB(BHA_changeParams(this)->mSLDeadFrameDiff);
+	u8 delay = getChangeParams()->getSLDeadFrameDiff();
 	for (int i = 0; i < 8; ++i)
 		mBodies[i]->unk10C = delay * CLBAbs(mWeakBodyIndex - i);
 	mHead->unk10C = delay * CLBAbs(mWeakBodyIndex + 1);
@@ -197,19 +156,19 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 {
 	bool changeRate = true;
 	f32 rate = SMSGetAnmFrameRate();
-	if (BHA_spine(this)->getLatestNerve() == &TNerveBossHanachanTumble::theNerve()) {
+	if (getSpine()->getLatestNerve() == &TNerveBossHanachanTumble::theNerve()) {
 		offHeadAndBodyNonstopMotionBlend_();
-		BHA_head(this)->changeTumbleAnmRate_();
+		getHead()->changeTumbleAnmRate_();
 		for (int i = 0; i < 8; ++i)
 			mBodies[i]->changeTumbleAnmRate_();
 		changeRate = false;
 	} else {
-		switch (BHA_head(this)->mCurrentAnm) {
+		switch (getHead()->mCurrentAnm) {
 		case BOSS_HANACHAN_ANM_UNK0:
 		case BOSS_HANACHAN_ANM_UNK1:
-			if (BHA_marchSpeed(this) <= BHA_paramF(BHA_changeParams(this)->mSLWalkAnmMarchSpeed)) {
+			if (getMarchSpeed() <= getChangeParams()->getSLWalkAnmMarchSpeed()) {
 				offHeadAndBodyNonstopMotionBlend_();
-				switch (BHA_head(this)->mCurrentAnm) {
+				switch (getHead()->mCurrentAnm) {
 				case BOSS_HANACHAN_ANM_UNK0:
 					break;
 				case BOSS_HANACHAN_ANM_UNK1:
@@ -222,9 +181,9 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 					                  BOSS_HANACHAN_STOP_MOTION_BLEND_ON);
 					break;
 				}
-			} else if (BHA_marchSpeed(this) >= BHA_paramF(BHA_changeParams(this)->mSLRunAnmMarchSpeed)) {
+			} else if (getMarchSpeed() >= getChangeParams()->getSLRunAnmMarchSpeed()) {
 				offHeadAndBodyNonstopMotionBlend_();
-				switch (BHA_head(this)->mCurrentAnm) {
+				switch (getHead()->mCurrentAnm) {
 				case BOSS_HANACHAN_ANM_UNK1:
 					break;
 				case BOSS_HANACHAN_ANM_UNK0:
@@ -238,12 +197,12 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 					break;
 				}
 			} else {
-				f32 ratio = CLBCalcRatio(BHA_paramF(BHA_changeParams(this)->mSLWalkAnmMarchSpeed),
-				                        BHA_paramF(BHA_changeParams(this)->mSLRunAnmMarchSpeed),
+				f32 ratio = CLBCalcRatio(getChangeParams()->getSLWalkAnmMarchSpeed(),
+				                        getChangeParams()->getSLRunAnmMarchSpeed(),
 				                        mMarchSpeed);
-				switch (BHA_head(this)->mCurrentAnm) {
+				switch (getHead()->mCurrentAnm) {
 				case BOSS_HANACHAN_ANM_UNK0:
-					if (BHA_head(this)->mPreviousAnm != BOSS_HANACHAN_ANM_UNK1) {
+					if (getHead()->mPreviousAnm != BOSS_HANACHAN_ANM_UNK1) {
 						setHeadAndBodyAnm(BOSS_HANACHAN_ANM_UNK1,
 						                  BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 						copyFrameFromOldAnmToNewAnm_();
@@ -252,7 +211,7 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 					setHeadAndBodyNonstopMotionBlendRatio_(ratio);
 					break;
 				case BOSS_HANACHAN_ANM_UNK1:
-					if (BHA_head(this)->mPreviousAnm == BOSS_HANACHAN_ANM_UNK0) {
+					if (getHead()->mPreviousAnm == BOSS_HANACHAN_ANM_UNK0) {
 						ratio = 1.0f - ratio;
 					} else {
 						setHeadAndBodyAnm(BOSS_HANACHAN_ANM_UNK0,
@@ -269,9 +228,9 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 				}
 			}
 			rate = mMarchSpeed * SMSGetAnmFrameRate()
-			       * BHA_changeParams(this)->mSLWalkBckRateMagnif.get();
-			if (rate < BHA_changeParams(this)->mSLWalkBckRateMin.get())
-				rate = BHA_changeParams(this)->mSLWalkBckRateMin.get();
+			       * getChangeParams()->mSLWalkBckRateMagnif.get();
+			if (rate < getChangeParams()->mSLWalkBckRateMin.get())
+				rate = getChangeParams()->mSLWalkBckRateMin.get();
 			break;
 		default:
 			offHeadAndBodyNonstopMotionBlend_();
@@ -279,10 +238,10 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 			break;
 		}
 	}
-	MActor* actor = BHA_head(this)->mMActor;
+	MActor* actor = getHead()->mMActor;
 	if (changeRate)
 		actor->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
-	BHA_head(this)->updateAnmSound();
+	getHead()->updateAnmSound();
 	actor->frameUpdate();
 	for (int i = 0; i < 8; ++i) {
 		MActor* actor = mBodies[i]->mMActor;

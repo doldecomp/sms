@@ -226,6 +226,19 @@ public:
 	/* 0x274 */ TParamRT<f32> mSLThrowSpeedMax;
 	/* 0x288 */ TParamRT<f32> mSLThrowMoveDirPower;
 	/* 0x29C */ TParamRT<f32> mSLThrowVecY;
+
+	// Fabricated per-field unwrappers. Their inline level is worth +24 of
+	// frame in TBossHanachan::changeAnmRateAndFrameUpdate_ over a raw
+	// `.get()`, which is how the set was chosen; mSLWalkBckRateMagnif and
+	// mSLWalkBckRateMin deliberately have none, because wrapping their three
+	// sites swaps the magnif/min float registers there.
+	f32 getSLWalkAnmMarchSpeed() const { return mSLWalkAnmMarchSpeed.get(); }
+	f32 getSLRunAnmMarchSpeed() const { return mSLRunAnmMarchSpeed.get(); }
+	u8 getSLNormalBckFrameDiff() const { return mSLNormalBckFrameDiff.get(); }
+	u8 getSLGetUpFrameDiff() const { return mSLGetUpFrameDiff.get(); }
+	u8 getSLSnortFrameDiff() const { return mSLSnortFrameDiff.get(); }
+	u8 getSLDamageFrameDiff() const { return mSLDamageFrameDiff.get(); }
+	u8 getSLDeadFrameDiff() const { return mSLDeadFrameDiff.get(); }
 };
 
 class TBossHanachanManager : public TEnemyManager {
@@ -290,6 +303,20 @@ public:
 	{
 		return mSpine->getLatestNerve();
 	}
+
+	// Fabricated accessors. Each is an inline level that
+	// changeAnmRateAndFrameUpdate_ needs and that a raw member read does not
+	// supply (measured from frame 0xc0 towards retail's 0x118:
+	// getChangeParams() +32 over its twelve sites, getHead() +24,
+	// getSpine() +8, getMarchSpeed() +8 at the two march-speed compares).
+	// TTinKoopa already carries exactly this getSpine().
+	TBossHanachanChangeSaveParams* getChangeParams() const
+	{
+		return mChangeParams;
+	}
+	TBossHanachanPartsHead* getHead() const { return mHead; }
+	TSpineBase<TLiveActor>* getSpine() const { return mSpine; }
+	f32 getMarchSpeed() const { return mMarchSpeed; }
 
 	void emitCamShake_();
 	void emitOneTimeSandPillar_(TBossHanachanPartsBody*);
