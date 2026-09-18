@@ -111,6 +111,22 @@ public:
 	const TCameraMapTool* getUnk70() const { return unk70; }
 	MtxPtr getUnk1EC() { return unk1EC; }
 	const JGeometry::TVec3<f32>& getUnk124() const { return unk124; }
+
+	// Fabricated name, real accessor: the game reads the camera position
+	// through a `Vec`-typed sibling of getUnk124() as well.  The whole game
+	// calls `JGeometry::TVec3<f32>::set(const Vec&)` out of line at exactly
+	// eight sites (lensflare x3, bosstelesa x2, sunmodel, CameraWarp,
+	// EventWatcher; header round 24), and that overload is only reachable
+	// when the argument is typed `Vec` -- a `const TVec3<f32>&` picks the
+	// `set<TY>` member template instead (see JGVec3.hpp).  Returning the
+	// base is also what makes a `const TVec3<f32>&` parameter take the
+	// converting constructor `TVec3(const Vec&)`, i.e. a stack temporary
+	// plus that out-of-line `set`, which is exactly what retail does at
+	// `TSunModel::moveSun_`'s scaleAdd call.  The TVec3-typed accessor
+	// above has to stay: `TMBindShadowManager::forceRequest` subtracts the
+	// camera position with lazy per-component loads and no temporary, which
+	// only the derived type gives.
+	const Vec& getUnk124Vec() const { return unk124; }
 	s16 getUnk258() const { return unk258; }
 	bool isThing() const
 	{

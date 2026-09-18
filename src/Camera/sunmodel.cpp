@@ -244,11 +244,12 @@ inline void TSunModel::moveSun_()
 		unkB0 = 0.0f;
 	} else {
 		f32 distSq = unkF8[0].squared();
-		if (unkF8[0].squared() > 2.0f) {
+		if (distSq > 2.0f) {
 			unkB0 = 0.0f;
 		} else {
-			unkB0 = CLBLinearInbetween<f32>(
-			    0.0f, (f32)unk80, 0.5f * (2.0f - distSq) * unk194);
+			f32 nearness = 2.0f - distSq;
+			unkB0        = CLBLinearInbetween<f32>(
+			           0.0f, (f32)unk80, 0.5f * nearness * unk194);
 		}
 	}
 
@@ -263,42 +264,36 @@ inline void TSunModel::moveSun_()
 	// `dir.sub(mPosition, camPos)` cannot do (it stores each component as
 	// soon as it is computed): the three differences are arguments of
 	// `set`, so they are all evaluated before the body runs.
-	const Vec& camPos = SMSGetCamera()->getUnk124();
 	JGeometry::TVec3<f32> dir;
-	dir.set(mPosition.x - camPos.x, mPosition.y - camPos.y,
-	        mPosition.z - camPos.z);
+	dir.set(mPosition.x - SMSGetCamera()->getUnk124().x,
+	    mPosition.y - SMSGetCamera()->getUnk124().y,
+	    mPosition.z - SMSGetCamera()->getUnk124().z);
 	MsVECNormalize(&dir, &dir);
 
-	// TODO: retail reaches `bl TVec3<f32>::set(const Vec&)` here (header
-	// round 24): the copy of the camera position is an out-of-line call,
-	// which a 3-statement in-class member only becomes at inline depth 4,
-	// and the argument is a `const Vec&`, not the `const TVec3<f32>&`
-	// that getUnk124() returns - so retail read the camera position
-	// through a Vec-typed accessor sitting three inline levels above this
-	// statement. Measured with a placeholder three-deep static-inline
-	// chain: this function goes 92.2% -> 97.4% with every instruction
-	// matching and only the 0x10 of low region the chain does not
-	// reserve left over (0xd0 against retail's 0xe0), so the shape is
-	// right but the accessor's real name and split are not recoverable
-	// yet. Two levels (set at depth 3) still inlines it: 95.1%.
-	// Closure batch 164: that chain does not survive moveSun_, so the two
-	// levels are not additive the way the depth table suggests.  With
-	// moveSun_ in place the statement already sits one expansion deep,
-	// and every further level measured *away* from the call rather than
-	// towards it: a TU-local `const Vec&` forwarder chain over
-	// SMSGetCamera()->getUnk124() (1/2/3 deep) gives 93.8/94.6/94.6%
-	// and never the `bl`; wrapping the three statements in one, two or
-	// three void static inlines gives 93.8/92.6/92.1%, and at three the
-	// outermost forwarder stops being inlined itself (its symbol is
-	// emitted), which is the chain breakdown the budget table warns
-	// about.  So the level retail used is *inside* the expression --
-	// something typed `Vec` reached through two more expansions -- not a
-	// wrapper around the statement.  The argument type is the whole
-	// reason the overload is `set(const Vec&)`: a `const TVec3<f32>&`
-	// picks the `set<TY>` member template instead (see JGVec3.hpp).
-	JGeometry::TVec3<f32> sunPos;
-	sunPos.set(SMSGetCamera()->getUnk124());
-	unk198.scaleAdd(250000.0f, sunPos, dir);
+	// Header round 30 closed this: the out-of-line `set(const Vec&)` is the
+	// *implicit* conversion at scaleAdd's `const TVec3<f32>&` parameter.
+	// `getUnk124Vec()` is typed `const Vec&`, so the argument takes the
+	// converting constructor `TVec3(const Vec&)`, which puts `set` at inline
+	// depth 4 (moveSun_ 1, scaleAdd 2, the constructor 3) - the depth at
+	// which a 3-statement in-class member stops expanding - and the
+	// constructor's stack temporary is the copy retail reads the three
+	// fmadds addends out of.  Everything from the `lfsu` through the last
+	// `stfs` is instruction-exact; only the displacements differ.
+	// The overload is the whole point: a `const TVec3<f32>&` binds directly
+	// (no temporary, no call) and `.set()` on a named local picks the
+	// `set<TY>` member template, which is why header round 24's forwarder
+	// chains never reached the `bl` (see the trial list in JGVec3.hpp).
+	// TODO: 8 bytes of frame left (0xe8 against retail's 0xe0), and retail
+	// allocates `mtx` *below* this expansion's locals (mtx 0x78, dir 0xa8,
+	// the temporary 0xb4) while ours allocates it above (dir 0x7c, temp
+	// 0x88, mtx 0x94, then 4 bytes of pad).  Declaring `mtx` at function
+	// scope and moving its declaration are both inert, as the rules card
+	// says block scope is; a level around the CUE_CALC_ANIM body is the
+	// untested reading.  Moving these statements out of moveSun_ into
+	// perform (with a one-statement level left behind for
+	// calcDispRatioAndScreenPos_) loses the `bl` again, because the
+	// conversion then sits at depth 3.
+	unk198.scaleAdd(250000.0f, SMSGetCamera()->getUnk124Vec(), dir);
 
 	if (unk64)
 		unk64->mPosition = unk198;
