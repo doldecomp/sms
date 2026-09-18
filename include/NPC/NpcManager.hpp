@@ -22,6 +22,12 @@ public:
 	SDLModelData* getPartsSDLModelData(const char*) const;
 
 public:
+	// TODO: names inferred, not from the map. clipEnemies' low region needs
+	// both of these reads to go through accessors.
+	f32 getUnk54() const { return unk54; }
+	const f32* getUnk58() const { return unk58; }
+
+public:
 	/* 0x54 */ f32 unk54;
 	/* 0x58 */ const f32* unk58;
 	/* 0x5C */ TModelDataKeeper* unk5C;
