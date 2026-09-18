@@ -316,6 +316,21 @@ void TMario::calcDamagePos(const JGeometry::TVec3<f32>& pos)
 //  - `animOffset1`'s materialised bool lands in r0 and is then `mr`ed into
 //    r31, where retail materialises straight into r31.
 //  - `mr r3, r24` against our `addi r3, r24, 0` at the `onYoshi()` call.
+// Batch note on the copy: the two copies are `operator*`'s by-value *parameter*
+// copy (0x94 -> 0x64) and its `return fst;` copy (0x64 -> 0xb8). The parameter
+// copy is constructed in MarioCollisionVecScaled's body and the return copy in
+// operator*'s, i.e. one level deeper, which is why we `bl` the second and
+// expand the first: at damageExec's site the chain is damageExec -> calcDamagePos
+// -> MarioCollisionVecScaled -> operator*, putting them at depths 3 and 4, and
+// only depth 4 is under the copy constructor's cost. Retail refuses both, so
+// the whole chain is one level deeper there -- but the level cannot go inside
+// MarioCollisionVecScaled or operator*, because the out-of-line calcDamagePos
+// (where everything is a level shallower) is already 0x18 *over* retail's
+// frame, not under it. Retail's out-of-line copy also puts 48 bytes between the
+// `sub` target (0x3c) and the isZero copy (0x6c) where we pack them 12 apart
+// (0x74, 0x80), so the two functions disagree about the pool and the level has
+// to come from something inside calcDamagePos that costs nothing when it is
+// emitted out of line.
 void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
                         int waterEmit, f32 knockbackSpeed, int rumbleFrames,
                         f32 pollutionAmount, s16 invincibilityFrames)
