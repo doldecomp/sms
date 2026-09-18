@@ -37,7 +37,8 @@
 #include "MoveBG/Pool.hpp"
 #include "MoveBG/WoodBarrel.hpp"
 #include <System/MarNameRefGen.hpp>
-#include <System/DummyStrings.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionManager.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 {
