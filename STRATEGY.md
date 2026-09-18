@@ -61,3 +61,8 @@ EOF
 - **Back up the branch.** All commits are local only; push to a fork.
 - **Review shared-code judgment calls** before more work builds on them: the water-hit field union, archive link order for duplicate globals, US-only paths in shared code, `TFootHitActor` in the shared boss header. Spot-check for fakematches.
 - **Upstream intent.** Upstream `doldecomp/sms` builds only `GMSJ01`/`GMSP01`. Upstreaming needs a Japanese image so header changes can be checked against it.
+
+## Timeline
+
+`docs/TIMELINE.md` is the run's progress history (per-commit snapshots, per-day rates, linear projections to full linking), rebuilt from git by `python3 tools/progress-timeline.py`.
+Refresh it together with `PROGRESS.md` after every landing.
