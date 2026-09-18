@@ -69,18 +69,26 @@ void TProgSelect::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		}
 
-		u32 prevSelection = mSelection;
-		if (mGamePad->checkFrameMeaning(0x8)) {
+		// TODO: 8 bytes of uninitialised local the compiled function never
+		// touches. Size (8), position (the named region, above
+		// prevSelection) and the fact that the only 8-byte concept in the
+		// block is the black/white colour pair passed to setBlackWhite are
+		// the whole of the evidence.
+		u32 black;
+		u32 white;
+
+		u32 prevSelection = getSelection();
+		if (getGamePad()->checkFrameMeaning(0x8)) {
 			if (mSelection) {
 				mSelection = 0;
 				unk128     = 0;
 			}
-		} else if (mGamePad->checkFrameMeaning(0x10)) {
+		} else if (getGamePad()->checkFrameMeaning(0x10)) {
 			if (mSelection != 1) {
 				mSelection = 1;
 				unk128     = 0;
 			}
-		} else if (mGamePad->checkFrameMeaning(0x20) || thing()) {
+		} else if (getGamePad()->checkFrameMeaning(0x20) || thing()) {
 			{
 				if (!mSelection) {
 #if defined(VERSION_GMSE01)

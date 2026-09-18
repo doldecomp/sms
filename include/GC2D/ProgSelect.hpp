@@ -13,6 +13,9 @@ public:
 
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 
+	TMarioGamePad* getGamePad() { return mGamePad; }
+	u8 getSelection() const { return mSelection; }
+
 	// fabricated
 	bool thing()
 	{
