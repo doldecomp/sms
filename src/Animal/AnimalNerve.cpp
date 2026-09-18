@@ -8,7 +8,41 @@
 #include <Camera/cameralib.hpp>
 #include <Strategic/Spine.hpp>
 
-f32 calcDist(const JGeometry::TVec3<f32>& a, const JGeometry::TVec3<f32>& b)
+// `inline`, not a plain function: the map's closure for AnimalNerve.o lists
+// exactly four weak duplicates (JGeometry::TUtil<f32>::sqrt, TPathNode::~TPathNode,
+// TNerveBase<TLiveActor>'s vtable and destructor) and nothing else, so whatever
+// computed these two distances left no symbol of its own. Plain and `static`
+// both emit a 0xac global the map has no room for; `inline` removes it with no
+// codegen change.
+//
+// TODO: this is still a reconstruction, and it is what makes
+// TNerveAnimalGraphWander::execute's frame 0x118 against the ROM's 0xe8. The
+// whole 48 bytes are inline-expansion parameter temporaries in the low region
+// -- all 334 instructions and the two `diff` vectors already match, and the
+// pool even ends up in the ROM's order. Measured levers, each with identical
+// instructions: actor->mMActor, ->mManager, ->mInstanceIndex, ->mActorType and
+// (TObjManager*)manager->getObj(i) are -8 each but saturate at -40 together;
+// raw manager->unk18[i] is -24; taking `a` by value or spelling diff.sub(b)
+// out per component is -8 each. unk18 + mMActor + mManager + mInstanceIndex +
+// mActorType + by-value `a` lands 0xe8 exactly with the pool in the ROM's
+// order, but leaves every slot 4 bytes high, and no -4 lever was found (a
+// split `int count; count = ...`, a split `save`, `mActor` or `hi`/`lo`
+// declaration are all worth zero), so that combination is not committed.
+//
+// Better lead for a header batch: JGeometry::TVec3<f32>::distance() has no
+// symbol anywhere in the map, and giving it this body --
+//   TVec3<f32> diff = *this; diff.sub(other); return TUtil<f32>::sqrt(diff.squared());
+// -- makes `actor->unkF4.getPoint().distance(actor->mPosition)` reproduce all
+// 334 instructions with no helper in this TU at all (frame 0x120; the current
+// scalar body gives frame 0xe8 exactly but 336 instructions). Retail's second
+// site is then literally TSpineEnemy::isReachedToGoal()'s body.
+//
+// Still open either way: retail holds `count` in r7 and the instance index in
+// r6 (ours are swapped) and keeps `other` in r27 where we reuse r28. No
+// spelling of the count/index/save locals, of `other`'s type, or of the
+// anmIdx/otherCtrl locals moves either.
+inline f32 calcDist(const JGeometry::TVec3<f32>& a,
+                    const JGeometry::TVec3<f32>& b)
 {
 	JGeometry::TVec3<f32> diff = a;
 	diff.sub(b);
