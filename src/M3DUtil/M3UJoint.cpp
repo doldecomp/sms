@@ -3,6 +3,24 @@
 #include <M3DUtil/M3UJoint.hpp>
 #include <JSystem/JMath.hpp>
 
+// TODO: 98.8%, frame 0x100 exact and all 233 instructions in the right order;
+// the only residue is a rotation of the callee-saved registers. Retail ranks
+// them r31 = &J3DSys::mCurrentS, r30 = &j3dSys.mModel, r29 = (u32)param_1,
+// r28 = basic, r27 = param_3, r26 = param_2, r25 = bVar5, r24 = pQuat; we agree
+// on r31 and r24 but put the j3dSys model address last (r25) and shift the
+// other five up one.
+// Diagnostic: `setScaleFlag(param_1, bVar5 != 0)` reproduces retail's ranking
+// exactly and leaves only the five bool-normalisation instructions it adds
+// (neg/subic/subfe plus the moved mScaleFlagArr load) -- so the body is right
+// and something about bVar5's live range is what orders the allocator. A
+// cheaper spelling of that extra step is the open question.
+// Measured as no improvement: j3dSys.mModel raw (98.5%), a J3DSys&/J3DSys*/
+// J3DModel*& /J3DModel** local for the model (95.9-96.1%), a TU-local
+// M3UGetModel() wrapper (unchanged), bool/u8 bVar5, an explicit (u8) cast on
+// the argument, declaring bVar5 at its initialiser, moving `currentS` first,
+// hoisting pQuat, a named copy of bVar5 or of the joint index, a named
+// J3DModel* before setScaleFlag, and spelling J3DSys::mCurrentS out instead of
+// the currentS reference (90.7%).
 void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
                         J3DTransformInfo* param_3, f32 param_4, bool basic)
 {
