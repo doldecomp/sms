@@ -35,6 +35,9 @@ public:
 
 	// fabricated
 	int getEventFlag() const { return unk2C; }
+	// The extra level in watch()'s SMS_ShowJoint argument is the 4 bytes of
+	// low region that put every one of that frame's slots at retail's offset.
+	J3DJoint* getJoint() { return unk20; }
 
 public:
 	/* 0x20 */ J3DJoint* unk20;

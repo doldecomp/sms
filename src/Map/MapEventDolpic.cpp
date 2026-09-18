@@ -125,7 +125,7 @@ bool TDolpicEventRiccoMammaGate::control()
 bool TDolpicEventRiccoMammaGate::watch()
 {
 	if (!TFlagManager::getInstance()->getBool(unk2C)) {
-		SMS_ShowJoint(unk20->getMesh(), true);
+		SMS_ShowJoint(getJoint()->getMesh(), true);
 		TMapObjBase::setJointScaleY(unk20, unk34);
 
 		TPosition3f mtx;
