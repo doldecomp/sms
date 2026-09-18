@@ -19,9 +19,9 @@ void TPerformList::forEachPerform(
 // reserve. forEachPerform's own out-of-line size is exact (0xa4), so the body
 // is right and the residue is entirely the call-site expansion.
 // Measured: getChildren() over begin()/end() directly is +24 (0xa8 -> 0xc0) and
-// nothing goes past 0xc0. Zero: getChildren() returning TPerformLinkList&, an
-// extra getChildren() forwarder level, begin()/end() forwarders on
-// TPerformLinkList, a while loop instead of the for. Rejected: (*it).perform()
+// nothing goes past 0xc0. Zero: getChildren() returning
+// TSingleLink<TPerformLink, 0>&, an extra getChildren() forwarder level,
+// begin()/end() forwarders on TSingleLink, a while loop instead of the for. Rejected: (*it).perform()
 // (-10%), named iterator locals for b/e (-26%), pre-increment (frame 0xb0).
 // A dead 36-40 byte non-trivial local (user ctor or dtor) in forEachPerform
 // lands 0xe8 exactly with perform still 54 instructions and forEachPerform

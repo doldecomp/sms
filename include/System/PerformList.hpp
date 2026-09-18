@@ -23,19 +23,8 @@ public:
 	/* 0x8 */ u32 mCueFilter;
 };
 
-// NOTE: fabricated name, but a class of this shape must exist. Two independent
-// results need one more class between TPerformList and TSingleNodeLinkList than
-// a direct derivation gives:
-//   * TPerformList::~TPerformList holds two nested `if (subobject != 0)` guards
-//     before it calls ~TSingleNodeLinkList, and MWCC emits exactly one guard
-//     per inlined destructor level;
-//   * TMarDirector::TMarDirector calls Initialize_ out of line five times, and
-//     Initialize_ is only pushed past the last inline pass with the extra
-//     level.
-// Both go to 100% with it.
-class TPerformLinkList : public JGadget::TSingleLinkList<TPerformLink, 0> { };
-
-class TPerformList : public JDrama::TViewObj, public TPerformLinkList {
+class TPerformList : public JDrama::TViewObj,
+                     public JGadget::TSingleLink<TPerformLink, 0> {
 public:
 	TPerformList() { }
 	TPerformList(const char* name)

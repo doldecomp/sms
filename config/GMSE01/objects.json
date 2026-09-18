@@ -79,6 +79,7 @@
   "Enemy/SleepBossHanachan.cpp",
   "Strategic/livemanager.cpp",
   "Strategic/objmanager.cpp",
+  "System/MarDirector.cpp",
   "System/MarDirectorCreateObjects.cpp",
   "System/TargetArrow.cpp",
   "Player/SplashManager.cpp",

@@ -162,6 +162,16 @@ public:
 	~TSingleLinkList() { }
 };
 
+// An empty layer above TSingleLinkList. Recovered from the map: MarDirector.cpp
+// dead-strips `__dt__Q27JGadget29TSingleLink<12TPerformLink,0>Fv` at 0x5c
+// alongside `__dt__Q27JGadget33TSingleLinkList<12TPerformLink,0>Fv` at 0x58,
+// so JGadget has both class templates over the same <T, I> and the larger
+// destructor is the derived one. TPerformList inherits this layer, which is
+// what makes TPerformList::~TPerformList hold two nested subobject guards and
+// pushes TSingleNodeLinkList::Initialize_ out of line in the TMarDirector
+// constructor (both 100% with it).
+template <class T, int I> class TSingleLink : public TSingleLinkList<T, I> { };
+
 } // namespace JGadget
 
 #endif

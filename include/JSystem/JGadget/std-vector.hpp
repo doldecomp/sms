@@ -403,7 +403,11 @@ public:
 	typedef T value_type;
 	typedef T* iterator;
 
-	TVector_pointer() { }
+	TVector_pointer(const JGadget::TAllocator<void*>& allocator
+	                = JGadget::TAllocator<void*>())
+	    : TVector_pointer_void(allocator)
+	{
+	}
 
 	~TVector_pointer() { }
 

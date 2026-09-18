@@ -11,26 +11,15 @@ static void dummy(Vec* v) { *v = (Vec) { 0.0f, 0.0f, 0.0f }; }
 void* gpSceneCmnDat;
 int gpSceneCmnDatSize;
 
-// TODO: blocked on one shared-header change in
-// include/JSystem/JGadget/std-vector.hpp. `JGadget::TVector_pointer<T>` should
-// carry the same ctor shape its list sibling already has:
-//
-//   TVector_pointer(const JGadget::TAllocator<void*>& allocator
-//                   = JGadget::TAllocator<void*>())
-//       : TVector_pointer_void(allocator) { }
-//
-// in place of `TVector_pointer() { }`. The default-argument
-// `TAllocator<void*>()` temporary is then built by the *caller*, one inline
-// level shallower, and lands on retail's 0x34 slot instead of 0x20 -- the only
-// difference left in this 892-byte constructor (frame 0x60 is already right).
-// Measured: with that header change this constructor and the whole unit reach
-// 100%, `TCubeManagerBase::TCubeManagerBase` 57.76 -> 57.93,
-// `TMarNameRefGen::getNameRef` 92.79 -> 92.81, no regressions, DOL unchanged.
-// Ruled out here: dropping `TVector_pointer() { }` for the implicit ctor (no
-// change), `unk88()` written first, last or in member order in the initialiser
-// list (no change), `new TPerformList()`, moving `unk88.reserve(100)` after
+// The `TAllocator<void*>()` default-argument temporary of
+// `JGadget::TVector_pointer`'s constructor is built by this caller, one inline
+// level shallower than a bare `TVector_pointer() { }` would put it, and so
+// lands on retail's 0x34 slot instead of 0x20 (frame 0x60 either way).
+// Ruled out here: dropping the declared ctor for the implicit one (no change),
+// `unk88()` written first, last or in member order in the initialiser list (no
+// change), `new TPerformList()`, moving `unk88.reserve(100)` after
 // `initLoadParticle()` (-1.5), an uninitialised body local. Declaring unk88 as
-// a bare `TVector_pointer_void` does put the temporary at 0x34, which is what
+// a bare `TVector_pointer_void` also puts the temporary at 0x34, which is what
 // identified the depth as the lever, but the map's UNUSED
 // `__dt__Q27JGadget27TVector_pointer<P8TBaseNPC>Fv` pins the real type.
 TMarDirector::TMarDirector()
