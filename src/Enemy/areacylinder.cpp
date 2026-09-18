@@ -11,24 +11,42 @@ TAreaCylinder::TAreaCylinder(const char* name)
 
 void TAreaCylinder::load(JSUMemoryInputStream& stream)
 {
+	// Declared as one block at the top, C style: MWCC reserves a frame slot
+	// for each scalar here even though two of them are never touched. Only
+	// their count (2), size (4 bytes each), position (between `rot` and
+	// `count`, at 0x74 and 0x70 of a 0xa0 frame) and class are recoverable
+	// from the binary -- a dead *pointer* local reserves nothing, so these
+	// two are scalars. The record's dropped scale.z and the dropped entry of
+	// the key table below are the plausible originals.
+	JGeometry::TVec3<f32> rot;
+	f32 unusedScaleZ;
+	s32 unusedKeyValue;
+	s32 count;
+
 	JDrama::TNameRef::load(stream);
 
-	JGeometry::TVec3<f32> v;
-
+	// Position, rotation and scale, as in every scene-binary record. The
+	// rotation is dropped, the scale's x and y become the cylinder's radius
+	// and height (scale 1.0 is 50 world units) and its z is read over the
+	// dead rotation z.
 	stream >> mPos.x >> mPos.y >> mPos.z;
-	stream >> v.x >> v.y >> v.z;
+	stream >> rot.x >> rot.y >> rot.z;
 	stream >> mRadius >> mHeight;
-	stream >> v.z;
+	stream >> rot.z;
 
 	mRadius *= 50.0f;
 	mHeight *= 50.0f;
 
 	stream.readString();
 
-	int count = stream.readS32();
-	for (int i = 0; i < count; ++i) {
-		f32 tmp;
-		stream >> tmp;
+	stream >> count;
+
+	// The ROM holds the bound in a callee-saved register across the body's
+	// calls, which an address-taken local cannot be: it was copied out of
+	// `count` first.
+	s32 num = count;
+	for (s32 i = 0; i < num; ++i) {
+		stream.readF32();
 		stream.readString();
 	}
 
@@ -41,9 +59,7 @@ void TAreaCylinder::load(JSUMemoryInputStream& stream)
 
 	mgr->registerCylinder(this);
 
-	s32 rate;
-	stream >> rate;
-	mProbability = (f32)rate / 100.0f;
+	mProbability = (f32)stream.readS32() / 100.0f;
 }
 
 void TAreaCylinder::perform(u32, JDrama::TGraphics*) { }
