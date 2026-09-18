@@ -248,7 +248,7 @@ public:
 	/* 0x2F8 */ TExPane* unk2F8;
 	/* 0x2FC */ JUTRect unk2FC;
 	/* 0x30C */ u8 unk30C;
-	/* 0x310 */ u32 unk310;
+	/* 0x310 */ int unk310;
 	/* 0x314 */ J2DPane* unk314[4];
 	/* 0x324 */ J2DPane* unk324;
 	/* 0x328 */ J2DPicture* unk328;

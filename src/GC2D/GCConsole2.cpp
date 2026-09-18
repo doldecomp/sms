@@ -94,7 +94,7 @@ static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
 }
 
 // fabricated
-static inline u32 getPressureFlashColor(u8 frame)
+static inline u32 getPressureFlashColor(int frame)
 {
 	u32 color = 0xff3f3f00;
 
@@ -104,7 +104,8 @@ static inline u32 getPressureFlashColor(u8 frame)
 	} else if (frame < 15) {
 		color = 0xffff0000;
 	} else if (frame < 25) {
-		u8 fade = 25 - frame;
+		// int, not u8: the ROM compares signed and converts with `xoris`.
+		int fade = 25 - frame;
 		color += ((u32)(s16)(s32)((f32)fade * -6.3f)) << 8;
 		color += ((u32)(s32)((f32)fade * 19.2f)) << 16;
 	}
@@ -120,31 +121,32 @@ static inline void updateWaterGaugeFill(TGCConsole2* console)
 	TNozzleBase* nozzle = waterGun->getCurrentNozzle();
 	s32 currentWater    = waterGun->mCurrentWater;
 	s32 maxWater        = nozzle->mEmitParams.mAmountMax.get();
-	u8 currentNozzle    = waterGun->mCurrentNozzle;
+	int currentNozzle   = waterGun->mCurrentNozzle;
 	f32 fill;
 
 	if (console->unk2F8->isInterpolatorAtZero() && !console->unk45
 	    && currentNozzle != console->unk310) {
 		console->unk274->getPane()->hide();
 		console->unk288->hide();
-		switch (currentNozzle) {
-		case TWaterGun::Spray:
+		// The ROM tests 0, 1, 4, 5 then 2 in that order with one `cmpwi`
+		// per value, so this is an if/else-if chain and not a switch, and
+		// the Hover and Underwater bodies are written out twice rather than
+		// sharing one arm.
+		if (currentNozzle == TWaterGun::Spray) {
 			console->unk274 = console->unk278[0];
 			console->unk288 = console->unk28C[0];
-			break;
-		case TWaterGun::Rocket:
+		} else if (currentNozzle == TWaterGun::Rocket) {
 			console->unk274 = console->unk278[2];
 			console->unk288 = console->unk28C[2];
-			break;
-		case TWaterGun::Hover:
-		case TWaterGun::Underwater:
+		} else if (currentNozzle == TWaterGun::Hover) {
 			console->unk274 = console->unk278[1];
 			console->unk288 = console->unk28C[1];
-			break;
-		case TWaterGun::Turbo:
+		} else if (currentNozzle == TWaterGun::Turbo) {
 			console->unk274 = console->unk278[3];
 			console->unk288 = console->unk28C[3];
-			break;
+		} else if (currentNozzle == TWaterGun::Underwater) {
+			console->unk274 = console->unk278[1];
+			console->unk288 = console->unk28C[1];
 		}
 		console->unk310 = currentNozzle;
 		console->unk274->getPane()->show();
@@ -1218,8 +1220,9 @@ static inline void updateShineAppearState(TGCConsole2* console)
 	if (!console->unk34)
 		return;
 
-	bool done = console->processAppearStar(console->unk5C);
-	done      = console->processDownCoin(console->unk5C) && done;
+	bool done = true;
+	done &= console->processAppearStar(console->unk5C);
+	done &= console->processDownCoin(console->unk5C);
 	if (done) {
 		int shines = TFlagManager::smInstance->getFlag(0x40000);
 		if ((int)console->unk24 != shines)
@@ -1321,8 +1324,11 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 // keeps the `bl`; one extra level is enough to push it back out of line.
 static inline void updateTankAppear(TGCConsole2* console)
 {
-	if (!console->unk46 && SMS_CheckMarioFlag(0x10000) && !console->unk45
-	    && !console->unk50)
+	// The ROM reads gpMarioOriginal->mFlag directly and tests 0x8000, not
+	// the 0x10000 bit through the SMS_CheckMarioFlag wrapper: the tank only
+	// comes up once Mario actually has FLUDD.
+	if (!console->unk46 && gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)
+	    && !console->unk45 && !console->unk50)
 		console->startAppearTank();
 }
 
@@ -2277,8 +2283,7 @@ void TGCConsole2::startDisappearTank()
 	unk4B = 1;
 	unk5A = 1;
 
-	int offset = 465 - unk2F8->mInitialBounds.y1;
-	offset += 60;
+	int offset = (465 - unk2F8->mInitialBounds.y1) + 60;
 	unk2F8->updatePaneOffset(40, 0, offset);
 
 	JUTPoint start(0, 0);
@@ -2288,6 +2293,16 @@ void TGCConsole2::startDisappearTank()
 	unk274->setPanePosition(40, start, mid, end);
 	unk270->setPanePosition(40, start, mid, end);
 	unk26C->setPanePosition(40, start, mid, end);
+
+	// The juice icon and the four juice-type panes only exist while Mario is
+	// riding Yoshi, so they go down with the tank. Without this tail the body
+	// is under MWCC's 15-statement floor and gets expanded at all three
+	// startCameraDemo() call sites, where the ROM keeps a `bl`.
+	if (gpMarioOriginal->mYoshi->onYoshi()) {
+		unk324->hide();
+		for (int i = 0; i < 4; ++i)
+			unk314[i]->hide();
+	}
 }
 
 void TGCConsole2::startAppearCoin()
