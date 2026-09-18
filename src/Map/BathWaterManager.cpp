@@ -1084,20 +1084,11 @@ public:
 		TProjection3f proj;
 		f32 meshWidth = unk80134->meshWidth.get();
 		f32 halfW     = 0.5f * meshWidth;
-		// TODO: JGProjection.hpp's orthographic() takes (t, b, l, r, n, f)
-		// like C_MTXOrtho, but the ROM evaluates the height-dependent
-		// argument before the width-dependent one. Arguments go right to
-		// left, so the real signature is (l, r, t, b, n, f) -- swapping it
-		// (and this call with it) takes prerender 85.3% -> 86.7% and fixes
-		// the fnmsubs/fmsubs signs of both pairs. Shared header, so it is
-		// only reported here. Its body also needs `+ n` on mMtx[0][3] and
-		// mMtx[1][3]: the ROM's fmadds adds the near literal to both, which
-		// is dead here because every caller passes 0.0f.
 		proj.orthographic(
-		    halfW,
-		    halfW - unk800B0 * (meshWidth * (f32)SMSGetGameRenderHeight()),
 		    -halfW,
 		    unk800B0 * (meshWidth * (f32)SMSGetGameRenderWidth()) - halfW,
+		    halfW,
+		    halfW - unk800B0 * (meshWidth * (f32)SMSGetGameRenderHeight()),
 		    0.0f, R3 - negR);
 
 		GXSetProjection(proj.mMtx, GX_ORTHOGRAPHIC);
