@@ -308,3 +308,132 @@ uninitialised non-trivial local emits nothing.
 - **A matching sibling is the best control for a slot-position gap**: `TRailMapObj::setGroundCollision` (exact, 0x50/0x18) vs `TRideCloud::setGroundCollision` (0x50/0x14) localises the missing slot to the guard's inlined accessor reads.
 - **Naming a value that lives across calls is a register-count fix**: `TGraphWeb* graph = unk138->getGraph()` reused for the second node fetch restored r28-r31 in `TRideCloud::control` (96.3 -> 99.8); re-reading after a call costs a load and a callee-saved register.
 - Steps measured: an `MSound` member accessor +8/site (`getModBgm()` parked in BossHanachanNerve, header item); `getConsole()` +8, `SMSGetMarDirector()` stacked +8, saturating at +0x10 for a one-site chain; `const TVec3&` member accessor +8; `TMapCollisionManager::getUnk8()` +8; `SMS_GetMarioX/Z` +8 (pair); `SMS_GetMarioAngleY()` +8 in the inlining caller, +0 in the callee. `sunmgr::load`: colour inputs declared in reverse read order so the reads go to ascending slots; still ~64 low. `sunmgr::perform`: a 48-byte uninitialised local (a scratch `Mtx`) gives 100% but nothing wants a matrix — left open. Open "last 8 bytes" members: `TNerveBossHanachanTumble::execute`, `calcSecureViewTarget_` (must be a trivial aggregate of its own body).
+
+## Closure batch 74: `MSound::startSoundActor` carries the sound-site 8 bytes
+
+`MSound::startSoundActor` (a header inline in `include/MSound/MSound.hpp`,
+marked *fabricated*) holds **one small stack object**.
+The map has no `startSoundActor__6MSound...` symbol at all — consistent with a
+header inline that inlined at every site and so never got an out-of-line weak
+copy, exactly like `MSound::startSoundSystemSE` and `startSeRandPlay`.
+So the object is invisible to `validate-symbol-order` and can only be measured.
+
+The honest spelling is a **named local carrying the callee's return value**.
+`MSoundSESystem::MSoundSE::startSoundActor` really does return `JAISound*`
+(`include/MSound/MSoundSE.hpp`), so a wrapper that hands the handle back is what
+a developer would have written:
+
+```cpp
+JAISound* startSoundActor(u32 id, const Vec* position, u32 ground_no,
+                          JAISoundHandle* out_handle, u32 fade, u8 camera_idx)
+{
+	JAISound* sound = nullptr;
+	if (gateCheck(id))
+		sound = MSoundSESystem::MSoundSE::startSoundActor(
+		    id, position, ground_no, out_handle, fade, camera_idx);
+	return sound;
+}
+```
+
+Measured project-wide, each variant against one fixed baseline, counting
+per-function `fuzzy_match` moves (the whole tree, not one unit):
+
+| variant inside `MSound::startSoundActor` | improved | to 100% | regressed | from 100% | `matched_code` |
+| --- | --- | --- | --- | --- | --- |
+| unchanged (reference) | - | - | - | - | 47.78% |
+| 8-byte non-trivial local | 85 | 59 | 34 | 14 | 48.10% |
+| two 4-byte non-trivial locals | 85 | 59 | 34 | 14 | 48.10% |
+| 8-byte non-trivial local, inside the `if` | 85 | 59 | 34 | 14 | 48.10% |
+| 12-byte non-trivial local | 58 | 37 | 33 | 14 | 48.00% |
+| 4-byte non-trivial local (dtor only) | 54 | 38 | 11 | 2 | 48.04% |
+| 4-byte non-trivial local (default ctor only) | 54 | 38 | 10 | 2 | 48.04% |
+| 4-byte non-trivial local, inside the `if` | 54 | 38 | 11 | 2 | 48.04% |
+| 4-byte non-trivial local, declared last | 54 | 38 | 11 | 2 | 48.04% |
+| **named `JAISound*` result, returned** | **54** | **38** | **10** | **2** | **48.04%** |
+| named `JAISound*` result, discarded inside the `if` | 54 | 38 | 10 | 2 | 48.04% |
+| `return` inside the `if`, no named local | 0 | 0 | 0 | 0 | 47.78% |
+| 8-byte **trivial** POD local | 0 | 0 | 0 | 0 | 47.78% |
+
+What the table settles:
+
+- **The named local is the slot, not the return type.** Spelling the wrapper
+  `if (gateCheck(id)) return MSoundSE::startSoundActor(...); return nullptr;`
+  is worth **zero** everywhere. Only binding the result to a local reserves
+  anything. This generalises the "named call result is 16" rule from `bombhei`
+  down to 4 bytes: the cost is the *binding*, and a pointer binding that is live
+  across a branch merge is not free even though a plain named pointer is.
+- **The object is 4 bytes, not 8.** A 4-byte object lands as +8 in callers with
+  no low-region slack and +0 in callers that have four spare bytes; an 8-byte
+  object costs +8 in *every* caller. 8 bytes closes 21 more callers but breaks
+  12 more, so 4 is the fit.
+- **The raw spelling is a different frame.** `if (gpMSound->gateCheck(id))
+  MSoundSESystem::MSoundSE::startSoundActor(...)` spelled out at the call site
+  is +0 (measured on `TDebuTelesa::receiveMessage`). A site's frame therefore
+  tells you which of the two spellings retail used, and it is the only evidence
+  that does.
+
+### Which spelling each site wants
+
+38 functions go to 100% with the wrapper form, among them
+`TDebuTelesa::receiveMessage` (which makes `DebuTelesa` a 100/100 unit),
+`THamuKuri::behaveToFindMario`, `THaneHamuKuri::attackToMario`,
+`TFireHamuKuri::changeTevColor`, `THinokuri2::updateAnmSound`,
+`TStayPakkun::setBehavior`, `TSmallEnemy::setAfterDeadEffect` and
+`generateEffectColumWater`, `TTelesa::changeByJuice` and `initItemAttacker`,
+`TFireWanwan::receiveMessage`, `TTobiPuku::behaveToWater`, `TMoePuku::hitWater`,
+`TGorogoro::setDeadAnm`, `TTamaNoko::setAfterDeadEffect`,
+`TBombHei::walkBehavior`, `TNerveKazekunHitWater::execute`,
+`TNerveAnimalBirdTakeoff::execute`, `TNerveBeeHiveFall::execute`,
+`TGessoPolluteObj::calcRootMatrix`, `TWoodBarrel::appear`,
+`TMapObjBase::startSound`, `TItem::appeared`, `TSuperHipDropBlock::receiveMessage`,
+`TRoulette::switchStop`, `TPanelRevolve::receiveMessage`,
+`TBalloonKoopaJr::kill`, `TMareCork::drawObject`, `TBigWatermelon::touchWaterSurface`,
+`TBellDolpic::control`, `TDptMonteFence::touchPlayer`, `TMareGate::control`,
+`TMapObjNail::receiveMessage`, `TBreakHideObj::receiveMessage` and
+`TMario::stayWall`.
+
+Ten functions want the **raw** spelling and regress under the wrapper form.
+Two of them are currently exact, so the change cannot land until they are
+converted:
+
+| function | file | pre-change |
+| --- | --- | --- |
+| `TNerveKazekunPreAttack::execute` | `src/Enemy/Kazekun.cpp:531` | 100% |
+| `TMapEventSink::control` | `src/Map/MapEventSink.cpp:106` | 100% |
+| `TMareEventDepressWall::depressing` | `src/Map/MapEventMare.cpp:325,356` | 99.94% |
+| `THaneHamuKuri::walkBehavior` | `src/Enemy/hamukuri.cpp:1490` | 99.90% |
+| `THamuKuri::jumpToSearchActor` | `src/Enemy/hamukuri.cpp:824` | 99.78% |
+| `TEffectObjBase::moveObject` | `src/Enemy/effectObj.cpp:149` | 98.84% |
+| `TMario::oilSlip` | `src/Player/MarioRun.cpp` | 98.49% |
+| `TYoshiTongue::movement` | `src/Player/Tongue.cpp:307` | 78.32% |
+| `TItemManager::resetNozzleBoxesModel` | `src/MoveBG/ItemManager.cpp:34` | 78.57% |
+| `TBossTelesa::forceHide` | `src/Enemy/bosstelesa.cpp:2121,2124` | 49.63% |
+
+Conversely `TEffectEnemy::setDeadAnm` and
+`TBossHanachan::emitOneTimeSandPillar_` currently spell the gate check out and
+are 8 bytes short, so they want the **wrapper**; switching them and landing the
+wrapper closes both, and `setDeadAnm`'s fabricated `JGeometry::TVec3<f32>
+effectPos` should be deleted in the same move.
+
+**Why this batch did not land it.** Reaching zero regressions needs those ten
+conversions, and four of the TUs involved (`hamukuri`, `MapEventMare`,
+`Tongue`, `MarioRun`) do not yet include `MSound/MSoundSE.hpp`; adding a header
+to a TU perturbs BSS and static-init order, so each has to be converted and
+re-measured on its own. The header edit alone is +54/-10 and must not be
+committed by itself.
+
+### Problem B addendum: the Animal `loadAfter` carrier is not `MSRandPlay`
+
+`MSoundSESystem::MSRandPlay::registerTrans(u32, const Vec*)` (0x54) and
+`createRandPlayVec(u32, u16)` (0xa4) are both **emitted, matching, out-of-line
+statics** reached by a real `bl` in all four `loadAfter` diffs, so neither can
+hold the dead 12-byte local itself — the same "carrier has to be a callee with
+no matching out-of-line copy" test that killed `TPollutionPos::worldToDepth`.
+The carrier must be a wrapper that inlines everywhere and so leaves no map
+symbol, like `MSound::startSoundActor` above. The Animal TUs' weak lists
+(`AnimalBase.cpp`, `Bird.cpp`, `AnimalManager.cpp`) contain no `MSRandPlay`- or
+sound-related entry, so the map cannot name it either.
+New lead from this batch: since a *named* local reserves a slot with zero
+instructions, the Animal carrier's 12 bytes need not be an explicitly dead
+object — a named by-value 12-byte result inside such a wrapper would read the
+same. Untested.

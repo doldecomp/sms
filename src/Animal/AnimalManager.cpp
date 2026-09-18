@@ -83,6 +83,12 @@ void TMewManager::load(JSUMemoryInputStream& stream)
 // getObjNum()/getCapacity()/a named u16/an explicit (u16) cast, inline forwarder
 // levels above TNameRef::loadAfter, 1-/2-/3-parameter inline wrappers with no
 // local, and argument-count effects on the outgoing parameter area.
+// Batch 74 narrowed the carrier: registerTrans and createRandPlayVec are both
+// emitted, matching out-of-line statics reached by a real bl, so neither can
+// hold the local itself -- it has to sit in a wrapper that inlines everywhere
+// and leaves no map symbol, and the Animal TUs' weak lists name no candidate.
+// See docs/catalog/frame-gaps.md, "Problem B addendum", for the new lead: a
+// named by-value 12-byte result reserves a slot just like a dead local does.
 void TMewManager::loadAfter()
 {
 	TAnimalManagerBase::loadAfter();

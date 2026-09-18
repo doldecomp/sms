@@ -120,6 +120,15 @@ void TBossHanachan::emitParticle_()
 	}
 }
 
+// TODO: 99.9%, frame 0x38 vs retail 0x40; all 77 instructions match and every
+// r1 displacement in retail is 8 higher, so the residue is one small object at
+// the bottom of the local area. Batch 74 traced it to MSound::startSoundActor:
+// retail called that wrapper here rather than spelling the gate check out, and
+// the wrapper bound the callee's JAISound* return to a named local. Switch the
+// tail below to `gpMSound->startSoundActor(0x2884, &mSandPillarPosition, 0,
+// nullptr, 0, 4)` once the header change lands (it needs ten other call sites
+// converted to the raw spelling first). See docs/catalog/frame-gaps.md,
+// "Closure batch 74".
 void TBossHanachan::emitOneTimeSandPillar_(TBossHanachanPartsBody* part)
 {
 	onLiveFlag(0x10000);
