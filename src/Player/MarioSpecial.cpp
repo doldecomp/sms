@@ -1396,7 +1396,7 @@ BOOL TMario::fenceMove()
 			newPos.y
 			    += 0.015625f * unk108->mStickV * mJumpParams.mFenceSpeed.get();
 
-			s16 camDelta = mFaceAngle.y - gpCamera->unk258;
+			s16 camDelta = mFaceAngle.y - SMSGetCamera()->unk258;
 			f32 normX, normZ;
 			if (camDelta > -0x4000 && camDelta < 0x4000) {
 				normZ = wall->mNormal.z;

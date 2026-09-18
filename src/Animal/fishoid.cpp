@@ -151,8 +151,8 @@ void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
 
 void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 {
-	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
-	                                   gpCamera->getAspect(),
+	SetViewFrustumClipCheckPerspective(SMSGetCamera()->getFovy(),
+	                                   SMSGetCamera()->getAspect(),
 	                                   graphics->getNearPlane(), 10000.0f);
 
 	for (int i = 0; i < unk150->getBoidNum(); ++i) {

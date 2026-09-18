@@ -681,7 +681,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 				}
 			}
 		}
-		gpCamera->startDemoCamera(pcVar8, nullptr, -1, 0.0f, true);
+		SMSGetCamera()->startDemoCamera(pcVar8, nullptr, -1, 0.0f, true);
 		if (unk50 & 4) {
 			mConsole->unk94->startAppearScenario();
 			unk50 &= ~0x4;
@@ -939,7 +939,7 @@ u8 TMarDirector::updateGameMode()
 			bVar5  = true;
 			offUnk4CFlag(0x80);
 		} else {
-			if (!gpCamera->getRestDemoFrames()) {
+			if (!SMSGetCamera()->getRestDemoFrames()) {
 				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 1200) {
 					bVar5  = true;
 					uVar15 = unk12C[unk24D].unk10;
@@ -952,21 +952,22 @@ u8 TMarDirector::updateGameMode()
 			unk24D &= 0x7;
 			TDemoInfo* info = &unk12C[prev];
 			if (unk24D != unk24C) {
-				gpCamera->endDemoCamera();
+				SMSGetCamera()->endDemoCamera();
 				if (info->unk14 != nullptr)
 					(*info->unk14)(info->unk18, 1);
 
 				// The camera that starts is the one the *new* index names.
 				info = &unk12C[unk24D];
-				gpCamera->startDemoCamera(info->unk0, info->unk4, info->unk8,
-				                          info->unkC, info->unk10);
+				SMSGetCamera()->startDemoCamera(info->unk0, info->unk4,
+				                                info->unk8, info->unkC,
+				                                info->unk10);
 				if (info->unk14 != nullptr)
 					(*info->unk14)(info->unk18, 0);
 			} else {
 				offUnk4CFlag(0x40);
 				unk126 = unk124 == 4 ? 2 : 0;
 				if (uVar15 != 0)
-					gpCamera->endDemoCamera();
+					SMSGetCamera()->endDemoCamera();
 				if (info->unk14 != nullptr)
 					(*info->unk14)(info->unk18, 1);
 			}
@@ -1025,11 +1026,12 @@ u8 TMarDirector::updateGameMode()
 				MSMainProc::toInnerCameraDemo();
 			unk18[0]->mFlags |= 0x10;
 			if (unk12C[unk24D].unk20.mValue == 1) {
-				gpCamera->startGateDemoCamera(unk12C[unk24D].unk1C);
+				SMSGetCamera()->startGateDemoCamera(unk12C[unk24D].unk1C);
 			} else {
 				TDemoInfo* info = &unk12C[unk24D];
-				gpCamera->startDemoCamera(info->unk0, info->unk4, info->unk8,
-				                          info->unkC, info->unk10);
+				SMSGetCamera()->startDemoCamera(info->unk0, info->unk4,
+				                                info->unk8, info->unkC,
+				                                info->unk10);
 				if (info->unk14 != nullptr)
 					(*info->unk14)(info->unk18, 0);
 			}

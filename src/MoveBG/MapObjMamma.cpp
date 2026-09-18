@@ -1255,7 +1255,7 @@ void TSandBird::control()
 	}
 
 	bool demo = true;
-	if (!gpCamera->isSimpleDemoCamera() && gpCamera->mMode != 0x49)
+	if (!SMSGetCamera()->isSimpleDemoCamera() && SMSGetCamera()->mMode != 0x49)
 		demo = false;
 
 	if (!demo && !mHelpShown) {

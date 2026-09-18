@@ -289,9 +289,9 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 		// gpCamera after isNowInbetween() is the tell that every term reads
 		// the global again.
 		if (gpCamera->isDemoCamera()
-		    || gpCamera->mMode == CAMERA_MODE_UNDER_GROUND
-		    || (gpCamera->mPrevMode == CAMERA_MODE_UNDER_GROUND
-		        && (gpCamera->isNowInbetween()
+		    || SMSGetCamera()->mMode == CAMERA_MODE_UNDER_GROUND
+		    || (SMSGetCamera()->mPrevMode == CAMERA_MODE_UNDER_GROUND
+		        && (SMSGetCamera()->isNowInbetween()
 		            || gpCamera->mMode == CAMERA_MODE_JUMP_CODE)))
 			if (farClip < 15000.0f)
 				farClip = 15000.0f;

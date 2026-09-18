@@ -284,8 +284,8 @@ void TPakkunManager::clipEnemies(JDrama::TGraphics* graphics)
 		clipRadius = unk38->mSLClipRadius.get();
 	}
 
-	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
-	                                   gpCamera->getAspect(),
+	SetViewFrustumClipCheckPerspective(SMSGetCamera()->getFovy(),
+	                                   SMSGetCamera()->getAspect(),
 	                                   graphics->mNearPlane, farClip);
 
 	for (int i = 0; i < getObjNum(); i++) {

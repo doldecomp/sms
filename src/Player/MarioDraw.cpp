@@ -469,9 +469,10 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 	if (param_2 == 0) {
 		TMario* mario = gpMarioForCallBack;
 		s16* bodyAngle = mario->unkFC;
-		if (mario == gpMarioOriginal && gpCamera->isLButtonCamera() == true
+		if (mario == gpMarioOriginal
+		    && SMSGetCamera()->isLButtonCamera() == true
 		    && gpMarioForCallBack->canBendBody() != 0
-		    && gpCamera->mCurrentTarget.mPitch > 0) {
+		    && SMSGetCamera()->mCurrentTarget.mPitch > 0) {
 			bodyAngle[0] = gpCamera->mCurrentTarget.mPitch;
 			Mtx transform;
 			s16 waistPitch = -bodyAngle[2];

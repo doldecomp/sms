@@ -229,11 +229,11 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 		CLBChaseGeneralConstantSpecifySpeed<f32>(&unkAC, unkB0, chase3);
 
 		JGeometry::TVec3<f32> dir;
-		dir.sub(mPosition, gpCamera->getUnk124());
+		dir.sub(mPosition, SMSGetCamera()->getUnk124());
 		MsVECNormalize(&dir, &dir);
 
 		JGeometry::TVec3<f32> camPos;
-		camPos.set(gpCamera->getUnk124());
+		camPos.set(SMSGetCamera()->getUnk124());
 		unk198.scaleAdd(250000.0f, camPos, dir);
 
 		if (unk64)
