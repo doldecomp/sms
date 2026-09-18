@@ -115,31 +115,37 @@ void TChuuHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// Hint balloons: standing on a panel long enough, a tackle, repeated
 	// stretches and the first flip each get one.
+	// TODO: 99.9%.  Instruction-identical; the low region is 0x18 short at
+	// 0x68.  Each console accessor level is worth 8 bytes per site
+	// (gpMarDirector->mConsole 0x38, ->getConsole() 0x58,
+	// SMSGetMarDirector()->getConsole() 0x68), so the residue is not a
+	// uniform per-site level and something else here binds temporaries.
 	if (cue & CUE_CALC_ANIM) {
 		if (SMS_GetMarioGrPlane()->getActor()
-		    && SMS_GetMarioGrPlane()->getActor()->isActorType(0x400000CF)) {
+		    && SMS_GetMarioGrPlane()->getActor()->getActorType()
+		        == 0x400000CF) {
 			if (unk60 < 900) {
 				unk60++;
 				if (unk60 == 900)
-					gpMarDirector->mConsole->startAppearBalloon(0x2E, true);
+					SMSGetMarDirector()->getConsole()->startAppearBalloon(0x2E, true);
 			}
 		}
 
 		if (unk68 >= 60 && unk68 < 80) {
 			unk60 = 1000;
 			unk68 = 80;
-			gpMarDirector->mConsole->startAppearBalloon(0x2F, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0x2F, true);
 		}
 
 		if (unk6C == 5 || unk6C == 10) {
 			unk6C++;
-			gpMarDirector->mConsole->startAppearBalloon(0x31, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0x31, true);
 		}
 
 		if (unk70 == 1) {
 			unk70++;
 			unk68 = 80;
-			gpMarDirector->mConsole->startAppearBalloon(0x30, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0x30, true);
 		}
 	}
 
@@ -589,7 +595,7 @@ void TChuuHana::calcRootMatrix()
 	}
 
 	// Footsteps on frame 2 of the walk cycle.
-	if (mCurrentBckAnm == 6 && getMActor()->getFrameCtrl(0)->checkPass(2.0f)) {
+	if (isBckAnm(6) && getMActor()->getFrameCtrl(0)->checkPass(2.0f)) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    0x54, getMActor()->getModel()->getAnmMtx(mBodyJntIndex), 0,
 		    nullptr);
