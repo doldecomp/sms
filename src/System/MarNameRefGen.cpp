@@ -11,6 +11,13 @@
 // them; parked so the leading .rodata block lines up.
 #include <Player/MarioDirtyStrings.hpp>
 
+// The 12-byte zero and one vectors that MapCollisionEntry.hpp's setUpTrans
+// parks in .rodata, plus the MSound pair that supplies the fifteen 12-byte
+// .bss nodes and the 764-byte __sinit.
+#include <Map/MapCollisionManager.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
 #include <JSystem/JDrama/JDRSmJ3DScn.hpp>
 #include <System/StageEventInfo.hpp>
 #include <System/TalkCursor.hpp>
@@ -40,7 +47,10 @@
 #include <GC2D/Guide.hpp>
 #include <GC2D/SunGlass.hpp>
 #include <Map/MapMirror.hpp>
+#include <Map/MapEventDolpic.hpp>
+#include <Map/MapEventMare.hpp>
 #include <Map/MapEventSink.hpp>
+#include <Map/MapEventSirena.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/EffectObj.hpp>
 #include <Enemy/AreaCylinder.hpp>
@@ -200,8 +210,13 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "Guide") == 0)
 		return new TGuide;
 
+	// TODO: the map emits TSunGlass's in-class constructor as a weak 0xb0
+	// body in this TU and *calls* it here, so MWCC refused the expansion.
+	// We expand it. Same shape as TTelesaSlot in MarNameRefGen_MapObj: both
+	// refused callees are in-class bodies whose generated form is ~40
+	// instructions, which is the only property they share.
 	if (strcmp(name, "SunGlass") == 0)
-		return new TSunGlass(JUtility::TColor(0, 0, 0, 80));
+		return new TSunGlass(JUtility::TColor(0, 0, 0, 80), "<SunGlass>");
 
 	if (strcmp(name, "SunShine") == 0)
 		return new TSunShine;
@@ -261,28 +276,26 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "MapEventSinkShadowMario") == 0)
 		return new TMapEventSinkShadowMario;
 
-	// TODO:
-	// if (strcmp(name, "MapEventSirenaSink") == 0)
-	// 	return new TMapEventSirenaSink;
+	if (strcmp(name, "MapEventSirenaSink") == 0)
+		return new TMapEventSirenaSink("ホテル沈む");
 
 	if (strcmp(name, "MapEventSinkBianco") == 0)
 		return new TMapEventSinkBianco;
 
-	// TODO:
-	// if (strcmp(name, "DolpicEventBiancoGate") == 0)
-	// 	return new TDolpicEventBiancoGate;
+	if (strcmp(name, "DolpicEventBiancoGate") == 0)
+		return new TDolpicEventBiancoGate("イベント（ビアンコゲート）");
 
-	// if (strcmp(name, "DolpicEventRiccoGate") == 0)
-	// 	return new TDolpicEventRiccoMammaGate;
+	if (strcmp(name, "DolpicEventRiccoGate") == 0)
+		return new TDolpicEventRiccoMammaGate("イベント（リコ、マンマゲート）");
 
-	// if (strcmp(name, "DolpicEventMammaGate") == 0)
-	// 	return new TDolpicEventRiccoMammaGate;
+	if (strcmp(name, "DolpicEventMammaGate") == 0)
+		return new TDolpicEventRiccoMammaGate("イベント（リコ、マンマゲート）");
 
-	// if (strcmp(name, "MareEventBumpyWall") == 0)
-	// 	return new TMareEventBumpyWall;
+	if (strcmp(name, "MareEventBumpyWall") == 0)
+		return new TMareEventBumpyWall("凸凹壁");
 
-	// if (strcmp(name, "MareEventWallRock") == 0)
-	// 	return new TMareEventWallRock;
+	if (strcmp(name, "MareEventWallRock") == 0)
+		return new TMareEventWallRock("イベント（マーレ壁の岩）");
 
 	if (strcmp(name, "StageEnemyInfoHeader") == 0)
 		return new TStageEnemyInfoTable;
