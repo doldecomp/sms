@@ -634,7 +634,7 @@ void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 	SMS_SendMessageToMario(param_2, 0x7);
 
 	SMS_ThrowMario(local_e0, 3.21875f);
-	mOwner->showMessage(0xE0005);
+	mOwner->showMessage(5);
 	mOwner->stopIfRoll();
 }
 
