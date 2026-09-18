@@ -16,6 +16,7 @@ void SMS_InitPacket_ThreeTevColor(J3DModel*, u16, GXTevRegID, const GXColorS10*,
                                   GXTevRegID, const GXColorS10*, GXTevRegID,
                                   const GXColorS10*);
 void SMS_InitPacket_CallDL(J3DModel*, u16, u8*, u32);
+void SMS_InitPacket_CallDL(J3DModel*, u16, u8*, u32);
 void SMS_InitPacket_Fog(J3DModel*, u16);
 void SMS_InitPacket_OneTevKColor(J3DModel*, u16, GXTevKColorID, const GXColor*);
 void SMS_InitPacket_TwoTevKColor(J3DModel*, u16, GXTevKColorID, const GXColor*,
