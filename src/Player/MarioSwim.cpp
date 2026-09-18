@@ -358,7 +358,7 @@ BOOL TMario::swimMain()
 	unk2A8.y = mFloorPosition.z;
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
-		if (MarioSwimGetStatus(this) != MARIO_STATUS_SWIM_PADDLE_START
+		if (getStatus() != MARIO_STATUS_SWIM_PADDLE_START
 		    && getStatus() != MARIO_STATUS_SWIM_PADDLE)
 			return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 
