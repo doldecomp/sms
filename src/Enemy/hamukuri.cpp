@@ -194,12 +194,15 @@ void THamuKuriManager::loadAfter()
 	}
 }
 
+// TODO: both of these lists are dead in retail too (the strings survive in
+// .rodata with nothing referencing them), so only their position is known.
+// The map's ids pin it: "hamukuri_walk"/"hamukuri_run" are @3024/@3025,
+// THamuKuriManager::createModelData's "default.bmd" is @3042 and
+// "hanekuri_wait" is @3102, so the hanekuri name is requested by a separate
+// construct further down the file.
 static const char* anmlist[] = {
 	"hamukuri_walk",
 	"hamukuri_run",
-	// TODO: this shouldn't be here but rodata ordering looks like it should?!
-	// "default.bmd",
-	"hanekuri_wait",
 };
 
 void THamuKuriManager::createModelData()
@@ -349,6 +352,10 @@ TSpineEnemy* THaneHamuKuriManager::createEnemyInstance()
 {
 	return new THaneHamuKuri;
 }
+
+static const char* hanekuriAnmList[] = {
+	"hanekuri_wait",
+};
 
 void THaneHamuKuriManager::createModelData()
 {
