@@ -60,7 +60,34 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					    currMtx[0][1], currMtx[1][1], currMtx[2][1]);
 					MsVECNormalize(&toMario, &toMario);
 
-					local_148 = MsGetRotFromZaxis(toMario)
+					// The const reference is load-bearing: JGVec3's
+					// `operator-` takes its left operand *by value*, and
+					// MWCC donates a temporary straight into that parameter
+					// slot, subtracting in place. Binding the temporary to a
+					// reference makes the left operand an lvalue, so the
+					// by-value copy is emitted (retail's three-word copy at
+					// 0x78 ahead of the `bl sub`) and the result is copied
+					// out afterwards (96.0 -> 98.3). Rejected: a named
+					// TVec3 for the difference or for the left operand (each
+					// adds a second copy, 271/274 instructions vs 267), and a
+					// TU-local const-reference subtraction helper (inlines
+					// `sub` away, 285).
+					// TODO: what remains is a 24-byte frame gap (0x178 vs
+					// 0x190; 24 bytes of padding gives the exact frame with
+					// no instruction change) and one GPR permutation that
+					// survives it: retail keeps gpCurrentNpc in r5 and the
+					// joint index in r0, we use r6 and r4, and retail emits
+					// `li r30, 0` before the isNeedNeckStraight receiver
+					// copy. Our temporaries are contiguous (rot 0xb0, the
+					// operator- copy 0xbc, rot 0xc8, the scratch Mtx 0xd4)
+					// where retail spreads them (0x78 copy, 0xcc/0xd8 rots,
+					// 0xf0 Mtx), so the missing 24 bytes are in that
+					// expansion region. A parked accessor for
+					// mIndividualProps overshoots to 0x1d8 and changes
+					// instructions.
+					const JGeometry::TVec3<f32>& rotToMario
+					    = MsGetRotFromZaxis(toMario);
+					local_148 = rotToMario
 					            - MsGetRotFromZaxis(neckForward);
 				} else {
 					local_148.zero();
