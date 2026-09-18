@@ -40,6 +40,12 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 	} else {
 		bool bVar6 = false;
 		bool bVar5 = false;
+		// TODO: retail `bl`s TGraphTracer::getCurGraphIndex and ::getGraph
+		// inside this first site (and reloads `0x124(r31)` between them
+		// because of the calls) while expanding both of them at the
+		// currPitchIsZero site just below, where we expand them at both. A
+		// per-call-site inline split with no lever found; see
+		// codegen-tells.md, "Inlining".
 		if (self->getTracer()->hasOnlyOneNext()) {
 			bVar6 = true;
 			if (self->getTracer()->currPitchIsZero())
@@ -79,6 +85,14 @@ DEFINE_NERVE(TNerveNPCUTurn, TLiveActor)
 	return false;
 }
 
+// TODO: 99.6% and frame-exact since resetGraphWaitTimer's two reads became
+// `.value` in min-then-max order. What is left is a three-register rotation:
+// retail keeps `self->unk22C` in r30 with minFrame/maxFrame in r29/r28, i.e.
+// it ranks the timer pointer as a pool/base temp above the two locals, while we
+// rank it as the inlined callee's `this` and put it in r28. That is the
+// known-open `this`-versus-pool-base callee-saved swap (frame-gaps.md,
+// "batch 145"); the scratch register for mPtrSaveNormal (r4 against our r3)
+// follows it.
 DEFINE_NERVE(TNerveNPCGraphWait, TLiveActor)
 {
 	TBaseNPC* self = (TBaseNPC*)spine->getBody();
@@ -112,6 +126,13 @@ DEFINE_NERVE(TNerveNPCWaitContinue, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region (frame-gaps.md, "batch 110").
+static inline u32 NpcActorType(const TBaseNPC* p)
+{
+	u32 actorType = p->getActorType();
+	return actorType;
+}
+
 DEFINE_NERVE(TNerveNPCWaitMarioApproach, TLiveActor)
 {
 	TBaseNPC* self = (TBaseNPC*)spine->getBody();
@@ -121,7 +142,7 @@ DEFINE_NERVE(TNerveNPCWaitMarioApproach, TLiveActor)
 		return true;
 	}
 
-	u32 actorType = self->getActorType();
+	u32 actorType = NpcActorType(self);
 	if (actorType - 0x400001C > 1) {
 
 		if (!self->isPeachTired()) {
@@ -148,6 +169,9 @@ DEFINE_NERVE(TNerveNPCWaitMarioApproach, TLiveActor)
 	return false;
 }
 
+// TODO: adding the NpcActorType binding level here as well moves the frame
+// 0x88 -> 0x90 (retail 0xb0) without changing the three-slot layout, so it is
+// not the missing construct and is left off.
 DEFINE_NERVE(TNerveNPCTurnToMario, TLiveActor)
 {
 	TBaseNPC* self = (TBaseNPC*)spine->getBody();

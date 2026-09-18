@@ -442,10 +442,17 @@ public:
 			unk4 = MsRandI(minFrame, maxFrame);
 		}
 
+		// The two reads here are `.value` and in min-then-max order, while
+		// resetGraphWanderTimer above keeps `.get()` in max-then-min order:
+		// TNerveNPCGraphWait wants both (`.get()` is +8 of pool each, frame
+		// 0x78 against retail's 0x68, and the declaration order is what puts
+		// the 0x234 load first), and giving resetGraphWanderTimer the same
+		// spelling breaks TNerveNPCGraphWander (frame 0x128 -> 0x118, 16
+		// markers -> 36). The asymmetry is retail's.
 		void resetGraphWaitTimer()
 		{
-			int maxFrame = mPtrSaveNormal->mSLGraphWaitMaxFrame.get();
-			int minFrame = mPtrSaveNormal->mSLGraphWaitMinFrame.get();
+			int minFrame = mPtrSaveNormal->mSLGraphWaitMinFrame.value;
+			int maxFrame = mPtrSaveNormal->mSLGraphWaitMaxFrame.value;
 
 			unk0 = 0;
 			unk4 = MsRandI(minFrame, maxFrame);
