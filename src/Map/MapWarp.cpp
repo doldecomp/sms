@@ -12,16 +12,24 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: 99.8%. Instruction-exact; frame 0x58 vs 0x40 (24 dead bytes), no
-// referenced local. See initModel().
+// Parked: the map has no symbol for a gpMap fork, so it lives here rather than
+// in the shared Map.hpp. It is the +4-per-read-site rung changeModel needs on
+// top of the getChild() level.
+static inline TMap* MapWarpGetMap() { return gpMap; }
+
+// The 24 dead bytes are two rungs of the same chain: `getChild()` at the
+// awaken site is +16 (at both sites it is +32) and the gpMap fork is +4 per
+// read site, i.e. +8 here. Both sites raw is 0x40, both through getChild()
+// 0x60.
 void TMapWarp::changeModel(int i)
 {
 	if (unk8 == i)
 		return;
 
 	// TODO: inlines
-	gpMap->getModelManager()->getJointModel(0)->mChildren[unk8]->sleep();
-	gpMap->getModelManager()->getJointModel(0)->mChildren[i]->awake();
+	MapWarpGetMap()->getModelManager()->getJointModel(0)->mChildren[unk8]
+	    ->sleep();
+	MapWarpGetMap()->getModelManager()->getJointModel(0)->getChild(i)->awake();
 	unk8 = i;
 }
 
@@ -38,7 +46,16 @@ void TMapWarp::warp(int) { }
 // zero-initialised and then has `.z` overwritten (`stfs` to the same slot
 // twice), not built by the three-argument constructor.
 // Residue: frame 0x170 vs 0x158, 24 dead bytes, plus `addi r5, r4, 0` where we
-// emit `mr r5, r4` for MTXMultVec's duplicated out-pointer.
+// emit `mr r5, r4` for MTXMultVec's duplicated out-pointer. The slots are not
+// uniformly shifted: retail's order up the frame is [operator+ copy 0xa0,
+// warpPos 0xe8, stream vector 0x100, mtx 0x10c, checkData 0x13c, the two
+// double magics 0x148/0x158], ours is [copy 0xd4, stream vector 0xe0, mtx
+// 0xec, warpPos 0x11c, checkData 0x12c, ...] -- so retail has 52 fewer low
+// bytes and keeps both warp vectors at the bottom, below the stream vector and
+// the matrix, where ours has `warpPos` in the named block. Making warpPos
+// unnamed is much worse (80.2%) and an explicit `TVec3(...)` temporary bound
+// to the `const&` parameter worse still (76.5%), so the two vectors are not
+// plain temporaries either; the low region is the lead.
 void TMapWarp::watchToWarp()
 {
 	const TBGCheckData* checkData;
@@ -88,10 +105,9 @@ void TMapWarp::watchToWarp()
 		SMS_WindMoveMario(vec2);
 }
 
-// TODO: 99.8%. Instruction-exact; frame 0x58 vs 0x48 (16 dead bytes) with no
-// referenced local at all. changeModel() below has the same shape at 24 bytes;
-// both are pure `gpMap->getModelManager()->getJointModel(0)->getChild(i)`
-// chains, so the two counts differ by one accessor level per extra site.
+// The 16 dead bytes are one `TJointObj::getChild()` level on the loop body's
+// child fetch (`getChildrenNum()` on the bound instead is the same +16; both
+// together overshoot to 0x60).
 void TMapWarp::initModel()
 {
 	// TODO: inlines
@@ -100,7 +116,7 @@ void TMapWarp::initModel()
 		if (i != unk8)
 			gpMap->getModelManager()
 			    ->getJointModel(0)
-			    ->mChildren[(u16)i]
+			    ->getChild((u16)i)
 			    ->sleep();
 }
 
