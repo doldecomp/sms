@@ -241,6 +241,11 @@ void SMS_IsMarioSpeedZero() { gpMarioOriginal->isSpeedZero(); }
 // intervening *store*, i.e. the type test may live in a helper that also writes
 // a member (nothing in this 18-instruction body can be that store, so more
 // likely the whole predicate lived somewhere else and was inlined here).
+// Closure batch 115 added the batch-110 binding level (a TU-local `static
+// inline TTakeActor* MarioAccessHolder(const TMario*)` binding the fetch, used
+// on both sides of the &&): codegen is byte-identical to the raw spelling, so
+// a binding level is not a CSE breaker either. What is left untried is a
+// spelling in which the two loads are genuinely different memory to MWCC.
 bool SMS_IsMarioOnWire()
 {
 	bool ret;

@@ -84,23 +84,51 @@ void TBGPolDrop::launch(const JGeometry::TVec3<f32>& param_1,
 	unk58 = 1;
 }
 
-// TODO: 100.0% but not exact: the MsGetRotFromZaxis return temporary sits at
-// 0x5c against retail's 0x64, with the frame already 0xd0 and every other slot
-// (the local_60 matrix at 0x70, the three float-to-int pairs at 0xa0/0xa8/0xb0,
-// the r27-r31 save block at 0xbc) on the nose. So retail's temporary region is
-// 8 bytes fuller below that temporary and ours leaves an 8-byte hole at
-// 0x68-0x6f, which is most likely the pair of reserved slots for the named `s`
-// and `c` below.
-// Measured, all with the temporary's offset in brackets: getScaling() on
-// either setBaseScale lands it exactly [0x64] but costs +8 of frame;
-// getMActor2() for unk54 is [0x60] +8; getUnk58() at all three sites [0x68]
-// +16; getRotation()/getPosition() in the MsMtxSetXYZRPH arguments [0x68] +16;
-// a named `J3DModel* model` before getBaseTRMtx() is [0x54] -8; getScaling()
-// plus that named model is [0x58] with the right frame. Worth nothing:
-// SMSGetPollution(), MsSin/MsCos over JMASin/JMACos, getUnk58() on the entry
-// guard alone. Actively worse: getVelocity() in MsGetRotFromZaxis (-0.3), a
-// named TVec3 for its result (-4.6), and dropping either of the named `s`/`c`
-// in favour of repeating JMASin/JMACos (the CSE goes away: -6 and -13).
+// Recovered: this is `MsMtxSetRotX__FPA4_ff`, which the map has *weak* (one
+// out-of-line copy in MoveBG.a MapObjPinna.cpp, 0x7c), i.e. a header inline
+// that belongs next to MsMtxSetRotRPH in <MarioUtil/MathUtil.hpp>. Compiled
+// out of line here it is 124 bytes = 0x7c on the nose, which is what identifies
+// it. It is parked TU-local and TU-prefixed, so that a header batch can add the
+// real name without a linkage clash; this batch may not edit shared headers.
+//
+// It is also what closed `perform`. That function used to be 100.0% but not
+// exact, with the MsGetRotFromZaxis return temporary at 0x5c against retail's
+// 0x64 and every other slot (the rotation matrix at 0x70, the three
+// float-to-int pairs at 0xa0/0xa8/0xb0, the r27-r31 save block at 0xbc) already
+// right. The 8-byte hole at 0x68-0x6f above the temporary was the pair of
+// reserved slots for the named `f32 s` and `f32 c`: the same two values held as
+// locals of an *inlined callee* are trivial PODs and cost zero frame, so the
+// temporary moves up by 8 and the frame stays 0xd0.
+// Rejected before that (temporary's offset in brackets): getScaling() on either
+// setBaseScale [0x64] but +8 of frame; getMActor2() for unk54 [0x60] +8;
+// getUnk58() at all three sites [0x68] +16; getRotation()/getPosition() in the
+// MsMtxSetXYZRPH arguments [0x68] +16; a named `J3DModel* model` before
+// getBaseTRMtx() [0x54] -8; getScaling() plus that named model [0x58] with the
+// right frame. Worth nothing: SMSGetPollution(), MsSin/MsCos over
+// JMASin/JMACos, getUnk58() on the entry guard alone. Actively worse:
+// getVelocity() in MsGetRotFromZaxis (-0.3), a named TVec3 for its result
+// (-4.6), and simply repeating JMASin/JMACos in place of the named `s`/`c`
+// (the CSE goes away: -6 and -13).
+static inline void BGPolDropSetRotX(MtxPtr dst, f32 degrees)
+{
+	f32 s      = JMASin(degrees);
+	f32 c      = JMACos(degrees);
+	dst[0][0]  = 1.0;
+	dst[0][1]  = 0.0;
+	dst[0][2]  = 0.0;
+	dst[0][3]  = 0.0;
+
+	dst[1][0] = 0.0;
+	dst[1][1] = c;
+	dst[1][2] = -s;
+	dst[1][3] = 0.0;
+
+	dst[2][0] = 0.0;
+	dst[2][1] = s;
+	dst[2][2] = c;
+	dst[2][3] = 0.0;
+}
+
 void TBGPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!unk58)
@@ -113,22 +141,7 @@ void TBGPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 		MtxPtr m = unk50->getModel()->getBaseTRMtx();
 		if (unk58 == 1) {
 			Mtx local_60;
-			f32 s          = JMASin(-90.0f);
-			f32 c          = JMACos(-90.0f);
-			local_60[0][0] = 1.0;
-			local_60[0][1] = 0.0;
-			local_60[0][2] = 0.0;
-			local_60[0][3] = 0.0;
-
-			local_60[1][0] = 0.0;
-			local_60[1][1] = c;
-			local_60[1][2] = -s;
-			local_60[1][3] = 0.0;
-
-			local_60[2][0] = 0.0;
-			local_60[2][1] = s;
-			local_60[2][2] = c;
-			local_60[2][3] = 0.0;
+			BGPolDropSetRotX(local_60, -90.0f);
 
 			mRotation = MsGetRotFromZaxis(unk44);
 
