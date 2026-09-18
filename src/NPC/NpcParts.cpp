@@ -54,9 +54,23 @@ void SetMActorAnmFrame(MActor* actor, f32 frame, bool set_bck, bool set_btp)
 // argument** of a wrapper around MActor::initSimpleMotionBlend that resolves -1
 // to the saved value. Spelling that wrapper as a TU-local `static inline
 // (MActor*, int frame = -1)` does not reproduce it -- MWCC folds the default
-// through one inline level -- so the wrapper is probably reached through a
-// second inlined level (a per-part setup helper taking the frame), which is
-// also where the remaining 104 low bytes would live.
+// through one inline level. Header round 23 added the second level and it still
+// folds: `SetPartsMotionBlendFrame(TSharedParts*, int frame = -1)` forwarding
+// to `SetMActorMotionBlendFrame(MActor*, int frame)` (which assigns the
+// parameter, so it cannot be substituted away) leaves all eight instructions
+// missing and the frame unchanged, and passing `-1` explicitly at one level is
+// inert too (frame 0x188 -> 0x198, still eight missing). So the construct is
+// not a defaulted argument across inline levels at all.
+// The sharper clue is the `20` site three arms down: retail emits `li r4,0x14`
+// there with *no* compare, so MWCC folded the constant on that path. One shared
+// wrapper cannot fold 20 and keep -1, so the two defaulted sites reach
+// `MActor::initSimpleMotionBlend` through a *different* callee than the `20`
+// site -- look for a zero-argument NPC-side helper whose -1 is produced by
+// something MWCC will not propagate (an inlined accessor returning the
+// constant, per the surviving `* 1.0f` rule), not by a default argument.
+// TNpcParts' own header only forward-declares TBaseNPC, so that helper is not
+// an inline method of TNpcParts without new includes there. The remaining 104
+// low bytes would live in the same helper.
 TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
                      TBaseNPC* param_3)
     : unk60(param_3)
