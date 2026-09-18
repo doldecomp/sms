@@ -8,17 +8,17 @@ Keep it current: every orchestrator appends a dated "State" entry below and rewr
 
 | | Matched code | Linked units |
 | --- | ---: | ---: |
-| Game | 44.40% | 162 / 385 |
+| Game | 44.49% | 162 / 385 |
 | JSystem | 89.93% | 179 / 198 |
 | SDK | 95.71% | 146 / 149 |
-| All | 54.36% | 489 / 732 |
+| All | 54.43% | 489 / 732 |
 
 `docs/TIMELINE.md` has the per-commit history and per-day rates; regenerate it with `python3 tools/progress-timeline.py`.
 Per-batch token costs are in `docs/progress/agent-costs-2026-09-18.md`; the batch-by-batch outcome log is `docs/progress/queue-2026-09-18.md`; the census scripts are under `tools/census/`.
 
 ## What the numbers say about yield
 
-Measured over 48 batches on 2026-09-18 (about 13M agent tokens, 57 links, roughly 60 functions to exact):
+Measured over 52 batches on 2026-09-18 (about 14.5M agent tokens, 57 links, roughly 75 functions to exact):
 
 | Batch type | Typical cost | Typical result | Verdict |
 | --- | ---: | --- | --- |
@@ -56,4 +56,4 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ## State log
 
-- **2026-09-18 evening** (session `7a7a015e`): 489/732 linked, 54.36% matched. Four batches in flight on `wt/grpfb` (reloc pass III), `wt/grpfc` (structural III), `wt/grpfd` (structural IV), `wt/grpfe` (4-byte re-pass II); land each with `tools/worktree.sh land <name> <units>` when its branch has commits, resolving `objects.json` conflicts with `python3 tools/resolve-objects-conflict.py config/GMSE01/objects.json` (keeps both sides, deduped) and catalog conflicts by keeping both hunks. Spare worktree `grpff` is built at HEAD.
+- **2026-09-18 night, final** (session `7a7a015e`): 489/732 linked, 54.43% matched, tree quiet. Every batch through 181 is landed; no agent is running. One spare worktree `grpff` exists (branch `wt/grpff`, no commits, built a few commits behind HEAD: `git rebase local/decomp-progress`, `build/venv/bin/ninja`, `build/venv/bin/ninja baseline` before using it). The last four batches (reloc III, structural III/IV, 4-byte re-pass II) lifted ~25 functions and closed 8 but linked nothing: the structural and reloc passes are now the main vein for exact functions, and links come from research results. Land routine for the next session: `tools/worktree.sh land <name> <units>`; `objects.json` conflicts via `python3 tools/resolve-objects-conflict.py config/GMSE01/objects.json`; catalog conflicts keep both hunks.
