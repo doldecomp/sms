@@ -174,6 +174,14 @@ void TNPCManager::load(JSUMemoryInputStream& stream)
 	unk3C = 250.0f;
 }
 
+// Binding level over a raw member read: a register lever in
+// TNPCManager::makePartsModelData_ at an unchanged frame (batch 127).
+static inline bool NpcManagerUnk2A(const TNpcModelData* p)
+{
+	bool v2A = p->unk2A;
+	return v2A;
+}
+
 void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
                                       TModelDataKeeper* keeper)
 {
@@ -195,7 +203,7 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 			continue;
 
 		loadFlags = flags;
-		if (modelData->unk2A != 0) {
+		if (NpcManagerUnk2A(modelData) != 0) {
 			loadFlags &= ~(0x40000 | 0x20000 | 0x10000);
 			loadFlags |= 0x100000;
 		}

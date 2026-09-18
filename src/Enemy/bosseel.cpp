@@ -1205,9 +1205,17 @@ TBossEelHeartCoin::TBossEelHeartCoin(const TLiveActor* owner, int jointIndex,
 	}
 }
 
+// Binding level over a raw member read: a register lever in
+// TBossEelHeartCoin::perform at an unchanged frame (batch 127).
+static inline bool BosseelActive(const TBossEelHeartCoin* p)
+{
+	bool active = p->mActive;
+	return active;
+}
+
 void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!mActive)
+	if (!BosseelActive(this))
 		return;
 
 	u32 calcAnim = cue & CUE_CALC_ANIM;

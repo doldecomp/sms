@@ -334,6 +334,14 @@ static inline f32 MapObjDolpicUnk14C(const TBellDolpic* p)
 	return v14C;
 }
 
+// Binding level over a raw member read: a register lever in
+// TBellDolpic::control at an unchanged frame (batch 127).
+static inline s8 MapObjDolpicUnk15C(const TBellDolpic* p)
+{
+	s8 v15C = p->unk15C;
+	return v15C;
+}
+
 // TODO: frame 0x48 vs retail's 0x58; every instruction is exact. The four
 // sound sites sit in mutually exclusive branches and need +0x10 between them,
 // i.e. 4 bytes each, and nothing measured pays 4. Header round 16 refuted the
@@ -371,7 +379,7 @@ void TBellDolpic::control()
 		unk150 = -unk150;
 
 		if (unk154 == 0) {
-			if (unk15C) {
+			if (MapObjDolpicUnk15C(this)) {
 				SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DOL_BEL_GS4,
 				                                &mPosition, 0, nullptr, 0, 4);
 
@@ -380,7 +388,7 @@ void TBellDolpic::control()
 				                                &mPosition, 0, nullptr, 0, 4);
 			}
 		} else {
-			if (unk15C) {
+			if (MapObjDolpicUnk15C(this)) {
 				SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DOL_BEL_GS4_K,
 				                                &mPosition, 0, nullptr, 0, 4);
 			} else {
