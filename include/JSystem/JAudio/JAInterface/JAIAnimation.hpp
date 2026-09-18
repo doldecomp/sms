@@ -54,7 +54,11 @@ public:
 
 public:
 	JAIAnimeSound();
-	~JAIAnimeSound();
+	// In the class and trivial: the map has no __dt__14JAIAnimeSoundFv
+	// anywhere, so nothing in the image ever calls a base destructor for this
+	// class. MAnmSound's UNUSED 0x60 destructor therefore inlines this one's
+	// vtable store rather than `bl`-ing it (see MAnmSound.hpp).
+	~JAIAnimeSound() { }
 
 	virtual void startAnimSound(void* interface, u32 id,
 	                            JAISoundHandle* out_handle, JAIActor* actor,

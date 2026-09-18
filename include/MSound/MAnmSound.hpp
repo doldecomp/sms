@@ -24,8 +24,27 @@ public:
 	// synthesises the derived class's implicit destructor, which calls this
 	// one out of line. TEnemyMario::initValues' `new MAnmSoundMario` is
 	// enemyMario.cpp's copy and TLiveActor's inlined MAnmSoundNPC is
-	// liveactor.o's. Both of ours come out at 0x64 against the map's 0x60,
-	// so the body is still four bytes off somewhere in the base chain.
+	// liveactor.o's.
+	//
+	// Header round 13 found half of the missing four bytes. The map has no
+	// __dt__14JAIAnimeSoundFv anywhere, so nothing in the image calls a base
+	// destructor for JAIAnimeSound; that destructor is in-class and trivial
+	// (JAIAnimation.hpp used to declare it out of line, which made this body
+	// `bl` a symbol that does not exist and cost the flag an extra register).
+	// With it inlined we emit 0x5c / 23 instructions: prologue and r31 save,
+	// `mr.`/`beq` null test, our vtable store, a bare `beq` for the base
+	// subobject, JAIAnimeSound's vtable store, the `extsh. r4` delete branch,
+	// epilogue.
+	//
+	// The map's 0x60 is 24 instructions, i.e. exactly one more. The byte-exact
+	// __dt__24TSpineBase<10TLiveActor>Fv (also 0x60) shows what that one
+	// instruction is: where its inlined base subobject sits at `this + 4` it
+	// emits `addic. r0, r31, 0x4` before the store and branches on that,
+	// whereas a subobject at offset 0 reuses the entry `mr.`'s cr0 and gets a
+	// bare `beq` -- which is what we emit. So MAnmSound (or JAIAnimeSound)
+	// still has one polymorphic subobject at a nonzero offset that this
+	// declaration does not model: a second base, or an intermediate class
+	// between the two. Nothing in the map names it yet.
 	~MAnmSound() { }
 
 	virtual void startAnimSound(void* interface, u32 id,
