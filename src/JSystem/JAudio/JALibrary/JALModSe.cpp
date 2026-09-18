@@ -114,6 +114,17 @@ f32 JALSystem::processModDistFx(u32 param_1, f32 param_2)
 	return 1.0f;
 }
 
+// TODO: 99.8%. Not one instruction is missing, extra or reordered; the only
+// residue is 104 bytes (0x68) of temp pool, frame 0x130 vs 0xc8. The named
+// block is already exact in shape and order -- set1 at frame-0x44/-0x40, prm at
+// -0x48, set2 at -0x50/-0x4c, set3 at -0x58/-0x54 -- and so are the six `new`
+// result temps at 0x58..0x6c, which sit at the *same* absolute offsets in both.
+// So retail allocates 0x68 more pool between those temps and the named block.
+// 0x68 is 13*8, and there are twelve in-class `JALSeModXxx` constructors
+// expanded here, which makes "one 8-byte inline temp per expansion plus one"
+// the obvious reading -- but every `JALSeModXxx` ctor lives in the shared
+// include/JSystem/JAudio/JALibrary/JALModSe.hpp, so testing it needs a
+// tree-wide `changes_all` and belongs in a research batch, not here.
 void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
                        u32 param_3, f32 param_4, f32 param_5, f32 param_6,
                        f32 param_7, f32 param_8, JALCalc::CurveSign param_9,
@@ -197,18 +208,27 @@ void JALSystem::appendGrpMember(JALSystem::ModType param_1, u32 param_2,
                                 u32 param_3)
 {
 	switch (param_1) {
+	// Retail really does double-check `found` in the last four arms and not in
+	// the first two; dropping the redundant tests loses eight instructions, and
+	// spelling the first two arms the same way costs four.
 	case ModType_JALSeModVolFGrp: {
 		JALSeModDataGrp<JALSeModVolFGrp>* found
 		    = JALListS<JALSeModVolFGrp, u32>::search(param_2);
-		if (found)
-			found->append(new JALSeModDataGrpMemb(param_3, nullptr));
+		if (found) {
+			JALSeModDataGrpMemb* memb
+			    = new JALSeModDataGrpMemb(param_3, nullptr);
+			found->append(memb);
+		}
 		spFManager->addUseFlag(param_3, param_1);
 	} break;
 	case ModType_JALSeModPitFGrp: {
 		JALSeModDataGrp<JALSeModPitFGrp>* found
 		    = JALListS<JALSeModPitFGrp, u32>::search(param_2);
-		if (found)
-			found->append(new JALSeModDataGrpMemb(param_3, nullptr));
+		if (found) {
+			JALSeModDataGrpMemb* memb
+			    = new JALSeModDataGrpMemb(param_3, nullptr);
+			found->append(memb);
+		}
 		spFManager->addUseFlag(param_3, param_1);
 	} break;
 	case ModType_JALSeModEffFGrp: {
