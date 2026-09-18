@@ -599,20 +599,26 @@ void TModelWaterManager::move()
 							                    HIT_MESSAGE_SPRAYED_BY_WATER);
 						}
 
-						JGeometry::TVec3<f32> local_194 = r27->getNormal();
-						local_194.scale(
-						    r27->mPlaneDistance
-						    + mParticlePositionSOA[i].dot(r27->getNormal()));
+						// `a = b * k`, not a copy plus an in-place scale:
+						// only the former puts TVec3::scale(f32) at inline
+						// depth 4 (copy ctor 1, operator* 2, operator*= 3),
+						// where the ROM `bl`s it. Retail's two copies here
+						// -- operator*'s by-value operand and the named
+						// result -- are the tell.
+						JGeometry::TVec3<f32> local_194
+						    = r27->getNormal()
+						      * (r27->mPlaneDistance
+						         + mParticlePositionSOA[i].dot(
+						             r27->getNormal()));
 
 						mParticlePositionSOA[i] -= local_194;
 
 						if (getFlagBottom4Bits(i) == 1) {
-							JGeometry::TVec3<f32> local_1d4 = r27->getNormal();
-							local_1d4.scale(mParticleSizeSOA[i]);
+							JGeometry::TVec3<f32> local_1d4
+							    = r27->getNormal() * mParticleSizeSOA[i];
 
 							JGeometry::TVec3<f32> local_1A4
-							    = mParticlePositionSOA[i];
-							local_1A4 += local_1d4;
+							    = mParticlePositionSOA[i] + local_1d4;
 							if (MsRandF() < unk5D88[10])
 								gpSplashManager->newSplash(local_1A4, 5.0f);
 
