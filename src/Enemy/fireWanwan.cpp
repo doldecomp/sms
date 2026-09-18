@@ -916,7 +916,7 @@ void TFireWanwan::doAdjustTarget()
 
 	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
 
-	local_70.rotate(local_60);
+	local_70.rotate(local_60, local_60);
 
 	f32 rot = MsGetRotFromZaxisY(local_60);
 
@@ -1893,7 +1893,36 @@ DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 		self->decideTarget(SMS_GetMarioPos());
 	}
 
-	self->doAdjustTarget();
+	// doAdjustTarget's body (UNUSED 0x298 in the map) written out here: at
+	// depth 1 TQuat4<f32>::rotate's in-class body has no statement limit and
+	// expands as retail does, while behind the call it sits at depth 2 where the
+	// 9-statement allowance refuses it and MWCC emits the bl we used to have.
+	// TODO: retail also `bl`s TVec4<f32>::dot and TVec4<f32>::scale out of the
+	// normalize() below, which needs one more inline level than
+	// `setLength(*this, one())` gives - i.e. normalize() spelled as the
+	// one-argument `setLength(one())` forwarder. Measured in JGVec4.hpp and
+	// again as a TQuat4-only override: both take this nerve 72.4 -> 85.4 and
+	// TNerveFireWanwanRecoverGraph 75.7 -> 86.5, but both cost seven other
+	// quaternion sites (TNerveKazekunAttack 98.9 -> 90.4, TNerveAmenboTurn 98.9
+	// -> 90.3, TBathtubKiller::makeQuat, TBeeHive::doWait, TTabePuku::swimTo,
+	// TCoasterEnemy::moveCoaster, TBathtub::updatePosture_), so the level is
+	// per site and belongs on the caller, not in the header.
+	J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+
+	f32 fVar8 = JGeometry::TUtil<f32>::clamp(ctrl->getFrame() / ctrl->getEnd(),
+	                                         0.0f, 1.0f);
+
+	JGeometry::TQuat4<f32> local_70;
+	local_70.slerp(self->unk1BC, self->unk1CC, fVar8);
+	local_70.normalize();
+
+	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
+
+	local_70.rotate(local_60, local_60);
+
+	f32 rot = MsGetRotFromZaxisY(local_60);
+
+	self->mRotation.y = MsAngleWrap(rot);
 
 	if (self->checkCurAnmEnd(0)) {
 		spine->pushAfterCurrent(&TNerveFireWanwanAttack::theNerve());
@@ -1964,7 +1993,23 @@ DEFINE_NERVE(TNerveFireWanwanRecoverGraph, TLiveActor)
 	// TODO: inline?
 	bool b = self->getMActor()->checkCurBckFromIndex(7);
 	if (b) {
-		self->doAdjustTarget();
+		// doAdjustTarget's body written out; see TNerveFireWanwanFindMario.
+		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+
+		f32 fVar8 = JGeometry::TUtil<f32>::clamp(
+		    ctrl->getFrame() / ctrl->getEnd(), 0.0f, 1.0f);
+
+		JGeometry::TQuat4<f32> local_70;
+		local_70.slerp(self->unk1BC, self->unk1CC, fVar8);
+		local_70.normalize();
+
+		JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
+
+		local_70.rotate(local_60, local_60);
+
+		f32 rot = MsGetRotFromZaxisY(local_60);
+
+		self->mRotation.y = MsAngleWrap(rot);
 		if (self->checkCurAnmEnd(0)) {
 			// removed code?
 		}
