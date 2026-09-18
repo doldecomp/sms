@@ -9,6 +9,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Match control flow and call order first, load/store order second (frame-gaps.md: "Diagnosing").
 - `if (a || b) return;` leaves the last operand unfused (`beq +8; b end`); two `if`s fuse both (codegen-tells.md: "Control flow").
 - A redundant `bcc next; b epilogue` pair means that test is one term of a wider `||` (codegen-tells.md: "batch 65").
+- In practice that pair is always two separate `if (c) return;` statements retail spells as one `if (a || b) return;`; read the compare's operand order off the `cmplw` (codegen-tells.md: "Structural pass 173").
+- A vtable slot past the declared base's last slot means the receiver is a **derived** class, not a wrong index (codegen-tells.md: "Structural pass 173").
+- A stack or member address used at two call sites is bound once into a callee-saved register; per-site `addi` is one instruction short each time (codegen-tells.md: "Structural pass 173").
+- An `int` local feeding an `int` parameter gives `mr`, a `u8` one `addi rD, rS, 0` (codegen-tells.md: "Structural pass 173").
 - Switch arms are emitted in **source** order, the pivot tree is value-sorted; decode destinations, not constants (codegen-tells.md: "batch 122").
 - Sequential `cmpwi` = `if`/`else if`; signed `cmpwi` on a `u32` = `switch`; empty cases move the pivot (codegen-tells.md: "`tinkoopa`").
 - Materialised bool = inlined bool helper, direct branch = inline compare; both occur in one TU (codegen-tells.md: "Booleans and predicates").
