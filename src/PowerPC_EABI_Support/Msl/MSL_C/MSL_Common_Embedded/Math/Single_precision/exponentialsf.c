@@ -60,6 +60,15 @@ extern const float __two_to_log2e_m1_tI[178];
 #define V_EXPF_MAX (88.72284f)
 #define V_EXPF_MIN (-87.33655f)
 
+// TODO: 97.2%. Every instruction, the whole Horner chain and the 0x28 frame
+// match; the only residue is which FPRs the loaded constants land in. Retail
+// keeps the four long-lived values high (almost_recip_128 f6,
+// compliment_recip_128 f7, pow2 f8, the table entry f9) and spends f1-f5 on the
+// polynomial coefficients, while we do the opposite (f2/f3/f1/f4 long-lived,
+// f6-f9 on coefficients); the destination-follows-the-addend pattern inside the
+// chain is already identical. Rejected: spelling the two reciprocal constants
+// as literals in the return expression (+0), and writing the chain as
+// `for (i = 6; i >= 0; i--)` (not unrolled, 58.7%).
 float expf(float x)
 {
 	static const float __exp_to_x[] = {
@@ -166,6 +175,15 @@ inline float __exp2f(float f)
 
 #pragma cplusplus off
 
+// TODO: 96.0%. Residues, in order of size: (1) our frame is 0x18 *larger*
+// (0xa8 vs 0x90) -- three 8-byte slots too many, and `__log2f` is expanded at
+// three sites here, each reserving its `unkConsts[2]`; (2) five instructions
+// are only scheduled differently (e.g. retail hoists `clrlwi r6, r9, 9` from
+// 0x48 to 0x38), reported as 5 missing plus 5 extra; (3) a wide GPR/FPR
+// permutation follows from those. Note the `lis r3, __log2_F@ha` vs
+// `...rodata.0@ha` pair at 0x4 is *not* a difference: the map has `__log2_F` as
+// the first object inside this file's `...rodata.0`, so objdiff is only naming
+// the same address by a different symbol.
 float powf(float x, float y)
 {
 	// TODO: work on improving acc, im lazy right now so this is half assed
