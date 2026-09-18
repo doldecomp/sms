@@ -411,5 +411,6 @@
   "Camera/CameraCodeControl.cpp",
   "MarioUtil/ModelUtil.cpp",
   "Enemy/enemytable.cpp",
-  "Strategic/Strategy.cpp"
+  "Strategic/Strategy.cpp",
+  "Map/MapXlu.cpp"
 ]
