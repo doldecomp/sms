@@ -136,11 +136,21 @@ void MSHandle::setSeDistancePan(u8 moveTime)
 	setSeInterPan(4, d, moveTime, 0);
 }
 
-// TODO: frame 0x38 vs 0x30: we reserve 8 bytes too much of low region (the
-// outgoing-parameter area is 8 bytes per f32 argument, and powf(f32, f32) wants
-// only 16). Dropping the named `shift` costs two reloads (95.2), moving its
-// declaration to the top is 0x40, and spelling dVar3's ternary as an if is
-// 0x40 at 92 instructions. calcDolby has the same shape and is frame-exact.
+// TODO: frame 0x38 vs 0x30, every one of the 72 instructions exact. We reserve
+// 8 bytes too much of low region, and it is tied to the *third* callee-saved
+// FPR, not to any statement: replacing the whole `cPan_HiSence_Dist` else
+// branch with `fVar4 *= param_3;` keeps 0x38, and so does dropping `+ 1.0f`,
+// dropping the `* (param_2 - ...)` factor, hoisting `cPan_HiSence_Dist` into a
+// local, spelling `*=` as `x = x * ...`, naming the rate, and folding the
+// `powf` product into one statement. Only removing every use of `param_3`
+// (so f30 stops being saved) brings it to 0x28, i.e. our low region is right
+// with two saved FPRs and 8 bytes too big with three: retail puts the save
+// area at 0x18 (8-aligned), we put it at 0x20 (16-aligned).
+// Also inert: `(f32)M_PI` (M_PI is already a float literal), `std::powf` (the
+// header wrapper is a level over a real bl, +0), and the `shift` declaration
+// between dVar3 and fVar4. Earlier trials: dropping `shift` costs two reloads
+// (95.2), declaring it at the top or right after fVar2 is 0x40.
+// calcDolby has the same shape with two saved FPRs and is frame-exact.
 f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 {
 	f32 fVar2 = cPan_MaxAmp;
@@ -179,9 +189,9 @@ void MSHandle::setSeDistanceDolby(u8 moveTime)
 	setSeInterDolby(4, d, moveTime, 0);
 }
 
-// TODO: pure FPR permutation. Retail keeps dVar2 in f0 (reusing zeroRad's
-// register) and the clamp result in f2; we use f3 and f0. Every instruction and
-// the frame are exact, so this is a declaration/live-range order question.
+// TODO: pure FPR permutation (a known-open residue class). Retail merges the
+// four if/else results for dVar2 into f0 and the clamp result into f2; we use
+// f3 and f0. Every instruction and the frame are exact.
 f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 {
 	f32 dVar2 = dist <= 0.0f ? 0.0f : MSACos(-pos.z / dist);
@@ -208,9 +218,11 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 	return r < 0.0f ? 0.0f : r;
 }
 
-// TODO: 99.8%, three operand-only differences. Retail keeps get_thing's
-// `param_1 >> 30` in r5 at this one site (r3 in the other two, which match);
-// swapping get_thing's two declarations and inlining `tmp` into the argument
+// TODO: 99.8%, three operand-only differences, i.e. a GPR permutation. Retail
+// keeps get_thing's `param_1 >> 30` in r5 at this one site (r3 in the other
+// two, which match) -- it declines to reuse getSwBit's return register even
+// though r3 is free until `this` is reloaded for setDistanceVolumeCommon.
+// Swapping get_thing's two declarations and inlining `tmp` into the argument
 // list both leave it unchanged.
 void MSHandle::setSeDistanceVolume(u8 moveTime)
 {
