@@ -30,6 +30,7 @@ public:
 	// TButterfloid::load's frame.
 	TBoidLeader* getBoidLeader() { return unk150; }
 	int getBoidNum() { return getBoidLeader()->getBoidNum(); }
+	TBoid* getBoid(int idx) { return getBoidLeader()->getBoid(idx); }
 
 public:
 	/* 0x150 */ TBoidLeader* unk150;

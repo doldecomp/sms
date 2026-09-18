@@ -157,18 +157,22 @@ void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
 	}
 }
 
-// TODO: 99.9%, all instructions match, frame exact (0x70); the only residue is
-// the `pos` temporary at 0x48 where retail has 0x44, i.e. retail's inline-temp
-// pool is 4 bytes bigger and its named block 4 smaller ("+4 low / -4 named").
-// Closure batch 128: a named `TBoid* boid = unk150->getBoid(i);` before the
-// copy closes this function exactly (batch 84's "a named pointer local is +8
-// when its initialiser goes through an indexed inline accessor") -- but
-// `clipBoids` is also *inlined* into `TRealoid::perform`, which is byte-exact
-// and where that local costs the same 8 bytes (0x98 -> 0xa0). One nonmatching
-// function either way, so the exact sibling is kept. A construct that is +4
-// named here and +0 in an inlined expansion would close both; a dead `BOOL`
-// or `f32` declared before `pos` is +0 in both, dropping a camera accessor
-// level is -8 in both, and `getRealoid(i)` for the flag calls is +8/+16.
+// Closed by re-pass 172 with header round 26's consumed-reference-binding rule:
+// `const TVec3<f32>& boidPos = unk150->getBoid(i)->mPosition;` ahead of the
+// copy is the 4 bytes of low region that slide `pos` from 0x48 to retail's
+// 0x44 in the out-of-line copy.  The same binding is worth **8** in an inlined
+// expansion, so it had to be paid for on both sides of the family, and it was:
+// `TRealoid::perform`'s second loop bound spelled `unk150->getBoidNum()`
+// instead of `getBoidLeader()->getBoidNum()` removes 8 there, and
+// `TFishoid::perform` (which the same accounting moved) takes the same
+// reference binding for +8 plus a `TRealoid::getBoid(int)` forwarder -- a
+// nested fork over `getBoidLeader()`, worth the last +4.  All three are
+// byte-exact and nothing else in the tree moved.
+// Rejected on the way (batch 128 and here): a named `TBoid* boid` before the
+// copy is +8 in both (one nonmatching function either way); a dead `BOOL` or
+// `f32` before `pos` is +0 in both; dropping a camera accessor level is -8 in
+// both; `getRealoid(i)` for the flag calls is +8/+16; a named
+// `getBoid(getBoidNum() - 1)` result in `TFishoid::perform` is +0.
 void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 {
 	SetViewFrustumClipCheckPerspective(SMSGetCamera()->getFovy(),
@@ -176,7 +180,9 @@ void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 	                                   graphics->getNearPlane(), 10000.0f);
 
 	for (int i = 0; i < unk150->getBoidNum(); ++i) {
-		JGeometry::TVec3<f32> pos = unk150->getBoid(i)->mPosition;
+		const JGeometry::TVec3<f32>& boidPos
+		    = unk150->getBoid(i)->mPosition;
+		JGeometry::TVec3<f32> pos = boidPos;
 		if (ViewFrustumClipCheck(graphics, &pos, 100.0f))
 			unk154[i]->offFlag(TRealoidActor::FLAG_CLIPPED_OUT);
 		else
@@ -190,7 +196,7 @@ void TRealoid::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_ANIM) {
 		clipBoids(graphics);
-		for (int i = 0; i < getBoidLeader()->getBoidNum(); ++i)
+		for (int i = 0; i < unk150->getBoidNum(); ++i)
 			unk154[i]->calcRootMatrix(getBoidLeader()->getBoid(i));
 	}
 
@@ -212,9 +218,10 @@ void TFishoid::perform(u32 cue, JDrama::TGraphics* graphics)
 	TRealoid::perform(cue, graphics);
 
 	for (int i = 0; i < getBoidNum(); ++i) {
-		TBoid* boid = getBoidLeader()->getBoid(i);
+		TBoid* boid = getBoid(i);
 
-		JGeometry::TVec3<f32> pos = boid->mPosition;
+		const JGeometry::TVec3<f32>& boidPos = boid->mPosition;
+		JGeometry::TVec3<f32> pos            = boidPos;
 		f32 y                     = pos.y;
 		if (y > 0.0f)
 			pos.y = 0.0f;
