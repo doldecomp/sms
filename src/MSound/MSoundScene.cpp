@@ -152,6 +152,42 @@ void MSSceneSE::sortMaxTrans(Vec* trans, u8 direction, u8 rank)
 	}
 }
 
+// The three helpers below are dead code, not inlined bodies: nothing in the
+// map's closure references them, and the target's frameLoop is 0x418 -- the
+// same byte count as ours -- so there is no expanded copy hiding in it either.
+// They are still compiled, so their literal requests shape the TU's .sdata2
+// pool, and that pool is the only evidence about their contents beyond the
+// map's sizes. Literals are allocated in code-generation order, which for
+// `-inline deferred` is reverse source order, so these three run *before*
+// sortMaxTrans and frameLoop and take the low ids:
+//
+//   @2051  0.0f        kept (frameLoop also wants it)
+//   @2052  4 bytes     UNUSED -- only these helpers want it
+//   @2053  3.1415927f  kept (frameLoop's upper clamp)
+//   @2054  4 bytes     UNUSED
+//   @2088  4 bytes     UNUSED
+//   @2114  8 bytes     UNUSED (a double: an int->float magic or a real
+//   @2115  8 bytes     UNUSED  double constant)
+//   @2263  -3.1415927f, @2264 -1.0470928f, @2265 1.0470928f, @2267 the
+//          u32->f64 magic -- all first requested by frameLoop
+//
+// So, reading the emission order calcPosPanSR, calcPosPanLR, calcPosVolume
+// against the id clusters: the first of the three requests four 4-byte
+// literals in the order 0.0f, ?, +pi, ?; a later one requests a single 4-byte
+// literal; and the last requests two 8-byte doubles. Sizes to hit are 0xf0
+// (60 instructions), 0x124 (73) and 0x134 (77).
+//
+// This also explains the one pool difference left in the unit: retail lays out
+// +pi (@2053) before -pi (@2263) because +pi was already allocated by a dead
+// helper, while our frameLoop -- which asks for -pi first, exactly as retail's
+// does -- allocates -pi first because nothing asked earlier. Our clamp order
+// is therefore right; the swap is entirely the missing helper bodies, and it
+// would have to be fixed before this unit could be linked from source.
+//
+// TODO: bodies unreconstructed. The literal *values* of @2052/@2054/@2088 and
+// the two doubles were dead-stripped and are not in the image, so anything
+// written here would be invention; four literal slots and a byte size are not
+// enough to pin 60-77 instructions.
 void MSSceneSE::calcPosVolume(Vec* param_1, f32* param_2, u8 param_3) { }
 
 void MSSceneSE::calcPosPanLR(Vec* param_1, f32 param_2) { }
