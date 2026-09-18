@@ -177,7 +177,8 @@ TSpineEnemy* TTobiPukuLaunchPadManager::createEnemyInstance()
 void TTobiPukuLaunchPadManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	for (int i = 0; i < getActiveObjNum(); ++i)
-		getObj(i)->perform(cue, graphics);
+		((TTobiPukuLaunchPad*)TLiveManager::getObj(i))
+		    ->perform(cue, graphics);
 }
 
 TSpineEnemy* TMoePukuLaunchPadManager::createEnemyInstance()
@@ -601,7 +602,7 @@ void TTobiPuku::generateEffectColumWater()
 	// is the "from water" cue; anything else is an entry splash.
 	if (mSpine->getCurrentNerve() != &TNerveTobiPukuGenerate::theNerve())
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER,
-		                                &mPosition, 0, nullptr, 0, 4);
+		                                &mPosition);
 	else
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_FRWATER,
 		                                &mPosition, 0, nullptr, 0, 4);
@@ -720,6 +721,16 @@ void TTobiPuku::forceKill()
 
 void TTobiPuku::genEventCoin() { isDeadBck(); }
 
+// TODO: parked binding level -- a TSmallEnemy::getJuiceBlock() that binds the
+// member to a local is worth the 8 bytes changeOut's frame is short, and only
+// at the kill site (the same level on the position read above is +16).
+// include/Enemy/SmallEnemy.hpp belongs to a header batch this round.
+static inline TJuiceBlock* TobiPukuJuiceBlock(TTobiPuku* self)
+{
+	TJuiceBlock* block = self->mJuiceBlock;
+	return block;
+}
+
 void TTobiPuku::changeOut()
 {
 	offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -730,7 +741,7 @@ void TTobiPuku::changeOut()
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
-	mJuiceBlock->kill();
+	TobiPukuJuiceBlock(this)->kill();
 	mJuiceBlock = nullptr;
 }
 
