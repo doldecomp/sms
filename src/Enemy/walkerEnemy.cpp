@@ -76,6 +76,15 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 // has a user constructor) inside an inlined callee. Finding that callee is one
 // research item for both functions; see docs/catalog/frame-gaps.md, "The dead
 // low region".
+// Measured this batch: the gap is not only 32 bytes of pool below the
+// `polarXZ` temp (ours 0x30, retail 0x50) but also a 4-byte pad on each
+// 12-byte vector slot -- retail strides 0x50 -> 0x60 -> 0x70 where we pack
+// 0x30 -> 0x3c -> 0x48. A 16-byte stride on a TVec3 is the signature of a
+// *callee's* class local (sizeof rounded to 8) rather than a caller temp, so
+// all four slots, the two live ones included, belong to inlined callees;
+// `local` being a named local here is itself wrong. TNerveWalkerEscape shows
+// the same 32+8 split around the `TSolidStack<TPathNode>::pop()` temp
+// (ours 0x24, retail 0x44, with 16 rather than 8 free bytes above it).
 void TWalkerEnemy::moveObject()
 {
 	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
@@ -179,6 +188,29 @@ static inline bool WalkerEnemyCheckUnk150(const TWalkerEnemy* p, u32 i)
 // spelled-out constructor is +12, not +8); dropping the binding out of
 // `WalkerEnemyCheckUnk150` is -8 on both temp and frame; `getSpine()` on the
 // three `pushAfterCurrent`s overshoots to frame 0x60.
+// This batch bracketed it: `setGoalPath((THitActor*)gpMarioAddress)` -- the
+// implicit TPathNode conversion at the call site instead of inside
+// `setGoalPathMario` -- keeps the frame at 0x50 and puts the temp at 0x38,
+// four bytes *over* retail, so retail sits exactly between the two spellings.
+// All four combinations: binder+setGoalPathMario 0x2c/frame 0x50,
+// binder+direct 0x38/0x50, no-binder+setGoalPathMario 0x24, no-binder+direct
+// 0x30/frame 0x48 -- a uniform 8 per binder and 12 per conversion level, so
+// the missing item is worth 4. The only 4-byte inline temp frame-gaps.md
+// knows is a *pointer* binding (batch 142: reference 8, pointer 4, void 0),
+// so one pointer rather than the bool is bound below the temp; a pointer
+// binder on the Mario global itself overshoots (+12, temp 0x44).
+// That 4 was then found, but it lives in the *shared* header and so is only
+// reported, not made here: spelling Enemy.hpp's `setGoalPathMario()` as
+//     THitActor* mario = (THitActor*)gpMarioAddress; setGoalPath(mario);
+// (a pointer binding, worth 4 by batch 142's return-type table) lands SEVEN
+// functions byte-exact tree-wide -- TGesso::behaveToFindMario,
+// TNerveHaneHamuKuriUpWait, TPakkun::load, TNervePakkunShoot,
+// TNerveFireWanwanAttack, TNerveBombHeiAttack and TNervePopoWait -- and moves
+// total matched_code 53.91% -> 53.95%. It costs two: TNerveWalkerTraceMario
+// (frame 0x60 -> ours 0x68) and telesa's TNerveTelesaFreeze (0x40 -> 0x48)
+// both go 8 over, so those two carry a lever of their own that has to come
+// out at the same time. Here it moves the temp 0x2c -> 0x30 (the predicted
+// +4) but the frame 0x50 -> 0x58, so this function still wants one more 4.
 void TWalkerEnemy::behaveToFindMario()
 {
 	if (WalkerEnemyCheckUnk150(this, 2)) {
