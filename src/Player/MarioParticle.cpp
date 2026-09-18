@@ -39,10 +39,19 @@ static const s32 cParticleIDs[] = {
 	MAP_POLLUTION_MS_M_TOKEOS,
 };
 
+// `fileName` is declared before `i` because the callee-saved order is
+// i (r31), the 4*i offset (r30), the three pool bases (r29-r27),
+// SMS_LoadParticle's flag pointer (r26), fileName (r25), and that order only
+// comes out with both locals at function scope in this order.
+// TODO: 98.7%. The three pool bases sit one register low (r28-r26) and the
+// flag pointer one high (r29), i.e. the documented pool-base-versus-callee-temp
+// rotation, at zero frame cost. Block scope for `i` is inert, as is `i++`.
 void TMario::initParticle()
 {
-	for (int i = 0; i < 3; ++i) {
-		const char* fileName = cParticleFileNames[i];
+	const char* fileName;
+	int i;
+	for (i = 0; i < 3; ++i) {
+		fileName = cParticleFileNames[i];
 		if (JKRFileLoader::getGlbResource(fileName)) {
 			if (i < 1)
 				SMS_LoadParticle(fileName, cParticleIDs[i]);
@@ -364,6 +373,17 @@ void TMario::surfingEffect()
 	if (spMax < mForwardVel)
 		scale = sMax;
 
+	// TODO: 99.5%, all 107 instructions exact; frame 0x70 vs 0x60, i.e. our
+	// dead low region is 16 bytes too *big* (retail 0xc..0x3c, ours 0xc..0x4c,
+	// neither referenced -- `scaleVec` is fully scalarised into f31 in both).
+	// A dead named `TVec3` here is only +8, so the surplus is not `scaleVec`
+	// as a slot; passing `TVec3(scale, scale, scale)` as a temporary at the
+	// four sites is far worse (frame 0xb8), and the `SMS_EasyEmitParticle`
+	// template, whose body is exactly these four blocks and whose
+	// type-to-flag map gives retail's 3/1/1/1, cannot be it either: a function
+	// template without `inline` never inlines, so it emits a `bl` (58.2%).
+	// The `addi r5` / `addi r7` order at the last three sites (retail computes
+	// the MtxPtr argument before `this`) is part of the same residue.
 	JGeometry::TVec3<f32> scaleVec(scale, scale, scale);
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_GESOSURF_A, (MtxPtr)getRootAnmMtx(), 3, this);
@@ -391,21 +411,43 @@ struct TWarpInCallBack
 void TWarpInCallBack::execute(JPABaseEmitter* emitter,
                               JPABaseParticle* particle)
 {
-	// TODO: awful vector maths :(
+	// f31/f30/f29/f28/f27 are five named scalar locals: the callee-saved FPRs
+	// go out f31-down in declaration order, which is what fixes `timer` first
+	// and `factor` last, and `factor += 1.0f` as its own statement is what
+	// keeps the product out of an `fmadds` and adds into factor's register.
+	// TODO: 73.9%, frame 0xc8 vs 0x110. Every instruction of the head and the
+	// tail matches; the residue is one 12-byte temporary too many per scale
+	// step. Retail runs six slots -- scale target, temporary, scale target,
+	// temporary, scale target, temporary -- i.e. `operator*`'s by-value
+	// parameter and its return temporary per step, with the return temporary
+	// copied into the next parameter. The three named `v` locals give us nine
+	// slots (parameter, return temporary, named local), and the pure chain
+	// `*vel * tmp * timer * factor` gives four, because MWCC then builds each
+	// inner result directly in the next parameter slot. Nothing in between was
+	// found: not a TU-local `mulVec(const TVec3&, f32)` copying into a local
+	// (39.1%, NRVO drops a copy), not `f(TVec3, f32)` by value, not `*=` on
+	// fresh copies (one copy per step). A member `TVec3 operator*(f32) const`
+	// in JGVec3.hpp, instead of the by-value `friend`, is the spelling whose
+	// expansion has exactly retail's six slots -- a shared-header change, so
+	// it is reported rather than made.
 	JGeometry::TVec3<f32>* vel = (JGeometry::TVec3<f32>*)emitter->getUserWork();
 
 	f32 timer = (f32)gpMarioOriginal->mStatusTimer;
-	f32 tmp   = gpMarioOriginal->unk468;
+	f32 velX  = particle->unk14.x;
+	f32 velY  = particle->unk14.y;
+	f32 velZ  = particle->unk14.z;
 
-	f32 factor = ((((int)particle >> 2) & 0x3F) / 16.0f + 1.0f);
+	f32 factor = ((((int)particle >> 2) & 0x3F) / 16.0f);
+	factor += 1.0f;
 
-	JGeometry::TVec3<f32> v = *vel;
+	JGeometry::TVec3<f32> v1 = *vel * gpMarioOriginal->unk468;
+	JGeometry::TVec3<f32> v2 = v1 * timer;
+	JGeometry::TVec3<f32> v3 = v2 * factor;
 
-	v = v * tmp;
-	v = v * timer;
-	v = v * factor;
-
-	particle->unk14 += v;
+	velX += v3.x;
+	velY += v3.y;
+	velZ += v3.z;
+	particle->unk14.set(velX, velY, velZ);
 }
 
 TWarpInCallBack warpInCallBack;
