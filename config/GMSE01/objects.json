@@ -435,5 +435,6 @@
   "GC2D/BoundPane.cpp",
   "THPPlayer/THPPlayer.c",
   "MoveBG/MapObjEx.cpp",
-  "Enemy/DebuTelesa.cpp"
+  "Enemy/DebuTelesa.cpp",
+  "Enemy/generator.cpp"
 ]
