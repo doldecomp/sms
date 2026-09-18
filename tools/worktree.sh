@@ -115,6 +115,12 @@ land)
 	;;
 remove)
 	[ -n "$name" ] || usage
+	# Refuse to drop work that never landed: the branch must be an ancestor of HEAD.
+	if git -C "$ROOT" show-ref --verify --quiet "refs/heads/wt/$name" \
+	   && ! git -C "$ROOT" merge-base --is-ancestor "wt/$name" HEAD; then
+		echo "refusing: wt/$name has commits not in HEAD (land it, or delete the branch by hand)" >&2
+		exit 1
+	fi
 	git -C "$ROOT" worktree remove --force "$WT_ROOT/$name"
 	git -C "$ROOT" branch -D "wt/$name" || true
 	;;
