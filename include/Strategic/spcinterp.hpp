@@ -668,30 +668,33 @@ public:
 	{
 	}
 
-	// TODO: 96.3% in EventWatcher. Retail loads mNativeCall into r0, tests it
-	// there and copies it to r12 for the indirect call (`lwz r0,0x10(r7);
-	// cmplwi r0,0; mr r12,r0; beq`); we load straight into r12 and lose the
-	// `mr`. Tried, all neutral or worse: dropping the named local and casting
-	// in the call expression (86.2%, r0 right but the surrounding registers
-	// renumber), declaring `call` uninitialised before `sym`, `(*call)(...)`,
-	// and testing the cast expression `(TypedNativeCall)sym->mNativeCall`
-	// instead of the u32 field. The early-return shape of the non-template
-	// TSpcInterp::dispatchBuiltinDefault (local first, `if (call == nullptr)`)
-	// is the remaining untried structure, but it moves the shared
-	// `bl TSpcInterp::dispatchBuiltin` tail that retail has at one label.
+	// Exact. The shape is two nested guards falling through to one shared
+	// `bl TSpcInterp::dispatchBuiltin` at the bottom, with the typed
+	// function pointer named inside the outer guard and the success path
+	// ending in `return`. That is what gives retail's `lwz r0, 0x10(r7);
+	// cmplwi r0, 0; mr r12, r0`: the guard's test takes r0 and the named
+	// local is the second user of the same load, so it needs the move.
+	// An `if (sym && sym->mNativeCall) { ... } else { ... }` collapses the
+	// two users into one register and loses the `mr` (96.3%); casting in
+	// the call expression instead of naming the pointer tests in r0 but
+	// re-loads at the call (86.2%); and the two-early-return form of the
+	// non-template dispatchBuiltinDefault duplicates the tail `bl` (79.3%).
 	virtual void dispatchBuiltin(u32 sym_index, u32 arg_count)
 	{
 		typedef void (*TypedNativeCall)(TSpcTypedInterp<T>*, u32);
 		TSpcSymbol* sym = mBinary->getSymbol(sym_index);
 
-		if (sym && sym->mNativeCall) {
+		if (sym != nullptr) {
 			TypedNativeCall call = (TypedNativeCall)sym->mNativeCall;
-
-			mCurrentlyExecutingBuiltinName = mBinary->getSymbolName(sym);
-			call(this, arg_count);
-		} else {
-			TSpcInterp::dispatchBuiltin(sym_index, arg_count);
+			if (call != nullptr) {
+				mCurrentlyExecutingBuiltinName
+				    = mBinary->getSymbolName(sym);
+				call(this, arg_count);
+				return;
+			}
 		}
+
+		TSpcInterp::dispatchBuiltin(sym_index, arg_count);
 	}
 
 	// fabricated
