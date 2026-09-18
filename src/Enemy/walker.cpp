@@ -6,6 +6,12 @@
 #include <Strategic/LiveActor.hpp>
 #include <Map/MapData.hpp>
 
+// TODO: every instruction matches; frame 0x58 vs 0x70. Slot triage: retail's
+// `volatile f32` result slot is at 0x34 and `diffs` at 0x48, ours at 0x30 and
+// 0x34 -- so retail has 4 more dead bytes below the scalar and a 16-byte hole
+// between the scalar and the array, i.e. one unreferenced 16-byte local declared
+// between them. The `volatile` round-trip itself is still the unexplained
+// "frsqrte with no Newton step" idiom (same shape as THitActor::calcEntryRadius).
 static f32 calcFarthestVertex(const TBGCheckData* param_1,
                               const JGeometry::TVec3<f32>& param_2,
                               const JGeometry::TVec3<f32>& param_3)
@@ -66,6 +72,35 @@ void TWalker::reset()
 	unk4.clear();
 }
 
+// TODO: 92.6% -> the residue is three separate things.
+// (1) The wall-record block is now retail's shape: retail builds a whole
+//     16-byte TPathNode in a local (one `li r0, 0` for unk0 plus the vector) and
+//     copies all four words into `enemy->unkF4` *after* the unk114 push, which
+//     is what identified the four m2c-era named vector locals as artifacts --
+//     the expression is one statement,
+//     `mPosition - normal * getWallRadius() + local_94 * fVar4`, with `normal`
+//     reused from the cross product rather than re-read through getNormal().
+//     What is left there is our TPathNode default ctor's four zero stores, which
+//     retail dead-strips entirely; declaring `node` block-scope inside each arm
+//     (91.1), once before the `empty()` test (91.2), once at the top of the wall
+//     block (92.2) and at function scope (92.6, but then the zero stores land in
+//     the prologue) all keep them, and an explicit `node.unk0 = nullptr` is
+//     worse (90.8).
+// (2) Retail copies each operator result through its own return slot (the
+//     `<` run before `bl TVec3::add`), the batch-119 by-value-return geometry:
+//     a JGVec3.hpp property, not fixable here. That is also why our frame is now
+//     0x338 against retail's 0x360 -- those return slots are the missing 40
+//     bytes (the pre-rewrite version hit 0x360 by accident with four named
+//     locals standing in for them).
+// (3) `TLiveActor::checkLiveFlag2` must return a 32-bit type, not `bool`:
+//     retail tests it with `cmpwi r4, 0` at both sites (0x138 and 0x5b0) where
+//     we emit `clrlwi. r0, r4, 24`, and at the first site retail reuses the zero
+//     it stored into `unk1C` instead of materialising `li r4, 0`.
+//     include/Strategic/LiveActor.hpp is owned by the header batch -- reported,
+//     not changed.
+// Also inert: SMSGetMap() for the isTouchedWallsAndMoveXZ receiver and a named
+// TBGWallCheckRecord* for its argument (retail evaluates the argument address
+// before loading gpMap; neither spelling reproduces that).
 void TWalker::bind(TLiveActor* param_1)
 {
 	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
@@ -179,6 +214,7 @@ void TWalker::bind(TLiveActor* param_1)
 
 			unk4.push(pTVar14);
 
+			TPathNode node;
 			JGeometry::TVec3<f32> normal = pTVar14->getNormal();
 			JGeometry::TVec3<f32> local_94;
 			local_94.cross(normal, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
@@ -225,24 +261,16 @@ void TWalker::bind(TLiveActor* param_1)
 			    = calcFarthestVertex(pTVar14, enemy->mPosition, local_94);
 			f32 fVar4 = (enemy->getWallRadius()) * 2.0f + dVar18;
 			if (enemy->unk114.empty()) {
-				JGeometry::TVec3<f32> local_130 = local_94 * fVar4;
-				JGeometry::TVec3<f32> local_124
-				    = pTVar14->getNormal() * enemy->getWallRadius();
-
-				JGeometry::TVec3<f32> local_254 = enemy->mPosition - local_124;
-				JGeometry::TVec3<f32> local_13c = local_254 + local_130;
+				node.unk4 = enemy->mPosition
+				            - normal * enemy->getWallRadius()
+				            + local_94 * fVar4;
 				enemy->unk114.push(enemy->unkF4);
-				enemy->unkF4.unk0 = nullptr;
-				enemy->unkF4.unk4 = local_13c;
+				enemy->unkF4 = node;
 			} else {
-				JGeometry::TVec3<f32> tmp2 = local_94 * fVar4;
-				JGeometry::TVec3<f32> tmp1
-				    = pTVar14->getNormal() * enemy->getWallRadius();
-				JGeometry::TVec3<f32> thing     = enemy->mPosition - tmp1;
-				JGeometry::TVec3<f32> local_278 = thing + tmp2;
-
-				enemy->unkF4.unk0 = nullptr;
-				enemy->unkF4.unk4 = local_278;
+				node.unk4 = enemy->mPosition
+				            - normal * enemy->getWallRadius()
+				            + local_94 * fVar4;
+				enemy->unkF4 = node;
 			}
 		}
 	}
