@@ -106,24 +106,8 @@ static int TobiPukuRollCallback(J3DNode* param_1, int param_2)
 				                    ->getModel()
 				                    ->getAnmMtx(joint->getJntNo());
 
-				f32 s = JMASin(gpCurTobiPuku->unk1EC);
-				f32 c = JMACos(gpCurTobiPuku->unk1EC);
-
 				Mtx local_44;
-				local_44[0][0] = c;
-				local_44[0][1] = -s;
-				local_44[0][2] = 0.0f;
-				local_44[0][3] = 0.0f;
-
-				local_44[1][0] = s;
-				local_44[1][1] = c;
-				local_44[1][2] = 0.0f;
-				local_44[1][3] = 0.0f;
-
-				local_44[2][0] = 0.0f;
-				local_44[2][1] = 0.0f;
-				local_44[2][2] = 1.0f;
-				local_44[2][3] = 0.0f;
+				MsMtxSetRotZ(local_44, gpCurTobiPuku->unk1EC);
 
 				MTXConcat(anmMtx, local_44, anmMtx);
 				MTXConcat(J3DSys::mCurrentMtx, local_44,

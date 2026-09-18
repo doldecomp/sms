@@ -191,20 +191,7 @@ static int PopoRollCallback(J3DNode* node, int param)
 
 		Mtx roll;
 		if (popo->isRollJump()) {
-			f32 s     = JMASin(gpCurPopo->mRollAngle);
-			f32 c     = JMACos(gpCurPopo->mRollAngle);
-			roll[0][0] = 1.0f;
-			roll[0][1] = 0.0f;
-			roll[0][2] = 0.0f;
-			roll[0][3] = 0.0f;
-			roll[1][0] = 0.0f;
-			roll[1][1] = c;
-			roll[1][2] = -s;
-			roll[1][3] = 0.0f;
-			roll[2][0] = 0.0f;
-			roll[2][1] = s;
-			roll[2][2] = c;
-			roll[2][3] = 0.0f;
+			MsMtxSetRotX(roll, gpCurPopo->mRollAngle);
 		} else {
 			f32 s     = JMASSin(0x8000);
 			f32 c     = JMASCos(0x8000);

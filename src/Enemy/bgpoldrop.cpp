@@ -84,14 +84,15 @@ void TBGPolDrop::launch(const JGeometry::TVec3<f32>& param_1,
 	unk58 = 1;
 }
 
-// Recovered: this is `MsMtxSetRotX__FPA4_ff`, which the map has *weak* (one
-// out-of-line copy in MoveBG.a MapObjPinna.cpp, 0x7c), i.e. a header inline
-// that belongs next to MsMtxSetRotRPH in <MarioUtil/MathUtil.hpp>. Compiled
-// out of line here it is 124 bytes = 0x7c on the nose, which is what identifies
-// it. It is parked TU-local and TU-prefixed, so that a header batch can add the
-// real name without a linkage clash; this batch may not edit shared headers.
+// The rotation matrix below `perform` builds is `MsMtxSetRotX__FPA4_ff`, the
+// map's weak 0x7c header inline (one out-of-line copy in MoveBG.a
+// MapObjPinna.cpp); compiled out of line here the body is 124 bytes = 0x7c on
+// the nose, which is what identified it. It now comes from
+// <MarioUtil/MathUtil.hpp>; the TU-local copy this unit used to park was
+// byte-identical, and so is the header spelling, which reaches the table
+// lookups through JMASSin/JMASCos rather than JMASin/JMACos.
 //
-// It is also what closed `perform`. That function used to be 100.0% but not
+// Naming it is what closed `perform`. That function used to be 100.0% but not
 // exact, with the MsGetRotFromZaxis return temporary at 0x5c against retail's
 // 0x64 and every other slot (the rotation matrix at 0x70, the three
 // float-to-int pairs at 0xa0/0xa8/0xb0, the r27-r31 save block at 0xbc) already
@@ -109,25 +110,6 @@ void TBGPolDrop::launch(const JGeometry::TVec3<f32>& param_1,
 // getVelocity() in MsGetRotFromZaxis (-0.3), a named TVec3 for its result
 // (-4.6), and simply repeating JMASin/JMACos in place of the named `s`/`c`
 // (the CSE goes away: -6 and -13).
-static inline void BGPolDropSetRotX(MtxPtr dst, f32 degrees)
-{
-	f32 s      = JMASin(degrees);
-	f32 c      = JMACos(degrees);
-	dst[0][0]  = 1.0;
-	dst[0][1]  = 0.0;
-	dst[0][2]  = 0.0;
-	dst[0][3]  = 0.0;
-
-	dst[1][0] = 0.0;
-	dst[1][1] = c;
-	dst[1][2] = -s;
-	dst[1][3] = 0.0;
-
-	dst[2][0] = 0.0;
-	dst[2][1] = s;
-	dst[2][2] = c;
-	dst[2][3] = 0.0;
-}
 
 void TBGPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -141,7 +123,7 @@ void TBGPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 		MtxPtr m = unk50->getModel()->getBaseTRMtx();
 		if (unk58 == 1) {
 			Mtx local_60;
-			BGPolDropSetRotX(local_60, -90.0f);
+			MsMtxSetRotX(local_60, -90.0f);
 
 			mRotation = MsGetRotFromZaxis(unk44);
 

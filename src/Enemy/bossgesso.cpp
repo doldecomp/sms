@@ -1451,23 +1451,7 @@ void TBossGesso::calcRootMatrix()
 
 		Mtx local_50;
 
-		f32 s = JMASSin(0x4000);
-		f32 c = JMASCos(0x4000);
-
-		local_50[0][0] = 1.0;
-		local_50[0][1] = 0.0;
-		local_50[0][2] = 0.0;
-		local_50[0][3] = 0.0;
-
-		local_50[1][0] = 0.0;
-		local_50[1][1] = c;
-		local_50[1][2] = -s;
-		local_50[1][3] = 0.0;
-
-		local_50[2][0] = 0.0;
-		local_50[2][1] = s;
-		local_50[2][2] = c;
-		local_50[2][3] = 0.0;
+		MsMtxSetRotX(local_50, 90.0f);
 
 		MTXConcat(mA, local_50, mA);
 
