@@ -248,29 +248,52 @@ int CPolarSubCamera::getRestDemoFrames() const
 	return mCameraDemo->mRemainingFrames;
 }
 
-// TODO: 99.9%. Every instruction matches; frame 0x50 vs 0x30 with `diff` the
-// only referenced local (0x30 vs 0x14), so retail has 28 dead bytes below it
-// and 4 above. Dead-low-region family with no carrier identified: the only
-// inlined callees here are MsVECMag2, MsClamp and the CameraInbetween call,
-// and this TU's UNUSED list (getTotalDemoFrames, endSimpleDemoCamera_,
-// endReproduceDemoCamera_, restartReproduceDemoCamera_ 0x44 still empty,
-// startReproduceDemoCamera_) contains nothing this function reaches.
-// TODO: 99.9%, every instruction exact, frame 0x30 vs 0x50.  The named region
-// is identical relative to the frame top (the int->float magic pair highest,
-// then `diff`), so all 32 bytes are inline-temp/outgoing-parameter area below
-// `diff`: retail's locals start at 0x30 (0x8-0x2f, the standard 32-byte
-// outgoing-parameter area plus 4 of alignment), ours at 0x14.  Ruled out
-// (closure batch 90): a by-value `Vec` parameter on the vector overload of
-// CLBChaseDecrease, which is the only construct here that could reserve a
-// parameter area of that size -- it is +16 but emits retail's missing
-// three-word copy (90.0%, +6 instructions), so cameralib.hpp's `const Vec&`
-// is right.  MsVECMag2 and all three CLBChaseDecrease calls are already `bl`s
-// in both builds.
+// The 32 bytes ctrlNormalDeadDemo_ used to be short (0x30 against retail's
+// 0x50) were three bindings, none of which changes an instruction.  The
+// arithmetic is exact: `diff`, the only referenced local, sits at
+// 0xc + <low region>, retail has it at 0x30 and so a low region of 36, and the
+// baseline is 8.  Accessor and binding levels here come in 8-byte steps
+// (measured: the mInbetween fetch at either call site +8 or +0x10, &mPosition
+// +8, &mInbetween->mAt +0x10, &mCurrentTarget.mTarget +0x10, a binding fork of
+// gpCameraMario or gpMarioOriginal +0x10 each and +0x18 together, a nested
+// pair of forks +0x18, &SMS_GetMarioPos() +0x10), so no combination of them
+// can reach 36 -- every one lands `diff` on 0x14 + 8k and never on 0x30.  The
+// binding around MsVECMag2 is the odd rung: with the two 8-byte ones it makes
+// exactly 28.  A dead unwritten 4-byte local declared before `diff` also
+// reaches the right frame but puts the 4 bytes of padding on the wrong side of
+// it (0x2c or 0x34 instead of 0x30), and a named f32 or a named pointer local
+// reserves nothing.
+// Ruled out earlier (closure batch 90): a by-value `Vec` parameter on the
+// vector overload of CLBChaseDecrease -- it is +16 but emits a three-word copy
+// retail lacks (90.0%), so cameralib.hpp's `const Vec&` is right.  MsVECMag2
+// and all three CLBChaseDecrease calls are `bl`s in both builds.
+static inline TCameraInbetween*
+CameraDemoGetInbetween(const CPolarSubCamera* camera)
+{
+	TCameraInbetween* inbetween = camera->mInbetween;
+	return inbetween;
+}
+
+static inline const JGeometry::TVec3<f32>*
+CameraDemoGetPosition(const CPolarSubCamera* camera)
+{
+	const JGeometry::TVec3<f32>* position = &camera->mPosition;
+	return position;
+}
+
+static inline f32
+CameraDemoVecMag(Vec* v)
+{
+	f32 mag = MsVECMag2(v);
+	return mag;
+}
+
 void CPolarSubCamera::ctrlNormalDeadDemo_()
 {
 	mCurrentTarget.mTarget.set(gpCameraMario->unk0);
-	mInbetween->execCameraInbetween(mPosition, mCurrentTarget.mTarget,
-	                                SMS_GetMarioPos());
+	CameraDemoGetInbetween(this)->execCameraInbetween(
+	    *CameraDemoGetPosition(this), mCurrentTarget.mTarget,
+	    SMS_GetMarioPos());
 
 	CLBChaseDecrease(&mTarget, mInbetween->mAt, 0.03f, 0.0f);
 
@@ -292,7 +315,7 @@ void CPolarSubCamera::ctrlNormalDeadDemo_()
 		diff.x           = mTarget.x - mPosition.x;
 		diff.y           = mTarget.y - mPosition.y;
 		diff.z           = mTarget.z - mPosition.z;
-		f32 distToTarget = MsVECMag2(&diff);
+		f32 distToTarget = CameraDemoVecMag(&diff);
 		if (distToTarget > 0.001f) {
 			f32 r = MsClamp(10500.0f * (1.0f / distToTarget), 5.0f, 80.0f);
 			CLBChaseConstantSpecifyFrame<f32>(&mFovy, r,
