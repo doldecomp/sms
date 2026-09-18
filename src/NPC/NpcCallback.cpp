@@ -85,6 +85,27 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					// expansion region. A parked accessor for
 					// mIndividualProps overshoots to 0x1d8 and changes
 					// instructions.
+					// Closure batch 115: the batch-110 binding level on
+					// `gpCurrentNpc` (a TU-local `static inline TBaseNPC*
+					// NpcCallbackCurrentNpc()` binding the global and
+					// returning it) is worth **+12 of frame per expansion**
+					// here, and applying it at exactly the two uses inside the
+					// `shouldRun` predicate lands the frame on 0x190 with the
+					// instruction count unchanged at 267 (98.3 -> 98.5, the
+					// differing rows drop from 102 to 43). It is not committed
+					// because the 24 bytes land in the wrong place: every
+					// temporary slot is still individually permuted (the
+					// MsGetRotFromZaxis buffers at 0xe0/0xc8 against retail's
+					// 0xcc/0xd8, the scratch matrix at 0x130 against 0x120),
+					// so the level fakes the total rather than reproducing
+					// retail's expansion order, and the r5/r6 and r0/r4
+					// permutations survive it untouched. The sweep over the
+					// sixteen `gpCurrentNpc` reads is monotone (+8 to +16 each,
+					// reaching 0x220 at all sixteen) and only the two-site
+					// prefix lands 0x190. Also +0: wrapping the predicate in a
+					// `static inline bool NpcCallbackNeckIsActive(const
+					// TBaseNPC*)` -- a parameter binding is free here where a
+					// global binding is not.
 					const JGeometry::TVec3<f32>& rotToMario
 					    = MsGetRotFromZaxis(toMario);
 					local_148 = rotToMario
