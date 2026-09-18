@@ -462,5 +462,6 @@
   "dolphin/vi/vi.c",
   "main.cpp",
   "GC2D/SunGlass.cpp",
-  "Camera/CameraWarp.cpp"
+  "Camera/CameraWarp.cpp",
+  "Map/PollutionManager.cpp"
 ]
