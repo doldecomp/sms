@@ -129,7 +129,21 @@ void TRideCloud::control()
 			// TODO: common subexpression elimination did a mess here and it is
 			// painful to figure out....
 
-			if (!unk138->unk0 || unk138->unk0->isDummy())
+			// The graph has to be named: retail keeps it in r28-r31 across
+			// moveToNextNode/moveTo and reads the node array back out of it
+			// for node2, where re-reading unk138->unk0 costs an extra load
+			// and one callee-saved register (96.3 -> 99.8).
+			// TODO: frame 0xc8 vs 0x90. Every slot, the int-to-float
+			// conversion pair at the top of the local area included, is 56
+			// bytes low, so retail has 56 bytes of inline-expansion
+			// temporaries this body does not account for (the open
+			// dead-low-region family in docs/catalog/frame-gaps.md); naming a
+			// MsClamp result is +0. The surviving f0/f1 swap in
+			// mDamageRadius' two multiplies resists all six operand
+			// orderings, both groupings and a named intermediate, and is
+			// probably the same register pressure.
+			TGraphWeb* graph = unk138->getGraph();
+			if (!graph || graph->isDummy())
 				return;
 
 			if (moveToNextNode(unk15C)) {
@@ -145,7 +159,9 @@ void TRideCloud::control()
 				if (node.getRailNode()->mFlags & 0x800)
 					unk16C = node.getRailNode()->mPitch;
 
-				TRailNode* node2 = unk138->getCurrent().getRailNode();
+				TRailNode* node2
+				    = graph->getGraphNode(unk138->getCurGraphIndex())
+				          .getRailNode();
 				if (node2->mYaw != 0xffff)
 					unk15C = node2->mYaw * 0.01f;
 
