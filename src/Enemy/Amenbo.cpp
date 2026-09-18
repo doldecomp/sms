@@ -326,7 +326,9 @@ void TAmenbo::doAdjustTarget()
 	vel *= 0.9f;
 	mVelocity = vel;
 
-	unk1E0 = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() / 63;
+	// The reciprocal is folded at compile time into the 1.0f / 63.0f the
+	// map keeps as @2944; a plain `/ 63` would allocate 63.0f instead.
+	unk1E0 = (1.0f / 63.0f) * mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 
 	if (1.0f <= unk1E0)
 		unk1E0 = 1.0f;
@@ -365,6 +367,9 @@ void TAmenbo::decideTarget()
 	}
 
 	JGeometry::TQuat4<f32> q;
+	// TODO: literal-pool order. The target asks for 1.5f (@3161) before
+	// pi (@3162); ours reverses the pair, so this expression is not yet
+	// spelled the way retail spells it (same instructions either way).
 	q.setRotate(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f),
 	            (1.5f - MsRandF()) * M_PI);
 	setWalkDir(q);
