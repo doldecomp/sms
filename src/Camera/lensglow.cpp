@@ -113,12 +113,16 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 // CLBEaseOutInbetween, CLBChaseDecrease and CLBCalcScaleTranslateMatrix are
 // all real `bl`s here, and the carrier test needs a callee with no matching
 // out-of-line copy. That leaves the inlined ones, and all of them live in
-// shared headers this batch may not touch: `TSunModel::isInBounds`
-// (SunModel.hpp -- sunmgr.cpp already measured one dead 48-byte non-trivial
-// local there and recorded that it takes this frame 0x120 -> 0x150),
-// `TSunModel::getUnk191/getUnk194`, `J3DFrameCtrl::update` (expanded twice,
-// so a 48-byte local there would be the other +96 on its own) and the
-// J3DMaterial colour accessors. 48 + 48 is the arithmetic that fits.
+// shared headers: `TSunModel::isInBounds` (SunModel.hpp -- sunmgr.cpp
+// measured one dead 48-byte non-trivial local there taking this frame
+// 0x120 -> 0x150), `TSunModel::getUnk191/getUnk194`, the TVec2 accumulate
+// loop and the J3DMaterial colour accessors. `J3DFrameCtrl::update` is *not*
+// one of them: retail `bl`s it twice here (0x8002DD54, 0x8002DD5C), so it
+// carries no pool, and the "48 + 48" arithmetic that used to fit is gone.
+// A dead 48-byte *trivial* local (a bare `Mtx`) in isInBounds is worth zero,
+// because MWCC drops an unused POD array in an inlined callee; only a
+// non-trivial object moves the frame, and no such object is nameable for a
+// bounds predicate. Recorded at the declaration; header round 21 rejected it.
 // With the frame padded, three independent residues remain, all of them
 // zero-frame: (a) an f0/f1 swap inside the isInBounds expansion plus an r4/r5
 // swap in its position walk; (b) `gpSunModel->getUnk194()` lands in f29 in

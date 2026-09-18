@@ -36,6 +36,19 @@ public:
 	f32 getUnk194() { return unk194; }
 
 	// Fabricated name; external callers retain the first position's address.
+	//
+	// Header round 21 measured this as the carrier for TLensGlow::perform's
+	// missing 96 bytes of inline-expansion pool and rejected it. A dead
+	// 48-byte *trivial* local (a bare `Mtx`) is worth exactly zero -- MWCC
+	// drops an unused POD array in an inlined callee, so perform stays at
+	// 0x120 against retail's 0x178 -- and only a dead *non-trivial* 48-byte
+	// local moves it (+0x30, as sunmgr.cpp recorded), which is both 0x28
+	// short on its own and not a shape this predicate can plausibly have
+	// built. The other candidate is gone too: retail `bl`s
+	// update__12J3DFrameCtrlFv twice in perform (0x8002DD54, 0x8002DD5C), so
+	// J3DFrameCtrl::update carries no pool there. What is left in perform
+	// that retail inlines is this predicate, getUnk191/getUnk194, the
+	// TVec2 accumulate loop and the J3DMaterial colour accessors.
 	bool isInBounds(f32 bounds)
 	{
 		const JGeometry::TVec2<f32>& position = unkF8[0];
