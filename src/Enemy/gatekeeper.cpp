@@ -6,6 +6,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DCluster.hpp>
 #include <System/Particles.hpp>
 #include <System/MarDirector.hpp>
+#include <System/MSoundMainSide.hpp>
 #include <System/FlagManager.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <Strategic/Strategy.hpp>
@@ -554,9 +555,19 @@ void TBiancoGateKeeper::startBGM()
 {
 	MSBgm::setTrackVolume(0, 0.0f, 0xA, 0);
 	MSBgm::startBGM(0x8001000B);
+	MSMainProc::setGateKeeperBGMPlayFlag(mVariant, true);
 }
 
-void TBiancoGateKeeper::stopBGM() { MSBgm::stopTrackBGM(1, 0xA); }
+// The second gate keeper must not silence the BGM while the first one is
+// still alive, so the track is only stopped once both play flags are clear.
+void TBiancoGateKeeper::stopBGM()
+{
+	MSMainProc::setGateKeeperBGMPlayFlag(mVariant, false);
+	if (MSMainProc::getGateKeeperBGMStopFlag())
+		MSBgm::stopTrackBGM(1, 0xA);
+	else
+		MSBgm::setTrackVolume(1, 0.0f, 1, 0);
+}
 
 void TBiancoGateKeeper::startAppearDemo()
 {
