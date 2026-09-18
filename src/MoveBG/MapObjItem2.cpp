@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <MoveBG/MapObjItem2.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <Map/Map.hpp>
@@ -93,8 +94,10 @@ void TMushroom1up::control()
 		}
 
 		JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
-		pos.x += 1.5f * (50.0f * JMACos(5.0f * t));
+		// The y offset comes first: it owns the lower literal id
+		// (@3312) than the 1.5f of the x/z lines.
 		pos.y += 200.0f;
+		pos.x += 1.5f * (50.0f * JMACos(5.0f * t));
 		pos.z += 1.5f * (50.0f * JMASin(5.0f * t));
 		mPosition.set(pos);
 
@@ -130,10 +133,12 @@ void TMushroom1up::control()
 
 	f32 delta = MsAngleDiff(angle, mRotation.y);
 	f32 step;
+	// std::min/std::max rather than MsClamp: the const-reference
+	// parameters are what put 1.0f and -1.0f in .sdata, not .sdata2.
 	if (delta > 0.0f)
-		step = MsClamp(delta, -1.0f, 1.0f);
+		step = std::min(delta, 1.0f);
 	else
-		step = MsClamp(delta, -1.0f, 1.0f);
+		step = std::max(delta, -1.0f);
 
 	mRotation.y = MsWrap(mRotation.y + step, 0.0f, 360.0f);
 
