@@ -116,7 +116,7 @@ TCardSave::TCardSave(const char* name, bool param_2)
 void TCardSave::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	initData(gpMarDirector->unk18[0]);
+	initData(SMSGetMarDirector()->getGamePad());
 }
 
 void TCardSave::initData(TMarioGamePad* param_1)
