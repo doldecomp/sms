@@ -55,12 +55,12 @@ void TMushroom1up::makeObjAppeared()
 	JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	    PARTICLE_MS_ENM_DISAP_A_W, &mPosition, 0, nullptr);
 	if (emitter)
-		emitter->setGlobalScale(mScaling);
+		emitter->setGlobalScale(getScaling());
 
 	emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_B, &mPosition,
 	                                       0, nullptr);
 	if (emitter)
-		emitter->setGlobalScale(mScaling);
+		emitter->setGlobalScale(getScaling());
 }
 
 void TMushroom1up::initMapObj()

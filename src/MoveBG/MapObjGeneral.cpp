@@ -148,8 +148,8 @@ void TMapObjGeneral::touchingPlayer()
 
 void TMapObjGeneral::holding()
 {
-	mPosition     = mHolder->mPosition;
-	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	mPosition     = getHolder()->mPosition;
+	mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
 }
 
 void TMapObjGeneral::recovering()

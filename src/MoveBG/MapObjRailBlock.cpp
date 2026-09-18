@@ -629,7 +629,8 @@ BOOL TWoodBlock::calcRecycle()
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_EX_CUBE_DISA, &mPosition, 0, nullptr)) {
-			f32 scale = (mScaling.x + mScaling.y + mScaling.z) / 3.0f;
+			f32 scale
+			    = (getScaling().x + getScaling().y + getScaling().z) / 3.0f;
 			emitter->setGlobalDynamicsScale(
 			    JGeometry::TVec3<f32>(scale, scale, scale));
 			emitter->setGlobalParticleScale(

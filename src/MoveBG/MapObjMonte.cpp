@@ -34,9 +34,9 @@
 void TMapObjMonteRoot::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	mDamageRadius = 1400.0f * mScaling.y;
+	mDamageRadius = 1400.0f * getScaling().y;
 	calcEntryRadius();
-	mPosition.y = mInitialPosition.y + mYOffset;
+	mPosition.y = getInitialPosition().y + getObjCollisionHeightOffset();
 }
 
 BOOL TJumpMushroom::receiveMessage(THitActor* sender, u32 message)

@@ -221,7 +221,7 @@ void TSlotDrum::initMapObj()
 {
 	unk148 = 3;
 	unk14C = 400.0f;
-	unk150 = mPosition.y;
+	unk150 = getPosition().y;
 	unk194 = false;
 	unk154 = 2.0f;
 	unk158 = 10.0f;
@@ -243,10 +243,10 @@ void TSlotDrum::initMapObj()
 		; // assert?
 
 	for (int i = 1; i <= unk148; ++i)
-		mMActor->setJointCallback(i, partsRollCallback);
+		getMActor()->setJointCallback(i, partsRollCallback);
 
-	unk140 = mDamageRadius / 3.0f;
-	unk144 = mDamageHeight;
+	unk140 = getDamageRadius() / 3.0f;
+	unk144 = getDamageHeight();
 	initNeonMatColor();
 }
 

@@ -179,7 +179,7 @@ void TMapObjTree::initMapObj()
 		if (isActorType(0x40000038)) {
 			snprintf(buffer, 0x100, "/mapObj/palmLeaf%02d", i + 1);
 		} else {
-			snprintf(buffer, 0x100, "/mapObj/%sLeaf%02d", unkF4, i + 1);
+			snprintf(buffer, 0x100, "/mapObj/%sLeaf%02d", getUnkF4(), i + 1);
 		}
 		leaf.mCollision->init(buffer, 0, this);
 		leaf.mCollision->setAllData(i);
@@ -189,8 +189,8 @@ void TMapObjTree::initMapObj()
 		leaf.mCollision->setUpMtx(leaf.mTransform);
 	}
 
-	if (mMapCollisionManager != nullptr)
-		mMapCollisionManager->unk10 = nullptr;
+	if (getMapCollisionManager() != nullptr)
+		getMapCollisionManager()->unk10 = nullptr;
 }
 
 TMapObjTree::TMapObjTree(const char* name)

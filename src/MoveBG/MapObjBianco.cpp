@@ -439,14 +439,14 @@ void TLeafBoat::touchActor(THitActor* other)
 
 	JGeometry::TVec3<f32> toOther(other->mPosition.x - mPosition.x, 0.0f,
 	                              other->mPosition.z - mPosition.z);
-	JGeometry::TVec3<f32> vel(mVelocity);
+	JGeometry::TVec3<f32> vel(getVelocity());
 	if (toOther.dot(vel) < 0.0f)
 		return;
 
 	if (toOther.x != 0.0f || toOther.z != 0.0f)
 		MsVECNormalize(&toOther, &toOther);
 
-	JGeometry::TVec3<f32> vel2(mVelocity);
+	JGeometry::TVec3<f32> vel2(getVelocity());
 	f32 into = toOther.dot(vel2);
 	if (other->checkActorType(ACTOR_TYPE_ENEMY)) {
 		mVelocity.x -= (1.0f + mEnemyBounce) * (toOther.x * into);
@@ -567,8 +567,8 @@ void TLeafBoat::calc()
 	if (mWaterPushRate != 0.0f) {
 		if (mEffectTimer > 8) {
 			if (fabsf(mVelocity.x) + fabsf(mVelocity.z) > 0.1f) {
-				mEffectPos.set(mPosition.x, mPosition.y - mYOffset,
-				               mPosition.z);
+				mEffectPos.set(getPosition().x, getPosition().y - mYOffset,
+				               getPosition().z);
 				JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 				emitAndBindScale(PARTICLE_MS_M_HAMON_B, 3, &mEffectPos, scale);
 				emitAndBindScale(PARTICLE_MS_M_HAMON_A, 1, &mEffectPos, scale);
@@ -631,7 +631,7 @@ void TLeafBoatRotten::control()
 
 	case 2: {
 		// Fade from white to the rotten tint over the remaining lifetime.
-		f32 rate = (f32)mStateTimer / (f32)mRottenTime;
+		f32 rate = (f32)getStateTimer() / (f32)mRottenTime;
 		mColor.r = (u8)(s32)((f32)(255 - mRottenColor.r) * rate
 		                     + (f32)mRottenColor.r);
 		mColor.g = (u8)(s32)((f32)(255 - mRottenColor.g) * rate

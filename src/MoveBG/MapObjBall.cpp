@@ -464,9 +464,9 @@ void TMapObjBall::makeObjAppeared()
 	calcCurrentMtx();
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	mtx[0][3] = mPosition.x;
-	mtx[1][3] = mPosition.y + mBodyRadius;
-	mtx[2][3] = mPosition.z;
+	mtx[0][3] = getPosition().x;
+	mtx[1][3] = getPosition().y + mBodyRadius;
+	mtx[2][3] = getPosition().z;
 
 	if (isActorType(0x40000394)) {
 		if (mtx[1][1] > 0.0f)
@@ -505,7 +505,7 @@ void TMapObjBall::control()
 		return;
 	}
 
-	JGeometry::TVec3<f32> vel(mVelocity);
+	JGeometry::TVec3<f32> vel(getVelocity());
 	if (!vel.isZero() || mGroundPlane->getActor() != nullptr)
 		calcCurrentMtx();
 }
@@ -1253,9 +1253,9 @@ void TResetFruit::makeObjAppeared()
 	calcCurrentMtx();
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	mtx[0][3] = mPosition.x;
-	mtx[1][3] = mPosition.y + mBodyRadius;
-	mtx[2][3] = mPosition.z;
+	mtx[0][3] = getPosition().x;
+	mtx[1][3] = getPosition().y + mBodyRadius;
+	mtx[2][3] = getPosition().z;
 
 	if (isActorType(0x40000394)) {
 		if (mtx[1][1] > 0.0f)

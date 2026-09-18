@@ -142,13 +142,13 @@ void TMapObjBase::startSound(u16 param_1)
 	if (unk100 != param_1)
 		unk100 = param_1;
 
-	if (!mMapObjData->mSound) {
+	if (!getMapObjData()->mSound) {
 		u32 uVar3 = TMapObjGeneral::mDefaultSound.unk0[unk100];
 		if (uVar3 != 0xffffffff)
 			SMSGetMSound()->startSoundActor(uVar3, &mPosition, 0, nullptr, 0,
 			                                4);
 	} else {
-		u32 uVar3 = mMapObjData->mSound->unk4->unk0[unk100];
+		u32 uVar3 = getMapObjData()->mSound->unk4->unk0[unk100];
 		if (uVar3 != 0xffffffff)
 			SMSGetMSound()->startSoundActor(uVar3, &mPosition, 0, nullptr, 0,
 			                                4);
@@ -629,8 +629,8 @@ void TMapObjBase::initAndRegister(const char* param_1)
 {
 	unkF4 = param_1;
 	initMapObj();
-	if (mMapObjData->unkC) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>(mMapObjData->unkC)
+	if (getMapObjData()->unkC) {
+		JDrama::TNameRefGen::search<TIdxGroupObj>(getMapObjData()->unkC)
 		    ->push_back(this);
 	}
 }
