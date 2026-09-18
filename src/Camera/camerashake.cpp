@@ -10,8 +10,8 @@
 TCameraShake* gpCameraShake;
 
 // fabricated
-static void unitVecTo(const Vec& from, const Vec& to,
-                      JGeometry::TVec3<f32>* out)
+static inline void unitVecTo(const Vec& from, const Vec& to,
+                             JGeometry::TVec3<f32>* out)
 {
 	out->set(to.x - from.x, to.y - from.y, to.z - from.z);
 	out->normalize();
@@ -129,17 +129,47 @@ void TCameraShake::keepShake(EnumCamShakeMode mode, f32 scale)
 	}
 }
 
-// TODO: 95.8%. The up-vector rotation and the whole shake loop are exact; what
-// is left is a 56-byte low-region frame gap (retail 0x118, ours 0xe0, with
-// `origPos` 4 bytes higher relative to the saves) plus ten structural
-// instructions at the entry and in the `finished` block. Retail materialises one
-// zero in r8 *before* the prologue and reuses it for `anyActive`, the loop index
-// and `mRollAccum = 0`, and reuses the `1` it stores into `mIsDecreasing` for
-// `finished = true`; we emit three separate `li 0`s and a separate `li 1`.
+// TODO: 95.9%. Every instruction in the body is exact; what is left is a
+// 56-byte low-region frame gap (retail 0x118, ours 0xe0) and ten structural
+// instructions, both fully diagnosed by re-pass 175's probes.
+//
+// Retail's slot map, read off the dtk asm (0xc0/0xc4 and everything below 0x90
+// are never referenced): dead 0xc..0x90, rot 0x90..0xb4, oldUp 0xb4..0xc0,
+// *8 dead bytes* 0xc0..0xc8, dir 0xc8, hAngle/vAngle/r 0xd4/0xd6/0xd8,
+// origPos 0xdc, three 8-byte conversion temps 0xe8/0xf0/0xf8, saves 0x100.
+// Ours is the same list with rot *below* oldUp, no 8-byte gap and only 80 dead
+// bytes instead of 132. Two spellings reproduce the map byte-for-byte:
+//   (1) `volatile char hole[8]` between dir and oldUp, `oldUp` declared
+//       uninitialised *before* rot and assigned `= *up` after it, and
+//       `volatile char trash[52]` declared last. Frame 0x118 exact, 345
+//       instructions, every stack displacement exact, 96.1%, leaving only the
+//       ten register markers below.
+//   (2) moving rot/oldUp into a TU-local `static inline` helper, which makes
+//       them inline temporaries growing *up* from the pool (rot then oldUp, so
+//       the copy lands after setRotate for free) and makes the 8-byte gap the
+//       region boundary. That alone is frame 0x110 - 48 of the 56 bytes - but
+//       leaves rot 60 bytes too low, because the helper's own expansion adds 52
+//       bytes of pool *above* rot where retail has 8.
+// So the residue is one dead 8-byte named local between dir and oldUp plus 52
+// dead pool bytes below rot, and no legal carrier is available: the TU's only
+// UNUSED callees (setShakeAngleAll_/One_) are not called from here, and the
+// inlined callees in scope (TVec3::set/setLength, TCamShakeInfo::isActive and
+// ::reset, JMASSin, TMatrix33::identity, SMatrix33C::at which returns by value)
+// all have empty local frames. Do not commit the padding.
+//
+// The ten structural markers are one phenomenon: retail CSEs the *constants*
+// that a bool flag shares with a neighbouring field store, and we do not.
+// In the entry block it materialises a single 0 in r8 before the prologue and
+// reuses it for `anyActive`, for `i` (`addi r4, r8, 0`) and for `mRollAccum = 0`
+// (`sth r8`), giving it=r3/i=r4; we emit three separate `li 0`s and get
+// it=r5/i=r6. In the shake loop `finished` lives in r0, sharing its 0 with
+// `it->mIsKeep = 0` and taking its 1 from the `li r6, 1` stored to
+// `mIsDecreasing` (`mr r0, r6`); ours keeps `finished` in r5 with its own
+// constants. `mRollAccum = 0` cannot move above the origPos copy (the store
+// would have to cross the loads from *pos, and retail's loads come first).
 // Rejected: `bool finished` hoisted above the angle accumulation or to the top
 // of the active block (both inert); a C-style `int i;` declaration block with
-// `it` fetched before the origPos copy (moves the `it` fetch to retail's
-// position but adds an extra `li 0` and a load reorder, 95.6).
+// `it` fetched before the origPos copy (95.6 at the old frame).
 void TCameraShake::execShake(const JGeometry::TVec3<f32>& origin,
                              JGeometry::TVec3<f32>* pos,
                              JGeometry::TVec3<f32>* up)
@@ -198,7 +228,7 @@ void TCameraShake::execShake(const JGeometry::TVec3<f32>& origin,
 	}
 
 	JGeometry::TVec3<f32> dir;
-	unitVecTo(*pos, origPos, &dir);
+	unitVecTo(origin, origPos, &dir);
 
 	JGeometry::TRotation3<TMtx33f> rot(
 	    dir, -(0.017453294f * (0.005493164f * (f32)mRollAccum)));
