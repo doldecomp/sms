@@ -729,16 +729,6 @@ void TTobiPuku::forceKill()
 
 void TTobiPuku::genEventCoin() { isDeadBck(); }
 
-// TODO: parked binding level -- a TSmallEnemy::getJuiceBlock() that binds the
-// member to a local is worth the 8 bytes changeOut's frame is short, and only
-// at the kill site (the same level on the position read above is +16).
-// include/Enemy/SmallEnemy.hpp belongs to a header batch this round.
-static inline TJuiceBlock* TobiPukuJuiceBlock(TTobiPuku* self)
-{
-	TJuiceBlock* block = self->mJuiceBlock;
-	return block;
-}
-
 void TTobiPuku::changeOut()
 {
 	offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -749,7 +739,7 @@ void TTobiPuku::changeOut()
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
-	TobiPukuJuiceBlock(this)->kill();
+	getJuiceBlock()->kill();
 	mJuiceBlock = nullptr;
 }
 

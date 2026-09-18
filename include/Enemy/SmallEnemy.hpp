@@ -188,6 +188,16 @@ public:
 	f32 getUnk158() const { return unk158; }
 	u8 getUnk184() const { return unk184; }
 
+	// The binding is load-bearing and applies per site: TTobiPuku::changeOut
+	// wants the named pointer at its kill() site only (+8, the byte count its
+	// frame was short), while the same level on the position read above it is
+	// +16 and overshoots. Header round 21.
+	TJuiceBlock* getJuiceBlock() const
+	{
+		TJuiceBlock* block = mJuiceBlock;
+		return block;
+	}
+
 	static bool mIsPolluter;
 	static bool mIsAmpPolluter;
 
