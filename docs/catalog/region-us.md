@@ -39,3 +39,7 @@ Life sounds: `0x480C` under water, `0x4823` on land, `0x4801` on gain; segment c
 - `Application`: shorter disc-error strings shift downstream `.rodata`; see `linking.md`.
 
 - **US debug strings are English where the JP source is Japanese** (batch 100): all 21 `TMenuDirector::setFixedStageValue` stage names (`Beach %d`, `Hotel %d`, `Casino 0/1`, `Park %d`, `Noki %d`, `sea bottom`, `%02d scene %d`, ...), the six Application disc-error messages (raw `\x99` inside "NINTENDO GAMECUBE") and the banner path `/card/mariobnr.bti` (not `_jpn`). A unit whose only nonmatching data rows are Shift-JIS strings in a debug menu should be checked against the target `.rodata` first.
+
+## Linker-computed stack symbols (library pass 135, 2026-09-18)
+
+- **A linker-computed stack symbol is a region constant.** The US map's linker-generated list (lines ~102828-102872 of `marioUS.MAP`) gives `_stack_end 0x804177e4`, `_stack_addr 0x804277e8`, `_db_stack_addr 0x804297e8`, and `__ArenaLo = (_db_stack_addr + 0x1f) & ~0x1f = 0x80429800`. `__init_registers` (`__start`), `__OSThreadInit` (OSThread), `InitMetroTRK` (dolphin_trk) and `OSInit` (OS.c, still at the Japanese 0x80424008; `OSInit`'s three remaining operands are exactly `_stack_addr` and `__ArenaLo`) each materialise one as a literal, and three units had the Japanese values. Guard with `#if defined(VERSION_GMSE01)`; keep `AT_ADDRESS` rather than letting the lcf define the symbol, because the extracted target object has no relocation there. `__start`, OSThread and dolphin_trk linked from this.
