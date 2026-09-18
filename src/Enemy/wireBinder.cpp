@@ -2,6 +2,12 @@
 #include <Map/MapWire.hpp>
 #include <Map/MapWireManager.hpp>
 
+// TODO: instruction-exact, frame 0x68 vs retail's 0x50; reset()'s two vectors
+// land at 0x3c/0x48 where retail has 0x24/0x30, i.e. +24 bytes of low region,
+// exactly as in bind().  Rejected: spelling reset()'s body out here (84
+// instructions instead of 67, so init really does inline reset), routing the
+// wire fetch through getWire() (70 instructions), and initialised vector
+// declarations (no change).
 bool TWireBinder::init(const JGeometry::TVec3<f32>& param_1)
 {
 	return reset(param_1);
@@ -26,6 +32,15 @@ bool TWireBinder::reset(const JGeometry::TVec3<f32>& param_1)
 	return true;
 }
 
+// TODO: instruction-exact, frame 0x88 vs retail's 0x78.  The named locals and
+// every inline temporary sit at the right *relative* offsets; the whole block is
+// 24 bytes too high because our low (inline-temporary) region is 48 bytes where
+// retail's is 24 -- the same +24 low region as init() below, and the two
+// functions' only shared trait is that they inline a callee which owns
+// JGeometry::TVec3<f32> locals of its own (getNextFramePosition's `velocity`
+// here, reset()'s two vectors there).  Rejected: dropping the named `f32 fVar`
+// (+0), spelling the last line as a named vector plus `-=` (186 instructions),
+// initialised instead of assigned vector declarations (no change).
 void TWireBinder::bind(TLiveActor* actor)
 {
 	JGeometry::TVec3<f32> unk_14;
@@ -54,22 +69,22 @@ TWireBinder::getDirAtPos(const JGeometry::TVec3<f32>& param_1,
 {
 	f32 posInWire = getRangePos(param_1);
 
-	f32 fVar1;
-	f32 fVar2;
+	f32 toPos;
 
+	// Sample two points 0.01 of the wire's range apart, stepping backwards
+	// instead of forwards when the requested direction would run off the end.
 	if (posInWire <= 0.01f && param_2 < 0.0f
 	    || 0.99f <= posInWire && 0.0f < param_2) {
-		fVar1 = posInWire - 0.01f * param_2;
-		fVar2 = posInWire;
+		toPos     = posInWire;
+		posInWire = posInWire - 0.01f * param_2;
 	} else {
-		fVar1 = posInWire;
-		fVar2 = posInWire + 0.01f * param_2;
+		toPos = posInWire + 0.01f * param_2;
 	}
 
 	JGeometry::TVec3<f32> vec1;
 	JGeometry::TVec3<f32> vec2;
-	getPoint(&vec1, fVar1);
-	getPoint(&vec2, fVar2);
+	getPoint(&vec1, posInWire);
+	getPoint(&vec2, toPos);
 
 	vec2 -= vec1;
 
@@ -110,20 +125,28 @@ bool TWireBinder::isStartWire(const JGeometry::TVec3<f32>& param_1,
                               f32 param_2) const
 {
 	f32 posInWire = getRangePos(param_1);
-	f32 targetPos = 0.0f < param_2 ? 0.0f : 1.0f;
+	f32 targetPos = getStartRangePos(param_2);
+	f32 diff      = posInWire - targetPos;
 
-	return fabsf(posInWire - targetPos) < 0.015f;
+	return fabsf(diff) < 0.015f;
 }
 
 bool TWireBinder::isEndWire(const JGeometry::TVec3<f32>& param_1,
                             f32 param_2) const
 {
 	f32 posInWire = getRangePos(param_1);
-	f32 targetPos = 0.0f < param_2 ? 1.0f : 0.0f;
+	f32 targetPos = getEndRangePos(param_2);
+	f32 diff      = posInWire - targetPos;
 
-	return fabsf(posInWire - targetPos) < 0.015f;
+	return fabsf(diff) < 0.015f;
 }
 
-void TWireBinder::getStartRangePos(f32) { }
+f32 TWireBinder::getStartRangePos(f32 param_1)
+{
+	return 0.0f < param_1 ? 0.0f : 1.0f;
+}
 
-void TWireBinder::getEndRangePos(f32) { }
+f32 TWireBinder::getEndRangePos(f32 param_1)
+{
+	return 0.0f < param_1 ? 1.0f : 0.0f;
+}
