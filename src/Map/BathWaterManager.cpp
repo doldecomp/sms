@@ -1016,9 +1016,8 @@ public:
 		    J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift));
 		unk8013C = new JUTTexture(
 		    (const ResTIMG*)JKRGetResource("/scene/map/map/water_ball.bti"));
-		JUTTexture* warpTex = new JUTTexture(
+		unk80140 = new JUTTexture(
 		    (const ResTIMG*)JKRGetResource("/scene/map/map/water_warp.bti"));
-		unk80140 = warpTex;
 		init_tobj_resource(&unk800B4,
 		                   JKRGetResource("/scene/map/map/ball.bti"));
 		init_tobj_resource(&unk800F4,
