@@ -117,8 +117,8 @@ public:
 
 class TTelesaBlock : public TJuiceBlock {
 public:
-	TTelesaBlock()
-	    : TJuiceBlock("テレサブロック")
+	TTelesaBlock(const char* name = "テレサブロック")
+	    : TJuiceBlock(name)
 	{
 	}
 
