@@ -291,7 +291,9 @@ void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 		if (param_1 & 2) {
 			if (unk60->isJellyFishMare() && i == 11) {
 				MActor* mactor = (*it)->getMActor();
-				Mtx mtx;
+				// TODO: still 40 bytes of frame short of the ROM after
+				// the 4x4 fix (0xd0 vs 0xf8).
+				Mtx44 mtx;
 				SMS_GetLightPerspectiveForEffectMtx(mtx);
 				J3DModelData* data = mactor->getModel()->getModelData();
 				int starglowMatIdx

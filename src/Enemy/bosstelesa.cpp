@@ -1330,7 +1330,7 @@ void TBossTelesa::calcRootMatrix()
 
 	for (u16 i = 0;
 	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); ++i) {
-		Mtx effectMtx;
+		Mtx44 effectMtx;
 		SMS_GetLightPerspectiveForEffectMtx(effectMtx);
 		getMActor()
 		    ->getModel()

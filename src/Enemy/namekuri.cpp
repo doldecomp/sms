@@ -454,7 +454,7 @@ void TNameKuri::perform(u32 cue, JDrama::TGraphics* graphics)
 	TWalkerEnemy::perform(cue, graphics);
 	unk1CC->perform(cue, graphics);
 	if (cue & CUE_CALC_ANIM) {
-		Mtx afStack_50;
+		Mtx44 afStack_50;
 		SMS_GetLightPerspectiveForEffectMtx(afStack_50);
 
 		// TODO: need one more inline here somewhere?

@@ -398,7 +398,7 @@ void TBEelTears::perform(u32 cue, JDrama::TGraphics* graphics)
 		control();
 
 	if (cue & CUE_CALC_ANIM) {
-		Mtx effectMtx;
+		Mtx44 effectMtx;
 		SMS_GetLightPerspectiveForEffectMtx(effectMtx);
 		mMActor->getModel()
 		    ->getModelData()

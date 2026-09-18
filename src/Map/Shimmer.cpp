@@ -45,13 +45,7 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 			far();
 		}
 
-		// TODO: 12 bytes of uninitialised local the compiled function never
-		// touches, declared ahead of effectMtx (it is the top 12 bytes of
-		// the 0x198 frame). Size and position are the only evidence; a
-		// scratch light position next to the effect matrix below is the
-		// plausible original.
-		Vec lightPos;
-		Mtx effectMtx;
+		Mtx44 effectMtx;
 		SMS_GetLightPerspectiveForEffectMtx(effectMtx);
 
 		getModel()->getModelData()

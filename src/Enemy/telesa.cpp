@@ -435,7 +435,9 @@ void TTelesa::calcRootMatrix()
 	if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
 		for (u16 i = 0;
 		     i < mMActor->getModel()->getModelData()->getMaterialNum(); ++i) {
-			Mtx afStack_94;
+			// TODO: still 16 bytes of frame short of the ROM after the
+			// 4x4 fix (0x130 vs 0x140); another local is missing here.
+			Mtx44 afStack_94;
 			SMS_GetLightPerspectiveForEffectMtx(afStack_94);
 			mMActor->getModel()
 			    ->getModelData()
