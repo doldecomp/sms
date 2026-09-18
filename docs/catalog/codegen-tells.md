@@ -702,3 +702,12 @@ Also measured there: a `const` accessor causes a CSE (retail reloads `mActorType
 - `MActorAnmBck::setMotionBlendRatio` census: 61 of 63 ROM sites use the single-read accessor form; `MActor.hpp` is right and `MarioDraw::calcAnim`'s double read is a call-site property.
 - Ruled out in headers: `TVec3 tmp(v); mult33(tmp, v);` in the one-arg `mult33` (only cameralib wants the copy; `TMapWire::init` 98.8 -> 95.9); `length()` as `TUtil::sqrt(dot())` (`squared()` is the intermediate; boid loses its weak `dot`); an `MsClamp<f32>` level (cameragc's single `bl` is the caller-size family, with `TVec3::set<f>` and `TUtil::one()` flipping at the same site); `TFlagT` copy ctor out of class (three JDrama ctors by value pin the in-class spelling; `~TFlagT() {}` reproduces the ABI but emits a `TGameSequence` dtor the map lacks); `TVector<void*>::begin()` facades (trial table in `std-vector.hpp`). The depth table is re-measured and unchanged: `static` 14/9/6/2/never, `inline` unlimited at depth 1 (17 measured), identical below.
 - `evSetEventStart`/`evSetEventEnd` are UNUSED at 0x174/0x148 with no strings of their own; left empty rather than fabricated.
+
+## Batch 59 tells (bossManta, chuuhana)
+
+- An `else` chain is readable off a lone `b <epilogue>` after a block, invisible in a collapsed diff; grep the `<` markers first.
+- Predicates cut both ways per site: retail materialises where we branch -> call the helper (`isAirborne()`, `isBckAnm(6)`); retail branches where we materialise -> compare inline (`getActorType() == 0x400000CF` over `isActorType()`). One TU uses both spellings of one predicate.
+- `.sdata2` order is reverse source order, so it is a literal-value oracle: a literal late in the pool belongs to a function near the top of the source, and a slot shared by two functions fixes its value (`-10.0f`, not `-1.0f`).
+- A store cannot move across a call: a target store after a `bl` dates the declaration after the call's result was named.
+- `a = b = mPosition.y;` gives one load / two stores with the last assignee stored first. `int index = mInstanceIndex;` removes the `extsh.` on an `s16` compared twice. An unnamed `(GXColor){...}` argument temporary sits above the named locals; a named one sits below and adds an init.
+- Console accessor levels are +8 per level per site (`gpMarDirector->mConsole` 0x38, `->getConsole()` 0x58, `SMSGetMarDirector()->getConsole()` 0x68 over four sites). `getPosition()` over `mPosition` is +8 as `operator-`'s left operand and zero as `set()`'s argument; naming `getGravityY()`'s result costs an instruction.
