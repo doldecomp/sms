@@ -5,6 +5,8 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
 
+TBeamManager* gpBeamManager;
+
 static void coneInPlane(const JGeometry::TVec3<f32>& origin, f32 angle,
                         const JGeometry::TVec3<f32>& axis,
                         const JGeometry::TVec3<f32>& offsetDir,
@@ -75,6 +77,18 @@ void TConeBeam::drawConeBeamAux(const GXColor& color, bool unk)
 
 // TODO: Recover origin caching in coneInPlane and the remaining stack layout.
 // Preserve the map's 348-byte UNUSED coneInPlane body while testing callers.
+// TODO: 95.6%. The instruction stream is exact apart from two scheduled
+// loads; the residue is the local layout: retail's frame is 0x1c8 against our
+// 0x1b8 and the 16 extra bytes are not appended, they are redistributed --
+// retail's low vectors sit at 0x58/0x64/0x78/0x84 with a 0x38 hole between
+// 0x8c and 0xc4, ours at 0x88/0xa0/0xb8/0xd0 with no hole, so an inlined
+// callee in the middle of the function owns temporaries we do not create.
+// coneInPlane already compiles to the map's 0x15c, so its body is not the
+// cause. Measured but not applied: declaring sinA before cosA in the second
+// loop puts the sine table back in r6 the way retail has it in both loops, but
+// it then schedules the two lfsx in the opposite order, so the score is a
+// wash (95.67 -> 95.65); the register evidence still says the second loop
+// evaluates JMASin first and uses cosA first.
 void TConeBeam::calcVertices(int count)
 {
 	JGeometry::TVec3<f32> local_140;
