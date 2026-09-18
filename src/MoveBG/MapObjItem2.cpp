@@ -82,6 +82,16 @@ void TMushroom1up::load(JSUMemoryInputStream& stream)
 	offLiveFlag(LIVE_FLAG_AIRBORNE | LIVE_FLAG_UNK10);
 }
 
+// TODO: 99.8%, all instructions match (closure batch 123: naming the shared
+// `f32 deg = 5.0f * t;` argument for JMACos/JMASin and using `mPosition = pos`
+// instead of `.set(pos)` -- the raw-word copy retail uses for a stack-to-
+// member TVec3 copy -- took this from 86.7% with 40 structural markers to
+// instruction-exact). What is left is two small frame items: the whole
+// function is 8 bytes short (0x88 vs 0x80, the "last 8 bytes" unnameable-
+// object shape, no candidate found), and the `diff = SMS_GetMarioPos(); diff
+// -= mPosition;` block's stack slot is 4 low -- the open `bl
+// TVec3::sub`/`operator-=` pool-ordering item from docs/catalog/frame-gaps.md
+// research batches 113/116/119, not re-investigated here.
 void TMushroom1up::control()
 {
 	TMapObjBase::control();
@@ -94,12 +104,13 @@ void TMushroom1up::control()
 		}
 
 		JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
+		f32 deg = 5.0f * t;
 		// The y offset comes first: it owns the lower literal id
 		// (@3312) than the 1.5f of the x/z lines.
 		pos.y += 200.0f;
-		pos.x += 1.5f * (50.0f * JMACos(5.0f * t));
-		pos.z += 1.5f * (50.0f * JMASin(5.0f * t));
-		mPosition.set(pos);
+		pos.x += 1.5f * (50.0f * JMACos(deg));
+		pos.z += 1.5f * (50.0f * JMASin(deg));
+		mPosition = pos;
 
 		mScaling.set(1.5f, 1.5f, 1.5f);
 		mLinearVelocity.zero();
@@ -245,6 +256,22 @@ void TJumpBase::calcRootMatrix()
 	TMapObjBase::calcRootMatrix();
 }
 
+// TODO: 96.0%, 8 structural markers of 112 total (closure batch 123
+// investigation, no source change landed). Two separate issues:
+// (1) case 5's `JMASSin(angle)`/`JMASCos(angle)` share one `angle >>
+// jmaSinShift` index computation in our build; retail's JMASSin/JMASCos each
+// redo it (the codegen-tells.md batch-56 "derives the table index twice"
+// shape) even though the shared `int angle` local is already named the same
+// way in both -- MWCC's CSE decision here is not steerable by splitting the
+// TVec3 ctor into per-component assignments (regresses 96.0% -> 93.7%,
+// reverted).
+// (2) around case 5's `if (!isAirborne())` block, retail's `unk13C = 0;
+// unk138 = 2;` pair (`stw 0x13c`/`stb 0x138`) is missing outright from our
+// build right after three of `this`'s own virtual calls (vtable+0x104/
+// +0x158/+0x100) -- not yet mapped to source; `this` also sits two
+// registers higher in retail (r29 vs our r31) throughout the function,
+// consistent with two missing persisted locals. Needs a slower per-case
+// re-derivation than this batch's budget allowed.
 void TJumpBase::control()
 {
 	int prevState = unk138;
