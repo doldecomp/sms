@@ -326,6 +326,20 @@ static inline TPlayList* JASHardStreamGetNext(TPlayList* p)
 		return mList->getPair()->getLoop();
 	}
 
+	// TODO: startFirst/startSecond inline this function and match instruction
+	// for instruction, but their frame is 0x88 while ours is 0x70: retail has
+	// 24 extra bytes of dead low region at 0x18..0x30 (buffer at 0x30, stmw at
+	// 0x74). Probed: the only zero-instruction source of exactly that geometry
+	// is an uninitialised local of a 24-byte class with a user constructor and
+	// no destructor declared here before `buffer` (a ctor+dtor class adds 8
+	// more above the buffer, a dead POD array is eliminated, a 16-byte class
+	// gives 0x28 and a 20-byte one 0x2c). No 24-byte class with a ctor is
+	// visible in the map for this TU, so the carrier is unidentified.
+	// Rejected (all leave buffer at 0x18): routing the strcpy/strcat through
+	// extendFilename (frame 0x78, +8 above the buffer instead), `&fi[*idx]`
+	// instead of `fi + *idx` at the three call sites, naming the DVDOpen
+	// result, declaring `ptr` before `buffer`, a wider outgoing argument area
+	// (a ten-word call only moves the buffer by 8).
 	BOOL TControl::fileOpen(u16 param_1, DVDFileInfo* param_2)
 	{
 		char buffer[64];
@@ -481,15 +495,20 @@ static inline TPlayList* JASHardStreamGetNext(TPlayList* p)
 
 	u32 TControl::msecToFrames(u32) { return 0; }
 
-	u8 TControl::volFloatToU8(f32 param_1)
+	u8 TControl::volFloatToU8(f32 vol)
 	{
-		if (param_1 > 1.0f)
-			param_1 = 1.0f;
+		// The two bounds are named locals: retail's frame reserves 8 bytes
+		// for them even though both fold into @sda21 loads (0x20 vs 0x18).
+		f32 max = 1.0f;
+		f32 min = 0.0f;
 
-		if (param_1 < 0.0f)
-			param_1 = 0.0f;
+		if (vol > max)
+			vol = max;
 
-		return param_1 * 255.0f;
+		if (vol < min)
+			vol = min;
+
+		return vol * 255.0f;
 	}
 
 	THardStreamFile::THardStreamFile() { }
