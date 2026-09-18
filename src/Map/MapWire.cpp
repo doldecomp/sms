@@ -364,11 +364,15 @@ f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
  * @param pos the relative position on the wire (0 to 1)
  * @param out the output vector
  */
+// TODO: retail spells the products span-first (`fmadds span, pos, start`).
+// `out->set(...)` here is refuted: it lands move()'s out-of-line `bl set<f>`
+// (84.3 -> 85.4) but costs getPointPosOnWire 95.8 -> 48.9, so the
+// out-of-line `set` in move()/release() must come from a deeper expansion.
 void TMapWire::getPointPosOnLine(f32 pos, JGeometry::TVec3<f32>* out) const
 {
-	out->x = mStartPoint.x + pos * mWireSpan.x;
-	out->y = mStartPoint.y + pos * mWireSpan.y;
-	out->z = mStartPoint.z + pos * mWireSpan.z;
+	out->x = mWireSpan.x * pos + mStartPoint.x;
+	out->y = mWireSpan.y * pos + mStartPoint.y;
+	out->z = mWireSpan.z * pos + mStartPoint.z;
 }
 
 void TMapWire::getPointPosOnWire(f32 pos, JGeometry::TVec3<f32>* out) const
