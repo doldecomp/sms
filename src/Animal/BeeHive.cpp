@@ -535,8 +535,8 @@ void TBeeHive::prepareFall()
 	offLiveFlag(LIVE_FLAG_UNK10);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-	gpMSound->startSoundActor(MSD_SE_EN_BEENEST_OFF, &mPosition, 0, nullptr, 0,
-	                          4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_BEENEST_OFF, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	JGeometry::TVec3<f32> velocity;
 	mRotation168.getZDir(velocity);

@@ -181,7 +181,7 @@ TMovieDirector::~TMovieDirector()
 	    = (JKRMemArchive*)JKRFileLoader::getVolume("subtitle"))
 		arc->unmountFixed();
 
-	gpMSound->stopAllSound();
+	SMSGetMSound()->stopAllSound();
 	THPPlayerStop();
 	THPPlayerClose();
 	THPPlayerQuit();

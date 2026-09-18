@@ -93,10 +93,9 @@ void TCogwheelScale::control()
 
 	if (mWaterAmount > 0.0f) {
 		mWaterAmount -= mWaterLeakSpeed;
-		gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_MR_TSUBO_WATER,
-		                                  &mPosition, nullptr,
-		                                  fabsf(mWaterAmount), 0, 0, nullptr,
-		                                  0, 4);
+		SMSGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_OBJ_MR_TSUBO_WATER, &mPosition, nullptr,
+		    fabsf(mWaterAmount), 0, 0, nullptr, 0, 4);
 		if (mWaterAmount < 0.0f)
 			mWaterAmount = 0.0f;
 	}

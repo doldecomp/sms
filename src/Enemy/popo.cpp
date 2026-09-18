@@ -418,7 +418,7 @@ bool TPopo::checkTrigger()
 	if (analogR > 20) {
 		mIsPumping = 1;
 		f32 pump   = mPumpScale;
-		if (gpMSound->gateCheck(0x20C2))
+		if (SMSGetMSound()->gateCheck(0x20C2))
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 			    0x20C2, &mPosition, nullptr, pump, 0, 0, nullptr, 0, 4);
 		mSprayedByWaterCooldown = 0;
@@ -451,7 +451,7 @@ bool TPopo::checkTrigger()
 
 	f32 levelLimit = mSaveParams->getSLLevelLimit();
 	if (analogR < 20 && (mIsLevelReached || mPumpScale > levelLimit)) {
-		if (gpMSound->gateCheck(0x28CD))
+		if (SMSGetMSound()->gateCheck(0x28CD))
 			MSoundSESystem::MSoundSE::startSoundActor(0x28CD, &mPosition, 0,
 			                                          nullptr, 0, 4);
 		onHitFlag(HIT_FLAG_NO_COLLISION);

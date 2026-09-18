@@ -1370,8 +1370,8 @@ void TBossTelesa::calcRootMatrix()
 	}
 
 	if (getMActor()->checkCurBckFromIndex(12)) {
-		gpMSound->startSoundActor(MSD_SE_BS_TELESA_FIRE, &mPosition, 0,
-		                          nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FIRE, &mPosition, 0,
+		                                nullptr, 0, 4);
 
 		gpMarioParticleManager->emitAndBindToMtxPtr(BTELESA_JPA_MS_BTLS_ASE,
 		    getMActor()->getModel()->getAnmMtx(1), 1, this);
