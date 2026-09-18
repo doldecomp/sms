@@ -2369,8 +2369,10 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 	}
 
 	// Another unused distance, as in TNerveBossTelesaFallDemo.
-	JGeometry::TVec3<f32> toMario = boss->mPosition;
-	toMario.sub(*gpMarioPos);
+	// `a = b - c`, not a copy plus an in-place sub: only the former reaches
+	// inline depth 4 (copy ctor 1, operator- 2, operator-= 3), where the ROM
+	// `bl`s TVec3::sub.
+	JGeometry::TVec3<f32> toMario = boss->mPosition - *gpMarioPos;
 
 	if (spine->getTime() > 400 && !boss->mKillSmallEnemy->unk6C) {
 		spine->pushAfterCurrent(&TNerveBossTelesaAppear::theNerve());
@@ -2606,8 +2608,7 @@ DEFINE_NERVE(TNerveBossTelesaFallDemo, TLiveActor)
 
 	if (boss->rouletteFall()) {
 		// The distance is never used: a leftover from the demo camera work.
-		JGeometry::TVec3<f32> toMario = boss->mPosition;
-		toMario.sub(*gpMarioPos);
+		JGeometry::TVec3<f32> toMario = boss->mPosition - *gpMarioPos;
 
 		if (boss->slotFall()) {
 			boss->offAllCollision();
