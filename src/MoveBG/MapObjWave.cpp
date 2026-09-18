@@ -293,6 +293,20 @@ void TMapObjWave::movement()
 // every accessor form of the map read inside movement() (bare global, plain
 // getCurrentMap(), SMSGetMarDirector()->mMap, a named TMarDirector* local, a
 // named u8 map) were all tried; the accessor chain below is the best of them.
+//
+// Re-measured (single-file compiles, perform's 34 instructions unchanged
+// throughout): the map read is the only lever and it saturates here. 0x28 for
+// `gpMarDirector->getCurrentMap()` twice or a named `u32 map`, 0x30 for a named
+// `u8 map` / a named `TMarDirector*` / one accessor plus one raw `mMap`, 0x38
+// for the two-level chain below -- and *nothing* goes past 0x38: a TU-local
+// three- or four-level wrapper around SMSGetMarDirector(), an `int`-returning
+// getCurrentMap() (the MapObjWave return-type lever that fixed draw()), a
+// `u32`-returning cue helper, and a named texture local all leave it at 0x38.
+// The last 8 bytes only appear for a genuine 8-byte *object* (`f64 unused;`
+// reaches 0x40 with all 34 instructions intact), exactly like MSBgm::init's
+// residue -- an 8-byte local, not another accessor or scalar. No candidate
+// declaration has any evidence: perform has no float, no aggregate and no
+// address-taken value, and the map lists no other helper for this TU.
 void TMapObjWave::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mTexture == nullptr)
