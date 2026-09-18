@@ -297,6 +297,11 @@ void TEnemyManager::copyFromShared()
 // aliveNum's register (`li r5, 0; addi r3, r5, 0`) where we emit two
 // independent `li 0`s. The same shape is open in TEMario::perform, so it is a
 // constant-reuse property of MWCC's loop setup, not a spelling here.
+// TODO: 99.7%. Two residues, probably one cause: our low region is 4 bytes
+// short (the TTimeRec colour temp sits at 0xb8 not 0xbc -- the known-open
+// JUTColor temp stride), and retail initialises the first loop's index by
+// copying the already-materialised zero (`addi r3, r5, 0`) instead of a fresh
+// `li r3, 0`. Refuted: hoisting the index declaration out of the `for`.
 void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (unk30 & 1)
