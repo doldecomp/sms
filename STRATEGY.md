@@ -9,16 +9,16 @@ The end goal is a game built entirely from source into a byte-identical DOL.
 **Source-linked code** is the measure that tracks that goal; matched bytes guide the intermediate work.
 A 99.9% function, or an exact function in an object with other differences, adds nothing to source-linked code.
 
-## Order
+## Order (revised 2026-09-17, after the whole-TU phase)
 
-This reflects what recent batches have actually done (see `git log`); the user has not revised it since 2026-09-15.
+The from-scratch phase is over: every game unit has a full reconstruction, 259 of the 327 unlinked game units are at 95%+ and 134 are within three functions of matching. What moves the goal now is **closing** units, not lifting them. Batches are one of:
 
-1. **Cheap links first.** A unit one function or one frame gap from linking is worth more than the same effort elsewhere. Check `docs/catalog/frame-gaps.md` for the list and what has already been tried.
-2. **Whole-TU reconstruction from the map.** The current mainline. Pick an unstarted or empty unit (enemies so far: `tobiPuku`, `seal`, `chuuhana`, `igaiga`, `cannon`, `popo`, `koopajr`, `hanasambo`), then:
-   - recover the full symbol inventory from `orig/GMSE01/files/marioUS.MAP` and scaffold per `docs/PROGRAM_STRUCTURE_REVVING.md`;
-   - declare virtuals in vtable order and params from `.rodata` first (`docs/catalog/tu-reconstruction.md`);
-   - draft bodies with m2c, write every function including nerves and UNUSED helpers, and put the file in map order.
-3. **Near-match queue.** Nonmatching game functions at 98%+ similarity, largest first, grouped by shared cause. Regenerate with the script below.
+1. **Closure batches.** 3-5 units per agent, each with 1-3 non-exact functions (regenerate the list with the script below, sorted by non-exact count then bytes left). The whole toolkit goes on those last functions; a unit whose code *and* data reach 100% is source-linked at landing (`config/GMSE01/objects.json`, DOL SHA-1 check).
+2. **Research batches.** One agent, a scratch TU compiled with the game flags, one residue class that blocks many closures (the "pushed inlined accessor" 4-8 byte family, the 16 bytes per extra `theNerve()`, float-register permutations inside `cross()`, the plain unexplained 8-byte gap). The statement-count table, the two-`return` refusal and the jump-table rule all came from such probes; each rule unlocks dozens of closures.
+3. **Header batches.** One agent at a time owns shared headers; `changes_all` after every change; the queue is kept by the orchestrator.
+4. **Data-only blockers.** Units with every function exact whose data or link still fails (`JUTDirectPrint`, `JASPlayer_impl`, `dsptask`, `CameraInbetween`): cheap links.
+
+Not worth a batch any more: sweeping a 95%+ unit for its own sake. The last dozen such sweeps lifted bytes but rarely closed anything; the exact-function count barely moves on 2-5 KB functions and the token cost per byte is 2-3x that of the structural work. Report bytes left and links, not function counts.
 
 ## Rules of thumb
 
@@ -28,24 +28,31 @@ This reflects what recent batches have actually done (see `git log`); the user h
 - **Parallel agents work in worktrees.** `tools/worktree.sh add <name>` gives each agent a buildable checkout; agents own disjoint units and never edit shared headers. See "Parallel agents and worktrees" in `CLAUDE.md`.
 - **Keep docs small.** Commit messages carry the batch detail. Update `PROGRESS.md` numbers in place. Edit the matching `docs/catalog/` entry only when a finding is reusable; do not write per-batch audit files.
 
-## Refreshing the near-match list
+## Refreshing the closure list
+
+Run after each landing to rank unlinked game units by distance to linking:
 
 ```
 python3 - <<'EOF'
 import json
 r = json.load(open("build/GMSE01/report.json"))
-fns = []
+rows = []
 for u in r["units"]:
-    # Drop this filter to include JSystem and SDK units.
+    m = u["measures"]
     if "game" not in u.get("metadata", {}).get("progress_categories", []):
         continue
-    for f in u.get("functions", []) or []:
-        fz = f.get("fuzzy_match_percent", 0) or 0
-        if 98 <= fz < 100:
-            name = f.get("metadata", {}).get("demangled_name", f["name"])
-            fns.append((int(f["size"]), fz, u["name"], name))
-for size, fz, unit, name in sorted(fns, key=lambda x: -x[0])[:40]:
-    print(f"{size:6d} {fz:7.3f} {unit} :: {name}")
+    if int(m.get("complete_code", 0) or 0) > 0:
+        continue  # already source-linked
+    fs = u.get("functions") or []
+    if not fs:
+        continue
+    ne = [f for f in fs if (f.get("fuzzy_match_percent") or 0) < 100]
+    left = int(m.get("total_code", 0)) - int(m.get("matched_code", 0) or 0)
+    data = float(m.get("matched_data_percent", 0) or 0)
+    names = [f.get("metadata", {}).get("demangled_name", f["name"]) for f in ne]
+    rows.append((len(ne), left, u["name"], data, names))
+for ne, left, name, data, names in sorted(rows)[:40]:
+    print(f"{name:40} nonexact={ne} bytes_left={left:5d} data={data:5.1f}%  {', '.join(names)[:80]}")
 EOF
 ```
 
