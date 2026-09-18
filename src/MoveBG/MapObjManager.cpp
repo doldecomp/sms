@@ -213,37 +213,13 @@ bool TMapObjBaseManager::canAppear(const TMapObjBase* param_1,
 TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
                                                bool param_5)
 {
-	// TODO: instruction-exact and frame-exact (0x58); the only difference is
-	// `checkData`'s slot, 0x34 here and 0x30 in the ROM.
-	//
-	// Batch 114 localised it exactly. `checkData` is the *topmost* item of
-	// the local area and everything else grows below it, so its offset is a
-	// direct byte count of the rest: the loop costs 24 (measured by deleting
-	// this block: frame 0x40), the ground-check call 12, `checkData` itself
-	// 4, and the flag test 4. The ROM pays 24 + 12 + 4 and nothing for the
-	// flag test, which is the whole gap.
-	//
-	// The 4 bytes are the binding of a bool-returning inlined member call
-	// whose receiver is a *fresh stack load*: dropping to the raw
-	// `checkData->mFlags & BG_CHECK_FLAG_ILLEGAL` test puts the slot at 0x30
-	// at once (but loses the `li 1 / b / li 0 / clrlwi.` materialisation the
-	// ROM has, so it is not the answer). `canAppear()` in the loop below
-	// materialises the same bool for free because its receiver lives in a
-	// register.
-	//
-	// Measured and rejected, all still 0x34 with the frame unmoved:
-	// `isIllegalData()`, `(*checkData).checkFlag()`, a TU-local
-	// `static bool isIllegalGround(const TBGCheckData*)` and the same taking
-	// a `const TBGCheckData&`, a `const TBGCheckData&` local bound before
-	// the test, a named `bool illegal` over the spelled-out ternary, a
-	// non-const `checkData`, function- vs block-scope `checkData`,
-	// `SMSGetMap()` vs `gpMap`, `f32 y2 = y` with no `else`, the inverted
-	// `if (!param_5)`, a named `f32 groundY`, and writing the three position
-	// components instead of `set()` (all +0).
-	// Levers that move it the wrong way: a named local anywhere in the body
-	// is +8 of frame and never moves the slot (declared after `checkData` it
-	// moves it *up*); `!isLegal()` +8; `== true` +8; raw `unk18[i]` for
-	// `getObj(i)` is -8, four too many, and no +4 was found to pair with it.
+	// The loops in this class read the object through
+	// `TObjManager::getObj(i)` with the cast at the call site, not through
+	// `TMapObjBaseManager::getObj(i)`, whose cast sits inside the accessor:
+	// the two spellings cost different numbers of low-region slots at equal
+	// depth, and the cast-outside form is the -4 that puts `checkData` on
+	// retail's 0x30 here. It is codegen-neutral for the two `u32` siblings,
+	// so all three loops are spelled the same way.
 	f32 y2;
 	const TBGCheckData* checkData;
 	if (param_5) {
@@ -255,7 +231,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 	}
 
 	for (int i = 0; i < getObjNum(); ++i) {
-		TMapObjBase* obj = (TMapObjBase*)getObj(i);
+		TMapObjBase* obj = (TMapObjBase*)TObjManager::getObj(i);
 
 		if (canAppear(obj, param_4)) {
 			obj->mPosition.set(x, y2, z);
@@ -270,7 +246,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 TMapObjBase* TMapObjBaseManager::makeObjAppear(u32 param_1)
 {
 	for (int i = 0; i < getObjNum(); ++i) {
-		TMapObjBase* obj = (TMapObjBase*)getObj(i);
+		TMapObjBase* obj = (TMapObjBase*)TObjManager::getObj(i);
 
 		if (canAppear(obj, param_1)) {
 			obj->appear();
@@ -284,7 +260,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(u32 param_1)
 TMapObjBase* TMapObjBaseManager::makeObjAppeared(u32 param_1)
 {
 	for (int i = 0; i < getObjNum(); ++i) {
-		TMapObjBase* obj = (TMapObjBase*)getObj(i);
+		TMapObjBase* obj = (TMapObjBase*)TObjManager::getObj(i);
 
 		if (canAppear(obj, param_1)) {
 			obj->makeObjAppeared();
