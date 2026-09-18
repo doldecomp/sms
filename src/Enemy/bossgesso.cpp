@@ -717,27 +717,34 @@ void TBossGesso::continuousRumble()
 		rumblePad(1, mBeak->mPosition);
 }
 
-// TODO: retail keeps this a `bl` inside perform while our build expands it
-// there (perform's largest remaining loss); splitting the two locals'
-// initialisations, naming the tentacle and replacing the `continue` with a
-// guarded block all leave the decision unchanged. The body itself differs only
-// in one contraction: retail fuses `x * x` into `y * y` with an `fmadds` that
-// our `squared()`/`dot()` spelling does not produce. The literal pool confirms
-// the expansion independently: retail's 100000.0f is @7822, the highest id in
-// the TU, because this function alone requests it, while ours lands it near
-// perform's own literals.
+// Retail keeps this a `bl` inside perform, which needs the body to cost 15
+// statements at depth one; four were missing. Naming the tentacle and the
+// node, splitting length() into squared() and sqrt(), and declaring tipPos
+// before assigning it (pass 167's TSolidStack::top() shape) are exactly those
+// four, and none of them changes a single instruction here: 412 bytes and
+// 107 instructions either way, while perform goes 82.2 -> 98.3.
+// TODO: the body's own residue is one contraction: retail loads y and z before
+// x and fuses `x * x` into `y * y` with an `fmadds` that our squared()/dot()
+// spelling does not produce. TMario::wireMove has the identical residue, so it
+// is a shared JGVec3 spelling question, not a local one. The literal pool
+// agrees that retail expands nothing here: its 100000.0f is @7822, the highest
+// id in the TU, because this function alone requests it, while ours lands it
+// near perform's own literals.
 f32 TBossGesso::lenFromToeToMario()
 {
 	f32 min = 100000.0f;
 
 	for (int i = 0; i < 4; ++i) {
-		if (mTentacles[i]->isThing2())
+		TBGTentacle* tentacle = mTentacles[i];
+		if (tentacle->isThing2())
 			continue;
 
-		JGeometry::TVec3<f32> tipPos
-		    = mTentacles[i]->getLastNode()->getPosition();
+		TBGTentacle::TNode* node = tentacle->getLastNode();
+		JGeometry::TVec3<f32> tipPos;
+		tipPos = node->getPosition();
 
-		f32 len = tipPos.length();
+		f32 lenSq = tipPos.squared();
+		f32 len   = JGeometry::TUtil<f32>::sqrt(lenSq);
 		if (len < min)
 			min = len;
 	}
@@ -759,8 +766,7 @@ void TBossGesso::showMessage(u32 param_1)
 // TODO: the map size is 0x11c (284 bytes) and this body compiles to less; the
 // best candidates for the remainder are the CUE_MOVE rumble/timer block that
 // follows it in perform and the CUE_CALC_ANIM pull-sound block above it, and
-// neither reads as part of "check take message". Keeping showMessage() a `bl`
-// (retail) is why the block sits behind a call at all.
+// neither reads as part of "check take message".
 void TBossGesso::checkTakeMsg()
 {
 	if (unk1A0)
@@ -1299,23 +1305,24 @@ void TBossGesso::doAttackShoot()
 	}
 
 	f32 sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
-	if (inSightAngle(0.5f * sightAngle)) {
-		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
-		delta -= mPosition;
+	if (!inSightAngle(0.5f * sightAngle))
+		return;
 
-		f32 singleAttackLen = getSaveParam2()->mSLSingleAttackLen.get();
-		if (delta.squared() < singleAttackLen * singleAttackLen)
-			changeAttackMode(ASTATE_SINGLE);
-	}
+	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
+	delta -= mPosition;
+
+	f32 singleAttackLen = getSaveParam2()->mSLSingleAttackLen.get();
+	if (delta.squared() < singleAttackLen * singleAttackLen)
+		changeAttackMode(ASTATE_SINGLE);
 }
 
-// TODO: retail inlines this whole body into moveObject's ASTATE_GUARD case and
-// keeps doAttackShoot a `bl`; our build does the opposite (moveObject 84.9%).
-// The out-of-line copy here is 584 bytes against the map's 580, so we are one
-// instruction over the budget that decides it. Four spellings of the guard
-// chain (nested ifs, merged `&&` with returns, `||` around the body, inline
-// sight-angle argument) all compile to 584, and three statement-adders in
-// doAttackShoot left it inlined, so the missing instruction is elsewhere.
+// Retail inlines this whole body into moveObject's ASTATE_GUARD case while
+// keeping doAttackShoot a `bl`; the lever is the statement budget, not bytes.
+// doAttackShoot sat at exactly 14 and needed one more statement (the early
+// return below), and this body sat at 16 and needed two fewer -- the two
+// nested `isThing2` guards collapse into one `||` inside the positive
+// condition. moveObject 85.0 -> 97.8.
+// TODO: the out-of-line copy is still 584 bytes against the map's 580.
 void TBossGesso::doAttackGuard()
 {
 	if (mBeak->mHolder != nullptr) {
@@ -1331,16 +1338,11 @@ void TBossGesso::doAttackGuard()
 	delta -= mPosition;
 
 	f32 guardLen = getSaveParam2()->mSLGuardLen.get();
-	if (!(guardLen * guardLen < delta.squared())) {
-		if (!mTentacles[3]->isThing2())
-			return;
-
-		if (!mTentacles[1]->isThing2())
-			return;
+	if (guardLen * guardLen < delta.squared()
+	    || (mTentacles[3]->isThing2() && mTentacles[1]->isThing2())) {
+		changeAllTentacleState(0);
+		changeAttackMode(ASTATE_SINGLE);
 	}
-
-	changeAllTentacleState(0);
-	changeAttackMode(ASTATE_SINGLE);
 }
 
 void TBossGesso::doAttackRoll()
@@ -1632,9 +1634,16 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		if (mBeak->mHolder != nullptr && unk190.color.a == 0) {
+			// TODO: retail `bl`s showMessage here and inlines it at the
+			// other two call sites, and showMessage is byte-exact at five
+			// statements, so this site must sit at depth four -- three
+			// inline levels of perform are still missing. Forcing the call
+			// takes perform 98.3 -> 99.2. With showMessage(3) the flag is
+			// 0, so the balloon always appears, which is why spelling the
+			// console call directly here was byte-identical.
 			if (!(isTentacleBusy(mTentacles[1])
 			      && isTentacleBusy(mTentacles[3]))) {
-				gpMarDirector->mConsole->startAppearBalloon(3, true);
+				showMessage(3);
 			}
 		}
 	}
