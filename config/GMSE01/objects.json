@@ -424,5 +424,6 @@
   "JSystem/JUtility/JUTDirectPrint.cpp",
   "JSystem/JAudio/JASystem/JASPlayer_impl.cpp",
   "JSystem/dsptask.c",
-  "Camera/CameraInbetween.cpp"
+  "Camera/CameraInbetween.cpp",
+  "Enemy/effectEnemy.cpp"
 ]

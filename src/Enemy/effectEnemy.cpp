@@ -15,8 +15,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-TEffectEnemyManager::~TEffectEnemyManager() { }
-
 void TEffectEnemyManager::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemyManager::load(stream);
@@ -25,7 +23,7 @@ void TEffectEnemyManager::load(JSUMemoryInputStream& stream)
 
 void TEffectEnemyManager::loadAfter() { JDrama::TNameRef::loadAfter(); }
 
-TLiveActor* TEffectEnemyManager::createEnemyInstance()
+TSpineEnemy* TEffectEnemyManager::createEnemyInstance()
 {
 	return new TEffectEnemy("エフェクト敵");
 }
@@ -125,6 +123,12 @@ void TEffectEnemy::sendAttackMsgToMario()
 
 void TEffectEnemy::setDeadAnm()
 {
+	// TODO: retail's frame is 8 bytes larger than the three statements below
+	// need and references no extra slot, so only the byte count is evidence
+	// for this scratch position; any 8-byte local closes the gap (f64, u32[2]
+	// and this TVec3 all give the exact 31 instructions, at the top of the
+	// body or the bottom).
+	JGeometry::TVec3<f32> effectPos;
 	gpMarioParticleManager->emitAndBindToPosPtr(0x8B, &mPosition, 0, nullptr);
 	if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_TO_COOL)) {
 		MSoundSESystem::MSoundSE::startSoundActor(
@@ -133,4 +137,8 @@ void TEffectEnemy::setDeadAnm()
 	onLiveFlag(LIVE_FLAG_UNK20000);
 }
 
-TEffectEnemy::~TEffectEnemy() { }
+// UNUSED, 0xf4 in the map, between setDeadAnm and the destructor. No call site
+// in this TU is large enough to hold it (perform is 0x150), so it is either
+// dead or inlined somewhere that is not reconstructed yet.
+// TODO: incorrect size (empty stub).
+void TEffectEnemy::emitEffect() { }

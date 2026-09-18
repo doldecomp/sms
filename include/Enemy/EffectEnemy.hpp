@@ -9,7 +9,7 @@ class TEffectEnemy : public TWalkerEnemy {
 public:
 	TEffectEnemy(const char* name);
 
-	virtual ~TEffectEnemy();
+	virtual ~TEffectEnemy() { }
 	virtual void init(TLiveManager*);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void setMActorAndKeeper();
@@ -19,6 +19,8 @@ public:
 	virtual void behaveToWater(THitActor*);
 	virtual void sendAttackMsgToMario();
 	virtual void setDeadAnm();
+
+	void emitEffect();
 
 	/* 0x194 */ int unk194;
 };
@@ -30,10 +32,10 @@ public:
 	{
 	}
 
-	virtual ~TEffectEnemyManager();
+	virtual ~TEffectEnemyManager() { }
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual TLiveActor* createEnemyInstance();
+	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 };
 
