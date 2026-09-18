@@ -111,7 +111,21 @@ public:
 /// The slot machine the boss plays with. Three drums, driven by TSlotDrum.
 class TTelesaSlot : public TSlotDrum {
 public:
-	TTelesaSlot(const char* name = "btelesaSlot");
+	// The map has this constructor weak at 0x98 and emitted in
+	// MarNameRefGen_MapObj.o, so it is an in-class body; its stores name the
+	// members it touches and, via __construct_array(0x1ac, TVec3<f>::TVec3,
+	// 0xc, 4), prove unk1AC is four vectors rather than a Mtx.
+	TTelesaSlot(const char* name = "btelesaSlot")
+	    : TSlotDrum(name)
+	    , unk19B(false)
+	    , mStopRequested(true)
+	    , mForcedResult(2)
+	    , unk1E0(0)
+	{
+		mForceHit[0] = false;
+		mForceHit[1] = false;
+		mForceHit[2] = false;
+	}
 
 	virtual ~TTelesaSlot() { }
 	virtual void calcRootMatrix();
@@ -138,7 +152,7 @@ public:
 	/* 0x1A0 */ TBossTelesa* mOwner;
 	/* 0x1A4 */ int mForcedResult;
 	/* 0x1A8 */ bool mForceHit[3];
-	/* 0x1AC */ Mtx unk1AC;
+	/* 0x1AC */ JGeometry::TVec3<f32> unk1AC[4];
 	/* 0x1DC */ TMapCollisionMove* unk1DC;
 	/* 0x1E0 */ u8 unk1E0;
 	/* 0x1E4 */ f32 mRollSp[3];

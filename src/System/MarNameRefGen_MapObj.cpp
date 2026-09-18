@@ -482,7 +482,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "ItemSlotDrum") == 0)
 		return new TItemSlotDrum;
 
-	// TODO:
+	// TODO: retail has this branch -- the map lists `__ct__11TTelesaSlotFPCc`
+	// weak in this TU -- and TTelesaSlot now carries the in-class constructor
+	// the map's 0x98 body describes. Restoring the branch (plus
+	// `#include "Enemy/BossTelesaObj.hpp"` at the head of the alphabetical
+	// block) still does not emit the weak copy: MWCC expands the in-class
+	// body at this one site and the unit falls 88.3 -> 87.7%. Ours is 0x3278
+	// against the map's 0x3734, so other missing branches have to come back
+	// first before this site's inline decision can be judged.
 	// if ( strcmp(name, "TelesaSlot") == 0 )
 	// 	return new TTelesaSlot("btelesaSlot");
 
