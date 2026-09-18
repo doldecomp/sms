@@ -195,6 +195,17 @@ public:
 		return sound;
 	}
 
+	// Fabricated, the two-argument form's sibling for the sites that pass a
+	// real handle: TMareGate::control hands &gpMSound->unk7C in and is 8 bytes
+	// of frame short with every instruction exact, which is the same single
+	// binding the two-argument overload supplies.
+	JAISound* startSoundActor(u32 id, const Vec* position,
+	                          JAISoundHandle* out_handle)
+	{
+		JAISound* sound = startSoundActor(id, position, 0, out_handle, 0, 4);
+		return sound;
+	}
+
 	void startSoundActorWithInfo(u32 id, const Vec* position, Vec* param_3,
 	                             f32 param_4, u32 param_5, u32 ground_no,
 	                             JAISoundHandle* out_handle, u32 fade,

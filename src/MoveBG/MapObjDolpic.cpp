@@ -399,15 +399,9 @@ void TMareGate::control()
 {
 	TMapObjBase::control();
 
-	// TODO: 8 bytes of frame short (0x18 vs 0x20) with every instruction
-	// exact. Trials: `&getPosition()` for `&mPosition` lands the frame but
-	// hoists `addi r31, this, 0x10` above `gateCheck`; a second
-	// `SMSGetMSound()` for the handle argument also lands the frame but
-	// hoists `addi r31, sound, 0x7c`. Both levers are +8; neither keeps the
-	// argument setup at the call the way retail does.
 	MSound* sound = SMSGetMSound();
-	sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
-	                       &sound->unk7C, 0, 4);
+	sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition,
+	                       &sound->unk7C);
 }
 
 void TMareGate::loadAfter()
