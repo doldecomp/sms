@@ -668,25 +668,40 @@ BOOL TMario::taken()
 	return 0;
 }
 
-// TODO (shared header, not changed here): where this body is *inlined* --
-// wireWait, wireSWait, wireHanging, wireRolling, hanging -- retail is one
-// inline level shallower than we are. Retail calls TVec3::operator*=(f32) and
-// TVec3::TVec3(const TVec3&) there and inlines `scale`; we inline operator*=
-// and the copy constructor and call `scale`. The standalone copy below agrees
-// with retail, so the expression is right and only the depth allowance
-// differs: at depth 4 JGVec3.hpp's two-statement operator*= still expands for
-// us. That is ~78 extra instructions in wireWait and ~140 in wireHanging and
-// wireRolling. Fixing it means making operator*= (and the copy constructor)
-// one statement heavier in include/JSystem/JGeometry/JGVec3.hpp, which needs a
-// full changes_all sweep. `outPos->set(...)` instead of `*outPos = ...` was
-// tried and is worse (90.7% here, wireWait 67.0 -> 60.6).
+// Where this body is *inlined* -- wireWait, wireSWait, wireHanging and
+// wireRolling all inline it -- retail `bl`s JGVec3.hpp's copy constructor and
+// operator*=(f32) while inlining `scale` inside operator*='s own emitted
+// body -- i.e. the product sits at inline depth 5, two levels below
+// `operator+`, while a bare
+// `start + dir * mWirePosRatio` only reaches depth 4 (batch 146's budget
+// table: a one-statement weak body still expands at 4 and never at 5). The
+// emitted copy of this function, in contrast, `bl`s only `scale`, so the
+// level cannot be above the statement or above the function -- `add`/`sub`
+// would then go out of line here too, and a level above getOnWirePosAngle
+// pushes the whole 14-statement body past the depth-2 budget and refuses it
+// outright (wireSWait 90.3 -> 56.0, measured). It has to sit on the scaled
+// direction alone, which is what the forwarder below does: the four callers
+// gain the two `bl`s with the frame exact, and the emitted copy stays 99.5%.
+// A `const TVec3&` return costs the emitted copy 16 bytes of frame; by value
+// it is free.
+// TODO: retail's own name for this is unrecoverable (fully inlined); dropping
+// `dirCopy` takes the callers another point but costs the emitted copy 4
+// (99.5 -> 95.3), and declaring `dirCopy` after the assignment is worse still.
+// fabricated
+static inline JGeometry::TVec3<f32>
+MarioWireScaleDir(const JGeometry::TVec3<f32>& dir, f32 ratio)
+{
+	return dir * ratio;
+}
+
 void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 {
 	JGeometry::TVec3<f32> start   = mWireStartPos;
 	JGeometry::TVec3<f32> dir     = mWireEndPos - start;
+
 	JGeometry::TVec3<f32> dirCopy = dir;
 
-	*outPos = start + dir * mWirePosRatio;
+	*outPos = start + MarioWireScaleDir(dir, mWirePosRatio);
 	outPos->y -= 160.0f;
 
 	Mtx rotA;
