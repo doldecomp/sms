@@ -6,6 +6,7 @@
 class TCardSave;
 class TMovieSubTitle;
 class TMovieRumble;
+class TEndingString;
 
 namespace JDrama {
 class TDisplay;
@@ -43,6 +44,7 @@ public:
 	/* 0x28 */ TMovieSubTitle* unk28;
 	/* 0x2C */ TMovieRumble* unk2C;
 	/* 0x30 */ JDrama::TFlagT<u16> unk30;
+	/* 0x34 */ TEndingString* unk34;
 };
 
 #endif
