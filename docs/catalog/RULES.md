@@ -68,6 +68,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - An **implicit** derived-from-base conversion on a `return` reserves 16 bytes (pool 20 low / 4 high): write `return iterator(Base::insert(...));`. Retail's list walks are `++it` (frame-gaps.md: "batch 133").
 - not: `TSolidStack::push` by value (65 regressions), a local before `pushAfterCurrent`, nerve pushes as a gap size, an argument-area explanation (frame-gaps.md: "Ruled out").
 - Seven units' scores rest on fabricated padding, so they are not evidence; do not link MarioGamePad (frame-gaps.md: "Pre-existing padding").
+- `TVec3`'s `operator*` return type is a **consumption** split, not an overload one: a destination copy (`x = a*k`, `TVec3 v = a*k`) wants the reference return, a consumed temporary (argument, `+=`, `+`) the by-value one. not: a by-value `operator=` or implicit copy ctor (map-refuted), direct-init, the parameter form (frame-gaps.md: "Research batch 159").
 
 ## Register and scheduling residues
 

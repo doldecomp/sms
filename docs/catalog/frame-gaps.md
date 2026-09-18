@@ -875,3 +875,47 @@ That is the whole explanation of why `bVar5` moves `M3UMtxCalcBlendAux`'s rotati
 - **MWCC 1.2.5 does no NRVO**: a by-value member `operator*(f32)` is inert (the return temp survives, nine slots stay); only a reference return collapses a per-step temp, and that shape (`friend const TVec3&` / member `const TVec3&`, the header's `operator+`/`-` idiom) gives retail's six slots in `TWarpInCallBack::execute` (73.9 -> 92.5) and ~12 other gains, but drops four weak out-of-line copies to MISSING (`div`, `dot`, `TUtil<f>::sqrt` in boid; `__ami__` in Tongue) and loses ~13 functions: tree-wide -0.02, rejected with the trial table beside the operator.
 - **An UNUSED size equal to a sibling's body plus ~4 instructions proves a per-call-site inline split** (`emitSweatSometimes(s16)` = `emitSweat` + a 4-instruction guard, 0x30 vs 0xe4), which is what a `#pragma dont_inline` in the same TU stands in for; a one-argument forwarder's UNUSED size says which parameter passes through (pass-through in r4 = one `li`, a swap = `mr` + `li`; `emitFootPrint` 0x24 vs 0x28). MarioParticle's eight UNUSED bodies defined (five size-exact), symbol order 8 MISSING -> PASS.
 - lensflare's three-deep `set(const Vec&)` chain is already present (two of three `bl set` and both `JMAS{Cos,Sin}` reproduce); the third is lost to the nine-scalar lerp whose products fp_contract fuses, so retail built the two difference vectors as objects (0x90 frame gap, four extra callee-saved FPRs).
+
+## Research batch 159 (2026-09-18): `operator*`'s return type is a **consumption** split, not an overload split
+
+Round 25 left the `TVec3<f32> operator*(f32)` return type open because one header shape gained ~12 functions and lost ~13.
+Both populations are now characterised from the source and from the retail stream, and the discriminator is not overload resolution.
+
+| site | source shape | retail objects | reference return |
+| --- | --- | --- | --- |
+| `TEffectColumWater::generate` | `mScaling = param_2 * 1.3f` | 1 (0x18 copied straight into `mScaling`) | 91.95 -> 99.79 |
+| `THamuKuri::forceRoll` | `local_20 = local_20 * k` | 1 | 90.23 -> 99.66 |
+| `TRope::moveHead` | `mPoints[i].unk18 = v * scale` | 1 | 93.60 -> 99.80 |
+| `TIgaiga::setMeltAnm` | `scale = mScaling * 0.5f` | 1 | 92.14 -> 96.06 |
+| `SMS_MakeJointsToArc` | `TVec3 a = dir * t` (copy-init) | 1 | 84.56 -> 88.83 |
+| `TWarpInCallBack::execute` | `TVec3 v1 = *vel * k`, three steps | 2/step: scale target + copy-out | 73.92 -> 92.47 |
+| `TYoshiTongue::emit` | `mInitialVelocity = dir * mInitialSpeed` | 1 | 93.64 -> 93.95 |
+| `TTamaNoko::landEffect` | `setGlobalScale(mScaling * 0.8f)`, four sites | 2 (0x40 copied to 0x74, 0x74 read) | 94.64 -> 82.97 |
+| `TNameIndParCallback::execute` | `setGlobalScale(local_7c * 0.5f)` | 2 | 82.05 -> 79.55 |
+| `TConeBeam::calcVertices` | `local_11c += local_140 * c` | 2 | 95.67 -> 88.48 |
+| `TMapObjPuncher::touchPlayer` | `dest += dir * 100.0f` | 2 | 99.72 -> 92.86 |
+| `TMario::keepDistance` | `mPosition += diff * step` | 2 | 93.96 -> 91.20 |
+| `TBoidLeader::calcForces` / `calcBoids` | `force += v * k`, `+= d / d2 * radius` | 2 | 99.55 -> 92.95 / 95.53 -> 85.50 |
+| `TWalker::bind`, `TMario::gunExec` | `pos + dir * k` | 2 | 92.34 -> 86.01, 94.54 -> 92.30 |
+
+Gains are exactly the sites that **copy the product into a destination object** (`x = a * k`, `TVec3 v = a * k`); losses are exactly the sites that **consume it by reference** — a function argument, or the right operand of `+=` or `+`.
+`div`, `dot` and `TUtil<f>::sqrt` (boid), `__ct__` (MarioCollision) and `__ami__` (Tongue) dropping to MISSING, plus `damageExec` -2.6 and the four wire* functions, are secondary: those functions hold no product of their own.
+
+- **At a destination-copy site retail materialises one object, at a consuming site two, so no single overload reproduces both.**
+  `generate` copies `operator*`'s object straight into `mScaling` with nothing in between; `landEffect` copies 0x40 into 0x74 and reads 0x74 for the inlined `setGlobalScale`.
+  A reference return gives one object everywhere and a by-value return two, and a member/friend by-value form is inert (round 25), so the return type is decided per *consumption*, not per operand type.
+- **Two candidate splits are refuted by the map without a build.**
+  `__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>` and `__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>` both exist, so `operator=` and the copy constructor take `const TVec3&`: a by-value `operator=` (whose parameter could double as the return temp) and an implicit copy constructor are both impossible.
+  `__ml__` has 0 hits in the map, so no `operator*` signature can be read off a symbol size.
+- **Direct-initialisation is inert**: `TVec3 v1(*vel * k)` is byte-identical to `TVec3 v1 = *vel * k` (73.92, identical markers), so MWCC does not elide the return temp into the destination — the caller-side counterpart of round 25's no-NRVO result.
+- **The parameter form is an orthogonal knob**: `friend const TVec3& operator*(const TVec3&, f32)` with an internal local reproduces the by-value-parameter reference return to within 0.1 on every member of both populations.
+  It also warns `function result is a pointer/reference to an automatic variable` in all 377 TUs, which the `operator+`/`operator-` form does not — a small argument that retail's reference-returning operators return their *parameter*.
+- **The only legal C++98 selector found is operand order**: by-value `operator*(TVec3, f32)` for `v * k` beside `const TVec3& operator*(f32, TVec3)` for `k * v` (equivalently a member/friend pair).
+  It reproduces both populations mechanically, but which order a site spells is unfalsifiable from the asm, so choosing it per site is picking codegen rather than following evidence. Not applied.
+- **Two of the regressions are our call sites, not the return type.**
+  `TTelesa::behaveToWater`'s retail stream copies `operator*`'s object into `local_20` and only then into `mVelocity`, i.e. retail wrote `local_20 = local_20 * fVar1; mVelocity = local_20;` — exactly its sibling `THamuKuri::forceRoll`; with the reference return that spelling is 99.9% with **zero** structural markers.
+  `TMapObjPuncher::touchPlayer` recovers to 99.65 with `TVec3 ofs = dir * 100.0f; dest += ofs;`, but the named local lands in the high region where retail's second object is a pool temp (+0x10 frame): the consuming population wants a *temporary*, and only a by-value return makes one.
+- **Near-miss worth re-trying: the parameter form alone.**
+  `friend TVec3 operator*(const TVec3& fst, f32 snd) { TVec3 r(fst); r *= snd; return r; }` keeps the by-value return, so neither population moves, and is +12 improvements — `TBoidLeader::calcBoids` 95.53 -> 98.79, `TMario::damageExec` 95.71 -> 97.83, `wireSWait` 93.09 -> 97.00, `wireHanging` +1.7, `wireWait` +1.1, `wireRolling` +0.6 — against six tenth-of-a-point regressions (`generate`, `landEffect`, `touchPlayer`, `emit`, `calcForces`) and `__ami__` MISSING, total fuzzy flat at 97.46 and -1 function.
+  Reverted for the `__ami__` loss only.
+  Spelling the same body `TVec3 r; r = fst; r *= snd;` is worse: boid's gain survives but `__ct__` **and** `__amu__` go MISSING in MarioCollision and the four wire* gains become losses.
