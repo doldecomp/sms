@@ -284,6 +284,22 @@ public:
 	}
 
 	// fabricated and fake and UB but it makes things match??
+	//
+	// The stack slot this by-value parameter gets is the last open residue of
+	// the 130 retail `bl TVec3::sub(const TVec3&)` sites (research batch 116).
+	// Retail puts it 4 bytes above the local floor 0xc with 12 bytes of pool
+	// above it; this spelling puts it 16 above with the pool below. The
+	// measured law is `prefix = 8 x (reference returns the caller copies out
+	// of)`, so this shape (two of them, `operator-` and `operator-=`) can only
+	// ever land on 0, 8, 16, ...; extra inline levels are free and do not move
+	// it. Prefix 4 exists only for
+	//     friend const TVec3& operator-(const TVec3& fst, const TVec3& snd)
+	//     { TVec3 r; r = fst; r -= snd; return r; }
+	// together with `void operator-=` and `void operator=`, and that shape
+	// leaves only 4 bytes above the temp where retail has 12 - every construct
+	// that adds bytes above also adds 4 to the prefix. Do not re-try `void
+	// operator-=` on its own (batch 113: -1 function, ~35 regressions).
+	// See docs/catalog/frame-gaps.md, "Research batch 116".
 	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
 	{
 		fst -= snd;
