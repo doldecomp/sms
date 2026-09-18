@@ -723,24 +723,35 @@ void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 	*outAngle = matan(dirCopy.z, dirCopy.x);
 }
 
+// Retail calls this out of line from all four wire nerves, so the body has to
+// cost at least 15 statements at depth one: splitting length() into its
+// squared() and sqrt() halves is the fifteenth (a separate `f32 limit = 1.0f -
+// margin;` also reaches 15 but reverses the compare's two operands, 94.1
+// against this shape's 97.1, and spelling the subtraction as `dir = mWireEndPos;
+// dir.sub(start);` scores 53.9). Before this, wireWait/wireRolling/wireHanging
+// expanded the whole body inline and sat at 69.2/68.7/58.5.
+// TODO: the one instruction left is the squared() contraction -- retail loads
+// y and z first and fuses `x * x` into the first `fadds` as an `fmadds`, which
+// needs x to become available last; ours materialises all three products.
 BOOL TMario::wireMove(f32 param_1)
 {
 	JGeometry::TVec3<f32> start = mWireStartPos;
 	JGeometry::TVec3<f32> dir   = mWireEndPos - start;
-	f32 len                     = dir.length();
+	f32 lenSq                   = dir.squared();
+	f32 len                     = JGeometry::TUtil<f32>::sqrt(lenSq);
 	f32 delta                   = param_1 / len;
 	f32 margin                  = 100.0f / len;
 
-	BOOL clean = true;
+	BOOL clean = TRUE;
 	if (mWirePosRatio + delta > 1.0f - margin) {
 		mWirePosRatio = 1.0f - margin;
-		clean         = false;
+		clean         = FALSE;
 	}
 	if (mWirePosRatio + delta < margin) {
 		mWirePosRatio = margin;
-		clean         = false;
+		clean         = FALSE;
 	}
-	if (clean)
+	if (clean == TRUE)
 		mWirePosRatio += delta;
 	return clean;
 }
@@ -1506,12 +1517,23 @@ BOOL TMario::fenceMove()
 			f32 hDot, vDiff, dist;
 			if (unk2C0 == nullptr) {
 				vDiff    = mPosition.y - mPrevPosition.y;
-				f32 sinY = JMASSin(mFaceAngle.y);
+				// jmaCosTable goes into f31 and jmaSinTable into f29 in
+				// the ROM, and the cosine is the factor on diff.x: the two
+				// were swapped here (and declared the other way round)
+				// before structural pass 168.
+				// TODO: retail still builds the three components of a
+				// rotated unit vector before dotting it with diff -- the
+				// surviving `0.0f * sin`, `0.0f * cos` and `1.0f * cos`
+				// products prove an inline boundary this spelling does not
+				// have, which is also where part of the 0x78 frame gap
+				// lives. Fixing the direction costs 0.5 objdiff points
+				// (95.8 -> 95.3) because the class is invisible to scoring.
 				f32 cosY = JMASCos(mFaceAngle.y);
+				f32 sinY = JMASSin(mFaceAngle.y);
 
 				JGeometry::TVec3<f32> diff = mPosition - mPrevPosition;
 
-				hDot = -cosY * diff.z + sinY * diff.x;
+				hDot = cosY * diff.x - sinY * diff.z;
 				dist = diff.length();
 			} else {
 				vDiff = unk300.y - unk2F4.y;
