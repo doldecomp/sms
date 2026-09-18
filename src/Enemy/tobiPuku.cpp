@@ -93,27 +93,6 @@ static TMoePuku* gpCurTobiPuku;
 
 static int TobiPukuRollCallback(J3DNode* node, int param);
 
-TTobiPukuLaunchPadManager::~TTobiPukuLaunchPadManager() { }
-
-TMoePukuLaunchPadManager::~TMoePukuLaunchPadManager() { }
-
-TTobiPukuManager::~TTobiPukuManager() { }
-
-TMoePukuManager::~TMoePukuManager() { }
-
-TMoePukuLaunchPad::~TMoePukuLaunchPad() { }
-
-TPukuPuku::~TPukuPuku() { }
-
-TMoePuku::~TMoePuku() { }
-
-BOOL TTobiPuku::isInhibitedForceMove()
-{
-	return checkLiveFlag(LIVE_FLAG_AIRBORNE) ? TRUE : FALSE;
-}
-
-void TMoePuku::swimEffect() { }
-
 // Rolls the whole model about Z while the puku is being flung, so it tumbles
 // instead of gliding flat. Only the three launch-related nerves want it.
 static int TobiPukuRollCallback(J3DNode* param_1, int param_2)
@@ -200,8 +179,6 @@ void TTobiPukuLaunchPadManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (int i = 0; i < getActiveObjNum(); ++i)
 		getObj(i)->perform(cue, graphics);
 }
-
-TTobiPukuLaunchPad::~TTobiPukuLaunchPad() { }
 
 TSpineEnemy* TMoePukuLaunchPadManager::createEnemyInstance()
 {
@@ -780,8 +757,6 @@ void TTobiPuku::scalingChangeActor()
 }
 
 const char** TTobiPuku::getBasNameTable() const { return pukupuku_bastable; }
-
-TTobiPuku::~TTobiPuku() { }
 
 TPukuPuku::TPukuPuku(const char* name)
     : TTobiPuku(name)

@@ -44,11 +44,16 @@ class TTobiPuku : public TWalkerEnemy {
 public:
 	TTobiPuku(const char* name);
 
-	virtual ~TTobiPuku();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TTobiPuku() { }
 
 	// Overrides of base virtuals; these occupy inherited slots.
 	virtual void initAttacker(THitActor*);
-	virtual BOOL isInhibitedForceMove();
+	virtual BOOL isInhibitedForceMove()
+	{
+		return checkLiveFlag(LIVE_FLAG_AIRBORNE) ? TRUE : FALSE;
+	}
 	virtual void generateEffectColumWater();
 	virtual void walkBehavior(int, f32);
 	virtual void scalingChangeActor();
@@ -139,7 +144,9 @@ public:
 	{
 	}
 
-	virtual ~TMoePuku();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TMoePuku() { }
 
 	// Overrides of base virtuals; these occupy inherited slots.
 	virtual void generateEffectColumWater();
@@ -164,7 +171,7 @@ public:
 	virtual void setDownAirAnm();
 	virtual void setDownLandAnm();
 	virtual void setFallEndLandAnm();
-	virtual void swimEffect();
+	virtual void swimEffect() { }
 	virtual void hitWater();
 	virtual const char** getBasNameTable() const;
 
@@ -177,7 +184,9 @@ class TPukuPuku : public TTobiPuku {
 public:
 	TPukuPuku(const char* name);
 
-	virtual ~TPukuPuku();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TPukuPuku() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void init(TLiveManager*);
 	virtual void reset();
@@ -187,7 +196,9 @@ class TTobiPukuLaunchPad : public TSmallEnemy {
 public:
 	TTobiPukuLaunchPad(const char* name);
 
-	virtual ~TTobiPukuLaunchPad();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TTobiPukuLaunchPad() { }
 	virtual void init(TLiveManager*);
 	virtual void reset();
 	virtual void launch();
@@ -210,7 +221,9 @@ public:
 	{
 	}
 
-	virtual ~TMoePukuLaunchPad();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TMoePukuLaunchPad() { }
 	virtual void launch();
 };
 
@@ -218,7 +231,9 @@ class TTobiPukuManager : public TSmallEnemyManager {
 public:
 	TTobiPukuManager(const char* name);
 
-	virtual ~TTobiPukuManager();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TTobiPukuManager() { }
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void load(JSUMemoryInputStream&);
 };
@@ -230,7 +245,9 @@ public:
 	{
 	}
 
-	virtual ~TMoePukuManager();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TMoePukuManager() { }
 	virtual TSpineEnemy* createEnemyInstance();
 };
 
@@ -240,7 +257,9 @@ public:
 
 	/* 0x60 */ u8 unk60;
 
-	virtual ~TTobiPukuLaunchPadManager();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TTobiPukuLaunchPadManager() { }
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -253,7 +272,9 @@ public:
 	{
 	}
 
-	virtual ~TMoePukuLaunchPadManager();
+	// Implicit in retail: the map has this dtor weak, so the body is
+	// in-class.
+	virtual ~TMoePukuLaunchPadManager() { }
 	virtual TSpineEnemy* createEnemyInstance();
 };
 
