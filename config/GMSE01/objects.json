@@ -423,5 +423,6 @@
   "GC2D/ProgSelect.cpp",
   "JSystem/JUtility/JUTDirectPrint.cpp",
   "JSystem/JAudio/JASystem/JASPlayer_impl.cpp",
-  "JSystem/dsptask.c"
+  "JSystem/dsptask.c",
+  "Camera/CameraInbetween.cpp"
 ]
