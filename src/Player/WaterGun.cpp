@@ -318,7 +318,7 @@ void TNozzleBase::emit(int param_1)
 		                   + emitPow * (1.0f - emitCtrl));
 
 		refEmitFlag = 0x40;
-		if (mFludd->hasFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
+		if (mFludd->checkFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
 			refEmitFlag = (refEmitFlag | 0x80);
 		}
 
@@ -598,7 +598,7 @@ void TNozzleTrigger::emit(int param_1)
 		emitInfo->mPow.set(pressure * (emitPow - emitPowMin) + emitPowMin);
 
 		refEmitFlag = 0x40;
-		if (mFludd->hasFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
+		if (mFludd->checkFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
 			refEmitFlag = (refEmitFlag | 0x80);
 		}
 
@@ -830,7 +830,7 @@ void TNozzleDeform::emit(int param_1)
 		emitInfo->mPow.set(localUnk378 * (emitPow - emitPowMin) + emitPowMin);
 
 		refEmitFlag = 0x40;
-		if (mFludd->hasFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
+		if (mFludd->checkFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
 			refEmitFlag = (refEmitFlag | 0x80);
 		}
 

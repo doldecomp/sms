@@ -126,7 +126,10 @@ public:
 
 	J3DModel* getModel() { return mFluddModel->mModel; }
 
-	// Fabricated
+	// Fabricated. Two spellings because the call sites disagree about the
+	// materialised result's type: TWaterGun::emit tests it with `clrlwi.`
+	// (a `bool`) while the three nozzle emit() overrides use `cmpwi r0, 0`
+	// (a `BOOL`/int). Names are guesses; the flag word itself is real.
 	inline bool hasFlag(u16 flag)
 	{
 		bool hasFlag;
@@ -136,6 +139,18 @@ public:
 			hasFlag = false;
 		}
 		return hasFlag;
+	}
+
+	// Fabricated
+	inline BOOL checkFlag(u16 flag)
+	{
+		BOOL checkFlag;
+		if ((mFlags & flag) != 0) {
+			checkFlag = TRUE;
+		} else {
+			checkFlag = FALSE;
+		}
+		return checkFlag;
 	}
 
 	// Fabricated
@@ -191,6 +206,9 @@ public:
 		mIsEmitWater = emittedWater;
 		// TODO: one more inline for getting emit params
 		// rather than separate getMaxWater, getDecRate, etc. functions?
+		// TODO: the const receiver is load-bearing: plain getCurrentNozzle()
+		// buys ~0.7 in TNozzleTrigger/TNozzleDeform::emit but costs
+		// TMario::gunExec (MarioMove) 2.0, so the real shape is still open.
 		s16 decRate = (((const TWaterGun*)this)->getCurrentNozzle())
 		                  ->mEmitParams.mDecRate.get();
 
