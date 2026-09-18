@@ -189,6 +189,25 @@ public:
 	// TFireWanwan::receiveMessage and TNerveKazekunHitWater::execute +8 for
 	// one). Those want the binding one level deeper and stay open.
 	// See docs/catalog/frame-gaps.md, "Closure batch 82", for the site table.
+	//
+	// Round 14 measured the overshoot exactly: one expansion of this overload
+	// is +8 of frame, not +4, and N expansions are +8N (TBellDolpic::control
+	// 0x48 -> 0x68 for its four sites, where retail wants 0x58). So the
+	// multi-site functions that need a flat +8 -- TDptMonteFence::touchPlayer
+	// and TRoulette::switchStop (two sites, +8 wanted),
+	// TMapObjBase::startSound (two, +8), TBellDolpic::control (four, +0x10),
+	// TTelesa::changeByJuice -- need a carrier that *saturates per function*,
+	// which nothing measured so far does. Ruled out for them: this overload at
+	// every site (overshoots by 8 per extra site); this overload at exactly one
+	// of two sites (lands the frame -- touchPlayer goes to 100% -- but two
+	// different spellings of the same call one line apart is not a spelling a
+	// developer would write, and which site gets it is unknowable); a per-class
+	// wrapper (the map lists no sound helper for TBellDolpic, TDptMonteFence,
+	// TMonumentShine or TRoulette, and a member wrapper binding only `this` is
+	// +0 anyway); a caller-level `MSound*` local (retail re-reads
+	// gpMSound@sda21 before each gateCheck, so the receiver is re-spelled).
+	// The carrier is therefore still unidentified and these sites keep the
+	// six-argument spelling.
 	JAISound* startSoundActor(u32 id, const Vec* position)
 	{
 		JAISound* sound = startSoundActor(id, position, 0, nullptr, 0, 4);
