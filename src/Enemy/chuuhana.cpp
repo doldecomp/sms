@@ -187,55 +187,61 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
 		TChuuHana* hana = gpCurChuuHana;
-		if (hana) {
-			if (!hana->isRolling())
-				return true;
+		if (hana == nullptr || !hana->isRolling())
+			return true;
 
-			J3DJoint* joint = (J3DJoint*)node;
-			MtxPtr anmMtx
-			    = gpCurChuuHana->getModel()->getAnmMtx(joint->getJntNo());
+		J3DJoint* joint = (J3DJoint*)node;
+		MtxPtr anmMtx
+		    = gpCurChuuHana->getModel()->getAnmMtx(joint->getJntNo());
 
-	Mtx ident;
-	MTXIdentity(ident);
+		// Hand-built identity, the popo joint-callback idiom: the three
+		// translation elements first, then the 3x3 row by row.
+		Mtx ident;
+		ident[0][3] = 0.0f;
+		ident[1][3] = 0.0f;
+		ident[2][3] = 0.0f;
+		ident[0][0] = 1.0f;
+		ident[0][1] = 0.0f;
+		ident[0][2] = 0.0f;
+		ident[1][0] = 0.0f;
+		ident[1][1] = 1.0f;
+		ident[1][2] = 0.0f;
+		ident[2][0] = 0.0f;
+		ident[2][1] = 0.0f;
+		ident[2][2] = 1.0f;
 
-	// The roll axis is the world-space axis at 0x204 with Y dropped, turned
-	// into joint space by projecting onto the joint's own rows.
-	JGeometry::TVec3<f32> axis(gpCurChuuHana->unk204.x, 0.0f,
-	                           gpCurChuuHana->unk204.z);
-	if (axis.x == 0.0f && axis.z == 0.0f)
-		axis.x = 0.001f;
+		// The roll axis is the world-space axis at 0x204 with Y dropped,
+		// turned into joint space by projecting onto the joint's own rows.
+		JGeometry::TVec3<f32> axis(gpCurChuuHana->unk204.x, 0.0f,
+		                           gpCurChuuHana->unk204.z);
+		if (axis.x == 0.0f && axis.z == 0.0f)
+			axis.x = 0.001f;
 
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-	JGeometry::TVec3<f32> side;
-	VECCrossProduct(&up, &axis, &side);
+		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+		JGeometry::TVec3<f32> side;
+		VECCrossProduct(&up, &axis, &side);
 
-	JGeometry::TVec3<f32> local;
-	f32 lenZ = anmMtx[2][0] * anmMtx[2][0] + anmMtx[2][1] * anmMtx[2][1]
-	    + anmMtx[2][2] * anmMtx[2][2];
-	local.z = lenZ == 0.0f ? 0.0f
-	                       : (side.x * anmMtx[2][0] + side.y * anmMtx[2][1]
-	                          + side.z * anmMtx[2][2])
-	                             / lenZ;
-	f32 lenY = anmMtx[1][0] * anmMtx[1][0] + anmMtx[1][1] * anmMtx[1][1]
-	    + anmMtx[1][2] * anmMtx[1][2];
-	local.y = lenY == 0.0f ? 0.0f
-	                       : (side.x * anmMtx[1][0] + side.y * anmMtx[1][1]
-	                          + side.z * anmMtx[1][2])
-	                             / lenY;
-	f32 lenX = anmMtx[0][0] * anmMtx[0][0] + anmMtx[0][1] * anmMtx[0][1]
-	    + anmMtx[0][2] * anmMtx[0][2];
-	local.x = lenX == 0.0f ? 0.0f
-	                       : (side.x * anmMtx[0][0] + side.y * anmMtx[0][1]
-	                          + side.z * anmMtx[0][2])
-	                             / lenX;
+		f32 rollDeg = gpCurChuuHana->unk210;
 
-	Mtx roll;
-	MTXRotAxisRad(roll, &local, (3.1415927f / 180.0f) * gpCurChuuHana->unk210);
-	MTXConcat(anmMtx, roll, anmMtx);
-	MTXConcat(anmMtx, ident, anmMtx);
-			MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
-			MTXConcat(J3DSys::mCurrentMtx, ident, J3DSys::mCurrentMtx);
-		}
+		// Project the world axis onto the joint's own column vectors.
+		JGeometry::TVec3<f32> zDir(anmMtx[0][2], anmMtx[1][2], anmMtx[2][2]);
+		JGeometry::TVec3<f32> xDir(anmMtx[0][0], anmMtx[1][0], anmMtx[2][0]);
+		JGeometry::TVec3<f32> yDir(anmMtx[0][1], anmMtx[1][1], anmMtx[2][1]);
+
+		f32 lenZ = zDir.squared();
+		f32 localZ = lenZ == 0.0f ? 0.0f : side.dot(zDir) / lenZ;
+		f32 lenY = yDir.squared();
+		f32 localY = lenY == 0.0f ? 0.0f : side.dot(yDir) / lenY;
+		f32 lenX = xDir.squared();
+		f32 localX = lenX == 0.0f ? 0.0f : side.dot(xDir) / lenX;
+		JGeometry::TVec3<f32> local(localX, localY, localZ);
+
+		Mtx roll;
+		MTXRotAxisRad(roll, &local, (3.1415927f / 180.0f) * rollDeg);
+		MTXConcat(anmMtx, roll, anmMtx);
+		MTXConcat(anmMtx, ident, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
+		MTXConcat(J3DSys::mCurrentMtx, ident, J3DSys::mCurrentMtx);
 	}
 	return true;
 }
