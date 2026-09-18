@@ -6,6 +6,21 @@
 #include "stddef.h"
 #include "string.h"
 
+/* TODO: 179 of 182 instructions and the 0x48 frame match; the residue is a
+   straight swap of two callee-saved registers over 13 operands. Retail keeps
+   `done` in r28 and `replyBuffer` in r29, we use r29 and r28. Everything else
+   -- the r21 error, r24 exit, r31 length, the stack homes of `buffer`/
+   `bufferId` at 0x10/0x14 (they are address-taken by TRKGetFreeBuffer) -- is
+   identical, so this is purely how the allocator ranks the loop-long `done`
+   against the reply-only `replyBuffer`.
+   Declaration order is a lever but no order fixes it: `replyBuffer` first,
+   immediately after `error`, after `replyBufferId` or block-scoped inside
+   `if (need_reply)` all go to 28 differing operands, `buffer`/`replyBuffer`
+   swapped to 23, and its present position (fourth of ten) is the best at 13.
+   Codegen-neutral: dropping the `(TRKBuffer*)` cast on TRKGetBuffer's `void*`,
+   `done = done + length`, a named `remain` for `*count - done`, and extra
+   parentheses in the `while`. Worse: reordering the `while` conditions (19) and
+   writing the length clamp as a ternary (26). */
 DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
                           DSIOResult* io_result, BOOL need_reply, BOOL read)
 {

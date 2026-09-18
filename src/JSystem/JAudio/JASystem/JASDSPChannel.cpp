@@ -237,6 +237,25 @@ static OSTick old_time;
 
 f32* TDSPChannel::getHistory() { return (f32*)history; }
 
+// TODO: all 138 instructions match; the residue is frame 0x38 against retail's
+// 0x50, i.e. 24 bytes of dead low region below the two int-to-float conversion
+// pairs (retail parks them at 0x30/0x38, ours at 0x18/0x20), plus one
+// callee-saved register.
+// Measured: a binding level inside `getCBInterval()` is +8, one inside
+// `getPriorityTime()` +8, and a static indexed `getChannel(u32)` accessor
+// (`TDSPChannel* channel = &DSPCH[index]; return channel;`) used for the loop's
+// `&DSPCH[i]` the last +8 -- the three together give frame 0x50 at 138
+// instructions. They were not committed: they are three fabricated levers in a
+// header other JAudio TUs include, and the object then still scores *lower*
+// (99.7%) because the last difference is a register: retail keeps `delta` (and
+// the `TDSPChannel*` of the inlined `breakLowerActive`, which shares its range)
+// in r29 where we use r28, the two registers the loop reuses for its element
+// offset and its `dspChannel`. Since the loop is byte-exact in both, the
+// allocator ranks the pre-loop range against the loop's, and nothing in the
+// block moves it: an unbraced block, a split `OSTick delta;` declaration and
+// `dspBuffer` declared inside the loop are all neutral or worse.
+// Worth +0 here: a binding inside `onUpdate` or `getStatus`. A `getDSPHandle()`
+// accessor lands the frame too but perturbs 29 instructions.
 void TDSPChannel::updateAll()
 {
 	DSPInterface::DSPBuffer* dspBuffer;
