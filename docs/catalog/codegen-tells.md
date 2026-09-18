@@ -1058,6 +1058,11 @@ None of them fits `__ct__11TTelesaSlotFPCc`, `__ct__6TFenceFPCc` or `__ct__9TSun
 Definition order is inert in every form — a free `inline` defined after the caller, a member defined out of class after the caller, and `inline` on only the declaration or only the definition all expand.
 In-class and out-of-class-`inline` members are unlimited at depth 1, so the 15-statement floor never applies to them; a 400-statement `inline` still expands at depth 1.
 
+**Applied.** `MAnmSoundNPC::startAnimSound` 81.0 -> 99.2 (150 instructions, exact count, all operand-only) by naming the distance in a level over `MSMarioPosVolume::getDistFromMario`, which is UNUSED 0x104 and so inlined at depth 1, putting `sqrtf` at 2; the named local also pays 8 of its 16-byte frame gap, and `sqrtf__3stdFf` itself goes 0 -> 100.
+`MSoundSE::startSoundActorWithInfo` 82.9 -> 98.4 with the frame exact, by splitting `vecLength` into a `static` forwarder over a `static inline` body: `vecLengthOf(const Vec&)` pays no frame, while `vecLengthOf(f32, f32, f32)` reaches the same depth and overshoots by 8.
+Refuted for MAnmSound: a level that wraps the distance *and* `MSHandle::calcVolume` (9 deletions - the compare belongs in the caller), binding `const Vec& pos` inside the level (31 deletions), and a second stacked level (+16, overshoots to 0x98).
+`MSoundMainSide`'s two `proc()` `bl`s are **not** reachable this way: the same file also carries four ROM expansions of the body through the same `vec_dist` helper, and adding an inner level costs both procs (98.5 -> 96.2, 98.9 -> 95.2), so those two sites are deeper by some path the helper does not share.
+
 **Still open, and now a three-member class.** `__ct__11TTelesaSlotFPCc` (weak 0x98) and `__ct__6TFenceFPCc` (weak 0x4c) in `getNameRef_MapObj`, and `__ct__9TSunGlassFQ28JUtility6TColorPCc` (weak) twice in `getNameRef`; `__ct__Q26JDrama8TNameRefFPCc` is `bl`ed once in the same factory and expanded (via `calcKeyCode`) elsewhere.
 Every other ctor `bl`ed in that factory is `global`, i.e. defined in its own `.cpp`, so only these four are anomalies.
 `TFence`'s body is one member store over an external base ctor — two statements — so no budget, size or content reading can reach it.
