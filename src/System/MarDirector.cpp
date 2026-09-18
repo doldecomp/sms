@@ -90,23 +90,7 @@ u32 TMarDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad** param_2,
 	return 0;
 }
 
-// TODO: promote into JDRViewObjPtrList.hpp by changing
-// TViewObjPtrListT<T>::insert to take `T*` by value instead of `T* const&`.
-// With the reference parameter, the TEventWatcher* -> TViewObj* conversion
-// temporary is bound at the outer call and lands at the bottom of the frame
-// (0xc), while retail binds it inside TList_pointer::push_back's `const T&`
-// and parks it above the iterator temporaries at 0x3c, with a frame of 0x50
-// against 0x48. Taking the pointer by value reproduces retail exactly (probed
-// by editing the header). Parked here because shared headers are off limits
-// in this batch.
-static inline void
-MarDirectorPushViewObj(JDrama::TViewObjPtrListT<JDrama::TViewObj>* list,
-                       JDrama::TViewObj* obj)
-{
-	list->getChildren().push_back(obj);
-}
-
 void TMarDirector::registerEventWatcher(TEventWatcher* param_1)
 {
-	MarDirectorPushViewObj(unk80, param_1);
+	unk80->insert(param_1);
 }
