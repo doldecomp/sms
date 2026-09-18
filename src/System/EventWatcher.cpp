@@ -514,6 +514,13 @@ static void evGetPollutionLevel(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push((int)gpPollution->getPollutionDegree());
 }
 
+// TODO: both are UNUSED (map 0x174 and 0x148, i.e. 93 and 82 instructions), so
+// there is no assembly to read and no string of their own left in the pool --
+// this TU's .rodata is already exact with the stubs empty, so whatever they
+// referenced was shared. 90-odd instructions is far more than any neighbouring
+// builtin, so a body cannot be invented from the name; left empty on purpose
+// rather than guessed. If evidence turns up it will be the event table these
+// two write into, since `interp` and `arg_num` are all they are given.
 static void evSetEventStart(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 }

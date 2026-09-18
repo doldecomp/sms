@@ -113,6 +113,10 @@ Byte size does not enter into it: at depth 1 a 0x4c body and a 0x278 body both i
 
 Everything else measured had **no** effect: definition order (48 pairs), call-site count (1 vs 2), caller size, `inline` vs `extern inline` vs `static inline` vs in-class, and return by value of a 12-byte struct.
 
+The table was re-measured from scratch with the priced cost model (one plain expression statement per unit, a chain of one-statement forwarders above it, game flags), and it is **confirmed unchanged**: `static` 14 / 9 / 6 / 2 / never, and `inline` and `static inline` differ only at depth 1, where they have no limit (17 statements measured here, 79 earlier).
+The `cameragc` reading of 10 at depth 2 was a mis-attribution: `TMario::checkStatusType` is not a budget case at all but the short-circuit rule below — it sits on the right of a `&&` at all five sites, and the ternary body is what expands.
+One caveat found while re-measuring: a forwarder that returns `*this` is not an ordinary level. In a chain `s3 -> s2 -> s1 -> self() -> get()` the ROM-flags build calls `self()` at depth 4 (where the allowance is 2 and its body is 1 statement) and still *expands* `get()` at depth 5. Do not count a `*this`-returning accessor such as `TNameRefPtrAryT::getChildren` when working out a depth.
+
 Two consequences:
 
 - **Definition order in a TU is not an inlining lever.** The map's reversed emission order fixes definition order, and that is all it fixes; it never decides what can inline. Do not reorder a TU hoping to move a call/inline decision.
