@@ -56,6 +56,17 @@
 //   JGeometry               retail *calls* TVec3<f>::set<f>(0, 0, 0) for
 //       mShinePosition (it is this TU's second map symbol, 0x10); our build
 //       expands it. Same family as the other set<f> call-vs-expand cases.
+//       Closure batch 120: this is now the unit's *whole* residue. All 43
+//       branches and both epilogues match except the TSleepBossHanachan one,
+//       and the three differences there are one effect: the missing `bl set`
+//       is why retail spills the `new` result to 0x1c(r1) and reloads it into
+//       r31 (frame 0x38 against our 0x30) and why the mMirrorActor null store
+//       lands after the call. SleepBossHanachan.hpp's initialiser list is
+//       already right, so the fix is one inline level between that constructor
+//       and TVec3's, i.e. a JGVec3.hpp question. A defaulted constructor
+//       argument is excluded as the level: the map has no
+//       __ct__18TSleepBossHanachan symbol of any arity, so MWCC never
+//       synthesised the no-argument forwarder that a default would need.
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
 	if (strcmp(name, "EMario") == 0)
