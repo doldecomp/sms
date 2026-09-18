@@ -191,6 +191,11 @@ static inline u16 JASTrackGetPanPowerBank(const TRegisterParam* p)
 	return panPowerBank;
 }
 
+// TODO: 99.9%, frame exact, five operands left: retail puts the `else`
+// branch's channel in r24 (mParent's register, dead there) and keeps r23 for
+// the `if` branch's, where we coalesce both into r23.  Both blocks' locals are
+// inner-block, on which declaration order is inert (batch 145), so this is the
+// known-open zero-frame rotation class.
 int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 {
 	if (mMute && (mPauseStatus & 0x40))
@@ -893,6 +898,11 @@ void TTrack::writeTimeParam(u8 param)
 }
 
 // TODO: This is pure pain
+// TODO: 100.0% instruction-exact, frame 0x38 against retail's 0x48 -- 16
+// bytes of low region missing (batch 138 closed the body; batch 152 found no
+// lever).  Two binding levels, or one worth +16, over the readByte/readReg
+// results would do it; every receiver-binder shape tried on the register
+// parameter overshoots.
 void TTrack::writeRegParam(u8 param)
 {
 
@@ -1413,6 +1423,14 @@ u16 TTrack::readRegDirect(u8 reg)
 	return result;
 }
 
+// TODO: 99.8%, instruction-exact, frame 0x20 against retail's 0x28.  Measured
+// (batch 152): one binding level on `setFlag`'s argument lands the frame
+// exactly and makes every instruction match, so retail passed that value
+// through a u16 accessor (the catalog's price for such an accessor's binding
+// form is exactly +8); a reference or pointer binder on mRegisterParam is +16
+// and overshoots, and widening `r4` to u32/s32/s16 does nothing.  Left open
+// rather than parked as an identity wrapper, which would be padding in
+// disguise.
 void TTrack::writeRegDirect(u8 reg, u16 value)
 {
 	u16 top;
