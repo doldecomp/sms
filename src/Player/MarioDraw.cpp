@@ -2239,6 +2239,14 @@ void TMario::drawSpecial(JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level worth +8 of low region, landing TMario::drawLogic's frame at
+// 0x28 (batch 124).
+static inline bool MarioDrawCheckUnk114(const TMario* p, u32 i)
+{
+	bool unk114 = p->checkUnk114(i);
+	return unk114;
+}
+
 void TMario::drawLogic()
 {
 	// volatile u32 padding[2];
@@ -2266,7 +2274,7 @@ void TMario::drawLogic()
 	unk398->draw();
 	GXSetColorUpdate(GX_TRUE);
 	GXSetAlphaUpdate(GX_FALSE);
-	if (checkUnk114(UNK114_FLAG_UNK20)) {
+	if (MarioDrawCheckUnk114(this, UNK114_FLAG_UNK20)) {
 		unk394->draw();
 		unk398->draw();
 	}

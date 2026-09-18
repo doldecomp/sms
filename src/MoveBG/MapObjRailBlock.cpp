@@ -314,6 +314,14 @@ void TNormalLift::readRailFlag()
 
 void TNormalLift::initMapObj() { TRailMapObj::initMapObj(); }
 
+// Binding level worth +16 of low region, landing TNormalLift::control's
+// frame at 0x78 (batch 124).
+static inline f32 MapObjRailBlockGetUnk144(const TNormalLift* p)
+{
+	f32 unk144 = p->getUnk144();
+	return unk144;
+}
+
 void TNormalLift::control()
 {
 	TMapObjBase::control();
@@ -327,7 +335,7 @@ void TNormalLift::control()
 			--unk150;
 		} else {
 			if (!checkRailFlag(2) && !calcRecycle()) {
-				if (moveToNextNode(getUnk144())) {
+				if (moveToNextNode(MapObjRailBlockGetUnk144(this))) {
 					readRailFlag();
 					unk138->moveToShortestNext();
 

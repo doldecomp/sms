@@ -829,9 +829,17 @@ void MSound::setSeExtParameter(JAISound* sound)
 	}
 }
 
+// Binding level worth +8 of low region, landing MSound::playTimer's frame at
+// 0x20 (batch 124).
+static inline bool MSoundCheckUnkA8(MSound* p, u32 i)
+{
+	bool unkA8 = p->checkUnkA8(i);
+	return unkA8;
+}
+
 void MSound::playTimer(u32 time)
 {
-	if (checkUnkA8(1)) {
+	if (MSoundCheckUnkA8(this, 1)) {
 		MSoundSESystem::MSoundSE::startSoundActorInner(
 		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);
 

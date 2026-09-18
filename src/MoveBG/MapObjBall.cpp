@@ -873,15 +873,23 @@ u32 TResetFruit::touchWater(THitActor* param_1)
 	return 1;
 }
 
+// Binding level worth +16 of low region, landing TResetFruit::touchActor's
+// frame at 0x28 (batch 124).
+static inline bool MapObjBallIsState(TResetFruit* p, u32 i)
+{
+	bool state = p->isState(i);
+	return state;
+}
+
 void TResetFruit::touchActor(THitActor* param_1)
 {
-	if (isState(STATE_APPEARING))
+	if (MapObjBallIsState(this, STATE_APPEARING))
 		return;
-	if (isState(STATE_BREAKING))
+	if (MapObjBallIsState(this, STATE_BREAKING))
 		return;
-	if (isState(STATE_ROTTING))
+	if (MapObjBallIsState(this, STATE_ROTTING))
 		return;
-	if (isState(STATE_WAITING_TO_APPEAR))
+	if (MapObjBallIsState(this, STATE_WAITING_TO_APPEAR))
 		return;
 
 	TMapObjBall::touchActor(param_1);
@@ -890,7 +898,7 @@ void TResetFruit::touchActor(THitActor* param_1)
 		return;
 
 	// Being knocked about starts the countdown, unless it is being carried.
-	if (isState(STATE_NORMAL) && !checkLiveFlag(LIVE_FLAG_UNK10))
+	if (MapObjBallIsState(this, STATE_NORMAL) && !checkLiveFlag(LIVE_FLAG_UNK10))
 		makeObjLiving();
 }
 

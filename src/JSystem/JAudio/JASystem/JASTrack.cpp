@@ -183,6 +183,14 @@ void TTrack::initTimed()
 	mTimedParam.mMoveParams[5].mTargetValue  = 0.0f;
 }
 
+// Binding level worth +8 of low region, landing JASystem::TTrack::noteOn's
+// frame at 0x70 (batch 124).
+static inline u16 JASTrackGetPanPowerBank(const TRegisterParam* p)
+{
+	u16 panPowerBank = p->getPanPowerBank();
+	return panPowerBank;
+}
+
 int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 {
 	if (mMute && (mPauseStatus & 0x40))
@@ -244,7 +252,7 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 	mNoteMgr.unk20[index] = chan->unkC6;
 
 	chan->setPanPower(
-	    mRegisterParam.getPanPowerBank(), mRegisterParam.getPanPowerExt(),
+	    JASTrackGetPanPowerBank(&mRegisterParam), mRegisterParam.getPanPowerExt(),
 	    mRegisterParam.getPanPowerOsc(), mRegisterParam.getPanPowerParent());
 
 	for (u8 i = 0; i < 2; ++i) {

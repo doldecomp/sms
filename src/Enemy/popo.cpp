@@ -900,6 +900,14 @@ void TPopo::thrownByChorobei()
 
 const char** TPopo::getBasNameTable() const { return popo_bastable; }
 
+// Binding level worth +16 of low region, landing
+// TNervePopoPossessedNozzle::execute's frame at 0x40 (batch 124).
+static inline MActor* PopoGetMActor(const TPopo* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNervePopoPossessedNozzle, TLiveActor)
 {
 	TPopo* popo = (TPopo*)spine->getBody();
@@ -917,7 +925,7 @@ DEFINE_NERVE(TNervePopoPossessedNozzle, TLiveActor)
 	if (popo->checkCurAnmEnd(0)) {
 		if (popo->unsetUnk165()) {
 			popo->setBckAnm(3);
-			popo->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTP);
+			PopoGetMActor(popo)->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTP);
 		} else {
 			popo->setBckAnm(4);
 			popo->getMActor()->getFrameCtrl(ANM_TYPE_BTP)->setFrame(0.0f);

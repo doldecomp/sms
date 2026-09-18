@@ -217,9 +217,17 @@ void JPAMagnetField::set()
 	else
 		unk58.set(unk18);
 }
+// Binding level worth +8 of low region, landing JPAMagnetField::affect's
+// frame at 0x28 (batch 124).
+static inline bool JPAFieldCheckStatus(JPAMagnetField* p, u32 i)
+{
+	bool status = p->checkStatus(i);
+	return status;
+}
+
 void JPAMagnetField::affect(JPAParticle* particle)
 {
-	if (!checkStatus(STATUS_USE_GLOBAL_COORDS))
+	if (!JPAFieldCheckStatus(this, STATUS_USE_GLOBAL_COORDS))
 		unk7C.sub(unk58, particle->mLocalPosition);
 	else
 		unk7C.sub(unk58, particle->mGlobalPosition);

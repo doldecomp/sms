@@ -45,12 +45,20 @@ static const GXColor bodyColor[4] = {
 
 void TYoshi::startVoice(u32 param_1) { }
 
+// Binding level worth +8 of low region, landing YoshiHeadCtrl's frame at
+// 0x50 (batch 124).
+static inline TNozzleBase* YoshiGetCurrentNozzle(const TWaterGun* p)
+{
+	TNozzleBase* currentNozzle = p->getCurrentNozzle();
+	return currentNozzle;
+}
+
 // (func,local) in the map's closure.
 static BOOL YoshiHeadCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 		const TWaterGun* waterGun = SMS_GetMarioWaterGun();
-		s16 angle                 = waterGun->getCurrentNozzle()->getGunAngle();
+		s16 angle                 = YoshiGetCurrentNozzle(waterGun)->getGunAngle();
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
 		MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);

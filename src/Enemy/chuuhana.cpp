@@ -1071,11 +1071,19 @@ DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor)
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveChuuHanaStick::execute's frame at 0x60 (batch 124).
+static inline bool ChuuhanaIsBckAnm(const TChuuHana* p, int i)
+{
+	bool bckAnm = p->isBckAnm(i);
+	return bckAnm;
+}
+
 DEFINE_NERVE(TNerveChuuHanaStick, TLiveActor)
 {
 	TChuuHana* hana = (TChuuHana*)spine->getBody();
 
-	if (spine->getTime() == 0 || !hana->isBckAnm(4)) {
+	if (spine->getTime() == 0 || !ChuuhanaIsBckAnm(hana, 4)) {
 		// A fresh stick, or one whose animation was taken over: head for
 		// Mario.
 		hana->setBckAnm(4);

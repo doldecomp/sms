@@ -238,6 +238,15 @@ void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk18[i]->perform(cue, graphics);
 }
 
+// Binding level worth +8 of low region, landing
+// TEnemyPolluteModelManager::generatePolluteModel's frame at 0x98 (batch
+// 124).
+static inline bool EnemyAttachmentCheckFlag(const TBGCheckData* p, u32 i)
+{
+	bool flag = p->checkFlag(i);
+	return flag;
+}
+
 // TODO: frame 0x90 vs retail's 0x98, and the two locals are allocated in the
 // opposite order: retail has `check` at 0x3c immediately below the 48-byte
 // matrix at 0x40, ours has the matrix at 0x2c with `check` above it at 0x60.
@@ -268,7 +277,7 @@ void TEnemyPolluteModelManager::generatePolluteModel(
 
 	const TBGCheckData* check;
 	gpMap->checkGround(param_1, &check);
-	if (!check->checkFlag(BG_CHECK_FLAG_ILLEGAL)
+	if (!EnemyAttachmentCheckFlag(check, BG_CHECK_FLAG_ILLEGAL)
 	    && !SMS_IsWaterSurface(check))
 		model->generate(param_1, param_2);
 

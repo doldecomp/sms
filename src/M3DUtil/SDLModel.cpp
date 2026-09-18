@@ -310,6 +310,14 @@ void SDLModel::entryModelDataSDL(SDLModelData* model_data, u32 flags,
 	mVertexBuffer = new J3DVertexBuffer(&md->getVertexData());
 }
 
+// Binding level worth +16 of low region, landing SDLModel::entry's frame at
+// 0xb8 (batch 124).
+static inline u32 SDLModelCheckSdlFlag(const SDLModel* p, u32 i)
+{
+	u32 sdlFlag = p->checkSdlFlag(i);
+	return sdlFlag;
+}
+
 // TODO: instruction-exact, frame 0xa8 vs retail's 0xb8.  All eight referenced
 // slots belong to the inlined registerSDLModel() below (whose own out-of-line
 // copy is size-exact at 0x128): ours 0x4c/0x50/0x54/0x60/0x64/0x70/0x74/0x78
@@ -335,7 +343,7 @@ void SDLModel::entryModelDataSDL(SDLModelData* model_data, u32 flags,
 // instructions).
 void SDLModel::entry()
 {
-	if (!checkSdlFlag(FLAG_UNK8) || !checkSdlFlag(FLAG_UNK2) || !mSdlModelData
+	if (!SDLModelCheckSdlFlag(this, FLAG_UNK8) || !SDLModelCheckSdlFlag(this, FLAG_UNK2) || !mSdlModelData
 	    || (mSdlModelData->unk18 & 0x1)) {
 		offSdlFlag(FLAG_UNK1);
 		J3DModel::entry();

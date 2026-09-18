@@ -898,26 +898,34 @@ void JPABaseEmitter::calcKeyFrameAnime()
 	}
 }
 
+// Binding level worth +8 of low region, landing JPABaseEmitter::calc's frame
+// at 0x20 (batch 124).
+static inline bool JPAEmitterCheckStatus(const JPABaseEmitter* p, u32 i)
+{
+	bool status = p->checkStatus(i);
+	return status;
+}
+
 void JPABaseEmitter::calc()
 {
 	JPAEmitterInfoObj.mEmitCount = 0;
 
-	if (!checkStatus(STATUS_STOP_CALC))
+	if (!JPAEmitterCheckStatus(this, STATUS_STOP_CALC))
 		calcKeyFrameAnime();
 
 	executeBeforeCallBack();
 
-	if (!checkStatus(STATUS_STOP_CALC)) {
+	if (!JPAEmitterCheckStatus(this, STATUS_STOP_CALC)) {
 		calcEmitterGlobalParams();
 		mDraw.calc();
 		mFieldManager.calcFieldParams();
-		if (!checkStatus(STATUS_ENABLE_DELETE))
+		if (!JPAEmitterCheckStatus(this, STATUS_ENABLE_DELETE))
 			calcCreateParticle();
 	}
 
 	executeAfterCallBack();
 
-	if (!checkStatus(STATUS_STOP_CALC)) {
+	if (!JPAEmitterCheckStatus(this, STATUS_STOP_CALC)) {
 		doParticle();
 		doChildParticle();
 		unk10.incFrame();

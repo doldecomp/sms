@@ -196,9 +196,17 @@ int TMtxTimeLagCallBack(J3DNode* node, int param)
 	return 1;
 }
 
+// Binding level worth +8 of low region, landing TMtxSwingRZ::calcLocalXY's
+// frame at 0xa0 (batch 124).
+static inline bool MtxUtilCheckFlag(const TMtxSwingRZ* p, int i)
+{
+	bool flag = p->checkFlag(i);
+	return flag;
+}
+
 void TMtxSwingRZ::calcLocalXY(MtxPtr mtx, Vec* vecX, Vec* vecY)
 {
-	if (checkFlag(2)) {
+	if (MtxUtilCheckFlag(this, 2)) {
 		offFlag(2);
 
 		Vec v = { 0.0f, 0.0f, 0.0f };

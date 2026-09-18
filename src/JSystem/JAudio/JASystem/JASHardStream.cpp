@@ -67,6 +67,14 @@ namespace HardStream {
 
 	void moveVolume(f32, u32) { }
 
+// Binding level worth +16 of low region, landing
+// JASystem::HardStream::main's frame at 0x48 (batch 124).
+static inline TPlayList* JASHardStreamGetNext(TPlayList* p)
+{
+	TPlayList* next = p->getNext();
+	return next;
+}
+
 	void main()
 	{
 		static DVDFileInfo finfo[3];
@@ -168,7 +176,7 @@ namespace HardStream {
 				}
 				if (strCtrl.getPlayArea() == 0) {
 					if (list->getPair()->getLoop() == 0xffff) {
-						if (list->getNext() == nullptr) {
+						if (JASHardStreamGetNext(list) == nullptr) {
 							DVDStopStreamAtEndAsync(&stop_cmd, 0);
 							strCtrl.clearListOne();
 							strCtrl.setPlayArea(2);

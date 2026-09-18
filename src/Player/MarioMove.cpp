@@ -875,6 +875,14 @@ void TMario::checkGraffitoFire()
 
 void TMario::checkGraffitoLava() { }
 
+// Binding level worth +8 of low region, landing TMario::checkGraffitoSlip's
+// frame at 0x78 (batch 124).
+static inline bool MarioMoveCheckFlag(const TMario* p, u32 i)
+{
+	bool flag = p->checkFlag(i);
+	return flag;
+}
+
 void TMario::checkGraffitoSlip()
 {
 	if (isTouchGround4cm()) {
@@ -918,7 +926,7 @@ void TMario::checkGraffitoSlip()
 				changePlayerStatus(MARIO_STATUS_OIL_RUN, 0, false);
 		}
 
-		if (!checkFlag(MARIO_FLAG_DIRTY))
+		if (!MarioMoveCheckFlag(this, MARIO_FLAG_DIRTY))
 			mStandingOnGraffitoTimer = mDirtyParams.mFogTimeYellow.get()
 			                           + mDirtyParams.mFogTimeRed.get();
 

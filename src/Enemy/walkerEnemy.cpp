@@ -131,9 +131,17 @@ void TWalkerEnemy::walkBehavior(int param_1, float param_2)
 	}
 }
 
+// Binding level worth +8 of low region, landing
+// TWalkerEnemy::behaveToFindMario's frame at 0x50 (batch 124).
+static inline bool WalkerEnemyCheckUnk150(const TWalkerEnemy* p, u32 i)
+{
+	bool unk150 = p->checkUnk150(i);
+	return unk150;
+}
+
 void TWalkerEnemy::behaveToFindMario()
 {
-	if (checkUnk150(2)) {
+	if (WalkerEnemyCheckUnk150(this, 2)) {
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerEscape::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());

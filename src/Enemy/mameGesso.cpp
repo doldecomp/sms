@@ -81,13 +81,21 @@ TSmallEnemy* TMameGessoManager::createEnemyInstance() { return new TMameGesso; }
 
 void TMameGessoManager::initSetEnemies() { }
 
+// Binding level worth +8 of low region, landing TMameGessoManager::perform's
+// frame at 0x48 (batch 124).
+static inline bool MameGessoCheckLiveFlag(const TMameGesso* p, u32 i)
+{
+	bool liveFlag = p->checkLiveFlag(i);
+	return liveFlag;
+}
+
 void TMameGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	for (int i = 0; i < mObjNum; i++) {
 		if (!(cue & CUE_MOVE))
 			continue;
 		TMameGesso* gesso = getObj(i);
-		if (gesso->checkLiveFlag(LIVE_FLAG_DEAD) && gesso->unk1D2) {
+		if (MameGessoCheckLiveFlag(gesso, LIVE_FLAG_DEAD) && gesso->unk1D2) {
 			gesso->unk1CC += 1;
 			if (gesso->unk1CC > gesso->unk194->mSLGenerateInterval.get()) {
 				gesso->reset();
@@ -586,6 +594,14 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 	return false;
 }
 
+// Binding level worth +16 of low region, landing
+// TNerveMameGessoObject::execute's frame at 0x48 (batch 124).
+static inline bool MameGessoIsBckAnm(const TMameGesso* p, int i)
+{
+	bool bckAnm = p->isBckAnm(i);
+	return bckAnm;
+}
+
 DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
@@ -609,14 +625,14 @@ DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 		self->unk1E8 = 80.0f;
 	}
 
-	if (self->checkCurAnmEnd(0) && self->isBckAnm(2))
+	if (self->checkCurAnmEnd(0) && MameGessoIsBckAnm(self, 2))
 		self->setBckAnm(16);
 
 	if (spine->getTime() > self->unk194->mSLObjectRecoverTime.get()) {
 		if (self->checkCurAnmEnd(0)) {
-			if (self->isBckAnm(16)) {
+			if (MameGessoIsBckAnm(self, 16)) {
 				self->setBckAnm(18);
-			} else if (self->isBckAnm(18)) {
+			} else if (MameGessoIsBckAnm(self, 18)) {
 				self->calcObjCollision();
 				self->entryObjCollision();
 				self->offHitFlag(HIT_FLAG_NO_COLLISION);

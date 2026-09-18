@@ -203,10 +203,18 @@ void TYumbo::initCollision()
 	mScaling.set(1.5f, 1.5f, 1.5f);
 }
 
+// Binding level worth +8 of low region, landing TYumbo::receiveMessage's
+// frame at 0x30 (batch 124).
+static inline bool YunboCheckLiveFlag(const TYumbo* p, u32 i)
+{
+	bool liveFlag = p->checkLiveFlag(i);
+	return liveFlag;
+}
+
 // TODO: instruction-identical, 8 bytes of frame short.
 BOOL TYumbo::receiveMessage(THitActor* sender, u32 message)
 {
-	if (checkLiveFlag(LIVE_FLAG_DEAD))
+	if (YunboCheckLiveFlag(this, LIVE_FLAG_DEAD))
 		return FALSE;
 
 	switch (message) {

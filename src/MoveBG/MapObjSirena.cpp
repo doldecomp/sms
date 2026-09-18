@@ -1182,9 +1182,17 @@ TWarpAreaActor::TWarpAreaActor(const char* name)
 {
 }
 
+// Binding level worth +8 of low region, landing TChestRevolve::touchWater's
+// frame at 0x20 (batch 124).
+static inline bool MapObjSirenaIsState(TChestRevolve* p, u32 i)
+{
+	bool state = p->isState(i);
+	return state;
+}
+
 u32 TChestRevolve::touchWater(THitActor* actor)
 {
-	if (isState(STATE_NORMAL)) {
+	if (MapObjSirenaIsState(this, STATE_NORMAL)) {
 		mState = STATE_REVOLVING;
 		startAnim(1);
 		setUpMapCollision(1);
