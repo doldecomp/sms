@@ -440,7 +440,7 @@ void THangingBridge::initDraw() const
 	              GX_DF_NONE, GX_AF_NONE);
 	GXSetChanCtrl(GX_ALPHA0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
 	              GX_DF_NONE, GX_AF_NONE);
-	GXColor color = { 0, 0, 0, 0 };
+	GXColor color = { 0, 0, 100, 255 };
 	GXSetChanMatColor(GX_COLOR0, color);
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
@@ -695,7 +695,7 @@ void TSwingBoard::initDraw() const
 	              GX_DF_NONE, GX_AF_NONE);
 	GXSetChanCtrl(GX_ALPHA0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
 	              GX_DF_NONE, GX_AF_NONE);
-	GXColor color = { 0, 0, 0, 0 };
+	GXColor color = { 0, 0, 100, 255 };
 	GXSetChanMatColor(GX_COLOR0, color);
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
