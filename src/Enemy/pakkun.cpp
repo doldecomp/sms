@@ -676,7 +676,7 @@ void TStayPakkun::load(JSUMemoryInputStream& stream)
 	TSmallEnemy::load(stream);
 	reset();
 
-	setGoalPathMario();
+	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	unk199 = 1;
 }
 
@@ -1007,7 +1007,8 @@ DEFINE_NERVE(TNervePakkunShoot, TLiveActor)
 
 	self->walkToCurPathNode(0.0f, self->getTurnSpeed(), 0.0f);
 	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
-		self->setGoalPathMario();
+		TPathNode marioNode((THitActor*)gpMarioAddress);
+		self->setGoalPath(marioNode);
 		return true;
 	}
 
