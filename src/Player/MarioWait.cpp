@@ -11,6 +11,14 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// Parked: `TMario::getGamePad()` does not exist yet and Mario.hpp is shared,
+// so squating's missing pad rung is spelled TU-locally here. It is worth 12
+// bytes of low region plus 4 named, applied at four of the five pad reads.
+static inline TMarioGamePad* MarioWaitGamePad(const TMario* mario)
+{
+	return mario->mGamePad;
+}
+
 BOOL TMario::startTalking()
 {
 	if (mGroundPlane->isLegal()) {
@@ -21,11 +29,6 @@ BOOL TMario::startTalking()
 	return 0;
 }
 
-// TODO: frame 0x30 vs 0x38, and the `gnd` out-parameter sits at 0x14 where
-// retail has 0x18: +4 of low region below it plus +4 in the named block.
-// Accessor levers step by 8, so neither half is an accessor; moving `gnd`'s
-// declaration first or above `groundY` and naming `mFloorPosition.y` all
-// leave the slot at 0x14 (the last breaks the body).
 bool TMario::canSleep()
 {
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER | MARIO_FLAG_IN_WATER))
@@ -35,6 +38,12 @@ bool TMario::canSleep()
 	f32 height = mDeParams.mSleepingCheckHeight.get();
 	f32 groundY;
 	const TBGCheckData* gnd;
+	// Dead, and positional evidence only: the last 4 bytes of retail's 0x38
+	// frame sit below `gnd`, which is where a scalar declared after it in a
+	// C-style block lands (the same dead-scalar idiom as
+	// TMapWireManager::load and TAreaCylinder::load). The wall radius is the
+	// one quantity this function uses as a bare literal, below.
+	f32 wallRadius;
 
 	groundY = gpMap->checkGround(mPosition.x - dist, mPosition.y + 30.0f,
 	                             mPosition.z, &gnd);
@@ -135,7 +144,8 @@ BOOL TMario::waitingCommonEvents()
 // 8 bytes" family. Every callee (waitProcess, setAnimation, onYoshi,
 // curAnmEndsNext, isLast1AnimeFrame, changePlayerStatus) is a real `bl`, so
 // there is no inlined callee to carry a dead 8-byte local and no positional
-// evidence for one in the body.
+// evidence for one in the body. An accessor level for `mYoshi` in front of
+// `mActor` is +0 here.
 void TMario::stopCommon(int anim_id, int status_on_end)
 {
 	waitProcess();
@@ -154,11 +164,14 @@ void TMario::changeMontemanWaitingAnim()
 	mStatusState |= 0x2;
 }
 
-// TODO: frame 0x30 vs 0x40. Accessor temporaries saturate at two here: any
-// single one of getIntendedMag(), getHealth(), getPreviousStatus(),
-// SMSGetMarDirector() or getGroundPlane() is worth 8, any pair of them 16, and
-// a third adds nothing. The last 8 bytes need an aggregate or address-taken
-// local, for which there is no evidence.
+// TODO: frame 0x38 vs 0x40 with no referenced stack slot -- the "last 8
+// bytes" family. Accessor temporaries saturate at two here: any single one of
+// getIntendedMag(), getHealth(), getPreviousStatus(), SMSGetMarDirector() or
+// getGroundPlane() is worth 8, any pair of them 16, and a third adds nothing
+// (getHealth() at the `mHealth <= 3` test on top of the two already applied is
+// +0). getM3UModel() for the frame-controller read is +0, and isUpperState()
+// at the second upper-state test costs five instructions. The last 8 bytes
+// need an aggregate or address-taken local, for which there is no evidence.
 BOOL TMario::waiting()
 {
 	if (waitingCommonEvents())
@@ -331,7 +344,7 @@ BOOL TMario::squating()
 	// 0x90. checkCurrentNozzleRocketType(1) over the spelled-out nozzle
 	// param read is +0. The last 16 bytes have no lever left in this TU:
 	// mInput, mFloorPosition, mFaceAngle, the three params classes and
-	// mGamePad->mCompSPos have no accessor, and getSideWalkValues is a real
+	// MarioWaitGamePad(this)->mCompSPos have no accessor, and getSideWalkValues is a real
 	// out-of-line call, so it cannot carry them.
 	if (mInput & 0x4)
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
@@ -366,7 +379,7 @@ BOOL TMario::squating()
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
-	if (mGamePad->checkMeaning(TMarioGamePad::MEANING_0x2000)) {
+	if (MarioWaitGamePad(this)->checkMeaning(TMarioGamePad::MEANING_0x2000)) {
 		E_SIDEWALK_TYPE type;
 		f32 v1, v2;
 		getSideWalkValues(&type, &v1, &v2);
@@ -384,10 +397,10 @@ BOOL TMario::squating()
 
 		mPosition.x += v2 * JMASCos(mFaceAngle.y);
 		mPosition.z -= v2 * JMASSin(mFaceAngle.y);
-	} else if (mGamePad->checkMeaning(TMarioGamePad::MEANING_0x400)) {
-		f32 absH      = fabsf(mGamePad->mCompSPos[0]);
+	} else if (MarioWaitGamePad(this)->checkMeaning(TMarioGamePad::MEANING_0x400)) {
+		f32 absH      = fabsf(MarioWaitGamePad(this)->mCompSPos[0]);
 		bool positive = true;
-		if (mGamePad->mCompSPos[0] < 0.0f)
+		if (MarioWaitGamePad(this)->mCompSPos[0] < 0.0f)
 			positive = false;
 
 		f32 mid    = mControllerParams.mSquatRotMidAnalog.get();
