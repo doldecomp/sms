@@ -58,7 +58,11 @@ u32 TPollutionManager::getPollutionDegree() const
 	u32 totalDegree = 0;
 	for (int i = 0; i < getJointModelNum(); ++i) {
 		TPollutionLayer* layer = getLayer(i);
-		totalDegree += layer->getPollutionDegree();
+		// Raw, not `layer->getPollutionDegree()`: that accessor is one inline
+		// level this body did not pay for. It is free in this emitted copy
+		// (where it sits at depth 1) but costs 8 bytes of frame in
+		// `cleanedAll`, which inlines the whole loop at depth 2.
+		totalDegree += layer->mCounter;
 	}
 	return totalDegree;
 }
@@ -84,19 +88,9 @@ static void dummy()
 	(Vec) { 1.0f, 1.0f, 1.0f };
 }
 
-// TODO: 96.4%. Instruction-identical, but our frame is 8 bytes too *big*
-// (0x38 vs 0x30) and r6-r9 come out one step rotated. The excess is in the
-// inlined getPollutionDegree expansion, not in this body: spelling the loop
-// out here instead of calling it gives 0x28 (8 too small, 86%), and
-// reaching the layer one level shallower inside getPollutionDegree
-// ((TPollutionLayer*)getJointModel(i) instead of getLayer(i)) lands this
-// frame exactly -- but costs getPollutionDegree's own emitted copy an
-// instruction (100% -> 94.5%), so it cannot be spelled that way here.
-// A const getLayer(i) casting mJointModels[i] directly (one level inside the
-// accessor instead of two) was measured project-wide in header round 14 and
-// is dead: this function does not move at all, while getPollutionType and
-// isPolluted lose their exact match. Rejected here: dropping the ternary (90.8%),
-// if/return (no change), naming the degree or the result (+8 each).
+// The 8-byte frame excess here was one inline level inside the inlined
+// `getPollutionDegree` loop: `TPollutionLayer::getPollutionDegree()` on the
+// layer, where retail reads `mCounter` raw (see the note there).
 bool TPollutionManager::cleanedAll() const
 {
 	return getPollutionDegree() < TMapEventSink::mCleanedDegree ? true : false;
