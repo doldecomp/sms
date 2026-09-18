@@ -87,15 +87,45 @@ void TCameraBck::endDemo() { unk0->setBckFromIndex(-1); }
 
 void TCameraBck::restartDemo() { }
 
+// TODO: promote these to TCameraBck members in CameraBck.hpp; parked here
+// because a header batch owns the shared headers this batch.
+static inline MActor* CameraBck_getMActor(TCameraBck* self)
+{
+	return self->unk0;
+}
+
+static inline MtxPtr CameraBck_getPosMtx(TCameraBck* self)
+{
+	return self->unkC;
+}
+
+static inline MtxPtr CameraBck_getLookatMtx(TCameraBck* self)
+{
+	return self->unk10;
+}
+
+static inline u32 CameraBck_getFrame(TCameraBck* self)
+{
+	return self->unk8;
+}
+
+static inline const JGeometry::TVec3<f32>* CameraBck_getOffset(
+    TCameraBck* self)
+{
+	return self->unk14;
+}
+
 bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
                             JGeometry::TVec3<f32>* lookat,
                             JGeometry::TVec3<f32>* up, f32* out_y_scale)
 {
 
-	unk0->calcAnm();
+	CameraBck_getMActor(this)->calcAnm();
 
-	if (pos != nullptr)
-		pos->set(unkC[0][3], unkC[1][3], unkC[2][3]);
+	if (pos != nullptr) {
+		MtxPtr mtx = CameraBck_getPosMtx(this);
+		pos->set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	}
 
 	if (lookat != nullptr)
 		lookat->set(unk10[0][3], unk10[1][3], unk10[2][3]);
@@ -104,23 +134,37 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 		up->set(unkC[0][1], unkC[1][1], unkC[2][1]);
 
 	if (out_y_scale != nullptr) {
-		J3DAnmTransformKey* anm = unk0->getBckAnm();
+		J3DAnmTransformKey* anm = CameraBck_getMActor(this)->getBckAnm();
 		if (anm != nullptr) {
 			J3DTransformInfo info;
-			anm->getTransform((u16)unk8, &info);
-			*out_y_scale = info.mScale.y;
+			anm->getTransform((u16)CameraBck_getFrame(this), &info);
+			f32 scaleY   = info.mScale.y;
+			*out_y_scale = scaleY;
 		}
 	}
 
-	if (unk14 != nullptr) {
+	if (CameraBck_getOffset(this) != nullptr) {
 		if (pos != nullptr)
-			*pos += *unk14;
+			*pos += *CameraBck_getOffset(this);
 		if (lookat != nullptr)
-			*lookat += *unk14;
+			*lookat += *CameraBck_getOffset(this);
 	}
 
-	bool result      = true;
-	J3DFrameCtrl* fc = unk0->getFrameCtrl(ANM_TYPE_BCK);
+	// TODO: one instruction from exact. Retail materialises checkState()'s
+	// bool straight into `result`'s register (r31, already 1), so its
+	// `li 1` is elided and only `li r31, 0` survives; the second
+	// cmpwi/li-1/li-0 block then re-normalises the same register. Ours
+	// materialises into r0 and copies. Rejected: `result = checkState()`
+	// (plain, ternary, or followed by `result = result ? true : false`),
+	// `return result ? true : false` (neg/subic/subfe conversion),
+	// `BOOL result`/`BOOL finished` (same conversion), an empty then with
+	// `result = false` in the else, early `return true` plus a ternary
+	// return, and one pure `fc != nullptr ? ... : true` ternary (all move
+	// the value into r3/r0 instead). Likely a coalescing difference that
+	// needs the assignment and the normalisation to be one statement.
+	bool result = true;
+	J3DFrameCtrl* fc
+	    = CameraBck_getMActor(this)->getFrameCtrl(ANM_TYPE_BCK);
 	if (fc != nullptr) {
 		if (fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE))
 			result = true;
