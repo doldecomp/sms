@@ -3,6 +3,21 @@
 
 JDrama::TFlagT<u16> TMarioGamePad::mResetFlag;
 
+// TODO (structural, blocks linking): this TU scores 100/100 but the DOL comes
+// out as e4e0508c because the `.sdata2` pool is in the wrong order -- retail
+// is 1.0f, 0.0f, 0.25f, 0.5f (@1806, @1807, @2115, @2116) and ours is 0.25f,
+// 0.5f, 0.0f, 1.0f. Only five bytes of `updateMeaning` differ, and all five are
+// the low halves of the `lfs` displacements the swap moved. Pool ids follow
+// parse order, so the ~300-id gap in the map says retail requested 1.0f then
+// 0.0f from a *header* inline and 0.25f then 0.5f from this .cpp -- the exact
+// inverse of ours, where the fabricated `resetMeaning()` inline in
+// MarioGamePad.hpp owns 0.25f/0.5f and updateMeaning's stick-scaling block owns
+// 1.0f/0.0f. We also allocate a second int->float magic double
+// (0x4330000080000000, the signed form) that the map has as UNUSED @2128, i.e.
+// retail converted an unsigned value where we convert a signed one.
+// The `u32 stackAlloc[83]` in updateMeaning is fabricated padding, so the unit
+// must not be linked until that is replaced regardless.
+
 void TMarioGamePad::reset()
 {
 	setButtonRepeat(0xf00000f, 20.0f / SMSGetAnmFrameRate(),

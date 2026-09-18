@@ -8,6 +8,26 @@
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
+// TODO (structural, blocks linking): this TU scores 100/100 but source-linking
+// it gives DOL 7165e897 -- the `.data` section grows 12 bytes (0x20 after the
+// DOL's 32-byte section padding) because we emit `__vt__10JSUIosBase` (0xc) and
+// retail's CubeManagerBase.o does not: the map's duplicate list for that vtable
+// names 29 TUs and this is not one of them, and with us linked the vtable
+// resolves here (0x803ad284) instead of from enemyMario.cpp (0x803af0f4),
+// displacing every later `.data` symbol.
+// It comes in with `TNameRefPtrAryT<TCubeGeneralInfo>::load`, whose local
+// `JSUMemoryInputStream` drags in the JSUMemoryInputStream/JSURandomInputStream/
+// JSUIosBase dtor chain. Retail's object emits the class's weak vtable and its
+// in-class dtor but references load/loadAfter/searchF as *globals* from
+// MarNameRefGen.cpp (0x802a01e8/0284/02e4), i.e. those three bodies were not
+// inline-visible here; ours instantiates them weak (816 bytes of `.text`, all
+// harmless dropped duplicates -- only the vtable moves bytes).
+// Measured and rejected: defining the three out of class in
+// Strategic/NameRefPtrAry.hpp instead of in class changes nothing, MWCC still
+// instantiates them eagerly for the vtable it emits. And retail's enemytable.cpp
+// *does* emit the same three weak for TNameRefPtrAryT<TStageEnemyInfo>, so the
+// bodies were header-visible there -- whatever hid them from this TU is still
+// unidentified, and the fix is not inside this unit's own files.
 TCubeManagerBase* gpCubeCamera;
 TCubeManagerBase* gpCubeMirror;
 TCubeManagerBase* gpCubeWire;
