@@ -547,6 +547,11 @@ void TShine::movingCircle()
 void TShine::movingUp()
 {
 	mPosition.y += mUpSpeed;
+	if (unk154 == 3) {
+		mRotation.y += 7.0f;
+		// Huh? Result discarded?
+		MsWrap(mRotation.y, 0.0f, 360.0f);
+	}
 	if (isStateTimerEngaged())
 		return;
 
@@ -563,6 +568,9 @@ void TShine::movingUp()
 void TShine::movingDown()
 {
 	mPosition.y -= mUpSpeed;
+	mRotation.y += 7.0f;
+	// Huh? Result discarded?
+	MsWrap(mRotation.y, 0.0f, 360.0f);
 	if (isStateTimerEngaged())
 		return;
 	unk16C      = 7.0f;
