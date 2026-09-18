@@ -132,6 +132,18 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 // in place and rejected: swapping the operands of
 // `(f32)(thing - unk5D) * (1.0f / (f32)(17 - unk5D))` (byte-identical) and
 // spelling it as a real division (95.3%, five extra instructions).
+// Batch 151: the carrier family is now confirmed productive elsewhere --
+// TMapCollisionData::polygonIsInGrid closed on exactly this mechanism, three
+// reserved `TVec3` locals per expansion of two UNUSED helpers -- so the 96
+// bytes here are very likely reserved locals of the inlined `SunModel.hpp`
+// bodies, at 12 bytes per `TVec3` (or 8 per `TVec2`) per expansion. This unit
+// cannot be closed without editing that shared header, which is out of scope
+// for a unit agent, and a TU-local wrapper cannot stand in: `isInBounds`
+// expands once, so parking 96 bytes there would mean eight dead vectors in one
+// forwarder. The exact requirement for whoever owns SunModel.hpp is +96 bytes
+// of reserved locals across the expansions below `avg` **and** -8 bytes of
+// slack between `scaleV` and the conversion temporaries; two dead 48-byte
+// non-trivial locals in `isInBounds` alone would give 0x180, eight over.
 void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	bool inBounds = false;
