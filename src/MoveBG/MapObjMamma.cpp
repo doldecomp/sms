@@ -96,8 +96,10 @@ TSandBase::TSandBase(const char* name)
 	mTrigger     = nullptr;
 }
 
-// TODO: 80.6%. Retail keeps mMapCollisionManager and its entry in callee-saved
-// registers across MsMtxSetTRS; ours reloads one of them.
+// 99.9%: every instruction matches, only the 24-byte frame gap is left. The
+// rumble is on the leaf's own position, not the trigger's, and retail names
+// the frame rate and the current frame as two f32 locals (f31 then f30) plus
+// the trigger pointer as a third.
 void TSandLeafBase::grow()
 {
 	if (mState == STATE_GROWN || mState == STATE_GROWING) {
@@ -120,10 +122,11 @@ void TSandLeafBase::grow()
 				mState = STATE_GROWING;
 			}
 
-			mTrigger->getMActor()->getFrameCtrl(0)->setFrame(
-			    SMSGetAnmFrameRate()
-			    + mTrigger->getMActor()->getFrameCtrl(0)->getFrame());
-			SMSRumbleMgr->start(0x15, 5, &mTrigger->mPosition);
+			f32 f31          = SMSGetAnmFrameRate();
+			TMapObjBase* r31 = mTrigger;
+			f32 f30          = r31->getMActor()->getFrameCtrl(0)->getFrame();
+			r31->getMActor()->getFrameCtrl(0)->setFrame(f31 + f30);
+			SMSRumbleMgr->start(0x15, 5, &mPosition);
 			gpMSound->startSoundActor(MSD_SE_OBJ_SANDBUD_NORMAL,
 			                          &mTrigger->mPosition, 0, nullptr, 0, 4);
 			mStateTimer = mWitherTime;
@@ -768,8 +771,9 @@ void TLeanMirror::controlGoTarget()
 			    0.0f, true, nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
 		}
 
-		mStateTimer = mDemoLightTime;
-		mState      = STATE_LIGHT;
+		// Two seconds past the end of the lighting camera.
+		startStateTimer(mDemoLightTime + 120);
+		mState = STATE_LIGHT;
 	}
 }
 
@@ -798,12 +802,21 @@ void TLeanMirror::controlShake()
 
 		JGeometry::TVec3<f32> axis(mSpeed.x, 0.0f, mSpeed.z);
 		rotateVecByAxisY(&axis, 1.5707963f);
-		mRotAxis.set(axis);
 
-		mRotSpeed = MsSqrtf(mSpeed.x * mSpeed.x + mSpeed.z * mSpeed.z)
+		// The ROM never stores mRotAxis/mRotSpeed here: the rotation step is
+		// spelled out over locals instead of going through calcCurrentMtx,
+		// which is why that UNUSED helper only shows up in controlGoTarget.
+		f32 f31 = MsSqrtf(mSpeed.x * mSpeed.x + mSpeed.z * mSpeed.z)
 		    * mSpeedRate;
 
-		calcCurrentMtx(mtx);
+		// TODO: retail `bl`s the weak JGeometry::SMatrix34C<f32> default
+		// constructor for `rot` here and we expand it to nothing, so this
+		// block still sits at the wrong inline depth; that and the 0x40
+		// frame gap are all that is left (86.7 -> 91.3).
+		JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > rot;
+		rot.identity();
+		makeMtxRotByAxis(axis, f31, rot);
+		concatOnlyRotFromLeft(rot, mtx, mtx);
 
 		if (getModel()->getAnmMtx(0)[1][1] < mLeanLimit) {
 			MtxPtr now = getModel()->getAnmMtx(0);
@@ -1281,7 +1294,7 @@ void TSandBird::control()
 		demo = false;
 
 	if (!demo && !mHelpShown) {
-		const TLiveActor* actor = SMS_GetMarioGrPlane()->mActor;
+		const TLiveActor* actor = (*gpMarioGroundPlane)->getActor();
 		if (actor) {
 			if (actor->isActorType(0x400002C9)) {
 				gpMarDirector->getConsole()->startAppearBalloon(0x2C, false);
