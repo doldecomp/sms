@@ -20,6 +20,17 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// Parked: a binding level over TMarDirector's frame counter. The map shows no
+// such accessor, so it stays TU-local; `TMushroom1up::perform` needs exactly
+// this one binding expansion (+16 of low region) on top of the two
+// `getStateTimer()` reads (+8 together) to reach retail's 0x40 frame. Header
+// batch item: a binding `TMarDirector::getFrameCounter()` would serve it.
+static inline int MapObjItem2GetDirectorFrame(TMarDirector* director)
+{
+	int frame = director->unk58;
+	return frame;
+}
+
 TMushroom1up::TMushroom1up(int param_1, const char* name)
     : TMapObjBase(name)
     , unk138(0)
@@ -82,16 +93,27 @@ void TMushroom1up::load(JSUMemoryInputStream& stream)
 	offLiveFlag(LIVE_FLAG_AIRBORNE | LIVE_FLAG_UNK10);
 }
 
-// TODO: 99.8%, all instructions match (closure batch 123: naming the shared
-// `f32 deg = 5.0f * t;` argument for JMACos/JMASin and using `mPosition = pos`
-// instead of `.set(pos)` -- the raw-word copy retail uses for a stack-to-
-// member TVec3 copy -- took this from 86.7% with 40 structural markers to
-// instruction-exact). What is left is two small frame items: the whole
-// function is 8 bytes short (0x88 vs 0x80, the "last 8 bytes" unnameable-
-// object shape, no candidate found), and the `diff = SMS_GetMarioPos(); diff
-// -= mPosition;` block's stack slot is 4 low -- the open `bl
-// TVec3::sub`/`operator-=` pool-ordering item from docs/catalog/frame-gaps.md
-// research batches 113/116/119, not re-investigated here.
+// TODO: 99.9%, all instructions match, 34 operand-only markers (closure batch
+// 123 made it instruction-exact; batch 128 mapped the frame). The residue is
+// now fully localised: retail's frame is 0x88 with three 12-byte named slots
+// packed at 0x44 (`diff`), 0x50 (`pos`) and 0x5c (unreferenced), 16 bytes of
+// int<->float magic doubles at 0x68/0x70, and 56 bytes of inline-temp pool
+// (0xc..0x43). Ours is 0x80 with `pos` at 0x50 and `diff` at 0x40 and only 52
+// pool bytes. Two independent items:
+//   (a) a dead 12-byte local declared before the Mario-follow block fills
+//       retail's 0x5c slot and lands the frame at 0x88 exactly (52 -> 34
+//       markers, zero instruction change) -- positional evidence only, no
+//       candidate the function plausibly wanted, so not committed;
+//   (b) after that, the only remaining difference is `diff` at 0x40 vs 0x44,
+//       i.e. retail's inline-temp pool is exactly 4 bytes bigger. Measured
+//       here: every accessor rung is +8, not +4 (`getPosition()` in the
+//       `diff -= mPosition` line, `getRotation().y` at the MsAngleDiff site or
+//       at the MsWrap site: each 0x88 -> 0x90); a dead 4-byte local declared
+//       last is +8; `SMS_GetMarioPos()` bound to a `const TVec3&`/`const
+//       TVec3*` local, or spelled as raw `*gpMarioPos`, is +0 at the `diff`
+//       site and costs 12 markers at the `pos` site. So this needs one of the
+//       catalogued "+4 low" causes (a global-accessor level per read site, a
+//       named cast intermediate), none of which this function has a site for.
 void TMushroom1up::control()
 {
 	TMapObjBase::control();
@@ -160,11 +182,11 @@ void TMushroom1up::control()
 
 void TMushroom1up::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk139 != 2 && mStateTimer < 240 && (cue & CUE_ENTRY)
-	    && gpMarDirector->unk58 % 6 > 2)
+	if (unk139 != 2 && getStateTimer() < 240 && (cue & CUE_ENTRY)
+	    && MapObjItem2GetDirectorFrame(gpMarDirector) % 6 > 2)
 		cue &= ~CUE_ENTRY;
 
-	if ((cue & CUE_MOVE) && unk13A == 0 && unk139 != 2 && mStateTimer <= 0)
+	if ((cue & CUE_MOVE) && unk13A == 0 && unk139 != 2 && getStateTimer() <= 0)
 		kill();
 
 	TMapObjBase::perform(cue, graphics);
@@ -180,7 +202,7 @@ void TJumpBase::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	if (mMapCollisionManager) {
-		TMapCollisionBase* base = mMapCollisionManager->unk8;
+		TMapCollisionBase* base = mMapCollisionManager->getUnk8();
 		base->setAllBGType(7);
 		base->setAllActor(this);
 		base->setAllData(0x2710);
@@ -256,22 +278,25 @@ void TJumpBase::calcRootMatrix()
 	TMapObjBase::calcRootMatrix();
 }
 
-// TODO: 96.0%, 8 structural markers of 112 total (closure batch 123
-// investigation, no source change landed). Two separate issues:
-// (1) case 5's `JMASSin(angle)`/`JMASCos(angle)` share one `angle >>
-// jmaSinShift` index computation in our build; retail's JMASSin/JMASCos each
-// redo it (the codegen-tells.md batch-56 "derives the table index twice"
-// shape) even though the shared `int angle` local is already named the same
-// way in both -- MWCC's CSE decision here is not steerable by splitting the
-// TVec3 ctor into per-component assignments (regresses 96.0% -> 93.7%,
-// reverted).
-// (2) around case 5's `if (!isAirborne())` block, retail's `unk13C = 0;
-// unk138 = 2;` pair (`stw 0x13c`/`stb 0x138`) is missing outright from our
-// build right after three of `this`'s own virtual calls (vtable+0x104/
-// +0x158/+0x100) -- not yet mapped to source; `this` also sits two
-// registers higher in retail (r29 vs our r31) throughout the function,
-// consistent with two missing persisted locals. Needs a slower per-case
-// re-derivation than this batch's budget allowed.
+// TODO: 97.2%, instruction count now exact (326/326) with 110 operand-only
+// markers. Closure batch 128 restored the missing `unk13C = 0; unk138 = 2;`
+// pair -- it belongs to the *ground-plane* block at the end of the function
+// (after makeObjDead/makeObjDefault/makeObjAppeared), not to case 5 as batch
+// 123's note guessed. Two items left:
+// (1) `this` and the `.rodata` string-pool base are swapped between r29 and
+//     r31 for the whole body (retail: r29 = `this`, r30 = `prevState`, r31 =
+//     pool base and later the per-case `ctrl`; ours has `this` in r31 and the
+//     pool in r29, with the prologue `mr` emitted one save earlier). This is
+//     the "retail ranks the .rodata pool address above `this`" item from
+//     frame-gaps.md batch 110; the liveness rule does not cover it. Moving
+//     `int prevState = unk138;` below the isAirborne block is worse
+//     (97.2 -> 96.5).
+// (2) case 5's `JMASSin(angle)`/`JMASCos(angle)` share one `sraw`/`slwi`
+//     index derivation where retail derives it twice from a single `lha` +
+//     `clrlwi` (the codegen-tells.md batch-56 tell). Not steerable from here:
+//     `JMASSin(*gpMarioAngleY)` twice (95.9, +1 instruction and +8 frame),
+//     `s16 angle` (95.9), and two separate `s16 sinAngle/cosAngle` locals
+//     (95.9) are all worse than the shared `int angle`.
 void TJumpBase::control()
 {
 	int prevState = unk138;
@@ -386,6 +411,8 @@ void TJumpBase::control()
 			makeObjDead();
 			makeObjDefault();
 			makeObjAppeared();
+			unk13C = 0;
+			unk138 = 2;
 		}
 	}
 
