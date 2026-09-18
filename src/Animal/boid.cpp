@@ -185,21 +185,28 @@ void TBoidLeader::updateGoal()
 }
 
 JGeometry::TVec3<f32>
-// TODO: frame 0x50 vs 0x48 -- we are 8 bytes *too big* and the returned vector's
-// temp sits at 0x38 where retail has it at 0x34 (4 extra low bytes and 4 extra
-// bytes of pad above it). Every instruction matches. One inline level or one
-// named scalar too many; `f32 len` is the only candidate in the body.
-// TPathNode::getPoint() returns `const TVec3&` and a reference return is worth
-// 8 bytes of inline temp per expansion, but the gap here is 4, so it is not
-// simply one getPoint() too many; spelling the read `force = mGoal.getPoint()`
-// instead of `force.set(...)` costs the whole function (99.6 -> 97.2).
+// Closed by re-pass II: the 4 extra bytes were `TUtil<f32>::one()`, which the
+// rules card already prices at +4 -- `normalize()` is
+// `setLength(*this, TUtil<f32>::one())`, so spelling the unit vector
+// `force.setLength(1.0f)` drops that one level and lands retail's 0x48 frame
+// and every displacement (99.6 -> 100.0). Only `calcGoalForce` wants it: the
+// same respelling is -8 in `calcForces` (0xa0 -> 0x98, still 8 over, and
+// 99.6 -> 99.5) and -8 in `calcBoids`, which is already 144 bytes short, so
+// the spelling is per call site here.
+// Inert on this function, measured in the same pass: a consumed
+// `const TVec3<f32>& goal = mGoal.getPoint();` binding, the pointer form
+// `const TVec3<f32>* goal = &mGoal.getPoint();`, `force.set(0,0,0)` for
+// `zero()`, and splitting `force` into one local per branch with an early
+// return (0x60). Worse: `force = mGraphGoal` for `force.set(mGraphGoal)`
+// (97.3). Statement-by-statement pool triage: every `+=`/`-=`/`*=` site costs
+// 0 bytes and the whole low region is the normalize expansion's 16.
 TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 {
 	JGeometry::TVec3<f32> force;
 	if (mFlags & FLAG_USE_GRAPH_GOAL) {
 		force.set(mGraphGoal);
 		force -= pos;
-		force.normalize();
+		force.setLength(1.0f);
 	} else {
 		force.set(mGoal.getPoint());
 		force += mGoalOffset;
@@ -220,6 +227,12 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 // temps are all exactly 12 bytes higher in ours (0x44/0x50/0x70 against retail's
 // 0x28/0x44/0x64), i.e. retail's pool has one more 12-byte entry at the bottom
 // and ours is hoisted. Same per-statement pool geometry as calcBoids above.
+// Re-pass II: `force.setLength(1.0f)` for `force.normalize()` (the lever that
+// closed calcGoalForce) is worth -8 here, 0xa0 -> 0x98, but it does not fix
+// the ordering and it costs 99.6 -> 99.5, so it is not committed -- the
+// `scale` temp still has to move *below* the shared 0x38 slot, which is the
+// allocation-order class, not a lever. A consumed
+// `const TVec3<f32>& target = mFleeTarget.getPoint();` binding is inert.
 JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 {
 	JGeometry::TVec3<f32> force = boid->mSeparationForce;
