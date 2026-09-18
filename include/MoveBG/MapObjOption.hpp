@@ -18,6 +18,8 @@ public:
 
 	enum {
 		STATE_ROCKING = 2,
+		// TODO: guessed; only used by the UNUSED makeBlockNoCard
+		STATE_NO_CARD = 3,
 	};
 
 public:

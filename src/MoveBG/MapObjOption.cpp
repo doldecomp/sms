@@ -12,13 +12,16 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-static void dummy(Vec* v)
+// TODO: UNUSED at 0x38 in the map, the same size as makeBlockNormal and
+// makeBlockRock, so the body is a startAnim/mState pair; which animation index
+// and which state value is a guess, continuing those two functions' pattern
+// (anim 0 / STATE_NORMAL, anim 1 / STATE_ROCKING).  Nothing calls it, so the
+// size is the only evidence.
+void TFileLoadBlock::makeBlockNoCard()
 {
-	*v = (Vec) { 0.0f, 0.0f, 0.0f };
-	*v = (Vec) { 1.0f, 1.0f, 1.0f };
+	startAnim(2);
+	mState = STATE_NO_CARD;
 }
-
-void TFileLoadBlock::makeBlockNoCard() { }
 
 void TFileLoadBlock::makeBlockNormal()
 {
@@ -34,6 +37,18 @@ void TFileLoadBlock::makeBlockRock()
 
 static int sRumbleTime = 8;
 
+// TODO: receiveMessage (0x30 vs our 0x20) and touchPlayer (0x28 vs our 0x18)
+// are instruction-exact and both want exactly one dead 13-16-byte non-trivial
+// local *here*: pushed() is UNUSED (0x9c), so an uninitialised class local
+// emits nothing and keeps that size, and it is the only inlined callee the two
+// functions share that is not already pinned by a matching out-of-line copy.
+// Measured (struct with an empty dtor, zero instruction change):
+//   12 bytes -> touchPlayer 0x28 exact, receiveMessage 0x28 (needs 0x30)
+//   13-16    -> both exact
+//   20       -> receiveMessage exact, touchPlayer 0x30 (over)
+//   24       -> both over
+// So two independent frames pin the size at 13-16 bytes, but nothing in the
+// body names the type, so it is left undeclared rather than fabricated.
 void TFileLoadBlock::pushed()
 {
 	startBck("fileloadblock");
