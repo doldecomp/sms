@@ -21,6 +21,34 @@
 // hoisting pQuat, a named copy of bVar5 or of the joint index, a named
 // J3DModel* before setScaleFlag, and spelling J3DSys::mCurrentS out instead of
 // the currentS reference (90.7%).
+// Closure batch 120 added twenty more measurements, all keeping the model
+// address in r25 (the bottom of the callee-saved group):
+//   - a TU-local `static inline` binding level around setScaleFlag, around the
+//     three setAnmMtx sites, or both: byte-identical (levels are inert here);
+//   - `J3DModel** ppModel = &j3dSys.mModel;` / `J3DModel*& model` declared at
+//     the setScaleFlag site or just after it, used at the setAnmMtx sites:
+//     98.5%, 128 differing operands (making the address a source variable does
+//     not raise its rank);
+//   - `j3dSys.mModel` raw at the setAnmMtx sites only 98.5%, at the
+//     setScaleFlag site only 98.8% (unchanged);
+//   - bVar5 declared first 98.6%, declared last 98.7% (current position is the
+//     best); three named `f32`s for the blended scale instead of local_98
+//     97.8%; `Vec* currentS` instead of the reference, and
+//     `local_8c = J3DSys::mCurrentS` in the else branch: both unchanged.
+// A named `J3DModel* model = j3dSys.getModel();` before setScaleFlag is a
+// zero-instruction "+4 named / -4 low" lever: the by-value checkScaleOne Vec
+// temporary moves 0x2c -> 0x28 with the frame still 0x100. Retail's is 0x2c,
+// so this function does not want it, but the lever is reusable.
+// The temp is *not* pinned to the bottom of the group: shortening `currentS`'s
+// live range promotes it straight to r31 (spelling J3DSys::mCurrentS out in
+// the tail pointer-walk block 96.5%, or everywhere except the checkScaleOne
+// argument 90.5%). So its priority sits between `currentS`'s and the
+// parameters', and the lever has to lower the parameters' priority (or add one
+// short-lived value between the address's definition and `clrlwi r29`, which
+// is exactly what the bVar5 normalisation supplies) -- not add an inline level.
+// The cheapest diagnostics are `bVar5 != 0` and `bVar5 ? 1 : 0` (97.0/97.5%,
+// nine differing lines: the neg/subic/subfe triple plus the moved
+// mScaleFlagArr load); `(bool)bVar5` and `!!bVar5` cost one more.
 void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
                         J3DTransformInfo* param_3, f32 param_4, bool basic)
 {
