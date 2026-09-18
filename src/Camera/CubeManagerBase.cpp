@@ -34,13 +34,8 @@ TCubeManagerBase::TCubeManagerBase(const char* name, u8 param_2)
     , unk14(nullptr)
     , unk18(nullptr)
 {
-	initializer();
-}
-
-void TCubeManagerBase::initializer()
-{
 	unk14 = new TNameRefPtrAryT<TCubeGeneralInfo>;
-	unk14->reserve(unk10);
+	unk14->getChildren().reserve(unk10);
 	for (int i = 0; i < unk10; ++i)
 		unk14->push_back(new TCubeGeneralInfo);
 }
@@ -57,7 +52,7 @@ void TCubeManagerBase::load(JSUMemoryInputStream& stream)
 		return;
 
 	unk14 = ary;
-	unk10 = unk14->size();
+	unk10 = unk14->getChildren().size();
 }
 
 void TCubeManagerBase::perform(u32 cue, JDrama::TGraphics* graphics) { }
@@ -86,10 +81,28 @@ bool TCubeManagerBase::isInCube(const Vec& v, s32 i) const
 {
 	bool result = false;
 	if (i >= 0 && i < unk10) {
-		TCubeGeneralInfo* info = (*unk14)[i];
+		TCubeGeneralInfo* info = getCubeInfo(i);
 		if (CLBIsPointInCube(v, info->getUnkC(), info->getUnk18(),
 		                     info->getUnk24()))
 			result = true;
+	}
+	return result;
+}
+
+// UNUSED (map size 0x9c, reproduced exactly); dead in the retail image, so the
+// body is reconstructed from the sibling overload plus the name lookup the
+// second argument implies.
+bool TCubeManagerBase::isInCube(const Vec& v, const char* name) const
+{
+	bool result = false;
+	for (u32 i = 0; i < unk10; ++i) {
+		TCubeGeneralInfo* info = getCubeInfo(i);
+		if (strcmp(info->getName(), name) == 0) {
+			if (CLBIsPointInCube(v, info->getUnkC(), info->getUnk18(),
+			                     info->getUnk24()))
+				result = true;
+			break;
+		}
 	}
 	return result;
 }
@@ -105,29 +118,30 @@ void TCubeManagerBase::calcPointInCubeRatio(const Vec& param_1, s32 param_2,
 
 bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
 {
-	int found = getInCubeNo(pos);
+	bool result = false;
+	int found    = getInCubeNo(pos);
 
 	if (unk1C == found)
-		return true;
-
+		result = true;
 	// Presumably hotel delphino floor transitions?
-	if (gpMarDirector->getCurrentMap() == 7 && unk1C != -1 && found != -1) {
-		const char* curName = (*unk14)[unk1C]->getName();
-		const char* newName = (*unk14)[found]->getName();
+	else if (gpMarDirector->getCurrentMap() == 7 && getInCubeNoSave() != -1
+	         && found != -1) {
+		const char* curName = getCubeInfo(unk1C)->getName();
+		const char* newName = getCubeInfo(found)->getName();
 
 		if (strcmp(curName, "３階") == 0) {
 			if (strcmp(newName, "２階") == 0 || strcmp(newName, "１階") == 0)
-				return true;
+				result = true;
 		} else if (strcmp(curName, "２階") == 0) {
 			if (strcmp(newName, "１階") == 0)
-				return true;
+				result = true;
 		}
 	}
 
-	return false;
+	return result;
 }
 
-inline bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
+bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
 {
 	bool result = false;
 	int in      = getInCubeNo(pos);
@@ -151,7 +165,7 @@ bool SMS_IsInOtherFastCube(const Vec& pos)
 bool SMS_IsInSameCameraCube(const Vec& pos)
 {
 	bool result  = false;
-	Vec marioPos = SMS_GetMarioPos();
+	Vec marioPos = *gpMarioPos;
 	marioPos.y += 75.0f;
 	int uVar7 = gpCubeCamera->getInCubeNo(marioPos);
 	int uVar4 = gpCubeCamera->getInCubeNo(pos);

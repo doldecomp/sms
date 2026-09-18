@@ -22,12 +22,12 @@ public:
 	TCubeManagerBase(const char*, const char*);
 	TCubeManagerBase(const char*, u8);
 
-	// fabricated
-	void initializer();
-
 	virtual ~TCubeManagerBase() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+
+	// fabricated
+	TCubeGeneralInfo* getCubeInfo(s32 i) const { return (*unk14)[i]; }
 
 	s32 getDataNo(s32) const;
 	int getInCubeNo(const Vec&) const;
@@ -48,6 +48,9 @@ public:
 	    , unk1C(-1)
 	{
 	}
+
+	// fabricated
+	int getInCubeNoSave() const { return unk1C; }
 
 	/* 0x1C */ int unk1C;
 };
