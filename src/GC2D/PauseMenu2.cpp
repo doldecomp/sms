@@ -123,8 +123,8 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 			mMenuPane->add(0, 0x1E);
 		} else {
 			// TODO: This doesn't match for some reason.
-			scenarioName
-			    = SMSGetMessageData(scenarioBmg, SMS_getNormalStage(shineID));
+			scenarioName = SMSGetMessageData(
+			    scenarioBmg, (u16)SMS_getNormalStage(shineID));
 		}
 		snprintf(mScenarioName->getStringPtr(), 0x80, "%s", scenarioName);
 	}

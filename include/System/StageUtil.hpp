@@ -87,6 +87,13 @@ static u32 scScenarioNameTable[] = {
 // Guide.cpp and UNUSED (0x28) in PauseMenu2.cpp, CardLoad.cpp and
 // ConsoleStr.cpp, and its .data slot sits right after scScenarioNameTable in
 // both objects that keep it, so it is declared here and next to it.
+//
+// Ruled out: making this and scScenarioNameTable function-local statics of
+// SMS_getNormalStage so that the objects that never call it would not carry
+// them. The map's .data layout lists both under `GC2D.a CardLoad.cpp` as
+// UNUSED at their full 0x118/0x28 sizes, i.e. retail's CardLoad.o does emit
+// them and the linker strips them; a function-local static would also have
+// been named `scScenarioNameTable$NNNN`, and it is not.
 static u32 scNormalStageTable[] = {
 	0x0, 0x1, 0x2, 0x3, 0x4, 0xD, 0x6, 0x8, 0x9, 0xA,
 };
@@ -94,19 +101,15 @@ static u32 scNormalStageTable[] = {
 // Despite the name this maps a shine id to a scenario message index, which is
 // what all four call sites want (SMSGetMessageData(mScenarioBmg2, ...)).
 //
-// TODO: 0x1c against the map's 0x18. The extra word is the `clrlwi` of the
-// narrowing return, and dropping it is measurably wrong at the call sites:
-//
-//   return type | size | callers
-//   ------------+------+---------------------------------------------------
-//   u16         | 0x1c | TPauseMenu2::load 99.96, TConsoleStr::load 99.54,
-//               |      | TSelectMenu::perform 88.81, initData 86.92
-//   u32         | 0x18 | 99.45, 99.10, 87.94, initData 86.97
-//
-// So three of the four sites do narrow the value and only `initData` prefers
-// the wide one. A u16 table would give 0x18 with no mask at all, but the
-// .data object is 280 bytes for 70 entries, i.e. u32. Left at u16.
-static u16 SMS_getNormalStage(u32 param_1)
+// The return is `u32` -- 0x18, the map's UNUSED size -- and the narrowing the
+// call sites need is written as an explicit `(u16)` on each of the seven
+// SMSGetMessageData arguments. That is codegen-identical to a `u16` return at
+// every site (empty changes_all) and 4 bytes shorter here, so it replaces the
+// old compromise of a `u16` return at 0x1c. SMSGetMessageData itself takes a
+// `u32` (SMSGetMessageData__FPvUl), so the mask is not a parameter
+// conversion. A `u16` table would drop the mask altogether, but the .data
+// object is 280 bytes for 70 entries, i.e. u32.
+static u32 SMS_getNormalStage(u32 param_1)
 {
 	return scScenarioNameTable[param_1];
 }

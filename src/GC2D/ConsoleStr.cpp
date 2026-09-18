@@ -94,7 +94,8 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 		if (pvVar10 == nullptr || uVar2 == -1)
 			puVar15 = "";
 		else
-			puVar15 = SMSGetMessageData(pvVar10, SMS_getNormalStage(uVar2));
+			puVar15 = SMSGetMessageData(
+			    pvVar10, (u16)SMS_getNormalStage(uVar2));
 
 		snprintf(unk29C[1]->getStringPtr(), 0x80, "%s", puVar15);
 	}

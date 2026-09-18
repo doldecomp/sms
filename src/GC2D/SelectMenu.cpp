@@ -573,7 +573,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		    = SMS_getShineID(SMS_getShineStage(mStage), mSelectedShine, false);
 
 		strncpy(mScenarioText1->getStringPtr(),
-		        SMSGetMessageData(mScenarioBmg2, SMS_getNormalStage(shineID)),
+		        SMSGetMessageData(mScenarioBmg2,
+		                          (u16)SMS_getNormalStage(shineID)),
 		        127);
 	}
 }
@@ -814,7 +815,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
 					                             mSelectedShine, false);
 					const char* scenarioName = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
+					    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
 
 					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
 
@@ -829,7 +830,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
 					                              mSelectedShine, false);
 					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
+					    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
 					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
@@ -887,7 +888,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
 					                             mSelectedShine, false);
 					const char* scenarioName = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
+					    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
 
 					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
 
@@ -901,7 +902,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
 					                              mSelectedShine, false);
 					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
+					    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
 					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
