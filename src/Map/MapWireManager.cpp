@@ -23,7 +23,12 @@ f32 TMapWireActor::mCommonAttackHeight = 200.0f;
 // with no instruction change, and this body is exactly 40 bytes short of the
 // map's UNUSED 0xe8, so the missing statements are the ones that used it.
 // Three `JGeometry::TVec3<f32>` (the start/end/foot triple getPosInWire uses)
-// is the right size; left out for want of a use for them.
+// is the right size; left out for want of a use for them. Note the expansion
+// in doActorToWire matches instruction for instruction, so by the batch-98
+// rule the 40-byte UNUSED excess is more likely a depth artifact of the
+// dead-stripped out-of-line copy than ten missing instructions, and the 40
+// dead frame bytes then have to be a dead local of this callee rather than
+// statements.
 void TMapWireActor::checkTakingActor()
 {
 	if (unk74->unk7C != nullptr) {
@@ -36,10 +41,14 @@ void TMapWireActor::checkTakingActor()
 	}
 }
 
-// TODO: frame 0xb8 vs 0xa8. The shifts are not uniform (+8 on the vector
-// temporaries, +0x14 on the `start` pair and +0x2c on the last pair), so slots
-// are missing in the middle of the pool, not just at the bottom.
-// `getPosition()` over `mPosition` is worse (99.3 -> 96.5).
+// TODO: frame 0xb8 vs 0xa8. Both builds allocate exactly eight 12-byte vector
+// slots, but retail's block starts at 0x4c where ours starts at 0x3c (16 more
+// low bytes below every vector) and two of the eight are permuted: reading the
+// slots in ascending order, ours is A C B D E H F G to retail's A B C D E F G H
+// (the (foot - start)/(end - start) pair is swapped and the last temporary is
+// two places early), so the difference is the term order of the returned
+// quotient, not a missing local. `getPosition()` over `mPosition` is worse
+// (99.3 -> 96.5).
 f32 TMapWireActor::getPosInWire() const
 {
 	JGeometry::TVec3<f32> start;
@@ -257,14 +266,20 @@ void TMapWireManager::loadAfter()
 // single `stream >>` temporary at 0x34/0x2c, so both regions are short.
 void TMapWireManager::load(JSUMemoryInputStream& stream)
 {
+	// A C-style declaration block with two dead 4-byte scalars, the shape
+	// TAreaCylinder::load also has: they are the top 8 bytes of the 0x50
+	// frame and nothing reads them, so the counts below are read straight
+	// into the members. The chained first read is the pool's last 8 bytes
+	// (one `>>` continuation = 8 low bytes).
+	s32 wireNum;
+	s32 actorNum;
+	s32 val;
 	JDrama::TViewObj::load(stream);
 	stream.readString();
-	stream >> unk14;
-	stream >> unk20;
+	stream >> unk14 >> unk20;
 	stream >> TMapWire::mDrawWidth;
 	stream >> TMapWire::mDrawHeight;
 
-	s32 val;
 	stream >> val;
 	mUpperSurface.r = val;
 	stream >> val;
