@@ -199,6 +199,15 @@ void TBombHei::kill()
 // 0x1c) plus a sixteen-byte dead hole between that receiver and the named
 // vector at 0x38 that we do not reserve -- the size of a TPathNode or a
 // TQuat4 declared and never used.
+// Batch 158 pinned the arithmetic: retail's pool below `dir` is 16 bytes of
+// low region + the 12-byte `operator-` by-value parameter copy at 0x1c + a
+// 16-byte hole, 44 bytes in all, against our 24 + 12 = 36, so it is two
+// separate errors that happen to net to +8 -- we generate one 8-byte pool
+// item too many *before* the parameter copy and none of the 16 after it. The
+// hole sits between the parameter copy and `dir`, i.e. in expansion order it
+// belongs to `operator-`'s own body or to a second *named* local declared
+// after `dir` (a dead 12-byte TVec3 plus 4 of alignment fits it exactly), not
+// to anything expanded later such as setVelocityAndFlag10.
 void TBombHei::genEventCoin()
 {
 	TBombHeiManager* manager = (TBombHeiManager*)mManager;
