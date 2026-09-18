@@ -30,8 +30,7 @@ static const char* MtxCalcTypeName[] = {
 	"MActorMtxCalcType_User ユーザー定義",
 };
 
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <Player/MarioDirtyStrings.hpp>
 
 TEMario::TEMario(const char* name)
     : TSpineEnemy(name)

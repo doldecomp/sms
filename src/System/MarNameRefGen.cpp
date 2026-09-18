@@ -9,8 +9,7 @@
 // TODO: retail has these two as (object,local) here as well, from the same
 // unidentified shared Player header as in the other nineteen TUs that carry
 // them; parked so the leading .rodata block lines up.
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <Player/MarioDirtyStrings.hpp>
 
 #include <JSystem/JDrama/JDRSmJ3DScn.hpp>
 #include <System/StageEventInfo.hpp>

@@ -32,8 +32,7 @@
 
 TMario* gpMarioForCallBack;
 
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <Player/MarioDirtyStrings.hpp>
 
 // clang-format off
 TMarioAnimeData gMarioAnimeData[336] = {
