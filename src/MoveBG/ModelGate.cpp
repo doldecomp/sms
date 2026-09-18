@@ -263,9 +263,7 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 	gpAfterEffect->unk15 = 2;
 	gpAfterEffect->unk1C = (u8)(mBlurAlpha * (1.0f - gpCamera->unk270));
 	gpAfterEffect->unk50 = mBlurRadius;
-	gpAfterEffect->unk5C = viewDir.x;
-	gpAfterEffect->unk60 = viewDir.y;
-	gpAfterEffect->unk64 = viewDir.z;
+	gpAfterEffect->unk5C = viewDir;
 }
 
 BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)

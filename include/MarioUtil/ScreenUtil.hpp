@@ -2,6 +2,7 @@
 #define MARIO_UTIL_SCREEN_UTIL_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/JGeometry/JGVec3.hpp>
 
 void SMS_FillScreenAlpha(u8);
 
@@ -52,9 +53,10 @@ public:
 	/* 0x54 */ f32 unk54;
 	/* 0x58 */ u8 unk58;
 	/* 0x59 */ u8 unk59;
-	/* 0x5C */ f32 unk5C;
-	/* 0x60 */ f32 unk60;
-	/* 0x64 */ f32 unk64;
+	// The radial-blur direction, written as one vector from
+	// TModelGate::screenBlur (three integer lwz/stw, i.e. a TVec3
+	// assignment, not three f32 stores).
+	/* 0x5C */ JGeometry::TVec3<f32> unk5C;
 };
 
 class TScreenTexture;
