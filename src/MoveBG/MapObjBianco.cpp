@@ -126,6 +126,14 @@ f32 TMapObjRootPakkun::mTrembleAccel = 0.95f;
 f32 TMapObjRootPakkun::mTrembleBrake = 0.98f;
 int TMapObjRootPakkun::mTrembleTime  = 360;
 
+// Binding level worth +8 of low region, landing
+// TMapObjRootPakkun::drawObject's frame at 0x28 (batch 121).
+static inline bool MapObjBiancoIsStateTimerEngaged(TMapObjRootPakkun* p)
+{
+	bool stateTimerEngaged = p->isStateTimerEngaged();
+	return stateTimerEngaged;
+}
+
 void TMapObjRootPakkun::drawObject(JDrama::TGraphics* graphics)
 {
 	TLiveActor::drawObject(graphics);
@@ -133,7 +141,7 @@ void TMapObjRootPakkun::drawObject(JDrama::TGraphics* graphics)
 	// Only worth animating while Mario is on this side of the valley.
 	if (fabsf(gpMarioPos->z - mPosition.z) < 10000.0f) {
 		mTrembleEffect->movement();
-		if (!isStateTimerEngaged()) {
+		if (!MapObjBiancoIsStateTimerEngaged(this)) {
 			mTrembleEffect->tremble(mTremblePower, mTrembleAccel,
 			                        mTrembleBrake, mTrembleTime);
 			mStateTimer = mTrembleTime;

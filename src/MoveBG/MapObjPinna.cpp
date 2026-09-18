@@ -545,6 +545,14 @@ void TShellCup::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level worth +8 of low region, landing TShellCup::loadAfter's frame
+// at 0x68 (batch 121).
+static inline u32 MapObjPinnaGetEventId(TMapObjBase* p)
+{
+	u32 eventId = p->getEventId();
+	return eventId;
+}
+
 void TShellCup::loadAfter()
 {
 	TMapObjBase::loadAfter();
@@ -558,7 +566,7 @@ void TShellCup::loadAfter()
 
 	mBlueCoin->setEventId(2);
 	if (!TFlagManager::smInstance->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), mBlueCoin->getEventId())) {
+	        gpMarDirector->getCurrentMap(), MapObjPinnaGetEventId(mBlueCoin))) {
 		mBlueCoin->makeObjAppeared();
 		mShells[0].mContent = mBlueCoin;
 	}

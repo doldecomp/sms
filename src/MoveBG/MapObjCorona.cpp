@@ -432,6 +432,15 @@ void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
 	    ->stagger(false);
 }
 
+// Binding level worth +8 of low region, landing TBathtub::quake's frame at
+// 0xa0 (batch 121).
+static inline const JGeometry::TVec3<f32>&
+MapObjCoronaGetInitialPosition(const TBathtub* p)
+{
+	const JGeometry::TVec3<f32>& initialPosition = p->getInitialPosition();
+	return initialPosition;
+}
+
 void TBathtub::quake(const JGeometry::TVec3<f32>& pos)
 {
 	if (unk29A)
@@ -440,7 +449,7 @@ void TBathtub::quake(const JGeometry::TVec3<f32>& pos)
 	// inv_sqrt guard survives.
 	// TODO: body exact, frame 0x98 against retail's 0xa0 (one 8-byte local).
 	JGeometry::TVec3<f32> dir;
-	dir.sub(pos, getInitialPosition());
+	dir.sub(pos, MapObjCoronaGetInitialPosition(this));
 	dir.y = 0.0f;
 	dir.normalize();
 	unk24C = 300;

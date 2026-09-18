@@ -287,6 +287,14 @@ void TNormalLift::load(JSUMemoryInputStream& stream)
 	}
 }
 
+// Binding level worth +8 of low region, landing TNormalLift::readRailFlag's
+// frame at 0x80 (batch 121).
+static inline int MapObjRailBlockGetCurGraphIndex(const TGraphTracer* p)
+{
+	int curGraphIndex = p->getCurGraphIndex();
+	return curGraphIndex;
+}
+
 void TNormalLift::readRailFlag()
 {
 	TRailMapObj::readRailFlag();
@@ -299,7 +307,8 @@ void TNormalLift::readRailFlag()
 	if (graph->isDummy())
 		return;
 
-	TGraphNode& node = graph->getGraphNode(getTracer()->getCurGraphIndex());
+	TGraphNode& node
+	    = graph->getGraphNode(MapObjRailBlockGetCurGraphIndex(unk138));
 
 	if (node.getRailNode()->mFlags & 0x800)
 		unk150 = node.getRailNode()->mPitch;

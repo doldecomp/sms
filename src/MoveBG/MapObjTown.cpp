@@ -137,9 +137,18 @@ void TManhole::touchPlayer(THitActor*)
 	appeared();
 }
 
+// Binding level worth +16 of low region, landing
+// TManhole::animationFinished's frame at 0x58 (batch 121).
+static inline MActor* MapObjTownGetMActor(const TManhole* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 bool TManhole::animationFinished()
 {
-	J3DFrameCtrl* frameCtrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+	J3DFrameCtrl* frameCtrl
+	    = MapObjTownGetMActor(this)->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->getRate() == 0.0f)
 		return true;
 	f32 next = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
@@ -599,6 +608,14 @@ void TRedCoinSwitch::loadAfter()
 	}
 }
 
+// Binding level worth +8 of low region, landing TRedCoinSwitch::load's frame
+// at 0x30 (batch 121).
+static inline TFlagManager* MapObjTownGetInstance()
+{
+	TFlagManager* instance = TFlagManager::getInstance();
+	return instance;
+}
+
 void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
@@ -612,7 +629,7 @@ void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 
 	u8 shineId = SMS_getShineIDofExStage(gpMarDirector->getCurrentMap());
 	if (shineId != 0xFF
-	    && !TFlagManager::getInstance()->getShineFlag(shineId)) {
+	    && !MapObjTownGetInstance()->getShineFlag(shineId)) {
 		makeObjDead();
 	}
 }

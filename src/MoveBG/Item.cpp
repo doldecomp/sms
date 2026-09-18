@@ -262,6 +262,22 @@ void TCoin::makeObjAppeared()
 		unk154->unk1A &= ~1;
 }
 
+// Binding level worth +16 of low region, landing TCoin::perform's frame at
+// 0x50 (batch 121).
+static inline u16 ItemGetColNum(TCoin* p)
+{
+	u16 colNum = p->getColNum();
+	return colNum;
+}
+
+// Binding level worth +16 of low region, landing TCoin::perform's frame at
+// 0x50 (batch 121).
+static inline MActor* ItemGetMActor(const TCoin* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -290,12 +306,12 @@ void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		}
 
-		if (getColNum())
-			for (int i = 0; i < getColNum(); ++i)
+		if (ItemGetColNum(this))
+			for (int i = 0; i < ItemGetColNum(this); ++i)
 				touchActor(mCollisions[i]);
 
 	} else {
-		if ((cue & CUE_CALC_VIEW) && getMActor() == nullptr) {
+		if ((cue & CUE_CALC_VIEW) && ItemGetMActor(this) == nullptr) {
 			gpQuestionManager->request(mPosition, 60.0f);
 		}
 
@@ -370,10 +386,18 @@ TCoinRed::TCoinRed(const char* name)
 	unk158.x = unk158.y = unk158.z = 0.0f;
 }
 
+// Binding level worth +8 of low region, landing TCoinBlue::makeObjAppeared's
+// frame at 0x28 (batch 121).
+static inline u32 ItemGetEventId(TCoinBlue* p)
+{
+	u32 eventId = p->getEventId();
+	return eventId;
+}
+
 void TCoinBlue::makeObjAppeared()
 {
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), getEventId()))
+	        gpMarDirector->getCurrentMap(), ItemGetEventId(this)))
 		return;
 
 	TCoin::makeObjAppeared();
@@ -765,6 +789,14 @@ void TShine::kill()
 	unk154 = 1;
 }
 
+// Binding level worth +8 of low region, landing TShine::makeMActors's frame
+// at 0x28 (batch 121).
+static inline const char* ItemGetName(const TShine* p)
+{
+	const char* name = p->getName();
+	return name;
+}
+
 void TShine::makeMActors()
 {
 	mMActorKeeper                    = new TMActorKeeper(mManager, 1);
@@ -773,7 +805,7 @@ void TShine::makeMActors()
 	                                   | (2 << J3DMLF_TevStageNumShift);
 	MActor* result;
 	if (TFlagManager::smInstance->getShineFlag(mEventId)
-	    && strcmp("シャイン（１００枚コイン用）", getName()) != 0) {
+	    && strcmp("シャイン（１００枚コイン用）", ItemGetName(this)) != 0) {
 		result = initMActor("shine_empty.bmd", nullptr, getSDLModelFlag());
 		unk1B4 = 1;
 	} else {
@@ -931,6 +963,14 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 	}
 }
 
+// Binding level worth +8 of low region, landing TEggYoshi::touchActor's
+// frame at 0x20 (batch 121).
+static inline TTakeActor* ItemGetHeldObject(TTakeActor* p)
+{
+	TTakeActor* heldObject = p->getHeldObject();
+	return heldObject;
+}
+
 void TEggYoshi::touchActor(THitActor* other)
 {
 	if (!isState(STATE_NORMAL) && !isState(0xD))
@@ -938,7 +978,7 @@ void TEggYoshi::touchActor(THitActor* other)
 
 	if (other->isActorType(0x80000001)) {
 		TTakeActor* casted = static_cast<TTakeActor*>(other);
-		if (casted->getHeldObject()
+		if (ItemGetHeldObject(casted)
 		    && TMapObjBase::isFruit(casted->getHeldObject()))
 			touchFruit(casted->getHeldObject());
 	}

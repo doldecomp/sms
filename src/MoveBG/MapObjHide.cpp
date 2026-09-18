@@ -84,11 +84,20 @@ BOOL THideObjBase::receiveMessage(THitActor* sender, u32 message)
 	return TMapObjBase::receiveMessage(sender, message);
 }
 
+// Binding level worth +8 of low region, landing THideObjBase::loadAfter's
+// frame at 0x30 (batch 121).
+static inline const char* MapObjHideGetName(const THideObjBase* p)
+{
+	const char* name = p->getName();
+	return name;
+}
+
 void THideObjBase::loadAfter()
 {
 	TMapObjBase::loadAfter();
 	mHiddenObj
-	    = TMapObjBaseManager::newAndRegisterObjByEventID(mEventId, getName());
+	    = TMapObjBaseManager::newAndRegisterObjByEventID(
+	        mEventId, MapObjHideGetName(this));
 	if (mHiddenObj != nullptr) {
 		if (mHiddenObj->isActorType(0x20000010)) {
 			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(

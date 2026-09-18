@@ -333,6 +333,14 @@ void TMapObjGeneral::kill()
 	breaking();
 }
 
+// Binding level worth +8 of low region, landing TMapObjGeneral::appear's
+// frame at 0x28 (batch 121).
+static inline u32 MapObjGeneralGetLivingTime(const TMapObjGeneral* p)
+{
+	u32 livingTime = p->getLivingTime();
+	return livingTime;
+}
+
 void TMapObjGeneral::appear()
 {
 	makeObjAppeared();
@@ -350,7 +358,7 @@ void TMapObjGeneral::appear()
 
 	appearing();
 	if (checkMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING))
-		mStateTimer = getLivingTime();
+		mStateTimer = MapObjGeneralGetLivingTime(this);
 
 	mState = STATE_APPEARING;
 }

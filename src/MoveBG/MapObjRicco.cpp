@@ -351,11 +351,19 @@ TRiccoWatermill::TRiccoWatermill(const char* name)
 
 // TSurfGesoObj
 
+// Binding level worth +8 of low region, landing TSurfGesoObj::initMapObj's
+// frame at 0x28 (batch 121).
+static inline const char* MapObjRiccoGetUnkF4(TSurfGesoObj* p)
+{
+	const char* unkF4 = p->getUnkF4();
+	return unkF4;
+}
+
 void TSurfGesoObj::initMapObj()
 {
 	TMapObjBase::initMapObj();
 
-	if (strcmp(getUnkF4(), "SurfGesoRed") == 0) {
+	if (strcmp(MapObjRiccoGetUnkF4(this), "SurfGesoRed") == 0) {
 		mBodyColor.r = 255;
 		mBodyColor.g = 180;
 		mBodyColor.b = 255;
