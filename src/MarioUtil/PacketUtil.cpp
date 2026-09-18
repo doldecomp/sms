@@ -148,10 +148,15 @@ static void FifoSetFogRangeAdj(u8 enable, u16 center, GXFogAdjTable* table)
 	GXWGFifo.u32 = range_c;
 }
 
-// TODO: every instruction matches; frame 0x58 vs retail's 0x50. Every
-// referenced slot is exactly 8 high, so it is 8 bytes of low region. `c_hex` is
-// required (it is retail's r27 across the __cvt_fp2unsigned call) and costs
-// exactly that 8; dropping it lands the frame but costs two instructions.
+// TODO: every instruction matches (fog3's operand order -- c_hex's shift
+// before type's -- was the last real difference, matching retail's
+// srwi-then-rlwimi pair); frame 0x58 vs retail's 0x50. Every referenced slot
+// is exactly 8 high, so it is 8 bytes of low region. `c_hex` is required (it
+// is retail's r27 across the __cvt_fp2unsigned call) and costs exactly that
+// 8; dropping it lands the frame but costs two instructions. A dead trailing
+// array of 1-4 bytes in this body is absorbed for free (no frame change) and
+// 5+ bytes overshoots to 0x60, so the extra 8 is not a missing declared
+// local here -- closure batch 123 trial, both reverted.
 static void FifoSetFog(GXFogType type, f32 startz, f32 endz, f32 nearz,
                        f32 farz, GXColor color)
 {
@@ -204,7 +209,7 @@ static void FifoSetFog(GXFogType type, f32 startz, f32 endz, f32 nearz,
 	GXWGFifo.u8  = 0x61;
 	GXWGFifo.u32 = fog2;
 
-	fog3         = (type << 21) | (c_hex >> 12) | 0xF1000000;
+	fog3         = (c_hex >> 12) | (type << 21) | 0xF1000000;
 	GXWGFifo.u8  = 0x61;
 	GXWGFifo.u32 = fog3;
 
@@ -424,9 +429,17 @@ void SMS_InitPacket_CallDL(J3DModel* param_1, u16 param_2, u8* param_3,
 	packet->setCallback(&ShapePacketCallBackFunc);
 }
 
-// TODO: 93.1%. Retail loads the PE block's vtable before the shape index and
-// its frame is 8 bytes bigger; evaluating the fog chain first or naming the
-// material both make it worse (45.4% / 65.6%).
+// TODO: 93.1%, structural/register-order residue, not a frame gap (target
+// frame is 8 bytes *bigger* than ours here, the opposite of most gaps).
+// Both builds share one materialNode fetch for InitPacket_Sub's `getShape()`
+// (+4) and this function's `getPEBlock()` (+0x30) and do the mulli/add for
+// `packet` before the getFog() vtable call -- only the +4/+0x30 read order is
+// swapped (retail reads +0x30 first). Closure batch 123 trials, both worse:
+// moving the fog fetch before `packet = InitPacket_Sub(...)` (45.4%, breaks
+// the shared materialNode fetch entirely -- two independent chains, 47
+// instructions); naming `J3DMaterial* mat` and computing `fog` from it before
+// `packet` (65.6%, keeps one fetch but pushes the shape/index read after the
+// virtual call). The safest known state (this ordering) is kept.
 void SMS_InitPacket_Fog(J3DModel* param_1, u16 param_2)
 {
 	J3DShapePacket* packet = InitPacket_Sub(param_1, param_2);
