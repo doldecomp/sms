@@ -20,6 +20,12 @@ public:
 
 	void addMoveCameraAndMario(const Vec& v) { unk0 += v; }
 
+	// Fabricated name; one inline level in controlByCameraCode_.
+	u32 getFramesSinceMarioStatusChange() const
+	{
+		return mFramesSinceMarioStatusChange;
+	}
+
 public:
 	/* 0x0 */ JGeometry::TVec3<f32> unk0;
 	/* 0xC */ f32 mFrameMoveDistHorizontal;
@@ -30,5 +36,8 @@ public:
 };
 
 extern TCameraMarioData* gpCameraMario;
+
+// Fabricated name, analogous to SMSGetMarDirector().
+inline TCameraMarioData* SMSGetCameraMario() { return gpCameraMario; }
 
 #endif

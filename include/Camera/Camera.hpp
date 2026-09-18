@@ -107,6 +107,8 @@ public:
 
 	// Fabricated
 	s16 getUnk2C8() const { return unk2C8; }
+	int getCamMode() const { return mMode; }
+	const TCameraMapTool* getUnk70() const { return unk70; }
 	MtxPtr getUnk1EC() { return unk1EC; }
 	const JGeometry::TVec3<f32>& getUnk124() const { return unk124; }
 	s16 getUnk258() const { return unk258; }
