@@ -1238,11 +1238,10 @@ void TSelectMenu::startOpenWindow()
 		                              rect.getWidth(), 0);
 		mLetterBoxBottom->setPaneOffset(time, 0, 0, 0, rect.getHeight());
 
-		// NOTE: objdiff shows a `~` on this pair's operands forever: the
-		// id 0x80010024 happens to be the address of TBeeHive::doWait()
-		// in the retail image, so dtk turned the target's literal into a
-		// relocation. Our constant is correct; the unit cannot reach 100%
-		// on this function without a `block_relocations` entry.
+		// NOTE: the id 0x80010024 lands inside TBeeHive::doWait() in the
+		// retail image, so dtk used to turn the target's literal into a
+		// relocation and objdiff scored a permanent `~` here. Fixed by the
+		// `target: 0x80010000` entry in config/GMSE01/config.yml.
 		MSBgm::startBGM(MSD_BGM_SCENARIO_SELECT);
 		mLetterboxAnimFrame = 0u;
 	}
