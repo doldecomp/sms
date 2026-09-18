@@ -44,6 +44,20 @@ static void IsNpcFlagOn_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	interp->push(result);
 }
 
+// TODO: parked. The ROM `bl`s TSpineBase<TLiveActor>::getLatestNerve() from
+// evCheckLatestNerve4Npc while expanding the one-word getCurrentNerve() in
+// evCheckCurNerve4Npc, so the latest-nerve read sits one inline level deeper
+// than the current-nerve read: the two-return body refuses to expand at that
+// depth. The natural carrier is a one-line `getLatestNerve()` forwarder on
+// TLiveActor (include/Strategic/LiveActor.hpp), the shape header round 12
+// already promoted for TBossGesso/TBossWanwan/TBossHanachan; parked here as a
+// TU-local until a header batch can add it.
+static inline const TNerveBase<TLiveActor>* NpcEventGetLatestNerve(
+    const TBaseNPC* npc)
+{
+	return npc->mSpine->getLatestNerve();
+}
+
 static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
                             bool param_3)
 {
@@ -54,7 +68,7 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 
 	const TNerveBase<TLiveActor>* expected = NerveGetByIndex(nerveId);
 	const TNerveBase<TLiveActor>* actual   = param_3
-	                                             ? npc->mSpine->getLatestNerve()
+	                                             ? NpcEventGetLatestNerve(npc)
 	                                             : npc->mSpine->getCurrentNerve();
 
 	if (actual == expected)
