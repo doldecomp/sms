@@ -30,32 +30,40 @@ public:
 
 	JGeometry::TVec3<f32> getPos(int i, int j, f32 h) const
 	{
+		// angle before amp: the ROM gives angle the higher float register, and
+		// register order follows declaration order while the int-to-float
+		// conversions follow assignment order.
+		// TODO: the three conversion temporaries still land in a different
+		// order (0x30/0x38/0x40 hold j, i, i in the ROM and i, j, i here);
+		// splitting the declarations and commuting the product do not move
+		// them.
 		f32 t     = (f32)i / (f32)j;
-		f32 amp   = t * (unk3C - h);
 		f32 angle = (f32)i * 0.31415927f;
+		f32 amp   = t * (unk3C - h);
 
 		JGeometry::TVec3<f32> result;
 		result = mPos;
 
-		// unk18's at()/ref() are row-major (SMatrix33R), so at(i, n) walks
-		// axis n's components: X here, then Z, then Y. The ROM's offsets
-		// settle the convention -- the sin term reads 0x18/0x1c/0x20 and the
-		// cos term 0x30/0x34/0x38, i.e. contiguous rows of mMtx, which is
-		// at(0, n)/at(1, n)/at(2, n) and not the transpose.
+		// The rows of mMtx are the bathtub's axes: the sin term walks
+		// 0x18/0x1c/0x20 (row 0, X), the cos term 0x30/0x34/0x38 (row 2, Z)
+		// and the height term 0x24/0x28/0x2c (row 1, Y). Read through the
+		// array and not at(): an inlined accessor's result always lands as
+		// the *second* operand of the multiply, and the ROM has the matrix
+		// element first in all nine fmadds.
 		f32 s = amp * sinf(angle);
-		result.x += unk18.at(0, 0) * s;
-		result.y += unk18.at(1, 0) * s;
-		result.z += unk18.at(2, 0) * s;
+		result.x += unk18.mMtx[0][0] * s;
+		result.y += unk18.mMtx[0][1] * s;
+		result.z += unk18.mMtx[0][2] * s;
 
 		f32 c = amp * cosf(angle);
-		result.x += unk18.at(0, 2) * c;
-		result.y += unk18.at(1, 2) * c;
-		result.z += unk18.at(2, 2) * c;
+		result.x += unk18.mMtx[2][0] * c;
+		result.y += unk18.mMtx[2][1] * c;
+		result.z += unk18.mMtx[2][2] * c;
 
 		f32 yScale = (1.0f - t) * -(unk44 - h);
-		result.x += unk18.at(0, 1) * yScale;
-		result.y += unk18.at(1, 1) * yScale;
-		result.z += unk18.at(2, 1) * yScale;
+		result.x += unk18.mMtx[1][0] * yScale;
+		result.y += unk18.mMtx[1][1] * yScale;
+		result.z += unk18.mMtx[1][2] * yScale;
 
 		return result;
 	}
