@@ -7,8 +7,15 @@
 
 void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	// TODO: 99.8%, frame 0x110 vs 0x118 with `orthoGraph` at 0x14 instead of
+	// 0x18, i.e. four bytes of low region short (frames are 8-aligned, so
+	// +4 low reads as +8). Naming the viewport reference is +0.1 and no
+	// frame; `getScreen()` over `unk10`, spelling the scissor width out as
+	// `x2 - x1`, and taking the scissor by value (which is +0x10 and three
+	// instructions) all measured worse or inert.
 	if (cue & CUE_DRAW) {
-		J2DOrthoGraph orthoGraph(graphics->getViewport());
+		const JUTRect& viewport = graphics->getViewport();
+		J2DOrthoGraph orthoGraph(viewport);
 		orthoGraph.setup2D();
 		unk10->draw(0, 0, &orthoGraph);
 		const JUTRect& rect = graphics->getScissor();
@@ -32,6 +39,8 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
     , unk38(param_4)
     , unk3C(0)
 {
+	// The loop bound below must be `int`: retail's `cmpw` is a signed
+	// compare against the `int` member, a `u32` index gives `cmplw`.
 	J2DTextBox* local_420[256];
 
 	JSUTreeIterator<J2DPane> iterator;
@@ -54,10 +63,24 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 	}
 
 	unk30 = new J2DTextBox*[unk28];
-	for (u32 i = 0; i < unk28; ++i)
+	for (int i = 0; i < unk28; ++i)
 		unk30[i] = local_420[i];
 }
 
+// TODO: 99.5%. Every instruction matches; the frame is 0x98 against
+// retail's 0x78 because each `JUtility::TColor = <TColor>.get()` assignment
+// below parks its conversion temporary in an 8-byte slot where retail uses
+// 4 (ours 0x78/0x80/0x88/0x90, retail 0x64/0x68/0x6c/0x70 -- four temps,
+// four bytes each of difference, plus alignment = 0x20). The same stride
+// difference is the whole residue of TMenuPlane::TMenuPlane (0x4b8 vs
+// 0x4c0, three temps) and of TMenuBase::perform. The assignment spelling
+// itself is right: `J2DTextBox::setGradColor(a, b)` (the by-value pair)
+// collapses the temporaries away entirely (frame 0x48, 101 instructions,
+// 83.8%), and `mCharColor.set(x.get())`, `mCharColor = x` and
+// `set(x.toUInt32())` each drop an instruction per site. The suspect is the
+// commented-out `TColor(const TColor&)` copy constructor in
+// JSystem/JUtility/JUTColor.hpp -- a shared header with its own trial
+// table, so it is reported rather than changed here.
 void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (unk18 & 0x4)
