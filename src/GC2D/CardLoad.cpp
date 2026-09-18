@@ -1305,7 +1305,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 s8 TCardLoad::waitForAnyKey(TEProgress progress)
 {
-	int result = -1;
+	s8 result = -1;
 
 	switch (unk10) {
 	case 0: {
@@ -1327,19 +1327,20 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		}
 		break;
 
-	case 2:
-		if (unkB4 <= 600 && unk38->checkFrameMeaning(0x60)) {
+	case 2: {
+		s16 timer = unkB4;
+		if (timer <= 600 && unk38->checkFrameMeaning(0x60)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
 		} else {
-			++unkB4;
+			unkB4 = timer + 1;
 		}
-		break;
+	} break;
 
 	case 3: {
-		unk568->setCenteredSize(20, unk56C.getWidth(), unk56C.getHeight(), 0,
-		                        0);
+		unk568->setCenteredSize(20, 0, 0, unk56C.getWidth(),
+		                        unk56C.getHeight());
 		unk580->hide();
 		unkB4 = 0;
 		unk10 = 4;
@@ -1347,7 +1348,7 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 
 	case 4:
 		if (unk568->update()) {
-			unk568->getPane()->hide();
+			unk568->mPane->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1582,7 +1583,10 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 
 	case 4:
 		if (unk568->update()) {
-			unk568->getPane()->hide();
+			// Not getPane(): the accessor's dead temporary is what puts our
+			// frame 16 bytes over retail's 0xd8 here, while the show() above
+			// does go through it.
+			unk568->mPane->hide();
 			unk10 = 5;
 		}
 		break;
