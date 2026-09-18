@@ -1503,17 +1503,6 @@ bool TFireWanwan::isRecovering() const
 	return mSpine->getLatestNerve() == &TNerveFireWanwanRecover::theNerve();
 }
 
-// TODO: shared-header change needed in Strategic/TakeActor.hpp, measured here.
-// Retail *calls* TTakeActor::isTaken() from this chain (it is the map's only
-// weak isTaken, 0x1c from fireWanwan.cpp, and the one bl isTaken in the whole
-// ROM is in updateRumble). Measured in a scratch TU with the game flags: a body
-// spelled `if (mHolder) return TRUE; return FALSE;` is refused for inlining
-// anywhere on the right of a `||`/`&&` chain at every depth, while the current
-// `return mHolder != nullptr ? TRUE : FALSE;` always expands - and both compile
-// to the map's 7 instructions. Reshaping the body took isTaken 0 -> 100%,
-// updateRumble 94.2 -> 97.1, moveObject 73.9 -> 76.2 and the unit 95.06 ->
-// 95.27 with no regression anywhere in the project, but TakeActor.hpp is not
-// this batch's header to edit.
 bool TFireWanwan::isCameraShake() const
 {
 	return isFreeze() || isDefeat() || unk194->isTaken() || isRecovering()

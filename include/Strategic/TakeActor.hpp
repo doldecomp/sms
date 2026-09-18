@@ -28,7 +28,16 @@ public:
 	}
 	virtual f32 getRadiusAtY(f32) const;
 
-	BOOL isTaken() const { return mHolder != nullptr ? TRUE : FALSE; }
+	// A two-`return` body is refused expansion on the right of a `||`/`&&`
+	// chain at every depth, which is why retail `bl`s this from
+	// TFireWanwan::updateRumble (the map's only weak isTaken, 0x1c from
+	// fireWanwan.cpp). The equivalent ternary always expands.
+	BOOL isTaken() const
+	{
+		if (mHolder != nullptr)
+			return TRUE;
+		return FALSE;
+	}
 	bool isHolding() const { return mHeldObject != nullptr ? true : false; }
 	TTakeActor* getHolder() { return mHolder; }
 	TTakeActor* getHeldObject() { return mHeldObject; }
