@@ -23,6 +23,9 @@ public:
 	virtual int getCounterNo(u32) const = 0;
 	virtual u16 getTokenNo(int) const   = 0;
 
+	// fabricated
+	int getCounterNum() const { return mCounterNum; }
+
 public:
 	/* 0x4 */ int mCounterCapacity;
 	/* 0x8 */ int mCounterNum;
@@ -150,6 +153,20 @@ public:
 	void setTevColorInByStampType(u16) const;
 	void pushJointObjStampTask(u8, u8, TPollutionObj*);
 	void calcViewMtx();
+	// fabricated. calcViewMtx wants 12 bytes of low region over the raw
+	// indexed reads and this pair of expansions is +8 of it; the last +4 and
+	// the register allocation come from getCounterNum() on the loop bound
+	// (each level is +0 alone and the pair is exact -- the lever-pair rule).
+	// getJointObjStampTaskNum() does the same for drawJointObjStamp, which
+	// was 30 diffs with an exact frame and is now 4 (an f0/f1 vs f3/f0 pair
+	// at makeWorldToPollutionMtx, which the calcViewMtx site gets right).
+	// Rejected there: a getJointObjStampTask(i) reference accessor (97.2%)
+	// and getMinX/getMinZ (frame 8 over).
+	J3DDrawBuffer* getModelStampDrawBuffer(int i) const
+	{
+		return mModelStampDrawBuffers[i];
+	}
+	u16 getJointObjStampTaskNum() const { return mJointObjStampTaskNum; }
 	void pushModelStampTask(u8, J3DModel*);
 	int registerRevivalTexStamp(int, short, short, short, short, int, ResTIMG*);
 	int registerTexStamp(u16, u16, ResTIMG*);

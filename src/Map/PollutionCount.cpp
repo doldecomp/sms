@@ -328,28 +328,31 @@ void TPollutionCounterLayer::drawPollutionLayer(int layer_index) const
 	setCallback(layer_index);
 }
 
-// The two translations really are crossed: the row that scales world X takes
-// -min_z and the row that scales world Z takes -min_x. Both call sites agree,
-// and the parameter order (min_z ahead of min_x) is what puts the two negated
-// products in retail's float registers at the inline sites.
-static void makeWorldToPollutionMtx(f32 scale, f32 min_z, f32 min_x,
+// Row 0 scales world X into pollution U and row 1 scales world Z into V, so
+// each row's translation is its own minimum. The parameter order is pinned by
+// right-to-left evaluation at both inline sites: retail loads mMinZ (0x40)
+// into the first float register and mMinX (0x38) into the second, i.e. min_z
+// is the later parameter.
+static void makeWorldToPollutionMtx(f32 scale, f32 min_x, f32 min_z,
                                     TPosition3f* mtx)
 {
 	mtx->zero();
 
 	mtx->mMtx[0][0] = scale;
-	mtx->mMtx[0][3] = -min_z * scale;
+	mtx->mMtx[0][3] = -min_x * scale;
 	mtx->mMtx[1][2] = scale;
-	mtx->mMtx[1][3] = -min_x * scale;
+	mtx->mMtx[1][3] = -min_z * scale;
 }
 
-// TODO: the frame is now exact (`SMSGetPollutionLayer` over
-// `gpPollution->getLayer` is the +16); the residue is "+4 low", every
-// temporary slot 4 bytes lower than retail's (0x60/0x64/0x68/0x6c against
-// 0x64/0x68/0x6c/0x70). A pointer instead of the `info` reference is +0.
+// TODO: 99.9%, frame exact. The residue is one FPR pair at
+// makeWorldToPollutionMtx: retail negates the two minima in the registers it
+// loaded them into (f0/f1) where we load mMinZ into f3 and negate across
+// registers. The calcViewMtx site compiles the same call exactly, so it is a
+// per-site allocation artifact; the `getJointObjStampTaskNum()` level on the
+// loop bound took this from 30 diffs to 4.
 void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 {
-	for (int i = 0; i < mJointObjStampTaskNum; ++i) {
+	for (int i = 0; i < getJointObjStampTaskNum(); ++i) {
 		const TPollutionJointObjTaskInfo& info = mJointObjStampTaskQueue[i];
 		if (info.mLayerIdx != layer_index)
 			continue;
@@ -382,8 +385,8 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		                GX_TEVPREV);
 
 		TPosition3f local_6c;
-		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinZ,
-		                        layer->mMinX, &local_6c);
+		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinX,
+		                        layer->mMinZ, &local_6c);
 		GXLoadPosMtxImm(local_6c, GX_PNMTX0);
 
 		j3dSys.setVtxPos(layer->getModelData()->getVtxPosArray());
@@ -630,7 +633,7 @@ void TPollutionCounterLayer::drawModelStamp(int layer_index)
 		return;
 
 	j3dSys.setUnk4C(7);
-	J3DDrawBuffer* buffer = mModelStampDrawBuffers[layer_index];
+	J3DDrawBuffer* buffer = getModelStampDrawBuffer(layer_index);
 	buffer->draw();
 	buffer->frameInit();
 }
@@ -647,8 +650,8 @@ void TPollutionCounterLayer::countTexDegree(int layer_index)
 	drawPollutionLayer(layer_index);
 	if (mModelStampTaskNum != 0) {
 		j3dSys.setUnk4C(7);
-		mModelStampDrawBuffers[layer_index]->draw();
-		mModelStampDrawBuffers[layer_index]->frameInit();
+		getModelStampDrawBuffer(layer_index)->draw();
+		getModelStampDrawBuffer(layer_index)->frameInit();
 	}
 
 	ReInitializeGX();
@@ -694,19 +697,6 @@ void TPollutionCounterLayer::pushJointObjStampTask(u8 param_1, u8 param_2,
 	++mJointObjStampTaskNum;
 }
 
-// TODO: instruction-exact apart from one FPR swap; frame 0xd0 against retail's
-// 0xe0, with every local 12 bytes lower and the register saves only 8 lower,
-// i.e. 12 bytes of dead low region and 4 fewer bytes in the named area.
-// `SMSGetPollutionLayer(i)` over `gpPollution->getLayer(i)` is the +8 that got
-// it this far (and it closes drawJointObjStamp's frame outright). A parked
-// `static inline` accessor for `mModelStampDrawBuffers[i]` used at both
-// `setDrawBuffer` calls is a further +8 with no instruction change, which
-// overshoots the 12 the slots ask for, so it is not applied; a reference local
-// for `mModelStampTaskQueue[j]` costs an instruction (97.4%).
-// The remaining FPR swap is `lfs f0, 0x40(r5)` / `lfs f1, 0x38(r5)`: retail
-// reads mMinX into f0 before mMinZ, where our argument order reads mMinZ
-// first. drawJointObjStamp spells the same call with no swap, so it is an
-// evaluation-order artifact of this caller, not a wrong signature.
 void TPollutionCounterLayer::calcViewMtx()
 {
 	TMtx34f afStack_68;
@@ -715,16 +705,17 @@ void TPollutionCounterLayer::calcViewMtx()
 	J3DDrawBuffer* oldDbOpa = j3dSys.getDrawBuffer(0);
 	J3DDrawBuffer* oldDbXlu = j3dSys.getDrawBuffer(1);
 
-	for (int i = 0; i < mCounterNum; ++i) {
+	for (int i = 0; i < getCounterNum(); ++i) {
 		TPollutionLayer* layer = SMSGetPollutionLayer(i);
 
 		TPosition3f local_a4;
-		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinZ,
-		                        layer->mMinX, &local_a4);
+		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale,
+		                        layer->getMinX(), layer->getMinZ(),
+		                        &local_a4);
 
 		j3dSys.setViewMtx(local_a4);
-		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], 0);
-		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], 1);
+		j3dSys.setDrawBuffer(getModelStampDrawBuffer(i), 0);
+		j3dSys.setDrawBuffer(getModelStampDrawBuffer(i), 1);
 
 		for (int j = 0; j < mModelStampTaskNum; ++j) {
 			if (mModelStampTaskQueue[j].mLayerIdx != i)

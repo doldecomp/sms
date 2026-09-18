@@ -98,6 +98,12 @@ public:
 		return true;
 	}
 	void action();
+	// fabricated. The inline level makeWorldToPollutionMtx's two arguments
+	// need: with the raw members calcViewMtx's frame is 8 short, with these
+	// (plus getCounterNum()) it is exact. drawJointObjStamp's frame is
+	// already exact and does not want them.
+	f32 getMinX() const { return mMinX; }
+	f32 getMinZ() const { return mMinZ; }
 	void fire();
 	void glassWall();
 	void electric();
