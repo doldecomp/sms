@@ -520,7 +520,7 @@ void TPollutionCounterLayer::drawTexStamp(int target_layer) const
 
 	for (int i = 0; i < mTexStampNum; ++i) {
 		TPollutionTexStamp& stamp = mTexStamps[i];
-		setTevColorInByStampType(mTexStamps[i].mStampType);
+		setTevColorInByStampType(stamp.mStampType);
 		doTask(target_layer, stamp.mTaskNum, stamp.mTaskQueue,
 		       stamp.mStampShapeTex,
 		       mLayers[target_layer]->getPollutionImage()->width,
@@ -650,16 +650,44 @@ void TPollutionCounterLayer::drawModelStamp(int layer_index)
 }
 
 // TODO: every instruction matches (149 = 149); the frame is 0x68 against
-// retail's 0xc0. The single referenced slot is the GXTexObj of the inlined
-// loadPollutionLayer, at 0x80 in retail and 0x2c here, so the gap splits as
-// 84 dead bytes *below* it and 4 above (retail 0xa0..0xa8 between the texObj
-// and the r26 save area, ours 0x4c..0x50 of pure padding). With the
-// instruction count already exact the only zero-instruction lever left is an
-// uninitialised non-trivial class local in one of the inlined UNUSED callees
-// (drawPollutionLayer 0x108, drawTexStamp 0xf8, loadPollutionLayer 0x88,
-// setCallback 0x6c -- all four are UNUSED, so all four are legal carriers),
-// but nothing in the TU says which local or which type, and 84 bytes is
-// fabricated padding unless the carrier is evidenced. Left as the residue.
+// retail's 0xc0. The one referenced slot is the GXTexObj of the inlined
+// loadPollutionLayer, at 0x80 in retail and 0x2c here, and re-pass 175 pinned
+// which half of the pool each byte belongs to.
+//
+// The pool is allocated **statement by statement in reverse statement order**
+// (batch 149), so the bytes *below* the texObj belong to the statements that
+// come *after* loadPollutionLayer and the bytes above it to the ones before.
+// Retail: 116 below (the rest of drawPollutionLayer, setCallback, the
+// model-stamp block, drawTexStamp with its loop) and 8 above (the two
+// mLayers/mPollutionImage reads and drawBlack). Ours: 32 below and 4 above.
+// countObjDegree is the control: it inlines the same loadPollutionLayer and is
+// byte-exact at 0x138 with the texObj at 0x54, 72 dead bytes below it and
+// initCountObjDegree's two TPosition3f above it, which is the same geometry.
+// So loadPollutionLayer's body is right and the gap is 84 bytes of pool owed by
+// countTexDegree's own later statements plus 4 by its earlier ones.
+//
+// Measured lever prices here (all instruction-free, 149 = 149 and 8 markers
+// throughout, so the residue really is only the frame):
+//   - a TU-local one-parameter pointer-returning binder over
+//     mLayers[target_layer]->getPollutionImage() at the two doTask sites:
+//     +12 below and -4 above (frame 0x70), i.e. +4 per site here, not the +12
+//     the library ladder measured.
+//   - a binding inside getModelStampDrawBuffer (two expansions here): +8 per
+//     expansion, frame 0x78, **but it breaks calcViewMtx** (100 -> 99.73),
+//     which the header note already warned depends on that accessor pair being
+//     a plain direct return. Refuted as a lever for this unit.
+// Both together reach 0xc0 - 64. Nothing in the TU evidences where the
+// remaining 64 bytes live: the natural +4 sites left (getUnk48, the four raw
+// TPollutionLayer reads feeding initGXforPollutionLayer, mTexStamps[i],
+// mLayerModelStampTaskNum[layer_index]) would need ~16 more dialled steps,
+// which is dial-fitting, and the shared PollutionLayer.hpp has no accessor for
+// mFlags/mPerFrameChangeThreshold/mPerFrameChangeDelta to route them through.
+// The three UNUSED bodies the validator reports short (drawTexStamp 0xf4 vs
+// 0xf8, TPollutionCounterObj::draw 0x13c vs 0x140, setCallback 0x68 vs 0x6c)
+// are each exactly one instruction, not a dead local, so none of them is the
+// carrier's home; their missing instruction is elided at the inline site, since
+// countTexDegree's and countObjDegree's expansions of all three are exact.
+// Left as the residue. Do not commit padding for it.
 void TPollutionCounterLayer::countTexDegree(int layer_index)
 {
 	if (!mIsLayerEnabled[layer_index])
