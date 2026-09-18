@@ -227,6 +227,18 @@ Hence `isZero()`/`squared()` on a member are unfused while `squared(const TVec3&
 - **Declare loop accumulators after the preceding call:** declared before `isTouchedWallsAndMoveXZ`, `nearest`/`nearestIdx` lived across it in `r29` with an early `lfs f31`; declared after, they land in `r6`/`r7` like the original.
 - **Open:** `TNerveAmiNokoWalkOnFence::execute` *calls* `TUtil<f32>::sqrt` for `toGoal.length() < 1.5f` while the same callee inside the inlined `creepToCurPathNode` is expanded later in the same function. Contradicts the depth model; naming the result and swapping sites did not help. Same class of problem as the `MapObjBall` table.
 
+## Rules from `MSoundMainSide` and `MarDirectorDirect`
+
+- The const/non-const accessor pair is a re-read lever on plain integer flag words: `checkUnk4CFlag(int) const` with non-const `on/offUnk4CFlag` reproduces the load-per-modify at ten sites (`updateGameMode` 86 -> 91); with the test non-const MWCC CSEs its load into every modify. Routing only the modifies through accessors does nothing.
+- Caller size gates `TVector<void*>::begin()`: the ROM `bl`s it once per `calcParamRatioInCube` expansion while the same chain at depth 0 folds to `lwz 0x10`; adding levels does not move it (`TWireTrap::checkHitActors` family; the callers' frames are 60-170 bytes short).
+- A weak symbol objdiff reports "extra" can be correct (`std::sqrtf` is UNREFERENCED DUPLICATE for this TU); `static inline` keeps inlined `frsqrte` chains with no symbol where plain `static` emits one. Check the closure before chasing an "extra".
+- A two-target jump table with alternating entries is `case 0: case 2: case 4: case 6:` against `default:`.
+- A named `int` copy of a `u8` parameter keeps the `clrlwi` result in a callee-saved register across a `bl` and turns later tests into signed `cmpwi`; a two-arm switch kept as a switch shows the unfused `beq +8; b else`.
+- An empty `case 0:` grouped with `default:` moves a compare tree's pivot (labels {0,1,2,4} pivot on 2, {1,2,4} on 3): read the pivot backwards to recover the label set (`setMario` 80 -> 99.8 with a named `TWaterGun*` receiver).
+- `Map/MapCollisionEntry.hpp` is a `.rodata` prefix for System TUs too (`MarDirectorDirect` data 27 -> 81); `System/StageUtil.hpp` must go where the map lacks its tables.
+- `MSStageCubeFade::setBgmVolumeForce` is not static (the caller null-tests `smInstance` in `r3`).
+- Open: `TFlagT<u16>`'s copy constructor (weak 0xc from `MarDirectorDirect.o`) is called twice in `decideNextStage` for `TGameSequence::set`'s by-value parameter; MWCC elides the copy in every spelling (`decideNextStage` 63%, and its call/inline split between `updateGameMode` and `changeState`). A real `fmuls` by `1.0f` in `updateGameMode`'s `registFadeout` call that every spelling folds away.
+
 ## Rules from `EventWatcher`
 
 - A missing function *permutes* the string pool, it does not merely shift it: two absent builtins reordered the `TSpcStack` trace literals and ~60 functions showed a bare `addi rX, base, imm` diff. Diff the two `.rodata` blobs before chasing operands per function (data 14 -> 100, 15 functions to exact from writing the two).
