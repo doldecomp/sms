@@ -11,6 +11,8 @@
 #include <stdlib.h>
 
 // rogue include
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
 TEffectObjManager* gpEffectObjManager;
