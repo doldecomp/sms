@@ -109,18 +109,48 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 
 	GXTexObj& obj = mirrorCam->unk60;
 	mirrorTex->setTexAttb(obj);
+	// TODO: 99.8%, frame 0x80 against the ROM's 0x88. Passing the rectangle
+	// as an unnamed temporary instead
+	// (`setSrcRect(JDrama::TRect(0, 0, w, h))`, same instructions, the
+	// `bl JUTRect::set` and the `&temp` hand-off are identical) makes the
+	// frame byte-exact and cuts the diff from 12 operand mismatches to 3,
+	// but leaves the rectangle's slot at 0x60 where the ROM has 0x64 (+4
+	// low) and swaps the last two argument loads -- retail materialises the
+	// receiver (`addi r3, r29, 0`) before the rectangle's address, we do it
+	// the other way round. `fuzzy_match` scores that spelling 99.6 because
+	// it weighs the register operands above the `stwu`, so it is not
+	// committed; whichever lever supplies the last +4 should land both at
+	// once. Measured and inert on top of it: qualifying the call as
+	// `JDrama::TEfbCtrl::setSrcRect`, a `JDrama::TEfbCtrl*` receiver local,
+	// one more binding level above the first ECTSearch, `unk20 = 0x228`
+	// instead of `unk20.set(0x228)`, and swapping the width/height
+	// arguments.
 	JDrama::TRect rect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj));
 	mirrorTex->setSrcRect(rect);
 
 	return mirrorTex;
 }
 
-// TODO: 97.5%, 104 bytes of frame short (0x308 vs 0x370) plus a whole
-// callee-saved rotation (r20/r21/r22 shifted by one from 0x150 onwards) and
-// three stray instructions. The ECTSearch level above overshoots here (+152
-// over 13 sites), so this function's low region is not the search chain.
-// The rotation starts at the TEfbCtrlDisp construction, i.e. before any
-// search: look there first.
+// TODO: 97.5%. **Header item, measured, not applied here because
+// include/System/MarDirector.hpp is shared.** `initECDisp` is a *static*
+// member in the ROM, like its neighbours `initECTMir`, `initECTGft` and
+// `preEntry`: retail's prologue clobbers r4 with the `.rodata` base
+// immediately and keeps r3 and r5, so the `TPerformList*` the whole body uses
+// as `push_back`'s receiver arrives in **r3**, which can only happen with no
+// `this`. With `static void initECDisp(...)` in the header the three
+// parameter registers line up and `insert`'s receiver becomes the *third*
+// parameter (r5), so the body's two `param_2->insert(...)` calls become
+// `param_3->insert(...)` and `param_2` is genuinely unused.
+// Measured whole-tree: zero regressions, initECDisp 97.50 -> 97.55, and the
+// single caller `TMarDirector::setupObjects` 98.00 -> 98.08 (the `this`
+// argument it no longer has to set up). Apply the pair together.
+//
+// What is left after that is 112 bytes of frame (0x300 vs 0x370) and one
+// extra callee-saved register: retail saves r20-r31 (`stmw r20`) where we
+// save r21-r31, with the whole set shifted by one from the very first
+// expansion. The ECTSearch level above overshoots here (+152 over 13 sites),
+// so this function's low region is not the search chain; the rotation starts
+// at the TEfbCtrlDisp construction, before any search.
 void TMarDirector::initECDisp(
     TPerformList* param_1,
     JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* param_2,
