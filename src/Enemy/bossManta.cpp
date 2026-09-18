@@ -484,9 +484,11 @@ void TBossManta::moveObject()
 		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
 		                     getPolluteRadius());
 
+	// The manta itself is the attacker: retail reads mPosition through the
+	// same register that holds `this` for mCollisions/mColCount.
 	for (int i = 0; i < mColCount; ++i)
 		if (mCollisions[i]->isActorType(0x80000001))
-			AttackMario(mCollisions[i]);
+			AttackMario(this);
 }
 
 BOOL TBossManta::isSpawnState()
@@ -689,6 +691,11 @@ bool TBossManta::isDamageable()
 	       || mSpine->getLatestNerve() == &TNerveMantaHitWater::theNerve();
 }
 
+// TODO: moveObject is instruction-identical but this array's inlined slot
+// lands at 0x24 where retail has it at 0x20, directly above AttackMario's
+// `dir`.  One dead 4-byte inline temporary too many; naming the
+// getPolluteRadius() result moves it the wrong way (+8), and the array's
+// const/size/signedness spelling does not move it at all.
 bool TBossManta::isPolluting()
 {
 	const u8 pollute[6] = { 1, 1, 1, 1, 1, 1 };
