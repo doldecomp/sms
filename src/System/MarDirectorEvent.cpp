@@ -13,7 +13,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 const char* cCameraBckNameShineGetInside
     = "/common/camera/camera_demo_shine_get_inside";
