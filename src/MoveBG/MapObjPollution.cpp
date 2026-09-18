@@ -49,89 +49,49 @@ TPolluterBase::TPolluterBase(const char* name)
 
 void TRevivalPolluter::pollute() { }
 
-// TODO: 88.1%, and the only function keeping MapObjPollution.cpp from being
+// TODO: 88.6%, and the only function keeping MapObjPollution.cpp from being
 // source-linked is its only caller, TMapObjRevivalPollution::loadAfter(), which
-// inlines this body. Two residues are left there, and this batch pinned the
-// first one down (all measured with single-file compiles; the out-of-line copy
-// stays at the map's 0x68 = 26 instructions in every variant below, so that
-// size is no discriminator):
+// inlines this body. The out-of-line copy stays at the map's 0x68 = 26
+// instructions in every variant tried, so that size is no discriminator.
 //
-// 1. Argument evaluation order, SOLVED but not retained. The ROM evaluates the
-//    argument list right to left -- texture (arg 7) before interval (arg 6),
-//    height (arg 5) before width (arg 4) -- and keeps the layer pointer in r8.
-//    Two changes reproduce that block instruction for instruction:
-//      * accessors for the polluter's own members
-//        (`getStampInterval()`, `getRevivalStampTex()` on TRevivalPolluter)
-//        swap the interval/texture pair into the ROM's order (a plain
-//        `mStampInterval, mRevivalStampTex` pair always loads left to right);
-//      * `int height = layer->mPos.mHeight;` declared *before*
-//        `int width = layer->mPos.mWidth;` swaps the dimension pair while
-//        keeping the layer in r8. `layer->getTexWidth()/getTexHeight()` or
-//        `layer->getPos().getWidth()/getHeight()` as expressions also give
-//        height-first, but move the layer into r7 and swap the two load
-//        destinations, so they are *not* what the ROM did.
-// 2. Frame size and a four-register rotation, UNSOLVED. loadAfter's frame is
-//    0x38 against the ROM's 0x60, and the ROM's callee-saved assignment is a
-//    rotation of ours: ROM has this=r30, i=r31, byte-offset=r29, element=r28,
-//    while every spelling tried gives the two compiler-generated loop values
-//    the *high* pair and this/i the low pair. The frame can be bought with
-//    accessor depth (raw 0x38; `getTexWidth/getTexHeight` +0x10; the same two
-//    named +0x18; `getPos().getWidth()/getHeight()` +0x28 = the ROM's 0x60;
-//    `getLayerIndex()` or a named counter-layer reference +8 each), and one
-//    asymmetric mix (`getPos().getHeight()` for height, `getTexWidth()` for
-//    width) lands on 0x60 *with* the ROM's exact inner block -- but nothing
-//    moves the register rotation. Loop shapes tried, all leaving the rotation:
-//    `i` declared at the top of the function, postfix `++`, a `while` loop, a
-//    `u32` index, `(unk14 + i)->`, a named `TRevivalPolluter*`/`&` inside the
-//    loop (rotates by one instead), `getPolluterNum()` as the bound,
-//    `getPolluter(i)` as the element (both no-ops), and hoisting the array base
-//    or the count into a local (both spill a fifth register).
-//    Closure batch 103 reproduced the 0x60 + exact-inner-block state and
-//    pinned its spelling: `getLayer(getLayerIndex())` with a raw `mLayerIndex`
-//    as argument 1, `layer->getTexWidth()` for width,
-//    `layer->getPos().getHeight()` for height, `getStampInterval()`/
-//    `getRevivalStampTex()` for the last pair, and a named
-//    `TPollutionCounterLayer&`. That is frame 0x60, 45 instructions and
-//    retail's whole argument-evaluation order; the only residue left is the
-//    four-register rotation plus the layer pointer landing in r7 where retail
-//    uses r8. It reads 88.0% against the current 88.1% because fuzzy_match
-//    weights the register operands above the frame, so it is not committed.
-//    Header round 18 sharpened the description: it is not a rotation of four
-//    independent values but a **swap of two groups whose internal order is
-//    preserved** -- retail is [i, this][offset, element] over r31..r28 and we
-//    are [offset, element][i, this], i.e. the compiler-generated pair is
-//    appended to the ranking in retail and prepended in ours. The same swap is
-//    the whole residue of AudioDecoderForOnMemory (src/THPPlayer/
-//    THPAudioDecode.c), where the rule behind it was found: a source local
-//    outranks a compiler-generated temporary when it is live *before* that
-//    temporary is materialised. That rule does not transfer here as written --
-//    `i` and `this` are already live before the loop in both builds -- and the
-//    one probe it suggests, hoisting `int i = 0;` above the base-class call so
-//    the counter is live across it, is worse (82.1%, 46 instructions, the
-//    `li`/`mr` pair moves). So the loop temporaries' creation point, not the
-//    counter's live range, is what differs here; look for a source shape that
-//    makes MWCC create them after the loop's source variables.
-//    Closure batch 115 tried the batch-110 binding level in every position and
-//    it is a pure frame lever here, never a register one: a `static inline`
-//    binding `&obj->unk14[i]` is +8 (0x38 -> 0x40), one binding `obj->unk14`
-//    is +8, the two nested is +0x10 (0x48), and none of the three moves a
-//    single register -- `this` stays in r28, `i` in r29, the byte offset in
-//    r31 and the element in r30. A two-parameter `void` level wrapping the
-//    whole loop body is +0 and equally inert. The only spelling that moves
-//    anything is still the named reference element (`TRevivalPolluter&
-//    polluter = unk14[i];` in the loop body), which rotates by one to
-//    [offset r31, i r30, element r29, this r28] -- the wrong direction, since
-//    retail wants the two *source* values on top ([i r31, this r30, offset
-//    r29, element r28]). So the ranking is not reachable through inline
-//    levels at all, and the lead stays "make MWCC create the loop temporaries
-//    after the loop's source variables".
+// 1. Argument evaluation order, SOLVED and retained (batch 151). The ROM
+//    evaluates the argument list right to left, so the accessor pair
+//    getStampInterval()/getRevivalStampTex() loads the texture (arg 7) before
+//    the interval (arg 6), and `int height` declared *before* `int width`
+//    swaps the dimension pair while keeping the layer pointer in r8. The whole
+//    loop body is now instruction-exact (22 markers, all r1 displacements or
+//    register numbers). A plain `mStampInterval, mRevivalStampTex` pair always
+//    loads left to right, and layer->getTexWidth()/getTexHeight() or
+//    getPos().getWidth()/getHeight() as expressions move the layer into r7, so
+//    they are not what the ROM did.
+// 2. Frame size and the callee-saved group swap, UNSOLVED. loadAfter's frame is
+//    0x38 against the ROM's 0x60 (+0x28), and the two blocks trade places
+//    wholesale: retail is [i r31, this r30, offset r29, element r28] and we are
+//    [offset r31, element r30, i r29, this r28]. Batch 145 named this class --
+//    the pool/base block versus the local block, as in `checkNextFrameSe` and
+//    `partsPerform` -- and its only known mover is the number of **named scalar
+//    locals** the frame holds (batch 144's `TSunMgr::load`). loadAfter's body
+//    holds exactly one (`i`), and there is no load-bearing second one to add or
+//    group, so the knob cannot be exercised here. Rejected, all inert on the
+//    ranking: every batch-110 binding level and position (pure frame levers,
+//    +8/+8/+0x10), a two-parameter `void` wrapper around the loop body, a named
+//    `TRevivalPolluter&` element in the loop body (rotates by one: [offset r31,
+//    i r30, element r29, this r28], still wrong), `i` hoisted above the
+//    base-class call, postfix `++`, a `while` loop, a `u32` index,
+//    `(unk14 + i)->`, `getPolluterNum()`/`getPolluter(i)`, and hoisting the
+//    array base or the count (both spill a fifth register). The frame alone is
+//    buyable with accessor depth (getPos().getWidth()/getHeight() is +0x28 =
+//    exactly the ROM's 0x60) but costs the ROM's argument order, so it is not
+//    worth trading residue 1 for it.
 void TRevivalPolluter::registerPolluteTex()
 {
 	// TODO: inlines make me cry
 	TPollutionLayer* layer = gpPollution->getLayer(mLayerIndex);
+	int height = layer->mPos.mHeight;
+	int width = layer->mPos.mWidth;
 	unk8 = gpPollution->getCounterLayer().registerRevivalTexStamp(
-	    mLayerIndex, 0, 0, layer->mPos.mWidth, layer->mPos.mHeight,
-	    mStampInterval, mRevivalStampTex);
+	    mLayerIndex, 0, 0, width, height, getStampInterval(),
+	    getRevivalStampTex());
 }
 
 void TRevivalPolluter::loadInfo(JSUMemoryInputStream& stream)

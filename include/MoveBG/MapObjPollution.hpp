@@ -22,6 +22,9 @@ public:
 	void registerPolluteTex();
 	void loadInfo(JSUMemoryInputStream&);
 
+	u32 getStampInterval() const { return mStampInterval; }
+	ResTIMG* getRevivalStampTex() const { return mRevivalStampTex; }
+
 	TRevivalPolluter();
 
 public:
