@@ -41,14 +41,43 @@
 
 static int KillerBodyCallback(J3DNode*, int);
 
-// fabricated: the ROM calls MsSin, MsCos and TVec3::set<f32> out of line from
-// the chase nerve, which only happens one inline level below flyMove, so the
-// forward step was built by a helper. It is local to the TU because the map
-// lists no symbol for it anywhere.
+// fabricated: the ROM calls MsSin, MsCos *and* TVec3::set<f32> out of line
+// from the chase nerve's forward step. MsSin/MsCos only stop expanding at
+// inline depth 5 and set<f32> at depth 4, so the direction vector is built
+// four expansions below the nerve body. TFlyEnemy::flyMove is UNUSED (0x2bc)
+// and its body is spelled out in the nerve, so at least one of those four
+// levels is flyMove itself; the other three have no symbol anywhere in the
+// map, which is why they are TU-local.
+//
+// Measured ladder on TNerveFlyEnemyChaseFly::execute (levels -> score / the
+// deepest callee that still expands): 1 -> 95.00 / JMASSin(short) inlined,
+// 2 -> 96.44 / bl JMASin(float), 3 -> 98.16 / bl set<f32>,
+// 4 -> 98.94 / bl MsSin, bl MsCos, bl set<f32> -- retail's exact call set.
+// TODO: replace the three thin wrappers with the real enclosing functions
+// once they are identified; the remaining residue is 48 bytes of frame and
+// one `fmr` in the turn clamp.
 static inline void MsGetVecFromRotY(JGeometry::TVec3<f32>& dst, f32 rot_y,
                                     f32 length)
 {
 	dst.set(length * MsSin(rot_y), 0.0f, length * MsCos(rot_y));
+}
+
+static inline void MsGetVecFromRotY_L3(JGeometry::TVec3<f32>& dst, f32 rot_y,
+                                       f32 length)
+{
+	MsGetVecFromRotY(dst, rot_y, length);
+}
+
+static inline void MsGetVecFromRotY_L2(JGeometry::TVec3<f32>& dst, f32 rot_y,
+                                       f32 length)
+{
+	MsGetVecFromRotY_L3(dst, rot_y, length);
+}
+
+static inline void MsGetVecFromRotY_L1(JGeometry::TVec3<f32>& dst, f32 rot_y,
+                                       f32 length)
+{
+	MsGetVecFromRotY_L2(dst, rot_y, length);
 }
 
 const char* killer_bastable[] = {
@@ -275,13 +304,15 @@ DEFINE_NERVE(TNerveFlyEnemyNormalFly, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 95.0%. Two residuals. (1) The ROM calls MsSin, MsCos and
-// TVec3::set<f32> out of line from the pasted flyMove body while our build
-// expands them and emits weak JMASSin/JMASCos instead; adding
-// MsGetVecFromRotY bought one level and a second fabricated wrapper is not
-// justified, so this is the MapObjBall-class per-call-site inlining
-// divergence. (2) The frame is 24 bytes short and one `fmr` is missing from
-// the negative turn clamp.
+// TODO: 98.9%. The forward step now uses the MsGetVecFromRotY_L1 ladder
+// above, which is the only spelling that reproduces retail's call set here
+// (bl MsSin, bl MsCos, bl set<f32>) and it also recovers the third
+// callee-saved FPR. This supersedes the earlier note that a second wrapper
+// was not justified: the ladder is measured, not guessed, and a
+// statement-bearing helper does not substitute for it (a three-statement
+// `MsAddVecFromRotY` doing the add itself only buys one level, 96.4%).
+// Remaining: the frame is 48 bytes short and one `fmr` is missing from the
+// negative turn clamp.
 DEFINE_NERVE(TNerveFlyEnemyChaseFly, TLiveActor)
 {
 	TFlyEnemy* flyEnemy = (TFlyEnemy*)spine->getBody();
@@ -344,7 +375,7 @@ DEFINE_NERVE(TNerveFlyEnemyChaseFly, TLiveActor)
 		f32 yaw                      = flyEnemy->mRotation.y;
 		f32 speed                    = flyEnemy->getMarchSpeed();
 		JGeometry::TVec3<f32> forward;
-		MsGetVecFromRotY(forward, yaw, speed);
+		MsGetVecFromRotY_L1(forward, yaw, speed);
 		linear.add(forward);
 		flyEnemy->mLinearVelocity = linear;
 		break;
