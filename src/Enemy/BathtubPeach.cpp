@@ -162,8 +162,8 @@ public:
 		f32 marioAngle                 = (360.0f / 65536.0f)
 		                 * matan(marioPos.z - tubZ, marioPos.x - tubX);
 		f32 peachAngle = (360.0f / 65536.0f)
-		                 * matan(peach->mPosition.z - tubZ,
-		                         peach->mPosition.x - tubX);
+		                 * matan(peach->getPosition().z - tubZ,
+		                         peach->getPosition().x - tubX);
 
 		// These three sites sit one inline level higher than faceTo's, so
 		// MWCC still expands std::fmodf here where the ROM calls it; the

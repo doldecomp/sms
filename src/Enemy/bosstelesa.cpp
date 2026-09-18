@@ -903,7 +903,7 @@ void TBossTelesa::init(TLiveManager* live_manager)
 		if (gpMapObjManager->getObj(i)->isActorType(0x4000019A)) {
 			unk154    = 0;
 			unk158    = 0;
-			mPosition = gpMapObjManager->getObj(i)->mPosition;
+			mPosition = gpMapObjManager->getObj(i)->getPosition();
 		}
 	}
 

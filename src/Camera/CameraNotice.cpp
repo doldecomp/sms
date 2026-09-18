@@ -136,8 +136,8 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			continue;
 
 		JGeometry::TVec2<f32> clipPos;
-		CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A0[i]->mPosition, nullptr,
-		              false);
+		CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A0[i]->getPosition(),
+		              nullptr, false);
 
 		// TODO: inline
 		f32 clipMax  = mSaveNotice->mOnClipRatio.get();

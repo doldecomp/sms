@@ -1014,9 +1014,11 @@ DEFINE_NERVE(TNerveElecNokonokoTurn, TLiveActor)
 	}
 
 	if (nokonoko->isBckAnm(DENNOKO_ANM_TURN1_LOOP)
-	    && MsIsInSight(nokonoko->mPosition, nokonoko->mRotation.y, *gpMarioPos,
-	                   ((TSmallEnemyParams*)nokonoko->getSaveParam())->getSLSearchLength(), 60.0f,
-	                   0.0f))
+	    && MsIsInSight(nokonoko->getPosition(), nokonoko->mRotation.y,
+	                   *gpMarioPos,
+	                   ((TSmallEnemyParams*)nokonoko->getSaveParam())
+	                       ->getSLSearchLength(),
+	                   60.0f, 0.0f))
 		nokonoko->setBckAnm(DENNOKO_ANM_TURN1_END);
 
 	if (nokonoko->checkCurAnmEnd(0)) {
@@ -1028,7 +1030,7 @@ DEFINE_NERVE(TNerveElecNokonokoTurn, TLiveActor)
 
 	// Standing exactly on top of the shell leaves the turn with no direction
 	// to aim at, so nudge along X.
-	if (nokonoko->mPosition.x - nokonoko->getCarapace()->mPosition.x == 0.0f
+	if (nokonoko->mPosition.x - nokonoko->getCarapace()->getPosition().x == 0.0f
 	    && nokonoko->mPosition.z - nokonoko->getCarapace()->mPosition.z
 	           == 0.0f)
 		nokonoko->mPosition.x += 1.0f;

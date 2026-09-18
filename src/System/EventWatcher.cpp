@@ -192,7 +192,7 @@ static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>* interp,
 	for (int i = 0; i < num; ++i) {
 		TMapObjBase* obj = gpMapObjManager->getObj(i);
 		if (type == obj->getActorType()) {
-			JGeometry::TVec3<f32> diff = which->mPosition;
+			JGeometry::TVec3<f32> diff = which->getPosition();
 			diff -= obj->mPosition;
 			if (diff.length() <= dist)
 				count++;

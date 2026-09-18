@@ -533,7 +533,7 @@ void TPakkun::behaveToWater(THitActor* sender)
 {
 	mSprayedByWaterCooldown = 0;
 
-	if (sender->mPosition.y
+	if (sender->getPosition().y
 	    > mGroundHeight + TPakkunManager::mIgnoreHitWaterY) {
 		unk165 = true;
 		if (mHitPoints > 5)

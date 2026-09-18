@@ -126,13 +126,13 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_ANIM) {
 		TPosition3f magic;
-		magic.translation(unk10->mPosition.x, unk10->mPosition.y,
+		magic.translation(unk10->getPosition().x, unk10->getPosition().y,
 		                  unk10->mPosition.z);
 		unk18->getModel()->setBaseTRMtx(magic);
 		if (unk2C != nullptr && unk30 != 0) {
 			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
 
-			unk20 = unk10->mPosition;
+			unk20 = unk10->getPosition();
 
 			unk2C->animeLoop(&unk20, ctrl->getFrame(), ctrl->getRate(), 0, 4);
 		}

@@ -707,7 +707,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 			// TODO: this direction away from Mario is overwritten right away
 			// by the model's own Y axis; the original kept an older attempt at
 			// picking the tumble direction.
-			JGeometry::TVec3<f32> jump(amiNoko->mPosition - *gpMarioPos);
+			JGeometry::TVec3<f32> jump(amiNoko->getPosition() - *gpMarioPos);
 			if (jump.x == 0.0f && jump.y == 0.0f && jump.z == 0.0f)
 				jump.x = 1.0f;
 

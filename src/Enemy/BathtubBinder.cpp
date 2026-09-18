@@ -122,7 +122,7 @@ void TBathtubBinder::float_(TLiveActor* actor)
 	dir.x = rot[0][2];
 	dir.z = rot[2][2];
 
-	front.x = dir.x * mFrontDist + actor->mPosition.x;
+	front.x = dir.x * mFrontDist + actor->getPosition().x;
 	front.z = dir.z * mFrontDist + actor->mPosition.z;
 	constrain_(front, getFrontMargin());
 	f32 frontY = mHeightOffset + mWater->getWaterHeight(front.x, front.z);

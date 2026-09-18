@@ -792,7 +792,7 @@ bool TBathtubKiller::isAttackable()
 		marioPos.y = 0.0f;
 		JGeometry::TVec3<f32> myPos = mPosition;
 		myPos.y = 0.0f;
-		JGeometry::TVec3<f32> bathtubPos = unk1CC->mPosition;
+		JGeometry::TVec3<f32> bathtubPos = unk1CC->getPosition();
 		bathtubPos.y = 0.0f;
 		if (myPos.distance(bathtubPos)
 		    > 100.0f + marioPos.distance(bathtubPos))

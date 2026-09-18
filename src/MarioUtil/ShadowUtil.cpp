@@ -249,7 +249,7 @@ void TMBindShadowBody::entryDrawShadow()
 {
 	f32 eps = JGeometry::TUtil<f32>::epsilon();
 
-	if (gpMarioPos->epsilonEquals(mActor->mPosition, eps)) {
+	if (gpMarioPos->epsilonEquals(mActor->getPosition(), eps)) {
 		if (!gpBindShadowManager->unk65) {
 			gpBindShadowManager->unk65 = true;
 			calc();

@@ -1515,7 +1515,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		Vec point;
 		graph->getGraphNode(prev).getPoint(&point);
 		JGeometry::TVec3<f32> toNode(point.x, point.y, point.z);
-		toNode -= boss->mPosition;
+		toNode -= boss->getPosition();
 
 		if (VECMag(toNode) < 400.0f && prev == graph->unk10) {
 			spine->pushAfterCurrent(&TNerveBWJumpToBath::theNerve());
@@ -1554,7 +1554,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 			JGeometry::TVec3<f32> facing
 			    = MsGetVecFromRotY(boss->mRotation.y, 1.0f);
 			boss->getTracer()->moveTo(graph->getEscapeDirLimited(
-			    prev, curr, facing, boss->mPosition, 100.0f, -1));
+			    prev, curr, facing, boss->getPosition(), 100.0f, -1));
 			boss->setGoalPathFromGraph();
 			boss->unk128 = 0;
 			boss->unk12C = 0.0f;
@@ -1576,8 +1576,8 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		JGeometry::TVec3<f32> marioDir;
 		marioDir.set(MsSin(marioYaw) * 1.0f, 0.0f, MsCos(marioYaw) * 1.0f);
 
-		JGeometry::TVec3<f32> toBoss(boss->mPosition);
-		toBoss -= gpMarioOriginal->mPosition;
+		JGeometry::TVec3<f32> toBoss(boss->getPosition());
+		toBoss -= gpMarioOriginal->getPosition();
 		VECNormalize(toBoss, toBoss);
 
 		f32 rate

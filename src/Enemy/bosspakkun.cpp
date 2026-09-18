@@ -487,7 +487,7 @@ void TBPTornado::launch(const JGeometry::TVec3<f32>& target)
 {
 	mState    = BOSSPAKU_TORNADO_MOVING;
 	mTarget   = target;
-	mPosition = mOwner->mPosition;
+	mPosition = mOwner->getPosition();
 	mCenter   = mOwner->mPosition;
 	mMove     = mOwner->getSaveParam2()->mSLTornadoMoveInit.get();
 	offHitFlag(HIT_FLAG_NO_COLLISION);

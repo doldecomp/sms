@@ -50,7 +50,7 @@ void TObjHitCheck::checkActorsInList(THitActor* actor, TObjCheckList* list)
 		    && !candidate->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT)
 		    && actor->canAttack(candidate)
 		    && checkDistance(actor->mPosition, actor->getAttackRadius(),
-		                     actor->getAttackHeight(), candidate->mPosition,
+		                     actor->getAttackHeight(), candidate->getPosition(),
 		                     candidate->getDamageRadius(),
 		                     candidate->getDamageHeight())) {
 			suffererIsInAttackArea(actor, candidate);
@@ -59,7 +59,8 @@ void TObjHitCheck::checkActorsInList(THitActor* actor, TObjCheckList* list)
 		if (!candidate->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
 		    && !actor->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT)
 		    && candidate->canAttack(actor)
-		    && checkDistance(candidate->mPosition, candidate->getAttackRadius(),
+		    && checkDistance(candidate->getPosition(),
+		                     candidate->getAttackRadius(),
 		                     candidate->getAttackHeight(), actor->mPosition,
 		                     actor->getDamageRadius(),
 		                     actor->getDamageHeight())) {

@@ -582,7 +582,7 @@ void TCannon::calcRootMatrix()
 MtxPtr TCannon::getTakingMtx()
 {
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		mTakingMtx.translation(mChorobei->mPosition.x,
+		mTakingMtx.translation(mChorobei->getPosition().x,
 		                       800.0f + mChorobei->mPosition.y,
 		                       mChorobei->mPosition.z);
 		return (MtxPtr)mTakingMtx;

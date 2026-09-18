@@ -712,9 +712,9 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 				const TLiveActor* groundActor
 				    = self->getGroundPlane()->getActor();
 				if (groundActor)
-					local_48 = self->mPosition - groundActor->mPosition;
+					local_48 = self->getPosition() - groundActor->getPosition();
 				else
-					local_48 = self->mPosition - SMS_GetMarioPos();
+					local_48 = self->getPosition() - SMS_GetMarioPos();
 				// As in the ROM: the parse is
 				// `(local_48.x == local_48.y) == local_48.z`,
 				// so the bool is converted to a float before the

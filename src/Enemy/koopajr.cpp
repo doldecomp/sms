@@ -1046,7 +1046,7 @@ void TKoopaJrSubmarine::makeRelativeAngle()
 	f32 flameDiff   = fabsf(mDirection.get() - nearerFlame);
 
 	JGeometry::TVec3<f32> toMario;
-	toMario.sub(*gpMarioPos, mKoopaJr->mBathtub->mPosition);
+	toMario.sub(*gpMarioPos, mKoopaJr->mBathtub->getPosition());
 	toMario.y = 0.0f;
 	// The by-value TVec3 parameter is the copy the ROM makes before atan2f.
 	f32 marioDir    = TDirectionCalc(toMario).get();

@@ -279,7 +279,7 @@ void TBiancoWatermillVertical::control()
 	                                  nullptr, fabsf(mRotSpeed), 0, 0,
 	                                  &mSoundHandle, 0, 4);
 	gpMSound->startSoundActorWithInfo(
-	    MSD_SE_OBJ_BI_STEPMILL_MOVE, &mBridge->mPosition, nullptr,
+	    MSD_SE_OBJ_BI_STEPMILL_MOVE, &mBridge->getPosition(), nullptr,
 	    fabsf(bridgeSpeed), 0, 0, &mBridgeSoundHandle, 0, 4);
 }
 

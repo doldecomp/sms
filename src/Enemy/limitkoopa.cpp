@@ -82,7 +82,7 @@ BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 
 	TDirectionCalc toMario;
 	JGeometry::TVec3<f32> delta;
-	delta.sub(SMS_GetMarioPos(), koopa->mPosition);
+	delta.sub(SMS_GetMarioPos(), koopa->getPosition());
 	delta.y = 0.0f;
 	toMario.makeDirection(delta);
 
@@ -98,9 +98,10 @@ BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 	    TDirectionCalc::d2r(params->rotationSpeed.get()));
 
 	TDirectionCalc facing;
-	JGeometry::TVec3<f32> toMario2(SMS_GetMarioPos().x - koopa->mPosition.x,
-	                               SMS_GetMarioPos().y - koopa->mPosition.y,
-	                               SMS_GetMarioPos().z - koopa->mPosition.z);
+	JGeometry::TVec3<f32> toMario2(
+	    SMS_GetMarioPos().x - koopa->getPosition().x,
+	    SMS_GetMarioPos().y - koopa->getPosition().y,
+	    SMS_GetMarioPos().z - koopa->getPosition().z);
 	toMario2.y = 0.0f;
 	facing.makeDirection(toMario2);
 

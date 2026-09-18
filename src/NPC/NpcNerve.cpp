@@ -19,8 +19,8 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 
 	JGeometry::TVec3<f32> local_582 = self->unkF4.getPoint();
 
-	JGeometry::TVec3<f32> local_58(local_582.x - self->mPosition.x, 0.0f,
-	                               local_582.z - self->mPosition.z);
+	JGeometry::TVec3<f32> local_58(local_582.x - self->getPosition().x, 0.0f,
+	                               local_582.z - self->getPosition().z);
 
 	(void)&local_58;
 

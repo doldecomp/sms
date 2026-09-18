@@ -163,7 +163,7 @@ public:
 		f32 upper = mario->mDamageHeight + rr;
 		f32 radH  = rr + mario->mDamageRadius;
 		f32 radH2 = radH * radH;
-		f32 mx    = mario->mPosition.x;
+		f32 mx    = mario->getPosition().x;
 		f32 my    = mario->mPosition.y;
 		f32 mz    = mario->mPosition.z;
 

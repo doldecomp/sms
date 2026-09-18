@@ -823,12 +823,12 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 					                                4);
 					if (mCanShedTears)
 						SMSGetMSound()->startSoundActor(
-						    MSD_SE_BS_UNG_VOICE_M_CRY, &mOwner->mPosition, 0,
-						    nullptr, 0, 4);
+						    MSD_SE_BS_UNG_VOICE_M_CRY, &mOwner->getPosition(),
+						    0, nullptr, 0, 4);
 					else
 						SMSGetMSound()->startSoundActor(
-						    MSD_SE_BS_UNG_VOICE_W_CRY, &mOwner->mPosition, 0,
-						    nullptr, 0, 4);
+						    MSD_SE_BS_UNG_VOICE_W_CRY, &mOwner->getPosition(),
+						    0, nullptr, 0, 4);
 					mOwner->mToothBroken = true;
 
 					JPABaseEmitter* emitter = gpMarioParticleManager->emit(
