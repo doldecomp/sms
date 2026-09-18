@@ -40,6 +40,8 @@ void TRealoidActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk70->perform(cue, graphics);
 }
 
+// TODO: 99.6%, all instructions match (58 `~` markers, all frame/register
+// only, closure batch 123 -- no structural residue left to chase).
 void TRealoidActor::calcRootMatrix(TBoid* boid)
 {
 	if (mFlags & FLAG_UNK2_OR_UNK4)
@@ -149,6 +151,10 @@ void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
 	}
 }
 
+// TODO: 99.9%, all instructions match. `pos`'s stack slot is 4 low with the
+// frame otherwise exact (closure batch 123: naming the loop bound
+// `unk150->getBoidNum()` into a local regresses to 88.2%, reverted). No
+// candidate lever found for the remaining +4.
 void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 {
 	SetViewFrustumClipCheckPerspective(SMSGetCamera()->getFovy(),
@@ -187,6 +193,9 @@ TFishoid::TFishoid(int type, const char* name)
 	unk15C = nullptr;
 }
 
+// TODO: 99.5%, all instructions match. Pure frame gap (0xb8 vs our 0x98, +32
+// low) around the single referenced local (a TVec3 used to clamp a position
+// component); no candidate object found this batch.
 void TFishoid::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TRealoid::perform(cue, graphics);
@@ -219,6 +228,15 @@ void TFishoid::init(TLiveManager* manager)
 
 void TFishoid::initBoids() { }
 
+// TODO: 99.8%, all instructions match. `unk150->mFleeTarget =
+// (THitActor*)gpMarioAddress;` (a plain field assignment through
+// `TPathNode`'s implicit converting ctor) compiled to a pointer-advancing
+// `stwu`-based copy of the temporary `TPathNode` into place; going through
+// the named `setFleeTarget(THitActor*)` setter in include/Animal/boid.hpp
+// instead gave retail's fixed-base `stw` form and took this from 96.6% (40
+// `|`/`<`/`>` markers) to instruction-exact (closure batch 123). What is
+// left is a pure 0x80-byte low-region gap around the temporary `TPathNode`'s
+// stack home and the callee-saved area, not pursued further.
 void TFishoid::load(JSUMemoryInputStream& stream)
 {
 	loadDefault(stream, cFishoidMdlNames[mType], 0);
@@ -239,7 +257,7 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 	unk150->mMaxPitch          = 5.0f;
 	unk150->mAlignmentStrength = 0.5f;
 
-	unk150->mFleeTarget = (THitActor*)gpMarioAddress;
+	unk150->setFleeTarget((THitActor*)gpMarioAddress);
 
 	unk150->mFleeRadius   = 400.0f;
 	unk150->mFleeStrength = 3.0f;
