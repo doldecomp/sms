@@ -443,7 +443,7 @@ void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (cue & CUE_CALC_ANIM) {
 			calcRootMatrix();
 			updateAnmSound();
-			getMActor()->calc();
+			getMActor()->calcAnm();
 		}
 		if (!checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 			if (cue & CUE_CALC_VIEW)
