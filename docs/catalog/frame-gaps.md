@@ -437,3 +437,12 @@ New lead from this batch: since a *named* local reserves a slot with zero
 instructions, the Animal carrier's 12 bytes need not be an explicitly dead
 object — a named by-value 12-byte result inside such a wrapper would read the
 same. Untested.
+
+## Closure batch 78
+
+- **A four-corner quad is readable off the store offsets**: twelve `stfs` to consecutive slots with two CSE'd sums is `TVec3 vtx[4]` at function scope plus `vtx[i].set(x±size, y±size, z+size)` in the loop (the `TSplashManager::makeDL` idiom); the twelve by-value `set` parameter temporaries are ~48 bytes of low region (`TQuestionManager::makeDL` 84 -> 100; question linked; its `#pragma dont_inline` was masking a 19-statement body).
+- **A named `bool` per block saturates like an accessor**: one of two blocks +0, both +8 (`TQuestionManager::perform`). `f32 dx; f32 dz;` named in that order so `fmadds` gets register operands (`request`).
+- **The dead-low-region carrier can be sized even when it cannot be named**: a dead non-trivial 4-byte local in `MSBgmXFade::getTimingForce` closes `xFadeBgmForce`, an 8-byte one in `getTiming` closes `xFadeBgm`'s frame (both UNUSED, so legal carriers; not fabricated). `getTiming`'s UNUSED size 0x94 vs our 0x60 is the optional `param_2` output path.
+- **A `JUtility::TColor`-from-`GXColor` conversion temporary is 8 bytes for us and 4 for retail** (Menu: four temps at an 8-byte stride vs retail's 4; header suspect: the commented-out `TColor(const TColor&)` copy ctor in JUTColor.hpp).
+- Hoisting a receiver local above its guard is a register lever (`TMovieRumble::readCurInfo`); retail still copies the ToolData pointer into a second callee-saved register that the guard's `isIndexValid` consumes (+8 in both callers, open). `movement`'s UNUSED 0xb4 vs our 0x78 says fifteen instructions are unrecovered (why `checkRumbleOff` still needs its pragma).
+- `TPollutionManager::load` 0x58 vs 0x60 with the ladder exhausted (the last 8 is a zero-instruction object); `SMSGetPollutionLayer(i)` is the wrong rung there (+0x20, +1 instruction). `cleanedAll` is 8 too big: a const `getLayer(i)` casting `mJointModels[i]` directly (one level) is the header candidate. `TWoodBarrel::kill`: a second dead `TVec3` (the emit direction at its `.prm` default) after `vec`, positional evidence; `appear` closes only with the queued `startSoundActor` item. A signed loop bound shows as `cmpw` vs `cmplw` against an `int` member. Trial scripts must grep for `FAILED`/`build stopped`, not `error` (sjiswrap prints "Shift JIS encoding errors" on success).
