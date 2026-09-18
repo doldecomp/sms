@@ -80,6 +80,11 @@ bool TAirportEventSink::control()
 // TMapEventSirenaSink::watch is 12 short in the same region, and
 // TMapEventSinkInPollution::watch / TMapEventSinkBianco::watch are 24 short,
 // so the missing levels are most likely in the shared pollution accessors.
+// Confirmed on this function and Sirena's: removing one statement at a time
+// leaves the whole residue in `gpPollution->getLayer(0)->startDecay()`, and one
+// extra 0-param accessor level inside `TJointModelManager::getJointModel`
+// (`getJointModels()`, a shared header, so not applied) recovers 8 of the 12
+// bytes here and 4 of Sirena's. Two such levels regress both.
 bool TAirportEventSink::watch()
 {
 	if (!mIsBuildingRecovered[0] && unk6C->checkLiveFlag(LIVE_FLAG_DEAD)) {
