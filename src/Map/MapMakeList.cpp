@@ -199,12 +199,29 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	return true;
 }
 
-// TODO: 91.4%. Frame 0xd8 vs retail's 0x108 (48 low bytes) plus, in each of
-// the three copies of the addCheckDataToList block, an extra `mr r3, r0`:
-// retail's inlined getListRoot leaves its result directly in r3 where ours
-// lands in r0 first. The UNUSED out-of-line addCheckDataToList is 0x27c
-// against our 0x124, so that body is still under-reconstructed, which is
-// probably the same cause -- retail expands a bigger block three times here.
+// TODO: 91.4%. Two independent residues.
+//  - Frame 0xd8 vs retail's 0x108. The 48 bytes are priced: a dead
+//    *non-trivial* 12-byte local (a TVec3, say) inside `getListRoot` lands
+//    0x108 exactly with no instruction change (8 bytes gives 0x100, 16 gives
+//    0x118), and `getListRoot` is UNUSED in the map, so it is a legal carrier
+//    per the batch-69 rule. Nothing in a "fetch the list root" function wants
+//    a 12-byte object, so it is measured and not committed.
+//  - In each of the three copies of the addCheckDataToList block retail's
+//    inlined getListRoot accumulates the address straight into r3 (`lwz r4,
+//    0x14(r31)` for the base, `add r3, r0, r24`, `add r3, r4, r3`) where ours
+//    keeps the base in r3, accumulates in r0 and adds `mr r3, r0`. Measured:
+//    splitting `TBGCheckList* list;` from its assignment is +0; spelling
+//    `addGroundNode(getListRoot(...), param_1)` in each switch arm expands
+//    getListRoot three times per block (46.7%, 511 instructions); reusing one
+//    `list2` variable for the root and the node is 86.8% and +10 instructions.
+//    The addGroundNode/addRoofNode/addWallNode trio really are file-static
+//    free functions (the map mangles them `__FP12TBGCheckList...`), which is
+//    why the root has to reach r3 and not r4.
+//  - The UNUSED out-of-line addCheckDataToList is 0x27c against our 0x124,
+//    but that is the same depth artifact as enemyAttachment's `generate`: at
+//    depth 1 the out-of-line copy expands helpers that the three inlined
+//    copies here reach at depth 2 and call. It is not evidence of missing
+//    statements.
 void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 {
 	int iVar7 = param_1->getPlaneType();
