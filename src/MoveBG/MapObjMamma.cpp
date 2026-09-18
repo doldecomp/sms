@@ -524,11 +524,12 @@ static s32 SandCastleCallBack(u32 param_1, u32 param_2)
 
 void TSandCastle::waitBeforeExplode()
 {
+	JDrama::TFlagT<u16> flag(0);
 	mState      = STATE_WAIT_BOM;
 	mStateTimer = mExplodeWaitTime;
 	SMSGetMarDirector()->fireStartDemoCamera("mamma1_sandcastle", nullptr, -1,
 	                                         0.0f, true, SandCastleCallBack, 0,
-	                                         nullptr, JDrama::TFlagT<u16>(0));
+	                                         nullptr, flag);
 	mDemoFired = true;
 }
 
