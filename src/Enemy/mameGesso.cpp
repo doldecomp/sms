@@ -346,6 +346,23 @@ void TMameGesso::checkMarioState() { }
 
 const char** TMameGesso::getBasNameTable() const { return mameGesso_bastable; }
 
+// fabricated: retail's dead water test inside TNerveMameGessoGraphJumpWander
+// covers six ground types, one fewer than TBGCheckData::isWaterSurface(), which
+// also takes BG_TYPE_SHADED_POOL. Spelling the chain at the site instead lets
+// MWCC drop terms, because the guarded statement is gone; inside an inlined
+// predicate the whole chain survives, which is what retail emits.
+static inline bool MameGessoIsWaterSurface(const TBGCheckData* data)
+{
+	if (data->mBGType == BG_TYPE_WATER
+	    || data->mBGType == BG_TYPE_DAMAGING_WATER
+	    || data->mBGType == BG_TYPE_SEA_WATER
+	    || data->mBGType == BG_TYPE_DAMAGING_SEA_WATER
+	    || data->mBGType == BG_TYPE_POOL
+	    || data->mBGType == BG_TYPE_INDOOR_POOL)
+		return true;
+	return false;
+}
+
 DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
@@ -402,9 +419,26 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 	}
 
 	if (self->unk1EC != 0) {
-		// TODO: one more condition that is kind of like
-		// mGroundPlane->isWaterSurface() but not really
-		if (!self->isReachedToGoal() || self->isAirborne()) {
+		if (self->isReachedToGoal()) {
+			if (self->isAirborne()) {
+				// TODO: retail evaluates this water-surface chain and then
+				// does nothing with it -- every path leaves the block -- so
+				// whatever statement it guarded was stripped. The chain is
+				// spelled out at the site (direct branches, no materialised
+				// bool) and covers six types, one fewer than
+				// TBGCheckData::isWaterSurface(), which also takes
+				// BG_TYPE_SHADED_POOL.
+				// TODO: 4 instructions short. Retail keeps both compare
+				// groups (0x100 peeled, 0x101-0x105 folded); with the body
+				// gone MWCC merges them and emits only the first, whatever
+				// the chain's spelling. Refuted: the chain at the site
+				// (drops the range), the negated `&&` form (keeps three
+				// unfolded terms), an empty `else` (inert). Retail's body
+				// most likely held a statement whose code MWCC stripped.
+				if (MameGessoIsWaterSurface(self->getGroundPlane())) {
+				}
+			}
+		} else {
 			if (!self->isAirborne())
 				self->walkBehavior(2, 1.0f);
 			else
