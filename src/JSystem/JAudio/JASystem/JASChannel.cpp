@@ -142,6 +142,16 @@ namespace Driver {
 		return value;
 	}
 
+	// TODO: both __UpdateJcToDSP and __UpdateJcToDSPInit are instruction-exact
+	// but 16 bytes of frame short (retail 0x30, ours 0x20).  Measured levers
+	// (batch 152): one binding level over channel->unk4->unk5A[i] is (+8, +8),
+	// a two-deep one over channel->unkB4[i] (+16, +8), one over
+	// channel->unk20->mDSPHandle (+8, +16), one over unk4->unk61 (+24, +24);
+	// a three-deep chain over unk4->unk5A[i] lands both frames exactly but
+	// reorders the loop's two index computations, and *any* two levers move
+	// `channel` from r31 to r30, so the missing 16 bytes come from one
+	// construct, not from two accessors.  A void helper shared by the two
+	// filter tails costs nothing.
 	static void __UpdateJcToDSP(TChannel* channel)
 	{
 		DSPInterface::DSPBuffer* buf = channel->unk20->mDSPHandle;
@@ -378,6 +388,10 @@ namespace Driver {
 		}
 	}
 
+	// TODO: instruction-exact but 24 bytes of frame short (retail 0x48, ours
+	// 0x30); unlike overwriteOsc/playLogicalChannel this site does keep the
+	// bankOscToOfs level, so retail had three more 8-byte inline temporaries
+	// here than we do.
 	int updatecallDSPChannel(TDSPChannel* dspChannel, u32 param)
 	{
 		TChannel* channel = dspChannel->getLogicalChannel();
@@ -637,7 +651,10 @@ void TChannel::overwriteOsc(u32 index, TOscillator::Osc_* src)
 {
 	JUT_ASSERT(index < 4);
 	setOscInit(index, src);
-	effectOsc(index, bankOscToOfs(index));
+	// Written out rather than calling bankOscToOfs(index): an inlined
+	// one-argument accessor would reserve another 8 bytes of frame here
+	// (retail's frame is 0x38, a bankOscToOfs level makes it 0x40).
+	effectOsc(index, unk38[index]->isOsc() ? unk38[index]->getOffset() : 1.0f);
 }
 
 void TChannel::overwriteOscMultiple(TOscillator::Osc_* osc1,
@@ -861,9 +878,12 @@ BOOL TChannel::playLogicalChannel()
 
 	unk9C = unk4;
 
+	// bankOscToOfs(i) written out for the same reason as in overwriteOsc: the
+	// extra inlined-accessor level would push the frame from 0x50 to 0x58.
 	for (u32 i = 0; i < 4; ++i)
 		if (unk38[i]->isOsc())
-			effectOsc(i, bankOscToOfs(i));
+			effectOsc(i,
+			          unk38[i]->isOsc() ? unk38[i]->getOffset() : 1.0f);
 
 	updateEffectorParam();
 	Driver::__UpdateJcToDSPInit(this);
@@ -914,6 +934,11 @@ void TChannel::updateEffectorParam()
 		break;
 	}
 
+	// TODO: the frame and every instruction match; retail keeps the Clamp01
+	// result temporaries (f5, f6) live into the auto-mixer branch and reads
+	// them there, where we read the variables' homes f31/f30 (5 operands).
+	// Rejected: computing `volume` after the three clamps (moves the temps to
+	// f0/f1), and a Clamp01 written with a named result (adds fmr pairs).
 	f32 volume = unkA4 * (unk54 * unk90);
 
 	pan   = Driver::Clamp01(pan);
