@@ -1030,23 +1030,21 @@ DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor)
 		// Step back along last frame's motion.
 		hana->mPosition.x -= 10.0f * hana->unk1EC.x;
 		hana->mPosition.z -= 10.0f * hana->unk1EC.z;
-	}
-
-	if (hana->checkCurAnmEnd(0)) {
-		if (hana->isBckAnm(2))
+	} else if (hana->checkCurAnmEnd(0)) {
+		if (hana->isBckAnm(2)) {
 			hana->setBckAnm(1);
-		if (hana->isBckAnm(1)) {
+		} else if (hana->isBckAnm(1)) {
 			if (spine->getTime() > hana->unk1B4->mSLKeepBalanceTime.get())
 				hana->setBckAnm(0);
 			else
 				hana->setBckAnm(1);
-		}
-		if (hana->isBckAnm(0) || hana->isBckAnm(7)) {
+		} else if (hana->isBckAnm(0) || hana->isBckAnm(7)) {
 			// Regained its footing: start this nerve over from a safe node.
 			spine->reset();
 			spine->setNext(&TNerveChuuHanaKeepBalance::theNerve());
 			spine->pushAfterCurrent(spine->getDefault());
 			hana->setSafeGoal();
+			return TRUE;
 		}
 	}
 
