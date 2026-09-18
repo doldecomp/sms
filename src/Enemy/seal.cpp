@@ -19,10 +19,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-TSeal::~TSeal() { }
-
-TSealManager::~TSealManager() { }
-
 TSeal::TSeal(const char* name)
     : TSpineEnemy(name)
 {
@@ -30,6 +26,15 @@ TSeal::TSeal(const char* name)
 	mLiveFlag |= LIVE_FLAG_UNK10;
 }
 
+// TODO: every instruction and the frame (0xc0) are exact; the only residue is
+// a two-register rotation, retail keeping the .rodata string base in r31 and
+// the `this` reloads in r30 where we do the reverse. Measured, all with the
+// frame right and 182 instructions: `->push_back(this)` is the baseline 0xb8,
+// `getChildren().push_back(this)` +16, `getSpine()->initWith` +8, spelling
+// `getMaxHitPoints()` out -8; four combinations reach 0xc0 and every one keeps
+// the rotation, as do a named group local, `getMActor()->offMakeDL()` and
+// splitting `radius`' declaration. So the lever is not an accessor level on
+// `this` (batch 63's register-priority rule does not apply here).
 void TSeal::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -43,9 +48,7 @@ void TSeal::init(TLiveManager* manager)
 	initHitActor(0x10000024, 1, 0x81000000, radius, radius, radius, radius);
 	mHitFlags &= ~HIT_FLAG_NO_COLLISION;
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-	    ->getChildren()
-	    .push_back(this);
+	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")->push_back(this);
 
 	f32 angle = 270.0f + mRotation.x;
 	while (angle >= 360.0f)
@@ -57,16 +60,11 @@ void TSeal::init(TLiveManager* manager)
 	mMapCollisionManager = new TMapCollisionManager(1, "/scene/seal", this);
 	mMapCollisionManager->init("gene_orange_col1.col", 2, nullptr);
 
-	Mtx mtx;
-	MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
-	            mRotation.y, mRotation.z, mScaling.x, mScaling.y, mScaling.z);
-	TMapCollisionBase* col = mMapCollisionManager->unk8;
-	col->setMtx(mtx);
-	col->setUp();
+	mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
 
 	mHitPoints = getMaxHitPoints();
 
-	mSpine->initWith(&TNerveSealSleep::theNerve());
+	getSpine()->initWith(&TNerveSealSleep::theNerve());
 }
 
 BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
@@ -77,20 +75,24 @@ BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
 		                        0, 0.0f, 0, 0, 4);
 
 		if (gpModelWaterManager->unk5D5F) {
-			gpMSound->startSoundSet(MSD_SE_ERASE_SCRAWL, &sender->mPosition, 0,
-			                        0.0f, 0, 0, 4);
+			gpMSound->startSoundSet(MSD_SE_ERASE_SCRAWL, &sender->mPosition,
+			                        0, 0.0f, 0, 0, 4);
 
 			const TNerveBase<TLiveActor>* dieNerve
 			    = &TNerveSealDie::theNerve();
-			if (mSpine->getLatestNerve() != dieNerve) {
-				if (mMapCollisionManager->unk8)
-					mMapCollisionManager->unk8->remove();
-				mSpine->pushNerve(&TNerveSealDie::theNerve());
+			if (getSpine()->getLatestNerve() != dieNerve) {
+				if (mMapCollisionManager->getUnk8())
+					mMapCollisionManager->getUnk8()->remove();
+				getSpine()->pushNerve(&TNerveSealDie::theNerve());
 			}
+			unk150++;
+			return TRUE;
 		}
+
+		return TRUE;
 	}
 
-	return TSpineEnemy::receiveMessage(sender, message);
+	return FALSE;
 }
 
 void TSeal::calcRootMatrix()
@@ -104,7 +106,7 @@ void TSeal::calcRootMatrix()
 void TSeal::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN)) && (cue & 1)) {
-		for (int i = 0; i < mColCount; ++i) {
+		for (int i = 0; i < getColNum(); ++i) {
 			THitActor* other = getCollision(i);
 			if (other->isActorType(0x80000001))
 				other->receiveMessage(this, 0xE);
@@ -119,7 +121,7 @@ void TSeal::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((cue & 2) && !(mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN))
-	    && mDistToMarioSquared < 2250000.0f
+	    && getDistToMarioSquared() < 2250000.0f
 	    && gpMSound->gateCheck(MSD_SE_EN_ORANGESEAL_WAIT)) {
 		MSoundSESystem::MSoundSE::startSoundActor(
 		    MSD_SE_EN_ORANGESEAL_WAIT, &mPosition, 0, nullptr, 0, 4);
@@ -140,9 +142,12 @@ void TSealManager::createModelData()
 	createModelDataArray(entry);
 }
 
+void TSealManager::initJParticle() { }
+
 void TSealManager::load(JSUMemoryInputStream& stream)
 {
 	TEnemyManager::load(stream);
+	initJParticle();
 }
 
 DEFINE_NERVE(TNerveSealSleep, TLiveActor)
@@ -154,7 +159,7 @@ DEFINE_NERVE(TNerveSealSleep, TLiveActor)
 		seal->getMActor()->setBckFromIndex(-1);
 	}
 
-	if (seal->mDistToMarioSquared < 1000000.0f) {
+	if (seal->getDistToMarioSquared() < 1000000.0f) {
 		spine->pushAfterCurrent(&TNerveSealWait::theNerve());
 		return TRUE;
 	}
@@ -166,6 +171,11 @@ DEFINE_NERVE(TNerveSealSleep, TLiveActor)
 	return FALSE;
 }
 
+// TODO: instruction-exact, frame 0x30 against retail's 0x38 -- one 8-byte
+// object left. `getDistToMarioSquared()` is the first +8 (0x28 -> 0x30); a
+// named `f32` for it, a named `int` for `spine->getTime()`, a cast temporary
+// for `spine->getBody()` and dropping the inner braces are all +0, and a named
+// `MActor*` or a named `bool` for the first `curAnmEndsNext` break the body.
 DEFINE_NERVE(TNerveSealWait, TLiveActor)
 {
 	TSeal* seal = (TSeal*)spine->getBody();
@@ -178,7 +188,7 @@ DEFINE_NERVE(TNerveSealWait, TLiveActor)
 		seal->getMActor()->setBckFromIndex(2);
 	}
 
-	if (seal->mDistToMarioSquared > 2250000.0f
+	if (seal->getDistToMarioSquared() > 2250000.0f
 	    && seal->getMActor()->curAnmEndsNext(0, nullptr)) {
 		seal->getMActor()->setBckFromIndex(1);
 		spine->pushAfterCurrent(&TNerveSealSleep::theNerve());
@@ -197,11 +207,13 @@ DEFINE_NERVE(TNerveSealDie, TLiveActor)
 		JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xD1, mtx, 0, seal);
 		if (emitter)
-			emitter->setGlobalScale(seal->mScaling);
-		emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xD2, mtx, 0, seal);
+			emitter->setGlobalScale(seal->getScaling());
+		// A distinct owner key so the second emitter is not treated as a
+		// rebind of the first; retail passes seal + 1 byte.
+		emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+		    0xD2, mtx, 0, (u8*)seal + 1);
 		if (emitter)
-			emitter->setGlobalScale(seal->mScaling);
+			emitter->setGlobalScale(seal->getScaling());
 	}
 
 	if (gpMSound->gateCheck(MSD_SE_WT_BOSS_FADEAWAY)) {
