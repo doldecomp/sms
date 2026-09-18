@@ -40,6 +40,18 @@ f32 BHSCalcCentrifugalForce(const JGeometry::TVec3<f32>& first,
 	return force;
 }
 
+// TODO: 94.0%. Two residues, both of which also show up where this body is
+// inlined into TSphereLink::setDegreeZAndRevisionPosXZ:
+//  - retail loads the surviving `distance.z` zero literal *before* the sine
+//    table `lfsx` and we load it after (one swapped pair, everything else in
+//    order), and at the inlined site the same swap comes with an f2/f3
+//    permutation on the following member read -- the known-open FPR
+//    permutation class;
+//  - frame 0x50 against retail's 0x58.
+// Measured inert: `distance` spelled `TVec3 d; d.set(...)`, spelled as three
+// field assignments. Measured worse: declaring `sine` before `cosine`
+// (94.0 -> 92.6, it permutes f3/f4 as well), writing the zero term as
+// `sine * distance.z` (93.5), putting the `distance.z` terms first (86.7).
 void BHSCalcRevisionDistXZByRotateZ(f32 degreeY, f32 degreeZ, f32 scale,
                                   f32* resultX, f32* resultZ)
 {
@@ -153,6 +165,13 @@ void TSphereLink::moveHead(const JGeometry::TVec3<f32>& position)
 	}
 }
 
+// TODO: 98.2% and frame-exact. The `mPoints[index - 1].mPosition - ...` sub
+// receiver sits at 0x5c where retail has 0x40 and its copy at 0x70 against
+// 0x74, and the tail carries the inlined BHSCalcRevisionDistXZByRotateZ swap
+// described above. Retail's `lfs f2, 0xc(r31)` member read ranks *below* the
+// computed product where ours ranks above it, which is the "a member read must
+// be a named local" rule -- but `point->mPosition.x += offsetX` has nowhere to
+// put the name without changing the store.
 BOOL TSphereLink::setDegreeZAndRevisionPosXZ(int index, f32 degreeZ)
 {
 	BOOL changed = FALSE;
