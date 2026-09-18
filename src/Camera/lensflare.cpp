@@ -1,3 +1,4 @@
+#include <System/DummyStrings.hpp>
 #include <Camera/LensFlare.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
@@ -32,7 +33,17 @@ TLensFlare::TLensFlare(const char* name)
 	if (gpSunMgr->isThing())
 		return;
 
+	// Dead 4-byte local. Retail puts `buf` at 0x18 and leaves one word between
+	// it and the outgoing-argument area; without a local declared after `buf`
+	// ours lands at 0x14 (every other instruction is identical). The same +4
+	// shows up in TLensGlow::TLensGlow and TSunModel::load, the two sibling
+	// functions that build a path out of cSunVolumeName, so this is a leftover
+	// declaration in that idiom rather than something the function uses.
+	// TODO: the original name is unrecoverable; an assigned local is register
+	// allocated and does not reserve the slot, so it was never written to.
 	char buf[0x100];
+	int pathLen;
+
 	snprintf(buf, 0x100, "%s/%s", cSunVolumeName, "sun_lensfx.bmd");
 
 	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf),
@@ -86,8 +97,9 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 
 		// TODO: a mystery is happening here with the args, but it's definitely
 		// this inline (maybe one more inlining layer?)
+		S16Vec camEuler;
 		JGeometry::TVec3<f32> near9grid[9];
-		CLBCalcNearNinePos(near9grid, nullptr, gpCamera->unk124,
+		CLBCalcNearNinePos(near9grid, &camEuler, gpCamera->unk124,
 		                   gpCamera->mTarget, gpCamera->getFinalAngleZ(),
 		                   gpCamera->getNear(), gpCamera->getFovy(),
 		                   gpCamera->getAspect());
