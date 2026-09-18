@@ -16,7 +16,7 @@ public:
 	TWaterGunParams(const char* prm)
 	    : TParams(prm)
 	    , PARAM_INIT(mRocketHeight, 1500.0f)
-	    , PARAM_INIT(mHoverHeight, 160.0f)
+	    , PARAM_INIT(mHHoverHeight, 160.0f)
 	    , PARAM_INIT(mLAngleNormal, 60.0f)
 	    , PARAM_INIT(mNozzleAngleYSpeed, 1.0f)
 	    , PARAM_INIT(mNozzleAngleYBrake, 0.995f)
@@ -27,7 +27,9 @@ public:
 	{
 	}
 	TParamRT<f32> mRocketHeight;
-	TParamRT<f32> mHoverHeight;
+	// Two H's: PARAM_INIT stringifies the member and WaterGun.cpp's
+	// .rodata @4096 is literally "mHHoverHeight", a typo in the ROM.
+	TParamRT<f32> mHHoverHeight;
 	TParamRT<f32> mLAngleNormal;
 	TParamRT<f32> mNozzleAngleYSpeed;
 	TParamRT<f32> mNozzleAngleYBrake;

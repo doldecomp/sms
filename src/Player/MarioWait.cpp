@@ -116,7 +116,7 @@ BOOL TMario::waitingCommonEvents()
 
 	if (rocketCheck()) {
 		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
+		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
@@ -343,7 +343,7 @@ BOOL TMario::squating()
 	        == 1
 	    && mWaterGun->isEmitting()) {
 		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
+		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 

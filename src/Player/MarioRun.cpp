@@ -702,7 +702,7 @@ BOOL TMario::running()
 
 	if (rocketCheck()) {
 		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
+		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
