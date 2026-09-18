@@ -53,21 +53,13 @@ TSelectDir::TSelectDir()
 // the `JKRFileLoader::getVolume` cast closes it identically, so the byte is
 // certain and its owner is not; the gamepad accessor is the spelling the rest
 // of the tree uses.)
-// Parked: a binding level over TSelectDir's gamepad member. See the note on
-// the destructor; header batch item (`TSelectDir::getGamePad()`).
-static inline TMarioGamePad* SelectDirGamePad(TSelectDir* dir)
-{
-	TMarioGamePad* gamePad = dir->unk18;
-	return gamePad;
-}
-
 TSelectDir::~TSelectDir()
 {
 	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("select");
 	if (arc)
 		arc->unmountFixed();
 
-	SelectDirGamePad(this)->offFlag(1);
+	getGamePad()->offFlag(1);
 }
 
 void TSelectDir::setup(JDrama::TDisplay* display, TMarioGamePad* gamePad,
@@ -258,10 +250,20 @@ void TSelectDir::changeOrder()
 // pairs 12 high, i.e. our pool has 4 bytes between the colour temporaries
 // and `res` that retail does not. Since that is four fabricated TU-local
 // levels for a function that still does not match, none of them is
-// committed; the numbers are the result. The right next step is a header
-// round giving `TSelectDir` real binding accessors (`getFader()` on
-// TApplication, `getMenu()`, `getGamePad()`, `getStage()`) and re-measuring
-// the 4-byte pool item on top.
+// committed; the numbers are the result.
+//
+// Header round 22 turned the parked TU-local into the real
+// `TSelectDir::getGamePad()` binding accessor (the destructor still exact)
+// and re-measured the ladder with it: the steps are strictly additive, so
+// using the accessor at both `isSomethingPushed()` sites gives 0x70, and
+// with TU-local fader and menu levels on top 0xe8 (fader + menu is 0x78 with
+// or without it). No subset containing a gamepad binding reaches 0xd0 --
+// 0x20 + 0x38 + 0x08 = 0x60, 0x20 + 0x40 + 0x08 = 0x68, 0x20 + 0x38 + 0x40
+// = 0x98 -- so retail's `direct()` reads the pad member without a level and
+// only fader + menu + stage lands on 0xd0. The two sites are therefore left
+// as raw member reads and `getGamePad()` is used where its +8 is proved, in
+// the destructor. The remaining unknown is still the 4 bytes between the
+// colour temporaries and `res`.
 int TSelectDir::direct()
 {
 	if (!unk38) {

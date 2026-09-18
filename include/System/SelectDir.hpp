@@ -22,6 +22,12 @@ public:
 
 	virtual int direct();
 
+	TMarioGamePad* getGamePad()
+	{
+		TMarioGamePad* gamePad = unk18;
+		return gamePad;
+	}
+
 	void setup(JDrama::TDisplay*, TMarioGamePad*, unsigned char);
 	static void* setupThreadFunc(void*);
 	int rsetup();
