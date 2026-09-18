@@ -167,6 +167,14 @@ public:
 		return mModelStampDrawBuffers[i];
 	}
 	u16 getJointObjStampTaskNum() const { return mJointObjStampTaskNum; }
+	// A binding inside the class's own accessor is +4 of low region per
+	// expansion (half the +8 a TU-local binding over the raw read buys),
+	// which is exactly what drawRevivalTexStamp's loop bound wanted.
+	// Plain, no binding: drawRevivalTexStamp is exact with this and 4 bytes
+	// of low region over it, so the TU-local binding over the raw
+	// mRevivalTexStampNum read that used to stand here (batch 127, +8) was
+	// overshooting by exactly one accessor step.
+	u16 getRevivalTexStampNum() const { return mRevivalTexStampNum; }
 	void pushModelStampTask(u8, J3DModel*);
 	int registerRevivalTexStamp(int, short, short, short, short, int, ResTIMG*);
 	int registerTexStamp(u16, u16, ResTIMG*);

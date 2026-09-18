@@ -345,11 +345,16 @@ static void makeWorldToPollutionMtx(f32 scale, f32 min_x, f32 min_z,
 }
 
 // TODO: 99.9%, frame exact. The residue is one FPR pair at
-// makeWorldToPollutionMtx: retail negates the two minima in the registers it
-// loaded them into (f0/f1) where we load mMinZ into f3 and negate across
-// registers. The calcViewMtx site compiles the same call exactly, so it is a
-// per-site allocation artifact; the `getJointObjStampTaskNum()` level on the
-// loop bound took this from 30 diffs to 4.
+// makeWorldToPollutionMtx: retail loads mMinZ into f0 and mMinX into f1 and
+// negates both in place, where we load mMinZ into f3 and mMinX into f0 and
+// negate across registers (four `~` markers, identical instruction sequence).
+// The calcViewMtx site compiles the same call exactly, so it is a per-site
+// allocation artifact; the `getJointObjStampTaskNum()` level on the loop bound
+// took this from 30 diffs to 4. Rejected since: `layer->getMinX()/getMinZ()`
+// here (frame +8, 32 diffs), naming the two products `offset_x`/`offset_z` in
+// makeWorldToPollutionMtx (costs calcViewMtx too), and hoisting both
+// `mMtx[.][.] = scale` stores above the translations (store order is source
+// order, so both lose). Known-open FPR-permutation class.
 void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 {
 	for (int i = 0; i < getJointObjStampTaskNum(); ++i) {
@@ -518,14 +523,6 @@ void TPollutionCounterLayer::drawTexStamp(int target_layer) const
 	}
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// TPollutionCounterLayer::drawRevivalTexStamp (batch 127).
-static inline u16 PollutionCountRevivalTexStampNum(const TPollutionCounterLayer* p)
-{
-	u16 revivalTexStampNum = p->mRevivalTexStampNum;
-	return revivalTexStampNum;
-}
-
 void TPollutionCounterLayer::drawRevivalTexStamp(int layer_index) const
 {
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_S16, 0);
@@ -556,7 +553,7 @@ void TPollutionCounterLayer::drawRevivalTexStamp(int layer_index) const
 	GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
 
-	for (int i = 0; i < PollutionCountRevivalTexStampNum(this); ++i) {
+	for (int i = 0; i < getRevivalTexStampNum(); ++i) {
 		TPollutionRevivalTexStamp& stamp = mRevivalTexStamps[i];
 
 		if (stamp.mStampInterval > 0) {
@@ -646,9 +643,17 @@ void TPollutionCounterLayer::drawModelStamp(int layer_index)
 	buffer->frameInit();
 }
 
-// TODO: every instruction matches; the frame is 0x68 against retail's 0xc0, so
-// 88 bytes of low region are unaccounted for (the inlined drawPollutionLayer /
-// drawTexStamp / drawRevivalTexStamp chain).
+// TODO: every instruction matches (149 = 149); the frame is 0x68 against
+// retail's 0xc0. The single referenced slot is the GXTexObj of the inlined
+// loadPollutionLayer, at 0x80 in retail and 0x2c here, so the gap splits as
+// 84 dead bytes *below* it and 4 above (retail 0xa0..0xa8 between the texObj
+// and the r26 save area, ours 0x4c..0x50 of pure padding). With the
+// instruction count already exact the only zero-instruction lever left is an
+// uninitialised non-trivial class local in one of the inlined UNUSED callees
+// (drawPollutionLayer 0x108, drawTexStamp 0xf8, loadPollutionLayer 0x88,
+// setCallback 0x6c -- all four are UNUSED, so all four are legal carriers),
+// but nothing in the TU says which local or which type, and 84 bytes is
+// fabricated padding unless the carrier is evidenced. Left as the residue.
 void TPollutionCounterLayer::countTexDegree(int layer_index)
 {
 	if (!mIsLayerEnabled[layer_index])
