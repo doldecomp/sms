@@ -121,6 +121,11 @@ public:
 	bool isAnmEnd() const;
 	MActor* getMActor() { return unk380; }
 
+	// Fabricated name. The level is worth 8 bytes of low region at the three
+	// reads in TNozzleBase::movement, which closes it at 0x30; the three
+	// writes in the same function stay raw. Header round 21.
+	u16 getUnk372() const { return unk372; }
+
 public:
 	/* 0x368 */ TWaterGun* mFludd;
 	/* 0x36C */ u16 unk36C; // Some animation state

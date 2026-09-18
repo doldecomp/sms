@@ -287,11 +287,11 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	}
 	s32 var1 = 256.0f * controllerWork.mAnalogR * 150.0f;
 
-	if (var1 > unk372) {
-		unk378 = (var1 - unk372) * 0.000015258789f;
+	if (var1 > getUnk372()) {
+		unk378 = (var1 - getUnk372()) * 0.000015258789f;
 		unk374 = unk378;
 		unk372 += (u16)mEmitParams.mTriggerRate.get();
-		if (var1 < unk372) {
+		if (var1 < getUnk372()) {
 			unk372 = var1;
 		}
 	} else {
