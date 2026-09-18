@@ -12,6 +12,12 @@ public:
 	void requestAppearCoin(const Vec&, f32, int);
 	void updateCoin();
 
+	// Fabricated. The accessor level is load-bearing: routing
+	// execAppearCoin_'s three pending-coin uses through it is +8 bytes of
+	// frame in updateCoin, which together with SMSGetMarDirector() over
+	// gpMarDirector closes updateCoin's 16-byte gap.
+	TMapObjBase* getCoin() { return unk0; }
+
 public:
 	/* 0x0 */ TMapObjBase* unk0;
 	/* 0x4 */ int unk4;
