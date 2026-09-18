@@ -13,23 +13,40 @@ TCameraMultiPlayer::TCameraMultiPlayer(u8 max_player_count)
 	mPlayers = new TMultiPlayerData[max_player_count];
 }
 
+// TODO: UNUSED 0x48 in the map, ours 0x44 -- one instruction short.  The named
+// `added` result, a positive `mPlayerCount < mMaxPlayers` guard, `mPlayers +
+// mPlayerCount` and `mPlayerCount = mPlayerCount + 1` are all codegen-neutral
+// here.
 bool TCameraMultiPlayer::addPlayer(const JGeometry::TVec3<f32>* param_1,
                                    f32 param_2, f32 param_3)
 {
-	bool added;
+	bool added = false;
 	if (mPlayerCount >= mMaxPlayers)
-		return false;
+		return added;
 
 	TMultiPlayerData* data = &mPlayers[mPlayerCount];
 	data->unk0             = param_1;
 	data->unk4             = param_2;
 	data->unk8             = param_3;
 	mPlayerCount += 1;
+	added = true;
 
-	return true;
+	return added;
 }
 
-// TODO: shouldn't be marked as inline
+// TODO: the map lists this as UNUSED 0x88 and an UNUSED symbol is never weak,
+// so it should be a plain method that MWCC both expands and emits.  Dropping
+// `inline` here does emit it, but then CPolarSubCamera::removeMultiPlayer
+// stops expanding it (100% -> 14.4%): with this body MWCC is over the depth-1
+// statement budget, i.e. retail's body is cheaper than ours -- ours is 0x90
+// against the map's 0x88.  The two extra instructions are not in the
+// condition: dropping the redundant `found == false &&` term reaches 0x88
+// exactly and still inlines, but retail's expansion *has* that term's
+// `cmplwi r0, 0; bne` pair, so the caller falls to 94.7% (plain `found ||`
+// gives 0x84).  Wanted: a spelling two instructions cheaper out of line whose
+// expansion is unchanged -- the same emitted-copy-vs-expansion split as
+// MapMakeData's setCheckData.  Until then `inline` keeps the byte-exact
+// caller and this symbol stays MISSING in validate-symbol-order.
 inline bool
 TCameraMultiPlayer::removePlayer(const JGeometry::TVec3<f32>* param_1)
 {
@@ -77,6 +94,31 @@ bool CPolarSubCamera::removeMultiPlayer(const JGeometry::TVec3<f32>* param_1)
 	return unk2BC->removePlayer(param_1);
 }
 
+// The inner loop of ctrlMultiPlayerCamera_ goes through this helper rather than
+// spelling the subtraction out: the extra inline level is what gives retail's
+// register allocation there (x's difference in f4 and y's in f3, ours had them
+// swapped).  Written per component because `TVec3 diff; diff.sub(a, b);` as a
+// local of an *inlined* callee is given a stack home and read back (seven
+// instructions retail does not have) where the same two statements in the
+// caller's own body are scalar-replaced.  The squares are named so the
+// products stay three `fmuls` (fp_contract fuses products of locals).
+//
+// TODO: with a dead `JGeometry::TVec3<f32> diff;` declared here the caller's
+// frame is 0x60 exactly, with no instruction change -- so retail's 28 bytes of
+// dead low region below the MsSqrtf slot are this helper's reserved locals
+// (MWCC reserves an inlined callee's slots even when its values live in
+// registers).  Left out because an unused local is not evidence on its own;
+// the real body is presumably the copy-and-subtract form above in a spelling
+// that our compiler scalar-replaces.
+static inline f32 sqDistance(const JGeometry::TVec3<f32>& a,
+                             const JGeometry::TVec3<f32>& b)
+{
+	f32 x2 = (a.x - b.x) * (a.x - b.x);
+	f32 y2 = (a.y - b.y) * (a.y - b.y);
+	f32 z2 = (a.z - b.z) * (a.z - b.z);
+	return x2 + y2 + z2;
+}
+
 void CPolarSubCamera::ctrlMultiPlayerCamera_()
 {
 	int count = unk2BC->mPlayerCount;
@@ -105,18 +147,19 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 			for (i = 0; i < count - 1; ++i, ++it) {
 				jt = it + 1;
 				for (j = i + 1; j < count; ++j, ++jt) {
-					JGeometry::TVec3<f32> diff;
-					diff.sub(*it->unk0, *jt->unk0);
-					f32 x2 = diff.x * diff.x;
-					f32 y2 = diff.y * diff.y;
-					f32 z2 = diff.z * diff.z;
-					f32 sq = x2 + y2 + z2;
+					f32 sq = sqDistance(*it->unk0, *jt->unk0);
 					if (sq > maxSqDist)
 						maxSqDist = sq;
 				}
 			}
 		}
 
+		// TODO: retail's fmadds writes camDistance straight into f31, the
+		// register MsClamp then clamps in place; ours computes it in f0 and
+		// copies (one extra `fmr f31, f0`).  A single-expression
+		// `MsClamp(1.5f * MsSqrtf(...) + 300.0f, min, max)` moves the copy
+		// rather than removing it (the clamp then runs in f0), and the
+		// if/else-if spelling reloads mDistMin in both arms (+2).
 		f32 camDistance = 1.5f * MsSqrtf(maxSqDist) + 300.0f;
 		camDistance     = MsClamp(camDistance, mCurrentParams->mDistMin,
 		                          mCurrentParams->mDistMax);
