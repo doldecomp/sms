@@ -698,9 +698,11 @@ void TIgaiga::setMeltAnm()
 	info->mPos.value     = mPosition;
 	gpModelWaterManager->emitRequest(*info);
 
-	JGeometry::TVec3<f32> half(mScaling);
-	half.scale(0.5f);
-	JGeometry::TVec3<f32> scale(half);
+	// The assignment is the level that reaches the map's out-of-line
+	// TVec3::scale: operator= is depth 1, operator* (nested in its
+	// argument) 2, operator*= 3 and scale 4.
+	JGeometry::TVec3<f32> scale;
+	scale = mScaling * 0.5f;
 
 	JPABaseEmitter* emitter
 	    = gpMarioParticleManager->emit(0xA1, &unk1C0, 0, nullptr);
