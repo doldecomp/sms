@@ -43,14 +43,14 @@ void SDLModelData::entrySameMat(J3DMaterial* material, SDLDrawBufToken* token)
 {
 	SDLModel* head = token->mHead;
 	while (head != nullptr) {
-		if (head->mSdlFlags & SDLModel::FLAG_UNK1)
+		if (head->checkSdlFlag(SDLModel::FLAG_UNK1))
 			break;
 		head = head->mNextSameMat;
 	}
 
 	if (head != nullptr) {
 		j3dSys.setModel(head);
-		j3dSys.setTexture(unk0->getTexture());
+		j3dSys.setTexture(getModelData()->getTexture());
 
 		J3DMatPacket* matPacket = head->getMatPacket(material->getIndex());
 		matPacket->drawClear();
@@ -63,7 +63,7 @@ void SDLModelData::entrySameMat(J3DMaterial* material, SDLDrawBufToken* token)
 
 		SDLModel* model = head->mNextSameMat;
 		while (model != nullptr) {
-			if (model->mSdlFlags & SDLModel::FLAG_UNK1) {
+			if (model->checkSdlFlag(SDLModel::FLAG_UNK1)) {
 				J3DShapePacket* shapePacket2
 				    = model->getShapePacket(material->getShape()->getIndex());
 				shapePacket2->drawClear();
@@ -132,11 +132,11 @@ void SDLModelData::entrySDLModels()
 
 	typedef JGadget::TList<SDLDrawBufToken*>::iterator I;
 	for (I it = mDbTokenList.begin(), e = mDbTokenList.end(); it != e; it++) {
-		recursiveEntry(unk0->getRootNode(), *it);
+		recursiveEntry(getModelData()->getRootNode(), *it);
 
 		SDLModel* model = (*it)->mHead;
 		while (model != nullptr) {
-			model->mSdlFlags &= ~SDLModel::FLAG_UNK1;
+			model->offSdlFlag(SDLModel::FLAG_UNK1);
 			model = model->mNextSameMat;
 		}
 
@@ -310,6 +310,16 @@ void SDLModel::entryModelDataSDL(SDLModelData* model_data, u32 flags,
 	mVertexBuffer = new J3DVertexBuffer(&md->getVertexData());
 }
 
+// TODO: instruction-exact, frame 0xa8 vs retail's 0xb8.  All eight referenced
+// slots belong to the inlined registerSDLModel() below (whose own out-of-line
+// copy is size-exact at 0x128): ours 0x4c/0x50/0x54/0x60/0x64/0x70/0x74/0x78
+// against retail's 0x5c/0x60/0x64/0x70/0x74/0x7c/0x80/0x84, i.e. 16 bytes of
+// missing low region for the five insert/iterator temporaries and 12 for the
+// `it`/`e`/new-token group, so retail's gap between the two groups is 8 where
+// ours is 12.  Rejected here: getSDLModelData() at one or all three sites (+0),
+// a named `*it` in registerSDLModel (97 instructions), push_back spelled as
+// insert(end(), token) (+0), and hoisting `e` out of the for-init (98
+// instructions).
 void SDLModel::entry()
 {
 	if (!checkSdlFlag(FLAG_UNK8) || !checkSdlFlag(FLAG_UNK2) || !mSdlModelData
@@ -329,7 +339,7 @@ void SDLModel::viewCalcSimple()
 {
 	swapDrawMtx();
 	MtxPtr mA = gpCamera->getUnk1EC();
-	for (int i = 0; i < mModelData->getDrawMtxNum(); ++i)
+	for (int i = 0; i < getModelData()->getDrawMtxNum(); ++i)
 		MTXConcat(mA, mNodeMatrices[i], getDrawMtx(i));
-	DCStoreRange(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+	DCStoreRange(getDrawMtxPtr(), getModelData()->getDrawMtxNum() * sizeof(Mtx));
 }
