@@ -8,17 +8,20 @@
 static u8 sDetach[2];
 const char CardFileName[0x20] = "super_mario_sunshine\0\0\0\0\0\0\0\0\0\0\0";
 
+// The US disc carries five languages (English, German, French, Spanish,
+// Italian); the title is the same English string for all five and `-str reuse`
+// folds them into a single @1632.
 const char* titles[] = {
-	"スーパーマリオサンシャイン", "Super Mario Sunshine",
-	"Super Mario Sunshine",       "Super Mario Sunshine",
-	"Super Mario Sunshine",       "Super Mario Sunshine",
-	"Super Mario Sunshine",
+	"Super Mario Sunshine", "Super Mario Sunshine", "Super Mario Sunshine",
+	"Super Mario Sunshine", "Super Mario Sunshine",
 };
 
 const char* comments[] = {
-	"%d月%d日のセーブデータです", "Last saved on %d/%d", "Last saved on %d/%d",
-	"Last saved on %d/%d",        "Last saved on %d/%d", "Last saved on %d/%d",
-	"Last saved on %d/%d",
+	"%d/%d Save Data",
+	"Gespeichert am: %d.%d.",
+	"Dern. sauvegarde le %d/%d",
+	"Datos: %d/%d.",
+	"Ultimo salvataggio %d/%d",
 };
 
 static u32 CalcCheckSum(const void* data, u32 size)
@@ -119,6 +122,10 @@ s32 TCardManager::decideUseSector(TCardManager::TCriteria* criteria)
 	if (criteria[1].getState() == TCriteria::STATE_CHECKSUM_BAD)
 		return 0;
 
+	// TODO: retail keeps the result in r0 and joins with a single `mr r3, r0`,
+	// so `idx` did not get the return register. Exhausted: the if/else below,
+	// a ternary, and declaring `idx` at the top of the function before the
+	// early returns -- all three emit `li r3, 0/1` straight into r3.
 	s32 idx;
 	if (criteria[0].getWriteCount() >= criteria[1].getWriteCount())
 		idx = 0;
@@ -492,20 +499,18 @@ s32 TCardManager::setCardStat_(CARDFileInfo* file)
 
 void TCardManager::buildHeader_(HeaderData* header)
 {
-	int iVar8 = 0;
-	if (TFlagManager::getInstance()->getFlag(0xA0001) != 0x100) {
-		iVar8 = TFlagManager::getInstance()->getFlag(0xA0001);
-		++iVar8;
-	}
+	// 0xA0001 is the live language option flag (0..4); language 0 (English)
+	// prints the date month-first, the European ones day-first.
+	u32 language = TFlagManager::getInstance()->getFlag(0xA0001);
 
-	snprintf(header->mTitle, 0x20, titles[iVar8]);
+	snprintf(header->mTitle, 0x20, titles[language]);
 	OSCalendarTime auStack_54;
 	OSTicksToCalendarTime(OSGetTime(), &auStack_54);
-	if (iVar8 == 0) {
-		snprintf(header->mComment, 0x20, comments[iVar8], auStack_54.mon + 1,
-		         auStack_54.mday);
+	if (language == 0) {
+		snprintf(header->mComment, 0x20, comments[language],
+		         auStack_54.mon + 1, auStack_54.mday);
 	} else {
-		snprintf(header->mComment, 0x20, comments[iVar8], auStack_54.mday,
+		snprintf(header->mComment, 0x20, comments[language], auStack_54.mday,
 		         auStack_54.mon + 1);
 	}
 	memcpy(header->mBanner, mBanner, sizeof(header->mBanner));
@@ -644,7 +649,7 @@ s32 TCardManager::readOptionBlock_()
 	if (result == CARD_RESULT_READY) {
 		TCardSector* sector = (TCardSector*)mSector;
 
-		if (mSectorCriteria[0].mState == TCriteria::STATE_UNREAD) {
+		if (mSectorCriteria[0].mState == TCriteria::STATE_EMPTY) {
 			sector->clearData();
 			sector->setCheckSum(0);
 		} else {
