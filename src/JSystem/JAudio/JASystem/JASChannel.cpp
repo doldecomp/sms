@@ -152,6 +152,20 @@ namespace Driver {
 	// `channel` from r31 to r30, so the missing 16 bytes come from one
 	// construct, not from two accessors.  A void helper shared by the two
 	// filter tails costs nothing.
+	// Batch 158 added the binder ladder on the `buf` chain itself, all
+	// measured as (__UpdateJcToDSP, __UpdateJcToDSPInit) from the 0x20/0x20
+	// baseline: a reference-*returning* accessor
+	// (`DSPBuffer*& f(ch) { return ch->unk20->mDSPHandle; }`) is (+0, +0); a
+	// one-deep binder that binds `DSPBuffer*& handle` and returns it is
+	// (+8, +8), with both bodies still instruction-exact; binding
+	// `TDSPChannel*& dsp = channel->unk20` alone is also (+8, +8) but costs
+	// Init's dolby re-read; nesting the two is (+24, +16), where Init's frame
+	// lands exactly at 0x30 with only the dolby branch one instruction out.
+	// So the wanted uniform +16 is not on this chain: binder depth on it steps
+	// 8, 8, 24/16 and never 16/16. Init's dolby branch is spelled through the
+	// same chain as `buf` in retail (it CSEs `lwz r3,0x20(r3); lwz r3,0xc(r3)`
+	// and copies the result into r30 with `addi`), so whatever carries the 16
+	// has to leave that CSE intact.
 	static void __UpdateJcToDSP(TChannel* channel)
 	{
 		DSPInterface::DSPBuffer* buf = channel->unk20->mDSPHandle;
