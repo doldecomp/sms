@@ -89,9 +89,9 @@ void TSandBlock::control()
 	} break;
 	case STATE_GONE:
 		if (!isStateTimerEngaged()
-		    && getDistance(SMS_GetMarioPos()) > getScaling().x * 100.0f) {
+		    && getDistance(SMS_GetMarioPos()) > mScaling.x * 100.0f) {
 			TMapObjBase::awake();
-			JGeometry::TVec3<f32> scaleCopy = getScaling();
+			JGeometry::TVec3<f32> scaleCopy = mScaling;
 			mScaling.set(mInitialScaling);
 			setUpMapCollision(0);
 			mScaling.set(scaleCopy);
