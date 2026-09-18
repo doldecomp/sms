@@ -633,6 +633,11 @@ void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 
 void TFireWanwanTailHit::clipNodes(JDrama::TGraphics*) { }
 
+// TODO: literal-pool order. Retail asks for 4.0f (@7688) and 0.25f (@7689)
+// from init()/performNodes() before this function's 0.7f (@7892), 0.4f
+// (@7893) and 10000.0f (@7894); ours reverses the two groups, so one of
+// init()/performNodes() is still missing its 4.0f/0.25f use. Definition
+// order already matches the map.
 void TFireWanwanTailHit::movementBody(const JGeometry::TVec3<f32>& param_1)
 {
 	if (mOwner->isHungTailNerve() && !mOwner->unk194->isTaken()
@@ -901,7 +906,10 @@ void TFireWanwan::decideTarget(const JGeometry::TVec3<f32>& param_1)
 		                 1.0f);
 	}
 
-	unk1BC.setEulerY(DEG_TO_RAD(mRotation.y));
+	// The map's factor is 0x3c8efa36, the single-precision product
+	// pi * (1/180); DEG_TO_RAD folds its division in double and gives
+	// 0x3c8efa35 instead.
+	unk1BC.setEulerY(0.017453294f * mRotation.y);
 }
 
 void TFireWanwan::doAdjustTarget()
