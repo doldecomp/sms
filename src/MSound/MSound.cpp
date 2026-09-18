@@ -560,7 +560,7 @@ void MSound::mainLoop()
 		return;
 
 	if (unkD1 == 1) {
-		MSBgm::startBGM(MSD_BGM_KUPPA);
+		MSBgm::startBGM(MSD_BGM_SHINE_APPEAR);
 		unkD1 = 0;
 	}
 

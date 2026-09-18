@@ -795,13 +795,13 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		unk60 = unk5C;
 		gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0xff));
 		if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
-			MSBgm::startBGM(MSD_BGM_BOSS);
+			MSBgm::startBGM(MSD_BGM_MISS);
 			if (checkUnk4EFlag(8))
 				gpApplication.mFader->startWipe(2, 0.0f, 2.0f);
 			else
 				gpApplication.mFader->startWipe(10, 0.0f, 2.2f);
 		} else {
-			MSBgm::startBGM(MSD_BGM_BOSSHANA_2ND3RD);
+			MSBgm::startBGM(MSD_BGM_GAMEOVER);
 			gpApplication.mFader->startWipe(0xD, 0.0f, 2.0f);
 		}
 		break;
@@ -851,7 +851,7 @@ u8 TMarDirector::updateGameMode()
 				TGCConsole2* console = gpMarDirector->mConsole;
 				console->unk94->startAppearShineGet();
 				console->unk47 = 1;
-				MSBgm::startBGM(MSD_BGM_CHUBOSS);
+				MSBgm::startBGM(MSD_BGM_GET_SHINE);
 				TFlagManager::getInstance()->setBool(true, 0x30006);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
 				// TODO: the ROM keeps a real `fmuls` by 1.0f here (the

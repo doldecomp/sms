@@ -330,7 +330,7 @@ void TSlotDrum::moveObject()
 							     && unk13C[j] > 360.0f))
 								return;
 						}
-						MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
+						MSBgm::startBGM(MSD_BGM_FANFARE_CASINO);
 						unk194 = true;
 					}
 				}
@@ -516,7 +516,7 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 void TItemSlotDrum::generateItem()
 {
 	if (getSlotResult() == 0) {
-		MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
+		MSBgm::startBGM(MSD_BGM_FANFARE_CASINO);
 		unk194 = true;
 		return;
 	}
@@ -744,7 +744,7 @@ void TCasinoPanelGate::moveObject()
 		if (allOpen) {
 			unk16D = true;
 			mMActor->setBck("pazul");
-			MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
+			MSBgm::startBGM(MSD_BGM_FANFARE_CASINO);
 			SMSGetMSound()->startSoundActor(MSD_SE_SY_COLLECT_DELIGHT,
 			                                &mPosition, 0, nullptr, 0, 4);
 			removeMapCollision();

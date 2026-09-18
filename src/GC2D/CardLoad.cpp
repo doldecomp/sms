@@ -672,7 +672,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				alpha = 0;
 			unk208->setAlpha(alpha);
 			if (gpCameraOption->unkE == 0) {
-				MSBgm::startBGM(MSD_BGM_BOSSPAKU_DEMO);
+				MSBgm::startBGM(MSD_BGM_MAP_SELECT);
 				unk1C = PROGRESS_UNK30;
 				unk14 = 0;
 			}
@@ -736,7 +736,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			break;
 
 		case 10:
-			MSBgm::startBGM(MSD_BGM_CHUBOSS2);
+			MSBgm::startBGM(MSD_BGM_MAIN_TITLE);
 			unk38->onFlag(0x1);
 			gpMarioOriginal->offFlag(MARIO_FLAG_GAME_OVER);
 			unk14 = 9;

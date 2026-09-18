@@ -2177,7 +2177,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				gpCameraShake->startShake((EnumCamShakeMode)0x20, 1.0f);
 			}
 		} else {
-			MSBgm::stopBGM(MSD_BGM_MAP_SELECT, 10);
+			MSBgm::stopBGM(MSD_BGM_BOSS, 10);
 			// mCamShakeNameSave[0x21] is "/Camera/shakeBTelesaDown.prm".
 			gpCameraShake->startShake((EnumCamShakeMode)0x21, 1.0f);
 
@@ -2370,7 +2370,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 
 		if (!boss->unk384) {
 			boss->unk384 = true;
-			MSBgm::startBGM(MSD_BGM_MAP_SELECT);
+			MSBgm::startBGM(MSD_BGM_BOSS);
 		}
 
 		boss->mSlot->mScaling.set(1.0f, 1.0f, 1.0f);

@@ -1393,13 +1393,6 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(result);
 }
 
-// TODO: the two ids below are the ones the ROM loads, but the names they carry
-// in BackgroundMusic.hpp do not fit these functions: the Monteman race BGM is
-// 0x8001002f (named MSD_STR_SPACEWORLD) while MSD_BGM_MONTEMAN_RACE is
-// 0x8001002e, and the Monteman fanfare is 0x80010026 (named
-// MSD_BGM_CAMERA_KAGE) while MSD_BGM_FANFARE_RACE is 0x80010025. Two
-// independent function names off by exactly one id suggests the tail of that
-// enum is shifted by one entry; the values here are the binary's, not a guess.
 // TODO: 99.9%, every instruction matching, 4 bytes short in the low region.
 // The `startSoundSystemSE` wrapper is right: spelling out its
 // `gateCheck` + `MSoundSE::startSoundSystemSE` body, or reaching it through
@@ -1410,7 +1403,7 @@ static void evStartMontemanBGM(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(0, &arg_num);
 
 	MSBgm::stopTrackBGM(0, 10);
-	MSBgm::startBGM(MSD_STR_SPACEWORLD);
+	MSBgm::startBGM(MSD_BGM_MONTEMAN_RACE);
 	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_RACE_START, 0, nullptr, 0);
 
 	interp->push();
@@ -1421,7 +1414,7 @@ static void evStartMontemanFanfare(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(0, &arg_num);
 
-	MSBgm::startBGM(MSD_BGM_CAMERA_KAGE);
+	MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
 
 	interp->push();
 }

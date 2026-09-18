@@ -1209,7 +1209,7 @@ void TSelectMenu::startOpenWindow()
 		                              rect.getWidth(), 0);
 		mLetterBoxBottom->setPaneOffset(time, 0, 0, 0, rect.getHeight());
 
-		MSBgm::startBGM(MSD_BGM_FANFARE_CASINO);
+		MSBgm::startBGM(MSD_BGM_SCENARIO_SELECT);
 		mLetterboxAnimFrame = 0u;
 	}
 }

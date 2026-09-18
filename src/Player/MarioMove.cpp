@@ -1965,11 +1965,11 @@ void TMario::thinkSituation()
 	if (isMario()) {
 		if (checkFlag(MARIO_FLAG_VISIBLE) == true
 		    && checkPrevFlag(MARIO_FLAG_VISIBLE) == false)
-			MSBgm::startBGM(MSD_BGM_TITLEBACK);
+			MSBgm::startBGM(MSD_BGM_UNDERGROUND);
 
 		if (checkFlag(MARIO_FLAG_VISIBLE) == false
 		    && checkPrevFlag(MARIO_FLAG_VISIBLE) == true)
-			MSBgm::stopBGM(MSD_BGM_TITLEBACK, 10);
+			MSBgm::stopBGM(MSD_BGM_UNDERGROUND, 10);
 	}
 
 	const TBGCheckData* ground;
