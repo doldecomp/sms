@@ -966,7 +966,8 @@ void TTrack::writeRegParam(u8 param)
 		u32 product = uVar5;
 		product *= r24;
 		writeRegDirect(4, product >> 0x10);
-		writeRegDirect(5, product);
+		u16 productLo = product;
+		writeRegDirect(5, productLo);
 		return;
 	}
 
