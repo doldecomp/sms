@@ -577,14 +577,14 @@ void TEnemyMario::initEnemyValues()
 
 void TEnemyMario::kill() { }
 
-f32 TEnemyMario::getStickPower() { }
+f32 TEnemyMario::getStickPower() { return 0.0f; }
 
 void TEnemyMario::setStickAgainstMario() { }
 
 void TEnemyMario::setStickToAngle(s16 angle, f32 power)
 {
-	unk108->mStickHS16 = (JMASSin(angle) * 64.0f) * power;
-	unk108->mStickVS16 = (-JMASCos(angle) * 64.0f) * power;
+	unk108->mStickHS16 = power * (JMASSin(angle) * getStickPower());
+	unk108->mStickVS16 = power * (-JMASCos(angle) * getStickPower());
 }
 
 void TEnemyMario::resetReplayStatus()
@@ -701,8 +701,7 @@ void TEnemyMario::emJumping()
 			unk108->mInput |= TMarioControllerWork::A;
 		}
 	} else if (mStatus & 0x600) {
-		TPollutionManager* pollution = gpPollution;
-		pollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
 		changeEMDoing(EM_DOING_WAITING);
 	}
 }
@@ -739,8 +738,7 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 50) {
-		TPollutionManager* pollution = gpPollution;
-		pollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
 		changeEMDoing(EM_DOING_HIDE);
 	}
 	if (mWallPlane != nullptr) {
