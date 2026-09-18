@@ -29,13 +29,14 @@ static void normalizeInner2(JGeometry::TVec3<f32>& vec)
 	normalizeInner1(vec);
 }
 
-// TODO: the copy of the input vector is the ROM's: mult33 writes its result
-// back over its argument, so the ROM reloads the operands from a copy taken
-// after setRotate returns. A cleaner home for it is the one-argument
-// `TRotation3::mult33(TVec3&)` in JSystem/JGeometry/JGRotation3.hpp, which
-// should forward as `TVec3<f32> tmp(v); mult33(tmp, v);`; that is a shared
-// header, so the copy is spelled here. Declaring `in` before `mtxT` (67.3%) or
-// as a bare `Vec` (73.9%) is worse than this order (83.8%).
+// The copy of the input vector is the ROM's: mult33 writes its result back over
+// its argument, so the ROM reloads the operands from a copy taken after
+// setRotate returns. It has to stay spelled out here rather than moving into
+// the one-argument `TRotation3::mult33(TVec3&)`: with the forwarder spelled
+// `TVec3<f32> tmp(v); mult33(tmp, v);` the other one-argument caller,
+// TMapWire::init, drops 98.79 -> 95.91%, so only this site wants the copy.
+// Declaring `in` before `mtxT` (67.3%) or as a bare `Vec` (73.9%) is worse
+// than this order (83.8%).
 static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
                                    f32 angle, JGeometry::TVec3<f32>* vec)
 {

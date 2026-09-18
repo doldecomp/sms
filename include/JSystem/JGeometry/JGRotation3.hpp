@@ -409,6 +409,12 @@ public:
 		);
 	}
 
+	// Ruled out: forwarding as `TVec3<f32> tmp(param_1); mult33(tmp, param_1);`
+	// so that the aliasing call reloads its operands from a copy. cameralib's
+	// RotateAboutAxis does want that copy, but it is the only caller that
+	// does: the one other one-argument user, TMapWire::init, drops 98.79 ->
+	// 95.91% with it. The copy therefore stays spelled out at the cameralib
+	// site, not here.
 	void mult33(TVec3<f32>& param_1) const { mult33(param_1, param_1); }
 
 	void setScale(f32 param_1, f32 param_2, f32 param_3)
