@@ -213,13 +213,37 @@ bool TMapObjBaseManager::canAppear(const TMapObjBase* param_1,
 TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
                                                bool param_5)
 {
-	// TODO: instruction-exact and frame-exact (0x58), but `checkData`'s slot
-	// is at 0x34 where the ROM has 0x30. The named block's top is 0x38, so
-	// the ROM declared one more 4-byte local above `checkData` and paid for
-	// it with 4 fewer bytes of low region ("+4 named / -4 low", the mirror
-	// of the MapEventDolpic/MapObjTrap family). A dead 4-byte local here is
-	// +8 of frame, not a move, so there is no slack: the lever has to remove
-	// one low-region level (getObj/canAppear) at the same time.
+	// TODO: instruction-exact and frame-exact (0x58); the only difference is
+	// `checkData`'s slot, 0x34 here and 0x30 in the ROM.
+	//
+	// Batch 114 localised it exactly. `checkData` is the *topmost* item of
+	// the local area and everything else grows below it, so its offset is a
+	// direct byte count of the rest: the loop costs 24 (measured by deleting
+	// this block: frame 0x40), the ground-check call 12, `checkData` itself
+	// 4, and the flag test 4. The ROM pays 24 + 12 + 4 and nothing for the
+	// flag test, which is the whole gap.
+	//
+	// The 4 bytes are the binding of a bool-returning inlined member call
+	// whose receiver is a *fresh stack load*: dropping to the raw
+	// `checkData->mFlags & BG_CHECK_FLAG_ILLEGAL` test puts the slot at 0x30
+	// at once (but loses the `li 1 / b / li 0 / clrlwi.` materialisation the
+	// ROM has, so it is not the answer). `canAppear()` in the loop below
+	// materialises the same bool for free because its receiver lives in a
+	// register.
+	//
+	// Measured and rejected, all still 0x34 with the frame unmoved:
+	// `isIllegalData()`, `(*checkData).checkFlag()`, a TU-local
+	// `static bool isIllegalGround(const TBGCheckData*)` and the same taking
+	// a `const TBGCheckData&`, a `const TBGCheckData&` local bound before
+	// the test, a named `bool illegal` over the spelled-out ternary, a
+	// non-const `checkData`, function- vs block-scope `checkData`,
+	// `SMSGetMap()` vs `gpMap`, `f32 y2 = y` with no `else`, the inverted
+	// `if (!param_5)`, a named `f32 groundY`, and writing the three position
+	// components instead of `set()` (all +0).
+	// Levers that move it the wrong way: a named local anywhere in the body
+	// is +8 of frame and never moves the slot (declared after `checkData` it
+	// moves it *up*); `!isLegal()` +8; `== true` +8; raw `unk18[i]` for
+	// `getObj(i)` is -8, four too many, and no +4 was found to pair with it.
 	f32 y2;
 	const TBGCheckData* checkData;
 	if (param_5) {
