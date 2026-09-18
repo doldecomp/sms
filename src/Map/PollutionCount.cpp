@@ -345,16 +345,16 @@ static void makeWorldToPollutionMtx(f32 scale, f32 min_x, f32 min_z,
 }
 
 // TODO: 99.9%, frame exact. The residue is one FPR pair at
-// makeWorldToPollutionMtx: retail loads mMinZ into f0 and mMinX into f1 and
-// negates both in place, where we load mMinZ into f3 and mMinX into f0 and
-// negate across registers (four `~` markers, identical instruction sequence).
-// The calcViewMtx site compiles the same call exactly, so it is a per-site
-// allocation artifact; the `getJointObjStampTaskNum()` level on the loop bound
-// took this from 30 diffs to 4. Rejected since: `layer->getMinX()/getMinZ()`
-// here (frame +8, 32 diffs), naming the two products `offset_x`/`offset_z` in
-// makeWorldToPollutionMtx (costs calcViewMtx too), and hoisting both
-// `mMtx[.][.] = scale` stores above the translations (store order is source
-// order, so both lose). Known-open FPR-permutation class.
+// makeWorldToPollutionMtx: the four-`~` FPR permutation here (retail loaded
+// mMinZ into f0 and mMinX into f1 and negated both in place, we loaded mMinZ
+// into f3 and mMinX into f0) was closed in research batch 171 by naming the
+// two arguments as locals at the call site with mMinZ declared first; see the
+// comment there. Rejected on the callee side: negating the parameters in
+// place, `scale * -min_x`, `-(min_x * scale)`, named products, and hoisting
+// both `mMtx[.][.] = scale` stores above the translations (store order is
+// source order, so all lose, most of them at the calcViewMtx site too).
+// Rejected on the caller side: `layer->getMinX()/getMinZ()` (frame +8, 32
+// diffs) and naming the two mins with mMinX first (no change).
 void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 {
 	for (int i = 0; i < getJointObjStampTaskNum(); ++i) {
@@ -390,8 +390,14 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		                GX_TEVPREV);
 
 		TPosition3f local_6c;
-		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinX,
-		                        layer->mMinZ, &local_6c);
+		// The declaration order of these two is load-bearing: retail loads
+		// mMinZ before mMinX here (research batch 171), which naming them in
+		// this order reproduces -- the raw arguments evaluate right to left
+		// but end up in the opposite register pair.
+		f32 minZ = layer->mMinZ;
+		f32 minX = layer->mMinX;
+		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, minX, minZ,
+		                        &local_6c);
 		GXLoadPosMtxImm(local_6c, GX_PNMTX0);
 
 		j3dSys.setVtxPos(layer->getModelData()->getVtxPosArray());
