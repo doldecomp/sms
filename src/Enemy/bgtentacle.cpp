@@ -186,7 +186,7 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 
 	if (mOwner->getState() == 5 && (param_1 == iVar8 || param_1 == uVar9 - 2)) {
 		local_74.set(0.0f, 0.3f, 0.0f);
-		local_68.cross(local_80, JGeometry::TVec3<f32>(0.0f, 0.3f, 0.0f));
+		local_68.cross(local_74, local_80);
 		VECNormalize(&local_68, &local_68);
 		local_80.cross(local_68, local_74);
 		VECNormalize(&local_80, &local_80);
