@@ -1525,23 +1525,23 @@ void TEnemyMario::checkReturn()
 	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
 		return;
 
-	int nodeIndex
+	int startIndex
 	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
-	BOOL searching = true;
-	while (searching) {
+	int nodeNum = mEMario->getTracer()->getGraph()->getNodeNum();
+	for (int i = 0; i < nodeNum; i++) {
 		JGeometry::TVec3<f32> point;
-		mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).getPoint(
-		    &point);
+		mEMario->getTracer()
+		    ->getGraph()
+		    ->getGraphNode((startIndex + i) % nodeNum)
+		    .getPoint(&point);
 
-		if (point.distance(SMS_GetMarioPos()) > 1000.0f) {
-			searching = false;
+		if (point.distance(SMS_GetMarioPos()) > 1000.0f)
 			mPosition = point;
-		}
-
-		nodeIndex
-		    = (nodeIndex + 1) % mEMario->getTracer()->getGraph()->getNodeNum();
 	}
 }
+// TODO: instruction-identical; 8 bytes of frame short (0x98 vs 0xa0) and the
+// four callee-saved registers are permuted (retail this=r29, nodeNum=r28;
+// ours this=r28, nodeNum=r30). Declaring `i` before `nodeNum` changes neither.
 
 void TEnemyMario::checkController(JDrama::TGraphics*)
 {
