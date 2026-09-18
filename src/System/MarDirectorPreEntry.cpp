@@ -54,6 +54,16 @@ static const char* SMS_NO_MEMORY_MESSAGE = "メモリが足りません\n";
 // `push_back`, the cast folded into `PreEntrySearch2`, an explicit
 // `(JDrama::TViewObj*)` on the `new`, and a `static inline` level returning the
 // render rect by value.
+// Batch 151 read the residue as a position rather than a size: the
+// `SMSGetRederRect_Game()` return temporary sits at 0xb8 in retail and 0xb4
+// here, so retail holds 4 more bytes of pool *below* that temporary and 4
+// fewer above it, at the same 0xe8 frame. The new inline-temp price rule
+// (return type: reference 8, pointer 4, void 0) does not deliver a 4-byte step
+// on either side of it: a second pointer-returning binding level over
+// `PreEntrySearch` at the `camera 1` site alone is +8 (0xf0, 7 markers), not
+// +4, and dropping the `PreEntrySearch2` level in favour of the direct
+// `search2` call is +0 in frame but costs three more markers. The lever wanted
+// is a paired +4 below and -4 above the TViewport statement.
 static inline JDrama::TViewObj* PreEntrySearch(const char* name)
 {
 	JDrama::TViewObj* obj

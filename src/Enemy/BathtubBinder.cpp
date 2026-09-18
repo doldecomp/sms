@@ -107,6 +107,17 @@ void TBathtubBinder::bind(TLiveActor* actor)
 // after `dy`. Ruled out for the latter: naming the blend target, moving
 // `f32 y` above `dy`, the `+=` spelling, reordering the epsilon sum,
 // reordering dx/dz and the two clamp stores.
+// Batch 151 read the FPR ranking off the two loads: retail holds dir.z in f31
+// and dir.x in f30 with the two `fmadds` results below them (f29 front.x, f27
+// front.z), while we hold the results in f31/f30 and the dir pair in f28/f27.
+// That is the shape rule 74/76 predicts when the dir pair are **named scalar
+// locals** and front/back are vector members -- but the named region's 44
+// bytes above the matrix are exactly three 12-byte vectors plus the
+// conversion pair, so `dir` really is a `TVec3` in retail. Measured: swapping
+// the two component assignments so `dir.z` is written first is bit-identical
+// (86 markers), and replacing `dir` with `f32 dirX`/`f32 dirZ` is 109 markers
+// and 0x170 of frame. So the ranking has to come from something else giving
+// the dir pair longer-lived homes than the products.
 void TBathtubBinder::float_(TLiveActor* actor)
 {
 	if (mWater == nullptr)

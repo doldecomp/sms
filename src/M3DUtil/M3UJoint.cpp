@@ -57,6 +57,15 @@
 // The cheapest diagnostics are `bVar5 != 0` and `bVar5 ? 1 : 0` (97.0/97.5%,
 // nine differing lines: the neg/subic/subfe triple plus the moved
 // mScaleFlagArr load); `(bool)bVar5` and `!!bVar5` cost one more.
+// Batch 151: the residue is batch 144's pool-vs-local boundary -- the
+// `&j3dSys + 0x38` base temp ranks first in retail (r30, under `currentS`'s
+// r31) and last here (r25), with the three parameters shifted one register up
+// as a consequence -- and its only known mover, the number of named scalar
+// locals, has already been exercised in both directions by earlier batches
+// (dropping `pQuat` and the `currentS` reference lowers the count, naming the
+// blended-scale components raises it; all inert). Batch 145 exhausted the
+// declaration-order knob (`bVar5` at all seven positions). No new rule reaches
+// it; it needs the boundary itself researched.
 void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
                         J3DTransformInfo* param_3, f32 param_4, bool basic)
 {
