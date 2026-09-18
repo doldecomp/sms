@@ -2,7 +2,13 @@
 #include <Strategic/Spine.hpp>
 #include <Enemy/Graph.hpp>
 #include <JSystem/JMath.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 // @non-matching -- the issue seems to stem from the JDrama TNameRefGen
 // search/push_back calls.
@@ -101,8 +107,16 @@ void TRiccoHook::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSpineEnemy::perform(cue, graphics);
 	mHookTake->perform(cue, graphics);
-	if ((cue & CUE_MOVE) && mTimer > 0) {
-		mTimer--;
+	if (cue & CUE_MOVE) {
+		if (mTimer > 0) {
+			mTimer--;
+		} else if (mInstanceIndex & 1) {
+			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CRANE_SIDEMOVE1,
+			                                &mPosition, 0, nullptr, 0, 4);
+		} else {
+			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CRANE_SIDEMOVE2,
+			                                &mPosition, 0, nullptr, 0, 4);
+		}
 	}
 }
 
@@ -135,6 +149,21 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
+// Parked TU-local helper: retail's distance test copies the left operand into
+// a stack vector, subtracts component-wise in place and then takes its length
+// (a 12-byte copy at 0x9c followed by three fsubs with store-back).
+// JGeometry::TVec3<f32>::distance() expands to a different shape and has no map
+// symbol at all, so the site went through a copy-and-subtract helper.
+// TODO: promote once the real helper is identified; batch 83 found the same
+// shape in TEMario::perform and AnimalNerve::calcDist.
+static inline f32 riccoHookDistance(const JGeometry::TVec3<f32>& a,
+                                    const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> diff = a;
+	diff.sub(b);
+	return diff.length();
+}
+
 DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 {
 	TRiccoHook* self = (TRiccoHook*)spine->getBody();
@@ -146,7 +175,8 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 		self->goToDirectedNextGraphNode(polar);
 	}
 
-	if (self->unk104.getPoint().distance(self->getPosition()) < 10.0f) {
+	if (riccoHookDistance(self->unk104.getPoint(), self->getPosition())
+	    < 10.0f) {
 		TGraphNode& node = self->unk124->getCurrent();
 
 		if (node.checkFlag(0x800)) {
