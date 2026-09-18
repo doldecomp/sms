@@ -383,30 +383,24 @@ bool TBombHei::isCollidMove(THitActor* other)
 	return true;
 }
 
-// TODO: 95.8%. The control flow is right, but MWCC merges the consecutive
-// BG types inside the inlined isPool()/isWaterSurface() more aggressively
-// here than the ROM does: the ROM keeps 0x104/0x105 apart and peels 0x100 and
-// 0x101 off the water range, ours merges 0x104..0x105 and 0x100..0x105. The
-// ROM itself compiles the same isWaterSurface() three different ways in this
-// TU (see TNerveBombHeiExplosion::execute, which matches), so this is a
-// context-dependent optimiser decision, not a wrong predicate. The frame is
-// also 0x48 against the ROM's 0x58.
-// TODO: 95.8%, and the residue is in a shared header, not here. Retail tests
-// the ground types of `isPool()`/`isWaterSurface()` as individual `cmplwi/beq`
-// pairs and only folds runs of three or more into a range (0x104, 0x105 stay
-// separate; 0x102-0x105 folds), while our MapData.hpp predicates fold every
-// run including two-value ones -- i.e. retail spells those bodies
-// `if (type == A) return TRUE; ...` rather than one `||` chain. Parked: editing
-// MapData.hpp perturbs every linked map unit. The frame is also 0x48 against
-// the ROM's 0x58.
+// How far MWCC folds the consecutive BG types of the inlined
+// isPool()/isWaterSurface() chains is decided by the **receiver expression**,
+// not by the predicate bodies: with the ground plane held in a named local it
+// folds every run (0x104..0x105 and 0x100..0x105), through `getGroundPlane()`
+// it peels one value off the water range, and through the raw member it peels
+// two and leaves 0x104/0x105 apart -- which is the ROM's shape here and the
+// shape TSmallEnemy::forceKill and TEffectEnemy::forceKill already match with
+// the same raw read. Respelling the MapData.hpp predicates as
+// `if (type == A) return true;` chains is refuted: it suppresses the fold
+// everywhere and costs TEffectEnemy::forceKill, TPakkunSeed::forceKill and
+// TSmallEnemy::forceKill, all byte-exact today.
 void TBombHei::forceKill()
 {
-	const TBGCheckData* ground = getGroundPlane();
-	if (ground->isIllegalData())
+	if (mGroundPlane->isIllegalData())
 		return;
 
-	if (ground->isDeathPlane() || ground->isPool()
-	    || ground->isWaterSurface()) {
+	if (mGroundPlane->isDeathPlane() || mGroundPlane->isPool()
+	    || mGroundPlane->isWaterSurface()) {
 		if (!isAirborne() && !checkLiveFlag(LIVE_FLAG_UNK10)) {
 			if (mSpine->getCurrentNerve()
 			    != &TNerveBombHeiExplosion::theNerve()) {
