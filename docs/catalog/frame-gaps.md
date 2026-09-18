@@ -205,7 +205,93 @@ Read the offsets of every named local before choosing a lever: a delta shared by
 - **An accessor retail did not use is a real +8/+16 over-frame in a hot loop**: `TJointObj::getChildrenNum()` cost 16 bytes in `TMapXlu::changeNormalJoint` and 8 in `changeXluJoint`; the raw `mChildrenNum` read closed the unit (const-ness irrelevant, the level is the cost).
 - **A dead inline temporary is reserved in expansion order downward from the named locals**, so a misplaced stream-read buffer localises a missing level *before* it: `TPerformList::load`'s `readU32` buffer at 0x58 vs 0x54 was the fabricated `search<T>` template; `getInstance()->getRootNameRef()->search(name)` spelled out closed it.
 - **Probe a pure callee-saved rotation with a throwaway normalisation**: `bVar5 != 0` at one argument of `M3UMtxCalcBlendAux` reproduces retail's whole ranking and leaves only the instructions it adds, proving "body right, allocator ranking wrong" and naming the live range responsible.
-- **Dead-low-region family (open, no accessor explanation):** ladders top out far below the target with all instructions exact: `TPollutionPos::isSame` 0x48 vs 0x58 (needs 32 bytes of inline temporaries; `TPollutionPos` saturates at one level, `TPollutionLayer::getOwner()` +8, nested `blockIndex()` +8), `TPerformList::perform` 0xc0 vs 0xe8 (40 bytes, `forEachPerform` UNUSED exact), `TMewManager::loadAfter` 0x18 vs 0x28 (15 instructions; `TAnimalBase::loadAfter` +16, `TAnimalBird::loadAfter` +24, `TAnimalBirdManager::loadAfter` +32), `TTalkCursor::associateNPC` 0x60 vs 0x78 (every slot 20 low; `getModel()` +16, `getMActor()` +8, `setTrans(t.x, t.y, t.z)` in `TPosition3::translation` +8, max 0x70) and `loadAfter` 0x28 vs 0x30. Per the research-batch rule, the candidates are non-trivial class locals (a `TVec3`, a stream) inside inlined callees.
+- **Dead-low-region family: solved as a dead non-trivial local in an inlined callee (batch 69).**
+  See [The dead low region](#the-dead-low-region) below for the rule, the probe
+  table and which member each measurement closes.
+
+## The dead low region
+
+*Measured in batch 69 in a scratch TU with the game flags, on the
+`TMewManager::loadAfter` shape (base frame 0x18, 15 instructions throughout).*
+
+An **uninitialised class local of an inlined callee** is the one construct that
+buys low-region bytes with **zero** instruction change, and its price is the
+local's size rounded up to 8:
+
+| local of the inlined callee | frame delta |
+| --- | --- |
+| trivial POD, any size | **0** |
+| non-trivial, 4 B | +8 |
+| non-trivial, 8 B | +8 |
+| non-trivial, 12 B (`JGeometry::TVec3<f32>`) | **+16** |
+| non-trivial, 16 B | +16 |
+| non-trivial, 20 B | +24 |
+| non-trivial, 24 B (`TVec3<f32>[2]`) | +24 |
+| two non-trivial 8 B locals | +16 |
+
+- **Triviality is the whole switch, and any one of four things flips it**: a
+  user-declared default ctor, a user-declared dtor, a user-declared copy ctor,
+  or a virtual function. A struct with none of them is worth 0 at any size.
+- **Nesting depth is irrelevant.** The same 12-byte local reached at depth 1, 2
+  or 3 costs +16 once. The cost is per *expansion*, not per level, so N call
+  sites of the same callee each pay.
+- Two expansions of one callee, by how the second argument is spelled:
+
+  | local size | 2 exp, by-value 2nd arg | 2 exp, pointer 2nd arg |
+  | --- | --- | --- |
+  | 4 B | +16 | +8 |
+  | 8 B | +24 | +16 |
+  | 12 B | +32 | +24 |
+  | 16 B | +40 | +32 |
+
+  (Frames are 8-aligned, so the same local can read 8 higher or lower depending
+  on what else sits in the low region; use the closest shape as the probe.)
+
+### One 12-byte local explains all four Animal `loadAfter`s
+
+Each body is `Base::loadAfter();` plus one or two `MSRandPlay` calls. Assume one
+dead 12-byte non-trivial local (a `TVec3<f32>`) in an inlined callee and every
+frame falls out, at the right instruction count:
+
+| function | expansions | ours | retail | S=12 predicts | insns |
+| --- | --- | --- | --- | --- | --- |
+| `TMewManager::loadAfter` | 1, by-value arg | 0x18 | 0x28 | 0x28 | 15 |
+| `TAnimalBase::loadAfter` | 1 guarded, ptr arg | 0x18 | 0x28 | 0x28 | 18 |
+| `TAnimalBird::loadAfter` | 2, ptr arg | 0x18 | 0x30 | 0x30 | 17 |
+| `TAnimalBirdManager::loadAfter` | 2, by-value arg | 0x18 | 0x38 | 0x38 | 19 |
+
+S=8 and S=16 each miss two of the four, so 12 is the unique fit. What the callee
+*is* stays unknown: `MSound::setPlayerInfo` matches with six `MSRandPlay` calls,
+so there is no wrapper around those, and the four classes share no base below
+`TNameRef`. Ruled out here (all zero, and `&getPosition()` also adds an
+instruction): `&TPlacement::getPosition()` over `&mPosition`, `getObjNum()` /
+`getCapacity()` / a named `u16` / an explicit `(u16)` cast, inline forwarder
+levels above the call, and 1-, 2- or 3-parameter inline wrappers with no local
+(parameter binding is free here, contrary to the per-parameter rule elsewhere).
+
+### The carrier has to be a callee with no matching out-of-line copy
+
+This is what decides whether the rule can be *applied*, and it is worth checking
+before any spelling work. The dead local grows the callee's own frame too, so a
+callee whose out-of-line copy is emitted and already matches cannot carry it.
+An **UNUSED** callee can: its size is an instruction-byte count, and an
+uninitialised non-trivial local emits nothing.
+
+- `TPerformList::perform` (0xc0 vs **0xe8**): 36-40 B in `forEachPerform` lands
+  0xe8 exactly, with `perform` still 54 instructions and `forEachPerform` still
+  41 (UNUSED size 0xa4 preserved). `forEachPerform` is UNUSED, so this one is
+  legal — it just has no evidence for a 36-40-byte object.
+- `TPollutionPos::isSame` (0x48 vs **0x58**): 28-32 B in `worldToDepth` lands
+  0x58 exactly at 53 instructions, but `worldToDepth`'s own copy is emitted and
+  100% at frame 0x18, so it breaks. `index()`, `isInArea()` and `getDepth()` are
+  shared with `getDepthWorld`, `isProhibit` and `getEdgeDegree`, which match
+  already. **No carrier exists**, so the 32 bytes have to be `isSame`'s own body
+  locals.
+- `TTalkCursor::associateNPC` (0x60 vs 0x78, +24) and `loadAfter` (0x28 vs 0x30,
+  +8): the only inlined callees are `JGeometry::TPosition3::translation`,
+  `MActor::getModel` and `TFlagT::on`/`off`; `TBaseNPC::getCursorPos` returns
+  12 bytes by value and is a real `bl`. Every carrier is a shared header.
+
 
 ## Closure batch 66: ladders worth three digits, and slot order as evidence
 

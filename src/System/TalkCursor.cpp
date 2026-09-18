@@ -52,6 +52,11 @@ void TTalkCursor::perform(u32 cue, JDrama::TGraphics* graphics)
 // Measured as zero: translation() taking the vector by value, mtx.mMtx over
 // the operator ArrType*() conversion, unkC.setBit() over off()/on(), a
 // J3DModel* named local, a getCursorModel() wrapper folding both links.
+// Batch 69: the +24 is a dead non-trivial local in an inlined callee (see
+// docs/catalog/frame-gaps.md, "The dead low region"), but every candidate here
+// is a shared header -- JGeometry::TPosition3::translation, MActor::getModel,
+// TFlagT::on/off -- since TBaseNPC::getCursorPos returns its 12 bytes by value
+// through a real bl. Nothing in this unit's own files can carry it.
 // Rejected (instruction changes): TPosition3f mtx(getCursorPos()) (-6%),
 // a named TVec3 for the cursor position (+8 frame but six extra instructions,
 // the copy is not elided), mtx.identity33() + mtx.setTrans() spelled out

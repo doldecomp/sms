@@ -129,6 +129,11 @@ void TAnimalBase::load(JSUMemoryInputStream& stream)
 	}
 }
 
+// TODO: frame 0x18 vs retail 0x28; all 18 instructions match. Same residue as
+// TMewManager::loadAfter: one dead 12-byte non-trivial local in an inlined
+// callee predicts 0x28 exactly. See docs/catalog/frame-gaps.md, "The dead low
+// region". &getPosition() over &mPosition is zero here and costs an
+// instruction, so it is not the lever.
 void TAnimalBase::loadAfter()
 {
 	TNameRef::loadAfter();

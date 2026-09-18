@@ -70,15 +70,19 @@ void TMewManager::load(JSUMemoryInputStream& stream)
 	loadSaveParams_("/Animal/mew.prm");
 }
 
-// TODO: frame 0x18 vs retail 0x28; all 15 instructions match. Retail declared
-// 13-16 bytes of locals here that nothing reads (measured: 12 bytes of locals
-// give 0x20, 16 give 0x28). Same shape in TAnimalBase::loadAfter (+16, one
-// registerTrans), TAnimalBird::loadAfter (+24) and TAnimalBirdManager::loadAfter
-// (+32). Ruled out: mObjNum vs getObjNum()/TObjManager::getObjNum()/a named u16/
-// an explicit (u16) cast (all zero), inline forwarder levels above
-// TNameRef::loadAfter (zero), argument-count effects on the outgoing parameter
-// area (zero: a 5- or 6-argument call does not grow it). MSound::setPlayerInfo
-// matches with six MSRandPlay calls, so the cost is not per call site.
+// TODO: frame 0x18 vs retail 0x28; all 15 instructions match. One dead 12-byte
+// non-trivial local (a TVec3<f32>) in an inlined callee is the unique fit across
+// this whole family: it predicts 0x28 here, 0x28 in TAnimalBase::loadAfter (one
+// guarded registerTrans), 0x30 in TAnimalBird::loadAfter (two registerTrans) and
+// 0x38 in TAnimalBirdManager::loadAfter (two createRandPlayVec), each at the
+// right instruction count; 8 and 16 bytes each miss two of the four. See
+// docs/catalog/frame-gaps.md, "The dead low region", for the probe table.
+// What that callee is stays unknown: MSound::setPlayerInfo matches with six
+// MSRandPlay calls, so there is no wrapper around those, and TMewManager shares
+// no base with TAnimalBird below TNameRef. Ruled out (all zero): mObjNum vs
+// getObjNum()/getCapacity()/a named u16/an explicit (u16) cast, inline forwarder
+// levels above TNameRef::loadAfter, 1-/2-/3-parameter inline wrappers with no
+// local, and argument-count effects on the outgoing parameter area.
 void TMewManager::loadAfter()
 {
 	TAnimalManagerBase::loadAfter();

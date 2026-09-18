@@ -23,6 +23,12 @@ void TPerformList::forEachPerform(
 // extra getChildren() forwarder level, begin()/end() forwarders on
 // TPerformLinkList, a while loop instead of the for. Rejected: (*it).perform()
 // (-10%), named iterator locals for b/e (-26%), pre-increment (frame 0xb0).
+// A dead 36-40 byte non-trivial local (user ctor or dtor) in forEachPerform
+// lands 0xe8 exactly with perform still 54 instructions and forEachPerform
+// still 41, so its UNUSED size 0xa4 survives -- forEachPerform is UNUSED, so it
+// is a legal carrier, unlike the emitted callees in PollutionPos and TalkCursor.
+// Not applied: nothing in a list-walk helper motivates a 36-40 byte object.
+// See docs/catalog/frame-gaps.md, "The dead low region", for the size ladder.
 void TPerformList::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	forEachPerform(getChildren().begin(), getChildren().end(), graphics, cue);

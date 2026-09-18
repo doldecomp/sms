@@ -57,6 +57,13 @@ f32 TPollutionPos::getDepthWorld(int x, int y) const
 // reaches 0x58. getDepthWorld and isProhibit, which share isInArea, getDepth
 // and index(), already match, so the level structure of those is right and the
 // missing 32 bytes belong to isSame itself.
+// Batch 69 confirmed that from the other side: a dead 28-32 byte non-trivial
+// local in worldToDepth lands 0x58 exactly at 53 instructions, but it also
+// grows worldToDepth's own frame from 0x18, and that copy is emitted and 100%,
+// so it is not a legal carrier; index()/isInArea()/getDepth() are shared with
+// three functions that already match. No inlined callee here can hold the 32
+// bytes, so they are isSame's own body locals. See docs/catalog/frame-gaps.md,
+// "The dead low region".
 bool TPollutionPos::isSame(int x, int z, f32 y) const
 {
 	if (!isInArea(x, z))

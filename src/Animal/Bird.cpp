@@ -160,9 +160,11 @@ void TAnimalBird::load(JSUMemoryInputStream& stream)
 	initTevColor(&cColorTable[mColorIndex]);
 }
 
-// TODO: 99.7%, instruction-identical, frame 0x30 vs our 0x18. Same 24-byte
-// gap shape as TAnimalBirdManager::loadAfter (32 there); no evidence for the
-// locals that would fill either.
+// TODO: 99.7%, instruction-identical, frame 0x30 vs our 0x18. Two expansions of
+// one inlined callee holding a dead 12-byte non-trivial local predict 0x30 here
+// and 0x38 in TAnimalBirdManager::loadAfter, the same 12 bytes that fit
+// TMewManager::loadAfter and TAnimalBase::loadAfter. See
+// docs/catalog/frame-gaps.md, "The dead low region"; the callee is unidentified.
 void TAnimalBird::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
@@ -600,6 +602,9 @@ void TAnimalBirdManager::load(JSUMemoryInputStream& stream)
 	TEnemyManager::load(stream);
 }
 
+// TODO: frame 0x18 vs retail 0x38 (+32), 19 instructions exact. Largest member
+// of the dead-low-region family; two expansions of a 12-byte non-trivial inline
+// local predict it. See TAnimalBird::loadAfter above.
 void TAnimalBirdManager::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
