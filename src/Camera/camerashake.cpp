@@ -52,18 +52,19 @@ TCameraShake::TCamShakeInfo* TCameraShake::getUseShakeData_()
 	return best;
 }
 
-// TODO: startShake and keepShake are 16 bytes *too big* (0x60 vs 0x50) with one
-// FPR difference inside this inlined body: retail does `lfs f3, 0x2c(r31)` then
-// `fmuls f3, f3, f31`, i.e. it multiplies the amp into amp's own register, while
-// we load amp into f1 and write f3. The magic double-conversion pair is at the
-// same distance from the frame top in both builds, so the 16 extra bytes are
-// low region -- our three expansions of this helper reserve ~17 bytes each
-// against retail's ~12. Rejected (all measured): `f32 a = amp; a *= scale;` and
-// its `a = a * scale` variant (both push this helper out of line, 84
-// instructions, 29%), `scale * amp` (99.3), named amp/vel locals in
-// setShakeAngleAll_ (+0x18), fetching mShakeData[mode] twice instead of naming
-// `save` (+8), moving the `duration` fetch inside the guard (77 instructions),
-// reordering the three stores, and dropping `#pragma strength off` (inert).
+// TODO: startShake and keepShake are frame-exact (0x50) and down to one FPR
+// pair each, inside this inlined body: retail does `lfs f3, 0x2c(r31)` then
+// `fmuls f3, f3, f31`, i.e. it loads the amp straight into the multiply's
+// destination register, while we load it into f1 and write f3. Only the *first*
+// of the three expansions differs; the Y and Z ones coalesce the same way
+// retail does, so it is a per-expansion allocation artifact with no source
+// handle left. Rejected (all measured): `f32 a = amp; a *= scale;` and its
+// `a = a * scale` variant (both push this helper out of line, 32%/66%),
+// `scale * amp` (99.5/99.8), declaring `v` before `a` (inert), named amp/vel
+// locals in setShakeAngleAll_ (+0x18), fetching mShakeData[mode] twice instead
+// of naming `save` (+8), moving the `duration` fetch inside the guard (77
+// instructions), reordering the three stores, dropping `#pragma strength off`
+// (inert), and a TU-local by-value getter around the velocity read (99.7).
 // The signature is pinned by the map (all five parameters by value).
 void TCameraShake::setShakeAngleOne_(TCameraShake::TCamShakeAngle* angle,
                                      f32 amp, s16 vel, u16 duration, f32 scale)
@@ -83,12 +84,20 @@ void TCameraShake::setShakeAngleAll_(TCameraShake::TCamShakeInfo* info,
                                      const TCamSaveShake* save, u16 duration,
                                      f32 scale)
 {
+	// The velocities are read directly and the amplitudes through get():
+	// TParamT<T>::get() is fabricated as returning `const T&`, and a
+	// reference return reserves an inline temporary per expansion, so this
+	// mixture is what reproduces retail's frame (all six through get() is
+	// 0x60 against retail's 0x50, all six direct is 0x48). Parked here rather
+	// than changing System/ParamInst.hpp: the real get() for an integer
+	// parameter almost certainly returned T by value, which is a shared
+	// header change every TParamRT caller pays for.
 	setShakeAngleOne_(&info->mAngleX, save->mShakeAmpX.get(),
-	                  save->mShakeVelX.get(), duration, scale);
+	                  save->mShakeVelX.value, duration, scale);
 	setShakeAngleOne_(&info->mAngleY, save->mShakeAmpY.get(),
-	                  save->mShakeVelY.get(), duration, scale);
+	                  save->mShakeVelY.value, duration, scale);
 	setShakeAngleOne_(&info->mAngleZ, save->mShakeAmpZ.get(),
-	                  save->mShakeVelZ.get(), duration, scale);
+	                  save->mShakeVelZ.value, duration, scale);
 }
 
 void TCameraShake::startShake(EnumCamShakeMode mode, f32 scale)
