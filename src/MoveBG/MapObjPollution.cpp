@@ -49,6 +49,47 @@ TPolluterBase::TPolluterBase(const char* name)
 
 void TRevivalPolluter::pollute() { }
 
+// TODO: 88.1%, and the only function keeping MapObjPollution.cpp from being
+// source-linked is its only caller, TMapObjRevivalPollution::loadAfter(), which
+// inlines this body. Two residues are left there, and this batch pinned the
+// first one down (all measured with single-file compiles; the out-of-line copy
+// stays at the map's 0x68 = 26 instructions in every variant below, so that
+// size is no discriminator):
+//
+// 1. Argument evaluation order, SOLVED but not retained. The ROM evaluates the
+//    argument list right to left -- texture (arg 7) before interval (arg 6),
+//    height (arg 5) before width (arg 4) -- and keeps the layer pointer in r8.
+//    Two changes reproduce that block instruction for instruction:
+//      * accessors for the polluter's own members
+//        (`getStampInterval()`, `getRevivalStampTex()` on TRevivalPolluter)
+//        swap the interval/texture pair into the ROM's order (a plain
+//        `mStampInterval, mRevivalStampTex` pair always loads left to right);
+//      * `int height = layer->mPos.mHeight;` declared *before*
+//        `int width = layer->mPos.mWidth;` swaps the dimension pair while
+//        keeping the layer in r8. `layer->getTexWidth()/getTexHeight()` or
+//        `layer->getPos().getWidth()/getHeight()` as expressions also give
+//        height-first, but move the layer into r7 and swap the two load
+//        destinations, so they are *not* what the ROM did.
+// 2. Frame size and a four-register rotation, UNSOLVED. loadAfter's frame is
+//    0x38 against the ROM's 0x60, and the ROM's callee-saved assignment is a
+//    rotation of ours: ROM has this=r30, i=r31, byte-offset=r29, element=r28,
+//    while every spelling tried gives the two compiler-generated loop values
+//    the *high* pair and this/i the low pair. The frame can be bought with
+//    accessor depth (raw 0x38; `getTexWidth/getTexHeight` +0x10; the same two
+//    named +0x18; `getPos().getWidth()/getHeight()` +0x28 = the ROM's 0x60;
+//    `getLayerIndex()` or a named counter-layer reference +8 each), and one
+//    asymmetric mix (`getPos().getHeight()` for height, `getTexWidth()` for
+//    width) lands on 0x60 *with* the ROM's exact inner block -- but nothing
+//    moves the register rotation. Loop shapes tried, all leaving the rotation:
+//    `i` declared at the top of the function, postfix `++`, a `while` loop, a
+//    `u32` index, `(unk14 + i)->`, a named `TRevivalPolluter*`/`&` inside the
+//    loop (rotates by one instead), `getPolluterNum()` as the bound,
+//    `getPolluter(i)` as the element (both no-ops), and hoisting the array base
+//    or the count into a local (both spill a fifth register).
+//    Best next hypothesis: the rotation says MWCC built loadAfter's two loop
+//    temporaries *after* this/i in the ROM and before them for us, so look for
+//    a source shape that creates a source-level variable in the loop body
+//    without folding it away, and re-measure the frame only after that.
 void TRevivalPolluter::registerPolluteTex()
 {
 	// TODO: inlines make me cry
