@@ -344,15 +344,26 @@ inline void CLBScreenFPosToSPos(JGeometry::TVec2<s16>* out,
 	// signed int-to-float conversion, where an `s16` return gives `extsh`.
 	f32 x = in.x;
 	// TODO: 98.0% in sunmodel, the only object that instantiates this body
-	// (the map has it as a 0x114 weak in sunmodel.cpp).  Residue: frame 0x30
-	// against our 0x28 plus a rotation of the four volatile FPRs.  Retail's
-	// inline-temp pool runs 0xc..0x1f with the int-to-float conversion pair
-	// at 0x18; ours is 0xc..0x17 with the pair at 0x10, so retail expands
-	// something worth 8 bytes of pool *before* the first conversion.  Naming
-	// the half-size scale in each branch is inert.  There is no accessor on
-	// JGeometry::TVec2 to read `in.x`/`in.y` through (which would leave the
-	// two dead 4-byte temps that fit exactly), so the carrier is still
-	// unidentified; the FPR rotation is almost certainly the same cause.
+	// (the map has it as a 0x114 weak in sunmodel.cpp).  Every instruction
+	// matches in opcode and order; the residue is frame 0x30 against our
+	// 0x28 plus a rotation of the four volatile FPRs (retail takes f1 for
+	// the magic double, f2 for the scale and f3 for the sum, ours f3/f1/f0).
+	// Retail's dead pool below the int-to-float conversion pair is 0xc..0x17
+	// (12 bytes) against our 0xc..0xf (4), i.e. 8 dead bytes more, and the
+	// conversion pair sits at 0x18 instead of 0x10.  Header round 30: this
+	// function has no inlined callee at all in our spelling (both externs
+	// and CLBRoundf are `bl`s), so the 8 bytes cannot be an accessor's dead
+	// 4-byte temporaries -- there is nowhere for them to come from.  What
+	// fits the rules card exactly is one dead *8-byte non-trivial class*
+	// local of an inlined callee, and JGeometry::TVec2<f32> is exactly 8
+	// bytes with a user constructor, so retail expands one helper here that
+	// declares an uninitialised TVec2<f32>.  One more live value in that
+	// expansion is also the natural cause of the FPR rotation, so the two
+	// halves of the residue are one missing expansion, not two facts.
+	// Naming the half-size scale in each branch is inert; no candidate
+	// helper is recoverable from the map (TVec2<f32> has only `__ct__Fv`
+	// and `sub` as symbols game-wide), so this stays parked rather than
+	// fabricated.
 	if (x < -1.0f || 1.0f < x)
 		out->x = -1;
 	else
