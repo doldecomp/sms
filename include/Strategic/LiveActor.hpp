@@ -136,6 +136,7 @@ public:
 	const TMActorKeeper* getActorKeeper() const { return mMActorKeeper; }
 	TMActorKeeper* getActorKeeper() { return mMActorKeeper; }
 	TLiveManager* getManager() { return mManager; }
+	TSpineBase<TLiveActor>* getSpine() const { return mSpine; }
 	s16 getInstanceIndex() const { return mInstanceIndex; }
 	MAnmSound* getAnmSound() { return mAnmSound; }
 	TMapCollisionManager* getMapCollisionManager()

@@ -209,8 +209,8 @@ void TAmenbo::behaveToWater(THitActor* param_1)
 {
 	if (mWaterGunHitCooldown <= 0 && isWaterFromWaterGun(param_1)) {
 		mWaterGunHitCooldown = 45;
-		mSpine->reset();
-		mSpine->setNext(&TNerveAmenboHitWater::theNerve());
+		getSpine()->reset();
+		getSpine()->setNext(&TNerveAmenboHitWater::theNerve());
 	}
 }
 

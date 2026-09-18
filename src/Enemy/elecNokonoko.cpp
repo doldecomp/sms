@@ -420,8 +420,8 @@ bool TElecNokonoko::isResignationAttack()
 
 void TElecNokonoko::behaveToFindMario()
 {
-	mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-	mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
+	getSpine()->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+	getSpine()->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 	mSpine->pushAfterCurrent(&TNerveElecNokonokoTurn::theNerve());
 	setGoalPathMario();
 }

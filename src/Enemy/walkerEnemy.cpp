@@ -40,7 +40,7 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 	getWalker()->unk18 = 150.0f;
 
 	mMarchSpeed = getSaveParam2()->unk324.rand();
-	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
+	getSpine()->initWith(&TNerveWalkerGenerate::theNerve());
 }
 
 // TODO: fake

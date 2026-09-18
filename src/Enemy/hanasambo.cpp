@@ -1129,7 +1129,7 @@ void TSamboHead::init(TLiveManager* manager)
 	mActorType  = 0x1000001B;
 	unk150      = 0x11;
 	mSaveParams = getSaveParams();
-	mSpine->initWith(&TNerveSamboHeadHide::theNerve());
+	getSpine()->initWith(&TNerveSamboHeadHide::theNerve());
 	TPathNode node((THitActor*)gpMarioAddress);
 	unkF4  = node;
 	unk104 = node;

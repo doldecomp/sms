@@ -802,8 +802,8 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 
 		++unk18C;
 
-		if (mSpine->getCurrentNerve() != &TNerveHino2Freeze::theNerve())
-			mSpine->setNext(&TNerveHino2Freeze::theNerve());
+		if (getSpine()->getCurrentNerve() != &TNerveHino2Freeze::theNerve())
+			getSpine()->setNext(&TNerveHino2Freeze::theNerve());
 
 		return true;
 	}
@@ -814,8 +814,8 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 
 		mHitPoints = 0;
 
-		if (mSpine->getCurrentNerve() != &TNerveHino2Damage::theNerve()) {
-			mSpine->setNext(&TNerveHino2Damage::theNerve());
+		if (getSpine()->getCurrentNerve() != &TNerveHino2Damage::theNerve()) {
+			getSpine()->setNext(&TNerveHino2Damage::theNerve());
 		}
 
 		return true;

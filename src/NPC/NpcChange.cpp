@@ -410,10 +410,10 @@ void TBaseNPC::behaveToSandBomb_(const TLiveActor* param_1)
 		mPosition.y += fVar1;
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity = JGeometry::TVec3<f32>(0.0f, fVar1, 0.0f);
-		if (mSpine->getCurrentNerve() == &TNerveNPCWet::theNerve()) {
-			mSpine->setNext(&TNerveNPCBlown::theNerve());
+		if (getSpine()->getCurrentNerve() == &TNerveNPCWet::theNerve()) {
+			getSpine()->setNext(&TNerveNPCBlown::theNerve());
 		} else {
-			mSpine->pushNerve(&TNerveNPCBlown::theNerve());
+			getSpine()->pushNerve(&TNerveNPCBlown::theNerve());
 		}
 	}
 }

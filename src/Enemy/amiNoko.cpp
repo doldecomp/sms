@@ -161,7 +161,7 @@ void TAmiNoko::init(TLiveManager* manager)
 	TWalkerEnemy::init(manager);
 	mActorType = 0x10000021;
 	unk150     = 0x11;
-	mSpine->initWith(&TNerveAmiNokoWalkOnFence::theNerve());
+	getSpine()->initWith(&TNerveAmiNokoWalkOnFence::theNerve());
 	mSaveParams = (TAmiNokoSaveLoadParams*)getSaveParam();
 	reset();
 	setWalkAnm();

@@ -365,8 +365,8 @@ void TKukku::behaveToWater(THitActor* water)
 	if (isRecoveringGraph())
 		return;
 
-	mSpine->reset();
-	mSpine->setNext(&TNerveKukkuFall::theNerve());
+	getSpine()->reset();
+	getSpine()->setNext(&TNerveKukkuFall::theNerve());
 }
 
 // UNUSED, 0x58 in the map.

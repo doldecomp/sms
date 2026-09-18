@@ -133,9 +133,6 @@ public:
 	void setColorType();
 	bool isRollFly();
 
-	// fabricated: one inline level over the inherited mSpine, in the
-	// TTinKoopa/TBossHanachan shape.
-	TSpineBase<TLiveActor>* getSpine() const { return mSpine; }
 
 	// fabricated
 	TKillerSaveLoadParams* getSaveParam3() const

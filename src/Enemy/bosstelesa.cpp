@@ -126,7 +126,7 @@ void TBubble::init(TLiveManager* live_manager)
 	unk150     = 0x11;
 	mParams    = (TBubbleSaveLoadParams*)getSaveParam();
 
-	mSpine->initWith(&TNerveBubbleLive::theNerve());
+	getSpine()->initWith(&TNerveBubbleLive::theNerve());
 	getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
 
 	TScreenTexture* screenTexture

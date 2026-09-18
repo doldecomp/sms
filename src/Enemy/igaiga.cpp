@@ -520,7 +520,7 @@ void TIgaiga::behaveToWater(THitActor* param_1)
 		unk1E4 *= unk1A4->mSLExpandRate.get();
 
 	unk165 = true;
-	if (mSpine->getCurrentNerve() != &TNerveIgaigaWaterHit::theNerve())
+	if (getSpine()->getCurrentNerve() != &TNerveIgaigaWaterHit::theNerve())
 		mSpine->pushNerve(&TNerveIgaigaWaterHit::theNerve());
 }
 

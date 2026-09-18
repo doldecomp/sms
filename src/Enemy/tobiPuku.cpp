@@ -600,7 +600,7 @@ void TTobiPuku::generateEffectColumWater()
 
 	// Coming up out of the water while the Generate nerve is still running
 	// is the "from water" cue; anything else is an entry splash.
-	if (mSpine->getCurrentNerve() != &TNerveTobiPukuGenerate::theNerve())
+	if (getSpine()->getCurrentNerve() != &TNerveTobiPukuGenerate::theNerve())
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER,
 		                                &mPosition);
 	else

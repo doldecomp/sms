@@ -626,7 +626,7 @@ void TKumokun::changeBck(const char* name)
 	setCurAnmSound();
 
 	f32 fVar1 = 1.0f;
-	if (mSpine->getLatestNerve() != &TNerveSmallEnemyDie::theNerve()
+	if (getSpine()->getLatestNerve() != &TNerveSmallEnemyDie::theNerve()
 	    && (unk1D4
 	        || mSpine->getLatestNerve() == &TNerveKumokunPreFly::theNerve())) {
 		fVar1 = 2.0f;

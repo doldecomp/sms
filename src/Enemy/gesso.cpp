@@ -456,13 +456,15 @@ void TGesso::setBehavior()
 		mAttackCooldown = 0;
 
 	if (isAirborne() && mPosition.y > mGroundHeight + 250.0f
-	    && mSpine->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
+	    && getSpine()->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
 		mNeedsLanding = true;
 	}
 
 	if (!isAirborne() && mNeedsLanding
-	    && (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
-	        || mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve())) {
+	    && (getSpine()->getCurrentNerve()
+	            == &TNerveWalkerGraphWander::theNerve()
+	        || getSpine()->getCurrentNerve()
+	               == &TNerveWalkerAttack::theNerve())) {
 		mSpine->pushNerve(&TNerveGessoLand::theNerve());
 	}
 

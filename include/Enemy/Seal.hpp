@@ -14,8 +14,6 @@ public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
 
-	// Two levels here are receiveMessage's missing 16 bytes of frame.
-	TSpineBase<TLiveActor>* getSpine() { return mSpine; }
 
 	/* 0x150 */ int unk150;
 };

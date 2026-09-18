@@ -1733,7 +1733,7 @@ bool TDoroHaneKuri::isCollidMove(THitActor* param_1)
 		if (mapObj->isHideObj(mapObj))
 			return false;
 
-		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
+		if (getSpine()->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			JGeometry::TVec3<f32> vel = mLinearVelocity;
 			vel.x *= -5.0f;
 			vel.z *= -5.0f;

@@ -315,7 +315,6 @@ public:
 		return mChangeParams;
 	}
 	TBossHanachanPartsHead* getHead() const { return mHead; }
-	TSpineBase<TLiveActor>* getSpine() const { return mSpine; }
 	f32 getMarchSpeed() const { return mMarchSpeed; }
 
 	void emitCamShake_();

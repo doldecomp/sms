@@ -226,7 +226,6 @@ public:
 	MActor* getTruckMActor() { return mTruckMActor; }
 	TTinKoopaFlame* getFlame() { return mFlame; }
 	TTinKoopaPartsBase* getParts(int i) { return mParts[i]; }
-	TSpineBase<TLiveActor>* getSpine() { return mSpine; }
 
 	// How many plates have been knocked off; 4 means Mecha-Bowser is done.
 	// It selects the wait/damage/break animation and the plate that goes next.

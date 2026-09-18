@@ -430,8 +430,8 @@ BOOL TBEelTears::receiveMessage(THitActor*, u32 message)
 {
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		mStateTimer = 60;
-		if (mSpine->getCurrentNerve() == &TNerveBEelTearsMoveUp::theNerve()
-		    || mSpine->getCurrentNerve() == &TNerveOilBallStay::theNerve())
+		if (getSpine()->getCurrentNerve() == &TNerveBEelTearsMoveUp::theNerve()
+		    || getSpine()->getCurrentNerve() == &TNerveOilBallStay::theNerve())
 			mSpine->pushNerve(&TNerveBEelTearsWaterHit::theNerve());
 
 		if (mSpine->getCurrentNerve() == &TNerveBEelTearsWaterHit::theNerve()) {
