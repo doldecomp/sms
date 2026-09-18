@@ -314,6 +314,15 @@ J3DTevSwapModeTable J3DMaterialFactory_v21::newTevSwapModeTable(int idx,
 		return J3DTevSwapModeTable(j3dDefaultTevSwapModeTable);
 }
 
+// UNUSED (map size 0x1c). The `new*` family all resolve the init data with
+// this expression; retail kept an out-of-line copy here, between
+// `newTevSwapModeTable` and `newFog`.
+J3DMaterialInitData_v21*
+J3DMaterialFactory_v21::getMaterialInitData_v21(u16 idx) const
+{
+	return &mpMaterialInitData[getMaterialID(idx)];
+}
+
 J3DFog* J3DMaterialFactory_v21::newFog(int idx) const
 {
 	J3DFog* ret                       = nullptr;
@@ -374,42 +383,34 @@ u8 J3DMaterialFactory_v21::newDither(int idx) const
 		return 0xff;
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// J3DMaterialFactory_v21::newNBTScale (batch 127).
-static inline u16 J3DMaterialFactoryv21NBTScaleIdx(const J3DMaterialInitData_v21* p)
+// TODO: parked TU-local lever. The 8 bytes of low region `newNBTScale` needs
+// over the plain sibling spelling are one binding expansion on the **u16**
+// material-id read (header round 23's rule), and retail almost certainly spelt
+// it by binding inside `getMaterialID` itself:
+//
+//   u16 getMaterialID(int idx) const { u16 id = mpMaterialID[idx]; return id; }
+//
+// That form makes this function byte-exact with the plain
+// `&mpMaterialInitData[getMaterialID(idx)]` body, but the sibling
+// `J3DMaterialFactory.hpp` change of the same shape breaks two linked
+// `J3DModelLoader_v26` functions, so the binding is parked here instead, where
+// it costs the same +8.
+static inline u16
+J3DMaterialFactoryv21MaterialID(const J3DMaterialFactory_v21* factory, int idx)
 {
-	u16 nBTScaleIdx = p->mNBTScaleIdx;
-	return nBTScaleIdx;
+	u16 id = factory->getMaterialID(idx);
+	return id;
 }
 
-// TODO: the body is instruction-exact (42 instructions) and the only residue is
-// 8 bytes of dead low region: retail's frame is 0x38 with `dflt` at 0x24(r1),
-// ours is 0x30 with it at 0x1c(r1), and both leave exactly 4 bytes above the
-// 16-byte object. The natural sibling spelling (raw `initData->mNBTScaleIdx`
-// twice, as `newIndTexMtx`/`newIndTexOrder` do) plus **one 8-byte aggregate
-// declared as the last local of this body** is byte-exact, so retail had such
-// an object; nothing here wants one, so it is not written.
-// Measured (frame/`dflt` slot/instructions), all at 42 instructions:
-//   raw x2, dflt first ......................... 0x30 / 0x1c   (this shape + 8)
-//   raw x2 + dead 8-byte aggregate last ........ 0x38 / 0x24   exact
-//   the parked binding level below (2 sites) ... 0x38 / 0x28   frame right,
-//                                                             object 4 high
-//   binding level bound to a named u16 ......... 0x38 / 0x24 but the pointer is
-//                                                folded into an `lhzx`
-// Ruled out: the carrier cannot be in `J3DNBTScale`'s constructors. A bound
-// `const J3DNBTScaleInfo*`/`&` in either ctor is +4 of low region here, and two
-// of them land 0x38/0x24 exactly -- but every such change also moves
-// `J3DMaterial::createTexGenBlock` (`new J3DTexGenBlockBasic`, which inlines
-// the same ctor and is byte-exact today), so the ctor pair is pinned and the
-// object belongs to this function's own body.
 J3DNBTScale J3DMaterialFactory_v21::newNBTScale(int idx) const
 {
 	J3DNBTScale defaultNbtScale;
 
-	J3DMaterialInitData_v21* initData = &mpMaterialInitData[mpMaterialID[idx]];
+	J3DMaterialInitData_v21* initData
+	    = &mpMaterialInitData[J3DMaterialFactoryv21MaterialID(this, idx)];
 
-	if (J3DMaterialFactoryv21NBTScaleIdx(initData) != 0xFFFF)
-		return J3DNBTScale(mpNBTScaleInfo[J3DMaterialFactoryv21NBTScaleIdx(initData)]);
+	if (initData->mNBTScaleIdx != 0xFFFF)
+		return J3DNBTScale(mpNBTScaleInfo[initData->mNBTScaleIdx]);
 	else
 		return defaultNbtScale;
 }

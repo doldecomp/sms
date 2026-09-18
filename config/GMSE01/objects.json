@@ -69,6 +69,8 @@
   "JSystem/J3D/J3DGraphLoader/J3DAnmLoader.cpp",
   "JSystem/J3D/J3DGraphLoader/J3DClusterLoader.cpp",
   "JSystem/J3D/J3DGraphLoader/J3DJointFactory.cpp",
+  "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp",
+  "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp",
   "JSystem/J3D/J3DGraphLoader/J3DModelLoader.cpp",
   "JSystem/J3D/J3DGraphLoader/J3DShapeFactory.cpp",
   "JSystem/JAudio/JADebug/JADHioNode.cpp",

@@ -255,6 +255,11 @@ J3DGXColor J3DMaterialFactory::newAmbColor(int idx, int stage) const
 		return dflt;
 }
 
+// TODO: `newLight__18J3DMaterialFactoryCFii` (UNUSED, 0x94) belongs here,
+// between `newAmbColor` and `newTexGenNum`. It is still MISSING from this TU --
+// 37 instructions built from `mpLightInfo` and the init data's light index, in
+// the shape of `newAmbColor`/`newColorChan`. Dead-stripped, so it does not
+// affect the link, but `validate-symbol-order.py` fails on it.
 u32 J3DMaterialFactory::newTexGenNum(int idx) const
 {
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
@@ -419,6 +424,14 @@ J3DIndTexCoordScale J3DMaterialFactory::newIndTexCoordScale(int idx,
 		return dflt;
 }
 
+// UNUSED (map size 0x1c). The `new*` family all resolve the init data with
+// this expression; retail kept an out-of-line copy here, between
+// `newIndTexCoordScale` and `newFog`.
+J3DMaterialInitData* J3DMaterialFactory::getMaterialInitData(u16 idx) const
+{
+	return &mpMaterialInitData[getMaterialID(idx)];
+}
+
 J3DFog* J3DMaterialFactory::newFog(int idx) const
 {
 	J3DFog* ret = nullptr;
@@ -481,42 +494,35 @@ u8 J3DMaterialFactory::newDither(int idx) const
 		return 0xFF;
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// J3DMaterialFactory::newNBTScale (batch 127).
-static inline u16 J3DMaterialFactoryNBTScaleIdx(const J3DMaterialInitData* p)
+// TODO: parked TU-local lever. The 8 bytes of low region `newNBTScale` needs
+// over the plain sibling spelling are one binding expansion on the **u16**
+// material-id read (header round 23's rule), and retail almost certainly spelt
+// it by binding inside `getMaterialID` itself:
+//
+//   u16 getMaterialID(int idx) const { u16 id = mpMaterialID[idx]; return id; }
+//
+// That form makes this function byte-exact with the plain
+// `&mpMaterialInitData[getMaterialID(idx)]` body, but `J3DMaterialFactory.hpp`
+// is shared: it drops `J3DModelLoader_v26::readMaterial` to 99.9% and
+// `readMaterialTable` to 99.8%, both linked today. So the binding is parked
+// here instead, where it costs the same +8. Promote it into the header once
+// those two `J3DModelLoader` functions are understood.
+static inline u16 J3DMaterialFactoryMaterialID(const J3DMaterialFactory* factory,
+                                               int idx)
 {
-	u16 nBTScaleIdx = p->mNBTScaleIdx;
-	return nBTScaleIdx;
+	u16 id = factory->getMaterialID(idx);
+	return id;
 }
 
-// TODO: the body is instruction-exact (42 instructions) and the only residue is
-// 8 bytes of dead low region: retail's frame is 0x38 with `dflt` at 0x24(r1),
-// ours is 0x30 with it at 0x1c(r1), and both leave exactly 4 bytes above the
-// 16-byte object. The natural sibling spelling (raw `initData->mNBTScaleIdx`
-// twice, as `newIndTexMtx`/`newIndTexOrder` do) plus **one 8-byte aggregate
-// declared as the last local of this body** is byte-exact, so retail had such
-// an object; nothing here wants one, so it is not written.
-// Measured (frame/`dflt` slot/instructions), all at 42 instructions:
-//   raw x2, dflt first ......................... 0x30 / 0x1c   (this shape + 8)
-//   raw x2 + dead 8-byte aggregate last ........ 0x38 / 0x24   exact
-//   the parked binding level below (2 sites) ... 0x38 / 0x28   frame right,
-//                                                             object 4 high
-//   binding level bound to a named u16 ......... 0x38 / 0x24 but the pointer is
-//                                                folded into an `lhzx`
-// Ruled out: the carrier cannot be in `J3DNBTScale`'s constructors. A bound
-// `const J3DNBTScaleInfo*`/`&` in either ctor is +4 of low region here, and two
-// of them land 0x38/0x24 exactly -- but every such change also moves
-// `J3DMaterial::createTexGenBlock` (`new J3DTexGenBlockBasic`, which inlines
-// the same ctor and is byte-exact today), so the ctor pair is pinned and the
-// object belongs to this function's own body.
 J3DNBTScale J3DMaterialFactory::newNBTScale(int idx) const
 {
 	J3DNBTScale dflt;
 
-	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
+	J3DMaterialInitData* initData
+	    = &mpMaterialInitData[J3DMaterialFactoryMaterialID(this, idx)];
 
-	if (J3DMaterialFactoryNBTScaleIdx(initData) != 0xFFFF)
-		return J3DNBTScale(mpNBTScaleInfo[J3DMaterialFactoryNBTScaleIdx(initData)]);
+	if (initData->mNBTScaleIdx != 0xFFFF)
+		return J3DNBTScale(mpNBTScaleInfo[initData->mNBTScaleIdx]);
 	else
 		return dflt;
 }
