@@ -378,8 +378,9 @@ DEFINE_NERVE(TNerveHauntLegHaunt, TLiveActor)
 	THauntLeg* leg = (THauntLeg*)spine->getBody();
 
 	if (spine->getTime() == 0) {
+		f32 jumpHeight     = 10.0f;
 		leg->mJumpVelocity = leg->calcVelocityToJumpToY(
-		    leg->unk19C->mPosition, 10.0f, leg->getGravityY());
+		    leg->unk19C->mPosition, jumpHeight, leg->getGravityY());
 		leg->mVelocity = leg->mJumpVelocity;
 		leg->mPosition.y += 10.0f;
 		leg->onLiveFlag(LIVE_FLAG_AIRBORNE);
