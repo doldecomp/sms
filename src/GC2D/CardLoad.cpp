@@ -806,6 +806,14 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level worth +16 of low region, landing TCardLoad::titleDraw's
+// frame at 0x270 (batch 124).
+static inline J2DPane* CardLoadGetPane(const TExPane* p)
+{
+	J2DPane* pane = p->getPane();
+	return pane;
+}
+
 // TODO: 99.8%. Retail's `buffer` starts four bytes lower than ours, so our
 // body carries one 4-byte inline temporary it does not have, and the u16
 // clamp keeps the raw sum in the variable's register where we narrow into it.
@@ -875,7 +883,7 @@ bool TCardLoad::titleDraw()
 		break;
 
 	case 2: {
-		u16 alpha = unkF0->getPane()->getAlpha() + 1;
+		u16 alpha = CardLoadGetPane(unkF0)->getAlpha() + 1;
 		if (alpha > 255) {
 			bool any = true;
 			alpha    = 255;
@@ -886,7 +894,7 @@ bool TCardLoad::titleDraw()
 				unk18 = 4;
 			}
 		}
-		unkF0->getPane()->setAlpha(alpha);
+		CardLoadGetPane(unkF0)->setAlpha(alpha);
 		unkF4->getPane()->setAlpha(alpha);
 	} break;
 
@@ -1623,6 +1631,14 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 	return -1;
 }
 
+// Binding level worth +8 of low region, landing TCardLoad::drawMessageBM's
+// frame at 0x178 (batch 124).
+static inline int CardLoadGetHeight(const JUTRect* p)
+{
+	int height = p->getHeight();
+	return height;
+}
+
 s8 TCardLoad::drawMessageBM(TEProgress param_1)
 {
 	s8 result = -1;
@@ -1641,7 +1657,7 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 		unk4CC[1]->hide();
 		unk4CC[2]->hide();
 
-		unk4AC->setCenteredSize(20, unk4B0.getWidth(), unk4B0.getHeight(), 0,
+		unk4AC->setCenteredSize(20, unk4B0.getWidth(), CardLoadGetHeight(&unk4B0), 0,
 		                        0);
 		unk10 = 1;
 		break;

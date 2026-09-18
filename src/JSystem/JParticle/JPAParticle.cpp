@@ -141,6 +141,14 @@ f32 JPABaseParticle::getCurrentPositionZ()
 	return info->unkC.z * (mLocalPosition.z + mVelocity.z) + unk14.z;
 }
 
+// Binding level worth +16 of low region, landing
+// JPAParticle::checkCreateChildParticle's frame at 0x58 (batch 124).
+static inline s32 JPAParticleGetStep(JPASweepShape* p)
+{
+	s32 step = p->getStep();
+	return step;
+}
+
 bool JPAParticle::checkCreateChildParticle()
 {
 	bool result          = false;
@@ -157,8 +165,8 @@ bool JPAParticle::checkCreateChildParticle()
 		    = info->mCurrentEmitter->getEmitterDataBlockInfoPtr()
 		          ->getSweepShape();
 		if (time >= sweepShape->getTiming()) {
-			if (sweepShape->getStep() > 0) {
-				if (getAge() % (sweepShape->getStep() + 1) == 0)
+			if (JPAParticleGetStep(sweepShape) > 0) {
+				if (getAge() % (JPAParticleGetStep(sweepShape) + 1) == 0)
 					result = true;
 			} else {
 				result = true;

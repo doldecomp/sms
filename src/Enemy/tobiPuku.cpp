@@ -538,12 +538,20 @@ void TTobiPuku::behaveToWater(THitActor* param_1)
 	mSpine->pushNerve(&TNerveTobiPukuHitWater::theNerve());
 }
 
+// Binding level worth +8 of low region, landing TTobiPuku::walkBehavior's
+// frame at 0x68 (batch 124).
+static inline int TobiPukuGetTime(const TSpineBase<TLiveActor>* p)
+{
+	int time = p->getTime();
+	return time;
+}
+
 void TTobiPuku::walkBehavior(int param_1, f32 param_2)
 {
 	TWalkerEnemy::walkBehavior(param_1, param_2);
 
 	f32 prevY   = mPosition.y;
-	mPosition.y = mSwimBaseY + 10.0f * JMASin(2.0f * mSpine->getTime());
+	mPosition.y = mSwimBaseY + 10.0f * JMASin(2.0f * TobiPukuGetTime(mSpine));
 
 	// Only the pitch is taken: the bob is vertical, so yaw and roll are
 	// left to whatever TWalkerEnemy::walkBehavior set.
@@ -961,6 +969,14 @@ DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveTobiPukuAttack::execute's frame at 0x50 (batch 124).
+static inline bool TobiPukuIsAirborne(const TTobiPuku* p)
+{
+	bool airborne = p->isAirborne();
+	return airborne;
+}
+
 // TODO: incorrect size. Map records 0x198 (408 bytes).
 DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 {
@@ -969,7 +985,7 @@ DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 	if (spine->getTime() == 0)
 		puku->setAttackAnm();
 
-	if (puku->isAirborne()) {
+	if (TobiPukuIsAirborne(puku)) {
 		if (puku->getCurAnmFrameNo(0) >= 6.0f) {
 			puku->unk194 = 0;
 			JGeometry::TVec3<f32> vel(puku->mVelocity);

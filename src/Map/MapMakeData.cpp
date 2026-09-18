@@ -193,11 +193,19 @@ void TMapCollisionBase::update()
 	updateCheckData(vecs);
 }
 
+// Binding level worth +8 of low region, landing
+// TMapCollisionBase::initAllCheckData's frame at 0xd0 (batch 124).
+static inline TBGCheckData* MapMakeDataGetCheckDataPoolTop(TMapCollisionData* p)
+{
+	TBGCheckData* checkDataPoolTop = p->getCheckDataPoolTop();
+	return checkDataPoolTop;
+}
+
 void TMapCollisionBase::initAllCheckData(s16 default_additional_data,
                                          const f32* vertices, u16 param_3,
                                          const TLiveActor* actor)
 {
-	mCheckDatas   = gpMapCollisionData->getCheckDataPoolTop();
+	mCheckDatas   = MapMakeDataGetCheckDataPoolTop(gpMapCollisionData);
 	mCheckDataNum = 0;
 
 	for (s16 i = 0; i < mCollisionGroupNum; ++i) {

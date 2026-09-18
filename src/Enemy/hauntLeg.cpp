@@ -66,6 +66,14 @@ TSpineEnemy* THauntLegManager::createEnemyInstance()
 	return new THauntLeg("ハントレッグ");
 }
 
+// Binding level worth +8 of low region, landing
+// THauntLegManager::initSetEnemies's frame at 0xe0 (batch 124).
+static inline MActor* HauntLegGetMActor(const THauntLeg* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 // Every leg starts on a random node of the "main" rail, one of eight colour
 // pairs cycling over the group.
 void THauntLegManager::initSetEnemies()
@@ -94,7 +102,7 @@ void THauntLegManager::initSetEnemies()
 		leg->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		leg->reset();
 		for (u16 j = 0;
-		     j < leg->getMActor()->getModel()->getModelData()->getMaterialNum();
+		     j < HauntLegGetMActor(leg)->getModel()->getModelData()->getMaterialNum();
 		     ++j)
 			SMS_InitPacket_TwoTevColor(getObj(i)->getMActor()->getModel(), j,
 			                           GX_TEVREG0, &tevColorData1[colorIndex],

@@ -300,6 +300,22 @@ void TCannon::loadAfter()
 	}
 }
 
+// Binding level worth +16 of low region, landing TCannon::init's frame at
+// 0x1a0 (batch 124).
+static inline f32 CannonGetSLChorobeiAttackHeight(const TCannonSaveLoadParams* p)
+{
+	f32 sLChorobeiAttackHeight = p->getSLChorobeiAttackHeight();
+	return sLChorobeiAttackHeight;
+}
+
+// Binding level worth +16 of low region, landing TCannon::init's frame at
+// 0x1a0 (batch 124).
+static inline f32 CannonGetSLChorobeiAttackRadius(const TCannonSaveLoadParams* p)
+{
+	f32 sLChorobeiAttackRadius = p->getSLChorobeiAttackRadius();
+	return sLChorobeiAttackRadius;
+}
+
 void TCannon::init(TLiveManager* manager)
 {
 	static const char* sCannonDomPartsJointTable[]
@@ -334,8 +350,8 @@ void TCannon::init(TLiveManager* manager)
 		                       ->getJointNum();
 		     ++i) { }
 		mChorobei->initHitActor(0x1000001D, 3, 0x90000000,
-		                        mSaveParams->getSLChorobeiAttackRadius(),
-		                        mSaveParams->getSLChorobeiAttackHeight(),
+		                        CannonGetSLChorobeiAttackRadius(mSaveParams),
+		                        CannonGetSLChorobeiAttackHeight(mSaveParams),
 		                        mSaveParams->getSLChorobeiDamageRadius(),
 		                        mSaveParams->getSLChorobeiDamageHeight());
 		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")

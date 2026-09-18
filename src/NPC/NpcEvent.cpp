@@ -322,6 +322,14 @@ static void evIsDemoMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push(result);
 }
 
+// Binding level worth +8 of low region, landing evCheckMonteClear's frame at
+// 0x90 (batch 124).
+static inline bool NpcEventIsClean(const TBaseNPC* p)
+{
+	bool clean = p->isClean();
+	return clean;
+}
+
 static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
@@ -333,7 +341,7 @@ static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
 	TBaseNPC* npc = JDrama::TNameRefGen::search<TBaseNPC>(buffer);
 
 	int b;
-	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && npc->isClean())
+	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && NpcEventIsClean(npc))
 		b = true;
 	else
 		b = false;

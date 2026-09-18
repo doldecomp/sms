@@ -522,6 +522,14 @@ BOOL TLimitKoopa::receiveMessage(THitActor* sender, u32 message)
 	return TSpineEnemy::receiveMessage(sender, message);
 }
 
+// Binding level worth +8 of low region, landing
+// TLimitKoopa::calcRootMatrix's frame at 0x38 (batch 124).
+static inline f32 LimitkoopaGetBodyDirection(const TDirectionCalc* p)
+{
+	f32 value = p->get();
+	return value;
+}
+
 // TODO: 94.0%, instruction-identical apart from the TDirectionCalc `this`
 // setup described below and an 8-byte frame gap.
 void TLimitKoopa::calcRootMatrix()
@@ -535,7 +543,7 @@ void TLimitKoopa::calcRootMatrix()
 	// r2d never receives a `this`. That reads as a static member in the
 	// original; TDirectionCalc lives in the shared KoopaJr.hpp, so the
 	// declaration is left alone here.
-	mRotation.y = TDirectionCalc::r2d(mBodyDirection.get());
+	mRotation.y = TDirectionCalc::r2d(LimitkoopaGetBodyDirection(&mBodyDirection));
 	TSpineEnemy::calcRootMatrix();
 }
 

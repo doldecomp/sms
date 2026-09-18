@@ -736,6 +736,22 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 	return false;
 }
 
+// Binding level worth +16 of low region, landing
+// TNerveNameKuriJumpAttack::execute's frame at 0x120 (batch 124).
+static inline bool NamekuriIsAirborne(const TNameKuri* p)
+{
+	bool airborne = p->isAirborne();
+	return airborne;
+}
+
+// Binding level worth +16 of low region, landing
+// TNerveNameKuriJumpAttack::execute's frame at 0x120 (batch 124).
+static inline MActor* NamekuriGetMActor(const TNameKuri* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 {
 	TNameKuri* self = (TNameKuri*)spine->getBody();
@@ -756,7 +772,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->walkToCurPathNode(0.0f, jumpAttackTurnSp, 0.0f);
 			}
 		} else if (self->isBckAnm(3)) {
-			if (self->getMActor()
+			if (NamekuriGetMActor(self)
 			        ->getFrameCtrl(ANM_TYPE_BCK)
 			        ->checkPass(62.0f)) {
 				JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
@@ -786,10 +802,10 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->unk1BC.r = self->unk1BC.g = self->unk1BC.b = col;
 			}
 
-			if (self->isAirborne())
+			if (NamekuriIsAirborne(self))
 				self->mScaling.x = self->unk1B0;
 
-			if (!self->isAirborne() && self->checkCurAnmEnd(0))
+			if (!NamekuriIsAirborne(self) && self->checkCurAnmEnd(0))
 				self->setBckAnm(2);
 		} else if (self->isBckAnm(2)) {
 			if (self->checkCurAnmEnd(0)) {

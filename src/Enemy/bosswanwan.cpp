@@ -419,10 +419,18 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+// Binding level worth +16 of low region, landing TBWPicket::moveRequest's
+// frame at 0x68 (batch 124).
+static inline const TNerveBase<TLiveActor>* BosswanwanGetLatestNerve(const TBossWanwan* p)
+{
+	const TNerveBase<TLiveActor>* latestNerve = p->getLatestNerve();
+	return latestNerve;
+}
+
 BOOL TBWPicket::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
-	if (mOwner->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
-	    || mOwner->getLatestNerve() == &TNerveBWDie::theNerve())
+	if (BosswanwanGetLatestNerve(mOwner) == &TNerveBWJumpToBath::theNerve()
+	    || BosswanwanGetLatestNerve(mOwner) == &TNerveBWDie::theNerve())
 		return FALSE;
 
 	if (mOwner->getHitPoints() != 0)

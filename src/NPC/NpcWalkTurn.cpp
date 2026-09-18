@@ -154,6 +154,14 @@ bool TBaseNPC::execUTurn()
 	return result;
 }
 
+// Binding level worth +8 of low region, landing
+// TBaseNPC::execTurnToFirstState's frame at 0x50 (batch 124).
+static inline const JGeometry::TVec3<f32>& NpcWalkTurnGetUnk1A0(const TBaseNPC* p)
+{
+	const JGeometry::TVec3<f32>& unk1A0 = p->getUnk1A0();
+	return unk1A0;
+}
+
 // TODO: frame 0x50 vs 0x40, 12 of the 16 bytes below `angle1` (0x30 vs 0x24)
 // and 4 above it. Naming the param fetch makes it worse (0x38),
 // `getRotation().y` for angle1 adds an instruction (99.7 -> 96.9). A
@@ -173,7 +181,7 @@ bool TBaseNPC::execTurnToFirstState()
 	bool result = false;
 
 	s16 angle1 = CLBDegToShortAngle(mRotation.y);
-	s16 angle2 = CLBDegToShortAngle(getUnk1A0().y);
+	s16 angle2 = CLBDegToShortAngle(NpcWalkTurnGetUnk1A0(this).y);
 	s16 angle3
 	    = CLBDegToShortAngle(mIndividualParams->mFirstStateTurnSpeed.get());
 	if (!CLBChaseGeneralConstantSpecifySpeed(&angle1, angle2, angle3)) {

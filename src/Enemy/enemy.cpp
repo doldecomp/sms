@@ -620,9 +620,17 @@ BOOL TSpineEnemy::checkCurAnmEnd(int type) const
 	}
 }
 
+// Binding level worth +8 of low region, landing TSpineEnemy::perform's frame
+// at 0x30 (batch 124).
+static inline TLiveManager* EnemyGetManager(TSpineEnemy* p)
+{
+	TLiveManager* manager = p->getManager();
+	return manager;
+}
+
 void TSpineEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager* mgr = (TEnemyManager*)getManager();
+	TEnemyManager* mgr = (TEnemyManager*)EnemyGetManager(this);
 
 	if (mgr != nullptr) {
 		if ((cue & CUE_CALC_ANIM)

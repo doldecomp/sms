@@ -877,9 +877,17 @@ void TSmallEnemy::expandCollision()
 	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
 }
 
+// Binding level worth +8 of low region, landing TSmallEnemy::isEaten's frame
+// at 0x30 (batch 124).
+static inline TTakeActor* SmallEnemyGetHeldObject(TTakeActor* p)
+{
+	TTakeActor* heldObject = p->getHeldObject();
+	return heldObject;
+}
+
 bool TSmallEnemy::isEaten()
 {
-	if (mHolder && mHolder->getHeldObject() == this) {
+	if (mHolder && SmallEnemyGetHeldObject(mHolder) == this) {
 		MtxPtr mtx = mHolder->getTakingMtx();
 		if (mtx) {
 			getModel()->setBaseTRMtx(mtx);

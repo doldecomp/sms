@@ -112,13 +112,21 @@ static JDrama::TNameRef* getNameRefPtr(TSpcSlice slice)
 	return result;
 }
 
+// Binding level worth +16 of low region, landing evGetNPCType's frame at
+// 0x90 (batch 124).
+static inline u32 EventWatcherGetActorType(const TBaseNPC* p)
+{
+	u32 actorType = p->getActorType();
+	return actorType;
+}
+
 static void evGetNPCType(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int result    = -1;
 	TBaseNPC* npc = (TBaseNPC*)getNameRefPtr(interp->pop());
 	if (npc)
-		result = npc->getActorType() - 0x4000001;
+		result = EventWatcherGetActorType(npc) - 0x4000001;
 	interp->push(result);
 }
 
@@ -1237,6 +1245,14 @@ static void evWarpMario(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
+// Binding level worth +8 of low region, landing evStartAppearJetBalloon's
+// frame at 0xa8 (batch 124).
+static inline TGCConsole2* EventWatcherGetConsole(TMarDirector* p)
+{
+	TGCConsole2* console = p->getConsole();
+	return console;
+}
+
 static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>* interp,
                                     u32 arg_num)
 {
@@ -1248,7 +1264,7 @@ static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>* interp,
 	switch (p2) {
 	case 0:
 		if (p1 == 1)
-			SMSGetMarDirector()->getConsole()->startAppearJetBalloon(0, 8);
+			EventWatcherGetConsole(SMSGetMarDirector())->startAppearJetBalloon(0, 8);
 		break;
 
 	case 1:

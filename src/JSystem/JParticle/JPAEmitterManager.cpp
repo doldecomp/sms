@@ -7,13 +7,21 @@
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 #include <macros.h>
 
+// Binding level worth +8 of low region, landing
+// JPAEmitterManager::JPAEmitterManager's frame at 0x70 (batch 124).
+static inline JKRHeap* JPAEmitterManagerGetCurrentHeap()
+{
+	JKRHeap* currentHeap = JKRHeap::getCurrentHeap();
+	return currentHeap;
+}
+
 JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
                                      s32 param_3, s32 param_4, JKRHeap* param_5)
     : unk3C(0.0f)
     , unk40(1.0f)
 {
 	if (!param_5)
-		param_5 = JKRHeap::getCurrentHeap();
+		param_5 = JPAEmitterManagerGetCurrentHeap();
 
 	u32 bytesForParticles
 	    = ALIGN_NEXT(param_2 * sizeof(JPAParticle), 0x20) + 0x80;
@@ -217,6 +225,22 @@ JPABaseEmitter* JPAEmitterManager::createVolumeEmitter(JPADataBlock* block,
 	return emitter;
 }
 
+// Binding level worth +16 of low region, landing
+// JPAEmitterManager::createEmitterBase's frame at 0xc8 (batch 124).
+static inline JPADataBlock* JPAEmitterManagerGetBaseEmitterBlock(JPADataBlockLinkInfo* p)
+{
+	JPADataBlock* baseEmitterBlock = p->getBaseEmitterBlock();
+	return baseEmitterBlock;
+}
+
+// Binding level worth +16 of low region, landing
+// JPAEmitterManager::createEmitterBase's frame at 0xc8 (batch 124).
+static inline u8 JPAEmitterManagerGetFieldNum(JPADataBlockLinkInfo* p)
+{
+	u8 fieldNum = p->getFieldNum();
+	return fieldNum;
+}
+
 JPABaseEmitter* JPAEmitterManager::createEmitterBase(
     s32 param_1, u8 param_2, u8 param_3,
     JPACallBackBase<JPABaseEmitter*>* param_4,
@@ -233,7 +257,7 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 			return nullptr;
 
 		JPADataBlockLinkInfo* linkInfo = emitterData->getLinkInfo()[0];
-		JPADataBlock* block            = linkInfo->getBaseEmitterBlock();
+		JPADataBlock* block            = JPAEmitterManagerGetBaseEmitterBlock(linkInfo);
 
 		JPABaseEmitter* emitter = createVolumeEmitter(block, param_2);
 
@@ -246,7 +270,7 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 
 			emitter->setFieldList(&unk28);
 
-			int count             = linkInfo->getFieldNum();
+			int count             = JPAEmitterManagerGetFieldNum(linkInfo);
 			JPADataBlock** blocks = linkInfo->getField();
 			for (int i = 0; i < count; ++i) {
 				JPADataBlock* block = blocks[i];

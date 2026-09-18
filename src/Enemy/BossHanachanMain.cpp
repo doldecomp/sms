@@ -71,10 +71,18 @@ void TBossHanachanManager::createModelData()
 	createModelDataArray(entry);
 }
 
+// Binding level worth +16 of low region, landing
+// TBossHanachanManager::loadAfter's frame at 0x40 (batch 124).
+static inline J3DTexture* BossHanachanMainGetTexture(const J3DMaterialTable* p)
+{
+	J3DTexture* texture = p->getTexture();
+	return texture;
+}
+
 void TBossHanachanManager::loadAfter()
 {
 	J3DMaterialTable* materials = gpMapObjManager->unkC0;
-	ResTIMG* sand = materials->getTexture()->getResTIMG(
+	ResTIMG* sand = BossHanachanMainGetTexture(materials)->getResTIMG(
 	    materials->getTextureName()->getIndex(cSandTextureName));
 	for (int i = 0; i < 2; ++i)
 		SMS_ChangeTextureAll(getModelDataKeeper()->getNthData(i)->getModelData(),

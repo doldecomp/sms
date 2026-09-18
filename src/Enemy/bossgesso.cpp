@@ -164,12 +164,20 @@ static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
+// Binding level worth +8 of low region, landing TBGBeakHit::moveRequest's
+// frame at 0x78 (batch 124).
+static inline f32 BossgessoGetIntendedMag(const TMario* p)
+{
+	f32 intendedMag = p->getIntendedMag();
+	return intendedMag;
+}
+
 BOOL TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
 	TBossGessoParams* params = mOwner->getSaveParam2();
 
 	unkA4 = fromPolar(gpMarioOriginal->getIntendedYaw(),
-	                  gpMarioOriginal->getIntendedMag()
+	                  BossgessoGetIntendedMag(gpMarioOriginal)
 	                      * params->mSLBeakStretch.get());
 
 	JGeometry::TVec3<f32> delta = mOwner->mPosition;
@@ -1269,6 +1277,14 @@ void TBossGesso::doAttackUnison()
 	}
 }
 
+// Binding level worth +16 of low region, landing TBossGesso::doAttackShoot's
+// frame at 0x98 (batch 124).
+static inline TBossGessoParams* BossgessoGetSaveParam2(const TBossGesso* p)
+{
+	TBossGessoParams* saveParam2 = p->getSaveParam2();
+	return saveParam2;
+}
+
 void TBossGesso::doAttackShoot()
 {
 	if (mBeak->mHolder != nullptr) {
@@ -1282,7 +1298,7 @@ void TBossGesso::doAttackShoot()
 		return;
 	}
 
-	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	f32 sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
 	if (inSightAngle(0.5f * sightAngle)) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 		delta -= mPosition;
