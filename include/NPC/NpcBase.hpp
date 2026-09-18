@@ -433,13 +433,22 @@ public:
 		{
 		}
 
-		void doThing()
+		void resetGraphWanderTimer()
 		{
-			int iVar13 = mPtrSaveNormal->mSLGraphWanderMinFrame.get();
-			int sVar1  = mPtrSaveNormal->mSLGraphWanderMaxFrame.get();
+			int maxFrame = mPtrSaveNormal->mSLGraphWanderMaxFrame.get();
+			int minFrame = mPtrSaveNormal->mSLGraphWanderMinFrame.get();
 
 			unk0 = 0;
-			unk4 = MsRandI(sVar1, iVar13);
+			unk4 = MsRandI(minFrame, maxFrame);
+		}
+
+		void resetGraphWaitTimer()
+		{
+			int maxFrame = mPtrSaveNormal->mSLGraphWaitMaxFrame.get();
+			int minFrame = mPtrSaveNormal->mSLGraphWaitMinFrame.get();
+
+			unk0 = 0;
+			unk4 = MsRandI(minFrame, maxFrame);
 		}
 
 		bool doThing2()

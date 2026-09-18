@@ -12,19 +12,26 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 {
 	TBaseNPC* self = (TBaseNPC*)spine->getBody();
 	if (spine->getTime() == 0) {
-		self->unk22C->doThing();
+		self->unk22C->resetGraphWanderTimer();
 	}
 
 	self->execWalk(true);
 
-	JGeometry::TVec3<f32> local_582 = self->unkF4.getPoint();
+	JGeometry::TVec3<f32> goal = self->unkF4.getPoint();
 
-	JGeometry::TVec3<f32> local_58(local_582.x - self->getPosition().x, 0.0f,
-	                               local_582.z - self->getPosition().z);
+	JGeometry::TVec3<f32> toGoal(goal.x - self->getPosition().x, 0.0f,
+	                             goal.z - self->getPosition().z);
 
-	(void)&local_58;
+	// TODO: fabricated. Retail gives `toGoal` a stack home and reloads all
+	// three components for the unfused squared(); a plain named local is
+	// scalar-replaced and fuses. Taking its address is the only spelling
+	// found that keeps the frame at 0x128; writing the whole expression as an
+	// unnamed TVec3 temporary reproduces the instruction stream exactly but
+	// grows the frame to 0x138 and puts the temp above `goal` instead of
+	// below it (retail: goal 0xd0, difference 0xdc, 8 free bytes at 0xe8).
+	(void)&toGoal;
 
-	f32 fVar2 = local_58.squared();
+	f32 fVar2 = toGoal.squared();
 
 	if (!self->unk114.empty()) {
 		if (fVar2 < CLBSquared(100.0f) && !self->unk114.empty()) {
@@ -77,7 +84,7 @@ DEFINE_NERVE(TNerveNPCGraphWait, TLiveActor)
 	TBaseNPC* self = (TBaseNPC*)spine->getBody();
 
 	if (spine->getTime() == 0)
-		self->unk22C->doThing();
+		self->unk22C->resetGraphWaitTimer();
 
 	if (self->getMarchSpeed() < 0.001f) {
 		if (self->unk22C->doThing2()) {
@@ -114,13 +121,14 @@ DEFINE_NERVE(TNerveNPCWaitMarioApproach, TLiveActor)
 		return true;
 	}
 
-	if (self->getActorType() - 0x400001C > 1) {
+	u32 actorType = self->getActorType();
+	if (actorType - 0x400001C > 1) {
 
 		if (!self->isPeachTired()) {
 
 			if (self->isSunflowerReviving()) {
 				self->sunflowerReviving();
-			} else if (self->getActorType() == 0x4000006) {
+			} else if (actorType == 0x4000006) {
 				self->monteMESetAnmWhenFar();
 				self->execTurnToFirstState();
 			} else {
@@ -149,28 +157,43 @@ DEFINE_NERVE(TNerveNPCTurnToMario, TLiveActor)
 		return true;
 	}
 
-	if (self->getActorType() - 0x400001C > 1) {
+	u32 actorType = self->getActorType();
+	if (actorType - 0x400001C > 1) {
 		if (!self->isPeachTired()) {
 			if (self->isSunflowerReviving()) {
 				self->sunflowerReviving();
-			} else if (self->getActorType() == 0x4000006) {
+			} else if (actorType == 0x4000006) {
 				self->monteMESetAnmWhenNear();
 				self->execTurnToFirstState();
 			} else if (self->isTurnToMarioWhenApproach()) {
 				SMS_GoRotate(self->mPosition, SMS_GetMarioPos(),
 				             self->getTurnSpeed(), &self->mRotation.y);
 
-				// TODO: wtf?
+				// TODO: instruction-exact, but the frame is 40 bytes
+				// short and the three 12-byte slots are laid out the
+				// other way round: retail has `axis` lowest (0x5c)
+				// with the two by-value copies ascending above it
+				// (0x78, 0x88) and 16 dead bytes between axis and the
+				// first copy, while every named-local spelling puts
+				// the copies below `axis` in declaration order. The
+				// two integer word copies themselves are real (retail
+				// copies 0x5c -> 0x78 -> 0x88 before reading x/z), so
+				// the level structure is right and only the placement
+				// is wrong -- most likely the copies belong to an
+				// inlined callee that takes the direction by value.
+				// `toMario3` itself is folded away, but removing it
+				// costs the memory home of `toMario2` (99.9 -> 97.5),
+				// so some further level really does bind a copy here.
 				JGeometry::TVec3<f32> axis = SMS_GetMarioPos();
 				axis -= self->mPosition;
-				JGeometry::TVec3<f32> copy  = axis;
-				JGeometry::TVec3<f32> copy2 = copy;
-				JGeometry::TVec3<f32> copy3;
-				copy3.set(copy2);
+				JGeometry::TVec3<f32> toMario  = axis;
+				JGeometry::TVec3<f32> toMario2 = toMario;
+				JGeometry::TVec3<f32> toMario3;
+				toMario3.set(toMario2);
 
-				f32 angle
-				    = MsWrap(abs(self->mRotation.y - MsGetRotFromZaxisY(copy3)),
-				             0.0f, 360.0f);
+				f32 angle = MsWrap(
+				    abs(self->mRotation.y - MsGetRotFromZaxisY(toMario3)),
+				    0.0f, 360.0f);
 				if (angle < 0.001f)
 					self->npcWaitIn();
 				else
