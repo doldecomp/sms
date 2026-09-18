@@ -188,6 +188,23 @@ public:
 	//     TAllocator::deallocate calling ::operator delete directly (this last
 	//     one moves the standalone InsertRaw 0xd8 -> 0xc0 but not insert): all
 	//     +0 on insert's frame.
+	//
+	// Header round 26 re-measured the whole ladder and found no single 32-byte
+	// object to remove: the excess is additive over the MSL helpers, and the
+	// two levers that exist only reach -0x18 between them (dummy -0x10,
+	// __copy_backward -0x8), both with the regressions above. `dealloc` is
+	// worth 0x18 of insert's frame on its own but its destructor is four real
+	// instructions, so it is retail's. Also +0 on insert (measured here):
+	// InsertRaw defined out of class with `inline`, a split-declared
+	// `iterator it; it = InsertRaw(...)`, dropping `I dummy` from
+	// std::uninitialized_fill_n (it folds away entirely), and `if (it !=
+	// pEnd_) fill; else WARN;`. Wrong direction: `if (it == end())` is +8
+	// (the accessor lever works here, so the residue is a shortage, not a
+	// misplacement), `std::uninitialized_fill` costs an instruction and
+	// `iterator it = pIt` five. The second residue is a callee-saved swap:
+	// retail ranks `this` (r30) above the `how_many` parameter (r29), we do
+	// the reverse -- the known-open ranking class, and no declaration order
+	// inside insert changes it.
 	void insert(iterator where, size_t how_many, const T& what)
 	{
 		if (!how_many)
