@@ -111,6 +111,24 @@ void TMapCollisionMove::setList()
 //    and it drops to 78.9%, and updateCheckData's size rules the spelling
 //    out); three unnamed `TVec3` temporaries in the setVertex call (87.4%,
 //    updateCheckData 252); `TVec3<f32> p[3]` (87.7%).
+//
+// Closure re-pass (batch 161) narrowed where the 24 remaining bytes live,
+// under the new UNUSED-callee carrier rule, and found no legal carrier.
+//  * They are not in setCheckData's own body: initAllCheckData is frame-exact
+//    at 0xd0 with *two* expansions of it, and any dead local here is paid
+//    twice there.  Collapsing those two sites into one with a ternary
+//    (`setCheckData(..., (param_3 & 2) ? 3 : 0)`) so a single payment could
+//    hide in 0xd0 costs instructions: initAllCheckData 100% -> 70.8%.  So
+//    retail really has the two mutually exclusive call sites.
+//  * They are not in setVertex's body either: its out-of-line copy is
+//    byte-exact at frame 0x40.
+//  * The only structure left is the expansion boundary itself -- the 24 bytes
+//    appear exactly where setVertex is inlined at depth 1 and nowhere else
+//    (in initAllCheckData and updateCheckData setVertex is a real `bl`).
+//    `MsVECNormalize` is a `bl` on both sides, so it is not a hidden
+//    expansion difference.  No UNUSED function is inlined into this body, so
+//    the new "dead uninitialised TVec3 in an UNUSED callee" carrier rule has
+//    nothing to attach to here.
 void TMapCollisionBase::setCheckData(const f32* vertices, const s16* indices,
                                      TBGCheckData* param_3, int kind)
 {
@@ -171,6 +189,16 @@ void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 // dead named `TVec3` declared after delta pays the upper 12 and a dead
 // non-trivial 12-byte local in an inlined callee the lower 12.  Nothing in
 // the body names either, so it stays open rather than padded.
+// Closure re-pass (batch 161): re-measured, still 99.7% frame-only, 0x58 vs
+// 0x70.  Read as a pure low region the two holes are a dead TVec3 at 0x20 and
+// another at 0x38 straddling the operator- temporary at 0x2c, i.e. 24 bytes =
+// floor(24/8)*8, the price of two dead vectors in one expansion.  The new
+// UNUSED-callee carrier rule cannot supply them: the only callees expanded
+// here are `TVec3::operator-`/`operator=` (shared header, off limits) and
+// `getUnk8()`, and `getUnk8()` is also expanded in the frame-exact
+// `TMapCollisionMove::setList`, so any local there breaks that function.  The
+// TU's three UNUSED functions (updateCheckData, updateVertexPos,
+// TBGCheckData::updateTrans) are none of them called from this body.
 void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> delta = param_1 - mPrevTranslation;
