@@ -148,6 +148,46 @@ public:
 		return pBegin_ + offset;
 	}
 
+	// TODO: the only emitted instantiation of this overload,
+	// TVector<TDrawSyncManager::TDrawSyncTokenRange>::insert (System.a
+	// DrawSyncManager.cpp, 0x3a8), is instruction-exact with a frame of 0x120
+	// against retail's 0x100 and r29/r30 swapped between `this` and
+	// `how_many`. Every referenced slot sits exactly 0x20 higher than
+	// retail's, so the whole excess is unreferenced low region: 32 bytes of
+	// inline-expansion temporaries retail does not reserve.
+	//
+	// Diagnosed (header round 15) as a **depth surcharge**, not a wrong body:
+	// spelling InsertRaw's body directly inside insert -- which puts the four
+	// std::uninitialized_copy expansions, std::copy_backward and the two
+	// DestroyElement_ expansions at depth 1 instead of depth 2 -- gives
+	// retail's 0x100 exactly (8 bytes per copy/fill expansion). That is not a
+	// usable fix: InsertRaw is a real function (UNUSED 0x38c here, emitted and
+	// called from the four MarNameRefGen instantiations), so insert must call
+	// it, and duplicating the body would drop the UNUSED symbol.
+	//
+	// Rejected, each measured with a full `ninja changes_all`:
+	//   - dropping `O dummy = d_first;` from std::uninitialized_copy (MSL
+	//     <memory>): insert 0x120 -> 0x110 with identical instructions, but it
+	//     regresses five exact functions -- InsertRaw for TStageEventInfo,
+	//     TScenarioArchiveName, TStagePositionInfo and void*, plus
+	//     TVector_pointer_void::reserve -- and unlinks std-vector, so retail
+	//     has the dummy.
+	//   - flattening std::copy_backward's `__copy_backward<T>` struct level
+	//     (MSL <algorithm>): insert 0x110 -> 0x108, and
+	//     TVector<TCameraMapTool>::InsertRaw 60.22 -> 99.96, but
+	//     TVector<TStageEventInfo>::InsertRaw 100 -> 41.97 (its
+	//     __as__15TStageEventInfo stops being emitted, which is what proves
+	//     __copy_backward assigns rather than copy-constructs), the other
+	//     three InsertRaw drop below 100 and std-vector unlinks. Net
+	//     matched_code -0.10.
+	//   - `iterator it = pIt;` without the explicit conversion in InsertRaw:
+	//     239 instructions instead of 234.
+	//   - TDestroyed_deallocate_ with a member-initialiser list, GetSize_extend_
+	//     without the `newCap` local, `DestroyElement_(pBegin_, pEnd_)` for
+	//     DestroyElement_all_(), `new (d_first)` without `&*`, and
+	//     TAllocator::deallocate calling ::operator delete directly (this last
+	//     one moves the standalone InsertRaw 0xd8 -> 0xc0 but not insert): all
+	//     +0 on insert's frame.
 	void insert(iterator where, size_t how_many, const T& what)
 	{
 		if (!how_many)
