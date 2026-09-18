@@ -233,6 +233,7 @@
   "Map/JointModel.cpp",
   "Map/JointModelManager.cpp",
   "Map/JointObj.cpp",
+  "Map/MapArea.cpp",
   "Map/MapCollisionData.cpp",
   "Map/MapCollisionEntry.cpp",
   "Map/MapCollisionManager.cpp",

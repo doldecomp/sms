@@ -39,6 +39,14 @@ static bool checkLinesCollision(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2,
 static bool checkLinePolygonCollision(f32 x0, f32 z0, f32 x1, f32 z1,
                                       TBGCheckData* data)
 {
+	// The polygon's three vertices: retail declared them here and read the
+	// components through the accessors, so the slots are reserved and dead.
+	// They are 36 of the 288 bytes polygonIsInGrid's pool needs per
+	// expansion; see the note above it.
+	JGeometry::TVec3<f32> p1;
+	JGeometry::TVec3<f32> p2;
+	JGeometry::TVec3<f32> p3;
+
 	if (checkLinesCollision(x0, z0, x1, z1, data->getPoint1().x,
 	                        data->getPoint1().z, data->getPoint2().x,
 	                        data->getPoint2().z)
@@ -56,6 +64,11 @@ static bool checkLinePolygonCollision(f32 x0, f32 z0, f32 x1, f32 z1,
 
 static bool pointIsInPolygon(f32 x, f32 z, TBGCheckData* data)
 {
+	// Reserved and dead, exactly as in checkLinePolygonCollision below.
+	JGeometry::TVec3<f32> p1;
+	JGeometry::TVec3<f32> p2;
+	JGeometry::TVec3<f32> p3;
+
 	if ((data->getPoint1().z - z) * (data->getPoint2().x - data->getPoint1().x)
 	        - (data->getPoint1().x - x) * (data->getPoint2().z - data->getPoint1().z)
 	    < 0.0f) {
@@ -86,37 +99,27 @@ static bool pointIsInGrid(f32 x, f32 z, f32 minX, f32 minZ, f32 maxX, f32 maxZ)
 	return false;
 }
 
-// TODO: 99.9%, zero instruction differences; retail's frame is 0x2c0 and ours
-// 0x1a0 (288 bytes of dead low region left). Measured levers, all with the
-// instruction stream unchanged or improved: routing pointIsInPolygon's twelve
-// point reads through getPoint1/2/3() is worth 296 bytes *and* the last
-// instruction differences (raw members: 0x78 / 95.7%); the fabricated
-// getNormal() level is worth 8; this body's own point reads are worth 16.
-// Saturated / rejected: a second (TU-static) forwarder level above
-// getPointN() is +0; raw members in checkLinePolygonCollision -16 and 87.4%;
-// named `const TVec3&` locals for the three points regress both helpers
-// (95.4% / 86.6%); pointIsInGrid taking the point by reference contradicts the
-// map's `pointIsInGrid__Fffffff` and gives 94.0%. The remaining 288 bytes
-// need a lever family we have not identified - note that retail references no
-// stack slot at all below 0x280.
-//
-// Batch 131 pinned the three helper bodies and priced the batch-127 lever:
-//   * all three UNUSED sizes are **exact** (pointIsInGrid 0x40,
-//     pointIsInPolygon 0x9c, checkLinePolygonCollision 0x27c), so no body is
-//     wrong. Re-measured alternatives for checkLinePolygonCollision, by size:
-//     three separate `if`s 0x28c, `return a || b || c;` 0x1b8, named
-//     `const TVec3&` points 0x280 / 0x290 / 0x1c8 -- only the committed
-//     short-circuit-into-one-`if` form is 0x27c.
-//   * a binding level over `getPointN()` (either `const TVec3*` or
-//     `const TVec3&` bound and returned -- the two are codegen-identical) is
-//     **+12 per read site**, not +8: all twelve reads in
-//     checkLinePolygonCollision are +0x240 = 576 across its four expansions,
-//     i.e. exactly twice the 288 wanted, and per-member granularity only
-//     offers 192 / 384 / 576. The same level on pointIsInPolygon's twelve
-//     reads is +0x360 (+18 per site) and adds 58 differing rows; a level that
-//     binds the `f32` component instead costs 14 instructions.
-//   So 288 is 24 read sites at +12, and no subset of one helper's reads has
-//   that cardinality -- the lever is still the wrong family.
+// Closed in batch 151. The 288 bytes of dead low region that polygonIsInGrid
+// was short are the reserved slots of three `JGeometry::TVec3<f32>` locals in
+// each of `pointIsInPolygon` and `checkLinePolygonCollision` -- the polygon's
+// three vertices -- which MWCC reserves per expansion (12 bytes each, so 4
+// expansions x 36 twice = 288) even though every value stays in a register.
+// Both helpers are UNUSED in the map, so they are legal carriers, and both
+// stay byte-size-exact (0x9c and 0x27c) with the locals declared: retail's
+// bodies read the vertices through the accessors, because spelling the same
+// three locals as value copies (`TVec3<f32> p1 = data->getPoint1();`) emits
+// the copies and takes the two helpers to 236 and 708 bytes and the caller to
+// 44.9%. `checkLinesCollision` cannot hold any of it -- it has a matching
+// out-of-line copy (0xd8), and a dead local there breaks it while leaving the
+// caller's frame untouched, which also confirms retail `bl`s it.
+// Earlier measurements that stand: routing pointIsInPolygon's twelve point
+// reads through getPoint1/2/3() is worth 296 bytes and the last instruction
+// differences (raw members: 0x78 / 95.7%); the MapArea_getNormal() level is
+// worth 8; this body's own point reads are worth 16; a second forwarder level
+// above getPointN() is +0; a binding level over getPointN() is +12 per read
+// site (the wrong granularity: 192 / 384 / 576); named `const TVec3&` locals
+// for the three points regress both helpers; and pointIsInGrid taking the
+// point by reference contradicts the map's `pointIsInGrid__Fffffff`.
 bool TMapCollisionData::polygonIsInGrid(f32 minX, f32 minZ, f32 maxX, f32 maxZ,
                                         TBGCheckData* data)
 {
