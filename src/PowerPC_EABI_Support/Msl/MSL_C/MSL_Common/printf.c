@@ -997,12 +997,12 @@ static int __pformatter(void* (*WriteProc)(void*, const char*, size_t),
 	return chars_written;
 }
 
-static void* __FileWrite(void* pFile, const char* pBuffer, size_t char_num)
+void* __FileWrite(void* pFile, const char* pBuffer, size_t char_num)
 {
 	return (fwrite(pBuffer, 1, char_num, (FILE*)pFile) == char_num ? pFile : 0);
 }
 
-static void* __StringWrite(void* pCtrl, const char* pBuffer, size_t char_num)
+void* __StringWrite(void* pCtrl, const char* pBuffer, size_t char_num)
 {
 	size_t chars;
 	__OutStrCtrl* ctrl = (__OutStrCtrl*)pCtrl;

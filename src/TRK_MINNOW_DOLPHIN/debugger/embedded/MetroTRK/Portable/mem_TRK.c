@@ -1,7 +1,7 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mem_TRK.h"
 #include "dolphin/types.h"
 
-void TRK_fill_mem(void* dst, int val, size_t n)
+static void TRK_fill_mem(void* dst, int val, size_t n)
 {
 	u32 v, i, j;
 	v = (u8)val;

@@ -6,7 +6,7 @@
 
 TRKBuffer gTRKMsgBufs[3];
 
-void TRKSetBufferUsed(TRKBuffer* msg, BOOL state) { msg->isInUse = state; }
+static void TRKSetBufferUsed(TRKBuffer* msg, BOOL state) { msg->isInUse = state; }
 
 DSError TRKInitializeMessageBuffers(void)
 {

@@ -6,7 +6,7 @@
 #include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
-static void TRKMessageIntoReply(TRKBuffer* buffer, u8 ackCmd,
+void TRKMessageIntoReply(TRKBuffer* buffer, u8 ackCmd,
                                 DSReplyError errSentInAck)
 {
 	TRKResetBuffer(buffer, 1);

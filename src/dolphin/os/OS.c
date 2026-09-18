@@ -66,8 +66,8 @@ static DVDCommandBlock DriveBlock;
 // functions
 static asm void __OSInitFPRs(void);
 static void OSExceptionInit(void);
-static void OSDefaultExceptionHandler(u8 exception /* r3 */,
-                                      OSContext* context /* r4 */);
+void OSDefaultExceptionHandler(u8 exception /* r3 */,
+                               OSContext* context /* r4 */);
 
 // NOTE: this is unused, but stuff won't align properly without it
 static asm void __OSInitFPRs(void)
