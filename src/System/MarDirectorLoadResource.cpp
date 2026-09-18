@@ -78,11 +78,9 @@ int TMarDirector::loadResource()
 
 	unkD4 = new (0x20) char[0x64000];
 	unkD8 = new JKRMemArchive;
-	if (mMap == 1) {
-		int errc = thpInit();
-		if (errc)
-			return errc;
-	}
+	int errc = thpInit();
+	if (errc)
+		return errc;
 
 	return 0;
 }
@@ -364,15 +362,30 @@ void TMarDirector::loadParticleMario()
 	SMS_LoadParticle("ms_mpk_fire_c.jpa", 0x1f8);
 }
 
-// TODO: size mismatch
 int TMarDirector::thpInit()
 {
-	THPPlayerInit(0);
-	if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
-		return 1;
-	THPPlayerSetBuffer(new (0x20) u8[THPPlayerCalcNeedMemory()]);
-	if (!THPPlayerPrepare(0, 1, 0))
-		return 1;
+	if (mMap == 1) {
+		THPPlayerInit(0);
+		if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
+			return 1;
+		u32 need = THPPlayerCalcNeedMemory();
+		THPPlayerSetBuffer(new (0x20) u8[need]);
+		if (!THPPlayerPrepare(0, 1, 0))
+			return 1;
+
+		// Spin for half a second so the THP decoder has buffered
+		// ahead. The signed magic on the tick difference and the
+		// unsigned one on OS_TIMER_CLOCK are the two doubles the map
+		// keeps in .sdata2.
+		OSTick startTick = OSGetTick();
+		while (true) {
+			f32 elapsed = (s32)(OSGetTick() - startTick)
+			    / (f32)OS_TIMER_CLOCK;
+			if (0.5f <= elapsed)
+				break;
+			OSYieldThread();
+		}
+	}
 
 	return 0;
 }
