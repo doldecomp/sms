@@ -617,7 +617,7 @@ void TChuuHana::bind()
 		return;
 	}
 
-	JGeometry::TVec3<f32> next(getPosition());
+	JGeometry::TVec3<f32> next(mPosition);
 	next += mLinearVelocity;
 	next += mVelocity;
 
@@ -630,7 +630,7 @@ void TChuuHana::bind()
 	mGroundHeight += 1.0f;
 
 	if (next.y <= mGroundHeight + 0.05f && mGroundPlane->getActor() == nullptr
-	    && getPosition().y < unk1F8.y - 200.0f) {
+	    && mPosition.y < unk1F8.y - 200.0f) {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		next.y = mGroundHeight;
 	} else {
@@ -1185,13 +1185,13 @@ DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
 	if (spine->getTime() == 0)
 		hana->setBckAnm(3);
 
-	hana->unk220 = hana->getPosition().y
+	hana->unk220 = hana->mPosition.y
 	    - hana->getMActor()->getModel()->getAnmMtx(TChuuHana::mFootJntIndex)[1][3];
 
 	// Ten frames in, launch back over the panel it left.
 	if (hana->getMActor()->getFrameCtrl(0)->checkPass(10.0f)) {
 		JGeometry::TVec3<f32> target;
-		target.x = 2.0f * hana->unk1F8.x - hana->getPosition().x;
+		target.x = 2.0f * hana->unk1F8.x - hana->mPosition.x;
 		target.y = 2.0f * hana->unk1F8.y - hana->mPosition.y;
 		target.z = 2.0f * hana->unk1F8.z - hana->mPosition.z;
 		*hana->unk21C = 0;
