@@ -12,24 +12,19 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// Parked: the map has no symbol for a gpMap fork, so it lives here rather than
-// in the shared Map.hpp. It is the +4-per-read-site rung changeModel needs on
-// top of the getChild() level.
-static inline TMap* MapWarpGetMap() { return gpMap; }
-
 // The 24 dead bytes are two rungs of the same chain: `getChild()` at the
-// awaken site is +16 (at both sites it is +32) and the gpMap fork is +4 per
-// read site, i.e. +8 here. Both sites raw is 0x40, both through getChild()
-// 0x60.
+// awaken site is +16 (at both sites it is +32) and the SMSGetMap() fork
+// (promoted to Map.hpp in header round 18) is +4 per read site, i.e. +8 here.
+// Both sites raw is 0x40, both through getChild() 0x60.
 void TMapWarp::changeModel(int i)
 {
 	if (unk8 == i)
 		return;
 
 	// TODO: inlines
-	MapWarpGetMap()->getModelManager()->getJointModel(0)->mChildren[unk8]
+	SMSGetMap()->getModelManager()->getJointModel(0)->mChildren[unk8]
 	    ->sleep();
-	MapWarpGetMap()->getModelManager()->getJointModel(0)->getChild(i)->awake();
+	SMSGetMap()->getModelManager()->getJointModel(0)->getChild(i)->awake();
 	unk8 = i;
 }
 

@@ -204,6 +204,13 @@ public:
 
 	bool isClean() const { return mPollutionAmount == 0.0f; }
 
+	// Fabricated name. The level is worth +8 of frame with no instruction
+	// change at the angle2 read of execTurnToFirstState and is +0 (and costs
+	// 1-3 instructions) at that function's two other unk1A0 reads, so it is
+	// applied per site. execTurnToFirstState is still 8 bytes short with it:
+	// see its TODO in src/NPC/NpcWalkTurn.cpp.
+	const JGeometry::TVec3<f32>& getUnk1A0() const { return unk1A0; }
+
 	enum {
 		LIVE_FLAG_DONT_TALK   = 0x10000,
 		LIVE_FLAG_SINK_BOTTOM = 0x800000,

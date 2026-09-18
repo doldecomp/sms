@@ -157,10 +157,9 @@ bool TBaseNPC::execUTurn()
 // TODO: frame 0x50 vs 0x40, 12 of the 16 bytes below `angle1` (0x30 vs 0x24)
 // and 4 above it. Naming the param fetch makes it worse (0x38),
 // `getRotation().y` for angle1 adds an instruction (99.7 -> 96.9). A
-// `const JGeometry::TVec3<f32>& getUnk1A0() const` level (parked as a TU-local
-// free function for the trial; the real one belongs in the shared
-// NpcBase.hpp) is **+8 with no instruction change at the angle2 site alone**
-// (0x40 -> 0x48) and saturates there: at the compare site or the tail
+// `getUnk1A0()` level (promoted to NpcBase.hpp in header round 18) is **+8
+// with no instruction change at the angle2 site alone** (0x40 -> 0x48, applied
+// below) and saturates there: at the compare site or the tail
 // assignment it is +0 and costs 1-3 instructions, and a params rung
 // (`mIndividualParams->mFirstStateTurnSpeed.get()` behind a wrapper) or
 // splitting the three `s16` declarations from their assignments are both +0.
@@ -174,7 +173,7 @@ bool TBaseNPC::execTurnToFirstState()
 	bool result = false;
 
 	s16 angle1 = CLBDegToShortAngle(mRotation.y);
-	s16 angle2 = CLBDegToShortAngle(unk1A0.y);
+	s16 angle2 = CLBDegToShortAngle(getUnk1A0().y);
 	s16 angle3
 	    = CLBDegToShortAngle(mIndividualParams->mFirstStateTurnSpeed.get());
 	if (!CLBChaseGeneralConstantSpecifySpeed(&angle1, angle2, angle3)) {

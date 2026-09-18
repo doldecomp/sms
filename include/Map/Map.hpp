@@ -77,4 +77,11 @@ public:
 	/* 0x20 */ u8 unk20;
 };
 
+// Fabricated name, in the SMSGet* family. The map has no symbol for it, as
+// expected of a header inline that inlines everywhere. It is the +4-per-read
+// rung TMapWarp::changeModel needs on top of its getChild() level; every other
+// gpMap reader in the tree matches on the raw global, so it is applied per
+// site.
+inline TMap* SMSGetMap() { return gpMap; }
+
 #endif

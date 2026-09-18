@@ -11,14 +11,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// Parked: `TMario::getGamePad()` does not exist yet and Mario.hpp is shared,
-// so squating's missing pad rung is spelled TU-locally here. It is worth 12
-// bytes of low region plus 4 named, applied at four of the five pad reads.
-static inline TMarioGamePad* MarioWaitGamePad(const TMario* mario)
-{
-	return mario->mGamePad;
-}
-
 BOOL TMario::startTalking()
 {
 	if (mGroundPlane->isLegal()) {
@@ -344,7 +336,7 @@ BOOL TMario::squating()
 	// 0x90. checkCurrentNozzleRocketType(1) over the spelled-out nozzle
 	// param read is +0. The last 16 bytes have no lever left in this TU:
 	// mInput, mFloorPosition, mFaceAngle, the three params classes and
-	// MarioWaitGamePad(this)->mCompSPos have no accessor, and getSideWalkValues is a real
+	// getGamePad()->mCompSPos have no accessor, and getSideWalkValues is a real
 	// out-of-line call, so it cannot carry them.
 	if (mInput & 0x4)
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
@@ -379,7 +371,7 @@ BOOL TMario::squating()
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
-	if (MarioWaitGamePad(this)->checkMeaning(TMarioGamePad::MEANING_0x2000)) {
+	if (getGamePad()->checkMeaning(TMarioGamePad::MEANING_0x2000)) {
 		E_SIDEWALK_TYPE type;
 		f32 v1, v2;
 		getSideWalkValues(&type, &v1, &v2);
@@ -397,10 +389,10 @@ BOOL TMario::squating()
 
 		mPosition.x += v2 * JMASCos(mFaceAngle.y);
 		mPosition.z -= v2 * JMASSin(mFaceAngle.y);
-	} else if (MarioWaitGamePad(this)->checkMeaning(TMarioGamePad::MEANING_0x400)) {
-		f32 absH      = fabsf(MarioWaitGamePad(this)->mCompSPos[0]);
+	} else if (getGamePad()->checkMeaning(TMarioGamePad::MEANING_0x400)) {
+		f32 absH      = fabsf(getGamePad()->mCompSPos[0]);
 		bool positive = true;
-		if (MarioWaitGamePad(this)->mCompSPos[0] < 0.0f)
+		if (getGamePad()->mCompSPos[0] < 0.0f)
 			positive = false;
 
 		f32 mid    = mControllerParams.mSquatRotMidAnalog.get();

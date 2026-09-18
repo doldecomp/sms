@@ -1330,6 +1330,11 @@ public:
 	// `mModel->` spellings elsewhere are only converted where they measure.
 	M3UModelMario* getM3UModel() const { return mModel; }
 
+	// Fabricated name. Retail reads the pad through one extra inline level at
+	// four of the five pad reads in TMario::squating (12 bytes of low region
+	// plus 4 named); the fifth stays raw. Per site, like the two levels above.
+	TMarioGamePad* getGamePad() const { return mGamePad; }
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;
