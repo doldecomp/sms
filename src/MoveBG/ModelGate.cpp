@@ -291,6 +291,11 @@ BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+// TODO: literal-pool order. Ours emits a 4-byte 0.5f and 3.0f that the
+// target's .sdata2 does not have at all (32 objects against the map's 30):
+// retail keeps only the 8-byte 0.5/3.0 double pair (@3049/@3050, MWCC's
+// inline sqrt), so one of this function's square roots is spelled on floats
+// here and on doubles in retail.
 void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(mFlags & GATE_FLAG_ACTIVE))

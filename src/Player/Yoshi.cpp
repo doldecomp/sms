@@ -836,6 +836,10 @@ f32 TYoshi::checkGroundYoshi(const JGeometry::TVec3<f32>& pos, f32* out_y,
 	return *out_y;
 }
 
+// TODO: literal-pool order. The target asks for 1.0f (@3849) before 60.0f
+// (@3850), i.e. a 1.0f use inside movement() precedes the 60.0f; ours puts
+// 1.0f last in the TU (shared with init, thinkUpper, thinkAnimation and
+// appearFromEgg). Order only -- the value sets match.
 void TYoshi::movement()
 {
 	if (!gpMarDirector->isDemoMode3() && !gpMarDirector->isDemoMode4()

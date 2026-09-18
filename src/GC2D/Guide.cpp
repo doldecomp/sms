@@ -792,6 +792,11 @@ void TGuide::changeBotStatus(int stage)
 // TODO: all the arithmetic matches; retail reads gpMarioPos->z before
 // storing the scaled x and keeps 0.5f in f4 across the marker-bounds loads,
 // where ours reloads. Frame 0x100 against our 0x78.
+// TODO: literal-pool order. The target asks for 21200.0f (@2954) before
+// 25000.0f (@2955), so the z scaling is spelled before the x scaling in the
+// source. Swapping the two statements does reproduce the pool order but costs
+// placeMario 76.9 -> 73.1 (four extra instructions), so the statement order is
+// right and something else about the pair's spelling is not; left as is.
 void TGuide::placeMario()
 {
 	if ((u8)SMS_getShineStage(gpMarDirector->mMap) != 1) {

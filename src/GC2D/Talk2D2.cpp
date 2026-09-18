@@ -492,6 +492,10 @@ void TTalk2D2::openTalkWindow(TBaseNPC* npc)
 	SMSRumbleMgr->startPause();
 }
 
+// TODO: literal-pool order. The target asks for -0.5f (@4525) before 0.5f
+// (@4526) inside this function; ours reverses the pair. Values and count
+// are otherwise identical, so it is a spelling/order question in the
+// bezier maths, not a wrong constant.
 void TTalk2D2::makeBoxLine(s8 line, char* text)
 {
 	JUTPoint start(mBezierStart[line]->getBounds().x1,

@@ -756,6 +756,10 @@ void TLeanMirror::controlGoTarget()
 	}
 }
 
+// TODO: literal-pool order. The target asks for controlShake's 1.5708f
+// (@4479) before controlGoTarget's 1100.0f (@4524), with an alignment hole
+// in front of the 0.5/3.0 double pair that follows; ours emits the 1100.0f
+// first and drops the two holes (65 objects against our 62). Order only.
 void TLeanMirror::controlShake()
 {
 	if (enemyIsOn() && mBgmStarted && SMS_IsMarioTouchGround4cm()

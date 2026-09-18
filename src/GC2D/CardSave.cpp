@@ -551,6 +551,9 @@ void TCardSave::endWaitForChoice()
 	unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(), unkE4.getHeight());
 }
 
+// TODO: literal-pool order. The target asks for 1.0f (@4275) well before
+// this function's -0.5f/1.5f/0.9f trio (@5958-@5960); ours requests 1.0f
+// last of the four. Order only.
 s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 {
 	// TODO: frame 0x3F8 vs original 0x428; centered-size registers,
