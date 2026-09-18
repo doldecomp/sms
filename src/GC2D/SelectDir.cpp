@@ -46,19 +46,28 @@ TSelectDir::TSelectDir()
 {
 }
 
-// TODO: 99.8%, pure frame gap (0x28 vs our 0x20), every instruction matches.
-// A dead trivial local of 8-12 bytes at the very bottom of the local area
-// (no other slot is referenced) reaches the target frame exactly (closure
-// batch 123 trial, `u8 dead[8];`/`[12]`, both reverted -- unnamed padding is
-// not committed per CLAUDE.md's fakematch rule). No plausible named object
-// found; `arc` itself is a pointer and costs nothing.
+// Closure batch 128: exact. The 8 bytes batch 123 could only find as unnamed
+// padding are one binding level over the gamepad member -- the shape a
+// `TMarioGamePad* TSelectDir::getGamePad()` accessor that binds its result
+// would have. Parked TU-local below; header batch item. (A binding level over
+// the `JKRFileLoader::getVolume` cast closes it identically, so the byte is
+// certain and its owner is not; the gamepad accessor is the spelling the rest
+// of the tree uses.)
+// Parked: a binding level over TSelectDir's gamepad member. See the note on
+// the destructor; header batch item (`TSelectDir::getGamePad()`).
+static inline TMarioGamePad* SelectDirGamePad(TSelectDir* dir)
+{
+	TMarioGamePad* gamePad = dir->unk18;
+	return gamePad;
+}
+
 TSelectDir::~TSelectDir()
 {
 	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("select");
 	if (arc)
 		arc->unmountFixed();
 
-	unk18->offFlag(1);
+	SelectDirGamePad(this)->offFlag(1);
 }
 
 void TSelectDir::setup(JDrama::TDisplay* display, TMarioGamePad* gamePad,
@@ -81,8 +90,19 @@ void* TSelectDir::setupThreadFunc(void* param_1)
 
 int TSelectDir::rsetup()
 {
-	// TODO: GMSE01 frame is 0x610 vs 0x648, with list/constructor temporary
-	// offsets and LookAtCamera vector ordering/register differences remaining.
+	// TODO: 99.6% with 370 operand-only markers and *no* structural marker;
+	// GMSE01 frame is 0x610 against retail's 0x648, with list/constructor
+	// temporary offsets and LookAtCamera vector ordering/register differences
+	// remaining. Closure batch 128 classified the residue: of the 233 markers
+	// that carry exactly one `r1` displacement on each side, the retail-minus-
+	// ours delta is *not* uniform -- 40 bytes at 61 slots, 56 at 59, 52 at 46,
+	// 48 at 33, 36 at 11, 44 at 9, 32 at 7, 64 at 4, 28 at 2 and one slot 56
+	// *lower*. So this is not one dead carrier under everything (contrast
+	// `direct()`, where every slot shifts by the same 0x80) but several
+	// separately misplaced objects inside a 0x600-byte local area, and the
+	// total gap is only 56 bytes. A per-object slot map (grouping the deltas
+	// by the source construct each slot belongs to) is the prerequisite for
+	// any lever work here; do not spend lever trials on it before that.
 	void* arcData = SMSLoadArchive("/data/select.arc", 0, 0, 0);
 
 	JKRMemArchive* archive = new JKRMemArchive;
@@ -218,8 +238,30 @@ void TSelectDir::changeOrder()
 // conversion temporaries and their strides -- shifts by the same 0x80, so
 // this is one big dead low-region carrier, not a stride problem (the TColor
 // stride itself matches between the three blocks: 4 then 8 bytes apart on
-// both sides). No candidate object found this batch; not pursued further
-// given JUTColor.hpp's own TODO already rules out touching the TColor ctor.
+// both sides). Not pursued further given JUTColor.hpp's own TODO already
+// rules out touching the TColor ctor.
+//
+// Closure batch 128 measured the carrier ladder instead. The 0x80 is
+// reachable, and the function is a *set* of binding levels, one per inlined
+// receiver expansion, with these measured steps (all zero-instruction):
+//   binding level over `gpApplication.mFader` (6 sites)       +0x38
+//   binding level over `unk20` (7 sites)                      +0x40
+//   the two together                                          +0x78
+//   binding level over `unk18` at both `isSomethingPushed()`   +0x20
+//   the same at one site only                                 +0x10
+//   binding level over `unk40` at the `unk40 == 9` compare     +0x08
+//   `SMSGetMSound()` over `gpMSound`, `SMSGetFlagManager()`
+//   over `TFlagManager::smInstance`, a level over `unk10`      +0
+// fader + menu + the stage compare is exactly 0xd0 and drops the diff from
+// 30 to 21 markers, but does not close it: with the frame exact the
+// `OSJoinThread` out-parameter sits 8 high and all three TColor conversion
+// pairs 12 high, i.e. our pool has 4 bytes between the colour temporaries
+// and `res` that retail does not. Since that is four fabricated TU-local
+// levels for a function that still does not match, none of them is
+// committed; the numbers are the result. The right next step is a header
+// round giving `TSelectDir` real binding accessors (`getFader()` on
+// TApplication, `getMenu()`, `getGamePad()`, `getStage()`) and re-measuring
+// the 4-byte pool item on top.
 int TSelectDir::direct()
 {
 	if (!unk38) {
