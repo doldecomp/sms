@@ -40,6 +40,16 @@ static void dummy(Vec* v)
 // (84.6%) and two or more extra levels inside `getJointModel` (84.6%).
 // TAirportEventSink::watch is 12 short in the same chain and
 // TMapEventSinkInPollution::watch / TMapEventSinkBianco::watch 24.
+// The exact recipe for this function is known: a TU-local `static inline
+// TPollutionManager* SMSGetPollution()` over `gpPollution` in the decay
+// statement (+4), a named `TFlagManager* flagManager = TFlagManager::
+// getInstance();` before `setBool` (+4), and one extra 0-param accessor level
+// under `TJointModelManager::getJointModel` (`return getJointModels()[i];`) for
+// the last +4. All three together make it byte-exact. The third is a shared
+// header and is not committable: globally it takes the source-linked
+// `mario/Map/MapEvent` from 100% to 95.9% code and costs `Map/MapEventSink`
+// and `Map/PollutionManager`, so it would break the DOL. The open question is
+// what adds that one level on the `getLayer(i)` path alone.
 bool TMapEventSirenaSink::watch()
 {
 	if (unk64) {

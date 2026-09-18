@@ -81,10 +81,24 @@ bool TAirportEventSink::control()
 // TMapEventSinkInPollution::watch / TMapEventSinkBianco::watch are 24 short,
 // so the missing levels are most likely in the shared pollution accessors.
 // Confirmed on this function and Sirena's: removing one statement at a time
-// leaves the whole residue in `gpPollution->getLayer(0)->startDecay()`, and one
-// extra 0-param accessor level inside `TJointModelManager::getJointModel`
-// (`getJointModels()`, a shared header, so not applied) recovers 8 of the 12
-// bytes here and 4 of Sirena's. Two such levels regress both.
+// leaves the whole residue in `gpPollution->getLayer(0)->startDecay()`. The
+// full exact recipe is known and three quarters of it is local:
+//   1. pass the flag as the unnamed `JDrama::TFlagT<u16>(0)` temporary every
+//      other caller of fireStartDemoCamera uses (the ROM has no named local
+//      above the slot, so this form is right; alone it is -8 on the frame),
+//   2. `getGateKeeper()` on this class in the guard (+4),
+//   3. a TU-local `static inline TPollutionManager* SMSGetPollution()` over
+//      `gpPollution` in the decay statement (+4; two such levels still +4),
+//   4. one extra 0-param accessor level under `TJointModelManager::getJointModel`
+//      (`getJointModel(i) { return getJointModels()[i]; }`) for the last +4.
+// With all four the function is byte-exact, but (4) is a shared header and is
+// not committable: measured globally it takes the source-linked
+// `mario/Map/MapEvent` from 100% to 95.9% code, `Map/MapEventSink` 97.1 -> 95.6
+// and `Map/PollutionManager` 80.2 -> 76.1, so it would break the DOL. The right
+// fix is whatever gives that one extra level on the `getLayer(i)` path only.
+// Worth zero here: two TU-local pollution levels, an extra `SMSGetMSound()`
+// level, an indexed forwarder inside `getJointModel`, and an extra level inside
+// `TPollutionLayer::startDecay` or `TPollutionManager::getLayer`.
 bool TAirportEventSink::watch()
 {
 	if (!mIsBuildingRecovered[0] && unk6C->checkLiveFlag(LIVE_FLAG_DEAD)) {
