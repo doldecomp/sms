@@ -8,3 +8,22 @@ mw_comment_version: 8
 symbols_known: true
 # Retail padding contains nonzero bytes that must survive the relink.
 fill_gaps: true
+# dtk turns a data word that looks like a RAM address (0x80xxxxxx) into an
+# R_PPC_ADDR32 in the *extracted target* object and zeroes the bytes, so
+# objdiff scores our correct literal as a mismatch. Each word below is inside a
+# bulk blob -- glyph bitmaps, a tremolo table, DSP filter coefficients, the
+# DSP binary -- and objdump names an unrelated function as its target, which is
+# the tell. `source` is the address of the word, `end` is exclusive.
+block_relocations:
+  - source: 0x803E03E0 # JUTDirectPrint::sFontData
+    end: 0x803E03E4
+  - source: 0x803E0500 # JUTDirectPrint::sFontData2
+    end: 0x803E0504
+  - source: 0x803E3640 # JASystem::Player::sTreTable
+    end: 0x803E3644
+  - source: 0x803DE530 # ModelWaterManager's tmp_data
+    end: 0x803DE534
+  - source: 0x803E2DA0 # JASystem::DSPInterface::DSPRES_FILTER
+    end: 0x803E2DA4
+  - source: 0x803E6058 # dsptask's jdsp blob
+    end: 0x803E605C
