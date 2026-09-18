@@ -11,8 +11,13 @@
  */
 class M3UMtxCalcSIAnmBlendQuat : public J3DMtxCalcSoftimage {
 public:
-	M3UMtxCalcSIAnmBlendQuat();
-	M3UMtxCalcSIAnmBlendQuat(bool basic);
+	// One constructor with a default argument, not two: retail's weak
+	// __ct__24M3UMtxCalcSIAnmBlendQuatFv (0x24, enemyMario.o) is the
+	// no-argument entry point MWCC synthesises for the default, and its
+	// body is `li r5, 0` plus a tail `bl __ct__...Fb` that forwards the
+	// hidden virtual-base flag in r4 -- a thunk, not a written body.
+	// `new M3UMtxCalcSIAnmBlendQuat[2]` is what needs that signature.
+	M3UMtxCalcSIAnmBlendQuat(bool basic = false);
 
 	virtual void init(const Vec&, const Mtx&);
 	virtual void calcTransform(u16, const J3DTransformInfo&);
