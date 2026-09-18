@@ -125,6 +125,30 @@ void TMario::emitSweatSometimes()
 		emitSweat(angle);
 }
 
+// UNUSED (0xe4). The size is the whole of emitSweat (0xd4) plus a four
+// instruction guard, so retail *inlined* emitSweat here while calling it out of
+// line from emitSweatSometimes() above -- a per-call-site inline split, which is
+// what the `#pragma dont_inline` around emitSweat is standing in for. With the
+// pragma in place this compiles to a `bl` and stays far under 0xe4.
+// TODO: incorrect size (pragma-bound, see above).
+void TMario::emitSweatSometimes(s16 rot)
+{
+	if (!(gpMarDirector->unk58 & 0xF))
+		emitSweat(rot);
+}
+
+// UNUSED (0x64). Dead code: nothing in the tree names it, so only the size
+// constrains the body. Two bound emitters plus nothing else is 0x58
+// (emitRotateShootEffect's shape), so one statement is missing.
+// TODO: incorrect size -- the recovery particle ids are unrecoverable.
+void TMario::emitRecover()
+{
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_A,
+	                                            &mCenterPos, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B,
+	                                            &mCenterPos, 1, this);
+}
+
 void TMario::emitGetEffect()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_A, &unk160,
@@ -143,6 +167,18 @@ void TMario::emitGetCoinEffect(JGeometry::TVec3<f32>* pos)
 {
 	gpMarioParticleManager->emit(PARTICLE_MS_COINGET_A, pos, 0, nullptr);
 	gpMarioParticleManager->emit(PARTICLE_MS_COINGET_B, pos, 0, nullptr);
+}
+
+// UNUSED (0x70) -- exactly the size of strongTouchDownEffect below, which is
+// the evidence for the same two-emitter shape. @fabricated: the particle ids
+// are a guess, so only the shape and the size are claimed.
+void TMario::strongTouchDownEffectDisp()
+{
+	gpMarioParticleManager->emitWithRotate(PARTICLE_MS_JUMP_ED_A, &mPosition, 0,
+	                                       mFaceAngle.y, 0, 0, nullptr);
+	s16 angle = mFaceAngle.y;
+	gpMarioParticleManager->emitWithRotate(PARTICLE_MS_JUMP_ED_B, &mPosition, 0,
+	                                       angle, 0, 0, nullptr);
 }
 
 void TMario::strongTouchDownEffect()
@@ -178,6 +214,17 @@ void TMario::rippleEffect()
 				mWaterWakeAlpha = 0xFF;
 		}
 	}
+}
+
+// UNUSED (0x28). The natural pairing with smallRippleEffect() below is kept
+// here on the naming evidence, but it compiles to 0x24: retail's body has one
+// instruction more. `SMS_EmitRipplePool(unk220, this)` -- rippleEffect()'s
+// shallow-water branch -- is the size-exact alternative (two operand setup
+// instructions instead of one), with no naming evidence behind it.
+// TODO: incorrect size (4 bytes short).
+void TMario::rippleEffectSmall()
+{
+	smallRippleEffect(&mWaterRipplePos);
 }
 
 void TMario::inOutWaterEffect(f32 waterY)
@@ -297,6 +344,13 @@ void TMario::swimmingBubbleEffect()
 			}
 		}
 	}
+}
+
+// UNUSED (0x24) -- exactly a three-instruction body around the tiny-ripple
+// emitter, which is what runningRippleEffect() below ends with.
+void TMario::smallRippleEffect(JGeometry::TVec3<f32>* pos)
+{
+	SMS_EmitRippleTiny(pos);
 }
 
 void TMario::runningRippleEffect()
@@ -655,6 +709,16 @@ void TMario::emitRotateShootEffect()
 	                                            &mCenterPos, 1, this);
 }
 
+// UNUSED, size-exact at 0x50: it stores the footprint position and emits the
+// print, which is the head of emitFootPrintWithEffect() below spelled out at
+// its one call site (a pasted UNUSED helper). Rejected: the run/speed/printId
+// guard block as well, which compiles to 0x84.
+void TMario::setFootPrint(const JGeometry::TVec3<f32>& pos, int printId)
+{
+	mFootprintPos.set(pos);
+	gpMarioParticleManager->emit(printId, &mFootprintPos, 0, nullptr);
+}
+
 void TMario::emitFootPrintWithEffect(int effectId, int printId)
 {
 	int foot   = 2;
@@ -715,6 +779,15 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 	}
 }
 
+// UNUSED (0x24). One instruction shorter than emitDirtyFootPrint() below, so
+// the argument is passed straight through in r4 and only r5 gets an `li`: the
+// parameter is the *effect* id, not the print id (that spelling needs an extra
+// `mr` and lands on 0x28).
+void TMario::emitFootPrint(int effectId)
+{
+	emitFootPrintWithEffect(effectId, 0);
+}
+
 void TMario::emitDirtyFootPrint()
 {
 	emitFootPrintWithEffect(MAP_POLLUTION_MS_M_ASHIOS, -1);
@@ -739,6 +812,20 @@ void TMario::meltInWaterEffect()
 				emitter->setGlobalScale(scale);
 			}
 		}
+	}
+}
+
+// UNUSED (0x84) -- the water-gun half of rocketEffectStart() below, which
+// spells it out at its one call site.
+void TMario::rocketEffectNozzle()
+{
+	if (mWaterGun != nullptr) {
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    PARTICLE_MS_M_ROCKET_A, &mWaterGun->getEmitPos0(), 0, this);
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    PARTICLE_MS_M_ROCKET_B, &mWaterGun->getEmitPos0(), 0, this);
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    PARTICLE_MS_M_ROCKET_B2, &mWaterGun->getEmitPos0(), 0, this);
 	}
 }
 
