@@ -1808,6 +1808,15 @@ void TBathWaterManager::throwMario(f32 param_1)
 	SMS_ThrowMario(vel, vel.length());
 }
 
+// Stands in for the unimplemented `TRandom_::get_float(f32)` declaration in
+// JMath.hpp, which the ROM reaches here: it is the level that keeps
+// TRandom_fast_::get() a `bl` at the jump-drop draw while the spread draw a
+// few lines up expands it. Parked here rather than in the shared header.
+static inline f32 drawJumpSpeed(JMath::TRandomFast& rnd, f32 max)
+{
+	return rnd.get_float(0.0f, max);
+}
+
 // TODO: needs more matching
 static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
                                JGeometry::TVec3<f32>* out)
@@ -1884,7 +1893,9 @@ void TBathWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 				JGeometry::TVec3<f32> vel;
 				if (fakeCalcPos(data, unk14[1]->dropRadius.get(),
 				                unk10.get_float(-1.0f, 1.0f), &vel))
-					unk20[1]->addDrop(vel, unk10.get_float01());
+					// The upward speed is drawn from [0, 10): 10.0f is the
+					// TU's `@3424` literal, which nothing else accounts for.
+					unk20[1]->addDrop(vel, drawJumpSpeed(unk10, 10.0f));
 			}
 
 			TBathWater* soundBw = unk20[0];
