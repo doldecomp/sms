@@ -106,17 +106,10 @@ f32 MSMarioPosVolume::getDistFromMario(const Vec& pos)
 	return 0.0f;
 }
 
-// The extra level over JAIActor::mTranslation is load-bearing: it takes
-// startAnimSound's frame from 0x88 to retail's 0x90 with no instruction change
-// and halves the register permutation below it. The natural home is a
-// `const Vec& getTranslation() const` on JAIActor, but JAIConst.hpp is shared
-// with a dozen linked units, so the level is parked here.
-// TODO: promote to JAIActor when that header can move.
-static inline const Vec& JAIActorTrans(JAIActor* actor)
-{
-	return *actor->mTranslation;
-}
-
+// The level over the translation is `JAIActor::getTranslation()` in
+// JAIConst.hpp (header round 23 promoted it out of a TU-local clone here; the
+// reference-returning accessor is worth the same 8 low bytes the free function
+// was, tree-wide neutral).
 // Research batch 146: retail's `bl std::sqrtf` inside getDistFromMario is a
 // depth measurement, not the "weak plus bl" refusal it was filed as. The
 // measured budget is 14 / 9 / 6 / 2 / never at depths 1-5 and math.h's body
@@ -132,7 +125,7 @@ static inline const Vec& JAIActorTrans(JAIActor* actor)
 // +16 binding in a single level, which nothing natural here supplies.
 static inline f32 MarioDistance(JAIActor* actor)
 {
-	f32 dist = MSMarioPosVolume::getDistFromMario(JAIActorTrans(actor));
+	f32 dist = MSMarioPosVolume::getDistFromMario(actor->getTranslation());
 
 	return dist;
 }

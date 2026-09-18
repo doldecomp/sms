@@ -23,6 +23,10 @@ public:
 	{
 	}
 
+	// The reference return is a level: MAnmSoundNPC::startAnimSound reads the
+	// translation through it and needs the 8 low bytes it reserves.
+	const Vec& getTranslation() const { return *mTranslation; }
+
 	/* 0x0 */ const void* mIdentity;
 	/* 0x4 */ const Vec* mTranslation;
 	/* 0x8 */ const Vec* unk8;
