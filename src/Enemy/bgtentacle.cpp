@@ -1047,8 +1047,12 @@ void TBGTentacle::moveConstraint()
 		break;
 
 	case 9: {
+		// TODO: retail makes two 12-byte copies here (a temporary at 0xc plus
+		// the local), which a by-value TNode::getPosition() would explain --
+		// but that costs calcAttackGuideAnm, calcAtkParticleAndSE,
+		// decideOwnState and moveNode 2-3 points each, so it is not that.
 		JGeometry::TVec3<f32> local_58 = mNodes[0].getPosition();
-		mNodes[0].setPosition(local_58);
+		mNodes[0].setUnk18(local_58);
 		for (int i = 1; i < mNodeNum; ++i) {
 			local_58.x -= getNodeLen() * 1.3f;
 			local_58.y -= getNodeLen() * 1.5f;
