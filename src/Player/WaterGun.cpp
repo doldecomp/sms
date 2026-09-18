@@ -893,9 +893,6 @@ void TNozzleDeform::emit(int param_1)
 
 void TNozzleDeform::animation(int param)
 {
-	volatile u8 stackPad[0x118];
-	(void)stackPad;
-
 	bool check = 0;
 	if (param == 0)
 		check = 1;
