@@ -248,18 +248,20 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 
 	mBlurAlpha += mBlurAlphaRate * (target - mBlurAlpha);
 
-	// TODO (shared header, ScreenUtil.hpp): read off retail's tail, the last
-	// three fields are one `JGeometry::TVec3<f32>` member at 0x5C, not three
-	// f32s. Retail computes the alpha and the radius first, copies `viewDir`
-	// into a fifth 12-byte stack vector with interleaved lfs/stfs (i.e.
-	// `dir.set(viewDir)`), loads gpAfterEffect only then, and writes the
-	// member with three integer `lwz`/`stw` (i.e. a `TVec3` assignment).
-	// That accounts for 12 of the function's 48-byte frame gap; another 8 are
-	// a second `stfd` slot for the `(s16)(182.04445f * mRotation.y - ...)`
-	// conversion, which retail materialises twice from one `fctiwz`, and the
-	// remaining 28 are dead low region. A by-value TU-local setter was tried
-	// and is worse (157 -> 161 instructions); the honest fix is the TVec3
-	// member plus a setter on TAfterEffect.
+	// TODO: header round 22 made 0x5C the single `JGeometry::TVec3<f32>`
+	// member retail's three integer `lwz`/`stw` prove (83.74 -> 87.07).
+	// What is left is the 0x30 frame gap, and the fifth 12-byte stack vector
+	// is *not* worth taking: retail copies `viewDir` into it with interleaved
+	// lfs/stfs before the integer copy into the member, but spelling that as
+	// `JGeometry::TVec3<f32> blurDir; blurDir.set(viewDir);` (declared last,
+	// which is where retail's 0x30 slot puts it) costs five instructions and
+	// scores 84.94, below the direct assignment. The gap breaks down as 12
+	// for that vector, 8 for a second `stfd` slot for the `(s16)(182.04445f *
+	// mRotation.y - ...)` conversion -- retail materialises the conversion
+	// twice from one `fctiwz`, i.e. the expression is written twice and only
+	// the float half is CSEd -- and 28 bytes of dead low region with no
+	// candidate. Declaration order is already confirmed exact by the four
+	// vector slots (viewDir, toMario, localPos, marioPos, highest first).
 	gpAfterEffect->unk15 = 2;
 	gpAfterEffect->unk1C = (u8)(mBlurAlpha * (1.0f - gpCamera->unk270));
 	gpAfterEffect->unk50 = mBlurRadius;
