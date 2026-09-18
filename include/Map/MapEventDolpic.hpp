@@ -33,6 +33,9 @@ public:
 
 	void rising();
 
+	// fabricated
+	int getEventFlag() const { return unk2C; }
+
 public:
 	/* 0x20 */ J3DJoint* unk20;
 	/* 0x24 */ TMapCollisionMove* unk24;

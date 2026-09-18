@@ -83,7 +83,8 @@ bool TDolpicEventRiccoMammaGate::isFinishedAll() const
 
 void TDolpicEventRiccoMammaGate::rising()
 {
-	f32 scale = TMapObjBase::getJointScaleY(unk20) + unk34;
+	f32 scale = TMapObjBase::getJointScaleY(unk20);
+	scale += unk34;
 
 	TPosition3f mtx;
 	mtx.identity();
@@ -104,8 +105,7 @@ bool TDolpicEventRiccoMammaGate::control()
 
 	if (unk44 > unk40) {
 		SMSRumbleMgr->start(0x13, (f32*)nullptr);
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &unk48, 0, nullptr, 0,
-		                                4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &unk48);
 	}
 
 	if (unk44 > 0) {
@@ -137,7 +137,7 @@ bool TDolpicEventRiccoMammaGate::watch()
 
 		unk44 = unk38;
 
-		if (unk2C == 0x50001) {
+		if (getEventFlag() == 0x50001) {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "マニ屋上げデモカメラ", &unk48, -1, 0.0f, false, nullptr, 0,
 			    nullptr, JDrama::TFlagT<u16>(0));
@@ -145,7 +145,7 @@ bool TDolpicEventRiccoMammaGate::watch()
 			                             this);
 			gpMarioParticleManager->emit(MAP_MAP_MS_OBJUP_MANIYA_B, &unk48, 2,
 			                             this);
-			gpPollution->getLayer(0)->startDecay();
+			SMSGetPollutionLayer(0)->startDecay();
 		} else {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "灯台上げデモカメラ", &unk48, -1, 0.0f, false, nullptr, 0,
@@ -154,10 +154,12 @@ bool TDolpicEventRiccoMammaGate::watch()
 			                             this);
 			gpMarioParticleManager->emit(MAP_MAP_MS_OBJUP_TOUDAI_B, &unk48, 2,
 			                             this);
-			gpPollution->getLayer(1)->startDecay();
+			SMSGetPollutionLayer(1)->startDecay();
 		}
 
 		SMS_MarioWarpRequest(unk54, unk60);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0,
+		                                   nullptr, 0);
 		return true;
 	}
 
@@ -175,9 +177,9 @@ void TDolpicEventRiccoMammaGate::loadAfter()
 		unk28->setUp();
 		unk18 = 0;
 		if (unk2C == 0x50001)
-			gpPollution->getCounterLayer().offLayer(0);
+			SMSGetPollution()->offLayer(0);
 		else
-			gpPollution->getCounterLayer().offLayer(1);
+			SMSGetPollution()->offLayer(1);
 	}
 }
 
@@ -185,9 +187,8 @@ void TDolpicEventRiccoMammaGate::load(JSUMemoryInputStream& stream)
 {
 	TMapEvent::load(stream);
 	stream.readString();
-	stream >> unk54.x >> unk54.y >> unk54.z;
 	f32 unused;
-	stream >> unused;
+	stream >> unk54.x >> unk54.y >> unk54.z >> unused;
 	stream >> unk60;
 
 	int idx;
@@ -201,7 +202,7 @@ void TDolpicEventRiccoMammaGate::load(JSUMemoryInputStream& stream)
 
 	unk24 = TMapObjBase::newAndInitBuildingCollisionMove(idx + 1, nullptr);
 	unk28 = TMapObjBase::newAndInitBuildingCollisionWarp(idx + 1, nullptr);
-	if (TFlagManager::getInstance()->getBool(unk2C)) {
+	if (TFlagManager::getInstance()->getBool(getEventFlag())) {
 		unk20 = getBuilding(idx + 1)->getJoint();
 		TMapObjBase::setJointScaleY(unk20, 0.008f);
 		TMapObjBase::setJointTransY(unk20, 295.0f);
@@ -241,8 +242,8 @@ TDolpicEventRiccoMammaGate::TDolpicEventRiccoMammaGate(const char* name)
     , unk3C(0)
     , unk40(0)
     , unk44(0)
-    , unk60(0.0f)
-    , unk54(0.0f, 0.0f, 0.0f)
-    , unk48(0.0f, 0.0f, 0.0f)
 {
+	unk60   = 0.0f;
+	unk48.x = unk48.y = unk48.z = 0.0f;
+	unk54.x = unk54.y = unk54.z = 0.0f;
 }
