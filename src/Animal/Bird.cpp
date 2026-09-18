@@ -253,12 +253,20 @@ void TAnimalBird::moveObject()
 	TLiveActor::moveObject();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TAnimalBird::bind (batch 127).
+static inline TWireBinder* BirdWireBinder(const TAnimalBird* p)
+{
+	TWireBinder* wireBinder = p->mWireBinder;
+	return wireBinder;
+}
+
 void TAnimalBird::bind()
 {
 	if (isCheckWithWireBinder() == false)
 		TLiveActor::bind();
 	else
-		mWireBinder->bind(this);
+		BirdWireBinder(this)->bind(this);
 }
 
 const char** TAnimalBird::getBasNameTable() const { return bird_bastable; }

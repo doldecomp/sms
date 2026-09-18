@@ -1075,6 +1075,14 @@ void TTinKoopa::startBreakingParts()
 	mBreakingParts->startBreaking();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TTinKoopa::launchKiller (batch 127).
+static inline int TinkoopaKillerIndex(const TTinKoopa* p)
+{
+	int killerIndex = p->mKillerIndex;
+	return killerIndex;
+}
+
 void TTinKoopa::launchKiller(int direction)
 {
 	TCoasterKiller* killer
@@ -1086,7 +1094,7 @@ void TTinKoopa::launchKiller(int direction)
 
 	int slot;
 	if (direction == 1)
-		slot = TINKOOPA_JOINT_KILLER_FIRST + mKillerIndex;
+		slot = TINKOOPA_JOINT_KILLER_FIRST + TinkoopaKillerIndex(this);
 	else
 		slot = (TINKOOPA_JOINT_KILLER_FIRST + 3) - mKillerIndex;
 

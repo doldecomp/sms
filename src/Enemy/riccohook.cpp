@@ -103,10 +103,18 @@ BOOL TRiccoHook::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TRiccoHook::perform (batch 127).
+static inline TTakeActor* RiccohookHookTake(const TRiccoHook* p)
+{
+	TTakeActor* hookTake = p->mHookTake;
+	return hookTake;
+}
+
 void TRiccoHook::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSpineEnemy::perform(cue, graphics);
-	mHookTake->perform(cue, graphics);
+	RiccohookHookTake(this)->perform(cue, graphics);
 	if (cue & CUE_MOVE) {
 		if (mTimer > 0) {
 			mTimer--;

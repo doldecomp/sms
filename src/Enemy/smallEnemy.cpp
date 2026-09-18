@@ -164,10 +164,18 @@ TSmallEnemy::TSmallEnemy(const char* name)
 {
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TSmallEnemy::setMActorAndKeeper (batch 127).
+static inline TMActorKeeper* SmallEnemyMActorKeeper(const TSmallEnemy* p)
+{
+	TMActorKeeper* mActorKeeper = p->mMActorKeeper;
+	return mActorKeeper;
+}
+
 void TSmallEnemy::setMActorAndKeeper()
 {
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
-	mMActor       = mMActorKeeper->createMActorFromNthData(0, 0);
+	mMActor       = SmallEnemyMActorKeeper(this)->createMActorFromNthData(0, 0);
 }
 
 void TSmallEnemy::init(TLiveManager* param_1)

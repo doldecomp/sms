@@ -542,6 +542,14 @@ DEFINE_NERVE(TNerveYumboHiding, TLiveActor)
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveYumboAppearing::execute (batch 127).
+static inline TMarioParticleManager* YunboGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 DEFINE_NERVE(TNerveYumboAppearing, TLiveActor)
 {
 	TYumbo* yumbo = (TYumbo*)spine->getBody();
@@ -549,7 +557,7 @@ DEFINE_NERVE(TNerveYumboAppearing, TLiveActor)
 	if (spine->getTime() == 0) {
 		yumbo->changeToYumbo();
 		yumbo->setBckAnm(10);
-		gpMarioParticleManager->emit(PARTICLE_MS_SMB_AP_ROCK,
+		YunboGetMarioParticleManager()->emit(PARTICLE_MS_SMB_AP_ROCK,
 		                             &yumbo->mPosition, 0, nullptr);
 		gpMarioParticleManager->emit(PARTICLE_MS_SMB_AP_SMOKE,
 		                             &yumbo->mPosition, 0, nullptr);

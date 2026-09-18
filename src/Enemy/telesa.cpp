@@ -944,13 +944,21 @@ TMarioModokiTelesa::TMarioModokiTelesa(const char* name)
 {
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMarioModokiTelesa::load (batch 127).
+static inline TLiveManager* TelesaManager(const TMarioModokiTelesa* p)
+{
+	TLiveManager* manager = p->mManager;
+	return manager;
+}
+
 void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 
 	stream >> mImitationIndex;
 
-	SDLModelData* modelToUse = ((TTelesaManager*)mManager)->mModokiTelesaModel;
+	SDLModelData* modelToUse = ((TTelesaManager*)TelesaManager(this))->mModokiTelesaModel;
 	switch (mImitationIndex) {
 		// NOTE: IMITATION_INDEX_NOT_IMITATING=0 stands for no model change
 

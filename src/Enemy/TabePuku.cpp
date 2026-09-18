@@ -729,13 +729,21 @@ DEFINE_NERVE(TNerveTabePukuAttack, TLiveActor)
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveTabePukuBite::execute (batch 127).
+static inline MSound* TabePukuGetMSound()
+{
+	MSound* mSound = gpMSound;
+	return mSound;
+}
+
 DEFINE_NERVE(TNerveTabePukuBite, TLiveActor)
 {
 	TTabePuku* puku = (TTabePuku*)spine->getBody();
 
 	puku->doBite();
 	puku->setBckAnm(TABEPUKU_ANM_SWIM);
-	gpMSound->startSoundActor(MSD_SE_EN_TOBIPUKU_BITE, &puku->mPosition, 0,
+	TabePukuGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_BITE, &puku->mPosition, 0,
 	                          nullptr, 0, 4);
 
 	spine->pushAfterCurrent(&TNerveTabePukuDive::theNerve());

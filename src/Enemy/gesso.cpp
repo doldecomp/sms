@@ -540,9 +540,17 @@ static inline MActor* GessoGetMActor(const TGesso* p)
 	return mActor;
 }
 
+// Binding level over a raw member read: a register lever in TGesso::pollute
+// at an unchanged frame (batch 127).
+static inline bool GessoIsRightSideUp(const TGesso* p)
+{
+	bool isRightSideUp = p->mIsRightSideUp;
+	return isRightSideUp;
+}
+
 void TGesso::pollute()
 {
-	if (mState != STATE_WANDERING && !mIsRightSideUp)
+	if (mState != STATE_WANDERING && !GessoIsRightSideUp(this))
 		mPolluteVelocity.y = -3.0f;
 
 	mPolluteObj->setVelocity(mPolluteVelocity);

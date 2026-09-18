@@ -79,6 +79,14 @@ TGKHitObj::TGKHitObj(TGateKeeperBase* owner, int joint_idx, const char* name)
 	    .push_back(this);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TGKHitObj::receiveMessage (batch 127).
+static inline TGateKeeperBase* GatekeeperOwner(const TGKHitObj* p)
+{
+	TGateKeeperBase* owner = p->mOwner;
+	return owner;
+}
+
 BOOL TGKHitObj::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x1000001
@@ -91,7 +99,7 @@ BOOL TGKHitObj::receiveMessage(THitActor* sender, u32 message)
 		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 		return true;
 	}
-	return mOwner->receiveMessage(sender, message);
+	return GatekeeperOwner(this)->receiveMessage(sender, message);
 }
 
 void TGKHitObj::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -125,12 +133,20 @@ TGateKeeperBase::TGateKeeperBase(const char* name)
 
 void TGateKeeperBase::kill() { onLiveFlag(LIVE_FLAG_DEAD); }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TGateKeeperBase::receiveMessage (batch 127).
+static inline TMarioParticleManager* GatekeeperGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 BOOL TGateKeeperBase::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x1000001) {
 		if (mVulnerable && message == HIT_MESSAGE_SPRAYED_BY_WATER)
 			unk154++;
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		GatekeeperGetMarioParticleManager()->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
 		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);

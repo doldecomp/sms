@@ -37,6 +37,14 @@ void CalcMtxPtrFromJointName(JUTNameTab* names, const char* name,
 	*result = model->getAnmMtx(index);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TBossHanachanPartsBase::TBossHanachanPartsBase (batch 127).
+static inline TBossHanachan* BossHanachanPartsUnkFC(const TBossHanachanPartsBase* p)
+{
+	TBossHanachan* vFC = p->unkFC;
+	return vFC;
+}
+
 TBossHanachanPartsBase::TBossHanachanPartsBase(TBossHanachan* boss,
                                              u32 actorType, int modelIndex,
                                              const char* name)
@@ -50,7 +58,7 @@ TBossHanachanPartsBase::TBossHanachanPartsBase(TBossHanachan* boss,
     , unk10C(0)
     , mInbetween(nullptr)
 {
-	mMActorKeeper = unkFC->mMActorKeeper;
+	mMActorKeeper = BossHanachanPartsUnkFC(this)->mMActorKeeper;
 	mMActor = mMActorKeeper->createMActorFromNthData(modelIndex, 0);
 	mMActor->initNormalMotionBlend();
 	initHitActor(actorType, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);

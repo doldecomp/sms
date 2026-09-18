@@ -515,14 +515,30 @@ DEFINE_NERVE(TNerveBEelTearsGenerate, TLiveActor)
 	return false;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TNerveBEelTearsMoveUp::execute (batch 127).
+static inline TMActorKeeper* BosseelMActorKeeper(const TBEelTears* p)
+{
+	TMActorKeeper* mActorKeeper = p->mMActorKeeper;
+	return mActorKeeper;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TNerveBEelTearsMoveUp::execute (batch 127).
+static inline TBEelTearsSaveLoadParams* BosseelTearsParams(const TBEelTears* p)
+{
+	TBEelTearsSaveLoadParams* tearsParams = p->mTearsParams;
+	return tearsParams;
+}
+
 DEFINE_NERVE(TNerveBEelTearsMoveUp, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		tears->mMActor = tears->mMActorKeeper->getMActor("tears.bmd");
+		tears->mMActor = BosseelMActorKeeper(tears)->getMActor("tears.bmd");
 		tears->mMActor->setBckFromIndex(1);
 	}
-	tears->mPosition.y += tears->mTearsParams->mSLTearsUpSpeed.get();
+	tears->mPosition.y += BosseelTearsParams(tears)->mSLTearsUpSpeed.get();
 	return false;
 }
 
@@ -587,6 +603,14 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 	return false;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TNerveBEelTearsSplit::execute (batch 127).
+static inline MActor* BosseelMActor(const TBEelTears* p)
+{
+	MActor* mActor = p->mMActor;
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
@@ -594,8 +618,8 @@ DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
 		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
-		tears->mMActor->setBckFromIndex(3);
-		MActor* actor = tears->mMActor;
+		BosseelMActor(tears)->setBckFromIndex(3);
+		MActor* actor = BosseelMActor(tears);
 		f32 frameRate = tears->mTearsParams->mSLHitAnmFrameRate.get();
 		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
@@ -1296,13 +1320,21 @@ void TBossEelCollision::initCollision()
 	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TBossEelCollision::behaveToMario (batch 127).
+static inline TBossEel* BosseelOwner(const TBossEelCollision* p)
+{
+	TBossEel* owner = p->mOwner;
+	return owner;
+}
+
 void TBossEelCollision::behaveToMario()
 {
 	JGeometry::TVec3<f32> marioTarget(0.0f, TBossEel::mForcePow, 0.0f);
 	marioTarget += SMS_GetMarioPos();
 	SMS_MarioMoveRequest(marioTarget);
 
-	if (mOwner && mOwner->canEatMario())
+	if (BosseelOwner(this) && mOwner->canEatMario())
 		mOwner->forceEat();
 }
 

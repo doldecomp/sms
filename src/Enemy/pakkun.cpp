@@ -915,11 +915,19 @@ bool TStayPakkun::isHitValid(u32 message)
 	return false;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TStayPakkun::shootIn (batch 127).
+static inline TPakkunSeed* PakkunSeed(const TStayPakkun* p)
+{
+	TPakkunSeed* seed = p->mSeed;
+	return seed;
+}
+
 // All three seeds come out at once, the outer two fanned ten degrees either
 // side of the middle one.
 void TStayPakkun::shootIn()
 {
-	mSeed->appear();
+	PakkunSeed(this)->appear();
 	mSeed->set();
 
 	for (int i = 0; i < 2; i++) {

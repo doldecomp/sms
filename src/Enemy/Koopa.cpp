@@ -625,11 +625,19 @@ void TKoopaBody::attack_(THitActor* other)
 // TKoopa
 // ---------------------------------------------------------------------------
 
+// Binding level over a raw member read, worth +8 of low region in
+// TKoopa::getFlameDirDegree (batch 127).
+static inline bool KoopaTurnsLeft(const TKoopa* p)
+{
+	bool turnsLeft = p->mTurnsLeft;
+	return turnsLeft;
+}
+
 f32 TKoopa::getFlameDirDegree() const
 {
 	f32 offset = getFlameDirRate() * getParam()->flameNeckRange.get();
 	f32 signed_;
-	if (mTurnsLeft)
+	if (KoopaTurnsLeft(this))
 		signed_ = -offset;
 	else
 		signed_ = offset;

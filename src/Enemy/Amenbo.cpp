@@ -562,17 +562,25 @@ DEFINE_NERVE(TNerveAmenboSearch, TLiveActor)
 	return false;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TNerveAmenboTurn::execute (batch 127).
+static inline bool AmenboIsChasingMario(const TAmenbo* p)
+{
+	bool isChasingMario = p->mIsChasingMario;
+	return isChasingMario;
+}
+
 DEFINE_NERVE(TNerveAmenboTurn, TLiveActor)
 {
 	TAmenbo* self = (TAmenbo*)spine->getBody();
 	if (spine->getTime() == 0) {
-		self->changeBck("amenbo_run1", self->mIsChasingMario ? 3.0f : 1.0f);
+		self->changeBck("amenbo_run1", AmenboIsChasingMario(self) ? 3.0f : 1.0f);
 	}
 
 	self->doAdjustTarget();
 
 	if (self->isStartMoving()) {
-		if (self->mIsChasingMario) {
+		if (AmenboIsChasingMario(self)) {
 			spine->pushAfterCurrent(&TNerveAmenboPreAttack::theNerve());
 		} else {
 			spine->pushAfterCurrent(&TNerveAmenboWalk::theNerve());

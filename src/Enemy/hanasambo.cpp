@@ -1448,13 +1448,21 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 	return false;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNerveSamboHeadHide::execute (batch 127).
+static inline TMarioParticleManager* HanasamboGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 DEFINE_NERVE(TNerveSamboHeadHide, TLiveActor)
 {
 	TSamboHead* head = (TSamboHead*)spine->getBody();
 	if (spine->getTime() == 0) {
 		head->setBckAnm(4);
 		head->onHitFlag(HIT_FLAG_NO_COLLISION);
-		gpMarioParticleManager->emit(0xB8, &head->mPosition, 0, nullptr);
+		HanasamboGetMarioParticleManager()->emit(0xB8, &head->mPosition, 0, nullptr);
 		gpMarioParticleManager->emit(0xB9, &head->mPosition, 0, nullptr);
 	} else if (head->checkCurAnmEnd(0)) {
 		head->onLiveFlag(LIVE_FLAG_HIDDEN);

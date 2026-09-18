@@ -766,6 +766,14 @@ TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 	return local_48;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TGraphWeb::getNeighborNodeIndexByFlag (batch 127).
+static inline s16 GraphConnectionNum(const TRailNode* p)
+{
+	s16 connectionNum = p->mConnectionNum;
+	return connectionNum;
+}
+
 int TGraphWeb::getNeighborNodeIndexByFlag(int param_1, int param_2,
                                           u32 param_3) const
 {
@@ -773,7 +781,7 @@ int TGraphWeb::getNeighborNodeIndexByFlag(int param_1, int param_2,
 	int goodConnections[8];
 
 	const TRailNode* railNode = getGraphNode(param_1).getRailNode();
-	for (int i = 0; i < railNode->mConnectionNum; ++i) {
+	for (int i = 0; i < GraphConnectionNum(railNode); ++i) {
 		int conn = railNode->mConnections[i];
 		if (conn != param_2 && getGraphNode(conn).checkFlag(param_3)) {
 			goodConnections[goodConnectionNum] = conn;

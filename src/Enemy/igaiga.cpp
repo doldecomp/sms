@@ -369,10 +369,18 @@ void TIgaigaPolluteModelManager::init(TLiveActor* param_1)
 		unk18[i] = new TIgaigaPolluteModel(param_1, modelData);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TIgaigaPolluteModel::setAnm (batch 127).
+static inline TSharedParts* IgaigaUnk10(const TIgaigaPolluteModel* p)
+{
+	TSharedParts* v10 = p->unk10;
+	return v10;
+}
+
 void TIgaigaPolluteModel::setAnm()
 {
-	unk10->unk18->setBckFromIndex(7);
-	unk10->unk18->getFrameCtrl(0)->setFrame(0.0f);
+	IgaigaUnk10(this)->unk18->setBckFromIndex(7);
+	IgaigaUnk10(this)->unk18->getFrameCtrl(0)->setFrame(0.0f);
 }
 
 TIgaigaManager::TIgaigaManager(const char* name)
@@ -834,10 +842,18 @@ void TGorogoroPolluteModelManager::init(TLiveActor* param_1)
 		unk18[i] = new TGorogoroPolluteModel(param_1, modelData);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TGorogoroPolluteModel::setAnm (batch 127).
+static inline TSharedParts* IgaigaUnk10(const TGorogoroPolluteModel* p)
+{
+	TSharedParts* v10 = p->unk10;
+	return v10;
+}
+
 void TGorogoroPolluteModel::setAnm()
 {
-	unk10->unk18->setBckFromIndex(3);
-	unk10->unk18->getFrameCtrl(0)->setFrame(0.0f);
+	IgaigaUnk10(this)->unk18->setBckFromIndex(3);
+	IgaigaUnk10(this)->unk18->getFrameCtrl(0)->setFrame(0.0f);
 }
 
 TGorogoroManager::TGorogoroManager(const char* name)

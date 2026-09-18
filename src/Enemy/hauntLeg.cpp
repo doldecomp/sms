@@ -301,10 +301,18 @@ void THauntLeg::setDeadAnm()
 	unk194->mHitFlags |= HIT_FLAG_NO_COLLISION;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// THauntLeg::attackToMario (batch 127).
+static inline f32 HauntLegDistToMarioSquared(const THauntLeg* p)
+{
+	f32 distToMarioSquared = p->mDistToMarioSquared;
+	return distToMarioSquared;
+}
+
 void THauntLeg::attackToMario()
 {
 	updateSquareToMario();
-	if (mDistToMarioSquared < 10000.0f)
+	if (HauntLegDistToMarioSquared(this) < 10000.0f)
 		sendAttackMsgToMario();
 }
 

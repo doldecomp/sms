@@ -866,9 +866,17 @@ void TCannon::damage()
 		emitter->setGlobalScale(mChorobei->mScaling);
 }
 
+// Binding level over a raw member read: a register lever in
+// TCannon::setKillerGoalPoint at an unchanged frame (batch 127).
+static inline u8 CannonAimAtMario(const TCannon* p)
+{
+	u8 aimAtMario = p->mAimAtMario;
+	return aimAtMario;
+}
+
 void TCannon::setKillerGoalPoint()
 {
-	if (mAimAtMario) {
+	if (CannonAimAtMario(this)) {
 		s16 angle = TMsRange<f32>(0.0f, 360000.0f).rand();
 		JGeometry::TVec3<f32> pos(*gpMarioPos);
 		pos.x += 500.0f * JMASCos(angle);
