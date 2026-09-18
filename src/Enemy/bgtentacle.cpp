@@ -84,19 +84,36 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	J3DMtxCalcAnm::calc(param_1);
 	int iVar8 = uVar9 - 1;
 
+	// TODO: 99.3%, every instruction exact, frame 0x2c0 vs 0x2d0.  Slot map:
+	// the four named vectors below (local_278, local_68, local_74, local_80)
+	// sit as one descending 12-byte block in both builds, but retail has a
+	// dead 4-byte slot between local_278 and local_68 (its block spans 0x250
+	// to 0x283, ours 0x240 to 0x26f) and 12 more bytes of unreferenced
+	// inline-temp pool: retail's pool leaves 0x1c dead above the
+	// TVec3::sub argument copy and 0x80 dead between the volatile sqrt slot
+	// and the spline-result temporary, and it orders those two the other way
+	// round (volatile below the spline temp, ours above).  So the 16 bytes are
+	// one 4-byte named local declared right after the spline point plus a
+	// 12-byte pool temporary, not a body local we can name from the code.
 	MtxPtr asdf = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1);
 
 	JGeometry::TVec3<f32> local_278
 	    = mOwner->mSpline->getPoint(param_1 / f32(iVar8));
 
-	asdf[0][3] = local_278.x;
-	asdf[1][3] = local_278.y;
-	asdf[2][3] = local_278.z;
+	asdf[0][3]  = local_278.x;
+	f32 nodeY   = local_278.y;
+	asdf[1][3]  = nodeY;
+	f32 nodeZ   = local_278.z;
+	asdf[2][3]  = nodeZ;
 
 	JGeometry::TVec3<f32> local_68;
+	JGeometry::TVec3<f32> local_74;
+	JGeometry::TVec3<f32> local_80;
 
 	if (param_1 == iVar8) {
 		// TODO: an inline for extracting a column out of a matrix?
+	// (The column indices below are read off the load offsets: 0xc/0x1c/0x2c
+	// is [i][3], 8/0x18/0x28 is [i][2] and 4/0x14/0x24 is [i][1].)
 		MtxPtr mtx1 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 2);
 		JGeometry::TVec3<f32> vec1(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
 
@@ -117,7 +134,9 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		MtxPtr mtx1 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 + 1);
 		JGeometry::TVec3<f32> vec1(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
 
-		vec1 -= local_278;
+		vec1.x -= local_278.x;
+		vec1.y -= nodeY;
+		vec1.z -= nodeZ;
 
 		if (!vec1.isZero()) {
 			VECNormalize(&vec1, &local_68);
@@ -127,22 +146,23 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	}
 
 	f32 fVar1 = 1.0f;
-	JGeometry::TVec3<f32> local_74;
 	if (param_1 == 0) {
 		local_74.set(0.0f, 1.0f, 0.0f);
 	} else {
 		MtxPtr mtx1 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 1);
-		JGeometry::TVec3<f32> vec1(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
+		JGeometry::TVec3<f32> zDir(mtx1[0][2], mtx1[1][2], mtx1[2][2]);
 
-		local_74.cross(local_68, vec1);
+		local_74.cross(local_68, zDir);
 
 		if (local_74.squared() < 0.01f) {
-			local_74.set(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
+			local_74.set(mtx1[0][1], mtx1[1][1], mtx1[2][1]);
 		}
 
 		VECNormalize(&local_74, &local_74);
 		JGeometry::TVec3<f32> local_d4(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
-		local_d4 -= local_278;
+		local_d4.x -= local_278.x;
+		local_d4.y -= nodeY;
+		local_d4.z -= nodeZ;
 
 		f32 fVar13 = VECMag(&local_d4);
 		if (fVar13 == 0.0f) {
@@ -160,7 +180,6 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		}
 	}
 
-	JGeometry::TVec3<f32> local_80;
 	local_80.cross(local_68, local_74);
 
 	if (!local_80.isZero()) {
@@ -178,11 +197,20 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		fVar1          = f;
 	}
 
-	f32 fVar13 = MsClamp(fVar1, 0.7f, 1.2f);
+	// Spelled out rather than MsClamp(fVar1, 0.7f, 1.2f): MsClamp's by-value
+	// parameter is bound in a scratch FPR, so the clamp lands in f1 and costs
+	// an `fmr f1, f29` retail does not have.  Retail clamps in fVar1's own
+	// callee-saved f29, which only an in-place assignment produces.  (The
+	// named result `f32 fVar13 = MsClamp(...)` is worth +8 of frame, so with
+	// this spelling the frame gap above is 16 rather than 8.)
+	if (fVar1 > 1.2f)
+		fVar1 = 1.2f;
+	else if (fVar1 < 0.7f)
+		fVar1 = 0.7f;
 
-	local_68.scale(fVar13);
-	local_74.scale(fVar13);
-	local_80.scale(fVar13);
+	local_68.scale(fVar1);
+	local_74.scale(fVar1);
+	local_80.scale(fVar1);
 
 	if (mOwner->getState() == 5 && (param_1 == iVar8 || param_1 == uVar9 - 2)) {
 		local_74.set(0.0f, 0.3f, 0.0f);
@@ -725,6 +753,13 @@ void TBGTentacle::setAttackTarget()
 		local_3c.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), local_148);
 		local_3c.normalize();
 
+		// TODO: the cross above is the open `TVec3::cross()` store-order
+		// header item: retail stores x and y, reloads local_148.x and then
+		// stores z, while our header computes all three before storing.
+		// Nothing at this call site changes it (JGVec3.hpp item).
+		// The frame is 112 bytes short, all of it low region, and
+		// getOwner()->mPosition for the subtrahend buys 8 of that with no
+		// instruction change.
 		// TODO: retail makes four 12-byte copies around the two out-of-line
 		// scale() calls (parameter, result, parameter, result); the named
 		// intermediate below makes five and the single-expression form
@@ -1294,7 +1329,29 @@ void TBGTentacle::calcAttackGuideAnm()
 	if (guideScale > 2.0f)
 		guideScale = 2.0f;
 
-	// TODO: retail keeps local_30's y and z in f30/f31 from the subtraction
+	// TODO: 98.9%.  Two residues, both measured in closure batch 90.
+	// (1) Retail loads local_30.z into f31 at the third subtraction above,
+	//     ours hoists it eight instructions earlier; the instruction set is
+	//     identical, only the schedule differs.  Splitting the declaration
+	//     (`f32 f31; ... f31 = local_30.z;`) or declaring it with its
+	//     initialiser at the use site both put the load in retail's place but
+	//     add an `fmr` from the scratch register the load lands in, so they
+	//     are worse (99.3% with an extra instruction).
+	// (2) Frame 0x170 vs 0x150.  The named region is byte-identical (local_30
+	//     0x28 from the top, local_3c 0x3c, local_b4 0x48, then the two Mtx
+	//     as one 0x60 block); the 32 bytes are unreferenced inline-temp pool
+	//     between the MsGetRotFromZaxis out-parameter temporary at 0x9c and
+	//     the first Mtx (retail packs them adjacent at 0xa8, ours starts at
+	//     0xc8).  So we expand one level more than retail somewhere in this
+	//     body: spelling both `local_3c.length()` sites as
+	//     TUtil<f32>::sqrt(local_3c.squared()) removes exactly 8 of the 32
+	//     (4 per expansion), which is the one lever found; the remaining 24
+	//     are unattributed.  `getFirstNode()->mPosition` for the copy cannot
+	//     be tried without making TNode::mPosition public.
+	// (3) The four zangle tables must stay `static const`: as plain const
+	//     locals MWCC copies each one to the stack (76.4%, +42 instructions).
+	//
+	// Retail keeps local_30's y and z in f30/f31 from the subtraction
 	// above all the way into this call and reloads only .x here. Measured in a
 	// scratch TU with the game flags: MWCC gives a callee-saved FPR only to a
 	// *named* f32 local of the function's own body, never to an aggregate
