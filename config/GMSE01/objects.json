@@ -182,6 +182,7 @@
   "JSystem/JMath.cpp",
   "JSystem/JParticle/JPABaseShape.cpp",
   "JSystem/JParticle/JPADataBlock.cpp",
+  "JSystem/JParticle/JPADraw.cpp",
   "JSystem/JParticle/JPADrawSetupTev.cpp",
   "JSystem/JParticle/JPAEmitterLoader.cpp",
   "JSystem/JParticle/JPAExTexShape.cpp",
