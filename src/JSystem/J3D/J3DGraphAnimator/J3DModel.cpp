@@ -528,6 +528,15 @@ void J3DModel::initialize()
 // coalesced with different existing ones, and dropping either the `packet` or
 // the `mat` local does not move them (dropping `packet` costs five
 // instructions).
+// Closure re-pass 2026-09-18, against batch 144/145's callee-saved ranking
+// rule: none of the four new levers moves either cluster. Measured, all at 312
+// instructions and frame 0xe8 unless noted -- dropping the `mat` local in the
+// else branch (10 operands, unchanged), an extra named
+// `J3DDisplayListObj* obj` local there (15 operands, frame 0xf0), and
+// `mShapePackets + shape->getIndex()` instead of `&mShapePackets[...]` (10
+// operands, unchanged). Declaration order is inert on inner-block locals by
+// that rule, which is exactly what the r25/r24-vs-r20/r21 pair is, so this
+// stays in the known-open rotation class.
 void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
                               u32 mtxNum)
 {

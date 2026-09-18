@@ -37,6 +37,10 @@ using namespace JDrama;
 // Also ruled out: a parked by-value `TGraphics::setRenderMode(GXRenderModeObj)`
 // and a parked by-value `getRenderMode()` accessor -- both land 0x130 but stop
 // MWCC folding the copy and add 30 instructions (167 against 137).
+// Closure re-pass 2026-09-18: the early-return guard spelling
+// (`if (!(cue & CUE_DRAW)) return;`) is codegen-identical -- same 137
+// instructions, same 0xb8 frame, same 84 low operands -- so it is not the
+// missing use of `cue` either.
 void TFrmGXSet::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {

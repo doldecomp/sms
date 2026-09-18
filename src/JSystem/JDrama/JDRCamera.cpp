@@ -34,6 +34,17 @@ void TPolarCamera::load(JSUMemoryInputStream& stream)
 // Ruled out: giving each concat its own destination matrix (four or five
 // `TPosition3f` locals instead of reusing two) overshoots to 0x1f0 and scores
 // 60.0%, so the missing 56 bytes are not another matrix local.
+// TODO: 66.3% (304 instructions, 11 opcode / 36 deleted / 32 inserted
+// operands, frame 0x168 against retail's 0x1a0). The pool of this TU is
+// `@877` = 0.0f, `@878` = 1.0f, `@879` = DEG_TO_RAD, and retail keeps three of
+// them live in callee-saved FPRs for the whole body -- f31 = 0.0f,
+// f30 = `fmr f30, f31` (a *second* 0.0f), f29 = 1.0f, f28 = -unk44 -- while we
+// reload each literal at every use, which is where all 32 inserts come from.
+// By batch 83's rule a callee-saved FPR only ever holds a named scalar local of
+// the function's own body, so retail named at least two zeros, a one and the
+// negated distance here and passed them into the `TPosition3f` calls instead of
+// writing literals. That is a rewrite of the matrix setup, not a frame lever,
+// so none of the batch 142-146 rules touches it; it wants its own batch.
 void TPolarCamera::perform(u32 cue, TGraphics* graphics)
 {
 	if (!(cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)))

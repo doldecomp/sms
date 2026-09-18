@@ -83,6 +83,11 @@ bool JDrama::IssueGXSetCopyClear(JUtility::TColor clear_color, u32 clear_z,
 // to 70%, and neither fixes the call site. Dropping the `!= nullptr` tests and
 // spelling the third argument `(flags & 0x20) != 0` or through a named `bool`
 // are codegen-identical here.
+// Closure re-pass 2026-09-18: the new register rule is about callee-saved
+// GPRs and this is a scratch permutation, so it does not apply. Two more
+// call-site trials measured: a named `bool useVFilter = flags & 0x20` grows the
+// frame to 0x58 (11 operands), and a named `bool antialias = render_mode.aa`
+// is byte-identical to the current spelling (6 operands). Still open.
 void JDrama::IssueGXCopyDisp(void* param_1, const TRect& src_rect,
                              const GXRenderModeObj& render_mode,
                              JUtility::TColor clear_color, u32 clear_z,

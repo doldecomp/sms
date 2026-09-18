@@ -181,6 +181,21 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 // call (186 instructions), spelling ALIGN_NEXT out (188), a separate
 // `alignedSize` local instead of reassigning `size` (187), and moving the size
 // alignment below the declaration block (neutral).
+// TODO: 98.8%. All 185 instructions are the right ones and the frame is exact;
+// the single residue is the placement of the hoisted `nor` that forms
+// `~(align - 1)`. Retail emits it at 0x568, *between* the `size` rounding and
+// the zero-initialisations, which leaves r4 (the dead `size` parameter) free
+// for the mask and puts `content` in r6; we hoist it into the pre-`stwu` slot
+// at 0x554 while r4 still holds `size`, so the mask takes r6 and `content`
+// takes r4. Six operands plus one insert/delete pair.
+// Measured 2026-09-18: dropping the named `content` (two `getContent()` calls)
+// is 97.3% at 186 instructions; a `u32 content` instead of `void* content` is
+// 97.1% at 184 with frame 0x40; and hoisting the mask by hand
+// (`u32 alignMask = ~(align - 1);` after the size rounding, used as
+// `(content + (align - 1)) & alignMask`) is 98.7% and does *not* move the
+// `nor`, which refutes the "a statement between them introduces it" reading.
+// None of the four rules of batch 142-146 applies: this is scheduling, not a
+// temp, a level or a callee-saved rank.
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
 	size                    = ALIGN_NEXT(size, 4);

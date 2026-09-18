@@ -622,6 +622,14 @@ void JAIBasic::initNullData()
 // reads the statics directly with `lbz @sda21`. `TrackMgr::init`/`reset` and
 // `AudioThread::start`/`setPriority` all return void, so there is no call
 // result to bind.
+// Closure re-pass 2026-09-18: batch 142's "inline-temp price is the callee's
+// return type" confirms the old note -- every callee here returns void, so the
+// 8 bytes cannot come from a temp. Also tried writing `initAudioThread`'s body
+// out at this call site (the pasted-UNUSED shape, both are 0x78): 95.0%, frame
+// still 0x28 and two opcode diffs, so the inlined call is the right spelling.
+// The only zero-instruction lever left is a dead 8-byte class local inside
+// `initAudioThread`, and header round 23 only relaxes it (no destructor
+// needed); nothing in JAudio wants such an object here.
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 aram_heap_size, u8 param_3)
 {
 	initAudioThread(heap, aram_heap_size, param_3);
