@@ -456,6 +456,21 @@ static void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 //     spaced 12 bytes apart inside each outer arm where ours are spaced 8, so
 //     each arm's slice has a 4-byte neighbour we do not reserve; ten slots and
 //     three groups on both sides.
+//     Batch 131 read the two layouts out in full. The ROM's is
+//     [8-byte f64 conversion buffer 0xc8][arg2 0xc0][arg1 0xb8][pop sret 0xb0]
+//     [pop sret 0xa8][nine push slices 0x9c down to 0x3c, 12 apart]; ours is
+//     [conversion buffer 0xa8][0x9c][0x94][nine 0x88 down to 0x48, 8 apart]
+//     [0x44][0x3c]. So there are *two* differences, and the second one is the
+//     interesting one: the ROM puts the two `pop()` return buffers **above**
+//     the nine push slices (with the named `arg1`/`arg2` above those again),
+//     while we put them at the very bottom of the pool -- the same
+//     "we hoist the whole function's pool bytes, the ROM allocates per
+//     statement" signature as research batches 116/119. The 4-byte neighbour
+//     per push slice is invariant under every spelling of the arm tried:
+//     `interp->push(TSpcSlice(owner->mPosition.x))` (+2 instructions),
+//     `TSpcSlice slice(v); push(slice)` (+2), storing mData before mType (+9),
+//     and a named `f32 v` for the member read (+13) all leave the frame at
+//     0xc0. So this is not a lever gap; it is the pool-ordering residue.
 //  2. The ROM lays the arg2 == 1 (rotation) arm out *before* the arg2 == 0
 //     (position) arm - the pivot tree is instruction-identical, only the two
 //     blocks are swapped, and the scaling arm is already in place. Reordering
