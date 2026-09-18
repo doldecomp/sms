@@ -82,6 +82,9 @@ public:
 
 	MActor* getMActor(int index) { return mActors[index]; }
 
+	u16 getActorNum() const { return mActorNum; }
+	u32 getModelLoaderFlags() const { return mModelLoaderFlags; }
+
 
 public:
 	/* 0x0 */ TModelDataKeeper* mModelDataKeeper;

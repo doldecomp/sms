@@ -168,18 +168,31 @@ MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 	int index = keeper->getIndex(model_data_name);
 
 	if (index < 0) {
-		ObjModelKeepModelData(keeper, model_data_name, mModelLoaderFlags);
+		ObjModelKeepModelData(keeper, model_data_name,
+	                      getModelLoaderFlags());
 		index = keeper->getIndex(model_data_name);
 	}
 
 	// createMActorFromNthData's body, duplicated in the original: routing this
 	// through the method leaves createAndRegister at depth 2, where MWCC
 	// refuses it and the whole allocator ranking shifts (77.5% vs 100%).
-	mActorModelDataIndices[mActorNum] = index;
+	mActorModelDataIndices[getActorNum()] = index;
 	SDLModelData* data                = keeper->getNthData(index);
 	return createAndRegister(data, flags);
 }
 
+// TODO: frame and instruction sequence are exact; the only residue is that
+// retail runs the inlined getModelDataNum node walk entirely in r3
+// (`lwz r3, 0(r3)` / `addi r3, r3, 4` / `lwz r3, 0xc(r3)`) where we keep the
+// keeper in r5 and the node in r4, i.e. MWCC does not coalesce the inlined
+// callee's `this` binding with its first local. The emitted out-of-line
+// getModelDataNum is byte-exact, so the body is right and the lever is at the
+// call site. Measured, all leaving the same five operand differences: a named
+// TModelDataKeeper* local, a static_cast to the const receiver, `getHead()`
+// for `&mHead`, a for-loop or split declaration in the callee, and a
+// while-loop here. `mModelDataKeeper` raw is -8 of frame and 18 differences; a
+// TU-local forwarder above getModelDataNum and spelling the walk out here
+// (getHead() or &...->mHead) are both far worse (24 / 38 differences).
 MActor* TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
 	int num = getModelDataKeeper()->getModelDataNum();
