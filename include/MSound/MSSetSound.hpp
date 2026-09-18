@@ -28,6 +28,21 @@ class MSSetSoundGrp;
 template <typename T>
 class MSSetSoundTL : public JALListHioNode<T, u32>, public JALListFrameLoop<T> {
 public:
+	// TODO (header round 24): both instantiations of this constructor are
+	// 99.8% with every instruction identical and only the frame wrong --
+	// retail 0x128, ours 0xc0, i.e. 104 bytes of dead low region. The
+	// low region is one contiguous block in *this* body, not one dead local
+	// per callee expansion: a single dead 104-byte class local declared
+	// anywhere in the body takes both constructors to 100.0%, while the same
+	// object inside JADPrm<T>'s constructor moves the frame by 0. That is
+	// expected, because retail *calls* all seventeen JADPrm constructors out
+	// of line here (18 `bl`s, which we reproduce) and the map sizes
+	// __ct__9JADPrm<f>FfPCc and __ct__10JADPrm<Uc>FUcPCc at 8 bytes each --
+	// two instructions, so those bodies are exactly `unk0 = val;` and hold no
+	// local at all. So the 104 bytes are an object of this constructor's own,
+	// and 104 is not a multiple of any member count here (17 JADPrm, 5
+	// JAISound*, 5 Vec); nothing in the map names a 0x68-sized type, so the
+	// object is not identified. Do not "fix" this with a probe class.
 	MSSetSoundTL(u32 param_1, const char* param_2, T* param_3, u8 param_4,
 	             u8 param_5, u8 param_6, u8 param_7, f32 param_8, u8 param_9,
 	             f32 param_10, f32 param_11, f32 param_12, f32 param_13,

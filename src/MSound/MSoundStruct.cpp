@@ -101,14 +101,10 @@ bool MSSetSoundGrp::startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
 // so this shall live here for now to avoid circular includes.
 //
 // Also open in this TU, but not fixable from the .cpp: the MSSetSoundTL
-// constructor (defined in the shared MSound/MSSetSound.hpp) is 99.8% with
-// every instruction matching and no referenced local at all -- frame 0xc0
-// against retail's 0x128, i.e. 104 bytes of pure dead low region. The only
-// zero-instruction lever for that is an uninitialised non-trivial class local
-// in an inlined callee, and here the callees are the twenty-odd JADPrm<T>
-// constructors plus the two base-class constructors. 104 is 13 x 8, which fits
-// one 8-byte dead local per JADPrm ctor expansion, but nothing evidences its
-// type and JADPrm.hpp is shared by every audio TU.
+// constructor's 104 bytes of dead low region, now measured and written up
+// beside the constructor in MSound/MSSetSound.hpp. The 13 x 8 reading (one
+// dead local per JADPrm ctor expansion) is ruled out: the JADPrm constructors
+// are called out of line and are 8 bytes each in the map.
 //
 // TODO: 98.1%, both instantiations. `bVar1 += uVar5;` before the
 // `getPlayGameFrameCounter()` read (closure batch 123) is a real fix -- it
