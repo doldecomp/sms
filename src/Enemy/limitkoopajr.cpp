@@ -215,6 +215,12 @@ void TLimitKoopaJr::checkNerve()
 // offset.x, then computes and stores forward.z. That is not JGVec3.hpp's to
 // fix -- all three alternative shapes were measured there and each regresses
 // a dozen other call sites, so the order has to come from this site.
+// fabricated
+static inline void LimitKoopaJrNormalize(JGeometry::TVec3<f32>* v)
+{
+	v->normalize();
+}
+
 void TLimitKoopaJr::moveRun()
 {
 	f32 angleVelocity
@@ -251,8 +257,12 @@ void TLimitKoopaJr::moveRun()
 		forward.z = -forward.z;
 	}
 
+	// Through the same forwarder as moveWait: at this depth it keeps
+	// setLength expanded but pushes its `squared()`'s dot to 5 and its
+	// scale(f, const&) to 4, which is the pair of `bl`s the ROM has here.
+	// The two normalize() calls above expand all the way for retail too.
 	JGeometry::TVec3<f32> dir(forward);
-	dir.normalize();
+	LimitKoopaJrNormalize(&dir);
 
 	TDirectionCalc bodyTarget(dir);
 	mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
@@ -278,12 +288,6 @@ bool TLimitKoopaJr::canYahoo() { return SMS_IsMarioStatusTypeJumping(); }
 // nerve goes 90.0 -> 95.8 and this body drops from 336 bytes to 292 against
 // the map's 288. Retail's own name for the level is unrecoverable; a
 // normalize step folded into a direction helper is the likely shape.
-// fabricated
-static inline void LimitKoopaJrNormalize(JGeometry::TVec3<f32>* v)
-{
-	v->normalize();
-}
-
 void TLimitKoopaJr::moveWait()
 {
 	JGeometry::TVec3<f32> toMario;
