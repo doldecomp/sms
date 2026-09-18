@@ -229,6 +229,18 @@ void SMS_IsMarioSpeedZero() { gpMarioOriginal->isSpeedZero(); }
 // 0) -- none of which exists here. Next idea worth trying: something that puts
 // a real call or store between the test and the dereference, i.e. the null test
 // may belong to a *different* inlined helper than the type test.
+// Closure batch 103 tried the documented CSE breakers and none of them works
+// here: a pointer-to-const parameter on a TU-local inline (the
+// AGENT_MATCHING_TIPS "const on an inline's pointer parameter also defeats
+// CSE" lever) applied to the null test, to the type test, and to both; the
+// const member `TTakeActor::isTaken()` on the left of the && (73.6%, the BOOL
+// still materialises *and* the load is still merged); and a `TTakeActor* const&`
+// reference parameter of an inline, which folds the address into the load
+// offset but still merges. Every variant is 17 instructions to retail's 18, so
+// the missing instruction really is a second `lwz 0x68`. Next idea: an
+// intervening *store*, i.e. the type test may live in a helper that also writes
+// a member (nothing in this 18-instruction body can be that store, so more
+// likely the whole predicate lived somewhere else and was inlined here).
 bool SMS_IsMarioOnWire()
 {
 	bool ret;

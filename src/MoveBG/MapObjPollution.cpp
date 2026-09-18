@@ -86,6 +86,20 @@ void TRevivalPolluter::pollute() { }
 //    loop (rotates by one instead), `getPolluterNum()` as the bound,
 //    `getPolluter(i)` as the element (both no-ops), and hoisting the array base
 //    or the count into a local (both spill a fifth register).
+//    Closure batch 103 reproduced the 0x60 + exact-inner-block state and
+//    pinned its spelling: `getLayer(getLayerIndex())` with a raw `mLayerIndex`
+//    as argument 1, `layer->getTexWidth()` for width,
+//    `layer->getPos().getHeight()` for height, `getStampInterval()`/
+//    `getRevivalStampTex()` for the last pair, and a named
+//    `TPollutionCounterLayer&`. That is frame 0x60, 45 instructions and
+//    retail's whole argument-evaluation order; the only residue left is the
+//    four-register rotation plus the layer pointer landing in r7 where retail
+//    uses r8. It reads 88.0% against the current 88.1% because fuzzy_match
+//    weights the register operands above the frame, so it is not committed.
+//    The rotation has the same signature as
+//    AudioDecoderForOnMemory's (retail interleaves a source local above the
+//    compiler-generated loop temporaries; every spelling we have puts both
+//    temporaries on top) -- treat the two together in a research batch.
 //    Best next hypothesis: the rotation says MWCC built loadAfter's two loop
 //    temporaries *after* this/i in the ROM and before them for us, so look for
 //    a source shape that creates a source-level variable in the loop body

@@ -12,6 +12,18 @@
 // TTalkCursor::getMActor() accessor over unk10 (it is +8 in associateNPC but
 // nothing here), naming the `new J3DModel` result, naming the
 // J3DModelLoaderDataBase::load result (also -9%), unkC.setBit() over on().
+// Closure batch 103 swept 24 combinations of {`MActor* actor = unk10` local /
+// raw unk10 / getMActor()} x {named J3DModel*} x {named J3DModelData*} x
+// {named `void* bmd`}: the `actor` local plus the named `bmd` is the only 60-
+// instruction shape and it is 0x28; nothing reaches 0x30. Also zero or worse:
+// `MActor* actor = new MActor(anmData); unk10 = actor;` (97.9), a setMActor()
+// setter (97.9), `new MActorAnmData()` with parens, a named `const char*` for
+// the anm-data path (94.1), a named `u32` for the loader flags (95.8), a
+// TU-local `static inline` that makes the anm data (84.2) or the J3DModel
+// (99.6) or forwards JKRGetResource (99.9), and a parked
+// `static inline MActor* f(TTalkCursor*)` (the batch-103 free-function binding
+// lever -- it is worth +8 only when its argument is a fresh *global* load, so
+// `this` buys nothing here).
 void TTalkCursor::loadAfter()
 {
 	MActorAnmData* anmData = new MActorAnmData;
@@ -57,6 +69,10 @@ void TTalkCursor::perform(u32 cue, JDrama::TGraphics* graphics)
 // is a shared header -- JGeometry::TPosition3::translation, MActor::getModel,
 // TFlagT::on/off -- since TBaseNPC::getCursorPos returns its 12 bytes by value
 // through a real bl. Nothing in this unit's own files can carry it.
+// Closure batch 103: the same parked-free-function lever (a `static inline`
+// taking the cursor by pointer and returning unk10 or unk10->getModel()) is
+// +0 at either site and in combination -- it binds only for a fresh global
+// load, and this function reads no global.
 // Rejected (instruction changes): TPosition3f mtx(getCursorPos()) (-6%),
 // a named TVec3 for the cursor position (+8 frame but six extra instructions,
 // the copy is not elided), mtx.identity33() + mtx.setTrans() spelled out

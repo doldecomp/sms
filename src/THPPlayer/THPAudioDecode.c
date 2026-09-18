@@ -83,6 +83,19 @@ static void* AudioDecoder(void* arg)
 // written inline in the if (84.3), `frame = 0` moved after the other two
 // initialisations (84.5), caching header.numFrames in a local (73.9), a named
 // OSThread* in the suspend branch (82.6).
+// Closure batch 103 added: all declarations at the top of the body in the
+// file's own C89 style (89.1, and any permutation of the five declarations only
+// ever swaps frame with readSize: 89.3 or 86.2), every order of the three
+// initialising statements (89.3 with readSize first, 84.5 with readBuffer.ptr
+// before frame), and named `OSThread* thread`/`THPPlayer* player` locals
+// initialised at the top in retail's register order (83.0 -- the ranking is not
+// declaration order either: it comes out player > frame > thread). So the
+// ranking is neither use count, nor declaration order, nor first-definition
+// order. Retail interleaves a source local and the two global-address
+// temporaries (frame > &AudioDecodeThread > &ActivePlayer > readSize) where we
+// always put both temporaries above both locals; the same shape blocks
+// TMapObjRevivalPollution::loadAfter, so this is one cross-unit question, not
+// a spelling problem here.
 static void* AudioDecoderForOnMemory(void* arg)
 {
 	s32 frame;

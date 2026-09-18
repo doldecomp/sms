@@ -89,6 +89,17 @@ void TMewManager::load(JSUMemoryInputStream& stream)
 // and leaves no map symbol, and the Animal TUs' weak lists name no candidate.
 // See docs/catalog/frame-gaps.md, "Problem B addendum", for the new lead: a
 // named by-value 12-byte result reserves a slot just like a dead local does.
+// Closure batch 103 *confirmed* the carrier mechanically: wrapping the call in
+// a TU-local `static inline` that holds an uninitialised
+// `JGeometry::TVec3<f32>` takes this function to 100.0% at the same 15
+// instructions, so the residue is exactly one 12-byte non-trivial local of an
+// inlined wrapper. It is not committed because the wrapper has to be shared
+// (Bird.cpp's two loadAfters need the same level) and nothing in the map names
+// it -- MSound.hpp, which already carries the symbol-less `startSoundActor`
+// inline, is the natural home. Also re-measured as zero here: a named `u16` for
+// getObjNum(), a named `u32` for the sound id, and a dead TVec3 in this
+// function's *own* body (+8, giving 0x20, not 0x28 -- an own-body 12-byte local
+// is worth 8 while an inlined callee's is worth 16).
 void TMewManager::loadAfter()
 {
 	TAnimalManagerBase::loadAfter();
