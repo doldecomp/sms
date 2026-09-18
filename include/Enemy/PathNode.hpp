@@ -61,7 +61,15 @@ public:
 		unk0 = nullptr;
 		unk4 = point;
 	}
-	// TODO: this inline doesn't match in a couple of places.
+	// TODO: this inline doesn't match in a couple of places. Header round 27
+	// promoted batch 158's TU-local walkerEnemy copy here -- reading
+	// `unk0->mPosition` raw instead of through `getPosition()` -- and it is a
+	// wash, so it stays parked: it closes TFireWanwan::isMissMario and
+	// TNerveBPTouchDown and loses TSpineEnemy::isReachedToGoal's weak copy in
+	// fishoid and TNerveBPTakeOff, with total fuzzy flat at 97.46%. Dropping
+	// the named `goal` reference in Enemy.hpp's isReachedToGoal alongside it
+	// is byte-identical, so the two levers are not the same one and the goal
+	// binding is not what the raw read displaces.
 	const JGeometry::TVec3<f32>& getPoint() const
 	{
 		if (unk0 != 0)
