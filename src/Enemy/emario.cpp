@@ -37,6 +37,12 @@ TEMario::TEMario(const char* name)
 {
 }
 
+// TODO: 99.9%. Instruction-exact; frame 0xf0 vs 0xa8 and every stream-read
+// slot is 92 bytes higher in retail, so ~72 dead bytes sit below them and the
+// rest above. Also note the two UNUSED map symbols this TU still lacks,
+// execKill__7TEMarioFv (0x54) and checkCollision__7TEMarioFv (0x220): they
+// need declarations in include/Enemy/Emario.hpp, which this batch must not
+// touch.
 void TEMario::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
@@ -104,6 +110,12 @@ void TEMario::loadAfter()
 		gpCamera->addMultiPlayer(&mPosition, 60.0f, 150.0f);
 	}
 }
+// TODO: 99.9%. Instruction-exact since the fog loop's body was respelled
+// `getMActor()->getModel()` while the loop bound keeps `mMActor->getModel()`
+// (closure batch 83, 97.8 -> 99.9): two different receiver expressions stop
+// MWCC CSE-ing the J3DModel, so retail re-derives it with `lwz r3, 4(r3)` from
+// the cached mMActor and leaves mMActor itself in r3 for the setBtk call.
+// Residue: frame 0x88 vs 0x60, 40 dead bytes, no referenced local at all.
 void TEMario::init(TLiveManager* manager)
 {
 	if (!manager) {
@@ -115,7 +127,7 @@ void TEMario::init(TLiveManager* manager)
 			for (int i = 0;
 			     i < mMActor->getModel()->getModelData()->getMaterialNum();
 			     i++) {
-				SMS_InitPacket_Fog(mMActor->getModel(), i);
+				SMS_InitPacket_Fog(getMActor()->getModel(), i);
 			}
 			mMActor->setBtk("kagemario_scroll");
 		}
@@ -188,6 +200,33 @@ void TEMario::startGateDrawing() { mEnemyMario->startGateDrawing(); }
 
 void TEMario::forceDisappear() { mEnemyMario->startDisappear(9); }
 
+// Parked here, not in Emario.hpp: the map has no symbol for it, so retail had
+// it as a file-scope `inline` (or a header inline that expanded everywhere).
+// It is the level that keeps JGeometry::TUtil<f32>::sqrt a `bl` at both of
+// perform's distance tests -- `TVec3::distance()` gives the call but expands
+// the subtraction, and a `diff.length()` written at the call site gives
+// retail's `bl TVec3::sub` but expands sqrt (closure batch 83:
+// TEMario::perform 71.9 -> 77.9 -> 98.1). This is the "second helper such as
+// AnimalNerve's calcDist" that docs/catalog/frame-gaps.md predicts for the
+// copy-and-subtract distance sites.
+static inline f32 EMarioCalcDist(const JGeometry::TVec3<f32>& a,
+                                 const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> diff = a - b;
+	return diff.length();
+}
+
+// TODO: 98.1%. What is left: retail initialises the strength-reduced byte
+// offset from the loop counter (`li r29, 0` then `addi r24, r29, 0`) where we
+// emit two independent `li`s, which also swaps r28/r29 between the counter and
+// the `cue & CUE_MOVE` bool, and the frame is 0x148 to retail's 0x130 -- two
+// 12-byte objects too many. Retail's four referenced vectors are grouped
+// differently too (diff2 0xec, diff1 0xe0 adjacent at the top, then the two
+// operator- temporaries at 0xb4 and 0x9c with holes between), while ours
+// interleaves them (temp1 0xfc, diff1 0xf0, temp2 0xdc, diff2 0xd0). Spelling
+// the helper's body `TUtil<f32>::sqrt(diff.squared())` instead of
+// `diff.length()` is codegen-identical, so the extra pair is most likely the
+// `const TVec3&` binding of squared()/dot() per expansion.
 void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK40)) {
@@ -205,7 +244,7 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (s32 i = 0; i < mColCount; ++i) {
 		switch (mCollisions[i]->mActorType) {
 		case 0x80000001: {
-			if (mPosition.distance(mCollisions[i]->getPosition())
+			if (EMarioCalcDist(mPosition, mCollisions[i]->getPosition())
 			    < mEnemyMario->mAttackRange) {
 				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
@@ -213,8 +252,8 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		case 0x400000bc: {
 			if (!mEnemyMario->checkStatusType(0x10000)) {
-
-				if (mCollisions[i]->getPosition().distance(mPosition)
+				if (EMarioCalcDist(mCollisions[i]->getPosition(),
+				                   mPosition)
 				    < (mCollisions[i]->getAttackRadius()
 				       + mEnemyMario->getDamageRadius())) {
 					mEnemyMario->changePlayerStatus(0x810446, 0, false);
