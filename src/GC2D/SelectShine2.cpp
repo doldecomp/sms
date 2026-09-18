@@ -194,19 +194,28 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 				mDecreasing = false;
 			}
 
-			// TODO: retail calls TVec3::add, TVec2::sub, TVec3::set<f>,
-			// JMASSin and JMASCos out of line inside this loop while
-			// inlining every one of them in initData, which has the same
-			// expressions at the same depth. Same per-call-site inlining
-			// puzzle as the MapObjBall table in docs/catalog/codegen-tells.md;
-			// it also costs one 12-byte temporary between getPosition's
-			// result and `pos` (frame 0x1c8 against 0x220).
+			// TVec3::add is not part of that puzzle: naming the sum gives
+			// it the `a = b + c` depth (copy ctor 1, operator+ 2,
+			// operator+= 3, add 4) that retail's `bl` measures, and the two
+			// copies retail makes out of operator+ say the sum was a local
+			// even though getAngle takes it by reference (the map's
+			// getAngle__19TSelectShineManagerFRCQ29JGeometry8TVec3<f>
+			// settles that). 79.6 -> 82.7.
+			// TODO: retail still calls TVec2::sub, TVec3::set<f>, JMASSin
+			// and JMASCos out of line inside this loop while inlining every
+			// one of them in initData, which has the same expressions at the
+			// same depth. Same per-call-site inlining puzzle as the
+			// MapObjBall table in docs/catalog/codegen-tells.md; TVec2::sub
+			// additionally wants the float-move spelling of getAngle noted
+			// above it. It also costs one 12-byte temporary between
+			// getPosition's result and `pos` (frame 0x1d0 against 0x220).
 			for (int i = 0; i < mShineNum; ++i) {
 				JGeometry::TVec3<f32> pos = getPosition(mScroll + i * 40);
 				mShines[i]->mPosition     = pos;
 
-				s16 angle
-				    = getAngle(mShines[i]->mPosition + mShines[i]->mOffset);
+				JGeometry::TVec3<f32> anglePos
+				    = mShines[i]->mPosition + mShines[i]->mOffset;
+				s16 angle = getAngle(anglePos);
 				if (pos.x > cCenter.x)
 					angle *= -1;
 
