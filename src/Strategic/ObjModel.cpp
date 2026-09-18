@@ -51,7 +51,7 @@ SDLModelData* TModelDataKeeper::createAndKeepData(const char* name, u32 flags)
 	while (node->getNext())
 		node = node->getNext();
 
-	SDLModelData* data = loadModelData(name, flags, mFolder);
+	SDLModelData* data = loadModelData(name, flags, getFolder());
 	node->registerDataAndJoinNewNode(data, name);
 	return data;
 }
@@ -68,7 +68,7 @@ int TModelDataKeeper::getIndex(const char* name) const
 {
 	u16 key = JDrama::TNameRef::calcKeyCode(name);
 
-	const TModelDataNode* node = &mHead;
+	const TModelDataNode* node = getHead();
 	for (u32 i = 0; node && node->getData(); ++i) {
 		if (node->isSameName(name, key))
 			return i;
@@ -145,6 +145,22 @@ MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 	return createAndRegister(data, flags);
 }
 
+// One inline level above TModelDataKeeper::createAndKeepData, parked here as a
+// TU-local helper because it is fully inlined everywhere and so has no map
+// symbol to name it from. It is what puts loadModelData and
+// registerDataAndJoinNewNode at depth 3 in createMActor, where MWCC refuses
+// them exactly as retail does, while createAndKeepData's own emitted copy
+// still expands both at depth 1. Without the level createMActor inlines
+// loadModelData (frame 0x1a8 vs 0xa0) and then refuses createAndRegister.
+// TODO: promote to a TModelDataKeeper member in Strategic/ObjModel.hpp once its
+// real name is known; only createMActor needs it, so it stays out of the
+// header while a header batch is running.
+static inline SDLModelData*
+ObjModelKeepModelData(TModelDataKeeper* keeper, const char* name, u32 flags)
+{
+	return keeper->createAndKeepData(name, flags);
+}
+
 MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
 	TModelDataKeeper* keeper = getModelDataKeeper();
@@ -152,16 +168,21 @@ MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 	int index = keeper->getIndex(model_data_name);
 
 	if (index < 0) {
-		keeper->createAndKeepData(model_data_name, mModelLoaderFlags);
+		ObjModelKeepModelData(keeper, model_data_name, mModelLoaderFlags);
 		index = keeper->getIndex(model_data_name);
 	}
 
-	return createMActorFromNthData(index, flags);
+	// createMActorFromNthData's body, duplicated in the original: routing this
+	// through the method leaves createAndRegister at depth 2, where MWCC
+	// refuses it and the whole allocator ranking shifts (77.5% vs 100%).
+	mActorModelDataIndices[mActorNum] = index;
+	SDLModelData* data                = keeper->getNthData(index);
+	return createAndRegister(data, flags);
 }
 
 MActor* TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
-	int num = mModelDataKeeper->getModelDataNum();
+	int num = getModelDataKeeper()->getModelDataNum();
 	for (int i = 0; i < num; ++i)
 		createMActorFromNthData(i, flags);
 }
@@ -191,7 +212,7 @@ TMActorKeeper::TMActorKeeper(TLiveManager* param_1)
 		mActorAnmData    = param_1->getMActorAnmData();
 	}
 
-	mModelDataNum          = mModelDataKeeper->getModelDataNum();
+	mModelDataNum          = getModelDataKeeper()->getModelDataNum();
 	mActorNum              = 0;
 	mActors                = new MActor*[mModelDataNum];
 	mActorModelDataIndices = new u16[mModelDataNum];

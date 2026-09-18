@@ -26,6 +26,9 @@ class TModelDataKeeper {
 public:
 	TModelDataKeeper(const char* folder);
 	int getModelDataNum() const;
+	// fabricated
+	const char* getFolder() const { return mFolder; }
+	const TModelDataNode* getHead() const { return &mHead; }
 	SDLModelData* getDataByName(const char* name) const;
 	int getIndex(const char* name) const;
 	SDLModelData* getNthData(int n) const;
@@ -78,6 +81,7 @@ public:
 	TModelDataKeeper* getModelDataKeeper() { return mModelDataKeeper; }
 
 	MActor* getMActor(int index) { return mActors[index]; }
+
 
 public:
 	/* 0x0 */ TModelDataKeeper* mModelDataKeeper;
