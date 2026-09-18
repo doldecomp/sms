@@ -409,5 +409,7 @@
   "Player/MarioBlend.cpp",
   "Camera/CameraMarioData.cpp",
   "Camera/CameraCodeControl.cpp",
-  "MarioUtil/ModelUtil.cpp"
+  "MarioUtil/ModelUtil.cpp",
+  "Enemy/enemytable.cpp",
+  "Strategic/Strategy.cpp"
 ]
