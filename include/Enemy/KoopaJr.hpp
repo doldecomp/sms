@@ -149,6 +149,15 @@ public:
 	/* 0x180 */ s32 mKillerIndex;
 	/* 0x184 */ s32 mKillerNum;
 	/* 0x188 */ f32 mAnmRate;
+
+public:
+	// fabricated
+	s32 getKillerIndex() const { return mKillerIndex; }
+	s32 getKillerNum() const { return mKillerNum; }
+	s32 getKillerTimer() const { return mKillerTimer; }
+	f32 getSwingAmplitude() const { return mSwingAmplitude; }
+	f32 getWaveAmplitude() const { return mWaveAmplitude; }
+
 	/* 0x18C */ u8 mIsDamaged;
 	/* 0x190 */ f32 mSwingAmplitude; // roll from being hit
 	/* 0x194 */ f32 mSwingPhase;

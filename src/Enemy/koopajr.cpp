@@ -752,13 +752,13 @@ void TKoopaJrSubmarine::moveSwing()
 	mSwingAmplitude -= 0.009424779f;
 	mSwingAmplitude = JGeometry::max(
 	    getSaveParams()->mSLSwingAmplitudeMin.get(), mSwingAmplitude);
-	if (mSwingAmplitude <= 0.0f)
+	if (getSwingAmplitude() <= 0.0f)
 		mSwingPhase = 0.0f;
 	mSwingPhase = WrapRadianF(
 	    mSwingPhase + getSaveParams()->mSLSwingPhaseVelocity.get());
 
 	f32 speedRate = mVelocity.length() / getSaveParams()->mSLSpeedMax.get();
-	if (mKillerTimer > 0) {
+	if (getKillerTimer() > 0) {
 		mWaveAmplitude += 0.03141593f;
 		mWaveAmplitude = JGeometry::min(
 		    getSaveParams()->mSLWaveAmplitudeMaxLaunch.get(), mWaveAmplitude);
@@ -771,7 +771,7 @@ void TKoopaJrSubmarine::moveSwing()
 	mWaveAmplitude -= 0.018849557f;
 	mWaveAmplitude = JGeometry::max(
 	    getSaveParams()->mSLWaveAmplitudeMin.get(), mWaveAmplitude);
-	if (mWaveAmplitude <= 0.0f)
+	if (getWaveAmplitude() <= 0.0f)
 		mWavePhase = 0.0f;
 	mWavePhase = WrapRadianF(
 	    mWavePhase + getSaveParams()->mSLWavePhaseVelocity.get());
@@ -1167,7 +1167,7 @@ DEFINE_NERVE(TNerveKoopaJrSubmarineCannonOpenClose, TLiveActor)
 DEFINE_NERVE(TNerveKoopaJrSubmarineLaunchKiller, TLiveActor)
 {
 	TKoopaJrSubmarine* submarine = (TKoopaJrSubmarine*)spine->getBody();
-	if (submarine->mKillerIndex == submarine->mKillerNum
+	if (submarine->getKillerIndex() == submarine->getKillerNum()
 	    && submarine->mKillerTimer <= 0) {
 		J3DFrameCtrl* ctrl = submarine->getMActor()->getFrameCtrl(0);
 		ctrl->setRate(submarine->mAnmRate);
