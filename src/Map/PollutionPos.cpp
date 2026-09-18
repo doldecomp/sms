@@ -5,6 +5,22 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: frame 0x20 vs retail 0x38 (24 bytes of inline temporaries short) plus a
+// register rotation that survives the correct frame: retail puts mLog2Width in
+// r7, x >> 3 in r8, mHeightMap in r6 and x & 7 in r9, ends the index with
+// `add r0, r11, r0` ((z & 3) * 8 added last) and uses mHeightMap as the `lbzx`
+// base, while we assign r6/r7/r9/r8 in computation order, fold mHeightMap into
+// the offset and make the hoisted (z & 3) * 8 the base. (isSame, which shares
+// index(), gets retail's operand order already, so it is the loop hoisting that
+// flips it.) Measured as +8 on the frame and zero on the registers: a
+// getHeightMap()/getLog2Width() accessor, getWidth()/getHeight() inside
+// isInArea, a getVerticalOffset() accessor; TPollutionPos accessors saturate at
+// one level (+8 total) and only 0x30 is reachable. Rejected: a nested
+// blockIndex() level in index() (+8 but -16% here), a named u32 for the index,
+// a local u8* for the height map, `!(dx == 0 && dy == 0)`, `dy != 0` first,
+// `*(mHeightMap + index(...))`, getDepth() instead of the raw byte read (that
+// turns retail's `cmplwi` into `cmpwi`), and putting (z & 3) * 8 last in
+// index() (-7%).
 int TPollutionPos::getEdgeDegree(int x, int y) const
 {
 	if (!isInArea(x, y))
@@ -31,6 +47,16 @@ f32 TPollutionPos::getDepthWorld(int x, int y) const
 	}
 }
 
+// TODO: frame 0x38 vs retail 0x58; all 53 instructions match (32 bytes of
+// temporary padding gives 100%), so retail has 32 bytes more of inline
+// temporaries in this leaf. Ladder measured here: one accessor level anywhere on
+// TPollutionPos +8 and saturating (getHeightMap, getLog2Width, getWidth/
+// getHeight in isInArea, getVerticalOffset in worldToDepth all give the same
+// +8), a getOwner() level on TPollutionLayer +8 on top of it, a nested
+// blockIndex() level inside index() +8 more; that reaches 0x48 and nothing
+// reaches 0x58. getDepthWorld and isProhibit, which share isInArea, getDepth
+// and index(), already match, so the level structure of those is right and the
+// missing 32 bytes belong to isSame itself.
 bool TPollutionPos::isSame(int x, int z, f32 y) const
 {
 	if (!isInArea(x, z))
