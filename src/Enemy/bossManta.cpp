@@ -66,7 +66,34 @@ static inline void lerp_hack(f32& value, f32 target, f32 progress)
 	value += step;
 }
 
-DEFINE_NERVE(TNerveMantaMove, TLiveActor)
+// The map groups all five execute() bodies together and puts all five
+// theNerve() accessors after them, so in source order (this TU is
+// -inline deferred) the accessors come first as one block: DEFINE_NERVE
+// would interleave them. Evidence: instance$2918/2924/2930/2936/2942 are
+// consecutive with stride 6 and nothing between them, while the local const
+// arrays of execute() are @2983 and up.
+// TODO: Nerve.hpp may have had a second macro pair for this layout; splitting
+// DEFINE_NERVE is a shared-header change and was not made here.
+#define DEFINE_NERVE_INSTANCE(Name)                                            \
+	const Name& Name::theNerve()                                               \
+	{                                                                          \
+		static Name instance;                                                  \
+		return instance;                                                       \
+	}
+
+DEFINE_NERVE_INSTANCE(TNerveMantaMove)
+
+DEFINE_NERVE_INSTANCE(TNerveMantaHitWater)
+
+DEFINE_NERVE_INSTANCE(TNerveMantaSpawn)
+
+DEFINE_NERVE_INSTANCE(TNerveMantaDeath)
+
+DEFINE_NERVE_INSTANCE(TNerveMantaAppearDemo)
+
+#undef DEFINE_NERVE_INSTANCE
+
+BOOL TNerveMantaMove::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 	s32 time         = spine->getTime();
@@ -185,7 +212,7 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
+BOOL TNerveMantaHitWater::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -233,7 +260,7 @@ DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
+BOOL TNerveMantaSpawn::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -270,7 +297,7 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
+BOOL TNerveMantaDeath::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -291,7 +318,7 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
+BOOL TNerveMantaAppearDemo::execute(TSpineBase<TLiveActor>* spine) const
 {
 	s32 time         = spine->getTime();
 	TBossManta* self = (TBossManta*)spine->getBody();
