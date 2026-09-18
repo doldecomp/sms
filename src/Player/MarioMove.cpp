@@ -979,8 +979,8 @@ void TMario::checkGraffito()
 		return;
 
 	int isDirty = 0;
-	mPollutionTypeStandingOn
-	    = gpPollution->getPollutionType(mPosition.x, mPosition.y, mPosition.z);
+	mPollutionTypeStandingOn = SMSGetPollution()->getPollutionType(
+	    mPosition.x, mPosition.y, mPosition.z);
 
 	switch (mPollutionTypeStandingOn) {
 	case POLLUTION_TYPE_SLIP:
@@ -991,31 +991,31 @@ void TMario::checkGraffito()
 		pos.z -= 32.0f;
 		isDirty = 1;
 
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		pos.x += 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		pos.x += 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		pos.z += 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		pos.x -= 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		pos.x -= 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		pos.z += 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		pos.x += 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		pos.x += 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 		break;
 	}
@@ -1032,25 +1032,25 @@ void TMario::checkGraffito()
 		isDirty = 1;
 
 		pos.z -= 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 
 		pos.x += 32.0f;
 		pos.z += 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 
 		pos.x -= 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 
 		pos.x -= 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 
 		pos.z += 32.0f;
 		pos.x += 32.0f;
-		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 
 		(void)&pos;
@@ -1063,7 +1063,7 @@ void TMario::checkGraffito()
 		pos.x = mPosition.x;
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
-		if (gpPollution->isPolluted(pos.x, pos.y, pos.z))
+		if (SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 1;
 		else
 			isDirty = 0;
@@ -2439,7 +2439,7 @@ void TMario::gunExec()
 			f32 fVar1 = mGraffitoParams.mFootEraseSize.get();
 			JGeometry::TVec3<f32> local_90
 			    = mPosition + local_34 * mGraffitoParams.mFootEraseFront.get();
-			gpPollution->clean(local_90.x, local_90.y, local_90.z, fVar1);
+			SMSGetPollution()->clean(local_90.x, local_90.y, local_90.z, fVar1);
 		}
 	}
 }

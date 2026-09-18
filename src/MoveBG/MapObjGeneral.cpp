@@ -284,8 +284,8 @@ void TMapObjGeneral::touchPlayer(THitActor* player)
 
 void TMapObjGeneral::recover()
 {
-	gpPollution->clean(mPosition.x, unk144, mPosition.z,
-	                   (u16)(mMapObjData->mHit->unkC[2].unk0 / 6.0f));
+	SMSGetPollution()->clean(mPosition.x, unk144, mPosition.z,
+	                         (u16)(mMapObjData->mHit->unkC[2].unk0 / 6.0f));
 
 	setUpMapCollision(1);
 	startAnim(6);

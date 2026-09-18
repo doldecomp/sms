@@ -350,9 +350,9 @@ void TRollEnemy::setBehavior()
 		}
 	}
 
-	gpPollution->stampGround(1, unk1AC * mLinearVelocity.x + mPosition.x,
-	                         mPosition.y, unk1AC * mLinearVelocity.z + mPosition.z,
-	                         32.0f * range);
+	SMSGetPollution()->stampGround(
+	    1, unk1AC * mLinearVelocity.x + mPosition.x, mPosition.y,
+	    unk1AC * mLinearVelocity.z + mPosition.z, 32.0f * range);
 }
 
 void TIgaigaPolluteModelManager::init(TLiveActor* param_1)
