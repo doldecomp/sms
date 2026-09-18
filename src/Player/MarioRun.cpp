@@ -983,7 +983,7 @@ BOOL TMario::surfing()
 
 		if ((wallToFace < -maxAngle || maxAngle < wallToFace)
 		    && mForwardVel > minSpeed) {
-			decHP(mDeParams.mHpMax.get());
+			decHP(mDeParams.mHPMax.get());
 			BOOL ret = changePlayerStatus(MARIO_STATUS_JUMP_BACK_DOWN, 0, true);
 			mForwardVel = 0.8f * -mForwardVel;
 			mVel.y      = 50.0f;

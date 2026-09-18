@@ -139,7 +139,7 @@ TMario::TMario()
 	unk108               = nullptr;
 	mFlag                = 0;
 	mPrevFlag            = 0;
-	mHealth              = mDeParams.mHpMax.get();
+	mHealth              = mDeParams.mHPMax.get();
 	unk122               = 0;
 	unk124               = 0;
 	mHotTimer            = 0;
@@ -377,7 +377,7 @@ void TMario::loadAfter()
 
 void TMario::initValues()
 {
-	mHealth     = mDeParams.mHpMax.get();
+	mHealth     = mDeParams.mHPMax.get();
 	mDirty      = 0.0f;
 	mOilBrake   = 1.0f;
 	mDirtyTimer = 0;
@@ -475,12 +475,7 @@ void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
 
 TMario::TDeParams::TDeParams()
     : TParams("/Mario/Mario.prm")
-    // TODO: the retail `.sdata2` string is "mHPMax", so the member is
-    // TDeParams::mHPMax and this line is PARAM_INIT(mHPMax, 8). The rename
-    // lives in the shared <Player/Mario.hpp> (plus MarioReceiveMsg,
-    // MarioMove and MarioCollision), so PARAM_INIT is spelled out here
-    // instead; it expands to exactly this.
-    , mHpMax(this, 8, JDrama::TNameRef::calcKeyCode("mHPMax"), "mHPMax")
+    , PARAM_INIT(mHPMax, 8)
     , PARAM_INIT(mRunningMax, 45.0f)
     , PARAM_INIT(mDashMax, 60.0f)
     , PARAM_INIT(mDashAcc, 0.5f)

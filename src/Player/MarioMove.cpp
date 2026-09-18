@@ -1737,7 +1737,7 @@ void TMario::checkCurrentPlane()
 			               == 0x400002BD)) {
 
 				if (dist1 < 10.0f || dist2 < 10.0f) {
-					int hp = mDeParams.mHpMax.get();
+					int hp = mDeParams.mHPMax.get();
 					floorDamageExec(hp, 3, 0, mMotorParams.mMotorReturn.get());
 				}
 			}
@@ -1955,7 +1955,7 @@ void TMario::thinkSituation()
 	    && (mGroundPlane->isIllegalData() || mGroundPlane->isOob())) {
 		mOobKillTimer += mDeParams.mIllegalPlaneCtInc.get();
 		if (mOobKillTimer > mDeParams.mIllegalPlaneTime.get())
-			decHP(mDeParams.mHpMax.get());
+			decHP(mDeParams.mHPMax.get());
 	} else {
 		mOobKillTimer -= 1;
 		if (mOobKillTimer < 0)
