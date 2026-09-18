@@ -43,15 +43,6 @@ void TBossHanachan::staticLoadParticle()
 	SMS_LoadParticle("ms_boha_kizetsu.jpa", 0x16F);
 }
 
-// TODO: promotion candidate for TWaterHitActor in
-// include/Player/ModelWaterManager.hpp: `s16 getWaterHitCounter() const`.
-// Parked here because the header belongs to another unit. Binding the s16
-// return is what turns our `cmpwi r0, 0` into retail's `extsh. r0, r0`.
-static inline s16 BHE_getWaterHitCounter(const TWaterHitActor* actor)
-{
-	return actor->mWaterHitCounter;
-}
-
 // TODO: frame 0xc8 vs 0x90 and no opcode differences left; the remaining 56
 // bytes of low region also account for the callee-saved renumbering (retail
 // keeps `this` in r31 and the nerve in r30, we have them swapped).
@@ -67,7 +58,7 @@ void TBossHanachan::emitParticle_()
 	f32 waterHeight = gpSunMgr->unk20;
 	JGeometry::TVec3<f32> position;
 	if (nerve != &TNerveBossHanachanSnort::theNerve()
-	    && BHE_getWaterHitCounter(mHead->unk100) > 0) {
+	    && mHead->unk100->getWaterHitCounter() > 0) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    0x169, mHead->mRightNoseMtx, 1, mHead);
 		gpMarioParticleManager->emitAndBindToMtxPtr(

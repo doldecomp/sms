@@ -58,6 +58,7 @@ public:
 	virtual ~TWaterHitActor() { }
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	void onWaterHitCounter();
+	s16 getWaterHitCounter() const { return mWaterHitCounter; }
 
 public:
 	// Senders carry a particle index; boss collision receivers carry a timer.
