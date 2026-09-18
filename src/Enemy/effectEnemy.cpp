@@ -127,7 +127,12 @@ void TEffectEnemy::setDeadAnm()
 	// need and references no extra slot, so only the byte count is evidence
 	// for this scratch position; any 8-byte local closes the gap (f64, u32[2]
 	// and this TVec3 all give the exact 31 instructions, at the top of the
-	// body or the bottom).
+	// body or the bottom). TDebuTelesa::receiveMessage and
+	// TBossHanachan::emitOneTimeSandPillar_ are 8 bytes short around the same
+	// gateCheck + startSoundActor idiom, so the real object may belong to that
+	// call rather than to this function; see the trial table in DebuTelesa.cpp
+	// (putting it in MSound::startSoundActor fixes all three but regresses
+	// ~15 exact callers of that wrapper).
 	JGeometry::TVec3<f32> effectPos;
 	gpMarioParticleManager->emitAndBindToPosPtr(0x8B, &mPosition, 0, nullptr);
 	if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_TO_COOL)) {

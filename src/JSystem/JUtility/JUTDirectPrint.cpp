@@ -135,6 +135,53 @@ void JUTDirectPrint::changeFrameBuffer(void* frameBuffer, u16 width, u16 height)
 	mFrameBufferSize   = (u32)mStride * (u32)mFrameBufferHeight * 2;
 }
 
+// UNUSED, 0x194 in the map, between changeFrameBuffer and drawString. The
+// body below is drawString_f's, which is the only other formatting entry point
+// and compiles to 0x188, i.e. three instructions short.
+// TODO: incorrect size. Measured: clamping against mFrameBufferWidth - 10
+// instead of the literal 310 gets it to 0x190, but that is a guess stacked on
+// a guess, so the plain copy is kept.
+void JUTDirectPrint::print(u16 position_x, u16 position_y,
+                                  char const* format, ...)
+{
+	if (!mFrameBuffer)
+		return;
+
+	va_list args;
+	va_start(args, format);
+
+	char buffer[256];
+
+	int buffer_length = vsnprintf(buffer, ARRAY_COUNT(buffer), format, args);
+	u16 x             = position_x;
+	if (buffer_length > 0) {
+		char* ptr = buffer;
+		for (; 0 < buffer_length; buffer_length--, ptr++) {
+			int codepoint = sAsciiTable[*ptr & 0x7f];
+			if (codepoint == 0xfe) {
+				position_x = x;
+				position_y += 7;
+			} else if (codepoint == 0xfd) {
+				position_x
+				    = position_x + 0x30 - ((position_x - x + 0x2f) % 0x30);
+			} else {
+				if (codepoint != 0xff) {
+					drawChar(position_x, position_y, codepoint);
+				}
+				position_x += 6;
+			}
+			if (position_x > 310) {
+				position_x = 16;
+				position_y += 8;
+			}
+		}
+	}
+
+	DCFlushRange(mFrameBuffer, mFrameBufferSize);
+
+	va_end(args);
+}
+
 void JUTDirectPrint::drawString(u16 position_x, u16 position_y, char* text)
 {
 	drawString_f(position_x, position_y, "%s", text);
