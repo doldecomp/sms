@@ -1,6 +1,7 @@
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapData.hpp>
+#include <algorithm>
 #include <types.h>
 
 TBGCheckData* TMapCollisionData::allocCheckData(u32 count)
@@ -144,28 +145,29 @@ void TMapCollisionData::addCheckDataToList(int i, int j, int param_3,
 	addAfterPreNode(j, i, list2, list3, param_3);
 }
 
-template <class T> static inline T max(const T& a, const T& b)
-{
-	return a > b ? a : b;
-}
-template <class T> static inline T min(const T& a, const T& b)
-{
-	return b > a ? a : b;
-}
-
+// TODO: 99.5%. Two residues left.
+//  - Frame 0x70 against retail's 0xe0: 112 bytes of dead low region below the
+//    single int-to-float conversion pair, which is the only referenced slot on
+//    either side. std::min/max' `const T&` parameters bind nothing here; the
+//    same templates taking their arguments by value are +0x28 and cost three
+//    register pairs, so the carrier is not the parameter form.
+//  - The Z inner min/max load p2.z and p3.z into the opposite registers
+//    (retail f6 = p3.z, f5 = p2.z); the X pair, with the identical spelling,
+//    comes out right, so this is an FPR permutation and not an argument-order
+//    difference (both compare a = p2).
 bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
                                     int* param_3, int* param_4, int* param_5,
                                     int* param_6)
 {
-	f32 minX
-	    = min(min(param_1->mPoint2.x, param_1->mPoint3.x), param_1->mPoint1.x);
-	f32 minZ
-	    = min(min(param_1->mPoint2.z, param_1->mPoint3.z), param_1->mPoint1.z);
+	f32 minX = std::min(param_1->mPoint1.x,
+	                    std::min(param_1->mPoint2.x, param_1->mPoint3.x));
+	f32 minZ = std::min(param_1->mPoint1.z,
+	                    std::min(param_1->mPoint2.z, param_1->mPoint3.z));
 
 	f32 maxX
-	    = max(param_1->mPoint1.x, max(param_1->mPoint2.x, param_1->mPoint3.x));
+	    = std::max(param_1->mPoint1.x, std::max(param_1->mPoint2.x, param_1->mPoint3.x));
 	f32 maxZ
-	    = max(param_1->mPoint1.z, max(param_1->mPoint2.z, param_1->mPoint3.z));
+	    = std::max(param_1->mPoint1.z, std::max(param_1->mPoint2.z, param_1->mPoint3.z));
 
 	if (maxX < -mGridExtentX || maxZ < -mGridExtentY || minX > mGridExtentX
 	    || minZ > mGridExtentY)
@@ -186,17 +188,23 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	if (*param_5 >= unk8)
 		*param_5 = unk8 - 1;
 
-	*param_4 = (minZ + mGridExtentX) * 0.0009765625f;
+	*param_4 = (minZ + mGridExtentY) * 0.0009765625f;
 	if (*param_4 < 0)
 		*param_4 = 0;
 
-	*param_6 = (maxZ + mGridExtentX) * 0.0009765625f;
+	*param_6 = (maxZ + mGridExtentY) * 0.0009765625f;
 	if (*param_6 >= unkC)
 		*param_6 = unkC - 1;
 
 	return true;
 }
 
+// TODO: 91.4%. Frame 0xd8 vs retail's 0x108 (48 low bytes) plus, in each of
+// the three copies of the addCheckDataToList block, an extra `mr r3, r0`:
+// retail's inlined getListRoot leaves its result directly in r3 where ours
+// lands in r0 first. The UNUSED out-of-line addCheckDataToList is 0x27c
+// against our 0x124, so that body is still under-reconstructed, which is
+// probably the same cause -- retail expands a bigger block three times here.
 void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 {
 	int iVar7 = param_1->getPlaneType();
@@ -283,6 +291,9 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 
 void TMapCollisionData::removeCheckListNode(s32, s32) { }
 
+// TODO: instruction-exact, frame 0x48 vs 0x60 (24 low bytes). The TU has no
+// accessor for unk30/unk42 to fork, and adding one belongs in
+// MapCollisionData.hpp, a shared header.
 void TMapCollisionData::updateCheckListNode(s32 param_1, s32 param_2,
                                             s32 param_3)
 {
@@ -316,6 +327,9 @@ void printData(const TBGCheckListWarp*, int) { }
 
 void printList(const TBGCheckList*) { }
 
+// TODO: frame 0x48 vs 0x70 (40 low bytes) and one register: retail keeps
+// `&unk42[start]`'s base in r3 where we use r5. Same missing accessor fork as
+// updateCheckListNode.
 void TMapCollisionData::removeCheckListData(u16 start, s32 count)
 {
 	TBGCheckListWarp* curr;
