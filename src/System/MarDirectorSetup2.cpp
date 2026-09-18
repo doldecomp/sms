@@ -19,6 +19,7 @@
 #include <GC2D/SunGlass.hpp>
 #include <THPPlayer/THPPlayer.h>
 #include <MSound/MSound.hpp>
+#include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/MapObjDolpic.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JKernel/JKRMemArchive.hpp>
@@ -39,23 +40,37 @@ class JPAEmitterManager;
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+// TODO: 99.9%. Every instruction and every register now matches; the frame is
+// 0x310 against retail's 0x410, i.e. **exactly 256 bytes** of dead low region,
+// and 256 is `sizeof(JDrama::TGraphics)`. Everything above the hole lines up
+// offset for offset (retail graphics 0x2f4 / TColor 0x2ec-0x2f0, ours the same
+// minus 0x100), so the missing object sits in the inline-temporary pool below
+// all named locals - it is a second TGraphics-sized local belonging to an
+// inlined callee, not to this body (a `volatile char trash[256]` declared last
+// here reaches 0x410 but leaves every slot 0x100 low, and a dead 256-byte
+// non-trivial local in a TU-static inlined callee overshoots to 0x710).
+// Which callee owns it is open.
 void TMarDirector::setup2()
 {
 	unkBC = JDrama::TNameRefGen::search<TNameRefAryT<TStageEventInfo> >(
 	    "イベントテーブル");
 	if (unkBC) {
+		u16 eventId = 0;
 		for (TStageEventInfo* it = unkBC->begin(); it != unkBC->end(); ++it) {
-			JDrama::TNameRef* ref
-			    = JDrama::TNameRefGen::search<JDrama::TNameRef>(it->unk14);
-			if (ref) {
-				// TODO: what is ref?
-				it->unk28 = ref;
+			TMapObjBase* obj
+			    = JDrama::TNameRefGen::search<TMapObjBase>(it->unk14);
+			if (obj) {
+				obj->mEventId = eventId;
+				it->unk28     = obj;
 			}
+			eventId++;
 		}
 	}
 
 	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(unk18[0]);
-	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = unk18[0];
+
+	TMarioGamePad* gamePad = getGamePad();
+	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = gamePad;
 
 	unk84 = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
 
@@ -70,8 +85,10 @@ void TMarDirector::setup2()
 
 	unkE0 = JDrama::TNameRefGen::search<TSunGlass>("サングラスフェーダ");
 	unk78 = JDrama::TNameRefGen::search<TGuide>("ガイド画面");
-	unkAC = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
-	unkB0 = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
+	unkAC            = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
+	unkAC->mGamePad  = unk18[0];
+	unkB0            = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
+	unkB0->mGamePad  = unk18[0];
 	unk70 = JDrama::TNameRefGen::search<TCardLoad>("データロード");
 
 	unk70->unk38 = unk18[0];
@@ -128,6 +145,12 @@ void TMarDirector::setup2()
 		sinkInPollutionEvent->initBuriedBuilding();
 }
 
+// TODO: 99.9%, zero instruction differences: frame 0x20 against retail's 0x38,
+// 24 bytes of dead low region. Ruled out (all inert): splitting the five
+// `(JKRMemArchive*)getVolume(...)` casts into two named locals each, folding
+// the five unmount blocks into one inlined `unmountFixedVolume(const char*)`
+// helper, SMSGetMSound() over gpMSound, getGamePad() over unk18[0], and a
+// TDrawSyncManager::getInstance() level over the four smInstance reads.
 TMarDirector::~TMarDirector()
 {
 	gpMSound->exitStage();
