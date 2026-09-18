@@ -271,11 +271,19 @@ bool TLimitKoopaJr::canRun()
 
 bool TLimitKoopaJr::canYahoo() { return SMS_IsMarioStatusTypeJumping(); }
 
-// TODO: incorrect size. Map records 288 bytes and this is 336, and the Wait
-// nerve stalls at 89.0% for the same reason: the ROM calls
-// TVec3::setLength(const TVec3&, f32) out of line here, while both setLength(f32)
-// and normalize() expand it in place for us. Same family as the per-call-site
-// inlining table in docs/catalog/codegen-tells.md.
+// The ROM calls TVec3::setLength(const TVec3&, f32) out of line here, which
+// puts it at inline depth 4 -- one level below what `dir.normalize()` reaches
+// on its own (normalize 2, setLength 3, where the four-statement body still
+// fits the depth-3 budget). The forwarder below supplies that level: the Wait
+// nerve goes 90.0 -> 95.8 and this body drops from 336 bytes to 292 against
+// the map's 288. Retail's own name for the level is unrecoverable; a
+// normalize step folded into a direction helper is the likely shape.
+// fabricated
+static inline void LimitKoopaJrNormalize(JGeometry::TVec3<f32>* v)
+{
+	v->normalize();
+}
+
 void TLimitKoopaJr::moveWait()
 {
 	JGeometry::TVec3<f32> toMario;
@@ -285,7 +293,7 @@ void TLimitKoopaJr::moveWait()
 	toMario.y = 0.0f;
 
 	JGeometry::TVec3<f32> dir = toMario;
-	dir.normalize();
+	LimitKoopaJrNormalize(&dir);
 
 	TDirectionCalc target(dir);
 	mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
