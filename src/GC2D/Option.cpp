@@ -952,7 +952,7 @@ bool TOptionControl::movementOption()
 	checkInput();
 	writeValue();
 
-	if (gpCameraOption->unk0 & 1) {
+	if (SMSGetCameraOption()->unk0 & 1) {
 		mSoundOption->stopSound();
 		return true;
 	}
