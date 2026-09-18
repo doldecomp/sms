@@ -427,6 +427,12 @@ void TEnemyMario::initEnemyValues()
 			stream.readString();
 			for (int link = 0; link < 3; ++link) {
 				stream.skip(2);
+				// TODO: retail sign-extends the byte before comparing it
+				// (extsb, then cmpwi 0x2a), so this local was a signed char.
+				// Spelling it `char` reproduces those three instructions but
+				// permutes the whole function's callee-saved registers
+				// (97.4% -> 96.2%, 150 operand diffs -> 448), so it waits for
+				// whatever named locals retail keeps live here.
 				u8 replayLetter;
 				stream.read(&replayLetter, sizeof(replayLetter));
 				if (replayLetter == '*') {
