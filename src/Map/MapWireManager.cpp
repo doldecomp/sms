@@ -18,17 +18,18 @@ f32 TMapWireActor::mCommonAttackHeight = 200.0f;
 // The `unk74->unk7C` guard is read off doActorToWire's inlined copy
 // (`lwz r3, 0x78(r30)` is unk4.unk74, not the manager's own unk7C), which is
 // what proves this block belongs to TMapWireActor rather than the manager.
-// TODO: an uninitialised 36-40 byte non-trivial local here takes
-// TMapWireActorManager::doActorToWire from 99.9% to exact (frame 0x30 -> 0x58)
-// with no instruction change, and this body is exactly 40 bytes short of the
-// map's UNUSED 0xe8, so the missing statements are the ones that used it.
-// Three `JGeometry::TVec3<f32>` (the start/end/foot triple getPosInWire uses)
-// is the right size; left out for want of a use for them. Note the expansion
-// in doActorToWire matches instruction for instruction, so by the batch-98
-// rule the 40-byte UNUSED excess is more likely a depth artifact of the
-// dead-stripped out-of-line copy than ten missing instructions, and the 40
-// dead frame bytes then have to be a dead local of this callee rather than
-// statements.
+// TODO: doActorToWire is frame-only (0x30 vs 0x58, all 121 instructions
+// identical, target's 0xc..0x48 locals region wholly unreferenced), and it
+// needs exactly 40 more dead bytes, which a dead local of this UNUSED callee
+// would supply. Measured accounting for dead non-trivial locals, both here and
+// in doActorToWire's own body: the region grows by floor(total_size / 8) * 8,
+// so k dead `TVec3`s give +8/+24/+32/+48 for k = 1..4 -- 3 TVec3 (36 B) is 32,
+// 4 (48 B) is 48, and no TVec3-only spelling reaches 40. A total size of 40-47
+// does: `TQuat4<f32> + 2 TVec3` was verified exact (frame 0x58, 100%), as is 3
+// TVec3 here plus 1 in doActorToWire. All are implausible content for a
+// collision scan, so the lever is left unpulled rather than fabricated; the
+// body above is what the matching expansion proves, and the map's UNUSED 0xe8
+// stays 40 bytes above it.
 void TMapWireActor::checkTakingActor()
 {
 	if (unk74->unk7C != nullptr) {
@@ -41,26 +42,42 @@ void TMapWireActor::checkTakingActor()
 	}
 }
 
-// TODO: frame 0xb8 vs 0xa8. Both builds allocate exactly eight 12-byte vector
-// slots, but retail's block starts at 0x4c where ours starts at 0x3c (16 more
-// low bytes below every vector) and two of the eight are permuted: reading the
-// slots in ascending order, ours is A C B D E H F G to retail's A B C D E F G H
-// (the (foot - start)/(end - start) pair is swapped and the last temporary is
-// two places early), so the difference is the term order of the returned
-// quotient, not a missing local. `getPosition()` over `mPosition` is worse
-// (99.3 -> 96.5).
+// `foot` is declared first because retail's named block descends
+// foot (0xa4), start (0x98), end (0x8c), MsPerpendicFootToLineR's return
+// buffer (0x80), and named locals are allocated top-down in declaration order;
+// `len` is named because f31 is saved across the second sqrt call, and only a
+// named scalar local of the function's own body gets a callee-saved FPR.
+// TODO: frame 0xb8 vs 0xa8, 99.3%, all 106 instructions present. Retail's low
+// region is 0xc..0x4c dead (64 B) then temps 0x4c, [4-byte hole at 0x58],
+// 0x5c, 0x68, 0x74; ours is 0xc..0x3c dead (48 B) then four contiguous 12-byte
+// temps, so the deficit is 16 dead bytes below the temps plus one dead 4-byte
+// temp after the first subtraction. Measured: `getTipPoints` works as a carrier
+// for those 16 bytes even though it has an out-of-line copy, because its leaf
+// copy allocates no frame for a dead local and keeps matching -- a 16-byte dead
+// local there, or one TU-local binding accessor `const TVec3& getStartPoint()`
+// (+16), makes the frame exactly 0xb8 and leaves only the 4-byte hole (99.6%,
+// 40 operand-only marks). Both spellings are fabricated, so neither is kept.
+// The 4 bytes are a temp allocated between the two `operator-` expansions:
+// splitting `len` off into its own statement reserves one, but then the temps
+// permute, because MWCC allocates inline temps statement by statement in
+// reverse statement order and within one statement by level (both subtractions,
+// then both TVec3 copies) -- which is why the quotient has to stay one
+// expression. not: `getPosition()` over `mPosition` (99.3 -> 96.5), two named
+// scalars for the two lengths (frame 0xc0), binding accessors on both tip
+// points (frame 0xc8).
 f32 TMapWireActor::getPosInWire() const
 {
+	JGeometry::TVec3<f32> foot;
 	JGeometry::TVec3<f32> start;
 	JGeometry::TVec3<f32> end;
 	getTipPoints(&start, &end);
 	start.y = 0.0f;
 	end.y   = 0.0f;
 
-	JGeometry::TVec3<f32> foot = MsPerpendicFootToLineR(start, end, mPosition);
+	foot = MsPerpendicFootToLineR(start, end, mPosition);
 
-	return JGeometry::TVec3<f32>(foot - start).length()
-	       / JGeometry::TVec3<f32>(end - start).length();
+	f32 len = JGeometry::TVec3<f32>(end - start).length();
+	return JGeometry::TVec3<f32>(foot - start).length() / len;
 }
 
 void TMapWireActor::getTipPoints(JGeometry::TVec3<f32>* start,
