@@ -686,6 +686,17 @@ DEFINE_NERVE(TNerveAnimalBirdActionOnGround, TLiveActor)
 // JGVec3.hpp problem in docs/catalog (our in-class member template always
 // expands), so the quaternion temporary is scalarised here and the whole
 // expansion renumbers.
+//
+// Both of this TU's validate-symbol-order failures are that one fact. A local
+// template instantiation is emitted immediately after the first function in
+// *emission* order that needs its out-of-line body, so the map's
+// `execute__WalkOnGround, set<f>, MsWrap<f>, theNerve__WalkOnGround` says this
+// function calls both; ours inlines both, MsWrap's first real caller is
+// doLanding thirty symbols later, and set<f> is never called at all -- hence
+// one MISSING and one ORDER error from a single missing refusal. The same
+// three inlines (MsWrap, TVec3::set<f>, TVec4::TVec4) flip together in
+// TAnimalBase::execWalk, so it is the caller-size family, not a spelling
+// here.
 DEFINE_NERVE(TNerveAnimalBirdWalkOnGround, TLiveActor)
 {
 	TAnimalBird* bird = (TAnimalBird*)spine->getBody();

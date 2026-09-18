@@ -268,6 +268,22 @@ void TAnimalBase::getRotationFlyToDir(JGeometry::TVec3<f32>* current_rot,
 // UNUSED (Size: 0x4a0 in MAP)
 void TAnimalBase::flyToCurPathNode(f32 a1, f32 a2) { }
 
+// TODO: validate-symbol-order fails on this TU with four MISSING symbols, and
+// all four are the *same* fact about this function. Retail's execWalk calls
+// set<f>__Q29JGeometry8TVec3<f>Ffff (0x10), __ct__Q29JGeometry8TVec4<f>Fv
+// (0x4), MsClamp<f>__Ffff (0x20) and MsWrap<f>__Ffff (0x48) out of line; our
+// execWalk expands the first three and only MsWrap survives as a symbol. The
+// map's position for that block is the oracle: MWCC emits a local template
+// instantiation immediately after the first function in *emission* order that
+// needs its out-of-line body, and for MsWrap ours lands in exactly the map's
+// slot (between execWalk and flyToCurPathNode) -- so the three that are
+// missing are missing only because this one call site inlines them.
+// Three unrelated inlines flipping together at one site is the caller-size
+// family (docs/catalog/codegen-tells.md); MathUtil.hpp's MsClamp comment
+// already records that no declaration form there moves it. The fourth,
+// set<f>__Q29JGeometry8TVec4<f>Fffff, is UNUSED and sits right after
+// flyToCurPathNode, i.e. it belongs to that 0x4a0 dead body, which is a stub
+// here.
 void TAnimalBase::execWalk(bool moving)
 {
 	TAnimalSaveIndividual* save = ((TAnimalManagerBase*)mManager)->mAnimalSave;
