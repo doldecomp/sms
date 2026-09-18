@@ -134,6 +134,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `theNerve()` expansion is emergent per function from identical source: a 54-79% residual with every instruction matching (codegen-tells.md: "`BathtubKiller`").
 - "Weak plus `bl` at depth 1" is now only the three factory ctors (`TTelesaSlot`, `TFence`, `TSunGlass`); `std::sqrtf` was a depth-3 measurement and closed, and `__construct_array`, inline asm and a per-caller budget are all refuted (codegen-tells.md: "batch 146").
 - The JGadget iterator temp-pool **grouping** on `TSeal::init`, `TMirrorActor::init`, `TPerformList::perform` is not the conversion lever (frame-gaps.md: "batch 133").
+- The JGadget grouping is a per-expansion block **stride** (8 retail, 12 ours), differs per site and ignores batch 142's return-type ladder; `operator++`/`operator*`/`operator->` return types are inert and the rest of the chain is pinned byte-exact. not: a named `TSingleNodeLinkList::begin()`/`end()` — lands `perform`'s 0xe8 but costs both `TPerformList::push_back` (frame-gaps.md: "Research batch 161").
 
 ## US-region differences
 

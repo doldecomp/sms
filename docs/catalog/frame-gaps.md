@@ -931,3 +931,39 @@ Gains are exactly the sites that **copy the product into a destination object** 
 - **A header inline with no map symbol in any TU is a free carrier**: `JDrama::TDisplay::getRenderMode()` has no symbol anywhere, and the binding lever inside the accessor (`GXRenderModeObj* rmo = &unk10; return *rmo;`) lands all four RenderModeObj frames (0x20/0x28/0x30/0x38; Game pays twice). `return *(&unk10);` is +0, so it is the named binding, never the address-of. RenderModeObj 25.6 -> 100, linked (483).
 - **A consumed reference binding at the call site is 4 bytes of low region**, the mirror of batch 142's dead-binding +4 above: `const TVec3<f32>& goal = unk104.getPoint();` slides `calcDist`'s by-value copy 0x24 -> 0x20 in `TSpineEnemy::isReachedToGoal` (100; fishoid 69.7 -> 73.2). `AnimalNerve.cpp` already spelled the same body that way: look for a committed sibling before inventing a lever.
 - JGadget `TVector::insert`'s 0x20 is additive over the MSL helpers (`O dummy` in `uninitialized_copy` -0x10, flattening `__copy_backward` -0x8, `dealloc` 0x18 but its dtor is four real instructions), not one object; `if (it == end())` is +8 (an accessor lever works, so it is a shortage). DrawSyncManager: map `end()` is 0x80 (a real method, not an accessor) and the dtor is 0x20 short: a unit round item.
+## Research batch 161 (2026-09-18): the JGadget iterator pool ignores the return-type price ladder, and the grouping has no shared cause
+
+Batch 133 left eight functions blocked on the JGadget list/iterator temp pool and batch 142 then found the inline-temp price-by-return-type rule (reference 8, pointer 4, void 0, additive over levels).
+This batch re-ran the analysis with that rule on all eight sites at once, measuring slot maps directly out of the compiled objects against the dtk asm (driver `grpek/{score,run}.py`: frame, absolute slot offsets, and group sizes with the dead gaps between them).
+
+**The eight residues, measured.** Retail against ours, as `frame  [group]+gap ...`:
+
+| site | retail | ours |
+| --- | --- | --- |
+| `TLampTrapIron::loadAfter` / `TLampTrapSpike::loadAfter` | `0x78 [5]+8 [3]` | `0x78 [2]+4 [3]+4 [3]` |
+| `TSeal::init` | `0xc0 [1]+4 [1]+56 [2]+8 [2]+8 [1]+52 [2]` | `0xc0 ... [2]+12 [2]+8 [1]+48 [2]` |
+| `TMirrorActor::init` | `0xd8 [1]+132 [2]+12 [2]+8 [2]` | `0xd8 [1]+116 [2]+20 [2]+16 [2]` |
+| `TRiccoHook::init` | `0xd8 [2]+4 [3]+16 [3]` | `0xd0 [2]+4 [3]+8 [3]` |
+| `TEnemyManager::createEnemies` | `0xb0 [5]+8 [4]` | `0xa8 [5]+4 [3]+12 [1]` |
+| `SDLModel::entry` | `0xb8 [3]+8 [2]+4 [3]` | `0xb8 [3]+8 [2]+8 [3]` |
+| `TPerformList::perform` | `0xe8 [2]+12 [2]+4 [5]+12 [4]` | `0xc0 [4]+8 [2]+4 [3]+12 [4]` |
+
+- **The return-type ladder is inert for this pool.**
+  Measured on all eight sites at once, byte-identical slot maps to the stock header: a `void`-returning `TList<T>::iterator::operator++()`, a `void`-returning `TList_pointer<T>::iterator::operator++()`, both at once, `operator*` routed through `operator->`, and a new pointer-returning `operator->` on the derived iterator.
+  Probing `TList_pointer<T>::insert` with an extra inlined level whose return type is by-value, pointer or reference leaves the three temps of the `insert` sub-block at exactly the same offsets in all three cases.
+  So batch 142's price ladder is a `TVec3`-shaped rule, not a general one; do not re-derive the JGadget grouping from it.
+- **Most of the chain is pinned byte-for-byte, so its return types are not free at all.**
+  `TList<void*>::begin()`/`end()` (12 B each, ObjHitCheck / enemymanager), `TList_pointer<THitActor*>::end()` (36 B, bossManta), `TList_pointer<THitActor*>::iterator::iterator(TList<void*>::iterator)` (12 B, by-value parameter), `TList_pointer<THitActor*>::insert` (76 B, batch 133), and all of `std-list.cpp` (`operator==` 24 B, `erase` 108 B, `CreateNode_` 116 B, `TList_pointer_void::insert` 136 B) are 100 % today.
+  Retail's `loadAfter` loads `TList_pointer_void::insert`'s return slot, so the "void in the base, iterator in the wrapper" split is refuted by the binary, and every `begin()`/`end()` is a by-value return with a hidden r3 slot, so the by-reference variant is refuted too.
+  `__pp__`, `__dr__` and JGadget `__ne__` have zero map hits, but so do ours: MWCC only emits the weak copy of an inline it also calls out of line, so that absence carries no evidence.
+- **The site spelling is fixed by the frame.** `getChildren().push_back(this)` is the only one of `->push_back`, `->insert(obj)`, `->add(obj)` and `getChildren().push_back` that keeps `loadAfter` at retail's 0x78; the other three land 0x68-0x70. The remaining free spelling on the five `TList_pointer` sites is `TList_pointer<T>::push_back`'s body, and five bodies (`insert(end(), what)`, a named `end()`, a dead named result, an `iterator` return, `this->`-qualified) all miss.
+- **The residue is a per-expansion block *stride*, and it is not uniform across the eight.**
+  Reading `loadAfter` instruction by instruction, both builds allocate the same eight temps in the same order; retail packs the `end()` block `{0x30,0x34}` and the `insert` block `{0x38,0x3c,0x40}` at stride 8 and we place the second block at 0x3c, i.e. stride 12, leaving a dead word at 0x38 and one at 0x48 where retail has both at 0x44/0x48.
+  `TPerformList::perform` has the same stride-12 hole between the `begin()` and `end()` blocks.
+  But `TSeal::init` is a flat +4 on one block, `TMirrorActor::init` wants 16 bytes moved from its two upper gaps to the bottom, `TRiccoHook::init` wants 8 *more* dead bytes and `TEnemyManager::createEnemies` wants +8/+12 on two groups: there is no single shift, so **no return-type/level assignment reproduces all eight, and none was found that reproduces even two.**
+  A nine-line scratch model of the two-sibling-expansion shape (`D begin(){return D(L::begin());}` over a one-pointer iterator) packs all eight temps contiguously, so the stride is not a property of the derived-iterator idiom by itself.
+- **One new lever, refuted by the map's own byte-exact neighbours.**
+  Naming the result in `TSingleNodeLinkList::begin()`/`end()` (`iterator r(mTail); return r;`) packs those two blocks at stride 8: `TPerformList::perform` goes 0xc0 -> **0xe8 exactly**, keeps thirteen slots and lands retail's top two groups and both 12-byte gaps (99.33 -> 99.78 tree-wide), and the emitted weak 12-byte `end()` stays byte-identical.
+  It is still not committable: it adds one temp to `TSingleLinkList<T,I>::Push_back`'s chain, dropping `TPerformList::push_back(TViewObj*, u32)` 100 -> 92.53 and `push_back(const char*, u32)` 100 -> 94.16, and six `Push_back`/`Insert` respellings (named `end()`, named `Insert` result, dead result) all keep seven slots where retail has six. Reverted.
+- Also measured and inert on all eight: `TSingleNodeLinkList::iterator::operator=` deleted or void-returning, the derived `iterator(TSingleNodeLinkList::iterator)` ctor non-`explicit`, and `TList_pointer<T>::end()` spelled with an implicit derived-from-base conversion (the batch-133 lever is about the *emitted copy's* frame only; at an inline expansion it is free).
+  Worse: a user copy constructor on `TSingleLinkList<T,I>::iterator` (perform 0xe8 -> 0xa8), `TSingleLinkList::begin()/end()` named (0xf0), `TList<T>::begin()/end()` named (SDLModel +0x20, seal +8, MirrorActor +8), the derived `operator==` comparing `unk0` directly (loses two slots), `TList<T>::push_back` as a named `end()`, a dead result or an `iterator` return (all `SDLModel::entry`-only and all worse).
