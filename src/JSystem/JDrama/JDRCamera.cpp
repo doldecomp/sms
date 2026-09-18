@@ -18,6 +18,22 @@ void TPolarCamera::load(JSUMemoryInputStream& stream)
 	unk3C = stream.readF32();
 	unk38 = stream.readF32();
 }
+// TODO: 66.3%. The prologue, the C_MTXPerspective call and the near/far stores
+// are exact; the whole residue is the view-matrix block. Two tells:
+//   * retail parks three literals in callee-saved FPRs *before* the first
+//     `sinf` -- `lfs f31, @877` (0.0f), `fmr f30, f31`, `lfs f29, @878` (1.0f)
+//     -- and reuses them for every `setTrans`/identity store after the calls,
+//     where we reload `@468`/`@469` after each call. The `fmr f30, f31` means
+//     two *distinct* live values that both hold 0.0f, i.e. two separate
+//     argument temporaries, so retail's block has more `setTrans`-like
+//     expansions than ours, not fewer.
+//   * our frame is 0x168 against retail's 0x1a0 (56 bytes short) and we save
+//     one extra callee-saved FPR (f20-f31 against f21-f31).
+// The read order (`0x40` then `0x44`, i.e. -unk40 then -unk44) already matches,
+// so the Euler order is right (cf. TSmJ3DAct::perform, where it was reversed).
+// Ruled out: giving each concat its own destination matrix (four or five
+// `TPosition3f` locals instead of reusing two) overshoots to 0x1f0 and scores
+// 60.0%, so the missing 56 bytes are not another matrix local.
 void TPolarCamera::perform(u32 cue, TGraphics* graphics)
 {
 	if (!(cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)))
