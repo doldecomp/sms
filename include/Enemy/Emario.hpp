@@ -19,6 +19,9 @@ public:
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
+	void checkCollision();
+	void execKill();
+
 	bool isGoal();
 	bool isReachedToGate() const;
 	bool isDownWaitingToTalk() const;
