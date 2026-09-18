@@ -27,23 +27,16 @@ DEFINE_NERVE(TNerveBossHanachanGraphWander, TLiveActor)
 DEFINE_NERVE(TNerveBossHanachanTumble, TLiveActor)
 {
 	TBossHanachan* boss = (TBossHanachan*)spine->getBody();
-	if (spine->getTime() == 0)
+	int time            = spine->getTime();
+	if (time == 0)
 		boss->setTumbleAnm(BOSS_HANACHAN_STOP_MOTION_BLEND_ON);
 	else
 		boss->considerSetAnm(BOSS_HANACHAN_NERVE_ANM_UNK0);
 	boss->execSlip();
-	// TODO: frame 0x38 vs retail 0x40; the body is instruction-exact (8 bytes
-	// of padding gives 100%) and every r1 displacement in retail, the LR slot
-	// included, is exactly 8 higher, i.e. one 8-byte object below every local
-	// (see docs/catalog/frame-gaps.md, "The last 8 bytes"). The accessor
-	// ladder saturates at +0x10 here: measured 0x28 for gpMarDirector
-	// ->mConsole, 0x30 for one level (either ->getConsole() or
-	// boss->getMarchSpeed()), 0x38 for any two or three of
-	// {SMSGetMarDirector(), getConsole(), getMarchSpeed()}. Also +0: a
-	// TU-static console forwarder (with and without a director parameter),
-	// nested ifs instead of &&, a named TLiveActor* before the cast, and a
-	// named bool for startAppearBalloon's discarded result.
-	if (0.0f == boss->mMarchSpeed && boss->isTumbleCompletelyAllBody()) {
+	// The frame's last 8 bytes are a lever pair: `getMarchSpeed()` and the
+	// named `time` are each +0 on their own (the accessor ladder saturates at
+	// 0x38) and +8 together, which is retail's 0x40.
+	if (0.0f == boss->getMarchSpeed() && boss->isTumbleCompletelyAllBody()) {
 		SMSGetMarDirector()->getConsole()->startAppearBalloon(7, true);
 		spine->pushAfterCurrent(&TNerveBossHanachanDown::theNerve());
 		return TRUE;
