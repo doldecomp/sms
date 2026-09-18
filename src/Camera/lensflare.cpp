@@ -14,6 +14,29 @@
 #include <Camera/SunModel.hpp>
 #include <stdio.h>
 
+// fabricated. Retail calls JMASCos, JMASSin and TVec3<f32>::set(const Vec&)
+// out of line from the calc-anim block below, which only happens if the
+// CLBCalcNearNinePos fovy/aspect wrapper sits at inline depth 3: the wrapper
+// then expands fakeTan at depth 4 but leaves the two table lookups at depth 5,
+// and the TVec3 temporaries its arguments need put set() at depth 4 as well.
+// Two levels between perform() and the wrapper reproduce that; their names and
+// split are guesses, since retail inlined both away completely.
+static inline void CalcLensNearNinePosFromCamera(JGeometry::TVec3<f32>* out_grid,
+                                                S16Vec* out_euler)
+{
+	const Vec& camPos = gpCamera->unk124;
+	const Vec& camAt  = gpCamera->unk148;
+	CLBCalcNearNinePos(out_grid, out_euler, camPos, camAt,
+	                   gpCamera->getFinalAngleZ(), gpCamera->getNear(),
+	                   gpCamera->getFovy(), gpCamera->getAspect());
+}
+
+static inline void CalcLensNearNinePos(JGeometry::TVec3<f32>* out_grid,
+                                       S16Vec* out_euler)
+{
+	CalcLensNearNinePosFromCamera(out_grid, out_euler);
+}
+
 TLensFlare::TLensFlare(const char* name)
     : JDrama::TViewObj(name)
     , unk10(nullptr)
@@ -93,16 +116,12 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		JGeometry::TVec3<f32> sunWorldPos = gpSunModel->unk198;
+		const Vec& sunPosSrc              = gpSunModel->unk198;
+		JGeometry::TVec3<f32> sunWorldPos = sunPosSrc;
 
-		// TODO: a mystery is happening here with the args, but it's definitely
-		// this inline (maybe one more inlining layer?)
 		S16Vec camEuler;
 		JGeometry::TVec3<f32> near9grid[9];
-		CLBCalcNearNinePos(near9grid, &camEuler, gpCamera->unk124,
-		                   gpCamera->mTarget, gpCamera->getFinalAngleZ(),
-		                   gpCamera->getNear(), gpCamera->getFovy(),
-		                   gpCamera->getAspect());
+		CalcLensNearNinePos(near9grid, &camEuler);
 
 		f32 tx = unk3C * -gpSunModel->unkF8[0].x;
 		f32 ty = unk3C * -gpSunModel->unkF8[0].y;
