@@ -57,8 +57,11 @@ f32 MSHandle::cDol_0Rad             = 1.0316f;
 f32 MSHandle::cDol_HalfRad          = 1.5707999f;
 f32 MSHandle::cDol_FullRad          = 2.1099999f;
 
+// The map has no symbol for this in MSHandle.o, so it was `inline`, not just
+// `static`: `static` leaves an emitted global behind for a fully inlined
+// file-scope function.
 // TODO: find a home for this
-static u32 get_thing(u32 param_1)
+static inline u32 get_thing(u32 param_1)
 {
 	u32 uVar1 = param_1 >> 30;
 	u32 uVar2 = param_1 >> 12 & 0xF;
@@ -90,15 +93,15 @@ f32 MSHandle::MSACos(f32 param_1)
 
 void MSHandle::setSeDistanceParameters()
 {
-	u8 type = smSeCategory[get_thing(mSoundID)].mType;
-	if (mState == SOUNDSTATE_Prepared)
+	u8 type = smSeCategory[get_thing(getID())].mType;
+	if (getStatus() == SOUNDSTATE_Prepared)
 		type = 0;
 
 	setSeDistanceVolume(type);
 	setSeDistancePan(type);
 	setSeDistancePitch(type);
 	setSePositionDopplar();
-	setSeDistanceFir(type);
+	setSeDistanceFxmix(type);
 
 	if (!(getSwBit() & JAISeSwBit_NoMapFxmix)) {
 		f32 dVar4 = interPointer->getMapInfoFxParameter(mActorGroundNumber);
@@ -129,10 +132,15 @@ void MSHandle::setSeDistancePan(u8 moveTime)
 	f32 thing = ptr->unk18;
 
 	f32 d = calcPan(ptr->mCamSpacePos, thing,
-	                smSeCategory[get_thing(mSoundID)].unk4);
+	                smSeCategory[get_thing(getID())].unk4);
 	setSeInterPan(4, d, moveTime, 0);
 }
 
+// TODO: frame 0x38 vs 0x30: we reserve 8 bytes too much of low region (the
+// outgoing-parameter area is 8 bytes per f32 argument, and powf(f32, f32) wants
+// only 16). Dropping the named `shift` costs two reloads (95.2), moving its
+// declaration to the top is 0x40, and spelling dVar3's ternary as an if is
+// 0x40 at 92 instructions. calcDolby has the same shape and is frame-exact.
 f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 {
 	f32 fVar2 = cPan_MaxAmp;
@@ -151,7 +159,6 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 		fVar4 = fVar2 * fVar4;
 	}
 
-	f32 fVar1;
 	if (param_2 < cPan_HiSence_Dist) {
 		fVar4 *= param_2 / cPan_HiSence_Dist;
 	} else {
@@ -172,6 +179,9 @@ void MSHandle::setSeDistanceDolby(u8 moveTime)
 	setSeInterDolby(4, d, moveTime, 0);
 }
 
+// TODO: pure FPR permutation. Retail keeps dVar2 in f0 (reusing zeroRad's
+// register) and the clamp result in f2; we use f3 and f0. Every instruction and
+// the frame are exact, so this is a declaration/live-range order question.
 f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 {
 	f32 dVar2 = dist <= 0.0f ? 0.0f : MSACos(-pos.z / dist);
@@ -198,6 +208,10 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 	return r < 0.0f ? 0.0f : r;
 }
 
+// TODO: 99.8%, three operand-only differences. Retail keeps get_thing's
+// `param_1 >> 30` in r5 at this one site (r3 in the other two, which match);
+// swapping get_thing's two declarations and inlining `tmp` into the argument
+// list both leave it unchanged.
 void MSHandle::setSeDistanceVolume(u8 moveTime)
 {
 	u32 swBit = getSwBit();
@@ -211,8 +225,8 @@ void MSHandle::setSeDistanceVolume(u8 moveTime)
 	if (!(swBit & JAISeSwBit_NoDistanceVolume)) {
 		// TODO: inline?
 		u32 tmp = getSwBit() >> JAISeSwBit_DistanceVolumeCurveShift & 0x7;
-		volume = setDistanceVolumeCommon(smSeCategory[get_thing(mSoundID)].unk4,
-		                                 tmp);
+		volume = setDistanceVolumeCommon(
+		    smSeCategory[get_thing(getID())].unk4, tmp);
 	} else {
 		volume = 1.0f;
 	}
@@ -224,7 +238,7 @@ f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 moveTime)
 {
 	f32 fVar1         = unk1C->unk18;
 	f32 maxVolumeDist = JAIGlobalParameter::getParamMaxVolumeDistance();
-	u32 uVar1         = get_thing(mSoundID);
+	u32 uVar1         = get_thing(getID());
 	return calcVolume(fVar1, volume, maxVolumeDist, moveTime, uVar1);
 }
 
