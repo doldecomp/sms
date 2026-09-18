@@ -218,15 +218,23 @@ struct TBubbleCallBack
 	void execute(JPABaseEmitter*, JPABaseParticle*);
 };
 
+// TODO: parked fork of gpMarioOriginal; belongs in Player/Mario.hpp as
+// SMSGetMarioOriginal(). It is worth 16 bytes of the frame at the guard site
+// only; forking all three reads overshoots by 0x18.
+static inline TMario* MarioParticleGetMario()
+{
+	TMario* mario = gpMarioOriginal;
+	return mario;
+}
+
 void TBubbleCallBack::execute(JPABaseEmitter*, JPABaseParticle* particle)
 {
-	if (!gpMarioOriginal->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
+	if (!MarioParticleGetMario()->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		JGeometry::TVec3<f32> pos;
 		particle->getCurrentPosition(pos);
 		if (pos.y > gpMarioOriginal->mFloorPosition.z) {
 			particle->unk10 |= 2;
-			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()
-			    != 0.0f) {
+			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()) {
 				gpMarioParticleManager->emit(PARTICLE_MS_M_AWAHAMON, &pos, 0,
 				                             nullptr);
 			}
@@ -457,7 +465,7 @@ void TMario::warpInEffect()
 			break;
 		}
 
-		MtxPtr mtx = mModel->getModel()->getAnmMtx(boneIdx);
+		MtxPtr mtx = getM3UModel()->getModel()->getAnmMtx(boneIdx);
 
 		s32 id = warpInEffectIDs[i];
 		BOOL b = TRUE;
@@ -469,7 +477,8 @@ void TMario::warpInEffect()
 			    = gpMarioParticleManager->emitAndBindToMtx(id, mtx, 0, this);
 			if (emitter != nullptr) {
 				emitter->setParticleCallBackPtr(&warpInCallBack);
-				emitter->setUserWork((uintptr_t)&mWarpInDir);
+				uintptr_t work = (uintptr_t)&mWarpInDir;
+				emitter->setUserWork(work);
 			}
 		}
 	}
@@ -478,10 +487,10 @@ void TMario::warpInEffect()
 	                                         getCenterAnmMtx(), 0, nullptr);
 	gpMarioParticleManager->emitAndBindToMtx(
 	    0x1D6,
-	    ((TModelGate*)mHolder)
+	    ((TModelGate*)getHolder())
 	        ->unk78->getModel()
-	        ->getAnmMtx(((TModelGate*)mHolder)->unk72),
-	    2, mHolder);
+	        ->getAnmMtx(((TModelGate*)getHolder())->unk72),
+	    2, getHolder());
 }
 
 void TMario::warpInLight()
@@ -490,6 +499,14 @@ void TMario::warpInLight()
 	                                            &mCenterPos, 0, this);
 }
 
+// TODO: 8 bytes of low region short, every instruction exact (retail 0x120,
+// ours 0x118; the double-conversion temporary sits at the top of the local
+// area in both). Routing the twelve `mModel->getModel()->getAnmMtx()` receivers
+// through getM3UModel() is worth +8 per *pair* of sites, so two or three of the
+// twelve land the frame exactly and all twelve overshoot by 0x28 -- an
+// arbitrary subset of identical sites, so it is not committed. Also measured
+// and inert: getPosition() at either &mPosition argument (it also costs
+// instructions), getM3UModel() at the first site alone.
 void TMario::warpOutEffect(int kind, f32 rotDeg)
 {
 	switch (kind) {
