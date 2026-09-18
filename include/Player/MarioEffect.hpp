@@ -18,7 +18,7 @@ public:
 	void init(TMario*);
 	void setJumpIntoWaterEffect();
 	void setJumpIntoWaterEffectSmall();
-	int getJumpIntoWaterModelData();
+	J3DModelData* getJumpIntoWaterModelData();
 	void startDashEffect();
 	void endDashEffect();
 

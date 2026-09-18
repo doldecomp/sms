@@ -19,6 +19,21 @@
 
 #include <Player/MarioDirtyStrings.hpp>
 
+// TODO (closure batch 87): all four non-exact functions in this TU share one
+// cause -- a one-step rotation of the callee-saved GPRs in which `this` gets
+// the wrong register. Retail puts `this` in r31 and the `.rodata` base in r29
+// (`init`), or `this` in r28 with the base in r31 and the getThing() index in
+// r29 (both setJumpIntoWaterEffect*); we hand the base and the index the higher
+// registers. Per docs/catalog/frame-gaps.md (batch 63) a pure rotation with
+// relative order preserved means one member read should go through an accessor.
+// Measured: `MActor* getEffectActor(int i) { return unk74[i]; }` over the nine
+// `unk74[idx]->` sites in setJumpIntoWaterEffectSmall is +0x18 of frame (0xe8
+// -> 0x100, target 0xf0) and does not move the registers; a `getMario()`
+// accessor over the single `unk68->unk220` read is +0. The low-region gaps are
+// 8 bytes (setJumpIntoWaterEffectSmall), 0x40 (setJumpIntoWaterEffect),
+// 0x30 (perform, which references no stack slot at all) and 0 (init, whose
+// residue is purely the rotation plus one `addi r4, r25, 0` where we emit
+// `mr r4, r25` -- retail's operand came from an accessor's returned address).
 void TMarioEffect::init(TMario* mario)
 {
 	unk68    = mario;
@@ -150,7 +165,13 @@ void TMarioEffect::setJumpIntoWaterEffectSmall()
 	unk6C[idx] = 1;
 }
 
-int TMarioEffect::getJumpIntoWaterModelData() { }
+// UNUSED (map 0x10): four instructions, i.e. three chained loads and a `blr`.
+// unk74[0] (+0x74), MActor::getModel() (+0x4) and J3DModel::getModelData()
+// (+0x0) are exactly that chain and its size.
+J3DModelData* TMarioEffect::getJumpIntoWaterModelData()
+{
+	return unk74[0]->getModel()->getModelData();
+}
 
 void TMarioEffect::startDashEffect()
 {
