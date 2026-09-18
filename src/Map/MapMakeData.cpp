@@ -97,22 +97,47 @@ void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 	                   + mNormal.z * mPoint1.z);
 }
 
-// TODO: 84.9%. `getUnk8()` over the raw `mKind` fixed retail's argument load
-// order (closure batch 83, 83.7 -> 84.9). What is left: retail hoists
-// `delta.y` and `delta.z` into f31/f30 in the loop preheader and reloads only
-// `delta.x` from the stack per use, and the frame is 0x70 vs 0x48. Of those 40
-// bytes, 16 are the two FPR saves; the other 24 are two 12-byte holes -- one
+// TODO: retail hoists `delta.y` and `delta.z` into f31/f30 in the loop
+// preheader and reloads only `delta.x` per use. Measured in a scratch TU with
+// the game flags (research batch 86): MWCC gives a callee-saved FPR only to a
+// *named* f32 local of the function's own body. An aggregate member read is
+// reloaded at every use, and a local of an inlined callee is reloaded too --
+// naming `y`/`z` inside `TBGCheckData::updateTrans` and calling it from here
+// changes nothing, and passing `delta` to it by reference suppresses the
+// promotion outright. So the translation loop has to be spelled here, which is
+// why the body duplicates the UNUSED `TBGCheckData::updateTrans` above: that
+// helper is never called in retail either (`UNUSED 0xdc` in the map). `y`
+// before `z` is what puts y in f31 and z in f30.
+// Residue: 0x58 vs 0x70. The remaining 24 bytes are two 12-byte holes -- one
 // extra inline-expansion temporary below the `operator-` temporary, and one
 // named 12-byte local declared *after* `delta` (retail: temp 0x2c, delta 0x44;
-// ours: temp 0x20, delta 0x2c). A source that names delta's y and z would
-// explain the FPR promotion but not why x stays in memory.
+// ours: temp 0x20, delta 0x2c).
 void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> delta = param_1 - mPrevTranslation;
+	f32 f31                     = delta.y;
+	f32 f30                     = delta.z;
 
 	TBGCheckData* checkDataIt = mCheckDatas;
 	for (int i = 0; i < mCheckDataNum; ++checkDataIt, ++i) {
-		checkDataIt->updateTrans(delta);
+		checkDataIt->mPoint1.x += delta.x;
+		checkDataIt->mPoint1.y += f31;
+		checkDataIt->mPoint1.z += f30;
+		checkDataIt->mPoint2.x += delta.x;
+		checkDataIt->mPoint2.y += f31;
+		checkDataIt->mPoint2.z += f30;
+		checkDataIt->mPoint3.x += delta.x;
+		checkDataIt->mPoint3.y += f31;
+		checkDataIt->mPoint3.z += f30;
+
+		checkDataIt->mMinY += f31;
+		checkDataIt->mMaxY += f31;
+
+		checkDataIt->mPlaneDistance
+		    = -(checkDataIt->mNormal.x * checkDataIt->mPoint1.x
+		        + checkDataIt->mNormal.y * checkDataIt->mPoint1.y
+		        + checkDataIt->mNormal.z * checkDataIt->mPoint1.z);
+
 		gpMapCollisionData->addCheckDataToGrid(checkDataIt, getUnk8());
 	}
 

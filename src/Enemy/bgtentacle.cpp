@@ -1271,8 +1271,15 @@ void TBGTentacle::calcAttackGuideAnm()
 		return;
 
 	JGeometry::TVec3<f32> local_30 = getFirstNode()->getPosition();
+	// Naming the two components retail keeps in f30/f31 across the two calls
+	// below; see the TODO above MsMtxSetTRS.
+	f32 f31 = local_30.z;
+	f32 f30 = local_30.y;
+
 	JGeometry::TVec3<f32> local_3c = unk84;
-	local_3c -= local_30;
+	local_3c.x -= local_30.x;
+	local_3c.y -= f30;
+	local_3c.z -= f31;
 	JGeometry::TVec3<f32> local_b4 = MsGetRotFromZaxis(local_3c);
 
 	f32 guideScale;
@@ -1287,9 +1294,19 @@ void TBGTentacle::calcAttackGuideAnm()
 	if (guideScale > 2.0f)
 		guideScale = 2.0f;
 
+	// TODO: retail keeps local_30's y and z in f30/f31 from the subtraction
+	// above all the way into this call and reloads only .x here. Measured in a
+	// scratch TU with the game flags: MWCC gives a callee-saved FPR only to a
+	// *named* f32 local of the function's own body, never to an aggregate
+	// member read nor to a local of an inlined callee, so the two components
+	// retail preserves were named in the source and .x was not. Declaring z
+	// before y is what puts y in f30 and z in f31 (the reverse order gives
+	// f31/f30). The per-component subtraction above is forced by the same
+	// measurement: with `local_3c -= local_30` the subtrahend loads come back
+	// from the stack instead of feeding f30/f31.
 	Mtx afStack_78;
-	MsMtxSetTRS(afStack_78, local_30.x, local_30.y, local_30.z, local_b4.x,
-	            local_b4.y, local_b4.z, 1.0f, 1.0f, guideScale);
+	MsMtxSetTRS(afStack_78, local_30.x, f30, f31, local_b4.x, local_b4.y,
+	            local_b4.z, 1.0f, 1.0f, guideScale);
 
 	Mtx local_a8;
 	if (mState == 10) {

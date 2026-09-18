@@ -1248,6 +1248,14 @@ void TBossMantaManager::updateMantaEscape()
 	// we reload all three.  Declare-then-assign changes nothing.  The older
 	// two-vector spelling `TVec3 h(p.x, 0.0f, p.z)` scored 90% by
 	// scalarising all three components, but retail plainly has one vector.
+	// Research batch 86 named the construct behind that hoist: only a named
+	// `f32` local of this function's own body gets a callee-saved FPR, and
+	// the last-declared one gets f31 (so `f32 z = marioPos.z;` before
+	// `f32 y = marioPos.y;` here).  Applying it means the two distance tests
+	// can no longer go through `TVec3::distance`, because passing the vector
+	// to an inlined callee by `const&` suppresses the promotion outright --
+	// the loops would have to spell the subtraction and `length()` per
+	// component.  Not attempted; `distance` is shared with many other sites.
 	JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 	marioPos.y = 0.0f;
 

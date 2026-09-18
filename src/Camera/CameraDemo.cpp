@@ -81,9 +81,18 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 				if (mCameraDemo->unk0 != nullptr)
 					origin = *mCameraDemo->unk0;
 
+				// Research batch 86: retail keeps origin's z and y in
+				// f31/f30 across both `bl TVec3::add` calls and re-reads
+				// only `.x`. Only a *named* f32 local of this function's
+				// body gets a callee-saved FPR; an aggregate member read is
+				// reloaded at every use. `z` before `y` is what puts z in
+				// f31 and y in f30.
+				f32 f31 = origin.z;
+				f32 f30 = origin.y;
+
 				JGeometry::TVec3<f32> posOffset(unk124.x - origin.x,
-				                                unk124.y - origin.y,
-				                                unk124.z - origin.z);
+				                                unk124.y - f30,
+				                                unk124.z - f31);
 				f32 posX    = posOffset.x;
 				posOffset.x = posX * JMASCos(angle)
 				              + posOffset.z * JMASSin(angle);
@@ -92,8 +101,8 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 				unk124 = origin + posOffset;
 
 				JGeometry::TVec3<f32> atOffset(unk148.x - origin.x,
-				                               unk148.y - origin.y,
-				                               unk148.z - origin.z);
+				                               unk148.y - f30,
+				                               unk148.z - f31);
 				f32 atX    = atOffset.x;
 				atOffset.x = atX * JMASCos(angle)
 				             + atOffset.z * JMASSin(angle);
