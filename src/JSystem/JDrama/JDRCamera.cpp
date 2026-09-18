@@ -79,6 +79,31 @@ void TPolarCamera::perform(u32 cue, TGraphics* graphics)
 	graphics->mNearPlane = mNear;
 	graphics->mFarPlane  = mFar;
 
+	// TODO: 99.69%; all 272 instructions match and the only residue is frame
+	// 0x138 against retail's 0x1a0. Library re-pass 2026-09-18 measured the
+	// gap exactly: it is 104 bytes of dead space that has to sit *below*
+	// `local_A4`, i.e. in the last-declared named slots, and its granularity
+	// is 8. `volatile char trash[104]` declared right here is 100.0% with zero
+	// markers; declared *before* `tmp` it also lands 0x1a0 but scrambles the
+	// three matrices (52 operands), so the position is pinned. trash[96..100]
+	// stops at 0x198 (the four pad bytes below the saved registers absorb the
+	// remainder), trash[101] already reaches 0x1a0.
+	// The natural half is two more `TPosition3f` (2 x 48 = 96, measured 0x198
+	// with no instruction change); the last 8 bytes need one *non-trivial*
+	// 8-byte class local, and `TPosition3f d1; TPosition3f d2;
+	// JGeometry::TVec2<f32> d3;` is a literal 100.0% / 0 markers here.
+	// It is not committed because nothing in a polar camera wants three dead
+	// objects: the 96 is credible as scratch matrices the author declared and
+	// never used, the `TVec2` is not.
+	// Also measured: a dead `TVec3<f32>` is worth **0** in this caller (not the
+	// 12 the rules card gives), and `JDrama::TRect` is not a zero-instruction
+	// carrier at all -- its `JUTRect()` initialiser list emits 13 extra
+	// instructions (90.4%). So the missing carrier must be an 8-byte class
+	// whose constructor is empty, like `TVec2<f32>` or `TPosition3<T>` itself.
+	// The pool is not the place to look: all three `concat` expansions spill
+	// their three float temps to 0xc/0x10/0x14 in *both* builds, so retail does
+	// not give each expansion its own 48-byte block.
+	//
 	// `dist` has to be named: as a bare `-unk44` argument the value outranks
 	// the three literals above (f31 instead of f28) and every FPR in the
 	// first block is renumbered.

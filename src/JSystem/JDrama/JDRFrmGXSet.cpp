@@ -41,6 +41,19 @@ using namespace JDrama;
 // (`if (!(cue & CUE_DRAW)) return;`) is codegen-identical -- same 137
 // instructions, same 0xb8 frame, same 84 low operands -- so it is not the
 // missing use of `cue` either.
+// Library re-pass 2026-09-18: header round 26's binding inside
+// `TDisplay::getRenderMode()` has since moved this frame 0xb8 -> 0xc0, so the
+// shortfall is now 0x70, not 0x78, and the two-copy reading above has to be
+// re-derived. The register residue is re-measured and unchanged: this is a leaf
+// with no saved registers, ours allocates the scratch pool {r4, r6, r7} and
+// retail {r6, r7, r8}, i.e. the only difference is that r4 -- `cue` -- is still
+// reserved in retail while we hand it to `&graphics->unkFC`. Both builds give
+// the long-lived `unkFC` pointer the lowest free register and the two display
+// temps the next two, so the shape of the allocation is right and only the
+// start of the free list is wrong. Since all 137 instructions match, retail's
+// extra live value cannot be materialised anywhere: `cue` itself has to stay
+// live past the guard, and no guard spelling, accessor or named copy tried so
+// far does that.
 void TFrmGXSet::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {

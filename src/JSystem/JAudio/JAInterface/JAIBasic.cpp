@@ -630,6 +630,24 @@ void JAIBasic::initNullData()
 // The only zero-instruction lever left is a dead 8-byte class local inside
 // `initAudioThread`, and header round 23 only relaxes it (no destructor
 // needed); nothing in JAudio wants such an object here.
+// Library re-pass 2026-09-18, against the re-pass rule that a dead class local
+// in an *UNUSED* callee is a legal carrier: `initAudioThread` is indeed UNUSED
+// in the map (0x78, the same size as `initDriver`, which is what a pure
+// forwarder gives), so the carrier would be legal -- the blocker is purely that
+// no 8-byte non-trivial class exists in this TU's reach. Every class reachable
+// from JAIBasic.cpp's includes with a two-word layout was enumerated
+// (`JASystem::TBank`, `TInstEffect`, `JAIEntry`, `JAICamera`) and none of them
+// belongs in an audio-thread bring-up. Re-confirmed from the map that the
+// carrier cannot be an accessor either: `getParamAudioSystemThreadPriority`
+// and `getParamAudioDvdThreadPriority` are UNUSED 0x8 *out-of-line* symbols of
+// JAIGlobalParameter.cpp, so JAIBasic.cpp cannot inline them, and
+// `AudioThread::setPriority`/`start` and `TrackMgr::init`/`reset` all take
+// plain scalars (`FUcUc`, `FP12JKRSolidHeapUlUl`, `Fii`) with no class
+// temporary to bind.
+// Unrelated lead found while scanning the map: `bootDSP__8JAIBasicFv` is UNUSED
+// at 0x20 (eight instructions) while ours is an empty body, so that stub still
+// needs a real body -- one `bl` to `JASystem::AudioThread::bootDSP` is exactly
+// 0x20, but that callee is itself UNUSED so the shape is unverifiable.
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 aram_heap_size, u8 param_3)
 {
 	initAudioThread(heap, aram_heap_size, param_3);

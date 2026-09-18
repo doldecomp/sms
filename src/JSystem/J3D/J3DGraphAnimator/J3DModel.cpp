@@ -537,6 +537,23 @@ void J3DModel::initialize()
 // operands, unchanged). Declaration order is inert on inner-block locals by
 // that rule, which is exactly what the r25/r24-vs-r20/r21 pair is, so this
 // stays in the known-open rotation class.
+// Library re-pass 2026-09-18 -- cluster (1) is now *solved but unaffordable*.
+// Naming the shape packet, either as `J3DShapePacket* shapePacket
+// = &mShapePackets[shape->getIndex()];` or as the reference form
+// `J3DShapePacket& shapePacket = mShapePackets[shape->getIndex()];`, removes
+// all five operands of cluster (1) (retail's `lwzx r4` / `lwz r5, 0x84(r29)`
+// homes appear exactly), and costs +8 of frame (0xf0 against retail's 0xe8):
+// it is an address binding, and the price is the same whether the local is a
+// pointer or a reference, and whether the named `shape` above it stays or the
+// whole chain is written into the binding. Net marker count is unchanged
+// (10 either way), so it is not committed: retail must hold this binding *and*
+// eight fewer bytes somewhere else in the function. The obvious donor,
+// `J3DMatPacket* packet` in the else branch below, is itself an address
+// binding retail clearly has (`add r24, r0, r23` reused twice), and dropping
+// it costs five instructions.
+// Also measured and inert on cluster (2): hoisting the else branch's `mat`,
+// `dlSize` and `packet` to function-scope locals (which is where the batch-145
+// declaration-order knob applies) leaves r20/r21 exactly where they were.
 void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
                               u32 mtxNum)
 {

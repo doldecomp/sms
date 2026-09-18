@@ -52,6 +52,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Two +0 levers can be +8 as a **pair** (six confirmations): try pairs before calling a residue unnameable (codegen-tells.md: "batches 91 and 94").
 - Best lever: a TU-local `static inline` taking the receiver by pointer that **binds and returns** a value, +8 (sometimes +16) per expansion; returning directly, or a level above a real `bl`, is +0 (frame-gaps.md: "batch 110").
 - Binding works over an accessor, a raw member read, or a struct/array member's **address**, which copies nothing; nested levels stack, two bindings in one level do not (frame-gaps.md: "sweep 127").
+- An address binding at a call site is +8 for the pointer **and** the reference form, and can buy a whole register cluster: `J3DModel::entryModelData` (frame-gaps.md: "re-pass 162").
 - Address binding is a frame lever only (0 keeps from 335 frame-exact functions). not: the reference form, 0 keeps in 1,243 trials (frame-gaps.md: "batch 130").
 - A constant argument binds nothing, `this` only as a fresh load, a binding must stay live; a member accessor caps at +8, a by-pointer free function reaches +16 (frame-gaps.md: "batch 82").
 - The two-argument `MSound::startSoundActor(id, pos)` binding overload is +8 per expansion, per site: multi-site branches overshoot (frame-gaps.md: "batch 82").
@@ -63,6 +64,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Triviality is the switch (user ctor, dtor, copy ctor or virtual): trivial PODs are +0 in a callee, while in the caller's body only size counts (frame-gaps.md: "The dead low region").
 - A carrier must be a callee with **no matching out-of-line copy**: an UNUSED function, or a header inline with no map symbol (frame-gaps.md: "The carrier has to be a callee").
 - A dead named local in the caller adds its size **above** the pool (`TVec3` 12, `u8[4]` 4, `f32` 0); a trailing `u8[1..4]` is free (frame-gaps.md: "batch 119").
+- It must be **last-declared** (declared first it lands the frame but scrambles the used locals) and its constructor must be **empty**: `TVec2<f32>` is 8, `TRect` is not a carrier at all (13 instructions), and a dead `TVec3` can be worth 0 (frame-gaps.md: "re-pass 162").
+- One inlined callee's expansions **share** one temp block, so a big dead low region is never one pool per expansion (frame-gaps.md: "re-pass 162").
 - Worth nothing: a scalar or trivial POD local of an inlined callee, a 4-byte local anywhere, a dead int-to-float conversion, `sqrtf`, `* 1.0f` (frame-gaps.md: "What is worth nothing").
 - Each chained `>>` continuation is 8 bytes of low region (`continuations = reads - statements`) (frame-gaps.md: "batch 81").
 - An **implicit** derived-from-base conversion on a `return` reserves 16 bytes (pool 20 low / 4 high): write `return iterator(Base::insert(...));`. Retail's list walks are `++it` (frame-gaps.md: "batch 133").

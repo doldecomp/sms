@@ -88,6 +88,14 @@ bool JDrama::IssueGXSetCopyClear(JUtility::TColor clear_color, u32 clear_z,
 // call-site trials measured: a named `bool useVFilter = flags & 0x20` grows the
 // frame to 0x58 (11 operands), and a named `bool antialias = render_mode.aa`
 // is byte-identical to the current spelling (6 operands). Still open.
+// Library re-pass 2026-09-18: two more call-site conversions of the first
+// argument are refuted -- `render_mode.aa != 0` is 98.0% (it turns the
+// normalisation into an opcode difference, 1 `|` and 1 `<`) and
+// `(bool)render_mode.aa` is byte-identical to the plain member read. What the
+// permutation really is: retail spends r0 on the live `aa` byte and coalesces
+// the *dead* `flags & 0x20` result into r4, the register `sample_pattern` is
+// loaded into at 0x348; we spend r0 on the dead value and run the bool chain
+// through r3/r4. Nothing at the call site reaches that coalescing.
 void JDrama::IssueGXCopyDisp(void* param_1, const TRect& src_rect,
                              const GXRenderModeObj& render_mode,
                              JUtility::TColor clear_color, u32 clear_z,

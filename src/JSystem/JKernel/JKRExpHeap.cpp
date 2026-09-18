@@ -196,6 +196,16 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 // `nor`, which refutes the "a statement between them introduces it" reading.
 // None of the four rules of batch 142-146 applies: this is scheduling, not a
 // temp, a level or a callee-saved rank.
+// Library re-pass 2026-09-18, three more spellings measured and all refuted:
+// folding `aligned` away (`u32 offset = ALIGN_NEXT((u32)content, align)
+// - (u32)content;`) drops the frame to 0x30 (9 operands); hoisting `content`,
+// `aligned` and `offset` to function scope is byte-identical (declaration
+// order is inert on them, as the rank rule predicts, because they live in
+// volatile registers); and splitting the rounding into `size += 3; size &= ~3;`
+// is 98.6%. The residue is the coloring, not the schedule: the mask has to be
+// the value that takes the dead `size` parameter register r4, and every
+// spelling that keeps `size` alive long enough to free r4 for it also changes
+// the instruction count.
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
 	size                    = ALIGN_NEXT(size, 4);
