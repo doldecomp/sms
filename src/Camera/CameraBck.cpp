@@ -162,6 +162,10 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 	// return, and one pure `fc != nullptr ? ... : true` ternary (all move
 	// the value into r3/r0 instead). Likely a coalescing difference that
 	// needs the assignment and the normalisation to be one statement.
+	// Also rejected: two returns with no local (`if (fc == nullptr) return
+	// true; return checkState(...) ? true : false;`) and the same with a
+	// `bool result` assigned in both arms -- both stage the value in r3 and
+	// grow the frame to 0x88.
 	bool result = true;
 	J3DFrameCtrl* fc
 	    = CameraBck_getMActor(this)->getFrameCtrl(ANM_TYPE_BCK);
