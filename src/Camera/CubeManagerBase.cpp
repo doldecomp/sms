@@ -151,6 +151,18 @@ bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
 	return result;
 }
 
+// TODO: 0x20 against retail's 0x28, every instruction exact. Confirmed to be
+// exactly one two-word object at the very bottom of the body: `u32 scratch[2]`
+// or `f64 scratch` declared last reaches 100% with no instruction change (not
+// committed -- stack padding is prohibited and there is no evidence for what
+// the object was). Ruled out: the carrier is not TCubeManagerFast::isInOtherCube
+// (a dead 8-byte non-trivial local or a getInCubeNoSave() level there is +8 per
+// expansion, so +0x18 over the three); SMSGetMarDirector() over gpMarDirector,
+// a named `bool demo`, a TU-local by-pointer isDemoModeNow wrapper (the
+// header-round-15 binding rule) and `return true/false` are all +0; a named
+// `bool other` for the || chain and three nested `else if`s add instructions.
+// The only inline expanded exactly once here is TMarDirector::isDemoModeNow,
+// which is a shared header.
 bool SMS_IsInOtherFastCube(const Vec& pos)
 {
 	bool result = false;
