@@ -21,39 +21,18 @@ static void dummy(Vec* v)
 	*v = (Vec) { 1.0f, 1.0f, 1.0f };
 }
 
-// TODO: instruction-exact; the TFlagT temporary passed to fireStartDemoCamera
-// sits at 0x38 in a 0x48 frame where the ROM has 0x44 in a 0x50 frame, i.e. the
-// low (inline-expansion) region is 12 bytes short. Removing one statement at a
-// time shows the whole residue belongs to `gpPollution->getLayer(0)->
-// startDecay()`: it is worth 24 bytes of temporaries for us (dropping it moves
-// the slot to 0x24) and every other statement here contributes none, so the
-// ROM's copy of that chain must be 12 bytes deeper. Measured levers, none of
-// them committable: a TU-local `SMSGetPollution()` wrapper over `gpPollution`
-// is +4 (and saturates - two or three levels still give +4); one extra 0-param
-// accessor level inside `TJointModelManager::getJointModel` (shared header) is
-// another +4, and the two together give the right 0x50 frame with the slot at
-// 0x40, four bytes short. Worth zero: own-class accessors for unk64/unk68
-// (unlike MapObjAirport, where `getGateKeeper()` in the guard is +4), an extra
-// level inside `TPollutionLayer::startDecay` or `TPollutionManager::getLayer`,
-// and a named layer local. Worse: `&getUnk68()` (97.8%), accessors on the warp
-// arguments (97.0%), a TU-local wrapper for the whole `getLayer(i)` chain
-// (84.6%) and two or more extra levels inside `getJointModel` (84.6%).
-// TAirportEventSink::watch is 12 short in the same chain and
-// TMapEventSinkInPollution::watch / TMapEventSinkBianco::watch 24.
-// The exact recipe for this function is known: a TU-local `static inline
-// TPollutionManager* SMSGetPollution()` over `gpPollution` in the decay
-// statement (+4), a named `TFlagManager* flagManager = TFlagManager::
-// getInstance();` before `setBool` (+4), and one extra 0-param accessor level
-// under `TJointModelManager::getJointModel` (`return getJointModels()[i];`) for
-// the last +4. All three together make it byte-exact. The third is a shared
-// header and is not committable: globally it takes the source-linked
-// `mario/Map/MapEvent` from 100% to 95.9% code and costs `Map/MapEventSink`
-// and `Map/PollutionManager`, so it would break the DOL. The open question is
-// what adds that one level on the `getLayer(i)` path alone.
+// Exact. Three inline levels pay for the frame: the named
+// `TFlagManager* flagManager` before `setBool`, and the two that
+// `SMSGetPollutionLayer` adds over `getLayer(i)` (see PollutionManager.hpp --
+// this site and TAirportEventSink::watch are the only two that read the layer
+// through `SMSGetPollution()->getLayers()[i]`). Worth zero here: own-class
+// accessors for unk64/unk68, an extra level inside TPollutionLayer::startDecay
+// or TPollutionManager::getLayer, and a named layer local. Worse: `&getUnk68()`
+// (97.8%) and accessors on the warp arguments (97.0%).
 bool TMapEventSirenaSink::watch()
 {
 	if (unk64) {
-		gpPollution->getLayer(0)->startDecay();
+		SMSGetPollutionLayer(0)->startDecay();
 		mRaisingBuildingIdx = 0;
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ホテル上げカメラ", &unk68, -1, 0.0f, true, nullptr, 0, nullptr,
@@ -61,7 +40,8 @@ bool TMapEventSirenaSink::watch()
 		gpItemManager->makeShineAppearWithDemo("シャイン（ホテル上げ用）",
 		                                       "ホテル上げシャインカメラ",
 		                                       unk68.x, unk68.y, unk68.z);
-		TFlagManager::getInstance()->setBool(true, 0x50008);
+		TFlagManager* flagManager = TFlagManager::getInstance();
+		flagManager->setBool(true, 0x50008);
 		SMS_MarioWarpRequest(unk74, unk80);
 		gpMarioParticleManager->emit(MAP_MAP_MS_OBJUP_HOTEL_A,
 		                             &gpMapObjManager->getUnk44(), 0, nullptr);

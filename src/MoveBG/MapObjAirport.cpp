@@ -59,55 +59,24 @@ bool TAirportEventSink::control()
 	return TMapEventSinkInPollutionReset::control();
 }
 
-// TODO: instruction-exact, frame-only residue. Retail's frame is 0x40 with the
-// TFlagT temporary at 0x3c; the named `flags` local below gives 0x40 with the
-// temporary at 0x34, and the unnamed `JDrama::TFlagT<u16>(0)` form every other
-// caller uses gives 0x38/0x30. Either way the low (inline-expansion) region is
-// 12 bytes short, and named locals are allocated *above* the temporary (an
-// uninitialised TVec3 anywhere in the body only grows the frame), so the 12
-// bytes are three missing accessor expansions, not a recovered local.
-// Measured temp-slot ladder for this function (target 0x3c):
-//   `gpPollution->getLayer(0)->startDecay()` is worth 24 bytes of temporaries
-//   (raw `mJointModels[0]` + raw `mFlags |=` is 4, adding `startDecay()` +4,
-//   adding `getJointModel()` +12, adding `getLayer()` +4); `SMSGetMSound()`
-//   over `gpMSound` +4; spelling the MSound wrapper out as
-//   `if (gateCheck()) MSoundSE::startSoundSystemSE()` -4; an extra same-class
-//   accessor level inside `getJointModel` +4; `SMSGetMarDirector()` over
-//   `gpMarDirector`, a `setRaisingBuildingIdx()` setter and an indexed
-//   `isBuildingRecovered(0)` accessor are all worth 0. A `getGateKeeper()`
-//   accessor on this class is +4 and saturates.
-//   `&unk6C->getPosition()` is +8 but CSEs the two `unk6C` loads retail keeps.
-// TMapEventSirenaSink::watch is 12 short in the same region, and
-// TMapEventSinkInPollution::watch / TMapEventSinkBianco::watch are 24 short,
-// so the missing levels are most likely in the shared pollution accessors.
-// Confirmed on this function and Sirena's: removing one statement at a time
-// leaves the whole residue in `gpPollution->getLayer(0)->startDecay()`. The
-// full exact recipe is known and three quarters of it is local:
-//   1. pass the flag as the unnamed `JDrama::TFlagT<u16>(0)` temporary every
-//      other caller of fireStartDemoCamera uses (the ROM has no named local
-//      above the slot, so this form is right; alone it is -8 on the frame),
-//   2. `getGateKeeper()` on this class in the guard (+4),
-//   3. a TU-local `static inline TPollutionManager* SMSGetPollution()` over
-//      `gpPollution` in the decay statement (+4; two such levels still +4),
-//   4. one extra 0-param accessor level under `TJointModelManager::getJointModel`
-//      (`getJointModel(i) { return getJointModels()[i]; }`) for the last +4.
-// With all four the function is byte-exact, but (4) is a shared header and is
-// not committable: measured globally it takes the source-linked
-// `mario/Map/MapEvent` from 100% to 95.9% code, `Map/MapEventSink` 97.1 -> 95.6
-// and `Map/PollutionManager` 80.2 -> 76.1, so it would break the DOL. The right
-// fix is whatever gives that one extra level on the `getLayer(i)` path only.
-// Worth zero here: two TU-local pollution levels, an extra `SMSGetMSound()`
-// level, an indexed forwarder inside `getJointModel`, and an extra level inside
-// `TPollutionLayer::startDecay` or `TPollutionManager::getLayer`.
+// Exact. The frame is the sum of four inline levels, three of them local (the
+// unnamed `JDrama::TFlagT<u16>(0)` temporary every other fireStartDemoCamera
+// caller passes, `getGateKeeper()` in the guard, and `SMSGetPollutionLayer`'s
+// `SMSGetPollution()` step) and the fourth the pollution-layer lookup itself:
+// this site and TMapEventSirenaSink::watch reach the layer two levels below
+// `getLayer(i)`, through `SMSGetPollution()->getLayers()[i]`. Substituting
+// `getLayer(0)` here loses 8 bytes of expansion temporaries, and pushing the
+// extra level down into `TJointModelManager::getJointModel` instead reaches
+// every other caller and breaks the source-linked Map/MapEvent.
 bool TAirportEventSink::watch()
 {
-	if (!mIsBuildingRecovered[0] && unk6C->checkLiveFlag(LIVE_FLAG_DEAD)) {
+	if (!mIsBuildingRecovered[0]
+	    && getGateKeeper()->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		mRaisingBuildingIdx = 0;
-		JDrama::TFlagT<u16> flags(0);
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "空港坂上げカメラ", &unk6C->mPosition, -1, 0.0f, true, nullptr, 0,
-		    nullptr, flags);
-		gpPollution->getLayer(0)->startDecay();
+		    nullptr, JDrama::TFlagT<u16>(0));
+		SMSGetPollutionLayer(0)->startDecay();
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,
 		                                 0);
 		return true;

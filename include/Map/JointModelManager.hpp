@@ -20,6 +20,8 @@ public:
 	// fabricated
 	const char* getFolder() { return mModelsFolder; }
 	int getJointModelNum() const { return mJointModelNum; }
+	TJointModel** getJointModels() { return mJointModels; }
+	TJointModel* const* getJointModels() const { return mJointModels; }
 	TJointModel* getJointModel(int i) { return mJointModels[i]; }
 	const TJointModel* getJointModel(int i) const { return mJointModels[i]; }
 	MActorAnmData* getMActorAnmData() { return &mActorAnimationData; }

@@ -32,6 +32,9 @@ public:
 
 	TAirportEventSink(const char* name = "水場スイッチ");
 
+	// fabricated
+	TGateKeeperBase* getGateKeeper() { return unk6C; }
+
 public:
 	/* 0x64 */ u32 unk64;
 	/* 0x68 */ u32 unk68;

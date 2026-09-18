@@ -65,6 +65,10 @@ public:
 	// fabricated
 	TPollutionCounterLayer& getCounterLayer() { return unk70; }
 	TPollutionCounterObj& getCounterObj() { return unk1EC; }
+	TPollutionLayer** getLayers()
+	{
+		return (TPollutionLayer**)getJointModels();
+	}
 	TPollutionLayer* getLayer(int i)
 	{
 		return (TPollutionLayer*)getJointModel(i);
@@ -92,5 +96,18 @@ public:
 	/* 0x208 */ ResTIMG* mDefaultCleanStampTex;
 	/* 0x20C */ u16 unk20C;
 };
+
+// Fabricated names. The ROM reaches a pollution layer at two different inline
+// depths: `getLayer(i)` (the indexed accessor over TJointModelManager's own
+// indexed `getJointModel(i)`) is what every ordinary site expands to, while
+// TAirportEventSink::watch and TMapEventSirenaSink::watch expand two levels
+// more -- this pair over the plain array accessor. Substituting either form at
+// the other's sites costs the exact match, so both spellings are load-bearing.
+inline TPollutionManager* SMSGetPollution() { return gpPollution; }
+
+inline TPollutionLayer* SMSGetPollutionLayer(int i)
+{
+	return SMSGetPollution()->getLayers()[i];
+}
 
 #endif
