@@ -25,7 +25,8 @@ public:
 public:
 	/* 0x0 */ J2DPane* unk0;
 	/* 0x4 */ JUTRect unk4;
-	/* 0x14 */ JUTRect unk14;
+	/* 0x14 */ JUTPoint unk14;
+	/* 0x1C */ JUTPoint unk1C;
 	/* 0x24 */ bool unk24;
 	/* 0x25 */ bool unk25;
 	/* 0x28 */ f32 unk28;

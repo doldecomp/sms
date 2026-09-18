@@ -427,7 +427,7 @@ bool TConsoleStr::processGo(f32 param_1)
 				// pane's bounds: the ROM reads +0x14/+0x18 off the
 				// TBoundPane itself.
 				bool landed
-				    = unk28[i]->unk14.x1 == 0 && unk28[i]->unk14.y1 == 0;
+				    = unk28[i]->unk14.x == 0 && unk28[i]->unk14.y == 0;
 				if (!landed) {
 					unk28[i]->setPanePosition(0x1E, JUTPoint(0, -40),
 					                          JUTPoint(0, -40),

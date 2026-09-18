@@ -1088,7 +1088,7 @@ static inline void updateDownBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
 		bool paneFinished = false;
-		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
+		if (pane->unk14.x == 0 && pane->unk14.y == 0)
 			paneFinished = true;
 		if (!paneFinished) {
 			pane->setPanePosition(30, TGCConsole2::cDownMidPoint,
@@ -1106,7 +1106,7 @@ static inline void updateDownPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
 		bool paneFinished = false;
-		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
+		if (pane->unk14.x == 0 && pane->unk14.y == 0)
 			paneFinished = true;
 		if (!paneFinished) {
 			pane->setPanePosition(30, TGCConsole2::cDownMidPoint,
@@ -1124,7 +1124,7 @@ static inline void updateUpPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
 		bool paneFinished = false;
-		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
+		if (pane->unk14.x == 0 && pane->unk14.y == 0)
 			paneFinished = true;
 		if (!paneFinished) {
 			pane->setPanePosition(30, TGCConsole2::cUpMidPoint,
@@ -1143,7 +1143,7 @@ static inline void updateUpPaneStateAfter(TBoundPane*& pane, bool& isFinished,
 {
 	if (frame >= startFrame && pane->update()) {
 		bool paneFinished = false;
-		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
+		if (pane->unk14.x == 0 && pane->unk14.y == 0)
 			paneFinished = true;
 		if (!paneFinished) {
 			pane->setPanePosition(30, TGCConsole2::cUpMidPoint,
@@ -1161,7 +1161,7 @@ static inline void updateUpBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
 		bool paneFinished = false;
-		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
+		if (pane->unk14.x == 0 && pane->unk14.y == 0)
 			paneFinished = true;
 		if (!paneFinished) {
 			pane->setPanePosition(30, TGCConsole2::cUpMidPoint,
@@ -1179,7 +1179,7 @@ static inline void updateCoinPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
 		bool paneFinished = false;
-		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
+		if (pane->unk14.x == 0 && pane->unk14.y == 0)
 			paneFinished = true;
 		if (!paneFinished) {
 			pane->setPanePosition(30, TGCConsole2::cCoinMidPoint,
@@ -1201,7 +1201,7 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 		isFinished = false;
 	} else {
 		bool paneFinished = false;
-		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
+		if (pane->unk14.x == 0 && pane->unk14.y == 0)
 			paneFinished = true;
 		if (!paneFinished) {
 			pane->setPanePosition(30, TGCConsole2::cCoinMidPoint,
@@ -3783,7 +3783,7 @@ bool TGCConsole2::processAppearTank(int param_1)
 
 	if (param_1 >= 26 && unk274->update()) {
 		bool paneFinished = false;
-		if (unk274->unk14.x1 == 0 && unk274->unk14.y1 == 0)
+		if (unk274->unk14.x == 0 && unk274->unk14.y == 0)
 			paneFinished = true;
 		if (!paneFinished) {
 			unk274->setPanePosition(30, cUpMidPoint, cUpMidPoint, cUpBotPoint);
