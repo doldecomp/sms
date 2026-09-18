@@ -113,8 +113,18 @@
 // retail used is not in this TU: a level supplied from inside
 // SleepBossHanachan.hpp (between TSleepBossHanachan's constructor and TVec3's)
 // would have its temp allocated after the caller's own expansions and is the
-// only remaining shape that puts this slot at 0x1c.  That is a shared-header
-// change, so it is reported rather than made.
+// only remaining shape that puts this slot at 0x1c.
+// Header round 30 made that change and it is inert: moving this exact level
+// into SleepBossHanachan.hpp as an `inline` free function (and deleting the
+// TU-local one) leaves the function byte-for-byte as it is here, slots still
+// 0x14/0x18.  So pool order does not depend on which header supplies the
+// level, which is the definition-order-inert rule again, and the remaining
+// shape has to be one that changes the *number* of temps this expansion
+// allocates rather than where it is defined.  The level cannot sit inside
+// TSleepBossHanachan's constructor either: retail calls `set<f>` with
+// r3 = &mShinePosition, so the TVec3 constructor is expanded on the member
+// itself and nothing can be interposed between it and `set` from an
+// initialiser list.
 static inline TSleepBossHanachan* newSleepBossHanachan(const char* name)
 {
 	TSleepBossHanachan* actor = new TSleepBossHanachan(name);
