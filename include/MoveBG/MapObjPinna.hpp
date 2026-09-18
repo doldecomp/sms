@@ -327,7 +327,7 @@ public:
 	}
 
 public:
-	/* 0x138 */ TMtx34f unk138;
+	/* 0x138 */ TPosition3f unk138;
 };
 
 #endif
