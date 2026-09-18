@@ -14,10 +14,17 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: promote into Camera.hpp as `inline CPolarSubCamera* SMSGetCamera()`,
+// alongside SMSGetMarDirector()/SMSGetCameraMario(). perform() is
+// instruction-identical either way, but the global-accessor level is the last
+// 8 bytes of its 0x138 frame; the member-level getUnk1EC() alone is worth
+// nothing. Parked here because shared headers are off limits in this batch.
+static inline CPolarSubCamera* SkyGetCamera() { return gpCamera; }
+
 void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
-		MtxPtr mtx = gpCamera->unk1EC;
+		MtxPtr mtx = SkyGetCamera()->getUnk1EC();
 
 		Mtx local_EC;
 		MTXInverse(mtx, local_EC);
@@ -55,10 +62,10 @@ void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 			local_8C[2][2] = fVar3;
 			local_8C[2][3] = 0.0f;
 			MTXConcat(local_8C, local_BC, local_BC);
-			unk48 += unk4C;
-			unk48 = MsWrap<f32>(unk48, 0.0f, 360.0f);
+			unk48 += getUnk4C();
+			unk48 = MsWrap<f32>(getUnk48(), 0.0f, 360.0f);
 		}
-		unk44->getModel()->setBaseTRMtx(local_BC);
+		MTXCopy(local_BC, getMActor()->getModel()->getBaseTRMtx());
 	}
 	unk44->perform(cue, graphics);
 	if ((cue & CUE_DRAW) != 0) {
@@ -101,14 +108,14 @@ void TSky::load(JSUMemoryInputStream& stream)
 	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 	        | (2 << J3DMLF_TevStageNumShift));
 
-	if (gpMapObjManager->unk68) {
-		unk44->getModel()->getModelData()->setMaterialTable(
+	if (gpMapObjManager->getUnk68()) {
+		getMActor()->getModel()->getModelData()->setMaterialTable(
 		    gpMapObjManager->getUnk68(), J3DMatCopyFlag_All);
-		unk44->initDL();
+		getMActor()->initDL();
 	}
 
-	if (gpMarDirector->mMap != 15)
-		TMapObjBase::startAllAnim(unk44, "sky");
+	if (SMSGetMarDirector()->getCurrentMap() != 15)
+		TMapObjBase::startAllAnim(getMActor(), "sky");
 }
 
 TSky::TSky(const char* name)
