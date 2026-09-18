@@ -21,6 +21,11 @@ bool gParticleFlagLoaded[0x201];
 JPAResourceManager* gpResourceManager;
 JPAEmitterManager* gpEmitterManager4D2;
 
+// TODO: every instruction is exact; frame 0x130 vs 0x170. Slot triage: retail's
+// `sceneDvdFile` sits at 0x60 with 84 dead bytes below it, ours at 0x18 with 12,
+// so the residue is +72 bytes of dead low region and -8 bytes in the named block
+// above the JKRDvdFile. No inlined callee in the body is a plausible carrier
+// (every call here is a real bl), so the 72 bytes are unattributed.
 int TMarDirector::loadResource()
 {
 	TMarioParticleManager* this_00 = new TMarioParticleManager;
@@ -123,6 +128,13 @@ void TMarDirector::initLoadParticle()
 		gParticleFlagLoaded[i] = 0;
 }
 
+// TODO: every instruction is exact; frame 0x28 vs 0x40 = 24 bytes of dead low
+// region, and neither build references a single stack slot, so there is no
+// positional evidence. Measured: a named JKRHeap* for getCurrentHeap() and a
+// named JPAResourceManager* for the unkA4[0] store are both +0;
+// SMSGetMarDirector()->getCurrentMap() for the map test is +8 but costs an
+// instruction. Nothing in the body is inlined (every callee is a real bl), so
+// the carrier is not an inline-expansion local.
 void TMarDirector::loadParticle()
 {
 	void* pvVar1 = new (-0x20) char[0x200000];
