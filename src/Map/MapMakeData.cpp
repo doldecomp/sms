@@ -67,6 +67,22 @@ void TMapCollisionMove::setList()
 // is a real bl and the frame is only 8 short), i.e. some callee of setVertex
 // holds locals whose slots we do not reserve. `volatile char trash[40]` does
 // not change the schedule, so the frame alone is not the cause.
+//
+// Closure batch 90 added two facts.
+//  * The min/max helpers above cannot be the carrier: a dead non-trivial
+//    4-byte local in each is +32 here (8-byte: +48, so 4 bytes would be the
+//    right size) but it also takes the *emitted* TBGCheckData::setVertex from
+//    its exact 0x40 to 0x60.  Per the batch-69 rule a carrier must have no
+//    matching out-of-line copy, and setVertex has one, so the 40 bytes belong
+//    to setCheckData's own body or to setVertex's parameter bindings.
+//  * The p1/p2/p3 slots are *ascending* in initAllCheckData's expansion
+//    (0x64/0x70/0x7c, i.e. the inline-temp pool, which grows up in expansion
+//    order) and *descending* in the emitted copy (0x78/0x6c/0x60, i.e. named
+//    body locals, which grow down in declaration order).  That is the same
+//    source in two regions, so the batched-vs-interleaved load order is a
+//    context property of those two regions rather than two spellings, and the
+//    lever is whatever makes the emitted copy schedule its loads one at a
+//    time -- most likely the 40 missing low bytes.
 void TMapCollisionBase::setCheckData(const f32* vertices, const s16* indices,
                                      TBGCheckData* param_3, int kind)
 {
@@ -108,17 +124,26 @@ void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 // why the body duplicates the UNUSED `TBGCheckData::updateTrans` above: that
 // helper is never called in retail either (`UNUSED 0xdc` in the map). `y`
 // before `z` is what puts y in f31 and z in f30.
-// Residue: 0x58 vs 0x70. The remaining 24 bytes are two 12-byte holes -- one
-// extra inline-expansion temporary below the `operator-` temporary, and one
-// named 12-byte local declared *after* `delta` (retail: temp 0x2c, delta 0x44;
-// ours: temp 0x20, delta 0x2c).
+// Residue (closure batch 90): 99.7%, every instruction exact, 0x58 vs 0x70.
+// Declaring the iterator before the two named scalars was the last instruction
+// difference (retail loads mCheckDatas before hoisting delta.y/z).
+// The 24 bytes are two separate 12-byte objects, confirmed by probe:
+//   * one named 12-byte local declared *after* delta.  A dead
+//     `TVec3<f32>` there lands exactly between the operator- temporary and
+//     delta (frame 0x58 -> 0x68, +16 because the named block then needs 4
+//     bytes of alignment), which is retail's hole at 0x38-0x43.
+//   * 12 bytes of outgoing-parameter/pool area below the operator-
+//     temporary: retail's locals start at 0x2c, i.e. it reserves the full
+//     32-byte outgoing area above 0xc, and ours start at 0x20 (20 bytes).
+// Both together give 0x70 exactly (0xc + 32 pool + 36 named + 32 saved), so
+// the two holes are the whole residue; neither has a source-level name yet.
 void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> delta = param_1 - mPrevTranslation;
-	f32 f31                     = delta.y;
-	f32 f30                     = delta.z;
 
 	TBGCheckData* checkDataIt = mCheckDatas;
+	f32 f31                   = delta.y;
+	f32 f30                   = delta.z;
 	for (int i = 0; i < mCheckDataNum; ++checkDataIt, ++i) {
 		checkDataIt->mPoint1.x += delta.x;
 		checkDataIt->mPoint1.y += f31;
