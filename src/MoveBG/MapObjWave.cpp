@@ -285,42 +285,21 @@ void TMapObjWave::movement()
 		updateHeightAndAlpha();
 }
 
-// TODO: instruction-identical but the frame is 8 bytes short (0x38 vs 0x40),
-// so the original declared one more two-word local here. The eight bytes are
-// perform()'s own, not movement()'s: an uninitialised scalar in movement() is
-// worth zero because movement() is an inlined callee (MWCC drops an inlined
-// callee's trivial locals; only a non-trivial 8-byte class local there would
-// count), while the same declaration in perform() is +8.
-//
-// The map read is the only lever and it is saturated. Each
-// SMSGetMarDirector()->getCurrentMap() use is +8 and saturates at three uses;
-// gpMarDirector->getCurrentMap() and ->mMap are +0. Measured frame/insns
-// (target 0x40/34) over five spellings of the texture guard x seven of the map
-// read, all 35 combinations:
-//
-//   two accessor uses (below)         0x38 / 34   <- best
-//   one accessor + one bare global    0x30 / 34
-//   two bare globals, or two ->mMap   0x28 / 34
-//   !mTexture, nested guard, u32 c    no change from the above
-//   named const ResTIMG* texture      +8 only where the map read is not
-//                                     already saturated (0x30 with a bare
-//                                     global, still 0x38 with two accessors)
-//   three accessor uses               0x40 / 36   <- right frame, wrong body
-//   switch (getCurrentMap()) 4/6      0x28 / 38
-//   != 4 && != 6 with early return    0x38 / 34
-//   a TU-static getMapNo()/getDirector() forwarder above SMSGetMarDirector()
-//                                     0x38 / 34, plus a stray symbol
-//
-// So the residue is one 8-byte object at the bottom of the frame and there is
-// no evidence for what it was: retail references no stack slot in perform, so
-// there is no positional evidence either. See docs/catalog/frame-gaps.md,
-// "The last 8 bytes". Left nonmatching rather than padded.
+// The frame's last 8 bytes are a lever pair: `getTexture()` and the named
+// `move` bool are each +0 on their own (the two SMSGetMarDirector()
+// ->getCurrentMap() uses in movement() have already saturated the map-read
+// ladder at 0x38) and +8 together, which is retail's 0x40. A named bool for
+// the CUE_DRAW block instead of the CUE_MOVE one is the same 0x40, and the
+// two bools together add nothing more, so which block retail named is not
+// decidable from the asm. Earlier trial table: docs/catalog/frame-gaps.md,
+// "The two closure cases".
 void TMapObjWave::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (mTexture == nullptr)
+	if (getTexture() == nullptr)
 		return;
 
-	if (cue & CUE_MOVE)
+	bool move = (cue & CUE_MOVE) != 0;
+	if (move)
 		movement();
 
 	if (cue & CUE_DRAW) {

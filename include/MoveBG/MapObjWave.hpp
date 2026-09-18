@@ -40,6 +40,8 @@ public:
 	f32 getMoveTexPos1(f32 v) const;
 	void initDraw();
 
+	const ResTIMG* getTexture() const { return mTexture; }
+
 public:
 	/// Side length of the drawn grid.
 	/* 0x10 */ f32 mAreaSize;
