@@ -133,6 +133,19 @@ public:
 		mType       = TYPE_INT;
 	}
 
+	// The by-value f32 parameter is load-bearing and stays. Header round 13
+	// retried batch 73's `const f32&` proposal: it lets liveinterp.cpp's nine
+	// linGetSRT float arms call setDataFloat() instead of writing mType and
+	// mData directly and still reach the ROM's 486 instructions (the setter's
+	// by-value parameter is the one instruction per site that made the direct
+	// writes necessary), but it breaks the byte-exact spcFloat in this TU,
+	// 100% -> 99.94%: every slot from 0x44 up sits 4 bytes low, because the
+	// by-value parameter reserves a 4-byte slot at that site and a reference
+	// binding does not. Naming the argument there
+	// (`f32 value = interp->pop().getDataFloat(); result.setDataFloat(value);`)
+	// does not give the slot back -- it shifts a second pair (0x34 -> 0x30) as
+	// well. Since linGetSRT is no closer either way, the exact function wins:
+	// keep the by-value setter and keep liveinterp's direct field writes.
 	void setDataFloat(f32 f)
 	{
 		mType         = TYPE_FLOAT;
