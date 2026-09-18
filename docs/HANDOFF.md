@@ -56,4 +56,4 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ## State log
 
-- **2026-09-18 evening** (session `7a7a015e`): 489/732 linked, 54.36% matched. Four batches in flight on `wt/grpfb` (reloc pass III), `wt/grpfc` (structural III), `wt/grpfd` (structural IV), `wt/grpfe` (4-byte re-pass II); land each with `tools/worktree.sh land <name> <units>` when its branch has commits, resolving `objects.json` conflicts with the scratchpad `resolve_objects.py` (dedupe both sides) and catalog conflicts by keeping both hunks. Spare worktree `grpff` is built at HEAD.
+- **2026-09-18 evening** (session `7a7a015e`): 489/732 linked, 54.36% matched. Four batches in flight on `wt/grpfb` (reloc pass III), `wt/grpfc` (structural III), `wt/grpfd` (structural IV), `wt/grpfe` (4-byte re-pass II); land each with `tools/worktree.sh land <name> <units>` when its branch has commits, resolving `objects.json` conflicts with `python3 tools/resolve-objects-conflict.py config/GMSE01/objects.json` (keeps both sides, deduped) and catalog conflicts by keeping both hunks. Spare worktree `grpff` is built at HEAD.
