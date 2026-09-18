@@ -44,9 +44,31 @@ u32 TRideCloud::touchWater(THitActor*)
 	return 1;
 }
 
+// The exact sibling `TRailMapObj::setGroundCollision` puts the scratch matrix
+// at 0x18 in the same 0x50 frame and differs only by a guard; the four bytes
+// of low region that guard's inlined reads make are supplied here by reading
+// `mMapCollisionManager` through one level that binds its result. This stands
+// in for a `TMapObjBase::getMapCollisionManager()` accessor of that shape, but
+// `MoveBG/MapObjBase.hpp` is shared with source-linked TUs, so it is parked
+// here and reported.
+// Measured, all at frame 0x50 unless noted: a binding level on the collision
+// pointer itself or on `getAnmMtx(0)` is +8 (matrix at 0x20, frame 0x58), a
+// non-binding `RideCloudSetMtx(mtx, src)` wrapper is -8, and `getUnk8()` on
+// the inner pointer is +8. Worth zero: `TPosition3f` instead of `TMtx34f`, a
+// named `MtxPtr` or `J3DModel*`, function-scope instead of block-scope for the
+// matrix, an early return, and `mMapCollisionManager->unk8->moveMtx(mtx)` in
+// place of the binding `if`. `mtx.set(*(const TMtx34f*)...)` also lands it (it
+// routes through the `set(const SMatrix34C&)` overload, whose extra conversion
+// binding is the same +4) but needs a reinterpret cast.
+static inline TMapCollisionManager* RideCloudCollisionManager(TRideCloud* cloud)
+{
+	TMapCollisionManager* manager = cloud->mMapCollisionManager;
+	return manager;
+}
+
 void TRideCloud::setGroundCollision()
 {
-	if (mMapCollisionManager) {
+	if (RideCloudCollisionManager(this)) {
 		// TODO: this is used in MapObjRailBlock too, inline global?
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
@@ -93,17 +115,57 @@ void TRideCloud::load(JSUMemoryInputStream& stream)
 
 u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 
+// TODO: 189 of 193 instructions and the frame are exact; what is left is a
+// three-register FPR permutation in `mDamageRadius`' two multiplies, where
+// retail parks the 300.0f literal in f2 (the register `fVar8` has just freed)
+// and unk160 in f1, and we get f1/f2. `getScaling()` fixed the `mScaling.x`
+// half of it (that read really does go through the accessor: it puts the load
+// in retail's f0); the literal's register resists all eight groupings and
+// operand orders of the product, a named intermediate, `*=`, and a binding
+// level on unk160.
+//
+// The 56 bytes of dead low region this body was missing are five inline
+// expansions, each a member read through one level that binds its result.
+// Measured from the 0x90 base: `mMapCollisionManager` +8, `checkRailFlag`
+// (both sites) +8, `unk138->getGraph()` +8, `unk138->getCurrent()` +0x10,
+// `getScaling().x` +8 = retail's 0xc8 exactly; also +8 each and
+// interchangeable with the last one: `getCurGraphIndex()`, any single
+// `node.getRailNode()` site (all three are +0x20). Worth zero:
+// `SMS_GetMarioSpeedY()` alone (+8 paired with the collision-manager level).
+// Worse: a binding level on `MsClamp<f32>` (+2 instructions),
+// `node.checkFlag()` over `getRailNode()->mFlags` (-8).
+// As in setGroundCollision these stand in for accessors that bind their
+// result on TMapObjBase/TRailMapObj/TGraphTracer, whose headers are shared
+// with source-linked TUs, so they are parked here and reported.
+static inline bool RideCloudRailFlag(TRideCloud* cloud, u32 flag)
+{
+	bool set = cloud->checkRailFlag(flag);
+	return set;
+}
+
+static inline TGraphWeb* RideCloudGraph(TRideCloud* cloud)
+{
+	TGraphWeb* graph = cloud->unk138->getGraph();
+	return graph;
+}
+
+static inline TGraphNode& RideCloudCurrentNode(TRideCloud* cloud)
+{
+	TGraphNode& node = cloud->unk138->getCurrent();
+	return node;
+}
+
 void TRideCloud::control()
 {
 	TMapObjBase::control();
-	TMapCollisionBase* col = mMapCollisionManager->unk8;
+	TMapCollisionBase* col = RideCloudCollisionManager(this)->unk8;
 	if (*gpMarioSpeedY > 0.0f)
 		col->setAllBGType(0x400);
 	else
 		col->setAllBGType(0);
 
 	checkMarioRiding();
-	if (!checkRailFlag(0x1)) {
+	if (!RideCloudRailFlag(this, 0x1)) {
 		unk150 = MsClamp<f32>(unk150 - mCushionSpeed, 0.0f, 1.0f);
 	} else {
 		unk150 = MsClamp<f32>(unk150 + mCushionSpeed, 0.0f, 1.0f);
@@ -119,35 +181,23 @@ void TRideCloud::control()
 
 	unk160        = MsClamp<f32>(unk160 + fVar8, 1.0f, 3.0f);
 	unk168        = MsClamp<f32>(unk168 + fVar8, 1.0f, 3.0f);
-	mDamageRadius = mScaling.x * 300.0f * unk160;
+	mDamageRadius = getScaling().x * 300.0f * unk160;
 	mDamageHeight = 50.0f;
 	calcEntryRadius();
-	if (!calcRecycle() && !checkRailFlag(0x2)) {
+	if (!calcRecycle() && !RideCloudRailFlag(this, 0x2)) {
 		if (unk16C != 0) {
 			--unk16C;
 		} else {
-			// TODO: common subexpression elimination did a mess here and it is
-			// painful to figure out....
-
-			// The graph has to be named: retail keeps it in r28-r31 across
-			// moveToNextNode/moveTo and reads the node array back out of it
-			// for node2, where re-reading unk138->unk0 costs an extra load
-			// and one callee-saved register (96.3 -> 99.8).
-			// TODO: frame 0xc8 vs 0x90. Every slot, the int-to-float
-			// conversion pair at the top of the local area included, is 56
-			// bytes low, so retail has 56 bytes of inline-expansion
-			// temporaries this body does not account for (the open
-			// dead-low-region family in docs/catalog/frame-gaps.md); naming a
-			// MsClamp result is +0. The surviving f0/f1 swap in
-			// mDamageRadius' two multiplies resists all six operand
-			// orderings, both groupings and a named intermediate, and is
-			// probably the same register pressure.
-			TGraphWeb* graph = unk138->getGraph();
+			// The graph has to be named: retail keeps it in r28-r31
+			// across moveToNextNode/moveTo and reads the node array
+			// back out of it for node2, where re-reading unk138->unk0
+			// costs an extra load and one callee-saved register.
+			TGraphWeb* graph = RideCloudGraph(this);
 			if (!graph || graph->isDummy())
 				return;
 
 			if (moveToNextNode(unk15C)) {
-				TGraphNode& node = unk138->getCurrent();
+				TGraphNode& node = RideCloudCurrentNode(this);
 
 				if ((node.getRailNode()->mFlags & 0x1000)) {
 					unk14A = 180;
