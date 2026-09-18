@@ -366,6 +366,46 @@ def build_diff(data: Dict[str, Any], symbol_name: str, args) -> None:
             print(f"{marker}{addr_str:>6} | {l_text:<{max_left}} | {r_text}")
         return
 
+    if args.clusters:
+        # Mismatch clusters only: runs of non-matching rows, merged when they
+        # are within `context` rows of each other, each printed with `context`
+        # matching rows on either side. Cheap enough to re-run after every
+        # trial instead of re-reading the whole diff.
+        counts = {"~": 0, "|": 0, "<": 0, ">": 0}
+        for r in rows:
+            if r[1] in counts:
+                counts[r[1]] += 1
+        frames = []
+        for side, insts in (("target", left_insts), ("ours", right_insts)):
+            for inst_entry in insts[:8]:
+                text = inst_entry.get("instruction", {}).get("formatted", "")
+                if text.startswith("stwu"):
+                    frames.append(f"{side} {text.split(None, 1)[1] if ' ' in text else text}")
+                    break
+        print(f"markers: ~{counts['~']} |{counts['|']} <{counts['<']} >{counts['>']}"
+              + (f"   frame: {' / '.join(frames)}" if frames else ""))
+        mism = [i for i, r in enumerate(rows) if not r[4]]
+        if not mism:
+            print("no mismatching instructions")
+            return
+        clusters = []
+        start = prev = mism[0]
+        for i in mism[1:]:
+            if i - prev > context * 2:
+                clusters.append((start, prev))
+                start = i
+            prev = i
+        clusters.append((start, prev))
+        for k, (a, b) in enumerate(clusters, 1):
+            lo = max(0, a - context)
+            hi = min(len(rows) - 1, b + context)
+            n = sum(1 for j in range(a, b + 1) if not rows[j][4])
+            print(f"-- cluster {k}: {rows[a][0]}-{rows[b][0]} ({n} mismatching)")
+            for j in range(lo, hi + 1):
+                s, m, lt, rt, _, _ = rows[j]
+                print(f"{m}{s:>6} | {lt:<{max_left}} | {rt}")
+        return
+
     # Collapse matching runs
     i = 0
     while i < len(rows):
@@ -443,6 +483,11 @@ def main():
         "--no-collapse",
         action="store_true",
         help="Don't collapse matching instruction runs",
+    )
+    parser.add_argument(
+        "--clusters",
+        action="store_true",
+        help="Print only the mismatch clusters with -C context rows each, plus marker counts and the frame",
     )
 
     args = parser.parse_args()

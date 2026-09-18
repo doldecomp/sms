@@ -8,7 +8,7 @@ The goal is not a higher percentage; it is **zero non-exact functions and 100% d
 
 - **No time cap per function.** The five-minute polish budget does not apply; the remaining function *is* the batch. Budget roughly 30-40 minutes per unit, then write the report and move to the next unit.
 - **Read the unit's history first.** `git log --oneline -- src/<path>.cpp`, the unit's entry in `docs/catalog/units/*.md` and `docs/catalog/frame-gaps.md`. Previous agents recorded rejected trials there; do not repeat one unless you have a new reason.
-- **Classify the residue before editing.** Read the whole diff with `--no-collapse`. Write down, in the scratchpad, which class it is:
+- **Classify the residue before editing.** Start with `decomp-diff.py -d <fn> --clusters` (mismatch runs, marker counts, frame); read the whole diff with `--no-collapse` at most once per function, and after each trial re-run `--clusters`, never the full diff. Write down, in the scratchpad, which class it is:
   1. structural (missing/extra call, block, branch, load/store order) — always fixable, fix first;
   2. inlining (a call where retail expands or the reverse) — count statements and depth per the inlining table in `docs/catalog/codegen-tells.md`;
   3. frame size only (`stwu`/`addi r1` and the save/restore offsets differ, bodies identical) — see the two-region frame model in `frame-gaps.md`; the candidates are named results, `.get()` vs wrapper, accessor by value vs reference, an unnamed temporary, a `TVec3` copy;
