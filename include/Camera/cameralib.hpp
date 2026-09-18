@@ -336,11 +336,23 @@ inline void CLBScreenFPosToSPos(JGeometry::TVec2<s16>* out,
                                 const JGeometry::TVec2<f32>& in)
 {
 	// can't include Resolution.hpp because of troubles with MapDraw.cpp
-	extern s16 SMSGetGameRenderHeight();
-	extern s16 SMSGetGameRenderWidth();
+	extern u16 SMSGetGameRenderHeight();
+	extern u16 SMSGetGameRenderWidth();
 
+	// The externs are `u16`, as System/Resolution.hpp declares them: retail
+	// zero-extends the result (`clrlwi r3, r3, 16`) before the `- 1` and the
+	// signed int-to-float conversion, where an `s16` return gives `extsh`.
 	f32 x = in.x;
-	// TODO: definitely more inlines but I couldn't get it to work out...
+	// TODO: 98.0% in sunmodel, the only object that instantiates this body
+	// (the map has it as a 0x114 weak in sunmodel.cpp).  Residue: frame 0x30
+	// against our 0x28 plus a rotation of the four volatile FPRs.  Retail's
+	// inline-temp pool runs 0xc..0x1f with the int-to-float conversion pair
+	// at 0x18; ours is 0xc..0x17 with the pair at 0x10, so retail expands
+	// something worth 8 bytes of pool *before* the first conversion.  Naming
+	// the half-size scale in each branch is inert.  There is no accessor on
+	// JGeometry::TVec2 to read `in.x`/`in.y` through (which would leave the
+	// two dead 4-byte temps that fit exactly), so the carrier is still
+	// unidentified; the FPR rotation is almost certainly the same cause.
 	if (x < -1.0f || 1.0f < x)
 		out->x = -1;
 	else

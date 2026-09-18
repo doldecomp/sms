@@ -65,6 +65,8 @@ private:
 
 	void calcDispRatioAndScreenPos_();
 
+	void moveSun_();
+
 public:
 	/* 0x44 */ J3DModelData* unk44;
 	/* 0x48 */ J3DModel* unk48;

@@ -50,19 +50,23 @@ TSunModel::TSunModel(bool param_1, const char* name)
 	gpSunModel = this;
 	if (param_1) {
 		unk1AC |= 0x4;
-		unk80 = 0;
+		unk80 = 48;   // retail `li r0, 0x30`, not 0
 	}
 
-	JGeometry::TVec2<f32>* it2 = unkF8;
 	JGeometry::TVec2<s16>* it1 = unkB4;
+	JGeometry::TVec2<f32>* it2 = unkF8;
 	bool* it3                  = unk180;
-	for (int i = 0; i < 17; ++i) {
+	// The three pointer increments belong in the for-increment clause, not in
+	// the body: with them in the body MWCC unrolls this loop eight times
+	// (`li r0, 2; mtctr` plus an extra offset induction variable, 51 extra
+	// instructions), while retail keeps the single 9-instruction body and
+	// `li r0, 0x11`.  Every other 17-iteration loop in this file carries a
+	// call or a branch and so was never unrollable, which is why this is the
+	// only place it shows.
+	for (int i = 0; i < 17; ++i, ++it1, ++it2, ++it3) {
 		it1->x = it1->y = -1;
-		++it1;
 		it2->x = it2->y = 10000.0f;
-		++it2;
-		*it3 = false;
-		++it3;
+		*it3            = false;
 	}
 }
 
@@ -152,8 +156,39 @@ void TSunModel::calcOtherFPosFromCenterAndRadius_(
 	param_1[7].y = param_2.y + fVar1;
 }
 
-// TODO: mark as inline or even move to the header maybe?
-void TSunModel::calcDispRatioAndScreenPos_()
+// The screen-position loop is an inline *level*, not a convenience: the map
+// carries CLBScreenFPosToSPos as a (func,weak) body of its own in this object
+// (0x114 at 0x29a50), i.e. retail `bl`s it from calcDispRatioAndScreenPos_
+// instead of expanding it.  A namespace-scope `inline` is unlimited at depth 1
+// and the loop sits directly in calcDispRatioAndScreenPos_'s body, so one
+// level has to separate them; with it the callee is at depth 2, its ~10
+// statements exceed the 9-statement allowance, and the `bl` appears.  That
+// lands calcDispRatioAndScreenPos_ byte-exact, which is the evidence that the
+// level is real -- only its name and receiver form are guesses, so it is
+// parked TU-local rather than added to the shared header.
+// The three declarations are in retail's order, not ours: callee-saved GPRs go
+// out r31 downward in reverse declaration order, and retail's r31/r30/r29 hold
+// i / it2 / it1, so `it1` must be declared first.
+static inline void SunModelCalcScreenPos(TSunModel* p)
+{
+	JGeometry::TVec2<s16>* it1;
+	JGeometry::TVec2<f32>* it2;
+	int i;
+
+	it1 = p->unkB4;
+	it2 = p->unkF8;
+	for (i = 0; i < 17; ++i) {
+		CLBScreenFPosToSPos(it1, *it2);
+		++it1;
+		++it2;
+	}
+}
+
+// `inline` is load-bearing: the map has this as (func,weak), which for a
+// member defined in the .cpp means the `inline` keyword, and retail `bl`s it
+// from perform (the call is in perform's relocation list).  See moveSun_ for
+// why that call survives.
+inline void TSunModel::calcDispRatioAndScreenPos_()
 {
 	unk191   = 0;
 	bool* it = unk180;
@@ -171,17 +206,104 @@ void TSunModel::calcDispRatioAndScreenPos_()
 	radius /= 2.0f;
 	calcOtherFPosFromCenterAndRadius_(&unkF8[9], unkF8[0], radius);
 
-	int i;
-	JGeometry::TVec2<f32>* it2;
-	JGeometry::TVec2<s16>* it1;
+	SunModelCalcScreenPos(this);
+}
 
-	it1 = unkB4;
-	it2 = unkF8;
-	for (i = 0; i < 17; ++i) {
-		CLBScreenFPosToSPos(it1, *it2);
-		++it1;
-		++it2;
+// Fabricated: retail's name for the CUE_MOVE body is unknown and it leaves no
+// symbol, because an inline that is expanded at every call site is emitted
+// nowhere.  What is known is that *some* level wraps this block: retail `bl`s
+// the weak calcDispRatioAndScreenPos_, and a weak body is unlimited at depth 1,
+// so the call cannot be a statement of perform itself.  One level puts it at
+// depth 2, where its ~22 statements are far over the 9-statement allowance,
+// and the `bl` appears; without this wrapper the body is expanded into perform
+// instead (perform 95.1% -> 70.8%, no out-of-line copy, and CLBScreenFPosToSPos
+// then takes perform's own depth-2 slot).  Splitting the block at exactly the
+// `if (cue & CUE_MOVE)` boundary is the smallest shape that does it.
+inline void TSunModel::moveSun_()
+{
+	unkA4 = CLBLinearInbetween<f32>((f32)unk68, 255.0f, unk194);
+	unkA8 = CLBEaseOutInbetween<f32>((f32)unk74, 255.0f, unk194);
+
+	f32 chase1;
+	if (unk9C < unkA4)
+		chase1 = unk6C;
+	else
+		chase1 = unk70;
+	CLBChaseDecrease(&unk9C, unkA4, chase1, 0.0f);
+	unk8C.color.a = (s16)unk9C;
+
+	f32 chase2;
+	if (unkA0 < unkA8)
+		chase2 = unk78;
+	else
+		chase2 = unk7C;
+	CLBChaseDecrease(&unkA0, unkA8, chase2, 0.0f);
+	unk94.color.a = (s16)unkA0;
+
+	if (gpCameraMario->isMarioIndoor()) {
+		unkB0 = 0.0f;
+	} else {
+		f32 distSq = unkF8[0].squared();
+		if (unkF8[0].squared() > 2.0f) {
+			unkB0 = 0.0f;
+		} else {
+			unkB0 = CLBLinearInbetween<f32>(
+			    0.0f, (f32)unk80, 0.5f * (2.0f - distSq) * unk194);
+		}
 	}
+
+	f32 chase3;
+	if (unkAC < unkB0)
+		chase3 = unk84;
+	else
+		chase3 = unk88;
+	CLBChaseGeneralConstantSpecifySpeed<f32>(&unkAC, unkB0, chase3);
+
+	// Retail loads all six operands before storing any component, which
+	// `dir.sub(mPosition, camPos)` cannot do (it stores each component as
+	// soon as it is computed): the three differences are arguments of
+	// `set`, so they are all evaluated before the body runs.
+	const Vec& camPos = SMSGetCamera()->getUnk124();
+	JGeometry::TVec3<f32> dir;
+	dir.set(mPosition.x - camPos.x, mPosition.y - camPos.y,
+	        mPosition.z - camPos.z);
+	MsVECNormalize(&dir, &dir);
+
+	// TODO: retail reaches `bl TVec3<f32>::set(const Vec&)` here (header
+	// round 24): the copy of the camera position is an out-of-line call,
+	// which a 3-statement in-class member only becomes at inline depth 4,
+	// and the argument is a `const Vec&`, not the `const TVec3<f32>&`
+	// that getUnk124() returns - so retail read the camera position
+	// through a Vec-typed accessor sitting three inline levels above this
+	// statement. Measured with a placeholder three-deep static-inline
+	// chain: this function goes 92.2% -> 97.4% with every instruction
+	// matching and only the 0x10 of low region the chain does not
+	// reserve left over (0xd0 against retail's 0xe0), so the shape is
+	// right but the accessor's real name and split are not recoverable
+	// yet. Two levels (set at depth 3) still inlines it: 95.1%.
+	// Closure batch 164: that chain does not survive moveSun_, so the two
+	// levels are not additive the way the depth table suggests.  With
+	// moveSun_ in place the statement already sits one expansion deep,
+	// and every further level measured *away* from the call rather than
+	// towards it: a TU-local `const Vec&` forwarder chain over
+	// SMSGetCamera()->getUnk124() (1/2/3 deep) gives 93.8/94.6/94.6%
+	// and never the `bl`; wrapping the three statements in one, two or
+	// three void static inlines gives 93.8/92.6/92.1%, and at three the
+	// outermost forwarder stops being inlined itself (its symbol is
+	// emitted), which is the chain breakdown the budget table warns
+	// about.  So the level retail used is *inside* the expression --
+	// something typed `Vec` reached through two more expansions -- not a
+	// wrapper around the statement.  The argument type is the whole
+	// reason the overload is `set(const Vec&)`: a `const TVec3<f32>&`
+	// picks the `set<TY>` member template instead (see JGVec3.hpp).
+	JGeometry::TVec3<f32> sunPos;
+	sunPos.set(SMSGetCamera()->getUnk124());
+	unk198.scaleAdd(250000.0f, sunPos, dir);
+
+	if (unk64)
+		unk64->mPosition = unk198;
+
+	calcDispRatioAndScreenPos_();
 }
 
 void TSunModel::perform(u32 cue, JDrama::TGraphics*)
@@ -198,74 +320,7 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 	}
 
 	if (cue & CUE_MOVE) {
-		unkA4 = CLBLinearInbetween<f32>((f32)unk68, 255.0f, unk194);
-		unkA8 = CLBEaseOutInbetween<f32>((f32)unk74, 255.0f, unk194);
-
-		f32 chase1;
-		if (unk9C < unkA4)
-			chase1 = unk6C;
-		else
-			chase1 = unk70;
-		CLBChaseDecrease(&unk9C, unkA4, chase1, 0.0f);
-		unk8C.color.a = (s16)unk9C;
-
-		f32 chase2;
-		if (unkA0 < unkA8)
-			chase2 = unk78;
-		else
-			chase2 = unk7C;
-		CLBChaseDecrease(&unkA0, unkA8, chase2, 0.0f);
-		unk94.color.a = (s16)unkA0;
-
-		if (gpCameraMario->isMarioIndoor()) {
-			unkB0 = 0.0f;
-		} else {
-			f32 distSq = unkF8[0].squared();
-			if (unkF8[0].squared() > 2.0f) {
-				unkB0 = 0.0f;
-			} else {
-				unkB0 = CLBLinearInbetween<f32>(
-				    0.0f, (f32)unk80, 0.5f * (2.0f - distSq) * unk194);
-			}
-		}
-
-		f32 chase3;
-		if (unkAC < unkB0)
-			chase3 = unk84;
-		else
-			chase3 = unk88;
-		CLBChaseGeneralConstantSpecifySpeed<f32>(&unkAC, unkB0, chase3);
-
-		// Retail loads all six operands before storing any component, which
-		// `dir.sub(mPosition, camPos)` cannot do (it stores each component as
-		// soon as it is computed): the three differences are arguments of
-		// `set`, so they are all evaluated before the body runs.
-		const Vec& camPos = SMSGetCamera()->getUnk124();
-		JGeometry::TVec3<f32> dir;
-		dir.set(mPosition.x - camPos.x, mPosition.y - camPos.y,
-		        mPosition.z - camPos.z);
-		MsVECNormalize(&dir, &dir);
-
-		// TODO: retail reaches `bl TVec3<f32>::set(const Vec&)` here (header
-		// round 24): the copy of the camera position is an out-of-line call,
-		// which a 3-statement in-class member only becomes at inline depth 4,
-		// and the argument is a `const Vec&`, not the `const TVec3<f32>&`
-		// that getUnk124() returns - so retail read the camera position
-		// through a Vec-typed accessor sitting three inline levels above this
-		// statement. Measured with a placeholder three-deep static-inline
-		// chain: this function goes 92.2% -> 97.4% with every instruction
-		// matching and only the 0x10 of low region the chain does not
-		// reserve left over (0xd0 against retail's 0xe0), so the shape is
-		// right but the accessor's real name and split are not recoverable
-		// yet. Two levels (set at depth 3) still inlines it: 95.1%.
-		JGeometry::TVec3<f32> sunPos;
-		sunPos.set(SMSGetCamera()->getUnk124());
-		unk198.scaleAdd(250000.0f, sunPos, dir);
-
-		if (unk64)
-			unk64->mPosition = unk198;
-
-		calcDispRatioAndScreenPos_();
+		moveSun_();
 	}
 
 	if (cue & CUE_CALC_ANIM) {
