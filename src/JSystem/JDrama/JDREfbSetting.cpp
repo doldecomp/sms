@@ -71,6 +71,18 @@ bool JDrama::IssueGXSetCopyClear(JUtility::TColor clear_color, u32 clear_z,
 	return bVar1;
 }
 
+// TODO: 95 of 101 instructions and the 0x50 frame are exact; the residue is a
+// six-instruction scratch-register permutation inside the inlined
+// `IssueGXSetCopyFilter`, where the *dead* `flags & 0x20` value and the
+// `render_mode.aa` byte swap homes: retail is `lbz r0, 0x19(r28)` /
+// `rlwinm. r4, r25, ...` and materialises the bool through r3/r0, ours is
+// `lbz r3` / `rlwinm. r0` through r4/r3. Both `rlwinm.` results are unused
+// (only CR0 is read), so this is allocator ranking, not a value.
+// `IssueGXSetCopyFilter`'s own out-of-line copy is byte-exact, which pins its
+// body: named `aa`/`vf` bools drop it to 93-94.5%, reversing the `&&` operands
+// to 70%, and neither fixes the call site. Dropping the `!= nullptr` tests and
+// spelling the third argument `(flags & 0x20) != 0` or through a named `bool`
+// are codegen-identical here.
 void JDrama::IssueGXCopyDisp(void* param_1, const TRect& src_rect,
                              const GXRenderModeObj& render_mode,
                              JUtility::TColor clear_color, u32 clear_z,

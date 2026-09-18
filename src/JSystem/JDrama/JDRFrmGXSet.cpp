@@ -22,6 +22,21 @@ using namespace JDrama;
 // setter has no symbol in the map. Left as is rather than guessed; the
 // register shift is a separate, unexplained residue (a `getDisplay()` accessor
 // takes the frame to 0x170 and does not move it).
+//
+// Re-measured in closure batch 133: the two residues really are independent.
+// `GXRenderModeObj rmo = unk10->getRenderMode(); graphics->mRenderMode = rmo;`
+// is 0xf8 at 137 instructions (MWCC reserves the slot and folds the copy), and
+// a second chained named copy lands 0x130 at 137 instructions -- but the score
+// stays 96.8% because all ~40 register operands are still one step low. So the
+// frame is a solved two-slot problem and the blocker is the allocator: this is
+// a leaf with no saved registers, retail allocates its scratch values in
+// r6/r7/r8 while we start at r4, i.e. retail's `cue` (r4) is still reserved
+// where ours is free. Nothing in the body reads `cue` after the `CUE_DRAW`
+// test, so the missing use is either another statement that consumes it or a
+// guard spelling that keeps it live; no spelling tried so far does.
+// Also ruled out: a parked by-value `TGraphics::setRenderMode(GXRenderModeObj)`
+// and a parked by-value `getRenderMode()` accessor -- both land 0x130 but stop
+// MWCC folding the copy and add 30 instructions (167 against 137).
 void TFrmGXSet::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {
