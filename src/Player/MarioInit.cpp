@@ -338,10 +338,23 @@ void TMario::load(JSUMemoryInputStream& stream)
 	initValues();
 }
 
+// Parked here, not in the shared <Player/Mario.hpp>, because a header batch
+// is running. Retail reads mModel through one extra inline level: adding it
+// is worth exactly +8 bytes of low-region frame per site with no instruction
+// change, and it is what closes both TMario::loadAfter (0x40 -> 0x48, two
+// sites) and TMario::initValues (0x38 -> 0x40, one site). Promotion to
+// `M3UModelMario* TMario::getM3UModel() { return mModel; }` is a header item;
+// the ~40 raw `mModel->` sites in MarioDraw/MarioCap should then be measured
+// one at a time, since the lever is per site.
+static inline M3UModelMario* MarioInitGetM3UModel(TMario* mario)
+{
+	return mario->mModel;
+}
+
 void TMario::loadAfter()
 {
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD))
-		mWaterGun->initInLoadAfter();
+		getFludd()->initInLoadAfter();
 
 	if (mYoshi != nullptr)
 		mYoshi->initInLoadAfter();
@@ -353,10 +366,10 @@ void TMario::loadAfter()
 
 	if (isMario())
 		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              mModel->getModel()->getAnmMtx(1), true);
+		                              MarioInitGetM3UModel(this)->getModel()->getAnmMtx(1), true);
 	else
 		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              mModel->getModel()->getAnmMtx(1), false);
+		                              MarioInitGetM3UModel(this)->getModel()->getAnmMtx(1), false);
 
 	finalDrawInitialize();
 	initMirrorModel();
@@ -413,7 +426,7 @@ void TMario::initValues()
 	unk468 = 0.0f;
 	unk46C = 0.0f;
 
-	mAnmSound = new MAnmSound(SMSGetMSound());
+	mAnmSound = new MAnmSoundMario(SMSGetMSound());
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 
 	unk4EC          = 0;
@@ -427,7 +440,7 @@ void TMario::initValues()
 	             mDeParams.mAttackHeight.get(), mDeParams.mDamageRadius.get(),
 	             mDeParams.mDamageHeight.get());
 
-	unk390 = new TMBindShadowBody(this, mModel->getModel(), 1.0f);
+	unk390 = new TMBindShadowBody(this, MarioInitGetM3UModel(this)->getModel(), 1.0f);
 
 	unk92  = 0x11;
 	unkA2  = 0xAD;
@@ -462,7 +475,12 @@ void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
 
 TMario::TDeParams::TDeParams()
     : TParams("/Mario/Mario.prm")
-    , PARAM_INIT(mHpMax, 8)
+    // TODO: the retail `.sdata2` string is "mHPMax", so the member is
+    // TDeParams::mHPMax and this line is PARAM_INIT(mHPMax, 8). The rename
+    // lives in the shared <Player/Mario.hpp> (plus MarioReceiveMsg,
+    // MarioMove and MarioCollision), so PARAM_INIT is spelled out here
+    // instead; it expands to exactly this.
+    , mHpMax(this, 8, JDrama::TNameRef::calcKeyCode("mHPMax"), "mHPMax")
     , PARAM_INIT(mRunningMax, 45.0f)
     , PARAM_INIT(mDashMax, 60.0f)
     , PARAM_INIT(mDashAcc, 0.5f)
