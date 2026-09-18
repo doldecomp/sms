@@ -843,6 +843,17 @@ void TShine::loadAfter()
 	}
 }
 
+// TODO: 99.7%, pure frame gap (0x50 vs our 0x48, every instruction matches).
+// Retail's slots are `name` 0x24, `eventId` 0x20, `v` 0x18 and it reuses
+// `eventId`'s 0x20 for `eventId = v`, exactly as below; ours are 0x1c / 0x18 /
+// 0x14. So retail has 12 bytes of low region where we have 8 *and* a dead
+// 4-byte slot at 0x1c between `eventId` and `v`. A dead-low-region carrier in
+// `TMapObjBase::setEventId` lands the frame on 0x50 and drops the diff from 19
+// to 12 markers, but it is not the answer -- see the note on `setEventId` in
+// MapObjBase.hpp for the six exact functions it costs. The 4 bytes at 0x1c
+// would be a dead named local declared between the two `s32`s, or an 8-byte
+// aggregate whose first word is what `stream >> v` reads; neither has a source
+// story yet, so the function is left as is.
 void TShine::loadBeforeInit(JSUMemoryInputStream& stream)
 {
 	char name[0x20];

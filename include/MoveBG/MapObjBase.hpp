@@ -339,6 +339,17 @@ public:
 
 	// fabricated
 	u32 getEventId() { return mEventId; }
+	// Header round 22: `setEventId` is a plain setter and cannot be the
+	// dead-low-region carrier frame-gaps.md once parked here for
+	// `TItemManager::newAndRegisterCoin`. That function has since been
+	// matched (and ItemManager linked) with a raw `mEventId =` write, and a
+	// dead 12-byte non-trivial local in this body costs six functions that
+	// are currently exact: `TCoinBlue::loadBeforeInit` 100 -> 99.57,
+	// `THideObjBase::load`, `TWaterHitHideObj::load`,
+	// `TFruitHitHideObj::load` 100 -> 99.74, `TShellCup::loadAfter` 100 ->
+	// 99.76 and `evSetEventID` 100 -> 99.81, for a single 0.12-point gain on
+	// `TShine::loadBeforeInit`. Whatever that function's 8 bytes are, they
+	// belong to an expansion only it has.
 	void setEventId(u32 v) { mEventId = v; }
 
 	// Fabricated
