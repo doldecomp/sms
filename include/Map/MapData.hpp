@@ -127,9 +127,15 @@ public:
 	TBGCheckData();
 
 	const JGeometry::TVec3<f32>& getNormal() const { return mNormal; }
+	// The two-return form, not a ternary: the out-of-line copy in
+	// BossHanachanSub.o is `beq; li 1; blr; li 0; blr`, seven instructions =
+	// the map's 0x1c, and that shape is what refuses to inline on the right
+	// of a short-circuit operator (TSphereLink::execMapCollision_).
 	bool isIllegalData() const
 	{
-		return mFlags & BG_CHECK_FLAG_ILLEGAL ? true : false;
+		if (mFlags & BG_CHECK_FLAG_ILLEGAL)
+			return true;
+		return false;
 	}
 	f32 getActiveJumpPower() const;
 	u32 getPlaneType();
@@ -174,6 +180,16 @@ public:
 	// fabricated
 	bool checkFlag(u32 flag) const { return mFlags & flag ? true : false; }
 
+	// TODO: rejected (batch 102). Retail's one `bl isIllegalData` site
+	// (TSphereLink::execMapCollision_, inlined twice in moveHead) compares
+	// the callee's *returned byte* against 1 (`clrlwi; cmplwi 1; bne; li 0;
+	// b; li 1`), which is this wrapper's shape with isIllegalData out of
+	// line -- so isLegal() forwarding to isIllegalData() rather than
+	// checkFlag() is the better-evidenced spelling. It does not reproduce
+	// the refusal (isIllegalData still inlines at depth 2) and it costs
+	// TMario::checkGroundPlane its exact match (100 -> 93.0), plus checkWet,
+	// checkCurrentPlane, TBaseNPC::bind, both CPolarSubCamera wall/roof
+	// checks. Retry only with the level that actually flips the callee.
 	bool isLegal() const
 	{
 		return checkFlag(BG_CHECK_FLAG_ILLEGAL) == 1 ? false : true;
