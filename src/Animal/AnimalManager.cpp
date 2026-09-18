@@ -13,6 +13,17 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: promote into EnemyManager.hpp. Retail's TEnemyManager::getObj(int)
+// casts TObjManager::getObj()'s result directly; our version routes through
+// TLiveManager::getObj(), and that extra inline level costs one 4-byte
+// temporary, which shifts every local of clipEnemies up by 4. Parked as a
+// TU-local helper because the shared header is off limits in this batch.
+static inline TSpineEnemy* AnimalManagerGetObj(TAnimalManagerBase* manager,
+                                               int i)
+{
+	return (TSpineEnemy*)manager->TObjManager::getObj(i);
+}
+
 TAnimalManagerBase::TAnimalManagerBase(const char* name)
     : TEnemyManager(name)
 {
@@ -37,9 +48,8 @@ void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 
 	int count = getObjNum();
 	for (int i = 0; i < count; ++i) {
-		JGeometry::TVec3<f32> pos;
-		TSpineEnemy* actor = getObj(i);
-		pos = actor->mPosition;
+		TSpineEnemy* actor        = AnimalManagerGetObj(this, i);
+		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
@@ -60,11 +70,20 @@ void TMewManager::load(JSUMemoryInputStream& stream)
 	loadSaveParams_("/Animal/mew.prm");
 }
 
+// TODO: frame 0x18 vs retail 0x28; all 15 instructions match. Retail declared
+// 13-16 bytes of locals here that nothing reads (measured: 12 bytes of locals
+// give 0x20, 16 give 0x28). Same shape in TAnimalBase::loadAfter (+16, one
+// registerTrans), TAnimalBird::loadAfter (+24) and TAnimalBirdManager::loadAfter
+// (+32). Ruled out: mObjNum vs getObjNum()/TObjManager::getObjNum()/a named u16/
+// an explicit (u16) cast (all zero), inline forwarder levels above
+// TNameRef::loadAfter (zero), argument-count effects on the outgoing parameter
+// area (zero: a 5- or 6-argument call does not grow it). MSound::setPlayerInfo
+// matches with six MSRandPlay calls, so the cost is not per call site.
 void TMewManager::loadAfter()
 {
 	TAnimalManagerBase::loadAfter();
 	MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_OBJ_KAMOME_SOLO,
-	                                              mObjNum);
+	                                              getObjNum());
 }
 
 void TMewManager::createModelData()
