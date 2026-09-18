@@ -45,7 +45,7 @@ void CPolarSubCamera::ctrlOptionCamera_()
 		int cubeNo = gpCubeCamera->getInCubeNo(probe);
 		if (cubeNo >= 0) {
 			TCubeCameraInfo* info
-			    = (TCubeCameraInfo*)&(*gpCubeCamera->unk14)[cubeNo];
+			    = (TCubeCameraInfo*)(*gpCubeCamera->unk14)[cubeNo];
 			TCameraMapTool* tool = info->unk38;
 			if (tool != nullptr && tool != unk70) {
 				gpCameraOption->unk0 ^= 0x1;

@@ -224,7 +224,7 @@ public:
 	/* 0x7F */ u8 unk7F;
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
-	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> unk88;
+	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC*> unk88;
 	/* 0xA0 */ TBaseNPC* unkA0; // talking NPC
 	/* 0xA4 */ u32 unkA4;
 	/* 0xA8 */ char unkA8[0x4];

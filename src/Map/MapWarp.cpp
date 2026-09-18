@@ -62,14 +62,14 @@ void TMapWarp::watchToWarp()
 	if (no == -1)
 		return;
 
-	TCubeStreamInfo& info = (TCubeStreamInfo&)(*gpCubeStream->unk14)[no];
+	TCubeStreamInfo* info = (TCubeStreamInfo*)(*gpCubeStream->unk14)[no];
 	Mtx mtx;
-	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
-	               info.unk18.z);
+	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info->unk18.x, info->unk18.y,
+	               info->unk18.z);
 
-	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
+	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info->unk40 * 0.01f);
 	MTXMultVec(mtx, &vec2, &vec2);
-	if ((info.unk38 == 0 ? true : false) || (info.unk38 == 1 ? true : false))
+	if ((info->unk38 == 0 ? true : false) || (info->unk38 == 1 ? true : false))
 		SMS_FlowMoveMario(vec2);
 	else
 		SMS_WindMoveMario(vec2);

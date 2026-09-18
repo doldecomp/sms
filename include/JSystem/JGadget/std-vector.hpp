@@ -389,12 +389,19 @@ public:
 	value_type* ResizeRaw(size_t);
 };
 
+// The template argument is the **pointer** type, not the pointee: the map
+// spells the destructor `__dt__Q27JGadget35TVector_pointer<P15TStageEnemyInfo>Fv`
+// (likewise `<P16TCubeGeneralInfo>`, `<P8TBaseNPC>` and the
+// `<P55TNameRefAryT<...>>` of MarNameRefGen), so `value_type` is T and
+// `iterator` is T*. TNameRefPtrAryT<T, U> keeps the pointee as its own
+// argument (`TNameRefPtrAryT<15TStageEnemyInfo,...>`) and derives from
+// `TVector_pointer<T*>`.
 template <class T> class TVector_pointer : public TVector_pointer_void {
 	typedef TVector_pointer_void Base;
-	typedef T* value_type;
 
 public:
-	typedef T** iterator;
+	typedef T value_type;
+	typedef T* iterator;
 
 	TVector_pointer() { }
 
@@ -404,10 +411,13 @@ public:
 	iterator end() { return iterator(Base::end()); }
 	size_t size() const { return Base::size(); }
 
-	T& operator[](size_t i) { return *static_cast<T*>(Base::operator[](i)); }
-	const T& operator[](size_t i) const
+	value_type operator[](size_t i)
 	{
-		return *static_cast<T*>(Base::operator[](i));
+		return static_cast<value_type>(Base::operator[](i));
+	}
+	value_type operator[](size_t i) const
+	{
+		return static_cast<value_type>(Base::operator[](i));
 	}
 
 	void push_back(const value_type& value) { Base::push_back(value); }

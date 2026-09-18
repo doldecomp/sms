@@ -254,7 +254,7 @@ void TMapWireManager::load(JSUMemoryInputStream& stream)
 
 	for (int i = 0; i < unk10; ++i) {
 		unk18[i] = new TMapWire;
-		unk18[i]->init(&gpCubeWire->unk14->getChildren()[i]);
+		unk18[i]->init(gpCubeWire->unk14->getChildren()[i]);
 	}
 }
 

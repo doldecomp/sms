@@ -5,7 +5,7 @@
 #include <JSystem/JGadget/std-vector.hpp>
 
 template <class T, class U = JDrama::TNameRef>
-class TNameRefPtrAryT : public U, public JGadget::TVector_pointer<T> {
+class TNameRefPtrAryT : public U, public JGadget::TVector_pointer<T*> {
 public:
 	TNameRefPtrAryT(const char* name = "<NameRefPtrAryT>")
 	    : U(name)
@@ -15,7 +15,7 @@ public:
 	virtual ~TNameRefPtrAryT() { }
 
 	// fabricated
-	JGadget::TVector_pointer<T>& getChildren() { return *this; }
+	JGadget::TVector_pointer<T*>& getChildren() { return *this; }
 
 	virtual void load(JSUMemoryInputStream& stream)
 	{

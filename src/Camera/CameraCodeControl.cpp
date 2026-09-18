@@ -25,7 +25,7 @@ bool CPolarSubCamera::controlByCameraCode_(int* param_1)
 		local_24.y += 75.0f;
 		for (int i = 0; i < count; ++i) {
 			if (gpCubeCamera->isInCube(local_24, i)) {
-				TCubeGeneralInfo* general = &(*gpCubeCamera->unk14)[i];
+				TCubeGeneralInfo* general = (*gpCubeCamera->unk14)[i];
 				TCubeCameraInfo* info     = (TCubeCameraInfo*)general;
 
 				TCameraMapTool* tool = info->getCameraMapTool();

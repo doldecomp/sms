@@ -546,12 +546,12 @@ void TLeafBoat::control()
 	// The stream cubes carry a flow direction that drags the boat along.
 	int cubeNo = gpCubeStream->getInCubeNo((Vec&)mPosition);
 	if (cubeNo != -1) {
-		TCubeStreamInfo& info
-		    = (TCubeStreamInfo&)gpCubeStream->unk14->getChildren()[cubeNo];
+		TCubeStreamInfo* info
+		    = (TCubeStreamInfo*)gpCubeStream->unk14->getChildren()[cubeNo];
 		Mtx flow;
-		MsMtxSetXYZRPH(flow, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
-		               info.unk18.z);
-		f32 power = 0.0001f * info.unk40;
+		MsMtxSetXYZRPH(flow, 0.0f, 0.0f, 0.0f, info->unk18.x, info->unk18.y,
+		               info->unk18.z);
+		f32 power = 0.0001f * info->unk40;
 		mVelocity.x += flow[0][2] * power;
 		mVelocity.z += flow[2][2] * power;
 	}

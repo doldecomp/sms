@@ -66,16 +66,16 @@ s32 TCubeManagerBase::getDataNo(s32 i) const
 {
 	u32 result = -1;
 	if (i >= 0 && i < unk10)
-		result = (*unk14)[i].unk34;
+		result = (*unk14)[i]->unk34;
 	return result;
 }
 
 int TCubeManagerBase::getInCubeNo(const Vec& v) const
 {
 	for (u32 i = 0; i < unk10; ++i) {
-		TCubeGeneralInfo& info = (*unk14)[i];
-		if (CLBIsPointInCube(v, info.getUnkC(), info.getUnk18(),
-		                     info.getUnk24()))
+		TCubeGeneralInfo* info = (*unk14)[i];
+		if (CLBIsPointInCube(v, info->getUnkC(), info->getUnk18(),
+		                     info->getUnk24()))
 			return i;
 	}
 
@@ -86,9 +86,9 @@ bool TCubeManagerBase::isInCube(const Vec& v, s32 i) const
 {
 	bool result = false;
 	if (i >= 0 && i < unk10) {
-		TCubeGeneralInfo& info = (*unk14)[i];
-		if (CLBIsPointInCube(v, info.getUnkC(), info.getUnk18(),
-		                     info.getUnk24()))
+		TCubeGeneralInfo* info = (*unk14)[i];
+		if (CLBIsPointInCube(v, info->getUnkC(), info->getUnk18(),
+		                     info->getUnk24()))
 			result = true;
 	}
 	return result;
@@ -98,9 +98,9 @@ void TCubeManagerBase::calcPointInCubeRatio(const Vec& param_1, s32 param_2,
                                             float* param_3, float* param_4,
                                             float* param_5) const
 {
-	TCubeGeneralInfo& info = (*unk14)[param_2];
-	CLBCalcPointInCubeRatio(param_1, info.getUnkC(), info.getUnk18(),
-	                        info.getUnk24(), param_3, param_4, param_5);
+	TCubeGeneralInfo* info = (*unk14)[param_2];
+	CLBCalcPointInCubeRatio(param_1, info->getUnkC(), info->getUnk18(),
+	                        info->getUnk24(), param_3, param_4, param_5);
 }
 
 bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
@@ -112,8 +112,8 @@ bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
 
 	// Presumably hotel delphino floor transitions?
 	if (gpMarDirector->getCurrentMap() == 7 && unk1C != -1 && found != -1) {
-		const char* curName = (*unk14)[unk1C].getName();
-		const char* newName = (*unk14)[found].getName();
+		const char* curName = (*unk14)[unk1C]->getName();
+		const char* newName = (*unk14)[found]->getName();
 
 		if (strcmp(curName, "３階") == 0) {
 			if (strcmp(newName, "２階") == 0 || strcmp(newName, "１階") == 0)

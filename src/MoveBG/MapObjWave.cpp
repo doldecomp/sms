@@ -231,9 +231,9 @@ void TMapObjWave::updateHeightAndAlpha()
 
 	int cubeNo = gpCubeStream->getInCubeNo(SMS_GetMarioPos());
 	if (cubeNo != -1) {
-		TCubeStreamInfo& info
-		    = (TCubeStreamInfo&)gpCubeStream->unk14->getChildren()[cubeNo];
-		if (mCubeWaveHeight < info.unk3C)
+		TCubeStreamInfo* info
+		    = (TCubeStreamInfo*)gpCubeStream->unk14->getChildren()[cubeNo];
+		if (mCubeWaveHeight < info->unk3C)
 			mCubeWaveHeight += mCubeWaveHeightRate;
 	} else {
 		if (mCubeWaveHeight > 0.0f)

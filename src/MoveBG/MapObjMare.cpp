@@ -875,15 +875,15 @@ void TMuddyBoat::bind()
 	// picks up whatever component of it points along its own heading.
 	int cubeNo = gpCubeStream->getInCubeNo(*gpMarioPos);
 	if (cubeNo != -1) {
-		TCubeStreamInfo& info
-		    = (TCubeStreamInfo&)gpCubeStream->unk14->getChildren()[cubeNo];
+		TCubeStreamInfo* info
+		    = (TCubeStreamInfo*)gpCubeStream->unk14->getChildren()[cubeNo];
 		Mtx flow;
-		MsMtxSetXYZRPH(flow, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
-		               info.unk18.z);
+		MsMtxSetXYZRPH(flow, 0.0f, 0.0f, 0.0f, info->unk18.x, info->unk18.y,
+		               info->unk18.z);
 		f32 alongHeading = 0.0f;
 		alongHeading += mtx[0][2] * flow[0][2];
 		alongHeading += mtx[2][2] * flow[2][2];
-		mSpeed += 0.0001f * (alongHeading * info.unk40);
+		mSpeed += 0.0001f * (alongHeading * info->unk40);
 	}
 
 	const TBGCheckData* ground;
