@@ -189,6 +189,10 @@ JGeometry::TVec3<f32>
 // temp sits at 0x38 where retail has it at 0x34 (4 extra low bytes and 4 extra
 // bytes of pad above it). Every instruction matches. One inline level or one
 // named scalar too many; `f32 len` is the only candidate in the body.
+// TPathNode::getPoint() returns `const TVec3&` and a reference return is worth
+// 8 bytes of inline temp per expansion, but the gap here is 4, so it is not
+// simply one getPoint() too many; spelling the read `force = mGoal.getPoint()`
+// instead of `force.set(...)` costs the whole function (99.6 -> 97.2).
 TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 {
 	JGeometry::TVec3<f32> force;
