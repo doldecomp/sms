@@ -438,5 +438,6 @@
   "Enemy/DebuTelesa.cpp",
   "Enemy/generator.cpp",
   "MoveBG/WoodBarrel.cpp",
-  "Camera/CameraOption.cpp"
+  "Camera/CameraOption.cpp",
+  "Player/MarioInit.cpp"
 ]

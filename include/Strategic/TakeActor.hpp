@@ -47,7 +47,12 @@ public:
 		mPosition = where_to;
 		return true;
 	}
-	virtual f32 getRadiusAtY(f32) const;
+	// The map has this weak (8 bytes, `lfs f1, 0x58(r3); blr`), so it is a
+	// header inline and TTakeActor's virtuals are inline throughout. That is
+	// what makes __vt__10TTakeActor a weak vtable emitted in every user TU;
+	// with the body missing, the vtable came in as an external and MarioInit.o
+	// was 0xb4 bytes of .data short, which is why it could not be linked.
+	virtual f32 getRadiusAtY(f32) const { return mDamageRadius; }
 
 	// A two-`return` body is refused expansion on the right of a `||`/`&&`
 	// chain at every depth, which is why retail `bl`s this from
