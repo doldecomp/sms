@@ -17,7 +17,6 @@ void M3UModelMario::changeMtxCalcSIAnmBQAnmTransform(int param_1, int param_2,
 
 void M3UModelMario::updateInMotion()
 {
-	// volatile u32 unused[12];
 	for (int i = 0; i < unk10; ++i) {
 		SomeModelMarioStruct& info = unk24[i];
 		getFrameCtrl(info.unk8).update();
@@ -36,8 +35,10 @@ void M3UModelMario::updateInMotion()
 		if (oldAnm != nullptr)
 			oldAnm->setFrame(getFrameCtrl(info.unk8).getFrame());
 
-		unk20->unk18[info.unk3].mNewAnm = newAnm;
-		unk20->unk18[info.unk3].mOldAnm = oldAnm;
+		// The two writes go through the accessor and the mtx-calc pointer does
+		// not: that is the 0x20 of frame between them.
+		unk20->getMtxCalcSIAnmBQ(info.unk3).mNewAnm = newAnm;
+		unk20->getMtxCalcSIAnmBQ(info.unk3).mOldAnm = oldAnm;
 		jnt->setMtxCalc(&unk20->unk18[info.unk3]);
 	}
 }

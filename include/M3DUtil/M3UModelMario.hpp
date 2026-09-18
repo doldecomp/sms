@@ -14,6 +14,9 @@ public:
 		return &unk18[param_1.mMtxCalcIdx];
 	}
 
+	// Fabricated; getMtxCalc() above returns the address of one of these.
+	M3UMtxCalcSIAnmBlendQuat& getMtxCalcSIAnmBQ(u8 idx) { return unk18[idx]; }
+
 public:
 	/* 0x18 */ M3UMtxCalcSIAnmBlendQuat* unk18;
 };
