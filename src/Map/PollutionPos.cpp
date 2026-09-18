@@ -5,22 +5,48 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: frame 0x20 vs retail 0x38 (24 bytes of inline temporaries short) plus a
-// register rotation that survives the correct frame: retail puts mLog2Width in
-// r7, x >> 3 in r8, mHeightMap in r6 and x & 7 in r9, ends the index with
-// `add r0, r11, r0` ((z & 3) * 8 added last) and uses mHeightMap as the `lbzx`
-// base, while we assign r6/r7/r9/r8 in computation order, fold mHeightMap into
-// the offset and make the hoisted (z & 3) * 8 the base. (isSame, which shares
-// index(), gets retail's operand order already, so it is the loop hoisting that
-// flips it.) Measured as +8 on the frame and zero on the registers: a
-// getHeightMap()/getLog2Width() accessor, getWidth()/getHeight() inside
-// isInArea, a getVerticalOffset() accessor; TPollutionPos accessors saturate at
-// one level (+8 total) and only 0x30 is reachable. Rejected: a nested
-// blockIndex() level in index() (+8 but -16% here), a named u32 for the index,
-// a local u8* for the height map, `!(dx == 0 && dy == 0)`, `dy != 0` first,
-// `*(mHeightMap + index(...))`, getDepth() instead of the raw byte read (that
-// turns retail's `cmplwi` into `cmpwi`), and putting (z & 3) * 8 last in
-// index() (-7%).
+// `index()` is two inline levels short here: retail's loop ends the address
+// with `add r0, r11, r0` ((z & 3) * 8, hoisted out of the loop, added last) and
+// uses `mHeightMap` as the `lbzx` base, while a direct `index()` call folds
+// `mHeightMap` into the offset and makes the hoisted term the base. One level
+// that binds its result restores retail's whole register assignment (85/85
+// instructions) and is +8 of frame; a second such level is the remaining +16,
+// giving retail's 0x38 exactly. Two bindings inside one level are only +16, so
+// it is the expansion count that pays, not the bindings.
+// These two stand in for named intermediates inside `TPollutionPos::index()`
+// itself (the block index and the final index), but `Map/PollutionPos.hpp` is
+// included by the source-linked Pollution TUs -- reordering `index()`'s terms
+// there fails the DOL SHA-1 check -- so they are parked here and reported.
+static inline u32 PollutionPosIndexInner(const TPollutionPos* pos, int x, int z)
+{
+	u32 inner = pos->index(x, z);
+	return inner;
+}
+
+static inline u32 PollutionPosIndex(const TPollutionPos* pos, int x, int z)
+{
+	u32 idx = PollutionPosIndexInner(pos, x, z);
+	return idx;
+}
+
+static inline bool PollutionPosIsInArea(const TPollutionPos* pos, int x, int z)
+{
+	bool inArea = pos->isInArea(x, z);
+	return inArea;
+}
+
+static inline int PollutionPosGetDepth(const TPollutionPos* pos, int x, int z)
+{
+	int depth = pos->getDepth(x, z);
+	return depth;
+}
+
+static inline int PollutionPosWorldToDepth(const TPollutionPos* pos, f32 y)
+{
+	int depth = pos->worldToDepth(y);
+	return depth;
+}
+
 int TPollutionPos::getEdgeDegree(int x, int y) const
 {
 	if (!isInArea(x, y))
@@ -30,7 +56,7 @@ int TPollutionPos::getEdgeDegree(int x, int y) const
 	for (int dy = -1; dy <= 1; ++dy) {
 		for (int dx = -1; dx <= 1; ++dx) {
 			if (dx != 0 || dy != 0) {
-				if (mHeightMap[index(x + dx, y + dy)] == 0xFF)
+				if (mHeightMap[PollutionPosIndex(this, x + dx, y + dy)] == 0xFF)
 					count += 1;
 			}
 		}
@@ -47,31 +73,32 @@ f32 TPollutionPos::getDepthWorld(int x, int y) const
 	}
 }
 
-// TODO: frame 0x38 vs retail 0x58; all 53 instructions match (32 bytes of
-// temporary padding gives 100%), so retail has 32 bytes more of inline
-// temporaries in this leaf. Ladder measured here: one accessor level anywhere on
-// TPollutionPos +8 and saturating (getHeightMap, getLog2Width, getWidth/
-// getHeight in isInArea, getVerticalOffset in worldToDepth all give the same
-// +8), a getOwner() level on TPollutionLayer +8 on top of it, a nested
-// blockIndex() level inside index() +8 more; that reaches 0x48 and nothing
-// reaches 0x58. getDepthWorld and isProhibit, which share isInArea, getDepth
-// and index(), already match, so the level structure of those is right and the
-// missing 32 bytes belong to isSame itself.
-// Batch 69 confirmed that from the other side: a dead 28-32 byte non-trivial
-// local in worldToDepth lands 0x58 exactly at 53 instructions, but it also
-// grows worldToDepth's own frame from 0x18, and that copy is emitted and 100%,
-// so it is not a legal carrier; index()/isInArea()/getDepth() are shared with
-// three functions that already match. No inlined callee here can hold the 32
-// bytes, so they are isSame's own body locals. See docs/catalog/frame-gaps.md,
-// "The dead low region".
+// The 32 bytes that batch 69 could not place are three inline levels, one per
+// member this function reads through: `isInArea`, `getDepth` and
+// `worldToDepth` each sit one expansion deeper than a direct call, and each
+// binds its result. Individually `isInArea` and `getDepth` are worth zero and
+// `worldToDepth` +8; `isInArea` + `getDepth` together are +16 (lever pair) and
+// all three are +32, which is 0x58 exactly at 53 instructions.
+// The levels belong on the members themselves -- a body of the
+// `int depth = mHeightMap[index(x, z)]; return depth;` shape in
+// `Map/PollutionPos.hpp` says the same thing -- but that header is included by
+// the source-linked Pollution TUs and any change to `index()`/`isInArea()`
+// there breaks the DOL (measured: reordering `index()`'s terms fails the
+// SHA-1 check), so they are parked here under TU-prefixed names and reported.
+// Superseded trials, all at frame 0x38: one accessor level anywhere on
+// TPollutionPos +8 and saturating, a `getOwner()` level on TPollutionLayer +8
+// on top of it, a nested `blockIndex()` level inside `index()` +8 more (0x48
+// ceiling); a dead 28-32 byte non-trivial local in `worldToDepth` lands 0x58
+// but grows `worldToDepth`'s own emitted 100% copy, so it is not a legal
+// carrier.
 bool TPollutionPos::isSame(int x, int z, f32 y) const
 {
-	if (!isInArea(x, z))
+	if (!PollutionPosIsInArea(this, x, z))
 		return false;
 
-	int d = getDepth(x, z);
+	int d = PollutionPosGetDepth(this, x, z);
 	if (d < 0xff) {
-		s32 iVar1 = worldToDepth(y);
+		s32 iVar1 = PollutionPosWorldToDepth(this, y);
 		int uVar4 = mOwner->getUnk48();
 		if (d - uVar4 <= iVar1 && iVar1 <= d + uVar4)
 			return true;
