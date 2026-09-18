@@ -144,7 +144,7 @@ public:
 	virtual void attackToMario();
 	virtual void forceKill();
 	virtual void setMActorAndKeeper();
-	virtual void initAttacker(THitActor*);
+	virtual void initAttacker(THitActor*) { unk184 = 1; }
 	virtual bool isHitValid(u32)
 	{
 		return checkLiveFlag(LIVE_FLAG_HIDDEN) ? false : true;

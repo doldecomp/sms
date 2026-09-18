@@ -57,7 +57,7 @@ static int PakkunSeedCallback(J3DNode* node, int type)
 
 		J3DJoint* joint = (J3DJoint*)node;
 		MtxPtr anmMtx   = gpCurPakkunSeed->getMActor()->getModel()->getAnmMtx(
-		    joint->getJntNo());
+            joint->getJntNo());
 
 		Mtx rotation;
 		MsMtxSetRotZ(rotation, gpCurPakkunSeed->unk170);
@@ -82,7 +82,7 @@ static int PakkunRootCallback(J3DNode* node, int type)
 
 			J3DJoint* joint = (J3DJoint*)node;
 			MtxPtr anmMtx   = gpCurPakkun->getMActor()->getModel()->getAnmMtx(
-			    joint->getJntNo());
+                joint->getJntNo());
 
 			TRotation3f scaling;
 			scaling.ref(0, 3) = 0.0f;
@@ -855,7 +855,7 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 					f32 gravity = self->unk1A0->mSLSeedGravityC.get();
 					JGeometry::TVec3<f32> velocity
 					    = self->calcVelocityToJumpToY(goal, speed, gravity);
-					self->unk198            = 1;
+					self->unk198 = 1;
 					self->unk194->setVelocity(velocity);
 					self->unk194->mRotation.set(TPakkunManager::mTestFlyAngX,
 					                            0.0f, 0.0f);
@@ -885,7 +885,7 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 				f32 gravity = self->unk1A0->mSLSeedGravityC.get();
 				JGeometry::TVec3<f32> velocity
 				    = self->calcVelocityToJumpToY(goal, speed, gravity);
-				self->unk198            = 1;
+				self->unk198 = 1;
 				self->unk194->setVelocity(velocity);
 				self->unk194->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f,
 				                            0.0f);
@@ -899,7 +899,7 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 				f32 gravity = self->unk1A0->mSLSeedGravityC.get();
 				JGeometry::TVec3<f32> velocity
 				    = self->calcVelocityToJumpToY(goal, speed, gravity);
-				self->unk198            = 1;
+				self->unk198 = 1;
 				self->unk194->setVelocity(velocity);
 				self->unk194->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f,
 				                            0.0f);
