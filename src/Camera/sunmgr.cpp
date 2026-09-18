@@ -33,13 +33,24 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
+	// Declared in reverse read order on purpose: named locals grow down from
+	// the top of the frame in declaration order, and retail reads the four
+	// colour inputs into *ascending* slots (0x8c, 0x90, 0x94, 0x98), so the
+	// first value read is the last one declared.
+	// TODO: frame 0x70 vs retail 0xb0. The four slots now ascend as retail's
+	// do but sit 60 bytes lower, i.e. retail has ~64 bytes of inline-expansion
+	// temporaries below them that nothing in this body accounts for, and r30
+	// (this) / r31 (the .rodata base) are swapped with ours. Measured:
+	// readU32() for the four inputs gives frame 0xa8 but 121 instructions
+	// instead of 114 and an extra callee-saved pair; an array and a four-read
+	// loop are worse (batch 32).
+	u32 local_18;
+	u32 local_1c;
+	u32 local_20;
 	u32 local_24;
 	stream >> local_24;
-	u32 local_20;
 	stream >> local_20;
-	u32 local_1c;
 	stream >> local_1c;
-	u32 local_18;
 	stream >> local_18;
 	stream >> unk20;
 
@@ -70,6 +81,17 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 	}
 }
 
+// TODO: frame 0x30 vs retail 0x60; the body is instruction-exact and every r1
+// displacement is 48 low with nothing referenced in the local area, so retail
+// has 48 bytes of locals here that this body does not name. A single
+// uninitialised 48-byte local (e.g. a scratch Mtx) reaches 0x60 and 100% with
+// no instruction change, but nothing in the function wants a matrix, so it is
+// not committed (docs/catalog/frame-gaps.md: the byte count confirms a size,
+// never a declaration). The accessor ladder saturates at 0x40: SMS_GetMarioX/
+// SMS_GetMarioZ +8, a const-reference getWarpPos() for unk24 +8, and then +0
+// each for SMSGetMarDirector(), a TU-static gpSunModel accessor, a parked
+// MSound::unk7C accessor and an isWarpEnabled() predicate (all
+// codegen-neutral).
 void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(unk15 & 1))
