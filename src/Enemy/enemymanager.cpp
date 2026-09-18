@@ -131,13 +131,20 @@ void TEnemyManager::createEnemies(int count)
 	if (count < 0)
 		return;
 
-	// TODO: 8 bytes of frame short (0xa8 against retail's 0xb0) and the two
-	// temp groups need +8 and +12 respectively, i.e. one +8 low lever plus
-	// 4 bytes between the groups. Making the loop body a call to the UNUSED
-	// createEnemy() (map 0xf8) is not it -- that costs five structural
-	// differences; search2 with the cast is codegen-identical; push_back
-	// instead of add() lands the frame but breaks the body; a TU-local
-	// binding level on getObjNum() overshoots by 24.
+	// TODO: 8 bytes of frame short (0xa8 against retail's 0xb0). Slot
+	// triage: the JGadget iterator pool splits into a 5-word group (retail
+	// 0x5c..0x6f, ours 0x54..0x67) and a 3-word group (retail 0x78..0x83,
+	// ours 0x6c..0x77) with the `insert` hint at 0x84 in both, so group A is
+	// +8 short and group B +12, i.e. the gap between the two groups is 8 in
+	// retail and 4 here. That is the JGadget iterator temp-pool *grouping*
+	// residue (frame-gaps.md batch 133, also open on TSeal::init and
+	// TPerformList::perform), and its only known cause is the implicit
+	// derived-from-base conversion on TList::insert's return, which lives in
+	// a shared JGadget header. Rejected here: the loop body as a call to the
+	// UNUSED createEnemy() (map 0xf8, five structural differences), search2
+	// with the cast (codegen-identical), push_back instead of add() (lands
+	// the frame, breaks the body), a TU-local binding level on getObjNum()
+	// (+24).
 	for (int i = 0; i < count; ++i) {
 
 		TSpineEnemy* enemy = createEnemyInstance();
@@ -281,6 +288,15 @@ void TEnemyManager::copyFromShared()
 	j3dSys.setViewMtx(viewMtx);
 }
 
+// TODO: 99.7%, frame-exact (0xf0). Two residues, both known-open classes.
+// (1) The two TTimeRec::startTimer(0xff,...) colour temporaries: retail builds
+// them at 0xb8 and 0xbc, i.e. adjacent with a 4-byte stride, while ours are at
+// 0xb0 and 0xb8 -- the JUTColor temp-stride residue.
+// (2) One opcode at 0x81c: in the alive-count loop retail materialises the
+// strength-reduced byte offset by copying the zero it already has in
+// aliveNum's register (`li r5, 0; addi r3, r5, 0`) where we emit two
+// independent `li 0`s. The same shape is open in TEMario::perform, so it is a
+// constant-reuse property of MWCC's loop setup, not a spelling here.
 void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (unk30 & 1)
@@ -513,9 +529,28 @@ static inline MActor* EnemymanagerGetMActor(const TSpineEnemy* p)
 
 // TODO: frame-exact, but retail keeps the scaled animation-frame index in r27
 // and the scratch matrix pointer in r28 while we have them the other way
-// round, which costs the slwi/lfs/addi ordering at 0x88 too. Declaration-order
-// permutations of `f`, `afStack_5C` and `wtf` (six tried) do not move it, and
-// dropping `wtf` loses two instructions retail has.
+// round, which costs the slwi/lfs/addi ordering at 0x88 too. afStack_5C also
+// sits at 0x64 in retail and 0x68 here, so one 4-byte named local is missing
+// above it even though the frame total is right. By the callee-saved rule
+// (r31 downwards in reverse introduction order) retail's claim order is
+// r29 stride temp, r28 wtf, r27 f, r26 mtx, i.e. an introduction order of
+// mtx, f, wtf -- our build introduces them in exactly reverse source order
+// (mtx, wtf, f), so no permutation of the three that keeps `wtf = afStack_5C`
+// after its array can produce retail's. Measured: moving `wtf` after `mtx`
+// 96.1 -> 96.0; hoisting `afStack_5C` + `wtf` above the getCurAnmFrameNo call
+// 96.1 -> 96.8 but the swap survives and the wtf materialisation moves ahead
+// of the call. Declaration-order permutations of `f`, `afStack_5C` and `wtf`
+// (six tried earlier) do not move it, and dropping `wtf` loses two
+// instructions retail has.
+// Open lead from validate-symbol-order: the map lists an UNUSED
+// `TPosition3<TMatrix34<SMatrix34C<f>>>::TPosition3()` in this TU, so one of
+// its matrix locals (this one, or copyFromShared's pair, or a local of the
+// unreconstructed UNUSED createCopyAnmMtx 0x15c / setScale 0x48) is a
+// TPosition3f rather than a raw Mtx -- which would also explain why the
+// scratch is taken through a separate MtxPtr. Spelling `afStack_5C` as
+// TPosition3f is codegen-identical here (96.1%, same five markers) but does
+// not define the symbol: JGPosition3.hpp's in-class empty default ctor is
+// elided, so whatever makes retail emit it lives in that shared header.
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 {
 	if (unk4C != EnemymanagerGetMActor(enemy)->getCurAnmIdx(ANM_TYPE_BCK))
