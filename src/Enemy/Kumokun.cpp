@@ -291,6 +291,14 @@ void TKumokun::bind()
 	mLinearVelocity = local_15C + local_150;
 }
 
+// TODO: literal-pool order. The target's .sdata2 runs 100.0f (@4644),
+// -30.0f (@5230), -10.0f (@5927), -100.0f (@6057), 50.0f (@6237),
+// 60.0f (@6421); ours runs -30, -10, 100, -100, 60, 50. So the 100.0f is
+// first requested too late (retail's earliest requester among
+// checkOnMovingRoof/Floor/Wall, initAttachPlane and init asks for it before
+// calcRootMatrix's -30.0f), and the 50.0f/60.0f pair is swapped: retail's
+// bind() asks for 50.0f before init() asks for 60.0f. Both need a code
+// restructure in those functions, not a constant change.
 bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
                                  const TBGCheckData** param_2,
                                  const JGeometry::TVec3<f32>& param_3,
@@ -1032,7 +1040,7 @@ void TKumokunManager::load(JSUMemoryInputStream& stream)
 
 	params->mSLAttackRadius.set(60);
 	params->mSLAttackHeight.set(50);
-	params->mSLDamageRadius.set(60);
+	params->mSLDamageRadius.set(65);
 	params->mSLDamageHeight.set(70);
 	TSmallEnemyManager::load(stream);
 }
