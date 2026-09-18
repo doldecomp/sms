@@ -1,18 +1,32 @@
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapData.hpp>
 
+// TODO: promote to TBGCheckData as `const TVec3<f32>& getNormal() const`.
+static inline const JGeometry::TVec3<f32>& MapArea_getNormal(const TBGCheckData* d)
+{
+	return d->mNormal;
+}
+
+// The two cross products are one reused two-element array: that is the only
+// spelling that gives retail's 0x38 frame (two separate arrays give 0x40 and
+// four scalars 0x30) with the instruction stream unchanged.
 static bool checkLinesCollision(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2,
                                 f32 x3, f32 z3)
 {
-	f32 c0 = (z1 - z0) * (x2 - x1) - (x1 - x0) * (z2 - z1);
-	f32 c1 = (z1 - z0) * (x3 - x1) - (x1 - x0) * (z3 - z1);
+	f32 cross[2];
 
-	if ((c0 >= 0.0f && c1 >= 0.0f) || (c0 < 0.0f && c1 < 0.0f))
+	cross[0] = (z1 - z0) * (x2 - x1) - (x1 - x0) * (z2 - z1);
+	cross[1] = (z1 - z0) * (x3 - x1) - (x1 - x0) * (z3 - z1);
+
+	if ((cross[0] >= 0.0f && cross[1] >= 0.0f)
+	    || (cross[0] < 0.0f && cross[1] < 0.0f))
 		return false;
 
-	f32 d0 = (z3 - z2) * (x0 - x3) - (x3 - x2) * (z0 - z3);
-	f32 d1 = (z3 - z2) * (x1 - x3) - (x3 - x2) * (z1 - z3);
-	if ((d0 >= 0.0f && d1 >= 0.0f) || (d0 < 0.0f && d1 < 0.0f))
+	cross[0] = (z3 - z2) * (x0 - x3) - (x3 - x2) * (z0 - z3);
+	cross[1] = (z3 - z2) * (x1 - x3) - (x3 - x2) * (z1 - z3);
+
+	if ((cross[0] >= 0.0f && cross[1] >= 0.0f)
+	    || (cross[0] < 0.0f && cross[1] < 0.0f))
 		return false;
 
 	return true;
@@ -38,20 +52,20 @@ static bool checkLinePolygonCollision(f32 x0, f32 z0, f32 x1, f32 z1,
 
 static bool pointIsInPolygon(f32 x, f32 z, TBGCheckData* data)
 {
-	if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-	        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
+	if ((data->getPoint1().z - z) * (data->getPoint2().x - data->getPoint1().x)
+	        - (data->getPoint1().x - x) * (data->getPoint2().z - data->getPoint1().z)
 	    < 0.0f) {
 		return false;
 	}
 
-	if ((data->mPoint2.z - z) * (data->mPoint3.x - data->mPoint2.x)
-	        - (data->mPoint2.x - x) * (data->mPoint3.z - data->mPoint2.z)
+	if ((data->getPoint2().z - z) * (data->getPoint3().x - data->getPoint2().x)
+	        - (data->getPoint2().x - x) * (data->getPoint3().z - data->getPoint2().z)
 	    < 0.0f) {
 		return false;
 	}
 
-	if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-	        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
+	if ((data->getPoint3().z - z) * (data->getPoint1().x - data->getPoint3().x)
+	        - (data->getPoint3().x - x) * (data->getPoint1().z - data->getPoint3().z)
 	    < 0.0f) {
 		return false;
 	}
@@ -68,17 +82,30 @@ static bool pointIsInGrid(f32 x, f32 z, f32 minX, f32 minZ, f32 maxX, f32 maxZ)
 	return false;
 }
 
+// TODO: 99.9%, zero instruction differences; retail's frame is 0x2c0 and ours
+// 0x1a0 (288 bytes of dead low region left). Measured levers, all with the
+// instruction stream unchanged or improved: routing pointIsInPolygon's twelve
+// point reads through getPoint1/2/3() is worth 296 bytes *and* the last
+// instruction differences (raw members: 0x78 / 95.7%); the fabricated
+// getNormal() level is worth 8; this body's own point reads are worth 16.
+// Saturated / rejected: a second (TU-static) forwarder level above
+// getPointN() is +0; raw members in checkLinePolygonCollision -16 and 87.4%;
+// named `const TVec3&` locals for the three points regress both helpers
+// (95.4% / 86.6%); pointIsInGrid taking the point by reference contradicts the
+// map's `pointIsInGrid__Fffffff` and gives 94.0%. The remaining 288 bytes
+// need a lever family we have not identified - note that retail references no
+// stack slot at all below 0x280.
 bool TMapCollisionData::polygonIsInGrid(f32 minX, f32 minZ, f32 maxX, f32 maxZ,
                                         TBGCheckData* data)
 {
-	if (data->mNormal.y < 0.0f) {
+	if (MapArea_getNormal(data).y < 0.0f) {
 		return true;
 	}
 
-	if (pointIsInGrid(data->mPoint1.x, data->mPoint1.z, minX, minZ, maxX, maxZ)
-	    || pointIsInGrid(data->mPoint2.x, data->mPoint2.z, minX, minZ, maxX,
+	if (pointIsInGrid(data->getPoint1().x, data->getPoint1().z, minX, minZ, maxX, maxZ)
+	    || pointIsInGrid(data->getPoint2().x, data->getPoint2().z, minX, minZ, maxX,
 	                     maxZ)
-	    || pointIsInGrid(data->mPoint3.x, data->mPoint3.z, minX, minZ, maxX,
+	    || pointIsInGrid(data->getPoint3().x, data->getPoint3().z, minX, minZ, maxX,
 	                     maxZ)) {
 		return true;
 	}
