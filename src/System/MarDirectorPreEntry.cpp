@@ -39,6 +39,21 @@ static const char* SMS_NO_MEMORY_MESSAGE = "メモリが足りません\n";
 // the push_back argument registers), a named `JDrama::TRect` for the render
 // rect (+0x10 and five instructions), and binding `search2`'s result at the
 // fifth site too (0xf0).
+//
+// Batch 131 showed the 4 bytes are an **ordering** difference, not a missing
+// pool item: the frame has no slack, so every +4 of pool immediately rounds the
+// frame to 0xf0 (measured with a 4-byte non-trivial probe struct -- +4 per
+// expansion inside a level, so 0x10 across the four search sites, and +8 of
+// frame when placed in the single-expansion `search2` level; a probe in the
+// caller's own body, first or last, is absorbed for free, which reconfirms
+// batch 123's trailing-dead-scalar rule). Retail therefore has 12 bytes above
+// the buffer where we have 16, with the same frame and the same seven
+// callee-saved registers. Also +0 here: a bound-`search2`-plus-cast level at
+// any one of the four sites (codegen-identical to the binding `search<T>`
+// level), `indirectSheen` typed `JDrama::TNameRef*` with the cast moved to the
+// `push_back`, the cast folded into `PreEntrySearch2`, an explicit
+// `(JDrama::TViewObj*)` on the `new`, and a `static inline` level returning the
+// render rect by value.
 static inline JDrama::TViewObj* PreEntrySearch(const char* name)
 {
 	JDrama::TViewObj* obj
