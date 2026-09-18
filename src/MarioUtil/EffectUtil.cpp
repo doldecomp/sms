@@ -71,11 +71,37 @@ bool SMS_EmitRippleSea(MtxPtr arg0, void* arg1)
 //     instruction sequence identical. Declaration order does not touch it,
 //     and the three alternative cross() bodies are ruled out tree-wide in
 //     JGVec3.hpp (this function is one of the sites they regress).
+// Parked binding level (batch 110's shape), TU-prefixed so a header batch can
+// give it its real name later. Measured in SMS_EmitSinkInPollutionEffect: it is
+// +8 of low region per expansion with no instruction change, and its two
+// expansions there are 16 of the 20 low bytes that function was short.
+static inline TMarioParticleManager* EffectUtilGetParticleManager()
+{
+	TMarioParticleManager* manager = gpMarioParticleManager;
+	return manager;
+}
+
+// TODO: 99.1%. Frame and every stack displacement are exact as of batch 115;
+// the whole residue is a three-way float-register rotation inside the two
+// cross products. Retail ranks each cross result descending by component
+// (B.x f31, B.y f30, B.z f29; C.x f27, C.y f26, C.z f25) and we rank them
+// ascending (B.x f29 ... B.z f31, C.x f25 ... C.z f27), with the 0.0f constant
+// correctly in f28 between the two groups; the instruction stream is otherwise
+// identical.
+// How the frame was landed (it was 20 low bytes short and 4 named bytes long):
+// `SMSGetMarDirector()` over the raw `gpMarDirector` read is +4 of low region
+// (it is +0 on its own -- levers interact, so measure it last), and the parked
+// EffectUtilGetParticleManager() binding level above is +8 per emit site.
+// Rejected: spelling the first cross out with its three temporaries and
+// storing z, y, x (98.2, and it moves the 0.0f constant into f31); declaring
+// `C` before the matrix (moves the matrix to 0x3c); normalizing B before C
+// (89.5, +5 instructions); an unnamed `TVec3<f32>(1, 0, 0)` argument in place
+// of the named `fwd` (frame-neutral, -12 on the matrix, registers unchanged).
 void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
                                    const JGeometry::TVec3<float>& arg1,
                                    bool arg2)
 {
-	if ((gpMarDirector->unk58 % 20) != 0)
+	if ((SMSGetMarDirector()->unk58 % 20) != 0)
 		return;
 
 	using namespace JGeometry;
@@ -106,10 +132,11 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
 	matrix.mMtx[2][3] = arg0.z;
 
 	if (arg2) {
-		gpMarioParticleManager->emitAndBindToMtx(0x1D8, matrix.mMtx, 2U,
-		                                         nullptr);
+		EffectUtilGetParticleManager()->emitAndBindToMtx(0x1D8, matrix.mMtx,
+		                                                 2U, nullptr);
 	}
-	gpMarioParticleManager->emitAndBindToMtx(0x1D9, matrix.mMtx, 2U, nullptr);
+	EffectUtilGetParticleManager()->emitAndBindToMtx(0x1D9, matrix.mMtx, 2U,
+	                                                 nullptr);
 }
 
 // Declared locally rather than by including <Player/MarioAccess.hpp>, which
