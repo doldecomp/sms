@@ -85,6 +85,15 @@ void TMapWireActor::init(TMapWireActorManager* manager)
 	group->getChildren().push_back(this);
 }
 
+// The pragma is load-bearing and costs one map symbol on purpose. Removing it
+// lets MWCC expand this constructor at its two sites, which emits the map's
+// UNUSED `__ct__10TTakeActorFPCc` (0x50) and brings
+// `__ct__20TMapWireActorManagerFP10TTakeActor` to its map size of 0x154 -- but
+// `TMapWireManager::loadAfter` then falls from exact to 81.3% and the UNUSED
+// `entry` grows from 0x140 to 0x160 against the map's 0x144. One exact
+// function is worth more than two UNUSED sizes, so the pragma stays and
+// `__ct__10TTakeActorFPCc` stays MISSING in validate-symbol-order. A real fix
+// needs the inline decision per call site, which `dont_inline` cannot express.
 #pragma dont_inline on
 TMapWireActor::TMapWireActor(const char* name)
     : TTakeActor(name)
