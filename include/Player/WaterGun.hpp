@@ -285,7 +285,12 @@ public:
 	/* 0x1C8D */ u8 mPreviousPressure;
 	/* 0x1C8E */ u8 unk1C8E;
 	/* 0x1C8F */ u8 unk1C8F;
-	/* 0x1C90 */ JGeometry::TVec3<f32> mEmitPos[4];
+	/* 0x1C90 */ JGeometry::TVec3<f32> mEmitPos[3];
+	// Mario's position, latched in init(). Not part of mEmitPos: the
+	// ctor's __construct_array only runs TVec3's ctor three times, and
+	// init() copies it word-wise, i.e. through Vec's aggregate
+	// assignment rather than a TVec3 member function.
+	/* 0x1CBC */ Vec unk1CBC;
 	/* 0x1CC0 */ s16 unk1CC0;
 	/* 0x1CC2 */ s16 unk1CC2;
 	/* 0x1CC4 */ s16 unk1CC4;

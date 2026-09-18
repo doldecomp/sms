@@ -1245,11 +1245,11 @@ BOOL TMario::pulling()
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 
-	if (!(unk108->mInput & 0x400)) {
+	if (!(unk108->mInput & 0x200)) {
 		((THitActor*)mHeldObject)->receiveMessage(this, 8);
 		mHeldObject = nullptr;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
-		return changePlayerStatus(0xc0022f, 0, false);
+		return changePlayerStatus(0x0C00022F, 0, false);
 	}
 
 	if (mInput & 0x2) {
@@ -1266,7 +1266,7 @@ BOOL TMario::pulling()
 
 	JGeometry::TVec3<f32> pos = mPosition;
 	s16 backAngle             = mFaceAngle.y + 0x8000;
-	s16 diff                  = mIntendedYaw - backAngle;
+	s16 diff                  = backAngle - mIntendedYaw;
 	f32 cosF                  = JMASCos(diff);
 	if (cosF < 0.0f)
 		cosF = 0.0f;
@@ -1278,12 +1278,12 @@ BOOL TMario::pulling()
 	f32 rateV, rateH;
 	getCurrentPullParams(&rateV, &rateH);
 
-	pos.x += cosF * rateH * JMASSin(backAngle)
-	         - sinF * rateV * JMASCos(backAngle);
-	pos.z += cosF * rateH * JMASCos(backAngle)
-	         + sinF * rateV * JMASSin(backAngle);
+	pos.x += rateV * (cosF * JMASSin(backAngle))
+	         - rateH * (sinF * JMASCos(backAngle));
+	pos.z += rateV * (cosF * JMASCos(backAngle))
+	         + rateH * (sinF * JMASSin(backAngle));
 
-	if (((THitActor*)mHeldObject)->receiveMessage(this, 0xa) == 1) {
+	if (mHeldObject->moveRequest(pos) == 1) {
 		mPosition = pos;
 	}
 
@@ -1302,6 +1302,9 @@ BOOL TMario::pulling()
 
 	default:
 		JGeometry::TVec3<f32> delta;
+		// TODO: retail reloads mActorType for the second test (the const
+		// getActorType() lets MWCC CSE it for us); isActorType() instead
+		// costs 12 bytes of frame, so the ternary form stays.
 		if ((mHeldObject->getActorType() == 0x8000006 ? true : false)
 		    || (mHeldObject->getActorType() == 0x8000008 ? true : false)) {
 			delta = pos - mPrevPosition;
