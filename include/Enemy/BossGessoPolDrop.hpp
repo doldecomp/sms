@@ -21,6 +21,9 @@ public:
 		unk54 = param_2;
 	}
 	int getUnk58() const { return unk58; }
+	// The accessor level is load-bearing in move(): with the raw member the
+	// frame is 8 bytes short and every local sits 4 low.
+	const JGeometry::TVec3<f32>& getVelocity() const { return unk44; }
 
 public:
 	/* 0x44 */ JGeometry::TVec3<f32> unk44;

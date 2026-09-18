@@ -25,13 +25,13 @@ TBGPolDrop::TBGPolDrop(const char* name)
 
 void TBGPolDrop::move()
 {
-	if (!unk58)
+	if (!getUnk58())
 		return;
 
 	JGeometry::TVec3<f32> local_14 = mPosition;
-	local_14 += unk44;
+	local_14 += getVelocity();
 
-	if (unk58 == 1) {
+	if (getUnk58() == 1) {
 		unk44.y -= 0.2f;
 		const TBGCheckData* checkData;
 		f32 dVar3 = gpMap->checkGround(local_14.x, mPosition.y, local_14.z,
@@ -49,7 +49,7 @@ void TBGPolDrop::move()
 			unk44.zero();
 			if (!unk50->checkCurBckFromIndex(12)) {
 				unk50->setBckFromIndex(12);
-				unk50->setBckFromIndex(13);
+				unk54->setBckFromIndex(13);
 			}
 
 			gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ODANHIT_A, &local_14,
@@ -67,7 +67,7 @@ void TBGPolDrop::move()
 		                                     &local_14.z, 80.0f))
 			unk58 = 0;
 
-	} else if (unk58 == 2 && unk50->curAnmEndsNext()) {
+	} else if (getUnk58() == 2 && unk50->curAnmEndsNext()) {
 		unk58 = 0;
 	}
 
@@ -84,6 +84,23 @@ void TBGPolDrop::launch(const JGeometry::TVec3<f32>& param_1,
 	unk58 = 1;
 }
 
+// TODO: 100.0% but not exact: the MsGetRotFromZaxis return temporary sits at
+// 0x5c against retail's 0x64, with the frame already 0xd0 and every other slot
+// (the local_60 matrix at 0x70, the three float-to-int pairs at 0xa0/0xa8/0xb0,
+// the r27-r31 save block at 0xbc) on the nose. So retail's temporary region is
+// 8 bytes fuller below that temporary and ours leaves an 8-byte hole at
+// 0x68-0x6f, which is most likely the pair of reserved slots for the named `s`
+// and `c` below.
+// Measured, all with the temporary's offset in brackets: getScaling() on
+// either setBaseScale lands it exactly [0x64] but costs +8 of frame;
+// getMActor2() for unk54 is [0x60] +8; getUnk58() at all three sites [0x68]
+// +16; getRotation()/getPosition() in the MsMtxSetXYZRPH arguments [0x68] +16;
+// a named `J3DModel* model` before getBaseTRMtx() is [0x54] -8; getScaling()
+// plus that named model is [0x58] with the right frame. Worth nothing:
+// SMSGetPollution(), MsSin/MsCos over JMASin/JMACos, getUnk58() on the entry
+// guard alone. Actively worse: getVelocity() in MsGetRotFromZaxis (-0.3), a
+// named TVec3 for its result (-4.6), and dropping either of the named `s`/`c`
+// in favour of repeating JMASin/JMACos (the CSE goes away: -6 and -13).
 void TBGPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!unk58)
