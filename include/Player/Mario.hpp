@@ -1313,6 +1313,16 @@ public:
 		return mPrevPosition;
 	}
 
+	// Fabricated name. The accessor level is load-bearing: TMario::
+	// checkPumpEnable is instruction-identical to retail with either
+	// spelling, but retail's frame is 0x50 against 0x40 for the raw member,
+	// and the level buys two 8-byte inline-expansion slots in the low region.
+	// It saturates at two, so checkPumpEnable routes only its first four
+	// reads through it; using it for the two nozzle-switch predicates as well
+	// makes MWCC reload mSwitchToSecondNozzleSpeed instead of reusing f1
+	// across the pair.
+	TWaterGun* getFludd() const { return mWaterGun; }
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;
