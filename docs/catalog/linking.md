@@ -109,3 +109,7 @@ Matches 100% but shifts the DOL.
 ## Header round 22 (2026-09-18): explicit instantiation order
 
 - **An explicit `template class` instantiation emits its members in reverse *declaration* order; definition order in a `.tpp` is inert.** MarNameRefGen's `validate-symbol-order` went from 3 MISSING + ORDER to PASS with 18/18 UNUSED sizes by (a) ordering the `template class` directives to the map's reversed `.text` layout, (b) reordering `TViewObjPtrListT`'s member declarations in `JDRViewObjPtrList.hpp` to `load, loadSuper, loadAfter, loadAfterSuper, searchF, perform` (safe: only the two new virtuals' relative order matters), (c) adding `template class TNameRefPtrAryT<TStageEventInfo>;` whose members are UNUSED in the map. All byte-neutral.
+
+## Closure batch 139 (2026-09-18): alignment attribute
+
+- **A 100/100 unit that breaks the DOL with a *shorter* section in `objdump -h` is a missing alignment attribute**: MapObjGrass's `color_table` (`.rodata`, `align:32` in symbols.txt, feeds `GXSetArray`) needs `__attribute__((aligned(32)))`; the hole before it is invisible to objdiff. Check symbols.txt's `align:` for every data object in a unit that will not link.
