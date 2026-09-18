@@ -213,6 +213,13 @@ bool TMapObjBaseManager::canAppear(const TMapObjBase* param_1,
 TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
                                                bool param_5)
 {
+	// TODO: instruction-exact and frame-exact (0x58), but `checkData`'s slot
+	// is at 0x34 where the ROM has 0x30. The named block's top is 0x38, so
+	// the ROM declared one more 4-byte local above `checkData` and paid for
+	// it with 4 fewer bytes of low region ("+4 named / -4 low", the mirror
+	// of the MapEventDolpic/MapObjTrap family). A dead 4-byte local here is
+	// +8 of frame, not a move, so there is no slack: the lever has to remove
+	// one low-region level (getObj/canAppear) at the same time.
 	f32 y2;
 	const TBGCheckData* checkData;
 	if (param_5) {
@@ -310,6 +317,25 @@ static TMapObjBase* newUniqueObjByName(const char* name)
 	else if (strcmp(name, "JuiceBlock") == 0)
 		return new TJuiceBlock;
 	else if (strcmp(name, "TelesaBlock") == 0)
+		// TODO: header items (measured, zero regressions, DOL unchanged;
+		// all three together take this function 97.25 -> 100 and restore
+		// the map's local set<f>__Q29JGeometry8TVec3<f>Ffff):
+		//  1. include/MoveBG/MapObjBlock.hpp - TTelesaBlock's ctor takes a
+		//     defaulted name (`TTelesaBlock(const char* name =
+		//     "テレサブロック") : TJuiceBlock(name)`). The defaulted
+		//     argument is one extra inline level, which is what puts the
+		//     3-statement TVec3::set<f> at depth 4 and makes it the ROM's
+		//     `bl`, and it also binds the `this` the ROM spills to 0x30(r1).
+		//  2. include/MoveBG/MapObjPinna.hpp - TMerryPole::unk138 is
+		//     TPosition3f, not TMtx34f: the ROM `bl`s the empty
+		//     SMatrix34C<f> ctor, i.e. that ctor sits at depth 5.
+		//  3. include/JSystem/JGeometry/JGMatrix34.hpp - identity()'s nine
+		//     zero stores are ONE assignment chain, not four statements;
+		//     the ROM keeps every zero in f0 where four statements need two
+		//     `fmr`s. Written order is the reverse of the store order:
+		//     ref(1,0) = ref(2,0) = ref(0,1) = ref(2,1) = ref(0,2) =
+		//     ref(1,2) = ref(0,3) = ref(1,3) = ref(2,3) = 0.0f;
+		//     (also closes TMapObjFlag::TMapObjFlag).
 		return new TTelesaBlock;
 	else if (strcmp(name, "lean_block") == 0)
 		return new TLeanBlock("傾くブロック");
