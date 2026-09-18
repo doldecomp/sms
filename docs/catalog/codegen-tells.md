@@ -1016,3 +1016,48 @@ Census: 531 retail `bl`s to the seven `TVec3<f>` members over 332 (function, mem
 - **A callee-saved-FPR ranking measured on a TU-local clone is a property of the clone's expansion, not of the member's declaration order**: `cross()` declared z, y, x loses tree-wide (97.40 -> 97.39, `SMS_EmitSinkInPollutionEffect` itself 99.06 -> 97.62, ~25 losses vs 8 tenth-point gains). Reverted; `cross()` is the only multi-temporary TVec3 member. Batch 131's rule is retired.
 - **A three-statement body written at the site is not the same as calling a helper with that body: the level is the point.** `TSpineEnemy::isReachedToGoal` is 60.80 with the copy-and-subtract inline and 99.74 through an in-class `static f32 calcDist(TVec3<f32> a, const TVec3<f32>& b)` (no symbol emitted, none in the map); fishoid 98.79 -> 99.93.
 - **Return-type ladder for a predicate accessor, read off the caller's test**: `clrlwi. rN, 24` = `bool`, `cmplwi rN, 0` = `u32`, `cmpwi rN, 0` = `BOOL`/`int`. `checkLiveFlag2` is `BOOL` (+5 functions, `TWalker::bind` proved it); `TBaseNPC::perform`'s two sites keep retail's `clrlwi` only with the raw `mLiveFlag & flag ? true : false` written out (all named-local forms lose). `BOOL isAirborne()` breaks `TGesso::setBehavior` and `TNerveMameGessoDamage::execute`.
+
+## Research batch 146: the inline budget is a table, and `std::sqrtf` was never a refusal
+
+The "weak body retail `bl`s at depth 1 where we expand it" class had two untested explanations in the queue.
+Both are wrong, and probing them produced the exact budget table instead, which closes the `std::sqrtf` half of the class outright.
+
+**Measured budget, statements that still expand, by the depth the call is reached at.**
+Chains of one-statement `return callee(x);` forwarders as the levels, game flags, `warn_notinlined on`:
+
+| definition form | linkage | depth 1 | 2 | 3 | 4 | 5 |
+| --- | --- | --- | --- | --- | --- | --- |
+| namespace-scope `inline`, in-class, or out-of-class with `inline` | weak / none | **unlimited** | 9 | 6 | 2 | 0 |
+| namespace-scope plain, or out-of-class plain | global | 14 | 9 | 6 | 2 | 0 |
+
+So the `inline` keyword buys **only depth 1**; from depth 2 down a header inline and a plain function share one budget.
+A chain of six forwarders measures nothing: the outermost forwarder stops being inlined itself and the callee is back at a shallow depth relative to it.
+
+**`std::sqrtf` is an ordinary depth measurement, not a refusal.**
+`math.h`'s body costs exactly 8 statements (calibrated by padding it with `n` cost-1 statements: depth 2 flips to `bl` at `n = 2`, and the depth-2 budget is 9).
+It therefore expands at depths 1 and 2 and is called from depth 3 — and every ROM `bl sqrtf__3stdFf` site is simply two inline levels above the call, exactly like the `TVec3<f>` family in batch 104.
+The body itself was already byte-exact: compiled out of line it is the target's 25 instructions in order, with `_half` on the lower `.sdata2` id.
+Corollary for the four ROM sites (MAnmSound, MSoundSE, two in MSoundMainSide): the ROM also *expands* the same body at depth 1 in MarioCheckCol, MarioAutodemo, JALCalc, JUTGamePad, J3DModel, J3DCluster, JPAMath and JAISound, so nothing about the declaration is special and the header must not be touched.
+
+**Refuted for the body cost.** Raising the cost into the 10-14 window that would make retail's own `getDistFromMario` (UNUSED 0x104, expanded) refuse at depth 2 needs 2+ statements that generate no code, and no such spelling exists.
+Naming `guess * guess` (cost 11) is byte-identical out of line *and* refuses at depth 2, but the named temporary survives every depth-1 expansion: tree-wide it costs `JALCalc::getDist`, `JUTGamePad::CStick::update`, `J3DModel::calcBBoard`, `JAISound::setPositionDopplarCommon`, `TMario::throwMario` and `TMario::hangPole` their exact match and breaks the DOL.
+Naming `_half * guess` instead reverses the two `.sdata2` literals and the two leading `fmul`s.
+The tail is `return x;`, not MSL's `else if (x == 0) ... NAN ... HUGE_VALF` triple (which emits a compare the ROM does not have); `else` is free and `double dx = x;` is +1.
+
+**Hypothesis 1, inline asm: dead.** A statement-level `asm { }` block inside an ordinary function is *inlinable* (batch 134's "function level assembler can not be inlined" is narrower than it reads).
+A function-level `asm` function is refused but emits **global**, not weak; only `inline asm` gives weak plus `bl`.
+Either way an `asm` body cannot be it: all four target bodies carry compiler prologues and compiler-numbered `@NNNN@sda21` literal-pool references, and ours reproduce them from plain C++.
+
+**Hypothesis 2, non-trivial member construction: dead.** A ctor that must emit `__construct_array` for a class-type member array inlines, as do a virtual base, a local with a destructor, a local static of class type (int or class), a jump-table `switch`, a call through a function pointer, `new[]`, a bit-field write, a union local, a by-value class return, a `volatile` local, a large local array, a local class, a `throw()` spec, a virtual call in the ctor, and every base-ctor arrangement tried: external base ctor, internal base ctor, multiple polymorphic bases with an `@32@` thunk, and a second base with its own ctor.
+
+**The only constructs MWCC 1.2.5 actually refuses** (each gives weak plus `bl` and, with `warn_notinlined on`, "inline function call '...' not inlined"): **direct recursion**, **mutual recursion** (the second of the pair takes the `bl`, the first still expands), **`...` varargs**, and **`inline asm`**.
+A refusal does not propagate: a caller containing a refused inner call is still inlined itself.
+None of them fits `__ct__11TTelesaSlotFPCc`, `__ct__6TFenceFPCc` or `__ct__9TSunGlassFQ28JUtility6TColorPCc`, whose mangled names exclude varargs and whose bodies are compiler-generated.
+
+**Also refuted for the ctor family.** There is no cumulative per-caller budget: 800 expansions of an 8-statement ctor in one function all inline, so `getNameRef_MapObj`'s 14 KB is not the cause (caller frames across the six sites run 0x50 to 0x178, no pattern).
+Definition order is inert in every form — a free `inline` defined after the caller, a member defined out of class after the caller, and `inline` on only the declaration or only the definition all expand.
+In-class and out-of-class-`inline` members are unlimited at depth 1, so the 15-statement floor never applies to them; a 400-statement `inline` still expands at depth 1.
+
+**Still open, and now a three-member class.** `__ct__11TTelesaSlotFPCc` (weak 0x98) and `__ct__6TFenceFPCc` (weak 0x4c) in `getNameRef_MapObj`, and `__ct__9TSunGlassFQ28JUtility6TColorPCc` (weak) twice in `getNameRef`; `__ct__Q26JDrama8TNameRefFPCc` is `bl`ed once in the same factory and expanded (via `calcKeyCode`) elsewhere.
+Every other ctor `bl`ed in that factory is `global`, i.e. defined in its own `.cpp`, so only these four are anomalies.
+`TFence`'s body is one member store over an external base ctor — two statements — so no budget, size or content reading can reach it.

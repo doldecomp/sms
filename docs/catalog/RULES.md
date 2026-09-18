@@ -23,6 +23,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 ## Inlining decisions
 
 - The budget is a statement **cost at the reached depth**, never bytes: plain 14 / 9 / 6 / 2 / never at depths 1-5, `inline` unlimited at depth 1 (codegen-tells.md: "Inlining").
+- The `inline` keyword buys **only depth 1**: from depth 2 down a weak header body and a plain function share 9 / 6 / 2 / never, and in-class members never hit the 15-statement floor (codegen-tells.md: "batch 146").
+- Only recursion, mutual recursion, `...` varargs and `inline asm` are true inline refusals; a statement-level `asm {}` block still inlines, and plain `asm` functions are global, not weak (codegen-tells.md: "batch 146").
 - Cost: 1 per expression statement or initialised declaration, 1 per `else`, a loop 1 + init + increment + 1 (codegen-tells.md: "`bosseel`/`fireWanwan`").
 - Free: uninitialised declaration, `;`, `{}`, `return <local>;`, splitting `f32 x = e;`, statements from a callee's own inlines (codegen-tells.md: "Inlining").
 - Depth counts from the innermost expression; an inlined call's argument is a level, an out-of-line call's is not (codegen-tells.md: "sweep 106").
@@ -129,7 +131,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - not: a user `~TVec3() {}` to collapse the prefix — prefix 0 but total fuzzy 97.36 -> 95.87 (frame-gaps.md: "batch 119").
 - Per-call-site inline splits with no lever: the `MapObjBall`/`amiNoko` `sqrt` sites, Koopa's five identical blocks (codegen-tells.md: "Inlining").
 - `theNerve()` expansion is emergent per function from identical source: a 54-79% residual with every instruction matching (codegen-tells.md: "`BathtubKiller`").
-- "Weak plus `bl` at depth 1 from a plain function" (`TTelesaSlot`, `std::sqrtf`): every callee, caller and site property probed, all inline (codegen-tells.md: "batch 104").
+- "Weak plus `bl` at depth 1" is now only the three factory ctors (`TTelesaSlot`, `TFence`, `TSunGlass`); `std::sqrtf` was a depth-3 measurement and closed, and `__construct_array`, inline asm and a per-caller budget are all refuted (codegen-tells.md: "batch 146").
 - The JGadget iterator temp-pool **grouping** on `TSeal::init`, `TMirrorActor::init`, `TPerformList::perform` is not the conversion lever (frame-gaps.md: "batch 133").
 
 ## US-region differences
