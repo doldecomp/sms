@@ -1365,11 +1365,13 @@ void TEnemyMario::emGetPad()
 // TODO: Reconstruct the retail deferred-inline boundaries that emit the
 // TMatrix34/TRotation3 constructors and TPathNode::getPoint without changing
 // shared JGeometry/Graph code generation.
-// TODO: retail's consider() has a 0x50-byte larger frame and *calls* three
-// header inlines this TU never emits: TGraphTracer::getGraph() twice and
-// TPathNode::getPoint() once (both weak in retail's object, both MISSING in
-// ours). That is the caller-size family, so they should come back on their own
-// once the missing locals are found; do not add wrapper levels for them.
+// TODO: retail's consider() *calls* three header inlines this TU never emits:
+// TGraphTracer::getGraph() twice and TPathNode::getPoint() once, both weak in
+// retail's object and both MISSING from ours. It is not the caller-size family:
+// our frame is larger (0x250 against retail's 0x220). The `bl`s go to the
+// **const** overload getGraph__12TGraphTracerCFv, which a const receiver would
+// select, so the lead is that retail reaches the graph through a const tracer
+// here; why a const header inline would then stay out of line is unexplained.
 void TEnemyMario::consider()
 {
 	switch (mEMDoing) {
