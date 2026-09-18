@@ -35,6 +35,16 @@ TLightCommon::TLightCommon(const char* name)
 	mShininess = 50.0f;
 }
 
+// TODO: 97.7%. Two residues. (1) 32 bytes of frame too much (0xc0 vs 0xa0),
+// all of it low region: our named block has the same shape (the GXGetLightColor
+// out-parameter 0x10 below the register saves in both). (2) the ROM
+// round-trips the first `unk29` colour through a 4-byte temporary at 0x18(r1)
+// (`stw r0, 0x18(r1); lwz r0, 0x18(r1); stw r0, 0x29(r30)`) while the second
+// stores straight to 0x2d -- the signature of one extra inline level on the
+// FIRST amb read only (the batch-91 "+4 low goes on the earliest expansion"
+// family). JDRLighting.hpp's TAmbColor::getColor() returns
+// `const JUtility::TColor&`; a by-value return there would bind that
+// temporary, but it is a shared header and 23 other TUs read it.
 void TLightCommon::loadAfter()
 {
 	mAmbAry    = (JDrama::TAmbAry*)JDrama::TNameRefGen::search2(
@@ -44,8 +54,8 @@ void TLightCommon::loadAfter()
 	mLightPos  = &mLightAry->getLight(0)->mPosition;
 	mShininess = 50.0f;
 	for (int i = 0; i < 4; ++i) {
-		unk31[i] = mLightAry->getLight(mLightIndex + i)->getColor();
-		unk44[i] = mLightAry->getLight(mLightIndex + i)->mPosition;
+		unk31[i] = mLightAry->getLight(i + mLightIndex)->getColor();
+		unk44[i] = mLightAry->getLight(i + mLightIndex)->mPosition;
 	}
 	unk29[0] = mAmbAry->getAmb(mAmbIndex)->getColor();
 	unk29[1] = mAmbAry->getAmb(mAmbIndex + 1)->getColor();
@@ -88,6 +98,14 @@ Vec* TLightCommon::getLightPosition(int index)
 	return &mLightAry->getLight(index)->mPosition;
 }
 
+// TODO: 99.1%, frame now exact (the ROM reuses one `Vec pos` for both
+// MTXMultVec results -- slot 0x3c is written twice). What is left is a pure
+// callee-saved rotation (ROM this=r29/gfx=r26/viewMtx=r28/manager=r27, ours
+// r28/r29/r27/r26) plus the two `addi`s of the inlined setEffectLight's
+// MTXMultVec in the opposite order (ROM computes the view matrix argument
+// first, i.e. left to right). Rejected: a named `MtxPtr viewMtx` inside
+// setEffectLight (+4 low, breaks the frame, and leaves its UNUSED size at
+// 0xf4 vs the map's 0xf8); a `getShininess()` accessor (97.1%).
 void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 {
 	ReInitializeGX();
@@ -104,10 +122,9 @@ void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 
 	gpLightManager->setEffectLight(gfx, &light);
 
-	Vec spos;
-	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &spos);
-	VECNormalize(&spos, &spos);
-	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
+	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &pos);
+	VECNormalize(&pos, &pos);
+	GXInitSpecularDir(&light, -pos.x, -pos.y, -pos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
 	GXInitLightShininess(&light, mShininess);
 	GXLoadLightObjImm(&light, GX_LIGHT2);
@@ -161,10 +178,9 @@ void TLightMario::setLight(const JDrama::TGraphics* gfx, int index)
 
 	gpLightManager->setEffectLight(gfx, &light);
 
-	Vec spos;
-	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &spos);
-	VECNormalize(&spos, &spos);
-	GXInitSpecularDir(&light, -spos.x, -spos.y, -spos.z);
+	MTXMultVec(gfx->getViewMtx(), getLightPosition(lightIndex), &pos);
+	VECNormalize(&pos, &pos);
+	GXInitSpecularDir(&light, -pos.x, -pos.y, -pos.z);
 	GXInitLightColor(&light, getLightColor(lightIndex));
 	GXInitLightShininess(&light, mShininess);
 	GXLoadLightObjImm(&light, GX_LIGHT2);
@@ -278,11 +294,32 @@ void TLightWithDBSet::resetLightDrawBuffer()
 	unk18 = nullptr;
 }
 
-void TLightWithDBSet::getOpaDrawBuffer(int) { }
+// UNUSED in the map at 0x28/0x28/0x20. All three are exactly four
+// instructions longer than the bare indexed read, and that shared prefix is
+// the `index > unk1C` clamp changeLightDrawBuffer spells out for itself.
+// Nothing in the retail image reaches them (changeLightDrawBuffer duplicates
+// their bodies), so they cannot be makeDrawBuffer's frame lever: the clamp
+// would add four instructions per site there.
+J3DDrawBuffer* TLightWithDBSet::getOpaDrawBuffer(int index)
+{
+	if (index > unk1C)
+		index = 0;
+	return unk10[index]->getOpaDbo()->getDrawBuffer();
+}
 
-void TLightWithDBSet::getXluDrawBuffer(int) { }
+J3DDrawBuffer* TLightWithDBSet::getXluDrawBuffer(int index)
+{
+	if (index > unk1C)
+		index = 0;
+	return unk10[index]->getXluDbo()->getDrawBuffer();
+}
 
-void TLightWithDBSet::getLightDrawBuffer(int) { }
+TLightDrawBuffer* TLightWithDBSet::getLightDrawBuffer(int index)
+{
+	if (index > unk1C)
+		index = 0;
+	return unk10[index];
+}
 
 int TLightWithDBSet::getLightIndex(const char* name)
 {
@@ -300,6 +337,16 @@ int TLightWithDBSet::getAmbIndex(const char* name)
 	return -1;
 }
 
+// TODO: all four makeDrawBuffer bodies are instruction-exact and exactly 32
+// bytes of low region short (0x88/0x78 vs 0xa8/0x98). Measured levers, all
+// instruction-neutral: `getLightDrawBuffer(i)` over `unk10[i]` at the four
+// loop sites is +8 and saturates; a `getLight()` accessor over `->mLight` is
+// +8 per site but only lands 0xa8 for the arbitrary subset {mLightIndex,
+// loadAfter} (60 of 256 combinations searched, no uniform spelling reaches
+// it), so it is not the answer. The clean candidates left are the two UNUSED
+// carriers this function expands, getLightIndex/getAmbIndex (0x84 each, both
+// size-exact): one dead 12-byte non-trivial local in each is +16 per
+// expansion = exactly 32, but nothing in a strcmp loop wants a vector.
 void TPlayerLightWithDBSet::makeDrawBuffer()
 {
 	static const char lightName[] = "太陽（プレイヤー）";

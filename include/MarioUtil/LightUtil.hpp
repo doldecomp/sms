@@ -150,9 +150,9 @@ public:
 
 	int getAmbIndex(const char*);
 	int getLightIndex(const char*);
-	void getLightDrawBuffer(int);
-	void getXluDrawBuffer(int);
-	void getOpaDrawBuffer(int);
+	TLightDrawBuffer* getLightDrawBuffer(int);
+	J3DDrawBuffer* getXluDrawBuffer(int);
+	J3DDrawBuffer* getOpaDrawBuffer(int);
 	void resetLightDrawBuffer();
 	void changeLightDrawBuffer(int);
 	void addChildGroupObj(JDrama::TViewObjPtrListT<JDrama::TViewObj>*);
