@@ -35,12 +35,14 @@ void TMapObjGrassGroup::drawNear() const
 	int iVar7     = 0;
 	const Vec& dv = TMapObjGrassManager::mDrawVec;
 	for (int i = 0; i < unk68; ++i) {
-		f32 midx = unk6C[i].x + gpMapObjGrassManager->unk20[iVar7];
-		GXPosition3f32(unk6C[i].x - dv.x, mPosition.y, unk6C[i].z - dv.z);
+		f32 x    = unk6C[i].x;
+		f32 z    = unk6C[i].z;
+		f32 midx = x + gpMapObjGrassManager->unk20[iVar7];
+		GXPosition3f32(x - dv.x, mPosition.y, z - dv.z);
 		GXColor1x8(1);
-		GXPosition3f32(midx, unk6C[i].y, unk6C[i].z);
+		GXPosition3f32(midx, unk6C[i].y, z);
 		GXColor1x8(0);
-		GXPosition3f32(unk6C[i].x + dv.x, mPosition.y, unk6C[i].z + dv.z);
+		GXPosition3f32(x + dv.x, mPosition.y, z + dv.z);
 		GXColor1x8(1);
 
 		++iVar7;
@@ -59,12 +61,14 @@ void TMapObjGrassGroup::drawFar() const
 	int iVar7        = 0;
 	const S16Vec& dv = TMapObjGrassManager::mDrawVecS16;
 	for (int i = 0; i < unk68; ++i) {
-		s16 midx = unk70[i].x + gpMapObjGrassManager->unk24[iVar7];
-		GXPosition3s16(unk70[i].x - dv.x, unk70[i].y, unk70[i].z - dv.z);
+		s16 x    = unk70[i].x;
+		s16 z    = unk70[i].z;
+		s16 midx = x + gpMapObjGrassManager->unk24[iVar7];
+		GXPosition3s16(x - dv.x, unk70[i].y, z - dv.z);
 		GXColor1x8(1);
-		GXPosition3s16(midx, unk74[i], unk70[i].z);
+		GXPosition3s16(midx, unk74[i], z);
 		GXColor1x8(0);
-		GXPosition3s16(unk70[i].x + dv.x, unk70[i].y, unk70[i].z + dv.z);
+		GXPosition3s16(x + dv.x, unk70[i].y, z + dv.z);
 		GXColor1x8(1);
 
 		++iVar7;
@@ -99,13 +103,16 @@ void TMapObjGrassGroup::load(JSUMemoryInputStream& stream)
 	unk6C = new JGeometry::TVec3<f32>[unk68];
 	unk70 = new JGeometry::TVec3<s16>[unk68];
 	unk74 = new s16[unk68];
-	JGeometry::TVec3<f32> scale(mScaling.x * 100.0f, mScaling.y * 200.0f,
-	                            mScaling.z * 100.0f);
+	// Three named scalars, declared x, z, y: retail's f27/f26/f25 follow that
+	// declaration order and a TVec3 costs 24 bytes of frame retail does not have.
+	f32 scaleX = mScaling.x * 100.0f;
+	f32 scaleZ = mScaling.z * 100.0f;
+	f32 scaleY = mScaling.y * 200.0f;
 
 	for (int i = 0; i < unk68; ++i) {
-		unk6C[i].x = scale.x * MsRandF() * 2.0f + mPosition.x - scale.x;
-		unk6C[i].z = scale.z * MsRandF() * 2.0f + mPosition.z - scale.z;
-		unk6C[i].y = scale.y * MsRandF() + mPosition.y + 100.0f;
+		unk6C[i].x = scaleX * MsRandF() * 2.0f + mPosition.x - scaleX;
+		unk6C[i].z = scaleZ * MsRandF() * 2.0f + mPosition.z - scaleZ;
+		unk6C[i].y = scaleY * MsRandF() + mPosition.y + 100.0f;
 
 		unk70[i].x = unk6C[i].x;
 		unk70[i].y = mPosition.y;
@@ -126,6 +133,8 @@ TMapObjGrassGroup::TMapObjGrassGroup()
 {
 }
 
+// TODO: every instruction matches; frame 0x80 vs retail's 0x98 (+24 low).
+// scale()/set()+scale()/a named MtxPtr for the view matrix are all +0.
 void TMapObjGrassManager::initDrawNear() const
 {
 	Mtx viewItm;
@@ -192,6 +201,11 @@ void TMapObjGrassManager::draw() const
 		unk14[i]->drawFar();
 }
 
+// TODO: every instruction matches; frame 0x50 vs retail's 0x80. The delta is
+// uniform across every referenced slot, so all 48 bytes are low region inside
+// the inlined draw() chain (draw()/initDrawFar()/entryGrassGroup() leave no map
+// symbol, so draw() is the only legal carrier and it cannot be named).
+// Named sin/angle locals in the loop are +0.
 void TMapObjGrassManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
