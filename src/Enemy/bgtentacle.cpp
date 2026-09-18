@@ -1259,14 +1259,21 @@ void TBGTentacle::calcAttackGuideAnm()
 	local_3c -= local_30;
 	JGeometry::TVec3<f32> local_b4 = MsGetRotFromZaxis(local_3c);
 
-	if (mState != 10) {
-		unk80->checkCurBckFromIndex(20);
-		// TODO: a bunch of stuff ghidra refuses to show
+	f32 guideScale;
+	if (mState == 10) {
+		guideScale = 1.0f;
+	} else if (unk80->checkCurBckFromIndex(20)) {
+		guideScale = (1.0f / 1500.0f) * local_3c.length();
+	} else {
+		guideScale = (1.0f / 1200.0f) * local_3c.length();
 	}
+
+	if (guideScale > 2.0f)
+		guideScale = 2.0f;
 
 	Mtx afStack_78;
 	MsMtxSetTRS(afStack_78, local_30.x, local_30.y, local_30.z, local_b4.x,
-	            local_b4.y, local_b4.z, 1.875f, 1.875f, 1.875f);
+	            local_b4.y, local_b4.z, 1.0f, 1.0f, guideScale);
 
 	Mtx local_a8;
 	if (mState == 10) {
