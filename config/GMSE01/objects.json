@@ -426,5 +426,8 @@
   "JSystem/dsptask.c",
   "Camera/CameraInbetween.cpp",
   "Enemy/effectEnemy.cpp",
-  "GC2D/MessageLoader.cpp"
+  "GC2D/MessageLoader.cpp",
+  "Player/MarioUpper.cpp",
+  "Map/Sky.cpp",
+  "NPC/NpcCoin.cpp"
 ]
