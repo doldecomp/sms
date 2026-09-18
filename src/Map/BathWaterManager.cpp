@@ -929,6 +929,15 @@ public:
 			                                    - data.unk44 * data.unk44));
 		}
 
+		// TODO: frame 0x1e8 against the ROM's 0x258. Everything else in this
+		// function is instruction-identical. The 112 bytes missing are
+		// exactly one Mtx plus one Mtx44 -- the pair initScreen2D now owns --
+		// and declaring a dead pair here does give 0x258, but the named
+		// locals then sit 0x5c low and the inlined matrices 0x34 low, so the
+		// recovered declaration is not this one. The ROM's named region runs
+		// 0x140 (a TColor copy), 0x144 (drawCap's position, so it is a named
+		// local there and not an argument temporary), 0x150 (this colour),
+		// 0x154 (texObj), with 0x174-0x1c8 unaccounted for.
 		GXColor color = (GXColor) { 0x78, 0xFA, 0x14, unk2C->alpha.get() };
 
 		GXTexObj texObj;
