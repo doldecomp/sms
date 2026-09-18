@@ -90,8 +90,11 @@ land)
 	git diff HEAD@{1} HEAD -- 'src/*' 'include/*' | grep -n '^+.*\(pragma dont_inline\|trash\[\|pad\[\)' \
 		| grep -v '^[0-9]*:+\s*//' && echo "!! suspicious padding/pragma ADDED above" || true
 	rc=0
+	pre=$(git rev-parse HEAD@{1})
 	if ! build/venv/bin/ninja >/dev/null 2>&1; then
-		echo "== BUILD FAILED after merge:"; build/venv/bin/ninja 2>&1 | grep -iE 'error|FAILED' -A3 | head -20
+		echo "== BUILD FAILED after merge:"; build/venv/bin/ninja 2>&1 | grep -iE 'error|FAILED|did NOT match' -A3 | head -20
+		git reset -q --hard "$pre"
+		echo "!! LAND REVERTED: main checkout reset to $pre; wt/$name keeps its commits"
 		exit 1
 	fi
 	build/venv/bin/ninja changes_all 2>&1 | awk -F'|' '
@@ -103,6 +106,9 @@ land)
 		echo "== DOL sha1 OK"
 	else
 		echo "== DOL sha1 MISMATCH: $sha"; rc=1
+		git reset -q --hard "$pre"
+		echo "!! LAND REVERTED: main checkout reset to $pre; wt/$name keeps its commits"
+		exit 1
 	fi
 	for u in "$@"; do
 		printf '== symbol order %s: ' "$u"
