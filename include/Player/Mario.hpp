@@ -1573,20 +1573,13 @@ public:
 	/* 0xF8 */ s16 mLightID;
 	/* 0xFA */ u16 mAnimationId;
 
-	// TODO: these four are one `s16 unkFC[4]`. MarioHeadCtrl and
-	// MarioWaistCtrl both form `addi rN, this, 0xfc` once and index it (+0
-	// for the camera pitch, +4 for the value the head and waist rotations are
-	// built from), which four separate members cannot produce; MarioDraw.cpp
-	// currently parks `s16* bodyAngle = &mario->unkFC;` to get there.
-	// Declaring the array and rewriting MarioInit.cpp's four stores as
-	// unkFC[0..3] was measured codegen-neutral with zero regressions, but it
-	// also needs the two `&mario->unkFC` in MarioDraw.cpp to lose their `&`,
-	// and that file is owned elsewhere right now. Land the two together.
-	/* 0xFC */ s16 unkFC;
-	/* 0xFE */ s16 unkFE;
-
-	/* 0x100 */ s16 unk100;
-	/* 0x102 */ s16 unk102;
+	// One array, not four members: MarioHeadCtrl, MarioWaistCtrl and
+	// getHeadRot all form `addi rN, this, 0xfc` once and index it (+0 for
+	// the camera pitch, +4 for the value the head and waist rotations are
+	// built from), which four separate members cannot produce. Slot 3 is
+	// only ever written, with the 0xAD sentinel MarioInit puts in several
+	// unused fields.
+	/* 0xFC */ s16 unkFC[4];
 	/* 0x104 */ f32 unk104;
 
 	/* 0x108 */ TMarioControllerWork* unk108;

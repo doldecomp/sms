@@ -441,10 +441,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 		} else {
 
 			TMario* mario = gpMarioForCallBack;
-			// TODO: unkFC..unk102 are one s16 array in TMario; the ROM
-			// forms &unkFC once and indexes it (as MarioWaistCtrl does
-			// too). Needs a Mario.hpp change to spell properly.
-			s16* bodyAngle = &mario->unkFC;
+			s16* bodyAngle = mario->unkFC;
 			f32 headRot;
 			if (mario->fabricatedIsPumping()) {
 				headRot = mario->mBodyAngleParamsWaterGun.mHeadRot.get();
@@ -472,10 +469,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 		TMario* mario = gpMarioForCallBack;
-		// TODO: unkFC..unk102 are one s16 array in TMario; the ROM forms
-		// &unkFC once and indexes it here and in MarioHeadCtrl. Needs a
-		// Mario.hpp change to spell properly.
-		s16* bodyAngle = &mario->unkFC;
+		s16* bodyAngle = mario->unkFC;
 		if (mario == gpMarioOriginal && gpCamera->isLButtonCamera() == true
 		    && gpMarioForCallBack->canBendBody() != 0
 		    && gpCamera->mCurrentTarget.mPitch > 0) {
@@ -757,7 +751,7 @@ void TMario::getJumpIntoWaterModelData() { }
 // member is read at the use site.
 s16 TMario::getHeadRot()
 {
-	s16* bodyAngle = &unkFC;
+	s16* bodyAngle = unkFC;
 	TBodyAngleParams* params;
 	if (isUpperPumpingStyle()) {
 		params = &mBodyAngleParamsWaterGun;

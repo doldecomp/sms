@@ -133,9 +133,9 @@ TMario::TMario()
 	unkF6                = 0;
 	mLightID             = 0;
 	mAnimationId         = 0xc3;
-	unkFC                = 0;
-	unkFE                = 0;
-	unk100               = 0;
+	unkFC[0]             = 0;
+	unkFC[1]             = 0;
+	unkFC[2]             = 0;
 	unk104               = 0.0f;
 	unk108               = nullptr;
 	mFlag                = 0;
@@ -434,7 +434,7 @@ void TMario::initValues()
 	unkA2  = 0xAD;
 	unkC6  = 0x22;
 	unkD6  = 0x33;
-	unk102 = 0xAD;
+	unkFC[3] = 0xAD;
 	unk12A = 0x44;
 	unk13E = 0x55;
 	unk37C = 0x99;
