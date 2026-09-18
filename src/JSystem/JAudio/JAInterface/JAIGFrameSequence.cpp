@@ -36,10 +36,21 @@ void JAIBasic::stopSeq(JAISound* param_1)
 	unk0->mSeqTrackInfo[param_1->mTrack].mSound = nullptr;
 }
 
+// Binding level over the sequence track info lookup, worth +8 of low region:
+// it is what lands JAIBasic::checkEntriedSeq's frame at retail's 0x50 (every
+// instruction already matched at 0x48).  Structural pass 167; do *not* also
+// route JAIBasic::checkPlayingSeqTrack's identical first statement through it,
+// that one is already 8 bytes over and the level costs it 95.7%.
+static inline JAISeqUpdateData* JAISeqTrackInfoPtr(JAIBasic* basic, int track)
+{
+	JAISeqUpdateData* sud = &basic->unk0->mSeqTrackInfo[track];
+	return sud;
+}
+
 void JAIBasic::checkEntriedSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[i];
+		JAISeqUpdateData* sud = JAISeqTrackInfoPtr(this, i);
 		JAISoundHandle& sound = unk0->mSeqTrackInfo[i].mSound;
 		u32& r27              = unk0->mSeqTrackInfo[i].unk8;
 
