@@ -6,6 +6,7 @@
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <System/THPRender.hpp>
 #include <System/Application.hpp>
+#include <System/FlagManager.hpp>
 
 // TODO: removeme
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
@@ -47,6 +48,22 @@ void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 	unk1C = (J2DTextBox*)unk14->search('me_b');
 
 	char buffer[256];
+
+	// TODO: setupResource is instruction-identical but eight bytes of frame
+	// short (0x140 vs 0x138), and the missing bytes sit *below* `buffer`:
+	// retail puts `buffer` at 0x28(r1), we put it at 0x1c(r1), so there is a
+	// 12-byte object between the inline-temporary region and `buffer` that we
+	// do not reproduce. Measured: a `char[9..12]` declared right after
+	// `buffer` reaches 100% with no instruction change; `char[5..8]` gives the
+	// right frame but leaves `buffer` 4 bytes low; `char[13..16]` overshoots to
+	// 0x148; anything declared *before* `buffer` never lands. Nothing in the
+	// function wants a second buffer, and the two .blo names and ".bmg" are
+	// all .rodata/.sdata2 literals, so the 12 bytes are more likely one more
+	// inline expansion (the temp region is 32 bytes in retail, 20 in ours)
+	// than a named local. Rejected: naming the movie id, naming unk14 before
+	// the two search() calls (97.2%), a `char* blank` alias for the memset
+	// (98.1%), sizeof instead of ARRAY_COUNT, and moving `buffer` to the top
+	// of the body (all no change).
 
 	// inline?
 	memset(buffer, ' ', ARRAY_COUNT(buffer));
@@ -113,7 +130,10 @@ void TMovieSubTitle::hide()
 
 const JMSMesgEntry* TMovieSubTitle::getCurEntry() const
 {
-	if (unk20->getMessageNum() <= unk24)
+	// 0x90001 is the subtitle option flag (TOptionControl::writeValue writes
+	// the subtitle unit's value there), so subtitles off means no entry.
+	if (unk20->getMessageNum() <= unk24
+	    || !TFlagManager::getInstance()->getFlag(0x90001))
 		return nullptr;
 
 	return unk20->getMessageEntry(unk24);
