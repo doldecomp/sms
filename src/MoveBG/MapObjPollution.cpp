@@ -96,14 +96,21 @@ void TRevivalPolluter::pollute() { }
 //    four-register rotation plus the layer pointer landing in r7 where retail
 //    uses r8. It reads 88.0% against the current 88.1% because fuzzy_match
 //    weights the register operands above the frame, so it is not committed.
-//    The rotation has the same signature as
-//    AudioDecoderForOnMemory's (retail interleaves a source local above the
-//    compiler-generated loop temporaries; every spelling we have puts both
-//    temporaries on top) -- treat the two together in a research batch.
-//    Best next hypothesis: the rotation says MWCC built loadAfter's two loop
-//    temporaries *after* this/i in the ROM and before them for us, so look for
-//    a source shape that creates a source-level variable in the loop body
-//    without folding it away, and re-measure the frame only after that.
+//    Header round 18 sharpened the description: it is not a rotation of four
+//    independent values but a **swap of two groups whose internal order is
+//    preserved** -- retail is [i, this][offset, element] over r31..r28 and we
+//    are [offset, element][i, this], i.e. the compiler-generated pair is
+//    appended to the ranking in retail and prepended in ours. The same swap is
+//    the whole residue of AudioDecoderForOnMemory (src/THPPlayer/
+//    THPAudioDecode.c), where the rule behind it was found: a source local
+//    outranks a compiler-generated temporary when it is live *before* that
+//    temporary is materialised. That rule does not transfer here as written --
+//    `i` and `this` are already live before the loop in both builds -- and the
+//    one probe it suggests, hoisting `int i = 0;` above the base-class call so
+//    the counter is live across it, is worse (82.1%, 46 instructions, the
+//    `li`/`mr` pair moves). So the loop temporaries' creation point, not the
+//    counter's live range, is what differs here; look for a source shape that
+//    makes MWCC create them after the loop's source variables.
 void TRevivalPolluter::registerPolluteTex()
 {
 	// TODO: inlines make me cry

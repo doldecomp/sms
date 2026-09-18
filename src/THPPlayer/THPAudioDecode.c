@@ -96,6 +96,29 @@ static void* AudioDecoder(void* arg)
 // always put both temporaries above both locals; the same shape blocks
 // TMapObjRevivalPollution::loadAfter, so this is one cross-unit question, not
 // a spelling problem here.
+// TODO: 89.3%, 46 instructions, every instruction exact; the whole residue is
+// a callee-saved rotation. Retail ranks the source counter above the two
+// global-address bases (frame r31, &AudioDecodeThread r30, &ActivePlayer r29,
+// readSize r28); we rank the two bases above it (r31/r30 for the bases, r29
+// for frame, r28 for readSize).
+//
+// Header round 18 found the mechanism: **a source local outranks a
+// compiler-generated global-address temporary only if it is live before that
+// temporary is materialised.** Spelling the first statement
+// `readBuffer.frameNumber = frame = 0;` -- a use of `frame` ahead of the first
+// ActivePlayer read -- reproduces retail's whole ranking exactly (89.3 ->
+// 97.7%, all four registers right, `li r31, 0` in retail's slot); the only
+// difference left is the pre-loop store that the probe itself adds, so the
+// real source got `frame` live early some other way.
+// Inert (all leave the rotation untouched): `s32 frame = 0;` at the
+// declaration, `register s32 frame;`, a `for (frame = 0;; frame++)` induction
+// variable, and all six permutations of the three initialising statements.
+// Worse: declaring `frame` last, which drops it to r28 -- so declaration order
+// ranks the source locals among themselves and never lifts the group above
+// the temporaries. Hoisting the `readBuffer.frameNumber` store out of the loop
+// (store before it, store after the increment) is +2 instructions.
+// The same group swap is open in TMapObjRevivalPollution::loadAfter
+// (src/MoveBG/MapObjPollution.cpp).
 static void* AudioDecoderForOnMemory(void* arg)
 {
 	s32 frame;
