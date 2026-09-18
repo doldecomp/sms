@@ -658,8 +658,8 @@ void TOilBall::reset()
 
 void TOilBall::moveObject()
 {
-	TBEelTearsSaveLoadParams* params = mTearsParams;
 	f32 scale                        = mScaling.x;
+	TBEelTearsSaveLoadParams* params = mTearsParams;
 	s32 attackRadius                 = params->mSLTearsAttackRadius.get();
 	s32 attackHeight                 = params->mSLTearsAttackHeight.get();
 	s32 damageRadius                 = params->mSLTearsDamageRadius.get();
@@ -678,8 +678,9 @@ void TOilBall::moveObject()
 			}
 		} else {
 			JGeometry::TVec3<f32> velocity(0.0f, 0.0f, 0.0f);
-			JGeometry::TVec3<f32> push;
-			push.sub(mPosition, actor->mPosition);
+			JGeometry::TVec3<f32> push(mPosition.x - actor->mPosition.x,
+			                           mPosition.y - actor->mPosition.y,
+			                           mPosition.z - actor->mPosition.z);
 			if (push.x == 0.0f && push.y == 0.0f && push.z == 0.0f)
 				push.x += 1.0f;
 			MsVECNormalize(&push, &push);
