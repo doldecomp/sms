@@ -192,7 +192,10 @@ public:
 		f32 mz  = mario->mPosition.z;
 		f32 mdh = mario->mDamageHeight;
 
-		JGeometry::TVec3<f32> capCenter = data.getThing();
+		// A const reference to the by-value return, not a copy: the ROM
+		// reads the temporary in place and never copies it into a named
+		// vector.
+		const JGeometry::TVec3<f32>& capCenter = data.getThing();
 
 		f32 rad = JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
 		                                      - data.unk44 * data.unk44);
@@ -358,7 +361,9 @@ public:
 				}
 			}
 
-			f32 heightVal;
+			// Seeded with the fallback and no else arm: the ROM hoists the
+			// 0.0f above the count test.
+			f32 heightVal = 0.0f;
 			if (count * 30 > bw->unk74) {
 				f32 inv = 1.0f / (f32)count;
 				accum *= inv;
@@ -367,16 +372,13 @@ public:
 				heightVal = JGeometry::TUtil<f32>::sqrt(t);
 				if (heightVal > 1.0f)
 					heightVal = 1.0f;
-			} else {
-				heightVal = 0.0f;
 			}
 			bw->unk78.set(accum);
 			bw->unk84 = heightVal;
 
 			if (bw->unk8C->intersects.get()) {
-				f32 dropRadius = bw->unk8C->dropRadius.get();
-				f32 twoR       = 2.0f * dropRadius;
-				f32 sep2       = 4.0f * (dropRadius * dropRadius);
+				f32 twoR = 2.0f * dropRadius;
+				f32 sep2 = 4.0f * (dropRadius * dropRadius);
 				for (TDrop* a = bw->unk88; a < end2; a++) {
 					for (TDrop* b = a + bw->unk8C->intersects.get(); b < end2;
 					     b += bw->unk8C->intersects.get()) {
@@ -393,12 +395,13 @@ public:
 							f32 half = (twoR - dist) / 2.0f;
 
 							local_2D8.x = local_2E4.x * half;
+							local_2D8.y = local_2E4.y * half;
 							local_2D8.z = local_2E4.z * half;
 
 							f32 hny = half * local_2E4.y;
 
 							local_2D8.set(local_2E4.x * half,
-							              (local_2E4.y + 1.0f) * hny,
+							              (1.0f + local_2E4.y) * hny,
 							              local_2E4.z * half);
 							b->unk18.extend(local_2D8);
 							local_2D8.x = -local_2D8.x;
@@ -444,8 +447,7 @@ public:
 			int lifeTime = bw->unk8C->lifeTime.get();
 			if (lifeTime > 0) {
 				for (TDrop* drop = bw->unk88; drop < end2; --end2, ++drop) {
-					drop->unk4C++;
-					if (drop->unk4C > lifeTime)
+					if (++drop->unk4C > lifeTime)
 						bw->eraseDrop(drop);
 				}
 			}
@@ -1828,6 +1830,10 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 	if (axis.isZero())
 		return false;
 
+	// TODO: retail has a dead `fcmpo/cror` against 0.0f on the squared length
+	// here, with no branch and with isZero's inlined squared CSE'd into it --
+	// i.e. one more discarded computation over `axis`. A plain
+	// `axis.length();` is not it (that emits a real `bl dot` at this depth).
 	JGeometry::TVec3<f32> nAxis;
 	nAxis.normalize(axis);
 
@@ -1843,12 +1849,12 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 	f32 h = 0.9f * (data.unk3C - radius);
 	nAxis.setLength(h);
 
-	JGeometry::TVec3<f32> up2(0.0f, 1.0f, 0.0f);
-	JGeometry::TVec3<f32> center;
-	center.set(data.getThing());
-	out->set(up2.x * radius + nAxis.x + center.x,
-	         up2.y * radius + nAxis.y + center.y,
-	         up2.z * radius + nAxis.z + center.z);
+	// scaleAdd and not the three products written out: binding `up` to a
+	// const reference is what keeps it in memory, and that is what stops MWCC
+	// folding its 0.0f and 1.0f components away (the ROM reads all three back
+	// and multiplies each by the radius).
+	out->scaleAdd(radius, nAxis, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+	*out += data.getThing();
 	return true;
 }
 
@@ -1861,8 +1867,7 @@ void TBathWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		unk30 = unk28[unk18->displaysMesh.get()];
-		unk1C += 1;
-		if (!(unk1C & 3)) {
+		if (!(++unk1C & 3)) {
 			for (int actor = 0; actor < 2; ++actor) {
 				TBathWater* bw           = unk20[actor];
 				const TBathtubData& data = unk24->getBathtubData();
@@ -1888,10 +1893,14 @@ void TBathWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			// Periodic jump-drop spawn.
 			if ((unk1C & 7) == 4 && unk24->getBathtubData().unk64) {
-				const TBathtubData& data = unk24->getBathtubData();
-
+				// The bathtub data is fetched as an argument and not held in
+				// a reference beforehand: arguments go right to left, so the
+				// ROM draws the random spread first, reads the radius second
+				// and only then re-reads unk24 (the draw's store to the seed
+				// is what forces the second load).
 				JGeometry::TVec3<f32> vel;
-				if (fakeCalcPos(data, unk14[1]->dropRadius.get(),
+				if (fakeCalcPos(unk24->getBathtubData(),
+				                unk14[1]->dropRadius.get(),
 				                unk10.get_float(-1.0f, 1.0f), &vel))
 					// The upward speed is drawn from [0, 10): 10.0f is the
 					// TU's `@3424` literal, which nothing else accounts for.
