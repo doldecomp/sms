@@ -313,11 +313,24 @@ void SDLModel::entryModelDataSDL(SDLModelData* model_data, u32 flags,
 // TODO: instruction-exact, frame 0xa8 vs retail's 0xb8.  All eight referenced
 // slots belong to the inlined registerSDLModel() below (whose own out-of-line
 // copy is size-exact at 0x128): ours 0x4c/0x50/0x54/0x60/0x64/0x70/0x74/0x78
-// against retail's 0x5c/0x60/0x64/0x70/0x74/0x7c/0x80/0x84, i.e. 16 bytes of
-// missing low region for the five insert/iterator temporaries and 12 for the
-// `it`/`e`/new-token group, so retail's gap between the two groups is 8 where
-// ours is 12.  Rejected here: getSDLModelData() at one or all three sites (+0),
-// a named `*it` in registerSDLModel (97 instructions), push_back spelled as
+// against retail's 0x5c/0x60/0x64/0x70/0x74/0x7c/0x80/0x84.
+//
+// Read as slots above 0xc, retail is [80 dead][3][2 dead][2][1 dead][3] and we
+// are [64 dead][3][2 dead][2][2 dead][3]: retail has **four** more temporaries
+// at the very bottom and **one fewer** between the second and third group, so
+// this is a different expansion structure, not one missing object.
+// TMirrorActor::init has the same shape (frame exact at 0xd8, first pair 16
+// low, second pair 8 low, the two named locals and the argument word in place),
+// which is why header round 15 looked for one shared cause in std-list.hpp.
+// Rejected there, each measured on this function's frame/instruction count
+// (target 0xb8/96):
+//   an explicit TList::iterator copy constructor            0xb0 /  83
+//   push_back as `iterator it = end(); insert(it, what);`   0xb0 / 100
+//   insert taking `const iterator& where`                   0xa0 /  94
+//   operator==/!= taking `const iterator&`                  0x98 /  85
+//   `iterator copy(*this); ++(*this);` in operator++(int)   0xa8 /  96 (identical)
+// Also rejected earlier: getSDLModelData() at one or all three sites (+0), a
+// named `*it` in registerSDLModel (97 instructions), push_back spelled as
 // insert(end(), token) (+0), and hoisting `e` out of the for-init (98
 // instructions).
 void SDLModel::entry()
