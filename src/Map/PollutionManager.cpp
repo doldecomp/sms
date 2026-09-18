@@ -92,10 +92,10 @@ static void dummy()
 // ((TPollutionLayer*)getJointModel(i) instead of getLayer(i)) lands this
 // frame exactly -- but costs getPollutionDegree's own emitted copy an
 // instruction (100% -> 94.5%), so it cannot be spelled that way here.
-// The remaining candidate is a const getLayer(i) that casts
-// mJointModels[i] directly (cast inside the accessor, one level instead of
-// two); that is a change to an accessor with ~25 sites in other units, so
-// it is reported, not made. Rejected here: dropping the ternary (90.8%),
+// A const getLayer(i) casting mJointModels[i] directly (one level inside the
+// accessor instead of two) was measured project-wide in header round 14 and
+// is dead: this function does not move at all, while getPollutionType and
+// isPolluted lose their exact match. Rejected here: dropping the ternary (90.8%),
 // if/return (no change), naming the degree or the result (+8 each).
 bool TPollutionManager::cleanedAll() const
 {

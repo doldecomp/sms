@@ -73,6 +73,13 @@ public:
 	{
 		return (TPollutionLayer*)getJointModel(i);
 	}
+	// Both overloads keep the two-level cast-over-getJointModel(i) spelling.
+	// Round 14 trialled `(TPollutionLayer*)mJointModels[i]` in the const one
+	// (the candidate left open by TPollutionManager::cleanedAll's note): it
+	// does not move cleanedAll at all (96.4%, still 8 bytes of frame too big)
+	// and costs getPollutionType and isPolluted their exact match
+	// (100% -> 99.7% each), so the level count is not interchangeable with
+	// where the level is declared. Do not retry.
 	TPollutionLayer* getLayer(int i) const
 	{
 		return (TPollutionLayer*)getJointModel(i);
