@@ -202,6 +202,15 @@ void TModelWaterManager::load(JSUMemoryInputStream& stream)
 	gpModelWaterManager = this;
 }
 
+// TODO: 24 bytes of low region short (0x58 vs 0x70) plus one `fmadds` operand
+// swap -- retail makes fVar1 (in f2) the *first* multiply operand and the
+// 24000.0f literal the second, ours the reverse. Source term order does not
+// steer it (`24000.0f * fVar1` and `8000.0f + fVar1 * 24000.0f` both unchanged),
+// so it is probably downstream of the frame. Frame levers measured: forking
+// both gpMarDirector reads to SMSGetMarDirector() +8, a named
+// TFlagManager::getInstance() result +8 (SMSGetFlagManager() identical), a
+// named TScreenTexture* -8, splitting the division +0. The best combination is
+// 0x68, still 8 short, so none of them is committed.
 void TModelWaterManager::loadAfter()
 {
 	unk5D34
@@ -1913,6 +1922,15 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 // accessor supplies the missing temporary, but retail's dead accessor slot is
 // the *highest* of the temp region (0x40) while ours is the lowest (0x24), so
 // every GXColor temporary below it sits 4 bytes high.
+// TODO: frame exact, every instruction exact, but all seven GXColor conversion
+// temporaries sit 4 bytes higher than retail's (0x40/0x3c/0x34/... vs
+// 0x3c/0x38/0x30/...), i.e. retail's inline-temp pool starts 4 lower. This is
+// the open "+4 low / -4 named" family (MapEventDolpic::watch, both MapObjTrap
+// loadAfters). Measured here and inert: a dead 4-byte local declared first
+// (the frame has 8 bytes of pad, so it is absorbed), a dead 4-byte local
+// declared last (makes it worse, 27 diffs), a dead 8-byte local first and a
+// 3x3 indirect matrix (both grow the frame to 0xd0), a named getWaterAlpha()
+// result.
 void TModelWaterManager::drawRefracAndSpec() const
 {
 
