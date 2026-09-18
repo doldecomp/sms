@@ -88,10 +88,12 @@ void TCameraShake::setShakeAngleAll_(TCameraShake::TCamShakeInfo* info,
 	// TParamT<T>::get() is fabricated as returning `const T&`, and a
 	// reference return reserves an inline temporary per expansion, so this
 	// mixture is what reproduces retail's frame (all six through get() is
-	// 0x60 against retail's 0x50, all six direct is 0x48). Parked here rather
-	// than changing System/ParamInst.hpp: the real get() for an integer
-	// parameter almost certainly returned T by value, which is a shared
-	// header change every TParamRT caller pays for.
+	// 0x60 against retail's 0x50, all six direct is 0x48). Header round 24
+	// measured the shared-header alternative and it is refuted: a by-value
+	// get() for the integer instantiations is total matched_code
+	// 53.73 -> 53.24 tree-wide (53.61 for s32 alone, 52.94 for every T), so
+	// the reference return is retail's and this mixture is a site-level
+	// spelling, not a symptom of the header.
 	setShakeAngleOne_(&info->mAngleX, save->mShakeAmpX.get(),
 	                  save->mShakeVelX.value, duration, scale);
 	setShakeAngleOne_(&info->mAngleY, save->mShakeAmpY.get(),

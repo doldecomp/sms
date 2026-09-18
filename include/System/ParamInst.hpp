@@ -18,7 +18,20 @@ public:
 
 	virtual void load(JSUMemoryInputStream& stream);
 
-	// fabricated
+	// fabricated, but the reference return is settled (header round 24).
+	// camerashake measured that an integer parameter read through get() does
+	// not reserve the inline temporary an f32 one does, which reads as
+	// "retail returned T by value for integer T". Tree-wide that is false:
+	// by value for every T is total matched_code 53.73 -> 52.94 (36 units
+	// lose, 4 gain), by value for the integer instantiations only (s8..u32,
+	// reference kept for f32/TVec3/TFlagT) is 53.73 -> 53.24, and the
+	// narrowest split there is any evidence for, s32 alone, is still
+	// 53.73 -> 53.61. So the reference return is retail's, for every T, and
+	// the few sites that want a by-value read want it at the *site* -- which
+	// also matches the address-of uses (`&x.get()` in AnimalManager,
+	// NpcManager, MtxUtil), all of them f32 or TVec3. There is no legal
+	// C++98 spelling for a per-type return anyway: an explicit member
+	// specialisation may not change the return type.
 	const T& get() const { return value; }
 
 	T value;
