@@ -184,10 +184,18 @@ void TPoiHana::reset()
 	mIsTrapped      = false;
 }
 
+// Binding level over the address of a struct member, worth +16 of low region
+// in TPoiHana::moveObject (batch 130).
+static inline const JGeometry::TVec3<f32>* PoihanaPosition(const TPoiHana* p)
+{
+	const JGeometry::TVec3<f32>* position = &p->mPosition;
+	return position;
+}
+
 void TPoiHana::moveObject()
 {
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		unk1BC->mPosition = mPosition;
+		unk1BC->mPosition = *PoihanaPosition(this);
 	} else {
 		MtxPtr mtx = getModel()->getAnmMtx(mBodyJntIndex);
 

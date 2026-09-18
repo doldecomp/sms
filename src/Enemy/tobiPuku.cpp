@@ -917,6 +917,14 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 	return FALSE;
 }
 
+// Binding level over the address of a struct member, worth +16 of low region
+// in TNerveTobiPukuFly::execute (batch 130).
+static inline const JGeometry::TVec3<f32>* TobiPukuVelocity(const TTobiPuku* p)
+{
+	const JGeometry::TVec3<f32>* velocity = &p->mVelocity;
+	return velocity;
+}
+
 // TODO: incorrect size. Map records 0x194 (404 bytes).
 DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
 {
@@ -935,7 +943,7 @@ DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
 		return TRUE;
 	}
 
-	JGeometry::TVec3<f32> vel(puku->mVelocity);
+	JGeometry::TVec3<f32> vel(*TobiPukuVelocity(puku));
 	puku->mFlyVelocityY = vel.y;
 
 	JGeometry::TVec3<f32> dir(puku->mVelocity);

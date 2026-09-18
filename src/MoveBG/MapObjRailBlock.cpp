@@ -180,9 +180,18 @@ BOOL TRailMapObj::calcRecycle()
 	return false;
 }
 
+// Binding level over the address of a struct member, worth +16 of low region
+// in TRailMapObj::resetPosition (batch 130).
+static inline const JGeometry::TVec3<f32>* MapObjRailBlockInitialPosition(
+    const TRailMapObj* p)
+{
+	const JGeometry::TVec3<f32>* initialPosition = &p->mInitialPosition;
+	return initialPosition;
+}
+
 void TRailMapObj::resetPosition()
 {
-	mPosition = mInitialPosition;
+	mPosition = *MapObjRailBlockInitialPosition(this);
 	mRotation = mInitialRotation;
 	unk148    = 0;
 	unk14A    = 180;

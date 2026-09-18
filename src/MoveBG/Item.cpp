@@ -1083,6 +1083,14 @@ void TEggYoshi::startFruit()
 		receiveMessage(nullptr, HIT_MESSAGE_UNK10);
 }
 
+// Binding level over the address of a struct member, worth +16 of low region
+// in TEggYoshi::receiveMessage (batch 130).
+static inline const JGeometry::TVec3<f32>* ItemVelocity(const TEggYoshi* p)
+{
+	const JGeometry::TVec3<f32>* velocity = &p->mVelocity;
+	return velocity;
+}
+
 BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_TAKE) {
@@ -1098,7 +1106,7 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_UNK10) {
-		JGeometry::TVec3<f32> v = mVelocity;
+		JGeometry::TVec3<f32> v = *ItemVelocity(this);
 		makeObjAppeared();
 		mVelocity.y = v.y;
 		offLiveFlag(LIVE_FLAG_UNK10);

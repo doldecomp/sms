@@ -554,13 +554,21 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 	}
 }
 
+// Binding level over the address of a array element, worth +16 of low region
+// in MSoundSESystem::MSoundSE::checkSoundArea (batch 130).
+static inline const JAICamera* MSoundSEUnkACAt(const MSound* p, int i)
+{
+	const JAICamera* vAC = &p->unkAC[i];
+	return vAC;
+}
+
 bool MSoundSE::checkSoundArea(u32 param_1, const Vec& param_2)
 {
 	bool result = true;
 
 	switch (param_1) {
 	case 7: {
-		Vec vec = *MSGMSound->unkAC[0].mPosition;
+		Vec vec = *MSoundSEUnkACAt(MSGMSound, 0)->mPosition;
 		vec.y += 75.0f;
 		Vec vec1  = vec;
 		int iVar2 = gpCubeCamera->getInCubeNo(vec1);

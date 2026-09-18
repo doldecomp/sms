@@ -814,12 +814,20 @@ static inline J2DPane* CardLoadGetPane(const TExPane* p)
 	return pane;
 }
 
+// Binding level over a raw member read: a register lever in
+// TCardLoad::titleDraw at an unchanged frame (batch 130).
+static inline int CardLoadUnk18(const TCardLoad* p)
+{
+	int v18 = p->unk18;
+	return v18;
+}
+
 // TODO: 99.8%. Retail's `buffer` starts four bytes lower than ours, so our
 // body carries one 4-byte inline temporary it does not have, and the u16
 // clamp keeps the raw sum in the variable's register where we narrow into it.
 bool TCardLoad::titleDraw()
 {
-	switch (unk18) {
+	switch (CardLoadUnk18(this)) {
 	case 0:
 		unk18 = 1;
 		break;

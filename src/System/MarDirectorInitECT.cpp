@@ -95,6 +95,14 @@ void TMarDirector::initECTGft(
 	}
 }
 
+// Binding level over the address of a struct member, worth +8 of low region
+// in TMarDirector::initECTMir (batch 130).
+static inline const GXTexObj* MarDirectorInitECTUnk60(const TMirrorCamera* p)
+{
+	const GXTexObj* v60 = &p->unk60;
+	return v60;
+}
+
 JDrama::TViewObj* TMarDirector::initECTMir(
     TPerformList* param_1,
     JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* param_2)
@@ -107,7 +115,7 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 
 	TMirrorCamera* mirrorCam = (TMirrorCamera*)ECTSearch("鏡カメラ");
 
-	GXTexObj& obj = mirrorCam->unk60;
+	GXTexObj& obj = *MarDirectorInitECTUnk60(mirrorCam);
 	mirrorTex->setTexAttb(obj);
 	// TODO: 99.8%, frame 0x80 against the ROM's 0x88. Passing the rectangle
 	// as an unnamed temporary instead

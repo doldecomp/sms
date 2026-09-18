@@ -1155,11 +1155,19 @@ void TGorogoro::rollSE()
 	    abs(mGroundPlane->mNormal.y), 0, 0, nullptr, 0, 4);
 }
 
+// Binding level over the address of a struct member, worth +16 of low region
+// in TGorogoro::boundSE (batch 130).
+static inline const JGeometry::TVec3<f32>* IgaigaNormal(const TBGCheckData* p)
+{
+	const JGeometry::TVec3<f32>* normal = &p->mNormal;
+	return normal;
+}
+
 void TGorogoro::boundSE()
 {
 	SMSGetMSound()->startSoundActorWithInfo(
 	    MSD_SE_BS_KRPAKU_GND, &mPosition, nullptr,
-	    abs(mGroundPlane->mNormal.y), 0, 0, nullptr, 0, 4);
+	    abs(IgaigaNormal(mGroundPlane)->y), 0, 0, nullptr, 0, 4);
 }
 
 void TGorogoro::walkBehavior(int param_1, f32 param_2)

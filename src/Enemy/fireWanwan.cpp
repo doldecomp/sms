@@ -2104,6 +2104,15 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 	return false;
 }
 
+// Binding level over the address of a struct member, worth +16 of low region
+// in TNerveFireWanwanHungTail::execute (batch 130).
+static inline const JGeometry::TVec3<f32>* FireWanwanPosition(
+    const TFireWanwan* p)
+{
+	const JGeometry::TVec3<f32>* position = &p->mPosition;
+	return position;
+}
+
 DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 {
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
@@ -2114,7 +2123,7 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 	}
 
-	JGeometry::TVec3<f32> vec = self->mPosition;
+	JGeometry::TVec3<f32> vec = *FireWanwanPosition(self);
 	vec -= SMS_GetMarioPos();
 
 	self->mRotation.y = MsGetRotFromZaxisY(vec);

@@ -245,6 +245,14 @@ void TAmiNoko::setWalkAnm()
 		setBckAnm(AMINOKO_ANM_RUN2_START);
 }
 
+// Binding level over the address of a struct member, worth +16 of low region
+// in TAmiNoko::isHitValid (batch 130).
+static inline const JGeometry::TVec3<f32>* AmiNokoUp(const TAmiNoko* p)
+{
+	const JGeometry::TVec3<f32>* up = &p->mUp;
+	return up;
+}
+
 // TODO: instruction-identical, frame 16 bytes short; the byte count is the
 // only evidence for what the original declared, so it is left alone.
 bool TAmiNoko::isHitValid(u32 message)
@@ -256,7 +264,8 @@ bool TAmiNoko::isHitValid(u32 message)
 		// TODO: the result is discarded; presumably a leftover from an earlier
 		// version that compared the fence facing against this angle.
 		matan(mUp.z, mUp.x);
-		if (toMario.dot(mUp) > 0.0f || message == HIT_MESSAGE_HIP_DROP)
+		if (toMario.dot(*AmiNokoUp(this)) > 0.0f
+		    || message == HIT_MESSAGE_HIP_DROP)
 			mSpine->pushNerve(&TNerveAmiNokoDie::theNerve());
 	}
 	return message == HIT_MESSAGE_UNKB ? true : false;
