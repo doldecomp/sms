@@ -453,15 +453,14 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		    = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'b');
 		mStageBannerShadow->getPane()->show();
 
-		// The pane this feeds is the stage-name box, and retail's .rodata
-		// carries "/common/2d/stagename.bmg" (@3965) right before
-		// "/common/2d/scenarioname.bmg" (@3966); the scenario bank is
-		// loaded separately in perform().
+		// Retail's .rodata carries "/common/2d/stagename.bmg" (@3965) right
+		// before "/common/2d/scenarioname.bmg" (@3966). The bank is only
+		// loaded here: the whole TU has exactly five strncpy and two
+		// J2DTextBox::setFont relocations, all of them accounted for by the
+		// scenario text, so nothing in SelectMenu.cpp ever copies the stage
+		// name into mStageName (a strncpy/setFont pair guessed here cost
+		// initData 91.5 -> 89.8).
 		mStageBmg = JKRGetResource("/common/2d/stagename.bmg");
-
-		strncpy(mStageName->getStringPtr(),
-		        SMSGetMessageData(mStageBmg, tags[mStage] & 0xFFFF), 0x11);
-		mStageName->setFont((JUTFont*)gpSystemFont);
 
 		mShineUnlockStates[0] = 2;
 		mShineUnlockStates[1] = 2;
@@ -585,10 +584,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		mShineMarks[mSelectedShine]->setWhite(mSelectedMarkCol);
 		mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
 
-		mScenarioImg1->insert(mScenarioTex[mSelectedShine], 0, 1.0f);
-		mScenarioImg1->remove(1);
-		mScenarioShadow1->insert(mScenarioTex[mSelectedShine], 0, 1.0f);
-		mScenarioShadow1->remove(1);
+		mScenarioImg1->changeTexture(
+		    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+		mScenarioShadow1->changeTexture(
+		    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
 
 		char buf[254];
 		snprintf(buf, sizeof(buf), "/common/2d/scenarioname.bmg");
@@ -826,19 +825,14 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					mScenarioPane1->setPaneOffset(10, mScenarioPaneDist, 0, 0,
 					                              0);
 
-					mScenarioImg2->insert(mScenarioTex[prevIndex], 0, 1.0f);
-					mScenarioImg2->remove(1);
-
-					mScenarioShadow2->insert(mScenarioTex[prevIndex], 0, 1.0f);
-					mScenarioShadow2->remove(1);
-
-					mScenarioImg1->insert(mScenarioTex[mSelectedShine], 0,
-					                      1.0f);
-					mScenarioImg1->remove(1);
-
-					mScenarioShadow1->insert(mScenarioTex[mSelectedShine], 0,
-					                         1.0f);
-					mScenarioShadow1->remove(1);
+					mScenarioImg2->changeTexture(
+					    mScenarioTex[prevIndex]->getTexInfo(), 0);
+					mScenarioShadow2->changeTexture(
+					    mScenarioTex[prevIndex]->getTexInfo(), 0);
+					mScenarioImg1->changeTexture(
+					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+					mScenarioShadow1->changeTexture(
+					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
 
 					s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
 					                             mSelectedShine, false);
@@ -899,19 +893,14 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					mScenarioPane1->setPaneOffset(10, -mScenarioPaneDist, 0, 0,
 					                              0);
 
-					mScenarioImg2->insert(mScenarioTex[nextIndex], 0, 1.0f);
-					mScenarioImg2->remove(1);
-
-					mScenarioShadow2->insert(mScenarioTex[nextIndex], 0, 1.0f);
-					mScenarioShadow2->remove(1);
-
-					mScenarioImg1->insert(mScenarioTex[mSelectedShine], 0,
-					                      1.0f);
-					mScenarioImg1->remove(1);
-
-					mScenarioShadow1->insert(mScenarioTex[mSelectedShine], 0,
-					                         1.0f);
-					mScenarioShadow1->remove(1);
+					mScenarioImg2->changeTexture(
+					    mScenarioTex[nextIndex]->getTexInfo(), 0);
+					mScenarioShadow2->changeTexture(
+					    mScenarioTex[nextIndex]->getTexInfo(), 0);
+					mScenarioImg1->changeTexture(
+					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+					mScenarioShadow1->changeTexture(
+					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
 
 					s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
 					                             mSelectedShine, false);
