@@ -152,6 +152,9 @@ TPollutionLayerWallBase::TPollutionLayerWallBase()
 {
 }
 
+// TODO: 99.3%. Only the first two loads are swapped: retail reads mMinX before
+// mtx[0][3]. Refuted: dropping the x/z locals for raw mtx reads (88.9%, an extra
+// `addi r5, r4, 0x20`); the compare forms are already retail's.
 void TPollutionLayer::stampModel(J3DModel* model)
 {
 	MtxPtr mtx = model->getBaseTRMtx();
@@ -327,7 +330,8 @@ void TPollutionLayer::initLayerInfo(const TPollutionLayerInfo* param_1)
 	if (getPollutionType() == POLLUTION_TYPE_UNK7) {
 		mPollutedThreshold       = 200;
 		mPerFrameChangeThreshold = 160;
-	} else if (getPollutionType() == POLLUTION_TYPE_FIRE) {
+	} else if (getPollutionType() == POLLUTION_TYPE_FIRE
+	           || getPollutionType() == POLLUTION_TYPE_ELECTRIC) {
 		mPollutedThreshold       = 128;
 		mPerFrameChangeThreshold = 128;
 	} else {
