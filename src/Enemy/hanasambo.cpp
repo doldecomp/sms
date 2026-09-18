@@ -942,10 +942,12 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 	return false;
 }
 
-static const int jIndexTable[4] = { 1, 3, 4, 5 };
-
 DEFINE_NERVE(TNerveHanaSamboDie, TLiveActor)
 {
+	// The map names this jIndexTable$3048, the mangling of a function-local
+	// static, so it lives inside the nerve body rather than at file scope.
+	static const int jIndexTable[4] = { 1, 3, 4, 5 };
+
 	THanaSambo* sambo = (THanaSambo*)spine->getBody();
 	if (spine->getTime() == 0) {
 		sambo->onHitFlag(HIT_FLAG_NO_COLLISION);
