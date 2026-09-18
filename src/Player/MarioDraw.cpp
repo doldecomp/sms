@@ -1350,7 +1350,7 @@ void TMario::initModel()
 	}
 
 	mSurfGesso = nullptr;
-	if (gpMarDirector->mMap == 58) {
+	if (gpMarDirector->getCurrentMap() == 58) {
 		if (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1) {
 			MActorAnmData* anmData = new MActorAnmData();
 			anmData->init("/scene/map/map/Torocco", nullptr);

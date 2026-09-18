@@ -553,7 +553,7 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	if (!SMS_IsMarioDashing())
 		return;
 
-	if (gpMarDirector->mMap == 1) {
+	if (SMSGetMarDirector()->getCurrentMap() == 1) {
 		startBck("nozzledoor");
 	} else {
 		makeObjDead();
@@ -565,13 +565,11 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0,
 	                                nullptr, 0, 4);
 
-	// TODO: 8 bytes of frame short (0x40 vs 0x48) with every instruction
-	// exact. The three `getPosition()` reads below are worth +16 with no
-	// instruction change; `SMSGetMarDirector()->mMap` over
-	// `gpMarDirector->mMap`, a three-argument `scale` constructor and three
-	// unnamed scale temporaries are all worth nothing here, and
-	// `&getPosition()` for either sound call hoists the address out of the
-	// call.
+	// The last 8 bytes of frame were the map read: `getCurrentMap()` over
+	// the raw `mMap` field plus the `SMSGetMarDirector()` fork close it.
+	// A three-argument `scale` constructor and three unnamed scale
+	// temporaries are worth nothing here, and `&getPosition()` for either
+	// sound call hoists the address out of the call.
 	JGeometry::TVec3<f32> scale(1.3f);
 
 	unk138.set(getPosition().x, getPosition().y + 100.0f, getPosition().z);

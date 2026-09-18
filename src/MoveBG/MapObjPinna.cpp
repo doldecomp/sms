@@ -557,8 +557,8 @@ void TShellCup::loadAfter()
 	mCoin1    = gpItemManager->newAndRegisterCoinReal();
 
 	mBlueCoin->setEventId(2);
-	if (!TFlagManager::smInstance->getBlueCoinFlag(gpMarDirector->mMap,
-	                                              mBlueCoin->getEventId())) {
+	if (!TFlagManager::smInstance->getBlueCoinFlag(
+	        gpMarDirector->getCurrentMap(), mBlueCoin->getEventId())) {
 		mBlueCoin->makeObjAppeared();
 		mShells[0].mContent = mBlueCoin;
 	}
