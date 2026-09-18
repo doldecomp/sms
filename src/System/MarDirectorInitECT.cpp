@@ -16,6 +16,22 @@
 // rogue includes
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// Parked helper for a JDRNameRefGen.hpp item: the ROM's
+// `JDrama::TNameRefGen::search2` binds its result before returning it, which is
+// worth 8-16 bytes of frame per expansion (the "named-and-returned result"
+// carrier of closure batch 74/82). Measured here: +16 per site in initECTMir
+// (0x60 -> 0x80 over two sites) and +8 in setupPerformList_console; it is
+// parked rather than put in the header because 40 other units expand search2
+// and the header batch owns that file. It is deliberately NOT used in
+// initECDisp: 13 sites there overshoot the ROM's 0x370 by 48.
+static inline JDrama::TNameRef* ECTSearch(const char* name)
+{
+	JDrama::TNameRef* ref = JDrama::TNameRefGen::search2(name);
+	return ref;
+}
+
+// TODO: 93.9%, 16 bytes of frame short (0x208 vs 0x218) after the ECTSearch
+// level (+32 over three sites).
 void TMarDirector::initECTGft(
     TPerformList* param_1, TPerformList* param_2,
     JDrama::TViewObjPtrListT<JDrama::TViewObj>* perf_event_group,
@@ -23,7 +39,7 @@ void TMarDirector::initECTGft(
 {
 	if (gpPollution->getJointModelNum() == 0) {
 		TBathWaterManager* bathtubWater
-		    = JDrama::TNameRefGen::search<TBathWaterManager>("バスタブの水");
+		    = (TBathWaterManager*)ECTSearch("バスタブの水");
 		if (bathtubWater)
 			param_2->push_back(bathtubWater->getPreprocessor(), CUE_DRAW);
 
@@ -31,10 +47,9 @@ void TMarDirector::initECTGft(
 	}
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* graffitiGroup
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("落書きグループ");
-	JDrama::TViewObj* drawInit
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("SMS Draw Init");
+	    = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)ECTSearch(
+	        "落書きグループ");
+	JDrama::TViewObj* drawInit = (JDrama::TViewObj*)ECTSearch("SMS Draw Init");
 
 	JDrama::TEfbCtrlTex* graffitiEfbTex
 	    = new JDrama::TEfbCtrlTex("graffito check");
@@ -85,24 +100,27 @@ JDrama::TViewObj* TMarDirector::initECTMir(
     JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* param_2)
 {
 	JDrama::TEfbCtrlTex* mirrorTex
-	    = JDrama::TNameRefGen::search<JDrama::TEfbCtrlTex>("鏡描画ステージ");
+	    = (JDrama::TEfbCtrlTex*)ECTSearch("鏡描画ステージ");
 
 	mirrorTex->unk20.set(0x228);
 	mirrorTex->mVFilter = SMSVFilter_flicker;
 
-	TMirrorCamera* mirrorCam
-	    = JDrama::TNameRefGen::search<TMirrorCamera>("鏡カメラ");
+	TMirrorCamera* mirrorCam = (TMirrorCamera*)ECTSearch("鏡カメラ");
 
 	GXTexObj& obj = mirrorCam->unk60;
 	mirrorTex->setTexAttb(obj);
-	mirrorTex->setSrcRect(
-	    JDrama::TRect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj)));
+	JDrama::TRect rect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj));
+	mirrorTex->setSrcRect(rect);
 
 	return mirrorTex;
 }
 
-extern void marker();
-
+// TODO: 97.5%, 104 bytes of frame short (0x308 vs 0x370) plus a whole
+// callee-saved rotation (r20/r21/r22 shifted by one from 0x150 onwards) and
+// three stray instructions. The ECTSearch level above overshoots here (+152
+// over 13 sites), so this function's low region is not the search chain.
+// The rotation starts at the TEfbCtrlDisp construction, i.e. before any
+// search: look there first.
 void TMarDirector::initECDisp(
     TPerformList* param_1,
     JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* param_2,
@@ -229,13 +247,15 @@ void TMarDirector::initECDisp(
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+// TODO: 99.8%, frame exact; every referenced slot is 4 bytes low, i.e. one
+// +4 of low region below the ECTSearch expansion, which is the earliest one.
 void TMarDirector::setupPerformList_console()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* list
-	    = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)
-	        JDrama::TNameRefGen::search2("Group 2D");
+	    = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)ECTSearch("Group 2D");
 
-	list->insert(new TEmitterViewObj(gpEmitterManager4D2));
+	TEmitterViewObj* emitter = new TEmitterViewObj(gpEmitterManager4D2);
+	list->insert(emitter);
 
 	unk30->push_back(list, CUE_MOVE | CUE_CALC_ANIM);
 	unk30->push_back("Group 2D 2", CUE_MOVE | CUE_CALC_ANIM);
