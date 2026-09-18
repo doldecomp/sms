@@ -26,6 +26,14 @@ s32 TPollutionLayer::mGlassWallEffectTime = 120;
 
 void TPollutionLayer::changeType(u16 type) { mPollutionType = type; }
 
+// TODO: 99.8%. Instruction-exact; frame 0xb0 vs 0x98, and every referenced
+// slot (the three int-to-float magic pairs) is exactly 24 bytes higher in
+// retail, so the whole residue is 24 dead bytes at the bottom of the local
+// area. Same family as `TPollutionPos::isSame` in docs/catalog/frame-gaps.md
+// ("The carrier has to be a callee with no matching out-of-line copy"): the
+// inlined callees here are TPollutionPos::index/isInArea/getDepthWorld, whose
+// out-of-line copies are emitted and already match, so the bytes cannot be
+// theirs. TPollutionLayer::action() is 40 bytes short with the same shape.
 bool TPollutionLayer::getPollutedPosNear(f32 range, JGeometry::TVec3<f32>* dest)
 {
 	TPollutionPos& pos = mPos;
@@ -108,9 +116,28 @@ void TPollutionLayer::glassWall()
 	}
 }
 
+// Exact. The scale vector has to be **one** function-scope local shared by
+// both emitters: measured in closure batch 83, every per-site spelling costs
+// two 12-byte slots instead of one (unnamed `TVec3(1.5f, 1.5f, 1.5f)`
+// temporary, `TVec3(1.5f)`, a per-site named local, an uninitialised local plus
+// `setAll`, and calling setGlobalDynamicsScale/setGlobalParticleScale
+// separately all give frame 0x48 against retail's 0x30), while writing
+// mGlobalDynamicsScale/mGlobalParticleScale directly gives 0x18. So retail
+// binds the reference once and MWCC charges one slot for the object and one for
+// the inlined setter's parameter binding.
+//
+// TODO: the `#pragma dont_inline` is still needed and is still a fakematch.
+// Retail calls fire() from action() at depth 1, so per docs the body should be
+// 15+ statements; this one is 10 and every spelling that pushes it over the
+// budget (splitting the scale into field assignments, two setters per site)
+// also costs the extra 24 bytes of frame. The other reading is batch 75's
+// caller-budget rule: action() is itself 40 bytes of dead low region short, so
+// retail's action may simply have spent its expansion budget before reaching
+// fire.
 #pragma dont_inline on
 void TPollutionLayer::fire()
 {
+	JGeometry::TVec3<f32> scale(1.5f, 1.5f, 1.5f);
 	if (getPollutedPosNear(mFireArea, &mEffectPositions[mCurEffectPosIndex])) {
 		mEffectTimer += 1;
 		if (mEffectTimer > mFireEffectWaitTime) {
@@ -120,12 +147,12 @@ void TPollutionLayer::fire()
 			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 			        MAP_POLLUTION_MS_NEWFIRE_B,
 			        &mEffectPositions[mCurEffectPosIndex], 2, this)) {
-				em->setGlobalScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
+				em->setGlobalScale(scale);
 			}
 			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 			        MAP_POLLUTION_MS_NEWFIRE_A,
 			        &mEffectPositions[mCurEffectPosIndex], 0, this)) {
-				em->setGlobalScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
+				em->setGlobalScale(scale);
 			}
 			mCurEffectPosIndex += 1;
 			if (mCurEffectPosIndex >= mEffectPositionsCapacity)
