@@ -141,8 +141,13 @@ void TMarDirector::fireGetStar(TShine* shine)
 	unk25C = shine;
 	unk4C |= 1;
 	JGeometry::TVec3<f32>& v = shine->mInitialRotation;
-	fireStartDemoCamera(!shine->unk190 ? cCameraBckNameShineGetInside
-	                                   : cCameraBckNameShineGetOutside,
+	// The polarity is read off the branch: retail's `bne` goes to the Inside
+	// name, so a non-zero unk190 selects Inside.
+	// TODO: 0%. The remaining residual is that retail calls
+	// fireStartDemoCamera out of line here while MWCC expands ours; its body
+	// is already byte-exact, so the missing level is on the caller side.
+	fireStartDemoCamera(shine->unk190 ? cCameraBckNameShineGetInside
+	                                  : cCameraBckNameShineGetOutside,
 	                    &gpMarioOriginal->mPosition, -1, v.y, false, nullptr, 0,
 	                    nullptr, JDrama::TFlagT<u16>(0));
 }
