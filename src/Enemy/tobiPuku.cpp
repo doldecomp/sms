@@ -129,6 +129,7 @@ TTobiPukuLaunchPadSaveLoadParams::TTobiPukuLaunchPadSaveLoadParams(
     , PARAM_INIT(mSLFlySpeed, 30.0f)
     , PARAM_INIT(mSLLaunchAngle, 45.0f)
 {
+	TParams::load(mPrmPath);
 }
 
 TTobiPukuSaveLoadParams::TTobiPukuSaveLoadParams(const char* prm)
@@ -139,6 +140,7 @@ TTobiPukuSaveLoadParams::TTobiPukuSaveLoadParams(const char* prm)
     , PARAM_INIT(mSLFlyGravityY, 0.2f)
     , PARAM_INIT(mSLPowerFromWater, 1.0f)
 {
+	TParams::load(mPrmPath);
 }
 
 TTobiPukuLaunchPadManager::TTobiPukuLaunchPadManager(const char* name)
