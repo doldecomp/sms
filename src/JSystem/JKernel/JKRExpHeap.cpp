@@ -168,6 +168,19 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 	return ptr;
 }
 
+// TODO: 98.8%, frame 0x38 and all 185 instructions now match; the residue is
+// three instructions' worth of scheduling. The hoisted `~(align - 1)` mask sits
+// in the prologue for us (`nor r6, r0, r0` before the `stwu`) and *after* the
+// `size = ALIGN_NEXT(size, 4)` pair for retail (`nor r4, r0, r0`), so retail
+// reuses the freed `size` parameter register r4 for the mask while we take r6
+// and put the block content in r4 -- five swapped operands in the loop follow
+// from that one slot. Naming the aligned address (below) was what landed the
+// frame: it is +8 with no instruction change. Ruled out for the mask slot: an
+// explicit `u32 alignMask`/`alignMinus1` local before the loop (+81 differing
+// operands, the mask stops being folded into the `and`), `(u32)align` at the
+// call (186 instructions), spelling ALIGN_NEXT out (188), a separate
+// `alignedSize` local instead of reassigning `size` (187), and moving the size
+// alignment below the declaration block (neutral).
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
 	size                    = ALIGN_NEXT(size, 4);
@@ -178,9 +191,9 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 	CMemBlock* newUsedBlock = nullptr;
 
 	for (CMemBlock* block = mHead; block; block = block->mNext) {
-		// this bastard is the problem
 		void* content = block->getContent();
-		u32 offset    = ALIGN_NEXT((u32)content, align) - (u32)content;
+		u32 aligned   = ALIGN_NEXT((u32)content, align);
+		u32 offset    = aligned - (u32)content;
 
 		if (block->mAllocatedSpace < size + offset) {
 			continue;
