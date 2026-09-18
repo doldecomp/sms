@@ -555,29 +555,23 @@ void TTamaNoko::requestShadow()
 // *calls* JGeometry::TVec3<f>::scale(f) (weak, boid.cpp holds the surviving
 // copy) at all four sites; we expand it, which costs 42 instructions. The
 // literal and the temporaries are right, the inline decision is not.
-// Batch 104 measured why: `scale(f)` is three statements, so it expands
-// through depth 3 and is a `bl` from depth 4 down. All four sites are
-// therefore *three inline levels* below this body, and the copy before the
-// `bl` plus the copy after it (which feeds setGlobalScale) are by-value
-// hand-offs through those levels. The levels are shared - 22 TUs and 64 ROM
-// sites call `scale` this way - so they belong in a header (Particles.hpp
-// already carries an emit-then-setGlobalScale helper), not in three
-// throwaway statics here. Forcing the `bl` by moving `scale` out of the
-// class body costs 217 functions project-wide; see codegen-tells.md.
+// Batch 106 closed it without any new level: `scale(f)` is three statements,
+// so it expands through depth 3 and is a `bl` from depth 4 down, and
+// `setGlobalScale(mScaling * 0.8f)` reaches exactly that depth --
+// `operator*` sits inside an inlined call's *argument*, which costs one
+// level, so operator* is 2, operator*= 3 and scale 4. The copy in front of
+// the `bl` is operator*'s by-value left operand and the copy behind it is its
+// return value (landEffect 57.2 -> 94.6).
 void TTamaNoko::landEffect()
 {
 	if (mGroundPlane->isSand()) {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-			JGeometry::TVec3<f32> scale(mScaling);
-			scale.scale(0.8f);
-			emitter->setGlobalScale(scale);
+			emitter->setGlobalScale(mScaling * 0.8f);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-			JGeometry::TVec3<f32> scale(mScaling);
-			scale.scale(0.8f);
-			emitter->setGlobalScale(scale);
+			emitter->setGlobalScale(mScaling * 0.8f);
 		}
 	}
 
@@ -589,15 +583,11 @@ void TTamaNoko::landEffect()
 	} else {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-			JGeometry::TVec3<f32> scale(mScaling);
-			scale.scale(0.8f);
-			emitter->setGlobalScale(scale);
+			emitter->setGlobalScale(mScaling * 0.8f);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_B, &mPosition, 0, nullptr)) {
-			JGeometry::TVec3<f32> scale(mScaling);
-			scale.scale(0.8f);
-			emitter->setGlobalScale(scale);
+			emitter->setGlobalScale(mScaling * 0.8f);
 		}
 	}
 
