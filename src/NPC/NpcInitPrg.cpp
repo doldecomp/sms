@@ -129,10 +129,31 @@ inline void TBaseNPC::initSinkNpc_()
 // a named unk124->getGraph() +8, a named mWaitTurnSpeed +8 -- 48 of the 112 at
 // best, and getMActor()->getModel() for the joint-name fetch is +0x18 but costs
 // an instruction. Naming the setMtxEffect_ model fetch (below) was the register
-// fix, not a frame lever. The carrier is most likely a dead non-trivial local in
-// one of the inlined constructors (TNpcSink, TNpcUnk22CStruct, TMultiMtxEffect,
-// TNpcUnk230Struct, TNpcInbetween all have their ctors inlined here -- retail
-// emits __nw__ without a ctor bl for each).
+// fix, not a frame lever.
+//
+// Header round 25 priced the inlined-constructor carrier and closed it. A
+// 12-byte non-trivial dead local is worth exactly +0x10 here in each of
+// TNpcSink, TNpcUnk22CStruct, TNpcUnk230Struct (NpcBase.hpp) and
+// TMultiMtxEffect (MtxUtil.hpp), so 112 needs *seven* such slots and this TU
+// only has nine expansions to spend them on. None of the four is legal:
+//   - TNpcInbetween's constructor is excluded outright, because
+//     TBossHanachanPartsBase::TBossHanachanPartsBase inlines it and is
+//     byte-exact at frame 0x50.
+//   - TNpcSink, TNpcUnk22CStruct and TNpcUnk230Struct are pure initialiser
+//     lists with no statement body, which is header round 24's JADPrm test:
+//     a constructor that is only `unkN = val;` holds no local.
+//   - TMultiMtxEffect's constructor is provably empty, because this function
+//     is instruction-exact and no member store follows any of its six
+//     `new TMultiMtxEffect` sites in the tree. Measured anyway, for the next
+//     agent: a dead 12-byte local there is +0x10 in TBaseNPC::init,
+//     TMario::initModel (0x500 -> 0x510, retail 0x5c0) and
+//     TEnemyMario::initModel (0x2a0 -> 0x2b0, retail 0x2f8) and +0x18 in
+//     TMarioCap::TMarioCap (two expansions, 0x108 -> 0x120, retail 0x180).
+//     No site lands, so it is padding, not a carrier.
+// That leaves only initNpcLight_ (UNUSED, two expansions here), setMtxEffect_
+// and initSinkNpc_ -- bodies private to this TU -- and none of the three has
+// an intermediate a 2002 developer would have named and then not used. The
+// 112 bytes stay open.
 void TBaseNPC::init(TLiveManager* param_1)
 {
 	int iVar18 = mActorType - 0x4000001;
