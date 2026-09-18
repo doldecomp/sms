@@ -15,8 +15,31 @@
 f32 TMapWireActor::mCommonAttackRadius = 200.0f;
 f32 TMapWireActor::mCommonAttackHeight = 200.0f;
 
-void TMapWireActor::checkTakingActor() { }
+// The `unk74->unk7C` guard is read off doActorToWire's inlined copy
+// (`lwz r3, 0x78(r30)` is unk4.unk74, not the manager's own unk7C), which is
+// what proves this block belongs to TMapWireActor rather than the manager.
+// TODO: an uninitialised 36-40 byte non-trivial local here takes
+// TMapWireActorManager::doActorToWire from 99.9% to exact (frame 0x30 -> 0x58)
+// with no instruction change, and this body is exactly 40 bytes short of the
+// map's UNUSED 0xe8, so the missing statements are the ones that used it.
+// Three `JGeometry::TVec3<f32>` (the start/end/foot triple getPosInWire uses)
+// is the right size; left out for want of a use for them.
+void TMapWireActor::checkTakingActor()
+{
+	if (unk74->unk7C != nullptr) {
+		for (int i = 0; i < mColCount; ++i) {
+			THitActor* col = mCollisions[i];
+			if (col->isActorType(0x80000001)
+			    && col->receiveMessage(this, HIT_MESSAGE_TAKE))
+				mHeldObject = (TTakeActor*)mCollisions[i];
+		}
+	}
+}
 
+// TODO: frame 0xb8 vs 0xa8. The shifts are not uniform (+8 on the vector
+// temporaries, +0x14 on the `start` pair and +0x2c on the last pair), so slots
+// are missing in the middle of the pool, not just at the bottom.
+// `getPosition()` over `mPosition` is worse (99.3 -> 96.5).
 f32 TMapWireActor::getPosInWire() const
 {
 	JGeometry::TVec3<f32> start;
@@ -110,14 +133,7 @@ void TMapWireActorManager::doActorToWire()
 		unk4.unk70       = 1;
 	}
 
-	if (unk0->mHeldObject != nullptr) {
-		for (int i = 0; i < unk4.mColCount; ++i) {
-			THitActor* col = unk4.mCollisions[i];
-			if (col->isActorType(0x80000001)
-			    && col->receiveMessage(&unk4, HIT_MESSAGE_TAKE))
-				unk4.mHeldObject = (TTakeActor*)unk4.mCollisions[i];
-		}
-	}
+	unk4.checkTakingActor();
 
 	if (previousWire != nullptr) {
 		if (unk7C != nullptr && unk7C != previousWire)
@@ -144,6 +160,8 @@ void TMapWireActorManager::doActorToWire()
 		previousWire->release();
 }
 
+// TODO: UNUSED at 0x6c in the map and never inlined anywhere in the TU, so
+// there is no call site to read a body off. Left empty rather than fabricated.
 void TMapWireActorManager::doWireToActor() { }
 
 TMapWireActorManager::TMapWireActorManager(TTakeActor* param_1)
@@ -166,13 +184,16 @@ void TMapWireManager::getPointPosInNthWire(int param_1,
                                            const JGeometry::TVec3<f32>& param_2,
                                            JGeometry::TVec3<f32>* param_3) const
 {
-	getWire(param_1)->getPointPosOnWire(getWire(param_1)->getPosInWire(param_2),
-	                                    param_3);
+	f32 posInWire = getWire(param_1)->getPosInWire(param_2);
+	getWire(param_1)->getPointPosOnWire(posInWire, param_3);
 }
 
-void TMapWireManager::getPointPosInWire(const JGeometry::TVec3<f32>&,
-                                        JGeometry::TVec3<f32>*) const
+void TMapWireManager::getPointPosInWire(const JGeometry::TVec3<f32>& param_1,
+                                        JGeometry::TVec3<f32>* param_2) const
 {
+	int wireNo = getWireNo(param_1);
+	if (wireNo != -1)
+		getPointPosInNthWire(wireNo, param_1, param_2);
 }
 
 void TMapWireManager::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -223,6 +244,8 @@ void TMapWireManager::loadAfter()
 	entry(gpMarioOriginal);
 }
 
+// TODO: frame 0x50 vs 0x40. Uniform +0x10 on the saved registers and +8 on the
+// single `stream >>` temporary at 0x34/0x2c, so both regions are short.
 void TMapWireManager::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
