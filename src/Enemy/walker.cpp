@@ -12,6 +12,16 @@
 // between the scalar and the array, i.e. one unreferenced 16-byte local declared
 // between them. The `volatile` round-trip itself is still the unexplained
 // "frsqrte with no Newton step" idiom (same shape as THitActor::calcEntryRadius).
+// Measured since: an uninitialised `TVec3` declared after `diffs` is +16 (12
+// plus 8-byte alignment) and lands the hole, and each `getPoint1()`-style
+// accessor expansion is +4 of low region (all six expansions are +24 and give
+// frame 0x70 with every vector 4 bytes high, so they fill the wrong region).
+// 100% comes out of exactly one combination -- the dead `TVec3` plus the two
+// `getPoint1()` expansions of the first `set` only -- which is asymmetric
+// enough to be an accounting coincidence rather than retail's source, so it is
+// not committed. Also measured: two dead vectors or a dead `TVec3[2]` reach
+// 0x70 from above the pool and leave the vectors 8 high; binding each point to
+// a `const TVec3&` first reorders the loads (99.0%).
 static f32 calcFarthestVertex(const TBGCheckData* param_1,
                               const JGeometry::TVec3<f32>& param_2,
                               const JGeometry::TVec3<f32>& param_3)
