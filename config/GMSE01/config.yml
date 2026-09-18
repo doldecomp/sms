@@ -15,6 +15,16 @@ fill_gaps: true
 # DSP binary -- and objdump names an unrelated function as its target, which is
 # the tell. `source` is the address of the word, `end` is exclusive.
 block_relocations:
+  # The same accident happens in `.text`: every `MSD_BGM_*` id is a small
+  # 0x8001xxxx integer (include/MSound/BackgroundMusic.hpp), and the whole
+  # range lands inside `TBeeHive::doWait` (0x8000FF10..0x8001059C), so dtk
+  # rewrites the `lis`/`addi` pair that materialises a BGM id as a reference to
+  # `doWait__8TBeeHiveFv+<offset>`. Only 4-aligned ids get hit (an `addi` of a
+  # non-multiple of 4 is not a plausible instruction address), which is the
+  # tell. Blocking by relocation *target* covers every call site at once,
+  # including future ones; nothing else in the image references that range.
+  - target: 0x80010000
+    end: 0x80010031
   - source: 0x803E03E0 # JUTDirectPrint::sFontData
     end: 0x803E03E4
   - source: 0x803E0500 # JUTDirectPrint::sFontData2
