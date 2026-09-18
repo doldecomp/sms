@@ -1266,8 +1266,9 @@ void TEnemyMario::emWaitingToInviteMario()
 	    && gpMarioPos->y < mPosition.y + mSettingParams->mSearchHeight.get()) {
 		JGeometry::TVec3<f32> gatePoint;
 		mEMario->getTracer()->getGraph()->getGraphNode(8).getPoint(&gatePoint);
-		mFaceAngle.y
-		    = matan(gatePoint.z - waitingPoint.z, gatePoint.x - waitingPoint.x);
+		f32 dx       = gatePoint.x - waitingPoint.x;
+		f32 dz       = gatePoint.z - waitingPoint.z;
+		mFaceAngle.y = matan(dz, dx);
 		mModelFaceAngle = mFaceAngle.y;
 		changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 		mReplayIndex = 0;
