@@ -453,6 +453,31 @@ TMapObjBase* TFruitLauncher::appearFruit() const
 		                                   mPosition.z, 0x40000394, false);
 }
 
+// fabricated: retail calls the weak TLiveActor::getMActor() from fireObj
+// instead of expanding it -- the map lists that 8-byte accessor as a real
+// symbol of this TU, referenced from exactly this site, and an 8-byte body
+// only stops expanding at inline depth five. No spelling of the statement
+// itself reproduces the call, so the enclosing expansions are missing; these
+// thin TU-local levels stand in for them (same shape as killer.cpp's
+// MsGetVecFromRotY ladder). Three levels is exact: two leave getMActor
+// expanded (98.95), four also push J3DFrameCtrl::setFrame out of line, which
+// retail inlines (99.2). TODO: replace them with the real functions once
+// they are identified; 16 bytes of frame are still missing.
+static inline void resetSwitchAnmFrame(TFruitSwitch* sw)
+{
+	sw->getMActor()->getFrameCtrl(0)->setFrame(0.0f);
+}
+
+static inline void resetSwitchAnmFrame_L3(TFruitSwitch* sw)
+{
+	resetSwitchAnmFrame(sw);
+}
+
+static inline void resetSwitchAnmFrame_L1(TFruitSwitch* sw)
+{
+	resetSwitchAnmFrame_L3(sw);
+}
+
 void TFruitLauncher::fireObj()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(
@@ -468,13 +493,7 @@ void TFruitLauncher::fireObj()
 		mCurrentSwitch = 0;
 
 	TFruitSwitch* sw = mSwitches[mCurrentSwitch];
-	// TODO: retail calls the weak TLiveActor::getMActor() here instead of
-	// expanding it -- the map lists that 8-byte accessor as a real symbol of
-	// this TU, referenced from exactly this site. An 8-byte body only stops
-	// expanding at inline depth five, so something above it is missing; no
-	// spelling of this statement reproduces the call, which is why
-	// validate-symbol-order reports getMActor as MISSING for this unit.
-	sw->getMActor()->getFrameCtrl(0)->setFrame(0.0f);
+	resetSwitchAnmFrame_L1(sw);
 	sw->offHitFlag(1);
 	sw->getModel()->calc();
 
