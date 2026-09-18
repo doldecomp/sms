@@ -349,6 +349,20 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
+// TNode::addVelocity is a one-statement in-class body, so `mVelocity += v`
+// inside it puts TVec3::add at inline depth 3 when the call is made directly
+// -- and retail `bl`s add here, i.e. depth 4. One forwarding level supplies
+// it (91.6 -> 95.9). The natural home is a TBGTentacle member
+// (`addVelocityToLastNode`), but BossGessoTentacle.hpp is shared with
+// bossgesso.cpp, so the level is parked TU-local.
+// TODO: promote when that header is next swept.
+// fabricated
+static inline void BGTakeHitAddLastNodeVelocity(TBGTentacle* owner,
+                                                const JGeometry::TVec3<f32>& v)
+{
+	owner->getLastNode()->addVelocity(v);
+}
+
 void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -399,8 +413,7 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			local_8c.scale(0.1f);
 
 			if (!unk74.isZero()) {
-				// TODO: one more inlining layer?!
-				mOwner->getLastNode()->addVelocity(unk74);
+				BGTakeHitAddLastNodeVelocity(mOwner, unk74);
 				local_8c += unk74;
 			}
 
