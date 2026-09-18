@@ -481,14 +481,22 @@ u8 J3DMaterialFactory::newDither(int idx) const
 		return 0xFF;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// J3DMaterialFactory::newNBTScale (batch 127).
+static inline u16 J3DMaterialFactoryNBTScaleIdx(const J3DMaterialInitData* p)
+{
+	u16 nBTScaleIdx = p->mNBTScaleIdx;
+	return nBTScaleIdx;
+}
+
 J3DNBTScale J3DMaterialFactory::newNBTScale(int idx) const
 {
 	J3DNBTScale dflt;
 
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
 
-	if (initData->mNBTScaleIdx != 0xFFFF)
-		return J3DNBTScale(mpNBTScaleInfo[initData->mNBTScaleIdx]);
+	if (J3DMaterialFactoryNBTScaleIdx(initData) != 0xFFFF)
+		return J3DNBTScale(mpNBTScaleInfo[J3DMaterialFactoryNBTScaleIdx(initData)]);
 	else
 		return dflt;
 }

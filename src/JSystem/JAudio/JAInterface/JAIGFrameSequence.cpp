@@ -662,6 +662,14 @@ void JAIBasic::checkReadSeq()
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// JAIBasic::checkSeqWave (batch 127).
+static inline u32 JAIGFrameSequenceFinishedSceneSet(const JAIBasic* p)
+{
+	u32 finishedSceneSet = p->mFinishedSceneSet;
+	return finishedSceneSet;
+}
+
 void JAIBasic::checkSeqWave()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
@@ -673,7 +681,7 @@ void JAIBasic::checkSeqWave()
 			continue;
 		if (sound->getSeqParameter()->mWaitSceneSet == 0xffffffff)
 			continue;
-		if (mFinishedSceneSet == 0xffffffff)
+		if (JAIGFrameSequenceFinishedSceneSet(this) == 0xffffffff)
 			continue;
 
 		u32 id = sound->getSeqParameter()->mWaitSceneSet;

@@ -61,6 +61,14 @@ void TPolarCamera::JSGSetProjectionFovy(float fovy) { mFovy = fovy; }
 float TPolarCamera::JSGGetProjectionAspect() const { return mAspect; }
 void TPolarCamera::JSGSetProjectionAspect(float aspect) { mAspect = aspect; }
 
+// Binding level over a raw member read, worth +8 of low region in
+// JDrama::TLookAtCamera::perform (batch 127).
+static inline f32 JDRCameraFar(const TLookAtCamera* p)
+{
+	f32 far = p->mFar;
+	return far;
+}
+
 void TLookAtCamera::perform(u32 cue, TGraphics* graphics)
 {
 	if (!(cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)))
@@ -69,7 +77,7 @@ void TLookAtCamera::perform(u32 cue, TGraphics* graphics)
 	MtxPtr projMtx = graphics->mProjMtx.mMtx;
 	C_MTXPerspective(projMtx, mFovy, mAspect, mNear, mFar);
 	graphics->mNearPlane = mNear;
-	graphics->mFarPlane  = mFar;
+	graphics->mFarPlane  = JDRCameraFar(this);
 	C_MTXLookAt(graphics->mViewMtx, &mPosition, &mUp, &mTarget);
 
 	if (cue & CUE_SET_PROJECTION)
@@ -99,6 +107,14 @@ void TOrthoProj::load(JSUMemoryInputStream& stream)
 	TPlacement::load(stream);
 	stream >> mField[0] >> mField[1] >> mField[2] >> mField[3];
 }
+// Binding level over a raw member read, worth +8 of low region in
+// JDrama::TOrthoProj::perform (batch 127).
+static inline f32 JDRCameraFar(const TOrthoProj* p)
+{
+	f32 far = p->mFar;
+	return far;
+}
+
 void TOrthoProj::perform(u32 cue, TGraphics* graphics)
 {
 	if (!(cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)))
@@ -108,7 +124,7 @@ void TOrthoProj::perform(u32 cue, TGraphics* graphics)
 	C_MTXOrtho(projMtx, mField[1], mField[3], mField[0], mField[2], mNear,
 	           mFar);
 	graphics->mNearPlane = mNear;
-	graphics->mFarPlane  = mFar;
+	graphics->mFarPlane  = JDRCameraFar(this);
 	MTXTrans(graphics->mViewMtx, mPosition.x, mPosition.y, mPosition.z);
 
 	if (cue & CUE_SET_PROJECTION)

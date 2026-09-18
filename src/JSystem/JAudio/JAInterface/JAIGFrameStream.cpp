@@ -157,6 +157,14 @@ void JAIBasic::checkRequestStream()
 	JAInter::StreamLib::setPrepareFlag(0);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// JAIBasic::checkPlayingStream (batch 127).
+static inline f32 JAIGFrameStreamCurrentValue(const JAIMoveParaSet* p)
+{
+	f32 currentValue = p->mCurrentValue;
+	return currentValue;
+}
+
 void JAIBasic::checkPlayingStream()
 {
 	JAIStreamUpdateParameter* sud = unk0->mStreamUpdate;
@@ -217,7 +225,7 @@ void JAIBasic::checkPlayingStream()
 				if (!unk0->moveParameter(mps))
 					streamParam->mVolumeUpdate ^= 1 << j;
 
-			vol *= mps->mCurrentValue;
+			vol *= JAIGFrameStreamCurrentValue(mps);
 		}
 		if (unk0->mStreamUpdate->mVolume != vol) {
 			JAInter::StreamLib::setVolume(vol);

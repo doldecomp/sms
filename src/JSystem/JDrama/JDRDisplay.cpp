@@ -24,10 +24,18 @@ TDisplay::TDisplay(u16 param_1, void* param_2, void* param_3,
 	unk60 = new TVideo();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// JDrama::TDisplay::startRendering (batch 127).
+static inline TVideo* JDRDisplayUnk60(const TDisplay* p)
+{
+	TVideo* v60 = p->unk60;
+	return v60;
+}
+
 void TDisplay::startRendering()
 {
 	unk60->setNextRenderMode(unk10);
-	unk60->setNextXFB(unk4[unkC]);
+	JDRDisplayUnk60(this)->setNextXFB(unk4[unkC]);
 	GXSetDispCopyGamma(unk50);
 	GXSetDispCopyFrame2Field(GX_COPY_PROGRESSIVE);
 	IssueGXPixelFormatSetting(unk10, unk64.check(0x8), unk64.check(0x10));

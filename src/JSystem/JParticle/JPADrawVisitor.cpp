@@ -1024,6 +1024,14 @@ void JPADrawExecRotation::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// JPADrawExecRotationCross::exec (batch 127).
+static inline f32 JPADrawVisitorScaleX(const JPADrawParams* p)
+{
+	f32 scaleX = p->mScaleX;
+	return scaleX;
+}
+
 void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
                                     JPABaseParticle* particle)
 {
@@ -1035,7 +1043,7 @@ void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
 	f32 sin = JMASSin(params->unk34);
 	f32 cos = JMASCos(params->unk34);
 
-	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 x0 = -JPADrawVisitorScaleX(params) * (dc->pcb->unk4.x + dc->pcb->unkC.x);
 	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
 	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
@@ -1517,6 +1525,14 @@ void JPADrawCalcScaleY::calc(const JPADrawContext* dc,
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// JPADrawCalcScaleXBySpeed::calc (batch 127).
+static inline f32 JPADrawVisitorUnkC(const JPADrawParams* p)
+{
+	f32 vC = p->unkC;
+	return vC;
+}
+
 void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext* dc,
                                     JPABaseParticle* particle)
 {
@@ -1527,7 +1543,7 @@ void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext* dc,
 
 	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
 		params->mScaleX
-		    = params->unkC
+		    = JPADrawVisitorUnkC(params)
 		      * ((dc->mExtraShape->getIncreaseRateX() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueX());
 	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {

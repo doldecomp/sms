@@ -785,12 +785,20 @@ BOOL TChannel::forceStopLogicalChannel()
 	return TRUE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// JASystem::TChannel::stopLogicalChannel (batch 127).
+static inline TDSPChannel* JASChannelUnk20(const TChannel* p)
+{
+	TDSPChannel* v20 = p->unk20;
+	return v20;
+}
+
 BOOL TChannel::stopLogicalChannel()
 {
 	if (!unk20)
 		return FALSE;
 
-	unk20->mCallback   = 0;
+	JASChannelUnk20(this)->mCallback   = 0;
 	unk20->mCBInterval = 0;
 	unk20->stop();
 	TDSPChannel::free(unk20, (uintptr_t)this);
