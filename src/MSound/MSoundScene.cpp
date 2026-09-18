@@ -22,6 +22,41 @@ MSSceneSE::MSSceneSE(u32 param_1)
 	mUseRandPlay = 0;
 }
 
+// TODO: 96.8%. Two residues, and the first is shared with sortMaxTrans:
+// retail addresses the `getDistFromCamera(mMaxTrans[direction][rank])`
+// argument as an *independently re-derived* indexed load while every other
+// access to the same slot goes through one materialised address. In the
+// out-of-line sortMaxTrans that is `lwzx r4, r25, r28` (row base + rank * 4)
+// against our `lwz r4, 0(r26)`, and it is why retail keeps both `rank` (r27)
+// and `rank << 2` (r28) in callee-saved registers where we let the scaled
+// index die in r0. In frameLoop's inlined expansion it is the same shape with
+// `rank` = 0 left unfolded (`li r0, 0; slwi r4, r0, 2; addi r24, r4, 0x428;
+// add r24, r25, r24`), and it accounts for the whole register difference:
+// retail saves r22-r31, we save r24-r31, because retail needs one register for
+// the re-derived address and one more for the row base it no longer folds the
+// 0x428 into.
+// Measured, all worse than the plain subscript at every site (closure batch
+// 120; sortMaxTrans 99.3% / 117 instructions is the best spelling found):
+//   - `Vec** maxTrans = &mMaxTrans[direction][rank];` for the test, the store
+//     and the recursion with the full subscript at the distance argument:
+//     91.9%, 122 instructions, frame 0x40 -> 0x48;
+//   - the same slot pointer at every site: 95.0%, 120 instructions;
+//   - `Vec** maxTrans = mMaxTrans[direction];` (row pointer) mixed 84.5% /
+//     everywhere 86.5%, both 121-122 instructions;
+//   - a `getMaxTrans(u8, u8)` in-class accessor at the distance argument:
+//     96.0% (the accessor's *value* CSEs into a callee-saved register and the
+//     reload disappears entirely) -- but it is +8 of frameLoop's frame, which
+//     is the only lever measured that moves frameLoop the right way (0x90 ->
+//     0x98 against retail's 0xc0);
+//   - a named `Vec* maxTrans` after the null test: 93.4%.
+// Second residue: frameLoop's frame is 0xc0 against our 0x90. 8 of the 48
+// bytes are the two extra callee-saved registers above; of the rest, retail
+// has ~16 bytes of named locals declared *before* `listenerTrans` (which sits
+// at 0x3c against our 0x20, with the u8 -> f32 magic-double temporaries above
+// it at 0x58-0x6f against our 0x30-0x47) and ~24 more bytes of
+// inline-expansion pool. The three UNUSED helpers below (calcPosVolume 0x134,
+// calcPosPanLR 0x124, calcPosPanSR 0xf0, all still empty stubs) are the only
+// candidates in the TU for locals that frameLoop declared and never read.
 void MSSceneSE::frameLoop(u32 sound_id, Vec* trans, u8 trans_num)
 {
 	if (MSGMSound->gateCheck(sound_id) && trans_num <= ARRAY_COUNT(mTrans)) {
