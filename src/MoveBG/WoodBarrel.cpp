@@ -54,6 +54,11 @@ void TWoodBarrel::kill()
 {
 	TMapObjGeneral::kill();
 	JGeometry::TVec3<f32> vec = mPosition;
+	// The emit direction is left at the .prm default. The ROM reserves its
+	// twelve bytes just below `vec` (`vec` sits at 0x1c, not 0x10, with
+	// identical instructions), so the original declared it here and never
+	// wrote it -- the same leftover as TRocket::setDeadAnm's dead `dir`.
+	JGeometry::TVec3<f32> dir;
 	vec.y += 100.0f;
 	unk148->mPos.value = vec;
 	gpModelWaterManager->emitRequest(*unk148);
@@ -67,9 +72,9 @@ void TWoodBarrel::appeared()
 {
 	TMapObjGeneral::appeared();
 	if (SMS_IsMarioStatusHipDrop()) {
-		setDamageHeight(mMapObjData->mHit->unkC->unkC + 90.0f);
+		setDamageHeight(getMapObjData()->mHit->unkC->unkC + 90.0f);
 	} else {
-		setDamageHeight(mMapObjData->mHit->unkC->unkC);
+		setDamageHeight(getMapObjData()->mHit->unkC->unkC);
 	}
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
@@ -82,6 +87,11 @@ void TWoodBarrel::appear()
 	makeObjAppeared();
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ENM_DISAP_A_W,
 	                                            &mPosition, 0, nullptr);
+	// TODO: 8 bytes of frame short (0x18 vs 0x20). The missing slot is the
+	// named JAISound* result inside MSound::startSoundActor (closure batch
+	// 74's table lists this function under the wrapper form); every
+	// zero-instruction lever here is +0 and `&getPosition()` buys the frame
+	// at the cost of an extra instruction. Closes with that header change.
 	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0, nullptr,
 	                                0, 4);
 }
