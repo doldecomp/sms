@@ -27,6 +27,26 @@ JAISound* MSModBgm::modBgm(u8 param_1, u8 param_2)
 	// spellings, and an early `return nullptr`. MWCC always sinks the
 	// pointer assignment below the member store, so the fix has to make
 	// the store's source depend on `sound`.
+	// Closure re-pass (batch 164): the two zeros have to be *one* value
+	// node for retail's `li r31, 0; stb r31` pair, and every route there
+	// is now refuted.  Making the store read the pointer
+	// (`unk0 = sound;` -- legal pointer-to-bool -- and
+	// `unk0 = sound != nullptr;`) is constant-folded straight back to
+	// `li r0, 0`, bit for bit the current output.  Unifying the *types*
+	// of the two zeros is inert too: `u8 unk0` with `unk0 = 0`/`= 1`
+	// gives the identical 65 instructions.  An early `return sound;` or
+	// `return nullptr;` in each reset (with or without the `else`) moves
+	// the zero into r3 and costs a further instruction (93.4%).  An
+	// inline `JAISound* stopMod() { unk0 = false; return nullptr; }`
+	// header helper keeps the split zero *and* buys a dead 8-byte low
+	// region (frame 0x18 -> 0x20), so it is doubly wrong.  Note that
+	// retail's `li r31, 0` is redundant on its own terms -- r31 is
+	// already 0 from `mr. r31, r3` -- which proves MWCC did not know the
+	// value: the zero is materialised for `sound = nullptr` and then
+	// *reused* by the store, i.e. the store was scheduled after it.  Our
+	// scheduler sinks the `li` below the `stb` in every spelling tried,
+	// so the next lead is whatever pins the `li` above the store, not
+	// another spelling of the two statements.
 	JAISound* sound = MSBgm::getHandle(param_2);
 	if (!sound) {
 		sound = nullptr;
@@ -126,6 +146,18 @@ void MSBgmXFade::xFadeBgm(f32 param_1)
 	//    `fcmpo` operand pairs. Naming the table element, reading `unk0`
 	//    raw in the conditions and every operand-order permutation of the
 	//    two comparisons were measured: none moves the allocation.
+	//    Batch 164 pins down what the named local buys: replacing it
+	//    with raw `unk0` reads in both conditions stops the hoist
+	//    altogether (the member is re-read inside the loop, 88.0%, and
+	//    the `this`/table-base registers swap), so retail's `unk0` *is*
+	//    a named scalar local of getTiming's body, read once in the
+	//    preheader.  What is open is only its rank: retail gives the
+	//    loop-invariant local f1 and the per-iteration `scTiming[i]`
+	//    f0, we do the reverse, which is exactly what introduction
+	//    order predicts, our local being introduced before anything
+	//    else in the body.  So the real body introduces at least one
+	//    other float value *before* it reads `unk0` -- another reason
+	//    to reconstruct the missing `param_2` code first.
 	//    Probably a longer live range for `unk0` in the real body (see
 	//    getTiming's 0x60-vs-0x94 size gap below).
 	// Closure re-pass (batch 161): under the UNUSED-callee carrier rule
@@ -158,6 +190,13 @@ void MSBgmXFade::xFadeBgmForce(f32 param_1)
 	}
 }
 
+// TODO: the second condition below is spelled backwards on purpose and
+// should be read as evidence, not as source: retail's operand order is
+// `fcmpo cr0, f1, f0` with f1 holding `unk0`, i.e. the symmetric
+// `unk0 >= scTiming[i]`.  Because our f0/f1 assignment is the mirror of
+// retail's, writing that symmetric form makes the one instruction that
+// currently matches mismatch as well, so it stays in the accidental
+// spelling until the register assignment is understood.
 // TODO: map size 0x94, ours 0x60: thirteen instructions of the optional
 // `param_2` output are missing. It is invisible at the only call site
 // (xFadeBgm passes nullptr, so the stores fold away), so there is no
