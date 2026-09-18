@@ -20,6 +20,19 @@ extern const TNerveBase<TLiveActor>* NerveGetByIndex(int index);
 
 int TNpcEvent::mDownSunflowerNum = 0;
 
+// TODO: header item, measured (zero regressions tree-wide, DOL unchanged):
+// include/Strategic/spcinterp.hpp's `push(int v)` must forward through the
+// slice overload -- `void push(int v) { push(TSpcSlice(v)); }` instead of
+// `mProcessStack.push(TSpcSlice(v))`. That extra level puts
+// TSpcStack<TSpcSlice>::push at depth 4 for a builtin that reaches it through
+// one of the two static helpers below, where the allowance is 2 and its body
+// is five statements, so it becomes the `bl` the map wants: the missing
+// `push__21TSpcStack<9TSpcSlice>FRC9TSpcSlice` (weak, 0x68, emitted between
+// evIsNpcSinkBottom and evCheckLatestNerve4Npc) appears at 100%, symbol order
+// goes from FAIL to PASS, evIsNpcSinkBottom 72.2 -> 100, evCheckCurNerve4Npc
+// 72.6 -> 93.0, evCheckLatestNerve4Npc 71.1 -> 87.3. Builtins that push
+// directly keep it at depth 3, where five statements still inline, so nothing
+// in EventWatcher or Strategic moves.
 static void IsNpcFlagOn_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
                          u32 flag)
 {
@@ -42,9 +55,9 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	                                             ? npc->mSpine->getLatestNerve()
 	                                             : npc->mSpine->getCurrentNerve();
 
-	TSpcSlice result;
+	int result = 0;
 	if (actual == expected)
-		result.setDataInt(1);
+		result = 1;
 	interp->push(result);
 }
 
@@ -86,6 +99,34 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(result);
 }
 
+static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
+                               u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+
+	int result = 0;
+
+	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
+	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
+
+		gpMarDirector->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
+		gpMarDirector->unk126 = 1;
+
+		result = 1;
+	} else {
+		interp->pop();
+	}
+
+	interp->push(result);
+}
+
+// TODO: 92.7%. The discarded pop is wrong: the ROM copies only the *second*
+// word of the popped slice (`addi r0, r3, 4; lwzx r0, r4, r0; stw r0,
+// 0x70(r1)`) and then re-stores it into a second slot at 0x7c, where we copy
+// both words of the slice into one temporary. So the argument is read through
+// something that yields just the data word (no getDataInt() type switch is
+// emitted), and it is still live afterwards -- the `(void)` below is a
+// placeholder, not the ROM's shape. 40 bytes of frame short as well.
 static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
                                         u32 arg_num)
 {
@@ -107,27 +148,6 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 			result = 1;
 		}
 	}
-	interp->push(result);
-}
-
-static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
-                               u32 arg_num)
-{
-	interp->verifyArgNum(1, &arg_num);
-
-	int result = 0;
-
-	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
-	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
-
-		gpMarDirector->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
-		gpMarDirector->unk126 = 1;
-
-		result = 1;
-	} else {
-		interp->pop();
-	}
-
 	interp->push(result);
 }
 
@@ -362,6 +382,10 @@ static s32 ReviveSunflowerCallBack(u32 param_1, u32 param_2)
 	return 1;
 }
 
+// TODO: 99.9%, every instruction and the frame exact; the `char[0x40]` buffer
+// and the TFlagT temporary both sit 4 bytes low (0x34/0x2c vs 0x38/0x30), i.e.
+// one more +4 of low region below the flag temporary, which is the earliest
+// expansion. SMSGetFlagManager() and a fork of gpItemManager do not move it.
 void TNpcEvent::reviveOneSunflower()
 {
 	if (mDownSunflowerNum > 0) {
@@ -372,7 +396,7 @@ void TNpcEvent::reviveOneSunflower()
 		int idx = 5 - mDownSunflowerNum;
 		snprintf(acStack_50, 0x40, "%s%d", sViewObjName, idx);
 
-		TBaseNPC* npc = JDrama::TNameRefGen::search<TBaseNPC>(acStack_50);
+		TBaseNPC* npc = (TBaseNPC*)JDrama::TNameRefGen::search2(acStack_50);
 		--mDownSunflowerNum;
 
 		static const char* sCameraNames[] = {
@@ -380,14 +404,17 @@ void TNpcEvent::reviveOneSunflower()
 			"ひまわりカメラ3", "ひまわりカメラ4",
 		};
 
-		gpMarDirector->fireStartDemoCamera(sCameraNames[idx], &npc->unk1B8, -1,
-		                                   0.0f, true, &ReviveSunflowerCallBack,
-		                                   (u32)npc, nullptr, 0);
+		JDrama::TFlagT<u16> demoFlag(0);
+		const JGeometry::TVec3<f32>* npcPos = &npc->unk1B8;
+		SMSGetMarDirector()->fireStartDemoCamera(sCameraNames[idx], npcPos, -1,
+		                                         0.0f,
+		                                   true, &ReviveSunflowerCallBack,
+		                                   (u32)npc, nullptr, demoFlag);
 
 		if (mDownSunflowerNum == 0) {
 			gpItemManager->makeShineAppearWithDemo(
-			    "ひまわり用シャイン", "ひまわりシャインカメラ", npc->unk1B8.x,
-			    npc->unk1B8.y + 500.0f, npc->unk1B8.z);
+			    "ひまわり用シャイン", "ひまわりシャインカメラ", npcPos->x,
+			    npcPos->y + 500.0f, npcPos->z);
 			TFlagManager::getInstance()->setBool(false, 0x50003);
 		}
 	}
