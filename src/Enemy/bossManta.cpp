@@ -708,8 +708,10 @@ f32 TBossManta::getPolluteRadius()
 	case 0:
 	case 1:
 	case 2:
-	case 3:
-		return getSaveParams()->mSLPolluteRadius.get() * mScaling.x;
+	case 3: {
+		f32 radius = getSaveParams()->mSLPolluteRadius.get();
+		return radius * mScaling.x;
+	}
 	case 4:
 	case 5:
 		return 100.0f;
