@@ -5,7 +5,6 @@
 #include <Player/ModelWaterManager.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Camera/CameraShake.hpp>
-#include <Map/MapCollisionManager.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
@@ -28,9 +27,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionManager.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 // NOTE: rodata ordering says this has to go here
-#include <Map/MapCollisionEntry.hpp>
 
 static const char* hinokuri2_bastable[] = {
 	"/scene/hinokuri2/bas/hinokuri2_appear.bas",
