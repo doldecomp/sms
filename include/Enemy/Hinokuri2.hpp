@@ -162,29 +162,26 @@ public:
 
 	// THinokuri2 must not override the virtual TSpineEnemy::getSaveParam
 	// slot: the map has no getSaveParam__10THinokuri2CFv and retail's
-	// vtable keeps TSpineEnemy's word at 0x108. Hence the *2 name, as in
-	// BossGesso/FireWanwan.
-	THino2Params* getSaveParam2() const
-	{
-		return (THino2Params*)getSaveParam();
-	}
+	// vtable keeps TSpineEnemy's word at 0x108. A downcasting wrapper is
+	// not an option either -- it spends an inline level the params
+	// `.get()` calls need -- so every use spells the cast out.
 
 	// fabricated
 	u8 calcHitPoints()
 	{
 		switch (mLevel) {
 		case 0:
-			return getSaveParam2()->mSLHitPointMaxLv0.get();
+			return ((THino2Params*)getSaveParam())->mSLHitPointMaxLv0.get();
 			break;
 		case 1:
-			return getSaveParam2()->mSLHitPointMaxLv1.get();
+			return ((THino2Params*)getSaveParam())->mSLHitPointMaxLv1.get();
 			break;
 		case 2:
-			return getSaveParam2()->mSLHitPointMaxLv2.get();
+			return ((THino2Params*)getSaveParam())->mSLHitPointMaxLv2.get();
 			break;
 		default:
-			if (getSaveParam2())
-				return getSaveParam2()->mSLHitPointMax.get();
+			if (getSaveParam())
+				return ((THino2Params*)getSaveParam())->mSLHitPointMax.get();
 			break;
 		}
 
