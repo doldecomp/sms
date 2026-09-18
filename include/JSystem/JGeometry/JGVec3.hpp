@@ -363,6 +363,14 @@ public:
 		return dx * dx + dy * dy + dz * dz;
 	}
 
+	// Ruled out: `TUtil<f32>::sqrt(dot(*this))`, i.e. skipping squared().
+	// It was tried because retail calls sqrt while expanding dot in
+	// EventWatcher's isNear builtins, but those are exact now and the
+	// spelling only costs: JGeometry::TVec3<f>::dot stops being emitted at
+	// all in boid.o where the map has a weak copy (100 -> 0%, unit
+	// matched_code 31.4 -> 30.7), TBoidLeader::calcBoids 95.5 -> 94.2 and
+	// TKazekun::flyAroundMario 93.5 -> 89.4, with no gain anywhere. So
+	// squared() is the real intermediate and it is what calls dot.
 	f32 length() const { return TUtil<f32>::sqrt(squared()); }
 
 	bool isZero() const { return squared() <= TUtil<f32>::epsilon(); }

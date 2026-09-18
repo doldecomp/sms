@@ -207,6 +207,16 @@ template <class T> inline T MsWrap(T t, T l, T r)
 	return t;
 }
 
+// Ruled out: no declaration form here makes the ROM's out-of-line
+// `MsClamp<f>` calls appear. The map's three local 0x20 copies (AnimalBase,
+// CameraChange, cameragc) are per *call site*, not per TU: cameragc has a
+// dozen uses and exactly one `bl`, in CPolarSubCamera::perform's expansion of
+// calcExternalData_, while loadAfter expands the identical expansion -- and at
+// that same site the ROM also calls TVec3::set<f> and TUtil<f32>::one(), which
+// no MathUtil change could touch. Three unrelated inlines flipping together at
+// one site is the caller-size family in docs/catalog/codegen-tells.md, so the
+// lever is that caller's frame, not this declaration. Any extra level added
+// *below* this function would also emit the wrong symbol name.
 template <class T> inline T MsClamp(T t, T l, T r)
 {
 	if (t > r)
