@@ -40,16 +40,27 @@ class JPAEmitterManager;
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
-// TODO: 99.9%. Every instruction and every register now matches; the frame is
-// 0x310 against retail's 0x410, i.e. **exactly 256 bytes** of dead low region,
-// and 256 is `sizeof(JDrama::TGraphics)`. Everything above the hole lines up
-// offset for offset (retail graphics 0x2f4 / TColor 0x2ec-0x2f0, ours the same
-// minus 0x100), so the missing object sits in the inline-temporary pool below
-// all named locals - it is a second TGraphics-sized local belonging to an
-// inlined callee, not to this body (a `volatile char trash[256]` declared last
-// here reaches 0x410 but leaves every slot 0x100 low, and a dead 256-byte
-// non-trivial local in a TU-static inlined callee overshoots to 0x710).
-// Which callee owns it is open.
+// TODO: 99.9%, every instruction and register exact. The frame is 0x310
+// against retail's 0x410 and the slots now shift uniformly: every named slot
+// (graphics at 0x2f4/0x1ec and its ctor's writes) is 0x108 apart and the
+// TColor inline temp 0x10c, while the save area and frame are 0x100 apart. So
+// the inline-temporary pool is 0x10c = 268 bytes short (ours 0xc..0x1e0 = 468
+// bytes, retail 0xc..0x2ec = 736) and the extra 4 bytes mod 8 is why our
+// TColor temp leaves a 4-byte hole below `graphics` where retail's is
+// contiguous. 268 is not `sizeof(TGraphics)`; it is 256 + 12, so the shape is
+// a 256-byte object plus a TVec3-sized one, or a run of smaller temps.
+// Since `graphics` is the only function-scope local and retail's sits at the
+// top of the pool, the missing bytes belong to inlined callees, not to this
+// body: a `volatile char trash[256]` declared last reaches 0x410 but leaves
+// every slot 0x100 low, and a dead 256-byte non-trivial local in a TU-static
+// inlined callee overshoots to 0x710. Which callee owns them is open; the 15
+// `TNameRefGen::search<T>` expansions are the only candidates numerous enough
+// to account for 468 bytes in our own build.
+//
+// The `graphics.unk0 = 0` below is read off the target: retail's second `sth`
+// goes to graphics+0x00, not graphics+0xFE (the +0xF4 `stw -1` and +0xFC `sth
+// 0` before it are TColor's and TFlagT's default ctors, since TGraphics has
+// only an implicit one).
 void TMarDirector::setup2()
 {
 	unkBC = JDrama::TNameRefGen::search<TNameRefAryT<TStageEventInfo> >(
@@ -115,10 +126,13 @@ void TMarDirector::setup2()
 	gpMSound->setCameraInfo(&gpCamera->unk124, gpCamera->unk13C,
 	                        gpCamera->unk1EC, 0);
 
+	// TODO: retail evaluates these two raw member reads right to left
+	// (`lbz r4, 0x7d` before `lbz r3, 0x7c`), which is the documented
+	// argument order; two plain member reads give us left to right instead.
 	unk258 = MSStage::init(mMap, unk7D);
 
 	JDrama::TGraphics graphics;
-	graphics.unkFE = 0;
+	graphics.unk0 = 0;
 	unk40->perform(CUE_ALL, &graphics);
 	unk38->perform(CUE_ALL, &graphics);
 	GXSetDrawDone();
