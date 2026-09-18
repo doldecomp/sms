@@ -14,10 +14,14 @@ TMessageLoader::TMessageLoader(const char* param_1)
 {
 	u8* res = (u8*)JKRGetResource(param_1);
 	if (res) {
-		u32 a;
-		u32 b;
-		readHeader(&a, &b, res);
-		unk4 = parseBlock(a, b, res + 0x20);
+		// The pair has to be one aggregate: readHeader() is inlined here and
+		// MWCC folds the two stores away, and with two separate `u32` locals
+		// (in this scope or the function's) it drops their slots too, leaving
+		// the frame 8 bytes short of retail's 0x20 with every r1 displacement
+		// 8 low. An array is homed, so the slots survive the folding.
+		u32 header[2];
+		readHeader(&header[0], &header[1], res);
+		unk4 = parseBlock(header[0], header[1], res + 0x20);
 		// NOTE: assert but in an if?
 		if (unk4)
 			(void)unk4;
@@ -57,12 +61,14 @@ void* TMessageLoader::parseBlock(u32 param_1, u32 param_2, void* param_3)
 		local_5c >> local_74;
 
 		switch (local_74) {
-		case 'INF1': {
-			void* info = local_5c.getCurrent();
-			local_70 = readInfoBlock(info);
+		// readInfoBlock's argument must be the getCurrent() call itself: the
+		// inlined body's parameter temporary is the 4-byte slot that puts
+		// entrySize at 0x34 and its stream at 0x38. A named `void* info`
+		// local is register-allocated and leaves both 4 low.
+		case 'INF1':
+			local_70 = readInfoBlock(local_5c.getCurrent());
 			local_5c.skip(4);
 			break;
-		}
 
 		case 'DAT1':
 			local_5c >> local_70;
@@ -98,8 +104,8 @@ JMSMesgEntry* TMessageLoader::getMessageEntry(u32 param_1)
 int TMessageLoader::readInfoBlock(void* data)
 {
 	s32* cursor = (s32*)data;
-	u16 entrySize;
 	int length = *cursor++;
+	u16 entrySize;
 	JSUMemoryInputStream local_38(cursor, length - 8);
 	local_38 >> unk0;
 	local_38 >> entrySize;
