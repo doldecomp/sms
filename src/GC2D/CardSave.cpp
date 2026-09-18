@@ -27,15 +27,15 @@
 extern JPAEmitterManager* gpEmitterManager4D2;
 
 u32 TCardSave::cMessageID[] = {
-	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xC,        0xF,        0x12,
-	0x4,        0x5,        0x6,        0x16,       0x1A,       0x14,
-	0xE,        0xD,        0x1,        0xA,        0x10,       0x19,
-	0x13,       0x18,       0x2,        0x8,        0x17,       0x1B,
-	0x15,       0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-	0x3,        0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xE,        0x11,       0x14,
+	0x5,        0x6,        0x7,        0x18,       0x22,       0x16,
+	0x10,       0xF,        0x2,        0xB,        0x12,       0x21,
+	0x15,       0x1B,       0x3,        0x9,        0x1A,       0x23,
+	0x17,       0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0x4,        0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-	0xFFFFFFFF, 0xFFFFFFFF, 0x11,       0xB,        0xFFFFFFFF, 0xFFFFFFFF,
-	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x9,        0x7,
+	0xFFFFFFFF, 0xFFFFFFFF, 0x13,       0xD,        0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xA,        0x8,        0xC,
 };
 
 TEProgress TCardSave::changeMode(s32 param_1)
@@ -315,6 +315,109 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 {
 	strncpy(text_box->getStringPtr(), SMSGetMessageData(unk2E4, param_3),
 	        param_2);
+}
+
+// The ROM reaches getLength()/getPosition() through the random-access base
+// classes -- they are virtual calls, not the derived classes' inline field
+// reads -- so the drain test was a helper declared on JSURandomInputStream /
+// JSURandomOutputStream, where `this` hides the dynamic type. The map has no
+// symbol for either, so they were header inlines; parked here rather than in
+// the shared headers.
+static inline bool isStreamDrained(const JSURandomInputStream& stream)
+{
+	return stream.getLength() - stream.getPosition() == 0;
+}
+
+static inline bool isStreamDrained(const JSURandomOutputStream& stream)
+{
+	return stream.getLength() - stream.getPosition() == 0;
+}
+
+// The ROM gives every write of the scanned byte its own stack slot, which is
+// what a by-value overload does at each inline expansion: JSUOutputStream
+// almost certainly had a write(u8) mirroring JSUInputStream's read(u8&)
+// family. The map has no symbol for it, so it was a header inline; parked here
+// rather than in the shared header.
+static inline int writeByte(JSUOutputStream& stream, u8 value)
+{
+	return stream.write(&value, sizeof(u8));
+}
+
+/// Copies a message into a text box, wrapping the balloon colour markers
+/// (single ASCII bytes) in the J2D escape sequences that actually change the
+/// glyph colour. Unrecognised bytes are copied through untouched.
+void TCardSave::setMessageC(J2DTextBox* text_box, s32 message_id, u32 size)
+{
+	JSUMemoryInputStream in(SMSGetMessageData(unk2E4, (u16)message_id), size);
+	JSUMemoryOutputStream out(text_box->getStringPtr(), size);
+	// TODO: 99.4%. Two residues, both slot-offset only (the frame size is
+	// already exact): the ROM narrows the id with `clrlwi r4, r5, 16` at the
+	// call while we hoist it into the prologue and move it, and the ROM's
+	// buffer starts four bytes lower, so our body carries one 4-byte inline
+	// temporary it does not have. `in.read(&c, 1)` instead of readU8(),
+	// per-site `u8` copies instead of writeByte(), a 260-byte buffer and an
+	// extra named local before the buffer were all tried and are worse.
+	char buffer[256];
+
+	while (!isStreamDrained(in) && !isStreamDrained(out)) {
+		u8 c = in.readU8();
+		JUtility::TColor color;
+
+		switch (c) {
+		case 0x1A: {
+			// A BMG escape: its second byte is the total tag length.
+			in.skip(in.readU8() - 2);
+			continue;
+		}
+
+		case 0x00:
+			writeByte(out, c);
+			return;
+
+		case 0x0A:
+			writeByte(out, c);
+			continue;
+		}
+
+		bool colored = true;
+		switch (c) {
+		case '@':
+			color.set(0x64, 0xFF, 0x64, 0xFF);
+			break;
+		case '#':
+			color.set(0xFF, 0xA0, 0x64, 0xFF);
+			break;
+		case '%':
+			color.set(0xFF, 0xFF, 0x00, 0xFF);
+			break;
+		case '+':
+		case '<':
+		case '>':
+		case 0xA5:
+			color.set(0xDC, 0xDC, 0xDC, 0xFF);
+			break;
+		case '$':
+			color.set(0x6E, 0xE6, 0xFF, 0xFF);
+			break;
+		default:
+			colored = false;
+			break;
+		}
+
+		if (colored) {
+			snprintf(buffer, 0xFF,
+			         "\033GM[0]\033CC[%02x%02x%02x]\033SH[3]\033CD[4]", color.r,
+			         color.g, color.b);
+			out.write(buffer, 0x1D);
+		}
+
+		writeByte(out, c);
+
+		if (colored) {
+			snprintf(buffer, 0xFF, "\033GM[0]\033CC\033FX\033FY\033SH\033CU[4]");
+			out.write(buffer, 0x18);
+		}
+	}
 }
 
 s8 TCardSave::waitForStop(TEProgress param_1)
