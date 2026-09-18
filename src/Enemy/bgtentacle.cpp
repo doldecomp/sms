@@ -724,7 +724,13 @@ void TBGTentacle::setAttackTarget()
 		local_3c.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), local_148);
 		local_3c.normalize();
 
-		unk84 += local_3c * (f32)iVar9 * 80.0f;
+		// TODO: retail makes four 12-byte copies around the two out-of-line
+		// scale() calls (parameter, result, parameter, result); the named
+		// intermediate below makes five and the single-expression form
+		// `unk84 += local_3c * (f32)iVar9 * 80.0f` makes three, so retail
+		// elides the first result into the named vector and we do not.
+		JGeometry::TVec3<f32> local_cc = local_3c * (f32)iVar9;
+		unk84 += local_cc * 80.0f;
 	}
 
 	if (mOwner->is2ndFightNow() && unk84.y < mOwner->mPosition.y + 20.0f)
