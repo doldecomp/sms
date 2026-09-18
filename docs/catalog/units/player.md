@@ -54,3 +54,13 @@ UNUSED `stageSetting` is an empty four-byte body.
 ## `TMarDirector::loadParticleMario` (batch 41, exact)
 
 Declared `static`; see `../frame-gaps.md`.
+
+## WaterGun / MarioSpecial (batch 56)
+
+- **`TWaterGun::isEmitting()` is inlined inside `WaterGun.cpp` itself** (plain 252-byte method defined there) and is the predicate behind the `gpMarDirector->unk124` demo/talk block that showed as a 13-instruction `<` run in six functions; `mFludd->isEmitting()` moved four functions 7-26 points. The `== true` spelling matters per site: `clrlwi.` + `beq` is `if (isEmitting())`, `clrlwi` + `cmplwi r0, 1` + `bne` is `if (isEmitting() == true)`.
+- **`TNozzleBase::isAnmEnd()` (UNUSED 0x94) is size-exact** as `bool end = false;` + `getFrameCtrl(ANM_TYPE_BCK)` + the `COMPLETED_ONCE|LOOPED_ONCE` test + `getFrame() > getEnd() - 0.1f`; inlined at four sites in the `animation()` overrides, it produces the `mr r0, r30` in the materialised bool's false arm (spelling the body out gives `li r0, 0`). A helper whose own `bool` local feeds the inlined test is the tell.
+- Two fabricated flag predicates: `TWaterGun::emit` tests the flag bool with `clrlwi.`, the nozzle `emit()` overrides with `cmpwi r0, 0`; a `bool hasFlag` / `BOOL checkFlag` pair gets both. A named `BOOL` holding a `bool` helper's result only adds 8 bytes of frame.
+- `mEmitPos` is `TVec3<f32>[3]` (`__construct_array` passes 3) plus a separate plain `Vec` at 0x1CBC; `TWaterGun::TDeParams` is the params class with a **no-argument** ctor carrying `"/Mario/WaterGun.prm"` (map `__ct__Q29TWaterGun9TDeParamsFv`, UNUSED 0x1f8), defined in the `.cpp` between `finalDrawInitialize` and `getEmitMtx`. `rotateProp` clamps with `mNozzleAngleYSpeedMax` (0x1d90), not `mHoverRotMax`. `chn_muzzle_1`; dummy texture `getResTIMG(1)`.
+- `TNozzleTrigger::movement`'s air-charge cue (0x4022) sits after the pressure decrement/clamp, gated on `!unk384`, with `prevPressure < unk388` where `prevPressure` is latched at entry (`f31`). `unk385` compares as `cmplwi` here (`u8`) but `isEmitting`/MarioMove/Yoshi want a signed compare: the consistent story is a `u8` field plus an `s32` accessor (header item).
+- Real bugs fixed in `TMario::pulling`: hold-release bit 0x200, drop status 0x0C00022F, yaw `backAngle - mIntendedYaw`, virtual `moveRequest(pos)` (vtable 0xac) not `receiveMessage`, `rateV`/`rateH` swapped.
+- Open: `#pragma dont_inline` still on `TNozzleBase::TNozzleBase`, `getEmitMtx`, `getEmitPosDirSpeed`; by the statement table each retail body had 15+ statements (`getEmitMtx` is at ~5). `mHoverHeight` should be `mHHoverHeight` (`@4096` string, ROM typo; four call sites in MarioWait/MarioJump/MarioRun).
