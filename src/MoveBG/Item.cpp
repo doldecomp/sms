@@ -116,8 +116,15 @@ void TItem::calc()
 		mtx[2][3] = mPosition.z;
 	}
 
-	if (isState(STATE_HOLDING) && checkMapObjFlag(MAP_OBJ_FLAG_UNK100))
-		TMapObjGeneral::calcRootMatrix();
+	if (isState(STATE_HOLDING) && checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
+		// The two nozzle items place themselves on Mario's back, so they
+		// get their own calcRootMatrix() through the vtable; everything
+		// else takes the base implementation directly.
+		if (isActorType(0x20000022) || isActorType(0x2000002A))
+			calcRootMatrix();
+		else
+			TMapObjGeneral::calcRootMatrix();
+	}
 }
 
 void TItem::appearing()
@@ -360,6 +367,7 @@ void TCoinRed::taken(THitActor* param_1)
 TCoinRed::TCoinRed(const char* name)
     : TCoin(name)
 {
+	unk158.x = unk158.y = unk158.z = 0.0f;
 }
 
 void TCoinBlue::makeObjAppeared()
@@ -1159,6 +1167,16 @@ void TItemNozzle::control() { TMapObjGeneral::control(); }
 // bytes of named/temporary slots than this spelling uses.
 void TItemNozzle::calcRootMatrix()
 {
+	// TODO: every instruction matches; the frame is 0x28 against the ROM's
+	// 0x38 with no referenced local slot at all, so the residue is 16 bytes
+	// of dead low region. Measured in place: a dead 48-byte `Mtx` is +48, a
+	// dead 12-byte `TVec3` +8 and a dead 16-byte object exactly +16 (a
+	// `TQuat4<f32>` reaches 100%), so the ROM declared one 16-byte local
+	// here. Nothing in the body wants a quaternion and the byte count is the
+	// only evidence, so it stays unnamed. Inert here (all +0): `getHolder()`
+	// at either or both reads, a TU-local `static MtxPtr` helper binding the
+	// holder matrix or the anim matrix (named pointer locals are worth
+	// nothing), and `getMActor()->getModel()` (which also changes the call).
 	if (isState(6) && mHolder != nullptr) {
 		MtxPtr holderMtx = mHolder->getTakingMtx();
 		MtxPtr mtx       = getModel()->getAnmMtx(0);
@@ -1249,11 +1267,11 @@ void TNozzleBox::touchPlayer(THitActor*)
 	    && !TFlagManager::smInstance->getNozzleRight(
 	        gpMarDirector->getCurrentMap(), 1)
 	    && !unk166) {
-		gpMarDirector->getConsole()->startAppearBalloon(0xE0057, true);
+		gpMarDirector->getConsole()->startAppearBalloon(0x5A, true);
 		unk166 = true;
 	}
 	if (!unk15C && !unk166) {
-		gpMarDirector->getConsole()->startAppearBalloon(0xE0056, true);
+		gpMarDirector->getConsole()->startAppearBalloon(0x59, true);
 		unk166 = true;
 	}
 }
