@@ -483,5 +483,7 @@
   "dolphin/thp/THPAudio.c",
   "dolphin/thp/THPDec.c",
   "dolphin/vi/vi.c",
-  "main.cpp"
+  "main.cpp",
+  "PowerPC_EABI_Support/Runtime/ExceptionPPC.cp",
+  "PowerPC_EABI_Support/Runtime/NMWException.cp"
 ]
