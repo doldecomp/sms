@@ -61,7 +61,7 @@ public:
 	TMActorKeeper(TLiveManager*);
 	TMActorKeeper(TLiveManager*, u16);
 
-	MActor* createMActorFromAllBmd(u32 flags);
+	void createMActorFromAllBmd(u32 flags);
 	MActor* createMActor(const char* model_data_name, u32 flags);
 	MActor* createMActorFromNthData(int n, u32 flags);
 	MActor* createMActorFromDefaultBmd(const char* folder, u32 flags);

@@ -164,19 +164,12 @@ MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 	return createAndRegister(data, flags);
 }
 
-// TODO: frame and instruction sequence are exact; the only residue is that
-// retail runs the inlined getModelDataNum node walk entirely in r3
-// (`lwz r3, 0(r3)` / `addi r3, r3, 4` / `lwz r3, 0xc(r3)`) where we keep the
-// keeper in r5 and the node in r4, i.e. MWCC does not coalesce the inlined
-// callee's `this` binding with its first local. The emitted out-of-line
-// getModelDataNum is byte-exact, so the body is right and the lever is at the
-// call site. Measured, all leaving the same five operand differences: a named
-// TModelDataKeeper* local, a static_cast to the const receiver, `getHead()`
-// for `&mHead`, a for-loop or split declaration in the callee, and a
-// while-loop here. `mModelDataKeeper` raw is -8 of frame and 18 differences; a
-// TU-local forwarder above getModelDataNum and spelling the walk out here
-// (getHead() or &...->mHead) are both far worse (24 / 38 differences).
-MActor* TMActorKeeper::createMActorFromAllBmd(u32 flags)
+// Returns void, not MActor*: with a pointer return type and no `return`
+// statement MWCC keeps r3 reserved for the result across the whole body, so
+// the inlined getModelDataNum node walk was pushed into r5/r4 where retail
+// runs it in r3. Both callers (TAnimalBase::loadAfter, TBossEel::init)
+// discard the result. Same mechanism as TMarioGamePad::read().
+void TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
 	int num = getModelDataKeeper()->getModelDataNum();
 	for (int i = 0; i < num; ++i)
