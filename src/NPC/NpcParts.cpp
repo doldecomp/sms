@@ -86,16 +86,8 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 			if (puVar3 == nullptr)
 				continue;
 
-			// TODO: header item. Retail reads the joint name with the same
-			// `j * 4` byte offset it uses for `unk8[j]` (`lwzx r4, r4, r28`
-			// straight off `initInfo->unk4[i]`), so TNpcModelData's first two
-			// words are one `const char* unk0[2]` -- a per-MActor-slot joint
-			// name -- not `const char* unk0; u32 unk4;`. The data tables in
-			// NpcInitData.cpp keep the same bytes under brace elision, and
-			// NpcManager already spells the sibling array `modelData->unk8[j]`.
-			// Until NpcInitData.hpp is fixed the `[j]` cannot be written here.
 			int iVar6;
-			if (strcmp(initInfo->unk4[i]->unk0, cNpcPartsNameRootJoint)
+			if (strcmp(initInfo->unk4[i]->unk0[j], cNpcPartsNameRootJoint)
 			    == 0) {
 				iVar6 = -1;
 			} else {
@@ -103,7 +95,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 				            ->getModel()
 				            ->getModelData()
 				            ->getJointName()
-				            ->getIndex(initInfo->unk4[i]->unk0);
+				            ->getIndex(initInfo->unk4[i]->unk0[j]);
 			}
 
 			TNPCManager* manager    = (TNPCManager*)unk60->getManager();

@@ -39,8 +39,7 @@ static const TColorChangeInfo sMonteM_HatABeltColorChange
     = { 0x00000001, "_obi_mat", sMonteM_HatABeltColorBuf, nullptr };
 
 static const TNpcModelData sMonteM_HatAData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "hatA_model.bmd" },
 	{
 	    { &sMonteM_HatAColorChange, 0 },
@@ -70,8 +69,7 @@ static const TColorChangeInfo sMonteM_HatBBeltColorChange
     = { 0x00000001, "_obi_mat", sMonteM_HatBBeltColorBuf, nullptr };
 
 static const TNpcModelData sMonteM_HatBData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "hatB_model.bmd" },
 	{
 	    { &sMonteM_HatBColorChange, 0 },
@@ -91,8 +89,7 @@ static const TColorChangeInfo sMonteM_HatDColorChange
     = { 0x00000001, "_obi_mat", sMonteM_HatDColorBuf, nullptr };
 
 static const TNpcModelData sMonteM_HatDData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "hatD_model.bmd" },
 	{
 	    { &sMonteM_HatDColorChange, 0 },
@@ -117,8 +114,7 @@ static const TColorChangeInfo sMonteM_HatEColorChange
 	    sMonteM_HatEColorBuf1 };
 
 static const TNpcModelData sMonteM_HatEData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "hatE_model.bmd" },
 	{
 	    { &sMonteM_HatEColorChange, 0 },
@@ -143,8 +139,7 @@ static const TColorChangeInfo sMonteM_HatFColorChange
 	    sMonteM_HatFColorBuf1 };
 
 static const TNpcModelData sMonteM_HatFData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "hatF_model.bmd" },
 	{
 	    { &sMonteM_HatFColorChange, 0 },
@@ -169,8 +164,7 @@ static const TColorChangeInfo sMonteM_HatGColorChange
 	    sMonteM_HatGColorBuf1 };
 
 static const TNpcModelData sMonteM_HatGData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "hatG_model.bmd" },
 	{
 	    { &sMonteM_HatGColorChange, 0 },
@@ -191,8 +185,7 @@ static const TColorChangeInfo sMonteM_MustacheAColorChange
     = { 0x00000001, "_hige_mat", sMonteM_MustacheAColorBuf0, nullptr };
 
 static const TNpcModelData sMonteM_MustacheAData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "higeA_model.bmd" },
 	{
 	    { &sMonteM_MustacheAColorChange, 0 },
@@ -203,8 +196,7 @@ static const TNpcModelData sMonteM_MustacheAData = {
 };
 
 static const TNpcModelData sMonteM_GlassesAData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "glassesA_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -224,8 +216,7 @@ static const TColorChangeInfo sMonteM_GlassesBColorChange
     = { 0x00000000, "_megane_mat", sMonteM_GlassesBColorBuf0, nullptr };
 
 static const TNpcModelData sMonteM_GlassesBData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "glassesB_model.bmd" },
 	{
 	    { &sMonteM_GlassesBColorChange, 0 },
@@ -250,8 +241,7 @@ static const TColorChangeInfo sMonteM_LapelAColorChange
 	    sMonteM_LapelAColorBuf1 };
 
 static const TNpcModelData sMonteM_LapelAData = {
-	"body_jnt",
-	0,
+	{ "body_jnt" },
 	{ "eriA_model.bmd" },
 	{
 	    { &sMonteM_LapelAColorChange, 0 },
@@ -273,8 +263,7 @@ static const TColorChangeInfo sMonteM_TieBColorChange
     = { 0x00000002, "_tie_mat", sMonteM_TieBColorBuf0, sMonteM_TieBColorBuf1 };
 
 static const TNpcModelData sMonteM_TieBData = {
-	"body_jnt",
-	0,
+	{ "body_jnt" },
 	{ "tieB_model.bmd" },
 	{
 	    { &sMonteM_TieBColorChange, 0 },
@@ -285,8 +274,7 @@ static const TNpcModelData sMonteM_TieBData = {
 };
 
 static const TNpcModelData sMonteM_LuggageData = {
-	"body_jnt",
-	0,
+	{ "body_jnt" },
 	{ "nimotsu_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -297,8 +285,7 @@ static const TNpcModelData sMonteM_LuggageData = {
 };
 
 static const TNpcModelData sMonteMF_TubeData = {
-	"body_jnt",
-	0,
+	{ "body_jnt" },
 	{ "tube_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -309,8 +296,7 @@ static const TNpcModelData sMonteMF_TubeData = {
 };
 
 static const TNpcModelData sMonteMG_MopData = {
-	"handR_jnt",
-	0,
+	{ "handR_jnt" },
 	{ "mop_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -321,8 +307,7 @@ static const TNpcModelData sMonteMG_MopData = {
 };
 
 static const TNpcModelData sMonteMH_UkleleData = {
-	"body_jnt",
-	0,
+	{ "body_jnt" },
 	{ "uklele_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -351,8 +336,7 @@ static const TColorChangeInfo sMonteW_FlowerOutColorChange
     = { 0x00000000, "_hana_mat", sMonteW_FlowerOutColorBuf, nullptr };
 
 static const TNpcModelData sMonteW_FlowerData = {
-	"yashi_jnt",
-	0,
+	{ "yashi_jnt" },
 	{ "flower_model.bmd" },
 	{
 	    { &sMonteW_FlowerInColorChange, 0 },
@@ -392,8 +376,7 @@ static const TColorChangeInfo sMonteW_HatABeltColorChange
     = { 0x00000001, "_obi_mat", sMonteW_HatABeltColorBuf, nullptr };
 
 static const TNpcModelData sMonteW_HatAData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "hwA_model.bmd" },
 	{
 	    { &sMonteW_HatAMainColorChange, 0 },
@@ -414,8 +397,7 @@ static const TColorChangeInfo sMonteW_GlassBColorChange
     = { 0x00000000, "_megane_mat", sMonteW_GlassBColorBuf, nullptr };
 
 static const TNpcModelData sMonteW_GlassBData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "gwB_model.bmd" },
 	{
 	    { &sMonteW_GlassBColorChange, 0 },
@@ -426,8 +408,7 @@ static const TNpcModelData sMonteW_GlassBData = {
 };
 
 static const TNpcModelData sMonteW_ArrowRData = {
-	"handR_jnt",
-	0,
+	{ "handR_jnt" },
 	{ "arrowR_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -438,8 +419,7 @@ static const TNpcModelData sMonteW_ArrowRData = {
 };
 
 static const TNpcModelData sMonteW_ArrowLData = {
-	"handR_jnt",
-	0,
+	{ "handR_jnt" },
 	{ "arrowL_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -450,8 +430,7 @@ static const TNpcModelData sMonteW_ArrowLData = {
 };
 
 static const TNpcModelData sMonteWC_HatCData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "hwC_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -462,8 +441,7 @@ static const TNpcModelData sMonteWC_HatCData = {
 };
 
 static const TNpcModelData sMonteWC_BraceletRData = {
-	"handR_jnt",
-	0,
+	{ "handR_jnt" },
 	{ "udewaR_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -474,8 +452,7 @@ static const TNpcModelData sMonteWC_BraceletRData = {
 };
 
 static const TNpcModelData sMonteWC_BraceletLData = {
-	"handL_jnt",
-	0,
+	{ "handL_jnt" },
 	{ "udewaL_model.bmd" },
 	{
 	    { nullptr, 0 },
@@ -501,8 +478,7 @@ static const TColorChangeInfo sMareM_HatAColorChange
     = { 0x00000002, "_mat1", sMareM_HatAColorBuf0, sMareM_HatAColorBuf1 };
 
 static const TNpcModelData sMareM_HatAData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareMhat_A.bmd" },
 	{
 	    { &sMareM_HatAColorChange, 0 },
@@ -526,8 +502,7 @@ static const TColorChangeInfo sMareM_HatBColorChange
     = { 0x00000002, "_mat1", sMareM_HatBColorBuf0, sMareM_HatBColorBuf1 };
 
 static const TNpcModelData sMareM_HatBData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareMhat_B.bmd" },
 	{
 	    { &sMareM_HatBColorChange, 0 },
@@ -555,8 +530,7 @@ static const TColorChangeInfo sMareM_HatEColorChange
     = { 0x00000002, "_mat1", sMareM_HatEColorBuf0, sMareM_HatEColorBuf1 };
 
 static const TNpcModelData sMareM_HatEData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareMhat_E.bmd" },
 	{
 	    { &sMareM_HatEColorChange, 0 },
@@ -584,8 +558,7 @@ static const TColorChangeInfo sMareM_ShellAColorChange
     = { 0x00000002, "_mat1", sMareM_ShellAColorBuf0, sMareM_ShellAColorBuf1 };
 
 static const TNpcModelData sMareM_ShellAData = {
-	"koshi",
-	0,
+	{ "koshi" },
 	{ "mareMmakigai_A.bmd" },
 	{
 	    { &sMareM_ShellAColorChange, 0 },
@@ -614,8 +587,7 @@ static const TColorChangeInfo sMareM_ShellBColorChange
     = { 0x00000002, "_mat1", sMareM_ShellBColorBuf0, sMareM_ShellBColorBuf1 };
 
 static const TNpcModelData sMareM_ShellBData = {
-	"koshi",
-	0,
+	{ "koshi" },
 	{ "mareMmakigai_B.bmd" },
 	{
 	    { &sMareM_ShellBColorChange, 0 },
@@ -640,8 +612,7 @@ static const TColorChangeInfo sMareM_BivalveBColorChange
 	    sMareM_BivalveBColorBuf1 };
 
 static const TNpcModelData sMareM_BivalveBData = {
-	"koshi",
-	0,
+	{ "koshi" },
 	{ "mareMbivalve_B.bmd" },
 	{
 	    { &sMareM_BivalveBColorChange, 0 },
@@ -667,8 +638,7 @@ static const TColorChangeInfo sMareM_GlassColorChange
     = { 0x00000002, "_matgrass", sMareM_GlassColorBuf0, sMareM_GlassColorBuf1 };
 
 static const TNpcModelData sMareM_GlassData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareM_grass.bmd" },
 	{
 	    { &sMareM_GlassColorChange, 0 },
@@ -715,8 +685,7 @@ static const TColorChangeInfo sMareMB_ElderMat3ColorChange
 	    sMareMB_ElderMat3ColorBuf1 };
 
 static const TNpcModelData sMareMB_ElderData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareMB_set.bmd" },
 	{
 	    { &sMareMB_ElderMat1ColorChange, 0 },
@@ -790,8 +759,7 @@ static const TColorChangeInfo sMareMC_HatFColorChange
     = { 0x00000002, "_mat1", sMareMC_HatFColorBuf0, sMareMC_HatFColorBuf1 };
 
 static const TNpcModelData sMareMC_HatFData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareMChat_F.bmd" },
 	{
 	    { &sMareMC_HatFColorChange, 0 },
@@ -813,8 +781,7 @@ static const TColorChangeInfo sMareMC_BeardColorChange
     = { 0x00000002, "_mat1", sMareMC_BeardColorBuf0, sMareMC_BeardColorBuf1 };
 
 static const TNpcModelData sMareMC_BeardData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareMCagohige.bmd" },
 	{
 	    { &sMareMC_BeardColorChange, 0 },
@@ -837,8 +804,7 @@ static const TColorChangeInfo sMareMC_MustacheColorChange
 	    sMareMC_MustacheColorBuf1 };
 
 static const TNpcModelData sMareMC_MustacheData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareMCkuchihige.bmd" },
 	{
 	    { &sMareMC_MustacheColorChange, 0 },
@@ -860,8 +826,7 @@ static const TColorChangeInfo sMareMD_PipeColorChange
     = { 0x00000002, "_mat1", sMareMD_PipeColorBuf0, sMareMD_PipeColorBuf1 };
 
 static const TNpcModelData sMareMD_PipeData = {
-	"migite",
-	0,
+	{ "migite" },
 	{ "mareMDhoragai_A.bmd" },
 	{
 	    { &sMareMD_PipeColorChange, 0 },
@@ -885,8 +850,7 @@ static const TColorChangeInfo sMareW_PearlAColorChange
     = { 0x00000002, "_mat1", sMareW_PearlAColorBuf0, sMareW_PearlAColorBuf1 };
 
 static const TNpcModelData sMareW_PearlAData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareWpearl_A.bmd" },
 	{
 	    { &sMareW_PearlAColorChange, 0 },
@@ -910,8 +874,7 @@ static const TColorChangeInfo sMareW_HatAColorChange
     = { 0x00000002, "_mat1", sMareW_HatAColorBuf0, sMareW_HatAColorBuf1 };
 
 static const TNpcModelData sMareW_HatAData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareWhatW_A.bmd" },
 	{
 	    { &sMareW_HatAColorChange, 0 },
@@ -939,8 +902,7 @@ static const TColorChangeInfo sMareW_HatDColorChange
     = { 0x00000002, "_mat1", sMareW_HatDColorBuf0, sMareW_HatDColorBuf1 };
 
 static const TNpcModelData sMareW_HatDData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "mareWhatW_D.bmd" },
 	{
 	    { &sMareW_HatDColorChange, 0 },
@@ -964,8 +926,7 @@ static const TColorChangeInfo sMareW_ShellAColorChange
     = { 0x00000002, "_mat1", sMareW_ShellAColorBuf0, sMareW_ShellAColorBuf1 };
 
 static const TNpcModelData sMareW_ShellAData = {
-	"koshi",
-	0,
+	{ "koshi" },
 	{ "mareWkai_A.bmd" },
 	{
 	    { &sMareW_ShellAColorChange, 0 },
@@ -991,8 +952,7 @@ static const TColorChangeInfo sMareW_ShellBColorChange
     = { 0x00000002, "_mat1", sMareW_ShellBColorBuf0, sMareW_ShellBColorBuf1 };
 
 static const TNpcModelData sMareW_ShellBData = {
-	"koshi",
-	0,
+	{ "koshi" },
 	{ "mareWkai_B.bmd" },
 	{
 	    { &sMareW_ShellBColorChange, 0 },
@@ -1017,8 +977,7 @@ static const TColorChangeInfo sMareW_BivalveAColorChange
 	    sMareW_BivalveAColorBuf1 };
 
 static const TNpcModelData sMareW_BivalveAData = {
-	"koshi",
-	0,
+	{ "koshi" },
 	{ "mareWbivalveW_A.bmd" },
 	{
 	    { &sMareW_BivalveAColorChange, 0 },
@@ -1074,8 +1033,7 @@ static TNpcModelData sMareWB_BabyData = {
 };
 
 static const TNpcModelData sKinopio_SunGlassesData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "kinopio_sunmegane.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1086,8 +1044,7 @@ static const TNpcModelData sKinopio_SunGlassesData = {
 };
 
 static const TNpcModelData sKinojii_StickData = {
-	"jnt_rfinger_1",
-	0,
+	{ "jnt_rfinger_1" },
 	{ "kinoji_stick.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1098,8 +1055,7 @@ static const TNpcModelData sKinojii_StickData = {
 };
 
 static const TNpcModelData sPeach_HairNormalData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "peach_hair_normal.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1110,8 +1066,7 @@ static const TNpcModelData sPeach_HairNormalData = {
 };
 
 static const TNpcModelData sPeach_Hand1LData = {
-	"jnt_hand_L",
-	0,
+	{ "jnt_hand_L" },
 	{ "peach_hand1_l.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1122,8 +1077,7 @@ static const TNpcModelData sPeach_Hand1LData = {
 };
 
 static const TNpcModelData sPeach_Hand1RData = {
-	"jnt_hand_R",
-	0,
+	{ "jnt_hand_R" },
 	{ "peach_hand1_r.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1134,8 +1088,7 @@ static const TNpcModelData sPeach_Hand1RData = {
 };
 
 static const TNpcModelData sPeach_HairPonytailData = {
-	"kubi",
-	0,
+	{ "kubi" },
 	{ "peach_hair_ponytail.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1146,8 +1099,7 @@ static const TNpcModelData sPeach_HairPonytailData = {
 };
 
 static const TNpcModelData sPeach_ParasolData = {
-	"jnt_hand_R",
-	0,
+	{ "jnt_hand_R" },
 	{ "peach_parasol.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1158,8 +1110,7 @@ static const TNpcModelData sPeach_ParasolData = {
 };
 
 static const TNpcModelData sPeach_Hand2LData = {
-	"jnt_hand_L",
-	0,
+	{ "jnt_hand_L" },
 	{ "peach_hand2_l.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1170,8 +1121,7 @@ static const TNpcModelData sPeach_Hand2LData = {
 };
 
 static const TNpcModelData sPeach_Hand2RData = {
-	"jnt_hand_R",
-	0,
+	{ "jnt_hand_R" },
 	{ "peach_hand2_r.bmd" },
 	{
 	    { nullptr, 0 },
@@ -1196,8 +1146,7 @@ static const TColorChangeInfo sRaccoonDog_TubeColorChange
 	    sRaccoonDog_TubeColorBuf1 };
 
 static const TNpcModelData sRaccoonDog_TubeData = {
-	"ukiwa_null",
-	0,
+	{ "ukiwa_null" },
 	{ "ukiwa.bmd" },
 	{
 	    { &sRaccoonDog_TubeColorChange, 0 },
