@@ -30,6 +30,10 @@ void TMarDirector::getTalkMsgID(TBaseNPC*) { }
 
 void TMarDirector::updateFlag(TBaseNPC*, u32, u32) { }
 
+// TODO: 94.8%. Structure and the distance expression are exact; the residue is
+// the hoisted `marioPos` component loads (retail reads y, z, then `unk88.end()`,
+// then x, giving f2/f4/f5 where we get f4/f3/f5) plus a 40-byte frame gap
+// (0x58 vs 0x30), so retail has temps we are missing; the two are one cause.
 TBaseNPC* TMarDirector::findNearestTalkNPC()
 {
 	TBaseNPC* result = nullptr;
@@ -76,28 +80,30 @@ TBaseNPC* TMarDirector::findNearestTakeNPC()
 void TMarDirector::movement_game()
 {
 	unk84->associateNPC(nullptr);
-	if ((int)unk124 == 0)
-		return;
 
-	unk18[0]->offFlag(0x2);
-	if (!gpMarioOriginal->isHolding() && gpCamera->isLButtonCamera())
-		return;
+	switch (unk124) {
+	case 0:
+		unk18[0]->offFlag(0x4);
+		if (!gpMarioOriginal->isHolding() && gpCamera->isLButtonCamera())
+			return;
 
-	if (!gpCamera->isDemoCamera()) {
-		TBaseNPC* takeNpc = findNearestTakeNPC();
-		if (takeNpc != nullptr) {
-			unk84->associateNPC(takeNpc);
-		} else {
-			TBaseNPC* talkNpc = findNearestTalkNPC();
-			if (talkNpc != nullptr) {
-				unkA0 = talkNpc;
-				unk84->associateNPC(talkNpc);
-				unk18[0]->onFlag(4);
-				unk128 |= 0x1;
-				if ((unk128 & 2) && (unk18[0]->mEnabledFrameMeaning & 0x800))
-					unk126 = 1;
+		if (!gpCamera->isDemoCamera()) {
+			if (TBaseNPC* takeNpc = findNearestTakeNPC()) {
+				unk84->associateNPC(takeNpc);
+			} else {
+				TBaseNPC* talkNpc = findNearestTalkNPC();
+				if (talkNpc != nullptr) {
+					unkA0 = talkNpc;
+					unk84->associateNPC(talkNpc);
+					unk18[0]->onFlag(4);
+					unk128 |= 0x1;
+					if ((unk128 & 2)
+					    && (unk18[0]->mEnabledFrameMeaning & 0x800))
+						unk126 = 1;
+				}
 			}
 		}
+		break;
 	}
 }
 
@@ -160,8 +166,11 @@ void TMarDirector::fireDemoMovie(u32, TLiveActor*) { }
 
 void TMarDirector::movement()
 {
-	if ((int)mState != STATE_UNK4)
+	switch (mState) {
+	case STATE_UNK4:
 		movement_game();
+		break;
+	}
 }
 
 #pragma dont_inline on
