@@ -70,32 +70,37 @@ void TEnemyAttachment::bind()
 	JGeometry::TVec3<f32> local_1C = mPosition;
 	local_1C += mLinearVelocity;
 	local_1C += mVelocity;
-	setBehavior();
+	recoverScale();
 	mVelocity.y -= getNowGravity();
 	if (mVelocity.y < mVelocityMinY)
 		mVelocity.y = mVelocityMinY;
 	if (!unk168) {
-		const TBGCheckData* local_18;
 		mGroundHeight = gpMap->checkGround(local_1C.x, local_1C.y + mHeadHeight,
-		                                   local_1C.z, &local_18);
+		                                   local_1C.z, &mGroundPlane);
 		mGroundHeight += 1.0f;
 	}
 
-	if (local_1C.y + mVelocity.y <= mGroundHeight)
+	f32 nextY = local_1C.y;
+	if (nextY + mVelocity.y <= mGroundHeight)
 		behaveToHitGround();
 	else
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-	JGeometry::TVec3<f32> p = local_1C;
-	p.y += mHeadHeight;
-	TBGWallCheckRecord local_48(p, mBodyRadius * 2.0f, 1, 0);
-	if (gpMap->isTouchedWallsAndMoveXZ(&local_48))
-		behaveToHitWall(local_48.mResultWalls[0]);
+	TBGWallCheckRecord local_48(local_1C.x, nextY + mHeadHeight, local_1C.z,
+	                            2.0f * mBodyRadius, 1, 0);
+	if (gpMap->isTouchedWallsAndMoveXZ(&local_48)) {
+		const TBGCheckData* wall = local_48.mResultWalls[0];
+		behaveToHitWall(wall);
+	}
 
-	mPosition                      = local_1C;
-	JGeometry::TVec3<f32> local_68 = local_1C;
-	local_68 -= mPosition;
-	mLinearVelocity = local_68;
+	mPosition = local_1C;
+	// Retail really does subtract the position it has just written, so the
+	// linear velocity always ends up zero here. The by-value left operand of
+	// operator- is what keeps TVec3::sub a `bl`.
+	// TODO: the operator- temporary lands at 0x24 where retail puts it at 0x10
+	// (frame and every instruction otherwise exact); ours allocates ~20 bytes
+	// of low region ahead of it.
+	mLinearVelocity = local_1C - mPosition;
 
 	setBehavior();
 	forceKill();
@@ -128,6 +133,7 @@ void TEnemyAttachment::moveObject()
 {
 	if (unk150 == 1) {
 		set();
+		setBehavior();
 	} else {
 		calcRideMomentum();
 		sendMessage();
@@ -145,7 +151,7 @@ void TEnemyAttachment::sendMessage()
 		}
 
 		if (mCollisions[i] != unk160) {
-			((TLiveActor*)mCollisions[i])->kill();
+			kill();
 		}
 	}
 }
@@ -162,7 +168,7 @@ void TEnemyAttachment::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk150 == nullptr) {
 		if (cue & CUE_CALC_ANIM)
-			kill();
+			behaveToHost();
 		return;
 	}
 
@@ -195,11 +201,11 @@ void TEnemyPolluteModelManager::init(TLiveActor* param_1)
 void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
-		f32 f31 = 100.0f;
-		SetViewFrustumClipCheckPerspective(
-		    gpCamera->getFovy(), gpCamera->getAspect(),
-		    graphics->getNearPlane(),
-		    gpConductor->getCondParams().mEnemyFarClip.get());
+		f32 f31     = 100.0f;
+		f32 farClip = gpConductor->getCondParams().mEnemyFarClip.get();
+		SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
+		                                   gpCamera->getAspect(),
+		                                   graphics->getNearPlane(), farClip);
 
 		for (int i = 0; i < unk14; ++i) {
 			if (unk18[i]->unk5D) {
@@ -215,6 +221,17 @@ void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk18[i]->perform(cue, graphics);
 }
 
+// TODO: fabricated inline level. Retail calls TBGCheckData::isWaterSurface()
+// out of line here (it is a weak header inline emitted in BeeHive.o), which
+// only happens when the call sits one level below the guard; spelling
+// `check->isWaterSurface()` directly expands it and costs 13 instructions.
+// The real helper is unrecoverable from the map (enemyAttachment.cpp lists no
+// UNUSED symbol but `generate`), so it is parked here.
+static inline bool EnemyAttachmentIsWaterSurface(const TBGCheckData* check)
+{
+	return check->isWaterSurface();
+}
+
 void TEnemyPolluteModelManager::generatePolluteModel(
     JGeometry::TVec3<f32>& param_1, JGeometry::TVec3<f32>& param_2)
 {
@@ -222,7 +239,8 @@ void TEnemyPolluteModelManager::generatePolluteModel(
 
 	const TBGCheckData* check;
 	gpMap->checkGround(param_1, &check);
-	if (!check->checkFlag(BG_CHECK_FLAG_ILLEGAL) && !check->isWaterSurface())
+	if (!check->checkFlag(BG_CHECK_FLAG_ILLEGAL)
+	    && !EnemyAttachmentIsWaterSurface(check))
 		model->generate(param_1, param_2);
 
 	++unk10;
@@ -239,6 +257,9 @@ TEnemyPolluteModel::TEnemyPolluteModel(TLiveActor* param_1, int param_2,
 	unk10 = new TSharedParts(param_1, param_2, param_3, 3);
 }
 
+// TODO: frame 0x48 vs retail's 0x80 -- 56 bytes of dead low region, plus a
+// callee-saved swap (retail keeps `cue` in r31 and `this` in r30). trash[56]
+// lands the frame and leaves the swap, so the two are independent.
 void TEnemyPolluteModel::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!unk5D || unk5C)
