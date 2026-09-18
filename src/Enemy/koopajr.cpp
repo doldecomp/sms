@@ -92,6 +92,13 @@ void TDirectionCalc::normalize() { mDirection = WrapRadian(mDirection); }
 // takes the shorter way round.
 f32 TDirectionCalc::calcNearerDirection(f32 dir)
 {
+	// The wrap is written out rather than routed through WrapRadianF: the five
+	// statements are what keep this function out of line at
+	// TKoopaJrSubmarine::makeRelativeAngle's two call sites (the ROM `bl`s it
+	// there, and WrapRadianF's single statement drops it under the depth-1
+	// budget: makeRelativeAngle 95.02% -> 26.09%). The cost is that std::fmodf
+	// expands here instead of being called (97.33%); the missing level above it
+	// is still unidentified.
 	f32 lo     = 0.0f;
 	f32 hi     = TWO_PI;
 	f32 range  = hi - lo;
@@ -746,13 +753,8 @@ void TKoopaJrSubmarine::moveSwing()
 	    getSaveParams()->mSLSwingAmplitudeMin.get(), mSwingAmplitude);
 	if (mSwingAmplitude <= 0.0f)
 		mSwingPhase = 0.0f;
-	mSwingPhase = 0.0f
-	              + std::fmodf(TWO_PI
-	                               + ((mSwingPhase
-	                                   + getSaveParams()
-	                                         ->mSLSwingPhaseVelocity.get())
-	                                  - 0.0f),
-	                           TWO_PI);
+	mSwingPhase = WrapRadianF(
+	    mSwingPhase + getSaveParams()->mSLSwingPhaseVelocity.get());
 
 	f32 speedRate = mVelocity.length() / getSaveParams()->mSLSpeedMax.get();
 	if (mKillerTimer > 0) {
@@ -770,13 +772,8 @@ void TKoopaJrSubmarine::moveSwing()
 	    getSaveParams()->mSLWaveAmplitudeMin.get(), mWaveAmplitude);
 	if (mWaveAmplitude <= 0.0f)
 		mWavePhase = 0.0f;
-	mWavePhase = 0.0f
-	             + std::fmodf(TWO_PI
-	                              + ((mWavePhase
-	                                  + getSaveParams()
-	                                        ->mSLWavePhaseVelocity.get())
-	                                 - 0.0f),
-	                          TWO_PI);
+	mWavePhase = WrapRadianF(
+	    mWavePhase + getSaveParams()->mSLWavePhaseVelocity.get());
 }
 
 // UNUSED, 0x38 in the map.

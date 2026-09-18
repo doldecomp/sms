@@ -136,46 +136,42 @@ namespace std {
 inline float fabsf(float f) { return ::fabsf(f); }
 inline float abs(float f) { return ::fabs(f); }
 // The ROM never inlines this: wireTrap.cpp carries the surviving weak 0x5c
-// copy and koopajr.cpp, Koopa.cpp, MapObjCorona.cpp and BathtubPeach.cpp all
-// call it. That copy's body is the same as JGeometry::TUtil<f32>::mod:
+// copy and MapObjCorona.cpp, limitkoopa.cpp, BathtubPeach.cpp, Koopa.cpp and
+// koopajr.cpp all carry unreferenced duplicates of it. The body below is
+// byte-exact against that copy (0x5c, 23 instructions, verified through
+// objdiff on wireTrap.o), and it is the same computation as
+// JGeometry::TUtil<f32>::mod. The named `unsigned long long quotient` is
+// load-bearing: folding the conversion into the return expression gives the
+// same 23 instructions with a 0x20 frame instead of the ROM's 0x28.
 //
-//     if (::fabsf(y) > ::fabsf(x))
-//         return x;
-//     return x - y * (float)(long long)(unsigned long long)(x / y);
+// Header round 13 replaced the old `return ::fmod(x, y);` forwarder with it.
+// That forwarder was certainly wrong -- the map has no `fmod` symbol at all,
+// so every site was emitting a `bl` to a function that does not exist in the
+// image -- but it scored better at the sites where MWCC expands this body
+// instead of calling it, so the switch costs two nonmatching functions some
+// fuzzy score (TDirectionCalc::calcNearerDirection 97.3% -> 69.9%,
+// TNervePeachEscape::execute 94.2% -> 93.9%) while improving eleven others
+// and making this symbol exact.
 //
-// which compiles to exactly 0x5c under our flags. It is *not* spelled here,
-// because writing it makes MWCC inline it at every call site we have and every
-// probe gets worse (TNervePeachEscape::execute 93.5% -> 79.0%).
-//
-// TODO: the blocker is inline depth, not the spelling. Measured in a scratch TU
-// with the game flags (-O4,p -inline auto,deferred), varying only the callee's
-// compiled size and the number of inline wrappers between it and a real
-// function:
-//
-//     body size | depth 2 | depth 3 | depth 4
-//     ----------+---------+---------+--------
-//       0x5c    | inline  | inline  | CALL
-//       0x6c    | inline  | inline  | CALL
-//       0x74    | inline  | CALL    | CALL
-//       0x84    | inline  | CALL    | CALL
-//       0x8c    | CALL    | CALL    | CALL
-//
-// So MWCC's per-expansion size allowance shrinks with depth, and a 0x5c body is
-// only refused from depth four down. Everything that could be changed here was
-// tried and none of it moves the decision: plain `inline`, `extern inline`, the
-// body split into three, five or seven statements, and a named `long long`
-// temporary. Caller size is irrelevant too -- a 0x7bf8 caller still inlines it
-// at depth one.
-//
-// The fix therefore is not in this header: our call sites reach std::fmodf at
-// depth two (nerve -> faceTo -> std::fmodf), and the ROM's reach it at depth
-// four, so two inline wrappers are missing above it. The shape of those
-// wrappers is visible in the ROM: every site computes
-// `l + std::fmodf((r - l) + (t - l), r - l)`, i.e. a wrap-into-[l,r) helper
-// distinct from MathUtil.hpp's loop-based MsWrap<f> (0x48, Animal/boid.o).
-// Recovering that helper pair belongs with the four .cpp files that call it.
-// #pragma dont_inline is not an acceptable stand-in.
-inline float fmodf(float x, float y) { return ::fmod(x, y); }
+// TODO: the open question is *why* the ROM never expands this body. It is not
+// inline depth. TDirectionCalc::calcNearerDirection (koopajr.cpp, 0xa0, whose
+// asm is the wrap written out with `lo`/`range` as separate literal loads)
+// `bl`s it from depth one. Our build expands it at depth one and two and calls
+// it from depth three, which is why the wrap helpers in wireTrap.cpp,
+// MapObjCorona.cpp, BathtubPeach.cpp, KoopaNerve.hpp and koopajr.cpp are
+// two levels deep: that is the only lever we have, and it is a stand-in, not
+// the mechanism. Tried and ruled out for the declaration: `extern inline`
+// (no change), a named `long long` temporary, the body split into three, five
+// and seven statements, plain `inline`. Caller size is irrelevant. Something
+// about the real declaration refuses expansion outright; find it and the two
+// regressions above, plus the six remaining expanded sites, all close.
+inline float fmodf(float x, float y)
+{
+	if (::fabsf(y) > ::fabsf(x))
+		return x;
+	unsigned long long quotient = (unsigned long long)(x / y);
+	return x - y * (float)(long long)quotient;
+}
 inline float atan2f(float y, float x) { return ::atan2((double)y, (double)x); }
 inline float sinf(float x) { return ::sin((double)x); }
 inline float cosf(float x) { return ::cos((double)x); }

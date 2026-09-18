@@ -58,12 +58,11 @@ namespace {
 int KoopaNeckCallBack(J3DNode*, int);
 } // namespace
 
-// Wraps `angle` into [-180, 180). Every site in this unit spells the wrap out;
-// the one in turnBody uses JGeometry::TUtil<f32>::mod instead of std::fmodf,
+// Wraps `angle` into [-180, 180) through the helper pair in KoopaNerve.hpp;
+// the wrap in turnBody uses JGeometry::TUtil<f32>::mod instead of std::fmodf,
 // so the two cannot share a helper (same split as TDirectionCalc in
 // koopajr.cpp).
-#define KOOPA_WRAP_DEGREES(angle)                                              \
-	(-180.0f + std::fmodf(360.0f + ((angle) - -180.0f), 360.0f))
+#define KOOPA_WRAP_DEGREES(angle) KoopaWrapDegrees(angle)
 
 // ---------------------------------------------------------------------------
 // Nerves

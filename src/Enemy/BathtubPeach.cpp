@@ -83,6 +83,21 @@ public:
 	}
 };
 
+// Fabricated, but the ROM's shape: every degree wrap in this TU computes
+// `l + std::fmodf((r - l) + (t - l), r - l)` with l = -180, r = 180, and the
+// two inline levels above std::fmodf are what make MWCC call the weak 0x5c
+// copy the map records for this TU instead of expanding it. Same pair as
+// koopajr.cpp's WrapDirectionF / WrapRadianF, in degrees.
+static inline f32 WrapDirectionF(f32 t, f32 l, f32 r)
+{
+	return l + std::fmodf((r - l) + (t - l), r - l);
+}
+
+static inline f32 WrapDegreesF(f32 angle)
+{
+	return WrapDirectionF(angle, -180.0f, 180.0f);
+}
+
 // Paddles around the rim of the bathtub so as to stay `angle` degrees away
 // from Mario, always facing him.
 //
@@ -150,26 +165,17 @@ public:
 		                 * matan(peach->mPosition.z - tubZ,
 		                         peach->mPosition.x - tubX);
 
+		// These three sites sit one inline level higher than faceTo's, so
+		// MWCC still expands std::fmodf here where the ROM calls it; the
+		// helper pair is nevertheless the better spelling (93.9% against
+		// 88.9% with the wrap written out).
 		f32 goalAngle;
-		if (-180.0f
-		        + std::fmodf(
-		            360.0f + ((peachAngle - marioAngle) - -180.0f), 360.0f)
-		    < 0.0f)
+		if (WrapDegreesF(peachAngle - marioAngle) < 0.0f)
 			goalAngle
-			    = -180.0f
-			      + std::fmodf(360.0f
-			                       + ((marioAngle
-			                           - peach->getParam()->angle.get())
-			                          - -180.0f),
-			                   360.0f);
+			    = WrapDegreesF(marioAngle - peach->getParam()->angle.get());
 		else
 			goalAngle
-			    = -180.0f
-			      + std::fmodf(360.0f
-			                       + ((marioAngle
-			                           + peach->getParam()->angle.get())
-			                          - -180.0f),
-			                   360.0f);
+			    = WrapDegreesF(marioAngle + peach->getParam()->angle.get());
 
 		f32 radius = peach->getParam()->radius.get();
 
@@ -240,19 +246,12 @@ void TBathtubPeach::faceTo(const JGeometry::TVec3<f32>& target, f32 turn_speed)
 
 	f32 angle = (360.0f / 65536.0f) * matan(dz, dx);
 	f32 goal  = angle - 90.0f;
-	f32 diff = -180.0f
-	           + std::fmodf(360.0f + ((goal - mRotation.y) - -180.0f), 360.0f);
+	f32 diff  = WrapDegreesF(goal - mRotation.y);
 
 	if (diff < -turn_speed)
-		mRotation.y
-		    = -180.0f
-		      + std::fmodf(
-		          360.0f + ((mRotation.y - turn_speed) - -180.0f), 360.0f);
+		mRotation.y = WrapDegreesF(mRotation.y - turn_speed);
 	else if (diff > turn_speed)
-		mRotation.y
-		    = -180.0f
-		      + std::fmodf(
-		          360.0f + ((mRotation.y + turn_speed) - -180.0f), 360.0f);
+		mRotation.y = WrapDegreesF(mRotation.y + turn_speed);
 	else
 		mRotation.y = goal;
 }

@@ -39,6 +39,19 @@ const GXColorS10 cBlueColor = { 15, 20, 210, 0 };
 void SMSReportVec(const char* name, const JGeometry::TVec3<f32>& v) { }
 } // namespace
 
+// Fabricated, but the ROM's shape: the wrap computes
+// `l + std::fmodf((r - l) + (t - l), r - l)`, and two inline levels above
+// std::fmodf are what make MWCC emit the weak 0x5c copy the map records for
+// this TU instead of expanding it. Same pair as koopajr.cpp's WrapDirectionF
+// / WrapRadianF, in degrees.
+static inline f32 WrapDirectionF(f32 t, f32 l, f32 r)
+{
+	return l + std::fmodf((r - l) + (t - l), r - l);
+}
+
+static inline f32 WrapAngleF(f32 t) { return WrapDirectionF(t, 0.0f, 360.0f); }
+
+
 TWireTrap::TWireTrap(const char* name)
     : TSpineEnemy(name)
     , unk160(0)
@@ -271,15 +284,11 @@ void TWireTrap::calcRootMatrix()
 
 	// The sparking body spins around its own Z axis as it slides. The
 	// redundant `- 0.0f` / `0.0f +` are in the ROM, so the wrap was written
-	// against a zero lower bound rather than simplified away.
-	// TODO: the ROM calls a weak std::fmodf whose body is the
-	// JGeometry::TUtil<f32>::mod one (compare magnitudes, divide, truncate
-	// through u64, subtract). MSL_Common/math.h still forwards std::fmodf to
-	// the double ::fmod here, so this emits `bl fmod` and the unit is short
-	// the 0x5c copy the map lists. Fixing that header is the open shared
-	// change; see docs/catalog/codegen-tells.md.
+	// against a zero lower bound rather than simplified away: the wrap goes
+	// through the two-level helper pair below, which is what makes MWCC call
+	// the weak std::fmodf the map lists here rather than expand it.
 	mRotation.z += -17.75f;
-	mRotation.z = 0.0f + std::fmodf(360.0f + (mRotation.z - 0.0f), 360.0f);
+	mRotation.z = WrapAngleF(mRotation.z);
 
 	spinQuat.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f),
 	                   0.017453294f * mRotation.z);

@@ -277,6 +277,21 @@ Mtx* TBathtubGrip::getRootJointMtx() const
 // indices transposed (a known open header item), so the correct body is
 // parked here, as this batch may not edit that header. Once concat is fixed
 // this becomes dst.concat(a, b).
+// Fabricated, but the ROM's shape: every angle comparison in this TU computes
+// `l + std::fmodf((r - l) + (t - l), r - l)` with l = -180, r = 180, and the
+// two inline levels above std::fmodf are what make MWCC call the weak 0x5c
+// copy the map records for this TU instead of expanding it. Same pair as
+// koopajr.cpp's WrapDirectionF / WrapRadianF.
+static inline f32 WrapDirectionF(f32 t, f32 l, f32 r)
+{
+	return l + std::fmodf((r - l) + (t - l), r - l);
+}
+
+static inline f32 WrapAngleDiffF(f32 a, f32 b)
+{
+	return WrapDirectionF(a - b, -180.0f, 180.0f);
+}
+
 static inline void ConcatMtx34(TSMtx34f& dst, const TSMtx34f& a,
     const TSMtx34f& b)
 {
@@ -931,8 +946,7 @@ f32 TBathtub::getNearJuncture(const JGeometry::TVec3<f32>& pos) const
 	f32 nearest = 360.0f;
 	int index   = 0;
 	for (int i = 0; i < 5; ++i) {
-		f32 difference = fabsf(-180.0f
-		    + std::fmodf(360.0f + ((unk13C[i] - angle) - -180.0f), 360.0f));
+		f32 difference = fabsf(WrapAngleDiffF(unk13C[i], angle));
 		if (difference < nearest) {
 			index   = i;
 			nearest = difference;
@@ -950,8 +964,7 @@ bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 tolerance,
 	f32 nearest = 360.0f;
 	int index = 0;
 	for (int i = 0; i < 5; ++i) {
-		f32 difference = fabsf(-180.0f + std::fmodf(
-		    360.0f + ((unk150[i] - angle) - -180.0f), 360.0f));
+		f32 difference = fabsf(WrapAngleDiffF(unk150[i], angle));
 		if (difference < nearest) {
 			index = i;
 			nearest = difference;
@@ -972,8 +985,7 @@ f32 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>& pos,
 	f32 nearest = 360.0f;
 	int index   = 0;
 	for (int i = 0; i < 5; ++i) {
-		f32 difference = fabsf(-180.0f
-		    + std::fmodf(360.0f + ((unk13C[i] - angle) - -180.0f), 360.0f));
+		f32 difference = fabsf(WrapAngleDiffF(unk13C[i], angle));
 		if (difference < nearest) {
 			index   = i;
 			nearest = difference;
@@ -991,8 +1003,7 @@ u8 TBathtub::getNextGrip(const JGeometry::TVec3<f32>& pos,
 	f32 nearest = 360.0f;
 	int index   = 0;
 	for (int i = 0; i < 5; ++i) {
-		f32 difference = fabsf(-180.0f
-		    + std::fmodf(360.0f + ((unk150[i] - angle) - -180.0f), 360.0f));
+		f32 difference = fabsf(WrapAngleDiffF(unk150[i], angle));
 		if (difference < nearest) {
 			index   = i;
 			nearest = difference;
