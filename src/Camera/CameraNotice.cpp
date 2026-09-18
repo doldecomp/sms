@@ -49,7 +49,8 @@ static inline f32 CameraNoticeSquaredDist(const JGeometry::TVec3<f32>& a,
 	f32 sqY = dy * dy;
 	f32 sqZ = dz * dz;
 
-	return sqX + sqY + sqZ;
+	f32 sum = sqX + sqY + sqZ;
+	return sum;
 }
 
 void CPolarSubCamera::setNoticeInfo()
@@ -72,20 +73,36 @@ void CPolarSubCamera::setNoticeInfo()
 	unk2A8 = JDrama::TNameRefGen::search<TLiveActor>(bossGesoViewObjName);
 }
 
-// TODO (closure batch 87): 79.7%, up from 73.2%. Restored here: the clip range
-// is [-ratio, +ratio] (retail's `fneg` off the single param read, hoisted above
-// CLBCalc2DFPos), the clip test is a **three**-bool ladder whose result is then
-// normalised again (`inClipY ? true : false`), and the squared distance goes
-// through a helper with three named squares instead of TVec3::squared(), which
-// contracts to `fmadds`. What is left:
-//   - frame 0xf0 vs 0xc8, and retail saves f27 and r25 where we start at f28
-//     and r26: retail hoists **both** `this + 0x16c` and `this + 0x1ec` into
-//     callee-saved registers before the loop (we only hoist 0x1ec), so two
-//     named matrix locals are missing.
-//   - at the first site MWCC schedules our `bl CLBSquared` before the three
-//     `fmuls`; retail evaluates the whole distance first. Naming the
-//     CLBSquared result as well (`f32 offDist2 = ...`) costs an instruction and
-//     does not move it.
+// TODO (closure batch 152): 92.7%, up from 79.7%, frame now exact (0xf0).
+// Restored here: the clip range is [-ratio, +ratio] (retail's `fneg` off the
+// single param read, hoisted above CLBCalc2DFPos), and **both** clip tests are
+// the same three-bool ladder whose result is normalised again
+// (`inClipY ? true : false`) -- the loop's ladder had been written as two
+// bools, which was six of the eight missing instructions. Also restored: the
+// loop's distance guard is `!(dist2 < closestDist2)` (a single `bge`; `>=`
+// compiles to `cror eq,gt,eq; beq`), the identity test is
+// `mNoticeActor == unk2A0[i]` in that operand order, the squared-distance
+// helper names its sum (`f32 sum = sqX + sqY + sqZ; return sum;`), which alone
+// landed the frame from 0xe8 to 0xf0, and the loop's two matrices go through
+// `getUnk16C()`/`getUnk1EC()`, which makes MWCC hoist *both* `this + 0x16c`
+// and `this + 0x1ec` as loop-invariant base temps in r31/r30 at exactly
+// retail's position. Named `MtxPtr` locals also hoist both but materialise the
+// two `addi`s at the declaration instead of just above the loop; declared
+// before `noticeActor` they get retail's register numbers, declared after they
+// get retail's placement, and no order gives both.
+// What is left (all in the first, pre-loop site plus two rotations):
+//   - r31/r30 are swapped against retail (retail r31 = 0x16c, ours r31 =
+//     0x1ec). Base temps are allocated in the opposite order to ours here;
+//     `unk16C, getUnk1EC()` and `getUnk16C(), unk1EC` are both inert on it.
+//   - at the first site MWCC still schedules our `bl CLBSquared` before the
+//     three `fmuls`, so the three differences live in f31/f30/f29 across the
+//     call where retail keeps only the sum (f28). Consequence: every
+//     callee-saved FPR is rotated by one (retail loop dist2 = f27, clipMax =
+//     f28; ours f28/f27). Rejected: un-naming `noticeDist2` (inert), naming
+//     the CLBSquared result as well (costs an instruction).
+//   - the three ladder bools: retail materialises one zero (`li r3,0`) and
+//     copies it (`addi r4,r3,0`, `addi r0,r3,0`); we emit three `li`, one of
+//     them late. A comma declaration is inert.
 TLiveActor* CPolarSubCamera::getNoticeActor_()
 {
 	if (mNoticeActor != nullptr && !mNoticeActor->checkLiveFlag(LIVE_FLAG_DEAD)
@@ -101,10 +118,8 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			              nullptr, false);
 
 			// TODO: inline
-			f32 clipMin     = -clipMax;
-			bool inClipX    = false;
-			bool overClipMinY = false;
-			bool inClipY    = false;
+			f32 clipMin = -clipMax;
+			bool inClipX = false, overClipMinY = false, inClipY = false;
 			if (clipMin <= clipPos.x && clipPos.x <= clipMax)
 				inClipX = true;
 
@@ -127,30 +142,34 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		    || unk2A0[i]->checkLiveFlag(LIVE_FLAG_HIDDEN))
 			continue;
 
-		if (mNoticeActor != nullptr && unk2A0[i] == mNoticeActor)
+		if (mNoticeActor != nullptr && mNoticeActor == unk2A0[i])
 			continue;
 
 		f32 dist2
 		    = CameraNoticeSquaredDist(unk2A0[i]->mPosition, *gpMarioPos);
-		if (dist2 >= closestDist2)
+		if (!(dist2 < closestDist2))
 			continue;
 
+		f32 clipMax = mSaveNotice->mOnClipRatio.get();
+
 		JGeometry::TVec2<f32> clipPos;
-		CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A0[i]->getPosition(),
+		CLBCalc2DFPos(&clipPos, getUnk16C(), getUnk1EC(),
+		              unk2A0[i]->getPosition(),
 		              nullptr, false);
 
 		// TODO: inline
-		f32 clipMax  = mSaveNotice->mOnClipRatio.get();
-		f32 clipMin  = -clipMax;
-		bool inClipX = false;
-		bool inClipY = false;
-		if (clipMin <= clipPos.x && clipPos.x <= clipMax) {
+		f32 clipMin = -clipMax;
+		bool inClipX = false, overClipMinY = false, inClipY = false;
+		if (clipMin <= clipPos.x && clipPos.x <= clipMax)
 			inClipX = true;
-		}
-		if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax) {
+
+		if (inClipX && clipMin <= clipPos.y)
+			overClipMinY = true;
+
+		if (overClipMinY && clipPos.y <= clipMax)
 			inClipY = true;
-		}
-		if (!inClipY)
+
+		if (!(inClipY ? true : false))
 			continue;
 
 		if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(*gpMarioAngleY),
@@ -191,14 +210,26 @@ void CPolarSubCamera::execNoticeOnOffProc_(EnumNoticeOnOffMode mode)
 	}
 }
 
-// TODO (closure batch 87): 92.0%, data now exact. The angle factor is
+// TODO (closure batch 152): 92.2%, up from 92.0%. The angle factor is
 // `|angle| * (2.0f / 65536.0f)` (a 0..1 fraction of a half turn), not
 // DEG2SHORTANGLE(1.0f) -- the old 182.04445f literal was displacing the whole
-// `.sdata2` pool. What is left: frame 0xa8 vs 0x88 (low region), the
-// `fmadds` pair for `dir * 500 + marioPos` has its two terms swapped against
-// retail, and the `ang - mCurrentTarget.mYaw` block sign-extends once where
-// retail extends at every s16-typed use (the same `extsh` family as
-// CameraNormal's ctrlNormalOrTowerCamera_).
+// `.sdata2` pool. The angle difference is `mCurrentTarget.mYaw - ang` in that
+// operand order, held in an `s16` (batch 152: two of the five missing
+// instructions). What is left:
+//   - frame 0xa8 vs 0x88: 36 bytes short in the low pool and 4 long in the
+//     named block, with seven cameralib templates inlined here.
+//   - retail truncates the yaw difference at each of its three uses
+//     (`extsh.` for the test, `extsh` in each ternary arm) off one un-extended
+//     `subf`; an `s16` local truncates once at the assignment instead.
+//     Rejected: `CLBAbs<s16>` (88.4%, it truncates its parameter on entry),
+//     and repeating `(s16)(mYaw - ang)` in all three positions (91.2%).
+//   - the `fmadds` pair for `diff * 500 + mPos` puts the literal on the left
+//     where retail has the vector component, which per the pool rule means
+//     retail's 500.0f reached the multiply as a *variable* (a named local or
+//     an inlined helper's parameter), not as a literal. Rejected: swapping the
+//     written operand order, and folding both terms into the `matan`
+//     arguments -- MWCC still evaluates the z term first where retail, doing
+//     arguments right to left, does x first.
 void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 {
 	Vec mPos     = gpCameraMario->unk0;
@@ -217,9 +248,8 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 		f32 dz       = diff.z * 500.0f + mPos.z;
 		s16 ang      = matan(dz - mCurrentTarget.mTarget.z,
 		                     dx - mCurrentTarget.mTarget.x);
-		int absAngle = ang - mCurrentTarget.mYaw >= 0
-		                   ? ang - mCurrentTarget.mYaw
-		                   : -(ang - mCurrentTarget.mYaw);
+		s16 yawDiff  = mCurrentTarget.mYaw - ang;
+		int absAngle = yawDiff >= 0 ? yawDiff : -yawDiff;
 		f32 ratio    = (f32)absAngle * (2.0f / 65536.0f);
 
 		f32 chase;

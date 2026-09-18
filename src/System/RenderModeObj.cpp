@@ -31,6 +31,14 @@ u8 SMSVFilter_flicker[7] = { 0x8, 0x8, 0xA, 0xC, 0xA, 0x8, 0x8 };
 // round 15 confirmed that with two spellings and failed to find an honest one.
 // The trial table lives at the declaration in
 // include/JSystem/JDrama/JDRDisplay.hpp.
+//
+// Second, independent confirmation of the same carrier (this batch): the
+// out-of-line SMSSetupTitleRenderMode is byte-exact at frame 0x20, so the body
+// inlined into SMSSetupTitleRenderingInfo is right and that function's 8 dead
+// bytes must come from the caller-side expansions only -- getRenderMode() or
+// offFlag(), and offFlag() returns void (price 0). Both diffs are ~ only on
+// stwu/lmw/stmw displacements, no instruction added or removed, so the four
+// bodies are settled and only the header item is left.
 
 JDrama::TRect SMSGetRederRect_Game()
 {
