@@ -55,7 +55,7 @@ asm void PPCMtl2cr(register u32 newL2cr)
 #endif // clang-format on
 }
 
-asm void PPCMtdec(register u32 newDec)
+inline asm void PPCMtdec(register u32 newDec)
 {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
@@ -73,7 +73,7 @@ asm void PPCSync()
 #endif // clang-format on
 }
 
-asm void PPCHalt()
+inline asm void PPCHalt()
 {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
