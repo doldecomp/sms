@@ -38,6 +38,19 @@ void TCardSector::clearData()
 	memset(&mHeader, 0, sizeof(mHeader) + sizeof(mOptionBlock));
 }
 
+// UNUSED, 0x50 in the map.
+//
+// TODO: the real body is almost certainly
+//     mWriteCount = write_count;
+//     mCheckSum   = CalcCheckSum(this, 0x1FFC);
+// which compiles to exactly the map's 0x50 (CalcCheckSum expands inside it)
+// and gives cmdLoop's expansion retail's `bl CalcCheckSum` (96.70 -> 99.21).
+// It is not in place because MWCC then also calls CalcCheckSum in
+// writeOptionBlock_ (100 -> 84.25), writeBlock_ (99.93 -> 85.84), readBlock_
+// (99.13 -> 88.31) and filledInitData_ (91.90 -> 78.86), where retail spells
+// the loop out. One body, two expansions: the per-call-site inline split of
+// docs/catalog/codegen-tells.md, with no lever found. The loop below is the
+// four-site shape and is kept until that split can be steered.
 void TCardSector::setCheckSum(u32 write_count)
 {
 	mWriteCount = write_count;
