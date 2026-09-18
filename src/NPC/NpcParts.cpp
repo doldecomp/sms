@@ -46,6 +46,17 @@ void SetMActorAnmFrame(MActor* actor, f32 frame, bool set_bck, bool set_btp)
 	}
 }
 
+// TODO: 94.2% (84.8% before batch 136 fixed the clearing loop below), frame
+// 0x1f8 vs 0x190 and eight instructions still missing. The missing ones are
+// one construct: at both defaulted `initSimpleMotionBlend` sites retail emits a
+// dead `li r4,-1; cmpwi r4,-1; bne` and only then reads
+// `mPtrSaveNormal->mMotionBlendFrame`, i.e. the frame count is a **defaulted
+// argument** of a wrapper around MActor::initSimpleMotionBlend that resolves -1
+// to the saved value. Spelling that wrapper as a TU-local `static inline
+// (MActor*, int frame = -1)` does not reproduce it -- MWCC folds the default
+// through one inline level -- so the wrapper is probably reached through a
+// second inlined level (a per-part setup helper taking the frame), which is
+// also where the remaining 104 low bytes would live.
 TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
                      TBaseNPC* param_3)
     : unk60(param_3)
@@ -53,19 +64,15 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(unk60->getActorType() - 0x4000001);
 
-	// TODO: the clearing loop. Retail walks a copied base pointer
-	// (`addi r3, r20, 0`) in eight-store steps of 0x20 over a `bdnz` with
-	// ctr = 3, i.e. a 24-trip loop unrolled by eight with no remainder path.
-	// Measured: a flat `slot[i] = nullptr` / `*slot++ = nullptr` over 24, and
-	// the same body in an inlined `static inline` helper taking the pointer
-	// and the count, all get *fully* unrolled into 24 stores at constant
-	// offsets off `this` (79.8%); this nested 2x12 walk is the only spelling
-	// that keeps a real loop, and it unrolls the 12-trip inner loop by eight
-	// with a remainder path (82.6%, and 83.5% with the if/else below).
-	// Whatever retail wrote, MWCC could not fold the base address there.
-	for (int j = 0; j < 2; ++j)
-		for (int i = 0; i < 12; ++i)
-			unk0[j][i] = nullptr;
+	// The clearing loop is a flat 24-trip pointer walk with the increment in
+	// the `for`'s third clause: that is the only spelling MWCC unrolls by
+	// eight into a `bdnz` with ctr = 3 and no remainder path, as retail does.
+	// `*slot++ = nullptr` as the body, `slot[i] = nullptr`, and a nested
+	// 2x12 walk are all different (82.0%, 82.0%, 84.8%); a pointer-compare
+	// `while` is 90.5%.
+	TSharedParts** slot = unk0[0];
+	for (int i = 0; i < 24; ++i, ++slot)
+		*slot = nullptr;
 
 	for (int i = 0; i < 12; ++i) {
 		const TNpcModelData* iVar10 = initInfo->unk4[i];

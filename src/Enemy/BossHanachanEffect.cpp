@@ -43,13 +43,20 @@ void TBossHanachan::staticLoadParticle()
 	SMS_LoadParticle("ms_boha_kizetsu.jpa", 0x16F);
 }
 
-// TODO: frame 0xc8 vs 0x90 and no opcode differences left; the remaining 56
-// bytes of low region also account for the callee-saved renumbering (retail
-// keeps `this` in r31 and the nerve in r30, we have them swapped).
-// `getLatestNerve()` and the parked water-counter accessor above each bought 8.
-// The next levers to try are indexed accessors for `mBodies[i]` and
-// `unk178->mPoints[i]`, which the catalog prices at +16 per use and which do
-// not saturate.
+// TODO: 98.3%, frame 0xc8 vs 0x90, no missing/extra/opcode differences.
+// Batch 136 measured the whole lever curve for the 56 bytes: a TU-local
+// binding over any one of mHead, unk178, mChangeParams, mBodies[i]->mFeet[],
+// mBodies[i]->mLegMtx[] or gpSunMgr->unk20 is +8 alone, but in combination the
+// cost is 24 + 8n, so exactly *five* of them reach 0xc8 and every five-subset
+// tried gives the identical result. It is not worth committing: at frame-exact
+// the operand mismatches only fall from 103 to 90 and two residues stay, and
+// both are known-open. (1) The named `position` vector sits at 0x6c where
+// retail has it at 0x70 -- the same 4-byte pool-order shift emitCamShake_
+// below has, and no 8-byte lever can pay for 4. (2) The callee-saved rotation:
+// retail keeps `this` in r31 and the nerve in r30 (we have them swapped) and
+// permutes the three loop counters with it; that is the `this`-vs-pool-base
+// swap of docs/catalog/frame-gaps.md, "pass 131". Fix the 4 bytes first --
+// it is shared with emitCamShake_, so one construct explains both.
 void TBossHanachan::emitParticle_()
 {
 	const TNerveBase<TLiveActor>* nerve = getLatestNerve();
@@ -167,11 +174,14 @@ static inline TBossHanachanCommonSaveParams* BossHanachanEffectCommonParams(cons
 	return commonParams;
 }
 
-// TODO: 99.9%, frame 0x78 vs 0x68. Every instruction and every register match;
-// 16 bytes of low region are missing. `getLatestNerve()` over
-// `mSpine->getLatestNerve()` bought the first 8. The hoisted `int j` is what
-// puts the outer counter in r25 and the inner in r26 as retail does; declaring
-// it inside the inner `for` swaps them.
+// TODO: 100.0% (two operands), frame now exact at 0x78. The only difference
+// left is MsSqrtf's `volatile float y` slot: retail puts it at 0x40, we put it
+// at 0x44, so our temp pool holds 4 more bytes before the MsSqrtf expansion
+// and 4 fewer after it. Every documented lever moves the pool by 8, so a
+// construct worth 4 is missing -- a global fork or TUtil<f32>::one() per the
+// rules card. The hoisted `int j` is what puts the outer counter in r25 and
+// the inner in r26 as retail does; declaring it inside the inner `for` swaps
+// them. emitParticle_ above wants the same 4 bytes.
 void TBossHanachan::emitCamShake_()
 {
 	if (gpMarDirector->mState == 1)
