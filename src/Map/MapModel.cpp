@@ -57,24 +57,38 @@ void TMapModel::perform(u32 cue, JDrama::TGraphics* graphics)
 	mActor->perform(cue, graphics);
 }
 
+// TODO: promote to TMapModel::getUnderpassMaterial() in MapModel.hpp; parked
+// here because a header batch owns the shared headers this batch.
+// The accessor supplies the last 8 bytes of initUnderpass' 0x70 frame: two
+// getModelData() reads are +8, getChildrenNum()/getChild() +0x10, and this
+// accessor +8 at two or three call sites (one is +0, four or five +0x10).
+// Only the byte count picks the three sites below, so an alternative reading
+// is that retail reached getTexCoord()/getZMode() through one more forwarding
+// level than our J3DMaterial does.
+static inline J3DMaterial* MapModel_getUnderpassMaterial(TMapModel* self)
+{
+	return self->mUnderpassMaterial;
+}
+
 void TMapModel::initUnderpass()
 {
-	s32 nameIdx = mModelData->getJointName()->getIndex("underpass");
+	s32 nameIdx = getModelData()->getJointName()->getIndex("underpass");
 	if (nameIdx < 0)
 		return;
 
-	J3DJoint* underpass = mModelData->getJointNodePointer(nameIdx);
+	J3DJoint* underpass = getModelData()->getJointNodePointer(nameIdx);
 
 	int i = 0;
-	while (i < mChildrenNum && mChildren[i]->getJoint() != underpass)
+	while (i < getChildrenNum() && getChild(i)->getJoint() != underpass)
 		++i;
 
-	mUnderpass         = mChildren[i];
+	mUnderpass         = getChild(i);
 	mUnderpassMaterial = underpass->getMesh();
-	mUnderpassMaterial->change();
-	mUnderpassMaterial->setSomeFlag();
+	MapModel_getUnderpassMaterial(this)->change();
+	MapModel_getUnderpassMaterial(this)->setSomeFlag();
 
-	J3DTexCoord* texCoord = mUnderpassMaterial->getTexCoord(0);
+	J3DTexCoord* texCoord
+	    = MapModel_getUnderpassMaterial(this)->getTexCoord(0);
 	texCoord->setTexGenType(GX_TG_MTX2x4);
 	texCoord->setTexGenSrc(GX_TG_POS);
 	texCoord->setTexGenMtx(GX_TEXMTX0);
