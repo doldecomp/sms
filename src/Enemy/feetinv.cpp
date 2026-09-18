@@ -84,6 +84,17 @@ void FeetInvCalc(J3DModel* model, u16 jnt_hip, u16 jnt_knee, u16 jnt_foot,
 	// and leaves every instruction unchanged, so the missing stack is
 	// unreferenced locals, not a missing computation; one of those holes is
 	// a 4-byte slot the original reserves between toKnee and toFoot.
+	// Re-measured in closure batch 87: **every** `r1` displacement in the
+	// original is exactly 0x68 higher than ours, the LR and the four FPR/four
+	// GPR save slots included, so all 104 bytes sit *below* every named local,
+	// i.e. they are inline-expansion temporaries and none of them can be
+	// recovered as a body local. The diff is 343 operand-only differences plus
+	// 31 pairs of the same instruction scheduled one slot apart and no missing
+	// or extra computation. The four "reload .x, keep .y/.z in callee-saved
+	// FPRs" sites are the pattern docs/catalog/frame-gaps.md records for
+	// TMapCollisionBase::updateTrans and CPolarSubCamera::updateDemoCamera_
+	// (closure batch 83, still unexplained), so this unit is blocked on the
+	// same research item rather than on anything local to it.
 
 	MtxPtr kneeMtx = model->getAnmMtx(jnt_knee);
 	MtxPtr footMtx = model->getAnmMtx(jnt_foot);
