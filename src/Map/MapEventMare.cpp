@@ -487,7 +487,13 @@ void TMareEventDepressWall::initCommon()
 	                     ->getYounger()
 	                     ->getChild();
 
-	int skipCount = 0x43 - (unk14 + (unk10 - 1));
+	// TODO: retail computes `unk10 - 1` on its own and only then adds unk14
+	// (`subi; add r0, r4, r0; subfic r4, r0, 0x43`); every spelling of the
+	// sum lets MWCC reassociate the -1 out to the end. This form at least
+	// fixes the load order and the add's operands. Exhausted:
+	// `unk14 + (unk10 - 1)` (loads unk14 first), a named `lastIdx` local
+	// (ditto, and the frame is already 8 bytes long).
+	int skipCount = 0x43 - (unk10 - 1 + unk14);
 	for (int i = 0; i < skipCount; ++i)
 		joint = joint->getYounger();
 
@@ -609,10 +615,18 @@ u32 TMareEventBumpyWall::touchWater(THitActor*)
 	return 1;
 }
 
+// TODO: all four bump* functions share one residue: retail's locals sit 4
+// bytes higher (`trans` at 0x14(r1), ours at 0x10) and retail keeps the
+// 0x144 limit in f1 across the `bge`, so its else arm needs no reload.
+// The frame total already matches (0x30), so this is 4 bytes of low region.
+// Exhausted: the two-argument `startSoundActor(id, &mPosition)` overload
+// (+8, frame 0x38), `&getPosition()` as the position argument (+0 and four
+// extra instructions), `setJointTransX(unk13C, trans.x)` after the store
+// (MWCC forwards the store, inert).
 void TMareEventBumpyWall::bumpDownZ()
 {
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
-	JGeometry::TVec3<f32> trans(z, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
 	if (z > -unk144) {
 		if (!TMapObjBase::isDemo()) {
 			z -= unk140;
@@ -638,7 +652,7 @@ void TMareEventBumpyWall::bumpDownZ()
 void TMareEventBumpyWall::bumpUpZ()
 {
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
-	JGeometry::TVec3<f32> trans(z, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
 	if (z < unk144) {
 		if (!TMapObjBase::isDemo()) {
 			z += unk140;
