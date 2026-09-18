@@ -46,6 +46,10 @@ void TMultiBtk::update()
 	}
 }
 
+// UNUSED (map size 4): an empty debug dumper. It must stay empty -- giving it
+// OSReport calls would add .rodata and shift the whole string pool.
+void SMS_DumpJ3DModel(J3DModel* model) { }
+
 void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
                                JGeometry::TVec3<f32>* pos, f32* arg2)
 {
@@ -66,7 +70,16 @@ void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
 				PSMTXCopy(*riding_info->unk0->getRootJointMtx(), mtx.mMtx);
 			}
 			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos);
-			*arg2 = *arg2 + riding_info->unk0->mRotation.y - riding_info->unk10;
+
+			// The frame says the yaw update named its two intermediates and
+			// read the actor's rotation through the accessor once (the
+			// re-read below is raw: the ROM reloads it, so it is a second,
+			// independent read): prevYaw and yaw are the 8 bytes above mtx,
+			// getRotation() the 0xc below the inlined
+			// SMS_RideMoveCalcLocalPos frame.
+			f32 prevYaw = riding_info->unk10;
+			f32 yaw = *arg2 + riding_info->unk0->getRotation().y - prevYaw;
+			*arg2              = yaw;
 			riding_info->unk10 = riding_info->unk0->mRotation.y;
 		}
 	} else {
