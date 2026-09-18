@@ -54,14 +54,16 @@ u8 TPopo::mExplosionSw     = 0;
 
 TPopo* gpCurPopo;
 
+// Indexed by BCK animation index, so the holes are real: only slots 0, 5
+// and 6 have a sound table.
 static const char* popo_bastable[] = {
 	"/scene/popo/bas/popo_chase.bas",
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
 	"/scene/popo/bas/popo_jump.bas",
 	"/scene/popo/bas/popo_wait.bas",
-	nullptr,
-	nullptr,
-	nullptr,
-	nullptr,
 };
 
 static int PopoNonScaleCallback(J3DNode* node, int param);
@@ -119,8 +121,10 @@ void TPopoManager::initSetEnemies()
 void TPopoManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "popoH.bmd", 0, 0 },
-		{ "popoL.bmd", 0, 0 },
+		{ "popoH.bmd",
+		  J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift), 0 },
+		{ "popoL.bmd",
+		  J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift), 0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
