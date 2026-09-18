@@ -8,10 +8,12 @@
 // The three accessors below belong on their classes, not here: this batch may
 // not touch the shared camera headers, so they are parked as TU-local inlines
 // under prefixed names. The promotions to make later are
-//   Camera/Camera.hpp:          int CPolarSubCamera::getCamMode() const
-//                               const TCameraMapTool* CPolarSubCamera::getUnk70() const
-//   Camera/CameraMarioData.hpp: u32 TCameraMarioData::getFramesSinceMarioStatusChange() const
-//                               TCameraMarioData* SMSGetCameraMario()
+//   Camera/Camera.hpp:
+//     int CPolarSubCamera::getCamMode() const
+//     const TCameraMapTool* CPolarSubCamera::getUnk70() const
+//   Camera/CameraMarioData.hpp:
+//     u32 TCameraMarioData::getFramesSinceMarioStatusChange() const
+//     TCameraMarioData* SMSGetCameraMario()
 // Each is exactly one inline level and the five levels used in
 // controlByCameraCode_ (these three, the named TCubeGeneralInfo* and
 // TCameraMapTool::getCameraMode()) are its 0x28 of otherwise missing frame.
@@ -26,7 +28,10 @@ CameraCodeGetCurCamMapTool(const CPolarSubCamera* cam)
 	return cam->unk70;
 }
 
-static inline TCameraMarioData* CameraCodeGetMarioData() { return gpCameraMario; }
+static inline TCameraMarioData* CameraCodeGetMarioData()
+{
+	return gpCameraMario;
+}
 
 static inline u32 CameraCodeGetStatusChangeFrames(const TCameraMarioData* data)
 {
