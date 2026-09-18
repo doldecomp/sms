@@ -81,27 +81,6 @@ enum {
 	PUKU_ANM_SWIM          = 9,
 };
 
-TTobiPukuSaveLoadParams::TTobiPukuSaveLoadParams(const char* prm)
-    : TWalkerEnemyParams(prm)
-    , PARAM_INIT(mSLBoundNum, 3)
-    , PARAM_INIT(mSLBoundVal, 0.8f)
-    , PARAM_INIT(mSLLifeTimer, 200)
-    , PARAM_INIT(mSLFlyGravityY, 0.2f)
-    , PARAM_INIT(mSLPowerFromWater, 1.0f)
-{
-}
-
-TTobiPukuLaunchPadSaveLoadParams::TTobiPukuLaunchPadSaveLoadParams(
-    const char* prm)
-    : TSmallEnemyParams(prm)
-    , PARAM_INIT(mSLLaunchInterval, 300)
-    , PARAM_INIT(mSLLaunchVelocityY, 12.0f)
-    , PARAM_INIT(mSLFlyDist, 1000.0f)
-    , PARAM_INIT(mSLFlySpeed, 30.0f)
-    , PARAM_INIT(mSLLaunchAngle, 45.0f)
-{
-}
-
 f32 TTobiPuku::mLandAngle = 90.0f;
 
 u8 TTobiPuku::mBoundSw = 1;
@@ -174,6 +153,29 @@ static int TobiPukuRollCallback(J3DNode* param_1, int param_2)
 		}
 	}
 	return true;
+}
+
+// The map emits both params constructors (UNUSED) immediately before
+// TobiPukuRollCallback, so in reverse source order they follow it.
+TTobiPukuLaunchPadSaveLoadParams::TTobiPukuLaunchPadSaveLoadParams(
+    const char* prm)
+    : TSmallEnemyParams(prm)
+    , PARAM_INIT(mSLLaunchInterval, 300)
+    , PARAM_INIT(mSLLaunchVelocityY, 12.0f)
+    , PARAM_INIT(mSLFlyDist, 1000.0f)
+    , PARAM_INIT(mSLFlySpeed, 30.0f)
+    , PARAM_INIT(mSLLaunchAngle, 45.0f)
+{
+}
+
+TTobiPukuSaveLoadParams::TTobiPukuSaveLoadParams(const char* prm)
+    : TWalkerEnemyParams(prm)
+    , PARAM_INIT(mSLBoundNum, 3)
+    , PARAM_INIT(mSLBoundVal, 0.8f)
+    , PARAM_INIT(mSLLifeTimer, 200)
+    , PARAM_INIT(mSLFlyGravityY, 0.2f)
+    , PARAM_INIT(mSLPowerFromWater, 1.0f)
+{
 }
 
 TTobiPukuLaunchPadManager::TTobiPukuLaunchPadManager(const char* name)
@@ -430,6 +432,29 @@ void TTobiPuku::hitWall()
 		mVelocity.y = 0.0f;
 }
 
+// UNUSED, 0xc8 in the map and size-exact: the body TNerveTobiPukuBound::execute
+// pastes in once canBound() has passed. Damp the stored launch velocity,
+// rebuild the vertical component from the drop height, go airborne, and reset
+// the drop reference while still rising.
+void TTobiPuku::bound()
+{
+	mBoundCount = mBoundCount + 1;
+
+	f32 damp = unk19C->mSLBoundVal.get();
+	JGeometry::TVec3<f32> vel(mLaunchVelocity);
+	vel.x *= damp;
+	vel.z *= damp;
+	vel.y = (TTobiPuku::mBoundVelocityY * damp * (unk1B0 - mGroundHeight))
+	        / 30.0f;
+
+	mLaunchVelocity = vel;
+	mVelocity       = vel;
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+	if (vel.y > 0.0f)
+		unk1B0 = mPosition.y;
+}
+
 void TTobiPuku::calcRootMatrix()
 {
 	gpCurTobiPuku = (TMoePuku*)this;
@@ -453,23 +478,6 @@ void TTobiPuku::calcRootMatrix()
 		gpMarioParticleManager->emitAndBindToPosPtr(0x177, &mFlamePos, 1,
 		                                            this);
 	}
-}
-
-// UNUSED, 0x140 in the map. Inlined into TobiPukuRollCallback, where the
-// materialised bool it returns is what shapes that function's branches.
-bool TTobiPuku::isRoll()
-{
-	// TODO: 0x150 against the map's 0x140, and when inlined the original's
-	// three tests converge on one `li r0, 1` where ours each get their own.
-	// Writing the body as a single `a || b || c` return gets the size down
-	// to 0xd4 but makes the inlined form much worse, so this stays.
-	if (mSpine->getCurrentNerve() == &TNerveTobiPukuLand::theNerve())
-		return true;
-	if (mSpine->getCurrentNerve() == &TNerveTobiPukuPrepareFly::theNerve())
-		return true;
-	if (mSpine->getCurrentNerve() == &TNerveTobiPukuReturnLaunch::theNerve())
-		return true;
-	return false;
 }
 
 bool TTobiPuku::isPichiEffect() { return isBckAnm(PUKU_ANM_PICHI) ? true : false; }
@@ -512,6 +520,35 @@ void TTobiPuku::setJumpStartAnm()
 {
 	if (isBckAnm(PUKU_ANM_JUMP_START))
 		setBckAnm(PUKU_ANM_JUMP_START);
+}
+
+// UNUSED, 0x2c in the map and size-exact: the guard
+// TNerveTobiPukuBound::execute tests before bound(). The `unk1AE = 1` store is
+// what the last two instructions of the map's 0x2c are; without it the body is
+// 0x24.
+bool TTobiPuku::canBound()
+{
+	unk1AE = 1;
+	if (mBoundCount < unk19C->mSLBoundNum.get())
+		return true;
+	return false;
+}
+
+// UNUSED, 0x140 in the map. Inlined into TobiPukuRollCallback, where the
+// materialised bool it returns is what shapes that function's branches.
+bool TTobiPuku::isRoll()
+{
+	// TODO: 0x150 against the map's 0x140, and when inlined the original's
+	// three tests converge on one `li r0, 1` where ours each get their own.
+	// Writing the body as a single `a || b || c` return gets the size down
+	// to 0xd4 but makes the inlined form much worse, so this stays.
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuLand::theNerve())
+		return true;
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuPrepareFly::theNerve())
+		return true;
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuReturnLaunch::theNerve())
+		return true;
+	return false;
 }
 
 void TTobiPuku::behaveToWater(THitActor* param_1)
@@ -617,6 +654,36 @@ f32 TTobiPuku::getGravityY() const
 	if (unk194)
 		return unk19C->mSLFlyGravityY.get();
 	return mGravity;
+}
+
+// UNUSED, 0x90 in the map and size-exact: the launch block
+// TNerveTobiPukuGenerate::execute pastes in before pushing the Fly nerve.
+// Rejected alternative: the Fly nerve's per-frame tail, which compiles to 0x74,
+// and a `pushNerve(&TNerveTobiPukuFly::theNerve())` wrapper, which is 0xcc
+// because the singleton expands inside it.
+void TTobiPuku::flyStart()
+{
+	mBoundCount  = 0;
+	unk194       = 1;
+	mVelocity    = mLaunchVelocity;
+	mLaunchAngle = MsGetRotFromZaxis(mVelocity).x;
+	generateEffectColumWater();
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	offLiveFlag(LIVE_FLAG_UNK10);
+}
+
+// UNUSED, 0x74 in the map and size-exact: the block
+// TNerveTobiPukuAttack::execute pastes in before pushing the Fall nerve --
+// stop the horizontal velocity, lift clear of the ground and go airborne.
+// Rejected alternative: the Fall nerve's own `getTime() == 0` head, 0x34.
+void TTobiPuku::fallStart()
+{
+	unk194 = 0;
+	JGeometry::TVec3<f32> vel(mVelocity);
+	JGeometry::TVec3<f32> stop(0.0f, vel.y, 0.0f);
+	mVelocity = stop;
+	mPosition.y += 2.0f;
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
 void TTobiPuku::hitWater()

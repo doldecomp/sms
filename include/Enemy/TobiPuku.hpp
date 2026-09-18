@@ -87,6 +87,12 @@ public:
 	virtual void moveObject();
 	void hitWall();
 	bool isRoll();
+	// UNUSED in the map (0x74 / 0x90 / 0x2c / 0xc8); their emission
+	// positions bracket hitWater, setJumpStartAnm and calcRootMatrix.
+	void fallStart();
+	void flyStart();
+	bool canBound();
+	void bound();
 
 
 	// Overrides the base slot at 0x154.
