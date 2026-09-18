@@ -117,7 +117,7 @@ BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 BOOL TNerveLimitKoopaTumble::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-	f32 rate           = koopa->getParam()->tumbleSpeed.get();
+	f32 rate           = koopa->getParam()->getTumbleSpeed();
 	koopa->changeBck(KOOPA_ANM_HIPDROP, rate);
 	if (koopa->getAnmEnd())
 		return TRUE;
@@ -139,7 +139,7 @@ BOOL TNerveLimitKoopaFlame::execute(TSpineBase<TLiveActor>*) const
 BOOL TNerveLimitKoopaStagger::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-	f32 rate           = koopa->getParam()->staggerSpeed.get();
+	f32 rate           = koopa->getParam()->getStaggerSpeed();
 	koopa->changeBck(KOOPA_ANM_STAGGER, rate);
 	if (koopa->getAnmEnd())
 		return TRUE;
@@ -149,7 +149,7 @@ BOOL TNerveLimitKoopaStagger::execute(TSpineBase<TLiveActor>* spine) const
 BOOL TNerveLimitKoopaGetShowered::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
-	f32 rate           = koopa->getParam()->waterhitSpeed.get();
+	f32 rate           = koopa->getParam()->getWaterhitSpeed();
 	koopa->changeBck(KOOPA_ANM_WATERHIT, rate);
 	if (koopa->getAnmEnd())
 		return TRUE;
@@ -164,12 +164,12 @@ BOOL TNerveLimitKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
 	case KOOPA_ANM_DOWN:
 		if (koopa->getAnmEnd())
 			koopa->changeBck(KOOPA_ANM_DOWN_WAIT,
-			                 koopa->getParam()->tumbleWeight.get());
+			                 koopa->getParam()->getDownSpeed());
 		break;
 	case KOOPA_ANM_DOWN_WAIT:
 		if (koopa->getAnmEnd())
 			koopa->changeBck(KOOPA_ANM_GETUP,
-			                 koopa->getParam()->tumbleWeight.get());
+			                 koopa->getParam()->getDownSpeed());
 		break;
 	case KOOPA_ANM_GETUP:
 		if (koopa->getAnmEnd())
@@ -177,7 +177,7 @@ BOOL TNerveLimitKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
 		break;
 	default:
 		koopa->changeBck(KOOPA_ANM_DOWN,
-		                 koopa->getParam()->tumbleWeight.get());
+		                 koopa->getParam()->getDownSpeed());
 		break;
 	}
 

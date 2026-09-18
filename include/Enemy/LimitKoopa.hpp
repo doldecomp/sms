@@ -61,6 +61,13 @@ public:
 		hipDropGravityY.set(0.4f);
 	}
 
+	// fabricated: the params-class rung of the ladder the nerves reach the
+	// animation speeds through.
+	f32 getStaggerSpeed() const { return staggerSpeed.get(); }
+	f32 getWaterhitSpeed() const { return waterhitSpeed.get(); }
+	f32 getDownSpeed() const { return downSpeed.get(); }
+	f32 getTumbleSpeed() const { return tumbleSpeed.get(); }
+
 	/* 0x0A8 */ TParamRT<f32> rotationSpeed;
 	/* 0x0BC */ TParamRT<f32> bodyScale;
 	/* 0x0D0 */ TParamRT<f32> hipDropInitialSpeedY;
