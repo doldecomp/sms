@@ -191,12 +191,14 @@ void TBombHei::kill()
 	}
 }
 
-// TODO: 79.6%. The ROM calls JGeometry::TVec3<f32>::sub out of line here and
-// our build expands it; spelling the subtraction as operator-= (one more
-// forwarder level) does not push it past the inline depth limit. This is the
-// open per-call-site TVec3::sub problem in docs/catalog/codegen-tells.md, so
-// it is deliberately left alone. Everything else in the function matches
-// except the frame (0x38 against the ROM's 0x50).
+// TODO: 99.7%. Instruction-exact since the intermediate `toMario` vector went
+// away -- retail copy-initialises the one named vector straight from `a - b`
+// and normalises it in place, so the second declaration was six extra
+// instructions. What is left is the frame: 0x48 against the ROM's 0x50, made of
+// eight bytes of pool too many (the `sub` receiver sits at 0x24, retail's at
+// 0x1c) plus a sixteen-byte dead hole between that receiver and the named
+// vector at 0x38 that we do not reserve -- the size of a TPathNode or a
+// TQuat4 declared and never used.
 void TBombHei::genEventCoin()
 {
 	TBombHeiManager* manager = (TBombHeiManager*)mManager;
@@ -210,8 +212,7 @@ void TBombHei::genEventCoin()
 			// out-of-line TVec3::sub: the copy constructor is one
 			// inline level and the difference nested in its argument
 			// two more.
-			JGeometry::TVec3<f32> toMario = *gpMarioPos - mPosition;
-			JGeometry::TVec3<f32> dir     = toMario;
+			JGeometry::TVec3<f32> dir = *gpMarioPos - mPosition;
 			MsVECNormalize((Vec*)&dir, (Vec*)&dir);
 			coin->setVelocityAndFlag10(20.0f * dir.x, 20.0f, 20.0f * dir.z);
 		}
@@ -390,6 +391,14 @@ bool TBombHei::isCollidMove(THitActor* other)
 // TU (see TNerveBombHeiExplosion::execute, which matches), so this is a
 // context-dependent optimiser decision, not a wrong predicate. The frame is
 // also 0x48 against the ROM's 0x58.
+// TODO: 95.8%, and the residue is in a shared header, not here. Retail tests
+// the ground types of `isPool()`/`isWaterSurface()` as individual `cmplwi/beq`
+// pairs and only folds runs of three or more into a range (0x104, 0x105 stay
+// separate; 0x102-0x105 folds), while our MapData.hpp predicates fold every
+// run including two-value ones -- i.e. retail spells those bodies
+// `if (type == A) return TRUE; ...` rather than one `||` chain. Parked: editing
+// MapData.hpp perturbs every linked map unit. The frame is also 0x48 against
+// the ROM's 0x58.
 void TBombHei::forceKill()
 {
 	const TBGCheckData* ground = getGroundPlane();
