@@ -147,7 +147,7 @@ void loadWarpPointPos(JSUMemoryInputStream& stream, int no, Vec* positions)
 	stream >> dummy >> dummy >> dummy;
 }
 
-// TODO: 97.2%, frame exact, no missing/extra/opcode differences left. Closure
+// TODO: 98.3%, frame and every stack slot exact. Closure
 // batch 136 found three constructs. (1) The three stack arrays are declared in
 // the order positions/warp/dest, not the reverse: named locals descend from
 // the top of the local area with the first declared highest, so this is what
@@ -161,16 +161,38 @@ void loadWarpPointPos(JSUMemoryInputStream& stream, int no, Vec* positions)
 // loop, so retail's five copies and frame 0x238 both pin the count at six
 // continuations. "4,2" and "5,1" groupings are indistinguishable from "3,3",
 // so only the count is evidence.
-// Residue: every r1 displacement is 4 high because `Vec& pos = positions[no];`
-// costs a 4-byte low slot, and it is needed -- without it MWCC keeps the base
-// in a callee-saved register and computes `pos+4`/`pos+8` at each call, where
-// retail materialises all three addresses into r4/r20/r23 up front and lets
-// `li r5, 4` kill the base. `positions += no` and a `Vec*` local are both
-// worse or equal. Since a continuation is 8 bytes there is no combination that
-// pays for those 4, so one of the three constructs above is still spelled
-// slightly wrong. The rest is a zero-frame callee-saved rotation (`this` r31
-// vs r26, stream r25 vs r29). loadWarpPointPos's own UNUSED copy is still
-// 0xc4 against the map's 0x12c.
+// Re-pass II (batch 178) paid the 4 bytes batch 136 could not and every r1
+// displacement now matches (dummy 0x64, arrays 0x68/0xb8/0x108, `data` 0x1f8,
+// `stmw r19, 0x204`, frame 0x238). Retail's low region is 0x5c = 92 bytes:
+// 48 for the six `>>` continuations, 16 that loadWarpPointPos's inlined
+// parameters cost, 4 for `Vec& pos = positions[no];`, 4 for the SMSGetMarDirector()
+// global fork (+4 per read, the Map.hpp SMSGetMap() rung again) and 16 for two
+// `getUnk8()` accessor sites (+8 each, measured by deleting them: three sites
+// is frame 0x238+4, none is 0x220). Three measurements pin that split:
+//   * the `pos` binding is +4 and is *needed* -- without it MWCC keeps the
+//     element base in one callee-saved register and folds `+4`/`+8` into the
+//     `addi r4` at each call, losing retail's hoisted `addi r20, r5, 8` /
+//     `addi r23, r5, 4`. `Vec* pos = &positions[no];` is identical; a TU-local
+//     direct-return fork used at the three read sites is also +4 *per site*;
+//     `positions += no` costs a register (205 instructions, 94.3%).
+//   * `const char* str = stream.readString();` must NOT be named: the extra
+//     named local rotates seven callee-saved registers (97.2 -> 98.1 for the
+//     naming alone, frame unchanged).
+//   * six continuations is confirmed, not just inferred: the "3,3,1,2"
+//     grouping (five continuations) drops both the pool 8 bytes *and* one
+//     callee-saved register (`stmw r20`), 96.8%.
+// Which two of the three negation components read through `getUnk8()` is not
+// determined by the binary -- the accessor is instruction-neutral there, only
+// its site count is priced. The alternative accounting (three accessors, no
+// `pos` binding, no fork) also gives 92 bytes exactly but loses the two
+// hoisted `addi`s (96.4%), so the binary prefers this one.
+// Residue: a zero-frame callee-saved permutation with every instruction and
+// every displacement identical (retail `this` r31 / stream r25 / array base
+// and cnt sharing r24, ours r24 / r27 / r25+r26). Inert on it: `cnt` in the
+// for-init scope, the `Vec*` spelling. Worse: `cnt` declared before the arrays
+// (205 instructions). loadWarpPointPos's own UNUSED copy is still 0xc4 against
+// the map's 0x12c, so its body is still 26 instructions short of retail's --
+// the standalone copy is the remaining lead.
 void TMapWarp::init(JSUMemoryInputStream& stream)
 {
 	u32 data;
@@ -196,8 +218,8 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 
 	int cnt = unk0 * 2;
 	for (int i = 0; i < cnt; ++i) {
-		const char* str = stream.readString();
-		loadWarpPointPos(stream, getWarpPointNo(str), local_130);
+		loadWarpPointPos(
+		    stream, getWarpPointNo(stream.readString()), local_130);
 	}
 
 	for (int i = 0; i < unk0; ++i) {
@@ -210,13 +232,13 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 
 		unk4[2 * i + 1].unk8.x = -unk4[2 * i].getUnk8().x;
 		unk4[2 * i + 1].unk8.y = -unk4[2 * i].getUnk8().y;
-		unk4[2 * i + 1].unk8.z = -unk4[2 * i].getUnk8().z;
+		unk4[2 * i + 1].unk8.z = -unk4[2 * i].unk8.z;
 
 		unk4[2 * i + 1].unk0 = local_180[i];
 		unk4[2 * i + 1].unk4 = local_1d0[i];
 	}
 
-	if (gpMarDirector->mMap == 4) {
+	if (SMSGetMarDirector()->mMap == 4) {
 		unkC = 8.0f;
 	}
 }
