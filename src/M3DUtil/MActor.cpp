@@ -155,6 +155,14 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 		mAnmData->createSampleModelData(mModel->getModelData());
 }
 
+// Binding level worth +8 of low region, landing MActor::isCurAnmAlreadyEnd's
+// frame at 0x38 (batch 121).
+static inline s16 MActorGetEnd(const J3DFrameCtrl* p)
+{
+	s16 end = p->getEnd();
+	return end;
+}
+
 bool MActor::isCurAnmAlreadyEnd(int type)
 {
 	bool result = true;
@@ -163,7 +171,7 @@ bool MActor::isCurAnmAlreadyEnd(int type)
 	if (ctrl) {
 		result = ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
 		         || ctrl->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)
-		         || ctrl->getFrame() + 0.1f >= ctrl->getEnd();
+		         || ctrl->getFrame() + 0.1f >= MActorGetEnd(ctrl);
 	}
 
 	return result;
@@ -391,6 +399,14 @@ void MActor::entry()
 		gpLightManager->getLightSet(unk44)->resetLightDrawBuffer();
 }
 
+// Binding level worth +8 of low region, landing MActor::frameUpdate's frame
+// at 0x50 (batch 121).
+static inline s32 MActorGetUnk0(MActorAnmData* p)
+{
+	s32 unk0 = p->getUnk0();
+	return unk0;
+}
+
 void MActor::frameUpdate()
 {
 	for (int i = ANM_TYPE_FIRST; i < ANM_TYPE_COUNT; ++i)
@@ -398,7 +414,7 @@ void MActor::frameUpdate()
 			mAnmByType[i]->getFrameCtrl()->update();
 
 	if (unk10)
-		for (int i = 0; i < mAnmData->getUnk0(); ++i)
+		for (int i = 0; i < MActorGetUnk0(mAnmData); ++i)
 			if (unk10[i]->getCurIdx() >= 0)
 				unk10[i]->getFrameCtrl()->update();
 }

@@ -109,6 +109,22 @@ void TSilhouette::setting(MtxPtr param_1)
 	GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
 }
 
+// Binding level worth +8 of low region, landing TSilhouette::perform's frame
+// at 0x188 (batch 121).
+static inline int DrawUtilGetJointModelNum(const TPollutionManager* p)
+{
+	int jointModelNum = p->getJointModelNum();
+	return jointModelNum;
+}
+
+// Binding level worth +8 of low region, landing TSilhouette::perform's frame
+// at 0x188 (batch 121).
+static inline u8 DrawUtilGetUnk1CAlpha(TSunMgr* p)
+{
+	u8 unk1CAlpha = p->getUnk1CAlpha();
+	return unk1CAlpha;
+}
+
 void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if ((cue & CUE_MOVE) != 0) {
@@ -128,11 +144,12 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 	if ((cue & CUE_DRAW_INIT) != 0) {
 		GXColor color = unk12;
-		color.a       = gpSunMgr->getUnk1CAlpha();
+		color.a       = DrawUtilGetUnk1CAlpha(gpSunMgr);
 		GXSetChanMatColor(GX_COLOR0A0, color);
 		setting(graphics->getViewMtx());
 	}
-	if (((cue & CUE_SET_PROJECTION) != 0) && gpPollution->getJointModelNum()) {
+	if (((cue & CUE_SET_PROJECTION) != 0)
+	    && DrawUtilGetJointModelNum(gpPollution)) {
 		Mtx afStack_80;
 		C_MTXLightFrustum(afStack_80, -1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 0.5f,
 		                  0.5f, 0.5f, 0.5f);

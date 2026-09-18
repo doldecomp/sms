@@ -642,6 +642,14 @@ void JPABaseEmitter::calcCurrentRateTimerStep()
 	}
 }
 
+// Binding level worth +8 of low region, landing
+// JPABaseEmitter::calcCreateParticle's frame at 0x58 (batch 121).
+static inline f32 JPAEmitterGetRandomRF(JPABaseEmitter* p)
+{
+	f32 randomRF = p->getRandomRF();
+	return randomRF;
+}
+
 int JPABaseEmitter::calcCreateParticle()
 {
 	int numToCreate = 0;
@@ -655,7 +663,8 @@ int JPABaseEmitter::calcCreateParticle()
 
 			if (mChildSpawnRateVariance != 0.0f) {
 				createRate
-				    += createRate * mChildSpawnRateVariance * getRandomRF();
+				    += createRate * mChildSpawnRateVariance
+				       * JPAEmitterGetRandomRF(this);
 			}
 
 			mChildSpawnTimer += createRate;
@@ -827,6 +836,22 @@ f32 JPABaseEmitter::getKeyValue(f32 time, u16 frame_num, f32* frames)
 	return JPAGetKeyFrameValue(time, frame_num, frames);
 }
 
+// Binding level worth +16 of low region, landing
+// JPABaseEmitter::calcKeyFrameAnime's frame at 0x88 (batch 121).
+static inline f32 JPAEmitterGetFrame(const JPAFrameManager* p)
+{
+	f32 frame = p->getFrame();
+	return frame;
+}
+
+// Binding level worth +16 of low region, landing
+// JPABaseEmitter::calcKeyFrameAnime's frame at 0x88 (batch 121).
+static inline JPAKeyFrameAnime** JPAEmitterGetKey(JPADataBlockLinkInfo* p)
+{
+	JPAKeyFrameAnime** key = p->getKey();
+	return key;
+}
+
 void JPABaseEmitter::calcKeyFrameAnime()
 {
 	u32 keyNum = mEmitterDataBlockInfo->getKeyNum();
@@ -835,7 +860,7 @@ void JPABaseEmitter::calcKeyFrameAnime()
 
 	u32 mask = mKeyAnmTypeMask;
 
-	JPAKeyFrameAnime** animeFrames = mEmitterDataBlockInfo->getKey();
+	JPAKeyFrameAnime** animeFrames = JPAEmitterGetKey(mEmitterDataBlockInfo);
 
 	u32 bit    = 1;
 	u32 bitIdx = 0;
@@ -850,7 +875,7 @@ void JPABaseEmitter::calcKeyFrameAnime()
 			++bitIdx;
 		} while (!stop);
 
-		f32 time       = unk10.getFrame();
+		f32 time       = JPAEmitterGetFrame(&unk10);
 		u8* animeData  = (u8*)animeFrames[i]->mRawData;
 		f32* keyFrames = (f32*)(animeData + 0x20);
 		u8 frameNum    = animeData[0x10];

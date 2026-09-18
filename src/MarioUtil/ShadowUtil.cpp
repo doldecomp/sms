@@ -134,6 +134,14 @@ void TMBindShadowParts::calc(f32 param_1)
 	gpBindShadowManager->request(request, mBody->mActor->getActorType());
 }
 
+// Binding level worth +16 of low region, landing
+// TMBindShadowBody::TMBindShadowBody's frame at 0x98 (batch 121).
+static inline u16 ShadowUtilGetJointNum(const J3DModelData* p)
+{
+	u16 jointNum = p->getJointNum();
+	return jointNum;
+}
+
 TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
                                    f32 param_3)
     : mParts(nullptr)
@@ -166,7 +174,7 @@ TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
 
 	J3DModelData* modelData = param_2->getModelData();
 
-	for (int i = 0; i < modelData->getJointNum(); i++) {
+	for (int i = 0; i < ShadowUtilGetJointNum(modelData); i++) {
 		if (modelData->getJointNodePointer((u8)i)->getKind() == 1
 		    && isUseThisJoint(i))
 			mPartsNum++;
@@ -175,7 +183,7 @@ TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
 	mParts = new TMBindShadowParts*[mPartsNum];
 
 	int count = 0;
-	for (int i = 0; i < modelData->getJointNum(); i++) {
+	for (int i = 0; i < ShadowUtilGetJointNum(modelData); i++) {
 		if (modelData->getJointNodePointer((u8)i)->getKind() != 1
 		    || !isUseThisJoint(i))
 			continue;

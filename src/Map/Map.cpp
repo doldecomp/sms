@@ -102,10 +102,18 @@ static void initMare()
 }
 
 #pragma dont_inline on
+// Binding level worth +8 of low region, landing initPinnaParco's frame at
+// 0x50 (batch 121).
+static inline TMapModelManager* MapGetModelManager(TMap* p)
+{
+	TMapModelManager* modelManager = p->getModelManager();
+	return modelManager;
+}
+
 static void initPinnaParco()
 {
 	J3DModel* model = new J3DModel(
-	    gpMap->getModelManager()->getJointModel(0)->getModelData(), 0, 1);
+	    MapGetModelManager(gpMap)->getJointModel(0)->getModelData(), 0, 1);
 	MActor* actor = new MActor(gpMap->getModelManager()->getMActorAnmData());
 	actor->setModel(model, 0);
 	TMapModelActor* mapModelActor = new TMapModelActor("ピンナ鏡用地形モデル");

@@ -192,6 +192,15 @@ void TPollutionManager::initPollutionInfo()
 	}
 }
 
+// Binding level worth +8 of low region, landing TPollutionManager::load's
+// frame at 0x60 (batch 121).
+static inline TPollutionCounterLayer&
+PollutionManagerGetCounterLayer(TPollutionManager* p)
+{
+	TPollutionCounterLayer& counterLayer = p->getCounterLayer();
+	return counterLayer;
+}
+
 // TODO: 99.9%, instruction-identical, frame 0x58 vs 0x60 with no slot
 // referenced on either side. The accessor ladder is exhausted at 0x58:
 // `getJointModelNum()` for the guard and `SMSGetPollution()->getCounterObj()`
@@ -213,7 +222,7 @@ void TPollutionManager::load(JSUMemoryInputStream& stream)
 		mDefaultCleanStampTex
 		    = (ResTIMG*)JKRGetResource("/common/map/clean.bti");
 
-		getCounterLayer().init(getJointModelNum(), 15, 5);
+		PollutionManagerGetCounterLayer(this).init(getJointModelNum(), 15, 5);
 
 		for (int i = 0; i < getJointModelNum(); ++i)
 			getCounterLayer().registerLayer(getLayer(i),

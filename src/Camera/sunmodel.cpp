@@ -66,6 +66,14 @@ TSunModel::TSunModel(bool param_1, const char* name)
 	}
 }
 
+// Binding level worth +8 of low region, landing TSunModel::load's frame at
+// 0x1f8 (batch 121).
+static inline s16 SunmodelGetFrameMax(const J3DAnmTextureSRTKey* p)
+{
+	s16 frameMax = p->getFrameMax();
+	return frameMax;
+}
+
 void TSunModel::load(JSUMemoryInputStream& param_1)
 {
 	JDrama::TActor::load(param_1);
@@ -104,7 +112,7 @@ void TSunModel::load(JSUMemoryInputStream& param_1)
 
 	unk9C = unkA4 = (f32)unk68;
 	unkA0 = unkA8 = (f32)unk74;
-	unk50.init(unk4C->getFrameMax());
+	unk50.init(SunmodelGetFrameMax(unk4C));
 	unk50.setRate(SMSGetAnmFrameRate());
 	unk50.setAttribute(J3DFrameCtrl::ATTR_LOOP);
 
