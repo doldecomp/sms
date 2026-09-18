@@ -22,7 +22,7 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
-ROOT = "/home/netflix/sms-wt/grpep"
+ROOT = os.environ.get("SMS_ROOT", os.getcwd())
 CLI = os.path.join(ROOT, "build", "tools", "objdiff-cli")
 REPORT = os.path.join(ROOT, "build", "GMSE01", "report.json")
 OBJECTS = os.path.join(ROOT, "config", "GMSE01", "objects.json")

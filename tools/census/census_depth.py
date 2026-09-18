@@ -15,7 +15,7 @@ import subprocess
 import sys
 from collections import Counter
 
-ROOT = "/home/netflix/sms-wt/grpdx"
+ROOT = os.environ.get("SMS_ROOT", os.getcwd())
 CLI = os.path.join(ROOT, "build", "tools", "objdiff-cli")
 REPORT = os.path.join(ROOT, "build", "GMSE01", "report.json")
 
