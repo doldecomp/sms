@@ -9,14 +9,6 @@
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
-// TODO: promotion candidate for include/System/FlagManager.hpp, next to
-// SMSGetMarDirector()/SMSGetCamera()/SMSGetMSound(). Parked here because a
-// shared header must not change during this batch.
-static inline TFlagManager* SMSGetFlagManager()
-{
-	return TFlagManager::getInstance();
-}
-
 void TSunGlass::startFade(int type, bool arg1)
 {
 	// The shine count is read and thrown away here in retail: the read is the

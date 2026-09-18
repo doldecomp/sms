@@ -64,4 +64,11 @@ private:
 	s64 mSavedLastSaveTime;
 };
 
+// The house global-accessor idiom (cf. SMSGetMarDirector, SMSGetCamera,
+// SMSGetMSound). A global accessor level is +4 bytes of low-region frame per
+// read site with no instruction change, so converting a raw
+// TFlagManager::getInstance() site is a per-site decision (194 raw sites
+// remain; sweep them against their frame gaps, not in bulk).
+inline TFlagManager* SMSGetFlagManager() { return TFlagManager::getInstance(); }
+
 #endif
