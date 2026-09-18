@@ -73,8 +73,8 @@ void TSandBlock::control()
 		break;
 	case STATE_FALLING: {
 		mScaling.y -= mSandScaleDown;
-		gpMSound->startSoundActor(MSD_SE_OBJ_SANDBLOCK_BREAK, &mPosition, 0,
-		                          nullptr, 0, 0x4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SANDBLOCK_BREAK,
+		                                &mPosition);
 		JGeometry::TVec3<f32> particleScale(mScaling.x, mInitialScaling.y,
 		                                    mScaling.z);
 		emitAndScale(0x147, 0x1, &mPosition, particleScale);
@@ -164,10 +164,11 @@ void TLeanBlock::initMapObj()
 	unk140 = 0.01f;
 	unk144 = 0.005f;
 	unk148 = 1.0f;
-	// TODO: Float registers mismatching
-	// I see other places are doing scaling._ * 100.0f aswell, possible inline?
-	unk138 = mScaling.x * 100.0f * 0.5f;
-	unk13C = mScaling.z * 100.0f * 0.5f;
+	// The halving is a division, not a `* 0.5f`: MWCC folds `/ 2.0f` into an
+	// `fmuls` that keeps the dividend as the left operand, which is how the
+	// ROM spells it here.
+	unk138 = mScaling.x * 100.0f / 2.0f;
+	unk13C = mScaling.z * 100.0f / 2.0f;
 	calcDefaultMtx();
 }
 
@@ -210,14 +211,13 @@ u32 TIceBlock::touchWater(THitActor* param_1)
 		                             &param_1->getPosition(), 0, nullptr);
 		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f,
 		                        0, 0, 4);
-		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition, 0,
-		                          nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition);
 
 		mScaling.x -= mMeltSpeedWater;
 		mScaling.y -= mMeltSpeedWater;
 		mScaling.z -= mMeltSpeedWater;
-		mScaledBodyRadius = mScaling.x * mMapObjData->unk30;
-		mScaling.y        = MsClamp(mScaling.y, 0.01f, mInitialScaling.y);
+		mScaledBodyRadius = mScaling.x * getMapObjData()->unk30;
+		mScaling.y        = MsClamp(mScaling.y, 0.01f, getInitialScaling().y);
 		if (mScaling.x < 0.0f) {
 			makeObjDead();
 		}
@@ -232,13 +232,13 @@ void TIceBlock::control()
 	JPABaseEmitter* emitter
 	    = gpMarioParticleManager->emit(MAPOBJ_ICEBLOCKA, &mPosition, 1, this);
 	if (emitter != nullptr) {
-		emitter->setGlobalDynamicsScale(mScaling);
+		emitter->setGlobalDynamicsScale(getScaling());
 	}
 
 	emitter
 	    = gpMarioParticleManager->emit(MAPOBJ_ICEBLOCKB, &mPosition, 1, this);
 	if (emitter != nullptr) {
-		emitter->setGlobalDynamicsScale(mScaling);
+		emitter->setGlobalDynamicsScale(getScaling());
 	}
 
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -253,8 +253,7 @@ void TIceBlock::control()
 
 		mScaledBodyRadius = mScaling.x * mMapObjData->unk30;
 
-		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition, 0,
-		                          nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition);
 
 		setObjHitData(0);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -267,7 +266,9 @@ void TIceBlock::control()
 
 void TIceBlock::calc()
 {
-	Mtx mtx;
+	// SMS_GetLightPerspectiveForEffectMtx writes row 3 as well, so its
+	// scratch buffer is a 4x4; that is the last 16 bytes of the frame.
+	Mtx44 mtx;
 	SMS_GetLightPerspectiveForEffectMtx(mtx);
 	getModel()
 	    ->getModelData()
@@ -349,8 +350,8 @@ void TTelesaBlock::initMapObj() { TMapObjBase::initMapObj(); }
 
 void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	mLiveFlag &= ~LIVE_FLAG_UNK200;
-	if (!gpMarDirector->isTalkModeNow()) {
+	offLiveFlag(LIVE_FLAG_UNK200);
+	if (!SMSGetMarDirector()->isTalkModeNow()) {
 		TMapObjBase::perform(cue, graphics);
 	} else {
 		if (cue & CUE_MOVE) {
@@ -361,12 +362,14 @@ void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_ANIM) {
 
-		// TODO: Possibly more TRotation3f inlines?
+		// The second scale really re-reads the member: routing it through
+		// `scale` too costs an instruction and four points.
 		TRotation3f mtx;
 		mtx.ref(0, 3) = 0.0f;
 		mtx.ref(1, 3) = 0.0f;
 		mtx.ref(2, 3) = 0.0f;
-		mtx.setScale(unk140.x, unk140.y, unk140.z);
+		const JGeometry::TVec3<f32>& scale = getUnk140();
+		mtx.setScale(scale.x, scale.y, scale.z);
 		PSMTXConcat(getModel()->getAnmMtx(1), mtx, getModel()->getAnmMtx(1));
 
 		mtx.setScale(unk140.y, unk140.y, unk140.z);
