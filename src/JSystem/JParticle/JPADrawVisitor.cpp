@@ -458,9 +458,15 @@ void JPADrawExecRotYBillBoard::exec(const JPADrawContext* dc,
 
 	MTXMultVecArray(dc->pcb->unk38, offs, offs, ARRAY_COUNT(offs));
 
+	// The rotate/scale-only multiply is the ROM's: this exec is the only
+	// billboard variant that drops the view translation here.
+	//
+	// TODO: 99.8%. Every instruction matches; the ROM's stack temps all sit
+	// 4 bytes higher (offs at 0x50, pt at 0x44), so one 4-byte inline temp --
+	// a pointer binding by frame-gaps' ladder -- is missing below `pt`.
 	JGeometry::TVec3<f32> pt;
 	particle->getGlobalPosition(pt);
-	MTXMultVec(dc->pcb->mViewMtx, &pt, &pt);
+	MTXMultVecSR(dc->pcb->mViewMtx, &pt, &pt);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(offs[0].x + pt.x, offs[0].y + pt.y, offs[0].z + pt.z);
