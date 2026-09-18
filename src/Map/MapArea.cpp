@@ -95,6 +95,24 @@ static bool pointIsInGrid(f32 x, f32 z, f32 minX, f32 minZ, f32 maxX, f32 maxZ)
 // map's `pointIsInGrid__Fffffff` and gives 94.0%. The remaining 288 bytes
 // need a lever family we have not identified - note that retail references no
 // stack slot at all below 0x280.
+//
+// Batch 131 pinned the three helper bodies and priced the batch-127 lever:
+//   * all three UNUSED sizes are **exact** (pointIsInGrid 0x40,
+//     pointIsInPolygon 0x9c, checkLinePolygonCollision 0x27c), so no body is
+//     wrong. Re-measured alternatives for checkLinePolygonCollision, by size:
+//     three separate `if`s 0x28c, `return a || b || c;` 0x1b8, named
+//     `const TVec3&` points 0x280 / 0x290 / 0x1c8 -- only the committed
+//     short-circuit-into-one-`if` form is 0x27c.
+//   * a binding level over `getPointN()` (either `const TVec3*` or
+//     `const TVec3&` bound and returned -- the two are codegen-identical) is
+//     **+12 per read site**, not +8: all twelve reads in
+//     checkLinePolygonCollision are +0x240 = 576 across its four expansions,
+//     i.e. exactly twice the 288 wanted, and per-member granularity only
+//     offers 192 / 384 / 576. The same level on pointIsInPolygon's twelve
+//     reads is +0x360 (+18 per site) and adds 58 differing rows; a level that
+//     binds the `f32` component instead costs 14 instructions.
+//   So 288 is 24 read sites at +12, and no subset of one helper's reads has
+//   that cardinality -- the lever is still the wrong family.
 bool TMapCollisionData::polygonIsInGrid(f32 minX, f32 minZ, f32 maxX, f32 maxZ,
                                         TBGCheckData* data)
 {
