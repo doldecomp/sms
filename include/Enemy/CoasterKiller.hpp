@@ -47,7 +47,7 @@ public:
 	virtual void makeCoasterGoalPath();
 	virtual void moveCoaster();
 	virtual float getGravityY() const;
-	virtual void setNormalFlyAnm();
+	virtual void setNormalFlyAnm() { }
 	virtual void setWalkAnm();
 	virtual void moveObject();
 	virtual void init(TLiveManager* manager);

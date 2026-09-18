@@ -144,11 +144,6 @@ void TCoasterEnemy::calcRootMatrix()
 	getModel()->setBaseTRMtx(pos);
 }
 
-void TCoasterEnemy::setNormalFlyAnm()
-{
-	// nothing
-}
-
 void TCoasterEnemy::setWalkAnm() { setNormalFlyAnm(); }
 
 DEFINE_NERVE(TNerveCoasterEnemyWander, TLiveActor)

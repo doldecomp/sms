@@ -168,9 +168,17 @@ void TPauseMenu2::loadAfter()
 // 99.40 -> 52.06, and the two symbols disappear entirely (2,020 bytes of
 // callee inlined, perform 0x1084 against retail's 0x940). Adding
 // `#pragma dont_inline on/off` around them changes nothing: with the inline
-// keyword present MWCC expands them anyway. So the mechanism that makes a
-// ~1 KB member function weak *and* out of line is still unidentified; it is
-// not the inline keyword alone.
+// keyword present MWCC expands them anyway.
+// Also measured (batch 133): `__declspec(weak)` on these two definitions does
+// reproduce the map exactly -- weak linkage, both still emitted out of line at
+// their map sizes, perform() still reaching them with a `bl`, and
+// validate-symbol-order goes to PASS. It is rejected as a crutch: it is an
+// MWCC linkage attribute this codebase only uses in MSL/SDK stubs, and it buys
+// nothing yet because eight functions here are still short of 100%. What it
+// proves is that the retail linkage is reachable without the inline keyword, so
+// the remaining candidate is the call site: an `inline` body is expanded without
+// limit at depth 1 but refused deeper, and retail's perform() may reach both
+// through one more inlined level than ours does.
 void TPauseMenu2::appearWindow()
 {
 	if (mFadeAnim <= 45.0f) {

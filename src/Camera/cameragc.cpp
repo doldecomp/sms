@@ -935,8 +935,13 @@ void CPolarSubCamera::calcExternalData_()
 // 0x468 body into perform (perform and calcPosAndAt_ drop to 0% and 75.5%,
 // unit 95.3 -> 70.0), which is exactly what the depth-1 no-limit rule
 // predicts. So whatever gives these two weak linkage also suppresses
-// inlining, and nothing in the catalog explains that pair yet. Leaving them
-// global costs only the BINDING check, not instructions.
+// inlining. Batch 133 narrowed it: `__declspec(weak)` does reproduce weak plus
+// out-of-line (measured on TPauseMenu2::appearWindow, ~1 KB), so the linkage is
+// reachable without the inline keyword, but it is an MSL/SDK crutch and not
+// what belongs here. The remaining candidate is the call site: an `inline` body
+// has no size limit at depth 1 and is refused deeper, so retail's perform_ most
+// likely reaches both through one more inlined level than ours does. Leaving
+// them global costs only the BINDING check, not instructions.
 void CPolarSubCamera::ctrlGameCamera_()
 {
 	if (!(unk64 & CAMERA_FLAG_DEAD_DEMO))
