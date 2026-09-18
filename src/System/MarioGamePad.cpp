@@ -13,7 +13,19 @@ void TMarioGamePad::reset()
 
 void TMarioGamePad::updateMeaning()
 {
-	u32 stackAlloc[83]; // A lot of stack space still missing
+	// Pre-existing fabricated padding, and the only reason this function
+	// scores 100%: without it the frame is 0x40 against retail's 0x190, i.e.
+	// 336 bytes of pure dead low region with every instruction already
+	// identical. It must not be read as a reconstruction, and this unit is not
+	// honestly closed until the padding is replaced by real locals.
+	// Closure batch 120 measured the obvious carriers on the 26 inlined
+	// updateMeaning(EButtons, PadMeanings, u32) expansions: binding the
+	// predicate to a `bool` (returned or not) is +0x18 and +207 instructions,
+	// and binding the two `mButton` reads to `u32`s is +0x68 (i.e. exactly 4
+	// bytes per expansion) but +26 instructions. 336 / 26 is not integral, so
+	// either the sites are at mixed depths or part of the region belongs to
+	// another callee (checkFlag / resetMeaning).
+	u32 stackAlloc[83];
 
 	if (mDisabledFrames > 0) {
 		mDisabledFrames -= 1;
@@ -159,15 +171,36 @@ finalize:
 	mDisabledFrameMeaning = prevMeaning & ~mMeaning;
 }
 
+// UNUSED, map size 0x90; inlined away or dead. Its one `f32*` argument and
+// its position between updateMeaning and onNeutralMarioKey are all the
+// evidence there is.
+// TODO: incorrect size (0x4 vs 0x90).
+void TMarioGamePad::considerMarioStick(f32* stick) { }
+
 void TMarioGamePad::onNeutralMarioKey() { _E4 = 0x3c; }
 
-u32 TMarioGamePad::read()
+void TMarioGamePad::read()
 {
 	JUTGamePad::read();
 
-	// TODO: I could not make the register check work properly here.
+	// Dead 4-byte local. Retail puts `resetPort` at 0xc(r1) and leaves the
+	// word at 0x8 reserved below it, which only a local declared *after* it
+	// can do (the named block fills bottom-up in reverse declaration order);
+	// without it `resetPort` lands at 0x8 and every other instruction is
+	// identical. It is never written, so the original name is unrecoverable.
 	s32 resetPort = 0;
+	s32 unusedPort;
+
 	if (checkReset(&resetPort)) {
 		handleReset(resetPort);
 	}
 }
+
+// UNUSED, map size 0x38. The rumble API TMarioGamePad exposed; no caller
+// survives in the image.
+// TODO: incorrect size (0x4 vs 0x38).
+void TMarioGamePad::rumble(TType type, u32 param_2) { }
+
+// UNUSED, map size 0x48.
+// TODO: incorrect size (0x4 vs 0x48).
+void TMarioGamePad::keepRumble(TType type) { }

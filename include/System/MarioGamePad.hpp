@@ -145,6 +145,11 @@ public:
 	// Fabricated
 	inline u32 resetMeaning()
 	{
+		// `i` has to be declared ahead of `dc`: the clearing loop below is
+		// unrolled by eight with a two-trip `ctr` tail, and retail keeps its
+		// counter in r5 with `dc` in r4. Declaring the counter in the `for`
+		// init reverses the pair (TMarioGamePad::updateMeaning 99.9 -> 100).
+		int i;
 		u16 dc = _DC;
 		_DC    = 0;
 
@@ -163,13 +168,21 @@ public:
 		_DE = _DC & ~dc;
 		_E0 = dc & ~_DC;
 
-		for (int i = 0; i < 10; i++)
+		for (i = 0; i < 10; i++)
 			mCompSPos[i] = 0.0f;
 
 		u32 prevMeaning = mMeaning;
 		mMeaning        = 0;
 		return prevMeaning;
 	}
+
+	// Fabricated enumerator: the map only gives the type's name, through the
+	// mangled parameter of keepRumble/rumble (Q213TMarioGamePad5TType).
+	enum TType { TYPE_UNK0 = 0 };
+
+	void keepRumble(TType type);
+	void rumble(TType type, u32 param_2);
+	void considerMarioStick(f32* stick);
 
 	// Fabricated
 	inline bool checkFlag(u32 flag) { return (mFlags & flag) != 0; }
@@ -179,7 +192,7 @@ public:
 	// fabricated
 	bool isSomethingPushed() const { return mResetFlag.check(1 << mPortNum); }
 
-	static u32 read();
+	static void read();
 	void onNeutralMarioKey();
 	void reset();
 	void updateMeaning();
