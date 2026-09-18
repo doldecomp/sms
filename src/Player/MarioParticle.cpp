@@ -499,6 +499,20 @@ void TMario::warpInLight()
 	                                            &mCenterPos, 0, this);
 }
 
+// Binding level worth +8 of low region, landing TMario::warpOutEffect's
+// frame at 0x120 (batch 124).
+static inline bool MarioParticleCheckFlagL0(const TMario* p, u32 i)
+{
+	bool flag = p->checkFlag(i);
+	return flag;
+}
+
+static inline bool MarioParticleCheckFlag(const TMario* p, u32 i)
+{
+	bool flag = MarioParticleCheckFlagL0(p, i);
+	return flag;
+}
+
 // TODO: 8 bytes of low region short, every instruction exact (retail 0x120,
 // ours 0x118; the double-conversion temporary sits at the top of the local
 // area in both). Routing the twelve `mModel->getModel()->getAnmMtx()` receivers
@@ -551,7 +565,7 @@ void TMario::warpOutEffect(int kind, f32 rotDeg)
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_LFOOT,
 		    mModel->getModel()->getAnmMtx(mJointIdFootL), 0, this);
-		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+		if (MarioParticleCheckFlag(this, MARIO_FLAG_HAS_FLUDD)) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    PARTICLE_MS_MARIOAP_WATGUN,
 			    mModel->getModel()->getAnmMtx(mJointIdCenter), 0, this);

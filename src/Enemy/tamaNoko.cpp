@@ -974,6 +974,20 @@ DEFINE_NERVE(TNerveTamaNokoHitWater, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveTamaNokoWait::execute's frame at 0x40 (batch 124).
+static inline bool TamaNokoIsBckAnmL0(const TTamaNoko* p, int i)
+{
+	bool bckAnm = p->isBckAnm(i);
+	return bckAnm;
+}
+
+static inline bool TamaNokoIsBckAnm(const TTamaNoko* p, int i)
+{
+	bool bckAnm = TamaNokoIsBckAnmL0(p, i);
+	return bckAnm;
+}
+
 DEFINE_NERVE(TNerveTamaNokoWait, TLiveActor)
 {
 	TTamaNoko* self = (TTamaNoko*)spine->getBody();
@@ -988,7 +1002,7 @@ DEFINE_NERVE(TNerveTamaNokoWait, TLiveActor)
 			self->setBckAnm(13);
 		} else if (self->isBckAnm(13)) {
 			if (spine->getTime() > self->unk198->mSLWaitTime.get()
-			    && self->isBckAnm(13))
+			    && TamaNokoIsBckAnm(self, 13))
 				self->setBckAnm(12);
 		} else if (self->isBckAnm(12)) {
 			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());

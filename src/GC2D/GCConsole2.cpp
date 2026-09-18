@@ -4141,6 +4141,20 @@ bool TGCConsole2::processAppearBalloon()
 	return isFinished;
 }
 
+// Binding level worth +8 of low region, landing
+// TGCConsole2::processDisappearBalloon's frame at 0x88 (batch 124).
+static inline u8 GCConsole2GetAlphaL0(const J2DWindow* p)
+{
+	u8 alpha = p->getAlpha();
+	return alpha;
+}
+
+static inline u8 GCConsole2GetAlpha(const J2DWindow* p)
+{
+	u8 alpha = GCConsole2GetAlphaL0(p);
+	return alpha;
+}
+
 bool TGCConsole2::processDisappearBalloon()
 {
 	bool isFinished = false;
@@ -4161,7 +4175,7 @@ bool TGCConsole2::processDisappearBalloon()
 		unk3B0->setBounds(
 		    JUTRect(unk3BC.x1, unk3BC.y2 - nextHeight, unk3BC.x2, unk3BC.y2));
 	} else {
-		s16 alpha = unk3B0->getAlpha();
+		s16 alpha = GCConsole2GetAlpha(unk3B0);
 		alpha -= 0x30;
 		if (alpha < 0) {
 			alpha      = 0;

@@ -315,6 +315,20 @@ void TMirrorModelManager::registerObjMirror(TMirrorModel* model)
 	unk10++;
 }
 
+// Binding level worth +8 of low region, landing TMirrorModelManager::load's
+// frame at 0x150 (batch 124).
+static inline u8 MapMirrorGetCurrentMapL0(TMarDirector* p)
+{
+	u8 currentMap = p->getCurrentMap();
+	return currentMap;
+}
+
+static inline u8 MapMirrorGetCurrentMap(TMarDirector* p)
+{
+	u8 currentMap = MapMirrorGetCurrentMapL0(p);
+	return currentMap;
+}
+
 void TMirrorModelManager::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
@@ -332,7 +346,7 @@ void TMirrorModelManager::load(JSUMemoryInputStream& stream)
 		for (int i = 0; i < local_28; ++i) {
 			unk1C[i] = new TMirrorModel;
 			char acStack_130[0x100];
-			if (gpMarDirector->getCurrentMap() == 7) {
+			if (MapMirrorGetCurrentMap(gpMarDirector) == 7) {
 				static const char* table[] = { "205", nullptr };
 				snprintf(acStack_130, 0x100, "/scene/map/mirror/mirror%s.bmd",
 				         table[i]);

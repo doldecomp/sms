@@ -1054,10 +1054,24 @@ void TEggYoshi::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level worth +8 of low region, landing TEggYoshi::startFruit's
+// frame at 0x20 (batch 124).
+static inline bool ItemIsStateL0(TEggYoshi* p, u32 i)
+{
+	bool state = p->isState(i);
+	return state;
+}
+
+static inline bool ItemIsState(TEggYoshi* p, u32 i)
+{
+	bool state = ItemIsStateL0(p, i);
+	return state;
+}
+
 void TEggYoshi::startFruit()
 {
 	receiveMessage(nullptr, HIT_MESSAGE_UNK10);
-	if (isState(0) || isState(0xE) || isState(0xF) || isState(0x10))
+	if (ItemIsState(this, 0) || isState(0xE) || isState(0xF) || isState(0x10))
 		receiveMessage(nullptr, HIT_MESSAGE_UNK10);
 }
 

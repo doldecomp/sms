@@ -847,6 +847,20 @@ void TBossManta::updateAttractor()
 	unk164 = local_108;
 }
 
+// Binding level worth +8 of low region, landing
+// TBossMantaManager::TMantaBattleState::update's frame at 0xe0 (batch 124).
+static inline bool BossMantaCheckLiveFlagL0(const TBossManta* p, u32 i)
+{
+	bool liveFlag = p->checkLiveFlag(i);
+	return liveFlag;
+}
+
+static inline bool BossMantaCheckLiveFlag(const TBossManta* p, u32 i)
+{
+	bool liveFlag = BossMantaCheckLiveFlagL0(p, i);
+	return liveFlag;
+}
+
 void TBossMantaManager::TMantaBattleState::update()
 {
 	static JAISound* sDefeatSE;
@@ -866,7 +880,7 @@ void TBossMantaManager::TMantaBattleState::update()
 		bool allMaxGen = true;
 		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
-			if (m->checkLiveFlag(LIVE_FLAG_DEAD))
+			if (BossMantaCheckLiveFlag(m, LIVE_FLAG_DEAD))
 				continue;
 			if (m->mGeneration != 4) {
 				allMaxGen = false;

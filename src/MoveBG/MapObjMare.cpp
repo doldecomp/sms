@@ -1016,6 +1016,20 @@ void TMuddyBoat::calc()
 
 u32 TMuddyBoat::getSDLModelFlag() const { return 0; }
 
+// Binding level worth +8 of low region, landing TMuddyBoat::initMapObj's
+// frame at 0x28 (batch 124).
+static inline u8 MapObjMareGetCurrentMapL0(TMarDirector* p)
+{
+	u8 currentMap = p->getCurrentMap();
+	return currentMap;
+}
+
+static inline u8 MapObjMareGetCurrentMap(TMarDirector* p)
+{
+	u8 currentMap = MapObjMareGetCurrentMapL0(p);
+	return currentMap;
+}
+
 void TMuddyBoat::initMapObj()
 {
 	TMapObjBase::initMapObj();
@@ -1027,7 +1041,7 @@ void TMuddyBoat::initMapObj()
 	mAccelBackward = 0.01f;
 	mRespawnTime   = 600;
 
-	if (gpMarDirector->getCurrentMap() == 52) {
+	if (MapObjMareGetCurrentMap(gpMarDirector) == 52) {
 		mWallRadiusFront  = 126.0f;
 		mWallRadiusCenter = 185.0f;
 		mWallRadiusBack   = 150.0f;

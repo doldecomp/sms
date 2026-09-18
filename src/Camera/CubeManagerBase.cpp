@@ -151,6 +151,20 @@ bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
 	return result;
 }
 
+// Binding level worth +8 of low region, landing SMS_IsInOtherFastCube's
+// frame at 0x28 (batch 124).
+static inline bool CubeManagerBaseIsDemoModeNowL0(const TMarDirector* p)
+{
+	bool demoModeNow = p->isDemoModeNow();
+	return demoModeNow;
+}
+
+static inline bool CubeManagerBaseIsDemoModeNow(const TMarDirector* p)
+{
+	bool demoModeNow = CubeManagerBaseIsDemoModeNowL0(p);
+	return demoModeNow;
+}
+
 // TODO: 0x20 against retail's 0x28, every instruction exact. Confirmed to be
 // exactly one two-word object at the very bottom of the body: `u32 scratch[2]`
 // or `f64 scratch` declared last reaches 100% with no instruction change (not
@@ -166,7 +180,7 @@ bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
 bool SMS_IsInOtherFastCube(const Vec& pos)
 {
 	bool result = false;
-	if (!gpMarDirector->isDemoModeNow()
+	if (!CubeManagerBaseIsDemoModeNow(gpMarDirector)
 	    && (gpCubeFastA->isInOtherCube(pos) || gpCubeFastB->isInOtherCube(pos)
 	        || gpCubeFastC->isInOtherCube(pos)))
 		result = true;

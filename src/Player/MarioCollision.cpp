@@ -190,10 +190,24 @@ BOOL TMario::trampleExec(THitActor* param_1)
 
 void TMario::resetNozzle() { }
 
+// Binding level worth +8 of low region, landing TMario::normalizeNozzle's
+// frame at 0x20 (batch 124).
+static inline bool MarioCollisionCheckFlagL0(const TMario* p, u32 i)
+{
+	bool flag = p->checkFlag(i);
+	return flag;
+}
+
+static inline bool MarioCollisionCheckFlag(const TMario* p, u32 i)
+{
+	bool flag = MarioCollisionCheckFlagL0(p, i);
+	return flag;
+}
+
 void TMario::normalizeNozzle()
 {
 	// volatile u32 padding[2];
-	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
+	if (MarioCollisionCheckFlag(this, MARIO_FLAG_HAS_FLUDD)) {
 		mWaterGun->changeNozzle(TWaterGun::Spray, true);
 		unk144 = -1;
 		unk148 = 0;

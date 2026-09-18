@@ -148,6 +148,20 @@ void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level worth +8 of low region, landing TSunShine::loadAfter's frame
+// at 0x28 (batch 124).
+static inline u8 SunGlassGetCurrentMapL0(TMarDirector* p)
+{
+	u8 currentMap = p->getCurrentMap();
+	return currentMap;
+}
+
+static inline u8 SunGlassGetCurrentMap(TMarDirector* p)
+{
+	u8 currentMap = SunGlassGetCurrentMapL0(p);
+	return currentMap;
+}
+
 // TODO: frame 0x20 vs 0x28. Instructions are exact; 8 bytes of locals are
 // missing with no positional evidence (the function references no stack slot).
 // An uninitialised 8- or 12-byte local anywhere in the body lands 0x28 at 23
@@ -157,7 +171,7 @@ void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 void TSunShine::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	if (gpMarDirector->getCurrentMap() == 6) {
+	if (SunGlassGetCurrentMap(gpMarDirector) == 6) {
 		unk14.r = 0x48;
 		unk14.g = 0x30;
 		unk14.b = 0;

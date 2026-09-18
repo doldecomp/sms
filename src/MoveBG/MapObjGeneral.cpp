@@ -312,10 +312,24 @@ void TMapObjGeneral::hold(TTakeActor* actor)
 	mState  = STATE_HOLDING;
 }
 
+// Binding level worth +8 of low region, landing
+// TMapObjGeneral::ensureTakeSituation's frame at 0x20 (batch 124).
+static inline bool MapObjGeneralIsStateL0(TMapObjGeneral* p, u32 i)
+{
+	bool state = p->isState(i);
+	return state;
+}
+
+static inline bool MapObjGeneralIsState(TMapObjGeneral* p, u32 i)
+{
+	bool state = MapObjGeneralIsStateL0(p, i);
+	return state;
+}
+
 void TMapObjGeneral::ensureTakeSituation()
 {
 	TMapObjBase::ensureTakeSituation();
-	if (isState(STATE_HOLDING) && mHolder == nullptr) {
+	if (MapObjGeneralIsState(this, STATE_HOLDING) && mHolder == nullptr) {
 		mState = STATE_NORMAL;
 		offLiveFlag(LIVE_FLAG_UNK10);
 	}
@@ -547,10 +561,24 @@ void TMapObjGeneral::bind()
 	mLinearVelocity = vec - mLinearVelocity;
 }
 
+// Binding level worth +8 of low region, landing TMapObjGeneral::control's
+// frame at 0x20 (batch 124).
+static inline bool MapObjGeneralCheckMapObjFlagL0(const TMapObjGeneral* p, u32 i)
+{
+	bool mapObjFlag = p->checkMapObjFlag(i);
+	return mapObjFlag;
+}
+
+static inline bool MapObjGeneralCheckMapObjFlag(const TMapObjGeneral* p, u32 i)
+{
+	bool mapObjFlag = MapObjGeneralCheckMapObjFlagL0(p, i);
+	return mapObjFlag;
+}
+
 void TMapObjGeneral::control()
 {
 	TMapObjBase::control();
-	if (checkMapObjFlag(MAP_OBJ_FLAG_CAN_SINK) && isState(STATE_NORMAL)
+	if (MapObjGeneralCheckMapObjFlag(this, MAP_OBJ_FLAG_CAN_SINK) && isState(STATE_NORMAL)
 	    && !isAirborne() && isPollutedGround(mPosition))
 		sink();
 
