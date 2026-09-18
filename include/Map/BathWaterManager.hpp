@@ -14,6 +14,14 @@ class J3DModel;
 
 class TBathtubData {
 public:
+	// TODO: 82.8%. The instruction stream is right; what is left is the
+	// callee-saved float allocation around the inlined
+	// TQuat4::setRotate(from, to, amount) -- retail holds the cross
+	// product's components and the two constant `up` components in
+	// f25-f31 and re-reads only up.x, while we spill up.y/up.z back to the
+	// stack across atan2f/sinf/cosf. JGQuat4.hpp's setRotate already carries
+	// the same note (the order is decided inside cross()'s batched set()),
+	// so no spelling here reaches it.
 	JGeometry::TVec3<f32> getGravityDir(f32 amount) const
 	{
 		(void)0;
