@@ -310,6 +310,15 @@ void TYoshiTongue::movement()
 			// argument two more, which is the depth-4 allowance the map's
 			// out-of-line TVec3::add measures. The three other advances here
 			// keep `+=`, which is what retail expands.
+			// Still open: retail `bl`s four TVec3 copy constructors in this
+			// function, two per `(a - b) * k` site, where we expand all four
+			// -- one more level on the product. A shared
+			// `(to - from) * rate` helper over both sites buys movement only
+			// 82.3 -> 82.5 and stops anything from expanding
+			// TVec3::operator-=, so the weak `__ami__` symbol drops to
+			// MISSING and the unit falls 89.8 -> 89.1 (reverted). Same family
+			// as frame-gaps.md "batch 142": the level has to spare
+			// operator-=.
 			mTipPos = mTipPos + step;
 			mInitialVelocity = step;
 
