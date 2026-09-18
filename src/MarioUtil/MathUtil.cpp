@@ -127,9 +127,16 @@ static u16 GetAtanTable(f32 param_1, f32 param_2)
 	if (param_1 == 0)
 		return atntable[0];
 
-	return atntable[(int)(param_2 * __fres(param_1) * 1024.0f + 0.5f)];
+	f32 inv = __fres(param_1);
+	return atntable[(int)(param_2 * inv * 1024.0f + 0.5f)];
 }
 
+// TODO: 99.4%. The whole instruction stream matches; the only difference is
+// that retail ranks the negated param_2 into f3 and the negated param_1 into
+// f4, and we have them the other way round. Ruled out (all 99.4%): hoisted
+// `f32 absZ; f32 absX;` declarations in either order, scoped locals in either
+// branch, reassigning one parameter and naming the other, and swapping
+// GetAtanTable's own parameter order.
 s16 matan(f32 param_1, f32 param_2)
 {
 	u16 result;
@@ -190,25 +197,36 @@ static inline void MsGetRotFromZaxisY2(const JGeometry::TVec3<f32>& axis,
 }
 
 // TODO: very much fake
+// Pitch from a unit Z axis. The two degenerate cases are negated relative to
+// MsGetRotFromZaxisY2's: `.sdata2` shows @1673 = 90.0f and @1674 = -90.0f, and
+// the y == 1.0f arm loads @1674.
 static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
                                        f32* out)
 {
-	if (axis.y == 1.0f) {
-		*out = 90.0f;
-		return;
-	} else if (axis.y == -1.0f) {
+	f32 y = axis.y;
+	if (y == 1.0f) {
 		*out = -90.0f;
+		return;
+	} else if (y == -1.0f) {
+		*out = 90.0f;
 		return;
 	}
 
-	f32 a = 1.0f - axis.y * axis.y;
+	f32 a = 1.0f - y * y;
 
-	// TODO: it smells to me like this entire function is not real but a result
-	// of MWCC optimizing out stuff for once
-
-	*out = -(matan(MsSqrtf(a), axis.y) * (360.0f / 65536.0f));
+	*out = -(matan(MsSqrtf(a), y) * (360.0f / 65536.0f));
 }
-
+// TODO: 99.1%/98.8%. Body and register allocation are right; retail's frame is
+// 0x58 and ours 0x48 because retail reserves a 32-byte outgoing-parameter area
+// (0x8-0x28) where we reserve 16 (0x8-0x18, exactly matan's two f32 arguments
+// at 8 bytes each). Everything above the area matches offset for offset once
+// the area is the right size. A dead 12-byte non-trivial local in X2 or Y2
+// lands 0x58 but puts MsSqrtf's volatile temp at 0x18 instead of 0x28, which
+// disproves the dead-local reading: retail's extra 16 bytes are *below* the
+// temp pool, not in it. The open question is which call in the original body
+// needed 32 bytes of argument area (four f32 arguments, or one more inlined
+// two-parameter level). The load order at 0x86c (`lfs 1.0f` before `lfs
+// axis.y`) is the same allocator symptom.
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> result;
