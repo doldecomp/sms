@@ -14,7 +14,6 @@
 #include <MarioUtil/LightUtil.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
-#include <Map/MapCollisionEntry.hpp>
 #include <MoveBG/Item.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -43,6 +42,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 f32 TBossEel::mOpenRollSpeed    = 0.3f;
 bool TBossEel::mUseObjCollision = true;
