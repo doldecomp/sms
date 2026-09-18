@@ -218,7 +218,7 @@ void TMapObjTreeScale::startScaleUp()
 
 u32 TMapObjTreeScale::touchWater(THitActor* water)
 {
-	if (mScaling.x == 1.0f)
+	if (getScaling().x == 1.0f)
 		return TMapObjGeneral::touchWater(water);
 
 	if (isState(STATE_SMALL))
