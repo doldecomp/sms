@@ -11049,6 +11049,12 @@ bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 	return false;
 }
 
+// TODO: retail copies `param_2` into a callee-saved register (r29) at entry
+// and never reads it again, and both `makeMActors` expansions load
+// `anim->unk4[i].unkC` for it, so the ROM has a use of it whose values MWCC
+// stripped while the load survived (the walkerEnemy `getSaveParam()` pattern).
+// Nothing below uses it, so our copy drops the register and both call sites
+// drop the load. The missing statement is still unidentified.
 MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
                                 u32 param_3)
 {
@@ -11087,7 +11093,8 @@ void TMapObjBase::makeMActors()
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-		mMActor = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
+		mMActor = initMActor(anim->unk4[0].unk0, anim->unk4[0].unkC,
+		                     getSDLModelFlag());
 
 		for (u16 i = 1; i < anim->unk0; ++i) {
 			if (anim->unk4[i].unk10 && mAnmSound == nullptr)
@@ -11095,7 +11102,8 @@ void TMapObjBase::makeMActors()
 
 			if (anim->unk4[i].unk0 != nullptr
 			    && !isAlreadyRegistered(anim, i)) {
-				initMActor(anim->unk4[i].unk0, nullptr, getSDLModelFlag());
+				initMActor(anim->unk4[i].unk0, anim->unk4[i].unkC,
+				           getSDLModelFlag());
 			}
 		}
 	} else {
