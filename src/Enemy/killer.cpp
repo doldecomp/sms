@@ -116,8 +116,8 @@ void TFlyEnemy::fly()
 	nextPos.add(mLinearVelocity);
 
 	JGeometry::TVec3<f32> drift = mVelocity;
-	drift.x += *gpMarioSpeedX / TFlyEnemy::mTestMarioSpMax;
-	drift.z += *gpMarioSpeedZ / TFlyEnemy::mTestMarioSpMax;
+	drift.x += SMS_GetMarioSpeedX() / TFlyEnemy::mTestMarioSpMax;
+	drift.z += SMS_GetMarioSpeedZ() / TFlyEnemy::mTestMarioSpMax;
 	nextPos.add(drift);
 	nextPos.y += mGravityY;
 
@@ -132,13 +132,13 @@ void TFlyEnemy::fly()
 			nextPos.y = mGroundHeight;
 		}
 
-		const TLiveActor* rider = mGroundPlane->getActor();
+		const TLiveActor* rider = getGroundPlane()->getActor();
 		if (rider) {
 			if (rider->isActorType(0x4000000A))
 				((TLiveActor*)rider)->kill();
 		}
 
-		if (mGroundPlane->isIllegalData())
+		if (getGroundPlane()->isIllegalData())
 			kill();
 	} else {
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -752,8 +752,10 @@ void TKiller::bind()
 		if (!isAirborne() && mFlyTime > TFlyEnemy::mInvalidTime) {
 			mSpine->pushNerve(&TNerveKillerExplosion::theNerve());
 		} else if (mFlyTime > TFlyEnemy::mInvalidTime) {
-			TBGWallCheckRecord record(mPosition.x, mPosition.y + mHeadHeight,
-			                          mPosition.z, 2.0f * mBodyRadius, 1, 0);
+			TBGWallCheckRecord record(getPosition().x,
+			                          mPosition.y + mHeadHeight,
+			                          getPosition().z, 2.0f * mBodyRadius, 1,
+			                          0);
 			if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
 				const TLiveActor* rider
 				    = record.mResultWalls[0]->getActor();
@@ -767,9 +769,7 @@ void TKiller::bind()
 	}
 
 	if (isAirborne()) {
-		if (gpMSound->gateCheck(MSD_SE_EN_KILLER_FLY))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_KILLER_FLY, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_KILLER_FLY, &mPosition);
 
 		mRotation.x = MsClamp(getRotation().x, -25.0f, 90.0f);
 		MsMtxSetXYZRPH(mParticleMtx, mPosition.x, mPosition.y, mPosition.z,
@@ -782,7 +782,7 @@ void TKiller::bind()
 // TODO: 99.9%, instruction-identical with a 32-byte frame gap.
 void TKiller::calcRootMatrix()
 {
-	if (gpMarDirector->checkUnk4CFlag(0xF)) {
+	if (SMSGetMarDirector()->checkUnk4CFlag(0xF)) {
 		onLiveFlag(LIVE_FLAG_DEAD);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
@@ -800,11 +800,11 @@ void TKiller::calcRootMatrix()
 
 	if (isBckAnm(KILLER_ANM_SEARCH1)) {
 		mEyesColor.r = mNoseColor.g = mNoseColor.b = 0;
-		if (mSpine->getTime() % 10 < 5)
+		if (getSpine()->getTime() % 10 < 5)
 			mEyesColor.g = mEyesColor.b = mNoseColor.r = 0;
 
 		if (mIsGold) {
-			if (mSpine->getTime() % 10 < 5) {
+			if (getSpine()->getTime() % 10 < 5) {
 				mNoseColor.r = 170;
 				mNoseColor.g = 140;
 				mNoseColor.b = 0;
@@ -816,7 +816,7 @@ void TKiller::calcRootMatrix()
 		}
 
 		if (unk1A5) {
-			if (mSpine->getTime() % 10 < 5) {
+			if (getSpine()->getTime() % 10 < 5) {
 				mNoseColor.r = mEyesColor.r = 200;
 				mNoseColor.g                = 0;
 				mNoseColor.b                = 0;
@@ -833,7 +833,7 @@ void TKiller::calcRootMatrix()
 		mEyesColor.g = mEyesColor.b = 0;
 		mNoseColor.g = mNoseColor.b = 0;
 
-		f32 pulse = fabsf(JMASin(360.0f * mSpine->getTime() / 120.0f));
+		f32 pulse = fabsf(JMASin(360.0f * getSpine()->getTime() / 120.0f));
 
 		if (mIsGold) {
 			mBodyColor.r = 170;
