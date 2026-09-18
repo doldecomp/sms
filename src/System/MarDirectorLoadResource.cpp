@@ -367,7 +367,7 @@ void TMarDirector::loadParticleMario()
 // TODO: size mismatch
 int TMarDirector::thpInit()
 {
-	THPPlayerInit();
+	THPPlayerInit(0);
 	if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
 		return 1;
 	THPPlayerSetBuffer(new (0x20) u8[THPPlayerCalcNeedMemory()]);

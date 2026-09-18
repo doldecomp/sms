@@ -77,14 +77,14 @@ static s16* audioCallbackWithMSound(s32 p1)
 	return SoundBuffer[SoundBufferIndex];
 }
 
-static void initAudio()
+static void audioInitWithMSound()
 {
 	JASystem::Kernel::registerMixCallback(&audioCallbackWithMSound, 3);
 }
 
-static void quitAudio() { JASystem::Kernel::registerMixCallback(nullptr, 0); }
+static void audioQuitWithMSound() { JASystem::Kernel::registerMixCallback(nullptr, 0); }
 
-BOOL THPPlayerInit()
+BOOL THPPlayerInit(s32 audioSystem)
 {
 	BOOL inter;
 
@@ -99,7 +99,7 @@ BOOL THPPlayerInit()
 	SoundBufferIndex = 0;
 	LastAudioBuffer  = (s16*)NULL;
 	CurAudioBuffer   = (s16*)NULL;
-	initAudio();
+	audioInitWithMSound();
 	OSRestoreInterrupts(inter);
 	memset(&SoundBuffer, 0, sizeof(SoundBuffer));
 	DCFlushRange(&SoundBuffer, sizeof(SoundBuffer));
@@ -111,7 +111,7 @@ BOOL THPPlayerInit()
 void THPPlayerQuit()
 {
 	LCDisable();
-	quitAudio();
+	audioQuitWithMSound();
 	Initialized = FALSE;
 }
 
@@ -221,10 +221,13 @@ BOOL THPPlayerClose()
 
 u32 THPPlayerCalcNeedMemory()
 {
+	u32 size;
+
 	if (ActivePlayer.open) {
-		u32 size = ActivePlayer.onMemory
-		               ? ALIGN_NEXT(ActivePlayer.header.movieDataSize, 32)
-		               : ALIGN_NEXT(ActivePlayer.header.bufsize, 32) * 10;
+		if (ActivePlayer.onMemory)
+			size = ALIGN_NEXT(ActivePlayer.header.movieDataSize, 32);
+		else
+			size = ALIGN_NEXT(ActivePlayer.header.bufsize, 32) * 10;
 
 		size += ALIGN_NEXT(ActivePlayer.videoInfo.xSize
 		                       * ActivePlayer.videoInfo.ySize,
@@ -346,16 +349,18 @@ void PrepareReady(BOOL msg)
 BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)
 {
 	u8* threadData;
+	u32 offset;
+
 	if (ActivePlayer.open && ActivePlayer.state == 0) {
 		if (frame > 0) {
-			if (ActivePlayer.header.offsetDataOffsets == 0)
+			offset = ActivePlayer.header.offsetDataOffsets;
+			if (offset == 0)
 				return FALSE;
 
 			if (ActivePlayer.header.numFrames > frame) {
+				offset += (frame - 1) * 4;
 				if (DVDReadPrio(&ActivePlayer.fileInfo, WorkBuffer, 0x20,
-				                ActivePlayer.header.offsetDataOffsets
-				                    + (frame - 1) * 4,
-				                2)
+				                offset, 2)
 				    < 0)
 					return FALSE;
 
@@ -379,7 +384,8 @@ BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)
 			ActivePlayer.curAudioTrack = audioTrack;
 		}
 
-		ActivePlayer.playFlag         = flag & 1;
+		flag &= 1;
+		ActivePlayer.playFlag = flag;
 		ActivePlayer.videoDecodeCount = 0;
 
 		if (ActivePlayer.onMemory) {
@@ -456,7 +462,7 @@ void THPPlayerStop()
 		VideoDecodeThreadCancel();
 		if (ActivePlayer.audioExist) {
 			AudioDecodeThreadCancel();
-			quitAudio();
+			audioQuitWithMSound();
 		}
 
 		while (PopUsedTextureSet() != 0) { }
@@ -477,6 +483,11 @@ BOOL THPPlayerPause()
 	}
 	return FALSE;
 }
+
+// TODO: THPPlayerSkip belongs here in source order (the map lists it UNUSED at
+// 0x1f0, between PlayControl and THPPlayerPause in emission order). 496 bytes
+// of dead code with no disassembly to work from; left undefined rather than
+// fabricated, so validate-symbol-order reports it MISSING.
 
 static void PlayControl(u32 retraceCnt)
 {
@@ -651,6 +662,16 @@ BOOL THPPlayerGetAudioInfo(THPAudioInfo* audioInfo)
 	return FALSE;
 }
 
+// TODO: UNUSED (map 0x24, the same shape and size as THPPlayerGetTotalFrame
+// below); the frame rate lives in the video info block.
+f32 THPPlayerGetFrameRate()
+{
+	if (ActivePlayer.open)
+		return ActivePlayer.header.frameRate;
+
+	return 0.0f;
+}
+
 u32 THPPlayerGetTotalFrame()
 {
 	if (ActivePlayer.open)
@@ -660,19 +681,6 @@ u32 THPPlayerGetTotalFrame()
 }
 
 s32 THPPlayerGetState() { return ActivePlayer.state; }
-
-void THPPlayerDrawDone()
-{
-	GXDrawDone();
-	if (Initialized) {
-		while (TRUE) {
-			void* tex = PopUsedTextureSet();
-			if (!tex)
-				break;
-			PushFreeTextureSet(tex);
-		}
-	}
-}
 
 static void PushUsedTextureSet(OSMessage msg)
 {
@@ -688,16 +696,15 @@ static OSMessage PopUsedTextureSet()
 	return NULL;
 }
 
-void THPPlayerPostDrawDone()
+void THPPlayerDrawDone()
 {
+	GXDrawDone();
 	if (Initialized) {
-		OSMessage msg;
 		while (TRUE) {
-			msg = PopUsedTextureSet();
-			if (msg == NULL) {
+			void* tex = PopUsedTextureSet();
+			if (!tex)
 				break;
-			}
-			PushFreeTextureSet(msg);
+			PushFreeTextureSet(tex);
 		}
 	}
 }
@@ -820,4 +827,17 @@ BOOL THPPlayerSetVolume(s32 vol, s32 duration)
 		return TRUE;
 	}
 	return FALSE;
+}
+
+// TODO: UNUSED (map 0x38, size-exact). Only the `open` guard fits: adding the
+// `audioExist` half that THPPlayerSetVolume tests costs exactly the three
+// instructions (0x44) that put this over the map size. `curVolume` instead of
+// `targetVolume` is the other reading and is size-neutral; `targetVolume` is
+// picked because that is the value THPPlayerSetVolume stores.
+s32 THPPlayerGetVolume()
+{
+	if (ActivePlayer.open)
+		return (s32)ActivePlayer.targetVolume;
+
+	return 0;
 }

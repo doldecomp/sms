@@ -57,7 +57,7 @@ typedef struct THPPlayer {
 
 extern THPPlayer ActivePlayer;
 
-BOOL THPPlayerInit();
+BOOL THPPlayerInit(s32 audioSystem);
 void THPPlayerQuit();
 BOOL THPPlayerOpen(const char* fileName, BOOL onMemory);
 BOOL THPPlayerClose();
@@ -72,7 +72,8 @@ u32 THPPlayerCalcNeedMemory();
 
 BOOL THPPlayerGetVideoInfo(THPVideoInfo* videoInfo);
 BOOL THPPlayerGetAudioInfo(THPAudioInfo* audioInfo);
-// f32 THPPlayerGetFrameRate();
+f32 THPPlayerGetFrameRate();
+s32 THPPlayerGetVolume();
 BOOL THPPlayerSetVolume(s32 vol, s32 duration);
 
 s32 THPPlayerDrawCurrentFrame(GXRenderModeObj* rmode, u32 x, u32 y,
@@ -80,8 +81,6 @@ s32 THPPlayerDrawCurrentFrame(GXRenderModeObj* rmode, u32 x, u32 y,
 u32 THPPlayerGetTotalFrame();
 s32 THPPlayerGetState();
 void THPPlayerDrawDone();
-
-void THPPlayerPostDrawDone();
 
 #ifdef __cplusplus
 }
