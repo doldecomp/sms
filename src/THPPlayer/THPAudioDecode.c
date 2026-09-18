@@ -72,6 +72,17 @@ static void* AudioDecoder(void* arg)
 	}
 }
 
+// TODO: 89.3%. Every instruction is right; the residue is a pure rotation of
+// the callee-saved set. Retail ranks frame (r31) > &AudioDecodeThread (r30) >
+// &ActivePlayer (r29) > readSize (r28) and emits `li r31, 0` before the two
+// address hoists; we rank &AudioDecodeThread (r31) > &ActivePlayer (r30) >
+// frame (r29) > readSize (r28) and initialise frame after them. Measured, all
+// no better: `s32 frame = 0` in the declaration (+0), `for (frame = 0;;
+// frame++)` (+0), readBuffer declared first (+0), `remaining` declared at the
+// top (+0), readSize declared before frame (86.2), the `remaining` expression
+// written inline in the if (84.3), `frame = 0` moved after the other two
+// initialisations (84.5), caching header.numFrames in a local (73.9), a named
+// OSThread* in the suspend branch (82.6).
 static void* AudioDecoderForOnMemory(void* arg)
 {
 	s32 frame;
