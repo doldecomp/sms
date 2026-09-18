@@ -8,33 +8,41 @@ MSBgm* MSBgm::smBgmInTrack[3];
 f32 MSBgm::smMainVolume = 0.75f;
 
 // TODO: every instruction matches; only the frame differs (target 0x48, ours
-// 0x28), so the original reserved 25..32 bytes of locals the optimiser never
+// 0x28), so the original reserved 32 bytes of locals the optimiser never
 // touched. `volatile char trash[25..32]` reaches 100% with no instruction
 // change, which confirms the body is right, but no plausible declaration
-// accounts for the bytes yet. Measured, instruction-neutral shapes (frame in
-// brackets): naming the allocation `MSBgm* bgm = new MSBgm(i)` [0x30];
-// clearing the tracks with `for (u32 i = 0; i < 3; ++i) smBgmInTrack[i] = 0`,
-// which MWCC unrolls into the same three stores [0x38]; naming the table owner
-// (`JAIData* data = MSGMSound->unk0`, or a `JAISoundTable&` reference) [+8 on
-// top of the above, 0x40]. Beyond three such locals MWCC reuses the slots, so
-// 0x40 is the ceiling for scalar naming -- re-measured: a fourth named scalar
-// of any kind (`JAISoundTable*`, a `JAISoundTable&`, `MSound* sound`, a
-// separate `u16 max`/`u32 count` pair, a second loop index, an `f32`, a
-// `JAISound*`, a `u8`, a `bool`) leaves the frame at 0x40. The remaining 8
-// bytes must therefore come from one 8-byte *object*: `u32 arr[2]`, `char
-// buf[8]` and `f64 d` each take the frame to exactly 0x48 with all 34
-// instructions unchanged, as does any 32-byte local on the bare body. So the
-// missing declaration is a single 8-byte-aligned aggregate (or an address-taken
-// local), not another scalar. There is still no evidence for one: this TU has
-// no string pool at all, so nothing was formatted into a local buffer for the
-// JALListVirtualNode name, and the map's symbol closure for init lists only
-// `JALList<MSBgm>::JALList`, so no other call's inlined body can carry it.
-// Ruled out: `u32` vs `u16` count, `int` vs
-// `u32` loop indices, a shared loop index, a single-iteration category loop, a
-// named sound id, and `MSBgm** tracks = smBgmInTrack` (changes instructions).
-// The UNUSED symbols in this TU (the four node destructors, which our build
-// already emits at the exact map sizes, and the mute/pause/volume stubs) are
-// not callable from here, so no missing inline explains the gap either.
+// accounts for the bytes yet.
+//
+// The naming ladder was re-measured exhaustively: all 72 combinations of six
+// spellings of the table read x three of the allocation x four of the track
+// clearing. Each of these is +8 and instruction-neutral:
+//   - naming the table owner, either `JAIData* data = MSGMSound->unk0` or a
+//     `JAISoundTable&`/`JAISoundTable*` bound to `...->mSeTable`
+//   - naming the allocation, `MSBgm* bgm = new MSBgm(i)` (declare-then-assign
+//     is worth the same)
+//   - clearing the tracks with `for (u32 i = 0; i < 3; ++i)` or `for (int i
+//     ...)`, which MWCC unrolls into the same three stores
+// Naming both the `JAIData*` and a `JAISoundTable&` counts as two levels, but
+// the total caps at **0x40** for every combination: MWCC reuses slots beyond
+// three scalar locals, so scalar naming cannot reach 0x48. A `u8` loop index
+// is 39 instructions instead of 34, and `u16 count;` split from its assignment
+// is worth zero.
+//
+// The remaining 8 bytes are therefore one 8-byte object at the bottom of the
+// frame - a two-word aggregate declared last in the body, or a non-trivial
+// 8-byte class local in an inlined callee (see docs/catalog/frame-gaps.md,
+// "The last 8 bytes"). There is no candidate for one here: the inlined callee
+// chain is MSBgm::MSBgm -> JALListVirtualNode -> JALListS, all plain ctor
+// initialiser lists bottoming out in the out-of-line `JALList<MSBgm>::JALList`
+// call, and retail references no stack slot in init, so there is no positional
+// evidence either.
+//
+// Ruled out: `u32` vs `u16` count, `int` vs `u32` loop indices, a shared loop
+// index, a single-iteration category loop, a named sound id, and
+// `MSBgm** tracks = smBgmInTrack` (changes instructions). The UNUSED symbols
+// in this TU (the four node destructors, which our build already emits at the
+// exact map sizes, and the mute/pause/volume stubs) are not callable from
+// here, so no missing inline explains the gap either.
 void MSBgm::init()
 {
 	u16 count = MSGMSound->unk0->mSeTable.mSoundMax[16];

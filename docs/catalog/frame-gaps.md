@@ -30,7 +30,7 @@ Read these in order; each one was checked before moving to the next.
    Also see `AGENT_MATCHING_TIPS.md`: "Each inline level in a call chain leaves one dead 4-byte temporary" and "`T x = f();` costs one more stack object".
 4. **Inlined accessor reads.** Each member read that goes through an inlined accessor leaves one dead 4-byte temporary (measured on `TMapCollisionMove::init`: one use 0x28, two 0x30, four 0x38 = target).
    Reading members through their accessors is therefore a first-class fix for small gaps, and the accessor can also fix load order (`allocCheckData(getUnkC())` loads the count before `gpMapCollisionData`; the raw field swaps them).
-   Scalar naming saturates: on `MSBgm::init`, naming the `new` result, the loop and the table owner reaches 0x40 and a fourth scalar reuses a slot, so the last 8 bytes of a 32-byte gap need an aggregate or address-taken local.
+   Scalar naming saturates: on `MSBgm::init`, naming the `new` result, the loop and the table owner reaches 0x40 and a fourth scalar reuses a slot, so the last 8 bytes of a 32-byte gap need an aggregate (see [The last 8 bytes](#the-last-8-bytes)).
 5. **Named locals and statics.** Cases where the fix was a source-level declaration:
    - `rocket`: `unk18[i]` -> `getObj(i)` alone closed `TRocketManager::initSetEnemies`; `getManager()` over `mManager` and `getSaveParams()` over `mSaveParams` each bought 8 elsewhere, but `getSaveParams()` in `getGravityY` broke a match, `getObjNum()` in a loop bound moved the wrong local, and naming a `TMsRange::rand()` result shrank the frame by 8. Measure per site.
    - `fruitsboat`: accessor temporaries stop accumulating after two or three uses (`init` stayed at 0xf0), and `setGroundCollision` needed **two** named locals (`J3DModel* model` and `MtxPtr mtx`): `mtx` alone put the fetch after the null test.
@@ -59,6 +59,77 @@ Scalar accessor levers saturate: `getStatus()`, `getIntendedMag()`, `getHeldObje
 
 Anti-levers (measured): an accessor for a raw `unk114 &` test materialises a bool retail lacks; `getHealth()` as `startMarioVoice`'s argument hoists the `lha` above the vtable load; a named `s16` for `IConverge`'s result adds a sign extension; naming a call result is worth zero once scalars saturate.
 
+## The last 8 bytes
+
+Once every accessor and naming lever has saturated, a residual **8**-byte gap is
+one 8-byte stack object at the very **bottom** of the local area, below every
+referenced local.
+Positional signature: each `r1` displacement in retail is exactly 8 higher than
+ours, the LR slot included.
+Confirmed on `TModelWaterManager::drawWaterVolume` (0xa8 vs 0xa0: retail
+44/48/51/.../88/144/172, ours 36/40/43/.../80/136/164).
+`MActor::MActor` is *not* this shape - its low group moves one way and its top
+group does not move at all, so that gap is two objects, not one.
+
+Three spellings put exactly that object there with **zero** instruction change.
+All measured in a scratch TU with the game flags, against a referenced `f32
+marker[3]` used to read off the insertion point.
+
+| variant | frame | insns | where the 8 bytes land |
+| --- | --- | --- | --- |
+| baseline | 0x20 | 37 | - |
+| `u32 tail[2];` / 2-word struct declared **last** in the body | 0x28 | 37 | below `marker` |
+| 8-byte class with a user ctor/dtor, local of an **inlined callee** | 0x28 | 37 | below `marker` |
+| same 8-byte local declared **first** in the body | 0x28 | 37 | *above* `marker` (wrong shape) |
+| `f64 tail;` declared last | 0x30 | 37 | +16, not +8 |
+| 2-word struct **by value** to an inlined callee | 0x30 | 37 | +16 (copy + source) |
+| 2-word struct **returned** by an inlined callee | 0x30 | 37 | +16 |
+| `T x = <inlined call returning 2 words>` | 0x38 | 37 | +32 |
+
+So: to add 8 and nothing else, declare a two-word **aggregate** (array or
+struct) as the **last** local of the body, or give an inlined callee an 8-byte
+**non-trivial** local.
+Do not measure with `f64`: it is 8-aligned, so it is worth 8 only when the
+bottom of the local area already happens to be aligned and 16 otherwise.
+
+### What is worth nothing (do not retry)
+
+- **Any scalar or trivial POD local of an inlined callee.** `u32`, `f32`,
+  `f64`, `u64`, `u32[2]` and 4/8/12-byte structs with no user ctor or dtor are
+  all +0 there; MWCC drops them. Triviality is the whole switch: the same
+  struct with an empty `~T() {}` is +8. (In the *caller's* own body the
+  opposite holds - triviality is irrelevant and only the size counts.)
+- **A 4-byte local anywhere.** The base frame already carries 8 bytes of slack
+  at the bottom, so the first 4 bytes of locals are free.
+- **A dead int-to-float conversion.** `f32 x = (f32)someU32;` inside an inlined
+  callee whose result is unused is +0. A *live* `u32`/`s32` to `f32` or `f32`
+  to `s32` conversion is +8, but its `0x43300000` pair sits at the **top** of
+  the local area and it costs instructions, so it can never be the silent
+  residue. Hypothesis refuted.
+- **`sqrtf`, `sqrt` and `f32 * 1.0`**: +0. Only the double `fabs()` of a float
+  adds 8 at the bottom, and it costs an instruction.
+- **An extra inline level once the ladder has saturated.** A TU-static
+  `getMapNo()`/`getDirector()` forwarder above `SMSGetMarDirector()` buys
+  nothing and emits a stray symbol.
+
+### The two closure cases, measured exhaustively
+
+Neither has any evidence for an 8-byte object, and retail references no stack
+slot in either, so there is no positional evidence to name one. Both stay
+nonmatching; the trial tables live in the source TODOs.
+
+- `TMapObjWave::perform` (0x38 vs 0x40). Each
+  `SMSGetMarDirector()->getCurrentMap()` use is +8 and saturates at three uses;
+  `gpMarDirector->getCurrentMap()` and `->mMap` are +0. Two uses is 0x38, three
+  is 0x40 but 36 instructions instead of 34. A `switch` on the map is 38
+  instructions. 35 combinations of five guard spellings by seven map spellings
+  give no 0x40 at 34 instructions. The gap is `perform`'s own: an uninitialised
+  scalar in `movement()` is +0 there (it is an inlined callee), +8 in `perform`.
+- `MSBgm::init` (0x28 vs 0x48). +8 each for naming the `JAIData*`, taking a
+  `JAISoundTable&`/`*`, naming the `new` result, and writing the three track
+  clears as a `u32`/`int` loop (a `u8` index is 39 instructions, not 34). All 72
+  combinations of 6 table x 3 new x 4 clear spellings cap at **0x40**.
+
 ## Diagnosing
 
 - Validate first with a temporary `volatile char trash[N]`.
@@ -85,7 +156,7 @@ Units one function short of source linking (last checked 2026-09-16; `egggen` an
 | --- | --- | --- |
 | `Player/MarioAccess` | `SMS_IsMarioOnWire` | Not a frame gap. The original loads `mHolder` twice (r0 to test, r3 to dereference); MWCC CSEs it. `&&` (93.8%), separate null check (90.0%), assigning the comparison (54.7%) and casting the holder (93.8%) all fail. |
 | `Strategic/HitActor` | `THitActor::calcEntryRadius` | 40-byte gap plus register numbering. The `frsqrte`/`frsp`/`stfs`/`lfs` sequence has no Newton step, so it is **not** `JGeometry::TUtil<f32>::sqrt`. |
-| `MSound/MSoundBGM` | `MSBgm::init` | Body exact (padding of 25-32 bytes gives 100%). Scalar naming ceiling 0x40 vs target 0x48; needs an aggregate local with no evidence for one. All trials are in the source TODO. |
+| `MSound/MSoundBGM` | `MSBgm::init` | Body exact (padding of 25-32 bytes gives 100%). Scalar naming ceiling 0x40 vs target 0x48 over all 72 spelling combinations; needs one 8-byte aggregate with no evidence for one. All trials are in the source TODO. |
 
 Also validated: `JGeometry::TQuat4<f32>::slerp` is exact modulo one 16-byte aggregate with no evidence (`= *this` + `normalize()` and the constructor form both give 35%).
 
