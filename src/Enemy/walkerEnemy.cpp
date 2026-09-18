@@ -228,6 +228,15 @@ DEFINE_NERVE(TNerveWalkerGraphWander, TLiveActor)
 	}
 }
 
+// Binding level worth +16 of low region, landing
+// TNerveWalkerAttack::execute's frame at 0x50 (batch 121).
+static inline const JGeometry::TVec3<f32>&
+WalkerEnemyGetPosition(const TWalkerEnemy* p)
+{
+	const JGeometry::TVec3<f32>& position = p->getPosition();
+	return position;
+}
+
 DEFINE_NERVE(TNerveWalkerAttack, TLiveActor)
 {
 	TWalkerEnemy* self = (TWalkerEnemy*)spine->getBody();
@@ -244,7 +253,8 @@ DEFINE_NERVE(TNerveWalkerAttack, TLiveActor)
 			return true;
 
 		f32 giveUpHeight = self->getSaveParam2()->mSLGiveUpHeight.get();
-		if (abs(SMS_GetMarioPos().y - self->getPosition().y) > giveUpHeight)
+		if (abs(SMS_GetMarioPos().y - WalkerEnemyGetPosition(self).y)
+		    > giveUpHeight)
 			return true;
 	}
 

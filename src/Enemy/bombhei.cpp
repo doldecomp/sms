@@ -480,6 +480,14 @@ DEFINE_NERVE(TNerveBombHeiAttack, TLiveActor)
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveBombHeiWalkExplosion::execute's frame at 0x60 (batch 121).
+static inline MActor* BombheiGetMActor(const TBombHei* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 // TODO: instruction-exact, frame 0x58 against the ROM's 0x60.
 DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 {
@@ -487,7 +495,7 @@ DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		bombHei->setBckAnm(BOMBHEI_ANM_COUNT_WALK);
-		bombHei->getMActor()->setBtpFromIndex(0);
+		BombheiGetMActor(bombHei)->setBtpFromIndex(0);
 	} else if (bombHei->checkCurAnmEnd(BOMBHEI_ANM_DOWN1)) {
 		spine->pushAfterCurrent(&TNerveBombHeiExplosion::theNerve());
 		return TRUE;

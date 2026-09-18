@@ -1086,6 +1086,14 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveBGKLaunchGoro::execute's frame at 0x40 (batch 121).
+static inline MActor* GatekeeperGetMActor(const TBiancoGateKeeper* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveBGKLaunchGoro, TLiveActor)
 {
 	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
@@ -1103,7 +1111,7 @@ DEFINE_NERVE(TNerveBGKLaunchGoro, TLiveActor)
 		return true;
 	}
 
-	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	if (GatekeeperGetMActor(self)->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBGKSleep::theNerve());
 		return true;
 	}

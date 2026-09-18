@@ -929,6 +929,14 @@ DEFINE_NERVE(TNerveTamaNokoSink, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveTamaNokoHitWater::execute's frame at 0x58 (batch 121).
+static inline bool TamaNokoUnsetUnk165(TTamaNoko* p)
+{
+	bool result = p->unsetUnk165();
+	return result;
+}
+
 // NOTE: lil shaking when mario sprays water on a sleeping tamanoko
 DEFINE_NERVE(TNerveTamaNokoHitWater, TLiveActor)
 {
@@ -948,7 +956,7 @@ DEFINE_NERVE(TNerveTamaNokoHitWater, TLiveActor)
 				self->unk1B9 = false;
 				if (!self->isBckAnm(1))
 					self->setBckAnm(1);
-			} else if (self->unsetUnk165()) {
+			} else if (TamaNokoUnsetUnk165(self)) {
 				self->setBckAnm(16);
 			} else {
 				spine->reset();

@@ -253,12 +253,20 @@ void TRocket::reset()
 	mSpine->initWith(&TNerveRocketWait::theNerve());
 }
 
+// Binding level worth +8 of low region, landing TRocket::attackToMario's
+// frame at 0x40 (batch 121).
+static inline TLiveManager* RocketGetManager(TRocket* p)
+{
+	TLiveManager* manager = p->getManager();
+	return manager;
+}
+
 // TODO: instruction-identical; 8 bytes of frame short (0x38 vs 0x40).
 // Naming the manager costs three instructions, so it is not that.
 void TRocket::attackToMario()
 {
 	if (mSpine->getCurrentNerve() == &TNerveRocketWait::theNerve()
-	    && ((TRocketManager*)getManager())->mIsNozzleFree)
+	    && ((TRocketManager*)RocketGetManager(this))->mIsNozzleFree)
 		mSpine->pushNerve(&TNerveRocketPossessedNozzle::theNerve());
 }
 

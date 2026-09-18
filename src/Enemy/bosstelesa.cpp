@@ -118,6 +118,14 @@ TBubble::TBubble(const char* name)
 {
 }
 
+// Binding level worth +8 of low region, landing TBubble::init's frame at
+// 0x78 (batch 121).
+static inline J3DModel* BosstelesaGetModel(const MActor* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TBubble::init(TLiveManager* live_manager)
 {
 	TWalkerEnemy::init(live_manager);
@@ -132,7 +140,7 @@ void TBubble::init(TLiveManager* live_manager)
 	TScreenTexture* screenTexture
 	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
 	const ResTIMG* textureInfo = screenTexture->getTexture()->getTexInfo();
-	SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
+	SMS_ChangeTextureAll(BosstelesaGetModel(getMActor())->getModelData(),
 	                     "H_ma_rak_dummy", *textureInfo);
 }
 
@@ -2296,11 +2304,19 @@ DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveBossTelesaHide::execute's frame at 0x40 (batch 121).
+static inline MActor* BosstelesaGetMActor(const TBossTelesa* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 
-	if (!boss->getMActor()->checkCurBckFromIndex(4)) {
+	if (!BosstelesaGetMActor(boss)->checkCurBckFromIndex(4)) {
 		boss->setBckAnm(4);
 		boss->getMActor()->setBtpFromIndex(2);
 	}

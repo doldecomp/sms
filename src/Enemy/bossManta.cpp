@@ -260,6 +260,14 @@ BOOL TNerveMantaHitWater::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing TNerveMantaSpawn::execute's
+// frame at 0x60 (batch 121).
+static inline TBossMantaManager* BossMantaGetManager(TBossManta* p)
+{
+	TBossMantaManager* manager = p->getManager();
+	return manager;
+}
+
 BOOL TNerveMantaSpawn::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
@@ -287,7 +295,8 @@ BOOL TNerveMantaSpawn::execute(TSpineBase<TLiveActor>* spine) const
 		u32 snd = sounds[self->mGeneration];
 		SMSGetMSound()->startSoundActor(snd, &self->mPosition, 0, nullptr, 0,
 		                                4);
-		self->getManager()->spawn(self->mGeneration + 1, self->mPosition);
+		BossMantaGetManager(self)->spawn(self->mGeneration + 1,
+		                                 self->mPosition);
 	}
 
 	if (spine->getTime() == 0x1E) {
@@ -297,12 +306,20 @@ BOOL TNerveMantaSpawn::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing TNerveMantaDeath::execute's
+// frame at 0x30 (batch 121).
+static inline MActor* BossMantaGetMActor(const TBossManta* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 BOOL TNerveMantaDeath::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		self->getMActor()->setBckFromIndex(0);
+		BossMantaGetMActor(self)->setBckFromIndex(0);
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		self->getMActor()->setMotionBlendRatioForBck(0.0f);
 	}
@@ -429,9 +446,17 @@ void TBossManta::updateAnimBlend()
 	}
 }
 
+// Binding level worth +16 of low region, landing
+// TBossManta::getIntoGraphVec's frame at 0x130 (batch 121).
+static inline TGraphTracer* BossMantaGetTracer(TBossManta* p)
+{
+	TGraphTracer* tracer = p->getTracer();
+	return tracer;
+}
+
 bool TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 {
-	TGraphWeb* graph = getTracer()->getGraph();
+	TGraphWeb* graph = BossMantaGetTracer(this)->getGraph();
 	for (int idx = 0; idx < 12; ++idx) {
 		JGeometry::TVec3<f32> a;
 		a.sub(graph->indexToPoint(idx), mPosition);
@@ -523,6 +548,14 @@ BOOL TBossManta::isSpawnState()
 	return mSpine->getLatestNerve() == &TNerveMantaSpawn::theNerve();
 }
 
+// Binding level worth +8 of low region, landing
+// TBossManta::collidedWithWater's frame at 0xa0 (batch 121).
+static inline int BossMantaGetVertebraeCount(const TSpineBase<TLiveActor>* p)
+{
+	int vertebraeCount = p->getVertebraeCount();
+	return vertebraeCount;
+}
+
 bool TBossManta::collidedWithWater()
 {
 	if (isDamageable()) {
@@ -549,7 +582,7 @@ bool TBossManta::collidedWithWater()
 					mSpine->pushAfterCurrent(&TNerveMantaDeath::theNerve());
 				else
 					mSpine->pushAfterCurrent(&TNerveMantaSpawn::theNerve());
-			} else if (mSpine->getVertebraeCount() < 7) {
+			} else if (BossMantaGetVertebraeCount(mSpine) < 7) {
 				mSpine->pushAfterCurrent(&TNerveMantaMove::theNerve());
 			}
 		}
@@ -1342,9 +1375,17 @@ void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 	GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 }
 
+// Binding level worth +8 of low region, landing
+// TBossMantaManager::createEnemies's frame at 0xb0 (batch 121).
+static inline int BossMantaGetObjNum(const TBossMantaManager* p)
+{
+	int objNum = p->getObjNum();
+	return objNum;
+}
+
 void TBossMantaManager::createEnemies(int num)
 {
-	if (num + getObjNum() > getCapacity())
+	if (num + BossMantaGetObjNum(this) > getCapacity())
 		num = getCapacity() - getObjNum();
 
 	if (unk38 != nullptr) {

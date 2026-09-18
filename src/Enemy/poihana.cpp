@@ -551,6 +551,14 @@ void TSleepPoiHana::load(JSUMemoryInputStream& stream)
 	TPoiHana::load(stream);
 }
 
+// Binding level worth +8 of low region, landing
+// TNervePoihanaSleep::execute's frame at 0x40 (batch 121).
+static inline MActor* PoihanaGetMActor(const TPoiHana* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 {
 	TPoiHana* self = (TPoiHana*)spine->getBody();
@@ -576,7 +584,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 		                                &self->mPosition, 0, nullptr, 0, 4);
 
 		self->setBckAnm(10);
-		self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(148.0f);
+		PoihanaGetMActor(self)->getFrameCtrl(ANM_TYPE_BCK)->setFrame(148.0f);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
@@ -608,12 +616,20 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 	return 0;
 }
 
+// Binding level worth +16 of low region, landing
+// TNervePoihanaFreeze::execute's frame at 0x48 (batch 121).
+static inline const TBGCheckData* PoihanaGetGroundPlane(const TPoiHana* p)
+{
+	const TBGCheckData* groundPlane = p->getGroundPlane();
+	return groundPlane;
+}
+
 DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 {
 	TPoiHana* self = (TPoiHana*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->getGroundPlane()->isSand()) {
+		if (PoihanaGetGroundPlane(self)->isSand()) {
 			self->setBckAnm(12);
 		} else {
 			self->setBckAnm(13);

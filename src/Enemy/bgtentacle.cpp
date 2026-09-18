@@ -296,12 +296,20 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	}
 }
 
+// Binding level worth +16 of low region, landing
+// TBGTakeHit::receiveMessage's frame at 0x90 (batch 121).
+static inline TTakeActor* BgtentacleGetHeldObject(TTakeActor* p)
+{
+	TTakeActor* heldObject = p->getHeldObject();
+	return heldObject;
+}
+
 BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x80000001) {
 		if (message == HIT_MESSAGE_TAKE) {
 			TTakeActor* casted = (TTakeActor*)sender;
-			if (casted->getHeldObject() != nullptr
+			if (BgtentacleGetHeldObject(casted) != nullptr
 			    && casted->getHeldObject() != this)
 				return false;
 

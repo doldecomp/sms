@@ -659,9 +659,17 @@ bool TKumokun::checkSerialAnmEnd() const
 	return unk1D8.empty() && checkCurAnmEnd(0);
 }
 
+// Binding level worth +8 of low region, landing TKumokun::calcRootMatrix's
+// frame at 0x178 (batch 121).
+static inline BOOL KumokunIsTaken(const TKumokun* p)
+{
+	BOOL taken = p->isTaken();
+	return taken;
+}
+
 void TKumokun::calcRootMatrix()
 {
-	if (isTaken()) {
+	if (KumokunIsTaken(this)) {
 		TSpineEnemy::calcRootMatrix();
 		return;
 	}
@@ -1150,12 +1158,20 @@ DEFINE_NERVE(TNerveKumokunWait, TLiveActor)
 	return false;
 }
 
+// Binding level worth +16 of low region, landing
+// TNerveKumokunFreeze::execute's frame at 0x50 (batch 121).
+static inline MActor* KumokunGetMActor(const TKumokun* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveKumokunFreeze, TLiveActor)
 {
 	TKumokun* self = (TKumokun*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->clearAnmStack();
-		if (self->getMActor()->checkCurAnm("kumo_hit_end", ANM_TYPE_BCK)
+		if (KumokunGetMActor(self)->checkCurAnm("kumo_hit_end", ANM_TYPE_BCK)
 		    || self->getMActor()->checkCurAnm("kumo_hit_start", ANM_TYPE_BCK)) {
 			self->changeBck("kumo_hit_loop");
 		} else if (!self->getMActor()->checkCurAnm("kumo_hit_loop",

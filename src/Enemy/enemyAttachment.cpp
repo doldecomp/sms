@@ -164,6 +164,14 @@ void TEnemyAttachment::calcRootMatrix()
 	getMActor()->getModel()->setBaseScale(mScaling);
 }
 
+// Binding level worth +8 of low region, landing TEnemyAttachment::perform's
+// frame at 0x30 (batch 121).
+static inline bool EnemyAttachmentIsDemoModeNow(const TMarDirector* p)
+{
+	bool demoModeNow = p->isDemoModeNow();
+	return demoModeNow;
+}
+
 void TEnemyAttachment::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk150 == nullptr) {
@@ -172,7 +180,7 @@ void TEnemyAttachment::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 	}
 
-	if (!SMSGetMarDirector()->isDemoModeNow()
+	if (!EnemyAttachmentIsDemoModeNow(SMSGetMarDirector())
 	    && SMSGetMarDirector()->isTalkModeNow()) {
 		performOnlyDraw(cue, graphics);
 		return;

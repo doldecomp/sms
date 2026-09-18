@@ -2185,6 +2185,14 @@ DEFINE_NERVE(TNerveFireWanwanFreeze, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveFireWanwanEscape::execute's frame at 0x78 (batch 121).
+static inline MActor* FireWanwanGetMActor(const TFireWanwan* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveFireWanwanEscape, TLiveActor)
 {
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
@@ -2192,7 +2200,7 @@ DEFINE_NERVE(TNerveFireWanwanEscape, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->initEscapeNextGraphNode();
 		self->setBckAnm(0);
-		self->getMActor()->setBtkFromIndex(0);
+		FireWanwanGetMActor(self)->setBtkFromIndex(0);
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 
 		self->changeBodyToBlack(40);

@@ -611,10 +611,18 @@ void TBPHeadHit::throwActor(THitActor* actor)
 	}
 }
 
+// Binding level worth +8 of low region, landing TBPHeadHit::perform's frame
+// at 0x38 (batch 121).
+static inline u16 BosspakkunGetColNum(TBPHeadHit* p)
+{
+	u16 colNum = p->getColNum();
+	return colNum;
+}
+
 void TBPHeadHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if ((cue & 1) && mOwner->mState != BOSSPAKU_STATE_BELLY_UP) {
-		for (int i = 0; i < getColNum(); ++i) {
+		for (int i = 0; i < BosspakkunGetColNum(this); ++i) {
 			THitActor* other = getCollision(i);
 			if (other->isActorType(ACTOR_TYPE_PLAYER | 1))
 				throwActor(other);

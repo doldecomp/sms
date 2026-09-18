@@ -917,6 +917,14 @@ DEFINE_NERVE(TNerveHanaSamboAttack, TLiveActor)
 	return false;
 }
 
+// Binding level worth +16 of low region, landing
+// TNerveHanaSamboHide::execute's frame at 0x60 (batch 121).
+static inline MActor* HanasamboGetMActor(const THanaSambo* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 {
 	THanaSambo* sambo = (THanaSambo*)spine->getBody();
@@ -931,7 +939,7 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 		sambo->initFlower();
 		sambo->onHitFlag(HIT_FLAG_NO_COLLISION);
 		sambo->setBckAnm(6);
-		sambo->getMActor()->setFrameRate(0.0f, 0);
+		HanasamboGetMActor(sambo)->setFrameRate(0.0f, 0);
 		sambo->onLiveFlag(LIVE_FLAG_HIDDEN);
 	}
 	sambo->updateSquareToMario();

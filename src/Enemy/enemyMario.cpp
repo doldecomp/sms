@@ -628,10 +628,19 @@ void TEnemyMario::resetReplayStatus()
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 }
 
+// Binding level worth +8 of low region, landing
+// TEnemyMario::startMonteReplay's frame at 0x98 (batch 121).
+static inline TGraphTracer* EnemyMarioGetTracer(TEMario* p)
+{
+	TGraphTracer* tracer = p->getTracer();
+	return tracer;
+}
+
 void TEnemyMario::startMonteReplay(u32 replayIndex)
 {
 	int nodeIndex
-	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	    = EnemyMarioGetTracer(mEMario)->getGraph()->findNearestNodeIndex(
+	        mPosition, -1);
 	JGeometry::TVec3<f32> currentPoint;
 	mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).getPoint(
 	    &currentPoint);

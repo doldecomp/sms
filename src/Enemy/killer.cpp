@@ -779,6 +779,14 @@ void TKiller::bind()
 	}
 }
 
+// Binding level worth +8 of low region, landing TKiller::calcRootMatrix's
+// frame at 0x90 (batch 121).
+static inline TSpineBase<TLiveActor>* KillerGetSpine(const TKiller* p)
+{
+	TSpineBase<TLiveActor>* spine = p->getSpine();
+	return spine;
+}
+
 // TODO: 99.9%, instruction-identical with a 32-byte frame gap.
 void TKiller::calcRootMatrix()
 {
@@ -800,7 +808,7 @@ void TKiller::calcRootMatrix()
 
 	if (isBckAnm(KILLER_ANM_SEARCH1)) {
 		mEyesColor.r = mNoseColor.g = mNoseColor.b = 0;
-		if (getSpine()->getTime() % 10 < 5)
+		if (KillerGetSpine(this)->getTime() % 10 < 5)
 			mEyesColor.g = mEyesColor.b = mNoseColor.r = 0;
 
 		if (mIsGold) {

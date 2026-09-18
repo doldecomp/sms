@@ -809,6 +809,14 @@ bool THamuKuri::isGiveUpSearchActor()
 	}
 }
 
+// Binding level worth +8 of low region in THamuKuri::jumpToSearchActor
+// (batch 121).
+static inline f32 HamukuriGetGroundHeight(const TLiveActor* p)
+{
+	f32 groundHeight = p->getGroundHeight();
+	return groundHeight;
+}
+
 void THamuKuri::jumpToSearchActor()
 {
 	(void)0; // TODO: hack, need to figure out canGoForSearchActor?
@@ -819,7 +827,7 @@ void THamuKuri::jumpToSearchActor()
 
 		if (local_1C.squared() > 40000.0f) {
 			JGeometry::TVec3<f32> tgt = pTVar5->mPosition;
-			tgt.y                     = pTVar5->getGroundHeight();
+			tgt.y                     = HamukuriGetGroundHeight(pTVar5);
 
 			setGoalPath(tgt);
 			return;
@@ -1237,6 +1245,22 @@ bool THamuKuri::isHitValid(u32 param_1)
 	return true;
 }
 
+// Binding level worth +16 of low region, landing THamuKuri::isCollidMove's
+// frame at 0xe8 (batch 121).
+static inline THamuKuriManager* HamukuriGetManager(THamuKuri* p)
+{
+	THamuKuriManager* manager = p->getManager();
+	return manager;
+}
+
+// Binding level worth +16 of low region, landing THamuKuri::isCollidMove's
+// frame at 0xe8 (batch 121).
+static inline bool HamukuriIsAirborne(const THamuKuri* p)
+{
+	bool airborne = p->isAirborne();
+	return airborne;
+}
+
 bool THamuKuri::isCollidMove(THitActor* param_1)
 {
 	if (param_1->isActorType(0x8000013))
@@ -1267,7 +1291,7 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 		if (fabsf(vel.y) > 2.0f
 		    && (fabsf(vel.x) > 2.0f || fabsf(vel.z) > 2.0f)) {
 			if (mSpine->getCurrentNerve() != &TNerveHamuKuriJitabata::theNerve()
-			    && !isAirborne()) {
+			    && !HamukuriIsAirborne(this)) {
 				mSpine->pushNerve(&TNerveHamuKuriJitabata::theNerve());
 			}
 		}
@@ -1277,7 +1301,8 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 		return false;
 
 	// TODO: inline
-	if (!(param_1->getActorType() == getManager()->unk60 ? true : false))
+	if (!(param_1->getActorType() == HamukuriGetManager(this)->unk60 ? true
+	                                                                 : false))
 		return true;
 
 	unk1A0 = 1;
@@ -1686,6 +1711,14 @@ void TDoroHaneKuri::reset()
 	onLiveFlag(LIVE_FLAG_UNK400);
 }
 
+// Binding level worth +8 of low region, landing
+// TDoroHaneKuri::attackToMario's frame at 0x50 (batch 121).
+static inline J3DModel* HamukuriGetModel(const MActor* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TDoroHaneKuri::attackToMario()
 {
 	if (!gpMarioOriginal->isWearingCap()) {
@@ -1699,7 +1732,7 @@ void TDoroHaneKuri::attackToMario()
 
 			mSpine->pushNerve(&TNerveDoroHaneRise::theNerve());
 			onHaveCap();
-			MtxPtr mtx = mMActor->getModel()->getAnmMtx(unk1AC);
+			MtxPtr mtx = HamukuriGetModel(mMActor)->getAnmMtx(unk1AC);
 			unk200.set(mtx[3][0], mtx[3][1], mtx[3][2]);
 			gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &unk200, 0,
 			                                            nullptr);
@@ -2873,6 +2906,14 @@ DEFINE_NERVE(TNerveFireHamuKuriRecover, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveDoroHaneRise::execute's frame at 0x58 (batch 121).
+static inline f32 HamukuriGetBodyScale(const TDoroHaneKuri* p)
+{
+	f32 bodyScale = p->getBodyScale();
+	return bodyScale;
+}
+
 DEFINE_NERVE(TNerveDoroHaneRise, TLiveActor)
 {
 	TDoroHaneKuri* self = (TDoroHaneKuri*)spine->getBody();
@@ -2881,7 +2922,7 @@ DEFINE_NERVE(TNerveDoroHaneRise, TLiveActor)
 		self->unk234 += MsClamp(self->mSpine->getTime() * 0.01f, 0.01f, 5.0f);
 
 	self->mScaling.x = self->mScaling.z
-	    = MsClamp(self->mScaling.x * 0.9f, self->getBodyScale(),
+	    = MsClamp(self->mScaling.x * 0.9f, HamukuriGetBodyScale(self),
 	              self->getBodyScale() * 2.0f);
 
 	self->mScaling.y

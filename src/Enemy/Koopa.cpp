@@ -918,11 +918,19 @@ bool TKoopa::isProvoking() const
 	return false;
 }
 
+// Binding level worth +8 of low region, landing TKoopa::getNeckFocus's frame
+// at 0x30 (batch 121).
+static inline MActor* KoopaGetMActor(const TKoopa* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 // How far the head has turned towards Mario over the course of the current
 // animation, in [0, 1]: 1 at rest, 0 while the neck is busy.
 f32 TKoopa::getNeckFocus() const
 {
-	int index          = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
+	int index          = KoopaGetMActor(this)->getCurAnmIdx(ANM_TYPE_BCK);
 	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	f32 end            = (f32)ctrl->getEnd();
 	f32 frame          = ctrl->getFrame();

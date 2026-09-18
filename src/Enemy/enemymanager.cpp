@@ -212,6 +212,14 @@ void TEnemyManager::updateAnmSoundShared()
 	}
 }
 
+// Binding level worth +8 of low region, landing
+// TEnemyManager::copyFromShared's frame at 0x100 (batch 121).
+static inline J3DModelData* EnemymanagerGetModelData(J3DModel* p)
+{
+	J3DModelData* modelData = p->getModelData();
+	return modelData;
+}
+
 void TEnemyManager::copyFromShared()
 {
 	Mtx afStack_88;
@@ -247,7 +255,7 @@ void TEnemyManager::copyFromShared()
 
 			J3DPSMtxArrayCopy(*model->getDrawMtxPtr(),
 			                  *enemy->getModel()->getDrawMtxPtr(),
-			                  model->getModelData()->getDrawMtxNum());
+			                  EnemymanagerGetModelData(model)->getDrawMtxNum());
 
 			DCStoreRange(enemy->getModel()->getDrawMtxPtr(),
 			             model->getModelData()->getDrawMtxNum() * sizeof(Mtx));

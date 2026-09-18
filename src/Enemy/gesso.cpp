@@ -447,6 +447,14 @@ void TGesso::attackToMario()
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
+// Binding level worth +16 of low region, landing TGesso::setBehavior's frame
+// at 0x50 (batch 121).
+static inline bool GessoIsAirborne(const TGesso* p)
+{
+	bool airborne = p->isAirborne();
+	return airborne;
+}
+
 void TGesso::setBehavior()
 {
 	if (mAttackCooldown > 0)
@@ -455,20 +463,18 @@ void TGesso::setBehavior()
 	if (mAttackCooldown > 200)
 		mAttackCooldown = 0;
 
-	if (isAirborne() && mPosition.y > mGroundHeight + 250.0f
-	    && getSpine()->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
+	if (GessoIsAirborne(this) && mPosition.y > mGroundHeight + 250.0f
+	    && mSpine->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
 		mNeedsLanding = true;
 	}
 
-	if (!isAirborne() && mNeedsLanding
-	    && (getSpine()->getCurrentNerve()
-	            == &TNerveWalkerGraphWander::theNerve()
-	        || getSpine()->getCurrentNerve()
-	               == &TNerveWalkerAttack::theNerve())) {
+	if (!GessoIsAirborne(this) && mNeedsLanding
+	    && (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
+	        || mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve())) {
 		mSpine->pushNerve(&TNerveGessoLand::theNerve());
 	}
 
-	if (!isAirborne())
+	if (!GessoIsAirborne(this))
 		mNeedsLanding = false;
 }
 
@@ -526,6 +532,14 @@ void TGesso::setPolluteGoal()
 	}
 }
 
+// Binding level worth +16 of low region, landing TGesso::pollute's frame at
+// 0x98 (batch 121).
+static inline MActor* GessoGetMActor(const TGesso* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 void TGesso::pollute()
 {
 	if (mState != STATE_WANDERING && !mIsRightSideUp)
@@ -539,7 +553,7 @@ void TGesso::pollute()
 	tmp.y                    = 0.0f;
 	mPolluteObj->mRotation.y = MsGetRotFromZaxisY(tmp);
 
-	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(mMouthJntIndex);
+	MtxPtr mtx = GessoGetMActor(this)->getModel()->getAnmMtx(mMouthJntIndex);
 
 	JGeometry::TVec3<f32> local_2c(0.0f, 0.0f, 100.0f);
 	Mtx afStack_5c;

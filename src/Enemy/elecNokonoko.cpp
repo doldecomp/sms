@@ -1043,6 +1043,14 @@ DEFINE_NERVE(TNerveElecNokonokoTurn, TLiveActor)
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveElecNokonokoFreeze::execute's frame at 0x70 (batch 121).
+static inline MActor* ElecNokonokoGetMActor(const TElecNokonoko* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveElecNokonokoFreeze, TLiveActor)
 {
 	TElecNokonoko* nokonoko = (TElecNokonoko*)spine->getBody();
@@ -1052,7 +1060,8 @@ DEFINE_NERVE(TNerveElecNokonokoFreeze, TLiveActor)
 			nokonoko->setBckAnm(DENNOKO_ANM_HIT1);
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    PARTICLE_MS_DNK_SHIBIRE_B,
-			    nokonoko->getMActor()->getModel()->getAnmMtx(0), 0, nullptr);
+			    ElecNokonokoGetMActor(nokonoko)->getModel()->getAnmMtx(0), 0,
+			    nullptr);
 		} else {
 			nokonoko->setBckAnm(DENNOKO_ANM_MOGAKI1_START);
 		}

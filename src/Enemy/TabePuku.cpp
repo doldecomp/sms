@@ -647,6 +647,14 @@ DEFINE_NERVE(TNerveTabePukuGraphWander, TLiveActor)
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveTabePukuFound::execute's frame at 0x90 (batch 121).
+static inline TTabePukuParams* TabePukuGetSaveParams(const TTabePuku* p)
+{
+	TTabePukuParams* saveParams = p->getSaveParams();
+	return saveParams;
+}
+
 DEFINE_NERVE(TNerveTabePukuFound, TLiveActor)
 {
 	TTabePuku* puku = (TTabePuku*)spine->getBody();
@@ -662,7 +670,7 @@ DEFINE_NERVE(TNerveTabePukuFound, TLiveActor)
 	forward.scale(puku->mMarchSpeed);
 
 	JGeometry::TVec3<f32> velocity = puku->mVelocity;
-	velocity.scale(puku->getSaveParams()->getWaterFric());
+	velocity.scale(TabePukuGetSaveParams(puku)->getWaterFric());
 	velocity.add(forward);
 	puku->mVelocity = velocity;
 

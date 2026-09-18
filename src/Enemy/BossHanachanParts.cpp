@@ -135,12 +135,20 @@ void TBossHanachanPartsBase::initMapCollisionAndHitActor_(TIdxGroupObj* group)
 	unk100->mPosition.set(mtx[0][3], mtx[1][3] - offsetY, mtx[2][3]);
 }
 
+// Binding level worth +16 of low region, landing
+// TBossHanachanPartsBody::initFootHitActor_'s frame at 0xf0 (batch 121).
+static inline J3DModel* BossHanachanPartsGetModel(const MActor* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TBossHanachanPartsBody::initFootHitActor_(TIdxGroupObj* group)
 {
 	static const char* sFootJointName[] = { "foot_L", "foot_R" };
 	int joints[2];
 	TBossHanachanCommonSaveParams* params = unkFC->mCommonParams;
-	J3DModel* model = mMActor->getModel();
+	J3DModel* model = BossHanachanPartsGetModel(mMActor);
 	JUTNameTab* names = model->getModelData()->getJointName();
 	for (int i = 0; i < 2; ++i) {
 		joints[i] = names->getIndex(sFootJointName[i]);
@@ -152,7 +160,8 @@ void TBossHanachanPartsBody::initFootHitActor_(TIdxGroupObj* group)
 		                      params->mSLFootDamageHeight.get());
 		group->getChildren().push_back(mFeet[i]);
 		mFeet[i]->offHitFlag(HIT_FLAG_NO_COLLISION);
-		MtxPtr mtx = mMActor->getModel()->getAnmMtx((u16)joints[i]);
+		MtxPtr mtx
+		    = BossHanachanPartsGetModel(mMActor)->getAnmMtx((u16)joints[i]);
 		mFeet[i]->mJointMtx = mtx;
 		mFeet[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	}
@@ -231,6 +240,14 @@ void TBossHanachanPartsBase::setDamageFog_(JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level worth +8 of low region, landing
+// TBossHanachanPartsBase::isCurBckAlreadyEnd_'s frame at 0x30 (batch 121).
+static inline s16 BossHanachanPartsGetEnd(const J3DFrameCtrl* p)
+{
+	s16 end = p->getEnd();
+	return end;
+}
+
 bool TBossHanachanPartsBase::isCurBckAlreadyEnd_() const
 {
 	bool result = true;
@@ -239,7 +256,8 @@ bool TBossHanachanPartsBase::isCurBckAlreadyEnd_() const
 		if (ctrl) {
 			result = (ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
 			          || ctrl->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE))
-			                 || ctrl->getFrame() + 0.1f >= ctrl->getEnd();
+			                 || ctrl->getFrame() + 0.1f
+			                        >= BossHanachanPartsGetEnd(ctrl);
 		}
 	}
 	return result;

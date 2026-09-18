@@ -433,6 +433,14 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveMameGessoDamage::execute's frame at 0x78 (batch 121).
+static inline bool MameGessoIsAirborne(const TMameGesso* p)
+{
+	bool airborne = p->isAirborne();
+	return airborne;
+}
+
 DEFINE_NERVE(TNerveMameGessoDamage, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
@@ -447,16 +455,17 @@ DEFINE_NERVE(TNerveMameGessoDamage, TLiveActor)
 		self->setBckAnm(13);
 	}
 
-	if (!self->isAirborne() && self->getGroundPlane()->isWaterSurface()) {
+	if (!MameGessoIsAirborne(self)
+	    && self->getGroundPlane()->isWaterSurface()) {
 		spine->pushAfterCurrent(&TNerveMameGessoObject::theNerve());
 		return true;
 	}
 
 	if (self->checkCurAnmEnd(0)) {
-		if (self->isBckAnm(13) && self->isAirborne())
+		if (self->isBckAnm(13) && MameGessoIsAirborne(self))
 			self->setBckAnm(0);
 
-		if (!self->isAirborne()) {
+		if (!MameGessoIsAirborne(self)) {
 			if (self->getGroundPlane()->isWaterSurface())
 				spine->pushAfterCurrent(&TNerveMameGessoObject::theNerve());
 			else

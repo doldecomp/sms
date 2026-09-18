@@ -369,10 +369,18 @@ void TChuuHana::reset()
 	unk1B2 = 1;
 }
 
+// Binding level worth +16 of low region, landing TChuuHana::setBckAnm's
+// frame at 0x30 (batch 121).
+static inline MActor* ChuuhanaGetMActor(const TChuuHana* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 void TChuuHana::setBckAnm(int index)
 {
 	unk194 = 1.0f;
-	getMActor()->setMotionBlendRatioForBck(unk194);
+	ChuuhanaGetMActor(this)->setMotionBlendRatioForBck(unk194);
 	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	TSmallEnemy::setBckAnm(index);
 }

@@ -155,6 +155,14 @@ void TAmiNoko::load(JSUMemoryInputStream& stream)
 	stream >> mCoinId;
 }
 
+// Binding level worth +8 of low region, landing TAmiNoko::init's frame at
+// 0x98 (batch 121).
+static inline u8 AmiNokoGetCurrentMap(TMarDirector* p)
+{
+	u8 currentMap = p->getCurrentMap();
+	return currentMap;
+}
+
 // TODO: instruction-identical, frame 8 bytes short.
 void TAmiNoko::init(TLiveManager* manager)
 {
@@ -167,7 +175,7 @@ void TAmiNoko::init(TLiveManager* manager)
 	setWalkAnm();
 	onLiveFlag(LIVE_FLAG_UNK10);
 	initialGraphNode();
-	if (SMSGetMarDirector()->getCurrentMap() == 8)
+	if (AmiNokoGetCurrentMap(SMSGetMarDirector()) == 8)
 		mUseAnmSet1 = 0;
 	unkE8   = 0;
 	mAmiHit = new TAmiHit(this, "アミノコ当り判定");

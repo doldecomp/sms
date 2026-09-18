@@ -885,6 +885,15 @@ void TKoopaJrSubmarine::prepareKillerLaunchFast(int num)
 		mKillerTypes[mKillerNum - 1] = 1;
 }
 
+// Binding level worth +8 of low region, landing
+// TKoopaJrSubmarine::appearShineKiller's frame at 0x70 (batch 121).
+static inline TKoopaJrSubmarineParams*
+KoopajrGetSaveParams(const TKoopaJrSubmarine* p)
+{
+	TKoopaJrSubmarineParams* saveParams = p->getSaveParams();
+	return saveParams;
+}
+
 // Rolls for a shine killer; the odds grow as Mario's tank runs dry.
 bool TKoopaJrSubmarine::appearShineKiller(int)
 {
@@ -899,7 +908,8 @@ bool TKoopaJrSubmarine::appearShineKiller(int)
 		const TWaterGun* gun = SMS_GetMarioWaterGun();
 		s32 maxWater = gun->getCurrentNozzle()->mEmitParams.mAmountMax.get();
 		s32 curWater = SMS_GetMarioWaterGun()->getCurrentWater();
-		f32 p0       = getSaveParams()->shineKillerProbability0.get();
+		f32 p0
+		    = KoopajrGetSaveParams(this)->shineKillerProbability0.get();
 		probability  = ((f32)curWater / (f32)maxWater)
 		                  * (getSaveParams()->shineKillerProbability1.get()
 		                     - p0)

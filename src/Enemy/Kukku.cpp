@@ -69,6 +69,14 @@ TKukkuBall::TKukkuBall(MActor* actor)
 {
 }
 
+// Binding level worth +8 of low region, landing TKukkuBall::init's frame at
+// 0x88 (batch 121).
+static inline J3DModel* KukkuGetModel(const MActor* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TKukkuBall::init()
 {
 	initHitActor(0x1000002E, 1, -0x80000000, 30.0f, 30.0f, 0.0f, 0.0f);
@@ -83,7 +91,7 @@ void TKukkuBall::init()
 	ResTIMG* image = (ResTIMG*)JKRFileLoader::getGlbResource(
 	    "/scene/map/pollution/H_ma_rak.bti");
 	if (image)
-		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
+		SMS_ChangeTextureAll(KukkuGetModel(mMActor)->getModelData(),
 		                     "K_name_dummy", *image);
 }
 

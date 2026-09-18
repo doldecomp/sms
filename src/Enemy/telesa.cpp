@@ -1101,6 +1101,14 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing TNerveTelesaDie::execute's
+// frame at 0x48 (batch 121).
+static inline u8 TelesaGetUnk184(const TTelesa* p)
+{
+	u8 unk184 = p->getUnk184();
+	return unk184;
+}
+
 DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 {
 	TTelesa* self = (TTelesa*)spine->getBody();
@@ -1114,7 +1122,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 			self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		}
 
-		if (self->getUnk184()) {
+		if (TelesaGetUnk184(self)) {
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
 			                             &self->mPosition, 0, nullptr);
 		} else {
@@ -1124,7 +1132,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 
 	self->reduceFlyForce();
 
-	if (self->checkCurAnmEnd(0) || self->getUnk184()) {
+	if (self->checkCurAnmEnd(0) || TelesaGetUnk184(self)) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
@@ -1135,7 +1143,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 		spine->setNext(&TNerveTelesaDie::theNerve());
 		spine->pushAfterCurrent(spine->getDefault());
 
-		if (!self->getUnk184()) {
+		if (!TelesaGetUnk184(self)) {
 			self->genRandomItem();
 			TTelesaManager* manager = (TTelesaManager*)self->getManager();
 			manager->generatePetBottle(self);
@@ -1238,6 +1246,14 @@ void TKageMarioModoki::load(JSUMemoryInputStream& stream)
 	reset();
 }
 
+// Binding level worth +8 of low region, landing TKageMarioModoki::init's
+// frame at 0x78 (batch 121).
+static inline J3DModel* TelesaGetModel(const MActor* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TKageMarioModoki::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
@@ -1248,7 +1264,7 @@ void TKageMarioModoki::init(TLiveManager* manager)
 	TScreenTexture* tex
 	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
 	const ResTIMG* img = tex->getTexture()->getTexInfo();
-	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
+	SMS_ChangeTextureAll(TelesaGetModel(mMActor)->getModelData(),
 	                     "H_kagemario_dummy", *img);
 }
 
