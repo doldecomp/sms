@@ -37,6 +37,18 @@ TBoidLeader::TBoidLeader(int num, const char* name)
 	mFlags |= FLAG_SIMULATE;
 }
 
+// TODO: 95.5%. Frame 0x150 vs 0x1e0. Every remaining structural difference is
+// the same shape at the three `d / d2 * radius` / `*= 1.0f / mag` sites: retail
+// copies the operator's result *through its own return slot* (0x84 -> 0x110 ->
+// 0xc0, six instructions per site) where we copy the by-value parameter temp
+// straight into the next operator's. That is the batch-119 "by-value return"
+// geometry -- retail's JGeometry operators return TVec3 by value and ours return
+// a reference -- so it cannot be fixed here (JGVec3.hpp is a shared header and
+// the by-value return was rejected project-wide). Declaring `radius` before `d2`
+// as a C-style block declaration is what puts d2 in f27 and radius in f22 as
+// retail does (measured: 175 -> 170 differing operands). Rejected: an explicit
+// `JGeometry::TVec3<f32>(d / d2)` temporary at the two separation sites (adds
+// four instructions and 0x20 of frame, 93.1).
 void TBoidLeader::calcBoids()
 {
 	TBoid* i;
@@ -57,11 +69,12 @@ void TBoidLeader::calcBoids()
 			for (j = i + 1; j != end; ++j) {
 				JGeometry::TVec3<f32> d = i->mPosition;
 				d -= j->mPosition;
+				f32 radius;
 				f32 d2 = d.squared();
 				if (d2 < 0.001f)
 					continue;
 
-				f32 radius = mNeighborRadius;
+				radius = mNeighborRadius;
 				if (d2 < radius * radius) {
 					i->mSeparationForce += d / d2 * radius;
 					j->mSeparationForce -= d / d2 * radius;
@@ -172,6 +185,10 @@ void TBoidLeader::updateGoal()
 }
 
 JGeometry::TVec3<f32>
+// TODO: frame 0x50 vs 0x48 -- we are 8 bytes *too big* and the returned vector's
+// temp sits at 0x38 where retail has it at 0x34 (4 extra low bytes and 4 extra
+// bytes of pad above it). Every instruction matches. One inline level or one
+// named scalar too many; `f32 len` is the only candidate in the body.
 TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 {
 	JGeometry::TVec3<f32> force;
@@ -194,6 +211,11 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 	return force;
 }
 
+// TODO: frame 0xa0 vs 0x90 -- 16 bytes too big. Slot triage: the calcGoalForce
+// sret slot is at 0x38 in *both* builds, while the three other 12-byte vector
+// temps are all exactly 12 bytes higher in ours (0x44/0x50/0x70 against retail's
+// 0x28/0x44/0x64), i.e. retail's pool has one more 12-byte entry at the bottom
+// and ours is hoisted. Same per-statement pool geometry as calcBoids above.
 JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 {
 	JGeometry::TVec3<f32> force = boid->mSeparationForce;
