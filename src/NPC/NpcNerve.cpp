@@ -43,9 +43,27 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 		// TODO: retail `bl`s TGraphTracer::getCurGraphIndex and ::getGraph
 		// inside this first site (and reloads `0x124(r31)` between them
 		// because of the calls) while expanding both of them at the
-		// currPitchIsZero site just below, where we expand them at both. A
-		// per-call-site inline split with no lever found; see
-		// codegen-tells.md, "Inlining".
+		// currPitchIsZero site just below, where we expand them at both.
+		// Measured this batch by probing extra accessor levels in
+		// Graph.hpp: the two accessors currently sit at inline depth 3
+		// (hasOnlyOneNext -> getCurrent/getRailNode -> accessors), one
+		// added level leaves them at depth 4 (still expanded, budget 2 vs
+		// cost 1) and two added levels put them at depth 5, where both do
+		// become `bl`s -- so retail's chain has four enclosing levels here.
+		// Two further constraints: `getGraphNode` must NOT share the body
+		// that calls them (at depth 5 it refuses too, and the map has no
+		// out-of-line TGraphWeb::getGraphNode anywhere, so retail indexed
+		// `unk0[i]` directly at that level), and the retail index is
+		// fetched before the graph, which only `getGraphNode(getCurGraphIndex())`
+		// right-to-left gives. Enemy.a enemyMario.cpp `consider()` is the
+		// other refusing caller of the const `getGraph` and is a matching
+		// function, so its two `bl getGraph`s are further evidence.
+		// Rejected here because the only spellings that reach depth 5 need
+		// two pure forwarding accessors invented on top of the already
+		// fabricated hasOnlyOneNext/currPitchIsZero (neither name is in the
+		// map). Note `getCurrent() const` reading `mCurrIdx` instead of
+		// `getCurGraphIndex()` is codegen-neutral today but cannot be right:
+		// the map emits getCurGraphIndex weak out of line *in this TU*.
 		if (self->getTracer()->hasOnlyOneNext()) {
 			bVar6 = true;
 			if (self->getTracer()->currPitchIsZero())
@@ -208,6 +226,19 @@ DEFINE_NERVE(TNerveNPCTurnToMario, TLiveActor)
 				// `toMario3` itself is folded away, but removing it
 				// costs the memory home of `toMario2` (99.9 -> 97.5),
 				// so some further level really does bind a copy here.
+				// Measured: the three slots are contiguous and
+				// *descending* here (0x44 copy2, 0x50 copy1, 0x5c
+				// axis, 12-byte stride) because they are named locals,
+				// while retail's are *ascending* with padding (0x5c
+				// axis, 16 dead, 0x78 copy1, 4 pad, 0x88 copy2, 4 pad,
+				// 0x98 the int->double temp) -- i.e. retail has no
+				// named TVec3 local at all in this block and all four
+				// slots are inline temporaries in expansion order.
+				// Closing it therefore needs the whole angle to be one
+				// expression whose callee copies the direction twice
+				// and holds one uninitialised TVec3 (the 16 dead
+				// bytes); every by-value TU-local helper spelling of
+				// that is artificial, so it is left open.
 				JGeometry::TVec3<f32> axis = SMS_GetMarioPos();
 				axis -= self->mPosition;
 				JGeometry::TVec3<f32> toMario  = axis;
