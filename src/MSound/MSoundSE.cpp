@@ -475,17 +475,23 @@ JAISound* MSoundSE::startSoundSystemSE(u32 id, u32 param_2,
 	return sound;
 }
 
-// TODO: the ROM computes this squared sum in startSoundActorWithInfo itself
-// and then `bl`s std::sqrtf (weak 0x64, MAnmSound.cpp holds the copy). Our
-// std::sqrtf body is seven statements, so it expands through depth 2 and is a
-// `bl` from depth 3 down - this one wrapper only reaches depth 2, and the
-// site needs two. Batch 104 ruled out the callee's `volatile` local, its
-// `__frsqrte` chain, `extern inline` vs `inline`, caller size and float
-// register pressure (18 live locals across the site) as the refusal.
-static f32 vecLength(const Vec& vec)
+// The ROM computes this squared sum in startSoundActorWithInfo itself and then
+// `bl`s std::sqrtf (weak 0x64, MAnmSound.cpp holds the copy). Research batch
+// 146 measured math.h's body at exactly 8 statements against a 14 / 9 / 6 / 2
+// budget at depths 1-5, so it expands through depth 2 and is called from
+// depth 3: one wrapper is not enough, and the second level below is what
+// reaches it (82.9 -> 98.4, frame 0x90 -> the ROM's 0x88).
+// Passing the three components instead of the vector also reaches depth 3 but
+// pays 8 bytes of extra frame, so the reference form is the ROM's.
+// TODO: one branch is still placed differently (`b 0xa6c` ahead of the
+// `lfs f30, 4(r27)` arm) and f30/f31 are swapped below it - a term-order
+// problem in the switch, not an inlining one.
+static inline f32 vecLengthOf(const Vec& vec)
 {
 	return std::sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
+
+static f32 vecLength(const Vec& vec) { return vecLengthOf(vec); }
 
 void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
                                        Vec* param_3, f32 param_4, u32 param_5,
