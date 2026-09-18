@@ -1154,6 +1154,28 @@ void TItemNozzle::appearing()
 
 void TItemNozzle::control() { TMapObjGeneral::control(); }
 
+// TODO: all 66 instructions match; the frame is 0x28 against the map's 0x38,
+// so retail reached the holder matrix or the position store through 16 more
+// bytes of named/temporary slots than this spelling uses.
+void TItemNozzle::calcRootMatrix()
+{
+	if (isState(6) && mHolder != nullptr) {
+		MtxPtr holderMtx = mHolder->getTakingMtx();
+		MtxPtr mtx       = getModel()->getAnmMtx(0);
+		MTXCopy(holderMtx, mtx);
+
+		// The rocket nozzle sits higher on Mario's back than the others.
+		if (isActorType(0x20000022))
+			mtx[1][3] += 50.0f;
+		else
+			mtx[1][3] += 30.0f;
+
+		mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	} else if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK8000000)) {
+		TMapObjGeneral::calcRootMatrix();
+	}
+}
+
 void TItemNozzle::initMapObj()
 {
 	TItem::initMapObj();

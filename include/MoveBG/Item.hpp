@@ -198,6 +198,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void calcRootMatrix();
 	virtual void control();
 	virtual void initMapObj();
 	virtual void touchPlayer(THitActor*);
