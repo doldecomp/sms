@@ -153,14 +153,16 @@ TSpineEnemy* TChuuHanaManager::createEnemyInstance()
 
 void TChuuHanaManager::initSetEnemies()
 {
-	static const char* graphlist[] = { "kohana0", "kohana1", "kohana2" };
+	// One node graph for the first, the second shared by two, the third by
+	// everything after them; the table spells that out per index.
+	static const char* graphlist[]
+	    = { "kohana0", "kohana1", "kohana1", "kohana2", "kohana2", "kohana2" };
 
 	for (int i = 0; i < mCapacity; ++i) {
 		TGraphWeb* graph = gpConductor->getGraphByName(graphlist[i]);
 		TChuuHana* hana  = (TChuuHana*)unk18[i];
 
-		// The first three share counters in twos: 0 alone, 1 and 2
-		// together, everything after that on the third.
+		// The pollution counters pair up the same way.
 		if (i == 0)
 			hana->unk21C = &unk64;
 		else if (i < 3)
