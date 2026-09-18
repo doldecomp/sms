@@ -14,7 +14,7 @@ public:
 	void isNowDemo() const;
 	void startDemo(const char*, const JGeometry::TVec3<f32>*);
 	int getTotalDemoFrames() const;
-	void isDemoFinished() const;
+	bool isDemoFinished() const;
 	void endDemo();
 	void restartDemo();
 	bool updateDemo(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*,

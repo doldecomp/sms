@@ -81,7 +81,21 @@ int TCameraBck::getTotalDemoFrames() const
 	return total;
 }
 
-void TCameraBck::isDemoFinished() const { }
+// UNUSED 0x70 in the map, and our body compiles to exactly 0x70. updateDemo
+// inlines it, which is what puts the whole result in r31: `finished`'s `true`
+// initialiser is hoisted above the getFrameCtrl call, checkState()'s own
+// ternary reuses that register (so only `li r31, 0` survives) and the outer
+// ternary re-normalises it in place.
+bool TCameraBck::isDemoFinished() const
+{
+	bool finished    = true;
+	J3DFrameCtrl* fc = unk0->getFrameCtrl(ANM_TYPE_BCK);
+	if (fc != nullptr)
+		finished = fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
+		    ? true
+		    : false;
+	return finished;
+}
 
 void TCameraBck::endDemo() { unk0->setBckFromIndex(-1); }
 
@@ -106,7 +120,7 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 		up->set(unkC[0][1], unkC[1][1], unkC[2][1]);
 
 	if (out_y_scale != nullptr) {
-		J3DAnmTransformKey* anm = getMActor()->getBckAnm();
+		J3DAnmTransformKey* anm = unk0->getBckAnm();
 		if (anm != nullptr) {
 			J3DTransformInfo info;
 			anm->getTransform((u16)getFrame(), &info);
@@ -122,33 +136,7 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 			*lookat += *getOffset();
 	}
 
-	// TODO: one instruction from exact. Retail materialises checkState()'s
-	// bool straight into `result`'s register (r31, already 1), so its
-	// `li 1` is elided and only `li r31, 0` survives; the second
-	// cmpwi/li-1/li-0 block then re-normalises the same register. Ours
-	// materialises into r0 and copies. Rejected: `result = checkState()`
-	// (plain, ternary, or followed by `result = result ? true : false`),
-	// `return result ? true : false` (neg/subic/subfe conversion),
-	// `BOOL result`/`BOOL finished` (same conversion), an empty then with
-	// `result = false` in the else, early `return true` plus a ternary
-	// return, and one pure `fc != nullptr ? ... : true` ternary (all move
-	// the value into r3/r0 instead). Likely a coalescing difference that
-	// needs the assignment and the normalisation to be one statement.
-	// Also rejected: two returns with no local (`if (fc == nullptr) return
-	// true; return checkState(...) ? true : false;`) and the same with a
-	// `bool result` assigned in both arms -- both stage the value in r3 and
-	// grow the frame to 0x88.
-	bool result = true;
-	J3DFrameCtrl* fc
-	    = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
-	if (fc != nullptr) {
-		if (fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE))
-			result = true;
-		else
-			result = false;
-	}
-
-	return result;
+	return isDemoFinished();
 }
 
 void TCameraBck::setFrame(f32 frame)
