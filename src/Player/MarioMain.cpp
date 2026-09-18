@@ -66,14 +66,36 @@ void TMario::thinkAloha()
 	}
 }
 
-// TODO: frame 0x100 vs 0x168. Every instruction matches. All eleven referenced
-// slots sit within the top 0x3c of the locals, so the 104-byte residue is
-// entirely below them (outgoing args plus inline-expansion temporaries). One
-// ordering detail is visible too: retail puts startTimer's four-byte colour
-// temporary immediately below `dir`, where we put three scalars first.
+// TODO: the frame is now exact (0x168) and every instruction matches; the only
+// residue left is a permutation of two slots in the named block. Retail lays
+// it out, top down, f64 0x148 / `dir` 0x13c / startTimer's four-byte colour
+// 0x138 / three scalars 0x134, 0x130, 0x12c / an 8-byte hole 0x124 / a 12-byte
+// vector 0x118; we put the colour *below* the three scalars (0x128) and the
+// vector 4 lower (0x114), with our own 8-byte hole at 0x120. The sizes all
+// agree, so the colour temporary of the very first statement wants to be
+// allocated before the two later colour conversions instead of after them.
+// TTimeRec::startTimer has one overload and its temporary placement is a
+// TimeRec.hpp question with its own trial table, so it is not a call-site fix.
+//
+// The 104 bytes of dead low region the frame needed were measured in closure
+// batch 120: the parked MarioMainGetFludd binding level below is +16 of low
+// region per expansion at eight of the nine `mWaterGun` sites (+0x60; all nine
+// is +0x70 and overshoots, and dropping any one of the nine gives the same
+// 0x160, so which site retail spelled differently is not determined), and
+// `getM3UModel()` at the setBaseTRMtx site supplies the last +8. The real
+// accessor `getFludd()` at all nine sites is only +16 in total, so the missing
+// level is a binding one, not the accessor.
+// Equivalent to the getM3UModel rung and also landing 0x168: a parked yoshi
+// binding level at the `mYoshi->movement()` site alone. Overshoot: a parked
+// cap binding (0x178), a parked yoshi binding at all ten sites (0x1b0).
 // checkUnk114() for the raw `unk114 &` tests is wrong -- it materialises a
-// bool retail does not have. getMActor()->getModel() and a getShadow()
-// wrapper over unk390 are both worth zero here.
+// bool retail does not have. A getShadow() wrapper over unk390 is worth zero.
+static inline TWaterGun* MarioMainGetFludd(TMario* mario)
+{
+	TWaterGun* fludd = mario->getFludd();
+	return fludd;
+}
+
 void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk114 & UNK114_FLAG_PROFILE)
@@ -90,8 +112,8 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			setPositions();
 			if (mCap != nullptr)
 				mCap->perform(CUE_MOVE, graphics);
-			if (mWaterGun != nullptr)
-				mWaterGun->perform(CUE_MOVE, graphics);
+			if (MarioMainGetFludd(this) != nullptr)
+				MarioMainGetFludd(this)->perform(CUE_MOVE, graphics);
 			if (mYoshi != nullptr)
 				mYoshi->movement();
 			moveParticle();
@@ -106,10 +128,10 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		calcAnim(CUE_CALC_ANIM, graphics);
 		animSound();
 
-		if (mWaterGun != nullptr) {
-			mWaterGun->setBaseTRMtx(
-			    mModel->getModel()->getAnmMtx(mJointIdChnChest));
-			mWaterGun->perform(CUE_CALC_ANIM, graphics);
+		if (MarioMainGetFludd(this) != nullptr) {
+			MarioMainGetFludd(this)->setBaseTRMtx(
+			    getM3UModel()->getModel()->getAnmMtx(mJointIdChnChest));
+			MarioMainGetFludd(this)->perform(CUE_CALC_ANIM, graphics);
 		}
 
 		if (mYoshi != nullptr)
@@ -118,8 +140,8 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_VIEW) {
 		calcView(graphics);
-		if (mWaterGun != nullptr)
-			mWaterGun->perform(CUE_CALC_VIEW, graphics);
+		if (MarioMainGetFludd(this) != nullptr)
+			MarioMainGetFludd(this)->perform(CUE_CALC_VIEW, graphics);
 		if (mYoshi != nullptr)
 			mYoshi->viewCalc();
 
@@ -145,7 +167,7 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			addDamageFog(graphics);
 
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD))
-				mWaterGun->perform(CUE_ENTRY, graphics);
+				MarioMainGetFludd(this)->perform(CUE_ENTRY, graphics);
 
 			entryModels(graphics);
 			mYoshi->entry();
@@ -267,7 +289,11 @@ void TMario::drawSyncCallback(u16)
 		return;
 	}
 
+	// Dead 4-byte local: retail's peek target is at 0x14(r1) with the word at
+	// 0x10 reserved below it, which only a local declared after it can do.
 	u32 local_1c;
+	u32 unusedPeek;
+
 	GXPeekARGB(mMarioScreenPos.x, mMarioScreenPos.y, &local_1c);
 	if ((local_1c & 0xff000000) == 0x10000000) {
 		offFlag(MARIO_FLAG_OCCLUDED);
