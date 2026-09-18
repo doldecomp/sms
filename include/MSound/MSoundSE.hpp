@@ -5,6 +5,7 @@
 #include <dolphin/mtx.h>
 
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
+#include <JSystem/JGeometry/JGVec3.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 
 class JAIActor;
@@ -121,5 +122,53 @@ public:
 };
 
 } // namespace MSoundSESystem
+
+// Fabricated pair. Both are thin wrappers around the emitted MSRandPlay
+// statics, and what they really carry is one uninitialised 12-byte non-trivial
+// local: all four Animal `loadAfter`s are instruction-identical to retail and
+// 8-32 bytes of frame short, and a dead JGeometry::TVec3<f32> in an inlined
+// callee is the only construct that buys low-region bytes with zero
+// instruction change (docs/catalog/frame-gaps.md, "The dead low region").
+// Measured, base frame 0x18 everywhere:
+//
+//   function                          expansions    ours -> retail   this pair
+//   TMewManager::loadAfter            1 (u16 arg)   0x18 -> 0x28     0x28
+//   TAnimalBirdManager::loadAfter     2 (u16 arg)   0x18 -> 0x38     0x30 (*)
+//   TAnimalBase::loadAfter            1 guarded     0x18 -> 0x28     0x20 (*)
+//   TAnimalBird::loadAfter            2 (Vec* arg)  0x18 -> 0x30     0x30
+//
+// (*) the two that land 8 short take one ordinary accessor lever on top -- a
+// lever pair, the usual shape: getObjNum() over mObjNum in
+// TAnimalBirdManager::loadAfter and getActorType() over mActorType in
+// TAnimalBase::loadAfter, each +0 on its own and +8 with this level. All four
+// are exact with the pair applied and nothing else in the tree moves.
+//
+// What the local *was* is unrecovered, and this is the honest limit of the
+// evidence: only its size (12, uniquely -- 8 and 16 each miss two of the four
+// frames) and the fact that retail never wrote it. Ruled out as spellings
+// (each adds the copy's three lfs/stfs pairs and so cannot be it): a
+// `TVec3 pos(*trans)` copy passed on in place of the caller's pointer, which
+// would also dangle since registerTrans stores the pointer, and a by-value
+// TVec3 parameter, which materialises its copy for the lvalue `&mPosition`
+// argument every site passes. Also re-measured as zero here: forwarder levels
+// with no local, a named u16 for the count, an explicit (u16) cast, and
+// &getPosition() over &mPosition (which costs an instruction too).
+//
+// The wrappers have to be shared rather than parked per TU because three TUs
+// need them (AnimalManager.cpp, AnimalBase.cpp, Bird.cpp), and they have to be
+// spelled separately from the statics they wrap because MSound::setPlayerInfo,
+// MSoundMainSide's stage tables and TMapStaticObj::initSound all match on the
+// direct call: apply per site, never per file.
+inline void MSCreateRandPlayVec(u32 id, u16 num)
+{
+	JGeometry::TVec3<f32> pos;
+	MSoundSESystem::MSRandPlay::createRandPlayVec(id, num);
+}
+
+inline int MSRegisterRandPlayTrans(u32 id, const Vec* trans)
+{
+	JGeometry::TVec3<f32> pos;
+	return MSoundSESystem::MSRandPlay::registerTrans(id, trans);
+}
 
 #endif

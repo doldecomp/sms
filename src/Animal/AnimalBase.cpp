@@ -129,17 +129,15 @@ void TAnimalBase::load(JSUMemoryInputStream& stream)
 	}
 }
 
-// TODO: frame 0x18 vs retail 0x28; all 18 instructions match. Same residue as
-// TMewManager::loadAfter: one dead 12-byte non-trivial local in an inlined
-// callee predicts 0x28 exactly. See docs/catalog/frame-gaps.md, "The dead low
-// region". &getPosition() over &mPosition is zero here and costs an
-// instruction, so it is not the lever.
+// Exact since header round 18: MSRegisterRandPlayTrans supplies 8 of the 16
+// missing bytes and getActorType() over the raw mActorType the other 8 (a
+// lever pair -- the accessor is worth nothing on its own). See the wrapper's
+// TODO in MSound/MSoundSE.hpp.
 void TAnimalBase::loadAfter()
 {
 	TNameRef::loadAfter();
-	if (mActorType == 0x800001)
-		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_KAMOME_SOLO,
-		                                          &mPosition);
+	if (getActorType() == 0x800001)
+		MSRegisterRandPlayTrans(MSD_SE_OBJ_KAMOME_SOLO, &mPosition);
 }
 
 void TAnimalBase::calcRootMatrix() { }

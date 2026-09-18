@@ -160,18 +160,14 @@ void TAnimalBird::load(JSUMemoryInputStream& stream)
 	initTevColor(&cColorTable[mColorIndex]);
 }
 
-// TODO: 99.7%, instruction-identical, frame 0x30 vs our 0x18. Two expansions of
-// one inlined callee holding a dead 12-byte non-trivial local predict 0x30 here
-// and 0x38 in TAnimalBirdManager::loadAfter, the same 12 bytes that fit
-// TMewManager::loadAfter and TAnimalBase::loadAfter. See
-// docs/catalog/frame-gaps.md, "The dead low region"; the callee is unidentified.
+// Exact since header round 18: two expansions of MSRegisterRandPlayTrans,
+// whose dead 12-byte local is the whole +0x18. See its TODO in
+// MSound/MSoundSE.hpp.
 void TAnimalBird::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_BIRD_DOL_FLYING1,
-	                                          &mPosition);
-	MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_BIRD_DOL_CHUN,
-	                                          &mPosition);
+	MSRegisterRandPlayTrans(MSD_SE_OBJ_BIRD_DOL_FLYING1, &mPosition);
+	MSRegisterRandPlayTrans(MSD_SE_OBJ_BIRD_DOL_CHUN, &mPosition);
 }
 
 BOOL TAnimalBird::receiveMessage(THitActor* sender, u32 message)
@@ -602,16 +598,14 @@ void TAnimalBirdManager::load(JSUMemoryInputStream& stream)
 	TEnemyManager::load(stream);
 }
 
-// TODO: frame 0x18 vs retail 0x38 (+32), 19 instructions exact. Largest member
-// of the dead-low-region family; two expansions of a 12-byte non-trivial inline
-// local predict it. See TAnimalBird::loadAfter above.
+// Exact since header round 18: two expansions of MSCreateRandPlayVec give
+// 0x30 and getObjNum() over the raw mObjNum the last 8 (lever pair, the same
+// shape TAnimalBase::loadAfter needs). See MSound/MSoundSE.hpp.
 void TAnimalBirdManager::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
-	MSoundSESystem::MSRandPlay::createRandPlayVec(
-	    MSD_SE_OBJ_BIRD_DOL_FLYING1, mObjNum);
-	MSoundSESystem::MSRandPlay::createRandPlayVec(MSD_SE_OBJ_BIRD_DOL_CHUN,
-	                                              mObjNum);
+	MSCreateRandPlayVec(MSD_SE_OBJ_BIRD_DOL_FLYING1, getObjNum());
+	MSCreateRandPlayVec(MSD_SE_OBJ_BIRD_DOL_CHUN, getObjNum());
 }
 
 void TAnimalBirdManager::createModelData()
