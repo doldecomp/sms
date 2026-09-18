@@ -9,9 +9,20 @@
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+// TODO: promotion candidate for include/System/FlagManager.hpp, next to
+// SMSGetMarDirector()/SMSGetCamera()/SMSGetMSound(). Parked here because a
+// shared header must not change during this batch.
+static inline TFlagManager* SMSGetFlagManager()
+{
+	return TFlagManager::getInstance();
+}
+
 void TSunGlass::startFade(int type, bool arg1)
 {
-	TFlagManager::getInstance()->getFlag(0x40000);
+	// The shine count is read and thrown away here in retail: the read is the
+	// only reason startFade's frame carries a named 4-byte slot at 0x58.
+	// TODO: dead in the shipped build; presumably fed a removed debug print.
+	s32 shineCount = SMSGetFlagManager()->getFlag(0x40000);
 
 	if (type == 2) {
 		unk1D = getShineAlpha();
@@ -90,15 +101,26 @@ void TSunGlass::perform(u32 cue, JDrama::TGraphics* graphics)
 		draw(graphics->getViewport(), unk14);
 }
 
-// TODO: this and changeAlpha have same size, maybe this isn't the right one for
-// this chunk of code?
+// Both this and changeAlpha(u8*) are UNUSED at 0xa4 in the map, and this body
+// reproduces 0xa4 exactly, so the two really are same-sized siblings.
+// TODO: changeAlpha's body is still unknown. `changeAlpha(u8* p) { *p =
+// getShineAlpha(); }` is the only shape that explains the equal sizes, but it
+// compiles to 0xb4 and buys none of startFade's frame, so it is not written
+// here. Writing the computation into `*p` directly is 0xb4 too.
+//
+// TODO: this expansion is 8 bytes of low region short at every site. A dead
+// 8-byte non-trivial local here (a `struct { ~T(); u32 a, b; }` probe) takes
+// both TSunGlass::loadAfter and startFade to 100% at unchanged instruction
+// counts, and unlike the accessor forks below it does not saturate across the
+// two expansions in startFade. Nothing in the body wants an 8-byte object, so
+// it is left out; see docs/catalog/frame-gaps.md "The dead low region".
 u8 TSunGlass::getShineAlpha()
 {
 	u8 alpha = 0;
-	if (gpMarDirector->getCurrentMap() == 1)
+	if (SMSGetMarDirector()->getCurrentMap() == 1)
 		alpha = (u8)((f32)(unk1E - unk1F)
 		             * (1.0f
-		                - (f32)TFlagManager::getInstance()->getFlag(0x40000)
+		                - (f32)SMSGetFlagManager()->getFlag(0x40000)
 		                      / 120.0f));
 	return alpha;
 }
@@ -108,9 +130,14 @@ void TSunGlass::loadAfter() { unk14.a = getShineAlpha(); }
 void TSunGlass::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	unk10 = gpMarDirector->unk18[1];
+	TMarioGamePad* gamePad = SMSGetMarDirector()->getGamePad(1);
+	unk10 = gamePad;
 }
 
+// TODO: frame 0x30 is exact but every temporary sits 4 bytes low: retail's
+// `draw` colour copy is at 0x18 and the emitter position at 0x1c-0x24, ours at
+// 0x14 and 0x18-0x20. One 4-byte low-region item below the colour copy is
+// missing; accessor levels come in 8-byte steps, so it is not an accessor.
 void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW)
@@ -129,6 +156,12 @@ void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// TODO: frame 0x20 vs 0x28. Instructions are exact; 8 bytes of locals are
+// missing with no positional evidence (the function references no stack slot).
+// An uninitialised 8- or 12-byte local anywhere in the body lands 0x28 at 23
+// instructions. `unk14.set(0x48, 0x30, 0, 0xFF)` and an unnamed
+// `JUtility::TColor(...)` temporary are both worth 0 (the temporary also costs
+// two instructions); a named `u8 map` and SMSGetMarDirector() are worth 0.
 void TSunShine::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
