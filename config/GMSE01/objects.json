@@ -441,5 +441,10 @@
   "MoveBG/WoodBarrel.cpp",
   "Camera/CameraOption.cpp",
   "Player/MarioInit.cpp",
-  "MoveBG/MapObjBlock.cpp"
+  "MoveBG/MapObjBlock.cpp",
+  "Camera/CameraBck.cpp",
+  "Enemy/BossHanachanNerve.cpp",
+  "MoveBG/MapObjWave.cpp",
+  "Camera/CameraSecureView.cpp",
+  "MSound/MSoundBGM.cpp"
 ]
