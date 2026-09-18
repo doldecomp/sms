@@ -55,6 +55,8 @@ namespace {
 // special-cased into the WalkOnGround nerve instead of being played here.
 const int cRandomAnims[] = { 7, 4, 0, 2, 8 };
 
+const char* const cMatName = "_mat_body1";
+
 // Body tint per mColorIndex: blue coin, yellow coin (the default), shine and
 // red coin.
 const GXColorS10 cColorTable[] = {
@@ -63,8 +65,6 @@ const GXColorS10 cColorTable[] = {
 	{ 255, 200, 0, 0 },
 	{ 255, 0, 0, 0 },
 };
-
-const char* const cMatName = "_mat_body1";
 
 } // namespace
 
