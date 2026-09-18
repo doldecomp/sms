@@ -81,7 +81,7 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 		JGeometry::TVec3<f32> pos;
 		JGeometry::TVec3<f32> rot;
 		unk138->unk0->unk14->getPosAndRot(unk138->unk14, &pos, &rot);
-		pos.sub(mPosition);
+		pos.sub(getPosition());
 		mLinearVelocity.add(pos);
 
 		mRotation = rot;
@@ -93,10 +93,10 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 	}
 
 	JGeometry::TVec3<f32> toNext = unk138->getCurrentPos();
-	toNext.sub(mPosition);
+	toNext.sub(getPosition());
 	if (toNext.squared() < param_1 * param_1 * 2.0f || unk13C == 0) {
 		readRailFlag();
-		web->getGraphNode(unk138->getCurGraphIndex()).getPoint(mPosition);
+		web->getGraphNode(unk138->getCurGraphIndex()).getPoint(getPosition());
 		return true;
 	} else {
 		VECNormalize(&toNext, &toNext);

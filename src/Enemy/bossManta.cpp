@@ -756,7 +756,7 @@ void TBossManta::updateAttractor()
 	// region. The mario-delta squared() also loads x,y,z where retail
 	// loads x,z,y and keeps y/z in f5/f6 for the later accumulate.
 	JGeometry::TVec3<f32> local_108 = unk158;
-	local_108 -= mPosition;
+	local_108 -= getPosition();
 	local_108.y = 0.0f;
 	local_108.normalize();
 	local_108 *= getSaveParams()->mSLAttractorPower.get();
@@ -764,7 +764,7 @@ void TBossManta::updateAttractor()
 	JGeometry::TVec3<f32> facing = unk170;
 	facing *= getSaveParams()->mSLEscapeLookPoint.get();
 
-	JGeometry::TVec3<f32> selfPos = mPosition;
+	JGeometry::TVec3<f32> selfPos = getPosition();
 	selfPos += facing;
 	selfPos.y = 0.0f;
 
@@ -794,7 +794,7 @@ void TBossManta::updateAttractor()
 		}
 	}
 
-	JGeometry::TVec3<f32> local_C0 = mPosition;
+	JGeometry::TVec3<f32> local_C0 = getPosition();
 	local_C0 -= SMS_GetMarioPos();
 	local_C0.y = 0.0f;
 

@@ -38,7 +38,7 @@ void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 	if (cue & CUE_CALC_ANIM) {
 		TPosition3f local_148;
 		local_148.identity();
-		local_148.setTrans(mPosition);
+		local_148.setTrans(getPosition());
 
 		(void)&local_148;
 

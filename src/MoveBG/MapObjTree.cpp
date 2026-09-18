@@ -232,7 +232,8 @@ void TMapObjTreeScale::control()
 	switch (mState) {
 	case STATE_SMALL:
 		if (SMSGetMarDirector()->getCurrentMap() != 4
-		    && !gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z))
+		    && !gpPollution->isPolluted(getPosition().x, getPosition().y,
+		                                getPosition().z))
 			startScaleUp();
 		break;
 
@@ -283,8 +284,8 @@ void TMapObjTreeScale::control()
 		if (mParticleEmitTimer > sWaitTime) {
 			// circular buffer of particle positions
 			mParticlePositions[mNextFreeParticlePos].set(
-			    mPosition.x + 400.0f * MsRandF() - 200.0f, mPosition.y,
-			    mPosition.z + 400.0f * MsRandF() - 200.0f);
+			    getPosition().x + 400.0f * MsRandF() - 200.0f, getPosition().y,
+			    getPosition().z + 400.0f * MsRandF() - 200.0f);
 
 			gpMarioParticleManager->emit(
 			    PARTICLE_MS_RAKU_KIE, &mParticlePositions[mNextFreeParticlePos],

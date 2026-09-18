@@ -171,7 +171,7 @@ void TMario::rippleEffect()
 
 void TMario::inOutWaterEffect(f32 waterY)
 {
-	JGeometry::TVec3<f32> pos = mPosition;
+	JGeometry::TVec3<f32> pos = getPosition();
 	pos.y                     = mFloorPosition.z;
 
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)

@@ -132,9 +132,9 @@ void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
 	mMActorKeeper = new TMActorKeeper(mManager, count + arg2);
 	unk150        = new TBoidLeader(count, "コントローラ");
 
-	unk150->setUnk38(mPosition);
+	unk150->setUnk38(getPosition());
 
-	unk150->setGraph(unk124->getGraph(), mPosition);
+	unk150->setGraph(unk124->getGraph(), getPosition());
 
 	unk154 = new TRealoidActor*[count];
 

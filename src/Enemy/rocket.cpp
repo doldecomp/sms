@@ -174,7 +174,7 @@ void TRocket::calcRootMatrix()
 
 		TPosition3f mtx;
 		if (mSpine->getCurrentNerve() == &TNerveRocketFly::theNerve()) {
-			mtx.translation(mPosition.x, mPosition.y, mPosition.z);
+			mtx.translation(getPosition().x, getPosition().y, getPosition().z);
 		} else {
 			MTXCopy(SMS_GetMarioWaterGun()->getEmitMtx(0), (MtxPtr)mtx);
 

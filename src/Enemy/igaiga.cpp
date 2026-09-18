@@ -321,7 +321,7 @@ bool TRollEnemy::isReachedToGoalXZ()
 
 void TRollEnemy::setBehavior()
 {
-	if (mPosition.y > 50.0f + mGroundHeight)
+	if (getPosition().y > 50.0f + mGroundHeight)
 		return;
 
 	if (mSpine->getTime() % getSaveParams()->mSLPolluteInterval.get() != 0)
@@ -351,7 +351,7 @@ void TRollEnemy::setBehavior()
 	}
 
 	SMSGetPollution()->stampGround(
-	    1, unk1AC * mLinearVelocity.x + mPosition.x, mPosition.y,
+	    1, unk1AC * mLinearVelocity.x + mPosition.x, getPosition().y,
 	    unk1AC * mLinearVelocity.z + mPosition.z, 32.0f * range);
 }
 

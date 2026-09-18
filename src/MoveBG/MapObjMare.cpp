@@ -254,8 +254,8 @@ void TCogwheel::calc()
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
 	MTXConcat(rotY, rotZ, mtx);
-	mtx[0][3] = mPosition.x;
-	mtx[1][3] = mPosition.y;
+	mtx[0][3] = getPosition().x;
+	mtx[1][3] = getPosition().y;
 	mtx[2][3] = mPosition.z;
 }
 

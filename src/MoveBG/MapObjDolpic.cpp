@@ -67,7 +67,7 @@ void TMonumentShine::hitByWater(THitActor* actor)
 
 	JGeometry::TVec3<f32> waterDir = actor->mPosition;
 
-	waterDir.sub(mPosition);
+	waterDir.sub(getPosition());
 	waterDir.y = 0.0f;
 
 	if (waterDir.squared() <= JGeometry::TUtil<f32>::epsilon())
@@ -83,12 +83,12 @@ void TMonumentShine::hitByWater(THitActor* actor)
 	static JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 
 	// TODO: 5 instructions from exact, all reloads: retail keeps
-	// mPosition.x/y/z in f7-f9 across both subtractions and waterDir.y/z in
+	// getPosition().x/y/z in f7-f9 across both subtractions and waterDir.y/z in
 	// f5/f6 from the first squared() into the dot, where our build reloads
 	// all five. The frame is exact (the named `side` below is the missing 8
 	// bytes), so the local set is right; what differs is only which values
 	// the allocator keeps live. Ruled out: sub() for -= , getPosition() for
-	// mPosition (lands the frame but hoists the address into a register),
+	// getPosition() (lands the frame but hoists the address into a register),
 	// isZero() for the spelled-out epsilon test (identical output), cross2()
 	// for cross().
 	JGeometry::TVec3<f32> cross;

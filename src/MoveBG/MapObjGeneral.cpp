@@ -188,7 +188,7 @@ void TMapObjGeneral::sinking()
 	}
 
 	if (mPosition.y + mMapObjData->mHit->unkC[2].unk4 < unk144) {
-		if (mPosition.x != mInitialPosition.x
+		if (getPosition().x != mInitialPosition.x
 		    || mPosition.z != mInitialPosition.z) {
 			makeObjDefault();
 			makeObjAppeared();

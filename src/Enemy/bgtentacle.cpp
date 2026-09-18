@@ -480,7 +480,7 @@ void TBGTentacle::TNode::calcVelocity(TBGTentacle* param_1,
 	JGeometry::TVec3<f32> local_A8 = param_2->mPosition;
 	local_A8 += param_2->mVelocity;
 
-	JGeometry::TVec3<f32> local_9C = mPosition;
+	JGeometry::TVec3<f32> local_9C = getPosition();
 	local_9C -= local_A8;
 
 	f32 nodeLen = param_1->getNodeLen();
@@ -527,7 +527,7 @@ void TBGTentacle::TNode::calcVelocity(TBGTentacle* param_1,
 		local_80 += local_8C;
 
 		JGeometry::TVec3<f32> local_74 = local_80;
-		local_74 -= mPosition;
+		local_74 -= getPosition();
 
 		local_74.scale(param_3);
 

@@ -95,7 +95,7 @@ void TCoasterEnemy::makeCoasterGoalPath()
 void TCoasterEnemy::moveCoaster()
 {
 	JGeometry::TVec3<f32> delta = unk124->getCurrentPos();
-	delta -= mPosition;
+	delta -= getPosition();
 	delta.normalize();
 
 	f32 t = getPathDir() == 0 ? getSaveParam2()->mSLCoasterSpeedInOrder.get()

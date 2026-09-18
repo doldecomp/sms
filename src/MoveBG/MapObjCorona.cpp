@@ -680,7 +680,7 @@ void TBathtub::control()
 		if (!(weight <= 0.0000000001f)) {
 			static JGeometry::TVec3<f32> yDown(0.0f, -1.0f, 0.0f);
 			JGeometry::TVec3<f32> lever;
-			lever.sub(*gpMarioPos, mPosition);
+			lever.sub(*gpMarioPos, getPosition());
 			JGeometry::TVec3<f32> torque;
 			torque.cross(lever, yDown);
 			torque.scale(0.00000001f * weight);

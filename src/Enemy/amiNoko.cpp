@@ -201,12 +201,12 @@ void TAmiNoko::attackToMario()
 	switch (mFenceKind) {
 	case AMINOKO_SURFACE_GROUND:
 		// Standing on the floor: Mario has to be above us to get zapped.
-		if (SMS_GetMarioRfPlane() != nullptr && gpMarioPos->y < mPosition.y)
+		if (SMS_GetMarioRfPlane() != nullptr && gpMarioPos->y < getPosition().y)
 			canAttack = FALSE;
 		break;
 	case AMINOKO_SURFACE_ROOF:
 		if (SMS_GetMarioGrPlane() != nullptr
-		    && 5.0f + gpMarioPos->y > mPosition.y)
+		    && 5.0f + gpMarioPos->y > getPosition().y)
 			canAttack = FALSE;
 		break;
 	case AMINOKO_SURFACE_WALL: {

@@ -116,15 +116,15 @@ void TBEelTearsDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 	THitActor::perform(cue, graphics);
 	if (cue & CUE_MOVE) {
 		mPosition.y += mRiseSpeed;
-		if (mPosition.y > gpMarioPos->y + 2000.0f)
+		if (getPosition().y > gpMarioPos->y + 2000.0f)
 			mActive = false;
 	}
 	if (cue & CUE_CALC_ANIM) {
 		Mtx transform;
 		// TODO: inline?
 		MtxPtr ptr = transform;
-		MsMtxSetXYZRPH(ptr, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
-		               mRotation.y, mRotation.z);
+		MsMtxSetXYZRPH(ptr, getPosition().x, getPosition().y, getPosition().z,
+		               mRotation.x, mRotation.y, mRotation.z);
 		mSharedParts->getMActor()->getModel()->setBaseTRMtx(ptr);
 		f32 scale = mOwner->mTearsParams->mSLTearsDropScaleLow.get();
 		mScaling.set(scale, scale, scale);

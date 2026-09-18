@@ -264,8 +264,8 @@ void TEnemyMario::initModel()
 BOOL TEnemyMario::canJumpToNode() const
 {
 	// TODO: missing some inlines which getGraph should live inside of
-	int nodeIndex
-	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	int nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
+	    getPosition(), -1);
 	return mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
 	    2);
 }

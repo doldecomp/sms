@@ -112,7 +112,7 @@ void TFlyEnemy::reset()
 // docs/catalog/codegen-tells.md. The 40-byte frame gap follows from it.
 void TFlyEnemy::fly()
 {
-	JGeometry::TVec3<f32> nextPos = mPosition;
+	JGeometry::TVec3<f32> nextPos = getPosition();
 	nextPos.add(mLinearVelocity);
 
 	JGeometry::TVec3<f32> drift = mVelocity;

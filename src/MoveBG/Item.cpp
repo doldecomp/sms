@@ -956,7 +956,7 @@ void TEggYoshi::control()
 			startAnim(3);
 			TYoshi* yoshi = SMS_GetYoshi();
 			if (!yoshi->isHatched()) {
-				JGeometry::TVec3<f32> pos = mPosition;
+				JGeometry::TVec3<f32> pos = getPosition();
 				yoshi->appearFromEgg(pos, mRotation.y, this);
 				yoshi->setEggYoshiPtr(this);
 			}

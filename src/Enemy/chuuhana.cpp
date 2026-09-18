@@ -617,7 +617,7 @@ void TChuuHana::bind()
 		return;
 	}
 
-	JGeometry::TVec3<f32> next(mPosition);
+	JGeometry::TVec3<f32> next(getPosition());
 	next += mLinearVelocity;
 	next += mVelocity;
 
@@ -630,7 +630,7 @@ void TChuuHana::bind()
 	mGroundHeight += 1.0f;
 
 	if (next.y <= mGroundHeight + 0.05f && mGroundPlane->getActor() == nullptr
-	    && mPosition.y < unk1F8.y - 200.0f) {
+	    && getPosition().y < unk1F8.y - 200.0f) {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		next.y = mGroundHeight;
 	} else {

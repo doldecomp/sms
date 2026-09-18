@@ -28,7 +28,7 @@ BOOL TMario::startJumpWall()
 
 	mVel.y = 52.0f;
 	mFaceAngle.y += 0x8000;
-	if (mVel.y + (160.0f + mPosition.y) >= mFloorPosition.x)
+	if (mVel.y + (160.0f + getPosition().y) >= mFloorPosition.x)
 		mVel.y = 1.0f;
 
 	return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, 0);

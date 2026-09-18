@@ -51,7 +51,7 @@ void TMario::doSwimming()
 	mVel.y -= mSwimParams.mGravity.get();
 
 	f32 depthRatio
-	    = (mFloorPosition.z - mPosition.y) / mSwimParams.mFloatHeight.get();
+	    = (mFloorPosition.z - getPosition().y) / mSwimParams.mFloatHeight.get();
 	if (depthRatio < 0.0f)
 		depthRatio = 0.0f;
 	if (depthRatio > 1.0f)
@@ -89,7 +89,7 @@ void TMario::doSwimming()
 	if (mFloorPosition.z > mFloorPosition.y + 400.0f
 	    && mPosition.y < mFloorPosition.y + 100.0f
 	    && getStatus() != MARIO_STATUS_SWIM_WAIT) {
-		mFootprintPos   = mPosition;
+		mFootprintPos   = getPosition();
 		mFootprintPos.y = mFloorPosition.y;
 		gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_SEASMOKE,
 		                                            &mFootprintPos, 1, this);

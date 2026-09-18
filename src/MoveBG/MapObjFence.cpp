@@ -255,7 +255,7 @@ void TRevolvingFenceInner::setGroundCollision()
 	// While Yoshi stands in the panel's footprint the collision follows the
 	// spinning model matrix instead of the object's own SRT.
 	if (SMS_GetYoshi()->isHatched()
-	    && mPosition.x - mBodyRadius < SMS_GetYoshi()->getTranslation().x
+	    && getPosition().x - mBodyRadius < SMS_GetYoshi()->getTranslation().x
 	    && mPosition.x + mBodyRadius > SMS_GetYoshi()->getTranslation().x
 	    && mPosition.z - mBodyRadius < SMS_GetYoshi()->getTranslation().z
 	    && mPosition.z + mBodyRadius > SMS_GetYoshi()->getTranslation().z) {

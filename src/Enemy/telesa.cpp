@@ -215,7 +215,7 @@ void TTelesa::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 	reset();
-	mDampenedGroundHeight = mPosition.y;
+	mDampenedGroundHeight = getPosition().y;
 	setTypeNormal();
 }
 

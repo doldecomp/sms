@@ -370,7 +370,7 @@ void TFruitsBoat::moveObject()
 	// and turn the line between the two samples into a rotation.
 	JGeometry::TVec3<f32> dir = MsGetVecFromRotY(mRotation.y, 300.0f);
 
-	JGeometry::TVec3<f32> center = mPosition;
+	JGeometry::TVec3<f32> center = getPosition();
 
 	JGeometry::TVec3<f32> bow = center;
 	bow.add(dir);
@@ -410,7 +410,7 @@ void TFruitsBoat::moveObject()
 		if (ground != nullptr && ground->mActor == this
 		    && SMS_IsMarioTouchGround4cm()) {
 			JGeometry::TVec3<f32> toMario = *gpMarioPos;
-			toMario.sub(mPosition);
+			toMario.sub(getPosition());
 			toMario.y = 0.0f;
 
 			f32 offCenter = toMario.length();

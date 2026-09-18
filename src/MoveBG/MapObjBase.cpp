@@ -333,7 +333,7 @@ void TMapObjBase::makeObjAppeared()
 			                                4);
 	}
 
-	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
@@ -351,7 +351,7 @@ void TMapObjBase::makeObjAppeared()
 
 	mPosition.y -= mYOffset;
 	if (mMapObjData->mCollision && mMapObjData->mCollision->unk4[0].unk0 != 0) {
-		f32 x = mPosition.x;
+		f32 x = getPosition().x;
 		f32 y = mPosition.y - mYOffset;
 		f32 z = mPosition.z;
 		mMapCollisionManager->changeCollision(0);

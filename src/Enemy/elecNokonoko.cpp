@@ -639,7 +639,7 @@ void TElecCarapace::perform(u32 cue, JDrama::TGraphics* graphics)
 				return;
 
 			TCircleShadowRequest request;
-			request.mPosition = mPosition;
+			request.mPosition = getPosition();
 
 			bool airborne = isAirborne();
 			if (!airborne) {

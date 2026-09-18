@@ -453,9 +453,9 @@ void TMapObjBall::makeObjDefault()
 	TMapObjBase::makeObjDefault();
 
 	MtxPtr mtx  = getModel()->getAnmMtx(0);
-	mtx[0][3] = mPosition.x;
-	mtx[1][3] = mPosition.y + mBodyRadius;
-	mtx[2][3] = mPosition.z;
+	mtx[0][3] = getPosition().x;
+	mtx[1][3] = getPosition().y + mBodyRadius;
+	mtx[2][3] = getPosition().z;
 }
 
 void TMapObjBall::makeObjAppeared()

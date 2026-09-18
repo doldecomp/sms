@@ -530,7 +530,7 @@ void TKukku::dropCoins()
 	if (mDroppedCoins == 10 && mOneUp) {
 		mDroppedCoins++;
 		mOneUp->appear();
-		mOneUp->JSGSetTranslation(mPosition);
+		mOneUp->JSGSetTranslation(getPosition());
 		mOneUp->mVelocity.set(0.0f, 0.0f, 0.0f);
 		mOneUp->offLiveFlag(LIVE_FLAG_UNK10);
 		return;
@@ -563,7 +563,7 @@ void TKukku::dropCoins()
 			break;
 
 		coin->appear();
-		coin->JSGSetTranslation(mPosition);
+		coin->JSGSetTranslation(getPosition());
 		coin->mVelocity.set(velocity);
 		coin->offLiveFlag(LIVE_FLAG_UNK10);
 

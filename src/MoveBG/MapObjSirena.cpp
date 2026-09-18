@@ -522,7 +522,7 @@ void TItemSlotDrum::generateItem()
 	}
 	if (getSlotResult() == 1) {
 		TTelesa* item = (TTelesa*)gpConductor->makeOneEnemyAppear(
-		    mPosition, "テレサマネージャー", 1);
+		    getPosition(), "テレサマネージャー", 1);
 		if (item != nullptr) {
 			s16 ang = (s16)DEG2SHORTANGLE(mRotation.x);
 			f32 s   = JMASSin(ang);
@@ -575,8 +575,8 @@ void TItemSlotDrum::generateItem()
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 200.0f);
 			MTXMultVec(m, &off, &off);
 			TMapObjBase* item = gpItemManager->makeObjAppear(
-			    mPosition.x + off.x, mPosition.y, mPosition.z + off.z,
-			    0x2000000E, false);
+			    getPosition().x + off.x, getPosition().y,
+			    getPosition().z + off.z, 0x2000000E, false);
 			if (item != nullptr) {
 				item->mPosition += off;
 				MsVECNormalize(&off, &off);

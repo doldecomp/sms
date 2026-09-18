@@ -483,9 +483,9 @@ void TLimitKoopa::startHipDrop()
 	JGeometry::TVec3<f32> target(SMS_GetMarioPos());
 	target.y = mGroundHeight;
 
-	JGeometry::TVec3<f32> goal(mPosition.x + (target.x - mPosition.x),
-	                           mPosition.y + (target.y - mPosition.y),
-	                           mPosition.z + (target.z - mPosition.z));
+	JGeometry::TVec3<f32> goal(getPosition().x + (target.x - getPosition().x),
+	                           getPosition().y + (target.y - getPosition().y),
+	                           getPosition().z + (target.z - getPosition().z));
 
 	velocity = calcVelocityToJumpToY(goal, velocity.y,
 	                                 getParam()->hipDropGravityY.get());

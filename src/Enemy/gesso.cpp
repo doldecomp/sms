@@ -752,8 +752,9 @@ void TGesso::rollCheck()
 	if (MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
 	                unk1E8->mSLSearchLengthOnObj.get(),
 	                unk1E8->mSLSearchAngleOnObj.get(), aware)) {
-		if ((mIsRightSideUp && mPosition.y > SMS_GetMarioPos().y + 10.0f)
-		    || (!mIsRightSideUp && mPosition.y < SMS_GetMarioPos().y - 10.0f)) {
+		if ((mIsRightSideUp && getPosition().y > SMS_GetMarioPos().y + 10.0f)
+		    || (!mIsRightSideUp
+		        && getPosition().y < SMS_GetMarioPos().y - 10.0f)) {
 			onHitFlag(HIT_FLAG_NO_COLLISION);
 			mState = STATE_ROLLING;
 			mSpine->pushNerve(&TNerveGessoRolling::theNerve());

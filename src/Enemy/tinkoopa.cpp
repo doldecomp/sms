@@ -608,8 +608,8 @@ void TTinKoopaPartsBase::startBreaking()
 		    TTinKoopa_getBreakingAnimationIndex(mPartsIndex));
 
 		MtxPtr base = mPartsMActor->getModel()->getBaseTRMtx();
-		base[0][3]  = mPosition.x;
-		base[1][3]  = mPosition.y;
+		base[0][3]  = getPosition().x;
+		base[1][3]  = getPosition().y;
 		base[2][3]  = mPosition.z;
 		mPartsMActor->getModel()->setBaseTRMtx(base);
 	}

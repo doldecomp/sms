@@ -359,7 +359,7 @@ void TSmallEnemy::genEventCoin()
 		}
 
 		if (coin) {
-			coin->mPosition = mPosition;
+			coin->mPosition = getPosition();
 			coin->mVelocity.set(0, 20, 0);
 			coin->offLiveFlag(LIVE_FLAG_UNK10);
 			--unk18C;

@@ -113,7 +113,7 @@ void TLiveActor::calcRideMomentum()
 			JGeometry::TVec3<f32> rideVelocity;
 			// mRidePos is from last frame here
 			MTXMultVec(mtx, &mRidePos, &rideVelocity);
-			rideVelocity -= mPosition;
+			rideVelocity -= getPosition();
 			mLinearVelocity += rideVelocity;
 
 			if (unkE8 >= 2) {

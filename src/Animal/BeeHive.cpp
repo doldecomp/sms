@@ -348,7 +348,7 @@ void TBeeHive::bind()
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
 
-	JGeometry::TVec3<f32> nextPos = mPosition;
+	JGeometry::TVec3<f32> nextPos = getPosition();
 	nextPos.add(mLinearVelocity);
 	nextPos.add(mVelocity);
 

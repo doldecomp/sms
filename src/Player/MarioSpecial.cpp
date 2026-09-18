@@ -266,7 +266,7 @@ int TMario::doRoofMovingProcess()
 	mVel.z     = mSlideVelZ;
 
 	JGeometry::TVec3<f32> newPos;
-	newPos.x = mPosition.x - mVel.x * mRoofPlane->getNormal().y;
+	newPos.x = getPosition().x - mVel.x * mRoofPlane->getNormal().y;
 	newPos.z = mPosition.z - mVel.z * mRoofPlane->getNormal().y;
 	newPos.y = mPosition.y;
 

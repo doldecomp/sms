@@ -95,11 +95,11 @@ void TBigWindmill::control()
 	for (int i = 0; i < 4; ++i) {
 		f32 rad    = 0.017453294f * angle;
 		MtxPtr mtx = mBlocks[i]->getModel()->getAnmMtx(0);
-		mtx[0][3]  = sRadius * cosf(rad) + mPosition.x;
+		mtx[0][3]  = sRadius * cosf(rad) + getPosition().x;
 		f32 offset = mYOffset;
 		angle += 90.0f;
-		mtx[1][3] = sRadius * sinf(rad) + mPosition.y - offset;
-		mtx[2][3] = mPosition.z - sSubZ;
+		mtx[1][3] = sRadius * sinf(rad) + getPosition().y - offset;
+		mtx[2][3] = getPosition().z - sSubZ;
 		mBlocks[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		if (angle > 360.0f)
 			angle -= 360.0f;

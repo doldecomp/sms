@@ -397,7 +397,7 @@ void TCannon::moveObject()
 		return;
 
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		mChorobei->mPosition = mPosition;
+		mChorobei->mPosition = getPosition();
 	} else {
 		MtxPtr mtx             = getModel()->getAnmMtx(mChorobeiJntIdx);
 		mChorobei->mPosition.x = mtx[0][3];
@@ -409,7 +409,7 @@ void TCannon::moveObject()
 	JGeometry::TVec3<f32> vel(mVelocity);
 	mPosition.y += vel.y;
 	mVelocity.y -= getGravityY();
-	if (mPosition.y < mInitialPos.y) {
+	if (getPosition().y < mInitialPos.y) {
 		mVelocity   = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		mPosition.y = mInitialPos.y;
 	}

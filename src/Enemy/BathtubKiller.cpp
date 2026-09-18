@@ -409,7 +409,7 @@ void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 				mSpine->pushNerve(
 				    &TNerveBathtubKillerExplosion::theNerve());
 		}
-		if (!gpMap->isInArea(mPosition.x, mPosition.z)) {
+		if (!gpMap->isInArea(getPosition().x, getPosition().z)) {
 			unk21C = 0;
 			onLiveFlag(LIVE_FLAG_DEAD);
 			stopAnmSound();
@@ -436,9 +436,9 @@ void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 				gpMarioParticleManager->emitAndBindToMtxPtr(
 				    MAP_MAP_MS_KP_KILL_SMOKE, unk220, 1, this);
 			}
-			f32 distToMario = mPosition.distance(*gpMarioPos);
+			f32 distToMario = getPosition().distance(*gpMarioPos);
 			gpMSound->startSoundActorWithInfo(MSD_SE_EN_KILLER_FLY,
-			                                  mPosition, nullptr,
+			                                  getPosition(), nullptr,
 			                                  distToMario, 0, 0, nullptr, 0,
 			                                  4);
 		}

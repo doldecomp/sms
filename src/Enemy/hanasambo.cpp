@@ -695,7 +695,7 @@ void THanaSambo::moveObject()
 {
 	TSmallEnemy::moveObject();
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		mHead->mPosition = mPosition;
+		mHead->mPosition = getPosition();
 	} else {
 		MtxPtr mtx         = getModel()->getAnmMtx(mHeadJntIndex);
 		mHead->mPosition.x = mtx[0][3];

@@ -93,8 +93,8 @@ void TAnimalBase::init(TLiveManager* manager)
 
 void TAnimalBase::initNoLoad_(TAnimalBase* other)
 {
-	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + mPosition.x;
-	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + mPosition.z;
+	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + getPosition().x;
+	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + getPosition().z;
 	if (mActorType == 0x800001)
 		other->mPosition.y = 1000.0f * MsRandF() + mPosition.y;
 	else

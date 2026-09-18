@@ -205,7 +205,7 @@ void TWireTrap::behaveHitWater(THitActor* sender)
 
 	mWaterTimer = 30;
 
-	JGeometry::TVec3<f32> toWater = mPosition;
+	JGeometry::TVec3<f32> toWater = getPosition();
 	toWater -= *gpMarioPos;
 
 	JGeometry::TVec3<f32> dir = getWireBinder()->getDir();

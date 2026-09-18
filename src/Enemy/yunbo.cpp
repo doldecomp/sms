@@ -77,7 +77,7 @@ void TYumboSeed::perform(u32 cue, JDrama::TGraphics* graphics)
 		mtx[0][2] = 0.0f;
 		mtx[1][2] = 0.0f;
 		mtx[2][2] = 1.0f;
-		mtx[0][3] = mPosition.x;
+		mtx[0][3] = getPosition().x;
 		mtx[1][3] = mPosition.y;
 		mtx[2][3] = mPosition.z;
 
