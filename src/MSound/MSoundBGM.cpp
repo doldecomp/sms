@@ -17,8 +17,19 @@ f32 MSBgm::smMainVolume = 0.75f;
 // which MWCC unrolls into the same three stores [0x38]; naming the table owner
 // (`JAIData* data = MSGMSound->unk0`, or a `JAISoundTable&` reference) [+8 on
 // top of the above, 0x40]. Beyond three such locals MWCC reuses the slots, so
-// 0x40 is the ceiling for scalar naming: the remaining 8 bytes need a real
-// aggregate or address-taken local. Ruled out: `u32` vs `u16` count, `int` vs
+// 0x40 is the ceiling for scalar naming -- re-measured: a fourth named scalar
+// of any kind (`JAISoundTable*`, a `JAISoundTable&`, `MSound* sound`, a
+// separate `u16 max`/`u32 count` pair, a second loop index, an `f32`, a
+// `JAISound*`, a `u8`, a `bool`) leaves the frame at 0x40. The remaining 8
+// bytes must therefore come from one 8-byte *object*: `u32 arr[2]`, `char
+// buf[8]` and `f64 d` each take the frame to exactly 0x48 with all 34
+// instructions unchanged, as does any 32-byte local on the bare body. So the
+// missing declaration is a single 8-byte-aligned aggregate (or an address-taken
+// local), not another scalar. There is still no evidence for one: this TU has
+// no string pool at all, so nothing was formatted into a local buffer for the
+// JALListVirtualNode name, and the map's symbol closure for init lists only
+// `JALList<MSBgm>::JALList`, so no other call's inlined body can carry it.
+// Ruled out: `u32` vs `u16` count, `int` vs
 // `u32` loop indices, a shared loop index, a single-iteration category loop, a
 // named sound id, and `MSBgm** tracks = smBgmInTrack` (changes instructions).
 // The UNUSED symbols in this TU (the four node destructors, which our build
