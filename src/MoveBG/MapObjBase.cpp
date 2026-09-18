@@ -11,6 +11,7 @@
 #include <MarioUtil/ShadowUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
@@ -216,10 +217,7 @@ void TMapObjBase::startAnim(u16 param_1)
 	}
 
 	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-	if (!anim)
-		return;
-
-	if (param_1 >= anim->unk0)
+	if (!anim || anim->unk0 <= param_1)
 		return;
 
 	const TMapObjAnimData* data = &anim->unk4[param_1];
@@ -227,7 +225,7 @@ void TMapObjBase::startAnim(u16 param_1)
 		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
 			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
 			if (d2->unk4 != nullptr) {
-				u8 type = d2->unk8;
+				int type = d2->unk8;
 				mMActor->getFrameCtrl(type)->setRate(0.0f);
 				mMActor->getFrameCtrl(type)->setFrame(0.0f);
 				mMActor->getUnk28(type)->unk0 = 0xffffffff;
@@ -445,9 +443,8 @@ void TMapObjBase::control()
 
 void TMapObjBase::setGroundCollision()
 {
-	if (!mMapCollisionManager)
-		return;
-	if (mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_MOVE)
+	if (!mMapCollisionManager
+	    || mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_MOVE)
 		return;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2)) {
@@ -484,10 +481,7 @@ void TMapObjBase::setGroundCollision()
 void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow()) {
-		if (checkLiveFlag(LIVE_FLAG_DEAD))
-			return;
-
-		if (isActorType(0x4000003B))
+		if (checkLiveFlag(LIVE_FLAG_DEAD) || isActorType(0x4000003B))
 			return;
 
 		if (cue & CUE_MOVE) {
@@ -576,7 +570,11 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_CALC_VIEW) && mMActor
 	    && checkMapObjFlag(MAP_OBJ_FLAG_UNK400)) {
-		getModel()->viewCalc();
+		// The model MActor builds is always an SDLModel; retail calls its
+		// slot-0x1c virtual here, not J3DModel::viewCalc (slot 0x14).
+		// TODO: TLiveActor::getModel() most likely returns SDLModel* in
+		// retail -- that is a shared-header change, parked.
+		((SDLModel*)getModel())->viewCalcSimple();
 		cue &= ~CUE_CALC_VIEW;
 		requestShadow();
 	}
