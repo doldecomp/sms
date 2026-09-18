@@ -356,6 +356,12 @@ void TMapEventSinkBianco::startControl()
 	if (mRaisingBuildingIdx == 0) {
 		SMS_ShowJoint(unk64->getMesh(), true);
 		SMS_MarioWarpRequest(unk6C, unk78);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0,
+		                                   nullptr, 0);
+		// TODO: 99.9%. Only the frame is short by 8 bytes: retail keeps the
+		// zero vector at 0x2c where we put it at 0x24, so one 8-byte inline
+		// temp is missing below it. A reference binding on this array element
+		// is inert (measured).
 		unk50[mRaisingBuildingIdx].set(7170.0f, 3675.0f, -185.0f);
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "bianco0_event0", nullptr, -1, 0.0f, true, nullptr, 0, nullptr,
@@ -387,6 +393,12 @@ bool TMapEventSinkBianco::watch()
 	return false;
 }
 
+// TODO: 56.7%. Retail's only structural difference is that the inlined
+// TMapEventSinkInPollutionReset::loadAfter() keeps its own base call as
+// `bl TMapEventSinkInPollution::loadAfter()` (one `bl`, one alive/kill loop),
+// while MWCC expands ours at depth two and duplicates the registerPollutionObj
+// loop. Both bases are instruction-exact on their own, so this is an inline
+// refusal at depth two, not a wrong callee.
 void TMapEventSinkBianco::loadAfter()
 {
 	TMapEventSinkInPollutionReset::loadAfter();
