@@ -696,7 +696,7 @@ bool TBaseNPC::npcWetting()
 								break;
 
 							case NPC_ANM_KIND_UNK7:
-							case NPC_ANM_KIND_UNK10:
+							case NPC_ANM_KIND_MAD:
 							case NPC_ANM_KIND_UNK18:
 								npcWetOut();
 								result = true;
@@ -844,6 +844,12 @@ bool TBaseNPC::npcBlowning()
 	return result;
 }
 
+// TODO: literal-pool order. Retail asks for MsRandF's 1/32768 (@3245) before
+// the 120.0f (@3246) that MsRandI's folded (r - l) produces; ours reverses
+// the pair. MsRandI in MarioUtil/RandomUtil.hpp spells the product
+// `rand() * K * (r - l)`, which puts (r - l) last; retail's asm has (r - l)
+// as the outer multiply's LEFT operand, i.e. `(r - l) * MsRandF()`. Shared
+// header, so not changed here.
 void TBaseNPC::npcMareStandIn()
 {
 	switch (unkD0->getCurrentAnmKind()) {
