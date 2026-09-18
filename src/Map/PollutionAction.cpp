@@ -34,6 +34,22 @@ void TPollutionLayer::changeType(u16 type) { mPollutionType = type; }
 // inlined callees here are TPollutionPos::index/isInArea/getDepthWorld, whose
 // out-of-line copies are emitted and already match, so the bytes cannot be
 // theirs. TPollutionLayer::action() is 40 bytes short with the same shape.
+// getPollutedPosNear's 24 dead low bytes are these two binding levels: each is
+// +8 alone and the pair is +24 (batch 136). Named `u8* map` / `f32 marioY`
+// locals only reach +8 together, so the real helpers are still unidentified.
+// TODO: promote once they are.
+static inline u8* PollutionMap(const TPollutionLayer* p)
+{
+	u8* map = p->mPollutionMap;
+	return map;
+}
+
+static inline f32 PollutionMarioY()
+{
+	f32 y = SMS_GetMarioPos().y;
+	return y;
+}
+
 bool TPollutionLayer::getPollutedPosNear(f32 range, JGeometry::TVec3<f32>* dest)
 {
 	TPollutionPos& pos = mPos;
@@ -48,9 +64,9 @@ bool TPollutionLayer::getPollutedPosNear(f32 range, JGeometry::TVec3<f32>* dest)
 			int texZ = getTexPosS(dest->z);
 			if (pos.isInArea(texX, texZ)) {
 				dest->y = pos.getDepthWorld(texX, texZ);
-				if (dest->y > SMS_GetMarioPos().y)
+				if (dest->y > PollutionMarioY())
 					return false;
-				if (mPollutionMap[mPos.index(texX, texZ)] != 0)
+				if (PollutionMap(this)[mPos.index(texX, texZ)] != 0)
 					return true;
 			}
 		}
@@ -74,6 +90,8 @@ void TPollutionLayer::changeEffectScale(const JGeometry::TVec3<f32>&, f32) { }
 
 void TPollutionLayer::spread()
 {
+	JGeometry::TVec3<f32> scratch;
+	JGeometry::TVec3<f32> scratch2;
 	if (mSpreadTimer < mSpreadFrequency) {
 		mSpreadTimer += 1;
 	} else {
@@ -84,8 +102,15 @@ void TPollutionLayer::spread()
 	}
 }
 
+// action()'s 40 dead low bytes are three uninitialised non-trivial TVec3
+// locals of the callees it inlines: one here and two in spread(). They cost no
+// instructions in either copy. The split matters -- three in spread() alone,
+// or one in each of electric()/glassWall()/spread(), leaves the two live
+// vectors 12 bytes high; only 1 + 2 puts every slot where retail has it.
+// TODO: nothing reads them, so what retail declared here is still unknown.
 void TPollutionLayer::electric()
 {
+	JGeometry::TVec3<f32> scratch;
 	if (getPollutedPosNear(mThunderArea,
 	                       &mEffectPositions[mCurEffectPosIndex])) {
 		mEffectTimer += 1;
