@@ -185,6 +185,24 @@ void JAIBasic::checkEntriedSeq()
 // 937 instructions).  The remaining 4 bytes are a second dead binding-sized
 // slot we have and retail does not; `JAISoundHandle` is only a typedef for
 // `JAISound*`, so no accessor temp is involved.
+//
+// Re-pass 172 located the second slot: it is the `u32* portFlags =
+// sud->mTrackUpdate;` binding.  Removing it (writing `sud->mTrackUpdate[...]`
+// at all thirteen uses) gives retail's frame 0x98 exactly, at the price of
+// sixteen extra reload instructions -- so retail holds that pointer in a
+// callee-saved register with no dead pool slot, while every spelling of a
+// caller-side pointer binding we know reserves one.  The two dead slots are
+// therefore `r30` (4) and `portFlags` (4), and retail pays for exactly one of
+// them.  Also measured and still 0xa0 with the same 35 markers: `&sud
+// ->mTrackUpdate[0]` instead of the plain decay.  Worse: declaring both in one
+// comma declaration as `u32 *r30 = &sud->unk8, *portFlags = sud
+// ->mTrackUpdate;` (937 instructions -- two bindings in one *statement* do not
+// share a slot the way two bindings in one inlined *level* do); swapping the
+// `seqParam`/`portFlags` declaration order (937); hoisting `portFlags` above
+// the `mPauseMode` test (217 markers); binding `portFlags` after the zeroing
+// loop with `sud->mTrackUpdate[j] = 0` inside it (939); hoisting `u32& r30`
+// above the `mPauseMode` test (242 markers); and `sud` as a
+// `JAISeqUpdateData&` with `sud.` at every use (two opcode diffs).
 void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 {
 	JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[trackID];
