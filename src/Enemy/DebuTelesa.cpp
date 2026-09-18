@@ -11,6 +11,8 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
 // rogue includes needed for matching sinit & bss
+#include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionManager.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
@@ -55,6 +57,20 @@ void TDebuTelesa::calcRootMatrix()
 
 void TDebuTelesa::kill() { TSmallEnemy::kill(); }
 
+// TODO: 99.8%, frame 0x28 vs retail's 0x30. All 44 instructions are exact and
+// retail references no stack slot, so the residue is one unnamed 8-byte object
+// (the "last 8 bytes" shape in docs/catalog/frame-gaps.md); any 8-byte local
+// closes it. Measured and rejected: gpMSound-> instead of SMSGetMSound()->
+// (+0), the spelled-out gateCheck + MSoundSE::startSoundActor pair (+0), a
+// named nullptr handle (+0), a TU-local static inline wrapper around the call
+// (+0, inline levels are saturated), &getPosition() (frame becomes 0x30 but
+// costs three instructions and a fourth callee-saved register). An 8-byte
+// non-trivial local inside MSound::startSoundActor gives exactly 100% here and
+// in TEffectEnemy::setDeadAnm and TBossHanachan::emitOneTimeSandPillar_, which
+// have the same 8-byte gap around the same idiom, but it regresses ~15
+// currently exact callers of that wrapper (TCoin::taken, TShine::touchPlayer,
+// TAmiNoko::emitEffects, TMario::startSoundActor, ...), so the 8 bytes are
+// per-call-site, not in the shared wrapper.
 BOOL TDebuTelesa::receiveMessage(THitActor* sender, u32 message)
 {
 	switch (message) {
