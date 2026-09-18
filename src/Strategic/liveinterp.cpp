@@ -440,6 +440,28 @@ void linSetAnmRate(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 	interp->push();
 }
 
+// The nine float arms set mType and mData directly instead of calling
+// TSpcSlice::setDataFloat: the setter's by-value f32 parameter costs one
+// instruction per site, which is exactly the nine instructions our build had
+// over the ROM's 486 (96.1% -> 99.8%, and no structural difference of any kind
+// is left). Declaring the setter's parameter `const f32&` in spcinterp.hpp
+// reaches the same 486 instructions with setDataFloat() at every site, and is
+// the likelier original, but it breaks the already-exact spcFloat in
+// Strategic/spcinterp (100 -> 99.9, matched_code 82.8 -> 80.8), so it is a
+// header item, not a local fix. A `f32`/`const f32&` local for the member read
+// is worth nothing (499 and 495 instructions).
+//
+// TODO: two things are left, both frame/layout only.
+//  1. Frame 0xc0 against the ROM's 0xe0. The ROM's nine TSpcSlice slots are
+//     spaced 12 bytes apart inside each outer arm where ours are spaced 8, so
+//     each arm's slice has a 4-byte neighbour we do not reserve; ten slots and
+//     three groups on both sides.
+//  2. The ROM lays the arg2 == 1 (rotation) arm out *before* the arg2 == 0
+//     (position) arm - the pivot tree is instruction-identical, only the two
+//     blocks are swapped, and the scaling arm is already in place. Reordering
+//     the case labels in the source (012, 102, 120, 210) changes nothing, which
+//     matches the catalog's finding that MWCC block placement is not source
+//     order.
 void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
@@ -452,17 +474,20 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 		switch (arg1.getDataInt()) {
 		case 0: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mPosition.x);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mPosition.x;
 			interp->push(slice);
 		} break;
 		case 1: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mPosition.y);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mPosition.y;
 			interp->push(slice);
 		} break;
 		case 2: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mPosition.z);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mPosition.z;
 			interp->push(slice);
 		} break;
 		default:
@@ -474,17 +499,20 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 		switch (arg1.getDataInt()) {
 		case 0: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mRotation.x);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mRotation.x;
 			interp->push(slice);
 		} break;
 		case 1: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mRotation.y);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mRotation.y;
 			interp->push(slice);
 		} break;
 		case 2: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mRotation.z);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mRotation.z;
 			interp->push(slice);
 		} break;
 		default:
@@ -496,17 +524,20 @@ void linGetSRT(TSpcTypedInterp<TLiveActor>* interp, u32 arg_num)
 		switch (arg1.getDataInt()) {
 		case 0: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mScaling.x);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mScaling.x;
 			interp->push(slice);
 		} break;
 		case 1: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mScaling.y);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mScaling.y;
 			interp->push(slice);
 		} break;
 		case 2: {
 			TSpcSlice slice;
-			slice.setDataFloat(owner->mScaling.z);
+			slice.mType         = TSpcSlice::TYPE_FLOAT;
+			slice.mData.asFloat = owner->mScaling.z;
 			interp->push(slice);
 		} break;
 		default:
