@@ -31,6 +31,13 @@ public:
 		this->identity33();
 		this->setTrans(x, y, z);
 	}
+	// Ruled out (header round 12): spelling the body
+	// `setTrans(t.x, t.y, t.z)`, which is +8 of frame on
+	// TTalkCursor::associateNPC with no instruction change. Applied
+	// project-wide it costs TFireWanwanTailHit::init 96.14 -> 94.80,
+	// TFireWanwanTailHit::moveRequest 99.38 -> 93.96 and
+	// TFireWanwan::init 99.89 -> 97.43, and associateNPC's own score does not
+	// move.
 	void translation(const TVec3<f32>& translation)
 	{
 		this->identity33();
