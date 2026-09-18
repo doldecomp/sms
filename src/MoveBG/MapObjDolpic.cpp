@@ -310,6 +310,18 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 	return 0;
 }
 
+// TODO: frame 0x48 vs retail's 0x58; every instruction is exact. The four
+// sound sites sit in mutually exclusive branches and need +0x10 between them,
+// i.e. 4 bytes each, and nothing measured pays 4. Header round 16 refuted the
+// "member wrapper that names the handle saturates per function" idea: a
+// TBellDolpic member `JAISound* startBellSound_(u32 id)` holding
+// `JAISound* sound = SMSGetMSound()->startSoundActor(id, &mPosition, 0,
+// nullptr, 0, 4); return sound;` and called at all four sites pays +8 per
+// expansion exactly like the two-argument overload (frame 0x68, +0x20), and
+// the same wrapper returning the call directly, with no named local, pays +0.
+// So a member's binding is not cheaper than a free function's, and the
+// carrier has to be a +4-per-site lever (a global-accessor level, per closure
+// batch 87) rather than a bound local.
 void TBellDolpic::control()
 {
 	JGeometry::TVec3<f32> pos;
