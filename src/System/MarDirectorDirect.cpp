@@ -145,9 +145,9 @@ int TMarDirector::direct()
 			u32 uVar11 = ~uVar8;
 			u32 uVar4  = uVar11;
 			if (unk58 & 1)
-				uVar4 &= ~0x100;
+				uVar4 &= ~CUE_MOVEMENT_GATE_A;
 			if (unk58 & 2)
-				uVar4 &= ~0x200;
+				uVar4 &= ~CUE_MOVEMENT_GATE_B;
 			if (checkUnk4EFlag(1))
 				mShinePfLstMov->perform(uVar4, &local_140);
 			else
@@ -191,9 +191,20 @@ int TMarDirector::direct()
 	return desiredAppState;
 }
 
+// TODO: the ROM emits JDrama::TFlagT<u16>'s copy constructor (weak, 0xc) for
+// this TU and calls it here plus once in `setNextArea`, i.e. the by-value
+// TFlagT parameter of TGameSequence::set gets a real copy that MWCC elides
+// for us at every spelling tried (including
+// `set(other.unk0, other.unk1, other.unk2.get())` in GameSequence.hpp's
+// operator=, worth +3.7 points here and nothing else, and dropping TFlagT's
+// user copy constructor so MWCC generates an implicit one, worth nothing).
+// The same depth question decides whether `decideNextStage` is inlined
+// (updateGameMode, where the ROM calls TFlagT::TFlagT(u16) and
+// TGameSequence::set out of line) or called (changeState, where the ROM
+// `bl`s decideNextStage and we expand it). Both sites live in
+// include/System/GameSequence.hpp and include/JSystem/JDrama/JDRFlag.hpp.
 static void decideNextStage()
 {
-	// TODO: inline hell. TFlagT is my mortal enemy
 	TGameSequence local_3C;
 
 	int stage = SMS_getShineStage(gpApplication.mCurrArea.getStage());
@@ -210,12 +221,15 @@ static void decideNextStage()
 	gpApplication.setNextArea(local_3C);
 }
 
+// UNUSED, 0x10c.
+// TODO: dead in the shipped game and 67 instructions in the map, with no call
+// site and no literal of its own to read; the body is unrecovered.
 static void decideNextStageOfMiss() { }
 
-static void checkDefeatShadowMarioAll() { }
-
-// fabricated
-static inline bool decideSomething()
+// UNUSED, 0x64: the shine flags of the seven shadow-Mario episodes, one per
+// stage. Its `stages` array is the map's `stages$3013` .sdata object, which
+// places it here in source order.
+static bool checkDefeatShadowMarioAll()
 {
 	static u8 stages[] = { 0x6, 0x10, 0x1A, 0x24, 0x2E, 0x38, 0x42 };
 
@@ -231,13 +245,14 @@ static inline bool decideSomething()
 
 static int decideNextScenario(u8 param_1)
 {
+	int scenario = 0;
 	if ((int)param_1 != 1)
-		return 0;
+		return scenario;
 
 	if (TFlagManager::smInstance->getBool(0x103AE))
 		return 2;
 
-	if (decideSomething())
+	if (checkDefeatShadowMarioAll())
 		return 9;
 
 	if (TFlagManager::smInstance->getBool(0x10389))
@@ -257,7 +272,7 @@ static int decideNextScenario(u8 param_1)
 	if (TFlagManager::smInstance->getBool(0x10384))
 		return 1;
 
-	return 0;
+	return scenario;
 }
 
 int TMarDirector::changeState()
@@ -1183,8 +1198,8 @@ void TMarDirector::moveStage()
 	}
 
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		u32 r5 = 0;
-		if ((int)gpMarioOriginal->mWaterGun->mSecondNozzle == 3)
+		u32 r5 = gpMarioOriginal->mWaterGun->mSecondNozzle;
+		if (r5 == 3)
 			r5 = 4;
 		TFlagManager::smInstance->setFlag(0x40004, r5);
 	}
