@@ -205,8 +205,10 @@ public:
 		return getCurrentNozzle()->mEmitParams.mAmountMax.get();
 	}
 
-	// Fabricated. TODO: compare callers before replacing this with the
-	// out-of-line isEmitting predicate, which also checks director state.
+	// Fabricated and now unreferenced: every known call site turned out to
+	// be the out-of-line TWaterGun::isEmitting() (which also rejects the
+	// demo/talk director modes). Kept only until something is shown to need
+	// a director-mode-agnostic spray predicate.
 	bool canSpray() const
 	{
 		if (mCurrentWater == 0)

@@ -1326,7 +1326,7 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 
 void TWaterGun::movement()
 {
-	if (!canSpray()) {
+	if (!isEmitting()) {
 		unk1CC2 = 0;
 		unk1CC4 = 0;
 	}
