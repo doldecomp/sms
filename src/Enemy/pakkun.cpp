@@ -372,6 +372,10 @@ void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 }
 
 // UNUSED
+// TODO: Reconstruct the original 0x98-byte body.
+void TPakkun::createPakkunSmoke(JGeometry::TVec3<f32>&) { }
+
+// UNUSED
 void TPakkun::seedPollute(JGeometry::TVec3<f32>& position)
 {
 	TSmallEnemyManager* manager = (TSmallEnemyManager*)getManager();

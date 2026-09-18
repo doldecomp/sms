@@ -106,6 +106,8 @@ public:
 	// UNUSED
 	void seedPollute(JGeometry::TVec3<f32>&);
 	// UNUSED
+	void createPakkunSmoke(JGeometry::TVec3<f32>&);
+	// UNUSED
 	bool isHideEnd() const;
 
 	static u8 mHeadJntIndex;
