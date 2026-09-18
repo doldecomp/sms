@@ -1108,6 +1108,14 @@ void JPADraw::zDraw()
 		zDrawChild();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// JPADraw::zDrawParticle (batch 127).
+static inline u8 JPADrawExecPtclVisNum(const JPADraw* p)
+{
+	u8 execPtclVisNum = p->execPtclVisNum;
+	return execPtclVisNum;
+}
+
 void JPADraw::zDrawParticle()
 {
 	unkC2 &= ~0x2;
@@ -1141,7 +1149,7 @@ void JPADraw::zDrawParticle()
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getFirst(); link; link = link->getNext()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < execPtclVisNum; ++i)
+			for (int i = 0; i < JPADrawExecPtclVisNum(this); ++i)
 				mpExecPtclVis[i]->exec(&mDrawCtx, particle);
 		}
 	} else {
@@ -1154,6 +1162,14 @@ void JPADraw::zDrawParticle()
 	}
 
 	GXSetMisc(GX_MT_XF_FLUSH, 0);
+}
+
+// Binding level over a raw member read, worth +8 of low region in
+// JPADraw::zDrawChild (batch 127).
+static inline u8 JPADrawExecChldVisNum(const JPADraw* p)
+{
+	u8 execChldVisNum = p->execChldVisNum;
+	return execChldVisNum;
 }
 
 void JPADraw::zDrawChild()
@@ -1197,7 +1213,7 @@ void JPADraw::zDrawChild()
 		JSULink<JPABaseParticle>* link;
 		for (link = particles->getFirst(); link; link = link->getNext()) {
 			JPABaseParticle* particle = link->getObject();
-			for (int i = 0; i < execChldVisNum; ++i)
+			for (int i = 0; i < JPADrawExecChldVisNum(this); ++i)
 				mpExecChldVis[i]->exec(&mDrawCtx, particle);
 		}
 	} else {

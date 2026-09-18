@@ -863,6 +863,14 @@ TNozzleDeform::TNozzleDeform(const char* name, const char* prm,
 	init();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNozzleDeform::movement (batch 127).
+static inline f32 WaterGunUnk378(const TNozzleDeform* p)
+{
+	f32 v378 = p->unk378;
+	return v378;
+}
+
 void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 {
 	if (!mFludd->hasWater()) {
@@ -873,7 +881,7 @@ void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 
 	unk378 *= mEmitParams.mEmitPowScale.get();
 
-	if (unk378 > 1.0f) {
+	if (WaterGunUnk378(this) > 1.0f) {
 		unk378 = 1.0f;
 	}
 

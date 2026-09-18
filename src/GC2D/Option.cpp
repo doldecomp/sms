@@ -494,18 +494,26 @@ TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
 	setState(STATE_INACTIVE);
 }
 
+// Binding level over a raw member read, worth +24 of low region in
+// TOptionSubtitleUnit::update (batch 127).
+static inline TExPane* OptionParentPane(const TOptionSubtitleUnit* p)
+{
+	TExPane* parentPane = p->mParentPane;
+	return parentPane;
+}
+
 void TOptionSubtitleUnit::update()
 {
 	switch (mState) {
 	case STATE_DEACTIVATING:
-		mParentPane->update();
+		OptionParentPane(this)->update();
 		// fade-out animation is done
-		if (mParentPane->getPane()->getAlpha() == 150)
+		if (OptionParentPane(this)->getPane()->getAlpha() == 150)
 			setState(STATE_INACTIVE);
 		break;
 
 	case STATE_ACTIVE:
-		mParentPane->update();
+		OptionParentPane(this)->update();
 		mSelectionBubble->update();
 		break;
 

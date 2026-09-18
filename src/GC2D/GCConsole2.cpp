@@ -2394,6 +2394,14 @@ void TGCConsole2::resetLife(int param_1)
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TGCConsole2::startAppearLife (batch 127).
+static inline TBoundPane* GCConsole2Unk174(const TGCConsole2* p)
+{
+	TBoundPane* v174 = p->unk174;
+	return v174;
+}
+
 bool TGCConsole2::startAppearLife(int param_1)
 {
 	if (unk38 || unk50 || gpMarioOriginal->getHealth() == 0)
@@ -2410,7 +2418,7 @@ bool TGCConsole2::startAppearLife(int param_1)
 		}
 		((J2DPicture*)unk178->getPane())->mWhite = 0xFFFFFFFF;
 		((J2DPicture*)unk178->getPane())->mBlack = 0;
-		((J2DPicture*)unk174->getPane())->mWhite = 0xFF4C00C8;
+		((J2DPicture*)GCConsole2Unk174(this)->getPane())->mWhite = 0xFF4C00C8;
 		((J2DPicture*)unk174->getPane())->mBlack = 0xFF4C0000;
 		updateLifeMeterColors(this, false);
 	} else if (param_1 == 1) {
@@ -2641,14 +2649,22 @@ void TGCConsole2::startAppearJetBalloon(int nozzleKind, int count)
 	startInsertJetBalloon();
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TGCConsole2::startInsertJetBalloon (batch 127).
+static inline TBoundPane* GCConsole2Unk400(const TGCConsole2* p)
+{
+	TBoundPane* v400 = p->unk400;
+	return v400;
+}
+
 void TGCConsole2::startInsertJetBalloon()
 {
 	unk3D = 1;
 	unk59 = 1;
 
 	unk3FC->getPane()->show();
-	unk400->getPane()->show();
-	unk400->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
+	GCConsole2Unk400(this)->getPane()->show();
+	GCConsole2Unk400(this)->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
 
 	unk404->getPane()->hide();
 	unk410->getPane()->hide();
@@ -2664,6 +2680,14 @@ void TGCConsole2::startInsertJetBalloon()
 		unk3FC->setPaneOffset(80, 0, -73, 0, 465 - unk3FC->mInitialBounds.y1);
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TGCConsole2::startAppearRedCoin (batch 127).
+static inline TBoundPane* GCConsole2Unk42C(const TGCConsole2* p)
+{
+	TBoundPane* v42C = p->unk42C;
+	return v42C;
+}
+
 void TGCConsole2::startAppearRedCoin()
 {
 	unk3C = 1;
@@ -2675,8 +2699,8 @@ void TGCConsole2::startAppearRedCoin()
 	else
 		unk428->setPaneOffset(40, 0, 0, 0, 465 - unk428->mInitialBounds.y1);
 
-	unk42C->getPane()->show();
-	unk42C->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
+	GCConsole2Unk42C(this)->getPane()->show();
+	GCConsole2Unk42C(this)->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
 
 	unk430->getPane()->hide();
 	unk438->getPane()->hide();

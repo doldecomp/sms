@@ -148,15 +148,31 @@ BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 	return TRUE;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMario::warpRequest (batch 127).
+static inline CPolarSubCamera* MarioMoveGetCamera()
+{
+	CPolarSubCamera* camera = gpCamera;
+	return camera;
+}
+
+// Binding level over a raw member read, worth +16 of low region in
+// TMario::warpRequest (batch 127).
+static inline TMarioGamePad* MarioMoveGamePad(const TMario* p)
+{
+	TMarioGamePad* gamePad = p->mGamePad;
+	return gamePad;
+}
+
 void TMario::warpRequest(const JGeometry::TVec3<f32>& pos, f32 angle)
 {
 	JGeometry::TVec3<f32> offset = pos - mPosition;
 	moveRequest(pos);
 	mFaceAngle.y    = (s16)DEG2SHORTANGLE(angle);
 	mModelFaceAngle = mFaceAngle.y;
-	gpCamera->addMoveCameraAndMario(offset);
+	MarioMoveGetCamera()->addMoveCameraAndMario(offset);
 	if (SMSGetMarDirector()->mMap != 7)
-		mGamePad->onNeutralMarioKey();
+		MarioMoveGamePad(this)->onNeutralMarioKey();
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, 1);
 }
 
@@ -1150,10 +1166,18 @@ void TMario::dirtyLimitCheck()
 		mDirty = mDirtyParams.mDirtyMax.get();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMario::thinkDirty (batch 127).
+static inline u32 MarioMoveStatus(const TMario* p)
+{
+	u32 status = p->mStatus;
+	return status;
+}
+
 void TMario::thinkDirty()
 {
 	if (checkFlag(MARIO_FLAG_DIRTY)) {
-		if (mStatus == MARIO_STATUS_RUN || mStatus == MARIO_STATUS_OIL_RUN)
+		if (MarioMoveStatus(this) == MARIO_STATUS_RUN || mStatus == MARIO_STATUS_OIL_RUN)
 			mDirty += mDirtyParams.mIncRunning.get();
 		if (mStatus == MARIO_STATUS_CATCH || mStatus == MARIO_STATUS_OIL_SLIP
 		    || mStatus == MARIO_STATUS_OIL_SLOPE)

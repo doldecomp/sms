@@ -827,15 +827,31 @@ f32 JPABaseEmitter::getKeyValue(f32 time, u16 frame_num, f32* frames)
 	return JPAGetKeyFrameValue(time, frame_num, frames);
 }
 
+// Binding level over a raw member read, worth +32 of low region in
+// JPABaseEmitter::calcKeyFrameAnime (batch 127).
+static inline JPADataBlockLinkInfo* JPAEmitterEmitterDataBlockInfo(const JPABaseEmitter* p)
+{
+	JPADataBlockLinkInfo* emitterDataBlockInfo = p->mEmitterDataBlockInfo;
+	return emitterDataBlockInfo;
+}
+
+// Binding level over a raw member read, worth +32 of low region in
+// JPABaseEmitter::calcKeyFrameAnime (batch 127).
+static inline u32 JPAEmitterKeyAnmTypeMask(const JPABaseEmitter* p)
+{
+	u32 keyAnmTypeMask = p->mKeyAnmTypeMask;
+	return keyAnmTypeMask;
+}
+
 void JPABaseEmitter::calcKeyFrameAnime()
 {
-	u32 keyNum = mEmitterDataBlockInfo->getKeyNum();
+	u32 keyNum = JPAEmitterEmitterDataBlockInfo(this)->getKeyNum();
 	if (!keyNum)
 		return;
 
-	u32 mask = mKeyAnmTypeMask;
+	u32 mask = JPAEmitterKeyAnmTypeMask(this);
 
-	JPAKeyFrameAnime** animeFrames = mEmitterDataBlockInfo->getKey();
+	JPAKeyFrameAnime** animeFrames = JPAEmitterEmitterDataBlockInfo(this)->getKey();
 
 	u32 bit    = 1;
 	u32 bitIdx = 0;

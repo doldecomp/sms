@@ -403,14 +403,22 @@ void TTalk2D2::setMessageID(u32 message_id, u32 flags)
 	mIsTalking = true;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TTalk2D2::forceCloseTalk (batch 127).
+static inline MSound* Talk2D2GetMSound()
+{
+	MSound* mSound = gpMSound;
+	return mSound;
+}
+
 void TTalk2D2::forceCloseTalk()
 {
 	gpCamera->makeMtxForPrevTalk();
 
 	if (mIsBoard)
-		gpMSound->startSoundSystemSE(MSD_SE_SY_RACE_START, 0, nullptr, 0);
+		Talk2D2GetMSound()->startSoundSystemSE(MSD_SE_SY_RACE_START, 0, nullptr, 0);
 	else
-		gpMSound->talkModeOut();
+		Talk2D2GetMSound()->talkModeOut();
 
 	gpMarDirector->getConsole()->startAppearTelop(false);
 

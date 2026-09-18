@@ -763,6 +763,14 @@ void TYoshi::doSearch()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TYoshi::doEat (batch 127).
+static inline TMarioParticleManager* YoshiGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 void TYoshi::doEat(u32 param_1)
 {
 	int r31;
@@ -786,13 +794,13 @@ void TYoshi::doEat(u32 param_1)
 		break;
 	}
 
-	gpMarioParticleManager->emitAndBindToMtxPtr(
+	YoshiGetMarioParticleManager()->emitAndBindToMtxPtr(
 	    0x3D, mActor->getModel()->getAnmMtx(unkF6), 0, this);
 
 	if (bVar1 == TRUE) {
 		mType = r31;
 		unkC  = unk8;
-		gpMarioParticleManager->emitAndBindToPosPtr(0x3E, &unk108, 0, this);
+		YoshiGetMarioParticleManager()->emitAndBindToPosPtr(0x3E, &unk108, 0, this);
 		SMSGetMSound()->startSoundActor(MSD_SE_YO_TONGUE_GOKKUN,
 		                                &mTongue->mTipPos, 0, nullptr, 0, 4);
 	}

@@ -1099,10 +1099,18 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 	return getCurrentFrame(0);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMario::setReverseAnimation (batch 127).
+static inline u16 MarioDrawAnimationId(const TMario* p)
+{
+	u16 animationId = p->mAnimationId;
+	return animationId;
+}
+
 f32 TMario::setReverseAnimation(int anm_id, f32 rate)
 {
 	// volatile u32 padding[4];
-	if (anm_id != mAnimationId) {
+	if (anm_id != MarioDrawAnimationId(this)) {
 		setAnimation(anm_id, rate);
 		// Tried using existing functions, but couldn make it match
 		// I suspect there might be another inline?
