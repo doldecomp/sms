@@ -284,14 +284,14 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD)) {
 		if (mImitatedBmd) {
 			if (cue & CUE_CALC_ANIM) {
-				const TBGCheckData* pTStack_5c;
-				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
-				                   &pTStack_5c);
-				Mtx afStack_58;
-				MsMtxSetXYZRPH(afStack_58, mPosition.x, mPosition.y,
-				               mPosition.z, mRotation.x, mRotation.y,
-				               mRotation.z);
-				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
+				Mtx mtx;
+				const TBGCheckData* ground;
+				f32 groundY = gpMap->checkGround(mPosition.x, mPosition.y,
+				                                 mPosition.z, &ground);
+				MtxPtr m    = mtx;
+				MsMtxSetXYZRPH(m, mPosition.x, groundY, mPosition.z,
+				               mRotation.x, mRotation.y, mRotation.z);
+				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(m);
 				mImitatedBmd->getMActor()->getModel()->setBaseScale(
 				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 			}
@@ -688,7 +688,7 @@ void TTelesa::initAttacker(THitActor* param_1)
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 
 	MtxPtr mtx = ((TLiveActor*)param_1)->getModel()->getAnmMtx(5);
-	mPosition.set(mtx[3][0], mtx[3][1] - 150.0f, mtx[3][2]);
+	mPosition.set(mtx[0][3], mtx[1][3] - 150.0f, mtx[2][3]);
 	mDampenedGroundHeight = mPosition.y;
 
 	mVelocity.set(0.0f, 8.0f, 0.0f);
