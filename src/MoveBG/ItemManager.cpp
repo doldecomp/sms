@@ -30,14 +30,18 @@ void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 			if (emitter)
 				emitter->setGlobalScale(
 				    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
-
-			SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT,
-			                                &box->mPosition, 0, nullptr, 0, 4);
 		}
 		box->makeModelValid();
 	}
 }
 
+// TODO: frame 0x78 vs 0x70 (8 bytes of low region, uniform on every slot) plus
+// one copy-form difference: retail spells the last argument copy `mr r7, r30`
+// where we emit `addi r7, r30, 0`. The three makeShine* functions all differ
+// by exactly that copy, and in the two appearWithDemo callers the polarity is
+// reversed (retail `addi`, ours `mr`), so the form is an allocator artifact,
+// not a type or scheduling property. Field stores instead of `mPosition.set()`
+// change nothing.
 TShine* TItemManager::makeShineAppearWithTime(const char* shine_name,
                                               int param_2, f32 x, f32 y, f32 z,
                                               int param_6, int param_7,
@@ -49,9 +53,21 @@ TShine* TItemManager::makeShineAppearWithTime(const char* shine_name,
 	return shine;
 }
 
-TShine* TItemManager::makeShineAppearWithTimeOffset(const char*, int, f32, f32,
-                                                    f32, int, int, int)
+// Reconstructed from the WithDemo/WithDemoOffset pair: the Offset variant adds
+// to the shine's position instead of setting it. WithDemoOffset is 24 bytes
+// bigger than WithDemo, and 176 + 24 = 0xc8, the map's UNUSED size for this.
+TShine* TItemManager::makeShineAppearWithTimeOffset(const char* shine_name,
+                                                    int param_2, f32 offset_x,
+                                                    f32 offset_y, f32 offset_z,
+                                                    int param_6, int param_7,
+                                                    int param_8)
 {
+	TShine* shine = JDrama::TNameRefGen::search<TShine>(shine_name);
+	shine->mPosition.x += offset_x;
+	shine->mPosition.y += offset_y;
+	shine->mPosition.z += offset_z;
+	shine->appearWithTime(param_2, param_6, param_7, param_8);
+	return shine;
 }
 
 TShine* TItemManager::makeShineAppearWithDemo(const char* shine_name,
@@ -77,21 +93,22 @@ TShine* TItemManager::makeShineAppearWithDemoOffset(const char* shine_name,
 	return shine;
 }
 
+// TODO: frame 0x68 vs 0x60. The six `TVec3` argument temporaries are exact in
+// size and order (last argument lowest, later branch lower), but retail's block
+// starts at 0x18 and ours at 0xc: retail has one more 12-byte inline-expansion
+// temporary below all of them, i.e. from an expansion later in source than the
+// coin_red call. `volatile char trash[12]` lands the frame but goes to the top
+// region, so a named local cannot be it, and the default-argument spelling used
+// here is codegen-identical to passing the three vectors explicitly.
 TCoin* TItemManager::newAndRegisterCoin(u32 event_id)
 {
 	TCoin* result;
 	if (event_id < 0x32) {
-		result = (TCoin*)newAndRegisterObj(
-		    "coin_blue", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		result = (TCoin*)newAndRegisterObj("coin_blue");
 	} else if (event_id == 100) {
 		result = gpItemManager->unk78;
 	} else if (event_id == 200) {
-		result = (TCoin*)newAndRegisterObj(
-		    "coin_red", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		result = (TCoin*)newAndRegisterObj("coin_red");
 	} else {
 		return nullptr;
 	}
