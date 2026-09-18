@@ -101,12 +101,15 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		JGeometry::TVec3<f32> vec1(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
 
 		MtxPtr mtx2 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 1);
-		JGeometry::TVec3<f32> vec2(mtx2[0][3], mtx2[1][3], mtx2[2][3]);
+		JGeometry::TVec3<f32> vec2;
+		vec2.x = mtx2[0][3];
+		vec2.y = mtx2[1][3];
+		vec2.z = mtx2[2][3];
 
-		vec1 -= vec2;
+		JGeometry::TVec3<f32> diff = vec2 - vec1;
 
-		if (!vec1.isZero()) {
-			VECNormalize(&vec1, &local_68);
+		if (!diff.isZero()) {
+			VECNormalize(&diff, &local_68);
 		} else {
 			local_68.set(1.0f, 0.0f, 0.0f);
 		}
@@ -171,7 +174,8 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	}
 
 	if (abs(fVar1) > 0.01f) {
-		fVar1 *= __frsqrte(fVar1);
+		volatile f32 f = fVar1 * __frsqrte(fVar1);
+		fVar1          = f;
 	}
 
 	f32 fVar13 = MsClamp(fVar1, 0.7f, 1.2f);
@@ -200,8 +204,6 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	dst[0][2] = local_80.x;
 	dst[1][2] = local_80.y;
 	dst[2][2] = local_80.z;
-
-	char trash[0x10]; // TODO: removeme
 }
 
 TBGTakeHit::TBGTakeHit(TBGTentacle* owner, const char* name)
