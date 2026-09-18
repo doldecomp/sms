@@ -26,8 +26,16 @@ extern unsigned long __DVDLongFileNameFlag;
 extern unsigned long __PADSpec;
 // TODO: other games don't seem to have AT_ADDRESS here,
 // but OSInit won't match without it. Am I doing smthing wrong?
+// The linker script computes these from the end of .sdata2, so they are
+// region-specific; marioUS.MAP gives _stack_addr 0x804277e8 and
+// _db_stack_addr 0x804297e8 for GMSE01 (__ArenaLo = (_db_stack_addr + 0x1f) & ~0x1f).
+#if defined(VERSION_GMSE01)
+extern unsigned char __ArenaLo[] AT_ADDRESS(0x80429800);
+extern char _stack_addr[] AT_ADDRESS(0x804277e8);
+#else
 extern unsigned char __ArenaLo[] AT_ADDRESS(0x80426020);
 extern char _stack_addr[] AT_ADDRESS(0x80424008);
+#endif
 extern unsigned char __ArenaHi[];
 
 // dummy entry points to the OS Exception vector
