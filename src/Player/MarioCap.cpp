@@ -18,7 +18,8 @@
 // The four mModel reads in this constructor stay raw: TMario::getM3UModel()
 // costs it 99.01 -> 98.89 (measured in header round 16), even though the same
 // level is what MarioDraw's setAnimation and MarioInit's loadAfter want.
-// TODO: 99.0%, and after the include swap above the residue is three things.
+// TODO: 99.1%, and after the include swap and the named ResTIMG reference the
+// residue is three things.
 // (a) Frame 0x108 vs 0x180, i.e. 120 bytes of dead low region; the commented
 // out `volatile u32 padding[51]` below is the old placeholder for it.
 // (b) Two r3/r4/r5/r6 rotations, in the SMS_ChangeTextureAll loop and in the
@@ -27,7 +28,12 @@
 // (c) `unk30 = new TTrembleModelEffect;` -- retail stores the result into
 // this->unk30 *before* the init call and then reloads it through that second
 // copy of `this` (`lwz r3, 0x30(r4)`), while we sink the store below the
-// reload. A named local for the allocation is the obvious next trial.
+// reload. Measured and rejected: a named `TTrembleModelEffect* tremble`
+// assigned to unk30 reaches 99.4% but deletes retail's reload entirely (the
+// `lwz r3, 0x30(r4)` disappears), so retail really does re-read the member and
+// the lever has to be whatever gives it the second `this` copy. `unk10[0]`
+// instead of `unk10[thingIdx]` is worse (98.7%), which confirms the index
+// variable.
 TMarioCap::TMarioCap(TMario* mario)
 {
 	// Unused stack space
@@ -58,8 +64,13 @@ TMarioCap::TMarioCap(TMario* mario)
 
 	if (mMario->mBodyPollutionTex != 0) {
 		for (int i = 0; i < 2; ++i) {
-			SMS_ChangeTextureAll(unk10[i]->getModelData(), cDirtyTexName,
-			                     *mMario->mBodyPollutionTex);
+			// The named reference is what puts the dereference chain in
+			// retail's registers: with the dereference spelled at the call
+			// site the mMario fetch lands in a scratch register and the
+			// getModelData chain is renumbered (99.04 -> 99.1, no instruction
+			// change).
+			const ResTIMG& tex = *mMario->mBodyPollutionTex;
+			SMS_ChangeTextureAll(unk10[i]->getModelData(), cDirtyTexName, tex);
 			SMS_MakeDLAndLock(unk10[i]);
 		}
 	}
