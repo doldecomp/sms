@@ -205,7 +205,13 @@ void TMapObjGrassManager::draw() const
 // uniform across every referenced slot, so all 48 bytes are low region inside
 // the inlined draw() chain (draw()/initDrawFar()/entryGrassGroup() leave no map
 // symbol, so draw() is the only legal carrier and it cannot be named).
-// Named sin/angle locals in the loop are +0.
+// Named sin/angle locals in the loop are +0. initDrawNear is a real `bl` here
+// (only initDrawFar and draw() are inlined), so `viewItm` cannot be the
+// carrier: declaring it as the non-trivial 48-byte `JGeometry::SMatrix34C<f32>`
+// (reads spelled `viewItm.mMtx[i][0]`, the conversion operator is ambiguous for
+// a subscript) is codegen-neutral in both functions and adds nothing to this
+// frame. The 48 bytes have to sit in draw() or initDrawFar(), neither of which
+// has a local to name.
 void TMapObjGrassManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
