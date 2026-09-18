@@ -181,6 +181,17 @@ void TMapObjTree::initEach()
 // format string (in both orders, +2 instructions), a named collision pointer,
 // a named joint index, hoisting `char buffer[64]`, inverting the if/else, and
 // a TU-local binding level on the count (that one grows the frame).
+// Closure batch 129, all still three `~` at frame 0x90: a TU-local binding
+// level reading `mLeafNum` by pointer (frame-neutral now, and inert on the
+// register -- so batch 110's "a binding level is also a register lever" does
+// not reach this shape), the same level on the loop bound or on `mLeafNum - i`,
+// `i++` for `++i`, an `(s32)` cast on the `new[]` count, and a named `MtxPtr`
+// for the anm matrix. The `-8` lever in this function is the raw
+// `mMapCollisionManager` read (frame 0x88), which also leaves the register
+// alone, so the count's rank is not bought with frame. Retail merges the
+// count's live range with the loop's scratch register and we merge it with the
+// second format-string base; both merges are legal, so the tie-break is
+// allocator-internal and no source spelling found reaches it.
 void TMapObjTree::initMapObj()
 {
 	TMapObjGeneral::initMapObj();
