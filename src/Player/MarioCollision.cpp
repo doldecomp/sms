@@ -304,8 +304,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 	if (onYoshi()) {
 		getOffYoshi(true);
-		SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mPosition);
 		return;
 	}
 

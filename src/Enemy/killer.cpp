@@ -686,8 +686,7 @@ void TKiller::flyBehavior()
 // the same way; see docs/catalog/frame-gaps.md.
 void TKiller::changeOut()
 {
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition);
 
 	onLiveFlag(LIVE_FLAG_DEAD);
 	genEventCoin();

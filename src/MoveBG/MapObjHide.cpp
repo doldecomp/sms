@@ -306,8 +306,7 @@ THipDropHideObj::THipDropHideObj(const char* name)
 void TWaterHitPictureHideObj::afterFinishedAnim()
 {
 	if (isActorType(0x400001A1)) {
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_POSTER_RIP2, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_POSTER_RIP2, &mPosition);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,
 		                                   0);
 	}

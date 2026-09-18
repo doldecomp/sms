@@ -559,8 +559,7 @@ void TTelesaSlot::calcRootMatrix()
 	if (rolling) {
 		// Every other frame, so that the spin loop does not retrigger itself.
 		if (unk1E0)
-			gpMSound->startSoundActor(MSD_SE_OBJ_SLOT_SPIN, &mPosition, 0,
-			                          nullptr, 0, 4);
+			gpMSound->startSoundActor(MSD_SE_OBJ_SLOT_SPIN, &mPosition);
 
 		unk1E0 = 1 - unk1E0;
 	}

@@ -1114,8 +1114,7 @@ void TItemNozzle::touchPlayer(THitActor* param_1)
 	else
 		boxKind = 4;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_NOZZLE, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_NOZZLE, &mPosition);
 	gpItemManager->resetNozzleBoxesModel(boxKind);
 	gpMarDirector->fireGetNozzle(this);
 }

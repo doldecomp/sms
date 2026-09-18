@@ -1225,8 +1225,7 @@ BOOL TMario::catching()
 
 	slippingBasic(MARIO_STATUS_CATCH_LOST, MARIO_STATUS_LANDING, 0x88);
 
-	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0, nullptr, 0,
-	                                4);
+	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition);
 
 	if (getMotionFrameCtrl().getFrame() > 50.0f)
 		getMotionFrameCtrl().setFrame(50.0f);
@@ -1304,8 +1303,7 @@ BOOL TMario::oilRun()
 		setAnimation(ANIM_RUN2,
 		             0.5f * mIntendedMag * mDirtyParams.mSlipAnmSpeed.get());
 		startVoiceIfNoVoice(MSD_SE_MV28_SPRISE_SMALL_01);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT, &mPosition);
 	}
 
 	switch (walkProcess()) {

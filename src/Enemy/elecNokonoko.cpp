@@ -272,8 +272,7 @@ void TElecNokonoko::calcRootMatrix()
 		    && mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()
 		    && mSpine->getCurrentNerve()
 		           != &TNerveElecNokonokoCollect::theNerve()) {
-			gpMSound->startSoundActor(MSD_SE_EN_DENNOKO_SPARK1, &mPosition, 0,
-			                          nullptr, 0, 4);
+			gpMSound->startSoundActor(MSD_SE_EN_DENNOKO_SPARK1, &mPosition);
 
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtxPtr(
@@ -771,8 +770,7 @@ void TElecCarapace::calcRootMatrix()
 	               mRotation.y + mSpinAngle, mRotation.z);
 	getMActor()->getModel()->setBaseScale(mScaling);
 
-	gpMSound->startSoundActor(MSD_SE_EN_DENNOKO_SPARK2, &mPosition, 0, nullptr,
-	                          0, 4);
+	gpMSound->startSoundActor(MSD_SE_EN_DENNOKO_SPARK2, &mPosition);
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_DNK_BIRI, getMActor()->getModel()->getAnmMtx(2), 1, this);

@@ -578,8 +578,7 @@ void TTelesa::scalingChangeActor()
 void TTelesa::changeOut()
 {
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mPosition = mJuiceBlock->mPosition;
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);

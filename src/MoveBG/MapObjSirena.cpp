@@ -1221,8 +1221,7 @@ BOOL TPanelRevolve::receiveMessage(THitActor* actor, u32 message)
 void TPanelRevolve::touchPlayer(THitActor* actor)
 {
 	if (marioHipAttack() && isState(STATE_NORMAL)) {
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition);
 		mState = STATE_REVOLVING;
 		startAnim(1);
 		removeMapCollision();
@@ -1250,8 +1249,7 @@ void TPictureTelesa::afterFinishedAnim()
 	if (isActorType(0x400001A2)) {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,
 		                                   0);
-		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH2, &mPosition,
-		                                0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH2, &mPosition);
 	}
 }
 
@@ -1262,8 +1260,8 @@ void TPictureTelesa::touchActor(THitActor* actor)
 	    && !isStateTimerEngaged()) {
 		if (actor->mPosition.distance(mPosition) < 200.0f) {
 			startStateTimer(60);
-			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR,
-			                                &mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(
+			    MSD_SE_BS_TELESA_DISAPPEAR, &mPosition);
 			unk174 = true;
 		}
 	}

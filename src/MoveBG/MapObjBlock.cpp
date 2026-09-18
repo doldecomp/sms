@@ -289,8 +289,7 @@ void TBrickBlock::kill()
 	emitAndScale(0x60, 0, &mPosition);
 	emitAndScale(0x61, 0, &mPosition);
 	emitAndScale(0x62, 0, &mPosition);
-	gpMSound->startSoundActor(MSD_SE_OBJ_CLASSIC_BLOCK_B, &mPosition, 0,
-	                          nullptr, 0, 4);
+	gpMSound->startSoundActor(MSD_SE_OBJ_CLASSIC_BLOCK_B, &mPosition);
 	SMSRumbleMgr->start(0x15, 0x14, &mPosition);
 	appearObj(100.0f);
 }

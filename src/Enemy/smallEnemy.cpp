@@ -741,8 +741,7 @@ void TSmallEnemy::scalingChangeActor()
 
 void TSmallEnemy::changeOut()
 {
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition);
 
 	kill();
 	mJuiceBlock->mPosition = mPosition;

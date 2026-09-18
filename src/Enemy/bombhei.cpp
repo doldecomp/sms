@@ -152,8 +152,7 @@ void TBombHei::behaveToWater(THitActor* water)
 // the same way, so whatever the original wrote here it wrote there too.
 void TBombHei::changeOut()
 {
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition);
 
 	onLiveFlag(LIVE_FLAG_DEAD);
 	genEventCoin();

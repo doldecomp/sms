@@ -320,8 +320,7 @@ BOOL TFenceWater::receiveMessage(THitActor* sender, u32 message)
 
 void TFenceWater::changeStatusToGo()
 {
-	gpMSound->startSoundActor(MSD_SE_OBJ_WATER_FENCE_FW, &mPosition, 0, nullptr,
-	                          0, 4);
+	gpMSound->startSoundActor(MSD_SE_OBJ_WATER_FENCE_FW, &mPosition);
 	setState(STATE_GO);
 }
 
@@ -437,8 +436,7 @@ int TRailFence::mWaitTime   = 240;
 BOOL TRailFence::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_SUPER_HIP_DROP) {
-		gpMSound->startSoundActor(MSD_SE_OBJ_MVING_FENCT_PNCH, &mPosition, 0,
-		                          nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_MVING_FENCT_PNCH, &mPosition);
 		setUpMapCollision(1);
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		setState(STATE_RUN);

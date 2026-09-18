@@ -2082,8 +2082,7 @@ void TDangoHamuKuri::behaveToWater(THitActor* param_1)
 	} else if (!mPrev->unk230) {
 		unk230 = 1;
 		unk210 = 1.0f;
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_DANGOKURI_TURN, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_DANGOKURI_TURN, &mPosition);
 	}
 }
 
@@ -2406,8 +2405,7 @@ bool TFireHamuKuri::recoverFire()
 			result = true;
 		}
 	} else {
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEKURI_FLAME, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEKURI_FLAME, &mPosition);
 		if (unk218 > 0) {
 			unk218 -= 1;
 			result = true;

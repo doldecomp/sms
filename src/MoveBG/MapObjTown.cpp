@@ -488,8 +488,7 @@ BOOL TMapObjSwitch::receiveMessage(THitActor*, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("objswitch");
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition);
 		removeMapCollision();
 		for (int i = 0; i < unk13C; ++i)
 			unk144[i]->action(unk140);
@@ -635,8 +634,7 @@ void TBasketReverse::kill()
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ENM_DISAP_B,
 	                                            &mPosition, 0, nullptr);
 
-	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition);
 	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_DELIGHT, 0, nullptr,
 	                                   0);
 	TMapObjBase::makeObjDead();
