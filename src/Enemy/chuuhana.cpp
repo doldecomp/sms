@@ -604,8 +604,11 @@ void TChuuHana::bind()
 	// binds normally, then everything below re-applies gravity and ground.
 	if (mSpine->getCurrentNerve() != &TNerveChuuHanaRoll::theNerve()
 	    && mSpine->getCurrentNerve() != &TNerveChuuHanaFall2::theNerve()
-	    && mSpine->getCurrentNerve() != &TNerveChuuHanaJumpPrepare::theNerve())
+	    && mSpine->getCurrentNerve()
+	        != &TNerveChuuHanaJumpPrepare::theNerve()) {
 		TLiveActor::bind();
+		return;
+	}
 
 	JGeometry::TVec3<f32> next(mPosition);
 	next += mLinearVelocity;
@@ -630,6 +633,10 @@ void TChuuHana::bind()
 	gpMap->isTouchedOneWallAndMoveXZ(&next.x, next.y + mHeadHeight, &next.z,
 	                                 mBodyRadius);
 
+	// TODO: 92.4%.  Retail `bl`s TVec3::sub here (r3 = moved, r4 =
+	// &mPosition) with no extra copy, so the spelling is right and this is
+	// the known per-call-site sub inlining split; `-=` and operator- both
+	// fail to push it out.
 	JGeometry::TVec3<f32> moved(next);
 	moved.sub(mPosition);
 	mLinearVelocity = moved;
