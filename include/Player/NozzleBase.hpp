@@ -118,6 +118,7 @@ public:
 	virtual void animation(int);
 
 	void calcGunAngle(const TMarioControllerWork&);
+	bool isAnmEnd() const;
 	MActor* getMActor() { return unk380; }
 
 public:

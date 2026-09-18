@@ -349,6 +349,24 @@ void TNozzleBase::emit(int param_1)
 
 // TODO: This has a lot of inline functions, find them and update them
 // properly
+// UNUSED (map size 0x94). Emitted between TNozzleBase::emit and
+// TNozzleBase::animation, i.e. defined here in source order; inlined into all
+// three animation() overrides.
+bool TNozzleBase::isAnmEnd() const
+{
+	bool end = false;
+
+	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+	if (ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+	                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
+		end = true;
+
+	if (ctrl->getFrame() > (ctrl->getEnd() - 0.1f))
+		end = true;
+
+	return end;
+}
+
 void TNozzleBase::animation(int param_1)
 {
 	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
@@ -370,18 +388,7 @@ void TNozzleBase::animation(int param_1)
 		if (!mactor->checkCurBckFromIndex(4))
 			mactor->setBckFromIndex(4);
 
-		bool thing = false;
-
-		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
-
-		if (ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
-		                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
-			thing = true;
-
-		if (ctrl->getFrame() > (ctrl->getEnd() - 0.1f))
-			thing = true;
-
-		if (!thing)
+		if (!isAnmEnd())
 			return;
 
 		unk36C = 1;
@@ -405,7 +412,7 @@ void TNozzleBase::animation(int param_1)
 		if (!mactor->checkCurBckFromIndex(3))
 			mactor->setBckFromIndex(3);
 
-		if (mFludd->isEmitting())
+		if (mFludd->isEmitting() == true)
 			unk36C = 0;
 		break;
 	}
@@ -687,17 +694,7 @@ void TNozzleTrigger::animation(int param_1)
 		if (!mactor->checkCurBckFromIndex(bckIdleOut))
 			mactor->setBckFromIndex(bckIdleOut);
 
-		bool finished = false;
-
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
-		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
-		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
-			finished = true;
-
-		if (frameCtrl->getFrame() > (frameCtrl->getEnd() - 0.1f))
-			finished = true;
-
-		if (finished)
+		if (isAnmEnd())
 			unk36C = 1;
 
 		break;
@@ -719,7 +716,7 @@ void TNozzleTrigger::animation(int param_1)
 		if (!mactor->checkCurBckFromIndex(bckStart))
 			mactor->setBckFromIndex(bckStart);
 
-		if (mFludd->isEmitting())
+		if (mFludd->isEmitting() == true)
 			unk36C = 0;
 
 		break;
@@ -959,18 +956,7 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(7))
 			mactor->setBckFromIndex(7);
 
-		bool finished           = 0;
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
-		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
-		                          | J3DFrameCtrl::STATE_LOOPED_ONCE)) {
-			finished = 1;
-		}
-
-		if (frameCtrl->getFrame() > (frameCtrl->getEnd() - 0.1f)) {
-			finished = 1;
-		}
-
-		if (finished) {
+		if (isAnmEnd()) {
 			unk36C = 3;
 		}
 		break;
@@ -990,19 +976,10 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(6))
 			mactor->setBckFromIndex(6);
 
-		if (mFludd->isEmitting())
+		if (mFludd->isEmitting() == true)
 			unk36C = 2;
 
-		bool finished           = false;
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
-		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
-		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
-			finished = true;
-
-		if (frameCtrl->getFrame() > (frameCtrl->getEnd() - 0.1f))
-			finished = true;
-
-		if (finished && !(mFludd->unk1CEC == 0.0f ? true : false))
+		if (isAnmEnd() && !(mFludd->unk1CEC == 0.0f ? true : false))
 			unk36C = 0;
 
 		break;
