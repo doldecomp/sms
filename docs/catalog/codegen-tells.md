@@ -755,3 +755,7 @@ Also measured there: a `const` accessor causes a CSE (retail reloads `mActorType
 - **`new` costs 8 bytes of frame retail does not pay** (`SMS_InitChangeNpcColor`: the new-expression itself, not the local; no explicit `operator new` spelling reproduces it). Mirror image of the "one 8-byte object" family; research item.
 - Two int<->bool shapes: `cmpwi/beq/li 1/b/li 0` is a ternary or if/else producing 1/0; `neg/subic/subfe/clrlwi` (or `cntlzw/extrwi/cntlzw/srwi`) is a real int->bool conversion. A retail `cmpwi` normalisation is never evidence for a `BOOL` local.
 - `TCameraBck::updateDemo`: retail materialises `checkState()`'s bool straight into `result`'s register (r31 already 1) so only `li r31, 0` survives; ours materialises into r0 and copies (ten spellings rejected in the source). `TMapModel::initUnderpass`: `getModelData()` +8 at both sites, `getChildrenNum()/getChild(i)` +0x10, a material accessor +8 at two or three sites. A trial script must print build failures or it reports stale objects.
+
+## Closure batch 70 tells
+
+- **A by-value `TVec3` operator parameter only materialises its copy for an lvalue argument**: `const TVec3& r = MsGetRotFromZaxis(...); x = r - g();` emits retail's three-word copy before `bl TVec3::sub`; `x = f() - g();` subtracts in the donated temporary (`NPCNeckCallBack` 96 -> 98.3). Decides the open `JGVec3.hpp` question of whether `operator-` takes its left operand by value (header item: a by-value-left signature should produce the shape project-wide).
