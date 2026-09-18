@@ -754,14 +754,14 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 				}
 			} else {
 				if (getBookmarkInfo().unk0 == 1) {
-					strncpy(unk124->getStringPtr(), "こわれています", 0x14);
-					strncpy(unk128->getStringPtr(), "こわれています", 0x14);
+					setMessage(unk124, 0x14, 0);
+					setMessage(unk128, 0x14, 0);
 					unk128->show();
 					unk134->hide();
 					unk138->hide();
 				} else if (getBookmarkInfo().unk18 == 0) {
-					strncpy(unk124->getStringPtr(), "NEW", 0x14);
-					strncpy(unk128->getStringPtr(), "NEW", 0x14);
+					setMessage(unk124, 0x14, 0x19);
+					setMessage(unk128, 0x14, 0x19);
 					unk128->show();
 					unk134->hide();
 					unk138->hide();
@@ -1014,14 +1014,14 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 
 			if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
 				if (getBookmarkInfo().unk0 == 1) {
-					strncpy(unk124->getStringPtr(), "こわれています", 0x14);
-					strncpy(unk128->getStringPtr(), "こわれています", 0x14);
+					setMessage(unk124, 0x14, 0);
+					setMessage(unk128, 0x14, 0);
 					unk128->show();
 					unk134->hide();
 					unk138->hide();
 				} else if (getBookmarkInfo().unk18 == 0) {
-					strncpy(unk124->getStringPtr(), "NEW", 0x14);
-					strncpy(unk128->getStringPtr(), "NEW", 0x14);
+					setMessage(unk124, 0x14, 0x19);
+					setMessage(unk128, 0x14, 0x19);
 					unk128->show();
 					unk134->hide();
 					unk138->hide();
@@ -1361,14 +1361,14 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 			unk22C->show();
 
 			if (getBookmarkInfo().unk0 == 1) {
-				strncpy(unk208->getStringPtr(), "こわれています", 0x14);
-				strncpy(unk20C->getStringPtr(), "こわれています", 0x14);
+				setMessage(unk208, 0x14, 0);
+				setMessage(unk20C, 0x14, 0);
 				unk20C->show();
 				unk210->hide();
 				unk214->hide();
 			} else if (getBookmarkInfo().unk18 == 0) {
-				strncpy(unk208->getStringPtr(), "NEW", 0x14);
-				strncpy(unk20C->getStringPtr(), "NEW", 0x14);
+				setMessage(unk208, 0x14, 0x19);
+				setMessage(unk20C, 0x14, 0x19);
 				unk20C->show();
 				unk210->hide();
 				unk214->hide();
@@ -1506,14 +1506,14 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 			unk130->show();
 
 			if (getBookmarkInfo().unk0 == 1) {
-				strncpy(unk124->getStringPtr(), "こわれています", 0x14);
-				strncpy(unk128->getStringPtr(), "こわれています", 0x14);
+				setMessage(unk124, 0x14, 0);
+				setMessage(unk128, 0x14, 0);
 				unk128->show();
 				unk134->hide();
 				unk138->hide();
 			} else if (getBookmarkInfo().unk18 == 0) {
-				strncpy(unk124->getStringPtr(), "NEW", 0x14);
-				strncpy(unk128->getStringPtr(), "NEW", 0x14);
+				setMessage(unk124, 0x14, 0x19);
+				setMessage(unk128, 0x14, 0x19);
 				unk128->show();
 				unk134->hide();
 				unk138->hide();
