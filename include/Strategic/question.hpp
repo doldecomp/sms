@@ -27,6 +27,8 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
+	u16 getRequestNum() const { return unk12; }
+
 	bool request(JGeometry::TVec3<f32>, f32);
 	void makeDL(JDrama::TGraphics*) const;
 	void draw() const;

@@ -24,36 +24,39 @@ void TQuestionManager::load(JSUMemoryInputStream& param_1)
 
 bool TQuestionManager::request(JGeometry::TVec3<f32> param_1, f32 param_2)
 {
-	// TODO: inline for horizontal distance?
-	if (unk12 < 0x20
-	    && (gpMarioPos->x - param_1.x) * (gpMarioPos->x - param_1.x)
-	               + (gpMarioPos->z - param_1.z) * (gpMarioPos->z - param_1.z)
-	           < unk14 * unk14) {
-		unk1C[unk12].unk0 = param_1;
-		unk1C[unk12].unkC = param_2;
-		++unk12;
-		return true;
+	if (unk12 < 0x20) {
+		f32 dx = gpMarioPos->x - param_1.x;
+		f32 dz = gpMarioPos->z - param_1.z;
+		if (dx * dx + dz * dz < unk14 * unk14) {
+			unk1C[unk12].unk0 = param_1;
+			unk1C[unk12].unkC = param_2;
+			++unk12;
+			return true;
+		}
 	}
 
 	return false;
 }
 
-#pragma dont_inline on
 void TQuestionManager::makeDL(JDrama::TGraphics* param_1) const
 {
-	for (int i = 0; i < unk12; ++i) {
-		TQuestionRequest& req    = unk1C[i];
-		JGeometry::TVec3<f32> v1 = req.unk0;
-		f32 f                    = req.unkC;
-		v1.y += f;
-		JGeometry::TVec3<f32> v2;
-		MTXMultVec(param_1->mViewMtx, &v1, &v2);
-		JGeometry::TVec3<f32> v3(v2.x - f, v2.y + f, v2.z + f);
-		unk20->request(&v3);
+	JGeometry::TVec3<f32> vtx[4];
+
+	for (int i = 0; i < getRequestNum(); ++i) {
+		JGeometry::TVec3<f32> viewPos;
+		TQuestionRequest& req     = unk1C[i];
+		JGeometry::TVec3<f32> pos = req.unk0;
+		f32 size                  = req.unkC;
+		pos.y += size;
+		MTXMultVec(param_1->mViewMtx, &pos, &viewPos);
+		vtx[0].set(viewPos.x - size, viewPos.y + size, viewPos.z + size);
+		vtx[1].set(viewPos.x + size, viewPos.y + size, viewPos.z + size);
+		vtx[2].set(viewPos.x + size, viewPos.y - size, viewPos.z + size);
+		vtx[3].set(viewPos.x - size, viewPos.y - size, viewPos.z + size);
+		unk20->request(vtx);
 	}
 	unk20->setEnd();
 }
-#pragma dont_inline off
 
 void TQuestionManager::draw() const
 {
@@ -92,7 +95,8 @@ void TQuestionManager::draw() const
 void TQuestionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if ((cue & CUE_CALC_VIEW) != 0) {
-		if (gpSilhouetteManager->isUnk48Positive()) {
+		bool silhouetteOn = gpSilhouetteManager->isUnk48Positive();
+		if (silhouetteOn) {
 			unk20->reset();
 			makeDL(graphics);
 			unk10 |= 2;
@@ -102,8 +106,9 @@ void TQuestionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk12 = 0;
 	}
 
-	if ((cue & CUE_DRAW) != 0 && gpSilhouetteManager->isUnk48Positive()
-	    && (unk10 & 2) != 0) {
-		draw();
+	if ((cue & CUE_DRAW) != 0) {
+		bool silhouetteOn = gpSilhouetteManager->isUnk48Positive();
+		if (silhouetteOn && (unk10 & 2) != 0)
+			draw();
 	}
 }
