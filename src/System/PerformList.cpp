@@ -12,6 +12,17 @@ void TPerformList::forEachPerform(
 	}
 }
 
+// TODO: frame 0xc0 vs retail 0xe8; all 54 instructions match and the thirteen
+// iterator copy slots pair up one-to-one, but retail's block sits 0x24-0x30
+// higher (0x90-0xdf against our 0x6c-0xb7) with one more hole in it, i.e. 40
+// bytes of dead inline-temporary space below the copies that we do not
+// reserve. forEachPerform's own out-of-line size is exact (0xa4), so the body
+// is right and the residue is entirely the call-site expansion.
+// Measured: getChildren() over begin()/end() directly is +24 (0xa8 -> 0xc0) and
+// nothing goes past 0xc0. Zero: getChildren() returning TPerformLinkList&, an
+// extra getChildren() forwarder level, begin()/end() forwarders on
+// TPerformLinkList, a while loop instead of the for. Rejected: (*it).perform()
+// (-10%), named iterator locals for b/e (-26%), pre-increment (frame 0xb0).
 void TPerformList::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	forEachPerform(getChildren().begin(), getChildren().end(), graphics, cue);
@@ -27,7 +38,9 @@ void TPerformList::load(JSUMemoryInputStream& stream)
 	while (stream.getLength() - stream.getPosition() > 0) {
 		stream.readString(elementName, 80);
 
-		obj = JDrama::TNameRefGen::search<JDrama::TViewObj>(elementName);
+		obj = (JDrama::TViewObj*)JDrama::TNameRefGen::getInstance()
+		          ->getRootNameRef()
+		          ->search(elementName);
 
 		u32 value = stream.readU32();
 
