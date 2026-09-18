@@ -180,6 +180,23 @@ public:
 	// fabricated
 	bool checkFlag(u32 flag) const { return mFlags & flag ? true : false; }
 
+	// TODO (header round 19): the level count is now measured. Retail's one
+	// `bl isIllegalData` site needs isIllegalData to sit at inline depth 3
+	// *inside* TSphereLink::execMapCollision_ -- i.e. two intermediate levels
+	// between them, not one. Probed with nested file-static forwarders in
+	// BossHanachanSub.cpp: one level changes nothing; two levels give the
+	// `bl`, emit isIllegalData weak at exactly the map's 0x1c and take
+	// TSphereLink::moveHead 85.7 -> 91.8 while execMapCollision_'s own
+	// out-of-line copy stays at the map's 0xbc (it still expands the callee at
+	// depth 3); three levels overshoot (the out-of-line copy drops to 0xb4).
+	// So `isLegal()` forwarding to `isIllegalData()` is only one of the two
+	// levels and cannot work alone -- that is why batch 102's trial failed.
+	// The second level is still unidentified; the map has no TBGCheckData
+	// legality symbol at all, so it is a fully inlined in-class body or a
+	// free helper. A plausible shape is a "pointer is non-null and legal"
+	// helper wrapping `ground != nullptr && ground->isLegal()`, but there is
+	// no evidence for it yet, so nothing is committed.
+	//
 	// TODO: rejected (batch 102). Retail's one `bl isIllegalData` site
 	// (TSphereLink::execMapCollision_, inlined twice in moveHead) compares
 	// the callee's *returned byte* against 1 (`clrlwi; cmplwi 1; bne; li 0;
