@@ -37,8 +37,12 @@ public:
 		}
 	}
 
-	// fabricated and wrong
-	T top() const { return operator[](mSize - 1); }
+	// A raw read of the last slot, with neither the empty guard nor the
+	// decrement pop() has: that is what retail expands inside
+	// TSpineEnemy::doShortCut, and there is no map symbol for it anywhere, so
+	// it has to stay expandable -- going through operator[] adds a level and
+	// MWCC then emits an out-of-line copy instead.
+	const T& top() const { return mData[mSize - 1]; }
 	// fabricated and wrong
 	T operator[](int index) const { return mData[index]; }
 

@@ -573,7 +573,17 @@ void TSpineEnemy::doShortCut()
 		return;
 	}
 
-	TPathNode node = unk114.pop();
+	// A peek, not a pop: the node is only consumed below, once the wall probe
+	// says the short cut is clear. Retail inlines `mData[mSize - 1]` here with
+	// no decrement and no empty guard, which is exactly TSolidStack::top().
+	// Declared then assigned, not copy-initialised: retail default-constructs
+	// the node (a null owner and a zero point) before the four-word copy.
+	//
+	// TODO: 99.6%, every instruction matching; our frame is 16 bytes over
+	// retail's 0xb0, so the assignment leaves one TPathNode-sized temporary
+	// retail does not have.
+	TPathNode node;
+	node = unk114.top();
 
 	JGeometry::TVec3<f32> local_28 = node.getPoint() - mPosition;
 	if (local_28.x == 0.0f && local_28.y == 0.0f && local_28.z == 0.0f)
