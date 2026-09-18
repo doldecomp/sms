@@ -62,7 +62,7 @@ void TMario::decHP(int hp)
 	}
 
 	mHealth -= hp;
-	if (0 >= mHealth) {
+	if (0 >= getHealth()) {
 		mHealth = 0;
 		loserExec();
 	}
@@ -94,7 +94,7 @@ bool TMario::isTakeSituation(THitActor* object)
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000000))
 		return false;
 
-	if (mStatus == MARIO_STATUS_CATCH)
+	if (getStatus() == MARIO_STATUS_CATCH)
 		return false;
 
 	if (onYoshi())
@@ -118,7 +118,8 @@ bool TMario::isTakeSituation(THitActor* object)
 		return false;
 	}
 
-	f32 dist = JGeometry::TVec3<f32>(object->mPosition - mPosition).length();
+	f32 dist
+	    = JGeometry::TVec3<f32>(object->mPosition - getPosition()).length();
 	if (dist > mAttackRadius + object->getDamageRadius()) {
 		return false;
 	}
@@ -137,13 +138,13 @@ BOOL TMario::trampleExec(THitActor* param_1)
 	if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING))
 		return false;
 
-	if (mStatus == MARIO_STATUS_DIVE)
+	if (getStatus() == MARIO_STATUS_DIVE)
 		return false;
 
 	if (param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE) == FALSE)
 		return false;
 
-	if (mStatus == MARIO_STATUS_BROAD_JUMP) {
+	if (getStatus() == MARIO_STATUS_BROAD_JUMP) {
 		changePlayerStatus(MARIO_STATUS_BACK_JUMP, 0, false);
 	} else {
 		switch (mAnimationId) {

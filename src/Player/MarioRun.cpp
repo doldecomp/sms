@@ -211,14 +211,14 @@ void TMario::getSlopeNormalAccele(f32* arg0, f32* arg1)
 		return;
 	}
 
-	if (mGroundPlane->isUnk2()) {
+	if (getGroundPlane()->isUnk2()) {
 		*arg0 = mSlipParams45.mSlopeAcceleUp.get();
 		*arg1 = mSlipParams45.mSlopeAcceleDown.get();
 		return;
 	}
 
-	if (mGroundPlane->isWetGround()) {
-		if (mGroundPlane->mNormal.y > 0.99f) {
+	if (getGroundPlane()->isWetGround()) {
+		if (getGroundPlane()->mNormal.y > 0.99f) {
 			*arg0 = mSlipParamsWaterGround.mSlopeAcceleUp.get();
 			*arg1 = mSlipParamsWaterGround.mSlopeAcceleDown.get();
 		} else {
@@ -246,14 +246,14 @@ void TMario::getSlopeSlideAccele(f32* arg0, f32* arg1)
 		return;
 	}
 
-	if (mGroundPlane->isUnk2()) {
+	if (getGroundPlane()->isUnk2()) {
 		*arg0 = mSlipParams45.mSlideAcceleUp.get();
 		*arg1 = mSlipParams45.mSlideAcceleDown.get();
 		return;
 	}
 
-	if (mGroundPlane->isWetGround()) {
-		if (mGroundPlane->mNormal.y > 0.99f) {
+	if (getGroundPlane()->isWetGround()) {
+		if (getGroundPlane()->mNormal.y > 0.99f) {
 			*arg0 = mSlipParamsWaterGround.mSlideAcceleUp.get();
 			*arg1 = mSlipParamsWaterGround.mSlideAcceleDown.get();
 		} else {
@@ -274,10 +274,10 @@ f32 TMario::getChangeAngleSpeed()
 	} else {
 		if (mGroundPlane->isSlider()) {
 			angSp = (f32)mSlipParamsAllSlider.mSlideAngleYSp.get();
-		} else if (mGroundPlane->isUnk2()) {
+		} else if (getGroundPlane()->isUnk2()) {
 			angSp = (f32)mSlipParams45.mSlideAngleYSp.get();
-		} else if (mGroundPlane->isWetGround()) {
-			if (mGroundPlane->mNormal.y > 0.99f) {
+		} else if (getGroundPlane()->isWetGround()) {
+			if (getGroundPlane()->mNormal.y > 0.99f) {
 				angSp = (f32)mSlipParamsWaterGround.mSlideAngleYSp.get();
 			} else {
 				angSp = (f32)mSlipParamsWaterSlope.mSlideAngleYSp.get();

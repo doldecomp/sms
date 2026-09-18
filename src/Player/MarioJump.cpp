@@ -68,16 +68,16 @@ void TMario::doJumping()
 	mForwardVel *= mJumpParams.mJumpSpeedBrake.get();
 
 	if (mInput & 1) {
-		f32 mag       = mIntendedMag;
+		f32 mag       = getIntendedMag();
 		s16 angleDiff = mIntendedYaw - mFaceAngle.y;
 
-		if (mStatus == MARIO_STATUS_ROCKET
+		if (getStatus() == MARIO_STATUS_ROCKET
 		    && checkFlag(MARIO_STATUS_FLAG_UNK8000)) {
-			if (mWaterGun->isEmitting())
-				mag = 2.5f * mIntendedMag;
+			if (getFludd()->isEmitting())
+				mag = 2.5f * getIntendedMag();
 		}
 
-		if (mStatus == MARIO_STATUS_WALL_JUMP && mVel.y > 0.0f
+		if (getStatus() == MARIO_STATUS_WALL_JUMP && mVel.y > 0.0f
 		    && (angleDiff < -0x4000 || angleDiff > 0x4000)) {
 			mag = 0.0f;
 		}
@@ -917,20 +917,20 @@ BOOL TMario::rocketCheck()
 		bVar2 = false;
 
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		if (mWaterGun->getEmitParams().mRocketType.get() != 1)
+		if (getFludd()->getEmitParams().mRocketType.get() != 1)
 			bVar2 = false;
 
 		if (!isUpperState(UPPER_STATE_PUMPING))
 			bVar2 = false;
 
-		if (!mWaterGun->isEmitting())
+		if (!getFludd()->isEmitting())
 			bVar2 = false;
 	} else {
 		bVar2 = false;
 	}
 
 	if (bVar2 == true) {
-		unk314 = mPosition.y + mWaterGun->mWatergunParams.mHHoverHeight.get();
+		unk314 = mPosition.y + getFludd()->mWatergunParams.mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 

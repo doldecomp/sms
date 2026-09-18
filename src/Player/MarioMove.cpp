@@ -32,7 +32,7 @@ f32 TMario::getJumpAccelControl() const
 
 f32 TMario::getJumpSlideControl() const
 {
-	if (mStatus == MARIO_STATUS_WIRE_JUMP)
+	if (getStatus() == MARIO_STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpSlideControl.get();
 
 	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))

@@ -98,7 +98,7 @@ void TMario::emitSweat(s16 rot)
 {
 	if (!checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
 	    && !checkFlag(MARIO_FLAG_IN_ANY_WATER) && !isUnderWater()) {
-		MtxPtr mtx = mModel->getModel()->getAnmMtx(mJointIdHead);
+		MtxPtr mtx = getM3UModel()->getModel()->getAnmMtx(mJointIdHead);
 		JGeometry::TVec3<f32> pos;
 		pos.x = mtx[0][3];
 		pos.y = mtx[1][3];
@@ -323,7 +323,7 @@ void TMario::treeSlipEffect()
 
 void TMario::frontSlipEffect()
 {
-	if (mGroundPlane->isWetGround()
+	if (getGroundPlane()->isWetGround()
 	    || (mStatus == MARIO_STATUS_CATCH && mStatusState == 1)) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_WATSLIDE_A,
 		                                            getCenterAnmMtx(), 3, this);
@@ -586,7 +586,7 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 {
 	int foot   = 2;
 	MtxPtr mtx = nullptr;
-	if (mStatus == MARIO_STATUS_RUN) {
+	if (getStatus() == MARIO_STATUS_RUN) {
 		if (onYoshi()) {
 			if (mYoshi->getFrameCtrl()->checkPass(47.0f)) {
 				mtx  = mYoshi->getMtxPtrFootL();
@@ -608,7 +608,7 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 		}
 	}
 
-	if (mStatus == MARIO_STATUS_WAIT && onYoshi()) {
+	if (getStatus() == MARIO_STATUS_WAIT && onYoshi()) {
 		if (mYoshi->getFrameCtrl()->checkPass(20.0f)
 		    || mYoshi->getFrameCtrl()->checkPass(71.0f)
 		    || mYoshi->getFrameCtrl()->checkPass(134.0f)) {
@@ -631,7 +631,7 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 		// wtf is this bs?
 		u32 b2 = printId > 0;
 		u32 b  = mForwardVel > 20.0f;
-		if (mStatus == MARIO_STATUS_RUN && b && b2)
+		if (getStatus() == MARIO_STATUS_RUN && b && b2)
 			gpMarioParticleManager->emit(printId, &mFootprintPos, 0, nullptr);
 
 		if (effectId > 0) {
@@ -705,7 +705,7 @@ void TMario::elecEndEffect()
 void TMario::kickRoofEffect()
 {
 	if (getMotionFrameCtrl().checkPass(8.0f)) {
-		MtxPtr mtx      = mModel->getModel()->getAnmMtx(mJointIdHead);
+		MtxPtr mtx      = getM3UModel()->getModel()->getAnmMtx(mJointIdHead);
 		mFootprintPos.x = mtx[0][3];
 		mFootprintPos.y = mtx[1][3];
 		mFootprintPos.z = mtx[2][3];
@@ -731,7 +731,7 @@ void TMario::sleepingEffectKill()
 
 void TMario::toroccoEffect()
 {
-	f32 dist = JGeometry::TVec3<f32>(mPosition - mToroccoPos).length();
+	f32 dist = JGeometry::TVec3<f32>(getPosition() - mToroccoPos).length();
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_TORO_WIND, mTorocco->getModel()->getAnmMtx(0), 1, this);

@@ -461,15 +461,15 @@ BOOL TMario::isFallCancel()
 
 void TMario::fallProcess()
 {
-	if (mStatus == MARIO_STATUS_DIVE) {
+	if (getStatus() == MARIO_STATUS_DIVE) {
 		mVel.y -= mDivingParams.mGravity.get();
 		if (mVel.y < -75.0f)
 			mVel.y = -75.0f;
 	} else {
 		if (isFallCancel()) {
 			mVel.y *= 0.75f;
-		} else if ((mStatus == MARIO_STATUS_LEFT_ROTATE_JUMP
-		            || mStatus == MARIO_STATUS_RIGHT_ROTATE_JUMP)
+		} else if ((getStatus() == MARIO_STATUS_LEFT_ROTATE_JUMP
+		            || getStatus() == MARIO_STATUS_RIGHT_ROTATE_JUMP)
 		           && mVel.y < 0.0f) {
 			mVel.y -= mJumpParams.mSpinJumpGravity.get();
 		} else {

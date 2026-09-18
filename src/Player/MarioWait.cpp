@@ -185,15 +185,15 @@ BOOL TMario::waiting()
 	} else if (isSinking()) {
 		setAnimation(ANIM_SINKING, 1.0f);
 	} else if (mUpperState == UPPER_STATE_IDLE
-	           && (mPrevStatus == MARIO_STATUS_BRAKE_END
+	           && (getPreviousStatus() == MARIO_STATUS_BRAKE_END
 	               || checkFlag(MARIO_FLAG_UNK_20))
 	           && !(mStatusState & 0x1)) {
 		setAnimation(ANIM_HOT_WAIT, 1.0f);
-		if (mModel->getFrameCtrl(0).checkPass(138.0f))
+		if (getM3UModel()->getFrameCtrl(0).checkPass(138.0f))
 			emitSweat(mFaceAngle.y - 0x4000);
 		if (isLast1AnimeFrame())
 			mStatusState |= 0x1;
-	} else if (mHealth <= 3) {
+	} else if (getHealth() <= 3) {
 		if (mAnimationId != ANIM_DAMAGE_WAIT
 		    && mAnimationId != ANIM_DAMAGE_WAIT_START) {
 			setAnimation(ANIM_DAMAGE_WAIT_START, 1.0f);

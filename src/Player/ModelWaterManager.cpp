@@ -297,7 +297,7 @@ u8 TModelWaterManager::emitRequest(const TWaterEmitInfo& param_1)
 		return 0;
 
 	while (particlesToSpawn > 0) {
-		if (mParticleCount >= unk10)
+		if (getParticleCount() >= unk10)
 			break;
 		makeEmit(param_1);
 		--particlesToSpawn;
