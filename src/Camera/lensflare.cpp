@@ -132,6 +132,21 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		f32 lz = near9grid[4].z + (near9grid[5].z - near9grid[4].z) * tx
 		         + (near9grid[1].z - near9grid[4].z) * ty;
 
+		// TODO (header round 25): the three-deep chain above is doing its
+		// job -- two of retail's three `bl TVec3<f32>::set(const Vec&)`
+		// sites, plus both `bl JMAS{Cos,Sin}`, reproduce exactly. The third
+		// `bl set` is this one, and it is lost to the lerp above, not to a
+		// depth problem: retail computes the three components with separate
+		// `fmuls`/`fadds` pairs (six adds, f29/f30/f31 as three named scalar
+		// locals) and only then calls `set`, while this spelling lets
+		// fp_contract fuse every product into `fmadds` and then folds the
+		// `set` away with it. The multiplicands retail uses are reloaded from
+		// the stack between the subtraction and the product, so the deltas
+		// were stored -- i.e. retail built the two difference *vectors* as
+		// objects and scaled them, rather than writing nine scalar
+		// expressions. That is the next thing to try here, and it should also
+		// account for the four extra callee-saved FPRs (we name seven float
+		// locals in this body, retail three) and most of the 0x90 frame gap.
 		JGeometry::TVec3<f32> finalPos;
 		finalPos.set(sunWorldPos);
 
