@@ -326,25 +326,42 @@ static inline TPlayList* JASHardStreamGetNext(TPlayList* p)
 		return mList->getPair()->getLoop();
 	}
 
-	// TODO: startFirst/startSecond inline this function and match instruction
-	// for instruction, but their frame is 0x88 while ours is 0x70: retail has
-	// 24 extra bytes of dead low region at 0x18..0x30 (buffer at 0x30, stmw at
-	// 0x74). Probed: the only zero-instruction source of exactly that geometry
-	// is an uninitialised local of a 24-byte class with a user constructor and
-	// no destructor declared here before `buffer` (a ctor+dtor class adds 8
-	// more above the buffer, a dead POD array is eliminated, a 16-byte class
-	// gives 0x28 and a 20-byte one 0x2c). No 24-byte class with a ctor is
-	// visible in the map for this TU, so the carrier is unidentified.
-	// Rejected (all leave buffer at 0x18): routing the strcpy/strcat through
-	// extendFilename (frame 0x78, +8 above the buffer instead), `&fi[*idx]`
-	// instead of `fi + *idx` at the three call sites, naming the DVDOpen
-	// result, declaring `ptr` before `buffer`, a wider outgoing argument area
-	// (a ten-word call only moves the buffer by 8).
+	// Closed by structural pass 167.  `startFirst`/`startSecond` inline
+	// `fileOpen` and always matched instruction for instruction; the whole
+	// residue was 24 bytes of dead low region (their frame 0x70 against retail's
+	// 0x88, the path buffer at 0x18 against 0x30), and earlier passes looked for
+	// it as a 24-byte class local, which no class in this TU's map reach could
+	// supply.  It is three stacked levels over the two file-local statics
+	// instead, priced here from the 0x70 base: the one-parameter binding that
+	// returns the file name is +12 (an 8-byte parameter temp plus a 4-byte
+	// pointer return), the parameterless binding over `rootDir` another +8, and
+	// the direct-return fork over `streamFiles` the last +4 -- which is exactly
+	// the "global fork is +4 per read" step, and it has to be nested inside the
+	// name binding, not spelled at the call site.  Refuted on the way: a
+	// void-returning `strcpy` wrapper for `rootDir` is +0 (the return type is
+	// what is priced), and binding the `index * 0x24` product as well overshoots
+	// to 0x90.  Earlier rejected: routing the strcpy/strcat through
+	// `extendFilename`, `&fi[*idx]` instead of `fi + *idx`, naming the DVDOpen
+	// result, declaring `ptr` before `buffer`, and a wider outgoing area.
+	static inline char* HardStreamFiles() { return streamFiles; }
+
+	static inline char* HardStreamRootDir()
+	{
+		char* dir = rootDir;
+		return dir;
+	}
+
+	static inline char* HardStreamFileName(u16 index)
+	{
+		char* name = HardStreamFiles() + index * 0x24;
+		return name;
+	}
+
 	BOOL TControl::fileOpen(u16 param_1, DVDFileInfo* param_2)
 	{
 		char buffer[64];
-		char* ptr = streamFiles + param_1 * 0x24;
-		strcpy(buffer, rootDir);
+		char* ptr = HardStreamFileName(param_1);
+		strcpy(buffer, HardStreamRootDir());
 		strcat(buffer, ptr);
 		if (!DVDOpen(buffer, param_2))
 			return false;
