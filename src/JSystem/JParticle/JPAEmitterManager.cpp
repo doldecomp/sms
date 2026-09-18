@@ -65,6 +65,13 @@ JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
 
 	unkC4 = 0;
 
+	// TODO: the 16 stores below match, but retail's two-iteration loop body
+	// allocates the first four `addi` offset registers as r10/r9/r8/r7 where we
+	// reuse r0/r4, then both agree from 0xd8 on (a clean r10..r0 round robin in
+	// retail). It is the whole residue of this constructor and the frame is
+	// already 0x70. Rejected: a nested `for (j)` loop (85.2%, frame 0x80), one
+	// shared `int i` for every loop in the function (14 operand markers, worse),
+	// `i++`, `u32 i` and `i != 2` (all +0).
 	for (int i = 0; i < 2; ++i) {
 		unkC8[i][0]  = 0;
 		unkC8[i][1]  = 0;
@@ -242,6 +249,14 @@ static inline u8 JPAEmitterManagerGetFieldNum(JPADataBlockLinkInfo* p)
 	return fieldNum;
 }
 
+// TODO: 99.6%, every instruction and the 0xc8 frame match; the only residue is
+// a two-register swap. Retail puts the CSE of `&unkA4[param_3]` in r30 and
+// `linkInfo` in r29, we do the reverse, with r22/r23/r24/r25/r31 identical.
+// Declaration order is inert here: hoisting `linkInfo`, `block` or `emitter`
+// to an uninitialised declaration ahead of the others each left the swap
+// unchanged. `linkInfo` cannot be un-named (spelling it from `emitterData`
+// would have to keep `emitterData` alive across `createVolumeEmitter`), so the
+// callee-saved rotation is the whole residue.
 JPABaseEmitter* JPAEmitterManager::createEmitterBase(
     s32 param_1, u8 param_2, u8 param_3,
     JPACallBackBase<JPABaseEmitter*>* param_4,
