@@ -12,23 +12,27 @@ void TPerformList::forEachPerform(
 	}
 }
 
-// TODO: frame 0xc0 vs retail 0xe8; all 54 instructions match and the thirteen
-// iterator copy slots pair up one-to-one, but retail's block sits 0x24-0x30
-// higher (0x90-0xdf against our 0x6c-0xb7) with one more hole in it, i.e. 40
-// bytes of dead inline-temporary space below the copies that we do not
-// reserve. forEachPerform's own out-of-line size is exact (0xa4), so the body
-// is right and the residue is entirely the call-site expansion.
-// Measured: getChildren() over begin()/end() directly is +24 (0xa8 -> 0xc0) and
-// nothing goes past 0xc0. Zero: getChildren() returning
-// TSingleLink<TPerformLink, 0>&, an extra getChildren() forwarder level,
-// begin()/end() forwarders on TSingleLink, a while loop instead of the for. Rejected: (*it).perform()
-// (-10%), named iterator locals for b/e (-26%), pre-increment (frame 0xb0).
-// A dead 36-40 byte non-trivial local (user ctor or dtor) in forEachPerform
-// lands 0xe8 exactly with perform still 54 instructions and forEachPerform
-// still 41, so its UNUSED size 0xa4 survives -- forEachPerform is UNUSED, so it
-// is a legal carrier, unlike the emitted callees in PollutionPos and TalkCursor.
-// Not applied: nothing in a list-walk helper motivates a 36-40 byte object.
-// See docs/catalog/frame-gaps.md, "The dead low region", for the size ladder.
+// TODO: frame 0xc0 vs retail 0xe8, and the residue is **not** a plain frame
+// gap: the thirteen iterator copy slots pair up one-to-one but their *grouping*
+// differs, so no amount of low region lines them up. Ours are
+// [0x6c 0x70 0x74 0x78] [0x84 0x88] [0x90 0x94 0x98] [0xa8 0xac 0xb0 0xb4];
+// retail's are [0x90 0x94] [0xa4 0xa8] [0xb0 0xb4 0xb8 0xbc 0xc0]
+// [0xd0 0xd4 0xd8 0xdc] -- a 12-byte hole between the two `operator!=`
+// temporary pairs where we have none, and no hole inside the middle group
+// where we have four bytes. That is the shared `JGadget` iterator expansion
+// structure that batch 81 flagged in `std-list.hpp` (the same "off by 8 per
+// group gap" seen in `SDLModel::entry` and `TMirrorActor::init`), not
+// something this TU can spell.
+// Frame levers measured anyway (all 54 instructions, all 36 diffs, i.e. none
+// of them changes the grouping): one level that binds `getChildren()` is +0x10
+// per call site and +0x18 for both, a second stacked level +0x18 more,
+// `begin()`/`end()` without `getChildren()` -0x18. Worse: binding levels on
+// `begin()`/`end()` themselves (67 instructions), named iterator locals for b
+// and e (63), wrapping the whole call (81).
+// `forEachPerform`'s own out-of-line copy is exact (UNUSED 0xa4), so the body
+// is right; a dead 36-40 byte non-trivial local in it would land 0xe8 (it is
+// UNUSED, so a legal carrier) but nothing in a list walk motivates one and it
+// would not fix the grouping either.
 void TPerformList::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	forEachPerform(getChildren().begin(), getChildren().end(), graphics, cue);
