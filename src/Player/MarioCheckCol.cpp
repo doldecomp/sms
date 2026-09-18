@@ -12,15 +12,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: GMSE01 frame is 0x18 vs 0x30; water-hit pointer registers differ.
-// TODO: promote to TWaterGun as `s32 getCurrentNozzleIndex() const`; the
-// signed `cmpwi` on the u8 field plus the 8 bytes of frame it carries are the
-// evidence (raw `(int)mCurrentNozzle` leaves hitNormal at 0x28 vs 0x30).
-static inline s32 MarioCheckCol_nozzleIndex(const TWaterGun* fludd)
-{
-	return fludd->mCurrentNozzle;
-}
-
 void TMario::hitNormal(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
@@ -53,7 +44,7 @@ void TMario::hitNormal(THitActor* actor)
 	}
 
 	TWaterGun* wg = mWaterGun;
-	if (MarioCheckCol_nozzleIndex(wg) == 0 && wg->mIsEmitWater != 0) {
+	if (wg->getCurrentNozzleIndex() == 0 && wg->mIsEmitWater != 0) {
 		// TODO: 99.7%: the only difference left is the volatile register
 		// holding &mStaticHitActor (retail r3, coalesced with the argument
 		// copy in r4; ours r7). The instruction stream is identical. Ruled

@@ -175,6 +175,11 @@ public:
 	// Fabricated
 	TNozzleBase* getNozzle(u8 index) { return mNozzleList[index]; }
 	TNozzleBase* getCurrentNozzle() { return mNozzleList[mCurrentNozzle]; }
+	// Fabricated. The signed return type is evidence, not decoration:
+	// TMario::hitNormal compares the nozzle index with a signed `cmpwi` and
+	// wants the 8 bytes of frame this accessor level carries, which a raw
+	// `(int)mCurrentNozzle` at the call site does not supply.
+	s32 getCurrentNozzleIndex() const { return mCurrentNozzle; }
 	const TNozzleBase::TEmitParams& getEmitParams() const
 	{
 		return getCurrentNozzle()->mEmitParams;
