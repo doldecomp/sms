@@ -15,6 +15,7 @@ DECLARE_NERVE(TNervePakkunHide, TLiveActor);
 DECLARE_NERVE(TNervePakkunAppear, TLiveActor);
 DECLARE_NERVE(TNervePakkunGenerate, TLiveActor);
 
+// TODO: Need to validate that these are actually real
 enum TPakkunSeedState {
 	PAKKUN_SEED_STATE_APPEAR = 1,
 	PAKKUN_SEED_STATE_SET    = 2,
@@ -22,6 +23,7 @@ enum TPakkunSeedState {
 	PAKKUN_SEED_STATE_CIRCLE = 4,
 };
 
+// An enum wrapper for the bas animations
 enum TPakkunAnimation {
 	PAKKUN_ANM_CRUSH_TO_HIDE = 0,
 	PAKKUN_ANM_DAMAGE        = 1,
