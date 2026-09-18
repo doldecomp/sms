@@ -178,7 +178,7 @@ public:
 	// 3 - got
 	/* 0x150 */ u8 mShineUnlockStates[8];
 
-	/* 0x158 */ void* mScenarioBmg;
+	/* 0x158 */ void* mStageBmg;
 	/* 0x15C */ void* mScenarioBmg2;
 
 	// Unused; look like this has been moved to TSelectGrad.

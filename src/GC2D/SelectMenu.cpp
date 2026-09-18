@@ -108,6 +108,13 @@ void TSelectGrad::setStageColor(u8 stage)
 	}
 }
 
+// TODO: 26 slot/register differences left. The unnamed `(GXColor)` argument
+// temporary is at 0x50/0x54 in retail, i.e. *above* the scratch Mtx at 0x20,
+// while ours sits below it at 0x1c/0x20 with the Mtx at 0x28; naming the
+// colour costs two structural differences instead. Retail also shares one
+// `li r8, 0` for `nextCycle`, the loop counter and its scaled copy
+// (`addi r7, r8, 0` / `addi r3, r8, 0`) where we emit two fresh `li`, and
+// hoists `mtctr` above them; three counter-declaration forms move nothing.
 void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x2) {
@@ -163,15 +170,15 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 
 		if (nextCycle) {
-			// TODO: This doesn't fully match.
-			mRgbAnimCycle[0]++;
-			mRgbAnimCycle[0] = (mRgbAnimCycle[0] >= 6) ? 0 : mRgbAnimCycle[0];
-
-			mRgbAnimCycle[1]++;
-			mRgbAnimCycle[1] = (mRgbAnimCycle[1] >= 6) ? 0 : mRgbAnimCycle[1];
-
-			mRgbAnimCycle[2]++;
-			mRgbAnimCycle[2] = (mRgbAnimCycle[2] >= 6) ? 0 : mRgbAnimCycle[2];
+			// A bound reference, unrolled: retail materialises
+			// `addi r5, r31, 0x10/0x14/0x18` for the zeroing store and
+			// keeps the increment in displacement form.
+			for (s32 i = 0; i < 3; i++) {
+				s32& cycle = mRgbAnimCycle[i];
+				cycle++;
+				if (cycle >= 6)
+					cycle = 0;
+			}
 		}
 	}
 
@@ -202,9 +209,14 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
 
-		u8 midR = (mTopLeftCol.r + mBottomRightCol.r) >> 1;
-		u8 midG = (mTopLeftCol.g + mBottomRightCol.g) >> 1;
-		u8 midB = (mTopLeftCol.b + mBottomRightCol.b) >> 1;
+		// The alpha midpoint is computed and never used (GXColor3u8 takes
+		// only rgb); it is worth the last 8 bytes of frame with no
+		// instruction change, and a fourth channel next to the other
+		// three is the only local this function plausibly wanted.
+		u8 midA = (mBottomRightCol.a + mTopLeftCol.a) >> 1;
+		u8 midR = (mBottomRightCol.r + mTopLeftCol.r) >> 1;
+		u8 midG = (mBottomRightCol.g + mTopLeftCol.g) >> 1;
+		u8 midB = (mBottomRightCol.b + mTopLeftCol.b) >> 1;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(0.0f, 16.0f, -100.0f);
@@ -265,7 +277,7 @@ TSelectMenu::TSelectMenu(const char* pName)
     , mCloseMenu(false)
     , unk14B(0)
     , mRcpAnmFrameRate(0.0f)
-    , mScenarioBmg(nullptr)
+    , mStageBmg(nullptr)
     , mScenarioBmg2(nullptr)
     , unk160()
     , unk164()
@@ -342,12 +354,23 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	s32 const tags[] = { 0x0,   0x0, 'bi_', 'rc_', 'mm_', 'pi_',
 		                 'sr_', 0x0, 'mo_', 'mr_', 0x0 };
 
-	// TODO: Unused but still compiled in?
-	volatile s32 const unkArr[]
+	// Unused but still compiled in (@2421).
+	s32 const unkArr[]
 	    = { 0x0, 0x0, 0x2, 0x3, 0x4, 0x5, 0x6, 0x0, 0x7, 0x8, 0x0 };
 
-	u8* const stages[] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		                   nullptr, nullptr, nullptr, nullptr, nullptr };
+	// Indexed by stage number like `tags` above, so Delfino Plaza (1) and
+	// the two unused slots are null. Dead here, but retail compiled it in.
+	const u8* const stages[] = { nullptr,
+		                         nullptr,
+		                         scShineTableBiancoEtc,
+		                         scShineTableRiccoEtc,
+		                         scShineTableMammaEtc,
+		                         scShineTablePinnaEtc,
+		                         scShineTableSirenaEtc,
+		                         nullptr,
+		                         scShineTableMonteEtc,
+		                         scShineTableMareEtc,
+		                         nullptr };
 
 	s32 numCoins = TFlagManager::getInstance()->getFlag(SMS_getShineStage(stage)
 	                                                    + 0x20005);
@@ -430,10 +453,14 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		    = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'b');
 		mStageBannerShadow->getPane()->show();
 
-		mScenarioBmg = JKRGetResource("/common/2d/scenarioname.bmg");
+		// The pane this feeds is the stage-name box, and retail's .rodata
+		// carries "/common/2d/stagename.bmg" (@3965) right before
+		// "/common/2d/scenarioname.bmg" (@3966); the scenario bank is
+		// loaded separately in perform().
+		mStageBmg = JKRGetResource("/common/2d/stagename.bmg");
 
 		strncpy(mStageName->getStringPtr(),
-		        SMSGetMessageData(mScenarioBmg, tags[mStage] & 0xFFFF), 0x11);
+		        SMSGetMessageData(mStageBmg, tags[mStage] & 0xFFFF), 0x11);
 		mStageName->setFont((JUTFont*)gpSystemFont);
 
 		mShineUnlockStates[0] = 2;
@@ -1211,6 +1238,11 @@ void TSelectMenu::startOpenWindow()
 		                              rect.getWidth(), 0);
 		mLetterBoxBottom->setPaneOffset(time, 0, 0, 0, rect.getHeight());
 
+		// NOTE: objdiff shows a `~` on this pair's operands forever: the
+		// id 0x80010024 happens to be the address of TBeeHive::doWait()
+		// in the retail image, so dtk turned the target's literal into a
+		// relocation. Our constant is correct; the unit cannot reach 100%
+		// on this function without a `block_relocations` entry.
 		MSBgm::startBGM(MSD_BGM_SCENARIO_SELECT);
 		mLetterboxAnimFrame = 0u;
 	}
