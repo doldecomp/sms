@@ -345,6 +345,20 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 // `gpTalk2D->mTalkMode` goes the wrong way (0x20), which does show that
 // `getTalkMode()` itself is worth 0x10 here, so retail is one level deeper
 // still.
+// TODO: closure batch 114 measured the "push an inlined accessor result"
+// family here and in NpcEvent and found no lever. The shape is always the
+// same: the ROM stores the slice's mType word *first* and only then evaluates
+// the pushed expression (`li r0, 0; stw r0, +0; lwz r0, <member>; stw r0, +4`)
+// while we read the member before the mType store, and the ROM's slice
+// temporary sits 4 or 8 bytes higher in the low region than ours.
+// Rejected, all codegen-neutral at these sites: a named result local, the
+// `(int)` cast dropped, an explicit `TSpcSlice(...)` at the call site,
+// `gpTalk2D` vs a fork, `TSpcInterp::push(int)` binding a named
+// `TSpcSlice slice` before forwarding, and `TSpcSlice(const int&)` instead of
+// the by-value ctor (both in spcinterp.hpp, both +0 tree-wide).
+// evGetRestTime narrows it further: spelling TMarDirector::getRestTime()
+// without its named `int time` moves the subtraction but not the frame
+// (96.1 -> 95.1), so the missing 8 bytes are not that local either.
 static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
@@ -404,6 +418,17 @@ static void evPushNerve4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	const TNerveBase<TLiveActor>* nerve = NerveGetByIndex(nerveId);
 	const char* actorName               = interp->pop().getDataString();
 
+	// TODO: this trio (evSetDead4LiveActor / evSetHide4LiveActor /
+	// evSetFlagNPCCanTaken) is the inverse case: every referenced slot up to
+	// 0x74 is byte-exact and the frame is 8 bytes too *big*, the surplus
+	// sitting between the last pool slot and the float-to-int conversion
+	// pair at the top. It is slack, not an object: an added `u32 probe;`
+	// is absorbed with no frame change. Rejected (all +0): a TU-local
+	// `EWSearchLiveActor` binding the search result before the cast, the
+	// cast moved inside the guard on a `JDrama::TNameRef*`, dropping the
+	// named `actorName`, `interp->pop().getDataInt()` without the
+	// `TSpcSlice(...)` copy, `(int)interp->pop()`, and popping into a named
+	// `TSpcSlice` read later.
 	TLiveActor* liveActor
 	    = (TLiveActor*)JDrama::TNameRefGen::search2(actorName);
 	if (liveActor && nerve)
