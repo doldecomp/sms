@@ -383,7 +383,7 @@ static void evSetFlagNPCCanTaken(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(2, &arg_num);
 	int arg          = TSpcSlice(interp->pop()).getDataInt();
 	const char* name = interp->pop().getDataString();
-	TBaseNPC* npc    = JDrama::TNameRefGen::search<TBaseNPC>(name);
+	TBaseNPC* npc    = (TBaseNPC*)JDrama::TNameRefGen::search2(name);
 	if (npc) {
 		if (arg)
 			npc->onLiveFlag(LIVE_FLAG_UNK100000);
@@ -404,7 +404,8 @@ static void evPushNerve4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	const TNerveBase<TLiveActor>* nerve = NerveGetByIndex(nerveId);
 	const char* actorName               = interp->pop().getDataString();
 
-	TLiveActor* liveActor = JDrama::TNameRefGen::search<TLiveActor>(actorName);
+	TLiveActor* liveActor
+	    = (TLiveActor*)JDrama::TNameRefGen::search2(actorName);
 	if (liveActor && nerve)
 		liveActor->mSpine->pushNerve(nerve);
 
@@ -432,7 +433,8 @@ static void evSetHide4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	int value             = TSpcSlice(interp->pop()).getDataInt();
 	const char* actorName = interp->pop().getDataString();
 
-	TLiveActor* liveActor = JDrama::TNameRefGen::search<TLiveActor>(actorName);
+	TLiveActor* liveActor
+	    = (TLiveActor*)JDrama::TNameRefGen::search2(actorName);
 	if (liveActor) {
 		if (value) {
 			liveActor->onLiveFlag(LIVE_FLAG_HIDDEN);
@@ -453,7 +455,8 @@ static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	int value             = TSpcSlice(interp->pop()).getDataInt();
 	const char* actorName = interp->pop().getDataString();
 
-	TLiveActor* liveActor = JDrama::TNameRefGen::search<TLiveActor>(actorName);
+	TLiveActor* liveActor
+	    = (TLiveActor*)JDrama::TNameRefGen::search2(actorName);
 	if (liveActor) {
 		if (value) {
 			liveActor->onLiveFlag(LIVE_FLAG_DEAD);
@@ -669,7 +672,7 @@ static void evRaiseBuilding(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int id = TSpcSlice(interp->pop()).getDataInt();
 
 	TMapEventSinkShadowMario* event
-	    = JDrama::TNameRefGen::search<TMapEventSinkShadowMario>(
+	    = (TMapEventSinkShadowMario*)JDrama::TNameRefGen::search2(
 	        "イベント（カゲマリオゲート）");
 
 	if (event)
@@ -721,7 +724,7 @@ static void evStartMonteman(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 
-	TEMario* monteMan = JDrama::TNameRefGen::search<TEMario>("モンテマン");
+	TEMario* monteMan = (TEMario*)JDrama::TNameRefGen::search2("モンテマン");
 
 	int id = TSpcSlice(interp->pop()).getDataInt();
 	if (monteMan)
@@ -798,7 +801,7 @@ static void evAppearShineFromNPC(TSpcTypedInterp<TEventWatcher>* interp,
 		    shineName, demoName, npc->mPosition.x, npc->mPosition.y,
 		    npc->mPosition.z);
 	} else {
-		TShine* shine = JDrama::TNameRefGen::search<TShine>(shineName);
+		TShine* shine = (TShine*)JDrama::TNameRefGen::search2(shineName);
 		shine->mInitialPosition = npc->mPosition;
 		shine->mPosition        = npc->mPosition;
 		shine->appearWithTime(1200, -1, -1, -1);
@@ -832,7 +835,7 @@ evAppearShineFromNPCWithoutDemo(TSpcTypedInterp<TEventWatcher>* interp,
 	const char* shineName = interp->pop().getDataString();
 	TBaseNPC* npc         = (TBaseNPC*)getNameRefPtr(npcSlice);
 
-	TShine* shine = JDrama::TNameRefGen::search<TShine>(shineName);
+	TShine* shine = (TShine*)JDrama::TNameRefGen::search2(shineName);
 	shine->mPosition.set(npc->mPosition);
 	shine->makeObjAppeared();
 
@@ -848,8 +851,8 @@ static void evAppearShineFromKageMario(TSpcTypedInterp<TEventWatcher>* interp,
 	const char* arg2 = interp->pop().getDataString();
 	const char* arg3 = interp->pop().getDataString();
 
-	THitActor* uuuh = JDrama::TNameRefGen::search<THitActor>(arg2);
-	TShine* shine   = JDrama::TNameRefGen::search<TShine>(arg3);
+	THitActor* uuuh = (THitActor*)JDrama::TNameRefGen::search2(arg2);
+	TShine* shine   = (TShine*)JDrama::TNameRefGen::search2(arg3);
 
 	shine->mPosition = uuuh->mPosition;
 	shine->appearSimple(arg1);
@@ -919,7 +922,7 @@ static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 			buffer[10] = '0' + i / 10;
 			buffer[11] = '0' + i % 10;
 		}
-		TMapObjBase* obj = JDrama::TNameRefGen::search<TMapObjBase>(buffer);
+		TMapObjBase* obj = (TMapObjBase*)JDrama::TNameRefGen::search2(buffer);
 		if (obj && obj->checkLiveFlag(LIVE_FLAG_DEAD))
 			--count;
 	}
@@ -950,7 +953,7 @@ static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
 			buffer[10] = '0' + i / 10;
 			buffer[11] = '0' + i % 10;
 		}
-		TMapObjBase* obj = JDrama::TNameRefGen::search<TMapObjBase>(buffer);
+		TMapObjBase* obj = (TMapObjBase*)JDrama::TNameRefGen::search2(buffer);
 		if (obj)
 			obj->appear();
 	}
@@ -973,7 +976,7 @@ static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 			buffer[10] = '0' + i / 10;
 			buffer[11] = '0' + i % 10;
 		}
-		TMapObjBase* obj = JDrama::TNameRefGen::search<TMapObjBase>(buffer);
+		TMapObjBase* obj = (TMapObjBase*)JDrama::TNameRefGen::search2(buffer);
 		if (obj)
 			obj->makeObjDead();
 	}
@@ -1006,7 +1009,7 @@ static void evStartMareBottleDemo(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(0, &arg_num);
 
-	TMapObjBase* obj = JDrama::TNameRefGen::search<TMapObjBase>("ＥＸビン");
+	TMapObjBase* obj = (TMapObjBase*)JDrama::TNameRefGen::search2("ＥＸビン");
 	obj->getMActor()->setBck("exbottle_bottle_in");
 
 	// The original keeps Mario in a register across both statements: the

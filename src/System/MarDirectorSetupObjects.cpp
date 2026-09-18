@@ -226,16 +226,19 @@ bool TMarDirector::setupObjects()
 		sceneCommon = JDrama::TNameRefGen::getInstance()->load(stream);
 	}
 
+	// NOTE: the (JDrama::TNameRef*) cast is an identity cast here and still
+	// changes codegen (97.99% with it, 97.70% without), which suggests the
+	// real entry point does not return TNameRef* -- see JDRNameRefGen.hpp.
 	JDrama::TNameRef* root
-	    = JDrama::TNameRefGen::search<JDrama::TNameRef>("Root View Obj");
+	    = (JDrama::TNameRef*)JDrama::TNameRefGen::search2("Root View Obj");
 
 	JDrama::TNameRefPtrListT<JDrama::TViewObj>* gameObjs;
 	if (root) {
 		gameObjs = (JDrama::TNameRefPtrListT<JDrama::TViewObj>*)root->search(
 		    "ゲームオブジェクト");
 	} else {
-		gameObjs = JDrama::TNameRefGen::search<
-		    JDrama::TNameRefPtrListT<JDrama::TViewObj> >("ゲームオブジェクト");
+		gameObjs = (JDrama::TNameRefPtrListT<JDrama::TViewObj>*)
+		    JDrama::TNameRefGen::search2("ゲームオブジェクト");
 	}
 
 	gameObjs->insert(gpMarioParticleManager);
@@ -305,7 +308,7 @@ bool TMarDirector::setupObjects()
 		}
 
 		JDrama::TLookAtCamera* cam
-		    = JDrama::TNameRefGen::search<JDrama::TLookAtCamera>("camera 1");
+		    = (JDrama::TLookAtCamera*)JDrama::TNameRefGen::search2("camera 1");
 		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
 		               / (u16)SMSGetGameVideoHeight();
 	}
@@ -366,15 +369,15 @@ bool TMarDirector::setupObjects()
 	JDrama::TFrmGXSet* drawInit = new JDrama::TFrmGXSet(unkC0);
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* drawBufferGroup
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("Draw Buffer Group");
-	JDrama::TNameRefGen::search<JDrama::TDrawBufObj>("DrawBuf Sky Opa")
+	    = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)
+	        JDrama::TNameRefGen::search2("Draw Buffer Group");
+	((JDrama::TDrawBufObj*)JDrama::TNameRefGen::search2("DrawBuf Sky Opa"))
 	    ->getDrawBuffer()
 	    ->setNonSort();
-	JDrama::TNameRefGen::search<JDrama::TDrawBufObj>("DrawBuf Sky Xlu")
+	((JDrama::TDrawBufObj*)JDrama::TNameRefGen::search2("DrawBuf Sky Xlu"))
 	    ->getDrawBuffer()
 	    ->setNonSort();
-	JDrama::TNameRefGen::search<JDrama::TDrawBufObj>("DrawBuf Graffito")
+	((JDrama::TDrawBufObj*)JDrama::TNameRefGen::search2("DrawBuf Graffito"))
 	    ->getDrawBuffer()
 	    ->setMatAnmSort();
 	gpLightManager->addChildGroupObj(drawBufferGroup);
@@ -383,7 +386,7 @@ bool TMarDirector::setupObjects()
 	initECTMir(mPerformListGX, perfEventGroup);
 
 	JDrama::TEfbCtrlTex* normalSceneDrawStage
-	    = JDrama::TNameRefGen::search<JDrama::TEfbCtrlTex>(
+	    = (JDrama::TEfbCtrlTex*)JDrama::TNameRefGen::search2(
 	        "通常シーン描画ステージ");
 	normalSceneDrawStage->unk20.on(0x122F);
 	normalSceneDrawStage->mVFilter = SMSVFilter_flicker;
@@ -398,7 +401,7 @@ bool TMarDirector::setupObjects()
 	normalSceneDrawStage->setSrcRect(local_dc);
 
 	JDrama::TViewport* normalSceneViewport
-	    = JDrama::TNameRefGen::search<JDrama::TViewport>("通常シーンViewport");
+	    = (JDrama::TViewport*)JDrama::TNameRefGen::search2("通常シーンViewport");
 	normalSceneViewport->unk10 = local_dc;
 
 	{
@@ -421,43 +424,43 @@ bool TMarDirector::setupObjects()
 	}
 
 	mPerformListMovement
-	    = JDrama::TNameRefGen::search<TPerformList>("PerformList Movement");
+	    = (TPerformList*)JDrama::TNameRefGen::search2("PerformList Movement");
 	mPerformListCalcAnim
-	    = JDrama::TNameRefGen::search<TPerformList>("PerformList CalcAnim");
+	    = (TPerformList*)JDrama::TNameRefGen::search2("PerformList CalcAnim");
 	mPerformListGX
-	    = JDrama::TNameRefGen::search<TPerformList>("PerformList GX");
+	    = (TPerformList*)JDrama::TNameRefGen::search2("PerformList GX");
 	mPerformListSilhouette
-	    = JDrama::TNameRefGen::search<TPerformList>("PerformList Silhouette");
+	    = (TPerformList*)JDrama::TNameRefGen::search2("PerformList Silhouette");
 	mPerformListGXPost
-	    = JDrama::TNameRefGen::search<TPerformList>("PerformList GX Post");
+	    = (TPerformList*)JDrama::TNameRefGen::search2("PerformList GX Post");
 	mShinePfLstMov
-	    = JDrama::TNameRefGen::search<TPerformList>("Shine PfLst Mov");
+	    = (TPerformList*)JDrama::TNameRefGen::search2("Shine PfLst Mov");
 	mShinePfLstAnm
-	    = JDrama::TNameRefGen::search<TPerformList>("Shine PfLst Anm");
+	    = (TPerformList*)JDrama::TNameRefGen::search2("Shine PfLst Anm");
 
 	initECDisp(mPerformListGXPost, perfEventGroup, normalScene);
 
 	mPerformListMovement->push_back(
-	    JDrama::TNameRefGen::search<JDrama::TViewObj>("合成3"), CUE_MOVE);
+	    (JDrama::TViewObj*)JDrama::TNameRefGen::search2("合成3"), CUE_MOVE);
 	JDrama::TViewObj* specularSheen
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("スペキュラシーン");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("スペキュラシーン");
 	if (specularSheen)
 		mPerformListMovement->push_back(specularSheen, CUE_MOVE);
 
 	JDrama::TViewObj* lensFlare
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("レンズフレア");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("レンズフレア");
 	JDrama::TViewObj* sunOcclusionGlow = nullptr;
 	if (lensFlare) {
 		sunOcclusionGlow
-		    = JDrama::TNameRefGen::search<JDrama::TViewObj>("太陽遮蔽物グロー");
+		    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("太陽遮蔽物グロー");
 		mPerformListMovement->push_back(sunOcclusionGlow, CUE_MOVE);
 		mPerformListMovement->push_back(lensFlare, CUE_MOVE);
 	}
 
 	JDrama::TViewObj* dialogueCursor
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("会話カーソル");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("会話カーソル");
 	JDrama::TViewObj* targetArrow
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("ターゲット矢印");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("ターゲット矢印");
 
 	mPerformListMovement->push_back(dialogueCursor, CUE_MOVE);
 	mPerformListCalcAnim->push_back(dialogueCursor, CUE_CALC_ANIM);

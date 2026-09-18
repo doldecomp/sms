@@ -138,7 +138,7 @@ static void evConnectDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
 
 	int result = 0;
 
-	TBaseNPC* dummyNpc = JDrama::TNameRefGen::search<TBaseNPC>("ダミーＮＰＣ");
+	TBaseNPC* dummyNpc = (TBaseNPC*)JDrama::TNameRefGen::search2("ダミーＮＰＣ");
 	if (dummyNpc != nullptr) {
 		const JDrama::TActor* actor
 		    = (const JDrama::TActor*)interp->pop().getDataInt();
@@ -155,7 +155,7 @@ static void evOnTalkToDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	TBaseNPC* dummyNpc = JDrama::TNameRefGen::search<TBaseNPC>("ダミーＮＰＣ");
+	TBaseNPC* dummyNpc = (TBaseNPC*)JDrama::TNameRefGen::search2("ダミーＮＰＣ");
 	if (dummyNpc != nullptr) {
 		dummyNpc->offLiveFlag(LIVE_FLAG_DEAD);
 		dummyNpc->offLiveFlag(LIVE_FLAG_UNK40000);

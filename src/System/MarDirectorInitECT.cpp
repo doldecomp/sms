@@ -114,16 +114,16 @@ void TMarDirector::initECDisp(
 	param_2->insert(stageDisp);
 
 	JDrama::TViewObj* composite3
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("合成3");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("合成3");
 	JDrama::TViewObj* specularSheen
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("スペキュラシーン");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("スペキュラシーン");
 
 	TLensGlow* lensGlow       = nullptr;
 	TLensFlare* lensFlare     = nullptr;
 	JDrama::TOrthoProj* ortho = nullptr;
 
 	JDrama::TViewObj* sunModel
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("太陽モデル");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("太陽モデル");
 
 	if (sunModel) {
 		lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
@@ -131,7 +131,7 @@ void TMarDirector::initECDisp(
 		lensFlare = new TLensFlare("レンズフレア");
 		param_2->insert(lensFlare);
 	} else {
-		sunModel = JDrama::TNameRefGen::search<JDrama::TViewObj>("夕日モデル");
+		sunModel = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("夕日モデル");
 		if (sunModel) {
 			lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
 			param_2->insert(lensGlow);
@@ -157,14 +157,15 @@ void TMarDirector::initECDisp(
 	param_1->push_back(composite3, CUE_DRAW);
 
 	JDrama::TViewObj* setViewMtx
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>(
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2(
 	        "J3D System Set View Mtx");
 	JDrama::TViewObj* drawInit
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("SMS Draw Init");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("SMS Draw Init");
 	JDrama::TDrawBufObj* drawBufLensFlare
-	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>("DrawBuf LensFlare");
+	    = (JDrama::TDrawBufObj*)JDrama::TNameRefGen::search2(
+	        "DrawBuf LensFlare");
 	JDrama::TCamera* camera1
-	    = JDrama::TNameRefGen::search<JDrama::TCamera>("camera 1");
+	    = (JDrama::TCamera*)JDrama::TNameRefGen::search2("camera 1");
 
 	if (specularSheen || lensFlare || lensGlow) {
 		param_1->push_back(ortho, CUE_SET_PROJECTION);
@@ -188,9 +189,9 @@ void TMarDirector::initECDisp(
 	}
 
 	JDrama::TCamera* drawBufChrOpa
-	    = JDrama::TNameRefGen::search<JDrama::TCamera>("DrawBuf ChrOpa");
+	    = (JDrama::TCamera*)JDrama::TNameRefGen::search2("DrawBuf ChrOpa");
 	JDrama::TCamera* drawBufChrXlu
-	    = JDrama::TNameRefGen::search<JDrama::TCamera>("DrawBuf ChrXlu");
+	    = (JDrama::TCamera*)JDrama::TNameRefGen::search2("DrawBuf ChrXlu");
 
 	param_1->push_back(camera1, CUE_SET_PROJECTION);
 	param_1->push_back(setViewMtx, CUE_CALC_VIEW);
@@ -208,7 +209,7 @@ void TMarDirector::initECDisp(
 	param_1->push_back(ortho3, CUE_SET_PROJECTION);
 
 	JDrama::TViewObj* group2D2
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D 2");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("Group 2D 2");
 	param_1->push_back(group2D2, CUE_DRAW);
 
 	JDrama::TOrthoProj* ortho4
@@ -216,12 +217,12 @@ void TMarDirector::initECDisp(
 	param_1->push_back(ortho4, CUE_SET_PROJECTION);
 
 	JDrama::TViewObj* group2D
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("Group 2D");
 	param_1->push_back(group2D, CUE_DRAW);
 
 	param_1->push_back(ortho4, CUE_SET_PROJECTION);
 	JDrama::TViewObj* guide
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>("Guide");
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("Guide");
 	param_1->push_back(guide, CUE_DRAW);
 	param_1->push_back(stageDisp, CUE_DRAW);
 }
@@ -231,8 +232,8 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 void TMarDirector::setupPerformList_console()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* list
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("Group 2D");
+	    = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)
+	        JDrama::TNameRefGen::search2("Group 2D");
 
 	list->insert(new TEmitterViewObj(gpEmitterManager4D2));
 
