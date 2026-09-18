@@ -433,7 +433,7 @@ bool TBaseNPC::isStateGoToMad_() const
 bool TBaseNPC::isNowCanTaken() const
 {
 	bool result = false;
-	if (checkLiveFlag(LIVE_FLAG_UNK100000) && mActorType != 0x400001C
+	if (checkLiveFlag(LIVE_FLAG_UNK100000) && getActorType() != 0x400001C
 	    && mHolder == nullptr && mHeldObject == nullptr
 	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                      | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK40000

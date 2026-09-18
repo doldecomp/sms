@@ -228,10 +228,11 @@ void JAIBasic::sendPlayingSeCommand()
 	u8 trackId = 0;
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
-		for (j = 0;
-		     j < unk0->mCategoryInfoTable[mSoundScene][(u8)cat].mMaxPlaying;
+		for (j = 0; j < getData()
+		                    ->mCategoryInfoTable[mSoundScene][(u8)cat]
+		                    .mMaxPlaying;
 		     ++trackId, ++j) {
-			sound = unk0->mSeTrack[cat][j].mSound;
+			sound = getData()->mSeTrack[cat][j].mSound;
 			if (sound == nullptr)
 				continue;
 

@@ -45,8 +45,8 @@ MActor::MActor(MActorAnmData* anm_data)
 
 	if (anm_data->getUnk2C()) {
 		mAnmBck = new MActorAnmBck;
-		mAnmBck->setUnk1C(anm_data->getUnk2C());
-		mAnmByType[ANM_TYPE_BCK] = mAnmBck;
+		getAnmBck()->setUnk1C(anm_data->getUnk2C());
+		mAnmByType[ANM_TYPE_BCK] = getAnmBck();
 	}
 
 	if (anm_data->getUnk30()) {
@@ -649,10 +649,10 @@ void MActor::entryOut()
 
 void MActor::updateMatAnm()
 {
-	j3dSys.setTexture(mModel->getModelData()->getTexture());
+	j3dSys.setTexture(getModel()->getModelData()->getTexture());
 	for (u16 i = 0; i < mMaterialNum; ++i)
 		if (unk30[i] != 0x32 || unk2C[i] != 0x32)
-			SMS_CalcMatAnmAndMakeDL(mModel, i);
+			SMS_CalcMatAnmAndMakeDL(getModel(), i);
 }
 
 void MActor::dumpReport() { }

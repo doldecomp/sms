@@ -813,7 +813,7 @@ const GXColor* TBaseNPC::getPtrInitPollutionColor() const
 
 	if (isPollutionNpc()) {
 		result = &unk174;
-	} else if (mActorType != 0x4000006
+	} else if (getActorType() != 0x4000006
 	           && (isSpecialMonte() || isSpecialMare())) {
 		result = &unk174;
 	}

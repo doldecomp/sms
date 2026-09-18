@@ -331,7 +331,7 @@ void TBaseNPC::walkAnmRateChange_()
 
 			f32 dVar132 = CLBLinearInbetween(fVar1, dVar12, dVar131);
 
-			if (mColCount != 0)
+			if (getColNum() != 0)
 				dVar132 = dVar12;
 
 			CLBChaseDecrease(&unk1D0, dVar132,

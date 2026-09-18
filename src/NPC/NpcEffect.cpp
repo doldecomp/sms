@@ -132,7 +132,7 @@ void TBaseNPC::emitHappyEffect_()
 	if (isNormalMonte()) {
 		SMS_EasyEmitParticle(PARTICLE_MS_MNT_KIRA, mHappyEffectMtxPtr, this,
 		                     scale);
-	} else if (isNormalMare() || mActorType == 0x4000016) {
+	} else if (isNormalMare() || getActorType() == 0x4000016) {
 		SMS_EasyEmitParticle(PARTICLE_MS_MARE_KIRA, mHappyEffectMtxPtr, this,
 		                     scale);
 	}
@@ -202,13 +202,13 @@ inline bool TBaseNPC::isPolWaitCEffectEmitTime_() const
 	} else if (isNormalMare()) {
 		static const f32 sCheckFrameMare[] = { 126.0f, 156.0f, -1.0f };
 		checkFrames                        = sCheckFrameMare;
-	} else if (mActorType == 0x4000016) {
+	} else if (getActorType() == 0x4000016) {
 		static const f32 sCheckFrameKino[] = { 22.0f, 44.0f, -1.0f };
 		checkFrames                        = sCheckFrameKino;
 	}
 
 	if (checkFrames)
-		result = IsCheckPassFrame(mMActor->getFrameCtrl(ANM_TYPE_BCK),
+		result = IsCheckPassFrame(getMActor()->getFrameCtrl(ANM_TYPE_BCK),
 		                          checkFrames);
 
 	return result;

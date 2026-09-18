@@ -170,8 +170,8 @@ void TRealoid::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_ANIM) {
 		clipBoids(graphics);
-		for (int i = 0; i < unk150->getBoidNum(); ++i)
-			unk154[i]->calcRootMatrix(unk150->getBoid(i));
+		for (int i = 0; i < getBoidLeader()->getBoidNum(); ++i)
+			unk154[i]->calcRootMatrix(getBoidLeader()->getBoid(i));
 	}
 
 	for (int i = 0; i < unk150->getBoidNum(); ++i)
