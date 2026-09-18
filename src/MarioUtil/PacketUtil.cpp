@@ -248,6 +248,20 @@ static void SetFogBase(const J3DFogInfo* fog)
 // instead of binding it, the shape FifoSetFog uses two functions above --
 // frame 0x178 -> 0x150 and the permutation unchanged.
 //
+// Closure batch 164 re-read the permutation and it is not a spelling: the two
+// expansions are instruction-for-instruction identical, and the difference is
+// that retail parks the two loop-invariant constants (0x61 and the 0xcc01
+// FIFO base) in the *low* volatiles r0/r3 and spreads the per-colour
+// temporaries across r4/r6/r7/r8/r9, while we do the exact inverse -- r7/r6
+// for the constants and r0/r3/r4/r5, reused, for the temporaries.  That is the
+// signature of retail holding one more value live across the block, i.e. the
+// same missing 8-byte object the frame gap wants, so the permutation is not an
+// independent residue and no reordering can reach it.  Swapping the regRA and
+// regBG declarations in both helpers is inert (MWCC schedules regRA's `lha`
+// pair first either way, 91.7% unchanged), which also rules out declaration
+// order as the ranking knob here.  Next step is naming the object, not another
+// trial.
+//
 // Dispatches the per-packet colour/fog override recorded by the
 // SMS_InitPacket_* helpers. The user area's first word is the packet type; the
 // jump table in .data has eleven entries, so types 0-10 all exist even though
