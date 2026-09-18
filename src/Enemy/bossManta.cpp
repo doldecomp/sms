@@ -1204,8 +1204,16 @@ void TBossMantaManager::updateMantaEscape()
 {
 	TBossManta::sEscapeFromMario = 0;
 
-	JGeometry::TVec3<f32> marioPos2 = SMS_GetMarioPos();
-	JGeometry::TVec3<f32> marioPos(marioPos2.x, 0.0f, marioPos2.z);
+	// Retail keeps a single 12-byte vector at 0x1c and stores 0.0f into its
+	// y in place, so this is the shape (the copy and the zero store are now
+	// byte-exact).  TODO: 84.4%.  The only residue is load placement in the
+	// two loops: retail hoists marioPos.y and marioPos.z into f31/f30 right
+	// after the zero store and reloads only marioPos.x per iteration, while
+	// we reload all three.  Declare-then-assign changes nothing.  The older
+	// two-vector spelling `TVec3 h(p.x, 0.0f, p.z)` scored 90% by
+	// scalarising all three components, but retail plainly has one vector.
+	JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
+	marioPos.y = 0.0f;
 
 	for (int i = 0; i < 7; ++i) {
 		if (unk74[i].distance(marioPos) < 350.0f)
