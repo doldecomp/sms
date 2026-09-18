@@ -90,6 +90,31 @@
 // this object's at 0x1c and the manager's at 0x14, ours at 0x14 and 0x18, so
 // retail reserves 8 dead bytes below this expansion's temp that one binding
 // does not buy.
+// Closure batch 164 mapped the pool instead of hunting levers, and the answer
+// is an *ordering* fact, not a size one.  There are exactly three live pool
+// slots in this function: SleepBossHanachanManager's temp (0x10 in both
+// builds), BossEelManager's, and this expansion's.  Deleting the level
+// altogether (`TSleepBossHanachan* actor = new TSleepBossHanachan("?");`
+// straight in the branch, which loses the `bl set<f>` and seven instructions)
+// moves BossEelManager's temp to 0x14 -- retail's slot -- which proves
+// retail's pool order is SleepBossHanachanManager, BossEelManager, then this
+// expansion *last*, at 0x1c with a dead word at 0x18.  Our builds always
+// allocate this expansion's temp before BossEelManager's, i.e. in source
+// order, because it comes from a level the caller's own TU supplies.  Every
+// lever on the level itself is inert on that order (all still 100.0%, 669
+// instructions, frame 0x38, slots 0x14/0x18): returning `TSleepBossHanachan&`
+// and taking the address at the call site, splitting the declaration from the
+// assignment, returning the base `JDrama::TNameRef*`, moving the binding out
+// of the helper into the branch, and defining the helper *after* its caller
+// behind a forward declaration (so definition order is inert here too, as it
+// is for inlining decisions).  Two-level spellings are worse both ways round
+// -- inner bind plus outer pass-through and the reverse both give 98.6%, lose
+// the `bl set<f>` block and rotate the pool to 0x10/0x14/0x1c.  So the level
+// retail used is not in this TU: a level supplied from inside
+// SleepBossHanachan.hpp (between TSleepBossHanachan's constructor and TVec3's)
+// would have its temp allocated after the caller's own expansions and is the
+// only remaining shape that puts this slot at 0x1c.  That is a shared-header
+// change, so it is reported rather than made.
 static inline TSleepBossHanachan* newSleepBossHanachan(const char* name)
 {
 	TSleepBossHanachan* actor = new TSleepBossHanachan(name);
