@@ -446,5 +446,6 @@
   "Enemy/BossHanachanNerve.cpp",
   "MoveBG/MapObjWave.cpp",
   "Camera/CameraSecureView.cpp",
-  "MSound/MSoundBGM.cpp"
+  "MSound/MSoundBGM.cpp",
+  "Animal/AnimalManager.cpp"
 ]
