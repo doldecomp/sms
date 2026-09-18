@@ -100,6 +100,34 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 	unk60 = unk64 = unk6C;
 }
 
+// TODO: 99.0%, and the whole residue is dead low region: frame 0x120 against
+// retail's 0x178. Every referenced slot in the lower group is exactly 0x60
+// higher in retail (`avg` 0x6c -> 0xcc, `mtx` 0x74 -> 0xd4, `scaleV` 0xa4 ->
+// 0x104) and every slot in the upper group exactly 0x58 higher (the three
+// int -> float magic-double pairs 0xc8/0xd0/0xd8 -> 0x120/0x128/0x130, the
+// stmw 0xe0 -> 0x138), so retail has **96 bytes more inline-expansion pool**
+// below `avg` and **8 bytes less** slack between `scaleV` and the conversion
+// temporaries. `volatile char trash[88]` reaches 0x178 and 99.1% with no new
+// instruction, confirming the body.
+// None of the four CLB helpers can be the carrier: CLBLinearInbetween,
+// CLBEaseOutInbetween, CLBChaseDecrease and CLBCalcScaleTranslateMatrix are
+// all real `bl`s here, and the carrier test needs a callee with no matching
+// out-of-line copy. That leaves the inlined ones, and all of them live in
+// shared headers this batch may not touch: `TSunModel::isInBounds`
+// (SunModel.hpp -- sunmgr.cpp already measured one dead 48-byte non-trivial
+// local there and recorded that it takes this frame 0x120 -> 0x150),
+// `TSunModel::getUnk191/getUnk194`, `J3DFrameCtrl::update` (expanded twice,
+// so a 48-byte local there would be the other +96 on its own) and the
+// J3DMaterial colour accessors. 48 + 48 is the arithmetic that fits.
+// With the frame padded, three independent residues remain, all of them
+// zero-frame: (a) an f0/f1 swap inside the isInBounds expansion plus an r4/r5
+// swap in its position walk; (b) `gpSunModel->getUnk194()` lands in f29 in
+// retail and f31 in ours, which rotates f27/f29/f30/f31 through the rest of
+// the function; (c) the first two conversion temporaries are swapped (retail
+// uses 0x128 then 0x130, we use 0x130 then 0x128). Measured with the padding
+// in place and rejected: swapping the operands of
+// `(f32)(thing - unk5D) * (1.0f / (f32)(17 - unk5D))` (byte-identical) and
+// spelling it as a real division (95.3%, five extra instructions).
 void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	bool inBounds = false;
