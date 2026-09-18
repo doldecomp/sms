@@ -1044,7 +1044,7 @@ public:
 		clearHeightMap();
 	}
 
-	void clearEFB(GXColor, u16, u16, bool) { }
+	void clearEFB(GXColor, u16, u16, bool);
 
 	void makeHeightMap(f32 h);
 	void makeNormalMap();
@@ -1595,6 +1595,13 @@ void TBathWaterMeshRenderer::clearHeightMap()
 	unk80080.set(1.0f, 1.0f, 1.0f);
 	unk80050.identity();
 }
+
+// TODO: UNUSED, 0x3dc in the map, so this stub is 984 bytes short. It is the
+// mesh renderer's own EFB clear (colour, width, height, flag); the body is not
+// recoverable from this object because nothing in the ROM calls it. It has to
+// live out of class all the same: an UNUSED symbol is never weak, and as an
+// in-class body it was dead-stripped out of our object entirely.
+void TBathWaterMeshRenderer::clearEFB(GXColor, u16, u16, bool) { }
 
 void TBathWaterMeshRenderer::makeHeightMap(f32 h)
 {
