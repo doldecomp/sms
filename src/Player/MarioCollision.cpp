@@ -203,8 +203,9 @@ void TMario::normalizeNozzle()
 void TMario::loserExec()
 {
 	// volatile u32 padding[2];
-	if (mStatus != MARIO_STATUS_SWIM_DOWN && mStatus != MARIO_STATUS_ELEC_DOWN
-	    && mStatus != MARIO_STATUS_SWIM_P_DOWN
+	if (getStatus() != MARIO_STATUS_SWIM_DOWN
+	    && getStatus() != MARIO_STATUS_ELEC_DOWN
+	    && getStatus() != MARIO_STATUS_SWIM_P_DOWN
 	    && mStatus != MARIO_STATUS_DOWN_LOSER) {
 		onFlag(MARIO_FLAG_GAME_OVER);
 		mHealth = 0;

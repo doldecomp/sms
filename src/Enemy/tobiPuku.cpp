@@ -665,9 +665,9 @@ void TTobiPuku::fallStart()
 
 void TTobiPuku::hitWater()
 {
-	JGeometry::TVec3<f32> vel(mVelocity);
-	JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x,
-	                           mPosition.y - SMS_GetMarioPos().y,
+	JGeometry::TVec3<f32> vel(getVelocity());
+	JGeometry::TVec3<f32> away(getPosition().x - SMS_GetMarioPos().x,
+	                           getPosition().y - SMS_GetMarioPos().y,
 	                           mPosition.z - SMS_GetMarioPos().z);
 	if (away.x == 0.0f && away.y == 0.0f && away.z == 0.0f)
 		away.x += 1.0f;

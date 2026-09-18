@@ -494,9 +494,9 @@ int TMario::jumpProcess(int param_1)
 	}
 
 	Vec next;
-	next.x  = mPosition.x + 0.25f * mVel.x;
-	next.y  = mPosition.y + 0.25f * mVel.y;
-	next.z  = mPosition.z + 0.25f * mVel.z;
+	next.x  = getPosition().x + 0.25f * mVel.x;
+	next.y  = getPosition().y + 0.25f * mVel.y;
+	next.z  = getPosition().z + 0.25f * mVel.z;
 	int ret = checkGroundAtJumping(next, param_1);
 	if (ret != 0)
 		result = ret;
@@ -506,7 +506,7 @@ int TMario::jumpProcess(int param_1)
 
 	fallProcess();
 
-	if (mStatus != MARIO_STATUS_JUMP_CATCH)
+	if (getStatus() != MARIO_STATUS_JUMP_CATCH)
 		mFaceAngle.x = 0;
 
 	mModelFaceAngle = mFaceAngle.y;

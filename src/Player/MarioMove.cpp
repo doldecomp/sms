@@ -1182,7 +1182,7 @@ void TMario::thinkDirty()
 void TMario::thinkHeight()
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
-		f32 height = mPosition.y - mFloorPosition.y;
+		f32 height = getPosition().y - mFloorPosition.y;
 		if (unk36C < height)
 			unk36C = height;
 	} else {
@@ -1190,7 +1190,7 @@ void TMario::thinkHeight()
 	}
 
 	JGeometry::TVec3<f32> point;
-	point.x = mPosition.x + unk15C * JMASSin(mFaceAngle.y);
+	point.x = getPosition().x + unk15C * JMASSin(mFaceAngle.y);
 	point.y = mPosition.y;
 	point.z = mPosition.z + unk15C * JMASCos(mFaceAngle.y);
 
