@@ -145,6 +145,7 @@ public:
 	TMapObjPuncher(const char* name = "パンチャー")
 	    : TMapObjBase(name)
 	{
+		mThrowSpeed = 0.0f;
 	}
 
 public:
@@ -219,6 +220,8 @@ public:
 	TMareCork(const char* name = "マーレコルク")
 	    : TMapObjBase(name)
 	{
+		mCannon     = nullptr;
+		mIsBlownOut = 0;
 	}
 
 public:
@@ -239,6 +242,7 @@ public:
 	TMareEventPoint(const char* name = "イベントポイント")
 	    : THitActor(name)
 	{
+		mDepressWall = nullptr;
 	}
 
 public:

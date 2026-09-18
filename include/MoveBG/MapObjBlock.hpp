@@ -27,7 +27,13 @@ public:
 		STATE_GONE      = 5
 	};
 
-	TSandBlock(const char* name = "砂ブロック");
+	// The map has no out-of-line copy of this constructor, and the object
+	// factory expands it (base ctor plus the two vtable stores), so it was
+	// defined in the class.
+	TSandBlock(const char* name = "砂ブロック")
+	    : TMapObjBase(name)
+	{
+	}
 	virtual void initMapObj();
 	virtual void control();
 	virtual void touchPlayer(THitActor*);

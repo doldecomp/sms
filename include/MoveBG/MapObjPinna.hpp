@@ -243,8 +243,8 @@ public:
 	// object factory builds them.
 	TBalloonKoopaJr(const char* name = "風船（クッパＪｒ）")
 	    : TMapObjGeneral(name)
-	    , mCenterPos(0.0f, 0.0f, 0.0f)
 	{
+		mCenterPos.x = mCenterPos.y = mCenterPos.z = 0.0f;
 	}
 
 public:
@@ -290,7 +290,6 @@ public:
 	TAmiKing(const char* name = "アミキング")
 	    : TMapObjBase(name)
 	    , mFlying(false)
-	    , mEffectPos(0.0f, 0.0f, 0.0f)
 	{
 	}
 

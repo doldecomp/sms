@@ -58,8 +58,6 @@ public:
 	    : TMapObjBase(name)
 	    , mCargo(nullptr)
 	    , mSoundId(0)
-	    , mRotXMax(0.0f)
-	    , mRotXMin(0.0f)
 	{
 	}
 
@@ -188,10 +186,7 @@ public:
 
 	TFruitLauncher(const char* name = "フルーツ発射口")
 	    : TMapObjBase(name)
-	    , mCurrentSwitch(0)
 	{
-		mSwitches[0] = nullptr;
-		mSwitches[1] = nullptr;
 	}
 
 public:

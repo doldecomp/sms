@@ -56,6 +56,7 @@ public:
 	TMapObjBillboard(const char* name = "看板")
 	    : THideObjBase(name)
 	{
+		unk150 = nullptr;
 	}
 
 	virtual void touchActor(THitActor*);
@@ -99,6 +100,7 @@ public:
 	TMapObjStartDemo(const char* name = "デモ開始オブジェ")
 	    : TMapObjBase(name)
 	{
+		unk138 = 0;
 	}
 
 	virtual void load(JSUMemoryInputStream&);

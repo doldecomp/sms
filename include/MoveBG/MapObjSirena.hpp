@@ -272,6 +272,7 @@ public:
 	TPictureTelesa(const char* name = "テルサの絵")
 	    : TWaterHitPictureHideObj(name)
 	{
+		unk174 = false;
 	}
 
 	virtual void control();

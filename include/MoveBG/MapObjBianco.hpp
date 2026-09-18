@@ -24,6 +24,7 @@ public:
 	TBigWindmill(const char* name = "大風車")
 	    : TMapObjBase(name)
 	{
+		mSoundHandle = nullptr;
 	}
 
 public:
@@ -41,6 +42,7 @@ public:
 	TMapObjRootPakkun(const char* name = "根元パックン")
 	    : TMapObjBase(name)
 	{
+		mTrembleEffect = nullptr;
 	}
 
 	static f32 mTremblePower;

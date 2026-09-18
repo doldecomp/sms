@@ -43,46 +43,41 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <Map/MapCollisionManager.hpp>
 
-// TODO (closure batch 114): 97.3%. The residue is entirely in the *inlined
-// constructors* of MoveBG classes, so every fix is an edit to another unit's
-// header and none of them were made here. Grouped by the class whose vtable
-// store precedes the diff:
+// TODO (header round 20): 98.89%. The constructor-body residues closure batch
+// 114 enumerated are all applied now (they were edits to other units' headers,
+// which is why they waited for a header batch); zero regressions tree-wide and
+// getNameRef_MapObj 97.35 -> 98.89. What landed, for the record:
 //
-// Missing member initialisations (the ROM's ctor body has them, ours does not;
-// the store order is descending, i.e. the batch-89 assignment chain
+// Missing member initialisations, added to the in-class constructor bodies
+// (the ROM's store order is descending, i.e. the batch-89 assignment chain
 // `m.x = m.y = m.z = v;`, not an initialiser list):
-//   TMapObjStartDemo   `stw 0, 0x138`
-//   TMapObjBillboard   `stw 0, 0x150`
-//   TTurboNozzleDoor   `stfs 0.0f` to 0x140, 0x13c, 0x138 (one TVec3)
-//   TBigWindmill       `stw 0, 0x148`
-//   TMapObjRootPakkun  `stw 0, 0x138`
-//   TMapObjPuncher     `stfs 0.0f, 0x138`
-//   TMareCork          `stw 0, 0x138` and `stb 0, 0x154`
-//   TMareEventPoint    `stw 0, 0x68`
-//   TPictureTelesa     `stb 0, 0x174`
+//   TMapObjStartDemo `unk138`, TMapObjBillboard `unk150`,
+//   TTurboNozzleDoor `unk138` (one TVec3, chain), TBigWindmill
+//   `mSoundHandle`, TMapObjRootPakkun `mTrembleEffect`, TMapObjPuncher
+//   `mThrowSpeed`, TMareCork `mCannon` + `mIsBlownOut`, TMareEventPoint
+//   `mDepressWall`, TPictureTelesa `unk174`.
+// Extra initialisations removed: TCraneUpDown `mRotXMax`/`mRotXMin`,
+//   TFruitLauncher `mCurrentSwitch` and both `mSwitches` entries, and --
+//   correcting batch 114's reading -- TAmiKing's `mEffectPos`, which the ROM
+//   does not initialise at all (only `mFlying`).
+// Initialiser list -> ctor-body chain: TBalloonKoopaJr's `mCenterPos` (the
+//   list emits `bl TVec3::set<f>`, the chain the ROM's three descending
+//   `stfs`); TAmiKing wanted the initialiser *dropped*, not converted.
+// TSandBlock's constructor had a declaration with no definition anywhere; the
+//   map has no out-of-line copy and the factory expands it, so it is now
+//   defined in the class.
+// Two real bugs the diff exposed: the "HideObj" branch built a THideObjBase
+//   (the ROM stores `__vt__8THideObj`), and the "PalmNatume" branch passed an
+//   explicit "地形オブジェ基底" where the ROM uses TMapObjTree's own default
+//   "木" (batch 114 read this as a TMapObjSteam small-data placement; the
+//   .sdata2-vs-.rodata difference was just the wrong string).
 //
-// Extra member initialisations we emit and the ROM does not:
-//   TCraneUpDown       `stfs` to 0x140/0x144
-//   TFruitLauncher     `stw 0` to 0x138/0x13c/0x140
-//
-// Initialiser list vs assignment chain (we emit `bl TVec3::set<f>`, the ROM
-// three descending `stfs`): TBalloonKoopaJr's `mCenterPos(0,0,0)` at 0x148 and
-// TAmiKing's vector at 0x13c both want a ctor *body* chain instead.
-//
-// Called where the ROM inlines: TSandBlock::TSandBlock(const char*) and
-// THideObj's constructor are out-of-line for us and expanded there (their
-// bodies belong in the class).
-//
-// TMapObjSteam's name argument is `li r4, @5102@sda21` in the ROM and
-// `addi r4, r31, 0x104` here: its default name string lives in the small-data
-// pool, not the TU's .rodata block.
-//
-// Everything from 0x2580 on (~250 instructions of r30/r29 renaming plus the
-// 0x50-vs-0x60 frame) is one cascade from the missing
-// TTelesaSlot::TTelesaSlot(const char*): the extra callee-saved register it
-// needs renames the object pointer for the whole tail. That constructor's
-// depth-1 inlining refusal is the standing research item from batch 104, so it
-// is left alone here.
+// Everything left (~250 instructions of r30/r29 renaming from 0x25a4 on, plus
+// the 0x50-vs-0x60 frame and the extra `stw r29`) is one cascade from the
+// missing TTelesaSlot::TTelesaSlot(const char*): the extra callee-saved
+// register it needs renames the object pointer for the whole tail. That
+// constructor's depth-1 inlining refusal is the standing research item from
+// batch 104, so it is left alone here.
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 {
 	if (strcmp(name, "MapObjBase") == 0)
@@ -263,7 +258,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TMapObjTree;
 
 	if (strcmp(name, "PalmNatume") == 0)
-		return new TMapObjTree("地形オブジェ基底");
+		return new TMapObjTree;
 
 	if (strcmp(name, "FruitTree") == 0)
 		return new TMapObjBase;
@@ -680,7 +675,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TCoinBlue;
 
 	if (strcmp(name, "HideObj") == 0)
-		return new THideObjBase;
+		return new THideObj;
 
 	if (strcmp(name, "WaterHitHideObj") == 0)
 		return new TWaterHitHideObj;
