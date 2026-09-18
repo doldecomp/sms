@@ -20,8 +20,13 @@ void TMovieRumble::init(const char* param_1)
 	char acStack_90[128];
 	makeBcrName(acStack_90, 128, param_1);
 
-	unk14     = new Koga::ToolData;
-	void* bcr = JKRGetResource(acStack_90);
+	// The binding on the allocation is +4 of low region and puts the
+	// 128-byte name buffer at retail's 0x30(r1).
+	// TODO: fabricated; retail probably assigned `unk14` directly and got
+	// the same slot from an expansion we have not identified.
+	Koga::ToolData* data = new Koga::ToolData;
+	unk14                = data;
+	void* bcr            = JKRGetResource(acStack_90);
 	unk14->Attach(bcr);
 	if (!unk14->dataExists())
 		unk18 = -1;
@@ -32,10 +37,6 @@ void TMovieRumble::init(const char* param_1)
 	unk28 = false;
 }
 
-// TODO: 99.8%, frame 0x28 vs 0x30, no stack slot referenced on either
-// side. The 8 bytes belong to the inlined `movement`/`checkRumbleOn` pair,
-// and `movement`'s UNUSED size says where: map 0xb4, ours 0x78, i.e.
-// fifteen instructions of `movement` are still missing.
 void TMovieRumble::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (cue & CUE_MOVE)
@@ -51,9 +52,23 @@ void TMovieRumble::movement()
 	}
 }
 
+// The binding over TTHPRender::getFrameNumber is what closes perform (frame
+// 0x28 -> 0x30) and checkRumbleOff (0x40 -> 0x48): both were exactly 8 low-
+// region bytes short and every instruction already matched. Retail therefore
+// read the frame number through one extra level here; the natural candidate
+// is a getFrameNumber() in THPRender.hpp that binds its member before
+// returning it, but that header is shared with linked units, so the level is
+// parked TU-locally.
+// TODO: promote into TTHPRender::getFrameNumber() when THPRender can move.
+static inline s32 MovieFrameNumber(const TTHPRender* render)
+{
+	s32 frame = render->getFrameNumber();
+	return frame;
+}
+
 void TMovieRumble::checkRumbleOn()
 {
-	if (unk24 != -1 && unk1C <= unk10->getFrameNumber()) {
+	if (unk24 != -1 && unk1C <= MovieFrameNumber(unk10)) {
 		SMSRumbleMgr->start(unk24, -1, (f32*)nullptr);
 		unk28 = true;
 	}
@@ -67,7 +82,7 @@ void TMovieRumble::checkRumbleOn()
 #pragma dont_inline on
 void TMovieRumble::checkRumbleOff()
 {
-	if (unk24 != -1 && unk20 <= unk10->getFrameNumber()) {
+	if (unk24 != -1 && unk20 <= MovieFrameNumber(unk10)) {
 		SMSRumbleMgr->stop();
 		unk18 += 1;
 		readCurInfo();
@@ -76,26 +91,34 @@ void TMovieRumble::checkRumbleOff()
 }
 #pragma dont_inline off
 
-// TODO: one construct short, and it is the same one in both inlining
-// callers (init 98.5% / frame 0xb8 vs 0xc0, checkRumbleOff 98.1% / 0x40 vs
-// 0x48): retail copies the ToolData pointer into a second, callee-saved
-// register (`addi r30, r3, 0` between the `cmplwi` and the `beq` of the
-// inlined isValid) and then lets the guard's `isIndexValid` consume the
-// first copy (`lwz r3, 4(r3)`), so the pointer is live in two registers.
-// Declaring the local above the `if` (done below) recovers the rest of the
-// register assignment: +0.7 on checkRumbleOff and +0.5 on init. Measured
-// with no further effect: `const Koga::ToolData*`, `Koga::ToolData&`,
-// `const Koga::ToolData&`, the local inside the `if`, and factoring the
-// three GetValue calls into an inlined one- or two-parameter `readInfo`
-// member (parameter binding is free here; it does land readCurInfo's own
-// UNUSED size on the map's 0xd0, but costs both callers 0.7/1.8).
-// `getToolData()` is +8 of low region per call site, saturating at two.
+// The `addi r30, r3, 0` that used to be missing in both callers is the
+// binding inside getToolData(): the pointer is loaded into a volatile
+// register for isValid()'s `cmplwi` and for the guard's `isIndexValid`, and
+// copied into a callee-saved one for the three GetValue calls. With the
+// binding, checkRumbleOff is exact and init is instruction-exact.
+// Measured and rejected: the local inside the `if`; the guard reading
+// `toolData` instead of `unk14` (98.1/97.4); the guard reading
+// `getToolData()` a second time (that expansion is +12 of low region, not
+// +4); `const Koga::ToolData*` / `Koga::ToolData&`; a `readInfo` helper
+// taking the pointer as a parameter.
+//
+// TODO: init is 100.0% but not exact -- `type` sits at 0x24(r1) where retail
+// has it at 0x28(r1), i.e. init's inline-temp pool is exactly 4 bytes short
+// while checkRumbleOff's (which expands the same readCurInfo) is right, so
+// the missing 4 bytes belong to an init-only expansion: makeBcrName,
+// JKRGetResource or dataExists. Measured with no effect on the slot: dead
+// `u8[4]` locals before and after the buffer, `&acStack_90[0]`, binding the
+// buffer at the call site or inside makeBcrName, `getToolData()->Attach` /
+// `->dataExists()` (both add a real reload, -4%), `data->Attach`, folding
+// JKRGetResource into the Attach argument. A 4-byte (not 8-byte) low-region
+// step is the `global fork` shape from codegen-tells batch 65, so the lever
+// is probably a read of a global, not an accessor.
 void TMovieRumble::readCurInfo()
 {
 	int group                = unk18;
 	Koga::ToolData* toolData = getToolData();
 
-	if (isValid() && getToolData()->isIndexValid(group)) {
+	if (isValid() && unk14->isIndexValid(group)) {
 		toolData->GetValue(group, "start_frame", unk1C);
 		toolData->GetValue(group, "end_frame", unk20);
 		const char* type;

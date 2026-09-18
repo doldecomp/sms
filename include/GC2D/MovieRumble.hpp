@@ -21,12 +21,22 @@ public:
 	bool isValid() const
 	{
 		bool result = false;
-		if (unk14 && unk18 >= 0)
+		if (getToolData() && unk18 >= 0)
 			result = true;
 		return result;
 	}
 
-	Koga::ToolData* getToolData() const { return unk14; }
+	// The binding is load-bearing: it is the `addi r30, r3, 0` that keeps
+	// the pointer live in a callee-saved register across readCurInfo's
+	// GetValue calls, and it is +4 of low region per expansion. isValid()
+	// reads the member through it for the same reason.
+	// TODO: fabricated shape -- neither accessor appears anywhere in
+	// marioUS.MAP, so only the codegen constrains them.
+	Koga::ToolData* getToolData() const
+	{
+		Koga::ToolData* data = unk14;
+		return data;
+	}
 
 public:
 	/* 0x10 */ const TTHPRender* unk10;
