@@ -43,15 +43,31 @@ void TBossHanachan::staticLoadParticle()
 	SMS_LoadParticle("ms_boha_kizetsu.jpa", 0x16F);
 }
 
+// TODO: promotion candidate for TWaterHitActor in
+// include/Player/ModelWaterManager.hpp: `s16 getWaterHitCounter() const`.
+// Parked here because the header belongs to another unit. Binding the s16
+// return is what turns our `cmpwi r0, 0` into retail's `extsh. r0, r0`.
+static inline s16 BHE_getWaterHitCounter(const TWaterHitActor* actor)
+{
+	return actor->mWaterHitCounter;
+}
+
+// TODO: frame 0xc8 vs 0x90 and no opcode differences left; the remaining 56
+// bytes of low region also account for the callee-saved renumbering (retail
+// keeps `this` in r31 and the nerve in r30, we have them swapped).
+// `getLatestNerve()` and the parked water-counter accessor above each bought 8.
+// The next levers to try are indexed accessors for `mBodies[i]` and
+// `unk178->mPoints[i]`, which the catalog prices at +16 per use and which do
+// not saturate.
 void TBossHanachan::emitParticle_()
 {
-	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	const TNerveBase<TLiveActor>* nerve = getLatestNerve();
 	if (nerve == &TNerveBossHanachanDead::theNerve())
 		return;
 	f32 waterHeight = gpSunMgr->unk20;
 	JGeometry::TVec3<f32> position;
 	if (nerve != &TNerveBossHanachanSnort::theNerve()
-	    && mHead->unk100->mWaterHitCounter > 0) {
+	    && BHE_getWaterHitCounter(mHead->unk100) > 0) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    0x169, mHead->mRightNoseMtx, 1, mHead);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
@@ -152,11 +168,16 @@ void TBossHanachan::emitOneTimeSandPillar_(TBossHanachanPartsBody* part)
 	gpMSound->startSoundActor(0x2884, &mSandPillarPosition);
 }
 
+// TODO: 99.9%, frame 0x78 vs 0x68. Every instruction and every register match;
+// 16 bytes of low region are missing. `getLatestNerve()` over
+// `mSpine->getLatestNerve()` bought the first 8. The hoisted `int j` is what
+// puts the outer counter in r25 and the inner in r26 as retail does; declaring
+// it inside the inner `for` swaps them.
 void TBossHanachan::emitCamShake_()
 {
 	if (gpMarDirector->mState == 1)
 		return;
-	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	const TNerveBase<TLiveActor>* nerve = getLatestNerve();
 	J3DFrameCtrl* ctrl = mBodies[0]->mMActor->getFrameCtrl(0);
 	bool grounded = SMS_IsMarioTouchGround4cm();
 	if (nerve == &TNerveBossHanachanGraphWander::theNerve()) {
@@ -171,11 +192,12 @@ void TBossHanachan::emitCamShake_()
 			                            mCommonParams->mSLCamShakeMaxDist.get(),
 			                            distance),
 			                0.0f, 1.0f);
+		int j;
 		for (int i = 0; i < 2; ++i) {
 			if (ctrl->checkPass(sEmitSandFrameFoot[i])) {
 				gpCameraShake->startShake((EnumCamShakeMode)0xB, ratio);
 				if (grounded)
-					for (int j = 0; j < 8; ++j)
+					for (j = 0; j < 8; ++j)
 						SMSRumbleMgr->start(8, &mBodies[j]->unk154);
 			}
 		}
