@@ -1196,19 +1196,20 @@ void TFireWanwan::updateCollisionFromParam()
 	if (isDefeat())
 		return;
 
-	setHitParams(getSaveParam2()->mSLAttackRadius.get(),
-	             getSaveParam2()->mSLAttackHeight.get(),
-	             getSaveParam2()->mSLDamageRadius.get(),
-	             getSaveParam2()->mSLDamageHeight.get());
+	f32 attackRadius = getSaveParam2()->mSLAttackRadius.get();
+	f32 attackHeight = getSaveParam2()->mSLAttackHeight.get();
+	f32 damageRadius = getSaveParam2()->mSLDamageRadius.get();
+	f32 damageHeight = getSaveParam2()->mSLDamageHeight.get();
+	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
 }
 
 // Tiny size mismatch
 void TFireWanwan::updateCameraShake()
 {
 	f32 shakeRange = getSaveParam2()->mCamShakeRange.get();
-	if (!isWalking() && !isAttacking()) {
+	if ((isWalking() || isAttacking())
+	    && mDistToMarioSquared < shakeRange * shakeRange)
 		gpCameraShake->keepShake(CAM_SHAKE_MODE_ENEMY, 0.5f);
-	}
 }
 
 void TFireWanwan::updateRumble()
@@ -1501,7 +1502,17 @@ bool TFireWanwan::isRecovering() const
 	return mSpine->getLatestNerve() == &TNerveFireWanwanRecover::theNerve();
 }
 
-// Probably wrong?
+// TODO: shared-header change needed in Strategic/TakeActor.hpp, measured here.
+// Retail *calls* TTakeActor::isTaken() from this chain (it is the map's only
+// weak isTaken, 0x1c from fireWanwan.cpp, and the one bl isTaken in the whole
+// ROM is in updateRumble). Measured in a scratch TU with the game flags: a body
+// spelled `if (mHolder) return TRUE; return FALSE;` is refused for inlining
+// anywhere on the right of a `||`/`&&` chain at every depth, while the current
+// `return mHolder != nullptr ? TRUE : FALSE;` always expands - and both compile
+// to the map's 7 instructions. Reshaping the body took isTaken 0 -> 100%,
+// updateRumble 94.2 -> 97.1, moveObject 73.9 -> 76.2 and the unit 95.06 ->
+// 95.27 with no regression anywhere in the project, but TakeActor.hpp is not
+// this batch's header to edit.
 bool TFireWanwan::isCameraShake() const
 {
 	return isFreeze() || isDefeat() || unk194->isTaken() || isRecovering()
