@@ -458,6 +458,8 @@ void TNozzleTrigger::init()
 
 void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 {
+	f32 prevPressure = unk388;
+
 	if (mFludd->mCurrentWater <= 0) {
 		unk385 = TNozzleTrigger::INACTIVE;
 		unk386 = 0;
@@ -465,7 +467,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		return;
 	}
 
-	if (unk385 == TNozzleTrigger::ACTIVE) {
+	if ((u8)unk385 == TNozzleTrigger::ACTIVE) {
 		unk386 -= 1;
 
 		// Very likely an inline
@@ -485,7 +487,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	if ((unk384 == true
 	     && (controllerWork.mFrameInput & TMarioControllerWork::A) != 0
 	     && (controllerWork.mInput & TMarioControllerWork::R) != 0)
-	    && unk385 == TNozzleTrigger::INACTIVE) {
+		    && (u8)unk385 == TNozzleTrigger::INACTIVE) {
 		unk385 = TNozzleTrigger::ACTIVE;
 		if (unk38C != 0xffffffff) {
 			u32 soundId;
@@ -512,15 +514,10 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 	if (canSpray == true) {
 		unk388 += 150.0f * controllerWork.mAnalogR;
-		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
+		if (!unk384 && (u8)unk385 == TNozzleTrigger::INACTIVE) {
 			if (gpMarDirector->unk58 % (int)mFludd->mMario->unk568 == 0)
 				SMSRumbleMgr->start(20, (int)mFludd->mMario->unk564,
 				                    (f32*)nullptr);
-		}
-		if (unk384 && unk385 == TNozzleTrigger::INACTIVE
-		    && controllerWork.mAnalogR > 0.0f) {
-			SMSGetMSound()->startSoundActor(
-			    MSD_SE_SY_NEWP_AIR_TAME, mFludd->mEmitPos[0], 0, nullptr, 0, 4);
 		}
 	}
 	unk388 -= mEmitParams.mInsidePressureDec.get();
@@ -528,9 +525,16 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		unk388 = 0.0f;
 	}
 
+	if (canSpray == true && !unk384
+	    && (u8)unk385 == TNozzleTrigger::INACTIVE
+	    && controllerWork.mAnalogR > 0.0f && prevPressure < unk388) {
+		SMSGetMSound()->startSoundActor(MSD_SE_SY_NEWP_AIR_TAME,
+		                                mFludd->mEmitPos[0], 0, nullptr, 0, 4);
+	}
+
 	if (unk388 > mEmitParams.mInsidePressureMax.get()) {
 		unk388 = mEmitParams.mInsidePressureMax.get();
-		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
+		if (!unk384 && (u8)unk385 == TNozzleTrigger::INACTIVE) {
 			unk385      = TNozzleTrigger::ACTIVE;
 			unk386      = mEmitParams.mTriggerTime.get();
 			u32 soundId = unk38C;
@@ -548,7 +552,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		}
 	}
 
-	if (unk385 == TNozzleTrigger::DEAD) {
+	if ((u8)unk385 == TNozzleTrigger::DEAD) {
 		unk388 = 0.0f;
 		if (controllerWork.mAnalogR == 0.0f) {
 			unk385 = TNozzleTrigger::INACTIVE;
