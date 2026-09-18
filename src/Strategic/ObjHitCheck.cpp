@@ -219,7 +219,8 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 
 		if (checkDistance((*it)->mPosition, (*it)->getAttackRadius(),
 		                  (*it)->getAttackHeight(), mario->mPosition,
-		                  mario->getAttackRadius(), mario->getAttackHeight())) {
+		                  mario->getDamageRadius(),
+		                  mario->getDamageHeight())) {
 			suffererIsInAttackArea(*it, mario);
 		}
 	}
@@ -234,20 +235,20 @@ void TObjHitCheck::checkActorsHit()
 	if (!(gpStrategy->unk50 & 0x800))
 		entryGroup(gpStrategy->unk10[3]);
 	if (!(gpStrategy->unk50 & 0x100))
-		entryGroup(gpStrategy->unk10[7]);
+		checkAndEntryGroup(gpStrategy->unk10[7]);
 	if (!(gpStrategy->unk50 & 0x200))
-		entryGroup(gpStrategy->unk10[8]);
+		checkAndEntryGroup(gpStrategy->unk10[8]);
 	if (!(gpStrategy->unk50 & 0x400))
-		entryGroup(gpStrategy->unk10[9]);
+		checkAndEntryGroup(gpStrategy->unk10[9]);
 	if (!(gpStrategy->unk50 & 0x40))
-		entryGroup(gpStrategy->unk10[6]);
+		checkAndEntryGroup(gpStrategy->unk10[6]);
 
 	if (!(gpStrategy->unk50 & 0x80)
 	    && gpModelWaterManager->askDoWaterHitCheck())
 		checkWater();
 
 	if (!(gpStrategy->unk50 & 0x800))
-		checkGroupPlayer(gpStrategy->unk10[3]);
+		checkGroupPlayer(gpStrategy->unk10[5]);
 }
 
 void TObjHitCheck::clearHitNum()
