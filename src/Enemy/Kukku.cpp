@@ -149,9 +149,7 @@ void TKukkuBall::bind()
 	gpMap->isTouchedOneWallAndMoveXZ(&pos.x, pos.y + mAttackHeight, &pos.z,
 	                                 mAttackRadius);
 
-	mPosition.x = pos.x;
-	mPosition.y = pos.y;
-	mPosition.z = pos.z;
+	mPosition = pos;
 }
 
 // UNUSED, 0xc0 in the map.
