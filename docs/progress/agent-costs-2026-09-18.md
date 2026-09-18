@@ -57,3 +57,4 @@
 | 175 | 4-byte lever re-pass (Opus, NEW policy) | 338,839 | 161 | 2,105 | 38 | 2 linked (MovieSubtitle, MarDirectorPreEntry), fishoid clipBoids exact |
 | 178 | reloc-target pass III, big units (Opus, NEW policy) | 415,597 | 223 | 1,864 | 42 | 13 functions up (30-40 pts each), 0 exact, 0 linked |
 | 179 | structural pass III (Opus, NEW policy) | 373,765 | 188 | 1,988 | 36 | 2 exact, 5 real bugs, CardManager data 3->56 |
+| 180 | structural pass IV (Opus, NEW policy) | 355,850 | 176 | 2,022 | 37 | 4 exact, 3 real bugs, 3 MISSING weak accessors restored |
