@@ -416,5 +416,9 @@
   "MoveBG/MapObjAirport.cpp",
   "Map/MapEventSirena.cpp",
   "MoveBG/MapObjWater.cpp",
-  "Map/MapModel.cpp"
+  "Map/MapModel.cpp",
+  "Enemy/areacylinder.cpp",
+  "Animal/Butterfly.cpp",
+  "Map/Shimmer.cpp",
+  "GC2D/ProgSelect.cpp"
 ]
