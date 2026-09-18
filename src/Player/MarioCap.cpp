@@ -9,12 +9,25 @@
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 
-#include <Player/MarioDirtyStrings.hpp>
+// The DummyStrings pair has to precede the dirty-texture names: retail's
+// .rodata opens with its 12- and 20-byte strings and only then cDirtyFileName,
+// which is what puts cDirtyTexName at 0x44 instead of 0x24.
 #include <System/DummyStrings.hpp>
+#include <Player/MarioDirtyStrings.hpp>
 
 // The four mModel reads in this constructor stay raw: TMario::getM3UModel()
 // costs it 99.01 -> 98.89 (measured in header round 16), even though the same
 // level is what MarioDraw's setAnimation and MarioInit's loadAfter want.
+// TODO: 99.0%, and after the include swap above the residue is three things.
+// (a) Frame 0x108 vs 0x180, i.e. 120 bytes of dead low region; the commented
+// out `volatile u32 padding[51]` below is the old placeholder for it.
+// (b) Two r3/r4/r5/r6 rotations, in the SMS_ChangeTextureAll loop and in the
+// getAnmMtx block at 0xb04-0xb20, where retail keeps the model pointer in r4
+// and a second copy of `this` alive.
+// (c) `unk30 = new TTrembleModelEffect;` -- retail stores the result into
+// this->unk30 *before* the init call and then reloads it through that second
+// copy of `this` (`lwz r3, 0x30(r4)`), while we sink the store below the
+// reload. A named local for the allocation is the obvious next trial.
 TMarioCap::TMarioCap(TMario* mario)
 {
 	// Unused stack space
