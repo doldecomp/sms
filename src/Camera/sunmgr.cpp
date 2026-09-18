@@ -29,6 +29,12 @@ TSunMgr::TSunMgr(const char* name)
 	gpSunMgr = this;
 }
 
+static inline TSunModel* SunMgrSearch(const char* name)
+{
+	TSunModel* model = JDrama::TNameRefGen::search<TSunModel>(name);
+	return model;
+}
+
 void TSunMgr::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
@@ -37,40 +43,46 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 	// the top of the frame in declaration order, and retail reads the four
 	// colour inputs into *ascending* slots (0x8c, 0x90, 0x94, 0x98), so the
 	// first value read is the last one declared.
-	// TODO: frame 0x70 vs retail 0xb0. The four slots now ascend as retail's
-	// do but sit 60 bytes lower, i.e. retail has ~64 bytes of inline-expansion
-	// temporaries below them that nothing in this body accounts for, and r30
-	// (this) / r31 (the .rodata base) are swapped with ours. Measured:
-	// readU32() for the four inputs gives frame 0xa8 but 121 instructions
-	// instead of 114 and an extra callee-saved pair; an array and a four-read
-	// loop are worse (batch 32).
+	// TODO: the frame is now retail's 0xb0 and all 114 instructions match, but
+	// r30 (`this`) and r31 (the .rodata string-pool base) are still swapped:
+	// retail ranks the compiler-generated pool address above the parameter
+	// even though `this` has eleven uses to the pool's four, which header
+	// round 18's liveness rule does not explain (`this` is live from entry).
+	// The 64 bytes of low region that were missing are: chaining the five
+	// stream reads into one statement (four continuations, +0x20, the batch-81
+	// rule), one level that binds the name-ref search result at both sites
+	// (+0x18) and `SMSGetMarDirector()` over the raw global (+8).
+	// Also measured: a binding level on `getCurrentMap()` +0x10 but one extra
+	// diff, on `TFlagManager::getInstance()->getBool()` +0, on the
+	// position-holder search +0x10 and three extra instructions; `search2`
+	// with the cast at the call site is codegen-identical here. Splitting the
+	// chain differently gives 8 bytes per continuation exactly (4/1 and 3/2
+	// both 0x88, 2/2/1 0x80). `unk24.set(...)` over the assignment costs 3
+	// instructions. Rejected earlier: readU32() for the four inputs (0xa8 but
+	// 121 instructions), an array plus a four-read loop (batch 32).
 	u32 local_18;
 	u32 local_1c;
 	u32 local_20;
 	u32 local_24;
-	stream >> local_24;
-	stream >> local_20;
-	stream >> local_1c;
-	stream >> local_18;
-	stream >> unk20;
+	stream >> local_24 >> local_20 >> local_1c >> local_18 >> unk20;
 
 	u32 col1 = local_24 << 8 | local_20;
 	u32 col2 = local_1c << 8 | local_18;
 	unk18.set(col1);
 	unk1C.set(col2);
 
-	TSunModel* sun = JDrama::TNameRefGen::search<TSunModel>("太陽モデル");
+	TSunModel* sun = SunMgrSearch("太陽モデル");
 	if (sun != nullptr) {
 		unk14 = 1;
 	} else {
-		sun = JDrama::TNameRefGen::search<TSunModel>("夕日モデル");
+		sun = SunMgrSearch("夕日モデル");
 		if (sun != nullptr) {
 			unk14 = 1;
 			unk15 |= 0x2;
 		}
 	}
 
-	if (unk14 != 0 && gpMarDirector->getCurrentMap() == 1
+	if (unk14 != 0 && SMSGetMarDirector()->getCurrentMap() == 1
 	    && TFlagManager::getInstance()->getBool(0x50004)) {
 		unk15 |= 0x1;
 		TStagePositionInfo* sunWarpPoint
@@ -81,17 +93,33 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 	}
 }
 
-// TODO: frame 0x30 vs retail 0x60; the body is instruction-exact and every r1
-// displacement is 48 low with nothing referenced in the local area, so retail
-// has 48 bytes of locals here that this body does not name. A single
-// uninitialised 48-byte local (e.g. a scratch Mtx) reaches 0x60 and 100% with
-// no instruction change, but nothing in the function wants a matrix, so it is
-// not committed (docs/catalog/frame-gaps.md: the byte count confirms a size,
-// never a declaration). The accessor ladder saturates at 0x40: SMS_GetMarioX/
-// SMS_GetMarioZ +8, a const-reference getWarpPos() for unk24 +8, and then +0
-// each for SMSGetMarDirector(), a TU-static gpSunModel accessor, a parked
-// MSound::unk7C accessor and an isWarpEnabled() predicate (all
-// codegen-neutral).
+// The 48 bytes of dead low region are six inline expansions, each a read
+// through one level that binds its result: `gpMarioPos->x`/`->z` through the
+// real `SMS_GetMarioX()`/`SMS_GetMarioZ()` (+8 for the pair), `SMSGetMSound()`
+// (+8) and the BGM handle at its three sites (+8 each) reach retail's 0x60
+// exactly at 107 instructions.
+// The two parked helpers stand in for accessors that bind -- `MSound::getBgm()`
+// over `unk7C` most obviously -- but `MSound/MSound.hpp` is shared with
+// source-linked TUs, so they live here and are reported.
+// Other measured levels, all +8 each and interchangeable with the above:
+// `gpCamera->isThing2()`, `gpSunModel->isInBounds(0.3f)`. Worth zero:
+// `gpMarDirector->setNextStage(9, nullptr)` behind a level.
+// Superseded: a single uninitialised 48-byte local reaches 0x60 too, and so
+// does one dead 48-byte non-trivial local inside `TSunModel::isInBounds`
+// (which also moves the still-open `TLensGlow::perform` 0x120 -> 0x150 toward
+// its 0x178); neither names anything, and the level ladder does.
+static inline MSound* SunMgrGetMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
+static inline JAISound* SunMgrGetBgm(MSound* sound)
+{
+	JAISound* bgm = sound->unk7C;
+	return bgm;
+}
+
 void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(unk15 & 1))
@@ -105,14 +133,14 @@ void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	// Transition to noki bay
-	f32 dx = gpMarioPos->x - unk24.x;
-	f32 dz = gpMarioPos->z - unk24.z;
+	f32 dx = SMS_GetMarioX() - unk24.x;
+	f32 dz = SMS_GetMarioZ() - unk24.z;
 	if (dx * dx + dz * dz < 160000.0f && gpSunModel->isInBounds(0.3f)) {
 		gpMarDirector->setNextStage(9, nullptr);
-		MSound* sound = SMSGetMSound();
-		if (sound->unk7C != nullptr) {
-			sound->unk7C->setVolume(0.0f, 100, 0);
-			sound->unk7C->setPitch(1.3f, 100, 0);
+		MSound* sound = SunMgrGetMSound();
+		if (SunMgrGetBgm(sound) != nullptr) {
+			SunMgrGetBgm(sound)->setVolume(0.0f, 100, 0);
+			SunMgrGetBgm(sound)->setPitch(1.3f, 100, 0);
 		}
 	}
 }
