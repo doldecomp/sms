@@ -55,6 +55,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Accessor levers are a **signed** knob, saturating per member and per block; a fourth rung needs another class (frame-gaps.md: "batch 103").
 - Two +0 levers can be +8 as a **pair** (six confirmations): try pairs before calling a residue unnameable (codegen-tells.md: "batches 91 and 94").
 - Best lever: a TU-local `static inline` taking the receiver by pointer that **binds and returns** a value, +8 (sometimes +16) per expansion; returning directly, or a level above a real `bl`, is +0 (frame-gaps.md: "batch 110").
+- A parameterless binder over a real `bl` is +4, not +0, when the binder also does the call site's arithmetic (`CLBGameRenderWidthMax()`); with the arithmetic left outside it is +0 and reorders the neighbouring literal load (frame-gaps.md: "re-pass II 178").
 - Binding works over an accessor, a raw member read, or a struct/array member's **address**, which copies nothing; nested levels stack, two bindings in one level do not (frame-gaps.md: "sweep 127").
 - The +4 rung is a direct-return fork **nested inside a binder**, over a global, a file-local static *or a plain member read*; at the call site it is +0 and two identical stacked forks collapse (frame-gaps.md: "re-pass 172").
 - A fork over a global must be used at **every** site of its wrapper family or it rotates the first expansion's register coalescing (frame-gaps.md: "re-pass 172").
@@ -100,6 +101,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `fp_contract` fuses only products of **locals**, except `a += b*c` and a single expression's last product (codegen-tells.md: "Floating point").
 - `x / 2.0f` and `x * 0.5f` both give `fmuls x, 0.5`, but division keeps the dividend left, a literal the constant (codegen-tells.md: "batch 101").
 - A surviving `* 0.0f`/`* 1.0f` proves an inline boundary or an accessor returning the constant; `TUtil<f32>::one()` is the +4 lever (codegen-tells.md: "Batch 58").
+- `TVec3::normalize()` is `setLength(*this, TUtil<f32>::one())`, so `setLength(1.0f)` at a call site is that rung spent: -4 per site, instruction-identical, and per site (frame-gaps.md: "re-pass II 178").
 - `.sdata2` is reverse source order, so a late literal belongs near the top of the file and a shared slot fixes its value (codegen-tells.md: "Batch 59").
 - `@NNNN` ids: aggregates and local statics numbered at **parse** (monotonic in source line), strings at deferred codegen; `.rodata` follows id order (tu-reconstruction.md: "Literal numbering").
 - A missing function **permutes** the pool rather than shifting it: diff the two `.rodata` blobs before chasing immediates (codegen-tells.md: "`EventWatcher`").

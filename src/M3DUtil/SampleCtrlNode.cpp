@@ -81,6 +81,16 @@ SampleCtrlJoint::SampleCtrlJoint(J3DJoint* joint)
 // J3DColorChanInfo&/J3DTevStageInfo& row reference, a u32 loop index, dropping
 // stageNum, and getColorBlock()->getColorChan(i) at two or more sites (a
 // callee-saved rotation).
+// TODO: 100.0% fuzzy with exactly two markers left, and they are one 4-byte
+// pool slot: the lookup table that a J3D `getColorChan` accessor inline copies
+// to the stack (`lwz r0, @NNNN; stw r0, N(r1)`, then `lbzx r0, r26, r0`) sits
+// at 0x90 in retail and 0x94 here.  Everything else is pinned -- frame 0xc8,
+// `stmw` at 0xb0 -- and that table is the *only* referenced slot in the whole
+// 164-byte pool, so the residue is 4 bytes too many charged to the statements
+// after it (the pool is allocated in reverse statement order), not a shortage.
+// That is re-pass 172's pinned-pool allocation-order class, where the lever
+// ladder has no +4 rung; the table itself comes from a shared J3D header, so
+// there is nothing to steer from this .cpp.
 SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* material)
 {
 	unk38 = j3dDefaultTevOrderInfoNull;
