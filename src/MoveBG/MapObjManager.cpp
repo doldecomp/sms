@@ -86,10 +86,7 @@ void TMapObjManager::initDrawBuffer()
 J3DMaterialTable* TMapObjManager::loadMatTable(const char* name)
 {
 	void* res = JKRGetResource(name);
-	if (res)
-		return J3DModelLoaderDataBase::loadMaterialTable(res);
-	else
-		return nullptr;
+	return res ? J3DModelLoaderDataBase::loadMaterialTable(res) : nullptr;
 }
 
 void TMapObjManager::load(JSUMemoryInputStream& stream)
@@ -116,7 +113,8 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	unk94 = loadMatTable("/scene/mapObj/riccoShip.bmt");
 
 	if ((gpMarDirector->getCurrentMap() == 3
-	     && (gpMarDirector->unk7D == 1 || gpMarDirector->unk7D == 5))
+	     && (SMSGetMarDirector()->unk7D == 1
+	         || SMSGetMarDirector()->unk7D == 5))
 	    || gpMarDirector->getCurrentMap() == 0x1E) {
 		mSurfGessoModelData = SMS_MakeSDLModelData(
 		    "/scene/mapObj/surfgeso.bmd", J3DMLF_MaterialPEFull
@@ -216,8 +214,8 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
                                                bool param_5)
 {
 	f32 y2;
+	const TBGCheckData* checkData;
 	if (param_5) {
-		const TBGCheckData* checkData;
 		y2 = gpMap->checkGround(x, y + 5.0f, z, &checkData);
 		if (checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL))
 			return nullptr;
@@ -397,8 +395,8 @@ TMapObjBase* TMapObjBaseManager::newAndRegisterObjByEventID(u32 event_id,
 
 	switch (event_id) {
 	case 777: {
-		char buffer[64];
-		snprintf(buffer, 64, "シャイン（%s）", name);
+		char buffer[256];
+		snprintf(buffer, 256, "シャイン（%s）", name);
 		return (TMapObjBase*)JDrama::TNameRefGen::search2(buffer);
 	} break;
 
