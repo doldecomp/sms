@@ -343,6 +343,10 @@ static void makeWorldToPollutionMtx(f32 scale, f32 min_z, f32 min_x,
 	mtx->mMtx[1][3] = -min_x * scale;
 }
 
+// TODO: the frame is now exact (`SMSGetPollutionLayer` over
+// `gpPollution->getLayer` is the +16); the residue is "+4 low", every
+// temporary slot 4 bytes lower than retail's (0x60/0x64/0x68/0x6c against
+// 0x64/0x68/0x6c/0x70). A pointer instead of the `info` reference is +0.
 void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 {
 	for (int i = 0; i < mJointObjStampTaskNum; ++i) {
@@ -350,7 +354,7 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		if (info.mLayerIdx != layer_index)
 			continue;
 
-		TPollutionLayer* layer = gpPollution->getLayer(info.mLayerIdx);
+		TPollutionLayer* layer = SMSGetPollutionLayer(info.mLayerIdx);
 
 		initDrawObjGX();
 		GXSetNumChans(1);
@@ -612,13 +616,23 @@ void TPollutionCounterLayer::cleanProhibitArea(int param_1) const
 	GXEnd();
 }
 
-// TODO: the map's UNUSED size is 0x5c and this body compiles to 0x20, so
-// fifteen instructions are unrecovered. countTexDegree is byte-identical with
-// the block spelled in place, so the call site is what the symbol's existence
-// proves, not the body.
+// The map's UNUSED size 0x5c is countTexDegree's model-stamp block: the guard
+// on the task count, the draw-pass number and the two draw-buffer calls, with
+// the buffer bound to a local (that local is exactly the 12 bytes between the
+// 0x68 the two raw indexed reads compile to and the map's 0x5c).
+// It has no caller: countTexDegree is byte-exact with the block spelled out
+// and the member re-read after `draw()`, and calling this function instead
+// costs an instruction there (99.9% -> 98.2%), so retail duplicated the body
+// rather than calling it.
 void TPollutionCounterLayer::drawModelStamp(int layer_index)
 {
-	drawModelStamp(layer_index);
+	if (mModelStampTaskNum == 0)
+		return;
+
+	j3dSys.setUnk4C(7);
+	J3DDrawBuffer* buffer = mModelStampDrawBuffers[layer_index];
+	buffer->draw();
+	buffer->frameInit();
 }
 
 // TODO: every instruction matches; the frame is 0x68 against retail's 0xc0, so
@@ -680,6 +694,19 @@ void TPollutionCounterLayer::pushJointObjStampTask(u8 param_1, u8 param_2,
 	++mJointObjStampTaskNum;
 }
 
+// TODO: instruction-exact apart from one FPR swap; frame 0xd0 against retail's
+// 0xe0, with every local 12 bytes lower and the register saves only 8 lower,
+// i.e. 12 bytes of dead low region and 4 fewer bytes in the named area.
+// `SMSGetPollutionLayer(i)` over `gpPollution->getLayer(i)` is the +8 that got
+// it this far (and it closes drawJointObjStamp's frame outright). A parked
+// `static inline` accessor for `mModelStampDrawBuffers[i]` used at both
+// `setDrawBuffer` calls is a further +8 with no instruction change, which
+// overshoots the 12 the slots ask for, so it is not applied; a reference local
+// for `mModelStampTaskQueue[j]` costs an instruction (97.4%).
+// The remaining FPR swap is `lfs f0, 0x40(r5)` / `lfs f1, 0x38(r5)`: retail
+// reads mMinX into f0 before mMinZ, where our argument order reads mMinZ
+// first. drawJointObjStamp spells the same call with no swap, so it is an
+// evaluation-order artifact of this caller, not a wrong signature.
 void TPollutionCounterLayer::calcViewMtx()
 {
 	TMtx34f afStack_68;
@@ -689,7 +716,7 @@ void TPollutionCounterLayer::calcViewMtx()
 	J3DDrawBuffer* oldDbXlu = j3dSys.getDrawBuffer(1);
 
 	for (int i = 0; i < mCounterNum; ++i) {
-		TPollutionLayer* layer = gpPollution->getLayer(i);
+		TPollutionLayer* layer = SMSGetPollutionLayer(i);
 
 		TPosition3f local_a4;
 		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinZ,
