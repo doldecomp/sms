@@ -1,6 +1,7 @@
 #ifndef ANIMAL_FISHOID_HPP
 #define ANIMAL_FISHOID_HPP
 
+#include <Animal/boid.hpp>
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Strategic/TakeActor.hpp>
@@ -24,6 +25,12 @@ public:
 
 	TRealoidActor* getRealoid(int idx) { return unk154[idx]; }
 
+	// Fabricated names. getBoidNum() forwards to the leader rather than being
+	// spelled out at the call sites: that third level is the last 8 bytes of
+	// TButterfloid::load's frame.
+	TBoidLeader* getBoidLeader() { return unk150; }
+	int getBoidNum() { return getBoidLeader()->getBoidNum(); }
+
 public:
 	/* 0x150 */ TBoidLeader* unk150;
 	/* 0x154 */ TRealoidActor** unk154;
@@ -40,6 +47,9 @@ public:
 	void checkHitActors();
 	void calcRootMatrix(TBoid*);
 	void calcRootMatrixOnTaking();
+
+	// Fabricated name; worth 8 bytes of TButterfloid::load's frame.
+	MActor* getMActor() { return unk70; }
 
 	bool checkFlag(int flag) const { return mFlags & flag; }
 	void onFlag(int flag) { mFlags |= flag; }

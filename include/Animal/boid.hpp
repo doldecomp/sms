@@ -39,9 +39,23 @@ public:
 
 	void setFleeTarget(const TPathNode& target) { mFleeTarget = target; }
 
+	// Fabricated names. The ROM reaches these members through accessors:
+	// every one of them is worth frame slots in TButterfloid::load (the nine
+	// writes below are +40 together) and none changes an instruction.
+	void setBaseSpeed(f32 v) { mBaseSpeed = v; }
+	void setNeighborRadius(f32 v) { mNeighborRadius = v; }
+	void setYawSpeed(f32 v) { mYawSpeed = v; }
+	void setPitchSpeed(f32 v) { mPitchSpeed = v; }
+	void setMaxPitch(f32 v) { mMaxPitch = v; }
+	void setAlignmentStrength(f32 v) { mAlignmentStrength = v; }
+	void setFleeRadius(f32 v) { mFleeRadius = v; }
+	void setFleeStrength(f32 v) { mFleeStrength = v; }
+	void onFlag(u32 flag) { mFlags |= flag; }
+
 public:
 	enum {
 		FLAG_SIMULATE       = 1,
+		FLAG_UNK2           = 2,
 		FLAG_USE_GRAPH_GOAL = 4,
 	};
 
