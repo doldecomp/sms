@@ -258,6 +258,18 @@ s16 CPolarSubCamera::getCameraInbetweenFrame_(int param_1)
 	return frames;
 }
 
+// TODO: retail's standalone copy of this function expands MsClamp<f> (as ours
+// does, byte-exact) while its *expansion* inside changeCamModeSub_ reaches the
+// map's local 0x20 `bl MsClamp<float>` -- one body, two inlining decisions,
+// the per-call-site refusal family. One TU-local `static inline` level around
+// the clamp gives changeCamModeSub_ exactly retail's 413 instructions
+// (97.7 -> 99.3) and takes the @3715 jump-table addends from 0x43c/0x450/0x484
+// to 0x424/0x438/0x46c against retail's 0x42c/0x440/0x474, but it also pushes
+// the clamp out of line in this standalone copy and costs its byte-exact
+// match (100 -> 79.4), so it is not committed. A level *above* this function
+// at the changeCamModeSub_ call site is the shape that would work, but the
+// function is private and a public forwarder would need a map symbol that does
+// not exist. Two and three stacked levels behave the same as one.
 void CPolarSubCamera::setUpToLButtonCamera_(int param_1)
 {
 	mCurrentTarget.unk30 = mCurrentTarget.unk28;
@@ -282,10 +294,9 @@ void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 		bVar11 = true;
 	}
 
-	if (!force && mMode == mode)
-		return;
-
-	if (tween_frames < 0)
+	// One `if` with `||`: retail shares a single return block and leaves the
+	// unfoldable `bge next; b epilogue` pair for the second term.
+	if ((!force && mMode == mode) || tween_frames < 0)
 		return;
 
 	if (tween_frames == 0)
@@ -293,6 +304,16 @@ void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 
 	mPrevMode = mMode;
 
+	// TODO: retail emits the unfoldable `bgt next; b join` pair for
+	// popThing()'s `unk4 > 0` guard where we emit the folded `ble join`, so
+	// changeCamModeSub_ is one further instruction short. Tried and inert:
+	// five popThing bodies (early return, two returns, empty then/else arm,
+	// a named count, `unk4 = unk4 - 1`) and five call-site spellings (two
+	// separate ifs, `== true`, inverted arms, `else if (!bVar11)`, no
+	// braces). Together with the MsClamp refusal noted on
+	// setUpToLButtonCamera_ this is the unit's whole data gap: @3715 is a
+	// 51-entry jump table whose grouping already matches and whose addends
+	// are gated on this function's size.
 	if (bVar11) {
 		unk60->popThing();
 	} else {
@@ -597,6 +618,10 @@ bool CPolarSubCamera::isChangeToParallelCameraCByMoveBG_() const
 
 // TODO: inlining is NOT working out in a bunch of places in this function,
 // hence the hacks above...
+// TODO: 80 bytes of frame short (0xb0 against retail's 0x100) with a
+// four-register callee-saved rotation (retail r26/r27/r28/r30 where we have
+// r28/r27/r30/r28) and one missing `mr r26, r27`. Not investigated in closure
+// batch 126.
 void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 {
 	if (SMS_isMultiPlayerMap()) {
