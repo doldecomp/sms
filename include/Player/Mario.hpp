@@ -1331,6 +1331,25 @@ public:
 	// makes MWCC reload mSwitchToSecondNozzleSpeed instead of reusing f1
 	// across the pair.
 	TWaterGun* getFludd() const { return mWaterGun; }
+	// Rejected in header round 21: making this accessor bind its result
+	// (`TWaterGun* fludd = mWaterGun; return fludd;`) breaks the DOL, because
+	// a binding inside a shared accessor is paid by every caller, including
+	// the linked Player units. A second, binding accessor beside it is no
+	// use either: both spellings put TMario::perform at 0x148 against
+	// retail's 0x168, while MarioMain's parked free function over the
+	// receiver reaches it. A member accessor cannot reach that rung -- the
+	// free function's by-pointer parameter binding is a separate 8 bytes on
+	// top of the bound result, so perform's carrier is not an accessor.
+
+	// The binding is load-bearing, and it is a separate rung from the plain
+	// read: TMario::stopCommon needs the named pointer (frame 0x28 -> 0x30,
+	// byte-exact) and the other yoshi reads do not, so this is applied per
+	// site like the three levels above. Header round 21.
+	TYoshi* getYoshi() const
+	{
+		TYoshi* yoshi = mYoshi;
+		return yoshi;
+	}
 
 	// Retail reads mModel through one extra inline level. It is worth exactly
 	// +8 bytes of low-region frame per site with no instruction change, and
@@ -1941,5 +1960,15 @@ public:
 
 extern TMario* gpMarioOriginal;
 extern TMario* gpMarioForCallBack;
+
+// The binding is load-bearing, unlike the other SMSGet* globals: an expansion
+// reserves 16 bytes of low region for the named pointer, which is what
+// TBubbleCallBack::execute's guard read wants (forking all three reads in that
+// body overshoots by 0x18, so it is applied per site). Header round 21.
+inline TMario* SMSGetMarioOriginal()
+{
+	TMario* mario = gpMarioOriginal;
+	return mario;
+}
 
 #endif

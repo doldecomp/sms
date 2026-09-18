@@ -138,20 +138,12 @@ BOOL TMario::waitingCommonEvents()
 // there is no inlined callee to carry a dead 8-byte local and no positional
 // evidence for one in the body. An accessor level for `mYoshi` in front of
 // `mActor` is +0 here.
-// TODO: parked getter -- belongs on TMario as getYoshi(); a header batch owns
-// include/Player/Mario.hpp this round.
-static inline TYoshi* MarioWaitGetYoshi(const TMario* mario)
-{
-	TYoshi* yoshi = mario->mYoshi;
-	return yoshi;
-}
-
 void TMario::stopCommon(int anim_id, int status_on_end)
 {
 	waitProcess();
 	setAnimation(anim_id, 1.0f);
 	if (onYoshi()
-	    && MarioWaitGetYoshi(this)->mActor->curAnmEndsNext(ANM_TYPE_BCK,
+	    && getYoshi()->mActor->curAnmEndsNext(ANM_TYPE_BCK,
 	                                                       nullptr)) {
 		changePlayerStatus(status_on_end, 0, false);
 	} else if (isLast1AnimeFrame()) {

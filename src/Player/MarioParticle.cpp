@@ -218,18 +218,9 @@ struct TBubbleCallBack
 	void execute(JPABaseEmitter*, JPABaseParticle*);
 };
 
-// TODO: parked fork of gpMarioOriginal; belongs in Player/Mario.hpp as
-// SMSGetMarioOriginal(). It is worth 16 bytes of the frame at the guard site
-// only; forking all three reads overshoots by 0x18.
-static inline TMario* MarioParticleGetMario()
-{
-	TMario* mario = gpMarioOriginal;
-	return mario;
-}
-
 void TBubbleCallBack::execute(JPABaseEmitter*, JPABaseParticle* particle)
 {
-	if (!MarioParticleGetMario()->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
+	if (!SMSGetMarioOriginal()->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		JGeometry::TVec3<f32> pos;
 		particle->getCurrentPosition(pos);
 		if (pos.y > gpMarioOriginal->mFloorPosition.z) {
