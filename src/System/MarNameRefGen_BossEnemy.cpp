@@ -63,10 +63,16 @@
 //       r31 (frame 0x38 against our 0x30) and why the mMirrorActor null store
 //       lands after the call. SleepBossHanachan.hpp's initialiser list is
 //       already right, so the fix is one inline level between that constructor
-//       and TVec3's, i.e. a JGVec3.hpp question. A defaulted constructor
-//       argument is excluded as the level: the map has no
-//       __ct__18TSleepBossHanachan symbol of any arity, so MWCC never
-//       synthesised the no-argument forwarder that a default would need.
+//       and TVec3's. A defaulted constructor argument is excluded as the
+//       level: the map has no __ct__18TSleepBossHanachan symbol of any arity,
+//       so MWCC never synthesised the no-argument forwarder that a default
+//       would need. Header round 21 rejected the JGVec3.hpp reading as well:
+//       a forwarder between TVec3(T, T, T) and set<f> does give this unit
+//       retail's `bl`, but it is all-or-nothing across every TVec3(x, y, z)
+//       site, breaks the DOL and is -28 exact functions tree-wide (trial
+//       table at the declaration in JGVec3.hpp). The level has to come from
+//       somewhere in this unit's own chain, and an initialiser list leaves
+//       no room for one in SleepBossHanachan.hpp.
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
 	if (strcmp(name, "EMario") == 0)

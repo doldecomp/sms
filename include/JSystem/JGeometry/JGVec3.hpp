@@ -163,6 +163,23 @@ public:
 	// Do not reach for the primary-template form: weak linkage plus
 	// never-inline is further from retail than what is here now.
 	//
+	// Nor is an extra inline level between the `TVec3(T, T, T)` constructor
+	// and this member the answer, even though it is the only place a level
+	// *can* go for a constructor reached through an initialiser list (the
+	// deriving class's own header has no room: an initialiser list calls
+	// TVec3's constructor directly). Header round 21 measured
+	// `TVec3(T x_, T y_, T z_) { setEach_(x_, y_, z_); }` over a one-line
+	// forwarder: it breaks the DOL and is total -28 exact functions. It does
+	// exactly what the depth model predicts and confirms the per-call-site
+	// reading -- the eight units that list `set<f>` MISSING (AnimalBase,
+	// Bird, pakkun, killer, wireTrap, Koopa, TabePuku,
+	// MarNameRefGen_BossEnemy) all gain retail's `bl`, but the seven that
+	// had it exact (cameragc, MtxUtil, GCLogoDir, MarDirectorInitECT,
+	// MenuDir, MovieDirector, MarDirectorSetupObjects) lose it, with 149
+	// function regressions against 13 improvements. A level here is
+	// all-or-nothing and the population is split, so the level has to come
+	// from the call site's own chain.
+	//
 	// Batch 104 measured that last row on the *non*-template members too and
 	// it is wrong for them as well. Every `TVec3<f>` member the map lists is
 	// weak, emitted once and called, but they are all in-class: retail's own
