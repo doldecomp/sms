@@ -27,6 +27,16 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// Parked here, not in a header: the map has no symbol for it, so retail had
+// it as a file-scope `inline`. It is the level that reaches the map's
+// out-of-line JGeometry::TVec3<f32>::sub, ::dot and TUtil<f32>::sqrt at the
+// copy-and-subtract distance tests inside isMissMario and doDrag (the same
+// shape as emario's EMarioCalcDist and AnimalNerve's calcDist).
+static inline f32 TabePukuLength(const JGeometry::TVec3<f32>& v)
+{
+	return v.length();
+}
+
 // The three .bck slots of the tabepuku model, in the alphabetical order the
 // model data indexes them; tabepuku_bastable names all three.
 enum {
@@ -410,9 +420,7 @@ bool TTabePuku::isMissMario() const
 		return true;
 
 	f32 giveUpLength = getSaveParams()->getSLGiveUpLength();
-	JGeometry::TVec3<f32> toGoal(unk104.getPoint());
-	toGoal.sub(mPosition);
-	if (toGoal.length() > giveUpLength)
+	if (TabePukuLength(unk104.getPoint() - mPosition) > giveUpLength)
 		return true;
 
 	JGeometry::TVec3<f32> onLink(
@@ -511,11 +519,10 @@ void TTabePuku::prepareDrag()
 bool TTabePuku::doDrag()
 {
 	if (!mTouchedWall && isAirborne()) {
-		JGeometry::TVec3<f32> toGoal(unk104.getPoint());
-		toGoal.sub(mPosition);
 		// Written inverted because retail branches on a bare `bge`; the
 		// direct `length() <= getDragLength()` adds a cror.
-		if (!(getSaveParams()->getDragLength() < toGoal.length()))
+		if (!(getSaveParams()->getDragLength()
+		      < TabePukuLength(unk104.getPoint() - mPosition)))
 			return false;
 	}
 
