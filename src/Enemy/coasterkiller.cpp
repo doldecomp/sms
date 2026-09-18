@@ -325,7 +325,7 @@ void TCoasterKiller::setDeadAnm()
 	    mPosition, "エフェクト爆発マネージャー", 1);
 	if (effectBase != nullptr) {
 		TEffectExplosion* effect = (TEffectExplosion*)effectBase;
-		effect->generate(mPosition, mScaling);
+		effect->generate(mPosition, getScaling());
 		mScaling *= 0.6f;
 	}
 }

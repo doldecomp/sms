@@ -144,8 +144,8 @@ void TWireTrap::initWire()
 	// the block differ.
 	if (0.0f
 	    <= JGeometry::TVec3<f32>(
-	           JGeometry::TUtil<f32>::one() * JMASin(mRotation.y), 0.0f,
-	           JGeometry::TUtil<f32>::one() * JMACos(mRotation.y))
+	           JGeometry::TUtil<f32>::one() * JMASin(getRotation().y), 0.0f,
+	           JGeometry::TUtil<f32>::one() * JMACos(getRotation().y))
 	           .dot(getWireBinder()->getDir()))
 		mMoveDir = 1.0f;
 	else

@@ -108,7 +108,7 @@ void TMapObjBase::setUpCurrentMapCollision()
 	} else {
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
-		colman->setUpUnk8TRS(pos, mRotation, mScaling);
+		colman->setUpUnk8TRS(pos, mRotation, getScaling());
 	}
 }
 
@@ -608,7 +608,7 @@ void TMapObjBase::calcRootMatrix()
 {
 	J3DModel* model = getModel();
 	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y - mYOffset,
-	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+	               mPosition.z, getRotation().x, getRotation().y, mRotation.z);
 	model->setBaseScale(mScaling);
 }
 

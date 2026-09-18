@@ -462,7 +462,8 @@ void TTelesa::calcRootMatrix()
 	}
 
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
-	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+	               mPosition.z, getRotation().x, getRotation().y,
+	               getRotation().z);
 	getModel()->setBaseScale(mScaling);
 }
 

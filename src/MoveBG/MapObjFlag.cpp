@@ -135,8 +135,8 @@ void TMapObjFlag::update()
 
 void TMapObjFlag::init(const char* name)
 {
-	mLength = 100.0f * mScaling.z;
-	mHeight = 100.0f * mScaling.y;
+	mLength = 100.0f * getScaling().z;
+	mHeight = 100.0f * getScaling().y;
 	mWavePhaseZ /= mScaling.z;
 	mWavePhaseY /= mScaling.y;
 	mWaveAmplitude *= mScaling.z;

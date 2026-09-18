@@ -400,7 +400,7 @@ void TKoopaJr::calcRootMatrix()
 		MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y,
 		               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	}
-	model->setBaseScale(mScaling);
+	model->setBaseScale(getScaling());
 }
 
 // UNUSED, 0x2c in the map.

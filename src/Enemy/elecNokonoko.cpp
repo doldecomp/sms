@@ -649,7 +649,7 @@ void TElecCarapace::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			request.mRadiusZ = request.mRadiusX
 			    = mNokonoko->mScaledBodyRadius;
-			request.mRotationY = mRotation.y;
+			request.mRotationY = getRotation().y;
 
 			gpBindShadowManager->request(request, mActorType);
 		}

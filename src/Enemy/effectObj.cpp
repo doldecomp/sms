@@ -330,7 +330,7 @@ void TEffectColumWater::generate(JGeometry::TVec3<f32>& param_1,
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        COLUMWATER_JPA_MS_ENEHAMON_A, &param_1, 0, nullptr)) {
-		emitter->setGlobalScale(mScaling);
+		emitter->setGlobalScale(getScaling());
 	}
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(

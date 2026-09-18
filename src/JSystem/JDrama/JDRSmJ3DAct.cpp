@@ -44,20 +44,20 @@ void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 
 		TPosition3f tmp;
 		tmp.identity();
-		tmp.setEularX(DEG_TO_RAD(mRotation.x));
+		tmp.setEularX(DEG_TO_RAD(getRotation().x));
 
 		TMtx34f local_110;
 		local_110.concat(local_148, tmp);
 
-		tmp.setEularY(DEG_TO_RAD(mRotation.y));
+		tmp.setEularY(DEG_TO_RAD(getRotation().y));
 		TMtx34f local_140;
 		local_140.concat(local_110, tmp);
 
-		tmp.setEularZ(DEG_TO_RAD(mRotation.z));
+		tmp.setEularZ(DEG_TO_RAD(getRotation().z));
 		local_110.concat(local_140, tmp);
 
 		unk48->setBaseTRMtx(local_110);
-		unk48->setBaseScale(mScaling);
+		unk48->setBaseScale(getScaling());
 
 		if (unk4C == nullptr) {
 			unk48->calc();

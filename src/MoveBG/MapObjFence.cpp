@@ -371,7 +371,7 @@ void TFenceWater::control()
 
 	mRotation.y = MsWrap(mTurnAngle + mInitialRotation.y, 0.0f, 360.0f);
 
-	mMessenger->mPosition.x = 500.0f * JMACos(mRotation.y) + mPosition.x;
+	mMessenger->mPosition.x = 500.0f * JMACos(getRotation().y) + mPosition.x;
 	mMessenger->mPosition.z = mPosition.z - 500.0f * JMASin(mRotation.y);
 }
 

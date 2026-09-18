@@ -10987,10 +10987,10 @@ void TMapObjBase::initObjCollisionData()
 		const TMapObjHitDataTable* table = getMapObjData()->mHit->unkC;
 
 		f32 fVar2;
-		if (mScaling.x > mScaling.z)
-			fVar2 = mScaling.x;
+		if (getScaling().x > getScaling().z)
+			fVar2 = getScaling().x;
 		else
-			fVar2 = mScaling.z;
+			fVar2 = getScaling().z;
 
 		if (table->unk8 > 0.0f) {
 			mBodyRadius = table->unk8 * fVar2;

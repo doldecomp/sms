@@ -1014,7 +1014,7 @@ void TCloset::calcRootMatrix()
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y + unk14C, mPosition.z,
 	               mRotation.x, mRotation.y, mRotation.z);
 	model->setBaseTRMtx(mtx);
-	model->setBaseScale(mScaling);
+	model->setBaseScale(getScaling());
 	mtx.ref(1, 3) += unk14C;
 	if (unk16C != 0 && mMActor->checkCurAnm("closetopen", ANM_TYPE_BCK)
 	    && mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))

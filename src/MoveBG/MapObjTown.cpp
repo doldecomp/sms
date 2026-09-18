@@ -393,7 +393,7 @@ void TMapObjWaterSpray::calc()
 	    = gpMarioParticleManager->emit(unk138, &mPosition, 1, this);
 	if (em) {
 		em->setRotation(mRotation.x, mRotation.y, mRotation.z);
-		em->setGlobalScale(mScaling);
+		em->setGlobalScale(getScaling());
 		em->setRate(unk13C);
 		em->setGlobalParticleScale(unk140);
 		em->setGlobalPrmColor(unk14C.r, unk14C.g, unk14C.b);

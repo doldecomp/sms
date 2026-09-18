@@ -238,7 +238,8 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 	    && mMActor) {
 		if (cue & CUE_CALC_ANIM) {
 			MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
-			               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
+			               mPosition.z, getRotation().x, getRotation().y,
+			               getRotation().z);
 			getModel()->setBaseScale(mScaling);
 		}
 
@@ -328,7 +329,7 @@ void TMapStaticObj::initMapCollision(const char* name)
 	else
 		mCollisionManager = new TMapCollisionManager(1, "/map/map", nullptr);
 	mCollisionManager->init(name, 0, nullptr);
-	mCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+	mCollisionManager->setUpUnk8TRS(mPosition, mRotation, getScaling());
 }
 
 #pragma dont_inline on

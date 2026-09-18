@@ -355,7 +355,8 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 				body->unk148 = body->unk144;
 			}
 			s16 angle = CLBDegToShortAngle(mBodies[0]->mRotation.y);
-			CLBChaseAngleDecrease(&angle, CLBDegToShortAngle(mRotation.y), 20);
+			CLBChaseAngleDecrease(&angle, CLBDegToShortAngle(getRotation().y),
+			                      20);
 			mBodies[0]->mRotation.y = (360.0f / 65536.0f) * angle;
 			for (int i = 1; i < 8; ++i) {
 				TBossHanachanPartsBody* body = mBodies[i];
@@ -368,7 +369,8 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			for (int i = 0; i < 8; ++i)
 				unk178->setDegreeZAndRevisionPosXZ(i, mBodies[i]->mRotation.z);
 			JGeometry::TVec3<f32> headPosition = mPosition;
-			headPosition.x -= JMASin(mRotation.y) * mCommonParams->mSLHeadLength.get();
+			headPosition.x
+			    -= JMASin(getRotation().y) * mCommonParams->mSLHeadLength.get();
 			headPosition.z -= JMACos(mRotation.y) * mCommonParams->mSLHeadLength.get();
 			f32 offsetX, offsetZ;
 			BHSCalcRevisionDistXZByRotateZ(mRotation.y, mRotation.z,

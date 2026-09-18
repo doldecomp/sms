@@ -553,7 +553,7 @@ void TRollBlock::calcRootMatrix()
 	// the plain reads.
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z,
 	               mInitialRotation.x, mInitialRotation.y, mInitialRotation.z);
-	model->setBaseScale(mScaling);
+	model->setBaseScale(getScaling());
 
 	f32 sinRoll = JMASin(unk138);
 	f32 cosRoll = JMACos(unk138);

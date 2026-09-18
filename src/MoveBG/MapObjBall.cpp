@@ -1097,10 +1097,10 @@ void TResetFruit::appearing()
 	concatOnlyRotFromLeft(grow, mtx, mtx);
 
 	mScaling.y *= mScaleUpSpeed;
-	mScaledBodyRadius = mBodyRadius * mScaling.y;
-	mtx[1][3] = mBodyRadius * mScaling.y + mPosition.y;
+	mScaledBodyRadius = mBodyRadius * getScaling().y;
+	mtx[1][3] = mBodyRadius * getScaling().y + mPosition.y;
 
-	if (mScaling.y >= mInitialScaling.y) {
+	if (getScaling().y >= mInitialScaling.y) {
 		mScaling.x = mInitialScaling.x;
 		mScaling.y = mInitialScaling.y;
 		mScaling.z = mInitialScaling.z;
@@ -1367,8 +1367,8 @@ void TCoverFruit::calcRootMatrix()
 		mPosition.z = held[2][3];
 	} else {
 		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
-		               mPosition.y - mYOffset, mPosition.z, mRotation.x,
-		               mRotation.y, mRotation.z);
+		               mPosition.y - mYOffset, mPosition.z, getRotation().x,
+		               getRotation().y, mRotation.z);
 	}
 
 	getModel()->setBaseScale(*(Vec*)&mScaling);

@@ -1812,11 +1812,11 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 		JGeometry::TVec3<f32> center(boss->mPosition);
 		center.y += 500.0f;
 
-		JGeometry::TVec3<f32> scale(boss->mScaling);
+		JGeometry::TVec3<f32> scale(boss->getScaling());
 		scale.scale(1.1f);
 
-		boss->getMapCollisionManager()->setUpUnk8TRS(center, boss->mRotation,
-		                                             scale);
+		boss->getMapCollisionManager()->setUpUnk8TRS(
+		    center, boss->getRotation(), scale);
 
 		boss->mHits[0]->onHitFlag(HIT_FLAG_NO_COLLISION);
 		boss->mHits[1]->onHitFlag(HIT_FLAG_NO_COLLISION);

@@ -248,7 +248,7 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	mHitPoints = 5;
 
-	mRotation.x = MsWrap(mRotation.x + 270.0f, 0.0f, 360.0f);
+	mRotation.x = MsWrap(getRotation().x + 270.0f, 0.0f, 360.0f);
 }
 
 void TCommonLauncher::load(JSUMemoryInputStream& stream)

@@ -640,8 +640,8 @@ BOOL TShine::receiveMessage(THitActor* sender, u32 message)
 	mRotation.y = 180.0f * (f32)*gpMarioAngleY / 32768.0f;
 
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
-	               mPosition.y - mYOffset, mPosition.z, mRotation.x,
-	               mRotation.y, mRotation.z);
+	               mPosition.y - mYOffset, mPosition.z, getRotation().x,
+	               getRotation().y, mRotation.z);
 
 	if (SMS_IsMarioOnYoshi()) {
 		if (unk1B4)

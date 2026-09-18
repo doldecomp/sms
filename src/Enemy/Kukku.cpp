@@ -326,7 +326,7 @@ void TKukku::calcRootMatrix()
 		MtxPtr src      = mtx;
 		J3DModel* model = getModel();
 		MTXCopy(src, model->getBaseTRMtx());
-		getModel()->setBaseScale(mScaling);
+		getModel()->setBaseScale(getScaling());
 	} else {
 		TSpineEnemy::calcRootMatrix();
 	}

@@ -296,9 +296,9 @@ void TBPVomit::vomit()
 
 	MtxPtr base = mOwner->getModel()->getBaseTRMtx();
 	MTXCopy(base, mMActor->getModel()->getBaseTRMtx());
-	mMActor->getModel()->setBaseScale(mOwner->mScaling);
+	mMActor->getModel()->setBaseScale(mOwner->getScaling());
 	MTXCopy(base, mStampMActor->getModel()->getBaseTRMtx());
-	mStampMActor->getModel()->setBaseScale(mOwner->mScaling);
+	mStampMActor->getModel()->setBaseScale(mOwner->getScaling());
 }
 
 // UNUSED, 0x3c in the map: perform() inlines it once the puddle animation has
@@ -445,7 +445,7 @@ void TBPTornado::perform(u32 cue, JDrama::TGraphics* graphics)
 		mtx[0][3] = mPosition.x;
 		mtx[1][3] = mPosition.y;
 		mtx[2][3] = mPosition.z;
-		model->setBaseScale(mScaling);
+		model->setBaseScale(getScaling());
 	}
 
 	if (cue & 2) {
@@ -454,12 +454,12 @@ void TBPTornado::perform(u32 cue, JDrama::TGraphics* graphics)
 		JPABaseEmitter* rock = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    BOSSPAKKUN_JPA_MS_BOPA_TR_ROCK, mtx, 1, this);
 		if (rock)
-			rock->setGlobalScale(mScaling);
+			rock->setGlobalScale(getScaling());
 
 		JPABaseEmitter* smoke = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    BOSSPAKKUN_JPA_MS_BOPA_TR_SMOKE, mtx, 1, this + 1);
 		if (smoke)
-			smoke->setGlobalScale(mScaling);
+			smoke->setGlobalScale(getScaling());
 
 		JPABaseEmitter* weed = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    BOSSPAKKUN_JPA_MS_BOPA_TR_WEED, mtx, 1, this + 2);

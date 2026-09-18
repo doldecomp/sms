@@ -298,7 +298,7 @@ void TCogwheel::initMapObj()
 	// found: TMapObjBase::rotateVecByAxisY is a full three-axis rotation and
 	// is never called here, and spelling the zeros out folds them away.
 	f32 radius  = sRadius;
-	f32 rad     = 0.017453294f * mRotation.y;
+	f32 rad     = 0.017453294f * getRotation().y;
 	f32 cos     = cosf(rad);
 	f32 sin     = sinf(rad);
 	f32 offsetX = radius * cos - 0.0f * sin;
@@ -318,7 +318,7 @@ void TCogwheel::initMapObj()
 	pos.set(mPosition.x - offsetX, mPosition.y, mPosition.z + offsetZ);
 	JGeometry::TVec3<f32> potScale(1.0f, 1.0f, 1.0f);
 	mPot = (TCogwheelScale*)TMapObjBaseManager::newAndRegisterObj(
-	    "cogwheel_pot", pos, mRotation, potScale);
+	    "cogwheel_pot", pos, getRotation(), potScale);
 	mPot->mIsUpper  = false;
 	mPot->mCogwheel = this;
 	mPot->appear();
@@ -1005,8 +1005,9 @@ void TMuddyBoat::calc()
 
 	if (mSpeed != 0.0f) {
 		mEffectPos.set(mPosition.x, mPosition.y - mYOffset, mPosition.z);
-		JGeometry::TVec3<f32> wakeScale(3.0f * mScaling.x, 2.0f * mScaling.y,
-		                                3.0f * mScaling.z);
+		JGeometry::TVec3<f32> wakeScale(3.0f * getScaling().x,
+		                                2.0f * getScaling().y,
+		                                3.0f * getScaling().z);
 		emitAndBindScale(PARTICLE_MS_M_HAMON_B, 3, &mEffectPos, wakeScale);
 		emitAndBindScale(PARTICLE_MS_M_HAMON_A, 1, &mEffectPos, wakeScale);
 		unk16C = 0;

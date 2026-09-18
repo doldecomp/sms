@@ -566,7 +566,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    BOSSEELTEARS_MS_MEO_TEAR_AWAGET, gpMarioPos, 0, nullptr);
 		if (emitter)
-			emitter->setGlobalScale(tears->mScaling);
+			emitter->setGlobalScale(tears->getScaling());
 		tears->kill();
 		return true;
 	}
@@ -574,7 +574,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 	    BOSSEELTEARS_MS_MEO_TEAR_AWA, &tears->mPosition, 1, tears);
 	if (emitter)
-		emitter->setGlobalScale(tears->mScaling);
+		emitter->setGlobalScale(tears->getScaling());
 
 	if (spine->getTime() > 1000) {
 		tears->kill();

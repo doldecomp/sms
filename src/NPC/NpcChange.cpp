@@ -216,7 +216,7 @@ void TBaseNPC::changeNerveToMad_()
 void TBaseNPC::releaseTaken_()
 {
 	f32 fVar1 = mPtrSaveNormal->mThrowSpeedXZ.get();
-	s16 uVar4 = CLBDegToShortAngle(unk158->mRotation.y);
+	s16 uVar4 = CLBDegToShortAngle(unk158->getRotation().y);
 	f32 fVar2 = mPtrSaveNormal->mThrowSpeedY.get();
 	f32 s     = JMASSin(uVar4);
 	f32 c     = JMASCos(uVar4);

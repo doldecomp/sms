@@ -311,7 +311,7 @@ void TBathtubKiller::generateItemBathtubKiller()
 			JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 			    PARTICLE_MS_ENM_DISAP_A_W, &item->mPosition, 0, nullptr);
 			if (emitter)
-				emitter->setGlobalScale(item->mScaling);
+				emitter->setGlobalScale(item->getScaling());
 			emitter = gpMarioParticleManager->emit(
 			    PARTICLE_MS_ENM_DISAP_B, &item->mPosition, 0, nullptr);
 			if (emitter)

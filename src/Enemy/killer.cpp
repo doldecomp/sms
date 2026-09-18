@@ -771,9 +771,9 @@ void TKiller::bind()
 			MSoundSESystem::MSoundSE::startSoundActor(
 			    MSD_SE_EN_KILLER_FLY, &mPosition, 0, nullptr, 0, 4);
 
-		mRotation.x = MsClamp(mRotation.x, -25.0f, 90.0f);
+		mRotation.x = MsClamp(getRotation().x, -25.0f, 90.0f);
 		MsMtxSetXYZRPH(mParticleMtx, mPosition.x, mPosition.y, mPosition.z,
-		               mRotation.x, mRotation.y, mRotation.z);
+		               getRotation().x, getRotation().y, getRotation().z);
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_KIL_SMOKE,
 		                                            mParticleMtx, 1, this);
 	}

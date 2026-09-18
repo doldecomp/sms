@@ -414,7 +414,7 @@ void TBiancoMiniWindmill::initMapObj()
 	mMessenger   = new TMapObjMessenger("地形オブジェメッセンジャー");
 	mMessenger->initHitActor(0, 1, 0, 0.0f, 0.0f, 300.0f, 500.0f);
 	mMessenger->mPosition.x
-	    = sMessengerPosZ * JMASSin((s16)(182.04445f * mRotation.y))
+	    = sMessengerPosZ * JMASSin((s16)(182.04445f * getRotation().y))
 	    + mPosition.x;
 	mMessenger->mPosition.y = mPosition.y + sMessengerPosY;
 	mMessenger->mPosition.z
