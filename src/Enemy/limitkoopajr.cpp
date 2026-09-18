@@ -180,6 +180,13 @@ void TLimitKoopaJr::setAnimationIndex(int index)
 // the value at a displacement off `this` (visible in perform, 97.9%). Neither
 // a static helper taking int& nor one taking int* reproduces it -- MWCC folds
 // the address back into the store and, worse, emits a symbol the map lacks.
+// TODO: the map's updateTimers is 0x34 = 13 instructions, i.e. six per timer
+// plus the blr, and `perform`'s expansion materialises each timer's address
+// (`addi r4, this, 0x158`) before loading it. The same six-per-timer shape
+// holds for TKoopaJr (0x4c, three timers), TTinKoopa (0x4c) and
+// TKoopaJrSubmarine (0x1c), so the level is shared. Refuted: a TU-local
+// `static inline decreaseTimer(int*)` -- MWCC folds `&member` back into a
+// direct member access and the body stays 0x2c.
 void TLimitKoopaJr::updateTimers()
 {
 	if (unk158 > 0)
@@ -309,11 +316,12 @@ TDirectionCalc TLimitKoopaJr::calcTargetDirection()
 {
 	TDirectionCalc calc;
 
-	THitActor* bathtub = mBathtub;
+	THitActor* bathtub                      = mBathtub;
+	const JGeometry::TVec3<f32>& bathtubPos = bathtub->mPosition;
 	JGeometry::TVec3<f32> toMario;
-	toMario.x = bathtub->mPosition.x - gpMarioPos->x;
-	toMario.y = bathtub->mPosition.y - gpMarioPos->y;
-	toMario.z = bathtub->mPosition.z - gpMarioPos->z;
+	toMario.x = bathtubPos.x - gpMarioPos->x;
+	toMario.y = bathtubPos.y - gpMarioPos->y;
+	toMario.z = bathtubPos.z - gpMarioPos->z;
 	toMario.y = 0.0f;
 	calc.makeDirection(toMario);
 
