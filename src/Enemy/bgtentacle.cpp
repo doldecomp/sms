@@ -280,7 +280,7 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 			if (mOwner->isThing3()) {
 				mHolder = casted;
 				mOwner->changeStateAndFixNodes(3);
-				mOwner->mOwner->unk1A0 = 1;
+				mOwner->getOwner()->unk1A0 = 1;
 				return true;
 			}
 		}
@@ -288,8 +288,8 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
 			mHolder               = nullptr;
 			TBGTentacle* tentacle = mOwner;
-			if (tentacle->mState != 4) {
-				if (tentacle->mOwner->getAttackMode() == 6)
+			if (tentacle->getState() != 4) {
+				if (tentacle->getOwner()->getAttackMode() == 6)
 					tentacle->changeStateAndFixNodes(9);
 				else
 					tentacle->changeStateAndFixNodes(0);
@@ -297,10 +297,13 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 			return true;
 		}
 
+		// TODO: 16 bytes of frame short (0x80 vs 0x90); every member read here
+		// already goes through an accessor except TBGTakeHit's own mOwner,
+		// which has no getter in the map.
 		if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP) {
-			if (mOwner->mState != 4 && mOwner->mState != 5
-			    && mOwner->mState != 3 && mOwner->mState != 6
-			    && mOwner->mState != 10) {
+			if (mOwner->getState() != 4 && mOwner->getState() != 5
+			    && mOwner->getState() != 3 && mOwner->getState() != 6
+			    && mOwner->getState() != 10) {
 				mOwner->changeStateAndFixNodes(5);
 				return true;
 			}
