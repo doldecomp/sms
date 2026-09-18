@@ -24,11 +24,16 @@
 // `instance()`) supplies it and makes this function byte-exact, but `endTimer`
 // is shared: it moves `TLiveManager::perform`'s and `TObjManager::perform`'s
 // colour slot from 0x34 down to 0x30 (both are source-linked at 100%) and
-// `TEnemyManager::perform`'s from 0x7c up to 0x80, which breaks the DOL. So
-// `endTimer` is right as it stands and the four missing bytes plus a -8 belong
-// to `startTimer(u32)`, whose only caller is this function. `_instance` or an
-// `inst`-first declaration inside `startTimer(u32)` is -4 but swaps r29/r30
-// here, and dropping the `inst` local re-reads `_instance`.
+// `TEnemyManager::perform`'s from 0x7c up to 0x80, which breaks the DOL.
+// Header round 18 retired that last point: the damage `endTimer`'s named
+// `timeArray` does to those two callers is exactly cancelled by removing the
+// same named local from the four-argument `startTimer` overload they also
+// call, so the colour does land at 0x38 with both of them still byte-exact --
+// what is left over is +8 of frame, and no (-8, 0) lever exists inside
+// `startTimer(u32)` yet. The round-18 trial table is at that overload's
+// declaration in the header. `_instance` or an `inst`-first declaration
+// inside `startTimer(u32)` is -4 but swaps r29/r30 here, and dropping the
+// `inst` local re-reads `_instance`.
 void TSnapTimeObj::perform(u32 cue, JDrama::TGraphics*)
 {
 	if ((unk14 & 1)) {

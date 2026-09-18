@@ -114,11 +114,50 @@ public:
 	// Nothing measured is worth (-8, 0) or (0, +4). 0x38 is the first
 	// 8-byte-aligned slot above `endTimer`'s block, so retail's temporary is
 	// probably 8-byte aligned (the catalog's "one 8-byte object" family), but
-	// no 8-byte object in this body reproduces it. The 4 bytes cannot come
-	// from `endTimer`: giving it the same named `timeArray` -- with or without
-	// `_instance` -- puts this function at 100% and simultaneously moves
-	// TLiveManager::perform's and TObjManager::perform's colour slot, and both
-	// are source-linked at 100%, so it breaks the DOL. Left as it stands.
+	// no 8-byte object in this body reproduces it.
+	//
+	// Header round 18 measured a second batch of levers on the same two
+	// numbers (frame / colour slot; the target is 0x50 / 0x38 at 57
+	// instructions), and all of them move the pair together:
+	//
+	//   dead non-trivial 4-byte local, first in this body   0x58 / 0x38
+	//   the same local 8 bytes wide                         0x58 / 0x3c
+	//   `JUtility::TColor` as a by-value *parameter* of
+	//     this overload (the caller's u32 conversion)        +5 instructions
+	//   the colour built one level deeper (an inlined
+	//     `makeColorBits(u32)` returning the bits)          0x58 / 0x30
+	//   an unnamed `JUtility::TColor(param_1)` temporary     0x58 / 0x40
+	//   a `TTimeArray::Entry` local with the colour in its
+	//     second word (trivial POD: scalar-replaced, the
+	//     store/reload disappears entirely)                 0x58 / --
+	//   dropping the named `col`                            store moves below
+	//                                                       the null test
+	//   an unnamed `OSGetTick()` at the `append` call        +5 instructions
+	//   raw `inst->unk4[inst->unk814][0]` for `crTimeAry()`  0x48 / 0x2c, +1
+	//   a named `inst` inside `snapGxTimeStatic` (+4 per
+	//     expansion, and perform has two)                    0x58 / 0x3c
+	//
+	// Two results worth keeping:
+	//
+	// 1. An 8-byte dead non-trivial local here *plus* `_instance` instead of
+	//    `instance()` lands both numbers exactly (0x50 / 0x38, 57
+	//    instructions) and leaves only an r29/r30 swap: with `_instance` the
+	//    caller's `cue` takes r30 and `inst` r29, the other way round from
+	//    retail. So `instance()` is load-bearing for the *caller's* register
+	//    assignment, which is why the (-8, -4) it is worth cannot be spent.
+	// 2. The old conclusion that `endTimer` is untouchable is retired.
+	//    Giving `endTimer` the named `timeArray` puts the colour at 0x38, and
+	//    the damage to the two source-linked callers is *exactly* cancelled
+	//    by removing the same named `timeArray` from the four-argument
+	//    overload above -- TLiveManager::perform and TObjManager::perform
+	//    stay byte-exact, because both call one `startTimer` and one
+	//    `endTimer` and only the sum matters. What is left over is the +8 of
+	//    frame, which the compensating pair does not touch. A reference
+	//    (`TTimeArray& timeArray = inst->crTimeAry()[0]`) in `endTimer` is
+	//    the same +8 and does *not* cancel (both callers 99.8%).
+	//
+	// So the remaining need is a pure (-8, 0) inside this overload, whose only
+	// caller is TSnapTimeObj::perform. Left as it stands.
 	static void startTimer(u32 param_1)
 	{
 		JUtility::TColor color(param_1);
