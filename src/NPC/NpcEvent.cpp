@@ -50,12 +50,13 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	interp->verifyArgNum(2, &arg_num);
 	int nerveId   = interp->pop().getDataInt();
 	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
+	int result = 0;
+
 	const TNerveBase<TLiveActor>* expected = NerveGetByIndex(nerveId);
 	const TNerveBase<TLiveActor>* actual   = param_3
 	                                             ? npc->mSpine->getLatestNerve()
 	                                             : npc->mSpine->getCurrentNerve();
 
-	int result = 0;
 	if (actual == expected)
 		result = 1;
 	interp->push(result);
