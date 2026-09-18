@@ -380,32 +380,6 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 	        param_2);
 }
 
-// The ROM reaches getLength()/getPosition() through the random-access base
-// classes -- they are virtual calls, not the derived classes' inline field
-// reads -- so the drain test was a helper declared on JSURandomInputStream /
-// JSURandomOutputStream, where `this` hides the dynamic type. The map has no
-// symbol for either, so they were header inlines; parked here rather than in
-// the shared headers.
-static inline bool isStreamDrained(const JSURandomInputStream& stream)
-{
-	return stream.getLength() - stream.getPosition() == 0;
-}
-
-static inline bool isStreamDrained(const JSURandomOutputStream& stream)
-{
-	return stream.getLength() - stream.getPosition() == 0;
-}
-
-// The ROM gives every write of the scanned byte its own stack slot, which is
-// what a by-value overload does at each inline expansion: JSUOutputStream
-// almost certainly had a write(u8) mirroring JSUInputStream's read(u8&)
-// family. The map has no symbol for it, so it was a header inline; parked here
-// rather than in the shared header.
-static inline int writeByte(JSUOutputStream& stream, u8 value)
-{
-	return stream.write(&value, sizeof(u8));
-}
-
 /// Copies a message into a text box, wrapping the balloon colour markers
 /// (single ASCII bytes) in the J2D escape sequences that actually change the
 /// glyph colour. Unrecognised bytes are copied through untouched.
@@ -418,11 +392,11 @@ void TCardSave::setMessageC(J2DTextBox* text_box, s32 message_id, u32 size)
 	// call while we hoist it into the prologue and move it, and the ROM's
 	// buffer starts four bytes lower, so our body carries one 4-byte inline
 	// temporary it does not have. `in.read(&c, 1)` instead of readU8(),
-	// per-site `u8` copies instead of writeByte(), a 260-byte buffer and an
+	// per-site `u8` copies instead of write(u8), a 260-byte buffer and an
 	// extra named local before the buffer were all tried and are worse.
 	char buffer[256];
 
-	while (!isStreamDrained(in) && !isStreamDrained(out)) {
+	while (!in.isDrained() && !out.isDrained()) {
 		u8 c = in.readU8();
 		JUtility::TColor color;
 
@@ -434,11 +408,11 @@ void TCardSave::setMessageC(J2DTextBox* text_box, s32 message_id, u32 size)
 		}
 
 		case 0x00:
-			writeByte(out, c);
+			out.write(c);
 			return;
 
 		case 0x0A:
-			writeByte(out, c);
+			out.write(c);
 			continue;
 		}
 
@@ -474,7 +448,7 @@ void TCardSave::setMessageC(J2DTextBox* text_box, s32 message_id, u32 size)
 			out.write(buffer, 0x1D);
 		}
 
-		writeByte(out, c);
+		out.write(c);
 
 		if (colored) {
 			snprintf(buffer, 0xFF, "\033GM[0]\033CC\033FX\033FY\033SH\033CU[4]");

@@ -17,6 +17,11 @@ public:
 	u32 peek(void* buf, s32 len);
 	int seek(s32 offset, JSUStreamSeekFrom from);
 
+	// The ROM tests the drain condition through the two virtuals rather
+	// than through getAvailable(), so the subtraction is spelled out here
+	// (TCardSave::setMessageC). Inlined everywhere, so the map has no symbol.
+	bool isDrained() const { return getLength() - getPosition() == 0; }
+
 	u32 peekU32()
 	{
 		u32 i;

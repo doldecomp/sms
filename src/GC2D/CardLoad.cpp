@@ -485,8 +485,30 @@ void TCardLoad::loadAfter()
 // `lbzu` where we emit `lbz` plus an `addi`, and retail calls
 // JSUInputStream::JSUInputStream() out of line inside the inlined
 // loadBookmark() while we expand it (the map's one MISSING symbol for this
-// TU). Declaring a constructor on JSUInputStream or on JSURandomInputStream
-// does not flip that, so an inline level above it is still missing.
+// TU).
+//
+// Diagnosed, not fixed: the TU has three `JSUMemoryInputStream stream;`
+// sites and retail cuts the implicit base-constructor chain at a different
+// place in each, which pins the depth of every one of them.
+//   * changeScene, PROGRESS_UNK31 (the stream declared in changeScene
+//     itself): everything inlined, JSUIosBase's constructor included. So
+//     Memory ctor 1, Random 2, Input 3, IosBase 4 (allowance 2, body = vptr
+//     store + mState store = 2 -> inlines).
+//   * changeScene, PROGRESS_UNK28 (through loadBookmark): `bl
+//     __ct__10JSUIosBaseFv`. Memory 2, Random 3, Input 4, IosBase 5, and
+//     nothing inlines at 5.
+//   * this function, case 4 (also through loadBookmark): `bl
+//     __ct__14JSUInputStreamFv`, i.e. one level deeper again -- Memory 3,
+//     Random 4, Input 5. The destructors ladder the same way: the first two
+//     sites reach the out-of-line `~JSUInputStream` with Random's weak
+//     destructor expanded, this one calls `~JSURandomInputStream`.
+// So retail's case 4 sits one inline level below `perform`, and our case 4
+// is written directly in the body. No static helper can be the level (all
+// eight of this TU's UNUSED symbols are accounted for and none fits), so it
+// would have to be an in-class TCardLoad method holding the case-4 block;
+// there is no independent evidence for one, so the level is left missing.
+// Declaring a constructor on JSUInputStream or on JSURandomInputStream does
+// not flip it.
 void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {

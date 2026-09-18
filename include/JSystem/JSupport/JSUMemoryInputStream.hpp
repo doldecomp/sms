@@ -20,8 +20,6 @@ public:
 	virtual int getLength() const { return mLength; }
 	virtual int getPosition() const { return mPosition; }
 
-	// fabricated
-	bool isNotDrained() const { return getLength() - getPosition() != 0; }
 	void* getCurrent() const { return (void*)((u8*)mBuffer + mPosition); }
 
 public:
