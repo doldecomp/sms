@@ -1292,8 +1292,11 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
 		return TRUE;
 	}
 
-	JGeometry::TVec3<f32> toPad(puku->mLaunchPad->mPosition);
-	toPad.sub(puku->mPosition);
+	// Copy-initialising from `a - b` is what reaches the map's out-of-line
+	// TVec3::sub: the copy constructor is one inline level and the
+	// difference nested in its argument two more.
+	JGeometry::TVec3<f32> toPad = puku->mLaunchPad->mPosition
+	                              - puku->mPosition;
 
 	JGeometry::TVec3<f32> dir(toPad);
 	dir.y = 0.0f;

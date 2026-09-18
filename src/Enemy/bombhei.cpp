@@ -206,9 +206,12 @@ void TBombHei::genEventCoin()
 		if (coin) {
 			coin->mPosition.y = mPosition.y;
 
-			JGeometry::TVec3<f32> toMario(*gpMarioPos);
-			toMario -= mPosition;
-			JGeometry::TVec3<f32> dir = toMario;
+			// Copy-initialising from `a - b` reaches the map's
+			// out-of-line TVec3::sub: the copy constructor is one
+			// inline level and the difference nested in its argument
+			// two more.
+			JGeometry::TVec3<f32> toMario = *gpMarioPos - mPosition;
+			JGeometry::TVec3<f32> dir     = toMario;
 			MsVECNormalize((Vec*)&dir, (Vec*)&dir);
 			coin->setVelocityAndFlag10(20.0f * dir.x, 20.0f, 20.0f * dir.z);
 		}

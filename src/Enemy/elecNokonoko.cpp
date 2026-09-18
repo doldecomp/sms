@@ -30,6 +30,34 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// Parked here, not in a header: the map has no symbol for it, so retail had
+// it as a file-scope `inline`. It is the level that reaches the map's
+// out-of-line JGeometry::TVec3<f32>::sub, ::dot and TUtil<f32>::sqrt at the
+// copy-and-subtract distance sites (the same shape as emario's
+// EMarioCalcDist and AnimalNerve's calcDist); `distance()` gives the sqrt
+// call but expands the other two.
+// Retail copies the difference into a fresh slot before `bl PSVECMag`, which
+// is a by-value hand-off, and that extra level is also what reaches the map's
+// out-of-line JGeometry::TVec3<f32>::sub at the same site.
+static inline f32 ElecVecMag(JGeometry::TVec3<f32> v) { return VECMag(v); }
+
+static inline f32 ElecDistTo(const JGeometry::TVec3<f32>& a,
+                             const JGeometry::TVec3<f32>& b)
+{
+	return ElecVecMag(a - b);
+}
+
+static inline f32 ElecLength(const JGeometry::TVec3<f32>& v)
+{
+	return v.length();
+}
+
+static inline f32 ElecCalcDist(const JGeometry::TVec3<f32>& a,
+                               const JGeometry::TVec3<f32>& b)
+{
+	return ElecLength(a - b);
+}
+
 // dennoko_bastable names ten of the model's eighteen .bck slots. The rest are
 // recovered from the call sites and from the alphabetical order of the .bck
 // files: the turn1_end/loop/start triple at 14..16 and the run1_loop/start
@@ -738,12 +766,8 @@ void TElecCarapace::shoot()
 	mSpine->initWith(&TNerveElecCarapaceMove::theNerve());
 	setGoalPath(goal);
 
-	// TODO: 89.4%. The retail object reaches the distance through three real
-	// calls (TVec3::sub, TVec3::dot, TUtil<f32>::sqrt); distance() gets the
-	// sqrt call but expands the other two, and (point - mPosition).length()
-	// gets sqrt and sub's copy but still expands sub and dot.
 	f32 cycle    = TMsRange<f32>(3.0f, 5.0f).rand();
-	mZigzagCycle = cycle * unk104.getPoint().distance(mPosition);
+	mZigzagCycle = cycle * ElecCalcDist(unk104.getPoint(), mPosition);
 	mZigzagAngle = TMsRange<f32>(20.0f, 30.0f).rand();
 }
 
@@ -1215,7 +1239,7 @@ DEFINE_NERVE(TNerveElecCarapaceReturn, TLiveActor)
 	TElecNokonoko* nokonoko = carapace->mNokonoko;
 	if (nokonoko->mSpine->getCurrentNerve()
 	        == &TNerveElecNokonokoFreeze::theNerve()
-	    && VECMag(nokonoko->mPosition - nokonoko->mCarapace->mPosition)
+	    && ElecDistTo(nokonoko->mPosition, nokonoko->mCarapace->mPosition)
 	           < 200.0f) {
 		// Shocked with the shell almost home: the koopa melts away and the
 		// shell pops instead of being caught.
