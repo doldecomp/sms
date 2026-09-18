@@ -9,12 +9,21 @@
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+// A binding level over the flag-manager fetch, worth +16 of low region and
+// landing startFade's frame at 0x68 exactly (batch 131; batch 121's rule that
+// one level at one site is occasionally +16 rather than +8).
+static inline TFlagManager* SunGlassGetFlagManager()
+{
+	TFlagManager* m = SMSGetFlagManager();
+	return m;
+}
+
 void TSunGlass::startFade(int type, bool arg1)
 {
 	// The shine count is read and thrown away here in retail: the read is the
 	// only reason startFade's frame carries a named 4-byte slot at 0x58.
 	// TODO: dead in the shipped build; presumably fed a removed debug print.
-	s32 shineCount = SMSGetFlagManager()->getFlag(0x40000);
+	s32 shineCount = SunGlassGetFlagManager()->getFlag(0x40000);
 
 	if (type == 2) {
 		unk1D = getShineAlpha();
