@@ -64,9 +64,22 @@ public:
 		return JGeometry::TUtil<f32>::sqrt(a.squared());
 	}
 
+	// The named goal reference is retail's: without it the by-value copy of
+	// `a` lands 4 bytes high (0x24 instead of 0x20 in an otherwise exact 0x30
+	// frame) -- a consumed reference binding is 4 bytes of low region, which
+	// is exactly what frame-gaps.md batch 142's two-region ladder predicts,
+	// and it is the spelling AnimalNerve.cpp's two `calcDist` sites already
+	// use for the same body (`const TVec3<f32>& goalPos = ...getPoint();`).
+	// Header round 26: fishoid's weak copy 99.74 -> 100. Measured as +0 or
+	// worse: a named `f32 dist` or `f32 length`/`f32 sq` result (+8, the copy
+	// stays high), an explicit `TVec3<f32> d = a;` with both parameters by
+	// reference (+8 more), `b` by pointer, the by-value parameter declared
+	// second, `a.dot(a)` for `a.squared()`, a non-static `calcDist(TVec3)`
+	// against `mPosition`, and `100.0f > calcDist(...)`.
 	virtual BOOL isReachedToGoal() const
 	{
-		return calcDist(unk104.getPoint(), mPosition) < 100.0f ? TRUE : FALSE;
+		const JGeometry::TVec3<f32>& goal = unk104.getPoint();
+		return calcDist(goal, mPosition) < 100.0f ? TRUE : FALSE;
 	}
 
 	void calcEnemyRootMatrix();
