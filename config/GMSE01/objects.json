@@ -453,5 +453,6 @@
   "System/TalkCursor.cpp",
   "Enemy/bgpoldrop.cpp",
   "NPC/NpcColor.cpp",
-  "Player/MarioWait.cpp"
+  "Player/MarioWait.cpp",
+  "Player/MarioSwim.cpp"
 ]
