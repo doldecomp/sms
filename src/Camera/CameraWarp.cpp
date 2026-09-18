@@ -52,6 +52,33 @@ void CPolarSubCamera::warpPosAndAt(const Vec& pos, const Vec& at)
 //   instruction changes: `usualLookat = getUsualLookat()` instead of
 //       `set()`, a `const TVec3&` bound to the returned temporary, a named
 //       MsClamp result, a table accessor indexed at the call site.
+// Closure batch 115 localised the 4 bytes exactly. A dead 4-byte named local
+// declared *last* (`s16 pitch;` after `usualLookat`) lands the frame on 0x58
+// and every other displacement -- `usualLookat` 0x2c, `pos` 0x38, the r30/r31/
+// f31 saves at 0x48/0x4c/0x50 -- on the target, leaving the getUsualLookat
+// return buffer as the single remaining slot (0x1c against 0x20). So the
+// residue is not a named local at all: retail's inline-temporary pool is
+// 0xc..0x2c with the buffer at its *top* (0x20..0x2c) and 20 dead bytes below,
+// while ours is 0xc..0x28 with the buffer at 0x1c..0x28 and only 16 below.
+// What is missing is one 4-byte expansion temporary allocated *after* the
+// getUsualLookat sret (batch 70's "an inlined callee's parameter temporary is
+// a placeable 4-byte slot"), and the dead named local only fakes its size.
+// Binding levels measured for it, all with the buffer's offset in brackets:
+//   +0   a binding level on `isLButtonCameraSpecifyMode(mMode)` [0x1c]
+//        (a level above a real `bl` is free, as the catalog says);
+//   +0   a `CameraWarpSetVec(&usualLookat, getUsualLookat())` level binding
+//        the destination pointer [0x1c];
+//   +0   `pos` declared `JGeometry::TVec3<f32>` instead of `Vec` [0x1c];
+//   +8   a five-parameter `static inline` level above CLBPolarToCross: frame
+//        0x58 exactly, but it reorders the call (151 instructions to 145);
+//   +0x10 a binding level around MsClamp<f32> (two expansions, +1 instruction);
+//   the only spelling that reaches [0x20] is a `static inline` returning
+//        `TVec3<f32>` by value above getUsualLookat, which allocates a second
+//        12-byte buffer (frame 0x68, 158 instructions).
+// Next: the carrier is probably inside the byte-exact `(const Vec&, const
+// Vec&)` overload that is inlined here -- e.g. an inlined setter binding
+// `mInbetween` for `mFramesRemaining = 0` -- so it has to be found without
+// moving that overload.
 void CPolarSubCamera::warpPosAndAt(f32 ratio, s16 yAngle)
 {
 	if (getCamMode() < CAMERA_MODE_REPRODUCE_DEMO) {

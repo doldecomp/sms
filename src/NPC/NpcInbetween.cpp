@@ -28,6 +28,24 @@
 // (78.5).  Since retail's 0x20 is exactly 0xc plus the two conversion doubles,
 // retail cannot be paying for a level either: the allocation difference has
 // another cause.
+// Closure batch 115 narrowed it to a single instruction. The whole diff is the
+// destination of one `fmuls`: retail writes `fmuls f1, f2, f1` (the result
+// lands in the register that held `1.0f / frame`, the *older* of the two dying
+// operands) and we write `fmuls f2, f2, f1` (the register that held the
+// converted timer, the newer one); the three `fmadds`/`lfs` pairs below just
+// follow that choice. Evaluation order, conversion-slot order (frame 0x10,
+// timer 0x18) and operand order are already identical, so the source's
+// expression shape is right and only the allocator's choice of the surviving
+// register differs.
+// This batch also establishes that a **zero-parameter** level is free in this
+// frame, which refutes "every level costs at least 8": the frame is
+// align8(0xc + 16) = 0x20 and stays 0x20 with a 4-byte binding, so
+// `JGeometry::TUtil<f32>::one()` as the numerator is codegen-identical (+0
+// frame, +0 registers). Also +0 and identical: `f32 progress;` hoisted to
+// function scope with the assignment left in the branch.
+// So a free level exists but does not move the pair; the lever has to be
+// something that changes the *liveness ranking* of `1.0f / frame` against the
+// converted timer, not another inline level.
 void TNpcInbetween::execPosInbetween(JGeometry::TVec3<f32>* cur_pos)
 {
 	mCurrentPos.set(*cur_pos);
