@@ -89,6 +89,26 @@ void TAfterEffect::calcDashBlurValue()
 	unk15 = 0;
 }
 
+// TODO: 99.8%, and the only difference in the whole function is that r30 and
+// r31 are swapped over 22 instructions. The ROM keeps the shared constant 0 in
+// r31 (hoisted to 0x494 for the four `color` byte stores and reused as the
+// false value of every `checkFlag(4)` materialisation) and `rect`'s address in
+// r30; we have it the other way round. Frame, slots, instruction count and
+// every other register already match.
+//
+// Measured and rejected, all codegen-neutral or worse: declaring `rect` before
+// `color` (still r31 for rect), all six orderings of the color block, the rect
+// reference and the interpolation block (RAC/ACR/ARC cost six instructions),
+// `rect` as a pointer, by value, or as the raw graphics->mViewportRect (the
+// last also moves the frame to 0x98), `GXColor color = {0,0,0,0}` (129 diffs),
+// the chained `color.a = color.b = color.g = color.r = 0`, a ternary in place
+// of the three if/else pairs (212 diffs), `unk14 & 4` in place of checkFlag(4)
+// (162 diffs), and `checkFlag(4) != FALSE` (78 diffs).
+//
+// Best next hypothesis: the ROM's `rect` has a shorter live range than ours --
+// something between the GXBegin block's sixteen `rect.` reads is named in the
+// original (the repeated `(rect.x1 + rect.x2) / 2` midpoints are the obvious
+// candidate), which would drop rect below the constant in MWCC's ranking.
 void TAfterEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(unk14 & 1))
