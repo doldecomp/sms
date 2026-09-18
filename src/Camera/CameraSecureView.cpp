@@ -9,34 +9,41 @@
 // TODO: macro in cameralib?
 #define ABS(x) ((x) >= 0 ? (x) : -(x))
 
-// TODO: frame 0x60 vs retail 0x68; the body is instruction-exact and every r1
-// displacement is 8 low, so this is the "last 8 bytes" shape (one 8-byte
-// object below every local, docs/catalog/frame-gaps.md). The object has to be
-// a *trivial* 8-byte aggregate of this body: execSecureView_ inlines this
-// function and is exact without it, and the table says a trivial POD local of
-// an inlined callee is dropped while the same local in its own body is +8.
-// Measured and rejected: naming the two output products (calc 0x60, batches
-// the sine/cosine lookups, 87%), naming the sine (calc 0x58 and a wrong
-// fmadds), SMS_GetMarioAngleY() here (+0 for calc, +8 for the caller),
-// CLBAbs/predicate/accessor trials (batch 32). No source-level evidence names
-// the object, so it stays nonmatching rather than padded.
+// The secure-view distances for the two axes. These have no symbol in the map,
+// which dates them file-scope `inline`: an inlined free function's by-pointer
+// parameter binds 8 bytes when the helper returns a *computed* value (it binds
+// nothing when the body is only a member read), and that binding is exactly
+// the 8 bytes calcSecureViewTarget_ was short of retail's 0x68. The X site
+// alone is enough (the second expansion saturates); spelling the helper with
+// `min`/`max` as parameters instead buys the same 8 bytes but loads the pair
+// max-first, which retail does not.
+static inline f32 CameraSecureViewDistX(const CPolarSubCamera* camera)
+{
+	return CLBLinearInbetween<f32>(camera->mCurrentParams->mSecureViewDistXMin,
+	                               camera->mCurrentParams->mSecureViewDistXMax,
+	                               camera->mCurrentTarget.unk28);
+}
+
+static inline f32 CameraSecureViewDistZ(const CPolarSubCamera* camera)
+{
+	return CLBLinearInbetween<f32>(camera->mCurrentParams->mSecureViewDistZMin,
+	                               camera->mCurrentParams->mSecureViewDistZMax,
+	                               camera->mCurrentTarget.unk28);
+}
+
 void CPolarSubCamera::calcSecureViewTarget_(s16 angle, f32* outX, f32* outZ)
 {
 	s16 base = SMS_GetMarioAngleY() - 0x8000;
 	s16 diff = angle - base;
 
-	f32 first = CLBLinearInbetween<f32>(mCurrentParams->mSecureViewDistXMin,
-	                                    mCurrentParams->mSecureViewDistXMax,
-	                                    mCurrentTarget.unk28);
+	f32 first = CameraSecureViewDistX(this);
 	f32 cos_d = JMASCos(diff);
 
 	f32 second;
 	if (cos_d >= 0.0f) {
 		second = 0.0f;
 	} else {
-		second = CLBLinearInbetween<f32>(mCurrentParams->mSecureViewDistZMin,
-		                                 mCurrentParams->mSecureViewDistZMax,
-		                                 mCurrentTarget.unk28);
+		second = CameraSecureViewDistZ(this);
 	}
 
 	f32 mag = -ABS(first * JMASSin(diff) + second * cos_d);
