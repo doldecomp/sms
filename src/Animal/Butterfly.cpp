@@ -23,6 +23,66 @@ const char* const cButterflyMdlNames[]
     = { "butterflyA.bmd", "butterflyB.bmd", "butterflyC.bmd" };
 } // namespace
 
+// Accessors the ROM reaches these members through. They belong on TRealoid,
+// TRealoidActor (Animal/fishoid.hpp) and TBoidLeader (Animal/boid.hpp), but
+// those are shared headers, so they are parked here with a TU prefix until a
+// header batch can promote them. Every one of them is worth frame slots in
+// TButterfloid::load and none of them changes an instruction; the measured
+// ladder is in the TODO on load() below.
+static inline void BoidSetNeighborRadius(TBoidLeader* leader, f32 v)
+{
+	leader->mNeighborRadius = v;
+}
+static inline void BoidSetBaseSpeed(TBoidLeader* leader, f32 v)
+{
+	leader->mBaseSpeed = v;
+}
+static inline void BoidSetYawSpeed(TBoidLeader* leader, f32 v)
+{
+	leader->mYawSpeed = v;
+}
+static inline void BoidSetPitchSpeed(TBoidLeader* leader, f32 v)
+{
+	leader->mPitchSpeed = v;
+}
+static inline void BoidSetMaxPitch(TBoidLeader* leader, f32 v)
+{
+	leader->mMaxPitch = v;
+}
+static inline void BoidSetAlignmentStrength(TBoidLeader* leader, f32 v)
+{
+	leader->mAlignmentStrength = v;
+}
+static inline void BoidSetFleeRadius(TBoidLeader* leader, f32 v)
+{
+	leader->mFleeRadius = v;
+}
+static inline void BoidSetFleeStrength(TBoidLeader* leader, f32 v)
+{
+	leader->mFleeStrength = v;
+}
+static inline void BoidOnFlag(TBoidLeader* leader, u32 flag)
+{
+	leader->mFlags |= flag;
+}
+
+static inline MActor* RealoidActorGetMActor(TRealoidActor* actor)
+{
+	return actor->unk70;
+}
+
+static inline TBoidLeader* RealoidGetBoidLeader(TRealoid* realoid)
+{
+	return realoid->unk150;
+}
+
+// TRealoid::getBoidNum(), forwarding to the leader: the extra level is the
+// last 8 bytes of load()'s frame.
+static inline int RealoidGetBoidNum(TRealoid* realoid)
+{
+	return RealoidGetBoidLeader(realoid)->getBoidNum();
+}
+
 TButterfly::TButterfly(MActor* actor, TButterfloid* butterfloid)
     : TRealoidActor(actor)
 {
@@ -84,8 +144,8 @@ void TButterfloid::init(TLiveManager* manager)
 
 void TButterfloid::initBoids()
 {
-	for (int i = 0; i < unk150->mNumBoids; ++i)
-		unk154[i]->init();
+	for (int i = 0; i < RealoidGetBoidNum(this); ++i)
+		getRealoid(i)->init();
 }
 
 void TButterfloid::receiveMessageFromChild(TButterfly* child)
@@ -93,7 +153,7 @@ void TButterfloid::receiveMessageFromChild(TButterfly* child)
 	child->onFlag(TRealoidActor::FLAG_UNK4);
 	child->onHitFlag(HIT_FLAG_NO_COLLISION);
 
-	if (++mNumEaten == unk150->getBoidNum()) {
+	if (++mNumEaten == RealoidGetBoidLeader(this)->getBoidNum()) {
 		TMapObjBase* obj = mItem;
 		if (obj != nullptr) {
 			if (obj->isActorType(0x2000000E))
@@ -113,21 +173,28 @@ void TButterfloid::load(JSUMemoryInputStream& stream)
 	loadDefault(stream, cButterflyMdlNames[mType], 0);
 	loadItem(stream);
 
-	// Making these all setters doesn't yield NEARLY enough stack frame padding
-	// for this to match
-	unk150->mNeighborRadius    = 100.0f;
-	unk150->mBaseSpeed         = 6.0f;
-	unk150->mYawSpeed          = 25.0f;
-	unk150->mPitchSpeed        = 8.0f;
-	unk150->mMaxPitch          = 16.0f;
-	unk150->mAlignmentStrength = 0.7f;
-	unk150->setFleeTarget((THitActor*)gpMarioAddress);
-	unk150->mFleeRadius   = 500.0f;
-	unk150->mFleeStrength = 2.0f;
-	unk150->mFlags |= 2;
+	// TODO: every accessor below is required by the frame, which is 136
+	// bytes of low region short with raw member access and instruction
+	// identical either way. Measured ladder (from 0x80 towards the ROM's
+	// 0x108): the two loops' getRealoid()/getBoidNum() +16 and +24, the
+	// leader accessor on the ten writes below +48, the nine TBoidLeader
+	// setters +40, getMActor() in the setBck loop +8, and the forwarding
+	// TRealoid::getBoidNum() the last +8. A plain u32 read of eventId
+	// through readU32() also buys 8 but costs a reload, so it is not the
+	// ROM's spelling.
+	BoidSetNeighborRadius(RealoidGetBoidLeader(this), 100.0f);
+	BoidSetBaseSpeed(RealoidGetBoidLeader(this), 6.0f);
+	BoidSetYawSpeed(RealoidGetBoidLeader(this), 25.0f);
+	BoidSetPitchSpeed(RealoidGetBoidLeader(this), 8.0f);
+	BoidSetMaxPitch(RealoidGetBoidLeader(this), 16.0f);
+	BoidSetAlignmentStrength(RealoidGetBoidLeader(this), 0.7f);
+	RealoidGetBoidLeader(this)->setFleeTarget((THitActor*)gpMarioAddress);
+	BoidSetFleeRadius(RealoidGetBoidLeader(this), 500.0f);
+	BoidSetFleeStrength(RealoidGetBoidLeader(this), 2.0f);
+	BoidOnFlag(RealoidGetBoidLeader(this), 2);
 
-	for (int i = 0; i < unk150->mNumBoids; ++i)
-		unk154[i]->unk70->setBck("butterfly_fly");
+	for (int i = 0; i < RealoidGetBoidNum(this); ++i)
+		RealoidActorGetMActor(getRealoid(i))->setBck("butterfly_fly");
 
 	initBoids();
 }
