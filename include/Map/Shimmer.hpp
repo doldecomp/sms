@@ -16,6 +16,8 @@ public:
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
+	J3DModel* getModel() { return unk48; }
+
 	void far();
 	void near();
 

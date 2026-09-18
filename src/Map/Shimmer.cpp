@@ -45,10 +45,16 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 			far();
 		}
 
+		// TODO: 12 bytes of uninitialised local the compiled function never
+		// touches, declared ahead of effectMtx (it is the top 12 bytes of
+		// the 0x198 frame). Size and position are the only evidence; a
+		// scratch light position next to the effect matrix below is the
+		// plausible original.
+		Vec lightPos;
 		Mtx effectMtx;
 		SMS_GetLightPerspectiveForEffectMtx(effectMtx);
 
-		unk48->getModelData()
+		getModel()->getModelData()
 		    ->getMaterialNodePointer(0)
 		    ->getTexGenBlock()
 		    ->getTexMtx(1)
@@ -74,14 +80,14 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		MTXInverse(viewMtx, inverseView);
 		MTXConcat(inverseView, translation, inverseView);
 		MTXConcat(inverseView, scale, inverseView);
-		unk48->setBaseTRMtx(inverseView);
-		unk48->calc();
-		unk48->viewCalc();
+		getModel()->setBaseTRMtx(inverseView);
+		getModel()->calc();
+		getModel()->viewCalc();
 	}
 
 	if (cue & CUE_ENTRY) {
-		if (gpMarDirector->mMap == 2 || !(gpCamera->unk124.y < 0.0f))
-			unk48->entry();
+		if (gpMarDirector->getCurrentMap() == 2 || !(gpCamera->getUnk124().y < 0.0f))
+			getModel()->entry();
 	}
 }
 
