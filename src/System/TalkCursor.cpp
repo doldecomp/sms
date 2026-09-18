@@ -7,30 +7,36 @@
 // rogue
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// TODO: frame 0x28 vs retail 0x30; all 60 instructions match, so retail's
-// low (inline-temporary) region is 8 bytes bigger. Measured as zero here: a
-// TTalkCursor::getMActor() accessor over unk10 (it is +8 in associateNPC but
-// nothing here), naming the `new J3DModel` result, naming the
-// J3DModelLoaderDataBase::load result (also -9%), unkC.setBit() over on().
-// Closure batch 103 swept 24 combinations of {`MActor* actor = unk10` local /
-// raw unk10 / getMActor()} x {named J3DModel*} x {named J3DModelData*} x
-// {named `void* bmd`}: the `actor` local plus the named `bmd` is the only 60-
-// instruction shape and it is 0x28; nothing reaches 0x30. Also zero or worse:
-// `MActor* actor = new MActor(anmData); unk10 = actor;` (97.9), a setMActor()
-// setter (97.9), `new MActorAnmData()` with parens, a named `const char*` for
-// the anm-data path (94.1), a named `u32` for the loader flags (95.8), a
-// TU-local `static inline` that makes the anm data (84.2) or the J3DModel
-// (99.6) or forwards JKRGetResource (99.9), and a parked
-// `static inline MActor* f(TTalkCursor*)` (the batch-103 free-function binding
-// lever -- it is worth +8 only when its argument is a fresh *global* load, so
-// `this` buys nothing here).
+// The 8 bytes of low region retail has here are one inline expansion: reading
+// `unk10` through a level that binds its result. This stands in for a
+// `TTalkCursor::getMActor()` accessor written as
+// `MActor* actor = unk10; return actor;`, but `System/TalkCursor.hpp` is
+// included by MarNameRefGen, MarDirectorEvent and MarDirectorSetup2, so it is
+// parked here and reported.
+// Also +8 and interchangeable with it (any one of them closes the function, and
+// they do not stack usefully): a binding level on `new MActorAnmData`, on
+// `new MActor(anmData)`, or on `JKRGetResource`. Worth zero: the same levels
+// without the binding (a plain forwarder above `MActorAnmData::init`,
+// `MActor::setModel/setBck/setBrk` or `unkC.on`, all of which sit above real
+// `bl`s). Worse: a binding level on `J3DModelLoaderDataBase::load` (frame
+// unmoved, 5 diffs).
+// Superseded by the above (closure batch 103's 24-combination sweep): a
+// non-binding `getMActor()`, naming the `new J3DModel` or loader results,
+// `unkC.setBit()`, `MActor* actor = new MActor(anmData); unk10 = actor;`, a
+// `setMActor()` setter, a named path string or loader-flag word.
+static inline MActor* TalkCursorMActor(TTalkCursor* cursor)
+{
+	MActor* actor = cursor->unk10;
+	return actor;
+}
+
 void TTalkCursor::loadAfter()
 {
 	MActorAnmData* anmData = new MActorAnmData;
 	anmData->init("/common/cursor_b", nullptr);
 	unk10 = new MActor(anmData);
 
-	MActor* actor = unk10;
+	MActor* actor = TalkCursorMActor(this);
 	void* bmd     = JKRGetResource("/common/cursor_b/default.bmd");
 	actor->setModel(new J3DModel(J3DModelLoaderDataBase::load(
 	                                 bmd, J3DMLF_MaterialPEFull
@@ -51,38 +57,43 @@ void TTalkCursor::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-// TODO: frame 0x60 vs retail 0x78; all 35 instructions match and every slot
-// (the getCursorPos() return temporary, mtx, the three stores) is exactly 20
-// bytes low, so the whole residue is the low inline-temporary region: 24 bytes
-// there, which is also exactly two TVec3 temporaries.
-// Measured ladder over the 0x50 no-accessor base: MActor::getModel() +16, a
-// TTalkCursor::getMActor() accessor over unk10 +8 (and the chain saturates at
-// two levels: a third forwarder above getMActor() adds nothing), spelling
-// JGeometry::TPosition3::translation's body as
-// `setTrans(t.x, t.y, t.z)` instead of `setTrans(t)` +8 with no instruction
-// change. Those three together reach 0x70 and nothing reaches 0x78.
-// Measured as zero: translation() taking the vector by value, mtx.mMtx over
-// the operator ArrType*() conversion, unkC.setBit() over off()/on(), a
-// J3DModel* named local, a getCursorModel() wrapper folding both links.
-// Batch 69: the +24 is a dead non-trivial local in an inlined callee (see
-// docs/catalog/frame-gaps.md, "The dead low region"), but every candidate here
-// is a shared header -- JGeometry::TPosition3::translation, MActor::getModel,
-// TFlagT::on/off -- since TBaseNPC::getCursorPos returns its 12 bytes by value
-// through a real bl. Nothing in this unit's own files can carry it.
-// Closure batch 103: the same parked-free-function lever (a `static inline`
-// taking the cursor by pointer and returning unk10 or unk10->getModel()) is
-// +0 at either site and in combination -- it binds only for a fresh global
-// load, and this function reads no global.
-// Rejected (instruction changes): TPosition3f mtx(getCursorPos()) (-6%),
-// a named TVec3 for the cursor position (+8 frame but six extra instructions,
-// the copy is not elided), mtx.identity33() + mtx.setTrans() spelled out
-// (-29%), translation() calling TRotation3<T>::identity33() directly (-35%).
+// The 24 bytes of low region are two inline expansions: the model fetch
+// through one level that binds its result (+0x10) and the NPC receiver through
+// one more (+8). Both are placeholders for levels this unit cannot spell --
+// `MActor::getModel()` and `TTalkCursor::getMActor()` written to bind, and
+// whatever the caller side really hands `getCursorPos()` -- and their headers
+// are shared, so they are parked here and reported. `TalkCursorTargetNPC` in
+// particular is an identity forwarder: only its binding is load-bearing, and
+// its real shape is not recovered.
+// Measured over the 0x60 no-level base (retail 0x78, every slot 20 bytes low):
+// a binding level on `unk10->getModel()` or on `unk10` alone +0x10 (slot 0x28,
+// 8 short), two stacked binding levels on either +0x18 (slot 0x34, 4 long),
+// and one binding level on the NPC pointer the missing +8 (slot 0x30 exactly).
+// Worth zero, alone and in every pair: binding levels above `unkC.off`/`on`,
+// `mtx.translation(...)`, `J3DModel::setBaseTRMtx`, a named or const-qualified
+// `TBaseNPC*` local, a `(const TBaseNPC*)` cast at the call site, a helper
+// returning the cursor position by value, and 4-, 8- or 12-byte named locals
+// declared before `mtx` (they land above it and only move the frame).
+// Rejected (instruction changes): `TPosition3f mtx(getCursorPos())`, a named
+// `TVec3` for the cursor position, `identity33()` + `setTrans()` spelled out.
+static inline J3DModel* TalkCursorModel(TTalkCursor* cursor)
+{
+	J3DModel* model = cursor->unk10->getModel();
+	return model;
+}
+
+static inline TBaseNPC* TalkCursorTargetNPC(TBaseNPC* npc)
+{
+	TBaseNPC* target = npc;
+	return target;
+}
+
 void TTalkCursor::associateNPC(TBaseNPC* param_1)
 {
 	if (param_1) {
 		TPosition3f mtx;
-		mtx.translation(param_1->getCursorPos());
-		unk10->getModel()->setBaseTRMtx(mtx);
+		mtx.translation(TalkCursorTargetNPC(param_1)->getCursorPos());
+		TalkCursorModel(this)->setBaseTRMtx(mtx);
 		unkC.off(CUE_CALC_VIEW | CUE_ENTRY);
 	} else {
 		unkC.on(CUE_CALC_VIEW | CUE_ENTRY);
