@@ -34,12 +34,18 @@ bool TMario::getNozzle(THitActor* sender, TWaterGun::TNozzleType type)
 	return TRUE;
 }
 
-// TODO: frame 0x30 vs 0x50. Every instruction matches and the float->int
-// conversion temporary sits at the top of the locals in both, so the missing
-// 32 bytes are four more inline-expansion levels below it. getStatus() and
-// getRotation() supplied two of the six; gpMapObjManager and mSurfGesso have
-// no accessors to route the rest through (adding them is a shared-header
-// change with no map evidence).
+// Parked stand-in for the global accessor MoveBG/MapObjManager.hpp is missing
+// (`SMSGetMapObjManager()`): a binding level over the raw `gpMapObjManager`
+// read is worth 8 bytes of low region per expansion, and the three mutually
+// exclusive surf-squid branches pay it each, which is exactly the 32 bytes
+// TMario::getGesso's frame was short (0x30 -> 0x50, byte-exact). Reported as a
+// header item; it lives here because MapObjManager.hpp is shared.
+static inline TMapObjManager* MarioReceiveMsgGetMapObjManager()
+{
+	TMapObjManager* manager = gpMapObjManager;
+	return manager;
+}
+
 void TMario::getGesso(THitActor* param_1)
 {
 	if (getStatus() != 0x10000) {
@@ -50,19 +56,19 @@ void TMario::getGesso(THitActor* param_1)
 		emitGetEffect();
 		switch (param_1->getActorType()) {
 		case 0x400000C5:
-			mSurfGesso     = gpMapObjManager->mRedGesso;
+			mSurfGesso     = MarioReceiveMsgGetMapObjManager()->mRedGesso;
 			mSurfGessoType = SURF_GESSO_TYPE_RED;
 			break;
 
 		case 0x400000C6:
-			mSurfGesso     = gpMapObjManager->mYellowGesso;
+			mSurfGesso     = MarioReceiveMsgGetMapObjManager()->mYellowGesso;
 			mSurfGessoType = SURF_GESSO_TYPE_YELLOW;
 			break;
 
 		default:
 		case 0x400000C7:
 			mSurfGessoType = SURF_GESSO_TYPE_GREEN;
-			mSurfGesso     = gpMapObjManager->mGreenGesso;
+			mSurfGesso     = MarioReceiveMsgGetMapObjManager()->mGreenGesso;
 			break;
 		}
 		mSurfGesso->setBck("surfgeso_run1");
@@ -112,6 +118,17 @@ void TMario::getCoinBlue()
 // the two middle regions stay empty, so they are reverted. The 116 bytes in
 // the middle are named locals the original declared between `diff` and the
 // endpoint swaps, and there is no evidence yet for what they were.
+//
+// Closure batch 120 re-read the slot map after the rest of the unit closed,
+// and the split is now exact. Ours, ascending: 0x164 / 0x170 / 0x17c three
+// 12-byte vectors, an 8-byte hole, an f64 pair at 0x190, saves at 0x19c.
+// Retail: 0x194 / 0x1a0 two vectors, a **68-byte hole**, the third vector at
+// 0x1f0, a **12-byte** hole, the f64 pair at 0x208, saves at 0x214. So the
+// 120 bytes are 48 of low region (six binding levels, the same +8-per-
+// expansion rung that closed getGesso above and TMario::perform in MarioMain),
+// one 68-byte object between the second and third vector, and 4 more between
+// the third vector and the f64. 68 is not a JGeometry size; a Mtx plus a
+// 20-byte object, or a 68-byte struct, would fit.
 BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 {
 	// TODO: GMSE01 instructions match apart from stack operands: frame 0x180
