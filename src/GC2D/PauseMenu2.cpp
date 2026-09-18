@@ -158,6 +158,19 @@ void TPauseMenu2::loadAfter()
 	mGamePad = gpMarDirector->unk18[0];
 }
 
+// TODO (structural, blocks linking): the map has appearWindow and
+// disappearWindow as **weak** and still emitted out of line, with perform()
+// reaching both through a `bl`. Everything else in this TU is at 99.3% or
+// better, so this binding is the only thing keeping PauseMenu2 unlinkable.
+// Measured and rejected: `inline` on these two definitions does give them weak
+// linkage and fixes both the order and the binding check, but MWCC then
+// expands both bodies into perform() -- perform 99.28 -> 18.92, the unit
+// 99.40 -> 52.06, and the two symbols disappear entirely (2,020 bytes of
+// callee inlined, perform 0x1084 against retail's 0x940). Adding
+// `#pragma dont_inline on/off` around them changes nothing: with the inline
+// keyword present MWCC expands them anyway. So the mechanism that makes a
+// ~1 KB member function weak *and* out of line is still unidentified; it is
+// not the inline keyword alone.
 void TPauseMenu2::appearWindow()
 {
 	if (mFadeAnim <= 45.0f) {

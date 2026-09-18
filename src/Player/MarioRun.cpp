@@ -890,7 +890,17 @@ BOOL TMario::turnEnd()
 	return 0;
 }
 
-// TODO: remove the inline mark here!!!
+// TODO (structural, blocks linking): the `inline` keyword is why
+// validate-symbol-order reports braking__6TMarioFv MISSING -- an explicit
+// `inline` on a cpp member makes MWCC drop the out-of-line copy, and the map
+// has one (UNUSED 0x158, stripped because every reference was inlined away).
+// Measured: dropping the keyword does emit the symbol and the unit passes, but
+// moveMain then emits `bl braking__6TMarioFv`, which the ROM does not have
+// anywhere (0 occurrences in the whole disassembly), and the unit goes
+// 99.51 -> 98.05. So retail's braking is a plain method that moveMain still
+// inlines, i.e. it had at most 14 statements at depth 1; this body has about
+// 22, the switch below accounting for nine of them. Recovering the helper that
+// hides those statements is what unblocks the keyword, not the keyword itself.
 inline BOOL TMario::braking()
 {
 	if (!(mInput & 0x10) && (mInput & 0xF))

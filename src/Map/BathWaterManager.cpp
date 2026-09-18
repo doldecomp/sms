@@ -1595,7 +1595,15 @@ void TBathWaterManager::load(JSUMemoryInputStream& stream)
 		unk14[i] = new TBathWaterParams(fileNames[i]);
 }
 
-void TBathWaterMeshRenderer::clearHeightMap()
+// `inline` so that the linkage matches the map's weak binding. It survives as
+// a symbol because its only caller is the constructor above, whose expansion
+// budget is already spent -- unlike makeHeightMap/makeNormalMap/calcCoord,
+// which the map also has weak but which render() swallows whole the moment
+// they are marked inline (measured: the three symbols vanish, render 93.83 ->
+// 51.30, the unit 96.99 -> 86.43), even though all three are far larger than
+// this one. So the lever for the remaining three linkage errors is render()'s
+// inlining budget, not their declaration.
+inline void TBathWaterMeshRenderer::clearHeightMap()
 {
 	for (int i = 0; i < 128; ++i)
 		for (int j = 0; j < 128; ++j)
