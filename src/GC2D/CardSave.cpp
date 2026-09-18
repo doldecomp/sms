@@ -1647,6 +1647,10 @@ void TCardSave::selectBookmarks(TEProgress, TEProgress, TEProgress, TEProgress)
 
 void TCardSave::changePattern(J2DPicture*, s16, u32) { }
 
+// TODO: 98.5%. The six remaining differences are all the same shape, at the
+// inlined saveBookmark(): retail moves the stream's address with `mr` and
+// keeps it in one register, we re-derive it with `addi rD, rS, 0` and carry an
+// extra copy. saveBookmark() itself is size-exact against the map.
 void TCardSave::execMovement_()
 {
 

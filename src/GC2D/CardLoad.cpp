@@ -481,6 +481,12 @@ void TCardLoad::loadAfter()
 	unk284 = JDrama::TNameRefGen::search<TMapObjOptionWall>("オプション用壁");
 }
 
+// TODO: 98.2%. Two residues. Retail folds the alpha field's address into
+// `lbzu` where we emit `lbz` plus an `addi`, and retail calls
+// JSUInputStream::JSUInputStream() out of line inside the inlined
+// loadBookmark() while we expand it (the map's one MISSING symbol for this
+// TU). Declaring a constructor on JSUInputStream or on JSURandomInputStream
+// does not flip that, so an inline level above it is still missing.
 void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -778,6 +784,9 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// TODO: 99.8%. Retail's `buffer` starts four bytes lower than ours, so our
+// body carries one 4-byte inline temporary it does not have, and the u16
+// clamp keeps the raw sum in the variable's register where we narrow into it.
 bool TCardLoad::titleDraw()
 {
 	switch (unk18) {
@@ -1464,6 +1473,8 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 	return result;
 }
 
+// TODO: 97.9%, instruction-identical. Our frame is 32 bytes *larger* than
+// retail's 0x1a8, and the callee-saved registers are rotated with it.
 s8 TCardLoad::waitForStart(TEProgress param_1)
 {
 	s8 result = -1;
@@ -1472,8 +1483,8 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 	case 0:
 		setMessage(unk538, 0x400, (u16)cMessageID[unk1C]);
 		setMessage(unk53C, 0x400, (u16)cMessageID[unk1C]);
-		setMessage(unk560, 0x400, 12);
-		setMessage(unk564, 0x400, 12);
+		setMessage(unk560, 0x400, 13);
+		setMessage(unk564, 0x400, 13);
 
 		unk524->getPane()->show();
 		unk524->setCenteredSize(20, unk528.getWidth(), unk528.getHeight(), 0,
@@ -2085,6 +2096,11 @@ void TCardLoad::setSelected(u8 param_1)
 	}
 }
 
+// TODO: every instruction matches; only the frame differs (0x178 vs retail's
+// 0x1e0). The gap is not one block: measured against retail's slots it is
+// +92 bytes below the lowest referenced local, +4 above it, +16 more above
+// the third stream object, and -8 above the fourth, which is four separate
+// causes rather than one missing local. Left for the bulk frame-gap pass.
 void TCardLoad::changeScene()
 {
 	TEProgress prevUnk1C = unk1C;
