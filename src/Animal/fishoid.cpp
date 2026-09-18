@@ -41,7 +41,13 @@ void TRealoidActor::perform(u32 cue, JDrama::TGraphics* graphics)
 }
 
 // TODO: 99.6%, all instructions match (58 `~` markers, all frame/register
-// only, closure batch 123 -- no structural residue left to chase).
+// only, closure batch 123 -- no structural residue left to chase). Batch 128
+// read the slot map: retail's frame is 0xd0 against our 0xa0, every
+// inline-temp slot sits exactly 0x40 higher in retail (0x94/0xa0/0xac against
+// our 0x54/0x60/0x6c -- the three `addi rD, r1, N` matrix/vector temporaries)
+// while the frame itself is only 0x30 bigger, so the callee-saved block
+// differs too. 64 bytes of dead low region is the size of a whole extra
+// `Mtx` plus 16, or of a `Mtx44` where we declare a `Mtx`; not chased.
 void TRealoidActor::calcRootMatrix(TBoid* boid)
 {
 	if (mFlags & FLAG_UNK2_OR_UNK4)
@@ -151,10 +157,18 @@ void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
 	}
 }
 
-// TODO: 99.9%, all instructions match. `pos`'s stack slot is 4 low with the
-// frame otherwise exact (closure batch 123: naming the loop bound
-// `unk150->getBoidNum()` into a local regresses to 88.2%, reverted). No
-// candidate lever found for the remaining +4.
+// TODO: 99.9%, all instructions match, frame exact (0x70); the only residue is
+// the `pos` temporary at 0x48 where retail has 0x44, i.e. retail's inline-temp
+// pool is 4 bytes bigger and its named block 4 smaller ("+4 low / -4 named").
+// Closure batch 128: a named `TBoid* boid = unk150->getBoid(i);` before the
+// copy closes this function exactly (batch 84's "a named pointer local is +8
+// when its initialiser goes through an indexed inline accessor") -- but
+// `clipBoids` is also *inlined* into `TRealoid::perform`, which is byte-exact
+// and where that local costs the same 8 bytes (0x98 -> 0xa0). One nonmatching
+// function either way, so the exact sibling is kept. A construct that is +4
+// named here and +0 in an inlined expansion would close both; a dead `BOOL`
+// or `f32` declared before `pos` is +0 in both, dropping a camera accessor
+// level is -8 in both, and `getRealoid(i)` for the flag calls is +8/+16.
 void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 {
 	SetViewFrustumClipCheckPerspective(SMSGetCamera()->getFovy(),
@@ -193,25 +207,23 @@ TFishoid::TFishoid(int type, const char* name)
 	unk15C = nullptr;
 }
 
-// TODO: 99.5%, all instructions match. Pure frame gap (0xb8 vs our 0x98, +32
-// low) around the single referenced local (a TVec3 used to clamp a position
-// component); no candidate object found this batch.
 void TFishoid::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TRealoid::perform(cue, graphics);
 
-	for (int i = 0; i < unk150->getBoidNum(); ++i) {
-		TBoid* boid = unk150->getBoid(i);
+	for (int i = 0; i < getBoidNum(); ++i) {
+		TBoid* boid = getBoidLeader()->getBoid(i);
 
 		JGeometry::TVec3<f32> pos = boid->mPosition;
-		if (pos.y > 0.0f)
+		f32 y                     = pos.y;
+		if (y > 0.0f)
 			pos.y = 0.0f;
 		boid->mPosition = pos;
 	}
 
 	if (unk15C != nullptr && (cue & CUE_MOVE)) {
 		unk15C->mPosition
-		    = unk150->getBoid(unk150->getBoidNum() - 1)->mPosition;
+		    = getBoidLeader()->getBoid(getBoidNum() - 1)->mPosition;
 	}
 }
 
@@ -228,15 +240,31 @@ void TFishoid::init(TLiveManager* manager)
 
 void TFishoid::initBoids() { }
 
-// TODO: 99.8%, all instructions match. `unk150->mFleeTarget =
-// (THitActor*)gpMarioAddress;` (a plain field assignment through
-// `TPathNode`'s implicit converting ctor) compiled to a pointer-advancing
-// `stwu`-based copy of the temporary `TPathNode` into place; going through
-// the named `setFleeTarget(THitActor*)` setter in include/Animal/boid.hpp
-// instead gave retail's fixed-base `stw` form and took this from 96.6% (40
-// `|`/`<`/`>` markers) to instruction-exact (closure batch 123). What is
-// left is a pure 0x80-byte low-region gap around the temporary `TPathNode`'s
-// stack home and the callee-saved area, not pursued further.
+// TODO: 99.9%, all instructions match and the frame is now exact (0xd0).
+// Batch 123 fixed the `TPathNode` copy shape by going through
+// `setFleeTarget(THitActor*)`; closure batch 128 recovered the 128 bytes of
+// low region: the eight `TBoidLeader` setters (+0x20 as a set, +0 singly),
+// `getBoidNum()` at both count sites (+0x20), `getBoidLeader()` as the
+// receiver of every leader access (+0x28), `getRealoid(i)`/`getPosition()`
+// (+8) and one binding level over `getBoidLeader()` (+0x10, parked below).
+// The single remaining difference is a slot-order swap: retail puts the
+// unnamed `TPathNode` conversion temporary at the *top* of the locals
+// (0xb0..0xbf) with the `stream >> eventId` buffer at 0xac under it, while we
+// put the buffer on top (0xb8) and the TPathNode 12 bytes lower (0xa4). That
+// is batch 59's "an unnamed argument temporary sits above the named locals"
+// failing for a converting-constructor temporary bound to an inlined setter's
+// `const TPathNode&`. Rejected here (all leave the 13 markers unmoved):
+// `eventId` in a nested block / as `s32` / declared at the top of the body, a
+// dead `u32` above it, an explicit `TPathNode(...)` temporary at the call, and
+// moving the binding level to any other leader site. Declaring the TPathNode
+// as a named local first is much worse (73-92%).
+
+static inline TBoidLeader* FishoidLeader(TRealoid* realoid)
+{
+	TBoidLeader* leader = realoid->getBoidLeader();
+	return leader;
+}
+
 void TFishoid::load(JSUMemoryInputStream& stream)
 {
 	loadDefault(stream, cFishoidMdlNames[mType], 0);
@@ -250,27 +278,27 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 			unk15C = gpItemManager->newAndRegisterCoinReal();
 	}
 
-	unk150->mBaseSpeed         = 4.0f;
-	unk150->mNeighborRadius    = 200.0f;
-	unk150->mYawSpeed          = 1.0f;
-	unk150->mPitchSpeed        = 0.5f;
-	unk150->mMaxPitch          = 5.0f;
-	unk150->mAlignmentStrength = 0.5f;
+	getBoidLeader()->setBaseSpeed(4.0f);
+	getBoidLeader()->setNeighborRadius(200.0f);
+	getBoidLeader()->setYawSpeed(1.0f);
+	getBoidLeader()->setPitchSpeed(0.5f);
+	getBoidLeader()->setMaxPitch(5.0f);
+	getBoidLeader()->setAlignmentStrength(0.5f);
 
-	unk150->setFleeTarget((THitActor*)gpMarioAddress);
+	FishoidLeader(this)->setFleeTarget((THitActor*)gpMarioAddress);
 
-	unk150->mFleeRadius   = 400.0f;
-	unk150->mFleeStrength = 3.0f;
-	unk150->mFlags |= 2;
+	getBoidLeader()->setFleeRadius(400.0f);
+	getBoidLeader()->setFleeStrength(3.0f);
+	getBoidLeader()->mFlags |= 2;
 
-	for (int i = 0; i < unk150->mNumBoids; ++i)
-		unk154[i]->unk70->setBck("fish_swim");
+	for (int i = 0; i < getBoidNum(); ++i)
+		getRealoid(i)->unk70->setBck("fish_swim");
 
 	if (unk15C) {
-		TRealoidActor* realoid = getRealoid(unk150->mNumBoids - 1);
+		TRealoidActor* realoid = getRealoid(getBoidNum() - 1);
 		realoid->onFlag(TRealoidActor::FLAG_UNK2);
 		unk15C->makeObjAppeared();
-		unk15C->mPosition = realoid->mPosition;
+		unk15C->mPosition = realoid->getPosition();
 	}
 }
 
