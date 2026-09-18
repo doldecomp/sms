@@ -171,16 +171,17 @@ DEFINE_NERVE(TNerveSealSleep, TLiveActor)
 	return FALSE;
 }
 
-// TODO: instruction-exact, frame 0x30 against retail's 0x38 -- one 8-byte
-// object left. `getDistToMarioSquared()` is the first +8 (0x28 -> 0x30); a
-// named `f32` for it, a named `int` for `spine->getTime()`, a cast temporary
-// for `spine->getBody()` and dropping the inner braces are all +0, and a named
-// `MActor*` or a named `bool` for the first `curAnmEndsNext` break the body.
+// The named `time` and `distToMario` are a lever pair: each one alone is +0,
+// together they are the last 8 bytes of frame (0x30 -> retail's 0x38) with no
+// instruction change. A cast temporary for `spine->getBody()` and dropping the
+// inner braces are +0 either way; a named `MActor*` or a named `bool` for the
+// first `curAnmEndsNext` break the body.
 DEFINE_NERVE(TNerveSealWait, TLiveActor)
 {
 	TSeal* seal = (TSeal*)spine->getBody();
 
-	if (spine->getTime() == 0)
+	int time = spine->getTime();
+	if (time == 0)
 		seal->getMActor()->setBckFromIndex(3);
 
 	if (seal->getMActor()->curAnmEndsNext(0, nullptr)
@@ -188,7 +189,8 @@ DEFINE_NERVE(TNerveSealWait, TLiveActor)
 		seal->getMActor()->setBckFromIndex(2);
 	}
 
-	if (seal->getDistToMarioSquared() > 2250000.0f
+	f32 distToMario = seal->getDistToMarioSquared();
+	if (distToMario > 2250000.0f
 	    && seal->getMActor()->curAnmEndsNext(0, nullptr)) {
 		seal->getMActor()->setBckFromIndex(1);
 		spine->pushAfterCurrent(&TNerveSealSleep::theNerve());
