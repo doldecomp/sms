@@ -21,9 +21,24 @@ JPADrawClipBoard JPADraw::cb;
 // instruction addresses it, which makes it impossible to localise from the
 // diff. Rejected: routing `mScaleOut = 1.0f` through `setKeyScl()` (+0), and a
 // `getDrawCtx()` accessor was already measured and pruned project-wide.
-// Remaining leads: an extra level on one of the four
-// `getEmitterDataBlockInfoPtr()->getXxxShape()` chains, or on the two by-value
-// `GXColor` getters (+8 each would be exactly the gap).
+//
+// Header round 27 priced the free carriers on those leads -- none of
+// getEmitterDataBlockInfoPtr, getBaseShape/getExtraShape/getSweepShape/
+// getExTexShape, getPrmColor or getEnvColor has a symbol anywhere in the map,
+// so the binding form is free to put inside any of them. Measured from the
+// 0x180 base: the getPrmColor/getEnvColor pair is +8 *together* (it saturates,
+// not +8 each), a binding inside getBaseShape on top of that is +0, and a
+// binding inside getEmitterDataBlockInfoPtr alone is +16 -- which lands the
+// frame on retail's 0x190 exactly and drops the diff from 17 markers to 12.
+// It is still not committed, and the 12 say why: with the frame right the
+// inline-temp pool is exact and every *named* slot is 4 bytes high (`white`
+// 0x184 against 0x180, the six `flags` words 0x16c-0x183 against
+// 0x168-0x17f), i.e. retail declared one more 4-byte named local *above*
+// `white`, which `int i` would be if it had a stack home and nothing else here
+// is a candidate for. And the header edit is not free after all: it costs
+// JPAParticle::checkCreateChildParticle, byte-exact today (100 -> 99.8).
+// So the last item is a 4-byte named local declared before `white`, not
+// another accessor.
 BOOL JPADraw::initialize(JPABaseEmitter* emitter,
                          JPATextureResource* tex_resource)
 {
