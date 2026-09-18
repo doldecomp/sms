@@ -114,6 +114,11 @@ void TMushroom1up::load(JSUMemoryInputStream& stream)
 //       site and costs 12 markers at the `pos` site. So this needs one of the
 //       catalogued "+4 low" causes (a global-accessor level per read site, a
 //       named cast intermediate), none of which this function has a site for.
+// Closure re-pass (batch 161): the new UNUSED-callee carrier rule does not
+// apply -- MapObjItem2 has no UNUSED *function* at all (only the four data
+// objects @1431/@1411/@1210/MtxCalcTypeName), and item (a)'s slot is in the
+// named block anyway (0x5c, above `pos` at 0x50 and `diff` at 0x44), i.e. a
+// local of this body declared before `pos`, not a callee's.
 void TMushroom1up::control()
 {
 	TMapObjBase::control();
@@ -297,6 +302,10 @@ void TJumpBase::calcRootMatrix()
 //     `JMASSin(*gpMarioAngleY)` twice (95.9, +1 instruction and +8 frame),
 //     `s16 angle` (95.9), and two separate `s16 sinAngle/cosAngle` locals
 //     (95.9) are all worse than the shared `int angle`.
+// Closure re-pass (batch 161): (1) is the `this`-vs-pool-base callee-saved
+// swap that RULES.md lists as known-open, confirmed here -- hoisting
+// `J3DFrameCtrl* ctrl` to function scope so the body holds two named locals
+// instead of one leaves the ranking untouched (97.2%, same 106 markers).
 void TJumpBase::control()
 {
 	int prevState = unk138;
