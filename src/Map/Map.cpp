@@ -442,4 +442,3 @@ TMap::TMap(const char* name)
 	gpMap = this;
 }
 
-TMap::~TMap() { }

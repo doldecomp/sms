@@ -16,7 +16,8 @@ extern TMap* gpMap;
 
 class TMap : public JDrama::TViewObj {
 public:
-	~TMap();
+	// __dt__4TMapFv is weak (0x74) in the map with no ~TMap() of its own:
+	// it is the implicit destructor, and declaring one makes it global.
 	TMap(const char* name = "マップ");
 
 	void load(JSUMemoryInputStream&);

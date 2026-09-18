@@ -161,7 +161,8 @@ void SMS_GetLightPerspectiveForEffectMtx(MtxPtr);
 
 class TRopePoint {
 public:
-	TRopePoint();
+	// __ct__10TRopePointFv is weak (4 bytes) in the map: the implicit
+	// default constructor, non-trivial only because TVec3<f32> has one.
 
 	/* 0x00 */ JGeometry::TVec3<f32> unk0;
 	/* 0x0C */ JGeometry::TVec3<f32> unkC;

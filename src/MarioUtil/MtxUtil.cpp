@@ -444,7 +444,6 @@ void SMS_GetLightPerspectiveForEffectMtx(MtxPtr mtx)
 	mtx[3][3] = 1.0f;
 }
 
-TRopePoint::TRopePoint() { }
 
 TRope::TRope(u16 count, const JGeometry::TVec3<f32>& pos, f32 p1, f32 p2,
              f32 p3, f32 p4)
