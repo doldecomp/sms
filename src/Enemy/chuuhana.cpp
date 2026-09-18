@@ -789,22 +789,24 @@ void TChuuHana::setGoal()
 {
 	// Pick a point 1000 ahead, with the heading swung by up to 30 degrees
 	// either side, and walk there.
+	// TODO: 99.5%.  Instruction-identical; the low region is 16 bytes short
+	// and every slot shifts by the same amount.  getPosition() over
+	// mPosition and spelling setGoalPath out as a TPathNode plus two
+	// assignments both move nothing.
 	JGeometry::TVec3<f32> goal;
 	goal.set(mPosition);
 	TMsRange<f32> swing(-30.0f, 30.0f);
-
-	Mtx rot;
-	MsMtxSetRotRPH(rot, mRotation.x, mRotation.y + swing.rand(), mRotation.z);
+	f32 swingAngle = swing.rand();
 
 	JGeometry::TVec3<f32> dir(0.0f, 0.0f, 1.0f);
+
+	Mtx rot;
+	MsMtxSetRotRPH(rot, mRotation.x, mRotation.y + swingAngle, mRotation.z);
 	MTXMultVec(rot, &dir, &dir);
 	goal.x += 1000.0f * dir.x;
 	goal.z += 1000.0f * dir.z;
 
-	TPathNode node(goal);
-	unkF4  = node;
-	unk104 = node;
-	unk114.clear();
+	setGoalPath(goal);
 	unk1A4 = mCheckOnPanelTime;
 	unk1B2 = 0;
 }
