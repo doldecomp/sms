@@ -10,17 +10,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// TODO: promote to MSound::getModBgm() in include/MSound/MSound.hpp. The
-// inline level it adds is what gives TNerveBossHanachanSnort::execute its
-// 0x40 frame (raw gpMSound->unk98 is 0x28, this level +8 per site, the
-// SMSGetMSound() level another +8 over the two sites); parked here as a
-// TU-prefixed static inline because a shared header may not be edited in a
-// unit batch.
-static inline MSModBgm* BossHanachanNerve_getModBgm(MSound* sound)
-{
-	return sound->unk98;
-}
-
 DEFINE_NERVE(TNerveBossHanachanGraphWander, TLiveActor)
 {
 	TBossHanachan* boss = (TBossHanachan*)spine->getBody();
@@ -109,10 +98,10 @@ DEFINE_NERVE(TNerveBossHanachanSnort, TLiveActor)
 		MSBgm::startBGM(0x80010029);
 		switch (boss->mHitPoints) {
 		case 2:
-			BossHanachanNerve_getModBgm(SMSGetMSound())->changeTempo(0, 1);
+			SMSGetMSound()->getModBgm()->changeTempo(0, 1);
 			break;
 		case 1:
-			BossHanachanNerve_getModBgm(SMSGetMSound())->changeTempo(1, 1);
+			SMSGetMSound()->getModBgm()->changeTempo(1, 1);
 			break;
 		}
 	}

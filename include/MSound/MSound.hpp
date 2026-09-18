@@ -193,6 +193,12 @@ public:
 
 	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }
 
+	// Fabricated name. The inline level it adds is what gives
+	// TNerveBossHanachanSnort::execute its 0x40 frame (raw gpMSound->unk98 is
+	// 0x28; this level is +8 per site and the SMSGetMSound() level another +8
+	// over the two sites).
+	MSModBgm* getModBgm() { return unk98; }
+
 public:
 #if defined(VERSION_GMSE01)
 	/* 0x98 */ u8 mWaterFilterOverride;
