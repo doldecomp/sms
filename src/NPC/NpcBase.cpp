@@ -669,7 +669,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		                  gpCamera->unk148.x - gpCamera->unk124.x);
 		JGeometry::TVec3<f32> local_4C = gpCamera->unk124;
 		if (!MsIsInSight(local_4C, SHORTANGLE2DEG(angle), mPosition,
-		                 farClip + 500.0f, 3.46875f, 4.28125f)) {
+		                 farClip + 500.0f, 120.0f, 800.0f)) {
 			updateSquareToMario();
 			bVar5 = false;
 		}
