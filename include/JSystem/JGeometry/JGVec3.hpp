@@ -123,6 +123,17 @@ public:
 
 	void zero() { x = y = z = 0.0f; }
 
+	// The map emits this one weak body in Camera.a lensflare.cpp at 0x1c
+	// (three lfs, three stfs, blr), which confirms the three statements, and
+	// the whole game calls it out of line exactly eight times: lensflare
+	// (three), bosstelesa (two), sunmodel, CameraWarp and EventWatcher. Like
+	// the other three-statement TVec3 members that is an inline *depth* tell
+	// and nothing else - measured on TSunModel::perform (header round 24),
+	// depth 3 still expands it and depth 4 produces the call, and dropping
+	// the copy in is worth the whole rest of that function. Note the overload:
+	// a `const TVec3<f32>&` argument picks the set<T> member template
+	// instead, so every one of those eight sites read its source through
+	// something typed `Vec`.
 	void set(const Vec& v)
 	{
 		x = v.x;
