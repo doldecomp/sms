@@ -36,7 +36,27 @@ SampleCtrlJoint::SampleCtrlJoint(J3DJoint* joint)
 // at the mAttnFn site, or `material->getTevBlock()->getTevStage(i)` at either
 // the first or the last field of the tev loop -- and all three are a mixed
 // accessor path at one line out of eighteen identical ones, so none is
-// committed: see the report for batch 131. Every plausible alternative is +0:
+// committed: see the report for batch 131.
+//
+// Header round 22 decided this and rejects all of them, because the knob is
+// the *size* of the inline-temporary pool and not any one site. The table is
+// the top temporary, so its displacement is `0xc + pool`; ours is 4 bytes of
+// pool more than retail's and every one of the 24 `getColorChan(i)` /
+// `getTevStage(i)` forwarder expansions contributes exactly 4 bytes of it.
+// Any single one of the 24 routed through its block therefore lands the match,
+// which is precisely why none of them is evidence: retail's source cannot be
+// recovered from a total. Committing one would be picking an arbitrary line to
+// spell differently from its seventeen (or five) identical neighbours, i.e. a
+// fakematch, so the unit stays out of objects.json over these 4 bytes. Also
+// measured and rejected in round 22: `unk38` in an initialiser list instead of
+// the first assignment (98.0%, and the pool does not move).
+//
+// The way out is a real -4 somewhere in the chain that is *not* one of the 24
+// -- a J3DMaterial.hpp forwarder shape that expands without a dead pointer
+// temporary, or one fewer expansion in the `getMatColor(0)` / `getTevStageNum`
+// prologue -- not another permutation of this body.
+//
+// Every plausible alternative is +0:
 // `j3dDefaultTevOrderInfoNull` through the same cast, `getMatColor(0)` or
 // `getTevStageNum()` through their blocks, `i++` for `++i`, `4U` for the first
 // bound, and `u16` for either loop counter (`u32`/`int`/`s32` cost four
