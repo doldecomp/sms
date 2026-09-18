@@ -87,43 +87,15 @@ void TCameraBck::endDemo() { unk0->setBckFromIndex(-1); }
 
 void TCameraBck::restartDemo() { }
 
-// TODO: promote these to TCameraBck members in CameraBck.hpp; parked here
-// because a header batch owns the shared headers this batch.
-static inline MActor* CameraBck_getMActor(TCameraBck* self)
-{
-	return self->unk0;
-}
-
-static inline MtxPtr CameraBck_getPosMtx(TCameraBck* self)
-{
-	return self->unkC;
-}
-
-static inline MtxPtr CameraBck_getLookatMtx(TCameraBck* self)
-{
-	return self->unk10;
-}
-
-static inline u32 CameraBck_getFrame(TCameraBck* self)
-{
-	return self->unk8;
-}
-
-static inline const JGeometry::TVec3<f32>* CameraBck_getOffset(
-    TCameraBck* self)
-{
-	return self->unk14;
-}
-
 bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
                             JGeometry::TVec3<f32>* lookat,
                             JGeometry::TVec3<f32>* up, f32* out_y_scale)
 {
 
-	CameraBck_getMActor(this)->calcAnm();
+	getMActor()->calcAnm();
 
 	if (pos != nullptr) {
-		MtxPtr mtx = CameraBck_getPosMtx(this);
+		MtxPtr mtx = getPosMtx();
 		pos->set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	}
 
@@ -134,20 +106,20 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 		up->set(unkC[0][1], unkC[1][1], unkC[2][1]);
 
 	if (out_y_scale != nullptr) {
-		J3DAnmTransformKey* anm = CameraBck_getMActor(this)->getBckAnm();
+		J3DAnmTransformKey* anm = getMActor()->getBckAnm();
 		if (anm != nullptr) {
 			J3DTransformInfo info;
-			anm->getTransform((u16)CameraBck_getFrame(this), &info);
+			anm->getTransform((u16)getFrame(), &info);
 			f32 scaleY   = info.mScale.y;
 			*out_y_scale = scaleY;
 		}
 	}
 
-	if (CameraBck_getOffset(this) != nullptr) {
+	if (getOffset() != nullptr) {
 		if (pos != nullptr)
-			*pos += *CameraBck_getOffset(this);
+			*pos += *getOffset();
 		if (lookat != nullptr)
-			*lookat += *CameraBck_getOffset(this);
+			*lookat += *getOffset();
 	}
 
 	// TODO: one instruction from exact. Retail materialises checkState()'s
@@ -168,7 +140,7 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 	// grow the frame to 0x88.
 	bool result = true;
 	J3DFrameCtrl* fc
-	    = CameraBck_getMActor(this)->getFrameCtrl(ANM_TYPE_BCK);
+	    = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (fc != nullptr) {
 		if (fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE))
 			result = true;

@@ -23,6 +23,13 @@ public:
 
 	void initUnderpass();
 
+	// Fabricated name. The accessor level supplies the last 8 bytes of
+	// initUnderpass' 0x70 frame; it is +8 at two or three of its call sites
+	// (one is +0, four or five +0x10). Only the byte count picks those sites,
+	// so an alternative reading is that retail reached getTexCoord()/
+	// getZMode() through one more forwarding level than our J3DMaterial does.
+	J3DMaterial* getUnderpassMaterial() { return mUnderpassMaterial; }
+
 public:
 	/* 0x30 */ TJointObj* mUnderpass;
 	/* 0x34 */ J3DMaterial* mUnderpassMaterial;
