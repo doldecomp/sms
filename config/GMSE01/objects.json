@@ -460,5 +460,7 @@
   "dolphin/thp/THPAudio.c",
   "dolphin/thp/THPDec.c",
   "dolphin/vi/vi.c",
-  "main.cpp"
+  "main.cpp",
+  "GC2D/SunGlass.cpp",
+  "Camera/CameraWarp.cpp"
 ]
