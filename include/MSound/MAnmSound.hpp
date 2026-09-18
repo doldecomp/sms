@@ -20,10 +20,12 @@ public:
 	// MAnmSound.cpp, so it is a header definition every using TU can emit,
 	// and __vt__9MAnmSound has no destructor slot (its first two words are
 	// the usual zero pair, then startAnimSound).
-	// Open: ours lands in liveactor.o -- reached from the inlined
-	// MAnmSoundNPC construction -- at 0x64, and enemyMario.o still lacks
-	// it, so retail's enemyMario.cpp destroys an MAnmSound somewhere we do
-	// not (its UNUSED `kill` is 0x4c against our 0x4 stub).
+	// What emits it is constructing a derived MAnmSound inline: MWCC
+	// synthesises the derived class's implicit destructor, which calls this
+	// one out of line. TEnemyMario::initValues' `new MAnmSoundMario` is
+	// enemyMario.cpp's copy and TLiveActor's inlined MAnmSoundNPC is
+	// liveactor.o's. Both of ours come out at 0x64 against the map's 0x60,
+	// so the body is still four bytes off somewhere in the base chain.
 	~MAnmSound() { }
 
 	virtual void startAnimSound(void* interface, u32 id,
@@ -34,6 +36,23 @@ public:
 	void initAnmSound(void* interface, u32 param_2, f32 frame);
 	void setSpeedModifySound(JAISound* sound,
 	                         JAIAnimeFrameSoundData* frame_data, f32 speed);
+};
+
+// The Marios' anime sound: TEnemyMario::initValues stores this vtable at 0x94
+// (the ROM's `lis/addi MAnmSoundMario::__vtable` there is what identified the
+// class), and its startAnimSound is the one that carries the sound-category
+// switch -- MAnmSound's own is a bare gateCheck plus startSoundActorInner.
+// The constructor has no symbol anywhere, so it is this in-class forwarder.
+class MAnmSoundMario : public MAnmSound {
+public:
+	MAnmSoundMario(MSound* sound)
+	    : MAnmSound(sound)
+	{
+	}
+
+	virtual void startAnimSound(void* interface, u32 sound_id,
+	                            JAISound** out_handle, JAIActor* actor,
+	                            u8 camera_idx);
 };
 
 class MAnmSoundNPC : public MAnmSound {

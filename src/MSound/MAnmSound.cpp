@@ -21,7 +21,26 @@ void MAnmSound::animeLoop(Vec* position, f32 frame, f32 speed, u32 ground_no,
 		                ground_no, param_5);
 }
 
-// TODO: find a home for this
+void MAnmSound::startAnimSound(void* interface, u32 id,
+                               JAISoundHandle* out_handle, JAIActor* actor,
+                               u8 camera_idx)
+{
+	if (MSGMSound->gateCheck(id))
+		MSoundSESystem::MSoundSE::startSoundActorInner(id, out_handle, actor, 0,
+		                                               camera_idx);
+}
+
+void MAnmSound::setSpeedModifySound(JAISound* sound,
+                                    JAIAnimeFrameSoundData* frame_data,
+                                    f32 speed)
+{
+	if (MSound::getSwitch(sound->getID(), MSSeSwBit_AnimeSpeed,
+	                      MSSeSwBit_AnimeSpeedShift))
+		JAIAnimeSound::setSpeedModifySound(sound, frame_data, speed);
+}
+
+// Fabricated name; fully inlined into MAnmSoundMario::startAnimSound, which is
+// its only user, so the map has no symbol for it.
 static u32 get_thing(u32 param_1)
 {
 	u32 uVar1 = param_1 >> 30;
@@ -39,38 +58,33 @@ static u32 get_thing(u32 param_1)
 	return 0xffffffff;
 }
 
-void MAnmSound::startAnimSound(void* interface, u32 id,
-                               JAISoundHandle* out_handle, JAIActor* actor,
-                               u8 camera_idx)
+void MAnmSoundMario::startAnimSound(void* interface, u32 sound_id,
+                                    JAISound** out_handle, JAIActor* actor,
+                                    u8 camera_idx)
 {
-	if (MSGMSound->gateCheck(id)) {
-		switch (get_thing(id)) {
+	if (MSGMSound->gateCheck(sound_id)) {
+		u32 category = get_thing(sound_id);
+		switch (category) {
 		case 0:
 			if ((actor->mGroundNumber & 0x1000) == 0x1000)
 				return;
 			break;
 
+		// TODO: instructions and frame exact; r0 and r5 are swapped between
+		// groundNo and voiceNo. Register-numbering residue only -- naming the
+		// volume, the MSound pointer, a const or an s32 voiceNo all leave it
+		// unchanged.
 		case 7: {
-			u32 bVar2 = actor->mGroundNumber >> 24;
-			u32 a     = bVar2 & 0xF;
-			u8 b      = bVar2 >> 4;
-			MSGMSound->startMarioVoice(id, a, b);
+			u32 groundNo = actor->mGroundNumber;
+			u32 voiceNo  = (groundNo >> 24) & 0xF;
+			MSGMSound->startMarioVoice(sound_id, voiceNo, groundNo >> 28);
 			return;
 		}
 		}
 
-		MSoundSESystem::MSoundSE::startSoundActorInner(id, out_handle, actor, 0,
-		                                               camera_idx);
+		MSoundSESystem::MSoundSE::startSoundActorInner(sound_id, out_handle,
+		                                               actor, 0, camera_idx);
 	}
-}
-
-void MAnmSound::setSpeedModifySound(JAISound* sound,
-                                    JAIAnimeFrameSoundData* frame_data,
-                                    f32 speed)
-{
-	if (MSound::getSwitch(sound->getID(), MSSeSwBit_AnimeSpeed,
-	                      MSSeSwBit_AnimeSpeedShift))
-		JAIAnimeSound::setSpeedModifySound(sound, frame_data, speed);
 }
 
 f32 MSMarioPosVolume::getDistFromMario(const Vec& pos)
