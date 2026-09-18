@@ -287,6 +287,10 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 
 // TODO: 99.8%, frame exact; every referenced slot is 4 bytes low, i.e. one
 // +4 of low region below the ECTSearch expansion, which is the earliest one.
+// Rejected: a second pointer-returning level over ECTSearch (a typed
+// `ECTSearchViewObjList` binding the cast result) -- a pointer return is worth
+// +4 elsewhere but is +8 here, overshooting to 0x88 and adding an
+// instruction (99.8 -> 97.2). No +4 lever is known for this pool.
 void TMarDirector::setupPerformList_console()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* list
