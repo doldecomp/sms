@@ -702,7 +702,8 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 	focus.normalize();
 
 	JGeometry::TVec3<f32> front(mtx[0][0], mtx[1][0], mtx[2][0]);
-	if (front.dot(flat) < 0.5f)
+	// The ROM's threshold is a `double` literal, so the comparison promotes.
+	if (front.dot(flat) < 0.5)
 		neckFocus *= (1.0f + front.dot(flat)) / 1.5f;
 
 	PSMTXCopy(mtx, J3DSys::mCurrentMtx);

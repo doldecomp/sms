@@ -207,7 +207,7 @@ void TTamaNokoManager::initSetEnemies()
 	for (int i = 0; i < mObjNum; ++i) {
 		TTamaNoko* enemy = (TTamaNoko*)unk18[i];
 		enemy->unk19C
-		    = new TTamaNokoFlower(enemy, 0, modelData, 0x3, "TamaNokoFlower");
+		    = new TTamaNokoFlower(enemy, 0, modelData, 0x3, "タマノコフラワー");
 	}
 }
 
@@ -551,16 +551,24 @@ void TTamaNoko::requestShadow()
 }
 
 #pragma dont_inline on
+// TODO: the ROM scales mScaling by 0.8f into a per-block temporary and
+// *calls* JGeometry::TVec3<f>::scale(f) (weak, boid.cpp holds the surviving
+// copy) at all four sites; we expand it, which costs 42 instructions. The
+// literal and the temporaries are right, the inline decision is not.
 void TTamaNoko::landEffect()
 {
 	if (mGroundPlane->isSand()) {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(mScaling);
+			JGeometry::TVec3<f32> scale(mScaling);
+			scale.scale(0.8f);
+			emitter->setGlobalScale(scale);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(mScaling);
+			JGeometry::TVec3<f32> scale(mScaling);
+			scale.scale(0.8f);
+			emitter->setGlobalScale(scale);
 		}
 	}
 
@@ -572,11 +580,15 @@ void TTamaNoko::landEffect()
 	} else {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(mScaling);
+			JGeometry::TVec3<f32> scale(mScaling);
+			scale.scale(0.8f);
+			emitter->setGlobalScale(scale);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_B, &mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(mScaling);
+			JGeometry::TVec3<f32> scale(mScaling);
+			scale.scale(0.8f);
+			emitter->setGlobalScale(scale);
 		}
 	}
 

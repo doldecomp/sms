@@ -715,8 +715,12 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 					local_48 = self->mPosition - groundActor->mPosition;
 				else
 					local_48 = self->mPosition - SMS_GetMarioPos();
-				if (local_48.x == 0.0f && local_48.y == 0.0f
-				    && local_48.z == 0.0f)
+				// As in the ROM: the parse is
+				// `(local_48.x == local_48.y) == local_48.z`,
+				// so the bool is converted to a float before the
+				// second comparison. Presumably a zero-vector guard
+				// that never fires for (0,0,0).
+				if (local_48.x == local_48.y == local_48.z)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
