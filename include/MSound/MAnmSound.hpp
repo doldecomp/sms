@@ -15,6 +15,16 @@ class JAIAnimeFrameSoundData;
 class MAnmSound : public JAIAnimeSound {
 public:
 	MAnmSound(MSound* sound);
+	// In the class body, and not virtual: the map has __dt__9MAnmSoundFv as
+	// an UNUSED 0x60 symbol of `Enemy.a enemyMario.cpp` rather than of
+	// MAnmSound.cpp, so it is a header definition every using TU can emit,
+	// and __vt__9MAnmSound has no destructor slot (its first two words are
+	// the usual zero pair, then startAnimSound).
+	// Open: ours lands in liveactor.o -- reached from the inlined
+	// MAnmSoundNPC construction -- at 0x64, and enemyMario.o still lacks
+	// it, so retail's enemyMario.cpp destroys an MAnmSound somewhere we do
+	// not (its UNUSED `kill` is 0x4c against our 0x4 stub).
+	~MAnmSound() { }
 
 	virtual void startAnimSound(void* interface, u32 id,
 	                            JAISoundHandle* out_handle, JAIActor* actor,

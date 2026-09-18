@@ -127,10 +127,13 @@ void TEnemyMario::initValues()
 	unk468 = 0.0f;
 	unk46C = 0.0f;
 
-	// TODO: shared-header item. The map has __dt__9MAnmSoundFv as an UNUSED
-	// symbol of this TU (0x60), so MAnmSound's destructor was written in
-	// MAnmSound.hpp and every TU that instantiates one carries a copy; ours
-	// only references the out-of-line copy in MAnmSound.cpp.
+	// TODO: the map has __dt__9MAnmSoundFv as an UNUSED symbol of this TU
+	// (0x60). MAnmSound.hpp now declares the destructor in the class body,
+	// which is what lets a using TU emit a copy, but instantiating one is
+	// not what triggers the emission (six TUs do `new MAnmSound` and none
+	// of them emits it, here or in retail) -- destroying one is. So this TU
+	// deletes an MAnmSound somewhere we have not reconstructed; its UNUSED
+	// `kill` is 0x4c against our 0x4 stub.
 	mAnmSound = new MAnmSound(SMSGetMSound());
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 	unk4EC          = 0;
