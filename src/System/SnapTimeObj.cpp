@@ -1,45 +1,39 @@
 #include <System/SnapTimeObj.hpp>
 #include <System/TimeRec.hpp>
 
-// TODO: one stack slot away from exact. The `JUtility::TColor` temporary that
-// the inlined `TTimeRec::startTimer(u32)` stores and reloads sits at 0x34; the
-// ROM puts it at 0x38, with the same 0x50 frame and identical instructions, so
-// four more bytes of inline-expansion temporaries belong below it. All levers
-// are in the shared `include/System/TimeRec.hpp`, so they are reported rather
-// than applied. Measured there: `endTimer()` is the only helper that
-// contributes temporaries (12 bytes; dropping it moves the colour to 0x28),
-// and its `instance()` fetch is 8 of them (`_instance` instead gives frame 0x48
-// / colour 0x30). Worth zero: `snapGxTimeEnd()` over `snapGxTimeStatic(0)`,
-// `instance()` inside `snapGxTimeStatic`, an extra `getInstance()` forwarder in
-// `startTimer`, and any declaration order inside `startTimer`'s body. Worse: an
-// extra level inside `crTimeAry()` (frame 0x58, colour 0x3c), a second
-// `instance()` in `endTimer`, a `TColor` temporary or an unnamed `OSGetTick()`
-// in `endTimer`, and a `TColor` argument at the `append` call.
-// The slot itself is recovered by giving `startTimer(u32)` the named
-// `TTimeArray* timeArray = inst->crTimeAry();` that the four-argument
-// `startTimer(u8,u8,u8,u8)` overload right above it already has: that puts the
-// colour at 0x38 exactly, but the extra local grows the frame to 0x58, so a
-// compensating -8 is still missing. Mirroring the four-argument overload in
-// `endTimer` too (the same named `timeArray`, plus `_instance` instead of
-// `instance()`) supplies it and makes this function byte-exact, but `endTimer`
-// is shared: it moves `TLiveManager::perform`'s and `TObjManager::perform`'s
-// colour slot from 0x34 down to 0x30 (both are source-linked at 100%) and
-// `TEnemyManager::perform`'s from 0x7c up to 0x80, which breaks the DOL.
-// Header round 18 retired that last point: the damage `endTimer`'s named
-// `timeArray` does to those two callers is exactly cancelled by removing the
-// same named local from the four-argument `startTimer` overload they also
-// call, so the colour does land at 0x38 with both of them still byte-exact --
-// what is left over is +8 of frame, and no (-8, 0) lever exists inside
-// `startTimer(u32)` yet. The round-18 trial table is at that overload's
-// declaration in the header. `_instance` or an `inst`-first declaration
-// inside `startTimer(u32)` is -4 but swaps r29/r30 here, and dropping the
-// `inst` local re-reads `_instance`.
+// The DRAW_INIT block's `endTimer()` sits one inline level below this call
+// site: adding a single forwarder above it moves the `JUtility::TColor`
+// temporary that the inlined `TTimeRec::startTimer(u32)` stores and reloads
+// from 0x34 to the ROM's 0x38 with the frame unchanged at 0x50, which is
+// exactly the (+4 slot, 0 frame) lever header round 18 was missing. The level
+// belongs in `include/System/TimeRec.hpp` -- most plausibly `endTimer()` (or
+// the whole snap-and-end pair) forwarding to a second static -- but that
+// header is shared with the source-linked `TLiveManager::perform`,
+// `TObjManager::perform` and `TEnemyManager::perform`, so it is parked here
+// under a TU-prefixed name and reported instead.
+//
+// Measured at this call site (colour slot, frame 0x50 throughout):
+//   one level above `endTimer()`                      0x38  <- exact
+//   the same level wrapping the whole DRAW_INIT block  0x38  <- also exact
+//   one level above `startTimer(unk10)`, `(u32)` arg   0x2c
+//   the same level taking `this`                       0x30
+//   one level above `snapGxTimeStatic(0)`, one or two  0x34 (inert)
+//   the DRAW block as one two-call wrapper             0x34, +1 instruction
+//   a named `u32` for `unk10`, an early return, a
+//     named `u16` for `unk14`, a copy of `cue`         0x34 (inert or worse)
+//   a parked `static inline` taking `this` for `unk10` 0x34, 11 diffs
+// Header-side history (all inside TimeRec.hpp, all rejected there): the trial
+// table at `startTimer(u32)`'s declaration, plus round 18's compensating pair
+// (the named `timeArray` in `endTimer` cancelled by removing it from the
+// four-argument `startTimer`), which lands the slot but leaves +8 of frame.
+static inline void SnapTimeObjEndTimer() { TTimeRec::endTimer(); }
+
 void TSnapTimeObj::perform(u32 cue, JDrama::TGraphics*)
 {
 	if ((unk14 & 1)) {
 		if ((cue & CUE_DRAW_INIT) != 0) {
 			TTimeRec::snapGxTimeStatic(0);
-			TTimeRec::endTimer();
+			SnapTimeObjEndTimer();
 		}
 		if ((cue & CUE_DRAW) != 0) {
 			TTimeRec::startTimer(unk10);
