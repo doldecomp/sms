@@ -509,12 +509,10 @@ void TLeafBoat::bind()
 	if (gpMap->isTouchedWallsAndMoveXZ(&record))
 		touchWall(&next, &record);
 
-	// TODO: the ROM calls JGeometry::TVec3<f32>::sub out of line here; MWCC
-	// expands it for us. Same open per-call-site inlining problem as
-	// MapObjBall (docs/catalog/codegen-tells.md).
-	JGeometry::TVec3<f32> delta(next);
-	delta.sub(mPosition);
-	mLinearVelocity = delta;
+	// `a = b - c` is the shape that reaches the map's out-of-line
+	// JGeometry::TVec3<f32>::sub: operator= is one inline level and the
+	// difference nested in its argument two more.
+	mLinearVelocity = next - mPosition;
 
 	// Standing on the deck counts as an attack so the boat can carry Mario.
 	f32 marioY = gpMarioPos->y;

@@ -917,9 +917,9 @@ void TMuddyBoat::bind()
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
 
-	JGeometry::TVec3<f32> delta(next);
-	delta.sub(mPosition);
-	mLinearVelocity.set(delta.x, delta.y, delta.z);
+	// `a = b - c` reaches the map's out-of-line TVec3::sub: operator= is one
+	// inline level and the difference nested in its argument two more.
+	mLinearVelocity = next - mPosition;
 }
 
 void TMuddyBoat::control()

@@ -189,9 +189,9 @@ void TTPHitActor::bind()
 	pos.x        = record.mCenter.x;
 	pos.z        = record.mCenter.z;
 
-	JGeometry::TVec3<f32> moved(pos);
-	moved.sub(mPosition);
-	mVelocity = moved;
+	// `a = b - c` reaches the map's out-of-line TVec3::sub: operator= is one
+	// inline level and the difference nested in its argument two more.
+	mVelocity = pos - mPosition;
 	mPosition = pos;
 }
 

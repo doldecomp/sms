@@ -867,9 +867,10 @@ void TLeanMirror::loadAfter()
 
 	mShiningStone = (TShiningStone*)JDrama::TNameRefGen::search2("ShiningStone");
 
-	JGeometry::TVec3<f32> toStone = mShiningStone->mPosition;
-	toStone.sub(mPosition);
-	mToStone = toStone;
+	// `a = b - c` reaches the map's out-of-line TVec3::sub: operator= is one
+	// inline level and the difference nested in its argument two more (and
+	// retail's re-read of mShiningStone is the assignment's own load).
+	mToStone = mShiningStone->mPosition - mPosition;
 	mToStone.setLength(1.0f);
 }
 

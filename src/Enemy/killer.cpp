@@ -144,9 +144,9 @@ void TFlyEnemy::fly()
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	JGeometry::TVec3<f32> step = nextPos;
-	step.sub(mPosition);
-	mLinearVelocity = step;
+	// `a = b - c` reaches the map's out-of-line TVec3::sub: operator= is one
+	// inline level and the difference nested in its argument two more.
+	mLinearVelocity = nextPos - mPosition;
 }
 
 // TODO: 98.7%, instruction-identical; our frame is 8 bytes bigger, i.e. one

@@ -640,13 +640,10 @@ void TChuuHana::bind()
 	gpMap->isTouchedOneWallAndMoveXZ(&next.x, next.y + mHeadHeight, &next.z,
 	                                 mBodyRadius);
 
-	// TODO: 92.4%.  Retail `bl`s TVec3::sub here (r3 = moved, r4 =
-	// &mPosition) with no extra copy, so the spelling is right and this is
-	// the known per-call-site sub inlining split; `-=` and operator- both
-	// fail to push it out.
-	JGeometry::TVec3<f32> moved(next);
-	moved.sub(mPosition);
-	mLinearVelocity = moved;
+	// `a = b - c` is what puts TVec3::sub out of line here: operator= is one
+	// inline level and the difference nested in its argument two more, which
+	// is the depth-4 allowance the retail `bl` measures.
+	mLinearVelocity = next - mPosition;
 }
 
 // UNUSED, 0xc4 in the map: add a push into the velocity.  Inlined into

@@ -457,9 +457,9 @@ void TLimitKoopa::bind()
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	}
 
-	JGeometry::TVec3<f32> step(nextPos);
-	step.sub(mPosition);
-	mLinearVelocity = step;
+	// `a = b - c` reaches the map's out-of-line TVec3::sub: operator= is one
+	// inline level and the difference nested in its argument two more.
+	mLinearVelocity = nextPos - mPosition;
 }
 
 // TODO: UNUSED (0x20), body not reconstructed.

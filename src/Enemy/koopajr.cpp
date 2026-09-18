@@ -794,9 +794,9 @@ void TKoopaJrSubmarine::bind()
 	JGeometry::TVec3<f32> next(mPosition);
 	next.add(mLinearVelocity);
 	next.add(mVelocity);
-	JGeometry::TVec3<f32> delta(next);
-	delta.sub(mPosition);
-	mLinearVelocity = delta;
+	// `a = b - c` reaches the map's out-of-line TVec3::sub: operator= is one
+	// inline level and the difference nested in its argument two more.
+	mLinearVelocity = next - mPosition;
 	mBathtubBinder->bind(this);
 }
 
