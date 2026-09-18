@@ -5,6 +5,27 @@
 
 class TTakeActor : public THitActor {
 public:
+	// The map has this ctor as UNUSED 0x50 in MapWireManager.cpp, so retail
+	// emitted exactly one dead copy of it. Header round 16 ruled out both
+	// header spellings and located the cause in that TU instead:
+	//   * out-of-class in this header without `inline` does emit a size-exact
+	//     0x50 copy, but as a *global* in all 205 objects that include the
+	//     header, where the map wants one; the map does list duplicate UNUSED
+	//     functions (SMS_getNormalStage__FUl, IsMember), so one entry means
+	//     one emission. DOL stayed exact, nothing moved.
+	//   * in-class (this form) emits no copy at all, because MWCC only emits
+	//     the out-of-line body of a non-virtual in-class inline when some
+	//     site fails to inline it. TTakeActor's virtuals do get weak copies.
+	// The single emission belongs to MapWireManager.cpp: `loadAfter` inlines
+	// `entry` (UNUSED 0x144) which inlines `TMapWireActorManager`'s ctor
+	// (UNUSED 0x154), and the emitted-but-stripped copies of those two are
+	// what reference a TTakeActor ctor at depth >= 2. Dropping
+	// `TMapWireActor::TMapWireActor`'s `#pragma dont_inline` reproduces all of
+	// it -- weak `__ct__10TTakeActorFPCc` at exactly 0x50 in that one object
+	// and the manager ctor at exactly 0x154 (from 284) -- but costs the exact
+	// `TMapWireManager::loadAfter` (100 -> 82.2) and pushes `entry` 320 -> 352
+	// against 0x144, because retail's split is per site and the pragma is not.
+	// So it stays a MapWireManager.cpp depth problem, not a header one.
 	TTakeActor(const char* name)
 	    : THitActor(name)
 	    , mHolder(nullptr)
