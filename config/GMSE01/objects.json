@@ -447,5 +447,8 @@
   "MoveBG/MapObjWave.cpp",
   "Camera/CameraSecureView.cpp",
   "MSound/MSoundBGM.cpp",
-  "Animal/AnimalManager.cpp"
+  "Animal/AnimalManager.cpp",
+  "System/SnapTimeObj.cpp",
+  "Map/PollutionPos.cpp",
+  "System/TalkCursor.cpp"
 ]
