@@ -5,6 +5,17 @@
 #include <JSystem/JAudio/JAInterface/JAIConst.hpp>
 #include <math.h>
 
+// TODO: 98.3%, frame 0x190 exact, and the only structural difference is one
+// extra `addi r29, r3, 0` at 0x534: retail's `lbzx` writes `maxPlaying`
+// straight into its callee-saved register (r26) and derives `maxPlaying + 1`
+// and `(u8)maxPlaying` from it, while our allocator lands the load in r3 and
+// has to copy it out. That copy is a symptom of a whole-function callee-saved
+// rotation (target -> ours: this r24->r28, &candidates r31->r23,
+// dummyZeroVec r29->r21, 0x7fffffff r28->r20, the 0x4330 magic r30->r22,
+// maxPlaying r26->r29, r18->r31, r21/r22/r23/r25 -> r25/r26/r27/r30), i.e. a
+// different spill-priority order over the twelve locals declared up front.
+// Not attempted: rescoping those declarations, which is a research-sized
+// search over this 470-instruction function.
 void JAIBasic::checkNextFrameSe()
 {
 	JAISound sound;
@@ -219,6 +230,16 @@ void JAIBasic::checkNextFrameSe()
 	}
 }
 
+// TODO: every instruction matches and the frame is 0xa8 exact, but four stack
+// slots sit elsewhere. The locals area is 0xc..0x30 (the f32-to-int conversion
+// slot at 0x30 and the register saves from 0x3c match), and inside it retail
+// has its temp pool end at 0x24 (the `get_ufloat_1` bit-cast at 0x1c, the
+// `std::sqrtf` round trip at 0x20) with `readStatus1`/`readStatus0` at
+// 0x26/0x28, where we have 8 bytes more temp pool (bit-cast 0x24, round trip
+// 0x28) and the pair at 0x2c/0x2e. So two opposite corrections are needed: one
+// inline expansion too many below the temps, and 6 bytes of named locals
+// declared *before* `readStatus0` that we are missing (0x2a..0x30 is empty in
+// retail, which is three more u16s or equivalent).
 void JAIBasic::sendPlayingSeCommand()
 {
 	u16 readStatus0;
