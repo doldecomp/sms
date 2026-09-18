@@ -431,5 +431,6 @@
   "Player/MarioUpper.cpp",
   "Map/Sky.cpp",
   "NPC/NpcCoin.cpp",
-  "Strategic/question.cpp"
+  "Strategic/question.cpp",
+  "GC2D/BoundPane.cpp"
 ]
