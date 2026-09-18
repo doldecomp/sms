@@ -518,7 +518,8 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 
 			if (unk1C == 19 || unk1C == 12 || unk1C == 13 || unk1C == 3
-			    || unk1C == 4 || unk1C == 5 || unk1C == 45 || unk1C == 16) {
+			    || unk1C == 4 || unk1C == 5 || unk1C == 45 || unk1C == 16
+			    || unk1C == 53) {
 				unk284->offCollision();
 				if (!(gpCameraOption->unk0 & 1)) {
 					if (unk10 == 2)
@@ -530,7 +531,8 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 		} break;
 
 		case 4: {
-			int rc = gpCardManager->getLastStatus();
+			bool done = true;
+			int rc    = gpCardManager->getLastStatus();
 			if (rc != CARD_RESULT_BUSY) {
 				if (rc == CARD_RESULT_READY) {
 					if (unkB8 == 0) {
@@ -552,7 +554,6 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				J2DPane* root1 = unk2C->search('ROOT');
 				J2DPane* root2 = unk28->search('ROOT');
 
-				bool done  = true;
 				int alpha1 = root1->getAlpha() + 4;
 				if (alpha1 > 255)
 					alpha1 = 255;
@@ -577,14 +578,15 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 		} break;
 
 		case 5: {
+			// The mirror of case 4: the score screen fades out while the
+			// bookmark screen fades back in.
+			bool done      = true;
 			J2DPane* root1 = unk2C->search('ROOT');
 			J2DPane* root2 = unk28->search('ROOT');
 
-			bool done = true;
-
-			int alpha1 = root1->getAlpha() + 4;
-			if (alpha1 > 255)
-				alpha1 = 255;
+			int alpha1 = root1->getAlpha() - 4;
+			if (alpha1 < 0)
+				alpha1 = 0;
 			else
 				done = false;
 			root1->setAlpha(alpha1);
@@ -593,9 +595,9 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk744->setAlpha(alpha1);
 			unk740->setAlpha(alpha1);
 
-			int alpha2 = root2->getAlpha() - 4;
-			if (alpha2 < 0)
-				alpha2 = 0;
+			int alpha2 = root2->getAlpha() + 4;
+			if (alpha2 > 255)
+				alpha2 = 255;
 			else
 				done = false;
 			root2->setAlpha(alpha2);
@@ -776,14 +778,6 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-// TODO: retail compiles this switch to an eight entry jump table, with the
-// slots for cases 5 through 7 pointing at the default, while we get a compare
-// chain. That one difference accounts for nearly all of the remaining diff --
-// the rest is register allocation downstream of it. The case set matches
-// retail (our chain does range-check 5 through 7, so they are not being
-// pruned), the body layout order matches, and the frame is 0x20 bytes smaller
-// than retail's. Typing the state as an enum spanning 0-7, moving the empty
-// cases to the front, and making the field unsigned all fail to flip it.
 bool TCardLoad::titleDraw()
 {
 	switch (unk18) {
