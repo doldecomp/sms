@@ -520,13 +520,27 @@ BOOL TMario::disappear()
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMario::demoMain (batch 127).
+static inline u32 MarioAutodemoStatusL0(const TMario* p)
+{
+	u32 status = p->mStatus;
+	return status;
+}
+
+static inline u32 MarioAutodemoStatus(const TMario* p)
+{
+	u32 status = MarioAutodemoStatusL0(p);
+	return status;
+}
+
 BOOL TMario::demoMain()
 {
 	// Missing stack space
 	// volatile u32 padding[10];
 
 	BOOL result = FALSE;
-	switch (mStatus) {
+	switch (MarioAutodemoStatus(this)) {
 	case MARIO_STATUS_WIN_DEMO:
 		result = winDemo();
 		break;

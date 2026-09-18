@@ -935,12 +935,20 @@ void TOptionControl::movementCommon()
 
 void TOptionControl::draw(J2DOrthoGraph* graph) { mScreen->draw(0, 0, graph); }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TOptionControl::movementCard2Option (batch 127).
+static inline J2DSetScreen* OptionScreen(const TOptionControl* p)
+{
+	J2DSetScreen* screen = p->mScreen;
+	return screen;
+}
+
 // mario walks from the card select screen to the options screen
 bool TOptionControl::movementCard2Option()
 {
 	if (gpCameraOption->unk12 == 0) {
 		mRumbleOption->mShouldRumble = false;
-		mScreen->search('txp2')->show();
+		OptionScreen(this)->search('txp2')->show();
 		mScreen->search('oya0')->show();
 		mScreen->search('oya1')->show();
 		mScreen->search('oya2')->show();

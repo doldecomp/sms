@@ -961,9 +961,17 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TModelWaterManager::calcVMAll (batch 127).
+static inline u16 ModelWaterManagerParticleCount(const TModelWaterManager* p)
+{
+	u16 particleCount = p->mParticleCount;
+	return particleCount;
+}
+
 void TModelWaterManager::calcVMAll(MtxPtr param_1)
 {
-	for (int i = 0; i < mParticleCount; ++i) {
+	for (int i = 0; i < ModelWaterManagerParticleCount(this); ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) != 2)
 			continue;
 
@@ -974,7 +982,7 @@ void TModelWaterManager::calcVMAll(MtxPtr param_1)
 		                unk2914[i]->getNormal(), unk2D14[i]);
 	}
 
-	for (int i = 0; i < mParticleCount; ++i) {
+	for (int i = 0; i < ModelWaterManagerParticleCount(this); ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) != 3)
 			continue;
 

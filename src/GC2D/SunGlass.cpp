@@ -126,6 +126,14 @@ void TSunGlass::load(JSUMemoryInputStream& stream)
 	unk10 = gamePad;
 }
 
+// Binding level over a raw member read: a register lever in
+// TSunShine::perform at an unchanged frame (batch 127).
+static inline u8 SunGlassUnk28(const TSunShine* p)
+{
+	u8 v28 = p->unk28;
+	return v28;
+}
+
 // TODO: frame 0x30 is exact but every temporary sits 4 bytes low: retail's
 // `draw` colour copy is at 0x18 and the emitter position at 0x1c-0x24, ours at
 // 0x14 and 0x18-0x20. One 4-byte low-region item below the colour copy is
@@ -137,7 +145,7 @@ void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		unk14.a = gpSunMgr->getAddColor();
-		if (unk28 != 0) {
+		if (SunGlassUnk28(this) != 0) {
 			if (!SMS_IsMarioStatusElecDamage())
 				unk28 = 0;
 		} else if (SMS_IsMarioStatusElecDamage()) {

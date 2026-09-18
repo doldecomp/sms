@@ -549,6 +549,14 @@ static void evSetEventEnd(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// evSetNextStage (batch 127).
+static inline TMarDirector* EventWatcherGetMarDirector()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
 static void evSetNextStage(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
@@ -558,7 +566,7 @@ static void evSetNextStage(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	// This function reads the global directly. The rest of the file goes
 	// through SMSGetMarDirector(), but here the accessor makes the match worse
 	// (94.8% -> 92.4%), so the original must have had the bare global.
-	gpMarDirector->setNextStage((scenario & 0xff) + ((stage + 1) << 8),
+	EventWatcherGetMarDirector()->setNextStage((scenario & 0xff) + ((stage + 1) << 8),
 	                            nullptr);
 
 	interp->push();
@@ -698,12 +706,20 @@ static void evRaiseBuilding(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// evForceCloseTalk (batch 127).
+static inline TTalk2D2* EventWatcherGetTalk2D()
+{
+	TTalk2D2* talk2D = gpTalk2D;
+	return talk2D;
+}
+
 static void evForceCloseTalk(TSpcTypedInterp<TEventWatcher>* interp,
                              u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 
-	gpTalk2D->forceCloseTalk();
+	EventWatcherGetTalk2D()->forceCloseTalk();
 
 	interp->push();
 }
@@ -899,13 +915,21 @@ static void evAppearShineForWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// evChangeNozzle (batch 127).
+static inline TMario* EventWatcherGetMarioOriginal()
+{
+	TMario* marioOriginal = gpMarioOriginal;
+	return marioOriginal;
+}
+
 static void evChangeNozzle(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TWaterGun::TNozzleType id
 	    = (TWaterGun::TNozzleType)interp->pop().getDataInt();
 	if (id == TWaterGun::DivingHelmet)
-		gpMarioOriginal->setDivHelm();
+		EventWatcherGetMarioOriginal()->setDivHelm();
 	else
 		gpMarioOriginal->mWaterGun->changeNozzle(id, true);
 	interp->push();

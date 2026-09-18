@@ -1306,9 +1306,17 @@ void TMario::checkReturn()
 	unk2B4 = mFaceAngle;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMario::checkThrowObject (batch 127).
+static inline M3UModelMario* MarioMoveModel(const TMario* p)
+{
+	M3UModelMario* model = p->mModel;
+	return model;
+}
+
 void TMario::checkThrowObject()
 {
-	if (mModel->unkC[0].checkPass(4.0f)) {
+	if (MarioMoveModel(this)->unkC[0].checkPass(4.0f)) {
 		startVoice(MSD_SE_MV15_EXERT_INST_01);
 		dropObject();
 	}

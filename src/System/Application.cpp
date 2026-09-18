@@ -258,6 +258,14 @@ void TApplication::initialize()
 	OSResumeThread(&gSetupThread);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TApplication::setupThreadFuncLogo (batch 127).
+static inline JKRHeap* ApplicationHeap(const TApplication* p)
+{
+	JKRHeap* heap = p->mHeap;
+	return heap;
+}
+
 void* TApplication::setupThreadFuncLogo()
 {
 	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK0))
@@ -272,7 +280,7 @@ void* TApplication::setupThreadFuncLogo()
 	    = SMSLoadArchive("/data/common.arc", nullptr, 0, JKRGetRootHeap());
 
 	bufStageArcBin = JKRDvdRipper::loadToMainRAM(
-	    "/data/stageArc.bin", nullptr, EXPAND_SWITCH_DEFAULT, 0, mHeap,
+	    "/data/stageArc.bin", nullptr, EXPAND_SWITCH_DEFAULT, 0, ApplicationHeap(this),
 	    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0, nullptr);
 
 	SMSLoadArchiveARAM(&gArBkConsole, "/data/game_6.arc");

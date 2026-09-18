@@ -21,6 +21,14 @@ static const char* MtxCalcTypeName[] = {
 	"MActorMtxCalcType_User ユーザー定義",
 };
 
+// Binding level over a raw member read, worth +8 of low region in
+// CPolarSubCamera::calcTowerCenterPos_ (batch 127).
+static inline int CameraNormalMode(const CPolarSubCamera* p)
+{
+	int mode = p->mMode;
+	return mode;
+}
+
 // `inline` here is what the map asks for: the symbol is weak and its
 // function-local static is spelled
 // `sPositionNameTable$localstatic0$calcTowerCenterPos___15CPolarSubCameraFP3Vec`,
@@ -41,7 +49,7 @@ inline void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 	};
 
 	const char* name;
-	switch (mMode) {
+	switch (CameraNormalMode(this)) {
 	case CAMERA_MODE_TOWER_A:
 		name = sPositionNameTable[0];
 		break;

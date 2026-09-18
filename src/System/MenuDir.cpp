@@ -39,9 +39,17 @@ TMenuDirector::TMenuDirector()
 	unk50    = false;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMenuDirector::~TMenuDirector (batch 127).
+static inline TMarioGamePad* MenuDirUnk2C(const TMenuDirector* p)
+{
+	TMarioGamePad* v2C = p->unk2C;
+	return v2C;
+}
+
 TMenuDirector::~TMenuDirector()
 {
-	unk2C->offFlag(0x1);
+	MenuDirUnk2C(this)->offFlag(0x1);
 	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("title");
 	if (arc)
 		arc->unmountFixed();

@@ -289,13 +289,21 @@ void TMario::doRoofWaitingProcess()
 	mVel.zero();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMario::roofCommonEvents (batch 127).
+static inline u32 MarioSpecialInput(const TMario* p)
+{
+	u32 input = p->mInput;
+	return input;
+}
+
 BOOL TMario::roofCommonEvents()
 {
 	if (mInput & 0x8000) {
 		mInput &= ~0x8000;
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
-	if (mInput & 0x2) {
+	if (MarioSpecialInput(this) & 0x2) {
 		const TLiveActor* actor = mRoofPlane->mActor;
 		if (actor != nullptr) {
 			((THitActor*)actor)->receiveMessage(this, 3);
@@ -1520,6 +1528,14 @@ BOOL TMario::fenceMove()
 	}
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMario::fencePunch (batch 127).
+static inline int MarioSpecialActorType(const TLiveActor* p)
+{
+	int actorType = p->mActorType;
+	return actorType;
+}
+
 BOOL TMario::fencePunch()
 {
 	JGeometry::TVec3<f32> pos = mPosition;
@@ -1555,7 +1571,7 @@ BOOL TMario::fencePunch()
 		if (unk2C0 != nullptr) {
 			((THitActor*)unk2C0)->receiveMessage(this, 3);
 			startVoice(MSD_SE_MV15_EXERT_INST_02);
-			if (unk2C0->mActorType == 0x4000006a) {
+			if (MarioSpecialActorType(unk2C0) == 0x4000006a) {
 				f32 x = unk2F4.x;
 				f32 z = unk2F4.y;
 				if (x < -120.0f)

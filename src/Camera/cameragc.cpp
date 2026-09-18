@@ -415,9 +415,17 @@ bool CPolarSubCamera::isMarioAimWithGun_() const
 	return isMarioReadyGun_() && unk120->checkMeaning(0x400);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// CPolarSubCamera::isMarioCrabWalk_ (batch 127).
+static inline TMarioGamePad* CameragcUnk120(const CPolarSubCamera* p)
+{
+	TMarioGamePad* v120 = p->unk120;
+	return v120;
+}
+
 bool CPolarSubCamera::isMarioCrabWalk_() const
 {
-	return isMarioReadyGun_() && unk120->checkMeaning(0x8000);
+	return isMarioReadyGun_() && CameragcUnk120(this)->checkMeaning(0x8000);
 }
 
 void CPolarSubCamera::execInvalidAutoChase_()

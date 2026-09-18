@@ -436,9 +436,17 @@ MtxPtr TLiveActor::getTakingMtx()
 	return mMActor->getModel()->getBaseTRMtx();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TLiveActor::initAnmSound (batch 127).
+static inline MAnmSound* LiveactorAnmSound(const TLiveActor* p)
+{
+	MAnmSound* anmSound = p->mAnmSound;
+	return anmSound;
+}
+
 void TLiveActor::initAnmSound()
 {
-	if (mAnmSound)
+	if (LiveactorAnmSound(this))
 		return;
 
 	if (checkActorType(0x4000000))

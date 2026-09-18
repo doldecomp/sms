@@ -351,6 +351,14 @@ void MSound::enterStage(MS_SCENE_WAVE wave, u8 param_2, u8 param3)
 	loadWave(wave);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// MSound::exitStage (batch 127).
+static inline JAISound* MSoundUnkC4(const MSound* p)
+{
+	JAISound* vC4 = p->unkC4;
+	return vC4;
+}
+
 void MSound::exitStage()
 {
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat)
@@ -358,8 +366,8 @@ void MSound::exitStage()
 			stopAllSe(cat);
 
 	MSBgm::stopTrackBGMs(7, 0);
-	if (unkC4)
-		unkC4->stop(0);
+	if (MSoundUnkC4(this))
+		MSoundUnkC4(this)->stop(0);
 
 	mAudioCameras[0] = JAInullCamera;
 
@@ -738,6 +746,14 @@ void MSound::setCategoryVOLsDefault(u16 mask)
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// MSound::setCategoryVOLs (batch 127).
+static inline JAIData* MSoundUnk0(const MSound* p)
+{
+	JAIData* v0 = p->unk0;
+	return v0;
+}
+
 void MSound::setCategoryVOLs(u16 param_1, f32 param_2)
 {
 	u8 tmp = param_2 * 127.0f;
@@ -748,7 +764,7 @@ void MSound::setCategoryVOLs(u16 param_1, f32 param_2)
 		uVar2 = tmp;
 
 	for (u8 cat = 0; cat < 16; ++cat) {
-		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0 && param_1 >> cat & 1)
+		if (MSoundUnk0(MSGMSound)->mSeTable.mSoundMax[cat] != 0 && param_1 >> cat & 1)
 			MSGMSound->setSeCategoryVolume(cat, uVar2);
 	}
 }

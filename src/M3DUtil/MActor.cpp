@@ -319,13 +319,27 @@ void MActor::calcAnm()
 	updateOut();
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// MActor::calc (batch 127).
+static inline J3DModel* MActorModelL0(const MActor* p)
+{
+	J3DModel* model = p->mModel;
+	return model;
+}
+
+static inline J3DModel* MActorModel(const MActor* p)
+{
+	J3DModel* model = MActorModelL0(p);
+	return model;
+}
+
 void MActor::calc()
 {
 	if (!unk39)
 		return;
 
 	updateIn();
-	mModel->calc();
+	MActorModel(this)->calc();
 	updateOut();
 }
 

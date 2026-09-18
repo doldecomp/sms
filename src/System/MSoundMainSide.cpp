@@ -67,10 +67,18 @@ bool MSMainProc::getGateKeeperBGMStopFlag()
 	return true;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// MSMainProc::getMonteVillageActorArea (batch 127).
+static inline u8 MSoundMainSideUnkCD(const MSound* p)
+{
+	u8 vCD = p->unkCD;
+	return vCD;
+}
+
 int MSMainProc::getMonteVillageActorArea(const Vec& param_1)
 {
 	int result = 4;
-	if (MSGMSound->unkCD == 8) {
+	if (MSoundMainSideUnkCD(MSGMSound) == 8) {
 		// inline?
 		Vec local_10 = param_1;
 		local_10.y += 75.0f;

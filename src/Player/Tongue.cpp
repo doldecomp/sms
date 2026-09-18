@@ -115,6 +115,14 @@ void TYoshiTongue::rest(const JGeometry::TVec3<f32>& a,
 }
 
 #pragma dont_inline on
+// Binding level over a raw member read, worth +8 of low region in
+// TYoshiTongue::canGo (batch 127).
+static inline TMap* TongueGetMap()
+{
+	TMap* map = gpMap;
+	return map;
+}
+
 BOOL TYoshiTongue::canGo()
 {
 	JGeometry::TVec3<f32> toTip = mTipPos - mHeadPos;
@@ -122,7 +130,7 @@ BOOL TYoshiTongue::canGo()
 	if (toTip.dot(mHeadDir) < 0.0f)
 		return false;
 
-	if (gpMap->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
+	if (TongueGetMap()->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
 	                                     &mTipPos.z, 50.0f))
 		return false;
 

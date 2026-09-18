@@ -5,6 +5,14 @@
 #include <System/MarioGamePad.hpp>
 #include <dolphin/gx.h>
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMenuBase::perform (batch 127).
+static inline J2DScreen* MenuUnk10(const TMenuBase* p)
+{
+	J2DScreen* v10 = p->unk10;
+	return v10;
+}
+
 void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// TODO: 99.8%, frame 0x110 vs 0x118 with `orthoGraph` at 0x14 instead of
@@ -17,7 +25,7 @@ void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		const JUTRect& viewport = graphics->getViewport();
 		J2DOrthoGraph orthoGraph(viewport);
 		orthoGraph.setup2D();
-		unk10->draw(0, 0, &orthoGraph);
+		MenuUnk10(this)->draw(0, 0, &orthoGraph);
 		const JUTRect& rect = graphics->getScissor();
 		GXSetScissor(rect.x1, rect.y1, rect.getWidth(), rect.getHeight());
 	}

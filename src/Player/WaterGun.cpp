@@ -159,12 +159,20 @@ s32 TNozzleButton::getNozzleKind() const { return 0; }
 
 s32 TNozzleTurbo::getNozzleKind() const { return 0; }
 
+// Binding level over a raw member read, worth +16 of low region in
+// NozzleCtrl (batch 127).
+static inline TWaterGun* WaterGunWaterGun(const TMario* p)
+{
+	TWaterGun* waterGun = p->mWaterGun;
+	return waterGun;
+}
+
 static BOOL NozzleCtrl(J3DNode* node, BOOL param_2)
 {
 	// TODO: Inlined stack space
 	if (!param_2) {
 		if (gpMarioForCallBack != nullptr) {
-			s16 gunAngle = gpMarioForCallBack->mWaterGun->getCurrentNozzle()
+			s16 gunAngle = WaterGunWaterGun(gpMarioForCallBack)->getCurrentNozzle()
 			                   ->getGunAngle();
 			if (gunAngle < 0) {
 				Mtx mtx;
@@ -280,6 +288,14 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 	unk36E += diff * mEmitParams.mLAngleChase.get();
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TNozzleBase::movement (batch 127).
+static inline u16 WaterGunUnk372(const TNozzleBase* p)
+{
+	u16 v372 = p->unk372;
+	return v372;
+}
+
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 {
 	if (mFludd->mCurrentWater <= 0) {
@@ -287,8 +303,8 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	}
 	s32 var1 = 256.0f * controllerWork.mAnalogR * 150.0f;
 
-	if (var1 > getUnk372()) {
-		unk378 = (var1 - getUnk372()) * 0.000015258789f;
+	if (var1 > unk372) {
+		unk378 = (var1 - WaterGunUnk372(this)) * 0.000015258789f;
 		unk374 = unk378;
 		unk372 += (u16)mEmitParams.mTriggerRate.get();
 		if (var1 < getUnk372()) {
@@ -1947,11 +1963,19 @@ BOOL TWaterGun::damage()
 	return FALSE;
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TWaterGun::changeBackup (batch 127).
+static inline f32 WaterGunSwitchToSecondNozzleProgress(const TWaterGun* p)
+{
+	f32 switchToSecondNozzleProgress = p->mSwitchToSecondNozzleProgress;
+	return switchToSecondNozzleProgress;
+}
+
 void TWaterGun::changeBackup()
 {
 	// TODO: Missing stack space
 	// volatile u32 unused2[5];
-	if (mSwitchToSecondNozzleProgress == 0.0f) {
+	if (WaterGunSwitchToSecondNozzleProgress(this) == 0.0f) {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_POMP_BACK, 0,
 		                                   nullptr, 0);
 		mSwitchToSecondNozzleSpeed = mWatergunParams.mChangeSpeed.get();

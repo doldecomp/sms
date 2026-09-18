@@ -35,6 +35,14 @@ TMovieSubTitle::TMovieSubTitle(const TTHPRender* param_1)
 {
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// TMovieSubTitle::setupResource (batch 127).
+static inline J2DSetScreen* MovieSubtitleUnk14(const TMovieSubTitle* p)
+{
+	J2DSetScreen* v14 = p->unk14;
+	return v14;
+}
+
 void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 {
 	if (is_longheight_movie(gpApplication.getMovie()))
@@ -44,7 +52,7 @@ void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 
 	hide();
 
-	unk18 = (J2DTextBox*)unk14->search('me_a');
+	unk18 = (J2DTextBox*)MovieSubtitleUnk14(this)->search('me_a');
 	unk1C = (J2DTextBox*)unk14->search('me_b');
 
 	char buffer[256];

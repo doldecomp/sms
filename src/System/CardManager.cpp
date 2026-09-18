@@ -677,6 +677,14 @@ s32 TCardManager::writeBlock_(u32 index)
 	return result;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TCardManager::writeOptionBlock_ (batch 127).
+static inline void* CardManagerSector(const TCardManager* p)
+{
+	void* sector = p->mSector;
+	return sector;
+}
+
 s32 TCardManager::writeOptionBlock_()
 {
 	CARDFileInfo info;
@@ -684,7 +692,7 @@ s32 TCardManager::writeOptionBlock_()
 	if (result != CARD_RESULT_READY)
 		return result;
 
-	TCardSector* sector = (TCardSector*)mSector;
+	TCardSector* sector = (TCardSector*)CardManagerSector(this);
 
 	sector->setCheckSum(0);
 

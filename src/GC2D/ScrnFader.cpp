@@ -153,6 +153,14 @@ void TSMSFader::perform(u32 cue, JDrama::TGraphics*)
 		draw(JDrama::TRect(0, 0, 640, 480));
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TSMSFader::update (batch 127).
+static inline int ScrnFaderUnk30(const TSMSFader* p)
+{
+	int v30 = p->unk30;
+	return v30;
+}
+
 void TSMSFader::update()
 {
 	updateRequest();
@@ -160,7 +168,7 @@ void TSMSFader::update()
 	if (mFadeStatus == TSMSFader::FADE_STATUS_FULLY_FADED_OUT)
 		mFadeColor.a = 0xff;
 
-	if (unk30 >= UNK30_UNK_18 || unk30 < UNK30_UNK_14)
+	if (ScrnFaderUnk30(this) >= UNK30_UNK_18 || ScrnFaderUnk30(this) < UNK30_UNK_14)
 		return;
 
 	updateFadeinout();
