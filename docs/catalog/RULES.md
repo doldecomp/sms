@@ -82,6 +82,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Callee-saved GPRs go out r31 down in reverse introduction order: pool/base temps, then locals, then parameters, `this` last, inner-block locals after `this`; use counts, first-use order and liveness are inert (frame-gaps.md: "Research batch 144", "batch 145").
 - How many **named scalar locals** the frame holds decides whether the pool base outranks `this`; grouping four of them into an array closed `TSunMgr::load` at zero frame cost (frame-gaps.md: "Research batch 144").
 - Declaration order is a knob **only** among function-scope named locals in callee-saved registers; it is inert on `this`, parameters, pool/constant temps and inner-block locals, and block scope is inert everywhere (frame-gaps.md: "batch 145").
+- Callee-saved FPRs go out f31 down: an **inlined callee's** temps first (reverse declaration order inside it), then the function's own named `f32` locals in **forward** declaration order, then parameters in reverse order; an anonymous literal/member/global read never gets one (frame-gaps.md: "Research batch 171").
+- Volatile FPRs (f0-f13) trade in blocks and ignore source order; the only knob is **naming** two values as locals, which sets which loads first (raw arguments evaluate right to left) and carries its register (frame-gaps.md: "Research batch 171").
 - Known-open: the `this`-vs-pool-base callee-saved swap and zero-frame rotations; `M3UMtxCalcBlendAux` moves with declaration order but never lands, and `TRKSuppAccessFile` (all 120 orders) plus `emitParticle_`, `checkNextFrameSe`, `partsPerform` (fully inert) are exhausted (frame-gaps.md: "batch 145").
 
 ## Float and pool

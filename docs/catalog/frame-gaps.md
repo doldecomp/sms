@@ -1008,3 +1008,42 @@ None closed, but three of the measurements sharpen existing rules.
 
 - **Receiver bindings in shared headers are destructive, argument bindings pay**: binding a global that becomes the callee's `this` (`SMS_LoadParticle` -1, `SMS_EasyEmitParticle` -6, `TNameRefGen::search`/`search2` -62 and DOL broken, `TSpineBase::pushNerve` -58) loses, because a bound receiver binds only as a fresh load; `gpMarioAddress` in `setGoalPathMario` was the only argument-passing global read in `include/`. A consumed *reference* binding on a by-value-returning inline call is the payable form (third confirmation): `switchNextGoalPath` as `const TPathNode& next = unk114.pop(); unkF4 = next;` (+1 exact, `TNerveBPFlyPivot`).
 - **When a header binding supplies part of a TU-local lever's value, reduce the lever's expansion count rather than delete it**: `JPAParticleGetStep` is +8 per expansion, the `getEmitterDataBlockInfoPtr` binding +8, so one expansion instead of two restores `checkCreateChildParticle`; `JPADraw::initialize` then sits at retail's 0x190 with one dead 4-byte named local declared first (slot 0x184 reserved, never touched: a dead scalar is worth 0), so it stays parked. `getMaterialID`'s binding is +4 per expansion and the two linked `J3DModelLoader_v26` readers carry no lever (already byte-identical streams, residue purely frame): parked with a positive reason.
+
+## Research batch 171 (2026-09-18): the callee-saved **FPR** allocation order
+
+Research 144 pinned the callee-saved GPR ranking; the FPR one had no rule and was blocking a named residue class.
+Measured the same way, in a scratch TU with the game flags (drivers `grpeu/fdrv.py`, `t1`-`t5`: `C::run(f32 p, f32 q, f32 r)` with one `bl sink()` per use so every value is live across a call).
+
+**Callee-saved FPRs are handed out f31 downward: long-lived temporaries of an *inlined callee* first, in *reverse* declaration order inside that callee; then the function's own named `f32` locals in *forward* declaration order; then parameters in *reverse* parameter order.**
+Only a **named** local (any initialiser) or a computed callee temporary qualifies; an anonymous literal, member or global read is rematerialised at each use and never takes one.
+
+| variant | ranking, f31 first |
+| --- | --- |
+| locals declared `a`, `b` / `b`, `a` | a > b / b > a (first-declared highest) |
+| the same with `b` used first, or `a` declared uninitialised and assigned after `b` | unchanged (first use and definition order inert) |
+| locals `a`, `b`, `c` / `c`, `b`, `a` | a > b > c / c > b > a |
+| five locals | f31-f27 in declaration order |
+| one local + one parameter | local > parameter |
+| parameters `p`, `q`, `r` | r > q > p (reverse parameter order) |
+| two locals + two parameters | a > b > q > p |
+| named local holding a literal, a member read, a global read, a call return, or a loop accumulator | ranked purely by its declaration position |
+| anonymous `1.0f` / `mb` / `0.0f` live across four calls, or a literal stored to five places across a call | **no** callee-saved FPR at all |
+| two locals both `= 0.0f` | CSE'd into one register |
+| a local not live across any call | no callee-saved FPR |
+| inlined helper's temps `u`, `v` / `v`, `u` | v > u / u > v (**reverse** declaration order) |
+| inlined helper's temps `u`, `v`, `w` / `w`, `v`, `u` | w > v > u / u > v > w |
+| a caller local declared before **or** after the helper call | helper temps outrank it either way |
+
+This **corrects batch 86/90's prose**, which read "the last-declared local gets f31" while its own worked example (`f32 z` before `f32 y` giving f31 = z) said the opposite; first-declared is right.
+It also explains batch 153's "literal temps rank above named locals": those were an inlined callee's temps, not literals.
+Batch 86's "a member read must be a named local", round 22's "declaration order inside an inlined helper does not transfer" (it does, reversed) and batch 145's "block scope is inert" all hold as measured.
+
+**Volatile FPRs (f0-f13) are allocated as blocks and are not a source-order knob.**
+`expf` is the clean instance: every instruction, the whole Horner chain and the 0x28 frame match, and retail simply puts the four long-lived values in f6-f9 with the coefficients in f1-f5 where we do the reverse (f1-f4 long-lived, f5-f9 coefficients) — the same wholesale block trade batch 145 recorded for `checkNextFrameSe`'s GPRs.
+Inert there: both declaration orders of the two reciprocal constants, `const`/`static const`/plain (plain is worse), splitting the float declarations, declaring floats before ints, one or two spare float locals, grouping the two constants, dropping the named `finalVal`, reordering the two multiplies, naming the table entry, staging the sum, spelling the constants as literals, and moving `__HI(pow2)` below the chain (68%).
+**The one knob that does move a volatile pair is naming the values as locals**, because raw arguments evaluate right to left while named locals evaluate in declaration order: that decides which of the two is loaded first and carries its register with it.
+`TPollutionCounterLayer::drawJointObjStamp` closed on exactly that (99.88 -> 100, unit 88.21 -> 94.35 matched_code): `f32 minZ = layer->mMinZ; f32 minX = layer->mMinX;` before the `makeWorldToPollutionMtx` call, **mMinZ first**, which is retail's load order; `minX` first is the stock four markers.
+
+- **`TRideCloud::control` (MapObjCloud, the unit's only non-exact function) is exhausted at four markers.** Fifteen more groupings and operand orders of `getScaling().x * 300.0f * unk160`, reusing `fVar8` as the literal's home (four forms), naming one or both member reads in both orders, `mScaling.x` raw, and putting `mDamageHeight = 50.0f` first (9 markers) are all 4 or worse. Batch 129's "halved on paper" note is optimistic: the named-product form measures the same 4. Keep the stock single expression.
+- **`TBathtubBinder::float_` is a group trade, not a rank inside a group.** Retail's dir pair sits in f31/f30 *above* the two `fmadds` products (f29/f27), ours in f28/f27 *below* them (f31/f30), and the swap survives: `f32 dirZ`/`f32 dirX` in place of the `TVec3 dir` (either order, 115 markers and -8 frame), and an inlined four-statement `BathtubDirXZ(dir, rot)` helper in both temp orders (116 markers, +8 frame). What *does* move is the **load order**: declaring or assigning z first reproduces retail's `lfs 0x104` before `lfs 0xe4`, for free. Parked at 96.2.
+- **`JASChannel::updateEffectorParam` (14 markers) is also a block trade**: separate `panOut`/`fxmixOut`/`dolbyOut` locals (25), clamping after `unk98` (84), clamping inside the two call argument lists (118) and clamping dolby first (20) all lose. Retail's f5/f6 Clamp01 temps are unreachable from the source.
