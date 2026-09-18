@@ -13,6 +13,14 @@
 #include <MSound/MSoundBGM.hpp>
 
 // TODO: GMSE01 frame is 0x18 vs 0x30; water-hit pointer registers differ.
+// TODO: promote to TWaterGun as `s32 getCurrentNozzleIndex() const`; the
+// signed `cmpwi` on the u8 field plus the 8 bytes of frame it carries are the
+// evidence (raw `(int)mCurrentNozzle` leaves hitNormal at 0x28 vs 0x30).
+static inline s32 MarioCheckCol_nozzleIndex(const TWaterGun* fludd)
+{
+	return fludd->mCurrentNozzle;
+}
+
 void TMario::hitNormal(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
@@ -45,7 +53,13 @@ void TMario::hitNormal(THitActor* actor)
 	}
 
 	TWaterGun* wg = mWaterGun;
-	if ((int)wg->mCurrentNozzle == 0 && wg->mIsEmitWater != 0) {
+	if (MarioCheckCol_nozzleIndex(wg) == 0 && wg->mIsEmitWater != 0) {
+		// TODO: 99.7%: the only difference left is the volatile register
+		// holding &mStaticHitActor (retail r3, coalesced with the argument
+		// copy in r4; ours r7). The instruction stream is identical. Ruled
+		// out: no local, a reference local, a TU-static accessor for the
+		// static, a cast at the call, `mPosition.set()`, `getPosition()`,
+		// and moving the mParticleIndex store earlier (all 93.8-99.6%).
 		TWaterHitActor* water = &TModelWaterManager::mStaticHitActor;
 		water->mPosition = mPosition;
 		water->mPosition.y += 80.0f;
@@ -178,11 +192,14 @@ void TMario::hangPole(THitActor* actor)
 			if (dist == 0.0f)
 				dist = 1.0f;
 
-			f32 a = JMASSin(mFaceAngle.y) * (dx / dist)
-			        + JMASCos(mFaceAngle.y) * (dz / dist);
-
 			f32 b = 50.0f + actor->getDamageRadius()
 			        + mBarParams.mCatchRadius.get();
+
+			f32 sinY = JMASSin(mFaceAngle.y);
+			f32 cosY = JMASCos(mFaceAngle.y);
+			f32 nx   = dx / dist;
+			f32 nz   = dz / dist;
+			f32 a    = sinY * nx + cosY * nz;
 
 			bool canCatch = true;
 			if (mPrevStatus & MARIO_STATUS_FLAG_UNK100000)
