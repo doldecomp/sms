@@ -44,36 +44,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// TODO: SoundEffects.hpp gives the MSD_SE_BS_UNG_* group ids in the 0x81xx/0x89xx
-// range, but retail bosseel passes 0x21xx/0x29xx immediates for all of them but
-// one. Every id below is read straight off the target object (see the `li r3/r4`
-// at the gateCheck/startSoundActor pairs in build/GMSE01/asm/Enemy/bosseel.s),
-// so the header, not this TU, is wrong. Parked under TU-prefixed names per the
-// shared-enum rule until SoundEffects.hpp is corrected; MSD_SE_BS_UNG_UP really
-// is 0x8922 (TNerveBossEelAppear passes it as lis/subi), which is why the group
-// cannot be fixed with one uniform offset.
-enum {
-	// header 0x8120, TBossEel::perform
-	BOSSEEL_SE_BS_UNG_VACUUM = 0x2180,
-	// header 0x8921, ExecSpinNerve_Sub + both spin nerves
-	BOSSEEL_SE_BS_UNG_ROLL = 0x2981,
-	// header 0x8923, ExecBackNerve_Sub
-	BOSSEEL_SE_BS_UNG_DOWN = 0x2982,
-	// header 0x8926, TNerveBEelTearsWaterHit + TNerveBEelTearsSplit
-	BOSSEEL_SE_BS_UNG_TEAR_TREMBLE = 0x2985,
-	// header 0x8927, TBEelTears::deadEffect
-	BOSSEEL_SE_BS_UNG_TEAR_CLASH = 0x2986,
-	// header 0x8928..0x892D, TBossEelTooth::receiveMessage
-	BOSSEEL_SE_BS_UNG_TEATH_COMEOFF = 0x2987,
-	BOSSEEL_SE_BS_UNG_TEATH_FLASH   = 0x2988,
-	BOSSEEL_SE_BS_UNG_VOICE_M_CRY   = 0x2989,
-	BOSSEEL_SE_BS_UNG_VOICE_W_CRY   = 0x298A,
-	BOSSEEL_SE_BS_UNG_VOICE_M_JOY   = 0x298B,
-	BOSSEEL_SE_BS_UNG_VOICE_W_JOY   = 0x298C,
-	// header 0x892F, TNerveBossEelDie
-	BOSSEEL_SE_BS_UNG_VOICE_LAST = 0x298D,
-};
-
 f32 TBossEel::mOpenRollSpeed    = 0.3f;
 bool TBossEel::mUseObjCollision = true;
 f32 TBossEel::mForcePow         = 10.0f;
@@ -520,7 +490,7 @@ void TBEelTears::deadEffect()
 	mRecoverCollision->mPosition   = mPosition;
 	mRecoverCollision->mPosition   = mPosition;
 	static_cast<TBEelTearsManager*>(mManager)->splitTears(mPosition);
-	SMSGetMSound()->startSoundActor(BOSSEEL_SE_BS_UNG_TEAR_CLASH, &mPosition, 0,
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_CLASH, &mPosition, 0,
 	                                nullptr, 0, 4);
 	onLiveFlag(LIVE_FLAG_HIDDEN);
 }
@@ -560,7 +530,7 @@ DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		SMSGetMSound()->startSoundActor(BOSSEEL_SE_BS_UNG_TEAR_TREMBLE,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
 		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
 		tears->mMActor->setBckFromIndex(3);
@@ -621,7 +591,7 @@ DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		SMSGetMSound()->startSoundActor(BOSSEEL_SE_BS_UNG_TEAR_TREMBLE,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
 		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
 		tears->mMActor->setBckFromIndex(3);
@@ -848,16 +818,16 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 				mColor.a = 0;
 				MTXCopy(mSharedParts->getConnectedMtx(), mDetachedMtx);
 				if (mToothType == 1) {
-					SMSGetMSound()->startSoundActor(BOSSEEL_SE_BS_UNG_TEATH_COMEOFF,
+					SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEATH_COMEOFF,
 					                                &mPosition, 0, nullptr, 0,
 					                                4);
 					if (mCanShedTears)
 						SMSGetMSound()->startSoundActor(
-						    BOSSEEL_SE_BS_UNG_VOICE_M_CRY, &mOwner->mPosition, 0,
+						    MSD_SE_BS_UNG_VOICE_M_CRY, &mOwner->mPosition, 0,
 						    nullptr, 0, 4);
 					else
 						SMSGetMSound()->startSoundActor(
-						    BOSSEEL_SE_BS_UNG_VOICE_W_CRY, &mOwner->mPosition, 0,
+						    MSD_SE_BS_UNG_VOICE_W_CRY, &mOwner->mPosition, 0,
 						    nullptr, 0, 4);
 					mOwner->mToothBroken = true;
 
@@ -866,16 +836,16 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 					if (emitter)
 						emitter->setGlobalScale(mOwner->mScaling);
 				} else {
-					SMSGetMSound()->startSoundActor(BOSSEEL_SE_BS_UNG_TEATH_FLASH,
+					SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEATH_FLASH,
 					                                &mPosition, 0, nullptr, 0,
 					                                4);
 					if (mCanShedTears)
 						SMSGetMSound()->startSoundActor(
-						    BOSSEEL_SE_BS_UNG_VOICE_M_JOY, &mOwner->mPosition, 0,
+						    MSD_SE_BS_UNG_VOICE_M_JOY, &mOwner->mPosition, 0,
 						    nullptr, 0, 4);
 					else
 						SMSGetMSound()->startSoundActor(
-						    BOSSEEL_SE_BS_UNG_VOICE_W_JOY, &mOwner->mPosition, 0,
+						    MSD_SE_BS_UNG_VOICE_W_JOY, &mOwner->mPosition, 0,
 						    nullptr, 0, 4);
 				}
 			}
@@ -1961,7 +1931,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 			MtxPtr breathMtx        = mMActor->getModel()->getAnmMtx(5);
 			mBreathParticlePosition.set(breathMtx[0][3], breathMtx[1][3],
 			                            breathMtx[2][3]);
-			SMSGetMSound()->startSoundActor(BOSSEEL_SE_BS_UNG_VACUUM, &mPosition, 0,
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_VACUUM, &mPosition, 0,
 			                                nullptr, 0, 4);
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToPosPtr(
@@ -2110,13 +2080,13 @@ void ExecSpinNerve_Sub(TBossEel* eel)
 		eel->mRotation.y -= spinSpeed;
 		if (eel->mRotation.y <= 0.0f)
 			SMSGetMSound()->startSoundActorWithInfo(
-			    BOSSEEL_SE_BS_UNG_ROLL, &eel->mPosition, nullptr, spinSpeed, 0, 0,
+			    MSD_SE_BS_UNG_ROLL, &eel->mPosition, nullptr, spinSpeed, 0, 0,
 			    nullptr, 0, 4);
 	} else {
 		eel->mRotation.y += spinSpeed;
 		if (eel->mRotation.y >= 360.0f)
 			SMSGetMSound()->startSoundActorWithInfo(
-			    BOSSEEL_SE_BS_UNG_ROLL, &eel->mPosition, nullptr, spinSpeed, 0, 0,
+			    MSD_SE_BS_UNG_ROLL, &eel->mPosition, nullptr, spinSpeed, 0, 0,
 			    nullptr, 0, 4);
 	}
 	eel->mRotation.y = MsWrap(eel->mRotation.y, 0.0f, 360.0f);
@@ -2127,7 +2097,7 @@ DEFINE_NERVE(TNerveBossEelFirstSpin, TLiveActor)
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 	if (spine->getTime() == 0) {
 		eel->mTurnSpeed = 0.0f;
-		SMSGetMSound()->startSoundActorWithInfo(BOSSEEL_SE_BS_UNG_ROLL,
+		SMSGetMSound()->startSoundActorWithInfo(MSD_SE_BS_UNG_ROLL,
 		                                        &eel->mPosition, nullptr, 2.0f,
 		                                        0, 0, nullptr, 0, 4);
 		eel->setBckAnm(10);
@@ -2155,7 +2125,7 @@ DEFINE_NERVE(TNerveBossEelSecondSpin, TLiveActor)
 		spinTimer->x                     = 0;
 		spinTimer->y    = static_cast<s32>(MsRandF() * 960.0f) + 241;
 		eel->mTurnSpeed = 0.0f;
-		SMSGetMSound()->startSoundActorWithInfo(BOSSEEL_SE_BS_UNG_ROLL,
+		SMSGetMSound()->startSoundActorWithInfo(MSD_SE_BS_UNG_ROLL,
 		                                        &eel->mPosition, nullptr, 2.0f,
 		                                        0, 0, nullptr, 0, 4);
 		if (MsRandF() < 0.5f)
@@ -2267,7 +2237,7 @@ static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 {
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 	if (spine->getTime() == 1) {
-		SMSGetMSound()->startSoundActor(BOSSEEL_SE_BS_UNG_DOWN, &eel->mPosition, 0,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_DOWN, &eel->mPosition, 0,
 		                                nullptr, 0, 4);
 		if (eel->mToothBroken) {
 			eel->mToothBroken = false;
@@ -2372,7 +2342,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 {
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		SMSGetMSound()->startSoundActor(BOSSEEL_SE_BS_UNG_VOICE_LAST,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_VOICE_LAST,
 		                                &eel->mPosition, 0, nullptr, 0, 4);
 		gpMarDirector->getConsole()->startAppearBalloon(0x14, true);
 		MSBgm::stopTrackBGMs(7, 10);
