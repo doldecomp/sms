@@ -270,8 +270,8 @@ void TPauseMenu2::disappearWindow()
 		for (s32 i = 0; i < 5; i++) {
 			JUTRect rect = mPauseLetters[i]->getBounds();
 
-			rect.add(0.25f * -rect.y1 + 0.01f * rect.getWidth(),
-			         0.25f * -rect.x1 + 0.01f * rect.getHeight());
+			rect.add(0.025f * -rect.y1 + 0.01f * rect.getWidth(),
+			         0.025f * -rect.x1 + 0.01f * rect.getHeight());
 
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 
@@ -281,8 +281,8 @@ void TPauseMenu2::disappearWindow()
 		// ... and now shrink the menu items in the same manner.
 		for (s32 i = 0; i < mNumItems; i++) {
 			JUTRect rect = mMenuItems[i]->getBounds();
-			rect.add(0.25f * -rect.y1 + 0.01f * rect.getWidth(),
-			         0.25f * -rect.x1 + 0.01f * rect.getHeight());
+			rect.add(0.025f * -rect.y1 + 0.01f * rect.getWidth(),
+			         0.025f * -rect.x1 + 0.01f * rect.getHeight());
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 			mMenuItems[i]->setBounds(rect);
 		}
