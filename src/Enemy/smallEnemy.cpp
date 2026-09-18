@@ -109,12 +109,13 @@ TSmallEnemyManager::TSmallEnemyManager(const char* name)
 
 void TSmallEnemyManager::createModelData()
 {
-	static TModelDataLoadEntry entry
-	    = { "default.bmd",
-		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
-		        | (2 << J3DMLF_TevStageNumShift),
-		    0 };
-	createModelDataArray(&entry);
+	static TModelDataLoadEntry entry[]
+	    = { { "default.bmd",
+		      J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		          | (2 << J3DMLF_TevStageNumShift),
+		      0 },
+			{ nullptr, 0, 0 } };
+	createModelDataArray(entry);
 }
 
 void TSmallEnemyManager::load(JSUMemoryInputStream& stream)
