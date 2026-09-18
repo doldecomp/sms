@@ -83,25 +83,45 @@ inline void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 	}
 }
 
-// TODO (closure batch 87): 98.1%, three separate residues, all of which point
-// at one missing inlined private member -- the "Tower" half of this function's
-// name, i.e. `ctrlTowerCamera_()` (or `ctrlNormalCamera_()`), declared in the
-// shared <Camera/Camera.hpp>:
-//   1. frame 0xb0 vs 0x70. The named region is right (`v` 12 bytes, then the
-//      int->float magic pair at the top) but the low region is 100 bytes in
-//      retail and 44 here, and there are 12 dead bytes between `v` and the
-//      magic pair where we have 4. Inline-expansion temporaries, i.e. a callee
-//      we do not expand.
+// TODO (closure batch 131): 98.1%, three residues, one of which is now closed.
+//   1. CLOSED. The 56 missing low bytes (frame 0xb0 against 0x70) are a single
+//      binding level over the raw `mCurrentParams` read, taken at all ten of
+//      this function's parameter reads: +0x40 exactly, no instruction change,
+//      and the differing rows drop from 34 to 16. So this is not the missing
+//      `ctrlTowerCamera_` expansion that batch 87 suspected -- that wrapper
+//      already expands correctly (there is no `bl` for it in either build and
+//      the map has no symbol for it, as an in-class body that is always
+//      inlined should not). Per-lever measurements at the other raw reads, for
+//      the record: `unk120` +0x20, `gpMarioAngleY` +0x20, `mSaveEx` +0x18,
+//      `unk288` +0x18, `unk258` +0x10, `unk64` +0x28 (and one extra
+//      instruction), `mCurrentTarget.unk28` +8.
 //   2. `fVar2` is retail's f29 and ours f30 (f31 for fVar3 is right).
 //      Swapping the two declarations swaps the *loads* instead, so it is
-//      allocator ranking, not declaration order.
-//   3. the `*gpMarioAngleY - 0x8000` block: retail keeps the raw value in r31
-//      and sign-extends at each s16-typed use (four `extsh` plus `neg`), we
-//      narrow once at the definition (one `extsh`). Measured alternatives, all
-//      worse: `CLBAbs<s16>(sVar9 - unk258)` 96.8%, `int sVar9` plus an explicit
-//      `(s16)` cast 97.2%, a named `s16` difference 97.2%, spelling arm 2 with
-//      `sVar9` instead of re-reading gpMarioAngleY 97.1%. Retail also loads
-//      unk258 before sVar9; ours is the other way round.
+//      allocator ranking, not declaration order. Unmoved by the frame fix.
+//   3. the `*gpMarioAngleY - 0x8000` block: retail keeps the **raw** int in
+//      r31 and narrows to s16 lazily at each use (`extsh` before the
+//      `unk258` subtraction in the CLBAbs arm, three more inside CLBAbs, none
+//      at all at the `CLBChaseGeneralConstantSpecifySpeed` call, and the raw
+//      r31 straight into the default arm's subtraction). Ours materialises the
+//      narrowed value into r31 and keeps the raw in r4, so it has one `extsh`
+//      too few and one live register too many. Re-measured with the frame
+//      landed: `int sVar9` with no casts is the closest (301 instructions
+//      against retail's 302, 15 rows) but deduces `CLBAbs<int>` and puts the
+//      one `extsh` at the call site where retail has none; spelling the
+//      default arm with `sVar9` instead of re-reading the global gives 302
+//      instructions and 17 rows, moving the spare `extsh` from the call into
+//      that arm. `int sVar9` with `(s16)` casts (0xa8, 39 rows),
+//      `CLBAbs<s16>(sVar9 - unk258)` (0xa8, 39) and dropping the variable
+//      entirely (0xa8, 129) are all much worse. What is wanted is an `s16`
+//      whose narrowing MWCC defers; no spelling found does that.
+// The residue left is 4 bytes: `ctrlTowerCamera_`'s `Vec v` sits at 0x74 here
+// against retail's 0x70, i.e. 4 bytes of pool too many below it.
+static inline TCameraKindParam* CNParams(const CPolarSubCamera* p)
+{
+	TCameraKindParam* v = p->mCurrentParams;
+	return v;
+}
+
 void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 {
 	f32 fVar2 = unk120->mCompSPos[6];
@@ -137,11 +157,11 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 		} else {
 			if (!SMS_IsMarioTouchGround4cm()) {
 				unk250 = CLBLinearInbetween(
-				    mCurrentParams->mJumpFollowSpeedXmin,
-				    mCurrentParams->mJumpFollowSpeedXmax, mCurrentTarget.unk28);
+				    CNParams(this)->mJumpFollowSpeedXmin,
+				    CNParams(this)->mJumpFollowSpeedXmax, mCurrentTarget.unk28);
 			} else {
-				unk250 = CLBLinearInbetween(mCurrentParams->mFollowSpeedXmin,
-				                            mCurrentParams->mFollowSpeedXmax,
+				unk250 = CLBLinearInbetween(CNParams(this)->mFollowSpeedXmin,
+				                            CNParams(this)->mFollowSpeedXmax,
 				                            mCurrentTarget.unk28);
 			}
 
@@ -182,21 +202,21 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 					f29 = 1.0f;
 					if (unk2CA != -1) {
 						f29 = CLBLinearInbetween(
-						    mCurrentParams->mInHouseMaginfXmin,
-						    mCurrentParams->mInHouseMaginfXmax,
+						    CNParams(this)->mInHouseMaginfXmin,
+						    CNParams(this)->mInHouseMaginfXmax,
 						    mCurrentTarget.unk28);
 					} else if (SMS_CheckMarioFlag(MARIO_FLAG_OCCLUDED)) {
 						f29 = CLBLinearInbetween(
-						    mCurrentParams->mObstructMaginfXmin,
-						    mCurrentParams->mObstructMaginfXmax,
+						    CNParams(this)->mObstructMaginfXmin,
+						    CNParams(this)->mObstructMaginfXmax,
 						    mCurrentTarget.unk28);
 					}
 
 					int uVar1 = unk120->mCompSPos[2];
 					if (uVar1 & 0xff) {
 						f29 *= CLBLinearInbetween(
-						    mCurrentParams->mLFollowMaginfXmin,
-						    mCurrentParams->mLFollowMaginfXmax,
+						    CNParams(this)->mLFollowMaginfXmin,
+						    CNParams(this)->mLFollowMaginfXmax,
 						    mCurrentTarget.unk28);
 					}
 					f32 fVar4;
