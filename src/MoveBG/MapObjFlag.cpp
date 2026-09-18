@@ -53,6 +53,15 @@ void TMapObjFlagLower::updateVertex()
 
 f32 TMapObjFlag::mFlutterSpeed = 4.0f;
 
+// TODO: 98.9%, all instructions match now (closure batch 123: the last
+// column's `mVertices[y][mNumZ - 1]`/`mVertices[y + 1][mNumZ - 1]` writes
+// were each re-deriving the row's last element from three separate
+// `.x`/`.y`/.z` subscripts, computing it as "one past the end, then back up"
+// instead of retail's single "&arr[mNumZ - 1]" pointer; naming
+// `last0`/`last1` pointers took this from 94.0% (122 markers, several
+// structural) to instruction-exact, 63 markers left, all frame/register).
+// What remains is a pure 0x50-byte low-region gap (0x108 vs our 0xb8); no
+// candidate object found.
 void TMapObjFlag::draw()
 {
 	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > mtx;
@@ -88,18 +97,19 @@ void TMapObjFlag::draw()
 			GXTexCoord2f32(s, t1);
 		}
 
-		GXPosition3f32(mVertices[y][mNumZ - 1].x, mVertices[y][mNumZ - 1].y,
-		               mVertices[y][mNumZ - 1].z);
+		JGeometry::TVec3<f32>* last0 = &mVertices[y][mNumZ - 1];
+		GXPosition3f32(last0->x, last0->y, last0->z);
 		GXTexCoord2f32(1.0f, t0);
-		GXPosition3f32(mVertices[y + 1][mNumZ - 1].x,
-		               mVertices[y + 1][mNumZ - 1].y,
-		               mVertices[y + 1][mNumZ - 1].z);
+		JGeometry::TVec3<f32>* last1 = &mVertices[y + 1][mNumZ - 1];
+		GXPosition3f32(last1->x, last1->y, last1->z);
 		GXTexCoord2f32(1.0f, t1);
 
 		GXEnd();
 	}
 }
 
+// TODO: 99.8%, all instructions match, pure frame gap (0x38 vs our 0x30).
+// No candidate object found this batch.
 void TMapObjFlag::updateVertex()
 {
 	for (int y = 0; y < mNumY; y += mSkip) {
@@ -201,6 +211,11 @@ TMapObjFlag::TMapObjFlag(const char* name)
 f32 TMapObjFlagManager::mDistNearMiddle = 5000.0f;
 f32 TMapObjFlagManager::mDistMiddleFar  = 10000.0f;
 
+// TODO: 99.9%, all instructions match. The `GXSetChanMatColor(4,
+// TColor(...))` conversion temporary is 8 bytes here and 4 for retail
+// (frame 0x28 vs 0x18) -- this is the JUTColor.hpp conversion-temporary
+// stride already documented and rejected there (an explicit copy ctor
+// regresses nine other units), not re-investigated.
 void TMapObjFlagManager::initDraw()
 {
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
@@ -240,6 +255,19 @@ void TMapObjFlagManager::initDraw()
 	GXSetCullMode(GX_CULL_NONE);
 }
 
+// TODO: 94.7%, structural residue confined to the UNUSED TMapObjFlag::update
+// body's inlined MsMtxSetXYZRPH call (closure batch 123). Retail's
+// instruction schedule interleaves the rotation-to-BAM conversions
+// (`fmuls`/`fctiwz`) with an unrelated address computation (`addi r3, r28,
+// 0x8c`, precomputing `&mWaveAngle` early) in a way our build does not
+// reproduce. Routing the position/rotation reads through `getPosition()`/
+// `getRotation()` matched the same 37 `~` markers in isolation, but
+// `ninja changes_all` showed a -0.02% fuzzy_match wobble on this function
+// that could not be pinned to a real instruction change, so the raw
+// `mPosition`/`mRotation` form is kept. The call site already matches
+// MsMtxSetXYZRPH's f32-degree overload in MathUtil.hpp exactly, so the
+// remaining gap is scheduling inside that shared inline, not something this
+// call site controls.
 void TMapObjFlagManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
@@ -339,6 +367,13 @@ void TMapObjFlagManager::registerObj(TMapObjFlag* flag, const char* name)
 	}
 }
 
+// TODO: 99.8%, all instructions match, pure frame gap (0x30 vs our 0x20).
+// A dead 16-byte local declared right after `buffer` (below it, so `buffer`
+// keeps its own offset) reaches the target frame exactly with zero
+// instruction change (closure batch 123 trial, reverted -- unnamed padding
+// is not committed per CLAUDE.md's fakematch rule). Widening `buffer`
+// itself only gets to 1 residual marker at any size 17-24, never 0, so the
+// object is separate from the read buffer. No plausible name found.
 void TMapObjFlagManager::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
