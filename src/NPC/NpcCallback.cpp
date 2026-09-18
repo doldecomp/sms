@@ -106,6 +106,24 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					// `static inline bool NpcCallbackNeckIsActive(const
 					// TBaseNPC*)` -- a parameter binding is free here where a
 					// global binding is not.
+					// Batch 131 classified the residue instead of levering it
+					// again: the statement below is an `a = b - c` site that
+					// really emits `bl JGeometry::TVec3<f32>::sub`, so this
+					// function is one of the 130 members of the census in
+					// docs/catalog/frame-gaps.md (research batches 113/116/119)
+					// and its slot permutation *is* that residue -- retail
+					// allocates two 12-byte slots per `a = b - c` statement
+					// (the by-value return above the by-value parameter temp)
+					// and hoists nothing, which is why its copy sits at 0x78
+					// with the rotation buffers above it at 0xcc/0xd8 while
+					// ours packs copy and rotations together at 0xb0..0xd4.
+					// Every reference-returning spelling of `operator-`
+					// allocates exactly one slot, so no call-site lever can
+					// reproduce it and the binding-level total is a fake. Do
+					// not spend further lever budget here: the unit closes when
+					// the by-value-return residue does, and the 24-byte total
+					// plus the r5/r6 and r0/r4 permutations should be re-read
+					// after that.
 					const JGeometry::TVec3<f32>& rotToMario
 					    = MsGetRotFromZaxis(toMario);
 					local_148 = rotToMario
