@@ -53,10 +53,6 @@ public:
 	TBEelTearsDrop(TBEelTears*, int, SDLModelData*, const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor* sender, u32 message)
-	{
-		return THitActor::receiveMessage(sender, message);
-	}
 
 	void generate(JGeometry::TVec3<f32>&);
 

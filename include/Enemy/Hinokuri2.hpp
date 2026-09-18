@@ -160,10 +160,13 @@ public:
 	BOOL receiveMessageLv1(THitActor*, u32);
 	BOOL receiveMessageLv2(THitActor*, u32);
 
-	// fabricated
-	THino2Params* getSaveParam() const
+	// THinokuri2 must not override the virtual TSpineEnemy::getSaveParam
+	// slot: the map has no getSaveParam__10THinokuri2CFv and retail's
+	// vtable keeps TSpineEnemy's word at 0x108. Hence the *2 name, as in
+	// BossGesso/FireWanwan.
+	THino2Params* getSaveParam2() const
 	{
-		return (THino2Params*)TSpineEnemy::getSaveParam();
+		return (THino2Params*)getSaveParam();
 	}
 
 	// fabricated
@@ -171,17 +174,17 @@ public:
 	{
 		switch (mLevel) {
 		case 0:
-			return getSaveParam()->mSLHitPointMaxLv0.get();
+			return getSaveParam2()->mSLHitPointMaxLv0.get();
 			break;
 		case 1:
-			return getSaveParam()->mSLHitPointMaxLv1.get();
+			return getSaveParam2()->mSLHitPointMaxLv1.get();
 			break;
 		case 2:
-			return getSaveParam()->mSLHitPointMaxLv2.get();
+			return getSaveParam2()->mSLHitPointMaxLv2.get();
 			break;
 		default:
-			if (getSaveParam())
-				return getSaveParam()->mSLHitPointMax.get();
+			if (getSaveParam2())
+				return getSaveParam2()->mSLHitPointMax.get();
 			break;
 		}
 
