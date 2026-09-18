@@ -202,6 +202,12 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 		// `MsClamp(1.5f * MsSqrtf(...) + 300.0f, min, max)` moves the copy
 		// rather than removing it (the clamp then runs in f0), and the
 		// if/else-if spelling reloads mDistMin in both arms (+2).
+		// FPR re-pass 172: the in-place shape that fixed
+		// TCameraShake::setShakeAngleOne_ does not work here either --
+		// `f32 camDistance = MsSqrtf(maxSqDist); camDistance = 1.5f *
+		// camDistance + 300.0f;` keeps the `fmadds f0` plus `fmr f31, f0`
+		// and loses the 4 bytes `maxDist` contributes to the named block
+		// (99.5 -> 99.3, every stack displacement 4 low).
 		f32 maxDist     = MsSqrtf(maxSqDist);
 		f32 camDistance = 1.5f * maxDist + 300.0f;
 		camDistance     = MsClamp(camDistance, mCurrentParams->mDistMin,
