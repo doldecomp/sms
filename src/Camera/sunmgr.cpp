@@ -45,9 +45,9 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 	// retail on every one of the nineteen uses), and with the array plus the
 	// two colour temporaries it ranks the pool base first, as retail does.
 	// Research batch 144 measured the whole ranking: pool base first, then
-	// locals and parameters in reverse introduction order, and the swap is
-	// decided by the count of named scalar locals alone (see
-	// docs/catalog/frame-gaps.md, "Research batch 144").
+	// locals and parameters in reverse introduction order, and the pool base's
+	// place in that order is decided by how many named scalar locals the frame
+	// holds (see docs/catalog/frame-gaps.md, "Research batch 144").
 	// The two colour temporaries have to stay named: they are what hoists all
 	// four loads above the first store.
 	// The 64 bytes of low region are: chaining the five stream reads into one

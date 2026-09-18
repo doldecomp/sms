@@ -788,3 +788,32 @@ Geometry is written **(below, above)** = pool bytes under and over the live `bl 
   `operator=` returning `const TVec3&`, `TVec3*` or `void`, or with a memberwise or `set`-forwarding body; `sub` declared out of class with `inline`; `operator-` returning `TVec3&`; a member `operator-`; `return *fst.subP(snd)`.
 - Census notes: retail's `below` is 4 only for the nine single-statement minimal-frame functions, and over all 130 sites it takes 57 distinct values from 4 to 760, because retail allocates per statement in source order — so "temp at the floor + 4" is not a universal target, the *intra-statement* order is.
   `__mi__` appears nowhere in the map (0 hits), so `operator-` is inline at all 130 sites and its shape cannot be read off a symbol size.
+
+## Research batch 144 (2026-09-18): the callee-saved allocation order, and `sunmgr::load` closed
+
+The `this`-vs-pool-base swap was a known-open register class (pass 131).
+It is now explained, and one of its four instances is closed at zero frame cost.
+
+**The ranking rule, from a scratch TU compiled with the game flags** (drivers `grpds/rdrv.py`, `t6`-`t14`; `run(int n, C* q)` with three string literals to force a `.rodata` pool base, one `bl` per use so every value is live across a call).
+Callee-saved GPRs are handed out **r31 downward in reverse order of value introduction**: the compiler's pool/base-address temp first, then locals in reverse declaration order, then parameters in reverse parameter order, with `this` last.
+
+| variant | ranking, r31 first |
+| --- | --- |
+| pool + `q` + `n` + `this`, seven permutations of first-use order | pool > q > n > this |
+| same, use counts 5/1/1/3 and 1/1/1/9 | pool > q > n > this (unchanged) |
+| pool materialised only at the end of the body | pool > this (the `lis` sinks, the rank does not) |
+| two literals only | no pool base: each literal gets its own `lis`/`addi` |
+| a loop added around the uses | pool > i > n > this |
+| two pointer locals from calls, either declaration order | b > a > this (later-declared higher) |
+| reference parameter driven by an inlined `operator>>` chain | pool > stream > this |
+| three disjoint ranges packed into one register | chain > pool > this |
+
+**First-use order, use counts, loop depth and range length are all inert** (that is the one thing every variant agrees on), so a swap is never fixed by moving a use, shortening a range or hoisting a materialisation — which is why every level and binding tried on these sites was inert.
+
+**What *does* move the pool temp's position in that list is how many named scalar locals the frame holds.**
+A stub-level mimic of `TSunMgr::load` (same 93 instructions and same frame in every variant) ranks pool > this > stream with five or six named scalars and **this > pool > stream with seven**, and putting four of them into a `u32 v[4]` array puts it back to pool-first.
+Inert in the mimic: naming or not naming the search result, declaring the temporaries before the input locals, an extra dead named local at either end, computing the pair through an inlined helper, and storing the pair through an inlined two-argument setter.
+
+- **`TSunMgr::load` closed (99.12 -> 100, unit 77.69 -> 100 matched_code)**: the four colour words are read into `u32 color[4]`, not four named scalars, and the two colour temporaries stay named — they are what hoists all four loads above the first store (dropping them fixes the registers but sinks the stores and moves the named block 4 bytes, 14 markers). The array is frame-neutral, so the low-region decomposition recorded at the site still holds. The batch-32 "array plus a four-read loop" rejection stands; it is the array *without* the loop that lands.
+- **`M3UMtxCalcBlendAux` stays open and is a different animal**: retail's permutation is a one-step rotation of r25-r30 that puts the `&j3dSys + 0x38` address temp on top and ours puts it at the bottom, with relative order otherwise preserved. Eleven spellings measured, all inert or worse than the stock 55 markers: dropping `pQuat`, dropping the `Vec& currentS` reference, the pointer walk as an indexed loop, a named `J3DModel*` at the first `getModel()`, named blended-scale components, a named `u16` joint index, and `bVar5` at all seven declaration positions (55 at its current position 1, then 64, 64, 65, 67, 69, and 92 at position 0). Declaration order is therefore a real but coarse knob on this ranking, contrary to batch 140's "inert" reading — it moves the rotation without ever landing it.
+- Not retried here: `TBossHanachanEffect::emitParticle_` (frame 24 + 8n short, so not the frame-exact case) and `TDSPChannel::updateAll`; neither has a group of named scalars to group into an aggregate.

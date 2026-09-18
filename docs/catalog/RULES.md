@@ -73,7 +73,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - So "x reloaded, y/z preserved" means retail named exactly those two components, at zero frame cost (codegen-tells.md: "batch 83").
 - Last-declared local gets f31; declare it at the statement that first reads it or it loads early and costs an `fmr` (codegen-tells.md: "batch 90").
 - A non-void return with no `return` reserves r3 for the whole body (frame-gaps.md: "batch 120").
-- Known-open: the `this`-vs-pool-base callee-saved swap (four instances) and zero-frame rotations (frame-gaps.md: "pass 131").
+- Callee-saved GPRs go out r31 down in reverse introduction order: pool/base temps, then locals, then parameters, `this` last; use counts, first-use order and liveness are inert (frame-gaps.md: "Research batch 144").
+- How many **named scalar locals** the frame holds decides whether the pool base outranks `this`; grouping four of them into an array closed `TSunMgr::load` at zero frame cost (frame-gaps.md: "Research batch 144").
+- Known-open: the `this`-vs-pool-base callee-saved swap (three instances left) and zero-frame rotations; `M3UMtxCalcBlendAux`'s rotation moves with declaration order but never lands (frame-gaps.md: "Research batch 144").
 
 ## Float and pool
 
