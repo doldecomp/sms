@@ -27,25 +27,29 @@ static void InitChangeTwoColor_Base(J3DModel* model, u16 material,
 		                           GX_TEVREG2, color2);
 }
 
-// TODO: every instruction matches; the frame is 8 bytes too big (0x40 vs
-// 0x38). Bisected to one statement: binding `operator new`'s result to a
-// local in case 0. With the whole `new` removed the frame is exactly 0x38, so
-// every other level in this function is already right, and with the `new` and
-// no field stores at all it is already 0x40 -- the eight bytes are the result
-// slot, not the colour copy. Retail calls the same `operator new(4)` and pays
-// nothing for it. Rejected: `new GXColor` without parentheses, explicit
-// `(GXColor*)operator new(sizeof(GXColor))`, a `void*` intermediate,
-// `GXColor& c = *new GXColor()`, `register`, declaring the pointer at
-// function scope, declaring all three pointers C-style at the top, casting
-// each field store, spelling the two InitChange*_Base helpers out at all four
-// call sites, and `param1->mModel` instead of `getModel()`.
+// Closed in batch 115. Every instruction had always matched and only the frame
+// was wrong (0x40 against 0x38), bisected to the named `operator new` result in
+// case 0, which reserves 8 bytes retail does not pay for. The 8 bytes come back
+// one statement earlier: naming the `J3DModelData*` of the material-name lookup
+// is worth **-8** here, so the `new` keeps its slot and the frame lands.
+// (The same -8 is reached by `modelData->mMaterialName` raw with or without the
+// named pointer, and by a named `JUTNameTab*` over the raw member; the raw
+// member alone, with no named local, overshoots to 0x30, so the accessor pair
+// plus one named pointer is the combination that fits.)
+// Rejected before that, all leaving 0x40: `new GXColor` without parentheses,
+// explicit `(GXColor*)operator new(sizeof(GXColor))`, a `void*` intermediate,
+// a split `GXColor* matColor; matColor = new GXColor();`, `GXColor& c = *new
+// GXColor()`, `register`, declaring the pointer at function scope, declaring
+// all three pointers C-style at the top, casting each field store, spelling the
+// two InitChange*_Base helpers out at all four call sites, and `param1->mModel`
+// instead of `getModel()`.
 void SMS_InitChangeNpcColor(const MActor* param1,
                             const TColorChangeInfo* param2, s16 param3,
                             const GXColor* param4)
 {
-	J3DModel* model = param1->getModel();
-	s32 matIdx
-	    = model->getModelData()->getMaterialName()->getIndex(param2->unk4);
+	J3DModel* model         = param1->getModel();
+	J3DModelData* modelData = model->getModelData();
+	s32 matIdx = modelData->getMaterialName()->getIndex(param2->unk4);
 	switch (param2->unk0) {
 	case 0:
 		if (param2->unk8 != nullptr) {
