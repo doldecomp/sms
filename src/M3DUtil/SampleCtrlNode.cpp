@@ -18,6 +18,25 @@ SampleCtrlJoint::SampleCtrlJoint(J3DJoint* joint)
 	mMax.set(joint->getMax());
 }
 
+// TODO: 311/311 instructions are identical; only the frame is 8 bytes too big
+// (ours 0xd0 / inline-temp region ends at 0x9c, retail 0xc8 / 0x94). The named
+// local region is already right (the getAttnFn() lookup table sits 0x38 below
+// the frame top in both). Priced in the temp region: each
+// J3DMaterial::getColorChan/getTevStage expansion is +4 (6 and 18 sites),
+// getTevOrder(0) +4, getMatColor(0) and getTevStageNum() +0, and the base is 8
+// bytes more than retail's. Three spellings reach an exact match but all need a
+// mixed accessor path nobody would write: two of the eighteen sites as
+// material->getTevBlock()->getTevStage(i); or one such site plus either
+// *(J3DTevOrderInfo*)material->getTevOrder(0) or
+// *material->getTevBlock()->getTevOrder(0). Ruled out (no effect): explicit
+// (u8)/(u32) casts on any getter or index, a u32 index local, getTevStageNum()
+// or getMatColor(0) through their blocks, naming the J3DTevOrder*, a
+// J3DTevOrderInfo& local, getTevOrderInfo() (+8 and moves the table 0xc),
+// declaring stageNum at the top, getTevStage(u8)/const in J3DMaterial.hpp.
+// Ruled out (breaks instructions): an initialiser list for unk4..unk10, a
+// J3DColorChanInfo&/J3DTevStageInfo& row reference, a u32 loop index, dropping
+// stageNum, and getColorBlock()->getColorChan(i) at two or more sites (a
+// callee-saved rotation).
 SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* material)
 {
 	unk38 = j3dDefaultTevOrderInfoNull;
