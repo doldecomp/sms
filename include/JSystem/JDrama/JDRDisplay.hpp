@@ -17,26 +17,27 @@ public:
 	virtual void endRendering();
 
 	void* getCurrentFrameBuffer() { return unk4[unkC]; }
-	// TODO: this inline is the unique carrier of the 8/16 bytes of dead
-	// frame that all four System/RenderModeObj `SMSSetup*RenderingInfo`
-	// functions are short of (GCLogo 0x18 vs 0x20, Movie 0x20 vs 0x28, Title
-	// 0x28 vs 0x30, Game 0x28 vs 0x38 -- Game pays twice). Any one extra
-	// 4-byte object bound inside it lands all four exactly, with zero
-	// instruction change and no regression anywhere in the tree: both a dead
-	// non-trivial 4-byte local and `GXRenderModeObj& rmo = unk10; return rmo;`
-	// do it. Both are unnecessary temporaries with nothing to name them
-	// after, so neither is committed.
-	// Measured as +0 (do not retry): a pointer-returning accessor
-	// (`GXRenderModeObj* getRenderMode() { return &unk10; }`, the JUTVideo
-	// spelling, with the call sites adjusted); dropping the const overload; a
-	// `(GXRenderModeObj&)unk10` cast; on/offFlag routed through
-	// JDrama::TFlagT::on/off; a named `GXRenderModeObj&` at the two call sites
-	// that do not already bind one; and a TU-local
-	// `SMSGetRenderMode(TDisplay*)` free function above the accessor (a
-	// reference return folds, so the free function's pointer parameter binds
-	// nothing -- unlike the value-returning case in MirrorActor.cpp).
+	// The named pointer is the binding level of frame-gaps.md batches 110/127/
+	// 130: it emits nothing, and it is the 4 bytes of dead low region that all
+	// four System/RenderModeObj `SMSSetup*RenderingInfo` functions were short of
+	// (8/8/8/16 of frame, Game paying twice). All four are byte-exact with it and
+	// RenderModeObj.cpp is source-linked; the DOL is unchanged. `rmo` is the name
+	// RenderModeObj.cpp gives the same object at every one of its own sites.
+	//
+	// Measured as +0 (do not retry): `return unk10;` or `return *(&unk10);` --
+	// the address-of alone is not the lever, the binding is; a pointer-returning
+	// accessor with the call sites adjusted, or a pointer accessor plus a
+	// reference forwarder (`return *getRenderModePtr();`); dropping the const
+	// overload; a `(GXRenderModeObj&)unk10` cast; on/offFlag routed through
+	// JDrama::TFlagT::on/off; a named `GXRenderModeObj*`/`&` local at the call
+	// sites; and a TU-local `SMSGetRenderMode(TDisplay*)` free function.
+	// Defining this out of class as `inline` is equivalent, not more natural.
 	const GXRenderModeObj& getRenderMode() const { return unk10; }
-	GXRenderModeObj& getRenderMode() { return unk10; }
+	GXRenderModeObj& getRenderMode()
+	{
+		GXRenderModeObj* rmo = &unk10;
+		return *rmo;
+	}
 	GXFBClamp getFBClamp() const { return unk54; }
 	JUtility::TColor getClearColor() const { return mFrameBufferClearColor; }
 	u32 getClearZ() const { return mFrameBufferClearZ; }

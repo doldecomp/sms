@@ -16,29 +16,20 @@ u8 SMSAASamplePattern_aa[12][2] = {
 u8 SMSVFilter_non[7]     = { 0x0, 0x0, 0x15, 0x16, 0x15, 0x0, 0x0 };
 u8 SMSVFilter_flicker[7] = { 0x8, 0x8, 0xA, 0xC, 0xA, 0x8, 0x8 };
 
-// All four SMSSetup*RenderingInfo functions are instruction-exact and short
-// only in frame: GCLogo 0x18 vs 0x20, Movie 0x20 vs 0x28, Title 0x28 vs 0x30,
-// Game 0x28 vs 0x38. `volatile char trash[]` in each body takes all four to
-// 100%, so the bodies are correct.
+// All four SMSSetup*RenderingInfo functions are exact. Their frames were 8/8/8
+// /16 bytes of dead low region short (GCLogo 0x18 vs 0x20, Movie 0x20 vs 0x28,
+// Title 0x28 vs 0x30, Game 0x28 vs 0x38) with no instruction difference at all;
+// header round 26 closed them by giving JDrama::TDisplay::getRenderMode() a
+// named pointer to bind (see the note at its declaration). Probes: one 4-byte
+// non-trivial local placed in getRenderMode() lands all four frames exactly,
+// the same local placed in on/offFlag lands only Movie and Title, and
+// SMSSetupTitleRenderMode -- the only one of the bodies with an out-of-line
+// copy -- is byte-exact at 0x20, so the bytes were provably caller-side and
+// getRenderMode() was the unique carrier.
 //
-// TODO: the missing object lives in JDrama::TDisplay::getRenderMode(), a header
-// inline with no map symbol (so it is invisible to validate-symbol-order, the
-// same shape as MSound::startSoundActor). GCLogoRenderingInfo inlines nothing
-// else -- its 46 instructions are the accessor, the five `bl`s and offFlag --
-// which is what makes the accessor the unique carrier. One extra 4-byte object
-// bound inside it lands all four exactly (Game pays for it twice, hence +16
-// there), with zero instruction change and no regression elsewhere; header
-// round 15 confirmed that with two spellings and failed to find an honest one.
-// The trial table lives at the declaration in
-// include/JSystem/JDrama/JDRDisplay.hpp.
-//
-// Second, independent confirmation of the same carrier (this batch): the
-// out-of-line SMSSetupTitleRenderMode is byte-exact at frame 0x20, so the body
-// inlined into SMSSetupTitleRenderingInfo is right and that function's 8 dead
-// bytes must come from the caller-side expansions only -- getRenderMode() or
-// offFlag(), and offFlag() returns void (price 0). Both diffs are ~ only on
-// stwu/lmw/stmw displacements, no instruction added or removed, so the four
-// bodies are settled and only the header item is left.
+// Measured as +0 here (do not retry): a named GXRenderModeObj* or
+// GXRenderModeObj& local at the call sites themselves, and a TU-local
+// SMSGetRenderMode(TDisplay*) forwarder.
 
 JDrama::TRect SMSGetRederRect_Game()
 {

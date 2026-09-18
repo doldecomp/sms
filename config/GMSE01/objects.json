@@ -356,6 +356,7 @@
   "System/Params.cpp",
   "System/PositionHolder.cpp",
   "System/ProcessMeter.cpp",
+  "System/RenderModeObj.cpp",
   "System/Resolution.cpp",
   "System/ScenarioArchiveName.cpp",
   "System/SnapTimeObj.cpp",
