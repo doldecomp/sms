@@ -64,10 +64,18 @@
 #include <Camera/Camera.hpp>
 #include <Camera/CameraMapTool.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.tpp>
+#include <Strategic/NameRefPtrAry.tpp>
+#include <Strategic/NameRefAry.tpp>
 
 namespace JDrama {
 template class TViewObjPtrListT<THitActor, TViewObj>;
 }
+
+template class TNameRefPtrAryT<TCubeGeneralInfo>;
+template class TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >;
+template class TNameRefAryT<TStagePositionInfo>;
+template class TNameRefAryT<TCameraMapTool>;
+template class TNameRefAryT<TScenarioArchiveName>;
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 {

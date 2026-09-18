@@ -463,5 +463,6 @@
   "main.cpp",
   "GC2D/SunGlass.cpp",
   "Camera/CameraWarp.cpp",
-  "Map/PollutionManager.cpp"
+  "Map/PollutionManager.cpp",
+  "Camera/CubeManagerBase.cpp"
 ]

@@ -1,4 +1,5 @@
 #include <Enemy/EnemyTable.hpp>
+#include <Strategic/NameRefPtrAry.tpp>
 #include <Enemy/Conductor.hpp>
 #include <stdlib.h>
 
