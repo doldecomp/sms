@@ -17,6 +17,17 @@
 // conversion slots), a named `rate` local (+8), the rate-only accessor (+8),
 // `mCurrentPos = *cur_pos` over `set()` (77.2%), and spelling the accessor out
 // at all three components (recomputes, 45.9%).
+// Closure batch 90 adds: a TU-static `calcBlendRatio(int timer, int frame)`
+// inline also restores every register (99.9%, only the frame differs) and
+// costs +0x10, which pins the cause as the extra inline level rather than the
+// accessor's receiver -- any level works and every level costs at least 8.
+// Further neutral or worse spellings: `f32 rate = 1.0f / frame; f32 progress =
+// timer * rate;` (98.9), `progress = 1.0f / frame; progress *= timer;` (97.5),
+// `progress = timer; progress *= 1.0f / frame;` (99.1), a `const TVec3& cur`
+// reference for the three base reads (88.0), and `1.0f * timer / frame`
+// (78.5).  Since retail's 0x20 is exactly 0xc plus the two conversion doubles,
+// retail cannot be paying for a level either: the allocation difference has
+// another cause.
 void TNpcInbetween::execPosInbetween(JGeometry::TVec3<f32>* cur_pos)
 {
 	mCurrentPos.set(*cur_pos);
