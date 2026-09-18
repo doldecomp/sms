@@ -308,9 +308,9 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 
 void TMapCollisionData::removeCheckListNode(s32, s32) { }
 
-// TODO: instruction-exact, frame 0x48 vs 0x60 (24 low bytes). The TU has no
-// accessor for unk30/unk42 to fork, and adding one belongs in
-// MapCollisionData.hpp, a shared header.
+// TODO: instruction-exact, frame 0x48 vs 0x60 (24 low bytes). A getWarpNode
+// fork saturates at +8 here and costs every callee-saved register beyond that;
+// the trial table is at MapCollisionData.hpp's rejected declaration.
 void TMapCollisionData::updateCheckListNode(s32 param_1, s32 param_2,
                                             s32 param_3)
 {
@@ -344,9 +344,10 @@ void printData(const TBGCheckListWarp*, int) { }
 
 void printList(const TBGCheckList*) { }
 
-// TODO: frame 0x48 vs 0x70 (40 low bytes) and one register: retail keeps
-// `&unk42[start]`'s base in r3 where we use r5. Same missing accessor fork as
-// updateCheckListNode.
+// TODO: instruction-exact, frame 0x48 vs 0x70 (40 low bytes). The register
+// residue is fixed (the sentinel store goes through setEntryStart); the
+// remaining low region has no candidate -- see the trial table at
+// MapCollisionData.hpp's rejected getWarpNode.
 void TMapCollisionData::removeCheckListData(u16 start, s32 count)
 {
 	TBGCheckListWarp* curr;
@@ -360,7 +361,7 @@ void TMapCollisionData::removeCheckListData(u16 start, s32 count)
 	rangeStart = unk42[start];
 	rangeEnd   = unk42[start] + count;
 
-	unk42[start] = 9999;
+	setEntryStart(start, 9999);
 	unk242       = start;
 
 	for (i = rangeStart; i < rangeEnd; ++i) {

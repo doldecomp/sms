@@ -184,6 +184,25 @@ public:
 
 	TBGCheckData* getCheckDataPoolTop() { return &unk28[unk34]; }
 
+	// fabricated. removeCheckListData's sentinel store goes through this
+	// setter: retail computes `&unk42[start]` into r3, which only an inlined
+	// member's address arithmetic does (raw, the address lands in r5).
+	// Measured there: the matching *reader* is the raw `unk42[start]`. A
+	// `getEntryStart(int) const` for the two reads is +8 of frame and fixes
+	// nothing, and using both is worse (99.8%), so only the write wants the
+	// level.
+	void setEntryStart(int id, u16 v) { unk42[id] = v; }
+
+	// TODO: rejected here, trial table for MapMakeList's two open frames.
+	// `getWarpNode(i)` (= `&unk30[i]`) is a legal-looking indexed fork but
+	// neither function lands: `updateCheckListNode` (0x48 vs 0x60) saturates
+	// at +8 over all 32 subsets of its five sites, and the three sites that
+	// would buy +16 rotate every callee-saved register (98.0%, 26 diffs);
+	// `removeCheckListData` (0x48 vs 0x70) reaches 0x58 at best, with or
+	// without unk40 and unk42 forks (64 combinations searched). Both frames
+	// need ~24 bytes from something else.
+	// TBGCheckListWarp* getWarpNode(int i) { return &unk30[i]; }
+
 public:
 	/* 0x0 */ f32 mGridExtentX;
 	/* 0x4 */ f32 mGridExtentY;
