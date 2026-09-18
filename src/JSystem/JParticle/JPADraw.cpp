@@ -14,6 +14,16 @@
 JPADrawVisitorContainer JPADraw::vc;
 JPADrawClipBoard JPADraw::cb;
 
+// TODO: every instruction matches, but the frame is 0x190 in retail and 0x180
+// here: 16 bytes of inline-temp low region are missing. The named block is
+// identical (`flags` at frame-0x28, `white` at frame-0x10, the same 8-byte hole
+// above it), so the gap is entirely in the temp pool below `flags` and no
+// instruction addresses it, which makes it impossible to localise from the
+// diff. Rejected: routing `mScaleOut = 1.0f` through `setKeyScl()` (+0), and a
+// `getDrawCtx()` accessor was already measured and pruned project-wide.
+// Remaining leads: an extra level on one of the four
+// `getEmitterDataBlockInfoPtr()->getXxxShape()` chains, or on the two by-value
+// `GXColor` getters (+8 each would be exactly the gap).
 BOOL JPADraw::initialize(JPABaseEmitter* emitter,
                          JPATextureResource* tex_resource)
 {
@@ -1273,6 +1283,11 @@ void JPADraw::loadYBBMtx(MtxPtr mtx)
 	JGeometry::TVec3<f32> v(0.0f, mtx[1][1], mtx[2][1]);
 	JUT_ASSERT(!v.isZero());
 	v.normalize();
+	// The Y-billboard matrix is a rotation about X built from the normalised
+	// (y, z) of the view matrix's Y column; naming the two components is what
+	// gives retail's 0x48 frame (it is 0x40 with v.y/v.z spelled at each use).
+	f32 cos = v.y;
+	f32 sin = v.z;
 
 	cb.unk38[0][0] = 1.0f;
 	cb.unk38[0][1] = 0.0f;
@@ -1280,13 +1295,13 @@ void JPADraw::loadYBBMtx(MtxPtr mtx)
 	cb.unk38[0][3] = mtx[0][3];
 
 	cb.unk38[1][0] = 0.0f;
-	cb.unk38[1][1] = v.y;
-	cb.unk38[1][2] = -v.z;
+	cb.unk38[1][1] = cos;
+	cb.unk38[1][2] = -sin;
 	cb.unk38[1][3] = mtx[1][3];
 
 	cb.unk38[2][0] = 0.0f;
-	cb.unk38[2][1] = v.z;
-	cb.unk38[2][2] = v.y;
+	cb.unk38[2][1] = sin;
+	cb.unk38[2][2] = cos;
 	cb.unk38[2][3] = mtx[2][3];
 
 	MTXIdentity(cb.unk68);
