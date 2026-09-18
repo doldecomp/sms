@@ -368,6 +368,24 @@ public:
 
 	// === length stuff ===
 
+	// The scalar body stays. Header round 13 measured batch 73's alternative
+	//     TVec3 diff = *this; diff.sub(other); return TUtil<f32>::sqrt(diff.squared());
+	// project-wide against a fixed baseline: 5 functions improve, 16 regress
+	// (fuzzy_match total 96.91% -> 96.88%). The wins are real and large --
+	// TSpineEnemy::isReachedToGoal 67.5% -> 99.7%, TElecNokonoko::
+	// isResignationAttack 82.6% -> 99.8%, TNerveRHGraphWander::execute
+	// 91.7% -> 99.8%, TNerveElecCarapaceMove::execute 90.6% -> 95.3% -- and so
+	// are the losses: TBossMantaManager::updateMantaEscape 84.4% -> 37.6%, the
+	// three TNerveBathtubKiller nerves ~97% -> ~76%, TPictureTelesa::touchActor
+	// 94.2% -> 67.4%, TMapObjGrassManager::perform 99.9% -> 88.0%,
+	// TMario::hipAttacking 99.8% -> 95.7%, four TEnemyMario functions.
+	//
+	// So the ROM has *both* spellings and they cannot share this member: the
+	// sites that want the copy-and-sub form want a second helper, of which
+	// AnimalNerve.cpp's file-scope `calcDist(const TVec3&, const TVec3&)` (a
+	// map-confirmed inline, no symbol) is the known instance. Look for that
+	// helper's real home rather than changing this body; the majority of the
+	// tree's 60-odd sites is the scalar form.
 	f32 distance(const TVec3& other) const
 	{
 		return TUtil<f32>::sqrt((x - other.x) * (x - other.x)
