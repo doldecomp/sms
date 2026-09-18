@@ -48,6 +48,21 @@ TSpider::~TSpider() { }
 // in an inlined callee between local_bc.sub() and the final operator-; and the
 // 12-byte hole above the setVelocity temporaries is a fourth TVec3 temporary
 // from the `param_1->setVelocity(local_5C)` site in the airborne branch.
+//
+// Batch 131 refuted the "fourth temporary" half of that: **no by-value shape
+// can supply it**, because every one costs the three-word copy. A TU-local
+// level taking the vector by value at that one site, a named copy
+// (`TVec3 newVel = local_5C; setVelocity(newVel)`) and an explicit
+// `TVec3(local_5C)` argument are all identical -- 355 instructions against
+// retail's 349 and frame 0x128, i.e. +8 not +12. `local_50.add(local_5C)` in
+// place of `+=` is byte-identical. Since the hole sits directly below `normal`
+// (the lowest named local) and a *dead named local in the caller* is the only
+// construct that adds its own size there (research batch 119's sizing law), the
+// 12 bytes are most likely a dead 12-byte named local declared last among the
+// named block, which is not shippable on its own evidence. The 52-byte hole
+// plus the `operator-` return buffer at 0x40 is the by-value-return residue of
+// research batch 119 (this function is one of the 130 `bl sub` sites), so the
+// unit cannot close before that does.
 void TSpider::bind(TLiveActor* param_1)
 {
 	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
