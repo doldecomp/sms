@@ -7,51 +7,30 @@
 MSBgm* MSBgm::smBgmInTrack[3];
 f32 MSBgm::smMainVolume = 0.75f;
 
-// TODO: every instruction matches; only the frame differs (target 0x48, ours
-// 0x28), so the original reserved 32 bytes of locals the optimiser never
-// touched. `volatile char trash[25..32]` reaches 100% with no instruction
-// change, which confirms the body is right, but no plausible declaration
-// accounts for the bytes yet.
-//
-// The naming ladder was re-measured exhaustively: all 72 combinations of six
-// spellings of the table read x three of the allocation x four of the track
-// clearing. Each of these is +8 and instruction-neutral:
-//   - naming the table owner, either `JAIData* data = MSGMSound->unk0` or a
-//     `JAISoundTable&`/`JAISoundTable*` bound to `...->mSeTable`
-//   - naming the allocation, `MSBgm* bgm = new MSBgm(i)` (declare-then-assign
-//     is worth the same)
-//   - clearing the tracks with `for (u32 i = 0; i < 3; ++i)` or `for (int i
-//     ...)`, which MWCC unrolls into the same three stores
-// Naming both the `JAIData*` and a `JAISoundTable&` counts as two levels, but
-// the total caps at **0x40** for every combination: MWCC reuses slots beyond
-// three scalar locals, so scalar naming cannot reach 0x48. A `u8` loop index
-// is 39 instructions instead of 34, and `u16 count;` split from its assignment
-// is worth zero.
-//
-// The remaining 8 bytes are therefore one 8-byte object at the bottom of the
-// frame - a two-word aggregate declared last in the body, or a non-trivial
-// 8-byte class local in an inlined callee (see docs/catalog/frame-gaps.md,
-// "The last 8 bytes"). There is no candidate for one here: the inlined callee
-// chain is MSBgm::MSBgm -> JALListVirtualNode -> JALListS, all plain ctor
-// initialiser lists bottoming out in the out-of-line `JALList<MSBgm>::JALList`
-// call, and retail references no stack slot in init, so there is no positional
-// evidence either.
-//
-// Ruled out: `u32` vs `u16` count, `int` vs `u32` loop indices, a shared loop
-// index, a single-iteration category loop, a named sound id, and
-// `MSBgm** tracks = smBgmInTrack` (changes instructions). The UNUSED symbols
-// in this TU (the four node destructors, which our build already emits at the
-// exact map sizes, and the mute/pause/volume stubs) are not callable from
-// here, so no missing inline explains the gap either.
+// Retail's 0x48 frame is four +8 levers, and the fourth has to be on a class
+// the other three do not touch: naming the `JAIData*`, binding the
+// `JAISoundTable&` and writing the track clears as a loop saturate at 0x40
+// (all 72 combinations of the older trial table did), and the extra level on
+// `JAIBasic::unk0` supplies the last 8 bytes. `JAIBasic::getData()` as a real
+// member accessor lands the same 0x48 at the same 34 instructions, but
+// JAIBasic.hpp is shared, so the level is parked here as a TU-local
+// `static inline` and reported instead. (Binding the helper's own result
+// inside it is a further +8 and overshoots to 0x50.)
+static inline JAIData* MSBgmGetAudioData(JAIBasic* basic)
+{
+	return basic->unk0;
+}
+
 void MSBgm::init()
 {
-	u16 count = MSGMSound->unk0->mSeTable.mSoundMax[16];
+	JAIData* data        = MSBgmGetAudioData(MSGMSound);
+	JAISoundTable& table = data->mSeTable;
+	u16 count            = table.mSoundMax[16];
 	for (u32 i = 1; i < count; ++i)
 		new MSBgm(i);
 
-	smBgmInTrack[0] = nullptr;
-	smBgmInTrack[1] = nullptr;
-	smBgmInTrack[2] = nullptr;
+	for (u32 j = 0; j < 3; ++j)
+		smBgmInTrack[j] = nullptr;
 }
 
 MS_SCENE_WAVE MSBgm::getSceneNo(u32 param)
