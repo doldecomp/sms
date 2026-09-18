@@ -39,6 +39,7 @@
   "GC2D/MessageLoader.cpp",
   "GC2D/MessageUtil.cpp",
   "GC2D/ProgSelect.cpp",
+  "GC2D/ScrnFader.cpp",
   "GC2D/ShineFader.cpp",
   "JSystem/J2D/J2DGrafContext.cpp",
   "JSystem/J2D/J2DOrthoGraph.cpp",

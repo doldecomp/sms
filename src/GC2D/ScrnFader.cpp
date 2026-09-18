@@ -60,19 +60,30 @@ void draw_wipe_box(const JDrama::TRect& param_1, JUtility::TColor param_2)
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
 		               GX_LO_NOOP);
 
-	// The height term is computed first in retail (the y2/y1 loads and the
-	// first int-to-float magic pair come before the x pair), so `h` is
-	// declared first: 93.8 -> 94.1. TODO: the residue is a uniform 8-byte
-	// frame gap (0x90 vs 0x88; every double temp and the JUTRect at 0x44 vs
-	// 0x3c move together) plus the scheduling of the two int-to-float pairs,
-	// where retail parks both 0x43300000 high words before either `lfd` and
-	// we interleave the second one. Rejected: a named `u8 alpha` (no change),
-	// `int h`/`int w` instead of `f32` (90.8%, one extra instruction).
-	f32 h = param_2.a * (param_1.getHeight() >> 1) / 255.0f;
-	f32 w = param_2.a * (param_1.getWidth() >> 1) / 255.0f;
-
-	JUTRect local_4c(param_1.x1 + int(w), param_1.y1 + int(h),
-	                 param_1.x2 - int(w), param_1.y2 - int(h));
+	// No named `h`/`w` locals: the inset is spelled out in all four
+	// arguments and MWCC common-subexpresses it.  The order of the six
+	// double-word conversion slots is what says so.  Arguments evaluate
+	// right to left, so retail's descending slots read
+	//   0x80 int->float(height), 0x78 float->int(height),
+	//   0x70 int->float(width),  0x68 float->int(width),
+	//   0x60 float->int(height) again, 0x58 float->int(width) again,
+	// i.e. each inset's int->float temporary is allocated immediately before
+	// the first float->int temporary that consumes it.  Two named `f32`
+	// locals put both int->float temporaries first instead
+	//   (0x78 h, 0x70 w, 0x68/0x60/0x58/0x50 the four float->int)
+	// and also cost 8 bytes of frame (0x88 against retail's 0x90) and a
+	// two-register swap on the y2/alpha loads: 94.1% however they are
+	// declared or assigned (block declaration, either order, either
+	// assignment order, a named `u8 alpha`, `int h`/`int w`).
+	JUTRect local_4c(
+	    param_1.x1
+	        + int(param_2.a * (param_1.getWidth() >> 1) / 255.0f),
+	    param_1.y1
+	        + int(param_2.a * (param_1.getHeight() >> 1) / 255.0f),
+	    param_1.x2
+	        - int(param_2.a * (param_1.getWidth() >> 1) / 255.0f),
+	    param_1.y2
+	        - int(param_2.a * (param_1.getHeight() >> 1) / 255.0f));
 
 	u32 color = 0xff;
 	GXBegin(GX_QUADS, GX_VTXFMT0, 0x10);
@@ -413,15 +424,12 @@ void TSMSFader::load(JSUMemoryInputStream& stream)
 	// second (96.7%). Retail's adjacent pair suggests both destinations were
 	// named locals declared in the reverse order (colour first), which would
 	// put the colour at 0x28 and the frame count at 0x24.
-	s32 local_1c = stream.readS32();
+	startFadein(stream.readS32());
 
-	startFadein(local_1c);
+	u32 color = stream.readU32();
 
-	u32 local_18;
-	stream >> local_18;
-
-	setColor(JUtility::TColor(local_18 >> 24, local_18 >> 16 & 0xFF,
-	                          local_18 >> 8 & 0xFF, local_18 & 0xFF));
+	setColor(JUtility::TColor((u8)(color >> 24), (u8)(color >> 16),
+	                          (u8)(color >> 8), (u8)color));
 }
 
 void TSMSFader::setDisplaySize(int param_1, int param_2)
