@@ -337,5 +337,3 @@ void TFishoidManager::createModelData()
 	};
 	createModelDataArray(entry);
 }
-
-TFishoidManager::~TFishoidManager() { }

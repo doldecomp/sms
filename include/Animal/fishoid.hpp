@@ -100,7 +100,9 @@ class TFishoidManager : public TEnemyManager {
 public:
 	TFishoidManager(const char* name = "回遊魚マネージャー");
 
-	virtual ~TFishoidManager();
+	// The map has __dt__15TFishoidManagerFv (weak)
+	// with no ~TFishoidManager() of its own, so it is the implicit
+	// destructor; declaring one would make it global.
 	virtual void createModelData();
 };
 
