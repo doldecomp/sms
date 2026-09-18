@@ -1818,7 +1818,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 			if (param_3) {
 				for (int i = 0; i < 3; ++i)
 					if (i != unkB0 || unk1C == PROGRESS_UNK1C
-					    || unk40[i].unk0 == 1)
+					    || unk40[unkB0].unk0 == 1)
 						unk2A4[i]->getPane()->hide();
 			}
 			unk10 = 5;
@@ -1917,13 +1917,15 @@ s8 TCardLoad::selectFunction()
 			((J2DPicture*)unk378[unkB0][unkB6]->getPane())->mWhite = 0x00FF00FF;
 			for (int i = 0; i < 3; ++i) {
 				if (unk40[i].unk0 == 1) {
-					setMessage(unk2C0[i], 0x14, 0);
-					setMessage(unk2CC[i], 0x14, 0);
+					// The ROM writes the shared caption pair here, not the
+					// per-slot boxes the surrounding show()/hide() use.
+					setMessage(unk51C, 0x14, 0);
+					setMessage(unk520, 0x14, 0);
 					unk2CC[i]->show();
 					unk2D8[i]->hide();
 				} else if (unk40[i].unk18 == 0) {
-					setMessage(unk2C0[i], 0x14, 0x1B);
-					setMessage(unk2CC[i], 0x14, 0x1B);
+					setMessage(unk51C, 0x14, 0x1B);
+					setMessage(unk520, 0x14, 0x1B);
 					unk2CC[i]->show();
 					unk2D8[i]->hide();
 				} else {
@@ -1990,9 +1992,10 @@ s8 TCardLoad::selectFunction()
 
 				JUTRect rect
 				    = unk378[unkB0][unkB6]->getPane()->getGlobalBounds();
-				JGeometry::TVec3<f32> pos(rect.x1 + rect.getWidth() / 2.0f,
-				                          rect.y1 + rect.getHeight() / 2.0f,
-				                          0.0f);
+				JGeometry::TVec3<f32> pos;
+				pos.x = rect.x1 + rect.getWidth() * 0.5f;
+				pos.y = rect.y1 + rect.getHeight() * 0.5f;
+				pos.z = 0.0f;
 				gpEmitterManager4D2->createEmitter(pos, 0x1FA, nullptr,
 				                                   nullptr);
 				unkAC = gpEmitterManager4D2->unkC8[0][0];
