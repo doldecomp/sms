@@ -437,17 +437,21 @@ void TChuuHana::behaveToWater(THitActor* param_1)
 void TChuuHana::attackToMario()
 {
 	if (mSpine->getCurrentNerve() != &TNerveChuuHanaObject::theNerve()) {
-		if (mDamageSw)
+		if (mDamageSw) {
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
-
-		if (mSpine->getCurrentNerve() == &TNerveChuuHanaAttack::theNerve()) {
+		} else if (mSpine->getCurrentNerve()
+		           == &TNerveChuuHanaAttack::theNerve()) {
 			// The tackle: throw a grounded Mario away along the line
 			// between us.
 			if (SMS_IsMarioTouchGround4cm()) {
 				SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
 
-				JGeometry::TVec3<f32> toMario(mPosition);
-				toMario.sub(SMS_GetMarioPos());
+				// operator- takes its left operand by value, which is
+				// what leaves TVec3::sub out of line here.
+				// TODO: that by-value copy sits at 0x5c where retail has
+				// it at 0x34; the frame size and every other slot agree.
+				JGeometry::TVec3<f32> toMario
+				    = getPosition() - SMS_GetMarioPos();
 
 				Mtx rot;
 				MsMtxSetRotRPH(rot, 0.0f, MsGetRotFromZaxisY(toMario), 0.0f);
