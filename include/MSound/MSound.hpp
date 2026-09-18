@@ -139,7 +139,53 @@ public:
 			                                             out_handle, fade);
 	}
 
-	// Fabricated, very likely due to real startSoundSystemSE
+	// Fabricated, very likely due to real startSoundSystemSE.
+	//
+	// Header round 13 re-measured batch 74's "bind the callee's result"
+	// proposal (`JAISound* sound = nullptr; if (gateCheck(id)) sound =
+	// MSoundSE::startSoundActor(...); return sound;`) and REJECTED it.
+	// Whole-tree: 53 functions improve, 37 of them to byte-exact (TDebuTelesa::
+	// receiveMessage, THamuKuri::behaveToFindMario, TSmallEnemy::
+	// setAfterDeadEffect, TMapObjBase::startSound, TMario::stayWall, ...), but
+	// three byte-exact functions regress, and two of them cannot be recovered:
+	//
+	//   TMapEventSink::control  100 -> 99.95 (frame 0x48 -> 0x50)
+	//   TNerveKazekunPreAttack::execute  100 -> 99.77
+	//   TBGPolDrop::move  100 -> 99.80 (recoverable, see below)
+	//
+	// The slot arithmetic is decisive. TMapEventSink::control's vector
+	// temporary sits at r1+0x28 + 4 * (number of 4-byte bindings this inline
+	// makes at the site), measured: 0x28 with the call spelled raw, 0x2c with
+	// one call-site binding, 0x30 with this wrapper as written (`this` +
+	// `position`), 0x34 with the result local added. Retail's temporary is at
+	// 0x30 in a byte-exact function, so retail's wrapper makes exactly *two*
+	// bindings here -- there is no room for a third, and no compensating error
+	// is possible in a function that already matches byte for byte. The same
+	// reading holds for TNerveKazekunPreAttack::execute (0x68 / 0x6c / 0x70).
+	//
+	// A single body cannot serve both groups, so the 4 bytes the 37 improving
+	// sites want are *not* in this function; they must come from a second
+	// inlined level between those sites and this one (a per-class sound helper
+	// that inlined everywhere and so left no map symbol, in the shape of the
+	// emitted TMario::startSoundActor(u32) and TMapObjBase::startSound(u16)).
+	// That is the lead to chase, not this body.
+	//
+	// Call-site spellings tried at the three regressing sites, all with the
+	// result-binding body in place:
+	//   raw `if (gpMSound->gateCheck(id)) MSoundSE::startSoundActor(...)`
+	//       -- 4 bytes short at all three (and it moves the position argument's
+	//          evaluation after the gate, losing r30 at TMapEventSink);
+	//   raw + `const Vec* pos` named before the gate -- restores the argument
+	//       order (r30 back) but still 4 short at TMapEventSink; actively worse
+	//       at Kazekun (98.7) and TBGPolDrop (97.3), which evaluate the address
+	//       after the gate;
+	//   raw + `JAISound* sound = nullptr;` named at the site -- recovers
+	//       TBGPolDrop::move to byte-exact, but adds nothing at TMapEventSink:
+	//       a call-site named pointer is register-allocated, whereas an inlined
+	//       wrapper's binding always takes a slot. That asymmetry is why no raw
+	//       spelling can imitate the wrapper's frame;
+	//   `gpMSound->` vs `SMSGetMSound()->` receiver -- codegen-identical here.
+	// See docs/catalog/frame-gaps.md, "Closure batch 74", for the site table.
 	void startSoundActor(u32 id, const Vec* position, u32 ground_no,
 	                     JAISoundHandle* out_handle, u32 fade, u8 camera_idx)
 	{
