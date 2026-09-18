@@ -116,8 +116,13 @@ void TBathtubBinder::bind(TLiveActor* actor)
 // conversion pair, so `dir` really is a `TVec3` in retail. Measured: swapping
 // the two component assignments so `dir.z` is written first is bit-identical
 // (86 markers), and replacing `dir` with `f32 dirX`/`f32 dirZ` is 109 markers
-// and 0x170 of frame. So the ranking has to come from something else giving
-// the dir pair longer-lived homes than the products.
+// and 0x170 of frame. Research batch 171 settled what this is: a wholesale
+// *group* trade between the dir pair and the two products, of the kind batch
+// 145 recorded for `checkNextFrameSe`'s GPRs, and not a rank inside one group.
+// Also rejected there: an inlined four-statement `BathtubDirXZ(dir, rot)`
+// helper in both temp orders (116 markers, +8 frame). Retail's **load** order
+// is reachable for free by naming or assigning z first (`lfs 0x104` before
+// `lfs 0xe4`), but it buys no marker on its own.
 void TBathtubBinder::float_(TLiveActor* actor)
 {
 	if (mWater == nullptr)

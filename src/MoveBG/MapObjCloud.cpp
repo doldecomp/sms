@@ -142,6 +142,10 @@ u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 // retail's and no source order reaches it; the natural single-expression
 // spelling is kept below because the named-product form is no closer by
 // marker count and reads worse.
+// Research batch 171 re-swept this with fifteen more spellings (every grouping
+// and operand order, reusing `fVar8` as the literal's home, naming one or both
+// member reads in both orders, raw `mScaling.x`, and `mDamageHeight` first):
+// all are four markers or worse, so the site is exhausted.
 //
 // The 56 bytes of dead low region this body was missing are five inline
 // expansions, each a member read through one level that binds its result.
