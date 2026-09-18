@@ -57,23 +57,50 @@ static const char* SMS_NO_MEMORY_MESSAGE = "メモリが足りません\n";
 // Batch 151 read the residue as a position rather than a size: the
 // `SMSGetRederRect_Game()` return temporary sits at 0xb8 in retail and 0xb4
 // here, so retail holds 4 more bytes of pool *below* that temporary and 4
-// fewer above it, at the same 0xe8 frame. The new inline-temp price rule
-// (return type: reference 8, pointer 4, void 0) does not deliver a 4-byte step
-// on either side of it: a second pointer-returning binding level over
-// `PreEntrySearch` at the `camera 1` site alone is +8 (0xf0, 7 markers), not
-// +4, and dropping the `PreEntrySearch2` level in favour of the direct
-// `search2` call is +0 in frame but costs three more markers. The lever wanted
-// is a paired +4 below and -4 above the TViewport statement.
+// fewer above it, at the same 0xe8 frame.
+//
+// Closed by re-pass 172 with batch 170's nested-fork step. The two header
+// entry points are replaced by one TU-local direct-return **fork** over the
+// global `JDrama::TNameRefGen::instance`, shared by all five sites: the four
+// binding levels keep their +12 each and the fifth site's fork is the missing
+// +4, which puts the return buffer at 0xb8 with the frame unchanged. The fork
+// has to be spelled *inside* both wrappers -- reached through the header's
+// `search<T>`/`search2` it is +0 -- and it has to be used at all five sites:
+// nesting it under `search2` alone does land the 0xb8 buffer, but the extra
+// inline level makes the first expansion's root-ref temporary coalesce with
+// r28 (the scratch the other four expansions use) where retail coalesces it
+// with r29, `setViewMtx`'s own register. Routing the four `PreEntrySearch`
+// sites through the fork instead of `search<T>` is frame- and register-neutral
+// on its own, so it costs nothing to reach the fifth site's +4.
+//
+// Exhausted for those 4 bytes: a second pointer-returning binding level over
+// `PreEntrySearch` at the `camera 1` site alone (+8, 0xf0); binding
+// `search2`'s result at the fifth site (+12, 0xf0); a parameterless binder at
+// the fifth site with the cast inside (+12, 0xf0); a redundant fork over
+// `search2` itself (+0, MWCC collapses two identical forks); a fork over
+// `getInstance()` alone (+0); `const JDrama::TRect& rect =
+// SMSGetRederRect_Game();` (three inserted instructions); a named
+// `JDrama::TNameRef*` intermediate for the cast (+0); a named
+// `JDrama::TViewport*` for the `new` (+0, and it swaps the push_back argument
+// registers); a named `JDrama::TRect` for the render rect (+0x10 and five
+// instructions); `indirectSheen` typed `JDrama::TNameRef*` with the cast moved
+// to the `push_back` (+0); the cast folded into `PreEntrySearch2` (+0); an
+// explicit `(JDrama::TViewObj*)` on the `new` (+0); and a `static inline`
+// level returning the render rect by value (+0).
+static inline JDrama::TNameRef* PreEntryRootNameRef()
+{
+	return JDrama::TNameRefGen::getInstance()->getRootNameRef();
+}
+
 static inline JDrama::TViewObj* PreEntrySearch(const char* name)
 {
-	JDrama::TViewObj* obj
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>(name);
+	JDrama::TViewObj* obj = (JDrama::TViewObj*)PreEntryRootNameRef()->search(name);
 	return obj;
 }
 
 static inline JDrama::TNameRef* PreEntrySearch2(const char* name)
 {
-	return JDrama::TNameRefGen::search2(name);
+	return PreEntryRootNameRef()->search(name);
 }
 
 void TMarDirector::preEntry(TPerformList* list)
