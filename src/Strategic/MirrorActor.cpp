@@ -121,6 +121,14 @@ void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 // not a call-site one.  Rejected here: named `new` results (frame 8 over when
 // combined with getUnk14(), 11 diffs alone) and a named cast for the SDLModel
 // branch (+0).
+// Closure batch 129: stated positionally, retail's pool is 16 bytes *more
+// compact* (0x90..0xbc against our 0x80..0xbc) and carries 16 more dead bytes
+// below it -- exactly SDLModel::entry's signature, where the extra words sit
+// in the gaps between expansion groups. Also rejected: `search2` with the cast
+// at the site (frame unmoved, 7 diffs), `insert(getChildren().end(), this)`
+// (92.5%), and dropping the named `mirrorScene` (every pair moves +4 and pair
+// 3 +8, so the pairs are not rigidly anchored: pair 2 then lands on retail's
+// 0xa4/0xa8 while the gaps grow to 24 and 16).
 void TMirrorActor::init(J3DModel* param_1, u16 param_2)
 {
 	unk1A = param_2;
