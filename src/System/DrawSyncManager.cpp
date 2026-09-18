@@ -49,6 +49,13 @@ private:
 	/* 0xC */ u32 mWriteIdx;
 };
 
+// TODO (closure batch 152): the fourth non-exact symbol in this object is the
+// weak JGadget::TVector<TDrawSyncTokenRange>::insert, at 99.2% and
+// instruction-exact: `this` and the count parameter are swapped (retail r30/
+// r29, ours r29/r30) and our frame is 0x20 *larger* than retail's 0x100, so it
+// wants a lever removed rather than added. It lives in JGadget's shared
+// header, so it is parked here as a report item.
+
 // TODO: 98.2%. Every instruction and the frame (0x40) are exact; the whole
 // residue is a five-way rotation of the callee-saved set, with the inlined
 // TDrawSyncManager constructor's values one step round from retail's:

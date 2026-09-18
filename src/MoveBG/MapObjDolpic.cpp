@@ -258,6 +258,13 @@ void TBellDolpic::calcRootMatrix()
 	PSMTXConcat(model->getBaseTRMtx(), temp, model->getBaseTRMtx());
 }
 
+// TODO (closure batch 152): 98.8%, instruction-exact, frame exact (0x48). Two
+// clusters, both a pure FPR permutation: the cross2/normalise block rotates
+// f4-f7 by one, and the `rand()` scaling chain permutes f0-f3. Worth
+// recording: objdiff reports the two `.sdata2` relocations in that chain as
+// *equal* (@3200 == our @1513, @3201 == our @1512), so the literal order is
+// already right and this is not the pool-order problem the differing ids
+// suggest -- it is codegen-tells.md's known-open FPR permutation.
 void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 {
 	if (fabsf(unk150) > 0.01f)
