@@ -18,8 +18,32 @@ SampleCtrlJoint::SampleCtrlJoint(J3DJoint* joint)
 	mMax.set(joint->getMax());
 }
 
-// TODO: 311/311 instructions are identical; only the frame is 8 bytes too big
-// (ours 0xd0 / inline-temp region ends at 0x9c, retail 0xc8 / 0x94). The named
+// TODO (batch 131): 311/311 instructions are identical and the frame is now
+// retail's 0xc8; the whole residue is 4 bytes, the getAttnFn() lookup table at
+// 0x94 against retail's 0x90.
+// Half of the original 8 came from spelling the slice explicitly:
+// `unk38 = *(J3DTevOrderInfo*)material->getTevOrder(0)` instead of relying on
+// the implicit base-class slice. That is a plain upcast (J3DTevOrder derives
+// from J3DTevOrderInfo), not a reinterpret, and it is exactly what a developer
+// writes when the copy is meant to take only the info part -- so it is kept.
+// `*(J3DTevOrderInfo*)material->getTevBlock()->getTevOrder(0)` is the same -4
+// (the two knobs are not additive), which says the 4 bytes are one inline
+// *level*: `material->getTevOrder(i)` is the J3DMaterial forwarder plus
+// J3DTevBlock's own getter, and skipping the forwarder removes one.
+// The last 4 bytes therefore need exactly one of the 24 `getColorChan(i)` /
+// `getTevStage(i)` sites to skip the forwarder as well. Three spellings are
+// byte-exact and interchangeable -- `material->getColorBlock()->getColorChan(i)`
+// at the mAttnFn site, or `material->getTevBlock()->getTevStage(i)` at either
+// the first or the last field of the tev loop -- and all three are a mixed
+// accessor path at one line out of eighteen identical ones, so none is
+// committed: see the report for batch 131. Every plausible alternative is +0:
+// `j3dDefaultTevOrderInfoNull` through the same cast, `getMatColor(0)` or
+// `getTevStageNum()` through their blocks, `i++` for `++i`, `4U` for the first
+// bound, and `u16` for either loop counter (`u32`/`int`/`s32` cost four
+// instructions; `int stageNum` does remove 8 bytes but from *above* the table
+// and it turns retail's unsigned `cmplw` bound test into `cmpw`).
+// Historical note, for the record (ours was 0xd0 / inline-temp region ending at
+// 0x9c against retail 0xc8 / 0x94). The named
 // local region is already right (the getAttnFn() lookup table sits 0x38 below
 // the frame top in both). Priced in the temp region: each
 // J3DMaterial::getColorChan/getTevStage expansion is +4 (6 and 18 sites),
@@ -56,7 +80,7 @@ SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* material)
 		unk18[i].mAttnFn    = material->getColorChan(i)->getAttnFn();
 	}
 
-	unk38 = *material->getTevOrder(0);
+	unk38 = *(J3DTevOrderInfo*)material->getTevOrder(0);
 
 	u8 stageNum = material->getTevStageNum();
 	for (u8 i = 0; i < stageNum; ++i) {
