@@ -11052,16 +11052,16 @@ bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
                                 u32 param_3)
 {
-	MActor* oldActor = mMActor;
+	MActor* oldActor = getMActor();
 	MActor* newActor = getActorKeeper()->createMActor(param_1, param_3);
 	mMActor          = newActor;
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000)) {
-		mMActor->setLightID(0);
-		mMActor->unmarkUnk40();
+		getMActor()->setLightID(0);
+		getMActor()->unmarkUnk40();
 	}
 	calcRootMatrix();
-	mMActor->calc();
-	mMActor->viewCalc();
+	getMActor()->calc();
+	getMActor()->viewCalc();
 	mMActor = oldActor;
 	return newActor;
 }

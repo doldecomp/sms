@@ -157,7 +157,7 @@ void THauntLeg::init(TLiveManager* manager)
 	mHitFlags |= 0x60000000;
 	((TWalker*)mBinder)->setMode(1);
 	unk130 = 2;
-	mMActor->setJointCallback(1, HauntLegCallback);
+	getMActor()->setJointCallback(1, HauntLegCallback);
 
 	unk194 = new THauntedObject("ハントオブジェクト");
 

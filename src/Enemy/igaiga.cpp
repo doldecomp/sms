@@ -992,7 +992,7 @@ void TGorogoro::init(TLiveManager* manager)
 	unk1A4 = (TRollEnemySaveLoadParams*)getSaveParam();
 
 	TMirrorActor* mirror = new TMirrorActor("ゴロゴロ in鏡");
-	mirror->init(mMActor->getModel(), 0x18);
+	mirror->init(getMActor()->getModel(), 0x18);
 
 	mTevKColor.a = 0xFF;
 
@@ -1000,20 +1000,20 @@ void TGorogoro::init(TLiveManager* manager)
 	const ResTIMG* timg = (const ResTIMG*)JKRFileLoader::getGlbResource(
 	    "/scene/map/pollution/H_ma_rak.bti");
 	if (timg) {
-		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(), "M_dummy",
+		SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(), "M_dummy",
 		                     *timg);
 		SMS_ChangeTextureAll(mirror->unk14->getModelData(), "M_dummy", *timg);
 	}
 
-	for (u16 i = 0; i < mMActor->getModel()->getModelData()->getMaterialNum();
-	     ++i) {
-		SMS_InitPacket_OneTevKColor(mMActor->getModel(), i, GX_KCOLOR0,
+	for (u16 i = 0;
+	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); ++i) {
+		SMS_InitPacket_OneTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
 		                            &mTevKColor);
 		SMS_InitPacket_OneTevKColor(mirror->unk14, i, GX_KCOLOR0,
 		                            &mTevKColor);
 	}
 
-	mMActor->setJointCallback(1, RollEnemyBodyCallback);
+	getMActor()->setJointCallback(1, RollEnemyBodyCallback);
 	unk130 = 1;
 }
 

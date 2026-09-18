@@ -929,7 +929,7 @@ void TBossWanwan::shakeCamera(int mode)
 	f32 coolRange = getSaveParam2()->mSLShakeLengthMaxHP0.get();
 
 	f32 heat;
-	if (mMActor->checkCurBckFromIndex(BWANWAN_BCK_BARK))
+	if (getMActor()->checkCurBckFromIndex(BWANWAN_BCK_BARK))
 		heat = 1.0f;
 	else
 		heat = (f32)getHitPoints()

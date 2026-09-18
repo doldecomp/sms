@@ -659,10 +659,10 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			mLiveFlag &= ~0x10000;
 		if (!gpMarDirector->isThing())
 			changeAnmRateAndFrameUpdate_();
-		mHead->mInbetween->execMotionBlend(mHead->mMActor);
+		mHead->mInbetween->execMotionBlend(mHead->getMActor());
 		for (int i = 0; i < 8; ++i) {
 			TBossHanachanPartsBody* body = mBodies[i];
-			body->mInbetween->execMotionBlend(body->mMActor);
+			body->mInbetween->execMotionBlend(body->getMActor());
 		}
 	}
 	if (cue & 2) {
@@ -691,9 +691,9 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 	if (cue & 4) {
-		mHead->mMActor->viewCalc();
+		mHead->getMActor()->viewCalc();
 		for (int i = 0; i < 8; ++i)
-			mBodies[i]->mMActor->viewCalc();
+			mBodies[i]->getMActor()->viewCalc();
 	}
 	if (mLiveFlag & 0x10000)
 		mSandPillarActor->perform(cue, graphics);

@@ -182,8 +182,8 @@ void TBaseNPC::init(TLiveManager* param_1)
 		onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
-	if (mMActor->getAnmBck())
-		mMActor->getAnmBck()->initNormalMotionBlend();
+	if (getMActor()->getAnmBck())
+		getMActor()->getAnmBck()->initNormalMotionBlend();
 
 	if (isPollutionNpc())
 		initSinkNpc_();
@@ -207,7 +207,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	if (mNeckJointIndex != -1) {
 		unk230 = new TNpcUnk230Struct;
 		extern int NPCNeckCallBack(J3DNode * param_1, int param_2);
-		mMActor->setJointCallback(mNeckJointIndex, &NPCNeckCallBack);
+		getMActor()->setJointCallback(mNeckJointIndex, &NPCNeckCallBack);
 	}
 
 	setHappyEffectMtxPtr_(jointNameTab);

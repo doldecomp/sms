@@ -256,8 +256,8 @@ void TEffectModel::calcRootMatrix()
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 	               mRotation.y, mRotation.z);
 	mtx.translation(mPosition.x, mPosition.y, mPosition.z);
-	mMActor->getModel()->setBaseTRMtx(mtx);
-	mMActor->getModel()->setBaseScale(mScaling);
+	getMActor()->getModel()->setBaseTRMtx(mtx);
+	getMActor()->getModel()->setBaseScale(mScaling);
 }
 
 TEffectColumWaterManager::TEffectColumWaterManager(const char* name)

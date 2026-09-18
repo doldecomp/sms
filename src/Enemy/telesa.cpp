@@ -434,12 +434,13 @@ void TTelesa::calcRootMatrix()
 {
 	if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
 		for (u16 i = 0;
-		     i < mMActor->getModel()->getModelData()->getMaterialNum(); ++i) {
+		     i < getMActor()->getModel()->getModelData()->getMaterialNum();
+		     ++i) {
 			// TODO: still 16 bytes of frame short of the ROM after the
 			// 4x4 fix (0x130 vs 0x140); another local is missing here.
 			Mtx44 afStack_94;
 			SMS_GetLightPerspectiveForEffectMtx(afStack_94);
-			mMActor->getModel()
+			getMActor()->getModel()
 			    ->getModelData()
 			    ->getMaterialNodePointer(i)
 			    ->getTexGenBlock()
@@ -449,13 +450,13 @@ void TTelesa::calcRootMatrix()
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x187, mMActor->getModel()->getAnmMtx(4), 1, this)) {
+		        0x187, getMActor()->getModel()->getAnmMtx(4), 1, this)) {
 			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x188, mMActor->getModel()->getAnmMtx(4), 1, this)) {
+		        0x188, getMActor()->getModel()->getAnmMtx(4), 1, this)) {
 			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 	}

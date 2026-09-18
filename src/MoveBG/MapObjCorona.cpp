@@ -628,7 +628,7 @@ void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 void TBathtub::control()
 {
 	if (unk29A) {
-		if (mMActor->curAnmEndsNext(0, nullptr)) {
+		if (getMActor()->curAnmEndsNext(0, nullptr)) {
 			switch (unk294++) {
 			case 0:
 				startBck("bath_overturn2");
@@ -651,7 +651,7 @@ void TBathtub::control()
 			shineEmitter2->setGlobalScale(
 			    JGeometry::TVec3<f32>(3.0f, 3.0f, 3.0f));
 
-		MtxPtr starMtx = mMActor->getModel()->getAnmMtx(mStarJntIdx);
+		MtxPtr starMtx = getMActor()->getModel()->getAnmMtx(mStarJntIdx);
 		unk200.set(starMtx[0][3], starMtx[1][3], starMtx[2][3]);
 		if (gpMSound->gateCheck(MSD_SE_SHINE_EXIST))
 			MSoundSESystem::MSoundSE::startSoundActor(
@@ -698,7 +698,7 @@ void TBathtub::control()
 		gpMarioParticleManager->emit(0x1BE, &unk1F4, 1, this);
 	for (int i = 0; i < 5; ++i) {
 		if (unk168[i]->unk248) {
-			MtxPtr mtx = mMActor->getModel()->getAnmMtx(mWaterJntIdx[i]);
+			MtxPtr mtx = getMActor()->getModel()->getAnmMtx(mWaterJntIdx[i]);
 			gpMarioParticleManager->emitAndBindToMtxPtr(0x1BF, mtx, 1, mtx);
 		}
 	}

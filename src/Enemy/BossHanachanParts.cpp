@@ -120,10 +120,10 @@ void TBossHanachanPartsBase::initMapCollisionAndHitActor_(TIdxGroupObj* group)
 		offsetY = params->mSLHeadHitOffsetY.get();
 		break;
 	}
-	J3DModel* model = mMActor->getModel();
+	J3DModel* model = getMActor()->getModel();
 	JUTNameTab* names = model->getModelData()->getJointName();
 	u16 joint = names->getIndex(cMapCollisionJointName);
-	unk108 = mMActor->getModel()->getAnmMtx(joint);
+	unk108 = getMActor()->getModel()->getAnmMtx(joint);
 	unk104 = new TMapCollisionMove;
 	unk104->init(collisionFile, 0x8000, this);
 	unk100 = new TWaterHitActor("ボスハナチャンのパーツ");

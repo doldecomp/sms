@@ -19,15 +19,15 @@ void TBossHanachan::setHeadAndBodyAnm(
 	for (int i = 0; i < 8; ++i) {
 		TBossHanachanPartsBody* body = mBodies[i];
 		if (body->setAnm_(anm, blend)) {
-			J3DFrameCtrl* bck = body->mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			J3DFrameCtrl* bck = body->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			int frame = (i * getChangeParams()->getSLNormalBckFrameDiff())
 			            % bck->getEnd();
 			f32 texFrame = frame;
 			bck->setFrame(frame);
-			J3DFrameCtrl* btp = body->mMActor->getFrameCtrl(ANM_TYPE_BTP);
+			J3DFrameCtrl* btp = body->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
 			if (btp)
 				btp->setFrame(texFrame);
-			J3DFrameCtrl* btk = body->mMActor->getFrameCtrl(ANM_TYPE_BTK);
+			J3DFrameCtrl* btk = body->getMActor()->getFrameCtrl(ANM_TYPE_BTK);
 			if (btk)
 				btk->setFrame(texFrame);
 		}

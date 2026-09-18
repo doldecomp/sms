@@ -1172,13 +1172,14 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	u32 calcAnim = cue & CUE_CALC_ANIM;
 	if (calcAnim) {
-		s32 jointIndex = mOwner->mMActor->getModel()
+		s32 jointIndex = mOwner->getMActor()->getModel()
 		                     ->getModelData()
 		                     ->getJointName()
 		                     ->getIndex("ha7");
-		MtxPtr jointMtx = mOwner->mMActor->getModel()->getAnmMtx(jointIndex);
-		if (mOwner->mMActor->checkCurBckFromIndex(3)
-		    && mOwner->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+		MtxPtr jointMtx
+		    = mOwner->getMActor()->getModel()->getAnmMtx(jointIndex);
+		if (mOwner->getMActor()->checkCurBckFromIndex(3)
+		    && mOwner->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 		           < 700.0f) {
 			mPosition.set(jointMtx[0][3], jointMtx[1][3], jointMtx[2][3]);
 		}
@@ -1415,7 +1416,7 @@ void TBossEel::init(TLiveManager* manager)
 	onLiveFlag(LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10);
 	mGroundHeight = gpMap->checkGround(
 	    mPosition.x, mPosition.y + getHeadHeight(), mPosition.z, &mGroundPlane);
-	mMActor->initNormalMotionBlend();
+	getMActor()->initNormalMotionBlend();
 	mSpine->initWith(&TNerveBossEelWaitAppear::theNerve());
 
 	initHitActor(0x08000003, 1, ACTOR_TYPE_PLAYER,
@@ -1424,12 +1425,12 @@ void TBossEel::init(TLiveManager* manager)
 	             mSaveParams->mSLBodyDamageRadius.get(),
 	             mSaveParams->mSLBodyDamageHeight.get());
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	J3DModel* model = mMActor->getModel();
+	J3DModel* model = getMActor()->getModel();
 	if (!model->getSkinDeform()) {
 		J3DSkinDeform* deform = new J3DSkinDeform;
 		model->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	}
-	mMActor->resetDL();
+	getMActor()->resetDL();
 
 	mHeadCollision = new THitActor("めおとウナギの頭部");
 	mHeadCollision->initHitActor(0x08000003, 2, ACTOR_TYPE_PLAYER,
@@ -1443,19 +1444,20 @@ void TBossEel::init(TLiveManager* manager)
 	mHeadCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	mBodyCollision = new TBossEelBodyCollision(
-	    mMActor->getModel()->getBaseTRMtx(), "体コリジョン");
+	    getMActor()->getModel()->getBaseTRMtx(), "体コリジョン");
 	mBodyCollision->initCollision();
 	mBodyCollision->mOwner = this;
 	enemyGroup->getChildren().push_back(mBodyCollision);
 	mBodyCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	mBarrierCollision = new TBossEelBarrierCollision(
-	    mMActor->getModel()->getAnmMtx(7), "障害コリジョン");
+	    getMActor()->getModel()->getAnmMtx(7), "障害コリジョン");
 	mBarrierCollision->initCollision();
 	enemyGroup->getChildren().push_back(mBarrierCollision);
 	mBarrierCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	JUTNameTab* jntNames = mMActor->getModel()->getModelData()->getJointName();
+	JUTNameTab* jntNames
+	    = getMActor()->getModel()->getModelData()->getJointName();
 
 	void* resource;
 	{
@@ -1537,7 +1539,7 @@ void TBossEel::init(TLiveManager* manager)
 	}
 
 	mAwaCollision = new TBossEelAwaCollision(
-	    mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[2]),
+	    getMActor()->getModel()->getAnmMtx(mMapCollisionJointIndices[2]),
 	    "泡コリジョン");
 	mAwaCollision->initCollision();
 	enemyGroup->getChildren().push_back(mAwaCollision);
@@ -1556,7 +1558,7 @@ void TBossEel::init(TLiveManager* manager)
 	}
 
 	initAnmSound();
-	mMActor->getModel()->calc();
+	getMActor()->getModel()->calc();
 }
 
 MtxPtr TBossEel::getTakingMtx() { return mMActor->getModel()->getAnmMtx(7); }

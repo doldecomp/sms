@@ -259,7 +259,7 @@ void TSlotDrum::initNeonMatColor()
 		unk170[i].b = 255;
 		unk170[i].a = 255;
 		SMS_InitPacket_OneTevColor(
-		    mMActor->getModel(),
+		    getMActor()->getModel(),
 		    getModel()->getModelData()->getMaterialName()->getIndex(
 		        matNames[i]),
 		    GX_TEVREG0, &unk170[i]);

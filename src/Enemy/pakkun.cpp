@@ -438,16 +438,16 @@ void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (cue & CUE_CALC_ANIM)
-			mMActor->frameUpdate();
+			getMActor()->frameUpdate();
 	} else {
 		if (cue & CUE_CALC_ANIM) {
 			calcRootMatrix();
 			updateAnmSound();
-			mMActor->calc();
+			getMActor()->calc();
 		}
 		if (!checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 			if (cue & CUE_CALC_VIEW)
-				mMActor->viewCalc();
+				getMActor()->viewCalc();
 			if (cue & CUE_ENTRY)
 				drawObject(graphics);
 		}
