@@ -14,6 +14,16 @@ public:
 	void makeBlockNormal();
 	void makeBlockRock();
 	void pushed();
+
+	// fabricated: the binding (a named pointer local rather than a direct
+	// `return &unk144;`) is the whole point -- it is one 8-byte low-region
+	// slot in every function that inlines pushed(), and it is needed at this
+	// one emit site only.  See the TODO at pushed().
+	const JGeometry::TVec3<f32>* getEffectPos() const
+	{
+		const JGeometry::TVec3<f32>* position = &unk144;
+		return position;
+	}
 	TFileLoadBlock(const char* name = "ファイル読み込みブロック");
 
 	enum {

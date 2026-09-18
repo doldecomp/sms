@@ -258,6 +258,7 @@
   "MoveBG/MapObjEx.cpp",
   "MoveBG/MapObjFloat.cpp",
   "MoveBG/MapObjManager.cpp",
+  "MoveBG/MapObjOption.cpp",
   "MoveBG/MapObjPole.cpp",
   "MoveBG/MapObjSample.cpp",
   "MoveBG/MapObjWater.cpp",

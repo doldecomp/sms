@@ -1,5 +1,4 @@
 #include <MoveBG/MapObjOption.hpp>
-#include <Map/MapCollisionEntry.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/Particles.hpp>
@@ -11,6 +10,12 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+// TMapCollisionBase::setUpTrans' two compound literals are this TU's zero and
+// one vectors, and they must be emitted *after* InfectiousStrings' names: with
+// this include at the top of the file the pool comes out reversed (one, zero,
+// then the names) and the object still scores 100% while the linked DOL loses
+// 234 bytes of .rodata order.
+#include <Map/MapCollisionEntry.hpp>
 
 // TODO: UNUSED at 0x38 in the map, the same size as makeBlockNormal and
 // makeBlockRock, so the body is a startAnim/mState pair; which animation index
@@ -37,28 +42,31 @@ void TFileLoadBlock::makeBlockRock()
 
 static int sRumbleTime = 8;
 
-// TODO: receiveMessage (0x30 vs our 0x20) and touchPlayer (0x28 vs our 0x18)
-// are instruction-exact and both want exactly one dead 13-16-byte non-trivial
-// local *here*: pushed() is UNUSED (0x9c), so an uninitialised class local
-// emits nothing and keeps that size, and it is the only inlined callee the two
-// functions share that is not already pinned by a matching out-of-line copy.
-// Measured (struct with an empty dtor, zero instruction change):
-//   12 bytes -> touchPlayer 0x28 exact, receiveMessage 0x28 (needs 0x30)
-//   13-16    -> both exact
-//   20       -> receiveMessage exact, touchPlayer 0x30 (over)
-//   24       -> both over
-// So two independent frames pin the size at 13-16 bytes, but nothing in the
-// body names the type, so it is left undeclared rather than fabricated.
+// The 16 bytes of low region that receiveMessage (0x30) and touchPlayer (0x28)
+// used to be short are two inlined bindings inside this body, each worth 8 in
+// both callers with zero instruction change:
+//   * startStateTimer(120) instead of the raw mStateTimer stores (the real
+//     accessor that already exists in MapObjBase.hpp), and
+//   * getEffectPos() at the *second* emit only (per site: using it at both
+//     makes MWCC CSE the address into a callee-saved register, +2 instructions
+//     and a register save).
+// Measured alternatives, all +8/+8 and interchangeable with getEffectPos()
+// here: a binding fork of gpCardLoad, of SMSRumbleMgr or of
+// gpMarioParticleManager, a binding wrapper around emit(), and a TU-local
+// static inline taking the block by pointer and binding &block->unk144.
+// A 13-16-byte dead non-trivial local in this body (the earlier reading) lands
+// the same two frames, but nothing here names such an object.
 void TFileLoadBlock::pushed()
 {
 	startBck("fileloadblock");
 	gpCardLoad->setSelected(unk138);
 	SMSRumbleMgr->start(0x15, sRumbleTime, (float*)nullptr);
 	gpMarioParticleManager->emit(MAP_MAP_MS_M_FILEBLOCK, &unk144, 0, nullptr);
-	gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &unk144, 0, nullptr);
-	mStateTimer         = 120;
-	unk13C->mStateTimer = 120;
-	unk140->mStateTimer = 120;
+	gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, getEffectPos(), 0,
+	    nullptr);
+	startStateTimer(120);
+	unk13C->startStateTimer(120);
+	unk140->startStateTimer(120);
 }
 
 void TFileLoadBlock::touchPlayer(THitActor* param_1)
