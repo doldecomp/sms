@@ -163,9 +163,10 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 				coin = gpItemManager->makeObjAppear(0x2000000E);
 			if (coin) {
 				coin->appear();
-				JGeometry::TVec3<f32> pos(mCenter);
-				pos.add(offset);
-				coin->mPosition = pos;
+				// `a = b + c` reaches the map's out-of-line
+				// TVec3::add: operator= is one inline level and the
+				// sum nested in its argument two more.
+				coin->mPosition = mCenter + offset;
 				MsVECNormalize(&offset, &offset);
 				++k;
 				TSamboFlowerSaveLoadParams* params = mFlowers[i]->mSaveParams;

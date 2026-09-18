@@ -689,9 +689,9 @@ void TCannon::hitHead(TBombHei* bomb)
 void TCannon::updateAttachPos()
 {
 	if (mAttachedBomb) {
-		JGeometry::TVec3<f32> pos(mAttachOffset);
-		pos.add(mChorobei->mPosition);
-		mAttachedBomb->mPosition = pos;
+		// `a = b + c` reaches the map's out-of-line TVec3::add: operator= is
+		// one inline level and the sum nested in its argument two more.
+		mAttachedBomb->mPosition = mAttachOffset + mChorobei->mPosition;
 		mAttachedBomb->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		if (mSpine->getCurrentNerve() == &TNerveCannonClose::theNerve()) {
 			mAttachedBomb->kill();
