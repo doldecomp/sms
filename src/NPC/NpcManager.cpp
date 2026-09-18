@@ -185,6 +185,15 @@ static inline bool NpcManagerUnk2A(const TNpcModelData* p)
 void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
                                       TModelDataKeeper* keeper)
 {
+	// TODO: instruction-identical, frame size right (0x150), but `path` sits
+	// at 0x20(r1) in retail and 0x1c(r1) here: the low region is 4 bytes
+	// short and the slack above `path` 4 bytes long. This is the "+4 low /
+	// -4 named" family in docs/catalog/frame-gaps.md. Rejected (no slot
+	// movement): naming the model name, the JKRGetResource result, the
+	// J3DModelData, the keeper folder, a literal 0x100 for sizeof(path).
+	// Rejected (instructions): a named `bool pollution` or an explicit
+	// (bool) cast for getBmt_'s argument (+4/+5 instructions), and moving
+	// `loadFlags` into the outer loop body (99.4%).
 	const TNpcInitInfo* initInfo = SMSGetNpcInitData(npc_type);
 	u32 loadFlags;
 
@@ -203,19 +212,10 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 			if (modelData->unk8[j] == nullptr)
 				continue;
 
-			// `resource` is declared right after `path` and assigned
-			// separately: a block local declared after the buffer lands
-			// below it, which is the 4 bytes of low region that put
-			// `path` on retail's 0x20. An initialised declaration
-			// (`void* resource = JKRGetResource(path);`) is
-			// register-allocated and reserves nothing, and folding the
-			// assignment into the test costs two instructions.
 			char path[0x100];
-			void* resource;
 			snprintf(path, sizeof(path), "%s/%s", keeper->mFolder,
 			         modelData->unk8[j]);
-			resource = JKRGetResource(path);
-			if (resource == nullptr)
+			if (JKRGetResource(path) == nullptr)
 				continue;
 
 			SDLModelData* sdlModel
