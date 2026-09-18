@@ -549,12 +549,12 @@ void TMarioParticleManager::emitTry(s32 param_1,
 
 			if (param_2->mEmitter != nullptr) {
 				param_2->mEmitter->setUserWork((uintptr_t)param_2->unk4);
-				if (param_2->checkFlag(0x10))
-					param_2->mEmitter->setEmitterCallBackPtr(
-					    &emitterCallBackBindToSRTMtxPtr);
-				else
+				if (param_2->checkFlag(INFO_FLAG_BIND_TO_RT_MTX))
 					param_2->mEmitter->setEmitterCallBackPtr(
 					    &emitterCallBackBindToMtxPtr);
+				else
+					param_2->mEmitter->setEmitterCallBackPtr(
+					    &emitterCallBackBindToSRTMtxPtr);
 			}
 		} else {
 			param_2->mEmitter = unk3B8->createSimpleEmitterID(
