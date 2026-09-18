@@ -534,6 +534,9 @@ void TFlagManager::resetOpt()
 		mSavedOptionInts[i] = 0;
 }
 
+// The option flags live twice: 0x7xxxx/0x8xxxx are the memory-card copy and
+// 0x9xxxx/0xAxxxx the live copy, so this and saveOption() are exact mirrors of
+// each other -- 0x70000<->0x90000, 0x80000<->0xA0001, 0x70002<->0x90001.
 void TFlagManager::correctOptFlag()
 {
 	setBool(!getBool(0x70000), 0x90000);
@@ -544,7 +547,8 @@ void TFlagManager::correctOptFlag()
 		setFlag(0xA0000, getBool(0x70001) ? 2 : 1);
 	}
 
-	setFlag(0xA0001, 0x100);
+	setFlag(0xA0001, getFlag(0x80000));
+	setBool(getBool(0x70002), 0x90001);
 }
 
 void TFlagManager::loadOption(JSUMemoryInputStream& in)
@@ -579,7 +583,8 @@ void TFlagManager::saveOption(JSUMemoryOutputStream& out)
 		OSSetSoundMode(1);
 		setBool(true, 0x70001);
 	}
-	setFlag(0x80000, 0);
+	setFlag(0x80000, getFlag(0xA0001));
+	setBool(getBool(0x90001), 0x70002);
 	out.write(mSavedOptionBools, sizeof(mSavedOptionBools));
 	out.write(mSavedOptionInts, sizeof(mSavedOptionInts));
 }
