@@ -458,5 +458,7 @@
   "JSystem/JParticle/JPAParticle.cpp",
   "MoveBG/ItemManager.cpp",
   "NPC/NpcManager.cpp",
-  "JSystem/JDrama/JDRDisplay.cpp"
+  "JSystem/JDrama/JDRDisplay.cpp",
+  "Strategic/ObjModel.cpp",
+  "MoveBG/MapObjManager.cpp"
 ]
