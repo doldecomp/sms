@@ -2,12 +2,14 @@
 #include <Map/MapWire.hpp>
 #include <Map/MapWireManager.hpp>
 
-// TODO: instruction-exact, frame 0x68 vs retail's 0x50; reset()'s two vectors
-// land at 0x3c/0x48 where retail has 0x24/0x30, i.e. +24 bytes of low region,
-// exactly as in bind().  Rejected: spelling reset()'s body out here (84
-// instructions instead of 67, so init really does inline reset), routing the
-// wire fetch through getWire() (70 instructions), and initialised vector
-// declarations (no change).
+// reset()'s two endpoint reads must be the raw members, not TMapWire's
+// getStartPoint()/getEndPoint(): each accessor reserves a dead 12-byte slot at
+// the bottom of init()'s inline-temporary pool, which was its whole 24-byte
+// over-frame (0x68 against retail's 0x50).  Still rejected: spelling reset()'s
+// body out here (84 instructions instead of 67, so init really does inline
+// reset), routing the wire fetch through getWire() (70 instructions),
+// setLength(v, 1.0f) for normalize(), the two-argument sub(), and initialised
+// vector declarations.
 bool TWireBinder::init(const JGeometry::TVec3<f32>& param_1)
 {
 	return reset(param_1);
@@ -24,33 +26,49 @@ bool TWireBinder::reset(const JGeometry::TVec3<f32>& param_1)
 
 	TMapWire* wire = gpMapWireManager->getWire(mWireNumber);
 
-	local24 = wire->getStartPoint();
-	local30 = wire->getEndPoint();
+	local24 = wire->mStartPoint;
+	local30 = wire->mEndPoint;
 	local30 -= local24;
 
 	mDir.normalize(local30);
 	return true;
 }
 
-// TODO: instruction-exact, frame 0x88 vs retail's 0x78.  The named locals and
-// every inline temporary sit at the right *relative* offsets; the whole block is
-// 24 bytes too high because our low (inline-temporary) region is 48 bytes where
-// retail's is 24 -- the same +24 low region as init() below, and the two
-// functions' only shared trait is that they inline a callee which owns
-// JGeometry::TVec3<f32> locals of its own (getNextFramePosition's `velocity`
-// here, reset()'s two vectors there).  Rejected: dropping the named `f32 fVar`
-// (+0), spelling the last line as a named vector plus `-=` (186 instructions),
-// initialised instead of assigned vector declarations (no change).
+// All 174 instructions and the 0x78 frame are exact; the one residue is the
+// offset of the `unk_20 - actor->mPosition` temporary, 0x3c here against
+// retail's 0x24.  That is the known `a = b - c` pool-ordering residue (see
+// docs/catalog/frame-gaps.md, research batches 113/116/119): retail allocates
+// the operator- by-value temporary after the three isnan() scratch words, our
+// build hoists it above them, and every reachable spelling either moves
+// nothing or costs instructions.  Measured here and rejected: a by-value
+// destination helper, a block-scoped or named copy plus sub()/-= (the copy is
+// scalar-replaced, 91.8%), TVec3(unk_20) at the site, mLinearVelocity written
+// directly, actor->getPosition() at either or both reads (+8/+16 frame),
+// getVelocity(), the getPoint chain spelled out or its range position named
+// (97.8%), and a dead non-trivial local in getRangePos/getPoint/getWire (the
+// only UNUSED carrier, getRangePos, also feeds the byte-exact out-of-line
+// isEndWire and getPoint(TVec3*, const TVec3&), so it breaks them).
+//
+// The rest of the frame was two anti-levers: actor->getPosition() at the two
+// position reads (+16) and, once those were raw, TLiveActor's fabricated
+// getNextFramePosition() wrapper.  Its body belongs to bind() -- `velocity` is
+// bind()'s own third local, which is why it sits below unk_20 at 0x4c instead
+// of in the temporary pool -- and no other TU calls it.
 void TWireBinder::bind(TLiveActor* actor)
 {
 	JGeometry::TVec3<f32> unk_14;
-	actor->getNextFramePosition(unk_14);
-
 	JGeometry::TVec3<f32> unk_20;
+	JGeometry::TVec3<f32> velocity;
+
+	unk_14 = actor->mPosition;
+	unk_14.add(actor->mLinearVelocity);
+	velocity = actor->mVelocity;
+	unk_14.add(velocity);
+
 	getPoint(&unk_20, unk_14);
 
 	if (isnan(unk_20.x) || isnan(unk_20.y) || isnan(unk_20.z))
-		unk_20.set(actor->getPosition());
+		unk_20.set(actor->mPosition);
 
 	f32 fVar = 0.05f + unk_20.y;
 
@@ -60,7 +78,7 @@ void TWireBinder::bind(TLiveActor* actor)
 		actor->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	actor->setLinearVelocity(unk_20 - actor->getPosition());
+	actor->setLinearVelocity(unk_20 - actor->mPosition);
 }
 
 JGeometry::TVec3<f32>
