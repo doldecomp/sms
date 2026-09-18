@@ -16,8 +16,8 @@ public:
 	    , PARAM_INIT(mSLCoasterSpeedReverse, 20.0f)
 	{
 		TParams::load(mPrmPath);
-		mSLCoasterSpeedInOrder.value = 20.0f;
-		mSLCoasterSpeedReverse.value = 16.0f;
+		mSLCoasterSpeedInOrder.set(20.0f);
+		mSLCoasterSpeedReverse.set(16.0f);
 	}
 
 	/* 0x338 */ TParamRT<f32> mSLCoasterSpeedInOrder;

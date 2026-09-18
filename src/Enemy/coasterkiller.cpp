@@ -60,6 +60,12 @@ void TCoasterEnemy::init(TLiveManager* mgr)
 
 void TCoasterEnemy::moveObject() { TWalkerEnemy::moveObject(); }
 
+// TODO: 99.9% and instruction-exact. The `nextPos - mPosition` receiver sits
+// at 0x1c where retail has it at 0x10, i.e. the 16-versus-4 `operator-`
+// parameter prefix that research batch 116 measured as `8 x (reference returns
+// the caller copies out of)`. Known-open class, see the note on `operator-` in
+// JGVec3.hpp; `.add()` for the two `+=`s and a direct `mLinearVelocity =`
+// assignment are both inert here.
 void TCoasterEnemy::bind()
 {
 	JGeometry::TVec3<f32> nextPos = mPosition;
@@ -211,6 +217,9 @@ void TCoasterKiller::init(TLiveManager* mgr)
 
 void TCoasterKiller::reset() { TCoasterEnemy::reset(); }
 
+// TODO: 95.5%. Scheduling only in the `mPosition.distance(SMS_GetMarioPos())`
+// block -- we hoist `lfs f0, 4(r3)` one slot early and `fmuls f1, f4, f4` two
+// slots early, everything else matches -- plus a frame of 0x50 against 0x58.
 void TCoasterKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TCoasterEnemy::perform(cue, graphics);
@@ -316,12 +325,12 @@ void TCoasterKiller::setDeadAnm()
 {
 	mMActor = getActorKeeper()->getMActor("downkiller_model1.bmd");
 	setBckAnm(0);
-	TSpineEnemy* effectBase = gpConductor->makeOneEnemyAppear(
-	    mPosition, "エフェクト爆発マネージャー", 1);
-	if (effectBase != nullptr) {
-		TEffectExplosion* effect = (TEffectExplosion*)effectBase;
-		effect->generate(mPosition, getScaling());
-		mScaling *= 0.6f;
+	TEffectExplosion* effect
+	    = (TEffectExplosion*)gpConductor->makeOneEnemyAppear(
+	        mPosition, "エフェクト爆発マネージャー", 1);
+	if (effect != nullptr) {
+		effect->generate(mPosition, mScaling);
+		effect->mScaling *= 0.6f;
 	}
 }
 
@@ -365,6 +374,14 @@ TCoasterKillerManager::TCoasterKillerManager(const char* name)
 {
 }
 
+// TODO: both manager entry points below are now instruction-exact and only
+// their frames are wrong -- loadAfter 0x20 against the ROM's 0x38, load 0x30
+// against 0x70 (the two nested params-ctor `this` temps sit at 0x10/0x14 and
+// retail's at 0x44/0x50, so retail has 52 more bytes of expansion pool). The
+// real assert macro is still unknown: retail emits no call for it, only the
+// `lwz`/`cmplwi` of the tested pointer, so it was compiled out, yet 24 and 64
+// bytes of frame remain. Whatever it was reserved stack without emitting code,
+// which is the "uninitialised local of an inlined callee" shape.
 #define ASSERT_MSG(msg, line) (void)((msg), (line))
 #define ASSERT_TEST(expr)                                                      \
 	(void)((expr) ? true : (ASSERT_MSG(__FILE__, __LINE__), false));
@@ -374,7 +391,7 @@ void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
 	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
 	TSmallEnemyManager::load(stream);
 	unk38 = new TCoasterKillerSaveLoadParams("/enemy/coasterkiller.prm");
-	unk38 = unk38 ? unk38 : unk38; // @hack to force cmplwi
+	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
 }
 
 void TCoasterKillerManager::loadAfter()
