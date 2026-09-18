@@ -92,7 +92,7 @@ land)
 	rc=0
 	pre=$(git rev-parse HEAD@{1})
 	if ! build/venv/bin/ninja >/dev/null 2>&1; then
-		echo "== BUILD FAILED after merge:"; build/venv/bin/ninja 2>&1 | grep -iE 'error|FAILED|did NOT match' -A3 | head -20
+		echo "== BUILD FAILED after merge:"; { build/venv/bin/ninja 2>&1 | grep -iE 'error|FAILED|did NOT match' -A3 | head -20; } || true
 		git reset -q --hard "$pre"
 		echo "!! LAND REVERTED: main checkout reset to $pre; wt/$name keeps its commits"
 		exit 1
