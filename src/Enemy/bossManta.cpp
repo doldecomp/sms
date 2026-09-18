@@ -1236,36 +1236,47 @@ void TBossMantaManager::drawMantaShadow(JDrama::TGraphics* graphics)
 	GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 }
 
+// The map lists no UNUSED symbol for this TU, so this helper inlined
+// everywhere and was file-scope inline rather than plain static.  Every
+// argument is a const reference: x has to be, because retail loads Mario's x
+// out of the frame copy as the subtraction's minuend-side operand (a by-value
+// f32 there swaps the f1/f2 pair), and y/z keep their callee-saved FPRs either
+// way.
+static inline f32 distanceTo(const JGeometry::TVec3<f32>& pos, const f32& x,
+                             const f32& y, const f32& z)
+{
+	return JGeometry::TUtil<f32>::sqrt((pos.x - x) * (pos.x - x)
+	                                   + (pos.y - y) * (pos.y - y)
+	                                   + (pos.z - z) * (pos.z - z));
+}
+
 void TBossMantaManager::updateMantaEscape()
 {
 	TBossManta::sEscapeFromMario = 0;
 
-	// Retail keeps a single 12-byte vector at 0x1c and stores 0.0f into its
-	// y in place, so this is the shape (the copy and the zero store are now
-	// byte-exact).  TODO: 84.4%.  The only residue is load placement in the
-	// two loops: retail hoists marioPos.y and marioPos.z into f31/f30 right
-	// after the zero store and reloads only marioPos.x per iteration, while
-	// we reload all three.  Declare-then-assign changes nothing.  The older
-	// two-vector spelling `TVec3 h(p.x, 0.0f, p.z)` scored 90% by
-	// scalarising all three components, but retail plainly has one vector.
-	// Research batch 86 named the construct behind that hoist: only a named
-	// `f32` local of this function's own body gets a callee-saved FPR, and
-	// the last-declared one gets f31 (so `f32 z = marioPos.z;` before
-	// `f32 y = marioPos.y;` here).  Applying it means the two distance tests
-	// can no longer go through `TVec3::distance`, because passing the vector
-	// to an inlined callee by `const&` suppresses the promotion outright --
-	// the loops would have to spell the subtraction and `length()` per
-	// component.  Not attempted; `distance` is shared with many other sites.
+	// Retail keeps a single 12-byte vector at 0x1c, stores 0.0f into its y
+	// in place and then hoists that y and z into f31/f30 for both loops,
+	// reloading only x per iteration.  Research batch 86: only a named f32
+	// local of this function's own body gets a callee-saved FPR, and the
+	// last-declared one gets f31, so marioY is declared before marioZ.
+	// TVec3::distance cannot be used here: passing the flattened vector to
+	// an inlined callee by const& suppresses the promotion, which is why the
+	// two loops go through the TU-local distanceTo() above -- it also
+	// restores the inline level that keeps TUtil<f32>::sqrt a bl (spelled
+	// out at the call site MWCC expands sqrt, 185 instructions).
 	JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 	marioPos.y = 0.0f;
 
+	f32 marioY = marioPos.y;
+	f32 marioZ = marioPos.z;
+
 	for (int i = 0; i < 7; ++i) {
-		if (unk74[i].distance(marioPos) < 350.0f)
+		if (distanceTo(unk74[i], marioPos.x, marioY, marioZ) < 350.0f)
 			TBossManta::sEscapeFromMario = 1;
 	}
 
 	for (int i = 0; i < 2; ++i) {
-		if (unk78[i].distance(marioPos) < 820.0f)
+		if (distanceTo(unk78[i], marioPos.x, marioY, marioZ) < 820.0f)
 			TBossManta::sEscapeFromMario = 1;
 	}
 }
