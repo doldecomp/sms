@@ -16,7 +16,9 @@ TCameraMultiPlayer::TCameraMultiPlayer(u8 max_player_count)
 // TODO: UNUSED 0x48 in the map, ours 0x44 -- one instruction short.  The named
 // `added` result, a positive `mPlayerCount < mMaxPlayers` guard, `mPlayers +
 // mPlayerCount` and `mPlayerCount = mPlayerCount + 1` are all codegen-neutral
-// here.
+// here.  A named `int index = mPlayerCount` with `mPlayerCount = index + 1`
+// goes the wrong way (0x40) and costs addMultiPlayer its match, so the extra
+// instruction is not an index temporary.
 bool TCameraMultiPlayer::addPlayer(const JGeometry::TVec3<f32>* param_1,
                                    f32 param_2, f32 param_3)
 {
@@ -34,20 +36,18 @@ bool TCameraMultiPlayer::addPlayer(const JGeometry::TVec3<f32>* param_1,
 	return added;
 }
 
-// TODO: the map lists this as UNUSED 0x88 and an UNUSED symbol is never weak,
-// so it should be a plain method that MWCC both expands and emits.  Dropping
-// `inline` here does emit it, but then CPolarSubCamera::removeMultiPlayer
-// stops expanding it (100% -> 14.4%): with this body MWCC is over the depth-1
-// statement budget, i.e. retail's body is cheaper than ours -- ours is 0x90
-// against the map's 0x88.  The two extra instructions are not in the
-// condition: dropping the redundant `found == false &&` term reaches 0x88
-// exactly and still inlines, but retail's expansion *has* that term's
-// `cmplwi r0, 0; bne` pair, so the caller falls to 94.7% (plain `found ||`
-// gives 0x84).  Wanted: a spelling two instructions cheaper out of line whose
-// expansion is unchanged -- the same emitted-copy-vs-expansion split as
-// MapMakeData's setCheckData.  Until then `inline` keeps the byte-exact
-// caller and this symbol stays MISSING in validate-symbol-order.
-inline bool
+// UNUSED 0x88 in the map, and now size-exact as a plain method that MWCC both
+// emits and expands into CPolarSubCamera::removeMultiPlayer byte for byte.
+// The lever was the tail: the earlier `if (found != true) return found;
+// mPlayerCount -= 1; return found;` is one statement and two instructions more
+// (0x90), and that one statement puts the body over MWCC's 14-statement
+// depth-1 budget, so `inline` was needed to keep the caller (which then left
+// the symbol undefined).  `if (found == true) mPlayerCount -= 1;` is two
+// statements and still emits retail's `clrlwi; cmplwi 1; bnelr` in the
+// expansion; a plain `if (found)` emits `clrlwi.; beqlr` instead and is 0x84.
+// `int i;` as its own declaration does not count toward the budget and is what
+// gives retail's r6/r5 split between the index and the cursor.
+bool
 TCameraMultiPlayer::removePlayer(const JGeometry::TVec3<f32>* param_1)
 {
 	bool found = false;
@@ -61,10 +61,9 @@ TCameraMultiPlayer::removePlayer(const JGeometry::TVec3<f32>* param_1)
 		}
 	}
 
-	if (found != true)
-		return found;
+	if (found == true)
+		mPlayerCount -= 1;
 
-	mPlayerCount -= 1;
 	return found;
 }
 
