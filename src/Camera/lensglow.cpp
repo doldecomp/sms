@@ -51,7 +51,15 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 		unk6C = 10.0f;
 	}
 
+	// Dead 4-byte local, the same leftover declaration as in
+	// TLensFlare::TLensFlare and TSunModel::load (the three sibling functions
+	// that build a path out of cSunVolumeName): retail puts `buf` at 0x48 and
+	// leaves one word between it and the outgoing-argument area, ours lands at
+	// 0x44 without it. An assigned local is register-allocated and reserves
+	// nothing, so it was never written to; the original name is unrecoverable.
 	char buf[0x100];
+	int pathLen;
+
 	snprintf(buf, sizeof(buf), "%s/%s", base, "glow.bmd");
 	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf),
 	                                     J3DMLF_MaterialPEFull
