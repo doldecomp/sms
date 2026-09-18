@@ -759,10 +759,13 @@ void TCannon::killerShoot()
 
 		JGeometry::TVec3<f32> vel
 		    = killer->calcVelocityToJumpToY(target, 5.0f, killer->getGravityY());
-		JGeometry::TVec3<f32> diff(target);
-		diff.sub(mPosition);
-		JGeometry::TVec3<f32> diff2(diff);
-		f32 dist = MsVECMag2((Vec*)&diff2);
+		// `a = b - c` is the spelling that puts TVec3::sub at inline depth 4
+		// (copy ctor 1, operator- 2, operator-= 3), which is where retail
+		// `bl`s it; `diff(target); diff.sub(...)` reaches sub at depth 1 and
+		// expands. The retail copy has exactly one copy out of operator-'s
+		// by-value operand, so there is no second `diff2` local.
+		JGeometry::TVec3<f32> diff = target - mPosition;
+		f32 dist                   = MsVECMag2((Vec*)&diff);
 
 		killer->unk1A5 = 0;
 		TMsRange<int> irange(0, 100);
@@ -798,8 +801,7 @@ void TCannon::killerShoot()
 		killer->mVelocity = vel;
 		killer->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-		JGeometry::TVec3<f32> toMario(*gpMarioPos);
-		toMario.sub(mPosition);
+		JGeometry::TVec3<f32> toMario = *gpMarioPos - mPosition;
 		target.x += toMario.x;
 		target.z += toMario.z;
 		killer->setGoalPath(TPathNode(target));
