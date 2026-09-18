@@ -133,11 +133,36 @@ bool SMS_IsMarioTouchGround4cm()
 // TODO: 93.8%, and the only function keeping MarioAccess.cpp from being
 // source-linked. The original loads mHolder twice -- once into r0 for the null
 // test, once into r3 to dereference -- where MWCC gives us one load reused.
-// Four source forms were tried and none reproduces it: the short-circuit &&
-// (93.8%, best), a separate null check then else-if (90.0%), assigning the
-// comparison to the result (54.7%), and casting the holder before the member
-// access (93.8%, identical codegen). Whatever defeats the common-subexpression
-// elimination here is not reachable from these shapes.
+// The body is otherwise exact: our 17 instructions are the target's 18 minus
+// that second `lwz r3, 0x68(r3)`, and the BOOL->bool tail (clrlwi/neg/subic/
+// subfe/clrlwi, same shape as SMS_IsMarioOnYoshi's) is already right.
+//
+// Rejected spellings (all measured; the last batch in a scratch TU with the
+// real 0x68/0x4c offsets, so the offsets are not the reason):
+//   * short-circuit && on the raw member (93.8%, best, what is below);
+//   * a separate null check then else-if (90.0%);
+//   * assigning the comparison to the result (54.7%);
+//   * casting the holder before the member access (93.8%, identical codegen);
+//   * isTaken() on the left of the && (73.6%: the BOOL ternary materialises a
+//     bool and adds a cmpwi, which the target does not have);
+//   * getHolder() on either side or both, getActorType(), isActorType(),
+//     u32/BOOL/pointer-returning isTaken() spellings, a base-class cast of
+//     gpMarioOriginal, a const base for the test, nested ifs, goto, do/while,
+//     a single-case switch, ||-inverted logic, non-short-circuit &, and a
+//     TU-local helper taking the holder by value or by const& (deferred
+//     definition included, which does not change CSE): every one of these
+//     compiles to the same 17 instructions, i.e. MWCC always CSEs the two
+//     member loads.
+// The only spelling that does reproduce two loads is a reference local or a
+// const-reference accessor (`TTakeActor* const& h = gpMarioOriginal->mHolder`),
+// but MWCC then keeps the *address* and emits `lwzu r0, 0x68(r3)` + `lwz r3,
+// 0(r3)`: right structure, wrong addressing mode. A scan of every .s file in
+// the ROM found 29 sites with this load/test/reload shape, and each of the
+// other 28 is explained by an intervening `bl`, an intervening store to the
+// same member, or index arithmetic (RumbleMgr's `mCtrlMgr[i]` with i folded to
+// 0) -- none of which exists here. Next idea worth trying: something that puts
+// a real call or store between the test and the dereference, i.e. the null test
+// may belong to a *different* inlined helper than the type test.
 bool SMS_IsMarioOnWire()
 {
 	bool ret;
