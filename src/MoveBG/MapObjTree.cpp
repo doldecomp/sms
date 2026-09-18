@@ -237,8 +237,7 @@ void TMapObjTreeScale::control()
 		break;
 
 	case STATE_SCALING_UP_Y_ONLY:
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_TREE_APPEAR, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_TREE_APPEAR, &mPosition);
 		mScaling.y += mScaleSpeedY;
 		// TODO: does this mean that the naming scheme for map obj states is
 		// actually same as Mario, "status" being the preferred term?
@@ -247,8 +246,7 @@ void TMapObjTreeScale::control()
 		break;
 
 	case STATE_SCALING_UP:
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_TREE_APPEAR, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_TREE_APPEAR, &mPosition);
 		if (mScaling.y < 1.0f)
 			mScaling.y += mScaleSpeedY;
 		else
