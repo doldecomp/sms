@@ -82,7 +82,19 @@ TRiccoHook::TRiccoHook(const char* name)
 {
 }
 
-// @non-matching - stack issues, maybe caused by THookTake ctor?
+// TODO: 99.9%, frame 0xd0 vs 0xd8, all 151 instructions and registers match.
+// Closure batch 136 located the 8 bytes exactly: the JGadget list-insert
+// temps the `new THookTake(this)` expansion leaves fall in two groups, one
+// anchored to the bottom of the local area (0x5c/0x60/0x68/0x6c/0x70, already
+// exact) and one anchored to the top (0x84/0x88/0x8c, 8 low), with a 20-byte
+// hole between them where retail has 12; the `&hookTake` slot above wants +4.
+// So the 8 bytes belong *inside* that expansion, between two of its
+// sub-expansions -- not at either end. Every TU-local binding lever adds them
+// at the bottom instead and shifts the first group by the same 8 (`mSpine`,
+// `unk124`, `getSaveLoadParam()` all reach frame 0xd8 with the first group
+// then 8 high; `getTracer()` and a named `f32 speed` are +0). This is the
+// JGadget iterator temp-pool grouping known-open class (docs/catalog/
+// frame-gaps.md, "batch 133"), shared with TSeal::init and TMirrorActor::init.
 void TRiccoHook::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);

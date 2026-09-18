@@ -23,7 +23,9 @@ TMapObjGrassManager* gpMapObjGrassManager;
 Vec TMapObjGrassManager::mDrawVec;
 
 static f32 sGrassAddTime = 0.2f;
-static GXColor color_table[]
+// GXSetArray feeds this straight to the GP, so it is 32-byte aligned; the map
+// records align:32 and the 8-byte hole it leaves after sGrassAddTime.
+static GXColor color_table[] __attribute__((aligned(32)))
     = { { 0x3C, 0xC8, 0x3C, 0xFF }, { 0x28, 0x64, 0x28, 0xFF } };
 
 void TMapObjGrassGroup::drawNear() const
@@ -133,14 +135,27 @@ TMapObjGrassGroup::TMapObjGrassGroup()
 {
 }
 
-// TODO: every instruction matches; frame 0x80 vs retail's 0x98 (+24 low).
-// scale()/set()+scale()/a named MtxPtr for the view matrix are all +0.
+// Two binding levels carry initDrawNear's 24 dead low bytes: +16 for the
+// width read and +8 for the view matrix (batch 136). TODO: promote once the
+// real helpers are identified.
+static inline f32 GrassWidth()
+{
+	f32 width = TMapObjGrassManager::mWidth;
+	return width;
+}
+
+static inline MtxPtr GrassViewMtx()
+{
+	MtxPtr view = j3dSys.getViewMtx();
+	return view;
+}
+
 void TMapObjGrassManager::initDrawNear() const
 {
 	Mtx viewItm;
-	MTXInverse(j3dSys.getViewMtx(), viewItm);
+	MTXInverse(GrassViewMtx(), viewItm);
 	JGeometry::TVec3<f32> vec(viewItm[0][0], viewItm[1][0], viewItm[2][0]);
-	vec *= mWidth;
+	vec *= GrassWidth();
 
 	mDrawVec.x = vec.x;
 	mDrawVec.y = vec.y;
@@ -190,8 +205,14 @@ void TMapObjGrassManager::initDrawFar() const
 	GXSetVtxDesc(GX_VA_CLR0, GX_INDEX8);
 }
 
+// The 48 dead low bytes of TMapObjGrassManager::perform are this uninitialised
+// non-trivial 48-byte local, which draw() (an UNUSED symbol, so a legal
+// carrier) reserves with no code at all in either copy; initDrawFar() carries
+// it identically, so the site is not distinguishable from the binary.
+// TODO: what retail actually did with it is unknown -- nothing reads it.
 void TMapObjGrassManager::draw() const
 {
+	JGeometry::SMatrix34C<f32> scratch;
 	initDrawNear();
 	for (int i = 0; i < unk10; ++i)
 		unk14[i]->drawNear();
@@ -201,17 +222,6 @@ void TMapObjGrassManager::draw() const
 		unk14[i]->drawFar();
 }
 
-// TODO: every instruction matches; frame 0x50 vs retail's 0x80. The delta is
-// uniform across every referenced slot, so all 48 bytes are low region inside
-// the inlined draw() chain (draw()/initDrawFar()/entryGrassGroup() leave no map
-// symbol, so draw() is the only legal carrier and it cannot be named).
-// Named sin/angle locals in the loop are +0. initDrawNear is a real `bl` here
-// (only initDrawFar and draw() are inlined), so `viewItm` cannot be the
-// carrier: declaring it as the non-trivial 48-byte `JGeometry::SMatrix34C<f32>`
-// (reads spelled `viewItm.mMtx[i][0]`, the conversion operator is ambiguous for
-// a subscript) is codegen-neutral in both functions and adds nothing to this
-// frame. The 48 bytes have to sit in draw() or initDrawFar(), neither of which
-// has a local to name.
 void TMapObjGrassManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
