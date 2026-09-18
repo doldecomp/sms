@@ -512,4 +512,10 @@ public:
 
 extern CPolarSubCamera* gpCamera;
 
+// Fabricated name, in the SMSGetMarDirector()/SMSGetCameraMario() idiom. The
+// extra global-accessor level is a real +8 of frame where a member-level
+// accessor on the same chain is worth nothing (TSky::perform, whose 0x138
+// frame it completes with instructions already identical).
+inline CPolarSubCamera* SMSGetCamera() { return gpCamera; }
+
 #endif

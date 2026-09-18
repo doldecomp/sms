@@ -14,17 +14,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: promote into Camera.hpp as `inline CPolarSubCamera* SMSGetCamera()`,
-// alongside SMSGetMarDirector()/SMSGetCameraMario(). perform() is
-// instruction-identical either way, but the global-accessor level is the last
-// 8 bytes of its 0x138 frame; the member-level getUnk1EC() alone is worth
-// nothing. Parked here because shared headers are off limits in this batch.
-static inline CPolarSubCamera* SkyGetCamera() { return gpCamera; }
-
 void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
-		MtxPtr mtx = SkyGetCamera()->getUnk1EC();
+		MtxPtr mtx = SMSGetCamera()->getUnk1EC();
 
 		Mtx local_EC;
 		MTXInverse(mtx, local_EC);
