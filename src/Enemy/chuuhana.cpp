@@ -370,7 +370,7 @@ void TChuuHana::behaveToWater(THitActor* param_1)
 	unk224 = 0;
 	((TChuuHanaManager*)mManager)->unk68++;
 
-	// Sprayed while rolling: shove it away from Mario and pop it up.
+	// Sprayed while rolling: shove it away from Mario, pop it up and stop.
 	// Not isRolling(): the original compares here without materialising.
 	if (mSpine->getCurrentNerve() == &TNerveChuuHanaRoll::theNerve()) {
 		JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x, 0.0f,
@@ -379,52 +379,52 @@ void TChuuHana::behaveToWater(THitActor* param_1)
 		away.scale(unk1B4->mSLGetWaterPow.get());
 		margeVelocity(away);
 		mPosition.y += 10.0f;
+		return;
 	}
 
-	if (mSpine->getCurrentNerve() != &TNerveChuuHanaWalkOnPanel::theNerve()
-	    && mSpine->getCurrentNerve() != &TNerveChuuHanaAttack::theNerve()
-	    && mSpine->getCurrentNerve() != &TNerveChuuHanaWait::theNerve()) {
-		if (mNewSw) {
-			if (mSpine->getCurrentNerve() == &TNerveChuuHanaStick::theNerve()) {
-			}
+	// Walking, attacking, waiting, or stuck in the new-switch build: get
+	// launched away from Mario and stick to whatever it lands on.
+	if (mSpine->getCurrentNerve() == &TNerveChuuHanaWalkOnPanel::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveChuuHanaAttack::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveChuuHanaWait::theNerve()
+	    || (mNewSw
+	        && mSpine->getCurrentNerve()
+	            == &TNerveChuuHanaStick::theNerve())) {
+		unk165 = true;
+		if (mAttackVersion)
+			*unk21C = 1;
+
+		JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x, 0.0f,
+		                           mPosition.z - SMS_GetMarioPos().z);
+		MsVECNormalize(away, away);
+		away.scale(unk1B4->mSLGetWaterPow2.get());
+
+		if (!isAirborne()) {
+			if (mCompareHeight)
+				mPosition.y += 2.0f;
+			else
+				mPosition.y += 1.0f;
 		}
-		if (!mNewSw) {
-			if (mSpine->getCurrentNerve()
-			    == &TNerveChuuHanaKeepBalance::theNerve()) {
-				JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x,
-				                           10.0f,
-				                           mPosition.z - SMS_GetMarioPos().z);
-				MsVECNormalize(away, away);
-				away.scale(2.0f * unk1B4->mSLGetWaterPow.get());
-				mVelocity = away;
-				onLiveFlag(LIVE_FLAG_AIRBORNE);
-				mPosition.y += 20.0f;
-			}
-		}
+		mVelocity = away;
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
+
+		if (mSpine->getCurrentNerve() != &TNerveChuuHanaStick::theNerve())
+			mSpine->pushNerve(&TNerveChuuHanaStick::theNerve());
+
+		mSprayedByWaterCooldown = 0;
+	} else if (!mNewSw
+	           && mSpine->getCurrentNerve()
+	               == &TNerveChuuHanaKeepBalance::theNerve()) {
+		// Balancing on a panel in the old build: a harder launch with a
+		// bigger pop.
+		JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x, 10.0f,
+		                           mPosition.z - SMS_GetMarioPos().z);
+		MsVECNormalize(away, away);
+		away.scale(2.0f * unk1B4->mSLGetWaterPow.get());
+		mVelocity = away;
+		onLiveFlag(LIVE_FLAG_AIRBORNE);
+		mPosition.y += 20.0f;
 	}
-
-	unk165 = true;
-	if (mAttackVersion)
-		*unk21C = 1;
-
-	JGeometry::TVec3<f32> away(mPosition.x - SMS_GetMarioPos().x, 0.0f,
-	                           mPosition.z - SMS_GetMarioPos().z);
-	MsVECNormalize(away, away);
-	away.scale(unk1B4->mSLGetWaterPow2.get());
-
-	if (!checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
-		if (mCompareHeight)
-			mPosition.y += 2.0f;
-		else
-			mPosition.y += 1.0f;
-	}
-	mVelocity = away;
-	onLiveFlag(LIVE_FLAG_AIRBORNE);
-
-	if (mSpine->getCurrentNerve() != &TNerveChuuHanaStick::theNerve())
-		mSpine->pushNerve(&TNerveChuuHanaStick::theNerve());
-
-	mSprayedByWaterCooldown = 0;
 }
 
 void TChuuHana::attackToMario()
@@ -630,11 +630,20 @@ void TChuuHana::bind()
 }
 
 // UNUSED, 0xc4 in the map: add a push into the velocity and pop up.
+// TODO: the guard is still wrong (behaveToWater 63.8%, this body 0xd4 vs the
+// map's 0xc4).  Retail re-reads mVelocity a second time into a low-region
+// temporary, copies that into *two* adjacent 12-byte locals, computes
+// `<copy1>.z * .z + <copy2>.x * .x` (two terms, contracted, y folded away),
+// compares it `<= 0.0f` and then *discards* the result: the branch and the
+// Newton step of TUtil<f32>::sqrt are both gone, which is what a discarded
+// length() leaves behind.  With one nesting level TVec3::dot stays a `bl`
+// here whatever the depth, and the two-term shape means the vector whose
+// length is taken had a statically zero y.  The VECAdd is unconditional.
 void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& push)
 {
 	JGeometry::TVec3<f32> vel(mVelocity);
-	if (!JGeometry::TVec3<f32>(JGeometry::TVec3<f32>(vel)).isZero())
-		VECAdd(&vel, &push, &vel);
+	JGeometry::TVec3<f32>(JGeometry::TVec3<f32>(mVelocity)).length();
+	VECAdd(&vel, &push, &vel);
 	vel.y     = 0.0f;
 	mVelocity = vel;
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
