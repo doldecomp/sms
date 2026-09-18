@@ -11,7 +11,17 @@ static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 TCameraOption* gpCameraOption;
-const char* cLoadCamName = "ロードカメラ";
+const char* cLoadCamName = "左サイドカメラ";
+
+// Parked here, not in <Camera/CameraOption.hpp>, because a header batch is
+// running: the house global-accessor idiom (cf. SMSGetCamera,
+// SMSGetMarDirector, SMSGetPollution). Promotion to the header is a header
+// item. Measured: each read routed through this level is +4 bytes of
+// low-region frame in ctrlOptionCamera_ with no instruction change, and the
+// four guard reads plus the four chaseOptionCamera_ arguments - eight sites -
+// are exactly the 32 bytes retail's frame has over the raw spelling. The
+// in-place decrements and the unk0/unk10/mFovY accesses stay raw.
+static inline TCameraOption* SMSGetCameraOption() { return gpCameraOption; }
 
 void CPolarSubCamera::chaseOptionCamera_(f32 param_1)
 {
@@ -33,11 +43,11 @@ void CPolarSubCamera::ctrlOptionCamera_()
 {
 	JGeometry::TVec3<f32> probe;
 
-	if (gpCameraOption->unkA > 0) {
-		chaseOptionCamera_(gpCameraOption->unkA);
+	if (SMSGetCameraOption()->unkA > 0) {
+		chaseOptionCamera_(SMSGetCameraOption()->unkA);
 		gpCameraOption->unkA--;
-	} else if (gpCameraOption->unkE > 0) {
-		chaseOptionCamera_(gpCameraOption->unkE);
+	} else if (SMSGetCameraOption()->unkE > 0) {
+		chaseOptionCamera_(SMSGetCameraOption()->unkE);
 		gpCameraOption->unkE--;
 	} else if (!(gpCameraOption->unk0 & 0x2)) {
 		probe = *gpMarioPos;
@@ -56,21 +66,17 @@ void CPolarSubCamera::ctrlOptionCamera_()
 			}
 		}
 
-		if (gpCameraOption->unk12 > 0) {
-			chaseOptionCamera_(gpCameraOption->unk12);
+		if (SMSGetCameraOption()->unk12 > 0) {
+			chaseOptionCamera_(SMSGetCameraOption()->unk12);
 			gpCameraOption->unk12--;
-		} else if (gpCameraOption->unk16 > 0) {
-			chaseOptionCamera_(gpCameraOption->unk16);
+		} else if (SMSGetCameraOption()->unk16 > 0) {
+			chaseOptionCamera_(SMSGetCameraOption()->unk16);
 			gpCameraOption->unk16--;
 		}
 	}
 
-	unk124.x = mPosition.x;
-	unk124.y = mPosition.y;
-	unk124.z = mPosition.z;
-	unk148.x = mTarget.x;
-	unk148.y = mTarget.y;
-	unk148.z = mTarget.z;
+	unk124.set(mPosition);
+	unk148.set(mTarget);
 	mFovy    = gpCameraOption->mFovY;
 }
 
@@ -97,14 +103,14 @@ TCameraOption::TCameraOption(JGeometry::TVec3<f32> param1,
 	CLBPolarToCross(param1, &unk18, 1000.0f, v2, v1);
 	param2->set(unk18);
 
-	// TODO: inline doesn't work?!
 	TCameraMapTool* tool = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(cLoadCamName), cLoadCamName);
 
 	if (tool != nullptr) {
 		JGeometry::TVec3<f32> origin;
 		tool->calcPosAndAt(&origin, &unk24);
-		s16 a = CLBRoundf<s16>(DEG2SHORTANGLE(tool->getYaw()));
+		f32 yaw = tool->getYaw();
+		s16 a   = CLBRoundf<s16>(DEG2SHORTANGLE(yaw));
 		s16 b = CLBRoundf<s16>(DEG2SHORTANGLE(60.0f));
 		CLBPolarToCross(origin, &unk30, 1000.0f, b, a);
 	}
@@ -117,7 +123,16 @@ void TCameraOption::moveToLoadFromTitle()
 	unk0 &= ~0x2;
 }
 
-void TCameraOption::moveToTitleFromLoad() { }
+// UNUSED (map 0x34). The exact mirror of moveToLoadFromTitle, which is
+// also 0x34: it moves the option camera back to the title-screen pose
+// (unk18, the polar position the constructor builds) and re-arms the
+// "no cube tracking" bit that moveToLoadFromTitle clears.
+void TCameraOption::moveToTitleFromLoad()
+{
+	unk3C->set(unk18);
+	unkE = unkC;
+	unk0 |= 0x2;
+}
 
 void TCameraOption::moveToUp()
 {
