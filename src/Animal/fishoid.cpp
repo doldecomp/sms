@@ -40,6 +40,15 @@ void TRealoidActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk70->perform(cue, graphics);
 }
 
+// TODO (closure batch 152): the fourth non-exact symbol in this object is the
+// weak copy of TSpineEnemy::isReachedToGoal (Enemy.hpp), at 99.7% with an
+// exact 0x30 frame: retail puts calcDist's by-value `a` at 0x20..0x2c and
+// leaves four bytes above it, we put it at 0x24..0x30 flush with the top. By
+// frame-gaps.md's two-region model that is one 4-byte slot declared *above*
+// the copy, which is the "dead binding, 4 above the temp" shape from batch
+// 142. Not touched here because Enemy.hpp is shared by every TSpineEnemy user
+// (a header round item, not a unit one).
+
 // TODO: 99.6%, all instructions match (58 `~` markers, all frame/register
 // only, closure batch 123 -- no structural residue left to chase). Batch 128
 // read the slot map: retail's frame is 0xd0 against our 0xa0, every

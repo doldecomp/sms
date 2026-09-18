@@ -34,6 +34,18 @@
 // 0x30 (perform, which references no stack slot at all) and 0 (init, whose
 // residue is purely the rotation plus one `addi r4, r25, 0` where we emit
 // `mr r4, r25` -- retail's operand came from an accessor's returned address).
+//
+// Closure batch 152 re-confirmed the classification with `--clusters` (init
+// |1 <0 >0 at an exact frame; setJumpIntoWaterEffectSmall |1 <1 >2, and both
+// of those are the *same* `li rIdx, -1` and the recomputed `add`/`lwzu` that
+// the rotation drags along) and tried the batch-144 named-scalar knob, since
+// `init` is the direction the rule is about: retail gives `this` r31 and the
+// `.rodata` base r29, i.e. `this` outranks the pool base there. Rejected:
+// reusing one `anmData`/`bmd`/`model` variable across both halves of `init`
+// instead of six separate ones (98.5% -> 98.3%, registers unmoved), and, on
+// setJumpIntoWaterEffectSmall, declaring the two `Mtx` above `idx` and
+// splitting `int idx; idx = getThing();` (both exactly inert). This TU stays
+// filed under frame-gaps.md's known-open `this`-vs-pool-base swap.
 void TMarioEffect::init(TMario* mario)
 {
 	unk68    = mario;

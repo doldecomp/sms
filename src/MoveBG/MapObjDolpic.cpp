@@ -90,7 +90,14 @@ void TMonumentShine::hitByWater(THitActor* actor)
 	// the allocator keeps live. Ruled out: sub() for -= , getPosition() for
 	// getPosition() (lands the frame but hoists the address into a register),
 	// isZero() for the spelled-out epsilon test (identical output), cross2()
-	// for cross().
+	// for cross(). Closure batch 152 also ruled out making the two
+	// subtractions agree: raw `mPosition` at both sites is 91.0% (~38 -> ~53)
+	// and `getPosition()` at both is 89.8% and breaks the frame, so the
+	// asymmetry -- `getPosition()` for waterDir, the raw member for marioDir --
+	// is itself evidence about retail's source. The five extra instructions are
+	// three reloads of mPosition plus two of waterDir.y/z; every one of them is
+	// a CSE the allocator declined, with the local set and the frame already
+	// right.
 	JGeometry::TVec3<f32> cross;
 	cross.cross(up, marioDir);
 

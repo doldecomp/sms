@@ -68,6 +68,14 @@ void TLampTrapSpike::initMapObj()
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+// TODO (closure batch 152): 99.9%, instruction-exact, frame exact (0x78).
+// The whole residue is the known-open JGadget iterator temp-pool word: the
+// three `TList::iterator` temporaries around `TList_pointer_void::insert` sit
+// at 0x38/0x3c/0x40 in retail and 0x3c/0x40/0x44 here, i.e. our pool base is
+// one word high while the frame total is right. TLampTrapIron::loadAfter is
+// byte-for-byte the same residue, so both close together or not at all; see
+// frame-gaps.md's "batch 133" entry (the grouping is not the conversion
+// lever).
 void TLampTrapSpike::loadAfter()
 {
 	TMapObjBase::loadAfter();
@@ -79,6 +87,13 @@ BOOL TLampTrapSpike::receiveMessage(THitActor* sender, u32 message)
 	TMapObjBase::receiveMessage(sender, message);
 }
 
+// TODO (closure batch 152): 99.5%, instruction-exact, frame exact (0x60). The
+// residue is one callee-saved GPR too many: retail allocates r27-r31 and
+// reuses r27 for two disjoint pointer live ranges (the `addi r27, r3, 0` at
+// the state check and the `mr r27, r3` at the MActor keeper), while we spend
+// r26 and r28 on them and keep the `.rodata` base in r28 as well, so the
+// whole set is rotated one step and the extra register eats four bytes of the
+// low pool. Filed under frame-gaps.md's known-open zero-frame rotations.
 void TLampTrapSpike::control()
 {
 	BOOL bVar1 = false;
@@ -247,12 +262,23 @@ void TLampTrapIron::initMapObj()
 	unk13C = mHitPointMax;
 }
 
+// TODO (closure batch 152): the same JGadget iterator temp-pool word as
+// TLampTrapSpike::loadAfter above; see the note there.
 void TLampTrapIron::loadAfter()
 {
 	TMapObjBase::loadAfter();
 	unk138 = new TLampTrapIronHit(this, "鉄板あたり");
 }
 
+// TODO (closure batch 152): 99.9%, instruction-exact; frame 0x28 vs our 0x20,
+// so eight bytes of dead low region. The only inlined callees are
+// `THitActor::isActorType` (bool), `MActor::getBaseTRMtx` (pointer, already
+// worth +4 here) and the static `mFireTimerMax` read -- `TLiveActor::getModel`
+// is a real `bl`, so a level over it is worth nothing. No honest +8 carrier
+// found: the natural candidates are a `gpMarioParticleManager` fork (+4 by the
+// global rule, and Yoshi.cpp's `YoshiGetMarioParticleManager` is the precedent
+// for the shape) and an accessor pair on `unk13C`/`unk140`, neither of which
+// reaches 8 on its own.
 BOOL TLampTrapIron::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->isActorType(0x1000001)) {
