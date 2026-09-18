@@ -46,6 +46,14 @@
 // parameters', and the lever has to lower the parameters' priority (or add one
 // short-lived value between the address's definition and `clrlwi r29`, which
 // is exactly what the bVar5 normalisation supplies) -- not add an inline level.
+// Batch 131 added the batch-127 fork-plus-binding shapes, which are the last
+// untried family and all make it worse by perturbing the frame instead:
+// a binding level reading `j3dSys.mModel` raw at all four sites (frame 0x120),
+// at the setScaleFlag site only (0x108), the same nested twice (0x150) and a
+// `static inline J3DSys* M3UJointSys()` fork above `getModel()` (0x150) -- 127
+// differing operands each against the base's 55, with the model address still
+// in r25. So levels really are inert on this ranking (batch 120) and a level
+// that is *not* inert only buys frame; the lever must change the live ranges.
 // The cheapest diagnostics are `bVar5 != 0` and `bVar5 ? 1 : 0` (97.0/97.5%,
 // nine differing lines: the neg/subic/subfe triple plus the moved
 // mScaleFlagArr load); `(bool)bVar5` and `!!bVar5` cost one more.
