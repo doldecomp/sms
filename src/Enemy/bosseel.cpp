@@ -1804,6 +1804,18 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		    = mAppearOffset
 		      + (mInitialPosition.y + mSaveParams->mSLInitTransYOffset.get());
 
+		// TODO: three things are known about this block and only one is
+		// applied. (1) Retail writes unk24.set(1100.0f, 1000.0f, 1100.0f)
+		// before the unkC set below, dead code overwritten by the scaled set
+		// (@6011/@6012 in the target's .sdata2); adding it matches those three
+		// stores but costs more than it gains, because (2) retail addresses
+		// mouthCube from one fixed base with 0xc/0x10/0x14 and 0x24/0x28/0x2c
+		// displacements while we bump the base with `stfsu f1, 0x24(r3)` and
+		// materialise a second base for the unkC group, and (3) retail `bl`s
+		// JGadget::TVector<void*>::begin() and dereferences its result at +4,
+		// where our chain (getChildren() -> TVector_pointer<T>::begin() ->
+		// TVector<void*>::begin(), depth 3) expands it and reads +0. Fix (2)
+		// and (3) before re-adding (1).
 		TCubeGeneralInfo* mouthCube
 		    = *mMouthCubeManager->unk14->getChildren().begin();
 		mouthCube->unkC.set(mPosition.x, mPosition.y + 9600.0f * mScaling.y,
@@ -1857,7 +1869,9 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mHitPoints != 0) {
 			mForceEat = false;
 			for (s32 i = 0; i < mHeadCollision->getColNum(); ++i) {
-				if (mHeadCollision->getCollision(i)->isActorType(0x80000001))
+				// direct compare: retail has no materialised bool here
+				if (mHeadCollision->getCollision(i)->getActorType()
+				    == 0x80000001)
 					mForceEat = true;
 			}
 
