@@ -39,47 +39,27 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	// Declared in reverse read order on purpose: named locals grow down from
-	// the top of the frame in declaration order, and retail reads the four
-	// colour inputs into *ascending* slots (0x8c, 0x90, 0x94, 0x98), so the
-	// first value read is the last one declared.
-	// TODO: the frame is now retail's 0xb0 and all 114 instructions match, but
-	// r30 (`this`) and r31 (the .rodata string-pool base) are still swapped:
-	// retail ranks the compiler-generated pool address above the parameter
-	// even though `this` has eleven uses to the pool's four, which header
-	// round 18's liveness rule does not explain (`this` is live from entry).
-	// The 64 bytes of low region that were missing are: chaining the five
-	// stream reads into one statement (four continuations, +0x20, the batch-81
-	// rule), one level that binds the name-ref search result at both sites
-	// (+0x18) and `SMSGetMarDirector()` over the raw global (+8).
-	// Also measured: a binding level on `getCurrentMap()` +0x10 but one extra
-	// diff, on `TFlagManager::getInstance()->getBool()` +0, on the
-	// position-holder search +0x10 and three extra instructions; `search2`
-	// with the cast at the call site is codegen-identical here.
-	// Batch 131 re-attacked the swap and found it invariant under every
-	// decomposition of the low region: a raw `gpMarDirector` plus a
-	// `getCurrentMap()` binding level reaches the same 0xb0 and the same 19
-	// diffs, and binding levels over the `unk14` read (+8), `gpPositionHolder`
-	// (+8, +4 insns), `cSunWarpPointName` (+0x10), `SMSGetMarDirector()` (+8),
-	// `TFlagManager::getInstance()` (+8) and the whole position search (+8)
-	// all move the frame without touching the ranking. Nor does moving
-	// `unk15 |= 1` after the position read (shortening `this`'s range costs
-	// three instructions) or naming the two search names (+7 insns). The pool
-	// temp outranking `this` is the fourth recorded instance of this swap
-	// (with TSunMgr::load, TJumpBase::control, MSoundStruct and TTobiPuku);
-	// no source-level lever is known. Splitting the
-	// chain differently gives 8 bytes per continuation exactly (4/1 and 3/2
-	// both 0x88, 2/2/1 0x80). `unk24.set(...)` over the assignment costs 3
-	// instructions. Rejected earlier: readU32() for the four inputs (0xa8 but
-	// 121 instructions), an array plus a four-read loop (batch 32).
-	u32 local_18;
-	u32 local_1c;
-	u32 local_20;
-	u32 local_24;
-	stream >> local_24 >> local_20 >> local_1c >> local_18 >> unk20;
+	// The four colour words go into an array, not four named scalars: with six
+	// named scalar locals in the frame MWCC ranks `this` above the compiler's
+	// `.rodata` pool base in callee-saved order (r31/r30 swapped against
+	// retail on every one of the nineteen uses), and with the array plus the
+	// two colour temporaries it ranks the pool base first, as retail does.
+	// Research batch 144 measured the whole ranking: pool base first, then
+	// locals and parameters in reverse introduction order, and the swap is
+	// decided by the count of named scalar locals alone (see
+	// docs/catalog/frame-gaps.md, "Research batch 144").
+	// The two colour temporaries have to stay named: they are what hoists all
+	// four loads above the first store.
+	// The 64 bytes of low region are: chaining the five stream reads into one
+	// statement (four continuations, +0x20, the batch-81 rule), one level that
+	// binds the name-ref search result at both sites (+0x18) and
+	// `SMSGetMarDirector()` over the raw global (+8).
+	// Each colour is a 24-bit RGB word followed by an alpha word.
+	u32 color[4];
+	stream >> color[0] >> color[1] >> color[2] >> color[3] >> unk20;
 
-	u32 col1 = local_24 << 8 | local_20;
-	u32 col2 = local_1c << 8 | local_18;
+	u32 col1 = color[0] << 8 | color[1];
+	u32 col2 = color[2] << 8 | color[3];
 	unk18.set(col1);
 	unk1C.set(col2);
 
