@@ -761,12 +761,12 @@ void TLeanMirror::controlGoTarget()
 				                    mShiningStone->mPosition.z);
 			}
 
-			gpMarDirector->fireStartDemoCamera(
+			SMSGetMarDirector()->fireStartDemoCamera(
 			    "demohanatyan_cam01", nullptr, -1, 0.0f, true,
 			    startCameraShakeSE, (u32)&mPosition, nullptr,
 			    JDrama::TFlagT<u16>(0));
 		} else {
-			gpMarDirector->fireStartDemoCamera(
+			SMSGetMarDirector()->fireStartDemoCamera(
 			    "太陽石点灯カメラ", &mShiningStone->mPosition, mDemoLightTime,
 			    0.0f, true, nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
 		}
