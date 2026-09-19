@@ -686,8 +686,16 @@ void TMapObjBase::getVerticalVecToTargetXZ(f32 x, f32 z,
 	rotateVecByAxisY2(vec, 1.5707963f);
 }
 
-void TMapObjBase::getVerticalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*)
+// TODO: 0xb4 against the map's 0xb0; the sibling-call spelling
+// (getNormalVecFromOffsetXZ then the rotate) measures the same 0xb4, so the
+// extra instruction is not in the statement split.
+void TMapObjBase::getVerticalVecFromOffsetXZ(f32 x, f32 z,
+                                             JGeometry::TVec3<f32>* vec)
 {
+	vec->set(x, 0.0f, z);
+	MsVECNormalize(vec, vec);
+
+	rotateVecByAxisY(vec, 1.5707963f);
 }
 
 void TMapObjBase::rotateVecByAxisY(JGeometry::TVec3<f32>* vec, f32 angle)
@@ -697,7 +705,12 @@ void TMapObjBase::rotateVecByAxisY(JGeometry::TVec3<f32>* vec, f32 angle)
 	rot.mult33(*vec, *vec);
 }
 
-void TMapObjBase::getNormalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*) { }
+void TMapObjBase::getNormalVecFromOffsetXZ(f32 x, f32 z,
+                                           JGeometry::TVec3<f32>* vec)
+{
+	vec->set(x, 0.0f, z);
+	MsVECNormalize(vec, vec);
+}
 
 void TMapObjBase::getNormalVecFromTargetXZ(f32 param_1, f32 param_2,
                                            JGeometry::TVec3<f32>* param_3) const
@@ -706,8 +719,11 @@ void TMapObjBase::getNormalVecFromTargetXZ(f32 param_1, f32 param_2,
 	MsVECNormalize(param_3, param_3);
 }
 
-void TMapObjBase::getNormalVecFromOffset(f32, f32, f32, JGeometry::TVec3<f32>*)
+void TMapObjBase::getNormalVecFromOffset(f32 x, f32 y, f32 z,
+                                         JGeometry::TVec3<f32>* vec)
 {
+	vec->set(x, y, z);
+	MsVECNormalize(vec, vec);
 }
 
 void TMapObjBase::getNormalVecFromTarget(f32 param_1, f32 param_2, f32 param_3,
@@ -834,7 +850,13 @@ void TMapObjBase::sendMsg(u32 param_1, u32 param_2)
 	}
 }
 
-void TMapObjBase::sendMsgToAll(u32) { }
+void TMapObjBase::sendMsgToAll(u32 param_1)
+{
+	for (int i = 0; i < getColNum(); ++i) {
+		THitActor* col = getCollision(i);
+		col->receiveMessage(this, param_1);
+	}
+}
 
 void TMapObjBase::actorIsOn(TLiveActor*) const { }
 
