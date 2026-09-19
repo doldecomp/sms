@@ -292,7 +292,10 @@ void THamuKuriManager::requestSerialKill(THamuKuri* param_1)
 
 	for (int i = 0; i < getActiveObjNum(); ++i) {
 		THamuKuri* obj = (THamuKuri*)unk18[i];
-		if (obj != param_1 && obj->isBckAnm(3)) {
+		if (obj == param_1)
+			continue;
+
+		if (obj->isBckAnm(3)) {
 			obj->kill();
 			++trampled;
 		}
@@ -1242,7 +1245,33 @@ bool THamuKuri::isResignationAttack()
 bool THamuKuri::isHitValid(u32 param_1)
 {
 	if (isBckAnm(3)) {
-		getManager()->requestSerialKill(this);
+		// THamuKuriManager::requestSerialKill's body written out: at 15
+		// statements it is over the depth-1 inline budget, so the ROM `bl`s it
+		// from TFireHamuKuri::isHitValid and expands it only here.
+		THamuKuriManager* manager = getManager();
+		int trampled              = 1;
+
+		THamuKuriSaveLoadParams* params
+		    = (THamuKuriSaveLoadParams*)manager->unk38;
+
+		s32 trampleBonusNum = params->getTrampleBonusNum();
+
+		for (int i = 0; i < manager->getActiveObjNum(); ++i) {
+			THamuKuri* obj = (THamuKuri*)manager->unk18[i];
+			if (obj == this)
+				continue;
+
+			if (obj->isBckAnm(3)) {
+				obj->kill();
+				++trampled;
+			}
+		}
+
+		if (trampled >= trampleBonusNum) {
+			gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
+			                             0x20000005, true);
+		}
+
 		return true;
 	}
 
