@@ -199,12 +199,37 @@ void TMarioEffect::endDashEffect()
 	unk80->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 }
 
+// Closure batch 226: perform references no stack slot of its own, and its
+// 0x30 of low region is six binding levels -- one per `unk68->mWaterGun` read
+// (five) plus one more. The sixth is +8 wherever it sits: the case-0
+// `checkFlag` receiver below, any single `unk80` receiver, or the second
+// `checkFlag`; taking two of them overshoots by 8. Kept on the mario read
+// because the gun binder already reads through it.
+// fabricated
+static inline TMario* PerformMario(const TMarioEffect* p)
+{
+	TMario* m = p->unk68;
+	return m;
+}
+
+static inline TWaterGun* PerformGun(const TMarioEffect* p)
+{
+	TWaterGun* g = p->unk68->mWaterGun;
+	return g;
+}
+
+static inline MActor* PerformActor(const TMarioEffect* p)
+{
+	MActor* a = p->unk80;
+	return a;
+}
+
 void TMarioEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		switch (unk7C) {
 		case 0:
-			if (unk68->checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
+			if (PerformMario(this)->checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 				startDashEffect();
 				unk7C = 1;
 			}
@@ -212,11 +237,11 @@ void TMarioEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		case 1:
 			if (unk68->checkFlag(MARIO_FLAG_FLUDD_EMITTING) == true) {
-				if (unk68->mWaterGun->getEmitMtx(0) != nullptr) {
+				if (PerformGun(this)->getEmitMtx(0) != nullptr) {
 					gpMarioParticleManager->emitAndBindToMtxPtr(
-					    0xFE, unk68->mWaterGun->getEmitMtx(0), 1, this);
+					    0xFE, PerformGun(this)->getEmitMtx(0), 1, this);
 					gpMarioParticleManager->emitAndBindToMtxPtr(
-					    0xFF, unk68->mWaterGun->getEmitMtx(0), 1, this);
+					    0xFF, PerformGun(this)->getEmitMtx(0), 1, this);
 				}
 			} else {
 				endDashEffect();
@@ -234,8 +259,8 @@ void TMarioEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((cue & CUE_CALC_ANIM) && unk7C != 0) {
-		if (unk68->mWaterGun->getEmitMtx(0) != nullptr) {
-			unk80->getModel()->setBaseTRMtx(unk68->mWaterGun->getEmitMtx(0));
+		if (PerformGun(this)->getEmitMtx(0) != nullptr) {
+			unk80->getModel()->setBaseTRMtx(PerformGun(this)->getEmitMtx(0));
 			unk80->perform(CUE_CALC_ANIM, graphics);
 		}
 	}
