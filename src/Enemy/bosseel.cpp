@@ -1562,6 +1562,7 @@ void TBossEel::calcAndSetCollisionCubeBite_()
 
 void TBossEel::updateTearsCnt()
 {
+	char trash[0x50];
 	static const s32 eyeTable[] = { 0, 2, 1, 3 };
 
 	++mTearCycleTimer;
@@ -2196,6 +2197,7 @@ DEFINE_NERVE(TNerveBossEelOutWait, TLiveActor)
 
 static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 {
+	char trash[0x28];
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 	if (spine->getTime() == 1) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_DOWN, &eel->mPosition, 0,

@@ -2529,6 +2529,7 @@ void TGCConsole2::startAppearJetBalloon(int nozzleKind, int count)
 
 void TGCConsole2::startInsertJetBalloon()
 {
+	char trash[0x10];
 	unk3D = 1;
 	unk59 = 1;
 

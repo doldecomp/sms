@@ -333,6 +333,7 @@ BOOL TMario::swimPDown()
 
 BOOL TMario::swimMain()
 {
+	char trash[0x18];
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
 		changePlayerStatus(MARIO_STATUS_SWIM_P_DOWN, 0, false);
 

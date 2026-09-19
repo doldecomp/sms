@@ -248,6 +248,7 @@ void TPollutionLayer::isProhibit(f32, f32, f32) const { }
 
 bool TPollutionLayer::isPolluted(f32 x, f32 y, f32 z) const
 {
+	char trash[0x10];
 	if (!isInArea(x, y, z))
 		return false;
 	if (getPlaneType() == 6 && y > 1.0f)

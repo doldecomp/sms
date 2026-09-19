@@ -32,6 +32,7 @@ BOOL TMario::startJumpWall()
 
 void TMario::doJumping()
 {
+	char trash[0x20];
 	f32 sideVel = 0.0f;
 	mForwardVel *= mJumpParams.mJumpSpeedBrake.get();
 

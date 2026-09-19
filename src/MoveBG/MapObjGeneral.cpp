@@ -90,6 +90,7 @@ void TMapObjGeneral::sink()
 
 void TMapObjGeneral::put()
 {
+	char trash[8];
 	mHolder                    = nullptr;
 	mHolder                    = nullptr;
 	s32 preservedTimeTilAppear = getStateTimer();

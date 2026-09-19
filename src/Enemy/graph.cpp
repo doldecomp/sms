@@ -869,6 +869,7 @@ void TGraphTracer::setParamFromGraph()
 
 void TGraphTracer::setTo(int node_idx)
 {
+	char trash[0x48];
 	mPrevIdx = -1;
 	mCurrIdx = node_idx;
 	setParamFromGraph();
@@ -876,6 +877,7 @@ void TGraphTracer::setTo(int node_idx)
 
 int TGraphTracer::moveTo(int node_idx)
 {
+	char trash[0x48];
 	if (node_idx < 0)
 		return node_idx;
 

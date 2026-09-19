@@ -864,6 +864,7 @@ void TNozzleTrigger::animation(int param_1)
 
 void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 {
+	char trash[0x10];
 	if (!mFludd->hasWater()) {
 		return;
 	}
@@ -1786,6 +1787,7 @@ void TWaterGun::triggerPressureMovement(
 }
 void TWaterGun::emit()
 {
+	char trash[0x50];
 	// TODO: Missing stack space
 	// volatile u32 unused1[25];
 

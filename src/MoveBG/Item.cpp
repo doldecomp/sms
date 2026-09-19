@@ -484,6 +484,7 @@ void TShine::calc()
 
 void TShine::movingCircle()
 {
+	char trash[0x18];
 	// TODO: hack, remove
 	(void)0;
 	(void)0;

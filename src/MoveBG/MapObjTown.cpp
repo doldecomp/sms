@@ -139,6 +139,7 @@ void TManhole::touchPlayer(THitActor*)
 
 bool TManhole::animationFinished()
 {
+	char trash[0x10];
 	J3DFrameCtrl* frameCtrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->getRate() == 0.0f)
 		return true;

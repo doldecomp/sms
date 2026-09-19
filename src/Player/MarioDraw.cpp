@@ -1075,6 +1075,7 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 
 f32 TMario::setReverseAnimation(int anm_id, f32 rate)
 {
+	char trash[0x10];
 	// volatile u32 padding[4];
 	if (anm_id != mAnimationId) {
 		setAnimation(anm_id, rate);

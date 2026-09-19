@@ -602,6 +602,7 @@ void MSound::pauseOn(bool param_1)
 
 void MSound::pauseOff(u8 param_1)
 {
+	char trash[0x18];
 	switch (param_1) {
 	case 0:
 		if (checkUnkA8(2))
@@ -680,6 +681,7 @@ void MSound::talkModeIn(bool param_1)
 
 void MSound::talkModeOut()
 {
+	char trash[8];
 	if (checkUnkA8(2)) {
 		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0,
 		                                             nullptr, 0);
@@ -1094,6 +1096,7 @@ u32 MSound::getWallSound(u32 param_1, f32 velocity)
 
 void MSound::startBeeSe(Vec* param_1, u32 param_2)
 {
+	char trash[0x20];
 	if (param_2 > 3) {
 		JAISound* sound
 		    = !checkUnkA8(1)

@@ -232,6 +232,7 @@ void TMapEventSinkInPollution::initBuriedBuilding()
 
 void TMapEventSinkInPollution::loadAfter()
 {
+	char trash[0x48];
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
 		gpPollution->getCounterObj().registerPollutionObj(

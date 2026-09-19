@@ -844,6 +844,7 @@ void TMario::checkGraffitoDamage() { }
 
 void TMario::checkGraffitoFire()
 {
+	char trash[0x30];
 	if (isInvincible())
 		return;
 

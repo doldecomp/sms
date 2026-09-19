@@ -621,6 +621,7 @@ void TMario::soundMovement()
 
 void TMario::animSound()
 {
+	char trash[0x30];
 	mSoundFlags = mGroundPlane->unk6;
 
 	if (checkFlag(MARIO_FLAG_DIRTY)) {
