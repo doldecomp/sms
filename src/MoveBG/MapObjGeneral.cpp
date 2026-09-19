@@ -168,12 +168,12 @@ void TMapObjGeneral::recovering()
 	if (hasModelOrAnimData(6)) {
 		J3DModel* model = getModel();
 		MtxPtr mat      = model->getAnmMtx(0);
-		f32 fVar1       = mat[3][1] - unk144;
+		f32 fVar1       = mat[1][3] - unk144;
 		mDamageHeight += fVar1;
 		calcEntryRadius();
 		if (mHeldObject)
 			mHeldObject->mPosition.y += fVar1;
-		unk144 = mat[3][1];
+		unk144 = mat[1][3];
 		if (!animIsFinished())
 			return;
 	} else if (mPosition.y < unk144) {
