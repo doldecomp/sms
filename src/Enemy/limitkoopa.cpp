@@ -156,15 +156,27 @@ BOOL TNerveLimitKoopaGetShowered::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
+static inline int LimitKoopaAnmIndex(const TLimitKoopa* koopa)
+{
+	int index = koopa->getAnmIndex();
+	return index;
+}
+
+static inline TLimitKoopaParams* LimitKoopaGetParam(const TLimitKoopa* koopa)
+{
+	TLimitKoopaParams* param = koopa->getParam();
+	return param;
+}
+
 BOOL TNerveLimitKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
 
-	switch (koopa->getAnmIndex()) {
+	switch (LimitKoopaAnmIndex(koopa)) {
 	case KOOPA_ANM_DOWN:
 		if (koopa->getAnmEnd())
 			koopa->changeBck(KOOPA_ANM_DOWN_WAIT,
-			                 koopa->getParam()->getDownSpeed());
+			                 LimitKoopaGetParam(koopa)->getDownSpeed());
 		break;
 	case KOOPA_ANM_DOWN_WAIT:
 		if (koopa->getAnmEnd())
@@ -341,6 +353,12 @@ void TLimitKoopa::loadAfter()
 }
 
 // TODO: 91.8%.
+static inline MActorAnmBck* LimitKoopaAnmBck(const TLimitKoopa* p)
+{
+	MActorAnmBck* bck = p->getMActor()->getAnmBck();
+	return bck;
+}
+
 void TLimitKoopa::init(TLiveManager* manager)
 {
 	mBodyRadius = 800.0f;
@@ -358,7 +376,7 @@ void TLimitKoopa::init(TLiveManager* manager)
 	// TSpineBase::initWith, the getAnmBck test). The named
 	// `MActorAnmBck* bck` local this replaced cost one `mr r3, r0` and, as
 	// a named local, *shrank* the frame by another 8 (0x60).
-	if (getMActor()->getAnmBck())
+	if (LimitKoopaAnmBck(this))
 		getMActor()->getAnmBck()->initSimpleMotionBlend(0x10);
 
 	unk170 = 0.0f;
@@ -378,10 +396,17 @@ void TLimitKoopa::init(TLiveManager* manager)
 	neck->setCallBackUserData(this);
 }
 
+static inline f32 LimitKoopaWaitSpeed(const TLimitKoopa* p)
+{
+	TLimitKoopaParams* param = p->getParam();
+	f32 speed                = param->waitSpeed.get();
+	return speed;
+}
+
 void TLimitKoopa::reset()
 {
 	TSpineEnemy::reset();
-	changeBck(KOOPA_ANM_WAIT, getParam()->waitSpeed.get());
+	changeBck(KOOPA_ANM_WAIT, LimitKoopaWaitSpeed(this));
 	mSpine->reset();
 	mWaitTimer     = 0;
 	mHipDropTimer  = 0;
