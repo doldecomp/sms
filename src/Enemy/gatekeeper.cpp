@@ -222,7 +222,7 @@ void TBiancoGateKeeperManager::createModelData()
 }
 
 TBGKMtxCalc::TBGKMtxCalc(TBiancoGateKeeper* owner)
-    : M3UMtxCalcSIAnmBlendQuat(false)
+    : M3UMtxCalcSIAnmBlendQuat(true)
     , mOwner(owner)
 {
 }
