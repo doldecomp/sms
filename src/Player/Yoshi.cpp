@@ -220,9 +220,9 @@ void TYoshi::init(TMario* param_1)
 	for (int i = 0; i < 2; ++i)
 		mMirrorModels[i]->getModelData()->onFlag1OnAllShapes();
 
-	mBodyAnmSound = new MAnmSound(SMSGetMSound());
+	mBodyAnmSound = new MAnmSoundMario(SMSGetMSound());
 	mBodyAnmSound->initAnmSound(nullptr, 1, 0.0f);
-	mTongueAnmSound = new MAnmSound(SMSGetMSound());
+	mTongueAnmSound = new MAnmSoundMario(SMSGetMSound());
 	mTongueAnmSound->initAnmSound(nullptr, 1, 0.0f);
 
 	{
@@ -368,7 +368,7 @@ u16 TYoshi::changeHand()
 	}
 
 	u32 a2 = mMario->mStatus;
-	if (a2 == 0x8023C)
+	if (a2 == 0x80023C)
 		return 6;
 	if (a2 == MARIO_STATUS_WIN_DEMO)
 		return 2;
@@ -501,6 +501,7 @@ void TYoshi::getOff(bool param_1)
 	SMS_RideMoveCalcLocalPos(unk94, mTranslation);
 	SMSGetMSound()->unk88 = 1;
 	MSBgm::setStageBgmYoshiPercussion(false);
+	mTongue->mState = TYoshiTongue::STATE_IDLE;
 }
 
 void TYoshi::thinkJumpEnd(u16, u16*) { }
@@ -583,7 +584,7 @@ void TYoshi::thinkAnimation()
 		} else {
 		walking:
 			u32 act = mMario->mStatus;
-			if (act == 0x8023C)
+			if (act == 0x80023C)
 				newIdx = 6;
 			else if (act == MARIO_STATUS_WIN_DEMO)
 				newIdx = 2;
