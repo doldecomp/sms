@@ -89,6 +89,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - The +4 rung is a direct-return fork **nested inside a binder**, over a global, a file-local static *or a plain member read*; at the call site it is +0 and two identical stacked forks collapse (frame-gaps.md: "re-pass 172").
 - A function 4 off an 8-byte binder grid wants the global-fork rung (`static inline THitActor* X() { return (THitActor*)gpMarioAddress; }` feeding the call); a binder over a large class member is priced by the object's size (+16 on a 0x18 `TVector`), not its return type (frame-gaps.md: "Closure 219").
 - A fork over a global must be used at **every** site of its wrapper family or it rotates the first expansion's register coalescing (frame-gaps.md: "re-pass 172").
+- A direct-return fork over a file-local static is +4 bottom/+4 top (+8 frame), the binder form +0x10 (`JPADragField::affect`); a `const`-receiver TU-local inline does not break a CSE of member flag reads (frame-gaps.md: "Closure 235").
 - A consumed reference binding is +4 out of line but **+8** in an inlined expansion of the same body, so price it across the whole family (frame-gaps.md: "re-pass 172").
 - When the low region's *total* is pinned (16-aligned named block) the residue is an allocation order difference and the whole lever ladder collapses to 0/8/16 (frame-gaps.md: "re-pass 172").
 - An address binding at a call site is +8 for the pointer **and** the reference form, and can buy a whole register cluster: `J3DModel::entryModelData` (frame-gaps.md: "re-pass 162").
