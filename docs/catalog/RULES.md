@@ -75,6 +75,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Of two test shapes on one inlined `bool` accessor only the `clrlwi.` site is the type tell; a `cmpwi` site is not a `BOOL` return (codegen-tells.md: "Header round 37").
 - Steer a tiny accessor with one relative level (owning-class forwarder, or const/non-const pair), never a header-wide change (codegen-tells.md: "Inlining").
 - An UNUSED helper whose map size matches a big `<` cluster in the same unit is a **missing call site** retail inlined and dead-stripped (`startFadeIn` in `TMovieDirector::direct`); a named pointer local over a *virtual* accessor is the honest +8 where fabricated binders saturate at +0x10 (codegen-tells.md: "Closure 232").
+- A size-exact UNUSED helper can still be **called**: an inline that expands at depth 1 but is a `bl` in retail proves the call (`doWalk`/`MsWrap`); `lfs fN, off(r3)` before the `bl` = a named `.get()` local (codegen-tells.md: "Closure 248").
 - Pasted-UNUSED: a size-exact UNUSED helper is often written out at its call sites; conversely one can exist only to *be* a level (codegen-tells.md: "`bosswanwan`").
 
 ## Frame-size gaps
