@@ -44,6 +44,18 @@ struct MapMirrorPlane {
 	/* 0xC */ f32 mD;
 };
 
+// TODO (shared header, not made here): JGVec3.hpp spells
+// `scaleAdd(scale, b, c)` as `x = b.x + c.x * scale`, but retail's only
+// out-of-line copy in the whole game is the one this TU emits, and it is
+// `lfs f2, 0(r4); lfs f0, 0(r5); fmadds f0, f2, f1, f0`, i.e.
+// `x = b.x * scale + c.x`. Six of its thirteen instructions differ here
+// (97.69%), and TMirrorModel::entry's three `bl scaleAdd` sites pass r4/r5
+// the other way round for the same reason. The fix is codegen-neutral
+// everywhere else -- flipping the header body and the b/c arguments of all
+// ~15 call sites (cameralib, sunmodel, JPAParticle, CameraJetCoaster,
+// CameraBGCheck, graph, fireWanwan, ...) cancels out at every inlined site,
+// because only this TU emits the body -- but it touches files this batch may
+// not edit.
 struct MapMirrorVecs {
 	/* 0x0 */ JGeometry::TVec3<f32> mTarget;
 	/* 0xC */ JGeometry::TVec3<f32> mUp;
@@ -51,6 +63,17 @@ struct MapMirrorVecs {
 
 void TMirrorCamera::makeMirrorViewMtx()
 {
+	// TODO: two levels are still wrong in the deep (TMirrorModel::entry)
+	// expansion. Retail inlines MapMirrorPlane's constructor at depth 4 and
+	// leaves only mNormal's `bl TVec3::TVec3()` plus `bl set<f>` behind;
+	// MWCC here refuses the constructor at depth 4 (one implicit member
+	// construction plus two statements is over the depth-4 allowance of 2),
+	// so the whole constructor goes out of line and retail's f28-f31 spill
+	// disappears with it. Folding mTarget/mUp into the plane so the
+	// constructor is the only declaration costs more than it gains (80.9%,
+	// and makeMirrorViewMtx then compiles to 0x178 instead of the map's
+	// 0x120); MapMirrorVecs keeps the 0x120 but pays two extra
+	// `bl TVec3::TVec3()` for its own members.
 	MapMirrorPlane plane(this);
 	MapMirrorVecs vecs;
 
