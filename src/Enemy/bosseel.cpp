@@ -2557,9 +2557,16 @@ DEFINE_NERVE(TNerveBossEelMouthOpenWait, TLiveActor)
 	return false;
 }
 
+static inline TBossEel* BossEelSleepingBody(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	TBossEel* eel    = static_cast<TBossEel*>(body);
+	return eel;
+}
+
 DEFINE_NERVE(TNerveBossEelSleepOnBottom, TLiveActor)
 {
-	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+	TBossEel* eel = BossEelSleepingBody(spine);
 
 	if (spine->getTime() == 0) {
 		eel->mBattleTimer = 0;
