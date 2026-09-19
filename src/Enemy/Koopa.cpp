@@ -536,6 +536,18 @@ BOOL TKoopaFlame::receiveMessage(THitActor*, u32 message)
 	return TRUE;
 }
 
+// TODO: 18.3%. Retail `bl`s TKoopa::changeAnm from here while MWCC expands it,
+// and this is a *per-site* refusal, not a budget: seven extra zero-codegen
+// statements in changeAnm take this function from 18.4% to 99.8% and leave
+// changeAnm itself byte-exact, but they also turn changeAnm into a call in
+// every other site in the TU and cost eleven functions their match (Wait,
+// Tumble, Fall, Flame, Provoke, Stagger, GetShowered, GetDown, init, reset:
+// the unit drops 85.1 -> 76.1). So retail inlines the same 8-statement body
+// everywhere else and calls it only here -- the emergent per-expansion class
+// of docs/catalog/codegen-tells.md "round 38" (SMS_getShineID in
+// TSelectMenu::perform), not a statement count. The r30/r31 inversion below
+// (retail ranks the `other` parameter above `this`) is a second, independent
+// residue.
 void TKoopaFlame::attack_(THitActor* other)
 {
 	if (other->receiveMessage(this, HIT_MESSAGE_UNKA)
