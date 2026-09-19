@@ -34,7 +34,8 @@ static void initMonte()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
 	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("マップグループ");
+	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >(
+	        "インダイレクトシーン");
 
 	TMapStaticObj* obj = new TMapStaticObj("水インダイレクト");
 	obj->init("SeaIndirect");
