@@ -502,7 +502,7 @@ int TMovieDirector::direct()
 			THPPlayerStop();
 			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
 			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
-			gpApplication.mFader->startWipe(15, 0.3f, 0.0f);
+			gpApplication.mFader->startWipe(14, 0.3f, 0.0f);
 			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
 			unk24->init(gpApplication.getMovie() == 17 ? 8 : 0);
 			break;
