@@ -103,13 +103,20 @@ void TLimitKoopaJr::reset()
 	resetLimitKoopaJr();
 }
 
+static inline int LimitKoopaJrShotPeriod(const TLimitKoopaJr* koopa)
+{
+	TLimitKoopaJrParams* params = koopa->getSaveParams();
+	int period                  = params->mSLShotDoodlePeriod.get();
+	return period;
+}
+
 void TLimitKoopaJr::resetLimitKoopaJr()
 {
 	mSpine->reset();
 
 	unk158     = 0;
 	mShotTimer = 0;
-	mShotTimer = getSaveParams()->mSLShotDoodlePeriod.get();
+	mShotTimer = LimitKoopaJrShotPeriod(this);
 
 	unk160.x = 0.0f;
 	unk160.y = 0.0f;
