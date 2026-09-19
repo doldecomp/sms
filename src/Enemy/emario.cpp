@@ -291,34 +291,28 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 	}
 
-	if (!(cue & CUE_MOVE)) {
-		return;
-	}
-
-	if (mEnemyMario->canControl() == 0) {
-		return;
-	}
-
-	for (s32 i = 0; i < mColCount; ++i) {
-		switch (mCollisions[i]->mActorType) {
-		case 0x80000001: {
-			if (EMarioCalcDist(mPosition, mCollisions[i]->getPosition())
-			    < mEnemyMario->mAttackRange) {
-				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
-			}
-		} break;
-
-		case 0x400000bc: {
-			if (!mEnemyMario->checkStatusType(0x10000)) {
-				if (EMarioCalcDist(mCollisions[i]->getPosition(),
-				                   mPosition)
-				    < (mCollisions[i]->getAttackRadius()
-				       + mEnemyMario->getDamageRadius())) {
-					mEnemyMario->changePlayerStatus(0x810446, 0, false);
-					mEnemyMario->emitGetEffect();
+	if ((cue & CUE_MOVE) && mEnemyMario->canControl() != 0) {
+		for (s32 i = 0; i < mColCount; ++i) {
+			switch (mCollisions[i]->mActorType) {
+			case 0x80000001: {
+				if (EMarioCalcDist(mPosition, mCollisions[i]->getPosition())
+				    < mEnemyMario->mAttackRange) {
+					mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
 				}
+			} break;
+
+			case 0x400000bc: {
+				if (!mEnemyMario->checkStatusType(0x10000)) {
+					if (EMarioCalcDist(mCollisions[i]->getPosition(),
+					                   mPosition)
+					    < (mCollisions[i]->getAttackRadius()
+					       + mEnemyMario->getDamageRadius())) {
+						mEnemyMario->changePlayerStatus(0x810446, 0, false);
+						mEnemyMario->emitGetEffect();
+					}
+				}
+			} break;
 			}
-		} break;
 		}
 	}
 
