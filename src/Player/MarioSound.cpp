@@ -713,12 +713,21 @@ u8 TMario::getVoiceStatus()
 	return 0;
 }
 
+// Binding level over the sound singleton, worth +8 of low region in
+// TMario::startVoice and startVoiceIfNoVoice (frame ladder 271).
+static inline MSound* MarioSoundGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 u32 TMario::startVoice(u32 param_1)
 {
 	if (onYoshi())
 		return 0;
 
-	return SMSGetMSound()->startMarioVoice(param_1, mHealth, getVoiceStatus());
+	return MarioSoundGetMSound()->startMarioVoice(param_1, mHealth,
+	                                              getVoiceStatus());
 }
 
 u32 TMario::startVoiceIfNoVoice(u32 param_1)
