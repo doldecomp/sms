@@ -163,8 +163,10 @@ public:
 	int moveTo(int node_idx);
 	f32 calcSplineSpeed(float);
 	bool traceSpline(float);
+#pragma dont_inline on
 	int getCurGraphIndex() const { return mCurrIdx; }
 	const TGraphWeb* getGraph() const { return unk0; }
+#pragma dont_inline off
 
 	// fabricated
 	TGraphNode& getCurrent() { return getGraph()->getGraphNode(mCurrIdx); }
