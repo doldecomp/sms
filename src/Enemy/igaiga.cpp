@@ -68,7 +68,6 @@
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
-#include <Map/MapCollisionManager.hpp>
 
 #include <MSound/MSSetSound.hpp>
 
@@ -496,6 +495,12 @@ void TIgaiga::setMActorAndKeeper()
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
 	mMActor       = mMActorKeeper->createMActor("igaiga_model1.bmd", 0);
 }
+
+// Rogue include, deliberately mid-file: retail's zero + (1,1,1) `TVec3` pair
+// from MapCollisionEntry::setUpTrans sits at .rodata 0x1B0, between
+// "igaiga_model1.bmd" and "bosspaku_head_move", not with the header block at
+// the top of the file.
+#include <Map/MapCollisionManager.hpp>
 
 void TIgaiga::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -1006,7 +1011,7 @@ void TGorogoro::init(TLiveManager* manager)
 	mSpine->initWith(&TNerveGorogoroRollOnGraph::theNerve());
 	unk1A4 = (TRollEnemySaveLoadParams*)getSaveParam();
 
-	TMirrorActor* mirror = new TMirrorActor("ゴロゴロ in鏡");
+	TMirrorActor* mirror = new TMirrorActor("ゴロゴロin鏡");
 	mirror->init(getMActor()->getModel(), 0x18);
 
 	mTevKColor.a = 0xFF;
