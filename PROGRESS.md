@@ -3163,16 +3163,25 @@ gefunden, alle nicht behebbar**:
    vielfach eingebundenem Header vs. konkrete Klassenmethode in
    eigener `.cpp`) zu unterschiedlichem MWCC-Codegen führen.
 3. **`JPAVecToRotaMtx`** (56,9 %, 436 B,
-   `src/JSystem/JParticle/JPAMath.cpp`): Retail prüft den
-   Schwellenwert auf dem QUADRIERTEN Wert `sq` (via Konstante
-   `@1489`) BEVOR die teure `frsqrte`-basierte Quadratwurzel via
-   `JGeometry::TUtil<f32>::sqrt()` berechnet wird (lazy evaluation),
-   während unser Quelltext `sin = TUtil<f32>::sqrt(sq)` unbedingt
-   VOR der `if (sin > epsilon())`-Prüfung berechnet. Erfordert eine
-   Restrukturierung, bei der `sin` nur im positiven Zweig berechnet
-   und trotzdem für die spätere Matrixkonstruktion verfügbar bleibt —
-   als konkreter, aber nicht-trivialer nächster Schritt dokumentiert,
-   nicht in dieser Runde umgesetzt.
+   `src/JSystem/JParticle/JPAMath.cpp`): Erste Analyse zeigte, dass
+   Retail den `sq`-Schwellenwert (Konstante `@1489` = 0.0f) vor der
+   teuren `frsqrte`-basierten Quadratwurzel prüft — das ist jedoch
+   nur `JGeometry::TUtil<f32>::sqrt()`s eigener interner
+   `if (mag <= 0.0f) return mag;`-Guard, inline ausgerollt, und war
+   bereits identisch in unserem Code vorhanden. **Versuch**: `axis`
+   (ein `TVec3`-Struct mit `.cross()`/`.scale()`/`.zero()`-Aufrufen)
+   durch rohe Skalar-Locals (`axisX/Y/Z`) ersetzt, um den
+   `calcWorldMinMax`-Fund (Runde 44: Struct-Methodenaufrufe erzwingen
+   Stack-Spill) zu wiederholen — Ergebnis NICHT wie erwartet: Retails
+   finale Matrixkonstruktion liest die Achsenkomponenten selbst
+   NACH der Skalierung weiterhin von einem Stack-Puffer
+   (`lfs f7, 0x14(r1)` etc.), d. h. Retail verwendet ebenfalls einen
+   Stack-gestützten Aufbau — die `calcWorldMinMax`-Heuristik
+   ("Struct-Methode vermeiden → kein Stack-Spill") gilt hier NICHT
+   pauschal. Sauber zurückgesetzt (94 vs. 115 Zeilen, weiterhin
+   92 Differenzen). Verbleibt als ungelöster Fall — die exakte
+   Quellstruktur, die Retails Stack-Layout UND Registerzuteilung
+   gleichzeitig reproduziert, wurde nicht gefunden.
 
 **`TConsoleStr::processGo`** (14,2 %, 1684 B,
 `src/GC2D/ConsoleStr.cpp`): mehrere bestehende
