@@ -34,6 +34,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `return x==N` is branchless, `return h()` adds `clrlwi`, `?TRUE:FALSE` a second branch, `bool` branches to `li 1/0` (codegen-tells.md: "Booleans and predicates").
 - A two-`return` body plus one level is refused right of `&&`/`||`: spell `if (c) return TRUE; return FALSE;` (codegen-tells.md: "header round 9").
 - MWCC always CSEs two loads of a member across a short-circuit branch: a reload proves a `bl` or store between (codegen-tells.md: "batch 60").
+- A member read through an inlined `const` accessor defers its load past a directly read global and flips the `fmuls` destination operand (`getUnk80() * gpCamera->mFovy`); a class local that must survive a `bl` is a four-float ctor (`MapMirrorPlane`), and `: member()` initialisers are not free (codegen-tells.md: "Closure 254").
 - A `const` accessor restores per-use re-reads and can also *cause* a CSE; decide per statement (codegen-tells.md: "header round 7").
 - A store cannot cross a call, so a store after a `bl` dates that declaration after it (codegen-tells.md: "Batch 59").
 - `a = b = c = v;` stores right to left; a C89 aggregate initialiser is emitted at its declaration, so a mid-function init means a nested block; a `u8` tested with signed `cmpwi` and no `extsb` was read as `int` (codegen-tells.md: "Structural pass VII").
