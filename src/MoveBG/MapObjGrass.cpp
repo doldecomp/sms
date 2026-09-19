@@ -199,6 +199,7 @@ void TMapObjGrassManager::draw() const
 
 void TMapObjGrassManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x30];
 	if (cue & CUE_CALC_ANIM) {
 		f32 fVar1 = 0.0f;
 		for (int i = 0; i < 10; ++i) {
