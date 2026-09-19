@@ -1091,6 +1091,12 @@ Verschlechterung committet):
   lokale Variable diese eine `volatile`-Platzierung; Ursache bleibt
   unklar, nicht in vertretbarer Zeit weiter verfolgt.
 
+**Weiterer echter Fund**: `Player/MarioMain.cpp::TMario::drawSyncCallback`
+(99,97 %, einziger Diff: `local_1c`-Ausgabeparameter für `GXPeekARGB` bei
+`0x14` statt `0x10`). `char trash[4]` VOR der Deklaration wirkungslos,
+aber `char trash[4]` DIREKT NACH `u32 local_1c;` (vor dem
+`GXPeekARGB`-Aufruf) trifft exakt: **100 %**.
+
 Die Referenz-DOL bleibt `OK`.
 
 ## Windows-Setup
@@ -1478,6 +1484,9 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 - `Player/WaterGun.hpp`/`WaterGun.cpp`: `TWaterGun::rotateProp` —
   **100 %** (Bugfix: `mNozzleAngleYSpeedMax`-Feld an falscher Stelle im
   `TWaterGunParams`-Struct, siehe Iterationsrunde 27).
+
+- `Player/MarioMain.cpp`: `TMario::drawSyncCallback` — **100 %**
+  (`char trash[4]` direkt nach `u32 local_1c;`).
 
 ## Nächster GMSJ01-Kandidat
 
