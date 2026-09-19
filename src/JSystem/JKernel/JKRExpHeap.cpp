@@ -206,6 +206,16 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 // the value that takes the dead `size` parameter register r4, and every
 // spelling that keeps `size` alive long enough to free r4 for it also changes
 // the instruction count.
+// Closure round 2026-09-18, five more spellings, none better than the 185/185
+// instruction baseline: a `while` loop with an explicit `block = block->mNext`
+// (6 markers), moving `size = ALIGN_NEXT(size, 4)` below the five
+// zero-initialisations (identical, 4 markers), `u32 alignMask = ~(align - 1);`
+// as the *first* statement (12 markers) and as the last statement before the
+// loop (93 markers, frame 0x40), and `u32 alignM = align - 1;` after the
+// rounding with `& ~alignM` at the use (186 instructions). The `nor` is placed
+// by the scheduler's pre-`stwu` slot, not by source order, so the mask cannot
+// be pushed below the rounding from the source side; this needs a reason for
+// the slot to be unavailable, not another spelling of the mask.
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
 	size                    = ALIGN_NEXT(size, 4);
