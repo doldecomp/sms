@@ -671,7 +671,7 @@ BOOL TLeanMirror::receiveMessage(THitActor* sender, u32 message)
 
 void TLeanMirror::touchPlayer(THitActor* actor)
 {
-	if (mState == STATE_SHAKE && marioIsOn()) {
+	if (isState(STATE_SHAKE) && marioIsOn()) {
 		updateSpeedVec(actor->mPosition, mMarioPower);
 		if (!mBgmStarted) {
 			MSBgm::startBGM(MSD_BGM_CHUBOSS2);
