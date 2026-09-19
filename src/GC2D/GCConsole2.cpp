@@ -3780,6 +3780,30 @@ bool TGCConsole2::processAppearStar(int param_1)
 	return isFinished;
 }
 
+// fabricated: binding levels over the coin counter's digit panes; the
+// fork nested inside a binder is the +4 rung (closure 264).
+static inline TBoundPane* GCConsole2UnkD4Fork(const TGCConsole2* p, int i)
+{
+	return p->unkD4[i];
+}
+
+static inline TBoundPane* GCConsole2UnkD4(const TGCConsole2* p, int i)
+{
+	TBoundPane* x = GCConsole2UnkD4Fork(p, i);
+	return x;
+}
+
+static inline TBoundPane* GCConsole2UnkD0Fork(const TGCConsole2* p)
+{
+	return p->unkD0;
+}
+
+static inline TBoundPane* GCConsole2UnkD0(const TGCConsole2* p)
+{
+	TBoundPane* x = GCConsole2UnkD0Fork(p);
+	return x;
+}
+
 bool TGCConsole2::processDownCoin(int param_1)
 {
 	bool isFinished = true;
@@ -3789,13 +3813,13 @@ bool TGCConsole2::processDownCoin(int param_1)
 		                       cCoinMidPoint);
 
 	if (param_1 == 24)
-		unkD0->setPanePosition(50, JUTPoint(0, 0), cCoinMidPoint,
-		                       cCoinMidPoint);
+		GCConsole2UnkD0(this)->setPanePosition(50, JUTPoint(0, 0),
+		                                       cCoinMidPoint, cCoinMidPoint);
 
 	for (int i = 0; i < 3; ++i) {
 		if (param_1 == i * 6 + 28)
-			unkD4[i]->setPanePosition(50, JUTPoint(0, i * 6), cCoinMidPoint,
-			                          cCoinMidPoint);
+			GCConsole2UnkD4(this, i)->setPanePosition(
+			    50, JUTPoint(0, i * 6), cCoinMidPoint, cCoinMidPoint);
 	}
 
 	updateCoinPaneState(unkC8, isFinished);
@@ -3822,12 +3846,16 @@ bool TGCConsole2::processDownCoin(int param_1)
 	// The emitter has to be named: as a bare `unk124->` receiver MWCC loads
 	// it after the argument arithmetic and interleaves the two `stfs`, while
 	// retail loads it first and batches both `fmadds` (99.9% vs 95.8%, and
-	// the setEmitterToPaneCenter() helper form is 98.9%).
+	// the setEmitterToPaneCenter() helper form is 98.9%). The centre goes
+	// through a named TVec3: MWCC forwards the three stores into the
+	// emitter's own members and leaves the 12-byte slot reserved, which is
+	// the hole at the bottom of the named block.
 	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
 	JPABaseEmitter* emitter = unk124;
-	emitter->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
-	                                bounds.y1 + bounds.getHeight() * 0.5f,
-	                                0.0f);
+	JGeometry::TVec3<f32> center;
+	center.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	           bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	emitter->mGlobalTranslation.set(center);
 
 	return isFinished;
 }
@@ -3885,7 +3913,7 @@ bool TGCConsole2::processAppearCoin(int param_1)
 	}
 
 	if (param_1 == 24) {
-		unkD0->getPane()->show();
+		GCConsole2UnkD0(this)->getPane()->show();
 		unkD0->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 	}
 
@@ -3908,9 +3936,10 @@ bool TGCConsole2::processAppearCoin(int param_1)
 
 	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
 	JPABaseEmitter* emitter = unk124;
-	emitter->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
-	                                bounds.y1 + bounds.getHeight() * 0.5f,
-	                                0.0f);
+	JGeometry::TVec3<f32> center;
+	center.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	           bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	emitter->mGlobalTranslation.set(center);
 
 	return isFinished;
 }
@@ -3978,12 +4007,30 @@ bool TGCConsole2::processDrawTelop(u32)
 	return isFinished;
 }
 
+// fabricated: a binder over the flag manager singleton.
+static inline TFlagManager* GCConsole2FlagManager()
+{
+	TFlagManager* x = TFlagManager::smInstance;
+	return x;
+}
+
+// fabricated: a binder over the telop data pointer.
+static inline void* GCConsole2UnkC4(const TGCConsole2* p)
+{
+	void* x = p->unkC4;
+	return x;
+}
+
+// fabricated: a binder over the current telop array.
+static inline u32* GCConsole2Unk570(const TGCConsole2* p)
+{
+	u32* x = p->unk570;
+	return x;
+}
+
 void TGCConsole2::checkChangeTelopArray()
 {
-	// TODO: 48 bytes of frame short. The instructions are exact; the original
-	// declared 0x30 bytes of locals here that the optimiser never touches and
-	// there is no other evidence for what they were.
-	u32* oldArray = unk570;
+	u32* oldArray = GCConsole2Unk570(this);
 
 	if (gpMarDirector->mMap == 1) {
 		switch (gpMarDirector->unk7D) {
@@ -3991,7 +4038,7 @@ void TGCConsole2::checkChangeTelopArray()
 			unk570 = scDolpicNewsDolpic0;
 			break;
 		case 1:
-			if (*(u32*)((u8*)unkC4 + 0x68) != 0)
+			if (*(u32*)((u8*)GCConsole2UnkC4(this) + 0x68) != 0)
 				unk570 = scDolpicNewsDolpic1;
 			else
 				unk570 = nullptr;
@@ -4011,13 +4058,13 @@ void TGCConsole2::checkChangeTelopArray()
 		case 5:
 			// One message per flag, both messages when both are set and the
 			// generic pair when neither is.
-			if (TFlagManager::smInstance->getBool(0x50001)) {
-				if (TFlagManager::smInstance->getBool(0x50002))
+			if (GCConsole2FlagManager()->getBool(0x50001)) {
+				if (GCConsole2FlagManager()->getBool(0x50002))
 					unk570 = scDolpicNewsDolpic5_4;
 				else
 					unk570 = scDolpicNewsDolpic5_2;
 			} else {
-				if (TFlagManager::smInstance->getBool(0x50002))
+				if (GCConsole2FlagManager()->getBool(0x50002))
 					unk570 = scDolpicNewsDolpic5_3;
 				else
 					unk570 = scDolpicNewsDolpic5_1;
