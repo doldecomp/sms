@@ -450,10 +450,11 @@ void TTinKoopaFlame::emitFlameEffects()
 			mScale = 1.0f;
 	}
 
-	f32 scale  = mScale * height;
-	f32 scaleY = scale;
+	f32 scaleY, scale;
+	scale  = mScale * height;
+	scaleY = scale;
 	if (mTinKoopa->mFlameStopTimer > 0)
-		scaleY = scale * 0.5f;
+		scaleY *= 0.5f;
 
 	JGeometry::TVec3<f32> flameScale(scale, scaleY, scale);
 
@@ -523,7 +524,9 @@ void TTinKoopaLaunchOrder::checkOrder()
 	if ((int)mDirection == 1)
 		count = count <= 2 ? count : 2;
 
-	int num = count > 4 ? 4 : count;
+	int num = count;
+	if (num > 4)
+		num = 4;
 	mTinKoopa->makeKillerQueue(num, mDirection);
 }
 
@@ -889,6 +892,14 @@ void TTinKoopa::resetTinKoopa()
 // collision, inlined into both reset() and the break nerve.
 void TTinKoopa::makeHitCollision()
 {
+	// TODO: the ROM keeps the third arm's `cmpwi r0, 2` (and the `b` over it
+	// that arm 1 needs), which MWCC only emits when the arm holds a statement
+	// that generates no code -- an empty `{ }` body is deleted compare and
+	// all.  Which statement is not recoverable: a placeholder `a = a;` lands
+	// TTinKoopa::reset at 99.9% and TNerveTinKoopaBreak::execute at 100%, but
+	// it is a mechanism, not a plausible source, so it is not committed.  A
+	// `switch` with an empty `case 2:` is refuted (reset 98.6% -> 94.2%: it
+	// builds a range tree).
 	if (mDamageStage == 0)
 		setHitParams(0.0f, 0.0f, getSaveParams()->mSLDamageRadius.get(),
 		             getSaveParams()->mSLDamageHeight0.get());
