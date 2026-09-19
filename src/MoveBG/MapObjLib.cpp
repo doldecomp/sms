@@ -52,6 +52,10 @@ bool TMapObjBase::isDemo()
 	if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
 		b1 = false;
 
+	// TODO: retail's `bne` here lands on the shared `li r3, 1; blr` block, so
+	// retail returns true for unk124 1 and 2 as well; every shape tried for
+	// that (`if (b1) return true;`, `if (!b2) return false;`, TU-local
+	// predicates behind `return a || b;`) costs more than the 0.2% it buys.
 	if (!b1) {
 		// TODO: should be OR, but need fancy inlines for that...
 		bool b2 = true;
