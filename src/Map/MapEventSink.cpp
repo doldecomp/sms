@@ -42,9 +42,17 @@ f32 TMapEventSink::getSinkOffsetY() const
 	return unk30->getMax().y - unk30->getMin().y;
 }
 
+// Binder over the pollution singleton.
+static inline TPollutionManager* MapEventSinkPollution()
+{
+	TPollutionManager* m = gpPollution;
+	return m;
+}
+
 TPollutionObj* TMapEventSink::getPollutionObj(int i)
 {
-	return gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2);
+	TMapEventSink::Unk60Struct* e = unk60;
+	return MapEventSinkPollution()->getLayer(e[i].unk0)->getObj(e[i].unk2);
 }
 
 bool TMapEventSink::isFinishedAll() const
@@ -300,11 +308,25 @@ void TMapEventSinkBianco::finishControl()
 		gpPollution->getLayer(i)->stopDecay();
 }
 
+static inline int MapEventSinkRaisingIdx(const TMapEventSink* p)
+{
+	int i = p->mRaisingBuildingIdx;
+	return i;
+}
+
+// Binder over the bell joint.
+static inline J3DJoint* MapEventSinkBiancoJoint(const TMapEventSinkBianco* p)
+{
+	J3DJoint* joint = p->unk64;
+	return joint;
+}
+
 void TMapEventSinkBianco::rising()
 {
 	TMapEventSinkInPollutionReset::rising();
-	if (mRaisingBuildingIdx == 0)
-		TMapObjBase::moveJoint(unk64, 0.0f, unk3C, 0.0f);
+	if (MapEventSinkRaisingIdx(this) == 0)
+		TMapObjBase::moveJoint(MapEventSinkBiancoJoint(this), 0.0f, unk3C,
+		                       0.0f);
 }
 
 // Binding level over a raw member read, worth +16 of low region in
@@ -382,9 +404,7 @@ bool TMapEventSinkBianco::watch()
 
 	for (int i = 1; i < mBuildingNum; ++i) {
 		if (!mIsBuildingRecovered[i]) {
-			if (gpPollution->getLayer(unk60[i].unk0)
-			        ->getObj(unk60[i].unk2)
-			        ->isCleaned()) {
+			if (getPollutionObj(i)->isCleaned()) {
 				mRaisingBuildingIdx = i;
 				return true;
 			}
@@ -427,10 +447,20 @@ void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
 	                 MAP_MAP_MS_OBJUP_SLOPE_B);
 }
 
+// Binder over the raising building's placement.
+static inline JGeometry::TVec3<f32>*
+MapEventSinkRaisingPos(const TMapEventSinkShadowMario* p)
+{
+	int idx                    = p->mRaisingBuildingIdx;
+	JDrama::TPlacement* obj    = p->unk64[idx];
+	JGeometry::TVec3<f32>* pos = &obj->mPosition;
+	return pos;
+}
+
 void TMapEventSinkShadowMario::rising()
 {
 	TMapEventSink::rising();
-	unk64[mRaisingBuildingIdx]->mPosition.y += unk3C;
+	MapEventSinkRaisingPos(this)->y += unk3C;
 }
 
 void TMapEventSinkShadowMario::raiseBuilding(int i)
