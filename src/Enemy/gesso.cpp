@@ -1064,9 +1064,15 @@ void TGessoPolluteObj::sendMessage()
 	}
 }
 
+static inline TGesso* GessoGetBody(TSpineBase<TLiveActor>* spine)
+{
+	TGesso* body = (TGesso*)spine->getBody();
+	return body;
+}
+
 DEFINE_NERVE(TNerveGessoStay, TLiveActor)
 {
-	TGesso* self = (TGesso*)spine->getBody();
+	TGesso* self = GessoGetBody(spine);
 	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
