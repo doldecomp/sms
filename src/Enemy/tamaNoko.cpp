@@ -924,7 +924,7 @@ DEFINE_NERVE(TNerveTamaNokoSink, TLiveActor)
 		if (self->isBckAnm(6))
 			self->setBckAnm(5);
 
-		int sinkTime              = self->getSaveParams2()->mSLSinkTime.get();
+		int sinkTime              = self->getSaveParams2()->mSLSinkTime.value;
 		TTamaNokoManager* manager = (TTamaNokoManager*)self->mManager;
 
 		// The less tamanokos remain, the faster they get back up
