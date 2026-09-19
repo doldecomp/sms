@@ -30,6 +30,7 @@ void TPollutionManager::stamp(u16 stamp_type, f32 x, f32 y, f32 z, f32 size)
 
 void TPollutionManager::clean(f32 x, f32 y, f32 z, f32 size)
 {
+	char trash[8];
 	if (gpMarDirector->getCurrentMap() == 1 && y < -10.0f)
 		return;
 
@@ -181,6 +182,7 @@ void TPollutionManager::initPollutionInfo()
 
 void TPollutionManager::load(JSUMemoryInputStream& stream)
 {
+	char trash[0x20];
 	TJointModelManager::load(stream);
 
 	initPollutionInfo();
