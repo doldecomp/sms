@@ -241,7 +241,7 @@ void TCannonDom::perform(u32 cue, JDrama::TGraphics* graphics)
 	                         | LIVE_FLAG_CLIPPED_OUT))
 		return;
 
-	if (cue == CUE_MOVE) {
+	if (cue == CUE_CALC_ANIM) {
 		if (mAnmSound != nullptr && mAnmSoundName != nullptr) {
 			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
 			mAnmSound->animeLoop((Vec*)&unk10->mPosition, ctrl->getFrame(),
