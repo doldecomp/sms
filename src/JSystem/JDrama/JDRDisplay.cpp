@@ -26,6 +26,7 @@ TDisplay::TDisplay(u16 param_1, void* param_2, void* param_3,
 
 void TDisplay::startRendering()
 {
+	char trash[8];
 	unk60->setNextRenderMode(unk10);
 	unk60->setNextXFB(unk4[unkC]);
 	GXSetDispCopyGamma(unk50);
