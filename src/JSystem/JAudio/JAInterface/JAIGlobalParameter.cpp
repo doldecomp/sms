@@ -249,6 +249,7 @@ void JAIGlobalParameter::setParamSeDistancepitchMax(f32 value)
 
 void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
 {
+	char trash[8];
 	int r31 = 1;
 	int r30 = 0;
 	switch (value) {
