@@ -2962,6 +2962,30 @@ verifizierte Funktionen** in 47 Commits. `matched_functions`
 unverändert bei 8975, DOL SHA1 `OK`.
 
 
+**Fortsetzung**: Weiterer Sweep des 99,5–100-%-Pools bei gelockerten
+Schwellen (Gap ≤ 0x100, `ndiff` ≤ 60, 489 Kandidaten) stieß zweimal
+auf einen Python-Kernel-Timeout (dieselbe Art Unterbrechung wie
+Runde 37 Batch 1). Beide Male sauber wiederhergestellt via
+`git status`/direkter `dtk elf disasm`-Nachprüfung: Von 7 bzw. 97
+durch die Scan-/Fix-Schleife berührten Dateien war in der ersten
+Wiederherstellung genau 1 echter Treffer dabei
+(`TPoiHanaManager::initSetEnemies`, `char trash[0xa0]`, Byte-für-Byte
+bestätigt), ein zweiter Kandidat (`TShine::control`) erwies sich als
+Fehlschlag und wurde verworfen; die zweite Unterbrechung (97 Dateien)
+bestand ausschließlich aus harmlosen CRLF-Touches der Scan-Phase
+(keine echten Änderungen, sauber per `git checkout .` entfernt).
+
+**Session-Endstand nach Runde 42: 389 tatsächlich verifizierte
+Funktionen** in 48 Commits. Funktionszahl: 8975 → **8976** (**+1**).
+DOL SHA1 bleibt `OK`. Der verbleibende 99,5–100-%-Pool (weiterhin
+~735 Kandidaten) ist für automatisierte Massenverarbeitung in dieser
+Sitzung nicht mehr zuverlässig zugänglich (wiederholte
+Kernel-Instabilität bei Batchgrößen > ~250 Kandidaten); künftige
+Sessions sollten kleinere Chunk-Größen (≤ 100 Kandidaten pro
+Eval-Aufruf) mit expliziten Zwischen-Commits verwenden, um das
+Wiederherstellungsrisiko zu begrenzen.
+
+
 
 
 
