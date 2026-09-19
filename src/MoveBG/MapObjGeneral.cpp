@@ -519,6 +519,13 @@ void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
+static inline TMapObjPhysicalData*
+TMapObjGeneralGetPhysicalData(TMapObjGeneral* p)
+{
+	TMapObjGeneral* self = p;
+	return self->mMapObjData->mPhysical->unk4;
+}
+
 void TMapObjGeneral::calcVelocity()
 {
 	if (checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
@@ -530,16 +537,16 @@ void TMapObjGeneral::calcVelocity()
 
 	const TMapObjPhysicalInfo* piVar4 = mMapObjData->mPhysical;
 	if (piVar4 ? (u8)1 : (u8)0) {
-		mVelocity.x *= mMapObjData->mPhysical->unk4->unk18;
-		mVelocity.z *= mMapObjData->mPhysical->unk4->unk18;
+		mVelocity.x *= TMapObjGeneralGetPhysicalData(this)->unk18;
+		mVelocity.z *= TMapObjGeneralGetPhysicalData(this)->unk18;
 
 		mVelocity.x = MsClamp<f32>(mVelocity.x, -mBodyRadius, mBodyRadius);
 		mVelocity.z = MsClamp<f32>(mVelocity.z, -mBodyRadius, mBodyRadius);
 
 		if (mGroundPlane->mNormal.y == 1.0f) {
-			if (abs(mVelocity.x) < mMapObjData->mPhysical->unk4->unkC)
+			if (abs(mVelocity.x) < TMapObjGeneralGetPhysicalData(this)->unkC)
 				mVelocity.x = 0.0f;
-			if (abs(mVelocity.z) < mMapObjData->mPhysical->unk4->unkC)
+			if (abs(mVelocity.z) < TMapObjGeneralGetPhysicalData(this)->unkC)
 				mVelocity.z = 0.0f;
 		}
 	}
