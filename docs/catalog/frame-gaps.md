@@ -1138,3 +1138,10 @@ The residue on the eight sites is never a missing or extra temp but the position
 - **The three free bodies are exhausted.** A 125-cell sweep (5 `end()` x 5 `insert` x 5 `push_back` bodies) over the five `TList_pointer` sites took the summed slot distance from 47 to 22 (`iterator w = where; return iterator(Base::insert(w, what));`, mostly `createEnemies` 21 -> 4 and `TMirrorActor::init` 12 -> 4) at the price of `loadAfter` and `TSeal::init` 3 -> 4, landing nothing.
   `SDLModel::entry` and `TPerformList::perform` never move under any `std-list.hpp` edit: they are not on this header's chain, so "eight sites, one cause" is refuted a second time.
   The remaining lever is outside `std-list.hpp` (the callers' own enclosing levels), and a further header sweep is not worth a batch.
+
+## Header round 31 (2026-09-18): the `operator*` consumption split reaches the number of materialised copies
+
+V2 (`friend TVec3 operator*(const TVec3& fst, f32 snd)` with an internal named local, by-value return) is +12 fuzzy improvements (`calcBoids` +3.3, `damageExec` +2.1, `wireSWait` +3.9, `wireHanging` +2.4, `wireWait` +1.1, `wireRolling` +0.6) against six tenth-of-a-point losses: total fuzzy +0.0046, matched_code flat, zero functions to or off 100, and Tongue's weak `__ami__` (0x34) drops to MISSING.
+Retail's two `(a - b) * k` sites in `TYoshiTongue::movement` decode to `bl __ct__`, `bl __ami__`, `bl __ct__`, an inline copy, `bl scale`: **three** objects per site, i.e. V3 (`TVec3 operator*(TVec3 fst, f32 snd) { TVec3 r(fst); r *= snd; return r; }`), which tree-wide costs `TWarpInCallBack::execute` 73.9 -> 42.3, `generate` -14.5, `forceRoll` -9.3 and about 25 more.
+The only V2 repair that re-emits `__ami__` is an explicit `TVec3(a - b)` temporary at both sites, inert under the stock header (a pure level substitute, i.e. a fakematch) and costing `movement` 1.43.
+Rejected, nothing committed. Do not retry a member/friend by-value pair: the populations differ only by consumption, so overload resolution cannot select between them; the class is closed until a caller-side mechanism is found.
