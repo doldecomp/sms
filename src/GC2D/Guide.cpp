@@ -637,11 +637,31 @@ void TGuide::searchNearPoint(s16* out_x, s16* out_y, s16 x, s16 y)
 	}
 }
 
+// fabricated: checkPoint's frame is 0x1c of low region above what the two
+// loops on their own reserve. Two binder expansions are +0x18 and the fork
+// nested at the first of them the remaining +4 (closure 262).
+static inline J2DPane* GuidePaneFork(J2DPane** panes, int i)
+{
+	return panes[i];
+}
+
+static inline J2DPane* GuidePaneFB(J2DPane** panes, int i)
+{
+	J2DPane* x = GuidePaneFork(panes, i);
+	return x;
+}
+
+static inline J2DPane* GuidePane(J2DPane** panes, int i)
+{
+	J2DPane* x = panes[i];
+	return x;
+}
+
 int TGuide::checkPoint(int x, int y)
 {
 	int hit = -1;
 	for (int i = 0; i < 14; ++i) {
-		JUTRect bounds = mStagePanes[i]->mBounds;
+		JUTRect bounds = GuidePaneFB(mStagePanes, i)->mBounds;
 		if (x > bounds.x1 && x < bounds.x2 && y > bounds.y1 && y < bounds.y2) {
 			hit = i;
 			break;
@@ -649,7 +669,7 @@ int TGuide::checkPoint(int x, int y)
 	}
 	if (hit == -1) {
 		for (int i = 0; i < 10; ++i) {
-			JUTRect bounds = mPointPanes[i]->mBounds;
+			JUTRect bounds = GuidePane(mPointPanes, i)->mBounds;
 			if (x > bounds.x1 && x < bounds.x2 && y > bounds.y1
 			    && y < bounds.y2) {
 				hit = i;
