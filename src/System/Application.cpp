@@ -194,6 +194,13 @@ static void* SetupThreadFuncBoot(void* param)
 
 extern void MarErrInit();
 
+// The ROM binds the address of the flag word (`addi r7, r4, 0x81c`) before
+// the read-modify-write, which a plain `->unk81C |= 1` does not produce.
+static inline u16& ApplicationTimeRecFlags(TTimeRec* rec)
+{
+	return rec->unk81C;
+}
+
 void TApplication::initialize()
 {
 	OSProtectRange(0, nullptr, 0x80000000, 0);
@@ -237,13 +244,13 @@ void TApplication::initialize()
 
 	SMSRumbleMgr = new RumbleMgr(true, true, true, true);
 	SMSRumbleMgr->init();
-	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0),
+	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0xff),
 	                        SMSGetVSyncTimesPerSec(), "ルートフェーダー");
 	mFader->setDisplaySize(SMSGetGCLogoRenderWidth(),
 	                       SMSGetGCLogoRenderHeight());
 	TFlagManager::start(JKRGetCurrentHeap());
 	TTimeRec::start(0xDFC0);
-	TTimeRec::instance()->unk81C |= 1;
+	ApplicationTimeRecFlags(TTimeRec::instance()) |= 1;
 	TDrawSyncManager::smInstance->setCallback(0, 0xDFC0, 0xDFFF,
 	                                          TTimeRec::instance());
 	mMeter = new TProcessMeter(2);
@@ -313,14 +320,15 @@ void TApplication::initialize_bootAfter()
 	this_01->mountFixed(arcBufNLogo, MBF_0);
 
 	this_01->becomeCurrent("/font");
-	u32 uVar1
-	    = this_01->getResSize(this_01->getResource("standard_fontEx.bfn"));
+	void* fontRes = this_01->getResource("standard_fontEx.bfn");
+	u32 uVar1     = this_01->getResSize(fontRes);
 	ResFONT* font = (ResFONT*)new (0x20) u8[uVar1];
 	this_01->readResource(font, uVar1, "standard_fontEx.bfn");
 	gpSystemFont = new JUTResFont(font, nullptr);
 
 	this_01->becomeCurrent("/audi");
-	u32 uVar3 = this_01->getResSize(this_01->getResource("mSound.aaf"));
+	void* soundRes = this_01->getResource("mSound.aaf");
+	u32 uVar3      = this_01->getResSize(soundRes);
 	u8* buf   = new u8[uVar3];
 	this_01->readResource(buf, uVar3, "mSound.aaf");
 	JKRHeap* prevHeap = JKRGetCurrentHeap();
