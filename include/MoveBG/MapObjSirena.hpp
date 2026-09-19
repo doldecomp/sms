@@ -64,9 +64,11 @@ public:
 class TSirenaRollMapObj : public TMapObjBase {
 public:
 	TSirenaRollMapObj(const char* name = "SirenaRollMapObj");
+#pragma dont_inline on
 	virtual f32 getRollAngX(int) const { return 0.0f; }
 	virtual f32 getRollAngY(int) const { return 0.0f; }
 	virtual f32 getRollAngZ(int) const { return 0.0f; }
+#pragma dont_inline off
 
 public:
 	/* 0x138 */ f32* unk138;
