@@ -1145,11 +1145,8 @@ void TBossTelesa::moveObject()
 
 	if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()) {
 		u8 maxHitPoints = getMaxHitPoints();
-		u8 alpha = mNormalAlpha + (maxHitPoints - mHitPoints) * 30;
-		if (alpha > 254)
-			alpha = 254;
-		else if (alpha < 0)
-			alpha = 0;
+		u8 alpha = MsClamp<u8>(
+		    mNormalAlpha + (maxHitPoints - mHitPoints) * 30, 0, 254);
 
 		if ((getMActor()->checkCurBckFromIndex(7)
 		     && getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 50.0f)
@@ -2365,12 +2362,7 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 		u8 maxHitPoints = boss->getMaxHitPoints();
 		u8 alpha = TBossTelesa::mNormalAlpha
 		    + (maxHitPoints - boss->mHitPoints) * 30;
-		if (alpha > 254)
-			alpha = 254;
-		else if (alpha < 0)
-			alpha = 0;
-
-		boss->unk34C.a = alpha;
+		boss->unk34C.a = MsClamp<u8>(alpha, 0, 254);
 
 		boss->mSlot->mScaling.set(0.0f, 0.0f, 0.0f);
 		boss->getMActor()->setBrkFromIndex(2);
@@ -2525,12 +2517,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				u8 maxHitPoints = boss->getMaxHitPoints();
 				u8 alpha = TBossTelesa::mNormalAlpha
 				    + (maxHitPoints - boss->mHitPoints) * 30;
-				if (alpha > 254)
-					alpha = 254;
-				else if (alpha < 0)
-					alpha = 0;
-
-				boss->unk34C.a = alpha;
+				boss->unk34C.a = MsClamp<u8>(alpha, 0, 254);
 
 				boss->setBckAnm(15);
 				boss->getMActor()->setBtpFromIndex(2);
@@ -2580,27 +2567,21 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 
 	if (boss->getMActor()->checkCurBckFromIndex(16)) {
-		if (!boss->checkCurAnmEnd(ANM_TYPE_BCK))
-			return FALSE;
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
+			boss->unk350 = false;
 
-		boss->unk350 = false;
+			u8 maxHitPoints = boss->getMaxHitPoints();
+			u8 alpha = TBossTelesa::mNormalAlpha
+			    + (maxHitPoints - boss->mHitPoints) * 30;
+			boss->unk34C.a = MsClamp<u8>(alpha, 0, 254);
 
-		u8 maxHitPoints = boss->getMaxHitPoints();
-		u8 alpha = TBossTelesa::mNormalAlpha
-		    + (maxHitPoints - boss->mHitPoints) * 30;
-		if (alpha > 254)
-			alpha = 254;
-		else if (alpha < 0)
-			alpha = 0;
-
-		boss->unk34C.a = alpha;
-
-		return TRUE;
+			return TRUE;
+		}
+	} else {
+		boss->setBckAnm(16);
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_THANKYOU,
+		                          &boss->mPosition, 0, nullptr, 0, 4);
 	}
-
-	boss->setBckAnm(16);
-	gpMSound->startSoundActor(MSD_SE_BS_TELESA_THANKYOU, &boss->mPosition, 0,
-	                          nullptr, 0, 4);
 
 	return FALSE;
 }
