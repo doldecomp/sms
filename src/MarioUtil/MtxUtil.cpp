@@ -1,3 +1,5 @@
+#include <System/DummyMactorString.hpp>
+
 #include <MarioUtil/MtxUtil.hpp>
 
 #include <printf.h>
@@ -9,17 +11,12 @@
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 
-// The leading 12-byte zero object (@1490, dead: only referenced as the .rodata
-// base by TMultiMtxEffect::setup) is dummyMactorStringValue1's string. Retail
-// carries it here *without* SMS_NO_MEMORY_MESSAGE's string, and in every TU
-// that has both the two ids are 620 apart (@1490 vs @2110 in
-// MarDirectorSetupObjects), so the pair in System/DummyStrings.hpp is really
-// two headers. Parked TU-local until that header is split; including
-// DummyStrings.hpp here would add the 20-byte Shift-JIS string retail does not
-// have. The remaining .rodata objects are @1819/@1820 (TMtxTimeLag::calc's
-// zero Vec and Quaternion) and @1846 (TMtxSwingRZ::calcLocalXY's zero Vec).
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-
+// The leading 12-byte zero object is @1490, dummyMactorStringValue1's string
+// from System/DummyMactorString.hpp; it is dead here, referenced only as the
+// .rodata base by TMultiMtxEffect::setup. Retail carries it *without*
+// SMS_NO_MEMORY_MESSAGE's string, which is what split that header in two. The
+// remaining .rodata objects are @1819/@1820 (TMtxTimeLag::calc's zero Vec and
+// Quaternion) and @1846 (TMtxSwingRZ::calcLocalXY's zero Vec).
 void MtxToQuat(MtxPtr m, Quaternion* quat)
 {
 	f32 q[4];
