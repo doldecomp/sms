@@ -1523,7 +1523,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 	}
 
 	if (head->isBckAnm(5)) {
-		if (!head->checkLiveFlag(LIVE_FLAG_AIRBORNE))
+		if (!head->isAirborne())
 			head->setBckAnm(7);
 	}
 	if (head->isBckAnm(6)) {
@@ -1531,7 +1531,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 		head->mPosition.y = 1.0f + head->mGroundHeight;
 		head->mVelocity   = head->mHitVelocity;
 	}
-	if (!head->checkLiveFlag(LIVE_FLAG_AIRBORNE))
+	if (!head->isAirborne())
 		head->setBckAnm(6);
 
 	if (head->checkCurAnmEnd(0)) {
