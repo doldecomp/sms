@@ -1035,7 +1035,8 @@ void THamuKuri::setAfterDeadEffect()
 		    mPosition.x, 200.0f + mPosition.y, mPosition.z, 0x2000003c, true);
 
 		if (obj) {
-			unk200.set(mPosition.x, mGroundHeight, mPosition.z);
+			unk200.set(obj->mPosition.x, obj->mPosition.y,
+			           obj->mPosition.z);
 			gpMarioParticleManager->emitAndBindToPosPtr(0xE4, &unk200, 0,
 			                                            nullptr);
 		}
