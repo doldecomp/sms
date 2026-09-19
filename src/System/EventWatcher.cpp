@@ -1209,6 +1209,16 @@ static void evStartSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
+// Binding level over the sound accessor, worth +8 of low region in
+// evStartEventSE; the plain accessor and a raw-global fork are both 0 there,
+// and at evStartSE's and evStartMontemanBGM's sound sites this binder is a
+// loss, so it stays per site.
+static inline MSound* EventWatcherMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 static void evStartEventSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
@@ -1221,7 +1231,12 @@ static void evStartEventSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		se = 0x485B;
 		break;
 	}
-	SMSGetMSound()->startSoundSystemSE(se, 0, nullptr, 0);
+	EventWatcherMSound()->startSoundSystemSE(se, 0, nullptr, 0);
+	// TODO: 99.9%, all 98 instructions matching and the frame now retail's
+	// 0x58. The residue is slot order: every pool slot (the popped slice at
+	// 0x38, the float-to-int double at 0x44, the nil-push slice at 0x2c)
+	// sits 8 bytes high, i.e. retail reserves 8 more bytes above the popped
+	// slice than the binder does.
 	interp->push();
 }
 
@@ -1347,11 +1362,16 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 	// .rodata base pointer and addresses both the name and the stack-overflow
 	// string through it, which renumbers every register in the function
 	// (92.2% -> 99.9%).
-	// TODO: all 122 instructions now match; the frame is 0x88 against
-	// retail's 0xa0 and the whole 24-byte shortfall is in the low region.
+	// TODO: all 122 instructions match and the frame is now retail's 0xa0
+	// (the director binder below at all three sites is worth the whole 24
+	// bytes; at one or two sites it is only 8 each). The one residue is the
+	// nil-push slice temporary: retail puts it at 0x54, `interp->push()`
+	// puts it at 0x4c and `interp->push(TSpcSlice())` at 0x60, and nothing
+	// on the caller side lands the 8 in between -- see the note above
+	// evGameOver.
 	// Ruled out (no frame change): a named `f32` for the timer seconds, a
 	// named `MtxPtr` for the animation matrix, a named `int` for the
-	// per-coin kill timer.
+	// per-coin kill timer; a `getConsole()` binder overshoots to 0xb0.
 	const char* switchName = "赤コイン用スイッチ";
 	TRedCoinSwitch* swtch
 	    = JDrama::TNameRefGen::search<TRedCoinSwitch>(switchName);
@@ -1369,10 +1389,10 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_B,
 		                             &coin->getUnk158(), 0, nullptr);
 	}
-	SMSGetMarDirector()->getConsole()->startAppearTimer(1,
-	                                                    iVar9 * 0.008333334f);
-	SMSGetMarDirector()->startTimer();
-	SMSGetMarDirector()->getConsole()->startMoveTimer(10);
+	EventWatcherGetMarDirector()->getConsole()->startAppearTimer(
+	    1, iVar9 * 0.008333334f);
+	EventWatcherGetMarDirector()->startTimer();
+	EventWatcherGetMarDirector()->getConsole()->startMoveTimer(10);
 	interp->push();
 }
 
