@@ -55,6 +55,32 @@ TSeal::TSeal(const char* name)
 // byte-identical. Also rejected here: `getChildren().push_back(this)` and
 // `insert(this)` at the site, and every `const&`/named-temporary/implicit
 // begin-end spelling in std-list.hpp (docs/catalog/frame-gaps.md, batch 133).
+//
+// Closure batch 215 applies research 211's rule (the JGadget pool packs when
+// the container receiver is a named local pointer and pads when it is an
+// unnamed expression): naming the searched group takes the push_back pool from
+// 0x4c,0x50 | 0x60,0x64 to retail's 0x4c,0x50 | 0x5c,0x60 exactly, so residue
+// (2) is now one 4-byte hole *below* the setUpUnk8TRS scratch Mtx (0x70 here,
+// 0x6c retail) with everything above it -- 0xa4, 0xa8 and the save area -- at
+// retail's offsets. `group->getChildren().push_back`, `group->add`, a named
+// `TList_pointer<THitActor*>` reference or pointer on top of the named group,
+// and a TU-local forwarder around `setUpUnk8TRS` are all worse. `mSpine->`
+// instead of `getSpine()->` and writing `getMaxHitPoints()` out each remove 8
+// bytes, 4 of them exactly the hole under the Mtx and 4 from the top of the
+// named region, so the hole is an allocation *order* difference in a pinned
+// low region, not a missing 4-byte item.
+//
+// The rotation (1) has one measured lever: `MActor* actor = createMActor(...);
+// mMActor = actor; actor->offMakeDL();` puts the .rodata base in r31 and the
+// `this`/group chain in r30 exactly as retail does -- 6 markers left, 99.3%,
+// frame 0xc0, both remaining clusters being the group binding and the Mtx.
+// It is not committable: retail reloads `mMActor` for `offMakeDL` (`stw r3,
+// 0x74(r29); lwz r3, 0x74(r29)`) and the named local elides that load. Every
+// spelling that keeps the reload (dead named result, `MActor* a = mMActor;`,
+// `getMActor()->offMakeDL()` with or without the named result) is back at 41
+// markers, and the same named-local trick on the TMActorKeeper or the
+// TMapCollisionManager does not move the rotation at all. So the caller-local
+// that outranks `this` in retail is a fourth value somewhere else in the body.
 void TSeal::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -68,7 +94,8 @@ void TSeal::init(TLiveManager* manager)
 	initHitActor(0x10000024, 1, 0x81000000, radius, radius, radius, radius);
 	mHitFlags &= ~HIT_FLAG_NO_COLLISION;
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")->push_back(this);
+	TIdxGroupObj* group = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	group->push_back(this);
 
 	f32 angle = 270.0f + mRotation.x;
 	while (angle >= 360.0f)
