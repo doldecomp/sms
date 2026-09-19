@@ -469,15 +469,14 @@ void TTamaNoko::calcRootMatrix()
 				gpCameraShake->startShake(CAM_SHAKE_MODE_TAMANOKO, 1.0f);
 				SMSRumbleMgr->start(8, 1, (float*)nullptr);
 
+				JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_SMB_AP_ROCK, &mPosition, 0, nullptr)) {
-					emitter->setGlobalScale(
-					    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+					emitter->setGlobalScale(scale);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_SMB_AP_SMOKE, &mPosition, 0, nullptr)) {
-					emitter->setGlobalScale(
-					    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+					emitter->setGlobalScale(scale);
 				}
 			}
 		}
