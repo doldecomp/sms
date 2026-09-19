@@ -72,6 +72,10 @@ TDoor::TDoor(const char* name)
 {
 }
 
+// TODO: 98.8%, frame 0x48 against retail's 0x90. Retail binds
+// &mInitialPosition.y once (`addi r3, r31, 0x110`) and reads the sink offset
+// through it; a TU-local reference-returning inline is folded straight back to
+// the member offset, so the binding has to come from somewhere else.
 void TManhole::touchPlayer(THitActor*)
 {
 	mState = STATE_NORMAL;
@@ -510,6 +514,10 @@ THideObjInfo::THideObjInfo(const char* name)
 	unk4C = 0.0f;
 }
 
+// TODO: 92.3%. Retail reloads mStateTimer at the call (`lwz r4, 0x104`
+// *after* the gate's own load) where MWCC keeps the gate's value alive; a
+// `getStateTimer()` argument and a TU-local const-pointer gate are both
+// byte-identical to this, so whatever breaks the CSE is not an accessor.
 void TMapObjSwitch::control()
 {
 	TMapObjBase::control();
@@ -617,9 +625,13 @@ BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 void TRedCoinSwitch::control()
 {
 	TMapObjBase::control();
+	// TODO: 95.0%. `case 1: return;` is what keeps the case in the pivot
+	// tree at all (as `break` MWCC folds it into the default and the tree
+	// loses the `cmpwi 1`), but retail's tree still pivots on 3 and ours on
+	// 2; reordering the arms only moves the bodies. Frame is 8 short.
 	switch (mState) {
 	case 1:
-		break;
+		return;
 	case 2:
 		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mStateTimer = 120;
