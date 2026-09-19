@@ -2893,6 +2893,27 @@ Funktionen** (368 aus Runde 1–40 plus 15 neue in Runde 41) in 45
 Commits. Funktionszahl: 8955 → **8970** (**+15**). DOL SHA1 bleibt
 `OK`.
 
+**Fortsetzung: vollständiger Größenbereich-Sweep** des 99,5–100-%-
+Pools (zuvor nur 400–2000 Bytes abgedeckt) über alle 197 relevanten
+Einheiten: 743 Kandidaten insgesamt, 360 mit sauberem additivem Gap
+(≤ 0x40 Bytes, `ndiff` ≤ 25). **5 von 360 Treffer** (~1,4 % —
+deutlich niedriger als die vorherigen Teilmengen-Batches, da große
+Überschneidung mit bereits verarbeiteten 400–2000-Byte-Kandidaten
+aus derselben Runde; die zusätzliche Ausbeute stammt aus den
+Größenrändern < 400 B und > 2000 B). Gefixt: `TWaterGun::
+changeNozzle`, `TMapObjBase::updateObjMtx`, `TTobiPuku::
+calcRootMatrix`, `TPollutionLayerWave::draw`, `TSunGlass::
+startFade`. Alle gegen frischen `report.json` verifiziert (0
+Probleme).
+
+**Session-Endstand nach Runde 41 (vollständig): 388 tatsächlich
+verifizierte Funktionen** (368 aus Runde 1–40 plus 20 neue in
+Runde 41) in 47 Commits. Funktionszahl: 8955 → **8975** (**+20**).
+DOL SHA1 bleibt `OK`. Die sinkende Erfolgsquote (4,5 % → 3,5 % →
+1,4 %) über die drei Teil-Batches bestätigt: der 99,5–100-%-Pool
+ist nun ebenfalls weitgehend erschöpft für diese Session.
+
+
 
 
 
