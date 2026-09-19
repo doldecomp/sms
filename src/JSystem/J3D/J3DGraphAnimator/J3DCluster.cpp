@@ -418,6 +418,25 @@ void J3DSkinDeform::initMtxIndexArray(J3DModelData* modelData)
 					// locals, a TU-local `p += n; return p;` helper,
 					// `(base += n) + 3`, `(vtx += n) += 3` (spills vtx to the
 					// stack), the comma operator.
+					// Closure 217: the sink is a *use* property, not a
+					// statement-form one.  This loop's own outer step
+					// `dl += vtxSize * vtxCount; dl += 3;` compiles to
+					// exactly retail's `add rD, rPtr, rIndex; addi rD, rD, 3`
+					// because `dl` also has non-indexed uses; the inner
+					// pointer's only three uses are indexed, so any form that
+					// materialises `vtx` before the `+ 3` lets MWCC fold the
+					// 3 into three separate `add`s plus `lbz/lhz 3(rX)`
+					// (+2 instructions, 249).  `vtx += vtxSize * k + 3`,
+					// `vtx += 3 + vtxSize * k` and the int-first
+					// `(3 + vtxSize * k) + dl` all canonicalise back to this
+					// line's index-first `add`; `dl + 3` before the compound
+					// (either order) is 248 with the `addi` and `add` merely
+					// swapped.  The two-object form
+					// `u8* base = dl; base += vtxSize * k; u8* vtx = base + 3;`
+					// is 247 with retail's operand order and its *only*
+					// residue is the intermediate register (r3 for retail's
+					// r4, 2 markers against this line's 1), so the last step
+					// is a volatile-register knob, not another spelling.
 					u8* vtx     = &dl[3 + vtxSize * k];
 					u8 pnmtxIdx = ((u32)(*(u8*)&vtx[pnmtxIdxOffs])) / 3;
 					u16 posIdx  = *(u16*)&vtx[posOffs];
