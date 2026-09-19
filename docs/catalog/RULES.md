@@ -124,6 +124,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `x / 2.0f` and `x * 0.5f` both give `fmuls x, 0.5`, but division keeps the dividend left, a literal the constant (codegen-tells.md: "batch 101").
 - A surviving `* 0.0f`/`* 1.0f` proves an inline boundary or an accessor returning the constant; `TUtil<f32>::one()` is the +4 lever (codegen-tells.md: "Batch 58").
 - `TVec3::normalize()` is `setLength(*this, TUtil<f32>::one())`, so `setLength(1.0f)` at a call site is that rung spent: -4 per site, instruction-identical, and per site (frame-gaps.md: "re-pass II 178").
+- `matched_data` counts a section only at 100%: triage data by sub-100 sections in `report.json`, a unit at 27% is often one byte away; a jump table (`.rel <fn>`) is never a data fix (linking.md: "Data pass 197").
+- A float literal in `.sdata` instead of `.sdata2` was bound to a `const T&` parameter (`std::min`/`max`), ids paired with one skipped (linking.md: "Data pass 197").
 - `.sdata2` is reverse source order, so a late literal belongs near the top of the file and a shared slot fixes its value (codegen-tells.md: "Batch 59").
 - A `name$NNNN` function-local static's map section tells its constness: `.rodata` = `static const`, `.data` = `static`; a wrong `const` shifts every later `.rodata` string by the array size (codegen-tells.md: "Header round 34").
 - An implicit copy ctor word-copies an **array** member but `lfs/stfs`-copies through a class member with no user copy ctor: a word-copied float pair is `f32[2]`, not `TVec2`; never give `TVec2` a copy ctor (codegen-tells.md: "Header round 34").
