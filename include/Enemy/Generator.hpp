@@ -22,6 +22,9 @@ public:
 	/* 0x34 */ TGraphWeb* mGraph;
 	/* 0x38 */ s32 mInterval;
 	/* 0x3C */ s32 mTimer;
+	// Present in retail sizeof (0x44) but never initialized nor read in this
+	// TU, purpose unobserved.
+	/* 0x40 */ s32 unk40;
 };
 
 class TOneShotGenerator : public THitActor {
