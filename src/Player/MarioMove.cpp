@@ -998,8 +998,10 @@ void TMario::checkGraffito()
 	if (onYoshi())
 		return;
 
-	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO
-	    || mPlayerType == PLAYER_TYPE_MONTE_MAN)
+	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO)
+		return;
+
+	if (mPlayerType == PLAYER_TYPE_MONTE_MAN)
 		return;
 
 	int isDirty = 0;
@@ -1087,6 +1089,10 @@ void TMario::checkGraffito()
 		pos.x = mPosition.x;
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
+		// TODO: retail stores these three into `pos` and reloads them as the
+		// arguments; ours forwards the registers straight into f1-f3. The
+		// three-argument constructor and pos.set() both keep the forwarding
+		// and cost 16 bytes of frame.
 		if (SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 1;
 		else
@@ -1839,7 +1845,7 @@ void TMario::checkRideMovement()
 
 	const TLiveActor* groundActor = mGroundPlane->getActor();
 
-	if (wall != nullptr && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)
+	if (groundActor != nullptr && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)
 	    && (isTouchGround4cm()))
 		actor = groundActor;
 
@@ -2087,9 +2093,9 @@ void TMario::thinkWaterSurface()
 		return;
 
 	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
-	bool isInWater  = false;
+	int isInWater   = 0;
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == true)
-		isInWater = true;
+		isInWater = 1;
 	else
 		mFloorPosition.z = mPosition.y;
 
@@ -2099,7 +2105,7 @@ void TMario::thinkWaterSurface()
 	if (mGroundPlane->isPool()) {
 		mFloorPosition.z = gpPoolManager->getWaterLevel(mGroundPlane);
 		if (mFloorPosition.z > mPosition.y) {
-			isInWater = true;
+			isInWater = 1;
 			onFlag(MARIO_FLAG_IN_SHALLOW_WATER);
 		}
 	}
@@ -2116,7 +2122,7 @@ void TMario::thinkWaterSurface()
 	if (mWaterFloor->isWaterSurface()) {
 		mFloorPosition.z = waterFloorY;
 		if (mFloorPosition.z >= mPosition.y) {
-			isInWater = true;
+			isInWater = 1;
 			onFlag(MARIO_FLAG_IN_WATER);
 		}
 	} else {
@@ -2124,7 +2130,7 @@ void TMario::thinkWaterSurface()
 		gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z, &localBg);
 		// TODO: identify BG type 0x810B (camera-noclip variant of 0x10B)
 		if (localBg->mBGType == 0x810B ? true : false) {
-			isInWater = true;
+			isInWater = 1;
 			onFlag(MARIO_FLAG_IN_WATER);
 		}
 	}
@@ -2354,10 +2360,11 @@ void TMario::thinkYoshiHeadCollision()
 
 	TBGWallCheckRecord record(headPos.x, headPos.y + 100.0f, headPos.z,
 	                          mYoshiParams.mHeadRadius.get(), 4, 0);
+	f32 z = headPos.z;
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&record) == true) {
 		f32 dx = record.mCenter.x - headPos.x;
-		f32 dz = record.mCenter.z - headPos.z;
+		f32 dz = record.mCenter.z - z;
 		f32 f4 = std::sqrtf(dx * dx + dz * dz);
 
 		f32 f2 = f4;
