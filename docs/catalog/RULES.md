@@ -62,6 +62,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Spellings reaching them: `a = b - c`, `a = a + b` over `+=`, a product in an inlined argument, one thin length level (codegen-tells.md: "sweep 106").
 - `TUtil<f32>::sqrt`/`inv_sqrt` are 3 statements: inline 1-3, `bl` at 4, so calling one and inlining the other measures extra levels (codegen-tells.md: "batch 71").
 - `std::fmodf`/`TUtil<f32>::mod` have a real 0x5c body retail never expands; two-level wrap helpers stand in (codegen-tells.md: "header round 13").
+- `addi rD, rS, 0; addi rD, rD, off` on a receiver is a **setter inlined at the call site** (`getModel()->setBaseTRMtx(m)` for `MTXCopy(m, getBaseTRMtx())`); a level over a pure `return member` decays to nothing (codegen-tells.md: "Header round 37").
+- Of two test shapes on one inlined `bool` accessor only the `clrlwi.` site is the type tell; a `cmpwi` site is not a `BOOL` return (codegen-tells.md: "Header round 37").
 - Steer a tiny accessor with one relative level (owning-class forwarder, or const/non-const pair), never a header-wide change (codegen-tells.md: "Inlining").
 - Pasted-UNUSED: a size-exact UNUSED helper is often written out at its call sites; conversely one can exist only to *be* a level (codegen-tells.md: "`bosswanwan`").
 
