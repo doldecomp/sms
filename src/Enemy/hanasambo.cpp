@@ -784,7 +784,7 @@ void THanaSambo::perform(u32 cue, JDrama::TGraphics* graphics)
 // attacking it is thrown forward.
 void THanaSambo::createPollen()
 {
-	MtxPtr joint = mMActor->getModel()->getAnmMtx(mPollenJntIndex);
+	MtxPtr joint = getMActor()->getModel()->getAnmMtx(mPollenJntIndex);
 	JGeometry::TVec3<f32> pos;
 	pos.x = joint[0][3];
 	pos.y = joint[1][3];
