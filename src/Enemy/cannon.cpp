@@ -97,6 +97,14 @@ void TCannonManager::load(JSUMemoryInputStream& stream)
 
 TSpineEnemy* TCannonManager::createEnemyInstance() { return new TCannon("砲台"); }
 
+// Binding level over a raw member read, worth +8 of low region in the two
+// constructors below (the same lever as TLiveActor::initAnmSound).
+static inline MAnmSound* ChorobeiAnmSound(const TChorobei* p)
+{
+	MAnmSound* anmSound = p->mAnmSound;
+	return anmSound;
+}
+
 TChorobei::TChorobei(TCannon* cannon, int jnt_idx, const char* name)
     : THitActor(name)
     , mCannon(cannon)
@@ -109,9 +117,9 @@ TChorobei::TChorobei(TCannon* cannon, int jnt_idx, const char* name)
 	mParts = new TSharedParts(mCannon, jnt_idx,
 	                          "/scene/cannon/tyorobe_model1.bmd", 0x10020000,
 	                          3, "<TSharedParts>");
-	if (mAnmSound)
+	if (ChorobeiAnmSound(this))
 		return;
-	mAnmSound = new MAnmSound(gpMSound);
+	mAnmSound = new MAnmSound(SMSGetMSound());
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }
 
@@ -203,6 +211,13 @@ bool TChorobei::isDownEnd()
 	return false;
 }
 
+// The same binding level for the dom's constructor (+8 of low region).
+static inline MAnmSound* CannonDomAnmSound(const TCannonDom* p)
+{
+	MAnmSound* anmSound = p->mAnmSound;
+	return anmSound;
+}
+
 TCannonDom::TCannonDom(TLiveActor* owner, int jnt_idx, SDLModelData* data,
                        u32 flags, const char* name)
     : TSharedParts(owner, jnt_idx, data, flags, name)
@@ -214,9 +229,9 @@ TCannonDom::TCannonDom(TLiveActor* owner, int jnt_idx, SDLModelData* data,
     , mSwingPhase(0.0f)
 {
 	mSwingPhase = TMsRange<f32>(0.0f, 360.0f).rand();
-	if (mAnmSound)
+	if (CannonDomAnmSound(this))
 		return;
-	mAnmSound = new MAnmSound(gpMSound);
+	mAnmSound = new MAnmSound(SMSGetMSound());
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }
 
