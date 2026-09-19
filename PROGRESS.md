@@ -89,6 +89,12 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   betreffen Registerwahl (`r29`/`r30` vs. `r31`/`r30`) für `frame`/`readSize`,
   die sich nur durch künstliche Variablenreihenfolge annähern ließen.
 
+- `MoveBG/MapObjPollution.cpp`: `loadAfter` (172 Bytes, 88,07 %).
+  Quellaufruf von `registerRevivalTexStamp` arbeitet mit `int/short`-Parametern;
+  eine forcierte `(s16)/(s32)`-Typisierung brachte keine Änderung. Differenz
+  bleibt in `r29`/`r30`-Registerwahl und Reihenfolge der `addi`s innerhalb der
+  Schleife.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -124,5 +130,6 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 ## Nächster GMSJ01-Kandidat
 
-`Camera/CameraMode.cpp`: `isNormalCameraCompletely` (144 Bytes, 72,86 %) — restliche
-Differenzen in `.data` (48,79 %) und `@1895` (50 %); Aufwand vermutlich hoch.
+`Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes, 99,84 %) bleibt
+offen; `AudioDecoderForOnMemory` und `MapObjPollution::loadAfter` sind
+dokumentierte Nonmatches.
