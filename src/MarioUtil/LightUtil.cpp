@@ -1,3 +1,8 @@
+// The 12-byte zero object retail's .rodata opens with is @1490,
+// dummyMactorStringValue1's string; LightUtil is one of the three TUs that
+// carry it without SMS_NO_MEMORY_MESSAGE.
+#include <System/DummyMactorString.hpp>
+
 #include <MarioUtil/LightUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/ReinitGX.hpp>
@@ -8,9 +13,6 @@
 #include <Player/MarioAccess.hpp>
 #include <stdio.h>
 #include <string.h>
-
-// TODO: figure out headers & PCH
-static const char dummy1[] = "\0\0\0\0\0\0\0\0\0\0\0";
 
 JDrama::TAmbAry* TLightCommon::mAmbAry;
 JDrama::TLightAry* TLightCommon::mLightAry;
