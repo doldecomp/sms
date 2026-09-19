@@ -423,8 +423,15 @@ void TNozzleBase::animation(int param_1)
 {
 	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
-	if (param_1 != 2)
+	// TODO: retail emits `beq body; b ret; b body; b ret` here -- two dead
+	// branches more than this switch produces, and `case 3: return;` makes it
+	// a range test instead. The extra pair is still unexplained.
+	switch (param_1) {
+	case 2:
+		break;
+	default:
 		return;
+	}
 
 	if (mFludd->isSwitchingToSecondaryNozzle())
 		unk36C = 4;
@@ -558,12 +565,8 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		    && unk385 == TNozzleTrigger::INACTIVE) {
 		unk385 = TNozzleTrigger::ACTIVE;
 		if (unk38C != 0xffffffff) {
-			u32 soundId;
-			if (unk378 < 1.0f) {
-				soundId = MSD_SE_PO_WATER_LOW_TRG;
-			} else {
-				soundId = MSD_SE_PO_WATER_HI_TRG;
-			}
+			u32 soundId = unk378 < 1.0f ? MSD_SE_PO_WATER_LOW_TRG
+			                            : MSD_SE_PO_WATER_HI_TRG;
 			SMSGetMSound()->startSoundActor(soundId, mFludd->mEmitPos[0], 0,
 			                                nullptr, 0, 4);
 		}
@@ -593,7 +596,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		unk388 = 0.0f;
 	}
 
-	if (canSpray == true && !unk384
+	if (canSpray == true && unk384 != true
 	    && unk385 == TNozzleTrigger::INACTIVE
 	    && controllerWork.mAnalogR > 0.0f && prevPressure < unk388) {
 		SMSGetMSound()->startSoundActor(MSD_SE_SY_NEWP_AIR_TAME,
@@ -605,9 +608,8 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
 			unk385      = TNozzleTrigger::ACTIVE;
 			unk386      = mEmitParams.mTriggerTime.get();
-			u32 soundId = unk38C;
-			if (soundId != 0xffffffff) {
-				SMSGetMSound()->startSoundActor(soundId, &mFludd->mEmitPos[0],
+			if (unk38C != 0xffffffff) {
+				SMSGetMSound()->startSoundActor(unk38C, &mFludd->mEmitPos[0],
 				                                0, nullptr, 0, 4);
 			}
 			if (mFludd->mCurrentNozzle == (s8)TWaterGun::Hover) {
