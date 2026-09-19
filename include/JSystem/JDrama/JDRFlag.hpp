@@ -40,6 +40,19 @@ public:
 	// remaining suspect is the *argument* at the call sites in
 	// MarDirectorDirect.cpp (what makes MWCC materialise the extra temporary),
 	// not this header.
+	//
+	// Header round (this batch) added to the refuted list, all measured in
+	// scratch TUs compiled with the real flags: the argument's value category
+	// is inert (a prvalue `TFlagT<u16>()`, a literal `0` converted here, a
+	// member lvalue and a `const TFlagT<u16>&` parameter all elide the copy);
+	// so are a defaulted third parameter on TGameSequence::set, an explicit
+	// `unk2(0)` member initialiser, and a by-value TGameSequence parameter.
+	// Adding inline levels moves TFlagT::set and the *converting* constructor
+	// out of line at depth 5 -- `set(u16)` first, then `TFlagT(u16)` straight
+	// into the parameter slot -- but never calls this copy constructor, so
+	// depth alone cannot be the lever either. Only an out-of-class definition
+	// without `inline` (the class-template rule) calls it, and that is the
+	// spelling already refuted above.
 	TFlagT(const TFlagT<T>& other)
 	    : mValue(other.mValue)
 	{

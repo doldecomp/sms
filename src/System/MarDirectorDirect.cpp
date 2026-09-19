@@ -191,18 +191,24 @@ int TMarDirector::direct()
 	return desiredAppState;
 }
 
-// TODO: the ROM emits JDrama::TFlagT<u16>'s copy constructor (weak, 0xc) for
-// this TU and calls it here plus once in `setNextArea`, i.e. the by-value
-// TFlagT parameter of TGameSequence::set gets a real copy that MWCC elides
-// for us at every spelling tried (including
-// `set(other.unk0, other.unk1, other.unk2.get())` in GameSequence.hpp's
-// operator=, worth +3.7 points here and nothing else, and dropping TFlagT's
-// user copy constructor so MWCC generates an implicit one, worth nothing).
-// The same depth question decides whether `decideNextStage` is inlined
-// (updateGameMode, where the ROM calls TFlagT::TFlagT(u16) and
-// TGameSequence::set out of line) or called (changeState, where the ROM
-// `bl`s decideNextStage and we expand it). Both sites live in
-// include/System/GameSequence.hpp and include/JSystem/JDrama/JDRFlag.hpp.
+// TODO: the ROM still emits JDrama::TFlagT<u16>'s copy constructor (weak,
+// 0xc) for this TU and calls it twice here -- once for the by-value TFlagT
+// parameter of the TGameSequence constructor's `set` and once for the one in
+// `setNextArea` -- each time from a *second* stack temporary that our build
+// folds away. GameSequence.hpp's two-argument `set` forwarder (header round,
+// this batch) bought the depth that puts TFlagT::set out of line at both
+// sites, but not the parameter copy itself. Measured in scratch TUs with the
+// real flags: MWCC elides that copy for every in-class spelling of the copy
+// constructor -- prvalue or lvalue argument, member-initialiser or assignment
+// constructor, a defaulted third parameter, one or two forwarding levels, and
+// every inline depth from 1 to 5 (at depth 5 it calls the *converting* ctor
+// straight into the parameter slot instead, which is not retail's shape).
+// Only defining the copy constructor out of class without `inline` produces
+// the call, and that is refuted tree-wide (see JDRFlag.hpp). What is left is
+// whatever gives retail its extra temporary, most likely one more inline
+// level between decideNextStage's local and TGameSequence::set.
+// `changeState` inlines decideNextStage at one site and `bl`s it at another,
+// which no statement-count rule explains yet either.
 static void decideNextStage()
 {
 	TGameSequence local_3C;
