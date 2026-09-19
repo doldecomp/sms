@@ -121,14 +121,25 @@ void TSelectShineManager::initData(u8* shine_states, u8 shine_num, u8 index,
 // different spelling of this function -- most likely a component-wise
 // sub() against a TVec2 temporary instead of `toCenter = toCenter - ...`.
 // The trial table is in JGVec2.hpp.
+// The (0, 1) axis is a named local declared *after* the subtraction, not two
+// call temporaries: retail hoists 0.0f into the higher callee-saved FPR and
+// 1.0f into the lower one in both loops that inline this function (initData
+// f28/f27, perform f31/f30), which is left-to-right initialisation of one
+// object; two `TVec2<f32>(0.0f, 1.0f)` arguments evaluate right to left and
+// load 1.0f first. Declared before `toCenter` the pair outranks 1500/300/1300
+// instead (initData -1.4).
+// TODO: the name costs 0x18 of frame that retail spends (initData 0x188
+// against 0x1b0, and retail's `bl TVec2<f>::sub` -- the unit's one MISSING map
+// symbol -- is still inlined here), so initData is 97.3 -> 97.1 while perform
+// is 82.7 -> 83.7. The spelling that keeps the order without dropping the
+// temporaries is unfound.
 s16 TSelectShineManager::getAngle(const JGeometry::TVec3<f32>& position)
 {
 	JGeometry::TVec2<f32> toCenter(300.0f, 1300.0f);
 	toCenter = toCenter - JGeometry::TVec2<f32>(position.x, position.z);
+	JGeometry::TVec2<f32> up(0.0f, 1.0f);
 	return (s16)(57.295776f
-	             * fabsf(atan2f(
-	                 toCenter.cross(JGeometry::TVec2<f32>(0.0f, 1.0f)),
-	                 toCenter.dot(JGeometry::TVec2<f32>(0.0f, 1.0f)))));
+	             * fabsf(atan2f(toCenter.cross(up), toCenter.dot(up))));
 }
 
 JGeometry::TVec3<f32> TSelectShineManager::getPosition(s16 angle)
