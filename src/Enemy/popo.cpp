@@ -494,7 +494,11 @@ f32 TPopo::getGravityY() const
 	if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveWalkerEscape::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve())
-		return mSaveParams->getSLMoveGravity();
+		// Read raw: TParamT::get() returns const T&, and the reference
+		// temporary is 8 bytes of frame here. getSLMoveGravity() is +8,
+		// mSLMoveGravity.get() and getSaveParams()->getSLMoveGravity()
+		// both +0x10.
+		return mSaveParams->mSLMoveGravity.value;
 
 	if (mSpine->getCurrentNerve() == &TNervePopoAttack::theNerve())
 		gravity = mSaveParams->getSLAttackGravity();
