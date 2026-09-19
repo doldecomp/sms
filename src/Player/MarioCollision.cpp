@@ -22,9 +22,15 @@ void TMario::rumbleStart(int channelDataIdx, int repeatCount)
 	}
 }
 
+// TODO: 99.9%, instruction-exact, frame 0x50 against our 0x30 (0x20 of low
+// region). A TU-local binder over `SMSGetMSound()` is the only shape that
+// moves it without adding markers, but its rungs are +0x10 (one call site),
+// +0x18 (both sites, or one site two levels deep), +0x28 (one site one level,
+// the other two) and +0x30 (both sites two levels): 0x20 is not on the ladder.
+// Binders on `mMaxAir` or `mDeParams.mHPMax.get()` are +0x18 but each adds two
+// register markers.
 void TMario::incHP(int hp)
 {
-	// volatile u32 padding[10];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		mAir += hp;
 		if (mAir > mMaxAir) {
@@ -459,9 +465,19 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 	dirtyLimitCheck();
 }
 
+// The held object is read three times in the release block below, and retail
+// binds it once: the binding level is worth the 0x18 of low region considerTake
+// was missing (closure batch 226). Bindings on `mStatus`, `mHolder` or the
+// earlier `mHeldObject` tests are +8 each and collapse in pairs.
+// fabricated
+static inline THitActor* MarioCollisionHeld(const TMario* p)
+{
+	THitActor* held = p->mHeldObject;
+	return held;
+}
+
 void TMario::considerTake()
 {
-	// volatile u32 missingStack[6];
 	bool check = false;
 
 	if (isUpperState(UPPER_STATE_HOLDING_OBJECT))
@@ -485,9 +501,9 @@ void TMario::considerTake()
 	if (mHolder != nullptr && mHolder->mHeldObject != this)
 		mHolder = nullptr;
 
-	if (mHeldObject != nullptr && !check) {
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_THROWN);
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
+	if (MarioCollisionHeld(this) != nullptr && !check) {
+		MarioCollisionHeld(this)->receiveMessage(this, HIT_MESSAGE_THROWN);
+		MarioCollisionHeld(this)->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHeldObject = nullptr;
 	}
 
