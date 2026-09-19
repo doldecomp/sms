@@ -65,6 +65,28 @@ static inline int GCConsole2HideOffsetY(const TExPane* pane)
 	return 465 - pane->mInitialBounds.y1;
 }
 
+// fabricated: one binder site, +8 of low region, lands
+// TGCConsole2::startDisappearTank's frame at 0xa0 (closure 262).
+static inline TExPane* GCConsole2Unk2F8(const TGCConsole2* p)
+{
+	TExPane* x = p->unk2F8;
+	return x;
+}
+
+// fabricated: the pair of binder sites is +0x18 of low region and lands
+// TGCConsole2::processDrawTelop's frame at 0x68 (closure 262).
+static inline TExPane* GCConsole2Unk524(const TGCConsole2* p)
+{
+	TExPane* x = p->unk524;
+	return x;
+}
+
+static inline J2DTextBox* GCConsole2Unk528(const TGCConsole2* p)
+{
+	J2DTextBox* x = p->unk528;
+	return x;
+}
+
 // fabricated
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
                                           J2DPane* pane)
@@ -2286,7 +2308,7 @@ void TGCConsole2::startDisappearTank()
 	unk4B = 1;
 	unk5A = 1;
 
-	int offset = GCConsole2HideOffsetY(unk2F8) + 60;
+	int offset = GCConsole2HideOffsetY(GCConsole2Unk2F8(this)) + 60;
 	unk2F8->updatePaneOffset(40, 0, offset);
 
 	JUTPoint start(0, 0);
@@ -3943,8 +3965,8 @@ bool TGCConsole2::processDrawTelop(u32)
 {
 	bool isFinished = false;
 
-	JUTRect paneBounds(unk524->getPane()->mGlobalBounds);
-	JUTRect textBounds(unk528->mBounds);
+	JUTRect paneBounds(GCConsole2Unk524(this)->getPane()->mGlobalBounds);
+	JUTRect textBounds(GCConsole2Unk528(this)->mBounds);
 
 	if (unk534.x1 < paneBounds.x1 - mTelopTextWidth) {
 		isFinished = true;
