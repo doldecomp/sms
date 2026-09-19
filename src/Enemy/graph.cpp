@@ -783,6 +783,7 @@ static inline s16 GraphConnectionNum(const TRailNode* p)
 int TGraphWeb::getNeighborNodeIndexByFlag(int param_1, int param_2,
                                           u32 param_3) const
 {
+	int index;
 	int goodConnectionNum = 0;
 	int goodConnections[8];
 
@@ -798,7 +799,8 @@ int TGraphWeb::getNeighborNodeIndexByFlag(int param_1, int param_2,
 	if (goodConnectionNum == 0)
 		return -1;
 
-	return goodConnections[(int)(MsRandF() * goodConnectionNum)];
+	index = (int)(MsRandF() * goodConnectionNum);
+	return goodConnections[index];
 }
 
 void TGraphWeb::getDesignatedNodeIndex(u32, int, f32) const { }
