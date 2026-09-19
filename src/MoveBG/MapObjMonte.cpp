@@ -1325,5 +1325,5 @@ TFluffManager::TFluffManager(const char* name)
 	mNextFluff    = nullptr;
 	mFluffNum     = 0;
 	mFluffMax     = 0;
-	mWind.zero();
+	mWind.set(0.0f, 0.0f, 0.0f);
 }
