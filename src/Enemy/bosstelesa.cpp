@@ -2340,15 +2340,37 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	return TRUE;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveBossTelesaHide::execute's frame at 0x40 (batch 121).
+static inline MActor* BosstelesaGetMActor(const TBossTelesa* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
+// Two-local binding level worth +8 of low region in
+// TNerveBossTelesaSpit::execute (frame ladder 271).
+static inline J3DFrameCtrl* BosstelesaGetBckCtrl(const TBossTelesa* p)
+{
+	MActor* mActor      = p->getMActor();
+	J3DFrameCtrl* frame = mActor->getFrameCtrl(ANM_TYPE_BCK);
+	return frame;
+}
+
+static inline TBossTelesa* BosstelesaGetBody(TSpineBase<TLiveActor>* spine)
+{
+	TBossTelesa* body = (TBossTelesa*)spine->getBody();
+	return body;
+}
+
 DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 {
-	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
+	TBossTelesa* boss = BosstelesaGetBody(spine);
 
 	if (spine->getTime() == 0
 	    || !boss->getMActor()->checkCurBckFromIndex(14)) {
 		boss->setBckAnm(14);
-	} else if (boss->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(
-	               40.0f)) {
+	} else if (BosstelesaGetBckCtrl(boss)->checkPass(40.0f)) {
 		boss->genAttacker();
 	}
 
@@ -2356,14 +2378,6 @@ DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 		return TRUE;
 
 	return FALSE;
-}
-
-// Binding level worth +8 of low region, landing
-// TNerveBossTelesaHide::execute's frame at 0x40 (batch 121).
-static inline MActor* BosstelesaGetMActor(const TBossTelesa* p)
-{
-	MActor* mActor = p->getMActor();
-	return mActor;
 }
 
 DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
