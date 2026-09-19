@@ -143,15 +143,15 @@ int TMario::checkGroundAtWalking(Vec* v)
 	checkWallPlane(v, 30.0f, 0.5f * unk15C);
 	TBGCheckData* wall = checkWallPlane(v, 60.0f, unk15C);
 
-	f32 floorY;
+	const TBGCheckData* roof;
 	const TBGCheckData* ground;
+	f32 floorY;
 	if (checkStatusType(0x10000)) {
 		floorY = gpMap->checkGround(v->x, v->y + 30.0f, v->z, &ground);
 	} else {
 		checkGroundPlane(v->x, v->y + 30.0f, v->z, &floorY, &ground);
 	}
 
-	const TBGCheckData* roof;
 	f32 roofY  = gpMap->checkRoof(v->x, mPosition.y + 80.0f, v->z, &roof);
 	mWallPlane = wall;
 
