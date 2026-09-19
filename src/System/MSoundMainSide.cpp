@@ -75,15 +75,18 @@ static inline u8 MSoundMainSideUnkCD(const MSound* p)
 	return vCD;
 }
 
+static inline Vec MSGetEarPos(const Vec& p)
+{
+	Vec v = p;
+	v.y += 75.0f;
+	return v;
+}
+
 int MSMainProc::getMonteVillageActorArea(const Vec& param_1)
 {
 	int result = 4;
 	if (MSoundMainSideUnkCD(MSGMSound) == 8) {
-		// inline?
-		Vec local_10 = param_1;
-		local_10.y += 75.0f;
-		Vec copy = local_10;
-		switch (gpCubeFastC->getInCubeNo(copy)) {
+		switch (gpCubeFastC->getInCubeNo(MSGetEarPos(param_1))) {
 		case 0:
 			result = 2;
 			break;
@@ -920,11 +923,7 @@ void MSStageCubeFade::proc()
 
 void MSStageCubeFade::setBgmVolumeForce()
 {
-	Vec local_7c = *gpMarioPos;
-	local_7c.y += 75.0f;
-	Vec local_88 = local_7c;
-
-	s32 r30 = gpCubeSoundChange->getInCubeNo(local_88);
+	s32 r30 = gpCubeSoundChange->getInCubeNo(MSGetEarPos(*gpMarioPos));
 
 	f32 fVar1;
 	if (r30 != -1)
@@ -1099,11 +1098,7 @@ f32 MSStageCubeFade::calcParamRatioInCube(s32 id)
 
 void MSStageCubeSwitch::proc()
 {
-	Vec tmp = SMS_GetMarioPos();
-	tmp.y += 75.0f;
-	Vec local_18 = tmp;
-
-	unk4 = gpCubeSoundChange->getInCubeNo(local_18);
+	unk4 = gpCubeSoundChange->getInCubeNo(MSGetEarPos(SMS_GetMarioPos()));
 
 	switch (unk4) {
 	case -1:
