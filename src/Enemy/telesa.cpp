@@ -148,6 +148,13 @@ void TTelesaManager::createModelData()
 	createModelDataArray(entry);
 }
 
+static inline MSound* TTelesaManagerGetMSound(TTelesaManager* p)
+{
+	TTelesaManager* self = p;
+	MSound* sound        = SMSGetMSound();
+	return sound;
+}
+
 void TTelesaManager::telesaForceKill()
 {
 	bool anyKilled = false;
@@ -159,9 +166,9 @@ void TTelesaManager::telesaForceKill()
 		}
 	}
 	if (anyKilled) {
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_DISAPPEAR,
-		                                &getObj(0)->mPosition, 0, nullptr, 0,
-		                                4);
+		TTelesaManagerGetMSound(this)->startSoundActor(
+		    MSD_SE_EN_TELESA_DISAPPEAR, &getObj(0)->mPosition, 0, nullptr, 0,
+		    4);
 	}
 }
 
