@@ -92,11 +92,13 @@ template <class T> T CLBLinearInbetween(T a, T b, f32 f)
 	return (T)(a + f * (b - a));
 }
 
+#pragma dont_inline on
 template <class T> T CLBPalFrame(T param_1)
 {
 	f32 rate = SMSGetAnmFrameRate();
 	return CLBRoundf<T>(param_1 * (1.0f / rate));
 }
+#pragma dont_inline off
 
 template <class T> T CLBPalIntSpeed(T param_1)
 {
