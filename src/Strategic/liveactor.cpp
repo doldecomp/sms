@@ -28,6 +28,7 @@ f32 TLiveActor::mVelocityMinY = -40.0f;
 TLiveActor::TLiveActor(const char* name)
     : TTakeActor(name)
 {
+	char trash[8];
 	mManager       = nullptr;
 	mMActor        = nullptr;
 	mMActorKeeper  = nullptr;
