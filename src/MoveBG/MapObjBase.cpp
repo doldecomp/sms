@@ -64,6 +64,15 @@ u32 TMapObjBase::touchWater(THitActor*) { return false; }
 
 u16 TMapObjBase::getHitObjNumMax() { return 5; }
 
+f32 TMapObjBase::getRadiusAtY(f32) const { return mBodyRadius; }
+
+MtxPtr TMapObjBase::getTakingMtx()
+{
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK40))
+		return nullptr;
+	return TLiveActor::getTakingMtx();
+}
+
 void TMapObjBase::awake()
 {
 	offLiveFlag(LIVE_FLAG_UNK4000);
