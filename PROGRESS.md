@@ -2338,6 +2338,65 @@ cli report`-Funktionszahl stieg real von 8648 auf 8652 (+4, siehe
 hamukuri.cpp-Fixes; `fireStartDemoCamera` zeigt separat 100 %, aber
 `fireGetStar` selbst zählt wegen der 4-Byte-Restlücke nicht mit).
 
+### Nach sechsunddreißigster Iterationsrunde (8 weitere Frame-Gap-Fixes in hamukuri.cpp)
+
+Fortsetzung der Kandidatensuche mit der in Runde 34/35 etablierten
+autoritativen Methode (`dtk elf disasm` auf frisch gebautem `src/*.o`
+gegen statisches `obj/*.o`, direkter Byte-Vergleich nach Normalisierung
+von lokalen-Klassen-Diskriminatoren und Literal-Pool-Labels). Breiter
+Scan über alle `populated`-Einheiten (Report neu generiert, 1986
+Kandidaten mit `fuzzy_match_percent < 100` oder `None` in Einheiten mit
+echtem Quellcode) fand acht weitere klassische Stackframe-Lücken in
+bereits bearbeiteten `hamukuri.cpp`-Klassen, alle mit `char trash[N]`
+behoben und Byte-für-Byte verifiziert:
+
+- `TFireHamuKuri::reset()` (8 Bytes)
+- `TFireHamuKuri::calcRootMatrix()` (16 Bytes)
+- `THamuKuri::moveObject()` (8 Bytes)
+- `THamuKuri::setBehavior()` (8 Bytes; Rest-Differenzen nur
+  Compiler-generierte Static-Local-Diskriminator-Label `init$N`/
+  `instance$N` und Literal-Pool `@N` — bestätigt kosmetisch, siehe
+  Runde 35-Methodik)
+- `THamuKuri::selectCapHolder()` (8 Bytes)
+- `THamuKuri::setAfterDeadEffect()` (8 Bytes)
+- `THamuKuri::setDeadAnm()` (24 Bytes)
+- `THamuKuri::behaveToFindMario()` (8 Bytes)
+- `THamuKuri::setCrashAnm()` (8 Bytes)
+
+**Neue Methodik-Beobachtung**: `char trash[N]` reagiert nicht
+zuverlässig auf alle Stackframe-Lücken — bei mehreren Kandidaten
+(`TBossPakkun::setGroundCollision`, `TWaterGun::setBaseTRMtx`,
+`TMapObjBase::getDistance`, `THamuKuri::bind`, `THamuKuri::
+jumpToSearchActor`) hatte das Hinzufügen/Vergrößern von `trash`
+keinerlei Wirkung auf die kompilierten Bytes (Dead-Code-Elimination
+entfernt ungenutzte Locals unabhängig von Position, Typ
+(`char[N]`/`f32`/`volatile`) oder Blockebene — mehrere Varianten pro
+Funktion getestet, keine erfolgreich). Diese Fälle wurden sauber
+zurückgesetzt (kein Commit) statt mit nutzlosem totem Code
+verunreinigt zu werden. `THamuKuri::isResignationAttack` benötigt
+zusätzlich eine Stackframe-VERKLEINERUNG (unser Frame ist 16 Bytes
+GRÖSSER als Retail, die entgegengesetzte, bisher nicht behandelte
+Richtung) — als offener Kandidat vorgemerkt.
+
+`THaneHamuKuri::walkBehavior(int, f32)` ist in unserer Quelle ein
+vollständiger Stub (`{ }`), Retail hat eine ~150-Instruktionen-
+Implementierung (Flug-/Schwebephysik mit Bodenabstands-Check,
+Nerve-State-Machine-Übergängen, Partikeleffekten und
+Rumble-/Sound-Feedback). Disassemblierung vollständig gelesen und
+Feldoffsets gegen `include/Enemy/HamuKuri.hpp` abgeglichen (alle
+benötigten Felder — `unk20C`, `unk210`, `unk214`, `unk21C`, `unk22C`,
+`unk230`, `unk234`, `mBoundFly` — bereits deklariert), aber
+Implementierung als zu aufwändig für diese Runde zurückgestellt —
+wichtigster offener Kandidat für eine künftige Session mit mehr
+Zeit für eine einzelne komplexe Funktion.
+
+Die Referenz-DOL bleibt `OK`. Vollständiger Report:
+Funktionszahl stieg real von 8652 auf 8661 (+9 über die gesamte
+Runde inkl. der bereits committeten `fireStartDemoCamera`-Fixes),
+Bytes von 1.507.836 auf 1.510.652 (+2.816). **Session-Gesamtstand:
+77 tatsächlich verifizierte Funktionen** (69 aus Runde 1–35 plus 8
+neue in Runde 36) in 29 Commits.
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
