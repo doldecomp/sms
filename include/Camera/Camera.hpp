@@ -25,6 +25,7 @@ class TLiveActor;
 
 class TTargetCamera {
 public:
+#pragma dont_inline on
 	TTargetCamera& operator=(const TTargetCamera& other)
 	{
 		mPosition = other.mPosition;
@@ -38,6 +39,7 @@ public:
 
 		return *this;
 	}
+#pragma dont_inline off
 
 	/* 0x0 */ JGeometry::TVec3<f32> mPosition;
 	/* 0xC */ JGeometry::TVec3<f32> mTarget;

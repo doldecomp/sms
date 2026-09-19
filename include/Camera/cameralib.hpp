@@ -332,6 +332,7 @@ void CLBRotatePosAndUp(s16, s16, const JGeometry::TVec3<f32>&,
                        const JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>*,
                        JGeometry::TVec3<f32>*);
 
+#pragma dont_inline on
 inline void CLBScreenFPosToSPos(JGeometry::TVec2<s16>* out,
                                 const JGeometry::TVec2<f32>& in)
 {
@@ -354,5 +355,6 @@ inline void CLBScreenFPosToSPos(JGeometry::TVec2<s16>* out,
 		out->y = CLBRoundf<s16>(
 		    (y - 1.0f) * (-0.5f * (f32)(SMSGetGameRenderHeight() - 1)));
 }
+#pragma dont_inline off
 
 #endif
