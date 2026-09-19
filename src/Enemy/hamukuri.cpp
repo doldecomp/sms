@@ -2379,7 +2379,8 @@ void TFireHamuKuri::behaveToWater(THitActor* param_1)
 void TFireHamuKuri::reset()
 {
 	THamuKuri::reset();
-	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	int hitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	mHitPoints    = hitPoints;
 	unk150 &= ~0x2;
 	unk150 |= 0x1;
 	unk214 = 0;
