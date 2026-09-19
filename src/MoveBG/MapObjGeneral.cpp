@@ -162,6 +162,18 @@ void TMapObjGeneral::holding()
 	mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
 }
 
+static inline const TMapObjSinkData* TMapObjGeneralGetSink(TMapObjGeneral* p)
+{
+	TMapObjGeneral* self = p;
+	return self->mMapObjData->mSink;
+}
+
+static inline TTakeActor* TMapObjGeneralGetHeldObject(TMapObjGeneral* p)
+{
+	TMapObjGeneral* self = p;
+	return self->mHeldObject;
+}
+
 void TMapObjGeneral::recovering()
 {
 	startSound(9);
@@ -177,9 +189,10 @@ void TMapObjGeneral::recovering()
 		if (!animIsFinished())
 			return;
 	} else if (mPosition.y < unk144) {
-		mPosition.y += mMapObjData->mSink->unk4;
-		if (mHeldObject)
-			mHeldObject->mPosition.y += mMapObjData->mSink->unk4;
+		mPosition.y += TMapObjGeneralGetSink(this)->unk4;
+		if (TMapObjGeneralGetHeldObject(this))
+			TMapObjGeneralGetHeldObject(this)->mPosition.y
+			    += TMapObjGeneralGetSink(this)->unk4;
 		return;
 	}
 
