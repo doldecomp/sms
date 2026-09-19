@@ -1106,8 +1106,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mCopyConnectedMtx == 0)
 			MTXCopy(eyeMtx, mBlendMtx);
 
-		mBlendRatio
-		    = JGeometry::TUtil<f32>::clamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
+		mBlendRatio = MsClamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
 		getMActor()->setMotionBlendRatioForBck(mBlendRatio);
 		if (mAnimationMode == 1
 		    && getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
