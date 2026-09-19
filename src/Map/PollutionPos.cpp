@@ -33,6 +33,7 @@ f32 TPollutionPos::getDepthWorld(int x, int y) const
 
 bool TPollutionPos::isSame(int x, int z, f32 y) const
 {
+	char trash[0x20];
 	if (!isInArea(x, z))
 		return false;
 
