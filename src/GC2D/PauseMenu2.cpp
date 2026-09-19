@@ -130,15 +130,39 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	}
 }
 
+// fabricated: binding levels over the pane arrays, +8 of low region each.
+static inline J2DPane* PauseBackgroundFork(const TPauseMenu2* p)
+{
+	return p->mBackground;
+}
+
+static inline J2DPane* PauseBackground(const TPauseMenu2* p)
+{
+	J2DPane* x = PauseBackgroundFork(p);
+	return x;
+}
+
+static inline J2DPicture* PauseMenuItem(J2DPicture** items, s32 i)
+{
+	J2DPicture* x = items[i];
+	return x;
+}
+
+static inline J2DPicture* PauseLetter(J2DPicture** letters, s32 i)
+{
+	J2DPicture* x = letters[i];
+	return x;
+}
+
 void TPauseMenu2::loadAfter()
 {
 	// "Save data"
 	mCardSave = JDrama::TNameRefGen::search<TCardSave>("データセーブ");
 
-	mItemColor = mMenuItems[0]->getWhite();
+	mItemColor = PauseMenuItem(mMenuItems, 0)->getWhite();
 
 	for (s32 i = 0; i < mNumItems; i++) {
-		mOrigItemBounds[i] = mMenuItems[i]->getBounds();
+		mOrigItemBounds[i] = PauseMenuItem(mMenuItems, i)->getBounds();
 	}
 
 	for (s32 i = 0; i < 5; i++) {
@@ -146,7 +170,7 @@ void TPauseMenu2::loadAfter()
 		mOrigLetterAngles[i] = mPauseLetters[i]->getRotation();
 	}
 
-	mBackgroundAlpha       = mBackground->mAlpha;
+	mBackgroundAlpha       = PauseBackground(this)->mAlpha;
 	mBackgroundFadeInSpeed = mBackgroundAlpha / 45.0f;
 
 	mFirstItemAngle = mMenuItems[0]->mRotation;
