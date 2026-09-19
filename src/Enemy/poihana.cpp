@@ -695,8 +695,8 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 			SMS_SendMessageToMario(self, HIT_MESSAGE_THROWN);
 			f32 backThrowVal = self->unk19C->mSLBackThrowVal.get();
 			Mtx afStack_4c;
-			MsMtxSetRotRPH(afStack_4c, self->mPosition.x, self->mPosition.y,
-			               self->mPosition.z);
+			MsMtxSetRotRPH(afStack_4c, self->mRotation.x, self->mRotation.y,
+			               self->mRotation.z);
 			JGeometry::TVec3<f32> local_58(0.0f, 1.0f, -backThrowVal);
 			MTXMultVec(afStack_4c, &local_58, &local_58);
 			SMS_ThrowMario(local_58, self->unk19C->mSLThrowSpeed.get());
