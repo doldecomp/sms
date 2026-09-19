@@ -1268,7 +1268,7 @@ Geometry stays **(below, above)** = pool bytes under and over the live `bl sub` 
 - **A binder over a large class member is priced by the bound object's size, not its return type**: on `TDrawSyncManager::mCallbacks` (`JGadget::TVector`, 0x18) a reference binder, a pointer binder, a direct-return fork and a member accessor are all +16 (`setCallback` 99.62, retail = the named-temporary form plus one 8-byte object below it).
 - **Ladder application**: `TDrawSyncManager::start`'s five-way rotation is one value moving rungs: MWCC coalesces the inlined `TFifo` ctor's `capacity` parameter with the caller's identically valued `param_2`, demoting it from the inlined-callee-parameters rung to the caller-parameters rung; retail keeps them distinct. A TU-local `MakeFifo(int)` level is worse (28 markers); the ctor with assignments instead of an initialiser list is inert. What keeps the two distinct closes the function.
 - `getSpine()` on an inlined `pushAfterCurrent` swaps the nerve/spine volatile registers (r4/r5): not a frame lever at inlined push sites. A named class local inside an inlined callee (`polarXZ`'s `TVec3 v`) is +16 frame but costs a real copy (-5.5). `setSeDistanceVolume`: naming the category index, or an anonymous shift (re-CSEd), inert.
-## Research batch 219 (2026-09-19): the volatile-GPR chain is an SSA-value count, and the `+ const` sink is block-local
+## Research batch 220 (2026-09-19): the volatile-GPR chain is an SSA-value count, and the `+ const` sink is block-local
 
 Two seeds in `J3DCluster`, both reduced to one mechanism: **retail keeps an address chain in a single volatile register where we spend a fresh one per step**, and the lever for that is not a spelling but how many SSA values the statement form creates.
 
