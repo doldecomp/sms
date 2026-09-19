@@ -247,9 +247,8 @@ inline void TSunModel::moveSun_()
 		if (distSq > 2.0f) {
 			unkB0 = 0.0f;
 		} else {
-			f32 nearness = 2.0f - distSq;
-			unkB0        = CLBLinearInbetween<f32>(
-			           0.0f, (f32)unk80, 0.5f * nearness * unk194);
+			f32 rate = 0.5f * (2.0f - distSq) * unk194;
+			unkB0    = CLBLinearInbetween<f32>(0.0f, (f32)unk80, rate);
 		}
 	}
 
@@ -284,18 +283,29 @@ inline void TSunModel::moveSun_()
 	// (no temporary, no call) and `.set()` on a named local picks the
 	// `set<TY>` member template, which is why header round 24's forwarder
 	// chains never reached the `bl` (see the trial list in JGVec3.hpp).
-	// TODO: the frame is exact now and only two differences are left: the
-	// `Mtx mtx` slot (retail 0x78, ours 0x70) and the `unkB0` argument
-	// scheduling in cluster 1.  Research batch 207 explains the slot order:
+	// TODO: the frame is exact and one difference is left: the `Mtx mtx`
+	// slot (retail 0x78, ours 0x70, an 8-byte hole between `mtx` and
+	// `dir`).  The `unkB0` argument scheduling that used to sit beside it
+	// is closed: naming the third argument (`f32 rate = 0.5f *
+	// (2.0f - distSq) * unk194;`) puts every load and both `fmuls` of that
+	// call on retail's schedule and colouring, but only with `nearness`
+	// folded into it -- naming both locals is +8 of frame, naming just
+	// `nearness` (the old spelling) leaves the schedule wrong at the same
+	// frame, so the lever is exactly one named f32 there.
+	// Research batch 207 explains the slot order:
 	// an inlined callee's class-object locals form their own block, and the
 	// blocks stack downward in *expansion* order below the caller's own
 	// named locals, so a `Mtx` declared in perform can never sit below this
 	// expansion's `dir`/temp pair - it has to be a local of a *second*
 	// inlined callee, which is what calcAnim_ is.  What is left is a
-	// constant 4 bytes at the top of calcAnim_'s block (ours is
-	// dir - mtx = 0x34, retail 0x30): measured invariant under a 4- or
+	// constant 8 bytes at the top of calcAnim_'s block (ours is
+	// dir - mtx = 0x38, retail 0x30; it was 4 before the named `rate`
+	// moved `dir` up): measured invariant under a 4- or
 	// 8-byte local declared before or after `mtx`, hoisting `calc()` out,
-	// a `J3DModel*` binder, and `MTXCopy(mtx, getBaseTRMtx())` in place of
+	// a `J3DModel*` binder (re-measured after the `rate` change: a binder
+	// over `unk48` placed *after* `mtx`, where the expansion-order rule
+	// predicts its block lands below `mtx`, is +8 of frame and leaves
+	// `mtx` where it was), and `MTXCopy(mtx, getBaseTRMtx())` in place of
 	// `setBaseTRMtx`, and a scratch TU with the same two-callee shape shows
 	// no such pad, so it comes from something inside this body.  The named
 	// `camera` is worth -8 of low region and is what makes the frame exact.
