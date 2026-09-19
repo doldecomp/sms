@@ -857,11 +857,25 @@ void TPopo::explosion()
 	gpModelWaterManager->emitRequest(*manager->mExplosionWater);
 }
 
+static inline MSound* PopoPossessedSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
+static inline MActor* PopoPossessedActor(TPopo* popo)
+{
+	MActor* actor = popo->getMActor();
+	return actor;
+}
+
+// TODO: frame and every instruction but one are exact; retail copies `this`
+// with `mr r31, r3` where we emit `addi r31, r3, 0`.
 void TPopo::possessedIn()
 {
 	mMActor = mMActorKeeper->getMActor("popoH.bmd");
 	setBckAnm(3);
-	getMActor()->setBtpFromIndex(0);
+	PopoPossessedActor(this)->setBtpFromIndex(0);
 	getMActor()->setFrameRate(0.0f, ANM_TYPE_BTP);
 	if (!mExplosionSw)
 		onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -872,7 +886,7 @@ void TPopo::possessedIn()
 	offLiveFlag(LIVE_FLAG_UNK10);
 	mRollAngle   = 90.0f;
 	mIsPossessed = 1;
-	if (gpMSound->gateCheck(0x2861))
+	if (PopoPossessedSound()->gateCheck(0x2861))
 		MSoundSESystem::MSoundSE::startSoundActor(0x2861, &mPosition, 0,
 		                                          nullptr, 0, 4);
 	mIsLevelReached = 0;
