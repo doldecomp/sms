@@ -198,6 +198,13 @@ void TMapObjTree::initEach()
 // boundary cannot be exercised, and declaration order is inert with a single
 // competitor. The frame is exact, so none of the new inline-temp price rules
 // applies either. Three operand-only markers, left as allocator-internal.
+// Closure batch 211: research 210's rule does not reach this shape either.
+// The count is not half of a rotation of two live values -- it dies before the
+// two format-string bases are materialised, so both spellings are legal
+// dead-range reuses (retail coalesces it with the loop scratch r25, we with
+// the @3182 base r26) and there is no second value to pair it with as an
+// inlined call's `this` and parameter. An inlined `getLeafNum()` accessor for
+// the `new[]` count is worse (3 -> 6 markers).
 void TMapObjTree::initMapObj()
 {
 	TMapObjGeneral::initMapObj();

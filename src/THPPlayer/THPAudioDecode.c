@@ -148,6 +148,14 @@ static void* AudioDecoder(void* arg)
 // two address bases. With no third load-bearing scalar to add and no aggregate
 // to group, the knob is exhausted here too; the site stays in the pool-vs-local
 // group-swap class with `checkNextFrameSe` and `loadAfter`.
+// Closure batch 211 tried research 210's inlined-call form, which is the only
+// one available in a C TU: a `static inline s32 GetFrameInBuffer(THPPlayer*
+// player, s32 frame)` wrapping the `(frame + initReadFrame) % numFrames`
+// expression, so that `frame` and the `&ActivePlayer` base are the two
+// parameters of one inlined call. Byte-for-byte inert (13 markers, 46
+// instructions, same rotation): the helper folds away and MWCC regenerates the
+// same global-address temporary, so a C helper cannot put a local into the
+// parameter bucket the way an inlined member's argument does in C++.
 static void* AudioDecoderForOnMemory(void* arg)
 {
 	s32 frame;

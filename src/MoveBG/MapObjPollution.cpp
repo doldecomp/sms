@@ -83,6 +83,12 @@ void TRevivalPolluter::pollute() { }
 //    buyable with accessor depth (getPos().getWidth()/getHeight() is +0x28 =
 //    exactly the ROM's 0x60) but costs the ROM's argument order, so it is not
 //    worth trading residue 1 for it.
+// 3. Closure batch 211 checked research 210's rule: the counter/offset pair
+//    cannot be made one inlined call's `this` and parameter, because the only
+//    inlined call in the loop is `registerPolluteTex()`, whose receiver is the
+//    element pointer and whose map signature takes no argument, and
+//    `getPolluter(i)` was already rejected. With 40 bytes of dead low region
+//    and no legal carrier (batch 208), this unit stays open.
 void TRevivalPolluter::registerPolluteTex()
 {
 	// TODO: inlines make me cry

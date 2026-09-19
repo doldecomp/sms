@@ -23,6 +23,24 @@
 // again.  So retail's `body` is in the locals bucket for a reason that is not
 // its declaration position, and the remaining shape has to change what MWCC
 // counts as a function-scope local here.
+// Closure batch 211 applied research 210's rule and measured the whole bucket
+// ladder here.  Moving the loop body into an inlined member
+// `setBodyAnm_(body, i, anm, blend)` makes `body` an inlined callee's explicit
+// **parameter**, and that bucket outranks everything: `body` jumps from r25 to
+// **r31** and pushes `i` to r30, while the params/`this`/temps below
+// (r29 blend, r28 anm, r27 this, r26 offset, r25 pool) come out exactly like
+// retail's.  So the ranking here is
+//   inlined-callee parameter > caller locals > caller parameters > `this`
+//   > pool/base temps > caller inner-block locals,
+// and retail's `body` (r30, one rung below `i`) is in the *caller locals*
+// bucket, which our `body` never reaches: hoisting `int i;` and
+// `TBossHanachanPartsBody* body;` to function scope in that order, with the
+// `for (i = 0; ...)` init separated, is still r25 (18 markers), confirming
+// batch 205.  The parameter order of the helper is inert (body first or `i`
+// first give byte-identical output), and the helper costs **+8 of frame per
+// parameter** (0x68 -> 0x88 with four), which this function has no named
+// pointer local to pay for -- so the one shape that moves `body` cannot be
+// afforded.  25 markers with the helper against 13 without it.
 void TBossHanachan::setHeadAndBodyAnm(
     EnumBossHanachanAnmKind anm, EnumBossHanachanStopMotionBlendOnOff blend)
 {

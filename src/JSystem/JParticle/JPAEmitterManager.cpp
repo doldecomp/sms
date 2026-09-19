@@ -268,6 +268,14 @@ static inline u8 JPAEmitterManagerGetFieldNum(JPADataBlockLinkInfo* p)
 // unchanged. `linkInfo` cannot be un-named (spelling it from `emitterData`
 // would have to keep `emitterData` alive across `createVolumeEmitter`), so the
 // callee-saved rotation is the whole residue.
+// Closure batch 211: the two TU-local binding levels are not the cause -- with
+// both `JPAEmitterManagerGetBaseEmitterBlock` and
+// `JPAEmitterManagerGetFieldNum` replaced by direct calls (frame 0xb8, i.e.
+// -0x10) the same r29/r30 swap survives, so `linkInfo` is not lifted above the
+// base temp by being an inlined call's explicit parameter. Research 210's
+// rule would need the base temp `&unkA4[param_3]` to be the explicit parameter
+// of an inlined call whose receiver is `linkInfo`, and no such call exists
+// here (every use of `linkInfo` already has it as the receiver).
 JPABaseEmitter* JPAEmitterManager::createEmitterBase(
     s32 param_1, u8 param_2, u8 param_3,
     JPACallBackBase<JPABaseEmitter*>* param_4,

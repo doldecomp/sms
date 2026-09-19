@@ -565,6 +565,17 @@ static inline MActor* EnemymanagerGetMActor(const TSpineEnemy* p)
 // declare. Spelling `afStack_5C` as TPosition3f is codegen-identical here
 // (96.1%, same five markers), so the r27/r28 swap has to come from somewhere
 // else.
+// Closure batch 211: our four locals come out in **forward** declaration order
+// (f r28, wtf r27, mtx r26, i r25) and retail's are wtf, f, mtx, i, so retail
+// declares the scratch matrix before the frame index -- which is the variant
+// batch 205 measured at 96.8% with the swap surviving, because an initialised
+// `MtxPtr wtf = afStack_5C;` also drags its materialisation ahead of the
+// getCurAnmFrameNo call. The 4-byte hole above afStack_5C (0x64 retail against
+// 0x68 here, same 0xc0 total) says retail's first-declared named local is a
+// 4-byte one, i.e. something declared *before* the matrix. Research 210's
+// inlined-call rule does not apply: the rotated pair is a local and a stack
+// address, not a receiver and an argument (see the bucket ladder recorded on
+// TBossHanachan::setHeadAndBodyAnm).
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 {
 	if (unk4C != EnemymanagerGetMActor(enemy)->getCurAnmIdx(ANM_TYPE_BCK))
