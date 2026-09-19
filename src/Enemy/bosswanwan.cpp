@@ -901,8 +901,15 @@ void TBossWanwan::init(TLiveManager* live_manager)
 	mScaledBodyRadius = 500.0f;
 
 	mMtxCalc = new TBossWanwanMtxCalc(this);
-	mMActor->setCalcForBck(mMtxCalc);
-	mMActor->getAnmBck()->unk2A = 3;
+	// Retail sets both fields under one null check, which setCalcForBck's
+	// own guard cannot share with a following statement, so the guard is
+	// spelled out here.
+	J3DMtxCalc* calc  = mMtxCalc;
+	MActorAnmBck* bck = mMActor->getAnmBck();
+	if (bck != nullptr) {
+		bck->setCalc(calc);
+		bck->unk2A = 3;
+	}
 	mMActor->calc();
 	offLiveFlag(LIVE_FLAG_UNK100);
 

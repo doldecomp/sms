@@ -251,7 +251,7 @@ public:
 	/* 0x1A0 */ s8 mWasSprayed;
 	/* 0x1A4 */ JGeometry::TVec3<f32> mJumpSmokePos;
 	/* 0x1B0 */ int unk1B0;
-	/* 0x1B4 */ int unk1B4;
+	/* 0x1B4 */ s16 unk1B4;
 };
 
 class TBossWanwanManager : public TEnemyManager {
