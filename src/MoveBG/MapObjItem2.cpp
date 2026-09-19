@@ -44,6 +44,7 @@ void TMushroom1up::touchPlayer(THitActor* param_1)
 
 void TMushroom1up::makeObjAppeared()
 {
+	char trash[8];
 	TMapObjBase::makeObjAppeared();
 	mStateTimer = 1200;
 	unk138      = 0;
@@ -144,6 +145,7 @@ void TMushroom1up::control()
 
 void TMushroom1up::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x18];
 	if (unk139 != 2 && mStateTimer < 240 && (cue & CUE_ENTRY)
 	    && gpMarDirector->mMoveTickCount % 6 > 2)
 		cue &= ~CUE_ENTRY;
@@ -162,6 +164,7 @@ TJumpBase::TJumpBase(const char* name)
 
 void TJumpBase::initMapObj()
 {
+	char trash[8];
 	TMapObjBase::initMapObj();
 	if (mMapCollisionManager) {
 		TMapCollisionBase* base = mMapCollisionManager->unk8;

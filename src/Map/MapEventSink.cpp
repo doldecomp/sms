@@ -212,6 +212,7 @@ TMapEventSink::TMapEventSink(const char* name)
 
 bool TMapEventSinkInPollution::watch()
 {
+	char trash[0x18];
 	for (int i = 0; i < mBuildingNum; ++i) {
 		if (!mIsBuildingRecovered[i] && getPollutionObj(i)->isCleaned()) {
 			mRaisingBuildingIdx = i;
@@ -223,6 +224,7 @@ bool TMapEventSinkInPollution::watch()
 
 void TMapEventSinkInPollution::initBuriedBuilding()
 {
+	char trash[0x18];
 	for (int i = 0; i < mBuildingNum; ++i)
 		if (getPollutionObj(i)->isCleaned())
 			makeBuildingRecovered(i);
@@ -287,6 +289,7 @@ void TMapEventSinkBianco::finishControl()
 
 void TMapEventSinkBianco::rising()
 {
+	char trash[0x18];
 	TMapEventSinkInPollutionReset::rising();
 	if (mRaisingBuildingIdx == 0)
 		TMapObjBase::moveJoint(unk64, 0.0f, unk3C, 0.0f);
@@ -294,6 +297,7 @@ void TMapEventSinkBianco::rising()
 
 bool TMapEventSinkBianco::control()
 {
+	char trash[0x10];
 	if (mRaisingBuildingIdx == 0 && unk4C == unk7C) {
 		gpItemManager->makeShineAppearWithTime(
 		    "シャイン（坂上げ用）", 300, unk50[mRaisingBuildingIdx].x,
@@ -343,6 +347,7 @@ void TMapEventSinkBianco::startControl()
 
 bool TMapEventSinkBianco::watch()
 {
+	char trash[0x18];
 	if (!mIsBuildingRecovered[0]
 	    && mGateKeeper->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		mRaisingBuildingIdx = 0;
@@ -395,6 +400,7 @@ void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
 
 void TMapEventSinkShadowMario::rising()
 {
+	char trash[0x18];
 	TMapEventSink::rising();
 	unk64[mRaisingBuildingIdx]->mPosition.y += unk3C;
 }

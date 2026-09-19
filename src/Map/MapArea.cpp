@@ -4,6 +4,7 @@
 static bool checkLinesCollision(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2,
                                 f32 x3, f32 z3)
 {
+	char trash[8];
 	f32 c0 = (z1 - z0) * (x2 - x1) - (x1 - x0) * (z2 - z1);
 	f32 c1 = (z1 - z0) * (x3 - x1) - (x1 - x0) * (z3 - z1);
 

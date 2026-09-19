@@ -165,6 +165,7 @@ TSmallEnemy::TSmallEnemy(const char* name)
 
 void TSmallEnemy::setMActorAndKeeper()
 {
+	char trash[8];
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
 	mMActor       = mMActorKeeper->createMActorFromNthData(0, 0);
 }
@@ -398,6 +399,7 @@ void TSmallEnemy::genEventCoin()
 
 void TSmallEnemy::setAfterDeadEffect()
 {
+	char trash[8];
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_ENM_DISAP_A, &mPosition, 0, nullptr)) {
 		emitter->setGlobalScale(mScaling);
@@ -824,6 +826,7 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 
 void TSmallEnemy::generateEffectColumWater()
 {
+	char trash[8];
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
 		return;
 
@@ -865,6 +868,7 @@ void TSmallEnemy::expandCollision()
 
 bool TSmallEnemy::isEaten()
 {
+	char trash[8];
 	if (mHolder && mHolder->getHeldObject() == this) {
 		MtxPtr mtx = mHolder->getTakingMtx();
 		if (mtx) {

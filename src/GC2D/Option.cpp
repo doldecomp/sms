@@ -647,6 +647,7 @@ void TOptionSoundUnit::toggle()
 
 void TOptionSoundUnit::adjust()
 {
+	char trash[8];
 	adjustView();
 	const FabricatedSoundSettings& setting
 	    = cSoundSettings[mSelectionText->getNumber()];
@@ -762,6 +763,7 @@ void TOptionSoundUnit::adjustView()
 
 void TOptionSoundUnit::adjustSound()
 {
+	char trash[8];
 	stopSound();
 
 	const FabricatedSoundSettings& setting
@@ -782,6 +784,7 @@ void TOptionSoundUnit::setInfluencedAlphaRecursive(J2DPane* pane, bool flag)
 
 void TOptionControl::load()
 {
+	char trash[8];
 	JKRArchive* optionArch = (JKRArchive*)JKRFileLoader::getVolume("option");
 
 	mScreen = new J2DSetScreen("option.blo", optionArch);
@@ -885,6 +888,7 @@ bool TOptionControl::movementOption2Card()
 void TOptionControl::setType(TOptionControl::SelectType type,
                              bool initial_options_entry)
 {
+	char trash[8];
 	if (mSelectedOption != type || initial_options_entry) {
 		mSelectedOption = type;
 		switch (type) {
@@ -949,6 +953,7 @@ bool TOptionControl::isChangedSetting() const
 
 void TOptionControl::resetChangedSetting()
 {
+	char trash[8];
 	mInitialRumbleValue = mRumbleOption->getValue();
 	mInitialSoundValue  = mSoundOption->getValue();
 }

@@ -79,6 +79,7 @@ int TModelDataKeeper::getIndex(const char* name) const
 
 SDLModelData* TModelDataKeeper::getDataByName(const char* name) const
 {
+	char trash[8];
 	int idx = getIndex(name);
 	if (idx < 0)
 		return nullptr;
@@ -116,6 +117,7 @@ MActor* TMActorKeeper::createAndRegister(SDLModelData* model_data,
 
 MActor* TMActorKeeper::getMActor(const char* name) const
 {
+	char trash[8];
 	if (!getModelDataKeeper())
 		return mActors[0];
 

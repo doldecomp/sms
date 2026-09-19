@@ -358,6 +358,7 @@ void TTamaNoko::behaveToRelease()
 
 BOOL TTamaNoko::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[0x20];
 	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP) {
 		if (isHitValid(message)) {
 			unk184 = 0;
@@ -584,6 +585,7 @@ void TTamaNoko::forceSleep()
 
 void TTamaNoko::setAfterDeadEffect()
 {
+	char trash[8];
 	TSmallEnemy::setAfterDeadEffect();
 	unk19C->unk34 = 1;
 	unk19C->setBckAnm(0);
@@ -598,6 +600,7 @@ const char** TTamaNoko::getBasNameTable() const { return tamaNoko_bastable; }
 
 f32 TTamaNoko::getGravityY() const
 {
+	char trash[8];
 	if (mSpine->getCurrentNerve() == &TNerveTamaNokoAttack::theNerve())
 		return unk198->mSLAttackGravityY.get();
 

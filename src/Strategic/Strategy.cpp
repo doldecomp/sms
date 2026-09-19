@@ -20,6 +20,7 @@ TStrategy::TStrategy(const char* name)
 
 void TStrategy::load(JSUMemoryInputStream& stream)
 {
+	char trash[8];
 	JDrama::TViewObj::load(stream);
 	new TObjHitCheck();
 

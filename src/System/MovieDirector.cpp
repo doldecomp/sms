@@ -172,6 +172,7 @@ int TMovieDirector::rsetup()
 
 TMovieDirector::~TMovieDirector()
 {
+	char trash[0x10];
 	if (JKRMemArchive* arc
 	    = (JKRMemArchive*)JKRFileLoader::getVolume("endsave"))
 		arc->unmountFixed();
@@ -190,6 +191,7 @@ TMovieDirector::~TMovieDirector()
 
 u32 TMovieDirector::decideNextMode(s32* param_1)
 {
+	char trash[0x30];
 
 	if (gpApplication.getMovie() != 14) {
 		if (!(gpApplication.getMovie() == 15 || gpApplication.getMovie() == 16

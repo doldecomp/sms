@@ -106,6 +106,7 @@ void TMarDirector::movement_game()
 
 void TMarDirector::fireGetBlueCoin(TCoin* coin)
 {
+	char trash[8];
 	if (!coin)
 		return;
 

@@ -103,6 +103,7 @@ ResTIMG* TPollutionLayerWave::getTexResource(const char* name)
 void TPollutionLayerWave::initJointModel(TJointModelManager* mgr,
                                          const char* name, MActorAnmData*)
 {
+	char trash[8];
 	mManager = mgr;
 
 	initPollutionTex(name);
@@ -365,6 +366,7 @@ void TPollutionLayer::initJointModel(TJointModelManager* param_1,
                                      const char* param_2,
                                      MActorAnmData* param_3)
 {
+	char trash[0x10];
 	TJointModel::initJointModel(param_1, param_2, param_3);
 
 	initPollutionTex(param_2);

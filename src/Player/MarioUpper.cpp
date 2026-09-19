@@ -42,6 +42,7 @@ void TMario::checkPumping()
 
 BOOL TMario::checkPumpEnable()
 {
+	char trash[0x18];
 	if ((mWaterGun != nullptr) && checkFlag(MARIO_FLAG_HAS_FLUDD)
 	    && gMarioAnimeData[mAnimationId].isPumpOK() && !onYoshi()
 	    && (!isSinking()

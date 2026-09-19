@@ -150,6 +150,7 @@ void TMapObjGeneral::touchingPlayer()
 
 void TMapObjGeneral::holding()
 {
+	char trash[8];
 	mPosition     = mHolder->mPosition;
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 }
@@ -180,6 +181,7 @@ void TMapObjGeneral::recovering()
 
 void TMapObjGeneral::sinking()
 {
+	char trash[8];
 	mPosition.y -= mMapObjData->mSink->unk0;
 
 	for (int i = 0; i < getColNum(); ++i) {
@@ -316,6 +318,7 @@ void TMapObjGeneral::hold(TTakeActor* actor)
 
 void TMapObjGeneral::ensureTakeSituation()
 {
+	char trash[8];
 	TMapObjBase::ensureTakeSituation();
 	if (isState(STATE_HOLDING) && mHolder == nullptr) {
 		mState = STATE_NORMAL;
@@ -543,6 +546,7 @@ void TMapObjGeneral::bind()
 
 void TMapObjGeneral::control()
 {
+	char trash[8];
 	TMapObjBase::control();
 	if (checkMapObjFlag(MAP_OBJ_FLAG_CAN_SINK) && isState(STATE_NORMAL)
 	    && !isAirborne() && isPollutedGround(mPosition))

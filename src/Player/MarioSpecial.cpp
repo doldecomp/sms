@@ -278,6 +278,7 @@ void TMario::doRoofWaitingProcess()
 
 BOOL TMario::roofCommonEvents()
 {
+	char trash[8];
 	if (mInput & 0x8000) {
 		mInput &= ~0x8000;
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);

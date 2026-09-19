@@ -432,6 +432,7 @@ bool TBaseNPC::isStateGoToMad_() const
 
 bool TBaseNPC::isNowCanTaken() const
 {
+	char trash[8];
 	bool result = false;
 	if (checkLiveFlag(LIVE_FLAG_UNK100000) && mActorType != 0x400001C
 	    && mHolder == nullptr && mHeldObject == nullptr
