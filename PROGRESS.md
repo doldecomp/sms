@@ -84,6 +84,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   vollständige Übereinstimmung. Die `TTimeRec::startTimer()`-Auswahl
   entscheidet offenbar über Stack-Layout und Registerwahl.
 
+- `THPPlayer/THPAudioDecode.c`: `AudioDecoderForOnMemory` (176 Bytes, 89,27 %).
+  Wechsel `while(TRUE)` → `for(;;)` ändert das Ergebnis nicht. Die Differenzen
+  betreffen Registerwahl (`r29`/`r30` vs. `r31`/`r30`) für `frame`/`readSize`,
+  die sich nur durch künstliche Variablenreihenfolge annähern ließen.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -119,4 +124,5 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 ## Nächster GMSJ01-Kandidat
 
-`THPPlayer/THPAudioDecode.cpp`: `AudioDecoderForOnMemory` (176 Bytes, 89,27 %).
+`Camera/CameraMode.cpp`: `isNormalCameraCompletely` (144 Bytes, 72,86 %) — restliche
+Differenzen in `.data` (48,79 %) und `@1895` (50 %); Aufwand vermutlich hoch.
