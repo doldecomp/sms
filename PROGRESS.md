@@ -3093,6 +3093,45 @@ Funktionen** (396 aus Runde 1–43 plus 2 neue in Runde 44:
 
 
 ## Nächster GMSJ01-Kandidat
+**Neuer, großer Kandidaten-Cluster identifiziert (Runde 44):
+`src/Enemy/BathtubKiller.cpp`** — `TBathtubKiller`/`TBathtubKillerManager`
+haben ca. 12 Funktionen mit echtem, aber nicht byte-genauem
+Rekonstruktions-Bedarf: `bind` (0,4 %, 1004 B), `perform` (10,0 %,
+1164 B, mit bestehendem TODO "only the bathtub lookup is
+reconstructed"), `makeInitialVelocity` (0,4 %, 932 B), `moveChasing`
+(0,7 %, 604 B), `makeQuat` (90,5 %, 1532 B — selbst NICHT vollständig
+korrekt trotz vollständiger Logik), `receiveMessage` (0,9 %, 620 B),
+`attackToMario` (1,0 %, 404 B), `isCollidMove` (0,7 %, 1068 B),
+`behaveToWater` (34,3 %, 280 B), `isAboided` (0,7 %, 836 B), die
+`execute`-Methoden von vier `TNerveBathtubKiller*`-Nerven (Wander
+0,6 %/952 B, Chase 0,6 %/912 B, ChaseStraight 0,5 %/1088 B, Straight
+62,4 %/400 B), sowie `TBathtubKillerManager::load`/`loadAfter`
+(81,0 %/79,1 %). Viele weitere Methoden (`killBathtubKiller`,
+`explodeBathtubKiller`, `moveParabolic`, `moveStraight`,
+`makeVelocityQuat`, `makeAccelerationQuat`, `makeScrewQuat`,
+`setNormalBathtubKillerAnm` u. a.) sind leere `{ }`-Stubs, tauchen
+aber NICHT in `report.json` auf — vermutlich vom Compiler wegoptimiert/
+wegge-inlined (keine eigenständigen Symbole in Retail).
+
+**Tiefenanalyse `TNerveBathtubKillerStraight::execute`** (62,4 %, hat
+bereits echte, plausible Logik, kein Stub): direkter `dtk elf
+disasm`-Vergleich zeigt, dass Retail zwei explizite Funktionsaufrufe
+(`TVec3<f>::dot`, `TVec3<f>::scale`) tätigt, die in unserem Build
+vollständig zu rohen Gleitkomma-Instruktionen ge-inlined sind (der
+Rest der Funktion — `getMActor`-Aufruf, `makeQuat`-Aufruf — matcht
+strukturell). Sehr wahrscheinlich dieselbe bestätigt-unfixbare
+Kategorie "asymmetrisches Pro-Aufrufstellen-Inlining" wie
+`TRotation3::identity33` (Runde 34) — nicht mit `#pragma dont_inline`
+behebbar, da funktionsweit statt pro Aufrufstelle wirksam.
+
+**Einschätzung**: Der TBathtub-Cluster (Runde 39/40, blockiert durch
+fehlende `TBathtubGrip`-Klasse und `-fp_contract`) und der
+TBathtubKiller-Cluster sind beide grundsätzlich reale, aber deutlich
+größere Mehr-Stunden-Rekonstruktionsprojekte (Physik-/Quaternion-
+Bewegungslogik, ~8 verbleibende Funktionen mit insgesamt > 8000
+Bytes) statt schnelle Fortsetzungs-Gewinne — für eine künftige
+dedizierte Session vorgemerkt, nicht in Runde 44 angegangen.
+
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
 59 in Runde 32/33 als "bereits korrekt" dokumentierten Funktionen
