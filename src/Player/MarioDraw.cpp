@@ -496,7 +496,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		           || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
 		           || gpMarioForCallBack->mAnimationId
 		                      == TMario::ANIM_RIDE_SHELL
-		                  && !gpMarioForCallBack->checkStatusType(
+		                  && !gpMarioForCallBack->checkFlag(
 		                      MARIO_FLAG_FLUDD_EMITTING)) {
 
 			// Ah, i love storing floats, casting them to s16
