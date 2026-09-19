@@ -461,11 +461,15 @@ public:
 		z = b.z * scale;
 	}
 
+	// Operand order is read off the game's only out-of-line copy, the weak
+	// symbol MapMirror.cpp emits (Map.a MapMirror.cpp in the map): the body is
+	// `lfs f2, 0(r4); lfs f0, 0(r5); fmadds f0, f2, f1, f0`, i.e. the *scaled*
+	// operand is the first reference parameter and the addend the second.
 	void scaleAdd(f32 scale, const TVec3& b, const TVec3& c)
 	{
-		x = b.x + c.x * scale;
-		y = b.y + c.y * scale;
-		z = b.z + c.z * scale;
+		x = b.x * scale + c.x;
+		y = b.y * scale + c.y;
+		z = b.z * scale + c.z;
 	}
 
 	// === length stuff ===

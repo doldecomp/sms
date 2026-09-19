@@ -717,7 +717,7 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 
 	JGeometry::TVec3<f32> up(mtx[0][1], mtx[1][1], mtx[2][1]);
 	JGeometry::TVec3<f32> flat;
-	flat.scaleAdd(-up.dot(focus), up, focus);
+	flat.scaleAdd(-up.dot(focus), focus, up);
 	flat.normalize();
 	focus.normalize();
 

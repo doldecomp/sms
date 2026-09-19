@@ -45,7 +45,7 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 
 		f32 fVar1 = unk2C4;
 		for (int i = 0; i < 9; ++i) {
-			local_120[9 + i].scaleAdd(fVar1, local_120[i], unk25C);
+			local_120[9 + i].scaleAdd(fVar1, unk25C, local_120[i]);
 		}
 
 		f32 tmp = unk2C0;

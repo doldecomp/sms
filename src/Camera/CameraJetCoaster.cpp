@@ -134,8 +134,8 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		toroccoAxisZ.set(toroccoMtx[0][2], toroccoMtx[1][2], toroccoMtx[2][2]);
 		mUp.set(toroccoAxisY);
 
-		mCurrentTarget.unk18.scaleAdd(-calcDistFromXRotRatio_(), newTarget,
-		                              toroccoAxisZ);
+		mCurrentTarget.unk18.scaleAdd(-calcDistFromXRotRatio_(), toroccoAxisZ,
+		                              newTarget);
 
 		CLBRotatePosAndUp(angleX, angleY, toroccoAxisX, toroccoAxisY, newTarget,
 		                  &mCurrentTarget.unk18, &mUp);

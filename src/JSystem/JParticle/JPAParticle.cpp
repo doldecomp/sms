@@ -85,7 +85,7 @@ void JPAParticle::calcVelocity()
 		unk14.set(info->unk24);
 
 	if (unk78 != 0.0f)
-		mBaseVelocity.scaleAdd(unk78, mBaseVelocity, unk68);
+		mBaseVelocity.scaleAdd(unk78, unk68, mBaseVelocity);
 
 	if (!checkStatus(JPABaseParticle::FLAG_IGNORE_FIELDS))
 		info->mCurrentFieldManager->affectField(this);

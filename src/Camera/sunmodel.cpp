@@ -307,7 +307,7 @@ inline void TSunModel::moveSun_()
 	// reloads `gpCamera` there after MsVECNormalize, so it was never a
 	// named local in retail): `camera->getUnk124Vec()` costs 3 extra
 	// instructions and `SMSGetCamera()->` gives the 8 bytes back.
-	unk198.scaleAdd(250000.0f, gpCamera->getUnk124Vec(), dir);
+	unk198.scaleAdd(250000.0f, dir, gpCamera->getUnk124Vec());
 
 	if (unk64)
 		unk64->mPosition = unk198;

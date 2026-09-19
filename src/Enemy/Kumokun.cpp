@@ -68,7 +68,7 @@ public:
 		tmp.set(*param_2);
 		f32 dist = wall->mNormal.dot(tmp) - wall->mDist;
 		if (param_3 - dist > 0.0f) {
-			param_2->scaleAdd(param_3 - dist, tmp, wall->mNormal);
+			param_2->scaleAdd(param_3 - dist, wall->mNormal, tmp);
 			return true;
 		}
 		return false;
@@ -309,7 +309,7 @@ bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
 	JGeometry::TVec3<f32> normal = getPlaneNormal();
 
 	JGeometry::TVec3<f32> local_30;
-	local_30.scaleAdd(100.0f, normal, param_3);
+	local_30.scaleAdd(100.0f, param_3, normal);
 
 	JGeometry::TVec3<f32> local_3C = local_30;
 	local_3C += param_4;
@@ -326,7 +326,7 @@ bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
 
 	JGeometry::TVec3<f32> local_70 = getPlaneNormal();
 	JGeometry::TVec3<f32> local_48;
-	local_48.scaleAdd(-10.0f, local_3C, local_70);
+	local_48.scaleAdd(-10.0f, local_70, local_3C);
 
 	const TBGCheckData* wall = checkWallPlane(&local_48, mHeadHeight, 100.0f);
 

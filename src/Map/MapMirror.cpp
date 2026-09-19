@@ -44,18 +44,11 @@ struct MapMirrorPlane {
 	/* 0xC */ f32 mD;
 };
 
-// TODO (shared header, not made here): JGVec3.hpp spells
-// `scaleAdd(scale, b, c)` as `x = b.x + c.x * scale`, but retail's only
-// out-of-line copy in the whole game is the one this TU emits, and it is
-// `lfs f2, 0(r4); lfs f0, 0(r5); fmadds f0, f2, f1, f0`, i.e.
-// `x = b.x * scale + c.x`. Six of its thirteen instructions differ here
-// (97.69%), and TMirrorModel::entry's three `bl scaleAdd` sites pass r4/r5
-// the other way round for the same reason. The fix is codegen-neutral
-// everywhere else -- flipping the header body and the b/c arguments of all
-// ~15 call sites (cameralib, sunmodel, JPAParticle, CameraJetCoaster,
-// CameraBGCheck, graph, fireWanwan, ...) cancels out at every inlined site,
-// because only this TU emits the body -- but it touches files this batch may
-// not edit.
+// JGVec3.hpp's `scaleAdd(scale, b, c)` is `x = b.x * scale + c.x`: the scaled
+// operand is the first reference parameter. Retail's only out-of-line copy in
+// the whole game is the one this TU emits, `lfs f2, 0(r4); lfs f0, 0(r5);
+// fmadds f0, f2, f1, f0`, and the three `bl scaleAdd` sites below pass r4/r5
+// to match it.
 struct MapMirrorVecs {
 	/* 0x0 */ JGeometry::TVec3<f32> mTarget;
 	/* 0xC */ JGeometry::TVec3<f32> mUp;
@@ -77,12 +70,12 @@ void TMirrorCamera::makeMirrorViewMtx()
 	MapMirrorPlane plane(this);
 	MapMirrorVecs vecs;
 
-	unk98.scaleAdd(plane.calcReflectScale(gpCamera->unk124),
-	               gpCamera->unk124, plane.mNormal);
+	unk98.scaleAdd(plane.calcReflectScale(gpCamera->unk124), plane.mNormal,
+	               gpCamera->unk124);
 	vecs.mTarget.scaleAdd(plane.calcReflectScale(gpCamera->unk148),
-	                      gpCamera->unk148, plane.mNormal);
-	vecs.mUp.scaleAdd(plane.calcReflectScale(gpCamera->mUp), gpCamera->mUp,
-	                  plane.mNormal);
+	                      plane.mNormal, gpCamera->unk148);
+	vecs.mUp.scaleAdd(plane.calcReflectScale(gpCamera->mUp), plane.mNormal,
+	                  gpCamera->mUp);
 
 	C_MTXLookAt(unk30, unk98, vecs.mUp, vecs.mTarget);
 }

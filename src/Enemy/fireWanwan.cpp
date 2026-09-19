@@ -97,7 +97,7 @@ void TTailRubber::reset(const JGeometry::TVec3<f32>& param_1,
 
 	for (int i = 1; i < unk0.size() - 1; ++i) {
 		JGeometry::TVec3<f32> pos;
-		pos.scaleAdd(f32(i) / f32(unk0.size()), param_1, diff);
+		pos.scaleAdd(f32(i) / f32(unk0.size()), diff, param_1);
 
 		Node& node = unk0[i];
 		node.mPos.set(pos);
@@ -1265,7 +1265,7 @@ void TFireWanwan::updatePollute()
 	mPolluteTimer = getSaveParam2()->mPolluteTimerMax.get();
 	MtxPtr mtx    = getModel()->getBaseTRMtx();
 	JGeometry::TVec3<f32> v1(mtx[0][0], mtx[1][0], mtx[2][0]);
-	v1.scaleAdd((MsRandF() - 0.5f) * 2.0f * mAttackRadius, mPosition, v1);
+	v1.scaleAdd((MsRandF() - 0.5f) * 2.0f * mAttackRadius, v1, mPosition);
 
 	f32 radius = 375.0f;
 	if (isAttacking())
@@ -1633,7 +1633,7 @@ void TFireWanwan::bind()
 		// Reflect velocity on the plane of collision -- "bounce off"
 		f32 fVar1 = mVelocity.dot(totalNormal);
 		if (fVar1 < 0.0f)
-			mVelocity.scaleAdd(abs(fVar1 * 2.0f), mVelocity, totalNormal);
+			mVelocity.scaleAdd(abs(fVar1 * 2.0f), totalNormal, mVelocity);
 
 		f32 rot = MsGetRotFromZaxisY(mVelocity);
 		mRotation.set(0.0f, MsAngleWrap(rot), 0.0f);
@@ -1761,7 +1761,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 			               - normal.dot(JGeometry::TVec3<f32>(
 			                   actualPoint.x, mGroundHeight, actualPoint.z)));
 			if (fVar4 > 0.0f)
-				actualPoint.scaleAdd(fVar4, actualPoint, normal);
+				actualPoint.scaleAdd(fVar4, normal, actualPoint);
 		} else {
 			actualPoint.y = mGroundHeight + 1.0f;
 		}

@@ -967,7 +967,7 @@ s16 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos,
 	matrix.getTrans(origin);
 	relative.sub(pos, origin);
 	radial.setLength(relative, 1.0f);
-	tangent.scaleAdd(-radial.dot(offset), offset, radial);
+	tangent.scaleAdd(-radial.dot(offset), radial, offset);
 	relative.add(tangent);
 	return matan(z.dot(relative), x.dot(relative));
 }
@@ -1080,7 +1080,7 @@ void TBathtub::updatePosture_()
 		axis.cross(y, up);
 		axis.normalize();
 		axis.scale(unk16C->rebound.get() * (rate * -acosf(y.dot(up))));
-		mAngleVel.scaleAdd(unk16C->angleVelDamp.get(), axis, mAngleVel);
+		mAngleVel.scaleAdd(unk16C->angleVelDamp.get(), mAngleVel, axis);
 	}
 
 	JGeometry::TQuat4<f32> dq;

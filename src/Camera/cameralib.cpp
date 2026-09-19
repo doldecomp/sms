@@ -397,7 +397,7 @@ void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_center, S16Vec* out_euler,
 	dir.sub(lookat, origin);
 	normalizeInner2(dir);
 
-	out_center->scaleAdd(near_dist, origin, dir);
+	out_center->scaleAdd(near_dist, dir, origin);
 
 	f32 xzDistance = MsSqrtf(((origin.x - lookat.x) * (origin.x - lookat.x)
 	                          + (origin.z - lookat.z) * (origin.z - lookat.z)));
@@ -450,10 +450,10 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 	f32 fVar6 = -fVar3;
 	f32 fVar7 = -fVar5;
 
-	out_grid[1].scaleAdd(fVar3, out_grid[4], local_68);
-	out_grid[7].scaleAdd(fVar6, out_grid[4], local_68);
-	out_grid[3].scaleAdd(fVar7, out_grid[4], local_74);
-	out_grid[5].scaleAdd(fVar5, out_grid[4], local_74);
+	out_grid[1].scaleAdd(fVar3, local_68, out_grid[4]);
+	out_grid[7].scaleAdd(fVar6, local_68, out_grid[4]);
+	out_grid[3].scaleAdd(fVar7, local_74, out_grid[4]);
+	out_grid[5].scaleAdd(fVar5, local_74, out_grid[4]);
 
 	// Anything below here could be part of CLBCalcNearFourPos?
 
@@ -462,21 +462,21 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 
 	f32 halfPlaneDiagonal = MsSqrtf(fVar3 * fVar3 + fVar5 * fVar5);
 
-	local_90.scaleAdd(fVar7, fVar19, local_74);
+	local_90.scaleAdd(fVar7, local_74, fVar19);
 	MsVECNormalize(&local_90, &local_90);
 
-	out_grid[0].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+	out_grid[0].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
 	local_90.negate();
-	out_grid[8].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+	out_grid[8].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
 
 	local_90.x = (f32)(fVar16.x + fVar19.x);
 	local_90.y = (f32)(fVar16.y + fVar19.y);
 	local_90.z = (f32)(fVar16.z + fVar19.z);
 	MsVECNormalize(&local_90, &local_90);
 
-	out_grid[2].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+	out_grid[2].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
 	local_90.negate();
-	out_grid[6].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
+	out_grid[6].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
 }
 
 // UNUSED in the map (0x104), and emitted before CLBCalcNearNinePos, so in

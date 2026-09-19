@@ -1862,7 +1862,7 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 	// const reference is what keeps it in memory, and that is what stops MWCC
 	// folding its 0.0f and 1.0f components away (the ROM reads all three back
 	// and multiplies each by the radius).
-	out->scaleAdd(radius, nAxis, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+	out->scaleAdd(radius, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), nAxis);
 	*out += data.getThing();
 	return true;
 }
