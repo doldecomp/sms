@@ -273,22 +273,30 @@ static inline JKRHeap* ApplicationHeap(const TApplication* p)
 	return heap;
 }
 
+// TODO: 100.0%, 8 instructions. The two SMSLoadArchiveARAM path buffers land
+// at 0x60/0x20 instead of retail's 0x64/0x24 while the two SMSLoadArchive
+// buffers (0xe8/0xa4) and the 0x140 total are exact, so the low region is 4
+// bytes short *below* the last two expansions and 4 long above them. The
+// `arc` local below is worth 0 bytes either way (closure 241).
 void* TApplication::setupThreadFuncLogo()
 {
+	void* arc = nullptr;
+
 	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK0))
 		OSYieldThread();
 	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK210))
 		OSYieldThread();
 
-	arcBufMario
-	    = SMSLoadArchive("/data/mario.arc", nullptr, 0, JKRGetRootHeap());
+	arc = SMSLoadArchive("/data/mario.arc", nullptr, 0, JKRGetRootHeap());
+	arcBufMario = arc;
 
-	arcBufCmn
-	    = SMSLoadArchive("/data/common.arc", nullptr, 0, JKRGetRootHeap());
+	arc = SMSLoadArchive("/data/common.arc", nullptr, 0, JKRGetRootHeap());
+	arcBufCmn = arc;
 
-	bufStageArcBin = JKRDvdRipper::loadToMainRAM(
+	arc = JKRDvdRipper::loadToMainRAM(
 	    "/data/stageArc.bin", nullptr, EXPAND_SWITCH_DEFAULT, 0, ApplicationHeap(this),
 	    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0, nullptr);
+	bufStageArcBin = arc;
 
 	SMSLoadArchiveARAM(&gArBkConsole, "/data/game_6.arc");
 
@@ -297,17 +305,6 @@ void* TApplication::setupThreadFuncLogo()
 	return nullptr;
 }
 
-// TODO: 0%. The ROM keeps this an 8-instruction forwarder while our build
-// expands all 57 instructions of setupThreadFuncLogo into it, so that body is
-// four statements under MWCC's 15-statement floor -- and it is already
-// byte-exact at 804 bytes, so the four statements have to be codegen-free.
-// Spelling the two ARAM waits as `while (true) { if (ready) break;
-// OSYieldThread(); }` is exactly +4 and lands this function at 100%, but it
-// turns the loops' bottom test into a top test and costs setupThreadFuncLogo
-// 100 -> 97.8, so it is not the shape. `JKRHeap* rootHeap =
-// JKRGetRootHeap();` is one defensible statement (retail holds the root heap
-// in callee-saved r28 across both SMSLoadArchive calls); three more are
-// missing.
 static void* SetupThreadFuncLogo(void* param)
 {
 	return ((TApplication*)param)->setupThreadFuncLogo();
