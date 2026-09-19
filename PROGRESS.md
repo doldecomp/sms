@@ -739,6 +739,55 @@ durch pauschale Anwendung auf automatisch gefundene Kandidatenlisten.
 Alle 24 Versuche sauber zurückgesetzt (`git checkout`), keine toten
 `trash`-Deklarationen im Baum verblieben.
 
+### Nach einundzwanzigster Iterationsrunde (Nerve-Vergleichsfehler-Suche: 4 Bugfixes)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,96 % (1.506.296 / 3.590.088) | +476 Bytes |
+| Funktionen matched | 8.645 / 12.881 | +1 |
+
+Neue Methodik: automatisierte Suche nach `__vt__`-Symbolabweichungen
+an identischer Instruktionsposition (gleiche Adresse, unterschiedlicher
+Vtable-Name) über alle 260 zuvor gescannten Units — ein zuverlässigeres
+Signal für echte Logikfehler als reine Stackframe-Gaps. 38 Treffer,
+davon 4 echte, über die rohe Retail-Disassembly bestätigte Bugs:
+
+- `Enemy/fireWanwan.cpp::TFireWanwan::attackToMario` — Nerve-
+  Ausschlussprüfung verglich gegen `TNerveFireWanwanRecover::
+  theNerve()` statt `TNerveFireWanwanRecoverGraph::theNerve()`.
+  **100 %** (476 Bytes) nach Fix.
+- `Enemy/tamaNoko.cpp::TTamaNoko::isCollidMove` — Trample-Message-
+  Guard verglich gegen `TNerveTamaNokoSleep::theNerve()` statt
+  `TNerveTamaNokoDown::theNerve()`. **100 %** nach Fix.
+- `Enemy/hinokuri2.cpp::THinokuri2::receiveMessageLv1` — Water-
+  Spray-Schadenszweig setzte `TNerveHino2Freeze` statt
+  `TNerveHino2Damage` als nächsten Nerve. 99,55 % → 99,81 % nach
+  Fix (separater, nicht behobener 16-Byte-Frame-/Register-Rest).
+- `Enemy/hinokuri2.cpp::TNerveHino2PrePol::execute` — `Pollute`-
+  und `Stamp`-Zweige vertauscht (if-Zweig sollte `Stamp` pushen,
+  else-Zweig `Pollute`, nicht umgekehrt). 98,68 % → 98,99 % nach
+  Fix (separater, nicht behobener `getSaveParam()`-Feldzugriffspfad-
+  Rest bei Index 30 der Instruktionsliste).
+
+Beide Hinokuri2-Fixes werden trotz nicht erreichter 100 % behalten
+(anders als bei spekulativen `trash`-Experimenten): Sie sind über die
+rohe Disassembly bestätigte echte Verhaltenskorrekturen, keine
+Vermutungen.
+
+Weitere `__vt__`-Kandidaten geprüft, aber als zu komplex für schnelle
+Fixes eingestuft (keine Änderung vorgenommen): `MarioUtil/MtxUtil.cpp::
+TMultiMtxEffect::setup` (91,28 %, drei verschachtelte Switch-Case-
+Objektkonstruktionen mit unterschiedlicher Registerreihenfolge),
+`GC2D/CardLoad.cpp::TCardLoad::perform` (97,49 %, bereits im
+Quelltext als upstream-TODO dokumentiert: Jump-Table vs.
+Compare-Chain ist die Hauptursache), `System/MarDirectorInitECT.cpp::
+TMarDirector::initECTGft` (90,76 %, mehrteilige Kamera/Ortho-
+Objektkonstruktions-Reihenfolge, nicht in vertretbarer Zeit
+aufgelöst). `MarioUtil/ShadowUtil.cpp::drawShadowGD`-Treffer sind
+reine anonyme `$NNNN`-Zähler-Artefakte (verschiedene lokale
+Typ-Ordinalzahlen zwischen unserem und dem Retail-Build), keine
+echten Bugs.
+
 Die Referenz-DOL bleibt `OK`.
 
 ## Windows-Setup
@@ -1063,6 +1112,12 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `Enemy/gesso.cpp`: `TGesso::rollCheck` — **100 %** (`char trash[8]`
   am Funktionsanfang).
+
+- `Enemy/fireWanwan.cpp`: `TFireWanwan::attackToMario` — **100 %**
+  (476 Bytes, Bugfix: falscher Nerve-Vergleich).
+
+- `Enemy/tamaNoko.cpp`: `TTamaNoko::isCollidMove` — **100 %**
+  (Bugfix: falscher Nerve-Vergleich).
 
 ## Nächster GMSJ01-Kandidat
 
