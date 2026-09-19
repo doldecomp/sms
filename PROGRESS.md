@@ -954,6 +954,74 @@ erneut durchgeführt: keine neuen Kandidaten seit Runde 22 (dieselben
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach fünfundzwanzigster Iterationsrunde (Tiefenanalyse `pulling`/`control`: ein Fehlalarm, ein bekanntes TODO)
+
+Zwei der in Runde 24 dokumentierten Kandidaten per Rohdisassembly
+(`build/GMSJ01/asm/…`) vollständig nachgeprüft, gemäß Methodik-Regel
+dieser Session:
+
+- `Player/MarioSpecial.cpp::TMario::pulling` — der vermutete
+  Bit-Test-Fehler (`rlwinm. r0,r0,0,22,22` vs. angeblich `...,21,21`
+  im Ziel) ist ein **bestätigter Fehlalarm**. Die rohe Retail-
+  Disassembly (Zeile 1737 in `MarioSpecial.s`) zeigt an exakt dieser
+  Stelle ebenfalls Bit 22 — unser Code ist dort bereits korrekt. Das
+  `objdiff-cli diff`-JSON war an dieser Position falsch ausgerichtet
+  (derselbe Artefakt-Typ wie beim bereits dokumentierten
+  `doActorToWire`-Fund). Kein Fix nötig; frühere Vermutung aus Runde
+  24 hiermit korrigiert.
+
+- `Strategic/liveactor.cpp::TLiveActor::control` — die rohe Retail-
+  Disassembly vollständig nachvollzogen (57 Instruktionen,
+  `build/GMSJ01/asm/Strategic/liveactor.s` Zeile 862ff). Bestätigt:
+  Der Quelltext hat an ZWEI Stellen einen reinen Kommentar-Stub
+  (`// call on unk90`) statt eines echten virtuellen Aufrufs auf
+  `unk90` (Vtable-Offset 0x10, über eine sekundäre Vtable bei
+  `unk90+0x5c`). `unk90` ist als `void*` untypisiert und wird im
+  gesamten sichtbaren Quelltext nirgends auf einen Nicht-Null-Wert
+  gesetzt (nur `nullptr`-Initialisierung im Konstruktor) — der
+  bestehende Kommentar `// TODO: was ist unk90???` markiert dies
+  bereits als offen. Eine Korrektur erfordert, `unk90`s tatsächlichen
+  Typ zu bestimmen (vermutlich eine polymorphe Klasse mit
+  Sekundär-Vtable, evtl. verwandt mit `TSpineBase`s eigenem
+  0x24-Offset-Muster) — außerhalb des Zeitrahmens für einen
+  risikoarmen Fix in dieser Runde; als offener Fall dokumentiert statt
+  spekulativ mit einem geratenen Typnamen committet (Projektregel:
+  keine Vermutungen als Fakten).
+
+Die Referenz-DOL bleibt `OK`.
+
+### Nach sechsundzwanzigster Iterationsrunde (echter `mVelocity`-Bugfix in `smallEnemy::attackToMario`)
+
+Verbleibende Feld-Offset-Scan-Kandidaten (`ModelWaterManager::drawMirror`
+90,04 %, `ModelWaterManager::calcVMMtxGround` 62,49 %,
+`TSmallEnemy::attackToMario` 87,31 %) einzeln per Rohdisassembly
+geprüft:
+
+- `drawMirror`/`calcVMMtxGround`: gestreute strukturelle Diffs (177 von
+  540 Instruktionen bei `drawMirror`, mehrere INSERT/DELETE-Cluster ab
+  früher Instruktion) — kein isolierbarer Einzel-Bug, sondern verteilt
+  über die ganze GX-lastige Funktion. Als offener Fall dokumentiert statt
+  weiterverfolgt.
+
+- `TSmallEnemy::attackToMario` — **echter Bugfix gefunden und behoben**:
+  Rohdisassembly (`build/GMSJ01/asm/Enemy/smallEnemy.s` Zeile 3719ff)
+  zeigt, dass `mVelocity.set(local_20)` im Ziel NUR `mVelocity.x`
+  (Offset `0xac`) und `mVelocity.z` (`0xb4`) beschreibt — `mVelocity.y`
+  (`0xb0`) wird nie gestored. Auf `mVelocity.x = local_20.x; mVelocity.z
+  = local_20.z;` umgestellt: **87,31 % → 90,44 %**. Passt inhaltlich zu
+  einem Angriffs-Lunge, der nur die horizontale Ebene beeinflusst und
+  die vertikale Geschwindigkeit unangetastet lässt. Restdiff (90,44 %)
+  ist ein reiner Stack-Slot-Wiederverwendungs-Unterschied: Ziel legt für
+  den lokalen `v`-Vektor einen frischen Slot bei `0x14(r1)` an,
+  unser Build wiederverwendet den toten `local_20`-Slot bei `0x20(r1)`
+  (beide Frames sind exakt `0x40` Bytes groß — keine Frame-Differenz,
+  reine Alias-Optimierung). `char trash[0xc]` vor der `v`-Deklaration
+  getestet: verschlechtert auf 90,22 %, sofort zurückgesetzt. Verbleibt
+  als MWCC-interne Slot-Alias-Entscheidung, nicht über Source
+  erzwingbar.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -1085,6 +1153,26 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 - `NPC/NpcManager.cpp`: `makePartsModelData_` (336 Bytes, 99,98 %).
   `sdlModel`-Local liegt 4 Bytes höher (`0x20` statt `0x1c`); Umordnen der
   `loadFlags`/`initInfo`-Deklaration ohne Wirkung.
+
+- `Strategic/liveactor.cpp`: `TLiveActor::control` (73,96 %). Quelltext
+  hat zwei reine Kommentar-Stubs (`// call on unk90`) statt echter
+  virtueller Aufrufe; `unk90` ist `void*` (untypisiert) und wird im
+  sichtbaren Quelltext nirgends auf Nicht-Null gesetzt — bereits als
+  `// TODO: was ist unk90???` markiert. Per Rohdisassembly bestätigt:
+  Aufruf über Sekundär-Vtable bei `unk90+0x5c`, Offset 0x10. Fix
+  erfordert Typbestimmung von `unk90`, nicht in dieser Runde geleistet.
+
+- `Player/ModelWaterManager.cpp`: `TModelWaterManager::drawMirror`
+  (90,04 %) und `calcVMMtxGround` (62,49 %). Gestreute strukturelle
+  Diffs (177/540 Instruktionen bei `drawMirror`, mehrere INSERT/DELETE-
+  Cluster) über die ganze GX-lastige Funktion verteilt — kein
+  isolierbarer Einzel-Bug.
+
+- `Enemy/smallEnemy.cpp`: `TSmallEnemy::attackToMario` (90,44 % nach
+  Bugfix, siehe Gematcht-Liste). Restdiff ist ein MWCC-interner Stack-
+  Slot-Alias-Unterschied (Ziel legt für `v` einen frischen Slot an,
+  wir nutzen den toten `local_20`-Slot wieder), Frame ist beidseitig
+  `0x40` Bytes — nicht über Source erzwingbar.
 
 ## Gematchte GMSJ01-Funktionen
 
