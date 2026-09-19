@@ -2784,6 +2784,29 @@ lohnt sich, gezielt nach kleinen (< 150 Byte) Funktionen mit sehr
 niedrigem Match (< 60 %) zu suchen, da diese oft echte fehlende
 Logik statt bloßer Padding-Lücken markieren.
 
+**`TBathtub::tumble(f32, f32)` — Logik erfolgreich rekonstruiert,
+aber Byte-Match durch globales `-fp_contract on` blockiert**: Retail
+berechnet (Bound-Flag-Guard `unk29A` vorausgesetzt) `mag = param_2 *
+0.0001f` (Literalwert `0x38D1B717` bestätigt), Winkel-Skalierung
+`param_1 * 182.04445` (= `65536/360`, bestätigt `0x43360B61` —
+identisch mit `MsSin`/`MsCos`s interner Konstante) und aktualisiert
+`unk1E8 += mag * cos(angle)`, `unk1EC += 0.0f`, `unk1F0 -= mag *
+sin(angle)`. Semantik vollständig verstanden, aber zwei
+Compiler-Codegen-Eigenheiten verhindern Byte-Genauigkeit: (a)
+Retail berechnet den Tabellenindex EINMAL für sin+cos gemeinsam,
+unser `MsCos(x)`/`MsSin(x)` (zwei getrennte Aufrufe derselben Formel)
+lässt den Compiler die Winkel-Skalierung ZWEIMAL berechnen — kein
+CSE über die beiden (potenziell geinlineten) Aufrufe hinweg; (b)
+Retail nutzt separate `fmuls`+`fadds` für `unk1E8 +=`, unser Code
+erzeugt (wegen des projektweiten `-fp_contract on`-Compiler-Flags)
+immer ein fusioniertes `fmadds` — nicht pro Datei/Funktion
+abschaltbar, ohne das globale Flag zu ändern (Risiko: würde andere
+bereits gematchte Funktionen zerstören). Zurückgesetzt, 0 Commit.
+Als gut vorbereiteter Kandidat für eine künftige Session mit einer
+Idee zur `fp_contract`-Umgehung (z. B. `volatile`-Zwischenspeicher
+oder ein anderer Ausdrucksaufbau) vorgemerkt.
+
+
 
 
 ## Nächster GMSJ01-Kandidat
