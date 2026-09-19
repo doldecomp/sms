@@ -1011,9 +1011,20 @@ bool TOptionControl::movementOption2Card()
 	return false;
 }
 
+// Binding level over a raw member read, worth +8 of low region and the
+// volatile-register rotation in isChangedSetting.
+static inline TOptionRumbleUnit* OptionRumbleUnit(const TOptionControl* p)
+{
+	TOptionRumbleUnit* unit = p->mRumbleOption;
+	return unit;
+}
+
 void TOptionControl::setType(TOptionControl::SelectType type,
                              bool initial_options_entry)
 {
+	// TODO: 8 bytes of frame short (target 0x30, ours 0x28); every
+	// instruction matches. A TU-local binder over mRumbleOption at any one
+	// site here is +0x10, not +8, so the rung is wrong, not the class.
 	if (mSelectedOption != type || initial_options_entry) {
 		mSelectedOption = type;
 		switch (type) {
@@ -1105,11 +1116,9 @@ void TOptionControl::writeValue()
 
 bool TOptionControl::isChangedSetting() const
 {
-	// TODO: 8 bytes of frame short (target 0x60, ours 0x58); every
-	// instruction matches, so this is a low-region temp, not structure.
 	bool result = true, soundResult = result;
 
-	if (mInitialRumbleValue == mRumbleOption->getValue()
+	if (mInitialRumbleValue == OptionRumbleUnit(this)->getValue()
 	    && mInitialSoundValue == mSoundOption->getValue())
 		soundResult = false;
 
