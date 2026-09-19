@@ -1699,13 +1699,31 @@ void TBossEel::calcAndSetCollisionCubeBite_()
 	                     7000.0f * mScaling.z);
 }
 
+static inline JGeometry::TVec3<f32>* BosseelMarioPos()
+{
+	JGeometry::TVec3<f32>* pos = gpMarioPos;
+	return pos;
+}
+
+static inline TBossEelEye* BosseelEye(const TBossEel* p, s32 i)
+{
+	TBossEelEye* eye = p->mEyes[i];
+	return eye;
+}
+
+static inline TBossEelEye* BosseelPairedEye(const TBossEel* p, s32 i)
+{
+	TBossEelEye* eye = BosseelEye(p, i)->mPairedEye;
+	return eye;
+}
+
 void TBossEel::updateTearsCnt()
 {
 	static const s32 eyeTable[] = { 0, 2, 1, 3 };
 
 	++mTearCycleTimer;
 	s32 interval = mSaveParams->mSLGenTearsTime.get();
-	f32 height   = fabsf(mPosition.y - gpMarioPos->y);
+	f32 height   = fabsf(mPosition.y - BosseelMarioPos()->y);
 	if (height > 30000.0f)
 		interval *= 4;
 	else if (height > 15000.0f)
@@ -1715,16 +1733,16 @@ void TBossEel::updateTearsCnt()
 
 	if (mTearCycleTimer == interval - 100) {
 		s32 eyeIndex = eyeTable[mTearEyeIndex];
-		mEyes[eyeIndex]->setBckAnm(1);
-		mEyes[eyeIndex]->mPairedEye->setBckAnm(1);
+		BosseelEye(this, eyeIndex)->setBckAnm(1);
+		BosseelPairedEye(this, eyeIndex)->setBckAnm(1);
 	}
 
 	if (mTearCycleTimer > interval) {
 		mTearCycleTimer = 0;
 		s32 eyeIndex    = eyeTable[mTearEyeIndex];
-		MtxPtr spawnMtx = mEyes[eyeIndex]->getConnectedMtx();
-		mEyes[eyeIndex]->setBckAnm(1);
-		mEyes[eyeIndex]->mAnimationLoopCount = 0;
+		MtxPtr spawnMtx = BosseelEye(this, eyeIndex)->getConnectedMtx();
+		BosseelEye(this, eyeIndex)->setBckAnm(1);
+		BosseelEye(this, eyeIndex)->mAnimationLoopCount = 0;
 		shedTears(spawnMtx);
 		mTearEyeIndex += 1;
 		if (mTearEyeIndex >= 4)
@@ -1794,6 +1812,18 @@ void TBossEel::shedTears(MtxPtr spawnMtx)
 // Also short by 0x30 of frame (0x28 vs 0x58) with every instruction matching; an
 // unreferenced `Mtx` local does not grow it here, so the missing locals belong to
 // an inline expansion, most likely TBossEelEye::setBckAnm's accessor chain.
+static inline bool BosseelTearEyeToggle(const TBossEel* p)
+{
+	bool toggle = p->mTearEyeToggle;
+	return toggle;
+}
+
+static inline TBossEelEye* BosseelShedEye(const TBossEel* p, s32 i)
+{
+	TBossEelEye* eye = BosseelEye(p, i);
+	return eye;
+}
+
 #pragma dont_inline on
 void TBossEel::forceShedTears(bool rearEyes)
 {
@@ -1801,7 +1831,7 @@ void TBossEel::forceShedTears(bool rearEyes)
 	s32 eyeIndex;
 	if (!rearEyes) {
 		eyeIndex = 0;
-		if (mTearEyeToggle)
+		if (BosseelTearEyeToggle(this))
 			eyeIndex = 1;
 	} else {
 		eyeIndex = 2;
@@ -1809,9 +1839,9 @@ void TBossEel::forceShedTears(bool rearEyes)
 			eyeIndex = 3;
 	}
 
-	MtxPtr spawnMtx = mEyes[eyeIndex]->getConnectedMtx();
-	mEyes[eyeIndex]->setBckAnm(1);
-	mEyes[eyeIndex]->mAnimationLoopCount = 0;
+	MtxPtr spawnMtx = BosseelShedEye(this, eyeIndex)->getConnectedMtx();
+	BosseelEye(this, eyeIndex)->setBckAnm(1);
+	BosseelEye(this, eyeIndex)->mAnimationLoopCount = 0;
 	shedTears(spawnMtx);
 }
 #pragma dont_inline off
