@@ -92,12 +92,14 @@ public:
 
 	explicit TVec3(f32 value) { setAll(value); }
 
+#pragma dont_inline on
 	TVec3(const TVec3& other)
 	{
 		// NOTE: yes, this has to use lwz/stw and not lfs/stf.
 		// Checked via MarioCollision.cpp where this is not inlined
 		*(Vec*)this = *(Vec*)&other;
 	}
+#pragma dont_inline off
 
 #pragma dont_inline on
 	TVec3& operator=(const TVec3& other)
@@ -124,12 +126,14 @@ public:
 	}
 #pragma dont_inline off
 
+#pragma dont_inline on
 	template <class TY> void set(TY x_, TY y_, TY z_)
 	{
 		x = x_;
 		y = y_;
 		z = z_;
 	}
+#pragma dont_inline off
 
 	template <class TY> void set(const TVec3<TY>& other)
 	{
@@ -335,6 +339,7 @@ public:
 
 	void normalize(const TVec3& other) { setLength(other, TUtil<f32>::one()); }
 
+#pragma dont_inline on
 	void setLength(const TVec3& v, f32 length)
 	{
 		f32 lsq = v.squared();
@@ -345,6 +350,7 @@ public:
 
 		scale(length * JGeometry::TUtil<f32>::inv_sqrt(lsq), v);
 	}
+#pragma dont_inline off
 
 	void setMax(const TVec3& max)
 	{
