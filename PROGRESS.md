@@ -148,6 +148,14 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   Funktion, Frame identisch. `threadData`-Scope auf den `onMemory`-Block
   verengt: keine Änderung. Rest nicht in vertretbarer Zeit lösbar.
 
+- `Camera/CameraMode.cpp`: `CPolarSubCamera::isNormalCameraCompletely`
+  (144 Bytes, 72,86 %). Original inlined `isNormalCameraSpecifyMode(int)`
+  komplett als Switch-Jump-Table (`lwzx`/`mtctr`/`bctr`) an BEIDEN Aufrufstellen
+  (`mMode` und `mPrevMode`); unser Build ruft die separate Funktion via `bl`
+  auf. MWCC-Auto-Inline-Heuristik, nicht über Source-Umbau erzwingbar ohne
+  Pragma-Kenntnis; strukturell verwandt mit dem bereits dokumentierten
+  `fabricatedInline3`-TODO in `NpcManager::clipEnemies`.
+
 - `NPC/NpcManager.cpp`: `TNPCManager::clipEnemies` (784 Bytes, 92,70 %).
   Bereits im Quelltext als upstream-`TODO` markiert
   ("figure out these inlines ... fabricatedInline3 matches in camera itself
