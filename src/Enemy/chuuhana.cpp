@@ -896,10 +896,11 @@ void TChuuHana::checkStretchType()
 
 	if (mSpine->getCurrentNerve() == &TNerveChuuHanaKeepBalance::theNerve()) {
 		// Balancing: a large enough bounce flips it over.
+		int size  = mInstanceIndex;
 		f32 limit = unk1B4->mSLReverseHeightS.get();
-		if (mInstanceIndex > 0)
+		if (size > 0)
 			limit = unk1B4->mSLReverseHeightM.get();
-		if (mInstanceIndex > 2)
+		if (size > 2)
 			limit = unk1B4->mSLReverseHeightL.get();
 
 		if (swing > limit) {
@@ -907,47 +908,51 @@ void TChuuHana::checkStretchType()
 			unk214 = 1;
 			mSpine->pushNerve(&TNerveChuuHanaFall2::theNerve());
 			mSpine->pushNerve(&TNerveChuuHanaJumpPrepare::theNerve());
+			return;
 		}
+	}
+
+	// Otherwise it is being stretched: big, medium or small.
+	((TChuuHanaManager*)mManager)->unk6C++;
+
+	int size = mInstanceIndex;
+	f32 big  = unk1B4->mSLStretchHeightS.get();
+	if (size > 0)
+		big = unk1B4->mSLStretchHeightM.get();
+	if (size > 2)
+		big = unk1B4->mSLStretchHeightL.get();
+
+	if (swing > big) {
+		unk1B1 = 0;
+		unk214 = 0;
+		setBckAnm(8);
+		mSpine->pushNerve(&TNerveChuuHanaForceJumped::theNerve());
 	} else {
-		// Otherwise it is being stretched: big, medium or small.
-		((TChuuHanaManager*)mManager)->unk6C++;
+		int mediumSize = mInstanceIndex;
+		f32 medium     = unk1B4->mSLMediumStretchHeightS.get();
+		if (mediumSize > 0)
+			medium = unk1B4->mSLMediumStretchHeightM.get();
+		if (mediumSize > 2)
+			medium = unk1B4->mSLMediumStretchHeightL.get();
 
-		f32 big = unk1B4->mSLStretchHeightS.get();
-		if (mInstanceIndex > 0)
-			big = unk1B4->mSLStretchHeightM.get();
-		if (mInstanceIndex > 2)
-			big = unk1B4->mSLStretchHeightL.get();
-
-		if (swing > big) {
+		if (swing > medium) {
 			unk1B1 = 0;
 			unk214 = 0;
-			setBckAnm(8);
+			setBckAnm(9);
 			mSpine->pushNerve(&TNerveChuuHanaForceJumped::theNerve());
 		} else {
-			f32 medium = unk1B4->mSLMediumStretchHeightS.get();
-			if (mInstanceIndex > 0)
-				medium = unk1B4->mSLMediumStretchHeightM.get();
-			if (mInstanceIndex > 2)
-				medium = unk1B4->mSLMediumStretchHeightL.get();
+			int smallSize = mInstanceIndex;
+			f32 small     = unk1B4->mSLSmallStretchHeightS.get();
+			if (smallSize > 0)
+				small = unk1B4->mSLSmallStretchHeightM.get();
+			if (smallSize > 2)
+				small = unk1B4->mSLSmallStretchHeightL.get();
 
-			if (swing > medium) {
+			if (swing > small) {
 				unk1B1 = 0;
 				unk214 = 0;
-				setBckAnm(9);
+				setBckAnm(10);
 				mSpine->pushNerve(&TNerveChuuHanaForceJumped::theNerve());
-			} else {
-				f32 small = unk1B4->mSLSmallStretchHeightS.get();
-				if (mInstanceIndex > 0)
-					small = unk1B4->mSLSmallStretchHeightM.get();
-				if (mInstanceIndex > 2)
-					small = unk1B4->mSLSmallStretchHeightL.get();
-
-				if (swing > small) {
-					unk1B1 = 0;
-					unk214 = 0;
-					setBckAnm(10);
-					mSpine->pushNerve(&TNerveChuuHanaForceJumped::theNerve());
-				}
 			}
 		}
 	}
