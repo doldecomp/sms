@@ -15,6 +15,7 @@ JPABaseEmitter::JPABaseEmitter()
     : unk0(this)
     , mRng(0)
 {
+	char trash[8];
 	MTXIdentity(mGlobalRotation);
 
 	mGlobalDynamicsScale.set(1.0f, 1.0f, 1.0f);
