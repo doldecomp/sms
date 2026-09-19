@@ -499,8 +499,8 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 	case 0:
 		setMessage(unkA0, 0x200, getCurMessageID());
 		setMessage(unkA4, 0x200, getCurMessageID());
-		setMessage(unkD8, 0x200, 0);
-		setMessage(unkDC, 0x200, 0);
+		setMessage(unkD8, 0x200, 1);
+		setMessage(unkDC, 0x200, 1);
 
 		unkA4->hide();
 		unk48->getPane()->show();
