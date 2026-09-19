@@ -43,8 +43,7 @@ f32 TMario::getJumpSlideControl() const
 
 static inline TWaterGun* TMarioCanSquatGetFludd(const TMario* p)
 {
-	const TMario* mario = p;
-	TWaterGun* fludd    = mario->mWaterGun;
+	TWaterGun* fludd = p->getFludd();
 	return fludd;
 }
 
