@@ -2194,9 +2194,9 @@ DEFINE_NERVE(TNerveBGRoll, TLiveActor)
 				else
 					return true;
 			}
-
-			return false;
 		}
+
+		return false;
 	} else {
 		if (spine->getTime() == 0)
 			self->changeBck(17);
