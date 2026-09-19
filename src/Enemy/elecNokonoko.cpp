@@ -249,7 +249,7 @@ void TElecNokonoko::rest()
 void TElecNokonoko::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
-	rest();
+	reset();
 }
 
 void TElecNokonoko::setMActorAndKeeper()
