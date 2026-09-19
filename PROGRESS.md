@@ -370,6 +370,48 @@ bereits exakt, 4-Byte-Slot-Versatz).
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach elfter Iterationsrunde (JDRDisplay, CameraMarioData, JAIGlobalParameter)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,63 % (1.494.420 / 3.590.088) | +744 Bytes |
+| Funktionen matched | 66,83 % (8.608 / 12.881) | +3 |
+
+Drei neue 100-%-Matches:
+
+- `JSystem/JDrama/JDRDisplay.cpp::TDisplay::startRendering` (248 Bytes,
+  `char trash[8]`, keine Locals).
+- `Camera/CameraMarioData.cpp::TCameraMarioData::calcAndSetMarioData`
+  (356 Bytes, `char trash[8]` nach `JGeometry::TVec3<f32> offset`).
+- `JSystem/JAudio/JAInterface/JAIGlobalParameter.cpp::
+  setParamSoundOutputMode` (140 Bytes, `char trash[8]` am
+  Funktionsanfang, zwei skalare Locals `r31`/`r30`).
+
+Vier weitere Funktionen in derselben Scan-Runde als Nonmatching
+bestätigt (nach neuem Protokoll sofort zurückgesetzt statt
+Zwischenwerte zu verfolgen):
+
+- `JSystem/JDrama/JDRActor.cpp::JDrama::TActor::load` (99,93 % clean,
+  340 Bytes) — Frame stimmt exakt, 4-Byte-Slot-Versatz für
+  `char str[0x50]`; beide getesteten `trash[4]`-Positionen
+  (vor/nach `str`) verschlechtern identisch auf 99,82 %.
+- `NPC/NpcInbetween.cpp::TNpcInbetween::execPosInbetween` (99,09 %
+  clean, 220 Bytes) — reines f1/f2-Register-Rotationsmuster, kein
+  Frame-Unterschied, dieselbe Kategorie wie `effectObj::moveObject`.
+- `Camera/CameraBck.cpp::TCameraBck::updateDemo` (98,96 % clean,
+  452 Bytes) — 24-Byte-Frame-Gap **plus** eine echte
+  Doppel-Bool-Normalisierung auf der Zielseite (eine zusätzliche
+  `li r0, 0x1`/`cmpwi r0, 0x0`-Sequenz vor der finalen
+  `result`-Zuweisung, die unser Build nicht erzeugt — `checkState()`
+  ist bereits `? 1 : 0`-normalisiert inline, daher unklar, wodurch die
+  Ziel-Redundanz entsteht). `char trash[0x18]` nach `J3DTransformInfo
+  info` bewegt den Match kaum (98,96 % → 99,03 %); zurückgesetzt.
+- `JSystem/JDrama/JDREfbSetting.cpp::IssueGXCopyDisp` (99,50 % clean,
+  404 Bytes) — kein Frame-Unterschied, reines Register-Rotationsmuster
+  (r0/r3/r4) für einen booleschen Ausdruck.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -615,6 +657,15 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `JSystem/JAudio/JASystem/JASDSPChannel.cpp`: `TDSPChannel::updateAll`
   — **100 %** (552 Bytes, `char trash[0x18]`).
+
+- `JSystem/JDrama/JDRDisplay.cpp`: `TDisplay::startRendering` —
+  **100 %** (248 Bytes, `char trash[8]`).
+
+- `Camera/CameraMarioData.cpp`: `TCameraMarioData::calcAndSetMarioData`
+  — **100 %** (356 Bytes, `char trash[8]`).
+
+- `JSystem/JAudio/JAInterface/JAIGlobalParameter.cpp`:
+  `setParamSoundOutputMode` — **100 %** (140 Bytes, `char trash[8]`).
 
 ## Nächster GMSJ01-Kandidat
 
