@@ -214,12 +214,13 @@ static void initStage()
 
 void TMap::updateDelfino()
 {
-	int cube = gpCubeArea->unk1C;
-	if (cube != mWarp->unk8) {
+	TMapWarp* warp = mWarp;
+	int cube       = gpCubeArea->unk1C;
+	if (cube != warp->unk8) {
 		if (cube != -1)
-			mWarp->changeModel(cube);
+			warp->changeModel(cube);
 		else if (gpMarDirector->getCurrentStage() != 0)
-			mWarp->changeModel(3);
+			warp->changeModel(3);
 	}
 }
 
@@ -255,17 +256,12 @@ void TMap::update()
 		break;
 	}
 
-	if (gpMarDirector->unk124 != 0)
-		return;
-
-	if (gpCamera->isDemoCamera())
+	if (gpMarDirector->unk124 != 0 || gpCamera->isDemoCamera())
 		return;
 
 	if (gpMarDirector->getCurrentMap() == 0x39
-	    || gpMarDirector->getCurrentMap() == 0x10)
-		return;
-
-	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
+	    || gpMarDirector->getCurrentMap() == 0x10
+	    || SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
 		return;
 
 	const JGeometry::TVec3<f32>& camPos = gpCamera->getUnk124();
