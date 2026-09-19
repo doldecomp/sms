@@ -955,7 +955,10 @@ DEFINE_NERVE(TNerveHanaSamboDie, TLiveActor)
 {
 	// The map names this jIndexTable$3048, the mangling of a function-local
 	// static, so it lives inside the nerve body rather than at file scope.
-	static const int jIndexTable[4] = { 1, 3, 4, 5 };
+	// It is not const: the map puts it in .data, between entry$2896 and
+	// entry$3090, and a const copy lands in .rodata and pushes every string
+	// after it 0x10 high.
+	static int jIndexTable[4] = { 1, 3, 4, 5 };
 
 	THanaSambo* sambo = (THanaSambo*)spine->getBody();
 	if (spine->getTime() == 0) {
