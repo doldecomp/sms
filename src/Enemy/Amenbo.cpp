@@ -248,7 +248,8 @@ bool TAmenbo::doKeepDistance() { return !isAttacking(); }
 
 void TAmenbo::attackToMario()
 {
-	if (isAttacking())
+	bool attacking = isAttacking();
+	if (attacking)
 		sendAttackMsgToMario();
 }
 
@@ -445,7 +446,8 @@ bool TAmenbo::isOverTerritory(JGeometry::TVec3<f32>* param_1) const
 bool TAmenbo::isAttacking() const
 {
 	bool result;
-	if (mSpine->getLatestNerve() != &TNerveAmenboHitWater::theNerve())
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	if (nerve != &TNerveAmenboHitWater::theNerve())
 		result = true;
 	else if (mMActor->checkCurAnm("amenbo_hit1_end", ANM_TYPE_BCK))
 		result = true;
