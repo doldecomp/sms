@@ -110,23 +110,27 @@ void TBaseNPC::execWalk(bool param_1)
 // The compare really is `mRotation.y == targetYaw` (retail's `fcmpu cr0, f3,
 // f0` puts the member first); reversing it costs nothing and is the ROM's
 // operand order.
-// TODO: frame 0x60 vs 0x58 and one `fmr f2, f0` retail has and we lack (it
-// loads the returned `.y` into f0 for the compare and copies it into f2, which
-// the MsWrap loop then consumes, so retail read the value twice and MWCC
-// CSE'd it). Spelling the difference unnamed
-// (`MsGetRotFromZaxis(unkF4.getPoint() - mPosition).y`) reproduces retail's
-// slot *structure* -- both objects in the temp pool with the struct-return
-// slot above the difference, where a named local puts the return slot below --
-// but leaves every vector offset 4 low (0x58 frame, 98.8%); `getUnkF4()` or
-// `getPosition()` on top of that lands 0x60 and the exact offsets at the cost
-// of one extra instruction and an r3/r4 argument swap (98.0/97.0). Naming the
-// returned vector instead is 78.9%. Two locals with the compare reversed was
-// 97.3.
+// TODO: 99.0%, frame 0x60 exact and every stack offset exact. The unnamed
+// difference spelling reproduces retail's slot structure at 0x58, and the
+// missing 4 bytes are bought by a direct-return fork over `mIndividualParams`
+// (batch 172's +4 rung: +4 of pool below and +4 above, instruction-neutral
+// here, where the `getUnkF4()`/`getPosition()` route costs an instruction and
+// still lands 97.9%). Two `~` are left, and they are one residue: retail
+// materialises the struct-return slot address in r3 *before* the difference
+// temporary's in r4 (we emit them the other way round) and then loads the
+// returned `.y` into f0 for the compare, copying it into f2 with an `fmr` for
+// the MsWrap loop, where our reversed argument order lets the load land in f2
+// directly. Refuted here: naming the returned vector (78.9%), naming the
+// difference (98.8% at the wrong structure), two locals with the compare
+// reversed (97.3%).
+static inline TNpcSaveIndividual* NpcUTurnParams(const TBaseNPC* p)
+{
+	return p->mIndividualParams;
+}
+
 bool TBaseNPC::execUTurn()
 {
-	JGeometry::TVec3<f32> local_24 = unkF4.getPoint();
-	local_24 -= mPosition;
-	f32 targetYaw = MsGetRotFromZaxis(local_24).y;
+	f32 targetYaw = MsGetRotFromZaxis(unkF4.getPoint() - mPosition).y;
 	if (mRotation.y == targetYaw)
 		return true;
 
@@ -146,7 +150,7 @@ bool TBaseNPC::execUTurn()
 	}
 
 	BOOL r = CLBChaseGeneralConstantSpecifySpeed(
-	    &mRotation.y, targetYaw, mIndividualParams->mUTurnSpeed.get());
+	    &mRotation.y, targetYaw, NpcUTurnParams(this)->mUTurnSpeed.get());
 	mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
 	if (!r)
 		result = true;
