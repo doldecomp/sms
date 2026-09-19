@@ -6,6 +6,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 
 ## Structure: calls, control flow, load/store order
 
+- In the 99.5-99.99 band, a `~`-only cluster whose operands do **not** mention `r1` is a wrong member, constant or vtable slot (17 of 25); map `lwz r12, N(r12)` to a name via the `__vt__` relocations, and `(asmOffset - structOffset - 24) / 20` is a `TParamRT` index (codegen-tells.md: "Tell sweep 267").
 - Match control flow and call order first, load/store order second (frame-gaps.md: "Diagnosing").
 - `if (a || b) return;` leaves the last operand unfused (`beq +8; b end`); two `if`s fuse both (codegen-tells.md: "Control flow").
 - A redundant `bcc next; b epilogue` pair means that test is one term of a wider `||` (codegen-tells.md: "batch 65").
