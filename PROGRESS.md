@@ -2559,6 +2559,26 @@ Schritt `OK`. Projekt-Gesamtfortschritt laut `objdiff-cli report`:
 Code-Match 41,98 % → 44,41 % (**+2,43 Prozentpunkte**), reflektiert
 ausschließlich diese Session (0 Commits hinter `upstream/main`).
 
+### Runde 37 Batch 8: vollständiger Sweep aller 249 Einheiten abgeschlossen (3 weitere Funktionen)
+
+Batch 7 deckte nur die ersten 130 von 249 Einheiten (nach Kandidaten-
+dichte sortiert) ab; Batch 8 verarbeitet die restlichen 119 bei
+identischen Schwellwerten: 3 von 40 Kandidaten bestätigt (7,5 %),
+darunter `TMapObjBase::calcRootMatrix` — bemerkenswert, da
+`TMapObjBase::getDistance` (dieselbe Klasse, Runde 36) sich als
+resistent gegen `char trash[N]` erwiesen hatte; die beiden Funktionen
+fallen also in unterschiedliche Gap-Kategorien trotz gemeinsamer
+Klasse.
+
+Damit ist der Sweep über alle 249 `populated`-Einheiten bei den
+gelockerten Schwellwerten (75–100 % Match, ≤ 3.000 Bytes, Gap ≤ 0x50,
+`ndiff` ≤ 15) vollständig abgeschlossen.
+
+**Session-Endstand nach Runde 37 (alle acht Batches): 361
+tatsächlich verifizierte Funktionen** (77 aus Runde 1–36 plus 284
+neue in Runde 37) in 37 Commits. Funktionszahl: 8663 → **8948**
+(**+285**). DOL SHA1 bleibt bei jedem Schritt `OK`.
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
