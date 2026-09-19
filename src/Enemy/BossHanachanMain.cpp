@@ -117,7 +117,8 @@ TBossHanachan::TBossHanachan(const char* name)
 
 void TBossHanachan::setRandomWeakBodyIndex()
 {
-	mWeakBodyIndex = 8.0f * MsRandF();
+	f32 rand       = MsRandF();
+	mWeakBodyIndex = 8.0f * rand;
 }
 
 void TBossHanachan::init(TLiveManager* manager)
