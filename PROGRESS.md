@@ -2985,6 +2985,43 @@ Sessions sollten kleinere Chunk-Größen (≤ 100 Kandidaten pro
 Eval-Aufruf) mit expliziten Zwischen-Commits verwenden, um das
 Wiederherstellungsrisiko zu begrenzen.
 
+### Nach dreiundvierzigster Iterationsrunde (Klein-Chunk-Methodik bestätigt crash-sicher: 7 weitere Funktionen)
+
+Direkte Anwendung der in Runde 42 dokumentierten Empfehlung:
+Batch-Größe auf ≤ 100 Kandidaten pro Eval-Aufruf begrenzt, mit
+explizitem Zwischen-Rebuild/-Commit/-Push nach jedem Chunk. Ergebnis:
+**0 Kernel-Abstürze über 6 aufeinanderfolgende Chunks** (im Gegensatz
+zu den zwei Abstürzen in Runde 42 bei größeren Batches). Nebenfund:
+`git add` normalisiert CRLF-Zeilenenden bereits selbst beim Staging
+(vermutlich via `.gitattributes`/`core.autocrlf`) — Dateien, deren
+Inhalt nach Normalisierung identisch mit `HEAD` ist, werden gar nicht
+erst in den Commit aufgenommen. Der bisher praktizierte manuelle
+CRLF-Erkennungs-/Rücksetzungsschritt vor jedem Commit war unnötig
+(aber harmlos); künftige Sessions können direkt `git add src/ && git
+commit` nutzen und nur bei `git status`-Verdacht auf echte Inhalte
+prüfen.
+
+**Kandidatenpool-Abschluss für kleine Funktionen** (≤ 800 Bytes,
+99,5–100 % Match): 488 + 87 = 575 Kandidaten über alle Einheiten
+vollständig verarbeitet, **7 Treffer** (`TRoulette::TRoulette`,
+`TAmenbo::doKeepDistance`, `TLightDrawBuffer::TLightDrawBuffer`,
+`TBossEelEye::TBossEelEye`, `JPABaseEmitter::JPABaseEmitter`,
+`TMapObjBillboard::touchActor`, `TSunGlass::loadAfter`).
+
+**Größeres Funktionsband erstmals vollständig geprüft** (800–2500
+Bytes, 99,5–100 % Match, 145 Kandidaten über 83 Einheiten): **0
+Treffer** — bestätigt erneut die Runde-40-Erkenntnis, dass die
+Erfolgsquote mit wachsender Funktionsgröße gegen null geht, auch
+innerhalb des sonst produktiven Match-Prozent-Bands.
+
+**Session-Gesamtstand nach Runde 43: 396 tatsächlich verifizierte
+Funktionen** (389 aus Runde 1–42 plus 7 neue in Runde 43) in 53
+Commits. Funktionszahl: 8976 → **8983** (**+7**). DOL SHA1 bleibt
+`OK`. Der ≤ 800-Byte-Kandidatenpool im 99,5–100-%-Band ist jetzt
+vollständig ausgeschöpft; verbleibende Kandidaten liegen
+überwiegend in größeren, resistenten Funktionen.
+
+
 
 
 
