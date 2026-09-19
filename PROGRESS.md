@@ -454,6 +454,42 @@ bestätigt:
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach dreizehnter Iterationsrunde (SDLModel: entrySameMat, viewCalcSimple)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,68 % (1.496.332 / 3.590.088) | +552 Bytes |
+| Funktionen matched | 66,90 % (8.614 / 12.881) | +2 |
+
+Zwei neue 100-%-Matches in `M3DUtil/SDLModel.cpp`:
+`SDLModelData::entrySameMat` (308 Bytes, `char trash[8]`) und
+`SDLModel::viewCalcSimple` (216 Bytes, `char trash[8]`), beide
+8-Byte-Frame-Gaps ohne Struct-Locals.
+
+Sechs weitere Funktionen aus derselben Scan-Runde als Nonmatching
+bestätigt (kein 100-%-Match, sofort zurückgesetzt):
+
+- `M3DUtil/SDLModel.cpp::SDLModelData::entrySDLModels` (99,87 % clean,
+  508 Bytes) — `char trash[8]` nach den Iterator-Locals `it`/`e`
+  erreicht keine 100 % (99,90 % best).
+- `M3DUtil/SDLModel.cpp::SDLModel::entry` (99,75 % clean, 384 Bytes)
+  — `char trash[0x10]` erreicht keine 100 % (99,80 % best).
+- `Map/MapXlu.cpp::TMapXlu::changeNormalJoint` (99,92 % clean,
+  256 Bytes) und `changeXluJoint` (99,84 % clean, 280 Bytes) —
+  Ziel-Frame ist **größer** als unseres; `char trash[0x10]`/`[8]` am
+  Funktionsanfang wird vom Compiler komplett wegoptimiert (keinerlei
+  Änderung an unserer kompilierten Größe oder am Match-Prozentsatz),
+  da die Locals in diesen reinen Doppel-`for`-Schleifen-Funktionen
+  ohne jede andere Verwendung nachweisbar tot sind.
+- `Enemy/areacylinder.cpp::TAreaCylinder::load` (99,94 % clean,
+  604 Bytes) — `char trash[8]` nach `JGeometry::TVec3<f32> v` erreicht
+  keine 100 %.
+- `GC2D/MovieSubtitle.cpp::TMovieSubTitle::setupResource` (99,88 %
+  clean, 404 Bytes) — `char trash[8]` vor/nach `char buffer[256]`
+  identisch wirkungslos (99,93 % best, beide Positionen).
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -718,6 +754,10 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `Map/PollutionPos.cpp`: `TPollutionPos::isSame` — **100 %**
   (212 Bytes, `char trash[0x20]`).
+
+- `M3DUtil/SDLModel.cpp`: `SDLModelData::entrySameMat` (308 Bytes) und
+  `SDLModel::viewCalcSimple` (216 Bytes) — je **100 %** (`char trash[8]`).
+  `entrySDLModels`, `entry` bleiben Nonmatching (siehe oben).
 
 ## Nächster GMSJ01-Kandidat
 
