@@ -2045,11 +2045,11 @@ void TMario::thinkSituation()
 	offFlag(MARIO_FLAG_VISIBLE);
 	offFlag(MARIO_FLAG_UNK_20);
 
-	if (mGroundPlane->isUnderground())
+	if (MarioEnforceJumpGround(this)->isUnderground())
 		onFlag(MARIO_FLAG_VISIBLE);
 
 	if (isMario() && isTouchGround4cm() && mStatus != MARIO_STATUS_DISAPPEAR
-	    && (mGroundPlane->isIllegalData() || mGroundPlane->isOob())) {
+	    && (MarioEnforceJumpGround(this)->isIllegalData() || MarioEnforceJumpGround(this)->isOob())) {
 		mOobKillTimer += mDeParams.mIllegalPlaneCtInc.get();
 		if (mOobKillTimer > mDeParams.mIllegalPlaneTime.get())
 			decHP(mDeParams.mHPMax.get());
@@ -2060,7 +2060,7 @@ void TMario::thinkSituation()
 	}
 
 	if (isMario()) {
-		if (checkFlag(MARIO_FLAG_VISIBLE) == true
+		if (MarioMoveCheckFlag(this, MARIO_FLAG_VISIBLE) == true
 		    && checkPrevFlag(MARIO_FLAG_VISIBLE) == false)
 			MSBgm::startBGM(MSD_BGM_UNDERGROUND);
 
@@ -2091,8 +2091,8 @@ void TMario::thinkSituation()
 	                         mPosition.z, unk1F0);
 
 	mLightID = 0;
-	if (mGroundPlane->isShadow() && mFloorPosition.y + 200.0f > mPosition.y) {
-		mLightID = mGroundPlane->getData();
+	if (MarioEnforceJumpGround(this)->isShadow() && mFloorPosition.y + 200.0f > mPosition.y) {
+		mLightID = MarioEnforceJumpGround(this)->getData();
 		if (mLightID == 1)
 			onFlag(MARIO_FLAG_UNK_20);
 	}
@@ -2109,10 +2109,10 @@ void TMario::thinkSituation()
 		}
 	}
 
-	if (mGroundPlane->isUnk300()) {
+	if (MarioEnforceJumpGround(this)->isUnk300()) {
 		if (onYoshi())
 			getOffYoshi(false);
-		gpMarDirector->setNextStage(mGroundPlane->getData(), nullptr);
+		gpMarDirector->setNextStage(MarioEnforceJumpGround(this)->getData(), nullptr);
 		offUnk114(UNK114_FLAG_VISIBLE);
 		offUnk114(UNK114_FLAG_DO_OCCLUSION_PROBE);
 	}
@@ -2140,12 +2140,12 @@ void TMario::thinkSituation()
 
 void TMario::thinkWaterSurface()
 {
-	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000))
+	if (MarioMoveStatusType(this, MARIO_STATUS_FLAG_UNK10000))
 		return;
 
-	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
+	BOOL wasInWater = MarioMoveCheckFlag(this, MARIO_FLAG_IN_ANY_WATER);
 	int isInWater   = 0;
-	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == true)
+	if (MarioMoveCheckFlag(this, MARIO_FLAG_IN_ANY_WATER) == true)
 		isInWater = 1;
 	else
 		mFloorPosition.z = mPosition.y;
@@ -2153,7 +2153,7 @@ void TMario::thinkWaterSurface()
 	offFlag(MARIO_FLAG_IN_SHALLOW_WATER);
 	offFlag(MARIO_FLAG_IN_WATER);
 
-	if (mGroundPlane->isPool()) {
+	if (MarioEnforceJumpGround(this)->isPool()) {
 		mFloorPosition.z = gpPoolManager->getWaterLevel(mGroundPlane);
 		if (mFloorPosition.z > mPosition.y) {
 			isInWater = 1;
@@ -2201,9 +2201,9 @@ void TMario::thinkWaterSurface()
 				rippleEffect();
 			swimmingBubbleEffect();
 
-			u32 statusId  = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
+			u32 statusId  = getStatus() & MARIO_STATUS_TYPE_AND_ID_MASK;
 			bool canEnter = true;
-			if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
+			if (MarioMoveStatusType(this, MARIO_STATUS_FLAG_SWIMMING))
 				canEnter = false;
 			if (isFencing())
 				canEnter = false;
@@ -2218,7 +2218,7 @@ void TMario::thinkWaterSurface()
 				mForwardVel *= mSwimParams.mStartVMult.get();
 				mVel.y *= mSwimParams.mStartVYMult.get();
 
-				if (checkStatusType(MARIO_FLAG_IN_WATER)) {
+				if (MarioMoveStatusType(this, MARIO_FLAG_IN_WATER)) {
 					changePlayerStatus(MARIO_STATUS_SWIM_P_DAMAGE, 0, true);
 				} else if (checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 					changePlayerStatus(MARIO_STATUS_SWIM_PADDLE, 0, true);
@@ -2232,7 +2232,7 @@ void TMario::thinkWaterSurface()
 		} else if (mFloorPosition.z
 		           < mPosition.y
 		                 + mWaterEffectParams.mRunningRippleDepth.get()) {
-			if (mStatus == MARIO_STATUS_RUN) {
+			if (getStatus() == MARIO_STATUS_RUN) {
 				if (getMotionFrameCtrl().checkPass(38.0f)
 				    || getMotionFrameCtrl().checkPass(8.0f))
 					runningRippleEffect();
@@ -2242,13 +2242,14 @@ void TMario::thinkWaterSurface()
 		}
 	}
 
-	if (mGroundPlane->isWetGround() && mStatus == MARIO_STATUS_RUN) {
+	if (MarioEnforceJumpGround(this)->isWetGround()
+	    && getStatus() == MARIO_STATUS_RUN) {
 		if (getMotionFrameCtrl().checkPass(38.0f)
 		    || getMotionFrameCtrl().checkPass(8.0f))
 			runningRippleEffect();
 	}
 
-	BOOL nowInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
+	BOOL nowInWater = MarioMoveCheckFlag(this, MARIO_FLAG_IN_ANY_WATER);
 
 	J3DGetTranslateRotateMtx(0, mModelFaceAngle, 0, mPosition.x,
 	                         mFloorPosition.z, mPosition.z, unk220);
@@ -2265,14 +2266,14 @@ void TMario::thinkWaterSurface()
 			// exited water
 			mWetWaterParticleTimer = 120;
 			if (depth < 32.0f) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_VSL,
-				                                &mPosition, 0, nullptr, 0, 4);
+				MarioMoveGetMSound()->startSoundActor(
+				    MSD_SE_MA_JUMP_FR_WATER_VSL, &mPosition, 0, nullptr, 0, 4);
 			} else if (depth < 80.0f) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_SLW,
-				                                &mPosition, 0, nullptr, 0, 4);
+				MarioMoveGetMSound()->startSoundActor(
+				    MSD_SE_MA_JUMP_FR_WATER_SLW, &mPosition, 0, nullptr, 0, 4);
 			} else {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_JUMP_FR_WATER_DEP,
-				                                &mPosition, 0, nullptr, 0, 4);
+				MarioMoveGetMSound()->startSoundActor(
+				    MSD_SE_MA_JUMP_FR_WATER_DEP, &mPosition, 0, nullptr, 0, 4);
 			}
 		} else {
 			// entered water
@@ -2318,7 +2319,7 @@ void TMario::thinkWaterSurface()
 
 void TMario::thinkSand()
 {
-	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == false
+	if (MarioMoveCheckFlag(this, MARIO_FLAG_IN_ANY_WATER) == false
 	    && mGroundPlane->isSand() == true) {
 		onFlag(MARIO_FLAG_ON_SAND);
 		emitSandEffect();
@@ -2333,10 +2334,10 @@ void TMario::thinkParams()
 	if (mInvincibilityFrames > 0)
 		mInvincibilityFrames -= 1;
 	if (!checkFlag(MARIO_FLAG_GAME_OVER)) {
-		if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
+		if (MarioMoveCheckFlag(this, MARIO_FLAG_IN_ANY_WATER)) {
 			if (!isUnderWater()) {
 				if (mWaterFloor->isThing5() && mWaterFloor->isThing5()
-				    && !checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
+				    && !MarioMoveStatusType(this, MARIO_STATUS_FLAG_UNK10000)) {
 					floorDamageExec(getDmgMapCode(mWaterFloor->getData()));
 				}
 			}
