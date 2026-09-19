@@ -993,7 +993,7 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 		                      fruit->mPosition.x - mPosition.x);
 		mState = 0xB;
 		unk150 = fruit;
-		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_PRETTY, 0, nullptr,
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_YOSHI, 0, nullptr,
 		                                   0);
 	} else if (animIsFinished()) {
 		startAnim(2);
