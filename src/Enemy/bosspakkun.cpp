@@ -1742,7 +1742,7 @@ DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
 	BosspakkunGetMarioParticleManager()->emitAndBindToMtxPtr(
 	    BOSSPAKKUN_JPA_MS_BOPA_WATHIT, mouth, 1, boss);
 	BosspakkunGetMarioParticleManager()->emitAndBindToMtxPtr(
-	    BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W, mouth, 1, boss + 1);
+	    BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W, mouth, 1, (u8*)boss + 1);
 
 	if (boss->unk170 != 0) {
 		boss->changeBck(BOSSPAKU_BCK_WATER_HIT);
