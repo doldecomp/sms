@@ -117,17 +117,25 @@ public:
 	f32 getWallRadius() const { return mBodyScale * mWallRadius; }
 	f32 getBodyRadius() const { return mBodyScale * mBodyRadius; }
 	f32 getBodyScale() const { return mBodyScale; }
-	// u8, not u32: TStayPakkun::setBehavior divides by it with divwu and
-	// PakkunRootCallback compares against it after a clrlwi, both of which
-	// need the narrowed type. The (u8) on the constant matters too -- with a
-	// plain 1 the ternary is an int expression and MWCC narrows it on the way
-	// out, which is one instruction more than TFireWanwan::updateHitPoint has
-	// (73.4 against 73.9); with both operands u8 the narrowing moves into the
-	// clamp's comparison where retail has it. Writing the body as two returns
-	// does the same.
+	// u8, not int: TStayPakkun::setBehavior divides by it with divwu,
+	// PakkunRootCallback compares against it after a clrlwi and
+	// TEffectEnemy::perform divides by it, all of which need the narrowed
+	// return type -- an `int` return costs those three their exact match
+	// (effectEnemy unlinks) for the same bosstelesa gain this spelling gets
+	// for free (header round 38).
+	// The constant is a plain `1`, not `(u8)1`: that makes the ternary an
+	// int expression which MWCC narrows once on the way out, and that single
+	// post-merge `clrlwi` is what the sites reading the result into a `u8`
+	// local want -- TNerveBossTelesaFreeze::execute 98.5 -> 99.7,
+	// TNerveBossTelesaHideWait +1.1, TNerveBossTelesaPrepareSlot +0.3, with
+	// TFireWanwan::receiveMessage, TStayPakkun::setBehavior,
+	// PakkunRootCallback and TEffectEnemy::perform all still exact.
+	// Priced: TFireWanwan::moveObject 76.2 -> 75.6 and TBossManta::init
+	// 99.07 -> 99.01, both already nonmatching, both wanting the narrowing
+	// one statement later than we put it.
 	u8 getMaxHitPoints() const
 	{
-		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : (u8)1;
+		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	}
 
 	// fabricated TODO: remove
