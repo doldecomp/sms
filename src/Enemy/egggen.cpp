@@ -31,6 +31,7 @@ void TEggGenerator::init(TLiveManager* manager)
 
 void TEggGenerator::control()
 {
+	char trash[0x18];
 	if (VECSquareDistance(&mPosition, &gpMarioOriginal->mPosition)
 	    < 250000.0f) {
 		if (!gpMarioOriginal->mYoshi->isHatched())

@@ -77,6 +77,10 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `char trash[0x20]` stellt den originalen 0x48-Byte-Stackframe wieder her;
   danach matchen auch `.text`, `.data`, `.bss` und `.sdata` der Unit zu 100 %.
 
+- `Enemy/egggen.cpp`: `TEggGenerator::control` — **100 %** (120 Bytes).
+  `char trash[0x18]` reproduziert den 0x30-Byte-Stackframe; anschließend
+  matchen `.text`, `.rodata`, `.data` und `.sdata2` der Unit zu 100 %.
+
 ## Nächster GMSJ01-Kandidat
 
 Noch auszuwählen.
