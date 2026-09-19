@@ -890,7 +890,7 @@ f32 TKoopa::getFlameDirRate() const
 			rate = 1.0f;
 
 		if (index == KOOPA_ANM_FIRE_END)
-			return rate * (1.0f - frame / end);
+			rate *= 1.0f - frame / end;
 		return rate;
 	}
 	}
