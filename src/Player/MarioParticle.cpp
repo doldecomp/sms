@@ -420,6 +420,7 @@ static const s32 warpInEffectIDs[] = {
 
 void TMario::warpInEffect()
 {
+	char trash[0x18];
 	for (int i = 0; i < 10; i++) {
 		u16 boneIdx;
 		switch (i) {

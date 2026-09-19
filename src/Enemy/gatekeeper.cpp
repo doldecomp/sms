@@ -629,6 +629,7 @@ void TBiancoGateKeeper::emitParticles()
 
 void TBiancoGateKeeper::controlCollision()
 {
+	char trash[0x18];
 	if (mMActor->checkCurBckFromIndex(0xB)
 	    || mMActor->checkCurBckFromIndex(7)) {
 		mHead->mVulnerable = TRUE;
