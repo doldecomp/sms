@@ -77,6 +77,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - One inlined callee's expansions **share** one temp block, so a big dead low region is never one pool per expansion (frame-gaps.md: "re-pass 162").
 - Worth nothing: a scalar or trivial POD local of an inlined callee, a 4-byte local anywhere, a dead int-to-float conversion, `sqrtf`, `* 1.0f` (frame-gaps.md: "What is worth nothing").
 - Each chained `>>` continuation is 8 bytes of low region (`continuations = reads - statements`) (frame-gaps.md: "batch 81").
+- JGadget list temps split into a derived-iterator block and a base-iterator block; the dead-word position is set by inline nesting depth, not by any structural property of `std-list.hpp` (inheritance vs containment, access, operators, the batch-133 conversion are all byte-identical); its `begin`/`end`/`insert`/`push_back` bodies are swept: do not re-sweep them (frame-gaps.md: "Research batch 184").
 - An **implicit** derived-from-base conversion on a `return` reserves 16 bytes (pool 20 low / 4 high): write `return iterator(Base::insert(...));`. Retail's list walks are `++it` (frame-gaps.md: "batch 133").
 - not: `TSolidStack::push` by value (65 regressions), a local before `pushAfterCurrent`, nerve pushes as a gap size, an argument-area explanation (frame-gaps.md: "Ruled out").
 - Seven units' scores rest on fabricated padding, so they are not evidence; do not link MarioGamePad (frame-gaps.md: "Pre-existing padding").
