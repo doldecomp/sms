@@ -514,6 +514,35 @@ Fünf neue 100-%-Matches über drei Dateien:
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach fünfzehnter Iterationsrunde (MapObjBlock: fünf Matches)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,75 % (1.499.040 / 3.590.088) | +1.652 Bytes |
+| Funktionen matched | 66,95 % → 66,97 % (8.624 / 12.881) | +5 |
+
+Fünf neue 100-%-Matches in `MoveBG/MapObjBlock.cpp`:
+`TIceBlock::control` (480 Bytes, `char trash[0x10]`),
+`TIceBlock::touchWater` (392 Bytes, `char trash[0x10]`),
+`TBrickBlock::kill` (208 Bytes, `char trash[8]`),
+`TSuperHipDropBlock::receiveMessage` (160 Bytes, `char trash[8]`),
+`TTelesaBlock::perform` (412 Bytes, `char trash[8]` nach
+`TRotation3f mtx` — bereits mit Upstream-TODO "Possibly more
+TRotation3f inlines?" markiert, Trash hat trotzdem funktioniert).
+`TSandBlock::control` bleibt Nonmatching (99,93 % best mit
+`char trash[8]`, keine 100 %).
+
+Zwei weitere Funktionen aus Nachbar-Units geprüft, beide Nonmatching:
+
+- `Enemy/coasterkiller.cpp::TCoasterEnemy::bind` (220 Bytes,
+  Frame bereits exakt, interner 12-Byte-Slot-Versatz — dieselbe
+  unlösbare Kategorie).
+- `Map/MapWireManager.cpp::TMapWireManager::load` (432 Bytes,
+  99,79 % clean) — `char trash[0x10]` erreicht keine 100 %
+  (99,89 % best).
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -793,6 +822,13 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 - `MoveBG/MapObjTrap.cpp`: `TLampTrapSpikeHit::perform` (228 Bytes,
   `char trash[0x18]`) und `TLampTrapIron::receiveMessage` (164 Bytes,
   `char trash[8]`) — je **100 %**.
+
+- `MoveBG/MapObjBlock.cpp`: `TIceBlock::control` (480 Bytes),
+  `TIceBlock::touchWater` (392 Bytes) — je `char trash[0x10]`;
+  `TBrickBlock::kill` (208 Bytes), `TSuperHipDropBlock::receiveMessage`
+  (160 Bytes) — je `char trash[8]`; `TTelesaBlock::perform` (412 Bytes,
+  `char trash[8]` nach `TRotation3f mtx`) — alle **100 %**.
+  `TSandBlock::control` bleibt Nonmatching (99,93 % best).
 
 ## Nächster GMSJ01-Kandidat
 
