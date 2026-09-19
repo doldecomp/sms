@@ -90,11 +90,13 @@ public:
 		y -= other.y;
 	}
 
+#pragma dont_inline on
 	void sub(const TVec2& fst, const TVec2& snd)
 	{
 		x = fst.x - snd.x;
 		y = fst.y - snd.y;
 	}
+#pragma dont_inline off
 
 	void scale(f32 scale)
 	{
@@ -115,7 +117,9 @@ public:
 		return (x >= other.x) && (y >= other.y) ? true : false;
 	}
 
+#pragma dont_inline on
 	T dot(const TVec2& other) const { return x * other.x + y * other.y; }
+#pragma dont_inline off
 
 	T cross(const TVec2& other) const { return x * other.y - y * other.x; }
 
