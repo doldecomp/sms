@@ -115,12 +115,14 @@ public:
 
 	void zero() { x = y = z = 0.0f; }
 
+#pragma dont_inline on
 	void set(const Vec& v)
 	{
 		x = v.x;
 		y = v.y;
 		z = v.z;
 	}
+#pragma dont_inline off
 
 	template <class TY> void set(TY x_, TY y_, TY z_)
 	{
