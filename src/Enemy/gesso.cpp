@@ -536,6 +536,8 @@ void TGesso::setPolluteGoal()
 		                     SMS_GetMarioPos().y,
 		                     SMS_GetMarioPos().z + range.rand());
 
+		// TODO: retail's third argument is the member at this+0x1b8, not a
+		// stack slot, so this call takes a member reference we do not have.
 		JGeometry::TVec3<f32> local;
 		calcVelocityToJumpToY(local, polluteObjSpeed, polluteObjGravity);
 		mPolluteVelocity = local;
@@ -545,7 +547,7 @@ void TGesso::setPolluteGoal()
 		mPolluteVelocity.y = 0.0f;
 		mPolluteVelocity.z -= mPosition.z;
 		MsVECNormalize(&mPolluteVelocity, &mPolluteVelocity);
-		f32 polluteObjLinerSp = unk1E8->mSLPolluteObjLinerSp.get();
+		f32 polluteObjLinerSp = unk1E8->mSLPolluteObjLinerSp.value;
 		mPolluteVelocity.x *= polluteObjLinerSp;
 		mPolluteVelocity.y = 0.0f;
 		mPolluteVelocity.z *= polluteObjLinerSp;

@@ -251,8 +251,8 @@ void TBPPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mState == BOSSPAKU_POLDROP_STAMPED) {
 			JGeometry::TVec3<f32> scale;
-			scale.x = scale.y = scale.z
-			    = mOwner->getSaveParam2()->mSLPollBallStampScale.get();
+			scale.z = scale.y = scale.x
+			    = mOwner->getSaveParam2()->mSLPollBallStampScale.value;
 			mStampMActor->getModel()->setBaseScale(scale);
 			MTXCopy(mtx, mStampMActor->getModel()->getBaseTRMtx());
 		}
