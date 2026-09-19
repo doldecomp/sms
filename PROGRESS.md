@@ -96,6 +96,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   voraus, dass die lokalen Variablen in einer bestimmten Reihenfolge deklariert
   sind und der Compiler die Hoists nicht zusammenlegt.
 
+- `Player/SplashManager.cpp`: `TSplashManager::makeDL` (392 Bytes, 99,95 %).
+  Original reserviert Color-Struct bei `0x58(r1)`, unsere Version bei `0x54(r1)`
+  (4-Byte-Differenz). Varianten `u32 pad` bzw. zusätzliche `JGeometry::TVec3`
+  erreichten 99,82 %/99,63 % – schlechter.
+
 - `MoveBG/MapObjPollution.cpp`: `loadAfter` (172 Bytes, 88,07 %).
   Quellaufruf von `registerRevivalTexStamp` arbeitet mit `int/short`-Parametern;
   eine forcierte `(s16)/(s32)`-Typisierung brachte keine Änderung. Differenz
