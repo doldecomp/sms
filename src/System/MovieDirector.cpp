@@ -35,7 +35,7 @@ public:
 		ENDING_FADE_OUT      = 3,
 	};
 
-	TEndingString(const char* name);
+	TEndingString(const char* name = "EndingString");
 
 	virtual ~TEndingString() { }
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -234,7 +234,7 @@ int TMovieDirector::rsetup()
 	switch (gpApplication.getMovie()) {
 	case 16:
 	case 17:
-		unk34 = new TEndingString("EndingString");
+		unk34 = new TEndingString;
 		group2d->getChildren().push_back(unk34);
 		// fallthrough
 	case 18:
