@@ -18,7 +18,51 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-void TMirrorCamera::makeMirrorViewMtx() { }
+// Parked TU-local (BATCH_BRIEF rule): the mirror plane makeMirrorViewMtx
+// reflects through. The levels are measured, not decorative --
+// TMirrorModelManager::perform inlines makeMirrorViewMtx twice, once at depth
+// 2 (from the CUE_MOVE block) and once at depth 3 (through
+// TMirrorModel::entry -> TMirrorModel::calcView). Retail reaches
+// TVec3<f32>::set<f32> out of line from both and TVec3<f32>::dot out of line
+// from both, while TVec3<f32>::scaleAdd expands in the shallow copy and is
+// called in the deep one: that only works if the normal is filled one level
+// below makeMirrorViewMtx's body (this constructor) and the dot product three
+// levels below it (calcReflectScale -> calcDistance -> dot).
+struct MapMirrorPlane {
+	MapMirrorPlane(const TMirrorCamera* camera)
+	{
+		mNormal.set(camera->unk84.x, camera->unk84.y, camera->unk84.z);
+		mD = -camera->unk90;
+	}
+
+	f32 calcReflectScale(const JGeometry::TVec3<f32>& point) const
+	{
+		return -2.0f * (mNormal.dot(point) - mD);
+	}
+
+	/* 0x0 */ JGeometry::TVec3<f32> mNormal;
+	/* 0xC */ f32 mD;
+};
+
+struct MapMirrorVecs {
+	/* 0x0 */ JGeometry::TVec3<f32> mTarget;
+	/* 0xC */ JGeometry::TVec3<f32> mUp;
+};
+
+void TMirrorCamera::makeMirrorViewMtx()
+{
+	MapMirrorPlane plane(this);
+	MapMirrorVecs vecs;
+
+	unk98.scaleAdd(plane.calcReflectScale(gpCamera->unk124),
+	               gpCamera->unk124, plane.mNormal);
+	vecs.mTarget.scaleAdd(plane.calcReflectScale(gpCamera->unk148),
+	                      gpCamera->unk148, plane.mNormal);
+	vecs.mUp.scaleAdd(plane.calcReflectScale(gpCamera->mUp), gpCamera->mUp,
+	                  plane.mNormal);
+
+	C_MTXLookAt(unk30, unk98, vecs.mUp, vecs.mTarget);
+}
 
 void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -49,7 +93,13 @@ void TMirrorCamera::drawSetting(MtxPtr param_1)
 	GXLoadTexMtxImm(afStack_98, 0x1E, GX_MTX3x4);
 }
 
-void TMirrorCamera::calcEffectMtx(MtxPtr) { }
+void TMirrorCamera::calcEffectMtx(MtxPtr param_1)
+{
+	Mtx afStack_38;
+	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->mFovy,
+	                      gpCamera->mAspect, 0.5f, -0.5f, 0.5f, 0.5f);
+	MTXConcat(afStack_38, getUnk30(), param_1);
+}
 
 TMirrorCamera::TMirrorCamera(const char* name)
     : JDrama::TCamera(10.0f, 300000.0f, name)
@@ -151,9 +201,27 @@ void TMirrorModel::initPlaneInfo()
 	}
 }
 
-void TMirrorModel::entry() { }
+static inline void MapMirrorMakeViewMtx(TMirrorCamera* camera)
+{
+	camera->makeMirrorViewMtx();
+}
 
-void TMirrorModel::calcView() { }
+void TMirrorModel::entry()
+{
+	MapMirrorMakeViewMtx(unk8);
+
+	Mtx effectMtx;
+	unk8->calcEffectMtx(effectMtx);
+
+	J3DMaterial* material
+	    = unk4->getModel()->getModelData()->getMaterialNodePointer(0);
+	material->change();
+	material->getTexGenBlock()->getTexMtx(0)->setEffectMtx(effectMtx);
+
+	unk4->entry();
+}
+
+void TMirrorModel::calcView() { unk4->viewCalc(); }
 
 void TMirrorModel::getMirrorTexInfo() { }
 
@@ -256,33 +324,40 @@ bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const
 	           : false;
 }
 
+// Parked TU-local (BATCH_BRIEF rule): the inline level that puts
+// makeMirrorViewMtx at depth 2 in the CUE_MOVE block, one below the depth 3
+// it reaches through TMirrorModel::entry -> calcView in the CUE_ENTRY block.
+// The manager is taken by pointer so that both statements re-read unk24,
+// which is what retail does (two `lwz rN, 0x24(r30)`).
+static inline void MapMirrorSetPlaneFromGround(TMirrorModelManager* manager,
+                                               const TBGCheckData* ground)
+{
+	manager->unk24->setUnk84AndUnk90(ground->mNormal.x, ground->mNormal.y,
+	                                 ground->mNormal.z,
+	                                 ground->mPlaneDistance);
+	manager->unk24->makeMirrorViewMtx();
+}
+
 void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	JGeometry::TVec3<f32> local_44 = *gpMarioPos;
-	unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
-	if (!(unk18 != -1 ? true : false)
-	    && !gpMarioGroundPlane[0]->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
-		unk24->unk84 = gpMarioGroundPlane[1]->mNormal;
-		unk24->unk90 = gpMarioGroundPlane[1]->mPlaneDistance;
-
-		JGeometry::TVec3<f32> local_7C;
-		local_7C.set(unk24->unk84);
-		f32 fVar4 = (local_7C.dot(gpCamera->unk124) - -unk24->unk90) * -2.0f;
-		unk24->unk98.scaleAdd(fVar4, gpCamera->unk124, local_7C);
-		// TODO: awful vector math, one of unused functions inlined
+	if (cue & CUE_MOVE) {
+		JGeometry::TVec3<f32> local_44 = *gpMarioPos;
+		unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
+		if (!isUnk18Present()
+		    && !gpMarioGroundPlane[0]->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+			MapMirrorSetPlaneFromGround(this, gpMarioGroundPlane[0]);
 	}
 
-	if (unk18 != -1) {
+	if (isUnk18Present()) {
 		if (cue & CUE_CALC_ANIM)
 			unk1C[unk18]->calc();
 
 		if (cue & CUE_CALC_VIEW)
-			unk1C[unk18]->unk4->viewCalc();
+			unk1C[unk18]->calcView();
 
 		if (cue & CUE_ENTRY) {
 			unk1C[unk18]->setPlane();
-
-			// TODO: awful vector math, one of unused functions inlined
+			unk1C[unk18]->entry();
 		}
 	}
 }
