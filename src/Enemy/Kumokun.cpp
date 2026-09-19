@@ -502,9 +502,16 @@ void TKumokun::bindOnFlying()
 	mLinearVelocity = local_74 - mPosition;
 }
 
+// Binding level over the accessor, worth +8 of frame in TKumokun::moveObject.
+static inline int KumokunUnk1D0(const TKumokun* p)
+{
+	int v = p->unk1D0;
+	return v;
+}
+
 void TKumokun::moveObject()
 {
-	if (getUnk1D0() > 0)
+	if (KumokunUnk1D0(this) > 0)
 		unk1D0 -= 1;
 
 	updateAnimation();
