@@ -615,7 +615,7 @@ void TElecCarapace::loadInit(TSpineEnemy* host, const char* model)
 	if (TMsRange<s32>(0, 300).rand() < 150)
 		mSpinReverse = false;
 
-	mBodyRadius = 80.0f;
+	mHeadHeight = 80.0f;
 }
 
 void TElecCarapace::perform(u32 cue, JDrama::TGraphics* graphics)
