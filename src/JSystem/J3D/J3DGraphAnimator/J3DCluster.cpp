@@ -110,6 +110,25 @@ void J3DDeformer::deform(J3DModel* model, u16 idx)
 // sign-flip block, r7/r8 at the `li` before it) plus the swapped emission
 // order of the two `rlwinm ..., 20/21, 29, 29` sign-index shifts; no frame
 // lever moves them.
+// Research 219 (2026-09-19) measured the source knobs on those 18 and every
+// one is worse, so the stock body is a local optimum:
+// reusing `flag` for the `src` index (20 markers, 2 opcode diffs), a named
+// `u16* posFlag = clusterKey->mPosFlag;` (20/2), dropping the named
+// `clusterKey` in the position loop (17 but 2 opcode diffs: retail's
+// `add r7, r27, r7; lwz r7, 4(r7)` becomes `addi r7, r7, 4; lwzx r9, ...`,
+// so the named local is right) or in the normal loop (18/2), swapping the
+// declaration order of `flag` and `src` (21 -- the order below is the better
+// one), `sign[(flag >> 15) & 1]` (27/4/5/5), naming the three shift results
+// or the three `sign[]` values as locals (41 each), three `f32` locals in
+// place of the `Vec` (41), `posDstIdx[i]` in the `dst` expression (52) and
+// `cluster->mPosDstIdx[i]` in the zeroing loop (91).
+// The two surviving shapes are the same one phenomenon, and it is the one
+// that also blocks `J3DSkinDeform::initMtxIndexArray`: retail builds an
+// address chain in a single volatile register (`add r7, r27, r7` then
+// `lwz r7, 4(r7)` then `clrlslwi r7` reusing it again) where we spend a
+// fresh one per step; the `rlwinm 20`/`rlwinm 21` pair is a pure schedule
+// swap -- both sides put the y index in r7 and the z index in r6, only the
+// two slots are exchanged.
 void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 {
 	if (checkFlag(2) && model->getModelData()->isDeformableVertexFormat()) {
@@ -437,6 +456,42 @@ void J3DSkinDeform::initMtxIndexArray(J3DModelData* modelData)
 					// residue is the intermediate register (r3 for retail's
 					// r4, 2 markers against this line's 1), so the last step
 					// is a volatile-register knob, not another spelling.
+					// Research 219 (2026-09-19) names the mechanism and
+					// closes the question as unreachable from the source.
+					// The `+ 3` sink is MWCC's *address flattening*: inside
+					// one basic block every `p[reg]` use of a pointer whose
+					// definition is a chain of adds is rewritten to
+					// `add rX, base, reg` plus a displacement load, so a
+					// separate `addi 3` only survives when the flattener
+					// cannot see the definition.  Measured in a scratch TU
+					// carrying this loop nest (~40 further spellings): the
+					// sink is insensitive to the number of uses (1, 2 and 3
+					// indexed uses all sink), to an extra non-address use
+					// (`f(vtx)` sinks *and* pays its own `addi`), to a
+					// constant-0 index, to `++vtx` x3, `vtx = vtx + 3`,
+					// `vtx += sizeof(T)`, a `u8**`/`u8*&` helper,
+					// `do { } while (0)` and a later `vtx - dl` use.
+					// The chain also coalesces into ONE register the moment
+					// there is no second SSA value, which is exactly retail's
+					// `add r4, r25, r0; addi r4, r4, 3`:
+					// `u8* vtx = dl; vtx += vtxSize * k;` alone compiles to
+					// `add r4, r25, r0` -- retail's operand order *and*
+					// retail's register.  Everything that keeps the `+ 3`
+					// alive introduces a second value, and a second value
+					// that dies immediately always takes the lowest free
+					// volatile (r3) while the long-lived one takes r4: the
+					// two-object form, a `(J3DDLHdr*)vtx + 1` retype (which
+					// does block the sink), `u32` arithmetic, an inlined
+					// `p += off; return p + 3;` helper, `register`, and both
+					// declaration scopes all give r3/r4 = 2 markers.
+					// The ONE construct that reproduces retail exactly is a
+					// basic-block boundary between the two steps
+					// (`vtx += vtxSize * k; if (c) vtx += 3;`): the flattener
+					// stops at the block edge and the phi forces both defs
+					// into r4.  There is no branch there in retail's stream,
+					// so no honest source reaches it; the single-expression
+					// spelling below (1 marker, the add's operand order) is
+					// the closest form and is kept.
 					u8* vtx     = &dl[3 + vtxSize * k];
 					u8 pnmtxIdx = ((u32)(*(u8*)&vtx[pnmtxIdxOffs])) / 3;
 					u16 posIdx  = *(u16*)&vtx[posOffs];
