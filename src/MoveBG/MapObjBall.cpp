@@ -1394,10 +1394,12 @@ void TCoverFruit::calcRootMatrix()
 	if (mHolder) {
 		// While carried it simply rides the holder's matrix.
 		MtxPtr held = mHolder->getTakingMtx();
-		MTXCopy(held, getModel()->getBaseTRMtx());
-		mPosition.x = held[0][3];
-		mPosition.y = held[1][3];
-		mPosition.z = held[2][3];
+		// TODO: retail binds the model pointer and then adds getBaseTRMtx's
+		// 0x20 in a second `addi`; both the named local here and folding the
+		// call back in emit the single `addi r4, r3, 0x20`.
+		J3DModel* model = getModel();
+		MTXCopy(held, model->getBaseTRMtx());
+		mPosition.set(held[0][3], held[1][3], held[2][3]);
 	} else {
 		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
 		               mPosition.y - mYOffset, mPosition.z, getRotation().x,
