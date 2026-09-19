@@ -1103,25 +1103,23 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		// TODO: this is an inline
 
-		if (!self->resetBaseGround()) {
-			if (!self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware))
-				return false;
+		if (self->resetBaseGround()
+		    || self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware)) {
+			gpMarioParticleManager->emitAndBindToPosPtr(
+			    0xCD, &self->mPosition, 0, nullptr);
+
+			self->mImitatedBmd = nullptr;
+			self->setFlyParam(1.0f);
+
+			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+
+			SMSGetMSound()->startSoundActor(MSD_SE_EN_KM_TELSA_REVEAL,
+			                                &self->mPosition, 0, nullptr, 0, 4);
+
+			// end of inline
+
+			return true;
 		}
-
-		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->mPosition, 0,
-		                                            nullptr);
-
-		self->mImitatedBmd = nullptr;
-		self->setFlyParam(1.0f);
-
-		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_KM_TELSA_REVEAL,
-		                                &self->mPosition, 0, nullptr, 0, 4);
-
-		// end of inline
-
-		return true;
 	}
 
 	return false;
