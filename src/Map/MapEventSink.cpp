@@ -257,14 +257,15 @@ void TMapEventSinkInPollution::loadAfter()
 {
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
-		gpPollution->getCounterObj().registerPollutionObj(
+		MapEventSinkPollution()->getCounterObj().registerPollutionObj(
 		    getPollutionObj(i), &getPollutionObj(i)->mCounter);
 	}
 }
 
 TPollutionObj* TMapEventSinkInPollutionReset::getResetPollutionObj(int i)
 {
-	return gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2 + 1);
+	TMapEventSink::Unk60Struct* e = unk60;
+	return MapEventSinkPollution()->getLayer(e[i].unk0)->getObj(e[i].unk2 + 1);
 }
 
 void TMapEventSinkInPollutionReset::makeBuildingRecovered(int i)
