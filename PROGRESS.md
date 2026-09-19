@@ -69,6 +69,17 @@ sofort zurückgesetzt. Ab jetzt: Matching-Flip **immer** mit
 `JSystem/JParticle/JPADraw.cpp` `.text` jetzt vollständig 100 % (4/4
 Funktionen); Unit bleibt wegen anonymem `.sdata2`-Rest NonMatching.
 
+### Nach vierter Iterationsrunde (MapModel, MapObjOption, ItemManager, PollutionManager)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,50 % (1.489.852 / 3.590.088) | +1.740 Bytes |
+| Funktionen matched | 66,74 % (8.597 / 12.881) | +6 |
+
+Sechs neue 100-%-Matches: `TMapModel::initUnderpass`,
+`TFileLoadBlock::touchPlayer`/`receiveMessage`,
+`TItemManager::resetNozzleBoxesModel`, `TPollutionManager::clean`/`load`.
+
 Die Referenz-DOL bleibt `OK`.
 
 ### Bereiche
@@ -189,6 +200,18 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   Loop-invariant-Code-Motion-Entscheidung von MWCC, nicht über einfache
   Source-Umformulierung erzwingbar ohne Risiko einer Verhaltensänderung.
 
+- `MoveBG/MapObjWater.cpp`: `TMapObjWaterFilter::perform` (404 Bytes,
+  78,39 %). Bereits im Quelltext als upstream-`TODO` markiert
+  ("mother of all intern codes..."); komplexe Matrixrechnung
+  (`J3DGetTranslateRotateMtx`, `PSMTXScale`, `MTXInverse`, `MTXConcat`) mit
+  mehreren `Mtx`-Stack-Locals, bekannt schwierig.
+
+- `Map/PollutionManager.cpp`: `TPollutionManager::cleanedAll` (268 Bytes,
+  96,43 %). Einzeiliger Quelltext (`return getPollutionDegree() < … ? true :
+  false;`), aber `getPollutionDegree()` (Schleife über `getLayer(i)`) wird
+  komplett inlined — kein benannter Local als Anker für Padding; Register-
+  Zählungsdifferenz (r8/r7/r6 vs. r7/r6) durch die Inline-Schleife bedingt.
+
 - `NPC/NpcManager.cpp`: `TNPCManager::clipEnemies` (784 Bytes, 92,70 %).
   Bereits im Quelltext als upstream-`TODO` markiert
   ("figure out these inlines ... fabricatedInline3 matches in camera itself
@@ -264,8 +287,30 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   Unit-`.text` jetzt 100 %; bleibt NonMatching wegen anonymem
   `[.sdata2-0]`-Rest (96,77 %, ungetestet als Matching-Flip-Risiko).
 
+- `Map/MapModel.cpp`: `TMapModel::initUnderpass` — **100 %** (420 Bytes).
+  `char trash[0x20]` direkt nach dem ersten Local (`s32 nameIdx`) schließt
+  eine 32-Byte-Frame-Differenz trotz mehrerer nachfolgender Scalar-Pointer-
+  Locals ohne eigene Struct-Deklaration.
+
+- `MoveBG/MapObjOption.cpp`: `TFileLoadBlock::touchPlayer` und
+  `receiveMessage` — je **100 %** (`char trash[0x10]` am Funktionsanfang).
+  Beide inlinen `pushed()` (String-Literal `"fileloadblock"`), identisches
+  16-Byte-Frame-Muster an beiden Aufrufstellen.
+
+- `MoveBG/ItemManager.cpp`: `TItemManager::resetNozzleBoxesModel` —
+  **100 %** (272 Bytes, `char trash[8]`). `newAndRegisterCoin` bleibt bei
+  99,59 % (Rest: 12-Byte-Offset auf drei `TVec3`-Argument-Temporaries für
+  `newAndRegisterObj`, unverändert durch `trash[8]`/`[0xc]`/`[0x14]`).
+
+- `Map/PollutionManager.cpp`: `TPollutionManager::clean` (208 Bytes,
+  `char trash[8]`) und `load` (356 Bytes, `char trash[0x20]`) — je **100 %**.
+  `cleanedAll` bleibt bei 96,43 % (siehe Nonmatching-Liste).
+
 ## Nächster GMSJ01-Kandidat
 
+`ItemManager::newAndRegisterCoin` (99,59 %) und `PollutionManager::
+cleanedAll` (96,43 %) offen; größere unbearbeitete Units laut Report:
+`JSystem/JAudio/JALibrary/JALModSe.cpp` (82,88 %, 2.204 Bytes offen).
 `JSystem/J3D/J3DGraphAnimator/J3DModel.cpp::entryModelData` (1248 Bytes,
 99,76 %) — Aufteilen des inline `&mShapePackets[shape->getIndex()]`-Ausdrucks
 in einen expliziten `J3DShapePacket*`-Local behob den ersten
