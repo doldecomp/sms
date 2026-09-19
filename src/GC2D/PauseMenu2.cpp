@@ -574,11 +574,18 @@ void TPauseMenu2::setDrawStart()
 	gpMSound->pauseOn(true);
 }
 
+// Binding level over the director's console read.
+static inline TGCConsole2* PauseConsole(TMarDirector* director)
+{
+	TGCConsole2* console = director->getConsole();
+	return console;
+}
+
 void TPauseMenu2::setDrawEnd()
 {
 	SMSRumbleMgr->finishPause();
 	gpMSound->pauseOff(0);
-	gpMarDirector->getConsole()->pauseOut();
+	PauseConsole(gpMarDirector)->pauseOut();
 	mFadeAnim = 0.0f;
 	mState    = MENU_DISAPPEARING;
 }
