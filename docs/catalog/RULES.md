@@ -18,6 +18,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A mixed-type ternary's constant places the narrowing: `cond ? mSL.get() : 1` on a `u8` return narrows once after the merge (retail's `clrlwi`); widening the return re-narrows at every caller; a reference binder over a params object costs its `sizeof` (codegen-tells.md: "Header round 39").
 - not: a non-template class's in-class method retail always `bl`s (`TMapCollisionBase::setMtx`): no source shape gives weak-plus-`bl` (codegen-tells.md: "Header round 39").
 - not: making an explicitly specialised class template's empty ctor a weak `bl` (`SMatrix34C<f32>`, -35 exact, DOL broken); the out-of-class forms emit a global (codegen-tells.md: "header round 35").
+- The virtual-dtor flag is `li r4, 1` for `delete p` and `li r4, -1` for `p->~T()`; retail's `cmplwi; beq; vcall slot 8; li r4, -1` is `if (p) p->~T();` (codegen-tells.md: "Header round 45"); check a class's `new` size before touching its layout.
 - A vtable slot past the declared base's last slot means the receiver is a **derived** class, not a wrong index (codegen-tells.md: "Structural pass 173").
 - A stack or member address used at two call sites is bound once into a callee-saved register; per-site `addi` is one instruction short each time (codegen-tells.md: "Structural pass 173").
 - An `int` local feeding an `int` parameter gives `mr`, a `u8` one `addi rD, rS, 0` (codegen-tells.md: "Structural pass 173").
