@@ -838,7 +838,7 @@ void TKumokun::prepareFly()
 {
 	JGeometry::TVec3<f32> vel = getPlaneNormal();
 	vel.setLength(getSaveParam2()->mFlySpeed.get());
-	mLinearVelocity = vel;
+	mVelocity = vel;
 
 	resetHitPlaneCounter();
 
