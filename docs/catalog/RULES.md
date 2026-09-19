@@ -32,6 +32,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Count a header helper's real call sites with `objdump -dr` and `R_PPC_REL24` rows; plain `objdump -d` shows an unrelocated `bl` as a self-branch (codegen-tells.md: "Header round 32").
 - Sequential `cmpwi` = `if`/`else if`; signed `cmpwi` on a `u32` = `switch`; empty cases move the pivot (codegen-tells.md: "`tinkoopa`").
 - Materialised bool = inlined bool helper, direct branch = inline compare; both occur in one TU (codegen-tells.md: "Booleans and predicates").
+- MWCC lays `li r3, V; b epilogue` return blocks out in **source** order of the `return`s (read the branch targets to place each `return`); a commutative FPU operand swap in a `~` cluster is register allocation, not source order: do not swap operands (codegen-tells.md: "Tell sweep 269").
 - `return x==N` is branchless, `return h()` adds `clrlwi`, `?TRUE:FALSE` a second branch, `bool` branches to `li 1/0` (codegen-tells.md: "Booleans and predicates").
 - A two-`return` body plus one level is refused right of `&&`/`||`: spell `if (c) return TRUE; return FALSE;` (codegen-tells.md: "header round 9").
 - A member read-modify-write (`m.add(w)`, `m.x += w.x`) cannot hoist its loads; sum into a fresh object then `m.set(tmp)` to load all components first; a `bl` to a distance helper is identified by subtraction direction, offset-member read and sqrt form, not by name (codegen-tells.md: "Header round 44").
