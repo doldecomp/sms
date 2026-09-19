@@ -51,8 +51,16 @@ Byte-genau gegen die PAL-DOL gematcht:
 Offen für PAL: Die `VideoHeight`-Funktionen in `System/Resolution.cpp` linken,
 matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
+## Offene GMSJ01-Nonmatching-Fälle
+
+- `Player/MarioAccess.cpp`: `SMS_IsMarioOnWire` (72 Bytes, 93,83 %).
+  Das Ziel lädt `mHolder` für Nullprüfung und Typzugriff zweimal; MWCC fasst
+  die beiden Quellzugriffe zusammen. Verschachtelte Bedingungen,
+  Zugriffsmethoden sowie volatile/alias-basierte Varianten erreichten nach
+  mehreren Versuchen höchstens 96,61 %, waren aber synthetischer als die
+  saubere 93,83-%-Fassung. Gemäß Iterationsregel als `// NONMATCHING`
+  zurückgestellt.
+
 ## Nächster GMSJ01-Kandidat
 
-`Player/MarioAccess.cpp`: 93,8 % matched, nur
-`SMS_IsMarioOnWire` (72 Bytes) ist offen. Ein erster verschachtelter
-`if`-Versuch verschlechterte den Match auf 82,44 % und wurde verworfen.
+Noch auszuwählen.
