@@ -162,7 +162,13 @@ void TGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TGessoManager::initSetEnemies()
 {
-	unk60 = new TGessoPolluteModelManager;
+	// The name is spelled out rather than left to TGessoPolluteModelManager's
+	// default argument: the defaulted argument is one inline level, and with
+	// it the JDrama::TViewObj constructor lands at depth 3 and is called
+	// instead of expanded (81.21 -> 99.83).
+	// TODO: 0xc8 of dead low region left (frame 0xe8 vs 0x20); no carrier
+	// found, every instruction matches.
+	unk60 = new TGessoPolluteModelManager("ゲッソーモデル汚染");
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
@@ -962,6 +968,9 @@ void TGessoPolluteObj::rebirth()
 
 	if (unk158 == 10) {
 		mVelocity.y = -15.0f;
+		// TODO: structure is exact; the ROM loads z, y, x and only then
+		// folds 0.5f into the radius and fetches gpPollution, while we fold
+		// the radius between x and z. Scheduling residue, no lever found.
 		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
 		                   TGesso::mPollRange * 32.0f * 0.5f);
 

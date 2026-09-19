@@ -149,9 +149,18 @@ public:
 	// whole body is the one stb: TWalkerEnemy's override copies the attacker's
 	// rotation first and then does the same store.
 	virtual void initAttacker(THitActor*) { unk184 = 1; }
-	virtual bool isHitValid(u32)
+	// Raw read, not checkLiveFlag(): that accessor is const, so MWCC will not
+	// share its load with the non-const onLiveFlag below, and the ROM loads
+	// mLiveFlag exactly once here (same shape as THaneHamuKuri's override).
+	virtual bool isHitValid(u32 message)
 	{
-		return checkLiveFlag(LIVE_FLAG_HIDDEN) ? false : true;
+		if (mLiveFlag & LIVE_FLAG_HIDDEN)
+			return false;
+
+		if (message == HIT_MESSAGE_UNKB)
+			onLiveFlag(LIVE_FLAG_HIDDEN);
+
+		return true;
 	}
 	virtual bool isCollidMove(THitActor*);
 	virtual BOOL isInhibitedForceMove() { return FALSE; }
