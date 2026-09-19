@@ -1013,7 +1013,7 @@ DEFINE_NERVE(TNervePopoExplosion, TLiveActor)
 		popo->onLiveFlag(LIVE_FLAG_DEAD);
 		popo->onLiveFlag(LIVE_FLAG_UNK8);
 		popo->offLiveFlag(LIVE_FLAG_HIDDEN);
-		popo->offLiveFlag(LIVE_FLAG_UNK20000);
+		popo->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		popo->mHolder = nullptr;
 		popo->stopAnmSound();
 		spine->reset();
