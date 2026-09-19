@@ -1868,61 +1868,65 @@ public:
 	/* 0x56C */ f32 unk56C;
 	/* 0x570 */ f32 unk570;
 
+	// Offsets below are measured, not guessed: retail's `new TMario` asks for
+	// 0x4290 bytes (MarNameRefGen), which is what this declaration compiles to,
+	// and `mMotorParams.mMotorWall.get()` lands on retail's 0x27f8 read. The
+	// comments used to run 8 bytes low from mBodyAngleParamsFree onwards.
 	/* 0x574 */ TDeParams mDeParams;
 
 	// TODO: Should these be an array indexed by an enum?
-	/* 0x998 */ TBodyAngleParams mBodyAngleParamsFree;
-	/* 0xA18 */ TBodyAngleParams mBodyAngleParamsWaterGun;
+	/* 0x9A0 */ TBodyAngleParams mBodyAngleParamsFree;
+	/* 0xA20 */ TBodyAngleParams mBodyAngleParamsWaterGun;
 
-	/* 0xA98 */ TAttackParams mAttackParamsFencePunch;
-	/* 0xAC8 */ TAttackParams mAttackParamsKickRoof;
-	/* 0xAF8 */ TJumpParams mJumpParams;
-	/* 0xE98 */ TRunParams mRunParams;
-	/* 0x1044 */ TSwimParams mSwimParams;
-	/* 0x1290 */ THangingParams mHangingParams;
-	/* 0x1310 */ THangRoofParams mHangRoofParams;
-	/* 0x132C */ TWireParams mWireParams;
+	/* 0xAA0 */ TAttackParams mAttackParamsFencePunch;
+	/* 0xAD0 */ TAttackParams mAttackParamsKickRoof;
+	/* 0xB00 */ TJumpParams mJumpParams;
+	/* 0xEA0 */ TRunParams mRunParams;
+	/* 0x104C */ TSwimParams mSwimParams;
+	/* 0x1298 */ THangingParams mHangingParams;
+	/* 0x1318 */ THangRoofParams mHangRoofParams;
+	/* 0x1334 */ TWireParams mWireParams;
 
 	// TODO: Should these be an array indexed by an enum?
-	/* 0x1474 */ TPullParams mPullParamsBGBeak;
+	/* 0x147C */ TPullParams mPullParamsBGBeak;
 	TPullParams mPullParamsBGTentacle;
 	TPullParams mPullParamsBGFireWanWanBossTail;
 	TPullParams mPullParamsFireWanWanTail;
 
 	TBarParams mBarParams;
 
-	/* 0x1640 */ TSurfingParams mSurfingParamsWaterRed;
-	/* 0x1814 */ TSurfingParams mSurfingParamsGroundRed;
-	/* 0x19E8 */ TSurfingParams mSurfingParamsWaterYellow;
-	/* 0x1BBC */ TSurfingParams mSurfingParamsGroundYellow;
-	/* 0x1D90 */ TSurfingParams mSurfingParamsWaterGreen;
-	/* 0x1F64 */ TSurfingParams mSurfingParamsGroundGreen;
+	/* 0x1648 */ TSurfingParams mSurfingParamsWaterRed;
+	/* 0x181C */ TSurfingParams mSurfingParamsGroundRed;
+	/* 0x19F0 */ TSurfingParams mSurfingParamsWaterYellow;
+	/* 0x1BC4 */ TSurfingParams mSurfingParamsGroundYellow;
+	/* 0x1D98 */ TSurfingParams mSurfingParamsWaterGreen;
+	/* 0x1F6C */ TSurfingParams mSurfingParamsGroundGreen;
 
-	/* 0x2138 */ THHoverParams mHoverParams;
-	/* 0x217C */ TDivingParams mDivingParams;
-	/* 0x21E8 */ TYoshiParams mYoshiParams;
-	/* 0x22A4 */ TWaterEffectParams mWaterEffectParams;
-	/* 0x2338 */ TControllerParams mControllerParams;
-	/* 0x2408 */ TGraffitoParams mGraffitoParams;
-	/* 0x25B4 */ TDirtyParams mDirtyParams;
-	/* 0x279C */ TMotorParams mMotorParams;
+	/* 0x2140 */ THHoverParams mHoverParams;
+	/* 0x2184 */ TDivingParams mDivingParams;
+	/* 0x21F0 */ TYoshiParams mYoshiParams;
+	/* 0x22AC */ TWaterEffectParams mWaterEffectParams;
+	/* 0x2340 */ TControllerParams mControllerParams;
+	/* 0x2410 */ TGraffitoParams mGraffitoParams;
+	/* 0x25BC */ TDirtyParams mDirtyParams;
+	/* 0x27A4 */ TMotorParams mMotorParams;
 	TParticleParams mParticleParams;
 	TEffectParams mEffectParams;
 
 	// TODO: Should these be an array indexed by an enum?
-	/* 0x2944 */ TSlipParams mSlipParamsNormal;
-	/* 0x2A28 */ TSlipParams mSlipParamsOil;
-	/* 0x2B0C */ TSlipParams mSlipParamsAll;
-	/* 0x2BF0 */ TSlipParams mSlipParamsAllSlider;
-	/* 0x2CD4 */ TSlipParams mSlipParams45;
-	/* 0x2DB8 */ TSlipParams mSlipParamsWaterSlope;
-	/* 0x2E9C */ TSlipParams mSlipParamsWaterGround;
-	/* 0x2F80 */ TSlipParams mSlipParamsYoshi;
+	/* 0x294C */ TSlipParams mSlipParamsNormal;
+	/* 0x2A30 */ TSlipParams mSlipParamsOil;
+	/* 0x2B14 */ TSlipParams mSlipParamsAll;
+	/* 0x2BF8 */ TSlipParams mSlipParamsAllSlider;
+	/* 0x2CDC */ TSlipParams mSlipParams45;
+	/* 0x2DC0 */ TSlipParams mSlipParamsWaterSlope;
+	/* 0x2EA4 */ TSlipParams mSlipParamsWaterGround;
+	/* 0x2F88 */ TSlipParams mSlipParamsYoshi;
 
 	TUpperParams mUpperBodyParams;
 
 	// TODO: Should these be an array indexed by an enum?
-	/* 0x30D0 */ TEParams mDmgParamsEnemyCommon;
+	/* 0x30D8 */ TEParams mDmgParamsEnemyCommon;
 	TEParams mDmgParamsHamakuri;
 	TEParams mDmgParamsNamekuri;
 	TEParams mDmgParamsHinokuri;
@@ -1942,8 +1946,8 @@ public:
 	TEParams mDmgParamsGraffitoLava;
 	TEParams mDmgParamsWaterSurface;
 
-	/* 0x3BCC */ TEParams mDmgMapParams0;
-	/* 0x3C60 */ TEParams mDmgMapParams1;
+	/* 0x3BD4 */ TEParams mDmgMapParams0;
+	/* 0x3C68 */ TEParams mDmgMapParams1;
 	TEParams mDmgMapParams2;
 	TEParams mDmgMapParams3;
 	TEParams mDmgMapParams4;
@@ -1953,9 +1957,9 @@ public:
 	TEParams mDmgMapParams8;
 	TEParams mDmgMapParams9;
 
-	/* 0x4194 */ TAutoDemoParams mAutoDemoParams;
-	/* 0x4228 */ TSoundParams mSoundParams;
-	/* 0x4244 */ TOptionParams mOptionParams;
+	/* 0x419C */ TAutoDemoParams mAutoDemoParams;
+	/* 0x4230 */ TSoundParams mSoundParams;
+	/* 0x424C */ TOptionParams mOptionParams;
 };
 
 extern TMario* gpMarioOriginal;
