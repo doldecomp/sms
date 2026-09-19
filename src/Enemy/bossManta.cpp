@@ -34,6 +34,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 f32 TBossManta::sScale[] = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
 int TBossManta::sCenterJointIndex;
@@ -389,6 +390,16 @@ TBossManta::TBossManta(const char* name)
 	unk1A0      = 0;
 }
 
+// The map has no symbol for this helper, but collidedWithWater copies one
+// `@NNNN` template to two stack temporaries and the template's id sits
+// immediately below getTailAnimSpeed's blend table, so the array was declared
+// in a TU-local inline just above it rather than twice in collidedWithWater.
+static inline int BossMantaGetHitCountMax(const TBossManta* manta)
+{
+	const int hitCounts[6] = { 16, 8, 4, 2, 1, 1 };
+	return hitCounts[manta->mGeneration];
+}
+
 f32 TBossManta::getTailAnimSpeed()
 {
 	const f32 blend[6] = { 0.005f, 0.008f, 0.01f, 0.03f, 0.05f, 0.05f };
@@ -575,8 +586,7 @@ bool TBossManta::collidedWithWater()
 		else
 			isHitWater = false;
 
-		const int hitCounts[6] = { 16, 8, 4, 2, 1, 1 };
-		if (unk19C < hitCounts[mGeneration]) {
+		if (unk19C < BossMantaGetHitCountMax(this)) {
 			unk1A0 = 0x1E;
 			if (!isHitWater) {
 				mSpine->reset();
@@ -584,8 +594,7 @@ bool TBossManta::collidedWithWater()
 			}
 			unk19C++;
 
-			const int hitCounts2[6] = { 16, 8, 4, 2, 1, 1 };
-			if (unk19C == hitCounts2[mGeneration]) {
+			if (unk19C == BossMantaGetHitCountMax(this)) {
 				if (mGeneration >= 4)
 					mSpine->pushAfterCurrent(&TNerveMantaDeath::theNerve());
 				else
