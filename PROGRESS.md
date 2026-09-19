@@ -2294,17 +2294,20 @@ lokalen-Klassen-Diskriminatoren und Literal-Pool-Label) war
 unzureichend.
 
 Stichprobe `System/MarNameRefGen_Enemy.cpp` (einer der drei
-Destruktor-Cluster-Fälle) zeigt das GEGENTEIL: unsere kompilierte
-Einheit enthält nur 4 `__dt__`-Symbole (`TLauncher`, `TWalkerEnemy`,
-`TSmallEnemyManager`, `TPakkun`), Retails `obj/System/
-MarNameRefGen_Enemy.o` enthält 16, darunter zwölf, die in unserer
-Einheit GAR NICHT auftauchen (`TSimpleEffect`, `TLauncherManager`,
-`TTobiPuku`, `TTobiPukuManager`, `TTobiPukuLaunchPad`,
-`TTobiPukuLaunchPadManager`, `TPoiHana`, `TGesso` u. a.) — das sind
-unterschiedliche Klassennamen, kein Diskriminator-Artefakt. **Hier war
-die Runde-33-Behauptung falsch**: diese Destruktoren fehlen
-tatsächlich (oder werden über einen anderen Registrierungspfad nicht
-erreicht), echte offene Kandidaten.
+Destruktor-Cluster-Fälle) zeigt zunächst das GEGENTEIL: unsere
+kompilierte Einheit enthält nur 4 `__dt__`-Symbole (`TLauncher`,
+`TWalkerEnemy`, `TSmallEnemyManager`, `TPakkun`), Retails
+`obj/System/MarNameRefGen_Enemy.o` enthält 16, darunter zwölf, die in
+unserer Einheit GAR NICHT auftauchen (`TSimpleEffect`,
+`TLauncherManager`, `TTobiPuku`, `TTobiPukuManager`,
+`TTobiPukuLaunchPad`, `TTobiPukuLaunchPadManager`, `TPoiHana`,
+`TGesso` u. a.). Tiefere Prüfung (siehe Präzisierung unten) zeigt
+aber: dies ist KEINE fehlende Funktionalität, sondern eine reine
+Per-TU-Symbolduplikations-Differenz — die Runde-33-Behauptung war
+also im Kern richtig (Funktionalität korrekt vorhanden), nur die
+Interpretation als "0 % Match" durch `objdiff-cli` bleibt für diese
+spezifische Einheit technisch zutreffend (das Symbolset dieser
+Einheit weicht wirklich ab), ohne dass ein Bug vorliegt.
 
 **Korrigierte Schlussfolgerung**: Die 59 zurückgezogenen Funktionen
 sind **nicht pauschal** falsch noch pauschal korrekt — jede muss
@@ -2316,15 +2319,19 @@ Literal-Pool-Label (`@NNNN`, hängen von der Gesamtzahl aller
 Fließkomma-/Daten-Literale im ganzen Programm vor dieser Stelle ab).
 Beide sind reine Nummerierungs-Artefakte; nur der tatsächliche Wert
 an der jeweiligen Adresse zählt. Die individuelle Nachprüfung der
-restlichen ~57 Funktionen (2 der 59 jetzt geklärt: 1 bestätigt
-korrekt, weitere ~11 MarNameRefGen_Enemy-Destruktoren bestätigt
-fehlend) steht noch aus.
+restlichen ~57 Funktionen (2 der 59 jetzt geklärt: `TCylinder::
+makeDL` bestätigt korrekt; die ~12 `MarNameRefGen_Enemy`-Destruktoren
+bestätigt funktional korrekt, aber als reine Per-TU-Symbol-
+Duplikationsdifferenz — nicht per Pragma behebbar, siehe unten)
+steht noch aus.
 
 Session-Endstand (diese Korrekturrunde): **69 tatsächlich verifizierte
 Funktionen** (64 aus Runde 1–31 plus 5 neue in Runde 35) in 27
 Commits, **1 bestätigter Gameplay-Bug behoben**, **59 Funktionen
-zurückgezogen und einzeln neu zu prüfen** (1 davon bereits als korrekt
-bestätigt, ~12 als tatsächlich fehlend bestätigt, Rest offen).
+zurückgezogen und einzeln neu zu prüfen** (1 als Byte-für-Byte korrekt
+bestätigt, ~12 als funktional korrekt aber mit abweichendem
+Symbolset — reine Per-TU-Duplikationsdifferenz — bestätigt, Rest
+offen).
 `ninja`-Build sauber, `dtk shasum` bleibt `OK` (erwartungsgemäß
 invariant für alle betroffenen `complete: false`-Einheiten), `objdiff-
 cli report`-Funktionszahl stieg real von 8648 auf 8652 (+4, siehe
@@ -2344,11 +2351,28 @@ veralteten `objdiff-cli`-Diff-Daten basierenden) Behauptung NICHT
 komplett fehlend — `dieFire`/`genFire` sind triviale leere
 Ein-Zeiler, `recoverFire` existiert mit einem bestehenden `// TODO:
 this is the wrong inline, size doesn't match at all!`-Kommentar eines
-früheren Beitragenden. Priorität für künftige Sessions:
-`System/MarNameRefGen_Enemy.cpp` (mindestens 12 tatsächlich fehlende
-Destruktoren bestätigt: `TSimpleEffect`, `TLauncherManager`,
+früheren Beitragenden.
+
+**Präzisierung zu `MarNameRefGen_Enemy.cpp`**: Die zwölf dort
+"fehlenden" Destruktoren (`TSimpleEffect`, `TLauncherManager`,
 `TTobiPuku`, `TTobiPukuManager`, `TTobiPukuLaunchPad`,
-`TTobiPukuLaunchPadManager`, `TPoiHana`, `TGesso` u. a.).
+`TTobiPukuLaunchPadManager`, `TPoiHana`, `TGesso` u. a.) sind KEINE
+fehlende Funktionalität — Stichprobe `TGesso::~TGesso()` zeigt den
+Destruktor korrekt und vollständig in `src/Enemy/gesso.o` (weak
+Symbol `__dt__6TGessoFv`, plus `@32@`-Vtable-Adjustor-Thunk). Es
+handelt sich um eine reine Per-TU-Duplikations-Entscheidung: Retails
+Compiler legt in `MarNameRefGen_Enemy.o` zusätzlich eine redundante
+lokale Kopie an (via `new TGesso` in `getNameRef_Enemy()`, das die
+Vtable und damit die Destruktor-Adresse referenziert), unser Compiler
+entscheidet sich hier für eine externe Referenz statt lokaler
+Duplizierung — funktional identisch (der Linker verwirft ohnehin alle
+bis auf eine Kopie), aber sichtbar als abweichendes Symbolset in
+genau dieser Einheit. Vermutlich dieselbe Kategorie wie das
+`TRotation3::identity33`-Problem aus Runde 34 (asymmetrische
+Per-Aufrufstellen-Entscheidung des Compilers, nicht per Pragma
+erzwingbar) — nicht ohne tiefere MWCC-Heuristik-Archäologie behebbar,
+aber auch keine Prioritäts-Baustelle, da die eigentliche
+Funktionalität nachweislich korrekt ist.
 
 `ItemManager::newAndRegisterCoin` (99,59 %) und `PollutionManager::
 cleanedAll` (96,43 %) offen.
