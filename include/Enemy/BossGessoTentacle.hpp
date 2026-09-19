@@ -37,7 +37,7 @@ public:
 public:
 	/* 0x70 */ TBGTentacle* mOwner;
 	/* 0x74 */ JGeometry::TVec3<f32> unk74;
-	/* 0x80 */ TMtx34f unk80;
+	/* 0x80 */ TPosition3f unk80;
 };
 
 class TBGAttackHit : public THitActor {
