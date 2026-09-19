@@ -164,6 +164,7 @@ void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& param_1)
 void TMapCollisionMove::init(u32 param_1, u16 bg_type, s16 data,
                              const TLiveActor* actor)
 {
+	char trash[8];
 	mKind         = 1;
 	mCheckDataNum = param_1;
 	mCheckDatas   = gpMapCollisionData->allocCheckData(getUnkC());
