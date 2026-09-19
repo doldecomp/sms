@@ -264,10 +264,11 @@ inline void TSunModel::moveSun_()
 	// `dir.sub(mPosition, camPos)` cannot do (it stores each component as
 	// soon as it is computed): the three differences are arguments of
 	// `set`, so they are all evaluated before the body runs.
+	CPolarSubCamera* camera = SMSGetCamera();
 	JGeometry::TVec3<f32> dir;
-	dir.set(mPosition.x - SMSGetCamera()->getUnk124().x,
-	    mPosition.y - SMSGetCamera()->getUnk124().y,
-	    mPosition.z - SMSGetCamera()->getUnk124().z);
+	dir.set(mPosition.x - camera->getUnk124().x,
+	    mPosition.y - camera->getUnk124().y,
+	    mPosition.z - camera->getUnk124().z);
 	MsVECNormalize(&dir, &dir);
 
 	// Header round 30 closed this: the out-of-line `set(const Vec&)` is the
@@ -283,32 +284,49 @@ inline void TSunModel::moveSun_()
 	// (no temporary, no call) and `.set()` on a named local picks the
 	// `set<TY>` member template, which is why header round 24's forwarder
 	// chains never reached the `bl` (see the trial list in JGVec3.hpp).
-	// TODO: 8 bytes of frame left (0xe8 against retail's 0xe0), and retail
-	// allocates `mtx` *below* this expansion's locals (mtx 0x78, dir 0xa8,
-	// the temporary 0xb4) while ours allocates it above (dir 0x80, temp
-	// 0x8c, mtx 0x98).  The 72-byte block itself is the same size on both
-	// sides, so the residue is two independent facts: 8 bytes of low region
-	// and the reversal inside the block.  Declaring `mtx` at function scope
-	// and moving its declaration are both inert, as the rules card says
-	// block scope is; re-pass II also measured a fabricated
-	// `SunModelCalcAnim(TSunModel*)` level around the whole CUE_CALC_ANIM
-	// body (the reading the previous TODO called untested) as **byte-for-
-	// byte inert**, so `mtx` is not steerable from the caller side at all
-	// and the reversal is what has to be understood first.  The frame half
-	// is cheap once it is: the `SMSGetCamera()` fork is +4 at each of its
-	// four read sites here (all four spelled `gpCamera->` gives 0xd8, i.e.
-	// -16), so two sites land 0xe0 exactly -- but no split of them is
-	// natural, and it does not move a single marker while the block is
-	// still reversed.  Moving these statements out of moveSun_ into perform
-	// (with a one-statement level left behind for
-	// calcDispRatioAndScreenPos_) loses the `bl` again, because the
-	// conversion then sits at depth 3.
-	unk198.scaleAdd(250000.0f, SMSGetCamera()->getUnk124Vec(), dir);
+	// TODO: the frame is exact now and only two differences are left: the
+	// `Mtx mtx` slot (retail 0x78, ours 0x70) and the `unkB0` argument
+	// scheduling in cluster 1.  Research batch 207 explains the slot order:
+	// an inlined callee's class-object locals form their own block, and the
+	// blocks stack downward in *expansion* order below the caller's own
+	// named locals, so a `Mtx` declared in perform can never sit below this
+	// expansion's `dir`/temp pair - it has to be a local of a *second*
+	// inlined callee, which is what calcAnim_ is.  What is left is a
+	// constant 4 bytes at the top of calcAnim_'s block (ours is
+	// dir - mtx = 0x34, retail 0x30): measured invariant under a 4- or
+	// 8-byte local declared before or after `mtx`, hoisting `calc()` out,
+	// a `J3DModel*` binder, and `MTXCopy(mtx, getBaseTRMtx())` in place of
+	// `setBaseTRMtx`, and a scratch TU with the same two-callee shape shows
+	// no such pad, so it comes from something inside this body.  The named
+	// `camera` is worth -8 of low region and is what makes the frame exact.
+	// Measured on the four camera reads with no binder: `gpCamera->` in
+	// place of `SMSGetCamera()` is -4 at each of the three subtraction
+	// operands and +0 at the scaleAdd argument, and any single one of the
+	// three reaches the same 7 markers with `mtx` at 0x74.  With the binder
+	// the scaleAdd argument has to stay a fresh read of the global (retail
+	// reloads `gpCamera` there after MsVECNormalize, so it was never a
+	// named local in retail): `camera->getUnk124Vec()` costs 3 extra
+	// instructions and `SMSGetCamera()->` gives the 8 bytes back.
+	unk198.scaleAdd(250000.0f, gpCamera->getUnk124Vec(), dir);
 
 	if (unk64)
 		unk64->mPosition = unk198;
 
 	calcDispRatioAndScreenPos_();
+}
+
+// Fabricated, like moveSun_: retail leaves no symbol for it, but `mtx` sits
+// *below* moveSun_'s expansion in retail's frame (0x78 against dir's 0xa8),
+// and an inlined callee's class-object locals always rank above the caller's
+// own named locals (research batch 207), so the Mtx block cannot be a local of
+// perform itself -- it has to be the local of a second inlined callee.
+inline void TSunModel::calcAnim_()
+{
+	Mtx mtx;
+	MsMtxSetTRS(mtx, unk198.x, unk198.y, unk198.z, mRotation.x, mRotation.y,
+	            mRotation.z, mScaling.x, mScaling.y, mScaling.z);
+	unk48->setBaseTRMtx(mtx);
+	unk48->calc();
 }
 
 void TSunModel::perform(u32 cue, JDrama::TGraphics*)
@@ -330,14 +348,8 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 
 	if (cue & CUE_CALC_ANIM) {
 		unk50.update();
-		if (sunInBounds) {
-			Mtx mtx;
-			MsMtxSetTRS(mtx, unk198.x, unk198.y, unk198.z, mRotation.x,
-			            mRotation.y, mRotation.z, mScaling.x, mScaling.y,
-			            mScaling.z);
-			unk48->setBaseTRMtx(mtx);
-			unk48->calc();
-		}
+		if (sunInBounds)
+			calcAnim_();
 	}
 
 	if (cue & CUE_ENTRY && sunInBounds) {
