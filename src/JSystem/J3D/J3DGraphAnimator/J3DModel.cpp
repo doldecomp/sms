@@ -558,42 +558,31 @@ void J3DModel::initialize()
 	unk94          = nullptr;
 }
 
-// TODO: 99.8%, frame exact, all 312 instructions exact; eleven operands left in
-// two register clusters. (1) At the `addShapePacket` call retail holds the
-// material in r4 and `mShapePackets` in r5, we hold them the other way round;
-// spelling the shape chain inline instead of the named `J3DShape* shape` makes
-// it worse (16 operands). (2) In the non-shared-display-list branch retail's
-// `dlSize`/packet pair lives in r25/r24 where ours lives in r20/r21; both
-// builds use all of r20-r31, so these are two extra ranges the allocator
-// coalesced with different existing ones, and dropping either the `packet` or
-// the `mat` local does not move them (dropping `packet` costs five
-// instructions).
-// Closure re-pass 2026-09-18, against batch 144/145's callee-saved ranking
-// rule: none of the four new levers moves either cluster. Measured, all at 312
-// instructions and frame 0xe8 unless noted -- dropping the `mat` local in the
-// else branch (10 operands, unchanged), an extra named
-// `J3DDisplayListObj* obj` local there (15 operands, frame 0xf0), and
-// `mShapePackets + shape->getIndex()` instead of `&mShapePackets[...]` (10
-// operands, unchanged). Declaration order is inert on inner-block locals by
-// that rule, which is exactly what the r25/r24-vs-r20/r21 pair is, so this
-// stays in the known-open rotation class.
-// Library re-pass 2026-09-18 -- cluster (1) is now *solved but unaffordable*.
-// Naming the shape packet, either as `J3DShapePacket* shapePacket
-// = &mShapePackets[shape->getIndex()];` or as the reference form
-// `J3DShapePacket& shapePacket = mShapePackets[shape->getIndex()];`, removes
-// all five operands of cluster (1) (retail's `lwzx r4` / `lwz r5, 0x84(r29)`
-// homes appear exactly), and costs +8 of frame (0xf0 against retail's 0xe8):
-// it is an address binding, and the price is the same whether the local is a
-// pointer or a reference, and whether the named `shape` above it stays or the
-// whole chain is written into the binding. Net marker count is unchanged
-// (10 either way), so it is not committed: retail must hold this binding *and*
-// eight fewer bytes somewhere else in the function. The obvious donor,
-// `J3DMatPacket* packet` in the else branch below, is itself an address
-// binding retail clearly has (`add r24, r0, r23` reused twice), and dropping
-// it costs five instructions.
-// Also measured and inert on cluster (2): hoisting the else branch's `mat`,
-// `dlSize` and `packet` to function-scope locals (which is where the batch-145
-// declaration-order knob applies) leaves r20/r21 exactly where they were.
+// TODO: 99.9%, frame exact (0xe8), all 312 instructions exact; five operands
+// left in one register cluster. Retail's non-shared-display-list branch holds
+// `dlSize` in r25 and the `J3DMatPacket*` in r24; ours holds them in r20/r21,
+// so retail hands the first-introduced of the pair the higher register (batch
+// 144's reverse-introduction rule) and we hand it the lower. Both builds use
+// r20-r31 and every other operand in the function is exact, so this is a
+// zero-frame rotation of two live ranges the allocator coalesced differently.
+//
+// Closure round 2026-09-18 solved the other cluster and paid for it. Naming
+// the shape packet (`J3DShapePacket* shapePacket = &mShapePackets[...]`) is an
+// address binding that lands all five operands of the `addShapePacket` call
+// for +8 of frame; the eight bytes come back by *dropping* the `J3DMaterial*
+// mat` local in the else branch below, which is worth exactly -8 with no
+// instruction change. The two together take the function from ten differing
+// operands to five. The named `J3DShape* shape` above the binding must stay:
+// folding the chain into the binding is +8 again.
+//
+// Measured inert on the surviving cluster, all at 312 instructions and frame
+// 0xe8: the reference form of `packet`, `mMatPackets + i` instead of
+// `&mMatPackets[i]`, `int dlSize`, and hoisting `dlSize`, `packet` or both to
+// block or function scope in either order (batch 145's declaration-order knob
+// really is confined to function-scope locals that are *live* there). Worse:
+// declaring `packet` before `dlSize` (the `add` floats above `countDLSize`,
+// 314 instructions), dropping `packet` (317 instructions, frame 0xf8), and a
+// named `J3DDisplayListObj* obj` (frame 0xf0).
 void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
                               u32 mtxNum)
 {
@@ -642,7 +631,8 @@ void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
 		for (int i = 0; i < pModelData->getMaterialNum(); ++i) {
 			mMatPackets[i].setMaterial(pModelData->getMaterialNodePointer(i));
 			J3DShape* shape = pModelData->getMaterialNodePointer(i)->getShape();
-			mMatPackets[i].addShapePacket(&mShapePackets[shape->getIndex()]);
+			J3DShapePacket* shapePacket = &mShapePackets[shape->getIndex()];
+			mMatPackets[i].addShapePacket(shapePacket);
 			mMatPackets[i].setTexture(pModelData->getTexture());
 
 			// The doubled `getMaterialNodePointer(i)` is deliberate: retail
@@ -658,8 +648,8 @@ void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
 				            pModelData->getMaterialNodePointer(i)
 				                ->countDLSize()));
 			} else {
-				J3DMaterial* mat     = pModelData->getMaterialNodePointer(i);
-				u32 dlSize           = mat->countDLSize();
+				u32 dlSize
+				    = pModelData->getMaterialNodePointer(i)->countDLSize();
 				J3DMatPacket* packet = &mMatPackets[i];
 				packet->setDisplayListObj(new J3DDisplayListObj);
 				packet->getDisplayListObj()->newDisplayList(dlSize);
