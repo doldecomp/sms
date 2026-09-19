@@ -393,6 +393,7 @@ void MActor::entry()
 
 void MActor::frameUpdate()
 {
+	char trash[8];
 	for (int i = ANM_TYPE_FIRST; i < ANM_TYPE_COUNT; ++i)
 		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->getFrameCtrl()->update();
@@ -652,6 +653,7 @@ void MActor::entryOut()
 
 void MActor::updateMatAnm()
 {
+	char trash[8];
 	j3dSys.setTexture(mModel->getModelData()->getTexture());
 	for (u16 i = 0; i < mMaterialNum; ++i)
 		if (unk30[i] != 0x32 || unk2C[i] != 0x32)
