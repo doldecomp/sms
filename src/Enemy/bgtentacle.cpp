@@ -1221,7 +1221,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 				unk4C = 1;
 
 				SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_ATK_IMPACT,
-				                                &mOwner->getPosition(), 0,
+				                                &mTakeHit->getPosition(), 0,
 				                                nullptr, 0, 4);
 
 				mOwner->rumblePad(2, mOwner->getPosition());
