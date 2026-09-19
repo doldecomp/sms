@@ -1180,9 +1180,8 @@ void TSamboHead::behaveToWater(THitActor*)
 		return;
 	if (mSpine->getCurrentNerve() == &TNerveSamboHeadAppear::theNerve())
 		return;
-	if (mSpine->getCurrentNerve() == &TNerveSamboHeadHitWall::theNerve())
-		return;
-	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
+	if (mSpine->getCurrentNerve() == &TNerveSamboHeadHitWall::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
 		return;
 
 	JGeometry::TVec3<f32> velocity(mVelocity);
