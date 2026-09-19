@@ -834,12 +834,13 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					mScenarioShadow1->changeTexture(
 					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
 
-					s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
-					                             mSelectedShine, false);
-					const char* scenarioName = SMSGetMessageData(
-					    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
-
-					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
+					strncpy(mScenarioText1->getStringPtr(),
+					        SMSGetMessageData(
+					            mScenarioBmg2,
+					            (u16)SMS_getNormalStage(SMS_getShineID(
+					                SMS_getShineStage(mStage), mSelectedShine,
+					                false))),
+					        127);
 
 					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
 					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
@@ -849,11 +850,13 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 					mSelectedShine = prevIndex;
 
-					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
-					                              mSelectedShine, false);
-					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
-					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
+					strncpy(mScenarioText2->getStringPtr(),
+					        SMSGetMessageData(
+					            mScenarioBmg2,
+					            (u16)SMS_getNormalStage(SMS_getShineID(
+					                SMS_getShineStage(mStage), mSelectedShine,
+					                false))),
+					        127);
 
 					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
 					mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
