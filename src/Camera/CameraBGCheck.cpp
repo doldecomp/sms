@@ -128,7 +128,7 @@ bool CPolarSubCamera::isNeedWallCheck_() const
 	return result;
 }
 
-static bool should_clip_fabricated(const TBGCheckData* data)
+static inline bool should_clip_fabricated(const TBGCheckData* data)
 {
 	bool result = false;
 
