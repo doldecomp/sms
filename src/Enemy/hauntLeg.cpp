@@ -326,8 +326,8 @@ bool THauntLeg::isCollidMove(THitActor* other)
 		if (((TTakeActor*)other)->mHolder == nullptr || other != unk19C) {
 			unk19C = other;
 			mSpine->setNext(&TNerveHauntLegHaunt::theNerve());
-			return false;
 		}
+		return false;
 	}
 	return false;
 }
