@@ -882,6 +882,12 @@ DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 	return false;
 }
 
+static inline MSound* HanasamboAttackGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 DEFINE_NERVE(TNerveHanaSamboAttack, TLiveActor)
 {
 	THanaSambo* sambo = (THanaSambo*)spine->getBody();
@@ -890,14 +896,13 @@ DEFINE_NERVE(TNerveHanaSamboAttack, TLiveActor)
 	} else if (sambo->checkCurAnmEnd(0)) {
 		if (sambo->isBckAnm(3)) {
 			sambo->createPollen();
-			if (gpMSound->gateCheck(0x291B))
+			if (HanasamboAttackGetMSound()->gateCheck(0x291B))
 				MSoundSESystem::MSoundSE::startSoundActor(
 				    0x291B, &sambo->mPosition, 0, nullptr, 0, 4);
 			sambo->setBckAnm(1);
 		} else if (sambo->isBckAnm(1)) {
-			if (spine->getTime()
-			        > sambo->mSaveParams->mSLAttackingTime.get()
-			    && !sambo->unsetUnk165())
+			s32 attackingTime = sambo->mSaveParams->mSLAttackingTime.get();
+			if (spine->getTime() > attackingTime && !sambo->unsetUnk165())
 				sambo->setBckAnm(2);
 			else
 				sambo->setBckAnm(1);
@@ -1238,22 +1243,37 @@ void TSamboHead::initFlower()
 
 void TSamboHead::setDeadAnm() { setBckAnm(3); }
 
+static inline TMarioParticleManager* SamboHeadGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
+static inline MSound* SamboHeadGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 void TSamboHead::setAfterDeadEffect()
 {
 	JPABaseEmitter* emitter;
 	if (isBckAnm(1)) {
-		emitter = gpMarioParticleManager->emit(0xE5, &mPosition, 0, nullptr);
+		emitter = SamboHeadGetMarioParticleManager()->emit(0xE5, &mPosition, 0,
+		                                                   nullptr);
 		if (emitter)
 			setEmitterScale(emitter, 1.5f, 1.5f, 1.5f);
 	} else {
-		emitter = gpMarioParticleManager->emit(0xE4, &mPosition, 0, nullptr);
+		emitter = SamboHeadGetMarioParticleManager()->emit(0xE4, &mPosition, 0,
+		                                                   nullptr);
 		if (emitter)
 			setEmitterScale(emitter, 1.5f, 1.5f, 1.5f);
 	}
-	emitter = gpMarioParticleManager->emit(0xE6, &mPosition, 0, nullptr);
+	emitter = SamboHeadGetMarioParticleManager()->emit(0xE6, &mPosition, 0,
+	                                                   nullptr);
 	if (emitter)
 		setEmitterScale(emitter, 1.5f, 1.5f, 1.5f);
-	if (gpMSound->gateCheck(0x295F))
+	if (SamboHeadGetMSound()->gateCheck(0x295F))
 		MSoundSESystem::MSoundSE::startSoundActor(0x295F, &mPosition, 0,
 		                                          nullptr, 0, 4);
 }
