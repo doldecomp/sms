@@ -414,9 +414,17 @@ bool CPolarSubCamera::isMarioReadyGun_() const
 	       && gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_UNK8000);
 }
 
+// Same +8 binding level isMarioCrabWalk_ below needs; defined here rather than
+// shared with CameragcUnk120, because moving that one shifts the pool.
+static inline TMarioGamePad* CameragcAimPad(const CPolarSubCamera* p)
+{
+	TMarioGamePad* v120 = p->unk120;
+	return v120;
+}
+
 bool CPolarSubCamera::isMarioAimWithGun_() const
 {
-	return isMarioReadyGun_() && unk120->checkMeaning(0x400);
+	return isMarioReadyGun_() && CameragcAimPad(this)->checkMeaning(0x400);
 }
 
 // Binding level over a raw member read, worth +8 of low region in
