@@ -281,10 +281,12 @@ void* TApplication::setupThreadFuncLogo()
 	return nullptr;
 }
 
+#pragma dont_inline on
 static void* SetupThreadFuncLogo(void* param)
 {
 	return ((TApplication*)param)->setupThreadFuncLogo();
 }
+#pragma dont_inline off
 
 void TApplication::initialize_bootAfter()
 {
