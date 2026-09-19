@@ -131,6 +131,7 @@ void TAnimalBase::load(JSUMemoryInputStream& stream)
 
 void TAnimalBase::loadAfter()
 {
+	char trash[0x10];
 	TNameRef::loadAfter();
 	if (mActorType == 0x800001)
 		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_KAMOME_SOLO,

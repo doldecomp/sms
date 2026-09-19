@@ -216,6 +216,7 @@ MActor* TNpcParts::getPartsMActor(int param_1, int param_2)
 
 void TNpcParts::partsFrameUpdate()
 {
+	char trash[0x10];
 	int i = 0;
 
 	TSharedParts** it = unk0[unk60->getLodAnm()->unk8];

@@ -7,6 +7,7 @@
 
 void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 {
+	char trash[8];
 	killHeightPan_();
 	mCurrentTarget.unk2C = mCurrentTarget.mYaw;
 	mCurrentTarget.mYaw  = *gpMarioAngleY - 0x8000;
@@ -34,6 +35,7 @@ void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 
 void CPolarSubCamera::makeMtxForPrevTalk()
 {
+	char trash[0x10];
 	if (isTalkCameraSpecifyMode(mMode)) {
 		mCurrentTarget.mYaw = mCurrentTarget.unk2C;
 

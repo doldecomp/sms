@@ -47,6 +47,7 @@ TSelectDir::TSelectDir()
 
 TSelectDir::~TSelectDir()
 {
+	char trash[8];
 	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("select");
 	if (arc)
 		arc->unmountFixed();

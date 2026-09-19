@@ -561,6 +561,7 @@ void TPauseMenu2::setDrawStart()
 
 void TPauseMenu2::setDrawEnd()
 {
+	char trash[8];
 	SMSRumbleMgr->finishPause();
 	gpMSound->pauseOff(0);
 	gpMarDirector->getConsole()->pauseOut();

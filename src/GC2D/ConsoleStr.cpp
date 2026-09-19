@@ -98,6 +98,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 
 void TConsoleStr::loadAfter()
 {
+	char trash[8];
 	JDrama::TViewObj::loadAfter();
 	unk2AC = 0;
 	unk2B0 = 0;

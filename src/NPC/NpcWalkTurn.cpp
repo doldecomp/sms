@@ -135,6 +135,7 @@ bool TBaseNPC::execTurnToFirstState()
 
 bool TBaseNPC::isNeedTurnToFirstState() const
 {
+	char trash[8];
 	if (!isClean() || checkActionFlag(NPC_ACTION_HAPPY))
 		return false;
 

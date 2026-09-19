@@ -125,6 +125,7 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 
 TGCLogoDir::~TGCLogoDir()
 {
+	char trash[8];
 	mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 }
 

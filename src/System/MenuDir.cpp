@@ -41,6 +41,7 @@ TMenuDirector::TMenuDirector()
 
 TMenuDirector::~TMenuDirector()
 {
+	char trash[8];
 	unk2C->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("title");
 	if (arc)

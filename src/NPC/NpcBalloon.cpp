@@ -10,6 +10,7 @@ void TNpcBalloon::setNextMessage(u32 a, s32 timer)
 
 bool TNpcBalloon::updateBalloon()
 {
+	char trash[8];
 	bool result = false;
 
 	if (mBalloonAppearTimer > 0) {

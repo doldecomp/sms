@@ -125,6 +125,7 @@ void CPolarSubCamera::startJetCoasterCam1()
 
 static s32 JetCoasterDemoCallBack(u32 param_1, u32 param_2)
 {
+	char trash[0x10];
 	if (param_2 == 1)
 		((CPolarSubCamera*)param_1)->startJetCoasterCam1();
 

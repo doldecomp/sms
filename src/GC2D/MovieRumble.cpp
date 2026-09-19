@@ -34,6 +34,7 @@ void TMovieRumble::init(const char* param_1)
 
 void TMovieRumble::perform(u32 cue, JDrama::TGraphics*)
 {
+	char trash[8];
 	if (cue & CUE_MOVE)
 		movement();
 }

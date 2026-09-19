@@ -115,6 +115,7 @@ TCardSave::TCardSave(const char* name, bool param_2)
 
 void TCardSave::load(JSUMemoryInputStream& stream)
 {
+	char trash[0x10];
 	JDrama::TViewObj::load(stream);
 	initData(gpMarDirector->unk18[0]);
 }

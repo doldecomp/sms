@@ -14,6 +14,7 @@
 
 void TMapWarp::changeModel(int i)
 {
+	char trash[0x18];
 	if (unk8 == i)
 		return;
 
@@ -77,6 +78,7 @@ void TMapWarp::watchToWarp()
 
 void TMapWarp::initModel()
 {
+	char trash[0x10];
 	// TODO: inlines
 	int num = gpMap->getModelManager()->getJointModel(0)->mChildrenNum;
 	for (int i = 0; i < num; ++i)
