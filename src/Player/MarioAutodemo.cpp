@@ -249,15 +249,29 @@ BOOL TMario::warpIn()
 	return FALSE;
 }
 
+// Closure batch 226: the two stage reads and the first nozzle change bind
+// their receiver once each, which is exactly the 0x28 of low region this
+// function was missing. The rungs are +0x10 per director site and +8 per
+// water-gun site; every other distribution over- or undershoots.
+// fabricated
+static inline TMarDirector* UnUsualDirector()
+{
+	TMarDirector* d = gpMarDirector;
+	return d;
+}
+
+static inline TWaterGun* UnUsualGun(const TMario* p)
+{
+	TWaterGun* g = p->mWaterGun;
+	return g;
+}
+
 bool TMario::isUnUsualStageStart()
 {
-	// Missing stack space
-	// volatile u32 padding[14];
-
 	// Pinna rollercoaster
 	if ((gpMarDirector->getCurrentMap() == 0x3A)
-	    && (gpMarDirector->getCurrentStage() == 0
-	        || gpMarDirector->getCurrentStage() == 1))
+	    && (UnUsualDirector()->getCurrentStage() == 0
+	        || UnUsualDirector()->getCurrentStage() == 1))
 		return toroccoStart();
 
 	if (SMS_isDivingMap()) {
@@ -270,7 +284,7 @@ bool TMario::isUnUsualStageStart()
 		onFlag(MARIO_FLAG_HAS_FLUDD);
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
-			mWaterGun->changeNozzle(TWaterGun::Underwater, true);
+			UnUsualGun(this)->changeNozzle(TWaterGun::Underwater, true);
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 			mWaterGun->changeNozzle(
