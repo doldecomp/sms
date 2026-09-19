@@ -222,7 +222,9 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 	return force;
 }
 
-// TODO: frame 0xa0 vs 0x90 -- 16 bytes too big. Slot triage: the calcGoalForce
+// TODO: the frame is exact now (a TU-local raw getPoint at the mFleeTarget
+// site is -0x10), but the slot ordering below is still wrong. Slot triage from
+// when the frame was 0xa0 vs 0x90: the calcGoalForce
 // sret slot is at 0x38 in *both* builds, while the three other 12-byte vector
 // temps are all exactly 12 bytes higher in ours (0x44/0x50/0x70 against retail's
 // 0x28/0x44/0x64), i.e. retail's pool has one more 12-byte entry at the bottom
@@ -233,6 +235,14 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 // `scale` temp still has to move *below* the shared 0x38 slot, which is the
 // allocation-order class, not a lever. A consumed
 // `const TVec3<f32>& target = mFleeTarget.getPoint();` binding is inert.
+static inline const JGeometry::TVec3<f32>& BoidGetPoint(const TPathNode& node)
+{
+	if (node.unk0 != 0)
+		return node.unk0->mPosition;
+
+	return node.unk4;
+}
+
 JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 {
 	JGeometry::TVec3<f32> force = boid->mSeparationForce;
@@ -250,7 +260,7 @@ JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 		f32 tmp = mFleeRadius;
 
 		JGeometry::TVec3<f32> away = boid->mPosition;
-		away -= mFleeTarget.getPoint();
+		away -= BoidGetPoint(mFleeTarget);
 		f32 d2 = away.squared();
 		if (0.0f < d2 && d2 < tmp * tmp) {
 			away.setLength(mFleeStrength);
