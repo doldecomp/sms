@@ -82,6 +82,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Uninitialised locals the original declared reserve a slot with no code (`Mtx` 48, `TVec3` 12, `TQuat4` 16): name them or leave the gap (frame-gaps.md: "What causes a gap").
 - A raw read where `offset - 0x10` is a 0x14-aligned slot is a `TParamRT`: declare the params class, call `.get()` (frame-gaps.md: "What causes a gap").
 - Last 8 bytes, every displacement 8 higher: a two-word **aggregate** declared last, or an 8-byte **non-trivial** local of an inlined callee. not `f64` (frame-gaps.md: "The last 8 bytes").
+- A fabricated flag-test gate whose call sites all pass constants is usually the TU's **real** gate function constant-folded; check the fold before treating the test as a carrier (frame-gaps.md: "Research batch 193").
 - Dead low region: an uninitialised **non-trivial class** local of an inlined callee is the only zero-instruction lever; `sizeof` rounded to 8 (4/8 B +8, 12/16 +16, 20/24 +24) per expansion (frame-gaps.md: "The dead low region").
 - Triviality is the switch (user ctor, dtor, copy ctor or virtual): trivial PODs are +0 in a callee, while in the caller's body only size counts (frame-gaps.md: "The dead low region").
 - A carrier must be a callee with **no matching out-of-line copy**: an UNUSED function, or a header inline with no map symbol (frame-gaps.md: "The carrier has to be a callee").
