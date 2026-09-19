@@ -82,7 +82,7 @@ bool TSandBase::withering()
 	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBUD_NORMAL, &mTrigger->mPosition,
 	                          0, nullptr, 0, 4);
 
-	if (mScaling.y == mScaleMin)
+	if (mScaling.y <= mScaleMin)
 		return true;
 
 	return false;
@@ -526,6 +526,10 @@ void TSandCastle::explode()
 	startControlAnim(3);
 }
 
+// TODO: the ROM takes the address of each of the two camera vectors
+// (`addi r4, gpCamera, 0x124`, then reads at 0 and 8) where we read them at
+// absolute offsets off gpCamera.  Ruled out: TU-local `static inline`s
+// returning a reference to each member -- byte-identical.
 static s32 SandCastleCallBack(u32 param_1, u32 param_2)
 {
 	if (param_2 == 1) {
@@ -1016,8 +1020,7 @@ void TShiningStone::putOnLight(TLiveActor* mirror)
 	case 0:
 		mEmitter = gpMarioParticleManager->emit(
 		    0x143, (JGeometry::TVec3<f32>*)&mPosition, 1, this);
-		mEmitter->setGlobalParticleScale(
-		    JGeometry::TVec3<f32>(3.0f, 3.0f, 3.0f));
+		mEmitter->setRate(3.0f);
 		mEmitterScale = 1.5f;
 		gpMSound->startSoundActor(MSD_SE_DM_REFLECTION_1, &mPosition, 0,
 		                          nullptr, 0, 4);
@@ -1026,8 +1029,7 @@ void TShiningStone::putOnLight(TLiveActor* mirror)
 	case 1:
 		mEmitter = gpMarioParticleManager->emit(
 		    0x144, (JGeometry::TVec3<f32>*)&mPosition, 1, this);
-		mEmitter->setGlobalParticleScale(
-		    JGeometry::TVec3<f32>(0.4f, 0.4f, 0.4f));
+		mEmitter->setRate(0.4f);
 		mEmitterScale = 0.2f;
 		gpMSound->startSoundActor(MSD_SE_DM_REFLECTION_2, &mPosition, 0,
 		                          nullptr, 0, 4);
@@ -1380,6 +1382,8 @@ void TGoalWatermelon::control()
 	TMapObjBase::control();
 
 	switch (mState) {
+	case 1:
+		break;
 	case 2:
 		if (mWatermelon->animIsFinished()) {
 			gpItemManager->makeShineAppearWithDemoOffset(
@@ -1398,9 +1402,10 @@ void TGoalWatermelon::loadAfter()
 
 	mShine = (TMapObjBase*)JDrama::TNameRefGen::search2(
 	    "シャイン（お化けスイカ用）");
-	mShine->mPosition.x = mShinePosition.x;
-	mShine->mPosition.y = mShinePosition.y;
-	mShine->mPosition.z = mShinePosition.z;
+	TMapObjBase* shine = mShine;
+	shine->mPosition.x = mShinePosition.x;
+	shine->mPosition.y = mShinePosition.y;
+	shine->mPosition.z = mShinePosition.z;
 	mShine->appear();
 }
 
