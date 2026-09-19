@@ -600,13 +600,7 @@ BOOL THanaSamboHead::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		THanaSambo* owner = mOwner;
-		owner->unk165     = true;
-		if (!owner->changeByJuice()) {
-			if (owner->mSpine->getCurrentNerve()
-			    == &TNerveHanaSamboWait::theNerve())
-				owner->mSpine->pushNerve(&TNerveHanaSamboFreeze::theNerve());
-		}
+		mOwner->waterDamage();
 		return TRUE;
 	}
 	return FALSE;
