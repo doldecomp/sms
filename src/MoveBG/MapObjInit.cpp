@@ -10863,7 +10863,7 @@ void TMapObjBase::initUnique()
 		SMS_UnifyMaterial(getModel());
 		break;
 	case 0x40000263:
-		startAllAnim(mMActor, unkF4);
+		startAllAnim(getMActor(), unkF4);
 		break;
 	case 0x4000003C:
 		mMActor->initSimpleMotionBlend(0x14);
@@ -10871,7 +10871,7 @@ void TMapObjBase::initUnique()
 	case 0x400000A8:
 	case 0x40000096:
 	case 0x4000009A:
-	case 0x4000009D:
+	case 0x4000009B:
 	case 0x4000009E:
 	case 0x4000009F:
 	case 0x400000A1:
@@ -10891,6 +10891,8 @@ void TMapObjBase::initUnique()
 		setMatTable(gpMapObjManager->unk90);
 		break;
 	case 0x400000CB:
+	case 0x400000CD:
+	case 0x400000CE:
 		setMatTable(gpMapObjManager->unkC0);
 		SMS_UnifyMaterial(getModel());
 		break;
