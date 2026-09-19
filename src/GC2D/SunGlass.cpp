@@ -11,6 +11,7 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 
 void TSunGlass::startFade(int type, bool arg1)
 {
+	char trash[0x18];
 	TFlagManager::getInstance()->getFlag(0x40000);
 
 	if (type == 2) {

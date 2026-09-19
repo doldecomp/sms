@@ -329,6 +329,7 @@ void TTobiPuku::bound() { }
 
 void TTobiPuku::calcRootMatrix()
 {
+	char trash[0x10];
 	gpCurTobiPuku = this;
 	TSpineEnemy::calcRootMatrix();
 	if (mRotation.x != 0.0f) {

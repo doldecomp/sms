@@ -462,6 +462,7 @@ void TMapObjBase::setRootMtxTrans() { }
 
 void TMapObjBase::updateObjMtx()
 {
+	char trash[8];
 	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), mPosition.x,
 	               mPosition.y - mYOffset, mPosition.z, mRotation.x,
 	               mRotation.y, mRotation.z);

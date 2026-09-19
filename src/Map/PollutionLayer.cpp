@@ -65,6 +65,7 @@ void TPollutionLayerWave::initGX() const
 
 void TPollutionLayerWave::draw() const
 {
+	char trash[0x38];
 	u16 xCount   = (u16)((mMaxX - mMinX) / mInterval);
 	f32 invXSize = 1.0f / (mMaxX - mMinX);
 	f32 invZSize = 1.0f / (mMaxZ - mMinZ);

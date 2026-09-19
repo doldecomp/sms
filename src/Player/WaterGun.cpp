@@ -1456,6 +1456,7 @@ MtxPtr TWaterGun::getNozzleMtx()
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {
+	char trash[0x40];
 	f32 usedWater = (f32)mCurrentWater
 	                / mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
 	if (nozzleType == Spray) {
