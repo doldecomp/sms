@@ -462,7 +462,7 @@ void TMapObjBall::makeObjDefault()
 
 	MtxPtr mtx  = getModel()->getAnmMtx(0);
 	mtx[0][3] = getPosition().x;
-	mtx[1][3] = getPosition().y + mBodyRadius;
+	mtx[1][3] = mPosition.y + mBodyRadius;
 	mtx[2][3] = getPosition().z;
 }
 
@@ -473,7 +473,7 @@ void TMapObjBall::makeObjAppeared()
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
 	mtx[0][3] = getPosition().x;
-	mtx[1][3] = getPosition().y + mBodyRadius;
+	mtx[1][3] = mPosition.y + mBodyRadius;
 	mtx[2][3] = getPosition().z;
 
 	if (isActorType(0x40000394)) {
@@ -1287,7 +1287,7 @@ void TResetFruit::makeObjAppeared()
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
 	mtx[0][3] = getPosition().x;
-	mtx[1][3] = getPosition().y + mBodyRadius;
+	mtx[1][3] = mPosition.y + mBodyRadius;
 	mtx[2][3] = getPosition().z;
 
 	if (isActorType(0x40000394)) {

@@ -34,7 +34,7 @@
 void TMapObjMonteRoot::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	mDamageRadius = 1400.0f * getScaling().y;
+	mDamageHeight = 1400.0f * getScaling().y;
 	calcEntryRadius();
 	mPosition.y = getInitialPosition().y + getObjCollisionHeightOffset();
 }
