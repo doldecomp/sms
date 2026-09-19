@@ -282,6 +282,7 @@
   "MoveBG/MapObjWave.cpp",
   "MoveBG/Pool.cpp",
   "MoveBG/WoodBarrel.cpp",
+  "MoveBG/MapObjTrap.cpp",
   "NPC/NpcBalloon.cpp",
   "NPC/NpcCoin.cpp",
   "NPC/NpcColor.cpp",
