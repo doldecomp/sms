@@ -1370,6 +1370,13 @@ BOOL TNozzleBox::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+static inline TGCConsole2* TNozzleBoxGetConsole()
+{
+	TMarDirector* director = gpMarDirector;
+	TGCConsole2* console   = director->getConsole();
+	return console;
+}
+
 void TNozzleBox::touchPlayer(THitActor*)
 {
 	if (mContainedNozzleType == TWaterGun::Hover
@@ -1378,11 +1385,11 @@ void TNozzleBox::touchPlayer(THitActor*)
 	    && !TFlagManager::smInstance->getNozzleRight(
 	        gpMarDirector->getCurrentMap(), 1)
 	    && !unk166) {
-		gpMarDirector->getConsole()->startAppearBalloon(0x5A, true);
+		TNozzleBoxGetConsole()->startAppearBalloon(0x5A, true);
 		unk166 = true;
 	}
 	if (!unk15C && !unk166) {
-		gpMarDirector->getConsole()->startAppearBalloon(0x59, true);
+		TNozzleBoxGetConsole()->startAppearBalloon(0x59, true);
 		unk166 = true;
 	}
 }
