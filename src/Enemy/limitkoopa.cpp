@@ -68,9 +68,9 @@ BOOL TNerveLimitKoopaHipDropStart::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
-// TODO: 71.9%. Both TDirectionCalc locals and the two makeDirection calls are
+// TODO: 78.9%. Both TDirectionCalc locals and the two makeDirection calls are
 // in place; the residual is the d2r/r2d `this` setup noted in calcRootMatrix
-// plus the 0x30-byte frame gap it drags along.
+// plus an 8-byte frame gap.
 BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
@@ -93,7 +93,7 @@ BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 	// `this`, so they are static members in the original. KoopaJr.hpp
 	// declares them non-static and is shared with koopajr.cpp, so the extra
 	// address setup stays until that header may be changed.
-	koopa->mBodyDirection = koopa->mBodyDirection.calcTurnDirection(
+	koopa->mBodyDirection.mDirection = koopa->mBodyDirection.calcTurnDirection(
 	    toMario.get(),
 	    TDirectionCalc::d2r(params->rotationSpeed.get()));
 
