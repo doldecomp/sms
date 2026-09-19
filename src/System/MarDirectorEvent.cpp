@@ -210,12 +210,14 @@ void TMarDirector::fireStartDemoCamera(const char* param_1,
 
 void TMarDirector::fireEndDemoCamera() { unk4C |= 0x80; }
 
+// TODO: 99.94% -- the frame is 0x40 in retail against our 0x18, a 40-byte
+// dead low region with no instruction difference left.
 void TMarDirector::fireStreamingMovie(u8 param_1)
 {
 	switch (param_1) {
 	case 0:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!checkUnk4CFlag(0x100)) {
+			onUnk4CFlag(0x100);
 			setNextStage(0x1, nullptr);
 			TFlagManager::smInstance->setBool(true, 0x10389);
 			TFlagManager::smInstance->setBool(true, 0x30004);
@@ -224,40 +226,40 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		break;
 
 	case 10:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!checkUnk4CFlag(0x100)) {
+			onUnk4CFlag(0x100);
 			setNextStage(0x3B, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
 	case 7:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!checkUnk4CFlag(0x100)) {
+			onUnk4CFlag(0x100);
 			setNextStage(0xE06, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
 	case 8:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!checkUnk4CFlag(0x100)) {
+			onUnk4CFlag(0x100);
 			setNextStage(0xE07, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
 	case 11:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!checkUnk4CFlag(0x100)) {
+			onUnk4CFlag(0x100);
 			setNextStage(0x3C, nullptr);
 			gpApplication.mMovie = param_1;
 		}
 		break;
 
 	case 2:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!checkUnk4CFlag(0x100)) {
+			onUnk4CFlag(0x100);
 			setNextStage(0x101, nullptr);
 			gpApplication.mMovie = param_1;
 		}
@@ -267,8 +269,8 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 	// default handling; without it MWCC emits a 12-entry table.
 	case 12:
 	default:
-		if (!(unk4C & 0x100)) {
-			unk4C |= 0x100;
+		if (!checkUnk4CFlag(0x100)) {
+			onUnk4CFlag(0x100);
 			setNextStage(0xF, nullptr);
 			gpApplication.mMovie = (u8)param_1;
 		}
