@@ -490,6 +490,30 @@ bestätigt (kein 100-%-Match, sofort zurückgesetzt):
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach vierzehnter Iterationsrunde (MapObjCloud, launcher, MapObjTrap)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,71 % (1.497.388 / 3.590.088) | +1.056 Bytes |
+| Funktionen matched | 66,95 % (8.619 / 12.881) | +5 |
+
+Fünf neue 100-%-Matches über drei Dateien:
+
+- `MoveBG/MapObjCloud.cpp::TRideCloud::setGroundCollision` (120 Bytes)
+  — `char trash[4]` nach `TMtx34f mtx` behebt einen 4-Byte-Slot-Versatz
+  bei bereits korrektem Frame (Ausnahme von der sonst unlösbaren
+  "interner Slot-Versatz"-Kategorie — hier hat es funktioniert).
+- `Enemy/launcher.cpp`: `TCommonLauncher::stateHitByWater` (180 Bytes,
+  `char trash[8]`) und `TCommonLauncher::perform` (364 Bytes,
+  `char trash[0x10]`) — je einfache Frame-Gaps ohne Struct-Locals.
+  `stateLaunch` bleibt Nonmatching (Frame bereits exakt, 48-Byte-
+  Vec/Mtx-Slot-Vertauschung zwischen drei Struct-Locals).
+- `MoveBG/MapObjTrap.cpp`: `TLampTrapSpikeHit::perform` (228 Bytes,
+  `char trash[0x18]`) und `TLampTrapIron::receiveMessage` (164 Bytes,
+  `char trash[8]`) — je einfache Frame-Gaps ohne Struct-Locals.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -758,6 +782,17 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 - `M3DUtil/SDLModel.cpp`: `SDLModelData::entrySameMat` (308 Bytes) und
   `SDLModel::viewCalcSimple` (216 Bytes) — je **100 %** (`char trash[8]`).
   `entrySDLModels`, `entry` bleiben Nonmatching (siehe oben).
+
+- `MoveBG/MapObjCloud.cpp`: `TRideCloud::setGroundCollision` — **100 %**
+  (120 Bytes, `char trash[4]` nach `TMtx34f mtx`).
+
+- `Enemy/launcher.cpp`: `TCommonLauncher::stateHitByWater` (180 Bytes,
+  `char trash[8]`) und `TCommonLauncher::perform` (364 Bytes,
+  `char trash[0x10]`) — je **100 %**. `stateLaunch` bleibt Nonmatching.
+
+- `MoveBG/MapObjTrap.cpp`: `TLampTrapSpikeHit::perform` (228 Bytes,
+  `char trash[0x18]`) und `TLampTrapIron::receiveMessage` (164 Bytes,
+  `char trash[8]`) — je **100 %**.
 
 ## Nächster GMSJ01-Kandidat
 
