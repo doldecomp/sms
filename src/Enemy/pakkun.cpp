@@ -596,9 +596,9 @@ void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model)
 	mMActor       = getActorKeeper()->createMActor(model, 3);
 	mPakkun       = (TPakkun*)unk160;
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ");
+	group->getChildren().push_back(this);
 
 	initHitActor(0x10000006, 1, -0x80000000, 20.0f, 20.0f, 20.0f, 20.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
