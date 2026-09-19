@@ -101,10 +101,16 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	}
 }
 
+static inline JPABaseEmitter** ConsoleStrEmitters(TConsoleStr* p)
+{
+	JPABaseEmitter** emitters = p->unk2A8;
+	return emitters;
+}
+
 void TConsoleStr::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	unk2A8[0] = nullptr;
+	ConsoleStrEmitters(this)[0] = nullptr;
 	unk2A8[1] = nullptr;
 	unk2A8[2] = nullptr;
 }
@@ -724,12 +730,10 @@ void TConsoleStr::startOpenWipe()
 {
 	unk2A4 = 0;
 	unk2B8 = 5;
-	unk28C[0]->getPane()->hide();
-	unk294->getPane()->show();
+	unk28C[0]->mPane->hide();
+	unk294->mPane->show();
 	unk28C[1]->getPane()->hide();
 	unk298->getPane()->show();
-
-	// TODO: TExPane::setPaneAlpha is wrong
 
 	JUTRect local_3c = unk294->getPane()->getBounds();
 	unk294->setPaneOffset(0x1E, -local_3c.getWidth(), 0, 0, 0);
