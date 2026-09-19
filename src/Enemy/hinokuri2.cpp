@@ -1097,7 +1097,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 			local_60 = self->mPosition;
 			local_60.y += 500.0f;
 		} else {
-			self->getJointTransByIndex(0x14, &local_60);
+			self->getJointTransByIndex(0x18, &local_60);
 		}
 
 		self->resetPolInterval();
