@@ -79,6 +79,7 @@ struct J3DCluster {
 		mDeformer         = other.mDeformer;
 	}
 
+	u16 getNrmNum() { return mNrmNum; }
 	J3DDeformer* getDeformer() { return mDeformer; }
 	void setDeformer(J3DDeformer* deformer)
 	{

@@ -91,6 +91,25 @@ void J3DDeformer::deform(J3DModel* model, u16 idx)
 // `f32 sign[2];` with two stores instead of the aggregate initialiser (four
 // operands worse, same frame), and hoisting `sign` above the zeroing loop
 // (473 instructions).
+// TODO: 99.8%, 18 operand markers, all of them register allocation; the frame
+// is now exact. Closure 217: the 8-byte frame gap research 215 measured was
+// one 4-byte inline-accessor temporary at the bottom of the dead low pool
+// (every named slot sat 4 low and the `lfd`-aligned save area rounded that to
+// 8). Routing *any single* one of this function's raw `cluster->` reads
+// through an in-class accessor lands frame 0x118 and drops 60 markers to 18:
+// `mNrmNum`, `mPosNum`, `mClusterVertexNum` and `mFlags` are byte-identical
+// choices, and each is read exactly once in the whole tree, so which member
+// retail's accessor covered is not decidable from this unit -- `getNrmNum()`
+// is the one used here. Refuted: `getKeyNum()` (four sites, +2 instructions,
+// frame 0x120), `getPosDstIdx()` (frame right, 59 markers),
+// `J3DClusterVertex::getNum()` at both its sites (40) or
+// `getSrcIdx()` (40), `getClusterVertex()` (37), and the angle accessors
+// (frame 0x120/0x128, over by one and two rungs).
+// The remaining 18 markers are three independent volatile-register rotations
+// in the normal loop (r7/r9 and r6/r7 around `lwz r7, 4(r7)`, r6/r8 in the
+// sign-flip block, r7/r8 at the `li` before it) plus the swapped emission
+// order of the two `rlwinm ..., 20/21, 29, 29` sign-index shifts; no frame
+// lever moves them.
 void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 {
 	if (checkFlag(2) && model->getModelData()->isDeformableVertexFormat()) {
@@ -147,7 +166,7 @@ void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 			f32* vtxNrmSrc = mDeformData->getVtxNrm();
 			f32* nrmBuf    = field_0x0c;
 
-			for (u16 i = 0; i < cluster->mNrmNum; i++) {
+			for (u16 i = 0; i < cluster->getNrmNum(); i++) {
 				f32* dst = &nrmBuf[i * 3];
 				dst[0]   = 0.0f;
 				dst[1]   = 0.0f;
