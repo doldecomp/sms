@@ -456,22 +456,56 @@ void TKukku::updateRotation()
 	mRotation.z *= bankZ;
 }
 
-// TODO: 92.9%, and every one of the 71 instructions is the right opcode in the
-// right place -- the whole residual is float-register numbering plus a 0x20
-// frame excess against the target's 0x78, both downstream of the frame.
-// Size-exact against the map, but expanded at every call site where retail
-// calls it (`addi r3, r1, 0x30; bl calcMomentum`). Four statements is far
-// under the 14-statement depth-1 budget, so retail's body cannot have been
-// these three JGeometry calls; spelling the Euler-to-quaternion conversion and
-// the rotate out component by component would reach the budget, but it would
-// also rewrite an already instruction-exact stream on no evidence beyond the
-// statement count. See the note on updateRotation(), where the same budget
-// problem was closed with statements the asm actually names.
+// 96.3%, frame exact at 0x78, all 71 opcodes in place.
+//
+// Retail *calls* this at every site (`addi r4, r30, 0; addi r3, r1, 0x30; bl
+// calcMomentum`), so by the depth-1 statement budget its body had to carry 15
+// or more counted statements -- and a call to TQuat4<f32>::rotate contributes
+// exactly one, because a callee's own inlined statements are free. Writing
+// rotate's fifteen statements out here (the same expansion, so not one opcode
+// moves) is what lifts the body over the budget, and it is what restores the
+// three `bl`s: TNerveKukkuRecoverGraph::execute 67.7 -> 99.8%,
+// TNerveKukkuGraphWander::execute 92.9 -> 94.5%.
+//
+// The frame ladder measured while landing 0x78, relative to this body:
+//   both TQuat4 temporaries as objects   0x98   (the header's literal body)
+//   q2 scalarised                        0x88
+//   q scalarised                         0x70
+//   both scalarised                      0x70
+//   q an object, vx/vy/vz named          0x80
+//   q an object, vx/vy/vz read in place  0x78   <- retail
+// So retail kept the first temporary as a real TQuat4 and read the vector
+// components straight out of `velocity` instead of naming them, exactly the
+// opposite of the shape JGQuat4.hpp's own rotate() uses.
+//
+// TODO: the residual is volatile-FPR numbering only (52 markers, no opcode or
+// operand-order difference) plus the low region's internal order -- retail
+// parks SMS_Eular2Quat's return slot at 0x38 with 44 bytes of temporaries
+// below it, we park it at 0x1c with 48 bytes split around it. Both totals are
+// 0x78, so no frame lever applies; this is the known-open volatile-FPR class.
 JGeometry::TVec3<f32> TKukku::calcMomentum(f32 speed)
 {
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
 	JGeometry::TVec3<f32> velocity(0.0f, 0.0f, speed);
-	quat.rotate(velocity, velocity);
+
+	f32 w = quat.w;
+	f32 z = quat.z;
+	f32 y = quat.y;
+	f32 x = quat.x;
+
+	// clang-format off
+	JGeometry::TQuat4<f32> q;
+	q.x =  w *  0 + y * velocity.z - z * velocity.y + w * velocity.x;
+	q.y = -x * velocity.z + y *  0 + z * velocity.x + w * velocity.y;
+	q.z =  x * velocity.y - y * velocity.x + z *  0 + w * velocity.z;
+	q.w = -x * velocity.x - y * velocity.y - z * velocity.z + w *  0;
+
+	f32 rx =  q.x *  w + q.y * -z - q.z * -y + q.w * -x;
+	f32 ry = -q.x * -z + q.y *  w + q.z * -x + q.w * -y;
+	f32 rz =  q.x * -y - q.y * -x + q.z *  w + q.w * -z;
+	// clang-format on
+
+	velocity.set(rx, ry, rz);
 	return velocity;
 }
 
@@ -537,8 +571,16 @@ void TKukku::dropCoins()
 		mDroppedCoins++;
 		mOneUp->appear();
 		mOneUp->JSGSetTranslation(getPosition());
-		mOneUp->mVelocity.set(0.0f, 0.0f, 0.0f);
-		mOneUp->offLiveFlag(LIVE_FLAG_UNK10);
+		// Retail reloads mOneUp before each of the three calls above (they
+		// clobber it) but holds it across the three velocity stores and the
+		// flag clear, which needs a pointer local declared exactly here: the
+		// member spelling reloads between the stores, and .set(0,0,0) turns
+		// the first store into an `stfsu` that costs the register.
+		TMapObjBase* oneUp = mOneUp;
+		oneUp->mVelocity.x = 0.0f;
+		oneUp->mVelocity.y = 0.0f;
+		oneUp->mVelocity.z = 0.0f;
+		oneUp->offLiveFlag(LIVE_FLAG_UNK10);
 		return;
 	}
 
@@ -703,8 +745,16 @@ void TKukkuManager::createModelData()
 
 const char** TKukku::getBasNameTable() const { return tori_bastable; }
 
-// TODO: 42.0%, almost entirely because updateRotation() expands here; see its
-// definition.
+// TODO: 94.5%. The residue is one refusal split that has no lever: retail
+// *inlines* calcMomentum here (and then calls SMS_Eular2Quat, TVec4's copy
+// constructor, TVec3::set<f> and TQuat4::rotate out of line from inside the
+// expansion) while it *calls* calcMomentum from TNerveKukkuRecoverGraph, whose
+// source statement is character-for-character the same. Since a body MWCC
+// inlines at depth 1 is by definition under the allowance, the two sites
+// cannot both be explained by the statement budget; the 15-statement body in
+// calcMomentum() is the side that wins (RecoverGraph 67.7 -> 99.8, this nerve
+// 92.9 -> 94.5), and its cost is that TVec3::set<f> is no longer instantiated
+// in this object -- retail's only two `bl`s to it are here and in dropCoins().
 DEFINE_NERVE(TNerveKukkuGraphWander, TLiveActor)
 {
 	TKukku* kukku = (TKukku*)spine->getBody();
@@ -815,8 +865,8 @@ DEFINE_NERVE(TNerveKukkuPostFall, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 0.0% for the same reason as TNerveKukkuGraphWander: retail calls both
-// updateRotation() and calcMomentum() and our build expands both.
+// 99.8%: the only residue is 8 bytes of frame (0x60 against the target's
+// 0x58) now that calcMomentum() is refused at this site as retail refuses it.
 DEFINE_NERVE(TNerveKukkuRecoverGraph, TLiveActor)
 {
 	TKukku* kukku = (TKukku*)spine->getBody();
