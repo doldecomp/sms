@@ -90,6 +90,7 @@ extern u32 jmaSinShift;
 extern f32* jmaSinTable;
 extern f32* jmaCosTable;
 
+#pragma dont_inline on
 inline f32 JMASCos(s16 v)
 {
 	return jmaCosTable[static_cast<u16>(v) >> jmaSinShift];
@@ -99,6 +100,7 @@ inline f32 JMASSin(s16 v)
 {
 	return jmaSinTable[static_cast<u16>(v) >> jmaSinShift];
 }
+#pragma dont_inline off
 
 bool JMANewSinTable(u8 numBits);
 void JMADeleteSinTable();

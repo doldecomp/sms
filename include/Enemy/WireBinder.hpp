@@ -13,7 +13,9 @@ public:
 	bool reset(const JGeometry::TVec3<f32>&);
 
 	void bind(TLiveActor*);
+#pragma dont_inline on
 	JGeometry::TVec3<f32> getDir() const { return mDir; }
+#pragma dont_inline off
 	JGeometry::TVec3<f32> getDirAtPos(const JGeometry::TVec3<f32>&, f32) const;
 	void getPoint(JGeometry::TVec3<f32>*, f32) const;
 	void getPoint(JGeometry::TVec3<f32>*, const JGeometry::TVec3<f32>&) const;
