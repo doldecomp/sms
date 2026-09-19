@@ -268,7 +268,12 @@ void TMapObjBase::calcMap()
 	gpMap->getModelManager()->getJointModel(0)->getModel()->calc();
 }
 
-void TMapObjBase::setJointScaleZ(J3DJoint*, f32) { }
+void TMapObjBase::setJointScaleZ(J3DJoint* joint, f32 scale)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mScale.z    = scale;
+	joint->setTransformInfo(info);
+}
 
 void TMapObjBase::setJointScaleY(J3DJoint* joint, f32 scale)
 {
@@ -277,9 +282,21 @@ void TMapObjBase::setJointScaleY(J3DJoint* joint, f32 scale)
 	joint->setTransformInfo(info);
 }
 
-void TMapObjBase::setJointScaleX(J3DJoint*, f32) { }
+void TMapObjBase::setJointScaleX(J3DJoint* joint, f32 scale)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mScale.x    = scale;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointScale(J3DJoint*, f32, f32, f32) { }
+void TMapObjBase::setJointScale(J3DJoint* joint, f32 x, f32 y, f32 z)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mScale.x          = x;
+	info.mScale.y          = y;
+	info.mScale.z          = z;
+	joint->setTransformInfo(info);
+}
 
 f32 TMapObjBase::getJointScaleZ(J3DJoint* joint)
 {
@@ -296,31 +313,74 @@ f32 TMapObjBase::getJointScaleX(J3DJoint* joint)
 	return joint->getTransformInfo().mScale.x;
 }
 
-void TMapObjBase::rotateJointZ(J3DJoint*, f32) { }
+void TMapObjBase::rotateJointZ(J3DJoint* joint, f32 angle)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	int rotation           = info.mRotation.z;
+	rotation += (s16)angle;
+	info.mRotation.z = rotation;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::rotateJointY(J3DJoint*, f32) { }
+void TMapObjBase::rotateJointY(J3DJoint* joint, f32 angle)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	int rotation           = info.mRotation.y;
+	rotation += (s16)angle;
+	info.mRotation.y = rotation;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::rotateJointX(J3DJoint*, f32) { }
+void TMapObjBase::rotateJointX(J3DJoint* joint, f32 angle)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	int rotation           = info.mRotation.x;
+	rotation += (s16)angle;
+	info.mRotation.x = rotation;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointRotateZ(J3DJoint*, short) { }
+void TMapObjBase::setJointRotateZ(J3DJoint* joint, short angle)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mRotation.z    = angle;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointRotateY(J3DJoint*, short) { }
+void TMapObjBase::setJointRotateY(J3DJoint* joint, short angle)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mRotation.y    = angle;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointRotateX(J3DJoint*, short) { }
+void TMapObjBase::setJointRotateX(J3DJoint* joint, short angle)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mRotation.x    = angle;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointRotate(J3DJoint*, short, short, short) { }
+void TMapObjBase::setJointRotate(J3DJoint* joint, short x, short y, short z)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mRotation.x       = x;
+	info.mRotation.y       = y;
+	info.mRotation.z       = z;
+	joint->setTransformInfo(info);
+}
 
-f32 TMapObjBase::getJointRotateZ(J3DJoint* joint)
+s16 TMapObjBase::getJointRotateZ(J3DJoint* joint)
 {
 	return joint->getTransformInfo().mRotation.z;
 }
 
-f32 TMapObjBase::getJointRotateY(J3DJoint* joint)
+s16 TMapObjBase::getJointRotateY(J3DJoint* joint)
 {
 	return joint->getTransformInfo().mRotation.y;
 }
 
-f32 TMapObjBase::getJointRotateX(J3DJoint* joint)
+s16 TMapObjBase::getJointRotateX(J3DJoint* joint)
 {
 	return joint->getTransformInfo().mRotation.x;
 }
@@ -346,7 +406,14 @@ void TMapObjBase::setJointTransX(J3DJoint* joint, f32 x)
 	joint->setTransformInfo(info);
 }
 
-void TMapObjBase::setJointTrans(J3DJoint*, f32, f32, f32) { }
+void TMapObjBase::setJointTrans(J3DJoint* joint, f32 x, f32 y, f32 z)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mTranslate.x      = x;
+	info.mTranslate.y      = y;
+	info.mTranslate.z      = z;
+	joint->setTransformInfo(info);
+}
 
 f32 TMapObjBase::getJointTransZ(J3DJoint* joint)
 {

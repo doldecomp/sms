@@ -280,9 +280,9 @@ public:
 	static void setJointTransX(J3DJoint*, f32);
 	static void setJointTransY(J3DJoint*, f32);
 	static void setJointTransZ(J3DJoint*, f32);
-	static f32 getJointRotateX(J3DJoint*);
-	static f32 getJointRotateY(J3DJoint*);
-	static f32 getJointRotateZ(J3DJoint*);
+	static s16 getJointRotateX(J3DJoint*);
+	static s16 getJointRotateY(J3DJoint*);
+	static s16 getJointRotateZ(J3DJoint*);
 	void setJointRotate(J3DJoint*, short, short, short);
 	void setJointRotateX(J3DJoint*, short);
 	void setJointRotateY(J3DJoint*, short);
