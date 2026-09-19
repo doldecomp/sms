@@ -660,9 +660,9 @@ void TRedCoinSwitch::loadAfter()
 	for (int i = 0; i < 8; ++i) {
 		char buf[0x40];
 		snprintf(buf, 0x40, "赤コイン %d", i);
-		JDrama::TNameRefGen::getInstance()
-		    ->search<TMapObjBase>(buf)
-		    ->makeObjDead();
+		TMapObjBase* coin
+		    = JDrama::TNameRefGen::getInstance()->search<TMapObjBase>(buf);
+		coin->makeObjDead();
 	}
 }
 
