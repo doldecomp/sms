@@ -793,7 +793,10 @@ void THanaSambo::perform(u32 cue, JDrama::TGraphics* graphics)
 void THanaSambo::createPollen()
 {
 	MtxPtr joint = mMActor->getModel()->getAnmMtx(mPollenJntIndex);
-	JGeometry::TVec3<f32> pos(joint[0][3], joint[1][3], joint[2][3]);
+	JGeometry::TVec3<f32> pos;
+	pos.x = joint[0][3];
+	pos.y = joint[1][3];
+	pos.z = joint[2][3];
 	Mtx mtx;
 	MsMtxSetRotRPH(mtx, 0.0f, 0.0f, -90.0f);
 	MTXConcat(joint, mtx, mtx);
@@ -901,14 +904,11 @@ DEFINE_NERVE(TNerveHanaSamboAttack, TLiveActor)
 			sambo->setBckAnm(1);
 		} else if (sambo->isBckAnm(1)) {
 			if (spine->getTime()
-			    > sambo->mSaveParams->mSLAttackingTime.get()) {
-				if (!sambo->unsetUnk165())
-					sambo->setBckAnm(2);
-				else
-					sambo->setBckAnm(1);
-			} else {
+			        > sambo->mSaveParams->mSLAttackingTime.get()
+			    && !sambo->unsetUnk165())
+				sambo->setBckAnm(2);
+			else
 				sambo->setBckAnm(1);
-			}
 		} else {
 			spine->pushAfterCurrent(&TNerveHanaSamboWait::theNerve());
 			return true;
@@ -1204,7 +1204,7 @@ void TSamboHead::behaveToWater(THitActor*)
 void TSamboHead::attackToMario()
 {
 	sendAttackMsgToMario();
-	if (checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
+	if (checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
 		JGeometry::TVec3<f32> away(mPosition.x - gpMarioPos->x, 10.0f,
 		                           mPosition.z - gpMarioPos->z);
 		MsVECNormalize(&away, &away);
