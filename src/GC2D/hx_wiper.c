@@ -91,7 +91,7 @@ typedef struct HxWork {
 	/* 0x2C */ void* resource;
 	/* 0x30 */ void* resourceEx;
 	/* 0x34 */ u32 resourceSize;
-	/* 0x38 */ s32 step;
+	/* 0x38 */ u32 step;
 	/* 0x3C */ u32 timer;
 	/* 0x40 */ HxMotion motion;
 } HxWork;
@@ -145,7 +145,7 @@ static u16 img_wy;
 static u8 vtable[7];
 
 static HxWork hx;
-static u8 hx_buffer[0x3300];
+static u8 hx_buffer[0x3300] __attribute__((aligned(32)));
 
 static void* fbuf        = hx_buffer;
 static u8 vtable_org[7]  = { 0x10, 0x10, 0x00, 0x00, 0x00, 0x10, 0x10 };
@@ -487,10 +487,12 @@ void Hx_StartWipe(int wipe_no, int param)
 		hx.resourceSize = sizeof(hx_buffer);
 	}
 
-	if (hx.state != 2) {
-	} else {
+	// TODO: the ROM's `beq body; b skip` here is still unfused where ours
+	// fuses to `bne skip`; the `(int)` cast is what buys retail's signed
+	// compare on this u8 (Hx_RemoveResource's plain `hx.state == 2` is
+	// cmplwi and byte-exact).
+	if ((int)hx.state == 2)
 		Hx_Warning(1);
-	}
 
 	hx.state  = 1;
 	hx.wipeNo = wipe_no;
@@ -1130,17 +1132,19 @@ static int hxs_logodraw_resetflag;
 static void Hxs_Logo_ExtraDraw(u8 alpha_in, const ResTIMG* timg)
 {
 	GXTexObj obj;
-	GXColor color = { 0xFF, 0xFF, 0xFF, 0xFF };
 
 	Hx_CameraInit();
 	Hx_GxInit(1, 1);
 	Hgx_init_tobj_resource(&obj, timg);
 
-	color.a = alpha_in;
-	GXSetTevColor(GX_TEVREG0, color);
+	{
+		GXColor color = { 0xFF, 0xFF, 0xFF, 0xFF };
+		color.a       = alpha_in;
+		GXSetTevColor(GX_TEVREG0, color);
+	}
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_ZERO, GX_CC_ZERO,
 	                GX_CC_ZERO);
-	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_A1, GX_CA_TEXA,
+	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_A0, GX_CA_TEXA,
 	                GX_CA_ZERO);
 	GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
@@ -1168,28 +1172,31 @@ static void Hxs_Logo_ExtraDraw(u8 alpha_in, const ResTIMG* timg)
 static void Hxs_Logo_TexSetup(u8 alpha_in, u8 fade_in, const ResTIMG* timg)
 {
 	GXTexObj obj;
-	GXColor color = { 0xFF, 0, 0, 0 };
 
 	Hx_CameraInit();
 	Hx_GxInit(1, 1);
 	Hgx_init_tobj_resource(&obj, timg);
 
-	color.r = alpha_in;
-	if (fade_in > 0xC0)
-		color.a = 0xFF;
-	else
-		color.a = 1.328 * (f64)fade_in;
-	GXSetTevColor(GX_TEVREG0, color);
+	{
+		GXColor color = { 0xFF, 0, 0, 0 };
+		color.r       = alpha_in;
+		color.a       = fade_in;
+		if (fade_in > 0xC0)
+			color.a = 0xFF;
+		else
+			color.a = 1.328 * (f64)fade_in;
+		GXSetTevColor(GX_TEVREG0, color);
 
-	if (fade_in > 0xC0)
-		color.a = ((0xFF - fade_in) * 4) & 0xFC;
-	else
-		color.a = 0xFF;
-	GXSetTevColor(GX_TEVREG1, color);
+		if (fade_in > 0xC0)
+			color.a = ((0xFF - fade_in) * 4) & 0xFC;
+		else
+			color.a = 0xFF;
+		GXSetTevColor(GX_TEVREG1, color);
+	}
 
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXA,
 	                GX_CC_ZERO);
-	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A0, GX_CA_A1, GX_CA_TEXA, GX_CA_ZERO);
+	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A1, GX_CA_A0, GX_CA_TEXA, GX_CA_ZERO);
 	GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
