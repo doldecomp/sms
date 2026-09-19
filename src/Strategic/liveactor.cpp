@@ -476,7 +476,7 @@ void TLiveActor::updateAnmSound()
 void TLiveActor::setAnmSound(const char* path)
 {
 	if (!mAnmSound)
-		OSPanic(__FILE__, 0x385, "TLiveActor[%s] : mAnmSound == NULL\n", mName);
+		OSPanic(__FILE__, 0x386, "TLiveActor[%s] : mAnmSound == NULL\n", mName);
 
 	mAnmSoundPath = path;
 
