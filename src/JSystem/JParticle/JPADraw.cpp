@@ -1255,6 +1255,7 @@ s16 JPADraw::getSecondTextureID()
 void JPADraw::loadYBBMtx(MtxPtr mtx)
 {
 	JGeometry::TVec3<f32> v(0.0f, mtx[1][1], mtx[2][1]);
+	char trash[8];
 	JUT_ASSERT(!v.isZero());
 	v.normalize();
 
