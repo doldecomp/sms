@@ -567,10 +567,14 @@ void MSound::mainLoop()
 	if (unkCF == 0 && unkA8 == 0)
 		return;
 
+	// US drops the deferred shine-appear BGM restart along with the only
+	// writer of unkD1 (MSSeCallBack case 40, also GMSJ01/GMSP01-only).
+#if !defined(VERSION_GMSE01)
 	if (unkD1 == 1) {
 		MSBgm::startBGM(MSD_BGM_SHINE_APPEAR);
 		unkD1 = 0;
 	}
+#endif
 
 	if (unkC8[1] != 0) {
 		MSMainProc::entranceDemoLoop(unkA4);
@@ -921,6 +925,19 @@ void MSound::playTimer(u32 time)
 	}
 }
 
+// TODO: three instruction runs are missing here because JAIBasic::unk94
+// (include/JSystem/JAudio/JAInterface/JAIBasic.hpp:304) is declared u16 while
+// the ROM loads and stores it as a word: `lwz r0, 0x94(r25)` /
+// `stw r26, 0x94(r25)`. It is the id of the last Mario voice started. With it
+// as u32 the body wants
+//   - `unk94 = param_1;` immediately after the startSoundActorInner call
+//     below (ROM 0xbc8);
+//   - `unk94 != MSD_SE_MV13_ACTION_SMALL_01 &&` as the first term of the
+//     random substitutions in `case 0xffff0003:` (ROM 0x888) and in
+//     `case MSD_SE_MV22_JUMP_MID_01:` (ROM 0xa50).
+// Nothing else in the tree reads that member, and the class size is unchanged,
+// but the declaration is in a shared JSystem header, so it is reported rather
+// than made here.
 u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 {
 	if (((param_3 & 0x1) ? true : false) == 1)
