@@ -920,21 +920,43 @@ void MSound::playTimer(u32 time)
 	}
 }
 
-// TODO: every instruction matches; the residue is a 0x30-byte frame gap
-// (retail 0xa0, ours 0x70) plus the r28/r29/r30 rotation it drags along.
+// TODO: every instruction matches; the residue is a 0x28-byte frame gap
+// (retail 0xa0, ours 0x78) plus the r28/r29/r30 rotation it drags along.
 // Measured: the two JAIActor named locals are 16 bytes each and sit directly
-// above the inline temp pool in both builds (retail 0x58 and 0x68, ours 0x30
-// and 0x40), so the gap is entirely a *dead low region*: retail's pool is
-// 0xc..0x58 = 76 bytes, ours 0xc..0x30 = 36, and the remaining 8 is the slack
-// left above the named block (retail 12, ours 4). Nothing in the body touches
-// either region, so the missing 40 bytes are uninitialised non-trivial locals
-// of an inlined callee, not a spelling of this function.
+// above the inline temp pool in both builds, so the gap is entirely a *dead
+// low region*; nothing in the body touches it, so the missing bytes are
+// uninitialised non-trivial locals of an inlined callee, not a spelling of
+// this function.
 //
-// This is a whole-TU class, not a startMarioVoice one: every instruction of
-// MSound::startSoundActorSpecial (0x78/0x70), startBeeSe (0x50/0x30),
-// talkModeOut (0x40/0x38), pauseOff (0x50/0x38) and this function matches and
-// only the frame differs, i.e. one shared inlined callee in MSound.hpp /
-// MSoundSE.hpp is missing a dead local. Research item, not a unit item.
+// Research pass (batch grpfj) narrowed the family sharply.  The fabricated
+// MSound::checkUnkA8 that used to gate every sound site here was really
+// MSound::gateCheck(id) with a *constant* id: for every id used in this TU
+// (id >> 11 & 1) | (id >> 24 & 0xC0) folds to 0 or 1, so gateCheck collapses
+// to exactly the `unkA8 & 1` / `unkA8 & 2` test the binary shows.  gateCheck
+// inlines at depth 1 only (budget 14); at depth 2 it stays a `bl`, which is
+// why every MSound::startSoundActor site in the rest of the game calls it out
+// of line and why these sites spell the gate out.  Folding it in closed
+// pauseOn and demoModeIn and moved this function 0x70 -> 0x78.
+//
+// What is left, all instruction-exact and frame-only:
+//   startMarioVoice        0xa0 / 0x78   (-0x28, one gateCheck expansion)
+//   startBeeSe             0x50 / 0x38   (-0x18, four gateCheck expansions)
+//   startSoundActorSpecial 0x78 / 0x70   (-8, variable id, gateCheck inlined)
+//   pauseOff               0x50 / 0x48   (-8)
+//   talkModeIn             0x30 / 0x28   (-8)
+//   talkModeOut            0x40 / 0x38   (-8)
+//   loadWaveBackword      0x128 / 0x120  (-8, plus the buffer 12 bytes low)
+//   exitStage              0x40 / 0x40   (JAICamera temp 4 bytes high)
+// An 8-byte dead non-trivial local in gateCheck lands talkModeOut and
+// startSoundActorSpecial exactly and overshoots pauseOn, pauseOff, talkModeIn
+// (+8) and startBeeSe (+0x10), so it is not the carrier -- and gateCheck is
+// emitted and byte-exact, so it is not a legal one either.  The same local in
+// MSBgm::setAllTracksVolume is +8 per expansion but wants demoModeOut to be
+// 8 bigger than retail; in MSound::checkUnkA8 it was +8 per expansion and fit
+// six functions, but that function does not exist.  The carrier is therefore
+// still unnamed: it has to be a callee of these sites with no out-of-line
+// copy, i.e. something in MSoundSE.hpp around startSoundActor /
+// startSoundSystemSE / startSeRandPlay.  Research item, not a unit item.
 u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 {
 	if (((param_3 & 0x1) ? true : false) == 1)
