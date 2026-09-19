@@ -119,7 +119,7 @@ BOOL TMario::doRunningAnimation()
 	f32 rate;
 	f32 sp;
 
-	sp = mIntendedMag > mForwardVel ? mForwardVel : mIntendedMag;
+	sp = mIntendedMag > mForwardVel ? mIntendedMag : mForwardVel;
 
 	if (sp < 4.0f)
 		sp = 4.0f;
@@ -421,13 +421,13 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		}
 	}
 
-	f32 mult   = (0.02f * (mIntendedMag * 0.03125f * cs)) + slipFr;
+	f32 mult   = (0.02f * (mIntendedMag / 32.0f * cs)) + slipFr;
 	f32 oldMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 
 	mSlideVelX
-	    += sn * (mSlideVelZ * (mIntendedMag * 0.03125f)) * getSlideStickMult();
+	    += sn * (mSlideVelZ * (mIntendedMag / 32.0f)) * getSlideStickMult();
 	mSlideVelZ = -(
-	    (sn * (mSlideVelX * (mIntendedMag * 0.03125f)) * getSlideStickMult())
+	    (sn * (mSlideVelX * (mIntendedMag / 32.0f)) * getSlideStickMult())
 	    - mSlideVelZ);
 
 	f32 newMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
@@ -665,7 +665,7 @@ BOOL TMario::running()
 			return changePlayerStatus(0xC400209, 0, false);
 		}
 		if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
-		    && mGroundPlane->mNormal.y <= 0.17364818f) {
+		    && mGroundPlane->mNormal.y >= 0.17364818f) {
 			return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
 		}
 		return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
@@ -690,7 +690,7 @@ BOOL TMario::running()
 			return changePlayerStatus(0xC400209, 0, false);
 		}
 		if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
-		    && mGroundPlane->mNormal.y <= 0.17364818f) {
+		    && mGroundPlane->mNormal.y >= 0.17364818f) {
 			return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
 		}
 		return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
