@@ -1882,7 +1882,7 @@ void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
 		unk234 -= 1.0f;
 
 	unk210      = JMASin(unk20C * 360.0f / flyBaseFrequency) * flyBaseAmplitude;
-	mPosition.y = unk210 + unk230 + unk234;
+	mPosition.y = unk230 + unk234 + unk210;
 	mTurnSpeed
 	    = ((THaneHamuKuriSaveLoadParams*)getSaveParam())->mSLTurnSpeedLow.get();
 	mMarchSpeed = ((THaneHamuKuriSaveLoadParams*)getSaveParam())
