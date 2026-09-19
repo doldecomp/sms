@@ -3312,6 +3312,53 @@ verifizierte Funktionen** (unverändert seit Runde 45) in 58 Commits.
 DOL SHA1 bestätigt `OK`.
 
 
+### Nach achtundvierzigster Iterationsrunde (breiter 70–99,5-%-Scan außerhalb bekannter Cluster: 84 Kandidaten, 0 Treffer; `initECTMir` bis auf 4 Zeilen rekonstruiert; neue Registerzuteilungs-Fallklasse dokumentiert)
+
+**`TBathtubKiller::attackToMario`-Stackframe-Rätsel weiter untersucht**
+(named-local-Variante des `TRect`-Temporarys, `int` statt `bool`) —
+keine der Varianten änderte die Frame-Differenz; Sackgasse endgültig
+bestätigt, sauber zurückgesetzt.
+
+**Breiter Scan des 70–99,5-%-Bands außerhalb aller bisher bearbeiteten
+Cluster-Dateien** (118 Kandidaten in 76 Einheiten, Größe 20–300 Bytes):
+84 Kandidaten mit Stackframe-Differenz gefunden und automatisiert per
+`char trash[N]` getestet — **0 Treffer**. Bestätigt, dass auch dieses
+Band inzwischen weitgehend erschöpft ist.
+
+**`TMarDirector::initECTMir`** (99,48 %, 248 B) am weitesten
+rekonstruiert: `char trash[24]` schloss die anfängliche 24-Byte-
+Framelücke exakt; Umschreiben des `JDrama::TRect`-Funktionsarguments
+auf ein benanntes `srcRect`-Local traf zusätzlich Retails exakte
+Registerreihenfolge (`r3` vor `r4` statt umgekehrt) — von 14 auf
+4 Diff-Zeilen reduziert. Verbleibend: zwei kosmetische
+`...rodata.N`-vs-`"@N"`-Label-Unterschiede (derselbe String-Literal-
+Inhalt, nur andere Pool-Nummerierung) sowie ein hartnäckiger
+"interner Slot-Versatz" (`0x40` vs. `0x64` als Stack-Offset für
+`srcRect`, bei bereits identischer Gesamt-Framegröße) — bestätigt
+erneut die bereits mehrfach dokumentierte resistente Kategorie
+(6+ frühere Fälle diese Session). `trash[N]`-Platzierung vor/nach der
+Local-Deklaration verändert den Offset nicht. Sauber zurückgesetzt.
+
+**Neue Registerzuteilungs-Fallklasse dokumentiert**
+(`execute__18TNerveNameKuriLandCFP24TSpineBase<10TLiveActor>`,
+96,8 %, 144 B): Retail hält den `self`-Zeiger NIE in einem
+Callee-Saved-Register (kein `r31`-Save, Frame nur `-0x8` statt
+unserer `-0x20`) — es nutzt `r3` direkt durch, weil auf JEDEM
+Kontrollflusspfad entweder `self` vor dem einzigen `bl
+checkCurAnmEnd`-Aufruf verbraucht wird oder dieser Aufruf komplett
+übersprungen wird (Short-Circuit-`&&`). Unser Compiler entscheidet
+sich konservativer für `r31`-Sicherung. Gleiche Quellstruktur wie
+Retail (`if (self->isBckAnm(4) && self->checkCurAnmEnd(0)) return
+true; if (!self->isAirborne()) self->setBckAnm(4); return false;`)
+— reine MWCC-Liveness-Analyse-Differenz, nicht in dieser Runde weiter
+verfolgt (passt in dieselbe "asymmetrische Compiler-Optimierungs-
+entscheidung"-Kategorie wie `identity33`).
+
+**Keine neuen Fixes in Runde 48.** Session-Gesamtstand bleibt bei
+**400 tatsächlich verifizierten Funktionen** in 58 Commits
+(unverändert seit Runde 45). DOL SHA1 bestätigt `OK`.
+
+
 
 ## Nächster GMSJ01-Kandidat
 **Neuer, großer Kandidaten-Cluster identifiziert (Runde 44):
