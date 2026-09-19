@@ -249,6 +249,12 @@ void TCoin::appearWithoutSound()
 		offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 }
 
+static inline MSound* TCoinAppearGetMSound(TCoin* p)
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TCoin::appear()
 {
 	if (isActorType(0x20000010)) {
@@ -257,8 +263,8 @@ void TCoin::appear()
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 			                                   nullptr, 0);
 	} else {
-		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COIN_APPEAR, 0, nullptr,
-		                                   0);
+		TCoinAppearGetMSound(this)->startSoundSystemSE(MSD_SE_SY_COIN_APPEAR,
+		                                               0, nullptr, 0);
 	}
 
 	appearWithoutSound();
