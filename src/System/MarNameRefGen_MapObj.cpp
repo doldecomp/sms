@@ -72,12 +72,11 @@
 //   "木" (batch 114 read this as a TMapObjSteam small-data placement; the
 //   .sdata2-vs-.rodata difference was just the wrong string).
 //
-// Everything left (~250 instructions of r30/r29 renaming from 0x25a4 on, plus
-// the 0x50-vs-0x60 frame and the extra `stw r29`) is one cascade from the
-// missing TTelesaSlot::TTelesaSlot(const char*): the extra callee-saved
-// register it needs renames the object pointer for the whole tail. That
-// constructor's depth-1 inlining refusal is the standing research item from
-// batch 104, so it is left alone here.
+// The last loss (~250 instructions of r30/r29 renaming from 0x25a4 on, plus
+// the 0x50-vs-0x60 frame and the extra `stw r29`) was one cascade from the
+// missing TTelesaSlot::TTelesaSlot(const char*), and it is closed: the ROM
+// leaves that constructor's name argument defaulted, which is the one inline
+// level that makes MWCC call it. getNameRef_MapObj is byte-exact.
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 {
 	if (strcmp(name, "MapObjBase") == 0)
@@ -506,23 +505,16 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "ItemSlotDrum") == 0)
 		return new TItemSlotDrum;
 
-	// TODO: the map keeps TTelesaSlot's in-class constructor as a weak
-	// out-of-line copy (0x98) *and* calls it here (the `bl` is straight
-	// after `__nw__FUl`, so at depth 1), so MWCC refused the expansion at
-	// this site. We still expand it, which costs one extra callee-saved
-	// register for the rest of the ladder.
-	// Batch 104 probed the caller-budget reading and everything else it
-	// could think of, and all of it expands: an in-class constructor has no
-	// statement limit at depth 1 (1..30 measured); a base initialiser, two
-	// bases, a vtable, a virtual destructor, an array-of-class member
-	// needing `__construct_array` and a defaulted `const char*` argument all
-	// together still expand; and a `new` ladder with 256 distinct in-class
-	// constructors and 2571 inlined instructions expands every one of them.
-	// The one shape that does give weak-plus-`bl` is a member of a class
-	// *template* defined outside the class body, which TTelesaSlot is not.
-	// Still open; see codegen-tells.md, research batch 104.
+	// The name is the constructor's default argument, and that one
+	// codegen-neutral inline level is the whole of batch 104's open item: the
+	// map keeps TTelesaSlot's in-class constructor as a weak out-of-line copy
+	// (0x98) and `bl`s it here, and spelling the argument out expands it
+	// instead, which renamed the object pointer for the ~250 instructions of
+	// this function's tail. Every shape batch 104 probed kept the argument at
+	// the call site, so the level was never there. Identical to what the ROM
+	// does at TIgaigaManager/TPakkunManager::createEnemyInstance.
 	if (strcmp(name, "TelesaSlot") == 0)
-		return new TTelesaSlot("btelesaSlot");
+		return new TTelesaSlot;
 
 	if (strcmp(name, "CasinoPanelGate") == 0)
 		return new TCasinoPanelGate;
