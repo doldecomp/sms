@@ -40,9 +40,13 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*);
+#pragma dont_inline on
 	virtual void restoreDrawBuffer(u32) { }
+#pragma dont_inline off
 	virtual void createEnemies(int);
+#pragma dont_inline on
 	virtual void changeDrawBuffer(u32) { }
+#pragma dont_inline off
 
 	void createEnemy();
 	void createSharedMActorSet(const char**);
