@@ -28,7 +28,11 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 
 // Some sites spell the centred-size computation with the width read before
 // the height; ExPane.hpp's setCenteredSize has the other order, which is the
-// one TConsoleStr::processReady matches. The order is per site.
+// one TConsoleStr::processReady matches. The order is per site. The width is
+// read from the rect's fields, not through getWidth(), so that the second
+// read costs no dead temporary.
+// waitForSelectOver wants the same order but the pair of getWidth() temps:
+// with the field reads its frame comes out 8 bytes short.
 static inline void setCenteredSizeWHh(TExPane* pane, s32 time, s32 target_w,
                                       s32 target_h, s32 initial_w,
                                       s32 initial_h)
@@ -42,16 +46,18 @@ static inline void setCenteredSizeWHh(TExPane* pane, s32 time, s32 target_w,
 	    (initH - initial_h) * 0.5f);
 }
 
-static inline void setCenteredSizeWw(TExPane* pane, s32 time, s32 target_w,
+static inline void setCenteredSizeWr(TExPane* pane, s32 time, s32 target_w,
                                      s32 target_h, s32 initial_w,
                                      s32 initial_h)
 {
 	pane->setPaneSize(time, target_w, target_h, initial_w, initial_h);
+	s32 initH = pane->mInitialBounds.getHeight();
 	pane->setPaneOffset(
-	    time, (pane->mInitialBounds.getWidth() - target_w) * 0.5f,
-	    (pane->mInitialBounds.getHeight() - target_h) * 0.5f,
-	    (pane->mInitialBounds.getWidth() - initial_w) * 0.5f,
-	    (pane->mInitialBounds.getHeight() - initial_h) * 0.5f);
+	    time,
+	    (pane->mInitialBounds.x2 - pane->mInitialBounds.x1 - target_w) * 0.5f,
+	    (initH - target_h) * 0.5f,
+	    (pane->mInitialBounds.x2 - pane->mInitialBounds.x1 - initial_w) * 0.5f,
+	    (initH - initial_h) * 0.5f);
 }
 
 u32 TCardSave::cMessageID[] = {
@@ -1287,7 +1293,7 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		setMessage(unk194, 0x200, (u16)messageID);
 
 		unk194->hide();
-		unk17C->mPane->show();
+		unk17C->getPane()->show();
 		unk17C->setCenteredSize(20, unk180.getWidth(), unk180.getHeight(), 0,
 		                        0);
 
@@ -1347,7 +1353,7 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 
 	case 4:
 		unk194->hide();
-		setCenteredSizeWw(unk17C, 20, 0, 0, unk180.getWidth(),
+		setCenteredSizeWr(unk17C, 20, 0, 0, unk180.getWidth(),
 		                  unk180.getHeight());
 
 		unk198[0][1]->hide();

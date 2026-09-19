@@ -32,6 +32,48 @@ TCardLoad* gpCardLoad;
 // TODO: where should this go?
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+// Some sites spell the centred-size computation with the width read before
+// the height; ExPane.hpp's setCenteredSize has the other order, which is the
+// one TConsoleStr::processReady matches. The order is per site.
+static inline void setCenteredSizeWHh(TExPane* pane, s32 time, s32 target_w,
+                                      s32 target_h, s32 initial_w,
+                                      s32 initial_h)
+{
+	pane->setPaneSize(time, target_w, target_h, initial_w, initial_h);
+	s32 initH = pane->mInitialBounds.getHeight();
+	pane->setPaneOffset(
+	    time, (pane->mInitialBounds.getWidth() - target_w) * 0.5f,
+	    (initH - target_h) * 0.5f,
+	    (pane->mInitialBounds.getWidth() - initial_w) * 0.5f,
+	    (initH - initial_h) * 0.5f);
+}
+
+static inline void setCenteredSizeWr(TExPane* pane, s32 time, s32 target_w,
+                                     s32 target_h, s32 initial_w,
+                                     s32 initial_h)
+{
+	pane->setPaneSize(time, target_w, target_h, initial_w, initial_h);
+	s32 initH = pane->mInitialBounds.getHeight();
+	pane->setPaneOffset(
+	    time,
+	    (pane->mInitialBounds.x2 - pane->mInitialBounds.x1 - target_w) * 0.5f,
+	    (initH - target_h) * 0.5f,
+	    (pane->mInitialBounds.x2 - pane->mInitialBounds.x1 - initial_w) * 0.5f,
+	    (initH - initial_h) * 0.5f);
+}
+
+static inline void setCenteredSizeWw(TExPane* pane, s32 time, s32 target_w,
+                                     s32 target_h, s32 initial_w,
+                                     s32 initial_h)
+{
+	pane->setPaneSize(time, target_w, target_h, initial_w, initial_h);
+	pane->setPaneOffset(
+	    time, (pane->mInitialBounds.getWidth() - target_w) * 0.5f,
+	    (pane->mInitialBounds.getHeight() - target_h) * 0.5f,
+	    (pane->mInitialBounds.getWidth() - initial_w) * 0.5f,
+	    (pane->mInitialBounds.getHeight() - initial_h) * 0.5f);
+}
+
 static void clearBookmark(u32 bm)
 {
 	JSUMemoryOutputStream stream;
@@ -1612,8 +1654,8 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 
 	case 3:
 		if (unkB4 > 180) {
-			unk568->setCenteredSize(20, 0, 0, unk56C.getWidth(),
-			                        unk56C.getHeight());
+			setCenteredSizeWr(unk568, 20, 0, 0, unk56C.getWidth(),
+			                   unk56C.getHeight());
 			unk580->hide();
 			unk10 = 4;
 		}
@@ -1720,8 +1762,8 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 
 	case 3:
 		if (unkB4 > 180) {
-			unk4AC->setCenteredSize(20, 0, 0, unk4B0.getWidth(),
-			                        unk4B0.getHeight());
+			setCenteredSizeWr(unk4AC, 20, 0, 0, unk4B0.getWidth(),
+			                  unk4B0.getHeight());
 
 			unk4C8->hide();
 			unk500->hide();
