@@ -20,7 +20,7 @@ Per-batch token costs are in `docs/progress/agent-costs-2026-09-18.md`; the batc
 
 ## What the numbers say about yield
 
-Measured over 52 batches on 2026-09-18 (about 14.5M agent tokens, 57 links, roughly 75 functions to exact):
+Measured over 52 batches on 2026-09-18 (about 14.5M agent tokens, 57 links, roughly 75 functions to exact); the second session's 27 batches (5.6M tokens, 0 links, ~60 exact, eleven units to 100% data) confirmed the verdicts and added the data-pass row:
 
 | Batch type | Typical cost | Typical result | Verdict |
 | --- | ---: | --- | --- |
@@ -32,6 +32,7 @@ Measured over 52 batches on 2026-09-18 (about 14.5M agent tokens, 57 links, roug
 | Library closure / re-pass | 220k-480k | 0-5 links | Good once (region constants, one-arg levers); the remaining 17 library units are research residues. |
 | Closure batch on units worked twice before | 300k-570k | 0-2 links | **Stop.** Every remaining one/two-function game unit is diagnosed as a known-open class. |
 | Sonnet on script-driven sweeps | 240k | 0 exact | Same tokens per call as Opus, less result. Opus only. |
+| Data pass (sub-100 sections, `objdump -r`, `$NNNN` static sections, rogue-include position) | 170k-250k | 3-5 units to 100% data, 1-4 exact as a side effect | Best value per token while sub-100 units with non-jump-table defects remain (none left on 2026-09-18). |
 
 Tokens per tool call are ~2,300 for every agent regardless of policy; savings come from agents reading and rereading less (rules card, `--clusters`), not from the model thinking less.
 
@@ -46,15 +47,13 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 7. **Landing is one bash call per step**; do not narrate between them. Refresh `PROGRESS.md` with `tools/refresh-progress.py` and the timeline after every landing, and report the percentage table to the user after every completion (they asked for it).
 8. **Spawn messages are short**: worktree, units, scratch dir, the two or three rules that apply, the link-test procedure with the `.cpp` spelling and the ninja exit-code check. The briefs carry the rest.
 
-## Open leads worth a batch (verified 2026-09-18)
+## Open leads worth a batch (verified 2026-09-18, late night)
 
-- Relocation-target sites remaining after pass III (GCConsole2, bossgesso, SelectMenu, MapObjMamma, MarioSpecial, ModelGate): run `tools/check-relocs.py` and work the real ones.
-- Structural census entries 171+ (about 470 functions).
-- `operator*` consumption split: V2 (`const TVec3&` parameter, by-value return) is +12 improvements, -1 function only because Tongue loses `__ami__`; if Tongue can keep `__ami__` another way, apply it (research 159).
-- Research seeds: `JPAGetRMtxTVecElement`'s FPR ranking (x f31, z f30, y f29) fits neither order while its byte-exact sibling pins the callee (research 174); `JPAVecToRotaMtx`'s memory-resident `axis`; the JGadget stride mechanism (research 161's variant table); `TMBindShadowManager`-style `Vec`-vs-`TVec3` accessor splits.
-- Library: `TPolarCamera::perform` (104 dead bytes = 96 + 8), `JAIBasic::initDriver` (8 bytes, a two-word class local in UNUSED `initAudioThread`), J3DModel (22 MISSING map symbols block its link), `bootDSP` UNUSED 0x20 with an empty body.
+- **Links one function away**: JALModSe `JALSystem::append` (instruction-exact; the 0x68 hole is 3 x 16 + 7 x 8 in the `JALPrmSet`/`JADPrmS<f32>` prologue constructions, unnamed: a research batch on what real C++ in those two constructors reserves it); J3DModel `entryModelData` 99.92 (zero-frame r25/r24 vs r20/r21 rotation).
+- **Research seeds with a measured payoff**: the `a = b - c` allocation order (+9 functions, needs a legitimate spelling for retail's (4, 12) geometry); the JGadget stride (eight functions; the lever is in the callers' enclosing levels, not `std-list.hpp`); `getMaxHitPoints()` as a statement-free address binding of `getSaveParam()->mSLHitPointMax` (bosstelesa +3, fireWanwan must stay exact); the constant 4-byte pad at the top of `TSunModel::calcAnim_`'s block; the emergent per-expansion inlining class (`TSelectMenu::perform` vs `initData`, the sharpest same-TU datum); `JPAGetRMtxTVecElement`'s FPR ranking (research 174); the frame-only census (functions with zero opcode markers and stack-offset residues) as a new detector for the research-208 block rule.
+- **Data**: the remaining sub-100 units are jump-table owners needing code (GCConsole2 `perform` 14.7 KB rebuild, CardSave `execMovement_`, bossgesso `changeAttackMode`, CardLoad's two `perform` tables, CardManager `setCheckSum` via a sub-9-statement byte-exact `CalcCheckSum`); Koopa's `.sdata2` needs the `KoopaNeckCallBack` tail; LightUtil wants `System/DummyMactorString.hpp` at a bisected include position.
+- **Exhausted, do not re-run without a new rule**: closure passes over the one- and two-function game tiers (54 units, batches 206/207) and the eight near-link library units (batch 202); header items on return types measured today (`isHolding`, `getColor`, `getMaxHitPoints`, `operator*` V2/V3, `SMatrix34C` ctor, `TNerveBase` ctor, `TVec2` copy ctor); reloc sites (264 left, nearly all compensated pairs or inlining artifacts); structural census rows (all 594 worked once).
 - Symbol-order FAILs on linked Runtime units (ExceptionPPC 26, NMWException 8 MISSING UNUSED bodies): correctness, not links.
-- Catalog contradictions listed by the rules-card agent (queue.md, 2026-09-18): a docs pass when a slot is idle.
 
 ## State log
 
