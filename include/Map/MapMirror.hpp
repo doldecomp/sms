@@ -21,6 +21,7 @@ public:
 	void calcEffectMtx(MtxPtr);
 
 	MtxPtr getUnk30() { return unk30; }
+	f32 getUnk80() const { return unk80; }
 	void setUnk84AndUnk90(f32 x, f32 y, f32 z, f32 dot)
 	{
 		unk84.set(x, y, z);

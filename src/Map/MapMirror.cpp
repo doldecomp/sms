@@ -28,11 +28,17 @@
 // called in the deep one: that only works if the normal is filled one level
 // below makeMirrorViewMtx's body (this constructor) and the dot product three
 // levels below it (calcReflectScale -> calcDistance -> dot).
+//
+// The four floats are parameters, not a camera pointer: retail evaluates them
+// right to left at the call site (-unk90 first, then z, y, x, into f28-f31
+// across the member's TVec3() call in the deep expansion) and stores mD only
+// after `bl set<f32>`, which no mem-initialiser spelling reproduces. That
+// spelling also lands TMirrorModel::entry on the map's 0x200.
 struct MapMirrorPlane {
-	MapMirrorPlane(const TMirrorCamera* camera)
+	MapMirrorPlane(f32 x, f32 y, f32 z, f32 d)
 	{
-		mNormal.set(camera->unk84.x, camera->unk84.y, camera->unk84.z);
-		mD = -camera->unk90;
+		mNormal.set(x, y, z);
+		mD = d;
 	}
 
 	f32 calcReflectScale(const JGeometry::TVec3<f32>& point) const
@@ -56,18 +62,21 @@ struct MapMirrorVecs {
 
 void TMirrorCamera::makeMirrorViewMtx()
 {
-	// TODO: two levels are still wrong in the deep (TMirrorModel::entry)
+	// TODO: one level is still wrong in the deep (TMirrorModel::entry)
 	// expansion. Retail inlines MapMirrorPlane's constructor at depth 4 and
 	// leaves only mNormal's `bl TVec3::TVec3()` plus `bl set<f>` behind;
-	// MWCC here refuses the constructor at depth 4 (one implicit member
-	// construction plus two statements is over the depth-4 allowance of 2),
-	// so the whole constructor goes out of line and retail's f28-f31 spill
-	// disappears with it. Folding mTarget/mUp into the plane so the
-	// constructor is the only declaration costs more than it gains (80.9%,
-	// and makeMirrorViewMtx then compiles to 0x178 instead of the map's
-	// 0x120); MapMirrorVecs keeps the 0x120 but pays two extra
-	// `bl TVec3::TVec3()` for its own members.
-	MapMirrorPlane plane(this);
+	// MWCC here refuses it because the implicit member construction costs 1
+	// on top of the two statements and the depth-4 allowance is 2 (measured:
+	// dropping either statement makes the constructor inline and the
+	// `bl TVec3::TVec3()` appear at the right place). An explicit
+	// `: mNormal()` is not free, and `: mD(d)` is not free either and also
+	// moves the mD store ahead of `bl set<f32>`; a default constructor plus
+	// a four-float set() member is much worse (73.8%). Folding mTarget/mUp
+	// into the plane so the constructor is the only declaration costs more
+	// than it gains (80.9%, and makeMirrorViewMtx then compiles to 0x178
+	// instead of the map's 0x120); MapMirrorVecs keeps the 0x120 but pays
+	// two extra `bl TVec3::TVec3()` for its own members.
+	MapMirrorPlane plane(unk84.x, unk84.y, unk84.z, -unk90);
 	MapMirrorVecs vecs;
 
 	unk98.scaleAdd(plane.calcReflectScale(gpCamera->unk124), plane.mNormal,
@@ -84,7 +93,7 @@ void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
 		Mtx44Ptr projMtx = graphics->mProjMtx.mMtx;
-		C_MTXPerspective(projMtx, unk80 * gpCamera->mFovy, gpCamera->mAspect,
+		C_MTXPerspective(projMtx, getUnk80() * gpCamera->mFovy, gpCamera->mAspect,
 		                 gpCamera->mNear, gpCamera->mFar);
 		MTXCopy(unk30, graphics->mViewMtx);
 		graphics->mNearPlane = gpCamera->mNear;
@@ -99,7 +108,7 @@ void TMirrorCamera::drawSetting(MtxPtr param_1)
 {
 	GXLoadTexObj(&unk60, GX_TEXMAP0);
 	Mtx afStack_38;
-	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->mFovy,
+	C_MTXLightPerspective(afStack_38, getUnk80() * gpCamera->mFovy,
 	                      gpCamera->mAspect, 0.5f, -0.5f, 0.5f, 0.5f);
 
 	Mtx afStack_68;
@@ -112,7 +121,7 @@ void TMirrorCamera::drawSetting(MtxPtr param_1)
 void TMirrorCamera::calcEffectMtx(MtxPtr param_1)
 {
 	Mtx afStack_38;
-	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->mFovy,
+	C_MTXLightPerspective(afStack_38, getUnk80() * gpCamera->mFovy,
 	                      gpCamera->mAspect, 0.5f, -0.5f, 0.5f, 0.5f);
 	MTXConcat(afStack_38, getUnk30(), param_1);
 }
