@@ -446,7 +446,8 @@ bool TApplication::checkAdditionalMovie()
 
 	const TGameSequence& currArea = gpApplication.mCurrArea;
 
-	u8 uVar1 = SMS_getShineIDofExStage(currArea.unk0);
+	int scenario = currArea.unk0;
+	u8 uVar1     = SMS_getShineIDofExStage(scenario);
 	if (uVar1 != 0xFF) {
 		if (!TFlagManager::getInstance()->getShineFlag(uVar1)) {
 			if (!TFlagManager::getInstance()->getBool(0x3000D)) {
@@ -671,18 +672,20 @@ int TApplication::gameLoop()
 			graphics.unkFE = 0;
 
 			JDrama::TVideo* video = mDisplay->unk60;
-			GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
-			              video->mNextRenderMode.efbHeight, 0.0f, 1.0f);
-			GXSetScissor(0, 0, video->mNextRenderMode.fbWidth,
-			             video->mNextRenderMode.efbHeight);
+			GXRenderModeObj& mode = video->mNextRenderMode;
+			GXSetViewport(0.0f, 0.0f, mode.fbWidth, mode.efbHeight, 0.0f,
+			              1.0f);
+			GXSetScissor(0, 0, mode.fbWidth, mode.efbHeight);
 			Mtx afStack_1ac;
-			C_MTXOrtho(afStack_1ac, 0.0f, (f32)video->mNextRenderMode.fbWidth,
-			           0.0f, (f32)video->mNextRenderMode.efbHeight, -1.0f,
-			           1.0f);
+			C_MTXOrtho(afStack_1ac, 0.0f, (f32)mode.fbWidth, 0.0f,
+			           (f32)mode.efbHeight, -1.0f, 1.0f);
 			GXSetProjection(afStack_1ac, GX_ORTHOGRAPHIC);
 			mFader->update();
-			mFader->draw(JDrama::TRect(0, 0, video->mNextRenderMode.fbWidth,
-			                           video->mNextRenderMode.efbHeight));
+			mFader->draw(
+			    JDrama::TRect(0, 0, mode.fbWidth, mode.efbHeight));
+			// TODO: the ROM loads gpMSound twice here (once for the test,
+			// once for the call); neither this spelling nor SMSGetMSound()
+			// per use reproduces the reload.
 			if (gpMSound != nullptr)
 				gpMSound->mainLoop();
 		}
@@ -769,8 +772,8 @@ int TApplication::drawDVDErr()
 		SMS_DrawInit();
 		JDrama::TVideo* video = mDisplay->unk60;
 
-		GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
-		              video->mNextRenderMode.efbHeight, 0.0f, 1.0f);
+		GXRenderModeObj& mode = video->mNextRenderMode;
+		GXSetViewport(0.0f, 0.0f, mode.fbWidth, mode.efbHeight, 0.0f, 1.0f);
 		Mtx afStack_260;
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
