@@ -1367,6 +1367,25 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 	return false;
 }
 
+static inline TCameraShake* Hino2CameraShake()
+{
+	TCameraShake* shake = gpCameraShake;
+	return shake;
+}
+
+static inline bool Hino2CurAnmEndsNext(THinokuri2* self)
+{
+	MActor* actor = self->getMActor();
+	return actor->curAnmEndsNext();
+}
+
+static inline f32 Hino2SLJumpShake(THinokuri2* self)
+{
+	THino2Params* params = (THino2Params*)self->getSaveParam();
+	f32 shake            = params->mSLJumpShake.get();
+	return shake;
+}
+
 DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
@@ -1376,11 +1395,11 @@ DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
 	if (spine->getTime() == 0)
 		self->changeBck(0x13);
 
-	if (self->getMActor()->curAnmEndsNext()) {
+	if (Hino2CurAnmEndsNext(self)) {
 		if (self->mCurrentBck == 0x13) {
-			f32 js = ((THino2Params*)self->getSaveParam())->mSLJumpShake.get();
+			f32 js = Hino2SLJumpShake(self);
 			if (!(js * js < self->mDistToMarioSquared))
-				gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
+				Hino2CameraShake()->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
 			self->changeBck(0x14);
 		}
 
