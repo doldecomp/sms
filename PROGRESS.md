@@ -1606,6 +1606,56 @@ riskant halbgefixt.
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach einunddreißigster Iterationsrunde (6 weitere Funktionen: TMapObjBase-Reste, TEnemyManager, Application, M3UJoint-Konstruktor)
+
+Fortsetzung der Runde-30-Systematik gegen die restlichen
+`populated_zero`-Kandidaten (Vtable-only, 0 `bl`-Aufrufstellen, aber
+populierte Zieldatei).
+
+- `TMapObjBase::getRadiusAtY(f32) const` — fehlte komplett; Retail lädt
+  Feld bei Offset 0xBC, das ist `TLiveActor::mBodyRadius` (geerbt).
+  `return mBodyRadius;` neu hinzugefügt.
+- `TMapObjBase::getTakingMtx()` — fehlte komplett; Retail prüft
+  `MAP_OBJ_FLAG_UNK40` (Bit 25 in PPC-Zählung = Maske `0x40`) und
+  gibt bei gesetztem Flag `nullptr` zurück, sonst delegiert an
+  `TLiveActor::getTakingMtx()`. Neu hinzugefügt, exakt nach
+  Disassembly.
+- `TEnemyManager::restoreDrawBuffer(u32)`/`changeDrawBuffer(u32)` —
+  beide bereits korrekt als leerer Inline-Body im Header, nur
+  Pragma-Fix nötig (0 direkte Call-Sites, reines Vtable-Muster).
+- `Application.cpp::SetupThreadFuncLogo` — erste Instanz des
+  Pragma-Musters auf einer GEWÖHNLICHEN (nicht Header-Inline)
+  `static`-Funktion, deren Adresse als Thread-Entry-Point übergeben
+  wird (`OSCreateThread(&gSetupThread, SetupThreadFuncLogo, …)`).
+  Trotz Adressnahme wurde sie ohne Pragma wegoptimiert; nach dem Fix
+  Byte-perfekt.
+- `M3UJoint.cpp::M3UMtxCalcSIAnmBlendQuat::M3UMtxCalcSIAnmBlendQuat()`
+  (parameterloser Ctor) — fehlte komplett; die vorhandene
+  `(bool basic)`-Überladung hat eine identische Initialisierungsfolge.
+  **Versuch 1** (verworfen): `new (this) M3UMtxCalcSIAnmBlendQuat(false);`
+  (Placement-New-Delegation) — Compile-Error, da kein passender
+  `operator new(size_t, void*)` im Projekt deklariert ist. **Versuch 2**
+  (erfolgreich): eigenständige Initialisierungsliste mit hartkodiertem
+  `mBehaveAsBasic = false;`, inhaltsgleich zur `(bool)`-Version. MWCCs
+  eigener Identical-Code-Folding-Optimierer faltet dies automatisch zu
+  einem Aufruf der `(bool)`-Version zusammen — **Byte-für-Byte
+  identisch** mit Retails kompiliertem Aufrufmuster, nicht nur
+  semantisch äquivalent.
+
+Alle sechs verifiziert: 0 Report-Regressionen, Byte-für-Byte gegen
+`orig/GMSJ01/sys/main.dol`.
+
+**Geprüft und verworfen**: `MoveBG/MapObjCorona.hpp` deklariert
+`TBathtubGrip` nur als Forward-Declaration (`class TBathtubGrip;`) —
+die Klasse selbst (inkl. `TBathtubGripParts`/`...Hard`/`...Fragile`)
+existiert nirgends im Quellbaum. Alle zugehörigen Kandidaten
+(`getRootJointMtx`, `receiveMessage`, Destruktor-Thunks) sind daher
+dieselbe Kategorie wie `TBossHanachan`/`TDirectionCalc` — vollständige
+Neuimplementierung nötig, kein Cheap-Fix.
+
+Die Referenz-DOL bleibt `OK`. Session-Gesamtsumme: **55 Funktionen**
+in 19 Commits, alle gepusht.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -1854,6 +1904,17 @@ Die Referenz-DOL bleibt `OK`.
   (fehlte komplett, `return mDamageRadius;` neu hinzugefügt),
   `THitActor::receiveMessage` (Pragma-Muster). Details siehe
   Iterationsrunde 30.
+
+- **6 Funktionen (Runde 31)** — je **100 %**, Byte-für-Byte gegen
+  `orig/GMSJ01/sys/main.dol` verifiziert: `TMapObjBase::getRadiusAtY`
+  und `TMapObjBase::getTakingMtx` (beide fehlten komplett, neu
+  hinzugefügt), `TEnemyManager::restoreDrawBuffer`/`changeDrawBuffer`
+  (Pragma-Muster), `SetupThreadFuncLogo` (Pragma-Muster auf
+  gewöhnlicher `static`-Funktion), `M3UMtxCalcSIAnmBlendQuat::
+  M3UMtxCalcSIAnmBlendQuat()` (parameterloser Ctor, fehlte komplett,
+  neu hinzugefügt — MWCCs Identical-Code-Folding faltet ihn
+  automatisch zu einem Aufruf der `(bool)`-Überladung). Details siehe
+  Iterationsrunde 31.
 
 ## Nächster GMSJ01-Kandidat
 
