@@ -502,7 +502,11 @@ void TPakkun::onShootLiner(JGeometry::TVec3<f32>& dir)
 		dir.x += 1.0f;
 	MsVECNormalize(&dir, &dir);
 
-	f32 speed = getSaveLoadParam()->getSLSeedSpeedS();
+	// Read raw: the const f32& from TParamT::get() is 0x10 of frame here.
+	// TODO: frame is exact now, but every stack temporary still sits 4 bytes
+	// low (goal at 0x28 against retail's 0x2c) -- 4 more bytes of low pool
+	// are missing; a named TPathNode and a const f32& binding both fail.
+	f32 speed = getSaveLoadParam()->mSLSeedSpeedS.value;
 	dir.x *= speed;
 	dir.y = -5.0f;
 	dir.z *= speed;

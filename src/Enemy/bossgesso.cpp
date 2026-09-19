@@ -1950,7 +1950,10 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 	if (self->mBeak->mHolder != nullptr) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 		delta -= self->mPosition;
-		f32 lim = self->getSaveParam2()->mSLBeakLengthDamage.get();
+		// Read raw: the const f32& from TParamT::get() is 8 bytes of frame.
+		// TODO: frame exact now, but delta still sits 4 bytes low (0xa0
+		// against retail's 0xa4); 4 bytes of low pool are still missing.
+		f32 lim = self->getSaveParam2()->mSLBeakLengthDamage.value;
 
 		if (delta.length() >= lim) {
 			self->getMActor()->setBtpFromIndex(1);
