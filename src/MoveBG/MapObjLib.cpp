@@ -369,6 +369,15 @@ void TMapObjBase::makeLowerStr(const char* in, char* out)
 	*out = 0;
 }
 
+// Binding level over the animation matrix, worth +0x10 of low region in the
+// setRootMtxRot* trio.
+static inline MtxPtr MapObjLibRootMtx(const TMapObjBase* p)
+{
+	J3DModel* model = p->getModel();
+	MtxPtr mtx      = model->getAnmMtx(0);
+	return mtx;
+}
+
 void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 {
 	f32 fVar1 = sinf(mRotation.z * 0.017453294f);
@@ -392,7 +401,7 @@ void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 
 void TMapObjBase::setRootMtxRotZ()
 {
-	makeRootMtxRotZ(getModel()->getAnmMtx(0));
+	makeRootMtxRotZ(MapObjLibRootMtx(this));
 }
 
 void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
@@ -418,7 +427,7 @@ void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 
 void TMapObjBase::setRootMtxRotY()
 {
-	makeRootMtxRotY(getModel()->getAnmMtx(0));
+	makeRootMtxRotY(MapObjLibRootMtx(this));
 }
 
 void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
@@ -444,7 +453,7 @@ void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 
 void TMapObjBase::setRootMtxRotX()
 {
-	makeRootMtxRotX(getModel()->getAnmMtx(0));
+	makeRootMtxRotX(MapObjLibRootMtx(this));
 }
 
 void TMapObjBase::updateRootMtxTrans()
@@ -754,9 +763,17 @@ bool TMapObjBase::marioHeadAttack() const
 	return false;
 }
 
+// Binding level over the ground-plane accessor, worth +8 of low region in
+// TMapObjBase::marioHipAttack.
+static inline const TBGCheckData* MapObjLibMarioGrPlane()
+{
+	const TBGCheckData* plane = SMS_GetMarioGrPlane();
+	return plane;
+}
+
 bool TMapObjBase::marioHipAttack() const
 {
-	if (SMS_GetMarioGrPlane()->getActor() == this && SMS_IsMarioStatusHipDrop()
+	if (MapObjLibMarioGrPlane()->getActor() == this && SMS_IsMarioStatusHipDrop()
 	    && (gpMarioPos->y + *gpMarioSpeedY) < SMS_GetMarioGrLevel())
 		return true;
 	return false;
