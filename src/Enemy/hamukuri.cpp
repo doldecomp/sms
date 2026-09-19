@@ -428,8 +428,12 @@ void TDangoHamuKuriManager::createModelDataArray(
 	        "ハムクリマネージャー");
 
 	if (manager) {
-		unk28            = manager->unk28;
-		mModelDataKeeper = manager->getModelDataKeeper();
+		// The keeper binder makes the body instruction-exact; the frame is
+		// still 8 short of the map's 0x20 and no second binder here has
+		// found that rung (the `unk28` scalar reorders the two stores).
+		unk28                    = manager->unk28;
+		TModelDataKeeper* keeper = manager->getModelDataKeeper();
+		mModelDataKeeper         = keeper;
 	} else {
 		TObjManager::createModelDataArray(param_1);
 	}
