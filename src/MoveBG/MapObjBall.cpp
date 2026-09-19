@@ -860,11 +860,19 @@ void TResetFruit::hold(TTakeActor* param_1)
 	}
 }
 
+// Binding level over the sound singleton, worth +0x10 of low region in
+// TResetFruit::touchPollution.
+static inline MSound* MapObjBallGetMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TResetFruit::touchPollution()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(0x8B, &mPosition, 0, nullptr);
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition, 0,
-	                                nullptr, 0, 4);
+	MapObjBallGetMSound()->startSoundActor(MSD_SE_OBJ_AWAY_INTO_GRAF,
+	                                       &mPosition, 0, nullptr, 0, 4);
 	makeObjDefault();
 	makeObjWaitingToAppear();
 }
