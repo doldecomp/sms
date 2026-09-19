@@ -713,6 +713,7 @@ void TGesso::behaveToFindMario()
 
 void TGesso::rollCheck()
 {
+	char trash[8];
 	if (mAttackCooldown != 0)
 		return;
 
