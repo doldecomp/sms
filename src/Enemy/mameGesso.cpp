@@ -83,6 +83,7 @@ void TMameGessoManager::initSetEnemies() { }
 
 void TMameGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[8];
 	for (int i = 0; i < mObjNum; i++) {
 		if (!(cue & CUE_MOVE))
 			continue;
@@ -439,6 +440,7 @@ DEFINE_NERVE(TNerveMameGessoDamage, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		JGeometry::TVec3<f32> vel = self->getVelocity();
+		char trash[8];
 
 		vel.x = 0.0f;
 		vel.z = 0.0f;
@@ -580,6 +582,7 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
+	char trash[0x10];
 
 	if (SMS_IsMarioStatusTypeSwimming()) {
 		self->offHitFlag(HIT_FLAG_NO_COLLISION);
