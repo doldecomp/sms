@@ -569,7 +569,7 @@ void TMapObjGeneral::bind()
 		}
 	}
 
-	mLinearVelocity = vec - mLinearVelocity;
+	mLinearVelocity = vec - mPosition;
 }
 
 // Binding level worth +8 of low region, landing TMapObjGeneral::control's
