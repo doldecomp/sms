@@ -1539,6 +1539,13 @@ void TBossTelesa::setSpicy(TLiveActor* actor)
 	}
 }
 
+/// Binds an actor's position before it is reset to the origin.
+static inline JGeometry::TVec3<f32>* bindPosition(TLiveActor* actor)
+{
+	JGeometry::TVec3<f32>* pos = &actor->mPosition;
+	return pos;
+}
+
 void TBossTelesa::damageRecover()
 {
 	for (int i = 0; i < 20; ++i) {
@@ -1549,7 +1556,9 @@ void TBossTelesa::damageRecover()
 			mFruits[i]->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
 			                             &mFruits[i]->mPosition, 0, nullptr);
-			mFruits[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+			JGeometry::TVec3<f32> origin;
+			origin.set(0.0f, 0.0f, 0.0f);
+			mFruits[i]->mPosition.set(origin);
 		}
 	}
 
@@ -1561,14 +1570,14 @@ void TBossTelesa::damageRecover()
 			mPeppers[i]->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
 			                             &mPeppers[i]->mPosition, 0, nullptr);
-			mPeppers[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+			bindPosition(mPeppers[i])->set(0.0f, 0.0f, 0.0f);
 		}
 
 		if (!mCoins[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			mCoins[i]->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
 			                             &mCoins[i]->mPosition, 0, nullptr);
-			mCoins[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+			bindPosition(mCoins[i])->set(0.0f, 0.0f, 0.0f);
 		}
 	}
 
