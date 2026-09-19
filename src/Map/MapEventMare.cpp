@@ -130,7 +130,7 @@ void TMareWallRock::movement()
 		f32 z = transformInfo.mTranslate.z;
 		if (z > unkFC) {
 			unk10C[0]->remove();
-			unk104->kill();
+			unk104->sleep();
 			unk100 = mWaitTimeToAppear;
 			unkF4  = 3;
 			return;
@@ -204,7 +204,7 @@ void TMareWallRock::loadAfter()
 	mPosition.z     = (max.z + min.z) / 2.0f;
 	unkFC           = 100.0f + (max.z - min.z);
 	TMapObjBase::moveJoint(unk104->mJoint, 0.0f, 0.0f, unkFC);
-	unk104->kill();
+	unk104->sleep();
 	initHitActor(0x4000022C, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 	initEffect();
 }
