@@ -770,7 +770,7 @@ void TMapObjPuncher::load(JSUMemoryInputStream& stream)
 
 void TMuddyBoat::moveByWater()
 {
-	if (SMS_GetMarioWaterGun()->mIsEmitWater == 0)
+	if (SMS_GetMarioWaterGun()->isEmitWater() == 0)
 		return;
 
 	MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);

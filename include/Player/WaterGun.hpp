@@ -213,6 +213,11 @@ public:
 	// Fabricated
 	s32 getCurrentWater() const { return mCurrentWater; }
 
+	// Fabricated: mIsEmitWater is a u8 but every reader tests it with a
+	// signed cmpwi and no extsb, i.e. retail read it through an int-returning
+	// accessor.
+	int isEmitWater() const { return mIsEmitWater; }
+
 	// Fabricated
 	void updateUnk1C88(u8 emittedWater)
 	{

@@ -768,17 +768,11 @@ void TSwingBoard::draw() const
 	drawOneRope(bottom, top);
 }
 
-// The water gun's emit flag, read as an int so the test is a signed compare.
-static inline int swingBoardIsEmitWater()
-{
-	return SMS_GetMarioWaterGun()->mIsEmitWater;
-}
-
 // UNUSED (0xa8): the water-jet push at the head of control.
 void TSwingBoard::swing()
 {
 	if (marioIsOn() && marioIsOn()
-	    && swingBoardIsEmitWater()) {
+	    && SMS_GetMarioWaterGun()->isEmitWater()) {
 		MtxPtr emit = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		f32 dirX    = -emit[0][0];
 		f32 dirY    = 0.0f;
@@ -796,7 +790,7 @@ void TSwingBoard::control()
 	TMapObjBase::control();
 
 	if (marioIsOn() && marioIsOn()
-	    && swingBoardIsEmitWater()) {
+	    && SMS_GetMarioWaterGun()->isEmitWater()) {
 		MtxPtr emit = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		f32 dirX    = -emit[0][0];
 		f32 dirY    = 0.0f;
