@@ -771,8 +771,8 @@ void TBossEelManager::createModelData()
 
 void TBossEelManager::clipEnemies(JDrama::TGraphics* graphics)
 {
-	clipActorsAux(graphics, mSaveParams.mSLViewClipRadius.get(),
-	              mSaveParams.mSLViewClipFar.get());
+	clipActorsAux(graphics, mSaveParams.mSLViewClipFar.get(),
+	              mSaveParams.mSLViewClipRadius.get());
 }
 
 TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
