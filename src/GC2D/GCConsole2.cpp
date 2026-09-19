@@ -2130,9 +2130,9 @@ void TGCConsole2::entryHelpActor(THelpActor* param_1)
 	if (unk8C < 32) {
 		unk90[unk8C] = param_1;
 
-		JDrama::TNameRefGen::search<TIdxGroupObj>("マップグループ")
-		    ->getChildren()
-		    .push_back(param_1);
+		TIdxGroupObj* group
+		    = JDrama::TNameRefGen::search<TIdxGroupObj>("マップグループ");
+		group->getChildren().push_back(param_1);
 
 		++unk8C;
 	}
