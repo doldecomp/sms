@@ -2463,6 +2463,44 @@ frischen Report erfolgt (Kernel-/Prozess-Abbrüche mitten im Batch
 können einzelne unvollständig verifizierte Fixes hinterlassen, siehe
 `considerRotateStart`-Fund oben).
 
+### Fortsetzung Runde 37: Batches 2–4 über alle übrigen Einheiten (95 weitere Funktionen)
+
+Fortsetzung des automatisierten Batch-Scans (siehe oben) über die
+restlichen `populated`-Einheiten mit additiven Frame-Gap-Kandidaten,
+in drei weiteren Durchläufen (Erfolgsquote sinkt erwartungsgemäß mit
+zunehmender Abarbeitung des leicht erreichbaren Kandidatenpools):
+
+- **Batch 2** (Einheiten Rang 60–110): 39 von 76 Kandidaten
+  bestätigt (51 %). Zusätzlicher Normalisierungs-Fund: anonyme
+  `...rodata.N`/`...data.N`-Datensymbole (unser Compiler) vs.
+  nummerierte Literal-Pool-Label `@N` (Retail) — teils dieselbe
+  kosmetische Kategorie, teils (wie bei `TTalkCursor::loadAfter`)
+  eine echte, bisher ungeklärte Abweichung; sicherheitshalber als
+  „differs" behandelt, nicht blind normalisiert.
+- **Batch 3** (Einheiten Rang 111–190): 39 von 129 Kandidaten
+  bestätigt (30 %).
+- **Batch 4** (Einheiten Rang 80–187, verbliebene Lücken): 17 von 27
+  Kandidaten bestätigt (63 %).
+
+Alle 95 Funktionen einzeln gegen den jeweils frischen `report.json`
+nachverifiziert (0 Probleme in allen drei Batches). Vollständiger
+Report nach allen vier Batches: Funktionszahl stieg von 8663 (Stand
+vor Runde 37) auf **8880** (**+217** über die gesamte Runde 37),
+Bytes von 1.510.652 auf 1.561.212 (**+50.560**). DOL SHA1 bleibt bei
+jedem Schritt `OK`.
+
+**Session-Gesamtstand nach Runde 37 (alle vier Batches): 293
+tatsächlich verifizierte Funktionen** (77 aus Runde 1–36 plus 216
+neue in Runde 37) in 33 Commits. Der leicht erreichbare Kandidatenpool
+für das additive-Frame-Gap-Muster über alle `populated`-Einheiten
+(85–100 % Match, ≤ 500 Bytes, Gap ≤ 0x30, `ndiff` ≤ 10) gilt damit als
+weitgehend abgearbeitet; künftige Sessions sollten entweder die
+Schwellwerte lockern (größere Funktionen, größere Gaps) oder auf
+andere Kategorien wechseln (fehlende Implementierungen wie
+`THaneHamuKuri::walkBehavior`, Per-Aufrufstellen-Inlining-Fälle wie
+`identity33`, oder die verbleibenden ~57 retracted Runde-32/33-
+Kandidaten einzeln prüfen).
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
