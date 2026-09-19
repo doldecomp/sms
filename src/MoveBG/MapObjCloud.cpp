@@ -49,6 +49,7 @@ void TRideCloud::setGroundCollision()
 	if (mMapCollisionManager) {
 		// TODO: this is used in MapObjRailBlock too, inline global?
 		TMtx34f mtx;
+		char trash[4];
 		mtx.set(getModel()->getAnmMtx(0));
 		if (TMapCollisionBase* col = mMapCollisionManager->unk8)
 			col->moveMtx(mtx);
