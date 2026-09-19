@@ -59,6 +59,16 @@ Symbol-Einträgen, nicht im Section-Aggregat. `MoveBG/WoodBarrel.cpp` auf
 sofort zurückgesetzt. Ab jetzt: Matching-Flip **immer** mit
 `ninja && dtk shasum -c` verifizieren, nie nur mit objdiff-Sections.
 
+### Nach dritter Iterationsrunde (JPADraw::initialize)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,45 % (1.488.112 / 3.590.088) | +868 Bytes |
+| Funktionen matched | 66,71 % (8.591 / 12.881) | +1 |
+
+`JSystem/JParticle/JPADraw.cpp` `.text` jetzt vollständig 100 % (4/4
+Funktionen); Unit bleibt wegen anonymem `.sdata2`-Rest NonMatching.
+
 Die Referenz-DOL bleibt `OK`.
 
 ### Bereiche
@@ -148,12 +158,6 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `sdlModel`-Local liegt 4 Bytes höher (`0x20` statt `0x1c`); Umordnen der
   `loadFlags`/`initInfo`-Deklaration ohne Wirkung.
 
-- `JSystem/JParticle/JPADraw.cpp`: `initialize` (868 Bytes, 99,92 %).
-  Frame 8 Bytes größer als Original (`0x190` vs. `0x188`); `char trash[8]`
-  vor/nach dem einzigen Local `int i` ohne Wirkung (i ist rein
-  registerallokiert, kein Stack-Slot). `loadYBBMtx`, `zDrawChild`,
-  `zDrawParticle` in derselben Unit inzwischen 100 % (siehe unten).
-
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -211,14 +215,24 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `JSystem/JParticle/JPADraw.cpp`: `loadYBBMtx` — **100 %** (208 Bytes,
   `char trash[8]` nach `TVec3<f32> v`), `zDrawParticle` und `zDrawChild` —
-  je **100 %** (`char trash[8]` am Funktionsanfang, kein früher Struct-Local
-  nötig). `initialize` bleibt bei 99,92 % offen (siehe oben); Unit-`.text`
-  jetzt 99,997 %.
+  je **100 %** (`char trash[8]` am Funktionsanfang), `initialize` — **100 %**
+  (868 Bytes; `char trash[0x10]` musste NACH dem mid-Funktions-Struct-Local
+  `JPADrawVisitorDefFlags flags` stehen, nicht nach dem frühen `int i` —
+  derselbe "nach dem Struct-Local"-Fund wie bei `calcRootMatrix`/`loadYBBMtx`,
+  nur dass der relevante Local hier erst in der Funktionsmitte auftaucht).
+  Unit-`.text` jetzt 100 %; bleibt NonMatching wegen anonymem
+  `[.sdata2-0]`-Rest (96,77 %, ungetestet als Matching-Flip-Risiko).
 
 ## Nächster GMSJ01-Kandidat
 
 `JSystem/J3D/J3DGraphAnimator/J3DModel.cpp::entryModelData` (1248 Bytes,
-99,76 %) — mehrere Register-Swap-Cluster in der Shape/Material-Packet-Schleife,
-kein einfacher Padding-Fall; `JSystem/JKernel/JKRExpHeap.cpp::allocFromHead
-(u32,int)` (98,78 %, Register-Scheduling um -1-Konstante) versucht, kein
-Fortschritt.
+99,76 %) — Aufteilen des inline `&mShapePackets[shape->getIndex()]`-Ausdrucks
+in einen expliziten `J3DShapePacket*`-Local behob den ersten
+Register-Swap-Cluster (99,76 % → 99,84 %), vergrößerte aber den Stackframe
+um 8 Bytes über das Original hinaus (jeder neue Pointer-Local kostet dort
+mehr als erwartet). Drei Varianten (separater `shape`-Local, kombinierter
+Ausdruck, zusätzliches `trash[8]`) landeten alle bei 99,84 % mit
+falschem Frame; zurückgesetzt auf die Original-99,76-%-Fassung, da sie
+wenigstens den korrekten Stackframe hat. `JSystem/JKernel/JKRExpHeap.cpp::
+allocFromHead(u32,int)` (98,78 %, Register-Scheduling um -1-Konstante)
+ebenfalls in drei Varianten versucht, kein Fortschritt.
