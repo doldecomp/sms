@@ -214,8 +214,17 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 			return false;
 		}
 
+		// TODO (closure batch 212): exactly one of this function's three
+		// accessor reads is a raw member read in retail -- the dead
+		// 4-byte temporary it drops is the last word of low region
+		// (pool base 0x9c, not 0xa0). `self->mRotation.y`,
+		// `riccoHookDistance(..., self->mPosition)` and this `sub`
+		// argument each land the function byte-exact on their own and
+		// nothing distinguishes them; this one is chosen because the
+		// same block writes `self->mPosition.add(dPos)` raw two lines
+		// below.
 		JGeometry::TVec3<f32> dPos = self->getUnkF4().getPoint();
-		dPos.sub(self->getPosition());
+		dPos.sub(self->mPosition);
 		PSVECNormalize(&dPos, &dPos);
 		dPos.scale(self->getMarchSpeed());
 		self->mPosition.add(dPos);

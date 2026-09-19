@@ -342,6 +342,25 @@ static inline u32 SDLModelCheckSdlFlag(const SDLModel* p, u32 i)
 // cannot carry a dead local. Still a std-list.hpp research item; `++it`
 // is left unapplied because on its own it costs 16 bytes of frame.
 //
+// Closure batch 212 measured the ladder that pays for `++it`, writing the
+// slot map as [bottom dead][3]+g1[2]+g2[3]+top and the target as
+// [84][3]+8[2]+4[3]+28 at frame 0xb8. With `++it` alone we are [64]...[2]+4
+// [3]+32 at 0xa8. A TU-local `SDLModelGetData(p)` binder over the
+// `mSdlModelData` member read is +8 bottom / +0 top / +8 frame per site, so
+// two sites (the `unk18` read and the `registerSDLModel` call) land [80] at
+// 0xb8; nesting a direct-return fork inside that binder at the `unk18` site
+// adds the last +4 bottom and lands [84][3]+8[2]+4 exactly, but also +4 top,
+// so the frame overshoots to 0xc0 (five markers, pool byte-exact).
+// Turning `SDLModelCheckSdlFlag` into a direct-return fork instead pays the
+// 8 back (frame 0xb8, ten markers) but re-opens the second gap to 8: the
+// second gap is 4 only while both flag sites go through a *binding* level.
+// So the residue is now one word that must move from the top region to the
+// second gap at constant frame, and none of these levers does that: the
+// binder rungs are all +4 bottom *and* +4 top. Inert here: naming the
+// binder's result in the caller, a fork nested in the flag binder, the
+// binder at one or three sites. Left unapplied (all of it is fabricated
+// machinery for +0.1% with the function still nonmatching).
+//
 // Research batch 133 settled which word that is: respelling
 // `TList::iterator::operator++(int)` so that it builds its result straight
 // from the node (`TNode_* p = p_; p_ = p_->pNext_; return iterator(p);`), with
