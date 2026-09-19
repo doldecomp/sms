@@ -879,22 +879,20 @@ void TSwingBoard::load(JSUMemoryInputStream& stream)
 	s16 yaw   = (s16)(182.04445f * mRotation.y);
 	f32 sinY  = JMASSin(yaw);
 	f32 cosY  = JMASCos(yaw);
-	mBaseMtx[0][0] = cosY;
-	mBaseMtx[0][1] = 0.0f;
-	mBaseMtx[0][2] = sinY;
-	mBaseMtx[0][3] = 0.0f;
-	mBaseMtx[1][0] = 0.0f;
-	mBaseMtx[1][1] = 1.0f;
-	mBaseMtx[1][2] = 0.0f;
-	mBaseMtx[1][3] = 0.0f;
-	mBaseMtx[2][0] = -sinY;
-	mBaseMtx[2][1] = 0.0f;
-	mBaseMtx[2][2] = cosY;
-	mBaseMtx[2][3] = 0.0f;
+	mBaseMtx.ref(0, 0) = cosY;
+	mBaseMtx.ref(0, 1) = 0.0f;
+	mBaseMtx.ref(0, 2) = sinY;
+	mBaseMtx.ref(0, 3) = 0.0f;
+	mBaseMtx.ref(1, 0) = 0.0f;
+	mBaseMtx.ref(1, 1) = 1.0f;
+	mBaseMtx.ref(1, 2) = 0.0f;
+	mBaseMtx.ref(1, 3) = 0.0f;
+	mBaseMtx.ref(2, 0) = -sinY;
+	mBaseMtx.ref(2, 1) = 0.0f;
+	mBaseMtx.ref(2, 2) = cosY;
+	mBaseMtx.ref(2, 3) = 0.0f;
 }
 
-// TODO: 99.9%, every instruction exact; retail's frame is 0x48 against our 0x18,
-// i.e. exactly one dead 48-byte Mtx the original declared and never used.
 TSwingBoard::TSwingBoard(const char* name)
     : TMapObjBase(name)
 {
@@ -905,11 +903,11 @@ TSwingBoard::TSwingBoard(const char* name)
 	mAngleSpeedMax = 0.0f;
 	mSound         = nullptr;
 
-	mBaseMtx[0][3] = mBaseMtx[1][3] = mBaseMtx[2][3] = 0.0f;
-	mBaseMtx[0][2] = mBaseMtx[1][2] = 0.0f;
-	mBaseMtx[0][1] = mBaseMtx[2][1] = 0.0f;
-	mBaseMtx[1][0] = mBaseMtx[2][0] = 0.0f;
-	mBaseMtx[0][0] = mBaseMtx[1][1] = mBaseMtx[2][2] = 1.0f;
+	mBaseMtx.ref(0, 3) = mBaseMtx.ref(1, 3) = mBaseMtx.ref(2, 3) = 0.0f;
+	mBaseMtx.ref(0, 2) = mBaseMtx.ref(1, 2) = 0.0f;
+	mBaseMtx.ref(0, 1) = mBaseMtx.ref(2, 1) = 0.0f;
+	mBaseMtx.ref(1, 0) = mBaseMtx.ref(2, 0) = 0.0f;
+	mBaseMtx.ref(0, 0) = mBaseMtx.ref(1, 1) = mBaseMtx.ref(2, 2) = 1.0f;
 
 	mAnchor.zero();
 }

@@ -147,7 +147,7 @@ public:
 	/* 0x140 */ f32 mAccelRate;
 	/* 0x144 */ f32 mAngleSpeed;
 	/* 0x148 */ f32 mAngleSpeedMax;
-	/* 0x14C */ Mtx mBaseMtx;
+	/* 0x14C */ JGeometry::SMatrix34C<f32> mBaseMtx;
 	/* 0x17C */ JGeometry::TVec3<f32> mAnchor;
 	/* 0x188 */ JAISound* mSound;
 };
