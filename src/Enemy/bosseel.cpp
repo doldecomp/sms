@@ -2404,12 +2404,37 @@ DEFINE_NERVE(TNerveBossEelOutWait, TLiveActor)
 	return false;
 }
 
+static inline J3DFrameCtrl* BosseelBackFrameCtrl(const TBossEel* p)
+{
+	J3DFrameCtrl* ctrl = p->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+	return ctrl;
+}
+
+static inline TBossEel* BosseelBackBody(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	TBossEel* eel    = static_cast<TBossEel*>(body);
+	return eel;
+}
+
+static inline TCameraShake* BosseelCameraShake()
+{
+	TCameraShake* shake = gpCameraShake;
+	return shake;
+}
+
+static inline MSound* BosseelBackSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 {
-	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+	TBossEel* eel = BosseelBackBody(spine);
 	if (spine->getTime() == 1) {
-		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_DOWN, &eel->mPosition, 0,
-		                                nullptr, 0, 4);
+		BosseelBackSound()->startSoundActor(MSD_SE_BS_UNG_DOWN,
+		                                    &eel->mPosition, 0, nullptr, 0, 4);
 		if (eel->mToothBroken) {
 			eel->mToothBroken = false;
 			eel->setBckAnm(6);
@@ -2421,14 +2446,14 @@ static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 	}
 
 	eel->mAppearOffset
-	    -= eel->mSaveParams->mSLAppearMoveDistY.get()
-	       / (eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2);
+	    -= eel->getBossEelParams().mSLAppearMoveDistY.get()
+	       / (BosseelBackFrameCtrl(eel)->getEnd() * 2);
 	if (eel->mAppearOffset < 0.0f) {
 		eel->mAppearOffset = 0.0f;
 		if (eel->checkCurAnmEnd(0)) {
 			eel->mInDemo = false;
 			spine->pushAfterCurrent(&TNerveBossEelSecondSpin::theNerve());
-			if (eel->mMActor->checkCurBckFromIndex(6))
+			if (eel->getMActor()->checkCurBckFromIndex(6))
 				spine->pushAfterCurrent(
 				    &TNerveBossEelSleepOnBottom::theNerve());
 			return true;
