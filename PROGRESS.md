@@ -3021,6 +3021,71 @@ Commits. Funktionszahl: 8976 → **8983** (**+7**). DOL SHA1 bleibt
 vollständig ausgeschöpft; verbleibende Kandidaten liegen
 überwiegend in größeren, resistenten Funktionen.
 
+### Nach vierundvierzigster Iterationsrunde (`FifoSetFog`/`FifoSetFogRangeAdj` in PacketUtil.cpp: neue Technik "Sibling-Algorithmus + Hardware-Write-Swap")
+
+**Neue Kandidatenkategorie**: gezielte Suche nach kleinen, fast bei
+0 % liegenden Funktionen, die sich beim Nachlesen als leere `{ }`-
+Stubs herausstellen, statt als echte Mismatches. `src/MarioUtil/
+PacketUtil.cpp` enthielt drei solche Stubs (`FifoSetFogRangeAdj`,
+`FifoSetFog`, `ShapePacketCallBackFunc`).
+
+**`FifoSetFogRangeAdj`** (312 Bytes, 1,28 % Match): erster Versuch
+mit `J3DGDWriteBPCmd`/`GDOverflowCheck` (gepufferter Display-List-
+Pfad, wie das Sibling `JRNISetFogRangeAdj` in `JRenderer.cpp:587`)
+kompilierte sauber, aber **DIFFER** — Retail nutzt direkte rohe
+Hardware-MMIO-Schreibzugriffe, nicht den gepufferten Pfad. Zweiter
+Versuch mit rohem `GXWGFifo.u8 = GX_LOAD_BP_REG; GXWGFifo.u32 = reg;`
+(passend zum SDK-Makro `GX_WRITE_BP_REG` aus `dolphin/gx/__gx.h` und
+der festen Hardware-Adresse `GXFIFO_ADDR` aus `GXVert.h`) ergab
+**Byte-exakten Match**, per `dtk elf disasm` direkt verifiziert.
+
+**`FifoSetFog`** (344 Bytes, 1,16 % Match): komplexeres Sibling
+`J3DGDSetFog` (`JRenderer.cpp:191`, A/B/C-Fog-Koeffizienten-Algorithmus
+mit Mantisse/Exponent-Normalisierung über zwei While-Schleifen, Packung
+via `BP_FOG_UNK0..3`/`BP_FOG_COLOR`-Makros aus `dolphin/gd/GDPixel.h`)
+direkt mit denselben rohen `GXWGFifo`-Schreibzugriffen adaptiert.
+Erster Versuch: 4 von 5 Schreibvorgängen matchten sofort, nur der
+letzte (`BP_FOG_COLOR`) zeigte eine reine Instruktions-Scheduling-
+Abweichung (6 Zeilen, gleiche Gesamtlänge 95/95) — die Farbfeld-Loads
+wurden in Retail VOR dem Opcode-Byte-Write eingeplant. Fix: den
+gepackten `BP_FOG_COLOR(...)`-Wert erst in eine lokale Variable
+schreiben, dann `GXWGFifo.u8`/`.u32` zuweisen (statt inline im selben
+Statement) — ergab sofort Byte-exakten Match.
+
+**`SMS_InitPacket_Fog`** (140 Bytes, 93,14 % Match, gleiche Datei):
+`char trash[8]` behob die Stackframe-Lücke (104→112 Bytes), aber
+7 Zeilen Register-Scheduling-Differenz in der `getModelData()->
+getMaterialNodePointer()->getPEBlock()->getFog()`-Aufrufkette
+(vertauschte r3/r4-Zuweisung, andere Teilausdrucks-Reihenfolge)
+blieben bestehen — bestätigt das etablierte Muster "additive
+Frame-Lücke behoben, aber Register-Scheduling nicht fixbar via
+Padding". Sauber zurückgesetzt.
+
+**`ShapePacketCallBackFunc`** (1936 Bytes, 0,21 % Match): 11-Fall-
+Sprungtabelle (passend zu den 11 `PacketUserData_*`-Structs in
+derselben Datei), jeder Fall mit eigener komplexer Bit-Packing-Logik
+für rohe Hardware-Schreibzugriffe (TEV-Farben, Material-Farben,
+Fog-Aufrufe). Deutlich größerer Umfang als die bisherigen Erfolge
+in dieser Datei, kein direktes Sibling verfügbar — als Kandidat für
+eine künftige Session dokumentiert, nicht in dieser Runde angegangen.
+
+**Neue Methodik-Erkenntnis**: die erfolgreichste Technik für leere
+Stub-Funktionen ist "existierendes Sibling mit identischem Algorithmus
+suchen, dann nur den Ein-/Ausgabe-Mechanismus (hier: gepufferter
+Display-List-Write vs. rohe Hardware-FIFO-Writes) anpassen" — deutlich
+zuverlässiger als reine Rohdisassembly-Rekonstruktion. Bei
+verbleibenden Scheduling-Differenzen nach dem Sibling-Swap hilft oft
+das Auslagern eines gepackten Ausdrucks in eine lokale Variable vor
+dem MMIO-Write (analog zur bereits etablierten `trash[N]`-Erkenntnis,
+dass MWCC Feld-Zugriffsreihenfolgen je nach Statement-Struktur anders
+plant).
+
+**Session-Gesamtstand nach Runde 44: 398 tatsächlich verifizierte
+Funktionen** (396 aus Runde 1–43 plus 2 neue in Runde 44:
+`FifoSetFogRangeAdj`, `FifoSetFog`) in 55 Commits. Funktionszahl:
+8983 → **8985** (**+2**). DOL SHA1 bleibt `OK`.
+
+
 
 
 
