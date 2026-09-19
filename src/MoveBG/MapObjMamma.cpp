@@ -1422,10 +1422,10 @@ void TGoalWatermelon::loadAfter()
 
 	mShine = (TMapObjBase*)JDrama::TNameRefGen::search2(
 	    "シャイン（お化けスイカ用）");
-	TMapObjBase* shine = mShine;
-	shine->mPosition.x = mShinePosition.x;
-	shine->mPosition.y = mShinePosition.y;
-	shine->mPosition.z = mShinePosition.z;
+	JGeometry::TVec3<f32>& pos = mShine->mPosition;
+	pos.x                      = mShinePosition.x;
+	pos.y                      = mShinePosition.y;
+	pos.z                      = mShinePosition.z;
 	mShine->appear();
 }
 
