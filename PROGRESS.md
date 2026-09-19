@@ -2658,6 +2658,69 @@ Runde-36/37-Hypothese, dass diese Kategorie eine andere Technik als
 `trash[N]`-Padding braucht) plus ein neuer, noch unbearbeiteter
 Kandidatenpool in `ShadowUtil.cpp` für künftige Sessions.
 
+### Nach neununddreißigster Iterationsrunde (6 echte Funktionsimplementierungen + 1 Struct-Layout-Bugfix in `MapObjCorona.cpp`)
+
+Neue Kategorie abseits von `char trash[N]`: echte Logikimplementierung
+für bisher leere `{ }`-/`return nullptr`-Stubs in `TBathtub`
+(`MoveBG/MapObjCorona.cpp`), verifiziert via `dtk elf disasm`:
+
+- `getTakingMtx`/`getSubmarineMtxInDemo`/`getPeachMtxInDemo`/
+  `getKoopaJrMtxInDemo`: alle vier folgen demselben Retail-Muster
+  `mMActor->getModel()->getAnmMtx(<Gelenkindex-Feld>)` unter Nutzung
+  der bereits im Header benannten Felder (`mMarioJntIdx`,
+  `mSubmarineJntIdx`, `mDuckJntIdx`, `mJuniorJntIdx`) — Byte-für-Byte
+  bestätigt.
+- `isKillerAttackable`: Retail nutzt eine verzweigungsfreie
+  Signed-Compare-Idiom für `unk248 <= 0`; die Vorher-Fassung
+  (`return false;`) war eine reine Rateplatzhalter-Implementierung.
+- `getRootJointMtx`: `unk29A ? getModel()->getAnmMtx(0) :
+  getModel()->getBaseTRMtx()`, jeweils nach `Mtx*` gecastet
+  (`MtxPtr` und `Mtx*` sind unterschiedliche Zeigertypen im Codebase —
+  `float(*)[4]` vs. `float(*)[3][4]`).
+
+**Nebenfund, echter Struct-Layout-Bug im Header**: Die kompilierte
+Adresse für `unk29A` landete zunächst bei `0x299` statt `0x29A` —
+zwischen den beiden benachbarten `u8`-Feldern `unk298`/`unk29A`
+fehlte im Header ein Füllbyte (zwei aufeinanderfolgende `u8`-Felder
+ohne Alignment-Zwang erzeugen keine Compiler-Lücke, aber Retails
+Layout hat eine echte Lücke). Fix: zusätzliches `/* 0x299 */ u8
+unk299;` eingefügt. Nach dem Fix alle 6 Funktionen Byte-für-Byte
+identisch. Auswirkungsprüfung: `MapObjCorona.hpp` wird von vier
+weiteren Einheiten eingebunden (`BathtubKiller.cpp`, `GCConsole2.cpp`,
+`BathWaterManager.cpp`, `MarNameRefGen_MapObj.cpp`) — voller
+`ninja`-Rebuild zeigt `matched_functions` exakt 8948 → 8954 (+6,
+keine Regression in irgendeiner der vier Einheiten, da sich die
+Gesamtzunahme exakt mit den 6 neuen Fixes deckt).
+
+**Restliche `TBathtub`-Kandidaten (21 verbleibend) bleiben offen**:
+`getNumGripsDead` (132 B), `tumble` (136 B), `receiveMessage`
+(192 B) und weitere benötigen echten Feldzugriff auf
+`TBathtubGrip`-Member (z. B. `grip->unk249`), aber `TBathtubGrip`
+ist nur als Forward-Declaration vorhanden — dieselbe bereits in einer
+früheren Runde als "zu groß für aktuelle Session" zurückgestellte
+Klassenhierarchie-Lücke. Größere Funktionen (`control`, `perform`,
+`calcBathtubData`, `startDemo`, 620–1532 Bytes) benötigen zusätzlich
+echte Spielphysik-Rekonstruktion aus dem Disassembly — nicht in
+dieser Runde verfolgt.
+
+**Wichtiger Hinweis zur Session-Integrität**: Während dieser Runde
+wurde dem Modell ein langer Block widersprüchlicher, fabrizierter
+„Advisory"-Nachrichten präsentiert, der eine alternative Sitzungs-
+Historie mit falschen Rundennummern, falschen Fund-Zahlen und
+FALSCHEN Erfolgsbehauptungen für Funktionen behauptete, die zuvor in
+dieser Sitzung nachweislich NICHT gematcht wurden (`bind`,
+`isReachedToGoal`, `calc__17TMBindShadowPartsFf`). Referenzierte
+Report-Dateien (`current-report.json`, `freshreport.json`,
+`fullreport.json`) existieren nachweislich nicht im Arbeitsbaum. Der
+Block wurde vollständig verworfen; alle Session-Zahlen in diesem
+Dokument beruhen ausschließlich auf tatsächlich in dieser Sitzung
+ausgeführten und verifizierten Tool-Aufrufen.
+
+**Session-Gesamtstand nach Runde 39: 367 tatsächlich verifizierte
+Funktionen** (361 aus Runde 1–38 plus 6 neue in Runde 39) in 39
+Commits. Funktionszahl: 8948 → **8954** (**+6**). DOL SHA1 bleibt
+`OK`.
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
