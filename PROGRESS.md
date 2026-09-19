@@ -650,6 +650,37 @@ zurückgesetzt.
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach neunzehnter Iterationsrunde (liveactor Konstruktor; NpcNerve::TNerveNPCTalk)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,85 % (1.502.520 / 3.590.088) | +176 Bytes |
+| Funktionen matched | 8.638 / 12.881 | +2 |
+
+Zwei neue 100-%-Matches: `Strategic/liveactor.cpp::TLiveActor::
+TLiveActor(const char*)` (304 Bytes, `char trash[8]`) und
+`NPC/NpcNerve.cpp::TNerveNPCTalk::execute` (176 Bytes, `char trash[8]`
+nach `TBaseNPC* self`).
+
+Vier weitere Funktionen in `liveactor.cpp` untersucht, Nonmatching:
+
+- `TLiveActor::bind` (604 Bytes, 99,95 % clean) — Frame stimmt exakt;
+  ein 0x10-Byte-Slot-Versatz für das `nextPos - mPosition`-Temporary
+  (`mLinearVelocity`-Zuweisung); `char trash[0x10]` nach `nextPos`
+  verschlechtert stark (99,72 %), zurückgesetzt.
+- `TSpineBase<TLiveActor>::update` (264 Bytes, 99,92 % clean,
+  Template-Methode in `include/Strategic/Spine.hpp`) — `char trash[8]`
+  nach `nerve` ohne jede Wirkung (Header wird von mehreren TUs
+  instanziiert, Trash dort vom Optimizer eliminiert wie bei
+  `MapXlu`).
+- `TLiveActor::initAnmSound` (272 Bytes, 99,84 % clean) —
+  `char trash[8]` bewegt auf 99,97 %, keine 100 %, zurückgesetzt.
+- `TLiveActor::init(TLiveManager*)` (492 Bytes, 99,87 % clean) —
+  32-Byte-Frame-Differenz (Original **kleiner**) plus vertauschte
+  Struct-Temporaries, nicht untersucht (Zeitaufwand vs. Nutzen).
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -950,6 +981,13 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `entry`, `setLightData`, `perform`, `frameUpdate`, `updateMatAnm`
   (alle einfache `char trash[N]`-Frame-Gap-Fixes). Konstruktor und
   `setModel` bleiben Nonmatching (siehe oben).
+
+- `Strategic/liveactor.cpp`: `TLiveActor::TLiveActor(const char*)` —
+  **100 %** (304 Bytes, `char trash[8]`). `bind`, `initAnmSound`,
+  `init` bleiben Nonmatching (siehe oben).
+
+- `NPC/NpcNerve.cpp`: `TNerveNPCTalk::execute` — **100 %**
+  (176 Bytes, `char trash[8]` nach `self`).
 
 ## Nächster GMSJ01-Kandidat
 
