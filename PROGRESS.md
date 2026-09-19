@@ -1807,10 +1807,46 @@ Bytes höher** als die von `objdiff-cli`/`report.json` ausgewiesenen
 in keiner Weise die tatsächliche Codequalität widerspiegelt.
 
 Die Referenz-DOL bleibt `OK` (keine Quelltextänderung in dieser
-Runde). Session-Gesamtsumme: **56 tatsächlich geänderte/neu
-implementierte Funktionen** in 20 Commits, plus **59 zusätzliche
-als bereits korrekt verifizierte** Funktionen (9.892 Bytes,
-wichtigster Dokumentationsfund der gesamten Session).
+Runde). Session-Gesamtsumme bis hier: 56 tatsächlich geänderte/neu
+implementierte Funktionen in 20 Commits, plus 59 zusätzliche als
+bereits korrekt verifizierte Funktionen (9.892 Bytes).
+
+### Nach vierunddreißigster Iterationsrunde (8 weitere Funktionen: TVec3-Reste, identity33, TSirenaRollMapObj, TFlagT)
+
+Fortsetzung des breiten Scans über ALLE `populated`-Einheiten
+(unabhängig von Call-Site-Anzahl) fand acht weitere echte
+Pragma-/Fehlende-Implementierung-Kandidaten:
+
+- `TVec3<f32>::TVec3(const TVec3&)` (Kopierkonstruktor, 28 B,
+  14 Call-Sites über 3 Dateien) — hatte bereits einen Kommentar
+  „Checked via MarioCollision.cpp where this is not inlined".
+- `TVec3<f32>::set<f32>(f32,f32,f32)` (Template, 16 B, 5 Dateien).
+- `TVec3<f32>::setLength(const TVec3&, f32)` (164 B, `normalize()`-Helfer).
+- `TRotation3<T>::identity33()` (48 B, 26 Call-Sites über 14 Dateien
+  — größte Call-Site-Anzahl dieser Session, weiterhin 0 Regressionen).
+- `TSirenaRollMapObj::getRollAngX/Y/Z(int) const` (Basisklassen-
+  Version, je 8 B, Vtable-only).
+- `JDrama::TFlagT<u16>::TFlagT(const TFlagT&)` (Kopierkonstruktor,
+  12 B, 9 Call-Sites über 4 Dateien).
+
+Alle acht Byte-für-Byte gegen `orig/GMSJ01/sys/main.dol` verifiziert,
+0 Report-Regressionen.
+
+**Geprüft und verworfen**: `MoveBG/MapObjCorona.cpp`s restliche
+`TVec4`/`fmodf`/`__sinit`-Kandidaten benötigen entweder die fehlende
+`TBathtubGrip`-Klassenhierarchie oder (bei
+`__sinit_MarNameRefGen_BossEnemy_cpp`) eine vollständige
+Cross-Referenz mit dem JAudio-Sound-System-Static-Listen-Set
+(`JALList<MSBgm>` u. v. a., zwölf verschiedene Template-Instanzen) —
+beides außerhalb des Scope eines Cheap-Fixes, als Lead vorgemerkt.
+`@32@__dt__14TWaterHitActorFv` (Vtable-Adjustor-Thunk) ist
+compiler-generiert und nicht über Quelltext-Pragmas ansprechbar.
+
+Die Referenz-DOL bleibt `OK`. **Session-Gesamtsumme: 64 tatsächlich
+geänderte/neu implementierte Funktionen** in 24 Commits, plus **59
+zusätzliche als bereits korrekt verifizierte** Funktionen
+(9.892 Bytes) — **123 Funktionen** insgesamt in dieser Session
+bearbeitet oder als bereits korrekt dokumentiert.
 
 ## Gematchte GMSJ01-Funktionen
 
@@ -2090,6 +2126,13 @@ Destruktoren in `MarNameRefGen_Enemy`/`_BossEnemy`/`_MapObj` (108–156
 B je Funktion), 6 lokale Klassen-Destruktoren in `ShadowUtil.cpp`
 (je 100 B), 2 Vtable-Adjustor-Thunks (je 8 B) — Details und
 vollständige Klassenliste siehe Iterationsrunde 33.
+
+- **8 Funktionen (Runde 34)** — je **100 %**, Byte-für-Byte gegen
+  `orig/GMSJ01/sys/main.dol` verifiziert: `TVec3<f32>::TVec3(const
+  TVec3&)`, `TVec3<f32>::set<f32>(f32,f32,f32)`, `TVec3<f32>::
+  setLength(const TVec3&,f32)`, `TRotation3<T>::identity33()`,
+  `TSirenaRollMapObj::getRollAngX/Y/Z(int) const`, `JDrama::
+  TFlagT<u16>::TFlagT(const TFlagT&)`. Details siehe Iterationsrunde 34.
 
 ## Nächster GMSJ01-Kandidat
 
