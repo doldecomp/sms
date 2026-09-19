@@ -817,13 +817,9 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
-			// TODO: the ROM adds first and subtracts after
-			// (`add; subi 0x78; extsh`) where MWCC folds the -120 into
-			// the random term here.  Ruled out: an `s16` or `int`
-			// named intermediate, splitting the subtraction off, and
-			// putting `timer` on the left -- all fold identically.
-			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
-			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
+			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
+			timer += (s32)(240.0f * MsRandF()) - 120;
+			self->unk298 = timer;
 			spine->pushAfterCurrent(&TNerveBGKLaunchGoro::theNerve());
 			return true;
 		}
@@ -1005,8 +1001,9 @@ DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
-			int timer    = self->getSaveParams()->mSLLaunchTimerDamage.get();
-			self->unk298 = (s32)(240.0f * MsRandF()) - 120 + timer;
+			int timer = self->getSaveParams()->mSLLaunchTimerDamage.get();
+			timer += (s32)(240.0f * MsRandF()) - 120;
+			self->unk298 = timer;
 			self->launchGorogoro();
 			self->rumblePad();
 		}
@@ -1127,13 +1124,9 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (self->mVariant == TBiancoGateKeeper::VARIANT_GENERIC) {
-			// TODO: the ROM adds first and subtracts after
-			// (`add; subi 0x78; extsh`) where MWCC folds the -120 into
-			// the random term here.  Ruled out: an `s16` or `int`
-			// named intermediate, splitting the subtraction off, and
-			// putting `timer` on the left -- all fold identically.
-			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
-			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
+			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
+			timer += (s32)(240.0f * MsRandF()) - 120;
+			self->unk298 = timer;
 			self->launchGorogoro();
 			self->rumblePad();
 		}
