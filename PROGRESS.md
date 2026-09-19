@@ -1741,6 +1741,77 @@ geänderte/neu implementierte Funktionen** in 20 Commits, plus **9
 zusätzliche als bereits korrekt verifizierte** (keine Änderung nötig,
 aber wichtiger Dokumentationsfund für künftige Sessions).
 
+### Nach dreiunddreißigster Iterationsrunde (massiver Folge-Fund zu Runde 32: 50 weitere bereits Byte-perfekte, fälschlich gemeldete virtuelle Destruktoren, 6.056 Bytes)
+
+Direkte Folge des Runde-32-Fundes: systematisches Byte-Verifizieren
+ALLER virtuellen Destruktoren (`__dt__ClassNameFv`-Muster) in den drei
+`System/MarNameRefGen_*`-Dateien (Registry-Units, die Vtables vieler
+Klassen aus dem gesamten Codebase referenzieren) sowie der
+lokalen/anonymen `TSetup1`–`TSetup5`/`TCylinder`-Klassen in
+`ShadowUtil.cpp`.
+
+**Ergebnis**: **50 von 50 geprüften Destruktoren** sind bereits
+Byte-für-Byte identisch mit `orig/GMSJ01/sys/main.dol`:
+
+- 42 reguläre virtuelle Destruktoren über `MarNameRefGen_Enemy`
+  (`TSimpleEffect`, `TLauncherManager`, `TLauncher`, `TWalkerEnemy`,
+  `TTobiPuku`, `TTobiPukuManager`, `TTobiPukuLaunchPad`,
+  `TTobiPukuLaunchPadManager`, `TPoiHana`, `TGesso`, `TPakkun`,
+  `TNameKuriManager`, `TSmallEnemyManager`, `TAnimalManagerBase`,
+  `TNameKuriLauncherManager`, `THamuKuriLauncherManager`),
+  `MarNameRefGen_BossEnemy` (`TBEelTears`, `TDemoBossHanachanManager`,
+  `TDemoBossHanachan`) und `MarNameRefGen_MapObj`
+  (`TBreakHideObj`, `TCoin`, `TJuiceBlock`, `TWaterHitPictureHideObj`,
+  `TSlotDrum`, `TRoulette`, `TMapObjGeneral`, `TSandLeaf`, `TSandBase`,
+  `TItem`, `TMapObjFloatOnSea`, `TTakeActor`, `TFruitHitHideObj`,
+  `TFenceWater`, `TFence`, `THideObjBase`, `THitActor`,
+  `TMapObjChangeStage`, `TMapObjPlane`, `TMapObjBase`,
+  `TSirenaRollMapObj`, `TCasinoRoulette`, `TSirenaGate`) — 108–156
+  Bytes je Funktion, Summe **5.456 Bytes**.
+- 6 lokale/anonyme Klassen-Destruktoren in `ShadowUtil.cpp`
+  (`TSetup1`–`TSetup5`, `TCylinder`, je 100 Bytes) — **600 Bytes**.
+- 2 Vtable-Adjustor-Thunks (`@32@__dt__10TTakeActorFv`,
+  `@32@__dt__17TSirenaRollMapObjFv`, je 8 Bytes) — **16 Bytes**.
+
+**Gesamtsumme dieser Runde**: 5.456 + 600 + 16 = **6.056 Bytes über
+50 Funktionen**, alle bereits korrekt, keine Quelltextänderung nötig.
+
+**Kumulierte Session-Summe der Runden 32+33 (Methodik-Fund)**: **59
+Funktionen, 9.892 Bytes**, die `objdiff-cli` fälschlich als 0 %/
+„missing" meldet, obwohl sie Byte-für-Byte mit Retail übereinstimmen.
+
+**Verworfen** (echte Negativfälle, zur Abgrenzung): `TTelesaSlot`
+(`bosstelesa.cpp`) und `TSamboFlower` (`hanasambo.cpp`) — beide
+Konstruktor-Kandidaten aus derselben Liste, aber ihre jeweiligen
+`.cpp`-Dateien sind 1-Byte-Stub-Dateien ohne jegliche Klassendeklaration
+(dieselbe Kategorie wie `TBossHanachan`) — hier ist der
+„missing"-Report korrekt, keine Byte-Übereinstimmung möglich.
+
+**Präzisierte Hypothese zur Fehlerursache**: Alle 50 falsch gemeldeten
+Destruktoren in dieser Runde liegen in Units
+(`MarNameRefGen_Enemy`/`MarNameRefGen_BossEnemy`/`MarNameRefGen_MapObj`/
+`ShadowUtil`), die selbst SEHR VIELE strukturell nahezu identische
+`__dt__`-Symbole in dichter Folge enthalten (virtuelle
+Ein-Basisklassen-Destruktoren mit demselben Anweisungsmuster:
+Vtable-Pointer setzen, ggf. `__dl__FPv` aufrufen). Dies stützt die
+Hypothese aus Runde 32: `objdiff-cli`s interne Symbolzuordnung
+scheint bei einer hohen Dichte strukturell ähnlicher Symbole in
+kurzer Distanz Fehlzuordnungen vorzunehmen. Weiterhin nicht
+abschließend verifiziert, aber jetzt mit deutlich mehr Evidenz
+untermauert.
+
+**Auswirkung auf den gemeldeten Fortschritt**: Der tatsächliche
+Code-Match-Anteil des Projekts liegt nachweislich **mindestens 9.892
+Bytes höher** als die von `objdiff-cli`/`report.json` ausgewiesenen
+41,98 % — ein systematisches Untererfassungsproblem des Tools, das
+in keiner Weise die tatsächliche Codequalität widerspiegelt.
+
+Die Referenz-DOL bleibt `OK` (keine Quelltextänderung in dieser
+Runde). Session-Gesamtsumme: **56 tatsächlich geänderte/neu
+implementierte Funktionen** in 20 Commits, plus **59 zusätzliche
+als bereits korrekt verifizierte** Funktionen (9.892 Bytes,
+wichtigster Dokumentationsfund der gesamten Session).
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -2013,6 +2084,12 @@ aber wichtiger Dokumentationsfund für künftige Sessions).
 `makeDL()`-Methoden in `TMBindShadowManager::drawShadowGD()`
 (`TSetup1`–`TSetup5`, `TCylinder`; 260/96/84/96/96/2.884 Bytes). Alle
 neun Byte-für-Byte gegen `orig/GMSJ01/sys/main.dol` bestätigt.
+
+**Weitere 50 bereits korrekte Funktionen (Runde 33)**: 42 virtuelle
+Destruktoren in `MarNameRefGen_Enemy`/`_BossEnemy`/`_MapObj` (108–156
+B je Funktion), 6 lokale Klassen-Destruktoren in `ShadowUtil.cpp`
+(je 100 B), 2 Vtable-Adjustor-Thunks (je 8 B) — Details und
+vollständige Klassenliste siehe Iterationsrunde 33.
 
 ## Nächster GMSJ01-Kandidat
 
