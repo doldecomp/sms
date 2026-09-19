@@ -123,12 +123,14 @@ void TMapObjGeneral::thrown()
 	unk138        = 0;
 	mHolder       = nullptr;
 
-	mVelocity.set(JMASSin((s32)*gpMarioAngleY) * *gpMarioThrowPower
+	mVelocity.set(JMASSin((s32)*gpMarioAngleY)
 	                      * mMapObjData->mPhysical->unk4->unk2C
+	                      * *gpMarioThrowPower
 	                  + (mNormalThrowSpeedRate * *gpMarioSpeedX),
 	              mMapObjData->mPhysical->unk4->unk30,
-	              JMASCos((s32)*gpMarioAngleY) * *gpMarioThrowPower
+	              JMASCos((s32)*gpMarioAngleY)
 	                      * mMapObjData->mPhysical->unk4->unk2C
+	                      * *gpMarioThrowPower
 	                  + (mNormalThrowSpeedRate * *gpMarioSpeedZ));
 
 	offLiveFlag(LIVE_FLAG_UNK10);
