@@ -268,6 +268,7 @@ void TCommonLauncher::stateInitial() { changeState(STATE_NORMAL); }
 
 void TCommonLauncher::stateHitByWater()
 {
+	char trash[8];
 	if (mTicksSpentInCurState == 0) {
 		changeBck(1);
 		decHitPoints();
@@ -374,6 +375,7 @@ const char** TCommonLauncher::getBasNameTable() const
 
 void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x10];
 	TSpineEnemy::perform(cue, graphics);
 	if ((cue & CUE_CALC_ANIM) && mMActor->checkCurBckFromIndex(1)) {
 		MtxPtr mtx = mMActor->getModel()->getAnmMtx(0);
