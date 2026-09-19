@@ -532,6 +532,11 @@ static inline MActor* EnemymanagerGetMActor(const TSpineEnemy* p)
 	return actor;
 }
 
+static inline int EnemymanagerGetCurAnmFrameNo(const TSpineEnemy* p)
+{
+	return p->getCurAnmFrameNo(ANM_TYPE_BCK);
+}
+
 // TODO: frame-exact, but retail keeps the scaled animation-frame index in r27
 // and the scratch matrix pointer in r28 while we have them the other way
 // round, which costs the slwi/lfs/addi ordering at 0x88 too. afStack_5C also
@@ -576,12 +581,30 @@ static inline MActor* EnemymanagerGetMActor(const TSpineEnemy* p)
 // inlined-call rule does not apply: the rotated pair is a local and a stack
 // address, not a receiver and an argument (see the bucket ladder recorded on
 // TBossHanachan::setHeadAndBodyAnm).
+// Closure batch 222 applied research 221's lever and landed most of it:
+// routing the frame number through the TU-local binding level
+// `EnemymanagerGetCurAnmFrameNo` makes the instruction stream **exact** (109
+// instructions, no inserted or deleted ones, frame 0xc0) -- the `lfs f0` /
+// `addi rD, r1, off` pair at 0x88 now comes out in retail's order -- taking
+// the function 96.1 -> 99.7%.  A *named* local inside that helper
+// (`int frame = ...; return frame;`) is a different and worse lever: it splits
+// the raw index from its `slwi` into two callee-saved values and costs +8 of
+// frame (0xc8, Mtx at 0x70, 12 markers), i.e. research 221's "a named local in
+// an inlined callee reserves stack" priced here at 8, not 4.
+// Residue (6 markers): retail reuses one register for the index and its
+// `slwi` (r27) and gives `wtf` r28, we spend r29 on the raw index, r28 on the
+// shifted one and r27 on `wtf`; afStack_5C is still 0x68 against retail's
+// 0x64, so the low region is 4 bytes too big (retail pays the difference back
+// as alignment pad under the 8-aligned float-conversion slot at 0x98, which is
+// why both frames are 0xc0).  Dropping `wtf` is -8 of low region, not -4
+// (0xb8, 14 markers, and it loses an instruction retail has), so the missing
+// knob is a -4 one below the matrix.
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 {
 	if (unk4C != EnemymanagerGetMActor(enemy)->getCurAnmIdx(ANM_TYPE_BCK))
 		return false;
 
-	int f = enemy->getCurAnmFrameNo(ANM_TYPE_BCK);
+	int f = EnemymanagerGetCurAnmFrameNo(enemy);
 	enemy->calcRootMatrix();
 	enemy->updateAnmSound();
 	enemy->getMActor()->frameUpdate();
