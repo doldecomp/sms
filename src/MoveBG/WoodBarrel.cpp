@@ -54,6 +54,7 @@ void TWoodBarrel::kill()
 {
 	TMapObjGeneral::kill();
 	JGeometry::TVec3<f32> vec = mPosition;
+	char trash[0xc];
 	vec.y += 100.0f;
 	unk148->mPos.value = vec;
 	gpModelWaterManager->emitRequest(*unk148);
