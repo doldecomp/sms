@@ -170,6 +170,17 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   inlined-Callee-Registerzuordnung, dieselbe Kategorie wie
   `J3DModel::entryModelData`.
 
+- `Map/MapEventSirena.cpp`: `TMapEventSirenaSink::watch` (280 Bytes,
+  99,97 % bestes Experiment — Original bleibt bei 99,87 %). `char trash[8]`
+  vor oder nach dem `fireStartDemoCamera(...)`-Aufruf (der Parameter
+  `JDrama::TFlagT<u16>(0)` als anonymes Temporary konstruiert) schließt
+  4 von 16 Bytes Offset-Differenz bei der `sth`-Store-Adresse des Temporaries;
+  `trash[0xc]` statt `trash[8]` an derselben Stelle ändert nichts weiter —
+  die Temporary-Platzierung ist compiler-intern fixiert, nicht über Local-
+  Padding beeinflussbar. Da 99,97 % kein 100-%-Match ist, Quelltext auf die
+  saubere Original-Fassung (99,87 %) zurückgesetzt statt einen wirkungslosen
+  `trash`-Hack stehen zu lassen.
+
 - `NPC/NpcManager.cpp`: `TNPCManager::clipEnemies` (784 Bytes, 92,70 %).
   Bereits im Quelltext als upstream-`TODO` markiert
   ("figure out these inlines ... fabricatedInline3 matches in camera itself
