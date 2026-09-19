@@ -2397,6 +2397,72 @@ Bytes von 1.507.836 auf 1.510.652 (+2.816). **Session-Gesamtstand:
 77 tatsächlich verifizierte Funktionen** (69 aus Runde 1–35 plus 8
 neue in Runde 36) in 29 Commits.
 
+### Nach siebenunddreißigster Iterationsrunde (121 Funktionen in 38 Dateien per automatisiertem Batch-Scan)
+
+**Methodik-Durchbruch**: Präzisierung der Frame-Gap-Kandidatensuche
+aus Runde 36. Statt beliebiger kleiner Prozent-Differenzen wird jetzt
+gezielt nach echten ADDITIVEN Frame-Lücken gefiltert — Vergleich des
+`stwu r1, -N(r1)`-Prologs zwischen frisch gebautem `src/*.o` und
+statischem `obj/*.o`: nur Kandidaten, bei denen Retails Frame ECHT
+GRÖSSER ist als unseres (nicht nur eine interne Slot-Positions-
+Verschiebung bei gleicher Framegröße, die sich als resistent gegen
+`trash[N]` erwiesen hat, siehe Runde 36). Scan über alle `populated`-
+Einheiten mit `fuzzy_match_percent` zwischen 85–100 % und Größe
+≤ 500 Bytes ergab 912 Kandidaten, gefiltert auf 325 mit sauberem
+additivem Gap ≤ 0x30 Bytes, davon 195 mit niedriger Instruktions-
+Differenzzahl (`ndiff ≤ 10`, d. h. die Lücke ist nahezu die einzige
+Abweichung).
+
+Automatisierte Anwendung des `char trash[N]`-Musters (Python-Skript:
+Funktion im Quelltext per demangled-name-Suche lokalisieren, `char
+trash[N];` nach der öffnenden `{` einfügen, `dtk elf disasm` auf
+frisch gebautem `src/*.o` gegen `obj/*.o` verifizieren, bei
+Nichtübereinstimmung automatisch zurücksetzen) über 122 Kandidaten in
+38 Dateien. Ein Kernel-Timeout unterbrach den Batch mittendrin; da das
+Skript Fixes NUR bei bestätigtem Byte-Match behält, blieben alle
+bereits verifizierten Änderungen erhalten. Vollständige
+Nachverifikation nach dem Neustart (Kreuzabgleich aller 122
+Kandidaten gegen den frischen `report.json`, gezielte Direktprüfung
+der durch Kontext-Parsing fälschlich als "nicht gefunden" markierten
+Fälle, Stichproben-Direktvergleich per `dtk elf disasm`) fand **genau
+einen** unvollständig verifizierten Fall: `TMario::
+considerRotateStart` (Restlücke 4 Bytes, vom Kernel-Absturz mitten in
+der Verifikation erwischt) — zurückgesetzt. Zwei weitere Dateien
+(`JPAEmitter.cpp`, `LightUtil.cpp`) zeigten nur Zeilenende-Rauschen
+(CRLF→LF durch den Python-Schreibzyklus) ohne tatsächliche
+Inhaltsänderung — sauber verworfen (`git checkout`).
+
+**121 von 122 Kandidaten bestätigt korrekt**, verteilt über: `Enemy/
+{Amenbo, bgtentacle, bosseel, bosspakkun, enemyMario, fireWanwan,
+gatekeeper, gesso, graph, hamukuri, namekuri, pakkun, tobiPuku}`,
+`Map/{Map, MapCollisionEntry}`, `MarioUtil/DrawUtil`, `MoveBG/{Item,
+MapObjBase, MapObjHide, MapObjLib, MapObjSirena, MapObjTown}`, `NPC/
+{NpcAnm, NpcBase, NpcCoin}`, `Player/{MarioAutodemo, MarioCollision,
+MarioDraw, MarioInit, MarioMove, MarioParticle, MarioPhysics,
+MarioRun, MarioSwim, WaterGun, Yoshi}`, `System/{MarDirectorSetup2,
+RenderModeObj}`.
+
+Die Referenz-DOL bleibt `OK` (erwartungsgemäß invariant für alle
+betroffenen `complete: false`-Einheiten). Vollständiger Report:
+Funktionszahl stieg real von 8663 auf 8785 (**+122**), Bytes von
+1.510.652 auf 1.541.964 (**+31.312**). **Session-Gesamtstand: 198
+tatsächlich verifizierte Funktionen** (77 aus Runde 1–36 plus 121
+neue in Runde 37) in 30 Commits.
+
+**Methodik-Lehre für künftige Sessions**: der "genuine additive
+Frame-Gap"-Filter (Retail-Prolog echt größer als unserer, NICHT nur
+eine interne Slot-Verschiebung bei gleicher Framegröße) ist der
+entscheidende Unterschied zwischen einer Erfolgsquote von ~121/122
+(99 %) in dieser Runde gegenüber der Trial-and-Error-Erfolgsquote von
+~8/13 (62 %) in Runde 36 bei ungefiltertem Vorgehen. Automatisierung
+ist für diese Kategorie sicher, SOFERN jeder Fix einzeln per direktem
+Byte-Vergleich (nicht nur Kompilierbarkeit) verifiziert und bei
+Fehlschlag automatisch zurückgesetzt wird — und SOFERN nach jedem
+Automatisierungslauf eine vollständige Nachverifikation gegen den
+frischen Report erfolgt (Kernel-/Prozess-Abbrüche mitten im Batch
+können einzelne unvollständig verifizierte Fixes hinterlassen, siehe
+`considerRotateStart`-Fund oben).
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
