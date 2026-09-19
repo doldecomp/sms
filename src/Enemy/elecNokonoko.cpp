@@ -658,10 +658,13 @@ void TElecCarapace::setBehavior()
 	if (mNokonoko->checkLiveFlag(LIVE_FLAG_DEAD))
 		kill();
 
-	if (mLanded)
+	// The flag setBehavior reads is TEnemyAttachment's own landing flag at
+	// 0x168, not TElecCarapace::mLanded at 0x184: retail's lbz/stb pair here
+	// addresses the base member while every other site in this TU uses 0x184.
+	if (unk168)
 		mPosition.y = mGroundHeight;
 
-	mLanded = false;
+	unk168 = false;
 }
 
 void TElecCarapace::behaveToHitGround()
