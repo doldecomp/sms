@@ -308,7 +308,7 @@ bool TRollEnemy::isCollidMove(THitActor* param_1)
 
 bool TRollEnemy::isReachedToGoalXZ()
 {
-	JGeometry::TVec3<f32> d(unk104.getPoint());
+	JGeometry::TVec3<f32> d(getUnk104().getPoint());
 	d.x -= mPosition.x;
 	d.y -= mPosition.y;
 	d.z -= mPosition.z;
@@ -510,11 +510,10 @@ void TIgaiga::calcRootMatrix()
 
 bool TIgaiga::isRolling()
 {
-	if (mSpine->getCurrentNerve() == &TNerveIgaigaRollOnGraph::theNerve())
-		return true;
-	if (mSpine->getCurrentNerve() == &TNerveIgaigaShootFromCannon::theNerve())
-		return true;
-	if (mSpine->getCurrentNerve() == &TNerveIgaigaWaterHit::theNerve())
+	if (mSpine->getCurrentNerve() == &TNerveIgaigaRollOnGraph::theNerve()
+	    || mSpine->getCurrentNerve()
+	           == &TNerveIgaigaShootFromCannon::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveIgaigaWaterHit::theNerve())
 		return true;
 	return false;
 }
@@ -646,7 +645,7 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 
 bool TIgaiga::isReachedToGoalXZ()
 {
-	JGeometry::TVec3<f32> d(unk104.getPoint());
+	JGeometry::TVec3<f32> d(getUnk104().getPoint());
 	d.x -= mPosition.x;
 	d.y -= mPosition.y;
 	d.z -= mPosition.z;
@@ -1283,9 +1282,8 @@ const char** TGorogoro::getBasNameTable() const { return gorogoro_bastable; }
 
 bool TGorogoro::isRolling()
 {
-	if (mSpine->getCurrentNerve() == &TNerveGorogoroRollOnGraph::theNerve())
-		return true;
-	if (isBckAnm(1))
+	if (mSpine->getCurrentNerve() == &TNerveGorogoroRollOnGraph::theNerve()
+	    || isBckAnm(1))
 		return true;
 	return false;
 }
