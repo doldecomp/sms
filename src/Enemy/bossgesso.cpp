@@ -634,8 +634,8 @@ void TBossGesso::init(TLiveManager* param_1)
 	mPolDrop = new TBGPolDrop;
 
 	mPolDrop->setMActors(
-	    getActorKeeper()->createMActor("bgeso_osenball_white.bmd", 0),
-	    getActorKeeper()->createMActor("bgeso_osenball.bmd", 0));
+	    getActorKeeper()->createMActor("bgeso_osenball.bmd", 0),
+	    getActorKeeper()->createMActor("bgeso_osenball_white.bmd", 0));
 
 	mCork = new TBGCork(this);
 
@@ -937,7 +937,7 @@ void TBossGesso::gotBeakDamage()
 void TBossGesso::changeAllTentacleState(int param_1)
 {
 	for (int i = 0; i < TENTACLE_NUM; ++i)
-		if (mTentacles[i]->mState != 5 && !mTentacles[i]->isThing())
+		if (mTentacles[i]->mState != 5 && !isTentacleBusy(mTentacles[i]))
 			mTentacles[i]->changeStateAndFixNodes(param_1);
 }
 
