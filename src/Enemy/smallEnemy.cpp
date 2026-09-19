@@ -753,7 +753,7 @@ void TSmallEnemy::changeOut()
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition);
 
 	kill();
-	mJuiceBlock->mPosition = mPosition;
+	mPosition = mJuiceBlock->mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
