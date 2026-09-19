@@ -534,6 +534,7 @@ void THinokuri2::init(TLiveManager* param_1)
 
 void THinokuri2::reset()
 {
+	char trash[0x28];
 	TSpineEnemy::reset();
 	onLiveFlag(LIVE_FLAG_UNK8);
 	resetPolInterval();

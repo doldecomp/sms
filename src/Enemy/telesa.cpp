@@ -711,6 +711,7 @@ void TTelesa::initAttacker(THitActor* param_1)
 
 void TTelesa::initItemAttacker(THitActor* param_1)
 {
+	char trash[8];
 	reset();
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	unk1B8 = 1;

@@ -37,6 +37,7 @@ void CPolarSubCamera::calcSecureViewTarget_(s16 angle, f32* outX, f32* outZ)
 
 void CPolarSubCamera::execSecureView_(s16 angle, Vec* out)
 {
+	char trash[0x10];
 	f32 px;
 	f32 pz;
 	calcSecureViewTarget_(angle, &px, &pz);

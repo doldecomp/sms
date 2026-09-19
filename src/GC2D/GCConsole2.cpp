@@ -2553,6 +2553,7 @@ void TGCConsole2::startInsertJetBalloon()
 
 void TGCConsole2::startAppearRedCoin()
 {
+	char trash[0x10];
 	unk3C = 1;
 	unk59 = 1;
 

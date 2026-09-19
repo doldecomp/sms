@@ -552,6 +552,7 @@ void TBaseNPC::npcHappyIn(u8 param_1)
 
 void TBaseNPC::npcWetIn()
 {
+	char trash[0x10];
 	if (!isSunflowerReviving()) {
 		EnumNpcAnmKind EVar7              = NPC_ANM_KIND_UNK5;
 		EnumNpcStopMotionBlendOnOff EVar6 = NPC_STOP_MOTION_BLEND_ON;

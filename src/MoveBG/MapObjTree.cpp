@@ -230,6 +230,7 @@ u32 TMapObjTreeScale::touchWater(THitActor* water)
 
 void TMapObjTreeScale::control()
 {
+	char trash[0x20];
 	switch (mState) {
 	case STATE_SMALL:
 		if (SMSGetMarDirector()->getCurrentMap() != 4
