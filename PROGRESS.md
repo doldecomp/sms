@@ -118,6 +118,63 @@ tatsächlicher `ninja && dtk shasum`-Durchlauf ist beweiskräftig.
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach sechster Iterationsrunde (JASTrack::writeRegDirect; spcinterp/JASTrack-Analysen)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,57 % (1.492.260 / 3.590.088) | +204 Bytes |
+| Funktionen matched | 66,76 % (8.600 / 12.881) | +1 |
+
+Ein neuer 100-%-Match: `JSystem/JAudio/JASystem/JASTrack.cpp::
+TTrack::writeRegDirect` (204 Bytes, `char trash[8]` schließt eine
+8-Byte-Frame-Lücke, keine Struct-Locals vorhanden).
+
+Drei weitere Funktionen ausführlich untersucht, kein Match erreicht,
+Quelltext auf sauberen Zustand zurückgesetzt:
+
+- `Strategic/spcinterp.cpp`: `execadd`/`execsub`/`execmul`/`execdiv`
+  (je 728 Bytes, 99,98 % clean) — identisches Muster in allen vier
+  Funktionen. Frame stimmt bereits exakt (`0x70` beidseitig); einziger
+  Rest ist ein 4-Byte-Stack-Offset-Unterschied (0x24/0x28 vs. 0x20/0x24)
+  für das compiler-interne `TSpcSlice`-Temporary im `push(int)`-Aufruf
+  des else-Zweigs. Drei Varianten (`trash[4]` nach `result`, expliziter
+  `TSpcSlice tmp`-Local statt `push(int)`, `trash[4]` vor dem `if`)
+  verschlechtern alle auf 99,89–99,95 %; zurückgesetzt auf die saubere
+  99,98-%-Fassung.
+- `Strategic/spcinterp.cpp::execcall` (580 Bytes, 99,66 % clean) —
+  32-Byte-Frame-Gap (`0x88` vs. `0x68`) **plus** eine echte
+  Register-Vertauschung: `mContextStack.mSize` und `mProgramCounter`
+  landen bei uns in r5/r4, im Original in r4/r5 (reines
+  Register-Allocation-Detail, keine Feldadress-Verwechslung — beide
+  Felder werden korrekt gelesen, nur die physischen Register
+  vertauscht). `char trash[0x20]` am Funktionsanfang erzeugte
+  scheinbar einen Sprung auf 99,69 %, was sich bei genauer Prüfung
+  als Messartefakt herausstellte (objdiff-cli grenzt bei
+  `NonMatching`-Funktionen den Vergleichsbereich der Zielseite an der
+  aktuell kompilierten Größe ab; das Vergrößern der eigenen Funktion
+  verschiebt dadurch auch das verglichene Zielfenster). Zurückgesetzt
+  auf die saubere 99,66-%-Fassung.
+- `JSystem/JAudio/JASystem/JASTrack.cpp::noteOn` (824 Bytes, 99,80 %
+  clean) — `char trash[8]` behebt die reale 8-Byte-Frame-Lücke
+  (0x70 vs. 0x68) sauber und hebt den Match auf 99,88 % an (Position
+  des `trash` innerhalb der Funktion ist irrelevant, drei Stellen
+  getestet, identisches Ergebnis). Rest ist ein einzelnes
+  Register-Umnummerierungsmuster (`r24` bei uns vs. `r23` im Original
+  für denselben `TTrack* mParent`-Lokal über die gesamte
+  Parent-Walk-Schleife) — dieselbe Kategorie wie der bereits
+  dokumentierte `effectObj::reset`-Fall. Zurückgesetzt auf die saubere
+  99,80-%-Fassung.
+- `JSystem/JAudio/JASystem/JASTrack.cpp::writeRegParam` (1.288 Bytes,
+  99,36 % clean, bereits mit Upstream-Kommentar `// TODO: This is pure
+  pain` als bekannt schwierig markiert) — 16-Byte-Frame-Gap (`0x48` vs.
+  `0x38`) plus eine echte Argument-Auswertungsreihenfolge-Vertauschung
+  vor dem zweiten `writeRegDirect(5, product)`-Aufruf (`this`-Setup vs.
+  Wertberechnung in umgekehrter Reihenfolge). `char trash[0x10]`
+  bewegt den Match nur auf 99,38 %; bestätigt als strukturell
+  schwierig, zurückgesetzt auf die saubere Fassung.
+
+Die Referenz-DOL bleibt `OK`.
+
 ### Bereiche
 
 | Bereich | Fuzzy | Code matched | Units linked |
@@ -348,6 +405,10 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `PitFunk`-Case) — je **100 %** einzeln. Unit bleibt `NonMatching` in
   `configure.py`: Matching-Flip bricht DOL-SHA1 trotz 100 % in allen
   objdiff-Sections (bestätigter Adress-Shift-Layoutfehler, siehe oben).
+
+- `JSystem/JAudio/JASystem/JASTrack.cpp`: `TTrack::writeRegDirect` —
+  **100 %** (204 Bytes, `char trash[8]`). `noteOn` (99,88 % best) und
+  `writeRegParam` (99,38 % best) bleiben Nonmatching (siehe oben).
 
 ## Nächster GMSJ01-Kandidat
 
