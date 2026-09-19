@@ -521,7 +521,7 @@ void TApplication::proc()
 			TMenuDirector* dir = new TMenuDirector;
 			mDirector          = dir;
 			dir->setup(mDisplay, mGamePads[0]);
-			TFlagManager::getInstance()->setFlag(3, 0x20001);
+			TFlagManager::getInstance()->setFlag(0x20001, 3);
 			mCurrArea.set(1, 0, 0);
 		} break;
 
@@ -574,7 +574,10 @@ void TApplication::proc()
 		if (!iVar9)
 			nextState = gameLoop();
 
-		delete mDirector;
+		// The director lives in mHeap, which the switch below frees wholesale,
+		// so retail destroys it in place (dtor flag -1) instead of deleting it.
+		if (mDirector)
+			mDirector->~TDirector();
 		mDirector = nullptr;
 
 		switch (mAppState) {

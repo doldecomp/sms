@@ -37,6 +37,10 @@ public:
 	/* 0x48 */ u32 unk48;
 	/* 0x4C */ u32 unk4C;
 	/* 0x50 */ bool unk50;
+	// TODO: name this. Nothing in the binary reads it; it exists only because
+	// the `new TMenuDirector` in TApplication::proc asks for 0x58 bytes and
+	// the constructor's last store is the `bool` at 0x50.
+	/* 0x54 */ u32 unk54;
 };
 
 #endif
