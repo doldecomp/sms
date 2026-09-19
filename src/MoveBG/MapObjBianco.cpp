@@ -917,9 +917,8 @@ u32 TBellWatermill::touchWater(THitActor* water)
 		unk158 = speed + unk15C;
 	}
 
-	f32 max = unk164;
-	if (unk158 > max)
-		unk158 = max;
+	if (unk158 > unk164)
+		unk158 = unk164;
 
 	return 1;
 }
