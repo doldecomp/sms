@@ -873,13 +873,15 @@ void TGuide::appearGuidePane(int stage)
 	}
 }
 
-// UNUSED; the reverse of appearGuidePane, spelled out in perform's case 2.
+// UNUSED: inlined into perform's STATE_SHOWING case, its only call site.
 void TGuide::disappearGuidePane(int stage)
 {
 	mOpenPanelB->setPaneAlpha(20, 0, 255);
 
 	JUTRect rect   = mPanelRects[stage];
 	JUTRect bounds = mStagePanes[stage]->mBounds;
+
+	gpMSound->startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0, nullptr, 0);
 
 	int height = rect.y2 - rect.y1;
 	int width  = rect.x2 - rect.x1;
@@ -974,20 +976,8 @@ void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 	case STATE_SHOWING:
 		if (mGamePad->mEnabledFrameMeaning
 		    & (TMarioGamePad::MEANING_0x20 | TMarioGamePad::MEANING_0x40)) {
-			s16 stage      = mCurrentStage;
-			mOpenPanelB->setPaneAlpha(20, 0, 255);
-			JUTRect rect   = mPanelRects[stage];
-			JUTRect bounds = mStagePanes[stage]->mBounds;
-			gpMSound->startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0, nullptr,
-			                             0);
-			int height = rect.y2 - rect.y1;
-			int width  = rect.x2 - rect.x1;
-			mOpenPanelA->setCenteredSize(20, 0, 0, width, height);
-			mOpenPanelA->setPaneOffset(20, bounds.x1 - rect.x1,
-			                           bounds.y1 - rect.x1 - 40, 0, 0);
-			mCursors[0]->setPaneAlpha(20, 255, 0);
-			mCursors[1]->setPaneAlpha(20, 80, 0);
-			mState = STATE_DISAPPEAR;
+			s16 stage = mCurrentStage;
+			disappearGuidePane(stage);
 		} else if (mGamePad->mButton.mTrigger & 0x10) {
 			mState = STATE_CLOSE;
 		}
