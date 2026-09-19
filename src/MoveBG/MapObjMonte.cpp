@@ -980,7 +980,8 @@ void TFluff::move()
 	mPosition.z = mDrift.z + (swing * (mSwingSin - mSwingCos)
 	                          + mInitialPosition.z);
 
-	JGeometry::TVec3<f32> wind(gpMapObjManager->unkD0);
+	JGeometry::TVec3<f32> wind;
+	wind.set(gpMapObjManager->unkD0);
 	if (wind.isZero()) {
 		mSwingAngle += mSwingAngleSpeed;
 		if (mSwingAngle > 360.0f)
@@ -1135,9 +1136,9 @@ void TFluffManager::findNextFluff()
 	}
 }
 
-// TODO: 70.3%. The instruction stream is close but the frame is 0x68 short
-// and the search loop's float registers are renumbered; the missing locals
-// are somewhere in the STATE_CALM hand-off.
+// TODO: 90.0%. The frame is still 0x58 short and the search loop's float
+// registers are renumbered; the missing locals are somewhere in the
+// STATE_CALM hand-off.
 void TFluffManager::control()
 {
 	switch (mState) {
@@ -1155,17 +1156,24 @@ void TFluffManager::control()
 		}
 		break;
 
+	// Retail loads all six floats before the first store, which a
+	// read-modify-write on the member (`unkD0.add(mWind)`, or three `+=`)
+	// cannot do: the stores may alias `mWind`. The sum has to land in a
+	// separate object first. Worth +2.9 (87.1 -> 90.0); three `f32` locals
+	// and a three-argument `set` measure identically, so the vector form is
+	// kept. Residue: retail loads `mWind.y` before `unkD0.y` in the second
+	// component, we the reverse.
 	case STATE_BLOW: {
 		TMapObjManager* man = gpMapObjManager;
-		man->unkD0.x += mWind.x;
-		man->unkD0.y += mWind.y;
-		man->unkD0.z += mWind.z;
+		JGeometry::TVec3<f32> wind;
+		wind.add(man->unkD0, mWind);
+		man->unkD0.set(wind);
 		if (!isStateTimerEngaged())
 			mState = STATE_CALM;
 		break;
 	}
 
-	// TODO: 87.1%. Two residues left. (1) retail expands TMapObjBase::
+	// TODO: Two residues left. (1) retail expands TMapObjBase::
 	// getDistance inside the inlined findNextFluff (`lfsu 0x10`, three
 	// `fsubs`/`fmuls`, `bl TUtil<f32>::sqrt`); we `bl` it -- a shared-header
 	// (MapObjBase.hpp) depth/statement-count item, parked. (2) STATE_CALM

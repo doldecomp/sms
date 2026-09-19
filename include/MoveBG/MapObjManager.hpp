@@ -108,7 +108,7 @@ public:
 	/* 0xC4 */ J3DMaterialTable* unkC4;
 	/* 0xC8 */ ResTIMG* unkC8;
 	/* 0xCC */ ResTIMG* unkCC;
-	/* 0xD0 */ Vec unkD0;
+	/* 0xD0 */ JGeometry::TVec3<f32> unkD0;
 };
 
 // The binding is load-bearing, unlike the other SMSGet* globals: every
