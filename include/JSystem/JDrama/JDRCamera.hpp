@@ -111,8 +111,9 @@ public:
 
 class TOrthoProj : public TCamera {
 public:
-	TOrthoProj(f32 near, f32 far, f32 a, f32 b, f32 c, f32 d)
-	    : TCamera(near, far, "<TOrthoProj>")
+	TOrthoProj(f32 near, f32 far, f32 a, f32 b, f32 c, f32 d,
+	           const char* name = "<TOrthoProj>")
+	    : TCamera(near, far, name)
 	{
 		mField[0] = a;
 		mField[1] = b;
