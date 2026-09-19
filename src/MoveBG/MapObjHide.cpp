@@ -85,6 +85,7 @@ BOOL THideObjBase::receiveMessage(THitActor* sender, u32 message)
 
 void THideObjBase::loadAfter()
 {
+	char trash[8];
 	TMapObjBase::loadAfter();
 	mHiddenObj
 	    = TMapObjBaseManager::newAndRegisterObjByEventID(mEventId, getName());
@@ -184,6 +185,7 @@ TFruitHitHideObj::TFruitHitHideObj(const char* name)
 
 void TFruitBasket::countFruit(THitActor* param_1)
 {
+	char trash[0x18];
 	mMActor->setBck("basket");
 
 	if (mHiddenObj != nullptr) {
@@ -231,6 +233,7 @@ void TFruitBasket::touchFruit(THitActor* param_1)
 
 void TFruitBasket::loadAfter()
 {
+	char trash[8];
 	TFruitHitHideObj::loadAfter();
 
 	if (mRotation.x != 0.0f) {
@@ -304,6 +307,7 @@ THipDropHideObj::THipDropHideObj(const char* name)
 
 void TWaterHitPictureHideObj::afterFinishedAnim()
 {
+	char trash[8];
 	if (isActorType(0x400001A1)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_POSTER_RIP2, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -335,6 +339,7 @@ void TWaterHitPictureHideObj::forward(f32 param_1)
 
 u32 TWaterHitPictureHideObj::touchWater(THitActor* param_1)
 {
+	char trash[0x30];
 	const JGeometry::TVec3<f32>& waterSpeed = getWaterSpeed(param_1);
 
 	MtxPtr rootMtx = getModel()->getAnmMtx(0);
@@ -630,6 +635,7 @@ void TBreakHideObj::kill()
 
 BOOL TBreakHideObj::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[8];
 	if (message == 1) {
 		if (isActorType(0x400002C3)) {
 			emitAndScale(0x6B, 0, &mPosition);
@@ -701,6 +707,7 @@ void TWoodBox::kill()
 
 void TWoodBox::loadAfter()
 {
+	char trash[8];
 	TBreakHideObj::loadAfter();
 	checkOnManhole();
 }

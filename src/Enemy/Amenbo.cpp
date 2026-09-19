@@ -207,6 +207,7 @@ BOOL TAmenbo::receiveMessage(THitActor* sender, u32 message)
 
 void TAmenbo::behaveToWater(THitActor* param_1)
 {
+	char trash[8];
 	if (mWaterGunHitCooldown <= 0 && isWaterFromWaterGun(param_1)) {
 		mWaterGunHitCooldown = 45;
 		mSpine->reset();
@@ -248,6 +249,7 @@ bool TAmenbo::doKeepDistance() { return !isAttacking(); }
 
 void TAmenbo::attackToMario()
 {
+	char trash[8];
 	if (isAttacking())
 		sendAttackMsgToMario();
 }

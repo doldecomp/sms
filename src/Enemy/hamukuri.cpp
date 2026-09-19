@@ -432,6 +432,7 @@ TSpineEnemy* TDangoHamuKuriManager::createEnemyInstance()
 void TDangoHamuKuriManager::createModelDataArray(
     const TModelDataLoadEntry* param_1)
 {
+	char trash[8];
 	THamuKuriManager* manager
 	    = (THamuKuriManager*)gpConductor->getManagerByName(
 	        "ハムクリマネージャー");
@@ -1357,6 +1358,7 @@ BOOL THaneHamuKuri::isReachedToGoal() const
 
 void THaneHamuKuri::attackToMario()
 {
+	char trash[8];
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_HANEKURI_ATTACK, &mPosition, 0,
 	                                nullptr, 0, 4);
 	sendAttackMsgToMario();
@@ -1382,6 +1384,7 @@ void THaneHamuKuri::setCrashAnm() { setBckAnm(0); }
 
 void THaneHamuKuri::setDeadAnm()
 {
+	char trash[0x18];
 	if (unk198 && mHeldObject != nullptr
 	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
@@ -1424,6 +1427,7 @@ TDoroHaneKuri::TDoroHaneKuri(const char* name)
 
 void TDoroHaneKuri::init(TLiveManager* param_1)
 {
+	char trash[8];
 	THaneHamuKuri::init(param_1);
 
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
@@ -1483,6 +1487,7 @@ void TDoroHaneKuri::behaveToWater(THitActor*)
 
 void TDoroHaneKuri::setBehavior()
 {
+	char trash[0x18];
 	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve()
 	    && mHeldObject && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
 		TMapObjBase* held = (TMapObjBase*)mHeldObject;

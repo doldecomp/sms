@@ -763,6 +763,7 @@ void TFireWanwan::setMActorAndKeeper()
 
 void TFireWanwan::reset()
 {
+	char trash[0x20];
 	mPosition = mInitialPosition;
 
 	unk194->mIsOnFire = true;

@@ -135,6 +135,7 @@ void TMarDirector::setup2()
 
 TMarDirector::~TMarDirector()
 {
+	char trash[0x18];
 	gpMSound->exitStage();
 	if (gpApplication.mCurrArea.unk0 == 15) {
 		if (JKRMemArchive* arch

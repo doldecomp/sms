@@ -40,6 +40,7 @@ void SMSSetupGCLogoRenderMode(GXRenderModeObj* rmo)
 
 void SMSSetupGCLogoRenderingInfo(JDrama::TDisplay* param_1)
 {
+	char trash[8];
 	SMSSetupGCLogoRenderMode(&param_1->getRenderMode());
 	param_1->offFlag(0x8);
 }

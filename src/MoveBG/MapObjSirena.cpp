@@ -146,6 +146,7 @@ void TRoulette::setRollSp(f32 sp)
 
 void TRoulette::switchStop()
 {
+	char trash[8];
 	if (unk150->unk6C != 0) {
 		if (SMS_GetMarioPos().y < 20.0f + SMS_GetMarioGrLevel()
 		    && unk13C != 0.0f) {
@@ -1159,6 +1160,7 @@ TWarpAreaActor::TWarpAreaActor(const char* name)
 
 u32 TChestRevolve::touchWater(THitActor* actor)
 {
+	char trash[8];
 	if (isState(STATE_NORMAL)) {
 		mState = STATE_REVOLVING;
 		startAnim(1);
@@ -1184,6 +1186,7 @@ void TChestRevolve::control()
 
 BOOL TPanelRevolve::receiveMessage(THitActor* actor, u32 message)
 {
+	char trash[8];
 	if (isState(STATE_NORMAL)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -1196,6 +1199,7 @@ BOOL TPanelRevolve::receiveMessage(THitActor* actor, u32 message)
 
 void TPanelRevolve::touchPlayer(THitActor* actor)
 {
+	char trash[8];
 	if (marioHipAttack() && isState(STATE_NORMAL)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -1222,6 +1226,7 @@ void TPanelRevolve::control()
 
 void TPictureTelesa::afterFinishedAnim()
 {
+	char trash[8];
 	TWaterHitPictureHideObj::afterFinishedAnim();
 	if (isActorType(0x400001A2)) {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,

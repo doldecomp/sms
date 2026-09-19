@@ -251,6 +251,7 @@ BOOL TMario::warpIn()
 
 bool TMario::isUnUsualStageStart()
 {
+	char trash[0x28];
 	// Missing stack space
 	// volatile u32 padding[14];
 

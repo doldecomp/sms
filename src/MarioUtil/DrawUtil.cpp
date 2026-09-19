@@ -442,6 +442,7 @@ void SMS_AddDamageFogEffect(J3DModelData* param_1,
 
 void SMS_ResetDamageFogEffect(J3DModelData* param_1)
 {
+	char trash[8];
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
 		J3DFog* fog
 		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
@@ -785,6 +786,7 @@ void SMS_DrawHorzCircle(const JGeometry::TVec3<f32>&, f32, int, const GXColor&)
 
 void SMS_CalcMatAnmAndMakeDL(J3DModel* param_1, u16 param_2)
 {
+	char trash[8];
 	J3DMaterial* mat = param_1->getModelData()->getMaterialNodePointer(param_2);
 
 	param_1->getModelData()

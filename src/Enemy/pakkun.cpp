@@ -201,6 +201,7 @@ TSmallEnemy* TPakkunManager::createEnemyInstance() { return new TPakkun(); }
 
 void TPakkunManager::clipEnemies(JDrama::TGraphics* graphics)
 {
+	char trash[0x10];
 	// Possibly an inline?
 	f32 radius;
 	f32 farClip;
@@ -530,6 +531,7 @@ void TPakkunSeed::behaveToHitWall(const TBGCheckData* ground)
 
 void TPakkunSeed::calcRootMatrix()
 {
+	char trash[8];
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_PAKKUN_SEED_FLY, &mPosition, 0,
 	                                nullptr, 0, 4);
 
@@ -662,6 +664,7 @@ void TPakkunSeed::seedSet()
 
 void TPakkunSeed::forceKill()
 {
+	char trash[8];
 	if (!mGroundPlane->isPool() && !mGroundPlane->isIllegalData()
 	    && gpMap->isInArea(mPosition.x, mPosition.z))
 		return;

@@ -289,6 +289,7 @@ void TTobiPuku::reset()
 
 void TTobiPuku::moveObject()
 {
+	char trash[8];
 	mTurnSpeed = unk19C->mSLTurnSpeedLow.get();
 	if (mBoundSw && TTobiPuku::isInhibitedForceMove())
 		hitWall();
@@ -418,6 +419,7 @@ bool TTobiPuku::isRoll() { return false; }
 
 void TTobiPuku::behaveToWater(THitActor* param_1)
 {
+	char trash[8];
 	if (mSpine->getCurrentNerve() != &TNerveTobiPukuHitWater::theNerve()) {
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_FLY, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -470,6 +472,7 @@ bool TTobiPuku::isReachedToGoalXZ()
 
 void TTobiPuku::generateEffectColumWater()
 {
+	char trash[8];
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
 		return;
 
@@ -561,6 +564,7 @@ void TTobiPuku::genEventCoin() { isDeadBck(); }
 
 void TTobiPuku::changeOut()
 {
+	char trash[8];
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mPosition = mJuiceBlock->mPosition;
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TLS_CHANGE,
@@ -666,6 +670,7 @@ void TMoePuku::calcRootMatrix()
 
 void TMoePuku::hitWater()
 {
+	char trash[8];
 	TTobiPuku::hitWater();
 
 	MtxPtr mtx = mMActor->getModel()->getAnmMtx(1);
@@ -747,6 +752,7 @@ void TMoePuku::setJumpStartAnm()
 
 void TMoePuku::generateEffectColumWater()
 {
+	char trash[8];
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
 		return;
 

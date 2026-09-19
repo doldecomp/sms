@@ -433,6 +433,7 @@ void TGesso::attackToMario()
 
 void TGesso::setBehavior()
 {
+	char trash[0x10];
 	if (mAttackCooldown > 0)
 		mAttackCooldown += 1;
 
@@ -956,6 +957,7 @@ void TGessoPolluteObj::set()
 
 void TGessoPolluteObj::calcRootMatrix()
 {
+	char trash[8];
 	TEnemyAttachment::calcRootMatrix();
 	if (unk168 != 0)
 		return;

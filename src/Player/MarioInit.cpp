@@ -339,6 +339,7 @@ void TMario::load(JSUMemoryInputStream& stream)
 
 void TMario::loadAfter()
 {
+	char trash[8];
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 		mWaterGun->initInLoadAfter();
 

@@ -129,6 +129,7 @@ TMapCollisionStatic::TMapCollisionStatic()
 
 void TMapCollisionMove::move()
 {
+	char trash[8];
 	if (checkFlag(FLAG_NEEDS_SETUP))
 		return;
 

@@ -87,6 +87,7 @@ void TMapObjBase::loadHideObjInfo(JSUMemoryInputStream& stream, s32* param_2,
 
 void TMapObjBase::checkOnManhole()
 {
+	char trash[0x20];
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f,
 	                                   mPosition.z, &mGroundPlane);
 	if (mGroundPlane->mActor && mGroundPlane->mActor->isActorType(0x4000000b)) {
@@ -365,6 +366,7 @@ void TMapObjBase::makeLowerStr(const char* in, char* out)
 
 void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 {
+	char trash[0x18];
 	f32 fVar1 = sinf(mRotation.z * (M_PI / 180.0f));
 	f32 fVar2 = cosf(mRotation.z * (M_PI / 180.0f));
 
@@ -386,11 +388,13 @@ void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 
 void TMapObjBase::setRootMtxRotZ()
 {
+	char trash[0x10];
 	makeRootMtxRotZ(getModel()->getAnmMtx(0));
 }
 
 void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 {
+	char trash[0x18];
 	f32 fVar1 = sinf(mRotation.y * (M_PI / 180.0f));
 	f32 fVar2 = cosf(mRotation.y * (M_PI / 180.0f));
 
@@ -412,11 +416,13 @@ void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 
 void TMapObjBase::setRootMtxRotY()
 {
+	char trash[0x10];
 	makeRootMtxRotY(getModel()->getAnmMtx(0));
 }
 
 void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 {
+	char trash[0x18];
 	f32 fVar1 = sinf(mRotation.x * (M_PI / 180.0f));
 	f32 fVar2 = cosf(mRotation.x * (M_PI / 180.0f));
 
@@ -743,6 +749,7 @@ bool TMapObjBase::marioHeadAttack() const
 
 bool TMapObjBase::marioHipAttack() const
 {
+	char trash[8];
 	if (SMS_GetMarioGrPlane()->getActor() == this && SMS_IsMarioStatusHipDrop()
 	    && (gpMarioPos->y + *gpMarioSpeedY) < SMS_GetMarioGrLevel())
 		return true;

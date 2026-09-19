@@ -803,6 +803,7 @@ void TEnemyMario::emAppear()
 
 void TEnemyMario::startDisappear(u16 doing)
 {
+	char trash[0x10];
 	mDisappearPosition = mPosition;
 
 	u8 currentMap      = gpMarDirector->getCurrentMap();
@@ -1064,6 +1065,7 @@ void TEnemyMario::emPreDownAnimation()
 #pragma dont_inline on
 void TEnemyMario::emDownAnimation()
 {
+	char trash[0x28];
 	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
 	setAnimation(ANIM_FALL_DOWN_WAIT, 1.0f);
 
@@ -1221,6 +1223,7 @@ void TEnemyMario::emReplayRunAway()
 
 void TEnemyMario::decideDoingAfterCarry()
 {
+	char trash[0x20];
 	if (checkEMFlag(EM_FLAG_ENFORCE_TAKE)) {
 		offEMFlag(EM_FLAG_ENFORCE_TAKE);
 		emReplayWaitingToReplayJumpToNearestNode();
@@ -1435,6 +1438,7 @@ void TEnemyMario::considerAfter()
 
 void TEnemyMario::hitWater(THitActor* sender)
 {
+	char trash[0x10];
 	if (mSpecialModel != nullptr)
 		return;
 

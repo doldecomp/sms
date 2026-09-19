@@ -370,6 +370,7 @@ EnumNpcAnmKind TBaseNPC::getNpcWaitAnmBase_()
 
 void TBaseNPC::npcWaitIn()
 {
+	char trash[0x18];
 	EnumNpcAnmKind kind = NPC_ANM_KIND_UNK1;
 
 	if (!checkActionFlag(NPC_ACTION_UNK400)) {
@@ -463,6 +464,7 @@ void TBaseNPC::npcStepIn()
 
 void TBaseNPC::npcTalkIn()
 {
+	char trash[0x18];
 	onLiveFlag(LIVE_FLAG_UNK80000);
 	if (mActorType != 0x400001C && mActorType != 0x400001D) {
 		if (!isSunflowerReviving()) {
@@ -479,6 +481,7 @@ void TBaseNPC::npcTalkIn()
 
 void TBaseNPC::npcTalking()
 {
+	char trash[0x18];
 	if (isSunflowerReviving()) {
 		sunflowerReviving();
 		return;
@@ -971,6 +974,7 @@ void TBaseNPC::sunflowerReviveIn()
 
 bool TBaseNPC::sunflowerReviving()
 {
+	char trash[8];
 	bool result = false;
 	if (checkUnk1D8(UNK1D8_FLAG_UNK2)
 	    && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {

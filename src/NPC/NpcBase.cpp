@@ -105,6 +105,7 @@ void TBaseNPC::load(JSUMemoryInputStream& stream)
 
 void TBaseNPC::loadAfter()
 {
+	char trash[0x20];
 	TSpineEnemy::loadAfter();
 	if (mActorType == 0x4000018 && gpMarDirector->getCurrentMap() == 1
 	    && gpMarDirector->getCurrentStage() == 1) {
@@ -375,6 +376,7 @@ bool TBaseNPC::isPartsAnmNpc() const
 
 bool TBaseNPC::isNeedNeckStraight() const
 {
+	char trash[0x10];
 	bool result = false;
 	int anmKind = unkD0->getCurrentAnmKind();
 	if ((mHolder != nullptr && mHolder == gpMarioAddress) || !isClean()
@@ -582,6 +584,7 @@ void TBaseNPC::moveObject()
 
 void TBaseNPC::execMotionBlend_()
 {
+	char trash[0x18];
 	if (!mInbetweenCtrl->isMotionBlending())
 		setKeepAnm_();
 
@@ -593,6 +596,7 @@ void TBaseNPC::execMotionBlend_()
 
 void TBaseNPC::calcRootMatrix()
 {
+	char trash[0x18];
 	if (mActorType == 0x400001D) {
 		TLiveActor::calcRootMatrix();
 		return;
@@ -809,6 +813,7 @@ void TBaseNPC::setBalloonMessage(u32 param_1, s32 param_2)
 
 const GXColor* TBaseNPC::getPtrInitPollutionColor() const
 {
+	char trash[8];
 	const GXColor* result = nullptr;
 
 	if (isPollutionNpc()) {

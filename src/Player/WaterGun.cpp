@@ -246,6 +246,7 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 {
+	char trash[8];
 	if (mFludd->mCurrentWater <= 0) {
 		return;
 	}
@@ -1421,6 +1422,7 @@ void TWaterGun::initInLoadAfter() { }
 #pragma dont_inline on
 MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 {
+	char trash[0x30];
 	MtxPtr result = nullptr;
 	if (mMario->onYoshi()) {
 		result = mMario->mYoshi->getTongueMtx();
@@ -1674,6 +1676,7 @@ TNozzleBase* TWaterGun::getCurrentNozzle() const
 
 void TWaterGun::setAmountToRate(f32 rate)
 {
+	char trash[0x18];
 	// volatile u32 unused2[7]; // TODO: possibly inlined function
 	if (mCurrentNozzle == 3) {
 		TNozzleBase* currentNozzle = getCurrentNozzle();
@@ -1687,6 +1690,7 @@ void TWaterGun::setAmountToRate(f32 rate)
 
 BOOL TWaterGun::isPressureOn()
 {
+	char trash[0x18];
 	// volatile u32 unused2[6];
 	if (getCurrentNozzle()->getNozzleKind() == 1) {
 		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
@@ -1699,6 +1703,7 @@ BOOL TWaterGun::isPressureOn()
 
 f32 TWaterGun::getPressure()
 {
+	char trash[0x10];
 	// TODO: Missing stack space
 	// volatile u32 unused2[5];
 	if (getCurrentNozzle()->getNozzleKind() == 1) {
@@ -1710,6 +1715,7 @@ f32 TWaterGun::getPressure()
 
 f32 TWaterGun::getPressureMax()
 {
+	char trash[0x10];
 	// TODO: Missing stack space
 	// volatile u32 unused2[6];
 
@@ -1726,6 +1732,7 @@ void TWaterGun::getEmitPosDirSpeed(int index, JGeometry::TVec3<f32>* pos,
                                    JGeometry::TVec3<f32>* dir,
                                    JGeometry::TVec3<f32>* speed)
 {
+	char trash[0x18];
 	// TODO: Fix unused stack space
 	// volatile u32 unused2[6];
 
@@ -1888,6 +1895,7 @@ BOOL TWaterGun::damage()
 
 void TWaterGun::changeBackup()
 {
+	char trash[8];
 	// TODO: Missing stack space
 	// volatile u32 unused2[5];
 	if (mSwitchToSecondNozzleProgress == 0.0f) {

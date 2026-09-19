@@ -195,6 +195,7 @@ BOOL TMario::doRunningAnimation()
 
 void TMario::getSlopeNormalAccele(f32* arg0, f32* arg1)
 {
+	char trash[8];
 	if (isForceSlip()) {
 		*arg0 = mSlipParamsAll.mSlopeAcceleUp.get();
 		*arg1 = mSlipParamsAll.mSlopeAcceleDown.get();
@@ -230,6 +231,7 @@ void TMario::getSlopeNormalAccele(f32* arg0, f32* arg1)
 
 void TMario::getSlopeSlideAccele(f32* arg0, f32* arg1)
 {
+	char trash[8];
 	if (isForceSlip()) {
 		*arg0 = mSlipParamsAll.mSlideAcceleUp.get();
 		*arg1 = mSlipParamsAll.mSlideAcceleDown.get();
@@ -287,6 +289,7 @@ f32 TMario::getChangeAngleSpeed()
 
 f32 TMario::getSlideStickMult()
 {
+	char trash[0x20];
 	(void)0;
 	(void)0;
 	(void)0;
@@ -1474,6 +1477,7 @@ BOOL TMario::catchDown()
 
 BOOL TMario::loserDown()
 {
+	char trash[8];
 	slopeProcess();
 	mForwardVel *= 0.9f;
 	if (mForwardVel * mForwardVel < 1.0f)

@@ -32,6 +32,7 @@ f32 TMario::getJumpAccelControl() const
 
 f32 TMario::getJumpSlideControl() const
 {
+	char trash[8];
 	if (mStatus == MARIO_STATUS_WIRE_JUMP)
 		return mWireParams.mWireJumpSlideControl.get();
 
@@ -43,6 +44,7 @@ f32 TMario::getJumpSlideControl() const
 
 bool TMario::canSquat() const
 {
+	char trash[0x20];
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun
 	    && ((const TWaterGun*)mWaterGun)
 	               ->getCurrentNozzle()
@@ -939,6 +941,7 @@ void TMario::checkGraffitoSlip()
 
 void TMario::checkGraffitoElec()
 {
+	char trash[0x30];
 	(void)0;
 	(void)0;
 	(void)0;
@@ -1144,6 +1147,7 @@ void TMario::dirtyLimitCheck()
 
 void TMario::thinkDirty()
 {
+	char trash[8];
 	if (checkFlag(MARIO_FLAG_DIRTY)) {
 		if (mStatus == MARIO_STATUS_RUN || mStatus == MARIO_STATUS_OIL_RUN)
 			mDirty += mDirtyParams.mIncRunning.get();
@@ -1272,6 +1276,7 @@ static void startForceJumpSound2(Vec* param_1, u32 param_2, f32 param_3,
 
 void TMario::checkEnforceJump()
 {
+	char trash[0x18];
 	if (mGroundPlane->isLegal() && mGroundPlane->isBounceOnLanding()
 	    && isTouchGround4cm() && (mPrevStatus & MARIO_STATUS_FLAG_JUMPING)) {
 
@@ -1301,6 +1306,7 @@ void TMario::checkReturn()
 
 void TMario::checkThrowObject()
 {
+	char trash[8];
 	if (mModel->unkC[0].checkPass(4.0f)) {
 		startVoice(MSD_SE_MV15_EXERT_INST_01);
 		dropObject();

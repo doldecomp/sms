@@ -1258,6 +1258,7 @@ TBossEelCollision::TBossEelCollision(MtxPtr collisionMtx, const char* name)
 
 void TBossEelCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x18];
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
 		for (s32 i = 0; i < mColCount; ++i) {
@@ -1319,6 +1320,7 @@ void TBossEelAwaCollision::behaveToMario()
 
 void TBossEelAwaCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x20];
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
 		if (gpMarioPos->y < mPosition.y + 500.0f)
@@ -1375,6 +1377,7 @@ void TBossEelTearsRecoverCollision::behaveToMario()
 void TBossEelTearsRecoverCollision::perform(u32 cue,
                                             JDrama::TGraphics* graphics)
 {
+	char trash[0x18];
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
 		for (s32 i = 0; i < mColCount; ++i) {

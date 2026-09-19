@@ -166,6 +166,7 @@ bool TManhole::animationFinished()
 
 void TManhole::appeared()
 {
+	char trash[0x20];
 	const TMapObjBase* assoc = unk154;
 	if (assoc) {
 		if (assoc->checkLiveFlag(LIVE_FLAG_DEAD)) {
@@ -208,6 +209,7 @@ void TManhole::appeared()
 
 void TManhole::calc()
 {
+	char trash[0x20];
 	f32 next = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 	           + getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate();
 	if ((getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() <= 45.0f
@@ -235,6 +237,7 @@ void TManhole::setGroundCollision()
 
 void TManhole::makeManholeUnuseful(const TMapObjBase* param_1)
 {
+	char trash[8];
 	if (unk154 == nullptr) {
 		unk154 = param_1;
 		unk158->setUpMtx(getModel()->getAnmMtx(0));
@@ -307,6 +310,7 @@ u32 TMapObjBillboard::touchWater(THitActor* param_1)
 
 void TMapObjChangeStage::touchPlayer(THitActor*)
 {
+	char trash[0x10];
 	gpMarDirector->setNextStage(unk138, nullptr);
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mColCount = 0;
@@ -323,6 +327,7 @@ void TMapObjChangeStage::load(JSUMemoryInputStream& stream)
 
 void TMapObjChangeStageHipDrop::touchPlayer(THitActor*)
 {
+	char trash[0x10];
 	if (SMS_IsMarioStatusHipDrop()
 	    && gpMarioPos->y + *gpMarioSpeedY < SMS_GetMarioGrLevel()) {
 		SMSGetMarDirector()->setNextStage(unk138, nullptr);
@@ -552,6 +557,7 @@ TMapObjSwitch::TMapObjSwitch(const char* name)
 
 BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 {
+	char trash[0x28];
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("redcoinswitch");
 		gpMarDirector->unk18[0]->mDisabledFrames
@@ -629,6 +635,7 @@ TRedCoinSwitch::TRedCoinSwitch(const char* name)
 
 void TBasketReverse::kill()
 {
+	char trash[8];
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ENM_DISAP_A_W,
 	                                            &mPosition, 0, nullptr);
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ENM_DISAP_B,

@@ -93,6 +93,7 @@ void TMario::doSwimming()
 
 BOOL TMario::checkSwimJump()
 {
+	char trash[8];
 	if (mInput & 0x2) {
 		if (checkFlag(MARIO_FLAG_FLUDD_EMITTING) && !isUnderWater()) {
 			mPosition.y = 1.0f + mFloorPosition.z;

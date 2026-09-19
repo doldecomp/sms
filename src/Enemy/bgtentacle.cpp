@@ -662,6 +662,7 @@ void TBGTentacle::continuousRumble()
 
 void TBGTentacle::beatNode(int index, const JGeometry::TVec3<f32>& param_2)
 {
+	char trash[8];
 	mNodes[index].setVelocity(param_2);
 
 	f32 fVar1;

@@ -415,6 +415,7 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 
 bool TYoshi::disappear()
 {
+	char trash[8];
 	if (isHatched()) {
 		if (mState == STATE_MOUNTED)
 			mMario->getOffYoshi(true);
@@ -436,6 +437,7 @@ bool TYoshi::disappear()
 
 void TYoshi::kill()
 {
+	char trash[8];
 
 	disappear();
 	mBodyAnmSound->stop();
@@ -444,6 +446,7 @@ void TYoshi::kill()
 
 void TYoshi::ride()
 {
+	char trash[0x18];
 	mState = STATE_MOUNTED;
 
 	changeAnimation(0x16);
@@ -460,6 +463,7 @@ void TYoshi::ride()
 
 void TYoshi::getOff(bool param_1)
 {
+	char trash[0x10];
 	if (mState != STATE_MOUNTED)
 		return;
 
@@ -748,6 +752,7 @@ void TYoshi::doSearch()
 
 void TYoshi::doEat(u32 param_1)
 {
+	char trash[0x10];
 	int r31;
 	BOOL bVar1 = true;
 

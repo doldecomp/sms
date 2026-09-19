@@ -24,6 +24,7 @@ void TMario::rumbleStart(int channelDataIdx, int repeatCount)
 
 void TMario::incHP(int hp)
 {
+	char trash[0x20];
 	// volatile u32 padding[10];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		mAir += hp;
@@ -46,6 +47,7 @@ void TMario::incHP(int hp)
 
 void TMario::decHP(int hp)
 {
+	char trash[8];
 	// volatile u32 padding[2];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 		mAir -= hp;
@@ -191,6 +193,7 @@ void TMario::resetNozzle() { }
 
 void TMario::normalizeNozzle()
 {
+	char trash[8];
 	// volatile u32 padding[2];
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		mWaterGun->changeNozzle(TWaterGun::Spray, true);
@@ -201,6 +204,7 @@ void TMario::normalizeNozzle()
 
 void TMario::loserExec()
 {
+	char trash[8];
 	// volatile u32 padding[2];
 	if (mStatus != MARIO_STATUS_SWIM_DOWN && mStatus != MARIO_STATUS_ELEC_DOWN
 	    && mStatus != MARIO_STATUS_SWIM_P_DOWN
@@ -405,6 +409,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 void TMario::considerTake()
 {
+	char trash[0x18];
 	// volatile u32 missingStack[6];
 	bool check = false;
 

@@ -541,6 +541,7 @@ void TBPHeadHit::throwActor(THitActor* actor)
 
 void TBPHeadHit::perform(u32 flags, JDrama::TGraphics* graphics)
 {
+	char trash[8];
 	if ((flags & CUE_MOVE)
 	    && mOwner->mWeakPoint != TBossPakkun::WEAK_POINT_NAVEL) {
 		for (int i = 0; i < mColCount; ++i) {

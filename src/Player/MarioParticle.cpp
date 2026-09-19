@@ -159,6 +159,7 @@ void TMario::smallTouchDownEffect()
 
 void TMario::rippleEffect()
 {
+	char trash[8];
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)) {
 		SMS_EmitRipplePool(unk220, this);
 	} else {
@@ -324,6 +325,7 @@ void TMario::treeSlipEffect()
 
 void TMario::frontSlipEffect()
 {
+	char trash[8];
 	if (mGroundPlane->isWetGround()
 	    || (mStatus == MARIO_STATUS_CATCH && mStatusState == 1)) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_WATSLIDE_A,

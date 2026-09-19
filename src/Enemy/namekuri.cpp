@@ -401,6 +401,7 @@ void TNameKuri::calcRootMatrix()
 
 void TNameKuri::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x10];
 	TWalkerEnemy::perform(cue, graphics);
 	unk1CC->perform(cue, graphics);
 	if (cue & CUE_CALC_ANIM) {

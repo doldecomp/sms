@@ -646,6 +646,7 @@ void TGraphWeb::getNodeIndexInXZRange(const JGeometry::TVec3<f32>&, f32,
 #pragma dont_inline on
 void TGraphWeb::calcGraphDirection(int n)
 {
+	char trash[0x28];
 	TGraphNode& graphNode = getGraphNode(n);
 	TRailNode* railNode   = graphNode.getRailNode();
 	for (int i = 0; i < railNode->mConnectionNum; ++i) {

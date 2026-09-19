@@ -160,6 +160,7 @@ void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 
 void TMapObjBase::startSound(u16 param_1)
 {
+	char trash[8];
 	if (unk100 != param_1)
 		unk100 = param_1;
 
@@ -279,6 +280,7 @@ void TMapObjBase::startAnim(u16 param_1)
 
 void TMapObjBase::makeObjDefault()
 {
+	char trash[0x28];
 	mPosition.set(mInitialPosition.x, mInitialPosition.y + mYOffset,
 	              mInitialPosition.z);
 
@@ -296,6 +298,7 @@ void TMapObjBase::makeObjDefault()
 
 void TMapObjBase::makeObjDead()
 {
+	char trash[0x30];
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
 

@@ -2006,6 +2006,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 
 void TMario::calcView(JDrama::TGraphics* graphics)
 {
+	char trash[0x10];
 	// volatile u32 padding[4];
 	MTXCopy(graphics->mViewMtx, j3dSys.mViewMtx);
 	mModel->unk8->viewCalc();

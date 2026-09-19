@@ -104,6 +104,7 @@ static void initMare()
 #pragma dont_inline on
 static void initPinnaParco()
 {
+	char trash[8];
 	J3DModel* model = new J3DModel(
 	    gpMap->getModelManager()->getJointModel(0)->getModelData(), 0, 1);
 	MActor* actor = new MActor(gpMap->getModelManager()->getMActorAnmData());
