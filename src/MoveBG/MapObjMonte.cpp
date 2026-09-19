@@ -912,10 +912,19 @@ TSwingBoard::TSwingBoard(const char* name)
 	mAnchor.zero();
 }
 
+// The guard reads the manager through a level the setter does not: the
+// binder is +8 at one site and +0x10 (and a register reshuffle) at both,
+// and retail's 0x28 frame wants exactly one.
+static inline TFlagManager* GoalFlagGetFlagManager()
+{
+	TFlagManager* flagManager = TFlagManager::smInstance;
+	return flagManager;
+}
+
 void TGoalFlag::touchActor(THitActor* actor)
 {
 	if (actor->isActorType(0x80000001)) {
-		if (!TFlagManager::getInstance()->getBool(0x50005))
+		if (!GoalFlagGetFlagManager()->getBool(0x50005))
 			TFlagManager::getInstance()->setBool(true, 0x50005);
 
 		actor->receiveMessage(this, 0xE);
