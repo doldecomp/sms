@@ -449,8 +449,8 @@ void TTelesa::calcRootMatrix()
 		for (u16 i = 0;
 		     i < getMActor()->getModel()->getModelData()->getMaterialNum();
 		     ++i) {
-			// TODO: still 16 bytes of frame short of the ROM after the
-			// 4x4 fix (0x130 vs 0x140); another local is missing here.
+			// TODO: frame size is exact but this matrix sits 4 bytes above
+			// retail's slot, so retail reserves 4 more bytes above it.
 			Mtx44 afStack_94;
 			SMS_GetLightPerspectiveForEffectMtx(afStack_94);
 			getMActor()->getModel()
@@ -475,8 +475,7 @@ void TTelesa::calcRootMatrix()
 	}
 
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
-	               mPosition.z, getRotation().x, getRotation().y,
-	               getRotation().z);
+	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	getModel()->setBaseScale(mScaling);
 }
 
