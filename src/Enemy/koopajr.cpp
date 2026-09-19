@@ -34,6 +34,7 @@
 static const char* koopajr_bastable[] = {
 	"/scene/koopajr/bas/koopajr_damage.bas",
 	"/scene/koopajr/bas/koopajr_shoot.bas",
+	nullptr,
 	"/scene/koopajr/bas/koopajr_yahoo.bas",
 };
 
