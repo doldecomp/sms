@@ -2501,6 +2501,34 @@ andere Kategorien wechseln (fehlende Implementierungen wie
 `identity33`, oder die verbleibenden ~57 retracted Runde-32/33-
 Kandidaten einzeln prüfen).
 
+### Runde 37 Batches 5–6: gelockerte Schwellwerte (45 weitere Funktionen, Kandidatenpool erschöpft)
+
+Nach Erschöpfung des Kandidatenpools bei den ursprünglichen
+Schwellwerten (85–100 % Match, ≤ 500 Bytes) wurden die Scan-Parameter
+gelockert (80–100 % Match, ≤ 1.500 Bytes, Gap ≤ 0x40, `ndiff` ≤ 12)
+und alle 239 `populated`-Einheiten mit Kandidaten erneut durchsucht:
+
+- **Batch 5** (Einheiten Rang 0–100 bei gelockerten Schwellwerten):
+  37 von 172 Kandidaten bestätigt (22 %).
+- **Batch 6** (Einheiten Rang 100–239, verbliebene): 8 von 49
+  Kandidaten bestätigt (16 %).
+
+Alle 45 Funktionen einzeln gegen den frischen `report.json`
+nachverifiziert (0 Probleme). Die sinkende Erfolgsquote (99 % → 51 %
+→ 30 % → 63 % → 22 % → 16 % über alle sechs Batches) bestätigt: der
+per `char trash[N]`-Padding leicht erreichbare Kandidatenpool für
+additive Frame-Gaps ist nun über den gesamten `populated`-Einheiten-
+Bestand hinweg praktisch erschöpft. Weitere Lockerung der Schwellwerte
+dürfte nur noch sehr geringe Zusatzausbeute bei wachsendem manuellen
+Nachprüfungsaufwand bringen.
+
+**Session-Gesamtstand nach Runde 37 (alle sechs Batches): 338
+tatsächlich verifizierte Funktionen** (77 aus Runde 1–36 plus 261
+neue in Runde 37) in 35 Commits. Vollständiger Report: Funktionszahl
+stieg von 8663 (Stand vor Runde 37) auf **8925** (**+262**), Bytes
+von 1.510.652 auf 1.583.928 (**+73.276**). DOL SHA1 bleibt bei jedem
+Schritt `OK`.
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
