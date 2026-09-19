@@ -877,11 +877,17 @@ void TResetFruit::touchPollution()
 	makeObjWaitingToAppear();
 }
 
+static inline MSound* ResetFruitGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 void TResetFruit::touchWaterSurface()
 {
 	emitColumnWater();
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition, 0,
-	                                nullptr, 0, 4);
+	ResetFruitGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER,
+	                                       &mPosition, 0, nullptr, 0, 4);
 	makeObjWaitingToAppear();
 }
 
@@ -1315,8 +1321,9 @@ void TResetFruit::makeObjAppeared()
 BOOL TResetFruit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_UNKB) {
-		if (isState(STATE_NORMAL) || isState(STATE_HOLDING)
-		    || isState(STATE_LIVING)) {
+		if (MapObjBallIsState(this, STATE_NORMAL)
+		    || MapObjBallIsState(this, STATE_HOLDING)
+		    || MapObjBallIsState(this, STATE_LIVING)) {
 			makeObjWaitingToAppear();
 			return TRUE;
 		}
@@ -1328,8 +1335,9 @@ BOOL TResetFruit::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if (isState(STATE_NORMAL) || isState(STATE_HOLDING)
-	    || isState(STATE_LIVING)) {
+	if (MapObjBallIsState(this, STATE_NORMAL)
+	    || MapObjBallIsState(this, STATE_HOLDING)
+	    || MapObjBallIsState(this, STATE_LIVING)) {
 		// Qualified so that TResetFruit::touchActor expands here as it does
 		// in control(); the virtual call cannot be inlined.
 		TResetFruit::touchActor(sender);
@@ -1337,7 +1345,7 @@ BOOL TResetFruit::receiveMessage(THitActor* sender, u32 message)
 		BOOL handled = TMapObjBall::receiveMessage(sender, message);
 		// Putting the fruit down starts its countdown.
 		if (message == HIT_MESSAGE_PUT) {
-			if (isState(STATE_NORMAL))
+			if (MapObjBallIsState(this, STATE_NORMAL))
 				mState = STATE_LIVING;
 		}
 		return handled;
@@ -1580,13 +1588,25 @@ void TBigWatermelon::kill()
 	TMapObjGeneral::kill();
 }
 
+static inline J3DModel* BigWatermelonModel(const TBigWatermelon* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
+static inline MtxPtr BigWatermelonAnmMtx(const TBigWatermelon* p)
+{
+	MtxPtr mtx = BigWatermelonModel(p)->getAnmMtx(0);
+	return mtx;
+}
+
 void TBigWatermelon::appearing()
 {
 	TMapObjGeneral::appearing();
 
-	MtxPtr mtx = getModel()->getAnmMtx(0);
+	MtxPtr mtx = BigWatermelonAnmMtx(this);
 	calcRootMatrix();
-	getModel()->calc();
+	BigWatermelonModel(this)->calc();
 	mtx[1][3] = mBodyRadius * (mScaling.y / mInitialScaling.y) + mPosition.y;
 
 	mScaledBodyRadius = 50.0f * mScaling.x;
