@@ -196,7 +196,7 @@ void THangingBridgeBoard::calcDefaultMtx()
 	Mtx rotY;
 	makeRootMtxRotY(rotY);
 	MTXConcat(rotY, rotX, rotY);
-	getDefaultMtx().set(rotY);
+	mDefaultMtx.set(rotY);
 
 	mVelocity.y = 0.0f;
 	mPosition.y = mInitialPosition.y;
