@@ -1752,15 +1752,21 @@ TNozzleBase* TWaterGun::getCurrentNozzle() const
 	return mNozzleList[mCurrentNozzle];
 }
 
+static inline TNozzleBase* WaterGunGetNozzle(const TWaterGun* gun)
+{
+	TNozzleBase* nozzle = gun->getCurrentNozzle();
+	return nozzle;
+}
+
 void TWaterGun::setAmountToRate(f32 rate)
 {
 	// volatile u32 unused2[7]; // TODO: possibly inlined function
 	if (mCurrentNozzle == 3) {
-		TNozzleBase* currentNozzle = getCurrentNozzle();
+		TNozzleBase* currentNozzle = WaterGunGetNozzle(this);
 		s32 amountMax = currentNozzle->mEmitParams.mAmountMax.get();
 		mCurrentWater = amountMax;
 	} else {
-		TNozzleBase* currentNozzle = getCurrentNozzle();
+		TNozzleBase* currentNozzle = WaterGunGetNozzle(this);
 		mCurrentWater = rate * currentNozzle->mEmitParams.mAmountMax.get();
 	}
 }
@@ -1768,8 +1774,9 @@ void TWaterGun::setAmountToRate(f32 rate)
 BOOL TWaterGun::isPressureOn()
 {
 	// volatile u32 unused2[6];
-	if (getCurrentNozzle()->getNozzleKind() == 1) {
-		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
+	if (WaterGunGetNozzle(this)->getNozzleKind() == 1) {
+		TNozzleTrigger* triggerNozzle
+		    = (TNozzleTrigger*)WaterGunGetNozzle(this);
 		if (triggerNozzle->unk388 > 0.0f) {
 			return TRUE;
 		}
@@ -1793,8 +1800,10 @@ f32 TWaterGun::getPressureMax()
 	// TODO: Missing stack space
 	// volatile u32 unused2[6];
 
-	if (getCurrentNozzle()->getNozzleKind() == 1) {
-		return getCurrentNozzle()->mEmitParams.mInsidePressureMax.get();
+	if (WaterGunGetNozzle(this)->getNozzleKind() == 1) {
+		TNozzleTrigger* triggerNozzle
+		    = (TNozzleTrigger*)WaterGunGetNozzle(this);
+		return triggerNozzle->mEmitParams.mInsidePressureMax.get();
 	}
 
 	return 0.0f;
