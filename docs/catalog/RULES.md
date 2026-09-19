@@ -111,6 +111,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A constant argument binds nothing, `this` only as a fresh load, a binding must stay live; a member accessor caps at +8, a by-pointer free function reaches +16 (frame-gaps.md: "batch 82").
 - The two-argument `MSound::startSoundActor(id, pos)` binding overload is +8 per expansion, per site: multi-site branches overshoot (frame-gaps.md: "batch 82").
 - An inlined `typeof()`-style accessor read is exactly +4 of pool below the statement's temp (spcinterp); a `this` save is `addi rD, r3, 0` (not `mr`) when an address of a member of `this` is passed out of the function through a pointer conversion (frame-gaps.md: "Closure 231").
+- A `JUTRect` read as `x2 - x1` instead of `getWidth()` is -4 of frame per read, identical instructions; `getPane()` -> `mPane` -8/-0x10/-0x18 per site (codegen-tells.md: "Closure 261").
 - A member read through an inlined accessor leaves a dead 4-byte temporary; inline temp cost is per parameter (one +8, two +16) (frame-gaps.md: "What causes a gap").
 - Uninitialised locals the original declared reserve a slot with no code (`Mtx` 48, `TVec3` 12, `TQuat4` 16): name them or leave the gap (frame-gaps.md: "What causes a gap").
 - A raw read where `offset - 0x10` is a 0x14-aligned slot is a `TParamRT`: declare the params class, call `.get()` (frame-gaps.md: "What causes a gap").
