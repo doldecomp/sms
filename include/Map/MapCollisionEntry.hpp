@@ -45,7 +45,9 @@ public:
 	}
 	virtual void remove() { onFlag(FLAG_NEEDS_SETUP); }
 
+#pragma dont_inline on
 	void setMtx(MtxPtr mtx) { MTXCopy(mtx, unk20); }
+#pragma dont_inline off
 	void setAllActor(const TLiveActor*);
 	void setAllData(s16);
 	void setAllBGType(u16);
