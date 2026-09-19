@@ -247,7 +247,8 @@ void TSmallEnemy::attackToMario()
 	JGeometry::TVec3<f32> local_20;
 	local_20.sub(mPosition, SMS_GetMarioPos());
 	MsVECNormalize(&local_20, &local_20);
-	mVelocity.set(local_20);
+	mVelocity.x = local_20.x;
+	mVelocity.z = local_20.z;
 
 	JGeometry::TVec3<f32> v;
 	v.scale(mBodyScale * mBodyRadius, local_20);
