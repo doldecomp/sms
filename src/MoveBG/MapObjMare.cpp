@@ -371,8 +371,8 @@ TCogwheel::TCogwheel(const char* name)
     , mPot(nullptr)
     , mLowerMargin(0.0f)
 {
-	mPotRopePos.set(0.0f, 0.0f, 0.0f);
-	mPlateRopePos.set(0.0f, 0.0f, 0.0f);
+	mPlateRopePos.x = mPlateRopePos.y = mPlateRopePos.z = 0.0f;
+	mPotRopePos.x = mPotRopePos.y = mPotRopePos.z = 0.0f;
 }
 
 void TMapObjElasticCode::draw() const
@@ -698,7 +698,7 @@ TWireBell::TWireBell(const char* name)
     , mRopeWidthZ(5.0f)
     , mTexPosRate(0.01f)
 {
-	mWirePos.set(0.0f, 0.0f, 0.0f);
+	mWirePos.x = mWirePos.y = mWirePos.z = 0.0f;
 }
 
 // Binding level over a raw member read, worth +16 of low region in
