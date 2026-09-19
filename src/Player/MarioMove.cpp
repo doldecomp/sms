@@ -863,19 +863,45 @@ void TMario::makeGraffitoDamage(const TMario::TEParams& params)
 
 void TMario::checkGraffitoDamage() { }
 
+// Binding level worth +8 of low region, landing TMario::checkGraffitoSlip's
+// frame at 0x78 (batch 124).
+static inline bool MarioMoveCheckFlag(const TMario* p, u32 i)
+{
+	bool flag = p->checkFlag(i);
+	return flag;
+}
+
+static inline u32 MarioMoveGetStatus(const TMario* p)
+{
+	u32 status = p->getStatus();
+	return status;
+}
+
+static inline TMarioParticleManager* MarioMoveParticleManager()
+{
+	TMarioParticleManager* manager = gpMarioParticleManager;
+	return manager;
+}
+
+static inline MSound* MarioMoveGetMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TMario::checkGraffitoFire()
 {
 	if (isInvincible())
 		return;
 
-	if (checkFlag(MARIO_FLAG_GAME_OVER))
+	if (MarioMoveCheckFlag(this, MARIO_FLAG_GAME_OVER))
 		return;
 
 	if (mPosition.y - mFloorPosition.y > mGraffitoParams.mFireHeight.get())
 		return;
 
-	if (mStatus == MARIO_STATUS_FIRE_DOWN
-	    || mStatus == MARIO_STATUS_FIRE_JUMP_END)
+	if (MarioMoveGetStatus(this) == MARIO_STATUS_FIRE_DOWN
+	    || getStatus() == MARIO_STATUS_FIRE_JUMP_END)
 		mFaceAngle.y += 0x8000;
 
 	f32 fVar2 = mForwardVel;
@@ -891,20 +917,12 @@ void TMario::checkGraffitoFire()
 	mInvincibilityFrames = mGraffitoParams.mFireInvincibleTime.get();
 	dropObject();
 	changePlayerStatus(MARIO_STATUS_FIRE_DOWN, 1, false);
-	gpMarioParticleManager->emitAndBindToPosPtr(6, &mPosition, 0, nullptr);
-	SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0,
-	                                nullptr, 0, 4);
+	MarioMoveParticleManager()->emitAndBindToPosPtr(6, &mPosition, 0, nullptr);
+	MarioMoveGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_FIRE, &mPosition, 0,
+	                                      nullptr, 0, 4);
 }
 
 void TMario::checkGraffitoLava() { }
-
-// Binding level worth +8 of low region, landing TMario::checkGraffitoSlip's
-// frame at 0x78 (batch 124).
-static inline bool MarioMoveCheckFlag(const TMario* p, u32 i)
-{
-	bool flag = p->checkFlag(i);
-	return flag;
-}
 
 void TMario::checkGraffitoSlip()
 {
@@ -975,7 +993,7 @@ void TMario::checkGraffitoElec()
 	(void)0;
 	(void)0;
 
-	if (!checkFlag(MARIO_FLAG_DIRTY))
+	if (!MarioMoveCheckFlag(this, MARIO_FLAG_DIRTY))
 		mStandingOnGraffitoTimer = mDeParams.mGraffitoNoDmgTime.get();
 
 	if (mStandingOnGraffitoTimer != 0) {
@@ -986,14 +1004,15 @@ void TMario::checkGraffitoElec()
 	if (isInvincible())
 		return;
 
-	if (((mStatus & MARIO_STATUS_TYPE_MASK) == MARIO_STATUS_TYPE_WAITING
-	     || (mStatus & MARIO_STATUS_TYPE_MASK) == MARIO_STATUS_TYPE_RUNNING)
+	if (((MarioMoveGetStatus(this) & MARIO_STATUS_TYPE_MASK)
+	         == MARIO_STATUS_TYPE_WAITING
+	     || (getStatus() & MARIO_STATUS_TYPE_MASK) == MARIO_STATUS_TYPE_RUNNING)
 	    && mFootPrintTimer <= 0) {
 		changePlayerStatus(MARIO_STATUS_ELECTRIC_DAMAGE, 0, false);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_ELEC, &mPosition, 0,
-		                                nullptr, 0, 4);
-		SMSGetMSound()->startSoundActor(MSD_SE_EF_LIGHTNING, &mPosition, 0,
-		                                nullptr, 0, 4);
+		MarioMoveGetMSound()->startSoundActor(MSD_SE_MA_DAMAGE_ELEC, &mPosition,
+		                                      0, nullptr, 0, 4);
+		MarioMoveGetMSound()->startSoundActor(MSD_SE_EF_LIGHTNING, &mPosition, 0,
+		                                      nullptr, 0, 4);
 	}
 }
 
