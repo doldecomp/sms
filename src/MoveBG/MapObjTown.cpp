@@ -358,11 +358,19 @@ void TMapObjChangeStage::load(JSUMemoryInputStream& stream)
 	unk138 = val;
 }
 
+// Binding level over the director singleton, worth +0x10 of low region in
+// TMapObjChangeStageHipDrop::touchPlayer.
+static inline TMarDirector* MapObjTownGetMarDirector()
+{
+	TMarDirector* director = SMSGetMarDirector();
+	return director;
+}
+
 void TMapObjChangeStageHipDrop::touchPlayer(THitActor*)
 {
 	if (SMS_IsMarioStatusHipDrop()
 	    && gpMarioPos->y + *gpMarioSpeedY < SMS_GetMarioGrLevel()) {
-		SMSGetMarDirector()->setNextStage(unk138, nullptr);
+		MapObjTownGetMarDirector()->setNextStage(unk138, nullptr);
 		gpMarioParticleManager->emit(MAPOBJ_MS_EX_HAHEN, &mPosition, 0,
 		                             nullptr);
 	}
