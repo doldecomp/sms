@@ -1850,6 +1850,12 @@ bool TFireWanwan::doKeepDistance() { return !unk194->mIsOnFire; }
 
 bool TFireWanwan::isCollidMove(THitActor*) { return true; }
 
+static inline TFireWanwan* FireWanwanGetBody(TSpineBase<TLiveActor>* spine)
+{
+	TFireWanwan* body = (TFireWanwan*)spine->getBody();
+	return body;
+}
+
 DEFINE_NERVE(TNerveFireWanwanGraphWander, TLiveActor)
 {
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
@@ -2181,7 +2187,7 @@ DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)
 
 DEFINE_NERVE(TNerveFireWanwanFreeze, TLiveActor)
 {
-	TFireWanwan* self = (TFireWanwan*)spine->getBody();
+	TFireWanwan* self = FireWanwanGetBody(spine);
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
