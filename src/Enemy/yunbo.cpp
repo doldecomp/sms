@@ -272,20 +272,29 @@ void TYumbo::updateCollision()
 		offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 }
 
+// A second binding level over the raw global, TU-local because the one beside
+// TNerveYumboAppearing is declared further down the file.
+static inline TMarioParticleManager* YunboEffectParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 void TYumbo::updateEffect()
 {
 	if (isChangedBlock())
 		return;
 
 	if (isFreeze()) {
-		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
+		JPABaseEmitter* emitter
+		    = YunboEffectParticleManager()->emitAndBindToPosPtr(
 		    PARTICLE_MS_POI_KIZETSU, &mPosition, 1, this);
 		if (emitter)
 			emitter->setGlobalScale(mScaling);
 	}
 
 	if (mMActor->checkCurAnm("sambohead_dance", 0)) {
-		gpMarioParticleManager->emitAndBindToMtxPtr(
+		YunboEffectParticleManager()->emitAndBindToMtxPtr(
 		    PARTICLE_MS_YNB_ONPU, getModel()->getAnmMtx(mCenterJntIndex), 1,
 		    this);
 	}
