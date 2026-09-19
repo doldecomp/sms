@@ -781,7 +781,7 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mHintTimer > 160) {
 			mHintTimer = 0;
 			mHintShown = TRUE;
-			gpMarDirector->getConsole()->startAppearBalloon(0xE002E, true);
+			gpMarDirector->getConsole()->startAppearBalloon(0x2B, true);
 		}
 	}
 
@@ -810,6 +810,11 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
+			// TODO: the ROM adds first and subtracts after
+			// (`add; subi 0x78; extsh`) where MWCC folds the -120 into
+			// the random term here.  Ruled out: an `s16` or `int`
+			// named intermediate, splitting the subtraction off, and
+			// putting `timer` on the left -- all fold identically.
 			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
 			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
 			spine->pushAfterCurrent(&TNerveBGKLaunchGoro::theNerve());
@@ -847,7 +852,7 @@ DEFINE_NERVE(TNerveBGKAppear, TLiveActor)
 		if (self->unk28A < 0xFF)
 			self->unk28A++;
 		if (self->unk28A == 2)
-			gpMarDirector->getConsole()->startAppearBalloon(0xE0047, true);
+			gpMarDirector->getConsole()->startAppearBalloon(0x4A, true);
 	}
 
 	if (spine->getTime() == 8) {
@@ -966,7 +971,7 @@ DEFINE_NERVE(TNerveBGKWait2, TLiveActor)
 			self->unk288++;
 			if (self->unk288 == 2 && self->unk28A == 1
 			    && gpMarDirector->getCurrentMap() == 0)
-				gpMarDirector->getConsole()->startAppearBalloon(0xE0000, true);
+				gpMarDirector->getConsole()->startAppearBalloon(0, true);
 			if (self->unk288 > self->getSaveParams()->mSLLoop2Dive.get()) {
 				self->changeBck(0xC);
 				self->unk288 = 0;
@@ -1115,6 +1120,11 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (self->mVariant == TBiancoGateKeeper::VARIANT_GENERIC) {
+			// TODO: the ROM adds first and subtracts after
+			// (`add; subi 0x78; extsh`) where MWCC folds the -120 into
+			// the random term here.  Ruled out: an `s16` or `int`
+			// named intermediate, splitting the subtraction off, and
+			// putting `timer` on the left -- all fold identically.
 			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
 			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
 			self->launchGorogoro();
