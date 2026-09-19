@@ -321,8 +321,8 @@ bool THauntLeg::isCollidMove(THitActor* other)
 {
 	if (mSpine->getCurrentNerve() != &TNerveHauntLegHaunt::theNerve()
 	    && unk198 == 0 && !(mLiveFlag & LIVE_FLAG_CLIPPED_OUT)
-	    && ((other->mActorType & 0xFFFF0000) == 0x20000000
-	        || (other->mActorType & 0xFFFF0000) == 0x40000000)) {
+	    && ((other->getActorType() & 0xFFFF0000) == 0x20000000
+	        || (other->getActorType() & 0xFFFF0000) == 0x40000000)) {
 		if (((TTakeActor*)other)->mHolder == nullptr || other != unk19C) {
 			unk19C = other;
 			mSpine->setNext(&TNerveHauntLegHaunt::theNerve());
