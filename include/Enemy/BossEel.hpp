@@ -354,7 +354,7 @@ public:
 	void startMoguCamera();
 	bool isInBossEelMoguDemo();
 	void quickBack();
-	BOOL isValidToothDamage();
+	bool isValidToothDamage();
 	void deadCheck();
 	void setBckAnm(int);
 	void collideToMario();

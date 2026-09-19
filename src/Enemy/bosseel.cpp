@@ -1949,7 +1949,7 @@ void TBossEel::deadCheck()
 	}
 }
 
-BOOL TBossEel::isValidToothDamage()
+bool TBossEel::isValidToothDamage()
 {
 	if (mSpine->getCurrentNerve() == &TNerveBossEelEat::theNerve())
 		return false;
