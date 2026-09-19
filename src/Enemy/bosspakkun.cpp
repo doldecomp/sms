@@ -973,7 +973,7 @@ void TBossPakkun::rumblePad(int kind, const JGeometry::TVec3<f32>& from)
 	case 1:
 		power *= 0.7f;
 		break;
-	default:
+	case 2:
 		break;
 	}
 
