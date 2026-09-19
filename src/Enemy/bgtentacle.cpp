@@ -852,7 +852,9 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 			gpMarioParticleManager->emitAndBindToMtxPtr(0x95, mtx, 0, nullptr);
 			gpMarioParticleManager->emitAndBindToMtxPtr(0x96, mtx, 0, nullptr);
 
-			mOwner->rumblePad(1, mOwner->getPosition());
+			// TODO: raw mPosition for getPosition() is -8 of the 0x30 the
+			// frame is over; 0x28 of extra low region remains below `zero`.
+			mOwner->rumblePad(1, mOwner->mPosition);
 		}
 		break;
 

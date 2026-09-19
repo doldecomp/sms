@@ -531,9 +531,21 @@ void TTelesa::bind()
 	mLinearVelocity.y += mCurrentFlyHeight + mFlyBobOffsetY;
 }
 
+// PathNode.hpp's getPoint() reaches the node's actor through getPosition();
+// reading mPosition raw instead is low region here. Header round 27 measured
+// the same change made in the header as a tree-wide wash, so it stays parked
+// TU-locally.
+static inline const JGeometry::TVec3<f32>& TelesaGetPoint(const TPathNode& node)
+{
+	if (node.unk0 != 0)
+		return node.unk0->mPosition;
+
+	return node.unk4;
+}
+
 BOOL TTelesa::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
+	JGeometry::TVec3<f32> local_c = TelesaGetPoint(getUnk104());
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 

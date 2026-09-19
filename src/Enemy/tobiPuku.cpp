@@ -563,13 +563,21 @@ void TTobiPuku::swimEffect()
 	emitter->mBaseLifetime = life;
 }
 
+// PathNode.hpp's getPoint() reaches the node's actor through getPosition();
+// reading mPosition raw instead is low region here. Header round 27 measured
+// the same change made in the header as a tree-wide wash, so it stays parked
+// TU-locally.
+static inline const JGeometry::TVec3<f32>& TobiPukuGetPoint(const TPathNode& node)
+{
+	if (node.unk0 != 0)
+		return node.unk0->mPosition;
+
+	return node.unk4;
+}
+
 bool TTobiPuku::isReachedToGoalXZ()
 {
-	// The goal node is reached through the accessor, which binds
-	// `this + 0x104` into a register (`addi r4, r3, 0x104`) the way the ROM
-	// does; the raw member read spells the fallback as `addi r5, r3, 0x108`.
-	// TODO: every instruction matches now, 0x10 of low region left over.
-	JGeometry::TVec3<f32> d(getUnk104().getPoint());
+	JGeometry::TVec3<f32> d(TobiPukuGetPoint(getUnk104()));
 	d.x -= mPosition.x;
 	d.y -= mPosition.y;
 	d.z -= mPosition.z;

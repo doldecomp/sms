@@ -1657,9 +1657,21 @@ void THaneHamuKuri::bind()
 	mLinearVelocity.y += unk234 + unk210;
 }
 
+// PathNode.hpp's getPoint() reaches the node's actor through getPosition();
+// reading mPosition raw instead is low region here. Header round 27 measured
+// the same change made in the header as a tree-wide wash, so it stays parked
+// TU-locally.
+static inline const JGeometry::TVec3<f32>& HamuKuriGetPoint(const TPathNode& node)
+{
+	if (node.unk0 != 0)
+		return node.unk0->mPosition;
+
+	return node.unk4;
+}
+
 BOOL THaneHamuKuri::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
+	JGeometry::TVec3<f32> local_c = HamuKuriGetPoint(getUnk104());
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 	if (MsVECMag2(&local_c) < 100.0f)
@@ -1895,7 +1907,7 @@ void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
 
 BOOL THaneHamuKuri2::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
+	JGeometry::TVec3<f32> local_c = HamuKuriGetPoint(getUnk104());
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 	if (MsVECMag2(&local_c) < 20.0f)

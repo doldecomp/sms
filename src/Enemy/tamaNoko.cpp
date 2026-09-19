@@ -645,12 +645,21 @@ void TTamaNoko::setWalkAnm() { setBckAnm(10); }
 
 void TTamaNoko::setDeadAnm() { setBckAnm(3); }
 
+// PathNode.hpp's getPoint() reaches the node's actor through getPosition();
+// reading mPosition raw instead is low region here. Header round 27 measured
+// the same change made in the header as a tree-wide wash, so it stays parked
+// TU-locally.
+static inline const JGeometry::TVec3<f32>& TamaNokoGetPoint(const TPathNode& node)
+{
+	if (node.unk0 != 0)
+		return node.unk0->mPosition;
+
+	return node.unk4;
+}
+
 BOOL TTamaNoko::isReachedToGoal() const
 {
-	// The accessor binds `this + 0x104` into a register the way the ROM does
-	// (`addi r4, r3, 0x104`); the raw member read spells the fallback branch
-	// as `addi r5, r3, 0x108`. TODO: 0x10 of low region still left over.
-	JGeometry::TVec3<f32> pos = getUnk104().getPoint();
+	JGeometry::TVec3<f32> pos = TamaNokoGetPoint(getUnk104());
 	pos -= mPosition;
 	pos.y = 0.0f;
 	if (pos.x == 0.0f && pos.z == 0.0f)
