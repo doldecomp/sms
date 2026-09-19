@@ -492,17 +492,27 @@ BOOL TBossTelesaTongue::receiveMessage(THitActor* sender, u32 message)
 	return true;
 }
 
+// The ROM `bl`s forceHide() from the bottom of this body, so forceHide had to
+// reach fifteen statements (see the note there); with the call out of line the
+// whole function falls out. The block-scoped `actor` is the ROM's second copy
+// of the collision pointer (`addi r28, r4, 0` inside the `if`, with the
+// unnamed CSE temp kept alive across the materialised bool) and it is also
+// worth the +4 of pool the frame needs.
+// TODO: one instruction left -- the ROM loads mCollisions[i] into r3 and
+// copies it to r4 before the mask test, i.e. it evaluates the element once
+// more than we do; every other instruction and the 0x38 frame are exact.
 void TBossTelesaKillSmallEnemy::checkHit()
 {
 	unk6C = false;
 
 	for (int i = 0; i < mColCount; ++i) {
-		THitActor* actor = mCollisions[i];
-		if (actor->checkActorType(ACTOR_TYPE_ENEMY)) {
+		if (mCollisions[i]->checkActorType(ACTOR_TYPE_ENEMY)) {
+			TLiveActor* actor = (TLiveActor*)mCollisions[i];
+
 			if (actor->getActorType() == 0x10000013)
 				((THamuKuri*)actor)->selectCapHolder();
 
-			((TLiveActor*)actor)->kill();
+			actor->kill();
 		}
 	}
 
@@ -2133,24 +2143,34 @@ bool TBossTelesa::isForceRestart()
 	return spinning != 3;
 }
 
+// The ROM calls this out of line from TBossTelesaKillSmallEnemy::checkHit, at
+// depth 1, so its source cost fifteen statements; the three early returns are
+// twelve of them (a bare `return;` costs one, unlike `return <local>;`) and
+// naming `checkCurBckFromIndex`'s first result is the fifteenth -- it is zero
+// codegen because the BOOL dies into the branch, where naming the nerve
+// instead hoists the spine load above the theNerve() guard and costs four
+// instructions. The two `startSoundActor` calls use the two-argument overload
+// for the 0x10 of low region the 0x48 frame needs (+8 per expansion).
 void TBossTelesa::forceHide()
 {
-	if (mSpine->getCurrentNerve() != &TNerveBossTelesaDie::theNerve()
-	    && !getMActor()->checkCurBckFromIndex(4)
-	    && !getMActor()->checkCurBckFromIndex(0)) {
-		forceAllItemKill();
-		unk368 = 0;
+	if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve())
+		return;
+	BOOL playing = getMActor()->checkCurBckFromIndex(4);
+	if (playing)
+		return;
+	if (getMActor()->checkCurBckFromIndex(0))
+		return;
 
-		if (unk350)
-			gpMSound->startSoundActor(MSD_SE_BS_TELESA_ESCAPE, &mPosition, 0,
-			                          nullptr, 0, 4);
-		else
-			gpMSound->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR, &mPosition, 0,
-			                          nullptr, 0, 4);
+	forceAllItemKill();
+	unk368 = 0;
 
-		mSpine->reset();
-		mSpine->setNext(&TNerveBossTelesaHide::theNerve());
-	}
+	if (unk350)
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_ESCAPE, &mPosition);
+	else
+		gpMSound->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR, &mPosition);
+
+	mSpine->reset();
+	mSpine->setNext(&TNerveBossTelesaHide::theNerve());
 }
 
 // Called from TTelesaSlot::moveObject once all three drums have stopped. The
