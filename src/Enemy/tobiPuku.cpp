@@ -987,9 +987,10 @@ DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 			spine->pushAfterCurrent(&TNerveTobiPukuFall::theNerve());
 			return TRUE;
 		}
-		return FALSE;
+	} else {
+		return TRUE;
 	}
-	return TRUE;
+	return FALSE;
 }
 
 // TODO: incorrect size. Map records 0x250 (592 bytes).
