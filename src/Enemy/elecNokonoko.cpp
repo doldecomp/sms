@@ -488,9 +488,9 @@ void TElecNokonoko::setMeltAnm()
 	unk18C            = 3;
 	mCarapace->mVelocity = stop;
 
+	J3DModel* model         = getMActor()->getModel();
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_DNK_SHIBIRE_B, getMActor()->getModel()->getAnmMtx(0), 0,
-	    nullptr);
+	    PARTICLE_MS_DNK_SHIBIRE_B, model->getAnmMtx(0), 0, nullptr);
 	if (emitter)
 		emitter->setGlobalScale(mScaling);
 }
