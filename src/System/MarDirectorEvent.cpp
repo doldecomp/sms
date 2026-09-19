@@ -107,6 +107,13 @@ void TMarDirector::movement_game()
 	}
 }
 
+// Binding level over the sound singleton, worth +8 of low region per site.
+static inline MSound* MarDirectorEventGetMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TMarDirector::fireGetBlueCoin(TCoin* coin)
 {
 	if (!coin)
@@ -116,8 +123,8 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 	                                          coin->getEventId());
 	unk4C |= 0x200;
 	unk261 = 1;
-	SMSGetMSound()->startSoundActor(MSD_SE_SY_BLUE_COIN_GET, &coin->mPosition,
-	                                0, nullptr, 0, 4);
+	MarDirectorEventGetMSound()->startSoundActor(
+	    MSD_SE_SY_BLUE_COIN_GET, &coin->mPosition, 0, nullptr, 0, 4);
 }
 
 void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
