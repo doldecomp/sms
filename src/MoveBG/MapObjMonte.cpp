@@ -344,7 +344,7 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	JGeometry::TVec2<f32> width(mSideDir);
 	width.scale(mRopeWidthBetweenBoards);
 
-	int vertexNum = ((mBoardNum + 2) * divide * 2) & ~1;
+	u16 vertexNum = (mBoardNum + 2) * divide * 2;
 
 	JGeometry::TVec3<f32> from;
 	JGeometry::TVec3<f32> to;
@@ -444,12 +444,16 @@ void THangingBridge::initDraw() const
 	GXLoadPosMtxImm(j3dSys.mViewMtx, GX_PNMTX0);
 	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetNumChans(1);
-	GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
 	              GX_DF_NONE, GX_AF_NONE);
-	GXSetChanCtrl(GX_ALPHA0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
 	              GX_DF_NONE, GX_AF_NONE);
+	// TODO: retail copies this named GXColor into a separate by-value argument
+	// temp (`stw` to the local, then `lwz`/`stw` into the outgoing slot); our
+	// build coalesces the two slots, and declaring it at the top of the
+	// function only moves the initialiser away from the call.
 	GXColor color = { 0, 0, 100, 255 };
-	GXSetChanMatColor(GX_COLOR0, color);
+	GXSetChanMatColor(GX_COLOR0A0, color);
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
@@ -472,9 +476,8 @@ void THangingBridge::initDraw() const
 	                GX_CA_ZERO);
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
-	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
-	               GX_LO_NOOP);
-	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetCullMode(GX_CULL_BACK);
 }
@@ -657,14 +660,16 @@ f32 TSwingBoard::mSpeedDownRate   = 0.998f;
 void TSwingBoard::drawOneRope(const JGeometry::TVec3<f32>& bottom,
                               const JGeometry::TVec3<f32>& top) const
 {
-	f32 texPos = mRopeLength * mTexPosRate;
-
-	f32 topXPlus    = top.x + mRopeWidthX;
-	f32 bottomXPlus = bottom.x + mRopeWidthX;
-	f32 topZPlus    = top.z + mRopeWidthZ;
-	f32 topZMinus   = top.z - mRopeWidthZ;
-	f32 bottomZPlus = bottom.z + mRopeWidthZ;
+	f32 topXPlus     = top.x + mRopeWidthX;
+	f32 topZPlus     = top.z + mRopeWidthZ;
+	f32 topZMinus    = top.z - mRopeWidthZ;
+	f32 bottomXPlus  = bottom.x + mRopeWidthX;
+	f32 bottomZPlus  = bottom.z + mRopeWidthZ;
 	f32 bottomZMinus = bottom.z - mRopeWidthZ;
+	f32 texPos       = mRopeLength * mTexPosRate;
+	f32 widthX       = mRopeWidthX;
+	f32 topX         = top.x;
+	f32 bottomX      = bottom.x;
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 8);
 	GXPosition3f32(bottom.x, bottom.y, bottomZPlus);
@@ -677,9 +682,9 @@ void TSwingBoard::drawOneRope(const JGeometry::TVec3<f32>& bottom,
 	GXPosition3f32(topXPlus, top.y, topZMinus);
 	GXTexCoord2f32(1.0f, 0.0f);
 
-	GXPosition3f32(bottom.x - mRopeWidthX, bottom.y, bottomZMinus);
+	GXPosition3f32(bottomX - widthX, bottom.y, bottomZMinus);
 	GXTexCoord2f32(2.0f, texPos);
-	GXPosition3f32(top.x - mRopeWidthX, top.y, topZMinus);
+	GXPosition3f32(topX - widthX, top.y, topZMinus);
 	GXTexCoord2f32(2.0f, 0.0f);
 
 	GXPosition3f32(bottom.x, bottom.y, bottomZPlus);
@@ -699,12 +704,16 @@ void TSwingBoard::initDraw() const
 	GXLoadPosMtxImm(j3dSys.mViewMtx, GX_PNMTX0);
 	GXSetCurrentMtx(GX_PNMTX0);
 	GXSetNumChans(1);
-	GXSetChanCtrl(GX_COLOR0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
 	              GX_DF_NONE, GX_AF_NONE);
-	GXSetChanCtrl(GX_ALPHA0, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
+	GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
 	              GX_DF_NONE, GX_AF_NONE);
+	// TODO: retail copies this named GXColor into a separate by-value argument
+	// temp (`stw` to the local, then `lwz`/`stw` into the outgoing slot); our
+	// build coalesces the two slots, and declaring it at the top of the
+	// function only moves the initialiser away from the call.
 	GXColor color = { 0, 0, 100, 255 };
-	GXSetChanMatColor(GX_COLOR0, color);
+	GXSetChanMatColor(GX_COLOR0A0, color);
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
@@ -722,13 +731,17 @@ void TSwingBoard::initDraw() const
 	                GX_CA_ZERO);
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
-	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
-	               GX_LO_NOOP);
-	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+	GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetCullMode(GX_CULL_BACK);
 }
 
+// TODO: 87.6%. Retail binds &mInitialPosition.z into a third callee-saved GPR
+// (`addi r30, r29, 0x114`, one use in the second block) and carries 28 more
+// bytes of dead low region. A `const f32&` local and a TU-local static inline
+// returning `const f32&` both fold back to the 0x114 displacement and only cost
+// +8 of frame, so the carrier for the addi is still unknown.
 void TSwingBoard::draw() const
 {
 	initDraw();
@@ -755,32 +768,42 @@ void TSwingBoard::draw() const
 	drawOneRope(bottom, top);
 }
 
+// The water gun's emit flag, read as an int so the test is a signed compare.
+static inline int swingBoardIsEmitWater()
+{
+	return SMS_GetMarioWaterGun()->mIsEmitWater;
+}
+
 // UNUSED (0xa8): the water-jet push at the head of control.
 void TSwingBoard::swing()
 {
 	if (marioIsOn() && marioIsOn()
-	    && SMS_GetMarioWaterGun()->mIsEmitWater) {
+	    && swingBoardIsEmitWater()) {
 		MtxPtr emit = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		f32 dirX    = -emit[0][0];
+		f32 dirY    = 0.0f;
 		f32 dirZ    = -emit[2][0];
 		MtxPtr mtx  = getModel()->getAnmMtx(0);
 		mAngleSpeed += mAccelRate
-		    * (mtx[0][2] * dirX + mtx[1][2] * 0.0f + mtx[2][2] * dirZ);
+		    * (mtx[0][2] * dirX + mtx[1][2] * dirY + mtx[2][2] * dirZ);
 	}
 }
 
+// TODO: 99.9%, every instruction exact; retail's frame is 0x118 against our
+// 0x70, i.e. 0xa8 more dead low region with no carrier identified.
 void TSwingBoard::control()
 {
 	TMapObjBase::control();
 
 	if (marioIsOn() && marioIsOn()
-	    && SMS_GetMarioWaterGun()->mIsEmitWater) {
+	    && swingBoardIsEmitWater()) {
 		MtxPtr emit = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		f32 dirX    = -emit[0][0];
+		f32 dirY    = 0.0f;
 		f32 dirZ    = -emit[2][0];
 		MtxPtr mtx  = getModel()->getAnmMtx(0);
 		mAngleSpeed += mAccelRate
-		    * (mtx[0][2] * dirX + mtx[1][2] * 0.0f + mtx[2][2] * dirZ);
+		    * (mtx[0][2] * dirX + mtx[1][2] * dirY + mtx[2][2] * dirZ);
 	}
 
 	mAngle += mAngleSpeed;
@@ -794,15 +817,15 @@ void TSwingBoard::control()
 			mSound->stop(1);
 
 		if (mAngleSpeed > 0.0f) {
-			f32 volume = fabsf(mAngle);
 			gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_SWING1,
-			                                  &mPosition, nullptr, volume, 0,
-			                                  0, &mSound, 0, 4);
+			                                  &mPosition, nullptr,
+			                                  fabsf(mAngle), 0, 0, &mSound, 0,
+			                                  4);
 		} else {
-			f32 volume = fabsf(mAngle);
 			gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_SWING2,
-			                                  &mPosition, nullptr, volume, 0,
-			                                  0, &mSound, 0, 4);
+			                                  &mPosition, nullptr,
+			                                  fabsf(mAngle), 0, 0, &mSound, 0,
+			                                  4);
 		}
 	}
 
@@ -876,6 +899,8 @@ void TSwingBoard::load(JSUMemoryInputStream& stream)
 	mBaseMtx[2][3] = 0.0f;
 }
 
+// TODO: 99.9%, every instruction exact; retail's frame is 0x48 against our 0x18,
+// i.e. exactly one dead 48-byte Mtx the original declared and never used.
 TSwingBoard::TSwingBoard(const char* name)
     : TMapObjBase(name)
 {
@@ -886,18 +911,11 @@ TSwingBoard::TSwingBoard(const char* name)
 	mAngleSpeedMax = 0.0f;
 	mSound         = nullptr;
 
-	mBaseMtx[0][0] = 1.0f;
-	mBaseMtx[0][1] = 0.0f;
-	mBaseMtx[0][2] = 0.0f;
-	mBaseMtx[0][3] = 0.0f;
-	mBaseMtx[1][0] = 0.0f;
-	mBaseMtx[1][1] = 1.0f;
-	mBaseMtx[1][2] = 0.0f;
-	mBaseMtx[1][3] = 0.0f;
-	mBaseMtx[2][0] = 0.0f;
-	mBaseMtx[2][1] = 0.0f;
-	mBaseMtx[2][2] = 1.0f;
-	mBaseMtx[2][3] = 0.0f;
+	mBaseMtx[0][3] = mBaseMtx[1][3] = mBaseMtx[2][3] = 0.0f;
+	mBaseMtx[0][2] = mBaseMtx[1][2] = 0.0f;
+	mBaseMtx[0][1] = mBaseMtx[2][1] = 0.0f;
+	mBaseMtx[1][0] = mBaseMtx[2][0] = 0.0f;
+	mBaseMtx[0][0] = mBaseMtx[1][1] = mBaseMtx[2][2] = 1.0f;
 
 	mAnchor.zero();
 }
