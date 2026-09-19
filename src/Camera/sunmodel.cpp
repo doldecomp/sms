@@ -1,3 +1,4 @@
+#pragma defer_codegen off
 #include <Camera/SunModel.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
@@ -144,9 +145,18 @@ void TSunModel::calcOtherFPosFromCenterAndRadius_(
 	param_1[7].y = param_2.y + fVar1;
 }
 
-// TODO: mark as inline or even move to the header maybe?
+// TODO: retail's symbol is weak, so this most likely lives in the header.
+// Retail keeps CLBScreenFPosToSPos out-of-line here (it is emitted as a weak
+// symbol in this TU). dont_inline is a call-site property in MWCC, so the
+// pragma on its definition in cameralib.hpp is not enough; and `-inline
+// deferred` discards the pragma state entirely, hence the defer_codegen off at
+// the top of the file. The camera matrices are read directly because
+// dont_inline would otherwise out-of-line the getUnk16C/getUnk1EC accessors.
+#pragma dont_inline on
 void TSunModel::calcDispRatioAndScreenPos_()
 {
+	char trash[16];
+
 	unk191   = 0;
 	bool* it = unk180;
 	for (int i = 0; i < 17; ++i, ++it)
@@ -155,8 +165,8 @@ void TSunModel::calcDispRatioAndScreenPos_()
 
 	unk194 = (f32)unk191 * (1.0f / 17.0f);
 
-	CLBCalc2DFPos(unkF8, gpCamera->getUnk16C(), gpCamera->getUnk1EC(), unk198,
-	              nullptr, false);
+	const f32(*view)[4] = gpCamera->unk1EC.mMtx;
+	CLBCalc2DFPos(unkF8, gpCamera->unk16C, view, unk198, nullptr, false);
 
 	f32 radius = unk1A4 * mScaling.y;
 	calcOtherFPosFromCenterAndRadius_(&unkF8[1], unkF8[0], radius);
@@ -176,6 +186,7 @@ void TSunModel::calcDispRatioAndScreenPos_()
 	}
 }
 
+#pragma dont_inline off
 void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 {
 	bool sunInBounds;
