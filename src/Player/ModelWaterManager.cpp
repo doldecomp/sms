@@ -728,15 +728,8 @@ void TModelWaterManager::move()
 void TModelWaterManager::calcWorldMinMax()
 {
 	if (mParticleCount == 0) {
-		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-
-		unk5D70.x = marioPos.x;
-		unk5D70.y = marioPos.y;
-		unk5D70.z = marioPos.z;
-
-		unk5D7C.x = marioPos.x;
-		unk5D7C.y = marioPos.y;
-		unk5D7C.z = marioPos.z;
+		unk5D70 = SMS_GetMarioPos();
+		unk5D7C = SMS_GetMarioPos();
 
 		unk5D70.x -= 1.0f;
 		unk5D70.y -= 1.0f;
@@ -748,26 +741,34 @@ void TModelWaterManager::calcWorldMinMax()
 		return;
 	}
 
-	JGeometry::TVec3<f32> fVar789 = mParticlePositionSOA[0];
-	fVar789.x -= 1.0f;
-	fVar789.y -= 1.0f;
-	fVar789.z -= 1.0f;
-	JGeometry::TVec3<f32> fVar123 = mParticlePositionSOA[0];
-	fVar789.x += 1.0f;
-	fVar789.y += 1.0f;
-	fVar789.z += 1.0f;
-	for (int i = 0; i < mParticleCount; ++i) {
-		fVar789.setMax(mParticlePositionSOA[i]);
-		fVar123.setMin(mParticlePositionSOA[i]);
+	f32 maxX = mParticlePositionSOA[0].x - 1.0f;
+	f32 maxY = mParticlePositionSOA[0].y - 1.0f;
+	f32 maxZ = mParticlePositionSOA[0].z - 1.0f;
+	f32 minX = mParticlePositionSOA[0].x + 1.0f;
+	f32 minY = mParticlePositionSOA[0].y + 1.0f;
+	f32 minZ = mParticlePositionSOA[0].z + 1.0f;
+	for (int i = 1; i < mParticleCount; ++i) {
+		if (maxX > mParticlePositionSOA[i].x)
+			maxX = mParticlePositionSOA[i].x;
+		if (maxY > mParticlePositionSOA[i].y)
+			maxY = mParticlePositionSOA[i].y;
+		if (maxZ > mParticlePositionSOA[i].z)
+			maxZ = mParticlePositionSOA[i].z;
+		if (minX < mParticlePositionSOA[i].x)
+			minX = mParticlePositionSOA[i].x;
+		if (minY < mParticlePositionSOA[i].y)
+			minY = mParticlePositionSOA[i].y;
+		if (minZ < mParticlePositionSOA[i].z)
+			minZ = mParticlePositionSOA[i].z;
 	}
 
-	unk5D70.x = fVar789.x - 200.0f;
-	unk5D70.y = fVar789.y - 200.0f;
-	unk5D70.z = fVar789.z - 200.0f;
+	unk5D70.x = maxX - 200.0f;
+	unk5D70.y = maxY - 200.0f;
+	unk5D70.z = maxZ - 200.0f;
 
-	unk5D7C.x = fVar123.x + 200.0f;
-	unk5D7C.y = fVar123.y + 200.0f;
-	unk5D7C.z = fVar123.z + 200.0f;
+	unk5D7C.x = minX + 200.0f;
+	unk5D7C.y = minY + 200.0f;
+	unk5D7C.z = minZ + 200.0f;
 }
 
 #pragma dont_inline on
