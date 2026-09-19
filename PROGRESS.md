@@ -72,11 +72,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   saubere 93,83-%-Fassung. Gemäß Iterationsregel als `// NONMATCHING`
   zurückgestellt.
 
-- `Strategic/HitActor.cpp`: `THitActor::calcEntryRadius` (124 Bytes, 97,68 %).
-  Stackframe (0x40 Bytes via `char trash[0x30]`) ist reproduzierbar; die
-  Abweichungen in FPSCR-Registerwahl und Reihenfolge der `fmadds`/`frsp`-Stores
-  ließen sich in vertretbarer Zeit nicht eindeutig auf MWCC-übliche
-  Ausdrucksformen abbilden. Zurückgestellt.
+- `Strategic/HitActor.cpp`: `THitActor::calcEntryRadius`. Aktueller Quelltext
+  matcht zu **91,90 %** (124 Bytes); mit `char trash[0x30]`-Padding stieg es
+  auf 97,68 %. Frame ist reproduzierbar; die restlichen Abweichungen liegen in
+  FPSCR-Registerwahl und Reihenfolge der `fmadds`/`frsp`-Stores und ließen
+  sich nicht eindeutig auf MWCC-übliche Ausdrucksformen abbilden.
 
 ## Gematchte GMSJ01-Funktionen
 
