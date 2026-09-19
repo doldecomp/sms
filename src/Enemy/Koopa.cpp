@@ -376,6 +376,12 @@ BOOL TNerveKoopaGetShowered::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
+static inline TKoopaParams* KoopaGetDownParam(TKoopa* koopa)
+{
+	TKoopaParams* param = koopa->getParam();
+	return param;
+}
+
 BOOL TNerveKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
@@ -384,17 +390,17 @@ BOOL TNerveKoopaGetDown::execute(TSpineBase<TLiveActor>* spine) const
 	case KOOPA_ANM_DOWN:
 		if (koopa->getAnmEnd())
 			koopa->changeAnm(KOOPA_ANM_DOWN_WAIT, 0,
-			                 koopa->getParam()->downSpeed.get());
+			                 KoopaGetDownParam(koopa)->downSpeed.get());
 		break;
 
 	case KOOPA_ANM_DOWN_WAIT: {
 		TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 		int time          = spine->getTime();
-		f32 downStep      = koopa->getParam()->downStep.get();
+		f32 downStep      = KoopaGetDownParam(koopa)->downStep.get();
 		if (!((f32)(time * (bathtub->getNumGripsDead() + 2)) < downStep)
 		    && koopa->getAnmEnd())
 			koopa->changeAnm(KOOPA_ANM_GETUP, 0,
-			                 koopa->getParam()->downSpeed.get());
+			                 KoopaGetDownParam(koopa)->downSpeed.get());
 		break;
 	}
 
