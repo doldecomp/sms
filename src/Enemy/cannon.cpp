@@ -356,9 +356,9 @@ void TCannon::init(TLiveManager* manager)
 		                        CannonGetSLChorobeiAttackHeight(mSaveParams),
 		                        mSaveParams->getSLChorobeiDamageRadius(),
 		                        mSaveParams->getSLChorobeiDamageHeight());
-		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-		    ->getChildren()
-		    .push_back(mChorobei);
+		TIdxGroupObj* group
+		    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+		group->getChildren().push_back(mChorobei);
 
 		JUTNameTab* jointNames
 		    = getMActor()->getModel()->getModelData()->getJointName();
