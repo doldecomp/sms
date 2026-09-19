@@ -23,6 +23,7 @@ f32 TMapObjNail::mDownHeight = 50.0f;
 
 BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[8];
 	if (message == HIT_MESSAGE_HIP_DROP && !isStateTimerEngaged()
 	    && unk150 < 3) {
 		mPosition.y -= mDownHeight;
@@ -55,6 +56,7 @@ TMapObjNail::TMapObjNail(const char* name)
 
 void TJointCoin::control()
 {
+	char trash[8];
 	unk138->frameUpdate();
 	unk138->calc();
 	MtxPtr mtx = unk138->getModel()->getAnmMtx(0);
