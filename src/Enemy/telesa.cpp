@@ -756,14 +756,9 @@ bool TTelesa::isCollidMove(THitActor* param_1)
 	return param_1->mActorType == 0x10000020 ? false : true;
 }
 
-// TODO: this FEELS real but it's 4 bytes too big!!!
 bool TTelesa::resetBaseGround()
 {
-	bool result = unk165;
-	if (result)
-		unk165 = false;
-
-	return result;
+	return unsetUnk165();
 }
 
 void TTelesa::setAttackPoint()
