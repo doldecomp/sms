@@ -38,6 +38,27 @@
 | Funktionen matched | 66,65 % (8.585 / 12.881) | +4 |
 | Units complete | 403 / 736 | ±0 |
 
+### Nach zweiter Iterationsrunde (JPADraw, effectObj, WoodBarrel::kill)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,43 % (1.487.244 / 3.590.088) | +1.744 Bytes |
+| Funktionen matched | 66,69 % (8.590 / 12.881) | +5 |
+
+**Methodik-Erkenntnis**: `char trash[N]`-Padding muss NACH dem betroffenen
+Struct-Local stehen, nicht davor — das brachte `calcRootMatrix`, `loadYBBMtx`
+und `WoodBarrel::kill` von 99,6–99,8 % auf 100 %. Funktionen ohne frühen
+Struct-Local reagieren weiterhin auf Padding am Funktionsanfang
+(`zDrawParticle`, `zDrawChild`, `NpcManager::perform`).
+
+**Warnung zu `configure.py`-Status**: `objdiff-cli diff` kann eine Unit-Section
+als 100 % melden, obwohl anonyme `[.data-0]`/`[.sdata-0]`-Reste (Padding/
+Literal-Pool-Bytes ohne Symbolnamen) abweichen — sichtbar nur in den
+Symbol-Einträgen, nicht im Section-Aggregat. `MoveBG/WoodBarrel.cpp` auf
+`Matching` zu setzen brach die DOL-SHA1, obwohl alle Sections 100 % zeigten;
+sofort zurückgesetzt. Ab jetzt: Matching-Flip **immer** mit
+`ninja && dtk shasum -c` verifizieren, nie nur mit objdiff-Sections.
+
 Die Referenz-DOL bleibt `OK`.
 
 ### Bereiche
@@ -102,8 +123,9 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `Player/SplashManager.cpp`: `TSplashManager::makeDL` (392 Bytes, 99,95 %).
   Original reserviert Color-Struct bei `0x58(r1)`, unsere Version bei `0x54(r1)`
-  (4-Byte-Differenz). Varianten `u32 pad` bzw. zusätzliche `JGeometry::TVec3`
-  erreichten 99,82 %/99,63 % – schlechter.
+  (4-Byte-Differenz). Varianten `u32 pad`, zusätzliche `JGeometry::TVec3`,
+  `char trash[8]`/`[4]` nach `thing[4]` erreichten 99,82 %/99,63 %/99,63 %/
+  99,82 % – alle schlechter. Vermutlich SDA-Konstantenwahl, nicht Padding.
 
 - `MoveBG/MapObjPollution.cpp`: `loadAfter` (172 Bytes, 88,07 %).
   Quellaufruf von `registerRevivalTexStamp` arbeitet mit `int/short`-Parametern;
@@ -126,10 +148,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `sdlModel`-Local liegt 4 Bytes höher (`0x20` statt `0x1c`); Umordnen der
   `loadFlags`/`initInfo`-Deklaration ohne Wirkung.
 
-- `JSystem/JParticle/JPADraw.cpp`: `loadYBBMtx` (208 Bytes, 99,83 %),
-  `zDrawChild`/`zDrawParticle`/`initialize` (99,7–99,97 %). Frame 8 Bytes
-  größer als Original; Aufsplitten des `TVec3`-Konstruktors verschlechterte
-  auf 96,94 % (zurückgesetzt). Unit `.text` insgesamt bei 99,99 %.
+- `JSystem/JParticle/JPADraw.cpp`: `initialize` (868 Bytes, 99,92 %).
+  Frame 8 Bytes größer als Original (`0x190` vs. `0x188`); `char trash[8]`
+  vor/nach dem einzigen Local `int i` ohne Wirkung (i ist rein
+  registerallokiert, kein Stack-Slot). `loadYBBMtx`, `zDrawChild`,
+  `zDrawParticle` in derselben Unit inzwischen 100 % (siehe unten).
 
 ## Gematchte GMSJ01-Funktionen
 
@@ -168,9 +191,13 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   — **100 %**. Je `char trash[8]` reproduziert 0x28- bzw. 0x50-Byte-Frame.
   Unit `.text`/`.data`/`.sbss` 100 %, in `configure.py` auf Matching gesetzt.
 
-- `MoveBG/WoodBarrel.cpp`: `TWoodBarrel::appear` und `appeared` — **100 %**.
-  Je `char trash[8]` für 0x20- bzw. 0x28-Byte-Frame. `kill` bleibt 99,69 %
-  (TVec3-Local 12 Bytes zu tief); Unit bleibt NonMatching.
+- `MoveBG/WoodBarrel.cpp`: `TWoodBarrel::appear`, `appeared`, `kill` —
+  **100 %** je einzeln (`.text` der Unit 100 %). `char trash[8]` am
+  Funktionsanfang für `appear`/`appeared`; bei `kill` musste `char trash[0xc]`
+  NACH der `TVec3<f32> vec`-Deklaration stehen (nicht davor). Unit bleibt
+  NonMatching: `configure.py` auf `Matching` gesetzt brach die DOL-SHA1
+  trotz 100 % in allen objdiff-Sections (anonyme Daten-Reste, siehe
+  Methodik-Hinweis oben) — sofort zurückgesetzt.
 
 - `THPPlayer/THPPlayer.c`: `THPPlayerCalcNeedMemory` — **100 %** (168 Bytes).
   Ternäre Größenberechnung (`onMemory ? … : …`) durch `if`/`else` ersetzt —
@@ -179,8 +206,19 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 - `NPC/NpcManager.cpp`: `TNPCManager::perform` — **100 %** (364 Bytes).
   `char trash[8]` reproduziert den 0x38-Byte-Stackframe.
 
+- `Enemy/effectObj.cpp`: `TEffectModel::calcRootMatrix` — **100 %**
+  (244 Bytes). `char trash[8]` musste NACH `TPosition3f mtx` stehen.
+
+- `JSystem/JParticle/JPADraw.cpp`: `loadYBBMtx` — **100 %** (208 Bytes,
+  `char trash[8]` nach `TVec3<f32> v`), `zDrawParticle` und `zDrawChild` —
+  je **100 %** (`char trash[8]` am Funktionsanfang, kein früher Struct-Local
+  nötig). `initialize` bleibt bei 99,92 % offen (siehe oben); Unit-`.text`
+  jetzt 99,997 %.
+
 ## Nächster GMSJ01-Kandidat
 
-`JSystem/J3D/J3DGraphAnimator/J3DModel.cpp` (große Unit, ~89 % matched);
-`JSystem/JKernel/JKRExpHeap.cpp::allocFromHead(u32,int)` (98,78 %,
-Register-Scheduling um -1-Konstante) versucht, kein Fortschritt.
+`JSystem/J3D/J3DGraphAnimator/J3DModel.cpp::entryModelData` (1248 Bytes,
+99,76 %) — mehrere Register-Swap-Cluster in der Shape/Material-Packet-Schleife,
+kein einfacher Padding-Fall; `JSystem/JKernel/JKRExpHeap.cpp::allocFromHead
+(u32,int)` (98,78 %, Register-Scheduling um -1-Konstante) versucht, kein
+Fortschritt.
