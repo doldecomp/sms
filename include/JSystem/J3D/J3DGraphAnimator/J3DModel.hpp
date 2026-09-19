@@ -124,6 +124,10 @@ public:
 
 	void* getVtxPosArray() const { return mVertexData.getVtxPosArray(); }
 	void* getVtxNormArray() const { return mVertexData.getVtxNormArray(); }
+	const GXVtxAttrFmtList* getVtxAttrFmtList() const
+	{
+		return mVertexData.getVtxAttrFmtList();
+	}
 
 	J3DJoint* getRootNode() { return mRootNode; }
 

@@ -158,14 +158,9 @@ TMirrorCamera::TMirrorCamera(const char* name)
 	unk98.zero();
 }
 
-// TODO: TMirrorModel::initPlaneInfo reaches 100% (frame -0xf0) once J3DModelData
-// gains a getVtxAttrFmtList() wrapper beside the existing getVtxPosArray() and
-// getVtxNormArray() ones; the getVertexData() reference temporary is 0xc of
-// frame per expansion here and a TU-local wrapper around it costs 8 more.
 static u8 getVertexFormat(const J3DModelData* model_data, GXAttr attr)
 {
-	const GXVtxAttrFmtList* list
-	    = model_data->getVertexData().getVtxAttrFmtList();
+	const GXVtxAttrFmtList* list = model_data->getVtxAttrFmtList();
 	for (; list->attr != GX_VA_NULL; ++list)
 		if (list->attr == attr)
 			return list->type;
