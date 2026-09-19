@@ -2529,6 +2529,36 @@ stieg von 8663 (Stand vor Runde 37) auf **8925** (**+262**), Bytes
 von 1.510.652 auf 1.583.928 (**+73.276**). DOL SHA1 bleibt bei jedem
 Schritt `OK`.
 
+### Runde 37 Batch 7: weitere Lockerung, klares Erschöpfungssignal (20 weitere Funktionen)
+
+Letzter Durchlauf mit nochmals gelockerten Schwellwerten (75–100 %
+Match, ≤ 3.000 Bytes, Gap ≤ 0x50, `ndiff` ≤ 15) über die ersten 130
+Einheiten nach Kandidatenanzahl: 20 von 244 Kandidaten bestätigt
+(**8 %** Erfolgsquote). Die Erfolgsquoten-Kurve über alle sieben
+Batches dieser Runde — 99 %, 51 %, 30 %, 63 %, 22 %, 16 %, 8 % — zeigt
+einen eindeutigen, monoton fallenden Trend: das additive-Frame-Gap-
+Muster ist als ergiebige Quelle für diese Session ausgeschöpft.
+Weitere Schwellwert-Lockerung wird nicht fortgesetzt; künftige
+Sessions sollten stattdessen:
+1. Die verbleibenden ~57 zurückgezogenen Runde-32/33-Kandidaten
+   einzeln nachprüfen (siehe Methodik-Korrektur-Abschnitt).
+2. `THaneHamuKuri::walkBehavior` implementieren (echte fehlende
+   Funktionalität, ~150 Instruktionen, Feldoffsets bereits geklärt).
+3. Die interne-Slot-Positions-Gap-Kategorie aus Runde 36 erneut
+   angehen (resistent gegen `char trash[N]`, braucht vermutlich
+   gezielte Local-Variablen-Umordnung statt reiner Größenänderung).
+4. Eine völlig neue Kategorie identifizieren (z. B. Register-
+   Scheduling-Fälle, echte Bugfixes wie der `fireGetStar`-Fund).
+
+**Session-Gesamtstand nach Runde 37 (alle sieben Batches): 358
+tatsächlich verifizierte Funktionen** (77 aus Runde 1–36 plus 281
+neue in Runde 37) in 36 Commits. Vollständiger Report: Funktionszahl
+stieg von 8663 (Stand vor Runde 37) auf **8945** (**+282**), Bytes
+von 1.510.652 auf 1.594.320 (**+83.668**). DOL SHA1 bleibt bei jedem
+Schritt `OK`. Projekt-Gesamtfortschritt laut `objdiff-cli report`:
+Code-Match 41,98 % → 44,41 % (**+2,43 Prozentpunkte**), reflektiert
+ausschließlich diese Session (0 Commits hinter `upstream/main`).
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
