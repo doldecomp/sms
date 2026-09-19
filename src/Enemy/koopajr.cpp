@@ -178,11 +178,10 @@ void TDirectionCalc::makeDirection(JGeometry::TVec3<f32> dir)
 {
 	// TODO: the two locals only exist to load z before x, as the original
 	// does; atan2f(dir.x, dir.z) loads them the other way round.
-	// TODO: the frame is 8 short; a bound `&dir` supplies the 8 but costs
-	// TKoopaJrSubmarine::makeRelativeAngle, which inlines this body.
-	f32 z      = dir.z;
-	f32 x      = dir.x;
-	mDirection = atan2f(x, z);
+	JGeometry::TVec3<f32>* pDir = &dir;
+	f32 z                       = pDir->z;
+	f32 x                       = pDir->x;
+	mDirection                  = atan2f(x, z);
 }
 
 JGeometry::TVec3<f32> TDirectionCalc::calcDirectionVector()
