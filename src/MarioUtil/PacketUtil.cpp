@@ -10,7 +10,29 @@ static void FifoSetTevColorS10(GXTevRegID, GXColorS10) { }
 
 static void FifoSetTevKColor(GXTevKColorID, GXColor) { }
 
-static void FifoSetFogRangeAdj(u8, u16, GXFogAdjTable*) { }
+static void FifoSetFogRangeAdj(u8 enable, u16 center, GXFogAdjTable* table)
+{
+	if (enable) {
+		for (int i = 0; i < 10; i += 2) {
+			// clang-format off
+			u32 reg =
+				(0xE9 + (i / 2)) << 24 |
+				table->r[i + 1] << 12 |
+				table->r[i];
+			// clang-format on
+			GXWGFifo.u8  = GX_LOAD_BP_REG;
+			GXWGFifo.u32 = reg;
+		}
+	}
+	// clang-format off
+	u32 reg =
+		0xE8 << 24 |
+		(center + 342) |
+		enable << 10;
+	// clang-format on
+	GXWGFifo.u8  = GX_LOAD_BP_REG;
+	GXWGFifo.u32 = reg;
+}
 
 static void FifoSetFog(GXFogType, float, float, float, float, GXColor) { }
 
