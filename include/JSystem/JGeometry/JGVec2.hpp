@@ -13,14 +13,21 @@ public:
 
 	// NOTE: Present in TP, presumably to force use of stfs/lfs instead of
 	// stw/lwz. SMS does not have the assignment operator, and this was
-	// measured rather than assumed: TCameraMapTool holds a TVec2 at 0x18 and
-	// std::__copy<TCameraMapTool> (System/MarNameRefGen.cpp) copies those two
-	// words with a *paired* lwz/lwz/stw/stw, which is how MWCC moves an
-	// aggregate sub-object with no user-declared operator=. Declaring one
-	// takes that function from exact to 88.3%, and spelling the field out as
-	// two f32 members does the same, because MWCC copies scalar float members
-	// with lfs/stfs. So the 0x18 field is an aggregate and the aggregate has
-	// no operator=.
+	// measured rather than assumed: std::__copy<TCameraMapTool>
+	// (System/MarNameRefGen.cpp) copies the class's 0x18 field with a *paired*
+	// lwz/lwz/stw/stw. Declaring an operator= takes that function from exact
+	// to 88.3%, and spelling the field out as two f32 members does the same,
+	// because MWCC copies scalar float members with lfs/stfs.
+	//
+	// The 0x18 field turned out not to be a TVec2 at all: it is an f32[2].
+	// TCameraMapTool's implicit copy constructor word-copies it while
+	// copying the TVec3 above it through TVec3's user copy constructor, and
+	// MWCC block-copies an *array* member but recurses to lfs/stfs through a
+	// class-type member that has no user copy constructor. Giving TVec2 a
+	// word-copying copy constructor reproduces that one function too, but it
+	// takes TMapCollisionData::intersectLine 71.4 -> 57.3 and pushes the
+	// map-exact UNUSED LineInLineXZ from 0x1bc to 0x20c, so TVec2 keeps
+	// neither a copy constructor nor an operator=.
 	//
 	// Enabling operator= does gain TSelectShineManager::initData 97.3 -> 98.0
 	// and ::perform 79.6 -> 80.3, and getAngle's UNUSED body only reaches the
