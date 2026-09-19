@@ -175,12 +175,71 @@ Quelltext auf sauberen Zustand zurückgesetzt:
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach siebter Iterationsrunde (THPPlayer/TimeRec/MapCollisionPlane/PollutionCount-Analysen, kein neuer Match)
+
+Sieben weitere Funktionen ausführlich untersucht, alle als strukturell
+schwierig bestätigt und auf sauberen Zustand zurückgesetzt — kein
+Fortschritt in dieser Runde, aber wertvolle Root-Cause-Dokumentation:
+
+- `THPPlayer/THPPlayer.c::THPPlayerPrepare` (624 Bytes, 97,98 % clean) —
+  Frame stimmt bereits exakt (`0x30` beidseitig, `stmw r26`), reine
+  Register-Umnummerierung: alle Parameter/Locals (`frame`, `flag`,
+  `threadData`) sitzen bei uns ein Register höher (`r28`→`r27` usw.)
+  als im Original. Dieselbe Kategorie wie `effectObj::reset`/`noteOn`.
+- `System/TimeRec.cpp::TTimeRec::flip` (144 Bytes, 99,17 % clean) —
+  reiner Register-Swap (r5↔r7) für die schleifengetragene `curr`-Variable
+  in der Rückwärtsschleife, kein Frame-Unterschied, keine Struct-Locals.
+- `Map/MapCollisionPlane.cpp::TMapCheckGroundPlane::checkPlaneGround`
+  (308 Bytes, 95,95 % clean, bereits mit Upstream-Kommentar `// TODO:
+  making the return type an int here makes it match better, but breaks
+  other places` als bekannt schwierig markiert) — 8-Byte-Frame-Gap plus
+  f6/f7-Register-Swap und Instruktions-Umordnung; `char trash[8]`
+  bewirkt keinerlei Veränderung (95,95 % → 95,95 %).
+- `Map/PollutionCount.cpp` — vier Funktionen, alle mit verschachteltem
+  Auto-Inlining (`ReInitializeGX`/`drawPollutionLayer`/
+  `loadPollutionLayer`/`initDrawObjGX` werden je nach Aufrufstelle vom
+  Compiler automatisch eingebettet):
+  - `drawRevivalTexStamp` (748 Bytes, 99,93 % clean) — 8-Byte-Frame-Gap
+    behoben durch zwei getrennte `char trash[4]`-Blöcke (vor der
+    `GXSetChanMatColor`-Compound-Literal-Zeile und nach dem
+    `JUTTexture texture`-Local in der Schleife), hebt den Match auf
+    99,98 % — bestmöglich. Rest ist eine einzelne 4-Byte-Verschiebung
+    für die Speicherposition des `(GXColor){...}`-Compound-Literals
+    relativ zu einem benachbarten, nicht überlappenden Stack-Slot;
+    weder Trash-Position/-Größe noch ein benannter `GXColor`-Local
+    statt Compound-Literal (Regression auf 98,87 %) beheben das.
+    Zurückgesetzt auf die saubere 99,93-%-Fassung.
+  - `countTexDegree` (596 Bytes, 99,87 % clean) — 88-Byte-Frame-Gap
+    durch zweifach verschachteltes Auto-Inlining von
+    `drawPollutionLayer` → `loadPollutionLayer` (dessen einziger Local
+    `GXTexObj GStack_40` landet komplett in `countTexDegree`s Frame).
+    `char trash[0x58]` direkt in `loadPollutionLayer` nach `GStack_40`
+    hat **null** Effekt (99,8658 % exakt unverändert) — der Optimizer
+    entfernt totes Padding in bereits eingebettetem Code, bevor die
+    Frame-Größe der umschließenden Funktion berechnet wird. Bestätigt
+    dieselbe Kategorie wie `MapObjPollution::loadAfter` ("inlines make
+    me cry").
+  - `drawJointObjStamp` (648 Bytes, 99,39 % clean) — 16-Byte-Frame-Gap
+    plus r26/r27-Register-Swap für die Schleifenvariable, zusätzlich
+    verschachteltes Inlining von `initDrawObjGX`; nicht weiter verfolgt
+    angesichts der bestätigten Kategorie.
+  - `calcViewMtx` (384 Bytes, 99,21 % clean) — 24-Byte-Frame-Gap durch
+    inlineten `TPosition3f local_a4`-Zero-Fill in der Schleife;
+    `char trash[0x18]` nach `local_a4` schließt den Frame exakt und
+    hebt den Match auf 99,28 % (bestmöglich; `trash[0x14]` verschlechtert
+    auf 99,21 %, da der Frame dann nicht mehr exakt stimmt). Rest ist
+    eine 4-Byte-Slot-Verschiebung plus f0/f1-Register-Swap für
+    `makeWorldToPollutionMtx`, dieselbe Kategorie wie
+    `drawRevivalTexStamp`. Zurückgesetzt auf die saubere 99,21-%-Fassung.
+
+Die Referenz-DOL bleibt `OK`.
+
 ### Bereiche
 
 | Bereich | Fuzzy | Code matched | Units linked |
 | --- | ---: | ---: | ---: |
-| Game Code | 71,92 % | 27,90 % | 3,29 % (81 / 387) |
-| JSystem | 99,71 % | 87,42 % | 66,97 % (176 / 200) |
+| Game Code | 71,92 % | 28,00 % | 3,29 % (81 / 387) |
+| JSystem | 99,71 % | 88,32 % | 66,97 % (176 / 200) |
 | SDK | 99,97 % | 98,88 % | 98,34 % (146 / 149) |
 
 ## Windows-Setup
