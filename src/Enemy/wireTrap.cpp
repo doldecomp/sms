@@ -118,6 +118,29 @@ void TWireTrap::initParticle()
 	                 WIRETRAP_JPA_MS_WRT_BIRI_B);
 }
 
+// TODO: fabricated level, not a map symbol. Retail reaches
+// `TVec3::set<f32>(f,f,f)` through the TU's local out-of-line copy here
+// (`set<f>__Q29JGeometry8TVec3<f>Ffff`, local, 0x10), which needs the
+// constructor of the facing temporary at inline depth 3 -- one level more
+// than `initWire` gives on its own. Wrapping the whole facing-vs-wire test
+// in one TU-local helper supplies that level: it restores retail's `bl`,
+// its right-to-left evaluation of `mSpine->reset()` against
+// `getNerveFromMode(mMoveMode)`, and the frame's shape, taking load from
+// 87.5% to 95.4%. What is left is 0x10 of low region (retail's facing temp
+// sits at 0x80(r1) with the three stream ints packed directly above it at
+// 0x8c/0x90/0x94; ours sits at 0x5c with a 4-byte hole above the ints), so
+// the real shape is probably a named helper on TWireTrap rather than this
+// free function -- the map lists no such symbol, so nothing better is
+// committed yet.
+static inline f32 WireTrapDirFromAngleY(f32 angle,
+                                        const JGeometry::TVec3<f32>& dir)
+{
+	return JGeometry::TVec3<f32>(JGeometry::TUtil<f32>::one() * JMASin(angle),
+	                             0.0f,
+	                             JGeometry::TUtil<f32>::one() * JMACos(angle))
+	    .dot(dir);
+}
+
 // UNUSED, 0x108 in the map. Binds to the wire under us and picks the travel
 // direction from the placed yaw: we start out going whichever way along the
 // wire the model is already facing.
@@ -142,14 +165,10 @@ void TWireTrap::initWire()
 	// objects), and no spelling here can produce that -- see the note on
 	// JGVec3.hpp in the batch report. Until then the last nine instructions of
 	// the block differ.
-	if (0.0f
-	    <= JGeometry::TVec3<f32>(
-	           JGeometry::TUtil<f32>::one() * JMASin(getRotation().y), 0.0f,
-	           JGeometry::TUtil<f32>::one() * JMACos(getRotation().y))
-	           .dot(getWireBinder()->getDir()))
-		mMoveDir = 1.0f;
-	else
-		mMoveDir = -1.0f;
+	mMoveDir = 0.0f <= WireTrapDirFromAngleY(getRotation().y,
+	                                         getWireBinder()->getDir())
+	    ? 1.0f
+	    : -1.0f;
 
 	mScaleRate = 1.0f;
 }
