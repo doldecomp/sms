@@ -289,7 +289,7 @@ void TSlotDrum::moveObject()
 	for (int i = 0; i < unk148; ++i) {
 		if (unk138[i] != 0.0f) {
 			unk188[i] += fabsf(unk138[i]);
-			if (unk188[i] > 360.0f / (f32)unk168) {
+			if (unk188[i] >= (f32)unk168) {
 				unk188[i] = 0.0f;
 				switch (i) {
 				case 0:
@@ -324,6 +324,29 @@ void TSlotDrum::moveObject()
 					unk13C[i] += 360.0f;
 				if ((int)fabsf(unk13C[i]) % unk168 == 0) {
 					unk138[i] = 0.0f;
+					// The drum stops mid-click: the ROM plays the tick
+					// once more and clears the accumulator before it
+					// recolours the reel.
+					if (unk188[i] != 0.0f) {
+						switch (i) {
+						case 0:
+							SMSGetMSound()->startSoundActor(
+							    MSD_SE_OBJ_SLOT_INC_L, &mPosition, 0,
+							    nullptr, 0, 4);
+							break;
+						case 1:
+							SMSGetMSound()->startSoundActor(
+							    MSD_SE_OBJ_SLOT_INC_C, &mPosition, 0,
+							    nullptr, 0, 4);
+							break;
+						case 2:
+							SMSGetMSound()->startSoundActor(
+							    MSD_SE_OBJ_SLOT_INC_R, &mPosition, 0,
+							    nullptr, 0, 4);
+							break;
+						}
+						unk188[i] = 0.0f;
+					}
 					if (unk13C[i] < (f32)unk168) {
 						unk170[i].r = 255;
 						unk170[i].g = 255;
@@ -342,8 +365,13 @@ void TSlotDrum::moveObject()
 								continue;
 							if (unk138[j] != 0.0f)
 								return;
-							if ((unk13C[j] >= (f32)unk168
-							     && unk13C[j] > 360.0f))
+							// `bge` past the return: the ROM bails out on a
+							// reel still short of a full turn, not past one.
+							// TODO: the ROM leaves the second test unfused
+							// (`bge next; b epilogue`) where the `&&` fuses
+							// it; a guard plus a bare return is worse (99.2).
+							if (unk13C[j] >= (f32)unk168
+							    && unk13C[j] < 360.0f)
 								return;
 						}
 						MSBgm::startBGM(MSD_BGM_FANFARE_CASINO);
@@ -904,8 +932,11 @@ void TDonchou::calcRootMatrix()
 	if (unk144 != nullptr && unk144->unk194 && unk148->unk194)
 		unk13C = 1;
 	if (unk13C != 0) {
-		unk14C++;
-		if (unk14C > 100) {
+		// The curtain only counts down while nobody is talking, and it
+		// freezes Mario's stick for as long as it is still counting.
+		if (!SMSGetMarDirector()->isTalkModeNow())
+			unk14C++;
+		if (unk14C > 20) {
 			if (mMActor->checkCurAnm("donchou", ANM_TYPE_BCK)) {
 				if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 					unk138->remove();
@@ -919,6 +950,9 @@ void TDonchou::calcRootMatrix()
 				J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 				fc->setRate(0.5f * fc->getRate());
 			}
+		} else if (!SMSGetMarDirector()->isTalkModeNow()) {
+			gpMarioOriginal->mGamePad->onNeutralMarioKey();
+			gpMarioOriginal->mGamePad->mDisabledFrames = 5;
 		}
 	}
 }
