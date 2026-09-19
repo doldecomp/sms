@@ -1063,6 +1063,14 @@ BOOL TTinKoopa::receiveMessage(THitActor* sender, u32 message)
 // Instruction-exact apart from an r5/r6 swap; the frame is 0x60 against the
 // ROM's 0x70, which is the usual 16 bytes per theNerve() expansion beyond the
 // first (see docs/catalog/frame-gaps.md).
+//
+// TODO: this body is also the whole loss of TTinKoopa::receiveMessage and
+// TTinKoopaPartsBase::receiveMessage (both 0%, 60B and 64B). Retail `bl`s
+// hitParts from each; we inline it, because a plain method is inlined at depth
+// 1 up to 14 statements and this body is 9. Measured exactly: six extra
+// zero-codegen statements here land *both* callers at 100.0% and change
+// nothing else, so retail's hitParts is a 15-statement body and six statements
+// of it are missing from this reconstruction. Do not pad -- find them.
 void TTinKoopa::hitParts()
 {
 	if (mSpine->getCurrentNerve() != &TNerveTinKoopaBreak::theNerve()) {

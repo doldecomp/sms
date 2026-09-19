@@ -429,13 +429,17 @@ void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
 		return;
 	if (unk250 > getUnk16C()->hipdropRelease.get())
 		return;
-	// Same discarded direction as quake().
-	// TODO: the body is instruction-exact; the frame is 0x88 against retail's
-	// 0x98. A single uninitialised 16-byte aggregate declared here takes it to
-	// 100.0% with no instruction change, but the byte count is the only
-	// evidence for it, so per docs/catalog/frame-gaps.md it stays unwritten.
-	// The same 16 bytes are what keep retail's two receiveMessage callers from
-	// inlining hipdrop, which is where the rest of this unit's loss is.
+	// The direction is thrown away in the shipped build, as in quake().
+	//
+	// This body is byte-exact, but it is also the whole loss of
+	// TBathtub::receiveMessage (0%, 192B): retail `bl`s hipdrop from its two
+	// hip-drop arms and we inline it, because a plain method is inlined at
+	// depth 1 up to 14 statements and this body is exactly 14. Measured: one
+	// extra zero-codegen statement here takes receiveMessage from 0% to 95.2%
+	// and costs hipdrop nothing, so retail's hipdrop has a 15th statement.
+	// TODO: it is not the obvious one -- naming the searched TKoopa
+	// (`TKoopa* koopa = search(...); koopa->stagger(false);`, the shape quake()
+	// uses) does not count towards the budget and costs hipdrop an `mr`.
 	JGeometry::TVec3<f32> dir;
 	dir.sub(pos, getInitialPosition());
 	dir.y = 0.0f;
