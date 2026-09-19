@@ -412,6 +412,48 @@ Zwischenwerte zu verfolgen):
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach zwölfter Iterationsrunde (MapObjEx, MapObjGrass, PollutionPos)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,66 % (1.495.808 / 3.590.088) | +1.780 Bytes |
+| Funktionen matched | 66,87 % (8.612 / 12.881) | +4 |
+
+Vier neue 100-%-Matches über drei Dateien:
+
+- `MoveBG/MapObjEx.cpp`: `TMapObjNail::receiveMessage` (324 Bytes) und
+  `TJointCoin::control` (284 Bytes) — je `char trash[8]` am
+  Funktionsanfang, keine Struct-Locals.
+- `MoveBG/MapObjGrass.cpp`: `TMapObjGrassManager::perform` (568 Bytes,
+  `char trash[0x30]`, 48-Byte-Frame-Gap ohne Struct-Locals).
+- `Map/PollutionPos.cpp`: `TPollutionPos::isSame` (212 Bytes,
+  `char trash[0x20]`, 32-Byte-Frame-Gap ohne Struct-Locals).
+
+Fünf weitere Funktionen untersucht, alle nach dem etablierten
+Protokoll (Ziel: 100 % oder sofortiger Revert) als Nonmatching
+bestätigt:
+
+- `Strategic/Strategy.cpp::TStrategy::load` (99,93 % clean, 280 Bytes)
+  — `char trash[8]` nach `JSUMemoryInputStream stream2` erreicht keine
+  100 % (99,94 % best, nicht verifiziert als real).
+- `MoveBG/MapObjGrass.cpp::TMapObjGrassManager::initDrawNear`
+  (99,87 % clean, 588 Bytes) — `char trash[0x18]` nach `vec` erreicht
+  keine 100 %.
+- `MarioUtil/ModelUtil.cpp::
+  SMS_RideMoveByGroundActor` (99,82 % clean, 404 Bytes) —
+  `char trash[0x18]` nach `TMtx34f mtx` erreicht keine 100 %.
+- `Animal/Butterfly.cpp::TButterfloid::load` (99,70 % clean,
+  640 Bytes) — bereits mit Quellcode-Kommentar "Making these all
+  setters doesn't yield NEARLY enough stack frame padding for this to
+  match" als bekannt schwierig markiert (136-Byte-Frame-Gap), nicht
+  erneut versucht.
+- `GC2D/ScrnFader.cpp::TSMSFader::update` (99,66 % clean, 348 Bytes)
+  — 16-Byte-Frame-Gap plus f1/f2-Register-Rotationsmuster (vermutlich
+  aus inlinetem `updateRequest()`/Farbzuweisung); `char trash[0x10]`
+  erreicht keine 100 %.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -666,6 +708,16 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `JSystem/JAudio/JAInterface/JAIGlobalParameter.cpp`:
   `setParamSoundOutputMode` — **100 %** (140 Bytes, `char trash[8]`).
+
+- `MoveBG/MapObjEx.cpp`: `TMapObjNail::receiveMessage` (324 Bytes) und
+  `TJointCoin::control` (284 Bytes) — je **100 %** (`char trash[8]`).
+
+- `MoveBG/MapObjGrass.cpp`: `TMapObjGrassManager::perform` — **100 %**
+  (568 Bytes, `char trash[0x30]`). `initDrawNear` bleibt Nonmatching
+  (99,87 %).
+
+- `Map/PollutionPos.cpp`: `TPollutionPos::isSame` — **100 %**
+  (212 Bytes, `char trash[0x20]`).
 
 ## Nächster GMSJ01-Kandidat
 
