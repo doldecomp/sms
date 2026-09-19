@@ -845,11 +845,25 @@ void TTinKoopa::reset()
 }
 
 // Instruction-exact; the frame is 0x70 against the ROM's 0x88.
+static inline TMario* TinKoopaResetMarioRef()
+{
+	return gpMarioOriginal;
+}
+
+static inline TMario* TinKoopaResetMario()
+{
+	TMario* mario = TinKoopaResetMarioRef();
+	return mario;
+}
+
 void TTinKoopa::resetTinKoopa()
 {
-	if (!mKillerManager)
-		mKillerManager = (TCoasterKillerManager*)JDrama::TNameRefGen::search<
-		    TCoasterKillerManager>("コースターキラーマネージャー");
+	if (!mKillerManager) {
+		TCoasterKillerManager* manager
+		    = (TCoasterKillerManager*)JDrama::TNameRefGen::search<
+		        TCoasterKillerManager>("コースターキラーマネージャー");
+		mKillerManager = manager;
+	}
 
 	// TODO: the retail object reads mKillerManager->unk38 here and throws the
 	// value away, so something the original wrote between the search and the
@@ -860,7 +874,7 @@ void TTinKoopa::resetTinKoopa()
 	// loses exactly those two instructions.
 	mKillerManager->getActiveObjNum();
 
-	mTruckMActor = gpMarioOriginal->mKoopaRail;
+	mTruckMActor = TinKoopaResetMario()->mKoopaRail;
 
 	mDamageStage = 0;
 	unk154       = 0;
