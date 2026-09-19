@@ -2085,22 +2085,35 @@ bool TBossTelesa::checkAllItemDead()
 	return true;
 }
 
+// The ROM calls this out of line at all three sites, all at depth 1, so its
+// source cost fifteen statements; the loop alone is twelve. The three names
+// below are the missing three: each is an intermediate the function computes
+// anyway, so all three are zero codegen (the body stays instruction-exact
+// against the ROM, only the 0x10 frame residue is left), and together they
+// take forceHide to 99.9% and the Die and PrepareSlot nerves from 90.0/86.5
+// to 98.7/98.4. `slot` is the address the ROM binds in r30 and reloads
+// through at every use; `zero` is the callee-saved f31 the ROM holds the
+// literal in across the loop.
 void TBossTelesa::forceAllItemKill()
 {
+	f32 zero = 0.0f;
+
 	for (int i = 0; i < mSlotItemNum; ++i) {
-		if (mSlotItems[i]->mHolder != nullptr) {
-			SMS_SendMessageToMario(mSlotItems[i], HIT_MESSAGE_UNK8);
-			mSlotItems[i]->mHolder = nullptr;
+		TLiveActor** slot = &mSlotItems[i];
+
+		THitActor* holder = (*slot)->mHolder;
+		if (holder != nullptr) {
+			SMS_SendMessageToMario(*slot, HIT_MESSAGE_UNK8);
+			(*slot)->mHolder = nullptr;
 		}
 
-		mSlotItems[i]->mPosition.set(0.0f, 0.0f, 0.0f);
-		mSlotItems[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
+		(*slot)->mPosition.set(zero, zero, zero);
+		(*slot)->onHitFlag(HIT_FLAG_NO_COLLISION);
 
-		if (!mSlotItems[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
-			mSlotItems[i]->kill();
+		if (!(*slot)->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			(*slot)->kill();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
-			                             &mSlotItems[i]->mPosition, 0,
-			                             nullptr);
+			                             &(*slot)->mPosition, 0, nullptr);
 		}
 	}
 }
