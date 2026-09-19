@@ -82,6 +82,42 @@ Sechs neue 100-%-Matches: `TMapModel::initUnderpass`,
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach fünfter Iterationsrunde (JALModSe: appendGrpMember, append)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,56 % (1.492.056 / 3.590.088) | +2.204 Bytes |
+| Funktionen matched | 66,75 % (8.599 / 12.881) | +2 |
+
+Zwei neue 100-%-Matches in `JSystem/JAudio/JALibrary/JALModSe.cpp`:
+`JALSystem::appendGrpMember` (`char trash[8]` am Funktionsanfang) und
+`JALSystem::append` (`char trash[0x68]` nach dem letzten Struct-Local
+`set3`, **plus echter Bugfix**: der `ModType_JALSeModPitFunk`-Case
+übergab `&set2` statt `&set3` — Disassembly-Beweis: `PitFunk` gruppiert
+sich beim Stack-Offset 0xd8 exakt mit `PitDist`/`PitFGrp`/`PitDGrp`
+(alle nutzen `set3`), nicht mit der 0xe0-Gruppe (`Vol*`/`Eff*`, nutzt
+`set2`) — passend zum "Pit"-Namensmuster der anderen drei Fälle).
+
+**Wichtiger Fund zum Matching-Flip-Risiko**: Beide Funktionen matchen
+einzeln zu 100 %, und die komplette Unit zeigt in `objdiff-cli` 100 %
+für **alle** Sections (`.text`/`.data`/`.bss`/`.sbss`/`.sdata2`/`.ctors`).
+Trotzdem bricht ein `Matching`-Flip in `configure.py` die DOL-SHA1
+(bestätigt per `dtk shasum`). Root-Cause-Analyse per Byte-Diff
+`build/GMSJ01/mario.dol` gegen `orig/GMSJ01/sys/main.dol`: 6.190
+abweichende Bytes, erster bei Datei-Offset `0x445df` (liegt exakt im
+`.text`-Bereich dieser Unit, Adresse ~`0x800476a0`), letzter bei
+`0x3a7c30` (liegt in `.data`) — die Abweichung zieht sich vom Ort dieser
+Unit bis ans Ende von `.text`, durch `.rodata` und in `.data` hinein.
+Das ist ein echter Downstream-Adress-Shift/Layout-Fehler, keine bloße
+anonyme Daten-Restgröße wie bisher bei `WoodBarrel` vermutet — aber die
+Konsequenz ist dieselbe: Unit bleibt `NonMatching` in `configure.py`,
+nur der Quellcode wird committet. **Erkenntnis für künftige Flips**:
+100 % in allen von `objdiff-cli` gelisteten Sections ist keine
+hinreichende Bedingung für einen sicheren Matching-Flip; nur ein
+tatsächlicher `ninja && dtk shasum`-Durchlauf ist beweiskräftig.
+
+Die Referenz-DOL bleibt `OK`.
+
 ### Bereiche
 
 | Bereich | Fuzzy | Code matched | Units linked |
@@ -306,11 +342,17 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `char trash[8]`) und `load` (356 Bytes, `char trash[0x20]`) — je **100 %**.
   `cleanedAll` bleibt bei 96,43 % (siehe Nonmatching-Liste).
 
+- `JSystem/JAudio/JALibrary/JALModSe.cpp`: `JALSystem::appendGrpMember`
+  (720 Bytes, `char trash[8]`) und `JALSystem::append` (1.484 Bytes,
+  `char trash[0x68]` nach `set3` **plus** Bugfix `&set2`→`&set3` im
+  `PitFunk`-Case) — je **100 %** einzeln. Unit bleibt `NonMatching` in
+  `configure.py`: Matching-Flip bricht DOL-SHA1 trotz 100 % in allen
+  objdiff-Sections (bestätigter Adress-Shift-Layoutfehler, siehe oben).
+
 ## Nächster GMSJ01-Kandidat
 
 `ItemManager::newAndRegisterCoin` (99,59 %) und `PollutionManager::
-cleanedAll` (96,43 %) offen; größere unbearbeitete Units laut Report:
-`JSystem/JAudio/JALibrary/JALModSe.cpp` (82,88 %, 2.204 Bytes offen).
+cleanedAll` (96,43 %) offen.
 `JSystem/J3D/J3DGraphAnimator/J3DModel.cpp::entryModelData` (1248 Bytes,
 99,76 %) — Aufteilen des inline `&mShapePackets[shape->getIndex()]`-Ausdrucks
 in einen expliziten `J3DShapePacket*`-Local behob den ersten
