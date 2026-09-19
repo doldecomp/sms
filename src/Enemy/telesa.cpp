@@ -109,6 +109,7 @@ TSmallEnemy* TTelesaManager::createEnemyInstance() { return new TTelesa; }
 
 void TTelesaManager::createEnemies(int param_1)
 {
+	char trash[8];
 	TEnemyManager::createEnemies(param_1);
 	int bodyMatIdx = getObj(0)
 	                     ->getMActor()
@@ -144,6 +145,7 @@ void TTelesaManager::createModelData()
 
 void TTelesaManager::telesaForceKill()
 {
+	char trash[0x10];
 	bool anyKilled = false;
 	for (int i = 0; i < mObjNum; ++i) {
 		TTelesa* telesa = (TTelesa*)unk18[i];
@@ -213,6 +215,7 @@ TTelesa::TTelesa(const char* name)
 
 void TTelesa::load(JSUMemoryInputStream& stream)
 {
+	char trash[8];
 	TSmallEnemy::load(stream);
 	reset();
 	mDampenedGroundHeight = mPosition.y;
@@ -349,6 +352,7 @@ void TTelesa::setBehavior()
 
 void TTelesa::attackToMario()
 {
+	char trash[8];
 	if (checkLiveFlag(LIVE_FLAG_HIDDEN)
 	    || !(mPosition.y + mAttackHeight - 50.0f < SMS_GetMarioPos().y)) {
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
@@ -578,6 +582,7 @@ void TTelesa::scalingChangeActor()
 
 void TTelesa::changeOut()
 {
+	char trash[8];
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -883,6 +888,7 @@ TSeeTelesa::TSeeTelesa(const char* name)
 
 void TSeeTelesa::load(JSUMemoryInputStream& stream)
 {
+	char trash[8];
 	TTelesa::load(stream);
 	setTypeCanSee();
 }
@@ -894,6 +900,7 @@ TLoopTelesa::TLoopTelesa(const char* name)
 
 void TLoopTelesa::load(JSUMemoryInputStream& stream)
 {
+	char trash[8];
 	TTelesa::load(stream);
 	setTypeLoop();
 }

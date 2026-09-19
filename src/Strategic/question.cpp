@@ -91,6 +91,7 @@ void TQuestionManager::draw() const
 
 void TQuestionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[8];
 	if ((cue & CUE_CALC_VIEW) != 0) {
 		if (gpSilhouetteManager->isUnk48Positive()) {
 			unk20->reset();

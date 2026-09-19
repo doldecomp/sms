@@ -128,6 +128,7 @@ BOOL TMario::waitingCommonEvents()
 
 void TMario::stopCommon(int anim_id, int status_on_end)
 {
+	char trash[8];
 	waitProcess();
 	setAnimation(anim_id, 1.0f);
 	if (onYoshi() && mYoshi->mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {

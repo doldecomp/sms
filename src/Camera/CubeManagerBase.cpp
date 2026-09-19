@@ -47,6 +47,7 @@ void TCubeManagerBase::initializer()
 
 void TCubeManagerBase::load(JSUMemoryInputStream& stream)
 {
+	char trash[8];
 	JDrama::TNameRef::load(stream);
 	JDrama::TNameRef* root
 	    = JDrama::TNameRefGen::getInstance()->getRootNameRef();
@@ -84,6 +85,7 @@ int TCubeManagerBase::getInCubeNo(const Vec& v) const
 
 bool TCubeManagerBase::isInCube(const Vec& v, s32 i) const
 {
+	char trash[8];
 	bool result = false;
 	if (i >= 0 && i < unk10) {
 		TCubeGeneralInfo& info = (*unk14)[i];

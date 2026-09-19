@@ -584,6 +584,7 @@ void MSound::initSound()
 
 void MSound::pauseOn(bool param_1)
 {
+	char trash[0x10];
 	if (param_1)
 		if (checkUnkA8(2))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_ON, 0,
@@ -636,6 +637,7 @@ void MSound::pauseOff(u8 param_1)
 
 void MSound::demoModeIn(u16 param_1, bool param_2)
 {
+	char trash[8];
 	for (u8 cat = 0; cat < 16; ++cat) {
 		if (param_1 >> cat & 1)
 			if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
@@ -663,6 +665,7 @@ void MSound::demoModeOut(bool param_1)
 
 void MSound::talkModeIn(bool param_1)
 {
+	char trash[0x18];
 	if (param_1 && checkUnkA8(2)) {
 		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_IN, 0,
 		                                             nullptr, 0);
@@ -792,6 +795,7 @@ void MSound::setSeExtParameter(JAISound* sound)
 
 void MSound::playTimer(u32 time)
 {
+	char trash[8];
 	if (checkUnkA8(1)) {
 		MSoundSESystem::MSoundSE::startSoundActorInner(
 		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);

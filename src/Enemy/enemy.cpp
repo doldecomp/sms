@@ -623,6 +623,7 @@ BOOL TSpineEnemy::checkCurAnmEnd(int type) const
 
 void TSpineEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[8];
 	TEnemyManager* mgr = (TEnemyManager*)getManager();
 
 	if (mgr != nullptr) {

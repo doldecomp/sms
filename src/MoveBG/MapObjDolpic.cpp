@@ -94,6 +94,7 @@ void TMonumentShine::hitByWater(THitActor* actor)
 
 BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[8];
 	if (sender->isActorType(0x01000001)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
@@ -354,6 +355,7 @@ void TBellDolpic::control()
 
 void TDptMonteFence::touchPlayer(THitActor* actor)
 {
+	char trash[8];
 	if (SMS_IsMarioStatusThrownDown()) {
 		SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -388,6 +390,7 @@ void TMapObjSmoke::load(JSUMemoryInputStream& in)
 
 void TMareGate::control()
 {
+	char trash[8];
 	TMapObjBase::control();
 
 	MSound* sound = SMSGetMSound();

@@ -11,6 +11,7 @@
 
 void CPolarSubCamera::calcSecureViewTarget_(s16 angle, f32* outX, f32* outZ)
 {
+	char trash[8];
 	s16 base = *gpMarioAngleY - 0x8000;
 	s16 diff = angle - base;
 

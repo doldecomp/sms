@@ -164,6 +164,7 @@ BOOL TRailMapObj::calcRecycle()
 
 void TRailMapObj::resetPosition()
 {
+	char trash[0x10];
 	mPosition = mInitialPosition;
 	mRotation = mInitialRotation;
 	unk148    = 0;
@@ -255,6 +256,7 @@ TNormalLift::TNormalLift(const char* name)
 
 void TNormalLift::resetPosition()
 {
+	char trash[0x10];
 	TRailMapObj::resetPosition();
 	unk158 = 1;
 }

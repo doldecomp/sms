@@ -1208,6 +1208,7 @@ void TBossGesso::moveObject()
 
 void TBossGesso::reset()
 {
+	char trash[8];
 	for (int i = 0; i < TENTACLE_NUM; ++i) {
 		mTentacles[i]->resetAllNodes(mPosition);
 		mTentacles[i]->getFirstNode()->onUnk24();

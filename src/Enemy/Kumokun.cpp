@@ -614,6 +614,7 @@ void TKumokun::pushNextAnm(const char* name, bool start)
 
 void TKumokun::changeBck(const char* name)
 {
+	char trash[8];
 	mMActor->setBck(name);
 	setCurAnmSound();
 

@@ -893,6 +893,7 @@ BOOL TMario::boardJumping()
 
 BOOL TMario::rocketCheck()
 {
+	char trash[0x20];
 	bool bVar2 = true;
 	if (mStatus == MARIO_STATUS_ROCKET)
 		bVar2 = false;

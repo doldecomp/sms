@@ -131,6 +131,7 @@ void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TSunShine::loadAfter()
 {
+	char trash[8];
 	JDrama::TViewObj::loadAfter();
 	if (gpMarDirector->getCurrentMap() == 6) {
 		unk14.r = 0x48;

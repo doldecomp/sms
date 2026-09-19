@@ -94,6 +94,7 @@ void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TSky::load(JSUMemoryInputStream& stream)
 {
+	char trash[0x18];
 	JDrama::TActor::load(stream);
 	unk44 = SMS_MakeMActorWithAnmData(
 	    "/scene/map/map/sky.bmd", gpMap->getModelManager()->getMActorAnmData(),

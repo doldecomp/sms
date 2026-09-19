@@ -35,6 +35,7 @@ bool TMario::getNozzle(THitActor* sender, TWaterGun::TNozzleType type)
 
 void TMario::getGesso(THitActor* param_1)
 {
+	char trash[0x28];
 	if (mStatus != 0x10000) {
 		mFaceAngle.y    = DEG2SHORTANGLE(param_1->mRotation.y);
 		mModelFaceAngle = mFaceAngle.y;

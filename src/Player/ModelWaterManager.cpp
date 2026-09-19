@@ -872,6 +872,7 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 
 void TModelWaterManager::calcVMAll(MtxPtr param_1)
 {
+	char trash[0x10];
 	for (int i = 0; i < mParticleCount; ++i) {
 		if ((mParticleFlagSOA[i] & 0xf) != 2)
 			continue;

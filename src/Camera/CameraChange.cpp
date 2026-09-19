@@ -425,6 +425,7 @@ void CPolarSubCamera::changeCamModeSpecifyFrame_(int mode, int tween_frames)
 void CPolarSubCamera::changeCamModeSpecifyCamMapTool_(
     const TCameraMapTool* tool)
 {
+	char trash[8];
 	int newMode = tool->getCameraMode();
 	if (mMode != newMode || unk70 != tool) {
 		unk74 = unk70;
@@ -446,6 +447,7 @@ void CPolarSubCamera::changeCamModeSpecifyCamMapToolAndFrame_(
 
 void CPolarSubCamera::execFrontRotate_()
 {
+	char trash[8];
 	(void)0;
 	(void)0;
 	(void)0;

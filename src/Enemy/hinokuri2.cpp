@@ -676,6 +676,7 @@ void THinokuri2::generateEnemy()
 
 void THinokuri2::updateAnmSound()
 {
+	char trash[8];
 	TSpineEnemy::updateAnmSound();
 	if (unk158 > 0)
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_HINO_SEED_LQ_LEV, &mPosition,

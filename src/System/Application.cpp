@@ -160,6 +160,7 @@ void SMSLoadArchiveARAM(TARAMBlock* out_block, const char* path)
 
 void SMSMountAramArchive(JKRMemArchive* archive, TARAMBlock& block)
 {
+	char trash[0x10];
 	if (block.mIsCompressed) {
 		JKRAram::aramToMainRam(
 		    block.mBlock, (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
@@ -174,6 +175,7 @@ void SMSMountAramArchive(JKRMemArchive* archive, TARAMBlock& block)
 
 JKRArchive* SMSSwitch2DArchive(const char* arc_path, TARAMBlock& block)
 {
+	char trash[0x10];
 	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume(arc_path);
 	arch->unmountFixed();
 	SMSMountAramArchive(arch, block);
