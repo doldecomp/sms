@@ -158,7 +158,7 @@ TMovieDirector::TMovieDirector()
     , unk24(nullptr)
     , unk30(0)
     , unk34(nullptr)
-    , unk38(nullptr)
+    , mEndingTimer(0)
 {
 }
 
@@ -372,6 +372,9 @@ int TMovieDirector::direct()
 		unk30.on(0x1);
 
 		gpMSound->initSound();
+		if (gpApplication.getMovie() == 16)
+			unk34->startFadeIn();
+
 		if (gpApplication.getMovie() == 9) {
 			gpApplication.mFader->startWipe(12, 0.0f, 0.0f);
 			unk18 = false;
@@ -400,13 +403,13 @@ int TMovieDirector::direct()
 
 	if (unk1C == STATE_SAVE_TO_TITLE || unk1C == STATE_SAVE_AND_CONTINUE) {
 		JDrama::TGraphics graphics;
-		graphics.unk2 = 1;
+		graphics.unk0 = 1;
 		unk10->testPerform(CUE_MOVE, &graphics);
-		graphics.unk2 = 0;
+		graphics.unk0 = 0;
 		unk10->testPerform(CUE_MOVE, &graphics);
-		graphics.unk2 = 0;
+		graphics.unk0 = 0;
 		unk10->testPerform(CUE_MOVE, &graphics);
-		graphics.unk2 = 0;
+		graphics.unk0 = 0;
 		unk10->testPerform(CUE_MOVE | CUE_CALC_ANIM, &graphics);
 		unk14->testPerform(CUE_DRAW, &graphics);
 	} else {
@@ -435,6 +438,15 @@ int TMovieDirector::direct()
 		} else if (THPPlayerGetState() == 3) {
 			desiredAppState = decideNextMode(&nextState);
 		}
+
+		if (mEndingTimer < 300)
+			mEndingTimer++;
+
+		if (gpApplication.getMovie() == 17 && mEndingTimer == 30)
+			unk34->startFadeIn();
+
+		if (gpApplication.getMovie() == 17 && mEndingTimer == 220)
+			unk34->mFadeState = TEndingString::ENDING_FADE_OUT;
 		break;
 
 	case STATE_FADE_OUT:

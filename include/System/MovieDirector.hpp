@@ -46,8 +46,9 @@ public:
 	/* 0x30 */ JDrama::TFlagT<u16> unk30;
 	/* 0x34 */ TEndingString* unk34;
 	// The ROM's `new` size is 0x3c and the constructor zeroes 0x38 next to
-	// 0x34, so one more pointer-sized member lives here.
-	/* 0x38 */ void* unk38;
+	// 0x34. `direct()` counts it up to 300 while a movie plays and keys the
+	// ending-string fade on it, so it is an unsigned frame counter.
+	/* 0x38 */ u32 mEndingTimer;
 };
 
 #endif
