@@ -198,7 +198,7 @@ void TMapObjGeneral::sinking()
 	}
 
 	if (mPosition.y + mMapObjData->mHit->unkC[2].unk4 < unk144) {
-		if (getPosition().x != mInitialPosition.x
+		if (mPosition.x != getInitialPosition().x
 		    || mPosition.z != mInitialPosition.z) {
 			makeObjDefault();
 			makeObjAppeared();
@@ -235,7 +235,8 @@ void TMapObjGeneral::appearing()
 		if (mScaling.x < mInitialScaling.x)
 			return;
 
-		mScaling.set(mInitialScaling);
+		// TODO: every instruction matches; the frame is 8 bytes short.
+		mScaling.set(getInitialScaling());
 	}
 
 uuuh:
