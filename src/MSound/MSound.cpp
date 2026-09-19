@@ -925,8 +925,21 @@ void MSound::playTimer(u32 time)
 	}
 }
 
-// TODO: every instruction matches; the remaining residue is a 0x30-byte frame
-// gap (retail 0xa0, ours 0x70) plus the callee-saved rotation it drags along.
+// TODO: every instruction matches; the residue is a 0x30-byte frame gap
+// (retail 0xa0, ours 0x70) plus the r28/r29/r30 rotation it drags along.
+// Measured: the two JAIActor named locals are 16 bytes each and sit directly
+// above the inline temp pool in both builds (retail 0x58 and 0x68, ours 0x30
+// and 0x40), so the gap is entirely a *dead low region*: retail's pool is
+// 0xc..0x58 = 76 bytes, ours 0xc..0x30 = 36, and the remaining 8 is the slack
+// left above the named block (retail 12, ours 4). Nothing in the body touches
+// either region, so the missing 40 bytes are uninitialised non-trivial locals
+// of an inlined callee, not a spelling of this function.
+//
+// This is a whole-TU class, not a startMarioVoice one: every instruction of
+// MSound::startSoundActorSpecial (0x78/0x70), startBeeSe (0x50/0x30),
+// talkModeOut (0x40/0x38), pauseOff (0x50/0x38) and this function matches and
+// only the frame differs, i.e. one shared inlined callee in MSound.hpp /
+// MSoundSE.hpp is missing a dead local. Research item, not a unit item.
 u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 {
 	if (((param_3 & 0x1) ? true : false) == 1)
