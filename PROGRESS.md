@@ -2806,6 +2806,49 @@ Als gut vorbereiteter Kandidat für eine künftige Session mit einer
 Idee zur `fp_contract`-Umgehung (z. B. `volatile`-Zwischenspeicher
 oder ein anderer Ausdrucksaufbau) vorgemerkt.
 
+### Nach vierzigster Iterationsrunde (Grenzbefund: 200–400-Byte-Klasse resistent gegen `trash[N]`)
+
+Erweiterter Scan mit gelockertem Größenfenster (200–400 Bytes,
+50–95 % Match, bisher wegen zu hoher Größe/`ndiff` nicht erfasst)
+fand 47 neue Kandidaten, davon 29 mit sauber additivem Frame-Gap
+(≤ 0x60 Bytes, `ndiff` ≤ 100). Automatisierter Batch-Versuch (identisches
+`try_fix2`-Protokoll wie Runde 37): **0 von 29 erreichten Match**
+(alle Änderungen automatisch zurückgesetzt, keine unkommitteten
+Reste). Manuelle Tiefenprüfung an drei Beispielen (`TGessoPolluteObj::
+rebirth`, `TPictureTelesa::touchActor`) zeigt ein konsistentes Muster:
+das Schließen des Frame-Gaps allein genügt nicht — zusätzlich
+unterscheidet sich die Instruktions-REIHENFOLGE für unabhängige,
+kommutative Lade-/Rechenoperationen (z. B. `lfs f0, 0x14(r30)` vor
+vs. nach `fsubs f2, f3, f2`; Argumentreihenfolge bei `TGesso::
+mPollRange * 32.0f * 0.5f`). Das ist dieselbe Kategorie wie der
+bereits dokumentierte `ShadowUtil::calc`-Fund (Runde 38): der
+Register-/Instruktions-Scheduler trifft bei größeren, komplexeren
+Funktionskörpern andere Reihenfolge-Entscheidungen als Retail, auch
+nachdem die Stackframe-Größe exakt übereinstimmt.
+
+**Etablierte Grenze für die `char trash[N]`-Methode**: zuverlässig
+erfolgreich nur bei kleinen (< 200 Byte), strukturell einfachen
+Funktionen mit additivem Frame-Gap. Ab ~200 Byte / mehreren
+unabhängigen Ausdrücken steigt die Wahrscheinlichkeit einer
+zusätzlichen, nicht durch Padding behebbaren Scheduling-Differenz
+drastisch. Bestätigt durch: 0/29 in dieser Runde (200–400 B) vs.
+durchgehend hohe Erfolgsquoten in Runde 37 bei kleineren Kandidaten
+(99 % zu Beginn, > 50 % bis Batch 4).
+
+Keine Quelltextänderung in dieser Runde (alle Experimente sauber
+automatisiert zurückgesetzt, 0 Commits, DOL SHA1 `OK`, `matched_
+functions` unverändert bei 8955). Session-Gesamtstand bleibt bei
+**368 tatsächlich verifizierte Funktionen** in 43 Commits.
+
+**Empfehlung für künftige Sessions**: Die 200–400-Byte-Klasse braucht
+entweder (a) gezielte, funktionsweise Ausdrucks-Umstrukturierung
+(Argument-Reihenfolge, Zwischenvariablen-Reihenfolge) mit
+Trial-and-Error pro Funktion, oder (b) eine neue Automatisierung, die
+nicht nur `trash[N]` einfügt, sondern auch die Reihenfolge
+unabhängiger Lade-Anweisungen systematisch permutiert und gegen
+Retail vergleicht — deutlich aufwändiger als das bisherige Pattern
+und nicht in dieser Runde verfolgt.
+
 
 
 
