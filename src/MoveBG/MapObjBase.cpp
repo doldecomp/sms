@@ -189,7 +189,25 @@ bool TMapObjBase::animIsFinished() const
 		return false;
 }
 
-void TMapObjBase::stopAnim() { }
+void TMapObjBase::stopAnim()
+{
+	if (unkFE == 0xffff)
+		return;
+
+	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
+	if (!anim || anim->unk0 == 0)
+		return;
+
+	const TMapObjAnimData* data = &anim->unk4[unkFE];
+	if (!data->unk4)
+		return;
+
+	u32 uVar6 = data->unk8;
+	mMActor->getFrameCtrl(uVar6)->setRate(0.0f);
+	mMActor->getFrameCtrl(uVar6)->setFrame(0.0f);
+	mMActor->getUnk28(uVar6)->unk0 = 0xffffffff;
+	unkFE                          = 0xffff;
+}
 
 void TMapObjBase::startControlAnim(u16 param_1)
 {
@@ -216,22 +234,12 @@ void TMapObjBase::startAnim(u16 param_1)
 			mMActor = mMActorKeeper->getMActor(anim->unk4[0].unk0);
 	}
 
-	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-	if (!anim || anim->unk0 <= param_1)
+	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 <= param_1)
 		return;
 
-	const TMapObjAnimData* data = &anim->unk4[param_1];
+	const TMapObjAnimData* data = &mMapObjData->mAnim->unk4[param_1];
 	if (data->unk8 == 0) {
-		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
-			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
-			if (d2->unk4 != nullptr) {
-				int type = d2->unk8;
-				mMActor->getFrameCtrl(type)->setRate(0.0f);
-				mMActor->getFrameCtrl(type)->setFrame(0.0f);
-				mMActor->getUnk28(type)->unk0 = 0xffffffff;
-				unkFE                         = 0xffff;
-			}
-		}
+		stopAnim();
 		stopAnmSound();
 		if (unkFE != param_1) {
 			unkFE = param_1;
@@ -276,14 +284,7 @@ void TMapObjBase::makeObjDead()
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
 
-	if (unkFE != 0xffff && mMapObjData->mAnim && mMapObjData->mAnim->unk0 > 0
-	    && mMapObjData->mAnim->unk4[unkFE].unk4) {
-		u32 uVar6 = mMapObjData->mAnim->unk4[unkFE].unk8;
-		mMActor->getFrameCtrl(uVar6)->setRate(0.0f);
-		mMActor->getFrameCtrl(uVar6)->setFrame(0.0f);
-		mMActor->getUnk28(uVar6)->unk0 = 0xffffffff;
-		unkFE                          = 0xffff;
-	}
+	stopAnim();
 
 	unk100 = 0xffff;
 	onHitFlag(HIT_FLAG_NO_COLLISION);
