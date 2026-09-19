@@ -183,12 +183,14 @@ void TBiancoWatermill::turn(const JGeometry::TVec3<f32>& point,
 
 u32 TBiancoWatermill::touchWater(THitActor* water) { return 0; }
 
+static inline MSound* BiancoWatermillGetMSound() { return gpMSound; }
+
 void TBiancoWatermill::control()
 {
 	mRotation.z -= mRotSpeed;
-	gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_BI_BIGMILL, &mPosition,
-	                                  nullptr, fabsf(mRotSpeed), 0, 0,
-	                                  &mSoundHandle, 0, 4);
+	BiancoWatermillGetMSound()->startSoundActorWithInfo(
+	    MSD_SE_OBJ_BI_BIGMILL, &mPosition, nullptr, fabsf(mRotSpeed), 0, 0,
+	    &mSoundHandle, 0, 4);
 }
 
 void TBiancoWatermill::initMapObj()
@@ -253,9 +255,11 @@ u32 TBiancoWatermillVertical::touchWater(THitActor* water)
 void TBiancoWatermillVertical::setGroundCollision()
 {
 	if (mNeedGroundUpdate || mColCount != 0) {
-		MtxPtr mtx = getModel()->getAnmMtx(0);
-		if (getMapCollisionManager()->getUnk8() != nullptr)
-			getMapCollisionManager()->getUnk8()->moveMtx(mtx);
+		J3DModel* model = getModel();
+		MtxPtr mtx = model->getAnmMtx(0);
+		TMapCollisionManager* manager = getMapCollisionManager();
+		if (manager->getUnk8() != nullptr)
+			manager->getUnk8()->moveMtx(mtx);
 		mNeedGroundUpdate = false;
 	}
 }
