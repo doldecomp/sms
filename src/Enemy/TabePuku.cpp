@@ -416,7 +416,7 @@ bool TTabePuku::isMissMario() const
 	    > getSaveParams()->getSLGiveUpHeight())
 		return true;
 
-	f32 giveUpLength = getSaveParams()->getSLGiveUpLength();
+	f32 giveUpLength = getSaveParams()->mSLGiveUpLength.get();
 	if (TabePukuLength(unk104.getPoint() - mPosition) > giveUpLength)
 		return true;
 
@@ -491,7 +491,7 @@ bool TTabePuku::doDive()
 {
 	swimTo(JGeometry::TVec3<f32>(0.0f, mGroundHeight - mPosition.y, 0.0f));
 
-	if (mPosition.y - mDiveStartY < -getSaveParams()->getApartHeight()
+	if (mPosition.y - mDiveStartY < -getSaveParams()->mApartHeight.get()
 	    || mPosition.y - mGroundHeight < 200.0f || !isAirborne())
 		return true;
 
@@ -629,7 +629,7 @@ DEFINE_NERVE(TNerveTabePukuGraphWander, TLiveActor)
 		puku->getTracer()->reset();
 		puku->goToShortestNextGraphNode();
 		puku->setBckAnm(TABEPUKU_ANM_SWIM);
-		puku->mMarchSpeed = puku->getSaveParams()->getMarchSpeed();
+		puku->mMarchSpeed = puku->getSaveParams()->mMarchSpeed.value;
 	}
 
 	if (puku->isReachedToGoal())
@@ -718,7 +718,7 @@ DEFINE_NERVE(TNerveTabePukuAttack, TLiveActor)
 	if (spine->getTime() == 0) {
 		puku->setBckAnm(TABEPUKU_ANM_CHASE);
 		puku->setGoalPathMario();
-		puku->mMarchSpeed = puku->getSaveParams()->getAttackSpeed();
+		puku->mMarchSpeed = puku->getSaveParams()->mAttackSpeed.value;
 	}
 
 	if (puku->isMissMario() || puku->mTouchedWall) {
