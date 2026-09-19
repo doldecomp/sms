@@ -1193,10 +1193,12 @@ public:
 	void animSound();
 	void soundMovement();
 	void startVoiceYoshi(u32);
+#pragma dont_inline on
 	bool checkStatusType(s32 flag) const
 	{
 		return mStatus & flag ? true : false;
 	}
+#pragma dont_inline off
 
 	// fabricated
 	f32 getIntendedMag() const { return mIntendedMag; }
