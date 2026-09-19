@@ -97,6 +97,7 @@ public:
 	/* 0x290 */ int unk290;
 	/* 0x294 */ int unk294;
 	/* 0x298 */ u8 unk298;
+	/* 0x299 */ u8 unk299;
 	/* 0x29A */ u8 unk29A;
 	/* 0x29C */ MActor* unk29C;
 	/* 0x2A0 */ u32 unk2A0;
