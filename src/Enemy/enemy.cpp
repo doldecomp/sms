@@ -422,14 +422,14 @@ void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 
 void TSpineEnemy::updateStayCount(f32) { }
 
-bool TSpineEnemy::turnToCurPathNode(f32 param_1)
+BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 {
 	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
 	tmp -= mPosition;
 
 	f32 rot = MsAngleDiff(MsGetRotFromZaxisY(tmp), mRotation.y);
 
-	bool uVar2 = false;
+	BOOL uVar2 = false;
 	if (rot > 0.0f) {
 		if (rot < param_1) {
 			uVar2 = true;

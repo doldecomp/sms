@@ -79,6 +79,13 @@ public:
 
 class TBossPakkun : public TSpineEnemy {
 public:
+	enum {
+		WEAK_POINT_NONE  = 0,
+		WEAK_POINT_NAVEL = 1,
+		WEAK_POINT_MOUTH = 2,
+		WEAK_POINT_FLY   = 3,
+	};
+
 	TBossPakkun(const char* name = "ボスパックン");
 
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -120,7 +127,7 @@ public:
 	/* 0x160 */ TBPTornado* mTornado;
 	/* 0x164 */ TBPHeadHit* mHeadHit;
 	/* 0x168 */ TBPNavel* mNavel;
-	/* 0x16C */ s8 unk16C;
+	/* 0x16C */ s8 mWeakPoint;
 	/* 0x170 */ s32 unk170;
 	/* 0x174 */ s32 unk174;
 	/* 0x178 */ s32 unk178;
