@@ -492,12 +492,12 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 				MTXConcat(J3DSys::mCurrentMtx, gunMtx, J3DSys::mCurrentMtx);
 				return 1;
 			}
-		} else if (gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
-		           || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
-		           || gpMarioForCallBack->mAnimationId
-		                      == TMario::ANIM_RIDE_SHELL
-		                  && !gpMarioForCallBack->checkFlag(
-		                      MARIO_FLAG_FLUDD_EMITTING)) {
+		}
+
+		if ((gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
+		     || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
+		     || gpMarioForCallBack->mAnimationId == TMario::ANIM_RIDE_SHELL)
+		    && !gpMarioForCallBack->checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 
 			// Ah, i love storing floats, casting them to s16
 			// and then transforming them to floats again...
