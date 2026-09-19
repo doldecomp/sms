@@ -833,6 +833,7 @@ void THamuKuri::canGoForSearchActor() { }
 
 void THamuKuri::behaveToFindMario()
 {
+	char trash[8];
 	TWalkerEnemy::behaveToFindMario();
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_HMKRI_VO_ATTACK, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -1093,6 +1094,7 @@ void THamuKuri::setRollAnm() { setBckAnm(7); }
 
 void THamuKuri::setCrashAnm()
 {
+	char trash[8];
 	if (unk198 && mHeldObject != nullptr
 	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
