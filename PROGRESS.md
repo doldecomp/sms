@@ -3247,6 +3247,71 @@ bleibt bei **400 tatsächlich verifizierten Funktionen** in 58 Commits
 (unverändert seit Runde 45). DOL SHA1 bestätigt `OK`.
 
 
+### Nach siebenundvierzigster Iterationsrunde (`TBathtubKiller::attackToMario`: reale Logik zu 93 % rekonstruiert, algorithmische Struktur bestätigt, Restdifferenz im Stackframe ungelöst)
+
+Erster echter Rekonstruktionsversuch im Runde-44-dokumentierten
+TBathtubKiller-Cluster. `attackToMario()` (0 % Match, leerer `{ }`-Stub,
+404 B Retail-Zielgröße) per direktem `dtk elf disasm`-Studium der
+Retail-Instruktionen vollständig algorithmisch rekonstruiert:
+
+```cpp
+void TBathtubKiller::attackToMario()
+{
+	bool isDying
+	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
+	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+
+	if (!isDying) {
+		if (SMS_GetMarioPos().y < mPosition.y) {
+			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+			SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 10.0f);
+			unk21C = 1;
+		}
+	}
+}
+```
+
+**Wichtiger Zwischenschritt**: die erste Fassung nutzte De-Morgan-Form
+(`cur != A && cur != B`), was zu VERTAUSCHTER Flag-Polarität gegenüber
+Retail führte (Retail initialisiert das "Ist-Sterbend"-Flag mit 1 und
+löscht es bedingt; unsere De-Morgan-Form initialisierte mit 0 und
+setzte bedingt auf 1 — bei IDENTISCHEM Wahrheitswert, aber
+UNTERSCHIEDLICHEM Opcode-Muster). Umschreiben auf die direkte
+Oder-Form `cur == A || cur == B` mit `if (!isDying)` traf exakt
+Retails Register-Initialisierungsmuster (`li r30, 0x1` an der
+richtigen Stelle) — ein weiterer bestätigter Fall, dass logisch
+äquivalente, aber unterschiedlich geschriebene Boolesche Ausdrücke zu
+verschiedenem MWCC-Code führen (ähnlich der `calcWorldMinMax`- und
+`calcVMMtxGround`-Funde).
+
+**Verbleibende Differenz**: nach der Oder-Form-Korrektur matcht die
+komplette Kernlogik (Nerve-Vergleich, verschachteltes `pushNerve()`,
+`SMS_SendMessageToMario`, `SMS_ThrowMario`, alle Konstanten und
+Sprungziele) strukturell 1:1 mit Retail — nur der Stackframe ist
+8 Bytes GRÖSSER als Retails (`-0x58` vs. `-0x50`), OBWOHL dieselbe
+Anzahl Register gesichert wird. `char trash[8]` (Standardtechnik
+dieser Session) verschlimmerte die Lücke auf 16 Bytes, da unser Frame
+bereits GRÖSSER war — die etablierte Padding-Technik ist hier nicht
+anwendbar (sie hilft nur, wenn UNSER Frame kleiner ist). Der
+`bool isDying`-Local direkt in die `if`-Bedingung inlinen (kein
+benannter Local) verschlimmerte die Situation weiter (120 statt
+109 Zeilen, zusätzlicher `...bss.0`-Bezug, vermutlich verdoppelte
+Lazy-Init-Instanziierung durch geänderte Ausdrucksauswertung) — sauber
+zurückgesetzt.
+
+**Sauber zurückgesetzt** (kein Netto-Fix, `git checkout --` bestätigt,
+DOL SHA1 `OK`). Der bestätigte Algorithmus (inkl. der Oder-Form-
+Erkenntnis) bleibt als direkt wiederverwendbare Vorlage für einen
+künftigen Anlauf mit mehr Zeit für die Stackframe-Spurensuche
+(vermutlich ein zusätzliches temporäres Objekt oder eine andere
+Local-Variablen-Anordnung, die Retail nutzt, um 8 Bytes zu sparen).
+
+**Session-Gesamtstand nach Runde 47: weiterhin 400 tatsächlich
+verifizierte Funktionen** (unverändert seit Runde 45) in 58 Commits.
+DOL SHA1 bestätigt `OK`.
+
+
 
 ## Nächster GMSJ01-Kandidat
 **Neuer, großer Kandidaten-Cluster identifiziert (Runde 44):
