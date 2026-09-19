@@ -77,9 +77,10 @@ bool TBaseNPC::isNerveCanGoToTalk() const
 	    || nerve == &TNerveNPCRecoverAfter::theNerve()
 	    || nerve == &TNerveNPCMad::theNerve()
 	    || nerve == &TNerveNPCMareStand::theNerve()) {
-		if (mSpine->getCurrentNerve() != nullptr
-		    || (mSpine->getTop() != &TNerveNPCWet::theNerve()
-		        && mSpine->getTop() != &TNerveNPCTalk::theNerve())) {
+		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
+		if (current != nullptr
+		    || (getSpine()->getTop() != &TNerveNPCWet::theNerve()
+		        && getSpine()->getTop() != &TNerveNPCTalk::theNerve())) {
 			result = true;
 		}
 	}
@@ -464,7 +465,7 @@ void TBaseNPC::changeNerveProc_()
 		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
-			if (isSunflowerReviving() && isNerveCanGoToTalk()
+			if (!isSunflowerReviving() && isNerveCanGoToTalk()
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
