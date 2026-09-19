@@ -46,6 +46,23 @@ void TPerformList::forEachPerform(
 // on either level's operators, explicit by-value slicing in `operator==`, and
 // explicit conversions on the `operator++(int)` returns were all measured and
 // none of them produce it -- see docs/catalog/frame-gaps.md, batch 133.
+// Closure batch 215 re-measured the slot map top-down, where the shape is
+// clearest: retail is [4]+12 [5]+4 [2]+12 [2] (0x90..0xdc, frame 0xe8) and we
+// are [4]+12 [3]+4 [2]+8 [4] (0x6c..0xb4, frame 0xc0), i.e. the same thirteen
+// slots with two of them moved from the bottom group up into the middle one
+// and the lower dead gap 4 bytes short; below the pool retail leaves 136 dead
+// bytes and we leave 100. Research 211's container-receiver knob does not
+// reach it: a named `TSingleLinkList<TPerformLink, 0>*` or `&` for
+// `getChildren()` is -0x10 (frame 0xb0) and a named `TPerformList* self` is
+// +8, and neither changes the grouping. `++it` in the loop is -0x10 and leaves
+// the out-of-line `forEachPerform` byte-exact (so the increment spelling is
+// free there); a `while` loop with the increment at the end is byte-identical
+// to the `for`; a named `end` iterator costs two instructions (95.4%). The
+// only construct measured that produces retail's grouping is research 161's
+// named result inside `TSingleNodeLinkList::begin()/end()`, a shared-header
+// change that lands perform at 0xe8 exactly but drops both
+// `TPerformList::push_back` overloads -- a std-list.hpp round item, not a
+// change this TU can make.
 void TPerformList::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	forEachPerform(getChildren().begin(), getChildren().end(), graphics, cue);
