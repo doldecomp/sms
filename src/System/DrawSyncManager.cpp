@@ -167,6 +167,21 @@ TDrawSyncManager::~TDrawSyncManager()
 // 0x18 bytes and the binder appears to be priced by the bound object, not by
 // the return type, so the missing item is a 8-byte object, not a vector
 // binding.
+// Closure 220 measured the 8 bytes exactly: they are *two 4-byte dead named
+// locals*, and the whole ladder is now known. On the named-temporary form
+// (frame 0x28, object 0x20) every dead named scalar declared after `range`
+// raises the object 4 and the first of them raises the frame 8, so two of them
+// are retail's 0x28/0x30 byte-for-byte (100.0%); one is 0x24/0x30, two u16s
+// pack into one word (0x24/0x30), and one dead 8-byte object is 0x30/0x38.
+// Two dead `u32` locals in the inlined TDrawSyncTokenRange constructor are the
+// same 100.0%. All of these are nonsensical temporaries, so none is
+// committable. Measured free instead (no slot at all): named pointer/reference
+// binders over `mCallbacks.begin()` or the element, in any declaration order,
+// singly or in pairs; the constructor written with assignments instead of an
+// initialiser list; a `setRange`/`set` helper inside the constructor
+// (inlined-callee *parameters* reserve nothing, only named locals do, and the
+// helper also costs drawSyncCallbackSub). What is missing is a real value,
+// two words wide, that this body computes and never uses.
 void TDrawSyncManager::setCallback(u32 param_1, u16 param_2, u16 param_3,
                                    TDrawSyncCallback* param_4)
 {
