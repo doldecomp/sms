@@ -1314,10 +1314,18 @@ static void startForceJumpSound2(Vec* param_1, u32 param_2, f32 param_3,
 	SMSGetMSound()->startForceJumpSound(param_1, param_2, param_3, param_4);
 }
 
+static inline const TBGCheckData* MarioEnforceJumpGround(const TMario* p)
+{
+	const TBGCheckData* ground = p->mGroundPlane;
+	return ground;
+}
+
 void TMario::checkEnforceJump()
 {
-	if (mGroundPlane->isLegal() && mGroundPlane->isBounceOnLanding()
-	    && isTouchGround4cm() && (mPrevStatus & MARIO_STATUS_FLAG_JUMPING)) {
+	if (MarioEnforceJumpGround(this)->isLegal()
+	    && MarioEnforceJumpGround(this)->isBounceOnLanding()
+	    && isTouchGround4cm()
+	    && (mPrevStatus & MARIO_STATUS_FLAG_JUMPING)) {
 
 		startForceJumpSound2(&mPosition, mSoundFlags, 0.0f,
 		                     mGroundPlane->getData());
