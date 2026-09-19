@@ -286,8 +286,10 @@ void THamuKuriManager::setSearchHamuKuri()
 	}
 }
 
+#pragma dont_inline on
 void THamuKuriManager::requestSerialKill(THamuKuri* param_1)
 {
+	char trash[8];
 	int trampled = 1;
 
 	THamuKuriSaveLoadParams* params = (THamuKuriSaveLoadParams*)unk38;
@@ -307,6 +309,7 @@ void THamuKuriManager::requestSerialKill(THamuKuri* param_1)
 		                             param_1->mPosition.z, 0x20000005, true);
 	}
 }
+#pragma dont_inline off
 
 void THamuKuriManager::checkSerialKill()
 {
@@ -2173,8 +2176,10 @@ void TFireHamuKuri::sendAttackMsgToMario()
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
+#pragma dont_inline on
 void TFireHamuKuri::changeTevColor()
 {
+	char trash[8];
 	if (recoverFire()) {
 		unk21C.r = (mFireHamNoseColorDiff.r * unk218) / 30
 		           + mFireHamNoseColorStart.r;
@@ -2191,6 +2196,7 @@ void TFireHamuKuri::changeTevColor()
 		           + mFireHamOtherColorStart.b;
 	}
 }
+#pragma dont_inline off
 
 TDoroHamuKuri::TDoroHamuKuri(const char* name)
     : THamuKuri(name)
