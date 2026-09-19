@@ -116,11 +116,18 @@ void TRoulette::perform(u32 cue, JDrama::TGraphics* graphics)
 	unk150->perform(cue, graphics);
 }
 
+/// Binds the roulette's model before the hit box is pinned to its joint.
+static inline MActor* bindMActor(TRoulette* obj)
+{
+	MActor* actor = obj->mMActor;
+	return actor;
+}
+
 void TRoulette::moveObject()
 {
 	TLiveActor::moveObject();
 	if (unk142 != 0)
-		mRotation.x += unk13C;
+		mRotation.y += unk13C;
 
 	if (unk141 != 0 && unk140 != 0) {
 		gpMarioOriginal->mGamePad->onNeutralMarioKey();
@@ -130,8 +137,10 @@ void TRoulette::moveObject()
 		mPosition.y -= 1.0f;
 	}
 
-	MtxPtr jnt = mMActor->getModel()->getAnmMtx(1);
-	unk150->mPosition.set(jnt[0][3], mPosition.y - 100.0f, jnt[2][3]);
+	MtxPtr jnt = bindMActor(this)->getModel()->getAnmMtx(1);
+	JGeometry::TVec3<f32> hitPos;
+	hitPos.set(jnt[0][3], mPosition.y - 100.0f, jnt[2][3]);
+	unk150->mPosition.set(hitPos);
 }
 
 void TRoulette::calcRootMatrix()
