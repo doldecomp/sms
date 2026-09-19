@@ -748,18 +748,26 @@ void TLeanMirror::release()
 
 static s32 startCameraShakeSE(u32 param_1, u32 param_2) { return 0; }
 
-// TODO: instruction-exact, but the frame is 0x80 against retail's 0x98, i.e.
-// 24 bytes of stack objects are missing, and this body is also the
-// whole remaining loss of TLeanMirror::control(): retail `bl`s this from the
-// STATE_GO_TARGET arm and MWCC inlines it here, because a plain method is
-// inlined at depth 1 up to 14 statements. Measured exactly: three extra
-// zero-codegen statements take control() from 29.3% to 98.6% and cost this
-// body nothing (two do not), so retail's controlGoTarget has three statements
-// this reconstruction is missing. Do not pad -- find them; the 24-byte frame
-// gap is the second measurement of the same three.
+// The three statements this body was missing are calcCurrentMtx's own: retail
+// spells that helper's four lines out here instead of calling it, which is
+// why the map has calcCurrentMtx UNUSED (nothing references it at all) and why
+// control() `bl`s this -- 1 statement becomes 4, putting the body over the
+// 14-statement depth-1 inline budget (control() 29.4 -> 99.9).
+//
+// TODO: instruction-exact, but the frame is 0x80 against retail's 0x98. The
+// 24 bytes are not the statements: named f32 locals for startFall's three
+// arguments cost nothing here (they stay in FPRs), and neither declaration
+// order of `rot` and `mtx` moves the layout. Retail's locals also run
+// matrix-above-temporaries where ours run matrix-below, so the gap is a dead
+// low region of some inlined callee; control() has the same shape with 32
+// bytes.
 void TLeanMirror::controlGoTarget()
 {
-	calcCurrentMtx(getModel()->getAnmMtx(0));
+	MtxPtr mtx = getModel()->getAnmMtx(0);
+	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > rot;
+	rot.identity();
+	makeMtxRotByAxis(mRotAxis, mRotSpeed, rot);
+	concatOnlyRotFromLeft(rot, mtx, mtx);
 
 	if (!isStateTimerEngaged()) {
 		mShiningStone->putOnLight(this);
@@ -855,10 +863,11 @@ void TLeanMirror::controlShake()
 	}
 }
 
-// TODO: 29.3%. The switch tree is now exact -- retail pivots on 3 because the
-// switch has a fourth, empty `case STATE_DONE: break;` arm, which makes the
-// sorted case set {1,2,3,4} and the median 3. Everything left is
-// controlGoTarget being inlined here; see its own TODO for the measurement.
+// TODO: instruction-exact; the frame is 0x48 against retail's 0x68, the same
+// dead-low-region gap controlGoTarget carries. The switch tree is exact
+// (retail pivots on 3 because the fourth, empty `case STATE_DONE: break;` arm
+// makes the sorted case set {1,2,3,4}), and controlGoTarget is now a real
+// `bl` as retail has it.
 void TLeanMirror::control()
 {
 	TMapObjBase::control();
@@ -893,10 +902,9 @@ void TLeanMirror::control()
 					                                                true);
 			}
 
-			f32 scale = stone->mEmitterScale;
+			f32 scale = stone->mEmitterRate;
 			if (scale > 0.0f)
-				stone->mEmitter->setGlobalParticleScale(
-				    JGeometry::TVec3<f32>(scale, scale, scale));
+				stone->mEmitter->setRate(scale);
 
 			mState = STATE_DONE;
 		}
@@ -1033,7 +1041,7 @@ void TShiningStone::putOnLight(TLiveActor* mirror)
 		mEmitter = gpMarioParticleManager->emit(
 		    0x143, (JGeometry::TVec3<f32>*)&mPosition, 1, this);
 		mEmitter->setRate(3.0f);
-		mEmitterScale = 1.5f;
+		mEmitterRate = 1.5f;
 		gpMSound->startSoundActor(MSD_SE_DM_REFLECTION_1, &mPosition, 0,
 		                          nullptr, 0, 4);
 		break;
@@ -1042,7 +1050,7 @@ void TShiningStone::putOnLight(TLiveActor* mirror)
 		mEmitter = gpMarioParticleManager->emit(
 		    0x144, (JGeometry::TVec3<f32>*)&mPosition, 1, this);
 		mEmitter->setRate(0.4f);
-		mEmitterScale = 0.2f;
+		mEmitterRate = 0.2f;
 		gpMSound->startSoundActor(MSD_SE_DM_REFLECTION_2, &mPosition, 0,
 		                          nullptr, 0, 4);
 		break;
@@ -1050,7 +1058,7 @@ void TShiningStone::putOnLight(TLiveActor* mirror)
 	case 2:
 		mEmitter = gpMarioParticleManager->emit(
 		    0x145, (JGeometry::TVec3<f32>*)&mPosition, 1, this);
-		mEmitterScale = 0.0f;
+		mEmitterRate = 0.0f;
 		gpMSound->startSoundActor(MSD_SE_DM_REFLECTION_3, &mPosition, 0,
 		                          nullptr, 0, 4);
 		break;
@@ -1129,7 +1137,7 @@ TShiningStone::TShiningStone(const char* name)
 {
 	mLightNum     = 0;
 	mEmitter      = nullptr;
-	mEmitterScale = 0.0f;
+	mEmitterRate = 0.0f;
 	mLitS         = false;
 	mLitM         = false;
 	mLitL         = false;

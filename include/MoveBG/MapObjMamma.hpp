@@ -190,7 +190,7 @@ public:
 	/* 0x73 */ bool mLitAll;
 	/* 0x74 */ int mLightNum;
 	/* 0x78 */ JPABaseEmitter* mEmitter;
-	/* 0x7C */ f32 mEmitterScale;
+	/* 0x7C */ f32 mEmitterRate;
 };
 
 /// One of the three 「ぐらぐら鏡」 mirrors. Mario, enemies and water pushes tilt
