@@ -340,6 +340,36 @@ als Nonmatching bestätigt und zurückgesetzt:
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach zehnter Iterationsrunde (HelpActor, MapCollisionEntry, JASDSPChannel)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,61 % (1.493.676 / 3.590.088) | +1.064 Bytes |
+| Funktionen matched | 66,80 % (8.605 / 12.881) | +3 |
+
+Drei neue 100-%-Matches, alle über simple Frame-Gap-Fixes ohne
+Register-Probleme:
+
+- `GC2D/HelpActor.cpp::THelpActor::perform` (344 Bytes, `char trash[8]`,
+  keine Locals).
+- `Map/MapCollisionEntry.cpp::TMapCollisionMove::init(u32,u16,s16,
+  const TLiveActor*)` (168 Bytes, `char trash[8]` am Funktionsanfang).
+- `JSystem/JAudio/JASystem/JASDSPChannel.cpp::TDSPChannel::updateAll`
+  (552 Bytes, `char trash[0x18]`, 24-Byte-Frame-Gap ohne Struct-Locals).
+
+Vier weitere Funktionen in derselben Unit-Scan-Runde als "Frame
+bereits exakt, nur interner Slot-Versatz" identifiziert (dieselbe
+unlösbare Kategorie wie `drawRevivalTexStamp`/`calcViewMtx`, siehe
+oben) und ohne Zwischen-Tuning sofort zurückgesetzt:
+`Map/PollutionObj.cpp::TPollutionObj::getDepthFromMap` (99,96 %,
+bereits mit Upstream-`TODO: inlines are wrong here!` markiert),
+`Map/MapCollisionEntry.cpp::TMapCollisionMove::move()` (99,90 % best,
+8-Byte-Gap in `local_18`), `TMapCollisionWarp::setUp()` (99,92 % best,
+8-Byte-Gap in `local_18`), `TMapCollisionMove::moveSRT` (Frame stimmt
+bereits exakt, 4-Byte-Slot-Versatz).
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -574,6 +604,17 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 - `Animal/AnimalManager.cpp`: `TMewManager::loadAfter` — **100 %**
   (60 Bytes, `char trash[0x10]`). `clipEnemies` bleibt Nonmatching
   (94,98 %, dieselbe Kategorie wie `NpcManager::clipEnemies`).
+
+- `GC2D/HelpActor.cpp`: `THelpActor::perform` — **100 %** (344 Bytes,
+  `char trash[8]`).
+
+- `Map/MapCollisionEntry.cpp`: `TMapCollisionMove::init(u32,u16,s16,
+  const TLiveActor*)` — **100 %** (168 Bytes, `char trash[8]`).
+  `move()`, `TMapCollisionWarp::setUp()`, `moveSRT` bleiben Nonmatching
+  (siehe oben, interner Slot-Versatz-Kategorie).
+
+- `JSystem/JAudio/JASystem/JASDSPChannel.cpp`: `TDSPChannel::updateAll`
+  — **100 %** (552 Bytes, `char trash[0x18]`).
 
 ## Nächster GMSJ01-Kandidat
 
