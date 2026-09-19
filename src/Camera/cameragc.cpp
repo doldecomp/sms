@@ -286,6 +286,10 @@ void CPolarSubCamera::loadAfter()
 		for (int j = 0; j < 4; ++j)
 			unk1AC[i][j] = unk16C[i][j];
 
+	// TODO: one instruction left (99.58%): MWCC binds &unk1EC into r30 for
+	// the C_MTXLookAt/MTXCopy pair while the ROM recomputes `addi rD, r31,
+	// 0x1ec` per site.  Ruled out: routing either or both sites through
+	// getUnk1EC() -- byte-identical, the binding survives.
 	MTXCopy(unk1EC, unk21C);
 
 	calcExternalData_();
@@ -456,7 +460,12 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 	s16 result = 0;
 
 	if (!isMarioReadyGun_()) {
-		// TODO: MarioAccess inline?
+		// TODO: one instruction left (98.07%): the false arm of the
+		// materialised isThing() bool is `mr r0, r4` (a copy of groundOK,
+		// known zero) in the ROM and `li r0, 0` here.  Ruled out: reading
+		// the plane and the test through a TU-local `static inline`
+		// returning `a && b` -- that drops the materialisation entirely
+		// and costs 2.5% (95.6%).
 		bool groundOK             = false;
 		const TBGCheckData* plane = *gpMarioGroundPlane;
 		if (plane != nullptr && plane->isThing())
