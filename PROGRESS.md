@@ -2236,15 +2236,119 @@ künftigen Nachprüfung mit der autoritativen Methode, gegeben dass
 (Destruktor-Cluster Runde 33, `DrawUtil::identity33` hier) nachweislich
 falsche Ergebnisse lieferte.
 
+### Nach fünfunddreißigster Iterationsrunde (Korrektur-Nachprüfung: 5 echte neue Fixes, differenziertes Bild der 59 zurückgezogenen Funktionen)
+
+Systematische Nachprüfung mit der oben etablierten autoritativen
+Methode (`dtk elf disasm` auf frisch gebautem `src/*.o` gegen
+statisches `obj/*.o`, direkter Byte-Vergleich) ergab ein
+**differenziertes** Bild statt eines pauschalen Richtig/Falsch:
+
+**5 echte neue Fixes, Byte-für-Byte verifiziert:**
+- `Enemy/hamukuri.cpp`: `TFireHamuKuri::changeTevColor()` und
+  `THamuKuriManager::requestSerialKill(THamuKuri*)` wurden an ihren
+  jeweiligen Aufrufstellen (`moveObject()`/`isHitValid()`) vollständig
+  wegoptimiert (Auto-Inline), obwohl Retail sie dort als echte
+  Funktionsaufrufe behält — `#pragma dont_inline on/off` um beide
+  Definitionen (dasselbe Muster wie Runde 29, diesmal auf
+  substanzielle .cpp-lokale Methoden statt triviale Header-Accessor
+  angewandt) plus je ein `char trash[8]` für die dadurch sichtbar
+  gewordene 8-Byte-Frame-Lücke. Ergebnis: `moveObject`,
+  `changeTevColor`, `isHitValid(u32)` (alle `TFireHamuKuri`) und
+  `requestSerialKill` matchen jetzt Byte-für-Byte gegen
+  `obj/Enemy/hamukuri.o`.
+- `System/MarDirectorEvent.cpp`: **echter Gameplay-Bug** gefunden —
+  `TMarDirector::fireGetStar()`s Ternary für die Get-Star-Kamera hatte
+  `Inside`/`Outside` vertauscht (`!shine->unk190 ? Inside : Outside`
+  statt `!shine->unk190 ? Outside : Inside`), bestätigt durch
+  Rückverfolgung der `cmplwi`/`bne`-Verzweigung und welcher
+  `cCameraBckNameShineGet{Inside,Outside}`-Konstante auf welcher Seite
+  der Verzweigung geladen wird, in beiden Disassemblierungen. Dieser
+  Bug betraf JEDE Shine-Aufnahme im Spiel. Zusätzlich war
+  `fireStartDemoCamera()` an dieser Aufrufstelle wegoptimiert (dasselbe
+  Muster wie oben) — `#pragma dont_inline` behoben.
+  `fireStartDemoCamera` matcht jetzt 100 % (224 Bytes, per
+  `objdiff-cli report` bestätigt); `fireGetStar` selbst bleibt bei
+  99,94 % (4-Byte-Stackslot-Position für ein `JDrama::TFlagT<u16>`-
+  Funktionsargument-Temporary, mehrere `trash`-Platzierungen ohne
+  Wirkung — als kleiner offener Rest belassen, keine
+  Semantik-Änderung riskiert).
+
+**Differenzierte Nachprüfung der 59 zurückgezogenen Runde-32/33-
+Funktionen — nicht pauschal falsch:**
+
+Stichprobe `TMBindShadowManager::TCylinder$882ShadowUtil_cpp::
+makeDL()` (einer der 6 `ShadowUtil.cpp`-Fälle): naiver Symbolvergleich
+zeigte scheinbar KEIN Retail-Gegenstück (unser Name trägt den
+lokalen-Klassen-Diskriminator `$882`, Retail `$2171` — diese Zahl
+hängt von Reihenfolge/Anzahl aller im TU deklarierten lokalen Klassen
+ab und ist reine Compiler-Buchführung, kein Bug). Nach Normalisierung
+auf den ECHTEN Retail-Namen (`grep` nach `TCylinder\$[0-9]+` fand
+`$2171`) zeigt der Byte-Vergleich: **alle 733 Instruktionen sind
+identisch** bis auf die `@NNNN`-Literal-Pool-Label (`@1363` vs.
+`@2743` etc.) — ebenfalls reine Compiler-Buchführung: Stichprobe von
+`@1363`/`@2743` zeigt denselben Wert (`0x3F800000` = 1.0f) am
+identischen `.sdata2`-Offset (`0x14`) in beiden Objektdateien. **Die
+Runde-33-Behauptung war für diesen Fall korrekt** — nur die
+Vergleichsmethode (naiver Namensabgleich ohne Normalisierung der
+lokalen-Klassen-Diskriminatoren und Literal-Pool-Label) war
+unzureichend.
+
+Stichprobe `System/MarNameRefGen_Enemy.cpp` (einer der drei
+Destruktor-Cluster-Fälle) zeigt das GEGENTEIL: unsere kompilierte
+Einheit enthält nur 4 `__dt__`-Symbole (`TLauncher`, `TWalkerEnemy`,
+`TSmallEnemyManager`, `TPakkun`), Retails `obj/System/
+MarNameRefGen_Enemy.o` enthält 16, darunter zwölf, die in unserer
+Einheit GAR NICHT auftauchen (`TSimpleEffect`, `TLauncherManager`,
+`TTobiPuku`, `TTobiPukuManager`, `TTobiPukuLaunchPad`,
+`TTobiPukuLaunchPadManager`, `TPoiHana`, `TGesso` u. a.) — das sind
+unterschiedliche Klassennamen, kein Diskriminator-Artefakt. **Hier war
+die Runde-33-Behauptung falsch**: diese Destruktoren fehlen
+tatsächlich (oder werden über einen anderen Registrierungspfad nicht
+erreicht), echte offene Kandidaten.
+
+**Korrigierte Schlussfolgerung**: Die 59 zurückgezogenen Funktionen
+sind **nicht pauschal** falsch noch pauschal korrekt — jede muss
+einzeln mit der autoritativen Methode nachgeprüft werden, UNTER
+Normalisierung zweier bestätigter Compiler-Buchführungs-Artefakte:
+(a) lokale-Klassen-Diskriminatoren (`$NNN`-Suffixe, hängen von
+Deklarationsreihenfolge im ganzen TU ab), (b) anonyme
+Literal-Pool-Label (`@NNNN`, hängen von der Gesamtzahl aller
+Fließkomma-/Daten-Literale im ganzen Programm vor dieser Stelle ab).
+Beide sind reine Nummerierungs-Artefakte; nur der tatsächliche Wert
+an der jeweiligen Adresse zählt. Die individuelle Nachprüfung der
+restlichen ~57 Funktionen (2 der 59 jetzt geklärt: 1 bestätigt
+korrekt, weitere ~11 MarNameRefGen_Enemy-Destruktoren bestätigt
+fehlend) steht noch aus.
+
+Session-Endstand (diese Korrekturrunde): **69 tatsächlich verifizierte
+Funktionen** (64 aus Runde 1–31 plus 5 neue in Runde 35) in 27
+Commits, **1 bestätigter Gameplay-Bug behoben**, **59 Funktionen
+zurückgezogen und einzeln neu zu prüfen** (1 davon bereits als korrekt
+bestätigt, ~12 als tatsächlich fehlend bestätigt, Rest offen).
+`ninja`-Build sauber, `dtk shasum` bleibt `OK` (erwartungsgemäß
+invariant für alle betroffenen `complete: false`-Einheiten), `objdiff-
+cli report`-Funktionszahl stieg real von 8648 auf 8652 (+4, siehe
+hamukuri.cpp-Fixes; `fireStartDemoCamera` zeigt separat 100 %, aber
+`fireGetStar` selbst zählt wegen der 4-Byte-Restlücke nicht mit).
+
 ## Nächster GMSJ01-Kandidat
 
-**Wieder offen (siehe Methodik-Korrektur oben)**: Alle 59 in Runde
-32/33 als "bereits korrekt" dokumentierten Funktionen. Priorität:
-`TFireHamuKuri` in `Enemy/hamukuri.cpp` — fehlende Funktionalität
-bestätigt (`dieFire`, `genFire`, `recoverFire`,
-`TNerveFireHamuKuriRecover::theNerve` existieren in Retail, fehlen
-komplett in unserer Quelle; `moveObject`/`isHitValid` zeigen
-`match_percent: 0.0`).
+**Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
+59 in Runde 32/33 als "bereits korrekt" dokumentierten Funktionen
+(1 davon — `TCylinder::makeDL` — in Runde 35 als tatsächlich korrekt
+bestätigt, siehe oben; `TFireHamuKuri::moveObject/isHitValid` in
+Runde 35 gefixt). Korrektur einer Falschaussage aus der ersten
+Retraction-Notiz: `dieFire`/`genFire`/`recoverFire`/`TNerveFire-
+HamuKuriRecover::theNerve` sind ENTGEGEN der ursprünglichen (auf
+veralteten `objdiff-cli`-Diff-Daten basierenden) Behauptung NICHT
+komplett fehlend — `dieFire`/`genFire` sind triviale leere
+Ein-Zeiler, `recoverFire` existiert mit einem bestehenden `// TODO:
+this is the wrong inline, size doesn't match at all!`-Kommentar eines
+früheren Beitragenden. Priorität für künftige Sessions:
+`System/MarNameRefGen_Enemy.cpp` (mindestens 12 tatsächlich fehlende
+Destruktoren bestätigt: `TSimpleEffect`, `TLauncherManager`,
+`TTobiPuku`, `TTobiPukuManager`, `TTobiPukuLaunchPad`,
+`TTobiPukuLaunchPadManager`, `TPoiHana`, `TGesso` u. a.).
 
 `ItemManager::newAndRegisterCoin` (99,59 %) und `PollutionManager::
 cleanedAll` (96,43 %) offen.
