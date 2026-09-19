@@ -24,6 +24,7 @@ public:
 		setRotate(axis, angle);
 	}
 
+#pragma dont_inline on
 	void identity33()
 	{
 		this->ref(0, 0) = 1.0f;
@@ -38,6 +39,7 @@ public:
 		this->ref(1, 2) = 0.0f;
 		this->ref(2, 2) = 1.0f;
 	}
+#pragma dont_inline off
 
 	void setRotate(const JGeometry::TVec3<f32>& param_1, f32 param_2)
 	{
