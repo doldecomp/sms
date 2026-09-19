@@ -6,6 +6,7 @@
 #include <Enemy/Launcher.hpp>
 #include <Enemy/MameGesso.hpp>
 #include <Enemy/NameKuri.hpp>
+#include <Enemy/Pakkun.hpp>
 #include <Enemy/PoiHana.hpp>
 #include <Enemy/RiccoHook.hpp>
 #include <Enemy/Rocket.hpp>
@@ -200,17 +201,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "DiffusionNameKuriManager") == 0)
 		return new TDiffusionNameKuriManager;
 
-	// TODO:
-	// if ( strcmp(name, "PakkunManager") == 0)
-	//     return new TPakkunManager;
+	if (strcmp(name, "PakkunManager") == 0)
+		return new TPakkunManager;
 
-	// TODO:
-	// if ( strcmp( name, "Pakkun" ) == 0 )
-	//     return new TPakkun;
+	if (strcmp(name, "Pakkun") == 0)
+		return new TPakkun;
 
-	// TODO:
-	// if ( strcmp(name, "StayPakkun") == 0)
-	//     return new TStayPakkun;
+	if (strcmp(name, "StayPakkun") == 0)
+		return new TStayPakkun;
 
 	// TODO:
 	// if ( strcmp(name, "HanaSamboManager") == 0)

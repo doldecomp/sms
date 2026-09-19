@@ -33,10 +33,11 @@ public:
 	virtual void recoverScale();
 	virtual f32 getNowGravity() { return mGravity; }
 
-	bool isUnk150Zero() const { return unk150 == 0 ? true : false; }
+	// Fabricated
+	bool isState(int check) const { return unk150 == check ? true : false; }
 
 public:
-	/* 0x150 */ int unk150;
+	/* 0x150 */ int unk150; // mState? 0 = hide, 1 = visible, pakkun has more
 	/* 0x154 */ u32 unk154;
 	/* 0x158 */ int unk158;
 	/* 0x15C */ char unk15C[4];
