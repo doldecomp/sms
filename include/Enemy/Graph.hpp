@@ -194,11 +194,12 @@ public:
 	void setGraph(TGraphWeb* web) { unk0 = web; }
 	u32 popCurr() // very wrong
 	{
-		int result = mPrevIdx;
+		int& prev  = mPrevIdx;
+		int result = prev;
 		int curr   = mCurrIdx;
-		if (mPrevIdx == -1)
+		if (prev == -1)
 			result = curr;
-		mPrevIdx = curr;
+		prev = curr;
 		return result;
 	}
 	bool currPitchIsZero() const
