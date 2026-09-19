@@ -977,9 +977,22 @@ MtxPtr TChuuHana::getEffectMtx()
 
 const char** TChuuHana::getBasNameTable() const { return tyuhana_bastable; }
 
+static inline const TLiveActor* ChuuHanaGroundActor(TChuuHana* hana)
+{
+	const TLiveActor* actor = hana->mGroundPlane->getActor();
+	return actor;
+}
+
+static inline TChuuHana* ChuuHanaWalkOnPanelBody(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	TChuuHana* hana  = (TChuuHana*)body;
+	return hana;
+}
+
 DEFINE_NERVE(TNerveChuuHanaWalkOnPanel, TLiveActor)
 {
-	TChuuHana* hana = (TChuuHana*)spine->getBody();
+	TChuuHana* hana = ChuuHanaWalkOnPanelBody(spine);
 
 	if (spine->getTime() == 0) {
 		hana->setWalkAnm();
@@ -988,7 +1001,7 @@ DEFINE_NERVE(TNerveChuuHanaWalkOnPanel, TLiveActor)
 
 	// Remember the panel it first lands on; until then just walk.
 	if (hana->unk218 == nullptr) {
-		const TLiveActor* actor = hana->mGroundPlane->getActor();
+		const TLiveActor* actor = ChuuHanaGroundActor(hana);
 		if (actor) {
 			hana->unk1F8 = actor->mPosition;
 			hana->unk218 = (THitActor*)hana->mGroundPlane->getActor();
