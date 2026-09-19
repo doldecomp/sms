@@ -284,7 +284,7 @@ void TElecNokonoko::attackToMario()
 	    && mSpine->getCurrentNerve()
 	           != &TNerveElecNokonokoCollect::theNerve()
 	    && mSpine->getCurrentNerve() != &TNerveElecNokonokoShoot::theNerve()
-	    && !hasCarapace())
+	    && hasCarapace())
 		mSpine->pushNerve(&TNerveElecNokonokoAttack::theNerve());
 }
 
