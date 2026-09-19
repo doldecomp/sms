@@ -469,8 +469,7 @@ void TAmiNoko::calcRootMatrix()
 	emitEffects();
 
 	// TODO: the original keeps this pointer in r31 and `this` in r30; we get
-	// the opposite, which costs the folded `addi r4, r4, 0x20` below and the
-	// register numbering of the second cross product.
+	// the opposite, plus the register numbering of the second cross product.
 	MtxPtr mtx;
 	if (isBckAnm(AMINOKO_ANM_FLYING1_LOOP)) {
 		// While falling the orientation is frozen, only the position moves.
@@ -478,7 +477,7 @@ void TAmiNoko::calcRootMatrix()
 		mRootMtx[1][3] = mPosition.y;
 		mRootMtx[2][3] = mPosition.z;
 		mtx            = mRootMtx;
-		MTXCopy(mtx, getModel()->getBaseTRMtx());
+		getModel()->setBaseTRMtx(mtx);
 		getModel()->setBaseScale(mScaling);
 		return;
 	}
