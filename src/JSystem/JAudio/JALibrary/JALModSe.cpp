@@ -141,6 +141,28 @@ f32 JALSystem::processModDistFx(u32 param_1, f32 param_2)
 // Next lead: the gap sits *above* the six `__nw__` result temps at 0x58..0x6c,
 // so it is produced by the ctor expansions themselves, and the levels inside
 // them (`JALSeModDataGrp<T>` and `JALListHioNode<T,u32>`) are untested.
+// Closure round 2026-09-18 -- the frame is now a measured ladder, but no rung
+// lands it. A TU-local binder used only by `append` (so the TU's other four
+// functions keep the plain accessor and stay byte-exact) moves the frame with
+// no instruction change:
+//   binder over `TFlagManager::get()`, n sites: 0xd0 0xe0 0xe8 0xf8 0x100 0x110
+//     (alternating +8/+16, +0x48 over all six `addUseFlag` arms)
+//   binder over `JALSystem::spFManager`, six sites: 0xf8 (a uniform +8 each)
+//   a second binding level nested in the binder: +24 per site (0x128 at four
+//     sites, 0x140 at five, 0x158 at six)
+//   a direct-return fork nested in the binder: identical to the plain binder
+//   a `void` wrapper doing the `addUseFlag` call itself: identical
+//   a pass-through pointer binder on `&set1` or `&prm` at all twelve arms:
+//     +12 each (0x158), and it perturbs the named block (131 operands)
+//   copy-initialising the four prologue objects: +14 instructions
+//   a named `JALSeModXxx* mod` per arm is +0 once a binder is present
+// Six-site binder (0x110) plus 0x20 is the target, and 0x20 is 4 x 8 against
+// the four named `JALPrmSet`/`JADPrmS<f32>` constructions in the prologue, so
+// the parked need is a +8 binding level *inside* those constructors, i.e. in
+// `JALModSe.hpp`/`JALPrmSet` -- shared headers (MSoundBGM, mameGesso and
+// MSSetSound.hpp all include JALModSe.hpp), so it is reported, not made.
+// Nothing here is committed: every rung above leaves the frame wrong and the
+// binder alone takes the differing-operand count from 56 to 74.
 void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
                        u32 param_3, f32 param_4, f32 param_5, f32 param_6,
                        f32 param_7, f32 param_8, JALCalc::CurveSign param_9,

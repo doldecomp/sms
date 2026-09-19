@@ -249,6 +249,18 @@ void JAIBasic::checkNextFrameSe()
 // inline expansion too many below the temps, and 6 bytes of named locals
 // declared *before* `readStatus0` that we are missing (0x2a..0x30 is empty in
 // retail, which is three more u16s or equivalent).
+// TODO: 100.0% by instruction, frame 0xa8 exact; the eight remaining operands
+// are all stack displacements. Retail puts the two `readPortApp` u16s at
+// 0x26/0x28 and the two 4-byte float temps at 0x1c/0x20; ours are at 0x2c/0x2e
+// and 0x24/0x28. Relative order and adjacency are right, so the low pool below
+// the float temps is 8 bytes larger in ours (0xc..0x24 against 0xc..0x1c) and
+// the named block starts 6 bytes higher, which is the -8 pool / +6 named split
+// recorded in frame-gaps.md. Closure round 2026-09-18: writing the sqrt loop
+// as `infos[k].unk18 = std::sqrtf(infos[k].unk18);` is byte-identical,
+// dropping `infos` costs an instruction, and dropping the `portMask` binding
+// takes the frame to 0xa0 (142 operands) -- so the pool is reachable from the
+// `portMask` binding's end, but nothing found yet removes 8 bytes from it
+// without moving code.
 void JAIBasic::sendPlayingSeCommand()
 {
 	u16 readStatus0;

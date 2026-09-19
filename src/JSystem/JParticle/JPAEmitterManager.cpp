@@ -243,6 +243,17 @@ JPAEmitterManagerGetBaseEmitterBlock(JPADataBlockLinkInfo* p)
 
 // Binding level worth +16 of low region, landing
 // JPAEmitterManager::createEmitterBase's frame at 0xc8 (batch 124).
+
+// TODO: 99.6%, frame 0xc8 exact, all 107 instructions exact; nine operands in
+// one callee-saved swap. Retail gives the long-lived base temp
+// `&unkA4[param_3]` (the `add`/`lwzu` pair reused for the second
+// `getResourceManager` at 0x78c) r30 and the named `linkInfo` local r29; we do
+// the reverse, i.e. retail ranks the base temp above the local exactly as
+// batch 144 says and we do not. Closure round 2026-09-18 measured seven ways
+// of changing the named-local count, none of which flips it: dropping `block`
+// (10 operands), `blocks` (frame 0xc0), `emitterData` (112 instructions,
+// frame 0xd8) or `count` (frame 0xc0), and adding a named `u8 type` (9),
+// a named `JPAFieldManager*` (28) or a named emitter resource (28).
 static inline u8 JPAEmitterManagerGetFieldNum(JPADataBlockLinkInfo* p)
 {
 	u8 fieldNum = p->getFieldNum();
