@@ -78,6 +78,12 @@ void J3DDeformer::deform(J3DModel* model, u16 idx)
 //     extracts in the opposite order (retail computes the y index at 0x5f0 and
 //     the z index at 0x604, we do the reverse) with r6/r7/r8/r9 rotated
 //     accordingly in the normal loop as well.
+// Closure round 2026-09-18, three more spellings, frame unmoved at 0x110 in
+// all three: `f32 weight = 1.0f; weight /= vertex->mNum;` (469 instructions),
+// `f32 sign[2];` with two stores instead of the aggregate initialiser (four
+// operands worse, same frame), and hoisting `sign` above the zeroing loop
+// (473 instructions). The 4+4 split really is a temp-pool word plus a named
+// word, so neither end moves from the `sign`/`weight` side.
 void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 {
 	if (checkFlag(2) && model->getModelData()->isDeformableVertexFormat()) {
@@ -351,6 +357,15 @@ void J3DSkinDeform::initMtxIndexArray(J3DModelData* modelData)
 					// perturbs the frame (a named `int ofs`); `vtx += ...`,
 					// `dl + (3 + ...)` and `&dl[vtxSize * k + 3]` are all
 					// identical to this one.
+					// Closure round 2026-09-18: `dl + vtxSize * k + 3`,
+					// `(dl + vtxSize * k) + 3`, `dl + 3 + vtxSize * k` and
+					// `&(dl + vtxSize * k)[3]` are all 248 instructions;
+					// `&dl[k * vtxSize + 3]` flips the `mullw` operands
+					// instead; the `(u32)` cast forms, dropping the `vtx`
+					// local for three spelled-out indices (248) and splitting
+					// off a `vtxBase` local (frame 0x118) are all no better.
+					// MWCC fixes `ptr + index` as `add rD, rIndex, rPtr` here
+					// and nothing in the index expression turns it round.
 					u8* vtx     = &dl[3 + vtxSize * k];
 					u8 pnmtxIdx = ((u32)(*(u8*)&vtx[pnmtxIdxOffs])) / 3;
 					u16 posIdx  = *(u16*)&vtx[posOffs];
