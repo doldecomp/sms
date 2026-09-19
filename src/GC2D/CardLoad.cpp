@@ -1409,7 +1409,7 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 
 	case 2: {
 		s16 timer = unkB4;
-		if (timer <= 600 && unk38->checkFrameMeaning(0x60)) {
+		if (timer > 600 || unk38->checkFrameMeaning(0x60)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
@@ -1517,7 +1517,7 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 
 	case 2: {
 		int b4 = unkB4;
-		if (b4 <= 600 && unk38->checkFrameMeaning(0x60)) {
+		if (b4 > 600 || unk38->checkFrameMeaning(0x60)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
