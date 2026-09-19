@@ -772,8 +772,8 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 
 		++unk18C;
 
-		if (mSpine->getCurrentNerve() != &TNerveHino2Freeze::theNerve())
-			mSpine->setNext(&TNerveHino2Freeze::theNerve());
+		if (mSpine->getCurrentNerve() != &TNerveHino2Damage::theNerve())
+			mSpine->setNext(&TNerveHino2Damage::theNerve());
 
 		return true;
 	}
@@ -1192,9 +1192,9 @@ DEFINE_NERVE(TNerveHino2PrePol, TLiveActor)
 			if (wait > uVar5) {
 				f32 prob = self->getSaveParam()->mSLStampProb.get();
 				if (rand() * (1.0f / (RAND_MAX + 1)) < prob) {
-					spine->pushAfterCurrent(&TNerveHino2Pollute::theNerve());
-				} else {
 					spine->pushAfterCurrent(&TNerveHino2Stamp::theNerve());
+				} else {
+					spine->pushAfterCurrent(&TNerveHino2Pollute::theNerve());
 				}
 
 				self->mWaitTimer = 0;
