@@ -144,6 +144,11 @@ public:
 	/* 0xA6 */ u8 unkA6;
 	/* 0xA7 */ bool mClosed;
 	/* 0xA8 */ JGeometry::TVec3<f32> mPositions[8];
+	// TODO: sizeof is 0x120 (TSelectDir::rsetup news 0x120), but the
+	// constructor's last write is the __construct_array over mPositions,
+	// which ends at 0x108, and no TU in the map reads past it. The size is
+	// the only evidence for this tail.
+	/* 0x108 */ u8 unk108[0x18];
 };
 
 #endif // GC2D_SELECT_SHINE_2_HPP
