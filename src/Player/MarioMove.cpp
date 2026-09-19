@@ -1866,6 +1866,18 @@ void TMario::checkCurrentPlane()
 
 void TMario::getActorMtx(const THitActor&, Mtx) { }
 
+static inline bool MarioMoveStatusType(const TMario* p, u32 i)
+{
+	bool flag = p->checkStatusType(i);
+	return flag;
+}
+
+static inline const TLiveActor* MarioMoveRideActor(const TMario* p)
+{
+	const TLiveActor* actor = p->unk2C0;
+	return actor;
+}
+
 void TMario::checkRideMovement()
 {
 	const TLiveActor* actor = nullptr;
@@ -1879,12 +1891,13 @@ void TMario::checkRideMovement()
 
 	const TLiveActor* groundActor = mGroundPlane->getActor();
 
-	if (groundActor != nullptr && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)
+	if (groundActor != nullptr
+	    && !MarioMoveStatusType(this, MARIO_STATUS_FLAG_JUMPING)
 	    && (isTouchGround4cm()))
 		actor = groundActor;
 
 	if (groundActor != nullptr && mStatus == MARIO_STATUS_HIP_DROP
-	    && (mStatusState == 2 || mStatusState == 3))
+	    && (getStatusState() == 2 || getStatusState() == 3))
 		actor = groundActor;
 
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK20000000) && wall != nullptr
@@ -1894,16 +1907,20 @@ void TMario::checkRideMovement()
 	if (actor != nullptr) {
 		if (unk2C0 == nullptr || unk2C0 != actor) {
 			unk2C0 = actor;
-			unk30C = unk2C0->mRotation.y;
+			unk30C = MarioMoveRideActor(this)->mRotation.y;
 			checkRideReCalc();
 		} else {
 			Mtx ridingMtx;
 			getRidingMtx(ridingMtx);
 			MTXMultVec(ridingMtx, &unk2F4, &mPosition);
 
+			// TODO: 100.0%, every instruction present; `ridingMtx` sits 4
+			// bytes low (0x7c against retail's 0x80) -- retail declares a
+			// named scalar after the array (frame ladder 300's knob), but
+			// neither an f32 nor an s16 `diff` here keeps the schedule.
 			mFaceAngle.y
 			    += (s16)((unk2C0->mRotation.y - unk30C) * 32768.0f / 180.0f);
-			unk30C = unk2C0->mRotation.y;
+			unk30C = MarioMoveRideActor(this)->mRotation.y;
 		}
 	} else {
 		unk2C0 = nullptr;
@@ -2431,6 +2448,18 @@ void TMario::thinkSound()
 		mSound->stop(1);
 }
 
+static inline TModelWaterManager* MarioMoveWaterManager()
+{
+	TModelWaterManager* manager = gpModelWaterManager;
+	return manager;
+}
+
+static inline TWaterEmitInfo* MarioMoveWetEmitInfo(const TMario* p)
+{
+	TWaterEmitInfo* info = p->unk158;
+	return info;
+}
+
 void TMario::checkWet()
 {
 	if (isMario() == 0)
@@ -2461,12 +2490,15 @@ void TMario::checkWet()
 	if (mWetWaterParticleTimer & 7)
 		return;
 
-	unk158->mPos.value = mPosition;
-	unk158->mPos.value.y += 5.0f;
+	MarioMoveWetEmitInfo(this)->mPos.value = mPosition;
+	// TODO: 99.9%, every instruction present and the frame exact at 0x78;
+	// retail's named block starts 4 bytes lower (floor at 0x50, ours 0x54),
+	// so 4 bytes of our low pool belong above it.
+	MarioMoveWetEmitInfo(this)->mPos.value.y += 5.0f;
 	// Why??? Are we missing THAT many inlines?
 	(Vec&)unk158->mV.value
 	    = (Vec) { mVel.x * 0.3f, mVel.y * 0.3f, mVel.z * 0.3f };
-	gpModelWaterManager->emitRequest(*unk158);
+	MarioMoveWaterManager()->emitRequest(*unk158);
 }
 
 void TMario::gunExec()
