@@ -1110,6 +1110,7 @@ void JPADraw::zDraw()
 
 void JPADraw::zDrawParticle()
 {
+	char trash[8];
 	unkC2 &= ~0x2;
 	setParticleClipBoard();
 	mDrawCtx.unk18 = mDrawCtx.mBaseEmitter->getParticleList();
@@ -1158,6 +1159,7 @@ void JPADraw::zDrawParticle()
 
 void JPADraw::zDrawChild()
 {
+	char trash[8];
 	unkC2 |= 0x2;
 	setChildClipBoard();
 	mDrawCtx.unk18 = mDrawCtx.mBaseEmitter->getChildParticleList();
