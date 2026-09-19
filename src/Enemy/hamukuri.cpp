@@ -852,6 +852,7 @@ void THamuKuri::attackToMario()
 
 void THamuKuri::moveObject()
 {
+	char trash[8];
 	if (unk198) {
 		offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		if (!isAirborne()) {
@@ -898,6 +899,7 @@ void THamuKuri::moveObject()
 
 void THamuKuri::setBehavior()
 {
+	char trash[8];
 	if (isAirborne() && mPosition.y > mGroundHeight + 250.0f
 	    && mSpine->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
 		unk1F0 = 1;
@@ -914,6 +916,7 @@ void THamuKuri::changeCapHolder() { }
 
 void THamuKuri::selectCapHolder()
 {
+	char trash[8];
 	if (!gpMarioOriginal->isWearingCap()) {
 		sendAttackMsgToMario();
 	} else {
@@ -1003,6 +1006,7 @@ void THamuKuri::genRandomItem() { TSmallEnemy::genRandomItem(); }
 
 void THamuKuri::setAfterDeadEffect()
 {
+	char trash[8];
 	if (unk198) {
 		TMapObjBase* obj = gpItemManager->makeObjAppear(
 		    mPosition.x, mPosition.y, mPosition.z, 0x2000003c, true);
@@ -1054,6 +1058,7 @@ void THamuKuri::setWalkAnm() { setBckAnm(4); }
 
 void THamuKuri::setDeadAnm()
 {
+	char trash[0x18];
 	if (unk198 && mHeldObject != nullptr
 	    && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
 		TMapObjBase* heldObj = (TMapObjBase*)mHeldObject;
@@ -2047,6 +2052,7 @@ void TFireHamuKuri::behaveToWater(THitActor* param_1)
 
 void TFireHamuKuri::reset()
 {
+	char trash[8];
 	THamuKuri::reset();
 	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	unk150 &= ~0x2;
@@ -2074,6 +2080,7 @@ void TFireHamuKuri::moveObject()
 
 void TFireHamuKuri::calcRootMatrix()
 {
+	char trash[0x10];
 	TSpineEnemy::calcRootMatrix();
 	if (unk210 && !checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (JPABaseEmitter* emitter
