@@ -600,9 +600,9 @@ void TElecCarapace::loadInit(TSpineEnemy* host, const char* model)
 
 	mNokonoko = (TElecNokonoko*)unk160;
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	group->getChildren().push_back(this);
 
 	initHitActor(0x1000000B, 3, 0x98000000, 80.0f, 80.0f, 60.0f, 60.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
