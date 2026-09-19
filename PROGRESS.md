@@ -2914,6 +2914,54 @@ DOL SHA1 bleibt `OK`. Die sinkende Erfolgsquote (4,5 % → 3,5 % →
 ist nun ebenfalls weitgehend erschöpft für diese Session.
 
 
+### Nach zweiundvierzigster Iterationsrunde (95–99,5-%-Band erschöpft; Methodik-Erkenntnis zu Data-Section-Mismatches)
+
+**95–99,5-%-Match-Band systematisch geprüft** (zwischen dem
+erschöpften < 95-%-Band und dem produktiven 99,5–100-%-Band): 457
+Kandidaten über 160 Einheiten gefunden, mit strengen Schwellwerten
+(Gap ≤ 0x30, `ndiff` ≤ 12) auf 11 saubere additive-Gap-Kandidaten
+gefiltert. **0 von 11 erreichten Match** (automatisiert
+zurückgesetzt, 0 Commits) — bestätigt, dass dieses mittlere Band
+ebenfalls überwiegend zusammengesetzte Probleme (Frame-Lücke +
+Scheduling-Differenz) statt reiner Padding-Lücken enthält, analog zu
+Runde 40.
+
+**Neue Methodik-Erkenntnis zu Daten-Sektionen**: Untersuchung von
+`Player/MarioCap.cpp` (11,4 % Data-Match, auffällig niedrig)
+zeigt: die 71 populierten Einheiten mit < 100 % Data-Match sind in
+diesem Fall **keine unabhängigen Daten-Bugs**, sondern direkte
+Konsequenz nicht-gematchter Funktionen in derselben Einheit — zwei
+zusätzliche `.sdata2`-Fließkomma-Literale (`0.5f`, `3.0f`) in
+unserer kompilierten `MarioCap.o` erwiesen sich als vollständig
+abwesend im aktuellen Quelltext (keine Fundstelle für `0.5f`/`3.0f`
+in `MarioCap.cpp`), was zunächst nach einem unabhängigen
+Daten-Layout-Bug aussah. Tiefere Prüfung zeigt: `TMarioCap::
+TMarioCap`/`::perform` sind selbst nicht gematcht (99,01 %/99,93 %),
+mit erheblichen additiven Frame-Lücken (+120/+160 Bytes) UND
+echten Register-Vertauschungen (nicht nur Offset-Verschiebungen) im
+Rest-Diff — ein bereits vom Vorautor mit auskommentiertem `//
+volatile u32 padding[51];` dokumentierter, aber nie gelöster
+Versuch. `char trash[120]` gleicht den Stackframe exakt an (264→384,
+`ndiff` 28→23), aber ein verbleibendes konsistentes +0x20-Offset-
+Muster UND mehrere Register-Swaps (`lwz r3`↔`lwz r5` etc.) bleiben
+bestehen; `trash[152]` überschießt (Frame 416 statt 384, `ndiff`
+zurück auf 28). Bestätigt dieselbe "zusammengesetztes Problem"-
+Kategorie aus Runde 40/38. Zurückgesetzt, 0 Commit.
+
+**Praktische Konsequenz für künftige Sessions**: Ein niedriger
+`matched_data_percent` in einer populierten Einheit ist in der
+Regel ein SYMPTOM nicht-gematchter Funktionen in derselben Einheit
+(unterschiedliche Literal-Pool-Referenzen durch unterschiedlichen
+Code), kein eigenständig zu jagendes Ziel — zuerst den
+Code-Match-Status der Einheit prüfen, bevor Zeit in
+Daten-Sektions-Archäologie investiert wird.
+
+Keine Quelltextänderung in dieser Runde (beide Experimente sauber
+zurückgesetzt). Session-Gesamtstand bleibt bei **388 tatsächlich
+verifizierte Funktionen** in 47 Commits. `matched_functions`
+unverändert bei 8975, DOL SHA1 `OK`.
+
+
 
 
 
