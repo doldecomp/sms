@@ -155,23 +155,49 @@ Quelltext auf sauberen Zustand zurückgesetzt:
   verschiebt dadurch auch das verglichene Zielfenster). Zurückgesetzt
   auf die saubere 99,66-%-Fassung.
 - `JSystem/JAudio/JASystem/JASTrack.cpp::noteOn` (824 Bytes, 99,80 %
-  clean) — `char trash[8]` behebt die reale 8-Byte-Frame-Lücke
-  (0x70 vs. 0x68) sauber und hebt den Match auf 99,88 % an (Position
-  des `trash` innerhalb der Funktion ist irrelevant, drei Stellen
-  getestet, identisches Ergebnis). Rest ist ein einzelnes
-  Register-Umnummerierungsmuster (`r24` bei uns vs. `r23` im Original
-  für denselben `TTrack* mParent`-Lokal über die gesamte
+  clean) — 8-Byte-Frame-Gap (`0x70` vs. `0x68` mit `trash[8]`)
+  **plus** ein Register-Umnummerierungsmuster (`r24` bei uns vs. `r23`
+  im Original für denselben `TTrack* mParent`-Lokal über die gesamte
   Parent-Walk-Schleife) — dieselbe Kategorie wie der bereits
-  dokumentierte `effectObj::reset`-Fall. Zurückgesetzt auf die saubere
-  99,80-%-Fassung.
+  dokumentierte `effectObj::reset`-Fall. **Korrektur**: Der zunächst
+  gemessene Sprung auf 99,88 % mit `char trash[8]` wurde nachträglich
+  als Messartefakt entlarvt (siehe `execcall`-Fund unten) — gezielte
+  Vorher/Nachher-Prüfung der Zieldisassemblierung zeigt, dass sich der
+  `stwu`-Wert der **Zielseite** exakt von `-0x68` auf `-0x70`
+  verschiebt, sobald unsere Funktion um 8 Byte wächst. Zurückgesetzt
+  auf die saubere 99,80-%-Fassung; keine verifizierbare Verbesserung.
 - `JSystem/JAudio/JASystem/JASTrack.cpp::writeRegParam` (1.288 Bytes,
   99,36 % clean, bereits mit Upstream-Kommentar `// TODO: This is pure
   pain` als bekannt schwierig markiert) — 16-Byte-Frame-Gap (`0x48` vs.
   `0x38`) plus eine echte Argument-Auswertungsreihenfolge-Vertauschung
   vor dem zweiten `writeRegDirect(5, product)`-Aufruf (`this`-Setup vs.
-  Wertberechnung in umgekehrter Reihenfolge). `char trash[0x10]`
-  bewegt den Match nur auf 99,38 %; bestätigt als strukturell
-  schwierig, zurückgesetzt auf die saubere Fassung.
+  Wertberechnung in umgekehrter Reihenfolge). `char trash[0x10]` zeigte
+  einen scheinbaren Sprung auf 99,38 % — angesichts des unten
+  dokumentierten Messartefakt-Musters nicht verifiziert und daher nicht
+  als reale Verbesserung gewertet; bestätigt als strukturell schwierig,
+  zurückgesetzt auf die saubere Fassung.
+
+**Wichtiger Methodik-Fund (Messartefakt bei Teil-Matches)**:
+`objdiff-cli` grenzt bei `NonMatching`-Funktionen den
+Vergleichsbereich der Zielseite offenbar an der aktuell kompilierten
+Größe unserer Funktion ab, wenn die Symbolgröße nicht anderweitig fest
+verankert ist. Vergrößert man die eigene Funktion per `char trash[N]`,
+kann dadurch auch das verglichene Zielfenster wachsen und zufällig
+bessere Byte-Übereinstimmung vortäuschen, **ohne dass ein echter
+Match vorliegt**. Nachträglich per gezieltem Vorher/Nachher-Vergleich
+des Ziel-Prologs (`stwu r1, -N(r1)`) an vier Fällen bestätigt:
+`execcall` (-0x68→-0x88), `calcViewMtx` (-0xc8→-0xe0),
+`drawRevivalTexStamp` (-0x98→-0xa0), `noteOn` (-0x68→-0x70) — in
+allen vier Fällen verschob sich der Zielwert exakt um die Größe des
+hinzugefügten `trash`-Arrays. **Regel ab sofort**: Eine
+Prozentverbesserung durch `trash[N]` gilt nur dann als real, wenn sie
+entweder (a) echte 100 % erreicht (dort ist eine zufällige
+Fensterverschiebung durch vollständige Byte-Identität statistisch
+ausgeschlossen) oder (b) durch einen expliziten Vorher/Nachher-Vergleich
+des Ziel-Prologs bestätigt wird, dass sich die Zielseite NICHT
+verändert hat. Reine Prozentangaben zwischen zwei `objdiff-cli`-Läufen
+mit unterschiedlicher eigener Funktionsgröße sind für sich allein
+**nicht** aussagekräftig.
 
 Die Referenz-DOL bleibt `OK`.
 
@@ -195,20 +221,23 @@ Fortschritt in dieser Runde, aber wertvolle Root-Cause-Dokumentation:
   other places` als bekannt schwierig markiert) — 8-Byte-Frame-Gap plus
   f6/f7-Register-Swap und Instruktions-Umordnung; `char trash[8]`
   bewirkt keinerlei Veränderung (95,95 % → 95,95 %).
-- `Map/PollutionCount.cpp` — vier Funktionen, alle mit verschachteltem
+- `Map/PollutionCount.cpp` — vier Funktionen mit verschachteltem
   Auto-Inlining (`ReInitializeGX`/`drawPollutionLayer`/
   `loadPollutionLayer`/`initDrawObjGX` werden je nach Aufrufstelle vom
   Compiler automatisch eingebettet):
   - `drawRevivalTexStamp` (748 Bytes, 99,93 % clean) — 8-Byte-Frame-Gap
-    behoben durch zwei getrennte `char trash[4]`-Blöcke (vor der
-    `GXSetChanMatColor`-Compound-Literal-Zeile und nach dem
-    `JUTTexture texture`-Local in der Schleife), hebt den Match auf
-    99,98 % — bestmöglich. Rest ist eine einzelne 4-Byte-Verschiebung
-    für die Speicherposition des `(GXColor){...}`-Compound-Literals
-    relativ zu einem benachbarten, nicht überlappenden Stack-Slot;
-    weder Trash-Position/-Größe noch ein benannter `GXColor`-Local
-    statt Compound-Literal (Regression auf 98,87 %) beheben das.
-    Zurückgesetzt auf die saubere 99,93-%-Fassung.
+    (bestätigt behoben durch zwei getrennte `char trash[4]`-Blöcke, vor
+    der `GXSetChanMatColor`-Compound-Literal-Zeile und nach dem
+    `JUTTexture texture`-Local in der Schleife). Der zunächst gemessene
+    Sprung auf 99,98 % wurde als Messartefakt identifiziert (siehe
+    Methodik-Fund oben): Ziel-Prolog verschiebt sich exakt von
+    `-0x98` auf `-0xa0`, wenn unsere Funktion um 8 Byte wächst. Der
+    restliche 4-Byte-Versatz betrifft die Speicherposition des
+    `(GXColor){...}`-Compound-Literals relativ zu einem benachbarten,
+    nicht überlappenden Stack-Slot; ein benannter `GXColor`-Local
+    statt Compound-Literal verschlechtert klar auf 98,87 % (kein
+    Artefakt, da Verschlechterung). Zurückgesetzt auf die saubere
+    99,93-%-Fassung; keine verifizierbare Verbesserung.
   - `countTexDegree` (596 Bytes, 99,87 % clean) — 88-Byte-Frame-Gap
     durch zweifach verschachteltes Auto-Inlining von
     `drawPollutionLayer` → `loadPollutionLayer` (dessen einziger Local
@@ -225,22 +254,55 @@ Fortschritt in dieser Runde, aber wertvolle Root-Cause-Dokumentation:
     angesichts der bestätigten Kategorie.
   - `calcViewMtx` (384 Bytes, 99,21 % clean) — 24-Byte-Frame-Gap durch
     inlineten `TPosition3f local_a4`-Zero-Fill in der Schleife;
-    `char trash[0x18]` nach `local_a4` schließt den Frame exakt und
-    hebt den Match auf 99,28 % (bestmöglich; `trash[0x14]` verschlechtert
-    auf 99,21 %, da der Frame dann nicht mehr exakt stimmt). Rest ist
-    eine 4-Byte-Slot-Verschiebung plus f0/f1-Register-Swap für
-    `makeWorldToPollutionMtx`, dieselbe Kategorie wie
-    `drawRevivalTexStamp`. Zurückgesetzt auf die saubere 99,21-%-Fassung.
+    `char trash[0x18]` nach `local_a4` zeigte einen scheinbaren Sprung
+    auf 99,28 %, der per Vorher/Nachher-Vergleich des Ziel-Prologs
+    (`-0xc8` → `-0xe0`, exakt um die Trash-Größe) als Messartefakt
+    entlarvt wurde. Rest ist eine 4-Byte-Slot-Verschiebung plus
+    f0/f1-Register-Swap für `makeWorldToPollutionMtx`, dieselbe
+    Kategorie wie `drawRevivalTexStamp`. Zurückgesetzt auf die saubere
+    99,21-%-Fassung; keine verifizierbare Verbesserung.
+- `Strategic/objmanager.cpp` — zwei weitere Funktionen (nicht Teil von
+  `PollutionCount.cpp`):
+  - `TObjManager::perform` (236 Bytes, 99,83 % clean) —
+    16-Byte-Frame-Gap; `char trash[0x10]` zeigte denselben Artefakt
+    (Ziel-Prolog `-0x40` → `-0x50`), keine reale Verbesserung.
+    Zurückgesetzt auf die saubere Fassung.
+  - `TObjManager::load` (168 Bytes, 99,93 % clean) — 4-Byte-Versatz für
+    `char buffer[0x100]`; `char trash[4]` vor und nach dem Buffer
+    jeweils **verschlechtert** auf 99,71 % (keine Artefakt-Verwechslung
+    möglich, da Verschlechterung eindeutig ist). Zurückgesetzt auf die
+    saubere Fassung.
+
 
 Die Referenz-DOL bleibt `OK`.
 
-### Bereiche
+### Nach achter Iterationsrunde (M3UModel::updateInMotion; Artefakt-Korrektur)
 
-| Bereich | Fuzzy | Code matched | Units linked |
-| --- | ---: | ---: | ---: |
-| Game Code | 71,92 % | 28,00 % | 3,29 % (81 / 387) |
-| JSystem | 99,71 % | 88,32 % | 66,97 % (176 / 200) |
-| SDK | 99,97 % | 98,88 % | 98,34 % (146 / 149) |
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,57 % (1.492.552 / 3.590.088) | +292 Bytes |
+| Funktionen matched | 66,77 % (8.601 / 12.881) | +1 |
+
+Ein neuer 100-%-Match: `M3DUtil/M3UModel.cpp::M3UModel::updateInMotion`
+(292 Bytes, `char trash[0x28]` schließt eine 40-Byte-Frame-Lücke ohne
+Struct-Locals im Funktionskörper).
+
+**Nachträgliche Korrektur der sechsten/siebten Runde**: Beim
+systematischen Nachprüfen (Vorher/Nachher-Vergleich des
+Ziel-Funktionsprologs) stellte sich heraus, dass die dort gemeldeten
+Teil-Verbesserungen durch `trash[N]` bei `noteOn` (99,80 % → 99,88 %),
+`calcViewMtx` (99,21 % → 99,28 %) und `drawRevivalTexStamp` (99,93 % →
+99,98 %) **Messartefakte** waren, keine echten Verbesserungen (siehe
+Methodik-Fund und korrigierte Einträge oben). Alle drei Funktionen
+bleiben bei ihrer sauberen Ausgangs-Prozentzahl ohne verifizierte
+Verbesserung. Die bereits committeten echten 100-%-Matches
+(`appendGrpMember`, `append`, `writeRegDirect`, `updateInMotion`) sind
+von diesem Artefakt nicht betroffen, da eine zufällige Fensterver-
+schiebung bei echten 100-%-Treffern über mehrere hundert Bytes hinweg
+statistisch ausgeschlossen ist.
+
+Die Referenz-DOL bleibt `OK`.
+
 
 ## Windows-Setup
 
@@ -466,13 +528,21 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   objdiff-Sections (bestätigter Adress-Shift-Layoutfehler, siehe oben).
 
 - `JSystem/JAudio/JASystem/JASTrack.cpp`: `TTrack::writeRegDirect` —
-  **100 %** (204 Bytes, `char trash[8]`). `noteOn` (99,88 % best) und
-  `writeRegParam` (99,38 % best) bleiben Nonmatching (siehe oben).
+  **100 %** (204 Bytes, `char trash[8]`). `noteOn` (99,80 % clean,
+  keine verifizierte Verbesserung — Messartefakt korrigiert) und
+  `writeRegParam` (99,36 % clean) bleiben Nonmatching (siehe oben).
+
+- `M3DUtil/M3UModel.cpp`: `M3UModel::updateInMotion` — **100 %**
+  (292 Bytes, `char trash[0x28]` am Funktionsanfang, keine Struct-Locals).
 
 ## Nächster GMSJ01-Kandidat
 
 `ItemManager::newAndRegisterCoin` (99,59 %) und `PollutionManager::
-cleanedAll` (96,43 %) offen.
+cleanedAll` (96,43 %) offen. `Map/Shimmer.cpp::TShimmer::perform`
+(99,80 %, 648 Bytes), `Enemy/bgpoldrop.cpp::TBGPolDrop::move` (99,79 %,
+592 Bytes), `Animal/AnimalManager.cpp::TMewManager::loadAfter`
+(99,67 %, 60 Bytes) und `TAnimalManagerBase::clipEnemies` (94,98 %,
+256 Bytes) sind gescannt, aber noch nicht untersucht.
 `JSystem/J3D/J3DGraphAnimator/J3DModel.cpp::entryModelData` (1248 Bytes,
 99,76 %) — Aufteilen des inline `&mShapePackets[shape->getIndex()]`-Ausdrucks
 in einen expliziten `J3DShapePacket*`-Local behob den ersten
