@@ -33,6 +33,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Materialised bool = inlined bool helper, direct branch = inline compare; both occur in one TU (codegen-tells.md: "Booleans and predicates").
 - `return x==N` is branchless, `return h()` adds `clrlwi`, `?TRUE:FALSE` a second branch, `bool` branches to `li 1/0` (codegen-tells.md: "Booleans and predicates").
 - A two-`return` body plus one level is refused right of `&&`/`||`: spell `if (c) return TRUE; return FALSE;` (codegen-tells.md: "header round 9").
+- A member read-modify-write (`m.add(w)`, `m.x += w.x`) cannot hoist its loads; sum into a fresh object then `m.set(tmp)` to load all components first; a `bl` to a distance helper is identified by subtraction direction, offset-member read and sqrt form, not by name (codegen-tells.md: "Header round 44").
 - MWCC always CSEs two loads of a member across a short-circuit branch: a reload proves a `bl` or store between (codegen-tells.md: "batch 60").
 - A member read through an inlined `const` accessor defers its load past a directly read global and flips the `fmuls` destination operand (`getUnk80() * gpCamera->mFovy`); a class local that must survive a `bl` is a four-float ctor (`MapMirrorPlane`), and `: member()` initialisers are not free (codegen-tells.md: "Closure 254").
 - A `const` accessor restores per-use re-reads and can also *cause* a CSE; decide per statement (codegen-tells.md: "header round 7").
