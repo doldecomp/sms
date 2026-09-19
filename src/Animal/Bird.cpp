@@ -68,6 +68,7 @@ const GXColorS10 cColorTable[] = {
 
 } // namespace
 
+
 TAnimalBird::TAnimalBird(const char* name)
     : TSpineEnemy(name)
 {
@@ -382,10 +383,29 @@ bool TAnimalBird::isCheckWithWireBinder() const
 	            == &TNerveAnimalBirdPreLanding::theNerve());
 }
 
+// TU-local, name unknown: one inline level between isChanged() and theNerve()
+// is what makes retail emit `li r3, instance$; bl TNerveBase<TLiveActor>()`
+// inside both of receiveMessage's inlined isChanged() guards while the two
+// `setNext(&theNerve())` arguments two statements later still expand the base
+// constructor (codegen-tells.md, "Research batch 251": the guard expands at
+// theNerve level 1 and calls the base ctor at level 2, and an argument is
+// evaluated at the caller's level). receiveMessage 96.9 -> 100.0 and
+// isChanged's own out-of-line body stays at the map's 0x90, which pins the
+// level to the inside of isChanged rather than the call site.
+// TODO: the level overshoots the two UNUSED sizes that measured it --
+// checkChangeToItem is now 0xec against the map's 0x110 (theNerve itself goes
+// out of line at level 3 there) and isChangeToItem 0xa8 against 0x98 -- so the
+// real spelling is probably a named TAnimalBird predicate, not a free helper.
+// It also reshuffles the weak DEFINE_NERVE bodies (validate-symbol-order's
+// compiler-controlled warning).
+static inline const TNerveBase<TLiveActor>* BirdChangeToCoinNerve()
+{
+	return &TNerveAnimalBirdChangeToCoin::theNerve();
+}
+
 bool TAnimalBird::isChanged() const
 {
-	return mSpine->getLatestNerve()
-	    == &TNerveAnimalBirdChangeToCoin::theNerve();
+	return mSpine->getLatestNerve() == BirdChangeToCoinNerve();
 }
 
 bool TAnimalBird::isFlying() const
