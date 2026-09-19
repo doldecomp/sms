@@ -41,14 +41,22 @@ f32 TMario::getJumpSlideControl() const
 	return mJumpParams.mJumpSlideControl.get();
 }
 
+static inline TWaterGun* TMarioCanSquatGetFludd(const TMario* p)
+{
+	const TMario* mario = p;
+	TWaterGun* fludd    = mario->mWaterGun;
+	return fludd;
+}
+
 bool TMario::canSquat() const
 {
-	if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun
-	    && ((const TWaterGun*)mWaterGun)
+	if (checkFlag(MARIO_FLAG_HAS_FLUDD) && TMarioCanSquatGetFludd(this)
+	    && ((const TWaterGun*)TMarioCanSquatGetFludd(this))
 	               ->getCurrentNozzle()
 	               ->mEmitParams.mRocketType.get()
 	           != 1
-	    && (int)mWaterGun->mCurrentNozzle != 5 && (mInput & 0x200))
+	    && (int)TMarioCanSquatGetFludd(this)->mCurrentNozzle != 5
+	    && (mInput & 0x200))
 		return true;
 	else
 		return false;
