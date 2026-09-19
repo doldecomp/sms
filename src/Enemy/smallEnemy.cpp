@@ -600,7 +600,9 @@ bool TSmallEnemy::changeByJuice()
 		if (!mJuiceBlock)
 			return false;
 
-		mJuiceBlock->mScaling.set(0.1f, 0.1f, 0.1f);
+		JGeometry::TVec3<f32> blockScale;
+		blockScale.set(0.1f, 0.1f, 0.1f);
+		mJuiceBlock->mScaling.set(blockScale);
 		mJuiceBlock->unk140.set(0.0f, 0.0f, 0.0f);
 		mJuiceBlock->mRotation.set(0.0f, mRotation.y, 0.0f);
 
