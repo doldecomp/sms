@@ -60,6 +60,7 @@ void TMapModel::perform(u32 cue, JDrama::TGraphics* graphics)
 void TMapModel::initUnderpass()
 {
 	s32 nameIdx = mModelData->getJointName()->getIndex("underpass");
+	char trash[0x20];
 	if (nameIdx < 0)
 		return;
 
