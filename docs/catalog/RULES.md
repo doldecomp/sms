@@ -36,6 +36,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Counted at zero codegen: `a = a;`, `(void)0;`, `a += 0;`, `if (0) {}`, `switch (x) {}`, `while (0);`, `goto`, a statement after `return`, an unused `register`/block-scope init decl, and **a named local** (`int t = e; x = t;`, the only plausible one); free: `;`, `{}`, uninit decl, `do {} while (0)`, `asm {}`, a folded `const` local, `enum`/`typedef`, a label. `a && b` costs the same as nested `if`s; the caller's context and `this->`/qualified calls are inert (codegen-tells.md: "Research batch 186").
 - Cost: 1 per expression statement or initialised declaration, 1 per `else`, a loop 1 + init + increment + 1 (codegen-tells.md: "`bosseel`/`fireWanwan`").
 - Free: uninitialised declaration, `;`, `{}`, `return <local>;`, splitting `f32 x = e;`, statements from a callee's own inlines (codegen-tells.md: "Inlining").
+- An inlined one-liner's **argument** is not a level, only an enclosing inlined body is: `f(g(x))` flips at the same cost as `t = g(x)` (codegen-tells.md: "Batch 190").
 - Depth counts from the innermost expression; an inlined call's argument is a level, an out-of-line call's is not (codegen-tells.md: "sweep 106").
 - Any **stored** value accepts a level; a `return *this` forwarder is not a level, but still binds frame (codegen-tells.md: "sweep 106").
 - not: definition order, "deferred inlines only later-defined callees", caller size, site count, declaration form — all inert (codegen-tells.md: "Inlining").
