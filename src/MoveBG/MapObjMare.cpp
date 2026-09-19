@@ -888,7 +888,7 @@ void TMuddyBoat::bind()
 
 	// The Noki Bay stream cubes carry a flow direction and strength; the boat
 	// picks up whatever component of it points along its own heading.
-	int cubeNo = gpCubeStream->getInCubeNo(*gpMarioPos);
+	int cubeNo = gpCubeStream->getInCubeNo(SMS_GetMarioPos());
 	if (cubeNo != -1) {
 		TCubeStreamInfo* info
 		    = (TCubeStreamInfo*)gpCubeStream->unk14->getChildren()[cubeNo];
