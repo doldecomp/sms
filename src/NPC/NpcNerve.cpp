@@ -251,6 +251,7 @@ DEFINE_NERVE(TNerveNPCSetPosAfterSinkBottom, TLiveActor)
 DEFINE_NERVE(TNerveNPCTalk, TLiveActor)
 {
 	TBaseNPC* self = (TBaseNPC*)spine->getBody();
+	char trash[8];
 
 	if (gpMarDirector->isThing()) {
 		if (spine->getTime() == 0)
