@@ -430,11 +430,16 @@ void JPARandomField::affect(JPAParticle* particle)
 
 JPADragField::JPADragField() { unk50 = 6; }
 JPADragField::~JPADragField() { }
+static inline f32 JPADragFieldRandom()
+{
+	return FieldRand.get_ufloat_1();
+}
+
 void JPADragField::affect(JPAParticle* particle)
 {
 	if (!particle->checkStatus(JPABaseParticle::FLAG_UNK4)) {
 		if (particle->getAge() == 0) {
-			f32 rnd = unk14 * (FieldRand.get_ufloat_1() - 0.5f) + unk10;
+			f32 rnd = unk14 * (JPADragFieldRandom() - 0.5f) + unk10;
 			if (rnd > 1.0f)
 				rnd = 1.0f;
 			particle->mDragForce = rnd;
