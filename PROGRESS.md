@@ -2134,7 +2134,117 @@ vollständige Klassenliste siehe Iterationsrunde 33.
   `TSirenaRollMapObj::getRollAngX/Y/Z(int) const`, `JDrama::
   TFlagT<u16>::TFlagT(const TFlagT&)`. Details siehe Iterationsrunde 34.
 
+## KRITISCHE METHODIK-KORREKTUR (spätes Finding dieser Session)
+
+**Entdeckung der Build-Architektur**: `objdiff.json` definiert pro Einheit
+`target_path` (`build/GMSJ01/obj/<Einheit>.o`, statische Retail-Referenz,
+extrahiert bei Projekt-Setup, NIE neu gebaut — kein Ninja-Rule erzeugt
+`obj/*.o`) und `base_path` (`build/GMSJ01/src/<Einheit>.o`, unser
+kompilierter Quelltext). Der `metadata.complete`-Flag pro Einheit
+entscheidet, welche Datei tatsächlich in `mario.elf`/`mario.dol` gelinkt
+wird: `complete: true` → `src/*.o` (unser Code), `complete: false` →
+`obj/*.o` (Retail-Bytes), bestätigt per `ninja -t query mario.elf` und
+direkter Durchsicht von `build.ninja`s `build mario.elf: link ...`-Zeile.
+736 Einheiten insgesamt, davon 415 `complete: true`. Die restlichen 321
+(darunter praktisch alle in dieser Session bearbeiteten Einheiten aus
+Runde 28–34: `CameraMode.cpp`, `hamukuri.cpp`, `ShadowUtil.cpp`,
+`MarNameRefGen_*.cpp`, `MapObjBase.cpp`, `DrawUtil.cpp`, `cameralib.cpp`
+u.v.a.) liefern **immer** Retail-Bytes an den Linker, unabhängig vom
+Inhalt von `src/*.o`.
+
+**Konsequenz**: `build/GMSJ01/mario.dol`s SHA-1 (`9f5a8caf...`, identisch
+mit `orig/GMSJ01/sys/main.dol`) ist bei `complete: false`-dominiertem
+Baustand strukturell invariant — ein Quelltext-Fix in einer
+unvollständigen Einheit kann diesen Hash grundsätzlich nicht verändern.
+Experimentell bestätigt: `CameraMode::isNormalCameraCompletely` auf
+`return true;` sabotiert, `ninja` neu gebaut, `dtk shasum -c` blieb
+`OK`, `ninja build\GMSJ01\mario.dol` meldete explizit `no work to do`.
+**Der in dieser Session (und vermutlich in früheren Sessions) als
+"mandatory ultimate ground truth" behandelte Byte-Vergleich zwischen
+`build/GMSJ01/mario.dol` und `orig/GMSJ01/sys/main.dol` ist für JEDE
+`complete: false`-Einheit ein No-Op-Test** (vergleicht Retail-Bytes mit
+sich selbst) und beweist nichts über Quelltext-Korrektheit.
+
+**Rückzug**: Die in Runde 32/33 als "bereits korrekt, `objdiff-cli`
+meldet fälschlich 0 %" dokumentierten 59 Funktionen (9.892 Bytes:
+`TFireHamuKuri::moveObject`/`isHitValid`, `TMarDirector::fireGetStar`,
+6 `ShadowUtil.cpp`-`makeDL()`-Methoden, 42 `MarNameRefGen_*`-Destruktoren,
+6 weitere `ShadowUtil.cpp`-Destruktoren, 2 Vtable-Thunks) wurden
+ausschließlich per Whole-DOL-Byte-Vergleich "verifiziert" — alle liegen
+in `complete: false`-Einheiten. Diese Verifikation ist ungültig.
+Stichprobe `TFireHamuKuri::moveObject`/`isHitValid` per direktem
+`objdiff-cli diff -u mario/Enemy/hamukuri`: **`match_percent: 0.0`**
+für beide Funktionen. Zusätzlich hat Retails `hamukuri.o` mehr Symbole
+als unseres (`dieFire`, `genFire`, `recoverFire`,
+`theNerve__25TNerveFireHamuKuriRecoverFv` fehlen komplett in unserer
+Quelle) — ein echtes, bisher unbekanntes Funktionsloch in
+`TFireHamuKuri`. **Alle 59 Funktionen gelten ab sofort wieder als
+offene Kandidaten**, nicht als erledigt.
+
+**Runde 28–34 Pragma-Fix-Kategorie (`#pragma dont_inline`, ~63
+Funktionen) — Status unklar, nicht pauschal zurückgezogen**: Stichprobe
+an `TRotation3<...>::identity33()` (Runde 34) zeigt ein komplexeres
+Bild als ein einfaches Richtig/Falsch:
+- Die Behauptung "26 Call-Sites über 14 Dateien" war falsch – tatsächlich
+  rufen nur 3 Dateien (`cameralib.cpp` 2×, `JDRCamera.cpp` 1×,
+  `BathWaterManager.cpp` 1×) `identity33()` direkt auf.
+- `config/GMSJ01/symbols.txt` bestätigt, dass Retail `identity33` als
+  `scope:weak`-Symbol besitzt (0x800C0E44, 0x30 Bytes) — der Fix war also
+  nicht grundlos.
+- Direkter `dtk elf disasm`-Vergleich von `obj/Camera/cameralib.o` gegen
+  frisch gebautes `src/Camera/cameralib.o`: **beide Seiten** emittieren
+  KEINE lokale `identity33`-Kopie (beide inlinen an dieser Aufrufstelle
+  vollständig) — hier stimmen Quelle und Retail überein, das Pragma
+  ändert an dieser Stelle nichts (weder positiv noch negativ).
+  `obj/MarioUtil/DrawUtil.o` dagegen ENTHÄLT eine vollständige
+  `identity33`-Definition (mit echtem Funktionskörper), obwohl
+  `src/MarioUtil/DrawUtil.cpp` `identity33()` an KEINER Stelle aufruft
+  — ein separates, unabhängiges Funktionsloch (fehlender Call oder
+  fehlende Funktionalität in `DrawUtil.cpp`), nicht durch das Pragma
+  behebbar.
+- **`objdiff-cli diff -u mario/MarioUtil/DrawUtil identity33...`
+  meldete fälschlich `left: vorhanden (48 Bytes, weak)`, obwohl die
+  frische Disassemblierung von `src/MarioUtil/DrawUtil.o` das Symbol
+  NICHT enthält** — ein weiterer bestätigter Fall von unzuverlässigen
+  `objdiff-cli`-Diff-Ergebnissen (vermutlich gecachte/veraltete Daten),
+  zusätzlich zum bereits bekannten Korrelations-Problem bei
+  Destruktor-Clustern (Runde 33).
+
+**Autoritative Verifikationsmethode ab sofort** (ersetzt sowohl
+Whole-DOL-Vergleich als auch blindes Vertrauen in `objdiff-cli
+diff`/`report`):
+1. `config/GMSJ01/symbols.txt` prüfen, ob Retail das Symbol überhaupt
+   als eigenständige Funktion kennt (`grep <mangled-name>`).
+2. Betroffene Einheit frisch bauen: `ninja build\GMSJ01\src\<Pfad>.o`.
+3. Beide Objektdateien disassemblieren: `dtk elf disasm
+   build\GMSJ01\src\<Pfad>.o out_src.s` und `dtk elf disasm
+   build\GMSJ01\obj\<Pfad>.o out_obj.s`.
+4. Direkter Text-/Byte-Vergleich der `.fn <symbol> ... .endfn`-Blöcke
+   in beiden Dateien. Das ist die einzige Methode, die in dieser Session
+   nicht widerlegt wurde.
+
+**Nicht erledigt**: Die individuelle Nachprüfung aller ~63 Runde-29–34-
+Pragma-Fix-Commits mit obiger Methode steht noch aus (zu
+zeitaufwändig für den Rest dieser Session). Runde 1–27 (Funktionen vor
+der Pragma-Kategorie, meist mit `char trash[N]`-Frame-Fixes und
+konkreten Vorher/Nachher-Prozent-Angaben aus `objdiff-cli report`)
+sind vermutlich unbetroffen, da deren Verifikation nie auf dem
+Whole-DOL-Vergleich beruhte, sondern auf gemessenen
+Report-Prozentänderungen — aber auch diese profitieren von einer
+künftigen Nachprüfung mit der autoritativen Methode, gegeben dass
+`objdiff-cli` in mindestens zwei unabhängigen Fällen dieser Session
+(Destruktor-Cluster Runde 33, `DrawUtil::identity33` hier) nachweislich
+falsche Ergebnisse lieferte.
+
 ## Nächster GMSJ01-Kandidat
+
+**Wieder offen (siehe Methodik-Korrektur oben)**: Alle 59 in Runde
+32/33 als "bereits korrekt" dokumentierten Funktionen. Priorität:
+`TFireHamuKuri` in `Enemy/hamukuri.cpp` — fehlende Funktionalität
+bestätigt (`dieFire`, `genFire`, `recoverFire`,
+`TNerveFireHamuKuriRecover::theNerve` existieren in Retail, fehlen
+komplett in unserer Quelle; `moveObject`/`isHitValid` zeigen
+`match_percent: 0.0`).
 
 `ItemManager::newAndRegisterCoin` (99,59 %) und `PollutionManager::
 cleanedAll` (96,43 %) offen.
