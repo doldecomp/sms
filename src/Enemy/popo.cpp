@@ -772,7 +772,16 @@ bool TPopo::isFindMario(float scale)
 	if (mSpine->getTime() > 100
 	    && !gpMarioOriginal->checkFlag(MARIO_FLAG_VISIBLE)) {
 		TSmallEnemyParams* params = (TSmallEnemyParams*)getSaveParam();
-		if (isInSight(SMS_GetMarioPos(), params->mSLSearchLength.get() * scale,
+		// Retail copies Mario's position into a stack temp before the
+		// call (`lfs 8/4/0`, `stfs 0/4/8`), so the argument is a value,
+		// not the `TVec3&` SMS_GetMarioPos returns; `= SMS_GetMarioPos()`
+		// copies it with `lwz`/`stw` instead (82.0 vs 83.6 here).
+		// TODO: still 0x18 of frame short -- two more 12-byte temporaries
+		// live below the copy in retail's low region, with no carrier
+		// visible, and the three `.get()`s want their addresses folded.
+		JGeometry::TVec3<f32> marioPos;
+		marioPos.set(SMS_GetMarioPos());
+		if (isInSight(marioPos, params->mSLSearchLength.get() * scale,
 		              params->mSLSearchAngle.get() * scale,
 		              params->mSLSearchAware.get() * scale))
 			return true;
