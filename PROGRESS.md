@@ -621,6 +621,35 @@ Zwei weitere Feld-`affect`-Funktionen geprüft, beide Nonmatching:
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach achtzehnter Iterationsrunde (M3DUtil/MActor.cpp: neun Matches)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,84 % (1.502.040 / 3.590.088) | +2.628 Bytes |
+| Funktionen matched | 8.636 / 12.881 | +9 |
+
+Neun neue 100-%-Matches in `M3DUtil/MActor.cpp`, alle einfache
+Frame-Gap-Fixes ohne Struct-Locals: `isCurAnmAlreadyEnd` (200 Bytes,
+`trash[8]`), `calc` (264 Bytes, `trash[0x10]`), `updateIn`/`updateOut`
+(228 Bytes je, `trash[8]`), `calcAnm` (404 Bytes, `trash[0x18]`),
+`entry` (332 Bytes, `trash[8]`), `setLightData` (160 Bytes,
+`trash[0x20]`), `perform` (472 Bytes, `trash[0x10]`),
+`frameUpdate`/`updateMatAnm` (192/148 Bytes, je `trash[8]`).
+
+Zwei Nonmatching-Reste in derselben Datei (Frame-Gap gefunden, aber
+kein 100-%-Match): Konstruktor `MActor::MActor(MActorAnmData*)`
+(1.272 Bytes, 99,97 % best mit `trash[8]`) und `setModel` (752 Bytes,
+99,95 % best mit `trash[0x18]`) — beide zurückgesetzt auf die
+sauberen 99,95-%/99,92-%-Ausgangsfassungen.
+
+Auch `Camera/CameraWarp.cpp::warpPosAndAt(f32,s16)` geprüft
+(580 Bytes, 99,77 % clean) — 8-Byte-Frame-Gap plus zwei vertauschte
+Struct-Locals (`usualLookat`/`pos`); weder Deklarationsreihenfolge-
+Tausch noch `char trash[8]` erreichten 100 % (99,83 % best),
+zurückgesetzt.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -915,6 +944,12 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   **100 %** (320 Bytes, `char trash[8]`). `JPADragField::affect`,
   `JPAVortexField::affect`, `JPARandomField::affect` bleiben
   Nonmatching (siehe oben).
+
+- `M3DUtil/MActor.cpp`: neun Funktionen — **100 %**:
+  `isCurAnmAlreadyEnd`, `calc`, `updateIn`, `updateOut`, `calcAnm`,
+  `entry`, `setLightData`, `perform`, `frameUpdate`, `updateMatAnm`
+  (alle einfache `char trash[N]`-Frame-Gap-Fixes). Konstruktor und
+  `setModel` bleiben Nonmatching (siehe oben).
 
 ## Nächster GMSJ01-Kandidat
 
