@@ -34,6 +34,7 @@ TWalkerEnemy::TWalkerEnemy(const char* name)
 
 void TWalkerEnemy::init(TLiveManager* param_1)
 {
+	char trash[8];
 	TSmallEnemy::init(param_1);
 	mBinder = new TWalker;
 	getWalker()->reset();
