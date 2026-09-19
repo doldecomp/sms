@@ -132,7 +132,7 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
 void TBPPolDrop::drop()
 {
 	mState      = BOSSPAKU_POLDROP_STAMPED;
-	mVelocity.z = mVelocity.y = mVelocity.x = 0.0f;
+	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 	mStampMActor->setBck("pollut_ball_stamp");
 	gpMarioParticleManager->emit(PARTICLE_MS_OSENDAN, &mPosition, 0,
 	                             nullptr);
