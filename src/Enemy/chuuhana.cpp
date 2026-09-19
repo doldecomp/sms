@@ -734,8 +734,9 @@ void TChuuHana::forceKill()
 {
 	// Only survive a force-kill when standing somewhere legal and inside
 	// the map area.
-	if (!mGroundPlane->isIllegalData() && !mGroundPlane->isDeathPlane()
-	    && !mGroundPlane->isPool() && !mGroundPlane->isWaterSurface()) {
+	if (mGroundPlane->isIllegalData()
+	    || (!mGroundPlane->isDeathPlane() && !mGroundPlane->isPool()
+	        && !mGroundPlane->isWaterSurface())) {
 		if (gpMap->isInArea(mPosition.x, mPosition.z)) {
 			if (!mGroundPlane->isIllegalData())
 				return;
