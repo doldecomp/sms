@@ -171,15 +171,12 @@ bool TGCLogoDir::direct_nlogo()
 	switch (mState) {
 	case 0:
 		if (gpApplication.mFader->isFullyFadedIn()) {
-			if (mProgSelect->unkC.mValue == 0)
-				nextState = 3;
-			else
-				nextState = 1;
+			nextState = (int)mProgSelect->unkC.mValue == 0 ? 3 : 1;
 
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_MV_CHAO, 0, nullptr, 0);
 			mLogoShowTimer = 0;
 		} else {
-			if (mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
+			if ((int)mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
 			    && VIGetDTVStatus() == 1) {
 				if (OSGetProgressiveMode() == 1) {
 					mProgSelect->unkC = 0;
@@ -202,7 +199,7 @@ bool TGCLogoDir::direct_nlogo()
 		} else {
 			bool bVar1 = false;
 
-			if (mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
+			if ((int)mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
 			    && VIGetDTVStatus() == 1) {
 				if (OSGetProgressiveMode() == 1) {
 					mProgSelect->unkC = 0;
@@ -226,7 +223,7 @@ bool TGCLogoDir::direct_nlogo()
 		break;
 
 	case 3:
-		if (mProgSelect->unkC.mValue) {
+		if (mProgSelect->mHideTextBoxes) {
 			mLogoShowTimer = 0;
 			nextState      = 4;
 		}
