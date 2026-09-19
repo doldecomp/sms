@@ -2849,6 +2849,51 @@ unabhängiger Lade-Anweisungen systematisch permutiert und gegen
 Retail vergleicht — deutlich aufwändiger als das bisherige Pattern
 und nicht in dieser Runde verfolgt.
 
+### Nach einundvierzigster Iterationsrunde (neuer produktiver Kandidatenpool: bereits nahe 100 % gematchte Funktionen, 400–2000 Bytes)
+
+Entdeckung eines bislang unbearbeiteten Kandidatenpools: 789
+Funktionen mit `fuzzy_match_percent` zwischen 90 % und 99,99 % und
+Größe 400–2000 Bytes — bisherige Batches (Runde 37) beschränkten
+sich auf Kandidaten unter 100 % Match generell, aber mit kleineren
+Größen-Obergrenzen (≤ 500–3000 B bei gleichzeitig niedrigerem
+Match-Prozentsatz 75–100 %). Der Pool "bereits > 99 % Match, aber
+größere Funktion" wurde nie gezielt abgesucht.
+
+- **Batch A** (99,5–100 % Match, Gap ≤ 0x40, `ndiff` ≤ 20, 134
+  Kandidaten über alle 152 relevanten Einheiten): 6 Treffer (~4,5 %).
+- **Batch B** (99,5–100 % Match, gelockert auf Gap ≤ 0x80, `ndiff`
+  ≤ 40, 255 Kandidaten): 9 weitere Treffer (~3,5 %).
+- **Batch C** (99,0–99,5 % Match, gleiche Gap/`ndiff`-Schwellen, 280
+  Kandidaten): **0 Treffer** — Erschöpfungsgrenze dieses Pools
+  erreicht; alle Änderungen automatisiert zurückgesetzt (reine
+  CRLF-Touches, sauber per `git checkout .` entfernt).
+
+Alle 15 Treffer einzeln gegen frischen `report.json` verifiziert (0
+Probleme): `TTelesa::initItemAttacker`, `THinokuri2::reset`,
+`TMapObjTreeScale::control`, `TBaseNPC::npcWetIn`,
+`TGCConsole2::startAppearRedCoin`, `CPolarSubCamera::
+execSecureView_`, `TOptionSoundUnit::setState`, `TMario::
+getChangeAngleSpeed`, `TCasinoPanelGate::moveObject`,
+`JPAConvertFixVecToFloatVec`, `TMario::addCallBack`, `TMario::
+rocketing`, `TPollutionLayer::getPollutedPosNear`, `TAnimalBase::
+init`, `TWoodBlock::calcRecycle`.
+
+**Erkenntnis**: Der "nahe an 100 %"-Pool (99,5–100 %) ist ergiebiger
+als die 200–400-Byte-Klasse aus derselben Runde, vermutlich weil ein
+bereits sehr hoher Match-Prozentsatz stark mit "nur eine isolierte
+additive Lücke, sonst identisch" korreliert — im Gegensatz zur
+50–95-%-Klasse, wo ein niedrigerer Match-Prozentsatz öfter
+zusammengesetzte Probleme (Frame-Lücke UND Scheduling-Differenz)
+bedeutet. Absacken auf 99,0–99,5 % bringt keinen weiteren Ertrag mehr
+(0/280) — die Ergiebigkeit korreliert eng mit der Match-Prozent-Nähe
+zu 100 %, nicht nur mit der Gap-Größe.
+
+**Session-Gesamtstand nach Runde 41: 383 tatsächlich verifizierte
+Funktionen** (368 aus Runde 1–40 plus 15 neue in Runde 41) in 45
+Commits. Funktionszahl: 8955 → **8970** (**+15**). DOL SHA1 bleibt
+`OK`.
+
+
 
 
 
