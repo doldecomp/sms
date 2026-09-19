@@ -231,6 +231,7 @@ DEFINE_NERVE(TNerveWalkerGraphWander, TLiveActor)
 DEFINE_NERVE(TNerveWalkerAttack, TLiveActor)
 {
 	TWalkerEnemy* self = (TWalkerEnemy*)spine->getBody();
+	char trash[0x10];
 
 	if (spine->getTime() == 0)
 		self->setRunAnm();
