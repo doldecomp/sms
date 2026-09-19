@@ -219,6 +219,13 @@ void TMapObjGeneral::breaking()
 	}
 }
 
+static inline const JGeometry::TVec3<f32>&
+TMapObjGeneralGetInitialScaling(TMapObjGeneral* p)
+{
+	TMapObjGeneral* self = p;
+	return self->mInitialScaling;
+}
+
 void TMapObjGeneral::appearing()
 {
 	// TODO: uuuuuuuh...
@@ -235,8 +242,7 @@ void TMapObjGeneral::appearing()
 		if (mScaling.x < mInitialScaling.x)
 			return;
 
-		// TODO: every instruction matches; the frame is 8 bytes short.
-		mScaling.set(getInitialScaling());
+		mScaling.set(TMapObjGeneralGetInitialScaling(this));
 	}
 
 uuuh:
