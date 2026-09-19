@@ -159,16 +159,24 @@ void SMSLoadArchiveARAM(TARAMBlock* param_1, const char* param_2)
 	}
 }
 
+static inline void* SMSMountAramArchiveGetUnkD4()
+{
+	TMarDirector* director = gpMarDirector;
+	void* unkD4            = director->getUnkD4();
+	return unkD4;
+}
+
 void SMSMountAramArchive(JKRMemArchive* param_1, TARAMBlock& param_2)
 {
 	if (param_2.unk4) {
-		JKRAram::aramToMainRam(param_2.unk0, (u8*)gpMarDirector->getUnkD4(), 0,
-		                       0, EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr,
-		                       -1, nullptr);
-	} else {
-		JKRAram::aramToMainRam(param_2.unk0, (u8*)gpMarDirector->getUnkD4(), 0,
-		                       0, EXPAND_SWITCH_DEFAULT, 0, nullptr, -1,
+		JKRAram::aramToMainRam(param_2.unk0,
+		                       (u8*)SMSMountAramArchiveGetUnkD4(), 0, 0,
+		                       EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr, -1,
 		                       nullptr);
+	} else {
+		JKRAram::aramToMainRam(param_2.unk0,
+		                       (u8*)SMSMountAramArchiveGetUnkD4(), 0, 0,
+		                       EXPAND_SWITCH_DEFAULT, 0, nullptr, -1, nullptr);
 	}
 	param_1->mountFixed(gpMarDirector->getUnkD4(), MBF_0);
 }
