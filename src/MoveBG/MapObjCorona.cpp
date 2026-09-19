@@ -1239,8 +1239,8 @@ bool TBathtub::isKillerLaunchable() const
 {
 	if (unk29A)
 		return false;
-	if (!JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70")
-	         ->allowsLaunch())
+	TKoopa* koopa = JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70");
+	if (!koopa->allowsLaunch())
 		return false;
 	return isKillerAttackable();
 }
