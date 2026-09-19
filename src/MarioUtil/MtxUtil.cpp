@@ -9,13 +9,17 @@
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 
-// TODO: .rodata is one 12-byte zero vector short at the front. The target
-// has four leading objects -- @1490 (12B zeros, dead: only referenced as the
-// .rodata base by TMultiMtxEffect::setup), @1819/@1820 (TMtxTimeLag::calc's
-// zero Vec and Quaternion) and @1846 (TMtxSwingRZ::calcLocalXY's zero Vec) --
-// while we emit only the last three. @1490's id is below TMtxTimeLag::calc's,
-// so it is parsed before line 56: either a rogue include's compound literal
-// or a zero-vector initialiser in a construct we have not reconstructed.
+// The leading 12-byte zero object (@1490, dead: only referenced as the .rodata
+// base by TMultiMtxEffect::setup) is dummyMactorStringValue1's string. Retail
+// carries it here *without* SMS_NO_MEMORY_MESSAGE's string, and in every TU
+// that has both the two ids are 620 apart (@1490 vs @2110 in
+// MarDirectorSetupObjects), so the pair in System/DummyStrings.hpp is really
+// two headers. Parked TU-local until that header is split; including
+// DummyStrings.hpp here would add the 20-byte Shift-JIS string retail does not
+// have. The remaining .rodata objects are @1819/@1820 (TMtxTimeLag::calc's
+// zero Vec and Quaternion) and @1846 (TMtxSwingRZ::calcLocalXY's zero Vec).
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+
 void MtxToQuat(MtxPtr m, Quaternion* quat)
 {
 	f32 q[4];
