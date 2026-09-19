@@ -1022,6 +1022,77 @@ geprüft:
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach siebenundzwanzigster Iterationsrunde (WaterGun-Struct-Bugfix, systematisches Scannen 90–99,99-%-Kandidaten)
+
+Automatisierter Scan aller Funktionen mit 90–99,99 % Fuzzy-Match und
+≤300 Bytes über alle 736 Units (462 Kandidaten), sortiert nach
+Instruktions-Diff-Anzahl (kleinste zuerst) statt nach Match-Prozent —
+liefert zuverlässigere Kandidaten als reines Prozent-Sortieren, weil
+Bytegröße die Prozentzahl verzerrt. Für jeden Kandidaten mit 1–2
+Instruction-Diffs Rohdisassembly-Cross-Check vor jedem Fix-Versuch
+(Methodik-Regel weiterhin bestätigt: kein Vertrauen in objdiff-JSON
+ohne Gegenprüfung).
+
+**Echter Bugfix**: `Player/WaterGun.hpp::TWaterGunParams` — Feld
+`mNozzleAngleYSpeedMax` (nirgends im Quelltext benutzt) stand an der
+falschen Stelle im Struct (zwischen `mNozzleAngleYBrake` und
+`mHoverRotMax`). Durch Cross-Referenzierung zweier unabhängiger
+Retail-Funktionen (`rotateProp`s `mHoverRotMax`-Offset `0x1d90` UND
+`changeBackup`s `mChangeSpeed`-Offset `0x1dcc`) eindeutig belegt: das
+Feld gehört zwischen `mHoverSmooth` und `mChangeSpeed`. Nach
+Verschieben: `rotateProp` **99,98 % → 100 %**; `movement()` verbessert
+sich ebenfalls leicht (bleibt wegen eines separaten, bereits
+dokumentierten TODO-Fehlens von Stack-Speicher unter 100 %).
+
+**Fehlgeschlagene Fixversuche** (alle einzeln zurückgesetzt, keine
+Verschlechterung committet):
+
+- `Enemy/bosspakkun.cpp::TBossPakkun::setGroundCollision` (99,98 %,
+  einziger Diff: `collisionMtx`-Local bei `0x20` statt `0x18`).
+  `char trash[8]` vor UND nach der Deklaration getestet: beide
+  verschlechtern (99,88 %/99,86 %). Zurückgesetzt.
+
+- `Player/WaterGun.cpp::TWaterGun::setBaseTRMtx` (99,97 %, `temp`-Mtx-
+  Local bei `0x1c` statt `0x20`). `char trash[4]` an drei Stellen
+  (vor `result`, zwischen `result`/`temp`, nach `temp`) getestet: alle
+  verschlechtern (99,63–99,67 %). Zurückgesetzt.
+
+- `MoveBG/MapObjLib.cpp::TMapObjBase::isDemo` (99,77 %, einziger Diff:
+  Sprungziel bei b1==true zeigt in unserem Build auf „return true"
+  statt wie im Original auf „return false"). Umstrukturierung zu
+  einem frühen `if (b1) return false;` verschlechterte drastisch auf
+  90,45 % — Hypothese falsch, MWCC kompiliert das Early-Return-Muster
+  anders als angenommen. Zurückgesetzt auf Original.
+
+- `Player/MarioRun.cpp::TMario::rotating` (98,65 %, einziger Diff:
+  fehlendes `extsh` nach `neg` bei `mModelFaceAngle = -(mStatusTimer *
+  4096);`). Drei Varianten (`(s16)`-Cast auf den ganzen Ausdruck,
+  Negation vor der Multiplikation, expliziter `s16`-Temp) probiert:
+  erste und dritte ändern nichts (98,65 % identisch), zweite
+  verschlechtert auf 95,95 %. MWCC-interne Entscheidung, ob nach einer
+  Negation vor `s16`-Store sign-extended wird, nicht über einfache
+  Source-Umformulierung erzwingbar.
+
+- `Enemy/pakkun.cpp::TNervePakkunAppear::execute` (98,55 %, einziger
+  Diff: überflüssiges `cmpwi r3,0x0` nach `checkPass()`-Aufruf, dessen
+  Ergebnis im leeren `if (...) { }`-Body nicht verwendet wird). Entfernen
+  des `if`-Wrappers (reiner Ausdrucks-Aufruf `checkPass(100.0f);`)
+  erzeugt **exakt identischen** Maschinencode — MWCC materialisiert den
+  bool-Rückgabewert eines Funktionsaufrufs unabhängig davon, ob er
+  ausgewertet wird. Zurückgesetzt auf die klarere `if(){}`-Fassung
+  (kein Unterschied, aber dokumentiert die ursprüngliche Absicht besser).
+
+- `MoveBG/MapObjLib.cpp::TMapObjBase::getDistance` (99,94 %, einziger
+  Diff: `volatile f32 y`-Local bei `0x14` statt `0x10`, Frame beidseitig
+  `0x18` identisch). Drei Varianten (`char trash[4]` am Funktionsanfang,
+  `char trash[4]` vor `y`, `f32 pad` vor `y`) — alle **exakt ohne
+  Wirkung** (99,935486 % identisch bei allen dreien). Anders als die
+  übrigen Padding-Fälle dieser Session beeinflusst hier offenbar keine
+  lokale Variable diese eine `volatile`-Platzierung; Ursache bleibt
+  unklar, nicht in vertretbarer Zeit weiter verfolgt.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -1173,6 +1244,34 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   Slot-Alias-Unterschied (Ziel legt für `v` einen frischen Slot an,
   wir nutzen den toten `local_20`-Slot wieder), Frame ist beidseitig
   `0x40` Bytes — nicht über Source erzwingbar.
+
+- `Enemy/bosspakkun.cpp`: `TBossPakkun::setGroundCollision` (99,98 %).
+  `collisionMtx`-Local bei `0x20` statt `0x18`; `char trash[8]` vor/nach
+  der Deklaration verschlechtert beide Male. Nicht über Padding lösbar.
+
+- `Player/WaterGun.cpp`: `TWaterGun::setBaseTRMtx` (99,97 %). `temp`-Mtx
+  bei `0x1c` statt `0x20`; drei `char trash[4]`-Platzierungen
+  verschlechtern alle. Nicht über Padding lösbar.
+
+- `MoveBG/MapObjLib.cpp`: `TMapObjBase::isDemo` (99,77 %). Einziger Diff
+  ist das Sprungziel des b1==true-Zweigs (Original springt direkt zu
+  `return false`, unser Build zu `return true`); Early-Return-
+  Umstrukturierung verschlechterte drastisch auf 90,45 % statt zu
+  verbessern — MWCC-Codegen für dieses Kontrollfluss-Muster nicht wie
+  erwartet. Zurückgesetzt.
+
+- `Player/MarioRun.cpp`: `TMario::rotating` (98,65 %). Fehlendes `extsh`
+  nach `neg` beim negierten Zweig von `mModelFaceAngle = -(mStatusTimer *
+  4096)`. Drei Umformulierungen ohne Wirkung oder verschlechternd.
+
+- `Enemy/pakkun.cpp`: `TNervePakkunAppear::execute` (98,55 %).
+  Überflüssiges `cmpwi` nach ungenutztem `checkPass()`-Rückgabewert;
+  Entfernen des `if(){}`-Wrappers erzeugt identischen Code (MWCC
+  materialisiert bool-Rückgaben unabhängig von Verwendung).
+
+- `MoveBG/MapObjLib.cpp`: `TMapObjBase::getDistance` (99,94 %).
+  `volatile f32 y`-Local bei `0x14` statt `0x10`, Frame identisch;
+  drei Padding-Varianten alle wirkungslos (exakt gleicher Match%).
 
 ## Gematchte GMSJ01-Funktionen
 
@@ -1375,6 +1474,10 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   **100 %** (164 Bytes, Bugfix: `TBGTentacle::isThing()`-
   Vergleichsreihenfolge in `include/Enemy/BossGessoTentacle.hpp`
   empirisch korrigiert).
+
+- `Player/WaterGun.hpp`/`WaterGun.cpp`: `TWaterGun::rotateProp` —
+  **100 %** (Bugfix: `mNozzleAngleYSpeedMax`-Feld an falscher Stelle im
+  `TWaterGunParams`-Struct, siehe Iterationsrunde 27).
 
 ## Nächster GMSJ01-Kandidat
 
