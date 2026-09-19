@@ -140,7 +140,7 @@ void TGessoManager::clipEnemies(JDrama::TGraphics* param_1)
 		else
 			gesso->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 
-		if (!gesso->getPolluteObj()->isUnk150Zero()) {
+		if (!gesso->getPolluteObj()->isState(0)) {
 			if (ViewFrustumClipCheck(
 			        param_1, &gesso->getPolluteObj()->mPosition, radius))
 				gesso->getPolluteObj()->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);

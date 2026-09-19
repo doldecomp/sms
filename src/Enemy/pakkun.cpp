@@ -230,7 +230,7 @@ void TPakkunManager::clipEnemies(JDrama::TGraphics* graphics)
 			pakkun->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		}
 
-		if (!pakkun->unk194->isUnk150Zero()) {
+		if (!pakkun->unk194->isState(PAKKUN_SEED_STATE_HIDE)) {
 			if (ViewFrustumClipCheck(graphics, &pakkun->unk194->mPosition,
 			                         radius))
 				pakkun->unk194->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
@@ -240,7 +240,7 @@ void TPakkunManager::clipEnemies(JDrama::TGraphics* graphics)
 
 		if (pakkun->unk199) {
 			for (int j = 0; j < 2; ++j) {
-				if (!pakkun->unk19C[j]->isUnk150Zero()) {
+				if (!pakkun->unk19C[j]->isState(PAKKUN_SEED_STATE_HIDE)) {
 					if (ViewFrustumClipCheck(
 					        graphics, &pakkun->unk19C[j]->mPosition, radius))
 						pakkun->unk19C[j]->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
@@ -252,7 +252,7 @@ void TPakkunManager::clipEnemies(JDrama::TGraphics* graphics)
 	}
 }
 
-TPakkun::TPakkun(const char* name = "パックン")
+TPakkun::TPakkun(const char* name)
     : TSmallEnemy(name)
     , unk194(nullptr)
     , unk198(0)
@@ -430,7 +430,7 @@ void TPakkun::behaveToWater(THitActor* hit_actor)
 		    && mSpine->getCurrentNerve() != &TNerveStayPakkunAppear::theNerve()
 		    && mSpine->getCurrentNerve() != &TNerveStayPakkunHide::theNerve()) {
 			mSpine->pushNerve(&TNervePakkunFreeze::theNerve());
-			if (unk194->isUnk150Zero()) {
+			if (unk194->isState(PAKKUN_SEED_STATE_HIDE)) {
 				unk194->kill();
 			}
 		}
@@ -623,8 +623,10 @@ void TPakkunSeed::rebirth()
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_PAKKUN_SEED_SINK, &mPosition,
 		                                0, nullptr, 0, 4);
 
-		gpMarioParticleManager->emit(0x13E, &mPosition, 1, owner->unk194);
-		gpMarioParticleManager->emit(0x13F, &mPosition, 1, owner->unk194);
+		gpMarioParticleManager->emit(PARTICLE_MS_PACKN_HD_ROCK, &mPosition, 1,
+		                             owner->unk194);
+		gpMarioParticleManager->emit(PARTICLE_MS_PACKN_HD_SMOKE, &mPosition, 1,
+		                             owner->unk194);
 		return;
 	}
 
@@ -719,8 +721,8 @@ void TStayPakkun::genRandomItem()
 		genEventCoin();
 	}
 
-	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0xA1, &unk1A4, 0, nullptr);
+	JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	    PARTICLE_MS_POPO_BOMB_A, &unk1A4, 0, nullptr);
 	if (emitter) {
 		emitter->setGlobalDynamicsScale(JGeometry::TVec3<f32>(1.5f));
 		emitter->setGlobalParticleScale(JGeometry::TVec3<f32>(1.5f));
@@ -774,7 +776,7 @@ bool TStayPakkun::isHitValid(u32 message)
 
 		gpPollution->clean(mPosition.x, mGroundHeight, mPosition.z,
 		                   32.0f * getSaveParam()->mSLPolluteRange.get());
-		if (unk194->isUnk150Zero())
+		if (unk194->isState(PAKKUN_SEED_STATE_HIDE))
 			unk194->kill();
 		setBckAnm(PAKKUN_ANM_CRUSH_TO_HIDE);
 	}
@@ -833,8 +835,7 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 
 	TPakkunSeed* seed = self->unk194;
 
-	// Possibly inlined check?
-	if (seed->unk150 == PAKKUN_SEED_STATE_APPEAR ? true : false) {
+	if (seed->isState(PAKKUN_SEED_STATE_APPEAR)) {
 		seed->seedSet();
 
 		if (spine->getTime() % 5 == 0) {
@@ -846,7 +847,7 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 		}
 	}
 
-	if (self->unk194->isUnk150Zero()) {
+	if (self->unk194->isState(PAKKUN_SEED_STATE_HIDE)) {
 		self->mPosition   = self->unk194->getPosition();
 		self->mPosition.y = self->unk194->getGroundHeight();
 		spine->pushAfterCurrent(&TNervePakkunAppear::theNerve());
@@ -866,7 +867,8 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 	s32 waitTime  = ((TSmallEnemyParams*)self->getSaveParam())->getSLWaitTime();
 	s32 readyTime = self->unk1A0->mSLReadyTime.get();
 
-	if (self->unk194->isUnk150Zero() && self->checkCurAnmEnd(ANM_TYPE_BCK)
+	if (self->unk194->isState(PAKKUN_SEED_STATE_HIDE)
+	    && self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && (spine->getTime() >= readyTime || spine->getTime() >= waitTime
 	        || self->unk1B1)) {
 		f32 goalDistance = self->unk104.getPoint().distance(self->mPosition);
@@ -980,7 +982,7 @@ DEFINE_NERVE(TNervePakkunHide, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_HIDDEN);
 	}
 
-	if (self->unk194->isUnk150Zero()) {
+	if (self->unk194->isState(PAKKUN_SEED_STATE_HIDE)) {
 		self->mPosition   = self->unk194->getPosition();
 		self->mPosition.y = self->unk194->getGroundHeight();
 		spine->pushAfterCurrent(&TNervePakkunAppear::theNerve());
@@ -1070,8 +1072,10 @@ DEFINE_NERVE(TNerveStayPakkunHide, TLiveActor)
 	    && !self->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
 		if (!gpPollution->isPolluted(self->mPosition.x, self->mPosition.y,
 		                             self->mPosition.z)) {
-			gpMarioParticleManager->emit(0x13E, &self->mPosition, 1, self);
-			gpMarioParticleManager->emit(0x13F, &self->mPosition, 1, self);
+			gpMarioParticleManager->emit(PARTICLE_MS_PACKN_HD_ROCK,
+			                             &self->mPosition, 1, self);
+			gpMarioParticleManager->emit(PARTICLE_MS_PACKN_HD_SMOKE,
+			                             &self->mPosition, 1, self);
 		} else {
 			JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 			    PARTICLE_MS_GENE_HIT, &self->mPosition, 1, self);

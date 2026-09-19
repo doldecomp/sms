@@ -17,6 +17,7 @@ DECLARE_NERVE(TNervePakkunGenerate, TLiveActor);
 
 // TODO: Need to validate that these are actually real
 enum TPakkunSeedState {
+	PAKKUN_SEED_STATE_HIDE   = 0,
 	PAKKUN_SEED_STATE_APPEAR = 1,
 	PAKKUN_SEED_STATE_SET    = 2,
 	PAKKUN_SEED_STATE_SHOOT  = 3,
