@@ -319,17 +319,11 @@ void MActor::calcAnm()
 	updateOut();
 }
 
-// Binding level over a raw member read, worth +16 of low region in
-// MActor::calc (batch 127).
+// Binding level over a raw member read, worth +8 of low region in
+// MActor::calc (frame ladder 271).
 static inline J3DModel* MActorModelL0(const MActor* p)
 {
 	J3DModel* model = p->mModel;
-	return model;
-}
-
-static inline J3DModel* MActorModel(const MActor* p)
-{
-	J3DModel* model = MActorModelL0(p);
 	return model;
 }
 
@@ -339,7 +333,7 @@ void MActor::calc()
 		return;
 
 	updateIn();
-	MActorModel(this)->calc();
+	MActorModelL0(this)->calc();
 	updateOut();
 }
 
@@ -651,9 +645,18 @@ void MActor::setBrkFromIndex(int index)
 	resetDL();
 }
 
+// Binding level over the animation-table element, worth +8 of low region in
+// MActor::updateIn, updateOut and perform (frame ladder 271).
+static inline MActorAnmBase* MActorAnmAt(const MActor* p, int type)
+{
+	MActorAnmBase* anm = p->mAnmByType[type];
+	return anm;
+}
+
 void MActor::updateIn()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
+	if (MActorAnmAt(this, ANM_TYPE_BCK)
+	    && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateIn();
 
 	updateInSubBck();
@@ -664,7 +667,8 @@ void MActor::updateIn()
 
 void MActor::updateOut()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
+	if (MActorAnmAt(this, ANM_TYPE_BCK)
+	    && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateOut();
 
 	updateOutSubBck();
