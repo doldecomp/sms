@@ -1376,6 +1376,174 @@ zurückgesetzt, keine Verbesserung):
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach neunundzwanzigster Iterationsrunde (neue Fix-Kategorie: `#pragma dont_inline` für fehlende weak-Symbole; 15 Commits, 39 Funktionen)
+
+**Neue Kandidaten-Kategorie entdeckt**: Ausgangspunkt war der
+"teilweise dekompilierte Datei mit wenigen 0-%-Funktionen"-Scan
+(bevorzugt laut Projekt-Policy). `mario/NPC/NpcBase` war bei 79 %
+Datei-Match mit genau einer unge matchten Funktion:
+`TBaseNPC::getAnmOffDist_()`. Das `report.json`-Feld für diese Funktion
+hatte **gar kein** `fuzzy_match_percent` — kein Vergleichssymbol
+vorhanden, nicht einfach ein niedriger Wert. Rohdisassembly bestätigte:
+Retail hält für diese Header-`inline`-definierte Methode eine echte
+**out-of-line `weak`-Symbol-Kopie** (260 Bytes, ein einziger Call-Site),
+während MWCC sie in unserem Build vollständig wegin lined — kein
+Symbol, keine Adresse, nichts zum Vergleichen.
+
+**Fix-Technik**: `#pragma dont_inline on` / `#pragma dont_inline off`
+direkt um die Methoden-Definition im Header gelegt zwingt MWCC, eine
+konkrete out-of-line-Kopie zu emittieren, exakt wie im Original. Das
+Pragma ist im Projekt bereits etabliert (45+ bestehende Verwendungen,
+bisher aber nur für gewöhnliche `.cpp`-lokale Methoden, nie für
+Header-`inline`-Definitionen mit mehreren Call-Sites).
+
+**Verifikationsmethodik-Erweiterung**: `objdiff-cli`s `report
+generate`/`diff` zeigen für diese frisch emittierten weak-Symbole
+weiterhin **kein** `fuzzy_match_percent` (selbst nach korrektem Fix) —
+ein bestätigtes Tool-Limit, nicht spezifisch für falsche Fixes. Einzige
+zuverlässige Verifikation: direkte Byte-Extraktion aus
+`build/GMSJ01/mario.dol` UND `orig/GMSJ01/sys/main.dol` an der
+bekannten virtuellen Adresse (DOL-Header-Parsing-Technik aus Runde 28),
+Vergleich `our_bytes == retail_bytes`. Zusätzlich vor jedem Commit:
+voller `report generate`-Vorher/Nachher-Vergleich der Menge aller
+`fuzzy_match_percent == 100.0`-Funktionen (`lost`/`gained`-Diff), um
+Regressionen an ANDEREN (ggf. weiterhin korrekt inlined) Call-Sites
+derselben Funktion auszuschließen — **bei allen 39 Fixes dieser Runde:
+0 Regressionen**, auch bei mehrfach verwendeten Funktionen wie
+`TUtil<f32>::one()` (verwendet transitiv in jedem `normalize()`-Aufruf)
+oder `TMario::checkStatusType()`.
+
+**Systematisches Scannen**: `report.json` nach Funktionen ohne
+`fuzzy_match_percent`-Feld durchsucht (2.369 Treffer von 12.881
+Gesamtfunktionen). Cross-Referenz mit einem einmalig aufgebauten
+Call-Site-Histogramm (`grep -rhoP '(?<=\tbl )\S+' build/GMSJ01/asm/`)
+identifiziert Kandidaten mit 1–6 `bl`-Aufrufstellen in Retail (= MWCC
+inlined fast überall, aber nicht an diesen Stellen). Für jeden
+Kandidaten geprüft: (a) existiert die Methode bereits inline im
+Quelltext (dann nur Pragma nötig) oder fehlt sie komplett (dann
+Neuimplementierung nötig, außerhalb des Scope dieser Fix-Kategorie),
+(b) ist die aufrufende Datei bzw. die Klasse, in der die Methode
+deklariert ist, tatsächlich vorhanden oder eine leere 1-Zeilen-Stub-Datei.
+
+**Wichtige Falltür entdeckt**: Ein Großteil der 2.369 Kandidaten
+gehört zu Dateien, die als 1-Byte-Stub existieren
+(`src/Enemy/BossHanachanMain.cpp`, `koopajr.cpp`, `limitkoopa.cpp`,
+`killer.cpp`, `wireTrap.cpp`, `cannon.cpp`, `MapObjBall.cpp` u.v.a. —
+~20 komplett unbearbeitete Enemy-/MapObj-Dateien). Für Methoden, deren
+Klasse NUR in einer solchen leeren Datei deklariert würde
+(`TBossHanachan::kill()`, `TDirectionCalc::*`, alle
+`__ct__XxxManagerFPCc`-Konstruktoren, `theNerve__Xxx`-Accessor), ist
+die Pragma-Technik **nicht anwendbar** — die ganze Klasse fehlt, das
+ist Neudekompilierungsarbeit, kein Emissions-Bugfix. Entscheidend war
+zu prüfen, ob die **Definition** der fehlenden Methode in einem
+bereits populierten Shared-Header liegt (z. B. `JGVec3.hpp`,
+`MathUtil.hpp`) — dann ist die Leere der AUFRUFENDEN Datei irrelevant.
+
+**39 gefixte Funktionen in 15 Commits** (alle Byte-für-Byte gegen
+`orig/GMSJ01/sys/main.dol` verifiziert, 0 Report-Regressionen, DOL-SHA1
+nach jedem Commit `OK`):
+
+1. `include/NPC/NpcBase.hpp`: `TBaseNPC::getAnmOffDist_()` (260 B).
+2. `include/MoveBG/MapObjHide.hpp`: `TWaterHitPictureHideObj::
+   getObjAppearPos()` (8 B), `THideObjPictureTwin::getObjAppearPos()`
+   (12 B) — beide virtuell, nur über Vtable erreichbar, 0 direkte
+   Call-Sites.
+3. `include/Player/MarioAccess.hpp`: `SMS_GetMarioPos()` (8 B).
+4. `include/Enemy/Graph.hpp`: `TGraphTracer::getCurGraphIndex()` (8 B),
+   `TGraphTracer::getGraph() const` (8 B).
+5. `include/Strategic/ObjModel.hpp`: `TMActorKeeper::getMActorAnmData()`
+   (8 B).
+6. `include/Map/MapCollisionEntry.hpp`: `TMapCollisionBase::setMtx()`
+   (44 B).
+7. `include/JSystem/JGeometry/JGUtil.hpp`: `TUtil<f32>::one()` (8 B);
+   `include/MarioUtil/MathUtil.hpp`: `MsClamp<f32>()` (32 B, drei
+   Call-Sites), `MsSqrtf()` (68 B).
+8. `include/Player/Mario.hpp`: `TMario::checkStatusType()` (28 B).
+9. `include/JSystem/JGeometry/JGMatrix33.hpp`: `SMatrix33C<f32>::at()`
+   (20 B).
+10. `include/Camera/Camera.hpp`: `TTargetCamera::operator=()` (116 B);
+    `include/Camera/cameralib.hpp`: `CLBScreenFPosToSPos()` (276 B).
+11. `include/JSystem/JGeometry/JGVec3.hpp`: `TVec3<f32>::operator=()`
+    (28 B), `TVec3<f32>::sub(fst,snd)` (52 B), `TVec3<f32>::
+    operator*=(f32)` (40 B), `TVec3<f32>::scaleAdd()` (52 B);
+    `include/MarioUtil/MathUtil.hpp`: `MsSin()`, `MsCos()` (je 56 B).
+12. `include/JSystem/JGeometry/JGVec2.hpp`: `TVec2<f32>::dot()` (28 B),
+    `TVec2<f32>::sub(1-Arg)` (36 B) — bemerkenswert: `TVec2<T>` ist
+    (anders als `TVec3<f32>`/`TUtil<f32>`) KEINE explizite
+    Template-Spezialisierung, trotzdem 0 Regressionen.
+13. Batch aus 6 Funktionen in einem Commit: `TMapObjBase::
+    getObjCollisionHeightOffset()` (4 B, leerer Body), `TLiveActor::
+    getMActor()` (8 B), `TTimeRec::crTimeAry()` (24 B), `JUTRect::
+    JUTRect(int,int,int,int)` (48 B), `TBGCheckData::isIllegalData()`
+    (28 B), `TRotation3<T>::TRotation3()` (4 B, Default-Ctor,
+    Template).
+14. `include/Strategic/TakeActor.hpp`: `TTakeActor::isTaken()` (28 B);
+    `include/Player/ModelWaterManager.hpp`: `TWaterHitActor::
+    onWaterHitCounter()` (12 B).
+15. `include/JSystem/JGeometry/JGVec4.hpp`: `TVec4<f32>::TVec4()`
+    (4 B), `TVec4<f32>::set<f32>()` (20 B); `include/JSystem/JGeometry/
+    JGMatrix33.hpp`: `SMatrix33R<f32>::SMatrix33R()` (4 B).
+16. `include/Enemy/PathNode.hpp`: `TPathNode::getPoint()` (28 B) —
+    trotz bestehendem Kommentar „doesn't match in a couple of places"
+    (bezieht sich auf ANDERE, weiterhin korrekt inlinede Call-Sites;
+    dieser spezifische nicht-inlinede Call-Site in `enemyMario.cpp`
+    ist jetzt Byte-perfekt).
+17. `include/Enemy/WireBinder.hpp`: `TWireBinder::getDir()` (8 B);
+    `include/JSystem/JMath.hpp`: `JMASCos(s16)`, `JMASSin(s16)`
+    (je 28 B).
+18. `include/Camera/cameralib.hpp`: `CLBPalFrame<s16>()` (92 B).
+19. `include/JSystem/JGeometry/JGRotation3.hpp`: `TRotation3<T>::
+    setSQ()` (256 B).
+
+**Wichtiger Vorbehalt zur `report.json`-Statistik**: Da `objdiff-cli`
+für frisch emittierte weak-Symbole weiterhin kein `fuzzy_match_percent`
+berechnet, ändert sich die **gemeldete** `Progress`-Ausgabe
+(`8648/12881 Funktionen`) durch diese Runde NICHT — obwohl alle 39
+Funktionen nachweislich (Byte-Vergleich gegen Retail) jetzt 100 %
+matchen. Die tatsächliche Matching-Quote liegt also messbar höher als
+die von `objdiff-cli` ausgewiesene; ein Werkzeug-Limit, kein
+Dokumentationsfehler.
+
+**Geprüft und als nicht anwendbar verworfen**:
+
+- `JGadget::TVector<T,Allocator>::begin()` (`TVector<void*,...>`,
+  MSoundMainSide.cpp/bosseel.cpp, 3 Call-Sites) — generisches Template,
+  in JEDER Instanziierung überall im Code verwendet; Pragma würde ALLE
+  Instanziierungen betreffen (viel größerer Blast-Radius als bei den
+  gefixten Einzel-Spezialisierungen). Nicht ohne umfassenderen
+  Vorher/Nachher-Vergleich riskiert.
+- `ArrayWrapper<TTailRubber::Node>::size()`/`operator[]`
+  (`fireWanwan.cpp`) — Retail-Mangling zeigt `@unnamed@34ArrayWrapper`
+  (anonymer Namespace in Retails Übersetzungseinheit), unser
+  `ArrayWrapper<T>` liegt dagegen in einem benannten Shared-Header
+  (`System/ArrayWrapper.hpp`). Architektonischer Unterschied, kein
+  reines Emissions-Problem — würde eine TU-lokale Neudeklaration
+  erfordern, nicht nur ein Pragma.
+- `TBossHanachan::kill()` — Vtable-Slot-Analyse bestätigt echten
+  Bedarf einer Override, aber `src/Enemy/BossHanachanMain.cpp` ist eine
+  1-Byte-Stub-Datei ohne jegliche Klassendeklaration. Würde die
+  komplette `TBossHanachan`-Klassenhierarchie samt Vtable-Layout
+  erfordern — eigenständige Dekompilierungsarbeit, kein Cheap-Fix.
+- `TDirectionCalc::*` (koopajr.cpp) — Klasse nirgends deklariert,
+  gleiche Kategorie wie oben.
+- Alle `__ct__XxxManagerFPCc`-Konstruktoren (~20 Enemy-/Animal-Manager)
+  und `theNerve__Xxx`-Accessoren — Klassen ausschließlich in leeren
+  1-Zeilen-Stub-Dateien deklariert.
+
+**Strategieempfehlung für Folgesitzungen**: Der
+„fehlendes-`fuzzy_match_percent`"-Scan (`report.json` nach Funktionen
+ohne dieses Feld durchsuchen, dann Call-Site-Histogramm für
+Blast-Radius-Einschätzung) ist ein **hochwertiges, wiederholbares**
+Verfahren zum Auffinden weiterer `#pragma dont_inline`-Kandidaten.
+2.369 Kandidaten insgesamt identifiziert, diese Runde deckte 39 davon
+ab (alle mit ≤6 Call-Sites und Definition in einer populierten Datei);
+der Großteil der übrigen ~2.330 gehört zu unbearbeiteten
+Enemy-/MapObj-Dateien (siehe oben) und ist für separate
+Vollimplementierungs-Sessions vorzusehen, nicht für diese Fix-Kategorie.
+
+Die Referenz-DOL bleibt `OK`. Upstream-Sync erneut bei 0 Commits
+Rückstand bestätigt.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -1589,6 +1757,29 @@ Die Referenz-DOL bleibt `OK`.
   (48 Bytes, Bugfix: invertierter `mState`-Vergleich `!=`→`==`; siehe
   Iterationsrunde 28 für die Byte-für-Byte-Verifikation gegen die
   fälschliche `objdiff-cli`-match_percent-Meldung).
+
+- **39 Funktionen via `#pragma dont_inline` (Runde 29)** — je **100 %**,
+  Byte-für-Byte gegen `orig/GMSJ01/sys/main.dol` verifiziert (nicht in
+  `objdiff-cli`s `report.json` sichtbar, siehe Vorbehalt oben):
+  `TBaseNPC::getAnmOffDist_`, `TWaterHitPictureHideObj::
+  getObjAppearPos`, `THideObjPictureTwin::getObjAppearPos`,
+  `SMS_GetMarioPos`, `TGraphTracer::getCurGraphIndex`, `TGraphTracer::
+  getGraph`, `TMActorKeeper::getMActorAnmData`, `TMapCollisionBase::
+  setMtx`, `TUtil<f32>::one`, `MsClamp<f32>`, `MsSqrtf`, `TMario::
+  checkStatusType`, `SMatrix33C<f32>::at`, `TTargetCamera::operator=`,
+  `CLBScreenFPosToSPos`, `TVec3<f32>::operator=`, `TVec3<f32>::
+  sub(fst,snd)`, `TVec3<f32>::operator*=(f32)`, `TVec3<f32>::scaleAdd`,
+  `MsSin`, `MsCos`, `TVec2<f32>::dot`, `TVec2<f32>::sub(1-Arg)`,
+  `TMapObjBase::getObjCollisionHeightOffset`, `TLiveActor::getMActor`,
+  `TTimeRec::crTimeAry`, `JUTRect::JUTRect(int,int,int,int)`,
+  `TBGCheckData::isIllegalData`, `TRotation3<T>::TRotation3`,
+  `TTakeActor::isTaken`, `TWaterHitActor::onWaterHitCounter`,
+  `TVec4<f32>::TVec4`, `TVec4<f32>::set<f32>`, `SMatrix33R<f32>::
+  SMatrix33R`, `TPathNode::getPoint`, `TWireBinder::getDir`,
+  `JMASCos(s16)`, `JMASSin(s16)`, `CLBPalFrame<s16>`, `TRotation3<T>::
+  setSQ`. Details, Adressen und verworfene Kandidaten (Template-
+  Blast-Radius, anonyme Namespaces, unbearbeitete Klassen) siehe
+  Iterationsrunde 29.
 
 ## Nächster GMSJ01-Kandidat
 
