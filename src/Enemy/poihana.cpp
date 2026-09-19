@@ -25,6 +25,14 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// TODO: shared-header need -- TLiveActor has getVelocity() for mVelocity but
+// no matching reader for mLinearVelocity; parked TU-locally.
+static inline const JGeometry::TVec3<f32>&
+PoiHanaLinearVelocity(const TLiveActor* actor)
+{
+	return actor->mLinearVelocity;
+}
+
 const char* poihana_bastable[] = {
 	"/scene/poihana/bas/poihana_dash.bas",
 	"/scene/poihana/bas/poihana_death.bas",
@@ -365,7 +373,7 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			mSpine->pushNerve(&TNervePoihanaFreeze::theNerve());
-			JGeometry::TVec3<f32> vel = mLinearVelocity;
+			JGeometry::TVec3<f32> vel = PoiHanaLinearVelocity(this);
 			vel.x *= -2.0f;
 			vel.y *= 5.0f;
 			vel.z *= -2.0f;

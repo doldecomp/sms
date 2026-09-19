@@ -2373,8 +2373,9 @@ void TFireHamuKuri::init(TLiveManager* param_1)
 void TFireHamuKuri::behaveToWater(THitActor* param_1)
 {
 	if (unk210) {
-		JGeometry::TVec3<f32> local_20(mPosition.x - gpMarioPos->x, 0.0f,
-		                               mPosition.z - gpMarioPos->z);
+		JGeometry::TVec3<f32> local_20(getPosition().x - SMS_GetMarioPos().x,
+		                               0.0f,
+		                               getPosition().z - SMS_GetMarioPos().z);
 
 		if (local_20.x == 0.0f && local_20.y == 0.0f && local_20.z == 0.0f)
 			local_20.x += 1.0f;
