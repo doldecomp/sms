@@ -873,6 +873,14 @@ DEFINE_NERVE(TNerveTamaNokoPickUp, TLiveActor)
 	return false;
 }
 
+// Real bug fixed here: the horizontal components were swapped, so a thrown
+// koopa flew off at ninety degrees to the direction Mario was facing. The ROM
+// multiplies the *sine* of gpMarioAngleY into x and the cosine into z
+// (`fmuls f1, f2, f0` with f0 out of jmaSinTable stores to 0x40 = x), and it
+// associates the product as rate * (power * trig), not (rate * power) * trig.
+// 75.9 -> 89.6%. TODO: the residue is the index arithmetic -- the ROM shifts
+// and scales the angle twice, once per trig expansion, where we compute it
+// once, and its frame is 0x60 against our 0x48.
 DEFINE_NERVE(TNerveTamaNokoThrown, TLiveActor)
 {
 	TTamaNoko* self = (TTamaNoko*)spine->getBody();
@@ -885,10 +893,10 @@ DEFINE_NERVE(TNerveTamaNokoThrown, TLiveActor)
 		f32 s     = JMASSin(angle);
 		f32 c     = JMASCos(angle);
 		f32 fVar3 = params->mSLThrownRateXZ.get();
-		f32 fVar4 = params->mSLThrownVY.get();
 
-		self->setVelocity(
-		    JGeometry::TVec3<f32>(fVar3 * fVar2 * c, fVar4, fVar3 * fVar2 * s));
+		self->setVelocity(JGeometry::TVec3<f32>(fVar3 * (fVar2 * s),
+		                                        params->mSLThrownVY.get(),
+		                                        fVar3 * (fVar2 * c)));
 
 		self->mPosition.y += 2.0f;
 
