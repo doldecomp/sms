@@ -1544,7 +1544,8 @@ void TEnemyMario::hitWater(THitActor* sender)
 			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
 			                             &sender->mPosition, 0, nullptr);
 			SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-			                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+			                              &sender->mPosition, 0, 30.0f, 0, 0,
+			                              4);
 			mWaterEffectTimer = mWaterEffectTimerMax;
 
 			if (mEMDoing == EM_DOING_REPLAY_WAITING) {
