@@ -96,7 +96,7 @@ s32 TFlagManager::getFlag(u32 flag) const
 		}
 		break;
 	case 7:
-		if (flag < 0x70002) {
+		if (flag < 0x70003) {
 			return mSavedOptionBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
@@ -106,7 +106,7 @@ s32 TFlagManager::getFlag(u32 flag) const
 		}
 		break;
 	case 9:
-		if (flag < 0x90001) {
+		if (flag < 0x90002) {
 			return mOptionBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
@@ -157,7 +157,7 @@ void TFlagManager::setFlag(u32 flag, s32 value)
 		}
 		break;
 	case 7:
-		if (flag < 0x70002) {
+		if (flag < 0x70003) {
 			mSavedOptionBools[low >> 3] &= ~(1 << (low & 7));
 			mSavedOptionBools[low >> 3] |= (value & 1) << (low & 7);
 		}
@@ -168,7 +168,7 @@ void TFlagManager::setFlag(u32 flag, s32 value)
 		}
 		break;
 	case 9:
-		if (flag < 0x90001) {
+		if (flag < 0x90002) {
 			mOptionBools[low >> 3] &= ~(1 << (low & 7));
 			mOptionBools[low >> 3] |= (value & 1) << (low & 7);
 		}
@@ -200,12 +200,12 @@ bool TFlagManager::getBool(u32 flag) const
 		}
 		break;
 	case 7:
-		if (flag < 0x70002) {
+		if (flag < 0x70003) {
 			return getFlag(flag) != 0;
 		}
 		break;
 	case 9:
-		if (flag < 0x90001) {
+		if (flag < 0x90002) {
 			return getFlag(flag) != 0;
 		}
 		break;
@@ -238,14 +238,14 @@ void TFlagManager::setBool(bool value, u32 flag)
 	case 6:
 		break;
 	case 7:
-		if (flag < 0x70002) {
+		if (flag < 0x70003) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 8:
 		break;
 	case 9:
-		if (flag < 0x90001) {
+		if (flag < 0x90002) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
@@ -434,9 +434,7 @@ void TFlagManager::restore()
 void TFlagManager::firstStart()
 {
 	resetCard();
-	memcpy(mSavedCardBools, mCardBools, sizeof(mCardBools));
-	memcpy(mSavedCardInts, mCardInts, sizeof(mCardInts));
-	mSavedLastSaveTime = mLastSaveTime;
+	saveSuccess();
 	correctFlag();
 }
 
@@ -479,6 +477,11 @@ void TFlagManager::correctFlag()
 
 void TFlagManager::save(JSUMemoryOutputStream& out)
 {
+	// Reserves the 8-byte slot retail's frame shows above every other local of
+	// this function and that its body never references: an OSTime the original
+	// declared ahead of the save header and then left unused.
+	OSTime unusedTime;
+
 	mLastSaveTimeBackup = mLastSaveTime;
 	mLastSaveTime       = OSGetTime();
 
