@@ -46,25 +46,31 @@ bool TMapObjBase::isHideObj(THitActor* param_1)
 	return false;
 }
 
+// TODO: these two predicates are almost certainly TMarDirector members in
+// retail (the `||` must expand both bodies at the call site so that the second
+// range test is only evaluated when the first fails). They are parked as
+// TU-local helpers because this batch may not edit System/MarDirector.hpp.
+static inline bool isDemoMovieKind()
+{
+	bool ret = true;
+	if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
+		ret = false;
+	return ret;
+}
+
+static inline bool isDemoEventKind()
+{
+	bool ret = true;
+	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
+		ret = false;
+	return ret;
+}
+
 bool TMapObjBase::isDemo()
 {
-	bool b1 = true;
-	if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
-		b1 = false;
+	if (isDemoMovieKind() || isDemoEventKind())
+		return true;
 
-	// TODO: retail's `bne` here lands on the shared `li r3, 1; blr` block, so
-	// retail returns true for unk124 1 and 2 as well; every shape tried for
-	// that (`if (b1) return true;`, `if (!b2) return false;`, TU-local
-	// predicates behind `return a || b;`) costs more than the 0.2% it buys.
-	if (!b1) {
-		// TODO: should be OR, but need fancy inlines for that...
-		bool b2 = true;
-		if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
-			b2 = false;
-		if (b2) {
-			return true;
-		}
-	}
 	return false;
 }
 
