@@ -3158,6 +3158,38 @@ Bewegungslogik, ~8 verbleibende Funktionen mit insgesamt > 8000
 Bytes) statt schnelle Fortsetzungs-Gewinne — für eine künftige
 dedizierte Session vorgemerkt, nicht in Runde 44 angegangen.
 
+**Weitere Funde in `ModelWaterManager.cpp` (Runde 44)**:
+`calcVMMtxGround`/`calcVMMtxWall` (62,49 %/54,12 %, beide mit
+bestehendem `// TODO: matching this is ewwwwwwwwwwwwwwwwww`-Kommentar
+eines früheren Beitragenden) — Ursache teilweise gefunden: Quellcode
+nutzt `param_4.y * 2.0 + param_3.y` mit `2.0` (Double-Literal statt
+`2.0f`), wodurch MWCC ein `fmadd` (Doppelpräzision) statt Retails
+`fmadds` (Einzelpräzision) erzeugt. Korrektur auf `2.0f` behebt genau
+dieses Symptom (bestätigt an den erzeugten Opcodes), reduziert die
+Differenz messbar, erreicht aber in keiner der beiden Funktionen
+100 % — verbleibende Differenz ist reine Registerzuteilung
+(unterschiedliche Stackframe-Größe, 3 vs. 2 gesicherte
+Gleitkomma-Register). Sauber zurückgesetzt, da nicht vollständig
+matchend; Erkenntnis über den `2.0`-vs-`2.0f`-Unterschied als
+Ausgangspunkt für eine künftige Session festgehalten.
+
+**`TSunModel::calcDispRatioAndScreenPos_`** (14,15 %, 292 B, `weak`
+Symbol in Retail): Ursache identifiziert — der einzige Aufrufer von
+`CLBScreenFPosToSPos()` (`include/Camera/cameralib.hpp:338`, bereits
+mit `#pragma dont_inline on/off` UND explizitem C++-`inline`-Keyword
+versehen) wird trotz Pragma vollständig ge-inlined (516 statt
+292 Bytes, kein eigenständiges `CLBScreenFPosToSPos`-Symbol im
+eigenen Build). Ein bereits bestehender Kommentar eines früheren
+Beitragenden ("TODO: definitely more inlines but I couldn't get it
+to work out...") bestätigt: dasselbe Problem wurde schon einmal
+erfolglos angegangen. Versuch, das `inline`-Schlüsselwort zu
+entfernen, sofort zurückgesetzt (Header wird von 37+ Übersetzungs­
+einheiten eingebunden, hätte Mehrfachdefinitions-Linkerfehler
+verursacht). Bestätigt dieselbe MWCC-Pragma-Ignorier-Eigenart wie
+andere in dieser Session dokumentierte Fälle — nicht ohne tiefere
+Compiler-Archäologie behebbar.
+
+
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
 59 in Runde 32/33 als "bereits korrekt" dokumentierten Funktionen
