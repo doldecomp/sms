@@ -41,6 +41,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - not: definition order, "deferred inlines only later-defined callees", caller size, site count, declaration form — all inert (codegen-tells.md: "Inlining").
 - Retail calling a plain method at depth 1 floors it at 15 statements; inlining over the allowance means `inline` (codegen-tells.md: "Inlining").
 - One statement flips it both ways; a ternary cuts cost with identical codegen (codegen-tells.md: "`MapObjDolpic`").
+- The named-local +1 is chosen by the diff: a callee-saved FPR holding a literal across a loop names the literal, an `addi` base reloaded through at every use names the **address** (`T** slot = &arr[i]`), a load feeding only a compare names the tested value; a local used twice collapses reloads, one feeding a call costs an `mr`, a loop bound hoists (codegen-tells.md: "Batch 189").
+- Folding nested `if`/`else` returns into ternaries can flip a header inline back under budget so its weak copy vanishes as retail's did (`getSightDirection`); a TU-local forwarder around an implicit member-wise copy keeps `TVec3::operator=` out of line (codegen-tells.md: "Batch 189").
 - Codegen-neutral levels: a one-line forwarding overload, a **defaulted argument**, `v *= k`, a params wrapper, `TPosition3f` over `Mtx`, a TU-local `static inline` (codegen-tells.md: "header round 19").
 - A class-template member defined out of class without `inline` never inlines: the only source of "weak plus `bl` at depth 1" (codegen-tells.md: "batch 104").
 - `TVec3<f>` members are in-class: 3-statement (`scale`, `sub`, `add`, `set`) call at depth 4, 1-statement (`dot`, `operator=`) at 5. not: making them never-inline, 217 functions lost (codegen-tells.md: "batch 104").
