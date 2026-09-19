@@ -359,14 +359,14 @@ void MSoundSE::construct()
 		    0xf, 200.0f, 0xb4, 1.0f, 1.0f, 0.0f, false);
 		// clang-format off
 		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
-		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO_12, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO_13, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO_21, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO_22, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO_23, nullptr, 60.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_ENSB, nullptr, 180.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_ENSB_2, nullptr, 180.0f));
+		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_ENSB_3, nullptr, 180.0f));
 		// clang-format on
 	}
 }
