@@ -1217,7 +1217,8 @@ TBathtub::TBathtub(const char* name)
     , unk164(nullptr)
     , unk290(0)
 {
-	unk16C = new TBathtubParams;
+	TBathtubParams* params = new TBathtubParams;
+	unk16C                 = params;
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 	mPosition.x = mPosition.y = mPosition.z = 0.0f;
 	mAngleVel.zero();
