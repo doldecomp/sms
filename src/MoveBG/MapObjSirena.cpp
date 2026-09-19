@@ -648,6 +648,7 @@ void TCasinoPanelGate::initMapObj()
 
 void TCasinoPanelGate::moveObject()
 {
+	char trash[0x18];
 	TLiveActor::moveObject();
 	mPosition.y = unk150 - unk14C;
 	if (unk16D) {

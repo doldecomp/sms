@@ -543,6 +543,7 @@ TWoodBlock::TWoodBlock(const char* name)
 
 BOOL TWoodBlock::calcRecycle()
 {
+	char trash[8];
 	switch (unk148) {
 	case 0:
 		unk14C = 1;

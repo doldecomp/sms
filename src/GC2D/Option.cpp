@@ -710,6 +710,7 @@ int TOptionSoundUnit::typeToFlag(TOptionSoundUnit::SoundType type)
 
 void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 {
+	char trash[8];
 	mState = state;
 	switch (state) {
 	case STATE_INACTIVE:

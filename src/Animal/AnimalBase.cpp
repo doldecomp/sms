@@ -47,6 +47,7 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 
 void TAnimalBase::init(TLiveManager* manager)
 {
+	char trash[0x28];
 	mManager = manager;
 	manager->manageActor(this);
 

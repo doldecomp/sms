@@ -28,6 +28,7 @@ void TPollutionLayer::changeType(u16 type) { mPollutionType = type; }
 
 bool TPollutionLayer::getPollutedPosNear(f32 range, JGeometry::TVec3<f32>* dest)
 {
+	char trash[0x18];
 	TPollutionPos& pos = mPos;
 	for (int i = 0; i < 5; ++i) {
 		f32 x   = (MsRandF() - 0.5f) * (mAreaMinRate + MsRandF());

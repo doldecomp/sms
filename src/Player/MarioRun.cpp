@@ -266,6 +266,7 @@ void TMario::getSlopeSlideAccele(f32* arg0, f32* arg1)
 
 f32 TMario::getChangeAngleSpeed()
 {
+	char trash[8];
 	f32 angSp;
 	if (isForceSlip()) {
 		angSp = (f32)mSlipParamsAll.mSlideAngleYSp.get();

@@ -925,6 +925,7 @@ BOOL TMario::rocketCheck()
 
 BOOL TMario::rocketing()
 {
+	char trash[0x50];
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD))
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 

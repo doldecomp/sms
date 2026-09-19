@@ -1783,6 +1783,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 
 void TMario::addCallBack(JDrama::TGraphics* graphics)
 {
+	char trash[0x70];
 	// volatile u32 padding[27];
 	gpMarioForCallBack      = this;
 	J3DModelData* modelData = mModel->unk8->getModelData();
