@@ -239,6 +239,7 @@ private:
 		if (mDamageParticleForbidCount != 0)
 			mDamageParticleForbidCount -= 1;
 	}
+#pragma dont_inline on
 	f32 getAnmOffDist_()
 	{
 		bool bVar3 = false;
@@ -262,6 +263,7 @@ private:
 
 		return fVar1;
 	}
+#pragma dont_inline off
 	void setNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
 	void requestNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
 	void setKeepAnm_();
