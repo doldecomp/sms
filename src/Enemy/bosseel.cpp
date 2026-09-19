@@ -86,6 +86,11 @@ static const char* bossEelTears_bastable[]
 
 static f32 testHeight;
 
+static inline TBEelTearsSaveLoadParams* BEelTearsParams(TBEelTears* tears)
+{
+	return tears->mTearsParams;
+}
+
 TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
                                SDLModelData* modelData, const char* name)
     : THitActor(name)
@@ -95,10 +100,10 @@ TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
 	mSharedParts
 	    = new TSharedParts(mOwner, jointIndex, modelData, 0, "<TSharedParts>");
 	initHitActor(0x2000002C, 3, ACTOR_TYPE_PLAYER,
-	             mOwner->mTearsParams->mSLTearsDropAttackRadius.get(),
-	             mOwner->mTearsParams->mSLTearsDropAttackHeight.get(),
-	             mOwner->mTearsParams->mSLTearsDropDamageRadius.get(),
-	             mOwner->mTearsParams->mSLTearsDropDamageHeight.get());
+	             BEelTearsParams(mOwner)->mSLTearsDropAttackRadius.get(),
+	             BEelTearsParams(mOwner)->mSLTearsDropAttackHeight.get(),
+	             BEelTearsParams(mOwner)->mSLTearsDropDamageRadius.get(),
+	             BEelTearsParams(mOwner)->mSLTearsDropDamageHeight.get());
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
 	    .push_back(this);
