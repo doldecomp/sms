@@ -150,9 +150,8 @@ void TLimitKoopaJr::calcRootMatrix()
 	TPosition3f mtx;
 	mtx.setQT(quat, mPosition);
 
-	MtxPtr src      = (MtxPtr)mtx;
-	J3DModel* model = getModel();
-	MTXCopy(src, model->getBaseTRMtx());
+	MtxPtr src = (MtxPtr)mtx;
+	getModel()->setBaseTRMtx(src);
 
 	getModel()->setBaseScale(mScaling);
 }
