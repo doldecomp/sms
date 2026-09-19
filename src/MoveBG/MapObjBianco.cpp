@@ -93,12 +93,12 @@ void TBigWindmill::control()
 
 	f32 angle = mRotation.z + sAngleAdd;
 	for (int i = 0; i < 4; ++i) {
-		f32 rad    = 0.017453294f * angle;
 		MtxPtr mtx = mBlocks[i]->getModel()->getAnmMtx(0);
+		f32 rad    = 0.017453294f * angle;
 		mtx[0][3]  = sRadius * cosf(rad) + getPosition().x;
 		f32 offset = mYOffset;
+		mtx[1][3]  = sRadius * sinf(rad) + getPosition().y - offset;
 		angle += 90.0f;
-		mtx[1][3] = sRadius * sinf(rad) + getPosition().y - offset;
 		mtx[2][3] = getPosition().z - sSubZ;
 		mBlocks[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		if (angle > 360.0f)
@@ -111,11 +111,10 @@ void TBigWindmill::load(JSUMemoryInputStream& stream)
 	TMapObjBase::load(stream);
 
 	for (int i = 0; i < 4; ++i) {
-		JGeometry::TVec3<f32> scale(1.0f, 1.0f, 1.0f);
-		JGeometry::TVec3<f32> rotation(0.0f, 0.0f, 0.0f);
-		JGeometry::TVec3<f32> position(0.0f, 0.0f, 0.0f);
 		mBlocks[i] = TMapObjBaseManager::newAndRegisterObj(
-		    "bigWindmillBlock", position, rotation, scale);
+		    "bigWindmillBlock", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
+		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		mBlocks[i]->appear();
 		mBlocks[i]->getModel()->calc();
 	}
@@ -222,6 +221,8 @@ u32 TBiancoWatermillVertical::touchWater(THitActor* water)
 		return 0;
 	}
 
+	// TODO: retail tests the result with `clrlwi.`, so `waterHitPlane` returns
+	// `bool`, not `BOOL` (MapObjBase.hpp, shared header).
 	if (!waterHitPlane(water))
 		return 0;
 
@@ -254,10 +255,9 @@ u32 TBiancoWatermillVertical::touchWater(THitActor* water)
 void TBiancoWatermillVertical::setGroundCollision()
 {
 	if (mNeedGroundUpdate || mColCount != 0) {
-		MtxPtr mtx             = getModel()->getAnmMtx(0);
-		TMapCollisionBase* col = getMapCollisionManager()->getUnk8();
-		if (col != nullptr)
-			col->moveMtx(mtx);
+		MtxPtr mtx = getModel()->getAnmMtx(0);
+		if (getMapCollisionManager()->getUnk8() != nullptr)
+			getMapCollisionManager()->getUnk8()->moveMtx(mtx);
 		mNeedGroundUpdate = false;
 	}
 }
@@ -389,13 +389,14 @@ void TBiancoMiniWindmill::calc()
 	spin[2][2] = 1.0f;
 	spin[2][3] = 0.0f;
 
-	MTXConcat(getModel()->getAnmMtx(0), spin, spin);
+	MtxPtr spinPtr = spin;
+	MTXConcat(getModel()->getAnmMtx(0), spinPtr, spinPtr);
 
 	MtxPtr blades = getModel()->getAnmMtx(1);
 	spin[0][3]    = blades[0][3];
 	spin[1][3]    = blades[1][3];
 	spin[2][3]    = blades[2][3];
-	MTXCopy(spin, getModel()->getAnmMtx(1));
+	MTXCopy(spinPtr, getModel()->getAnmMtx(1));
 
 	if (gpMSound->getDistPowFromCamera(mMessenger->mPosition) < 36000000.0f)
 		gpMSound->startSoundActorWithInfo(
@@ -511,7 +512,10 @@ void TLeafBoat::bind()
 		next = mPosition;
 	}
 
-	JGeometry::TVec3<f32> probe(next.x, next.y - mYOffset, next.z);
+	JGeometry::TVec3<f32> probe;
+	probe.x = next.x;
+	probe.y = next.y - mYOffset;
+	probe.z = next.z;
 	TBGWallCheckRecord record(probe, mBodyRadius, 4,
 	                          TBGWallCheckRecord::DONT_MOVE_XZ);
 	if (gpMap->isTouchedWallsAndMoveXZ(&record))
@@ -795,14 +799,13 @@ void TLampSeesawMain::loadAfter()
 {
 	// The partner is named after this object with the "（主）" suffix replaced;
 	// the four bytes after the shared prefix are copied across verbatim.
-	int prefix       = strlen("ランプシーソーＡ");
-	const char* name = getName();
+	int prefix = strlen("ランプシーソーＡ");
 	char buffer[64];
-	u8 c0 = name[prefix];
-	u8 c1 = name[prefix + 1];
-	u8 c2 = name[prefix + 2];
-	u8 c3 = name[prefix + 3];
-	snprintf(buffer, sizeof(buffer), "ランプシーソーＢ００", name);
+	u8 c0 = getName()[prefix];
+	u8 c1 = getName()[prefix + 1];
+	u8 c2 = getName()[prefix + 2];
+	u8 c3 = getName()[prefix + 3];
+	snprintf(buffer, sizeof(buffer), "ランプシーソーＢ００", getName());
 	buffer[prefix]     = c0;
 	buffer[prefix + 1] = c1;
 	buffer[prefix + 2] = c2;
