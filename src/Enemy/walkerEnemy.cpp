@@ -171,49 +171,25 @@ void TWalkerEnemy::walkBehavior(int param_1, float param_2)
 	}
 }
 
-// Binding level worth +8 of low region, landing
-// TWalkerEnemy::behaveToFindMario's frame at 0x50 (batch 124).
-static inline bool WalkerEnemyCheckUnk150(const TWalkerEnemy* p, u32 i)
-{
-	bool unk150 = p->checkUnk150(i);
-	return unk150;
-}
+// TU-local fork of the Mario global, worth +4 of low region (the "global fork
+// is +4 per read" rung).  `setGoalPathMario()` and the spelled-out
+// `setGoalPath((THitActor*)gpMarioAddress)` bracket retail here without ever
+// hitting it: measured against retail's TPathNode temp at 0x34 / frame 0x50,
+// the direct call is 0x30/0x48, the header's `setGoalPathMario()` (which binds
+// its own `THitActor* mario`) is 0x2c/0x50, and a TU-local binder over
+// `checkUnk150` is a uniform +8/+8 on either, so every combination lands on
+// the 8-byte grid 4 away from retail.  Forking the global read out of the
+// argument is the missing 4 and closes the function.
+static inline THitActor* WalkerEnemyMario() { return (THitActor*)gpMarioAddress; }
 
-// TODO: frame-exact at 0x50, but the `setGoalPath` TPathNode temp sits at 0x2c
-// and retail's at 0x34, i.e. eight bytes of pool short with the frame already
-// right (there are twelve bytes of slack above the temp, so a +8 pool item
-// costs no frame). Measured, all with `WalkerEnemyCheckUnk150` in place:
-// `setGoalPathMario()` 0x2c; a named `TPathNode node(...)` + `setGoalPath(node)`
-// 0x38; the same as an unnamed `setGoalPath(TPathNode(...))` temp 0x38 (so the
-// spelled-out constructor is +12, not +8); dropping the binding out of
-// `WalkerEnemyCheckUnk150` is -8 on both temp and frame; `getSpine()` on the
-// three `pushAfterCurrent`s overshoots to frame 0x60.
-// This batch bracketed it: `setGoalPath((THitActor*)gpMarioAddress)` -- the
-// implicit TPathNode conversion at the call site instead of inside
-// `setGoalPathMario` -- keeps the frame at 0x50 and puts the temp at 0x38,
-// four bytes *over* retail, so retail sits exactly between the two spellings.
-// All four combinations: binder+setGoalPathMario 0x2c/frame 0x50,
-// binder+direct 0x38/0x50, no-binder+setGoalPathMario 0x24, no-binder+direct
-// 0x30/frame 0x48 -- a uniform 8 per binder and 12 per conversion level, so
-// the missing item is worth 4. The only 4-byte inline temp frame-gaps.md
-// knows is a *pointer* binding (batch 142: reference 8, pointer 4, void 0),
-// so one pointer rather than the bool is bound below the temp; a pointer
-// binder on the Mario global itself overshoots (+12, temp 0x44).
-// That 4 was then found and is now in the shared header: `setGoalPathMario()`
-// binds `THitActor* mario` before calling `setGoalPath`, which is the +4 that
-// lands seven callers tree-wide (header round 28). Here it moves the temp
-// 0x2c -> 0x30 (the predicted +4) but the frame 0x50 -> 0x58, so this function
-// is now 4 short of pool *and* 8 over on frame at the same time -- the two no
-// longer track each other, so the residue is a high-region item 12 too big
-// rather than one more pool step.
 void TWalkerEnemy::behaveToFindMario()
 {
-	if (WalkerEnemyCheckUnk150(this, 2)) {
+	if (checkUnk150(2)) {
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerEscape::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
-		setGoalPathMario();
+		setGoalPath(WalkerEnemyMario());
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
