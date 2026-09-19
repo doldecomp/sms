@@ -42,7 +42,7 @@ public:
 	// fabricated
 	TLauncherParams* getSaveParam2() const
 	{
-		return (TLauncherParams*)TSpineEnemy::getSaveParam();
+		return (TLauncherParams*)getSaveParam();
 	}
 
 public:

@@ -85,7 +85,8 @@ bool TMario::isInvincible() const
 bool TMario::isWallInFront() const
 {
 	if (mWallPlane != nullptr) {
-		s16 diff = getWallAngle() - mFaceAngle.y;
+		s16 wallAngle = getWallAngle();
+		s16 diff      = wallAngle - mFaceAngle.y;
 		if (diff < -0x71C7 || diff > 0x71C7)
 			return true;
 	}
