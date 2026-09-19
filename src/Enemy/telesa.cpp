@@ -242,7 +242,7 @@ void TTelesa::init(TLiveManager* manager)
 	                     *img);
 	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	if (mInstanceIndex == 0) {
-		for (u16 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
+		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
 			;
 	}
 
@@ -523,7 +523,7 @@ void TTelesa::bind()
 
 BOOL TTelesa::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = unk104.getPoint();
+	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 
@@ -1093,7 +1093,7 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 		// TODO: this is an inline
 
 		if (!self->resetBaseGround()) {
-			if (self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware))
+			if (!self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware))
 				return false;
 		}
 
