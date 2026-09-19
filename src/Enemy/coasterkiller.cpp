@@ -385,6 +385,7 @@ void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
 
 void TCoasterKillerManager::loadAfter()
 {
+	char trash[0x18];
 	TSmallEnemyManager::loadAfter();
 	ASSERT_TEST(unk38);
 }
