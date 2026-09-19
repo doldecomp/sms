@@ -118,7 +118,7 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
     , mFlyTimer(0)
     , mGroundY(0.0f)
 {
-	mVelocity.set(0.0f, 0.0f, 0.0f);
+	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
 
 	initHitActor(0x800000F, 1, 0x80000000, 0.0f, 0.0f, 100.0f, 200.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
