@@ -15,6 +15,7 @@ TItemManager* gpItemManager;
 
 void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 {
+	char trash[8];
 	for (int i = 0; i < getObjNum(); ++i) {
 		THitActor* maybeBox = getObj(i);
 		if (!maybeBox->isActorType(0x20000068))
@@ -84,6 +85,7 @@ TShine* TItemManager::makeShineAppearWithDemoOffset(const char* shine_name,
 
 TCoin* TItemManager::newAndRegisterCoin(u32 event_id)
 {
+	char trash[8];
 	TCoin* result;
 	if (event_id < 0x32) {
 		result = (TCoin*)newAndRegisterObj(
