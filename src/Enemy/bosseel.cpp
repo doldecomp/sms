@@ -823,13 +823,15 @@ TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
 		                                  &mColor);
 
 	mColor.a   = 0xFF;
-	mHitPoints = mOwner->getBossEelParams().mSLToothMaxHitPoint.get();
+	mHitPoints = mOwner->mSaveParams->mSLToothMaxHitPoint.value;
 	initHitActor(0x08000022, 5, 0x81000000,
-	             mOwner->getBossEelParams().mSLToothAttackRadius.get(),
-	             mOwner->getBossEelParams().mSLToothAttackHeight.get(),
-	             mOwner->getBossEelParams().mSLToothDamageRadius.get(),
-	             mOwner->getBossEelParams().mSLToothDamageHeight.get());
+	             mOwner->mSaveParams->mSLToothAttackRadius.get(),
+	             mOwner->mSaveParams->mSLToothAttackHeight.get(),
+	             mOwner->mSaveParams->mSLToothDamageRadius.get(),
+	             mOwner->mSaveParams->mSLToothDamageHeight.get());
 
+	// TODO: frame size is exact but the push_back iterator temporaries sit 4
+	// bytes below retail's, so something above them is 4 bytes wider here.
 	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
 	    ->getChildren()
 	    .push_back(this);
