@@ -42,12 +42,14 @@ void TFileLoadBlock::pushed()
 
 void TFileLoadBlock::touchPlayer(THitActor* param_1)
 {
+	char trash[0x10];
 	if (isState(STATE_NORMAL) && marioHeadAttack() && !isStateTimerEngaged())
 		pushed();
 }
 
 BOOL TFileLoadBlock::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[0x10];
 	if (isState(STATE_NORMAL) && message == HIT_MESSAGE_PUSH_UP
 	    && !isStateTimerEngaged()) {
 		pushed();
