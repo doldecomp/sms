@@ -182,6 +182,12 @@ void TFruitHitHideObj::load(JSUMemoryInputStream& stream)
 	THideObjBase::load(stream);
 }
 
+static inline MSound* FruitBasketSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TFruitBasket::countFruit(THitActor* param_1)
 {
 	mMActor->setBck("basket");
@@ -189,9 +195,9 @@ void TFruitBasket::countFruit(THitActor* param_1)
 	if (mHiddenObj != nullptr) {
 		appearObj(0.0f);
 
-		SMSGetMSound()->startSoundActor(MSD_SE_IT_SOCCER_GOAL, &mPosition, 0,
+		FruitBasketSound()->startSoundActor(MSD_SE_IT_SOCCER_GOAL, &mPosition, 0,
 		                                nullptr, 0, 4);
-		SMSGetMSound()->startSoundSystemSE(MSD_SE_FGM_SOCCER_GOAL, 0, nullptr,
+		FruitBasketSound()->startSoundSystemSE(MSD_SE_FGM_SOCCER_GOAL, 0, nullptr,
 		                                   0);
 	} else {
 		if (unk150 == 0) {
