@@ -3195,6 +3195,58 @@ Funktionen** (399 aus Runde 1–44 plus 1 neue in Runde 45:
 `TSunGlass::load`) in 58 Commits. Funktionszahl: 8986 → **8987**
 (**+1**). DOL SHA1 bleibt `OK`.
 
+### Nach sechsundvierzigster Iterationsrunde (kritische Methodik-Lektion: rohes ELF-Byte-Lesen ohne Relokationsauflösung ist unzuverlässig für Datenvergleiche; Destruktor-Pool erneut als bekanntes Artefakt bestätigt)
+
+**Stichprobenprüfung des `fp=None`-Destruktor-Pools** (573 Kandidaten
+mit `__dt__`-Namensmuster und fehlendem `fuzzy_match_percent` im
+aktuellen `report.json`): Stichprobe `TWoodLog::~TWoodLog()`
+(`mario/MoveBG/MapObjBianco`) zeigt das Symbol existiert NICHT im
+eigenen `src`-Build dieser Einheit (weak-Symbol, vom Compiler in
+dieser TU nicht dupliziert, da Retail hier großzügiger dupliziert).
+Bestätigt exakt das bereits in Runde 32/33 etablierte
+Per-TU-Duplikations-Artefakt — keine neue Erkenntnis, keine
+Handlungsoption ohne MWCC-interne Heuristik-Kontrolle.
+
+**KRITISCHER METHODIK-FUND**: Versuch, `.data`-Abschnitte direkt
+durch rohes Parsen der ELF-Sektionsbytes (Python, ohne
+Relokationsauflösung) zwischen `src/*.o` und `obj/*.o` zu vergleichen,
+um datenreiche Einheiten mit 100 % Code-Match aber niedrigem
+Daten-Match zu untersuchen (`mario/JSystem/JAudio/JASystem/
+JASPlayer_impl`, 100 % Code / 2,1 % Daten laut `report.json`).
+Rohvergleich zeigte scheinbar `sTreTable[8]` mit `0x8001` in unserem
+Quelltext vs. `0x0000` in Retails `.o`-Datei — Korrektur angewendet,
+**DOL-SHA1-Check schlug danach fehl** (`build/GMSJ01/mario.dol:
+FAILED`)! Sofort zurückgesetzt, DOL wieder `OK` bestätigt.
+
+**Ursache**: diese Einheit ist eine `complete: true`-Einheit (verlinkt
+aus `src/*.o`, bestätigt durch die direkte Reaktion des
+DOL-Hash-Checks auf die Quelltextänderung) — der ORIGINALE Wert
+`0x8001` war die ganze Zeit korrekt und bereits Teil der
+erfolgreich verlinkten, exakt passenden DOL. Der rohe
+ELF-Sektionsvergleich (ohne `.rela.data`-Relokationen aufzulösen)
+lieferte ein IRREFÜHRENDES Ergebnis für `obj/*.o` an dieser Stelle.
+
+**Neue Methodik-Regel**: rohes ELF-`.data`-Byte-Lesen ohne
+Relokationsauflösung ist NICHT als eigenständige Verifikationsmethode
+für Datenwerte zu verwenden. Für `complete: true`-Einheiten ist der
+DOL-SHA1-Check die einzige zuverlässige Autorität (dieser hat den
+Fehler hier korrekt und sofort erkannt — das etablierte
+Verifikationsprotokoll „DOL-SHA1 nach jeder Änderung prüfen" hat
+genau wie vorgesehen funktioniert und eine reale Regression
+verhindert). Für `complete: false`-Einheiten bleibt `dtk elf disasm`
+(Code) die etablierte Methode; ein äquivalent zuverlässiges Werkzeug
+für Datenabschnitts-Vergleiche wurde in dieser Runde NICHT gefunden
+und ist für künftige Sessions offen (evtl. `objdiff-cli`s internes
+`data_diff`-Feature untersuchen, falls über eine unterstützte
+Schnittstelle zugänglich).
+
+**Keine neuen Fixes in Runde 46** — beide Untersuchungslinien
+(Destruktor-Pool, Datenvergleich) endeten in bereits bekannten bzw.
+neu entdeckten, aber nicht umsetzbaren Sackgassen. Session-Gesamtstand
+bleibt bei **400 tatsächlich verifizierten Funktionen** in 58 Commits
+(unverändert seit Runde 45). DOL SHA1 bestätigt `OK`.
+
+
 
 ## Nächster GMSJ01-Kandidat
 **Neuer, großer Kandidaten-Cluster identifiziert (Runde 44):
