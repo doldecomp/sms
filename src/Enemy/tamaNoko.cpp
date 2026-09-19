@@ -630,7 +630,7 @@ bool TTamaNoko::isCollidMove(THitActor* param_1)
 	if (param_1->getActorType() == getActorType())
 		return true;
 
-	if (mSpine->getCurrentNerve() == &TNerveTamaNokoSleep::theNerve()) {
+	if (mSpine->getCurrentNerve() == &TNerveTamaNokoDown::theNerve()) {
 		param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 		return true;
 	}
