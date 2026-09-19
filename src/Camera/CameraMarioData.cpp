@@ -32,6 +32,7 @@ void TCameraMarioData::calcAndSetMarioData()
 
 	default:
 		JGeometry::TVec3<f32> offset;
+		char trash[8];
 		offset.sub(SMS_GetMarioPos(), gpMarioOriginal->getPrevPosition());
 		mFrameMoveDistHorizontal = offset.x * offset.x + offset.z * offset.z;
 		mFrameMoveDistVertical   = offset.y * offset.y;
