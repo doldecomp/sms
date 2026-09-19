@@ -19,6 +19,17 @@
 | Funktionen matched | 66,10 % (8.514 / 12.881) |
 | Units complete | 396 / 736 |
 
+## Stand nach acht Iterationen
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,11 % (1.475.800 Bytes) | +1.084 Bytes |
+| Funktionen matched | 66,15 % (8.521 / 12.881) | +7 |
+| Code complete / linked | 18,80 % | +0,80 pp |
+| Units complete | 402 / 736 | +6 |
+
+Die Referenz-DOL bleibt `OK`.
+
 ### Bereiche
 
 | Bereich | Fuzzy | Code matched | Units linked |

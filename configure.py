@@ -427,7 +427,7 @@ config.libs = [
             # JAInterface
             Object(Matching, "JSystem/JAudio/JAInterface/JAIAsnData.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIAnimation.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAInterface/JAIBasic.cpp"),
+            Object(Matching, "JSystem/JAudio/JAInterface/JAIBasic.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIConst.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIDebug.cpp"),
             Object(Matching, "JSystem/JAudio/JAInterface/JAIData.cpp"),
@@ -522,18 +522,18 @@ config.libs = [
             # J3DGraphLoader
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DClusterLoader.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DJointFactory.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DModelLoader.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DShapeFactory.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DAnmLoader.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp"),
 
             # JParticle
             Object(NonMatching, "JSystem/JParticle/JPAEmitter.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPAEmitterManager.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPAField.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPAMath.cpp"),
-            Object(NonMatching, "JSystem/JParticle/JPAParticle.cpp"),
+            Object(Matching, "JSystem/JParticle/JPAParticle.cpp"),
             Object(Matching, "JSystem/JParticle/JPADrawSetupTev.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPADraw.cpp"),
             Object(NonMatching, "JSystem/JParticle/JPADrawVisitor.cpp"),
@@ -989,7 +989,7 @@ config.libs = [
         "objects": [
             PCHObject(NonMatching, "MSound/MAnmSound.cpp"),
             PCHObject(NonMatching, "MSound/MSound.cpp"),
-            PCHObject(NonMatching, "MSound/MSoundBGM.cpp"),
+            PCHObject(Matching, "MSound/MSoundBGM.cpp"),
             Object(Matching, "MSound/MSoundDebug.cpp"),
             Object(NonMatching, "MSound/MSoundScene.cpp"),
             PCHObject(NonMatching, "MSound/MSoundSE.cpp"),
@@ -1192,7 +1192,7 @@ config.libs = [
             PCHObject(NonMatching, "Enemy/amiNoko.cpp"),
             PCHObject(NonMatching, "Enemy/gatekeeper.cpp"),
             PCHObject(NonMatching, "Enemy/BossHanachanEffect.cpp"),
-            PCHObject(NonMatching, "Enemy/egggen.cpp"),
+            PCHObject(Matching, "Enemy/egggen.cpp"),
             PCHObject(NonMatching, "Enemy/seal.cpp"),
             PCHObject(NonMatching, "Enemy/bgpoldrop.cpp"),
             PCHObject(NonMatching, "Enemy/bgtentacle.cpp"),
