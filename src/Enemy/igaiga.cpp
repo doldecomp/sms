@@ -258,7 +258,7 @@ void TRollEnemy::behaveToWater(THitActor* param_1)
 
 	// Each spray swells the body, and the hit radii with it.
 	if (unk158 < unk1A4->mSLExpandMax.get()) {
-		f32 rate = unk1A4->mSLExpandRate.get();
+		f32 rate = unk1A4->mSLExpandRate.value;
 		mBodyScale *= rate;
 		unk158 *= rate;
 		mScaledBodyRadius *= rate;
