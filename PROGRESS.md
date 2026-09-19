@@ -3583,3 +3583,195 @@ Retail-Disassembly strukturell wiedererkannt).
 Session-Gesamtstand bleibt bei 400 verifizierten echten Fixes in 58 Commits
 (kein neuer Commit diese Runde — Inhalt korrekt rekonstruiert, aber
 Byte-Match durch dateiweite Inlining-Heuristik blockiert).
+
+### Zwischenstand Runde 49: eigene Tiefenanalyse `TLiveActor::control()` und `evIsNpcSinkBottom`
+
+**`TLiveActor::control()`** (`src/Strategic/liveactor.cpp`, 73,96 % Match, 200
+Bytes) enthielt zwei `// call on unk90`-Platzhalterkommentare eines früheren
+Mitwirkenden (Feld `void* unk90` mit unbekanntem Typ, nirgendwo im
+Repository mit konkretem Typ belegt). Aus dem Retail-Disassembly exakt
+rekonstruiert: beide Stellen rufen `((vtable von *(unk90+0x5c))[4])(unk90)`
+auf (Rohzeiger-Vtable-Dispatch, passend zum bereits im Code verwendeten
+Stil `*(int*)((char*)unk90 + 4)` für denselben unbekannten Typ). Zusätzlich
+ersetzte `mSpine->isIdle()` (materialisiert eine Bool-Variable vor dem
+Sprung) durch die direkte OR-Form `mSpine->getCurrentNerve() != nullptr ||
+mSpine->getVertebraeCount() > 0` (Negation von `isIdle()`), wodurch die
+Verzweigungsstruktur exakt auf Retails direkte Sprunglogik ohne
+Bool-Materialisierung einschwenkte. Ergebnis: **alle 58 Instruktionen
+strukturell identisch** (gleiche Anzahl, gleiche Opcodes, gleiche
+Sprungstruktur nach Label-Kanonisierung) — einzige Restdifferenz: `unk90`
+wird bei uns in r5, bei Retail in r4 alloziert (reine
+Registerzuteilungsentscheidung, drei verschiedene Formulierungen probiert:
+Rohzeiger-Cast, benannte `void** vtbl`-Lokale, zusätzlicher
+`void* p = unk90`-Cache — alle drei identisches Resultat). Gehört zur
+bereits dokumentierten Kategorie „asymmetrische
+Register-Zuteilungsentscheidung" (wie `TNerveNameKuriLand::execute`,
+`TRotation3::identity33`) — kein Byte-Match erreicht, sauber
+zurückgesetzt.
+
+**`evIsNpcSinkBottom`** (`src/NPC/NpcEvent.cpp`, über die gemeinsame
+Hilfsfunktion `IsNpcFlagOn_`, 72,17 % Match, 264 Bytes) zeigte einen
+deutlicheren strukturellen Unterschied: Retail ruft für den finalen
+`interp->push(result)`-Aufruf die reale Out-of-line-Funktion
+`push__21TSpcStack<9TSpcSlice>FRC9TSpcSlice` auf, während unser Build den
+kompletten Push-Rumpf (Kapazitätsprüfung, Speichern, Größe inkrementieren)
+inline expandiert. `TSpcStack<T>::push()` ist in `include/Strategic/
+spcinterp.hpp` als gewöhnliche (nicht explizit inline-markierte, aber
+kurze) Methode definiert. **Risikoabschätzung durchgeführt, bevor
+experimentiert wurde**: Dieselbe Datei enthält mindestens sieben weitere
+`ev*`-Funktionen, die exakt denselben `interp->push(result)`-Aufruf nutzen
+und bereits bei 100 % Match liegen (`evConnectDummyNpc`,
+`evOnTalkToDummyNpc`, `evSetNpcBalloonMessage`,
+`evSetNpcTalkForbidCount`, `evNpcDanceOn`, `evNpcDanceOffHappyOn`,
+`evResetFruitNum`) — für diese muss `push()` also bereits korrekt inline
+expandiert werden. Ein pauschales `#pragma dont_inline` auf die geteilte
+Template-Methode hätte ein hohes Risiko, diese sieben bereits
+matchenden Funktionen zu regressieren (dieselbe Gefahrenklasse wie der in
+dieser Runde bereits dokumentierte `theNerve()`-Fall im
+`TBathtubKiller`-Cluster: eine dateiweite/funktionsabhängige
+Inlining-Heuristik, keine lokale Stellschraube). Ohne experimentellen
+Eingriff auf die geteilte Header-Datei als „untersucht, aber zurückgestellt"
+eingestuft; keine Änderung vorgenommen.
+
+**Parallele Subagenten-Ergebnisse** (acht parallel gestartete
+Untersuchungsaufgaben für Funktionen mit real existierender, aber
+niedrig-prozentiger Implementierung — dieselbe „falscher statt nur
+unpräziser Algorithmus"-Technik wie beim `behaveToWater`-Fund):
+- **`TMameGesso::reset()`** (47,9 % → **MATCH**, Commit `210212f2`):
+  `unk1CC = MsRandF(l, r)` (reine Float-Arithmetik) ersetzt durch das
+  bereits vorhandene `TMsRange<s32>(0, interval).rand()`-Template — Retail
+  nutzt Integer-Subtraktion vor der Float-Konvertierung, nicht reine
+  Float-Arithmetik. Byte-identisch bis auf kosmetische
+  Konstanten-Pool-Nummerierung.
+- **`TDoroHamuKuri::attackToMario()`** (43,5 % → **MATCH**, Commit
+  `351c13f0`): Algorithmus war korrekt; MWCC inlinete
+  `THamuKuri::selectCapHolder()` komplett, Retail ruft es reell
+  (`bl selectCapHolder`). Fix: `#pragma dont_inline` um die
+  **Callee**-Definition (nicht den Aufrufer) — bestätigt die aus Runde 29
+  bekannte Regel, dass das Pragma um die aufgerufene Funktion stehen muss.
+- **`TApplication::TApplication()`** (36,4 % → **NO-MATCH**, zurückgesetzt):
+  Quellcode bereits semantisch exakt (Initialisierungsreihenfolge korrekt);
+  Lücke stammt aus `JDrama::TFlagT<T>::set`/Kopierkonstruktor, die in
+  `JDRFlag.hpp` inline definiert sind, während Retail sie als externe
+  Weak-Symbole in `MarDirectorDirect.cpp` referenziert (0 Bytes Stackframe
+  bei uns vs. 0x40 bei Retail). `#pragma dont_inline`/`inline_depth`
+  in vier Varianten erfolglos getestet (siehe Unteragenten-Bericht) —
+  Cross-TU-Header-Änderung nötig, außerhalb des Aufgabenumfangs,
+  zurückgestellt für eine dedizierte JDRFlag.hpp-Untersuchung.
+
+Fünf weitere Unteragenten-Untersuchungen (`SunModel`, `MarioOnYoshi`,
+`HamuKuriIsHitValid`, `WoodBlockLoad`, `WarpInCallBackExecute`) liefen zum
+Zeitpunkt dieses Zwischenstands noch; Ergebnisse folgen im nächsten
+Abschnitt.
+
+### Zwischenstand Runde 49, Teil 2: `defer_codegen`-Durchbruch und weitere Subagenten-Ergebnisse
+
+**Grundlegender Methodik-Durchbruch** (gefunden vom `SunModel`-Unteragenten,
+eigenständig reproduziert und bestätigt am `theNerve()`-Fall aus Teil 1
+dieser Runde): `#pragma dont_inline` ist im gesamten Projekt praktisch
+wirkungslos, weil `configure.py`s `-inline deferred`-Compilerflag jeden
+Pragma-Zustand verwirft, BEVOR er wirken kann. Der Fix:
+`#pragma defer_codegen off` als ERSTE Zeile einer `.cpp`-Datei setzt
+dieses Verhalten für die gesamte Datei zurück, wonach bereits vorhandene
+`#pragma dont_inline`-Markierungen in Headern (wie `at()` in
+`JGMatrix33.hpp`, ~88 Stellen projektweit) endlich greifen. Bestätigt an
+zwei unabhängigen Fällen:
+- **`TSunModel::calcDispRatioAndScreenPos_`** (14,15 % → **MATCH**, Commit
+  `4c40b60e`): `CLBScreenFPosToSPos` blieb dank `defer_codegen off` +
+  gezieltem `dont_inline` um die Zielfunktion out-of-line, exakt wie
+  Retail. Zusätzlich `char trash[16]` für eine reine Rahmengrößenlücke.
+  Nebenfund: `CLBScreenFPosToSPos` existierte in unserem Objekt vorher
+  GAR NICHT (0 %), jetzt nahezu vollständig (75/75 Instruktionen) — ein
+  verbleibender Bug in `include/Camera/cameralib.hpp` (u16/s16-Vorzeichen-
+  Fehlkonvertierung bei `SMSGetGameRenderHeight`/`Width`, plus 8-Byte-
+  Rahmenlücke) wurde dokumentiert, aber bewusst NICHT behoben (Header mit
+  37+ Includern, außerhalb des Aufgabenumfangs).
+- **Eigener Test in `TBathtubKiller::behaveToWater`** (siehe Teil 1): Mit
+  `#pragma defer_codegen off` am Dateianfang wird
+  `theNerve__28TNerveBathtubKillerExplosionFv`/
+  `theNerve__24TNerveBathtubKillerBreakFv` jetzt korrekt als reale
+  Out-of-line-Funktion aufgerufen (`bl`) statt komplett inline expandiert
+  — der in Teil 1 dokumentierte `theNerve()`-Cluster-Mythos ist damit
+  **teilweise aufgeklärt**: nicht dateiweite Heuristik allein, sondern
+  das gemeinsame `-inline deferred`/`dont_inline`-Problem. Restdifferenzen
+  bleiben aber bestehen: (a) eine dritte `theNerve()`-Referenz innerhalb
+  von `mSpine->pushNerve(...)`s inline-Expansion wird weiterhin komplett
+  inline rekonstruiert statt (wie Retail) die bereits konstruierte
+  `instance`-Adresse direkt wiederzuverwenden — drei Formulierungen
+  (OR-Kette, separate `bool a,b`-Lokale, gemeinsame `breakNerve`-Lokale)
+  probiert, keine erreichte exakten Match; (b) die Boolean-
+  Materialisierung des `isDying`-Vergleichs nutzt bei Retail ein
+  `subf+cntlzw+extrwi.`-Bitmuster, bei uns entweder direktes Branching
+  oder ein abweichendes `srwi`-Muster. `behaveToWater` bleibt daher
+  NICHT gematcht, sauber zurückgesetzt (inkl. der `defer_codegen`-Pragma-
+  Zeile). **Für zukünftige Cluster-Arbeit festgehalten**: `defer_codegen
+  off` ist ein notwendiger, aber nicht hinreichender erster Schritt für
+  den ganzen `TBathtubKiller`-Cluster; `attackToMario`s Runde-47-
+  Rahmenlücke (ours 0x58 vs. Retail 0x50) sollte mit dieser Erkenntnis
+  erneut versucht werden, da sie vermutlich auch auf inline-aufgeblähtem
+  `theNerve()`-Code beruhte — noch nicht nachgetestet, da die Restarbeit
+  an `behaveToWater` bereits das Rundenbudget beanspruchte.
+
+**Weitere abgeschlossene Subagenten-Ergebnisse**:
+- **`TMario::onYoshi() const`** (22,2 % → **MATCH**, Commit `59200eeb`):
+  Bug lag NICHT in der Zieldatei, sondern in
+  `include/Player/Yoshi.hpp`s `TYoshi::onYoshi()` — ein Ternary-Ausdruck
+  (`return mState == STATE_MOUNTED ? TRUE : FALSE;`) wurde trotz
+  `dont_inline` textuell komplett wegoptimiert (MWCC ignoriert
+  `dont_inline` bei trivialen Ternary-Rümpfen unabhängig vom
+  `defer_codegen`-Zustand). Umformulierung zu explizitem `if`/`else`
+  ließ MWCC die Funktion endlich als eigenständig respektieren →
+  Byte-exakter Match, inklusive korrekter Nachfolge-Adressen für
+  `windMove`/`flowMove`/`warpRequest` in derselben Datei.
+- **`THamuKuri::isHitValid(u32)`** (35,6 % → **NO-MATCH**, sauber
+  zurückgesetzt): Echter Algorithmus-Bug gefunden und behoben (Retail
+  dupliziert `THamuKuriManager::requestSerialKill`s komplette Logik
+  inline, statt sie aufzurufen) — nach Fix inklusive `char trash[24]`
+  75 von 76 Instruktionen exakt, aber ein hartnäckiger
+  Register-Rotationsunterschied (`mr r3,r0` vs. direktes `lwzx r3,...`)
+  erwies sich nach zehn Quellcode-Varianten als Compiler-Kontext-Artefakt
+  (auch `requestSerialKill` selbst zeigt denselben Extra-Befehl in
+  Retail) — bestätigter Grenzfall, kein Fix möglich.
+- **`TWoodBlock::load(JSUMemoryInputStream&)`** (44,6 % → **NO-MATCH**,
+  sauber zurückgesetzt): Echter Algorithmus-Bug gefunden (Retail ruft
+  `TRailMapObj::load` direkt auf und dupliziert `TNormalLift::load`s
+  Schwanzlogik inline, statt über `TNormalLift::load` zu delegieren) —
+  aber nach Korrektur bleibt `TRailMapObj::load` an ZWEI Aufrufstellen
+  ASYMMETRISCH: in `TNormalLift::load` muss es inline bleiben (aktuell
+  korrekt), in `TWoodBlock::load` muss es out-of-line werden. Da
+  `dont_inline` eine reine Definitionseigenschaft ist (wirkt auf ALLE
+  Aufrufer gleich), ist diese Asymmetrie mit dem verfügbaren Werkzeug
+  NICHT auflösbar, ohne die bereits korrekte `TNormalLift::load` zu
+  brechen — bestätigter Grenzfall, dieselbe Kategorie wie die
+  `WoodBlockLoad`-eigene Analyse es einordnet.
+- **`TWarpInCallBack::execute(...)`** (36,75 % → **NO-MATCH**, sauber
+  zurückgesetzt): Kein Algorithmus-Bug (Mathematik bereits identisch),
+  reine Codegen-Formdifferenz. Ursache identifiziert:
+  `JGVec3.hpp`s `operator*(TVec3, f32)` gibt **by value** zurück
+  (`dont_inline`-geschützter Kopierkonstruktor/-zuweisung erzeugt daher
+  überzählige Rückgabe-Temporäre bei Verkettung), während Retails Muster
+  auf `const TVec3&`-Rückgabe hindeutet — dieselbe „fake-Referenz für
+  Matching"-Masche, die bereits bei `operator+`/`operator-` in
+  derselben Headerdatei angewendet wird. Empfehlung für eine dedizierte
+  Headerdatei-Änderungsrunde dokumentiert, nicht in dieser Runde
+  umgesetzt (gemeinsam genutzter Header, 37+ Includer).
+- **`TApplication::TApplication()`** (36,4 % → **NO-MATCH**, sauber
+  zurückgesetzt): Bereits in Teil 1 dokumentiert — `JDRFlag.hpp`s
+  `TFlagT<T>::set`/Kopierkonstruktor inline vs. Retails externe
+  Weak-Symbole in `MarDirectorDirect.cpp`; Cross-TU-Header-Änderung
+  nötig, zurückgestellt.
+
+**`MapObjLibDeferCodegen`-Unteragent** (86-Funktionen-Regressionsprüfung
+für `src/MoveBG/MapObjLib.cpp` mit `defer_codegen off`) lief zum
+Zeitpunkt dieses Zwischenstands noch; Ergebnis folgt im nächsten
+Abschnitt.
+
+Session-Gesamtstand nach Teil 2: **404 verifizierte echte Fixes in 62
+Commits** (4 neue Matches diese Runde: `TMameGesso::reset`,
+`TDoroHamuKuri::attackToMario`, `TSunModel::
+calcDispRatioAndScreenPos_`, `TMario::onYoshi`). `defer_codegen off` ist
+ab sofort als Standard-Ersttest für JEDE Funktion mit Verdacht auf
+fehlende Out-of-line-Aufrufe etabliert (Diagnosekriterium: Zielfunktion
+ruft eine im Header als `dont_inline` markierte Methode auf, die im
+eigenen `src/*.o` gar nicht als eigenes Symbol erscheint, aber im
+`obj/*.o`-Referenzobjekt schon).
