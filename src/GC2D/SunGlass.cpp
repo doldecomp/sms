@@ -109,6 +109,7 @@ void TSunGlass::loadAfter() {
 
 void TSunGlass::load(JSUMemoryInputStream& stream)
 {
+	char trash[24];
 	JDrama::TViewObj::load(stream);
 	unk10 = gpMarDirector->unk18[1];
 }
