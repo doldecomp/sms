@@ -233,7 +233,7 @@ void TAnimalBird::calcRootMatrix()
 {
 	if (mHolder != nullptr) {
 		MtxPtr mtx = mHolder->getTakingMtx();
-		MTXCopy(mtx, getModel()->getBaseTRMtx());
+		getModel()->setBaseTRMtx(mtx);
 	} else {
 		TSpineEnemy::calcRootMatrix();
 	}

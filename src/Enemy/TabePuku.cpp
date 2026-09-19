@@ -322,12 +322,9 @@ void TTabePuku::calcRootMatrix()
 
 	getModel()->setBaseScale(mScaling);
 
-	MtxPtr src      = mtx;
-	J3DModel* model = getModel();
-	// TODO: 99.0%. Retail copies the model pointer and adds getBaseTRMtx()'s
-	// 0x20 in a second instruction; naming the destination as well reproduces
-	// neither, and moves every local up four bytes.
-	MTXCopy(src, model->getBaseTRMtx());
+	MtxPtr src = mtx;
+	// TODO: 99.9%. `src` lands in r29 where retail has r31.
+	getModel()->setBaseTRMtx(src);
 
 	emitEffects();
 }
