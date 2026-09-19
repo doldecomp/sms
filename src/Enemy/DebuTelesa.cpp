@@ -58,6 +58,7 @@ void TDebuTelesa::kill() { TSmallEnemy::kill(); }
 
 BOOL TDebuTelesa::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[8];
 	switch (message) {
 	case HIT_MESSAGE_TRAMPLE:
 	case HIT_MESSAGE_HIP_DROP:

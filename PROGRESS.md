@@ -86,6 +86,9 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `char trash[0x18]` reproduziert den 0x30-Byte-Stackframe; anschließend
   matchen `.text`, `.rodata`, `.data` und `.sdata2` der Unit zu 100 %.
 
+- `Enemy/DebuTelesa.cpp`: `TDebuTelesa::receiveMessage` — **100 %**
+  (176 Bytes). `char trash[8]` gleicht den Stackframe von 0x28 auf 0x30 Bytes an.
+
 ## Nächster GMSJ01-Kandidat
 
 Noch auszuwählen.
