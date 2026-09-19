@@ -92,6 +92,16 @@ void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
 	}
 }
 
+M3UMtxCalcSIAnmBlendQuat::M3UMtxCalcSIAnmBlendQuat()
+    : J3DMtxCalcSoftimage()
+{
+	mMotionBlendRatio = 0.0f;
+	unk60             = 0.0f;
+	mOldAnm           = nullptr;
+	mNewAnm           = nullptr;
+	mBehaveAsBasic    = false;
+}
+
 M3UMtxCalcSIAnmBlendQuat::M3UMtxCalcSIAnmBlendQuat(bool basic)
     : J3DMtxCalcSoftimage()
 {
