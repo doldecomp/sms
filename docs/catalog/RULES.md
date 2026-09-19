@@ -54,6 +54,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Depth counts from the innermost expression; an inlined call's argument is a level, an out-of-line call's is not (codegen-tells.md: "sweep 106").
 - Any **stored** value accepts a level; a `return *this` forwarder is not a level, but still binds frame (codegen-tells.md: "sweep 106").
 - not: definition order, "deferred inlines only later-defined callees", caller size, site count, declaration form — all inert (codegen-tells.md: "Inlining").
+- The depth-1 budget is met at exactly 14 with `if` = 1 and each extra `||`/`&&` term = 1; a zero-codegen named local is the honest 15th (`changeNerveProc_`); an `inline` free function the map lists UNUSED must be plain `static` (codegen-tells.md: "Closure 236").
 - Retail calling a plain method at depth 1 floors it at 15 statements; inlining over the allowance means `inline` (codegen-tells.md: "Inlining").
 - One statement flips it both ways; a ternary cuts cost with identical codegen (codegen-tells.md: "`MapObjDolpic`").
 - The named-local +1 is chosen by the diff: a callee-saved FPR holding a literal across a loop names the literal, an `addi` base reloaded through at every use names the **address** (`T** slot = &arr[i]`), a load feeding only a compare names the tested value; a local used twice collapses reloads, one feeding a call costs an `mr`, a loop bound hoists (codegen-tells.md: "Batch 189").
