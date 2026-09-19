@@ -19,6 +19,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A stack or member address used at two call sites is bound once into a callee-saved register; per-site `addi` is one instruction short each time (codegen-tells.md: "Structural pass 173").
 - An `int` local feeding an `int` parameter gives `mr`, a `u8` one `addi rD, rS, 0` (codegen-tells.md: "Structural pass 173").
 - A dead `b <default>` in a switch is one more empty case; `if (c) return f(v); return v;` leaves a dead `b epilogue` where `if (c) v op= k; return v;` shares the exit; a surviving impossible compare is `MsClamp<T>` with a parameter bound (codegen-tells.md: "Structural pass VIII").
+- `TVec3` values built only for `const TVec3&` arguments are call temporaries (right-to-left, ascending slots, reversed stores), never block locals; a pointer local that only feeds a call costs an `mr`: delete it and re-call the accessor (codegen-tells.md: "Structural pass X").
 - Declare a named local **after** the expression that first materialises its value to share the load (before: an early load plus `fmr`); `MTXCopy(call(), member)` evaluates the destination first, so bind the member address before the call (codegen-tells.md: "Structural pass VIII").
 - not: `TNerveBase<T>::TNerveBase()` out of class (-3.15 matched, DOL broken); retail's `bl` at `theNerve()` statics is per site like `TVec3::set<f>` (codegen-tells.md: "Structural pass VIII").
 - Switch arms are emitted in **source** order, the pivot tree is value-sorted; decode destinations, not constants (codegen-tells.md: "batch 122").
