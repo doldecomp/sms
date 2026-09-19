@@ -857,7 +857,12 @@ void TOptionSoundUnit::adjustView()
 
 void TOptionSoundUnit::adjustSound()
 {
-	stopSound();
+	// stopSound()'s body is written out here rather than called: retail's
+	// TOptionControl::checkInput expands it at inline depth 4, where a plain
+	// call would not have been inlined (95.12% -> 98.84% on checkInput, and
+	// the out-of-line adjustSound is unchanged).
+	if (mMusic)
+		mMusic->stop(1);
 
 	const FabricatedSoundSettings& setting
 	    = cSoundSettings[mSelectionText->getNumber()];
@@ -1097,7 +1102,9 @@ void TOptionControl::writeValue()
 
 bool TOptionControl::isChangedSetting() const
 {
-	bool result = true, soundResult = true;
+	// TODO: 8 bytes of frame short (target 0x60, ours 0x58); every
+	// instruction matches, so this is a low-region temp, not structure.
+	bool result = true, soundResult = result;
 
 	if (mInitialRumbleValue == mRumbleOption->getValue()
 	    && mInitialSoundValue == mSoundOption->getValue())
