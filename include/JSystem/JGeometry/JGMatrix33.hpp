@@ -14,7 +14,9 @@ template <typename T> struct SMatrix33C {
 template <> struct SMatrix33C<f32> {
 	SMatrix33C() { }
 
+#pragma dont_inline on
 	f32 at(u32 i, u32 j) const { return mMtx[i][j]; }
+#pragma dont_inline off
 	f32& ref(u32 i, u32 j) { return mMtx[i][j]; }
 
 	f32 mMtx[3][3];
