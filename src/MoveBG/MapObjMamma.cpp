@@ -73,13 +73,22 @@ bool TSandBase::isDown() const
 	return false;
 }
 
+// Binding level over the same raw member read, worth +8 of low region in
+// TSandBase::withering.
+static inline TSandBomb* MapObjMammaBaseTrigger(const TSandBase* p)
+{
+	TSandBomb* trigger = p->mTrigger;
+	return trigger;
+}
+
 bool TSandBase::withering()
 {
 	mScaling.y -= mWitherSpeed;
 	if (mScaling.y < mScaleMin)
 		mScaling.y = mScaleMin;
 
-	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBUD_NORMAL, &mTrigger->mPosition,
+	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBUD_NORMAL,
+	                          &MapObjMammaBaseTrigger(this)->mPosition,
 	                          0, nullptr, 0, 4);
 
 	if (mScaling.y <= mScaleMin)
