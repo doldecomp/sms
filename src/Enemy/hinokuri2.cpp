@@ -1270,7 +1270,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 			int polWait = ((THino2Params*)self->getSaveParam())->mSLPolWaitCount.get();
 			if (uVar1 > polWait) {
 				self->unk180 = FALSE;
-				self->changeBck(3);
+				self->changeBck(0x10);
 				uVar1 = 0;
 			}
 			self->mWaitTimer = uVar1;
@@ -1280,7 +1280,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 
 	if (self->mCurrentBck == 16) {
 		if (self->getMActor()->curAnmEndsNext()) {
-			self->changeBck(3);
+			self->changeBck(0x11);
 			self->unk15C = 0;
 
 			JGeometry::TVec3<f32> local_40;
@@ -1288,7 +1288,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 				local_40 = self->mPosition;
 				local_40.y += 500.0f;
 			} else {
-				self->getJointTransByIndex(0x14, &local_40);
+				self->getJointTransByIndex(0x18, &local_40);
 			}
 		}
 		return false;
