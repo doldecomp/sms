@@ -521,7 +521,7 @@ void TMario::doRunning()
 		rotSp = (s16)((f32)rotSp * mYoshiParams.mRotYoshiMult.get());
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
-		rotSp = mDeParams.mRunningRotSpMin.get();
+		rotSp = mRunParams.mDashRotSp.get();
 
 	if (isRunningInWater()) {
 		mForwardVel *= -(
