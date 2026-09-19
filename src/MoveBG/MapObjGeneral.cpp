@@ -481,18 +481,32 @@ void TMapObjGeneral::checkRoofCollision(JGeometry::TVec3<f32>* param_1)
 		touchRoof(param_1);
 }
 
+static inline TMapObjPhysicalData*
+TMapObjGeneralTouchGroundGetPhysicalData(TMapObjGeneral* p)
+{
+	TMapObjPhysicalData* data = p->mMapObjData->mPhysical->unk4;
+	return data;
+}
+
+static inline const TMapObjPhysicalInfo*
+TMapObjGeneralTouchGroundGetPhysical(TMapObjGeneral* p)
+{
+	const TMapObjPhysicalInfo* physical = p->mMapObjData->mPhysical;
+	return physical;
+}
+
 void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 {
-	if (mMapObjData->mPhysical ? true : false) {
-		mVelocity.x *= mMapObjData->mPhysical->unk4->unk10;
-		mVelocity.z *= mMapObjData->mPhysical->unk4->unk10;
+	if (TMapObjGeneralTouchGroundGetPhysical(this) ? true : false) {
+		mVelocity.x *= TMapObjGeneralTouchGroundGetPhysicalData(this)->unk10;
+		mVelocity.z *= TMapObjGeneralTouchGroundGetPhysicalData(this)->unk10;
 	}
 
 	if ((mMapObjData->mPhysical ? true : false)
 	    && abs(JGeometry::TVec3<f32>(mVelocity).y)
-	           > mMapObjData->mPhysical->unk4->unkC) {
+	           > TMapObjGeneralTouchGroundGetPhysicalData(this)->unkC) {
 		param_1->y -= JGeometry::TVec3<f32>(mVelocity).y;
-		mVelocity.y *= -mMapObjData->mPhysical->unk4->unk4;
+		mVelocity.y *= -TMapObjGeneralTouchGroundGetPhysicalData(this)->unk4;
 		if (isCoin(this)) {
 			SMSGetMSound()->startSoundActorWithInfo(
 			    MSD_SE_SY_COIN_BOUND, &mPosition, nullptr,
