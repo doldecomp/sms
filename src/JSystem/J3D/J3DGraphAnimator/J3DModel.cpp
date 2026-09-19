@@ -558,31 +558,6 @@ void J3DModel::initialize()
 	unk94          = nullptr;
 }
 
-// TODO: 99.9%, frame exact (0xe8), all 312 instructions exact; five operands
-// left in one register cluster. Retail's non-shared-display-list branch holds
-// `dlSize` in r25 and the `J3DMatPacket*` in r24; ours holds them in r20/r21,
-// so retail hands the first-introduced of the pair the higher register (batch
-// 144's reverse-introduction rule) and we hand it the lower. Both builds use
-// r20-r31 and every other operand in the function is exact, so this is a
-// zero-frame rotation of two live ranges the allocator coalesced differently.
-//
-// Closure round 2026-09-18 solved the other cluster and paid for it. Naming
-// the shape packet (`J3DShapePacket* shapePacket = &mShapePackets[...]`) is an
-// address binding that lands all five operands of the `addShapePacket` call
-// for +8 of frame; the eight bytes come back by *dropping* the `J3DMaterial*
-// mat` local in the else branch below, which is worth exactly -8 with no
-// instruction change. The two together take the function from ten differing
-// operands to five. The named `J3DShape* shape` above the binding must stay:
-// folding the chain into the binding is +8 again.
-//
-// Measured inert on the surviving cluster, all at 312 instructions and frame
-// 0xe8: the reference form of `packet`, `mMatPackets + i` instead of
-// `&mMatPackets[i]`, `int dlSize`, and hoisting `dlSize`, `packet` or both to
-// block or function scope in either order (batch 145's declaration-order knob
-// really is confined to function-scope locals that are *live* there). Worse:
-// declaring `packet` before `dlSize` (the `add` floats above `countDLSize`,
-// 314 instructions), dropping `packet` (317 instructions, frame 0xf8), and a
-// named `J3DDisplayListObj* obj` (frame 0xf0).
 void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
                               u32 mtxNum)
 {
@@ -631,8 +606,14 @@ void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
 		for (int i = 0; i < pModelData->getMaterialNum(); ++i) {
 			mMatPackets[i].setMaterial(pModelData->getMaterialNodePointer(i));
 			J3DShape* shape = pModelData->getMaterialNodePointer(i)->getShape();
-			J3DShapePacket* shapePacket = &mShapePackets[shape->getIndex()];
-			mMatPackets[i].addShapePacket(shapePacket);
+			// The array base is its own local: it decides which of the two
+			// volatile registers the `addShapePacket` argument chain is built
+			// in (retail loads the material into r4 and the packet base into
+			// r5). Spelling this `&mShapePackets[shape->getIndex()]` swaps
+			// the pair, and binding the resulting packet instead costs a
+			// further 8 bytes of frame.
+			J3DShapePacket* packets = mShapePackets;
+			mMatPackets[i].addShapePacket(&packets[shape->getIndex()]);
 			mMatPackets[i].setTexture(pModelData->getTexture());
 
 			// The doubled `getMaterialNodePointer(i)` is deliberate: retail
@@ -648,11 +629,8 @@ void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
 				            pModelData->getMaterialNodePointer(i)
 				                ->countDLSize()));
 			} else {
-				u32 dlSize
-				    = pModelData->getMaterialNodePointer(i)->countDLSize();
-				J3DMatPacket* packet = &mMatPackets[i];
-				packet->setDisplayListObj(new J3DDisplayListObj);
-				packet->getDisplayListObj()->newDisplayList(dlSize);
+				mMatPackets[i].newDisplayList(
+				    pModelData->getMaterialNodePointer(i)->countDLSize());
 			}
 		}
 	}
