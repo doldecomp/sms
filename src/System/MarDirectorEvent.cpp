@@ -141,11 +141,12 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 
 void TMarDirector::fireGetStar(TShine* shine)
 {
+	char trash[4];
 	unk25C = shine;
 	unk4C |= 1;
 	JGeometry::TVec3<f32>& v = shine->mInitialRotation;
-	fireStartDemoCamera(!shine->unk190 ? cCameraBckNameShineGetInside
-	                                   : cCameraBckNameShineGetOutside,
+	fireStartDemoCamera(!shine->unk190 ? cCameraBckNameShineGetOutside
+	                                   : cCameraBckNameShineGetInside,
 	                    &gpMarioOriginal->mPosition, -1, v.y, false, nullptr, 0,
 	                    nullptr, JDrama::TFlagT<u16>(0));
 }
@@ -171,6 +172,7 @@ void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
 
 void TMarDirector::fireStageEvent(TMapObjBase*) { }
 
+#pragma dont_inline on
 void TMarDirector::fireStartDemoCamera(const char* param_1,
                                        const JGeometry::TVec3<f32>* param_2,
                                        s32 param_3, f32 param_4, bool param_5,
@@ -195,6 +197,7 @@ void TMarDirector::fireStartDemoCamera(const char* param_1,
 	unk24C += 1;
 	unk24C &= 7;
 }
+#pragma dont_inline off
 
 void TMarDirector::fireEndDemoCamera() { unk4C |= 0x80; }
 
