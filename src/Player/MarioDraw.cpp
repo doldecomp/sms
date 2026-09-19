@@ -520,17 +520,28 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
+// Parking spot: include/Player/Mario.hpp declares no accessors for the foot
+// joint ids, and the four foot callbacks read them one level deeper than a
+// raw member chain reaches (shared-header need).
+static inline u8 MarioChnFootRJointId(const TMario* p)
+{
+	return p->mJointIdChnFootR;
+}
+
+static inline u8 MarioChnFootLJointId(const TMario* p)
+{
+	return p->mJointIdChnFootL;
+}
+
 // UNUSED (0x80 -- CheckMarioFootPosCtrl). Dead: all four foot callbacks carry
 // this guard written out.
 static BOOL CheckMarioFootPosCtrl()
 {
-	if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
+	if ((gpMarioForCallBack->getStatus() & MARIO_STATUS_TYPE_MASK)
 	        == MARIO_STATUS_TYPE_WAITING
-	    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
+	    && gpMarioForCallBack->getStatus() != MARIO_STATUS_BRAKE_END
 	    && !gpMarioForCallBack->onYoshi()
-	    && (gpMarioForCallBack->mStatus == MARIO_STATUS_SLEEPY
-	        || gpMarioForCallBack->mStatus == MARIO_STATUS_SLEEP)
-	           == false)
+	    && !gpMarioForCallBack->isSleeping())
 		return TRUE;
 	return FALSE;
 }
@@ -543,7 +554,7 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 		if (CheckMarioFootPosCtrl()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->getM3UModel()->getModel()->getAnmMtx(
-			    gpMarioForCallBack->mJointIdChnFootR);
+			    MarioChnFootRJointId(gpMarioForCallBack));
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
@@ -645,7 +656,7 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 		if (CheckMarioFootPosCtrl()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->getM3UModel()->getModel()->getAnmMtx(
-			    gpMarioForCallBack->mJointIdChnFootL);
+			    MarioChnFootLJointId(gpMarioForCallBack));
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
