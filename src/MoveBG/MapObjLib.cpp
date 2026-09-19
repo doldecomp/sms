@@ -692,27 +692,27 @@ const JGeometry::TVec3<f32>& TMapObjBase::getWaterPos(THitActor* actor)
 	return gpModelWaterManager->mParticlePositionSOA[getWaterID(actor)];
 }
 
-BOOL TMapObjBase::waterHitPlane(THitActor* actor)
+bool TMapObjBase::waterHitPlane(THitActor* actor)
 {
 	int idx                   = getWaterID(actor);
 	const TBGCheckData* plane = gpModelWaterManager->unk2914[idx];
 	if (plane == nullptr)
-		return FALSE;
+		return false;
 	{
 		const JGeometry::TVec3<f32>& v
 		    = gpModelWaterManager->mParticleVelocitySOA[idx];
 		if (v.x == 0.0f && v.z == 0.0f)
-			return FALSE;
+			return false;
 	}
 
 	{
 		const JGeometry::TVec3<f32>& v
 		    = gpModelWaterManager->mParticleVelocitySOA[idx];
 		if (v.x * plane->mNormal.x > 0.0f || v.z * plane->mNormal.z > 0.0f)
-			return FALSE;
+			return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 void TMapObjBase::sendMsg(u32 param_1, u32 param_2)

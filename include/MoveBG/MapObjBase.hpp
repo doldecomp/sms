@@ -238,7 +238,7 @@ public:
 	void actorIsOn(TLiveActor*) const;
 	void sendMsgToAll(u32);
 	void sendMsg(u32, u32);
-	static BOOL waterHitPlane(THitActor*);
+	static bool waterHitPlane(THitActor*);
 	static const JGeometry::TVec3<f32>& getWaterPos(THitActor*);
 	static const JGeometry::TVec3<f32>& getWaterSpeed(THitActor*);
 	static const TBGCheckData* getWaterPlane(THitActor*);

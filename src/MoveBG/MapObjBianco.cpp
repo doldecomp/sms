@@ -221,8 +221,6 @@ u32 TBiancoWatermillVertical::touchWater(THitActor* water)
 		return 0;
 	}
 
-	// TODO: retail tests the result with `clrlwi.`, so `waterHitPlane` returns
-	// `bool`, not `BOOL` (MapObjBase.hpp, shared header).
 	if (!waterHitPlane(water))
 		return 0;
 
