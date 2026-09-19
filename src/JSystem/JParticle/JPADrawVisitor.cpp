@@ -502,6 +502,7 @@ void dirTypeEmtrDir(JPABaseParticle*, JPABaseEmitter* emitter,
 void dirTypePrevPtcl(JPABaseParticle* particle, JPABaseEmitter* emitter,
                      JGeometry::TVec3<f32>& result)
 {
+	char trash[0x10];
 	JGeometry::TVec3<f32> pos;
 	particle->getGlobalPosition(pos);
 	JSULink<JPABaseParticle>* prev = particle->getLinkBufferPtr()->getPrev();

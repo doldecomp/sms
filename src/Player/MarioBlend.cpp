@@ -17,6 +17,7 @@ void M3UModelMario::changeMtxCalcSIAnmBQAnmTransform(int param_1, int param_2,
 
 void M3UModelMario::updateInMotion()
 {
+	char trash[0x20];
 	// volatile u32 unused[12];
 	for (int i = 0; i < unk10; ++i) {
 		SomeModelMarioStruct& info = unk24[i];

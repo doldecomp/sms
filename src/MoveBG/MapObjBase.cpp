@@ -152,6 +152,7 @@ void TMapObjBase::setUpMapCollision(u16 param_1)
 
 void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 {
+	char trash[8];
 	f32 currFrame = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	if (currFrame <= param_2 && param_2 < currFrame + param_3) {
 		SMSGetMSound()->startSoundActor(param_1, &mPosition, 0, nullptr, 0, 4);

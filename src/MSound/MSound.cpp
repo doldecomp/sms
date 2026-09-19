@@ -749,6 +749,7 @@ void MSound::setCategoryAllVolume(u8 category, f32 volume, u32 param_3,
 
 void MSound::fadeOutAllSound(u32 fadeout)
 {
+	char trash[8];
 	unkA8 &= 1;
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {

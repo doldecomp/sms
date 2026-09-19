@@ -847,6 +847,7 @@ bool TBaseNPC::npcBlowning()
 
 void TBaseNPC::npcMareStandIn()
 {
+	char trash[8];
 	switch (unkD0->getCurrentAnmKind()) {
 	case NPC_ANM_KIND_UNKE:
 	case NPC_ANM_KIND_UNK5:

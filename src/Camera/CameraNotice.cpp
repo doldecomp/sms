@@ -190,6 +190,7 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 
 void CPolarSubCamera::getNozzleTopPos_(JGeometry::TVec3<f32>* out) const
 {
+	char trash[0x18];
 	if (SMS_GetMarioWaterGun() == nullptr) {
 		out->set(gpCameraMario->unk0);
 	} else {
