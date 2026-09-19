@@ -1218,7 +1218,7 @@ BOOL TMario::catching()
 	(void)0;
 
 	if (!(mInput & 0x8) && (mInput & 0x2)) {
-		if (mForwardVel > mDeParams.mClashSpeed.get())
+		if (mForwardVel > mJumpParams.mRotBroadEnableV.get())
 			return changePlayerStatus(MARIO_STATUS_ROTATE_BROAD_JUMP, 0, false);
 
 		return changePlayerStatus(MARIO_STATUS_CATCH_STOP, 0, false);
