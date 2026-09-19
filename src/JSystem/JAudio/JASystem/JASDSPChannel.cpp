@@ -239,6 +239,7 @@ f32* TDSPChannel::getHistory() { return (f32*)history; }
 
 void TDSPChannel::updateAll()
 {
+	char trash[0x18];
 	DSPInterface::DSPBuffer* dspBuffer;
 	{
 		OSTick time   = OSGetTick();
