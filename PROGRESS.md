@@ -1297,6 +1297,16 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   abhängige MWCC-Inlining-Entscheidung, nicht ohne Risiko für die
   bereits 100 % matchende Basismethode angreifbar.
 
+- `Player/MarioDraw.cpp`: `TMario::initMirrorModel` (99,96 %). Alle drei
+  Diffs sind identische rodata-Offset-Shifts (`@1490+0xa50/0xa5c/0xa6c`
+  bei uns vs. `+0xa08/0xa14/0xa24` im Original, konstant `0x48` Bytes
+  Versatz) für die Japanese-String-Literale der `TMirrorActor`-Namen.
+  Die ganze Unit zeigt `[.rodata-0]` nur **50,33 %** — deutet auf einen
+  umfassenderen String-Literal-Reihenfolge-/Größenunterschied irgendwo
+  früher in der Datei hin, nicht isoliert auf diese Funktion. Für eine
+  künftige Runde: alle String-Literale in `MarioDraw.cpp` systematisch
+  mit der rohen `.rodata`-Sektion der Retail-Disassembly abgleichen.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
