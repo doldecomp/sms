@@ -1787,7 +1787,6 @@ BOOL TWaterGun::isPressureOn()
 f32 TWaterGun::getPressure()
 {
 	// TODO: Missing stack space
-	// volatile u32 unused2[5];
 	if (getCurrentNozzle()->getNozzleKind() == 1) {
 		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
 		return triggerNozzle->unk388;
