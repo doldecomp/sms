@@ -484,30 +484,30 @@ void TYoshi::ride()
 
 void TYoshi::getOff(bool param_1)
 {
-	if (mState != STATE_MOUNTED)
-		return;
+	if (mState == STATE_MOUNTED) {
+		unk2C  = 0.0f;
+		mState = STATE_UNMOUNTED;
+		unk2   = unk4;
 
-	unk2C  = 0.0f;
-	mState = STATE_UNMOUNTED;
-	unk2   = unk4;
+		if (param_1 == true) {
+			changeAnimation(1);
 
-	if (param_1 == true) {
-		changeAnimation(1);
+			SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mTranslation, 0,
+			                                nullptr, 0, 4);
 
-		SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mTranslation, 0,
-		                                nullptr, 0, 4);
+			SMSRumbleMgr->start(0x15, 0x14, (f32*)nullptr);
+		} else {
+			changeAnimation(0x17);
 
-		SMSRumbleMgr->start(0x15, 0x14, (f32*)nullptr);
-	} else {
-		changeAnimation(0x17);
+			SMSGetMSound()->startSoundActor(MSD_SE_YV_PURU_PURU, &mTranslation,
+			                                0, nullptr, 0, 4);
+		}
 
-		SMSGetMSound()->startSoundActor(MSD_SE_YV_PURU_PURU, &mTranslation, 0,
-		                                nullptr, 0, 4);
+		SMS_RideMoveCalcLocalPos(unk94, mTranslation);
+		SMSGetMSound()->unk88 = 1;
+		MSBgm::setStageBgmYoshiPercussion(false);
 	}
 
-	SMS_RideMoveCalcLocalPos(unk94, mTranslation);
-	SMSGetMSound()->unk88 = 1;
-	MSBgm::setStageBgmYoshiPercussion(false);
 	mTongue->mState = TYoshiTongue::STATE_IDLE;
 }
 
