@@ -408,7 +408,7 @@ void TIgaigaManager::createModelData()
 
 TSpineEnemy* TIgaigaManager::createEnemyInstance()
 {
-	return new TIgaiga("イガイガ");
+	return new TIgaiga;
 }
 
 void TIgaigaManager::initSetEnemies()

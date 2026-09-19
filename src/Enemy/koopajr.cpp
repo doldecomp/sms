@@ -1249,7 +1249,16 @@ void TKoopaJrSubmarineManager::loadAfter()
 	getActiveObjNum();
 }
 
+// The name is the constructor's default argument, as in TIgaigaManager and
+// TPakkunManager, where that one level is exactly what makes the ROM `bl` the
+// constructor instead of expanding it.
+// TODO: this constructor is still one statement short of the refusal --
+// measured with zero-codegen fillers, one flips the site from 3.6% to 100% and
+// costs the constructor nothing. Mem-initialisers are not it: neither
+// `mDirection()` nor `mDirection(0.0f), mBodyDirection(0.0f)` counts towards
+// the budget (both measured, both inert), so the missing statement is a real
+// one in the body.
 TSpineEnemy* TKoopaJrSubmarineManager::createEnemyInstance()
 {
-	return new TKoopaJrSubmarine("クッパジュニアサブマリン");
+	return new TKoopaJrSubmarine;
 }

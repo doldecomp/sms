@@ -272,7 +272,7 @@ void TPakkunManager::createModelData()
 // the byte-exact 0x64 body leaves no room for them.
 TSpineEnemy* TPakkunManager::createEnemyInstance()
 {
-	return new TPakkun("パックン");
+	return new TPakkun;
 }
 
 // Each pakkun clips its seeds along with itself, so the seeds keep drawing

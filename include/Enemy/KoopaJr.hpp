@@ -97,7 +97,7 @@ public:
 
 class TKoopaJrSubmarine : public TSpineEnemy {
 public:
-	TKoopaJrSubmarine(const char* name);
+	TKoopaJrSubmarine(const char* name = "クッパジュニアサブマリン");
 
 	virtual ~TKoopaJrSubmarine() { }
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);

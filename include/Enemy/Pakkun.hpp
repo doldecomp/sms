@@ -60,7 +60,7 @@ public:
 
 class TPakkun : public TSmallEnemy {
 public:
-	TPakkun(const char* name);
+	TPakkun(const char* name = "パックン");
 
 	// Declared in vtable order. TPakkun adds shootIn/shoot to TSmallEnemy.
 	virtual ~TPakkun() { }
