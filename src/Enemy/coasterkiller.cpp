@@ -374,30 +374,24 @@ TCoasterKillerManager::TCoasterKillerManager(const char* name)
 {
 }
 
-// TODO: both manager entry points below are now instruction-exact and only
-// their frames are wrong -- loadAfter 0x20 against the ROM's 0x38, load 0x30
-// against 0x70 (the two nested params-ctor `this` temps sit at 0x10/0x14 and
-// retail's at 0x44/0x50, so retail has 52 more bytes of expansion pool). The
-// real assert macro is still unknown: retail emits no call for it, only the
-// `lwz`/`cmplwi` of the tested pointer, so it was compiled out, yet 24 and 64
-// bytes of frame remain. Whatever it was reserved stack without emitting code,
-// which is the "uninitialised local of an inlined callee" shape.
-#define ASSERT_MSG(msg, line) (void)((msg), (line))
-#define ASSERT_TEST(expr)                                                      \
-	(void)((expr) ? true : (ASSERT_MSG(__FILE__, __LINE__), false));
+// The discarded `getActiveObjNum()` calls below are the same idiom as
+// TBathtubKillerManager::load and TKoopaJrSubmarineManager::load/loadAfter:
+// the inline opens with `if (!unk38) return getObjNum();`, so throwing the
+// result away leaves exactly the ROM's `lwz`/`cmplwi` of the params pointer
+// with no branch, plus the expansion pool the frame needs.
 
 void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
 {
-	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
+	getActiveObjNum();
 	TSmallEnemyManager::load(stream);
 	unk38 = new TCoasterKillerSaveLoadParams("/enemy/coasterkiller.prm");
-	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
+	getActiveObjNum();
 }
 
 void TCoasterKillerManager::loadAfter()
 {
 	TSmallEnemyManager::loadAfter();
-	ASSERT_TEST(unk38);
+	getActiveObjNum();
 }
 
 void TCoasterKillerManager::createModelData()
