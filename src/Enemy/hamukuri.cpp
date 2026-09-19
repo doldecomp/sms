@@ -2515,7 +2515,25 @@ void TFireHamuKuri::sendAttackMsgToMario()
 
 void TFireHamuKuri::changeTevColor()
 {
-	if (recoverFire()) {
+	// The ROM spells TFireHamuKuri::recoverFire's body out here rather than
+	// calling it: at 17 statements changeTevColor is over the 14-statement
+	// depth-1 inline budget, which is why TFireHamuKuri::moveObject `bl`s it.
+	// recoverFire itself stays in the TU as the (unused) helper the map lists.
+	bool result = false;
+	if (!unk210) {
+		if (unk218 < 30) {
+			unk218 += 1;
+			result = true;
+		}
+	} else {
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_MOEKURI_FLAME, &mPosition);
+		if (unk218 > 0) {
+			unk218 -= 1;
+			result = true;
+		}
+	}
+
+	if (result) {
 		unk21C.r = (mFireHamNoseColorDiff.r * unk218) / 30
 		           + mFireHamNoseColorStart.r;
 		unk21C.g = (mFireHamNoseColorDiff.g * unk218) / 30
