@@ -790,6 +790,60 @@ echten Bugs.
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach zweiundzwanzigster Iterationsrunde (configure.py: 12 Unit-Flips auf Matching)
+
+Neue Methodik: `objdiff-cli report generate` liefert pro Unit
+`measures.matched_code_percent` und `measures.matched_data_percent`.
+Systematischer Scan aller 736 Units fand 406 mit BEIDEM bei 100 %
+(alle Funktionen UND alle Daten matchen bereits einzeln) — davon
+waren 389 in `configure.py` schon korrekt auf `Matching` gesetzt,
+17 noch nicht. Nach Ausschluss der beiden bereits dokumentierten
+bekannten Brecher (`JALModSe.cpp`, `WoodBarrel.cpp` — Adress-Shift-
+Layoutfehler) blieben 15 Kandidaten. Per-Unit-Bisektion (flip →
+`python configure.py` → `ninja` → DOL-SHA1-Check → bei Fehlschlag
+zurücksetzen) ergab:
+
+**12 erfolgreich auf `Matching` gesetzt** (DOL-SHA1 bleibt `OK`):
+`JSystem/JDrama/JDRDisplay.cpp`, `JSystem/JAudio/JAInterface/
+JAIGlobalParameter.cpp`, `JSystem/JAudio/JASystem/JASDSPChannel.cpp`,
+`JSystem/JParticle/JPADraw.cpp`, `M3DUtil/M3UModel.cpp`,
+`System/MarNameRefGen_NPC.cpp`, `MoveBG/MapObjFloat.cpp`,
+`Map/MapModel.cpp`, `GC2D/HelpActor.cpp`,
+`Enemy/DemoBossHanachanBase.cpp`, `Enemy/BossHanachanSave.cpp`,
+`Camera/CameraMarioData.cpp`. Verlinkte Units: 403 → 415 / 736.
+
+**3 brechen die DOL-SHA1 trotz 100 % Code+Daten** (sofort
+zurückgesetzt, bleiben `NonMatching`): `MoveBG/MapObjOption.cpp`,
+`Map/PollutionEvent.cpp`, `Camera/CameraInbetween.cpp` — dieselbe
+Kategorie wie `WoodBarrel`/`JALModSe` (anonyme Daten-/Adress-
+Shift-Reste, die `objdiff-cli` pro Symbol nicht erfasst).
+
+**Bug-Hunting-Methodik abgeschlossen**: Der `__vt__`-Symbol-
+Mismatch-Scan (siehe 21. Runde) wurde projektweit auf alle 736
+Units ausgeweitet (zuvor nur 260 automatisch vorselektierte
+Kandidaten-Units). Ergebnis: exakt dieselben 38 Treffer wie in
+Runde 21, keine neuen. Alle `Enemy/*.cpp`-Dateien (84 Stück)
+einzeln gegengeprüft: 0 Treffer außerhalb der bereits behobenen.
+Diese Methodik gilt für die aktuelle Codebasis als ausgeschöpft.
+
+**Blindes `char trash[N]`-Auffüllen ist erschöpft geprüft**: Über
+30 weitere automatisch erkannte Frame-Gap-Kandidaten (positiver
+Gap, `fuzzy_match_percent` > 99,5 %) einzeln getestet — **0 Treffer**
+in dieser Runde (verglichen mit einer deutlich höheren Trefferquote
+bei den zuvor manuell kuratierten mameGesso/walkerEnemy/gesso-
+Kandidaten). Auch `volatile char trash[N]` sowie ein erzwungener
+Schreibzugriff wurden getestet, ohne Wirkung auf die Frame-Größe.
+MWCC (`-O4,p -opt`) eliminiert ungenutzte Stack-Arrays bei manchen
+Funktionen vollständig, bei anderen (auch mit identischen Flags,
+identischer Datei) nicht — das Muster ist nicht zuverlässig
+vorhersagbar. Empfehlung für Folge-Sessions: `trash`-Padding nur
+noch bei Kandidaten versuchen, die durch vollständiges Lesen der
+Funktion und Vergleich mit der rohen Retail-Disassembly bereits als
+"nur Frame-Gap, sonst identisch" verifiziert wurden — nicht mehr
+blind batchen.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
