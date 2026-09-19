@@ -615,10 +615,10 @@ void TTinKoopaPartsBase::startBreaking()
 		base[1][3]  = getPosition().y;
 		base[2][3]  = mPosition.z;
 		mPartsMActor->getModel()->setBaseTRMtx(base);
-	}
 
-	if (mPartsMActor)
-		emitPartsTrackEffects();
+		if (mPartsMActor)
+			emitPartsTrackEffects();
+	}
 }
 
 // UNUSED, 0x2fc in the map. It must exist as a function even though the retail
