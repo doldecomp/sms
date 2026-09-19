@@ -185,8 +185,12 @@ TNameIndParCallback::TNameIndParCallback(TNameKuri* owner)
 void TNameIndParCallback::execute(JPABaseEmitter* param_1,
                                   JPABaseParticle* param_2)
 {
-	if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		MtxPtr mA = mOwner->getMActor()->getModel()->getAnmMtx(1);
+	// Inverted gate: `rlwinm.` then `bne` past the body, so the ROM runs this
+	// only while the namekuri is *not* clipped out -- we were driving the
+	// indirect-texture particle exactly when the enemy was invisible. The
+	// joint is 4, not 1 (`addi r29, r8, 0xc0`).
+	if (!mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+		MtxPtr mA = mOwner->getMActor()->getModel()->getAnmMtx(4);
 
 		f32 s = JMASin(mOwner->unk1AC);
 		f32 c = JMACos(mOwner->unk1AC);
@@ -209,8 +213,13 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 
 		MTXConcat(mA, local_4c, mA);
 
-		// TODO: definitely some inlines missing. Row/column extract func?
-		// Maybe a function to extract the scale vector from a matrix?
+		// TODO: the ROM builds each column in a real stack TVec3 and reloads
+		// it (`lfs 0(r29); stfs 0xb0(r1)` ... then three unfused `fmuls`),
+		// where we forward the stores straight into the squares and contract
+		// them into `fmadds`. Component assignments instead of the
+		// constructor do not stop the forwarding (identical 80 markers,
+		// frame 0x108 against the constructor form's 0x128 and the ROM's
+		// 0x120), so the block is something that takes the vector's address.
 		JGeometry::TVec3<f32> local_7c;
 
 		JGeometry::TVec3<f32> tmp1(mA[0][0], mA[1][0], mA[2][0]);
