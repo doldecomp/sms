@@ -414,10 +414,10 @@ void TMapStaticObj::init(const char* name)
 	}
 
 	if (mActorData->mIdxGroupName != nullptr) {
-		TIdxGroupObj* group
-		    = JDrama::TNameRefGen::getInstance()->search<TIdxGroupObj>(
-		        mActorData->mIdxGroupName);
-		group->getChildren().push_back(this);
+		JDrama::TNameRefGen::getInstance()
+		    ->search<TIdxGroupObj>(mActorData->mIdxGroupName)
+		    ->getChildren()
+		    .push_back(this);
 	}
 
 	if (mActorData->mFlags & TActorData::FLAG_IS_INDIRECT) {
