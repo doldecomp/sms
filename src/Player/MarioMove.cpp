@@ -1016,9 +1016,21 @@ void TMario::checkGraffitoElec()
 	}
 }
 
+static inline const TBGCheckData* MarioGraffitoGround(const TMario* p)
+{
+	const TBGCheckData* ground = p->mGroundPlane;
+	return ground;
+}
+
+static inline TPollutionManager* MarioMoveGetPollution()
+{
+	TPollutionManager* pollution = SMSGetPollution();
+	return pollution;
+}
+
 void TMario::checkGraffito()
 {
-	if (mGroundPlane->isIllegalData())
+	if (MarioGraffitoGround(this)->isIllegalData())
 		return;
 
 	if (onYoshi())
@@ -1031,16 +1043,17 @@ void TMario::checkGraffito()
 		return;
 
 	int isDirty = 0;
-	mPollutionTypeStandingOn = SMSGetPollution()->getPollutionType(
+	mPollutionTypeStandingOn = MarioMoveGetPollution()->getPollutionType(
 	    mPosition.x, mPosition.y, mPosition.z);
 
 	// One function-scope `pos`: retail's three cases all use the same slot at
-	// 0x48, which block-scope declarations never share here (they landed at
-	// 0x4c/0x40 and left the electric case in registers).
-	// TODO: 99.8%, every instruction present; the frame is 24 bytes short
-	// (0x50 against 0x68), 4 of them above `pos` and the rest in the low
-	// region.
+	// 0x48, which block-scope declarations never share here.
+	// TODO: 99.8%, every instruction present and the frame exact at 0x68;
+	// `pos` sits 4 bytes high (0x4c against 0x48), so 4 bytes of our low pool
+	// belong in the named block above it. Swapping it with `isDirty` does
+	// nothing.
 	JGeometry::TVec3<f32> pos;
+
 
 	switch (mPollutionTypeStandingOn) {
 	case POLLUTION_TYPE_SLIP:
@@ -2564,17 +2577,17 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	mPrevPosition = mPosition;
 	offUnk114(UNK114_FLAG_UNK8);
 
-	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)
+	if (gpMarDirector->unk124 == 1 && getStatus() != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
 	if (gpMarioOriginal == this) {
-		if (gpCamera->isLButtonCamera()
-		    && !((mStatus & MARIO_STATUS_TYPE_AND_ID_MASK)
+		if (MarioMoveGetCamera()->isLButtonCamera()
+		    && !((getStatus() & MARIO_STATUS_TYPE_AND_ID_MASK)
 		             >= (MARIO_STATUS_HANGING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		         && (MARIO_STATUS_HANG_JUMPING & MARIO_STATUS_TYPE_AND_ID_MASK)
-		                >= (mStatus & MARIO_STATUS_TYPE_AND_ID_MASK))
+		                >= (getStatus() & MARIO_STATUS_TYPE_AND_ID_MASK))
 		    && gpMarDirector->unk124 != 1) {
-			mFaceAngle.y = (gpCamera->getUnk258() + 0x8000)
+			mFaceAngle.y = (MarioMoveGetCamera()->getUnk258() + 0x8000)
 			               - gpCamera->getOffsetAngleY();
 		}
 	}
