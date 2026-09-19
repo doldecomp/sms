@@ -484,6 +484,7 @@ u8 J3DMaterialFactory::newDither(int idx) const
 J3DNBTScale J3DMaterialFactory::newNBTScale(int idx) const
 {
 	J3DNBTScale dflt;
+	char trash[8];
 
 	J3DMaterialInitData* initData = &mpMaterialInitData[mpMaterialID[idx]];
 

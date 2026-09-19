@@ -68,6 +68,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `char trash[2]` reproduziert den originalen 0x30-Byte-Stackframe; der
   übrige Inline-Code war bereits identisch.
 
+- `JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp`:
+  `J3DMaterialFactory::newNBTScale` — **100 %** (168 Bytes). Ein nach
+  `dflt` deklariertes `char trash[8]` reproduziert Stackframe und
+  Local-Offsets des Originals.
+
 ## Nächster GMSJ01-Kandidat
 
 Noch auszuwählen.
