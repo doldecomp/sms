@@ -83,6 +83,13 @@ TDirectionCalc::TDirectionCalc(f32 direction) { mDirection = direction; }
 
 TDirectionCalc::TDirectionCalc(JGeometry::TVec3<f32> dir)
 {
+	// TODO: this by-value parameter and makeDirection's own copy the vector
+	// twice wherever the constructor is inlined (six extra instructions in
+	// TKoopaJrSubmarine::makeRelativeAngle, where the ROM copies once).
+	// Writing makeDirection's body out here closes makeRelativeAngle
+	// (95.04% -> 99.79%) but costs this constructor 99.76% -> 70.62%, so it
+	// is a trade, not a fix; makeDirection is by-value in the map, so the
+	// reference form is not available.
 	makeDirection(dir);
 }
 
@@ -1138,8 +1145,12 @@ void TKoopaJrSubmarine::makeDirection()
 	if (!mIsNearTarget) {
 		JGeometry::TVec3<f32> v(mVelocity);
 		v.normalize();
+		// Named, and through the by-value TDirectionCalc ctor: the ROM
+		// copies the vector, calls atan2f and keeps the result in f31
+		// before it fetches the rotation speed.
+		f32 dir                   = TDirectionCalc(v).get();
 		mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
-		    atan2f(v.x, v.z),
+		    dir,
 		    TDirectionCalc::d2r(getSaveParams()->mSLRotationSpeed.get()));
 	}
 }
