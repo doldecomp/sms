@@ -175,11 +175,13 @@ f32 TDirectionCalc::calcTurnDirection(f32 dir, f32 step)
 
 void TDirectionCalc::makeDirection(JGeometry::TVec3<f32> dir)
 {
-	// TODO: the two locals only exist to load z before x, as the original
-	// does; atan2f(dir.x, dir.z) loads them the other way round.
-	f32 z      = dir.z;
-	f32 x      = dir.x;
-	mDirection = atan2f(x, z);
+	// The bound address is worth +8 of frame; the two locals load z before
+	// x, as the original does (atan2f(dir.x, dir.z) loads them the other
+	// way round).
+	const JGeometry::TVec3<f32>* v = &dir;
+	f32 z                          = v->z;
+	f32 x                          = v->x;
+	mDirection                     = atan2f(x, z);
 }
 
 JGeometry::TVec3<f32> TDirectionCalc::calcDirectionVector()
@@ -354,6 +356,14 @@ void TKoopaJr::init(TLiveManager* manager)
 	resetKoopaJr();
 }
 
+// Binding level over the save-params accessor, worth +8 of low region in
+// TKoopaJr::reset (frame ladder 271).
+static inline TKoopaJrParams* KoopaJrGetParams(const TKoopaJr* p)
+{
+	TKoopaJrParams* params = p->getSaveParams();
+	return params;
+}
+
 void TKoopaJr::reset()
 {
 	TSpineEnemy::reset();
@@ -367,7 +377,7 @@ void TKoopaJr::resetKoopaJr()
 	mDamageTimer     = 0;
 	mLaunchTimer     = 0;
 	mFastLaunchTimer = 0;
-	mLaunchTimer     = getSaveParams()->mSLLaunchKillerPeriod.get();
+	mLaunchTimer     = KoopaJrGetParams(this)->mSLLaunchKillerPeriod.get();
 	mFastLaunchTimer = 0;
 }
 
