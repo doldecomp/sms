@@ -148,6 +148,23 @@ s16 matan(f32 param_1, f32 param_2)
 	// TODO: currently too lazy to figure out how exactly they use symmetries
 	// here and what exact result transforms are needed in various branches.
 	// Probably should be something nice and symmetric and not this.
+	//
+	// 99.9%, frame exact, every instruction identical: the residue is five
+	// volatile-FPR names in this first branch, where retail's negated
+	// `param_1` is f4 and ours is f3.  Closure batch 205 measured the knob:
+	// the two negations are *distinct* variables, and only here.  Naming the
+	// first one (`a` below) while the `param_2 < 0` arm keeps mutating its
+	// parameters in place takes the function 99.4 -> 99.9 and makes the whole
+	// second arm exact (retail's -param_2 = f3, -param_1 = f4).  Measured and
+	// rejected, all back at 99.4 / 18 markers: a local for the second arm's
+	// `param_1` (with or without one here), a local for `param_2`, and one
+	// function-scope `f32 a` shared by both arms -- a shared variable is what
+	// the original in-place spelling already is.  Inert at 99.9 / 5 markers:
+	// `const f32 a`, `0.0f - param_1`, and splitting the declaration from the
+	// assignment.  Swapping the outer test to `if (param_2 < 0.0f)` reorders
+	// the whole body and is 4.6%, so the polarity is load-bearing.  What is
+	// left is a free-register choice inside this arm alone: ours reuses f3
+	// (the second arm's -param_2 register), retail reuses f4 (its -param_1).
 	if (param_2 >= 0.0f) {
 		if (param_1 >= 0.0f) {
 			if (param_1 >= param_2)
@@ -155,11 +172,11 @@ s16 matan(f32 param_1, f32 param_2)
 			else
 				result = 0x4000 - GetAtanTable(param_2, param_1);
 		} else {
-			param_1 = -param_1;
-			if (param_1 < param_2)
-				result = 0x4000 + GetAtanTable(param_2, param_1);
+			f32 a = -param_1;
+			if (a < param_2)
+				result = 0x4000 + GetAtanTable(param_2, a);
 			else
-				result = 0x8000 - GetAtanTable(param_1, param_2);
+				result = 0x8000 - GetAtanTable(a, param_2);
 		}
 	} else {
 		param_2 = -param_2;
