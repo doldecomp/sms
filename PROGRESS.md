@@ -61,6 +61,13 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   saubere 93,83-%-Fassung. Gemäß Iterationsregel als `// NONMATCHING`
   zurückgestellt.
 
+## Gematchte GMSJ01-Funktionen
+
+- `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
+  `JAIBasic::initDriver` — **100 %** (120 Bytes). Ein ungenutztes
+  `char trash[2]` reproduziert den originalen 0x30-Byte-Stackframe; der
+  übrige Inline-Code war bereits identisch.
+
 ## Nächster GMSJ01-Kandidat
 
 Noch auszuwählen.

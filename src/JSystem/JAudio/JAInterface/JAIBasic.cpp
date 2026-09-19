@@ -612,6 +612,7 @@ void JAIBasic::initNullData()
 
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 aram_heap_size, u8 param_3)
 {
+	char trash[2];
 	initAudioThread(heap, aram_heap_size, param_3);
 }
 
