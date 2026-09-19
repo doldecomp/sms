@@ -136,8 +136,8 @@ void TConeBeam::calcVertices(int count)
 		PSVECNormalize(&local_128, &local_128);
 
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 cosA = JMACos(i * (360.0f / mVtxCount));
 			f32 sinA = JMASin(i * (360.0f / mVtxCount));
+			f32 cosA = JMACos(i * (360.0f / mVtxCount));
 
 			JGeometry::TVec3<f32> local_ec;
 			local_ec.zero();
