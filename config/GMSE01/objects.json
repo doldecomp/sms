@@ -58,6 +58,7 @@
   "JSystem/J3D/J3DGraphAnimator/J3DJoint.cpp",
   "JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.cpp",
   "JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.cpp",
+  "JSystem/J3D/J3DGraphAnimator/J3DModel.cpp",
   "JSystem/J3D/J3DGraphAnimator/J3DNode.cpp",
   "JSystem/J3D/J3DGraphBase/J3DDrawBuffer.cpp",
   "JSystem/J3D/J3DGraphBase/J3DMaterial.cpp",
