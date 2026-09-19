@@ -747,8 +747,8 @@ void TBossEelManager::createModelData()
 
 void TBossEelManager::clipEnemies(JDrama::TGraphics* graphics)
 {
-	clipActorsAux(graphics, mSaveParams.mSLViewClipRadius.get(),
-	              mSaveParams.mSLViewClipFar.get());
+	clipActorsAux(graphics, mSaveParams.mSLViewClipFar.get(),
+	              mSaveParams.mSLViewClipRadius.get());
 }
 
 TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
@@ -759,7 +759,7 @@ TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
     , mOwner(owner)
     , mHitPoints(0)
     , mToothType(toothType)
-    , unk78(0.0f, 0.0f, 0.0f)
+    , mTrembleRotation(0.0f, 0.0f, 0.0f)
     , mDamageCooldown(0)
     , mCanShedTears(true)
 {
@@ -898,7 +898,8 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 					if (mSharedParts->getMActor()->checkCurBckFromIndex(22)) {
 						mSharedParts->getMActor()->setBckFromIndex(20);
 						JGeometry::TVec3<f32> tearsPosition(
-						    mDetachedMtx[0][3], unk78.y + mDetachedMtx[1][3],
+						    mDetachedMtx[0][3],
+						    mTrembleRotation.y + mDetachedMtx[1][3],
 						    mDetachedMtx[2][3]);
 						mOwner->generateBubble(tearsPosition);
 						mSharedParts->getMActor()->setFrameRate(
@@ -912,9 +913,9 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 
 				f32 speed = mOwner->getBossEelParams().mSLToothUpSpeed.get();
 				if (mToothType == 1) {
-					unk78.y += speed;
-					if (unk78.y > mOwner->getBossEelParams()
-					                  .mSLToothLiveHeight.get()
+					mTrembleRotation.y += speed;
+					if (mTrembleRotation.y > mOwner->getBossEelParams()
+					                             .mSLToothLiveHeight.get()
 					    || mPosition.y > gpMarioPos->y + 2000.0f) {
 						mHitPoints = 0;
 						onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -955,11 +956,11 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 				emitter->setGlobalScale(mOwner->mScaling);
 		}
 
-		TPosition3f transform(0, 0, unk78.x);
+		TPosition3f transform(0, 0, mTrembleRotation.x);
 		MTXConcat(toothMtx, transform, toothMtx);
-		MsMtxSetRotRPH(transform, unk78.z, unk78.z, 0.0f);
+		MsMtxSetRotRPH(transform, mTrembleRotation.z, mTrembleRotation.z, 0.0f);
 		MTXConcat(toothMtx, transform, toothMtx);
-		toothMtx[1][3] += unk78.y;
+		toothMtx[1][3] += mTrembleRotation.y;
 		mPosition.x = toothMtx[0][3];
 		mPosition.y = toothMtx[1][3];
 		mPosition.z = toothMtx[2][3];
