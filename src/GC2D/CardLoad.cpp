@@ -945,7 +945,7 @@ bool TCardLoad::titleDraw()
 			}
 		}
 		CardLoadGetPane(unkF0)->setAlpha(alpha);
-		unkF4->getPane()->setAlpha(alpha);
+		CardLoadGetPane(unkF4)->setAlpha(alpha);
 	} break;
 
 	case 4: {
