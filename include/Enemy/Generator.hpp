@@ -22,6 +22,10 @@ public:
 	/* 0x34 */ TGraphWeb* mGraph;
 	/* 0x38 */ s32 mInterval;
 	/* 0x3C */ s32 mTimer;
+	// The constructor leaves this alone, but `new TGenerator` in
+	// TMarNameRefGen::getNameRef asks for 0x44 bytes, so the class carries one
+	// more word than any code here reads.
+	/* 0x40 */ u32 unk40;
 };
 
 class TOneShotGenerator : public THitActor {
