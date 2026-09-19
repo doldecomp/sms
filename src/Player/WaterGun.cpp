@@ -33,6 +33,11 @@
 // TODO: these come from some header...
 #include <Player/MarioDirtyStrings.hpp>
 
+// Carries the zero and (1,1,1) vectors retail emits between the dirty-texture
+// names and nozzleBmdData's paths; without them every later .rodata string
+// sits 24 bytes low and nozzleBmdData's relocations miss.
+#include <Map/MapCollisionEntry.hpp>
+
 TNozzleBmdData nozzleBmdData = {
 	{
 	    {

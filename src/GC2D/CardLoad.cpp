@@ -331,16 +331,6 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 
 void TCardLoad::setupTitleScreen() { }
 
-// TODO (shared header, measured but not applied here): SMS_isGetShine in
-// include/System/StageUtil.hpp holds SMS_getShineID's result in an `s32`.
-// Retail narrows the u8 argument of getShineFlag straight from the callee's
-// raw return (`extsh r0, r3` for the -1 test, `clrlwi r4, r3, 24` for the
-// argument) and therefore has to stage the TFlagManager receiver through r0
-// (`mr r3, r0`). Declaring it `s16` -- the return type SMS_getShineID already
-// has -- reproduces all of that: setupScoreScreen 98.62 -> 99.29,
-// TCardLoad::load 98.05 -> 98.15, unit 98.90 -> 98.95, zero regressions
-// tree-wide and the DOL still matches. It is a shared header, so it is left
-// for a header batch.
 void TCardLoad::setupScoreScreen()
 {
 	int iVar2 = TFlagManager::getInstance()->getFlag(0x40000);
