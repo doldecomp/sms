@@ -2,7 +2,7 @@
 
 ## Ausgangs-Baseline (GMSJ01 / NTSC-J)
 
-- Upstream-Basis: `b4cab1d2` (`BossPakkun closer`)
+- Upstream-Basis: `39458071` (nach rebase auf `upstream/main`)
 - Arbeitsbranch: `decomp-work`
 - Referenz-DOL: `build/GMSJ01/mario.dol: OK`
 - Erwarteter SHA-1: `9f5a8caf56f5356aeac9d3ed28bf8de976a03625`
@@ -19,14 +19,15 @@
 | Funktionen matched | 66,10 % (8.514 / 12.881) |
 | Units complete | 396 / 736 |
 
-## Stand nach acht Iterationen
+## Stand nach Rebase + FlagManager
 
-| Metrik | Aktuell | Änderung |
+| Metrik | Aktuell | Änderung vs. Baseline |
 | --- | ---: | ---: |
-| Code matched | 41,11 % (1.475.800 Bytes) | +1.084 Bytes |
-| Funktionen matched | 66,15 % (8.521 / 12.881) | +7 |
-| Code complete / linked | 18,80 % | +0,80 pp |
-| Units complete | 402 / 736 | +6 |
+| Fuzzy match | 77,84 % | +0,50 pp |
+| Code matched | 41,35 % (1.484.660 / 3.590.088) | +9.944 Bytes |
+| Funktionen matched | 66,62 % (8.581 / 12.881) | +67 |
+| Code complete / linked | 19,03 % | +1,03 pp |
+| Units complete | 403 / 736 | +7 |
 
 Die Referenz-DOL bleibt `OK`.
 
@@ -34,8 +35,8 @@ Die Referenz-DOL bleibt `OK`.
 
 | Bereich | Fuzzy | Code matched | Units linked |
 | --- | ---: | ---: | ---: |
-| Game Code | 71,28 % | 27,57 % | 2,86 % (78 / 387) |
-| JSystem | 99,71 % | 87,29 % | 62,14 % (172 / 200) |
+| Game Code | 71,92 % | 27,90 % | 3,29 % (81 / 387) |
+| JSystem | 99,71 % | 87,42 % | 66,97 % (176 / 200) |
 | SDK | 99,97 % | 98,88 % | 98,34 % (146 / 149) |
 
 ## Windows-Setup
@@ -72,21 +73,15 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   saubere 93,83-%-Fassung. Gemäß Iterationsregel als `// NONMATCHING`
   zurückgestellt.
 
-- `Strategic/HitActor.cpp`: `THitActor::calcEntryRadius`. Aktueller Quelltext
-  matcht zu **91,90 %** (124 Bytes); mit `char trash[0x30]`-Padding stieg es
-  auf 97,68 %. Frame ist reproduzierbar; die restlichen Abweichungen liegen in
-  FPSCR-Registerwahl und Reihenfolge der `fmadds`/`frsp`-Stores und ließen
-  sich nicht eindeutig auf MWCC-übliche Ausdrucksformen abbilden.
+- `Strategic/HitActor.cpp`: `THitActor::calcEntryRadius` (124 Bytes).
+  Nach `ninja all_source` matcht der committed Quelltext zu **97,61 %**.
+  Mit `char trash[0x30]` stieg es auf 97,68 %. Rest: FPSCR-Registerwahl
+  und `fmadds`/`frsp`-Reihenfolge.
 
-- `Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes, 99,92 %).
-  Bestes Experiment `char trash[0x10]` reproduziert Frame-Größe (0x50 Bytes)
-  und Save-Layout (`stmw r27, 0x3c(r1)` auf beiden Seiten). Verbleibend sind
-  ausschließlich die fünf Color-Access-Bytes: links `0x34..0x37(r1)`,
-  rechts `0x24..0x27(r1)` — Differenz **16 Bytes**. Die drei Branch-Differenzen
-  sind identische relative Offsets (Differenz = 0x84 wie bei den
-  Instruktionsadressen), also kein Code-Anordnungsproblem. Varianten
-  `volatile u32 color`-Local und `g = graphics`-Local erreichten
-  99,60 %/96,67 % – schlechter.
+- `Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes).
+  Nach Rebuild matcht der committed Quelltext zu **99,84 %**. Bestes
+  Experiment `char trash[0x10]`: 99,92 %, Frame 0x50 identisch. Verbleibend
+  fünf Color-Access-Offsets (`0x34` vs. `0x24`).
 
 - `THPPlayer/THPAudioDecode.c`: `AudioDecoderForOnMemory` (176 Bytes, 89,27 %).
   Register-Diff betrifft die gehoisteten `ActivePlayer`- und `AudioDecodeThread`-
@@ -139,6 +134,10 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `JPAParticle::checkCreateChildParticle` — **100 %** (196 Bytes).
   `char trash[0x10]` stellt den 0x58-Byte-Stackframe wieder her; `.text`,
   `.data` und `.sdata2` matchen vollständig.
+
+- `System/FlagManager.cpp`: `TFlagManager::start` und `TFlagManager::save`
+  — **100 %**. Je `char trash[8]` reproduziert 0x28- bzw. 0x50-Byte-Frame.
+  Unit `.text`/`.data`/`.sbss` 100 %, in `configure.py` auf Matching gesetzt.
 
 ## Nächster GMSJ01-Kandidat
 

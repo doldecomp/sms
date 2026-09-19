@@ -6,6 +6,7 @@ TFlagManager* TFlagManager::smInstance = 0;
 
 TFlagManager* TFlagManager::start(JKRHeap* heap)
 {
+	char trash[8];
 	if (smInstance == nullptr)
 		smInstance = new (heap, 0) TFlagManager;
 
@@ -479,6 +480,7 @@ void TFlagManager::correctFlag()
 
 void TFlagManager::save(JSUMemoryOutputStream& out)
 {
+	char trash[8];
 	mLastSaveTimeBackup = mLastSaveTime;
 	mLastSaveTime       = OSGetTime();
 
