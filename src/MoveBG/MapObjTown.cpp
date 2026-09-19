@@ -286,7 +286,8 @@ void TMapObjBillboard::swing(THitActor* param_1)
 	}
 }
 
-void TMapObjBillboard::touchActor(THitActor* param_1) { swing(param_1); }
+void TMapObjBillboard::touchActor(THitActor* param_1) {
+	char trash[8]; swing(param_1); }
 
 u32 TMapObjBillboard::touchWater(THitActor* param_1)
 {
