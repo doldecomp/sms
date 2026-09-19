@@ -362,7 +362,7 @@ void TIgaigaPolluteModelManager::init(TLiveActor* param_1)
 	    "/scene/igaiga/stamp_igaiga_model1.bmd");
 	SDLModelData* modelData = new SDLModelData(J3DModelLoaderDataBase::load(
 	    res, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
-	             | (2 << J3DMLF_TevStageNumShift)));
+	             | (1 << J3DMLF_TevStageNumShift)));
 
 	for (int i = 0; i < unk14; ++i)
 		unk18[i] = new TIgaigaPolluteModel(param_1, modelData);
@@ -840,7 +840,7 @@ void TGorogoroPolluteModelManager::init(TLiveActor* param_1)
 	    "/scene/gorogoro/bosspaku_head_stamp.bmd");
 	SDLModelData* modelData = new SDLModelData(J3DModelLoaderDataBase::load(
 	    res, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
-	             | (2 << J3DMLF_TevStageNumShift)));
+	             | (1 << J3DMLF_TevStageNumShift)));
 
 	for (int i = 0; i < unk14; ++i)
 		unk18[i] = new TGorogoroPolluteModel(param_1, modelData);

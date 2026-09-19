@@ -264,11 +264,11 @@ void TYoshi::initInLoadAfter()
 	mTongue->initInLoadAfter();
 
 	TMirrorActor* mirrorMain = new TMirrorActor("ヨッシーin鏡");
-	mirrorMain->init(mActor->getModel(), 4);
+	mirrorMain->init(mActor->getModel(), 0x20);
 
 	for (int i = 0; i < 2; ++i) {
 		TMirrorActor* mirror = new TMirrorActor("ヨッシー手in鏡");
-		mirror->init(mMirrorModels[i], 4);
+		mirror->init(mMirrorModels[i], 0x20);
 	}
 
 	mActor->getModel()->getModelData()->getJointNodePointer(21)->setCallBack(
