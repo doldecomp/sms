@@ -609,11 +609,18 @@ void TIgaiga::rollSE()
 	                                       0, 4);
 }
 
+static inline f32 IgaigaGroundNormalY(const TLiveActor* p)
+{
+	const TBGCheckData* plane = p->mGroundPlane;
+	f32 y                     = plane->mNormal.y;
+	return y;
+}
+
 void TIgaiga::boundSE()
 {
 	SMSGetMSound()->startSoundActorWithInfo(
 	    MSD_SE_EN_IGAIGA_BOUND, &mPosition, nullptr,
-	    abs(mGroundPlane->mNormal.y), 0, 0, nullptr, 0, 4);
+	    abs(IgaigaGroundNormalY(this)), 0, 0, nullptr, 0, 4);
 }
 
 void TIgaiga::walkBehavior(int param_1, f32 param_2)
@@ -1156,7 +1163,7 @@ void TGorogoro::rollSE()
 {
 	SMSGetMSound()->startSoundActorWithInfo(
 	    MSD_SE_BS_KRPAKU_ROLL, &mPosition, nullptr,
-	    abs(mGroundPlane->mNormal.y), 0, 0, nullptr, 0, 4);
+	    abs(IgaigaGroundNormalY(this)), 0, 0, nullptr, 0, 4);
 }
 
 // Binding level over the address of a struct member, worth +16 of low region
