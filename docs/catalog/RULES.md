@@ -15,6 +15,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A vtable slot past the declared base's last slot means the receiver is a **derived** class, not a wrong index (codegen-tells.md: "Structural pass 173").
 - A stack or member address used at two call sites is bound once into a callee-saved register; per-site `addi` is one instruction short each time (codegen-tells.md: "Structural pass 173").
 - An `int` local feeding an `int` parameter gives `mr`, a `u8` one `addi rD, rS, 0` (codegen-tells.md: "Structural pass 173").
+- A dead `b <default>` in a switch is one more empty case; `if (c) return f(v); return v;` leaves a dead `b epilogue` where `if (c) v op= k; return v;` shares the exit; a surviving impossible compare is `MsClamp<T>` with a parameter bound (codegen-tells.md: "Structural pass VIII").
+- Declare a named local **after** the expression that first materialises its value to share the load (before: an early load plus `fmr`); `MTXCopy(call(), member)` evaluates the destination first, so bind the member address before the call (codegen-tells.md: "Structural pass VIII").
+- not: `TNerveBase<T>::TNerveBase()` out of class (-3.15 matched, DOL broken); retail's `bl` at `theNerve()` statics is per site like `TVec3::set<f>` (codegen-tells.md: "Structural pass VIII").
 - Switch arms are emitted in **source** order, the pivot tree is value-sorted; decode destinations, not constants (codegen-tells.md: "batch 122").
 - Range grouping of an `x == c` chain over contiguous constants (one range test vs one test plus a range) is emergent per expansion: retail emits both from one source; never reorder the `||` terms for it (codegen-tells.md: "Header round 32").
 - Count a header helper's real call sites with `objdump -dr` and `R_PPC_REL24` rows; plain `objdump -d` shows an unrelocated `bl` as a self-branch (codegen-tells.md: "Header round 32").
