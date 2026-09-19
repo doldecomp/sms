@@ -1530,8 +1530,8 @@ void TWaterGun::movement()
 		unk1CC4 = 0;
 	}
 
-	unk1CC8 += (unk1CC2 - unk1CC8) * mWatergunParams.mChangeSpeed.get();
-	unk1CCC += (unk1CC4 - unk1CCC) * mWatergunParams.mChangeSpeed.get();
+	unk1CC8 += (unk1CC2 - unk1CC8) * mWatergunParams.mHoverSmooth.get();
+	unk1CCC += (unk1CC4 - unk1CCC) * mWatergunParams.mHoverSmooth.get();
 
 	rotateProp(getCurrentNozzle()->unk378);
 
