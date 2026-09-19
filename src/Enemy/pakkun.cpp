@@ -1151,8 +1151,20 @@ DEFINE_NERVE(TNervePakkunAppear, TLiveActor)
 	}
 
 	// TODO: the original compares this result and throws it away (a dead
-	// cmpwi we do not reproduce); an empty if and a bool local both fail to
-	// bring it back.
+	// `cmpwi r3, 0` with no consumer).  The construct is now known -- see
+	// TCoasterKillerManager::load and TKoopaJr::init: a discarded call to a
+	// value-returning inline whose *first* statement is a guard returning a
+	// side-effect-free expression, e.g.
+	//     if (getMActor()->getFrameCtrl(0)->checkPass(100.0f)) return a;
+	//     return b;
+	// Throwing the result away kills everything but the guard's compare,
+	// whose branch then lands on the fall-through and is dropped; a probe of
+	// that shape takes this function to 100% at zero frame cost.  What is
+	// missing is the predicate's name and its two arms, so it is not written
+	// here.  Ruled out: an empty `if` (nested or with `&&`), an unused
+	// `bool`, an explicit cast, a `bool`-returning inline that just forwards
+	// checkPass, and an empty inline taking a `bool` argument -- MWCC deletes
+	// the compare with the value in all of them.
 	self->getMActor()->getFrameCtrl(0)->checkPass(100.0f);
 
 	if (self->checkCurAnmEnd(0)) {
