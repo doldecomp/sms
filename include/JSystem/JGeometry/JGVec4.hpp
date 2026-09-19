@@ -11,7 +11,9 @@ namespace JGeometry {
 template <typename T> class TVec4 : public Quaternion {
 public:
 	/* Constructors */
+#pragma dont_inline on
 	inline TVec4() { }
+#pragma dont_inline off
 
 	TVec4(const TVec4& other) { *(Quaternion*)this = *(Quaternion*)&other; }
 
@@ -40,6 +42,7 @@ public:
 		w = _v.w;
 	}
 
+#pragma dont_inline on
 	template <typename A> void set(A _x, A _y, A _z, A _w)
 	{
 		x = _x;
@@ -47,6 +50,7 @@ public:
 		z = _z;
 		w = _w;
 	}
+#pragma dont_inline off
 
 	f32 dot(const TVec4<f32>& other) const
 	{
