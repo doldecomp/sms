@@ -844,6 +844,69 @@ blind batchen.
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach dreiundzwanzigster Iterationsrunde (bossgesso isThing()-Reihenfolge; Konstanten-Mismatch-Scan)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,96 % (1.506.460 / 3.590.088) | +164 Bytes |
+| Funktionen matched | 8.646 / 12.881 | +1 |
+
+Neue Methodik: automatisierte Suche nach `cmpwi`/`cmplwi`/`li`-
+Instruktionen mit identischer Position, identischem Register aber
+UNTERSCHIEDLICHER Konstante (statt `__vt__`-Symbolen) — 94 Treffer
+über 241 Kandidaten-Units (`fuzzy_match_percent` ≥ 95 %). Nach
+Filterung auf Fälle mit bereits identischem Stack-Frame (sicherstes
+Signal für einen isolierten Fehler statt einer strukturellen
+Differenz) blieben 3 Kandidaten:
+
+- `Enemy/bossgesso.cpp::TBossGesso::changeAllTentacleState` —
+  **100 %** (164 Bytes) nach Fix. `TBGTentacle::isThing()`
+  (`include/Enemy/BossGessoTentacle.hpp`, als `// fabricated`
+  markiert) prüfte `mState == 6 || mState == 3 || mState == 4` in
+  Quelltextreihenfolge — MWCC kompiliert OR-Ketten mit
+  Ganzzahlkonstanten aber NICHT strikt links-nach-rechts (bestätigt
+  durch zwei Zwischenversuche mit unterschiedlicher Reihenfolge, die
+  unterschiedliche, aber beide nicht korrekte Vergleichsreihenfolgen
+  erzeugten). Empirisch ermittelte korrekte Quelltextreihenfolge
+  `4 || 6 || 3` kompiliert exakt zur Zielreihenfolge. Nur ein
+  Aufrufort (`changeAllTentacleState`), daher risikolos änderbar.
+
+- `System/Application.cpp::TApplication::initialize_bootAfter`
+  (98,77 % clean) — **tiefere Struktur-Unsicherheit gefunden, nicht
+  behoben**: Der Konstruktoraufruf `new MSound(...)` kompiliert mit
+  `li r3, 0xd4` (212, unsere `sizeof(MSound)`), während das Ziel
+  `li r3, 0x30c` (780) erwartet. `include/MSound/MSound.hpp`s
+  Feld-Offset-Kommentare summieren sich bereits korrekt auf 0x30C,
+  aber der tatsächliche kompilierte `sizeof` bleibt bei 0xd4 — nach
+  zweifachem erzwungenem Rebuild (Cache-Problem ausgeschlossen)
+  weiterhin reproduzierbar. `include/JSystem/JAudio/JAInterface/
+  JAIBasic.hpp` trägt bereits einen expliziten Upstream-TODO-
+  Kommentar ("some of the fields might actually be from a derived
+  class, MSound") — die JAIBasic/MSound-Feldgrenze ist demnach
+  bereits als ungeklärt bekannt. Eine Korrektur erfordert eine
+  vollständige Neuanalyse, welche Felder zu welcher Klasse gehören
+  (Auswirkung auf alle ~50 Methoden beider Klassen) — zu riskant für
+  einen schnellen Fix, als offener Fall dokumentiert statt geraten.
+
+- `Player/WaterGun.cpp::TWaterGun::TWaterGun(TMario*)` (99,86 %
+  clean, bereits von der `mHHoverHeight`-Typo-Untersuchung dieser
+  Session betroffen) — weiterer unaufgeklärter Fund: Der Compiler
+  erzeugt für das Array-Member `mEmitPos[4]` (`JGeometry::TVec3<f32>
+  mEmitPos[4];`, Offsets im Header intern konsistent 0x1C90–0x1CC0)
+  einen `__construct_array`-Aufruf mit Zähler `0x3` statt `0x4` —
+  nach erzwungenem Rebuild reproduzierbar, Header-Deklaration bereits
+  korrekt `[4]`. Vermutlich MWCC-interne Slicing-/Unroll-Heuristik
+  für kleine Fixed-Size-Arrays, nicht über einfache Source-Änderung
+  kontrollierbar; nicht weiter verfolgt.
+
+`GC2D/PauseMenu2.cpp::TPauseMenu2::load` (99,96 % clean) ebenfalls
+geprüft: Frame-Gap (0x50 vs. 0x30, Ziel kleiner) plus ein
+`addis`/`addi`-Konstantenpaar (`0x70613030` vs. `0x745f30`, vermutlich
+ein Fixed-Point- oder FourCC-Literal) — mehrteiliger Fall, nicht in
+vertretbarer Zeit isoliert.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -1172,6 +1235,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `Enemy/tamaNoko.cpp`: `TTamaNoko::isCollidMove` — **100 %**
   (Bugfix: falscher Nerve-Vergleich).
+
+- `Enemy/bossgesso.cpp`: `TBossGesso::changeAllTentacleState` —
+  **100 %** (164 Bytes, Bugfix: `TBGTentacle::isThing()`-
+  Vergleichsreihenfolge in `include/Enemy/BossGessoTentacle.hpp`
+  empirisch korrigiert).
 
 ## Nächster GMSJ01-Kandidat
 
