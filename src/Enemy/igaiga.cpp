@@ -888,7 +888,7 @@ void TGorogoroManager::loadAfter()
 
 TSpineEnemy* TGorogoroManager::createEnemyInstance()
 {
-	return new TGorogoro("ゴロゴロ");
+	return new TGorogoro;
 }
 
 void TGorogoroManager::initSetEnemies()
