@@ -205,6 +205,7 @@ public:
 		quat.w = 0.5f / scale * (this->at(1, 0) - this->at(0, 1));
 	}
 
+#pragma dont_inline on
 	void setSQ(const JGeometry::TVec3<f32>& scale,
 	           const JGeometry::TQuat4<f32>& qt)
 	{
@@ -235,6 +236,7 @@ public:
 		this->ref(2, 1) = scale.z * (f7 + f5);
 		this->ref(2, 2) = scale.z * (f6 - f9);
 	}
+#pragma dont_inline off
 
 	// from TP, may be useful in the future?
 	void getEulerXYZ(JGeometry::TVec3<f32>&) const;
