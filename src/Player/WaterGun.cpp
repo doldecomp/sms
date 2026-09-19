@@ -1810,9 +1810,6 @@ void TWaterGun::getEmitPosDirSpeed(int index, JGeometry::TVec3<f32>* pos,
                                    JGeometry::TVec3<f32>* dir,
                                    JGeometry::TVec3<f32>* speed)
 {
-	// TODO: Fix unused stack space
-	// volatile u32 unused2[6];
-
 	MtxPtr nozzleEmitMtx = getEmitMtx(index);
 	pos->set(mEmitPos[index]);
 
@@ -1821,7 +1818,9 @@ void TWaterGun::getEmitPosDirSpeed(int index, JGeometry::TVec3<f32>* pos,
 		dir->y = nozzleEmitMtx[1][0];
 		dir->z = nozzleEmitMtx[2][0];
 	} else {
-		dir->set(0.0f, 0.0f, 1.0f);
+		JGeometry::TVec3<f32> forward;
+		forward.set(0.0f, 0.0f, 1.0f);
+		dir->set(forward);
 	}
 
 	speed->x = mMario->mVel.x * 0.125f;
