@@ -113,6 +113,11 @@ public:
 	// fabricated
 	bool isOnWall() const { return !isOnFloor() && !isOnRoof(); }
 
+	// Fabricated: moveObject reads the timer twice, once for the test and
+	// once for the decrement, which only an inline boundary on the test
+	// gives -- MWCC CSEs two reads of a plain member.
+	int getUnk1D0() const { return unk1D0; }
+
 public:
 	/* 0x194 */ int mHitPlaneCounter;
 	/* 0x198 */ const TBGCheckData* unk198;

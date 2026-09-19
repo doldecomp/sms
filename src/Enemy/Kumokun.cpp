@@ -502,14 +502,9 @@ void TKumokun::bindOnFlying()
 	mLinearVelocity = local_74 - mPosition;
 }
 
-// The ROM reads the timer twice -- once for the test, once for the decrement
-// -- which only an inline boundary on the test gives; MWCC CSEs the two reads
-// of a plain member.  Parked here: it belongs as a const accessor on TKumokun.
-static inline int KumokunUnk1D0(const TKumokun* p) { return p->unk1D0; }
-
 void TKumokun::moveObject()
 {
-	if (KumokunUnk1D0(this) > 0)
+	if (getUnk1D0() > 0)
 		unk1D0 -= 1;
 
 	updateAnimation();
