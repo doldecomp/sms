@@ -66,6 +66,15 @@ void TLauncher::init(TLiveManager* param_1)
 	offHitFlag(0x1);
 }
 
+// A TU-local binding level over the raw member read: retail's frame is 8 bytes
+// of dead low region above ours, and this is the only rung that pays exactly +8
+// here (the same binder over `getActorType()` is +16, as is one over `mState`).
+static inline u32 LauncherSenderType(const THitActor* p)
+{
+	u32 type = p->mActorType;
+	return type;
+}
+
 BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -74,12 +83,12 @@ BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 	if (mState == STATE_DIE)
 		return false;
 
-	if (sender->getActorType() == 0x1000001) {
+	if (LauncherSenderType(sender) == 0x1000001) {
 		if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
-			                             nullptr);
-			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
-			                        0.0f, 0, 0, 4);
+			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+			                             &sender->mPosition, 0, nullptr);
+			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+			                        &sender->mPosition, 0, 0.0f, 0, 0, 4);
 			if (mState == STATE_HITBYWATER)
 				return true;
 
@@ -223,12 +232,18 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	mMActor       = mMActorKeeper->createMActor("generator_model1.bmd", 0);
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
 
-	mLaunchCooldown = mLaunchPeriod * MsRandF();
+	s32 launchPeriod = mLaunchPeriod;
+	mLaunchCooldown  = launchPeriod * MsRandF();
 
 	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 	initHitActor(0x10000014, 1, -0x7f000000, 150.0f, 100.0f, 150.0f, 100.0f);
 	offHitFlag(0x1);
 
+	// TODO: 100.0% fuzzy, 7 instructions off: the JGadget iterator temp block
+	// sits 4 bytes higher than retail's (0x7c/0x64/0x60 vs 0x78/0x60/0x5c),
+	// the recorded per-expansion pool stride. Naming the searched object
+	// (batch 211's packing rule) is -8 frame and 30 markers here, so this
+	// site is the known-open grouping class, not the unnamed-receiver one.
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
 	    .push_back(this);
@@ -326,9 +341,10 @@ void TCommonLauncher::stateLaunch()
 
 			local_14.x = MsWrap(local_14.x - 270.0f, 0.0f, 360.0f);
 
+			JGeometry::TVec3<f32> local_20;
 			Mtx mtx;
 			MsMtxSetRotRPH(mtx, local_14.x, local_14.y, local_14.z);
-			JGeometry::TVec3<f32> local_20(0.0f, 4.0f, 0.0f);
+			local_20.set(0.0f, 4.0f, 0.0f);
 			local_14.set(0.0f, 0.0f, 0.0f);
 			MTXMultVec(mtx, &local_20, &local_20);
 			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_20);
