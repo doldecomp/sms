@@ -109,6 +109,27 @@ int TSelectDir::rsetup()
 	// (0x34 and 0x38 near the top) are the same accumulation after the last
 	// expansion.  RULES.md lists this as the JGadget pool-word class, so no
 	// lever trials here until that class is solved for the tree.
+	// Closure 217 rebuilt the slot map per instruction (all 1096 align, 0
+	// structural markers) and split the 0x38 into three pieces: +28 below
+	// our first referenced pool slot (0x204 against retail's 0x220), +20 of
+	// pad inside the pool (retail's five `+4` steps, one per expansion
+	// sub-block, ours contiguous), and +8 between the pool top and the
+	// second temp block, whose stride is 0x14 on both sides but whose
+	// retail groups alternate 0x10/0x14.  So it is not one knob.
+	// Research 211's receiver knob was then tried in the inverse direction
+	// it predicts, and every spelling is worse: dropping `root` for
+	// `((TViewObjPtrListT<TViewObj>*)unk10)->getChildren().push_back(x)` at
+	// the four root sites is +9 instructions (97.3%, the member is reloaded
+	// per site) and still leaves the pool contiguous; a TU-local binder
+	// returning the cast is the same +9 at frame 0x630; `root->insert(x)`
+	// at the four root sites rewrites the whole map (frame 0x5a8, pool
+	// [60]); `insert` at all twenty sites is 85.1% and +107 instructions;
+	// and keeping `root` but initialising it from `unk10` after the member
+	// store costs one reload for frame 0x608.  The pool stays [48]
+	// contiguous in every packing variant, so retail's five pad words are
+	// not the receiver's naming here -- the padded sub-blocks are the first
+	// five expansions only, and whatever distinguishes them is upstream of
+	// the call site.
 	void* arcData = SMSLoadArchive("/data/select.arc", 0, 0, 0);
 
 	JKRMemArchive* archive = new JKRMemArchive;
