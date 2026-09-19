@@ -163,6 +163,34 @@ f32 JALSystem::processModDistFx(u32 param_1, f32 param_2)
 // MSSetSound.hpp all include JALModSe.hpp), so it is reported, not made.
 // Nothing here is committed: every rung above leaves the frame wrong and the
 // binder alone takes the differing-operand count from 56 to 74.
+// Closure round 2026-09-18 (2) -- the residue is now provably frame-only and
+// the missing 0x68 is arithmetically solved, but no honest spelling produces
+// it yet. Two facts settle where it lives:
+//   * the ModType_JALSeModPitFunk arm passes `set3`, not `set2` (retail's
+//     `addi r8, r1, 0xd8`), so all four `Pit` arms share the second pair.
+//     Fixed below; with `volatile char trash[0x68]` declared after `set3` the
+//     function is 100.0%, 371/371 instructions, zero differing operands.
+//   * the six `new`-result temps keep their absolute offsets 0x58..0x6c in
+//     both builds, so the 0x68 is one contiguous block allocated *above* them,
+//     i.e. during the four prologue constructions and before any switch arm.
+//     That rules the Grp/leaf constructors out by position: a reservation in
+//     `JALSeModDataGrp<T>` or in the twelve leaf ctors is allocated after the
+//     arm temps and would move them.
+// Measured ladder for the prologue expansions (dead uninitialised non-trivial
+// class local in the named constructor, zero instructions either way):
+//   JALPrmSet ctor, 8-byte local   -> +0x18 (3 expansions x 8): frame 0xe0
+//   JADPrmS<T> ctor, 8-byte local  -> +0x38 (7 expansions x 8): frame 0x100
+//   JALPrmSet 16-byte + JADPrmS 8  -> +0x68 exactly: frame 0x130, 100.0%,
+//                                     zero differing operands
+// So the residue is 3 x 16 + 7 x 8 = 0x68, equivalently 8 bytes for the
+// standalone `prm` plus 16 for each of the six `JADPrmS` subobjects nested
+// inside a `JALPrmSet`. The open question is purely what real C++ reserves
+// that: refuted this round are `JADPrmS(const T&, const char*)` (+2
+// instructions, frame unmoved), `JALPrmSet(const f32&, const f32&)` (one
+// opcode differs, frame unmoved) and a defaulted `const char* name = nullptr`
+// on `JADPrmS` with the explicit nulls dropped at all seven sites (+0, exactly
+// codegen-neutral). Probe structs are padding by another name and are not
+// committed.
 void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
                        u32 param_3, f32 param_4, f32 param_5, f32 param_6,
                        f32 param_7, f32 param_8, JALCalc::CurveSign param_9,
@@ -181,7 +209,7 @@ void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
 		break;
 
 	case ModType_JALSeModPitFunk:
-		new JALSeModPitFunk(param_2, param_3, &set1, &set2, &prm, param_9,
+		new JALSeModPitFunk(param_2, param_3, &set1, &set3, &prm, param_9,
 		                    param_12);
 		TFlagManager::get()->addUseFlag(param_3, param_1);
 		break;
