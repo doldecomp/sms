@@ -877,6 +877,14 @@ void TLeanMirror::controlShake()
 // (retail pivots on 3 because the fourth, empty `case STATE_DONE: break;` arm
 // makes the sorted case set {1,2,3,4}), and controlGoTarget is now a real
 // `bl` as retail has it.
+static inline TMarDirector* LeanMirrorGetMarDirector() { return gpMarDirector; }
+
+static inline MSound* LeanMirrorGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 void TLeanMirror::control()
 {
 	TMapObjBase::control();
@@ -884,18 +892,16 @@ void TLeanMirror::control()
 	switch (mState) {
 	case STATE_SHAKE:
 		controlShake();
-		gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_MA_MIRROR_MOVE,
-		                                  &mPosition, nullptr,
-		                                  fabsf(mSpeed.length()), 0, 0,
-		                                  nullptr, 0, 4);
+		LeanMirrorGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_OBJ_MA_MIRROR_MOVE, &mPosition, nullptr,
+		    fabsf(mSpeed.length()), 0, 0, nullptr, 0, 4);
 		break;
 
 	case STATE_GO_TARGET:
 		controlGoTarget();
-		gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_MA_MIRROR_DEMOMV,
-		                                  &mPosition, nullptr,
-		                                  fabsf(mSpeed.length()), 0, 0,
-		                                  nullptr, 0, 4);
+		LeanMirrorGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_OBJ_MA_MIRROR_DEMOMV, &mPosition, nullptr,
+		    fabsf(mSpeed.length()), 0, 0, nullptr, 0, 4);
 		break;
 
 	case STATE_LIGHT:
@@ -904,11 +910,13 @@ void TLeanMirror::control()
 			if (stone->getLightNum() < 3) {
 				MSBgm::setTrackVolume(0, 1.0f, 0xA, 0);
 				if (stone->getLightNum() == 1)
-					gpMarDirector->getConsole()->startAppearBalloon(0x32,
-					                                                true);
+					LeanMirrorGetMarDirector()
+					    ->getConsole()
+					    ->startAppearBalloon(0x32, true);
 				else
-					gpMarDirector->getConsole()->startAppearBalloon(0x33,
-					                                                true);
+					LeanMirrorGetMarDirector()
+					    ->getConsole()
+					    ->startAppearBalloon(0x33, true);
 			}
 
 			f32 scale = stone->mEmitterRate;
@@ -1029,6 +1037,15 @@ void TShiningStone::endDemo()
 	}
 }
 
+// The three lighting emitters are bound through a level the bare
+// `emit(0x56, ...)` below them does not use: three sites are retail's 0x40,
+// all four overshoot by 8.
+static inline TMarioParticleManager* ShiningStoneGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
 void TShiningStone::putOnLight(TLiveActor* mirror)
 {
 	if (strcmp(mirror->getName(), "mirrorS") == 0) {
@@ -1047,7 +1064,7 @@ void TShiningStone::putOnLight(TLiveActor* mirror)
 
 	switch (mLightNum) {
 	case 0:
-		mEmitter = gpMarioParticleManager->emit(
+		mEmitter = ShiningStoneGetMarioParticleManager()->emit(
 		    0x143, (JGeometry::TVec3<f32>*)&mPosition, 1, this);
 		mEmitter->setRate(3.0f);
 		mEmitterRate = 1.5f;
@@ -1056,7 +1073,7 @@ void TShiningStone::putOnLight(TLiveActor* mirror)
 		break;
 
 	case 1:
-		mEmitter = gpMarioParticleManager->emit(
+		mEmitter = ShiningStoneGetMarioParticleManager()->emit(
 		    0x144, (JGeometry::TVec3<f32>*)&mPosition, 1, this);
 		mEmitter->setRate(0.4f);
 		mEmitterRate = 0.2f;
@@ -1065,7 +1082,7 @@ void TShiningStone::putOnLight(TLiveActor* mirror)
 		break;
 
 	case 2:
-		mEmitter = gpMarioParticleManager->emit(
+		mEmitter = ShiningStoneGetMarioParticleManager()->emit(
 		    0x145, (JGeometry::TVec3<f32>*)&mPosition, 1, this);
 		mEmitterRate = 0.0f;
 		gpMSound->startSoundActor(MSD_SE_DM_REFLECTION_3, &mPosition, 0,
