@@ -1467,9 +1467,9 @@ void TBossMantaManager::createEnemy()
 {
 	TSpineEnemy* enemy = createEnemyInstance();
 	if (enemy != nullptr) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
-		    ->getChildren()
-		    .push_back(enemy);
+		TIdxGroupObj* group
+		    = JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ");
+		group->getChildren().push_back(enemy);
 		enemy->init(this);
 	}
 }
