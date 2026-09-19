@@ -76,6 +76,18 @@ void TMario::thinkAloha()
 // allocated before the two later colour conversions instead of after them.
 // TTimeRec::startTimer has one overload and its temporary placement is a
 // TimeRec.hpp question with its own trial table, so it is not a call-site fix.
+// Closure batch 205 measured that table's remaining rows against *this*
+// caller (frame / colour slot; the target is 0x168 / 0x138 and we are at
+// 0x168 / 0x128).  Inert, still 0x168 / 0x128: declaring `color` before
+// `inst` inside startTimer, and declaring both `color` and `col` before it.
+// Worse: an unnamed `JUtility::TColor(r, g, b, a)` temporary is +8 of frame
+// (0x170), and `TColor color; color.set(r, g, b, a);` costs two instructions.
+// A TU-local level around the call (`MarioMainStartTimer()`) is not neutral
+// here either -- it adds three instructions and drops the function to 98.4%.
+// So the colour's rank among this function's four-byte pool temporaries is
+// not reachable from startTimer's statement list at all: our descending pool
+// is GXSetChanMatColor#1, #2, startTimer, retail's is startTimer, #1, #2,
+// i.e. retail's is expansion order and ours puts the first expansion last.
 //
 // The 104 bytes of dead low region the frame needed were measured in closure
 // batch 120: the parked MarioMainGetFludd binding level below is +16 of low

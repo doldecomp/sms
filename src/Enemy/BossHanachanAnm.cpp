@@ -12,6 +12,17 @@
 // Declaring `texFrame` before the BCK setFrame call is what puts the two
 // conversion temporaries in retail's order (0x28 then 0x30); dropping the
 // named `texFrame` entirely is 74.1%. getBody(i) for the array read is inert.
+// TODO: 98.6%, frame exact (0x68) and every instruction identical: the residue
+// is one callee-saved GPR rotation.  Retail ranks `body` *above* the two
+// parameters -- r31 `i`, r30 `body`, r29 blend, r28 anm, r27 `this`, r26 the
+// strength-reduced mBodies offset, r25 the 0x4330 pool base -- while we rank
+// it below everything, at r25, which is the "inner-block locals after `this`"
+// bucket.  Closure batch 205: hoisting `body` to function scope, and hoisting
+// both `i` and `body` out of the `for`, are both inert (still 98.6%, same
+// registers), which is the catalog's "block scope is inert everywhere" rule
+// again.  So retail's `body` is in the locals bucket for a reason that is not
+// its declaration position, and the remaining shape has to change what MWCC
+// counts as a function-scope local here.
 void TBossHanachan::setHeadAndBodyAnm(
     EnumBossHanachanAnmKind anm, EnumBossHanachanStopMotionBlendOnOff blend)
 {
