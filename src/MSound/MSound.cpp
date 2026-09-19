@@ -925,19 +925,8 @@ void MSound::playTimer(u32 time)
 	}
 }
 
-// TODO: three instruction runs are missing here because JAIBasic::unk94
-// (include/JSystem/JAudio/JAInterface/JAIBasic.hpp:304) is declared u16 while
-// the ROM loads and stores it as a word: `lwz r0, 0x94(r25)` /
-// `stw r26, 0x94(r25)`. It is the id of the last Mario voice started. With it
-// as u32 the body wants
-//   - `unk94 = param_1;` immediately after the startSoundActorInner call
-//     below (ROM 0xbc8);
-//   - `unk94 != MSD_SE_MV13_ACTION_SMALL_01 &&` as the first term of the
-//     random substitutions in `case 0xffff0003:` (ROM 0x888) and in
-//     `case MSD_SE_MV22_JUMP_MID_01:` (ROM 0xa50).
-// Nothing else in the tree reads that member, and the class size is unchanged,
-// but the declaration is in a shared JSystem header, so it is reported rather
-// than made here.
+// TODO: every instruction matches; the remaining residue is a 0x30-byte frame
+// gap (retail 0xa0, ours 0x70) plus the callee-saved rotation it drags along.
 u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 {
 	if (((param_3 & 0x1) ? true : false) == 1)
@@ -988,7 +977,8 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 
 	switch (param_1) {
 	case 0xffff0003:
-		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.5f)
+		if (unk94 != MSD_SE_MV13_ACTION_SMALL_01 && param_3 != 2
+		    && JALCalc::getRandom_0_1() < 0.5f)
 			param_1 = MSD_SE_MA_VO_JUMP_MID_3;
 		if (param_1 + 0x10000 == 3)
 			param_1 = MSD_SE_MA_VO_LAND_LOW_4;
@@ -1073,7 +1063,8 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 			param_1 = MSD_SE_MV41_JUMP_T_01;
 			break;
 		}
-		if (param_3 != 2 && JALCalc::getRandom_0_1() < 0.7f)
+		if (unk94 != MSD_SE_MV13_ACTION_SMALL_01 && param_3 != 2
+		    && JALCalc::getRandom_0_1() < 0.7f)
 			param_1 = MSD_SE_MA_VO_JUMP_MID_0;
 		break;
 
@@ -1128,6 +1119,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 	                  unkAC[iVar3].mPosition, 0);
 	MSoundSESystem::MSoundSE::startSoundActorInner(param_1, unk8C + iVar6,
 	                                               &local_48, 1, 4);
+	unk94 = param_1;
 	if (unk8C[iVar6] != nullptr) {
 		if (param_3 == 2) {
 			unk8C[iVar6]->setPortData(11, 1);
