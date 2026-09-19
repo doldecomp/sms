@@ -181,6 +181,14 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   saubere Original-Fassung (99,87 %) zurückgesetzt statt einen wirkungslosen
   `trash`-Hack stehen zu lassen.
 
+- `Enemy/enemytable.cpp`: `TStageEnemyInfoTable::getMatchedInfo` (276 Bytes,
+  92,41 %). Frame-Differenz 64 Bytes (0xa0 vs. 0x60): unser Build hoisted
+  `begin()`/`end()` aus der `for`-Schleife in zwei zusätzliche Callee-Save-
+  Register (r28+r29+r30+r31), das Original liest `this->begin` (+0x10) und
+  `this->end` (+0x14) bei JEDER Iteration neu aus `this` (nur r29..r31 nötig).
+  Loop-invariant-Code-Motion-Entscheidung von MWCC, nicht über einfache
+  Source-Umformulierung erzwingbar ohne Risiko einer Verhaltensänderung.
+
 - `NPC/NpcManager.cpp`: `TNPCManager::clipEnemies` (784 Bytes, 92,70 %).
   Bereits im Quelltext als upstream-`TODO` markiert
   ("figure out these inlines ... fabricatedInline3 matches in camera itself
