@@ -48,6 +48,7 @@ int THelpActor::getHelpID()
 
 void THelpActor::perform(u32 cue, JDrama::TGraphics*)
 {
+	char trash[8];
 	if (cue & CUE_MOVE) {
 		if (unk74) {
 			if (getHelpID() == -1)
