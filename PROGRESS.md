@@ -2721,6 +2721,38 @@ Funktionen** (361 aus Runde 1–38 plus 6 neue in Runde 39) in 39
 Commits. Funktionszahl: 8948 → **8954** (**+6**). DOL SHA1 bleibt
 `OK`.
 
+**Zwei weitere bestätigte Fälle der `identity33`-Kategorie
+(asymmetrische Per-Aufrufstellen-Inlining-Entscheidung, NICHT per
+`#pragma dont_inline` steuerbar)**:
+- `TYoshi::onYoshi()` (Header-inline, mit vorhandenem `// TODO: dumb
+  hack, but why is it not getting inlined in the original?!`-
+  Kommentar eines früheren Beitragenden samt zehnfachem `(void)0;`-
+  Workaround-Versuch): Ersetzen durch `#pragma dont_inline on/off`
+  hatte an der geprüften Aufrufstelle (`TMario::onYoshi()` in
+  `MarioMove.cpp`) KEINE Wirkung (identischer Bytecode wie vorher,
+  weiterhin vollständig geinlinet) UND verursachte an anderer Stelle
+  eine Netto-Regression (`matched_functions` 8954 → 8952). Sauber
+  zurückgesetzt.
+- `THaneHamuKuri::THaneHamuKuri(const char*)` (Konstruktor,
+  `.cpp`-lokal definiert): Retail hält den Konstruktor an der
+  Aufrufstelle `THaneHamuKuriManager::createEnemyInstance()`
+  out-of-line (echter `bl`-Aufruf), inlinet ihn aber VOLLSTÄNDIG an
+  der Aufrufstelle `THaneHamuKuri2::THaneHamuKuri2(const char*)`
+  (delegierender Konstruktor-Aufruf `: THaneHamuKuri(name)` — direkt
+  per `dtk elf disasm` bestätigt: Retails kompilierter Code für
+  `THaneHamuKuri2`s Konstruktor enthält exakt die geinlinete
+  Feld-Initialisierung von `THaneHamuKuri`s Konstruktorkörper, gefolgt
+  von der eigenen Vtable-Zuweisung — KEIN separater
+  `bl __ct__13THaneHamuKuriFPCc`-Aufruf). `#pragma dont_inline
+  on/off` um die Konstruktordefinition fixte `createEnemyInstance`
+  (0,18 % → 100 %), regressierte aber `THaneHamuKuri2`s und
+  `TDoroHaneKuri`s Konstruktoren (Netto `matched_functions` 8954 →
+  8953). Die Quelltext-Delegationskette selbst (`THaneHamuKuri2(name)
+  : THaneHamuKuri(name)`) ist nachweislich KORREKT — es handelt sich
+  um eine reine Compiler-Heuristik-Asymmetrie, kein Struktur-Bug in
+  der Vererbungskette. Sauber zurückgesetzt.
+
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
