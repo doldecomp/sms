@@ -175,11 +175,11 @@ void THino2MtxCalc::calc(u16 param_1)
 			info = joint->getTransformInfo();
 
 			calcTransform(param_1, info);
-		} else if (mTwo[0] == 0.0f || !mOne[1]) {
+		} else if (unk78 == 0.0f || !mOne[1]) {
 			J3DTransformInfo auStack_74;
 			mOne[0]->getTransform(param_1, &auStack_74);
 			calcTransform(param_1, auStack_74);
-		} else if (mTwo[0] == 1.0f || !mOne[0]) {
+		} else if (unk78 == 1.0f || !mOne[0]) {
 			J3DTransformInfo auStack_94;
 			mOne[1]->getTransform(param_1, &auStack_94);
 			calcTransform(param_1, auStack_94);
