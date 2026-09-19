@@ -360,6 +360,7 @@
   "System/MarNameRefGen_Map.cpp",
   "System/MarNameRefGen_MapObj.cpp",
   "System/MarNameRefGen_NPC.cpp",
+  "System/MarioGamePad.cpp",
   "System/ParamInst.cpp",
   "System/Params.cpp",
   "System/PositionHolder.cpp",

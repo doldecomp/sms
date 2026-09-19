@@ -3,20 +3,11 @@
 
 JDrama::TFlagT<u16> TMarioGamePad::mResetFlag;
 
-// TODO (structural, blocks linking): this TU scores 100/100 but the DOL comes
-// out as e4e0508c because the `.sdata2` pool is in the wrong order -- retail
-// is 1.0f, 0.0f, 0.25f, 0.5f (@1806, @1807, @2115, @2116) and ours is 0.25f,
-// 0.5f, 0.0f, 1.0f. Only five bytes of `updateMeaning` differ, and all five are
-// the low halves of the `lfs` displacements the swap moved. Pool ids follow
-// parse order, so the ~300-id gap in the map says retail requested 1.0f then
-// 0.0f from a *header* inline and 0.25f then 0.5f from this .cpp -- the exact
-// inverse of ours, where the fabricated `resetMeaning()` inline in
-// MarioGamePad.hpp owns 0.25f/0.5f and updateMeaning's stick-scaling block owns
-// 1.0f/0.0f. We also allocate a second int->float magic double
-// (0x4330000080000000, the signed form) that the map has as UNUSED @2128, i.e.
-// retail converted an unsigned value where we convert a signed one.
-// The `u32 stackAlloc[83]` in updateMeaning is fabricated padding, so the unit
-// must not be linked until that is replaced regardless.
+// NOTE (linked from source, batch 279): the `.sdata2` pool order that used to
+// block the link is fixed -- see considerMarioStick below. What is still
+// dishonest here is the `u32 stackAlloc[83]` in updateMeaning: it is
+// fabricated stack padding, and the DOL now depends on it. Replacing it with
+// the real locals is outstanding work, not a closed question.
 
 void TMarioGamePad::reset()
 {
@@ -186,11 +177,36 @@ finalize:
 	mDisabledFrameMeaning = prevMeaning & ~mMeaning;
 }
 
-// UNUSED, map size 0x90; inlined away or dead. Its one `f32*` argument and
-// its position between updateMeaning and onNeutralMarioKey are all the
-// evidence there is.
-// TODO: incorrect size (0x4 vs 0x90).
-void TMarioGamePad::considerMarioStick(f32* stick) { }
+// UNUSED, map size 0x90. Reconstructed as the out-of-line original of the
+// neutral-key stick-scaling block updateMeaning expands below: the signature
+// (`f32*`, i.e. a `mCompSPos` slot pair), the position immediately after
+// updateMeaning in source order, and the `.sdata2` pool all agree. The pool is
+// the hard evidence: the map wants 1.0f (@1806) and 0.0f (@1807) allocated
+// ~300 ids before 0.25f/0.5f (@2115/@2116), and under -inline deferred literal
+// ids are handed out in reverse definition order, so the 1.0f/0.0f pair has to
+// be requested by a body generated *before* updateMeaning. This is the only
+// such body, and giving it the scaling block puts the pool in retail's order.
+// TODO: incorrect size (0x38 vs 0x90).
+void TMarioGamePad::considerMarioStick(f32* stick)
+{
+	f32 stickScaling = 1.0f;
+
+	if (0 < _E4) {
+		_E4 -= 1;
+	}
+
+	if (0 < _E4) {
+		s16 elapsed = 0x3d - _E4;
+		if (elapsed <= 0x28) {
+			stickScaling = 0.0f;
+		} else {
+			stickScaling = CLBCalcRatio<s16>(0x28, 0x3c, elapsed);
+		}
+	}
+
+	stick[0] = stickScaling * mMainStick.mPosX;
+	stick[1] = stickScaling * mMainStick.mPosY;
+}
 
 void TMarioGamePad::onNeutralMarioKey() { _E4 = 0x3c; }
 
@@ -212,10 +228,15 @@ void TMarioGamePad::read()
 }
 
 // UNUSED, map size 0x38. The rumble API TMarioGamePad exposed; no caller
-// survives in the image.
+// survives in the image, and nothing in the map or the disassembly says what
+// it did, so it stays a stub rather than a guess. It is dead-stripped, so the
+// size does not reach the DOL -- but note it is code-generated *before*
+// updateMeaning under -inline deferred, so any float literal added here would
+// take a `.sdata2` pool slot ahead of 0.25f/0.5f and break the link.
 // TODO: incorrect size (0x4 vs 0x38).
 void TMarioGamePad::rumble(TType type, u32 param_2) { }
 
-// UNUSED, map size 0x48.
+// UNUSED, map size 0x48. Same standing as rumble above: no evidence, and the
+// same pool constraint applies.
 // TODO: incorrect size (0x4 vs 0x48).
 void TMarioGamePad::keepRumble(TType type) { }
