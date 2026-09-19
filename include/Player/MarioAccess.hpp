@@ -81,7 +81,9 @@ TYoshi* SMS_GetYoshi();
 void SMS_SetMarioAccessParams();
 
 // Real, see bossgesso
+#pragma dont_inline on
 inline JGeometry::TVec3<f32>& SMS_GetMarioPos() { return *gpMarioPos; }
+#pragma dont_inline off
 
 inline f32 SMS_GetMarioX() { return gpMarioPos->x; }
 inline f32 SMS_GetMarioY() { return gpMarioPos->y; }
