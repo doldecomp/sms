@@ -224,9 +224,10 @@ void TBathtubKiller::reset()
 	resetBathtubKiller();
 }
 
-// TODO: GMSE01 instructions match apart from the stack frame layout.
 void TBathtubKiller::resetBathtubKiller()
 {
+	JGeometry::TVec3<f32> zero;
+
 	mSpine->initWith(&TNerveBathtubKillerWander::theNerve());
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	unk208 = 0;
@@ -235,7 +236,8 @@ void TBathtubKiller::resetBathtubKiller()
 	unk214 = 0;
 	unk218 = 0;
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
-	mVelocity.set(0.0f, 0.0f, 0.0f);
+	zero.set(0.0f, 0.0f, 0.0f);
+	mVelocity.set(zero);
 	mAcceleration.set(0.0f, 0.0f, 0.0f);
 	unk21C = 0;
 	unk1D4 = 0;
