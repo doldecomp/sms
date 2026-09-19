@@ -369,13 +369,11 @@ void TMapObjBase::makeLowerStr(const char* in, char* out)
 	*out = 0;
 }
 
-// Binding level over the animation matrix, worth +0x10 of low region in the
-// setRootMtxRot* trio.
-static inline MtxPtr MapObjLibRootMtx(const TMapObjBase* p)
+// Binder over the actor position.
+static inline const JGeometry::TVec3<f32>* MapObjLibPos(const TMapObjBase* p)
 {
-	J3DModel* model = p->getModel();
-	MtxPtr mtx      = model->getAnmMtx(0);
-	return mtx;
+	const JGeometry::TVec3<f32>* v = &p->mPosition;
+	return v;
 }
 
 void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
@@ -386,7 +384,7 @@ void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 	ptr[0][0] = fVar2;
 	ptr[0][1] = -fVar1;
 	ptr[0][2] = 0.0f;
-	ptr[0][3] = mPosition.x;
+	ptr[0][3] = MapObjLibPos(this)->x;
 
 	ptr[1][0] = fVar1;
 	ptr[1][1] = fVar2;
@@ -396,12 +394,13 @@ void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 	ptr[2][0] = 0.0f;
 	ptr[2][1] = 0.0f;
 	ptr[2][2] = 1.0f;
-	ptr[2][3] = mPosition.z;
+	ptr[2][3] = MapObjLibPos(this)->z;
 }
 
 void TMapObjBase::setRootMtxRotZ()
 {
-	makeRootMtxRotZ(MapObjLibRootMtx(this));
+	J3DModel* model = getModel();
+	makeRootMtxRotZ(model->getAnmMtx(0));
 }
 
 void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
@@ -412,7 +411,7 @@ void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 	ptr[0][0] = fVar2;
 	ptr[0][1] = 0.0f;
 	ptr[0][2] = fVar1;
-	ptr[0][3] = mPosition.x;
+	ptr[0][3] = MapObjLibPos(this)->x;
 
 	ptr[1][0] = 0.0f;
 	ptr[1][1] = 1.0f;
@@ -422,12 +421,13 @@ void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 	ptr[2][0] = -fVar1;
 	ptr[2][1] = 0.0f;
 	ptr[2][2] = fVar2;
-	ptr[2][3] = mPosition.z;
+	ptr[2][3] = MapObjLibPos(this)->z;
 }
 
 void TMapObjBase::setRootMtxRotY()
 {
-	makeRootMtxRotY(MapObjLibRootMtx(this));
+	J3DModel* model = getModel();
+	makeRootMtxRotY(model->getAnmMtx(0));
 }
 
 void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
@@ -438,7 +438,7 @@ void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 	ptr[0][0] = 1.0f;
 	ptr[0][1] = 0.0f;
 	ptr[0][2] = 0.0f;
-	ptr[0][3] = mPosition.x;
+	ptr[0][3] = MapObjLibPos(this)->x;
 
 	ptr[1][0] = 0.0f;
 	ptr[1][1] = fVar2;
@@ -448,12 +448,13 @@ void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 	ptr[2][0] = 0.0f;
 	ptr[2][1] = fVar1;
 	ptr[2][2] = fVar2;
-	ptr[2][3] = mPosition.z;
+	ptr[2][3] = MapObjLibPos(this)->z;
 }
 
 void TMapObjBase::setRootMtxRotX()
 {
-	makeRootMtxRotX(MapObjLibRootMtx(this));
+	J3DModel* model = getModel();
+	makeRootMtxRotX(model->getAnmMtx(0));
 }
 
 void TMapObjBase::updateRootMtxTrans()
