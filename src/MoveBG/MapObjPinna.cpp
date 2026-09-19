@@ -751,10 +751,10 @@ void TChangeStageMerrygoround::touchPlayer(THitActor* sender)
 void TChangeStageMerrygoround::calc()
 {
 	if (unk13C) {
-		gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_HIKAGE1_A,
-		                                            gpMarioPos, 1, this);
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    (E_SMS_EFFECT_LOOP_NORMAL)0x101, gpMarioPos, 1, this);
+		    PARTICLE_MS_HIKAGE1_A, &SMS_GetMarioPos(), 1, this);
+		gpMarioParticleManager->emitAndBindToPosPtr(
+		    (E_SMS_EFFECT_LOOP_NORMAL)0x101, &SMS_GetMarioPos(), 1, this);
 	}
 }
 
