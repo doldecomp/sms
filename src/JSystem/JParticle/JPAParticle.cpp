@@ -143,6 +143,7 @@ f32 JPABaseParticle::getCurrentPositionZ()
 
 bool JPAParticle::checkCreateChildParticle()
 {
+	char trash[0x10];
 	bool result          = false;
 	JPAEmitterInfo* info = JPAGetEmitterInfoPtr();
 

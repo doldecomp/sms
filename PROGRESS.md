@@ -89,6 +89,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 - `Enemy/DebuTelesa.cpp`: `TDebuTelesa::receiveMessage` — **100 %**
   (176 Bytes). `char trash[8]` gleicht den Stackframe von 0x28 auf 0x30 Bytes an.
 
+- `JSystem/JParticle/JPAParticle.cpp`:
+  `JPAParticle::checkCreateChildParticle` — **100 %** (196 Bytes).
+  `char trash[0x10]` stellt den 0x58-Byte-Stackframe wieder her; `.text`,
+  `.data` und `.sdata2` matchen vollständig.
+
 ## Nächster GMSJ01-Kandidat
 
 Noch auszuwählen.
