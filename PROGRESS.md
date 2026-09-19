@@ -1544,6 +1544,68 @@ Vollimplementierungs-Sessions vorzusehen, nicht für diese Fix-Kategorie.
 Die Referenz-DOL bleibt `OK`. Upstream-Sync erneut bei 0 Commits
 Rückstand bestätigt.
 
+### Nach dreißigster Iterationsrunde (unvollständige Vtables: TMapObjBase/TTakeActor/THitActor, 10 Funktionen)
+
+Fortsetzung des Missing-`fuzzy_match_percent`-Scans mit Fokus auf
+Kandidaten mit **0** `bl`-Aufrufstellen in Retail (nur über Vtable
+erreichbar) UND populierter Zieldatei. `mario/System/MarNameRefGen_MapObj`
+(504 Zeilen, dient als "Name-Referenz-Registry" für viele MapObj-Klassen)
+lieferte ungewöhnlich viele Treffer für `TMapObjBase`/`TTakeActor`/
+`THitActor`-Methoden.
+
+**Root Cause war diesmal keine Inlining-Frage**: `TMapObjBase::
+loadBeforeInit/calc/draw/dead/touchWater/getHitObjNumMax` waren im
+Header nur DEKLARIERT (`virtual void calc();` etc., ohne Inline-Body)
+aber **nirgends im gesamten `src`-Baum implementiert** — echte fehlende
+Basisklassen-Default-Implementierungen, keine Emissions-Bugs. Da
+`TMapObjBase` offenbar nie direkt instanziiert wird (immer über
+Subklassen), fiel das nie als Linker-Fehler auf; unser Vtable für
+`TMapObjBase` selbst wird schlicht nie gebraucht — Retail braucht es
+aber, weil dort (wahrscheinlich) eine Subklasse diese Slots nicht
+überschreibt und auf den Default zurückfällt.
+
+**Fix**: Alle sechs mit trivialen Ein-Zeiler-Bodies exakt nach
+Rohdisassembly ergänzt (`src/MoveBG/MapObjBase.cpp`, nach
+`getSDLModelFlag`): `loadBeforeInit(JSUMemoryInputStream&) { }`,
+`calc() { }`, `draw() const { }`, `dead() { }`, `touchWater(THitActor*)
+{ return false; }`, `getHitObjNumMax() { return 5; }`.
+
+**Zusätzlich in `include/Strategic/TakeActor.hpp`/`HitActor.hpp`**:
+`TTakeActor::ensureTakeSituation()` und `TTakeActor::moveRequest()`
+hatten bereits korrekten Inline-Code (missing-weak-symbol-Muster, nur
+Pragma nötig); `TTakeActor::getRadiusAtY(f32) const` hatte **keine**
+Implementierung (`return mDamageRadius;`, geerbtes Feld von `THitActor`
+bei Offset 0x58, neu hinzugefügt); `THitActor::receiveMessage(THitActor*,
+u32)` hatte bereits korrekten Inline-Code (nur Pragma nötig).
+
+**Byte-für-Byte verifiziert, 0 Report-Regressionen**, alle 10 in einem
+Commit: `TMapObjBase::loadBeforeInit/calc/draw/dead/touchWater/
+getHitObjNumMax`, `TTakeActor::ensureTakeSituation/moveRequest/
+getRadiusAtY`, `THitActor::receiveMessage`.
+
+**Versucht und verworfen**: `TMapObjBase::setModelMtx(MtxPtr)` — Retail
+kopiert `mtx` nach `getModel()->mNodeMatrices[0]` (`PSMTXCopy`), aber
+`J3DModel::mNodeMatrices` ist `protected` — direkter Zugriff schlägt
+mit Compile-Error fehl (`illegal access to protected/private member`).
+Bräuchte eine neue öffentliche Zugriffsmethode auf `J3DModel` (z. B.
+`getNodeMatrix(int)`), was über den Scope eines Cheap-Fixes hinausgeht.
+Zurückgesetzt, nicht committed.
+
+`TMapObjBase::getDepthAtFloating()` — Rohdisassembly der Basisklasse
+lädt einen `0.0f`-Konstanten-Load vor `blr` trotz `void`-Signatur (der
+Rückgabewert wird nie verwendet). Gleichzeitig hat die Subklasse
+`TMapObjBall::getDepthAtFloating() { }` in ihrem EIGENEN Vtable-Slot
+laut Disassembly (`MapObjBall.s`) tatsächlich `getDepthAtFloating__
+11TMapObjBaseFv` (die Basisklassen-Version!) referenziert statt einer
+eigenen `TMapObjBall`-Version — d. h. Retail überschreibt diese Methode
+in `TMapObjBall` mutmaßlich GAR NICHT, während unser Header sie
+redundant überschreibt. Das ist eine tiefere Klassenhierarchie-Frage
+(potenzieller eigener Bug in `MapObjBall.hpp`), keine reine
+Emissions-Frage — als Lead für eine eigene Session vorgemerkt statt
+riskant halbgefixt.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -1780,6 +1842,18 @@ Rückstand bestätigt.
   setSQ`. Details, Adressen und verworfene Kandidaten (Template-
   Blast-Radius, anonyme Namespaces, unbearbeitete Klassen) siehe
   Iterationsrunde 29.
+
+- **10 Funktionen: TMapObjBase/TTakeActor/THitActor-Vtable-Vervollständigung
+  (Runde 30)** — je **100 %**, Byte-für-Byte gegen `orig/GMSJ01/sys/main.dol`
+  verifiziert: `TMapObjBase::loadBeforeInit`, `TMapObjBase::calc`,
+  `TMapObjBase::draw`, `TMapObjBase::dead`, `TMapObjBase::touchWater`,
+  `TMapObjBase::getHitObjNumMax` (alle sechs waren im Header nur
+  deklariert, nirgends implementiert — trivialer Body neu hinzugefügt),
+  `TTakeActor::ensureTakeSituation`, `TTakeActor::moveRequest`
+  (missing-weak-symbol-Pragma-Muster), `TTakeActor::getRadiusAtY`
+  (fehlte komplett, `return mDamageRadius;` neu hinzugefügt),
+  `THitActor::receiveMessage` (Pragma-Muster). Details siehe
+  Iterationsrunde 30.
 
 ## Nächster GMSJ01-Kandidat
 
