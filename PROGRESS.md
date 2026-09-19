@@ -102,6 +102,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   bleibt in `r29`/`r30`-Registerwahl und Reihenfolge der `addi`s innerhalb der
   Schleife.
 
+- `THPPlayer/THPPlayer.c`: `THPPlayerPrepare` (624 Bytes, 97,98 %).
+  Register-Offset um genau 1 (`r27..r30` statt `r28..r31`) über die gesamte
+  Funktion, Frame identisch. `threadData`-Scope auf den `onMemory`-Block
+  verengt: keine Änderung. Rest nicht in vertretbarer Zeit lösbar.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -143,8 +148,12 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   Je `char trash[8]` für 0x20- bzw. 0x28-Byte-Frame. `kill` bleibt 99,69 %
   (TVec3-Local 12 Bytes zu tief); Unit bleibt NonMatching.
 
+- `THPPlayer/THPPlayer.c`: `THPPlayerCalcNeedMemory` — **100 %** (168 Bytes).
+  Ternäre Größenberechnung (`onMemory ? … : …`) durch `if`/`else` ersetzt —
+  reines Register-Scheduling-Artefakt, kein Verhaltensunterschied.
+
 ## Nächster GMSJ01-Kandidat
 
-`Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes, 99,84 %) bleibt
-offen; `AudioDecoderForOnMemory` und `MapObjPollution::loadAfter` sind
-dokumentierte Nonmatches.
+`NPC/NpcManager.cpp` bzw. `JSystem/J3D/J3DGraphAnimator/J3DModel.cpp` (große
+Units, 88–89 % matched); `JSystem/JKernel/JKRExpHeap.cpp::allocFromHead(u32,int)`
+(98,78 %, Register-Scheduling um -1-Konstante) versucht, kein Fortschritt.
