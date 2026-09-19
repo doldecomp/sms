@@ -353,6 +353,15 @@ f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
 	JGeometry::TVec3<f32> perpPoint
 	    = MsPerpendicFootToLineR(flatStart, flatEnd, point);
 
+	// TODO: retail names both differences (`TVec3 span = flatEnd - flatStart;`
+	// then `span.length()`): the inlined expansion in setFootPointsAtHanged
+	// copies the `operator-` temporary into a 12-byte named slot twice, and
+	// writing it that way takes that function 92.43 -> 99.59 with every opcode
+	// exact. It cannot be committed while `operator-` forwards through
+	// `operator-=`: the named store is one more inline level, so `sub` drops
+	// out of line here as well (85.94 -> 40.42) where retail still expands it.
+	// Retail's `operator-` must reach `sub` one level sooner -- a shared-header
+	// change (JGVec3.hpp).
 	f32 totalLength   = (flatEnd - flatStart).length();
 	f32 partialLength = (perpPoint - flatStart).length();
 	return partialLength / totalLength;

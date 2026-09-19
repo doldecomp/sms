@@ -837,6 +837,21 @@ void TAmiKing::initMapObj()
 	}
 }
 
+// Parked here: retail materialises each of the four `isState` results and then
+// the whole `||` chain once more before the `if`, which is what a predicate
+// with a two-`return` body emits. It belongs on TMapObjBase in MapObjBase.hpp.
+// TODO: retail reloads `mState` between the first and the second `isState`
+// where this form keeps the first load; the remaining instruction.
+static inline bool MapObjPinnaIsGateBroken(TMapObjBase* gate)
+{
+	if (gate->isState(TMapObjGeneral::STATE_BREAKING)
+	    || gate->isState(TMapObjGeneral::STATE_TOUCHING_WATER)
+	    || gate->isState(TMapObjGeneral::STATE_TOUCHING_PLAYER)
+	    || gate->isState(TMapObjGeneral::STATE_HOLDING))
+		return true;
+	return false;
+}
+
 void TAmiKing::moveObject()
 {
 	TLiveActor::moveObject();
@@ -882,16 +897,7 @@ void TAmiKing::moveObject()
 		// Wake up when the gate the net is sitting on gets broken.
 		TMapObjBase* gate = (TMapObjBase*)mGroundPlane->mActor;
 		if (gate->mActorType == 0x4000006A) {
-			// TODO: 92.8%. Retail normalises the whole chain once more after
-			// the fourth test (li 1 / li 0 / clrlwi. / beq) where this form
-			// branches straight into the body. Assigning the chain to a bool
-			// local and routing it through a bool-returning helper both give
-			// three nested flag registers instead of retail's one, so neither
-			// is it.
-			if (gate->isState(TMapObjGeneral::STATE_BREAKING)
-			    || gate->isState(TMapObjGeneral::STATE_TOUCHING_WATER)
-			    || gate->isState(TMapObjGeneral::STATE_TOUCHING_PLAYER)
-			    || gate->isState(TMapObjGeneral::STATE_HOLDING)) {
+			if (MapObjPinnaIsGateBroken(gate)) {
 				mFlying = true;
 
 				mVelocity.x = 5.0f;
