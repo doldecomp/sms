@@ -82,6 +82,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A consumed reference binding is +4 out of line but **+8** in an inlined expansion of the same body, so price it across the whole family (frame-gaps.md: "re-pass 172").
 - When the low region's *total* is pinned (16-aligned named block) the residue is an allocation order difference and the whole lever ladder collapses to 0/8/16 (frame-gaps.md: "re-pass 172").
 - An address binding at a call site is +8 for the pointer **and** the reference form, and can buy a whole register cluster: `J3DModel::entryModelData` (frame-gaps.md: "re-pass 162").
+- A +8 binding can be paid by dropping a neighbouring named pointer local its chain already reloads (`entryModelData`); `ptr + index` is always `add rD, rIndex, rPtr`; a binder scoped to one function prices a lever a shared accessor would break (frame-gaps.md: "Library closure 202").
 - Address binding is a frame lever only (0 keeps from 335 frame-exact functions). not: the reference form, 0 keeps in 1,243 trials (frame-gaps.md: "batch 130").
 - A constant argument binds nothing, `this` only as a fresh load, a binding must stay live; a member accessor caps at +8, a by-pointer free function reaches +16 (frame-gaps.md: "batch 82").
 - The two-argument `MSound::startSoundActor(id, pos)` binding overload is +8 per expansion, per site: multi-site branches overshoot (frame-gaps.md: "batch 82").
