@@ -1,77 +1,58 @@
-# Decomp-Fortschritt (GMSP01 / PAL)
+# Decomp-Fortschritt
 
-## Wichtiger Kontext zur Zielversion
+## Ausgangs-Baseline (GMSJ01 / NTSC-J)
 
-Dieses Repo zielt primär auf **GMSJ01 (NTSC-J)**. Die hier verwendete Disc ist
-**GMSP01 (PAL)**. Upstream bezeichnet PAL als „slightly broken, feel free to fix";
-konkret:
+- Upstream-Basis: `b4cab1d2` (`BossPakkun closer`)
+- Arbeitsbranch: `decomp-work`
+- Referenz-DOL: `build/GMSJ01/mario.dol: OK`
+- Erwarteter SHA-1: `9f5a8caf56f5356aeac9d3ed28bf8de976a03625`
+- Report: `report.json`, erzeugt mit
+  `build/tools/objdiff-cli report generate -o report.json`
 
-- `.github/workflows/build.yml` Zeile 15: `version: [GMSJ01] # GMSP01` —
-  PAL ist aus der CI **auskommentiert**, wird also nicht gegengeprüft.
-- CI baut `ninja all_source progress report.json`; das Target `ok`
-  (SHA1-Verifikation der DOL) läuft **nie**. Ein „DOL OK" ist erst bei 100 %
-  Completion erreichbar, nicht als Setup-Gate.
+| Metrik | Ausgangswert |
+| --- | ---: |
+| Fuzzy match | 77,34 % |
+| Code matched | 41,08 % (1.474.716 / 3.590.088 Bytes) |
+| Code complete / linked | 18,00 % (646.308 Bytes) |
+| Data matched | 59,44 % (380.623 / 640.331 Bytes) |
+| Data complete | 20,72 % (132.708 Bytes) |
+| Funktionen matched | 66,10 % (8.514 / 12.881) |
+| Units complete | 396 / 736 |
 
-## Ausgangs-Baseline (GMSP01, Commit b4cab1d2)
+### Bereiche
 
-Aus `build/GMSP01/report.json`:
+| Bereich | Fuzzy | Code matched | Units linked |
+| --- | ---: | ---: | ---: |
+| Game Code | 71,28 % | 27,57 % | 2,86 % (78 / 387) |
+| JSystem | 99,71 % | 87,29 % | 62,14 % (172 / 200) |
+| SDK | 99,97 % | 98,88 % | 98,34 % (146 / 149) |
 
-| Metrik | Wert |
-| --- | --- |
-| Fuzzy match | 61,40 % |
-| Code matched | 26,29 % (938.880 / 3.571.488) |
-| Code complete | 8,54 % (305.020) |
-| Data matched | 44,78 % (285.583 / 637.803) |
-| Data complete | 15,17 % (96.763) |
-| Funktionen matched | 41,71 % (5.319 / 12.751) |
-| Units complete | 173 / 730 |
+## Windows-Setup
 
-DOL-Vergleich gegen Original (`a2edfa86…`, identische Größe 4.094.112 Bytes):
-1.673.643 abweichende Bytes (41 %), davon 46,2 % im `.text`-Hauptsegment.
+Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
+git-ignored. Native Windows-Tools werden verwendet, kein wibo/Wine.
 
-## Behobene PAL-Build-Blocker
+Der Checkout braucht LF:
 
-Der PAL-Build hat vorher **gar nicht gelinkt**. Behoben:
-
-1. **6 undefinierte Symbole** beim Link von `marioEU.elf`:
-   - `OSGetLanguage`, `OSGetEuRgb60Mode`, `OSSetEuRgb60Mode` — PAL-only
-     SDK-Funktionen, in `src/dolphin/os/OSRtc.c` ergänzt (`#ifdef VERSION_GMSP01`).
-   - `SMSGet{Game,Title,GCLogo}VideoHeight` — PAL erwartet `__FUl`
-     (nimmt TV-Format als Parameter), Quelle deklarierte `__Fv`.
-2. **`config/GMSP01/build.sha1`** verwies auf `build/GMSP01/mario.dol`,
-   gebaut wird aber `marioEU.dol` (`config.yml`: `name: marioEU`).
-
-### Lokale Voraussetzung (Windows)
-
-`.gitattributes` setzt `* text=auto`; auf Windows erzeugt das CRLF und damit
-einen vom Upstream abweichenden Worktree. Nötig:
-
+    git config core.autocrlf false
     git config core.eol lf
 
-(`core.autocrlf false` allein genügt **nicht**, das `text`-Attribut überstimmt es.)
+## Bisherige Branch-Änderungen
 
-## Gematchte Funktionen
+Vor dem Wechsel auf GMSJ01 wurden PAL-Buildfehler behoben. Alle Änderungen
+sind mit `VERSION_GMSP01` isoliert; der GMSJ01-Referenz-Build bleibt `OK`.
 
-Byte-genau gegen die Original-DOL verifiziert:
+Byte-genau gegen die PAL-DOL gematcht:
 
-- `OSGetLanguage` (0x8033FF8C, 0x6C) — MATCH
-- `OSGetEuRgb60Mode` (0x8033FFF8, 0x70) — MATCH
-- `OSSetEuRgb60Mode` (0x80340068, 0xA4) — MATCH
-  (brauchte `char trash[0x2]` für den 0x20-Stackframe, wie `OSSetProgressiveMode`)
+- `OSGetLanguage`
+- `OSGetEuRgb60Mode`
+- `OSSetEuRgb60Mode`
 
-## Offene Nonmatching-Fälle
+Offen für PAL: Die `VideoHeight`-Funktionen in `System/Resolution.cpp` linken,
+matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
-- **`src/System/Resolution.cpp`** — die drei PAL-`VideoHeight`-Funktionen sind
-  funktional korrekt und linken, aber die **Funktionsreihenfolge im TU** weicht ab.
-  PAL emittiert `SMSGetGCLogoVideoHeight` zuerst, der aktuelle Quelltext zuletzt;
-  die PAL-Reihenfolge ist exakt die Umkehrung der jetzigen Dateireihenfolge.
-  Ein Match erforderte, die Dateireihenfolge versionsabhängig zu spalten — das
-  würde GMSJ01 betreffen und ist ohne JPN-Disc nicht gegenprüfbar. Zurückgestellt.
-- `SMSGetTitleVideoHeight` dupliziert in PAL den Switch, statt an
-  `SMSGetGameVideoHeight` weiterzureichen (in der PAL-Fassung so umgesetzt).
+## Nächster GMSJ01-Kandidat
 
-## Nächste Kandidaten
-
-Noch nicht ausgewählt — sinnvoll erst nach der Entscheidung, ob weiter auf PAL
-oder auf GMSJ01 gearbeitet wird (siehe oben: PAL ist ohne CI-Absicherung und
-ohne Upstream-Fortschrittstracking).
+`Player/MarioAccess.cpp`: 93,8 % matched, nur
+`SMS_IsMarioOnWire` (72 Bytes) ist offen. Ein erster verschachtelter
+`if`-Versuch verschlechterte den Match auf 82,44 % und wurde verworfen.

@@ -32,6 +32,7 @@ ctx.*
 # Generated configs
 objdiff.json
 compile_commands.json
+report.json
 
 # Miscellaneous
 /*.txt
