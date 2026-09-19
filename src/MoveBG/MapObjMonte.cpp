@@ -964,16 +964,17 @@ void TFluff::move()
 	mDrift.x += mWindRate * gpMapObjManager->unkD0.x;
 	mDrift.z += mWindRate * gpMapObjManager->unkD0.z;
 
-	mDrift.x += mVelocity.x;
-	mDrift.y += mVelocity.y;
-	mDrift.z += mVelocity.z;
+	JGeometry::TVec3<f32> velocity = mVelocity;
+	mDrift.x += velocity.x;
+	mDrift.y += velocity.y;
+	mDrift.z += velocity.z;
 
 	f32 down = mSpeedDownRate;
 	mVelocity.x *= down;
 	mVelocity.y *= down;
 	mVelocity.z *= down;
 
-	f32 swing   = mSwingRadius * sinf(3.14f * (mSwingAngle / 180.0f));
+	f32 swing   = mSwingRadius * sinf(3.14f * mSwingAngle / 180.0f);
 	mPosition.x = mDrift.x + (swing * (mSwingCos + mSwingSin)
 	                          + mInitialPosition.x);
 	mPosition.y += mWindRate * gpMapObjManager->unkD0.y;
