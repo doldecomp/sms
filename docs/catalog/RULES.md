@@ -93,6 +93,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Accessor steps are 8 bytes, never 4, on member chains; a global fork is +4 per read; an indexed accessor on structs +16 per use (codegen-tells.md: "batch 65").
 - Accessor levers are a **signed** knob, saturating per member and per block; a fourth rung needs another class (frame-gaps.md: "batch 103").
 - Two +0 levers can be +8 as a **pair** (six confirmations): try pairs before calling a residue unnameable (codegen-tells.md: "batches 91 and 94").
+- A TU-local binder (`T* x = p->m; return x;`) is exactly +8 per call site and a fork (`return p->m;`) +0, so frame = base + 8 x binder sites; which site carries it is unobservable (`TOptionSubtitleUnit::update`, 27 arrangements) (codegen-tells.md: "Header round 43").
 - Best lever: a TU-local `static inline` taking the receiver by pointer that **binds and returns** a value, +8 (sometimes +16) per expansion; returning directly, or a level above a real `bl`, is +0 (frame-gaps.md: "batch 110").
 - A parameterless binder over a real `bl` is +4, not +0, when the binder also does the call site's arithmetic (`CLBGameRenderWidthMax()`); with the arithmetic left outside it is +0 and reorders the neighbouring literal load (frame-gaps.md: "re-pass II 178").
 - Binding works over an accessor, a raw member read, or a struct/array member's **address**, which copies nothing; nested levels stack, two bindings in one level do not (frame-gaps.md: "sweep 127").
