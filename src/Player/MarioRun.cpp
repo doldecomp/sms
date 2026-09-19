@@ -405,7 +405,7 @@ BOOL TMario::doSliding(f32 stopThreshold)
 	} else if (mGroundPlane->isUnk2()) {
 		slipFr = mSlipParams45.mSlipFriction.get();
 	} else if (mGroundPlane->isWetGround()) {
-		if (mGroundPlane->mNormal.y > 0.99f)
+		if (mGroundPlane->getNormal().y > 0.99f)
 			slipFr = mSlipParamsWaterGround.mSlipFriction.get();
 		else
 			slipFr = mSlipParamsWaterSlope.mSlipFriction.get();
@@ -976,7 +976,8 @@ BOOL TMario::surfing()
 		}
 
 		s16 wallToFace
-		    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
+		    = matan(MarioRunGetNormal(mWallPlane).z,
+		            MarioRunGetNormal(mWallPlane).x)
 		      - mFaceAngle.y;
 
 		s16 maxAngle;
@@ -996,7 +997,8 @@ BOOL TMario::surfing()
 			BOOL ret = changePlayerStatus(MARIO_STATUS_JUMP_BACK_DOWN, 0, true);
 			mForwardVel = 0.8f * -mForwardVel;
 			mVel.y      = 50.0f;
-			gpMSound->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
+			MSound* sound = SMSGetMSound();
+			sound->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
 			return ret;
 		}
 		setPlayerVelocity(0.0f);
