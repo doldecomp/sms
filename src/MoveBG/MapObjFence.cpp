@@ -410,9 +410,9 @@ void TFenceWater::initMapObj()
 	mMessenger->offHitFlag(HIT_FLAG_NO_COLLISION);
 	mMessenger->mPosition.set(mPosition.x, mPosition.y - 150.0f, mPosition.z);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
-	    ->getChildren()
-	    .push_back(mMessenger);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ");
+	group->getChildren().push_back(mMessenger);
 }
 
 void TFenceWaterH::control()
