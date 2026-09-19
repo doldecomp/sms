@@ -219,6 +219,7 @@ void JPAMagnetField::set()
 }
 void JPAMagnetField::affect(JPAParticle* particle)
 {
+	char trash[8];
 	if (!checkStatus(STATUS_USE_GLOBAL_COORDS))
 		unk7C.sub(unk58, particle->mLocalPosition);
 	else
