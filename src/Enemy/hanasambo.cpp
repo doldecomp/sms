@@ -1403,7 +1403,7 @@ DEFINE_NERVE(TNerveSamboHeadAppear, TLiveActor)
 DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 {
 	TSamboHead* head = (TSamboHead*)spine->getBody();
-	BOOL airborne    = head->checkLiveFlag(LIVE_FLAG_AIRBORNE);
+	bool airborne    = head->isAirborne();
 	if (!airborne) {
 		if (head->mJumpTimer > head->mSaveParams->mSLJumpPrepareTime.get()
 		    && head->checkCurAnmEnd(0)) {
@@ -1454,7 +1454,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 	}
 
 	f32 turnSpeed = head->mTurnSpeed;
-	if (head->checkLiveFlag(LIVE_FLAG_AIRBORNE))
+	if (head->isAirborne())
 		turnSpeed = 5.0f;
 	head->walkToCurPathNode(0.0f, turnSpeed, 0.0f);
 	return false;
