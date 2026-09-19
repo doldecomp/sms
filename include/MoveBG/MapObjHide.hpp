@@ -99,7 +99,9 @@ public:
 	virtual void control();
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
+#pragma dont_inline on
 	virtual const JGeometry::TVec3<f32>& getObjAppearPos() { return mPosition; }
+#pragma dont_inline off
 	virtual void afterFinishedAnim();
 	virtual void forward(f32);
 
@@ -126,10 +128,12 @@ public:
 	virtual void loadAfter();
 	virtual void initMapObj();
 
+#pragma dont_inline on
 	virtual const JGeometry::TVec3<f32>& getObjAppearPos()
 	{
 		return unk174->mPosition;
 	}
+#pragma dont_inline off
 	virtual void afterFinishedAnim();
 
 public:
