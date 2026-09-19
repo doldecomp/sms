@@ -1155,14 +1155,23 @@ void TFluffManager::control()
 		}
 		break;
 
-	case STATE_BLOW:
-		gpMapObjManager->unkD0.x += mWind.x;
-		gpMapObjManager->unkD0.y += mWind.y;
-		gpMapObjManager->unkD0.z += mWind.z;
+	case STATE_BLOW: {
+		TMapObjManager* man = gpMapObjManager;
+		man->unkD0.x += mWind.x;
+		man->unkD0.y += mWind.y;
+		man->unkD0.z += mWind.z;
 		if (!isStateTimerEngaged())
 			mState = STATE_CALM;
 		break;
+	}
 
+	// TODO: 87.1%. Two residues left. (1) retail expands TMapObjBase::
+	// getDistance inside the inlined findNextFluff (`lfsu 0x10`, three
+	// `fsubs`/`fmuls`, `bl TUtil<f32>::sqrt`); we `bl` it -- a shared-header
+	// (MapObjBase.hpp) depth/statement-count item, parked. (2) STATE_CALM
+	// reads unkD0 through an advanced base (`lfsu f31, 0xd0(r3)`) and writes
+	// it from one reload; a `Vec&` binding (83.9) and a `TMapObjManager*`
+	// binding (85.3) both measured worse than the raw spelling.
 	case STATE_CALM: {
 		f32 rate = mWindDownRate;
 		f32 windX = gpMapObjManager->unkD0.x * rate;
@@ -1178,12 +1187,12 @@ void TFluffManager::control()
 			windZ      = 0.0f;
 
 			mRideFluff->mRotation.set(mRotation);
-			mRideFluff->mInitialRotation.set(mRotation);
+			mRideFluff->mInitialRotation = mRotation;
 			mRideFluff->appear();
 			mRideFluff->mPosition.set(mPosition);
-			mRideFluff->mInitialPosition.set(mPosition);
+			mRideFluff->mInitialPosition = mPosition;
 			mRideFluff->mRotation.set(0.0f, 0.0f, 0.0f);
-			mRideFluff->mInitialRotation.set(mRideFluff->mRotation);
+			mRideFluff->mInitialRotation = mRideFluff->mRotation;
 			mRideFluff->mSwingAngle = 0.0f;
 			mRideFluff->mWindRate   = 1.0f;
 			mRideFluff->mIsRideable = true;
