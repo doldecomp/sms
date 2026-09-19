@@ -56,15 +56,6 @@ private:
 // wants a lever removed rather than added. It lives in JGadget's shared
 // header, so it is parked here as a report item.
 
-// TODO: 98.2%. Every instruction and the frame (0x40) are exact; the whole
-// residue is a five-way rotation of the callee-saved set, with the inlined
-// TDrawSyncManager constructor's values one step round from retail's:
-// param_1 r27 (retail r31), param_2 r28 (r27), the `new` result r31 (r30),
-// the reloaded `this` r29 (r28) and the constant 0 r30 (r29). Per
-// docs/catalog/frame-gaps.md a pure rotation with relative order preserved is
-// a member read that should go through an accessor; no member of
-// TDrawSyncManager is read here, so the lever is more likely an inline level
-// around the `new`/constructor pair.
 TDrawSyncManager* TDrawSyncManager::start(u32 param_1, u32 param_2, s32 param_3)
 {
 	if (smInstance == nullptr)
@@ -135,9 +126,11 @@ TDrawSyncManager::TDrawSyncManager(u32 param_1, u32 param_2, s32 param_3)
     : mCallbacks(param_1)
 {
 	mFlags = 0;
-	OSCreateThread(&mProcessingThread, &threadFunc, this,
-	               new u8[0x1000] + 0x1000, 0x1000, param_3, 0);
-	OSInitMessageQueue(&mMessageQueue, new u8[0x50], 0x14);
+	u8* stack = new u8[0x1000];
+	OSCreateThread(&mProcessingThread, &threadFunc, this, stack + 0x1000, 0x1000,
+	               param_3, 0);
+	u8* buffer = new u8[0x50];
+	OSInitMessageQueue(&mMessageQueue, buffer, 0x14);
 	mFifo = new TFifo(param_2);
 	OSResumeThread(&mProcessingThread);
 }
