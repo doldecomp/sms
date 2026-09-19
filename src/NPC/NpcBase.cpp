@@ -580,12 +580,19 @@ void TBaseNPC::moveObject()
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region per site.
+static inline TNpcInbetween* NpcBaseInbetween(const TBaseNPC* p)
+{
+	TNpcInbetween* ctrl = p->mInbetweenCtrl;
+	return ctrl;
+}
+
 void TBaseNPC::execMotionBlend_()
 {
-	if (!mInbetweenCtrl->isMotionBlending())
+	if (!NpcBaseInbetween(this)->isMotionBlending())
 		setKeepAnm_();
 
-	mInbetweenCtrl->execMotionBlend(getMActor());
+	NpcBaseInbetween(this)->execMotionBlend(getMActor());
 
 	if (mInbetweenCtrl->isForcedBlendRatio())
 		mKeepAnmCtrl->reset();
