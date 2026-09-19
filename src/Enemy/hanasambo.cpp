@@ -960,19 +960,22 @@ DEFINE_NERVE(TNerveHanaSamboDie, TLiveActor)
 		sambo->setDeadAnm();
 	} else if (sambo->checkCurAnmEnd(0) || spine->getTime() > 300) {
 		for (int i = 0; i < 4; ++i) {
-			JGeometry::TVec3<f32>* pos = &sambo->mDieEffectPos[i];
 			MtxPtr mtx = sambo->getMActor()->getModel()->getAnmMtx(
 			    jIndexTable[i]);
-			pos->set(mtx[0][3], mtx[1][3], mtx[2][3]);
+			sambo->mDieEffectPos[i].set(mtx[0][3], mtx[1][3],
+			                            mtx[2][3]);
+			JGeometry::TVec3<f32>* pos = &sambo->mDieEffectPos[i];
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emit(0xE4, pos, 0, nullptr);
-			if (emitter)
-				setEmitterScale(emitter, sambo->mScaling.x,
-				                sambo->mScaling.y, sambo->mScaling.z);
+			if (emitter) {
+				emitter->mGlobalDynamicsScale.set(sambo->mScaling);
+				emitter->mGlobalParticleScale.set(sambo->mScaling);
+			}
 			emitter = gpMarioParticleManager->emit(0xE6, pos, 0, nullptr);
-			if (emitter)
-				setEmitterScale(emitter, sambo->mScaling.x,
-				                sambo->mScaling.y, sambo->mScaling.z);
+			if (emitter) {
+				emitter->mGlobalDynamicsScale.set(sambo->mScaling);
+				emitter->mGlobalParticleScale.set(sambo->mScaling);
+			}
 		}
 		sambo->onLiveFlag(LIVE_FLAG_DEAD);
 		sambo->onLiveFlag(LIVE_FLAG_UNK8);
@@ -1017,48 +1020,45 @@ static int SamboHeadRollCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
 		TSamboHead* head = gpCurSamboHead;
-		if (head != nullptr) {
-			bool use = head->isUseCallBack();
-			if (use) {
-				J3DJoint* joint = (J3DJoint*)node;
-				MtxPtr anmMtx   = gpCurSamboHead->getModel()->getAnmMtx(
+		if (head == nullptr || !head->isUseCallBack())
+			return true;
+		J3DJoint* joint = (J3DJoint*)node;
+		MtxPtr anmMtx   = gpCurSamboHead->getModel()->getAnmMtx(
                     joint->getJntNo());
 
-				JGeometry::TVec3<f32> velocity(gpCurSamboHead->mVelocity);
-				if (velocity.x == 0.0f && velocity.z == 0.0f)
-					velocity.x = 0.001f;
-				JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-				JGeometry::TVec3<f32> axis;
-				VECCrossProduct(&up, &velocity, &axis);
+		JGeometry::TVec3<f32> velocity(gpCurSamboHead->mVelocity);
+		if (velocity.x == 0.0f && velocity.z == 0.0f)
+			velocity.x = 0.001f;
+		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+		JGeometry::TVec3<f32> axis;
+		VECCrossProduct(&up, &velocity, &axis);
 
-				JGeometry::TVec3<f32> colZ(anmMtx[0][2], anmMtx[1][2],
-				                           anmMtx[2][2]);
-				JGeometry::TVec3<f32> colX(anmMtx[0][0], anmMtx[1][0],
-				                           anmMtx[2][0]);
-				JGeometry::TVec3<f32> colY(anmMtx[0][1], anmMtx[1][1],
-				                           anmMtx[2][1]);
-				f32 angle = gpCurSamboHead->mRollAngle;
+		JGeometry::TVec3<f32> colZ(anmMtx[0][2], anmMtx[1][2],
+		                           anmMtx[2][2]);
+		JGeometry::TVec3<f32> colX(anmMtx[0][0], anmMtx[1][0],
+		                           anmMtx[2][0]);
+		JGeometry::TVec3<f32> colY(anmMtx[0][1], anmMtx[1][1],
+		                           anmMtx[2][1]);
+		f32 angle = gpCurSamboHead->mRollAngle;
 
-				f32 pz   = 0.0f;
-				f32 lenZ = colZ.dot(colZ);
-				if (0.0f != lenZ)
-					pz = axis.dot(colZ) / lenZ;
-				f32 py   = 0.0f;
-				f32 lenY = colY.dot(colY);
-				if (0.0f != lenY)
-					py = axis.dot(colY) / lenY;
-				f32 px   = 0.0f;
-				f32 lenX = colX.dot(colX);
-				if (0.0f != lenX)
-					px = axis.dot(colX) / lenX;
-				JGeometry::TVec3<f32> localAxis(px, py, pz);
+		f32 pz   = 0.0f;
+		f32 lenZ = colZ.dot(colZ);
+		if (0.0f != lenZ)
+			pz = axis.dot(colZ) / lenZ;
+		f32 py   = 0.0f;
+		f32 lenY = colY.dot(colY);
+		if (0.0f != lenY)
+			py = axis.dot(colY) / lenY;
+		f32 px   = 0.0f;
+		f32 lenX = colX.dot(colX);
+		if (0.0f != lenX)
+			px = axis.dot(colX) / lenX;
+		JGeometry::TVec3<f32> localAxis(px, py, pz);
 
-				Mtx roll;
-				MTXRotAxisRad(roll, &localAxis, 0.017453292f * angle);
-				MTXConcat(anmMtx, roll, anmMtx);
-				MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
-			}
-		}
+		Mtx roll;
+		MTXRotAxisRad(roll, &localAxis, 0.017453292f * angle);
+		MTXConcat(anmMtx, roll, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
 	}
 	return true;
 }
@@ -1338,12 +1338,10 @@ void TSamboHead::genEventCoin()
 // UNUSED, 0x140 in the map: inlined into SamboHeadRollCallback.
 bool TSamboHead::isUseCallBack()
 {
-	if (mSpine->getCurrentNerve() == &TNerveSamboHeadAttack::theNerve())
-		return true;
-	if (mSpine->getCurrentNerve() == &TNerveSamboHeadHitWater::theNerve())
-		return true;
-	if (mSpine->getCurrentNerve()
-	    == &TNerveSamboHeadRecoverWater::theNerve())
+	if (mSpine->getCurrentNerve() == &TNerveSamboHeadAttack::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveSamboHeadHitWater::theNerve()
+	    || mSpine->getCurrentNerve()
+	           == &TNerveSamboHeadRecoverWater::theNerve())
 		return true;
 	return false;
 }
