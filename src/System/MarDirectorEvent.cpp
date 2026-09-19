@@ -84,7 +84,9 @@ void TMarDirector::movement_game()
 	switch (unk124) {
 	case 0:
 		unk18[0]->offFlag(0x4);
-		if (!gpMarioOriginal->isHolding() && gpCamera->isLButtonCamera())
+		if (gpMarioOriginal->isHolding())
+			return;
+		if (gpCamera->isLButtonCamera())
 			return;
 
 		if (!gpCamera->isDemoCamera()) {
