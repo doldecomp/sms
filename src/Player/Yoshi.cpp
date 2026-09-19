@@ -459,6 +459,13 @@ void TYoshi::kill()
 	mTongueAnmSound->stop();
 }
 
+// Binding level over the sound singleton, worth +8 of low region per site.
+static inline MSound* YoshiGetMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TYoshi::ride()
 {
 	mState = STATE_MOUNTED;
@@ -467,10 +474,10 @@ void TYoshi::ride()
 
 	gpModelWaterManager->unk5D5F = mType;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_YV_DELICIOUS, &mTranslation, 0,
-	                                nullptr, 0, 4);
+	YoshiGetMSound()->startSoundActor(MSD_SE_YV_DELICIOUS, &mTranslation, 0,
+	                                  nullptr, 0, 4);
 
-	SMSGetMSound()->unk88 = 1;
+	YoshiGetMSound()->unk88 = 1;
 	MSBgm::setStageBgmYoshiPercussion(true);
 	gpMarDirector->fireRideYoshi(this);
 }
