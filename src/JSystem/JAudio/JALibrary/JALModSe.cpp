@@ -123,6 +123,7 @@ void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
 	JADPrmS<f32> prm(param_6, nullptr);
 	JALPrmSet set2(param_7, param_8);
 	JALPrmSet set3(param_7, param_8);
+	char trash[0x68];
 
 	switch (param_1) {
 	case ModType_JALSeModVolFunk:
@@ -132,7 +133,7 @@ void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
 		break;
 
 	case ModType_JALSeModPitFunk:
-		new JALSeModPitFunk(param_2, param_3, &set1, &set2, &prm, param_9,
+		new JALSeModPitFunk(param_2, param_3, &set1, &set3, &prm, param_9,
 		                    param_12);
 		TFlagManager::get()->addUseFlag(param_3, param_1);
 		break;
@@ -196,6 +197,7 @@ void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
 void JALSystem::appendGrpMember(JALSystem::ModType param_1, u32 param_2,
                                 u32 param_3)
 {
+	char trash[8];
 	switch (param_1) {
 	case ModType_JALSeModVolFGrp: {
 		JALSeModDataGrp<JALSeModVolFGrp>* found
