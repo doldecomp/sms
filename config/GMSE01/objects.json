@@ -376,6 +376,7 @@
   "System/ZBufferCatch.cpp",
   "System/marerr.cpp",
   "System/FlagManager.cpp",
+  "System/MarNameRefGen_MapObj.cpp",
   "THPPlayer/THPDraw.c",
   "THPPlayer/THPPlayer.c",
   "THPPlayer/THPRead.c",
