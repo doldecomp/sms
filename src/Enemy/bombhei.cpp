@@ -449,22 +449,51 @@ const char** TBombHei::getBasNameTable() const { return bombhei_bastable; }
 // ~28 more bytes of inline-expansion temporaries than we generate; the two
 // identical four-statement "switch back to the wind-up model" blocks look
 // like an inline helper, but the map lists no UNUSED symbol for one.
+static inline MActor* BombHeiMActor(const TBombHei* p)
+{
+	MActor* actor = p->mMActor;
+	return actor;
+}
+
+static inline TMActorKeeper* BombHeiKeeperRaw(const TBombHei* p)
+{
+	return p->mMActorKeeper;
+}
+
+static inline TMActorKeeper* BombHeiKeeperFork(const TBombHei* p)
+{
+	TMActorKeeper* keeper = BombHeiKeeperRaw(p);
+	return keeper;
+}
+
+static inline TMActorKeeper* BombHeiKeeper(const TBombHei* p)
+{
+	TMActorKeeper* keeper = p->mMActorKeeper;
+	return keeper;
+}
+
+static inline TTakeActor* BombHeiHolder(const TBombHei* p)
+{
+	TTakeActor* holder = p->mHolder;
+	return holder;
+}
+
 DEFINE_NERVE(TNerveBombHeiGenerate, TLiveActor)
 {
 	TBombHei* bombHei = (TBombHei*)spine->getBody();
 
 	if (spine->getTime() == 0) {
 		bombHei->mMActor
-		    = bombHei->getActorKeeper()->getMActor("nejibomb_model1.bmd");
+		    = BombHeiKeeperFork(bombHei)->getMActor("nejibomb_model1.bmd");
 		bombHei->setBckAnm(BOMBHEI_ANM_WIND_UP);
 		bombHei->getMActor()->setBtpFromIndex(1);
 		bombHei->getMActor()->setFrameRate(0.0f, ANM_TYPE_BTP);
 	}
 
-	if (bombHei->getHolder())
+	if (BombHeiHolder(bombHei))
 		bombHei->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 
-	if (!bombHei->isAirborne() && !bombHei->getHolder()) {
+	if (!bombHei->isAirborne() && !BombHeiHolder(bombHei)) {
 		if (bombHei->isBckAnm(BOMBHEI_ANM_WIND_UP)) {
 			bombHei->setBckAnm(BOMBHEI_ANM_LAND1);
 		} else if (bombHei->checkCurAnmEnd(BOMBHEI_ANM_DOWN1)) {
@@ -475,7 +504,7 @@ DEFINE_NERVE(TNerveBombHeiGenerate, TLiveActor)
 		JGeometry::TVec3<f32> velocity = bombHei->mVelocity;
 		if (velocity.y > 0.0f) {
 			if (!bombHei->isBckAnm(BOMBHEI_ANM_WIND_UP)) {
-				bombHei->mMActor = bombHei->getActorKeeper()->getMActor(
+				bombHei->mMActor = BombHeiKeeper(bombHei)->getMActor(
 				    "nejibomb_model1.bmd");
 				bombHei->setBckAnm(BOMBHEI_ANM_WIND_UP);
 				bombHei->getMActor()->setBtpFromIndex(1);
@@ -614,17 +643,23 @@ DEFINE_NERVE(TNerveBombHeiThrown, TLiveActor)
 	TBombHei* bombHei = (TBombHei*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		// TODO: 96.1%. The instruction stream is right but r5/r6 are
-		// swapped (the ROM allocates the cos table index before the
-		// throw-power pointer) and the frame is 8 bytes too big. Naming
-		// the angle in an s16 local, or assigning the three components
-		// separately, are both worse (92.0% / 84.7%).
+		// TODO: 96.2%, frame closed. Reading the two params through
+		// `mSLFoo.get()` rather than the class's `getSLFoo()` wrapper is
+		// one inline level shallower and takes the frame from 0x70 to the
+		// ROM's 0x68 with every stack displacement exact. What is left is
+		// one volatile-FPR block rotation (ours f3/f1 for the throw power
+		// and the cosine, the ROM's f2/f3, with the matching r5/r6 swap
+		// on the table index) plus the ROM loading `mSLThrownVY` *late*,
+		// into the register the x store has just freed, where we load it
+		// ahead of the two products. Retried at the new depth and still
+		// worse: three separate component assignments (84.7%) and
+		// `velocity.set(x, y, z)` (identical to the ctor, 96.2%).
 		TBombHeiSaveLoadParams* params = bombHei->getSaveParams();
 		JGeometry::TVec3<f32> velocity(
-		    params->getSLThrownRateXZ()
+		    params->mSLThrownRateXZ.get()
 		        * (*gpMarioThrowPower * JMASSin(SMS_GetMarioAngleY())),
-		    params->getSLThrownVY(),
-		    params->getSLThrownRateXZ()
+		    params->mSLThrownVY.get(),
+		    params->mSLThrownRateXZ.get()
 		        * (*gpMarioThrowPower * JMASCos(SMS_GetMarioAngleY())));
 		bombHei->mVelocity = velocity;
 		bombHei->mPosition.y += 2.0f;
