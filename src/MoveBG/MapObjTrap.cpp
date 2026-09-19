@@ -41,6 +41,7 @@ BOOL TLampTrapSpikeHit::receiveMessage(THitActor* sender, u32 message)
 
 void TLampTrapSpikeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x18];
 	THitActor::perform(cue, graphics);
 	if (cue & CUE_MOVE) {
 		mPosition = unk68->mPosition;
@@ -254,6 +255,7 @@ void TLampTrapIron::loadAfter()
 
 BOOL TLampTrapIron::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[8];
 	if (sender->isActorType(0x1000001)) {
 		if (unk13C > 0) {
 			--unk13C;
