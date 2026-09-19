@@ -139,9 +139,10 @@ void TTPHitActor::updateTerrainCollsion()
 	JGeometry::TVec3<f32> down(0.0f, -1.0f, 0.0f);
 
 	JGeometry::TVec3<f32> pos;
-	pos.x = up.x * lift + mOwner->mPosition.x + down.x * sink;
-	pos.y = up.y * lift + mOwner->mPosition.y + down.y * sink;
-	pos.z = up.z * lift + mOwner->mPosition.z + down.z * sink;
+	JGeometry::TVec3<f32>& ownerPos = mOwner->mPosition;
+	pos.x = up.x * lift + ownerPos.x + down.x * sink;
+	pos.y = up.y * lift + ownerPos.y + down.y * sink;
+	pos.z = up.z * lift + ownerPos.z + down.z * sink;
 
 	JGeometry::TVec3<f32> moved(pos);
 	moved.sub(mPosition);
@@ -296,7 +297,8 @@ void TTabePuku::bind()
 	mLinearVelocity = mMouthHit->mVelocity;
 	mTouchedWall    = mMouthHit->mTouchedWall;
 
-	if (mMouthHit->mAirborne)
+	int airborne = mMouthHit->mAirborne;
+	if (airborne)
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 	else
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -323,8 +325,8 @@ void TTabePuku::calcRootMatrix()
 	MtxPtr src      = mtx;
 	J3DModel* model = getModel();
 	// TODO: 99.0%. Retail copies the model pointer and adds getBaseTRMtx()'s
-	// 0x20 in a second instruction; naming that pointer as well reproduces the
-	// pair but moves every local up four bytes.
+	// 0x20 in a second instruction; naming the destination as well reproduces
+	// neither, and moves every local up four bytes.
 	MTXCopy(src, model->getBaseTRMtx());
 
 	emitEffects();
@@ -470,7 +472,7 @@ bool TTabePuku::isBiting() const
 // the nerves pick (straight at it while wandering, above it while chasing).
 void TTabePuku::swimToCurPathNode(const JGeometry::TVec3<f32>& offset)
 {
-	JGeometry::TVec3<f32> dir(unk104.getPoint());
+	JGeometry::TVec3<f32> dir(getUnk104().getPoint());
 	dir.sub(mPosition);
 	dir.add(offset);
 	swimTo(dir);
@@ -705,8 +707,12 @@ DEFINE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor)
 
 	// Aim far above the node while stuck on the ground or a wall, so the puku
 	// climbs off it before swimming on.
-	f32 rise = puku->isTouchedPlane() ? 10000.0f : 0.0f;
-	puku->swimToCurPathNode(JGeometry::TVec3<f32>(0.0f, rise, 0.0f));
+	JGeometry::TVec3<f32> offset;
+	if (puku->isTouchedPlane())
+		offset.set(0.0f, 10000.0f, 0.0f);
+	else
+		offset.set(0.0f, 0.0f, 0.0f);
+	puku->swimToCurPathNode(offset);
 	return FALSE;
 }
 
