@@ -2609,6 +2609,13 @@ void TDoroHamuKuri::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("dorokuri_model.bmd", 3);
 }
 
+// TODO: retail `bl`s THamuKuri::selectCapHolder here (map 0x506d0, 0xb0,
+// byte-exact and its only call site); we auto-inline it, which is the whole
+// 43.4%. This is the open "small global helper retail refuses to inline at
+// depth 1" class (codegen-tells.md research seed, same family as
+// TFireHamuKuri::changeTevColor in this TU): the depth-1 budget is a
+// statement count of 15 and no codegen-neutral spelling reaches it. A named
+// THamuKuriManager* local in the callee was measured: no effect.
 void TDoroHamuKuri::attackToMario()
 {
 	if (mSpine->getCurrentNerve() == &TNerveHamuKuriJitabata::theNerve()) {

@@ -1637,15 +1637,18 @@ bool TBossTelesa::slotFall()
 	mSlot->mPosition.y = y - 1.0f;
 
 	if (mSlot->mPosition.y < mRoulettes[0]->mPosition.y - 900.0f) {
-		if (isForceRestart())
+		bool restart = isForceRestart();
+		if (restart)
 			rouletteStart();
 	}
 
 	if (mSlot->mPosition.y < mRoulettes[0]->mPosition.y - 1100.0f)
 		return true;
 
-	mRoulettes[0]->unk150->setHitParams(280.0f, 100.0f, 280.0f, 100.0f);
-	mRoulettes[1]->unk150->setHitParams(280.0f, 100.0f, 280.0f, 100.0f);
+	TRouletteSw* sw0 = mRoulettes[0]->unk150;
+	sw0->setHitParams(280.0f, 100.0f, 280.0f, 100.0f);
+	TRouletteSw* sw1 = mRoulettes[1]->unk150;
+	sw1->setHitParams(280.0f, 100.0f, 280.0f, 100.0f);
 
 	return false;
 }
@@ -2628,6 +2631,12 @@ DEFINE_NERVE(TNerveBossTelesaFallDemo, TLiveActor)
 
 	if (boss->rouletteFall()) {
 		// The distance is never used: a leftover from the demo camera work.
+		// TODO: 12 bytes of frame and one extra copy-out. Retail's operator-
+		// builds the difference straight in the named local (one temp at
+		// 0x34, `bl sub` at depth 1); we copy the returned temp into it.
+		// Measured: `= boss->mPosition; toMario.sub(...)` and a bare
+		// expression statement both inline `sub` (90.2); a `const&` binding
+		// and direct-init are identical to this (95.1).
 		JGeometry::TVec3<f32> toMario = boss->mPosition - *gpMarioPos;
 
 		if (boss->slotFall()) {
