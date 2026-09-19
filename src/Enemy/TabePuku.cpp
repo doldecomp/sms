@@ -322,9 +322,7 @@ void TTabePuku::calcRootMatrix()
 
 	getModel()->setBaseScale(mScaling);
 
-	MtxPtr src = mtx;
-	// TODO: 99.9%. `src` lands in r29 where retail has r31.
-	getModel()->setBaseTRMtx(src);
+	getModel()->setBaseTRMtx(mtx);
 
 	emitEffects();
 }
