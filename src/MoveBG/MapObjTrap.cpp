@@ -96,7 +96,7 @@ void TLampTrapSpike::control()
 		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			getMActor()->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(SMSGetAnmFrameRate());
 		}
@@ -112,7 +112,7 @@ void TLampTrapSpike::control()
 		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			getMActor()->setBck("lamptrapspike_down");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.8f);
 		}
@@ -159,7 +159,7 @@ void TLampTrapSpike::control()
 		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			getMActor()->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.1f);
 		}
@@ -176,7 +176,7 @@ void TLampTrapSpike::control()
 		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			getMActor()->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+			ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(-SMSGetAnmFrameRate());
 		}
@@ -260,15 +260,6 @@ void TLampTrapIron::loadAfter()
 	unk138 = new TLampTrapIronHit(this, "鉄板あたり");
 }
 
-// TODO (closure batch 152): 99.9%, instruction-exact; frame 0x28 vs our 0x20,
-// so eight bytes of dead low region. The only inlined callees are
-// `THitActor::isActorType` (bool), `MActor::getBaseTRMtx` (pointer, already
-// worth +4 here) and the static `mFireTimerMax` read -- `TLiveActor::getModel`
-// is a real `bl`, so a level over it is worth nothing. No honest +8 carrier
-// found: the natural candidates are a `gpMarioParticleManager` fork (+4 by the
-// global rule, and Yoshi.cpp's `YoshiGetMarioParticleManager` is the precedent
-// for the shape) and an accessor pair on `unk13C`/`unk140`, neither of which
-// reaches 8 on its own.
 BOOL TLampTrapIron::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->isActorType(0x1000001)) {
@@ -276,8 +267,9 @@ BOOL TLampTrapIron::receiveMessage(THitActor* sender, u32 message)
 			--unk13C;
 			if (unk13C == 0) {
 				unk140 = mFireTimerMax;
-				gpMarioParticleManager->emitAndBindToMtxPtr(
-				    100, getModel()->getBaseTRMtx(), 0, this);
+				MtxPtr mtx = getModel()->getBaseTRMtx();
+				gpMarioParticleManager->emitAndBindToMtxPtr(100, mtx, 0,
+				                                           this);
 			}
 		}
 		return true;
