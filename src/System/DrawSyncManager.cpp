@@ -33,7 +33,11 @@ public:
 	void advanceReadIdx() { mReadIdx = getLoopIdx(mReadIdx + 1); }
 
 	// fabricated
-	void* read() { return mData[getLoopIdx(mReadIdx + 1)]; }
+	void* read()
+	{
+		int idx = getLoopIdx(mReadIdx + 1);
+		return mData[idx];
+	}
 
 	// fabricated
 	void push(void* value)
@@ -83,13 +87,6 @@ void TDrawSyncManager::drawSyncCallback(u16 param_1)
 		smInstance->drawSyncCallbackSub(param_1);
 }
 
-// TODO: 99.9%. Instruction-exact; frame 0x38 vs 0x30 and `msg` at 0x20 vs
-// 0x1c, i.e. retail has one 4-byte local declared *before* `msg` (named locals
-// grow down from the top, first-declared highest) plus the 4 bytes of
-// alignment that makes. Rejected (closure batch 83): hoisting the fifo count
-// to function scope as `u32 pending;` declared before `msg` -- it is
-// register-allocated and changes nothing; a named `TFifo*` cannot be it either
-// because retail re-reads 0x348(r30) at every use.
 void* TDrawSyncManager::threadFunc(void* param_1)
 {
 	TDrawSyncManager* self = (TDrawSyncManager*)param_1;
