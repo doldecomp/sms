@@ -611,6 +611,16 @@ void MSound::startSoundSetGrp(u32 param_1, const Vec* param_2, u32 param_3,
 		                                param_5, param_6, param_7);
 }
 
+// Binding level over a raw member read, worth +8 of low region in
+// MSound::setCategoryVOLs (batch 127).
+static inline JAIData* MSoundUnk0(const MSound* p)
+{
+	JAIData* v0 = p->unk0;
+	return v0;
+}
+
+static inline JAIData* MSoundUnk0D(const MSound* p) { return p->unk0; }
+
 void MSound::initSound()
 {
 	unkA8 |= 0x2;
@@ -636,12 +646,12 @@ void MSound::initSound()
 void MSound::pauseOn(bool param_1)
 {
 	if (param_1)
-		if (checkUnkA8(2))
+		if (gateCheck(MSD_SE_SY_PAUSE_ON))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_ON, 0,
 			                                             nullptr, 0);
 
 	for (u8 cat = 0; cat < 16; ++cat)
-		if (cat != 4 && MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
+		if (cat != 4 && MSoundUnk0D(MSGMSound)->mSeTable.mSoundMax[cat] != 0)
 			MSGMSound->setSeCategoryVolume(cat, 0);
 
 	if (param_1)
@@ -654,7 +664,7 @@ void MSound::pauseOff(u8 param_1)
 {
 	switch (param_1) {
 	case 0:
-		if (checkUnkA8(2))
+		if (gateCheck(MSD_SE_SY_PAUSE_OFF))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_OFF, 0,
 			                                             nullptr, 0);
 		// FALLTHROUGH!!!
@@ -672,12 +682,12 @@ void MSound::pauseOff(u8 param_1)
 		break;
 
 	case 1:
-		if (checkUnkA8(2))
+		if (gateCheck(MSD_SE_SY_DECIDE_COMMON))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(
 			    MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
 
 		for (u8 cat = 0; cat < 16; ++cat)
-			if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
+			if (MSoundUnk0D(MSGMSound)->mSeTable.mSoundMax[cat] != 0)
 				MSGMSound->setSeCategoryVolume(cat, 0);
 
 		MSBgm::setAllTracksVolume(0.0f, 15);
@@ -689,7 +699,7 @@ void MSound::demoModeIn(u16 param_1, bool param_2)
 {
 	for (u8 cat = 0; cat < 16; ++cat) {
 		if (param_1 >> cat & 1)
-			if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
+			if (MSoundUnk0D(MSGMSound)->mSeTable.mSoundMax[cat] != 0)
 				MSGMSound->setSeCategoryVolume(cat, 0);
 	}
 
@@ -714,21 +724,19 @@ void MSound::demoModeOut(bool param_1)
 
 void MSound::talkModeIn(bool param_1)
 {
-	if (param_1 && checkUnkA8(2)) {
+	if (param_1 && gateCheck(MSD_SE_SY_TALK_MODE_IN)) {
 		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_IN, 0,
 		                                             nullptr, 0);
 	}
 
-	for (u8 cat = 0; cat < 16; ++cat)
-		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0 && (0x44 >> cat) & 1)
-			MSGMSound->setSeCategoryVolume(cat, 0);
+	setCategoryVOLs(0x44, 0.0f);
 
 	MSBgm::setAllTracksVolume(0.6f, 30);
 }
 
 void MSound::talkModeOut()
 {
-	if (checkUnkA8(2)) {
+	if (gateCheck(MSD_SE_SY_TALK_MODE_OUT)) {
 		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0,
 		                                             nullptr, 0);
 	}
@@ -748,14 +756,6 @@ void MSound::setCategoryVOLsDefault(u16 mask)
 				    min<u8>(MSHandle::smSeCategory[cat].unk8 * 127.0f, 127));
 			}
 	}
-}
-
-// Binding level over a raw member read, worth +8 of low region in
-// MSound::setCategoryVOLs (batch 127).
-static inline JAIData* MSoundUnk0(const MSound* p)
-{
-	JAIData* v0 = p->unk0;
-	return v0;
 }
 
 void MSound::setCategoryVOLs(u16 param_1, f32 param_2)
@@ -849,17 +849,9 @@ void MSound::setSeExtParameter(JAISound* sound)
 	}
 }
 
-// Binding level worth +8 of low region, landing MSound::playTimer's frame at
-// 0x20 (batch 124).
-static inline bool MSoundCheckUnkA8(MSound* p, u32 i)
-{
-	bool unkA8 = p->checkUnkA8(i);
-	return unkA8;
-}
-
 void MSound::playTimer(u32 time)
 {
-	if (MSoundCheckUnkA8(this, 1)) {
+	if (gateCheck(MSD_SE_SY_TIMER)) {
 		MSoundSESystem::MSoundSE::startSoundActorInner(
 		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);
 
@@ -1034,7 +1026,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 		break;
 
 	case MSD_SE_MV10A_CRY_SHORT_01:
-		if (checkUnkA8(2))
+		if (gateCheck(MSD_SE_MV10A_CRY_SHORT_01))
 			MSoundSESystem::MSRandPlay::startSeRandPlay(
 			    MSD_SE_MV10A_CRY_SHORT_01, 0);
 		if (unk8C[0] != nullptr)
@@ -1204,7 +1196,7 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 {
 	if (param_2 > 3) {
 		JAISound* sound
-		    = !checkUnkA8(1)
+		    = !gateCheck(MSD_SE_EN_BEE_GROUP)
 		          ? nullptr
 		          : MSoundSESystem::MSoundSE::startSoundActor(
 		                MSD_SE_EN_BEE_GROUP, param_1, 0, nullptr, 0, 4);
@@ -1216,15 +1208,15 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 	}
 
 	if (param_2 > 2) {
-		if (checkUnkA8(1))
+		if (gateCheck(MSD_SE_EN_BEE_3))
 			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_3, param_1,
 			                                          0, nullptr, 0, 4);
 	} else if (param_2 == 2) {
-		if (checkUnkA8(1))
+		if (gateCheck(MSD_SE_EN_BEE_2))
 			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_2, param_1,
 			                                          0, nullptr, 0, 4);
 	} else if (param_2 == 1) {
-		if (checkUnkA8(1))
+		if (gateCheck(MSD_SE_EN_BEE_1))
 			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_1, param_1,
 			                                          0, nullptr, 0, 4);
 	}
