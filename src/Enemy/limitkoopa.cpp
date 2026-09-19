@@ -224,9 +224,14 @@ TLimitKoopaFlame::TLimitKoopaFlame(TLimitKoopa* owner)
 
 BOOL TLimitKoopaFlame::receiveMessage(THitActor*, u32 message)
 {
-	// TODO: the ROM compares the message signed (cmpwi), which a u32
-	// parameter cannot produce here.
-	return message == HIT_MESSAGE_SPRAYED_BY_WATER ? FALSE : TRUE;
+	// A signed `cmpwi` on a u32 parameter plus the `beq case; b default` pair
+	// is a one-arm switch, not an if/else (rules card, "Structure").
+	switch (message) {
+	case HIT_MESSAGE_SPRAYED_BY_WATER:
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 void TLimitKoopaFlame::attack_(THitActor* other)
@@ -355,14 +360,19 @@ void TLimitKoopa::init(TLiveManager* manager)
 
 	JUTNameTab* joints = getModel()->getModelData()->getJointName();
 	// TODO: the ROM walks every joint name here and does nothing with them.
+	// It reads the bound straight out of the JUTNameTab (`lhz r4, 8(r3)` =
+	// JUTNameTab::mNameNum), not through the ResNTAB. JUTNameTab has no
+	// public accessor for it and the class lives in a shared JSystem header,
+	// so `u16 getNameNum() const { return mNameNum; }` is reported rather
+	// than added here; it is the last structural difference in this body.
 	for (u16 i = 0; i < joints->getResNameTable()->mEntryNum; i++) { }
 
 	mAgoJntIndex  = joints->getIndex("ago");
 	mHeadJntIndex = joints->getIndex("head");
 	mNeckJntIndex = joints->getIndex("neck");
 
-	J3DJoint* neck = getModel()->getModelData()->getJointNodePointer(
-	    mHeadJntIndex);
+	J3DModelData* modelData = getModel()->getModelData();
+	J3DJoint* neck = modelData->getJointNodePointer(mHeadJntIndex);
 	neck->setCallBack(&KoopaNeckCallBack);
 	neck->setCallBackUserData(this);
 }
@@ -522,16 +532,6 @@ BOOL TLimitKoopa::receiveMessage(THitActor* sender, u32 message)
 	return TSpineEnemy::receiveMessage(sender, message);
 }
 
-// Binding level worth +8 of low region, landing
-// TLimitKoopa::calcRootMatrix's frame at 0x38 (batch 124).
-static inline f32 LimitkoopaGetBodyDirection(const TDirectionCalc* p)
-{
-	f32 value = p->get();
-	return value;
-}
-
-// TODO: 94.0%, instruction-identical apart from the TDirectionCalc `this`
-// setup described below and an 8-byte frame gap.
 void TLimitKoopa::calcRootMatrix()
 {
 	TLimitKoopaParams* params = getParam();
@@ -544,7 +544,7 @@ void TLimitKoopa::calcRootMatrix()
 	// original; TDirectionCalc lives in the shared KoopaJr.hpp, so the
 	// declaration is left alone here.
 	mRotation.y
-	    = TDirectionCalc::r2d(LimitkoopaGetBodyDirection(&mBodyDirection));
+	    = TDirectionCalc::r2d(mBodyDirection.get());
 	TSpineEnemy::calcRootMatrix();
 }
 
@@ -711,7 +711,14 @@ void TLimitKoopa::updateTimers()
 // UNUSED (0xc).
 TLimitKoopaParams* TLimitKoopa::getParam() const
 {
-	return (TLimitKoopaParams*)((TEnemyManager*)mManager)->getSaveParam();
+	// The named manager is one inline level: without it
+	// TEnemyManager::getSaveParam() expands one level deeper at every caller
+	// of getParam(), and the three TNerveLimitKoopa*::execute bodies plus
+	// TLimitKoopa::calcRootMatrix miss. Spelling it
+	// `(TLimitKoopaParams*)getSaveParam()` over TSpineEnemy's accessor
+	// instead is one level too many (whole unit 87.90 -> 85.23).
+	TEnemyManager* manager = (TEnemyManager*)mManager;
+	return (TLimitKoopaParams*)manager->getSaveParam();
 }
 
 // ---------------------------------------------------------------------------
