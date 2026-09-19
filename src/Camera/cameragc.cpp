@@ -115,16 +115,14 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	int stage = gpMarDirector->getCurrentStage();
-	// TODO: two unknowns keep this constructor off an exact match.
-	// (1) The ROM leaves the stage test unmerged (`cmplwi 0; beq body;
-	//     cmplwi 1; bne end`) where MWCC folds ours into `cmplwi 1; bgt`.
-	//     Ruled out: repeating `getCurrentStage()` per term (CSEd and still
-	//     folded), a two-label `switch (stage) { case 0: case 1: }` (builds a
-	//     range tree), nesting the map test, and `s16`/`u8` stage types.
-	// (2) Frame 0x40 against the ROM's 0x58 -- 24 bytes of inline-expansion
-	//     temporaries below the `this` copy at 0x28 (ours at 0x14).
-	if (gpMarDirector->getCurrentMap() == 58 && (stage == 0 || stage == 1)) {
+	u32 stage = gpMarDirector->getCurrentStage();
+	// TODO: frame 0x40 against the ROM's 0x58 -- 24 bytes of inline-expansion
+	// temporaries below the `this` copy at 0x28 (ours at 0x14) -- keeps this
+	// constructor off an exact match.  The stage test is settled: spelling the
+	// first term `!stage` rather than `stage == 0` stops MWCC folding the pair
+	// into the range test `cmplwi 1; bgt`, and an unsigned `stage` gives the
+	// ROM's `cmplwi` rather than `cmpwi`.
+	if (gpMarDirector->getCurrentMap() == 58 && (!stage || stage == 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
 		switch (stage) {
