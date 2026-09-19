@@ -1271,6 +1271,18 @@ DEFINE_NERVE(TNerveCannonDamageDemo, TLiveActor)
 	return FALSE;
 }
 
+static inline MSound* CannonObjectSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
+static inline J3DFrameCtrl* CannonObjectFrameCtrl(TCannon* cannon)
+{
+	J3DFrameCtrl* ctrl = cannon->getMActor()->getFrameCtrl(0);
+	return ctrl;
+}
+
 DEFINE_NERVE(TNerveCannonObject, TLiveActor)
 {
 	TCannon* cannon = (TCannon*)spine->getBody();
@@ -1278,7 +1290,7 @@ DEFINE_NERVE(TNerveCannonObject, TLiveActor)
 	if (spine->getTime() == 0) {
 		if (!cannon->isBckAnm(4)) {
 			cannon->setBckAnm(4);
-			J3DFrameCtrl* ctrl = cannon->getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = CannonObjectFrameCtrl(cannon);
 			ctrl->setFrame(ctrl->getEnd());
 		}
 		if (cannon->mChorobei)
@@ -1287,7 +1299,7 @@ DEFINE_NERVE(TNerveCannonObject, TLiveActor)
 
 	if (cannon->isBckAnm(4)
 	    && cannon->getMActor()->getFrameCtrl(0)->checkPass(60.0f)
-	    && gpMSound->gateCheck(MSD_SE_EN_CANNON_LAND))
+	    && CannonObjectSound()->gateCheck(MSD_SE_EN_CANNON_LAND))
 		MSoundSESystem::MSoundSE::startSoundActor(
 		    MSD_SE_EN_CANNON_LAND, &cannon->mPosition, 0, nullptr, 0, 4);
 
