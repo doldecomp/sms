@@ -348,9 +348,19 @@ void TKoopaJr::init(TLiveManager* manager)
 	mSpine->initWith(&TNerveKoopaJrWait::theNerve());
 	mKillerManager = JDrama::TNameRefGen::search<TEnemyManager>(
 	    "バスタブキラーマネージャー");
+	// Two discarded `getActiveObjNum()` calls, as in
+	// TKoopaJrSubmarineManager::load/loadAfter and
+	// TBathtubKillerManager::load: the ROM reads the manager's params
+	// pointer and compares it against null with no branch and no use of the
+	// result, which is all that survives of the inline's leading `if
+	// (!unk38)` guard once the value is thrown away.
+	mKillerManager->getActiveObjNum();
 	if (mSubmarineManager == nullptr)
 		mSubmarineManager = JDrama::TNameRefGen::search<TEnemyManager>(
 		    "クッパジュニアサブマリンマネージャー");
+	// TODO: instruction-exact with both calls; the frame is 8 over retail's
+	// 0xe0 (each discarded expansion is +0x20, retail wants +0x38).
+	mSubmarineManager->getActiveObjNum();
 	f32 scale = getSaveParams()->mSLKoopaJrScale.get();
 	mScaling.set(scale, scale, scale);
 	resetKoopaJr();
