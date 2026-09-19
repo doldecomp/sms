@@ -3080,10 +3080,36 @@ dem MMIO-Write (analog zur bereits etablierten `trash[N]`-Erkenntnis,
 dass MWCC Feld-Zugriffsreihenfolgen je nach Statement-Struktur anders
 plant).
 
-**Session-Gesamtstand nach Runde 44: 398 tatsächlich verifizierte
-Funktionen** (396 aus Runde 1–43 plus 2 neue in Runde 44:
-`FifoSetFogRangeAdj`, `FifoSetFog`) in 55 Commits. Funktionszahl:
-8983 → **8985** (**+2**). DOL SHA1 bleibt `OK`.
+**Zusätzlicher Fund (`TModelWaterManager::calcWorldMinMax`, 360 Bytes,
+war 10,37 % Match, keine Stub-Funktion sondern bereits plausible,
+aber subtil falsche Logik)**: vier echte Bugs durch direkten `dtk elf
+disasm`-Vergleich gefunden und behoben:
+1. `unk5D70`/`unk5D7C` wurden aus einem gecachten `marioPos`-Local
+   zugewiesen; Retail ruft `SMS_GetMarioPos()` (liefert eine
+   Referenz) für jedes Ziel SEPARAT auf (passend zum doppelten
+   `gpMarioPos`-Dereferenzieren in Retails Disasm).
+2. Bestehender Tippfehler im Dekompilat: `fVar789.x/y/z += 1.0f`
+   statt `fVar123.x/y/z += 1.0f` (Ergebnis der vorherigen `-1.0f`
+   wurde versehentlich auf der falschen Variable rückgängig gemacht).
+3. `TVec3::setMax()`/`setMin()`-Methodenaufrufe auf Stack-Structs
+   durch rohe Skalar-Locals (`maxX`/`maxY`/`maxZ`/`minX`/`minY`/
+   `minZ`) ersetzt — Retail rechnet rein in Gleitkomma-Registern
+   OHNE Stackframe, während die Struct-Methodenaufrufe bei uns einen
+   0x38-Byte-Frame erzwangen.
+4. Exakte Vergleichsrichtung Retails nachgebildet (striktes `if
+   (max > kandidat) max = kandidat;` / `if (min < kandidat) min =
+   kandidat;` statt nicht-striktem `<=`/`>=`, das ein zusätzliches
+   `cror+bne` statt eines einzelnen `ble`/`bge` erzeugte); Schleife
+   beginnt bei Index 1 statt 0 (Index 0 diente bereits der
+   Initialisierung, erneutes Verarbeiten wäre redundant).
+
+Byte-exakter Match nach allen vier Korrekturen, per `dtk elf disasm`
+bestätigt.
+
+**Session-Gesamtstand nach Runde 44: 399 tatsächlich verifizierte
+Funktionen** (396 aus Runde 1–43 plus 3 neue in Runde 44:
+`FifoSetFogRangeAdj`, `FifoSetFog`, `calcWorldMinMax`) in 57 Commits.
+Funktionszahl: 8983 → **8986** (**+3**). DOL SHA1 bleibt `OK`.
 
 
 
