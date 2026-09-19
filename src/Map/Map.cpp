@@ -312,8 +312,9 @@ bool TMap::isTouchedOneWallAndMoveXZ(f32* x, f32 y, f32* z, f32 radius) const
 
 	int r = mCollisionData->checkWalls(&record);
 	if (r != 0 ? true : false) {
-		*x = record.mCenter.x;
-		*z = record.mCenter.z;
+		const JGeometry::TVec3<f32>& center = record.mCenter;
+		*x = center.x;
+		*z = center.z;
 		return true;
 	} else {
 		return false;
