@@ -748,6 +748,15 @@ void TLeanMirror::release()
 
 static s32 startCameraShakeSE(u32 param_1, u32 param_2) { return 0; }
 
+// TODO: instruction-exact, but the frame is 0x80 against retail's 0x98, i.e.
+// 24 bytes of stack objects are missing, and this body is also the
+// whole remaining loss of TLeanMirror::control(): retail `bl`s this from the
+// STATE_GO_TARGET arm and MWCC inlines it here, because a plain method is
+// inlined at depth 1 up to 14 statements. Measured exactly: three extra
+// zero-codegen statements take control() from 29.3% to 98.6% and cost this
+// body nothing (two do not), so retail's controlGoTarget has three statements
+// this reconstruction is missing. Do not pad -- find them; the 24-byte frame
+// gap is the second measurement of the same three.
 void TLeanMirror::controlGoTarget()
 {
 	calcCurrentMtx(getModel()->getAnmMtx(0));
@@ -846,10 +855,10 @@ void TLeanMirror::controlShake()
 	}
 }
 
-// TODO: 27.3%. Retail calls controlGoTarget out of line; ours still inlines
-// it, because our calcCurrentMtx compiles to 0x84 where the map records
-// 0x100, leaving controlGoTarget under MWCC's per-callee budget. The switch's
-// comparison tree also pivots on 2 rather than retail's 3.
+// TODO: 29.3%. The switch tree is now exact -- retail pivots on 3 because the
+// switch has a fourth, empty `case STATE_DONE: break;` arm, which makes the
+// sorted case set {1,2,3,4} and the median 3. Everything left is
+// controlGoTarget being inlined here; see its own TODO for the measurement.
 void TLeanMirror::control()
 {
 	TMapObjBase::control();
@@ -891,6 +900,9 @@ void TLeanMirror::control()
 
 			mState = STATE_DONE;
 		}
+		break;
+
+	case STATE_DONE:
 		break;
 	}
 }
