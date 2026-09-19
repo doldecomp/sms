@@ -592,6 +592,35 @@ und wurden nicht weiter isoliert.
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach siebzehnter Iterationsrunde (JPAField::JPAMagnetField::affect)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,77 % (1.499.412 / 3.590.088) | +320 Bytes |
+| Funktionen matched | 8.626 / 12.881 | +1 |
+
+Ein neuer 100-%-Match: `JSystem/JParticle/JPAField.cpp::
+JPAMagnetField::affect` (320 Bytes, `char trash[8]`, 8-Byte-Frame-Gap
+ohne Locals).
+
+Zwei weitere Feld-`affect`-Funktionen geprüft, beide Nonmatching:
+
+- `JPADragField::affect` (288 Bytes, 99,85 % clean) — Frame stimmt
+  nach `char trash[8]` exakt, verbleibender 4-Byte-Slot-Versatz bei
+  drei getesteten Positionen (`trash[8]`/`[4]` am Funktionsanfang,
+  `trash[4]` nach `rnd`) identisch bei 99,97 % — dieselbe unlösbare
+  Kategorie wie `drawRevivalTexStamp`. Zurückgesetzt auf die saubere
+  99,85-%-Fassung.
+- `JPAVortexField::affect` (360 Bytes, 99,22 % clean) — r30/r3-
+  Registervertauschung plus f28/f29-FP-Rotation, nicht untersucht
+  (dieselbe Kategorie wie `effectObj::moveObject`).
+- `JPARandomField::affect` (320 Bytes, 99,09 % clean) — 16-Byte-
+  Frame-Gap plus dreifach wiederholtes FP-Rotationsmuster
+  (f0/f1/f2/f3) in den drei `get_ufloat_1() - 0.5f`-Aufrufen;
+  `char trash[0x10]` bewegt nur auf 99,18 %, zurückgesetzt.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -881,6 +910,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `Enemy/coasterkiller.cpp`: `TCoasterKillerManager::loadAfter` —
   **100 %** (52 Bytes, `char trash[0x18]`).
+
+- `JSystem/JParticle/JPAField.cpp`: `JPAMagnetField::affect` —
+  **100 %** (320 Bytes, `char trash[8]`). `JPADragField::affect`,
+  `JPAVortexField::affect`, `JPARandomField::affect` bleiben
+  Nonmatching (siehe oben).
 
 ## Nächster GMSJ01-Kandidat
 
