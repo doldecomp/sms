@@ -671,15 +671,22 @@ void TBiancoGateKeeper::emitParticles()
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region per site.
+static inline MActor* GateKeeperMActor(const TBiancoGateKeeper* p)
+{
+	MActor* actor = p->mMActor;
+	return actor;
+}
+
 void TBiancoGateKeeper::controlCollision()
 {
-	if (mMActor->checkCurBckFromIndex(0xB)
-	    || mMActor->checkCurBckFromIndex(7)) {
+	if (GateKeeperMActor(this)->checkCurBckFromIndex(0xB)
+	    || GateKeeperMActor(this)->checkCurBckFromIndex(7)) {
 		mHead->mVulnerable = TRUE;
 		mVulnerable        = FALSE;
 		return;
 	}
-	if (mMActor->checkCurBckFromIndex(0x12)) {
+	if (GateKeeperMActor(this)->checkCurBckFromIndex(0x12)) {
 		mHead->mVulnerable = TRUE;
 		mVulnerable        = FALSE;
 		return;
