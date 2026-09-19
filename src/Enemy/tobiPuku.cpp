@@ -313,26 +313,26 @@ void TMoePukuLaunchPad::launch()
 }
 
 // TODO: 0% of 180 bytes despite initialising the right fields. The original
-// default-constructs mLandPos and mLandDelta through __construct_array with a
+// default-constructs mLand[0] and mLand[1] through __construct_array with a
 // count of 2, and keeps `this` in a stack slot across the base call; ours
 // inlines both TVec3 constructors instead. The field set and their values are
 // confirmed by the assembly, so only the construction form is wrong.
 TTobiPuku::TTobiPuku(const char* name)
     : TWalkerEnemy(name)
+    , unk194(0)
+    , mBoundCount(0)
+    , unk19C(nullptr)
+    , unk1AC(1)
+    , unk1AD(1)
+    , unk1AE(0)
+    , unk1B0(0.0f)
+    , mLaunchAngle(0.0f)
+    , mSwimBaseY(0.0f)
+    , mFlyVelocityY(0.0f)
+    , mReturnPitchStep(0.0f)
+    , unk1EC(0.0f)
 {
-	unk194   = 0;
-	mBoundCount = 0;
-	unk19C   = nullptr;
-	unk1AC   = 1;
-	unk1AD   = 1;
-	unk1AE   = 0;
-	unk1B0   = 0.0f;
-	mLaunchAngle = 0.0f;
-	mSwimBaseY      = 0.0f;
-	mFlyVelocityY   = 0.0f;
-	mReturnPitchStep = 0.0f;
-	unk1EC          = 0.0f;
-	gpCurTobiPuku   = nullptr;
+	gpCurTobiPuku = nullptr;
 }
 
 void TTobiPuku::init(TLiveManager* manager)
@@ -351,8 +351,8 @@ void TTobiPuku::reset()
 	mSpine->initWith(&TNerveTobiPukuGenerate::theNerve());
 	unk1AD          = 1;
 	unk194          = 0;
-	mLandDelta      = getPosition();
-	mLandPos        = mLandDelta;
+	mLand[1]      = getPosition();
+	mLand[0]        = mLand[1];
 	mSwimBaseY      = getPosition().y;
 }
 
@@ -1163,7 +1163,7 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 			puku->unk1AE = 0;
 		}
 
-		puku->mLandPos = puku->mPosition;
+		puku->mLand[0] = puku->mPosition;
 		puku->setFallEndLandAnm();
 		puku->mRotation.x = 0.0f;
 		return FALSE;
@@ -1171,20 +1171,20 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 
 	if (puku->isFallEndLandBck()) {
 		if (spine->getTime() == 1) {
-			puku->mLandDelta.x = puku->mPosition.x - puku->mLandPos.x;
-			puku->mLandDelta.y = puku->mPosition.y - puku->mLandPos.y;
-			puku->mLandDelta.z = puku->mPosition.z - puku->mLandPos.z;
+			puku->mLand[1].x = puku->mPosition.x - puku->mLand[0].x;
+			puku->mLand[1].y = puku->mPosition.y - puku->mLand[0].y;
+			puku->mLand[1].z = puku->mPosition.z - puku->mLand[0].z;
 		}
 
 		int time = spine->getTime();
 		if (time < 20) {
 			f32 t             = 0.05f * (f32)time;
-			puku->mPosition.x = puku->mLandPos.x;
-			puku->mPosition.y = puku->mLandPos.y;
-			puku->mPosition.z = puku->mLandPos.z;
-			puku->mPosition.x += puku->mLandDelta.x * t;
-			puku->mPosition.y += puku->mLandDelta.y * t;
-			puku->mPosition.z += puku->mLandDelta.z * t;
+			puku->mPosition.x = puku->mLand[0].x;
+			puku->mPosition.y = puku->mLand[0].y;
+			puku->mPosition.z = puku->mLand[0].z;
+			puku->mPosition.x += puku->mLand[1].x * t;
+			puku->mPosition.y += puku->mLand[1].y * t;
+			puku->mPosition.z += puku->mLand[1].z * t;
 		}
 
 		if (puku->checkCurAnmEnd(0)) {

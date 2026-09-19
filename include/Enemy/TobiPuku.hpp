@@ -126,8 +126,9 @@ public:
 	// 0x1B4 is a scalar, not a vector: the Land nerve uses 0x1B8 onwards as
 	// its own landing position and delta.
 	/* 0x1B4 */ f32 mLaunchAngle;
-	/* 0x1B8 */ JGeometry::TVec3<f32> mLandPos;
-	/* 0x1C4 */ JGeometry::TVec3<f32> mLandDelta;
+	// Retail's constructor default-constructs these two through
+	// __construct_array with a count of 2, so they are one array member.
+	/* 0x1B8 */ JGeometry::TVec3<f32> mLand[2];
 	/* 0x1D0 */ JGeometry::TVec3<f32> mLaunchVelocity;
 	/* 0x1DC */ TTobiPukuLaunchPad* mLaunchPad;
 	/* 0x1E0 */ f32 mSwimBaseY;
