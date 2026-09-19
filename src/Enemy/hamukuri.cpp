@@ -1778,7 +1778,7 @@ void TDoroHaneKuri::attackToMario()
 			mSpine->pushNerve(&TNerveDoroHaneRise::theNerve());
 			onHaveCap();
 			MtxPtr mtx = HamukuriGetModel(mMActor)->getAnmMtx(unk1AC);
-			unk200.set(mtx[3][0], mtx[3][1], mtx[3][2]);
+			unk200.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 			gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &unk200, 0,
 			                                            nullptr);
 		}
