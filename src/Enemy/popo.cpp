@@ -114,12 +114,12 @@ TSpineEnemy* TPopoManager::createEnemyInstance() { return new TPopo("ポポ"); }
 void TPopoManager::initSetEnemies()
 {
 	TGraphWeb* web = getObj(0)->unk124->getGraph();
-	// TODO: the ROM keeps a `cmpwi r3, 0` on isDummy()'s result with no
-	// branch after it, i.e. an `if` whose body generates nothing.  Ruled
-	// out: `if (web && web->isDummy()) { }` and an unused `bool` local --
-	// MWCC deletes the compare with the body in both.
-	if (web)
-		web->isDummy();
+	// Nothing left to set up here: the ROM's dead `cmpwi r3, 0` on
+	// isDummy()'s result is the trailing guard's own branch, which lands on
+	// the epilogue and so is dropped as a fall-through.  (`if (web &&
+	// web->isDummy()) return;` is byte-identical.)
+	if (!web || web->isDummy())
+		return;
 }
 
 void TPopoManager::createModelData()
