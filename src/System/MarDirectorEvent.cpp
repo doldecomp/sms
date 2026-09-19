@@ -159,7 +159,23 @@ void TMarDirector::fireGetStar(TShine* shine)
 	                    nullptr, JDrama::TFlagT<u16>(0));
 }
 
-void TMarDirector::fireRideYoshi(TYoshi*) { }
+// TODO: 99.8%, instruction-exact; the only residue is a 16-byte frame gap
+// (0x28 vs 0x18), so retail has two 4-byte temporaries we are missing.
+void TMarDirector::fireRideYoshi(TYoshi* yoshi)
+{
+	if (!yoshi)
+		return;
+
+	if (gpApplication.mCurrArea.unk0 != 1)
+		return;
+
+	if (TFlagManager::smInstance->getBool(0x1038F))
+		return;
+
+	TFlagManager::smInstance->setBool(true, 0x1038F);
+	unk4C |= 0x200;
+	unk261 = 5;
+}
 
 void TMarDirector::fireDefeatEnemy(TSpineEnemy*) { }
 
@@ -174,12 +190,51 @@ void TMarDirector::movement()
 	}
 }
 
-#pragma dont_inline on
+// TODO: 74%. Control flow, the stage/episode split and the tail switch are
+// instruction-exact; every remaining difference is the known TFlagT<u16>
+// by-value copy documented in JSystem/JDrama/JDRFlag.hpp -- retail builds the
+// TGameSequence default flag with an inlined ctor plus an out-of-line copy
+// constructor into the by-value parameter slot (twice), where MWCC here
+// constructs straight into the slot with the converting ctor. That accounts
+// for the 0x10 frame gap and the register-allocation shift as well.
 void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
 {
-	// TODO: wtf is happening in this function it's cursed
+	if (checkUnk4CFlag(0x2))
+		return;
+
+	TGameSequence next;
+	if (param_1 >= 0x100) {
+		next.unk0 = (param_1 >> 8) - 1;
+		next.unk1 = param_1;
+	} else {
+		next.unk0 = param_1;
+		next.unk1 = 0xFF;
+	}
+
+	gpApplication.setNextArea(next);
+
+	const TGameSequence& curr = gpApplication.mCurrArea;
+	if (param_2 != nullptr) {
+		onUnk4CFlag(0x4);
+		unk250 = param_2;
+	} else {
+		u8 cur = curr.getStage();
+		if ((cur == 1 && next.getStage() == 5)
+		    || (cur == 1 && next.getStage() == 6)
+		    || (cur == 1 && next.getStage() == 8)) {
+			onUnk4CFlag(0x8);
+		} else {
+			onUnk4CFlag(0x2);
+		}
+	}
+
+	switch (next.getStage()) {
+	case 0x37:
+		onUnk4CFlag(0x100);
+		gpApplication.setMovie(6);
+		break;
+	}
 }
-#pragma dont_inline off
 
 void TMarDirector::fireStageEvent(TMapObjBase*) { }
 
