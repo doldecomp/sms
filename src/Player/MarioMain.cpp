@@ -260,6 +260,7 @@ void TMario::drawSyncCallback(u16)
 	}
 
 	u32 local_1c;
+	char trash[4];
 	GXPeekARGB(mMarioScreenPos.x, mMarioScreenPos.y, &local_1c);
 	if ((local_1c & 0xff000000) == 0x10000000) {
 		offFlag(MARIO_FLAG_OCCLUDED);
