@@ -375,6 +375,7 @@
   "System/TimeRec.cpp",
   "System/ZBufferCatch.cpp",
   "System/marerr.cpp",
+  "System/FlagManager.cpp",
   "THPPlayer/THPDraw.c",
   "THPPlayer/THPPlayer.c",
   "THPPlayer/THPRead.c",
