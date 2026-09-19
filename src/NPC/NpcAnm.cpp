@@ -551,7 +551,7 @@ void TBaseNPC::npcTalkOut()
 			}
 		}
 
-		offLiveFlag(LIVE_FLAG_UNK8000);
+		offLiveFlag(LIVE_FLAG_UNK80000);
 		changeNerveFromTalk_();
 		if (NpcAnmThrowCtrl(this) == nullptr && NpcAnmActorType(this) == 0x4000006)
 			requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_ON);
