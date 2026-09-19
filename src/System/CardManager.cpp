@@ -47,13 +47,19 @@ void TCardSector::clearData()
 //     mWriteCount = write_count;
 //     mCheckSum   = CalcCheckSum(this, 0x1FFC);
 // which compiles to exactly the map's 0x50 (CalcCheckSum expands inside it)
-// and gives cmdLoop's expansion retail's `bl CalcCheckSum` (96.70 -> 99.21).
+// and gives cmdLoop's expansion retail's `bl CalcCheckSum` (96.70 -> 99.21),
+// closing the unit's only data defect (the cmdLoop jump table, 56.41 -> 100).
 // It is not in place because MWCC then also calls CalcCheckSum in
 // writeOptionBlock_ (100 -> 84.25), writeBlock_ (99.93 -> 85.84), readBlock_
-// (99.13 -> 88.31) and filledInitData_ (91.90 -> 78.86), where retail spells
-// the loop out. One body, two expansions: the per-call-site inline split of
-// docs/catalog/codegen-tells.md, with no lever found. The loop below is the
-// four-site shape and is kept until that split can be steered.
+// (99.13 -> 88.31) and filledInitData_ (96.43 -> 82.22), where retail expands
+// the loop instead. The split is a depth one: cmdLoop reaches setCheckSum
+// through an inlined readOptionBlock_, so CalcCheckSum sits at depth 3 (budget
+// 6) there and at depth 2 (budget 9) in the other four, which means our
+// CalcCheckSum body costs more than 9 statements. Shaving the pointer bump out
+// of the loop increment (`ptr[i]`) is one statement cheaper but breaks
+// CalcCheckSum itself (100 -> 24.94) without flipping either decision. The
+// loop below is the four-site shape and is kept until the cost can be cut
+// without changing CalcCheckSum's own codegen.
 void TCardSector::setCheckSum(u32 write_count)
 {
 	mWriteCount = write_count;
