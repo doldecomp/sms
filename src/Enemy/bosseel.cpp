@@ -841,7 +841,8 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 
 			if (mHitPoints == 1) {
 				mColor.a = 0;
-				MTXCopy(mSharedParts->getConnectedMtx(), mDetachedMtx);
+				MtxPtr detached = mDetachedMtx;
+				MTXCopy(mSharedParts->getConnectedMtx(), detached);
 				if (mToothType == 1) {
 					SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEATH_COMEOFF,
 					                                &mPosition, 0, nullptr, 0,
