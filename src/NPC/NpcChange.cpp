@@ -249,7 +249,7 @@ void TBaseNPC::behaveToBeTaken_(THitActor* param_1)
 	offLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000 | LIVE_FLAG_UNK400000);
 	if (mActorType == 0x4000018) {
 		peachParasolOut_();
-		mBalloonCtrl->setNextMessage(0xE004F, 0x2EE);
+		mBalloonCtrl->setNextMessage(0x52, 0x2EE);
 	}
 
 	mSpine->setNext(&TNerveNPCWaitContinue::theNerve());
@@ -586,7 +586,9 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 {
 	JGeometry::TVec3<f32> pos = unk194;
 
-	bool cVar8 = gpPollution->isPolluted(pos.x, pos.y, pos.z);
+	f32 y      = pos.y;
+	f32 z      = pos.z;
+	bool cVar8 = gpPollution->isPolluted(pos.x, y, z);
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
 	            | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000
 	            | LIVE_FLAG_UNK40000 | LIVE_FLAG_UNK400000
@@ -613,7 +615,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
 		           | LIVE_FLAG_SINK_BOTTOM);
 		unk1C4 = mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
-		    pos.x, pos.y + getHeadHeight(), pos.z, &mGroundPlane);
+		    pos.x, y + getHeadHeight(), z, &mGroundPlane);
 		pos.y = unk1C4 - mIndividualParams->mSinkHeight.get();
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {
