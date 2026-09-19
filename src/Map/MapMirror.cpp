@@ -158,6 +158,10 @@ TMirrorCamera::TMirrorCamera(const char* name)
 	unk98.zero();
 }
 
+// TODO: TMirrorModel::initPlaneInfo reaches 100% (frame -0xf0) once J3DModelData
+// gains a getVtxAttrFmtList() wrapper beside the existing getVtxPosArray() and
+// getVtxNormArray() ones; the getVertexData() reference temporary is 0xc of
+// frame per expansion here and a TU-local wrapper around it costs 8 more.
 static u8 getVertexFormat(const J3DModelData* model_data, GXAttr attr)
 {
 	const GXVtxAttrFmtList* list
@@ -185,16 +189,14 @@ void TMirrorModel::initPlaneInfo()
 	if (posComp == GX_S16) {
 		S16Vec* v = (S16Vec*)unk4->getModel()
 		                ->getModelData()
-		                ->getVertexData()
-		                .getVtxPosArray();
+		                ->getVtxPosArray();
 		unkC.x = v->x;
 		unkC.y = v->y;
 		unkC.z = v->z;
 	} else {
 		Vec* v = (Vec*)unk4->getModel()
 		             ->getModelData()
-		             ->getVertexData()
-		             .getVtxPosArray();
+		                ->getVtxPosArray();
 		unkC.x = v->x;
 		unkC.y = v->y;
 		unkC.z = v->z;
@@ -205,8 +207,7 @@ void TMirrorModel::initPlaneInfo()
 	if (normComp == GX_S16) {
 		S16Vec* v = (S16Vec*)unk4->getModel()
 		                ->getModelData()
-		                ->getVertexData()
-		                .getVtxNormArray();
+		                ->getVtxNormArray();
 		// BUG: probably meant to do a float division here?
 		unk18.x = v->x / 16384;
 		unk18.y = v->y / 16384;
@@ -214,8 +215,7 @@ void TMirrorModel::initPlaneInfo()
 	} else if (normComp == GX_F32) {
 		Vec* v = (Vec*)unk4->getModel()
 		             ->getModelData()
-		             ->getVertexData()
-		             .getVtxNormArray();
+		                ->getVtxNormArray();
 		unk18.x = v->x;
 		unk18.y = v->y;
 		unk18.z = v->z;
@@ -295,13 +295,13 @@ TMirrorModel::TMirrorModel()
 	unk18.zero();
 }
 
+// TODO: frame size is exact but local_18 sits 4 bytes above retail's slot, so
+// retail reserves 4 more bytes above it (the "every temporary 4 bytes low"
+// family).
 void TMirrorModelObj::setPlane()
 {
 	MtxPtr mtx = unk4->getModel()->getAnmMtx(0);
-	Vec* v     = (Vec*)unk4->getModel()
-	             ->getModelData()
-	             ->getVertexData()
-	             .getVtxPosArray();
+	Vec* v     = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 
 	JGeometry::TVec3<f32> local_18;
 	local_18.x = v->x;
