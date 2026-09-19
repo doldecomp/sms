@@ -2579,6 +2579,72 @@ tatsächlich verifizierte Funktionen** (77 aus Runde 1–36 plus 284
 neue in Runde 37) in 37 Commits. Funktionszahl: 8663 → **8948**
 (**+285**). DOL SHA1 bleibt bei jedem Schritt `OK`.
 
+### Nach achtunddreißigster Iterationsrunde (Korrektur `walkBehavior`-Größenschätzung, 3 weitere bestätigte Fälle der resistenten "interner Slot-Versatz"-Kategorie, ShadowUtil.cpp-Scan)
+
+**Korrektur einer Fehleinschätzung aus Runde 36**: `THaneHamuKuri::
+walkBehavior(int, f32)` wurde dort auf "~150 Instruktionen" geschätzt.
+Vollständige Neu-Disassemblierung von `obj/Enemy/hamukuri.o` zeigt: die
+Funktion ist tatsächlich **0x8A0 Bytes (~230 Instruktionen, 0x190-Byte-
+Stackframe)**, mit komplexer Nerve-Machine-Interaktion (`TNerveWalker-
+GraphWander`, `TNerveWalkerAttack`, `TNerveHaneHamuKuriUpWait`,
+`TNerveDoroHanePrepareAttack` — vier verschiedene statische Nerve-
+Instanzen mit `__register_global_object`-Aufrufen), Partikel-/Sound-/
+Rumble-Feedback und geschachtelten Bedingungen. Eine von-Hand-
+geschriebene Neuimplementierung mit realistischer Aussicht auf
+Byte-Genauigkeit ist für eine einzelne Sitzung nicht angemessen
+(Risiko einer plausibel aussehenden, aber MWCC-Register-Scheduling-
+inkompatiblen Fehlimplementierung). Zurückgestellt.
+
+**Drei weitere bestätigte Fälle der "interner Slot-Versatz"-Kategorie
+(resistent gegen `char trash[N]`)**, Nachprüfung mit gezielten
+Trash-Platzierungs-Experimenten:
+- `THaneHamuKuri::bind()` (Stackframe-Lücke ist additiv, +8 Bytes):
+  `char trash[8]` direkt nach der `local_18`-Deklaration behebt den
+  Stackframe (64→72, korrekt) und schiebt `local_18` an die richtige
+  Adresse, aber ein zweiter, compilergenerierter RVO-Temporary für
+  `local_18 - mPosition` bleibt an einem um 12 Byte falschen Offset
+  (0x1c statt 0x10) — fünf verschiedene Zweit-`trash`-Platzierungen
+  und -Größen probiert, keine traf die richtige Kombination (entweder
+  ndiff stieg wieder oder der Frame wuchs über das Ziel hinaus).
+  Sauber zurückgesetzt.
+- `THaneHamuKuri::isReachedToGoal() const` (SUBTRAKTIVE Lücke: unser
+  Frame ist 8 Byte GRÖSSER als Retail, 0x28 vs. 0x20) — Ursache ist
+  eine andere Adress-Berechnungsreihenfolge für `unk104.getPoint()`
+  (Retail berechnet `this+0x104` vorab in einer separaten Instruktion,
+  die im Else-Zweig weiterverwendet wird; unser Code lädt stattdessen
+  direkt `this+0x108`). Echte Restrukturierung auf Quellebene nötig,
+  kein Kandidat für `trash[N]`.
+- `TMBindShadowBody::TMBindShadowBody(THitActor*, J3DModel*, f32)`
+  (additiv, +16 Bytes): `char trash[16]` nach der öffnenden Klammer
+  behebt den Stackframe (136→152) und die meisten Slots, aber sieben
+  Zeilen bleiben um konstant 0x14=20 Byte versetzt (vermutlich ein
+  Konstruktor-Temporary für `new TMBindShadowParts(...)` im zweiten
+  `for`-Loop). Zusätzliches `trash2[20]` vor dem Loop überkompensierte
+  (Frame wuchs auf 176 statt 152). Zurückgesetzt.
+
+**Neuer Scan-Fund**: `MarioUtil/ShadowUtil.cpp` hat außerhalb der
+bereits (Runde 32/33/35) behandelten `makeDL()`-Methoden und
+Destruktoren **11 weitere Funktionen mit `fuzzy_match_percent` zwischen
+96,6 % und 99,99 %** in `TMBindShadowManager`/`TMBindShadowBody`/
+`TMBindShadowParts` (`calc`, `entryDrawShadow`, `drawShadowVolume`,
+`drawShadowGD`, `drawShadow`, `request`, `forceRequest`, `calcVtx` u. a.).
+Mehrere davon haben SEHR große additive Lücken (`calc__17TMBind-
+ShadowPartsFf`: +152 Bytes; `drawShadowGD`: +624 Bytes; `calcVtx`:
++144 Bytes mit 263 differierenden Zeilen) — diese sind vermutlich
+KEINE einfachen Padding-Lücken, sondern echte Codegen-/Funktionalitäts-
+Unterschiede (ähnlich `walkBehavior`), die eine tiefere Einzelanalyse
+erfordern würden. Als Kandidatenpool für eine künftige Sitzung mit
+mehr Zeit pro Funktion vorgemerkt, nicht in dieser Runde verfolgt.
+
+Keine Quelltextänderung in dieser Runde (alle Experimente sauber
+zurückgesetzt, 0 Commits). Session-Gesamtstand bleibt bei **361
+tatsächlich verifizierte Funktionen** aus Runde 37. Wichtigster
+Ertrag dieser Runde: drei zusätzliche, konkret dokumentierte
+Negativ-Befunde zur "interner Slot-Versatz"-Kategorie (stützt die
+Runde-36/37-Hypothese, dass diese Kategorie eine andere Technik als
+`trash[N]`-Padding braucht) plus ein neuer, noch unbearbeiteter
+Kandidatenpool in `ShadowUtil.cpp` für künftige Sessions.
+
 ## Nächster GMSJ01-Kandidat
 
 **Wieder offen (siehe Methodik-Korrektur oben)**: 58 der ursprünglich
