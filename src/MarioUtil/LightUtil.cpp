@@ -326,30 +326,41 @@ TLightDrawBuffer* TLightWithDBSet::getLightDrawBuffer(int index)
 
 int TLightWithDBSet::getLightIndex(const char* name)
 {
-	for (int i = 0; i < TLightCommon::mLightAry->getLightNum(); ++i)
-		if (strcmp(name, TLightCommon::mLightAry->getLight(i)->getName()) == 0)
+	for (int i = 0; i < TLightCommon::mLightAry->getLightNum(); ++i) {
+		JDrama::TLightAry* lightAry = TLightCommon::mLightAry;
+		JDrama::TIdxLight* light    = lightAry->getLight(i);
+		const char* lightName    = light->getName();
+		if (strcmp(name, lightName) == 0)
 			return i;
+	}
 	return -1;
 }
 
 int TLightWithDBSet::getAmbIndex(const char* name)
 {
-	for (int i = 0; i < TLightCommon::mAmbAry->getAmbNum(); ++i)
-		if (strcmp(name, TLightCommon::mAmbAry->getAmb(i)->getName()) == 0)
+	for (int i = 0; i < TLightCommon::mAmbAry->getAmbNum(); ++i) {
+		JDrama::TAmbAry* ambAry = TLightCommon::mAmbAry;
+		JDrama::TAmbColor* amb  = ambAry->getAmb(i);
+		const char* ambName    = amb->getName();
+		if (strcmp(name, ambName) == 0)
 			return i;
+	}
 	return -1;
 }
 
-// TODO: all four makeDrawBuffer bodies are instruction-exact and exactly 32
-// bytes of low region short (0x88/0x78 vs 0xa8/0x98). Measured levers, all
-// instruction-neutral: `getLightDrawBuffer(i)` over `unk10[i]` at the four
-// loop sites is +8 and saturates; a `getLight()` accessor over `->mLight` is
-// +8 per site but only lands 0xa8 for the arbitrary subset {mLightIndex,
-// loadAfter} (60 of 256 combinations searched, no uniform spelling reaches
-// it), so it is not the answer. The clean candidates left are the two UNUSED
-// carriers this function expands, getLightIndex/getAmbIndex (0x84 each, both
-// size-exact): one dead 12-byte non-trivial local in each is +16 per
-// expansion = exactly 32, but nothing in a strcmp loop wants a vector.
+// The 32 bytes of low region the four makeDrawBuffer bodies were short come
+// from the two UNUSED carriers they expand: naming the array and the light in
+// getLightIndex/getAmbIndex is +8 per expansion and a third chain step a
+// further +8 (24 in all), and the `mLight` binder below closes the last 8.
+// TODO: the binder is +8 in the two className bodies but +0x10 in
+// TPlayer/TObject (both the naming and the plain form), so those two are
+// still 8 over and keep the raw `unk10[i]->mLight` spelling, 8 short.
+static inline TLightCommon* LightWithDBSetLight(TLightDrawBuffer* buffer)
+{
+	TLightCommon* light = buffer->mLight;
+	return light;
+}
+
 void TPlayerLightWithDBSet::makeDrawBuffer()
 {
 	static const char lightName[] = "太陽（プレイヤー）";
@@ -357,7 +368,7 @@ void TPlayerLightWithDBSet::makeDrawBuffer()
 
 	int lightIndex = getLightIndex(lightName);
 	int ambIndex   = getAmbIndex(ambName);
-	unk10          = new TLightDrawBuffer*[unk1C];
+	unk10 = new TLightDrawBuffer*[unk1C];
 	for (int i = 0; i < unk1C; ++i) {
 		unk10[i] = new TLightDrawBuffer(
 		    i, 0x80, TLightCommon::mAmbAry->getAmb(ambIndex + i)->getName());
@@ -376,7 +387,7 @@ void TObjectLightWithDBSet::makeDrawBuffer()
 
 	int lightIndex = getLightIndex(lightName);
 	int ambIndex   = getAmbIndex(ambName);
-	unk10          = new TLightDrawBuffer*[unk1C];
+	unk10 = new TLightDrawBuffer*[unk1C];
 	for (int i = 0; i < unk1C; ++i) {
 		unk10[i] = new TLightDrawBuffer(
 		    i, 0x100, TLightCommon::mAmbAry->getAmb(ambIndex + i)->getName());
@@ -404,7 +415,7 @@ void TMapObjectLightWithDBSet::makeDrawBuffer()
 		unk10[i]->setLight(light);
 		unk10[i]->mLight->mAmbIndex   = ambIndex;
 		unk10[i]->mLight->mLightIndex = lightIndex;
-		unk10[i]->mLight->loadAfter();
+		LightWithDBSetLight(unk10[i])->loadAfter();
 	}
 }
 
@@ -424,7 +435,7 @@ void TIndirectLightWithDBSet::makeDrawBuffer()
 		unk10[i]->setLight(light);
 		unk10[i]->mLight->mAmbIndex   = ambIndex;
 		unk10[i]->mLight->mLightIndex = lightIndex;
-		unk10[i]->mLight->loadAfter();
+		LightWithDBSetLight(unk10[i])->loadAfter();
 	}
 }
 
