@@ -79,12 +79,15 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   sich nicht eindeutig auf MWCC-übliche Ausdrucksformen abbilden.
 
 - `Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes, 99,92 %).
-  Bestes Experiment `char trash[0x10]` reproduziert Frame (0x40 Bytes) und
-  Inliner-Reihenfolge der `startTimer`-Aufrufargumente (Stack ab 0x24). Drei
-  abweichende `bne`/`beq`-Ziele innerhalb der `setFlagOutOfCube`-/`clipActors`-
-  Aufrufe bleiben übrig; sie hängen an der Aufrufreihenfolge im Quelltext und
-  sind nicht durch Stack-Frame-Variationen lösbar. `startTimer(u32)`-Überladung
-  verschlechtert das Match durch zusätzliche `volatile`-Stack-Operationen.
+  Bestes Experiment `char trash[0x10]` reproduziert Frame-Größe (0x50 Bytes).
+  Verbleibend sind die fünf `stb r0, 0x24..0x27(r1)`/`lwz r28, 0x24(r1)`-Bytes:
+  das Original speichert nur `r27..r30` via `stmw r27, 0x3c(r1)` (4 Register,
+  Save-Bereich `0x3c..0x4b`) und legt das Color-Local davor bei `0x34`; wir
+  speichern `r27..r31` (5 Register, Save-Bereich `0x38..0x4b`), wodurch das
+  Color-Local auf `0x24` fällt. Die drei Branch-Differenzen sind identische
+  relative Offsets (Differenz = 0x84 wie bei den Instruktionsadressen), also
+  kein Code-Anordnungsproblem. Varianten `volatile u32 color`-Local und
+  `g = graphics`-Local erreicht 99,60 %/96,67 % – schlechter.
 
 - `THPPlayer/THPAudioDecode.c`: `AudioDecoderForOnMemory` (176 Bytes, 89,27 %).
   Register-Diff betrifft die gehoisteten `ActivePlayer`- und `AudioDecodeThread`-
