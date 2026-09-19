@@ -530,9 +530,7 @@ void TSamboFlower::bloom()
 // UNUSED, 0x44 in the map: inlined into moveObject.
 bool TSamboFlower::isBloomEnd()
 {
-	if (getMActor()->getFrameCtrl(0)->getFrame() < 1.0f)
-		return true;
-	return false;
+	return getMActor()->getFrameCtrl(0)->getFrame() < 1.0f;
 }
 
 // UNUSED, 0x50 in the map: inlined into moveObject.
