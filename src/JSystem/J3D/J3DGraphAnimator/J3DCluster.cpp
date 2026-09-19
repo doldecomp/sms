@@ -67,13 +67,21 @@ void J3DDeformer::deform(J3DModel* model, u16 idx)
 }
 
 // TODO: 99.7%. Two residues, no instruction is missing or extra.
-// (1) frame 0x118 vs 0x110, and it is two independent 4-byte gaps, not one 8:
-//     the named block matches from `pos[3]` up to `sign[2]` (28 bytes for the
-//     two `Vec deform`s), but retail has 16 bytes between `sign[2]` and the
-//     u16-to-f32 conversion slot where we have 12, and 4 more bytes of temp
-//     pool below `pos[3]` (100 vs 96). Replacing the first `Vec deform` with
-//     three `f32`s costs 8, so the `Vec` spelling is right and something else
-//     is missing.
+// (1) frame 0x118 vs 0x110. Research 215 (2026-09-19) corrects the earlier
+//     "two independent 4-byte gaps" reading: it is ONE missing word, and it
+//     sits in the low inline-temp pool, below `pos[3]`. Slot map, retail
+//     against ours: `pos[3]` 0x70/0x74/0x78 vs 0x6c/0x70/0x74, `sign[2]`
+//     0x98/0x9c vs 0x94/0x98, the u16-to-f32 conversion pair 0xb0/0xb4 vs
+//     0xa8/0xac, `stmw r20` 0xb8 vs 0xb0. Every named slot is exactly 4 low,
+//     and the conversion pair is 8 low only because it is `lfd`-aligned: one
+//     extra word under `pos[3]` shifts the whole named block by 4 and rounds
+//     the conversion pair, the saved registers and the frame to retail's.
+//     Measured: `volatile char trash[4]` declared first (above `cluster`) is
+//     +8 and lands frame 0x118 with the conversion slot and `stmw` exact,
+//     leaving `pos`/`sign` 4 low -- it fills the gap from the wrong end. The
+//     missing word is an inline-expansion temp; a +4 rung (a direct-return
+//     fork over a plain member read, nested in a binder) on one of the raw
+//     `cluster->`/`vertex->` member reads is the open candidate.
 // (2) the position loop's sign multiplies schedule the two `rlwinm` bit
 //     extracts in the opposite order (retail computes the y index at 0x5f0 and
 //     the z index at 0x604, we do the reverse) with r6/r7/r8/r9 rotated
@@ -82,8 +90,7 @@ void J3DDeformer::deform(J3DModel* model, u16 idx)
 // all three: `f32 weight = 1.0f; weight /= vertex->mNum;` (469 instructions),
 // `f32 sign[2];` with two stores instead of the aggregate initialiser (four
 // operands worse, same frame), and hoisting `sign` above the zeroing loop
-// (473 instructions). The 4+4 split really is a temp-pool word plus a named
-// word, so neither end moves from the `sign`/`weight` side.
+// (473 instructions).
 void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 {
 	if (checkFlag(2) && model->getModelData()->isDeformableVertexFormat()) {
@@ -362,10 +369,36 @@ void J3DSkinDeform::initMtxIndexArray(J3DModelData* modelData)
 					// `&(dl + vtxSize * k)[3]` are all 248 instructions;
 					// `&dl[k * vtxSize + 3]` flips the `mullw` operands
 					// instead; the `(u32)` cast forms, dropping the `vtx`
-					// local for three spelled-out indices (248) and splitting
-					// off a `vtxBase` local (frame 0x118) are all no better.
-					// MWCC fixes `ptr + index` as `add rD, rIndex, rPtr` here
-					// and nothing in the index expression turns it round.
+					// local for three spelled-out indices (248) and
+					// splitting off a `vtxBase` local (frame 0x118) are all
+					// no better.
+					// Research 215 (2026-09-19), ~60 spellings measured in a
+					// scratch TU carrying this loop nest: the operand order
+					// is not an index spelling at all, it is the statement
+					// form. A single address expression whose constant sits
+					// inside the index (`&dl[3 + p]`, `dl + (p + 3)`) gives
+					// `add rD, rIndex, rPtr` then `addi 3`; a constant left
+					// outside (`dl + p + 3`, `&(dl + p)[3]`, a struct member
+					// offset such as `((Hdr*)(dl + p))->data`) gives `addi 3`
+					// then `add rD, rPtr, rIndex`, which costs one extra `mr`
+					// here because the product lives in r0; and a compound
+					// assignment `p += index` gives `add rD, rPtr, rIndex` --
+					// retail's order. So
+					// `u8* base = dl; base += vtxSize * k; u8* vtx = base + 3;`
+					// reproduces retail's two instructions exactly (247
+					// instructions, frame 0x110, operand order right) and
+					// leaves only the destination register: retail keeps one
+					// register (`add r4, r25, r0; addi r4, r4, 3`), the
+					// two-object chain gets r3 then r4. One object with a
+					// separate `vtx += 3` instead sinks the 3 into the three
+					// load displacements (249 instructions), and every
+					// one-object two-step form tried sinks the same way, so
+					// the single-expression spelling below is kept as the
+					// closer one (1 differing operand, not 2). Refuted for
+					// the register: declaration order and scope of the two
+					// locals, a TU-local `p += n; return p;` helper,
+					// `(base += n) + 3`, `(vtx += n) += 3` (spills vtx to the
+					// stack), the comma operator.
 					u8* vtx     = &dl[3 + vtxSize * k];
 					u8 pnmtxIdx = ((u32)(*(u8*)&vtx[pnmtxIdxOffs])) / 3;
 					u16 posIdx  = *(u16*)&vtx[posOffs];
