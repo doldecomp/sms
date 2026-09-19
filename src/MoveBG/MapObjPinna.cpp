@@ -189,6 +189,12 @@ THorizontalViking::THorizontalViking(const char* name)
 
 // TViking
 
+static inline MSound* VikingRollSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TViking::roll()
 {
 	switch (mState) {
@@ -198,7 +204,7 @@ void TViking::roll()
 		mSwingAngle += mSwingSpeed;
 
 		if (mSwingAngle < 0.0f) {
-			SMSGetMSound()->startSoundActorWithInfo(
+			VikingRollSound()->startSoundActorWithInfo(
 			    MSD_SE_OBJ_PIN_BIKING_WING, &mPosition, nullptr,
 			    fabsf(mSwingSpeed), 0, 0, nullptr, 0, 4);
 			mState = STATE_ROLL_UP_FWD;
@@ -206,7 +212,7 @@ void TViking::roll()
 
 		if (mSwingAngle > 180.0f) {
 			mSwingAngle -= 360.0f;
-			SMSGetMSound()->startSoundActorWithInfo(
+			VikingRollSound()->startSoundActorWithInfo(
 			    MSD_SE_OBJ_PIN_BIKING_WING, &mPosition, nullptr,
 			    fabsf(mSwingSpeed), 0, 0, nullptr, 0, 4);
 			mState = STATE_ROLL_UP_BACK;
