@@ -1060,31 +1060,40 @@ BOOL TTinKoopa::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
-// Instruction-exact apart from an r5/r6 swap; the frame is 0x60 against the
-// ROM's 0x70, which is the usual 16 bytes per theNerve() expansion beyond the
-// first (see docs/catalog/frame-gaps.md).
+// The six statements this body was missing: the three guards are early returns
+// rather than two nested `if`s (+3), each pushNerve names its nerve (+2, and
+// that is also what fixes retail's r5/r6 assignment in both inlined pushNerve
+// expansions -- retail creates the argument temporary before the receiver),
+// and the decremented hit points are read back into a named local (+1, which
+// also brings the frame from 0x60 to 0x68). At 15 statements the body is over
+// MWCC's depth-1 inline budget, so both TTinKoopa::receiveMessage and
+// TTinKoopaPartsBase::receiveMessage `bl` it as retail does; both 0 -> 100.
 //
-// TODO: this body is also the whole loss of TTinKoopa::receiveMessage and
-// TTinKoopaPartsBase::receiveMessage (both 0%, 60B and 64B). Retail `bl`s
-// hitParts from each; we inline it, because a plain method is inlined at depth
-// 1 up to 14 statements and this body is 9. Measured exactly: six extra
-// zero-codegen statements here land *both* callers at 100.0% and change
-// nothing else, so retail's hitParts is a 15-statement body and six statements
-// of it are missing from this reconstruction. Do not pad -- find them.
+// TODO: instruction-exact; 8 bytes of frame left (0x68 against 0x70), i.e. one
+// more named local with a stack slot. Naming mDamageStage costs a statement
+// but no frame, so it is not the one.
 void TTinKoopa::hitParts()
 {
-	if (mSpine->getCurrentNerve() != &TNerveTinKoopaBreak::theNerve()) {
-		if (mSpine->getCurrentNerve() != &TNerveTinKoopaDamage::theNerve()
-		    && mDamageStage != 4) {
-			startTinKoopaMessage(BALLOON_MSG_TINKOOPA_PARTS_HIT);
+	if (mSpine->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve())
+		return;
+	if (mSpine->getCurrentNerve() == &TNerveTinKoopaDamage::theNerve())
+		return;
+	if (mDamageStage == 4)
+		return;
 
-			mPartsHitPoints--;
-			if (mPartsHitPoints <= 0)
-				mSpine->pushNerve(&TNerveTinKoopaBreak::theNerve());
-			else
-				mSpine->pushNerve(&TNerveTinKoopaDamage::theNerve());
-		}
+	startTinKoopaMessage(BALLOON_MSG_TINKOOPA_PARTS_HIT);
+
+	mPartsHitPoints--;
+
+	int hitPoints = mPartsHitPoints;
+	if (hitPoints <= 0) {
+		TNerveBase<TLiveActor>* nerve = &TNerveTinKoopaBreak::theNerve();
+		mSpine->pushNerve(nerve);
+		return;
 	}
+
+	TNerveBase<TLiveActor>* nerve = &TNerveTinKoopaDamage::theNerve();
+	mSpine->pushNerve(nerve);
 }
 
 // UNUSED, 0x4c in the map: inlined into the break nerve.
