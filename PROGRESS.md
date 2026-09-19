@@ -29,6 +29,15 @@
 | Code complete / linked | 19,03 % | +1,03 pp |
 | Units complete | 403 / 736 | +7 |
 
+### Nach dieser Iterationsrunde (NpcManager, THPPlayer)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Fuzzy match | 77,84 % | ±0 |
+| Code matched | 41,38 % (1.485.500 / 3.590.088) | +840 Bytes |
+| Funktionen matched | 66,65 % (8.585 / 12.881) | +4 |
+| Units complete | 403 / 736 | ±0 |
+
 Die Referenz-DOL bleibt `OK`.
 
 ### Bereiche
@@ -107,6 +116,21 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   Funktion, Frame identisch. `threadData`-Scope auf den `onMemory`-Block
   verengt: keine Änderung. Rest nicht in vertretbarer Zeit lösbar.
 
+- `NPC/NpcManager.cpp`: `TNPCManager::clipEnemies` (784 Bytes, 92,70 %).
+  Bereits im Quelltext als upstream-`TODO` markiert
+  ("figure out these inlines ... fabricatedInline3 matches in camera itself
+  but not here"); großer struktureller Unterschied (Frame 0x90 vs. 0x50,
+  `gpCamera`-Caching), nicht mit lokalen Padding-Tricks lösbar.
+
+- `NPC/NpcManager.cpp`: `makePartsModelData_` (336 Bytes, 99,98 %).
+  `sdlModel`-Local liegt 4 Bytes höher (`0x20` statt `0x1c`); Umordnen der
+  `loadFlags`/`initInfo`-Deklaration ohne Wirkung.
+
+- `JSystem/JParticle/JPADraw.cpp`: `loadYBBMtx` (208 Bytes, 99,83 %),
+  `zDrawChild`/`zDrawParticle`/`initialize` (99,7–99,97 %). Frame 8 Bytes
+  größer als Original; Aufsplitten des `TVec3`-Konstruktors verschlechterte
+  auf 96,94 % (zurückgesetzt). Unit `.text` insgesamt bei 99,99 %.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -152,8 +176,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   Ternäre Größenberechnung (`onMemory ? … : …`) durch `if`/`else` ersetzt —
   reines Register-Scheduling-Artefakt, kein Verhaltensunterschied.
 
+- `NPC/NpcManager.cpp`: `TNPCManager::perform` — **100 %** (364 Bytes).
+  `char trash[8]` reproduziert den 0x38-Byte-Stackframe.
+
 ## Nächster GMSJ01-Kandidat
 
-`NPC/NpcManager.cpp` bzw. `JSystem/J3D/J3DGraphAnimator/J3DModel.cpp` (große
-Units, 88–89 % matched); `JSystem/JKernel/JKRExpHeap.cpp::allocFromHead(u32,int)`
-(98,78 %, Register-Scheduling um -1-Konstante) versucht, kein Fortschritt.
+`JSystem/J3D/J3DGraphAnimator/J3DModel.cpp` (große Unit, ~89 % matched);
+`JSystem/JKernel/JKRExpHeap.cpp::allocFromHead(u32,int)` (98,78 %,
+Register-Scheduling um -1-Konstante) versucht, kein Fortschritt.
