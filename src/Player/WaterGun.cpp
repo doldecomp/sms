@@ -906,7 +906,7 @@ void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 
 	TNozzleBase::movement(controllerWork);
 
-	unk378 *= mEmitParams.mEmitPowScale.get();
+	unk378 *= mEmitParams.mEmitPowScale.value;
 
 	if (WaterGunUnk378(this) > 1.0f) {
 		unk378 = 1.0f;
