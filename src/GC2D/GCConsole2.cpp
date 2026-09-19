@@ -56,6 +56,15 @@ JUTPoint TGCConsole2::cCoinTopPoint(0, 0);
 JUTPoint TGCConsole2::cCoinMidPoint(0, 45);
 JUTPoint TGCConsole2::cCoinBotPoint(0, 0);
 
+// fabricated: the pane's "parked below the screen" offset. Retail computes
+// 465 - y1 and *then* adds the extra 60 (`subfic 0x1d1; addi 0x3c`), which one
+// folded expression never emits, so the subtraction lived behind an inline of
+// its own.
+static inline int GCConsole2HideOffsetY(const TExPane* pane)
+{
+	return 465 - pane->mInitialBounds.y1;
+}
+
 // fabricated
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
                                           J2DPane* pane)
@@ -1199,9 +1208,7 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	pane->update();
 
-	if (pane->unk24) {
-		isFinished = false;
-	} else {
+	if (!pane->unk24) {
 		bool paneFinished = false;
 		if (pane->unk14.x == 0 && pane->unk14.y == 0)
 			paneFinished = true;
@@ -1211,6 +1218,8 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 			                      TGCConsole2::cCoinBotPoint);
 			isFinished = false;
 		}
+	} else {
+		isFinished = false;
 	}
 }
 
@@ -2204,14 +2213,8 @@ void TGCConsole2::resetMoveTank() { }
 
 void TGCConsole2::endCameraDemo()
 {
-	if (unk39)
+	if (unk39 || !unk50)
 		return;
-
-	if (!unk50)
-		return;
-
-	// TODO: the ROM has one extra branch here, as if the whole body
-	// were nested in the unk50 test rather than an early return.
 
 	if (unkB6 < 3) {
 		++unkB6;
@@ -2283,7 +2286,7 @@ void TGCConsole2::startDisappearTank()
 	unk4B = 1;
 	unk5A = 1;
 
-	int offset = (465 - unk2F8->mInitialBounds.y1) + 60;
+	int offset = GCConsole2HideOffsetY(unk2F8) + 60;
 	unk2F8->updatePaneOffset(40, 0, offset);
 
 	JUTPoint start(0, 0);
@@ -2335,6 +2338,10 @@ void TGCConsole2::startDisappearCoin()
 	unk4D = true;
 	unk5A = true;
 
+	// TODO: 98.2%. Retail adds the trailing +1 to the finished sum
+	// (`add y2,h; addi 1`) while MWCC folds it into the height subtraction
+	// here whatever the operand order or a named `height` local; the
+	// remaining 0x18 of frame is a separate low-region residue.
 	if (unk140->isInterpolatorAtZero())
 		unk140->updatePaneOffset(
 		    40, 0,
@@ -2381,6 +2388,7 @@ void TGCConsole2::startInsertLife(int param_1)
 
 	int offset = -(unk1C4->unk4.y2 + 1);
 	unk1C4->getPane()->show();
+	unk1C4->getPane()->setAlpha(255);
 	unk1C4->setPanePosition(unk98, JUTPoint(0, offset),
 	                        JUTPoint(0, offset >> 1), JUTPoint(0, 0));
 	unk174->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
@@ -2489,17 +2497,17 @@ void TGCConsole2::startDownLeftBot()
 	unk5A = 1;
 
 	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
-		unk44C->updatePaneOffset(20, 0, 525 - unk44C->getInitialBounds().y1);
+		unk44C->updatePaneOffset(20, 0, GCConsole2HideOffsetY(unk44C) + 60);
 		unk51C = 1;
 	}
 
 	if (unk428->getPane()->isVisible()) {
-		unk428->updatePaneOffset(20, 0, 525 - unk428->getInitialBounds().y1);
+		unk428->updatePaneOffset(20, 0, GCConsole2HideOffsetY(unk428) + 60);
 		unk448 = 1;
 	}
 
 	if (unk3FC->getPane()->isVisible()) {
-		unk3FC->updatePaneOffset(20, 0, 525 - unk3FC->getInitialBounds().y1);
+		unk3FC->updatePaneOffset(20, 0, GCConsole2HideOffsetY(unk3FC) + 60);
 		unk426 = 1;
 	}
 }
@@ -2580,7 +2588,7 @@ void TGCConsole2::startDisappearTelop()
 
 void TGCConsole2::startDisappearTimer()
 {
-	unk44C->updatePaneOffset(40, 0, 525 - unk44C->getInitialBounds().y1);
+	unk44C->updatePaneOffset(40, 0, GCConsole2HideOffsetY(unk44C) + 60);
 	unk3F = 1;
 	unk5A = 1;
 }
@@ -3370,8 +3378,6 @@ void TGCConsole2::changeNum(TBlendPane* pane, int digit, int frames)
 
 void TGCConsole2::setTimer(s32 param_1)
 {
-	// TODO: Needs regswaps but should otherwise be equivalent
-
 	u32 timerValue;
 
 	if (param_1 == -1) {
@@ -3389,6 +3395,8 @@ void TGCConsole2::setTimer(s32 param_1)
 				timerValue = unk514 - timerValue;
 			}
 		}
+	} else {
+		timerValue = param_1;
 	}
 
 	// Cap at 5999.99 seconds (99:59.99)
@@ -3416,7 +3424,7 @@ void TGCConsole2::setTimer(s32 param_1)
 		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
 	} else {
 		if (timerValue < 1000
-		    && ((J2DPicture*)unk458[9]->getPane())->mWhite != unk508) {
+		    && ((J2DPicture*)unk458[9]->getPane())->getWhite() != unk508) {
 			for (int i = 6; i <= 9; i++) {
 				((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
 			}
@@ -3437,7 +3445,7 @@ void TGCConsole2::setTimer(s32 param_1)
 		SMSGetMSound()->playTimer(timerValue * 10);
 	}
 
-	unk4FC = param_1;
+	unk4FC = timerValue;
 }
 
 // TODO: 128 bytes of frame short (0x228 vs 0x2a8). The ROM leaves an 80-byte
@@ -3789,9 +3797,15 @@ bool TGCConsole2::processDownCoin(int param_1)
 
 	isFinished &= unk108->update();
 
+	// The emitter has to be named: as a bare `unk124->` receiver MWCC loads
+	// it after the argument arithmetic and interleaves the two `stfs`, while
+	// retail loads it first and batches both `fmadds` (99.9% vs 95.8%, and
+	// the setEmitterToPaneCenter() helper form is 98.9%).
 	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
-	unk124->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
-	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	JPABaseEmitter* emitter = unk124;
+	emitter->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	                                bounds.y1 + bounds.getHeight() * 0.5f,
+	                                0.0f);
 
 	return isFinished;
 }
@@ -3871,8 +3885,10 @@ bool TGCConsole2::processAppearCoin(int param_1)
 	}
 
 	JUTRect bounds(unkCC->getPane()->mGlobalBounds);
-	unk124->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
-	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	JPABaseEmitter* emitter = unk124;
+	emitter->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	                                bounds.y1 + bounds.getHeight() * 0.5f,
+	                                0.0f);
 
 	return isFinished;
 }
