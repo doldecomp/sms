@@ -231,11 +231,20 @@ void TCoin::makeObjDead()
 		unk154->unk1A |= 1;
 }
 
+// Two binding levels over the animation matrix, worth +0x10 of low region in
+// TCoin::appearWithoutSound.
+static inline MtxPtr ItemAnmMtx(const TItem* p)
+{
+	J3DModel* model = p->getModel();
+	MtxPtr mtx      = model->getAnmMtx(0);
+	return mtx;
+}
+
 void TCoin::appearWithoutSound()
 {
 	TItem::appear();
-	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    MAPOBJ_MS_WATCOIN_KIRA, getModel()->getAnmMtx(0), 0, this);
+	gpMarioParticleManager->emitAndBindToMtxPtr(MAPOBJ_MS_WATCOIN_KIRA,
+	                                            ItemAnmMtx(this), 0, this);
 	if (isActorType(0x2000000e))
 		offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 }
