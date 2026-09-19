@@ -1045,7 +1045,7 @@ void TEggYoshi::control()
 		break;
 	case 0xC:
 		if (animIsFinished()) {
-			kill();
+			makeObjDead();
 			mState = STATE_DEAD;
 		}
 		break;
