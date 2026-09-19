@@ -1022,7 +1022,7 @@ s8 TCardSave::drawMessage(TEProgress param_1)
 		setMessage(unk174, 0x200, getCurMessageID());
 		setMessage(unk178, 0x200, getCurMessageID());
 		unk178->hide();
-		unk160->getPane()->show();
+		unk160->mPane->show();
 		unk160->setCenteredSize(20, unk164.getWidth(), unk164.getHeight(), 0,
 		                        0);
 		unk10 = 1;
@@ -1134,14 +1134,14 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 
 s8 TCardSave::waitForAnyKey(TEProgress param_1)
 {
-	s32 result = -1;
+	s8 result = -1;
 
 	switch (unk10) {
 	case 0:
 		setMessage(unk174, 0x200, getCurMessageID());
 		setMessage(unk178, 0x200, getCurMessageID());
 		unk178->hide();
-		unk160->getPane()->show();
+		unk160->mPane->show();
 		unk160->setCenteredSize(20, unk164.getWidth(), unk164.getHeight(), 0,
 		                        0);
 		unk10 = 1;
@@ -1157,8 +1157,8 @@ s8 TCardSave::waitForAnyKey(TEProgress param_1)
 	case 2:
 		if (unk2E0 > 300) {
 			unk178->hide();
-			unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
-			                        unk164.getHeight());
+			setCenteredSizeWr(unk160, 20, 0, 0, unk164.getWidth(),
+			                  unk164.getHeight());
 			unk10 = 3;
 		} else {
 			unk2E0++;
