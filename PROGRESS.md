@@ -1307,6 +1307,75 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   künftige Runde: alle String-Literale in `MarioDraw.cpp` systematisch
   mit der rohen `.rodata`-Sektion der Retail-Disassembly abgleichen.
 
+### Nach achtundzwanzigster Iterationsrunde (kritischer objdiff-cli-Fund: falscher match_percent, echter Logikbug in `TMarDirector::movement`)
+
+Fortsetzung des ndiff-sortierten 85–99,99-%-Scans (723 Kandidaten, Größe
+≤400 Bytes, alle 736 Units). Ein Kandidat mit ungewöhnlich niedrigem
+Match% bei nur 2 Instruktions-Diffs (`TMarDirector::movement`,
+91,25 %, 48 Bytes) fiel sofort als starkes Bug-Signal auf.
+
+**Kritischer Methodik-Fund**: Das objdiff-JSON zeigte scheinbar, dass
+unser Build `movement_game()` NIE aufruft (toter Code nach einem
+unbedingten `b`), während das Original es aufruft. Rohdisassembly
+(`build/GMSJ01/asm/System/MarDirectorEvent.s` Zeile 331–346) bestätigte
+tatsächlich einen invertierten Vergleich im Quelltext (`!=` statt `==`
+für `STATE_UNK4`) — ein echter Logikbug, keine Fehlwahrnehmung. Nach dem
+Fix (`if ((int)mState == STATE_UNK4) movement_game();`) meldete
+`objdiff-cli` jedoch **90,0 %** (schlechter als vorher!) mit einem
+`beq`/`bne`-Opcode-Mismatch, der der rohen Zieldisassembly widersprach.
+
+Direkte Byte-für-Byte-Verifikation via Parsen des DOL-Headers und
+Extraktion der rohen Maschinencode-Bytes an virtueller Adresse
+`0x800EDA30` aus unserer frisch gebauten `mario.dol` (unter Umgehung von
+`objdiff-cli` komplett) bewies: **unser kompilierter Code ist jetzt
+byte-identisch mit der Zieldisassembly** (`7C0802A6 90010004 9421FFF8
+88030064 2C000004 41820008 48000008 480002C1 8001000C 38210008
+7C0803A6 4E800020` — exakt wie im `.s`-File dokumentiert). Der Fix ist
+also ein **bestätigter 100-%-Byte-Match**, trotz `objdiff-cli`s
+fälschlicher 90-%-Meldung.
+
+Das ist eine **schwerwiegendere Ausprägung** des bereits mehrfach
+dokumentierten objdiff-JSON-Fehlausrichtungsproblems: bisher betraf es
+nur die PER-INSTRUKTION-Anzeige (falsche Zuordnung einzelner Zeilen bei
+insgesamt korrekter `match_percent`); hier war die `match_percent`-Zahl
+selbst falsch, sowohl über `objdiff-cli diff` als auch über die
+Batch-`report generate`-Pipeline (beide nutzen denselben Diff-Kern,
+daher kein Cache-Artefakt eines einzelnen Kommandos). **Neue
+Methodik-Regel**: Bei widersprüchlichen/unplausiblen `match_percent`-
+Sprüngen nach einem Fix (insbesondere Verschlechterung trotz
+offensichtlich korrekterer Logik) MUSS zusätzlich zur `.s`-Rohdatei auch
+eine direkte Byte-Extraktion aus dem gebauten `mario.dol` an der
+bekannten virtuellen Adresse erfolgen, um `objdiff-cli` vollständig zu
+umgehen.
+
+**Fix**: `System/MarDirectorEvent.cpp::TMarDirector::movement()` —
+`if ((int)mState != STATE_UNK4)` → `if ((int)mState == STATE_UNK4)`.
+Echter, spielrelevanter Logikbug (Aufruf von `movement_game()` war
+vorher faktisch unerreichbarer Code). Byte-perfekt gegen Retail
+verifiziert.
+
+**Weitere in dieser Runde geprüfte Kandidaten** (alle Padding-Versuche
+zurückgesetzt, keine Verbesserung):
+
+- Bestätigtes wiederkehrendes Muster „Output-Parameter per Adresse,
+  Stack-Slot um 4–8 Bytes versetzt" bei sieben Funktionen in dieser
+  Runde (`makeObjAppear` in `MapObjManager.cpp`, `getRandomNextIndex`
+  in `graph.cpp`, `execGroundCheck` in `CameraBGCheck.cpp`, `__ct__
+  TLensFlare` in `lensflare.cpp`, zusätzlich zu den bereits in Runde 27
+  dokumentierten `setGroundCollision`/`setBaseTRMtx`/`getDistance`) —
+  `char trash[N]` vor UND nach der Deklaration jeweils getestet, alle
+  Varianten verschlechtern oder wirkungslos. Diese Kategorie gilt nun
+  als **systematisch nicht per Padding lösbar** und wird nicht weiter
+  einzeln verfolgt.
+
+- `GC2D/GCConsole2.cpp::TGCConsole2::startDisappearTimer` (98,61 %).
+  Konstanten-Diff `0x1d1+0x3c` (Ziel) vs. `0x20d` (unser, vorberechnet
+  `525`) — Dekomposition des Quelltexts in `465 - y1 + 60` statt
+  `525 - y1` ändert nichts (MWCC faltet die Konstante identisch zurück
+  zusammen). Nicht per einfacher Source-Umformulierung lösbar.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -1515,6 +1584,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `Player/MarioMain.cpp`: `TMario::drawSyncCallback` — **100 %**
   (`char trash[4]` direkt nach `u32 local_1c;`).
+
+- `System/MarDirectorEvent.cpp`: `TMarDirector::movement` — **100 %**
+  (48 Bytes, Bugfix: invertierter `mState`-Vergleich `!=`→`==`; siehe
+  Iterationsrunde 28 für die Byte-für-Byte-Verifikation gegen die
+  fälschliche `objdiff-cli`-match_percent-Meldung).
 
 ## Nächster GMSJ01-Kandidat
 
