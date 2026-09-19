@@ -412,6 +412,7 @@ void MActor::matAnmFrameUpdate()
 
 void MActor::perform(u32 cue, JDrama::TGraphics*)
 {
+	char trash[0x10];
 	if (cue & CUE_CALC_ANIM)
 		calcAnm();
 
