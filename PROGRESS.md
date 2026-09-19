@@ -540,6 +540,13 @@ Zwei weitere Funktionen aus Nachbar-Units geprüft, beide Nonmatching:
 - `Map/MapWireManager.cpp::TMapWireManager::load` (432 Bytes,
   99,79 % clean) — `char trash[0x10]` erreicht keine 100 %
   (99,89 % best).
+- `Strategic/liveinterp.cpp::linGetSRT` (1.944 Bytes, 96,06 % clean)
+  — großer verschachtelter `switch(arg2){switch(arg1){...}}` mit
+  mehreren `TSpcSlice slice;`-Locals in gegenseitig exklusiven
+  Case-Block-Scopes; dieselbe Kategorie wie die bereits dokumentierten
+  `execadd`/`execsub`/`execmul`/`execdiv`-Fälle in `spcinterp.cpp`
+  (compiler-interne Temporary-Platzierung). `char trash[0x20]`
+  bewegt kaum etwas (96,06 % → 96,10 %); zurückgesetzt.
 
 Die Referenz-DOL bleibt `OK`.
 
