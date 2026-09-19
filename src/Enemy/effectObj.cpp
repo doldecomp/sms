@@ -234,7 +234,8 @@ void TEffectModel::init(TLiveManager* param_1)
 void TEffectModel::reset()
 {
 	TSpineEnemy::reset();
-	mRotation.y = MsRandF(0.0f, 360.0f);
+	TMsRange<f32> angleRange(0.0f, 360.0f);
+	mRotation.y = angleRange.rand();
 	onLiveFlag(LIVE_FLAG_UNK8);
 	onLiveFlag(LIVE_FLAG_UNK10);
 	offLiveFlag(LIVE_FLAG_DEAD);
