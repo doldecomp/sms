@@ -78,16 +78,21 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   FPSCR-Registerwahl und Reihenfolge der `fmadds`/`frsp`-Stores und ließen
   sich nicht eindeutig auf MWCC-übliche Ausdrucksformen abbilden.
 
-- `Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes, 99,84 %).
-  Versuche mit `char trash[0x10]`/`0x18`/`0x40]` sowie Forcieren der
-  Vier-Byte-`startTimer`-Überladung erreichten 99,92 % / 99,84 % ohne
-  vollständige Übereinstimmung. Die `TTimeRec::startTimer()`-Auswahl
-  entscheidet offenbar über Stack-Layout und Registerwahl.
+- `Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes, 99,92 %).
+  Bestes Experiment `char trash[0x10]` reproduziert Frame (0x40 Bytes) und
+  Inliner-Reihenfolge der `startTimer`-Aufrufargumente (Stack ab 0x24). Drei
+  abweichende `bne`/`beq`-Ziele innerhalb der `setFlagOutOfCube`-/`clipActors`-
+  Aufrufe bleiben übrig; sie hängen an der Aufrufreihenfolge im Quelltext und
+  sind nicht durch Stack-Frame-Variationen lösbar. `startTimer(u32)`-Überladung
+  verschlechtert das Match durch zusätzliche `volatile`-Stack-Operationen.
 
 - `THPPlayer/THPAudioDecode.c`: `AudioDecoderForOnMemory` (176 Bytes, 89,27 %).
-  Wechsel `while(TRUE)` → `for(;;)` ändert das Ergebnis nicht. Die Differenzen
-  betreffen Registerwahl (`r29`/`r30` vs. `r31`/`r30`) für `frame`/`readSize`,
-  die sich nur durch künstliche Variablenreihenfolge annähern ließen.
+  Register-Diff betrifft die gehoisteten `ActivePlayer`- und `AudioDecodeThread`-
+  Pointer sowie den Frame-Index (`r28` ist beidseitig `readSize`; die echte
+  Verschiebung ist `frame` in `r29` statt `r31`). `while(TRUE)` → `for(;;)`
+  ist ein No-Op auf die Registerallokation; ein belastbarer Match setzt
+  voraus, dass die lokalen Variablen in einer bestimmten Reihenfolge deklariert
+  sind und der Compiler die Hoists nicht zusammenlegt.
 
 - `MoveBG/MapObjPollution.cpp`: `loadAfter` (172 Bytes, 88,07 %).
   Quellaufruf von `registerRevivalTexStamp` arbeitet mit `int/short`-Parametern;
