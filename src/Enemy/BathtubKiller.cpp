@@ -984,8 +984,13 @@ TBathtubKillerManager::TBathtubKillerManager(const char* name)
 
 void TBathtubKillerManager::load(JSUMemoryInputStream& stream)
 {
+	// Two discarded `getActiveObjNum()` calls: the ROM reads mParams and
+	// compares it against null twice here, with no branch and no use of the
+	// result, exactly as in loadAfter.
+	getActiveObjNum();
 	TSmallEnemyManager::load(stream);
 	unk38 = new TBathtubKillerParams("/enemy/bathtubkiller.prm");
+	getActiveObjNum();
 }
 
 void TBathtubKillerManager::loadAfter()
