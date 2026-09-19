@@ -12,6 +12,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - In practice that pair is always two separate `if (c) return;` statements retail spells as one `if (a || b) return;`; read the compare's operand order off the `cmplw` (codegen-tells.md: "Structural pass 173").
 - Consecutive `if (c) return;` whose earlier tests branch straight to the exit and whose last is unfused are one `if (a || b || c) return;`; the `return true` mirror shares one `li r3, 1` (codegen-tells.md: "Structural pass VI").
 - `f32 x = e; x /= k;` lands the quotient in the local's FPR without an `fmr`; `x = !x` on a `u8` is `cntlzw`/`srwi`, `x = (x == 0)` adds a `neg` (codegen-tells.md: "Structural pass VI").
+- `subfic A; addi B` for a folded `A - x + B` means the subtraction was its own inline; `case N: break;` on an empty first arm leaves the pivot tree, `case N: return;` keeps it; a receiver retail loads before the argument arithmetic is a named local (codegen-tells.md: "Structural pass IX").
+- A lone `addi rD, rBase, off` between two member loads in a tiny accessor is a reference-typed local; store a helper's result in its exact return type (`s16` for `SMS_getShineID`) (codegen-tells.md: "header round 35").
+- not: making an explicitly specialised class template's empty ctor a weak `bl` (`SMatrix34C<f32>`, -35 exact, DOL broken); the out-of-class forms emit a global (codegen-tells.md: "header round 35").
 - A vtable slot past the declared base's last slot means the receiver is a **derived** class, not a wrong index (codegen-tells.md: "Structural pass 173").
 - A stack or member address used at two call sites is bound once into a callee-saved register; per-site `addi` is one instruction short each time (codegen-tells.md: "Structural pass 173").
 - An `int` local feeding an `int` parameter gives `mr`, a `u8` one `addi rD, rS, 0` (codegen-tells.md: "Structural pass 173").
