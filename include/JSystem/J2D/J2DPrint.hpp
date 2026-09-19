@@ -58,6 +58,22 @@ public:
 		mFontSizeY = sizeY > 0 ? sizeY : 0;
 	}
 
+	// TODO: fabricated. TApplication::drawDVDError parks both escape colours
+	// in one 8-byte `.sdata2` object (@2485, ffff00ff ffff00ff) and copies it
+	// through *two* stack temporaries before storing the halves to 0x44/0x48,
+	// so an 8-byte POD pair went through two by-value levels there. The map
+	// names no setter for 0x44/0x48, so this pair type and setter are a guess.
+	struct TColorPair {
+		GXColor mChar;
+		GXColor mGrad;
+	};
+
+	void setEscapeColors(TColorPair colors)
+	{
+		unk44 = colors.mChar;
+		unk48 = colors.mGrad;
+	}
+
 	void setSomeColors(JUtility::TColor c1, JUtility::TColor c2)
 	{
 		unk3C = c1;

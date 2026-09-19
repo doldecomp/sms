@@ -819,8 +819,9 @@ int TApplication::drawDVDErr()
 		// temporaries before landing on unk44/unk48, so the two assignments
 		// were one call taking a colour pair by value. Our two separate
 		// compound literals give two 4-byte objects instead.
-		print.unk44  = (GXColor) { 0xff, 0xff, 0, 0xff };
-		print.unk48  = (GXColor) { 0xff, 0xff, 0, 0xff };
+		J2DPrint::TColorPair colors
+		    = { { 0xff, 0xff, 0, 0xff }, { 0xff, 0xff, 0, 0xff } };
+		print.setEscapeColors(colors);
 		f32 msgWidth = print.getWidth(message);
 		print.print((600.0f - msgWidth) / 2.0f, 230, message);
 	}
