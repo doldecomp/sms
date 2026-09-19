@@ -771,7 +771,11 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 100) {
-		mTargetAngle = rand();
+		// The cast is in the ROM: an int-to-s16 assignment costs an `extsh`
+		// here and retail stores rand()'s low half straight with `sth`, while
+		// TEnemyMario::consider reads the field back with `lha`, so the member
+		// is s16 and only this RHS is 16-bit typed.
+		mTargetAngle = (u16)rand();
 		changeEMDoing(EM_DOING_TURNING);
 		return;
 	}
@@ -1215,9 +1219,9 @@ void TEnemyMario::runAwayMoveEffect()
 
 void TEnemyMario::emRunAwayToNearestNode()
 {
-	TGraphWeb* graph = mEMario->getTracer()->getGraph();
 	JGeometry::TVec3<f32> targetPoint;
-	graph->getGraphNode(mRunAwayNodeIndex).getPoint(&targetPoint);
+	mEMario->getTracer()->getGraph()->getGraphNode(mRunAwayNodeIndex).getPoint(
+	    &targetPoint);
 	runAwayMoveEffect();
 
 	if (mEMDoingTimer >= 8 && mEMDoingTimer < 300) {
@@ -1264,7 +1268,8 @@ void TEnemyMario::emRunAwayToNearestNode()
 	case 300:
 		if (gpMarDirector->getCurrentMap() == 1) {
 			JGeometry::TVec3<f32> waitingPoint;
-			graph->getGraphNode(7).getPoint(&waitingPoint);
+			mEMario->getTracer()->getGraph()->getGraphNode(7).getPoint(
+			    &waitingPoint);
 			mFaceAngle.y    = matan(waitingPoint.z - targetPoint.z,
 			                        waitingPoint.x - targetPoint.x);
 			mModelFaceAngle = mFaceAngle.y;
