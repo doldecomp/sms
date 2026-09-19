@@ -451,22 +451,7 @@ void TBossTelesaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 BOOL TBossTelesaBody::receiveMessage(THitActor* sender, u32 message)
 {
-	TBossTelesa* boss = mOwner;
-
-	if (message == HIT_MESSAGE_TRAMPLE) {
-		if (!sender->isActorType(0x80000001)) {
-			if (boss->mSpine->getCurrentNerve()
-			    == &TNerveBossTelesaPrepareSlot::theNerve())
-				boss->mSpine->pushNerve(&TNerveBossTelesaSpit::theNerve());
-		}
-	}
-
-	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		if (boss->mSpine->getCurrentNerve()
-		    == &TNerveBossTelesaPrepareSlot::theNerve())
-			boss->mSpine->pushNerve(&TNerveBossTelesaFreeze::theNerve());
-	}
-
+	mOwner->checkMessage(sender, message);
 	return true;
 }
 
@@ -478,16 +463,8 @@ bool TBossTelesaTongue::checkHit() { return false; }
 
 BOOL TBossTelesaTongue::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		TBossTelesa* boss = mOwner;
-		if (boss->mSpine->getCurrentNerve()
-		    == &TNerveBossTelesaAppear::theNerve()) {
-			// TODO: the ROM reaches TNerveBase<TLiveActor>'s constructor one
-			// inline level deeper here (a `bl` where we expand the vtable
-			// store); same at both push sites in TBossTelesaBody.
-			boss->mSpine->pushNerve(&TNerveBossTelesaSlotStart::theNerve());
-		}
-	}
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
+		mOwner->tongueHitWater();
 
 	return true;
 }
@@ -1435,7 +1412,28 @@ BOOL TBossTelesa::receiveMessage(THitActor* sender, u32 message)
 
 
 // TODO: incorrect size. Map records 588 bytes.
-BOOL TBossTelesa::checkMessage(THitActor* sender, u32 message) { return false; }
+// TODO: incomplete, 0x24c in the map. Only the part the body's collision
+// forwards here is reconstructed: the two nerve pushes, whose theNerve()
+// guards retail reaches one inline level below TBossTelesaBody::receiveMessage
+// (the `bl TNerveBase<TLiveActor>::TNerveBase()` at both push sites).
+BOOL TBossTelesa::checkMessage(THitActor* sender, u32 message)
+{
+	if (message == HIT_MESSAGE_TRAMPLE) {
+		if (!sender->isActorType(0x80000001)) {
+			if (mSpine->getCurrentNerve()
+			    == &TNerveBossTelesaPrepareSlot::theNerve())
+				mSpine->pushNerve(&TNerveBossTelesaSpit::theNerve());
+		}
+	}
+
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		if (mSpine->getCurrentNerve()
+		    == &TNerveBossTelesaPrepareSlot::theNerve())
+			mSpine->pushNerve(&TNerveBossTelesaFreeze::theNerve());
+	}
+
+	return false;
+}
 
 void TBossTelesa::checkHitObject(THitActor* actor)
 {
@@ -1586,7 +1584,15 @@ void TBossTelesa::damageRecover()
 }
 
 // TODO: incorrect size. Map records 284 bytes.
-void TBossTelesa::tongueHitWater() { }
+// TODO: incomplete, 0x11c in the map. Only the nerve push the tongue's spray
+// message forwards here is reconstructed; retail reaches TNerveBase<
+// TLiveActor>'s constructor one inline level below TBossTelesaTongue::
+// receiveMessage because of this call.
+void TBossTelesa::tongueHitWater()
+{
+	if (mSpine->getCurrentNerve() == &TNerveBossTelesaAppear::theNerve())
+		mSpine->pushNerve(&TNerveBossTelesaSlotStart::theNerve());
+}
 
 bool TBossTelesa::rouletteFall()
 {
