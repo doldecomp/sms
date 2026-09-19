@@ -81,16 +81,12 @@ int TFruitsBoat::setBckTrack(const char* name)
 			mBckTrackCtrl = new J3DFrameCtrl();
 			mBckTrackCtrl->init(mBckTrack->getFrameMax());
 			mBckTrackCtrl->setAttribute(mBckTrack->getAttribute());
-			// TODO: instruction-identical, frame 0x60 against the ROM's
-			// 0x58. `speed` is what keeps the param load in f31 ahead of
-			// SMSGetAnmFrameRate() (without it the load sinks past the
-			// call), but it also costs 8 bytes the ROM does not spend, so
-			// one of the inlined accessor temporaries above is one object
-			// too many. Dropping the getSaveParams()/get() wrapper levels,
-			// reading mAnmNum/mAnmNames directly, naming the frame rate or
-			// the product, and hoisting the declaration all left it at 0x60.
-			f32 speed;
-			speed = getSaveParams()->getSLBckMoveSpeed();
+			// `speed` keeps the param load in f31 ahead of
+			// SMSGetAnmFrameRate(); the named `params` pointer over the
+			// virtual getSaveParams() is the honest +8 that lands the
+			// frame (`get()` instead of `.value` is +0x10 and overshoots).
+			TFruitsBoatParams* params = getSaveParams();
+			f32 speed                 = params->mSLBckMoveSpeed.value;
 			mBckTrackCtrl->setRate(speed * SMSGetAnmFrameRate());
 			return 0;
 		}
