@@ -268,13 +268,21 @@ BOOL TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& pos, f32 length,
 	return MsIsInSight(mPosition, mRotation.y, pos, length, angle, aware);
 }
 
+// The ROM `bl`s JGeometry::TVec3<f>::operator= for both of the TPathNode
+// copies below, which needs them one inline level deeper than a plain
+// assignment reaches; a TU-local forwarder is that level.
+static inline void assignPathNode(TPathNode* dst, const TPathNode& src)
+{
+	*dst = src;
+}
+
 void TSpineEnemy::setGoalPathFromGraph()
 {
 	JGeometry::TVec3<f32> local_48;
 	unk124->getCurrent().getPoint(&local_48);
 	TPathNode local_3c(local_48);
-	unkF4  = local_3c;
-	unk104 = local_3c;
+	assignPathNode(&unkF4, local_3c);
+	assignPathNode(&unk104, local_3c);
 	unk114.clear();
 }
 
