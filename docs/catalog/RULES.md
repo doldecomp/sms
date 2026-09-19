@@ -25,6 +25,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - MWCC always CSEs two loads of a member across a short-circuit branch: a reload proves a `bl` or store between (codegen-tells.md: "batch 60").
 - A `const` accessor restores per-use re-reads and can also *cause* a CSE; decide per statement (codegen-tells.md: "header round 7").
 - A store cannot cross a call, so a store after a `bl` dates that declaration after it (codegen-tells.md: "Batch 59").
+- `a = b = c = v;` stores right to left; a C89 aggregate initialiser is emitted at its declaration, so a mid-function init means a nested block; a `u8` tested with signed `cmpwi` and no `extsb` was read as `int` (codegen-tells.md: "Structural pass VII").
+- A raw `TVec3` build: interleaved load/store pairs ascending = three assignments, all loads first descending = a 3-argument `set`/ctor (codegen-tells.md: "Structural pass VII").
 - Argument `.get()`s defer loads to the call; arguments evaluate right to left, named locals left to right (codegen-tells.md: "Load and store order").
 - A global read through its inline accessor (`&SMS_GetMarioPos()` for `gpMarioPos`) is a free evaluation-order knob: as an argument it loads ahead of the receiver, as the receiver ahead of the arguments (codegen-tells.md: "Reloc-target pass IV").
 - `a * b * c` association reads off the first `fmuls`; a retail `bne <true-arm>` with the false value in the fallthrough means the source negated the ternary's test (codegen-tells.md: "Reloc-target pass IV").
