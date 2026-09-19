@@ -305,6 +305,7 @@ void MActor::updateOutSubBck()
 
 void MActor::calcAnm()
 {
+	char trash[0x18];
 	frameUpdate();
 
 	updateIn();
