@@ -164,14 +164,14 @@ void TMapObjGeneral::holding()
 
 static inline const TMapObjSinkData* TMapObjGeneralGetSink(TMapObjGeneral* p)
 {
-	TMapObjGeneral* self = p;
-	return self->mMapObjData->mSink;
+	TMapObjData* data           = p->mMapObjData;
+	const TMapObjSinkData* sink = data->mSink;
+	return sink;
 }
 
 static inline TTakeActor* TMapObjGeneralGetHeldObject(TMapObjGeneral* p)
 {
-	TMapObjGeneral* self = p;
-	return self->mHeldObject;
+	return p->mHeldObject;
 }
 
 void TMapObjGeneral::recovering()
@@ -235,8 +235,8 @@ void TMapObjGeneral::breaking()
 static inline const JGeometry::TVec3<f32>&
 TMapObjGeneralGetInitialScaling(TMapObjGeneral* p)
 {
-	TMapObjGeneral* self = p;
-	return self->mInitialScaling;
+	const JGeometry::TVec3<f32>& scaling = p->mInitialScaling;
+	return scaling;
 }
 
 void TMapObjGeneral::appearing()
@@ -536,8 +536,8 @@ void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 static inline TMapObjPhysicalData*
 TMapObjGeneralGetPhysicalData(TMapObjGeneral* p)
 {
-	TMapObjGeneral* self = p;
-	return self->mMapObjData->mPhysical->unk4;
+	TMapObjPhysicalData* physData = p->mMapObjData->mPhysical->unk4;
+	return physData;
 }
 
 void TMapObjGeneral::calcVelocity()
