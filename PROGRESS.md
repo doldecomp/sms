@@ -156,6 +156,20 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   Pragma-Kenntnis; strukturell verwandt mit dem bereits dokumentierten
   `fabricatedInline3`-TODO in `NpcManager::clipEnemies`.
 
+- `Enemy/effectObj.cpp`: `TEffectColumSand::reset` (308 Bytes, 98,49 %).
+  `r30`/`r31` komplett vertauscht (`this` vs. String-Literal-Adresse
+  "08_sunabashira") — Reihenfolge, in der die zwei über den
+  `TEffectModel::reset()`-Aufruf hinweg lebenden Werte in Callee-Save-Register
+  gesichert werden. Expliziter `const char* name`-Local verschlechterte auf
+  94,35 % (zurückgesetzt); rein MWCC-interne Save-Reihenfolge, nicht über
+  Source beeinflussbar.
+
+- `Enemy/effectObj.cpp`: `TEffectObjBase::moveObject` (464 Bytes, 98,84 %).
+  Dreifach identisches FP-Register-Rotationsmuster (f0/f1/f2 zyklisch
+  vertauscht) in den drei `emitter->setGlobalScale(local_1c)`-Aufrufen —
+  inlined-Callee-Registerzuordnung, dieselbe Kategorie wie
+  `J3DModel::entryModelData`.
+
 - `NPC/NpcManager.cpp`: `TNPCManager::clipEnemies` (784 Bytes, 92,70 %).
   Bereits im Quelltext als upstream-`TODO` markiert
   ("figure out these inlines ... fabricatedInline3 matches in camera itself
