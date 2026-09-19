@@ -72,6 +72,12 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   saubere 93,83-%-Fassung. Gemäß Iterationsregel als `// NONMATCHING`
   zurückgestellt.
 
+- `Strategic/HitActor.cpp`: `THitActor::calcEntryRadius` (124 Bytes, 97,68 %).
+  Stackframe (0x40 Bytes via `char trash[0x30]`) ist reproduzierbar; die
+  Abweichungen in FPSCR-Registerwahl und Reihenfolge der `fmadds`/`frsp`-Stores
+  ließen sich in vertretbarer Zeit nicht eindeutig auf MWCC-übliche
+  Ausdrucksformen abbilden. Zurückgestellt.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -107,4 +113,5 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 ## Nächster GMSJ01-Kandidat
 
-Noch auszuwählen.
+`Strategic/HitActor.cpp`: restliche Funktionen in der Unit (insbesondere
+`initHitActor`-Pfad), mit aktuell noch offenem `calcEntryRadius`.
