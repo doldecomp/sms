@@ -184,12 +184,21 @@ void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// Binding level over a raw member read, worth +8 of low region in the
+// emit family (frame ladder 271).
+static inline JPAEmitterManager*
+EmitterMgr(const TMarioParticleManager* p)
+{
+	JPAEmitterManager* mgr = p->unk3B8;
+	return mgr;
+}
+
 JPABaseEmitter*
 TMarioParticleManager::emit(s32 param_1, const JGeometry::TVec3<f32>* param_2,
                             u8 param_3, const void* param_4)
 {
 	if (param_3 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
+		if (JPABaseEmitter* emitter = EmitterMgr(this)->createSimpleEmitterID(
 		        *param_2, param_1, param_3, 0, nullptr, nullptr))
 			return emitter;
 
@@ -268,7 +277,7 @@ TMarioParticleManager::emitAndBindToPosPtr(s32 param_1,
                                            u8 param_3, const void* param_4)
 {
 	if (param_3 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
+		if (JPABaseEmitter* emitter = EmitterMgr(this)->createSimpleEmitterID(
 		        *param_2, param_1, param_3, 0, nullptr, nullptr)) {
 			emitter->setUserWork((uintptr_t)param_2);
 			emitter->setEmitterCallBackPtr(&emitterCallBackBindToPosPtr);
