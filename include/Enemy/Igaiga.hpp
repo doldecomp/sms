@@ -38,7 +38,7 @@ public:
 	virtual void flagJump();
 	virtual bool isReachedToGoalXZ();
 	virtual void bound() { }
-	virtual bool isRolling() { return true; }
+	virtual bool isRolling() { return false; }
 	virtual void rollSE() { }
 	virtual void boundSE() { }
 
