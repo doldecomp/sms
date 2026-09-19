@@ -110,6 +110,7 @@ BOOL TMario::barWait()
 
 BOOL TMario::barClimb()
 {
+	char trash[0x30];
 	if (mHolder == nullptr)
 		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 

@@ -879,6 +879,7 @@ void TMario::checkGraffitoLava() { }
 
 void TMario::checkGraffitoSlip()
 {
+	char trash[8];
 	if (isTouchGround4cm()) {
 		mFootPrintTimer = mDeParams.mFootPrintTimerMax.get();
 
@@ -2232,6 +2233,7 @@ void TMario::thinkSand()
 
 void TMario::thinkParams()
 {
+	char trash[0x18];
 	mRotation.y = SHORTANGLE2DEG(mFaceAngle.y);
 	if (mInvincibilityFrames > 0)
 		mInvincibilityFrames -= 1;

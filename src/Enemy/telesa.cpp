@@ -537,6 +537,7 @@ BOOL TTelesa::isReachedToGoal() const
 
 bool TTelesa::changeByJuice()
 {
+	char trash[8];
 	if (checkUnk150(0x40)) {
 
 		if (mJuiceBlock != nullptr)

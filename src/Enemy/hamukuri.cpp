@@ -2219,6 +2219,7 @@ TDoroHamuKuri::TDoroHamuKuri(const char* name)
 
 void TDoroHamuKuri::init(TLiveManager* param_1)
 {
+	char trash[8];
 	THamuKuri::init(param_1);
 	mActorType = 0x10000013;
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
@@ -2256,6 +2257,7 @@ void TDoroHamuKuri::attackToMario()
 
 void TDoroHamuKuri::setBehavior()
 {
+	char trash[0x10];
 	TDoroHamuKuriManager* man = (TDoroHamuKuriManager*)getManager();
 	if (!unk198 && man->unk70) {
 		if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()

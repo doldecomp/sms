@@ -512,6 +512,7 @@ void TSmallEnemy::updateAnmSound() { TSpineEnemy::updateAnmSound(); }
 
 BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[0x30];
 	if (isEatenByYosshi() && message == HIT_MESSAGE_TAKE && !mHolder) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mHolder = (TTakeActor*)sender;
@@ -564,6 +565,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 
 bool TSmallEnemy::changeByJuice()
 {
+	char trash[0x18];
 	if (gpModelWaterManager->unk5D5F == 1 || gpModelWaterManager->unk5D5F == 2
 	    || gpModelWaterManager->unk5D5F == 3
 	    || TSmallEnemyManager::mTestJuiceType != 0) {

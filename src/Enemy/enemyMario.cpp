@@ -862,6 +862,7 @@ void TEnemyMario::emDisappearToGate()
 
 void TEnemyMario::emReplay()
 {
+	char trash[0x18];
 	mInputReplays[mReplayIndex]->play(&mIntendedMag, &mIntendedYaw,
 	                                  &unk108->mInput, &unk108->mFrameInput,
 	                                  &unk108->mAnalogLU8, &unk108->mAnalogRU8);

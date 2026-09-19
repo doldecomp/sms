@@ -670,6 +670,7 @@ void TBiancoGateKeeper::controlCollision()
 
 void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x28];
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 

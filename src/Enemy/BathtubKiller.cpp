@@ -205,6 +205,7 @@ void TBathtubKiller::reset()
 
 void TBathtubKiller::resetBathtubKiller()
 {
+	char trash[0x18];
 	mSpine->initWith(&TNerveBathtubKillerWander::theNerve());
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	unk208 = 0;

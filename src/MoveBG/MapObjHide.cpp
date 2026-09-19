@@ -418,6 +418,7 @@ BOOL TWaterHitPictureHideObj::receiveMessage(THitActor* sender, u32 message)
 
 void TWaterHitPictureHideObj::loadAfter()
 {
+	char trash[0x28];
 	THideObjBase::loadAfter();
 
 	if (mHiddenObj != nullptr) {

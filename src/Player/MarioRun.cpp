@@ -1371,6 +1371,7 @@ BOOL TMario::oilSlope()
 
 f32 TMario::downingCommon(int anim, f32 limit, int arg2)
 {
+	char trash[8];
 	f32 animRate = setAnimation(anim, 1.0f);
 	if (animRate < limit) {
 		slopeProcess();
@@ -1512,6 +1513,7 @@ BOOL TMario::loserDown()
 
 BOOL TMario::jumpSlipCommon(s16 anim, u32 status)
 {
+	char trash[8];
 	if (mInput & 0x1) {
 		slopeProcess();
 		mForwardVel *= 0.98f;

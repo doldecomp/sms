@@ -850,6 +850,7 @@ TShine::TShine(const char* name)
 
 void TEggYoshi::decideRandomLoveFruit()
 {
+	char trash[0x40];
 	u8 map = gpMarDirector->mMap;
 
 	if (map == 7 && gpMarDirector->unk7D == 1) {

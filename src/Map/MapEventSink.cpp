@@ -246,6 +246,7 @@ TPollutionObj* TMapEventSinkInPollutionReset::getResetPollutionObj(int i)
 
 void TMapEventSinkInPollutionReset::makeBuildingRecovered(int i)
 {
+	char trash[0x40];
 	TMapEventSinkInPollution::makeBuildingRecovered(i);
 	getPollutionObj(i)->kill();
 	getResetPollutionObj(i)->alive();

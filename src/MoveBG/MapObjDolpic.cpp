@@ -460,6 +460,7 @@ void TDemoCannon::startDemo()
 
 void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[0x10];
 	TMapObjBase::perform(cue, graphics);
 
 	if (!unk14C)

@@ -1860,6 +1860,7 @@ void TMario::setUpperDamageRun()
 
 void TMario::addUpper()
 {
+	char trash[0x40];
 	// volatile u32 padding[17];
 	J3DFrameCtrl& frameCtrl = mModel->getFrameCtrl(1);
 	if (mUpperState != UPPER_STATE_FIXED_ANIMATION) {

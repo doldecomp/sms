@@ -186,6 +186,7 @@ void TPoiHana::reset()
 
 void TPoiHana::moveObject()
 {
+	char trash[0x10];
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		unk1BC->mPosition = mPosition;
 	} else {

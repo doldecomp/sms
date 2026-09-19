@@ -107,6 +107,7 @@ void SMSSetupGameRenderingInfo(JDrama::TDisplay* param_1, bool param_2)
 
 void SMSSetupMovieRenderingInfo(JDrama::TDisplay* param_1)
 {
+	char trash[8];
 	GXRenderModeObj& rmo = param_1->getRenderMode();
 
 	bool noFilter = VIGetTvFormat() == 0 && OSGetProgressiveMode() == 1;

@@ -418,6 +418,7 @@ void TOptionRumbleUnit::toggle()
 
 void TOptionRumbleUnit::adjust()
 {
+	char trash[8];
 	bool b = mSelectionText->getNumber() == 1 ? true : false;
 	SMSRumbleMgr->setActive(b);
 	adjustView();
@@ -836,6 +837,7 @@ void TOptionControl::draw(J2DOrthoGraph* graph) { mScreen->draw(0, 0, graph); }
 // mario walks from the card select screen to the options screen
 bool TOptionControl::movementCard2Option()
 {
+	char trash[0x10];
 	if (gpCameraOption->unk12 == 0) {
 		mRumbleOption->mShouldRumble = false;
 		mScreen->search('oya0')->show();

@@ -1646,6 +1646,7 @@ void TBossEel::shedTears(MtxPtr spawnMtx)
 #pragma dont_inline on
 void TBossEel::forceShedTears(bool rearEyes)
 {
+	char trash[0x30];
 	mTearEyeToggle = !mTearEyeToggle;
 	s32 eyeIndex;
 	if (!rearEyes) {

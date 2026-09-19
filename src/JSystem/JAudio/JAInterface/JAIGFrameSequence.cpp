@@ -664,6 +664,7 @@ void JAIBasic::checkReadSeq()
 
 void JAIBasic::checkSeqWave()
 {
+	char trash[8];
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
 		JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[i];
 		JAISoundHandle& sound = sud->mSound;

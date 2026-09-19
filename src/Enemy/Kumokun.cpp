@@ -631,6 +631,7 @@ void TKumokun::changeBck(const char* name)
 
 void TKumokun::setDeadAnm()
 {
+	char trash[8];
 	switch (unk1EC) {
 	case 0:
 		changeBck("kumo_down1");

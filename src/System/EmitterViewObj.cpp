@@ -188,6 +188,7 @@ JPABaseEmitter*
 TMarioParticleManager::emit(s32 param_1, const JGeometry::TVec3<f32>* param_2,
                             u8 param_3, const void* param_4)
 {
+	char trash[8];
 	if (param_3 == 0)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
 		        *param_2, param_1, param_3, 0, nullptr, nullptr))
@@ -267,6 +268,7 @@ TMarioParticleManager::emitAndBindToPosPtr(s32 param_1,
                                            const JGeometry::TVec3<f32>* param_2,
                                            u8 param_3, const void* param_4)
 {
+	char trash[8];
 	if (param_3 == 0)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
 		        *param_2, param_1, param_3, 0, nullptr, nullptr)) {

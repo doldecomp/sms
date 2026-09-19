@@ -221,6 +221,7 @@ TSlotDrum::TSlotDrum(const char* name)
 
 void TSlotDrum::initMapObj()
 {
+	char trash[8];
 	unk148 = 3;
 	unk14C = 400.0f;
 	unk150 = mPosition.y;

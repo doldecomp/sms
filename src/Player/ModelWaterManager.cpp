@@ -289,6 +289,7 @@ void TModelWaterManager::makeEmit(const TWaterEmitInfo& param_1)
 
 u8 TModelWaterManager::emitRequest(const TWaterEmitInfo& param_1)
 {
+	char trash[8];
 	int particlesToSpawn = param_1.mNum.get();
 	if (particlesToSpawn == 0)
 		return 0;

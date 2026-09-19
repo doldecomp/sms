@@ -494,6 +494,7 @@ void TMario::warpInLight()
 
 void TMario::warpOutEffect(int kind, f32 rotDeg)
 {
+	char trash[8];
 	switch (kind) {
 	case 0:
 		gpMarioParticleManager->emitWithRotate(
@@ -588,6 +589,7 @@ void TMario::emitRotateShootEffect()
 
 void TMario::emitFootPrintWithEffect(int effectId, int printId)
 {
+	char trash[8];
 	int foot   = 2;
 	MtxPtr mtx = nullptr;
 	if (mStatus == MARIO_STATUS_RUN) {

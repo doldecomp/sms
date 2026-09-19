@@ -159,6 +159,7 @@ void JAIBasic::checkRequestStream()
 
 void JAIBasic::checkPlayingStream()
 {
+	char trash[8];
 	JAIStreamUpdateParameter* sud = unk0->mStreamUpdate;
 	JAISound* sound               = sud->mSound;
 

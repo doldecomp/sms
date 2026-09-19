@@ -697,6 +697,7 @@ BOOL TMario::slipFalling()
 
 BOOL TMario::fireDowning()
 {
+	char trash[8];
 	if (mStatusTimer == 1)
 		startVoice(MSD_SE_MV05_DAMAGE_FIRE_01);
 	mStatusTimer += 1;

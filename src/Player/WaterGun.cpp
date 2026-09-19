@@ -1852,6 +1852,7 @@ void TWaterGun::emit()
 }
 BOOL TWaterGun::suck()
 {
+	char trash[0x28];
 	// TODO: Missing stack space
 	// volatile u32 unused1[7];
 	if (mCurrentNozzle == (s8)Yoshi) {

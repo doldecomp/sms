@@ -797,6 +797,7 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 
 BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 {
+	char trash[0x40];
 	if (sender->getActorType() == 0x1000001
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x13)
