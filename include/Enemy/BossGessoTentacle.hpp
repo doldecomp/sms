@@ -149,7 +149,7 @@ public:
 	// fabricated
 	BOOL isThing()
 	{
-		if (mState == 6 || mState == 3 || mState == 4)
+		if (mState == 4 || mState == 6 || mState == 3)
 			return true;
 		return false;
 	}
