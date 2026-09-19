@@ -222,9 +222,11 @@ BOOL THPPlayerClose()
 u32 THPPlayerCalcNeedMemory()
 {
 	if (ActivePlayer.open) {
-		u32 size = ActivePlayer.onMemory
-		               ? ALIGN_NEXT(ActivePlayer.header.movieDataSize, 32)
-		               : ALIGN_NEXT(ActivePlayer.header.bufsize, 32) * 10;
+		u32 size;
+		if (ActivePlayer.onMemory)
+			size = ALIGN_NEXT(ActivePlayer.header.movieDataSize, 32);
+		else
+			size = ALIGN_NEXT(ActivePlayer.header.bufsize, 32) * 10;
 
 		size += ALIGN_NEXT(ActivePlayer.videoInfo.xSize
 		                       * ActivePlayer.videoInfo.ySize,
