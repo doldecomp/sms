@@ -91,6 +91,7 @@ BOOL JPADraw::initialize(JPABaseEmitter* emitter,
 		mpCalcChldVis[i] = nullptr;
 
 	JPADrawVisitorDefFlags flags;
+	char trash[0x10];
 
 	flags.mbIsEnableDrawParent = mDrawCtx.mSweepShape == nullptr
 	                             || mDrawCtx.mSweepShape->isEnableDrawParent();
