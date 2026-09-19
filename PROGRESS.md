@@ -3480,3 +3480,106 @@ falschem Frame; zurückgesetzt auf die Original-99,76-%-Fassung, da sie
 wenigstens den korrekten Stackframe hat. `JSystem/JKernel/JKRExpHeap.cpp::
 allocFromHead(u32,int)` (98,78 %, Register-Scheduling um -1-Konstante)
 ebenfalls in drei Varianten versucht, kein Fortschritt.
+
+### Nach neunundvierzigster Iterationsrunde (`TBathtubKiller::behaveToWater`: falsche Algorithmus-Logik entdeckt und korrigiert rekonstruiert; **grundlegender Methodik-Fund**: `theNerve()`-Inlining ist eine dateiweite Compiler-Heuristik, kein Einzelfunktions-Rätsel)
+
+**Ausgangspunkt**: Im dokumentierten `TBathtubKiller`-Cluster (Runde 47) wurde
+`behaveToWater(THitActor*)` erneut untersucht. Der bisherige Quellcode
+(`{ breakBathtubKiller(); }`, 34,3 % Fuzzy-Match) erwies sich beim direkten
+Disassembly-Vergleich nicht nur als unpräzise, sondern als **komplett falscher
+Algorithmus**: Retail implementiert exakt dasselbe `isDying`-Muster wie
+`attackToMario` (Vergleich des aktuellen Nerve gegen
+`TNerveBathtubKillerExplosion::theNerve()` und `TNerveBathtubKillerBreak::
+theNerve()`), gefolgt von `mSpine->pushNerve(&TNerveBathtubKillerBreak::
+theNerve())`, falls nicht sterbend — kein Aufruf von `breakBathtubKiller()`
+überhaupt. Als Quellcode rekonstruiert:
+
+```cpp
+void TBathtubKiller::behaveToWater(THitActor*)
+{
+	bool isDying
+	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
+	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+
+	if (!isDying) {
+		mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
+	}
+}
+```
+
+Kompiliert sauber, aber der Disassembly-Vergleich zeigte einen fundamentalen
+strukturellen Unterschied: Im Retail-Objekt existiert `TNerveBathtubKillerExplosion
+::theNerve()` (und `TNerveBathtubKillerBreak::theNerve()`) als **eigenständige,
+reale Out-of-line-Funktion** (`.fn theNerve__28TNerveBathtubKillerExplosionFv`,
+ausschließlich per `bl` aufgerufen — bestätigt an *allen* sechs Retail-Aufrufstellen
+im Cluster: `behaveToWater` ×2, `isCollidMove` ×7, `receiveMessage` ×4,
+`perform` ×3, `bind` ×5, `attackToMario` ×1 „echter" Aufruf). In unserem aktuellen
+Build dagegen wird der komplette `theNerve()`-Rumpf (Lazy-Init-Guard, vtable-
+Konstruktion, `__register_global_object`-Aufruf) **vollständig inline** in
+`behaveToWater` expandiert — die Funktion `theNerve__28TNerveBathtubKillerExplosionFv`
+existiert in unserem Objekt gar nicht als eigene Symboldefinition.
+
+**Hypothesentest 1 (Datei-Reihenfolge)**: Vermutung, dass die Inline-Entscheidung
+von der Position der *ersten* Aufrufstelle in der Datei abhängt (`attackToMario`
+erscheint vor `behaveToWater`). `attackToMario` probeweise mit der in Runde 47
+rekonstruierten Logik wieder eingefügt (gemeinsam mit `behaveToWater`) und neu
+gebaut — **kein Effekt**, `behaveToWater` blieb vollständig inline. Hypothese
+verworfen.
+
+**Fund im Retail-Disassembly**: `attackToMario` selbst dupliziert den
+Lazy-Init-Guard für `TNerveBathtubKillerExplosion` *zweimal inline* (einmal für
+den `isDying`-Vergleich, einmal für die `pushNerve(&Explosion::theNerve())`-Aufrufstelle
+später in derselben Funktion) — vermutlich eine lokale CSE-Optimierung des
+Compilers für *mehrfach in derselben Funktion referenzierte* Aufrufe. Für
+`TNerveBathtubKillerBreak` (nur einmal in `attackToMario` referenziert) bleibt
+es dagegen bei einem regulären `bl theNerve__24TNerveBathtubKillerBreakFv`.
+Dieses Verhalten ist strikt lokal pro Funktion, keine dateiweite Weiterverbreitung
+(bestätigt: `behaveToWater` referenziert `TNerveBathtubKillerExplosion::theNerve()`
+in Retail ebenfalls nur einmal und erhält dort einen regulären `bl`-Aufruf, nicht
+die Inline-Behandlung).
+
+**Hypothesentest 2 (Aufrufstellen-Gesamtzahl in der TU)**: Vermutung, dass MWCCs
+Auto-Inliner die Entscheidung „lohnt sich eine eigene Out-of-line-Funktion" von
+der *Gesamtzahl* der `theNerve()`-Aufrufstellen in der ganzen Übersetzungseinheit
+abhängig macht (Retail: rund 22 Aufrufstellen über sechs Funktionen; unser
+aktueller Stand: 2–6). Günstiger Test: `isAboided()` und `canChase()`
+(bisher leere Stubs) probeweise mit zusätzlichen (nicht committeten)
+`theNerve()`-Referenzen bestückt, um die Gesamtzahl testweise zu erhöhen, ohne
+die vollständige Cluster-Rekonstruktion vorwegzunehmen. Nach Neubau blieb
+`behaveToWater` weiterhin vollständig inline — Hypothese in dieser einfachen
+Form ebenfalls verworfen (der tatsächliche Schwellenwert, falls einer existiert,
+liegt jedenfalls deutlich höher als die getestete Aufstockung, oder die
+Entscheidung hängt zusätzlich von der Gesamtkomplexität/-größe der Datei ab,
+die in unserem Stand noch weit von Retails vollständiger ~4000-Zeilen-Implementierung
+entfernt ist).
+
+**Schlussfolgerung**: Das `theNerve()`-Inlining-Verhalten ist keine lokale
+Stellschraube, die sich durch Umformulierung einer einzelnen Funktion lösen
+lässt (anders als die bisher dokumentierten `char trash[N]`-Fälle). Es handelt
+sich um eine dateiweite MWCC-Optimierungsheuristik, deren genaue
+Schwellenwertbedingung nicht mit vertretbarem Aufwand isoliert reproduzierbar
+ist, ohne den *gesamten* `TBathtubKiller`-Cluster (`isCollidMove`,
+`receiveMessage`, `perform`, `bind` — je 100–300+ Byte komplexe Funktionen,
+alle mit Retail-Referenzdisassembly bereits in `build/_btk_check_obj.s`
+vorliegend) gemeinsam korrekt zu rekonstruieren. Das ist ein legitimes, aber
+deutlich größeres Vorhaben als ein Einzelfunktions-Fix und wird für eine
+zukünftige, dedizierte Mehrfunktions-Rekonstruktionsrunde zurückgestellt.
+Da `behaveToWater` mit der korrigierten Logik weiterhin nicht Byte-exakt
+matcht, wurde die Änderung gemäß Session-Regel (nur Byte-exakte Fixes werden
+committet) sauber zurückgesetzt; `src/Enemy/BathtubKiller.cpp` bleibt im
+Stand von Runde 48.
+
+**Wichtiger methodischer Nebenbefund**: Die Entdeckung selbst — dass
+`behaveToWater`s bisherige Logik (`breakBathtubKiller()`) *inhaltlich falsch*
+war, nicht nur unpräzise geplant — bestätigt erneut den in Runde 47
+etablierten Ansatz „bereits implementierte, aber nicht vollständig
+matchende Funktionen im TBathtubKiller-Cluster auf falsche Algorithmen prüfen,
+nicht nur auf Register-/Rahmen-Rätsel". Das `isDying`-OR-Muster
+(`cur == &Explosion::theNerve() || cur == &Break::theNerve()`) bleibt als
+Vorlage für zukünftige Cluster-Arbeit bestätigt (jetzt dreifach beobachtet:
+`attackToMario`, `behaveToWater`, sowie in `isCollidMove`/`receiveMessage`s
+Retail-Disassembly strukturell wiedererkannt).
+
+Session-Gesamtstand bleibt bei 400 verifizierten echten Fixes in 58 Commits
+(kein neuer Commit diese Runde — Inhalt korrekt rekonstruiert, aber
+Byte-Match durch dateiweite Inlining-Heuristik blockiert).
