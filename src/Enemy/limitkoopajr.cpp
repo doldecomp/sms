@@ -185,8 +185,11 @@ void TLimitKoopaJr::setAnimationIndex(int index)
 // (`addi r4, this, 0x158`) before loading it. The same six-per-timer shape
 // holds for TKoopaJr (0x4c, three timers), TTinKoopa (0x4c) and
 // TKoopaJrSubmarine (0x1c), so the level is shared. Refuted: a TU-local
-// `static inline decreaseTimer(int*)` -- MWCC folds `&member` back into a
-// direct member access and the body stays 0x2c.
+// `static inline decreaseTimer(int*)` and, structural pass IX, the same helper
+// with an `int&` parameter -- MWCC folds `&member` back into a direct member
+// access either way and the body stays 0x2c. Note retail's *load* keeps the
+// direct `0x158(this)` form and only the store goes through the bound
+// address, so whatever creates it is not a plain reference binding.
 void TLimitKoopaJr::updateTimers()
 {
 	if (unk158 > 0)
