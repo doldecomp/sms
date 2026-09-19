@@ -1405,6 +1405,7 @@ u16 TTrack::readRegDirect(u8 reg)
 
 void TTrack::writeRegDirect(u8 reg, u16 value)
 {
+	char trash[8];
 	u16 top;
 	u16 uVar1;
 	u8 r30 = reg;
