@@ -22,6 +22,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A `const` accessor restores per-use re-reads and can also *cause* a CSE; decide per statement (codegen-tells.md: "header round 7").
 - A store cannot cross a call, so a store after a `bl` dates that declaration after it (codegen-tells.md: "Batch 59").
 - Argument `.get()`s defer loads to the call; arguments evaluate right to left, named locals left to right (codegen-tells.md: "Load and store order").
+- A global read through its inline accessor (`&SMS_GetMarioPos()` for `gpMarioPos`) is a free evaluation-order knob: as an argument it loads ahead of the receiver, as the receiver ahead of the arguments (codegen-tells.md: "Reloc-target pass IV").
+- `a * b * c` association reads off the first `fmuls`; a retail `bne <true-arm>` with the false value in the fallthrough means the source negated the ternary's test (codegen-tells.md: "Reloc-target pass IV").
 - `f32 x = a - b;` subtracts into `b`'s register, `x = a; x -= b;` into `a`'s (codegen-tells.md: "batch 80").
 
 ## Inlining decisions
