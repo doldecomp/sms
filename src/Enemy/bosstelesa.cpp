@@ -1603,6 +1603,12 @@ void TBossTelesa::tongueHitWater()
 		mSpine->pushNerve(&TNerveBossTelesaSlotStart::theNerve());
 }
 
+static inline MSound* BossTelesaRouletteFallGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 bool TBossTelesa::rouletteFall()
 {
 	f32 y      = mRoulettes[0]->mPosition.y;
@@ -1616,14 +1622,14 @@ bool TBossTelesa::rouletteFall()
 			if (SMS_SendMessageToMario(this, HIT_MESSAGE_TAKE))
 				mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
 		} else if (SMS_SendMessageToMario(this, HIT_MESSAGE_UNK8)) {
-			gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_SET, &mPosition, 0,
+			BossTelesaRouletteFallGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_SET, &mPosition, 0,
 			                          nullptr, 0, 4);
 			mHeldObject = nullptr;
 		}
 
-		gpMSound->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1B, &mPosition, 0,
+		BossTelesaRouletteFallGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1B, &mPosition, 0,
 		                          nullptr, 0, 4);
-		gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_DOWN, &mPosition, 0,
+		BossTelesaRouletteFallGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_DOWN, &mPosition, 0,
 		                          nullptr, 0, 4);
 		gpMarioOriginal->mGamePad->onNeutralMarioKey();
 
@@ -1637,7 +1643,8 @@ bool TBossTelesa::rouletteFall()
 
 bool TBossTelesa::slotFall()
 {
-	f32 y = mSlot->mPosition.y;
+	TLiveActor* slot = mSlot;
+	f32 y            = slot->mPosition.y;
 	if (y > mRoulettes[0]->mPosition.y - 800.0f) {
 		mSlot->mPosition.y = y - 5.0f;
 		return false;
