@@ -254,6 +254,7 @@ void TEffectModel::moveObject()
 void TEffectModel::calcRootMatrix()
 {
 	TPosition3f mtx;
+	char trash[8];
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 	               mRotation.y, mRotation.z);
 	mtx.translation(mPosition.x, mPosition.y, mPosition.z);
