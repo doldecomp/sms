@@ -53,7 +53,9 @@ public:
 	MActor* createMActorFromDefaultBmd(const char* folder, u32 flags);
 	MActor* getMActor(const char* name) const;
 	MActor* createAndRegister(SDLModelData* model_data, u32 model_flags);
+#pragma dont_inline on
 	MActorAnmData* getMActorAnmData() const { return mActorAnmData; }
+#pragma dont_inline off
 
 	const TModelDataKeeper* getModelDataKeeper() const
 	{
