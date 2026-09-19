@@ -14,6 +14,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A stack or member address used at two call sites is bound once into a callee-saved register; per-site `addi` is one instruction short each time (codegen-tells.md: "Structural pass 173").
 - An `int` local feeding an `int` parameter gives `mr`, a `u8` one `addi rD, rS, 0` (codegen-tells.md: "Structural pass 173").
 - Switch arms are emitted in **source** order, the pivot tree is value-sorted; decode destinations, not constants (codegen-tells.md: "batch 122").
+- Range grouping of an `x == c` chain over contiguous constants (one range test vs one test plus a range) is emergent per expansion: retail emits both from one source; never reorder the `||` terms for it (codegen-tells.md: "Header round 32").
+- Count a header helper's real call sites with `objdump -dr` and `R_PPC_REL24` rows; plain `objdump -d` shows an unrelocated `bl` as a self-branch (codegen-tells.md: "Header round 32").
 - Sequential `cmpwi` = `if`/`else if`; signed `cmpwi` on a `u32` = `switch`; empty cases move the pivot (codegen-tells.md: "`tinkoopa`").
 - Materialised bool = inlined bool helper, direct branch = inline compare; both occur in one TU (codegen-tells.md: "Booleans and predicates").
 - `return x==N` is branchless, `return h()` adds `clrlwi`, `?TRUE:FALSE` a second branch, `bool` branches to `li 1/0` (codegen-tells.md: "Booleans and predicates").
