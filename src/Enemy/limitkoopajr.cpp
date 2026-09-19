@@ -348,6 +348,12 @@ TDirectionCalc TLimitKoopaJr::makeDirection(JGeometry::TVec3<f32> point)
 	return calc;
 }
 
+static inline TLimitKoopaJr* LimitKoopaJrGetBody(TSpineBase<TLiveActor>* spine)
+{
+	TLimitKoopaJr* body = (TLimitKoopaJr*)spine->getBody();
+	return body;
+}
+
 DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor)
 {
 	TLimitKoopaJr* koopaJr = (TLimitKoopaJr*)spine->getBody();
@@ -410,7 +416,7 @@ DEFINE_NERVE(TNerveLimitKoopaJrLaunch, TLiveActor)
 
 DEFINE_NERVE(TNerveLimitKoopaJrYahoo, TLiveActor)
 {
-	TLimitKoopaJr* koopaJr = (TLimitKoopaJr*)spine->getBody();
+	TLimitKoopaJr* koopaJr = LimitKoopaJrGetBody(spine);
 
 	if (spine->getTime() == 0)
 		koopaJr->setAnimationIndex(TLimitKoopaJr::LIMITKOOPAJR_ANM_YAHOO);
