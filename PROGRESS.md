@@ -3118,6 +3118,75 @@ Funktionszahl: 8983 → **8986** (**+3**). DOL SHA1 bleibt `OK`.
 
 
 
+### Nach fünfundvierzigster Iterationsrunde (systematischer Vollabdeckungs-Scan des 99,5–99,99-%-Bands: 1 weiterer Treffer; drei neue Compiler-Heuristik-Grenzfälle dokumentiert)
+
+**Vollständiger Neu-Scan des 99,5–99,99-%-Match-Bands über ALLE 197
+betroffenen Einheiten** (730 Kandidaten, nicht mehr nur ≤ 800 Bytes
+wie in Runde 43, sondern jede Größe): 515 echte additive
+Stackframe-Lücken gefunden und einzeln per `char trash[N]` getestet
+(automatisierte Pipeline: Funktion im Quelltext lokalisieren,
+`trash[N]` einfügen, Einheit neu bauen, `dtk elf disasm` vergleichen,
+bei Nichttreffer automatisch zurücksetzen). Ergebnis: **1 Treffer**
+(`TSunGlass::load`, `char trash[24]`) — bestätigt erneut, dass der
+additive-Lücken-Pool für dieses Band praktisch erschöpft ist (Runde
+43 hatte bereits 575 Kandidaten im ≤ 800-Byte-Teilbereich
+abgearbeitet; die verbleibenden ~150 neuen Kandidaten in diesem
+erweiterten Scan lieferten nur den einen zusätzlichen Fund).
+
+**Kernel-Absturz bei zu großem Batch (171 Kandidaten in einem
+Eval-Aufruf) reproduziert und sauber gehandhabt**: nach Absturz zeigte
+`git status` genau eine midway-modifizierte Datei
+(`src/NPC/NpcChange.cpp`, ein `trash[24]`-Versuch in
+`TBaseNPC::behaveToHitObject_`); direkter `dtk elf disasm`-Vergleich
+außerhalb des Kernels bestätigte NICHT-Match, sauber per `git
+checkout --` zurückgesetzt. Bestätigt erneut die Session-Regel:
+Batch-Größe ≤ 40 Kandidaten pro Eval-Aufruf für Crash-Sicherheit.
+
+**Drei neue, tiefer untersuchte Compiler-Heuristik-Grenzfälle
+gefunden, alle nicht behebbar**:
+1. **`TMapWireManager::getPointPosInNthWire`** (57 %, 96 B): Quelltext
+   ruft `getWire(param_1)` bereits zweimal explizit auf (identisch zu
+   Retail), aber unser Compiler CSE't (common subexpression
+   elimination) den kompletten `unk18[index]`-Speicherzugriff über
+   die Aufrufgrenze hinweg, während Retail den Load bei jedem Aufruf
+   neu ausführt (nur der Index-Shift wird geteilt). Reine
+   Optimierer-Entscheidung, nicht steuerbar.
+2. **`TSpineEnemy::isReachedToGoal()`** (67,5 %, 184 B,
+   `include/Enemy/Enemy.hpp`): Versuch, das Muster bereits
+   existierender, funktionierender Geschwister-Implementierungen
+   (`THaneHamuKuri::isReachedToGoal`, `TTamaNoko::isReachedToGoal` —
+   beide kopieren `unk104.getPoint()` zuerst in ein benanntes
+   `JGeometry::TVec3<f32>`-Local) auf die Basisklassen-Version
+   anzuwenden. Nach Vollbau: Match-Rate verschlechterte sich auf
+   42,0 % (von 67,5 %) — sofort zurückgesetzt. Zeigt: dasselbe
+   Quelltextmuster kann je nach Kontext (virtuelle Funktion in
+   vielfach eingebundenem Header vs. konkrete Klassenmethode in
+   eigener `.cpp`) zu unterschiedlichem MWCC-Codegen führen.
+3. **`JPAVecToRotaMtx`** (56,9 %, 436 B,
+   `src/JSystem/JParticle/JPAMath.cpp`): Retail prüft den
+   Schwellenwert auf dem QUADRIERTEN Wert `sq` (via Konstante
+   `@1489`) BEVOR die teure `frsqrte`-basierte Quadratwurzel via
+   `JGeometry::TUtil<f32>::sqrt()` berechnet wird (lazy evaluation),
+   während unser Quelltext `sin = TUtil<f32>::sqrt(sq)` unbedingt
+   VOR der `if (sin > epsilon())`-Prüfung berechnet. Erfordert eine
+   Restrukturierung, bei der `sin` nur im positiven Zweig berechnet
+   und trotzdem für die spätere Matrixkonstruktion verfügbar bleibt —
+   als konkreter, aber nicht-trivialer nächster Schritt dokumentiert,
+   nicht in dieser Runde umgesetzt.
+
+**`TConsoleStr::processGo`** (14,2 %, 1684 B,
+`src/GC2D/ConsoleStr.cpp`): mehrere bestehende
+`// TODO: all wrong`/`// TODO:`-Kommentare eines früheren
+Beitragenden zeigen, dass die verschachtelte If-Kette
+(`param_1 >= 90/95/175`-Fälle) nur teilweise rekonstruiert ist — echte
+Mehr-Stunden-Rekonstruktion, für künftige Session vorgemerkt.
+
+**Session-Gesamtstand nach Runde 45: 400 tatsächlich verifizierte
+Funktionen** (399 aus Runde 1–44 plus 1 neue in Runde 45:
+`TSunGlass::load`) in 58 Commits. Funktionszahl: 8986 → **8987**
+(**+1**). DOL SHA1 bleibt `OK`.
+
+
 ## Nächster GMSJ01-Kandidat
 **Neuer, großer Kandidaten-Cluster identifiziert (Runde 44):
 `src/Enemy/BathtubKiller.cpp`** — `TBathtubKiller`/`TBathtubKillerManager`
