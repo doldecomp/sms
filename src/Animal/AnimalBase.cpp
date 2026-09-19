@@ -305,8 +305,8 @@ void TAnimalBase::execWalk(bool moving)
 		mTurnSpeed    = walkSpeed * SMSGetAnmFrameRate();
 	}
 
-	f32 turnSpeed  = mTurnSpeed;
 	f32 marchSpeed = mMarchSpeed;
+	f32 turnSpeed  = mTurnSpeed;
 
 	JGeometry::TVec3<f32> diff = unkF4.getPoint();
 	diff -= mPosition;
