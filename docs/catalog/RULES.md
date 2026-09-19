@@ -73,6 +73,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 
 ## Frame-size gaps
 
+- Validate with `volatile char trash[N]` in the caller's own body only: inside an inlined callee a trivial POD prices 0, so probe a callee with a `struct S { ~S() {} u32 a; }` local (frame-gaps.md: "Research batch 233").
 - Validate with `volatile char trash[N]`: 100% with no instruction diff means only the frame is wrong. Never commit padding (frame-gaps.md: "Diagnosing").
 - Locals start at `0xc(r1)`, `frame = align8(0xc + locals + 1)`; an outgoing area costs 8 bytes per `f32` argument (frame-gaps.md: "Diagnosing").
 - An inlined callee's **class-object** locals form their own block that always ranks **above** the caller's own named locals; blocks stack downward in expansion order, later-declared higher inside a block; the only knob is which body declares the object, caller-side scope/position and triviality are inert (frame-gaps.md: "Research batch 208").
