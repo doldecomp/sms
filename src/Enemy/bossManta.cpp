@@ -352,7 +352,7 @@ BOOL TNerveMantaAppearDemo::execute(TSpineBase<TLiveActor>* spine) const
 	if (time == 0) {
 		self->mPosition.x = 0.0f;
 		self->mPosition.y = 0.0f;
-		self->mPosition.z = self->getSaveParams()->mSLAppearDemoInitialZ.get();
+		self->mPosition.z = self->getSaveParams()->mSLAppearDemoInitialZ.value;
 		self->unk170.x    = 0.0f;
 		self->unk170.y    = 0.0f;
 		self->unk170.z    = -1.0f;
