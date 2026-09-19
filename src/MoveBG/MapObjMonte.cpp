@@ -1144,7 +1144,7 @@ void TFluffManager::findNextFluff()
 	}
 }
 
-// TODO: 96.4%. The frame is still 0x48 short; the missing locals are
+// TODO: 97.1%. The frame is still 0x48 short; the missing locals are
 // somewhere in the STATE_CALM hand-off.
 void TFluffManager::control()
 {
@@ -1180,13 +1180,14 @@ void TFluffManager::control()
 		break;
 	}
 
-	// TODO: Two residues left. (1) retail expands TMapObjBase::
-	// getDistance inside the inlined findNextFluff (`lfsu 0x10`, three
-	// `fsubs`/`fmuls`, `bl TUtil<f32>::sqrt`); we `bl` it -- a shared-header
-	// (MapObjBase.hpp) depth/statement-count item, parked. (2) STATE_CALM
-	// reads unkD0 through an advanced base (`lfsu f31, 0xd0(r3)`) and writes
-	// it from one reload; a `Vec&` binding (83.9) and a `TMapObjManager*`
-	// binding (85.3) both measured worse than the raw spelling.
+	// TODO: retail reads unkD0 here through an advanced base
+	// (`lfsu f31, 0xd0(r3)`, then 4(r3)/8(r3)) and stores it back with three
+	// plain `stfs` off one reload of the global -- i.e. the *read* group is
+	// the member call and the *write* group the raw components, the opposite
+	// of what is spelled here. Measured from 96.4: this (`set` on the store
+	// side) 97.1, a `TVec3<f32>&` binding on the read side plus `set` 96.8,
+	// binding plus `set` without the named `rate`/`minWind` 97.0, and a
+	// `TMapObjManager*` local for both groups 94.6.
 	case STATE_CALM: {
 		f32 rate = mWindDownRate;
 		f32 windX = gpMapObjManager->unkD0.x * rate;
@@ -1215,9 +1216,7 @@ void TFluffManager::control()
 			mState                  = STATE_WAIT;
 		}
 
-		gpMapObjManager->unkD0.x = windX;
-		gpMapObjManager->unkD0.y = windY;
-		gpMapObjManager->unkD0.z = windZ;
+		gpMapObjManager->unkD0.set(windX, windY, windZ);
 		break;
 	}
 	}
