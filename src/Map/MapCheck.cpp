@@ -286,6 +286,14 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 	return 9999999.0f;
 }
 
+// HEADER NEED: TBGCheckListRoot has getRoofList()/getWallList() but no
+// getGroundList(); parked here as a TU-local until the shared header can take
+// it.
+static inline const TBGCheckList* MapCheckGroundList(const TBGCheckListRoot& r)
+{
+	return r.unk0[0].getNext();
+}
+
 // Binding level over a raw member read, worth +16 of low region in
 // TMapCollisionData::checkGround (batch 127).
 static inline TMapCheckGroundPlane* MapCheckGroundPlane(const TMapCollisionData* p)
@@ -308,11 +316,13 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 
 	const TBGCheckData* local_60;
 	f32 dVar5 = checkGroundList(
-	    x, y, z, flags, getGridRoot18(gridX, gridZ).getRoofList(), &local_60);
+	    x, y, z, flags, MapCheckGroundList(getGridRoot18(gridX, gridZ)),
+	    &local_60);
 
 	const TBGCheckData* local_64;
 	f32 dVar6 = checkGroundList(
-	    x, y, z, flags, getGridRoot14(gridX, gridZ).getRoofList(), &local_64);
+	    x, y, z, flags, MapCheckGroundList(getGridRoot14(gridX, gridZ)),
+	    &local_64);
 
 	if (MapCheckGroundPlane(this) != nullptr) {
 		const TBGCheckData* local_68;
@@ -399,7 +409,7 @@ static bool bgIntersectLine(const TBGCheckData* data,
 	return true;
 }
 
-inline const TBGCheckData* intersectLineList(const TBGCheckList* head,
+static const TBGCheckData* intersectLineList(const TBGCheckList* head,
                                              const JGeometry::TVec3<f32>& start,
                                              const JGeometry::TVec3<f32>& end,
                                              bool front_only,
