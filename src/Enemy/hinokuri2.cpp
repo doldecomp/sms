@@ -736,7 +736,7 @@ void THinokuri2::changeBck(int param_1)
 			        param_1));
 		}
 
-		getMActor()->getAnmBck()->setFrameCtrl(param_1);
+		mMActor->getAnmBck()->setFrameCtrl(param_1);
 	}
 
 	mCurrentBck = param_1;
@@ -744,7 +744,7 @@ void THinokuri2::changeBck(int param_1)
 	J3DFrameCtrl* pJVar7 = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (pJVar7 != nullptr) {
 		if (mLevel == 0 && (param_1 - 23U <= 1 || param_1 - 26U <= 1))
-			pJVar7->setRate(((THino2Params*)getSaveParam())->mSLWalkSpeedRateLv0.get());
+			pJVar7->setRate(((THino2Params*)getSaveParam())->mSLWalkSpeedRateLv0.value);
 		else
 			pJVar7->setRate(1.0f);
 	}

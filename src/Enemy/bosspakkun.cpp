@@ -1173,7 +1173,7 @@ void TBossPakkun::changeBck(int index)
 	if (index == BOSSPAKU_BCK_POLLUT_START)
 		getMActor()
 		    ->getFrameCtrl(ANM_TYPE_BCK)
-		    ->setRate(getSaveParam2()->mSLVomitAnmRate.get());
+		    ->setRate(getSaveParam2()->mSLVomitAnmRate.value);
 
 	f32 blendFrames = -1.0f;
 	if (prev == BOSSPAKU_BCK_WAIT) {
