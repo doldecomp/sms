@@ -68,6 +68,12 @@ int KoopaNeckCallBack(J3DNode*, int);
 // Nerves
 // ---------------------------------------------------------------------------
 
+static inline TKoopa* KoopaGetBody(TSpineBase<TLiveActor>* spine)
+{
+	TKoopa* koopa = (TKoopa*)spine->getBody();
+	return koopa;
+}
+
 BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
@@ -178,7 +184,7 @@ BOOL TNerveKoopaTumble::execute(TSpineBase<TLiveActor>* spine) const
 
 BOOL TNerveKoopaFall::execute(TSpineBase<TLiveActor>* spine) const
 {
-	TKoopa* koopa = (TKoopa*)spine->getBody();
+	TKoopa* koopa = KoopaGetBody(spine);
 
 	koopa->changeAnm(KOOPA_ANM_FALL, 0, koopa->getParam()->fallSpeed.get());
 	return FALSE;
@@ -350,7 +356,7 @@ BOOL TNerveKoopaProvoke::execute(TSpineBase<TLiveActor>* spine) const
 
 BOOL TNerveKoopaStagger::execute(TSpineBase<TLiveActor>* spine) const
 {
-	TKoopa* koopa = (TKoopa*)spine->getBody();
+	TKoopa* koopa = KoopaGetBody(spine);
 
 	koopa->changeAnm(KOOPA_ANM_STAGGER, 0,
 	                 koopa->getParam()->staggerSpeed.get());
@@ -361,7 +367,7 @@ BOOL TNerveKoopaStagger::execute(TSpineBase<TLiveActor>* spine) const
 
 BOOL TNerveKoopaGetShowered::execute(TSpineBase<TLiveActor>* spine) const
 {
-	TKoopa* koopa = (TKoopa*)spine->getBody();
+	TKoopa* koopa = KoopaGetBody(spine);
 
 	koopa->changeAnm(KOOPA_ANM_WATERHIT, 0,
 	                 koopa->getParam()->waterhitSpeed.get());
@@ -1303,10 +1309,16 @@ MtxPtr TKoopa::getHeadMtx() const
 	return getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
 }
 
+static inline TKoopaParams* KoopaGetParam(const TKoopa* koopa)
+{
+	TKoopaParams* param = koopa->getParam();
+	return param;
+}
+
 void TKoopa::reset()
 {
 	TSpineEnemy::reset();
-	changeAnm(KOOPA_ANM_WAIT, 1, getParam()->waitSpeed.get());
+	changeAnm(KOOPA_ANM_WAIT, 1, KoopaGetParam(this)->waitSpeed.get());
 	mWaitTimer = 600;
 }
 
