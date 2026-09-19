@@ -1279,6 +1279,24 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `volatile f32 y`-Local bei `0x14` statt `0x10`, Frame identisch;
   drei Padding-Varianten alle wirkungslos (exakt gleicher Match%).
 
+- `Map/PollutionLayer.cpp`: `TPollutionLayer::stampModel` (99,27 %).
+  Einziger Diff: Ladereihenfolge von `x` (aus `model`) und `mMinX` (aus
+  `this`) vertauscht (reine Instruktions-Scheduling-Reihenfolge, gleiche
+  Zielregister). Operanden-Vertauschung im Vergleich (`mMinX > x` statt
+  `x < mMinX`) verschlechtert auf 98,27 %; Deklarationsreihenfolge von
+  `x`/`z` getauscht: keine Wirkung (99,267 % ~ identisch). Zurückgesetzt.
+
+- `MoveBG/MapObjRailBlock.cpp`: `TNormalLift::setGroundCollision`
+  (95,74 %). `TRailMapObj::setGroundCollision` (die per Quelltext
+  aufgerufene Basisklassenmethode) matcht **für sich genommen 100 %**;
+  beim Inlinen in `TNormalLift::setGroundCollision` erzeugt unser Build
+  jedoch einen zusätzlichen `__ct__` (leerer `SMatrix34C<f32>`-Default-
+  Konstruktor für das lokale `TMtx34f mtx`), den das Original an dieser
+  Inlining-Stelle wegoptimiert. `#pragma dont_inline on/off` um die
+  aufrufende Funktion ohne Wirkung (identisches Ergebnis). Kontext-
+  abhängige MWCC-Inlining-Entscheidung, nicht ohne Risiko für die
+  bereits 100 % matchende Basismethode angreifbar.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
