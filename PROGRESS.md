@@ -73,6 +73,11 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `dflt` deklariertes `char trash[8]` reproduziert Stackframe und
   Local-Offsets des Originals.
 
+- `JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp`:
+  `J3DMaterialFactory_v21::newNBTScale` — **100 %** (168 Bytes).
+  Derselbe nach dem Rückgabewert deklarierte `char trash[8]` gleicht
+  Stackframe und Local-Offsets an; `.text` und `.sdata2` matchen vollständig.
+
 - `MSound/MSoundBGM.cpp`: `MSBgm::init` — **100 %** (136 Bytes).
   `char trash[0x20]` stellt den originalen 0x48-Byte-Stackframe wieder her;
   danach matchen auch `.text`, `.data`, `.bss` und `.sdata` der Unit zu 100 %.

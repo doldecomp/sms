@@ -377,6 +377,7 @@ u8 J3DMaterialFactory_v21::newDither(int idx) const
 J3DNBTScale J3DMaterialFactory_v21::newNBTScale(int idx) const
 {
 	J3DNBTScale defaultNbtScale;
+	char trash[8];
 
 	J3DMaterialInitData_v21* initData = &mpMaterialInitData[mpMaterialID[idx]];
 
