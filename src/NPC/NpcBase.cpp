@@ -103,11 +103,17 @@ void TBaseNPC::load(JSUMemoryInputStream& stream)
 		setIndividualDifference_(stream);
 }
 
+static inline TMarDirector* TBaseNPCGetMarDirector()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
 void TBaseNPC::loadAfter()
 {
 	TSpineEnemy::loadAfter();
-	if (mActorType == 0x4000018 && gpMarDirector->getCurrentMap() == 1
-	    && gpMarDirector->getCurrentStage() == 1) {
+	if (mActorType == 0x4000018 && TBaseNPCGetMarDirector()->getCurrentMap() == 1
+	    && TBaseNPCGetMarDirector()->getCurrentStage() == 1) {
 		mBalloonCtrl = new TNpcBalloon;
 	}
 	gpMarDirector->entryNPC(this);
