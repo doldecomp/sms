@@ -71,6 +71,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 
 - Validate with `volatile char trash[N]`: 100% with no instruction diff means only the frame is wrong. Never commit padding (frame-gaps.md: "Diagnosing").
 - Locals start at `0xc(r1)`, `frame = align8(0xc + locals + 1)`; an outgoing area costs 8 bytes per `f32` argument (frame-gaps.md: "Diagnosing").
+- An inlined callee's **class-object** locals form their own block that always ranks **above** the caller's own named locals; blocks stack downward in expansion order, later-declared higher inside a block; the only knob is which body declares the object, caller-side scope/position and triviality are inert (frame-gaps.md: "Research batch 208").
 - Inline temporaries grow up from 0xc in expansion order; named locals down from the top, first declared highest (frame-gaps.md: "Two regions").
 - Classify by inter-slot deltas: uniform = low region (levers work), a hole in the named block = a missing declaration, located with `trash[N]` declared **last** (frame-gaps.md: "batch 120").
 - Accessor steps are 8 bytes, never 4, on member chains; a global fork is +4 per read; an indexed accessor on structs +16 per use (codegen-tells.md: "batch 65").
