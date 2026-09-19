@@ -99,6 +99,10 @@ Most remaining differences in these units are frame gaps and per-call-site inlin
 ## Still open
 
 - **The branch exists only on this disk.** No fork is configured. This is the outstanding risk and needs a remote from the user.
+- **`System/MarioGamePad` is linked on top of a fakematch**: `updateMeaning` still carries the
+  pre-existing `u32 stackAlloc[83]` padding (336 bytes of dead low region over 26 inlined
+  expansions). The linked count of 492 includes it; the unit is not honestly closed until the
+  padding is replaced by real locals (`docs/catalog/linking.md`, "Links 279").
 - `Camera/CameraInbetween` matches but will not link: `docs/catalog/linking.md`.
 - Units one function from linking (`MSoundBGM`, `MarioAccess`): `docs/catalog/frame-gaps.md`.
 - About 200 nerve bodies, and most enemy and MoveBG methods, are unwritten.
