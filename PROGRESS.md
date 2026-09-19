@@ -78,6 +78,12 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   FPSCR-Registerwahl und Reihenfolge der `fmadds`/`frsp`-Stores und ließen
   sich nicht eindeutig auf MWCC-übliche Ausdrucksformen abbilden.
 
+- `Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes, 99,84 %).
+  Versuche mit `char trash[0x10]`/`0x18`/`0x40]` sowie Forcieren der
+  Vier-Byte-`startTimer`-Überladung erreichten 99,92 % / 99,84 % ohne
+  vollständige Übereinstimmung. Die `TTimeRec::startTimer()`-Auswahl
+  entscheidet offenbar über Stack-Layout und Registerwahl.
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -113,5 +119,4 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 ## Nächster GMSJ01-Kandidat
 
-`Strategic/HitActor.cpp`: restliche Funktionen in der Unit (insbesondere
-`initHitActor`-Pfad), mit aktuell noch offenem `calcEntryRadius`.
+`THPPlayer/THPAudioDecode.cpp`: `AudioDecoderForOnMemory` (176 Bytes, 89,27 %).
