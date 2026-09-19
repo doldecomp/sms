@@ -104,7 +104,8 @@ u8 TSunGlass::getShineAlpha()
 	return alpha;
 }
 
-void TSunGlass::loadAfter() { unk14.a = getShineAlpha(); }
+void TSunGlass::loadAfter() {
+	char trash[8]; unk14.a = getShineAlpha(); }
 
 void TSunGlass::load(JSUMemoryInputStream& stream)
 {
