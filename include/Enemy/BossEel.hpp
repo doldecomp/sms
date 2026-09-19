@@ -197,7 +197,7 @@ public:
 	/* 0x06C */ TBossEel* mOwner;
 	/* 0x070 */ s32 mHitPoints;
 	/* 0x074 */ u8 mToothType;
-	/* 0x078 */ JGeometry::TVec3<f32> unk78;
+	/* 0x078 */ JGeometry::TVec3<f32> mTrembleRotation;
 	/* 0x084 */ s32 mDamageCooldown;
 	/* 0x088 */ Mtx mDetachedMtx;
 	/* 0x0B8 */ GXColor mColor;
@@ -354,7 +354,7 @@ public:
 	void startMoguCamera();
 	bool isInBossEelMoguDemo();
 	void quickBack();
-	BOOL isValidToothDamage();
+	bool isValidToothDamage();
 	void deadCheck();
 	void setBckAnm(int);
 	void collideToMario();
