@@ -632,6 +632,10 @@ int TItemSlotDrum::getForcastResult(int idx)
 {
 	f32 angle = unk13C[idx];
 	f32 speed = unk138[idx];
+	// The ROM caps the simulation at 10001 steps rather than spinning forever.
+	// The cap is its own bottom-of-loop test, and the rounded angle is written
+	// back before the break, so the give-up path returns the unrounded angle.
+	int i = 0;
 	for (;;) {
 		if (fabsf(speed) > unk160) {
 			angle += speed;
@@ -649,11 +653,17 @@ int TItemSlotDrum::getForcastResult(int idx)
 				angle -= 360.0f;
 			if (angle <= 0.0f)
 				angle += 360.0f;
-			if ((int)fabsf(angle) % unk168 == 0)
+			if ((int)fabsf(angle) % unk168 == 0) {
+				angle = (int)(angle / unk168) * unk168;
 				break;
+			}
 		}
+
+		if (++i > 10000)
+			break;
 	}
-	return getResultFromAng((int)(angle / unk168) * unk168);
+
+	return getResultFromAng(angle);
 }
 
 int TItemSlotDrum::getResultFromAng(f32 ang)
@@ -1009,14 +1019,18 @@ void TCloset::moveObject()
 						    fabsf(unk138[i]), 0, 0, nullptr, 0, 4);
 					if ((int)fabsf(unk13C[i]) % 180 == 0) {
 						unk138[i] = 0.0f;
-						if (unk13C[i] < 180.0f || unk13C[i] == 360.0f) {
+						if (unk13C[i] <= 180.0f || unk13C[i] >= 360.0f) {
 							for (int j = 0; j < unk148; ++j) {
 								if (i == j)
 									continue;
 								if (unk138[j] != 0.0f)
 									return;
-								if (!(unk13C[j] < 180.0f
-								      || unk13C[j] >= 360.0f))
+								// TODO: the ROM spells the second term as
+								// `bge continue; b return`, which this `&&`
+								// does not reproduce; two `continue`s are
+								// worse still (99.44 -> 98.49).
+								if (unk13C[j] >= 180.0f
+								    && unk13C[j] < 360.0f)
 									return;
 							}
 							unk16C = 1;
