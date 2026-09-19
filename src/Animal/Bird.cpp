@@ -451,9 +451,10 @@ void TAnimalBird::doWalk()
 {
 	mGravity = 0.15f;
 
-	f32 torque
-	    = getSaveParams()->mWalkingTorqueY.get() * SMSGetAnmFrameRate();
-	mRotation.y = MsWrap(mTurnDir * torque + mRotation.y, 0.0f, 360.0f);
+	f32 torque  = getSaveParams()->mWalkingTorqueY.get();
+	mRotation.y = MsWrap(mTurnDir * (torque * SMSGetAnmFrameRate())
+	                         + mRotation.y,
+	                     0.0f, 360.0f);
 
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
 	JGeometry::TVec3<f32> velocity(0.0f, 0.0f,
@@ -713,22 +714,13 @@ DEFINE_NERVE(TNerveAnimalBirdWalkOnGround, TLiveActor)
 		return TRUE;
 	}
 
-	// doWalk()'s body spelled out: behind the call, TQuat4::rotate sits at
-	// depth 2 and the ROM's inlined expansion (plus its out-of-line
-	// TVec4<f32>::TVec4 call) turns into a bl. The UNUSED doWalk copy is
-	// size-exact on its own, so the original pasted this here.
-	bird->mGravity = 0.15f;
-
-	f32 torque
-	    = bird->getSaveParams()->mWalkingTorqueY.get() * SMSGetAnmFrameRate();
-	bird->mRotation.y
-	    = MsWrap(bird->mTurnDir * torque + bird->mRotation.y, 0.0f, 360.0f);
-
-	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(bird->mRotation);
-	JGeometry::TVec3<f32> velocity(
-	    0.0f, 0.0f, bird->getSaveParams()->mWalkingSpeed.get());
-	quat.rotate(velocity, velocity);
-	bird->mLinearVelocity = velocity;
+	// Retail calls doWalk() rather than spelling its body out here: at depth 2
+	// MsWrap<f32> refuses to inline, which is exactly the `bl MsWrap<float>`
+	// the ROM has (a pasted body puts it at depth 1, where it expands into two
+	// wrap loops). TQuat4::rotate still goes out of line for us where retail
+	// expands it -- that is JGQuat4.hpp's known-open "inlined direction" local
+	// set, not this call site.
+	bird->doWalk();
 
 	if (bird->isWantToRest()) {
 		spine->pushAfterCurrent(&TNerveAnimalBirdWaitOnGround::theNerve());
