@@ -173,17 +173,12 @@ bool TKazekun::isHitWater() const
 	    || spine->getLatestNerve() == &TNerveKazekunAttack::theNerve();
 }
 
-// UNUSED, 0xf0 in the map.
-// TODO: incorrect size -- this compiles to 0xf4, exactly one instruction more
-// than the map, and identical to isHitWater above. Something distinguishes the
-// two in the original; see the note on attackToMario.
-bool TKazekun::isDamage() const
-{
-	TSpineBase<TLiveActor>* spine = mSpine;
-	return spine->getLatestNerve() == &TNerveKazekunTurn::theNerve()
-	    || spine->getLatestNerve() == &TNerveKazekunPreAttack::theNerve()
-	    || spine->getLatestNerve() == &TNerveKazekunAttack::theNerve();
-}
+// UNUSED, 0xf0 in the map: the same three nerves as isHitWater, spelled
+// through it. The forwarder is what the map's four-byte gap against
+// isHitWater's 0xf4 records, and it is what puts theNerve() one level deeper
+// at the attackToMario call site, where retail calls TNerveBase<TLiveActor>::
+// TNerveBase() instead of expanding it.
+bool TKazekun::isDamage() const { return isHitWater(); }
 
 // UNUSED, 0x104 in the map: the wind and the motion blur only show while the
 // spirit is flying, not while it is appearing or vanishing.
@@ -198,13 +193,6 @@ bool TKazekun::hasWind() const
 
 const char** TKazekun::getBasNameTable() const { return Kazekun_bastable; }
 
-// TODO: 93.8%. The two differing instructions are inside the inlined
-// TNerveKazekunTurn::theNerve(): retail emits `bl TNerveBase<TLiveActor>::
-// TNerveBase()` for the singleton's base constructor while we expand it. The
-// same construction at the same nesting depth *is* expanded in behaveToWater
-// (which matches), so the decision is not depth alone -- isDamage is 0xf0 in
-// the map against isHitWater's 0xf4 even though both read as the same three
-// nerve comparisons, and that missing instruction is probably the cause.
 void TKazekun::attackToMario()
 {
 	if (isDamage())
