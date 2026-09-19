@@ -798,9 +798,12 @@ void MSound::stopAllSeInCategory(u8 param_1, u32 param_2) { }
 void MSound::setCategoryAllVolume(u8 category, f32 volume, u32 param_3,
                                   u8 param_4)
 {
-	for (JAISound* sound         = unk0->getLinkBuffer(category)->mUsedHead;
-	     sound != nullptr; sound = sound->getNextSound())
+	JAISound* sound = unk0->getLinkBuffer(category)->mUsedHead;
+	for (u32 i = 0; sound != nullptr; sound = sound->getNextSound(), ++i) {
+		if (i >= 100)
+			break;
 		sound->setVolume(volume, param_3, param_4);
+	}
 }
 
 void MSound::fadeOutAllSound(u32 fadeout)
@@ -808,7 +811,7 @@ void MSound::fadeOutAllSound(u32 fadeout)
 	unkA8 &= 1;
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
-		if (unk0->mSeTable.mSoundMax[cat] != 0 && cat != 4) {
+		if (MSoundUnk0D(this)->mSeTable.mSoundMax[cat] != 0 && cat != 4) {
 			setCategoryAllVolume(cat, 0.0f, fadeout, 2);
 		}
 	}
