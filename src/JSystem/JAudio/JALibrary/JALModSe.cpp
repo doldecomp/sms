@@ -191,6 +191,39 @@ f32 JALSystem::processModDistFx(u32 param_1, f32 param_2)
 // on `JADPrmS` with the explicit nulls dropped at all seven sites (+0, exactly
 // codegen-neutral). Probe structs are padding by another name and are not
 // committed.
+// Research round 2026-09-19 -- the *mechanism* is now named, the type is not.
+// A defaulted argument of class type whose object is never read is exactly
+// codegen-neutral and still reserves stack at every call site of the inline
+// that declares it, at align8(sizeof) for the object plus the outgoing
+// by-value copy area once the class no longer fits a register:
+//   sizeof <= 4 -> +8 per site   sizeof 8 -> +16   sizeof 16 -> +32
+// (This refines header round 19's "a defaulted argument is a codegen-neutral
+// inline level": neutral in instructions, not in frame, once it is a class.)
+// One such argument on `JADPrmS<T>`'s ctor (7 sites x 8 = 0x38) plus one
+// 8-byte one on `JALPrmSet`'s (3 sites x 16 = 0x30) is 0x68 exactly: frame
+// 0x130, 100.0%, 371/371, zero differing operands, and `ninja changes_all`
+// moves nothing else in the tree -- MSoundBGM, mameGesso and MSSetSound are
+// untouched, so the shape is surgical as well as exact. Two 4-byte arguments
+// on `JALPrmSet` land the same total, as would a dead 12-16-byte class local
+// in `JALPrmSet`'s ctor over a dead <=8-byte one in `JADPrmS`'s.
+// Refuted this round, each measured alone: by-value `JADPrmS<f32>` parameters
+// on `JALPrmSet` with a converting `JADPrmS(T, const char* = nullptr)` (frame
+// 0x110, +27 instructions); copy-initialising the four prologue objects from
+// same-type temporaries (0xe0, +14); a `JADPrmName` class carrying the
+// `const char*` by value into `JADPrmS` (0x118, +24); and forwarding
+// `JALPrmSet`'s two defaulted objects to its members instead of defaulting
+// them again at the member sites (0x118, zero instructions but 0x50, not
+// 0x68). A *live* by-value class argument always pays the store/reload, so
+// only an argument nothing reads is free -- which is why the landing shape
+// stays uncommitted: an empty class invented to hold the slot is a probe
+// struct with extra steps, and neither marioUS.MAP nor any clean source
+// (`gh search code JADPrm` returns only copies of this header) names a 4- or
+// 8-byte JAudio debug type to put there. Name the type and the unit links in
+// one edit.
+// Sibling: `MSSetSoundTL`'s constructor is missing exactly the same 0x68 with
+// seventeen `JADPrm` constructions, so "8 bytes per JADPrmS materialised" does
+// not generalise; either the two are independent, or both bodies declare one
+// dead object of the same unnamed ~104-byte audio-debug type.
 void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
                        u32 param_3, f32 param_4, f32 param_5, f32 param_6,
                        f32 param_7, f32 param_8, JALCalc::CurveSign param_9,
