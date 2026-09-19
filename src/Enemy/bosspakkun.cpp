@@ -960,7 +960,8 @@ void TBossPakkun::rumblePad(int kind, const JGeometry::TVec3<f32>& from)
 	toMario.y -= from.y;
 	toMario.z -= from.z;
 
-	f32 power = (3000.0f - toMario.length()) / 1000.0f;
+	f32 length = toMario.length();
+	f32 power  = (3000.0f - length) / 1000.0f;
 	if (power < 0.0f)
 		return;
 	if (power > 1.0f)
