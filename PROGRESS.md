@@ -907,6 +907,53 @@ vertretbarer Zeit isoliert.
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach vierundzwanzigster Iterationsrunde (Feld-Offset-Mismatch-Scan; keine neuen sicheren Fixes)
+
+Vierte Scan-Methodik ergänzt: Suche nach `lwz`/`stw`/`lha`/`lbz`/`sth`/
+`stb`/`lfs`/`stfs`/`lfd`/`stfd`-Instruktionen an identischer Position
+mit identischem Register-Paar, aber unterschiedlichem Offset-Literal
+(analog zum Konstanten-Scan, aber für Feldzugriffe statt Immediates).
+Projektweit (736 Units) 126 Treffer, davon nach Ausschluss `r1`-
+basierter (Stack-Slot-Verschiebung, bereits bekannte Kategorie)
+7 echte Feld-/Objekt-relative Treffer:
+
+- `Enemy/smallEnemy.cpp::attackToMario` (nur 87,3 % clean insgesamt) —
+  einzelner sauberer Offset-Diff, aber eingebettet in eine größere
+  Umsortierung zweier `fsubs`-Berechnungen (Differenzbildung in
+  anderer Reihenfolge) — kein isolierter Fix möglich.
+- `Strategic/liveactor.cpp::TLiveActor::control` (nur 73,96 % clean) —
+  `lwz r12, 0x10(r12)` vs. `0xc(r12)`, ein Vtable-Offset (potenziell
+  falscher virtueller Aufruf), aber die Funktion hat 25 weitere
+  strukturelle Diffs (fehlende/zusätzliche Instruktionen) — deutet auf
+  einen echten fehlenden Codepfad hin, nicht in dieser Runde lösbar.
+- `Player/MarioSpecial.cpp::TMario::pulling` (94,93 % clean) — Bit-Test
+  `rlwinm. r0,r0,0,22,22` (Bit 22, Maske 0x200) vs. Ziel `...,21,21`
+  (Bit 21, Maske 0x400); Quelltext bei `if (!(unk108->mInput & 0x400))`
+  (Zeile 1209) legt Maske 0x400 nahe, passend zum ZIEL — bei 114
+  Gesamt-Diffs in dieser sehr langen Funktion aber nicht zweifelsfrei
+  genau dieser Quelltextzeile zuordenbar ohne vollständige Neulesung;
+  als Kandidat für eine künftige Session vorgemerkt statt spekulativ
+  gefixt.
+- `Player/WaterGun.cpp::rotateProp` — identisch mit dem bereits
+  dokumentierten `mHoverRotMax`-Rätsel dieser Session.
+- `Map/MapCollisionEntry.cpp::moveSRT` — bereits als "interner
+  Slot-Versatz" dokumentiert.
+- `Strategic/spcinterp.cpp::execadd/execsub/execmul/execdiv` — bereits
+  als Messartefakt dokumentiert.
+
+Alle drei in dieser Runde einzeln ausprobierten `char trash[N]`-
+Kandidaten (`Map/PollutionAction.cpp::fire`, `Map/MapMirror.cpp::
+isUpperThanMirrorPlane`, sowie ein Re-Check von `moveSRT`) blieben
+bei 0 % Wirkung — bestätigt erneut den in Runde 22 dokumentierten
+Befund, dass blindes `trash`-Padding außerhalb bereits vertrauter
+Dateien nicht zuverlässig funktioniert. `configure.py`-Unit-Flip-Scan
+erneut durchgeführt: keine neuen Kandidaten seit Runde 22 (dieselben
+3 bekannten Brecher `MapObjOption`, `PollutionEvent`,
+`CameraInbetween` plus die 2 bereits dokumentierten `JALModSe`/
+`WoodBarrel`).
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
