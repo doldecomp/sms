@@ -164,6 +164,8 @@ public:
 		return mGamepadIcon[mSelectionText->getNumber()];
 	}
 
+	u8 getInitialAlpha() const { return mInitialAlpha; }
+
 public:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
@@ -259,6 +261,8 @@ public:
 	void adjustView();
 	void adjustSound();
 	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
+
+	u8 getInitialAlpha() const { return mInitialAlpha; }
 
 	struct FabricatedSoundSettings {
 		/* 0x0 */ u32 mSoundSystemSE;

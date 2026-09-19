@@ -436,7 +436,7 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		break;
 
 	case STATE_DEACTIVATING:
-		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
+		mParentPane->setPaneAlpha(30, 150, getInitialAlpha());
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mShouldRumble = false;
 		break;
@@ -817,7 +817,7 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 		break;
 
 	case STATE_DEACTIVATING:
-		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
+		mParentPane->setPaneAlpha(30, 150, getInitialAlpha());
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		break;
 

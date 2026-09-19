@@ -10,15 +10,6 @@ class J2DScreen;
 class JUTTexture;
 class J2DPane;
 
-// fabricated
-inline static s16 clapAlpha(s16 alpha)
-{
-	s16 a = alpha < 0 ? s16(0) : alpha;
-	if (a > 255)
-		return 255;
-	return a;
-}
-
 /**
  * @brief Wrapper around J2DPane that supports animating the pane's position,
  * size, and alpha over a specified number of frames.
@@ -71,7 +62,10 @@ public:
 	/// Initiates a pane's alpha animation.
 	void setPaneAlpha(s32 time, s16 target_alpha, s16 initial_alpha)
 	{
-		mPane->setAlpha(clapAlpha(initial_alpha));
+		s16 a = initial_alpha < 0 ? s16(0) : initial_alpha;
+		if (a > 255)
+			a = 255;
+		mPane->setAlpha(a);
 
 		mCurrentAlpha     = initial_alpha;
 		mAlphaStep        = f32(target_alpha - initial_alpha) / time;
