@@ -485,7 +485,7 @@ void TTalk2D2::openTalkWindow(TBaseNPC* npc)
 
 	gpMarDirector->getConsole()->startDisappearTelop();
 	gpMarDirector->getConsole()->startDisappearBalloon(
-	    gpMarDirector->getConsole()->unk3E4, true);
+	    gpMarDirector->getConsole()->unk3E0, true);
 	gpMarDirector->getConsole()->startDisappearMario();
 
 	if (mMessageID == 0x1e) {
