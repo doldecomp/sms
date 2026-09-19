@@ -208,6 +208,14 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 		// camDistance + 300.0f;` keeps the `fmadds f0` plus `fmr f31, f0`
 		// and loses the 4 bytes `maxDist` contributes to the named block
 		// (99.5 -> 99.3, every stack displacement 4 low).
+		// Re-pass 203, both byte-identical to this spelling (99.5%, the same
+		// five operand markers plus the one `fmr`): an uninitialised
+		// `f32 camDistance;` declared ahead of `maxDist` with the fmadds as a
+		// plain assignment, and `f32 camDistance = maxDist; camDistance =
+		// 1.5f * camDistance + 300.0f;` (the in-place shape with `maxDist`
+		// kept, which re-pass 172 had only measured without it). The
+		// coalescing choice is inert to declaration order and to the in-place
+		// form alike.
 		f32 maxDist     = MsSqrtf(maxSqDist);
 		f32 camDistance = 1.5f * maxDist + 300.0f;
 		camDistance     = MsClamp(camDistance, mCurrentParams->mDistMin,

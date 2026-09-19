@@ -46,6 +46,15 @@
 // So a free level exists but does not move the pair; the lever has to be
 // something that changes the *liveness ranking* of `1.0f / frame` against the
 // converted timer, not another inline level.
+// Re-pass 203 tried the rules card's `f32 x = e; x op= k` result-register rule
+// directly: `f32 progress = 1.0f / mPosInbetweenFrame; progress *=
+// mPosInbetweenTimer;` does move the `fmuls` destination into the local's own
+// register as the rule predicts (`fmuls f3, f3, f1`), but it also **swaps the
+// allocation order of the two int-to-float conversion buffers** -- timer 0x10 /
+// frame 0x18 against retail's frame 0x10 / timer 0x18 -- and the whole
+// conversion block moves with them (99.1% -> 97.5%, 8 markers -> 23). The
+// compound-assignment lever is real here but is paid for with the conversion
+// pool's order, which retail pins, so the single-expression form stays.
 // Batch 151: none of the new frame-price rules applies here -- the frame is
 // exact, so the inline-temp price by return type, the u16 accessor rungs and
 // the dead-local carriers are all the wrong family. What is left is a single
