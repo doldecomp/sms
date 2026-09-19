@@ -834,6 +834,20 @@ void TMuddyBoat::kill()
 }
 
 /**
+ * @brief One inline level over TMapObjBase::getObjCollisionHeightOffset().
+ *
+ * @details Retail `bl`s the accessor from bind()'s three touchWall()
+ * expansions and emits it weak into this object, so the call sits at inline
+ * depth 5: bind -> bindToWall -> touchWall -> the argument of mEffectPos.set()
+ * -> here -> the accessor, which a one-statement in-class body no longer
+ * survives. Without this level the accessor expands to a plain `lfs`.
+ */
+static inline f32 MapObjMareGetHeightOffset(const TMapObjBase* object)
+{
+	return object->getObjCollisionHeightOffset();
+}
+
+/**
  * @brief Break the boat against the walls a sweep just hit.
  *
  * @details UNUSED in the map (0xa8); inlined into bind() three times, once per
@@ -842,20 +856,12 @@ void TMuddyBoat::kill()
 void TMuddyBoat::touchWall(JGeometry::TVec3<f32>* pos,
                            const TBGWallCheckRecord& record)
 {
-	f32 z = -(record.mResultWalls[0]->mNormal.z * (50.0f + record.mRadius)
-	          - record.mCenter.z);
-	// TODO: retail emits the weak getObjCollisionHeightOffset() into this
-	// object and `bl`s it three times from bind(); ours still expands it
-	// (`lfs 0x108`). That is the caller-size rule, not a wrong spelling: our
-	// bind() frame is 0x140 against retail's 0x270, and MWCC stops inlining
-	// two-instruction accessors only once the caller is big enough. It should
-	// fall out when bind()'s missing locals are recovered.
-	f32 yOffset  = getObjCollisionHeightOffset();
-	mEffectPos.x = -(record.mResultWalls[0]->mNormal.x
+	mEffectPos.set(-(record.mResultWalls[0]->mNormal.x
 	                     * (50.0f + record.mRadius)
-	                 - record.mCenter.x);
-	mEffectPos.y = 100.0f + (mPosition.y - yOffset);
-	mEffectPos.z = z;
+	                 - record.mCenter.x),
+	    100.0f + (mPosition.y - MapObjMareGetHeightOffset(this)),
+	    -(record.mResultWalls[0]->mNormal.z * (50.0f + record.mRadius)
+	      - record.mCenter.z));
 
 	*pos = mPosition;
 	kill();
