@@ -513,7 +513,10 @@ void TPoiHana::genEventCoin()
 
 	coin->mPosition = mPosition;
 
-	JGeometry::TVec3<f32> vec = mPosition - SMS_GetMarioPos();
+	// TODO: the frame is exact reading gpMarioPos raw (SMS_GetMarioPos()
+	// returns a reference and reserves 8 bytes here), but `vec` sits at
+	// 0x28 against retail's 0x14, so retail's slot pool below it is larger.
+	JGeometry::TVec3<f32> vec = mPosition - *gpMarioPos;
 	MsVECNormalize(&vec, &vec);
 	coin->mVelocity.set(vec.x * 10.0f, 18.0f, vec.z * 10.0f);
 
