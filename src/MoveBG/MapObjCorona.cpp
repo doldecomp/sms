@@ -1275,20 +1275,19 @@ int TBathtub::getNumKillerBurstable() const
 	int dead = getNumGripsDead();
 	if (dead >= 4)
 		return 8;
-	if (allowsTumble() || unk250 != 0 || unk258 != 0)
-		return 0;
-	switch (dead) {
-	case 1:
-		return 4;
-	case 2:
-		return 6;
-	case 3:
-		return 8;
-	case 4:
-		return 8;
-	default:
-		return 0;
+	if (!allowsTumble() && unk250 == 0 && unk258 == 0) {
+		switch (dead) {
+		case 1:
+			return 4;
+		case 2:
+			return 6;
+		case 3:
+			return 8;
+		case 4:
+			return 8;
+		}
 	}
+	return 0;
 }
 
 TBathtub::~TBathtub() { }
