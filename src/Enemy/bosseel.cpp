@@ -546,9 +546,22 @@ DEFINE_NERVE(TNerveBEelTearsMoveUp, TLiveActor)
 	return false;
 }
 
-DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
+static inline f32 BEelTearsHitAnmFrameRate(TBEelTears* tears)
+{
+	TBEelTearsSaveLoadParams* params = tears->mTearsParams;
+	f32 rate                         = params->mSLHitAnmFrameRate.get();
+	return rate;
+}
+
+static inline TBEelTears* BEelTearsWaterHitBody(TSpineBase<TLiveActor>* spine)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
+	return tears;
+}
+
+DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
+{
+	TBEelTears* tears = BEelTearsWaterHitBody(spine);
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
@@ -557,7 +570,7 @@ DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
 	}
 
 	--tears->mStateTimer;
-	f32 frameRate = tears->mTearsParams->mSLHitAnmFrameRate.get();
+	f32 frameRate = BEelTearsHitAnmFrameRate(tears);
 	if (tears->mStateTimer < 0) {
 		MActor* actor = tears->mMActor;
 		actor->setFrameRate(-frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
