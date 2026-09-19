@@ -437,9 +437,15 @@ void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
 	// depth 1 up to 14 statements and this body is exactly 14. Measured: one
 	// extra zero-codegen statement here takes receiveMessage from 0% to 95.2%
 	// and costs hipdrop nothing, so retail's hipdrop has a 15th statement.
-	// TODO: it is not the obvious one -- naming the searched TKoopa
+	// TODO: it is not a named local of any kind. Naming the searched TKoopa
 	// (`TKoopa* koopa = search(...); koopa->stagger(false);`, the shape quake()
-	// uses) does not count towards the budget and costs hipdrop an `mr`.
+	// uses) does not count towards the budget and costs hipdrop an `mr`, and
+	// naming the release threshold the second guard tests
+	// (`int release = getUnk16C()->hipdropRelease.get();`) does not flip
+	// receiveMessage either while costing 8 bytes of frame -- this body's
+	// frame is already exact at 0x98, so retail has no extra stack object
+	// here. The 15th statement is therefore one that takes neither a register
+	// nor a slot.
 	JGeometry::TVec3<f32> dir;
 	dir.sub(pos, getInitialPosition());
 	dir.y = 0.0f;
