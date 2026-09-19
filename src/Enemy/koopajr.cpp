@@ -175,13 +175,13 @@ f32 TDirectionCalc::calcTurnDirection(f32 dir, f32 step)
 
 void TDirectionCalc::makeDirection(JGeometry::TVec3<f32> dir)
 {
-	// The bound address is worth +8 of frame; the two locals load z before
-	// x, as the original does (atan2f(dir.x, dir.z) loads them the other
-	// way round).
-	const JGeometry::TVec3<f32>* v = &dir;
-	f32 z                          = v->z;
-	f32 x                          = v->x;
-	mDirection                     = atan2f(x, z);
+	// TODO: the two locals only exist to load z before x, as the original
+	// does; atan2f(dir.x, dir.z) loads them the other way round.
+	// TODO: the frame is 8 short; a bound `&dir` supplies the 8 but costs
+	// TKoopaJrSubmarine::makeRelativeAngle, which inlines this body.
+	f32 z      = dir.z;
+	f32 x      = dir.x;
+	mDirection = atan2f(x, z);
 }
 
 JGeometry::TVec3<f32> TDirectionCalc::calcDirectionVector()
