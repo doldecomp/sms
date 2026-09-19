@@ -1656,6 +1656,91 @@ Neuimplementierung nötig, kein Cheap-Fix.
 Die Referenz-DOL bleibt `OK`. Session-Gesamtsumme: **55 Funktionen**
 in 19 Commits, alle gepusht.
 
+### Nach zweiunddreißigster Iterationsrunde (`TVec3<f32>::set(const Vec&)`; **kritischer Methodik-Fund**: `objdiff-cli` meldet 0 %/„missing" für mindestens 9 bereits Byte-perfekte Funktionen)
+
+**Fix**: `include/JSystem/JGeometry/JGVec3.hpp`: `TVec3<f32>::set(const Vec&)`
+— dasselbe missing-weak-symbol-Muster wie Runde 29, 8 nicht-inlinede
+Retail-Call-Sites über 5 Dateien. Byte-für-Byte gegen
+`orig/GMSJ01/sys/main.dol` verifiziert (`0x800DD50C`), 0
+Report-Regressionen.
+
+**Kritischer Methodik-Fund (schwerwiegender als Runde 28)**: Beim
+Prüfen von `mario/Enemy/hamukuri` (aus der `populated_zero`-Kandidatenliste)
+zeigte `objdiff-cli diff` für `TFireHamuKuri::moveObject()` **0,0 %
+Match** mit einem scheinbaren Instruktions-Diff bei Index 7 (unser
+Build ruft angeblich `changeTevColor()`, Retail angeblich
+`recoverFire()` direkt). Rohdisassembly (`hamukuri.s` Zeile 3111–3127)
+zeigte jedoch sofort: Retails `moveObject()` ruft **exakt dieselben
+zwei Funktionen** in derselben Reihenfolge wie unser Quelltext
+(`moveObject__9THamuKuriFv` dann `changeTevColor__13TFireHamuKuriFv`).
+Direkte Byte-Extraktion aus `build/GMSJ01/mario.dol` UND
+`orig/GMSJ01/sys/main.dol` an Adresse `0x80263D98` (52 Bytes)
+bestätigte: **exakt identisch**. `objdiff-cli`s 0,0-%-Meldung war
+**komplett falsch** — nicht nur eine Fehlausrichtung der
+Instruktionsanzeige (wie Runde 16/28), sondern ein Fall, in dem das
+Tool eine bereits perfekt gematchte Funktion fälschlich als
+funktional unterschiedlich meldet.
+
+Dieselbe Verifikation für `TFireHamuKuri::isHitValid(u32)` (144 Bytes,
+`0x802639B8`) ergab ebenfalls **Byte-für-Byte identisch** trotz
+gemeldeter 0,0 %.
+
+Ausgehend von diesem Fund wurden weitere `populated_zero`-Kandidaten
+direkt (ohne den unzuverlässigen `objdiff-cli diff` als
+Zwischenschritt) per DOL-Byte-Vergleich geprüft:
+
+- `System/MarDirectorEvent.cpp::TMarDirector::fireGetStar(TShine*)`
+  (124 Bytes, `0x800EDAE8`) — **Byte-für-Byte identisch**, trotz
+  gemeldeter 0,0 %.
+- `MarioUtil/ShadowUtil.cpp::TMBindShadowManager::drawShadowGD()`
+  enthält sechs lokal (innerhalb der Funktion) definierte anonyme
+  Hilfsklassen (`TSetup1`…`TSetup5`, `TCylinder`, mit vom Compiler
+  vergebenen `$NNNN`-Disambiguator-Suffixen im gemangelten Namen) mit
+  jeweils einer `makeDL()`-Methode. Alle sechs waren in `report.json`
+  als „missing" gelistet (0 direkte Call-Sites, nur Vtable-Zugriff via
+  lokaler `TGDLStatic`-Subklassen). Direkte Byte-Vergleiche für alle
+  sechs (`TSetup1`: 260 B @ `0x800CE258`, `TSetup2`: 96 B @
+  `0x800CD67C`, `TSetup3`: 84 B @ `0x800CD628`, `TSetup4`: 96 B @
+  `0x800CD5C8`, `TSetup5`: 96 B @ `0x800CD568`, `TCylinder`: **2.884
+  Bytes** @ `0x800CD6DC`) ergaben **alle sechs Byte-für-Byte
+  identisch**.
+
+**Gesamtsumme falsch gemeldeter, tatsächlich bereits 100 % gematchter
+Bytes in dieser Runde entdeckt**: 52 + 144 + 124 + 260 + 96 + 84 + 96
+  + 96 + 2.884 = **3.836 Bytes über 9 Funktionen**, für die **keine
+Quelltextänderung nötig ist** — sie sind bereits korrekt. Keine dieser
+9 Funktionen kann jedoch einzeln in `configure.py` auf `Matching`
+gesetzt werden, da ihre jeweiligen Units andere echte
+Nonmatching-Funktionen enthalten (`hamukuri.cpp`: `THaneHamuKuri::
+walkBehavior` als 4-Byte-Stub statt 2.208 Byte Original;
+`MarDirectorEvent.cpp`/`ShadowUtil.cpp`: weitere offene Fälle).
+
+**Vermutete Ursache**: Bei lokalen/anonymen Klassen mit
+compiler-generierten `$NNNN`-Suffixen und bei Funktionen in Units mit
+einer stark abweichenden Nachbarfunktion (`walkBehavior`s 4-Byte-Stub
+vs. 2.208-Byte-Original in derselben Datei) könnte `objdiff-cli`s
+interne Symbol-zu-Symbol-Zuordnung (Adress- oder Reihenfolge-basiert
+statt rein namensbasiert) ins Straucheln geraten und einem bereits
+korrekten Funktionspaar fälschlich unterschiedliche Bytes zuordnen.
+Nicht abschließend verifiziert (out of scope für diese Session), aber
+als Hypothese für zukünftige Sessions festgehalten.
+
+**Neue verschärfte Methodik-Regel**: Bei JEDER Funktion, die laut
+`report.json`/`objdiff-cli diff` 0 % oder „missing" ist, ABER deren
+Quelltext bereits vollständig und plausibel korrekt aussieht
+(insbesondere wenn Feldnamen/Kontrollfluss exakt zur
+Rohdisassembly-Beschriftung passen), MUSS vor jeder Quelltextänderung
+zuerst ein direkter Byte-Vergleich zwischen `build/GMSJ01/mario.dol`
+und `orig/GMSJ01/sys/main.dol` an der bekannten virtuellen Adresse
+erfolgen. Andernfalls droht das Risiko, funktionierenden Code
+„kaputt zu reparieren", nur weil das Tool eine falsche Diskrepanz
+meldet.
+
+Die Referenz-DOL bleibt `OK`. Session-Gesamtsumme: **56 tatsächlich
+geänderte/neu implementierte Funktionen** in 20 Commits, plus **9
+zusätzliche als bereits korrekt verifizierte** (keine Änderung nötig,
+aber wichtiger Dokumentationsfund für künftige Sessions).
+
 ## Gematchte GMSJ01-Funktionen
 
 - `JSystem/JAudio/JAInterface/JAIBasic.cpp`:
@@ -1915,6 +2000,19 @@ in 19 Commits, alle gepusht.
   neu hinzugefügt — MWCCs Identical-Code-Folding faltet ihn
   automatisch zu einem Aufruf der `(bool)`-Überladung). Details siehe
   Iterationsrunde 31.
+
+- `JSystem/JGeometry/JGVec3.hpp`: `TVec3<f32>::set(const Vec&)`
+  (Runde 32) — **100 %** (28 Bytes, Pragma-Muster, 8 Call-Sites über
+  5 Dateien).
+
+**Bereits korrekt, keine Änderung nötig (Runde 32 Methodik-Fund,
+`objdiff-cli` meldete fälschlich 0 %)**: `Enemy/hamukuri.cpp`:
+`TFireHamuKuri::moveObject()` (52 B), `TFireHamuKuri::isHitValid(u32)`
+(144 B); `System/MarDirectorEvent.cpp`: `TMarDirector::fireGetStar
+(TShine*)` (124 B); `MarioUtil/ShadowUtil.cpp`: sechs lokale
+`makeDL()`-Methoden in `TMBindShadowManager::drawShadowGD()`
+(`TSetup1`–`TSetup5`, `TCylinder`; 260/96/84/96/96/2.884 Bytes). Alle
+neun Byte-für-Byte gegen `orig/GMSJ01/sys/main.dol` bestätigt.
 
 ## Nächster GMSJ01-Kandidat
 
