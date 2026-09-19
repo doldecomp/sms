@@ -1008,11 +1008,19 @@ void TMario::checkGraffito()
 	mPollutionTypeStandingOn = SMSGetPollution()->getPollutionType(
 	    mPosition.x, mPosition.y, mPosition.z);
 
+	// One function-scope `pos`: retail's three cases all use the same slot at
+	// 0x48, which block-scope declarations never share here (they landed at
+	// 0x4c/0x40 and left the electric case in registers).
+	// TODO: 99.8%, every instruction present; the frame is 24 bytes short
+	// (0x50 against 0x68), 4 of them above `pos` and the rest in the low
+	// region.
+	JGeometry::TVec3<f32> pos;
+
 	switch (mPollutionTypeStandingOn) {
 	case POLLUTION_TYPE_SLIP:
 	case POLLUTION_TYPE_INSTAKILL:
 	case POLLUTION_TYPE_SAFE: {
-		JGeometry::TVec3<f32> pos = mPosition;
+		pos = mPosition;
 		pos.x -= 32.0f;
 		pos.z -= 32.0f;
 		isDirty = 1;
@@ -1050,7 +1058,6 @@ void TMario::checkGraffito()
 	case POLLUTION_TYPE_FIRE:
 	case POLLUTION_TYPE_GLASS_WALL:
 	case POLLUTION_TYPE_UNK7: {
-		JGeometry::TVec3<f32> pos;
 		pos.x = mPosition.x;
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
@@ -1079,20 +1086,13 @@ void TMario::checkGraffito()
 		if (!SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 
-		(void)&pos;
-
 		break;
 	}
 
 	case POLLUTION_TYPE_ELECTRIC: {
-		JGeometry::TVec3<f32> pos;
 		pos.x = mPosition.x;
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
-		// TODO: retail stores these three into `pos` and reloads them as the
-		// arguments; ours forwards the registers straight into f1-f3. The
-		// three-argument constructor and pos.set() both keep the forwarding
-		// and cost 16 bytes of frame.
 		if (SMSGetPollution()->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 1;
 		else
