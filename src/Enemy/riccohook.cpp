@@ -95,6 +95,24 @@ TRiccoHook::TRiccoHook(const char* name)
 // then 8 high; `getTracer()` and a named `f32 speed` are +0). This is the
 // JGadget iterator temp-pool grouping known-open class (docs/catalog/
 // frame-gaps.md, "batch 133"), shared with TSeal::init and TMirrorActor::init.
+// Closure batch 221 decomposes it into two independent residues and prices
+// the first: R1 is 8 bytes missing *between* the two groups (group one,
+// 0x5c/0x60/0x68/0x6c/0x70, is exact; group two is 0x84/0x88/0x8c retail and
+// 0x7c/0x80/0x84 here), R2 is the `&hookTake` spill at 0xa4 for retail's
+// 0xa8. A TU-local binder over `mSpine` feeding `initWith` adds its 8 bytes
+// at the very bottom of the pool: frame 0xd8 exact and group two exactly
+// retail's, but group one then reads 0x64..0x78 and the spill 0xac -- 13
+// markers, all of them slot displacements. So the lever needed is 8 bytes
+// that land between the two groups, plus 4 above them.
+// Spellings measured on THookTake's inlined ctor (it has no out-of-line copy,
+// so its body is free): a named `TIdxGroupObj* group` with
+// `getChildren().push_back` packs group one another 4 (19 markers); a named
+// `JGadget::TList_pointer<THitActor*>&` receiver does the same (19);
+// `->add(this)` collapses to frame 0xc0 (22) and `->insert(this)` to 0xc8
+// (23, +2 instructions); a named `THitActor*` for the pushed object costs a
+// spill; a TU-local binder returning `&search(...)->getChildren()` hoists the
+// string base out of the prologue (88.6). Every honest lever tried so far
+// pads at the bottom or packs, never between.
 void TRiccoHook::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);

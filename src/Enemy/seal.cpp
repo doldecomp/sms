@@ -70,6 +70,33 @@ TSeal::TSeal(const char* name)
 // named region, so the hole is an allocation *order* difference in a pinned
 // low region, not a missing 4-byte item.
 //
+// Closure batch 221 splits the residue into three independent pieces and
+// prices two of them.
+// (b) The group *binding*: retail binds the converted list base (`addi rD,
+// r3, 0x10` after the search, then `+8` and `+0` at the two uses) where our
+// named `group` binds `r3 + 0` and pays `+0x18`/`+0x10` per use. Dropping the
+// local -- `search<TIdxGroupObj>("...")->push_back(this)` -- reproduces
+// retail's binding and its two uses byte for byte (and is the same spelling
+// THookTake's ctor already proves in riccohook.cpp), but research 211's pad
+// comes back: the second iterator group goes 0x60/0x64 for retail's
+// 0x5c/0x60, 43 markers against the named local's 41. Named group and
+// retail's binding are so far mutually exclusive.
+// (c) The Mtx hole is now priced exactly: `mSpine->initWith` (in place of
+// `getSpine()->`) puts the scratch Mtx at retail's 0x6c with the whole
+// push_back pool still exact, and the *only* thing left below the save area
+// is 4 bytes of dead low region -- our iterator copies land at 0xa0/0xa4 for
+// retail's 0xa4/0xa8, frame 0xb8 for 0xc0. So retail allocates that one
+// 4-byte accessor temporary *above* the Mtx and we allocate it below; a
+// `volatile char trash[4]` declared last restores the frame but parks its
+// word above the copies (0xa4/0xa8 unmoved), so the missing item sits at
+// 0xa0, between the Mtx's end and the iterator copies.
+// Also rejected this batch: the group local in an inner block (byte-identical
+// to the baseline, so the callee-saved ladder's inner-block rung does not
+// reach it), `search(...)->getChildren().push_back(this)` (frame 0xc8, 62
+// markers), a named `JGadget::TList_pointer<THitActor*>&` receiver (0xc8, 62)
+// and a named `TList_pointer<THitActor*>*` (the implicit derived-to-base
+// pointer conversion adds a null test, 94.9).
+//
 // The rotation (1) has one measured lever: `MActor* actor = createMActor(...);
 // mMActor = actor; actor->offMakeDL();` puts the .rodata base in r31 and the
 // `this`/group chain in r30 exactly as retail does -- 6 markers left, 99.3%,
