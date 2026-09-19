@@ -413,7 +413,7 @@ TSpineEnemy* TIgaigaManager::createEnemyInstance()
 
 void TIgaigaManager::initSetEnemies()
 {
-	unk60 = new TIgaigaPolluteModelManager;
+	unk60 = new TIgaigaPolluteModelManager("イガイガモデル汚染");
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
@@ -893,7 +893,7 @@ TSpineEnemy* TGorogoroManager::createEnemyInstance()
 
 void TGorogoroManager::initSetEnemies()
 {
-	unk6C = new TGorogoroPolluteModelManager;
+	unk6C = new TGorogoroPolluteModelManager("ゴロゴロモデル汚染");
 	unk6C->init((TLiveActor*)unk18[0]);
 
 	static const char* graphlist[] = { "gorogoro0", "gorogoro1" };
