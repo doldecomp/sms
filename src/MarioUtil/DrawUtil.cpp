@@ -121,7 +121,7 @@ static inline int DrawUtilGetJointModelNum(const TPollutionManager* p)
 // at 0x188 (batch 121).
 static inline u8 DrawUtilGetUnk1CAlpha(TSunMgr* p)
 {
-	u8 unk1CAlpha = p->getUnk1CAlpha();
+	u8 unk1CAlpha = p->unk18.a;
 	return unk1CAlpha;
 }
 
