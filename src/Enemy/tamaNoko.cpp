@@ -647,7 +647,10 @@ void TTamaNoko::setDeadAnm() { setBckAnm(3); }
 
 BOOL TTamaNoko::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> pos = unk104.getPoint();
+	// The accessor binds `this + 0x104` into a register the way the ROM does
+	// (`addi r4, r3, 0x104`); the raw member read spells the fallback branch
+	// as `addi r5, r3, 0x108`. TODO: 0x10 of low region still left over.
+	JGeometry::TVec3<f32> pos = getUnk104().getPoint();
 	pos -= mPosition;
 	pos.y = 0.0f;
 	if (pos.x == 0.0f && pos.z == 0.0f)
