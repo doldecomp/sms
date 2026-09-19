@@ -1141,11 +1141,24 @@ TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
 	getMActor()->setMotionBlendRatioForBck(BosseelBlendRatio(this));
 }
 
-// TODO: instruction-exact (32 bytes of throwaway locals reach 100%), 0x28 short
-// of frame. Retail's eyeMtx sits at the very top of the local region, which is
-// why the `const TBossEel* owner = getOwner();` local had to go: its cast takes
-// a slot above the matrix. The remaining 0x28 is all below the matrix, i.e. in
-// the inline-temporary region, and no accessor lever found here moves it.
+// Retail's eyeMtx sits at the very top of the local region, which is why the
+// `const TBossEel* owner = getOwner();` local had to go: its cast takes a slot
+// above the matrix. The 0x28 below it is accessor pool, paid by the MActor
+// binder at three of nine sites.
+// TODO: 100.0%, every instruction present and the frame exact at 0xb8;
+// `eyeMtx` still sits 4 bytes low (0x64 against retail's 0x68).
+static inline MActor* BosseelEyeMActor(TBossEelEye* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
+static inline TMarioParticleManager* BosseelEyeParticleManager()
+{
+	TMarioParticleManager* manager = gpMarioParticleManager;
+	return manager;
+}
+
 void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (getOwner()->mLiveFlag
@@ -1163,14 +1176,14 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 		Mtx eyeMtx;
 		MTXCopy(getConnectedMtx(), eyeMtx);
 		MtxPtr mtx = eyeMtx;
-		getMActor()->getModel()->setBaseTRMtx(mtx);
+		BosseelEyeMActor(this)->getModel()->setBaseTRMtx(mtx);
 		if (mCopyConnectedMtx == 0) {
 			MtxPtr blendMtx = mBlendMtx;
 			MTXCopy(mtx, blendMtx);
 		}
 
 		mBlendRatio = MsClamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
-		getMActor()->setMotionBlendRatioForBck(mBlendRatio);
+		BosseelEyeMActor(this)->setMotionBlendRatioForBck(mBlendRatio);
 		if (mAnimationMode == 1
 		    && getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			++mAnimationLoopCount;
@@ -1196,7 +1209,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		}
 	}
-	getMActor()->perform(cue, graphics);
+	BosseelEyeMActor(this)->perform(cue, graphics);
 	mCopyConnectedMtx = -1;
 }
 
