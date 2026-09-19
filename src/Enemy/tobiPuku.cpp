@@ -565,7 +565,11 @@ void TTobiPuku::swimEffect()
 
 bool TTobiPuku::isReachedToGoalXZ()
 {
-	JGeometry::TVec3<f32> d(unk104.getPoint());
+	// The goal node is reached through the accessor, which binds
+	// `this + 0x104` into a register (`addi r4, r3, 0x104`) the way the ROM
+	// does; the raw member read spells the fallback as `addi r5, r3, 0x108`.
+	// TODO: every instruction matches now, 0x10 of low region left over.
+	JGeometry::TVec3<f32> d(getUnk104().getPoint());
 	d.x -= mPosition.x;
 	d.y -= mPosition.y;
 	d.z -= mPosition.z;
@@ -1296,10 +1300,7 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		TTobiPukuLaunchPad* pad = puku->mLaunchPad;
-		TPathNode node(pad->mPosition);
-		puku->unkF4  = node;
-		puku->unk104 = node;
-		puku->unk114.clear();
+		puku->setGoalPath(pad->mPosition);
 		puku->setSwimAnm();
 		puku->mSwimBaseY = puku->mPosition.y;
 	}
