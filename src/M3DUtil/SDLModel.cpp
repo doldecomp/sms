@@ -41,6 +41,7 @@ public:
 
 void SDLModelData::entrySameMat(J3DMaterial* material, SDLDrawBufToken* token)
 {
+	char trash[8];
 	SDLModel* head = token->mHead;
 	while (head != nullptr) {
 		if (head->mSdlFlags & SDLModel::FLAG_UNK1)
@@ -327,6 +328,7 @@ void SDLModel::entry()
 
 void SDLModel::viewCalcSimple()
 {
+	char trash[8];
 	swapDrawMtx();
 	MtxPtr mA = gpCamera->getUnk1EC();
 	for (int i = 0; i < mModelData->getDrawMtxNum(); ++i)
