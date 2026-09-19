@@ -4,14 +4,16 @@ Written 2026-09-18 by the session that ran batches 92 to 181.
 Read this before `docs/ORCHESTRATION.md`; it is the judgement that document does not carry.
 Keep it current: every orchestrator appends a dated "State" entry below and rewrites the advice when it stops being true.
 
-## Where things stand (2026-09-18, evening)
+## Where things stand (2026-09-18, late night, session 110dc638)
 
 | | Matched code | Linked units |
 | --- | ---: | ---: |
-| Game | 44.49% | 162 / 385 |
+| Game | 45.03% | 162 / 385 |
 | JSystem | 89.93% | 179 / 198 |
 | SDK | 95.71% | 146 / 149 |
-| All | 54.43% | 489 / 732 |
+| All | 54.86% | 489 / 732 |
+
+Matched data is 95.2% (from 92.8%); eleven more units have 100% data than this morning.
 
 `docs/TIMELINE.md` has the per-commit history and per-day rates; regenerate it with `python3 tools/progress-timeline.py`.
 Per-batch token costs are in `docs/progress/agent-costs-2026-09-18.md`; the batch-by-batch outcome log is `docs/progress/queue-2026-09-18.md`; the census scripts are under `tools/census/`.
@@ -56,4 +58,5 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ## State log
 
+- **2026-09-18 late night** (session `110dc638`, batches 182-208, ~5.6M agent tokens): 489/732 linked (no new links), 54.43 -> 54.86% matched, ~60 functions to exact, ~25 real gameplay bugs fixed, matched data 92.8 -> 95.2% (eleven units to 100% data). Yield per type this session: data passes 240k for 3-5 units to 100% data (best value while units remained); header rounds 110-190k for 1-4 exact plus data; structural passes 320-410k for 5-9 exact and 3-5 bugs, no links; closure re-passes over the one- and two-function game tiers (54 units) and the eight near-link library units: **zero closures**, every residue a recorded known-open class; research 184/186/193/208 each produced a rule (JGadget stride not in `std-list.hpp`; the statement-count table with the named-local +1; MSound's fabricated gate; an inlined callee's class-object locals form their own block above the caller's). The user is at 40% of the weekly budget 12 hours into the week and chose two agents, yield-first; with the cheap tiers exhausted the remaining yield is research only. Open leads: JALModSe `append` is instruction-exact and its 0x68 hole is positioned in the `JALPrmSet`/`JADPrmS<f32>` prologue constructions (3 x 16 + 7 x 8) but unnamed: naming it links the unit; J3DModel `entryModelData` 99.92 (zero-frame r25/r24 vs r20/r21 rotation) links the unit; `TSunModel::perform` has a constant 4-byte pad at the top of `calcAnim_`'s block; `getMaxHitPoints()` wants a statement-free address binding of `getSaveParam()->mSLHitPointMax`; CardManager `setCheckSum` needs a `CalcCheckSum` body under 9 statements that stays byte-exact; the remaining sub-100 data units are jump-table owners (GCConsole2 `perform` is a 14.7 KB rebuild). Worktrees grpfg/grpfh/grpfi/grpfj/grpfk exist, all landed, some behind HEAD (rebase + `ninja` + `ninja baseline` before use). Census scripts take `SMS_ROOT` or the cwd.
 - **2026-09-18 night, final** (session `7a7a015e`): 489/732 linked, 54.43% matched, tree quiet. Every batch through 181 is landed; no agent is running. One spare worktree `grpff` exists (branch `wt/grpff`, no commits, built a few commits behind HEAD: `git rebase local/decomp-progress`, `build/venv/bin/ninja`, `build/venv/bin/ninja baseline` before using it). The last four batches (reloc III, structural III/IV, 4-byte re-pass II) lifted ~25 functions and closed 8 but linked nothing: the structural and reloc passes are now the main vein for exact functions, and links come from research results. Land routine for the next session: `tools/worktree.sh land <name> <units>`; `objects.json` conflicts via `python3 tools/resolve-objects-conflict.py config/GMSE01/objects.json`; catalog conflicts keep both hunks.
