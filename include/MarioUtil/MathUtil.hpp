@@ -129,6 +129,7 @@ template <class T> inline T MsWrap(T t, T l, T r)
 	return t;
 }
 
+#pragma dont_inline on
 template <class T> inline T MsClamp(T t, T l, T r)
 {
 	if (t > r)
@@ -137,6 +138,7 @@ template <class T> inline T MsClamp(T t, T l, T r)
 		t = l;
 	return t;
 }
+#pragma dont_inline off
 
 // fabricated
 inline f32 MsAngleDiff(f32 alpha, f32 beta)
@@ -200,6 +202,7 @@ MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
 	return thing;
 }
 
+#pragma dont_inline on
 inline f32 MsSqrtf(f32 x)
 {
 	// We love copy-pasting code, don't we?
@@ -212,6 +215,7 @@ inline f32 MsSqrtf(f32 x)
 	}
 	return x;
 }
+#pragma dont_inline off
 
 // NOTE: MsCos is **real**.
 inline f32 MsSin(f32 v) { return JMASSin(v * (65536.0f / 360.0f)); }

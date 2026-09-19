@@ -25,7 +25,9 @@ template <class T> T TUtil<T>::mod(T value, T modulus)
 }
 
 template <> struct TUtil<f32> {
+#pragma dont_inline on
 	static f32 one() { return 1.0f; }
+#pragma dont_inline off
 	static f32 epsilon() { return 3.81469727e-06f; }
 	static f32 PI() { return 3.14159265358979323846f; }
 	static f32 halfPI() { return 1.5707963267948966f; }
