@@ -2752,6 +2752,39 @@ Commits. Funktionszahl: 8948 → **8954** (**+6**). DOL SHA1 bleibt
   um eine reine Compiler-Heuristik-Asymmetrie, kein Struktur-Bug in
   der Vererbungskette. Sauber zurückgesetzt.
 
+**Echter neuer Fix: `TMarDirector::fireRideYoshi(TYoshi*)`** (war
+leerer Stub): Guard auf `param_1 == nullptr`, Prüfung
+`gpApplication.mCurrArea.unk0 == 1` (Delfino Plaza), Einmal-Flag
+`TFlagManager::smInstance->getBool/setBool(0x1038F)` (dieselbe
+Flag-ID wird bereits an mehreren anderen Stellen im Code verwendet),
+dann `unk4C |= 0x200; unk261 = 5;` (löst das Yoshi-Reit-Tutorial-
+Event aus). Nach `char trash[16]` für eine additive 16-Byte-
+Frame-Lücke Byte-für-Byte bestätigt. Voller Rebuild: `matched_
+functions` 8954 → 8955 (+1), keine Regression, DOL SHA1 `OK`.
+
+**`TMapWireManager::getPointPosInNthWire` (57 % Match, unterhalb
+aller bisherigen Batch-Scan-Schwellwerte) bleibt offen**: `char
+trash[8]` gleicht den Stackframe exakt an, aber Retail wertet
+`getWire(param_1)` an der zweiten Aufrufstelle NEU aus (frischer
+`lwz`/`lwzx`-Ladevorgang von `this->unk18[idx]`), während unser
+Compiler das Ergebnis der ersten Auswertung wiederverwendet
+(Common-Subexpression-Elimination) — eine weitere Instanz
+asymmetrischer Compiler-Optimierungsentscheidungen, nicht über
+`trash[N]` lösbar. Zurückgesetzt.
+
+**Session-Endstand nach Runde 39 (fortgesetzt): 368 tatsächlich
+verifizierte Funktionen** (361 aus Runde 1–38 plus 7 neue in
+Runde 39: 6 `MapObjCorona.cpp` + 1 `MarDirectorEvent.cpp`) in 41
+Commits. Funktionszahl: 8948 → **8955** (**+7**). DOL SHA1 bleibt
+`OK`. Bestätigte neue Erkenntnis dieser Runde: reine
+Logikimplementierung für leere Stubs (statt `trash[N]`-Padding) ist
+eine tragfähige dritte Fix-Kategorie neben additiven Frame-Lücken
+und (nicht per Pragma lösbaren) asymmetrischen Inlining-Fällen —
+lohnt sich, gezielt nach kleinen (< 150 Byte) Funktionen mit sehr
+niedrigem Match (< 60 %) zu suchen, da diese oft echte fehlende
+Logik statt bloßer Padding-Lücken markieren.
+
+
 
 ## Nächster GMSJ01-Kandidat
 
