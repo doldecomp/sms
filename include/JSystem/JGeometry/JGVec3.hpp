@@ -328,6 +328,35 @@ public:
 	// that adds bytes above also adds 4 to the prefix. Do not re-try `void
 	// operator-=` on its own (batch 113: -1 function, ~35 regressions).
 	// See docs/catalog/frame-gaps.md, "Research batch 116".
+	//
+	// Header round 47 closes the whole `const TVec3&` family. Retail calls
+	// `__ami__` out of line twice inside `TYoshiTongue::movement`
+	// (0x80267cbc, 0x80267eec), and *this* by-value spelling is what puts
+	// both `bl`s there: every left-operand-by-reference shape
+	//     TVec3 r; *(Vec*)&r = *(const Vec*)&fst; r -= snd; return r;
+	// drops the reloc count in Tongue.o from 2 to 0 and takes `__ami__`
+	// MISSING, so retail's `operator-` does copy its left operand into a
+	// by-value parameter and does route through `operator-=`. Measured on
+	// TCoasterEnemy::bind (frame 0x40, retail temp at 0x10, locals floor
+	// 0x10, named local 0x28), pool bytes (below, above) the live temp:
+	//     stock (this)                                      (8, 4)
+	//     const& + raw Vec copy + operator-=                (8, 4)  temp 0x18
+	//     same, as a member operator- (this = left)         (8, 4)  identical
+	//     same, returning TVec3 by value                    (8, 4)  identical
+	//     const& + TVec3 r(fst) copy ctor                   pool +4, worse
+	//     const& + r = fst (operator=)                      frame 0x48, worse
+	//     const& + r.sub(snd)             `sub` inlines away, 130 sites lose
+	//                                      the `bl`, tree -0.18 fuzzy
+	//     const& + r.sub(fst, snd) with the two-argument
+	//       `sub` respelled as raw copy + sub(snd)          (0, 4), frame
+	//                                      0x38 - the temp lands on retail's
+	//                                      slot but the frame is 8 short, and
+	//                                      tree-wide it is 56.92 -> 56.85
+	//                                      (CameraMarioData unlinks)
+	// Every weak `TVec3<f>` body the map lists is already emitted by this
+	// header, in the map's TU, at the map's size, at 100% (all 21 of them,
+	// including the 4-byte `__ct__...Fv` in CameraBGCheck.cpp), so there is
+	// no missing out-of-line copy left to buy a reshape with.
 	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
 	{
 		fst -= snd;
