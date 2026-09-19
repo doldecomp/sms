@@ -1125,9 +1125,10 @@ void TGorogoro::kill()
 
 void TGorogoro::forceKill()
 {
-	// Standing on water or bad ground kills it outright.
-	BOOL illegal = mGroundPlane->isIllegalData();
-	if (!illegal && !mGroundPlane->isPool() && !mGroundPlane->isWaterSurface())
+	// Standing on water kills it outright; illegal ground is left alone.
+	if (mGroundPlane->isIllegalData())
+		return;
+	if (!mGroundPlane->isPool() && !mGroundPlane->isWaterSurface())
 		return;
 
 	if (isAirborne())
