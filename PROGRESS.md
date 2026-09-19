@@ -139,6 +139,10 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   — **100 %**. Je `char trash[8]` reproduziert 0x28- bzw. 0x50-Byte-Frame.
   Unit `.text`/`.data`/`.sbss` 100 %, in `configure.py` auf Matching gesetzt.
 
+- `MoveBG/WoodBarrel.cpp`: `TWoodBarrel::appear` und `appeared` — **100 %**.
+  Je `char trash[8]` für 0x20- bzw. 0x28-Byte-Frame. `kill` bleibt 99,69 %
+  (TVec3-Local 12 Bytes zu tief); Unit bleibt NonMatching.
+
 ## Nächster GMSJ01-Kandidat
 
 `Strategic/livemanager.cpp`: `TLiveManager::perform` (252 Bytes, 99,84 %) bleibt
