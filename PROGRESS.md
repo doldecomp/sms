@@ -303,6 +303,42 @@ statistisch ausgeschlossen ist.
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach neunter Iterationsrunde (AnimalManager::loadAfter; Shimmer/bgpoldrop/clipEnemies-Analysen)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,58 % (1.492.612 / 3.590.088) | +60 Bytes |
+| Funktionen matched | 66,78 % (8.602 / 12.881) | +1 |
+
+Ein neuer 100-%-Match: `Animal/AnimalManager.cpp::TMewManager::loadAfter`
+(60 Bytes, `char trash[0x10]` schließt eine 16-Byte-Frame-Lücke, keine
+Locals im Funktionskörper).
+
+Drei weitere Funktionen untersucht, alle nach dem neuen
+Verifikationsprotokoll (Ziel-100-%-Test statt Zwischenprozent-Tracking)
+als Nonmatching bestätigt und zurückgesetzt:
+
+- `Map/Shimmer.cpp::TShimmer::perform` (648 Bytes, 99,80 % clean) —
+  40-Byte-Frame-Gap plus konstante 4-Byte-Verschiebung in einer
+  verketteten Virtual-Call-Kette (`getModelData()->
+  getMaterialNodePointer(0)->getTexGenBlock()->getTexMtx(1)`);
+  `char trash[0x28]` nach dem letzten `Mtx`-Local erreicht keine
+  100 % (bestätigter Ziel-Fenster-Artefakt, `-0x170` → `-0x198`).
+- `Enemy/bgpoldrop.cpp::TBGPolDrop::move` (592 Bytes, 99,79 % clean) —
+  8-Byte-Frame-Gap, `char trash[8]` nach `local_14` erreicht keine
+  100 %; nach neuem Protokoll sofort zurückgesetzt statt
+  weiterzuoptimieren.
+- `Animal/AnimalManager.cpp::TAnimalManagerBase::clipEnemies`
+  (256 Bytes, 94,98 % clean) — strukturell identisch zu den bereits
+  dokumentierten `clipEnemies`-Fällen (`NpcManager`, `CameraMode`):
+  16-Byte-Frame-Gap plus echte Argument-Auswertungsreihenfolge in
+  `SetViewFrustumClipCheckPerspective(gpCamera->mFovy,
+  gpCamera->getAspect(), mViewClipNear, *mViewClipFarPtr)` (vier
+  verschiedene Ladereihenfolgen f3/r3/f2/f1 vs. r3/f2/f1/f3) plus
+  r29/r30-Register-Swap für die Schleifenvariable. `char trash[0x10]`
+  erreicht keine 100 %; bestätigt dieselbe Kategorie, zurückgesetzt.
+
+Die Referenz-DOL bleibt `OK`.
 
 ## Windows-Setup
 
@@ -535,14 +571,14 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 - `M3DUtil/M3UModel.cpp`: `M3UModel::updateInMotion` — **100 %**
   (292 Bytes, `char trash[0x28]` am Funktionsanfang, keine Struct-Locals).
 
+- `Animal/AnimalManager.cpp`: `TMewManager::loadAfter` — **100 %**
+  (60 Bytes, `char trash[0x10]`). `clipEnemies` bleibt Nonmatching
+  (94,98 %, dieselbe Kategorie wie `NpcManager::clipEnemies`).
+
 ## Nächster GMSJ01-Kandidat
 
 `ItemManager::newAndRegisterCoin` (99,59 %) und `PollutionManager::
-cleanedAll` (96,43 %) offen. `Map/Shimmer.cpp::TShimmer::perform`
-(99,80 %, 648 Bytes), `Enemy/bgpoldrop.cpp::TBGPolDrop::move` (99,79 %,
-592 Bytes), `Animal/AnimalManager.cpp::TMewManager::loadAfter`
-(99,67 %, 60 Bytes) und `TAnimalManagerBase::clipEnemies` (94,98 %,
-256 Bytes) sind gescannt, aber noch nicht untersucht.
+cleanedAll` (96,43 %) offen.
 `JSystem/J3D/J3DGraphAnimator/J3DModel.cpp::entryModelData` (1248 Bytes,
 99,76 %) — Aufteilen des inline `&mShapePackets[shape->getIndex()]`-Ausdrucks
 in einen expliziten `J3DShapePacket*`-Local behob den ersten
