@@ -225,7 +225,7 @@ void TMameGesso::kill()
 f32 TMameGesso::getGravityY() const
 {
 	f32 result = mGravity;
-	if (mSpine->getCurrentNerve() == &TNerveMameGessoObject::theNerve())
+	if (mSpine->getCurrentNerve() == &TNerveMameGessoGraphJumpWander::theNerve())
 		result = unk194->mSLJumpWanderGravityY.get();
 
 	if (mSpine->getCurrentNerve() == &TNerveMameGessoThrown::theNerve())
