@@ -99,6 +99,7 @@ public:
 		*(Vec*)this = *(Vec*)&other;
 	}
 
+#pragma dont_inline on
 	TVec3& operator=(const TVec3& other)
 	{
 		// NOTE: yes, this has to use lwz/stw and not lfs/stf.
@@ -106,6 +107,7 @@ public:
 		*(Vec*)this = *(Vec*)&other;
 		return *this;
 	}
+#pragma dont_inline off
 
 	// fabricated
 	operator Vec*() const { return (Vec*)&x; }
@@ -164,12 +166,14 @@ public:
 		z -= translate.z;
 	}
 
+#pragma dont_inline on
 	void sub(const TVec3& fst, const TVec3& snd)
 	{
 		x = fst.x - snd.x;
 		y = fst.y - snd.y;
 		z = fst.z - snd.z;
 	}
+#pragma dont_inline off
 
 	void mul(const TVec3& b)
 	{
@@ -206,11 +210,13 @@ public:
 		mul(other);
 		return *this;
 	}
+#pragma dont_inline on
 	TVec3& operator*=(f32 other)
 	{
 		scale(other);
 		return *this;
 	}
+#pragma dont_inline off
 	TVec3& operator/=(f32 other)
 	{
 		div(other);
@@ -289,12 +295,14 @@ public:
 		z = b.z * scale;
 	}
 
+#pragma dont_inline on
 	void scaleAdd(f32 scale, const TVec3& b, const TVec3& c)
 	{
 		x = b.x + c.x * scale;
 		y = b.y + c.y * scale;
 		z = b.z + c.z * scale;
 	}
+#pragma dont_inline off
 
 	// === length stuff ===
 

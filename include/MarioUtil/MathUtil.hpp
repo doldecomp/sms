@@ -218,8 +218,10 @@ inline f32 MsSqrtf(f32 x)
 #pragma dont_inline off
 
 // NOTE: MsCos is **real**.
+#pragma dont_inline on
 inline f32 MsSin(f32 v) { return JMASSin(v * (65536.0f / 360.0f)); }
 inline f32 MsCos(f32 v) { return JMASCos(v * (65536.0f / 360.0f)); }
+#pragma dont_inline off
 
 inline void MsMtxSetRotX(MtxPtr mtx, f32 x)
 {
