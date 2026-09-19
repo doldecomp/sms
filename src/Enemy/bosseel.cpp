@@ -1327,12 +1327,25 @@ TBossEelCollision::TBossEelCollision(MtxPtr collisionMtx, const char* name)
 {
 }
 
+static inline s32 BossEelColCount(const THitActor* collider)
+{
+	s32 count = collider->mColCount;
+	return count;
+}
+
+static inline bool BossEelHitMario(const THitActor* collider, s32 i)
+{
+	THitActor* actor = collider->mCollisions[i];
+	bool isMario     = actor->isActorType(0x80000001);
+	return isMario;
+}
+
 void TBossEelCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
-		for (s32 i = 0; i < mColCount; ++i) {
-			if (mCollisions[i]->isActorType(0x80000001))
+		for (s32 i = 0; i < BossEelColCount(this); ++i) {
+			if (BossEelHitMario(this, i))
 				behaveToMario();
 		}
 	}
@@ -1396,17 +1409,35 @@ void TBossEelAwaCollision::behaveToMario()
 	SMS_MarioMoveRequest(marioTarget);
 }
 
+static inline JGeometry::TVec3<f32>* BossEelAwaMarioPos()
+{
+	JGeometry::TVec3<f32>* pos = gpMarioPos;
+	return pos;
+}
+
+static inline s32 BossEelAwaColCount(const THitActor* collider)
+{
+	s32 count = collider->mColCount;
+	return count;
+}
+
+static inline bool BossEelAwaHitMario(const THitActor* collider, s32 i)
+{
+	THitActor* actor = collider->mCollisions[i];
+	return actor->isActorType(0x80000001);
+}
+
 void TBossEelAwaCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
-		if (gpMarioPos->y < mPosition.y + 500.0f)
+		if (BossEelAwaMarioPos()->y < mPosition.y + 500.0f)
 			offHitFlag(HIT_FLAG_NO_COLLISION);
 		if (gpMarioPos->y > mPosition.y + mAttackHeight)
 			onHitFlag(HIT_FLAG_NO_COLLISION);
 
-		for (s32 i = 0; i < mColCount; ++i) {
-			if (mCollisions[i]->isActorType(0x80000001))
+		for (s32 i = 0; i < BossEelAwaColCount(this); ++i) {
+			if (BossEelAwaHitMario(this, i))
 				behaveToMario();
 		}
 	}
@@ -1451,13 +1482,26 @@ void TBossEelTearsRecoverCollision::behaveToMario()
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+static inline s32 BossEelTearsColCount(const THitActor* collider)
+{
+	s32 count = collider->mColCount;
+	return count;
+}
+
+static inline bool BossEelTearsHitMario(const THitActor* collider, s32 i)
+{
+	THitActor* actor = collider->mCollisions[i];
+	bool isMario     = actor->isActorType(0x80000001);
+	return isMario;
+}
+
 void TBossEelTearsRecoverCollision::perform(u32 cue,
                                             JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
-		for (s32 i = 0; i < mColCount; ++i) {
-			if (mCollisions[i]->isActorType(0x80000001))
+		for (s32 i = 0; i < BossEelTearsColCount(this); ++i) {
+			if (BossEelTearsHitMario(this, i))
 				behaveToMario();
 		}
 	}
