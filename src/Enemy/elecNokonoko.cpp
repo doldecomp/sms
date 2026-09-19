@@ -323,7 +323,9 @@ void TElecNokonoko::calcRootMatrix()
 		}
 	}
 
-	if (isBckAnm(DENNOKO_ANM_ELEC_DOWN1)) {
+	// Compared in place, not through isBckAnm(): the ROM branches straight
+	// off the `cmpwi 2` where the helper would materialise a bool first.
+	if (mCurrentBckAnm == DENNOKO_ANM_ELEC_DOWN1) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_DNK_SHIBIRE_A, getMActor()->getModel()->getAnmMtx(0),
 		    1, this);
@@ -428,13 +430,9 @@ void TElecNokonoko::behaveToFindMario()
 
 void TElecNokonoko::behaveToWater(THitActor* water)
 {
-	if (isBckAnm(DENNOKO_ANM_SHOOT1) && getCurAnmFrameNo(0) > 58.0f)
-		return;
-
-	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
-		return;
-
-	if (isBckAnm(DENNOKO_ANM_CATCH1) && mHasCarapace == 0)
+	if ((isBckAnm(DENNOKO_ANM_SHOOT1) && getCurAnmFrameNo(0) > 58.0f)
+	    || mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve()
+	    || (isBckAnm(DENNOKO_ANM_CATCH1) && mHasCarapace == 0))
 		return;
 
 	unk165                  = true;
@@ -633,26 +631,25 @@ void TElecCarapace::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & 0x200) {
-		if (!isUnk150Zero()
-		    && !mNokonoko->checkLiveFlag(LIVE_FLAG_DEAD)) {
-			if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN))
-				return;
+		if (isUnk150Zero() || mNokonoko->checkLiveFlag(LIVE_FLAG_DEAD)
+		    || checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN))
+			return;
 
-			TCircleShadowRequest request;
-			request.mPosition = getPosition();
+		TCircleShadowRequest request;
+		request.mPosition = getPosition();
 
-			bool airborne = isAirborne();
-			if (!airborne) {
-				request.mPosition.y      = mGroundHeight;
-				request.mNeedsGroundCheck = 0;
-			}
-
-			request.mRadiusZ = request.mRadiusX
-			    = mNokonoko->mScaledBodyRadius;
-			request.mRotationY = getRotation().y;
-
-			gpBindShadowManager->request(request, mActorType);
+		bool airborne = isAirborne();
+		if (!airborne) {
+			request.mPosition.y       = mGroundHeight;
+			request.mNeedsGroundCheck = 0;
 		}
+
+		request.mRadiusZ = request.mRadiusX = mNokonoko->mScaledBodyRadius;
+		request.mRotationY                  = getRotation().y;
+
+		// TODO: two instructions left: the ROM loads mActorType before
+		// gpBindShadowManager, i.e. the request argument is bound first.
+		gpBindShadowManager->request(request, mActorType);
 	}
 }
 
@@ -741,9 +738,7 @@ void TElecCarapace::shoot()
 	if (unk150 == 2)
 		return;
 
-	JGeometry::TVec3<f32> toMario = *gpMarioPos - mPosition;
-
-	JGeometry::TVec3<f32> goal(toMario);
+	JGeometry::TVec3<f32> goal = *gpMarioPos - mPosition;
 	MsVECNormalize((Vec*)&goal, (Vec*)&goal);
 
 	f32 flyDist = mNokonoko->getSaveParams()->getSLCarapaceFlyDist();
@@ -754,7 +749,7 @@ void TElecCarapace::shoot()
 	goal.y += mPosition.y;
 	goal.z += mPosition.z;
 
-	mSpinReverse  = mSpinReverse == 0;
+	mSpinReverse  = !mSpinReverse;
 	mSpinAngle    = 0.0f;
 	unk150        = 2;
 	mFlying       = false;
