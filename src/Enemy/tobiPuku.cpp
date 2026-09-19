@@ -1113,8 +1113,8 @@ DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
 	if (puku->checkCurAnmEnd(0)) {
 		puku->onLiveFlag(LIVE_FLAG_DEAD);
 		puku->onLiveFlag(LIVE_FLAG_UNK8);
-		puku->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-		puku->offLiveFlag(LIVE_FLAG_UNK20000);
+		puku->offLiveFlag(LIVE_FLAG_HIDDEN);
+		puku->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		puku->mHolder = nullptr;
 		puku->stopAnmSound();
 		spine->reset();
