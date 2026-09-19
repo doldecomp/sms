@@ -95,8 +95,9 @@ void THauntLegManager::initSetEnemies()
 	for (int i = 0; i < mObjNum; ++i) {
 		TGraphWeb* graph = gpConductor->getGraphByName("main");
 		THauntLeg* leg   = (THauntLeg*)getObj(i);
+		TMsRange<int> range(0, graph->unk8);
 		JGeometry::TVec3<f32> point;
-		graph->unk0[TMsRange<int>(0, graph->unk8).rand()].getPoint(point);
+		graph->unk0[range.rand()].getPoint(point);
 		leg->mPosition = point;
 		leg->mPosition.y += 5.0f;
 		leg->onLiveFlag(LIVE_FLAG_AIRBORNE);
