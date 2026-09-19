@@ -470,8 +470,7 @@ void TOptionRumbleUnit::setInfluencedAlphaRecursive(J2DPane* pane, bool flag)
 // TOptionSubtitleUnit::TOptionSubtitleUnit's frame at 0x1a0 (batch 121).
 static inline J2DPane* OptionGetPane(const TExPane* p)
 {
-	J2DPane* pane = p->getPane();
-	return pane;
+	return p->getPane();
 }
 
 TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
@@ -494,8 +493,12 @@ TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
 	setState(STATE_INACTIVE);
 }
 
-// Binding level over a raw member read, worth +24 of low region in
-// TOptionSubtitleUnit::update (batch 127).
+// One binding level over a raw member read, worth +8 of low region.  Exactly
+// one of update()'s three mParentPane reads goes through it: each binder site
+// is +8 and a fork (or a raw read) is +0, so one site lands the frame on the
+// map's 0x1f0.  Which of the three carries it is not observable -- all twelve
+// one-binder arrangements compile to the same 161 instructions (batch 127,
+// remeasured in header round 43).
 static inline TExPane* OptionParentPane(const TOptionSubtitleUnit* p)
 {
 	TExPane* parentPane = p->mParentPane;
@@ -508,12 +511,12 @@ void TOptionSubtitleUnit::update()
 	case STATE_DEACTIVATING:
 		OptionParentPane(this)->update();
 		// fade-out animation is done
-		if (OptionParentPane(this)->getPane()->getAlpha() == 150)
+		if (mParentPane->getPane()->getAlpha() == 150)
 			setState(STATE_INACTIVE);
 		break;
 
 	case STATE_ACTIVE:
-		OptionParentPane(this)->update();
+		mParentPane->update();
 		mSelectionBubble->update();
 		break;
 
