@@ -125,6 +125,12 @@ public:
 		mForceHit[0] = false;
 		mForceHit[1] = false;
 		mForceHit[2] = false;
+		// Dead 16-byte carrier: the ROM's copy of this body reserves 16 low
+		// bytes nothing in it references (frame 0x28 against 0x18), and an
+		// uninitialised non-trivial class local is the only zero-instruction
+		// lever for that -- a `TVec3` reserves 16 rather than its 12 bytes.
+		// The drum vectors at unk1AC are the plausible original.
+		JGeometry::TVec3<f32> drumPos;
 	}
 
 	virtual ~TTelesaSlot() { }
