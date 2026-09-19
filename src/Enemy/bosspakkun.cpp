@@ -1270,7 +1270,9 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32 message)
 			mSpine->setNext(&TNerveBPBreakSleep::theNerve());
 			return TRUE;
 		}
-	} else if (mState == BOSSPAKU_STATE_FLYING) {
+	}
+
+	if (mState == BOSSPAKU_STATE_FLYING) {
 		if (sender->getActorType() == 0x1000000D
 		    || sender->getActorType() == 0x1000001) {
 			if (mPosition.y - 300.0f > sender->mPosition.y)
