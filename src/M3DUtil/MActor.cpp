@@ -341,6 +341,7 @@ void MActor::setLightID(s16 light_id)
 void MActor::setLightData(const TBGCheckData* param_1,
                           const JGeometry::TVec3<f32>& param_2)
 {
+	char trash[0x20];
 	if (!unk40)
 		return;
 
@@ -368,6 +369,7 @@ void MActor::update() { }
 
 void MActor::entry()
 {
+	char trash[8];
 	if (!unk39)
 		return;
 
