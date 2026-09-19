@@ -73,6 +73,10 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   `dflt` deklariertes `char trash[8]` reproduziert Stackframe und
   Local-Offsets des Originals.
 
+- `MSound/MSoundBGM.cpp`: `MSBgm::init` — **100 %** (136 Bytes).
+  `char trash[0x20]` stellt den originalen 0x48-Byte-Stackframe wieder her;
+  danach matchen auch `.text`, `.data`, `.bss` und `.sdata` der Unit zu 100 %.
+
 ## Nächster GMSJ01-Kandidat
 
 Noch auszuwählen.
