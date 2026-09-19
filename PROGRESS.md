@@ -681,6 +681,66 @@ Vier weitere Funktionen in `liveactor.cpp` untersucht, Nonmatching:
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach zwanzigster Iterationsrunde (mameGesso/walkerEnemy-Batch; getGravityY-Bugfix)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,94 % (1.505.820 / 3.590.088) | +3.300 Bytes |
+| Funktionen matched | 8.644 / 12.881 | +6 |
+
+Sechs neue 100-%-Matches: `Enemy/mameGesso.cpp::TNerveMameGessoObject::
+execute` (`char trash[0x10]` nach `self`), `TNerveMameGessoDamage::
+execute` (`char trash[8]` nach `vel`), `TMameGessoManager::perform`
+(`char trash[8]` am Funktionsanfang), `Enemy/walkerEnemy.cpp::
+TNerveWalkerAttack::execute` (`char trash[0x10]` nach `self`),
+`TWalkerEnemy::init` (`char trash[8]` am Funktionsanfang),
+`Enemy/gesso.cpp::TGesso::rollCheck` (`char trash[8]` am
+Funktionsanfang).
+
+Echter Logikfehler gefunden und gefixt: `Enemy/mameGesso.cpp::
+TMameGesso::getGravityY` verglich `mSpine->getCurrentNerve()` gegen
+`TNerveMameGessoObject::theNerve()` statt `TNerveMameGessoGraphJump
+Wander::theNerve()`, bevor `mSLJumpWanderGravityY` angewendet wird —
+Feldname und Nerve-Name passten nicht zusammen. Bestätigt gegen die
+rohe Retail-Disassembly (`build/GMSJ01/asm/Enemy/mameGesso.s`, zeigt
+`__vt__30TNerveMameGessoGraphJumpWander` an dieser Stelle). Nach Fix
+`match_percent` 100,0 %. Hinweis: Der projektweite `fuzzy_match_
+percent`-Zähler aus `objdiff-cli report` (Basis für die obige
+Fortschrittstabelle) hatte diese Funktion schon VOR dem Fix als
+100 % fuzzy-matched gezählt — die Byte-Zahl der Tabelle enthält
+diese Funktion daher nicht als Delta, obwohl der Fix inhaltlich
+korrekt und über `objdiff-cli diff` (`match_percent`, die in diesem
+Projekt maßgebliche Metrik) bestätigt 100 % ist.
+
+**Neuer Methodik-Fund**: Eine automatisierte Rundum-Suche nach
+Funktionen mit reinem Stackframe-Gap (Prolog-`stwu`-Differenz, sonst
+strukturell identisch) über 260 Units lieferte 1.119 Kandidaten mit
+erkennbarem Gap; 69 davon mit hoher Konfidenz (`fuzzy_match_percent`
+> 99,5 %, Ziel-Frame größer als unseres). Blindes Anwenden von
+`char trash[N]` (Platzierung: nach letztem struct-typisiertem Local
+bzw. am Funktionsanfang) auf 24 dieser automatisch gefundenen
+Kandidaten (u. a. `tamaNoko.cpp`, `EventWatcher.cpp`, `hamukuri.cpp`,
+`NpcChange.cpp`, `DrawUtil.cpp`, `wireBinder.cpp`, `boid.cpp`, sowie
+ein Retry in `mameGesso.cpp`) ergab **0 Treffer** — jedes Mal blieb
+der Ziel-Stackframe exakt auf der Baseline-Größe, das `trash`-Array
+wurde vom Optimizer vollständig eliminiert. Auch `volatile char
+trash[N]` sowie ein erzwungener Schreibzugriff (`trash[0] = 0`)
+änderten daran nichts (letzteres verschlechterte den Match sogar,
+da ein zusätzlicher, nicht im Original vorhandener `stb`-Befehl
+entsteht, ohne den Frame zu vergrößern). MWCC (`-O4,p -opt`) eliminiert
+in diesen Fällen das komplett ungenutzte Array unabhängig von Größe,
+Platzierung oder `volatile`-Qualifikation — offenbar eine Eigenschaft
+der jeweiligen Funktion (Registerdruck/Liveness), nicht der Datei
+oder der Compiler-Flags (identisch `-O4,p -opt` für `mameGesso.cpp`
+und `EventWatcher.cpp` verifiziert). Fazit: `char trash[N]` ist kein
+garantiert wirksamer Trick — er funktioniert zuverlässig nur, wenn
+man empirisch für die KONKRETE Funktion prüft (bauen + diffen), nicht
+durch pauschale Anwendung auf automatisch gefundene Kandidatenlisten.
+Alle 24 Versuche sauber zurückgesetzt (`git checkout`), keine toten
+`trash`-Deklarationen im Baum verblieben.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -988,6 +1048,21 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
 
 - `NPC/NpcNerve.cpp`: `TNerveNPCTalk::execute` — **100 %**
   (176 Bytes, `char trash[8]` nach `self`).
+
+- `Enemy/mameGesso.cpp`: `TNerveMameGessoObject::execute` (`char
+  trash[0x10]` nach `self`), `TNerveMameGessoDamage::execute`
+  (`char trash[8]` nach `vel`), `TMameGessoManager::perform`
+  (`char trash[8]` am Funktionsanfang), `TMameGesso::getGravityY`
+  (Bugfix: falscher Nerve-Vergleich) — alle **100 %**.
+
+- `Enemy/walkerEnemy.cpp`: `TNerveWalkerAttack::execute` (`char
+  trash[0x10]` nach `self`), `TWalkerEnemy::init` (`char trash[8]`
+  am Funktionsanfang) — je **100 %**. `behaveToFindMario`, `reset`,
+  `TNerveWalkerEscape::execute` mit `trash` getestet (99,92 %/
+  99,70 %/99,94 % beste Werte, keine 100 %), sauber zurückgesetzt.
+
+- `Enemy/gesso.cpp`: `TGesso::rollCheck` — **100 %** (`char trash[8]`
+  am Funktionsanfang).
 
 ## Nächster GMSJ01-Kandidat
 
