@@ -351,12 +351,15 @@ void TLimitKoopa::init(TLiveManager* manager)
 	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	mSpine->initWith(&TNerveLimitKoopaWait::theNerve());
 
-	// TODO: the ROM tests the result of getAnmBck() in r3 directly, so this
-	// named local costs one `mr`; the body is otherwise instruction-exact
-	// apart from a 0x10-byte frame gap.
-	MActorAnmBck* bck = getMActor()->getAnmBck();
-	if (bck)
-		bck->initSimpleMotionBlend(0x10);
+	// TODO: every instruction of init() now matches; the frame is 0x68
+	// against retail's 0x70 and nothing in the body touches the stack, so
+	// the residue is a purely dead low region 8 bytes short -- an 8-byte
+	// non-trivial local of one of the inlined callees here (theNerve(),
+	// TSpineBase::initWith, the getAnmBck test). The named
+	// `MActorAnmBck* bck` local this replaced cost one `mr r3, r0` and, as
+	// a named local, *shrank* the frame by another 8 (0x60).
+	if (getMActor()->getAnmBck())
+		getMActor()->getAnmBck()->initSimpleMotionBlend(0x10);
 
 	unk170 = 0.0f;
 	reset();
