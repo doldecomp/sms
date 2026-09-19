@@ -919,7 +919,12 @@ void THinokuri2::moveObject()
 		                 * (1.0f + dhp / calcHitPoints())
 		             - unk194;
 
-		unk194 += symmetric_clamp(fVar12, 0.004f);
+		if (fVar12 > 0.0f)
+			fVar12 = std::min(fVar12, 0.004f);
+		else
+			fVar12 = std::max(fVar12, -0.004f);
+
+		unk194 += fVar12;
 	} else {
 		unk194 = 1.0f;
 	}
