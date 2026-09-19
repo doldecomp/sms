@@ -1051,7 +1051,8 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-	int freezeTime = self->getSaveParams()->getSLFreezeWait();
+	TSmallEnemyParams* params = self->getSaveParams();
+	int freezeTime            = params->getSLFreezeWait();
 
 	if (spine->getTime() == 0)
 		self->setFreezeAnm();
