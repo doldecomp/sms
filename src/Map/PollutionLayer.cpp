@@ -100,10 +100,19 @@ ResTIMG* TPollutionLayerWave::getTexResource(const char* name)
 	return (ResTIMG*)JKRFileLoader::getGlbResource(buf);
 }
 
+// A direct-return fork over the parameter, worth +8 of frame in
+// TPollutionLayerWave::initJointModel; binding it to a named local first is
+// +0x10 and overshoots.
+static inline TJointModelManager*
+PollutionLayerWaveManager(TJointModelManager* mgr)
+{
+	return mgr;
+}
+
 void TPollutionLayerWave::initJointModel(TJointModelManager* mgr,
                                          const char* name, MActorAnmData*)
 {
-	mManager = mgr;
+	mManager = PollutionLayerWaveManager(mgr);
 
 	initPollutionTex(name);
 }
@@ -248,15 +257,27 @@ void TPollutionLayer::stamp(u16 stamp_type, f32 x, f32 y, f32 z, f32 size)
 
 void TPollutionLayer::isProhibit(f32, f32, f32) const { }
 
+// Two frame levels over the height parameter of the f32 overload of
+// isPolluted: the direct-return fork is +8 and the binding form another +8,
+// which is the whole gap. Binding an argument of either virtual accessor call
+// instead reaches the same frame but hoists the receiver load.
+static inline f32 PollutionLayerLimit(f32 y) { return y; }
+
+static inline f32 PollutionLayerHeight(f32 y)
+{
+	f32 height = y;
+	return height;
+}
+
 bool TPollutionLayer::isPolluted(f32 x, f32 y, f32 z) const
 {
 	if (!isInArea(x, y, z))
 		return false;
-	if (getPlaneType() == 6 && y > 1.0f)
+	if (getPlaneType() == 6 && PollutionLayerLimit(y) > 1.0f)
 		return false;
 	int texS = getTexPosS(x);
 	int texT = getTexPosT(z);
-	return isPolluted(texS, texT, y);
+	return isPolluted(texS, texT, PollutionLayerHeight(y));
 }
 
 bool TPollutionLayer::isPolluted(int s, int t, f32 y) const
