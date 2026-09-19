@@ -114,6 +114,10 @@ TSpineEnemy* TPopoManager::createEnemyInstance() { return new TPopo("ポポ"); }
 void TPopoManager::initSetEnemies()
 {
 	TGraphWeb* web = getObj(0)->unk124->getGraph();
+	// TODO: the ROM keeps a `cmpwi r3, 0` on isDummy()'s result with no
+	// branch after it, i.e. an `if` whose body generates nothing.  Ruled
+	// out: `if (web && web->isDummy()) { }` and an unused `bool` local --
+	// MWCC deletes the compare with the body in both.
 	if (web)
 		web->isDummy();
 }
@@ -398,7 +402,7 @@ bool TPopo::checkTrigger()
 {
 	mIsPumping = 0;
 	if (gpMarioOriginal->onYoshi()
-	    || SMS_GetMarioWaterGun()->mCurrentNozzle != 0) {
+	    || (s32)SMS_GetMarioWaterGun()->mCurrentNozzle != 0) {
 		kill();
 		return false;
 	}
@@ -459,11 +463,9 @@ bool TPopo::checkTrigger()
 
 void TPopo::behaveToWater(THitActor* param_1)
 {
-	if (mSpine->getCurrentNerve() == &TNervePopoFly::theNerve())
-		return;
-	if (mSpine->getCurrentNerve() == &TNervePopoExplosion::theNerve())
-		return;
-	if (mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
+	if (mSpine->getCurrentNerve() == &TNervePopoFly::theNerve()
+	    || mSpine->getCurrentNerve() == &TNervePopoExplosion::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
 		return;
 	if (mSpine->getCurrentNerve() == &TNervePopoPossessedNozzle::theNerve()) {
 		mSprayedByWaterCooldown = 0;
@@ -507,7 +509,7 @@ void TPopo::behaveToFindMario()
 {
 	TPopoManager* manager = (TPopoManager*)mManager;
 	if (SMS_CheckMarioFlag(MARIO_FLAG_HAS_FLUDD) && manager->mIsNozzleFree
-	    && SMS_GetMarioWaterGun()->mCurrentNozzle == 0
+	    && (s32)SMS_GetMarioWaterGun()->mCurrentNozzle == 0
 	    && !gpMarioOriginal->onYoshi()) {
 		setGoalPathMario();
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
