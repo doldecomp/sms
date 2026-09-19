@@ -1652,60 +1652,17 @@ void TMario::calcBaseMtxSwim(MtxPtr mtx)
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
 	if (mStatus == MARIO_STATUS_TOROCCO) {
-		if (mRailType == 0) {
-			mPinaRail->calcAnm();
-			MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
-			        mTorocco->getModel()->getBaseTRMtx());
-		}
-		if (mRailType == 1) {
-			mKoopaRail->calcAnm();
-			MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
-			        mTorocco->getModel()->getBaseTRMtx());
-		}
-
-		mTorocco->calcAnm();
-		Mtx transform;
-		MsMtxSetRotRPH(transform, 0.0f, SHORTANGLE2DEG(mToroccoAngle), 0.0f);
-		MTXConcat(mTorocco->getModel()->getAnmMtx(2), transform, mtx);
-
-		mToroccoPos = mPosition;
-		mPosition.x = mtx[0][3];
-		mPosition.y = mtx[1][3];
-		mPosition.z = mtx[2][3];
+		calcBaseMtxTorocco(mtx);
 		return;
 	}
 
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK100000)) {
-		J3DTransformInfo ti;
-		ti.mScale.x     = 1.0f;
-		ti.mScale.y     = 1.0f;
-		ti.mScale.z     = 1.0f;
-		ti.mRotation.x  = 0;
-		ti.mRotation.y  = mModelFaceAngle;
-		ti.mRotation.z  = 0;
-		f32 radiusAtY   = mHolder->getRadiusAtY(mPosition.y);
-		ti.mTranslate.x = mPosition.x - (radiusAtY * JMASSin(mModelFaceAngle));
-		ti.mTranslate.y = mPosition.y;
-		ti.mTranslate.z = mPosition.z - radiusAtY * JMASCos(mModelFaceAngle);
-		J3DGetTranslateRotateMtx(ti, mtx);
+		calcBaseMtxPole(mtx);
 		return;
 	}
 
 	if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
-		J3DTransformInfo ti;
-		ti.mScale.x     = 1.0f;
-		ti.mScale.y     = 1.0f;
-		ti.mScale.z     = 1.0f;
-		ti.mRotation.x  = 0;
-		ti.mRotation.y  = mModelFaceAngle;
-		ti.mRotation.z  = 0;
-		ti.mTranslate.x = mPosition.x;
-		ti.mTranslate.y = mPosition.y;
-		ti.mTranslate.z = mPosition.z;
-		ti.mTranslate.y += gpMapObjWave->getHeight(
-		                       mPosition.x, mFloorPosition.z, mPosition.z)
-		                   - mFloorPosition.z;
-		J3DGetTranslateRotateMtx(ti, mtx);
+		calcBaseMtxSwim(mtx);
 		return;
 	}
 
