@@ -257,11 +257,14 @@ TJointObj* TMapObjBase::getBuildingJointObj(int i)
 	    (u16)i);
 }
 
-void TMapObjBase::getMapMActor() { }
+MActor* TMapObjBase::getMapMActor() { return gpMap->getRootJointModel()->mActor; }
 
-void TMapObjBase::getMapModelData() { }
+J3DModelData* TMapObjBase::getMapModelData()
+{
+	return gpMap->getRootJointModel()->getModel()->getModelData();
+}
 
-void TMapObjBase::getMapModel() { }
+J3DModel* TMapObjBase::getMapModel() { return gpMap->getRootJointModel()->getModel(); }
 
 void TMapObjBase::calcMap()
 {
@@ -543,9 +546,29 @@ void TMapObjBase::updateRootMtxTrans()
 	mtx[0][3] = mPosition.z;
 }
 
-void TMapObjBase::makeRootMtxTrans(MtxPtr) { }
+void TMapObjBase::makeRootMtxTrans(MtxPtr ptr)
+{
+	ptr[0][0] = 1.0f;
+	ptr[0][1] = 0.0f;
+	ptr[0][2] = 0.0f;
+	ptr[0][3] = mPosition.x;
 
-void TMapObjBase::setRootMtxTrans() { }
+	ptr[1][0] = 0.0f;
+	ptr[1][1] = 1.0f;
+	ptr[1][2] = 0.0f;
+	ptr[1][3] = mPosition.y - mYOffset;
+
+	ptr[2][0] = 0.0f;
+	ptr[2][1] = 0.0f;
+	ptr[2][2] = 1.0f;
+	ptr[2][3] = mPosition.z;
+}
+
+void TMapObjBase::setRootMtxTrans()
+{
+	J3DModel* model = getModel();
+	makeRootMtxTrans(model->getAnmMtx(0));
+}
 
 // Binding level over a raw member read, worth +8 of low region in
 // TMapObjBase::updateObjMtx (batch 127).
