@@ -167,6 +167,16 @@ TDrawSyncManager::~TDrawSyncManager()
 // range;`) puts it flush with the top but shrinks the frame to 0x28, so retail
 // is a named local with 8 more bytes of dead low region *or* this unnamed form
 // with 4 more; both need an object nothing here wants.
+// Closure 217 pinned which of the two retail is: the named form's frame is
+// exactly the top of the temporary (0x28), the unnamed form's is that rounded
+// up (temp top 0x2c, frame 0x30), and retail's 0x28/0x30 has no padding, so
+// retail is the *named* form plus 8 bytes of pool below it. Every +8 lever
+// tried on `mCallbacks` measured +16 instead (frame 0x38): a TU-local
+// reference binder, the same as a pointer binder, a bare direct-return fork,
+// and a `getCallbacks()` member accessor binder in the class -- the vector is
+// 0x18 bytes and the binder appears to be priced by the bound object, not by
+// the return type, so the missing item is a 8-byte object, not a vector
+// binding.
 void TDrawSyncManager::setCallback(u32 param_1, u16 param_2, u16 param_3,
                                    TDrawSyncCallback* param_4)
 {

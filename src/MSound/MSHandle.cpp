@@ -226,7 +226,10 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 // two, which match) -- it declines to reuse getSwBit's return register even
 // though r3 is free until `this` is reloaded for setDistanceVolumeCommon.
 // Swapping get_thing's two declarations and inlining `tmp` into the argument
-// list both leave it unchanged.
+// list both leave it unchanged. Closure 217 added two more inert spellings:
+// naming the category index (`u32 idx = get_thing(getID());`) and dropping
+// get_thing's `uVar1` so the shift is anonymous at all three compares (MWCC
+// re-CSEs it).
 void MSHandle::setSeDistanceVolume(u8 moveTime)
 {
 	u32 swBit = getSwBit();
