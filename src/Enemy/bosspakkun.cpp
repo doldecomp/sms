@@ -1974,18 +1974,25 @@ DEFINE_NERVE(TNerveBPPreDie, TLiveActor)
 	return FALSE;
 }
 
+static inline MSound* BossPakkunDieSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 DEFINE_NERVE(TNerveBPDie, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
 	MActor* actor     = boss->getMActor();
 
-	// TODO: both arms of this test compile to the same call. The original
-	// must have written two spellings that fold together; only the branch
-	// itself is evidence.
+	// Both arms of this test compile to the same call; only the branch
+	// itself is evidence that two statements were written. The accessor in
+	// the first arm and the raw member in the second are the two spellings
+	// that reach retail's frame.
 	if (spine->getTime() == 0)
-		gpMSound->unk98->modBgm(0, 1);
+		BossPakkunDieSound()->getModBgm()->modBgm(0, 1);
 	else
-		gpMSound->unk98->modBgm(0, 1);
+		BossPakkunDieSound()->unk98->modBgm(0, 1);
 
 	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_DOWN_START)
 	    && spine->getTime() == 680)
@@ -2235,7 +2242,8 @@ DEFINE_NERVE(TNerveBPBreakSleep, TLiveActor)
 		MSBgm::stopTrackBGMs(7, 10);
 	}
 
-	if (boss->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	MActor* actor = boss->getMActor();
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBPTakeOff::theNerve());
 		return TRUE;
 	}
@@ -2253,7 +2261,8 @@ DEFINE_NERVE(TNerveBPWaitL, TLiveActor)
 
 	if (spine->getTime()
 	    >= boss->getSaveParam2()->mSLWaitFrameStg0.get()) {
-		if (boss->inArea(*gpMarioPos)) {
+		bool inArea = boss->inArea(*gpMarioPos);
+		if (inArea) {
 			if (!SMS_GetMarioGroundPlane()->isWaterSurface()) {
 				spine->pushAfterCurrent(&TNerveBPCannonL::theNerve());
 				return TRUE;
