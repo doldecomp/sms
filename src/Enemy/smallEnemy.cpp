@@ -979,6 +979,12 @@ void TSmallEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 	TSpineEnemy::perform(cue, graphics);
 }
 
+static inline TSmallEnemy* SmallEnemyGetBody(TSpineBase<TLiveActor>* spine)
+{
+	TSmallEnemy* body = (TSmallEnemy*)spine->getBody();
+	return body;
+}
+
 DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
@@ -1057,7 +1063,7 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 
 DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 {
-	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
+	TSmallEnemy* self = SmallEnemyGetBody(spine);
 
 	if (spine->getTime() == 0) {
 		if (self->checkLiveFlag2(LIVE_FLAG_UNK8000)
@@ -1128,7 +1134,7 @@ DEFINE_NERVE(TNerveSmallEnemyWait, TLiveActor)
 
 DEFINE_NERVE(TNerveSmallEnemyChange, TLiveActor)
 {
-	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
+	TSmallEnemy* self = SmallEnemyGetBody(spine);
 
 	int changeTime = self->getChangeBlockTime();
 
