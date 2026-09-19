@@ -28,6 +28,7 @@ public:
 	const char* getName(u16 index) const;
 	u16 calcKeyCode(char const* pName) const;
 	const ResNTAB* getResNameTable() const { return mNameTable; }
+	u16 getNameNum() const { return mNameNum; }
 
 private:
 	const ResNTAB* mNameTable;

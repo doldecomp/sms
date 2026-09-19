@@ -351,6 +351,9 @@ void TLimitKoopa::init(TLiveManager* manager)
 	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	mSpine->initWith(&TNerveLimitKoopaWait::theNerve());
 
+	// TODO: the ROM tests the result of getAnmBck() in r3 directly, so this
+	// named local costs one `mr`; the body is otherwise instruction-exact
+	// apart from a 0x10-byte frame gap.
 	MActorAnmBck* bck = getMActor()->getAnmBck();
 	if (bck)
 		bck->initSimpleMotionBlend(0x10);
@@ -359,13 +362,8 @@ void TLimitKoopa::init(TLiveManager* manager)
 	reset();
 
 	JUTNameTab* joints = getModel()->getModelData()->getJointName();
-	// TODO: the ROM walks every joint name here and does nothing with them.
-	// It reads the bound straight out of the JUTNameTab (`lhz r4, 8(r3)` =
-	// JUTNameTab::mNameNum), not through the ResNTAB. JUTNameTab has no
-	// public accessor for it and the class lives in a shared JSystem header,
-	// so `u16 getNameNum() const { return mNameNum; }` is reported rather
-	// than added here; it is the last structural difference in this body.
-	for (u16 i = 0; i < joints->getResNameTable()->mEntryNum; i++) { }
+	// The ROM walks every joint name here and does nothing with them.
+	for (u16 i = 0; i < joints->getNameNum(); i++) { }
 
 	mAgoJntIndex  = joints->getIndex("ago");
 	mHeadJntIndex = joints->getIndex("head");
