@@ -996,9 +996,22 @@ DEFINE_NERVE(TNervePopoFly, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNervePopoExplosion, TLiveActor)
+static inline int PopoExplosionEmitTime(TPopo* popo)
+{
+	TPopoSaveLoadParams* params = popo->getSaveParams();
+	int emitTime                = params->getSLExplosionEmitTime();
+	return emitTime;
+}
+
+static inline TPopo* PopoExplosionBody(TSpineBase<TLiveActor>* spine)
 {
 	TPopo* popo = (TPopo*)spine->getBody();
+	return popo;
+}
+
+DEFINE_NERVE(TNervePopoExplosion, TLiveActor)
+{
+	TPopo* popo = PopoExplosionBody(spine);
 
 	if (spine->getTime() == 0) {
 		popo->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
@@ -1009,7 +1022,7 @@ DEFINE_NERVE(TNervePopoExplosion, TLiveActor)
 		popo->explosionEffect();
 	}
 
-	if (spine->getTime() > popo->getSaveParams()->getSLExplosionEmitTime()) {
+	if (spine->getTime() > PopoExplosionEmitTime(popo)) {
 		popo->onLiveFlag(LIVE_FLAG_DEAD);
 		popo->onLiveFlag(LIVE_FLAG_UNK8);
 		popo->offLiveFlag(LIVE_FLAG_HIDDEN);
