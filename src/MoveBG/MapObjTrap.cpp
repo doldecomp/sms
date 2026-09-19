@@ -28,9 +28,9 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
     , unk68(trap)
 {
 	initHitActor(0x4000001E, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ");
+	group->getChildren().push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
@@ -68,14 +68,6 @@ void TLampTrapSpike::initMapObj()
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
-// TODO (closure batch 152): 99.9%, instruction-exact, frame exact (0x78).
-// The whole residue is the known-open JGadget iterator temp-pool word: the
-// three `TList::iterator` temporaries around `TList_pointer_void::insert` sit
-// at 0x38/0x3c/0x40 in retail and 0x3c/0x40/0x44 here, i.e. our pool base is
-// one word high while the frame total is right. TLampTrapIron::loadAfter is
-// byte-for-byte the same residue, so both close together or not at all; see
-// frame-gaps.md's "batch 133" entry (the grouping is not the conversion
-// lever).
 void TLampTrapSpike::loadAfter()
 {
 	TMapObjBase::loadAfter();
@@ -219,9 +211,9 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
     , unk68(trap)
 {
 	initHitActor(0x4000001D, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ");
+	group->getChildren().push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
@@ -262,8 +254,6 @@ void TLampTrapIron::initMapObj()
 	unk13C = mHitPointMax;
 }
 
-// TODO (closure batch 152): the same JGadget iterator temp-pool word as
-// TLampTrapSpike::loadAfter above; see the note there.
 void TLampTrapIron::loadAfter()
 {
 	TMapObjBase::loadAfter();
