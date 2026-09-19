@@ -776,10 +776,22 @@ s32 TShine::appearWithTimeCallback(u32 param_1, u32 param_2)
 	return 0;
 }
 
+static inline TFlagManager* TShineAppearSimpleGetFlagManager(TShine* p)
+{
+	TFlagManager* flagManager = TFlagManager::smInstance;
+	return flagManager;
+}
+
+static inline MSound* TShineAppearSimpleGetMSound(TShine* p)
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TShine::appearSimple(int param_1)
 {
 	TItem::appear();
-	TFlagManager::smInstance->setBool(true, 0x50000);
+	TShineAppearSimpleGetFlagManager(this)->setBool(true, 0x50000);
 
 	unk174   = 60;
 	unk170   = param_1;
@@ -792,12 +804,9 @@ void TShine::appearSimple(int param_1)
 
 	mInitialPosition = mPosition;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr,
-	                                0, 4);
+	TShineAppearSimpleGetMSound(this)->startSoundActor(
+	    MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr, 0, 4);
 	MSBgm::startBGM(MSD_BGM_SHINE_APPEAR);
-
-	// TODO: 99.9%. Only the frame is 16 bytes short of retail's 0x30, and with
-	// it the `this`/param_1 pair sits in r30/r31 the other way round.
 
 	mStateTimer = unk174;
 	mState      = STATE_UNKB;
