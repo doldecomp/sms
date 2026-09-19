@@ -35,6 +35,17 @@ static const char* gateMActorNames[] = {
 	"05_gate05mare",
 };
 
+// The three YUV planes are resized through a binder on the ResTIMG: retail
+// reloads `mResources` once per plane and folds the plane offset into the
+// first store (`stbu`), which only happens when the three fields are written
+// through one bound pointer.
+static inline void setGateTexRes(ResTIMG* res, u16 width, u16 height)
+{
+	res->format = 1;
+	res->width  = width;
+	res->height = height;
+}
+
 void TModelGate::loadAfter()
 {
 	initHitActor(0x080000C0, 5, 0x80000000, 300.0f, 400.0f, 300.0f,
@@ -75,18 +86,12 @@ void TModelGate::loadAfter()
 		// field gives `extrwi rD, rS, 16, 15`. Deriving them from the
 		// `width`/`height` u16 locals is not it either (556 instructions
 		// against retail's 548: MWCC re-materialises the truncation).
-		u16 halfX       = videoInfo.xSize / 2;
-		u16 halfY       = videoInfo.ySize / 2;
+		u16 halfX       = width >> 1;
+		u16 halfY       = height >> 1;
 		J3DTexture* tex = unk78->getModel()->getModelData()->unkAC;
-		tex->mResources[0].format = 1;
-		tex->mResources[0].width  = width;
-		tex->mResources[0].height = height;
-		tex->mResources[1].format = 1;
-		tex->mResources[1].width  = halfX;
-		tex->mResources[1].height = halfY;
-		tex->mResources[2].format = 1;
-		tex->mResources[2].width  = halfX;
-		tex->mResources[2].height = halfY;
+		setGateTexRes(&tex->mResources[0], width, height);
+		setGateTexRes(&tex->mResources[1], halfX, halfY);
+		setGateTexRes(&tex->mResources[2], halfX, halfY);
 	}
 
 	unkB8          = 0;
