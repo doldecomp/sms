@@ -934,7 +934,11 @@ DEFINE_NERVE(TNerveKillerExplosion, TLiveActor)
 	TKiller* killer = (TKiller*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		f32 bombRange = killer->getSaveParam3()->mSLBombRange.get();
+		// TODO: the frame is exact with the raw read, but both `scaling`
+		// vectors sit 8 bytes low: retail has an 8-byte local below them that
+		// is not the mSLBombRange reference temporary (spelling the read
+		// `.get()` puts them at the right offsets and the frame 8 over).
+		f32 bombRange = killer->getSaveParam3()->mSLBombRange.value;
 		f32 bombScale = bombRange * killer->getBodyScale();
 		killer->mExplosionScaleMax = bombScale / killer->mAttackRadius;
 		killer->mRotation.x        = 0.0f;
