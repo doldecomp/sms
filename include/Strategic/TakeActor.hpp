@@ -28,7 +28,9 @@ public:
 	}
 	virtual f32 getRadiusAtY(f32) const;
 
+#pragma dont_inline on
 	BOOL isTaken() const { return mHolder != nullptr ? TRUE : FALSE; }
+#pragma dont_inline off
 	bool isHolding() const { return mHeldObject != nullptr ? true : false; }
 	TTakeActor* getHolder() { return mHolder; }
 	TTakeActor* getHeldObject() { return mHeldObject; }

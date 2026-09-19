@@ -50,7 +50,9 @@ public:
 class TWaterHitActor : public THitActor {
 public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+#pragma dont_inline on
 	void onWaterHitCounter() { unk68 = 0x3C; }
+#pragma dont_inline off
 
 public:
 	/* 0x68 */ int unk68;
