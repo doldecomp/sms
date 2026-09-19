@@ -550,6 +550,48 @@ Zwei weitere Funktionen aus Nachbar-Units geprüft, beide Nonmatching:
 
 Die Referenz-DOL bleibt `OK`.
 
+### Nach sechzehnter Iterationsrunde (coasterkiller::loadAfter; objdiff-Diff-Artefakt entdeckt)
+
+| Metrik | Aktuell | Änderung |
+| --- | ---: | ---: |
+| Code matched | 41,76 % (1.499.092 / 3.590.088) | +52 Bytes |
+| Funktionen matched | 66,97 % (8.625 / 12.881) | +1 |
+
+Ein neuer 100-%-Match: `Enemy/coasterkiller.cpp::TCoasterKillerManager::
+loadAfter` (52 Bytes, `char trash[0x18]` schließt eine 24-Byte-
+Frame-Lücke, keine Locals).
+
+**Wichtiger Methodik-Fund (objdiff-Instruktions-Alignment-Artefakt)**:
+Bei der Untersuchung von `TMapWireActorManager::doActorToWire`
+(99,40 % clean, 484 Bytes) zeigte `objdiff-cli`s Instruktions-Diff an
+einer Stelle einen scheinbar echten Bug: unser kompilierter Code lädt
+`lwz r3, 0x78(r30)` / `lwz r0, 0x7c(r3)` (entspricht `unk4.unk74->
+unk7C`), während die "Ziel"-Seite in der JSON-Ausgabe `lwz r3, 0x0(r30)`
+/ `lwz r0, 0x6c(r3)` zeigt (entspräche `unk0->mHeldObject`) — ein
+scheinbarer Strukturunterschied. Ein expliziter Test mit temporärer
+Variable (`TTakeActor* dbgUnk0 = unk0;`) änderte am kompilierten Ergebnis
+**nichts**, was den Verdacht erhärtete. Gegenprobe direkt in der
+**rohen Retail-Disassemblierung** (`build/GMSJ01/asm/Map/
+MapWireManager.s`, generiert am Anfang der Session, seither
+unverändert): An der exakten Adresse `801EAC6C`/`801EAC70` innerhalb
+von `doActorToWire` (zwischen `.fn`/`.endfn`) steht dort tatsächlich
+`lwz r3, 0x78(r30)` / `lwz r0, 0x7c(r3)` — **identisch mit unserem
+kompilierten Code**. Das bedeutet: `objdiff-cli`s Instruktions-
+Alignment in der JSON-Diff-Ausgabe kann an einzelnen Stellen
+fehlausgerichtet sein (vermutlich Nachwirkung einer Sequenz-Alignment-
+Neusynchronisierung nach einer früheren echten Abweichung im
+Funktionsverlauf), auch wenn der aggregierte `match_percent`-Wert
+korrekt bleibt. **Regel für künftige Sessions**: Bei einem
+scheinbaren "echten Bug" (unterschiedliche Feldoffsets/Strukturzugriffe)
+immer zusätzlich direkt in der rohen `build/GMSJ01/asm/*.s`-Referenz-
+datei (stabil seit Sessionbeginn, nicht von eigenen Edits beeinflusst)
+gegenprüfen, bevor Zeit in einen vermeintlichen Quellcode-Fix investiert
+wird. `doActorToWire` bleibt bei 99,40 % clean dokumentiert; die
+echten Restunterschiede liegen an anderer Stelle im Funktionskörper
+und wurden nicht weiter isoliert.
+
+Die Referenz-DOL bleibt `OK`.
+
 ## Windows-Setup
 
 Die JPN-RVZ liegt als Hardlink unter `orig/GMSJ01/disc.rvz`; `orig/*/*` ist
@@ -836,6 +878,9 @@ matchen wegen abweichender TU-Funktionsreihenfolge aber noch nicht.
   (160 Bytes) — je `char trash[8]`; `TTelesaBlock::perform` (412 Bytes,
   `char trash[8]` nach `TRotation3f mtx`) — alle **100 %**.
   `TSandBlock::control` bleibt Nonmatching (99,93 % best).
+
+- `Enemy/coasterkiller.cpp`: `TCoasterKillerManager::loadAfter` —
+  **100 %** (52 Bytes, `char trash[0x18]`).
 
 ## Nächster GMSJ01-Kandidat
 
