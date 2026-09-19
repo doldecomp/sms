@@ -5,6 +5,11 @@
 
 class TPollutionTest : public JDrama::TViewObj {
 public:
+	TPollutionTest(const char* name)
+	    : JDrama::TViewObj(name)
+	{
+	}
+
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
 
