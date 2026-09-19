@@ -631,6 +631,7 @@ Mtx* TMapObjBase::getRootJointMtx() const
 
 void TMapObjBase::calcRootMatrix()
 {
+	char trash[8];
 	J3DModel* model = getModel();
 	MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y - mYOffset,
 	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);

@@ -31,6 +31,7 @@ TRailMapObj::TRailMapObj(const char* name)
 // TODO: weird stack frame issues here D:
 void TRailMapObj::initGraphTracer(TGraphWeb* graph)
 {
+	char trash[0x10];
 	unk138 = new TGraphTracer;
 
 	unk138->unk0 = graph;

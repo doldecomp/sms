@@ -192,6 +192,7 @@ inline void TBaseNPC::emitWashEffect_()
 
 inline bool TBaseNPC::isPolWaitCEffectEmitTime_() const
 {
+	char trash[8];
 	bool result = false;
 
 	const f32* checkFrames = nullptr;
