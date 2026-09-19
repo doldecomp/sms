@@ -157,6 +157,7 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 
 bool MActor::isCurAnmAlreadyEnd(int type)
 {
+	char trash[8];
 	bool result = true;
 
 	J3DFrameCtrl* ctrl = getFrameCtrl(type);
@@ -313,6 +314,7 @@ void MActor::calcAnm()
 
 void MActor::calc()
 {
+	char trash[0x10];
 	if (!unk39)
 		return;
 
@@ -608,6 +610,7 @@ void MActor::setBrkFromIndex(int index)
 
 void MActor::updateIn()
 {
+	char trash[8];
 	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateIn();
 
@@ -619,6 +622,7 @@ void MActor::updateIn()
 
 void MActor::updateOut()
 {
+	char trash[8];
 	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateOut();
 
