@@ -56,10 +56,12 @@ public:
 	virtual ~THitActor() { }
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+#pragma dont_inline on
 	virtual BOOL receiveMessage(THitActor* sender, u32 message)
 	{
 		return false;
 	}
+#pragma dont_inline off
 
 	f32 initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
 	                 f32 attack_radius, f32 attack_height, f32 damage_radius,

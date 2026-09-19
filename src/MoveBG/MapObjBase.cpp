@@ -52,6 +52,18 @@ void TMapObjBase::changeObjSRT(const JGeometry::TVec3<f32>& param_1,
 
 u32 TMapObjBase::getSDLModelFlag() const { return 3; }
 
+void TMapObjBase::loadBeforeInit(JSUMemoryInputStream&) { }
+
+void TMapObjBase::calc() { }
+
+void TMapObjBase::draw() const { }
+
+void TMapObjBase::dead() { }
+
+u32 TMapObjBase::touchWater(THitActor*) { return false; }
+
+u16 TMapObjBase::getHitObjNumMax() { return 5; }
+
 void TMapObjBase::awake()
 {
 	offLiveFlag(LIVE_FLAG_UNK4000);

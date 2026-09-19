@@ -13,6 +13,7 @@ public:
 	}
 	virtual ~TTakeActor() { }
 	virtual MtxPtr getTakingMtx() = 0;
+#pragma dont_inline on
 	virtual void ensureTakeSituation()
 	{
 		if (mHeldObject != nullptr && mHeldObject->mHolder != this)
@@ -21,12 +22,17 @@ public:
 		if (mHolder != nullptr && mHolder->mHeldObject != this)
 			mHolder = nullptr;
 	}
+#pragma dont_inline off
+#pragma dont_inline on
 	virtual BOOL moveRequest(const JGeometry::TVec3<f32>& where_to)
 	{
 		mPosition = where_to;
 		return true;
 	}
-	virtual f32 getRadiusAtY(f32) const;
+#pragma dont_inline off
+#pragma dont_inline on
+	virtual f32 getRadiusAtY(f32) const { return mDamageRadius; }
+#pragma dont_inline off
 
 #pragma dont_inline on
 	BOOL isTaken() const { return mHolder != nullptr ? TRUE : FALSE; }
