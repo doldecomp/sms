@@ -663,7 +663,9 @@ void MSMainProc::startStageBGM(u8, u8)
 
 MSStage* MSStage::init(u8 param_1, u8 param_2)
 {
-	smMSStage = nullptr;
+	smMSStage                         = nullptr;
+	MSStageCubeFade::smInstance       = nullptr;
+	MSStageCubeFadeDouble::smInstance = nullptr;
 
 	gpMSound->unk9C->unk0 = 0.0f;
 
