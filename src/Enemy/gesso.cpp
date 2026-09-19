@@ -1197,8 +1197,12 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 		self->setGoalPath(TPathNode(SMS_GetMarioPos()));
 
 		if (self->isWandering()) {
+			// The two Mario reads are raw (SMS_GetMarioPos() returns a
+			// reference and reserves 8 bytes per site) but only the second
+			// position read is: the frame is exact at three raw reads of the
+			// four, and four is 8 under.
 			JGeometry::TVec3<f32> local_80
-			    = self->getPosition() - SMS_GetMarioPos();
+			    = self->getPosition() - *gpMarioPos;
 			local_80.y = 0.0f;
 			if (local_80.x == 0.0f && local_80.z == 0.0f)
 				local_80.z = 1.0f;
@@ -1223,7 +1227,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 		if (self->checkCurAnmEnd(0)) {
 			if (self->isBckAnm(6)) {
 				JGeometry::TVec3<f32> local_8C
-				    = self->getPosition() - SMS_GetMarioPos();
+				    = self->mPosition - *gpMarioPos;
 				local_8C.y = 0.0f;
 				if (local_8C.x == 0.0f && local_8C.z == 0.0f)
 					local_8C.z = 1.0f;
