@@ -2636,6 +2636,19 @@ Unterschiede (ähnlich `walkBehavior`), die eine tiefere Einzelanalyse
 erfordern würden. Als Kandidatenpool für eine künftige Sitzung mit
 mehr Zeit pro Funktion vorgemerkt, nicht in dieser Runde verfolgt.
 
+**Gegengeprüfter Negativbefund für `calc__17TMBindShadowPartsFf`**: Ein
+`char trash[152]` gleicht den Stackframe exakt an (144→296) und
+reduziert `ndiff` von 75 auf 68, bleibt aber bei **97,51 %** laut
+`objdiff-cli report` (nicht 100 %) — unabhängig gegengeprüft per
+direktem `dtk elf disasm`-Vergleich (identisches Ergebnis: DIFFER,
+68 Restzeilen). Die Restzeilen sind ECHTE Register-Allokations-
+Unterschiede (z. B. `fnmsubs f9,f9,f1,f4` vs. `fnmsubs f4,f9,f1,f4` —
+unterschiedliche Zielregister bei gleichen Quelloperanden, nicht durch
+eine `r1`-Offset-Verschiebung erklärbar), keine reine
+Stackframe-Offset-Kaskade. Bestätigt die Scan-Fund-Einschätzung oben:
+diese `ShadowUtil.cpp`-Kandidaten brauchen echte Register-Scheduling-
+Archäologie, kein `trash[N]`. Zurückgesetzt, 0 Commit.
+
 Keine Quelltextänderung in dieser Runde (alle Experimente sauber
 zurückgesetzt, 0 Commits). Session-Gesamtstand bleibt bei **361
 tatsächlich verifizierte Funktionen** aus Runde 37. Wichtigster
