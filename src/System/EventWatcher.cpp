@@ -587,11 +587,19 @@ static inline TMarDirector* EventWatcherMarDirector()
 	return marDirector;
 }
 
+// The nil push has two spellings and they are not interchangeable: writing the
+// temporary at the call site (`push(TSpcSlice())`) puts the slice one 4-byte
+// pool slot *above* where the zero-argument `push()` overload puts it, because
+// that overload builds the same temporary one inlining level down. Both forms
+// occur among this file's exact functions, so the choice is per function; here
+// the accessor binder above plus the call-site temporary is what lands
+// retail's 0x38 frame with the slice at 0x24 (the raw-global fork plus
+// `push()` is 0x30/0x1c, and `push()` alone with the binder is 0x38/0x20).
 static void evGameOver(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 	EventWatcherMarDirector()->onUnk4CFlag(0x1);
-	interp->push();
+	interp->push(TSpcSlice());
 }
 
 static void evIsGraffitoCoverage0(TSpcTypedInterp<TEventWatcher>* interp,
