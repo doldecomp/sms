@@ -202,10 +202,13 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 		// out rather than routed through MSound::startSeRandPlay because the
 		// wrapper's inline temp costs 8 bytes of frame the ROM does not have.
 		//
-		// TODO: 99.3%. The ROM keeps mRandPlayHandle in r31 across the
-		// gateCheck call where we reload it; a named local (function-scope or
-		// block-scope, initialised or not) lands in r25 with an extra `addi`
-		// instead, so the carrier is something else.
+		// TODO: 99.3%. The ROM loads mSoundId straight into r27 and
+		// mRandPlayHandle straight into r31 and keeps both across the
+		// gateCheck call, where we reload the members at the call. Naming
+		// either or both as locals (function scope, block scope, initialised
+		// or uninitialised) always lands them in r25/r26 *below* `this` with
+		// an extra `addi` copy after the compare, so the carrier is not a
+		// named local of this function.
 		if (mSoundId != -1) {
 			if (mRandPlayHandle == -1)
 				SMSGetMSound()->startSoundActor(mSoundId, &mPosition, 0,
@@ -454,7 +457,7 @@ TMapStaticObj::TMapStaticObj(const char* name)
     , mMActor(nullptr)
     , mCollisionManager(nullptr)
     , mSoundId(-1)
-    , mRandPlayHandle(0)
+    , mRandPlayHandle(-1)
 {
 }
 
