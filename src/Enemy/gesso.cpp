@@ -196,22 +196,27 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		J3DJoint* joint = (J3DJoint*)param_1;
 		MtxPtr anmMtx   = gpCurGesso->getModel()->getAnmMtx(joint->getJntNo());
 
-		f32 scale = gpCurGesso->getBodyScale();
+		// The ROM zeroes the translation column first and only then reads
+		// the body scale (`stfs f1, 0x80(r1)` three times, then `lfs f2,
+		// 0x148(r4)`), so the scale local is declared after those three
+		// stores rather than above the matrix: 85.6 -> 91.9%.
 		Mtx local_44;
+		local_44[0][3] = 0.0f;
+		local_44[1][3] = 0.0f;
+		local_44[2][3] = 0.0f;
+
+		f32 scale      = gpCurGesso->getBodyScale();
 		local_44[0][0] = scale;
 		local_44[0][1] = 0.0f;
 		local_44[0][2] = 0.0f;
-		local_44[0][3] = 0.0f;
 
 		local_44[1][0] = 0.0f;
 		local_44[1][1] = scale;
 		local_44[1][2] = 0.0f;
-		local_44[1][3] = 0.0f;
 
 		local_44[2][0] = 0.0f;
 		local_44[2][1] = 0.0f;
 		local_44[2][2] = scale;
-		local_44[2][3] = 0.0f;
 
 		f32 maxAngle = gpCurGesso->getSaveParams()->mSLBodyAngMax.get();
 		f32 angle = MsClamp(gpCurGesso->mBodyTrackingAngle - 90.0f, -maxAngle,
@@ -236,6 +241,12 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		local_74[2][2] = c;
 		local_74[2][3] = 0.0f;
 
+		// TODO: the residue is 0x10 of frame (0xc8 against the ROM's 0xb8)
+		// and the callee-saved binding that goes with it -- the ROM parks
+		// &local_74 in r30 for its two MTXConcat arguments and keeps its four
+		// f32 locals in volatile registers, where our four take a slot each
+		// and push local_44 0x10 up. Declaring local_74 above the scalars
+		// packs the matrices but costs 8 markers.
 		MTXConcat(anmMtx, local_74, anmMtx);
 		MTXConcat(anmMtx, local_44, anmMtx);
 		MTXConcat(J3DSys::mCurrentMtx, local_74, J3DSys::mCurrentMtx);
@@ -494,7 +505,10 @@ void TGesso::polluteBehavior()
 	if (mSpine->getCurrentNerve() == &TNerveGessoPollute::theNerve())
 		return;
 
-	if (mPollutionTimer < unk1E8->mSLPollutionInterval.get())
+	// `cmpw r3, r0; ble` -- the ROM needs the timer strictly greater than
+	// the interval, so the pollution actually fires one frame later than a
+	// `<` reading of this test would.
+	if (mPollutionTimer <= unk1E8->mSLPollutionInterval.get())
 		return;
 
 	if (!MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
@@ -934,6 +948,9 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 
 f32 TGessoPolluteObj::getNowGravity()
 {
+	// TODO: 98.1%, the whole residue is that the ROM parks the params
+	// pointer in r4 and keeps unk16C alive in r3. A named params local and
+	// testing the flag first were both measured worse (85.0 and 48.1).
 	f32 gravity = unk16C->getSaveParams()->mSLPolluteObjGravity.get();
 	if (unk16C->unk1D8 == 0)
 		return gravity;
