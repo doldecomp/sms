@@ -363,20 +363,20 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 			} else {
 				enemy->getMActor()->matAnmFrameUpdate();
 			}
+		}
 
-			if (param_1 & CUE_CALC_VIEW)
-				enemy->requestShadow();
+		if (param_1 & CUE_CALC_VIEW)
+			enemy->requestShadow();
 
-			if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
-			                          | LIVE_FLAG_CLIPPED_OUT)) {
-				if ((param_1 & CUE_CALC_VIEW)
-				    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
-					enemy->getMActor()->viewCalc();
-				if (param_1 & CUE_ENTRY) {
-					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
-					                                 enemy->mPosition);
-					enemy->getMActor()->entry();
-				}
+		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
+		                          | LIVE_FLAG_CLIPPED_OUT)) {
+			if ((param_1 & CUE_CALC_VIEW)
+			    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
+				enemy->getMActor()->viewCalc();
+			if (param_1 & CUE_ENTRY) {
+				enemy->getMActor()->setLightData(enemy->getGroundPlane(),
+				                                 enemy->mPosition);
+				enemy->getMActor()->entry();
 			}
 		}
 	}
