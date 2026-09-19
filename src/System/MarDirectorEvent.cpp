@@ -168,6 +168,12 @@ void TMarDirector::fireGetStar(TShine* shine)
 
 // TODO: 99.8%, instruction-exact; the only residue is a 16-byte frame gap
 // (0x28 vs 0x18), so retail has two 4-byte temporaries we are missing.
+static inline TFlagManager* TMarDirectorGetFlagManager()
+{
+	TFlagManager* flagManager = TFlagManager::smInstance;
+	return flagManager;
+}
+
 void TMarDirector::fireRideYoshi(TYoshi* yoshi)
 {
 	if (!yoshi)
@@ -176,10 +182,10 @@ void TMarDirector::fireRideYoshi(TYoshi* yoshi)
 	if (gpApplication.mCurrArea.unk0 != 1)
 		return;
 
-	if (TFlagManager::smInstance->getBool(0x1038F))
+	if (TMarDirectorGetFlagManager()->getBool(0x1038F))
 		return;
 
-	TFlagManager::smInstance->setBool(true, 0x1038F);
+	TMarDirectorGetFlagManager()->setBool(true, 0x1038F);
 	unk4C |= 0x200;
 	unk261 = 5;
 }
