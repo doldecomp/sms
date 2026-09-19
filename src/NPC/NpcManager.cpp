@@ -265,6 +265,7 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 
 void TNPCManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[8];
 	if (cue & CUE_ENTRY) {
 		for (int i = 0, e = mObjNum; i < e; ++i) {
 			TBaseNPC* npc = (TBaseNPC*)unk18[i];
