@@ -101,9 +101,8 @@ TChuuHanaManager::TChuuHanaManager(const char* name)
 	unk6C         = 0;
 	unk70         = 0;
 	gpCurChuuHana = nullptr;
-	unk64         = 0;
-	unk65         = 0;
-	unk66         = 0;
+	for (int i = 0; i < 3; ++i)
+		unk64[i] = 0;
 }
 
 void TChuuHanaManager::load(JSUMemoryInputStream& stream)
@@ -171,11 +170,11 @@ void TChuuHanaManager::initSetEnemies()
 
 		// The pollution counters pair up the same way.
 		if (i == 0)
-			hana->unk21C = &unk64;
+			hana->unk21C = &unk64[0];
 		else if (i < 3)
-			hana->unk21C = &unk65;
+			hana->unk21C = &unk64[1];
 		else
-			hana->unk21C = &unk66;
+			hana->unk21C = &unk64[2];
 
 		// Drop each one on a random node of its graph, 50 up.
 		JGeometry::TVec3<f32> point;

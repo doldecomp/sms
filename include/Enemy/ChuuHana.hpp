@@ -150,9 +150,7 @@ public:
 	virtual void initSetEnemies();
 
 	/* 0x60 */ s32 unk60;
-	/* 0x64 */ u8 unk64;
-	/* 0x65 */ u8 unk65;
-	/* 0x66 */ u8 unk66;
+	/* 0x64 */ u8 unk64[3];
 	/* 0x68 */ s32 unk68;
 	/* 0x6C */ s32 unk6C;
 	/* 0x70 */ s32 unk70;
