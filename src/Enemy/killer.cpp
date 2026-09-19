@@ -455,6 +455,7 @@ static int KillerBodyCallback(J3DNode* node, int param)
 		MtxPtr anmMtx = gpCurKiller->getModel()->getAnmMtx(joint->getJntNo());
 
 		Mtx scale;
+		Mtx roll;
 		scale[0][3] = 0.0f;
 		scale[1][3] = 0.0f;
 		scale[2][3] = 0.0f;
@@ -469,7 +470,6 @@ static int KillerBodyCallback(J3DNode* node, int param)
 		scale[2][1] = 0.0f;
 		scale[2][2] = s;
 
-		Mtx roll;
 		f32 rs      = JMASin(gpCurKiller->mRollAngle);
 		f32 rc      = JMACos(gpCurKiller->mRollAngle);
 		roll[0][0]  = rc;
@@ -485,9 +485,10 @@ static int KillerBodyCallback(J3DNode* node, int param)
 		roll[2][2]  = 1.0f;
 		roll[2][3]  = 0.0f;
 
-		MTXConcat(anmMtx, roll, anmMtx);
+		MtxPtr rollMtx = roll;
+		MTXConcat(anmMtx, rollMtx, anmMtx);
 		MTXConcat(anmMtx, scale, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
+		MTXConcat(J3DSys::mCurrentMtx, rollMtx, J3DSys::mCurrentMtx);
 		MTXConcat(J3DSys::mCurrentMtx, scale, J3DSys::mCurrentMtx);
 	}
 	return 1;
