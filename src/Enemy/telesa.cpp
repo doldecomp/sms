@@ -107,6 +107,12 @@ void TTelesaManager::load(JSUMemoryInputStream& stream)
 
 TSmallEnemy* TTelesaManager::createEnemyInstance() { return new TTelesa; }
 
+static inline TTelesa* TelesaManagerGetObj(TTelesaManager* manager, int i)
+{
+	TTelesa* obj = (TTelesa*)manager->unk18[i];
+	return obj;
+}
+
 void TTelesaManager::createEnemies(int param_1)
 {
 	TEnemyManager::createEnemies(param_1);
@@ -118,7 +124,7 @@ void TTelesaManager::createEnemies(int param_1)
 	                     ->getIndex("_mat_body");
 
 	for (int i = 0; i < mObjNum; ++i) {
-		TTelesa* telesa          = (TTelesa*)unk18[i];
+		TTelesa* telesa          = TelesaManagerGetObj(this, i);
 		telesa->mTelesaFadeColor = cTelesaColorStart;
 		for (u16 i = 0; i < 4; ++i) {
 			if (i != bodyMatIdx)
