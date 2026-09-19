@@ -1123,12 +1123,20 @@ TFluff::TFluff(const char* name)
 
 f32 TFluffManager::mWindMin = 1.0f;
 
-// UNUSED (0x118): the search control's STATE_WAIT branch expands.
+// UNUSED (0x118, ours 0xf4): the search control's STATE_WAIT branch expands.
+//
+// The distance test is `mPosition.distance(*gpMarioPos)`, not the class's own
+// `getDistance(*gpMarioPos)`: retail's expansion in TFluffManager::control
+// subtracts `mPosition - marioPos` off an advancing base (`lfsu f3, 0x10(r3)`)
+// with no `mYOffset` term and ends in `bl TUtil<f32>::sqrt`, while
+// getDistance's own out-of-line body (MapObjLib.cpp, map 0x7c, 99.9% here)
+// subtracts the other way, reads 0x108 and expands the `frsqrte` refinement.
+// Worth +6.4 on control (90.0 -> 96.4); no change to MapObjBase.hpp is needed.
 void TFluffManager::findNextFluff()
 {
 	for (int i = 3; i < mFluffMax; i++) {
 		if (!mFluffs[i]->mIsRideable && !mFluffs[i]->mHeldObject
-		    && mFluffs[i]->getDistance(*gpMarioPos) > 3000.0f) {
+		    && mFluffs[i]->mPosition.distance(*gpMarioPos) > 3000.0f) {
 			mNextFluff = mFluffs[i];
 			mFluffs[i]->kill();
 			return;
@@ -1136,9 +1144,8 @@ void TFluffManager::findNextFluff()
 	}
 }
 
-// TODO: 90.0%. The frame is still 0x58 short and the search loop's float
-// registers are renumbered; the missing locals are somewhere in the
-// STATE_CALM hand-off.
+// TODO: 96.4%. The frame is still 0x48 short; the missing locals are
+// somewhere in the STATE_CALM hand-off.
 void TFluffManager::control()
 {
 	switch (mState) {
