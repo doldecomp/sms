@@ -644,6 +644,22 @@ void JAIBasic::initNullData()
 // `AudioThread::setPriority`/`start` and `TrackMgr::init`/`reset` all take
 // plain scalars (`FUcUc`, `FP12JKRSolidHeapUlUl`, `Fii`) with no class
 // temporary to bind.
+// Closure pass 2026-09-19 found the missing 8 bytes but not a legal carrier.
+// Frame ladder 273's binder rungs were re-priced here: a binder over one of
+// the `JAIGlobalParameter` `u8` statics is +0 (as the note above says), a
+// one-local *pointer* binder over `heap` is +0x10 and a two-local one is also
+// +0x10, but a one-local **u32 binder in argument position** over
+// `aram_heap_size` is exactly +8 and lands the frame on retail's 0x30 with all
+// 30 instructions still present.  It is rejected because the bound argument is
+// materialised *first*: retail emits `addi r3, r30, 0` / `addi r4, r29, 0`
+// before `AudioThread::start` and the binder swaps that pair (2 markers, the
+// only ones left).  Every relocation of the same binder is worse: hoisting its
+// result to a named `u32` local is +0x10, dropping `rootHeap` moves the swap up
+// into the r29/r30 prologue pair, binding `rootHeap` in argument 1 is +0x10 and
+// binding `uVar1` in argument 3 rotates r30/r31.  So the carrier has to be
+// something whose expansion sits *ahead of* the first argument, not a binder on
+// arguments 2 or 3 -- the dead 8-byte class local this note has wanted all
+// along, now with a measured price to compare against.
 // Unrelated lead found while scanning the map: `bootDSP__8JAIBasicFv` is UNUSED
 // at 0x20 (eight instructions) while ours is an empty body, so that stub still
 // needs a real body -- one `bl` to `JASystem::AudioThread::bootDSP` is exactly
