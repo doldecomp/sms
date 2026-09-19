@@ -44,6 +44,10 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <Map/MapCollisionEntry.hpp>
 
+// The map names no enumerator for the top hit-flag bit; parked TU-locally per
+// the shared-header rule until a header batch adds the canonical name.
+enum { BOSSEEL_HIT_FLAG_UNK80000000 = 0x80000000 };
+
 f32 TBossEel::mOpenRollSpeed    = 0.3f;
 bool TBossEel::mUseObjCollision = true;
 f32 TBossEel::mForcePow         = 10.0f;
@@ -273,7 +277,7 @@ void TBEelTears::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
 	mActorType = 0x08000003;
-	onHitFlag(HIT_FLAG_UNK8000000);
+	onHitFlag(BOSSEEL_HIT_FLAG_UNK80000000);
 	setMActorAndKeeper();
 	mTearsParams = static_cast<TBEelTearsSaveLoadParams*>(getSaveParam());
 	mSpine->initWith(&TNerveBEelTearsGenerate::theNerve());
