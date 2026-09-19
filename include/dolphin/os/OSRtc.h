@@ -54,6 +54,8 @@ u32 OSGetVideoMode();
 void OSSetVideoMode(u32 mode);
 u8 OSGetLanguage();
 void OSSetLanguage(u8 language);
+u32 OSGetEuRgb60Mode();
+void OSSetEuRgb60Mode(u32 mode);
 u16 OSGetWirelessID(s32 channel);
 void OSSetWirelessID(s32 channel, u16 id);
 

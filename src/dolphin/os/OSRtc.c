@@ -212,6 +212,48 @@ void OSSetProgressiveMode(u32 mode)
 	__OSUnlockSram(TRUE);
 }
 
+#ifdef VERSION_GMSP01
+u8 OSGetLanguage()
+{
+	OSSram* sram;
+	u8 language;
+
+	sram     = __OSLockSram();
+	language = sram->language;
+	__OSUnlockSram(FALSE);
+	return language;
+}
+
+u32 OSGetEuRgb60Mode()
+{
+	OSSram* sram;
+	u32 mode;
+
+	sram = __OSLockSram();
+	mode = (sram->ntd & 0x40) >> 6;
+	__OSUnlockSram(FALSE);
+	return mode;
+}
+
+void OSSetEuRgb60Mode(u32 mode)
+{
+	char trash[0x2]; // TODO: intermediate vars or inlines?
+	OSSram* sram;
+	mode <<= 6;
+	mode &= 0x40;
+
+	sram = __OSLockSram();
+	if (mode == (sram->ntd & 0x40)) {
+		__OSUnlockSram(FALSE);
+		return;
+	}
+
+	sram->ntd &= ~0x40;
+	sram->ntd |= mode;
+	__OSUnlockSram(TRUE);
+}
+#endif
+
 u16 OSGetWirelessID(s32 channel)
 {
 	OSSramEx* sram;
