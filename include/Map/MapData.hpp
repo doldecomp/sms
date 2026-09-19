@@ -121,10 +121,12 @@ public:
 	TBGCheckData();
 
 	const JGeometry::TVec3<f32>& getNormal() const { return mNormal; }
+#pragma dont_inline on
 	bool isIllegalData() const
 	{
 		return mFlags & BG_CHECK_FLAG_ILLEGAL ? true : false;
 	}
+#pragma dont_inline off
 	f32 getActiveJumpPower() const;
 	u32 getPlaneType();
 	void setVertex(const JGeometry::TVec3<f32>& point1,

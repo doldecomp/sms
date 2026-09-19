@@ -47,7 +47,9 @@ public:
 
 	static TTimeRec* _instance;
 
+#pragma dont_inline on
 	TTimeArray* crTimeAry() { return unk4[unk814]; }
+#pragma dont_inline off
 
 	// fabricated
 	static void snapGxTimeStart(u8 r, u8 g, u8 b, u8 a)

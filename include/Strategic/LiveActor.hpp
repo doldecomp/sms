@@ -94,7 +94,9 @@ public:
 	void calcRideMomentum();
 	void calcRidePos();
 
+#pragma dont_inline on
 	MActor* getMActor() const { return mMActor; }
+#pragma dont_inline off
 
 	static f32 mVelocityMinY;
 

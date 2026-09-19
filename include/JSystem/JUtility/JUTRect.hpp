@@ -4,7 +4,9 @@
 class JUTRect {
 public:
 	JUTRect() { set(0, 0, 0, 0); }
+#pragma dont_inline on
 	JUTRect(int x1, int y1, int x2, int y2) { set(x1, y1, x2, y2); }
+#pragma dont_inline off
 
 	JUTRect(const JUTRect& other) { copy(other); }
 

@@ -14,7 +14,9 @@ template <class T> inline T max(T a, T b) { return a >= b ? a : b; }
 
 template <class T> class TRotation3 : public T {
 public:
+#pragma dont_inline on
 	TRotation3() { }
+#pragma dont_inline off
 
 	TRotation3(const JGeometry::TVec3<f32>& axis, f32 angle)
 	{
