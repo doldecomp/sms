@@ -477,7 +477,7 @@ void TLimitKoopa::bind()
 // TODO: UNUSED (0x20), body not reconstructed.
 void TLimitKoopa::moveStop() { }
 
-// TODO: 77.3%, and the ROM calls this from
+// TODO: 86.7%, and the ROM calls this from
 // TNerveLimitKoopaHipDropStart::execute while MWCC still inlines it here,
 // which is why that nerve scores 0%. The lever *is* the depth-1 statement
 // budget after all: this body is 10 statements, a plain method is inlined at
@@ -485,13 +485,18 @@ void TLimitKoopa::moveStop() { }
 // TNerveLimitKoopaHipDropStart::execute from 0.0% to 99.9% (four do not) while
 // costing this body nothing. So retail's startHipDrop is a 15-statement body
 // and five statements of it are missing from this reconstruction. Do not pad
-// -- find them. Not them: naming the three goal deltas
-// (`f32 dx = target.x - getPosition().x;` ...) neither counts towards the
-// budget nor reproduces retail's schedule (it costs 0.3), and per
+// -- find them. Not them, all measured: naming the three goal deltas
+// (`f32 dx = target.x - getPosition().x;` ...) neither counts nor reproduces
+// retail's schedule (-0.3); building `goal` as three assignments instead of
+// the three-argument constructor costs 2.0 and 8 bytes of frame; a named
+// `f32 speed = velocity.length();` before the test costs 0.3; and per
 // docs/catalog/codegen-tells.md "Closure 241" a named local feeding the next
-// statement's call does not count either. Retail re-loads getPosition().y and
-// .z for the additions after computing all three differences, so the missing
-// statements are on that expression.
+// statement's call does not count either.
+//
+// Two codegen residues are left to read: retail re-loads getPosition().y and
+// .z for the additions after computing all three differences (we keep both in
+// FPRs), and retail's inlined normalize() re-uses the squared length that the
+// length() test just computed where we recompute x*x + y*y + z*z.
 void TLimitKoopa::startHipDrop()
 {
 	// One local carries the jump: first the straight-up launch speed, then the
@@ -514,7 +519,7 @@ void TLimitKoopa::startHipDrop()
 		velocity.scale(200.0f);
 	}
 
-	mVelocity = velocity;
+	mVelocity.set(velocity);
 }
 
 // TODO: UNUSED (0x4c), body not reconstructed.
