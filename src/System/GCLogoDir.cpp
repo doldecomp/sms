@@ -124,7 +124,13 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	gpApplication.mFader->startWipe(14, 0.4f, 0.0f);
 }
 
-TGCLogoDir::~TGCLogoDir() { mGamePad->offFlag(0x1); }
+static inline TMarioGamePad* TGCLogoDirGetGamePad(TGCLogoDir* p)
+{
+	TMarioGamePad* pad = p->mGamePad;
+	return pad;
+}
+
+TGCLogoDir::~TGCLogoDir() { TGCLogoDirGetGamePad(this)->offFlag(0x1); }
 
 int TGCLogoDir::direct()
 {
