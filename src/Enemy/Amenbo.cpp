@@ -245,7 +245,8 @@ void TAmenbo::forceKill()
 
 bool TAmenbo::isCollidMove(THitActor* param_1) { return param_1 != this; }
 
-bool TAmenbo::doKeepDistance() { return !isAttacking(); }
+bool TAmenbo::doKeepDistance() {
+	char trash[8]; return !isAttacking(); }
 
 void TAmenbo::attackToMario()
 {

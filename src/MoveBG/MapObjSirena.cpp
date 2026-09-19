@@ -58,6 +58,7 @@ TRoulette::TRoulette(const char* name)
     , unk144(0.2f)
     , unk150(nullptr)
 {
+	char trash[16];
 	unk148 = 0;
 	unk14A = 0;
 	unk14C = 0;

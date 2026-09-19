@@ -195,6 +195,7 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
     , mXluDrawBufferObject(nullptr)
     , unk80(param_1)
 {
+	char trash[8];
 	snprintf(unk1C, 0x32, "%s%s", name, "opa");
 	mOpaDrawBufferObject = new JDrama::TDrawBufObj(3, param_2, unk1C);
 
