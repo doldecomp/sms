@@ -1166,7 +1166,8 @@ void TBathtub::load(JSUMemoryInputStream& stream)
 	unk138 = new MActorAnmData;
 	unk138->init("scene/map/map/stand_effect", nullptr);
 	for (int i = 0; i < 5; ++i) {
-		f32 angle     = 360.0f * (0.5f + (f32)i) / 5.0f;
+		f32 angle = 360.0f * (0.5f + (f32)i);
+		angle /= 5.0f;
 		f32 gripAngle = angle - 180.0f;
 		unk168[i % 5] = new TBathtubGrip(this, gripAngle, unk138,
 		    "\x89\xf3\x82\xea\x82\xa9\x82\xaf\x82\xcc\x83\x6f\x83"
@@ -1264,11 +1265,7 @@ int TBathtub::getNumKillerBurstable() const
 	int dead = getNumGripsDead();
 	if (dead >= 4)
 		return 8;
-	if (allowsTumble())
-		return 0;
-	if (unk250 != 0)
-		return 0;
-	if (unk258 != 0)
+	if (allowsTumble() || unk250 != 0 || unk258 != 0)
 		return 0;
 	switch (dead) {
 	case 1:
