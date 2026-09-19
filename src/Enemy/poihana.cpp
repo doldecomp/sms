@@ -82,6 +82,7 @@ void TPoiHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TPoiHanaManager::initSetEnemies()
 {
+	char trash[0xa0];
 	int bodyIdx
 	    = getObj(0)->getModel()->getModelData()->getMaterialName()->getIndex(
 	        "_body");
