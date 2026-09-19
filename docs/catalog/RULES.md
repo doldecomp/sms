@@ -124,6 +124,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `x / 2.0f` and `x * 0.5f` both give `fmuls x, 0.5`, but division keeps the dividend left, a literal the constant (codegen-tells.md: "batch 101").
 - A surviving `* 0.0f`/`* 1.0f` proves an inline boundary or an accessor returning the constant; `TUtil<f32>::one()` is the +4 lever (codegen-tells.md: "Batch 58").
 - `TVec3::normalize()` is `setLength(*this, TUtil<f32>::one())`, so `setLength(1.0f)` at a call site is that rung spent: -4 per site, instruction-identical, and per site (frame-gaps.md: "re-pass II 178").
+- A `.data` pointer table with matching bytes but every relocation 24 low is a missing rogue include (`MapCollisionEntry.hpp`'s zero/(1,1,1) pair after `InfectiousStrings.hpp`); a POD copied through two stack temps is a named local plus a by-value parameter level (linking.md: "Data pass II").
 - `matched_data` counts a section only at 100%: triage data by sub-100 sections in `report.json`, a unit at 27% is often one byte away; a jump table (`.rel <fn>`) is never a data fix (linking.md: "Data pass 197").
 - A float literal in `.sdata` instead of `.sdata2` was bound to a `const T&` parameter (`std::min`/`max`), ids paired with one skipped (linking.md: "Data pass 197").
 - `.sdata2` is reverse source order, so a late literal belongs near the top of the file and a shared slot fixes its value (codegen-tells.md: "Batch 59").
