@@ -731,7 +731,7 @@ void MSound::talkModeIn(bool param_1)
 
 	setCategoryVOLs(0x44, 0.0f);
 
-	MSBgm::setAllTracksVolume(0.6f, 30);
+	MSBgm::setAllTracksVolume(0.48f, 30);
 }
 
 void MSound::talkModeOut()
