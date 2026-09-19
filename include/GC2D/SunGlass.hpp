@@ -7,7 +7,8 @@ class TMarioGamePad;
 
 class TSunGlass : public JDrama::TViewObj {
 public:
-	TSunGlass(JUtility::TColor param_1, const char* name = "<SunGlass>")
+	TSunGlass(JUtility::TColor param_1 = JUtility::TColor(0, 0, 0, 80),
+	          const char* name                = "<SunGlass>")
 	    : JDrama::TViewObj(name)
 	    , unk10(nullptr)
 	    , unk14(param_1)
@@ -47,7 +48,6 @@ public:
 	/* 0x24 */ u16 unk24;
 	/* 0x26 */ u8 unk26;
 	/* 0x27 */ u8 unk27;
-	/* 0x28 */ u8 unk28;
 };
 
 class TSunShine : public TSunGlass {
@@ -62,6 +62,12 @@ public:
 
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+
+public:
+	// Only TSunShine's own methods touch this, and `new TSunGlass` in
+	// MarNameRefGen asks for 0x28 while `new TSunShine` asks for 0x2c, so the
+	// flag is the derived class' single added member.
+	/* 0x28 */ u8 unk28;
 };
 
 #endif

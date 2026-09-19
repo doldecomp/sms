@@ -239,7 +239,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	// refused callees are in-class bodies whose generated form is ~40
 	// instructions, which is the only property they share.
 	if (strcmp(name, "SunGlass") == 0)
-		return new TSunGlass(JUtility::TColor(0, 0, 0, 80), "<SunGlass>");
+		return new TSunGlass;
 
 	if (strcmp(name, "SunShine") == 0)
 		return new TSunShine;
