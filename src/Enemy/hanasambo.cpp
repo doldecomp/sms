@@ -1454,27 +1454,51 @@ DEFINE_NERVE(TNerveSamboHeadAppear, TLiveActor)
 	return false;
 }
 
+static inline MActor* SamboHeadAtkMActor(const TSamboHead* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
+static inline TSamboHeadSaveLoadParams* SamboHeadAtkParams(const TSamboHead* p)
+{
+	TSamboHeadSaveLoadParams* params = p->mSaveParams;
+	return params;
+}
+
+// Shared-header need: TPathNode::getPoint with a named unk0 local.
+// Parked TU-local so the header copy is untouched (hinokuri2).
+static inline const JGeometry::TVec3<f32>&
+SamboHeadGetPoint(const TSamboHead* p)
+{
+	const TPathNode& node = p->unk104;
+	THitActor* owner      = node.unk0;
+	if (owner != 0)
+		return owner->getPosition();
+	return node.unk4;
+}
+
 // Hops toward Mario, one jump every mSLJumpPrepareTime frames.
 DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 {
 	TSamboHead* head = (TSamboHead*)spine->getBody();
 	bool airborne    = head->isAirborne();
 	if (!airborne) {
-		if (head->mJumpTimer > head->mSaveParams->mSLJumpPrepareTime.get()
+		if (head->mJumpTimer > SamboHeadAtkParams(head)->mSLJumpPrepareTime.get()
 		    && head->checkCurAnmEnd(0)) {
 			head->mJumpTimer = 0;
 			head->updateSquareToMario();
-			JGeometry::TVec3<f32> goal(head->unk104.getPoint());
-			goal.set(gpMarioPos->x - head->mPosition.x, 0.0f,
-			         gpMarioPos->z - head->mPosition.z);
+			JGeometry::TVec3<f32> goal(SamboHeadGetPoint(head));
+			goal.set(SMS_GetMarioPos().x - head->mPosition.x, 0.0f,
+			         SMS_GetMarioPos().z - head->mPosition.z);
 			if (goal.x == 0.0f && goal.y == 0.0f && goal.z == 0.0f)
 				goal.x += 1.0f;
 			MsVECNormalize(&goal, &goal);
-			f32 dist = head->mSaveParams->mSLMoveDist.get();
+			f32 dist = SamboHeadAtkParams(head)->mSLMoveDist.get();
 			goal.x   = goal.x * dist + head->mPosition.x;
 			goal.z   = goal.z * dist + head->mPosition.z;
 			goal.y   = head->mPosition.y;
-			f32 jumpSp      = head->mSaveParams->mSLJumpSp.get();
+			f32 jumpSp      = SamboHeadAtkParams(head)->mSLJumpSp.get();
 			head->mVelocity = head->calcVelocityToJumpToY(
 			    goal, jumpSp, head->getGravityY());
 			head->mPosition.y += 2.0f;
@@ -1488,20 +1512,20 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 			if (landed)
 				head->setBckAnm(0xC);
 		}
-		head->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		SamboHeadAtkMActor(head)->setFrameRate(SMSGetAnmFrameRate(), 0);
 	} else {
-		JGeometry::TVec3<f32> velocity(head->mVelocity);
+		JGeometry::TVec3<f32> velocity(head->getVelocity());
 		if (velocity.y < 0.0f) {
 			if (head->isBckAnm(8)) {
 				head->setBckAnm(7);
-				head->getMActor()->setFrameRate(0.0f, 0);
+				SamboHeadAtkMActor(head)->setFrameRate(0.0f, 0);
 			}
 		}
 	}
 
 	if (head->mPosition.y > 30.0f + head->mGroundHeight) {
-		f32 angMax = head->mSaveParams->mSLJumpAngY.get();
-		JGeometry::TVec3<f32> velocity(head->mVelocity);
+		f32 angMax = SamboHeadAtkParams(head)->mSLJumpAngY.get();
+		JGeometry::TVec3<f32> velocity(head->getVelocity());
 		head->mRollAngle
 		    = MsClamp(MsGetRotFromZaxis(velocity).x, -angMax, angMax);
 	} else {
@@ -1596,9 +1620,9 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 
 	if (head->checkCurAnmEnd(0)) {
 		if (head->isBckAnm(6)) {
-			// TODO: retail schedules the vtable load ahead of the receiver
-			// copy and the params read here; every spelling of these two
-			// statements tried keeps our order.
+			// TODO: retail loads the setBckAnm vtable ahead of the
+			// params read; naming rate first keeps f31 but the opposite
+			// load order, and swapping the statements drops f31.
 			f32 rate = SamboHeadWaterParams(head)->mSLHitJumpSpRateXZ.get();
 			head->setBckAnm(6);
 			head->mHitVelocity.x *= rate;
