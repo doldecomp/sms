@@ -118,21 +118,37 @@ void THangingBridgeBoard::drawRopes() const
 }
 
 // UNUSED (0x10).
+// The bridge pointer is reloaded at every site in retail, so this is a pure
+// frame rung: the binder is +8 per expansion inside pushNeighbor and +12 at a
+// control-tail site. Which four of the six tail sites carry it is unobservable.
+static inline THangingBridge* HangingBridgeBoardBridge(const THangingBridgeBoard* board)
+{
+	THangingBridge* bridge = board->mBridge;
+	return bridge;
+}
+
+// fp_contract folds `y -= accel * rate` into one fnmsubs; retail keeps the
+// fmuls and the fsubs apart, so the product is named out of the statement.
+static inline f32 HangingBridgeBoardPush(f32 accel, f32 rate)
+{
+	return accel * rate;
+}
+
 void THangingBridgeBoard::push(f32 accel) { mVelocity.y -= accel; }
 
 // UNUSED (0x94): the neighbour chain control expands twice.
 void THangingBridgeBoard::pushNeighbor(f32 accel)
 {
 	if (mPrev) {
-		mPrev->mVelocity.y -= accel * mBridge->mNeighborRate;
+		mPrev->mVelocity.y -= HangingBridgeBoardPush(accel, HangingBridgeBoardBridge(this)->mNeighborRate);
 		if (mPrev2)
-			mPrev2->mVelocity.y -= accel * mBridge->mNeighbor2Rate;
+			mPrev2->mVelocity.y -= HangingBridgeBoardPush(accel, HangingBridgeBoardBridge(this)->mNeighbor2Rate);
 	}
 
 	if (mNext) {
-		mNext->mVelocity.y -= accel * mBridge->mNeighborRate;
+		mNext->mVelocity.y -= HangingBridgeBoardPush(accel, HangingBridgeBoardBridge(this)->mNeighborRate);
 		if (mNext2)
-			mNext2->mVelocity.y -= accel * mBridge->mNeighbor2Rate;
+			mNext2->mVelocity.y -= HangingBridgeBoardPush(accel, HangingBridgeBoardBridge(this)->mNeighbor2Rate);
 	}
 }
 
@@ -143,37 +159,13 @@ void THangingBridgeBoard::control()
 	TLeanBlock::control();
 
 	if (marioIsOn()) {
-		mVelocity.y -= mMarioAccelY;
-		if (mPrev) {
-			mPrev->mVelocity.y -= mMarioAccelY * mBridge->mNeighborRate;
-			if (mPrev2)
-				mPrev2->mVelocity.y
-				    -= mMarioAccelY * mBridge->mNeighbor2Rate;
-		}
-		if (mNext) {
-			mNext->mVelocity.y -= mMarioAccelY * mBridge->mNeighborRate;
-			if (mNext2)
-				mNext2->mVelocity.y
-				    -= mMarioAccelY * mBridge->mNeighbor2Rate;
-		}
+		push(mMarioAccelY);
+		pushNeighbor(mMarioAccelY);
 	}
 
 	if (marioHipAttack()) {
-		mVelocity.y -= mMarioHipDropAccelY;
-		if (mPrev) {
-			mPrev->mVelocity.y
-			    -= mMarioHipDropAccelY * mBridge->mNeighborRate;
-			if (mPrev2)
-				mPrev2->mVelocity.y
-				    -= mMarioHipDropAccelY * mBridge->mNeighbor2Rate;
-		}
-		if (mNext) {
-			mNext->mVelocity.y
-			    -= mMarioHipDropAccelY * mBridge->mNeighborRate;
-			if (mNext2)
-				mNext2->mVelocity.y
-				    -= mMarioHipDropAccelY * mBridge->mNeighbor2Rate;
-		}
+		push(mMarioHipDropAccelY);
+		pushNeighbor(mMarioHipDropAccelY);
 	}
 
 	mPosition.y += mVelocity.y;
@@ -183,10 +175,10 @@ void THangingBridgeBoard::control()
 	MtxPtr mtx      = getModel()->getAnmMtx(0);
 	mRopeTop[0].x   = mPosition.x - mtx[0][0] * mBridge->mRopeOffset;
 	mRopeTop[0].y   = 70.0f + (mPosition.y - mtx[1][0] * mBridge->mRopeOffset);
-	mRopeTop[0].z   = mPosition.z - mtx[2][0] * mBridge->mRopeOffset;
-	mRopeTop[1].x   = mtx[0][0] * mBridge->mRopeOffset + mPosition.x;
-	mRopeTop[1].y   = 70.0f + (mtx[1][0] * mBridge->mRopeOffset + mPosition.y);
-	mRopeTop[1].z   = mtx[2][0] * mBridge->mRopeOffset + mPosition.z;
+	mRopeTop[0].z   = mPosition.z - mtx[2][0] * HangingBridgeBoardBridge(this)->mRopeOffset;
+	mRopeTop[1].x   = mtx[0][0] * HangingBridgeBoardBridge(this)->mRopeOffset + mPosition.x;
+	mRopeTop[1].y   = 70.0f + (mtx[1][0] * HangingBridgeBoardBridge(this)->mRopeOffset + mPosition.y);
+	mRopeTop[1].z   = mtx[2][0] * HangingBridgeBoardBridge(this)->mRopeOffset + mPosition.z;
 }
 
 void THangingBridgeBoard::calcDefaultMtx()
