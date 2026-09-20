@@ -523,8 +523,10 @@ void TGesso::polluteBehavior()
 
 void TGesso::setPolluteGoal()
 {
-	f32 polluteObjGravity = unk1E8->mSLPolluteObjGravity.get();
-	f32 polluteObjSpeed   = unk1E8->mSLPolluteObjSpeed.get();
+	// All three param reads through getSaveParams() (not raw unk1E8)
+	// land the frame at 0xa8. Two sites left it 8 short.
+	f32 polluteObjGravity = getSaveParams()->mSLPolluteObjGravity.get();
+	f32 polluteObjSpeed   = getSaveParams()->mSLPolluteObjSpeed.get();
 
 	if (!mIsRightSideUp)
 		polluteObjSpeed = 0.0f;
@@ -536,10 +538,6 @@ void TGesso::setPolluteGoal()
 		                     SMS_GetMarioPos().y,
 		                     SMS_GetMarioPos().z + range.rand());
 
-		// Retail passes this+0x1b8 (mPolluteVelocity) as the jump
-		// target. Frame is 0x10 short and the return dest sits at
-		// 0x44 vs 0x50; a named TVec3 copy of the return adds
-		// instructions, binders scramble the param FPRs.
 		mPolluteVelocity = calcVelocityToJumpToY(
 		    mPolluteVelocity, polluteObjSpeed, polluteObjGravity);
 	} else {
@@ -548,7 +546,7 @@ void TGesso::setPolluteGoal()
 		mPolluteVelocity.y = 0.0f;
 		mPolluteVelocity.z -= mPosition.z;
 		MsVECNormalize(&mPolluteVelocity, &mPolluteVelocity);
-		f32 polluteObjLinerSp = unk1E8->mSLPolluteObjLinerSp.value;
+		f32 polluteObjLinerSp = getSaveParams()->mSLPolluteObjLinerSp.value;
 		mPolluteVelocity.x *= polluteObjLinerSp;
 		mPolluteVelocity.y = 0.0f;
 		mPolluteVelocity.z *= polluteObjLinerSp;
@@ -999,7 +997,8 @@ void TGessoPolluteObj::rebirth()
 		mVelocity.y = -15.0f;
 		// TODO: structure is exact; the ROM loads z, y, x and only then
 		// folds 0.5f into the radius and fetches gpPollution, while we fold
-		// the radius between x and z. Scheduling residue, no lever found.
+		// the radius between x and z. Scheduling residue. Named 0.5/scaled,
+		// SMSGetPollution(), and getPosition() were inert or worse.
 		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
 		                   TGesso::mPollRange * 32.0f * 0.5f);
 
@@ -1130,6 +1129,8 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 				if (tmp == 0)
 					self->setBckAnm(8);
 			}
+			// Retail branches over this reset after setBckAnm(8); sharing
+			// one setFrame() via if/else duplicates the call (99.4 -> 97.6).
 			self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 		} else if (self->isBckAnm(8)) {
 			return true;
