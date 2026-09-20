@@ -103,7 +103,9 @@ TCameraOption::TCameraOption(JGeometry::TVec3<f32> param1,
 	    JDrama::TNameRef::calcKeyCode(cLoadCamName), cLoadCamName);
 
 	if (tool != nullptr) {
+		void* trash1;
 		JGeometry::TVec3<f32> origin;
+		void* trash2;
 		tool->calcPosAndAt(&origin, &unk24);
 		s16 a = CLBRoundf<s16>(DEG2SHORTANGLE(tool->getYaw()));
 		s16 b = CLBRoundf<s16>(DEG2SHORTANGLE(60.0f));
