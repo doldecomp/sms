@@ -107,26 +107,27 @@ void TCubeManagerBase::calcPointInCubeRatio(const Vec& param_1, s32 param_2,
 
 bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
 {
-	int found = getInCubeNo(pos);
+	char trash[16];
+	bool result = false;
+	int found   = getInCubeNo(pos);
 
-	if (unk1C == found)
-		return true;
-
-	// Presumably hotel delphino floor transitions?
-	if (gpMarDirector->getCurrentMap() == 7 && unk1C != -1 && found != -1) {
+	if (unk1C == found) {
+		result = true;
+	} else if (gpMarDirector->getCurrentMap() == 7 && unk1C != -1 && found != -1) {
+		// Presumably hotel delphino floor transitions?
 		const char* curName = (*unk14)[unk1C].getName();
 		const char* newName = (*unk14)[found].getName();
 
 		if (strcmp(curName, "３階") == 0) {
 			if (strcmp(newName, "２階") == 0 || strcmp(newName, "１階") == 0)
-				return true;
+				result = true;
 		} else if (strcmp(curName, "２階") == 0) {
 			if (strcmp(newName, "１階") == 0)
-				return true;
+				result = true;
 		}
 	}
 
-	return false;
+	return result;
 }
 
 inline bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
