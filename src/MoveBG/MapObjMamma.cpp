@@ -105,10 +105,20 @@ TSandBase::TSandBase(const char* name)
 	mTrigger     = nullptr;
 }
 
-// 99.9%: every instruction matches, only the 24-byte frame gap is left. The
-// rumble is on the leaf's own position, not the trigger's, and retail names
-// the frame rate and the current frame as two f32 locals (f31 then f30) plus
-// the trigger pointer as a third.
+// Exact. Two trigger-pointer binders plus one collision-manager binder land
+// retail's 0x80 frame; the rumble stays on the leaf's own position.
+static inline TSandBomb* SandLeafGrowTrigger(TSandLeafBase* p)
+{
+	TSandBomb* trigger = p->mTrigger;
+	return trigger;
+}
+
+static inline TMapCollisionManager* SandLeafGrowCollision(TSandLeafBase* p)
+{
+	TMapCollisionManager* manager = p->mMapCollisionManager;
+	return manager;
+}
+
 void TSandLeafBase::grow()
 {
 	if (mState == STATE_GROWN || mState == STATE_GROWING) {
@@ -118,7 +128,7 @@ void TSandLeafBase::grow()
 				mScaling.y = 1.0f;
 
 			if (mState == STATE_GROWN) {
-				mMapCollisionManager->changeCollision(1);
+				SandLeafGrowCollision(this)->changeCollision(1);
 				TMapCollisionManager* manager = mMapCollisionManager;
 				Mtx mtx;
 				MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z,
@@ -127,7 +137,7 @@ void TSandLeafBase::grow()
 				TMapCollisionBase* entry = manager->unk8;
 				entry->setMtx(mtx);
 				entry->setUp();
-				mTrigger->startControlAnim(2);
+				SandLeafGrowTrigger(this)->startControlAnim(2);
 				mState = STATE_GROWING;
 			}
 
@@ -137,7 +147,8 @@ void TSandLeafBase::grow()
 			r31->getMActor()->getFrameCtrl(0)->setFrame(f31 + f30);
 			SMSRumbleMgr->start(0x15, 5, &mPosition);
 			gpMSound->startSoundActor(MSD_SE_OBJ_SANDBUD_NORMAL,
-			                          &mTrigger->mPosition, 0, nullptr, 0, 4);
+			                          &SandLeafGrowTrigger(this)->mPosition, 0,
+			                          nullptr, 0, 4);
 			mStateTimer = mWitherTime;
 		}
 	}
@@ -493,17 +504,27 @@ TSandBombBase::TSandBombBase(const char* name)
 
 f32 TSandCastle::mCollisionRate = 1.7f;
 
-// TODO: 76.2%. The animation advance matches; the scale term and the
-// stage-change kill still differ in register use.
+static inline MActor* SandCastleWitherActor(const TLiveActor* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
+// TODO: 99.3%, frame-exact. Residue is the f30/f31 inversion (same class as
+// TSandBombBase::expanded); declaration order and a named getFrame() result
+// do not flip it.
 bool TSandCastle::withering()
 {
-	mMActor->getFrameCtrl(0)->setFrame(mWitherSpeed
-	                                   + mMActor->getFrameCtrl(0)->getFrame());
-	mMActor->getFrameCtrl(5)->setFrame(mWitherSpeed
-	                                   + mMActor->getFrameCtrl(5)->getFrame());
+	f32 speed = mWitherSpeed;
+	getMActor()->getFrameCtrl(0)->setFrame(
+	    speed + SandCastleWitherActor(this)->getFrameCtrl(0)->getFrame());
 
-	f32 frame  = mMActor->getFrameCtrl(0)->getFrame();
-	f32 end    = mMActor->getFrameCtrl(0)->getEnd();
+	f32 speed5 = mWitherSpeed;
+	getMActor()->getFrameCtrl(5)->setFrame(
+	    speed5 + getMActor()->getFrameCtrl(5)->getFrame());
+
+	f32 frame  = SandCastleWitherActor(this)->getFrameCtrl(0)->getFrame();
+	f32 end    = SandCastleWitherActor(this)->getFrameCtrl(0)->getEnd();
 	mScaling.y = mCollisionRate * ((end - frame) / end);
 
 	if (frame > 240.0f) {
