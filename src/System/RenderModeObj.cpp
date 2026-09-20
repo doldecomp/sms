@@ -67,6 +67,7 @@ void SMSSetupTitleRenderMode(GXRenderModeObj* rmo)
 
 void SMSSetupTitleRenderingInfo(JDrama::TDisplay* param_1)
 {
+	char trash[8];
 	SMSSetupTitleRenderMode(&param_1->getRenderMode());
 	param_1->offFlag(0x8);
 }
