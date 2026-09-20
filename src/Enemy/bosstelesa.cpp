@@ -1734,10 +1734,18 @@ void TBossTelesa::offAllCollision()
 
 const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
 
+// The ROM's frame needs one inline level at the first makeOneEnemyAppear and
+// none at the second: the binder is +8 there and +0x10 at both sites.
+static inline TConductor* BossTelesaGenAttackerConductor()
+{
+	TConductor* conductor = gpConductor;
+	return conductor;
+}
+
 void TBossTelesa::genAttacker()
 {
 	if (unk150) {
-		TTelesa* telesa = (TTelesa*)gpConductor->makeOneEnemyAppear(
+		TTelesa* telesa = (TTelesa*)BossTelesaGenAttackerConductor()->makeOneEnemyAppear(
 		    mPosition, "テレサマネージャー", 1);
 		if (telesa)
 			telesa->initAttacker(this);
