@@ -410,40 +410,46 @@ void TBaseNPC::npcFallIn()
 
 bool TBaseNPC::npcRecoverFromSinking()
 {
-	bool result = false;
+	// matching: retail keeps `this` in r31 and the result flag in r30, which
+	// only happens when a named local aliases `this`
+	TBaseNPC* self = this;
+	bool result    = false;
 
-	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
-		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
-			onLiveFlag(LIVE_FLAG_UNK8000000);
-			f32 dVar6 = getGravityY();
+	if (!self->checkLiveFlag(LIVE_FLAG_UNK8000000)) {
+		if (self->mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
+			self->onLiveFlag(LIVE_FLAG_UNK8000000);
+			f32 dVar6 = self->getGravityY();
 			f32 fVar1 = 0.0f;
-			f32 tmp   = unk1C4 - mPosition.y + 150.0f;
+			f32 tmp   = self->unk1C4 - self->mPosition.y + 150.0f;
 			if (dVar6 > 0.0f) {
 				fVar1 = dVar6 * 0.5f
 				        * (MsSqrtf(tmp * (1.0f / dVar6) * 8.0f + 1.0f) + 1.0f);
 			}
 
-			mVelocity.y = fVar1;
-			if (mVelocity.y < 5.0f)
-				mVelocity.y = 5.0f;
+			self->mVelocity.y = fVar1;
+			if (self->mVelocity.y < 5.0f)
+				self->mVelocity.y = 5.0f;
 		}
 	}
+	// matching: retail reserves a 4-byte stack slot below the inlined MsSqrtf
+	// temporary for a call that emits no code
+	MsClamp(0.0f, 0.0f, 0.0f);
 
-	if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
+	if (self->mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		result = true;
-		offLiveFlag(LIVE_FLAG_AIRBORNE);
-		mVelocity.set(0.0f, 0.0f, 0.0f);
-		mPosition.y = unk1C4;
-		offLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
-		            | LIVE_FLAG_UNK8000000);
+		self->offLiveFlag(LIVE_FLAG_AIRBORNE);
+		self->mVelocity.set(0.0f, 0.0f, 0.0f);
+		self->mPosition.y = self->unk1C4;
+		self->offLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
+		                  | LIVE_FLAG_UNK8000000);
 	} else {
-		if (checkLiveFlag(LIVE_FLAG_UNK8000000)) {
-			mVelocity.y -= getGravityY();
-			if (mVelocity.y < mVelocityMinY)
-				mVelocity.y = mVelocityMinY;
-			mPosition.y += mVelocity.y;
-			if (mVelocity.y <= 0.0f && mPosition.y < unk1C4)
-				mPosition.y = unk1C4;
+		if (self->checkLiveFlag(LIVE_FLAG_UNK8000000)) {
+			self->mVelocity.y -= self->getGravityY();
+			if (self->mVelocity.y < self->mVelocityMinY)
+				self->mVelocity.y = self->mVelocityMinY;
+			self->mPosition.y += self->mVelocity.y;
+			if (self->mVelocity.y <= 0.0f && self->mPosition.y < self->unk1C4)
+				self->mPosition.y = self->unk1C4;
 		}
 	}
 
