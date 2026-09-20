@@ -50,6 +50,14 @@ static JGeometry::TVec3<f32> fall_upper_pos(2827.0f, 8604.0f, 7202.0f);
 
 // Binding level over a raw member read, worth +16 of low region in
 // TMuddyBoat::kill (batch 127).
+// Binding level over a raw member read, worth +16 of low region in
+// TMapObjPuncher::touchPlayer (batch 127).
+static inline JGeometry::TVec3<f32>* MapObjMareGetMarioPos()
+{
+	JGeometry::TVec3<f32>* marioPos = gpMarioPos;
+	return marioPos;
+}
+
 static inline MSound* MapObjMareGetMSound()
 {
 	MSound* mSound = gpMSound;
@@ -76,6 +84,12 @@ u32 TCogwheelScale::touchWater(THitActor* water)
 	return 1;
 }
 
+static inline f32* MapObjMareGetMarioSpeedY()
+{
+	f32* speedY = gpMarioSpeedY;
+	return speedY;
+}
+
 static inline f32 CogwheelSpeed(const TCogwheel* wheel)
 {
 	return wheel->mSpeed;
@@ -96,16 +110,17 @@ void TCogwheelScale::touchPlayer(THitActor* player)
 	if (marioIsOn())
 		mRiderWeight = mMarioWeight;
 
-	if (mPosition.y - mYOffset > 150.0f + gpMarioPos->y
-	    && ((mIsUpper && mCogwheel->mSpeed > 0.0f)
-	        || (!mIsUpper && mCogwheel->mSpeed < 0.0f))) {
+	if (mPosition.y - getObjCollisionHeightOffset()
+	        > 150.0f + MapObjMareGetMarioPos()->y
+	    && ((mIsUpper && CogwheelSpeed(mCogwheel) > 0.0f)
+	        || (!mIsUpper && CogwheelSpeed(mCogwheel) < 0.0f))) {
 		mCogwheel->rebound();
 
 		// Landing on the high bucket makes the wheel spin the other way at a
 		// rate proportional to how hard Mario hit it.
 		if (marioHeadAttack())
 			mCogwheel->mSpeed
-			    = mHeadAttackRate * (mCogwheel->mSpeed * *gpMarioSpeedY);
+			    = mHeadAttackRate * (CogwheelSpeed(mCogwheel) * *MapObjMareGetMarioSpeedY());
 	}
 
 	mWaterAmount = 0.0f;
@@ -731,14 +746,6 @@ TWireBell::TWireBell(const char* name)
     , mTexPosRate(0.01f)
 {
 	mWirePos.x = mWirePos.y = mWirePos.z = 0.0f;
-}
-
-// Binding level over a raw member read, worth +16 of low region in
-// TMapObjPuncher::touchPlayer (batch 127).
-static inline JGeometry::TVec3<f32>* MapObjMareGetMarioPos()
-{
-	JGeometry::TVec3<f32>* marioPos = gpMarioPos;
-	return marioPos;
 }
 
 void TMapObjPuncher::touchPlayer(THitActor* player)
