@@ -1073,6 +1073,7 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 {
 	TTobiPuku* self = (TTobiPuku*)spine->getBody();
+	JGeometry::TVec3<f32> velocity2;
 	if (spine->getTime() == 0) {
 		self->unk1AE = 1;
 		if (self->unk198 < self->unk19C->mSLBoundNum.get()) {
@@ -1088,8 +1089,9 @@ DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
 	}
+	char trash[0xC];
 
-	JGeometry::TVec3<f32> velocity2 = self->mVelocity;
+	velocity2 = self->mVelocity;
 	if (velocity2.y > 0.0f)
 		self->unk1B0 = self->mPosition.y;
 
