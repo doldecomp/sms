@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1.
-- Landed `grptw` MapObjPinna ([MapObjPinna unit ladder](4f827ca4-86a2-491d-926c-563cf505961b)): +1 exact (`TShellCup::initMapObj`); coaster control 98.9→99.9 frame-exact via `setBaseTRMtx`; unit **69.29→73.72**; All **61.72→61.73**, Game **53.66→53.68**, exact **11,351→11,352**.
-- Landed MapObjBase +3; All **61.69→61.72**, exact **11,348→11,351**.
-- Total: **61.73%** matched, game **53.68%**, linked **492 / 732**, exact **11,352**.
-- Running: `grptx` / telesa ([telesa unit ladder](215d5f2f-5be3-47d4-88fb-dae914c98208)). Refill: conductor.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2.
+- Landed `grptx` telesa ([telesa unit ladder](215d5f2f-5be3-47d4-88fb-dae914c98208)): +2 exact (`initAttacker`, `init`); AttackMario/Imitate/KageWait frames landed; unit **72.37→79.19**; All **61.73→61.77**, Game **53.68→53.73**, exact **11,352→11,354**. Catalog: named `s16` + delayed `JMASCos` keeps retail’s second `lfsx`.
+- Landed MapObjPinna +1; MapObjBase +3.
+- Total: **61.77%** matched, game **53.73%**, linked **492 / 732**, exact **11,354**.
+- Running: `grpty` / conductor ([conductor unit ladder](8db1cd65-1ae5-49f3-b050-e298ac08a9ec)). Refill: gesso.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
