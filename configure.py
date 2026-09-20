@@ -350,7 +350,7 @@ config.libs = [
             # JKernel
             Object(Matching, "JSystem/JKernel/JKRArchivePri.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAramArchive.cpp"),
-            Object(MatchingFor("GMSJ01"), "JSystem/JKernel/JKRAramHeap.cpp"),
+            Object(Matching, "JSystem/JKernel/JKRAramHeap.cpp"),
             Object(Matching, "JSystem/JKernel/JKRAram.cpp"),
             Object(Matching, "JSystem/JKernel/JKRArchivePub.cpp"),
             Object(Matching, "JSystem/JKernel/JKRCompArchive.cpp"),
@@ -494,7 +494,7 @@ config.libs = [
             # J2D
             Object(Matching, "JSystem/J2D/J2DPane.cpp"),
             Object(Matching, "JSystem/J2D/J2DPicture.cpp"),
-            Object(MatchingFor("GMSJ01"), "JSystem/J2D/J2DPrint.cpp"),
+            Object(Matching, "JSystem/J2D/J2DPrint.cpp"),
             Object(Matching, "JSystem/J2D/J2DScreen.cpp"),
             Object(Matching, "JSystem/J2D/J2DTextBox.cpp"),
             Object(Matching, "JSystem/J2D/J2DWindow.cpp"),

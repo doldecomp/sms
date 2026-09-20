@@ -174,7 +174,20 @@ float J2DPrint::print(int x, int y, u8 opacity, const char* format, ...)
 	return result;
 }
 
-void J2DPrint::getSize(J2DPrint::TSize& size, const char* format, ...) { }
+void J2DPrint::getSize(J2DPrint::TSize& size, const char* format, ...)
+{
+	va_list args;
+	va_start(args, format);
+
+	OSLockMutex(&mMutex);
+	s32 sz = vsnprintf(mStrBuff, mStrBuffSize, format, args);
+	if (sz < 0 || sz > mStrBuffSize)
+		sz = mStrBuffSize;
+	parse((u8*)mStrBuff, sz, 0x7fffffff, nullptr, size, 0xff, false);
+	OSUnlockMutex(&mMutex);
+
+	va_end(args);
+}
 
 float J2DPrint::getWidth(const char* format, ...)
 {
