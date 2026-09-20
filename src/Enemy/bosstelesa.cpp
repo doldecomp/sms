@@ -1280,23 +1280,18 @@ void TBossTelesa::prepareGenerate()
 
 void TBossTelesa::calcRootMatrix()
 {
-	getMActor()->getModel()->setBaseScale(mScaling);
-
-	f32 hosei = unk364;
-	if (hosei > 0.0f)
-		hosei = 0.0f;
-	else if (hosei < mBaseHoseiPosY)
-		hosei = mBaseHoseiPosY;
+	mMActor->getModel()->setBaseScale(mScaling);
 
 	TPosition3f mtx;
 	Mtx rotation;
 
 	mtx.translation(mPosition.x,
-	                mPosition.y + mParams->mSLTransYOffset.get() + hosei,
+	                mPosition.y + getSaveParam2()->mSLTransYOffset.get()
+	                    + MsClamp<f32>(unk364, mBaseHoseiPosY, 0.0f),
 	                mPosition.z);
 	MsMtxSetRotRPH(rotation, mRotation.x, mRotation.y, mRotation.z);
 	MTXConcat(mtx, rotation, mtx);
-	MTXCopy(mtx, getMActor()->getModel()->getBaseTRMtx());
+	MTXCopy(mtx, mMActor->getModel()->getBaseTRMtx());
 
 	// The slot machine hangs off whichever joint the current animation uses.
 	if (mSlot) {
