@@ -733,10 +733,22 @@ void TShine::touchPlayer(THitActor* actor)
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+static inline TFlagManager* TShineAppearSimpleGetFlagManager(TShine* p)
+{
+	TFlagManager* flagManager = TFlagManager::smInstance;
+	return flagManager;
+}
+
+static inline MSound* TShineAppearSimpleGetMSound(TShine* p)
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 {
 	TItem::appear();
-	TFlagManager::smInstance->setBool(true, 0x50000);
+	TShineAppearSimpleGetFlagManager(this)->setBool(true, 0x50000);
 
 	if (param_2 >= 0)
 		unk174 = param_2;
@@ -748,21 +760,21 @@ void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 	unk168 = param_1 - (unk174 + unk170 + unk178);
 	unk158 = 0.0f;
 
-	f32 yDelta = mInitialPosition.y - (mUpSpeed * (f32)unk170 + mPosition.y);
+	f32 yDelta = mInitialPosition.y - (mUpSpeed * (f32)unk170 + getPosition().y);
 
-	unk17C.x = (mInitialPosition.x - mPosition.x) / (f32)unk168;
+	unk17C.x = (mInitialPosition.x - getPosition().x) / (f32)unk168;
 	unk17C.y = yDelta / (f32)unk168;
-	unk17C.z = (mInitialPosition.z - mPosition.z) / (f32)unk168;
+	unk17C.z = (mInitialPosition.z - getPosition().z) / (f32)unk168;
 
-	unk15C = getDistanceXZ(mInitialPosition);
+	unk15C = getDistanceXZ(getInitialPosition());
 	if (unk15C == 0.0f)
 		unk15C = 1000.0f;
 	if (yDelta > 0.0f)
 		unk15C += fabsf(yDelta);
 	unk160 = unk15C * mCircleRateY;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr,
-	                                0, 4);
+	TShineAppearSimpleGetMSound(this)->startSoundActor(
+	    MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr, 0, 4);
 	MSBgm::startBGM(MSD_BGM_SHINE_APPEAR);
 
 	mStateTimer = unk174;
@@ -780,18 +792,6 @@ s32 TShine::appearWithTimeCallback(u32 param_1, u32 param_2)
 		gpMarDirector->unk4E &= ~1;
 	}
 	return 0;
-}
-
-static inline TFlagManager* TShineAppearSimpleGetFlagManager(TShine* p)
-{
-	TFlagManager* flagManager = TFlagManager::smInstance;
-	return flagManager;
-}
-
-static inline MSound* TShineAppearSimpleGetMSound(TShine* p)
-{
-	MSound* sound = SMSGetMSound();
-	return sound;
 }
 
 void TShine::appearSimple(int param_1)
