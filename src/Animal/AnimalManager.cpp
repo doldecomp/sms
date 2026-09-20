@@ -23,13 +23,17 @@ TAnimalManagerBase::TAnimalManagerBase(const char* name)
 
 void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 {
+	char trash2[8];
+	f32 clipNear = mViewClipNear;
 	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->getAspect(),
-	                                   mViewClipNear, *mViewClipFarPtr);
+	                                   clipNear, *mViewClipFarPtr);
 
 	s32 count = mObjNum;
+	TLiveActor* actor;
 	for (int i = 0; i < count; ++i) {
-		TLiveActor* actor         = (TLiveActor*)unk18[i];
+		actor                     = (TLiveActor*)unk18[i];
 		JGeometry::TVec3<f32> pos = actor->mPosition;
+		char trash[0xC];
 		pos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
