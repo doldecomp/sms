@@ -1371,7 +1371,7 @@ void TEnemyMario::emWaitingToInviteMario()
 	changeMontemanWaitingAnim();
 
 	f32 distanceToMario = EMarioDistance(mPosition, *gpMarioPos);
-	if (distanceToMario < mSettingParams->mSearchDist.get()
+	if (distanceToMario < getSettingsParams()->mSearchDist.get()
 	    && gpMarioPos->y < mPosition.y + mSettingParams->mSearchHeight.get()) {
 		JGeometry::TVec3<f32> gatePoint;
 		mEMario->getTracer()->getGraph()->getGraphNode(8).getPoint(&gatePoint);
