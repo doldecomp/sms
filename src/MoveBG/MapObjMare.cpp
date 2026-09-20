@@ -429,13 +429,13 @@ void TMapObjElasticCode::control()
 	if (mHeldObject != nullptr) {
 		mVelocity.y -= mHoldWeight;
 
-		JGeometry::TVec3<f32> pos = mHeldObject->mPosition;
-		JGeometry::TVec3<f32> velocity = mVelocity;
+		JGeometry::TVec3<f32> pos      = mHeldObject->getPosition();
+		JGeometry::TVec3<f32> velocity = getVelocity();
 		pos.y += velocity.y;
 		mHeldObject->moveRequest(pos);
 	}
 
-	JGeometry::TVec3<f32> velocity = mVelocity;
+	JGeometry::TVec3<f32> velocity = getVelocity();
 	mPosition.y += velocity.y;
 }
 
