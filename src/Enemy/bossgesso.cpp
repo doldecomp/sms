@@ -1224,6 +1224,12 @@ static inline JGeometry::TVec3<f32> BossgessoMarioEarPos()
 	return earPos;
 }
 
+static inline TMap* BossgessoGetMap()
+{
+	TMap* map = gpMap;
+	return map;
+}
+
 static inline TMarDirector* BossgessoGetMarDirector()
 {
 	TMarDirector* director = gpMarDirector;
@@ -1898,13 +1904,13 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		self->mCork->crush();
 
 	if (spine->getTime() == 12) {
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    BGESO_JPA_MS_BOGE_HIT_A, self->getModel()->getAnmMtx(27), 0,
+		BossgessoGetParticleManager()->emitAndBindToMtxPtr(
+		    BGESO_JPA_MS_BOGE_HIT_A, BossgessoGetModel(self)->getAnmMtx(27), 0,
 		    nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
+		BossgessoGetParticleManager()->emitAndBindToMtxPtr(
 		    BGESO_JPA_MS_BOGE_HIT_C, self->getModel()->getAnmMtx(27), 0,
 		    nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
+		BossgessoGetParticleManager()->emitAndBindToMtxPtr(
 		    BGESO_JPA_MS_BOGE_HIT_B, self->getModel()->getAnmMtx(27), 0,
 		    nullptr);
 	}
@@ -1928,19 +1934,19 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		JGeometry::TVec3<f32> local_28;
 		self->getJointTransByIndex(47, &local_28);
 		const TBGCheckData* data;
-		local_28.y = gpMap->checkGround(local_28.x, local_28.y + 500.0f,
+		local_28.y = BossgessoGetMap()->checkGround(local_28.x, local_28.y + 500.0f,
 		                                local_28.z, &data);
 
-		gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_HITDOWN, &local_28, 0,
+		BossgessoGetParticleManager()->emit(BGESO_JPA_MS_BOGE_HITDOWN, &local_28, 0,
 		                             nullptr);
 	}
 
 	if (spine->getTime() == 40) {
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    BGESO_JPA_MS_BOGE_KIZETSU, self->getModel()->getAnmMtx(7), 0,
+		BossgessoGetParticleManager()->emitAndBindToMtxPtr(
+		    BGESO_JPA_MS_BOGE_KIZETSU, BossgessoGetModel(self)->getAnmMtx(7), 0,
 		    nullptr);
-		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    BGESO_JPA_MS_BOGE_KIZETSU_R, self->getModel()->getAnmMtx(4), 0,
+		BossgessoGetParticleManager()->emitAndBindToMtxPtr(
+		    BGESO_JPA_MS_BOGE_KIZETSU_R, BossgessoGetModel(self)->getAnmMtx(4), 0,
 		    nullptr);
 	}
 
