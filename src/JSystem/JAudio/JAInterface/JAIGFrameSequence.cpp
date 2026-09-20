@@ -56,6 +56,7 @@ void JAIBasic::checkEntriedSeq()
 		    mSeqArchiveHandle + (sound->mSoundID & JAISoundID_IndexMask));
 
 		u8 pos;
+		u8 trash[8];
 		u8* ptr = (u8*)unk0->checkOnMemory(
 		    sound->mSoundID & JAISoundID_IndexMask, &pos);
 
