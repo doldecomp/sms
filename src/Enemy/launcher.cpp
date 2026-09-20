@@ -239,14 +239,14 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	initHitActor(0x10000014, 1, -0x7f000000, 150.0f, 100.0f, 150.0f, 100.0f);
 	offHitFlag(0x1);
 
-	// TODO: 100.0% fuzzy, 7 instructions off: the JGadget iterator temp block
-	// sits 4 bytes higher than retail's (0x7c/0x64/0x60 vs 0x78/0x60/0x5c),
-	// the recorded per-expansion pool stride. Naming the searched object
-	// (batch 211's packing rule) is -8 frame and 30 markers here, so this
-	// site is the known-open grouping class, not the unnamed-receiver one.
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-	    ->getChildren()
-	    .push_back(this);
+	// The named TList_pointer& is the research-211 packing knob that drops
+	// the insert block 4 without renaming the searched object (that costs
+	// the addi rD, r3, 0x10 bind and the frame). Unnamed
+	// search<>()->getChildren().push_back(this) is 7 stack slots high.
+	JGadget::TList_pointer<THitActor*>& list
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	          ->getChildren();
+	list.push_back(this);
 
 	onLiveFlag(LIVE_FLAG_UNK8);
 	onLiveFlag(LIVE_FLAG_UNK10);
