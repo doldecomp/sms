@@ -175,6 +175,7 @@ void TMario::inOutWaterEffect(f32 waterY)
 {
 	JGeometry::TVec3<f32> pos = mPosition;
 	pos.y                     = mFloorPosition.z;
+	char trash[8];
 
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 	    || checkPrevFlag(MARIO_FLAG_IN_SHALLOW_WATER)) {
