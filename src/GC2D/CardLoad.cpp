@@ -394,30 +394,30 @@ void TCardLoad::setupScoreScreen()
 		int shineCount = 0;
 
 		if (TFlagManager::getInstance()->getBool(0x103A5 + local_90[i]))
-			unk584[i].unk0->hide();
-		else
 			unk584[i].unk0->show();
+		else
+			unk584[i].unk0->hide();
 
 		for (int j = 0; j < 8; ++j)
 			if (SMS_isGetShine(local_90[i], j, false))
 				++shineCount;
 
-		shineCount &= 0xff;
-		iVar8 += shineCount;
+		u8 count = shineCount;
+		iVar8 += count;
 
 		for (int j = 0; j < 8; ++j) {
 			J2DPane* pane = unk584[i].unk10[j];
 			if (!pane)
 				continue;
 
-			if (j < shineCount)
+			if (j < count)
 				pane->show();
 			else
 				pane->hide();
 		}
 
 		for (int j = 0; j < 2; ++j) {
-			if (SMS_isGetShine(local_90[i], j, true)) {
+			if (SMS_isGetShine(local_90[i], j + 1, true)) {
 				iVar8 += 1;
 				unk584[i].unk30[j]->show();
 			} else {
@@ -460,11 +460,11 @@ void TCardLoad::setupScoreScreen()
 		asdf += 1;
 	if (TFlagManager::getInstance()->getBool(0x10058))
 		asdf += 1;
-	u16 kek = iVar8 + asdf;
+	iVar8 += asdf;
 	if (asdf > 9)
 		asdf = 9;
-	const ResTIMG* pRVar4 = unkC8[asdf % 10]->getTexInfo();
-	((J2DPicture*)unk2C->search('\0n_f'))->changeTexture(pRVar4, 0);
+	((J2DPicture*)unk2C->search('\0n_f'))
+	    ->changeTexture(unkC8[asdf % 10]->getTexInfo(), 0);
 
 	if (TFlagManager::getInstance()->getBool(0x103a6))
 		unk2C->search('st_7')->show();
@@ -473,7 +473,7 @@ void TCardLoad::setupScoreScreen()
 	unk2C->search('st_7')->setAlpha(255);
 	if (SMS_isGetShine(1, 0, true)) {
 		unk2C->search('sh7a')->show();
-		kek += 1;
+		iVar8 += 1;
 	} else {
 		unk2C->search('sh7a')->hide();
 	}
@@ -500,15 +500,15 @@ void TCardLoad::setupScoreScreen()
 		    ->changeTexture(unkC8[thing]->getTexInfo(), 0);
 	}
 
-	int asdf2 = TFlagManager::getInstance()->getFlag(0x40000) - kek;
+	int asdf2 = TFlagManager::getInstance()->getFlag(0x40000) - (u16)iVar8;
 	if (asdf2 > 100)
 		asdf2 = 99;
 	if (asdf2 < 0)
 		asdf2 = 0;
-	const ResTIMG* pRVar42 = unkC8[asdf2 / 10]->getTexInfo();
-	((J2DPicture*)unk2C->search('\0n_d'))->changeTexture(pRVar42, 0);
-	const ResTIMG* pRVar43 = unkC8[asdf2 % 10]->getTexInfo();
-	((J2DPicture*)unk2C->search('\0n_e'))->changeTexture(pRVar43, 0);
+	const ResTIMG* tens = unkC8[asdf2 / 10]->getTexInfo();
+	((J2DPicture*)unk2C->search('\0n_d'))->changeTexture(tens, 0);
+	((J2DPicture*)unk2C->search('\0n_e'))
+	    ->changeTexture(unkC8[asdf2 % 10]->getTexInfo(), 0);
 
 	unk744->setAlpha(0);
 	unk740->setAlpha(0);
@@ -864,9 +864,10 @@ static inline int CardLoadUnk18(const TCardLoad* p)
 	return v18;
 }
 
-// TODO: 99.8%. Retail's `buffer` starts four bytes lower than ours, so our
-// body carries one 4-byte inline temporary it does not have, and the u16
-// clamp keeps the raw sum in the variable's register where we narrow into it.
+// TODO: opcode-exact, 5 slot-offset markers. Retail's first JUTRect sits
+// four bytes lower (0x16c vs 0x170). `u16 r = col.r; r += 7;` and the same
+// split on alpha are the clamp shape. CardLoadUnk18 must stay: dropping it
+// moves later rects and adds markers.
 bool TCardLoad::titleDraw()
 {
 	switch (CardLoadUnk18(this)) {
@@ -914,7 +915,8 @@ bool TCardLoad::titleDraw()
 				any &= unk1D4[i]->update();
 				JUtility::TColor col
 				    = ((J2DPicture*)unk1D4[i]->getPane())->mBlack;
-				u16 r = col.r + 7;
+				u16 r = col.r;
+				r += 7;
 				if (r > 255)
 					r = 255;
 
@@ -933,7 +935,8 @@ bool TCardLoad::titleDraw()
 		break;
 
 	case 2: {
-		u16 alpha = CardLoadGetPane(unkF0)->getAlpha() + 1;
+		u16 alpha = CardLoadGetPane(unkF0)->getAlpha();
+		alpha += 1;
 		if (alpha > 255) {
 			bool any = true;
 			alpha    = 255;
@@ -1419,8 +1422,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 	} break;
 
 	case 3: {
-		unk568->setCenteredSize(20, 0, 0, unk56C.getWidth(),
-		                        unk56C.getHeight());
+		setCenteredSizeWr(unk568, 20, 0, 0, unk56C.getWidth(),
+		                  unk56C.getHeight());
 		unk580->hide();
 		unkB4 = 0;
 		unk10 = 4;
