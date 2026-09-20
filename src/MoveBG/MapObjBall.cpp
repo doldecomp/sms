@@ -467,15 +467,36 @@ void TMapObjBall::calcCurrentMtx()
 	MTXCopy(rot, getModel()->getAnmMtx(0));
 }
 
+// Binding level over the physical-parameter chain, sizing
+// TMapObjBall::checkWallCollision's low region.
+static inline f32 MapObjBallBodyRadius(const TMapObjBall* p) { return p->mBodyRadius; }
+
+static inline const TMapObjPhysicalInfo* MapObjBallPhysical(const TMapObjBall* p)
+{
+	return p->mMapObjData->mPhysical;
+}
+
+static inline u32 MapObjBallWallCheckFlags(const TMapObjBall* p)
+{
+	u32 flags = MapObjBallPhysical(p)->mWallCheckFlags;
+	return flags;
+}
+
 void TMapObjBall::checkWallCollision(JGeometry::TVec3<f32>* param_1)
 {
 	JGeometry::TVec3<f32> centre;
 	centre.x = param_1->x;
-	centre.y = param_1->y + mBodyRadius;
+	f32 radius = MapObjBallBodyRadius(this);
+	centre.y = param_1->y + radius;
 	centre.z = param_1->z;
 
-	TBGWallCheckRecord check(centre, mBodyRadius, 4,
-	                         mMapObjData->mPhysical->mWallCheckFlags);
+	// TODO: 99.3%. Every instruction matches and the frame is exact; retail
+	// puts `centre` below the check record where ours puts it above, and
+	// loads param_1->y into f0 before the radius. Declaration order among
+	// the two named locals cannot be reversed (the record's constructor
+	// consumes centre).
+	TBGWallCheckRecord check(centre, radius, 4,
+	                         MapObjBallWallCheckFlags(this));
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&check)) {
 		unk138   = check.mResultWalls[0];
