@@ -78,16 +78,30 @@ const char* bgeso_bastable[] = {
 static const char* getAttackModeStr(int) { return nullptr; }
 
 // fabricated: a TBGTentacle predicate over the same state set as the one
-// changeAllTentacleState() tests, but with the comparisons emitted in the
-// order 4, 6, 3 and with no 3/4 range merge, so it cannot be that helper.
-// Parked here rather than in BossGessoTentacle.hpp, which belongs to
-// bgtentacle.cpp.
+// changeAllTentacleState() tests. Parked here rather than in
+// BossGessoTentacle.hpp, which belongs to bgtentacle.cpp.
+//
+// The `int state` copy is load-bearing, not decoration: reading the member
+// straight into the comparisons leaves all three tests separate in every
+// expansion, while copying it first lets MWCC fold `state == 3 || state == 4`
+// into retail's `subi 3; cmplwi 1` and hoist the `== 6` test ahead of it, at
+// every inlined site (stopIfRoll, changeAttackMode and the five nerves) and
+// in the unit's .data, which only matches with the fold. The comparison order
+// stays 4, 6, 3: 6/3/4 and 3/4/6 both break the fold and the data again.
+//
+// TODO: the out-of-line TBossGesso::changeAllTentacleState (94.12) is the one
+// body that must *not* fold -- retail emits 4, 6, 3 unmerged there from the
+// same source and folds only in the expansions. No spelling found that splits
+// them: a named local in that loop (93.9), reading getState() (93.9), the
+// explicit three-compare chain (87.0, and it costs the expansions their
+// materialised bool), a pointer-taking forwarding overload, and
+// TBGTentacle::isThing() (order 6/3/4, no fold anywhere) were all tried.
 // TODO: find the real name; `canTake` and `isAttacking` are the only named
 // TBGTentacle predicates in the map and neither fits.
 static inline BOOL isTentacleBusy(TBGTentacle* tentacle)
 {
-	if (tentacle->mState == 4 || tentacle->mState == 6
-	    || tentacle->mState == 3)
+	int state = tentacle->mState;
+	if (state == 4 || state == 6 || state == 3)
 		return true;
 
 	return false;
