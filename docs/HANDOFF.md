@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan (+2 then +0 structural), hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7.
-- Landed `grpts` fireWanwan ([fireWanwan unit ladder](ba516c41-d146-46a5-b83f-c517743670eb)): emitEffects TVec3 slots + updatePollute column loads; unit fuzzy 95.87→95.89; +0 exact; All stays **61.67%**. Pre-existing ArrayWrapper MISSING symbols.
-- Landed MapObjMamma +7 exact; All **61.62→61.67**, exact **11,339→11,346**.
-- Total: **61.67%** matched, game **53.61%**, linked **492 / 732**, exact **11,346**.
-- Running: `grptt` / hamukuri ([hamukuri unit ladder](08819716-deb2-4ae0-a9a5-e88037ca8383)). Refill: bosseel.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7.
+- Landed `grptt` hamukuri ([hamukuri unit ladder](08819716-deb2-4ae0-a9a5-e88037ca8383)): +2 exact (`TDoroHamuKuri::attackToMario` via depth-3 selectCapHolder wrappers; `THaneHamuKuri::setDeadAnm`); unit **71.08→72.05**; All **61.67→61.69**, Game **53.61→53.62**, exact **11,346→11,348**. Catalog: 8-stmt method needs two TU wrappers for `bl`; named `u8` flag copy is +8 frame.
+- Landed fireWanwan structural (+0 exact). Landed MapObjMamma +7.
+- Total: **61.69%** matched, game **53.62%**, linked **492 / 732**, exact **11,348**.
+- Running: `grptu` / bosseel ([bosseel unit ladder](9fc2a748-56b3-4267-90bd-850d8052c935)). Refill: MapObjBase.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
