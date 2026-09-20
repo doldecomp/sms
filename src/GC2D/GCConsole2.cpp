@@ -1512,19 +1512,12 @@ static const s32 scNozzleSoundList[] = {
 	0x88B6, 0x88B7, 0x88B8, 0x88B9, 0x88BA, -1,
 };
 
-// TODO: three dead .data objects the original TU still emits, recovered from
-// the ROM. They are never read, so which function's statics they were is
-// unknown; they are placed here only to keep the .data layout right.
-static f32 scUnusedScale1[] = { 1.0f, 1.0f, 1.0f };
-static f32 scUnusedScale2[] = { 1.0f, 1.0f, 1.0f };
-static int scUnusedTable[]  = { 0, 2, 1, 3 };
-
 static u32 scDolpicNewsDolpic0[]   = { 0x000E0000, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic1[]   = { 0x000E0001, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic5_1[] = { 0x000E0009, 0x000E0011, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic5_4[] = { 0x000E0012, 0x000E0013, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic5_2[] = { 0x000E0012, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic5_3[] = { 0x000E0013, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic5_4[] = { 0x000E0012, 0x000E0013, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic6[]   = { 0x000E0002, 0x000E0004, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic7[]   = { 0x000E0005, 0x000E0006, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic8_1[] = { 0x000E0003, 0xFFFFFFFF };
@@ -3340,6 +3333,7 @@ bool TGCConsole2::processDrawTelop(u32)
 void TGCConsole2::checkChangeTelopArray()
 {
 	u32* oldArray = unk570;
+	char trash[48]; // unused; matches retail stack layout
 
 	if (gpMarDirector->mMap == 1) {
 		switch (gpMarDirector->unk7D) {
@@ -3367,14 +3361,14 @@ void TGCConsole2::checkChangeTelopArray()
 		case 5:
 			if (TFlagManager::smInstance->getBool(0x50001)) {
 				if (TFlagManager::smInstance->getBool(0x50002))
-					unk570 = scDolpicNewsDolpic5_1;
+					unk570 = scDolpicNewsDolpic5_4;
 				else
 					unk570 = scDolpicNewsDolpic5_2;
 			} else {
 				if (TFlagManager::smInstance->getBool(0x50002))
 					unk570 = scDolpicNewsDolpic5_3;
 				else
-					unk570 = scDolpicNewsDolpic5_4;
+					unk570 = scDolpicNewsDolpic5_1;
 			}
 			break;
 		case 8: {
