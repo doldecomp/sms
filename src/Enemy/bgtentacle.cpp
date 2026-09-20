@@ -78,27 +78,37 @@ TBGTentacleMtxCalc::TBGTentacleMtxCalc(TBGTentacle* owner)
 {
 }
 
+static inline u16 BGTentacleGetJointNum(J3DModelData* d)
+{
+	u16 n = d->getJointNum();
+	return n;
+}
+
+// two-local binder over getUnk2C()->getModel(): +8 at one site.
+static inline J3DModel* BGTentacleGetModel(TBGTentacle* t)
+{
+	MActor* actor = t->getUnk2C();
+	J3DModel* model = actor->getModel();
+	return model;
+}
+
 void TBGTentacleMtxCalc::calc(u16 param_1)
 {
-	int uVar9 = mOwner->getUnk2C()->getModel()->getModelData()->getJointNum();
+	int uVar9 = BGTentacleGetJointNum(
+	    mOwner->getUnk2C()->getModel()->getModelData());
 	J3DMtxCalcAnm::calc(param_1);
 	int iVar8 = uVar9 - 1;
 
-	// TODO: 99.3%, every instruction exact, frame 0x2c0 vs 0x2d0.  Slot map:
-	// the four named vectors below (local_278, local_68, local_74, local_80)
-	// sit as one descending 12-byte block in both builds, but retail has a
-	// dead 4-byte slot between local_278 and local_68 (its block spans 0x250
-	// to 0x283, ours 0x240 to 0x26f) and 12 more bytes of unreferenced
-	// inline-temp pool: retail's pool leaves 0x1c dead above the
-	// TVec3::sub argument copy and 0x80 dead between the volatile sqrt slot
-	// and the spline-result temporary, and it orders those two the other way
-	// round (volatile below the spline temp, ours above).  So the 16 bytes are
-	// one 4-byte named local declared right after the spline point plus a
-	// 12-byte pool temporary, not a body local we can name from the code.
-	MtxPtr asdf = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1);
+	// TODO: 99.5%, frame exact at 0x2d0.  Named t puts the spline ratio in
+	// f31; the model binder + named getJointNum step land the frame and
+	// local_278 at 0x278.  Residue: a 4-byte hole between local_278 and
+	// local_68 (ours 0x26c for retail's 0x268) and TVec3::sub's temp at
+	// 0x1c4 for retail's 0x128 (the a=b-c allocation-order class).
+	// Moving iVar8 below the spline added a subi and dropped 99.5 -> 98.8.
+	MtxPtr asdf = BGTentacleGetModel(mOwner)->getAnmMtx(param_1);
 
-	JGeometry::TVec3<f32> local_278
-	    = mOwner->mSpline->getPoint(param_1 / f32(iVar8));
+	f32 t = param_1 / f32(iVar8);
+	JGeometry::TVec3<f32> local_278 = mOwner->mSpline->getPoint(t);
 
 	asdf[0][3]  = local_278.x;
 	f32 nodeY   = local_278.y;
