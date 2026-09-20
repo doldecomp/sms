@@ -279,40 +279,45 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 void TMapStaticObj::initUnique()
 {
 	switch (getActorType()) {
-	case 0x40000024:
-		if (gpMarDirector->getCurrentMap() == 4)
+	case 0x40000024: {
+		u8 map = SMSGetMarDirector()->getCurrentMap();
+		if (map == 4)
 			mEffectCoronaScale = 1.8f;
 		else
 			mEffectCoronaScale = 1.8f;
 		break;
 	}
+	}
 
 	if (strcmp(mActorName, "ReflectSky") == 0) {
-		TSky* sky = JDrama::TNameRefGen::getInstance()->search<TSky>("空");
+		JDrama::TNameRefGen* gen = JDrama::TNameRefGen::getInstance();
+		TSky* sky                = gen->search<TSky>("空");
 
 		getModelData()->setMaterialTable(gpMapObjManager->getUnk68(),
 		                                 J3DMatCopyFlag_All);
 		mMActor->initDL();
 
-		JDrama::TDrawBufObj* dboOpa
-		    = JDrama::TNameRefGen::getInstance()->search<JDrama::TDrawBufObj>(
-		        "DrawBuf MirrorSky Opa");
-		j3dSys.setDrawBuffer(dboOpa->getDrawBuffer(), 0);
-		JDrama::TDrawBufObj* dboXlu
-		    = JDrama::TNameRefGen::getInstance()->search<JDrama::TDrawBufObj>(
-		        "DrawBuf MirrorSky Xlu");
-		j3dSys.setDrawBuffer(dboXlu->getDrawBuffer(), 1);
+		j3dSys.setDrawBuffer(
+		    JDrama::TNameRefGen::getInstance()
+		        ->search<JDrama::TDrawBufObj>("DrawBuf MirrorSky Opa")
+		        ->getDrawBuffer(),
+		    0);
+		j3dSys.setDrawBuffer(
+		    JDrama::TNameRefGen::getInstance()
+		        ->search<JDrama::TDrawBufObj>("DrawBuf MirrorSky Xlu")
+		        ->getDrawBuffer(),
+		    1);
 
 		getModel()->calc();
 		getModel()->viewCalc();
 		getModel()->entry();
 	} else if (strcmp(mActorName, "SoundObjRiver") == 0) {
-		if (gpMarDirector->getCurrentMap() == 13)
+		if (SMSGetMarDirector()->getCurrentMap() == 13)
 			mSoundId = MSD_SE_OBJ_FOUNTAIN;
 	} else if (strcmp(mActorName, "MareFalls") == 0) {
-		switch (gpMarDirector->getCurrentMap()) {
+		switch (SMSGetMarDirector()->getCurrentMap()) {
 		case 8:
-			switch (gpMarDirector->getCurrentStage()) {
+			switch (SMSGetMarDirector()->getCurrentStage()) {
 			case 0:
 			case 2:
 			case 4:
