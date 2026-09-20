@@ -630,6 +630,14 @@ BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 	return FALSE;
 }
 
+// Binding level worth +8 of low region, landing TRedCoinSwitch::load's frame
+// at 0x30 (batch 121).
+static inline TFlagManager* MapObjTownGetInstance()
+{
+	TFlagManager* instance = TFlagManager::getInstance();
+	return instance;
+}
+
 void TRedCoinSwitch::control()
 {
 	TMapObjBase::control();
@@ -639,12 +647,13 @@ void TRedCoinSwitch::control()
 	// 2; reordering the arms only moves the bodies. Frame is 8 short.
 	switch (mState) {
 	case 1:
-		return;
+	case 4:
+		break;
 	case 2:
 		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mStateTimer = 120;
 			mState      = 3;
-			TFlagManager::getInstance()->setBool(true, 0x50009);
+			MapObjTownGetInstance()->setBool(true, 0x50009);
 		}
 		break;
 	case 3:
@@ -664,14 +673,6 @@ void TRedCoinSwitch::loadAfter()
 		    = JDrama::TNameRefGen::getInstance()->search<TMapObjBase>(buf);
 		coin->makeObjDead();
 	}
-}
-
-// Binding level worth +8 of low region, landing TRedCoinSwitch::load's frame
-// at 0x30 (batch 121).
-static inline TFlagManager* MapObjTownGetInstance()
-{
-	TFlagManager* instance = TFlagManager::getInstance();
-	return instance;
 }
 
 void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
