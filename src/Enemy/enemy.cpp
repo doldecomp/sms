@@ -268,22 +268,21 @@ BOOL TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& pos, f32 length,
 	return MsIsInSight(mPosition, mRotation.y, pos, length, angle, aware);
 }
 
-// The ROM `bl`s JGeometry::TVec3<f>::operator= for both of the TPathNode
-// copies below, which needs them one inline level deeper than a plain
-// assignment reaches; a TU-local forwarder is that level.
-static inline void assignPathNode(TPathNode* dst, const TPathNode& src)
+// A forwarder around TGraphNode::getPoint(Vec*): the extra inline level is
+// frame-only pool that the ROM's expansions of this body carry.
+static inline void getNodePoint(const TGraphNode& node,
+                                JGeometry::TVec3<f32>* out)
 {
-	*dst = src;
+	node.getPoint(out);
 }
 
 void TSpineEnemy::setGoalPathFromGraph()
 {
 	JGeometry::TVec3<f32> local_48;
-	unk124->getCurrent().getPoint(&local_48);
-	TPathNode local_3c(local_48);
-	assignPathNode(&unkF4, local_3c);
-	assignPathNode(&unk104, local_3c);
-	unk114.clear();
+	getNodePoint(getTracer()->getGraph()->getGraphNode(
+	                 getTracer()->getCurGraphIndex()),
+	             &local_48);
+	setGoalPath(TPathNode(local_48));
 }
 
 void TSpineEnemy::goToInitialVisibleNode(f32, f32) { }
@@ -293,16 +292,17 @@ void TSpineEnemy::goToInitialGraphNodeCheckY(f32 param_1) { }
 #pragma dont_inline on
 int TSpineEnemy::goToShortestNextGraphNode()
 {
-	if (unk124->unk0 == nullptr)
+	if (getTracer()->getGraph() == nullptr)
 		return -1;
 
-	if (unk124->mCurrIdx < 0)
-		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+	if (getTracer()->getCurGraphIndex() < 0)
+		unk124->setTo(
+		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	else
-		unk124->moveTo(unk124->unk0->getShortestNextIndex(
-		    unk124->mCurrIdx, unk124->mPrevIdx, -1));
+		unk124->moveTo(getTracer()->getGraph()->getShortestNextIndex(
+		    getTracer()->getCurGraphIndex(), getTracer()->getPrevIndex(), -1));
 
-	if (unk124->mCurrIdx < 0)
+	if (getTracer()->getCurGraphIndex() < 0)
 		return -1;
 
 	setGoalPathFromGraph();
