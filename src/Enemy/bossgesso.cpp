@@ -848,7 +848,7 @@ void TBossGesso::stopIfRoll()
 
 	changeAttackMode(ASTATE_SINGLE);
 
-	mSpine->reset();
+	getSpine()->reset();
 	mSpine->setNext(&TNerveBGWait::theNerve());
 
 	changeAllTentacleState(0);
