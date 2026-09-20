@@ -299,12 +299,28 @@ void TFireWanwanManager::createModelData()
 	createModelDataArray(entry);
 }
 
+// Two-local binder, +0x10 per site: four getConsole sites land
+// TFireWanwanManager::perform's frame at 0x110.
+static inline TGCConsole2* FireWanwanMgrConsole()
+{
+	TMarDirector* director = gpMarDirector;
+	TGCConsole2* console   = director->getConsole();
+	return console;
+}
+
+// Bare-return fork over the indexed array. Zero frame; ranks the wanwan
+// pointer above the loop index (r29/r28) as retail does.
+static inline TFireWanwan* FireWanwanMgrObj(TFireWanwanManager* m, int i)
+{
+	return (TFireWanwan*)m->unk18[i];
+}
+
 void TFireWanwanManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TEnemyManager::perform(cue, graphics);
 
 	for (int i = 0; i < mObjNum; ++i) {
-		TFireWanwan* wanwan = (TFireWanwan*)unk18[i];
+		TFireWanwan* wanwan = FireWanwanMgrObj(this, i);
 		if (!gpMap->isInArea(wanwan->mPosition.x, wanwan->mPosition.z)
 		    || (wanwan->getGroundPlane()
 		        && wanwan->getGroundPlane()->isDeathPlane())) {
@@ -333,7 +349,7 @@ void TFireWanwanManager::checkBalloonHelpBoss22()
 		f32 helpRange22 = getWanwanParams()->mBoss22HelpRange.get();
 		if (diff.squared() < helpRange22 * helpRange22) {
 			mBoss22BalloonWasShown = true;
-			gpMarDirector->getConsole()->startAppearBalloon(0x16, true);
+			FireWanwanMgrConsole()->startAppearBalloon(0x16, true);
 		}
 	}
 }
@@ -344,7 +360,7 @@ void TFireWanwanManager::checkBalloonHelpBoss23()
 	    && getWanwanParams()->mBoss23TimerMax.get() > unk64) {
 		if (++unk64 >= getWanwanParams()->mBoss23TimerMax.get()) {
 			unk64 = getWanwanParams()->mBoss23TimerMax.get();
-			gpMarDirector->getConsole()->startAppearBalloon(0x17, true);
+			FireWanwanMgrConsole()->startAppearBalloon(0x17, true);
 		}
 	}
 }
@@ -352,7 +368,7 @@ void TFireWanwanManager::checkBalloonHelpBoss23()
 void TFireWanwanManager::checkBalloonHelpBoss24()
 {
 	if (mWanwanRecoversBeforeHelpBalloon == 0) {
-		gpMarDirector->getConsole()->startAppearBalloon(0x18, true);
+		FireWanwanMgrConsole()->startAppearBalloon(0x18, true);
 		mWanwanRecoversBeforeHelpBalloon = -1;
 	}
 }
@@ -363,7 +379,7 @@ void TFireWanwanManager::checkShineAppear()
 		return;
 
 	if (mWanwansKilled == getActiveObjNum() && gpMarDirector->unk124 != 3
-	    && gpMarDirector->getConsole()->unk10 == 0) {
+	    && FireWanwanMgrConsole()->unk10 == 0) {
 		mShineAppeared = true;
 		gpItemManager->makeShineAppearWithDemo(
 		    "シャイン（ボス用）", "ボスシャインカメラ",
@@ -1624,7 +1640,8 @@ template <class T> static inline T clamp2(T t, T r)
 bool TFireWanwan::doTurn()
 {
 	f32 fVar2 = getSaveParam2()->mRotateY.get();
-	f32 fVar1 = MsAngleDiff(mTurnTargetAngle, mRotation.y);
+	// getRotation().y is +8 of frame on the GetBody baseline (0x78 -> 0x80).
+	f32 fVar1 = MsAngleDiff(mTurnTargetAngle, getRotation().y);
 	mRotation.y += clamp2(fVar1, fVar2);
 	mRotation.y = MsAngleWrap(mRotation.y);
 
@@ -1989,7 +2006,7 @@ DEFINE_NERVE(TNerveFireWanwanGraphWander, TLiveActor)
 
 DEFINE_NERVE(TNerveFireWanwanTurn, TLiveActor)
 {
-	TFireWanwan* self = FireWanwanGetBody2(spine);
+	TFireWanwan* self = FireWanwanGetBody(spine);
 	if (spine->getTime() == 0) {
 		self->prepareTurn();
 		self->setBckAnm(5);
