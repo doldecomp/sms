@@ -579,6 +579,13 @@ void TChuuHana::moveObject()
 		kill();
 }
 
+// One extra inline level so retail's `bl TNerveBase()` appears inside
+// theNerve()'s first-use guard at the WalkOnPanel -> Roll push.
+static inline const TNerveBase<TLiveActor>& ChuuHanaRollNerve()
+{
+	return TNerveChuuHanaRoll::theNerve();
+}
+
 bool TChuuHana::isCollidMove(THitActor* param_1)
 {
 	if (param_1->isActorType(0x10000016)) {
@@ -587,7 +594,7 @@ bool TChuuHana::isCollidMove(THitActor* param_1)
 			// Hit by a rolling one while walking: start rolling too.
 			if (mSpine->getCurrentNerve()
 			    == &TNerveChuuHanaWalkOnPanel::theNerve())
-				mSpine->pushNerve(&TNerveChuuHanaRoll::theNerve());
+				mSpine->pushNerve(&ChuuHanaRollNerve());
 		} else if (unk1B2 == 0) {
 			// Bumping a higher-numbered sibling: one time in four, wander.
 			if (mSpine->getCurrentNerve() != &TNerveChuuHanaAttack::theNerve()
@@ -601,6 +608,11 @@ bool TChuuHana::isCollidMove(THitActor* param_1)
 
 	// Retail is cmplw / bne / li 0 / b / li 1, not the branchless
 	// subf/subic/subfe of `return nerve != Object`.
+	// TODO: 99.8%, instruction-identical except frame 0x10 long (0x128 /
+	// 0x118). The extra 0x10 sits below setSafeGoal's block and lifts every
+	// TMsRange / point / TPathNode slot by the same amount. Named `other`
+	// and raw mActorType are 0 / wrong bool shape. Need an isCollidMove-only
+	// -0x10 that does not shrink ForceJumped.
 	if (mSpine->getCurrentNerve() == &TNerveChuuHanaObject::theNerve())
 		return false;
 	return true;
@@ -895,8 +907,8 @@ void TChuuHana::setSafeGoal()
 {
 	unk1A4 = mCheckOnPanelTime;
 
-	JGeometry::TVec3<f32> point;
 	TMsRange<int> range(0, ChuuHanaSafeNodeNum(this));
+	JGeometry::TVec3<f32> point;
 	ChuuHanaSafeNode(this, range.rand())->getPoint((Vec*)&point);
 
 	TPathNode goal(point);
@@ -1101,8 +1113,9 @@ DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
 	// Late in the jump it slams whatever it is standing on.
 	// Retail tests getActor() into r0, then mr r3, r0 inside the arm.
 	// getActor on the named receiver is the +8; the test stays raw.
-	// TODO: 99.9%, frame exact. Residue is setSafeGoal's TMsRange /
-	// point-vec slot order (known-open, chuuhana ladder 332).
+	// TODO: 100% instructions, TMsRange 4 high (0x8c / 0x88) after
+	// declaring range before point. Hoisted actor pointer and dropping
+	// SafeNodeNum's named local are inert / -8 frame.
 	if (hana->unk214 && hana->getCurAnmFrameNo(0) > 80.0f) {
 		if (hana->mGroundPlane->mActor) {
 			THitActor* actor
