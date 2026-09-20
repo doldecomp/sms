@@ -1526,6 +1526,7 @@ BOOL TMario::fencePunch()
 			}
 		}
 	}
+	char trash[16];
 
 	if (isLast1AnimeFrame()) {
 		changePlayerStatus(MARIO_STATUS_FENCE_MOVE, 0, false);
