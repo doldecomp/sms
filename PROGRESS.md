@@ -4773,3 +4773,154 @@ Lösung auf Quelltext-Ebene.
 **9048** (von 9039 zu Rundenbeginn), `matched_code_percent`: 45,67 %.
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`.
+
+### Nach sechzigster Iterationsrunde (21-Kandidaten-Batch: 2 neue Matches, aber drei außergewöhnlich wertvolle Fast-Treffer mit insgesamt 12+ echten Gameplay-Bugs — inkl. eines projektweiten Header-Bugs)
+
+**Pool der einfachen Kandidaten (80-100 % Fuzzy-Match, kleine Dateien)
+erschöpft sich sichtbar** (504 → 168 → 84 → 44 → 24 Kandidaten über die
+letzten vier Runden). Diese Runde wurde deshalb bewusst auf größere/
+niedrigprozentigere Funktionen ausgeweitet (bis 88,64 %/72,14 % Fuzzy-
+Match, bis 2008 Byte Größe) — Trefferquote sank entsprechend (2/21),
+aber die QUALITATIVE Ausbeute an dokumentierten echten Bugs ist die
+höchste einer einzelnen Runde bisher.
+
+**2 neue Fixes, beide commitet:**
+
+1. `TMenuBase::perform` (Commit `345444b7`) — zweiseitiges 4+4-Byte-
+   Trash-Padding um ein `J2DOrthoGraph`-Stack-Objekt.
+2. `TAfterEffect::perform` (Commit `3e2c1fec`) — neue allgemeine
+   Technik entdeckt: **MWCC ordnet Callee-saved-Register nach
+   Kandidaten-Erzeugungsreihenfolge** (Parameter zuerst, dann
+   Frontend-Lokale/Temporärwerte in Quelltext-Reihenfolge, dann ERST
+   Inline-Expansions-Temporärwerte), aufsteigend r28..r31 zugewiesen.
+   Ein `const TRect& rect = graphics->getViewport();` (Accessor-Aufruf,
+   inline expandiert) wird deshalb ALS LETZTES erzeugt und bekommt die
+   falsche Registernummer; Ersatz durch Direktzugriff
+   `graphics->mViewportRect` verschiebt den Kandidaten früher in die
+   Liste und trifft Retails Reihenfolge exakt. `char trash[4]` NACH der
+   betroffenen Lokalen stellt den durch den Accessor-Wegfall
+   verlorenen 4-Byte-Stack-Slot wieder her.
+
+**★ DREI HERAUSRAGENDE FAST-TREFFER — vollständig dokumentiert für
+künftige Wiederaufnahme, NICHT commitet (Hard Rule: nur Byte-exakt):**
+
+**`TSpider::bind` (`src/Enemy/spider.cpp`, 83,88 % → 100 % Instruktions-
+identisch, blockiert durch 56-Byte-Phantom-Frame-Lücke):** VIER echte
+Logikfehler gefunden und bestätigt (Nachweis: symbolische Neu-
+herleitung gegen Retail-Disassembly):
+- `checkGround`-Aufruf Nr. 2 benutzte `local_50.y` statt
+  `param_1->mPosition.y` als Y-Argument.
+- `TBGWallCheckRecord`-Y-Argument fehlte `+ spine->getHeadHeight()`.
+- `TBGWallCheckRecord`-Radius benutzte `getHeadHeight()` statt
+  `getWallRadius()` (= `mBodyScale * mWallRadius`, ein anderes Feld!).
+- Wand-Rückstoßrichtung: Quelltext berechnete `local_bc = tmp -
+  center` (mit separatem `tmp`), Retail skaliert `normal` IN PLACE und
+  subtrahiert `normal` direkt von `local_bc` — unterschiedliche
+  Aliasing-Semantik.
+Zusätzlich wurde die exakte Quelltext-Form gefunden, die einen 100 %
+instruktionsidentischen Strom erzeugt (366/366 Instruktionen, exakt
+dieselben Register): `TSpineEnemy* spine`-Cast als benannte Lokale,
+Referenz-Bindung für `normal` vor der Kopie, Wiederverwendung von
+`local_50` statt einer dritten Lokalen, sowie eine präzise Kette
+benannter Materialisierungen (`vy`, `vz`, `y`, `z` in genau dieser
+Deklarationsreihenfolge) für die f27-f31-Registerbelegung. Blockiert
+einzig durch eine unerreichbare 56-Byte-Lücke zwischen zwei Compiler-
+Temporärwerten (Retail-Rahmen 0x158 vs. unser 0x120) — ein
+`JGeometry::TVec3<f32>(0,0,0)`-Sondierungs-Statement wächst den
+Temp-Pool zwar, aber in die FALSCHE Richtung (12 Byte oberhalb UND
+unterhalb statt der benötigten zusammenhängenden 52-Byte-Lücke).
+**Vollständige Wiederanwendungs-Anleitung im Agent-Transkript
+`history://SpiderBind` archiviert** — sobald die Phantom-Frame-
+Fehlerklasse durchbrochen ist, ist dies der Kandidat mit dem
+höchsten sofortigen Ertrag.
+
+**`JDrama::TSmJ3DAct::perform` (`src/JSystem/JDrama/JDRSmJ3DAct.cpp`,
+72,14 % → strukturell identisch, blockiert durch Register-Scheduling
+in drei Matrix-Multiplikationsblöcken):** DREI echte Bugs gefunden,
+darunter ein **projektweiter Header-Bug**:
+- Rotationsreihenfolge: Retail wendet Z, dann Y, dann X an; Quelltext
+  hatte X, Y, Z (andere komponierte Rotation — echter Verhaltensbug).
+- Matrix-Wiederverwendung: Retail nutzt nur ZWEI lebende Matrizen für
+  die Multiplikationskette (Ergebnis wird wiederverwendet), Quelltext
+  allozierte eine dritte.
+- **`include/JSystem/JGeometry/JGMatrix34.hpp::TMatrix34::concat()`
+  ist fehlerhaft transkribiert**: berechnet die TRANSPONIERTE des
+  beabsichtigten Produkts PLUS einen Out-of-Bounds-Lesezugriff auf die
+  4. Spalte (liest 0x34/0x38 Byte über die 3×4-Matrix hinaus). Durch
+  symbolische Herleitung gegen Retails tatsächliche Arithmetik
+  bestätigt: die korrekte zeilen-majore Form ist `result[i][j] =
+  a.at(i,0)*b.at(0,j) + a.at(i,1)*b.at(1,j) + a.at(i,2)*b.at(2,j)`
+  (+ `a.at(i,3)` für `j==3`). Betrifft mindestens DREI Aufrufstellen
+  repo-weit: `JDRSmJ3DAct.cpp`, `JDRCamera.cpp` (`TPolarCamera::
+  perform`, dort mit 65,79 % der schlechteste bekannte Match-Wert
+  einer nicht-trivialen Funktion), und `BathWaterManager.cpp:1149`.
+  Reiht sich ein in die wachsende Liste bekannter „fabrizierter"
+  Header-Funktionen dieser Session (`J3DColorChan::getAttnFn`, Runde
+  58; `TExPane::setCenteredSize`, Runde 60/CardLoad).
+Mit allen drei Fixes: 146/313 Zeilen byte-identisch, alle 313
+Instruktionen multisetgleich, aber Register/Planungsreihenfolge
+innerhalb der drei Matrix-Multiplikationsblöcke weicht ab; zusätzlich
+eine unerreichbare 0x38-Byte-Rahmenlücke (klassisches Phantom-Frame-
+Muster). **Empfehlung für Runde 61: dedizierte Runde, die den
+`concat()`-Fix mit vollständiger Projekt-Regressionsprüfung anwendet
+und alle drei betroffenen Aufrufstellen neu bearbeitet — potenziell
+drei Funktionen in einem koordinierten Durchgang.**
+
+**`TConeBeam::calcVertices` (`src/Enemy/beam.cpp`, 88,64 % → auf 2
+vertauschte Instruktionen reduziert): FÜNF echte Bugs gefunden:**
+- Sin/Cos-Faktoren im `mBGCheckData==nullptr`-Zweig vertauscht
+  (`local_140 * s` / `local_134 * c` statt umgekehrt) — der
+  nicht-null-Zweig hatte bereits die korrekte Zuordnung, ein klarer
+  Beleg für einen echten Transkriptionsfehler mit sichtbarer
+  Auswirkung auf Kegel-Beam-Gegner ohne BG-Check-Daten.
+- Halbierungsfaktor muss von LINKS multiplizieren (`0.5f *
+  (mScale*MsSin(ang))`, nicht `/2.0f`).
+- Gemeinsame benannte `ang`-Lokale für `MsSin`/`MsCos` nötig (ohne sie
+  vertauscht MWCC die Konstanten-Register).
+- Eine `TPartition3<f32> partition(...)`-Lokale existiert bei Retail
+  gar nicht: vier `f32`-Lokale (Ebenenabstand + 3 Normalen-
+  komponenten) werden VOR der Schleife einmalig geladen und bleiben
+  über die gesamte Schleife in Callee-saved-Registern — die
+  Struct-Variante erzwingt pro Iteration unnötige Stack-Reloads.
+- Deklarationsreihenfolge mehrerer Lokalen (`local_140`, `local_134`,
+  `local_128`; `oz`, `oy`, `ox`) musste exakt Retails Speicher-
+  reihenfolge treffen.
+Restlücke: zwei unabhängige `lfsx`-Ladeinstruktionen (jmaCosTable/
+jmaSinTable) werden in vertauschter Reihenfolge emittiert, plus eine
+Rahmenlücke (0x1c8 vs. 0x198) durch unterschiedliche Compiler-
+Klassifizierung von inline-expandierten Struct-Wertkopien
+(`operator*(TVec3,f32)`-Parameterkopien) — nicht durch Trash-Padding
+erreichbar, da die POOL-REIHENFOLGE selbst abweicht, nicht nur die
+Größe.
+
+**Weitere gründlich dokumentierte Sackgassen** (sauber zurückgesetzt):
+`MarDirectorSetupConsole`, `BoidLeaderCalcGoalForce`, `ButterfloidLoad`,
+`NpcInbetweenExecPos` (reines FPR-Tie-Break, 8 Varianten erfolglos),
+`JDREfbSettingIssueCopy` (bestätigt eine bereits früher in dieser
+PROGRESS.md dokumentierte Sackgasse unabhängig erneut), `CameraMulti
+PlayerCtrl` (fast vollständig gelöst, ein `MsSqrtf`-Temporärwert
+bleibt auf festem Offset 0x10 gepinnt), `CardLoadDrawMessage` (ZWEI
+echte Bugs — Array-Out-of-Bounds `unk4CC[3]`→`[2]`, falsches
+`JUTRect`-Feld `unk46C`→`unk4B0` — blockiert durch einen
+This/Result-Register-Swap, der laut Code-Kommentar `// TODO: hack,
+regswap` bereits von einem früheren Mitwirkenden erfolglos bekämpft
+wurde; `TExPane::setCenteredSize` ist im Header selbst als „fabricated
+and incorrect" markiert), `SnapTimeObjPerform`, `AnimalNerveGraph
+Wander`, `SunMgrLoad` (Register-Bank-Vertauschung this/rodata-Basis,
+neue Variante der Phantom-Fehlerfamilie), `NpcInitPrgBaseInit`,
+`JKRExpHeapAllocFromHead`, `MapCollisionPlaneCheck`, `EffectUtilSink
+Pollution`, `CameraBckUpdateDemo` (Boolean-Materialisierung, Referenz
+auf denselben Idiom-Typ in `MActor::isCurAnmAlreadyEnd`),
+`CameraShakeExecShake` (ein weiterer echter Logikfehler: `unitVecTo`
+benutzte `*pos` statt `origin` als Quellvektor — betrifft die
+Rollachsen-Berechnung der Kamera-Erschütterung).
+
+### Session-Gesamtstand nach Runde 60
+
+**467 verifizierte echte Fixes in 121 Commits.** `matched_functions`:
+**9050** (von 9048 zu Rundenbeginn), `matched_code_percent`: 45,73 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`. Trotz niedriger Fix-Quote dieser Runde
+(2/21) außergewöhnlich hoher Erkenntniswert: 12+ dokumentierte echte
+Gameplay-Bugs in drei Fast-Treffer-Funktionen, davon einer (`TMatrix34::
+concat`) mit projektweitem Einfluss auf mindestens drei Aufrufstellen.
