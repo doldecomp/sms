@@ -1398,8 +1398,10 @@ void TBossGesso::doAttackShoot()
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 	delta -= mPosition;
 
-	f32 singleAttackLen = getSaveParam2()->mSLSingleAttackLen.get();
-	if (delta.squared() < singleAttackLen * singleAttackLen)
+	f32 singleAttackLen2 = getSaveParam2()->mSLSingleAttackLen.get();
+	singleAttackLen2 *= singleAttackLen2;
+
+	if (delta.squared() < singleAttackLen2)
 		changeAttackMode(ASTATE_SINGLE);
 }
 
