@@ -58,6 +58,19 @@ static inline f32 ElecCalcDist(const JGeometry::TVec3<f32>& a,
 	return ElecLength(a - b);
 }
 
+// The copy-and-subtract distance, the shape AnimalNerve.cpp's file-scope
+// `calcDist` and emario's `EMarioCalcDist` already park, and the second
+// spelling the tree needs beside TVec3::distance(): the by-value first
+// argument is the copy retail stores into its own slot before subtracting
+// component by component, and taking TUtil<f32>::sqrt here rather than through
+// TVec3::length() is what keeps the sqrt out of line.
+static inline f32 ElecSubDist(JGeometry::TVec3<f32> a,
+                              const JGeometry::TVec3<f32>& b)
+{
+	a.sub(b);
+	return JGeometry::TUtil<f32>::sqrt(a.squared());
+}
+
 // dennoko_bastable names ten of the model's eighteen .bck slots. The rest are
 // recovered from the call sites and from the alphabetical order of the .bck
 // files: the turn1_end/loop/start triple at 14..16 and the run1_loop/start
@@ -402,7 +415,7 @@ BOOL TElecNokonoko::receiveMessage(THitActor* sender, u32 message)
 
 bool TElecNokonoko::isResignationAttack()
 {
-	f32 range = mSaveParams->getSLCarapaceShootRange();
+	f32 range = getSaveParams()->mSLCarapaceShootRange.value;
 
 	if (!checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		// TODO: 82.5%. The retail object copies the goal point into a local,
@@ -411,7 +424,7 @@ bool TElecNokonoko::isResignationAttack()
 		// point; d -= mPosition; d.length()`) reproduces the stores but
 		// expands sqrt, while distance() keeps the `bl sqrt` and drops the
 		// stores; no spelling found so far gives both.
-		if (unk104.getPoint().distance(mPosition) < range) {
+		if (ElecSubDist(unk104.getPoint(), mPosition) < range) {
 			mSpine->pushAfterCurrent(&TNerveElecNokonokoShoot::theNerve());
 			return true;
 		}
