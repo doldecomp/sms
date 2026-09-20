@@ -169,6 +169,7 @@ BOOL TMario::trampleExec(THitActor* param_1)
 
 	if (param_1->checkActorType(ACTOR_TYPE_UNK4000000)) {
 		JGeometry::TVec3<f32> scale(0.5f);
+		char trash[8];
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_B, &mPosition, this, scale);
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_C, &mPosition, this, scale);
 	} else {
