@@ -119,6 +119,13 @@ static const GXColorS10 nameKuriTevColorData[7] = {
 	{ 0x64, 0x28, 0x0, 0xA9 },
 };
 
+static inline MActor* NameKuriGetObjMActor(TNameKuriManager* mgr, int i)
+{
+	TLiveActor* obj = mgr->getObj(i);
+	MActor* mActor  = obj->getMActor();
+	return mActor;
+}
+
 void TNameKuriManager::initSetEnemies()
 {
 	void* brainBmd           = JKRGetResource("/scene/namekuri2/brain.bmd");
@@ -142,7 +149,8 @@ void TNameKuriManager::initSetEnemies()
 
 			nameKuri->unk1C4 = nameKuriTevColorData[colorIdx];
 
-			SMS_InitPacket_TwoTevColor(getObj(i)->getMActor()->getModel(), idx,
+			SMS_InitPacket_TwoTevColor(
+			    NameKuriGetObjMActor(this, i)->getModel(), idx,
 			                           GX_TEVREG0, &nameKuri->unk1C4,
 			                           GX_TEVREG1, &nameKuri->unk1BC);
 
