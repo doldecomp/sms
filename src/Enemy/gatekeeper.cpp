@@ -221,6 +221,12 @@ void TBiancoGateKeeperManager::createModelData()
 	createModelDataArray(entry);
 }
 
+static inline TMarDirector* GateKeeperDirector()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
 TBGKMtxCalc::TBGKMtxCalc(TBiancoGateKeeper* owner)
     : M3UMtxCalcSIAnmBlendQuat(true)
     , mOwner(owner)
@@ -253,14 +259,15 @@ void TBGKMtxCalc::calc(u16 param_1)
 		MTXCopy(mtx, J3DSys::mCurrentMtx);
 	} else if (param_1 == 0) {
 		MtxPtr mtx = mOwner->getMActor()->getModel()->getAnmMtx(param_1);
-		if (!gpMarDirector->isDemoModeNow()) {
-			if (!gpMarDirector->isTalkModeNow()
+		JGeometry::TVec3<f32> diff;
+		if (!GateKeeperDirector()->isDemoModeNow()) {
+			if (!GateKeeperDirector()->isTalkModeNow()
 			    && (mOwner->getMActor()->checkCurBckFromIndex(0xB)
 			        || mOwner->getMActor()->checkCurBckFromIndex(0x12)
 			        || mOwner->getMActor()->checkCurBckFromIndex(0xF)
 			        || mOwner->getMActor()->checkCurBckFromIndex(0x10)
 			        || mOwner->getMActor()->checkCurBckFromIndex(0xC))) {
-				JGeometry::TVec3<f32> diff = SMS_GetMarioPos();
+				diff = SMS_GetMarioPos();
 				diff -= mOwner->mPosition;
 
 				f32 yaw2 = MsGetRotFromZaxisY(diff);
@@ -286,6 +293,10 @@ void TBGKMtxCalc::calc(u16 param_1)
 
 		f32 s = JMASin(mOwner->unk180);
 		f32 c = JMACos(mOwner->unk180);
+		// TODO: retail's `rot` sits at 0xdc, ours at 0xc8: the low pool
+		// under it is 20 bytes short.  The frame, `diff` and every
+		// conversion buffer are exact, so the residue is one unnamed
+		// pool item inside the MsWrap/MsAngleDiff/std::min expansion.
 		Mtx rot;
 		rot[0][0] = c;
 		rot[0][1] = 0.0f;
@@ -718,12 +729,6 @@ void TBiancoGateKeeper::controlCollision()
 	}
 	mHead->mVulnerable = FALSE;
 	mVulnerable        = FALSE;
-}
-
-static inline TMarDirector* GateKeeperDirector()
-{
-	TMarDirector* director = gpMarDirector;
-	return director;
 }
 
 static inline TBGKMtxCalc* GateKeeperMtxCalc(const TBiancoGateKeeper* p)
