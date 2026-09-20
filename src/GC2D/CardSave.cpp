@@ -46,6 +46,12 @@ static inline void setCenteredSizeWHh(TExPane* pane, s32 time, s32 target_w,
 	    (initH - initial_h) * 0.5f);
 }
 
+static inline J2DPane* cardSaveGetPane(TExPane* pane)
+{
+	J2DPane* p = pane->getPane();
+	return p;
+}
+
 static inline void setCenteredSizeWr(TExPane* pane, s32 time, s32 target_w,
                                      s32 target_h, s32 initial_w,
                                      s32 initial_h)
@@ -1389,15 +1395,15 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 {
 	s8 result = -1;
 
-	switch (unk10) {
+	switch (getUnk10()) {
 	case 0:
-		unk1BC->getPane()->show();
+		cardSaveGetPane(unk1BC)->show();
 		unk1BC->setCenteredSize(20, unk1C0.getWidth(), unk1C0.getHeight(), 0,
 		                        0);
 
 		unk204->hide();
-		setMessage(unk200, 0x200, 0x21);
-		setMessage(unk204, 0x200, 0x21);
+		setMessage(unk200, 0x200, 0x29);
+		setMessage(unk204, 0x200, 0x29);
 
 		unk1E8[0][1]->hide();
 		unk1D0[0][0]->hide();
@@ -1476,7 +1482,7 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		break;
 
 	case 2: {
-		s8 oldSelect = unk2E9;
+		s8 oldSelect = getUnk2E9();
 		u32 input    = unk270->mEnabledFrameMeaning;
 
 		if (input & 0x20) {
@@ -1492,26 +1498,26 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 			}
 		}
 
-		if (oldSelect != unk2E9) {
+		if (oldSelect != getUnk2E9()) {
 			gpMSound->startSoundSystemSE(0x481EU, 0, nullptr, 0);
 
 			unk1D0[oldSelect][0]->hide();
 			unk1D0[oldSelect][1]->hide();
-			unk1D0[unk2E9][0]->show();
-			unk1D0[unk2E9][1]->show();
+			unk1D0[getUnk2E9()][0]->show();
+			unk1D0[getUnk2E9()][1]->show();
 		}
 		break;
 	}
 
 	case 4:
-		unk1BC->setCenteredSize(20, 0, 0, unk1C0.getWidth(),
-		                        unk1C0.getHeight());
+		setCenteredSizeWr(unk1BC, 20, 0, 0, unk1C0.getWidth(),
+		                  unk1C0.getHeight());
 
 		unk1E8[0][1]->hide();
 		unk1E8[1][1]->hide();
 		unk1E8[2][1]->hide();
-		unk1D0[unk2E9][0]->hide();
-		unk1D0[unk2E9][1]->hide();
+		unk1D0[getUnk2E9()][0]->hide();
+		unk1D0[getUnk2E9()][1]->hide();
 
 		unk230[0]->hide();
 		unk230[1]->hide();
@@ -1533,14 +1539,14 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		break;
 
 	case 5:
-		if (unk2E9 == 0) {
+		if (getUnk2E9() == 0) {
 			unk310 = param_1;
-		} else if (unk2E9 == 1) {
+		} else if (getUnk2E9() == 1) {
 			unk310 = param_2;
 		} else {
 			unk310 = param_3;
 		}
-		result = unk2E9;
+		result = getUnk2E9();
 		break;
 	}
 
