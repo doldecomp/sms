@@ -1140,6 +1140,7 @@ config.libs = [
             PCHObject(NonMatching, "Enemy/emario.cpp"),
             PCHObject(NonMatching, "Enemy/enemy.cpp"),
             PCHObject(NonMatching, "Enemy/enemyAttachment.cpp"),
+            PCHObject(Matching, "Enemy/enemyinterp.cpp"),
             PCHObject(NonMatching, "Enemy/enemymanager.cpp"),
             PCHObject(NonMatching, "Enemy/enemyMario.cpp"),
             PCHObject(NonMatching, "Enemy/feetinv.cpp"),
