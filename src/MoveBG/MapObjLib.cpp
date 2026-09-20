@@ -114,13 +114,10 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
                                   f32 vertical_speed) const
 {
 	object->appear();
-	// TODO: 99.9%. Frame-exact; one `fadds` operand swap on
-	// `getPosition().y + y_offset` (catalog: commutative FPU ~ is
-	// register allocation). Raw `mPosition` matches the add and drops
-	// 0x10 of frame; a named `const TVec3& pos = getPosition()` is -8.
-	object->mPosition.set(getPosition().x, getPosition().y + y_offset,
+	object->mPosition.set(getPosition().x, mPosition.y + y_offset,
 	                      getPosition().z);
-	if (getMActor()) {
+	MActor* actor = getMActor();
+	if (actor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		object->mVelocity.set(mtx[0][2] * speed,
 		                      mtx[1][2] * speed + vertical_speed,
@@ -136,19 +133,17 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
 	}
 }
 
-// TODO: 99.75%, frame 0x80 against the ROM's 0x88. Binding the address of
-// mRotation at the `.y` read alone (batch 130) lands the frame exactly and
-// reaches 99.94%, but binding all three components, or a named
-// `const TVec3* rotation` local used for all three, is worse (99.8%), so the
-// measured lever is one arbitrary component of one read and is not the
-// original spelling. The missing 8 bytes are elsewhere.
+// TODO: 99.9%, frame-exact. The else-branch Mtx sits 8 bytes low
+// (0x2c vs 0x34); a named getRotation() ref moves it to 0x30. Same
+// allocation-order residue as TMapObjTurn::touchWater.
 void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
                                            const JGeometry::TVec3<f32>& point,
                                            f32 speed, f32 y_speed) const
 {
 	object->appear();
 	object->mPosition.set(point);
-	if (getMActor()) {
+	MActor* actor = getMActor();
+	if (actor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
@@ -796,20 +791,18 @@ f32 TMapObjBase::getDistanceXZ(const JGeometry::TVec3<f32>& param_1) const
 	return lenSq;
 }
 
+// +4 pool so MsSqrtf's volatile lands at 0x14 (raw mYOffset leaves it at 0x10).
+static inline f32 mapObjLibHeightOffset(const TMapObjBase* p)
+{
+	return p->getObjCollisionHeightOffset();
+}
+
 f32 TMapObjBase::getDistance(const JGeometry::TVec3<f32>& param_1) const
 {
-	f32 dx    = param_1.x - mPosition.x;
-	f32 dy    = param_1.y - (mPosition.y - mYOffset);
-	f32 dz    = param_1.z - mPosition.z;
-	f32 lenSq = dx * dx + dy * dy + dz * dz;
-	if (lenSq > 0.0f) {
-		f64 guess = __frsqrte((f64)lenSq);
-		volatile f32 y
-		    = (f32)((f64)lenSq
-		            * (0.5 * guess * -((f64)lenSq * (guess * guess) - 3.0)));
-		lenSq = y;
-	}
-	return lenSq;
+	f32 dx = param_1.x - mPosition.x;
+	f32 dy = param_1.y - (mPosition.y - mapObjLibHeightOffset(this));
+	f32 dz = param_1.z - mPosition.z;
+	return MsSqrtf(dx * dx + dy * dy + dz * dz);
 }
 
 int TMapObjBase::getWaterID(THitActor* actor)
@@ -1062,6 +1055,10 @@ TMapObjMessenger::TMapObjMessenger(const char* name)
 {
 }
 
+// TODO: 99.9%, frame-exact. Remaining: `throwY += 200.0f` writes the
+// `fadds` into throwY's FPR (retail into the 200.0f literal's); else-branch
+// Mtx 8 bytes low (same class as throwObjToFrontFromPoint). getRotation()
+// there swaps this/obj (r30/r31).
 u32 TMapObjTurn::touchWater(THitActor*)
 {
 	if (fabsf(unk158) < unk164) {
@@ -1080,8 +1077,12 @@ u32 TMapObjTurn::touchWater(THitActor*)
 			ySpeed = mAppearYSpeed;
 			speed  = mAppearSpeed;
 			obj->appear();
-			obj->mPosition.set(mPosition.x, mPosition.y + 200.0f, mPosition.z);
-			if (mMActor) {
+			f32 throwY = mPosition.y;
+			f32 throwZ = mPosition.z;
+			throwY += 200.0f;
+			obj->mPosition.set(mPosition.x, throwY, throwZ);
+			MActor* actor = getMActor();
+			if (actor) {
 				MtxPtr mtx = getModel()->getAnmMtx(0);
 				obj->mVelocity.set(mtx[0][2] * speed,
 				                   mtx[1][2] * speed + ySpeed,
