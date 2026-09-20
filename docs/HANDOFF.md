@@ -77,7 +77,7 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grpvn` WaterGun ([WaterGun](2f0fd56b-1730-4240-82a2-5a72bb758094)): +1 exact. Game **54.69→54.70**.
 - Landed `grpvo` MarioSpecial ([MarioSpecial](29a33d37-f740-4864-84e4-4ef8b6f4db7d)): +2 exact (`barWait`, `barClimb`) via /512 + named holder-y. Unit **17.26→26.00**. All **62.53→62.59**, Game **54.70→54.76**, exact **11,395→11,397**. Park specMain/pulling/getOnWirePosAngle/wireMove.
 - Landed `grpvp` MSoundSE ([MSoundSE](d4b0dd3d-d95d-4f7d-bd30-4ae7d3f831c1)): +1 exact (`getRandomID` via TU-local `msWeightAt`); construct wait/shift immediates restored. Unit **15.95→21.16**. All **62.59→62.60**, Game **54.76→54.78**, exact **11,397→11,398**. Park construct/sinit frames, randPlay JAIActor, MSRand* ctors, getRandVol FPR.
-- Running: `grpvq` / bgtentacle ([bgtentacle](26e6d697-0ea8-46d1-9760-2aab04d18b89)); `grpvr` / launcher (spawning).
+- Running: `grpvq` / bgtentacle ([bgtentacle](26e6d697-0ea8-46d1-9760-2aab04d18b89)); `grpvr` / launcher (agent id filled after spawn).
 - Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers, BathWater leftovers, MarNameRefGen leftovers, Guide leftovers, ShadowUtil leftovers, WaterGun leftovers, MarioSpecial leftovers, MSoundSE leftovers.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
