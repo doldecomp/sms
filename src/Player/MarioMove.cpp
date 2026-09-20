@@ -697,7 +697,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 u32 TMario::setStatusToRunning(u32 status, u32)
 {
-	f32 mag = mIntendedMag <= 8.0f ? 8.0f : mIntendedMag;
+	f32 mag = mIntendedMag <= 8.0f ? mIntendedMag : 8.0f;
 
 	switch (status) {
 	case MARIO_STATUS_RUN:
