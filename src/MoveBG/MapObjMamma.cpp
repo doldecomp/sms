@@ -340,10 +340,12 @@ void TSandBombBase::explode()
 	JGeometry::TVec3<f32> effectScale(mExplodeEffectScale,
 	                                  mExplodeEffectScale,
 	                                  mExplodeEffectScale);
-	emitter->setGlobalParticleScale(effectScale);
-	emitter->setGlobalDynamicsScale(effectScale);
+	bool inDemo = true;
+	emitter->setGlobalScale(effectScale);
 
 	if (SMSGetMarDirector()->unk124 != 3 && SMSGetMarDirector()->unk124 != 4)
+		inDemo = false;
+	if (!inDemo)
 		gpCameraShake->startShake(CAM_SHAKE_MODE_SAND_BOMB_APPEAR, 1.0f);
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBOMB_BANG, &mPosition, 0, nullptr,
@@ -553,10 +555,12 @@ void TSandCastle::explode()
 	JGeometry::TVec3<f32> effectScale(mExplodeEffectScale,
 	                                  mExplodeEffectScale,
 	                                  mExplodeEffectScale);
-	emitter->setGlobalParticleScale(effectScale);
-	emitter->setGlobalDynamicsScale(effectScale);
+	bool inDemo = true;
+	emitter->setGlobalScale(effectScale);
 
 	if (SMSGetMarDirector()->unk124 != 3 && SMSGetMarDirector()->unk124 != 4)
+		inDemo = false;
+	if (!inDemo)
 		gpCameraShake->startShake(CAM_SHAKE_MODE_SAND_BOMB_APPEAR, 1.0f);
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SANDBOMB_BANG, &mPosition, 0, nullptr,
