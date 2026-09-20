@@ -449,7 +449,8 @@ void TSpineEnemy::updateStayCount(f32) { }
 
 BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 {
-	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
+	const TPathNode& node     = getUnkF4();
+	JGeometry::TVec3<f32> tmp = node.getPoint();
 	tmp -= mPosition;
 
 	f32 rot = MsAngleDiff(MsGetRotFromZaxisY(tmp), mRotation.y);
