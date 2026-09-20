@@ -66,6 +66,9 @@ extern u8* gpSetupThreadStack;
 
 void TMenuDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 {
+	// TODO: 99.8%, instruction-exact; frame 0x40 vs retail 0x58. A caller-side
+	// 0x18 unused local lands the frame size but leaves the inlined
+	// TDStageGroup temps 0xc low — residue is inside the inlined ctor block.
 	unk14         = new JDrama::TDStageGroup(param_1);
 	unk2C         = param_2;
 	unk2C->mFlags = 1;
@@ -76,6 +79,9 @@ void TMenuDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 
 int TMenuDirector::rsetup()
 {
+	// TODO: 99.8%, instruction-exact after the i==17/18 goto fallthrough;
+	// frame 0x298 vs retail 0x2f0 (0x58). Same list-insert / ViewObj inlined
+	// temp pool class as setup.
 	void* arcBlob      = SMSLoadArchive("/data/title.arc", nullptr, 0, nullptr);
 	JKRMemArchive* arc = new JKRMemArchive;
 	arc->mountFixed(arcBlob, MBF_0);
@@ -91,7 +97,7 @@ int TMenuDirector::rsetup()
 	unk3C = new J2DSetScreen("title.blo", arc);
 
 	if (!unk3C)
-		return 0;
+		return 1;
 
 	group2d->getChildren().push_back(new TMenuBase(unk3C));
 
@@ -131,9 +137,12 @@ int TMenuDirector::rsetup()
 			char acStack_40[22];
 			if (message)
 				snprintf(acStack_40, 22, "%02d %s", i, message);
-			else if (i == 17 || i == 18)
+			else if (i == 17) {
+				goto show_movie;
+			} else if (i == 18) {
+			show_movie:
 				snprintf(acStack_40, 22, "show movie %d", i == 17 ? 1 : 2);
-			else
+			} else
 				snprintf(acStack_40, 22, "%02d No Data            ", i);
 
 			if (i < 9) {
@@ -180,9 +189,9 @@ int TMenuDirector::direct()
 		void* res;
 		OSJoinThread(&gSetupThread, &res);
 		gpApplication.mFader->startFadeinT(0.25f);
-		if (TFlagManager::getInstance()->getBool(0x30007)) {
+		if (!TFlagManager::getInstance()->getBool(0x30007)) {
 			TFlagManager::getInstance()->setBool(true, 0x30007);
-			gpMSound->loadWave(MS_WAVE_UNK128);
+			gpMSound->loadWave(MS_WAVE_DEFAULT);
 		}
 		unk50 = true;
 	}
@@ -196,7 +205,7 @@ int TMenuDirector::direct()
 		if (unk40->checkFlag(0x1)) {
 			if (!(unk2C->getButton() & JUTGamePad::X)) {
 				TFlagManager::getInstance()->firstStart();
-				for (u8 i = 0; i < 30; ++i)
+				for (u8 i = 0; i < 120; ++i)
 					TFlagManager::getInstance()->setShineFlag(i);
 				for (u32 i = 0x10366; i < 0x103B4; ++i)
 					TFlagManager::getInstance()->setBool(true, i);
@@ -207,7 +216,8 @@ int TMenuDirector::direct()
 
 			unk38->setString(unk40->unk30[unk40->unk2C]->getStringPtr());
 
-			if (unk40->unk2C == 6) {
+			int stage = unk40->unk2C;
+			if (stage == 6) {
 				for (int i = 0; i < 10; ++i) {
 					int code = i + 'st_1';
 					if (i == 9)
@@ -231,7 +241,7 @@ int TMenuDirector::direct()
 				         22, "Casino 1");
 				snprintf(((J2DTextBox*)unk3C->search('st_k'))->getStringPtr(),
 				         22, "Boss");
-			} else if (unk40->unk2C == 5) {
+			} else if (stage == 5) {
 				for (int i = 0; i < 10; ++i) {
 					int code = i + 'st_1';
 					if (i == 9)
@@ -258,7 +268,7 @@ int TMenuDirector::direct()
 				         22, "Demo 0");
 				snprintf(((J2DTextBox*)unk3C->search('st_k'))->getStringPtr(),
 				         22, "Demo 1");
-			} else if (unk40->unk2C == 8) {
+			} else if (stage == 8) {
 				for (int i = 0; i < 10; ++i) {
 					int code = i + 'st_1';
 					if (i == 9)
@@ -271,7 +281,10 @@ int TMenuDirector::direct()
 					if (i == 9)
 						snprintf(box->getStringPtr(), 22, "Boss");
 				}
-			} else if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12) {
+			} else if (stage == 0x11) {
+				goto movie_names;
+			} else if (stage == 0x12) {
+			movie_names:
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)
@@ -329,7 +342,10 @@ int TMenuDirector::direct()
 			unk18 = 2;
 			gpApplication.mFader->startFadeoutT(0.25f);
 			TGameSequence nextArea;
-			nextArea.set(unk48, unk4C, 0);
+			// TODO: setNextArea / TFlagT copy-ctor temps — same open class as
+			// MarDirectorDirect::decideNextStage (in-class TFlagT copy is
+			// elided; retail wants the weak copy-ctor bl and a 0xa8 frame).
+			nextArea.set(unk48, unk4C);
 			gpApplication.setNextArea(nextArea);
 		} else if (unk44->checkFlag(0x2)) {
 			unk18 = 0;
@@ -341,10 +357,14 @@ int TMenuDirector::direct()
 
 	case 2:
 		if (gpApplication.mFader->isFullyFadedOut()
-		    && gpMSound->checkWaveOnAram(MS_WAVE_UNK128)) {
-			if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12)
+		    && gpMSound->checkWaveOnAram(MS_WAVE_DEFAULT)) {
+			int stage = unk40->unk2C;
+			if (stage == 0x11) {
+				goto movie_state;
+			} else if (stage == 0x12) {
+			movie_state:
 				uVar13 = TApplication::APP_STATE_MOVIE;
-			else
+			} else
 				uVar13 = TApplication::APP_STATE_GAMEPLAY;
 		}
 		break;
@@ -364,6 +384,10 @@ void TMenuDirector::setFixedStageValue()
 	unk4C = unk44->unk2C;
 	int local_30[]
 	    = { 0, 0x14, 0x1c, 0x1e, 0x20, 0x22, 0x28, 0, 0x2a, 0x2c, 0x2e };
+	// Declared but unused; the original reserves 0x1c below the remap table
+	// (frame 0x58). Size recovered from the frame gap; name inferred from
+	// this TU's snprintf label buffers.
+	char unusedLabel[0x1c];
 
 	if ((unk48 == 0x11) || (unk48 == 0x12)) {
 		int movie = unk4C;
