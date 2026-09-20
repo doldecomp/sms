@@ -63,9 +63,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grptd` bosspakkun ([bosspakkun unit ladder](0e9b4b32-6d06-465d-b58b-51038744e68f)): +3 exact; 46.95 -> 51.79; data 100.
 - Landed `grpte` igaiga ([igaiga unit ladder](ec1b7d25-9431-4196-9cd2-b2f652d3353c)): +3 exact; 50.42 -> 56.20; data 100.
 - Landed `grptf` bossManta ([bossManta unit ladder](12ccfdbd-f20d-4d11-9663-348f4fe456a6)): +0 exact; `init` frame-exact.
-- Landed `grptg` gesso ([gesso unit ladder](02703244-19d4-4f7b-b3d4-937ccf3f4448)): +1 exact (`getNowGravity`); Turn frame landed; accepted `setPolluteGoal` fuzzy 99.94 -> 99.71 (wrong dest arg fixed to `mPolluteVelocity`). Unit 69.86 -> 70.02; data 100.
-- Total ~**61.32%** matched, game **53.16%**, **~11,318** exact, linked **492 / 732**.
-- Running: `grpth` / fireWanwan ([fireWanwan unit ladder](b05dce47-5008-47cf-89f8-809c722e2605)). Refill after grptg remove.
+- Landed `grptg` gesso ([gesso unit ladder](02703244-19d4-4f7b-b3d4-937ccf3f4448)): +1 exact; 69.86 -> 70.02; data 100.
+- Landed `grpth` fireWanwan ([fireWanwan unit ladder](b05dce47-5008-47cf-89f8-809c722e2605)): +2 exact; 41.99 -> 45.08; data 100.
+- Landed `grpti` hamukuri ([hamukuri unit ladder](fb157349-4ee4-4772-b0c8-52cb9ffdef7e)): +2 exact (createModelDataArray, DoroHaneHitWater); also fixed dango `calcRootMatrix` translation `[i][3]`; 70.01 -> 71.08; data 100.
+- Total: **61.37%** matched, game **53.22%**, linked **492 / 732**.
+- Running: `grptj` / chuuhana ([chuuhana unit ladder](41923f14-a48a-435e-9cfc-0e81b25021f5)). Refill: bosstelesa.
 - Stale unlanded: grpfg bosseel, grpfh WaterGun.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
