@@ -794,12 +794,24 @@ void TFireWanwan::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("wanwan.bmd", 0);
 }
 
+// TODO: TFireWanwan::unk194 and unk238 want accessors in FireWanwan.hpp;
+// parked here as TU-locals until a header batch adds them.
+static inline TFireWanwanTailHit* FireWanwanGetTailHit(const TFireWanwan* p)
+{
+	return p->unk194;
+}
+
+static inline TLerpControl* FireWanwanGetLerp(const TFireWanwan* p)
+{
+	return p->unk238;
+}
+
 void TFireWanwan::reset()
 {
 	mPosition = mInitialPosition;
 
-	unk194->mIsOnFire = true;
-	unk124->reset();
+	FireWanwanGetTailHit(this)->mIsOnFire = true;
+	getTracer()->reset();
 	goToShortestNextGraphNode();
 	TSmallEnemy::reset();
 	mPolluteTimer = 0;
@@ -807,11 +819,11 @@ void TFireWanwan::reset()
 	TFireWanwanSaveLoadParams* params
 	    = (TFireWanwanSaveLoadParams*)getSaveParam();
 	mMarchSpeed = params->mMarchSpeed.get();
-	mSpine->reset();
-	mSpine->setDefaultNext();
-	unk238->setCurrent(cBodyColorOnFire);
-	unk238->init(cBodyColorOnFire, unk238->getCurrent(), 1.0f);
-	unk194->unkBC->init(cBodyColorOnFire, unk194->unkBC->getCurrent(), 1.0f);
+	getSpine()->reset();
+	getSpine()->setDefaultNext();
+	FireWanwanGetLerp(this)->setCurrent(cBodyColorOnFire);
+	FireWanwanGetLerp(this)->init(cBodyColorOnFire, FireWanwanGetLerp(this)->getCurrent(), 1.0f);
+	FireWanwanGetTailHit(this)->unkBC->init(cBodyColorOnFire, FireWanwanGetTailHit(this)->unkBC->getCurrent(), 1.0f);
 }
 
 void TFireWanwan::initParticle()
