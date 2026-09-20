@@ -387,7 +387,9 @@ void TApplication::initialize_nlogoAfter()
 
 	gpRomFont = nullptr;
 	((JKRExpHeap*)mHeap)->destroy();
-	JKRGetRootHeap()->getSize(spGameHeapBlock);
+	// destroy() on a create(void*, ...)-style heap (mIsRoot) does not
+	// release the backing block; retail vcalls slot 0x10 (free).
+	JKRGetRootHeap()->free(spGameHeapBlock);
 
 	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
 	gpCardManager->mIcons
@@ -626,14 +628,40 @@ void TApplication::proc()
 	}
 }
 
+// Three forwarding levels over only the second crTimeAry() so that site
+// sits at depth 5 and retail's `bl crTimeAry` appears; the first append
+// still expands (codegen-tells.md Header round 40).
+static inline TTimeArray* ApplicationCrTimeAry3(TTimeRec* inst)
+{
+	return inst->crTimeAry();
+}
+
+static inline TTimeArray* ApplicationCrTimeAry2(TTimeRec* inst)
+{
+	return ApplicationCrTimeAry3(inst);
+}
+
+static inline TTimeArray* ApplicationCrTimeAry1(TTimeRec* inst)
+{
+	return ApplicationCrTimeAry2(inst);
+}
+
+static inline void ApplicationStartTimerTwice(u32 tick, u32 param)
+{
+	TTimeRec* inst = TTimeRec::_instance;
+	if (!inst)
+		return;
+	inst->crTimeAry()[0].append(tick, param);
+	ApplicationCrTimeAry1(inst)[1].append(tick, param);
+}
+
 int TApplication::gameLoop()
 {
 	u32 nextState = APP_STATE_DEFAULT;
 	while (nextState <= APP_STATE_DEFAULT) {
 		mDisplay->startRendering();
 
-		// TODO: TimeRec BS
-		TTimeRec::startTimerTwice(mDisplay->unk60->mLastRetraceTime, 0);
+		ApplicationStartTimerTwice(mDisplay->unk60->mLastRetraceTime, 0);
 		TTimeRec::snapGxTimeStatic(0);
 
 		TMarioGamePad::read();
@@ -684,9 +712,9 @@ int TApplication::gameLoop()
 			GXSetViewport(0.0f, 0.0f, mode.fbWidth, mode.efbHeight, 0.0f,
 			              1.0f);
 			GXSetScissor(0, 0, mode.fbWidth, mode.efbHeight);
-			Mtx afStack_1ac;
-			C_MTXOrtho(afStack_1ac, 0.0f, (f32)mode.fbWidth, 0.0f,
-			           (f32)mode.efbHeight, -1.0f, 1.0f);
+			Mtx44 afStack_1ac;
+			C_MTXOrtho(afStack_1ac, 0.0f, (f32)mode.efbHeight, 0.0f,
+			           (f32)mode.fbWidth, -1.0f, 1.0f);
 			GXSetProjection(afStack_1ac, GX_ORTHOGRAPHIC);
 			mFader->update();
 			mFader->draw(
@@ -782,7 +810,7 @@ int TApplication::drawDVDErr()
 
 		GXRenderModeObj& mode = video->mNextRenderMode;
 		GXSetViewport(0.0f, 0.0f, mode.fbWidth, mode.efbHeight, 0.0f, 1.0f);
-		Mtx afStack_260;
+		Mtx44 afStack_260;
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
 		MTXIdentity(afStack_260);
@@ -822,16 +850,19 @@ int TApplication::drawDVDErr()
 		if (gpSystemFont != nullptr)
 			font = gpSystemFont;
 		J2DPrint print(font, 0);
-		// TODO: retail parks both colours in one 8-byte `@2485`
-		// (ffff00ff ffff00ff) and copies it through two by-value parameter
-		// temporaries before landing on unk44/unk48, so the two assignments
-		// were one call taking a colour pair by value. Our two separate
-		// compound literals give two 4-byte objects instead.
+		// TODO: frame is exact (0x318) after Mtx44; the J2DPrint/Mtx44
+		// block sits 4 bytes low (0x50/0xb4 vs 0x54/0xb8) and the
+		// `(600-width)*0.5` FPRs are swapped (retail 600 in f0, 0.5 in f2).
+		// Named `display`, `getVideo()`, and a caller-side pointer local
+		// all grow the frame. Need a +4 low-region temp that does not.
 		J2DPrint::TColorPair colors
 		    = { { 0xff, 0xff, 0, 0xff }, { 0xff, 0xff, 0, 0xff } };
 		print.setEscapeColors(colors);
 		f32 msgWidth = print.getWidth(message);
-		print.print((600.0f - msgWidth) / 2.0f, 230, message);
+		f32 x        = 600.0f;
+		x -= msgWidth;
+		x *= 0.5f;
+		print.print(x, 230, message);
 	}
 
 	return error;
