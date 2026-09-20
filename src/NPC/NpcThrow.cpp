@@ -8,6 +8,7 @@
 void TNpcThrow::throwMario(THitActor* param_1)
 {
 	JGeometry::TVec3<f32> local_14;
+	f32 trash;
 	if (unk4 >= 90.0f) {
 		local_14.set(0.0f, 1.0f, 0.0f);
 	} else if (unk4 <= 0.0f) {
