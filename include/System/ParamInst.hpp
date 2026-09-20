@@ -34,6 +34,12 @@ public:
 	// specialisation may not change the return type.
 	const T& get() const { return value; }
 
+	// Fabricated, but measured: the extra inline level around the assignment
+	// is the 4 bytes of low pool TMario::checkWet's named block needs
+	// (research 312), and `value = param` keeps retail's word copy where
+	// `value.set(param)` would spell it as three float copies.
+	void set(const T& param) { value = param; }
+
 	T value;
 };
 

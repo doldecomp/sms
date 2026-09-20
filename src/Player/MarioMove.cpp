@@ -2468,17 +2468,6 @@ static inline TModelWaterManager* MarioMoveWaterManager()
 	return manager;
 }
 
-// TODO: shared-header need, parked TU-local: the extra inline level around the
-// assignment is 4 bytes of low pool that checkWet's named block needs, and the
-// honest home for it is a `void TParamT<T>::set(const T&)` beside `get()` in
-// System/ParamInst.hpp. Written here it keeps retail's word copy, where
-// `value.set(v)` would turn it into three float copies.
-static inline void MarioMoveSetPos(TParamT<JGeometry::TVec3<f32> >& p,
-                                   const JGeometry::TVec3<f32>& v)
-{
-	p.value = v;
-}
-
 static inline TWaterEmitInfo* MarioMoveWetEmitInfo(const TMario* p)
 {
 	TWaterEmitInfo* info = p->unk158;
@@ -2515,7 +2504,7 @@ void TMario::checkWet()
 	if (mWetWaterParticleTimer & 7)
 		return;
 
-	MarioMoveSetPos(MarioMoveWetEmitInfo(this)->mPos, mPosition);
+	MarioMoveWetEmitInfo(this)->mPos.set(mPosition);
 	MarioMoveWetEmitInfo(this)->mPos.value.y += 5.0f;
 	// Why??? Are we missing THAT many inlines?
 	(Vec&)unk158->mV.value
