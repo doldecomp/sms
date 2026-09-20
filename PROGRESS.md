@@ -11,12 +11,12 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 53.92% | 12.06% | 166 / 385 |
+| Game | 53.93% | 12.06% | 166 / 385 |
 | JSystem | 90.24% | 75.06% | 180 / 198 |
 | SDK | 95.71% | 95.54% | 146 / 149 |
-| All | 61.92% | 26.71% | 492 / 732 |
+| All | 61.93% | 26.71% | 492 / 732 |
 
-11,371 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,372 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
 ## What recent batches have done
 
@@ -43,7 +43,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `Enemy/bosstelesa` | 93.17% | 74 / 118 |
 | `Enemy/bosspakkun` | 98.62% | 92 / 129 |
 | `Enemy/bossgesso` | 95.79% | 57 / 88 |
-| `Enemy/hamukuri` | 98.94% | 174 / 226 |
+| `Enemy/hamukuri` | 99.89% | 207 / 226 |
 | `GC2D/SelectShine2` | 94.11% | 8 / 13 |
 | `GC2D/Guide` | 90.34% | 6 / 17 |
 | `GC2D/Option` | 99.08% | 24 / 42 |

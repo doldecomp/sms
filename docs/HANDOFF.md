@@ -59,11 +59,12 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural then +2), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte (+3 then +0 structural x2), bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 (+0 structural then UNUSED restore), EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer (+1 then +0 structural), MapObjBall +0 structural, Option (+1 then +1), elecNokonoko +3, hanasambo +2.
-- Landed `grpuo` MapObjMonte ([MapObjMonte unit ladder](020bb894-1193-4262-ad3e-cd2161837611)): `drawOneRope` frame exact via director binder (99.1→99.3); unit fuzzy 99.89→99.90; +0 exact; All stays **61.92%**.
-- Landed Option +1 (`setType`); All **61.91→61.92**, exact **11,370→11,371**.
-- Total: **61.92%** matched, game **53.92%**, linked **492 / 732**, exact **11,371**.
-- Running: `grupp` / hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)). Refill: gesso.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural then +2), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2 then +1), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte (+3 then +0 structural x2 then drawOneRope frame), bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 (+0 structural then UNUSED restore), EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer (+1 then +0 structural), MapObjBall +0 structural, Option (+1 then +1), elecNokonoko +3, hanasambo +2.
+- Landed `grupp` hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)): `THamuKuri::isHitValid` exact via inlined `HamukuriSerialKill` binder; `generateBody` frame exact (TNerveBase `bl` still open). All **61.92→61.93**, exact **11,371→11,372**.
+- Landed `grpuo` MapObjMonte drawOneRope frame; Option +1 (`setType`).
+- Total: **61.93%** matched, game **53.93%**, linked **492 / 732**, exact **11,372**.
+- Running: `grpuq` / gesso ([gesso unit ladder](de17d3e6-08d8-4bc0-b954-db954c664a34)). Refill: fireWanwan.
+- Do not re-queue bosseel without binder/`TVector::begin()` header. hamukuri `generateBody` TNerveBase `bl` is per-site; skip without new lever.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
