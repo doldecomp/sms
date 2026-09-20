@@ -1881,7 +1881,12 @@ static inline TBossEelEye* BosseelShedEye(const TBossEel* p, s32 i)
 // TNerveBossEelSleepOnBottom (100 -> 41.1). The body is 13 statements against a budget of 14; a
 // named `bool toggle` plus a named TBossEelEye* for the two BosseelEye() reads
 // is the +2 that reaches the floor -- the callers then stay exact -- but the
-// body itself drops to 91.0, so one of the two locals is not byte-free.
+// body itself drops to 91.0. Retail's shape for the second is a *reference*
+// binding, not a named pointer: `TBossEelEye*& tearEye = mEyes[eyeIndex];`
+// gives retail's `lwzu r3, 0x15c(r29)` plus a reload through r29 and takes the
+// body to 97.5 instruction-near, but drops the frame to 0x30 against retail's
+// 0x58 because it also drops the two BosseelEye()/BosseelShedEye() forks that
+// carry the pool. A reference-returning fork over mEyes[i] is the open lead.
 #pragma dont_inline on
 void TBossEel::forceShedTears(bool rearEyes)
 {
