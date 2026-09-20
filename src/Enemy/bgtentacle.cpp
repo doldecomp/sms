@@ -1137,7 +1137,7 @@ void TBGTentacle::decideOwnState()
 		break;
 
 	case 5: {
-		JGeometry::TVec3<f32> delta = getLastNode()->getPosition();
+		JGeometry::TVec3<f32> delta = mNodes[mNodeNum - 1].getPosition();
 		delta -= mOwner->getPosition();
 		f32 rot = MsGetRotFromZaxisY(delta);
 		if (abs(MsAngleDiff(mOwner->getRotation().y, rot)) > 45.0f) {
