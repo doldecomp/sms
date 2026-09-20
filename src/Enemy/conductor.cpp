@@ -94,11 +94,15 @@ void TConductor::registerEnemyInfoTable(TStageEnemyInfoTable* param_1)
 
 void TConductor::init()
 {
-	JGadget::TList<TEnemyManager*>::iterator it, e;
-	for (it = unk20.begin(), e = unk20.end(); it != e; ++it)
-		if (!(*it)->search("ヒノクリ２マネージャー")
-		    && !(*it)->search("ボスゲッソーマネージャー"))
-			(*it)->createEnemies((*it)->getCapacity());
+	for (JGadget::TList<TEnemyManager*>::iterator it = unk20.begin(),
+	                                              e  = unk20.end();
+	     it != e; ++it) {
+		JDrama::TNameRef* hinokuri = (*it)->search("ヒノクリ２マネージャー");
+		if (!hinokuri) {
+			if (!(*it)->search("ボスゲッソーマネージャー"))
+				(*it)->createEnemies((*it)->getCapacity());
+		}
+	}
 
 	unkF8 = (TAreaCylinderManager*)search("ナメクリ出現エリアマネージャー");
 }
@@ -117,8 +121,9 @@ TLiveManager* TConductor::getManagerByName(const char* name)
 {
 	u16 key = JDrama::TNameRef::calcKeyCode(name);
 
-	JGadget::TList<TLiveManager*>::iterator it, e;
-	for (it = unk10.begin(), e = unk10.end(); it != e; ++it)
+	for (JGadget::TList<TLiveManager*>::iterator it = unk10.begin(),
+	                                             e  = unk10.end();
+	     it != e; ++it)
 		if ((*it)->searchF(key, name))
 			return *it;
 
@@ -129,6 +134,9 @@ void TConductor::polluterExterminated() { }
 
 BOOL TConductor::isBossDefeated()
 {
+	// TODO: retail's pivot is cmpwi 2 / cmpwi 4 and sends every map
+	// except 3 to the hinokuri arm. `default:` next to `case 2:` folds
+	// that tree to a single cmpwi 3 and costs ~3%.
 	switch (gpMarDirector->mMap) {
 	case 2: {
 		TLiveManager* mgr = getManagerByName("ヒノクリ２マネージャー");
@@ -242,8 +250,9 @@ TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
                                    f32 param_2)
 {
-	JGadget::TList<TEnemyManager*>::iterator it, e;
-	for (it = unk20.begin(), e = unk20.end(); it != e; ++it) {
+	for (JGadget::TList<TEnemyManager*>::iterator it = unk20.begin(),
+	                                              e  = unk20.end();
+	     it != e; ++it) {
 		if ((*it)->search("ボスワンワンマネージャー") == nullptr)
 			(*it)->killChildrenWithin(param_1, param_2);
 	}
@@ -271,8 +280,9 @@ void TConductor::genEnemyFromPollution()
 		return;
 
 	JGeometry::TVec3<f32> targetPos = *gpMarioPos;
-	f32 r                           = MsRandF(unk84.mGenerateRadiusMin.get(),
-	                                          unk84.mGenerateRadiusMax.get());
+	f32 minR                        = unk84.mGenerateRadiusMin.get();
+	f32 maxR                        = unk84.mGenerateRadiusMax.get();
+	f32 r                           = MsRandF(minR, maxR);
 
 	f32 theta = MsRandF() * 360 * (65536.0f / 360.0f);
 	targetPos.x += r * JMASSin(theta);
@@ -305,9 +315,9 @@ void TConductor::genEnemyFromPollution()
 		return;
 
 	enemy->resetToPosition(targetPos);
-	enemy->moveObject();
+	enemy->calcRootMatrix();
 	if (enemy->getModel())
-		enemy->getModel()->entry();
+		enemy->getModel()->calc();
 }
 
 void TConductor::clipAloneActors(JDrama::TGraphics* param_1)
@@ -402,26 +412,31 @@ void TConductor::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	{
-		JGadget::TList<TGenerator*>::iterator it, e;
-		for (it = unk60.begin(), e = unk60.end(); it != e; ++it)
+		for (JGadget::TList<TGenerator*>::iterator it = unk60.begin(),
+		                                           e  = unk60.end();
+		     it != e; ++it)
 			(*it)->testPerform(cue, graphics);
 	}
 
 	{
-		JGadget::TList<JDrama::TViewObj*>::iterator it, e;
-		for (it = unk40.begin(), e = unk40.end(); it != e; ++it)
+		for (JGadget::TList<JDrama::TViewObj*>::iterator it = unk40.begin(),
+		                                                 e  = unk40.end();
+		     it != e; ++it)
 			(*it)->testPerform(cue, graphics);
 	}
 
 	{
-		JGadget::TList<TAreaCylinderManager*>::iterator it, e;
-		for (it = unk50.begin(), e = unk50.end(); it != e; ++it)
+		for (JGadget::TList<TAreaCylinderManager*>::iterator it
+		     = unk50.begin(),
+		     e = unk50.end();
+		     it != e; ++it)
 			(*it)->testPerform(cue, graphics);
 	}
 
 	if (cue & CUE_ENTRY) {
-		JGadget::TList<SDLModelData*>::iterator it, e;
-		for (it = unk70.begin(), e = unk70.end(); it != e; ++it)
+		for (JGadget::TList<SDLModelData*>::iterator it = unk70.begin(),
+		                                             e  = unk70.end();
+		     it != e; ++it)
 			(*it)->entrySDLModels();
 	}
 
