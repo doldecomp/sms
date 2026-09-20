@@ -182,6 +182,7 @@ void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk3B8->draw(&drawInfo, 1);
 		}
 	}
+	char trash[24];
 }
 
 JPABaseEmitter*
