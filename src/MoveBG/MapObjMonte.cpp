@@ -80,6 +80,7 @@ static inline TMarDirector* MapObjMonteMarDirector()
 
 // TODO: 99.3%. Frame is retail's 0x78 via MapObjMonteMarDirector (was
 // 0x10 short). Leftover is volatile colouring of top.y (f4 vs f2).
+// A by-value top.y fork is +0x10 and swaps the hookY fadds operands.
 void THangingBridgeBoard::drawOneRope(const JGeometry::TVec3<f32>& top) const
 {
 	f32 hookY  = top.y + THangingBridge::mRopeHeight;
