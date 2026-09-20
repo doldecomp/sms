@@ -108,13 +108,13 @@ void TSelectGrad::setStageColor(u8 stage)
 	}
 }
 
-// TODO: 26 slot/register differences left. The unnamed `(GXColor)` argument
-// temporary is at 0x50/0x54 in retail, i.e. *above* the scratch Mtx at 0x20,
-// while ours sits below it at 0x1c/0x20 with the Mtx at 0x28; naming the
-// colour costs two structural differences instead. Retail also shares one
-// `li r8, 0` for `nextCycle`, the loop counter and its scaled copy
-// (`addi r7, r8, 0` / `addi r3, r8, 0`) where we emit two fresh `li`, and
-// hoists `mtctr` above them; three counter-declaration forms move nothing.
+// TODO: 98.4%. Residues are the known-open loop zero-reuse
+// (`li r8,0; addi r7/r3,r8,0` vs two fresh `li`, same class as
+// TEnemyManager::performShared) and the AmbColor temporary at 0x1c/0x20
+// below the Mtx instead of retail's 0x50/0x54 above it. Named GXColor,
+// midA reorder, and ambScratch declarations move nothing useful on the
+// colour slot. midB/midG/midR declaration order (assign R/G/B) fixed the
+// r28/r30 mid-channel swap.
 void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x2) {
@@ -213,10 +213,16 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		// only rgb); it is worth the last 8 bytes of frame with no
 		// instruction change, and a fourth channel next to the other
 		// three is the only local this function plausibly wanted.
-		u8 midA = (mBottomRightCol.a + mTopLeftCol.a) >> 1;
-		u8 midR = (mBottomRightCol.r + mTopLeftCol.r) >> 1;
-		u8 midG = (mBottomRightCol.g + mTopLeftCol.g) >> 1;
-		u8 midB = (mBottomRightCol.b + mTopLeftCol.b) >> 1;
+		// Declare midB before midR so callee-saved colouring is r28=R,
+		// r30=B; assign in retail's R/G/B schedule.
+		u8 midA;
+		u8 midB;
+		u8 midG;
+		u8 midR;
+		midA = (mBottomRightCol.a + mTopLeftCol.a) >> 1;
+		midR = (mBottomRightCol.r + mTopLeftCol.r) >> 1;
+		midG = (mBottomRightCol.g + mTopLeftCol.g) >> 1;
+		midB = (mBottomRightCol.b + mTopLeftCol.b) >> 1;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(0.0f, 16.0f, -100.0f);
@@ -306,7 +312,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		return;
 	}
 
-	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", nullptr);
+	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", pArch);
 	mLetterBoxTop    = new TExPane(mMenuScreen, 'msk1');
 	mLetterBoxBottom = new TExPane(mMenuScreen, 'msk2');
 	mStageName       = (J2DTextBox*)mMenuScreen->search('map');
@@ -324,7 +330,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 
 	for (s32 i = 0; i < 8; i++) {
 		char buf[254];
-		snprintf(buf, sizeof(buf), "/select/timg/sc_number_%d.bti", i);
+		snprintf(buf, sizeof(buf), "/select/timg/sc_number_%d.bti", i + 1);
 		mScenarioTex[i] = new JUTTexture((const ResTIMG*)JKRGetResource(buf));
 	}
 
