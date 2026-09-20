@@ -658,7 +658,7 @@ void THinokuri2::emitWaterParticle()
 		getJointTransByIndex(0x19, &position);
 	} else {
 		position = mPosition;
-		position.y += ((THino2Params*)getSaveParam())->mSLWaterEmitPos.get();
+		position.y += Hino2Params(this)->mSLWaterEmitPos.get();
 	}
 	unk19C->mPos.value = position;
 	gpModelWaterManager->emitRequest(*unk19C);
@@ -1413,6 +1413,18 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 	return false;
 }
 
+static inline THinokuri2* Hino2Self(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	return (THinokuri2*)body;
+}
+
+static inline TGraphTracer* Hino2Tracer(THinokuri2* self)
+{
+	TGraphTracer* tracer = self->unk124;
+	return tracer;
+}
+
 static inline TCameraShake* Hino2CameraShake()
 {
 	TCameraShake* shake = gpCameraShake;
@@ -1460,17 +1472,17 @@ DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
 
 DEFINE_NERVE(TNerveHino2Burst, TLiveActor)
 {
-	THinokuri2* self = (THinokuri2*)spine->getBody();
+	THinokuri2* self = Hino2Self(spine);
 
 	if (spine->getTime() == 0) {
 		self->changeBck(0xA);
 		self->emitWaterParticle();
 	}
 
-	if (self->getMActor()->curAnmEndsNext()) {
+	if (Hino2CurAnmEndsNext(self)) {
 		self->setLevel(self->mLevel - 1);
 		self->mHitPoints = self->calcHitPoints();
-		self->unk124->reset();
+		Hino2Tracer(self)->reset();
 		self->goToShortestNextGraphNode();
 		spine->reset();
 		spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
