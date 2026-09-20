@@ -284,14 +284,20 @@ void TCogwheel::calc()
 	mtx[2][3] = mPosition.z;
 }
 
+/// The load one bucket puts on the rope: its own weight, the water in it and
+/// whoever is standing on it.
+static inline f32 CogwheelScaleTotalWeight(const TCogwheelScale* scale)
+{
+	return scale->mRiderWeight + (scale->mWeight + scale->mWaterAmount);
+}
+
 void TCogwheel::control()
 {
 	TMapObjBase::control();
 
 	mPlateRopeLength += mSpeed;
 	mSpeed += mAccelRate
-	    * ((mPlate->mRiderWeight + (mPlate->mWeight + mPlate->mWaterAmount))
-	       - (mPot->mRiderWeight + (mPot->mWeight + mPot->mWaterAmount)));
+	    * (CogwheelScaleTotalWeight(mPlate) - CogwheelScaleTotalWeight(mPot));
 	mSpeed *= mSpeedDecay;
 
 	if (mPlateRopeLength < mUpperMargin && mSpeed < 0.0f)
@@ -300,15 +306,16 @@ void TCogwheel::control()
 	if (mPlateRopeLength > mRopeLength - mLowerMargin && mSpeed > 0.0f)
 		rebound();
 
-	mPlate->mPosition.y = mPosition.y - mPlateRopeLength + mPlate->mYOffset;
+	mPlate->mPosition.y = mPosition.y - mPlateRopeLength
+	    + mPlate->getObjCollisionHeightOffset();
 	mPot->mPosition.y   = mPosition.y - (mRopeLength - mPlateRopeLength);
 
 	f32 speed = fabsf(mSpeed);
 	if (speed > 0.01f) {
 		f32 volume = 10.0f * speed;
-		gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_MR_TSUBO_PULL, &mPosition,
-		                                  nullptr, volume, 0, 0, nullptr, 0,
-		                                  4);
+		MapObjMareGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_OBJ_MR_TSUBO_PULL, &mPosition, nullptr, volume, 0, 0,
+		    nullptr, 0, 4);
 	}
 }
 
