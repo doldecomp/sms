@@ -519,7 +519,8 @@ void TBathtub::tumble(f32 angle, f32 power)
 {
 	if (unk29A)
 		return;
-	f32 amount = power * 0.0001f;
+	f32 amount = power;
+	amount *= 0.0001f;
 	mAngleVel.add(JGeometry::TVec3<f32>(amount * JMACos(angle), 0.0f,
 	    amount * -JMASin(angle)));
 }
