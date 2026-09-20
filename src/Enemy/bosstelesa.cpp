@@ -2643,14 +2643,15 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 
-	if (boss->getMActor()->checkCurBckFromIndex(16)) {
+	if (BosstelesaGetMActor(boss)->checkCurBckFromIndex(16)) {
 		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			boss->unk350 = false;
 
 			u8 maxHitPoints = boss->getMaxHitPoints();
-			u8 alpha = TBossTelesa::mNormalAlpha
-			    + (maxHitPoints - boss->mHitPoints) * 30;
-			boss->unk34C.a = MsClamp<u8>(alpha, 0, 254);
+			boss->unk34C.a = MsClamp<u8>(
+			    TBossTelesa::mNormalAlpha
+			        + (maxHitPoints - boss->mHitPoints) * 30,
+			    0, 254);
 
 			return TRUE;
 		}
