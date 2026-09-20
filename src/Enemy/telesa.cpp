@@ -463,7 +463,6 @@ void TTelesa::calcRootMatrix()
 			getMActor()->getModel()
 			    ->getModelData()
 			    ->getMaterialNodePointer(i)
-			    ->getTexGenBlock()
 			    ->getTexMtx(2)
 			    ->setEffectMtx(afStack_94);
 		}
