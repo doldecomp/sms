@@ -24,10 +24,13 @@ void EnableMetroTRKInterrupts(void);
 
 extern unsigned long __DVDLongFileNameFlag;
 extern unsigned long __PADSpec;
-// TODO: other games don't seem to have AT_ADDRESS here,
-// but OSInit won't match without it. Am I doing smthing wrong?
+#ifdef VERSION_GMSP01
+extern unsigned char __ArenaLo[] AT_ADDRESS(0x80420D60);
+extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
+#else
 extern unsigned char __ArenaLo[] AT_ADDRESS(0x80426020);
 extern char _stack_addr[] AT_ADDRESS(0x80424008);
+#endif
 extern unsigned char __ArenaHi[];
 
 // dummy entry points to the OS Exception vector
@@ -243,8 +246,8 @@ void OSInit()
 
 	__DVDLongFileNameFlag = 1;
 
-	OSSetArenaLo((!BootInfo->arenaLo) ? &__ArenaLo : BootInfo->arenaLo);
-	if ((!BootInfo->arenaLo) && (BI2DebugFlag) && (*(u32*)BI2DebugFlag < 2)) {
+	OSSetArenaLo(!BootInfo->arenaLo ? &__ArenaLo : BootInfo->arenaLo);
+	if (!BootInfo->arenaLo && BI2DebugFlag && (*(u32*)BI2DebugFlag < 2)) {
 		OSSetArenaLo((void*)(((u32)(char*)&_stack_addr + 0x1F) & 0xFFFFFFE0));
 	}
 	OSSetArenaHi((!BootInfo->arenaHi) ? &__ArenaHi : BootInfo->arenaHi);
@@ -278,12 +281,10 @@ void OSInit()
 	OSReport("Console Type : ");
 
 	consoleType = OSGetConsoleType();
-	// work out what console type this corresponds to and report it
-	// consoleTypeSwitchHi = inputConsoleType & 0xF0000000;
-	if ((consoleType & 0x10000000) == OS_CONSOLE_RETAIL) { // check "first" byte
+	if ((consoleType & 0x10000000) == OS_CONSOLE_RETAIL) {
 		OSReport("Retail %d\n", consoleType);
 	} else {
-		switch (consoleType) { // if "first" byte is 2, check "the rest"
+		switch (consoleType) {
 		case OS_CONSOLE_EMULATOR:
 			OSReport("Mac Emulator\n");
 			break;
