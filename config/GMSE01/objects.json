@@ -253,6 +253,7 @@
   "Map/MapXlu.cpp",
   "Map/MarineSnow.cpp",
   "Map/PollutionAction.cpp",
+  "Map/PollutionCount.cpp",
   "Map/PollutionEvent.cpp",
   "Map/PollutionManager.cpp",
   "Map/PollutionObj.cpp",
