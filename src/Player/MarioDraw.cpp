@@ -498,8 +498,9 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		    && !gpMarioForCallBack->checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 
 			// TODO: retail shares one Mtx slot (0x88) across all three
-			// MsMtxSetRotRPH sites, i.e. one function-scope Mtx plus 0x60
-			// of low region below it; the conversion order of the second
+			// MsMtxSetRotRPH sites; hoisting a function-scope Mtx unifies
+			// the slot but drops the frame 0xe0 -> 0x80 (the 0x60 below
+			// 0x88 is still unaccounted). Conversion order of the second
 			// and fourth arguments is still reversed here.
 			Mtx transform;
 			MsMtxSetRotRPH(transform,
@@ -1210,32 +1211,31 @@ void TMario::initModel()
 	    "/mario/bmd/ma_hnd4r.bmd",
 	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 
-	// The ROM keeps each hand model's data in a register across the
-	// setResTIMG call and re-reads only getTexture(), so the model data was
-	// a named local.
-	J3DModelData* handData = mHandModels[0][0]->getModelData();
-	handData->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	// Retail loads mBodyModelData (the setResTIMG argument) before each
+	// hand model. Naming the hand data first reversed that pair.
+	const ResTIMG* bodyTimg = mBodyModelData->getTexture()->getResTIMG(0);
+	J3DModelData* handData  = mHandModels[0][0]->getModelData();
+	handData->getTexture()->setResTIMG(0, *bodyTimg);
 	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
+	bodyTimg = mBodyModelData->getTexture()->getResTIMG(0);
 	handData = mHandModels[0][1]->getModelData();
-	handData->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	handData->getTexture()->setResTIMG(0, *bodyTimg);
 	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
+	bodyTimg = mBodyModelData->getTexture()->getResTIMG(0);
 	handData = mHandModels[1][0]->getModelData();
-	handData->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	handData->getTexture()->setResTIMG(0, *bodyTimg);
 	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
+	bodyTimg = mBodyModelData->getTexture()->getResTIMG(0);
 	handData = mHandModels[1][1]->getModelData();
-	handData->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	handData->getTexture()->setResTIMG(0, *bodyTimg);
 	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
+	bodyTimg = mBodyModelData->getTexture()->getResTIMG(0);
 	handData = mRHand4ndModel->getModelData();
-	handData->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	handData->getTexture()->setResTIMG(0, *bodyTimg);
 	DCFlushRange(handData->getTexture()->getResTIMG(0), 0x20);
 
 	mBodyModelData->getShapeNodePointer(4)->onFlag(J3DShpFlag_Visible);
@@ -1335,7 +1335,7 @@ void TMario::initModel()
 	transformInfo.mScale.y     = 1.0f;
 	transformInfo.mScale.z     = 1.0f;
 	transformInfo.mRotation.x  = mFaceAngle.x;
-	transformInfo.mRotation.y  = mFaceAngle.y;
+	transformInfo.mRotation.y  = mModelFaceAngle;
 	transformInfo.mRotation.z  = mFaceAngle.z;
 	transformInfo.mTranslate.x = mPosition.x;
 	transformInfo.mTranslate.y = mPosition.y;
