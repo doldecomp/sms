@@ -825,6 +825,12 @@ void THanaSambo::initFlower()
 	mFlower->mPosition.y = mGroundHeight;
 }
 
+static inline THanaSamboSaveLoadParams* HanasamboWaitParams(const THanaSambo* p)
+{
+	THanaSamboSaveLoadParams* params = p->mSaveParams;
+	return params;
+}
+
 DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 {
 	THanaSambo* sambo = (THanaSambo*)spine->getBody();
@@ -836,7 +842,8 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 		gpMarioParticleManager->emit(0xB7, &sambo->mPosition, 0, nullptr);
 		TSamboFlower* flower = sambo->mFlower;
 		flower->onHitFlag(HIT_FLAG_NO_COLLISION);
-		flower->getMActor()->setBck("flower_fwait");
+		MActor* flowerActor = flower->getMActor();
+		flowerActor->setBck("flower_fwait");
 		flower->onLiveFlag(LIVE_FLAG_DEAD);
 	}
 	if (sambo->checkCurAnmEnd(0)) {
@@ -844,20 +851,16 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 		sambo->setWaitAnm();
 		if (gpMarioPos->y < 100.0f + sambo->mPosition.y) {
 			sambo->updateSquareToMario();
-			f32 dist = sambo->mSaveParams->mSLAttackDist.get();
-			if (sambo->mDistToMarioSquared < dist * dist)
+			f32 dist = HanasamboWaitParams(sambo)->mSLAttackDist.get();
+			dist *= dist;
+			if (sambo->mDistToMarioSquared < dist)
 				spine->pushAfterCurrent(&TNerveHanaSamboAttack::theNerve());
 		}
 		return true;
 	}
-	sambo->walkToCurPathNode(0.0f, 3.0f * sambo->mTurnSpeed, 0.0f);
+	f32 turnSpeed = sambo->mTurnSpeed;
+	sambo->walkToCurPathNode(0.0f, 3.0f * turnSpeed, 0.0f);
 	return false;
-}
-
-static inline THanaSamboSaveLoadParams* HanasamboWaitParams(const THanaSambo* p)
-{
-	THanaSamboSaveLoadParams* params = p->mSaveParams;
-	return params;
 }
 
 DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
