@@ -748,18 +748,21 @@ void TOptionSoundUnit::toggle()
 	adjustSound();
 }
 
+// One extra inline level so SMSGetMSound sits at depth 5 from checkInput
+// (never inlines: the map's weak 8-byte copy and retail's discarded
+// receiver) while staying at depth 4 from loadSetting (still expands).
+static inline void OptionSetOutputMode(u32 mode)
+{
+	MSound* sound = SMSGetMSound();
+	sound->setParamSoundOutputMode(mode);
+}
+
 void TOptionSoundUnit::adjust()
 {
 	adjustView();
 	const FabricatedSoundSettings& setting
 	    = cSoundSettings[mSelectionText->getNumber()];
-	// TODO: retail keeps SMSGetMSound() a `bl` here (the discarded receiver is
-	// visible in checkInput) and inlines it away in loadSetting's three
-	// copies; our build inlines the global read at both, so the dead call is
-	// missing. Per-site accessor inlining, not a spelling problem.
-	// A TU-local fork/binder over SMSGetMSound() decays; it does not
-	// create the `bl` or emit the weak 8-byte copy.
-	SMSGetMSound()->setParamSoundOutputMode(setting.mOutputMode);
+	OptionSetOutputMode(setting.mOutputMode);
 }
 
 void TOptionSoundUnit::show() { }
