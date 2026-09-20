@@ -228,17 +228,20 @@ bool JKRSolidHeap::dump()
 	return ret;
 }
 
+static inline s32 SolidHeapUsedSize(JKRSolidHeap* heap)
+{
+	s32 used = JKRSolidHeap::getUsedSize(heap);
+	return used;
+}
+
 void JKRSolidHeap::state_register(TState* p, u32 id) const
 {
 	JUT_ASSERT(p != nullptr);
 	JUT_ASSERT(p->getHeap() == this);
 
 	setState_u32ID_(p, id);
-	setState_uUsedSize_(p, getUsedSize((JKRSolidHeap*)this));
+	setState_uUsedSize_(p, SolidHeapUsedSize((JKRSolidHeap*)this));
 
-	// TODO: r28 is copy-pasted from TP debug but still not enough stack
-	char trash[0x4];
-	void* r28     = getState_(p);
 	u32 checkCode = (uintptr_t)mCurStart;
 	checkCode += (uintptr_t)mCurEnd * 3;
 	setState_u32CheckCode_(p, checkCode);
