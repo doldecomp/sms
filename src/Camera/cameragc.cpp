@@ -50,6 +50,20 @@ const char* cJetCoasterCam1BckName = "tinkoopa_camera";
 const char* cJetCoasterDemoBckName = "tinkoopa_killer_camera";
 const char* cStartCamBckFileName   = "/scene/map/camera/StartCamera.bck";
 
+// Named-local binders: CameragcBck + CameragcDemoFrame close
+// JetCoasterDemoCallBack's 16-byte frame; CameragcBck at the ctor
+// startDemo site is the last +8 of that constructor's 24-byte gap.
+static inline TCameraBck* CameragcBck(CPolarSubCamera* p)
+{
+	TCameraBck* bck = p->unk2B0;
+	return bck;
+}
+
+static inline s32 CameragcDemoFrame(TMarDirector* d)
+{
+	return d->unk58;
+}
+
 CPolarSubCamera::CPolarSubCamera(const char* name)
     : JDrama::TLookAtCamera(CLBConstUpVec, CLBConstUpVec, CLBConstUpVec, 0.0f,
                             0.0f, name)
@@ -110,19 +124,19 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	u32 stage = gpMarDirector->getCurrentStage();
-	// TODO: frame 0x40 against the ROM's 0x58 -- 24 bytes of inline-expansion
-	// temporaries below the `this` copy at 0x28 (ours at 0x14) -- keeps this
-	// constructor off an exact match.  The stage test is settled: spelling the
-	// first term `!stage` rather than `stage == 0` stops MWCC folding the pair
-	// into the range test `cmplwi 1; bgt`, and an unsigned `stage` gives the
-	// ROM's `cmplwi` rather than `cmpwi`.
-	if (gpMarDirector->getCurrentMap() == 58 && (!stage || stage == 1)) {
+	u32 stage = SMSGetMarDirector()->getCurrentStage();
+	// TODO: frame now matches (0x58) after SMSGetMarDirector() at both
+	// stage/map sites and CameragcBck on startDemo; the `this` copy is still
+	// 0x24 against retail's 0x28.  A TU-local getCurrentMap fork was inert.
+	// The stage test is settled: `!stage` rather than `stage == 0` stops
+	// MWCC folding the pair into `cmplwi 1; bgt`, and unsigned `stage`
+	// gives the ROM's `cmplwi`.
+	if (SMSGetMarDirector()->getCurrentMap() == 58 && (!stage || stage == 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
 		switch (stage) {
 		case 0:
-			unk2B0->startDemo(cJetCoasterCam0BckName, nullptr);
+			CameragcBck(this)->startDemo(cJetCoasterCam0BckName, nullptr);
 			break;
 		}
 	}
@@ -134,13 +148,8 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 
 void CPolarSubCamera::startJetCoasterCam1()
 {
-	unk2B0->startDemo(cJetCoasterCam1BckName, nullptr);
-	unk2B0->setFrame(gpMarDirector->unk58 * 0.5f);
-	// TODO: JetCoasterDemoCallBack, which inlines this body, is
-	// instruction-identical with frame 0x20 against retail's 0x30: 16 bytes
-	// missing from the inline-expansion region, i.e. four temporaries this
-	// helper's retail body bound and ours does not. SMSGetMarDirector() over
-	// gpMarDirector here is worth zero.
+	CameragcBck(this)->startDemo(cJetCoasterCam1BckName, nullptr);
+	unk2B0->setFrame(CameragcDemoFrame(gpMarDirector) * 0.5f);
 }
 
 static s32 JetCoasterDemoCallBack(u32 param_1, u32 param_2)
@@ -428,6 +437,13 @@ static inline TMarioGamePad* CameragcUnk120(const CPolarSubCamera* p)
 	return v120;
 }
 
+// Two sites in ctrlGameCamera_ close its 32-byte frame (param still +8).
+static inline TCameraKindParam* CameragcParams(CPolarSubCamera* p)
+{
+	TCameraKindParam* params = p->mCurrentParams;
+	return params;
+}
+
 bool CPolarSubCamera::isMarioCrabWalk_() const
 {
 	return isMarioReadyGun_() && CameragcUnk120(this)->checkMeaning(0x8000);
@@ -463,12 +479,13 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 	if (!isMarioReadyGun_()) {
 		// TODO: one instruction left (98.07%): the false arm of the
 		// materialised isThing() bool is `mr r0, r4` (a copy of groundOK,
-		// known zero) in the ROM and `li r0, 0` here.  Ruled out: reading
-		// the plane and the test through a TU-local `static inline`
-		// returning `a && b` -- that drops the materialisation entirely
-		// and costs 2.5% (95.6%).
-		bool groundOK             = false;
+		// known zero) in the ROM and `li r0, 0` here.  Ruled out: a TU-local
+		// `a && b` helper (drops materialisation, 95.6%); `groundOK =
+		// plane->isThing()` (96.7%); `thing = true/else thing = groundOK`
+		// (still `li r0, 0`, constant-folded).  groundOK is declared after
+		// the plane fetch so `li r4, 0` sits after the global load.
 		const TBGCheckData* plane = *gpMarioGroundPlane;
+		bool groundOK             = false;
 		if (plane != nullptr && plane->isThing())
 			groundOK = true;
 
@@ -934,9 +951,12 @@ void CPolarSubCamera::calcExternalData_()
 	                 0.0f, 1.0f);
 }
 
-// TODO: 99.9%, frame 0x100 against the ROM's 0x120 (32 bytes of
-// inline-expansion temporaries), and every remaining difference is an r1
-// displacement shifted by it.
+// TODO: 100.0%, frame 0x120 matches. Left: TCameraKindParam `param` sits at
+// 0x40 against retail's 0x38 (the lwzu copy dest 0x38 vs 0x30). Two
+// CameragcParams sites plus SMSGetCameraMario() closed the old 32-byte gap;
+// a second CameragcParams is +0x10 of frame, one site leaves the frame 0x10
+// short. SMS_GetMarioPos() is +4 of low region and throws the named-local
+// slots. getCamMode() at isTalkCameraSpecifyMode adds an instruction.
 //
 // The map also lists this and calcSlopeAngleX_ as **weak** symbols of this TU
 // while every other CPolarSubCamera method here is global, so both were
@@ -976,22 +996,22 @@ void CPolarSubCamera::ctrlGameCamera_()
 	if (isNormalDeadDemo()) {
 		yOffset = 35.0f;
 	} else {
-		yOffset = mCurrentTarget.unk28 * mCurrentParams->mXRotRatioAtOffsetY
-		          + mCurrentParams->mAtOffsetY;
+		yOffset = mCurrentTarget.unk28 * CameragcParams(this)->mXRotRatioAtOffsetY
+		          + CameragcParams(this)->mAtOffsetY;
 		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
 			yOffset += 260.0f;
 		if (mMode == CAMERA_MODE_DEFINITE_D2)
 			yOffset += unk290;
 	}
 	marPos.y += yOffset;
-	gpCameraMario->unk0.set(marPos);
-	gpCameraMario->calcAndSetMarioData();
+	SMSGetCameraMario()->unk0.set(marPos);
+	SMSGetCameraMario()->calcAndSetMarioData();
 
 	mPreviousTarget = mCurrentTarget;
 
-	if (gpMarDirector->mState == 4 && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
+	if (SMSGetMarDirector()->mState == 4 && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
 		if (isTalkCameraSpecifyMode(mMode)) {
-			if (!gpMarDirector->isTalkModeNow())
+			if (!SMSGetMarDirector()->isTalkModeNow())
 				changeCamMode_(mInitialMode);
 		} else if (!isSimpleDemoCamera()) {
 			if (controlByCameraCode_(&code))
