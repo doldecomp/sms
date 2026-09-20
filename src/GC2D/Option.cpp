@@ -1039,6 +1039,18 @@ static inline TOptionRumbleUnit* OptionRumbleUnit(const TOptionControl* p)
 	return unit;
 }
 
+static inline TOptionSoundUnit* OptionSoundOption(const TOptionControl* p)
+{
+	TOptionSoundUnit* unit = p->mSoundOption;
+	return unit;
+}
+
+static inline TOptionSubtitleUnit* OptionSubtitleOption(const TOptionControl* p)
+{
+	TOptionSubtitleUnit* unit = p->mSubtitleOption;
+	return unit;
+}
+
 void TOptionControl::setType(TOptionControl::SelectType type,
                              bool initial_options_entry)
 {
@@ -1136,15 +1148,23 @@ void TOptionControl::writeValue()
 
 bool TOptionControl::isChangedSetting() const
 {
-	bool result = true, soundResult = result;
-
-	if (mInitialRumbleValue == OptionRumbleUnit(this)->getValue()
-	    && mInitialSoundValue == mSoundOption->getValue())
+	// TODO: retail `mr r29, r31` copies result into soundResult; MWCC
+	// folds `bool soundResult = result` to a second `li r29, 1`.
+	bool result                = true;
+	bool soundResult           = result;
+	int initialRumble          = mInitialRumbleValue;
+	TToggleControl* rumbleText = OptionRumbleUnit(this)->mSelectionText;
+	if (initialRumble == rumbleText->getNumber()
+	    && mInitialSoundValue == OptionSoundOption(this)->getValue())
 		soundResult = false;
 
-	if (!soundResult
-	    && mInitialSubtitleValue == mSubtitleOption->getValue())
-		result = false;
+	if (!soundResult) {
+		int initialSubtitle = mInitialSubtitleValue;
+		TToggleControl* subtitleText
+		    = OptionSubtitleOption(this)->mSelectionText;
+		if (initialSubtitle == subtitleText->getNumber())
+			result = false;
+	}
 
 	return result;
 }
