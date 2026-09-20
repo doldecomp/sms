@@ -733,11 +733,12 @@ void TSmallEnemy::scalingChangeActor()
 
 void TSmallEnemy::changeOut()
 {
+	char trash[8];
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
 	                                nullptr, 0, 4);
 
 	kill();
-	mJuiceBlock->mPosition = mPosition;
+	mPosition = mJuiceBlock->mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
@@ -920,10 +921,12 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 	if (!isCollidMove(param_1))
 		return;
 
+	const JGeometry::TVec3<f32>* otherPos = &param_1->getPosition();
+
 	JGeometry::TVec3<f32> result(0.0f, 0.0f, 0.0f);
 
-	JGeometry::TVec3<f32> local_14;
-	local_14.sub(mPosition, param_1->getPosition());
+	JGeometry::TVec3<f32> local_14(mPosition.x - otherPos->x, mPosition.y - otherPos->y,
+	                               mPosition.z - otherPos->z);
 
 	if (local_14.x == 0.0f && local_14.y == 0.0f && local_14.z == 0.0f)
 		local_14.x += 1.0f;
