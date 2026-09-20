@@ -142,19 +142,30 @@ THino2MtxCalc::THino2MtxCalc(u16 param_1, u16 param_2, u16 param_3, u16 param_4,
 
 static THinokuri2* gpCurHinokuri;
 
+static inline THinokuri2* Hino2Cur()
+{
+	THinokuri2* cur = gpCurHinokuri;
+	return cur;
+}
+
+static inline J3DJoint* Hino2JointNode(u16 idx)
+{
+	J3DModelData* data = j3dSys.getModel()->getModelData();
+	return data->getJointNodePointer(idx);
+}
+
 void THino2MtxCalc::calc(u16 param_1)
 {
 	j3dSys.setCurrentMtxCalc(this);
 
-	if (gpCurHinokuri->mLevel == 2 && (param_1 == 0x13 || param_1 == 0x17)) {
+	if (Hino2Cur()->mLevel == 2 && (param_1 == 0x13 || param_1 == 0x17)) {
+		J3DJoint* joint;
 		J3DTransformInfo info;
 
 		if (mOne[0]) {
 			mOne[0]->getTransform(param_1, &info);
 		} else {
-			J3DJoint* joint
-			    = j3dSys.getModel()->getModelData()->getJointNodePointer(
-			        param_1);
+			joint = Hino2JointNode(param_1);
 
 			info = joint->getTransformInfo();
 		}
@@ -166,6 +177,9 @@ void THino2MtxCalc::calc(u16 param_1)
 		calcTransform(param_1, info);
 	} else {
 
+		// TODO: the four J3DTransformInfo objects of the branches below
+		// sit 4 bytes low at an exact frame -- one 4-byte pool level is
+		// missing above `info` and below them.
 		if (!mOne[0] && !mOne[1]) {
 			J3DTransformInfo info;
 			J3DJoint* joint
@@ -184,12 +198,12 @@ void THino2MtxCalc::calc(u16 param_1)
 			mOne[1]->getTransform(param_1, &auStack_94);
 			calcTransform(param_1, auStack_94);
 		} else {
-			J3DTransformInfo JStack_d4;
 			J3DTransformInfo JStack_b4;
+			J3DTransformInfo JStack_d4;
 			mOne[0]->getTransform(param_1, &JStack_d4);
 			J3DTransformInfo* ptr = &JStack_b4;
 			mOne[1]->getTransform(param_1, ptr);
-			M3UMtxCalcBlendAux(param_1, &JStack_d4, ptr, mTwo[0], false);
+			M3UMtxCalcBlendAux(param_1, &JStack_d4, ptr, unk78, false);
 		}
 	}
 
