@@ -4371,3 +4371,89 @@ nachweislich saubere, unveränderte Arbeitsbäume.
 **9021** (von 9010 zu Rundenbeginn), `matched_code_percent`: 45,20 %.
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`.
+
+### Nach sechsundfünfzigster Iterationsrunde (17-Kandidaten-Batch: 4 neue Matches, Kumokun-Cluster vollständig als Sackgasse bestätigt, wiederkehrendes „JUTRect-Bounds"-Scheduler-Muster kartiert)
+
+**Vier neue Byte-exakte Matches**:
+
+- **`TAnimalManagerBase::clipEnemies(JDrama::TGraphics*)`** (95,0 % →
+  Match, Commit `6a0546b3`): Drei unabhängige Ursachen — `mViewClipNear`
+  vor dem Aufruf in eine Lokale gehoben, Akteur-Zeiger vor statt in der
+  Schleife deklariert, zweiseitige Stack-Polsterung. **Neue, präzise
+  Regel bestätigt**: MWCC legt früher deklarierte Lokalen bei HÖHEREN
+  Stack-Adressen ab — ein `trash`-Array VOR einer Lokalen polstert
+  darüber (verschiebt sie nicht), ein `trash`-Array NACH einer Lokalen
+  verschiebt sie nach oben. Zweiseitige Lücken brauchen zwei
+  `trash`-Arrays.
+- **`CPolarSubCamera::execWallCheck_(Vec*)`** (95,6 % → Match, Commit
+  `ee637ee5`): Additions-Reihenfolge der Ebenendistanz, Accessor- vs.
+  Direktzugriff für CSE-Steuerung, und ein **neues, siebtes Bugmuster**:
+  Die Registerform einer inline-kopierten 12-Byte-Struktur hängt von der
+  QUELLAUSDRUCKSART ab — Kopie aus einem Struct-Mitglied (`obj.field`)
+  ergibt ein anderes Scratch-Register-Paar als Kopie aus einer einfachen
+  benannten Lokalen oder einem Array-Element. Wenn Retail die
+  Mitglieds-Form zeigt, liegen beide Vektoren vermutlich in EINEM
+  gemeinsamen Stack-Aggregat, nicht in zwei getrennten Lokalen.
+- **`TTamaNokoFlower::perform(u32, JDrama::TGraphics*)`** (94,1 % →
+  Match, Commit `d529a708`): Echter Verhaltens-Bug — rotierter Vektor
+  wurde ins Member `unk20` statt zurück in `local_88` geschrieben
+  (nachfolgende Lesungen nutzten den unrotierten Vektor); plus fehlendes
+  bedingungsloses `return` im Demo/Talk-Zweig.
+- **`TBossMantaAdditionalCollision::perform(...)`** (Bonus-Fund,
+  Commit `e2df3ce4`): Derselbe Pattern-4-Bug wie im NICHT gelösten
+  `TBossManta::moveObject` (siehe unten) — `AttackMario(mCollisions[i])`
+  statt `AttackMario(this)` —, hier aber OHNE Restdifferenz vollständig
+  behoben.
+
+**Kumokun-Cluster vollständig als Sackgasse bestätigt**: Alle sieben
+untersuchten Funktionen in `src/Enemy/Kumokun.cpp`
+(`checkOnMovingWall/Floor/Roof`, `bindOnFlying`, `moveObject`,
+`decideTargetAtDir`, `rotateGoalDirToLocal`) sind blockiert durch
+dieselbe gemeinsame Ursache im inline-expandierten `TKumokun::
+checkWallPlane`: Retail emittiert nach der `isTouchedWallsAndMoveXZ()`-
+Prüfung `ble`, unser Build immer `beq`, unabhängig von der
+Quelltext-Formulierung (`if(x)`, `if(0<x)`, Ternary — alle identisch).
+Dies löst eine Registerzuteilungs-Kaskade aus, die alle Funktionen
+gleich betrifft. Drei unabhängige Unteragenten bestätigten denselben
+Befund und koordinierten sich erfolgreich über Hub, bevor sie
+zurücksetzten — keine Datei-Konflikte trotz gemeinsamer Zieldatei.
+Weitere, in diesem Cluster gefundene aber isoliert nicht ausreichende
+echte Bugs: falsch gespeicherter Wert (`yTmp` statt `dVar10`) in
+`checkOnMovingFloor`/`checkOnMovingRoof`; unnötige Vektorkopie in
+`checkOnMovingWall`.
+
+**Wiederkehrendes „JUTRect-Bounds"-Scheduler-Muster** über drei
+unabhängige Dateien bestätigt (`GCConsole2.cpp`s `processDownCoin`/
+`processAppearCoin`, `ConsoleStr.cpp`s `processShineGet`/`processMiss`):
+Der Ausdruck `JUTRect bounds(...); ptr->mGlobalTranslation.set(bounds.x1
++ bounds.getWidth()*0.5f, ...)` erzeugt bei Retail eine KONSERVATIVE
+Instruktions-Planung (frühe `stw`-Speicherung vor der `xoris`-Adress-
+berechnung) für die Magic-Double-Konvertierungsblöcke, während unser
+Compiler konsistent eine AGGRESSIVERE Umordnung wählt — bestätigt in
+drei unabhängigen Dateien mit identischem Muster, kein quelltext-
+seitiger Hebel gefunden (auch Retails eigenes `GCConsole2.cpp` zeigt
+dasselbe konservative Muster für denselben Idiom-Typ, schließt also
+eine Datei-lokale Ursache aus).
+
+**Weitere gründlich dokumentierte Fast-Treffer** (alle instruktions-
+identisch oder nahezu, aber durch Stack-Slot-Feinheiten blockiert,
+sauber zurückgesetzt): `TGCConsole2::startAppearBalloon` (3 echte Bugs,
+8/180 Zeilen Rest, Ursache in `J2DWindow::getContentsBounds()`s
+Rückgabe-per-Wert-ABI lokalisiert), `CPolarSubCamera::
+updateDemoCamera_` (53,2 % → 220/220 Instruktionen identisch, blockiert
+durch `operator+`-Tiefe-3-Out-of-line-Regel), `TNerveBGKDie::execute`
+(2 echte Bugs, 264/264 Instruktionen identisch, TU-weite Rahmen-
+Inflation über 10+ Funktionen bestätigt), `TNerveRHGraphWander::
+execute` (199/199 Instruktionen identisch, blockiert durch 8- vs.
+4-Byte-Ausrichtung eines Rückgabewert-Temporärs), `TPoiHana::init`
+(167/167 Instruktionen identisch, Restursache in einer ANDEREN
+Funktion derselben Datei über einen gemeinsamen Rodata-Pool
+lokalisiert), `TNameIndParCallback::execute`/`TNameKuri::
+calcRootMatrix` (zusammen 6+ echte Bugs, Differenzen um 90 % reduziert).
+
+### Session-Gesamtstand nach Runde 56
+
+**438 verifizierte echte Fixes in 92 Commits.** `matched_functions`:
+**9025** (von 9021 zu Rundenbeginn), `matched_code_percent`: 45,26 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`.
