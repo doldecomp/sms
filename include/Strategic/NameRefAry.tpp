@@ -9,6 +9,16 @@
 // TScenarioArchiveName instantiations (explicitly instantiated there) and weak
 // for TStageEventInfo (implicit), with no unreferenced duplicates anywhere.
 
+// TU-local stand-in for TVector::operator[] spelled `return begin()[u]`.
+// That header shape is +4 at every operator[] site and made these four
+// load bodies exact, but it regresses MapObjWave and TApplication. One
+// site here keeps the vector header untouched.
+template <class T>
+static inline T& nameRefAryAt(JGadget::TVector<T>& v, size_t u)
+{
+	return v.begin()[u];
+}
+
 template <class T, class U>
 void TNameRefAryT<T, U>::load(JSUMemoryInputStream& stream)
 {
@@ -19,7 +29,7 @@ void TNameRefAryT<T, U>::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < local_44; ++i) {
 		JSUMemoryInputStream stream2;
 		JDrama::TNameRef::getType(stream, stream2);
-		getChildren()[i].load(stream2);
+		nameRefAryAt(getChildren(), i).load(stream2);
 	}
 }
 
