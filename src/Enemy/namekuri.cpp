@@ -424,6 +424,7 @@ void TNameKuri::moveObject()
 	TWalkerEnemy::moveObject();
 
 	JGeometry::TVec3<f32> local_50 = mVelocity;
+	char trash[0xc];
 	if (local_50.y < 0.0f
 	    && (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
 	        || mSpine->getCurrentNerve() == &TNerveWalkerEscape::theNerve())
