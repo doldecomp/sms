@@ -1728,26 +1728,35 @@ void TWaterGun::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+static inline TMarDirector* WaterGunGetDirector()
+{
+	TMarDirector* d = gpMarDirector;
+	return d;
+}
+
+static inline TNozzleBase* WaterGunGetNozzle(const TWaterGun* gun)
+{
+	TNozzleBase* nozzle = gun->getCurrentNozzle();
+	return nozzle;
+}
+
 bool TWaterGun::isEmitting()
 {
-	// TODO: instruction structure matches; frame 0x30 vs original 0x80.
-	const TWaterGun* self = this;
-
-	if (mCurrentWater == 0)
+	if (getCurrentWater() == 0)
 		return false;
 
-	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
-	    || gpMarDirector->isTalkModeNow())
+	if (WaterGunGetDirector()->isDemoMode3() || WaterGunGetDirector()->isDemoMode4()
+	    || WaterGunGetDirector()->isTalkModeNow())
 		return false;
 
-	if (self->getCurrentNozzle()->getNozzleKind() == 1) {
-		TNozzleTrigger* trig = (TNozzleTrigger*)self->getCurrentNozzle();
+	if (WaterGunGetNozzle(this)->getNozzleKind() == 1) {
+		TNozzleTrigger* trig = (TNozzleTrigger*)WaterGunGetNozzle(this);
 		if (trig->getSprayState() == TNozzleTrigger::ACTIVE)
 			return true;
 		return false;
 	}
 
-	if (self->getCurrentNozzle()->unk378 > 0.0f)
+	if (WaterGunGetNozzle(this)->unk378 > 0.0f)
 		return true;
 
 	return false;
@@ -1756,12 +1765,6 @@ bool TWaterGun::isEmitting()
 TNozzleBase* TWaterGun::getCurrentNozzle() const
 {
 	return mNozzleList[mCurrentNozzle];
-}
-
-static inline TNozzleBase* WaterGunGetNozzle(const TWaterGun* gun)
-{
-	TNozzleBase* nozzle = gun->getCurrentNozzle();
-	return nozzle;
 }
 
 void TWaterGun::setAmountToRate(f32 rate)
@@ -1967,8 +1970,6 @@ void TWaterGun::emit()
 }
 BOOL TWaterGun::suck()
 {
-	// TODO: Missing stack space
-	// volatile u32 unused1[7];
 	if (mCurrentNozzle == (s8)Yoshi) {
 		return false;
 	} else {
@@ -1977,14 +1978,14 @@ BOOL TWaterGun::suck()
 			mCurrentWater += suckRate;
 
 			s32 currentWater = mCurrentWater;
-			s32 maxWater     = getCurrentNozzle()->mEmitParams.mAmountMax.get();
+			s32 maxWater     = WaterGunGetNozzle(this)->mEmitParams.mAmountMax.get();
 			if (currentWater > maxWater) {
 				mCurrentWater = maxWater;
 			}
 
 			if (!(mCurrentWater
-			      >= getCurrentNozzle()->mEmitParams.mAmountMax.get())) {
-				SMSGetMSound()->startSoundActor(
+			      >= WaterGunGetNozzle(this)->mEmitParams.mAmountMax.get())) {
+				WaterGunGetMSound()->startSoundActor(
 				    MSD_SE_PO_SUCK_WATER_B, &getEmitPos0(), 0, nullptr, 0, 4);
 			}
 			return true;
