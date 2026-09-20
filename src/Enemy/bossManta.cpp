@@ -441,9 +441,15 @@ void TBossManta::startDamageAnim()
 	getMActor()->setMotionBlendRatioForBck(0.0f);
 }
 
+static inline MActor* BossMantaGetMActorForBlend(const TBossManta* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 void TBossManta::updateAnimBlend()
 {
-	if (getMActor()->checkCurBckFromIndex(3)) {
+	if (BossMantaGetMActorForBlend(this)->checkCurBckFromIndex(3)) {
 		JGeometry::TVec3<f32> local_134 = unk164;
 		local_134.normalize();
 
@@ -457,8 +463,9 @@ void TBossManta::updateAnimBlend()
 
 		unk150 = (1.0f - b) * unk150 + b * turn;
 
-		getMActor()->setMotionBlendRatioForBck(JGeometry::TUtil<f32>::clamp(
-		    unk150 + getEpilogueValue(), 0.0f, 1.0f));
+		BossMantaGetMActorForBlend(this)->setMotionBlendRatioForBck(
+		    JGeometry::TUtil<f32>::clamp(unk150 + getEpilogueValue(), 0.0f,
+		                                 1.0f));
 	} else {
 		getMActor()->setMotionBlendRatioForBck(0.0f);
 	}
@@ -713,7 +720,7 @@ void TBossManta::control()
 
 	JGeometry::TVec3<f32> vel(unk170);
 	vel *= unk190;
-	JGeometry::TVec3<f32> curVel(mVelocity);
+	JGeometry::TVec3<f32> curVel(getVelocity());
 	vel.y     = curVel.y;
 	mVelocity = vel;
 
