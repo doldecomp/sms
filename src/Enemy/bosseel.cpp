@@ -2242,9 +2242,10 @@ static s32 hoseiDiveCameraCallback(u32 actorAddress, u32 state)
 	if (state == 1) {
 		const TLiveActor* actor
 		    = reinterpret_cast<const TLiveActor*>(actorAddress);
-		JGeometry::TVec3<f32> position = actor->mPosition;
+		const JGeometry::TVec3<f32>& marioPos = *gpMarioPos;
+		JGeometry::TVec3<f32> position               = actor->mPosition;
 		position.y += 12300.0f;
-		gpCamera->warpPosAndAt(position, *gpMarioPos);
+		gpCamera->warpPosAndAt(position, marioPos);
 	}
 	return 0;
 }
@@ -2297,25 +2298,37 @@ DEFINE_NERVE(TNerveBossEelWaitAppear, TLiveActor)
 	return false;
 }
 
+static inline TCameraShake* BosseelCameraShake()
+{
+	TCameraShake* shake = gpCameraShake;
+	return shake;
+}
+
+static inline MSound* BosseelBackSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void ExecSpinNerve_Sub(TBossEel* eel)
 {
 	f32 spinSpeed = eel->mTurnSpeed;
-	CLBChaseGeneralConstantSpecifySpeed(&spinSpeed,
-	                                    eel->mSaveParams->mSLSpinMaxSpeed.get(),
-	                                    eel->mSaveParams->mSLSpinAccel.get());
+	f32 maxSpeed  = eel->getBossEelParams().mSLSpinMaxSpeed.get();
+	CLBChaseGeneralConstantSpecifySpeed(
+	    &spinSpeed, maxSpeed, eel->getBossEelParams().mSLSpinAccel.get());
 	eel->mTurnSpeed = spinSpeed;
-	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
+	BosseelCameraShake()->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
 
 	if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_UNK10000)) {
 		eel->mRotation.y -= spinSpeed;
 		if (eel->mRotation.y <= 0.0f)
-			SMSGetMSound()->startSoundActorWithInfo(
+			BosseelBackSound()->startSoundActorWithInfo(
 			    MSD_SE_BS_UNG_ROLL, &eel->mPosition, nullptr, spinSpeed, 0, 0,
 			    nullptr, 0, 4);
 	} else {
 		eel->mRotation.y += spinSpeed;
 		if (eel->mRotation.y >= 360.0f)
-			SMSGetMSound()->startSoundActorWithInfo(
+			BosseelBackSound()->startSoundActorWithInfo(
 			    MSD_SE_BS_UNG_ROLL, &eel->mPosition, nullptr, spinSpeed, 0, 0,
 			    nullptr, 0, 4);
 	}
@@ -2327,7 +2340,7 @@ DEFINE_NERVE(TNerveBossEelFirstSpin, TLiveActor)
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 	if (spine->getTime() == 0) {
 		eel->mTurnSpeed = 0.0f;
-		SMSGetMSound()->startSoundActorWithInfo(MSD_SE_BS_UNG_ROLL,
+		gpMSound->startSoundActorWithInfo(MSD_SE_BS_UNG_ROLL,
 		                                        &eel->mPosition, nullptr, 2.0f,
 		                                        0, 0, nullptr, 0, 4);
 		eel->setBckAnm(10);
@@ -2474,18 +2487,6 @@ static inline TBossEel* BosseelBackBody(TSpineBase<TLiveActor>* spine)
 	TLiveActor* body = spine->getBody();
 	TBossEel* eel    = static_cast<TBossEel*>(body);
 	return eel;
-}
-
-static inline TCameraShake* BosseelCameraShake()
-{
-	TCameraShake* shake = gpCameraShake;
-	return shake;
-}
-
-static inline MSound* BosseelBackSound()
-{
-	MSound* sound = SMSGetMSound();
-	return sound;
 }
 
 static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
