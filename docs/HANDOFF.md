@@ -63,10 +63,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grupp` hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)): `THamuKuri::isHitValid` exact via inlined `HamukuriSerialKill` binder; `generateBody` frame exact (TNerveBase `bl` still open). All **61.92→61.93**, exact **11,371→11,372**.
 - Landed `grpuo` MapObjMonte drawOneRope frame; Option +1 (`setType`).
 - Total: **61.93%** matched, game **53.93%**, linked **492 / 732**, exact **11,372**.
-- Landed `grpuy` Option ([Option unit ladder](441b2924-b54c-4ede-9121-f12308bf5302)): +1 exact `SMSGetMSound` via depth-5 OptionSetOutputMode; climbed checkInput/isChangedSetting/loadSetting. Unit fuzzy 99.68→99.82. All stays **62.00%**, exact **11,379→11,380**. Do not third-pass isChangedSetting mr-fold / loadSetting +0x18 / JUTRect slot / TPaneScalingControl FPR without new lever.
-- Landed MapObjBall +2 (crossed 62%); popo structural; MapObjMamma +1; bossManta +1; EventWatcher +3.
-- Running: `grpuz` / elecNokonoko ([elecNokonoko unit ladder](eea7bb08-9b6a-4a28-b60e-b64d81f6ed5d)). Refill: hanasambo.
-- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control/boundByActor.
+- Landed `grpuz` elecNokonoko ([elecNokonoko unit ladder](eea7bb08-9b6a-4a28-b60e-b64d81f6ed5d)): +1 exact Collect via ElecIsNotNerve; sendMessage structural. Unit 65.00→69.27. All **62.00→62.02**, exact **11,380→11,381**. Do not third-pass Turn/loadInit 4-byte pool / reflect FPR without new lever.
+- Landed Option +1 SMSGetMSound; MapObjBall +2; EventWatcher +3.
+- Running: `grpva` / hanasambo ([hanasambo unit ladder](bc539a39-5ccd-4d57-8312-e2062df59367)). Refill: telesa.
+- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold/loadSetting.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 

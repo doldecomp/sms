@@ -11,12 +11,12 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 54.02% | 12.06% | 166 / 385 |
+| Game | 54.04% | 12.06% | 166 / 385 |
 | JSystem | 90.24% | 75.06% | 180 / 198 |
 | SDK | 95.71% | 95.54% | 146 / 149 |
-| All | 62.00% | 26.71% | 492 / 732 |
+| All | 62.02% | 26.71% | 492 / 732 |
 
-11,380 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,381 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
 ## What recent batches have done
 
@@ -28,7 +28,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `MoveBG/MapObjWave` | 99.99% | 11 / 12 |
 | `Enemy/effectEnemy` | 99.99% | 17 / 18 |
 | `Enemy/tinkoopa` | 97.38% | 29 / 54 |
-| `Enemy/elecNokonoko` | 97.02% | 44 / 69 |
+| `Enemy/elecNokonoko` | 99.20% | 61 / 69 |
 | `Enemy/killer` | 97.48% | 39 / 54 |
 | `Enemy/limitkoopa` | 87.00% | 38 / 58 |
 | `Enemy/Kazekun` | 96.37% | 35 / 43 |
