@@ -380,6 +380,7 @@ namespace Driver {
 
 	int updatecallDSPChannel(TDSPChannel* dspChannel, u32 param)
 	{
+		char trash[0x18];
 		TChannel* channel = dspChannel->getLogicalChannel();
 		TChannelMgr* mgr  = channel->unk4;
 
