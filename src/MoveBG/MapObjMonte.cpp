@@ -329,6 +329,18 @@ void THangingBridge::drawUpper(const JGeometry::TVec3<f32>& from,
 	}
 }
 
+static inline int HangingBridgeBoardNum(const THangingBridge* bridge)
+{
+	return bridge->mBoardNum;
+}
+
+static inline THangingBridgeBoard* HangingBridgeBoardAt(const THangingBridge* bridge,
+                                                       int i)
+{
+	THangingBridgeBoard* board = bridge->mBoards[i];
+	return board;
+}
+
 // UNUSED (0x10): the board-position fetch drawRopeBetweenBoards expands.
 void THangingBridge::setDrawPos(int i, f32 yOffset,
                                 JGeometry::TVec3<f32>* out) const
@@ -336,15 +348,20 @@ void THangingBridge::setDrawPos(int i, f32 yOffset,
 	out->y += yOffset;
 }
 
+// TODO: every local slot matches; retail's frame is 0x108 against our 0x100,
+// 8 bytes of dead region above the class-object block that no pool or binder
+// rung reaches (two-local binder subsets all land 0x108 but 8 bytes too low).
+// The board-number fork is also what swaps `mullw r0, r0, r30`'s operands.
 void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 {
 	f32 offsetX = mSideDir.x * mRopeOffset;
-	f32 offsetZ = mSideDir.y * mRopeOffset;
+	f32 offsetZ = mSideDir.y;
+	offsetZ *= mRopeOffset;
 
 	JGeometry::TVec2<f32> width(mSideDir);
 	width.scale(mRopeWidthBetweenBoards);
 
-	u16 vertexNum = (mBoardNum + 2) * divide * 2;
+	u16 vertexNum = (HangingBridgeBoardNum(this) + 2) * divide * 2;
 
 	JGeometry::TVec3<f32> from;
 	JGeometry::TVec3<f32> to;
@@ -352,8 +369,8 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x + offsetX, mStart.y + yOffset, mStart.z + offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to = mBoards[i]->mRopeTop[0];
-		to.y += yOffset;
+		to = HangingBridgeBoardAt(this, i)->mRopeTop[0];
+		setDrawPos(i, yOffset, &to);
 		drawLowerMinus(from, to, width, divide);
 		from = to;
 	}
@@ -366,8 +383,8 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x + offsetX, mStart.y + yOffset, mStart.z + offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to = mBoards[i]->mRopeTop[0];
-		to.y += yOffset;
+		to = HangingBridgeBoardAt(this, i)->mRopeTop[0];
+		setDrawPos(i, yOffset, &to);
 		drawLowerPlus(from, to, width, divide);
 		from = to;
 	}
@@ -380,8 +397,8 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x + offsetX, mStart.y + yOffset, mStart.z + offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to = mBoards[i]->mRopeTop[0];
-		to.y += yOffset;
+		to = HangingBridgeBoardAt(this, i)->mRopeTop[0];
+		setDrawPos(i, yOffset, &to);
 		drawUpper(from, to, width, divide);
 		from = to;
 	}
@@ -394,8 +411,8 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x - offsetX, mStart.y + yOffset, mStart.z - offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to = mBoards[i]->mRopeTop[1];
-		to.y += yOffset;
+		to = HangingBridgeBoardAt(this, i)->mRopeTop[1];
+		setDrawPos(i, yOffset, &to);
 		drawLowerMinus(from, to, width, divide);
 		from = to;
 	}
@@ -408,8 +425,8 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x - offsetX, mStart.y + yOffset, mStart.z - offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to = mBoards[i]->mRopeTop[1];
-		to.y += yOffset;
+		to = HangingBridgeBoardAt(this, i)->mRopeTop[1];
+		setDrawPos(i, yOffset, &to);
 		drawLowerPlus(from, to, width, divide);
 		from = to;
 	}
@@ -422,8 +439,8 @@ void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vertexNum);
 	from.set(mStart.x - offsetX, mStart.y + yOffset, mStart.z - offsetZ);
 	for (int i = 0; i < mBoardNum; i++) {
-		to = mBoards[i]->mRopeTop[1];
-		to.y += yOffset;
+		to = HangingBridgeBoardAt(this, i)->mRopeTop[1];
+		setDrawPos(i, yOffset, &to);
 		drawUpper(from, to, width, divide);
 		from = to;
 	}
