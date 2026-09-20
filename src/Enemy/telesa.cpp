@@ -710,7 +710,8 @@ void TTelesa::initAttacker(THitActor* param_1)
 	unk184 = 1;
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 
-	MtxPtr mtx = ((TLiveActor*)param_1)->getModel()->getAnmMtx(5);
+	TLiveActor* attacker = (TLiveActor*)param_1;
+	MtxPtr mtx           = attacker->getModel()->getAnmMtx(5);
 	mPosition.set(mtx[0][3], mtx[1][3] - 150.0f, mtx[2][3]);
 	mDampenedGroundHeight = mPosition.y;
 
@@ -773,6 +774,12 @@ bool TTelesa::resetBaseGround()
 	return unsetUnk165();
 }
 
+static inline u8 TelesaAttackUnk184(const TTelesa* p)
+{
+	u8 v = p->getUnk184();
+	return v;
+}
+
 void TTelesa::setAttackPoint()
 {
 	JGeometry::TVec3<f32> pos = mPosition;
@@ -791,23 +798,20 @@ void TTelesa::setFirstAttackPoint()
 {
 	TPosition3f SStack_78;
 
-	if (unk184)
+	if (TelesaAttackUnk184(this))
 		mRotation.y = 180.0f - mInstanceIndex * 720.0f;
 
 	JGeometry::TVec3<f32> pos = mPosition;
 
-	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
-	// The sine goes on x and the cosine on z: retail's AttackMario nerve
-	// indexes jmaSinTable for the x term and jmaCosTable for the z term, and
-	// this body stays size-exact at the map's 0x118 either way. Writing the
-	// two lookups inline instead of naming them costs 0x20 of size and takes
-	// the nerve from 96.9% to 92.4%, so the locals are real; the last residue
-	// is that retail's second `lfsx` sits after the x store where MWCC hoists
-	// both up front.
-	f32 s = JMASin(mRotation.y);
-	f32 c = JMACos(mRotation.y);
+	// Shared short-angle so both table lookups reuse one index; naming the
+	// cosine after the x store keeps retail's second `lfsx` there. JMASin
+	// plus JMACos together hoist both loads (96.9%); inlining either lookup
+	// recomputes the index (92.4%, UNUSED 0x138).
+	s16 ang = DEG2SHORTANGLE(mRotation.y);
+	f32 s   = JMASSin(ang);
 
 	pos.x += s * 1000.0f;
+	f32 c = JMASCos(ang);
 	pos.z += c * 1000.0f;
 
 	setGoalPath(TPathNode(pos));
@@ -1068,11 +1072,19 @@ void TMarioModokiTelesa::imitateAnm()
 		mImitatedBmd->getMActor()->setBckFromIndex(0);
 }
 
+static inline TSharedParts* TelesaImitatedBmd(TSpineBase<TLiveActor>* spine)
+{
+	TTelesa* self       = (TTelesa*)spine->getBody();
+	TSharedParts* parts = self->mImitatedBmd;
+	return parts;
+}
+
+// TODO: frame-exact at 0xb0; setGoalPathMario's TPathNode still sits 4
+// bytes low (0x64 against retail 0x68). Allocation order, not size.
 DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 {
-	TTelesa* self = (TTelesa*)spine->getBody();
-
-	TSharedParts* imitatedItem = self->mImitatedBmd;
+	TSharedParts* imitatedItem = TelesaImitatedBmd(spine);
+	TTelesa* self              = (TTelesa*)spine->getBody();
 
 	if (gpApplication.mCurrArea.unk0 != 7
 	    && gpApplication.mCurrArea.unk0 != 14) {
@@ -1219,9 +1231,18 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 	return false;
 }
 
+static inline TTelesa* TelesaAttackBody(TSpineBase<TLiveActor>* spine)
+{
+	TSpineEnemy* body = spine->getBody();
+	TTelesa* self     = (TTelesa*)body;
+	return self;
+}
+
+// TODO: frame-exact at 0xf8; TPosition3f / pos / TPathNode still sit
+// 0x10 / 0x10 / 4 bytes low. Allocation order after the angle split.
 DEFINE_NERVE(TNerveTelesaAttackMario, TLiveActor)
 {
-	TTelesa* self = (TTelesa*)spine->getBody();
+	TTelesa* self = TelesaAttackBody(spine);
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(6);
@@ -1302,12 +1323,26 @@ void TKageMarioModoki::init(TLiveManager* manager)
 	                     "H_kagemario_dummy", *img);
 }
 
+static inline TKageMarioModoki*
+TelesaKageBody(TSpineBase<TLiveActor>* spine)
+{
+	TSpineEnemy* body      = spine->getBody();
+	TKageMarioModoki* self = (TKageMarioModoki*)body;
+	return self;
+}
+
+static inline MActor* TelesaKageMActor(TKageMarioModoki* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
 DEFINE_NERVE(TNerveKageMarioModokiWait, TLiveActor)
 {
-	TKageMarioModoki* self = (TKageMarioModoki*)spine->getBody();
+	TKageMarioModoki* self = TelesaKageBody(spine);
 
 	if (spine->getTime() == 0) {
-		self->getMActor()->setBck("ma_wait");
+		TelesaKageMActor(self)->setBck("ma_wait");
 		self->setGoalPath(TPathNode(SMS_GetMarioPos()));
 	}
 
