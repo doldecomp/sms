@@ -327,11 +327,23 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	calcGunAngle(controllerWork);
 }
 
+static inline TModelWaterManager* NozzleWaterMgr()
+{
+	TModelWaterManager* mgr = gpModelWaterManager;
+	return mgr;
+}
+
+static inline TModelWaterManager* NozzleWaterMgr2()
+{
+	return NozzleWaterMgr();
+}
+
 void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 {
-	param_2->mAlive.set(
-	    gpModelWaterManager->mWaterParticleTypes[mEmitParams.mType.get()]
-	        ->mAlive.get());
+	s32 type = mEmitParams.mType.get();
+	f32 alive
+	    = NozzleWaterMgr2()->mWaterParticleTypes[type]->mAlive.get();
+	param_2->mAlive.set(alive);
 
 	JGeometry::TVec3<f32> pos;
 	JGeometry::TVec3<f32> dir;
