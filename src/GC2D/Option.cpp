@@ -1041,6 +1041,7 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 	// instruction matches. A TU-local binder over mRumbleOption at any one
 	// site here is +0x10, not +8, so the rung is wrong, not the class.
 	// A raw gpMSound binder above the startSound bl is +0 (level-above-bl).
+	// A one-site sound-unit binder is +0x10, same as rumble.
 	if (mSelectedOption != type || initial_options_entry) {
 		mSelectedOption = type;
 		switch (type) {
