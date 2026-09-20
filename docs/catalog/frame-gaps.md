@@ -1789,3 +1789,16 @@ Three exact and five frame landings in `Enemy/bosstelesa` (36.33% -> 39.91%, 96 
 - `TelesaSlotGetOwner`'s bare fork is +0 where its binding form is +0x10 at the same site (the NpcEvent 353 pair).
 - A named `THitActor* collision` local is retail's extra `addi r4, r3, 0` (`TBossTelesaKillSmallEnemy::checkHit`, then `SMS_GetMarioPos()` over raw `*gpMarioPos` for the last +8).
 - `include/Enemy/BossTelesaObj.hpp` is shared with the two `MarNameRefGen_*` units; `TTelesaSlot::mOwner`'s accessor is parked as a TU-local.
+
+## bossgesso ladder 377
+
+Three exact and one lift in `Enemy/bossgesso` (36.05% -> 41.48%, 66 -> 69 of 88 exact), no regressions.
+
+- A bare-return TU-local fork over `getModel()` is the +4 pool rung where the same TU's named-local binder over it is +8 (`TNerveBGPollute::execute` at its one emit site, `TNerveBGTug::execute` at the first of three).
+It does not generalise: a bare fork over `getMActor()` at 1 or 5 sites is 0 (`TNerveBGDie`), and a bare fork over the raw member `mMActor` is 0, so the +4 needs the fork body to call an accessor, not read a member (Frame ladder 273's +0 and NpcEvent 353's +4 reconciled).
+- `SMS_GetMarioPos()` -> raw `*gpMarioPos` is -4 in a short frame and -8 in a long one within one TU (`rumblePad` 0x40 exact, `doAttackShoot` 0x98 -> 0x90).
+- `len *= len;` before the compare is the float-member sibling of hanasambo 329's `d *= d;`: the product takes the loaded value's FPR where `len * len` inside the compare takes a fresh one (`doAttackShoot`, 99.73 -> 99.96).
+- `TBossGesso::inSightAngle`'s UNUSED body is 168 bytes short of the map while `inSight` is 8 long; retail's `bl SMS_GetMarioPos()` inside the pasted `doAttackGuard -> inSightAngle -> inSight` chain in `moveObject` shows that chain is one inline level deeper than ours.
+That level is the shared blocker behind `moveObject` (+8), `doAttackSingle` (51 missing instructions) and `doAttackShoot`'s last 4 bytes.
+- `tipPos.length()` for `squared()` plus `TUtil<f32>::sqrt` is instruction-identical and +4 in `lenFromToeToMario` but drops the pasting `TBossGesso::perform` 98.29 -> 82.22; this TU's `length()`/`squared()` split is caller-visible.
+- `TNerveBGWait` needs -0x30, none of it reachable from the nerve's own body; it sits below three pasted `changeBck` expansions, whose rung is shared with eight callers of disagreeing sign.
