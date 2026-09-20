@@ -582,8 +582,13 @@ void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 		return;
 	}
 
+	// TODO: local_1c sits 4 bytes low (0x40 for retail's 0x44) under a
+	// conversion buffer both sides put at 0x50, at the right total frame:
+	// one more 4-granular by-value read is missing.  Each `getState()` here
+	// is +4, `getPosition()`/`getVelocity()` +8 each; a TU-local fork over
+	// getState() and `isUnk24()` are both +0.
 	JGeometry::TVec3<f32> local_1c = unk18;
-	local_1c -= mPosition;
+	local_1c -= getPosition();
 	f32 len = local_1c.squared();
 	if (len > 0.01f) {
 
@@ -592,17 +597,17 @@ void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 		if (len > 100000000.0f) {
 			fVar2 = 1.0f;
 		} else {
-			if (param_1->mState == 8) {
+			if (param_1->getState() == 8) {
 				if (param_1->mTimeInCurrentState < 60)
 					fVar2 = (param_1->mTimeInCurrentState * 0.5f) / 60.0f;
 				else
 					fVar2 = 0.5f;
-			} else if (param_1->mState == 1 || param_1->mState == 10) {
+			} else if (param_1->getState() == 1 || param_1->getState() == 10) {
 				if (param_1->mTimeInCurrentState < 180)
 					fVar2 = (param_1->mTimeInCurrentState * 0.4f) / 180.0f;
 				else
 					fVar2 = 0.4f;
-			} else if (param_1->mState == 2) {
+			} else if (param_1->getState() == 2) {
 				if (param_1->mTimeInCurrentState < 120)
 					fVar2 = (param_1->mTimeInCurrentState * 0.05f) / 120.0f;
 				else
@@ -621,7 +626,7 @@ void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 		mVelocity += local_1c;
 	}
 
-	mPosition += mVelocity;
+	mPosition += getVelocity();
 }
 
 TBGTentacle::TBGTentacle(TBossGesso* owner, int node_num, int index)
