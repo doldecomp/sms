@@ -931,6 +931,8 @@ inline BOOL TMario::braking()
 
 BOOL TMario::surfing()
 {
+	char trash[8];
+
 	setAnimation(ANIM_RIDE_SHELL, 1.0f);
 	if (mStatusTimer != 0) {
 		mStatusTimer--;
@@ -963,7 +965,7 @@ BOOL TMario::surfing()
 		s16 maxAngle;
 		f32 minSpeed;
 
-		if (mWallPlane->isWaterSurface()) {
+		if (mGroundPlane->isWaterSurface()) {
 			maxAngle = getSurfingParamsWater()->mClashAngle.get();
 			minSpeed = getSurfingParamsWater()->mClashSpeed.get();
 		} else {
