@@ -1089,6 +1089,37 @@ void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+static inline THinokuri2* Hino2Self(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	return (THinokuri2*)body;
+}
+
+static inline TGraphTracer* Hino2Tracer(THinokuri2* self)
+{
+	TGraphTracer* tracer = self->unk124;
+	return tracer;
+}
+
+static inline TCameraShake* Hino2CameraShake()
+{
+	TCameraShake* shake = gpCameraShake;
+	return shake;
+}
+
+static inline bool Hino2CurAnmEndsNext(THinokuri2* self)
+{
+	MActor* actor = self->getMActor();
+	return actor->curAnmEndsNext();
+}
+
+static inline f32 Hino2SLJumpShake(THinokuri2* self)
+{
+	THino2Params* params = (THino2Params*)self->getSaveParam();
+	f32 shake            = params->mSLJumpShake.get();
+	return shake;
+}
+
 DEFINE_NERVE(TNerveHino2Appear, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
@@ -1361,33 +1392,33 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 
 DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 {
-	THinokuri2* self = (THinokuri2*)spine->getBody();
+	THinokuri2* self = Hino2Self(spine);
 
 	if (spine->getTime() == 0) {
 		self->unk180 = TRUE;
 		self->changeBck(0x5);
 	}
 
-	if (self->getMActor()->curAnmEndsNext()) {
-		if (self->mCurrentBck == 5)
+	if (Hino2CurAnmEndsNext(self)) {
+		if (self->getCurrentBck() == 5)
 			self->changeBck(2);
-		if (self->mCurrentBck == 2)
+		if (self->getCurrentBck() == 2)
 			self->changeBck(3);
 	}
 
 	if (self->unk18C > 0) {
-		if (self->mCurrentBck != 5)
+		if (self->getCurrentBck() != 5)
 			self->changeBck(5);
 
 		self->unk18C = 0;
-		if (self->mHitPoints == 0) {
+		if (self->getHitPoints() == 0) {
 			self->unk180 = FALSE;
 			spine->pushAfterCurrent(&TNerveHino2Squat::theNerve());
 			return true;
 		}
 	}
 
-	if (spine->getTime() >= ((THino2Params*)self->getSaveParam())->getSLDamageTimer()) {
+	if (spine->getTime() >= Hino2Params(self)->getSLDamageTimer()) {
 		self->unk180 = FALSE;
 		if (self->getHitPoints() == 0) {
 			spine->pushAfterCurrent(&TNerveHino2Squat::theNerve());
@@ -1397,8 +1428,8 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 		if (self->getCurrentBck() != 4)
 			self->changeBck(4);
 
-		if (self->getMActor()->curAnmEndsNext() && self->getCurrentBck() == 4) {
-			self->unk124->reset();
+		if (Hino2CurAnmEndsNext(self) && self->getCurrentBck() == 4) {
+			Hino2Tracer(self)->reset();
 			self->goToShortestNextGraphNode();
 			spine->reset();
 			spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
@@ -1411,37 +1442,6 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 	}
 
 	return false;
-}
-
-static inline THinokuri2* Hino2Self(TSpineBase<TLiveActor>* spine)
-{
-	TLiveActor* body = spine->getBody();
-	return (THinokuri2*)body;
-}
-
-static inline TGraphTracer* Hino2Tracer(THinokuri2* self)
-{
-	TGraphTracer* tracer = self->unk124;
-	return tracer;
-}
-
-static inline TCameraShake* Hino2CameraShake()
-{
-	TCameraShake* shake = gpCameraShake;
-	return shake;
-}
-
-static inline bool Hino2CurAnmEndsNext(THinokuri2* self)
-{
-	MActor* actor = self->getMActor();
-	return actor->curAnmEndsNext();
-}
-
-static inline f32 Hino2SLJumpShake(THinokuri2* self)
-{
-	THino2Params* params = (THino2Params*)self->getSaveParam();
-	f32 shake            = params->mSLJumpShake.get();
-	return shake;
 }
 
 DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
