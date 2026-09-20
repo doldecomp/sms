@@ -163,9 +163,14 @@ void TBPPolDrop::move()
 
 		if (mFlyTimer >= 60 || mOwner->is2ndFightNow()) {
 			const TBGCheckData* ground;
+			// `x += 1.0f` after the call puts the return in f1 first
+			// (`fadds f31, f1, f0`); `checkGround() + 1.0f` swapped them.
+			// TODO: 99.8%, frame 0x30 vs retail 0x70. drop() is UNUSED 0xa8
+			// and already spelled out here; the remaining 0x40 is accessor
+			// pool inside that expansion.
 			f32 groundY
-			    = gpMap->checkGround(pos.x, mPosition.y, pos.z, &ground)
-			      + 1.0f;
+			    = gpMap->checkGround(pos.x, mPosition.y, pos.z, &ground);
+			groundY += 1.0f;
 			if (ground->isIllegalData())
 				groundY = mGroundY;
 			mGroundY = groundY;
@@ -2115,7 +2120,11 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 	}
 
 	f32 turn  = boss->mTurnSpeed;
-	f32 speed = boss->getSaveParam2()->mSLFlySpeed.get();
+	// TODO: 99.8%, frame-exact 0xb8. BosspakkunParams lands the missing 8;
+	// the remaining ~s are the toGoal / flyToCurPathNode temps 8 high
+	// (allocation order). Swapping turn/speed declaration loses the f31
+	// hoist of mTurnSpeed.
+	f32 speed = BosspakkunParams(boss)->mSLFlySpeed.get();
 	boss->flyToCurPathNode(speed, turn);
 
 	return FALSE;
@@ -2222,7 +2231,7 @@ DEFINE_NERVE(TNerveBPHover, TLiveActor)
 DEFINE_NERVE(TNerveBPFall, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
-	MActor* actor     = boss->getMActor();
+	MActor* actor     = BosspakkunMActor(boss);
 
 	if (spine->getTime() == 0) {
 		boss->offLiveFlag(LIVE_FLAG_UNK10);
@@ -2236,14 +2245,14 @@ DEFINE_NERVE(TNerveBPFall, TLiveActor)
 	} else if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FALL_LOOP)) {
 		if (!boss->isAirborne()) {
 			boss->changeBck(BOSSPAKU_BCK_FALL_END);
-			gpCameraShake->startShake(
+			BosspakkunGetCameraShake()->startShake(
 			    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_POPO, 1.0f);
 			boss->rumblePad(2, boss->mPosition);
 		}
 	} else if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FALL_END)) {
 		if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			boss->changeBck(BOSSPAKU_BCK_GETUP);
-			gpCameraShake->startShake(
+			BosspakkunGetCameraShake()->startShake(
 			    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_GETUP, 1.0f);
 			boss->rumblePad(0, boss->mPosition);
 		}
