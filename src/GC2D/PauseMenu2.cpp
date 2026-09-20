@@ -85,14 +85,14 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mMenuPane   = mScreen->search('t_0');
 
 	for (s32 i = 0; i < 5; i++) {
-		mPauseLetters[i] = (J2DPicture*)mScreen->search('t_0' + i);
+		mPauseLetters[i] = (J2DPicture*)mScreen->search('pa00' + i);
 	}
 
 	for (s32 i = 0; i < 3; i++) {
 		mMenuItems[i] = (J2DPicture*)mScreen->search('tx_1' + i);
 
 		if (mNumItems == 2) {
-			mMenuItems[i]->add(0, 14);
+			mMenuItems[i]->add(0, 20);
 		}
 		mMenuItems[i]->mVisible = false;
 	}
@@ -106,13 +106,13 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 
 	mStagePane = mScreen->search('brek');
 
-	u32 shineStage = SMS_getShineStage(gpMarDirector->mMap);
+	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->mMap);
 	s32 flag       = TFlagManager::getInstance()->getFlag(0x40003);
 
 	mStageName->setString(SMSGetMessageData(
 	    JKRFileLoader::getGlbResource("/common/2d/stagename.bmg"), shineStage));
 
-	if (gpMarDirector->mMap != 0xF) {
+	if (SMSGetMarDirector()->mMap != 0xF) {
 		void* scenarioBmg
 		    = JKRFileLoader::getGlbResource("/common/2d/scenarioname.bmg");
 		s16 shineID = SMS_getShineID(shineStage, flag, false);
@@ -122,12 +122,13 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 			mStageName->add(0, 0xF);
 			mMenuPane->add(0, 0x1E);
 		} else {
-			// TODO: This doesn't match for some reason.
 			scenarioName = SMSGetMessageData(
 			    scenarioBmg, (u16)SMS_getNormalStage(shineID));
 		}
 		snprintf(mScenarioName->getStringPtr(), 0x80, "%s", scenarioName);
 	}
+	// TODO: frame +0x20 (0x50 vs 0x30); instruction-identical otherwise after
+	// pa00/add(0,20). Same +0x20 class as appearWindow.
 }
 
 // fabricated: binding levels over the pane arrays, +8 of low region each.
@@ -262,7 +263,7 @@ void TPauseMenu2::appearWindow()
 				rect.reform(hx, hy, -hx, -hy);
 
 				mMenuItems[i]->setBounds(rect);
-			} else if (mFadeAnim <= 46.0f) {
+			} else if (mFadeAnim >= 46.0f) {
 				// Fade in animation complete; set state to open.
 				if (mState != MENU_OPEN) {
 					mState = MENU_OPEN;
@@ -272,6 +273,8 @@ void TPauseMenu2::appearWindow()
 	}
 
 	mFadeAnim += 0.5f;
+	// TODO: frame +0x20 (0xd0 vs 0xb0); instruction-identical after the
+	// >= 46.0f compare fix. Same +0x20 class as load.
 }
 
 void TPauseMenu2::disappearWindow()
@@ -327,6 +330,8 @@ void TPauseMenu2::disappearWindow()
 	}
 
 	mFadeAnim += 0.5f;
+	// TODO: frame +8 (0x100 vs 0xf8). A one-site bg binder lands frame-exact
+	// but drops retail's `addi r5,r3,0xcc` alpha address bind and fuzzy score.
 }
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -381,7 +386,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							gpMSound->pauseOff(0);
 							SMSGetMarDirector()->getConsole()->pauseOut();
 							mFadeAnim = 0.0f;
-							mState    = MENU_APPEARING;
+							mState    = MENU_DISAPPEARING;
 							break;
 						case 2:
 							mSelectionConfirmed = true;
@@ -569,20 +574,32 @@ u8 TPauseMenu2::getNextState()
 	return state;
 }
 
+// Binding level over the director's console read.
+static inline TGCConsole2* PauseConsole(TMarDirector* director)
+{
+	TGCConsole2* console = director->getConsole();
+	return console;
+}
+
+static inline TMarDirector* PauseDirector()
+{
+	return gpMarDirector;
+}
+
 void TPauseMenu2::setDrawStart()
 {
-	mPressedB               = false;
-	mSelectionConfirmed     = false;
-	mSelectedItem           = 0;
-	mFadeAnim               = 0.0f;
-	mState                  = MENU_APPEARING;
-	mBounceAnim             = 0.0f;
-	mMenuItems[0]->mWhite   = mItemColor;
-	mMenuItems[0]->mVisible = false;
+	mPressedB           = false;
+	mSelectionConfirmed = false;
+	mSelectedItem       = 0;
+	mFadeAnim           = 0.0f;
+	mState              = MENU_APPEARING;
+	mBounceAnim         = 0.0f;
+	PauseMenuItem(mMenuItems, 0)->mWhite   = mItemColor;
+	PauseMenuItem(mMenuItems, 0)->mVisible = false;
 
 	for (s32 i = 1; i < mNumItems; ++i) {
-		mMenuItems[i]->mWhite   = 0xFFFFFFFF;
-		mMenuItems[i]->mVisible = false;
+		PauseMenuItem(mMenuItems, i)->mWhite   = 0xFFFFFFFF;
+		PauseMenuItem(mMenuItems, i)->mVisible = false;
 	}
 
 	mPauseLetters[0]->mRotation = u16(mOrigLetterAngles[0] + 180.0f);
@@ -593,16 +610,11 @@ void TPauseMenu2::setDrawStart()
 
 	mMenuPane->setAlpha(255);
 	mMenuPane->mRotation = 0.0f;
-	gpMarDirector->getConsole()->pauseIn();
+	PauseConsole(PauseDirector())->pauseIn();
 	SMSRumbleMgr->startPause();
 	gpMSound->pauseOn(true);
-}
-
-// Binding level over the director's console read.
-static inline TGCConsole2* PauseConsole(TMarDirector* director)
-{
-	TGCConsole2* console = director->getConsole();
-	return console;
+	// TODO: frame-exact; four stack markers on the TColor assignment temps
+	// (0x58/0x50 retail vs 0x60/0x5c) — known-open JUTColor temp stride.
 }
 
 void TPauseMenu2::setDrawEnd()
