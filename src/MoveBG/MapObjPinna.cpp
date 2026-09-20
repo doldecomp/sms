@@ -994,6 +994,14 @@ void TAmiKing::touchPlayer(THitActor* sender)
 
 static int switchSnd;
 
+// Retail binds the model into the destination register and only then adds the
+// base-TR offset, so the accessor sat behind one more inline level here.
+static inline MtxPtr MapObjPinnaBaseTRMtx(TLiveActor* p)
+{
+	J3DModel* model = p->getModel();
+	return model->getBaseTRMtx();
+}
+
 void TPinnaCoaster::control()
 {
 	TMapObjBase::control();
@@ -1002,11 +1010,10 @@ void TPinnaCoaster::control()
 	mRail->calc();
 
 	MtxPtr railMtx = mRail->getModel()->getAnmMtx(0);
-	// TODO: 98.7%. Retail splits the destination into `mr r4, r3` + `addi r4,
-	// r4, 0x20` and has 16 more bytes of frame, so getBaseTRMtx() sat behind
-	// one more inline level here; a named J3DModel* local is not it (no
-	// instruction change, -8 of frame).
-	MTXCopy(railMtx, getModel()->getBaseTRMtx());
+	// TODO: 99.0%. Retail binds the model into the destination register and
+	// only then adds the base-TR offset (`addi r4, r3, 0` + `addi r4, r4,
+	// 0x20`), and the copy temporary of the speed vector sits 4 bytes higher.
+	MTXCopy(railMtx, MapObjPinnaBaseTRMtx(this));
 
 	getMActor()->frameUpdate();
 	getMActor()->calc();
