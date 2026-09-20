@@ -79,38 +79,6 @@ public:
 };
 
 /**
- * @brief MtxCalc that fetches local joint transforms from a J3DAnmTransform and
- * so supports skeletal animations.
- */
-class J3DMtxCalcAnm : public virtual J3DMtxCalc {
-public:
-	J3DMtxCalcAnm(J3DAnmTransform* transform)
-	{
-		initAnm();
-		setAnmTransform(transform);
-	}
-
-	virtual ~J3DMtxCalcAnm() { initAnm(); }
-	virtual void calc(u16 jntIdx);
-
-	void initAnm()
-	{
-		for (int i = 0; i < 2; i++) {
-			mOne[i] = nullptr;
-			mTwo[i] = 1.0f;
-		}
-	}
-	void setAnmTransform(J3DAnmTransform* mAnmTransform)
-	{
-		mOne[0] = mAnmTransform;
-	}
-
-public:
-	J3DAnmTransform* mOne[2];
-	f32 mTwo[2];
-};
-
-/**
  * @brief MtxCalc for a basic in-house skeletal hierarchy format.
  * @details See J3DMtxCalcBasic::calcTransform for how scaling is propagated
  * through the hierarchy.
@@ -153,6 +121,38 @@ public:
 
 	void setBackupS(const Vec& vec) { mBackupS = vec; }
 	void setBackupParentS(const Vec& vec) { mBackupParentS = vec; }
+};
+
+/**
+ * @brief MtxCalc that fetches local joint transforms from a J3DAnmTransform and
+ * so supports skeletal animations.
+ */
+class J3DMtxCalcAnm : public virtual J3DMtxCalc {
+public:
+	J3DMtxCalcAnm(J3DAnmTransform* transform)
+	{
+		initAnm();
+		setAnmTransform(transform);
+	}
+
+	virtual ~J3DMtxCalcAnm() { initAnm(); }
+	virtual void calc(u16 jntIdx);
+
+	void initAnm()
+	{
+		for (int i = 0; i < 2; i++) {
+			mOne[i] = nullptr;
+			mTwo[i] = 1.0f;
+		}
+	}
+	void setAnmTransform(J3DAnmTransform* mAnmTransform)
+	{
+		mOne[0] = mAnmTransform;
+	}
+
+public:
+	J3DAnmTransform* mOne[2];
+	f32 mTwo[2];
 };
 
 /**
