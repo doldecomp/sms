@@ -30,6 +30,7 @@ bool TMario::canSleep()
 	f32 height = mDeParams.mSleepingCheckHeight.get();
 	f32 groundY;
 	const TBGCheckData* gnd;
+	const TBGCheckData* gnd2; // unused, but reserves its stack slot
 
 	groundY = gpMap->checkGround(mPosition.x - dist, mPosition.y + 30.0f,
 	                             mPosition.z, &gnd);
