@@ -678,12 +678,11 @@ void TMerrygoround::control()
 
 void TMerrygoround::draw() const { }
 
-// Binding level over a raw member read, worth +8 of low region in
-// TMerrygoround::initMapObj (batch 127).
-static inline TMapObjChangeStage* MapObjPinnaWarp(const TMerrygoround* p)
+// A setter level around the scalar assignment, worth +4 of low region in
+// TMerrygoround::initMapObj (research 312's 4-byte rung).
+static inline void MapObjPinnaSetWarpId(TMapObjChangeStage* warp, u32 id)
 {
-	TMapObjChangeStage* warp = p->mWarp;
-	return warp;
+	warp->unk138 = id;
 }
 
 void TMerrygoround::initMapObj()
@@ -726,9 +725,9 @@ void TMerrygoround::initMapObj()
 
 	mWarp = (TMapObjChangeStage*)TMapObjBaseManager::newAndRegisterObj(
 	    "ChangeStageMerrygoround");
-	mWarp->unk138 = 0x29;
+	MapObjPinnaSetWarpId(mWarp, 0x29);
 	mWarp->mScaling.y *= 1.5f;
-	MapObjPinnaWarp(this)->makeObjAppeared();
+	mWarp->makeObjAppeared();
 	joinToGroup("マップグループ", mWarp);
 }
 
