@@ -579,6 +579,14 @@ void TBaseNPC::npcHappyIn(u8 param_1)
 	resetToWait_();
 }
 
+// TODO: shared-header need -- THitActor::getActorType() returns u32, so the
+// range compares below come out unsigned; retail compares the signed member.
+static inline int NpcAnmActorType(const THitActor* p)
+{
+	int actorType = p->mActorType;
+	return actorType;
+}
+
 void TBaseNPC::npcWetIn()
 {
 	if (!isSunflowerReviving()) {
@@ -593,7 +601,7 @@ void TBaseNPC::npcWetIn()
 				if (isNormalMonte())
 					EVar6 = NPC_STOP_MOTION_BLEND_OFF;
 			} else {
-				if (isNormalMonte() || mActorType == 0x400000D) {
+				if (isNormalMonte() || getActorType() == 0x400000D) {
 					if (!checkLiveFlag(LIVE_FLAG_UNK4000000)
 					    && MsRandF() < 0.5f)
 						EVar7 = NPC_ANM_KIND_UNKB;
@@ -603,7 +611,7 @@ void TBaseNPC::npcWetIn()
 					if (isNormalMare() || mActorType == 0x4000011) {
 						if (MsRandF() < 0.5f)
 							EVar7 = NPC_ANM_KIND_UNKB;
-					} else if (!(mActorType < 0x4000018
+					} else if (!(NpcAnmActorType(this) < 0x4000018
 					             && mActorType >= 0x4000016)) {
 						(void)mActorType; // TODO: uh, inlining maybe?
 					} else if (!checkLiveFlag(LIVE_FLAG_UNK4000000)) {
