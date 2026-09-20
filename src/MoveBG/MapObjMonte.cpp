@@ -1181,8 +1181,10 @@ void TFluffManager::findNextFluff()
 	}
 }
 
-// TODO: 97.1%. The frame is still 0x48 short; the missing locals are
-// somewhere in the STATE_CALM hand-off.
+// TODO: 99.6%. STATE_CALM is instruction-exact (reference-bind `lfsu` on
+// unkD0, scale-in-place, raw stores after one global reload, `mWindMin`
+// read at the compare). STATE_BLOW still colours the first four loads
+// differently and swaps the z pair; the frame is 0x48 short.
 void TFluffManager::control()
 {
 	switch (mState) {
@@ -1200,40 +1202,31 @@ void TFluffManager::control()
 		}
 		break;
 
-	// Retail loads all six floats before the first store, which a
-	// read-modify-write on the member (`unkD0.add(mWind)`, or three `+=`)
-	// cannot do: the stores may alias `mWind`. The sum has to land in a
-	// separate object first. Worth +2.9 (87.1 -> 90.0); three `f32` locals
-	// and a three-argument `set` measure identically, so the vector form is
-	// kept. Residue: retail loads `mWind.y` before `unkD0.y` in the second
-	// component, we the reverse.
+	// `add(mWind, unkD0)` loads mWind.x/unkD0.x/mWind.y/unkD0.y in retail
+	// order. The z pair is still swapped and the first `fadds` lives in
+	// unkD0's register in retail (`fadds f2, f2, f0`).
 	case STATE_BLOW: {
 		TMapObjManager* man = gpMapObjManager;
 		JGeometry::TVec3<f32> wind;
-		wind.add(man->unkD0, mWind);
+		wind.add(mWind, man->unkD0);
 		man->unkD0.set(wind);
 		if (!isStateTimerEngaged())
 			mState = STATE_CALM;
 		break;
 	}
 
-	// TODO: retail reads unkD0 here through an advanced base
-	// (`lfsu f31, 0xd0(r3)`, then 4(r3)/8(r3)) and stores it back with three
-	// plain `stfs` off one reload of the global -- i.e. the *read* group is
-	// the member call and the *write* group the raw components, the opposite
-	// of what is spelled here. Measured from 96.4: this (`set` on the store
-	// side) 97.1, a `TVec3<f32>&` binding on the read side plus `set` 96.8,
-	// binding plus `set` without the named `rate`/`minWind` 97.0, and a
-	// `TMapObjManager*` local for both groups 94.6.
 	case STATE_CALM: {
-		f32 rate = mWindDownRate;
-		f32 windX = gpMapObjManager->unkD0.x * rate;
-		f32 windY = gpMapObjManager->unkD0.y * rate;
-		f32 minWind = mWindMin;
-		f32 windZ = gpMapObjManager->unkD0.z * rate;
+		JGeometry::TVec3<f32>& d0 = gpMapObjManager->unkD0;
+		f32 windX                 = d0.x;
+		f32 rate                  = mWindDownRate;
+		f32 windY                 = d0.y;
+		f32 windZ                 = d0.z;
+		windX *= rate;
+		windY *= rate;
+		windZ *= rate;
 
-		if (fabsf(windX) < minWind && fabsf(windY) < minWind
-		    && fabsf(windZ) < minWind) {
+		if (fabsf(windX) < mWindMin && fabsf(windY) < mWindMin
+		    && fabsf(windZ) < mWindMin) {
 			windX      = 0.0f;
 			windY      = 0.0f;
 			mRideFluff = mNextFluff;
@@ -1253,7 +1246,10 @@ void TFluffManager::control()
 			mState                  = STATE_WAIT;
 		}
 
-		gpMapObjManager->unkD0.set(windX, windY, windZ);
+		TMapObjManager* man = gpMapObjManager;
+		man->unkD0.x        = windX;
+		man->unkD0.y        = windY;
+		man->unkD0.z        = windZ;
 		break;
 	}
 	}
@@ -1297,6 +1293,10 @@ f32 TFluffManager::getRandomZ() const
 	return mRangeZ * (2.0f * MsRandF() - 1.0f);
 }
 
+// TODO: 99.8%. Both named seeds now word-copy a stack TVec3 into
+// mInitialPosition (`stfs` then `lwz`/`stw`); retail's frame is 0x78
+// against our 0x88. The extra 0x10 is the named `initPos` that no
+// callee-block helper absorbed without extra copies or a `set<f>` `bl`.
 void TFluffManager::loadAfter()
 {
 	mFluffNum = 0;
@@ -1308,12 +1308,16 @@ void TFluffManager::loadAfter()
 	mRideFluff->appear();
 	mRideFluff->mPosition.set(mPosition);
 	mRideFluff->mRotation.set(mRotation);
-	mRideFluff->mInitialPosition.set(getRandomX(), mPosition.y * MsRandF(),
-	                                 getRandomZ());
+	JGeometry::TVec3<f32> initPos;
+	initPos.set(getRandomX(), mPosition.y * MsRandF(), getRandomZ());
+	mRideFluff->mInitialPosition = initPos;
 	registerNextFluff(mRideFluff);
 
 	mNextFluff = newFluff("２つ目のわた毛");
-	setUpNextFluff();
+	mNextFluff->mPosition.set(mPosition);
+	mNextFluff->mRotation.set(mRotation);
+	initPos.set(getRandomX(), mPosition.y * MsRandF(), getRandomZ());
+	mNextFluff->mInitialPosition = initPos;
 	mNextFluff->makeObjDead();
 	registerNextFluff(mNextFluff);
 
