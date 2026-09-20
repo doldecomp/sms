@@ -53,22 +53,19 @@ TWireBinder::getDirAtPos(const JGeometry::TVec3<f32>& param_1,
                          f32 param_2) const
 {
 	f32 posInWire = getRangePos(param_1);
-
-	f32 fVar1;
 	f32 fVar2;
 
 	if (posInWire <= 0.01f && param_2 < 0.0f
 	    || 0.99f <= posInWire && 0.0f < param_2) {
-		fVar1 = posInWire - 0.01f * param_2;
 		fVar2 = posInWire;
+		posInWire -= 0.01f * param_2;
 	} else {
-		fVar1 = posInWire;
 		fVar2 = posInWire + 0.01f * param_2;
 	}
 
 	JGeometry::TVec3<f32> vec1;
 	JGeometry::TVec3<f32> vec2;
-	getPoint(&vec1, fVar1);
+	getPoint(&vec1, posInWire);
 	getPoint(&vec2, fVar2);
 
 	vec2 -= vec1;
