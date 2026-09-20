@@ -597,53 +597,68 @@ Mtx* TBathtub::getRootJointMtx() const
 	return (Mtx*)getModel()->getBaseTRMtx();
 }
 
+// Named-local forks over the director and the shine actor: +0x60 and +8
+// per site, landing TBathtub::perform's 0x168 frame (the shine fork at six
+// of its seven sites; any six land it).
+static inline TMarDirector* MapObjCoronaDirector()
+{
+	TMarDirector* d = gpMarDirector;
+	return d;
+}
+
+static inline MActor* MapObjCoronaShine(const TBathtub* p)
+{
+	MActor* a = p->unk29C;
+	return a;
+}
+
 void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TMapObjBase::perform(cue, graphics);
 	u32 calcCue = cue & 1;
 	if (calcCue) {
 		MTXCopy(mMActor->getModel()->getAnmMtx(mStarJntIdx),
-		    unk29C->getModel()->getBaseTRMtx());
-		JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
-		unk29C->getModel()->setBaseScale(scale);
+		    MapObjCoronaShine(this)->getModel()->getBaseTRMtx());
+		MapObjCoronaShine(this)->getModel()->setBaseScale(
+		    JGeometry::TVec3<f32>(3.0f, 3.0f, 3.0f));
 	}
 	if (calcCue) {
-		int time = gpMarDirector->unk58;
+		int time = MapObjCoronaDirector()->unk58;
 		switch (getNumGripsDead()) {
 		case 0:
 			if (time >= 7200) {
 				if (!(unk2A0 & 0x2))
-					gpMarDirector->getConsole()->startAppearBalloon(0x1F, true);
+					MapObjCoronaDirector()->getConsole()->startAppearBalloon(0x1F, true);
 				unk2A0 |= 0x2;
 			} else if (time >= 3600) {
 				if (!(unk2A0 & 0x1))
-					gpMarDirector->getConsole()->startAppearBalloon(0x1E, true);
+					MapObjCoronaDirector()->getConsole()->startAppearBalloon(0x1E, true);
 				unk2A0 |= 0x1;
 			}
 			break;
 		case 1:
 			if (!(unk2A0 & 0x4))
-				gpMarDirector->getConsole()->startAppearBalloon(0x20, true);
+				MapObjCoronaDirector()->getConsole()->startAppearBalloon(0x20, true);
 			unk2A0 |= 0x4;
 			break;
 		case 2:
 			if (!(unk2A0 & 0x8))
-				gpMarDirector->getConsole()->startAppearBalloon(0x21, true);
+				MapObjCoronaDirector()->getConsole()->startAppearBalloon(0x21, true);
 			unk2A0 |= 0x8;
 			break;
 		case 3:
 			if (!(unk2A0 & 0x10))
-				gpMarDirector->getConsole()->startAppearBalloon(0x22, true);
+				MapObjCoronaDirector()->getConsole()->startAppearBalloon(0x22, true);
 			unk2A0 |= 0x10;
 			break;
 		case 4:
 			if (!(unk2A0 & 0x8000))
-				gpMarDirector->getConsole()->startAppearBalloon(0x2D, true);
+				MapObjCoronaDirector()->getConsole()->startAppearBalloon(0x2D, true);
 			unk2A0 |= 0x8000;
 			break;
 		case 5:
 			if (!(unk2A0 & 0x20))
-				gpMarDirector->getConsole()->startAppearBalloon(0x23, true);
+				MapObjCoronaDirector()->getConsole()->startAppearBalloon(0x23, true);
 			unk2A0 |= 0x20;
 			break;
 		}
@@ -651,13 +666,13 @@ void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & 0x2)
 		unk29C->calc();
 	if (cue & 0x4)
-		unk29C->viewCalc();
+		MapObjCoronaShine(this)->viewCalc();
 	if (cue & 0x200) {
-		MtxPtr mtx = unk29C->getModel()->getBaseTRMtx();
+		MtxPtr mtx = MapObjCoronaShine(this)->getModel()->getBaseTRMtx();
 		JGeometry::TVec3<f32> pos;
 		pos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
-		unk29C->setLightData(mGroundPlane, pos);
-		unk29C->entry();
+		MapObjCoronaShine(this)->setLightData(mGroundPlane, pos);
+		MapObjCoronaShine(this)->entry();
 	}
 }
 
