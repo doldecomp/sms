@@ -74,9 +74,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grpvk` MarNameRefGen ([MarNameRefGen](cd56fcce-fa2e-4304-bf6f-0c4b4cc5ef33)): +4 exact. All **62.47→62.53**.
 - Landed `grpvl` Guide ([Guide](4a9a5bc9-f616-4afd-9696-29615c0987f7)): +0 structural.
 - Landed `grpvm` ShadowUtil ([ShadowUtil](750a29a9-2a94-4e96-9ddc-f428d2c6f57a)): +0 structural.
-- Landed `grpvn` WaterGun ([WaterGun](2f0fd56b-1730-4240-82a2-5a72bb758094)): +1 exact (`NozzleCtrl`); hover/turbo callback bugfix; init mBomb; perform→setEmitPt. Unit **46.75→47.56**. Game **54.69→54.70**, exact **11,394→11,395**. Park animation/ctor/emit residues.
-- Running: `grpvo` / MarioSpecial ([MarioSpecial](29a33d37-f740-4864-84e4-4ef8b6f4db7d)); `grpvp` / MSoundSE ([MSoundSE](d4b0dd3d-d95d-4f7d-bd30-4ae7d3f831c1)).
-- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers, BathWater leftovers, MarNameRefGen leftovers, Guide leftovers, ShadowUtil leftovers, WaterGun leftovers.
+- Landed `grpvn` WaterGun ([WaterGun](2f0fd56b-1730-4240-82a2-5a72bb758094)): +1 exact. Game **54.69→54.70**.
+- Landed `grpvo` MarioSpecial ([MarioSpecial](29a33d37-f740-4864-84e4-4ef8b6f4db7d)): +2 exact (`barWait`, `barClimb`) via /512 + named holder-y. Unit **17.26→26.00**. All **62.53→62.59**, Game **54.70→54.76**, exact **11,395→11,397**. Park specMain/pulling/getOnWirePosAngle/wireMove.
+- Running: `grpvp` / MSoundSE ([MSoundSE](d4b0dd3d-d95d-4f7d-bd30-4ae7d3f831c1)). Refill: bgtentacle.
+- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers, BathWater leftovers, MarNameRefGen leftovers, Guide leftovers, ShadowUtil leftovers, WaterGun leftovers, MarioSpecial leftovers.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
