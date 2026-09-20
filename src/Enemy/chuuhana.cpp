@@ -160,6 +160,9 @@ TSpineEnemy* TChuuHanaManager::createEnemyInstance()
 
 static inline int ChuuHanaGraphNodeNum(TGraphWeb* web) { return web->unk8; }
 
+static inline int ChuuHanaSafeNodeNum(const TChuuHana* p);
+static inline TGraphNode* ChuuHanaSafeNode(const TChuuHana* p, int i);
+
 static inline TGraphWeb* ChuuHanaGraphOf(const TChuuHana* p)
 {
 	TGraphTracer* tracer = p->unk124;
@@ -211,6 +214,18 @@ void TChuuHanaManager::initSetEnemies()
 }
 
 // Rolls the body joint about the roll axis while the Roll nerve is active.
+static inline int ChuuHanaSafeNodeNum(const TChuuHana* p)
+{
+	int num = ChuuHanaGraphNodeNum(ChuuHanaGraphOf(p));
+	return num;
+}
+
+static inline TGraphNode* ChuuHanaSafeNode(const TChuuHana* p, int i)
+{
+	TGraphNode* node = ChuuHanaGraphNode(ChuuHanaGraphOf(p), i);
+	return node;
+}
+
 static int ChuuHanaBodyCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -862,9 +877,9 @@ void TChuuHana::setSafeGoal()
 {
 	unk1A4 = mCheckOnPanelTime;
 
-	TMsRange<int> range(0, ChuuHanaGraphNodeNum(ChuuHanaGraphOf(this)));
 	JGeometry::TVec3<f32> point;
-	ChuuHanaGraphNode(ChuuHanaGraphOf(this), range.rand())->getPoint((Vec*)&point);
+	TMsRange<int> range(0, ChuuHanaSafeNodeNum(this));
+	ChuuHanaSafeNode(this, range.rand())->getPoint((Vec*)&point);
 
 	TPathNode goal(point);
 	unkF4  = goal;
