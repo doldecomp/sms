@@ -65,8 +65,9 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Total: **61.93%** matched, game **53.93%**, linked **492 / 732**, exact **11,372**.
 - Landed `grpva` hanasambo ([hanasambo unit ladder](bc539a39-5ccd-4d57-8312-e2062df59367)): structural dropLeaf/loadAfter/genEventCoin/checkGenCoin (fuzzy 99.08→99.54); +0 exact. All stays **62.04%**. Do not third-pass dropLeaf +4 / loadAfter +0xc / genEventCoin +0xc / attackToMario +0x10 without new lever.
 - Landed telesa +2; elecNokonoko Collect +1; Option +1; MapObjBall +2.
-- Running: `grpvc` / killer ([killer unit ladder](04977864-8348-428c-8317-c99ec640d998)). Refill: MapObjPinna.
-- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c.
+- Yielded `grpvc` killer ([killer](04977864-8348-428c-8317-c99ec640d998)): +0; worktree clean. Park ChaseFly +0x30 / NormalFly +0x18 (need priced getBody / getPosition / getVelocity binders), KillerBodyCallback `1.0f` schedule, and register-only residues (Explosion 8-low, fly a=b-c, calcChaseParam r3/r4, flyBehavior r4/r5, genEventCoin r30/r31). Do not re-queue without a new lever.
+- Running: `grpvd` / MapObjPinna ([MapObjPinna](b8704e92-16c3-4a6b-a5d2-46ab846cfa09)). Refill: MarioJump.
+- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
