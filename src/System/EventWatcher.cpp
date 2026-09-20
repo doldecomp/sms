@@ -1328,6 +1328,11 @@ static inline TGCConsole2* EventWatcherGetConsole(TMarDirector* p)
 	return console;
 }
 
+static inline TGCConsole2* EventWatcherConsoleForJet()
+{
+	return SMSGetMarDirector()->getConsole();
+}
+
 static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>* interp,
                                     u32 arg_num)
 {
@@ -1345,7 +1350,7 @@ static void evStartAppearJetBalloon(TSpcTypedInterp<TEventWatcher>* interp,
 
 	case 1:
 		if (p1 == 1)
-			SMSGetMarDirector()->getConsole()->startAppearJetBalloon(1, 10);
+			EventWatcherConsoleForJet()->startAppearJetBalloon(1, 10);
 		break;
 
 	case 2:
