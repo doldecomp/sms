@@ -713,7 +713,7 @@ void TElecCarapace::behaveToHitGround()
 	if (mFlying)
 		mLanded = true;
 
-	if (getGroundPlane()->isWaterSurface())
+	if (mGroundPlane->isWaterSurface())
 		kill();
 
 	mFlying = false;
