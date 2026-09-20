@@ -49,16 +49,23 @@ const char* namekuri2_bastable[] = {
 	nullptr, nullptr, nullptr, nullptr,
 };
 
+static inline int NameKuriLaunchTicks(const TNameKuriLauncher* p)
+{
+	return p->mTicksSpentInCurState;
+}
+
 void TNameKuriLauncher::stateLaunch()
 {
-	if (mTicksSpentInCurState == 0) {
+	if (NameKuriLaunchTicks(this) == 0) {
 		TSpineEnemy* enemy = getProperEnemy("ナメクリマネージャー");
 		if (enemy) {
-			Mtx mtx;
-			MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-
+			// TVec3s before the Mtx, same declaration order as
+			// TCommonLauncher::stateLaunch. A by-value fork over the
+			// tick counter is the +4 pool that lands the Mtx at 0x10.
 			JGeometry::TVec3<f32> local_14;
 			JGeometry::TVec3<f32> local_20;
+			Mtx mtx;
+			MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 
 			local_20.set(0.0f, 4.0f, 0.0f);
 			local_14.set(0.0f, 0.0f, 0.0f);
