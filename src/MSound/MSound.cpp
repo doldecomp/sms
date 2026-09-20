@@ -86,7 +86,7 @@ static bool loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
 	if (!heap)
 		return false;
 
-	if (heap->mBase != 0)
+	if (heap->getBase() != nullptr)
 		return false;
 
 	char filePath[256];
@@ -97,13 +97,17 @@ static bool loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
 		return false;
 
 	JASystem::Kernel::THeap* root = JASystem::WaveArcLoader::getRootHeap();
-	if (!heap->selfAlloc(root, extent, (u32)root->mBase + root->unk10 - extent))
+	void* base                   = root->getBase();
+	u32 addr                     = (u32)base;
+	addr += root->unk10;
+	addr -= extent;
+	if (!heap->selfAlloc(root, extent, addr))
 		return false;
 
 	u32* ptr = obj->getLoadFlagPtr();
 	*ptr     = 0;
-	if (JASystem::Dvd::loadToAramDvdT(0, filePath, heap->mBase, 0, extent, ptr,
-	                                  nullptr)
+	if (JASystem::Dvd::loadToAramDvdT(0, filePath, heap->getBase(), 0, extent,
+	                                  ptr, nullptr)
 	    == -1) {
 		heap->free();
 		return false;
@@ -352,7 +356,9 @@ void MSound::enterStage(MS_SCENE_WAVE wave, u8 param_2, u8 param3)
 }
 
 // Binding level over a raw member read, worth +8 of low region in
-// MSound::exitStage (batch 127).
+// MSound::exitStage (batch 127). Nested fork-in-binder is +8 of frame
+// (0x40 -> 0x48) and raises the JAICamera temp further, not the +4
+// slot we want.
 static inline JAISound* MSoundUnkC4(const MSound* p)
 {
 	JAISound* vC4 = p->unkC4;
@@ -643,6 +649,16 @@ void MSound::initSound()
 	}
 }
 
+// TU-local bind of startSoundSystemSE's JAISound*, same shape as the
+// two-argument MSound::startSoundActor overload. Parked here so pauseOn
+// (already exact on the raw call) is untouched. +8 of frame at one site.
+static inline JAISound* MSStartSysSE(u32 id)
+{
+	JAISound* sound = MSoundSESystem::MSoundSE::startSoundSystemSE(id, 0,
+	                                                              nullptr, 0);
+	return sound;
+}
+
 void MSound::pauseOn(bool param_1)
 {
 	if (param_1)
@@ -665,8 +681,7 @@ void MSound::pauseOff(u8 param_1)
 	switch (param_1) {
 	case 0:
 		if (gateCheck(MSD_SE_SY_PAUSE_OFF))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_OFF, 0,
-			                                             nullptr, 0);
+			MSStartSysSE(MSD_SE_SY_PAUSE_OFF);
 		// FALLTHROUGH!!!
 
 	case 2:
@@ -724,10 +739,9 @@ void MSound::demoModeOut(bool param_1)
 
 void MSound::talkModeIn(bool param_1)
 {
-	if (param_1 && gateCheck(MSD_SE_SY_TALK_MODE_IN)) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_IN, 0,
-		                                             nullptr, 0);
-	}
+	if (param_1)
+		if (gateCheck(MSD_SE_SY_TALK_MODE_IN))
+			MSStartSysSE(MSD_SE_SY_TALK_MODE_IN);
 
 	setCategoryVOLs(0x44, 0.0f);
 
@@ -736,10 +750,8 @@ void MSound::talkModeIn(bool param_1)
 
 void MSound::talkModeOut()
 {
-	if (gateCheck(MSD_SE_SY_TALK_MODE_OUT)) {
-		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0,
-		                                             nullptr, 0);
-	}
+	if (gateCheck(MSD_SE_SY_TALK_MODE_OUT))
+		MSStartSysSE(MSD_SE_SY_TALK_MODE_OUT);
 
 	setCategoryVOLsDefault(0x1ff);
 
@@ -938,25 +950,16 @@ void MSound::playTimer(u32 time)
 // of line and why these sites spell the gate out.  Folding it in closed
 // pauseOn and demoModeIn and moved this function 0x70 -> 0x78.
 //
-// What is left, all instruction-exact and frame-only:
-//   startMarioVoice        0xa0 / 0x78   (-0x28, one gateCheck expansion)
-//   startBeeSe             0x50 / 0x38   (-0x18, four gateCheck expansions)
-//   startSoundActorSpecial 0x78 / 0x70   (-8, variable id, gateCheck inlined)
-//   pauseOff               0x50 / 0x48   (-8)
-//   talkModeIn             0x30 / 0x28   (-8)
-//   talkModeOut            0x40 / 0x38   (-8)
-//   loadWaveBackword      0x128 / 0x120  (-8, plus the buffer 12 bytes low)
-//   exitStage              0x40 / 0x40   (JAICamera temp 4 bytes high)
-// An 8-byte dead non-trivial local in gateCheck lands talkModeOut and
-// startSoundActorSpecial exactly and overshoots pauseOn, pauseOff, talkModeIn
-// (+8) and startBeeSe (+0x10), so it is not the carrier -- and gateCheck is
-// emitted and byte-exact, so it is not a legal one either.  The same local in
-// MSBgm::setAllTracksVolume is +8 per expansion but wants demoModeOut to be
-// 8 bigger than retail; in MSound::checkUnkA8 it was +8 per expansion and fit
-// six functions, but that function does not exist.  The carrier is therefore
-// still unnamed: it has to be a callee of these sites with no out-of-line
-// copy, i.e. something in MSoundSE.hpp around startSoundActor /
-// startSoundSystemSE / startSeRandPlay.  Research item, not a unit item.
+// Closed this batch: talkModeIn / talkModeOut / pauseOff via MSStartSysSE
+// (bind startSoundSystemSE's JAISound* at the call site; gateCheck stays
+// outside so it still inlines), startBeeSe via MSStartActor (same bind on
+// MSoundSE::startSoundActor), loadWaveBackword via getBase() + named base
+// + incremental addr.  Still open, instruction-exact and frame-only:
+//   startMarioVoice        0xa0 / 0x78   (-0x28)
+//   startSoundActorSpecial 0x78 / 0x70   (-8; Inner bind lands the frame
+//                                         but splits retail's mr. r27, r3)
+//   exitStage              0x40 / 0x40   (JAICamera temp 4 bytes high;
+//                                         nested fork-in-binder is +8)
 u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 {
 	if (((param_3 & 0x1) ? true : false) == 1)
@@ -1217,14 +1220,23 @@ u32 MSound::getWallSound(u32 param_1, f32 velocity)
 		return MSD_SE_MA_WALL_COL_CMN_H;
 }
 
+// Same bind as MSStartSysSE, for MSoundSE::startSoundActor. gateCheck stays
+// at the call site so it still inlines (the header 2-arg startSoundActor
+// would put it at depth 2 and emit a bl).
+static inline JAISound* MSStartActor(u32 id, Vec* pos)
+{
+	JAISound* sound = MSoundSESystem::MSoundSE::startSoundActor(
+	    id, pos, 0, nullptr, 0, 4);
+	return sound;
+}
+
 void MSound::startBeeSe(Vec* param_1, u32 param_2)
 {
 	if (param_2 > 3) {
 		JAISound* sound
 		    = !gateCheck(MSD_SE_EN_BEE_GROUP)
 		          ? nullptr
-		          : MSoundSESystem::MSoundSE::startSoundActor(
-		                MSD_SE_EN_BEE_GROUP, param_1, 0, nullptr, 0, 4);
+		          : MSStartActor(MSD_SE_EN_BEE_GROUP, param_1);
 
 		if (sound != nullptr)
 			sound->setVolume(JALCalc::linearTransform(param_2, 3.0f, 50.0f,
@@ -1234,16 +1246,13 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 
 	if (param_2 > 2) {
 		if (gateCheck(MSD_SE_EN_BEE_3))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_3, param_1,
-			                                          0, nullptr, 0, 4);
+			MSStartActor(MSD_SE_EN_BEE_3, param_1);
 	} else if (param_2 == 2) {
 		if (gateCheck(MSD_SE_EN_BEE_2))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_2, param_1,
-			                                          0, nullptr, 0, 4);
+			MSStartActor(MSD_SE_EN_BEE_2, param_1);
 	} else if (param_2 == 1) {
 		if (gateCheck(MSD_SE_EN_BEE_1))
-			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_1, param_1,
-			                                          0, nullptr, 0, 4);
+			MSStartActor(MSD_SE_EN_BEE_1, param_1);
 	}
 }
 
