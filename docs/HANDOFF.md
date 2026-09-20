@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural, Option +1, elecNokonoko +3, hanasambo +2.
-- Landed `grpuh` hanasambo ([hanasambo unit ladder](a8d90721-883c-4e31-9c23-9aa1bba73c6b)): +2 exact (`setDeadAnm` via getActorKeeper; `receiveMessage` this-binder at bloom); Attack frame + init u8 joint; unit **67.95→69.52**; All **61.87→61.88**, Game **53.86→53.87**, exact **11,366→11,368**.
-- Landed elecNokonoko +3; Option +1.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural, Option +1, elecNokonoko +3, hanasambo +2.
+- Landed `grpui` chuuhana ([chuuhana unit ladder](ec0b4951-1288-4349-a503-cc6d27c06977)): `isCollidMove` Object-nerve as if/return not branchless `!=` (95.9→97.6); unit fuzzy 99.25→99.33; +0 exact; All stays **61.88%**.
+- Landed hanasambo +2; elecNokonoko +3; Option +1.
 - Total: **61.88%** matched, game **53.87%**, linked **492 / 732**, exact **11,368**.
-- Running: `grpui` / chuuhana ([chuuhana unit ladder](ec0b4951-1288-4349-a503-cc6d27c06977)). Refill: MapObjMonte.
+- Running: `grpuj` / MapObjMonte ([MapObjMonte unit ladder](edac801f-9269-48e0-8832-747f916ac88a)). Refill: hinokuri2.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
