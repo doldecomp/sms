@@ -142,7 +142,20 @@ void TBEelTearsDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 	mSharedParts->getMActor()->perform(cue, graphics);
 }
 
-void TBEelTearsDrop::generate(JGeometry::TVec3<f32>& position) { }
+void TBEelTearsDrop::generate(JGeometry::TVec3<f32>& position)
+{
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	mActive = true;
+	TMsRange<f32> riseRange(4.0f, 6.0f);
+	mRiseSpeed = riseRange.rand();
+	mPosition  = position;
+
+	TMsRange<f32> unused(1.0f, 1.5f);
+	rand();
+
+	f32 scale = mOwner->mTearsParams->mTearsDropScaleRange.rand();
+	mScaling.set(scale, scale, scale);
+}
 
 TBEelTearsSaveLoadParams::TBEelTearsSaveLoadParams(const char* path)
     : TSpineEnemyParams(path)
@@ -250,18 +263,7 @@ void TBEelTearsManager::splitTears(JGeometry::TVec3<f32>& position)
 		dropPosition.z += positionRange.rand();
 
 		--tearsLeft;
-		TBEelTearsDrop* drop = *dropPtr;
-		drop->offHitFlag(HIT_FLAG_NO_COLLISION);
-		drop->mActive = true;
-		TMsRange<f32> riseRange(4.0f, 6.0f);
-		drop->mRiseSpeed = riseRange.rand();
-		drop->mPosition  = dropPosition;
-
-		TMsRange<f32> unused(1.0f, 1.5f);
-		unused.rand();
-
-		f32 scale = drop->mOwner->mTearsParams->mTearsDropScaleRange.rand();
-		drop->mScaling.set(scale, scale, scale);
+		(*dropPtr)->generate(dropPosition);
 
 		if (tearsLeft < 0)
 			break;
