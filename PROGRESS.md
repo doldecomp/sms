@@ -5163,3 +5163,128 @@ falscher Rahmengröße erreichbar, nie beides gleichzeitig).
 jüngeren Session-Geschichte, +0,26 Prozentpunkte). Volles
 `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`.
+
+### Nach dreiundsechzigster Iterationsrunde (23-Kandidaten-Batch, 16 Fixes/17 Funktionen — neuer Rekord, drei neue Stack-Layout-Techniken katalogisiert)
+
+**16 neue Fix-Commits, 17 exakt getroffene Funktionen** (eine
+2-für-1-Sonderfund, siehe unten) — größter Einzelrunden-Zuwachs der
+Session bisher (+0,28 Prozentpunkte `matched_code_percent`).
+
+**Drei neue, allgemein wiederverwendbare Stack-Layout-Techniken
+entdeckt:**
+
+1. **Pattern 7i — „echter Initialisierer überlebt, `char trash[N]`
+   nicht"** (`TFireWanwan::receiveMessage`): ein unbenutztes `char
+   trash[N];` ohne Initialisierung wird von MWCC VOR der Stack-Layout-
+   Kandidaten-Registrierung wegoptimiert (tote Speicherung eliminiert,
+   bevor der Slot überhaupt gezählt wird). Ein Lokal mit einem ECHTEN,
+   nicht-konstanten Initialisierer-Ausdruck (z. B. `u8 trash =
+   sender->getActorType();`) übersteht dagegen die Kandidaten-
+   Registrierungsphase und reserviert seinen Slot, obwohl der
+   nachfolgende Lese-/Schreibzugriff selbst wieder als totzurück-
+   eliminiert werden kann — Regel: MWCC zählt Frontend-Lokale für die
+   Stack-Platzierung, BEVOR die Dead-Store-Elimination ihre
+   tatsächlichen Lade-/Speicherinstruktionen entfernt.
+2. **Pattern 7j — Umkehrung von Muster 5/7h, fabrizierte Inline-
+   Helfer HINZUFÜGEN statt entfernen** (`TMario::changePlayerTriJump`
+   / `changePlayerJumping`, 2-für-1-Fund): `TMario::setMissJumping()`
+   war in `include/Player/Mario.hpp` bereits als `inline` deklariert,
+   aber in `MarioMove.cpp` mit einem LEEREN Rumpf „gestubbt" — Retail
+   hatte dort echten Code (Gesichtswinkel-Reset, bedingte
+   Geschwindigkeits-Neuberechnung über `JMASSin`/`JMASCos`/
+   `MsSqrtf`/`matan`, `dropObject()`, `changePlayerStatus(...)`), der
+   an BEIDEN Aufrufstellen vollständig inline expandiert wurde (kein
+   `setMissJumping`-Symbol im Retail-Objekt vorhanden). Den echten
+   Rumpf einzusetzen behob gleichzeitig zwei vorher getrennt
+   fehlschlagende Funktionen (`changePlayerTriJump` UND
+   `changePlayerJumping`) mit einem einzigen Commit — die fehlenden
+   8 Byte Inline-Rahmen-Reservierung kamen exakt aus der jetzt
+   vorhandenen Inline-Expansionsebene.
+3. **Pattern 7k — MWCCs Zwei-Pool-Modell für Stack-Allokation**
+   (charakterisiert durch `LiveActorBind`, NICHT gelöst, aber
+   erstmals präzise beschrieben): benannte C++-Lokale werden in einen
+   Pool allokiert, der OBEN am Register-Save-Bereich verankert ist
+   (wächst den Rahmen nach oben, wenn mehr/größere Lokale
+   hinzukommen); anonyme, vom Compiler synthetisierte Temporärwerte
+   (z. B. aus inline-expandiertem `operator-`) leben in einem
+   GETRENNTEN, unabhängig dimensionierten Pool, der UNTEN verankert
+   ist. Trash-Arrays können NIEMALS Bytes zwischen diesen beiden
+   Pools verschieben — sie wachsen immer nur den oberen (benannten)
+   Pool. Erklärt einen erheblichen Teil der bisher als „unlösbar"
+   dokumentierten Phantom-Frame-Fälle strukturell.
+
+**Alle 16 Fixes:**
+
+1. `TMarioModokiTelesa::load` (Commit `80111de4`) — `char trash[16]`.
+2. `TNervePoihanaFreeze::execute` (Commit `23782a99`) — `char
+   trash[0x10]`, gleiche Technik wie das Runde-62-Fix der
+   Schwesterfunktion `TNervePoihanaSleep::execute`.
+3. `TMario::checkGroundAtWalking` (Commit `a629df2e`) — reine
+   Deklarationsreihenfolge-Korrektur: `roof`, `ground`, `floorY` (statt
+   `floorY`, `ground`, ..., `roof` verstreut) — kein Trash nötig.
+4. `TEnemyMario::initValues` (Commit `4ae8583e`) — `char trash[8]`.
+5. `TMarioParticleManager::emitAndBindToSRTMtxPtr` (Commit
+   `13c8dafd`) — `char trash[4]`, identisches Muster zur bereits
+   gefixten Schwesterfunktion `emitAndBindToMtxPtr` (Runde 62).
+6. `TMario::initValues` (Commit `22c9d010`) — `char trash[8]`.
+7. `TPlayerLightWithDBSet::makeDrawBuffer` (Commit `606eb283`) —
+   `char trash[32]`.
+8. `TBEelTears::receiveMessage` (Commit `34ba1171`) — `char trash[8]`.
+9. `TNameKuriManager::initSetEnemies` (Commit `14965073`) — `char
+   trash[16]`.
+10. `TNpcCoin::requestAppearCoin` (Commit `a340c065`) — **echter Bug**:
+    `MsSin/MsCos(75)`-Header-Wrapper rundete den Kurzwinkel auf 0x3555
+    statt Retails 0x3552; direkter `JMASSin/Cos(75*182)`-Aufruf (der
+    im Code bereits etablierte Grad→Winkel-Faktor) reproduziert
+    Retails exakte Konstante. Plus `char trash[0x10]`.
+11. `TMonumentShine::control` (Commit `092a4c2d`) — Umkehrung des
+    üblichen Musters: zwei überflüssige benannte Lokale (`limit`,
+    `zero`) ENTFERNT (Literale direkt inline verwendet) — Retails
+    Rahmen war KLEINER, nicht größer.
+12. `TPollutionLayer::fire` (Commit `2ec08166`) — zwei identische
+    `JGeometry::TVec3<f32>(1.5f,1.5f,1.5f)`-Konstruktor-Aufrufstellen
+    zu einer gemeinsamen benannten Lokalen zusammengeführt (jede
+    separate Inline-Konstruktion reservierte einen eigenen Phantom-
+    Slot).
+13. `CPolarSubCamera::updateGateDemoCamera_` (Commit `6fd7409b`) —
+    `char trash[4]`.
+14. `TFireWanwan::receiveMessage` (Commit `828553f2`) — Pattern 7i
+    (siehe oben), `u8` mit echtem Initialisierer statt totem
+    `char trash[N]`.
+15. `TSpcTypedInterp<TEventWatcher>::evSetFruitType` (Commit
+    `57da7962`) — **echter Bug**: zwei gepoppte Werte waren als
+    `int` statt `u32` deklariert; Retail nutzt vorzeichenlose Typen
+    mit expliziten `(int)`-Casts an den Vergleichsstellen. Hinweis für
+    künftige Runden: Schwesterfunktion `evGetFruitNum` in derselben
+    Datei zeigt identisches +8-Byte-Rahmen-Symptom, vermutlich
+    derselbe Fix, nicht im Scope dieser Runde bearbeitet.
+16. `TMario::changePlayerTriJump` + `TMario::changePlayerJumping`
+    (Commit `ad4217f7`) — Pattern 7j (siehe oben), 2-für-1-Fund.
+
+**Weitere gründlich dokumentierte Sackgassen** (sauber
+zurückgesetzt): `TMario::turnning` (Zwei-Pool-Problem, Ziellokal
+immer im oberen statt unteren Pool platziert), `TMario::
+initMirrorModel` (bestätigt und erweitert einen bereits aus Runde 28
+bekannten Cross-Funktions-.rodata-Literal-Pool-Versatz von 24 Byte,
+eigenständiger ELF32-Parser geschrieben, da `readelf`/`objdump`
+fehlen), `TNerveBathtubKillerExplosion::execute` (bestätigt
+identisches Symptom in Schwester-Nerve `TNerveBathtubKillerBreak`,
+bereits aus einer früheren Runde als TODO-Kommentar im Code vermerkt),
+`TAmenbo::calcRootMatrix` (adressgenommene `TPosition3f`-Lokale
+resistent gegen jede Trash-Platzierung), `TNerveBGKAppear::execute`
+(weitere Bestätigung des `TFlagT<u16>`-Systemproblems, diesmal mit
+9-teiligem Varianten-Log), `TLiveActor::bind` (Ursprung von Pattern
+7k, siehe oben), `TBossMantaManager::setupEfbAlpha` (anonymer
+`GXColor`-Blockspeicher-für-Zeiger-Argument landet immer an der
+niedrigsten statt höchsten Adresse, 7 Varianten erfolglos).
+
+### Session-Gesamtstand nach Runde 63
+
+**499 verifizierte echte Fixes in 156 Commits.** `matched_functions`:
+**9083** (von 9066 zu Rundenbeginn, +17). `matched_code_percent`:
+**46,34 %** (größter Einzelrunden-Zuwachs der Session, +0,28
+Prozentpunkte). Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c`
+bestätigt `build/GMSJ01/mario.dol: OK`. Rundenfolge 61-63 zusammen:
+`matched_functions` 9050→9083 (+33), `matched_code_percent`
+45,73 %→46,34 % (+0,61 Prozentpunkte) — drei projektweite Header-Bug-
+Funde plus zwei starke reguläre Batch-Runden.
