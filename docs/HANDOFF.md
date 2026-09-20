@@ -59,13 +59,12 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan +2, hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale land), WaterGun (stale land), popo +1.
-- Landed `grpto` popo ([popo unit ladder](f211851a-641e-41ee-ab1e-26b82567222a)): `TPopo::checkTrigger` exact; Fly yaw colouring + init frame; All **61.59→61.62**, Game **53.50→53.53**, exact **11,338→11,339**.
-- Landed stale `grpfg` bosseel + `grpfh` WaterGun: All **61.46→61.59**, Game **53.33→53.50**, exact **11,330→11,338**.
-- Landed `grptn` MapObjMonte: +3 exact (`TFluff::appear`/`control`, `THangingBridge::perform`).
-- Total: **61.62%** matched, game **53.53%**, linked **492 / 732**.
-- Running: `grptp` / hinokuri2 ([hinokuri2 unit ladder](bcb42251-eac5-4783-9400-eed2947f1b60)). Refill: EventWatcher (36 unmatched fns).
-- Cleaned abandoned worktrees grpfi/grpfj/grpfk.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan +2, hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale), WaterGun (stale), popo +1, hinokuri2 +0 structural.
+- Landed `grptp` hinokuri2 ([hinokuri2 unit ladder](bcb42251-eac5-4783-9400-eed2947f1b60)): `THino2Mask::perform` concat/translation bind (98.4→99.7, frame-exact); unit fuzzy 99.56→99.60; no new exact; All stays **61.62%**. Next lever: reconstruct UNUSED `shakeCamera`/`makeQuake`/`updatePolTrans` stubs.
+- Landed `grpto` popo: `TPopo::checkTrigger` exact; All **61.59→61.62**, exact **11,338→11,339**.
+- Landed stale bosseel + WaterGun: All **61.46→61.59**, exact **11,330→11,338**.
+- Total: **61.62%** matched, game **53.53%**, linked **492 / 732**, exact **11,339**.
+- Running: `grptq` / EventWatcher ([EventWatcher unit ladder](ddd29749-bdd6-4872-afca-252c0bd8d5af)). Refill: MapObjMamma.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
