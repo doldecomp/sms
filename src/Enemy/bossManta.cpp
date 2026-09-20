@@ -593,12 +593,16 @@ bool TBossManta::collidedWithWater()
 			}
 			unk19C++;
 
+			// TODO: frame is 8 long.  Spelling the array out at both
+			// sites lands 0xa0 exactly but emits the literal twice and
+			// renumbers the whole pool (matched_data 100 -> 18), so the
+			// residue is one 8-byte level elsewhere in this body.
 			if (unk19C == BossMantaGetHitCountMax(this)) {
-				if (mGeneration >= 4)
+				if (BossMantaGeneration(this) >= 4)
 					mSpine->pushAfterCurrent(&TNerveMantaDeath::theNerve());
 				else
 					mSpine->pushAfterCurrent(&TNerveMantaSpawn::theNerve());
-			} else if (BossMantaGetVertebraeCount(mSpine) < 7) {
+			} else if (mSpine->getVertebraeCount() < 7) {
 				mSpine->pushAfterCurrent(&TNerveMantaMove::theNerve());
 			}
 		}
