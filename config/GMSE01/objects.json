@@ -81,6 +81,7 @@
     "JSystem/JAudio/JADebug/JADHioNode.cpp",
     "JSystem/JAudio/JAInterface/JAIAnimation.cpp",
     "JSystem/JAudio/JAInterface/JAIAsnData.cpp",
+    "JSystem/JAudio/JAInterface/JAIBasic.cpp",
     "JSystem/JAudio/JAInterface/JAIConst.cpp",
     "JSystem/JAudio/JAInterface/JAIData.cpp",
     "JSystem/JAudio/JAInterface/JAIDebug.cpp",

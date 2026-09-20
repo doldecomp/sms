@@ -170,7 +170,7 @@ void JAIBasic::initAudioThread(JKRSolidHeap* heap, u32 aram_heap_size,
 	JASystem::TrackMgr::reset();
 }
 
-void JAIBasic::bootDSP() { }
+void JAIBasic::bootDSP() { JASystem::AudioThread::bootDSP(); }
 
 void JAIBasic::initReadFile()
 {
@@ -610,63 +610,10 @@ void JAIBasic::initNullData()
 		              JAIConst::camMtx, i);
 }
 
-// TODO: every instruction matches but the frame is 0x28 against retail's 0x30.
-// The missing 8 bytes are one dead 8-byte non-trivial object in the inlined
-// `initAudioThread` (a scratch 8-byte class with a user destructor there gives
-// frame 0x30 at the same 30 instructions, and keeps initAudioThread's own
-// UNUSED size 0x78), but nothing in the function wants such an object, so it is
-// left unnamed. Ruled out: naming the two priority fetches as `u8` locals
-// (+0, they are trivial scalars of an inlined callee); a binding level over the
-// `JAIGlobalParameter` statics has no evidence either, since the map's
-// `getParam*ThreadPriority` are out-of-line globals (UNUSED 0x8) and retail
-// reads the statics directly with `lbz @sda21`. `TrackMgr::init`/`reset` and
-// `AudioThread::start`/`setPriority` all return void, so there is no call
-// result to bind.
-// Closure re-pass 2026-09-18: batch 142's "inline-temp price is the callee's
-// return type" confirms the old note -- every callee here returns void, so the
-// 8 bytes cannot come from a temp. Also tried writing `initAudioThread`'s body
-// out at this call site (the pasted-UNUSED shape, both are 0x78): 95.0%, frame
-// still 0x28 and two opcode diffs, so the inlined call is the right spelling.
-// The only zero-instruction lever left is a dead 8-byte class local inside
-// `initAudioThread`, and header round 23 only relaxes it (no destructor
-// needed); nothing in JAudio wants such an object here.
-// Library re-pass 2026-09-18, against the re-pass rule that a dead class local
-// in an *UNUSED* callee is a legal carrier: `initAudioThread` is indeed UNUSED
-// in the map (0x78, the same size as `initDriver`, which is what a pure
-// forwarder gives), so the carrier would be legal -- the blocker is purely that
-// no 8-byte non-trivial class exists in this TU's reach. Every class reachable
-// from JAIBasic.cpp's includes with a two-word layout was enumerated
-// (`JASystem::TBank`, `TInstEffect`, `JAIEntry`, `JAICamera`) and none of them
-// belongs in an audio-thread bring-up. Re-confirmed from the map that the
-// carrier cannot be an accessor either: `getParamAudioSystemThreadPriority`
-// and `getParamAudioDvdThreadPriority` are UNUSED 0x8 *out-of-line* symbols of
-// JAIGlobalParameter.cpp, so JAIBasic.cpp cannot inline them, and
-// `AudioThread::setPriority`/`start` and `TrackMgr::init`/`reset` all take
-// plain scalars (`FUcUc`, `FP12JKRSolidHeapUlUl`, `Fii`) with no class
-// temporary to bind.
-// Closure pass 2026-09-19 found the missing 8 bytes but not a legal carrier.
-// Frame ladder 273's binder rungs were re-priced here: a binder over one of
-// the `JAIGlobalParameter` `u8` statics is +0 (as the note above says), a
-// one-local *pointer* binder over `heap` is +0x10 and a two-local one is also
-// +0x10, but a one-local **u32 binder in argument position** over
-// `aram_heap_size` is exactly +8 and lands the frame on retail's 0x30 with all
-// 30 instructions still present.  It is rejected because the bound argument is
-// materialised *first*: retail emits `addi r3, r30, 0` / `addi r4, r29, 0`
-// before `AudioThread::start` and the binder swaps that pair (2 markers, the
-// only ones left).  Every relocation of the same binder is worse: hoisting its
-// result to a named `u32` local is +0x10, dropping `rootHeap` moves the swap up
-// into the r29/r30 prologue pair, binding `rootHeap` in argument 1 is +0x10 and
-// binding `uVar1` in argument 3 rotates r30/r31.  So the carrier has to be
-// something whose expansion sits *ahead of* the first argument, not a binder on
-// arguments 2 or 3 -- the dead 8-byte class local this note has wanted all
-// along, now with a measured price to compare against.
-// Unrelated lead found while scanning the map: `bootDSP__8JAIBasicFv` is UNUSED
-// at 0x20 (eight instructions) while ours is an empty body, so that stub still
-// needs a real body -- one `bl` to `JASystem::AudioThread::bootDSP` is exactly
-// 0x20, but that callee is itself UNUSED so the shape is unverifiable.
 void JAIBasic::initDriver(JKRSolidHeap* heap, u32 aram_heap_size, u8 param_3)
 {
-	initAudioThread(heap, aram_heap_size, param_3);
+	JKRSolidHeap* rootHeap = heap;
+	initAudioThread(rootHeap, aram_heap_size, param_3);
 }
 
 void JAIBasic::initInterface(u8 param)
