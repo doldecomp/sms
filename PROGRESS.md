@@ -5625,3 +5625,144 @@ Rekord-Zuwachs in Folge nach Runde 64 [+18] und Runde 65-Kontext).
 `matched_code_percent`: **47,12 %** (überschreitet erstmals die
 47-Prozent-Marke). Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c`
 bestätigt `build/GMSJ01/mario.dol: OK`.
+
+### Nach siebenundsechzigster Iterationsrunde (24-Kandidaten-Batch, 16 Fix-Commits / 18 Funktionen matched, neue Trash-Pool-Erkenntnisse)
+
+**16 neue Fix-Commits** (alle mit der seit Runde 64 etablierten
+strengen Byte-für-Byte-Instruktionswort-Verifikation bestätigt), davon
+einer (Nr. 14) ein Header-Fix, der zusätzlich zur Zielfunktion drei
+weitere Template-Instanzen im selben Header auf 100 % brachte —
+**18 Funktionen** insgesamt neu gematcht:
+
+1. `TMapCollisionData::removeCheckListData` (Commit `6b801674`) —
+   `char trash[0x28]`.
+2. `TIndirectLightWithDBSet::makeDrawBuffer` (Commit `b5da1e9d`) —
+   `char trash[32]`, viertes und letztes von vier Geschwister-
+   `makeDrawBuffer`-Fixes in `LightUtil.cpp`.
+3. `TBellDolpic::control` (Commit `52e1539a`) — `char trash[16]` nach
+   `pos`-Lokaler.
+4. `TSpcTypedInterp<TEventWatcher>::evGetAddressFromViewObjName`
+   (Commit `cf12b481`) — **umgekehrtes Muster 7**: ein ÜBERFLÜSSIGER
+   benannter Lokal (`viewObj`) reservierte einen Slot, den Retail
+   nicht hat; Entfernen (inline-Cast direkt im `push()`-Argument)
+   verschiebt den kompletten Anonym-Pool um die fehlenden 4 Byte nach
+   oben.
+5. `TMapObjBase::changeObjMtx` (Commit `9178fa3b`) — **zwei echte
+   Bugs**: (a) Übersetzungsspalte falsch gelesen (`mtx[3][0..2]`
+   Bottom-Row statt der projektweiten Konvention `mtx[0..2][3]`
+   Translation-Column); (b) `char trash[0x28]` für die fehlende
+   40-Byte-Rahmenreserve.
+6. `TKageMarioModoki::init` (Commit `52026a21`) — `char trash[8]`.
+7. `TMario::canSleep` (Commit `add9a5c5`) — zusätzlicher, nie
+   referenzierter `const TBGCheckData* gnd2`-Pointer-Lokal direkt
+   nach `gnd` (Verfeinerung von Muster 7i: ein unbenutzter Pointer
+   OHNE Initialisierer wird hier NICHT vor der Stack-Layout-
+   Registrierung eliminiert, reserviert seinen Slot trotzdem).
+8. `TWireBinder::getDirAtPos` (Commit `9641f2ab`) — dritten benannten
+   Lokal (`fVar1`) eliminiert, dessen Wert stattdessen in-place in
+   `posInWire` mutiert (reproduziert Retails bedingtes
+   `fmr f31,f1`-Muster exakt).
+9. `TBossEelHeartCoin::perform` (Commit `92276978`) — `char
+   trash[44]` nach `heartMtx`-Lokaler.
+10. `TBossGesso::rumblePad` (Commit `c6576249`) — Deklaration von
+    `fVar2` an den Funktionsanfang vorgezogen, Zuweisung
+    (`fVar2 = delta.length();`) blieb an ursprünglicher Stelle:
+    reines Registrierungsreihenfolge-Detail ohne Instruktionsänderung
+    verschiebt `delta`s Slot um die nötigen 4 Byte.
+11. `TGesso::behaveToFindMario` (Commit `7f89a008`) — **neues
+    Trash-Pool-Teilmuster „benutztes vs. unbenutztes Trash"**: ein
+    unbenutztes `char trash[N]` wächst immer den OBEREN (benannten)
+    Pool und kann einen anonymen Temporärwert nie verschieben; ein
+    TATSÄCHLICH BESCHRIEBENES `char trash[4]; trash[0]=0;` (die
+    Zuweisung selbst wird wegoptimiert, Instruktionszahl bleibt
+    gleich) überlebt als echter benannter Lokal im UNTEREN Bereich
+    und verschiebt dadurch den anonymen `TPathNode`-Temporärwert um
+    die nötigen 4 Byte nach oben.
+12. `CPolarSubCamera::ctrlNormalDeadDemo_` (Commit `4d0f223f`) —
+    **neue Anker-Regel**: ein unreferenziertes `char trash[N]`
+    landet immer NACH jedem echten (adressgenommenen) benannten
+    Lokal in seinem Scope, unabhängig von der Textposition relativ zu
+    diesem Lokal — bestätigt durch drei erfolglose Platzierungen vor
+    `Vec diff`; der Fix platziert `char trash[28]` stattdessen NACH
+    `diff`s Feldzuweisungen, was den Vor-`diff`-Bereich wachsen lässt
+    und `diff` von Offset 0x14 auf 0x30 verschiebt (exakt Retail).
+13. `TGCConsole2::checkChangeTelopArray` (Commit `22731050`) — **drei
+    kombinierte Fixes**: (a) drei zuvor fälschlich hinzugefügte
+    benannte Globals (`scUnusedScale1/2`, `scUnusedTable`)
+    dupliziierten bereits vorhandene anonyme Compiler-Literale und
+    verschoben das komplette nachfolgende `.data`-Layout um 40 Byte —
+    entfernt; (b) `scDolpicNewsDolpic5_1`/`_4` im Case-5-Zweig
+    vertauscht (per Retail-Symbol-zu-Adresse-Abgleich verifiziert);
+    (c) `char trash[48]` für die restliche Rahmenlücke.
+14. `TNameRefAryT<T,JDrama::TNameRef>::load` (Commit `0f596d40`,
+    Header-Fix in `include/Strategic/NameRefAry.hpp`) — Bindung des
+    `operator[]`-Ergebnisses an eine explizite Referenz
+    (`T& child = getChildren()[i];`) vor dem virtuellen `load()`-
+    Aufruf; reserviert den fehlenden 4-Byte-Slot. Da es sich um eine
+    Template-Methode handelt, brachte dieser EINE Fix alle vier im
+    selben Objekt instanziierten Varianten
+    (`TStageEventInfo`, `TStagePositionInfo`, `TCameraMapTool`,
+    `TScenarioArchiveName`) gleichzeitig auf 100 % — nach
+    vollständiger Regressionsprüfung aller Includer committet.
+15. `TWalkerEnemy::behaveToFindMario` (Commit `f9d9c145`) — Kombi aus
+    benanntem `TPathNode node(...)` PLUS benanntem Pointer
+    `TPathNode* nodePtr = &node;` (nicht Referenz) reproduziert
+    Retails exaktes +4/+4-Split-Layout.
+16. `TMario::thinkHeight` (Commit `ead2db98`) — inline-expandiertes
+    `checkStatusType()`-Ergebnis an eine benannte `bool jumping`-
+    Lokale gebunden statt direkt in der `if`-Bedingung verwendet;
+    verifiziert ohne Regression der bereits exakt matchenden
+    Geschwisterfunktion `checkPlayerAround`.
+
+**Fünf gründlich dokumentierte Sackgassen** (alle sauber
+zurückgesetzt, mehrere mit außergewöhnlicher Bisektionstiefe):
+`MActorAnmData::MActorAnmData()` (8 Varianten — der anonyme
+Compiler-Temporärwert für die implizite Default-Argument-Konstruktion
+des ersten Klassenmembers ist permanent auf den niedrigsten
+Anonym-Pool-Offset fixiert; nichts Legales kann vor der allerersten
+Member-Konstruktion ausgewertet werden), `MSHandle::calcPan`
+(8 Varianten, reine 8-Byte-Überreservierung ohne zugehörige
+Save/Spill-Instruktion, klassische Zwei-Pool-Sackgasse),
+`TMapObjGrassManager::initDrawNear` (20+ Iterationen — DRITTER,
+unabhängiger Stack-Pool für GXColor-Compound-Literal-Materialisierung
+identifiziert, zusätzlich zum benannten und dem fctiwz-Anonym-Pool;
+jede nicht-störende `TVec3<s16>`-Dummy-Variante erreicht nur +16 von
+benötigten +20 Byte, jede größere Variante überschießt auf +24 oder
+stört die bereits passende Register-Allokation), `JPABaseEmitter::
+calcCreateParticle` (15+ Varianten, Diff von 58 auf 6 Zeilen reduziert
+— der `getRandomRF()`-Bit-Trick-Temporärwert aus `JMath::
+TRandom_fast_::get_ufloat_1()` bleibt permanent an der niedrigsten
+Anonym-Pool-Position fixiert, da er der ERSTE in Erstellungsreihen-
+folge erzeugte Inline-Temporärwert der Funktion ist), `TApplication::
+setupThreadFuncLogo` (~10 Varianten — asymmetrische +4/+0-Verschiebung
+über vier Aufrufstellen zweier geteilter Inline-Helfer
+(`SMSLoadArchive`/`SMSLoadArchiveARAM`) mathematisch nicht aus einer
+symmetrisch wirkenden Body-Änderung ableitbar, da beide Aufrufstellen
+jeder Helferfunktion identischen Code teilen).
+
+Drei Kandidaten mit sauberem Fehlschlag ohne Dateiänderung (Infra-
+Ratenbegrenzung bzw. Skript-Fehler vor jeder Quelländerung):
+`TMActorKeeper::TMActorKeeper(TLiveManager*)`, `TCoasterEnemy::bind`,
+`TMapObjGeneral::receiveMessage` — bleiben frische Kandidaten für eine
+künftige Runde.
+
+**Methodik-Verfeinerung**: Die Kandidaten-Ausschlussmenge wurde von
+reiner Unit-Pfad-Ebene auf Funktions-Ebene verfeinert
+(`(unit, funktion)`-Paare statt nur `unit`), nachdem eine Prüfung
+zeigte, dass vier der fünf neuen Sackgassen-Units noch zahlreiche
+andere unberührte Kandidatenfunktionen im Zielbereich hatten (z. B.
+`JPAEmitter.cpp` mit vier weiteren, `MActorData.cpp` mit sieben
+weiteren) — eine reine Unit-Sperre hätte diese in künftigen Runden
+fälschlich unsichtbar gemacht.
+
+### Session-Gesamtstand nach Runde 67
+
+**565 verifizierte echte Fixes in 222 Commits.** `matched_functions`:
+**9151** (von 9133 zu Rundenbeginn, +18 exakt wie erwartet — 16
+Fix-Commits, davon einer mit Kaskadeneffekt auf vier
+Template-Instanzen). `matched_code_percent`: **47,35 %**. Volles
+`ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`. Regressionsprüfung (Vergleich aller
+zuvor 100 %-matchenden Funktionen vor/nach dem Rebuild): 0
+Regressionen, 18 Neuzugänge — exakte Übereinstimmung.
+
