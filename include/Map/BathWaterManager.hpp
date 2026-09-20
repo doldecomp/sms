@@ -43,8 +43,8 @@ public:
 		// conversions follow assignment order.
 		// TODO: the three conversion temporaries still land in a different
 		// order (0x30/0x38/0x40 hold j, i, i in the ROM and i, j, i here);
-		// splitting the declarations and commuting the product do not move
-		// them.
+		// naming j first, `t = j; t = i / t`, and commuting the product do
+		// not move them.
 		f32 t     = (f32)i / (f32)j;
 		f32 angle = (f32)i * 0.31415927f;
 		f32 amp   = t * (unk3C - h);

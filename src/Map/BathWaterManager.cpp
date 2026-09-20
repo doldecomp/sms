@@ -126,8 +126,12 @@ public:
 		             unk8C->dropRadius.get() * 2.0f, 0.0f, 0.0f);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-		unk78.set(0.0f, 0.0f, 0.0f);
-		unk84 = 0.0f;
+		// Three reverse stores, not a descending chain: `z = y = x = 0`
+		// still emits x,y,z. Retail writes z, then y, then x.
+		unk78.z = 0.0f;
+		unk78.y = 0.0f;
+		unk78.x = 0.0f;
+		unk84   = 0.0f;
 	}
 
 	void addDrop(const JGeometry::TVec3<f32>& param_1, f32 param_2)
@@ -512,6 +516,9 @@ static void initScreen2D(s16 w, s16 h)
 static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 {
 	static f32 delta = 2.0f * 3.1415927f / 30.0f;
+	// angle before r matches the out-of-line copy (100). Swapping them
+	// lands render's inlined f21/f20 (99.8 -> 99.9) but drops this
+	// standalone body 100 -> 99.4; the inline FPR pair stays.
 	f32 angle;
 	f32 r;
 
@@ -900,7 +907,8 @@ public:
 		for (int i = 0; i < num; ++i) {
 			TBathWaterParams* p = params[i];
 			if (p->isVisible.get()) {
-				f32 size = p->texScale.get() * p->dropRadius.get();
+				f32 size = p->texScale.get();
+				size *= p->dropRadius.get();
 				f32 ux = u0 * size, uy = u1 * size, uz = u2 * size;
 				f32 rx = r0 * size, ry = r1 * size, rz = r2 * size;
 				GXBegin(GX_QUADS, GX_VTXFMT0, (waters[i]->unk74 * 4) & 0xfffc);
@@ -929,15 +937,16 @@ public:
 			                                    - data.unk44 * data.unk44));
 		}
 
-		// TODO: frame 0x1e8 against the ROM's 0x258. Everything else in this
-		// function is instruction-identical. The 112 bytes missing are
-		// exactly one Mtx plus one Mtx44 -- the pair initScreen2D now owns --
-		// and declaring a dead pair here does give 0x258, but the named
-		// locals then sit 0x5c low and the inlined matrices 0x34 low, so the
-		// recovered declaration is not this one. The ROM's named region runs
-		// 0x140 (a TColor copy), 0x144 (drawCap's position, so it is a named
-		// local there and not an argument temporary), 0x150 (this colour),
-		// 0x154 (texObj), with 0x174-0x1c8 unaccounted for.
+		// TODO: frame 0x1e8 against the ROM's 0x258. Instruction stream is
+		// identical except drawCap's inlined f21/f20 (r vs angle); swapping
+		// those locals here lands render 99.9 but drops the out-of-line
+		// drawCap 100 -> 99.4. The 112 bytes missing are one Mtx plus one
+		// Mtx44 -- the pair initScreen2D now owns -- and declaring a dead
+		// pair here does give 0x258, but the named locals then sit 0x5c
+		// low and the inlined matrices 0x34 low. The ROM's named region
+		// runs 0x140 (a TColor copy), 0x144 (drawCap's position, so it is
+		// a named local there and not an argument temporary), 0x150 (this
+		// colour), 0x154 (texObj), with 0x174-0x1c8 unaccounted for.
 		GXColor color = (GXColor) { 0x78, 0xFA, 0x14, unk2C->alpha.get() };
 
 		GXTexObj texObj;
@@ -1899,34 +1908,36 @@ void TBathWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 						throwMario(unk14[0]->jump.get());
 				}
 			}
-
-			// Periodic jump-drop spawn.
-			if ((unk1C & 7) == 4 && unk24->getBathtubData().unk64) {
-				// The bathtub data is fetched as an argument and not held in
-				// a reference beforehand: arguments go right to left, so the
-				// ROM draws the random spread first, reads the radius second
-				// and only then re-reads unk24 (the draw's store to the seed
-				// is what forces the second load).
-				JGeometry::TVec3<f32> vel;
-				if (fakeCalcPos(unk24->getBathtubData(),
-				                unk14[1]->dropRadius.get(),
-				                unk10.get_float(-1.0f, 1.0f), &vel))
-					// The upward speed is drawn from [0, 10): 10.0f is the
-					// TU's `@3424` literal, which nothing else accounts for.
-					unk20[1]->addDrop(vel, unk10.get_float(10.0f));
-			}
-
-			TBathWater* soundBw = unk20[0];
-			JGeometry::TVec3<f32> avg;
-			avg.set(soundBw->unk78);
-			f32 tmp = soundBw->unk84;
-			if (tmp > 0.0f)
-				SMSGetMSound()->startSoundActorWithInfo(MSD_SE_BS_KOOPA_FLOOD,
-				                                        &avg, nullptr, tmp, 0,
-				                                        0, nullptr, 0, 4);
 		}
+
+		// Outside `!(unk1C & 3)`: retail's bne from that test lands on
+		// this spawn, so it (and the flood sound) run every CUE_MOVE.
+		if ((unk1C & 7) == 4 && unk24->getBathtubData().unk64) {
+			// The bathtub data is fetched as an argument and not held in
+			// a reference beforehand: arguments go right to left, so the
+			// ROM draws the random spread first, reads the radius second
+			// and only then re-reads unk24 (the draw's store to the seed
+			// is what forces the second load).
+			JGeometry::TVec3<f32> vel;
+			if (fakeCalcPos(unk24->getBathtubData(),
+			                unk14[1]->dropRadius.get(),
+			                unk10.get_float(-1.0f, 1.0f), &vel))
+				// The upward speed is drawn from [0, 10): 10.0f is the
+				// TU's `@3424` literal, which nothing else accounts for.
+				unk20[1]->addDrop(vel, unk10.get_float(10.0f));
+		}
+
+		TBathWater* soundBw = unk20[0];
+		JGeometry::TVec3<f32> avg;
+		avg.set(soundBw->unk78);
+		f32 tmp = soundBw->unk84;
+		if (tmp > 0.0f)
+			SMSGetMSound()->startSoundActorWithInfo(MSD_SE_BS_KOOPA_FLOOD,
+			                                        &avg, nullptr, tmp, 0, 0,
+			                                        nullptr, 0, 4);
 	}
 
+	// Slot 0xc on the 0x14 renderer vtable (0x8 prerender, 0xc render).
 	if (cue & CUE_DRAW)
-		unk30->prerender(graphics, unk24->getBathtubData(), unk20, unk14, 2);
+		unk30->render(graphics, unk24->getBathtubData(), unk20, unk14, 2);
 }
