@@ -1271,36 +1271,42 @@ bool THamuKuri::isResignationAttack()
 	return false;
 }
 
+// requestSerialKill's body as an inlined callee so its `param_1` (this) outranks
+// the loop locals the way the standalone copy ranks r31.
+static inline void HamukuriSerialKill(THamuKuri* param_1)
+{
+	THamuKuriManager* manager = param_1->getManager();
+	int trampled              = 1;
+
+	THamuKuriSaveLoadParams* params
+	    = (THamuKuriSaveLoadParams*)manager->unk38;
+
+	s32 trampleBonusNum = params->mSLTrampleBonusNum.value;
+
+	for (int i = 0; i < manager->getActiveObjNum(); ++i) {
+		THamuKuri* obj = (THamuKuri*)manager->getObj(i);
+		if (obj == param_1)
+			continue;
+
+		if (obj->isBckAnm(3)) {
+			obj->kill();
+			++trampled;
+		}
+	}
+
+	if (trampled >= trampleBonusNum) {
+		gpItemManager->makeObjAppear(param_1->mPosition.x, param_1->mPosition.y,
+		                             param_1->mPosition.z, 0x20000005, true);
+	}
+}
+
 bool THamuKuri::isHitValid(u32 param_1)
 {
 	if (isBckAnm(3)) {
 		// THamuKuriManager::requestSerialKill's body written out: at 15
 		// statements it is over the depth-1 inline budget, so the ROM `bl`s it
 		// from TFireHamuKuri::isHitValid and expands it only here.
-		THamuKuriManager* manager = getManager();
-		int trampled              = 1;
-
-		THamuKuriSaveLoadParams* params
-		    = (THamuKuriSaveLoadParams*)manager->unk38;
-
-		s32 trampleBonusNum = params->getTrampleBonusNum();
-
-		for (int i = 0; i < manager->getActiveObjNum(); ++i) {
-			THamuKuri* obj = (THamuKuri*)manager->unk18[i];
-			if (obj == this)
-				continue;
-
-			if (obj->isBckAnm(3)) {
-				obj->kill();
-				++trampled;
-			}
-		}
-
-		if (trampled >= trampleBonusNum) {
-			gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
-			                             0x20000005, true);
-		}
-
+		HamukuriSerialKill(this);
 		return true;
 	}
 
@@ -2362,6 +2368,12 @@ void TBossDangoHamuKuri::genEventCoin()
 	}
 }
 
+static inline TSpineBase<TLiveActor>* HamukuriDangoSpine(TLiveActor* p)
+{
+	TSpineBase<TLiveActor>* spine = p->getSpine();
+	return spine;
+}
+
 void TBossDangoHamuKuri::generateBody()
 {
 	s32 numArray = unk23C->getNumArray();
@@ -2377,7 +2389,7 @@ void TBossDangoHamuKuri::generateBody()
 
 	newHamu->reset();
 	newHamu->mSpine->reset();
-	newHamu->mSpine->setNext(&TNerveDangoHamuKuriWait::theNerve());
+	HamukuriDangoSpine(newHamu)->setNext(&TNerveDangoHamuKuriWait::theNerve());
 	newHamu->mPosition.set(0.0f, 0.0f, 0.0f);
 	newHamu->unk124->unk0 = unk124->unk0;
 	++unk238;
