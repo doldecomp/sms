@@ -4256,3 +4256,118 @@ verlorene Inline-Hilfsfunktion im Retail-Quelltext hin).
 **9010** (von 9005 zu Rundenbeginn), `matched_code_percent`: 45,06 %.
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`.
+
+### Nach fünfundfünfzigster Iterationsrunde (großer 20-Kandidaten-Batch: 11 neue Matches, sechstes Bugmuster, mehrere Lehrbeispiele zu Stack-Slot-Allokation)
+
+Größter Batch dieser Session (20 parallele Unteragenten). **Elf neue
+Byte-exakte Matches**:
+
+- **`TMarioParticleManager::emitParticleCallBack(...)`** (95,85 % → Match,
+  Commit `fb2aefe9`): Klassischer Pattern-4-Bug — `param_4` (Callback)
+  statt `param_5` (User-Daten) an `getAvailableIdx()` und `info->unk0`
+  übergeben.
+- **`TMapObjPlane::depress(f32,f32,f32)`** (94,7 % → Match, Commit
+  `9b4c12d2`): Referenz-Bindung `f32& h = heightAt(...); h -= ...;`
+  materialisiert die Element-Adresse als echte gemeinsame Unterausdruck
+  (CSE), verhindert MWCCs Faltung in einen reinen `lfsx`/`stfsx`-Zugriff.
+- **`TSmallEnemy::changeOut()`** + **`behaveToHitOthers(THitActor*)`**
+  (95,5 %/91,8 % → beide Match, Commit `d630b0ee`): Vertauschte
+  Zuweisungsrichtung (`mJuiceBlock->mPosition = mPosition` statt
+  umgekehrt) plus Distanzvektor-Berechnung über 3-Arg-Konstruktor statt
+  `sub()`-Methode (matcht das bereits gefixte `attackToMario`-Muster in
+  derselben Datei).
+- **`TJointCoin::makeObj(const char*, u16)`** (95,4 % → Match, Commit
+  `6b6e1230`): Erste Array-Slot-Lesung in eine benannte Lokale
+  gecacht — ändert nichts an den erzeugten Instruktionen, verschiebt
+  aber MWCCs Registerfarbe auf Retails Zuteilung.
+- **`JPABaseField::calcFieldFadeScale(f32)`** (95,3 % → Match, Commit
+  `f7e51c15`): Datei-lokale Hilfsfunktion mit `volatile`-Referenz-
+  Parameter verhindert CSE des wiederholt gelesenen Status-Worts.
+- **`TBaseNPC::npcRecoverFromSinking()`** (95,1 % → Match, Commit
+  `9c6d9c25`): `TBaseNPC* self = this;` als erste Lokale verschiebt
+  Registerzuteilung (deklarierte Lokalen erhalten Vorrang vor dem
+  impliziten `this`); toter `MsClamp(0,0,0)`-Aufruf nach dem
+  Sink-Geschwindigkeits-Block reserviert exakt 4 Byte unterhalb des
+  inline-expandierten `MsSqrtf`-Temporärwerts.
+- **`MarioWaistCtrl`/`MarioFootDirRCtrl`/`MarioFootDirLCtrl`/
+  `TMario::boxDrawPrepare`** (94,8 %/78 %/78 %/92,5 % → alle vier Match,
+  Commits `91724804`+`fbd1d5ac`): Größte Einzelausbeute dieser Runde.
+  Falscher Flag-Accessor (`checkStatusType` statt `checkFlag`), falsche
+  Kontrollfluss-Struktur (FLUDD-Test galt nur für einen Case statt für
+  drei plus Fallthrough), falsches zweites Kreuzprodukt (Gram-Schmidt:
+  `n × cross1` statt `n × currentMtxDir`), invertiertes
+  Schlaf-Prädikat, und — bemerkenswert — ein **im Retail-Binary selbst
+  vorhandener Tippfehler reproduziert**: `footMtx[2][1] = normalDir.z`
+  wird tatsächlich nach `footMtx[2][2]` geschrieben (0x24 bleibt
+  unbeschrieben). Mehrere `volatile`-Lückenfüller-Arrays für exakte
+  Stack-Slot-Adressen.
+
+**Neues, sechstes Bugmuster bestätigt**: „Benannte Lokale mit
+Selbstzuweisung erzwingt Adress-CSE" — z. B. `f32& h = heightAt(...); h
+= h - x;` verhindert MWCCs Faltung eines Compound-Assignments in einen
+indizierten Zugriff (`TMapObjPlane::depress`).
+
+**Zwei bemerkenswerte neue Stack-Layout-Techniken dokumentiert** (beide
+erfolgreich angewendet, aber auch mit dokumentierten Grenzen):
+- Ein **toter Aufruf einer INLINE-Funktion** (z. B. `MsClamp(0,0,0);`
+  als eigenständige Anweisung) reserviert Stack-Bytes an einer
+  SPEZIFISCHEN Position unterhalb einer bereits inline-expandierten
+  Funktion (z. B. `MsSqrtf`s `volatile float`-Temporärwert) — anders als
+  `char trash[N]`, das IMMER oberhalb bestehender Lokalen landet. Diese
+  Technik löste `npcRecoverFromSinking`, versagte aber bei mehreren
+  anderen Kandidaten dieser Runde (Hino2HeadCallback, TNerveHino2JumpIn::
+  execute), wo die fehlenden Bytes UNTERHALB eines versteckten
+  Rückgabewert-Temporärwerts sitzen und mit keinem getesteten
+  Konstrukt reproduzierbar waren.
+- **„By-Value-Rückgabeslot einer inline-expandierten Funktion hält einen
+  Konstruktor-Aufruf out-of-line; eine benannte Lokale nicht"** — neue,
+  präzise Formulierung der bereits bekannten Inline-Tiefe-Heuristik,
+  bestätigt an zwei unabhängigen Fällen (`NpcEffect.cpp`s
+  `getEffectScale_`-Vergleich, `emario.cpp`s `SMS_DistanceBetween`-
+  Hilfsfunktion für `sub()`/`sqrt()`).
+
+**Neun gründlich dokumentierte Fast-Treffer/Sackgassen** (alle sauber
+zurückgesetzt, hoher Erkenntniswert): `MSound`-Konstruktor (reines
+Register-Rauschen um `this`), `JPAConvectionField::affect` (zwei echte
+Bugs gefunden — nicht-initialisiertes Schatten-`thing4`, In-Place- statt
+separates `setLength()` — auf reines Registerrauschen reduziert),
+`draw_wipe_box` (echter h/w-Reihenfolge-Bug gefunden, Rest ist
+Scheduler-Rauschen bei unabhängigen Fließkomma-Konvertierungen),
+`TMareEventBumpyWall::bumpDownZ` (zwei echte Bugs — vertauschte
+Konstruktor-Komponente, fehlende CSE-Erzwingung — blockiert von einem
+klassenweiten systemischen Rahmen-Offset, bestätigt in unberührten
+Schwesterfunktionen), `TMario::wireSWait` (**vier echte Bugs** gefunden
+und gefixt — falsches Feld `mWireBounceVelPrev` statt `mWireBounceVel`,
+falsche Bit-Maske, vertauschte Subtraktionsoperanden, wegoptimierte
+Multiplikation —, blockiert von einer geteilten Inline-Hilfsfunktion mit
+Alles-oder-Nichts-Schwellenwert), `MSStageCubeFade::proc` (**zwei echte
+Bugs** — fehlende Y-Komponenten-Übernahme, Stub-Funktion
+`calcParamRatioInCube` real implementiert —, blockiert von
+dateiweiter Rahmen-Inflation), `TBaseNPC::execWalk` (**fünf echte
+Bugs** — Accessor- statt Direktzugriff, fehlendes `fabs`, fehlende
+Kopierkette, falsche Konstante, **falscher Algorithmus** in
+`isCanWalk` [horizontale statt 3D-Distanz] —, auf 12 von ~250
+Instruktionen reduziert), `TEMario::perform`/`init` (**echter
+Kontrollfluss-Bug** gefunden — Retail kehrt nie früh zurück, läuft
+immer bis zum Ende durch —, Header-Änderungsversuch an `JGVec3.hpp::
+distance()` korrekt als regressionsverursachend identifiziert und
+verworfen), `Hino2HeadCallback`/`TNerveHino2JumpIn::execute` (mehrere
+echte Bugs gefunden, auf 8 von ~90 bzw. 82 von ~180 Instruktionen
+reduziert).
+
+**Kleinere Inzidente**: Zwei Unteragenten stellten fest, dass generische
+Python-Eval-Variablennamen (nicht Dateien!) über Sitzungen hinweg
+kollidieren können, wenn mehrere Agenten zufällig denselben Kernel-
+Kontext nutzen — beide erkannten es selbst, wechselten auf
+dateibasierte Werkzeuge (`edit`/`write`) und stellten betroffene
+Dateien wieder her; keine dauerhaften Schäden. Zwei Task-Ergebnisse
+kamen mit Status „failed" statt eines sauberen Abschlussberichts zurück
+(vermutlich Antwortlängen-Limit erreicht) — beide hinterließen dennoch
+nachweislich saubere, unveränderte Arbeitsbäume.
+
+### Session-Gesamtstand nach Runde 55
+
+**434 verifizierte echte Fixes in 88 Commits.** `matched_functions`:
+**9021** (von 9010 zu Rundenbeginn), `matched_code_percent`: 45,20 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`.
