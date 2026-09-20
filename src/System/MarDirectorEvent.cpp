@@ -120,21 +120,19 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 
 void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 {
+	char trash[8];
 	if (!nozzle)
 		return;
 
+	u8 areaId = gpApplication.mCurrArea.unk0;
 	if (nozzle->isActorType(0x20000022)
-	    && TFlagManager::smInstance->getNozzleRight(
-	        gpApplication.mCurrArea.unk0, 0)) {
-		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
-		                                         0);
+	    && !TFlagManager::smInstance->getNozzleRight(areaId, 0)) {
+		TFlagManager::smInstance->setNozzleRight(areaId, 0);
 		unk4C |= 0x200;
 		unk261 = 3;
 	} else if (nozzle->isActorType(0x2000002A)
-	           && TFlagManager::smInstance->getNozzleRight(
-	               gpApplication.mCurrArea.unk0, 1)) {
-		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
-		                                         1);
+	           && !TFlagManager::smInstance->getNozzleRight(areaId, 1)) {
+		TFlagManager::smInstance->setNozzleRight(areaId, 1);
 		unk4C |= 0x200;
 		unk261 = 4;
 	}
