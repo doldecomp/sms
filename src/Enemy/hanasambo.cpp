@@ -1294,14 +1294,20 @@ void TSamboHead::setAfterDeadEffect()
 }
 
 // UNUSED, 0xfc in the map.
+static inline const JGeometry::TVec3<f32>* SamboHeadCrashPos(const TSamboHead* p)
+{
+	const JGeometry::TVec3<f32>* pos = &p->mPosition;
+	return pos;
+}
+
 void TSamboHead::setCrashAnm()
 {
 	setBckAnm(1);
-	JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
-	    0xE2, &mPosition, 0, (s16)DEG2SHORTANGLE(mRotation.y), 0, 0, nullptr);
+	JPABaseEmitter* emitter = SamboHeadGetMarioParticleManager()->emitWithRotate(
+	    0xE2, SamboHeadCrashPos(this), 0, (s16)DEG2SHORTANGLE(mRotation.y), 0, 0, nullptr);
 	if (emitter)
 		setEmitterScale(emitter, 1.5f, 1.5f, 1.5f);
-	emitter = gpMarioParticleManager->emitWithRotate(
+	emitter = SamboHeadGetMarioParticleManager()->emitWithRotate(
 	    0xE3, &mPosition, 0, (s16)DEG2SHORTANGLE(mRotation.y), 0, 0, nullptr);
 	if (emitter) {
 		setEmitterScale(emitter, 1.5f, 1.5f, 1.5f);
@@ -1602,15 +1608,27 @@ DEFINE_NERVE(TNerveSamboHeadRecoverWater, TLiveActor)
 	return false;
 }
 
+static inline MActor* SamboHeadWallMActorRaw(const TSamboHead* p)
+{
+	return p->getMActor();
+}
+
+static inline MActor* SamboHeadWallMActor(const TSamboHead* p)
+{
+	MActor* mActor = SamboHeadWallMActorRaw(p);
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveSamboHeadHitWall, TLiveActor)
 {
 	TSamboHead* head = (TSamboHead*)spine->getBody();
 	if (spine->getTime() == 0)
 		head->setCrashAnm();
-	int wait = ((TSmallEnemyManager*)head->mManager)->unk5C;
+	TSmallEnemyManager* manager = (TSmallEnemyManager*)head->mManager;
+	int wait                    = manager->unk5C;
 	if (head->checkCurAnmEnd(0)
 	    && spine->getTime()
-	           > wait + head->getMActor()->getFrameCtrl(0)->getEnd()) {
+	           > wait + SamboHeadWallMActor(head)->getFrameCtrl(0)->getEnd()) {
 		head->onLiveFlag(LIVE_FLAG_DEAD);
 		head->onLiveFlag(LIVE_FLAG_UNK8);
 		head->onLiveFlag(LIVE_FLAG_UNK20000);
