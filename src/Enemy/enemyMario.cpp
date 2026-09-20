@@ -951,21 +951,21 @@ void TEnemyMario::emReplay()
 	                                  &unk108->mInput, &unk108->mFrameInput,
 	                                  &unk108->mAnalogLU8, &unk108->mAnalogRU8);
 
-	if (mSettingParams->mPolluteFlag.get() && gpPollution != nullptr) {
+	if (getSettingsParams()->mPolluteFlag.get() && gpPollution != nullptr) {
 		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
-		                     mSettingParams->mPolluteSize.get());
+		                     getSettingsParams()->mPolluteSize.get());
 	}
 
 	if (mInputReplays[mReplayIndex]->canPlay()) {
 		return;
 	}
 
-	if (mSettingParams->mCarryFlag.get() == 1 && mHeldObject == nullptr) {
+	if (getSettingsParams()->mCarryFlag.get() == 1 && mHeldObject == nullptr) {
 		changeEMDoing(EM_DOING_UNK12);
 		return;
 	}
 
-	if (mStampActor != nullptr && mSettingParams->mStampFlag.get() == 1) {
+	if (mStampActor != nullptr && getSettingsParams()->mStampFlag.get() == 1) {
 		mStampActor->setBck("stamp_koopa_sign_draw1");
 		MActor* stampActor = mStampActor;
 		stampActor->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
@@ -983,7 +983,7 @@ void TEnemyMario::emReplay()
 		return;
 	}
 
-	if (mSettingParams->mStopFlag.get() == 1) {
+	if (getSettingsParams()->mStopFlag.get() == 1) {
 		changeEMDoing(EM_DOING_REPLAY_WAITING);
 		return;
 	}
