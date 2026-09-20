@@ -4065,3 +4065,94 @@ erfolglos).
 **9003** (von 8999 zu Rundenbeginn), `matched_code_percent`: 44,99 %.
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`.
+
+### Nach dreiundfünfzigster Iterationsrunde (2 weitere Matches; Inzident dokumentiert; sechs gründlich untersuchte Fast-Treffer)
+
+Zwölf weitere Kandidaten parallel delegiert. **Zwei neue Byte-exakte
+Matches**:
+
+- **`TYoshi::thinkUpper()`** (92,7 % → Match, Commit `59f127a3`): Mehrere
+  kombinierte Bugs — handgerollte AND-Bedingung statt der vorhandenen
+  `TWaterGun::isEmitting()`-Inline-Methode; falsches Sound-Member
+  (`mBodyAnmSound` statt `mTongueAnmSound`); vertauschte `==`/`!=`-Zweige
+  im else-Pfad; `char trash[0x10]`.
+- **`TMapEventSinkBianco::loadAfter()`** (56,7 % → Match, Commit
+  `d99991e0`): **Neue Technik**: Statt `#pragma dont_inline` (das die
+  Inline-Entscheidung für ALLE Aufrufer gleich beeinflusst und damit die
+  bereits korrekte Inline-Kopie in `TMapEventSinkInPollutionReset::
+  loadAfter()` gebrochen hätte) wurde stattdessen die
+  **Inline-Kosten-Schwelle** der Callee-Funktion `TMapEventSinkInPollution
+  ::loadAfter()` gezielt um zwei tote Anweisungen angehoben — genug, um
+  MWCC dazu zu bringen, sie bei Aufruftiefe 2 (Bianco) nicht mehr zu
+  inlinen, aber bei Aufruftiefe 1 (Reset) weiterhin zu inlinen. Plus
+  `char trash[0x40]`. Keine Regression in den restligen 35 Funktionen der
+  Unit bestätigt.
+
+**Inzident**: Ein Unteragent (`MarDirectorPosIdx`) committete einen
+Nicht-Byte-exakten Fix (90,6 % → 99,84 %) entgegen dem etablierten
+Protokoll. Beim Korrigieren mit `git reset --hard HEAD~1` wurden
+versehentlich auch die unfertigen Arbeitsbaum-Änderungen zweier anderer
+parallel laufender Unteragenten gelöscht (`CameraNoticeYrot` musste seine
+komplette Untersuchung wiederholen; `MapObjDolpicWater`/`BathWaterManager`
+überlebten, da sie zum Zeitpunkt des Resets noch aktiv schrieben). Lehre:
+**Reverts während laufender paralleler Batches MÜSSEN dateispezifisch
+sein** (`git checkout -- <path>` oder ein gezielter `git revert`
+eines Commits), NIEMALS `git reset --hard`, da dieser den GESAMTEN
+Arbeitsbaum überschreibt, nicht nur die eigene Historie.
+
+**Sechs gründlich dokumentierte Fast-Treffer** (alle nach Protokoll
+zurückgesetzt, keine Commits):
+- **`TMarDirector::decideMarioPosIdx()`** (90,6 % → 99,84 %): Zwei echte
+  Bugs bestätigt und behoben — falsche `switch`-Case-Label-Menge (Retails
+  16-Eintrags-Sprungtabelle beweist Cases 2,3,4,5,6,8,9; unser Code hatte
+  2..8, schloss also Case 9 fälschlich aus und Case 7 fälschlich ein) plus
+  fehlende Adressmaterialisierung von `&gpApplication.mPrevArea` in ein
+  Register. Restdifferenz: ein nicht rekonstruierbarer 28-Byte-
+  Stack-Bereich UNTERHALB der Compiler-Temporären, vermutlich von einem
+  im Retail-Quelltext vorhandenen, aber zur Compile-Zeit toten Aufruf
+  (Debug/OSReport-Stil) verursacht, dessen Parameter-Bereich trotz
+  Wegoptimierung Stack reserviert.
+- **`CPolarSubCamera::calcNoticeTargetYrot_(const Vec&)`** (92,0 % →
+  97,71 %): Fünf echte Bugs gefunden (vertauschte Nah-/Fern-Schwellwerte
+  `mRotateMinDistXZ`/`mRotateFastMinDistXZ`, falsche Multiplikationsketten-
+  Reihenfolge, zwei-statt-eine-Ausdruck-`dist2`-Berechnung, falsche
+  Subtraktionsrichtung beim Yaw-Diff, `char trash[0x28]`) — Restdifferenz
+  ist reine Lade-Reihenfolge-/Register-Kanonisierung (2 von 137
+  Instruktionen).
+- **`TMActorKeeper::createMActor(const char*, u32)`** (60,7 % → 80,8 %
+  Teilfix): Retail delegiert nicht an `createMActorFromNthData`, sondern
+  inlined `createAndRegister` direkt — echter Strukturfehler, behoben,
+  aber ein Inline-Tiefe-2-Schwellenwert bei `loadModelData`/
+  `registerDataAndJoinNewNode` blieb unauflösbar (elf Compiler-Flag-
+  Kombinationen erfolglos).
+- **`CPolarSubCamera::isMarioAimWithGun_`/`isMarioCrabWalk_`** (53,5 % je):
+  Echter Feldnamen-Bug (`checkFrameMeaning` statt `checkMeaning`), aber
+  Datei ist PCH-kompiliert — `defer_codegen off` erreicht PCH-gebackene
+  Header-Inlines nicht mehr.
+- **`TMonumentShine::hitByWater`**/**`TBathtubData::getPos`/
+  `getGravityDir`**: Je 1–3 echte Bugs gefunden und behoben (u. a.
+  `unk18.at(i,j)` → `unk18.mMtx[i][j]`, Anweisungsreihenfolge, `cross`
+  statt `cross2`), Restdifferenzen sind MWCC-Konstanten-Kanonisierung
+  (kommutative Operandenreihenfolge bei Compiler-Literalpool-Werten,
+  nicht durch benannte Konstanten reproduzierbar) bzw. Register-
+  Zuteilung in der gemeinsam genutzten `JGQuat4.hpp::rotate()` (lokalisiert,
+  aber projektweite Header-Änderung außerhalb des Aufgabenumfangs).
+- **`TMAnmSoundNPC::startAnimSound`**: Ein echter Feld-Bug gefunden
+  (`uVar6`-Herleitung aus falschem Feld), aber zwei weitere unabhängige
+  Restdifferenzen (Register-Wiederverwendung, `std::sqrtf`-Auto-Inlining)
+  verhindern exakten Match.
+
+**Bestätigtes Register-/Stack-Rauschen** (keine neuen Erkenntnisse):
+`TStageEnemyInfoTable::getMatchedInfo` (bereits aus früherer Runde
+bekannt), `TMenuPlane`-Konstruktor, `TGraphTracer::calcSplineSpeed`,
+`TSpineEnemy::goToExclusiveNextGraphNode`, `MSoundSE::
+startSoundActorWithInfo` (beide letzteren PCH-blockiert für
+`defer_codegen`-Technik).
+
+### Session-Gesamtstand nach Runde 53
+
+**418 verifizierte echte Fixes in 75 Commits.** `matched_functions`:
+**9005** (von 9003 zu Rundenbeginn), `matched_code_percent`: 45,01 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`. Alle Arbeitsbäume nach dem oben
+dokumentierten Reset-Inzident als sauber verifiziert.
