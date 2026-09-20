@@ -461,11 +461,17 @@ void TSamboFlower::setMActorAndKeeper()
 	actor->getModel()->lock();
 }
 
+static inline TSamboFlower* SamboFlowerSelf(TSamboFlower* p)
+{
+	TSamboFlower* flower = p;
+	return flower;
+}
+
 BOOL TSamboFlower::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (!mIsBloomed)
-			bloom();
+			SamboFlowerSelf(this)->bloom();
 		return TRUE;
 	}
 	return FALSE;
