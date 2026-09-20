@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan +2, hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3.
-- Landed `grptl` MapObjLib ([MapObjLib unit ladder](c4e52ba0-e8f5-4cba-afcf-34497d0e89c6)): +3 exact (`checkOnManhole`, `getVerticalVecToTargetXZ`, `SMatrix33C::at`); unit 64.52→68.41; data 100. Catalog: depth-5 for `SMatrix33C` bl.
-- Total: **61.40%** matched, game **53.26%**, linked **492 / 732**.
-- Running: `grptm` / bossgesso ([bossgesso unit ladder](97e54b29-af6d-4abf-9da4-8daa19eef7e0)). Refill: MapObjMonte.
-- Stale unlanded: grpfg bosseel, grpfh WaterGun.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan +2, hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1.
+- Landed `grptm` bossgesso ([bossgesso unit ladder](97e54b29-af6d-4abf-9da4-8daa19eef7e0)): +1 exact (`TBossGessoMtxCalc::calc`); unit 41.48→42.71; data 100. Accepted `init` fuzzy 99.91→99.87 (equal-frame slot shift).
+- Total: **61.41%** matched, game **53.28%**, linked **492 / 732**.
+- Running: `grptn` / MapObjMonte ([MapObjMonte unit ladder](bf31ba18-adc1-4989-bfa5-a9a812075f3f)). Refill: hinokuri2.
+- Stale unlanded: grpfg bosseel, grpfh WaterGun. Open shared lead: bossgesso `inSightAngle` UNUSED 168 short.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
