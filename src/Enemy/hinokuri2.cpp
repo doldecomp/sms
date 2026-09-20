@@ -1281,6 +1281,7 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 
 DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 {
+	char trash[0x48];
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 
 	if (spine->getTime() == 0) {
