@@ -111,16 +111,6 @@ BOOL TMario::barWait()
 
 BOOL TMario::barClimb()
 {
-	// TODO: instructions exact, frame 0x60 vs retail's 0x80. Routing every
-	// `mHolder->` read through `getHolder()` reaches 0x80 exactly, but the
-	// five `mPosition.y + mHolderHeightDiff` sites then pair f0/f1 the other
-	// way round from retail (retail puts the first-loaded operand in f0) and
-	// swapping the addition's operands changes nothing. Accessor steps
-	// measured here: the null test plus the two `getActorType()` receivers
-	// +8, `SMSGetMarDirector()` over `gpMarDirector` +8 (kept), the .x/.z
-	// copies plus the subtraction +8 together, and the five fadds sites the
-	// remaining 0x18. `mHolder->getPosition().y` is +16 per site and flips
-	// the same registers.
 	if (mHolder == nullptr)
 		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 
@@ -131,16 +121,17 @@ BOOL TMario::barClimb()
 		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
 	}
 
-	mPosition.x = mHolder->mPosition.x;
-	mPosition.y = mHolder->mPosition.y + mHolderHeightDiff;
-	mPosition.z = mHolder->mPosition.z;
+	mPosition.x = getHolder()->mPosition.x;
+	f32 hy      = getHolder()->mPosition.y;
+	mPosition.y = hy + mHolderHeightDiff;
+	mPosition.z = getHolder()->mPosition.z;
 
 	if (unk108->mStickV < 8.0f)
 		return changePlayerStatus(MARIO_STATUS_BAR_WAIT, 0, false);
 
 	mVel.y = 0.0f;
 	mPosition.y += unk108->mStickV * mBarParams.mClimbSp.get();
-	mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
+	mHolderHeightDiff = mPosition.y - getHolder()->mPosition.y;
 
 	if (mPosition.y > mHolder->mPosition.y + mHolder->getDamageHeight()) {
 		setPlayerVelocity(0.0f);
@@ -163,7 +154,7 @@ BOOL TMario::barClimb()
 	}
 
 	if (getHolder()->getActorType() == 0x40000246) {
-		u8 state = SMSGetMarDirector()->mMap;
+		u8 state = SMSGetMarDirector()->getCurrentMap();
 		if (state == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;
