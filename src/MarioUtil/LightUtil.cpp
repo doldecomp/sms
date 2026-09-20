@@ -104,10 +104,10 @@ Vec* TLightCommon::getLightPosition(int index)
 // MTXMultVec results -- slot 0x3c is written twice). What is left is a pure
 // callee-saved rotation (ROM this=r29/gfx=r26/viewMtx=r28/manager=r27, ours
 // r28/r29/r27/r26) plus the two `addi`s of the inlined setEffectLight's
-// MTXMultVec in the opposite order (ROM computes the view matrix argument
-// first, i.e. left to right). Rejected: a named `MtxPtr viewMtx` inside
-// setEffectLight (+4 low, breaks the frame, and leaves its UNUSED size at
-// 0xf4 vs the map's 0xf8); a `getShininess()` accessor (97.1%).
+// MTXMultVec in the opposite order (ROM CSEs the live viewMtx). Rejected:
+// named `MtxPtr viewMtx` in the caller (+8 frame); named viewMtx inside
+// setEffectLight (+4 low, UNUSED 0xf4 vs 0xf8); early-named manager (extra
+// lwz); manual inline of setEffectLight (90.8%); getShininess (97.1%).
 void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 {
 	ReInitializeGX();
@@ -134,6 +134,12 @@ void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 	GXSetChanAmbColor(GX_COLOR0A0, getAmbColor(index));
 }
 
+// TODO: 99.9%, frame 0x10 short (0x70 vs 0x80). Instruction-exact with light
+// at 0x18 vs retail 0x24; the 0x10 is pure low-region between the getLightColor
+// out-param at 0x14 and the GXLightObj. Named Vec* for the y/z getLightPosition
+// results match m2c (r31/r30) at zero frame. A defaulted 8-byte arg lands the
+// frame but leaves light at 0x28 (4 high); named color binders add copies.
+// Shared-header getColor shape may be the real carrier (parked).
 void TLightCommon::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW_INIT) {
