@@ -1589,12 +1589,12 @@ void TWaterGun::movement()
 	unk1CC8 += (unk1CC2 - unk1CC8) * mWatergunParams.mHoverSmooth.get();
 	unk1CCC += (unk1CC4 - unk1CCC) * mWatergunParams.mHoverSmooth.get();
 
-	rotateProp(getCurrentNozzle()->unk378);
+	rotateProp(WaterGunCurNozzle(this)->unk378);
 
 	// They do the same thing again?... This is the exact same code as
 	// rotateProp
 	if (mCurrentNozzle == Turbo) {
-		unk1CD2 += mNozzleList[mCurrentNozzle]->unk378
+		unk1CD2 += WaterGunCurNozzle(this)->unk378
 		           * mWatergunParams.mNozzleAngleYSpeed.get();
 		unk1CD2 *= mWatergunParams.mNozzleAngleYBrake.get();
 		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
@@ -1608,11 +1608,13 @@ void TWaterGun::movement()
 
 	// Yoshi nozzle
 	if (mCurrentNozzle == 3) {
-		mCurrentWater = getCurrentNozzle()->mEmitParams.mAmountMax.get();
+		mCurrentWater
+		    = WaterGunCurNozzle(this)->mEmitParams.mAmountMax.get();
 	}
 
 	if (SMS_isDivingMap()) {
-		mCurrentWater = getCurrentNozzle()->mEmitParams.mAmountMax.get();
+		mCurrentWater
+		    = WaterGunCurNozzle(this)->mEmitParams.mAmountMax.get();
 	}
 
 	if (mCurrentNozzle == 3) {
@@ -1621,8 +1623,9 @@ void TWaterGun::movement()
 
 	// Nozzle swapping
 	if (mSwitchToSecondNozzleSpeed != 0.0f) {
-		f32 before                    = mSwitchToSecondNozzleProgress;
-		f32 after                     = before + mSwitchToSecondNozzleSpeed;
+		f32 before = mSwitchToSecondNozzleProgress;
+		f32 after  = before;
+		after += mSwitchToSecondNozzleSpeed;
 		mSwitchToSecondNozzleProgress = after;
 
 		if (before < 0.5f && 0.5f <= after)
