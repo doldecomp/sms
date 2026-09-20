@@ -68,6 +68,7 @@ void TLauncher::init(TLiveManager* param_1)
 
 BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[8];
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return false;
 
@@ -76,10 +77,10 @@ BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 
 	if (sender->getActorType() == 0x1000001) {
 		if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
-			                             nullptr);
-			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
-			                        0.0f, 0, 0, 4);
+			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+			                             &sender->mPosition, 0, nullptr);
+			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+			                        &sender->mPosition, 0, 0.0f, 0, 0, 4);
 			if (mState == STATE_HITBYWATER)
 				return true;
 
