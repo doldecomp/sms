@@ -7,7 +7,12 @@ template <class T> class TFlagT {
 public:
 	TFlagT(T v = T()) { mValue = v; }
 
-	TFlagT(const TFlagT<T>& other);
+#pragma dont_inline on
+	TFlagT(const TFlagT<T>& other)
+	    : mValue(other.mValue)
+	{
+	}
+#pragma dont_inline off
 
 	// fabricated
 	TFlagT& operator=(const TFlagT<T>& other)
@@ -16,7 +21,7 @@ public:
 		return *this;
 	}
 
-	void set(T v);
+	void set(T v) { mValue = v; }
 	T get() const { return mValue; }
 
 	void setBit(T bit, bool on)

@@ -32,19 +32,6 @@
 #include <NPC/NpcBase.hpp>
 #include <dolphin/gx.h>
 
-namespace JDrama {
-template <>
-TFlagT<u16>::TFlagT(const TFlagT<u16>& other)
-    : mValue(other.mValue)
-{
-}
-template <>
-void TFlagT<u16>::set(u16 v)
-{
-	mValue = v;
-}
-} // namespace JDrama
-
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
