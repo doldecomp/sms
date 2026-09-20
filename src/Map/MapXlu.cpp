@@ -10,7 +10,7 @@
 void TMapXlu::changeNormalJoint()
 {
 	for (int i = 0; i < gpMap->getRootJointModel()->getChildrenNum(); ++i)
-		gpMap->getRootJointModel()->getChild(i)->stand();
+		gpMap->getRootJointModel()->mChildren[i]->stand();
 
 	for (int i = 0; i < mPrioGroupNum; ++i)
 		for (int j = 0; j < mPrioGroups[i].mObjectNum; ++j)
