@@ -401,24 +401,25 @@ u32 TBiancoMiniWindmill::touchWater(THitActor* water)
 	return 1;
 }
 
+// TODO: every instruction and every stack slot is retail's; the five
+// small-data loads of the sin/cos setup are scheduled after the identity
+// store run instead of interleaved into it. Moving the sin/cos statements
+// above the identity, and calling setMtxRotZ for the rotation block, both
+// make it worse.
 void TBiancoMiniWindmill::calc()
 {
+	// The column-wise chains are retail's store order: `a = b = c = v`
+	// stores right to left.
 	Mtx spin;
-	spin[0][0] = 1.0f;
-	spin[0][1] = 0.0f;
-	spin[0][2] = 0.0f;
-	spin[0][3] = 0.0f;
-	spin[1][0] = 0.0f;
-	spin[1][1] = 1.0f;
-	spin[1][2] = 0.0f;
-	spin[1][3] = 0.0f;
-	spin[2][0] = 0.0f;
-	spin[2][1] = 0.0f;
-	spin[2][2] = 1.0f;
-	spin[2][3] = 0.0f;
+	spin[0][3] = spin[1][3] = spin[2][3] = 0.0f;
+	spin[0][2] = spin[1][2] = 0.0f;
+	spin[0][1] = spin[2][1] = 0.0f;
+	spin[1][0] = spin[2][0] = 0.0f;
+	spin[0][0] = spin[1][1] = spin[2][2] = 1.0f;
 
 	f32 sin    = JMASSin((s16)(182.04445f * mAngle));
 	f32 cos    = JMASCos((s16)(182.04445f * mAngle));
+
 	spin[0][0] = cos;
 	spin[0][1] = -sin;
 	spin[0][2] = 0.0f;
@@ -433,9 +434,9 @@ void TBiancoMiniWindmill::calc()
 	spin[2][3] = 0.0f;
 
 	MtxPtr spinPtr = spin;
-	MTXConcat(getModel()->getAnmMtx(0), spinPtr, spinPtr);
+	MTXConcat(BiancoMiniWindmillModel(this)->getAnmMtx(0), spinPtr, spinPtr);
 
-	MtxPtr blades = getModel()->getAnmMtx(1);
+	MtxPtr blades = BiancoMiniWindmillModel(this)->getAnmMtx(1);
 	spin[0][3]    = blades[0][3];
 	spin[1][3]    = blades[1][3];
 	spin[2][3]    = blades[2][3];
