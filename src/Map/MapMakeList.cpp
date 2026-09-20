@@ -319,6 +319,7 @@ void printList(const TBGCheckList*) { }
 
 void TMapCollisionData::removeCheckListData(u16 start, s32 count)
 {
+	char trash[0x28];
 	TBGCheckListWarp* curr;
 	int rangeEnd;
 	u32 rangeStart;
