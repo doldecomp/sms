@@ -1428,22 +1428,22 @@ BOOL TMario::fenceMove()
 	if (wall != nullptr) {
 		if (mInput & 0x1) {
 			JGeometry::TVec3<f32> newPos = mPosition;
-			newPos.y
-			    += 0.015625f * unk108->mStickV * mJumpParams.mFenceSpeed.get();
+			f32 fenceSp = mJumpParams.mFenceSpeed.get();
+			newPos.y += 0.015625f * unk108->mStickV * fenceSp;
 
 			s16 camDelta = mFaceAngle.y - SMSGetCamera()->unk258;
 			f32 normX, normZ;
 			if (camDelta > -0x4000 && camDelta < 0x4000) {
-				normZ = wall->mNormal.z;
-				normX = -wall->mNormal.x;
-			} else {
-				normX = wall->mNormal.x;
 				normZ = -wall->mNormal.z;
+				normX = wall->mNormal.x;
+			} else {
+				normX = -wall->mNormal.x;
+				normZ = wall->mNormal.z;
 			}
 
 			f32 stickH = 0.015625f * unk108->mStickH;
-			newPos.x += normX * stickH * mJumpParams.mFenceSpeed.get();
-			newPos.z += normZ * stickH * mJumpParams.mFenceSpeed.get();
+			newPos.x += normX * stickH * fenceSp;
+			newPos.z += normZ * stickH * fenceSp;
 
 			JGeometry::TVec3<f32> sideFront = newPos;
 			sideFront.x += 0.5f * (50.0f * JMASSin(mFaceAngle.y));
