@@ -594,7 +594,7 @@ void TItemSlotDrum::generateItem()
 		TTelesa* item = (TTelesa*)gpConductor->makeOneEnemyAppear(
 		    getPosition(), "テレサマネージャー", 1);
 		if (item != nullptr) {
-			s16 ang = (s16)DEG2SHORTANGLE(mRotation.x);
+			s16 ang = (s16)DEG2SHORTANGLE(mRotation.y);
 			f32 s   = JMASSin(ang);
 			f32 c   = JMASCos(ang);
 			Mtx m;
@@ -626,7 +626,7 @@ void TItemSlotDrum::generateItem()
 		}
 		for (int i = 0; i < count; ++i) {
 			s16 ang = (s16)DEG2SHORTANGLE(spread * ((f32)i - 1.0f)
-			                              + (mRotation.x - spread));
+			                              + (mRotation.y - spread));
 			f32 s   = JMASSin(ang);
 			f32 c   = JMASCos(ang);
 			Mtx m;
