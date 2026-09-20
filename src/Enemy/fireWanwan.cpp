@@ -458,6 +458,22 @@ TFireWanwanTailHit::TFireWanwanTailHit(TFireWanwan& param_1)
 	MTXIdentity(unk74);
 }
 
+static inline TFireWanwan* FireWanwanTailOwner(const TFireWanwanTailHit* p)
+{
+	return p->mOwner;
+}
+
+static inline TTailRubber* FireWanwanTailRubber(const TFireWanwanTailHit* p)
+{
+	return p->unkA4;
+}
+
+static inline TFireWanwanSaveLoadParams*
+FireWanwanTailParams(const TFireWanwanTailHit* p)
+{
+	return FireWanwanTailOwner(p)->getSaveParam2();
+}
+
 BOOL TFireWanwanTailHit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x80000001) {
@@ -481,22 +497,22 @@ BOOL TFireWanwanTailHit::receiveMessage(THitActor* sender, u32 message)
 void TFireWanwanTailHit::behaveTaken(THitActor* param_1)
 {
 	mHolder            = (TTakeActor*)param_1;
-	unkA4->mFixTailPos = true;
+	FireWanwanTailRubber(this)->mFixTailPos = true;
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_HOLD, &mPosition, 0,
 	                                nullptr, 0, 4);
-	((TFireWanwanManager*)mOwner->getManager())->unk64 = 1;
+	((TFireWanwanManager*)FireWanwanTailOwner(this)->getManager())->unk64 = 1;
 
-	mCurTailLength  = unkA4->getLength();
+	mCurTailLength  = FireWanwanTailRubber(this)->getLength();
 	mPrevTailLength = mCurTailLength;
-	moveRequest(mPosition);
+	moveRequest(param_1->mPosition);
 }
 
 void TFireWanwanTailHit::behaveApart()
 {
-	unkA4->mFixTailPos = false;
+	FireWanwanTailRubber(this)->mFixTailPos = false;
 
-	((TFireWanwanManager*)mOwner->getManager())->unk64 = 0;
-	mOwner->startThrownSound();
+	((TFireWanwanManager*)FireWanwanTailOwner(this)->getManager())->unk64 = 0;
+	FireWanwanTailOwner(this)->startThrownSound();
 	mThrowPow       = calcApartPow();
 	mCurTailLength  = 0.0f;
 	mPrevTailLength = 0.0f;
@@ -638,22 +654,6 @@ void TFireWanwanTailHit::clipNodes(JDrama::TGraphics*) { }
 // (@7893) and 10000.0f (@7894); ours reverses the two groups, so one of
 // init()/performNodes() is still missing its 4.0f/0.25f use. Definition
 // order already matches the map.
-static inline TFireWanwan* FireWanwanTailOwner(const TFireWanwanTailHit* p)
-{
-	return p->mOwner;
-}
-
-static inline TTailRubber* FireWanwanTailRubber(const TFireWanwanTailHit* p)
-{
-	return p->unkA4;
-}
-
-static inline TFireWanwanSaveLoadParams*
-FireWanwanTailParams(const TFireWanwanTailHit* p)
-{
-	return FireWanwanTailOwner(p)->getSaveParam2();
-}
-
 void TFireWanwanTailHit::movementBody(const JGeometry::TVec3<f32>& param_1)
 {
 	if (mOwner->isHungTailNerve() && !mOwner->unk194->isTaken()
