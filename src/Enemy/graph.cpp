@@ -52,7 +52,6 @@ TSplineRail::TSplineRail(const TGraphWeb* graph)
 
 	unk0->getPoint(0.0f);
 
-	char trash[0x50]; // TODO: skill issue, need more inlines
 }
 
 f32 TSplineRail::wrapT(f32 param_1)
@@ -81,7 +80,6 @@ void TSplineRail::getPosAndRot(f32 t, JGeometry::TVec3<f32>* out_pos,
 	JGeometry::TVec3<f32> point;
 	JGeometry::TVec3<f32> dir;
 
-	char trash2[0xC];
 
 	for (;;) {
 		if (t + dt > 1.0f)
