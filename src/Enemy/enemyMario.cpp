@@ -1001,9 +1001,31 @@ void TEnemyMario::emReplayWaitingToReplayJumpToNearestNode()
 	changeEMDoing(EM_DOING_REPLAY_JUMP_TO_NEAREST_NODE);
 }
 
+// fabricated: the scalar-difference distance form retail uses where
+// TVec3::distance's repeated-subexpression body schedules the loads wrong.
+static inline f32 EMarioSquaredDist(const JGeometry::TVec3<f32>& a,
+                                    const JGeometry::TVec3<f32>& b)
+{
+	f32 dx = a.x - b.x;
+	f32 dy = a.y - b.y;
+	f32 dz = a.z - b.z;
+
+	f32 sqX = dx * dx;
+	f32 sqY = dy * dy;
+	f32 sqZ = dz * dz;
+
+	return sqX + sqY + sqZ;
+}
+
+static inline f32 EMarioDistance(const JGeometry::TVec3<f32>& a,
+                                 const JGeometry::TVec3<f32>& b)
+{
+	return JGeometry::TUtil<f32>::sqrt(EMarioSquaredDist(a, b));
+}
+
 void TEnemyMario::emReplayWaiting()
 {
-	f32 dist = mPosition.distance(SMS_GetMarioPos());
+	f32 dist = EMarioDistance(mPosition, SMS_GetMarioPos());
 	if (dist < mSettingParams->mSearchDist.get()) {
 		if (SMS_GetMarioPos().y
 		    < mPosition.y + mSettingParams->mSearchHeight.get()) {
@@ -1348,7 +1370,7 @@ void TEnemyMario::emWaitingToInviteMario()
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	changeMontemanWaitingAnim();
 
-	f32 distanceToMario = mPosition.distance(*gpMarioPos);
+	f32 distanceToMario = EMarioDistance(mPosition, *gpMarioPos);
 	if (distanceToMario < mSettingParams->mSearchDist.get()
 	    && gpMarioPos->y < mPosition.y + mSettingParams->mSearchHeight.get()) {
 		JGeometry::TVec3<f32> gatePoint;
@@ -1630,7 +1652,7 @@ void TEnemyMario::checkReturn()
 		    ->getGraphNode((startIndex + i) % nodeNum)
 		    .getPoint(&point);
 
-		if (point.distance(SMS_GetMarioPos()) > 1000.0f)
+		if (EMarioDistance(point, *gpMarioPos) > 1000.0f)
 			mPosition = point;
 	}
 }
