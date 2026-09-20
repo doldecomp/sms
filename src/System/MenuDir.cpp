@@ -384,10 +384,8 @@ void TMenuDirector::setFixedStageValue()
 	unk4C = unk44->unk2C;
 	int local_30[]
 	    = { 0, 0x14, 0x1c, 0x1e, 0x20, 0x22, 0x28, 0, 0x2a, 0x2c, 0x2e };
-	// Declared but unused; the original reserves 0x1c below the remap table
-	// (frame 0x58). Size recovered from the frame gap; name inferred from
-	// this TU's snprintf label buffers.
-	char unusedLabel[0x1c];
+	// TODO: frame 0x38 vs retail 0x58 — 0x20 dead below remap table.
+	// A named unused char[0x1c] lands the frame but is a fakematch.
 
 	if ((unk48 == 0x11) || (unk48 == 0x12)) {
 		int movie = unk4C;
