@@ -284,6 +284,7 @@ TNameKuri::TNameKuri(const char* name)
 
 void TNameKuri::init(TLiveManager* param_1)
 {
+	char trash[40];
 	JKRHeap::getCurrentHeap()->getTotalFreeSize();
 
 	TWalkerEnemy::init(param_1);
