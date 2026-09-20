@@ -1894,17 +1894,30 @@ void TMario::calcAnimHands()
 	}
 }
 
+// Binding level worth +8 of low region per site; all ten joint reads in
+// TMario::addCallBack carry it.
+static inline J3DJoint* MarioCBJoint(J3DModelData* d, u16 i)
+{
+	J3DJoint* joint = d->getJointNodePointer(i);
+	return joint;
+}
+
+// By-value read of the animation table's flag byte, +8 of low region.
+static inline u8 MarioCBAnimeUnk6(const TMario* p)
+{
+	return gMarioAnimeData[p->mAnimationId].unk6;
+}
+
 void TMario::addCallBack(JDrama::TGraphics* graphics)
 {
-	// volatile u32 padding[27];
 	gpMarioForCallBack      = this;
 	J3DModelData* modelData = getM3UModel()->unk8->getModelData();
 	if (isMario()) {
-		modelData->getJointNodePointer(mJointIdHead)
+		MarioCBJoint(modelData, mJointIdHead)
 		    ->setCallBack(MarioHeadCtrl);
 	}
 
-	modelData->getJointNodePointer(mJointIdChest)->setCallBack(MarioWaistCtrl);
+	MarioCBJoint(modelData, mJointIdChest)->setCallBack(MarioWaistCtrl);
 
 	if (0x4B0 > gpMarDirector->unk58 || isUpperPumpingStyle()) {
 		if (mMultiMtxEffect != nullptr) {
@@ -1919,7 +1932,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 			mCap->mtxEffectHide();
 		}
 	} else {
-		if ((gMarioAnimeData[mAnimationId].unk6 & 2) != 0
+		if ((MarioCBAnimeUnk6(this) & 2) != 0
 		    && mUpperState == UPPER_STATE_IDLE) {
 			if (mMultiMtxEffect != nullptr) {
 				mMultiMtxEffect->flagOn(0x1);
@@ -1935,7 +1948,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 		}
 	}
 
-	if ((gMarioAnimeData[mAnimationId].unk6 & 4) != 0
+	if ((MarioCBAnimeUnk6(this) & 4) != 0
 	    && mUpperState == UPPER_STATE_IDLE) {
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 			mWaterGun->unk1CDC->mMtxEffectTbl[1]->mFlags |= 1;
@@ -1945,19 +1958,19 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	}
 
 	if ((graphics->unk0 & 2) != 0) {
-		modelData->getJointNodePointer(mJointIdChnFootR)
+		MarioCBJoint(modelData, mJointIdChnFootR)
 		    ->setCallBack(MarioFootPosRCtrl);
-		modelData->getJointNodePointer(mJointIdFootR)
+		MarioCBJoint(modelData, mJointIdFootR)
 		    ->setCallBack(MarioFootDirRCtrl);
-		modelData->getJointNodePointer(mJointIdChnFootL)
+		MarioCBJoint(modelData, mJointIdChnFootL)
 		    ->setCallBack(MarioFootPosLCtrl);
-		modelData->getJointNodePointer(mJointIdFootL)
+		MarioCBJoint(modelData, mJointIdFootL)
 		    ->setCallBack(MarioFootDirLCtrl);
 	} else {
-		modelData->getJointNodePointer(mJointIdChnFootR)->setCallBack(nullptr);
-		modelData->getJointNodePointer(mJointIdFootR)->setCallBack(nullptr);
-		modelData->getJointNodePointer(mJointIdChnFootL)->setCallBack(nullptr);
-		modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
+		MarioCBJoint(modelData, mJointIdChnFootR)->setCallBack(nullptr);
+		MarioCBJoint(modelData, mJointIdFootR)->setCallBack(nullptr);
+		MarioCBJoint(modelData, mJointIdChnFootL)->setCallBack(nullptr);
+		MarioCBJoint(modelData, mJointIdFootL)->setCallBack(nullptr);
 	}
 }
 
