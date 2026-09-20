@@ -266,6 +266,9 @@ const TNerveBubbleLive& TNerveBubbleLive::theNerve()
 // TODO: incorrect size. Map records 216 bytes.
 void TBubble::appendItem() { }
 
+// TODO: +0x10 of named block above the TMsRange (TVec3 call temp already
+// sits at 0x10). A conductor binder lands the 0x50 frame from the pool
+// and pushes that temp; a named gpConductor local hoists the load.
 void TBubble::appendEnemy()
 {
 	mEnemyInside = nullptr;
@@ -1320,8 +1323,12 @@ void TBossTelesa::calcRootMatrix()
 	TPosition3f mtx;
 	Mtx rotation;
 
+	// TODO: retail hoists mSLTransYOffset.get() into f3 before mBaseHoseiPosY
+	// (same delay slot as the z load). Named getSaveParam2() recovered the
+	// params load and took 98.1 -> 99.1; frame is still 8 short of 0x2a8.
+	TBossTelesaSaveLoadParams* params = getSaveParam2();
 	mtx.translation(mPosition.x,
-	                mPosition.y + getSaveParam2()->mSLTransYOffset.get()
+	                mPosition.y + params->mSLTransYOffset.get()
 	                    + MsClamp<f32>(unk364, mBaseHoseiPosY, 0.0f),
 	                mPosition.z);
 	MsMtxSetRotRPH(rotation, mRotation.x, mRotation.y, mRotation.z);
@@ -1474,6 +1481,12 @@ BOOL TBossTelesa::checkMessage(THitActor* sender, u32 message)
 	return false;
 }
 
+static inline TGCConsole2* BossTelesaHitGetConsole()
+{
+	TGCConsole2* console = gpMarDirector->getConsole();
+	return console;
+}
+
 void TBossTelesa::checkHitObject(THitActor* actor)
 {
 	unk380 = -1;
@@ -1520,12 +1533,12 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 	if (!unk350 && actor->getActorType() != 0x40000395) {
 		if (unk35A) {
 			unk35A = false;
-			gpMarDirector->getConsole()->startAppearBalloon(0xF, true);
+			BossTelesaHitGetConsole()->startAppearBalloon(0xF, true);
 		}
 
 		unk35C += 1;
 		if (unk35C > 2)
-			gpMarDirector->getConsole()->startAppearBalloon(0x10, true);
+			BossTelesaHitGetConsole()->startAppearBalloon(0x10, true);
 	} else {
 		unk35C = 0;
 	}
@@ -2180,6 +2193,8 @@ bool TBossTelesa::checkAllItemDead()
 // to 98.7/98.4. `slot` is the address the ROM binds in r30 and reloads
 // through at every use; `zero` is the callee-saved f31 the ROM holds the
 // literal in across the loop.
+// TODO: +8 frame (0x38 vs 0x40), instruction-exact. A holder binder is
+// +0x10; a particle-manager binder lands the frame but swaps r28/r30.
 void TBossTelesa::forceAllItemKill()
 {
 	f32 zero = 0.0f;
@@ -2669,6 +2684,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 	// TODO: one instruction left -- the ROM holds unk368 in r3 and emits the
 	// receiver `addi r3, r31, 0` after the subtraction; we load it into r4 and
 	// the receiver floats above the subf. Frame and everything else are exact.
+	// Named `elapsed` is inert.
 	if (boss->unk368 > timeLimit - 120)
 		boss->flashItem(timeLimit - boss->unk368);
 
