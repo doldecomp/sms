@@ -25,8 +25,7 @@ static bool is_near(f32 h00, f32 h01, f32 h10, f32 h11)
 
 u8 TPollutionObj::getDepthFromMap(int x, int z)
 {
-	// TODO: inlines are wrong here!
-	(void)0;
+	const TBGCheckData* tmp;
 	f32 worldX = mLayer->getWorldPosX(x);
 	f32 worldZ = mLayer->getWorldPosZ(z);
 
@@ -36,8 +35,7 @@ u8 TPollutionObj::getDepthFromMap(int x, int z)
 	f32 maxZ = (worldZ + mLayer->getTexelSize()) + 5.0f;
 
 	f32 texelSz = mLayer->getTexelSize();
-
-	const TBGCheckData* tmp;
+	f32 dummy; // unused: matches retail stack layout (tmp slot placement)
 	f32 h00 = gpMap->checkGround(minX, 9999999.0f, minZ, &tmp);
 	f32 h10 = gpMap->checkGround(maxX, 9999999.0f, minZ, &tmp);
 	f32 h01 = gpMap->checkGround(minX, 9999999.0f, maxZ, &tmp);
