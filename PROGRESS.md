@@ -11,12 +11,12 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 53.99% | 12.06% | 166 / 385 |
+| Game | 54.02% | 12.06% | 166 / 385 |
 | JSystem | 90.24% | 75.06% | 180 / 198 |
 | SDK | 95.71% | 95.54% | 146 / 149 |
-| All | 61.98% | 26.71% | 492 / 732 |
+| All | 62.00% | 26.71% | 492 / 732 |
 
-11,377 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,379 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
 ## What recent batches have done
 
@@ -85,7 +85,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `MoveBG/MapObjBianco` | 97.84% | 49 / 74 |
 | `MoveBG/MapObjMare` | 96.46% | 38 / 67 |
 | `MoveBG/MapObjCorona` | 93.01% | 28 / 52 |
-| `MoveBG/MapObjBall` | 98.65% | 35 / 72 |
+| `MoveBG/MapObjBall` | 99.45% | 62 / 72 |
 | `Player/ModelWaterManager` | 94.97% | 10 / 25 |
 | `MarioUtil/ShadowUtil` | 79.68% | 25 / 49 |
 | `Enemy/koopajr` | 90.50% | 48 / 81 |
