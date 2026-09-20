@@ -44,6 +44,25 @@ static void IsNpcFlagOn_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	interp->push(result);
 }
 
+static inline TSpineBase<TLiveActor>* NpcEventGetSpine(const TBaseNPC* npc)
+{
+	TSpineBase<TLiveActor>* spine = npc->getSpine();
+	return spine;
+}
+
+static inline const TNerveBase<TLiveActor>*
+NpcEventGetLatestNerve(const TBaseNPC* npc)
+{
+	const TLiveActor* actor             = npc;
+	const TNerveBase<TLiveActor>* nerve = actor->getLatestNerve();
+	return nerve;
+}
+
+// getSpine binder (+0x10) lands evCheckCurNerve4Npc's frame at 0xa0;
+// TLiveActor* upcast + named getLatestNerve (+0x10) lands
+// evCheckLatestNerve4Npc at 0x98. Both then 99.96% / frame exact; leftover
+// is arg_num 4 low and the pushed slice 8-12 low. NerveGetByIndex binder
+// also lands the frame but drops the r28 save (ladder 353).
 static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
                             bool param_3)
 {
@@ -54,8 +73,8 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 
 	const TNerveBase<TLiveActor>* expected = NerveGetByIndex(nerveId);
 	const TNerveBase<TLiveActor>* actual   = param_3
-	                                             ? npc->getLatestNerve()
-	                                             : npc->mSpine->getCurrentNerve();
+	                                             ? NpcEventGetLatestNerve(npc)
+	                                             : NpcEventGetSpine(npc)->getCurrentNerve();
 
 	if (actual == expected)
 		result = 1;
