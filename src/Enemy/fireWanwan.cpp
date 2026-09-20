@@ -1740,6 +1740,7 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 	bool bVar8 = true;
 
 	for (int i = 0; i < 8; ++i) {
+		TBGWallCheckRecord checkRecord;
 		JGeometry::TVec3<f32> point = currPos;
 
 		{
@@ -1752,7 +1753,6 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 		}
 
 		JGeometry::TVec3<f32> boundPointStep;
-		TBGWallCheckRecord checkRecord;
 		bindPoint(&boundPointStep, point, step, fVar1, &checkRecord);
 		bVar8 &= isAirborne();
 
@@ -1760,7 +1760,7 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 		currPos += pointCorrection;
 
 		for (int i = 0; i < checkRecord.mResultWallsNum; ++i)
-			*normal_sum += checkRecord.mResultWalls[i]->getNormal();
+			*normal_sum += checkRecord.mResultWalls[i]->mNormal;
 
 		collisionNum += checkRecord.mResultWallsNum;
 	}
