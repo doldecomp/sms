@@ -217,8 +217,8 @@ void TMareWallRock::loadAfter()
 	unk104          = TMapObjBase::getBuildingJointObj(unkF8 + 1);
 	unk108          = unkF8;
 	J3DJoint* joint = unk104->getJoint();
-	const Vec& max  = joint->getMax();
 	const Vec& min  = joint->getMin();
+	const Vec& max  = joint->getMax();
 	mPosition.x     = (max.x + min.x) / 2.0f;
 	mPosition.y     = (max.y + min.y) / 2.0f;
 	mPosition.z     = (max.z + min.z) / 2.0f;
