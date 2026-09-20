@@ -359,6 +359,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "TalkCursor") == 0)
 		return new TTalkCursor;
 
+	// TODO: retail's inlined TTargetArrow ctor passes "?" (sdata2 @4703)
+	// to TViewObj; ours uses the TViewObj default "<TViewObj>". Shared
+	// header: TTargetArrow(const char* name = "?") : TViewObj(name).
+	// The rest of getNameRef is ~-only (every spill 4 bytes low at an
+	// exact 0x178 frame) — the open "every temp 4 bytes low" class.
 	if (strcmp(name, "TargetArrow") == 0)
 		return gpTargetArrow = new TTargetArrow;
 
