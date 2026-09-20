@@ -278,6 +278,7 @@ static int PopoPossessedCallback(J3DNode* node, int param)
 }
 
 // The limbs keep the body scale instead of the pump scale.
+// TODO: frame 0x80 vs retail 0xc0; getModel binder adds an instruction.
 static int PopoNonScaleCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -285,12 +286,10 @@ static int PopoNonScaleCallback(J3DNode* node, int param)
 		if (popo == nullptr || !popo->isUseScaleCallBack())
 			return 1;
 
-		J3DJoint* joint = (J3DJoint*)node;
-		MtxPtr anmMtx   = gpCurPopo->getModel()->getAnmMtx(joint->getJntNo());
+		int jntNo     = ((J3DJoint*)node)->getJntNo();
+		MtxPtr anmMtx = gpCurPopo->getModel()->getAnmMtx(jntNo);
 		Mtx scale;
-		scale[0][3] = 0.0f;
-		scale[1][3] = 0.0f;
-		scale[2][3] = 0.0f;
+		scale[2][3] = scale[1][3] = scale[0][3] = 0.0f;
 		f32 s       = 0.9f * gpCurPopo->mBodyScale;
 		scale[0][0] = s;
 		scale[0][1] = 0.0f;
@@ -330,6 +329,12 @@ void TPopo::load(JSUMemoryInputStream& stream)
 	reset();
 }
 
+static inline MActor* PopoInitActor(TPopo* popo)
+{
+	MActor* actor = popo->getMActor();
+	return actor;
+}
+
 void TPopo::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
@@ -342,20 +347,24 @@ void TPopo::init(TLiveManager* manager)
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
 	onHitFlag(HIT_FLAG_UNK8000000);
 
-	getMActor()->setJointCallback(mCenterJntIndex, &PopoRollCallback);
+	PopoInitActor(this)->setJointCallback(mCenterJntIndex, &PopoRollCallback);
 	mMActorKeeper->getMActor("popoL.bmd")
 	    ->setJointCallback(mCenterJntIndex, &PopoRollCallback);
-	getMActor()->setJointCallback(mMouthJntIndex, &PopoPossessedCallback);
-	getMActor()->setJointCallback(mRLegJntIndex, &PopoNonScaleCallback);
-	getMActor()->setJointCallback(mLLegJntIndex, &PopoNonScaleCallback);
-	getMActor()->setJointCallback(mRHandJntIndex, &PopoNonScaleCallback);
-	getMActor()->setJointCallback(mLHandJntIndex, &PopoNonScaleCallback);
+	PopoInitActor(this)->setJointCallback(mMouthJntIndex,
+	                                     &PopoPossessedCallback);
+	PopoInitActor(this)->setJointCallback(mRLegJntIndex, &PopoNonScaleCallback);
+	PopoInitActor(this)->setJointCallback(mLLegJntIndex, &PopoNonScaleCallback);
+	PopoInitActor(this)->setJointCallback(mRHandJntIndex, &PopoNonScaleCallback);
+	PopoInitActor(this)->setJointCallback(mLHandJntIndex, &PopoNonScaleCallback);
 	unk188 = 0.0f;
 
 	mCollision = new TPopoCollision("ポポコリジョン");
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-	    ->getChildren()
-	    .push_back(mCollision);
+	// Named search is -8 against the 6-site getMActor binder's +0x48, landing
+	// the frame.
+	// TODO: JGadget iterator temps still group 0xc off (stride-8-vs-12 class).
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	group->getChildren().push_back(mCollision);
 	mCollision->initHitActor(0x1000000D, 2, 0x98000000, 80.0f, 80.0f, 80.0f,
 	                         80.0f);
 	getCollision()->onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -398,11 +407,29 @@ void TPopo::reset()
 	unk18C = 0;
 }
 
+static inline MActor* PopoTriggerActor(TPopo* popo)
+{
+	MActor* actor = popo->getMActor();
+	return actor;
+}
+
+static inline MSound* PopoTriggerSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
+static inline TWaterGun* PopoTriggerGun()
+{
+	TWaterGun* gun = SMS_GetMarioWaterGun();
+	return gun;
+}
+
 bool TPopo::checkTrigger()
 {
 	mIsPumping = 0;
 	if (gpMarioOriginal->onYoshi()
-	    || (s32)SMS_GetMarioWaterGun()->mCurrentNozzle != 0) {
+	    || (s32)PopoTriggerGun()->mCurrentNozzle != 0) {
 		kill();
 		return false;
 	}
@@ -413,7 +440,7 @@ bool TPopo::checkTrigger()
 	if (analogR > 20) {
 		mIsPumping = 1;
 		f32 pump   = mPumpScale;
-		if (SMSGetMSound()->gateCheck(0x20C2))
+		if (PopoTriggerSound()->gateCheck(0x20C2))
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 			    0x20C2, &mPosition, nullptr, pump, 0, 0, nullptr, 0, 4);
 		mSprayedByWaterCooldown = 0;
@@ -423,11 +450,12 @@ bool TPopo::checkTrigger()
 		if (mPumpScale > scaleMax) {
 			mPumpScale = scaleMax;
 			if (!mBrkFlag)
-				getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BRK);
+				PopoTriggerActor(this)->setFrameRate(SMSGetAnmFrameRate(),
+				                                     ANM_TYPE_BRK);
 		}
 		f32 scaleMax2 = mSaveParams->getSLWaterScaleMax();
 		if (mBrkFlag)
-			getMActor()->getFrameCtrl(ANM_TYPE_BRK)->setFrame(
+			PopoTriggerActor(this)->getFrameCtrl(ANM_TYPE_BRK)->setFrame(
 			    mBrkFrames * mPumpScale / scaleMax2);
 	}
 
@@ -457,7 +485,7 @@ bool TPopo::checkTrigger()
 	mScaledBodyRadius
 	    = (8.0f * mPumpScale + 8.0f) * (mBodyScale * mBodyRadius);
 	if (mPumpScale >= scaleMax)
-		getMActor()->getFrameCtrl(ANM_TYPE_BTP)->setFrame(5.0f);
+		PopoTriggerActor(this)->getFrameCtrl(ANM_TYPE_BTP)->setFrame(5.0f);
 	return false;
 }
 
@@ -1055,16 +1083,37 @@ DEFINE_NERVE(TNervePopoAttack, TLiveActor)
 	return FALSE;
 }
 
+static inline TPopo* PopoFlyBody(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	TPopo* popo      = (TPopo*)body;
+	return popo;
+}
+
+static inline TWaterGun* PopoFlyGun()
+{
+	TWaterGun* gun = SMS_GetMarioWaterGun();
+	return gun;
+}
+
+static inline TPopoSaveLoadParams* PopoFlyParams(TPopo* popo)
+{
+	TPopoSaveLoadParams* params = popo->getSaveParams();
+	return params;
+}
+
+// TODO: vel temporary still sits 4 bytes high (retail 0x68, ours 0x6c):
+// the open "4 high after the pool is full" class.
 DEFINE_NERVE(TNervePopoFly, TLiveActor)
 {
-	TPopo* popo = (TPopo*)spine->getBody();
+	TPopo* popo = PopoFlyBody(spine);
 
 	if (spine->getTime() == 0) {
 		popo->setBckAnm(2);
-		MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
-		f32 speed      = popo->getSaveParams()->getSLReleaseSpeed()
-		            * (popo->mPumpScale
-		               / popo->getSaveParams()->getSLWaterScaleMax());
+		MtxPtr emitMtx = PopoFlyGun()->getEmitMtx(0);
+		f32 speed      = PopoFlyParams(popo)->getSLReleaseSpeed();
+		speed *= popo->mPumpScale
+		         / popo->getSaveParams()->getSLWaterScaleMax();
 		JGeometry::TVec3<f32> vel;
 		vel.x = speed * emitMtx[0][0];
 		vel.y = speed * emitMtx[1][0];
@@ -1072,8 +1121,10 @@ DEFINE_NERVE(TNervePopoFly, TLiveActor)
 		popo->mVelocity = vel;
 		popo->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		popo->releaseNozzle();
-		f32 yaw = MsGetRotFromZaxisY(vel);
-		popo->mRotation.set(0.0f, MsWrap(yaw, 0.0f, 360.0f), 0.0f);
+		// Reusing speed for the yaw lands MsGetRotFromZaxisY in f1 with
+		// no fmr; a second named local reintroduces it (MapEventMare 359).
+		speed = MsGetRotFromZaxisY(vel);
+		popo->mRotation.set(0.0f, MsWrap(speed, 0.0f, 360.0f), 0.0f);
 		if (TPopo::mExplosionSw)
 			popo->offHitFlag(HIT_FLAG_NO_COLLISION);
 	} else if (!popo->isAirborne()) {
