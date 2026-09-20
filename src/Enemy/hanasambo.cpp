@@ -443,14 +443,20 @@ void TSamboFlower::init(TLiveManager* manager)
 	onLiveFlag(LIVE_FLAG_DEAD);
 }
 
+static inline TMActorKeeper* SamboFlowerKeeper(const TSamboFlower* p)
+{
+	TMActorKeeper* keeper = p->mMActorKeeper;
+	return keeper;
+}
+
 void TSamboFlower::setMActorAndKeeper()
 {
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
-	mMActor       = mMActorKeeper->createMActor("flower.bmd", 3);
-	MActor* actor = mMActor;
+	mMActor       = SamboFlowerKeeper(this)->createMActor("flower.bmd", 3);
+	MActor* actor                = mMActor;
+	TSamboFlowerManager* manager = (TSamboFlowerManager*)mManager;
 	actor->getModel()->getModelData()->setMaterialTable(
-	    ((TSamboFlowerManager*)mManager)->mMaterialTable,
-	    (J3DMaterialCopyFlag)3);
+	    manager->mMaterialTable, (J3DMaterialCopyFlag)3);
 	actor->initDL();
 	actor->getModel()->lock();
 }
