@@ -810,10 +810,8 @@ void TPinnaEntrance::loadAfter()
 {
 	TMapObjBase::loadAfter();
 
-	// TODO: 96.6%. Retail lays the defaulted scale temporary out below the
-	// explicit rotation one; passing the scale explicitly does not swap them.
-	TMapObjBaseManager::newAndRegisterObj(
-	    "GateManta", getPosition(), JGeometry::TVec3<f32>(90.0f, 0.0f, 0.0f));
+	JGeometry::TVec3<f32> rotation(90.0f, 0.0f, 0.0f);
+	TMapObjBaseManager::newAndRegisterObj("GateManta", mPosition, rotation);
 }
 
 // TWaterRecoverObj
