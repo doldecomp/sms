@@ -1260,13 +1260,16 @@ DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
 		puku->mRotStep = (angle - puku->mRotation.x) / 60.0f;
 	}
 
-	f32 x = puku->mPosition.x;
+	// TODO: 99.4%. Only the volatile FPR pair is left: retail puts the
+	// component in f1 and the 1/60 literal in f2, we have them the other
+	// way round in all three statements.
+	f32 x = puku->getPosition().x;
 	puku->mPosition.x
 	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.x - x) + x;
-	f32 y = puku->mPosition.y;
+	f32 y = puku->getPosition().y;
 	puku->mPosition.y
 	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.y - y) + y;
-	f32 z = puku->mPosition.z;
+	f32 z = puku->getPosition().z;
 	puku->mPosition.z
 	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.z - z) + z;
 
