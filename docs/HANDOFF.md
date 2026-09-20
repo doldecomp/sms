@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural, Option +1, elecNokonoko +3, hanasambo +2.
-- Landed `grpui` chuuhana ([chuuhana unit ladder](ec0b4951-1288-4349-a503-cc6d27c06977)): `isCollidMove` Object-nerve as if/return not branchless `!=` (95.9→97.6); unit fuzzy 99.25→99.33; +0 exact; All stays **61.88%**.
-- Landed hanasambo +2; elecNokonoko +3; Option +1.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte (+3 then +0 structural), bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural, Option +1, elecNokonoko +3, hanasambo +2.
+- Landed `grpuj` MapObjMonte ([MapObjMonte unit ladder](edac801f-9269-48e0-8832-747f916ac88a)): `TFluffManager::loadAfter` 91.6→99.8, `control` 97.1→99.6 (word-copy TVec3 + lfsu); unit fuzzy 99.31→99.89; +0 exact; All stays **61.88%**.
+- Landed chuuhana isCollidMove; hanasambo +2; elecNokonoko +3.
 - Total: **61.88%** matched, game **53.87%**, linked **492 / 732**, exact **11,368**.
-- Running: `grpuj` / MapObjMonte ([MapObjMonte unit ladder](edac801f-9269-48e0-8832-747f916ac88a)). Refill: hinokuri2.
+- Running: `grpuk` / hinokuri2 ([hinokuri2 unit ladder](8d6a0f95-b3e1-4d4d-9795-c62354e0929a)). Refill: gesso.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
