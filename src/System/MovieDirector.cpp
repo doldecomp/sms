@@ -83,6 +83,11 @@ void TEndingString::startFadeIn()
 	mFadeState = ENDING_FADE_IN;
 }
 
+static inline u16 MovieDirectorGetPaneAlpha(J2DPane* pane)
+{
+	return pane->getAlpha();
+}
+
 void TEndingString::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -90,7 +95,7 @@ void TEndingString::perform(u32 cue, JDrama::TGraphics* graphics)
 		case ENDING_FADE_NONE:
 			break;
 		case ENDING_FADE_IN: {
-			u16 alpha = mRootPane->getAlpha();
+			u16 alpha = MovieDirectorGetPaneAlpha(mRootPane);
 			alpha += 8;
 			if (alpha > 255) {
 				mFadeState = ENDING_FADE_WAIT;
@@ -118,9 +123,6 @@ void TEndingString::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
-	// TODO: 8 bytes of frame short (retail 0x128, ours 0x120) and the
-	// J2DOrthoGraph lands at 0x28 instead of 0x2c: one unexplained 4-byte
-	// temp below the named object. Every instruction matches.
 	if (cue & CUE_DRAW) {
 		switch (mFadeState) {
 		case ENDING_FADE_IN:
