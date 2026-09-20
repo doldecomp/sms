@@ -594,16 +594,14 @@ void TMapObjBall::initMapObj()
 		mDepthAtFloating      = mBodyRadius / 3.0f;
 		break;
 
-	case 0x40000390:
-	case 0x40000391:
-	case 0x40000392:
-		unk148 = 0.4f;
+	case 0x40000393:
+		unk148 = 0.6f;
 		unk14C = 0.2f;
 		unk150 = 1.3f;
-		unk154 = 0.0f;
-		unk158 = 1.2f;
-		unk15C = 0.8f;
-		unk160 = 0.5f;
+		unk154 = 15.0f;
+		unk158 = 0.5f;
+		unk15C = 1.3f;
+		unk160 = 1.0f;
 		unk170 = 0.9f;
 		unk174 = 0.13f;
 		unk178 = 20.0f;
@@ -618,14 +616,16 @@ void TMapObjBall::initMapObj()
 		mDepthAtFloating      = 50.0f;
 		break;
 
-	case 0x40000393:
-		unk148 = 0.6f;
+	case 0x40000390:
+	case 0x40000391:
+	case 0x40000392:
+		unk148 = 0.4f;
 		unk14C = 0.2f;
 		unk150 = 1.3f;
-		unk154 = 15.0f;
-		unk158 = 0.5f;
-		unk15C = 1.3f;
-		unk160 = 1.0f;
+		unk154 = 0.0f;
+		unk158 = 1.2f;
+		unk15C = 0.8f;
+		unk160 = 0.5f;
 		unk170 = 0.9f;
 		unk174 = 0.13f;
 		unk178 = 20.0f;
@@ -1410,11 +1410,7 @@ void TCoverFruit::calcRootMatrix()
 	if (mHolder) {
 		// While carried it simply rides the holder's matrix.
 		MtxPtr held = mHolder->getTakingMtx();
-		// TODO: retail binds the model pointer and then adds getBaseTRMtx's
-		// 0x20 in a second `addi`; both the named local here and folding the
-		// call back in emit the single `addi r4, r3, 0x20`.
-		J3DModel* model = getModel();
-		MTXCopy(held, model->getBaseTRMtx());
+		getModel()->setBaseTRMtx(held);
 		mPosition.set(held[0][3], held[1][3], held[2][3]);
 	} else {
 		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
