@@ -247,20 +247,28 @@ void TMapObjBall::kicked()
 	}
 }
 
+// By-value scalar fork over the per-kind water drag: +4 of low region and
+// +4 above it in both touchWater bodies, and it defers the load past the
+// current's first component.
+static inline f32 MapObjBallWaterDrag(const TMapObjBall* p) { return p->unk17C; }
+
 u32 TMapObjBall::touchWater(THitActor* param_1)
 {
 	if (isState(STATE_HOLDING) || isState(STATE_APPEARING))
 		return 1;
 
 	// The current drags the ball along, scaled by the per-kind unk17C.
-	JGeometry::TVec3<f32> vel(mVelocity);
 	JGeometry::TVec3<f32> pushed;
+	JGeometry::TVec3<f32> vel(mVelocity);
 	pushed.set(vel);
 
 	const JGeometry::TVec3<f32>& flow = getWaterSpeed(param_1);
-	pushed.x += flow.x * unk17C;
-	pushed.y += flow.y * unk17C;
-	pushed.z += flow.z * unk17C;
+	// TODO: retail loads flow.x before the drag factor; every spelling tried
+	// (scaleAdd, the fork at each site, the raw member) loads the drag first.
+	f32 drag = MapObjBallWaterDrag(this);
+	pushed.x += flow.x * drag;
+	pushed.y += flow.y * drag;
+	pushed.z += flow.z * drag;
 	mVelocity = pushed;
 
 	offLiveFlag(LIVE_FLAG_UNK10);
@@ -899,9 +907,10 @@ u32 TResetFruit::touchWater(THitActor* param_1)
 		pushed.set(vel);
 
 		const JGeometry::TVec3<f32>& flow = getWaterSpeed(param_1);
-		pushed.x += flow.x * unk17C;
-		pushed.y += flow.y * unk17C;
-		pushed.z += flow.z * unk17C;
+		f32 drag = MapObjBallWaterDrag(this);
+		pushed.x += flow.x * drag;
+		pushed.y += flow.y * drag;
+		pushed.z += flow.z * drag;
 		mVelocity = pushed;
 
 		offLiveFlag(LIVE_FLAG_UNK10);
