@@ -173,17 +173,21 @@ static inline TWaterGun* WaterGunWaterGun(const TMario* p)
 	return waterGun;
 }
 
+static inline TNozzleBase* NozzleCtrlCurrent(TWaterGun* gun)
+{
+	return gun->mNozzleList[gun->getCurrentNozzleIndex()];
+}
+
 static BOOL NozzleCtrl(J3DNode* node, BOOL param_2)
 {
 	// TODO: Inlined stack space
 	if (!param_2) {
 		if (gpMarioForCallBack != nullptr) {
-			s16 gunAngle = WaterGunWaterGun(gpMarioForCallBack)->getCurrentNozzle()
+			s16 gunAngle = NozzleCtrlCurrent(
+			                   WaterGunWaterGun(gpMarioForCallBack))
 			                   ->getGunAngle();
 			if (gunAngle < 0) {
 				Mtx mtx;
-				// Unused stack space
-				// volatile u32 unused2[6];
 				MsMtxSetRotRPH(mtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
 				MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 			}
