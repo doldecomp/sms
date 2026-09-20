@@ -1897,8 +1897,8 @@ DEFINE_NERVE(TNerveBWJumpAway, TLiveActor)
 
 	if (boss->isReachedToGoal()) {
 		boss->mPosition = BW_HEAD_START;
-		boss->getTracer()->reset();
-		boss->getTracer()->reset2();
+		boss->unk124->reset();
+		boss->unk124->reset2();
 		boss->goToShortestNextGraphNode();
 		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
 		return TRUE;
@@ -1935,7 +1935,7 @@ DEFINE_NERVE(TNerveBWFall, TLiveActor)
 		const JGeometry::TVec3<f32>& picket = boss->getPicket()->mPosition;
 		JGeometry::TVec3<f32> velocity = boss->calcVelocityToJumpToY(
 		    picket, 5.0f, boss->getGravityY());
-		boss->setGoalPath(TPathNode(picket));
+		boss->setGoalPath(TPathNode(boss->mPicket->mPosition));
 		boss->mVelocity = velocity;
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->mIsRolling = 0;
@@ -1943,8 +1943,8 @@ DEFINE_NERVE(TNerveBWFall, TLiveActor)
 
 	if (boss->isReachedToGoal()) {
 		boss->mPosition = boss->getPicket()->mPosition;
-		boss->getTracer()->reset();
-		boss->getTracer()->reset2();
+		boss->unk124->reset();
+		boss->unk124->reset2();
 		boss->goToShortestNextGraphNode();
 		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
 		return TRUE;
