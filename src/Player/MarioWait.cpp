@@ -147,6 +147,7 @@ void TMario::changeMontemanWaitingAnim()
 
 BOOL TMario::waiting()
 {
+	char trash[24];
 	if (waitingCommonEvents())
 		return 1;
 
