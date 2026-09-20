@@ -765,9 +765,24 @@ u32 TResetFruit::mFruitWaitTimeToAppear = 360;
 // UNUSED in the map; the value is not recoverable from the binary.
 GXColorS10 TResetFruit::mRottenColor    = { 0, 0, 0, 0 };
 
+// Binding level over a raw member read, worth +16 of low region in
+// TResetFruit::makeObjWaitingToAppear (batch 127).
+static inline TMarDirector* MapObjBallGetMarDirector()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
+// Binding levels used to size TResetFruit::checkGroundCollision's low region.
+static inline TMap* ResetFruitGetMap()
+{
+	TMap* map = gpMap;
+	return map;
+}
+
 void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 {
-	u8 map = gpMarDirector->mMap;
+	u8 map = MapObjBallGetMarDirector()->mMap;
 	if (map != 7 && map != 4) {
 		TMapObjGeneral::checkGroundCollision(param_1);
 		return;
@@ -775,7 +790,7 @@ void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 
 	if (map == 4) {
 		// Probe from well above so a fruit cannot fall through the deck.
-		mGroundHeight = gpMap->checkGround(param_1->x, 200.0f + param_1->y,
+		mGroundHeight = ResetFruitGetMap()->checkGround(param_1->x, 200.0f + param_1->y,
 		                                   param_1->z, &mGroundPlane);
 		mGroundHeight += 1.0f;
 		if (param_1->y <= mGroundHeight) {
@@ -786,11 +801,11 @@ void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 		return;
 	}
 
-	mGroundHeight = gpMap->checkGround(param_1->x, param_1->y + mHeadHeight,
+	mGroundHeight = ResetFruitGetMap()->checkGround(param_1->x, param_1->y + mHeadHeight,
 	                                   param_1->z, &mGroundPlane);
 
-	if (mGroundPlane->isMapObjThrough()) {
-		mGroundHeight = gpMap->checkGroundExactY(
+	if (getGroundPlane()->isMapObjThrough()) {
+		mGroundHeight = ResetFruitGetMap()->checkGroundExactY(
 		    param_1->x, mGroundHeight - 200.0f, param_1->z, &mGroundPlane);
 	}
 
@@ -817,14 +832,6 @@ static inline MSound* ResetFruitAppearSound()
 {
 	MSound* sound = SMSGetMSound();
 	return sound;
-}
-
-// Binding level over a raw member read, worth +16 of low region in
-// TResetFruit::makeObjWaitingToAppear (batch 127).
-static inline TMarDirector* MapObjBallGetMarDirector()
-{
-	TMarDirector* marDirector = gpMarDirector;
-	return marDirector;
 }
 
 // Binding level over a raw member read, worth +16 of low region in
@@ -1305,17 +1312,24 @@ void TResetFruit::control()
 	}
 }
 
+// Binding level over the area-cube singleton, +8 of low region.
+static inline TCubeManagerArea* MapObjBallGetCubeArea()
+{
+	TCubeManagerArea* area = gpCubeArea;
+	return area;
+}
+
 void TResetFruit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->mMap == 7) {
-		if (isState(STATE_HOLDING)
+	if (MapObjBallGetMarDirector()->mMap == 7) {
+		if (MapObjBallIsState(this, STATE_HOLDING)
 		    || !JGeometry::TVec3<f32>(mVelocity).isZero()) {
 			if (checkLiveFlag(LIVE_FLAG_UNK200))
 				offLiveFlag(LIVE_FLAG_UNK200);
-		} else if (!gpCubeArea->isInAreaCube((const Vec&)mPosition)) {
+		} else if (!MapObjBallGetCubeArea()->isInAreaCube((const Vec&)mPosition)) {
 			// Settled outside every area cube and away from where it
 			// started: send it back to its spawn point.
-			if (isState(STATE_LIVING)
+			if (MapObjBallIsState(this, STATE_LIVING)
 			    && (mPosition.x != mInitialPosition.x
 			        || mPosition.z != mInitialPosition.z)) {
 				makeObjWaitingToAppear();
