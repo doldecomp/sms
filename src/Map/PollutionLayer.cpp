@@ -170,6 +170,7 @@ void TPollutionLayer::appearItem(f32, f32, f32) { }
 
 void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 {
+	char trash[0x30];
 	static int effect_counter = 1;
 	effect_counter += 1;
 
