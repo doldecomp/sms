@@ -221,9 +221,10 @@ void TManhole::appeared()
 
 void TManhole::calc()
 {
-	f32 next = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
-	           + getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate();
-	if ((getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() <= 45.0f
+	f32 next = MapObjTownGetMActor(this)->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+	           + MapObjTownGetMActor(this)->getFrameCtrl(ANM_TYPE_BCK)->getRate();
+	if ((MapObjTownGetMActor(this)->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+	         <= 45.0f
 	     && 45.0f < next)
 	    || (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() <= 125.0f
 	        && 125.0f < next)) {
