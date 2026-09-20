@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural, Option +1.
-- Landed `grpuf` Option ([Option unit ladder](1922447e-b6be-4975-a19c-0f3463751825)): +1 exact (`JUTRect(int,int,int,int)` via depth-5 TU wrapper); `movementOption` 96.81→99.96; unit **46.49→46.76**; All **61.84%**, exact **11,362→11,363**. Pre-existing MISSING `SMSGetMSound`.
-- Landed MapObjBall kicked structural; killer +1; BossHanachanParts +5.
-- Total: **61.84%** matched, game **53.82%**, linked **492 / 732**, exact **11,363**.
-- Running: `grpug` / elecNokonoko ([elecNokonoko unit ladder](318e0070-4006-48bc-b318-7f577004f91d)). Refill: hanasambo.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural, Option +1, elecNokonoko +3.
+- Landed `grpug` elecNokonoko ([elecNokonoko unit ladder](318e0070-4006-48bc-b318-7f577004f91d)): +3 exact (`clipEnemies`, `init`, `behaveToFindMario`); Turn nerve 98.4→99.9; unit **58.74→65.00**; All **61.84→61.87**, Game **53.82→53.86**, exact **11,363→11,366**.
+- Landed Option +1; MapObjBall structural; killer +1; BossHanachanParts +5.
+- Total: **61.87%** matched, game **53.86%**, linked **492 / 732**, exact **11,366**.
+- Running: `grpuh` / hanasambo ([hanasambo unit ladder](a8d90721-883c-4e31-9c23-9aa1bba73c6b)) — already has `setDeadAnm` commit. Refill: chuuhana.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
