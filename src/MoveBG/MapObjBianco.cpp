@@ -488,11 +488,14 @@ TBiancoMiniWindmill::TBiancoMiniWindmill(const char* name)
 {
 }
 
+// TODO: `into` first lands `toOther` at 0x40; `vel`/`vel2` stay 4 high
+// (0x34/0x28 vs 0x30/0x24). A second function-scope f32 grows the frame.
 void TLeafBoat::touchActor(THitActor* other)
 {
 	if (other->isActorType(0x80000001))
 		return;
 
+	f32 into;
 	JGeometry::TVec3<f32> toOther(other->mPosition.x - mPosition.x, 0.0f,
 	                              other->mPosition.z - mPosition.z);
 	JGeometry::TVec3<f32> vel(getVelocity());
@@ -503,7 +506,7 @@ void TLeafBoat::touchActor(THitActor* other)
 		MsVECNormalize(&toOther, &toOther);
 
 	JGeometry::TVec3<f32> vel2(getVelocity());
-	f32 into = toOther.dot(vel2);
+	into = toOther.dot(vel2);
 	if (other->checkActorType(ACTOR_TYPE_ENEMY)) {
 		mVelocity.x -= (1.0f + mEnemyBounce) * (toOther.x * into);
 		mVelocity.z -= (1.0f + mEnemyBounce) * (toOther.z * into);
@@ -539,24 +542,26 @@ void TLeafBoat::touchWall(JGeometry::TVec3<f32>* pos,
 	}
 }
 
+// TODO: frame is retail's 0xe8; `next` is 4 low and the getVelocity()
+// copies sit 0x44 high. marioY/deckY still swap f4/f5.
 void TLeafBoat::bind()
 {
-	JGeometry::TVec3<f32> next(mPosition);
+	JGeometry::TVec3<f32> next(getPosition());
 
-	JGeometry::TVec3<f32> velX(mVelocity);
+	JGeometry::TVec3<f32> velX(getVelocity());
 	next.x += velX.x;
-	JGeometry::TVec3<f32> velZ(mVelocity);
+	JGeometry::TVec3<f32> velZ(getVelocity());
 	next.z += velZ.z;
 
 	const TBGCheckData* ground;
 	if (gpMap->checkGroundIgnoreWaterSurface(next.x, mPosition.y - mYOffset,
 	                                         next.z, &ground)
 	    > mPosition.y - mYOffset - 50.0f) {
-		JGeometry::TVec3<f32> vel(mVelocity);
+		JGeometry::TVec3<f32> vel(getVelocity());
 		calcReflectingVelocity(ground, 1.0f, &vel);
 		mVelocity.x *= -1.0f;
 		mVelocity.z *= -1.0f;
-		next = mPosition;
+		next = getPosition();
 	}
 
 	JGeometry::TVec3<f32> probe;
@@ -571,17 +576,24 @@ void TLeafBoat::bind()
 	// `a = b - c` is the shape that reaches the map's out-of-line
 	// JGeometry::TVec3<f32>::sub: operator= is one inline level and the
 	// difference nested in its argument two more.
-	mLinearVelocity = next - mPosition;
+	mLinearVelocity = next - getPosition();
 
 	// Standing on the deck counts as an attack so the boat can carry Mario.
-	f32 marioY = gpMarioPos->y;
-	f32 deckY  = mPosition.y - mYOffset;
-	f32 dx     = gpMarioPos->x - mPosition.x;
+	f32 marioY = SMS_GetMarioPos().y;
+	f32 deckY  = getPosition().y - mYOffset;
+	f32 dx     = SMS_GetMarioPos().x - getPosition().x;
 	f32 radius = mBodyRadius;
-	f32 dz     = gpMarioPos->z - mPosition.z;
+	f32 dz     = SMS_GetMarioPos().z - getPosition().z;
 	if (marioY <= deckY && deckY - 100.0f < marioY
 	    && dx * dx + dz * dz < radius * radius)
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+}
+
+/// Fabricated: binder over the out-of-line water-gun fetch.
+static inline TWaterGun* LeafBoatGetWaterGun()
+{
+	TWaterGun* gun = SMS_GetMarioWaterGun();
+	return gun;
 }
 
 void TLeafBoat::control()
@@ -593,7 +605,7 @@ void TLeafBoat::control()
 
 	if (marioIsOn()) {
 		mVelocity.y -= mRiderWeight;
-		if (SMS_GetMarioWaterGun()->isEmitWater() > 0) {
+		if (LeafBoatGetWaterGun()->isEmitWater() > 0) {
 			MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 			mVelocity.x -= emitMtx[0][0] * mWaterPushRate;
 			mVelocity.z -= emitMtx[2][0] * mWaterPushRate;
@@ -606,8 +618,8 @@ void TLeafBoat::control()
 		TCubeStreamInfo* info
 		    = (TCubeStreamInfo*)gpCubeStream->unk14->getChildren()[cubeNo];
 		Mtx flow;
-		MsMtxSetXYZRPH(flow, 0.0f, 0.0f, 0.0f, info->unk18.x, info->unk18.y,
-		               info->unk18.z);
+		MsMtxSetXYZRPH(flow, 0.0f, 0.0f, 0.0f, info->getUnk18().x,
+		               info->getUnk18().y, info->getUnk18().z);
 		f32 power = 0.0001f * info->unk40;
 		mVelocity.x += flow[0][2] * power;
 		mVelocity.z += flow[2][2] * power;
