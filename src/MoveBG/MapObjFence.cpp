@@ -182,6 +182,18 @@ void TRevolvingFenceInner::calcCurrentMtx()
 	mtx[2][3] = mPosition.z;
 }
 
+static inline f32 RevolvingFenceSpeed()
+{
+	f32 speed = TRevolvingFenceInner::mSpeed;
+	return speed;
+}
+
+static inline f32 RevolvingFenceInitRotY(const TRevolvingFenceInner* p)
+{
+	f32 rotY = p->mInitialRotation.y;
+	return rotY;
+}
+
 void TRevolvingFenceInner::controlWall()
 {
 	switch (mState) {
@@ -190,37 +202,37 @@ void TRevolvingFenceInner::controlWall()
 		break;
 
 	case STATE_TURN_TO_BACK_CW:
-		mAngle += mSpeed;
+		mAngle += RevolvingFenceSpeed();
 		if (mAngle > 180.0f) {
 			mAngle      = 180.0f;
-			mRotation.y = mAngle + mInitialRotation.y;
+			mRotation.y = mAngle + RevolvingFenceInitRotY(this);
 			setState(STATE_WAIT_BACK);
 		}
 		calcCurrentMtx();
 		break;
 
 	case STATE_TURN_TO_FRONT_CW:
-		mAngle += mSpeed;
+		mAngle += RevolvingFenceSpeed();
 		if (mAngle > 360.0f) {
 			mAngle      = 0.0f;
-			mRotation.y = mAngle + mInitialRotation.y;
+			mRotation.y = mAngle + RevolvingFenceInitRotY(this);
 			setState(STATE_WAIT_FRONT);
 		}
 		calcCurrentMtx();
 		break;
 
 	case STATE_TURN_TO_BACK_CCW:
-		mAngle -= mSpeed;
+		mAngle -= RevolvingFenceSpeed();
 		if (mAngle < -180.0f) {
 			mAngle      = 180.0f;
-			mRotation.y = mAngle + mInitialRotation.y;
+			mRotation.y = mAngle + RevolvingFenceInitRotY(this);
 			setState(STATE_WAIT_BACK);
 		}
 		calcCurrentMtx();
 		break;
 
 	case STATE_TURN_TO_FRONT_CCW:
-		mAngle -= mSpeed;
+		mAngle -= RevolvingFenceSpeed();
 		if (mAngle < 0.0f) {
 			mAngle      = 0.0f;
 			mRotation.y = mAngle + mInitialRotation.y;
