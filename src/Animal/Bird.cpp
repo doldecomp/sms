@@ -403,6 +403,14 @@ static inline const TNerveBase<TLiveActor>* BirdChangeToCoinNerve()
 	return &TNerveAnimalBirdChangeToCoin::theNerve();
 }
 
+// Binding level over mItem: +8 of low region per expansion, the same
+// pointer-member form that closed TAnimalBird::bind.
+static inline TMapObjBase* BirdItem(const TAnimalBird* p)
+{
+	TMapObjBase* item = p->mItem;
+	return item;
+}
+
 bool TAnimalBird::isChanged() const
 {
 	return mSpine->getLatestNerve() == BirdChangeToCoinNerve();
@@ -417,13 +425,14 @@ bool TAnimalBird::isFlying() const
 
 void TAnimalBird::doDropCoin()
 {
-	TMapObjBase* item = mItem;
-	if (item->isActorType(0x20000013)) {
+	TMapObjBase* item = BirdItem(this);
+	u32 type          = item->getActorType();
+	if (type == 0x20000013 ? true : false) {
 		item->JSGSetTranslation(mPosition);
 		((TShine*)mItem)->appearWithDemo("鳥シャインカメラ");
 	} else {
 		TMapObjBase* obj;
-		if (item->isActorType(0x2000000E))
+		if (type == 0x2000000E ? true : false)
 			obj = gpItemManager->makeObjAppear(0x2000000E);
 		else
 			obj = item;
@@ -771,6 +780,10 @@ DEFINE_NERVE(TNerveAnimalBirdTakeoff, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 99.8%. Instruction-identical except the frame is 0x18 too large
+// (0xb8 vs 0xa0). bird->mSpine (not the spine parameter) is the return-timer
+// compare; getSpine() adds another +8. The extra 0x10 was already there from
+// the inlined doGotoRandomNextGraphNode TPathNode temps.
 DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor)
 {
 	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
@@ -785,14 +798,15 @@ DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor)
 		bird->doGotoRandomNextGraphNode();
 
 		if (bird->mPosition.y <= bird->getUnkF4().getPoint().y)
-			bird->setBckAnm(TAnimalBird::BIRD_ANM_FLY);
-		else
 			bird->setBckAnm(TAnimalBird::BIRD_ANM_STOP);
+		else
+			bird->setBckAnm(TAnimalBird::BIRD_ANM_FLY);
 	}
 
 	bird->checkCurAnmEnd(0);
 
-	if (bird->getSaveParams()->mReturnTimer.get() < spine->getTime()) {
+	if (bird->getSaveParams()->mReturnTimer.get()
+	    < bird->mSpine->getTime()) {
 		spine->pushAfterCurrent(&TNerveAnimalBirdComeback::theNerve());
 		return TRUE;
 	}
@@ -801,6 +815,9 @@ DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 98.7%. Frame exact. Residue is only r30/r31 ranking (retail ranks
+// the else-arm obj above bird). Named getActorType() plus BirdItem binder
+// closed the type-reload and the 0x10 under-frame.
 DEFINE_NERVE(TNerveAnimalBirdChangeToCoin, TLiveActor)
 {
 	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
@@ -808,15 +825,14 @@ DEFINE_NERVE(TNerveAnimalBirdChangeToCoin, TLiveActor)
 	if (spine->getTime() == 0) {
 		bird->onLiveFlag(LIVE_FLAG_DEAD);
 
-		TMapObjBase* item = bird->mItem;
-		if (item->isActorType(0x20000013)) {
+		TMapObjBase* item = BirdItem(bird);
+		u32 type          = item->getActorType();
+		if (type == 0x20000013 ? true : false) {
 			item->JSGSetTranslation(bird->mPosition);
 			((TShine*)bird->mItem)->appearWithDemo("鳥シャインカメラ");
 		} else {
-			// doDropCoin()'s body spelled out: the ROM reads mItem and its
-			// actor type once and shares both with the shine test above.
 			TMapObjBase* obj;
-			if (item->isActorType(0x2000000E))
+			if (type == 0x2000000E ? true : false)
 				obj = gpItemManager->makeObjAppear(0x2000000E);
 			else
 				obj = item;
