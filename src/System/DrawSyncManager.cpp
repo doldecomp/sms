@@ -68,7 +68,9 @@ void* TDrawSyncManager::threadFunc(void* param_1)
 {
 	TDrawSyncManager* self = (TDrawSyncManager*)param_1;
 	for (;;) {
+		char t1[4];
 		void* msg;
+		char t2[4];
 		OSReceiveMessage(&self->mMessageQueue, &msg, 1);
 		if ((size_t)msg >= 0x80000000) {
 			self->mFifo->push(msg);
