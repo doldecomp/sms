@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural then +2), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte (+3 then +0 structural), bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 (+0 structural then UNUSED restore), EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer (+1 then +0 structural), MapObjBall +0 structural, Option (+1 then +1), elecNokonoko +3, hanasambo +2.
-- Landed `grpun` Option ([Option unit ladder](199aa2a9-0739-49e8-b8fe-8a98e25264cd)): +1 exact (`setType` via `getRumbleOption()` at rumble activate); unit **46.76→49.19**; All **61.91→61.92**, Game **53.90→53.92**, exact **11,370→11,371**. Pre-existing MISSING `SMSGetMSound`.
-- Landed killer frames; gesso +2.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural then +2), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte (+3 then +0 structural x2), bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 (+0 structural then UNUSED restore), EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer (+1 then +0 structural), MapObjBall +0 structural, Option (+1 then +1), elecNokonoko +3, hanasambo +2.
+- Landed `grpuo` MapObjMonte ([MapObjMonte unit ladder](020bb894-1193-4262-ad3e-cd2161837611)): `drawOneRope` frame exact via director binder (99.1→99.3); unit fuzzy 99.89→99.90; +0 exact; All stays **61.92%**.
+- Landed Option +1 (`setType`); All **61.91→61.92**, exact **11,370→11,371**.
 - Total: **61.92%** matched, game **53.92%**, linked **492 / 732**, exact **11,371**.
-- Running: `grpuo` / MapObjMonte ([MapObjMonte unit ladder](020bb894-1193-4262-ad3e-cd2161837611)). Refill: hamukuri.
+- Running: `grupp` / hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)). Refill: gesso.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
