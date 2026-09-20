@@ -1,3 +1,4 @@
+#pragma defer_codegen off
 #include <Camera/Camera.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <System/MarioGamePad.hpp>
@@ -20,50 +21,6 @@ static const char* MtxCalcTypeName[] = {
 	"MActorMtxCalcType_MotionBlend モーションブレンド",
 	"MActorMtxCalcType_User ユーザー定義",
 };
-
-// TODO: this should be an inline that doesn't get inlined,
-// but it actually gets inlined :(
-void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
-{
-	static const char* sPositionNameTable[6] = {
-		"塔カメラＡ中心", "塔カメラＢ中心", "塔カメラＣ中心",
-		"塔カメラＤ中心", "塔カメラＥ中心",
-	};
-
-	const char* name;
-	switch (mMode) {
-	case CAMERA_MODE_TOWER_A:
-		name = sPositionNameTable[0];
-		break;
-	case CAMERA_MODE_TOWER_B:
-		name = sPositionNameTable[1];
-		break;
-	case CAMERA_MODE_TOWER_C:
-		name = sPositionNameTable[2];
-		break;
-	case CAMERA_MODE_TOWER_D:
-		name = sPositionNameTable[3];
-		break;
-	case CAMERA_MODE_TOWER_E:
-		name = sPositionNameTable[4];
-		break;
-	default:
-		result->x = 0.0f;
-		result->y = 0.0f;
-		result->z = 0.0f;
-		return;
-	}
-
-	TStagePositionInfo* info = (TStagePositionInfo*)gpPositionHolder->searchF(
-	    JDrama::TNameRef::calcKeyCode(name), name);
-	if (info != nullptr) {
-		*result = info->unkC;
-	} else {
-		result->x = 0.0f;
-		result->y = 0.0f;
-		result->z = 0.0f;
-	}
-}
 
 void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 {
@@ -194,4 +151,51 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 	}
 
 	calcPosAndAt_();
+}
+
+// Retail emits this as a weak (inline) symbol that is still called out-of-line.
+// MWCC only leaves it out-of-line if the body is not visible at the call site in
+// ctrlNormalOrTowerCamera_, hence the definition at the bottom of the file, and
+// only if deferred codegen is off (otherwise it gets inlined anyway).
+inline void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
+{
+	char trash[8];
+	static const char* sPositionNameTable[6] = {
+		"塔カメラＡ中心", "塔カメラＢ中心", "塔カメラＣ中心",
+		"塔カメラＤ中心", "塔カメラＥ中心",
+	};
+
+	const char* name;
+	switch (mMode) {
+	case CAMERA_MODE_TOWER_A:
+		name = sPositionNameTable[0];
+		break;
+	case CAMERA_MODE_TOWER_B:
+		name = sPositionNameTable[1];
+		break;
+	case CAMERA_MODE_TOWER_C:
+		name = sPositionNameTable[2];
+		break;
+	case CAMERA_MODE_TOWER_D:
+		name = sPositionNameTable[3];
+		break;
+	case CAMERA_MODE_TOWER_E:
+		name = sPositionNameTable[4];
+		break;
+	default:
+		result->x = 0.0f;
+		result->y = 0.0f;
+		result->z = 0.0f;
+		return;
+	}
+
+	TStagePositionInfo* info = (TStagePositionInfo*)gpPositionHolder->searchF(
+	    JDrama::TNameRef::calcKeyCode(name), name);
+	if (info != nullptr) {
+		*result = info->unkC;
+	} else {
+		result->x = 0.0f;
+		result->y = 0.0f;
+		result->z = 0.0f;
+	}
 }
