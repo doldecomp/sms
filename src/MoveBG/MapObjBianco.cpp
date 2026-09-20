@@ -581,7 +581,7 @@ void TLeafBoat::calc()
 	if (mWaterPushRate != 0.0f) {
 		if (mEffectTimer > 8) {
 			if (fabsf(mVelocity.x) + fabsf(mVelocity.z) > 0.1f) {
-				mEffectPos.set(getPosition().x, getPosition().y - mYOffset,
+				mEffectPos.set(mPosition.x, getPosition().y - mYOffset,
 				               getPosition().z);
 				JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 				emitAndBindScale(PARTICLE_MS_M_HAMON_B, 3, &mEffectPos, scale);
@@ -710,13 +710,19 @@ void TLampSeesaw::touchPlayer(THitActor* player)
 		mPartner->pushDown(-mPushSpeed);
 }
 
+/// Fabricated: the level retail's frame shows around this assignment.
+static inline void LampSeesawSetLowerLimit(TLampSeesaw* p, f32 y)
+{
+	p->mLowerLimitY = y;
+}
+
 void TLampSeesaw::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 
 	f32 drop;
 	stream.read(&drop, 4);
-	mLowerLimitY = mInitialPosition.y - drop;
+	LampSeesawSetLowerLimit(this, mInitialPosition.y - drop);
 	stream.read(&mPushSpeed, 4);
 	mPushSpeed *= 0.0001f;
 }
@@ -1060,16 +1066,26 @@ TBellWatermill::TBellWatermill(const char* name)
 {
 }
 
+/// Fabricated: the wrapper fork over the raw global retail's frame shows here.
+static inline JGeometry::TVec3<f32>* WoodLogGetMarioPos() { return gpMarioPos; }
+
+/// Fabricated: the binder retail's frame shows at this unit's anm-matrix reads.
+static inline MtxPtr WoodLogAnmMtx(TWoodLog* p)
+{
+	J3DModel* model = p->getModel();
+	return model->getAnmMtx(0);
+}
+
 void TWoodLog::control()
 {
 	TMapObjFloatOnSea::control();
 
 	// Push a swimming Mario out to the nearer long side of the log.
 	Mtx inverse;
-	MTXInverse(getModel()->getAnmMtx(0), inverse);
+	MTXInverse(WoodLogAnmMtx(this), inverse);
 
 	JGeometry::TVec3<f32> marioPos;
-	marioPos.x = gpMarioPos->x;
+	marioPos.x = WoodLogGetMarioPos()->x;
 	marioPos.y = gpMarioPos->y;
 	marioPos.z = gpMarioPos->z;
 	JGeometry::TVec3<f32> local;
@@ -1084,7 +1100,7 @@ void TWoodLog::control()
 			local.x = -141.0f;
 
 		JGeometry::TVec3<f32> pushTo;
-		MTXMultVec(getModel()->getAnmMtx(0), local, pushTo);
+		MTXMultVec(WoodLogAnmMtx(this), local, pushTo);
 		SMS_MarioMoveRequest(pushTo);
 	}
 }
