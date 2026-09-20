@@ -63,7 +63,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grupp` hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)): `THamuKuri::isHitValid` exact via inlined `HamukuriSerialKill` binder; `generateBody` frame exact (TNerveBase `bl` still open). All **61.92→61.93**, exact **11,371→11,372**.
 - Landed `grpuo` MapObjMonte drawOneRope frame; Option +1 (`setType`).
 - Total: **61.93%** matched, game **53.93%**, linked **492 / 732**, exact **11,372**.
-- Running: `grpuq` / gesso ([gesso unit ladder](de17d3e6-08d8-4bc0-b954-db954c664a34)). Refill: fireWanwan.
+- Running: `grpur` / fireWanwan ([fireWanwan unit ladder](ef2fe9cd-4277-488f-b265-1e317212100d)). Refill: EventWatcher.
+- Yielded `grpuq` gesso ([gesso unit ladder](de17d3e6-08d8-4bc0-b954-db954c664a34)): no commit. BodyCallback +0x10 is not `.get()` (survives `.value` and packed Mtx); clamp-helper hits frame 0xb8 but `bl MsClamp`. `set()` 0xc copy refuses named/by-value/const-ref. Freeze +8 not `isBckAnm(9)` re-test. Do not re-queue gesso without a BodyCallback carrier that drops the 0x10 without refusing MsClamp.
 - Do not re-queue bosseel without binder/`TVector::begin()` header. hamukuri `generateBody` TNerveBase `bl` is per-site; skip without new lever.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
