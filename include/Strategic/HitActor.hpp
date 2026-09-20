@@ -72,6 +72,14 @@ public:
 
 	// fabricated
 	u32 getActorType() const { return mActorType; }
+	// mActorType is an int, and getActorType()'s u32 turns a range compare
+	// into cmplw; this reader keeps retail's signed compare (tail sweep 310).
+	// Returning int from getActorType() itself is refuted tree-wide.
+	int getActorTypeID() const
+	{
+		int actorType = mActorType;
+		return actorType;
+	}
 	bool checkActorType(u32 flag) const
 	{
 		return mActorType & flag ? true : false;
