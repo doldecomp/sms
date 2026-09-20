@@ -40,14 +40,13 @@ void TRealoidActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk70->perform(cue, graphics);
 }
 
-// TODO: 99.6%, all instructions match (58 `~` markers, all frame/register
-// only, closure batch 123 -- no structural residue left to chase). Batch 128
-// read the slot map: retail's frame is 0xd0 against our 0xa0, every
-// inline-temp slot sits exactly 0x40 higher in retail (0x94/0xa0/0xac against
-// our 0x54/0x60/0x6c -- the three `addi rD, r1, N` matrix/vector temporaries)
-// while the frame itself is only 0x30 bigger, so the callee-saved block
-// differs too. 64 bytes of dead low region is the size of a whole extra
-// `Mtx` plus 16, or of a `Mtx44` where we declare a `Mtx`; not chased.
+// TODO: 99.6%, all instructions match (58 `~` markers, frame/register only).
+// Retail frame 0xd0 vs our 0xa0; n/dir/up sit 0x40 low (0x94/0xa0/0xac vs
+// 0x54/0x60/0x6c) while the taking-path `v` already matches at 0x88. A dead
+// last-declared `Mtx` lands the frame but lifts `v` off 0x88 and leaves the
+// other temps 0x10 short. `boid->mPosition.set(...)` drops the word-copy
+// (95%). getHolder/getMActor already measured inert. Open: +0x40 of low
+// region that does not move the taking `v`.
 void TRealoidActor::calcRootMatrix(TBoid* boid)
 {
 	if (mFlags & FLAG_UNK2_OR_UNK4)
@@ -247,24 +246,14 @@ void TFishoid::init(TLiveManager* manager)
 
 void TFishoid::initBoids() { }
 
-// TODO: 99.9%, all instructions match and the frame is now exact (0xd0).
-// Batch 123 fixed the `TPathNode` copy shape by going through
-// `setFleeTarget(THitActor*)`; closure batch 128 recovered the 128 bytes of
-// low region: the eight `TBoidLeader` setters (+0x20 as a set, +0 singly),
-// `getBoidNum()` at both count sites (+0x20), `getBoidLeader()` as the
-// receiver of every leader access (+0x28), `getRealoid(i)`/`getPosition()`
-// (+8) and one binding level over `getBoidLeader()` (+0x10, parked below).
-// The single remaining difference is a slot-order swap: retail puts the
-// unnamed `TPathNode` conversion temporary at the *top* of the locals
-// (0xb0..0xbf) with the `stream >> eventId` buffer at 0xac under it, while we
-// put the buffer on top (0xb8) and the TPathNode 12 bytes lower (0xa4). That
-// is batch 59's "an unnamed argument temporary sits above the named locals"
-// failing for a converting-constructor temporary bound to an inlined setter's
-// `const TPathNode&`. Rejected here (all leave the 13 markers unmoved):
-// `eventId` in a nested block / as `s32` / declared at the top of the body, a
-// dead `u32` above it, an explicit `TPathNode(...)` temporary at the call, and
-// moving the binding level to any other leader site. Declaring the TPathNode
-// as a named local first is much worse (73-92%).
+// TODO: 99.9%, all instructions match; TPathNode/eventId slot *order* now
+// matches (0xb0 / 0xac) after moving the eventId read into `loadItem` (map
+// UNUSED 0x84, inlined here like Butterfly) plus `onFlag` and a
+// `gpMarioAddress` fork. Frame is 0xd8 against retail 0xd0: an 8-byte hole
+// sits above the TPathNode (r28 at 0xc8, node ends at 0xbf). Every -8 that
+// lands the frame also drops both slots 4 or 8 (drop `getPosition()`, one
+// `getBoidLeader()`, or `getBoidNum()`). `FishoidLeader` binder is +0x10 and
+// required; a named `TPathNode` local wrecks the copy (92.3%).
 
 static inline TBoidLeader* FishoidLeader(TRealoid* realoid)
 {
@@ -272,18 +261,15 @@ static inline TBoidLeader* FishoidLeader(TRealoid* realoid)
 	return leader;
 }
 
+static inline THitActor* FishoidMario()
+{
+	return (THitActor*)gpMarioAddress;
+}
+
 void TFishoid::load(JSUMemoryInputStream& stream)
 {
 	loadDefault(stream, cFishoidMdlNames[mType], 0);
-
-	u32 eventId;
-	stream >> eventId;
-
-	unk15C = TMapObjBaseManager::newAndRegisterObjByEventID(eventId, "");
-	if (unk15C != nullptr) {
-		if (unk15C->isActorType(0x2000000E))
-			unk15C = gpItemManager->newAndRegisterCoinReal();
-	}
+	loadItem(stream);
 
 	getBoidLeader()->setBaseSpeed(4.0f);
 	getBoidLeader()->setNeighborRadius(200.0f);
@@ -292,11 +278,11 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 	getBoidLeader()->setMaxPitch(5.0f);
 	getBoidLeader()->setAlignmentStrength(0.5f);
 
-	FishoidLeader(this)->setFleeTarget((THitActor*)gpMarioAddress);
+	FishoidLeader(this)->setFleeTarget(FishoidMario());
 
 	getBoidLeader()->setFleeRadius(400.0f);
 	getBoidLeader()->setFleeStrength(3.0f);
-	getBoidLeader()->mFlags |= 2;
+	getBoidLeader()->onFlag(TBoidLeader::FLAG_UNK2);
 
 	for (int i = 0; i < getBoidNum(); ++i)
 		getRealoid(i)->unk70->setBck("fish_swim");
@@ -309,7 +295,17 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 	}
 }
 
-void TFishoid::loadItem(JSUMemoryInputStream&) { }
+void TFishoid::loadItem(JSUMemoryInputStream& stream)
+{
+	u32 eventId;
+	stream >> eventId;
+
+	unk15C = TMapObjBaseManager::newAndRegisterObjByEventID(eventId, "");
+	if (unk15C != nullptr) {
+		if (unk15C->isActorType(0x2000000E))
+			unk15C = gpItemManager->newAndRegisterCoinReal();
+	}
+}
 
 TRealoidActor* TFishoid::createRealoidActor(MActor* actor)
 {
