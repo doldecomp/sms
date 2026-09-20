@@ -2108,6 +2108,7 @@ DEFINE_NERVE(TNerveFireWanwanFreeze, TLiveActor)
 DEFINE_NERVE(TNerveFireWanwanEscape, TLiveActor)
 {
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
+	char trash[8];
 
 	if (spine->getTime() == 0) {
 		self->initEscapeNextGraphNode();
