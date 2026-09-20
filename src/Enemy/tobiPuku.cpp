@@ -373,17 +373,16 @@ void TTobiPuku::hitWall()
 	                          1, 0);
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
-		const TBGCheckData* wall = record.mResultWalls[0];
-		// TODO: 95.2%. Two loads short: the original re-reads mNormal.x and
-		// mVelocity.x after the dot product instead of keeping them live,
-		// and its frame is 0x40 larger.
-		f32 bounce
-		    = -(2.0f
-		        * (mVelocity.y * wall->mNormal.y + mVelocity.x * wall->mNormal.x
-		           + mVelocity.z * wall->mNormal.z));
-		mVelocity.x += bounce * wall->mNormal.x;
+		// TODO: 97.1%. One load short -- the original re-reads mNormal.x
+		// for the x bounce -- and its frame is 0x30 larger: accessor pool
+		// inside the inlined TBGWallCheckRecord constructor.
+		f32 dot = getVelocity().x * record.mResultWalls[0]->mNormal.x
+		          + getVelocity().y * record.mResultWalls[0]->mNormal.y
+		          + getVelocity().z * record.mResultWalls[0]->mNormal.z;
+		f32 bounce = -(2.0f * dot);
+		mVelocity.x += bounce * record.mResultWalls[0]->mNormal.x;
 		mVelocity.y *= 0.5f;
-		mVelocity.z += bounce * wall->mNormal.z;
+		mVelocity.z += bounce * record.mResultWalls[0]->mNormal.z;
 		mLaunchVelocity = mVelocity;
 		unk1B0          = mPosition.y;
 		return;
