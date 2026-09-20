@@ -1750,3 +1750,16 @@ One named local (the stack alone) is inert; the value that moves to r31 is the o
 
 - **A raw-global fork is non-monotone in which sites carry it**: at 4 emit sites the last two are +0x10 and clean while the first two rotate the call's argument registers (`TBiancoGateKeeper::emitParticles` exact). **`SMS_GetMarioPos()` bound to a `const TVec3&` operand is +4 of low pool** when the frame is short (`getRumblePow` exact on raw `*gpMarioPos`), and `getSpine()` over raw `mSpine` is a natural +4 rung (`launchNamekuri` exact, with `mVelocity` as three component assignments not `set`, a real bug, and `getPosition()`/`getRotation()` +0x10). A `getSLFoo()` params wrapper is +0; the +8 lives in the named step inside it (`{ s32 t = mSLDiveTimer.get(); return t; }`; `TNerveBGKWait` exact), confirming header round 50 for `TParamRT`. **A map-UNUSED helper is a free lowering site**: dropping `getActorKeeper()` inside `TBGKMtxCalc::setAnm`/`joinAnm` is -0x18 in the pasting caller at no cost (`changeBck` exact).
 - **`f32 t = a / b; t = 1.0f - t;` forces the whole ratio before a following `bl`** where `f32 t = 1.0f - a / b;` lets MWCC sink the arithmetic past the call (`TNerveBGKDie` 93.9 -> 100, with a by-value fork over an `s8` guard reproducing retail's reload, fireWanwan 322 confirmed on a narrow member). Also exact: `TNerveBGKSleep` (two-local `getBody()` +8, `getMActor()` at 2 of 3 sites +0x18), `TNerveBGKAppear` (director fork at both sites plus a particle fork +0x20; binders overshoot), `TNerveBGKWait2`. Open: `TBGKMtxCalc::calc` (frame exact, `Mtx rot` 20 bytes low, the item is inside the `MsWrap`/`MsAngleDiff`/`std::min` expansion), `init` (+0x50 and `this` r28 vs r30). Unit 46.18 -> 83.88, 53 of 55 exact.
+
+## MActorData ladder 372
+
+Six exact (`MActorAnmDataEach<T>::loadAnmPtrArray`, all instances) from one rung; unit 21.12% -> 48.27% matched code.
+
+- A named step inside a header reader (`int n = mAnmNum; return n;`) is +8 of low pool below two `char[256]` buffers, but only when its result is consumed directly by the statement (`new J3DAnmBase*[reader()]`).
+Wrapping the whole `new[]` in a helper that contains the same step prices 0.
+The reader's name is fabricated and carries a `// TODO:`.
+- Which class hosts the step is a collateral question: in `MActorAnmDataBase::getAnmNum()` it lands all six identically but breaks nine functions that read the count through the bare accessor (`MActor::checkCurAnm`, `checkAnmFileExist`, six `MActorAnmEach<T>::setAnm`, `TFruitsBoat::setBckTrack`).
+Shadowing it in the derived template narrows the damage to `setBckTrack`; that function (fruitsboat.cpp:78) most likely reads `bcks->mAnmNum` raw in retail, an untested cross-unit lead.
+- This pool carries 4 bytes of slack: a probe of 2 or 4 bytes after the buffers moved nothing, 8 moved +8, so only an 8-byte item is a rung.
+- The non-trivial-class frame probe is not always per expansion: in `addFileTable` (six `getSimpleName` expansions) a `struct S { ~S(){} u32 a[N]; }` stepped 0x18 per word from a 0x20 base, so +0x60 is unreachable that way.
+`addFileTable` needs +0x60 of dead pool with no stack references plus an r28/r29 swap inside the expansions; `init` needs +0xc and retail ranks the parameter above the two locals (r30 `additional_files`); the default ctor needs +8 below a 1-byte `TAllocator` temp.
