@@ -590,6 +590,24 @@ void THinokuri2::stopPolParticle() { }
 void THinokuri2::updatePolTrans() { }
 
 // TODO: fake & wrong
+static inline THino2Hit* Hino2BindHead(THinokuri2* self)
+{
+	THino2Hit* hit = self->mHead;
+	return hit;
+}
+
+static inline THino2Hit* Hino2BindBody(THinokuri2* self)
+{
+	THino2Hit* hit = self->mBody;
+	return hit;
+}
+
+static inline THino2Params* Hino2Params(THinokuri2* self)
+{
+	THino2Params* params = (THino2Params*)self->getSaveParam();
+	return params;
+}
+
 template <class T> static inline T randy(T l, T r)
 {
 	r -= l;
@@ -600,7 +618,7 @@ template <class T> static inline T randy(T l, T r)
 
 void THinokuri2::resetPolInterval()
 {
-	int l  = ((THino2Params*)getSaveParam())->mSLPolIntervalMin.value;
+	int l  = Hino2Params(this)->mSLPolIntervalMin.value;
 	int r  = ((THino2Params*)getSaveParam())->mSLPolIntervalMax.value;
 	unk164 = randy(l, r);
 }
@@ -619,10 +637,15 @@ void THinokuri2::invalidateCollisionAll()
 void THinokuri2::validateCollisionAll()
 {
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mHead->offHitFlag(HIT_FLAG_NO_COLLISION);
-	mBody->offHitFlag(HIT_FLAG_NO_COLLISION);
-	unk174->offHitFlag(HIT_FLAG_NO_COLLISION);
-	unk178->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	Hino2BindHead(this)->offHitFlag(HIT_FLAG_NO_COLLISION);
+	Hino2BindBody(this)->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	THino2Hit* left = unk174;
+	left->offHitFlag(HIT_FLAG_NO_COLLISION);
+
+	THino2Hit* right = unk178;
+	right->offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void THinokuri2::emitWaterParticle()
@@ -824,12 +847,6 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 	}
 
 	return false;
-}
-
-static inline THino2Params* Hino2Params(THinokuri2* self)
-{
-	THino2Params* params = (THino2Params*)self->getSaveParam();
-	return params;
 }
 
 // Parked TU-locally: retail binds the mask pointer at each use.
