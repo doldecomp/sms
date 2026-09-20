@@ -578,9 +578,11 @@ BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 
 void TRedCoinSwitch::control()
 {
+	char trash[8];
 	TMapObjBase::control();
 	switch (mState) {
 	case 1:
+	case 4:
 		break;
 	case 2:
 		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
