@@ -1837,8 +1837,6 @@ f32 TWaterGun::getPressureMax()
 	return 0.0f;
 }
 
-// TODO: Figure out why inline happens
-#pragma dont_inline on
 // TODO: body unknown (map 0x90, thirty-six instructions). isEmitting() is the
 // surviving predicate of that shape but is a separate, larger symbol.
 void TWaterGun::getWillBeEmitted() { }
@@ -1856,7 +1854,9 @@ void TWaterGun::getEmitPosDirSpeed(int index, JGeometry::TVec3<f32>* pos,
 		dir->z = nozzleEmitMtx[2][0];
 	} else {
 		JGeometry::TVec3<f32> forward;
-		forward.set(0.0f, 0.0f, 1.0f);
+		forward.x = 0.0f;
+		forward.y = 0.0f;
+		forward.z = 1.0f;
 		dir->set(forward);
 	}
 
@@ -1864,7 +1864,6 @@ void TWaterGun::getEmitPosDirSpeed(int index, JGeometry::TVec3<f32>* pos,
 	speed->y = 0.0f;
 	speed->z = mMario->mVel.z * 0.125f;
 }
-#pragma dont_inline off
 
 void TWaterGun::rotateProp(f32 rotation)
 {
