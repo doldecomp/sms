@@ -500,13 +500,21 @@ void TCannon::entryObjCollision()
 
 const char** TCannon::getBasNameTable() const { return cannon_bastable; }
 
+// Binding level over the Mario-parts actor: +8 of low region at each of the
+// first two sites, landing TCannon::perform's frame at 0x188.
+static inline MActor* CannonMarioPartsMActor(TCannon* p)
+{
+	MActor* actor = p->mMarioParts->getMActor();
+	return actor;
+}
+
 void TCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSmallEnemy::perform(cue, graphics);
 
 	if (mMarioAnmPlaying) {
-		mMarioParts->getMActor()->perform(cue, graphics);
-		if ((cue & CUE_MOVE) && mMarioParts->getMActor()->curAnmEndsNext())
+		CannonMarioPartsMActor(this)->perform(cue, graphics);
+		if ((cue & CUE_MOVE) && CannonMarioPartsMActor(this)->curAnmEndsNext())
 			mMarioAnmPlaying = 0;
 
 		if ((cue & CUE_CALC_ANIM) && mStage == 1) {
