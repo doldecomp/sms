@@ -3899,3 +3899,95 @@ isolierte Dateien, mit dokumentierten Grenzen für große Dateien) und
 eine neue produktive Fehlerkategorie (duplizierte Argumente bei
 `TParamRT`-Strukturzugriffen, erkennbar am Magic-Double-
 Konvertierungsmuster im Disassembly).
+
+### Nach einundfünfzigster Iterationsrunde (parallele Elf-Kandidaten-Untersuchung: 7 neue Matches, neue Methodik-Details)
+
+Fortsetzung des Klein-Datei-Scans (≤ 30 Funktionen pro Unit, `fp` zwischen
+5–90 %, Größe < 500 Bytes), elf Kandidaten parallel an Unteragenten delegiert.
+**Sieben neue Byte-exakte Matches**, sechs Commits:
+
+- **`TQuestionManager::makeDL(JDrama::TGraphics*) const`** (84,2 % → Match,
+  Commit `2a012e9b`): Retail baut alle VIER Quad-Eckpunkte in ein
+  `TVec3<f32>[4]`-Array und übergibt das Array an `TDLTexQuad::request`;
+  unser Code baute nur EINEN transformierten Vertex. `char trash[4]` schloss
+  die verbleibende 8-Byte-Rahmenlücke.
+- **`TQuestionManager::request(TVec3<f32>, f32)`** (88,7 % → Match, selber
+  Commit): Reine Codegen-Form-Differenz (Z-Term zuerst statt X-Term zuerst,
+  `fmadds` statt zwei `fmuls`+`fadds`) — durch benannte lokale `dz`/`distZ`
+  in exakter Retail-Reihenfolge behoben.
+- **`CPolarSubCamera::calcTowerCenterPos_(Vec*)`** (84,6 % → Match, Commit
+  `a0b05f8a`): Retail emittiert die Funktion als `inline`/`weak`-Symbol
+  (kein CSE der Tabellenadresse über den `switch`). Fix: `inline`-Markierung
+  + Verschiebung ans Dateiende nach dem einzigen Aufrufer (da `dont_inline`
+  eine Aufrufstellen-, keine Definitionseigenschaft ist) + `defer_codegen
+  off` + `char trash[8]`.
+- **`TMarDirector::fireGetNozzle(TItemNozzle*)`** (77,8 % → Match, Commit
+  `814da6f2`): Zwei kombinierte Bugs — `gpApplication.mCurrArea.unk0` wurde
+  in jedem Zweig neu gelesen statt einmal vor der Verzweigung; und
+  `getNozzleRight(...)` fehlte die Negation (`!`). Plus `char trash[8]`.
+- **`TCubeManagerArea::isInAreaCube(const Vec&) const`** (81,4 % → Match,
+  Commit `88d6ae2e`): Mehrere frühe `return true;` durch einen einzelnen
+  `bool result`-Akkumulator mit `if`/`else if`-Kette ersetzt (verlängert die
+  Live-Range, wodurch der Compiler 5 statt 4 Register via `stmw`/`lmw`
+  alloziert, exakt wie Retail) — Muster aus der Schwesterfunktion
+  `TCubeManagerFast::isInOtherCube` in derselben Datei übernommen. Plus
+  `char trash[16]`.
+- **`TBoundPane::TBoundPane(J2DScreen*, u32)`** (83,5 % → Match, Commit
+  `4d7aae7b`, **Header geändert**): Feld `unk14` war als `JUTRect` deklariert
+  (mit echtem Out-of-line-Konstruktor), wird aber nur über rohe
+  `.x1/.y1/.x2/.y2`-Zugriffe verwendet — Retail behandelt es als reines POD.
+  Neuer schlanker Typ `SBoundRect` (4×`s32`, inline-Ctor) ersetzt `JUTRect`
+  für dieses eine Feld, mit `operator JUTRect()`-Konversion für den einzigen
+  externen Aufrufer (`ConsoleStr.cpp`). Alle vier Header-Includer
+  (ConsoleStr.o, GCConsole2.o, SelectMenu.o, BlendPane.o) nachgebaut und
+  bestätigt fehlerfrei. Plus `char trash[8]`. Vollständiges `ninja`-Rebuild
+  nach diesem Fix bestätigt `build/GMSJ01/mario.dol: OK`.
+- **`TEnemyPolluteModelManager::generatePolluteModel(TVec3<f32>&,
+  TVec3<f32>&)`** (86,3 % → Match, Commit `9debd4d6`): Der komplette
+  Boden-/Wasser-Check lag in Wahrheit in einem inline-expandierten
+  `TEnemyPolluteModel::generate` (kein eigenes Symbol im Retail-Objekt),
+  nicht im Manager selbst — drei Indizien (Out-of-line-`isWaterSurface`-
+  Aufruf nur bei Inline-Tiefe ≥ 2, Stack-Layout-Reihenfolge, leerer
+  `SMatrix34C`-Konstruktor-Aufruf nur bei Inline-Expansion) bestätigten die
+  Struktur. `generate` als `inline`-Methode direkt in der `.cpp` (keine
+  Header-Änderung, keine weiteren Aufrufer) neu definiert, Restlogik in den
+  Manager verschoben. `JGeometry::TVec3<f32> trash` (nicht `char[]` — ein
+  reines `char trash[12]` wird innerhalb der Inline-Expansion wegoptimiert)
+  schloss die 12-Byte-Lücke.
+
+**Neue Methodik-Erkenntnis**: `#pragma dont_inline` ist eine
+**Aufrufstellen-Eigenschaft**, keine Definitionseigenschaft — bestätigt am
+`calcTowerCenterPos_`-Fund: Um eine Funktion an EINER Aufrufstelle
+out-of-line zu halten, muss ihre Definition entweder (a) mit `dont_inline`
+UND `defer_codegen off` kombiniert werden (funktioniert nur in kleinen,
+isolierten Dateien, siehe Runde-49-Grenzbefund), ODER (b) für Fälle mit
+genau einem Aufrufer: die Definition NACH dem Aufrufer im Quelltext
+platzieren und als `inline` markieren, was MWCC dazu bringt, sie als
+Weak-Symbol mit eigenem Out-of-line-Körper zu emittieren statt sie
+textuell zu inlinen.
+
+**Zwei Kandidaten mit gründlich dokumentiertem, aber nicht erreichtem
+Match** (beide sauber zurückgesetzt, wertvolle Investigation dennoch):
+`TMarDirector::fireStreamingMovie(u8)` (neue Hypothese: `unk4C`-Feld
+verhält sich wie `volatile` in Retails echtem Quelltext, aber als
+projektweit von vielen Dateien über „fabricated"-Hilfsmethoden genutztes
+Feld außerhalb des Aufgabenumfangs für eine Einzelfunktions-Änderung) und
+`TMapObjWaterFilter::perform` (109 von 111 Instruktionen exakt nach
+sechs echten Struktur-Fixes — camera-Check-Umformulierung, `pos`-Referenz,
+View-Matrix-Lokale, Deklarationsreihenfolge, `char trash[0x38]` — letzte
+zwei Instruktionen sind ein MWCC-Branch-Folding-Artefakt bei der letzten
+`&&`-Bedingung vor einem bloßen `return;`, gegen 14 Quellvarianten
+resistent, bestätigt anhand von zwei weiteren Funktionen mit demselben
+Muster in `Map.cpp`/`bosseel.cpp`). Weitere vier Kandidaten
+(`updateTrans`, `getPosInWire`, `TStrategy`-Konstruktor, `initMActor`,
+`loadAfter` von `TMapObjRevivalPollution`, `TCubeManagerBase`-Konstruktor,
+`AudioDecoderForOnMemory`) als reines Register-Zuteilungs-/
+Stack-Slot-Rauschen bestätigt und zurückgesetzt.
+
+### Session-Gesamtstand nach Runde 51
+
+**412 verifizierte echte Fixes in 70 Commits.** `matched_functions`:
+**8999** (von 8992 zu Rundenbeginn), `matched_code_percent`: 44,96 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`. `git fetch upstream` weiterhin 0 Commits
+Rückstand.
