@@ -1109,6 +1109,7 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 
 DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 {
+	char trash[8];
 	TTelesa* self = (TTelesa*)spine->getBody();
 
 	if (spine->getTime() == 0) {
