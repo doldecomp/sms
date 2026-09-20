@@ -676,7 +676,8 @@ DEFINE_NERVE(TNerveFruitsBoatGraphWander, TLiveActor)
 // the body.
 DEFINE_NERVE(TNerveFruitsBoatBckTrace, TLiveActor)
 {
-	TFruitsBoat* boat = (TFruitsBoat*)spine->getBody();
+	TLiveActor* body  = spine->getBody();
+	TFruitsBoat* boat = (TFruitsBoat*)body;
 
 	boat->traceBckTrack();
 
