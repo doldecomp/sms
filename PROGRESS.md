@@ -5062,3 +5062,104 @@ fanden denselben zweiten `concat`-Bug unabhängig voneinander aus drei
 verschiedenen Aufrufstellen und koordinierten sauber über Hub, um
 Merge-Konflikte am gemeinsamen Header zu vermeiden, bevor Main den
 finalen Commit nach vollständiger Regressionsprüfung durchführte.
+
+### Nach zweiundsechzigster Iterationsrunde (Methodik-Wechsel zu funktionsgenauer statt dateibasierter Ausschlussliste — 23-Kandidaten-Batch, 14 neue Matches, zweitstärkste Runde bisher)
+
+**Methodik-Erkenntnis:** Der dateibasierte Ausschluss-Fragment-Ansatz
+(bisher: alle Funktionen einer Datei ausschließen, sobald EINE Funktion
+darin behandelt wurde) hatte den Kandidatenpool künstlich auf nur noch
+4-24 Kandidaten schrumpfen lassen, obwohl `fuzzy_match_percent < 100`
+im frischen `report.json` bereits objektiv beweist, dass eine
+bestimmte Funktion noch NICHT exakt getroffen ist — unabhängig davon,
+ob andere Funktionen derselben Datei bereits gefixt wurden. Umstellung
+auf eine präzise, pro-Einheit-exakte Ausschlussliste (nur konkret
+dokumentierte Sackgassen-Einheiten, keine Substring-Fragmente mehr)
+öffnete den Kandidatenpool sofort wieder auf 167 frische Dateien.
+
+**14 neue Fixes, alle commitet:**
+
+1. `TMarioParticleManager::emitAndBindToMtxPtr` (Commit `a7b21d6e`) —
+   `char trash[4]` nach einer Vec3-Lokalen.
+2. `TNervePoihanaSleep::execute` (Commit `713f66e3`) — `char trash[8]`.
+3. `TOptionControl::loadSetting` (Commit `8837a94b`) — `char
+   trash[0x28]` (40 Byte).
+4. `TNerveStayPakkunHide::execute` (Commit `95394573`) — `char
+   trash[16]`.
+5. `MSoundSESystem::MSoundSE::getRandomID` (Commit `9c3ed7b2`) —
+   `char trash[4]` nach einem `u32[16]`-Array (identisches Muster zu
+   `lensflare.cpp`/`lensglow.cpp`).
+6. `TMario::waiting` (Commit `8a33e6b7`) — `char trash[24]`, gleiche
+   Technik wie das bereits gefixte `TMario::stopCommon` derselben
+   Datei.
+7. `TWaterGun::setBaseTRMtx` (Commit `4c5be3f1`) — **neue Stack-
+   Technik**: kein Trash-Array half hier (alle drei Positionen
+   erfolglos, wie in früheren Runden dokumentiert); stattdessen musste
+   die `Mtx temp;`-Deklaration strukturell an ihre erste Verwendungs-
+   stelle verschoben werden (nicht als Padding, sondern durch
+   Änderung der MWCC-Frontend-Erzeugungsreihenfolge selbst).
+8. `TNPCManager::makePartsModelData_` (Commit `ed928359`) — `char
+   trash[4]` nach einem `char[0x100]`-Puffer.
+9. `TMarioEffect::perform` (Commit `a6a5d71a`) — `Mtx mtx;` als
+   ungenutzte, aber Retail-seitig echt deklarierte Lokale (48 Byte,
+   sizeof(Mtx)) — hier WAR die fehlende Reservierung eine reale, im
+   Quelltext einfach vergessene Variable, kein Trash-Padding-Trick.
+10. `TPauseMenu2::load` (Commit `1fa46609`) — **zwei echte Bugs**:
+    (a) Panel-Suchschlüssel `'t_0' + i` muss `'pa00' + i` sein (falscher
+    FourCC-Literal, hätte im Spiel dazu geführt, dass die Pause-Menü-
+    Buchstaben-Bilder nicht gefunden werden); (b) `add(0, 14)` muss
+    `add(0, 20)` sein. Plus `char trash[32]`.
+11. `TAmenbo::init` (Commit `b8b91d24`) — **echter Bug**: Gelenk-
+    Index-Cache-Schleife rief `getMaterialName()` (Offset 0xB4) statt
+    `getJointName()` (Offset 0xB0) auf — falscher Accessor, liest
+    einen komplett anderen Materialdaten-Bereich. Plus `char trash[8]`.
+12. `TMario::surfing` (Commit `e7ed3c73`) — **echter Bug**: Wasser-
+    /Boden-Parameterauswahl testete `mWallPlane->isWaterSurface()`
+    statt `mGroundPlane->isWaterSurface()` (TMario+0xD8 statt +0xE0,
+    falsches Feld). Plus `char trash[8]`.
+13. `TGesso::bind` (Commit `38bde37e`) — zwei verzahnte Stack-Layout-
+    Ursachen: (a) `MsAtan2()`-Inline-Wrapper-Aufruf durch die
+    ausgeschriebene Form `abs(matan(...) * (360.0f/65536.0f))` ersetzt
+    (spart einen 8-Byte-Inline-Rückgabe-Temporärwert, gleiches Idiom
+    wie in `graph.cpp`); (b) eine VIERTE, komplett ungenutzte
+    `TVec3<f32>`-Lokale nötig, um einen fehlenden 12-Byte-Slot im
+    Block zu reservieren (Block ist boden-verankert: neue Lokale
+    verschiebt den Frame-Boden nach unten, nicht nach oben).
+14. `TFireWanwanTailHit::movementBody` (Commit `f1361d70`) — **neue
+    Technik, Umkehrung von Muster 5**: unser Rahmen war KLEINER als
+    Retail (0xf8 vs. 0x138, 0x40 Byte Differenz), verursacht durch
+    FEHLENDE Inline-Expansions-Reservierungen. Anstatt einen Accessor
+    durch Direktzugriff zu ersetzen (übliche Richtung von Muster 5),
+    mussten hier DREI NEUE fabrizierte Inline-Setter (`TTailRubber::
+    setBoundRate/setDecay/setMaxLength`) in `include/Enemy/
+    FireWanwan.hpp` ergänzt und an 8 Stellen anstelle von Direkt-
+    zuweisungen verwendet werden, um genau die fehlenden Inline-
+    Reservierungsblöcke zu erzeugen — der Instruktionsstrom bleibt
+    dabei komplett unverändert. Zusätzlich musste ein bereits
+    existierender fabrizierter Wrapper (`isTailTaken()`) anstelle von
+    `unk194->isTaken()` verwendet werden. Header-Änderung ist rein
+    additiv (neue Methoden, keine Verhaltensänderung an bestehenden);
+    beide anderen Einbinder der Datei (`CameraNormal.cpp`,
+    `MarNameRefGen_Enemy.cpp`) wurden nachgebaut und sind exakt
+    unverändert (md5-identisch) — keine Regression.
+
+**Weitere gründlich dokumentierte Sackgassen** (alle sauber
+zurückgesetzt): `TBathWaterManager::loadAfter`, `TTrembleModelEffect::
+reset`, `CPolarSubCamera::execGroundCheck_`, `TTamaNoko::
+calcRootMatrix`, `THamuKuri::behaveToWater`, `JPAGetRMtxSTVecElement`
+(bestätigt: `std::sqrtf`s Drei-Schritt-Newton-Raphson-Iteration ist
+bereits korrekt, `TUtil<f32>::sqrt()` wäre die falsche, da nur
+einstufige, Funktion), `TRoulette::initMapObj` (4 Varianten,
+`JGadget::TList`-Iterator-Temporärwert-Familie), `TGraphWeb::
+getRandomNextIndex` (8-Byte-Lücke unerreichbar ohne Stilbruch
+gegenüber Schwesterfunktionen derselben Datei), `TBossPakkun::
+setGroundCollision` (13 Varianten, exakte Zielposition nur mit
+falscher Rahmengröße erreichbar, nie beides gleichzeitig).
+
+### Session-Gesamtstand nach Runde 62
+
+**483 verifizierte echte Fixes in 140 Commits.** `matched_functions`:
+**9066** (von 9052 zu Rundenbeginn, +14, exakt wie erwartet).
+`matched_code_percent`: 46,06 % (größter Einzelrunden-Zuwachs der
+jüngeren Session-Geschichte, +0,26 Prozentpunkte). Volles
+`ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`.
