@@ -421,6 +421,17 @@ TSpineEnemy* TDangoHamuKuriManager::createEnemyInstance()
 	return new TDangoHamuKuri;
 }
 
+static inline void DangoHamuSetUnk28(TDangoHamuKuriManager* p, s32 v)
+{
+	p->unk28 = v;
+}
+
+static inline void DangoHamuSetKeeper(TDangoHamuKuriManager* p,
+                                      TModelDataKeeper* k)
+{
+	p->mModelDataKeeper = k;
+}
+
 void TDangoHamuKuriManager::createModelDataArray(
     const TModelDataLoadEntry* param_1)
 {
@@ -429,12 +440,12 @@ void TDangoHamuKuriManager::createModelDataArray(
 	        "ハムクリマネージャー");
 
 	if (manager) {
-		// The keeper binder makes the body instruction-exact; the frame is
-		// still 8 short of the map's 0x20 and no second binder here has
-		// found that rung (the `unk28` scalar reorders the two stores).
-		unk28                    = manager->unk28;
+		// The keeper binder makes the body instruction-exact; two setter
+		// levels over the pointer/scalar members are +4 each (fireWanwan
+		// ladder 374).
+		DangoHamuSetUnk28(this, manager->unk28);
 		TModelDataKeeper* keeper = manager->getModelDataKeeper();
-		mModelDataKeeper         = keeper;
+		DangoHamuSetKeeper(this, keeper);
 	} else {
 		TObjManager::createModelDataArray(param_1);
 	}
@@ -1241,6 +1252,8 @@ MtxPtr THamuKuri::getTakingMtx()
 	return takingMtx;
 }
 
+// TODO: instruction-exact; frame 8 long (0x48 vs 0x40). `.value` lands the
+// frame but drops the calcDist by-value TVec3 8 low (allocation-order class).
 bool THamuKuri::isResignationAttack()
 {
 	const JGeometry::TVec3<f32>& goal = unk104.getPoint();
@@ -1721,9 +1734,19 @@ void THaneHamuKuri::behaveToWater(THitActor*) { forceRoll(*gpMarioPos, true); }
 
 void THaneHamuKuri::setCrashAnm() { setBckAnm(0); }
 
+static inline u8 HaneHamuUnk198(const THaneHamuKuri* p)
+{
+	const THaneHamuKuri* self = p;
+	u8 v                     = self->unk198;
+	return v;
+}
+
+// TODO: instruction-exact; frame 8 short (0x28 vs 0x30) after the unk198
+// binder. A second binder over setBckAnm or a pasted held-object local
+// adds instructions.
 void THaneHamuKuri::setDeadAnm()
 {
-	if (unk198)
+	if (HaneHamuUnk198(this))
 		releaseCap();
 	setBckAnm(1);
 }
@@ -2044,11 +2067,24 @@ void TDangoHamuKuri::setRunAnm()
 		setBckAnm(14);
 }
 
+static inline J3DModel* DangoHamuGetModel(TDangoHamuKuri* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
+static inline TTakeActor* DangoHamuGetHolder(TDangoHamuKuri* p)
+{
+	TTakeActor* holder = p->mHolder;
+	return holder;
+}
+
 void TDangoHamuKuri::calcRootMatrix()
 {
-	getModel()->setBaseScale(mScaling);
-	if (mHolder && mHolder->mHeldObject == this) {
-		MtxPtr takingMtx = mHolder->getTakingMtx();
+	DangoHamuGetModel(this)->setBaseScale(mScaling);
+	if (DangoHamuGetHolder(this)
+	    && DangoHamuGetHolder(this)->mHeldObject == this) {
+		MtxPtr takingMtx = DangoHamuGetHolder(this)->getTakingMtx();
 		if (takingMtx) {
 			if (unk230) {
 				unk210 += 40.0f;
@@ -2059,20 +2095,23 @@ void TDangoHamuKuri::calcRootMatrix()
 				}
 			}
 
-			TDangoHamuKuri* holder = (TDangoHamuKuri*)mHolder;
+			TDangoHamuKuri* holder
+			    = (TDangoHamuKuri*)DangoHamuGetHolder(this);
 			if (holder->unk230)
 				unk210 = -holder->unk210;
-			takingMtx[3][0] += unk21C;
-			takingMtx[3][1] += unk220;
-			takingMtx[3][2] += unk224;
+			takingMtx[0][3] += unk21C;
+			takingMtx[1][3] += unk220;
+			takingMtx[2][3] += unk224;
 
-			getModel()->setBaseScale(mScaling);
+			DangoHamuGetModel(this)->setBaseScale(mScaling);
+			// TODO: instruction-exact at frame 0xa8; TMsRange sits 4 high
+			// and the rot Mtx 0x18 high (block-object order).
 			Mtx afStack_68;
 			MsMtxSetRotRPH(afStack_68, 0.0f, unk210, unk214);
 			MTXConcat(takingMtx, afStack_68, takingMtx);
-			getModel()->setBaseTRMtx(takingMtx);
+			DangoHamuGetModel(this)->setBaseTRMtx(takingMtx);
 
-			mPosition.set(takingMtx[3][0], takingMtx[3][1], takingMtx[3][2]);
+			mPosition.set(takingMtx[0][3], takingMtx[1][3], takingMtx[2][3]);
 			return;
 		}
 	}
@@ -2124,9 +2163,11 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
+	// TODO: instruction-exact; frame still 0x20 short (0x28 vs 0x48) after
+	// the particle-manager binder. getPosition/SMSGetMSound swap this/sender.
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition, 0,
-		                             nullptr);
+		HamukuriGetMarioParticleManager()->emit(
+		    PARTICLE_MS_ENM_WATHIT, &sender->mPosition, 0, nullptr);
 		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0.0f,
 		                        0.0f, 0, 0, 4);
 		if (mSprayedByWaterCooldown == 0) {
@@ -3072,7 +3113,7 @@ DEFINE_NERVE(TNerveDoroHaneHitWater, TLiveActor)
 {
 	TDoroHaneKuri* self = (TDoroHaneKuri*)spine->getBody();
 	if (spine->getTime() == 0) {
-		self->setGoalPath((SMS_GetMarioPos()));
+		self->setGoalPath(*gpMarioPos);
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate() * 1.5f,
 		                                ANM_TYPE_BCK);
 	}
