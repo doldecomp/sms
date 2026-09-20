@@ -43,6 +43,10 @@ public:
 	/* 0x28 */ TMovieSubTitle* unk28;
 	/* 0x2C */ TMovieRumble* unk2C;
 	/* 0x30 */ JDrama::TFlagT<u16> unk30;
+#ifdef VERSION_GMSP01
+	/* 0x34 */ u32 unk34;
+	/* 0x38 */ u32 unk38;
+#endif
 };
 
 #endif
