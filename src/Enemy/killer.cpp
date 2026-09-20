@@ -178,8 +178,9 @@ void TFlyEnemy::fly()
 	mLinearVelocity = nextPos - mPosition;
 }
 
-// TODO: 98.7%, instruction-identical; our frame is 8 bytes bigger, i.e. one
-// inline-expansion temporary too many.
+// TODO: 99.5%. Naming the fly-speed local reused retail's f1 across both
+// products (98.7 -> 99.5). Frame is still 0x10 short; params pointer after
+// MsVECNormalize is r3 against retail's r4.
 void TFlyEnemy::calcChaseParam()
 {
 	JGeometry::TVec3<f32> toMario(SMS_GetMarioPos().x - mPosition.x,
@@ -212,8 +213,9 @@ void TFlyEnemy::calcChaseParam()
 			mFlyState = FLY_STATE_NORMAL;
 			MsVECNormalize((Vec*)&toMario, (Vec*)&toMario);
 			TFlyEnemyParams* params = mFlyParams;
-			velocity.x              = toMario.x * params->mSLNormalFlySpeed.get();
-			velocity.z              = toMario.z * params->mSLNormalFlySpeed.get();
+			f32 speed               = params->getSLNormalFlySpeed();
+			velocity.x              = toMario.x * speed;
+			velocity.z              = toMario.z * speed;
 			mGravityY               = params->mSLForceGravityY.get();
 		} else {
 			mPosition.y -= 3.0f;
@@ -940,9 +942,8 @@ DEFINE_NERVE(TNerveKillerExplosion, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		// TODO: the frame is exact with the raw read, but both `scaling`
-		// vectors sit 8 bytes low: retail has an 8-byte local below them that
-		// is not the mSLBombRange reference temporary (spelling the read
-		// `.get()` puts them at the right offsets and the frame 8 over).
+		// vectors sit 8 bytes low: `.get()` is +8 frame and still 4 high,
+		// getSLBombRange() is +16 / 8 high. Same residue as TNerveTamaNokoDown.
 		f32 bombRange = killer->getSaveParam3()->mSLBombRange.value;
 		f32 bombScale = bombRange * killer->getBodyScale();
 		killer->mExplosionScaleMax = bombScale / killer->mAttackRadius;
