@@ -986,7 +986,7 @@ void TBossMantaAdditionalCollision::perform(u32 cue,
 	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mColCount; ++i)
 			if (mCollisions[i]->isActorType(0x80000001))
-				AttackMario(mCollisions[i]);
+				AttackMario(this);
 	}
 }
 
