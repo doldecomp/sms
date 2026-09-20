@@ -215,15 +215,35 @@ void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk18[i]->perform(cue, graphics);
 }
 
+inline void TEnemyPolluteModel::generate(JGeometry::TVec3<f32>& param_1,
+                                         JGeometry::TVec3<f32>& param_2)
+{
+	JGeometry::TVec3<f32> trash; // matching: stack padding
+	const TBGCheckData* check;
+	gpMap->checkGround(param_1, &check);
+	if (check->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+		return;
+	if (check->isWaterSurface())
+		return;
+
+	unk44 = param_1;
+	unk50 = param_2;
+
+	TPosition3f TStack_58;
+	TStack_58.translation(param_1.x, param_1.y, param_1.z);
+	unk14.translation(param_1.x, param_1.y, param_1.z);
+	unk10->unk18->getModel()->setBaseTRMtx(TStack_58);
+	unk5D = true;
+	unk5C = false;
+	setAnm();
+}
+
 void TEnemyPolluteModelManager::generatePolluteModel(
     JGeometry::TVec3<f32>& param_1, JGeometry::TVec3<f32>& param_2)
 {
 	TEnemyPolluteModel* model = unk18[unk10];
 
-	const TBGCheckData* check;
-	gpMap->checkGround(param_1, &check);
-	if (!check->checkFlag(BG_CHECK_FLAG_ILLEGAL) && !check->isWaterSurface())
-		model->generate(param_1, param_2);
+	model->generate(param_1, param_2);
 
 	++unk10;
 	if (unk10 >= unk14)
@@ -259,17 +279,3 @@ void TEnemyPolluteModel::perform(u32 cue, JDrama::TGraphics* graphics)
 		gpPollution->stampModel(unk10->unk18->getModel());
 }
 
-void TEnemyPolluteModel::generate(JGeometry::TVec3<f32>& param_1,
-                                  JGeometry::TVec3<f32>& param_2)
-{
-	unk44 = param_1;
-	unk50 = param_2;
-
-	TPosition3f TStack_58;
-	TStack_58.translation(param_1.x, param_1.y, param_1.z);
-	unk14.translation(param_1.x, param_1.y, param_1.z);
-	unk10->unk18->getModel()->setBaseTRMtx(TStack_58);
-	unk5D = true;
-	unk5C = false;
-	setAnm();
-}
