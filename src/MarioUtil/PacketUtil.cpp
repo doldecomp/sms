@@ -208,12 +208,11 @@ struct PacketUserData_Fog {
 
 void SMS_InitPacket_Fog(J3DModel* param_1, u16 param_2)
 {
-	J3DShapePacket* packet = InitPacket_Sub(param_1, param_2);
-
-	J3DFog* fog = param_1->getModelData()
-	                  ->getMaterialNodePointer(param_2)
-	                  ->getPEBlock()
-	                  ->getFog();
+	char trash[40];
+	J3DMaterial* mat = param_1->getModelData()->getMaterialNodePointer(param_2);
+	J3DPEBlock* peblock     = mat->getPEBlock();
+	J3DShapePacket* packet = param_1->getShapePacket(mat->getShape()->getIndex());
+	J3DFog* fog             = peblock->getFog();
 
 	PacketUserData_Fog* userData = new PacketUserData_Fog;
 	userData->unk0               = 5;
