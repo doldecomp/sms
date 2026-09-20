@@ -366,9 +366,9 @@ void TTinKoopaFlame::hitWater()
 
 	if (mHitPoints <= 0) {
 		mHitPoints
-		    = (s16)mTinKoopa->getSaveParams()->getSLFlameHP();
+		    = (s16)mTinKoopa->getSaveParams()->mSLFlameHP.get();
 		mTinKoopa->mFlameStopTimer
-		    = (s16)mTinKoopa->getSaveParams()->getSLFlameRevivalTime();
+		    = (s16)mTinKoopa->getSaveParams()->mSLFlameRevivalTime.get();
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
@@ -407,11 +407,11 @@ void TTinKoopaFlame::checkMario()
 	if (mTinKoopa->mFlameStopTimer > 0)
 		return;
 
-	if (mTinKoopa->getDamageStage() == 4)
+	if (mTinKoopa->mDamageStage == 4)
 		return;
 
 	int frame;
-	if (mTinKoopa->getDamageStage() == 0)
+	if (mTinKoopa->mDamageStage == 0)
 		frame = 2750;
 	else
 		frame = 3400;
@@ -421,15 +421,18 @@ void TTinKoopaFlame::checkMario()
 }
 
 // UNUSED, 0x18 in the map: six instructions, so the body can only be the bare
-// stage test. Nothing calls it; emitFlameEffects compares inline.
+// stage test.
 bool TTinKoopaFlame::isHighPosition()
 {
-	return mTinKoopa->getDamageStage() != 0;
+	return mTinKoopa->mDamageStage != 0;
 }
 
+// TODO: instruction-exact except the post-clamp mScale reload: retail
+// `lfs f0; fmuls f30, f0, f2`, ours `lfs f30; fmuls f30, f30, f2`.
+// `scale = mScale * height` restores the f0 load but adds a second `fmr`.
 void TTinKoopaFlame::emitFlameEffects()
 {
-	if (mTinKoopa->getSpine()->getCurrentNerve()
+	if (mTinKoopa->mSpine->getCurrentNerve()
 	    != &TNerveTinKoopaWait::theNerve())
 		return;
 
@@ -437,7 +440,7 @@ void TTinKoopaFlame::emitFlameEffects()
 	    TTinKoopa_getJointIndex(TINKOOPA_JOINT_FIRE));
 
 	f32 height = 1.0f;
-	if (mTinKoopa->getDamageStage() != 0)
+	if (isHighPosition())
 		height = 1.6f;
 
 	if (mTinKoopa->mFlameStopTimer > 0) {
@@ -450,8 +453,9 @@ void TTinKoopaFlame::emitFlameEffects()
 			mScale = 1.0f;
 	}
 
-	f32 scaleY, scale;
-	scale  = mScale * height;
+	f32 scaleY;
+	f32 scale = mScale;
+	scale *= height;
 	scaleY = scale;
 	if (mTinKoopa->mFlameStopTimer > 0)
 		scaleY *= 0.5f;
@@ -473,8 +477,8 @@ void TTinKoopaFlame::emitFlameEffects()
 	if (emitter)
 		emitter->setGlobalScale(flameScale);
 
-	gpMSound->startSoundActorWithInfo(MSD_SE_BS_MKP_FIRE, &mPosition, nullptr,
-	                                  scale, 0, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActorWithInfo(
+	    MSD_SE_BS_MKP_FIRE, &mPosition, nullptr, scale, 0, 0, nullptr, 0, 4);
 }
 
 // UNUSED, 0x1c in the map.
@@ -1068,13 +1072,6 @@ void TTinKoopa::changeBck(int index)
 	setAnmSound(table == nullptr ? nullptr : table[index]);
 }
 
-// TODO: 0%. The retail object calls hitParts() here; ours expands it, so the
-// whole 596-byte body lands inside these 60. hitParts sits exactly three
-// statements under MWCC's per-callee inline budget -- three dead `if`s in it
-// flip this function to 100% -- but no plausible spelling of its body (early
-// returns instead of nested ifs, a spelled-out console call, a named local)
-// finds those three statements. Same story for
-// TTinKoopaPartsBase::receiveMessage, which calls the same helper.
 BOOL TTinKoopa::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x1000002B) {
@@ -1084,23 +1081,13 @@ BOOL TTinKoopa::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
-// The six statements this body was missing: the three guards are early returns
-// rather than two nested `if`s (+3), each pushNerve names its nerve (+2, and
-// that is also what fixes retail's r5/r6 assignment in both inlined pushNerve
-// expansions -- retail creates the argument temporary before the receiver),
-// and the decremented hit points are read back into a named local (+1, which
-// also brings the frame from 0x60 to 0x68). At 15 statements the body is over
-// MWCC's depth-1 inline budget, so both TTinKoopa::receiveMessage and
-// TTinKoopaPartsBase::receiveMessage `bl` it as retail does; both 0 -> 100.
-//
-// TODO: instruction-exact; 8 bytes of frame left (0x68 against 0x70), i.e. one
-// more named local with a stack slot. Naming mDamageStage costs a statement
-// but no frame, so it is not the one.
+// getSpine() at the two early-return nerve tests is the last +8 of frame
+// (0x68 -> 0x70). Raw mSpine is instruction-identical and 8 short.
 void TTinKoopa::hitParts()
 {
-	if (mSpine->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve())
+	if (getSpine()->getCurrentNerve() == &TNerveTinKoopaBreak::theNerve())
 		return;
-	if (mSpine->getCurrentNerve() == &TNerveTinKoopaDamage::theNerve())
+	if (getSpine()->getCurrentNerve() == &TNerveTinKoopaDamage::theNerve())
 		return;
 	if (mDamageStage == 4)
 		return;
