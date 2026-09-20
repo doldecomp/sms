@@ -1385,6 +1385,19 @@ const char** TSamboHead::getBasNameTable() const
 	return sambohead_bastable;
 }
 
+// TNerveSamboHeadHide::execute (batch 127).
+static inline TMarioParticleManager* HanasamboGetMarioParticleManager()
+{
+	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
+	return marioParticleManager;
+}
+
+static inline TSamboFlower* SamboHeadFlower(const TSamboHead* p)
+{
+	TSamboFlower* flower = p->mFlower;
+	return flower;
+}
+
 DEFINE_NERVE(TNerveSamboHeadAppear, TLiveActor)
 {
 	TSamboHead* head = (TSamboHead*)spine->getBody();
@@ -1398,15 +1411,15 @@ DEFINE_NERVE(TNerveSamboHeadAppear, TLiveActor)
 		} else {
 			head->setBckAnm(0xA);
 		}
-		gpMarioParticleManager->emit(0xB6, &head->mPosition, 0, nullptr);
-		gpMarioParticleManager->emit(0xB7, &head->mPosition, 0, nullptr);
-		flower = head->mFlower;
+		HanasamboGetMarioParticleManager()->emit(0xB6, &head->mPosition, 0, nullptr);
+		HanasamboGetMarioParticleManager()->emit(0xB7, &head->mPosition, 0, nullptr);
+		flower = SamboHeadFlower(head);
 		flower->onHitFlag(HIT_FLAG_NO_COLLISION);
 		flower->getMActor()->setBck("flower_fwait");
 		flower->onLiveFlag(LIVE_FLAG_DEAD);
 	}
 	if (spine->getTime() == 20)
-		((TSamboFlowerManager*)head->mFlower->mManager)
+		((TSamboFlowerManager*)SamboHeadFlower(head)->mManager)
 		    ->dropLeaf(head->mPosition, head->mScaling);
 	if (head->checkCurAnmEnd(0)) {
 		head->setBckAnm(0xC);
@@ -1478,13 +1491,6 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 }
 
 // Binding level over a raw member read, worth +8 of low region in
-// TNerveSamboHeadHide::execute (batch 127).
-static inline TMarioParticleManager* HanasamboGetMarioParticleManager()
-{
-	TMarioParticleManager* marioParticleManager = gpMarioParticleManager;
-	return marioParticleManager;
-}
-
 DEFINE_NERVE(TNerveSamboHeadHide, TLiveActor)
 {
 	TSamboHead* head = (TSamboHead*)spine->getBody();
