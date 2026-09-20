@@ -5427,3 +5427,94 @@ Regressionen durch den `MenuDir.hpp`-Header-Fix). `matched_code_percent`:
 **46,64 %** (weiterer Rekord-Einzelrunden-Zuwachs, +0,29
 Prozentpunkte). Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c`
 bestätigt `build/GMSJ01/mario.dol: OK`.
+
+### Nach fünfundsechzigster Iterationsrunde (24-Kandidaten-Batch, 12 Fixes trotz Infrastruktur-Ratenbegrenzung, TFlagT<u16>-Konstruktorsyntax-Erkenntnis)
+
+**Fünf Kandidaten scheiterten an einem Infrastruktur-Problem**
+(Rate-Limit-Fehler des zugrundeliegenden Modell-Providers,
+`minimax-code/MiniMax-M3 429`, sowie einige unklare frühe Abbrüche)
+— alle fünf machten KEINE Dateiänderungen (sauber abgebrochen vor
+jeder Bearbeitung), verbleiben also als frische Kandidaten für eine
+künftige Runde: `TMapObjectLightWithDBSet::makeDrawBuffer`,
+`SMSSetupTitleRenderingInfo`, `TSmallEnemy::generateItem`.
+(`TMario::~TMario` und `TMapObjBase::getDistance` wurden in DIESER
+Runde als Retries behandelt und sind unten dokumentiert — eines
+erfolgreich gefixt, das andere ebenfalls an derselben Ratenbegrenzung
+gescheitert.)
+
+**12 neue Fix-Commits:**
+
+1. `TMario::doRoofMovingProcess` (Commit `7ca67917`) — `char trash[4]`
+   nach `newPos`.
+2. `TMario::squating` (Commit `e3b584cd`) — `char trash[56]`.
+3. `TNerveBEelTearsSplit::execute` (Commit `b414b8f9`) — `char
+   trash[16]`.
+4. `TTalkCursor::loadAfter` (Commit `09998db8`) — `char trash[8]`.
+5. `TMapObjGeneral::appear` (Commit `3549f48b`) — `char trash[8]`.
+6. `TNameKuri::moveObject` (Commit `cb12847b`) — `char trash[12]`.
+7. `TNerveMameGessoWait::execute` (Commit `34a9edfc`) — `char
+   trash[8]`.
+8. `TMario::barProcess` (Commit `e89da4b0`) — `char trash[4]` NACH
+   `pos` (Sonderfall: alle Lokalen lagen gleichmäßig 4 Byte zu
+   niedrig, Rahmengröße war durch 8-Byte-Rundung bereits zufällig
+   korrekt).
+9. `TMenuDirector::setFixedStageValue` (Commit `d0a4e4e2`) — `char
+   trash[0x1C]` nach einem Array-Lokal.
+10. `TMarioParticleManager::perform` (Commit `8be3d482`) — **neue
+    Erkenntnis zur Trash-Anker-Position**: `char trash[24]` musste am
+    ENDE der Funktion (nach dem letzten Block, vor der schließenden
+    Klammer) stehen, nicht am Anfang — beide Positionen korrigieren
+    zwar die Gesamtrahmengröße gleich, aber nur die Endposition lässt
+    den Abstand zweier `JPADrawInfo`-Lokalen zum Rahmen-Oberrand
+    unverändert, wie es Retail benötigt.
+11. `TNerveTobiPukuBound::execute` (Commit `c052a17d`) — kombinierter
+    Fix: `velocity2`-Deklaration (ohne Initialisierung) vor den
+    äußeren if-Block gezogen (für Stack-Slot-Reihenfolge), tatsächliche
+    Zuweisung an ursprünglicher Stelle belassen (für Instruktions-
+    Terminierung), PLUS `char trash[12]`.
+12. `TMarDirector::fireGetStar` (Commit `437d5ead`) — **wichtige neue
+    Erkenntnis zur `TFlagT<u16>`-Fehlerfamilie**: ein bereits
+    vorhandenes, wirkungsloses `char trash[4]` war nur Rauschen: die
+    tatsächliche Ursache war `JDrama::TFlagT<u16>(0)` (expliziter
+    Konstruktor-Aufruf mit Null-Argument) statt `JDrama::TFlagT<u16>()`
+    (Standard-Konstruktor) — beide erzeugen denselben Laufzeitwert,
+    aber MWCCs anonymer Temporärwert-Pool-Allokator positioniert den
+    Temporärwert unterschiedlich für die beiden Schreibweisen. Dies
+    ist die ERSTE bestätigte Auflösung eines `TFlagT<u16>`-„Phantom-
+    Frame"-Falls durch eine reine Syntaxänderung (keine Stack-
+    Padding-Technik) — lohnt sich, bei den zahlreichen bereits als
+    Sackgasse dokumentierten `TFlagT<u16>`/`fireStartDemoCamera`-
+    Fällen aus früheren Runden erneut zu prüfen, ob sie explizite
+    `(0)`-Argumente statt Standard-Konstruktoren verwenden.
+
+**Weitere gründlich dokumentierte Sackgassen** (alle sauber
+zurückgesetzt, mehrere mit außergewöhnlich gründlicher Bisektion):
+`MActor::setModel` (9 Varianten, anonyme `JGadget::TList`-Iterator-
+Vergleichs-Temporärwerte unbeeinflussbar durch Named-Pool-Padding),
+`THinokuri2::changeBck` (systematische Bisektion zeigt: zwei sich
+gegenseitig ausschließende if/else-Zweige reservieren JEWEILS einen
+eigenen 32-Byte-Anonym-Pool-Slot, obwohl nie gleichzeitig lebendig —
+16 Byte Overreservierung ließ sich nicht durch Padding entfernen, da
+Padding nur hinzufügen, nie entfernen kann), `TMapStaticObj::perform`
+(über 70 Build-Iterationen, Ziel-Layout verlangt gleichzeitiges
+Wachsen UND Schrumpfen verschiedener Rahmenbereiche — unerreichbar),
+`TFireWanwan::behaveToWater` (vier Platzierungs-/Typ-Varianten
+bestätigen erneut das Zwei-Pool-Modell empirisch), `TBaseNPC::
+changeNerveFromTalk_` (11 Iterationen — JEDE Umformulierung, die den
+Instruktionsstrom exakt hält, reproduziert auch die exakte
+16-Byte-Overreservierung; JEDE Umformulierung, die die Rahmengröße
+ändert, bricht auch den Instruktionsstrom — kein Ausweg gefunden),
+`TStayPakkun::genRandomItem` (mathematische Formelherleitung: Rahmen-
+größe F = 48 + 24×N für N TVec3-Kandidaten, Zielwert hat keine
+ganzzahlige Lösung für N — beweist, dass die gesamte Familie „TVec3-
+Temporärwerte konsolidieren/aufteilen" als Fix-Ansatz ausscheidet),
+`TMapEventSinkBianco::startControl` (zwei unabhängige, nicht
+gegenseitig aufhebbare Stack-Layout-„Basisvektoren" identifiziert,
+16 Iterationen, keine Kombination trifft exakt).
+
+### Session-Gesamtstand nach Runde 65
+
+**530 verifizierte echte Fixes in 187 Commits.** `matched_functions`:
+**9114** (von 9102 zu Rundenbeginn, +12 exakt wie erwartet).
+`matched_code_percent`: **46,82 %**. Volles `ninja`-Rebuild
+erfolgreich, `dtk shasum -c` bestätigt `build/GMSJ01/mario.dol: OK`.
