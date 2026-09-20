@@ -885,8 +885,8 @@ void THinokuri2::moveObject()
 		                   * (dhp / calcHitPoints())
 		             - unk194;
 
-		unk194 += fVar12 > 0.0f ? MsMin(fVar12, 0.004f)
-		                        : MsMax(fVar12, -0.004f);
+		unk194
+		    += fVar12 > 0.0f ? MsMin(fVar12, 0.004f) : MsMax(fVar12, -0.004f);
 	} else {
 		unk194 = 1.0f;
 	}
