@@ -7,8 +7,8 @@ Run start: 2026-09-15 08:00 EDT. Elapsed: 125.2 h.
 
 | | Matched code | Linked units |
 | --- | ---: | ---: |
-| Game | 53.96% | 166 / 385 |
-| All | 61.96% | 492 / 732 |
+| Game | 53.98% | 166 / 385 |
+| All | 61.97% | 492 / 732 |
 
 ## Per day
 
@@ -19,7 +19,7 @@ Run start: 2026-09-15 08:00 EDT. Elapsed: 125.2 h.
 | 2026-09-17 | 638 | 36.82% | 120 | 431 | +25 |
 | 2026-09-18 | 902 | 45.03% | 162 | 489 | +42 |
 | 2026-09-19 | 635 | 50.60% | 166 | 492 | +4 |
-| 2026-09-20 | 442 | 53.96% | 166 | 492 | +0 |
+| 2026-09-20 | 443 | 53.98% | 166 | 492 | +0 |
 
 ## Rates and projection
 
@@ -27,8 +27,8 @@ Linear extrapolations only; the remaining units are the hard ones, so treat ever
 
 | Window | Game links / h | All links / h | Game matched pts / h | Days to 385 game links | Days to 732 all links |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| last 12 h (12 h) | 0.00 | 0.00 | 0.251 | inf | inf |
-| last 24 h (24 h) | 0.04 | -0.04 | 0.320 | 219.0 | inf |
+| last 12 h (12 h) | 0.00 | 0.00 | 0.252 | inf | inf |
+| last 24 h (24 h) | 0.04 | -0.04 | 0.320 | 219.3 | inf |
 | last 48 h (48 h) | 0.27 | 0.42 | 0.217 | 33.7 | 24.0 |
 | whole run (125 h) | 0.78 | 3.38 | 0.432 | 11.8 | 3.0 |
 
@@ -483,3 +483,4 @@ One row per commit that touched `PROGRESS.md` or `objects.json`.
 | 09-20 12:50 |  124.8 | cdc5b137 | 53.93% | 166 | 61.93% | 492 |
 | 09-20 13:01 |  125.0 | a8872329 | 53.96% | 166 | 61.96% | 492 |
 | 09-20 13:08 |  125.1 | 30cbf083 | 53.96% | 166 | 61.96% | 492 |
+| 09-20 13:09 |  125.2 | 8ee30264 | 53.98% | 166 | 61.97% | 492 |
