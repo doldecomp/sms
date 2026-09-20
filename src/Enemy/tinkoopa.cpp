@@ -807,8 +807,8 @@ f32 TTinKoopa::calcCoasterDistanceInOrder(int from, int to)
 	if (to >= from)
 		return calcCoasterDistance(from, to);
 
-	return calcCoasterDistance(from, mKillerGraph->getNodeNum() - 1)
-	    + calcCoasterDistance(0, to);
+	f32 distance = calcCoasterDistance(from, mKillerGraph->getNodeNum() - 1);
+	return distance + calcCoasterDistance(0, to);
 }
 
 // UNUSED, 0xdc in the map: inlined into
