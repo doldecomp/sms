@@ -647,7 +647,7 @@ void TGraphWeb::getNodeIndexInXZRange(const JGeometry::TVec3<f32>&, f32,
 void TGraphWeb::calcGraphDirection(int n)
 {
 	TGraphNode& graphNode = getGraphNode(n);
-	TRailNode* railNode   = graphNode.getRailNode();
+	TRailNode* railNode   = getGraphNode(n).getRailNode();
 	for (int i = 0; i < railNode->mConnectionNum; ++i) {
 		f32 totalPeriod = railNode->mPeriods[i] + graphNode.getUnk8();
 		u32 conn        = railNode->mConnections[i];
@@ -655,8 +655,8 @@ void TGraphWeb::calcGraphDirection(int n)
 		// are we trying to find shortest paths in a graph here and failing
 		// miserably at it or what?
 		TGraphNode& otherGraphNode = getGraphNode(conn);
-		if (otherGraphNode.getUnk4() == 0
-		    || otherGraphNode.getUnk8() > totalPeriod) {
+		if (getGraphNode(conn).getUnk4() == 0
+		    || getGraphNode(conn).getUnk8() > totalPeriod) {
 			otherGraphNode.incUnk4();
 			otherGraphNode.setUnk8(totalPeriod);
 			calcGraphDirection(conn);
