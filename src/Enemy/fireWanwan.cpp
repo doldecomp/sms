@@ -1461,7 +1461,7 @@ void TFireWanwan::emitTailHitEffect() { }
 // correct but popCurr is incorrect
 void TFireWanwan::initTurnNextGraphNode()
 {
-	unk124->mCurrIdx = unk124->popCurr();
+	getTracer()->mCurrIdx = getTracer()->popCurr();
 	setGoalPathFromGraph();
 	unk128 = 0;
 	unk12C = 0.0f;
@@ -1946,7 +1946,7 @@ DEFINE_NERVE(TNerveFireWanwanGraphWander, TLiveActor)
 
 DEFINE_NERVE(TNerveFireWanwanTurn, TLiveActor)
 {
-	TFireWanwan* self = (TFireWanwan*)spine->getBody();
+	TFireWanwan* self = FireWanwanGetBody2(spine);
 	if (spine->getTime() == 0) {
 		self->prepareTurn();
 		self->setBckAnm(5);
