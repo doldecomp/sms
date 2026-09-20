@@ -544,6 +544,16 @@ bool TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
 	return changed;
 }
 
+// Two-local binder over unkFC + mWeakBodyIndex, +0x10 of
+// TBossHanachanPartsBody::receiveMessage. Pair with RecvIdx for +0x18.
+static inline s32
+BossHanachanPartsRecvWeak(const TBossHanachanPartsBody* p)
+{
+	TBossHanachan* owner = p->unkFC;
+	s32 weak = owner->mWeakBodyIndex;
+	return weak;
+}
+
 BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 {
 	if (gpMarDirector->isThing())
@@ -561,11 +571,13 @@ BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 			break;
 		case HIT_MESSAGE_HIP_DROP: {
 			bool weak;
-			if (unk114 == unkFC->mWeakBodyIndex)
+			s32 idx = unk114;
+			if (idx == BossHanachanPartsRecvWeak(this))
 				weak = true;
 			else
 				weak = false;
-			switch (mCurrentAnm) {
+			EnumBossHanachanAnmKind anm = mCurrentAnm;
+			switch (anm) {
 			case BOSS_HANACHAN_ANM_UNK2:
 			case BOSS_HANACHAN_ANM_UNK3:
 			case BOSS_HANACHAN_ANM_UNK5:
@@ -577,7 +589,7 @@ BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 					        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 					unkFC->execDamage();
 				} else {
-					if (mCurrentAnm == BOSS_HANACHAN_ANM_UNK13)
+					if (anm == BOSS_HANACHAN_ANM_UNK13)
 						restartBck_();
 					else
 						setAnm_(BOSS_HANACHAN_ANM_UNK13,
