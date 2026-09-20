@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1.
-- Landed `grptz` gesso ([gesso unit ladder](c909f1e1-f102-4304-9fda-257a1e6152ec)): `GessoBodyCallback` 91.9→97.5 (named `MtxPtr` for both `MTXConcat`); unit fuzzy 99.70→99.80; +0 exact; All stays **61.78%**. Pre-existing MISSING `checkDropInWater` / `TMsRange` dtors.
-- Landed conductor +1; telesa +2; MapObjPinna +1; MapObjBase +3.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural.
+- Landed `grpua` NpcEvent ([NpcEvent unit ladder](ecd91adb-18c2-4d82-a3e2-fbbc31c78ebc)): both CheckNerve frames exact via getSpine / TLiveActor binders; unit fuzzy 99.59→99.61; +0 exact; All stays **61.78%**. Residue: 4/8-byte slice slots.
+- Landed gesso BodyCallback structural; conductor +1; telesa +2.
 - Total: **61.78%** matched, game **53.74%**, linked **492 / 732**, exact **11,355**.
-- Running: `grpua` / NpcEvent ([NpcEvent unit ladder](ecd91adb-18c2-4d82-a3e2-fbbc31c78ebc)). Refill: smallEnemy.
+- Running: `grpub` / smallEnemy ([smallEnemy unit ladder](5f21a9ce-866e-43af-9f77-ee01e179f319)) — already has generateItem + HitWaterJump commits. Refill: BossHanachanParts.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
