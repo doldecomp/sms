@@ -2130,6 +2130,28 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 	return FALSE;
 }
 
+// TODO: park for a shared header. PathNode.hpp's getPoint() reaches the
+// node's actor through getPosition(); reading mPosition raw instead drops
+// the +8 reference temp that keeps TNerveBPTouchDown at frame 0x50 vs
+// retail 0x48. Header round 27 measured the same change in the header as a
+// wash (closes this nerve, loses TNerveBPTakeOff and isReachedToGoal), so
+// it stays TU-local and is used only here.
+static inline const JGeometry::TVec3<f32>&
+BosspakkunGetPoint(const TPathNode& node)
+{
+	if (node.unk0 != 0)
+		return node.unk0->mPosition;
+
+	return node.unk4;
+}
+
+// +4 setter rung (MapObjBianco ladder 337): lands the goal TVec3 at
+// retail's 0x2c. The raw `mPosition.y = goal.y` leaves it 4 low.
+static inline void BosspakkunSetPosY(TBossPakkun* p, f32 y)
+{
+	p->mPosition.y = y;
+}
+
 DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
@@ -2141,13 +2163,9 @@ DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FLY)) {
 		boss->mPosition.y -= 5.0f;
 
-		// TODO: 99.9%, frame 0x50 vs retail 0x48. The by-value TVec3 copy of
-		// getUnk104().getPoint() is instruction-correct (lwz/stw); the const
-		// TVec3& form lands the frame but drops the copy. Declare-then-assign
-		// and a named-ref-plus-copy are both still 8 long.
-		JGeometry::TVec3<f32> goal = boss->getUnk104().getPoint();
+		JGeometry::TVec3<f32> goal = BosspakkunGetPoint(boss->getUnk104());
 		if (goal.y > boss->mPosition.y) {
-			boss->mPosition.y = goal.y;
+			BosspakkunSetPosY(boss, goal.y);
 			boss->changeBck(BOSSPAKU_BCK_LAND);
 			boss->offLiveFlag(LIVE_FLAG_UNK10);
 		}
