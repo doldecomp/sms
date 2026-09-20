@@ -92,6 +92,33 @@ static inline const char* MapObjHideGetName(const THideObjBase* p)
 	return name;
 }
 
+// Named getModel / getAnmMtx stack: +0x10 then +8 on
+// TWaterHitPictureHideObj::loadAfter / load.
+static inline J3DModel* MapObjHideGetModel(TLiveActor* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
+static inline MtxPtr MapObjHideGetRootMtx(TLiveActor* p)
+{
+	MtxPtr mtx = MapObjHideGetModel(p)->getAnmMtx(0);
+	return mtx;
+}
+
+// Named-local fork over the particle singleton, +8 on touchWater.
+static inline TMarioParticleManager* MapObjHideParticles()
+{
+	TMarioParticleManager* mgr = gpMarioParticleManager;
+	return mgr;
+}
+
+// Unnamed extra level over gpModelWaterManager, last +8 on touchWater.
+static inline TModelWaterManager* MapObjHideWaterMgr()
+{
+	return gpModelWaterManager;
+}
+
 void THideObjBase::loadAfter()
 {
 	TMapObjBase::loadAfter();
@@ -216,11 +243,13 @@ void TFruitBasket::countFruit(THitActor* param_1)
 	((TResetFruit*)param_1)->makeObjWaitingToAppear();
 }
 
+// TODO: frame exact (0x38) after reading mGroundPlane raw; roofPlane sits at
+// 0x2c, not retail's 0x28. gpMap binders were 0; getPosition inlines away.
 void TFruitBasket::touchFruit(THitActor* param_1)
 {
 	if (fabsf(mRotation.x) < 45.0f) {
 		// Upwards facing basket -- check that the fruit's on top of us
-		if (((TLiveActor*)param_1)->getGroundPlane()->getActor() != this)
+		if (((TLiveActor*)param_1)->mGroundPlane->getActor() != this)
 			return;
 	} else {
 		// Basket lying on it's side -- check that the fruit rolled inside
@@ -331,18 +360,18 @@ u32 TWaterHitPictureHideObj::touchWater(THitActor* param_1)
 {
 	const JGeometry::TVec3<f32>& waterSpeed = getWaterSpeed(param_1);
 
-	MtxPtr rootMtx = getModel()->getAnmMtx(0);
+	MtxPtr rootMtx = MapObjHideGetRootMtx(this);
 	if ((rootMtx[0][2] * waterSpeed.x + rootMtx[1][2] * waterSpeed.y
 	     + rootMtx[2][2] * waterSpeed.z)
 	    > 0.0f)
 		return 0;
 
 	int id = getWaterID(param_1);
-	if (gpModelWaterManager->checkFlagBottom4Bits(id, 0x1)) {
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
-		                             &param_1->mPosition, 0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
-		                              0, 0, 0, 4);
+	if (MapObjHideWaterMgr()->checkFlagBottom4Bits(id, 0x1)) {
+		MapObjHideParticles()->emit(PARTICLE_MS_ENM_WATHIT,
+		                            &param_1->getPosition(), 0, nullptr);
+		FruitBasketSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition,
+		                                  0, 0, 0, 0, 4);
 	}
 	forward(mSprayProgressSpeed);
 	if (isActorType(0x400001A1))
@@ -412,7 +441,7 @@ void TWaterHitPictureHideObj::loadAfter()
 	if (mHiddenObj != nullptr) {
 		if (mHiddenObj->isActorType(0x20000010)) {
 			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
-			    gpMarDirector->getCurrentMap(), mEventId);
+			    SMSGetMarDirector()->getCurrentMap(), mEventId);
 			if (isBlueCollected) {
 				makeObjDead();
 				return;
@@ -423,7 +452,7 @@ void TWaterHitPictureHideObj::loadAfter()
 	case 0x40000012:
 		mMinProgress = 32.0f;
 		mMaxProgress = 100.0f;
-		if (getModel()->getAnmMtx(0)[1][2] > 0.7f) {
+		if (MapObjHideGetRootMtx(this)[1][2] > 0.7f) {
 			mSprayProgressSpeed = 1.5f;
 		} else {
 			mSprayProgressSpeed = 0.48f;
@@ -497,14 +526,15 @@ void TWaterHitPictureHideObj::load(JSUMemoryInputStream& stream)
 	mBarrelProgressSpeed = 1.0f;
 	unk15C               = 0.4f;
 
-	f32 yOffset = getModel()->getAnmMtx(0)[1][2];
+	f32 yOffset = MapObjHideGetRootMtx(this)[1][2];
 	if (yOffset > 0.7f) {
 		mYOffset = 0.0f;
 		setDamageHeight(40.0f);
 		mPosition.y         = mInitialPosition.y + mYOffset;
 		mSprayProgressSpeed = 2.8f;
 	} else if (yOffset < -0.7f) {
-		mYOffset = mScaling.y * -10.0f;
+		f32 scaleY = mScaling.y;
+		mYOffset   = scaleY * -10.0f;
 		setDamageHeight(30.0f);
 		mPosition.y         = mInitialPosition.y + mYOffset;
 		mSprayProgressSpeed = 2.5f;
@@ -512,7 +542,7 @@ void TWaterHitPictureHideObj::load(JSUMemoryInputStream& stream)
 		mSprayProgressSpeed = 1.8f;
 	}
 
-	initPacketMatColor(getModel(), GX_TEVREG0, &mColor);
+	initPacketMatColor(MapObjHideGetModel(this), GX_TEVREG0, &mColor);
 }
 
 TWaterHitPictureHideObj::TWaterHitPictureHideObj(const char* name)
@@ -573,29 +603,28 @@ void THideObjPictureTwin::afterFinishedAnim()
 	mState = 3;
 }
 
+// TODO: frame is exact (0x90) but the snprintf buffer sits at 0x24, not
+// retail's 0x28. Named hitActor / char[4] both grow the frame back to 0x98.
 void THideObjPictureTwin::loadAfter()
 {
 	TWaterHitPictureHideObj::loadAfter();
 	char* wrapName = strstr(mName, "ふたご落書きＡ");
 	if (wrapName != nullptr) {
 		size_t len = strlen("ふたご落書きＡ");
-		char buffer[4];
-		buffer[0] = mName[len];
-		buffer[1] = mName[len + 1];
-		buffer[2] = mName[len + 2];
-		buffer[3] = mName[len + 3];
+		char c0    = mName[len];
+		char c1    = mName[len + 1];
+		char c2    = mName[len + 2];
+		char c3    = mName[len + 3];
 
 		char buffer2[0x4C];
 		snprintf(buffer2, 0x40, "ふたご落書きＢ００");
-		buffer2[len]     = buffer[0];
-		buffer2[len + 1] = buffer[1];
-		buffer2[len + 2] = buffer[2];
-		buffer2[len + 3] = buffer[3];
+		buffer2[len]     = c0;
+		buffer2[len + 1] = c1;
+		buffer2[len + 2] = c2;
+		buffer2[len + 3] = c3;
 
-		THideObjPictureTwin* hitActor
-		    = JDrama::TNameRefGen::getInstance()->search<THideObjPictureTwin>(
-		        buffer2);
-		unk174         = hitActor;
+		unk174 = JDrama::TNameRefGen::getInstance()->search<THideObjPictureTwin>(
+		    buffer2);
 		unk174->unk174 = this;
 	}
 }
@@ -662,7 +691,7 @@ void TBreakHideObj::initMapObj()
 	}
 }
 
-void TWoodBox::fabricatedGroundKillCheck(f32 dX, f32 dY)
+void TWoodBox::killNearWoodBox(f32 dX, f32 dY) const
 {
 	const TBGCheckData* groundPlane;
 	f32 resY = gpMap->checkGround(dX + gpMarioPos->x, gpMarioPos->y + 1000.0f,
@@ -675,6 +704,8 @@ void TWoodBox::fabricatedGroundKillCheck(f32 dX, f32 dY)
 		}
 	}
 }
+// TODO: +0x98 frame (0x58 vs 0xf0) with killNearWoodBox inlined 4x.
+// Named SMS_GetMarioPos() CSE's the per-site gpMarioPos reloads (93.6%).
 void TWoodBox::kill()
 {
 	startAnim(2);
@@ -687,10 +718,10 @@ void TWoodBox::kill()
 	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
 	                                nullptr, 0, 4);
 
-	fabricatedGroundKillCheck(50.0f, 50.0f);
-	fabricatedGroundKillCheck(50.0f, -50.0f);
-	fabricatedGroundKillCheck(-50.0f, 50.0f);
-	fabricatedGroundKillCheck(-50.0f, -50.0f);
+	killNearWoodBox(50.0f, 50.0f);
+	killNearWoodBox(50.0f, -50.0f);
+	killNearWoodBox(-50.0f, 50.0f);
+	killNearWoodBox(-50.0f, -50.0f);
 }
 
 void TWoodBox::loadAfter()
