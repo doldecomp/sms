@@ -72,6 +72,14 @@ f32 THangingBridgeBoard::mRopeWidthX         = 10.0f;
 f32 THangingBridgeBoard::mRopeWidthZ         = 7.0f;
 f32 THangingBridgeBoard::mTexPosRate         = 0.01f;
 
+static inline TMarDirector* MapObjMonteMarDirector()
+{
+	TMarDirector* director = SMSGetMarDirector();
+	return director;
+}
+
+// TODO: 99.3%. Frame is retail's 0x78 via MapObjMonteMarDirector (was
+// 0x10 short). Leftover is volatile colouring of top.y (f4 vs f2).
 void THangingBridgeBoard::drawOneRope(const JGeometry::TVec3<f32>& top) const
 {
 	f32 hookY  = top.y + THangingBridge::mRopeHeight;
@@ -82,7 +90,7 @@ void THangingBridgeBoard::drawOneRope(const JGeometry::TVec3<f32>& top) const
 	f32 zPlus  = top.z + mRopeWidthZ;
 	f32 zMinus = top.z - mRopeWidthZ;
 
-	if (gpMarDirector->mMap == 0xD)
+	if (MapObjMonteMarDirector()->mMap == 0xD)
 		bottom -= 60.0f;
 
 	f32 texTop    = mTexPosRate * (hookY - top.y);
@@ -310,12 +318,6 @@ void THangingBridge::drawUpper(const JGeometry::TVec3<f32>& from,
 		y += dy;
 		z += dz;
 	}
-}
-
-static inline TMarDirector* MapObjMonteMarDirector()
-{
-	TMarDirector* director = SMSGetMarDirector();
-	return director;
 }
 
 static inline int HangingBridgeBoardNum(const THangingBridge* bridge)
@@ -726,7 +728,8 @@ void TSwingBoard::initDraw() const
 	              GX_DF_NONE, GX_AF_NONE);
 	// TODO: 100% instructions, frame 0x88 vs retail 0x80. Same +8 TColor
 	// residue as TCogwheel/TWireBell::initDraw; a named TColor lands the
-	// frame but parks the color copy in the named block.
+	// frame but parks the color copy in the named block. The 4-arg
+	// TColor(0,0,100,255) ctor is byte stores and drops to 92.9%.
 	GXColor color = { 0, 0, 100, 255 };
 	GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(color));
 	GXSetNumTexGens(1);
@@ -890,9 +893,12 @@ void TSwingBoard::load(JSUMemoryInputStream& stream)
 	else
 		mAngleSpeed = mAngleSpeedMax * MsRandF();
 
-	s16 yaw   = (s16)(182.04445f * mRotation.y);
-	f32 sinY  = JMASSin(yaw);
-	f32 cosY  = JMASCos(yaw);
+	// 12x ref() is +0x30 over all-raw (0x68 vs 0x38). One ref() lands
+	// retail's 0x40 but swaps epilogue addi/mtlr (98.4%). Left as all
+	// ref(); the leftover is the `1.0f + MsRandF()` FPR pair.
+	s16 yaw  = (s16)(182.04445f * mRotation.y);
+	f32 sinY = JMASSin(yaw);
+	f32 cosY = JMASCos(yaw);
 	mBaseMtx.ref(0, 0) = cosY;
 	mBaseMtx.ref(0, 1) = 0.0f;
 	mBaseMtx.ref(0, 2) = sinY;
@@ -1184,7 +1190,8 @@ void TFluffManager::findNextFluff()
 // TODO: 99.6%. STATE_CALM is instruction-exact (reference-bind `lfsu` on
 // unkD0, scale-in-place, raw stores after one global reload, `mWindMin`
 // read at the compare). STATE_BLOW still colours the first four loads
-// differently and swaps the z pair; the frame is 0x48 short.
+// differently and swaps the z pair; the frame is 0x48 short. A
+// reference-bind on BLOW's unkD0 is wrong (`lfsu` first, 99.3%).
 void TFluffManager::control()
 {
 	switch (mState) {
@@ -1295,8 +1302,10 @@ f32 TFluffManager::getRandomZ() const
 
 // TODO: 99.8%. Both named seeds now word-copy a stack TVec3 into
 // mInitialPosition (`stfs` then `lwz`/`stw`); retail's frame is 0x78
-// against our 0x88. The extra 0x10 is the named `initPos` that no
-// callee-block helper absorbed without extra copies or a `set<f>` `bl`.
+// against our 0x88. The extra 0x10 is not absorbed by a ctor temporary
+// (two slots, 0x98) or an inlined assign helper (97.8%, extra fluff
+// pointer load). Ruled out: 4-arg TColor() on SwingBoard::initDraw
+// (byte stores, 92.9%).
 void TFluffManager::loadAfter()
 {
 	mFluffNum = 0;
