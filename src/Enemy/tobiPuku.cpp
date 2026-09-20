@@ -1004,7 +1004,7 @@ DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 // TODO: incorrect size. Map records 0x250 (592 bytes).
 DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
 {
-	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+	TTobiPuku* puku = TobiPukuBody(spine);
 
 	if (spine->getTime() == 0) {
 		if (puku->isAirborne()) {
@@ -1030,7 +1030,7 @@ DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
 		away.z *= 5.0f;
 		puku->mVelocity = away;
 		puku->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		puku->mPosition.y += away.y;
+		puku->mPosition.y += 5.0f;
 	}
 
 	if (puku->checkCurAnmEnd(0)) {
@@ -1050,7 +1050,7 @@ DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
 // callers depend on.
 DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor)
 {
-	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+	TTobiPuku* puku = TobiPukuBody(spine);
 
 	if (spine->getTime() == 0) {
 		puku->mRotation.x = 0.0f;
