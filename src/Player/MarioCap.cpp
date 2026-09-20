@@ -9,13 +9,16 @@
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
 const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 TMarioCap::TMarioCap(TMario* mario)
 {
 	// Unused stack space
-	// volatile u32 padding[51];
+	volatile u32 padding[30];
 	mMario = mario;
 
 	J3DModelData* maCap1ModelData = J3DModelLoaderDataBase::load(
@@ -42,8 +45,8 @@ TMarioCap::TMarioCap(TMario* mario)
 
 	if (mMario->mBodyPollutionTex != 0) {
 		for (int i = 0; i < 2; ++i) {
-			SMS_ChangeTextureAll(unk10[i]->getModelData(), cDirtyTexName,
-			                     *mMario->mBodyPollutionTex);
+			const ResTIMG& t = *mMario->mBodyPollutionTex;
+			SMS_ChangeTextureAll(unk10[i]->getModelData(), cDirtyTexName, t);
 			SMS_MakeDLAndLock(unk10[i]);
 		}
 	}
@@ -67,8 +70,8 @@ TMarioCap::TMarioCap(TMario* mario)
 	unk10[0]->calc();
 	unk10[1]->setBaseTRMtx(mtx);
 	unk10[1]->calc();
-	mMario->mModel->getModel()->setAnmMtx(mMario->mJointIdHead,
-	                                      unk10[2]->getBaseTRMtx());
+	unk10[2]->setBaseTRMtx(
+	    mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdHead));
 	unk10[2]->calc();
 
 	unk20 = new TMultiMtxEffect();
@@ -99,7 +102,8 @@ TMarioCap::TMarioCap(TMario* mario)
 
 	int thingIdx = 0;
 	unk30        = new TTrembleModelEffect;
-	unk30->init(unk10[thingIdx]);
+	// Retail reloads unk30 through the same scaled-index base as unk10[thingIdx]
+	(&unk30)[thingIdx]->init(unk10[thingIdx]);
 	unk34 = 4.0f;
 
 	for (int idx = 0; idx < 2; idx++) {
