@@ -145,8 +145,8 @@ void TEnemyMario::initModel()
 	TMario* original = gpMarioOriginal;
 	mBodyModelData   = original->mModel->getModel()->getModelData();
 	mJointIdCenter   = mBodyModelData->getJointName()->getIndex("center");
-	mJointIdChest    = mBodyModelData->getJointName()->getIndex("chn_chest");
-	mJointIdChnChest = mBodyModelData->getJointName()->getIndex("jnt_chest");
+	mJointIdChnChest = mBodyModelData->getJointName()->getIndex("chn_chest");
+	mJointIdChest    = mBodyModelData->getJointName()->getIndex("jnt_chest");
 	mJointIdArmR1    = mBodyModelData->getJointName()->getIndex("jnt_arm_R1");
 	mJointIdArmL1    = mBodyModelData->getJointName()->getIndex("jnt_arm_L1");
 	mJointIdHandR    = mBodyModelData->getJointName()->getIndex("jnt_hand_R");
@@ -208,7 +208,7 @@ void TEnemyMario::initModel()
 
 	SomeModelMarioStruct* setInfo = new SomeModelMarioStruct[2];
 	setInfo[0] = (SomeModelMarioStruct) { 0, 2, 0, 0x14, 0x41, 0 };
-	setInfo[1] = (SomeModelMarioStruct) { mJointIdChnChest, 2, 1, 0, 0, 1 };
+	setInfo[1] = (SomeModelMarioStruct) { mJointIdChest, 2, 1, 0, 0, 1 };
 	modelMario->unk10 = 2;
 	modelMario->unk24 = setInfo;
 
@@ -248,7 +248,7 @@ void TEnemyMario::initModel()
 	mMultiMtxEffect                 = new TMultiMtxEffect;
 	mMultiMtxEffect->mNumBones      = 3;
 	u16* boneIDs                    = new u16[3];
-	boneIDs[0]                      = mJointIdChnChest;
+	boneIDs[0]                      = mJointIdChest;
 	boneIDs[1]                      = mJointIdArmR1;
 	boneIDs[2]                      = mJointIdArmL1;
 	mMultiMtxEffect->mBoneIDs       = boneIDs;

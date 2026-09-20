@@ -1780,8 +1780,8 @@ public:
 	/* 0x3B0 */ J3DModel* mHandModels[2][2];  // Hand models
 	/* 0x3C0 */ J3DModel* mRHand4ndModel;
 	/* 0x3C4 */ u8 mJointIdCenter;
-	/* 0x3C5 */ u8 mJointIdChnChest;
-	/* 0x3C6 */ u8 mJointIdChest;
+	/* 0x3C5 */ u8 mJointIdChest;    // "jnt_chest"
+	/* 0x3C6 */ u8 mJointIdChnChest; // "chn_chest"
 	/* 0x3C7 */ u8 mJointIdArmR1;
 	/* 0x3C8 */ u8 mJointIdArmL1;
 	/* 0x3C9 */ u8 mJointIdHandR;

@@ -1218,7 +1218,7 @@ void TWaterGun::init()
 	mNozzleYoshiDeform.mBomb.unk384 = true;
 
 	// TODO: wrong
-	MtxPtr r24 = mMario->mModel->unk8->getAnmMtx(mMario->mJointIdChnChest);
+	MtxPtr r24 = mMario->mModel->unk8->getAnmMtx(mMario->mJointIdChest);
 
 	unk1CBC = mMario->mPosition;
 
@@ -1248,7 +1248,7 @@ void TWaterGun::init()
 	mFluddModel->setModel(fluddModel, 0);
 
 	mFluddModel->getModel()->setBaseTRMtx(
-	    mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdChnChest));
+	    mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdChest));
 
 	mFluddModel->mModel->calc();
 

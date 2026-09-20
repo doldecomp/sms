@@ -142,7 +142,7 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (MarioMainGetFludd(this) != nullptr) {
 			MarioMainGetFludd(this)->setBaseTRMtx(
-			    getM3UModel()->getModel()->getAnmMtx(mJointIdChnChest));
+			    getM3UModel()->getModel()->getAnmMtx(mJointIdChest));
 			MarioMainGetFludd(this)->perform(CUE_CALC_ANIM, graphics);
 		}
 
