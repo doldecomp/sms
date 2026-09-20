@@ -879,7 +879,7 @@ config.libs = [
             PCHObject(NonMatching, "System/MarNameRefGen_Enemy.cpp"),
             PCHObject(NonMatching, "System/MarNameRefGen_Map.cpp"),
             PCHObject(NonMatching, "System/MarNameRefGen_MapObj.cpp"),
-            PCHObject(NonMatching, "System/MarNameRefGen_NPC.cpp"),
+            PCHObject(Matching, "System/MarNameRefGen_NPC.cpp"),
             PCHObject(NonMatching, "System/CardManager.cpp"),
             PCHObject(NonMatching, "System/MarDirectorLoadResource.cpp"),
             PCHObject(NonMatching, "System/MovieDirector.cpp"),

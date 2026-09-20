@@ -8,8 +8,6 @@
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_NPC(const char* name) const
 {
-	// NOTE: TBaseNPC's first arg here screams enum. probably worth seeing what
-	// they could mean beyond the associated strings here
 	if (strcmp(name, "NPCMonteM") == 0)
 		return new TBaseNPC(0x04000001U);
 
