@@ -25,9 +25,10 @@
 
 void TMapObjBase::changeObjMtx(MtxPtr mtx)
 {
-	mPosition.x = mtx[3][0];
-	mPosition.y = mtx[3][1] + mYOffset;
-	mPosition.z = mtx[3][2];
+	char trash[0x28];
+	mPosition.x = mtx[0][3];
+	mPosition.y = mtx[1][3] + mYOffset;
+	mPosition.z = mtx[2][3];
 	if (mMActor) {
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
 			setModelMtx(mtx);
