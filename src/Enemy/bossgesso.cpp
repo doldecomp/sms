@@ -882,8 +882,8 @@ void TBossGesso::changeAttackMode(int new_mode)
 		else
 			unk1A1 = false;
 		changeAllTentacleState(0x8);
-		mSpine->reset();
-		mSpine->setNext(&TNerveBGRoll::theNerve());
+		getSpine()->reset();
+		getSpine()->setNext(&TNerveBGRoll::theNerve());
 		mSpine->pushAfterCurrent(&TNerveBGWait::theNerve());
 		break;
 
