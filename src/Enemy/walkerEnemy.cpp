@@ -139,7 +139,9 @@ void TWalkerEnemy::behaveToFindMario()
 		mSpine->pushAfterCurrent(&TNerveWalkerEscape::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
-		setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+		TPathNode node((THitActor*)gpMarioAddress);
+		TPathNode* nodePtr = &node;
+		setGoalPath(*nodePtr);
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
