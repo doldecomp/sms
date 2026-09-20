@@ -2613,49 +2613,53 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		boss->setBckAnm(15);
-		boss->getMActor()->setBtpFromIndex(2);
+		BosstelesaGetMActor(boss)->setBtpFromIndex(2);
 	}
 
 	if (boss->unk350) {
 		boss->unk36C += 1;
 
 		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
-			if (boss->getMActor()->checkCurBckFromIndex(1)) {
+			if (BosstelesaGetMActor(boss)->checkCurBckFromIndex(1)) {
 				boss->setBckAnm(12);
-				boss->getMActor()->setBtpFromIndex(1);
-			} else if (boss->getMActor()->checkCurBckFromIndex(12)) {
-				if (boss->unk36C > boss->mParams->mSLSpicyTime.get())
+				BosstelesaGetMActor(boss)->setBtpFromIndex(1);
+			} else if (BosstelesaGetMActor(boss)->checkCurBckFromIndex(12)) {
+				if (boss->unk36C > boss->getSaveParam2()->mSLSpicyTime.get())
 					boss->setBckAnm(13);
 			} else {
 				boss->unk36C = 0;
 				boss->unk350 = false;
 
 				u8 maxHitPoints = boss->getMaxHitPoints();
-				u8 alpha = TBossTelesa::mNormalAlpha
-				    + (maxHitPoints - boss->mHitPoints) * 30;
-				boss->unk34C.a = MsClamp<u8>(alpha, 0, 254);
+				boss->unk34C.a = MsClamp<u8>(
+				    TBossTelesa::mNormalAlpha
+				        + (maxHitPoints - boss->mHitPoints) * 30,
+				    0, 254);
 
 				boss->setBckAnm(15);
-				boss->getMActor()->setBtpFromIndex(2);
+				BosstelesaGetMActor(boss)->setBtpFromIndex(2);
 			}
 		}
 	}
 
 	boss->unk368 += 1;
 
-	int timeLimit = boss->mParams->mSLStopSlotTime0.get();
+	int timeLimit = boss->getSaveParam2()->mSLStopSlotTime0.get();
 	if (boss->mHitPoints == 2)
-		timeLimit = boss->mParams->mSLStopSlotTime1.get();
+		timeLimit = boss->getSaveParam2()->mSLStopSlotTime1.get();
 	if (boss->mHitPoints == 1)
-		timeLimit = boss->mParams->mSLStopSlotTime2.get();
+		timeLimit = boss->getSaveParam2()->mSLStopSlotTime2.get();
 
 	if (boss->checkSlotResult())
-		timeLimit = (int)((f32)timeLimit * 0.5f);
+		timeLimit = (int)((f32)timeLimit / 2.0f);
 
+	// TODO: one instruction left -- the ROM holds unk368 in r3 and emits the
+	// receiver `addi r3, r31, 0` after the subtraction; we load it into r4 and
+	// the receiver floats above the subf. Frame and everything else are exact.
 	if (boss->unk368 > timeLimit - 120)
 		boss->flashItem(timeLimit - boss->unk368);
 
-	if (boss->getMActor()->checkCurBckFromIndex(15)) {
+	if (BosstelesaGetMActor(boss)->checkCurBckFromIndex(15)) {
 		if (boss->checkAllItemDead() || boss->unk368 > timeLimit) {
 			boss->unk368 = 0;
 			boss->forceAllItemKill();
