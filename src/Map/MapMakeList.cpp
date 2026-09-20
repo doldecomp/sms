@@ -1,6 +1,7 @@
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapData.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <types.h>
 
 TBGCheckData* TMapCollisionData::allocCheckData(u32 count)
@@ -144,28 +145,19 @@ void TMapCollisionData::addCheckDataToList(int i, int j, int param_3,
 	addAfterPreNode(j, i, list2, list3, param_3);
 }
 
-template <class T> static inline T max(const T& a, const T& b)
-{
-	return a > b ? a : b;
-}
-template <class T> static inline T min(const T& a, const T& b)
-{
-	return b > a ? a : b;
-}
-
 bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
                                     int* param_3, int* param_4, int* param_5,
                                     int* param_6)
 {
-	f32 minX
-	    = min(min(param_1->mPoint2.x, param_1->mPoint3.x), param_1->mPoint1.x);
-	f32 minZ
-	    = min(min(param_1->mPoint2.z, param_1->mPoint3.z), param_1->mPoint1.z);
+	f32 minX = MsMin(param_1->mPoint1.x,
+	                 MsMin(param_1->mPoint3.x, param_1->mPoint2.x));
+	f32 minZ = MsMin(param_1->mPoint1.z,
+	                 MsMin(param_1->mPoint3.z, param_1->mPoint2.z));
 
-	f32 maxX
-	    = max(param_1->mPoint1.x, max(param_1->mPoint2.x, param_1->mPoint3.x));
-	f32 maxZ
-	    = max(param_1->mPoint1.z, max(param_1->mPoint2.z, param_1->mPoint3.z));
+	f32 maxX = MsMax(param_1->mPoint1.x,
+	                 MsMax(param_1->mPoint2.x, param_1->mPoint3.x));
+	f32 maxZ = MsMax(param_1->mPoint1.z,
+	                 MsMax(param_1->mPoint2.z, param_1->mPoint3.z));
 
 	if (maxX < -mGridExtentX || maxZ < -mGridExtentY || minX > mGridExtentX
 	    || minZ > mGridExtentY)

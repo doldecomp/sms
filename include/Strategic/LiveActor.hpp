@@ -144,6 +144,13 @@ public:
 		mLinearVelocity = v;
 	}
 	TLodAnm* getLodAnm() { return unkD0; }
+	const char* getBas(int idx) const
+	{
+		const char** basTable = getBasNameTable();
+		if (!basTable)
+			return nullptr;
+		return basTable[idx];
+	}
 
 public:
 	/* 0x70 */ TLiveManager* mManager;

@@ -38,6 +38,8 @@ public:
 		return mPrevious;
 	}
 
+	bool isNerve(Nerve nerve) const { return getLatestNerve() == nerve; }
+
 	// matching
 	void pushNerve(Nerve nerve)
 	{

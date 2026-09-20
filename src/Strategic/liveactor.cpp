@@ -482,11 +482,8 @@ void TLiveActor::setCurAnmSound()
 
 	if (mMActor) {
 		int idx = mMActor->getCurAnmIdx(ANM_TYPE_BCK);
-		if (idx >= 0) {
-			const char** table = getBasNameTable();
-
-			name = !table ? nullptr : table[idx];
-		}
+		if (idx >= 0)
+			name = getBas(idx);
 	}
 
 	setAnmSound(name);

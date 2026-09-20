@@ -212,14 +212,14 @@ TBGKMtxCalc::TBGKMtxCalc(TBiancoGateKeeper* owner)
 void TBGKMtxCalc::joinAnm(int param_1)
 {
 	M3UMtxCalcSIAnmBlendQuat::joinAnm(
-	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	    mOwner->getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(
 	        param_1));
 }
 
 void TBGKMtxCalc::setAnm(int param_1)
 {
 	M3UMtxCalcSIAnmBlendQuat::setAnm(
-	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	    mOwner->getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(
 	        param_1));
 }
 
@@ -254,9 +254,9 @@ void TBGKMtxCalc::calc(u16 param_1)
 				f32 delta = MsAngleDiff(yaw, cur);
 				f32 turn;
 				if (0.0f < delta)
-					turn = 3.0f > delta ? delta : 3.0f;
+					turn = MsMin(3.0f, delta);
 				else
-					turn = -3.0f > delta ? -3.0f : delta;
+					turn = MsMax(-3.0f, delta);
 
 				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
 				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);

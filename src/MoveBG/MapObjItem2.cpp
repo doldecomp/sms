@@ -131,9 +131,9 @@ void TMushroom1up::control()
 	f32 delta = MsAngleDiff(angle, mRotation.y);
 	f32 step;
 	if (delta > 0.0f)
-		step = MsClamp(delta, -1.0f, 1.0f);
+		step = MsMin(delta, 1.0f);
 	else
-		step = MsClamp(delta, -1.0f, 1.0f);
+		step = MsMax(delta, -1.0f);
 
 	mRotation.y = MsWrap(mRotation.y + step, 0.0f, 360.0f);
 
