@@ -947,6 +947,14 @@ void TDonchou::loadAfter()
 	}
 }
 
+/// Binding level over the director singleton (batch 370: +8 of low frame per
+/// site, like the sound one).
+static inline TMarDirector* MapObjSirenaDirector()
+{
+	TMarDirector* d = SMSGetMarDirector();
+	return d;
+}
+
 void TDonchou::calcRootMatrix()
 {
 	J3DModel* model = getModel();
@@ -961,23 +969,23 @@ void TDonchou::calcRootMatrix()
 	if (unk13C != 0) {
 		// The curtain only counts down while nobody is talking, and it
 		// freezes Mario's stick for as long as it is still counting.
-		if (!SMSGetMarDirector()->isTalkModeNow())
+		if (!MapObjSirenaDirector()->isTalkModeNow())
 			unk14C++;
 		if (unk14C > 20) {
 			if (mMActor->checkCurAnm("donchou", ANM_TYPE_BCK)) {
 				if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 					unk138->remove();
 			} else {
-				SMSGetMSound()->startSoundActor(MSD_SE_SY_DONCHO_OPEN,
+				MapObjSirenaSound()->startSoundActor(MSD_SE_SY_DONCHO_OPEN,
 				                                &mPosition, 0, nullptr, 0, 4);
 				mMActor->setBck("donchou");
-				SMSGetMarDirector()->fireStartDemoCamera(
+				MapObjSirenaDirector()->fireStartDemoCamera(
 				    "どん帳カメラ", &mPosition, -1, 0.0f, true, nullptr, 0,
 				    nullptr, JDrama::TFlagT<u16>(0));
 				J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 				fc->setRate(0.5f * fc->getRate());
 			}
-		} else if (!SMSGetMarDirector()->isTalkModeNow()) {
+		} else if (!MapObjSirenaDirector()->isTalkModeNow()) {
 			gpMarioOriginal->mGamePad->onNeutralMarioKey();
 			gpMarioOriginal->mGamePad->mDisabledFrames = 5;
 		}
