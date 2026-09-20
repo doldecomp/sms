@@ -42,6 +42,23 @@ public:
 	virtual void rollSE() { }
 	virtual void boundSE() { }
 
+	// Rescales the hit and damage cylinders from the swollen body scale.
+	// Retail reaches this from behaveToWater, which expands whole into
+	// TGorogoro::behaveToWater; the split is what keeps that expansion inside
+	// MWCC's depth-1 statement budget while this stays inside the depth-2 one.
+	void calcHitScale()
+	{
+		f32 attackRadius = getSaveParams()->getSLAttackRadius();
+		f32 attackHeight = getSaveParams()->getSLAttackHeight();
+		f32 damageRadius = getSaveParams()->getSLDamageRadius();
+		f32 damageHeight = getSaveParams()->getSLDamageHeight();
+		f32 ratio        = mBodyScale / unk154;
+		mAttackRadius    = attackRadius * ratio;
+		mAttackHeight    = attackHeight * ratio;
+		mDamageRadius    = damageRadius * ratio;
+		mDamageHeight    = damageHeight * ratio;
+	}
+
 	static f32 mBoundVal;
 	static f32 mTransYOffset;
 

@@ -264,15 +264,7 @@ void TRollEnemy::behaveToWater(THitActor* param_1)
 		mScaledBodyRadius *= rate;
 		mScaling.x = mScaling.y = mScaling.z = mScaling.z * rate;
 
-		f32 attackRadius = getSaveParams()->getSLAttackRadius();
-		f32 attackHeight = getSaveParams()->getSLAttackHeight();
-		f32 damageRadius = getSaveParams()->getSLDamageRadius();
-		f32 damageHeight = getSaveParams()->getSLDamageHeight();
-		f32 ratio        = mBodyScale / unk154;
-		mAttackRadius    = attackRadius * ratio;
-		mAttackHeight    = attackHeight * ratio;
-		mDamageRadius    = damageRadius * ratio;
-		mDamageHeight    = damageHeight * ratio;
+		calcHitScale();
 		calcEntryRadius();
 	}
 }
@@ -1063,6 +1055,13 @@ void TGorogoro::init(TLiveManager* manager)
 	unk130 = 1;
 }
 
+// Binding level over the actor's model; parked here rather than in MActor.hpp.
+static inline J3DModel* IgaigaModel(const MActor* mActor)
+{
+	J3DModel* model = mActor->getModel();
+	return model;
+}
+
 // Binding level over a raw member read, worth +16 of low region in
 // TGorogoro::perform (batch 127).
 static inline MActor* IgaigaMActor(const TGorogoro* p)
@@ -1168,13 +1167,13 @@ void TGorogoro::behaveToWater(THitActor* param_1)
 	TRollEnemy::behaveToWater(param_1);
 
 	// Fade the goop tint with the hit points that are left.
-	s32 maxHp = getSaveParams() ? getSaveParams()->mSLHitPointMax.get() : 1;
-	mTevKColor.a = (s8)((mHitPoints * 255) / maxHp);
+	u8 maxHp = getSaveParams() ? getSaveParams()->mSLHitPointMax.get() : 1;
+	mTevKColor.a = (mHitPoints * 255) / maxHp;
 	if (mHitPoints < 2)
 		mHitPoints = 1;
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    0x176, getMActor()->getModel()->getAnmMtx(0), 1, this);
+	    0x176, IgaigaModel(IgaigaMActor(this))->getAnmMtx(0), 1, this);
 	if (emitter)
 		emitter->setGlobalScale(mScaling);
 }
