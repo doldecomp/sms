@@ -291,8 +291,8 @@ void TSlotDrum::initNeonMatColor()
 	}
 }
 
-/// Binding level over the sound singleton; the ROM's reel-tick sites carry it.
-static inline MSound* slotDrumSound()
+/// Binding level over the sound singleton (batch 370: +8 of low frame per site).
+static inline MSound* MapObjSirenaSound()
 {
 	MSound* sound = SMSGetMSound();
 	return sound;
@@ -309,11 +309,11 @@ void TSlotDrum::moveObject()
 				unk188[i] = 0.0f;
 				switch (i) {
 				case 0:
-					slotDrumSound()->startSoundActor(
+					MapObjSirenaSound()->startSoundActor(
 					    MSD_SE_OBJ_SLOT_INC_L, &mPosition, 0, nullptr, 0, 4);
 					break;
 				case 1:
-					slotDrumSound()->startSoundActor(
+					MapObjSirenaSound()->startSoundActor(
 					    MSD_SE_OBJ_SLOT_INC_C, &mPosition, 0, nullptr, 0, 4);
 					break;
 				case 2:
@@ -768,13 +768,13 @@ void TCasinoPanelGate::moveObject()
 	if (unk16D) {
 		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc->getFrame() < (f32)fc->getEnd() - 8.0f) {
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_PANELPUZZLE_OPEN, 0,
+			MapObjSirenaSound()->startSoundSystemSE(MSD_SE_SY_PANELPUZZLE_OPEN, 0,
 			                                   nullptr, 0);
 		}
 
 		if (unk16C == 0 && fc->checkPass((f32)fc->getEnd() - 2.0f)) {
 			unk16C = 1;
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0,
+			MapObjSirenaSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0,
 			                                   nullptr, 0);
 		}
 	} else {
@@ -1060,7 +1060,7 @@ void TCloset::moveObject()
 						wrapped = true;
 					}
 					if (wrapped)
-						SMSGetMSound()->startSoundActorWithInfo(
+						MapObjSirenaSound()->startSoundActorWithInfo(
 						    MSD_SE_OBJ_TEL_CLOSET_ROLL, &mPosition, nullptr,
 						    fabsf(unk138[i]), 0, 0, nullptr, 0, 4);
 				} else {
