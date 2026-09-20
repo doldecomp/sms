@@ -449,16 +449,24 @@ void TMapObjGeneral::touchWall(JGeometry::TVec3<f32>* param_1,
 	                       mMapObjData->mPhysical->unk4->unk8, &mVelocity);
 }
 
+// TODO: TMapObjBaseData wants a `const TMapObjPhysicalInfo* getPhysical()`
+// accessor; parked here as a TU-local until a header batch adds it.
+static inline const TMapObjPhysicalInfo* MapObjGetPhysical(
+    const TMapObjData* p)
+{
+	return p->mPhysical;
+}
+
 void TMapObjGeneral::checkWallCollision(JGeometry::TVec3<f32>* param_1)
 {
-	param_1->y += mMapObjData->mPhysical->unk4->unk1C;
+	param_1->y += MapObjGetPhysical(mMapObjData)->unk4->unk1C;
 
 	TBGWallCheckRecord check(*param_1, mBodyRadius, 4,
 	                         mMapObjData->mPhysical->mWallCheckFlags);
 
 	bool touched = gpMap->isTouchedWallsAndMoveXZ(&check);
 
-	param_1->y -= mMapObjData->mPhysical->unk4->unk1C;
+	param_1->y -= MapObjGetPhysical(mMapObjData)->unk4->unk1C;
 
 	if (touched) {
 		unk138 = check.mResultWalls[0];
