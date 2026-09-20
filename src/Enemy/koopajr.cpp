@@ -192,9 +192,19 @@ void TDirectionCalc::makeDirection(JGeometry::TVec3<f32> dir)
 	mDirection                  = atan2f(x, z);
 }
 
+// The by-value read of the stored direction: the fork puts sinf's argument
+// in f0 and moves it into f1, which is the ROM's order, and the named local
+// inside it is +8 of low region per expansion.
+static inline f32 KoopajrDirectionOf(const TDirectionCalc* p)
+{
+	f32 direction = p->mDirection;
+	return direction;
+}
+
 JGeometry::TVec3<f32> TDirectionCalc::calcDirectionVector()
 {
-	return JGeometry::TVec3<f32>(sinf(mDirection), 0.0f, cosf(mDirection));
+	return JGeometry::TVec3<f32>(sinf(KoopajrDirectionOf(this)), 0.0f,
+	                             cosf(KoopajrDirectionOf(this)));
 }
 
 f32 TDirectionCalc::absDirection(f32 dir)
