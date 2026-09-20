@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan +2, hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7.
-- Landed `grptr` MapObjMamma ([MapObjMamma unit ladder](d66b1257-e7c6-4c59-858c-b7d6eeafc57e)): +7 exact (GoalWatermelon control/touchActor, LeanMirror updateSpeedVec/receive/touchPlayer/touchEnemy, SandCastle/SandBomb explode); unit **43.36→53.65**; All **61.62→61.67**, Game **53.53→53.61**, exact **11,339→11,346**.
-- Landed EventWatcher talk-callback frames (fuzzy ↑, +0 exact); hinokuri2 Mask structural (+0 exact); popo `checkTrigger` (+1).
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan (+2 then +0 structural), hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7.
+- Landed `grpts` fireWanwan ([fireWanwan unit ladder](ba516c41-d146-46a5-b83f-c517743670eb)): emitEffects TVec3 slots + updatePollute column loads; unit fuzzy 95.87→95.89; +0 exact; All stays **61.67%**. Pre-existing ArrayWrapper MISSING symbols.
+- Landed MapObjMamma +7 exact; All **61.62→61.67**, exact **11,339→11,346**.
 - Total: **61.67%** matched, game **53.61%**, linked **492 / 732**, exact **11,346**.
-- Running: `grpts` / fireWanwan ([fireWanwan unit ladder](ba516c41-d146-46a5-b83f-c517743670eb)). Refill: hamukuri.
+- Running: `grptt` / hamukuri ([hamukuri unit ladder](08819716-deb2-4ae0-a9a5-e88037ca8383)). Refill: bosseel.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
