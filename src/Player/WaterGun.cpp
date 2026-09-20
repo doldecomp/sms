@@ -1671,6 +1671,12 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	mFluddModel->getModel()->setBaseTRMtx(result);
 }
 
+static inline MActor* WaterGunFluddModel(const TWaterGun* p)
+{
+	MActor* model = p->mFluddModel;
+	return model;
+}
+
 void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 {
 	gpMarioForCallBack      = mMario;
@@ -1693,10 +1699,10 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 			} else {
 				switch (mMario->mAnimationId) {
 				case TMario::ANIM_HANG:
-					mFluddModel->setBck("wg_hgpmp");
+					WaterGunFluddModel(this)->setBck("wg_hgpmp");
 					break;
 				default:
-					mFluddModel->setBck("wg_pump");
+					WaterGunFluddModel(this)->setBck("wg_pump");
 					break;
 				}
 			}
@@ -1705,7 +1711,7 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 			frameCtrl->setFrame(mMario->getPumpFrame());
 			unk1CFA = unk1CF8;
 		} else {
-			mFluddModel->setBck("wg_house");
+			WaterGunFluddModel(this)->setBck("wg_house");
 			if (unk1CEC > 0.0f) {
 				unk1CEC -= 0.1f;
 				if (unk1CEC <= 0.0f)
@@ -1721,12 +1727,12 @@ void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 		if (unk1CFA == 0) {
 			if (unk1CEC < 1.0f) {
 				unk1CEC += unk1CF4;
-				mFluddModel->setBck("wg_house");
+				WaterGunFluddModel(this)->setBck("wg_house");
 				frameCtrl->setRate(0.0f);
 				frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 			} else {
 				unk1CEC = 1.0f;
-				mFluddModel->setBck("wg_house");
+				WaterGunFluddModel(this)->setBck("wg_house");
 				frameCtrl->setRate(0.0f);
 				frameCtrl->setFrame(unk1CEC * frameCtrl->getEnd());
 			}
