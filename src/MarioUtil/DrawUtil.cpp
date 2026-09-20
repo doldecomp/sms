@@ -280,7 +280,7 @@ void TTrembleModelEffect::tremble(f32 magnitude, f32 spring, f32 damping,
 		unk26                      = (s16)(spring * unkC);
 		unk24                      = (s16)(damping * unkC);
 		JGeometry::TVec3<s16>* src = (JGeometry::TVec3<s16>*)unk4;
-		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		for (u32 i = 0; i < unk0->getModelData()->getVtxNum();
 		     ++i) {
 			unk20[i].x  = (s16)(unkC * (magnitude * (2.0f * MsRandF() - 1.0f)));
 			unk20[i].y  = (s16)(unkC * (magnitude * (2.0f * MsRandF() - 1.0f)));
@@ -536,10 +536,10 @@ Plane sViewPlane[6];
 static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
                                     f32 near, f32 far)
 {
-	f32 farTop    = top * (far / near);
-	f32 farBottom = bottom * (far / near);
 	f32 farLeft   = left * (far / near);
+	f32 farTop    = top * (far / near);
 	f32 farRight  = right * (far / near);
+	f32 farBottom = bottom * (far / near);
 
 	Vec corner[8];
 
