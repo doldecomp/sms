@@ -977,6 +977,11 @@ bool TFireWanwan::isFindMario(f32 param_1)
 	return isFindMarioFromParam(param_1);
 }
 
+static inline TGraphTracer* FireWanwanTracer(TFireWanwan* p)
+{
+	return p->getTracer();
+}
+
 static inline f32 dist(const JGeometry::TVec3<f32>& a,
                        const JGeometry::TVec3<f32>& b)
 {
@@ -1469,30 +1474,32 @@ void TFireWanwan::initTurnNextGraphNode()
 
 void TFireWanwan::initEscapeNextGraphNode()
 {
-	u32 uVar1 = unk124->unk0->findNearestNodeIndex(mPosition, -1);
-	u32 uVar2 = unk124->unk0->getEscapeFromMarioIndex(uVar1, -1, mPosition, -1);
+	u32 uVar1 = FireWanwanTracer(this)->getGraph()->findNearestNodeIndex(mPosition, -1);
+	u32 uVar2 = FireWanwanTracer(this)->getGraph()->getEscapeFromMarioIndex(uVar1, -1, mPosition, -1);
 
-	JGeometry::TVec3<f32> p1 = SMS_GetMarioPos();
 	JGeometry::TVec3<f32> p2;
-	unk124->getGraph()->getGraphNode(uVar1).getPoint(&p2);
 	JGeometry::TVec3<f32> p3;
-	unk124->getGraph()->getGraphNode(uVar2).getPoint(&p3);
+	JGeometry::TVec3<f32> p1 = SMS_GetMarioPos();
+	FireWanwanTracer(this)->getGraph()->getGraphNode(uVar1).getPoint(&p2);
+	FireWanwanTracer(this)->getGraph()->getGraphNode(uVar2).getPoint(&p3);
 
 	p2 -= mPosition;
 	p3 -= mPosition;
 	p1 -= mPosition;
+	// TODO: the two dot products differ only in which FPR holds p1.x and
+	// p1.z (retail f6/f5, ours f5/f6); swapping the receivers is worse.
 
 	f32 dot1 = p1.dot(p2);
 	f32 dot2 = p1.dot(p3);
 	if (0.0f <= dot1 && dot2 < 0.0f) {
-		unk124->mPrevIdx = -1;
-		unk124->mCurrIdx = uVar2;
+		FireWanwanTracer(this)->mPrevIdx = -1;
+		FireWanwanTracer(this)->mCurrIdx = uVar2;
 		setGoalPathFromGraph();
 		unk128 = 0;
 		unk12C = 0.0f;
 	} else {
-		unk124->mPrevIdx = -1;
-		unk124->mCurrIdx = uVar1;
+		FireWanwanTracer(this)->mPrevIdx = -1;
+		FireWanwanTracer(this)->mCurrIdx = uVar1;
 		setGoalPathFromGraph();
 		unk128 = 0;
 		unk12C = 0.0f;
