@@ -58,6 +58,20 @@ static inline f32 ElecCalcDist(const JGeometry::TVec3<f32>& a,
 	return ElecLength(a - b);
 }
 
+// Parked here, not in a header: the map has no symbol for it either. The
+// retail object materialises the whole two-term test into a byte before
+// branching on it, so both terms belong to one inline predicate with an
+// explicit if/return.
+static inline bool ElecIsShockedNearCarapace(TElecNokonoko* nokonoko)
+{
+	if (nokonoko->mSpine->getCurrentNerve()
+	        == &TNerveElecNokonokoFreeze::theNerve()
+	    && ElecDistTo(nokonoko->mPosition, nokonoko->mCarapace->mPosition)
+	           < 200.0f)
+		return true;
+	return false;
+}
+
 // Parked here, not in a header: the map has no symbol for it. The retail
 // object materialises this test into a byte (`li 1`/`li 0`/`clrlwi.`) instead
 // of branching on the compare, which is what an inline predicate with an
@@ -1267,10 +1281,7 @@ DEFINE_NERVE(TNerveElecCarapaceReturn, TLiveActor)
 	}
 
 	TElecNokonoko* nokonoko = carapace->mNokonoko;
-	if (nokonoko->mSpine->getCurrentNerve()
-	        == &TNerveElecNokonokoFreeze::theNerve()
-	    && ElecDistTo(nokonoko->mPosition, nokonoko->mCarapace->mPosition)
-	           < 200.0f) {
+	if (ElecIsShockedNearCarapace(nokonoko)) {
 		// Shocked with the shell almost home: the koopa melts away and the
 		// shell pops instead of being caught.
 		carapace->mNokonoko->onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
