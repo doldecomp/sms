@@ -218,8 +218,8 @@ void TBossHanachanPartsBase::moveMapCollision_()
 
 void TBossHanachanPartsBase::entryCircleShadow_()
 {
-	if (unkFC->mSpine->getCurrentNerve() == &TNerveBossHanachanDead::theNerve()
-	    && unkFC->mSpine->getTime() > 200)
+	if (unkFC->getSpine()->getCurrentNerve() == &TNerveBossHanachanDead::theNerve()
+	    && unkFC->getSpine()->getTime() > 200)
 		return;
 
 	TCircleShadowRequest request;
