@@ -17,9 +17,6 @@ main.cpp:
 	.ctors      start:0x8036B2E4 end:0x8036B2E8
 	.bss        start:0x803E10C0 end:0x803E1110
 
-Runtime.PPCEABI.H/__mem.c:
-	.init       start:0x80003100 end:0x80003244
-
 Animal/boid.cpp:
 	.text       start:0x8000566C end:0x80006B60
 	.data       start:0x803A39E0 end:0x803A3A28
@@ -3859,6 +3856,9 @@ TRK_MINNOW_DOLPHIN/notify.c:
 
 TRK_MINNOW_DOLPHIN/flush_cache.c:
 	.text       start:0x80337B9C end:0x80337BD4
+
+Runtime.PPCEABI.H/__mem.c:
+	.init       start:0x80003100 end:0x80003244
 
 TRK_MINNOW_DOLPHIN/mem_TRK.c:
 	.init       start:0x80003244 end:0x80003298
