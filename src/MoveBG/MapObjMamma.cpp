@@ -673,49 +673,70 @@ void TLeanMirror::draw() const
 }
 
 // UNUSED: the shared body of the four places that tilt the mirror towards the
-// pusher's position.
-// TODO: 0xac in the map; check the compiled size against that.
+// pusher's position. 0xac, map-exact. The x-then-z named quotients are what
+// retail expands at every site.
+static inline J3DModel* LeanMirrorGetModel(const TLeanMirror* p)
+{
+	return p->getModel();
+}
+
+static inline f32 LeanMirrorWaterPower(const TLeanMirror* p)
+{
+	f32 power = p->mWaterPower;
+	return power;
+}
+
+
 void TLeanMirror::updateSpeedVec(const JGeometry::TVec3<f32>& pos, f32 power)
 {
-	MtxPtr mtx = getModel()->getAnmMtx(0);
+	MtxPtr mtx = LeanMirrorGetModel(this)->getAnmMtx(0);
+	f32 dx     = (pos.x - mPosition.x) / fabsf(mSize * mtx[0][0]);
 	f32 dz     = (pos.z - mPosition.z) / fabsf(mSize * mtx[2][2]);
-	mSpeed.x += power * ((pos.x - mPosition.x) / fabsf(mSize * mtx[0][0])
-	                     - mtx[0][1]);
+	mSpeed.x += power * (dx - mtx[0][1]);
 	mSpeed.z += power * (dz - mtx[2][1]);
 }
 
 BOOL TLeanMirror::receiveMessage(THitActor* sender, u32 message)
 {
-	switch (message) {
-	case 0:
+	THitActor* hit = sender;
+
+	if (message == 0) {
 		sendMsg(0x10000016, message);
-		updateSpeedVec(sender->mPosition, mWaterPower);
+		updateSpeedVec(hit->mPosition, LeanMirrorWaterPower(this));
 		return TRUE;
+	}
 
-	case 1:
+	if (message == 1) {
 		sendMsg(0x10000016, message);
-		updateSpeedVec(sender->mPosition, mWaterJetPower);
+		updateSpeedVec(hit->mPosition, mWaterJetPower);
 		return TRUE;
+	}
 
-	case 3:
-		updateSpeedVec(sender->mPosition, mFruitPower);
+	if (message == 3) {
+		updateSpeedVec(hit->mPosition, mFruitPower);
 		return TRUE;
+	}
 
-	case 8:
+	if (message == 8) {
 		mHitNum--;
 		if (mHitNum == 0)
 			release();
 		return TRUE;
-
-	default:
-		return FALSE;
 	}
+
+	return FALSE;
+}
+
+static inline f32 LeanMirrorMarioPower(const TLeanMirror* p)
+{
+	f32 power = p->mMarioPower;
+	return power;
 }
 
 void TLeanMirror::touchPlayer(THitActor* actor)
 {
 	if (isState(STATE_SHAKE) && marioIsOn()) {
-		updateSpeedVec(actor->mPosition, mMarioPower);
+		updateSpeedVec(actor->mPosition, LeanMirrorMarioPower(this));
 		if (!mBgmStarted) {
 			MSBgm::startBGM(MSD_BGM_CHUBOSS2);
 			MSBgm::setTrackVolume(0, 0.0f, 0xA, 0);
@@ -1444,15 +1465,17 @@ u32 TWatermelonStatic::touchWater(THitActor* actor) { return 1; }
 
 void TGoalWatermelon::touchActor(THitActor* actor)
 {
+	JDrama::TFlagT<u16> flag(0);
+
 	if (isState(STATE_NORMAL) && actor->isActorType(0x400000D0)) {
 		mWatermelon = (TMapObjBase*)actor;
 		mWatermelon->getMActor()->setBck("watermelon_shrink");
 		mWatermelon->offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		JGeometry::TVec3<f32> stop(0.0f, 0.0f, 0.0f);
 		mWatermelon->mVelocity = stop;
-		gpMarDirector->fireStartDemoCamera(
+		SMSGetMarDirector()->fireStartDemoCamera(
 		    "スイカゴールカメラ", &mWatermelon->mPosition, -1, 0.0f, true,
-		    nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
+		    nullptr, 0, nullptr, flag);
 		mState = 2;
 	}
 }
@@ -1471,6 +1494,8 @@ void TGoalWatermelon::control()
 			    0.0f, 0.0f);
 			mState = 3;
 		}
+		break;
+	case 3:
 		break;
 	}
 }
