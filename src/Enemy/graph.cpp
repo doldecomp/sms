@@ -960,18 +960,22 @@ BOOL TGraphTracer::traceSpline(f32 param_1)
 	f32 dVar9 = dVar8 + param_1;
 
 	f32 dVar10;
-	if (unk0->unk14->unk4 && mPrevIdx == unk0->unk8 - 1 && mCurrIdx == 0) {
+	if (unk0->getSplineRail()->isUnk4() && mPrevIdx == unk0->unk8 - 1 && mCurrIdx == 0) {
 		dVar10 = unk0->unk14->getNthT(mPrevIdx + 1);
-	} else if (unk0->unk14->unk4 && mPrevIdx == 0
+	} else if (unk0->getSplineRail()->isUnk4() && mPrevIdx == 0
 	           && mCurrIdx == unk0->unk8 - 1) {
 		dVar10 = unk0->unk14->getNthT(mPrevIdx);
 	} else {
 		u32 uVar7 = mCurrIdx;
-		if (unk0->unk14->unk4)
+		if (unk0->getSplineRail()->isUnk4())
 			uVar7 += 1;
-		dVar10 = unk0->unk14->getNthT(uVar7);
+		dVar10 = unk0->getSplineRail()->getNthT(uVar7);
 	}
 
+	// TODO: 11 markers left, all register numbering: retail colours the
+	// mPrevIdx/unk8 pair r3/r6 where we give r3/r6 the other way round, and
+	// reads mPrevIdx into r0 at the second test. getPrevIndex()/
+	// getCurGraphIndex() (-1pp, +0x18) and getNodeNum() (+0x18) refuted.
 	BOOL result;
 	if ((param_1 >= 0.0f && dVar8 <= dVar10 && dVar10 <= dVar9)
 	    || (param_1 < 0.0f && dVar9 <= dVar10 && dVar10 <= dVar8)) {
