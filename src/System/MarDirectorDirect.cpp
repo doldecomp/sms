@@ -37,12 +37,7 @@
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <Map/MapCollisionEntry.hpp>
 
-// Declared rather than pulled in through System/StageUtil.hpp: that header
-// emits its static shine tables into every includer, and the map has none of
-// them for this TU.
-u8 SMS_getShineIDofExStage(u8);
-u8 SMS_getShineStage(u8);
-bool SMS_isExMap();
+#include <System/StageUtil.hpp>
 
 extern OSThread gSetupThread;
 

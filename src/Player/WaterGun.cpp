@@ -15,6 +15,7 @@
 
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/StageUtil.hpp>
 
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
@@ -24,11 +25,6 @@
 #include <MarioUtil/MtxUtil.hpp>
 #include <MSound/MSound.hpp>
 
-// StageUtil.hpp also carries ConsoleStr.cpp's file-local scShineTable arrays,
-// which land 0x5c bytes ahead of this TU's float pool and permute every
-// .sdata2 slot; retail's WaterGun.o has no such objects. Declared locally, as
-// GCConsole2.cpp and ModelWaterManager.cpp do.
-bool SMS_isDivingMap();
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

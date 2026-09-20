@@ -16,11 +16,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// Declared rather than included from <System/StageUtil.hpp>: that header
-// carries the shine/scenario/normal-stage tables as file statics, and the map
-// lists none of them for this TU.
-bool SMS_isMultiPlayerMap();
-bool SMS_isExMap();
+#include <System/StageUtil.hpp>
 
 void CPolarSubCamera::getLButtonCameraModeByNozzle_() { }
 

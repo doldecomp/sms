@@ -33,13 +33,13 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
 #include <JSystem/JUtility/JUTResFont.hpp>
+#include <System/StageUtil.hpp>
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 #include <stdio.h>
 #include <string.h>
 
 extern JPAEmitterManager* gpEmitterManager4D2;
-bool SMS_isDivingMap();
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

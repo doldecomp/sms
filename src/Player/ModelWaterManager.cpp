@@ -28,9 +28,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// Declared directly rather than through System/StageUtil.hpp: that header also
-// emits its static shine/scenario tables, which retail's .data does not carry.
-bool SMS_isDivingMap();
+#include <System/StageUtil.hpp>
 
 TModelWaterManager* gpModelWaterManager;
 TWaterHitActor TModelWaterManager::mStaticHitActor;

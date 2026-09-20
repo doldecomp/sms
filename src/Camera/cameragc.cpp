@@ -18,12 +18,7 @@
 #include <macros.h>
 #include <stdio.h>
 
-// Declared rather than included from <System/StageUtil.hpp>: that header
-// carries the shine/scenario/normal-stage tables as file statics, and the map
-// lists none of them for this TU.
-bool SMS_isMultiPlayerMap();
-bool SMS_isExMap();
-bool SMS_isOptionMap();
+#include <System/StageUtil.hpp>
 
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
