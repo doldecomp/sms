@@ -982,6 +982,23 @@ void TBossPakkun::rumblePad(int kind, const JGeometry::TVec3<f32>& from)
 	SMSRumbleMgr->start(8, &mRumblePower);
 }
 
+static inline TModelWaterManager* BosspakkunWaterManager()
+{
+	TModelWaterManager* manager = gpModelWaterManager;
+	return manager;
+}
+
+static inline TWaterEmitInfo* BosspakkunWaterEmitInfoRaw(TBossPakkun* p)
+{
+	return p->mWaterEmitInfo;
+}
+
+static inline TWaterEmitInfo* BosspakkunWaterEmitInfo(TBossPakkun* p)
+{
+	TWaterEmitInfo* info = BosspakkunWaterEmitInfoRaw(p);
+	return info;
+}
+
 // Binding level over a raw member read, worth +16 of low region in
 // TBossPakkun::showMessage (batch 127).
 static inline TMarDirector* BosspakkunGetMarDirector()
@@ -1048,8 +1065,8 @@ void TBossPakkun::resetWaterMark()
 		JGeometry::TVec3<f32> mouth;
 		getJointTransByIndex(0x12, &mouth);
 		mouth.y += 250.0f;
-		mWaterEmitInfo->mPos.value = mouth;
-		gpModelWaterManager->emitRequest(*mWaterEmitInfo);
+		BosspakkunWaterEmitInfo(this)->mPos.value = mouth;
+		BosspakkunWaterManager()->emitRequest(*mWaterEmitInfo);
 	}
 }
 
@@ -1925,20 +1942,8 @@ DEFINE_NERVE(TNerveBPStompReact, TLiveActor)
 		boss->mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
 
-	if (spine->getTime() == 30 && !boss->unk17C) {
-		boss->unk17C = 1;
-		boss->unk174 = 0;
-		boss->unk170 = 0;
-		boss->unk1B8 = 50;
-
-		if (boss->mWaterEmitInfo) {
-			JGeometry::TVec3<f32> mouth;
-			boss->getJointTransByIndex(0x12, &mouth);
-			mouth.y += 250.0f;
-			boss->mWaterEmitInfo->mPos.value = mouth;
-			gpModelWaterManager->emitRequest(*boss->mWaterEmitInfo);
-		}
-	}
+	if (spine->getTime() == 30 && !boss->unk17C)
+		boss->resetWaterMark();
 
 	if (spine->getTime() == 50)
 		boss->unk1BC = 1;
@@ -2159,7 +2164,7 @@ DEFINE_NERVE(TNerveBPHover, TLiveActor)
 		boss->mState = BOSSPAKU_STATE_FLYING;
 	}
 
-	f32 range = boss->getSaveParam2()->mSLPollBallRange.get();
+	f32 range = BosspakkunParams(boss)->mSLPollBallRange.get();
 
 	if (boss->inArea(*gpMarioPos)
 	    && boss->mDistToMarioSquared < range * range) {
@@ -2174,7 +2179,7 @@ DEFINE_NERVE(TNerveBPHover, TLiveActor)
 		return TRUE;
 	}
 
-	if (spine->getTime() >= boss->getSaveParam2()->mSLHoverTimer.get()) {
+	if (spine->getTime() >= BosspakkunParams(boss)->mSLHoverTimer.get()) {
 		spine->pushAfterCurrent(&TNerveBPFly::theNerve());
 		boss->mState = BOSSPAKU_STATE_NORMAL;
 		return TRUE;
@@ -2214,7 +2219,7 @@ DEFINE_NERVE(TNerveBPFall, TLiveActor)
 	} else if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_GETUP)) {
 		if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			if (boss->is2ndFightNow()) {
-				f32 prop = boss->getSaveParam2()->mSLTornadoProp.get();
+				f32 prop = BosspakkunParams(boss)->mSLTornadoProp.get();
 				if (boss->mTornado->mState != BOSSPAKU_TORNADO_DEAD
 				    || MsRandF() < prop) {
 					spine->pushAfterCurrent(&TNerveBPTakeOff::theNerve());
