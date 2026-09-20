@@ -368,6 +368,12 @@ EnumNpcAnmKind TBaseNPC::getNpcWaitAnmBase_()
 	return result;
 }
 
+static inline TGraphTracer* NpcAnmWaitTracer(const TBaseNPC* p)
+{
+	TGraphTracer* tracer = p->unk124;
+	return tracer;
+}
+
 void TBaseNPC::npcWaitIn()
 {
 	EnumNpcAnmKind kind = NPC_ANM_KIND_UNK1;
@@ -385,8 +391,8 @@ void TBaseNPC::npcWaitIn()
 				kind = NPC_ANM_KIND_UNK12;
 			}
 		} else {
-			if (!unk124->unk0->isDummy()) {
-				if (mSpine->getLatestNerve()
+			if (!NpcAnmWaitTracer(this)->getGraph()->isDummy()) {
+				if (getSpine()->getLatestNerve()
 				    == &TNerveNPCGraphWait::theNerve()) {
 					if (!gpMarDirector->isThing())
 						kind = getNpcWaitAnmBase_();
@@ -822,6 +828,12 @@ void TBaseNPC::npcMadIn()
 	npcStepIn();
 }
 
+static inline TNpcSaveIndividual* NpcAnmMadParams(const TBaseNPC* p)
+{
+	TNpcSaveIndividual* params = p->mIndividualParams;
+	return params;
+}
+
 bool TBaseNPC::npcMadding()
 {
 	bool result = false;
@@ -829,27 +841,31 @@ bool TBaseNPC::npcMadding()
 	if (!checkLiveFlag(LIVE_FLAG_UNK2000000)) {
 		result = true;
 	} else {
-		switch (unkD0->getCurrentAnmKind()) {
+		switch (NpcAnmGetCurrentAnmKind(unkD0)) {
 		case NPC_ANM_KIND_UNK4: {
 			SMS_GoRotate(mPosition, SMS_GetMarioPos(),
-			             mIndividualParams->mMadTurnSpeed.get(), &mRotation.y);
+			             NpcAnmMadParams(this)->mMadTurnSpeed.get(), &mRotation.y);
+			// TODO: frame exact, but retail ranks the three vectors the
+			// other way round (axis lowest at 0x68, copy 0x88, copy2 0x98),
+			// so retail's `axis` is an inlined callee's object, not a local
+			// of this body.
 			JGeometry::TVec3<f32> axis = SMS_GetMarioPos();
-			axis -= mPosition;
+			axis -= getPosition();
 			JGeometry::TVec3<f32> copy  = axis;
 			JGeometry::TVec3<f32> copy2 = copy;
 			JGeometry::TVec3<f32> copy3;
 			copy3.set(copy2);
-			f32 fVar1 = MsWrap(abs(mRotation.y - MsGetRotFromZaxisY(copy3)),
-			                   0.0f, 360.0f);
+			f32 rotZ  = MsGetRotFromZaxisY(copy3);
+			f32 fVar1 = MsWrap(abs(mRotation.y - rotZ), 0.0f, 360.0f);
 			if (fVar1 < 0.001f)
 				requestNpcAnm_(NPC_ANM_KIND_MAD, NPC_STOP_MOTION_BLEND_OFF);
-			if (!unk124->getGraph()->isDummy())
+			if (!NpcAnmWaitTracer(this)->getGraph()->isDummy())
 				onUnk1DA(UNK1DA_FLAG_UNK1);
 		} break;
 
 		case NPC_ANM_KIND_MAD:
 		case NPC_ANM_KIND_UNKB:
-			if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
+			if (getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 				result = true;
 				offLiveFlag(LIVE_FLAG_UNK2000000);
 			}
