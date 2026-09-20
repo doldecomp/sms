@@ -151,12 +151,14 @@ void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
 
 void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 {
+	f32 nearPlane = graphics->getNearPlane();
 	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
-	                                   gpCamera->getAspect(),
-	                                   graphics->getNearPlane(), 10000.0f);
+	                                   gpCamera->getAspect(), nearPlane,
+	                                   10000.0f);
 
 	for (int i = 0; i < unk150->getBoidNum(); ++i) {
-		JGeometry::TVec3<f32> pos = unk150->getBoid(i)->mPosition;
+		TBoid* boid               = unk150->getBoid(i);
+		JGeometry::TVec3<f32> pos = boid->mPosition;
 		if (ViewFrustumClipCheck(graphics, &pos, 100.0f))
 			unk154[i]->offFlag(TRealoidActor::FLAG_CLIPPED_OUT);
 		else
@@ -170,12 +172,16 @@ void TRealoid::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_ANIM) {
 		clipBoids(graphics);
-		for (int i = 0; i < unk150->getBoidNum(); ++i)
-			unk154[i]->calcRootMatrix(unk150->getBoid(i));
+		for (int i = 0; i < unk150->getBoidNum(); ++i) {
+			TBoid* boid = unk150->getBoid(i);
+			unk154[i]->calcRootMatrix(boid);
+		}
 	}
 
-	for (int i = 0; i < unk150->getBoidNum(); ++i)
-		unk154[i]->perform(cue, graphics);
+	for (int i = 0; i < unk150->getBoidNum(); ++i) {
+		TRealoidActor* actor = getRealoid(i);
+		actor->perform(cue, graphics);
+	}
 }
 
 void TFish::init() { mHitFlags |= HIT_FLAG_NO_COLLISION; }
