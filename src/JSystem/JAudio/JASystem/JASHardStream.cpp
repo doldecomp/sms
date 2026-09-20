@@ -75,6 +75,7 @@ namespace HardStream {
 		static DVDCommandBlock get_addr_cmd[16];
 		static DVDCommandBlock stop_cmd;
 		static DVDCommandBlock finish_cmd;
+		char trash[16];
 		if (!useHardStreaming) {
 			return;
 		}
