@@ -14,7 +14,6 @@
 #include <JSystem/JMath.hpp>
 
 #include <System/MarDirector.hpp>
-#include <System/StageUtil.hpp>
 #include <System/EmitterViewObj.hpp>
 
 #include <M3DUtil/MActor.hpp>
@@ -24,6 +23,12 @@
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MSound/MSound.hpp>
+
+// StageUtil.hpp also carries ConsoleStr.cpp's file-local scShineTable arrays,
+// which land 0x5c bytes ahead of this TU's float pool and permute every
+// .sdata2 slot; retail's WaterGun.o has no such objects. Declared locally, as
+// GCConsole2.cpp and ModelWaterManager.cpp do.
+bool SMS_isDivingMap();
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -308,7 +313,7 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	if (mFludd->mCurrentWater <= 0) {
 		return;
 	}
-	s32 var1 = 256.0f * controllerWork.mAnalogR * 150.0f;
+	s32 var1 = 150.0f * controllerWork.mAnalogR * 256.0f;
 
 	if (var1 > unk372) {
 		unk378 = (var1 - WaterGunUnk372(this)) * 0.000015258789f;
