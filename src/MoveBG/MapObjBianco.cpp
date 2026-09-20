@@ -869,16 +869,24 @@ void TBiancoBell::ring()
  *
  * @details UNUSED in the map (0x120); touchPlayer and touchWater inline it.
  */
+/// Fabricated: the binder retail's frame shows at the bell's frame-control
+/// reads.
+static inline J3DFrameCtrl* BiancoBellFrameCtrl(TBiancoBell* p)
+{
+	MActor* actor = p->getMActor();
+	return actor->getFrameCtrl(ANM_TYPE_BCK);
+}
+
 void TBiancoBell::ringSingle()
 {
-	if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() == 0.0f
+	if (BiancoBellFrameCtrl(this)->getFrame() == 0.0f
 	    || getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 	            + getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate()
 	        >= (f32)getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd()
 	            - 1.0f) {
 		startAnim(4);
 		f32 rate = SMSGetAnmFrameRate();
-		getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
+		BiancoBellFrameCtrl(this)->setRate(rate);
 		gpMSound->startSoundActor(MSD_SE_OBJ_BI_BELL, &mPosition, 0, nullptr,
 		                          0, 4);
 	}
