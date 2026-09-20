@@ -771,7 +771,7 @@ void THamuKuri::behaveToWater(THitActor* param_1)
 		}
 
 		if (mVelocity.y < 0.0f)
-			forceRoll(SMS_GetMarioPos(), true);
+			forceRoll(*gpMarioPos, true);
 	}
 }
 
@@ -2377,6 +2377,15 @@ void TFireHamuKuri::init(TLiveManager* param_1)
 	unk20C     = (TFireHamuKuriSaveLoadParams*)getSaveParam();
 }
 
+// The +4 rung: a by-value scalar fork over an existing header accessor, which
+// is what puts this body's named block on retail's slot once
+// THamuKuri::behaveToWater reads gpMarioPos raw (frame-gaps.md, "Frame ladder
+// 318").
+static inline u8 FireHamuKuriHitPoints(const TFireHamuKuri* p)
+{
+	return p->getHitPoints();
+}
+
 void TFireHamuKuri::behaveToWater(THitActor* param_1)
 {
 	if (unk210) {
@@ -2392,7 +2401,7 @@ void TFireHamuKuri::behaveToWater(THitActor* param_1)
 		mVelocity = local_20;
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		mPosition.y += 5.0f;
-		if (mHitPoints == 0)
+		if (FireHamuKuriHitPoints(this) == 0)
 			dieFire();
 		mSprayedByWaterCooldown = 20;
 		return;
