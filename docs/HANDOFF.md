@@ -72,9 +72,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grpvi` CardLoad ([CardLoad](569a7982-2eb3-48d4-9866-073ac899bb92)): +1 exact. All **62.44→62.47**.
 - Landed `grpvj` BathWaterManager ([BathWaterManager](e7c65049-d748-4c20-9cdc-cd58e046e5c4)): +0 structural.
 - Landed `grpvk` MarNameRefGen ([MarNameRefGen](cd56fcce-fa2e-4304-bf6f-0c4b4cc5ef33)): +4 exact. All **62.47→62.53**.
-- Landed `grpvl` Guide ([Guide](4a9a5bc9-f616-4afd-9696-29615c0987f7)): +0 exact; appearGuidePane frame + resetObjects coin narrow (fuzzy **90.83→90.86**). Park r24/r29, load tags, resetObjects clamp/frame, ExPane shared. Pre-existing symbol-order FAIL.
-- Running: `grpvm` / ShadowUtil ([ShadowUtil](750a29a9-2a94-4e96-9ddc-f428d2c6f57a)); `grpvn` / WaterGun ([WaterGun](2f0fd56b-1730-4240-82a2-5a72bb758094)).
-- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers, BathWater leftovers, MarNameRefGen leftovers, Guide leftovers.
+- Landed `grpvl` Guide ([Guide](4a9a5bc9-f616-4afd-9696-29615c0987f7)): +0 structural; fuzzy **90.83→90.86**.
+- Landed `grpvm` ShadowUtil ([ShadowUtil](750a29a9-2a94-4e96-9ddc-f428d2c6f57a)): +0 exact; `calc` via getPosition() (entryDrawShadow frame). Park ctor slots, drawShadowVolume/drawShadow/request residues, $NNNN PCH ids. Pre-existing symbol-order FAIL.
+- Running: `grpvn` / WaterGun ([WaterGun](2f0fd56b-1730-4240-82a2-5a72bb758094)). Refill: MarioSpecial.
+- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers, BathWater leftovers, MarNameRefGen leftovers, Guide leftovers, ShadowUtil leftovers.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
