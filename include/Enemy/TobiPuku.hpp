@@ -68,7 +68,7 @@ public:
 	// New virtuals, declared in the order the vtable lists them
 	// (0x1b8 onwards).
 	virtual bool isPichiEffect();
-	virtual BOOL isJumpBck();
+	virtual bool isJumpBck();
 	virtual BOOL isDeadBck();
 	virtual bool isJumpStartBck();
 	virtual bool isAttackBck();
@@ -158,7 +158,7 @@ public:
 	// isInhibitedForceMove, walkBehavior, isReachedToGoalXZ,
 	// getGravityY or genEventCoin, so TMoePuku inherits those.
 	virtual bool isPichiEffect();
-	virtual BOOL isJumpBck();
+	virtual bool isJumpBck();
 	virtual BOOL isDeadBck();
 	virtual bool isJumpStartBck();
 	virtual bool isAttackBck();

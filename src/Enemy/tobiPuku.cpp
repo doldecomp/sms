@@ -446,7 +446,7 @@ void TTobiPuku::calcRootMatrix()
 
 bool TTobiPuku::isPichiEffect() { return isBckAnm(PUKU_ANM_PICHI) ? true : false; }
 
-BOOL TTobiPuku::isJumpBck() { return isBckAnm(PUKU_ANM_JUMP) ? TRUE : FALSE; }
+bool TTobiPuku::isJumpBck() { return isBckAnm(PUKU_ANM_JUMP) ? true : false; }
 
 BOOL TTobiPuku::isDeadBck() { return isBckAnm(PUKU_ANM_DEAD) ? TRUE : FALSE; }
 
@@ -830,7 +830,7 @@ void TMoePuku::hitWater()
 
 bool TMoePuku::isPichiEffect() { return isBckAnm(PUKU_ANM_PICHI) ? true : false; }
 
-BOOL TMoePuku::isJumpBck() { return isBckAnm(PUKU_ANM_JUMP) ? TRUE : FALSE; }
+bool TMoePuku::isJumpBck() { return isBckAnm(PUKU_ANM_JUMP) ? true : false; }
 
 BOOL TMoePuku::isDeadBck() { return isBckAnm(PUKU_ANM_DEAD) ? TRUE : FALSE; }
 
