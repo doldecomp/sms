@@ -1230,6 +1230,7 @@ TWaterGun::TWaterGun(TMario* mario)
 
 void TWaterGun::init()
 {
+	TNozzleTrigger* bomb       = &mNozzleDeform.mBomb;
 	mFlags                     = 0;
 	mNozzleList[Spray]         = &mNozzleDeform;
 	mNozzleList[Rocket]        = &mNozzleRocket;
@@ -1261,7 +1262,7 @@ void TWaterGun::init()
 	mEmitInfo = new TWaterEmitInfo("/Mario/GunEmit.prm");
 
 	unk1D08                         = 0;
-	mNozzleDeform.mBomb.unk384      = true;
+	bomb->unk384                    = true;
 	mNozzleYoshiDeform.mBomb.unk384 = true;
 
 	// TODO: wrong
