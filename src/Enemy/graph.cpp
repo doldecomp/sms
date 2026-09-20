@@ -837,6 +837,10 @@ TGraphGroup::~TGraphGroup() { }
 
 void TGraphGroup::initGraphGroup()
 {
+	// TODO: 8 short of retail's 0xc0 and the TVec3(0,0,0) temporary sits 4
+	// low. A getGraph(i) accessor for unk8[i] at all three sites lands 0xc0
+	// exactly but puts the temporary 4 high and swaps r28/r29 (99.8 ->
+	// 99.2); a named unk8[i] breaks the body (94%).
 	for (int i = 0; i < unk4; ++i) {
 		if (unk8[i]->unk10 >= 0)
 			continue;
