@@ -218,6 +218,7 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param)
 		// Hand-built identity, the popo joint-callback idiom: the three
 		// translation elements first, then the 3x3 row by row.
 		Mtx ident;
+		Mtx roll;
 		ident[0][3] = 0.0f;
 		ident[1][3] = 0.0f;
 		ident[2][3] = 0.0f;
@@ -238,8 +239,8 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param)
 		if (axis.x == 0.0f && axis.z == 0.0f)
 			axis.x = 0.001f;
 
-		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 		JGeometry::TVec3<f32> side;
+		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 		VECCrossProduct(&up, &axis, &side);
 
 		f32 rollDeg = gpCurChuuHana->unk210;
@@ -257,7 +258,6 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param)
 		f32 localX = lenX == 0.0f ? 0.0f : side.dot(xDir) / lenX;
 		JGeometry::TVec3<f32> local(localX, localY, localZ);
 
-		Mtx roll;
 		MTXRotAxisRad(roll, &local, (3.1415927f / 180.0f) * rollDeg);
 		MTXConcat(anmMtx, roll, anmMtx);
 		MTXConcat(anmMtx, ident, anmMtx);
@@ -1243,7 +1243,7 @@ DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
 		hana->setBckAnm(3);
 
 	hana->unk220 = hana->mPosition.y
-	    - hana->getMActor()->getModel()->getAnmMtx(TChuuHana::mFootJntIndex)[1][3];
+	    - hana->mMActor->getModel()->getAnmMtx(TChuuHana::mFootJntIndex)[1][3];
 
 	// Ten frames in, launch back over the panel it left.
 	if (hana->getMActor()->getFrameCtrl(0)->checkPass(10.0f)) {
