@@ -335,7 +335,7 @@ TMBindShadowManager::TMBindShadowManager(const char* name)
 	mShadowColor.b = 115;
 	mShadowColor.a = 180;
 
-	switch (gpApplication.mCurrArea.unk0) {
+	switch (gpApplication.mCurrArea.getStage()) {
 	case 6:
 		mShadowColor.r = 9;
 		mShadowColor.g = 9;
