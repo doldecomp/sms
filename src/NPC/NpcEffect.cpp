@@ -56,17 +56,20 @@ void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
 
 void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 {
+	char trash[8];
 	const char* koshiNullJoint = "koshi_null";
+	const char* koshiJoint     = "koshi";
 	const char* bodyJoint      = "jnt_body";
 	const char* leftFootJoint  = "footL_jnt";
 	const char* rightFootJoint = "footR_jnt";
-	const char* koshiJoint     = "koshi";
 
 	const char* pcVar5;
 	if (isNormalMonte()) {
-		unk200 = getModel()->getAnmMtx(tab->getIndex(leftFootJoint));
-		unk204 = getModel()->getAnmMtx(tab->getIndex(rightFootJoint));
-		pcVar5 = koshiNullJoint;
+		int idx = tab->getIndex(leftFootJoint);
+		unk200  = getModel()->getAnmMtx(idx & 0xFFFF);
+		idx     = tab->getIndex(rightFootJoint);
+		unk204  = getModel()->getAnmMtx(idx & 0xFFFF);
+		pcVar5  = koshiNullJoint;
 	} else if (isNormalMare()) {
 		pcVar5 = koshiJoint;
 	} else if (mActorType == 0x4000016) {
@@ -75,8 +78,10 @@ void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 		pcVar5 = nullptr;
 	}
 
-	if (pcVar5)
-		mPollutionEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(pcVar5));
+	if (pcVar5) {
+		int idx                = tab->getIndex(pcVar5);
+		mPollutionEffectMtxPtr = getModel()->getAnmMtx(idx & 0xFFFF);
+	}
 }
 
 void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
@@ -90,8 +95,8 @@ void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
 		model  = getModel();
 		pcVar3 = "yashi_jnt";
 	}
-	mSmokeEffectMtxPtr = model->getAnmMtx(
-	    model->getModelData()->getJointName()->getIndex(pcVar3));
+	u16 idx            = model->getModelData()->getJointName()->getIndex(pcVar3);
+	mSmokeEffectMtxPtr = model->getAnmMtx(idx);
 }
 
 static bool IsCheckPassFrame(J3DFrameCtrl* param_1, const f32* param_2)
