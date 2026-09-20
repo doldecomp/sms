@@ -111,15 +111,16 @@ void TChuuHanaManager::load(JSUMemoryInputStream& stream)
 	unk38 = new TChuuHanaSaveLoadParams("/enemy/chuuhana.prm");
 }
 
+static inline TGCConsole2* ChuuHanaGetConsole()
+{
+	TGCConsole2* console = SMSGetMarDirector()->getConsole();
+	return console;
+}
+
 void TChuuHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// Hint balloons: standing on a panel long enough, a tackle, repeated
 	// stretches and the first flip each get one.
-	// TODO: 99.9%.  Instruction-identical; the low region is 0x18 short at
-	// 0x68.  Each console accessor level is worth 8 bytes per site
-	// (gpMarDirector->mConsole 0x38, ->getConsole() 0x58,
-	// SMSGetMarDirector()->getConsole() 0x68), so the residue is not a
-	// uniform per-site level and something else here binds temporaries.
 	if (cue & CUE_CALC_ANIM) {
 		if (SMS_GetMarioGrPlane()->getActor()
 		    && SMS_GetMarioGrPlane()->getActor()->getActorType()
@@ -127,14 +128,14 @@ void TChuuHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (unk60 < 900) {
 				unk60++;
 				if (unk60 == 900)
-					SMSGetMarDirector()->getConsole()->startAppearBalloon(0x2E, true);
+					ChuuHanaGetConsole()->startAppearBalloon(0x2E, true);
 			}
 		}
 
 		if (unk68 >= 60 && unk68 < 80) {
 			unk60 = 1000;
 			unk68 = 80;
-			SMSGetMarDirector()->getConsole()->startAppearBalloon(0x2F, true);
+			ChuuHanaGetConsole()->startAppearBalloon(0x2F, true);
 		}
 
 		if (unk6C == 5 || unk6C == 10) {
@@ -157,6 +158,20 @@ TSpineEnemy* TChuuHanaManager::createEnemyInstance()
 	return new TChuuHana("チュウハナ");
 }
 
+static inline int ChuuHanaGraphNodeNum(TGraphWeb* web) { return web->unk8; }
+
+static inline TGraphNode* ChuuHanaGraphNode(TGraphWeb* web, int index)
+{
+	TGraphNode* node = &web->unk0[index];
+	return node;
+}
+
+static inline TConductor* ChuuHanaGetConductor()
+{
+	TConductor* conductor = gpConductor;
+	return conductor;
+}
+
 void TChuuHanaManager::initSetEnemies()
 {
 	// One node graph for the first, the second shared by two, the third by
@@ -165,7 +180,7 @@ void TChuuHanaManager::initSetEnemies()
 	    = { "kohana0", "kohana1", "kohana1", "kohana2", "kohana2", "kohana2" };
 
 	for (int i = 0; i < mCapacity; ++i) {
-		TGraphWeb* graph = gpConductor->getGraphByName(graphlist[i]);
+		TGraphWeb* graph = ChuuHanaGetConductor()->getGraphByName(graphlist[i]);
 		TChuuHana* hana  = (TChuuHana*)unk18[i];
 
 		// The pollution counters pair up the same way.
@@ -177,13 +192,13 @@ void TChuuHanaManager::initSetEnemies()
 			hana->unk21C = &unk64[2];
 
 		// Drop each one on a random node of its graph, 50 up.
+		TMsRange<int> range(0, ChuuHanaGraphNodeNum(graph));
 		JGeometry::TVec3<f32> point;
-		TMsRange<int> range(0, graph->unk8);
-		graph->unk0[range.rand()].getPoint((Vec*)&point);
+		ChuuHanaGraphNode(graph, range.rand())->getPoint((Vec*)&point);
 		hana->mPosition = point;
 		hana->mPosition.y += 50.0f;
 		hana->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		hana->unk124->setGraph(graph);
+		hana->getTracer()->setGraph(graph);
 		hana->reset();
 	}
 }
