@@ -188,6 +188,7 @@ TMActorKeeper::TMActorKeeper(TLiveManager* param_1, u16 param_2)
 
 TMActorKeeper::TMActorKeeper(TLiveManager* param_1)
 {
+	char trash[8];
 	if (param_1) {
 		mModelDataKeeper = param_1->getModelDataKeeper();
 		mActorAnmData    = param_1->getMActorAnmData();
