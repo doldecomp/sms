@@ -940,6 +940,13 @@ void TBathtub::calcRootMatrix()
 // Unused; TODO: Recover quaternion and direction helpers from their callers.
 void QuatRotate(JGeometry::TQuat4<f32>&, const JGeometry::TVec3<f32>&) { }
 
+// A setter level around the found-angle store: +4 of low region, the
+// rung that lands TBathtub::getNearGrip's inlined getDir block.
+static inline void MapObjCoronaSetAngle(f32* out, f32 v)
+{
+	*out = v;
+}
+
 namespace {
 /// Yaw of `pos` inside the frame of `mtx`, measured about the matrix's Y axis.
 s16 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos)
@@ -996,7 +1003,8 @@ bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 tolerance,
                           f32* gripAngle) const
 {
 	s16 dir     = getDir(*getRootJointMtx(), pos);
-	f32 angle   = (360.0f / 65536.0f) * dir;
+	f32 angle   = dir;
+	angle *= 360.0f / 65536.0f;
 	f32 nearest = 360.0f;
 	int index = 0;
 	for (int i = 0; i < 5; ++i) {
@@ -1007,7 +1015,7 @@ bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 tolerance,
 		}
 	}
 	if (nearest < tolerance) {
-		*gripAngle = unk150[index];
+		MapObjCoronaSetAngle(gripAngle, unk150[index]);
 		return true;
 	}
 	return false;
