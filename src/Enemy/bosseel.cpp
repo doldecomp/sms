@@ -142,6 +142,24 @@ void TBEelTearsDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 	mSharedParts->getMActor()->perform(cue, graphics);
 }
 
+static inline TBEelTears* BEelTearsDropOwner(const TBEelTearsDrop* drop)
+{
+	return drop->mOwner;
+}
+
+static inline TBEelTearsSaveLoadParams*
+BEelTearsDropParams(const TBEelTearsDrop* drop)
+{
+	TBEelTearsSaveLoadParams* params = BEelTearsDropOwner(drop)->mTearsParams;
+	return params;
+}
+
+static inline const TMsRange<f32>&
+BEelTearsDropScaleRange(const TBEelTearsDrop* drop)
+{
+	return BEelTearsDropParams(drop)->mTearsDropScaleRange;
+}
+
 void TBEelTearsDrop::generate(JGeometry::TVec3<f32>& position)
 {
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -153,7 +171,7 @@ void TBEelTearsDrop::generate(JGeometry::TVec3<f32>& position)
 	TMsRange<f32> unused(1.0f, 1.5f);
 	rand();
 
-	f32 scale = mOwner->mTearsParams->mTearsDropScaleRange.rand();
+	f32 scale = BEelTearsDropScaleRange(this).rand();
 	mScaling.set(scale, scale, scale);
 }
 
