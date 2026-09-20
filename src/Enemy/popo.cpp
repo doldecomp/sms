@@ -473,9 +473,14 @@ void TPopo::behaveToWater(THitActor* param_1)
 	}
 
 	if (isAirborne()) {
+		// getPosition() and SMS_GetMarioPos() are each an 8-byte
+		// reference temporary; the pair is the frame here.
+		// TODO: the two vector temporaries still sit 4 bytes low
+		// (frame-gaps.md's "4 low" class).
 		JGeometry::TVec3<f32> vel(mVelocity);
-		JGeometry::TVec3<f32> push(mPosition.x - gpMarioPos->x, 0.0f,
-		                           mPosition.z - gpMarioPos->z);
+		JGeometry::TVec3<f32> push(getPosition().x - SMS_GetMarioPos().x,
+		                           0.0f,
+		                           getPosition().z - SMS_GetMarioPos().z);
 		MsVECNormalize((Vec*)&push, (Vec*)&push);
 		push.scale(12.0f);
 		push.y = -1.0f;
