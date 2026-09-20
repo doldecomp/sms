@@ -436,12 +436,21 @@ void TIgaigaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 // Rolls the body joint about Z by the accumulated roll angle, and lifts it
 // by mTransYOffset.
-// TODO: 82%. The original keeps the roll matrix's address in a callee-saved
-// register across both concats; ours recomputes it from the stack pointer.
+// TODO: 92%. The joint number and the roll matrix's address take each other's
+// callee-saved register, and our roll matrix sits 0xc low: retail packs it at
+// 0x2c with nothing above it but the int-to-float buffer, ours leaves a
+// 12-byte hole there.
+// A binding level over the file-scope current-roller pointer.
+static inline TRollEnemy* IgaigaCurRoller()
+{
+	TRollEnemy* roller = gpCurRollEnemy;
+	return roller;
+}
+
 static int RollEnemyBodyCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
-		if (gpCurRollEnemy == nullptr || !gpCurRollEnemy->isRolling())
+		if (gpCurRollEnemy == nullptr || !IgaigaCurRoller()->isRolling())
 			return true;
 
 		J3DJoint* joint = (J3DJoint*)node;
@@ -453,7 +462,8 @@ static int RollEnemyBodyCallback(J3DNode* node, int param)
 		f32 c     = JMASCos(angle);
 
 		Mtx roll;
-		roll[0][0] = 1.0f;
+		MtxPtr rollMtx = roll;
+		roll[0][0]     = 1.0f;
 		roll[0][1] = 0.0f;
 		roll[0][2] = 0.0f;
 		roll[0][3] = 0.0f;
@@ -469,8 +479,8 @@ static int RollEnemyBodyCallback(J3DNode* node, int param)
 		roll[2][3] = 0.0f;
 
 		anmMtx[1][3] += TRollEnemy::mTransYOffset;
-		MTXConcat(anmMtx, roll, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);
+		MTXConcat(anmMtx, rollMtx, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, rollMtx, J3DSys::mCurrentMtx);
 	}
 	return true;
 }
