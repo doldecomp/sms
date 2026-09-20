@@ -1325,23 +1325,24 @@ DEFINE_NERVE(TNerveHino2PrePol, TLiveActor)
 
 DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 {
-	THinokuri2* self = (THinokuri2*)spine->getBody();
+	TLiveActor* body = spine->getBody();
+	THinokuri2* self = (THinokuri2*)body;
 
 	if (spine->getTime() == 0) {
 		self->changeBck(0x2);
 		return 0;
 	}
 
-	if (self->mCurrentBck == 2) {
-		if (self->getMActor()->curAnmEndsNext()) {
+	if (self->getCurrentBck() == 2) {
+		if (Hino2CurAnmEndsNext(self)) {
 			self->changeBck(3);
 			self->unk180 = TRUE;
 		}
 		return false;
 	}
 
-	if (self->mCurrentBck == 3) {
-		if (self->getMActor()->curAnmEndsNext()) {
+	if (self->getCurrentBck() == 3) {
+		if (Hino2CurAnmEndsNext(self)) {
 			int uVar1 = self->mWaitTimer;
 			++uVar1;
 			int polWait = ((THino2Params*)self->getSaveParam())->mSLPolWaitCount.get();
@@ -1355,8 +1356,8 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 		return false;
 	}
 
-	if (self->mCurrentBck == 16) {
-		if (self->getMActor()->curAnmEndsNext()) {
+	if (self->getCurrentBck() == 16) {
+		if (Hino2CurAnmEndsNext(self)) {
 			self->changeBck(0x11);
 			self->unk15C = 0;
 
@@ -1371,14 +1372,14 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 		return false;
 	}
 
-	if (self->mCurrentBck == 17) {
-		if (self->getMActor()->curAnmEndsNext()) {
+	if (self->getCurrentBck() == 17) {
+		if (Hino2CurAnmEndsNext(self)) {
 			self->changeBck(1);
 		}
 		return false;
 	}
 
-	if (self->mCurrentBck == 1 && self->getMActor()->curAnmEndsNext()) {
+	if (self->getCurrentBck() == 1 && Hino2CurAnmEndsNext(self)) {
 		self->mHitPoints = self->calcHitPoints();
 
 		self->resetPolInterval();
