@@ -1094,9 +1094,11 @@ void TBossTelesa::reset()
 	onLiveFlag(LIVE_FLAG_HIDDEN);
 	unk18C = false;
 
-	setHitParams(mParams->mSLAttackRadius.get(), mParams->mSLAttackHeight.get(),
-	             mParams->mSLDamageRadius.get(),
-	             mParams->mSLDamageHeight.get());
+	f32 attackRadius = getSaveParam2()->mSLAttackRadius.get();
+	f32 attackHeight = mParams->mSLAttackHeight.get();
+	f32 damageRadius = mParams->mSLDamageRadius.get();
+	f32 damageHeight = mParams->mSLDamageHeight.get();
+	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
 
 	SMSGetMarDirector()->fireStartDemoCamera("btelesa_roll_camera", nullptr,
 	                                         -1, 0.0f, true, nullptr, 0,
