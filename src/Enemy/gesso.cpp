@@ -698,6 +698,8 @@ void TGesso::genRandomItem()
 
 void TGesso::behaveToFindMario()
 {
+	char trash[4];
+	trash[0] = 0;
 	if (unk150 & 2) {
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerEscape::theNerve());
