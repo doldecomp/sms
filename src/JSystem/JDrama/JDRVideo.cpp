@@ -44,13 +44,23 @@ void TVideo::waitForRetrace(u16 param_1)
 			VISetBlack(1);
 			mCurFrameBuffer = 0;
 			VIFlush();
+#ifdef VERSION_GMSP01
+			for (int i = 0; i < 5; ++i)
+				VIWaitForRetrace();
+#else
 			VIWaitForRetrace();
+#endif
 			s32 uVar11 = mCurRenderMode.viTVmode & 3;
 			if (((uVar11 == 2) && ((mNextRenderMode.viTVmode & 3) != 2))
 			    || ((uVar11 != 2 && ((mNextRenderMode.viTVmode & 3) == 2)))) {
 
-				for (int i = 0; i < 0x3C; ++i)
+#ifdef VERSION_GMSP01
+				for (int i = 0; i < 55; ++i)
 					VIWaitForRetrace();
+#else
+				for (int i = 0; i < 60; ++i)
+					VIWaitForRetrace();
+#endif
 			}
 		}
 	}

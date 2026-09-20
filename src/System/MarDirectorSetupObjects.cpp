@@ -305,8 +305,13 @@ bool TMarDirector::setupObjects()
 
 		JDrama::TLookAtCamera* cam = static_cast<JDrama::TLookAtCamera*>(
 		    JDrama::TNameRefGen::search("camera 1"));
+#ifdef VERSION_GMSP01
+		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
+		               / (u16)SMSGetGameRenderHeight();
+#else
 		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
 		               / (u16)SMSGetGameVideoHeight();
+#endif
 	}
 
 	unk80 = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("イベントグループ");
