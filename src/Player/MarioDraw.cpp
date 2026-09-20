@@ -2338,12 +2338,27 @@ void TMario::addDirty()
 	}
 }
 
+static inline M3UModelMario* MarioFogM3UModel(const TMario* p)
+{
+	M3UModelMario* m3UModel = p->getM3UModel();
+	return m3UModel;
+}
+
+static inline u16 MarioFogMatNum(J3DModelData* d)
+{
+	u16 n = d->getMaterialNum();
+	return n;
+}
+
 void TMario::addDamageFog(JDrama::TGraphics* graphics)
 {
 	// volatile u32 padding[30];
 	bool check       = true;
 	GXColor fogColor = (GXColor) { 0xff, 0x00, 0x80, 0xff };
 
+	// TODO: frame and instructions match; the three compound-literal temps
+	// still sit 0xc low and fogColor 4 low inside the (correctly sized) low
+	// region.
 	// Inlined "bool getFogColor(GXColor* color)"?
 	if (mInvincibilityFrames == 0)
 		check = false;
@@ -2363,19 +2378,19 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 
 	if (check == true) {
 		// Very likely an inline since it is duplicated
-		J3DModelData* modelData = getM3UModel()->getModel()->getModelData();
-		for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
+		J3DModelData* modelData = MarioFogM3UModel(this)->getModel()->getModelData();
+		for (u16 i = 0; i < MarioFogMatNum(modelData); ++i) {
 			J3DFog* fog
 			    = modelData->getMaterialNodePointer(i)->getPEBlock()->getFog();
 			fog->mColor = fogColor;
 		}
 
-		SMS_AddDamageFogEffect(getM3UModel()->getModel()->getModelData(), mPosition,
+		SMS_AddDamageFogEffect(MarioFogM3UModel(this)->getModel()->getModelData(), mPosition,
 		                       graphics);
 
 		if (mCap != nullptr) {
 			J3DModelData* mCapModelData = mCap->unkC->getModelData();
-			for (u16 i = 0; i < mCapModelData->getMaterialNum(); ++i) {
+			for (u16 i = 0; i < MarioFogMatNum(mCapModelData); ++i) {
 				J3DFog* fog = mCapModelData->getMaterialNodePointer(i)
 				                  ->getPEBlock()
 				                  ->getFog();
@@ -2406,7 +2421,7 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 		}
 
 	} else {
-		SMS_ResetDamageFogEffect(getM3UModel()->unk8->getModelData());
+		SMS_ResetDamageFogEffect(MarioFogM3UModel(this)->unk8->getModelData());
 		if (mCap != nullptr) {
 			SMS_ResetDamageFogEffect(mCap->unkC->getModelData());
 		}
@@ -2434,5 +2449,4 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 // mDashInc/mDashDec while the turbo nozzle is spraying and writes it into
 // gpAfterEffect scaled by those three params. What is missing is the TMario
 // member that holds the blend: no existing field fits, and inventing one in
-// Mario.hpp on this evidence alone is not justified. 63 instructions.
-void TMario::thinkDashEffect() { }
+// Mario.hpp on this evidence alone is not justified. 63 instructions.() { }
