@@ -754,7 +754,7 @@ void THanaSambo::setWaitAnm()
 // The death model is a separate bmd.
 void THanaSambo::setDeadAnm()
 {
-	mMActor = mMActorKeeper->getMActor("samboD.bmd");
+	mMActor = getActorKeeper()->getMActor("samboD.bmd");
 	if (mIsAttacking)
 		setBckAnm(0xA);
 	else
