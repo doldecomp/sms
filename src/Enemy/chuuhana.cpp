@@ -818,6 +818,14 @@ bool TChuuHana::checkOnPanel()
 	return false;
 }
 
+// Binder over the mirror pointer, worth +8 of low region per site; two of
+// the three component reads land willFall's frame at 0xd0.
+static inline THitActor* ChuuHanaMirror(const TChuuHana* p)
+{
+	THitActor* mirror = p->unk218;
+	return mirror;
+}
+
 bool TChuuHana::willFall(long param_1)
 {
 	// The mirror it is standing on gets bigger with the instance index.
@@ -831,8 +839,8 @@ bool TChuuHana::willFall(long param_1)
 		radius += 250.0f;
 
 	if (unk218) {
-		f32 dx = mPosition.x - unk218->mPosition.x;
-		f32 dy = mPosition.y - unk218->mPosition.y;
+		f32 dx = mPosition.x - ChuuHanaMirror(this)->mPosition.x;
+		f32 dy = mPosition.y - ChuuHanaMirror(this)->mPosition.y;
 		f32 dz = mPosition.z - unk218->mPosition.z;
 		if (JGeometry::TUtil<f32>::sqrt(dx * dx + dy * dy + dz * dz) > radius) {
 			// Too far from the mirror's centre: wander back to a node.
