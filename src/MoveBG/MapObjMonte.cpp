@@ -546,30 +546,28 @@ void THangingBridge::loadAfter()
 
 	f32 cosQ = cosf(1.5707964f);
 	f32 sinQ = sinf(1.5707964f);
-	f32 dirZ = mSideDir.y;
-	f32 dirX = mSideDir.x;
-	mSideDir.x = dirX * cosQ - dirZ * sinQ;
-	mSideDir.y = dirX * sinQ + dirZ * cosQ;
+	mSideDir.set(mSideDir.x * cosQ - mSideDir.y * sinQ,
+	             mSideDir.x * sinQ + mSideDir.y * cosQ);
 
 	mBoards = new THangingBridgeBoard*[mBoardNum];
 	for (int i = 0; i < mBoardNum; i++) {
 		f32 t = (f32)i / (f32)(mBoardNum - 1);
 		JGeometry::TVec3<f32> pos;
 		pos.x = t * (mEnd.x - mStart.x) + mStart.x;
-		sinf(3.14f * t);
-		pos.y = (t * (mEnd.y - mStart.y) + mStart.y) - 0.0f;
+		pos.y = (t * (mEnd.y - mStart.y) + mStart.y)
+		    - 0.0f * sinf(3.14f * t);
 		pos.z = t * (mEnd.z - mStart.z) + mStart.z;
 
 		JGeometry::TVec3<f32> rot(15.0f, pitch, 0.0f);
 		if (gpMarDirector->mMap == 8) {
 			mBoards[i] = (THangingBridgeBoard*)
 			    TMapObjManager::newAndRegisterObj(
-			        "PinnaHangingBridgeBoard", pos, rot,
+			        "HangingBridgeBoard", pos, rot,
 			        JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		} else {
 			mBoards[i] = (THangingBridgeBoard*)
 			    TMapObjManager::newAndRegisterObj(
-			        "HangingBridgeBoard", pos, rot,
+			        "PinnaHangingBridgeBoard", pos, rot,
 			        JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		}
 		mBoards[i]->mBridge = this;
@@ -604,6 +602,8 @@ void THangingBridge::loadAfter()
 		for (int i = 0; i < mBoardNum; i++) {
 			if (board[i][0] == -1.0f)
 				break;
+			if (board[i][0] == -1.0f)
+				continue;
 
 			mBoards[i]->mInitialPosition.set(board[i][0], board[i][1],
 			                                 board[i][2]);
