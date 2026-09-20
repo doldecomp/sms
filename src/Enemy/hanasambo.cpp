@@ -113,7 +113,9 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 
 	bool allOpen = true;
 	for (int i = 0; i < mNum; ++i) {
-		bool open = mFlowers[i]->getMActor()->checkCurAnm("flower_fwait", 0);
+		bool open = mFlowers[i]->getMActor()->checkCurAnm("flower_fwait", 0)
+		                ? true
+		                : false;
 		if (!open)
 			allOpen = false;
 	}
@@ -129,34 +131,37 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 	}
 
 	if (coinNum > 0) {
-		int k = 0;
+		Mtx rot;
+		MtxPtr mtx = rot;
+		int k      = 0;
 		for (int i = 0; i < mNum; ++i) {
 			TSamboFlower* flower = mFlowers[i];
 			if (flower->mCoin == nullptr)
 				continue;
 
+			TSamboFlowerSaveLoadParams* dropParams = flower->mSaveParams;
+			f32 radius = dropParams->mSLCoinCircleR.get();
 			JGeometry::TVec3<f32> offset;
 			offset.x = 0.0f;
 			offset.y = 0.0f;
+			offset.z = radius;
 			f32 rate = (f32)k / (f32)coinNum;
-			offset.z = flower->mSaveParams->mSLCoinCircleR.get();
 			s16 angle = DEG2SHORTANGLE(360.0f * rate);
 			f32 s     = JMASSin(angle);
 			f32 c     = JMASCos(angle);
-			Mtx rot;
-			rot[0][0] = c;
-			rot[0][1] = 0.0f;
-			rot[0][2] = s;
-			rot[0][3] = 0.0f;
-			rot[1][0] = 0.0f;
-			rot[1][1] = 1.0f;
-			rot[1][2] = 0.0f;
-			rot[1][3] = 0.0f;
-			rot[2][0] = -s;
-			rot[2][1] = 0.0f;
-			rot[2][2] = c;
-			rot[2][3] = 0.0f;
-			MTXMultVec(rot, &offset, &offset);
+			mtx[0][0] = c;
+			mtx[0][1] = 0.0f;
+			mtx[0][2] = s;
+			mtx[0][3] = 0.0f;
+			mtx[1][0] = 0.0f;
+			mtx[1][1] = 1.0f;
+			mtx[1][2] = 0.0f;
+			mtx[1][3] = 0.0f;
+			mtx[2][0] = -s;
+			mtx[2][1] = 0.0f;
+			mtx[2][2] = c;
+			mtx[2][3] = 0.0f;
+			MTXMultVec(mtx, &offset, &offset);
 
 			TMapObjBase* coin = mFlowers[i]->mCoin;
 			if (coin->isActorType(0x2000000E))
@@ -170,16 +175,15 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 				MsVECNormalize(&offset, &offset);
 				++k;
 				TSamboFlowerSaveLoadParams* params = mFlowers[i]->mSaveParams;
-				f32 speed = params->mSLCoinVelocityXZ.get();
-				coin->mVelocity.set(offset.x * speed,
-				                    8.0f * rate
-				                        + params->mSLCoinVelocityY.get(),
-				                    offset.z * speed);
+				f32 velXZ = params->mSLCoinVelocityXZ.get();
+				f32 velY  = params->mSLCoinVelocityY.get();
+				coin->mVelocity.set(offset.x * velXZ, 8.0f * rate + velY,
+				                    offset.z * velXZ);
 				coin->offLiveFlag(LIVE_FLAG_UNK10);
 			}
 		}
 		if (gpMSound->gateCheck(0x4813))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4813, 0, nullptr,
+			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4813, k, nullptr,
 			                                             0);
 	}
 	mCoinItem = nullptr;
