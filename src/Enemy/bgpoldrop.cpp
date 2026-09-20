@@ -34,6 +34,7 @@ void TBGPolDrop::move()
 	if (unk58 == 1) {
 		unk44.y -= 0.2f;
 		const TBGCheckData* checkData;
+		char trash[12];
 		f32 dVar3 = gpMap->checkGround(local_14.x, mPosition.y, local_14.z,
 		                               &checkData);
 		dVar3 += 1.0f;
@@ -49,7 +50,7 @@ void TBGPolDrop::move()
 			unk44.zero();
 			if (!unk50->checkCurBckFromIndex(12)) {
 				unk50->setBckFromIndex(12);
-				unk50->setBckFromIndex(13);
+				unk54->setBckFromIndex(13);
 			}
 
 			gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ODANHIT_A, &local_14,
