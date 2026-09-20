@@ -100,6 +100,15 @@ MActor::MActor(MActorAnmData* anm_data)
 
 void MActor::setMActorAnmData(MActorAnmData* anm_data) { mAnmData = anm_data; }
 
+// TODO: MActor::mAnmData wants an accessor in MActor.hpp; parked here as a
+// TU-local until a header batch adds it.
+static inline MActorAnmData* MActorGetAnmData(const MActor* p)
+{
+	return p->mAnmData;
+}
+
+// TODO: frame-exact; the JGadget list iterator pair still sits 8 low and the
+// comparison temporaries 4 high.
 void MActor::setModel(J3DModel* param_1, u32 param_2)
 {
 	mModel       = param_1;
@@ -109,9 +118,9 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 	if ((~param_2 & 0x10000) != 0)
 		onMakeDL();
 
-	unk8 = mModel->getModelData()->getJointNodePointer(0)->getMtxCalc();
+	unk8 = getModel()->getModelData()->getJointNodePointer(0)->getMtxCalc();
 	for (u16 i = 0; i < mMaterialNum; ++i) {
-		J3DMaterial* mat = mModel->getModelData()->getMaterialNodePointer(i);
+		J3DMaterial* mat = getModel()->getModelData()->getMaterialNodePointer(i);
 		unk30[i]         = 0x32;
 		unk2C[i]         = 0x32;
 		for (u8 j = 0; j < mat->getTexGenBlock()->getTexGenNum(); ++j) {
@@ -124,21 +133,21 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 
 	for (int i = 0; i < 6; ++i) {
 		if (mAnmByType[i]) {
-			mAnmByType[i]->setModel(mModel);
+			mAnmByType[i]->setModel(getModel());
 			mAnmByType[i]->checkUseMaterialIDInit(unk2C);
 		}
 	}
 
-	if (mAnmData->getUnk0() > 0) {
-		JGadget::TList<MActorSubAnmInfo>::iterator it = mAnmData->unk1C.begin();
-		JGadget::TList<MActorSubAnmInfo>::iterator e  = mAnmData->unk1C.end();
+	if (MActorGetAnmData(this)->getUnk0() > 0) {
+		JGadget::TList<MActorSubAnmInfo>::iterator it = MActorGetAnmData(this)->unk1C.begin();
+		JGadget::TList<MActorSubAnmInfo>::iterator e  = MActorGetAnmData(this)->unk1C.end();
 		for (int i = 0; it != e; ++it, ++i) {
-			unk10[i]->setModel(mModel);
+			unk10[i]->setModel(getModel());
 		}
 	}
 
 	for (u16 i = 0; i < mMaterialNum; ++i) {
-		J3DMaterial* mat    = mModel->getModelData()->getMaterialNodePointer(i);
+		J3DMaterial* mat    = getModel()->getModelData()->getMaterialNodePointer(i);
 		J3DMaterialAnm* anm = mat->getMaterialAnm();
 
 		if (anm == nullptr && (unk2C[i] != 0x32 || unk30[i] != 0x32)) {
@@ -151,8 +160,8 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 
 	initDL();
 
-	if (!mAnmData->getUnk48())
-		mAnmData->createSampleModelData(mModel->getModelData());
+	if (!MActorGetAnmData(this)->getUnk48())
+		MActorGetAnmData(this)->createSampleModelData(getModel()->getModelData());
 }
 
 // Binding level worth +8 of low region, landing MActor::isCurAnmAlreadyEnd's
