@@ -66,6 +66,18 @@ void TMareWallRock::appear()
 	unkF4 = 2;
 }
 
+static inline RumbleMgr* MareWallRockRumbleMgr()
+{
+	RumbleMgr* mgr = SMSRumbleMgr;
+	return mgr;
+}
+
+static inline TCameraShake* MareWallRockCameraShake()
+{
+	TCameraShake* shake = gpCameraShake;
+	return shake;
+}
+
 void TMareWallRock::movement()
 {
 	switch (unkF4) {
@@ -87,8 +99,9 @@ void TMareWallRock::movement()
 				mPosition.z -= mAppearSpeed;
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &mPosition, 0,
 			                                nullptr, 0, 4);
-			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
-			gpCameraShake->keepShake(CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
+			MareWallRockRumbleMgr()->start(0x13, -1, (f32*)nullptr);
+			MareWallRockCameraShake()->keepShake(
+			    CAM_SHAKE_MODE_BUILDING_APPEAR, 0.5f);
 		}
 
 		unk104->getJoint()->setTransformInfo(transformInfo);
@@ -98,7 +111,7 @@ void TMareWallRock::movement()
 			unk100 = mWaitTimeToDepress;
 			unk10C[1]->setUp();
 			unkF4 = 1;
-			SMSRumbleMgr->stop(0x13);
+			MareWallRockRumbleMgr()->stop(0x13);
 			return;
 		}
 		JGeometry::TVec3<f32> t(0.0f, 0.0f, z);
