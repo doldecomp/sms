@@ -900,6 +900,7 @@ void JPABaseEmitter::calcKeyFrameAnime()
 
 void JPABaseEmitter::calc()
 {
+	char trash[8];
 	JPAEmitterInfoObj.mEmitCount = 0;
 
 	if (!checkStatus(STATUS_STOP_CALC))
