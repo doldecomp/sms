@@ -461,8 +461,10 @@ TMapObjBase* TFruitLauncher::appearFruit() const
 // thin TU-local levels stand in for them (same shape as killer.cpp's
 // MsGetVecFromRotY ladder). Three levels is exact: two leave getMActor
 // expanded (98.95), four also push J3DFrameCtrl::setFrame out of line, which
-// retail inlines (99.2). TODO: replace them with the real functions once
-// they are identified; 16 bytes of frame are still missing.
+// retail inlines (99.2).
+// The two-argument startSoundActor overload at both fire sites is the +0x10
+// frame the six-argument form was short; TFlagT<u16>() (not TFlagT<u16>(0))
+// places the demo-camera flag at retail's 0x4c slot.
 static inline void resetSwitchAnmFrame(TFruitSwitch* sw)
 {
 	sw->getMActor()->getFrameCtrl(0)->setFrame(0.0f);
@@ -483,8 +485,8 @@ void TFruitLauncher::fireObj()
 	gpMarioParticleManager->emitAndBindToPosPtr(
 	    (E_SMS_EFFECT_ONETIME_NORMAL)0x11, &mPosition, 0, nullptr);
 
-	SMSGetMSound()->startSoundActor(0x384C, &mPosition, 0, nullptr, 0, 4);
-	SMSGetMSound()->startSoundActor(0x387D, &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(0x384C, &mPosition);
+	SMSGetMSound()->startSoundActor(0x387D, &mPosition);
 
 	// Release the switch that is not about to be pressed.
 	if (mCurrentSwitch == 0)
@@ -520,7 +522,7 @@ void TFruitLauncher::fireObj()
 
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "フルーツタンクカメラカメラ", &fruit->mPosition, -1, 0.0f, true,
-		    nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
+		    nullptr, 0, nullptr, JDrama::TFlagT<u16>());
 
 		SMSGetMSound()->startSoundSystemSE(0x4849, 0, nullptr, 0);
 
