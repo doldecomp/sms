@@ -525,6 +525,18 @@ void TRailFence::goOnRail()
 	}
 }
 
+static inline MSound* RailFenceSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
+static inline TGraphTracer* RailFenceTracer(TRailFence* fence)
+{
+	TGraphTracer* tracer = fence->mTracer;
+	return tracer;
+}
+
 void TRailFence::control()
 {
 	TMapObjBase::control();
@@ -540,8 +552,8 @@ void TRailFence::control()
 	case STATE_AT_GOAL:
 		if (!isStateTimerEngaged()) {
 			removeMapCollision();
-			gpMSound->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition,
-			                          0, nullptr, 0, 4);
+			RailFenceSound()->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK,
+			                                  &mPosition, 0, nullptr, 0, 4);
 			setState(STATE_FALL);
 		}
 		break;
@@ -550,7 +562,7 @@ void TRailFence::control()
 		// falling()'s body, spelled out: MWCC refuses to inline the helper at
 		// its size and retail has no call here.
 		{
-			JGeometry::TVec3<f32> velocity = mVelocity;
+			JGeometry::TVec3<f32> velocity = getVelocity();
 			mPosition.y += velocity.y;
 
 			mVelocity.y -= mGravity;
@@ -563,8 +575,8 @@ void TRailFence::control()
 				mPosition.z = mInitialPosition.z;
 				setUpMapCollision(0);
 				mTracer->setTo(
-				    mTracer->getGraph()->findNearestNodeIndex(mPosition,
-				                                              0xffffffff));
+				    RailFenceTracer(this)->getGraph()->findNearestNodeIndex(
+				        mPosition, 0xffffffff));
 				makeObjAppeared();
 				calcRootMatrix();
 				getModel()->calc();
