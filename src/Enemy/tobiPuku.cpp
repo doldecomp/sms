@@ -965,23 +965,23 @@ DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
 	return FALSE;
 }
 
-// Binding level worth +8 of low region, landing
-// TNerveTobiPukuAttack::execute's frame at 0x50 (batch 124).
-static inline bool TobiPukuIsAirborne(const TTobiPuku* p)
+// Binding level over spine->getBody(), worth +4 of low region and landing
+// TNerveTobiPukuAttack::execute exactly (ladder 341).
+static inline TTobiPuku* TobiPukuBody(TSpineBase<TLiveActor>* spine)
 {
-	bool airborne = p->isAirborne();
-	return airborne;
+	TTobiPuku* body = (TTobiPuku*)spine->getBody();
+	return body;
 }
 
 // TODO: incorrect size. Map records 0x198 (408 bytes).
 DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 {
-	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+	TTobiPuku* puku = TobiPukuBody(spine);
 
 	if (spine->getTime() == 0)
 		puku->setAttackAnm();
 
-	if (TobiPukuIsAirborne(puku)) {
+	if (puku->isAirborne()) {
 		if (puku->getCurAnmFrameNo(0) >= 6.0f) {
 			puku->unk194 = 0;
 			JGeometry::TVec3<f32> vel(puku->mVelocity);
