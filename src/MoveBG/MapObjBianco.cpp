@@ -314,6 +314,9 @@ void TBiancoWatermillVertical::load(JSUMemoryInputStream& stream)
 	mRotSpeed = mRotSpeedTarget;
 }
 
+// TODO: the frame is 0x10 short and every instruction matches. A ctor-only
+// body has no binder-eligible call site; body assignments instead of
+// mem-initialisers are inert.
 TBiancoWatermillVertical::TBiancoWatermillVertical(const char* name)
     : TMapObjBase(name)
     , mRotSpeed(0.0f)
@@ -807,11 +810,19 @@ void TLampSeesawMain::loadAfter()
 {
 	// The partner is named after this object with the "（主）" suffix replaced;
 	// the four bytes after the shared prefix are copied across verbatim.
+	//
+	// TODO: the frame is 8 short. Every stack slot is retail's (buffer 0x28)
+	// with the raw member read at three of the five name reads; retail holds
+	// twelve bytes above the array where prefix alone gives four, so it has
+	// two more four-byte named scalars there. No honest declaration lands
+	// them: buffer declared first/last, the u8s as ints, a named
+	// `const char*` for the name (costs five instructions) and a TU-local
+	// fork around search<T>() are all inert or worse.
 	int prefix = strlen("ランプシーソーＡ");
 	char buffer[64];
-	u8 c0 = getName()[prefix];
-	u8 c1 = getName()[prefix + 1];
-	u8 c2 = getName()[prefix + 2];
+	u8 c0 = mName[prefix];
+	u8 c1 = mName[prefix + 1];
+	u8 c2 = mName[prefix + 2];
 	u8 c3 = getName()[prefix + 3];
 	snprintf(buffer, sizeof(buffer), "ランプシーソーＢ００", getName());
 	buffer[prefix]     = c0;
