@@ -1900,6 +1900,30 @@ static inline TFireWanwan* FireWanwanGetBody(TSpineBase<TLiveActor>* spine)
 	return body;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveFireWanwanEscape::execute's frame at 0x78 (batch 121).
+static inline MActor* FireWanwanGetMActor(const TFireWanwan* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
+static inline TFireWanwanManager* FireWanwanManagerOf(TFireWanwan* p)
+{
+	return (TFireWanwanManager*)p->getManager();
+}
+
+static inline TFireWanwan* FireWanwanGetBody2(TSpineBase<TLiveActor>* spine)
+{
+	TFireWanwan* body = FireWanwanGetBody(spine);
+	return body;
+}
+
+static inline J3DFrameCtrl* FireWanwanFrameCtrl(const TFireWanwan* p, int type)
+{
+	return FireWanwanGetMActor(p)->getFrameCtrl(type);
+}
+
 DEFINE_NERVE(TNerveFireWanwanGraphWander, TLiveActor)
 {
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
@@ -2084,20 +2108,20 @@ DEFINE_NERVE(TNerveFireWanwanRecoverGraph, TLiveActor)
 
 DEFINE_NERVE(TNerveFireWanwanRecover, TLiveActor)
 {
-	TFireWanwan* self = (TFireWanwan*)spine->getBody();
+	TFireWanwan* self = FireWanwanGetBody2(spine);
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(2);
-		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BTK);
-		self->getMActor()->getFrameCtrl(ANM_TYPE_BTK)->setFrame(0.0f);
-		TFireWanwanManager* manager = (TFireWanwanManager*)self->getManager();
+		FireWanwanGetMActor(self)->setFrameRate(0.0f, ANM_TYPE_BTK);
+		FireWanwanFrameCtrl(self, ANM_TYPE_BTK)->setFrame(0.0f);
+		TFireWanwanManager* manager = FireWanwanManagerOf(self);
 		manager->receiveMessageFromBody(self,
 		                                TFireWanwanManager::BODY_MSG_RECOVERED);
 
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_RECOVER,
 		                                &self->mPosition, 0, nullptr, 0, 4);
 
-		f32 end = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd();
+		f32 end = FireWanwanFrameCtrl(self, ANM_TYPE_BCK)->getEnd();
 
 		self->changeBodyToRed(end);
 	}
@@ -2250,14 +2274,6 @@ DEFINE_NERVE(TNerveFireWanwanFreeze, TLiveActor)
 	}
 
 	return false;
-}
-
-// Binding level worth +8 of low region, landing
-// TNerveFireWanwanEscape::execute's frame at 0x78 (batch 121).
-static inline MActor* FireWanwanGetMActor(const TFireWanwan* p)
-{
-	MActor* mActor = p->getMActor();
-	return mActor;
 }
 
 DEFINE_NERVE(TNerveFireWanwanEscape, TLiveActor)
