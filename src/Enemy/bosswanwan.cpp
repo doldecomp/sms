@@ -391,20 +391,37 @@ TBWPicket::TBWPicket(TBossWanwan* owner, const char* name)
 	mMActor = mOwner->getActorKeeper()->createMActor("bwanwan_picket.bmd", 0);
 }
 
+static inline MSound* BWPicketSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
+static inline TBossWanwan* BWPicketOwnerRaw(const TBWPicket* p)
+{
+	return p->mOwner;
+}
+
+static inline TBossWanwan* BWPicketOwner(const TBWPicket* p)
+{
+	TBossWanwan* owner = BWPicketOwnerRaw(p);
+	return owner;
+}
+
 BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x80000001) {
 		if (message == HIT_MESSAGE_HIP_DROP) {
-			TBossWanwan* owner      = mOwner;
+			TBossWanwan* owner      = BWPicketOwner(this);
 			owner->mIsPicketPlanted = 1;
 			owner->mPulledTimer     = 0;
-			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_LOCK, &mPosition, 0,
+			BWPicketSound()->startSoundActor(MSD_SE_BS_WANWAN_LOCK, &mPosition, 0,
 			                          nullptr, 0, 4);
 			return TRUE;
 		}
 
 		if (message == HIT_MESSAGE_TAKE) {
-			TBossWanwan* owner = mOwner;
+			TBossWanwan* owner = BWPicketOwner(this);
 			owner->releasePicket();
 			mHolder = (TTakeActor*)sender;
 			return TRUE;
@@ -980,16 +997,16 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 
 		u8 hp = getHitPoints();
 		if (hp == 0) {
-			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_COOL_MORE, &mPosition, 0,
+			BWPicketSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL_MORE, &mPosition, 0,
 			                          nullptr, 0, 4);
 		} else if (hp == 1) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    BWANWAN_JPA_MS_BWAN_DOWNYUGE, getModel()->getAnmMtx(1), 0,
 			    nullptr);
-			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
+			BWPicketSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
 			                          nullptr, 0, 4);
 		} else {
-			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_COOL, &mPosition, 0,
+			BWPicketSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL, &mPosition, 0,
 			                          nullptr, 0, 4);
 		}
 
@@ -1006,7 +1023,7 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 			mWasSprayed += 1;
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    BWANWAN_JPA_MS_BWAN_DOWNYUGE, getModel()->getAnmMtx(1), 0, nullptr);
-		gpMSound->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
+		BWPicketSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
 		                          nullptr, 0, 4);
 	}
 
