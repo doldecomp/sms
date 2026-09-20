@@ -816,7 +816,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 			if (NamekuriGetMActor(self)
 			        ->getFrameCtrl(ANM_TYPE_BCK)
 			        ->checkPass(62.0f)) {
-				JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
+				JGeometry::TVec3<f32> local_44 = *gpMarioPos;
 				f32 jumpAttackSp = self->getSaveParams()->mSLJumpAttackSp.get();
 				JGeometry::TVec3<f32> local_6c = self->calcVelocityToJumpToY(
 				    local_44, jumpAttackSp, self->getGravityY());
