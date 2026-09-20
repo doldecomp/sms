@@ -3991,3 +3991,77 @@ Stack-Slot-Rauschen bestätigt und zurückgesetzt.
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`. `git fetch upstream` weiterhin 0 Commits
 Rückstand.
+
+### Nach zweiundfünfzigster Iterationsrunde (4 weitere Matches; neues Muster „Joint-Index-Truncation-Timing"; zwei bemerkenswerte Fast-Treffer dokumentiert)
+
+Fortsetzung des Klein-Datei-Scans mit sieben weiteren parallel delegierten
+Kandidaten. **Vier neue Byte-exakte Matches**, drei Commits:
+
+- **`TMirrorCamera::perform(u32, JDrama::TGraphics*)`** (91,0 % → Match,
+  Commit `c195ae05`): Projektionsmatrix-Zeiger nicht gehoben (`MtxPtr`
+  statt wiederholtem `graphics->mProjMtx.mMtx`), `gpCamera`-Felder direkt
+  statt über die Inline-Accessoren `getFovy/getAspect/getNear/getFar`
+  gelesen (ändert Argument-Auswertungsreihenfolge), plus `char trash[8]`.
+- **`TLauncher::receiveMessage(THitActor*, u32)`** (90,8 % → Match, Commit
+  `c8a3646a`): Echter Argumentfehler — `&mPosition` (this) statt
+  `&sender->mPosition` für Emit/Sound-Aufrufe. Plus `char trash[8]`.
+- **`TBaseNPC::setPollutionEffectMtxPtr_`/`setSmokeEffectMtxPtr_`** (90,5 %
+  / 91,1 % → beide Match, Commit `7dd7e933`): **Neues, viertes
+  wiederkehrendes Bugmuster entdeckt**: Ein von `JUTNameTab::getIndex`
+  zurückgegebener `s32`-Gelenkindex muss vor der inline-expandierten
+  `*0x30`-Array-Index-Multiplikation in `J3DModel::getAnmMtx` auf 16 Bit
+  maskiert werden — aber NUR wenn dies als `int idx = call(); ... idx &
+  0xFFFF;` geschrieben wird (nicht als `u16`-typisierte Lokale oder
+  `(u16)`-Cast), da MWCC die Maskierung sonst sofort statt verzögert über
+  einen Zwischenaufruf hinweg einplant. Zusätzlich beeinflusst die
+  Deklarationsreihenfolge lokaler `const char*`-Gelenknamen direkt die
+  Registerzuteilung (auch für `@sda21`-adressierte String-Literale).
+
+**Zwei bemerkenswerte, gründlich dokumentierte Fast-Treffer** (beide nach
+Protokoll zurückgesetzt, da nicht Byte-exakt):
+- **`SMS_AddDamageFogEffect`** (90,0 % → 99,44 %, NICHT committet):
+  Echter Logikfehler gefunden und behoben (lokale `f32`-Literale wurden
+  von MWCC konstant-gefaltet und die beiden Oszillationswerte fälschlich
+  zu einem CSE't — Ersetzung durch nicht-konstante `static f32`-Datei-
+  Globale erzwingt zwei unabhängige Laufzeitberechnungen wie im Retail-
+  Disassembly). Nach Fix + `char trash[0x38]`: alle 76 Instruktionen
+  strukturell identisch, aber 4 Zeilen zeigen vertauschte Operandenreihen-
+  folge bei kommutativen `fmuls`/`fadds` (z. B. `fmuls f29,f2,f1` vs.
+  `fmuls f29,f1,f2`). **Selbst nachgeprüft**: expliziter Tausch der
+  Quelltext-Multiplikationsreihenfolge (`s * (...)` statt `(...) * s`)
+  hatte NULL Effekt auf die erzeugten Instruktionen — MWCC kanonisiert die
+  Operandenreihenfolge kommutativer Gleitkomma-Operationen unabhängig vom
+  Quelltext. Bestätigter Grenzfall, kein Fix möglich.
+- **`TMActorKeeper::createMActor(const char*, u32)`** (60,7 % → 80,8 % bei
+  einer Teilkorrektur, NICHT committet): Zwei unabhängige Lücken
+  identifiziert — (a) Retail delegiert NICHT an
+  `createMActorFromNthData`, sondern inlined `createAndRegister` direkt
+  (echter Strukturfehler, Teilfix erreicht 80,8 % ohne Regressionen); (b)
+  ein Inline-Tiefe-2-Schwellenwert-Unterschied bei `loadModelData`/
+  `registerDataAndJoinNewNode`, den keine der elf getesteten
+  Compiler-Flag-Kombinationen (`inline_depth`, `inline_max_size`,
+  `-O3`/`-O4`, alternative Compiler-Version 1.2.5n, `defer_codegen off`)
+  reproduzieren konnte, ohne andere Funktionen der Unit zu regressieren.
+  Nicht committet, da laut Protokoll nur Byte-exakte Treffer zulässig sind.
+- **`CPolarSubCamera::isMarioAimWithGun_`/`isMarioCrabWalk_`** (53,5 % je,
+  NICHT committet): Echter Feldnamen-Bug gefunden (`checkFrameMeaning`
+  [Offset 0xD4] statt `checkMeaning` [Offset 0xD0]), aber Datei ist
+  `PCHObject(NonMatching, ...)` — die PCH bäckt `-inline deferred` bereits
+  beim PCH-Bau ein, wodurch `defer_codegen off` in der `.cpp`-Datei selbst
+  keine Wirkung mehr auf bereits-PCH-kompilierte Header-Inlines
+  (`TMario::checkStatusType`, dutzende Aufrufstellen projektweit) hat.
+  **Neue Grenzbedingung für die `defer_codegen`-Technik**: PCH-kompilierte
+  Dateien sind für diesen Trick nicht erreichbar.
+
+**Weitere bestätigte Register-/Stack-Rauschen-Fälle** (zurückgesetzt):
+`TCardManager::setCardStat_` (Retail nutzt ein Duff's-Device-entrolltes
+Laufzeit-Loop für eine kompilierzeit-konstante Trip-Count von 6, das
+MWCC mit den Projekt-Flags nicht reproduziert — sieben Quellvarianten
+erfolglos).
+
+### Session-Gesamtstand nach Runde 52
+
+**416 verifizierte echte Fixes in 73 Commits.** `matched_functions`:
+**9003** (von 8999 zu Rundenbeginn), `matched_code_percent`: 44,99 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`.
