@@ -19,7 +19,7 @@ Run start: 2026-09-15 08:00 EDT. Elapsed: 124.1 h.
 | 2026-09-17 | 638 | 36.82% | 120 | 431 | +25 |
 | 2026-09-18 | 902 | 45.03% | 162 | 489 | +42 |
 | 2026-09-19 | 635 | 50.60% | 166 | 492 | +4 |
-| 2026-09-20 | 391 | 53.82% | 166 | 492 | +0 |
+| 2026-09-20 | 392 | 53.82% | 166 | 492 | +0 |
 
 ## Rates and projection
 
@@ -27,9 +27,9 @@ Linear extrapolations only; the remaining units are the hard ones, so treat ever
 
 | Window | Game links / h | All links / h | Game matched pts / h | Days to 385 game links | Days to 732 all links |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| last 12 h (12 h) | 0.00 | 0.00 | 0.265 | inf | inf |
-| last 24 h (24 h) | 0.04 | -0.04 | 0.317 | 219.1 | inf |
-| last 48 h (48 h) | 0.33 | 0.61 | 0.216 | 27.3 | 16.5 |
+| last 12 h (12 h) | 0.00 | 0.00 | 0.262 | inf | inf |
+| last 24 h (24 h) | 0.04 | -0.04 | 0.315 | 220.4 | inf |
+| last 48 h (48 h) | 0.33 | 0.60 | 0.215 | 27.4 | 16.6 |
 | whole run (124 h) | 0.78 | 3.41 | 0.434 | 11.7 | 2.9 |
 
 ## Snapshots
@@ -475,3 +475,4 @@ One row per commit that touched `PROGRESS.md` or `objects.json`.
 | 09-20 11:49 |  123.8 | a75f9bfc | 53.75% | 166 | 61.78% | 492 |
 | 09-20 11:58 |  124.0 | 77fb11ba | 53.81% | 166 | 61.84% | 492 |
 | 09-20 12:00 |  124.0 | 791f599b | 53.82% | 166 | 61.84% | 492 |
+| 09-20 12:08 |  124.1 | f09c885a | 53.82% | 166 | 61.84% | 492 |
