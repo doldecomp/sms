@@ -347,7 +347,8 @@ void TCoin::loadAfter()
 			return;
 	}
 
-	unk154 = new TMirrorActor("コインin鏡");
+	TMirrorActor* actor = new TMirrorActor("コインin鏡");
+	unk154              = actor;
 	unk154->init(getModel(), 0x18);
 }
 
