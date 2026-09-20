@@ -585,6 +585,13 @@ TSpineEnemy* TFruitsBoatManager::createEnemyInstance() { return nullptr; }
 DEFINE_NERVE(TNerveFruitsBoatGraphWander, TLiveActor)
 {
 	TFruitsBoat* boat = (TFruitsBoat*)spine->getBody();
+	// The two spelled-out rowing blocks below do not share slots for these
+	// two vectors when each declares its own pair, so one pair is declared
+	// here (-0x18 of frame).
+	// TODO: the frame is still 8 long at 0x128 against retail's 0x120; the
+	// `node` binder and the `speed`/`marchSpeed` locals are all inert here.
+	JGeometry::TVec3<f32> rot;
+	JGeometry::TVec3<f32> pos;
 
 	if (boat->getTracer()->getGraph() == nullptr
 	    || boat->getTracer()->getGraph()->isDummy())
@@ -613,8 +620,6 @@ DEFINE_NERVE(TNerveFruitsBoatGraphWander, TLiveActor)
 				f32 speed = boat->getTracer()->calcSplineSpeed(marchSpeed);
 				boat->getTracer()->traceSpline(speed);
 
-				JGeometry::TVec3<f32> rot;
-				JGeometry::TVec3<f32> pos;
 				boat->getTracer()->getGraph()->getSplineRail()->getPosAndRot(
 				    boat->getTracer()->unk14, &pos, &rot);
 
@@ -647,8 +652,6 @@ DEFINE_NERVE(TNerveFruitsBoatGraphWander, TLiveActor)
 		f32 speed = boat->getTracer()->calcSplineSpeed(marchSpeed);
 		boat->getTracer()->traceSpline(speed);
 
-		JGeometry::TVec3<f32> rot;
-		JGeometry::TVec3<f32> pos;
 		boat->getTracer()->getGraph()->getSplineRail()->getPosAndRot(
 		    boat->getTracer()->unk14, &pos, &rot);
 
