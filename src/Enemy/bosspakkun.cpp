@@ -508,7 +508,7 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
 
 BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (&TNerveBPSleep::theNerve() == mOwner->getLatestNerve())
+	if (mOwner->getLatestNerve() == &TNerveBPSleep::theNerve())
 		return mOwner->receiveMessage(sender, message);
 
 	TBossPakkun* boss = mOwner;
@@ -646,11 +646,7 @@ TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
 
 BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 {
-	// TODO: retail calls TSpineBase<TLiveActor>::getLatestNerve() out of line
-	// at this site and in TBPHeadHit::receiveMessage, while inlining it in
-	// TBossPakkun::setGroundCollision; our build expands all three. Same open
-	// item as bosswanwan and boss-hanachan. It is the whole residual here.
-	if (&TNerveBPSleep::theNerve() == mOwner->mSpine->getLatestNerve())
+	if (mOwner->getLatestNerve() == &TNerveBPSleep::theNerve())
 		return mOwner->receiveMessage(sender, message);
 
 	u32 type = sender->getActorType();
@@ -663,6 +659,10 @@ BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 	if (type == 0x80000001) {
 		if (message == HIT_MESSAGE_HIP_DROP)
 			mOwner->gotHipDropDamage();
+		// TODO: retail keeps a `cmplwi r31, 0` for the trample arm with no
+		// branch (the dead-compare family, research 297); an empty arm drops
+		// it and a `return TRUE;` arm adds a whole return block. Frame is
+		// also 0x10 short.
 		else if (message == HIT_MESSAGE_TRAMPLE) {
 		}
 	}
@@ -1234,6 +1234,10 @@ const char** TBossPakkun::getBasNameTable() const { return bosspakkun_bastable; 
 
 void TBossPakkun::setGroundCollision()
 {
+	// TODO: retail's two guards compare `cmplw nerve, instance`; writing them
+	// as `mSpine->getLatestNerve() == &...::theNerve()` flips the operands but
+	// lets MWCC hoist and CSE both expansions above the static-init guards
+	// (77.1%). The remaining difference is these two compare operand orders.
 	if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve())
 		return;
 	if (&TNerveBPTumbleOut::theNerve() == mSpine->getLatestNerve())
