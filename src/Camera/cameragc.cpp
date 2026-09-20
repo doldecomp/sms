@@ -873,6 +873,7 @@ void CPolarSubCamera::ctrlGameCamera_()
 	if (unk282 != 0)
 		unk282 -= 1;
 
+	int code;
 	JGeometry::TVec3<f32> marPos = *gpMarioPos;
 	f32 yOffset;
 	if (isNormalDeadDemo()) {
@@ -896,12 +897,12 @@ void CPolarSubCamera::ctrlGameCamera_()
 			if (!gpMarDirector->isTalkModeNow())
 				changeCamMode_(mInitialMode);
 		} else if (!isSimpleDemoCamera()) {
-			int code;
+
 			if (controlByCameraCode_(&code))
 				execCameraModeChangeProc_(code);
 		}
 	}
-
+	char trash[8];
 	TCameraKindParam param;
 	param.copySaveParam(*mSaveKindParam[mMode]);
 
@@ -909,6 +910,7 @@ void CPolarSubCamera::ctrlGameCamera_()
 		mCurrentParams->inbetweenData(param, (f32)mInbetween->getUnk4());
 	else
 		*mCurrentParams = param;
+	char trash2[24];
 
 	if (unk284 > mCurrentParams->mAutoChaseCompleteFrame)
 		unk284 = mCurrentParams->mAutoChaseCompleteFrame;
