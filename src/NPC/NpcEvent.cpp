@@ -427,10 +427,13 @@ static s32 ReviveSunflowerCallBack(u32 param_1, u32 param_2)
 	return 1;
 }
 
-// TODO: 99.9%, every instruction and the frame exact; the `char[0x40]` buffer
-// and the TFlagT temporary both sit 4 bytes low (0x34/0x2c vs 0x38/0x30), i.e.
-// one more +4 of low region below the flag temporary, which is the earliest
-// expansion. SMSGetFlagManager() and a fork of gpItemManager do not move it.
+// A by-value read of the static member, worth the last +4 of low region in
+// reviveOneSunflower (a named local inside it is +8 and overshoots).
+static inline int NpcEventDownSunflowerNum()
+{
+	return TNpcEvent::mDownSunflowerNum;
+}
+
 void TNpcEvent::reviveOneSunflower()
 {
 	if (mDownSunflowerNum > 0) {
@@ -438,7 +441,7 @@ void TNpcEvent::reviveOneSunflower()
 
 		char acStack_50[0x40];
 
-		int idx = 5 - mDownSunflowerNum;
+		int idx = 5 - NpcEventDownSunflowerNum();
 		snprintf(acStack_50, 0x40, "%s%d", sViewObjName, idx);
 
 		TBaseNPC* npc = (TBaseNPC*)JDrama::TNameRefGen::search2(acStack_50);
