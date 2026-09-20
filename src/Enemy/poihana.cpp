@@ -555,6 +555,7 @@ void TSleepPoiHana::load(JSUMemoryInputStream& stream)
 
 DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 {
+	char trash[8];
 	TPoiHana* self = (TPoiHana*)spine->getBody();
 
 	if (spine->getTime() == 0) {
