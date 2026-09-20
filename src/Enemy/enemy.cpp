@@ -150,10 +150,18 @@ void TSpineEnemy::calcEnemyRootMatrix()
 	mtx[2][3] = mPosition.z;
 }
 
+// Binding level worth +8 of low region. Same shape as
+// SmallEnemyGetHeldObject, which lands TSmallEnemy::isEaten at 0x30.
+static inline TTakeActor* EnemyGetHeldObject(TTakeActor* p)
+{
+	TTakeActor* heldObject = p->getHeldObject();
+	return heldObject;
+}
+
 void TSpineEnemy::calcRootMatrix()
 {
-	if (mHolder && mHolder->getHeldObject() == this) {
-		MtxPtr src = getTakingMtx();
+	if (mHolder && EnemyGetHeldObject(mHolder) == this) {
+		MtxPtr src = mHolder->getTakingMtx();
 		if (src) {
 			getModel()->setBaseTRMtx(src);
 			mPosition.set(src[0][3], src[1][3], src[2][3]);
