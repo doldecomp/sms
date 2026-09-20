@@ -622,21 +622,28 @@ void TPopo::walkBehavior(int param_1, f32 param_2)
 		walkToCurPathNode(0.0f, mTurnSpeed, 0.0f);
 }
 
+// Sibling `if`s, not `else if`: the walker test has to reload getCurrentNerve
+// after the first arm's theNerve expansions. The nerves are exclusive, so the
+// missing retail `b` past the second test is dead. Frame lands at 0xa0 through
+// getSpine() on the four compares, SMS_GetMarioPos, and getPosition components.
+// TODO: TVec3 temporaries sit 4 bytes high; `else if`/`return` restores the
+// `b` but CSEs the nerve back into r28.
 void TPopo::attackToMario()
 {
 	TPopoManager* manager = (TPopoManager*)mManager;
-	if (mSpine->getCurrentNerve() == &TNervePopoAttack::theNerve()
-	    || mSpine->getCurrentNerve() == &TNervePopoWait::theNerve()) {
+	if (getSpine()->getCurrentNerve() == &TNervePopoAttack::theNerve()
+	    || getSpine()->getCurrentNerve() == &TNervePopoWait::theNerve()) {
 		if (manager->mIsNozzleFree)
 			mSpine->pushNerve(&TNervePopoPossessedNozzle::theNerve());
-	} else if (mSpine->getCurrentNerve() == &TNerveWalkerEscape::theNerve()
-	           || mSpine->getCurrentNerve()
-	                  == &TNerveWalkerGraphWander::theNerve()) {
+	}
+	if (getSpine()->getCurrentNerve() == &TNerveWalkerEscape::theNerve()
+	    || getSpine()->getCurrentNerve()
+	           == &TNerveWalkerGraphWander::theNerve()) {
 		sendAttackMsgToMario();
 		JGeometry::TVec3<f32> push(0.0f, 0.0f, 0.0f);
-		JGeometry::TVec3<f32> dir(mPosition.x - gpMarioPos->x,
-		                          mPosition.y - gpMarioPos->y,
-		                          mPosition.z - gpMarioPos->z);
+		JGeometry::TVec3<f32> dir(getPosition().x - SMS_GetMarioPos().x,
+		                          getPosition().y - SMS_GetMarioPos().y,
+		                          getPosition().z - SMS_GetMarioPos().z);
 		MsVECNormalize((Vec*)&dir, (Vec*)&dir);
 		mVelocity.x = dir.x;
 		mVelocity.z = dir.z;
