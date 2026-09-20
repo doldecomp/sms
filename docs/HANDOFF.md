@@ -59,10 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7.
-- [bosseel](9fc2a748-56b3-4267-90bd-850d8052c935) yielded clean (no commit): all near-misses are catalogued 4-byte slots or binder-inert +0x20/+0x30/+0x40 frames; shared-header need parked for `TVector<void*>::begin()` in `TBossEel::perform`. Do not re-queue bosseel without a new binder family or that header change.
-- Landed hamukuri +2; All **61.69%**, Game **53.62%**, exact **11,348**, linked **492 / 732**.
-- Running: `grptv` / MapObjBase ([MapObjBase unit ladder](01422139-e057-4457-9746-04a9e02da9f7)) — already has `startAnim` commit in-flight. Refill: MapObjPinna.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3.
+- Landed `grptv` MapObjBase ([MapObjBase unit ladder](01422139-e057-4457-9746-04a9e02da9f7)): +3 exact (`startAnim`, `setGroundCollision`, `makeObjDefault`); unit **52.51→65.78**; All **61.69→61.72**, Game **53.62→53.66**, exact **11,348→11,351**. Catalog: `getMapObjData()` in UNUSED `stopAnim` pays +8 into `startAnim`; do not CSE named `TMapCollisionManager*` through `setGroundCollision`.
+- [bosseel](9fc2a748-56b3-4267-90bd-850d8052c935) yielded clean — do not re-queue without new binder/`begin()` header lever.
+- Total: **61.72%** matched, game **53.66%**, linked **492 / 732**, exact **11,351**.
+- Running: `grptw` / MapObjPinna ([MapObjPinna unit ladder](4f827ca4-86a2-491d-926c-563cf505961b)). Refill: telesa.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
