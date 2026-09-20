@@ -1242,6 +1242,11 @@ static inline J3DModel* BossgessoGetModel(const TBossGesso* p)
 	return model;
 }
 
+static inline J3DModel* BossgessoModelOf(const TBossGesso* p)
+{
+	return p->getModel();
+}
+
 static inline MSound* BossgessoGetMSound()
 {
 	MSound* sound = SMSGetMSound();
@@ -2196,7 +2201,7 @@ DEFINE_NERVE(TNerveBGPollute, TLiveActor)
 
 	if (spine->getTime() == 90) {
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
-		    BGESO_JPA_MS_BOGE_OSEN, self->getModel()->getAnmMtx(27), 0,
+		    BGESO_JPA_MS_BOGE_OSEN, BossgessoModelOf(self)->getAnmMtx(27), 0,
 		    nullptr);
 	}
 
