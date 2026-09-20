@@ -358,10 +358,11 @@ void TKoopaJr::init(TLiveManager* manager)
 	if (mSubmarineManager == nullptr)
 		mSubmarineManager = JDrama::TNameRefGen::search<TEnemyManager>(
 		    "クッパジュニアサブマリンマネージャー");
-	// TODO: instruction-exact with both calls; the frame is 8 over retail's
-	// 0xe0 (each discarded expansion is +0x20, retail wants +0x38).
 	mSubmarineManager->getActiveObjNum();
-	f32 scale = getSaveParams()->mSLKoopaJrScale.get();
+	// The scale is read straight off getSaveParam(): the getSaveParams()
+	// wrapper is one inline level worth +8 of low region here, and the ROM's
+	// frame (0xe0) has room for only two of this function's three reads.
+	f32 scale = ((TKoopaJrParams*)getSaveParam())->mSLKoopaJrScale.get();
 	mScaling.set(scale, scale, scale);
 	resetKoopaJr();
 }
