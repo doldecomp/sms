@@ -275,6 +275,22 @@ u32 TMapObjBall::touchWater(THitActor* param_1)
 	return 1;
 }
 
+// Binding level over the physical-parameter chain, used in
+// TMapObjBall::boundByActor.
+static inline f32 MapObjBallMinBoundSpeed(const TMapObjBall* p)
+{
+	f32 min = p->mMapObjData->mPhysical->unk4->unkC;
+	return min;
+}
+
+// Binding level over the sound singleton, +8 of low region per site in
+// TMapObjBall::boundByActor.
+static inline MSound* MapObjBallBoundSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TMapObjBall::boundByActor(THitActor* param_1)
 {
 	JGeometry::TVec3<f32> away;
@@ -296,12 +312,12 @@ void TMapObjBall::boundByActor(THitActor* param_1)
 	if (param_1->isActorType(0x80000001)) {
 		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
 			// Mario walking into it nudges it harder than standing on it.
-			f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+			f32 minSpeed = MapObjBallMinBoundSpeed(this);
 			if (abs(SMS_GetMarioSpeedX()) > minSpeed
 			    || abs(SMS_GetMarioSpeedZ()) > minSpeed) {
 				mVelocity.y += unk150;
 				if (!isActorType(0x400000D0)) {
-					SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN,
+					MapObjBallBoundSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN,
 					                                &mPosition, 0, nullptr, 0,
 					                                4);
 				}
@@ -317,18 +333,18 @@ void TMapObjBall::boundByActor(THitActor* param_1)
 		JGeometry::TVec3<f32> vel(mVelocity);
 		f32 into = JGeometry::TVec3<f32>(vel).dot(away);
 
-		if (into <= 0.0f
+		if (into >= 0.0f
 		    && abs(JGeometry::TVec3<f32>(vel).x)
-		        > mMapObjData->mPhysical->unk4->unkC
+		        > MapObjBallMinBoundSpeed(this)
 		    && abs(JGeometry::TVec3<f32>(mVelocity).z)
-		        > mMapObjData->mPhysical->unk4->unkC) {
+		        > MapObjBallMinBoundSpeed(this)) {
 			mVelocity.x = -((1.0f + unk16C) * (away.x * into) - mVelocity.x);
 			mVelocity.y += unk168;
 			mVelocity.z = -((1.0f + unk16C) * (away.z * into) - mVelocity.z);
 			param_1->receiveMessage(this, HIT_MESSAGE_UNK10);
 
 			if (!isActorType(0x400000D0)) {
-				SMSGetMSound()->startSoundActor(MSD_SE_IT_DRIAN_BOUND,
+				MapObjBallBoundSound()->startSoundActor(MSD_SE_IT_DRIAN_BOUND,
 				                                &mPosition, 0, nullptr, 0, 4);
 			}
 		} else {
@@ -350,7 +366,7 @@ void TMapObjBall::boundByActor(THitActor* param_1)
 			mVelocity.z += unk158 * SMS_GetMarioSpeedZ();
 
 			if (!isActorType(0x400000D0)) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN,
+				MapObjBallBoundSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN,
 				                                &mPosition, 0, nullptr, 0, 4);
 			}
 		}
