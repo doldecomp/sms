@@ -889,6 +889,21 @@ static inline TMarDirector* EnemyMarioGetMarDirector()
 	return marDirector;
 }
 
+// fabricated: raw-global MSound binder
+static inline MSound* EnemyMarioGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
+// fabricated: two-local binder over getSettingsParams + stop flag
+static inline u8 EnemyMarioGetStopFlag(TEnemyMario* p)
+{
+	TEnemyMario::TSettingParams* s = p->getSettingsParams();
+	u8 flag                       = s->mStopFlag.get();
+	return flag;
+}
+
 void TEnemyMario::startDisappear(u16 doing)
 {
 	mDisappearPosition = mPosition;
@@ -1244,8 +1259,10 @@ void TEnemyMario::runAwayMoveEffect()
 void TEnemyMario::emRunAwayToNearestNode()
 {
 	JGeometry::TVec3<f32> targetPoint;
-	mEMario->getTracer()->getGraph()->getGraphNode(mRunAwayNodeIndex).getPoint(
-	    &targetPoint);
+	EnemyMarioGetTracer(mEMario)
+	    ->getGraph()
+	    ->getGraphNode(mRunAwayNodeIndex)
+	    .getPoint(&targetPoint);
 	runAwayMoveEffect();
 
 	if (mEMDoingTimer >= 8 && mEMDoingTimer < 300) {
@@ -1257,12 +1274,12 @@ void TEnemyMario::emRunAwayToNearestNode()
 	switch (mEMDoingTimer) {
 	case 0:
 		findRunAwayNearestNode();
-		mDisappearPosition = mPosition;
+		mDisappearPosition = getPosition();
 		mDisappearPosition.y += 80.0f;
 		gpMarioParticleManager->emit(SCENE_KAGEMARIO_JPA_MS_KGM_CHANGE,
 		                             &mDisappearPosition, 0, nullptr);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY, &mPosition,
-		                                0, nullptr, 0, 4);
+		EnemyMarioGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_AWAY,
+		                                       &mPosition, 0, nullptr, 0, 4);
 		break;
 	case 8:
 		break;
@@ -1286,16 +1303,17 @@ void TEnemyMario::emRunAwayToNearestNode()
 	case 220:
 		gpMarioParticleManager->emit(SCENE_KAGEMARIO_JPA_MS_KGM_CHANGE,
 		                             &mDisappearPosition, 0, nullptr);
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_APPEAR, &mPosition,
-		                                0, nullptr, 0, 4);
+		EnemyMarioGetMSound()->startSoundActor(MSD_SE_MA_KAGE_FIELD_APPEAR,
+		                                       &mPosition, 0, nullptr, 0, 4);
 		break;
 	case 300:
-		if (gpMarDirector->getCurrentMap() == 1) {
+		if (EnemyMarioGetMarDirector()->getCurrentMap() == 1) {
 			JGeometry::TVec3<f32> waitingPoint;
-			mEMario->getTracer()->getGraph()->getGraphNode(7).getPoint(
+			EnemyMarioGetTracer(mEMario)->getGraph()->getGraphNode(7).getPoint(
 			    &waitingPoint);
-			mFaceAngle.y    = matan(waitingPoint.z - targetPoint.z,
-			                        waitingPoint.x - targetPoint.x);
+			f32 dx          = waitingPoint.x - targetPoint.x;
+			f32 dz          = waitingPoint.z - targetPoint.z;
+			mFaceAngle.y    = matan(dz, dx);
 			mModelFaceAngle = mFaceAngle.y;
 			mPosition       = targetPoint;
 			mPosition.y += 5.0f;
@@ -1330,13 +1348,16 @@ void TEnemyMario::emReplayRunAway()
 
 void TEnemyMario::decideDoingAfterCarry()
 {
+	// Uninitialised TVec3: 100% with this local in the caller (0xc8 frame).
+	// A copy inside canJumpToNode overshoots and breaks hitWater.
+	JGeometry::TVec3<f32> nodePoint;
 	if (checkEMFlag(EM_FLAG_ENFORCE_TAKE)) {
 		offEMFlag(EM_FLAG_ENFORCE_TAKE);
 		emReplayWaitingToReplayJumpToNearestNode();
 		return;
 	}
 
-	if (mSettingParams->mStopFlag.get() == 1) {
+	if (EnemyMarioGetStopFlag(this) == 1) {
 		changeEMDoing(EM_DOING_REPLAY_WAITING);
 		return;
 	}
@@ -1662,10 +1683,18 @@ void TEnemyMario::checkReturn()
 // four callee-saved registers are permuted (retail this=r29, nodeNum=r28;
 // ours this=r28, nodeNum=r30). Declaring `i` before `nodeNum` changes neither.
 
+// fabricated: two-local address binder over unk108->mStickH, +0x10
+static inline f32* EnemyMarioGetStickHPtr(TEnemyMario* p)
+{
+	TMarioControllerWork* work = p->unk108;
+	f32* stick = &work->mStickH;
+	return stick;
+}
+
 void TEnemyMario::checkController(JDrama::TGraphics*)
 {
-	f32 dx           = gpMarioPos->x - mPosition.x;
-	f32 dz           = gpMarioPos->z - mPosition.z;
+	f32 dx           = SMS_GetMarioPos().x - getPosition().x;
+	f32 dz           = SMS_GetMarioPos().z - getPosition().z;
 	mAngleToMario    = matan(dz, dx);
 	mDistanceToMario = std::sqrtf(dx * dx + dz * dz);
 
@@ -1678,8 +1707,8 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	unk108->mAnalogLU8  = 0;
 	consider();
 
-	unk108->mStickH = 0.0f;
-	unk108->mStickV = 0.0f;
+	*EnemyMarioGetStickHPtr(this) = 0.0f;
+	unk108->mStickV              = 0.0f;
 	if (unk108->mStickHS16 < -7)
 		unk108->mStickH = unk108->mStickHS16 + 6;
 
@@ -1701,8 +1730,10 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	}
 	unk108->mFrameInput = unk108->mInput & (unk108->mInput ^ previousInput);
 
-	f32 stickRatio = unk108->mStickDist * (1.0f / 64.0f);
-	mIntendedMag   = 64.0f * (stickRatio * stickRatio) * 0.5f;
+	f32 stickRatio = unk108->mStickDist;
+	stickRatio *= (1.0f / 64.0f);
+	stickRatio *= stickRatio;
+	mIntendedMag = 64.0f * stickRatio * 0.5f;
 	if (mIntendedMag > 0.0f)
 		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH);
 	else
@@ -1799,8 +1830,8 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 
 void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	MActor* emarioActor   = nullptr;
 	J3DModel* emarioModel = nullptr;
+	MActor* emarioActor   = nullptr;
 
 	if (mSpecialModel == nullptr) {
 		emarioActor = mEMario->getMActor();
