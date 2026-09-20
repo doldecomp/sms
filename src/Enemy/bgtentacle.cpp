@@ -266,6 +266,12 @@ void TBGTakeHit::disableAttackCheck() { }
 
 MtxPtr TBGTakeHit::getTakingMtx() { return unk80; }
 
+static inline TBossGessoParams* BGGessoSaveParams(TBossGesso* g)
+{
+	TBossGessoParams* p = g->getSaveParam2();
+	return p;
+}
+
 // TODO: fake
 static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 {
@@ -280,10 +286,10 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	gpMap->isTouchedOneWallAndMoveXZ(&local_EC.x, local_EC.y, &local_EC.z,
 	                                 150.0f);
 
-	// TODO: tentacle inline?  The frame is still 0x10 short of retail's
-	// 0x110: `.get()` over `.value` and `getOwner()` over the raw member are
-	// +8 each, and a named `TBGTentacle* owner` for the r30 binding retail
-	// makes at the `getOwner()->getPosition()` below costs two instructions.
+	// TODO: 99.1%, frame exact at 0x110 (getOwner + save-params binder).
+	// Residue: delta 4 high, fromPolar/local_44 8 high, stretch/mag FPR
+	// swap, and an extra lwz of mOwner before incDamage (r30 not kept).
+	// A block-scoped owner for that load cost -8 and kept the extra insn.
 	JGeometry::TVec3<f32> delta = local_EC;
 	TBGTentacle* ten            = mOwner;
 	delta -= ten->getOwner()->getPosition();
@@ -293,7 +299,7 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 		unk74 = fromPolar(
 		    gpMarioOriginal->getIntendedYaw(),
 		    gpMarioOriginal->getIntendedMag()
-		        * mOwner->mOwner->getSaveParam2()->getSLTentacleStretch());
+		        * BGGessoSaveParams(mOwner->getOwner())->getSLTentacleStretch());
 
 		JGeometry::TVec3<f32> local_44 = mOwner->getOwner()->getPosition();
 		local_44 -= local_EC;
