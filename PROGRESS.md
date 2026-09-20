@@ -3775,3 +3775,60 @@ fehlende Out-of-line-Aufrufe etabliert (Diagnosekriterium: Zielfunktion
 ruft eine im Header als `dont_inline` markierte Methode auf, die im
 eigenen `src/*.o` gar nicht als eigenes Symbol erscheint, aber im
 `obj/*.o`-Referenzobjekt schon).
+
+### Nach neunundvierzigster Iterationsrunde, Abschluss: `MapObjLib.cpp`-Regressionskaskade bestätigt Grenzen von `defer_codegen off`
+
+Der `MapObjLibDeferCodegen`-Unteragent (86-Funktionen-Regressionsprüfung,
+16 Minuten Laufzeit) kam zu einem klaren **NO-GO**, sauber zurückgesetzt
+(`git status` bestätigt leer). Kernbefund: `#pragma defer_codegen off`
+wirkt NICHT nur lokal auf die Zielfunktion, sondern schaltet die GANZE
+Datei von „deferred" auf „sofortige" Codegen-Reihenfolge um — das bricht
+bereits bestehende, korrekt matchende Funktionen, die zufällig von der
+alten „ganze Datei auf einmal betrachten"-Inlining-Reihenfolge profitiert
+hatten (Beispiel: `TMapObjBase::startAllAnim` verlor sein Match, weil es
+VOR seiner einzigen Aufrufstelle `makeLowerStr` im Quellcode steht und
+implizit auf verzögertes Cross-Function-Inlining angewiesen war). Jeder
+Versuch, EINE Regression zu flicken, erzeugte eine NEUE an anderer
+Stelle (`makeObjMtxRotByAxis` 97,2 %→58,3 %, dann ein gemeinsames
+Weak-Template-Symbol `TRotation3<...>::setEular` 100 %→36,5 %) — ein
+**divergierendes, nicht konvergierendes** Regressionsmuster in dieser
+speziellen 86-Funktionen-Datei. Die primären Zielfunktionen
+(`getVerticalVecToTargetXZ`, `rotateVecByAxisY`) verbesserten sich dabei
+in KEINER getesteten Konfiguration, wurden in den meisten sogar
+schlechter als der unveränderte Ausgangszustand.
+
+**Präzisierte Methodik-Regel für `defer_codegen off`** (aktualisiert
+gegenüber der optimistischen Einschätzung aus Teil 2 dieser Runde):
+Dieser Fix funktioniert zuverlässig nur in **kleinen, isolierten
+Dateien** mit wenigen Funktionen und geringer gegenseitiger
+Inlining-Abhängigkeit (bestätigtes Beispiel: `sunmodel.cpp`). In
+**großen, dicht vernetzten Dateien** (wie `MapObjLib.cpp` mit 86
+Funktionen und vielen `TMapObjBase`-Methoden, die sich gegenseitig
+aufrufen) ist das Risiko einer Regressionskaskade hoch, weil
+`-inline deferred`s „gesamte Datei auf einmal betrachten"-Verhalten
+viele bereits-korrekte Matches UNSICHTBAR mitträgt. Vor jedem
+`defer_codegen off`-Versuch MUSS eine vollständige Vorher/Nachher-
+Regressionsprüfung über ALLE Funktionen der Zieldatei erfolgen (nicht
+nur der Zielfunktion); bei mehr als einer Handvoll Regressionen ist der
+Ansatz für diese Datei zu verwerfen, nicht zu erzwingen.
+
+### Rundenabschluss: Session-Gesamtstand
+
+**404 verifizierte echte Fixes in 62 Commits** nach Abschluss von Runde
+49 (4 neue Matches: `TMameGesso::reset`, `TDoroHamuKuri::attackToMario`,
+`TSunModel::calcDispRatioAndScreenPos_`, `TMario::onYoshi`).
+`matched_functions` in frisch generiertem `report.json`: **8991** (von
+8987 zu Rundenbeginn), `matched_code_percent`: 44,90 %. Volles
+`ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt `build/GMSJ01/
+mario.dol: OK`. `git fetch upstream` bestätigt weiterhin 0 Commits
+Rückstand. Acht parallele Unteragenten-Untersuchungen plus zwei
+eigene Tiefenanalysen (`TLiveActor::control()`, `evIsNpcSinkBottom`)
+plus die ursprüngliche `TBathtubKiller::behaveToWater`-Analyse ergaben
+zusätzlich: einen grundlegenden Methodik-Durchbruch (`defer_codegen
+off` für isolierte Dateien), zwei präzisierte Grenzfälle (asymmetrische
+Aufrufstellen-Inlining bei `WoodBlockLoad`, dateiweite
+Regressionskaskaden bei großen Dateien), und drei neue, für spätere
+dedizierte Header-Änderungsrunden dokumentierte Kandidaten
+(`JDRFlag.hpp`/`TFlagT` für `TApplication`-Konstruktoren, `JGVec3.hpp`s
+`operator*`-Rückgabe-für-Wert für Partikel-Code, `evIsNpcSinkBottom`s
+`TSpcStack::push`-Inlining-Asymmetrie).
