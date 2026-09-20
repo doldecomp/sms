@@ -797,10 +797,10 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 		if (dmgAmount <= 0)
 			return true;
 
-		if (mHitPoints >= dmgAmount)
+		if (dmgAmount >= mHitPoints)
 			mHitPoints = 0;
 		else
-			mHitPoints -= dmgAmount;
+			mHitPoints = mHitPoints - dmgAmount;
 
 		++unk18C;
 
