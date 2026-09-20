@@ -101,6 +101,7 @@ void TOrthoProj::load(JSUMemoryInputStream& stream)
 }
 void TOrthoProj::perform(u32 cue, TGraphics* graphics)
 {
+	char trash[8];
 	if (!(cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)))
 		return;
 
