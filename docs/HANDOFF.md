@@ -57,6 +57,13 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ## State log
 
+### Session cursor-orchestrator (2026-09-20 morning)
+
+- Landed `grptc` MarioSpecial: `moveRoof` exact (`getPosition`/`getPrevPosition` + named `mAnmMult`); `fenceMove` 95.4 -> 96.0 (swapped wall-normal arms + named `fenceSp`). Total matched code **61.23%**, game **53.04%**.
+- Spawned two Grok 4.6 unit ladders (disjoint): `grptd` / `mario/Enemy/bosspakkun`, `grpte` / `mario/Enemy/igaiga`. Scratch `/home/netflix/sms-wt/grptd-scratch` and `grpte-scratch`.
+- Stale unlanded worktrees still present: `grpfg` (bosseel), `grpfh` (WaterGun), `grpfi`/`grpfj`/`grpfk` (older). Do not reassign those units until landed or abandoned.
+- Next after these land: bossManta 8 near-misses, then thin queue / sweeps.
+
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
 - Frame ladders 270-290 closed ~110 functions on rung pricing (RULES: binder pricing, scalar-in-binder, per-site mixing, raw-global fork, unrolled loop +0x10, `ref()` sites); tell sweeps 272/283 and branch sweeps 289/291 fixed ~40 real gameplay bugs (right-to-left args, `TParamRT` index, branch-target reading, `!x` range fold). `MarioGamePad` linked (492/732; its `updateMeaning` still carries `u32 stackAlloc[83]`, an open debt). `objects.json` had two duplicate entries: the honest linked count was 491 before that link.
