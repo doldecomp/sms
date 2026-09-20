@@ -258,6 +258,8 @@ int TMario::doRoofMovingProcess()
 	newPos.z = mPosition.z - mVel.z * mRoofPlane->getNormal().y;
 	newPos.y = mPosition.y;
 
+	char trash[4];
+
 	int code = hangingCheckRoof(&newPos);
 	if (code == 2)
 		code = 0;
