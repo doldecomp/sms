@@ -485,32 +485,34 @@ void TTelesa::moveObject()
 	changeTevKColor();
 }
 
+// TODO: frame-exact; the `nextPos - mPosition` temporary still sits at 0xa0
+// instead of retail's 0x50 (the `a = b - c` allocation-order family).
 void TTelesa::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
 
-	JGeometry::TVec3<f32> nextPos = mPosition;
+	JGeometry::TVec3<f32> nextPos = getPosition();
 	nextPos.y -= mCurrentFlyHeight + mFlyBobOffsetY;
 	nextPos += mLinearVelocity;
-	nextPos += mVelocity;
+	nextPos += getVelocity();
 
 	mVelocity.y -= getGravityY();
 
-	if (mVelocity.y < mVelocityMinY)
+	if (getVelocity().y < mVelocityMinY)
 		mVelocity.y = mVelocityMinY;
 
 	if (mGroundHeightDampeningSpeed == 0.0f
-	    || mSpine->getCurrentNerve() == &TNerveTelesaDie::theNerve()) {
+	    || getSpine()->getCurrentNerve() == &TNerveTelesaDie::theNerve()) {
 		mGroundHeight
 		    = gpMap->checkGround(nextPos.x, nextPos.y + mHeadHeight + 200.0f,
 		                         nextPos.z, &mGroundPlane);
 
 		if (unk184 == nullptr
-		    && mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
-			if (unk124->getGraph() && !unk124->getGraph()->isDummy()) {
+		    && getSpine()->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
+			if (getTracer()->getGraph() && !getTracer()->getGraph()->isDummy()) {
 				JGeometry::TVec3<f32> VStack_24;
-				unk124->getCurrent().getPoint(&VStack_24);
+				getTracer()->getCurrent().getPoint(&VStack_24);
 				mGroundHeight = VStack_24.y;
 			}
 		}
@@ -521,7 +523,7 @@ void TTelesa::bind()
 	if (nextPos.y <= mGroundHeight + 0.05f) {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.set(0.0f, 0.0f, 0.0f);
-		if (mSpine->getCurrentNerve() == &TNerveTelesaDie::theNerve())
+		if (getSpine()->getCurrentNerve() == &TNerveTelesaDie::theNerve())
 			nextPos.y = mGroundHeight;
 	} else {
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
