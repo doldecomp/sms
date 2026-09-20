@@ -45,6 +45,10 @@ TMovieDirector::TMovieDirector()
     , unk20(nullptr)
     , unk24(nullptr)
     , unk30(0)
+#ifdef VERSION_GMSP01
+    , unk34(0)
+    , unk38(0)
+#endif
 {
 }
 
