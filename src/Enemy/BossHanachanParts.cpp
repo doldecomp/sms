@@ -128,7 +128,7 @@ void TBossHanachanPartsBase::initMapCollisionAndHitActor_(TIdxGroupObj* group)
 		offsetY = params->mSLHeadHitOffsetY.get();
 		break;
 	}
-	J3DModel* model = getMActor()->getModel();
+	J3DModel* model = mMActor->getModel();
 	JUTNameTab* names = model->getModelData()->getJointName();
 	u16 joint = names->getIndex(cMapCollisionJointName);
 	unk108 = getMActor()->getModel()->getAnmMtx(joint);
@@ -154,11 +154,13 @@ static inline J3DModel* BossHanachanPartsGetModel(const MActor* p)
 void TBossHanachanPartsBody::initFootHitActor_(TIdxGroupObj* group)
 {
 	static const char* sFootJointName[] = { "foot_L", "foot_R" };
+	int i;
+	J3DModel* model;
 	int joints[2];
 	TBossHanachanCommonSaveParams* params = unkFC->mCommonParams;
-	J3DModel* model = BossHanachanPartsGetModel(mMActor);
+	model = BossHanachanPartsGetModel(getMActor());
 	JUTNameTab* names = model->getModelData()->getJointName();
-	for (int i = 0; i < 2; ++i) {
+	for (i = 0; i < 2; ++i) {
 		joints[i] = names->getIndex(sFootJointName[i]);
 		mFeet[i] = new TFootHitActor("ボスハナチャンの足");
 		mFeet[i]->initHitActor(getActorType(), 1, ACTOR_TYPE_PLAYER,
@@ -233,7 +235,7 @@ void TBossHanachanPartsBase::setDamageFog_(JDrama::TGraphics* graphics)
 	bool isBody = true;
 	if (getActorType() == 0x08000014)
 		isBody = false;
-	J3DModelData* data = getMActor()->getModel()->getModelData();
+	J3DModelData* data = mMActor->getModel()->getModelData();
 	u16 materialCount = data->getMaterialNum();
 	JGeometry::TVec3<f32> position(unk108[0][3], unk108[1][3], unk108[2][3]);
 	if (unkFC->getLatestNerve() == &TNerveBossHanachanDamage::theNerve()) {
@@ -271,12 +273,21 @@ bool TBossHanachanPartsBase::isCurBckAlreadyEnd_() const
 	return result;
 }
 
+// Binding level over a raw mMActor read. Two sites in
+// copyFrameFromOldAnmToNewAnm_ target +0x10 of frame.
+static inline MActor*
+BossHanachanPartsGetActor(const TBossHanachanPartsBase* p)
+{
+	MActor* actor = p->mMActor;
+	return actor;
+}
+
 void TBossHanachanPartsBase::copyFrameFromOldAnmToNewAnm_()
 {
-	J3DAnmTransform* anm = mMActor->getBckAnm();
+	J3DAnmTransform* anm = BossHanachanPartsGetActor(this)->getBckAnm();
 	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 	if (anm && ctrl) {
-		f32 frame = mMActor->getBckOldMotionBlendFrame();
+		f32 frame = BossHanachanPartsGetActor(this)->getBckOldMotionBlendFrame();
 		anm->setFrame(frame);
 		ctrl->setFrame(frame);
 	}
@@ -452,6 +463,15 @@ void TBossHanachanPartsBase::considerSetAnm_(EnumBossHanachanNerveAnm nerve)
 	}
 }
 
+// Two-local binder over mMActor + getModel, +0x10 for body setAnm_.
+static inline J3DModel*
+BossHanachanPartsGetActorModel(const TBossHanachanPartsBase* p)
+{
+	MActor* actor = p->mMActor;
+	J3DModel* model = actor->getModel();
+	return model;
+}
+
 bool TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
                                     EnumBossHanachanStopMotionBlendOnOff blend)
 {
@@ -462,10 +482,8 @@ bool TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
 	if (mCurrentAnm != anm) {
 		mPreviousAnm = mCurrentAnm;
 		mCurrentAnm = anm;
-		int current = mMActor->getCurAnmIdx(ANM_TYPE_BCK);
-		int next = sBodyBckIndex[anm];
-		if (next != current) {
-			int index = next;
+		if (sBodyBckIndex[anm] != mMActor->getCurAnmIdx(ANM_TYPE_BCK)) {
+			int index = sBodyBckIndex[anm];
 			if (unk114 == unkFC->mWeakBodyIndex) {
 				switch (anm) {
 				case BOSS_HANACHAN_ANM_UNK2: index = 11; break;
@@ -483,7 +501,7 @@ bool TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
 		if (anm == BOSS_HANACHAN_ANM_UNK15) {
 			mMActor->setBrkFromIndex(0);
 			mMActor->getFrameCtrl(ANM_TYPE_BRK)->setAttribute(J3DFrameCtrl::ATTR_ONCE);
-			mMActor->getModel()->unlock();
+			BossHanachanPartsGetActorModel(this)->unlock();
 		}
 	}
 	return changed;
