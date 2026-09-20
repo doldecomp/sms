@@ -442,6 +442,26 @@ void TTrembleModelEffect::reset()
 	unk0->getVertexBuffer()->setCurrentVtxPos(unk4);
 }
 
+// Three binder rungs (+0x10, +8, +8) and SMSGetCamera() (+8) carry this
+// body's 0x30 of accessor pool below the local_80 Vec.
+static inline J3DMaterial* DrawUtilGetMaterial(J3DModelData* md, u16 i)
+{
+	J3DMaterial* mat = md->getMaterialNodePointer(i);
+	return mat;
+}
+
+static inline J3DPEBlock* DrawUtilGetPEBlock(J3DMaterial* mat)
+{
+	J3DPEBlock* peBlock = mat->getPEBlock();
+	return peBlock;
+}
+
+static inline J3DFog* DrawUtilGetFog(J3DPEBlock* peBlock)
+{
+	J3DFog* fog = peBlock->getFog();
+	return fog;
+}
+
 void SMS_AddDamageFogEffect(J3DModelData* param_1,
                             const JGeometry::TVec3<f32>& param_2,
                             JDrama::TGraphics* param_3)
@@ -464,17 +484,17 @@ void SMS_AddDamageFogEffect(J3DModelData* param_1,
 	endOsc *= s;
 
 	// TODO: retail keeps the peaks in the volatile pair (f1/f0) and the
-	// bases in f31/f30; spelling the subtraction as one expression is what
-	// puts the peaks there, and that expression folds. The frame is also
-	// 0x30 short: retail reserves 0x28 of pool below the local_80 Vec.
+	// bases in f31/f30, which needs the peaks anonymous -- that is, the
+	// subtraction as one expression, and that expression folds. Frame and
+	// instruction count are exact; declaration order is inert here.
 
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
-		J3DFog* fog
-		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
+		J3DFog* fog = DrawUtilGetFog(
+		    DrawUtilGetPEBlock(DrawUtilGetMaterial(param_1, i)));
 		fog->mStartZ = -local_80.z + startBase + startOsc;
 		fog->mEndZ   = -local_80.z + endBase + endOsc;
-		fog->mNearZ  = gpCamera->getNear();
-		fog->mFarZ   = gpCamera->getFar();
+		fog->mNearZ  = SMSGetCamera()->getNear();
+		fog->mFarZ   = SMSGetCamera()->getFar();
 	}
 }
 
