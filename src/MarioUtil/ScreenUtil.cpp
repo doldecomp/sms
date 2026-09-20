@@ -114,8 +114,9 @@ void TAfterEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 	color.g = 0;
 	color.b = 0;
 	color.a = 0;
+	char trash[4];
 
-	const JDrama::TRect& rect = graphics->getViewport();
+	const JDrama::TRect& rect = graphics->mViewportRect;
 
 	unk20 += unk48 * (unk1B - unk20);
 	unk24 += unk48 * (unk1C - unk24);
