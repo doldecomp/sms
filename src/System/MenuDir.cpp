@@ -357,6 +357,7 @@ void TMenuDirector::setFixedStageValue()
 	unk4C = unk44->unk2C;
 	int local_30[]
 	    = { 0, 0x14, 0x1c, 0x1e, 0x20, 0x22, 0x28, 0, 0x2a, 0x2c, 0x2e };
+	char trash[0x1C];
 
 	if ((unk48 == 0x11) || (unk48 == 0x12)) {
 		int movie = unk4C;
