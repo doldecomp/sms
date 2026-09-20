@@ -336,6 +336,15 @@ void TSandBombBase::waitBeforeExplode()
 
 void TSandBombBase::grow() { mState = STATE_FIRING; }
 
+static inline MActor* SandBombMActor(const TSandBomb* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
+// TODO: frame and instruction count are exact; the remaining difference is
+// FPR colouring in the STATE_GROWN arm, where retail gives `frame` f30 and we
+// give it f31 (retail reserves f31 for the STATE_FIRING speeds).
 void TSandBombBase::control()
 {
 	TMapObjBase::control();
@@ -344,31 +353,29 @@ void TSandBombBase::control()
 
 	switch (mState) {
 	case STATE_GROWN: {
-		f32 frame = trigger->getMActor()->getFrameCtrl(0)->getFrame()
+		f32 frame = SandBombMActor(trigger)->getFrameCtrl(0)->getFrame()
 		    - mFiringFrameDownSpeed;
 		if (frame >= 0.0f) {
-			mTrigger->getMActor()->getFrameCtrl(0)->setFrame(frame);
-			mTrigger->getMActor()->getFrameCtrl(5)->setFrame(frame);
+			SandBombMActor(mTrigger)->getFrameCtrl(0)->setFrame(frame);
+			SandBombMActor(mTrigger)->getFrameCtrl(5)->setFrame(frame);
 		}
 		break;
 	}
 
 	case STATE_FIRING: {
-		f32 speed = mExplodeFrameSpeed;
-		trigger->getMActor()->getFrameCtrl(0)->setFrame(
-		    speed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
-		{
-			TSandBomb* t = mTrigger;
-			f32 speed    = mExplodeFrameSpeed;
-			t->getMActor()->getFrameCtrl(5)->setFrame(
-			    speed + t->getMActor()->getFrameCtrl(5)->getFrame());
-		}
-		{
-			TSandBomb* t = mTrigger;
-			f32 speed    = mExplodeFrameSpeed;
-			t->getMActor()->getFrameCtrl(3)->setFrame(
-			    speed + t->getMActor()->getFrameCtrl(3)->getFrame());
-		}
+		f32 speed0 = mExplodeFrameSpeed;
+		SandBombMActor(trigger)->getFrameCtrl(0)->setFrame(
+		    speed0 + trigger->getMActor()->getFrameCtrl(0)->getFrame());
+
+		TSandBomb* t5 = mTrigger;
+		f32 speed5    = mExplodeFrameSpeed;
+		t5->getMActor()->getFrameCtrl(5)->setFrame(
+		    speed5 + t5->getMActor()->getFrameCtrl(5)->getFrame());
+
+		TSandBomb* t3 = mTrigger;
+		f32 speed3    = mExplodeFrameSpeed;
+		t3->getMActor()->getFrameCtrl(3)->setFrame(
+		    speed3 + t3->getMActor()->getFrameCtrl(3)->getFrame());
 		if (mTrigger->animIsFinished())
 			waitBeforeExplode();
 		break;
