@@ -267,21 +267,38 @@ void TNozzleBase::init()
 	unk37C = 0.0f;
 }
 
+static inline TWaterGun* NozzleFludd(const TNozzleBase* p)
+{
+	TWaterGun* fludd = p->mFludd;
+	return fludd;
+}
+
+static inline TMario* NozzleMario(const TNozzleBase* p)
+{
+	TMario* mario = p->mFludd->mMario;
+	return mario;
+}
+
+static inline TMario* NozzleMario2(const TNozzleBase* p)
+{
+	TMario* mario = NozzleMario(p);
+	return mario;
+}
+
 void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 {
 	// volatile u32 unused1[17];
-	if (mFludd->mMario == gpMarioAddress
+	if (NozzleMario2(this) == gpMarioAddress
 	    && (gpCamera->isLButtonCamera() || gpCamera->isJetCoaster1stCamera())) {
 		unk36E = gpCamera->mCurrentTarget.mPitch;
 		return;
 	}
 
 	s16 angle;
-	if (mFludd->mMario->mStatus == MARIO_STATUS_SQUAT) {
-		// TODO: Wrong reguster used, using r3 instead of r4
-		angle = unk36E
-		        + (s16)(mFludd->mMario->mGamePad->mCompSPos[0 * 2 + 1]
-		                * mEmitParams.mRButtonMult.get());
+	if (NozzleMario2(this)->mStatus == MARIO_STATUS_SQUAT) {
+			angle = unk36E;
+		angle += (s16)(NozzleMario2(this)->mGamePad->mCompSPos[0 * 2 + 1]
+		               * mEmitParams.mRButtonMult.get());
 	} else {
 		angle = -mEmitParams.mLAngleBase.get();
 	}
@@ -551,18 +568,6 @@ void TNozzleTrigger::init()
 	unk36C = 0;
 	unk386 = 0;
 	unk388 = 0.0f;
-}
-
-static inline TWaterGun* NozzleFludd(const TNozzleBase* p)
-{
-	TWaterGun* fludd = p->mFludd;
-	return fludd;
-}
-
-static inline TMario* NozzleMario(const TNozzleBase* p)
-{
-	TMario* mario = p->mFludd->mMario;
-	return mario;
 }
 
 static inline MSound* WaterGunMSound()
