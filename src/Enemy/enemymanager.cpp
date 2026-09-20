@@ -213,8 +213,10 @@ void TEnemyManager::updateAnmSoundShared()
 
 void TEnemyManager::copyFromShared()
 {
+	Mtx afStack_58;
 	Mtx afStack_88;
 	MTXCopy(j3dSys.getViewMtx(), afStack_88);
+	char trash[12];
 
 	s32 r29 = getActiveObjNum();
 
@@ -234,7 +236,6 @@ void TEnemyManager::copyFromShared()
 			MtxPtr src = enemy->getModel()->getBaseTRMtx();
 			MTXScaleApply(src, src, enemy->mScaling.x, enemy->mScaling.y,
 			              enemy->mScaling.z);
-			Mtx afStack_58;
 			MTXConcat(afStack_88, src, afStack_58);
 			j3dSys.setViewMtx(afStack_58);
 
