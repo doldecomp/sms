@@ -1087,18 +1087,10 @@ DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor)
 	return FALSE;
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// TNerveTobiPukuDie::execute (batch 127).
-static inline u8 TobiPukuUnk1AD(const TTobiPuku* p)
-{
-	u8 v1AD = p->unk1AD;
-	return v1AD;
-}
-
 // TODO: incorrect size. Map records 0x1fc (508 bytes).
 DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
 {
-	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
+	TTobiPuku* puku = TobiPukuBody(spine);
 
 	if (spine->getTime() == 0) {
 		if (puku->isAirborne()) {
@@ -1108,7 +1100,7 @@ DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
 			stop.y          = vel.y;
 			puku->mVelocity = stop;
 			puku->setDownAirAnm();
-		} else if (TobiPukuUnk1AD(puku) != 0) {
+		} else if (puku->unk1AD != 0) {
 			puku->mHitFlags |= HIT_FLAG_NO_COLLISION;
 			puku->setDownLandAnm();
 		} else {
