@@ -1447,6 +1447,18 @@ TWaterGun::TDeParams::TDeParams()
 
 // TODO: Do i really need to explcitly say this?
 #pragma dont_inline on
+static inline TNozzleBase* WaterGunCurNozzle(const TWaterGun* p)
+{
+	TNozzleBase* n = p->getCurrentNozzle();
+	return n;
+}
+
+static inline const TNozzleBmdData* WaterGunBmdData()
+{
+	const TNozzleBmdData* d = &nozzleBmdData;
+	return d;
+}
+
 MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 {
 	MtxPtr result = nullptr;
@@ -1454,14 +1466,14 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 		result = mMario->mYoshi->getTongueMtx();
 	} else {
 		// This entire block is likely an inlined function.
-		s32 flag = nozzleBmdData.getFlags(mCurrentNozzle, jointIndex);
+		s32 flag = WaterGunBmdData()->getFlags(mCurrentNozzle, jointIndex);
 
 		switch (flag) {
 		case 0:
 		case 1:
 		case 2:
-			result = getCurrentNozzle()->getMActor()->getModel()->getAnmMtx(
-			    nozzleBmdData.getJointIndex(mCurrentNozzle, jointIndex));
+			result = WaterGunCurNozzle(this)->getMActor()->getModel()->getAnmMtx(
+			    WaterGunBmdData()->getJointIndex(mCurrentNozzle, jointIndex));
 			break;
 		case 3:
 			result = mMario->mYoshi->getTongueMtx();
@@ -1505,10 +1517,22 @@ J3DModel* TWaterGun::getModel() { return mFluddModel->mModel; }
 // animations by name, so the id form has no surviving call site.
 void TWaterGun::getWaterGunAnmID(int index) { }
 
+static inline TMario* WaterGunGetMario(const TWaterGun* p)
+{
+	TMario* mario = p->mMario;
+	return mario;
+}
+
+static inline TNozzleBase* WaterGunCurNozzle2(const TWaterGun* p)
+{
+	TNozzleBase* n = WaterGunCurNozzle(p);
+	return n;
+}
+
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {
 	f32 usedWater = (f32)mCurrentWater
-	                / mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
+	                / WaterGunCurNozzle2(this)->mEmitParams.mAmountMax.get();
 	if (nozzleType == Spray) {
 		if (animate == true) {
 			mSwitchToSecondNozzleProgress = 0.0f;
@@ -1520,13 +1544,13 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 		}
 	}
 	mCurrentNozzle = nozzleType;
-	mNozzleList[mCurrentNozzle]->init();
+	WaterGunCurNozzle(this)->init();
 	if (nozzleType == Yoshi) {
-		mCurrentWater = mMario->mYoshi->unkD4;
+		mCurrentWater = WaterGunGetMario(this)->mYoshi->unkD4;
 	} else {
 		mCurrentWater
 		    = usedWater
-		      * mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
+		      * WaterGunCurNozzle(this)->mEmitParams.mAmountMax.get();
 	}
 }
 
