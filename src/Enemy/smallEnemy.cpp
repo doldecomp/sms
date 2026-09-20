@@ -309,14 +309,10 @@ void TSmallEnemy::reset()
 	f32 attackRadius = getSaveParams()->getSLAttackRadius();
 	f32 attackHeight = getSaveParams()->getSLAttackHeight();
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.value;
 
-	attackRadius *= mBodyScale;
-	attackHeight *= mBodyScale;
-	damageRadius *= mBodyScale;
-	damageHeight *= mBodyScale;
-
-	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
+	setHitParams(attackRadius * mBodyScale, attackHeight * mBodyScale,
+	             damageRadius * mBodyScale, damageHeight * mBodyScale);
 
 	unk164 = 0;
 
@@ -469,17 +465,12 @@ void TSmallEnemy::moveObject()
 
 	f32 attackRadius = getSaveParams()->getSLAttackRadius();
 	f32 attackHeight = getSaveParams()->getSLAttackHeight();
-	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+	f32 damageRadius = getSaveParams()->mSLDamageRadius.value;
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.value;
 
-	f32 scale = mBodyScale;
+	setHitParams(attackRadius * mBodyScale, attackHeight * mBodyScale,
+	             damageRadius * mBodyScale, damageHeight * mBodyScale);
 
-	mAttackRadius = attackRadius * scale;
-	mAttackHeight = attackHeight * scale;
-	mDamageRadius = damageRadius * scale;
-	mDamageHeight = damageHeight * scale;
-
-	calcEntryRadius();
 	ensureTakeSituation();
 	mLinearVelocity.zero();
 	mAngularVelocity.zero();
@@ -498,11 +489,12 @@ void TSmallEnemy::moveObject()
 		if (!isCollidMove(col))
 			continue;
 
-		JGeometry::TVec3<f32> v;
-		v.zero();
-
 		JGeometry::TVec3<f32> local_74;
-		local_74.sub(mPosition, col->mPosition);
+		JGeometry::TVec3<f32> v(0.0f, 0.0f, 0.0f);
+
+		local_74.set(mPosition.x - col->mPosition.x,
+		             mPosition.y - col->mPosition.y,
+		             mPosition.z - col->mPosition.z);
 		if (local_74.x == 0.0f && local_74.y == 0.0f && local_74.z == 0.0f)
 			local_74.x += 1;
 
@@ -884,14 +876,12 @@ void TSmallEnemy::expandCollision()
 	f32 attackRadius = getSaveParams()->getSLAttackRadius();
 	f32 attackHeight = getSaveParams()->getSLAttackHeight();
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.value;
 
-	attackRadius *= unk190 / unk154;
-	attackHeight *= unk190 / unk154;
-	damageRadius *= unk190 / unk154;
-	damageHeight *= unk190 / unk154;
+	f32 scale = unk190 / unk154;
 
-	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
+	setHitParams(attackRadius * scale, attackHeight * scale,
+	             damageRadius * scale, damageHeight * scale);
 }
 
 // Binding level worth +8 of low region, landing TSmallEnemy::isEaten's frame
@@ -916,20 +906,28 @@ bool TSmallEnemy::isEaten()
 	return false;
 }
 
+// Binder over the record's first hit wall; the low pool retail's inlines leave
+// behind under isHitWallInBound's named block is 8 bytes per bound site.
+static inline TBGCheckData* SmallEnemyHitWall(const TBGWallCheckRecord& record)
+{
+	TBGCheckData* wall = record.mResultWalls[0];
+	return wall;
+}
+
 bool TSmallEnemy::isHitWallInBound()
 {
 	mWallRadius = 25.0f;
-	TBGWallCheckRecord local_3C(mPosition.x, mPosition.y + mHeadHeight,
-	                            mPosition.z, mWallRadius * mBodyScale * 1.1f, 1,
-	                            0);
+	TBGWallCheckRecord local_3C(getPosition().x, mPosition.y + mHeadHeight,
+	                            getPosition().z,
+	                            mWallRadius * mBodyScale * 1.1f, 1, 0);
 
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_3C)) {
-		f32 sVar2 = matan(local_3C.mResultWalls[0]->mNormal.z,
-		                  local_3C.mResultWalls[0]->mNormal.x)
+		f32 sVar2 = matan(SmallEnemyHitWall(local_3C)->mNormal.z,
+		                  SmallEnemyHitWall(local_3C)->mNormal.x)
 		            * (360.0f / 65536.0f);
 
-		JGeometry::TVec3<f32> v(mVelocity.x, 0.0f, mVelocity.z);
-		if (v.dot(local_3C.mResultWalls[0]->getNormal()) > 0.0f)
+		JGeometry::TVec3<f32> v(getVelocity().x, 0.0f, getVelocity().z);
+		if (v.dot(SmallEnemyHitWall(local_3C)->getNormal()) > 0.0f)
 			return false;
 
 		mPosition.x = local_3C.mCenter.x;
