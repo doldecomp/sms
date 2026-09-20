@@ -1201,12 +1201,24 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+static inline J3DModel* EggYoshiLoadModel(const TEggYoshi* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
+static inline TFlagManager* EggYoshiLoadFlags()
+{
+	TFlagManager* flagManager = TFlagManager::getInstance();
+	return flagManager;
+}
+
 void TEggYoshi::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 
 	if (strcmp(unkF4, "eggYoshiEvent") == 0) {
-		if (TFlagManager::getInstance()->getFlag(0x60003) == 1) {
+		if (EggYoshiLoadFlags()->getFlag(0x60003) == 1) {
 			mState = 0xE;
 		} else {
 			makeObjDead();
@@ -1226,7 +1238,7 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 	    "/scene/mapObj/eggYoshi_fukidashi.bmd", mManager->getMActorAnmData(), 3,
 	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 	        | (1 << J3DMLF_TevStageNumShift));
-	MtxPtr src = getModel()->getAnmMtx(0);
+	MtxPtr src = EggYoshiLoadModel(this)->getAnmMtx(0);
 	PSMTXCopy(src, unk148->getModel()->getBaseTRMtx());
 	unk148->setBck("eggyoshi_fukidashi_wait");
 	unk148->setBtp("eggyoshi_fukidashi");
