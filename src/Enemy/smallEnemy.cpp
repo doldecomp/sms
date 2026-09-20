@@ -172,6 +172,13 @@ static inline TMActorKeeper* SmallEnemyMActorKeeper(const TSmallEnemy* p)
 	return mActorKeeper;
 }
 
+// Binder over SMSGetMarDirector(); priced on TSmallEnemy::init's two tests.
+static inline TMarDirector* SmallEnemyMarDirector()
+{
+	TMarDirector* director = SMSGetMarDirector();
+	return director;
+}
+
 void TSmallEnemy::setMActorAndKeeper()
 {
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
@@ -186,8 +193,8 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	setMActorAndKeeper();
 
 	onLiveFlag(LIVE_FLAG_DEAD);
-	if (SMSGetMarDirector()->getCurrentMap() == 2
-	    && SMSGetMarDirector()->getCurrentStage() == 0)
+	if (SmallEnemyMarDirector()->getCurrentMap() == 2
+	    && SmallEnemyMarDirector()->getCurrentStage() == 0)
 		onLiveFlag(LIVE_FLAG_UNK2000);
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	unk158 = 1.0f;
@@ -359,7 +366,7 @@ void TSmallEnemy::genEventCoin()
 
 	if (mCoin) {
 		TCoin* coin;
-		if (isActorType(0x2000000E)) {
+		if (mCoin->isActorType(0x2000000E)) {
 			coin = (TCoin*)gpItemManager->makeObjAppear(0x2000000E);
 		} else {
 			coin = mCoin;
@@ -376,7 +383,7 @@ void TSmallEnemy::genEventCoin()
 
 	if (unk18C > 0) {
 		for (int i = 0; i < unk18C; ++i) {
-			Mtx44 local_c0;
+			Mtx local_c0;
 
 			f32 angle = 360.0f / unk18C * i + mRotation.y;
 			f32 s     = JMASin(angle);
@@ -995,6 +1002,13 @@ static inline TSmallEnemy* SmallEnemyGetBody(TSpineBase<TLiveActor>* spine)
 	return body;
 }
 
+// Binder over getSaveParams(); +8 of low pool in HitWaterJump.
+static inline TSmallEnemyParams* SmallEnemySaveParams(const TSmallEnemy* p)
+{
+	TSmallEnemyParams* params = p->getSaveParams();
+	return params;
+}
+
 DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
@@ -1099,7 +1113,7 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 
 DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 {
-	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
+	TSmallEnemy* self = SmallEnemyGetBody(spine);
 
 	if (spine->getTime() == 0) {
 		if (self->checkLiveFlag2(0x8000)
@@ -1109,9 +1123,9 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 		self->setWaitAnm();
 		self->jumpBehavior();
 
-		JGeometry::TVec3<f32> v = self->mVelocity;
-		v.y                     = self->getSaveParams()->mSLJumpForce.get();
-		self->mVelocity         = v;
+		JGeometry::TVec3<f32> v = self->getVelocity();
+		v.y = SmallEnemySaveParams(self)->mSLJumpForce.get();
+		self->setVelocity(v);
 
 		self->onLiveFlag(LIVE_FLAG_UNK8000);
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
