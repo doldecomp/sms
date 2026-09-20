@@ -1876,21 +1876,17 @@ static inline TBossEelEye* BosseelShedEye(const TBossEel* p, s32 i)
 	return eye;
 }
 
-// Pragma residue (sweep 360): protects TBossEelTooth::receiveMessage
-// (100 -> 70.9), TNerveBossEelDie (99.95 -> 87.4) and
-// TNerveBossEelSleepOnBottom (100 -> 41.1). The body is 13 statements against a budget of 14; a
-// named `bool toggle` plus a named TBossEelEye* for the two BosseelEye() reads
-// is the +2 that reaches the floor -- the callers then stay exact -- but the
-// body itself drops to 91.0. Retail's shape for the second is a *reference*
-// binding, not a named pointer: `TBossEelEye*& tearEye = mEyes[eyeIndex];`
-// gives retail's `lwzu r3, 0x15c(r29)` plus a reload through r29 and takes the
-// body to 97.5 instruction-near, but drops the frame to 0x30 against retail's
-// 0x58 because it also drops the two BosseelEye()/BosseelShedEye() forks that
-// carry the pool. A reference-returning fork over mEyes[i] is the open lead.
-#pragma dont_inline on
+// Retail calls this from TBossEelTooth::receiveMessage, TNerveBossEelDie and
+// TNerveBossEelSleepOnBottom instead of expanding it, so the body has to cost
+// 15 statements under the measured depth-1 budget of 14. The two that reach the
+// floor are both byte-free: naming the toggle out of its own store, and naming
+// the shed eye out of the getConnectedMtx() chain. Both the body and all three
+// callers stay exact, so the `dont_inline` pragma that used to stand here is
+// gone (pragma sweep 360's open lead, closed).
 void TBossEel::forceShedTears(bool rearEyes)
 {
-	mTearEyeToggle = !mTearEyeToggle;
+	bool toggle    = !mTearEyeToggle;
+	mTearEyeToggle = toggle;
 	s32 eyeIndex;
 	if (!rearEyes) {
 		eyeIndex = 0;
@@ -1902,12 +1898,12 @@ void TBossEel::forceShedTears(bool rearEyes)
 			eyeIndex = 3;
 	}
 
-	MtxPtr spawnMtx = BosseelShedEye(this, eyeIndex)->getConnectedMtx();
+	TBossEelEye* shedEye = BosseelShedEye(this, eyeIndex);
+	MtxPtr spawnMtx      = shedEye->getConnectedMtx();
 	BosseelEye(this, eyeIndex)->setBckAnm(1);
 	BosseelEye(this, eyeIndex)->mAnimationLoopCount = 0;
 	shedTears(spawnMtx);
 }
-#pragma dont_inline off
 
 void TBossEel::generateVortex()
 {
