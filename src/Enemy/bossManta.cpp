@@ -893,8 +893,9 @@ void TBossMantaManager::TMantaBattleState::update()
 		}
 		break;
 	case 1: {
+		int i;
 		bool allMaxGen = true;
-		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (BossMantaCheckLiveFlag(m, LIVE_FLAG_DEAD))
 				continue;
@@ -914,8 +915,9 @@ void TBossMantaManager::TMantaBattleState::update()
 		break;
 	}
 	case 2: {
+		int i;
 		bool victory = true;
-		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->mGeneration != 5)
 				continue;
@@ -927,7 +929,7 @@ void TBossMantaManager::TMantaBattleState::update()
 		if (victory) {
 			MSBgm::stopTrackBGMs(7, 10);
 			sDefeatSE = nullptr;
-			SMSGetMSound()->startSoundActor(MSD_SE_BS_MANTA_ALL_DEATH, nullptr,
+			gpMSound->startSoundActor(MSD_SE_BS_MANTA_ALL_DEATH, nullptr,
 			                                0, &sDefeatSE, 0, 4);
 			mState++;
 		}
@@ -947,12 +949,18 @@ void TBossMantaManager::TMantaBattleState::update()
 	}
 }
 
+static inline TMarDirector* BossMantaGetDirector()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
 void TBossMantaManager::TMantaMessageState::update()
 {
 	switch (unk4) {
 	case 0:
 		if (((TBossManta*)unk0->getObj(0))->isSpawnState()) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xC, true);
+			BossMantaGetDirector()->getConsole()->startAppearBalloon(0xC, true);
 			unk4++;
 		}
 		break;
@@ -964,7 +972,7 @@ void TBossMantaManager::TMantaMessageState::update()
 				aliveCount++;
 		}
 		if (aliveCount > 50) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xD, true);
+			BossMantaGetDirector()->getConsole()->startAppearBalloon(0xD, true);
 			unk4++;
 		}
 		break;
