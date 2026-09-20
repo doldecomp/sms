@@ -806,6 +806,7 @@ void TOptionControl::load()
 #pragma dont_inline on
 void TOptionControl::loadSetting()
 {
+	char trash[0x28];
 	switch (TFlagManager::getInstance()->getFlag(0xA0000)) {
 	case 0:
 		mSoundOption->setValue(0);
