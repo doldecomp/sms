@@ -170,7 +170,8 @@ void MSRandPlay::randPlay(u32 vec_idx)
 			                            4);
 			break;
 		default:
-			JAIActor actor(vec->mTrans, vec->mTrans, vec->mTrans, 0);
+			const Vec* trans = vec->mTrans;
+			JAIActor actor(vec->mTrans, trans, trans, 0);
 			MSoundSE::startSoundActorInner(mSoundID, &vec->mSound, &actor, 0,
 			                               4);
 			break;
