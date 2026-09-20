@@ -14,6 +14,7 @@
 #endif
 
 #define VERSION_SELECT_JOIN(a, b, c, d, e, f, g, h, ...) a b c d e f g h
+
 #define VERSION_SELECT(...) (VERSION_SELECT_JOIN(__VA_ARGS__, , , , , , , ))
 
 #endif
