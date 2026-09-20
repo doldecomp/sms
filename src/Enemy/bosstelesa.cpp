@@ -554,12 +554,38 @@ void TTelesaSlot::calcRootMatrix()
 	TSlotDrum::calcRootMatrix();
 }
 
+// TODO: TTelesaSlot::mOwner wants an accessor in BossTelesaObj.hpp; parked
+// here as a TU-local until a header batch adds it.
+
+static inline int TelesaSlotForcastResult(TTelesaSlot* p, int index)
+{
+	int result = p->getForcastResult(index);
+	return result;
+}
+
+static inline MSound* TelesaSlotGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
+static inline TBossTelesa* TelesaSlotBindOwner(const TTelesaSlot* p)
+{
+	TBossTelesa* owner = p->mOwner;
+	return owner;
+}
+
+// The 0xd0 frame is three rungs: the owner binder at the params read (+0x10)
+// and at the pasted fanfale() body (+8), and the sound fork (+0x10).
+// TODO: one callee-saved register left -- the ROM keeps the fanfale() owner in
+// r27 where we rank it r26 (a pre-existing gap); every instruction is exact.
 void TTelesaSlot::moveObject()
 {
 	TLiveActor::moveObject();
 
 	for (int i = 0; i < unk148; ++i) {
-		if (mForceHit[i] && mForcedResult == getForcastResult(i)) {
+		if (mForceHit[i]
+		    && mForcedResult == TelesaSlotForcastResult(this, i)) {
 			mIsRolling[i] = false;
 			mForceHit[i]  = false;
 		}
@@ -595,14 +621,16 @@ void TTelesaSlot::moveObject()
 					unk13C[i] = unk168 * (s32)(unk13C[i] / (f32)unk168);
 					unk138[i] = 0.0f;
 
-					gpMSound->startSoundActor(MSD_SE_BS_TELESA_SLT_STOP,
+					TelesaSlotGetMSound()->startSoundActor(
+					    MSD_SE_BS_TELESA_SLT_STOP,
 					                          &mPosition, 0, nullptr, 0, 4);
 
 					for (int j = 0; j < unk148; ++j) {
 						if (mIsRolling[j]) {
 							TMsRange<f32> chance(0.0f, 1.0f);
-							f32 rate
-							    = mOwner->mParams->mSLSlotHitCollectRate.get();
+							f32 rate = TelesaSlotBindOwner(this)
+							               ->mParams->mSLSlotHitCollectRate
+							               .get();
 							if (chance.rand() <= rate)
 								mForceHit[j] = true;
 							else
@@ -617,7 +645,7 @@ void TTelesaSlot::moveObject()
 					}
 
 					if (allStopped)
-						mOwner->fanfale();
+						TelesaSlotBindOwner(this)->fanfale();
 				}
 			}
 		}
@@ -645,8 +673,6 @@ void TTelesaSlot::moveStart()
 
 u32 TTelesaSlot::touchWater(THitActor* actor) { return 0; }
 
-// TODO: TTelesaSlot::mOwner wants an accessor in BossTelesaObj.hpp; parked
-// here as a TU-local until a header batch adds it.
 static inline TBossTelesa* TelesaSlotGetOwner(const TTelesaSlot* p)
 {
 	return p->mOwner;
@@ -1826,6 +1852,18 @@ void TBossTelesa::setBckAnm(int index)
 // TODO: incorrect size. Map records 140 bytes.
 bool TBossTelesa::isInDamage() { return false; }
 
+static inline RumbleMgr* BossTelesaRouletteGetRumbleMgr()
+{
+	RumbleMgr* rumble = SMSRumbleMgr;
+	return rumble;
+}
+
+static inline TCameraShake* BossTelesaRouletteGetCameraShake()
+{
+	TCameraShake* shake = gpCameraShake;
+	return shake;
+}
+
 void TBossTelesa::rouletteStart()
 {
 	// A real ROM bug: the count is never used, so only the three speed loads
@@ -1864,9 +1902,10 @@ void TBossTelesa::rouletteStart()
 
 	rollRouletteCircle();
 
-	SMSRumbleMgr->start(0x14, 0xF, (f32*)nullptr);
+	BossTelesaRouletteGetRumbleMgr()->start(0x14, 0xF, (f32*)nullptr);
 	// mCamShakeNameSave[0x23] is "/Camera/shakeBTelesaRoll.prm".
-	gpCameraShake->startShake((EnumCamShakeMode)0x23, 1.0f);
+	BossTelesaRouletteGetCameraShake()->startShake((EnumCamShakeMode)0x23,
+	                                               1.0f);
 }
 
 void TBossTelesa::slotStart()
