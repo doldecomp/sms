@@ -40,22 +40,33 @@ class JPAEmitterManager;
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
-// TODO: 99.9%, every instruction and register exact. The frame is 0x310
-// against retail's 0x410 and the slots now shift uniformly: every named slot
-// (graphics at 0x2f4/0x1ec and its ctor's writes) is 0x108 apart and the
-// TColor inline temp 0x10c, while the save area and frame are 0x100 apart. So
-// the inline-temporary pool is 0x10c = 268 bytes short (ours 0xc..0x1e0 = 468
-// bytes, retail 0xc..0x2ec = 736) and the extra 4 bytes mod 8 is why our
-// TColor temp leaves a 4-byte hole below `graphics` where retail's is
-// contiguous. 268 is not `sizeof(TGraphics)`; it is 256 + 12, so the shape is
-// a 256-byte object plus a TVec3-sized one, or a run of smaller temps.
-// Since `graphics` is the only function-scope local and retail's sits at the
-// top of the pool, the missing bytes belong to inlined callees, not to this
-// body: a `volatile char trash[256]` declared last reaches 0x410 but leaves
-// every slot 0x100 low, and a dead 256-byte non-trivial local in a TU-static
-// inlined callee overshoots to 0x710. Which callee owns them is open; the 15
-// `TNameRefGen::search<T>` expansions are the only candidates numerous enough
-// to account for 468 bytes in our own build.
+// Two-local binder over search2: 0x408 alone / 0x410 with Setup2GamePad.
+// TColor then sits 4 low of retail (pool ordering). Root/instance forks that
+// closed preEntry's same residue are inert here (every site already shares
+// one binder). One-local forms drop to 0x3d0.
+template <class T> static inline T* Setup2Search(const char* name)
+{
+	JDrama::TNameRef* ref = JDrama::TNameRefGen::search2(name);
+	T* obj                = (T*)ref;
+	return obj;
+}
+
+static inline TMarioGamePad* Setup2GamePad(TMarDirector* dir)
+{
+	TMarioGamePad* pad = dir->getGamePad();
+	return pad;
+}
+
+// TODO: 100% fuzzy, frame exact at 0x410. Every slot matches except the
+// setColor TColor temporary: retail constructs at 0x2ec / copies at 0x2f0
+// (contiguous with graphics at 0x2f4); ours is 4 low (0x2e8 / 0x2ec) with a
+// dead word in the hole. Same residue class as preEntry's closed 4-byte
+// ordering gap, but the instance/root forks that fixed preEntry are inert
+// here (every search site already shares one two-local binder). Rejected:
+// named fadeColor (lands in the named block at 0x3ec), u32 TColor ctor,
+// setColor-before-mRate, a shine-fade wrapper, search<T> at the shine site,
+// one-local binders (frame 0x3d0). Setup2Search + Setup2GamePad +
+// getCurrentMap/Stage are load-bearing for the exact frame and arg order.
 //
 // The `graphics.unk0 = 0` below is read off the target: retail's second `sth`
 // goes to graphics+0x00, not graphics+0xFE (the +0xF4 `stw -1` and +0xFC `sth
@@ -63,13 +74,11 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 // only an implicit one).
 void TMarDirector::setup2()
 {
-	unkBC = JDrama::TNameRefGen::search<TNameRefAryT<TStageEventInfo> >(
-	    "イベントテーブル");
+	unkBC = Setup2Search<TNameRefAryT<TStageEventInfo> >("イベントテーブル");
 	if (unkBC) {
 		u16 eventId = 0;
 		for (TStageEventInfo* it = unkBC->begin(); it != unkBC->end(); ++it) {
-			TMapObjBase* obj
-			    = JDrama::TNameRefGen::search<TMapObjBase>(it->unk14);
+			TMapObjBase* obj = Setup2Search<TMapObjBase>(it->unk14);
 			if (obj) {
 				obj->mEventId = eventId;
 				it->unk28     = obj;
@@ -78,29 +87,28 @@ void TMarDirector::setup2()
 		}
 	}
 
-	JDrama::TNameRefGen::search<TMario>("マリオ")->setGamePad(unk18[0]);
+	Setup2Search<TMario>("マリオ")->setGamePad(unk18[0]);
 
-	TMarioGamePad* gamePad = getGamePad();
-	JDrama::TNameRefGen::search<CPolarSubCamera>("camera 1")->unk120 = gamePad;
+	Setup2Search<CPolarSubCamera>("camera 1")->unk120 = Setup2GamePad(this);
 
-	unk84 = JDrama::TNameRefGen::search<TTalkCursor>("会話カーソル");
+	unk84 = Setup2Search<TTalkCursor>("会話カーソル");
 
-	mConsole = JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール");
+	mConsole = Setup2Search<TGCConsole2>("GCコンソール");
 
 	mConsole->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 
-	unkDC = JDrama::TNameRefGen::search<TShineFader>("シャインフェーダー");
+	unkDC = Setup2Search<TShineFader>("シャインフェーダー");
 
 	unkDC->mRate = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
 
-	unkE0 = JDrama::TNameRefGen::search<TSunGlass>("サングラスフェーダ");
-	unk78 = JDrama::TNameRefGen::search<TGuide>("ガイド画面");
-	unkAC            = JDrama::TNameRefGen::search<TPauseMenu2>("ポーズメニュー");
+	unkE0 = Setup2Search<TSunGlass>("サングラスフェーダ");
+	unk78 = Setup2Search<TGuide>("ガイド画面");
+	unkAC            = Setup2Search<TPauseMenu2>("ポーズメニュー");
 	unkAC->mGamePad  = unk18[0];
-	unkB0            = JDrama::TNameRefGen::search<TTalk2D2>("会話表示");
+	unkB0            = Setup2Search<TTalk2D2>("会話表示");
 	unkB0->mGamePad  = unk18[0];
-	unk70 = JDrama::TNameRefGen::search<TCardLoad>("データロード");
+	unk70 = Setup2Search<TCardLoad>("データロード");
 
 	unk70->unk38 = unk18[0];
 	unk78->mGamePad = unk18[0];
@@ -114,7 +122,7 @@ void TMarDirector::setup2()
 		unk70->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 	}
 
-	unk254 = JDrama::TNameRefGen::search<TDemoCannon>("デモ砲台");
+	unk254 = Setup2Search<TDemoCannon>("デモ砲台");
 
 	TDrawSyncManager::smInstance->setCallback(1, 0x7D, 0x7D, gpSunMgr);
 	TDrawSyncManager::smInstance->setCallback(2, 0x7E, 0x91,
@@ -126,10 +134,7 @@ void TMarDirector::setup2()
 	gpMSound->setCameraInfo(&gpCamera->unk124, gpCamera->unk13C,
 	                        gpCamera->unk1EC, 0);
 
-	// TODO: retail evaluates these two raw member reads right to left
-	// (`lbz r4, 0x7d` before `lbz r3, 0x7c`), which is the documented
-	// argument order; two plain member reads give us left to right instead.
-	unk258 = MSStage::init(mMap, unk7D);
+	unk258 = MSStage::init(getCurrentMap(), getCurrentStage());
 
 	JDrama::TGraphics graphics;
 	graphics.unk0 = 0;
@@ -138,20 +143,15 @@ void TMarDirector::setup2()
 	GXSetDrawDone();
 	GXWaitDrawDone();
 
-	TMapEventSinkInPollution* sinkInPollutionEvent;
-
-	sinkInPollutionEvent
-	    = JDrama::TNameRefGen::search<TMapEventSinkInPollution>(
-	        "イベント（地形沈む）");
+	TMapEventSinkInPollution* sinkInPollutionEvent
+	    = Setup2Search<TMapEventSinkInPollution>("イベント（地形沈む）");
 
 	if (!sinkInPollutionEvent) {
-		sinkInPollutionEvent
-		    = JDrama::TNameRefGen::search<TMapEventSinkInPollution>(
-		        "イベント（地形沈む再汚染）");
+		sinkInPollutionEvent = Setup2Search<TMapEventSinkInPollution>(
+		    "イベント（地形沈む再汚染）");
 		if (!sinkInPollutionEvent) {
-			sinkInPollutionEvent
-			    = JDrama::TNameRefGen::search<TMapEventSinkInPollution>(
-			        "イベント（地形沈むビアンコ）");
+			sinkInPollutionEvent = Setup2Search<TMapEventSinkInPollution>(
+			    "イベント（地形沈むビアンコ）");
 		}
 	}
 
@@ -159,32 +159,35 @@ void TMarDirector::setup2()
 		sinkInPollutionEvent->initBuriedBuilding();
 }
 
-// TODO: 99.9%, zero instruction differences: frame 0x20 against retail's 0x38,
-// 24 bytes of dead low region. Ruled out (all inert): splitting the five
-// `(JKRMemArchive*)getVolume(...)` casts into two named locals each, folding
-// the five unmount blocks into one inlined `unmountFixedVolume(const char*)`
-// helper, SMSGetMSound() over gpMSound, getGamePad() over unk18[0], and a
-// TDrawSyncManager::getInstance() level over the four smInstance reads.
+// Three of five getVolume sites through a pointer-returning binder (+8 each)
+// lands the 0x38 frame; yoshi/scene stay as raw casts. Five binder sites
+// overshoot to 0x48; zero stay at 0x20.
+static inline JKRMemArchive* Setup2GetMemArchive(const char* name)
+{
+	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume(name);
+	return arch;
+}
+
 TMarDirector::~TMarDirector()
 {
 	gpMSound->exitStage();
 	if (gpApplication.mCurrArea.unk0 == 15) {
-		if (JKRMemArchive* arch
-		    = (JKRMemArchive*)JKRFileLoader::getVolume("option"))
+		if (JKRMemArchive* arch = Setup2GetMemArchive("option"))
 			arch->unmountFixed();
 	}
 
+	if (JKRMemArchive* arch = Setup2GetMemArchive("game_6"))
+		arch->unmountFixed();
+
+	if (JKRMemArchive* arch = Setup2GetMemArchive("guide"))
+		arch->unmountFixed();
+
 	if (JKRMemArchive* arch
-	    = (JKRMemArchive*)JKRFileLoader::getVolume("game_6"))
+	    = (JKRMemArchive*)JKRFileLoader::getVolume("yoshi"))
 		arch->unmountFixed();
 
-	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("guide"))
-		arch->unmountFixed();
-
-	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("yoshi"))
-		arch->unmountFixed();
-
-	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("scene"))
+	if (JKRMemArchive* arch
+	    = (JKRMemArchive*)JKRFileLoader::getVolume("scene"))
 		arch->unmountFixed();
 
 	unk18[0]->offFlag(0x20);
