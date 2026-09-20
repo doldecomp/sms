@@ -27,6 +27,12 @@ void TShimmer::far() { }
 
 void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	Mtx effectMtx;
+	Mtx afStack_80;
+	Mtx afStack_b0;
+	Mtx afStack_e0;
+	J3DTransformInfo info;
+
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		return;
 
@@ -45,7 +51,6 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 			mPosition.set(0.0f, 0.0f, 0.0f);
 		}
 
-		Mtx effectMtx;
 		SMS_GetLightPerspectiveForEffectMtx(effectMtx);
 
 		unk48->getModelData()
@@ -56,7 +61,6 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		MtxPtr viewMtx = graphics->mViewMtx;
 
-		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
 		info.mScale.z     = 1.0f;
@@ -66,22 +70,19 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		info.mTranslate.x = mPosition.x;
 		info.mTranslate.y = mPosition.y;
 		info.mTranslate.z = mPosition.z;
-		Mtx afStack_b0;
 		J3DGetTranslateRotateMtx(info, afStack_b0);
-		Mtx afStack_e0;
 		MTXScale(afStack_e0, mScaling.x, mScaling.y, mScaling.z);
-		Mtx afStack_80;
 		MTXInverse(viewMtx, afStack_80);
 		MTXConcat(afStack_80, afStack_b0, afStack_80);
 		MTXConcat(afStack_80, afStack_e0, afStack_80);
 		unk48->setBaseTRMtx(afStack_80);
-		unk48->entry();
 		unk48->calc();
+		unk48->viewCalc();
 	}
 
 	if (cue & CUE_ENTRY) {
 		if (gpMarDirector->mMap == 2 || !(gpCamera->unk124.y < 0.0f))
-			unk48->update();
+			unk48->entry();
 	}
 }
 
