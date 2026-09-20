@@ -588,7 +588,7 @@ void TCardSave::endWaitForChoice()
 	unkFC->getPane()->hide();
 	unk100->getPane()->hide();
 	unk10 = 3;
-	unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(), unkE4.getHeight());
+	setCenteredSizeWr(unkE0, 20, 0, 0, unkE4.getWidth(), unkE4.getHeight());
 }
 
 // TODO: literal-pool order. The target asks for 1.0f (@4275) well before
@@ -1575,7 +1575,7 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 		unkFC->getPane()->hide();
 		unk100->getPane()->hide();
 
-		unkE0->getPane()->show();
+		unkE0->mPane->show();
 		unkE0->setCenteredSize(20, unkE4.getWidth(), unkE4.getHeight(), 0, 0);
 		unk10 = 1;
 		break;
@@ -1636,7 +1636,7 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 
 	case 3:
 		if (unkE0->update()) {
-			unkE0->getPane()->hide();
+			cardSaveGetPane(unkE0)->hide();
 			unk10 = 5;
 		}
 		break;
