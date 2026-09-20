@@ -140,8 +140,9 @@ void TLightCommon::perform(u32 cue, JDrama::TGraphics* graphics)
 		ReInitializeGX();
 		SMS_DrawInit();
 		GXLightObj light;
-		GXInitLightPos(&light, getLightPosition(0)->x, getLightPosition(0)->y,
-		               getLightPosition(0)->z);
+		Vec* posZ = getLightPosition(0);
+		Vec* posY = getLightPosition(0);
+		GXInitLightPos(&light, getLightPosition(0)->x, posY->y, posZ->z);
 		GXInitLightColor(&light, getLightColor(0));
 		GXInitLightAttn(&light, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 		GXLoadLightObjImm(&light, GX_LIGHT0);
@@ -349,14 +350,19 @@ int TLightWithDBSet::getAmbIndex(const char* name)
 // The 32 bytes of low region the four makeDrawBuffer bodies were short come
 // from the two UNUSED carriers they expand: naming the array and the light in
 // getLightIndex/getAmbIndex is +8 per expansion and a third chain step a
-// further +8 (24 in all), and the `mLight` binder below closes the last 8.
-// TODO: the binder is +8 in the two className bodies but +0x10 in
-// TPlayer/TObject (both the naming and the plain form), so those two are
-// still 8 over and keep the raw `unk10[i]->mLight` spelling, 8 short.
+// further +8 (24 in all). The last 8 closes with an mLight fork at loadAfter:
+// bare `return buffer->mLight` is +8 in the getName bodies (Player/Object);
+// the named-local form is +8 in the className bodies (MapObject/Indirect) and
+// +0x10 in Player/Object.
 static inline TLightCommon* LightWithDBSetLight(TLightDrawBuffer* buffer)
 {
 	TLightCommon* light = buffer->mLight;
 	return light;
+}
+
+static inline TLightCommon* LightWithDBSetLightBare(TLightDrawBuffer* buffer)
+{
+	return buffer->mLight;
 }
 
 void TPlayerLightWithDBSet::makeDrawBuffer()
@@ -374,7 +380,7 @@ void TPlayerLightWithDBSet::makeDrawBuffer()
 		unk10[i]->setLight(light);
 		unk10[i]->mLight->mAmbIndex   = ambIndex;
 		unk10[i]->mLight->mLightIndex = lightIndex;
-		unk10[i]->mLight->loadAfter();
+		LightWithDBSetLightBare(unk10[i])->loadAfter();
 	}
 }
 
@@ -393,7 +399,7 @@ void TObjectLightWithDBSet::makeDrawBuffer()
 		unk10[i]->setLight(light);
 		unk10[i]->mLight->mAmbIndex   = ambIndex;
 		unk10[i]->mLight->mLightIndex = lightIndex;
-		unk10[i]->mLight->loadAfter();
+		LightWithDBSetLightBare(unk10[i])->loadAfter();
 	}
 }
 
