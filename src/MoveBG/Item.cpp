@@ -538,6 +538,12 @@ void TShine::calc()
 	unk1A4 = 1;
 }
 
+static inline int TShineCircleTime(const TShine* p)
+{
+	int time = p->unk168;
+	return time;
+}
+
 void TShine::movingCircle()
 {
 	// TODO: hack, remove
@@ -547,7 +553,8 @@ void TShine::movingCircle()
 	f32 prevY = mPosition.y;
 	unk158 += 180.0f / (f32)unk168;
 
-	f32 tmp = (f32)(unk168 - mStateTimer) / (f32)unk168;
+	f32 tmp = (f32)(TShineCircleTime(this) - mStateTimer)
+	          / (f32)TShineCircleTime(this);
 
 	mPosition.x += unk17C.x;
 
