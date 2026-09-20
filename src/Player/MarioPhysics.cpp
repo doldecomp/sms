@@ -240,6 +240,7 @@ int TMario::barProcess()
 	f32 floorY;
 
 	JGeometry::TVec3<f32> pos;
+	char trash[4];
 	pos.x = mHolder->mPosition.x;
 	pos.y = mPosition.y;
 	pos.z = mHolder->mPosition.z;
