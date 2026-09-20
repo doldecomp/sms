@@ -53,6 +53,12 @@ static inline TNozzleBase* YoshiGetCurrentNozzle(const TWaterGun* p)
 	return currentNozzle;
 }
 
+// The extra level makes retail's `addi r4, r28, 0` (not `mr`) at setModel.
+static inline void YoshiSetModel(MActor* actor, J3DModel* model)
+{
+	actor->setModel(model, 0);
+}
+
 // (func,local) in the map's closure.
 static BOOL YoshiHeadCtrl(J3DNode* param_1, int param_2)
 {
@@ -105,7 +111,7 @@ void TYoshi::init(TMario* param_1)
 	                       yoshiModelRaw, J3DMLF_MaterialPEFull
 	                                          | (4 << J3DMLF_TevStageNumShift)),
 	                   0, 1);
-	mActor->setModel(yoshiModel, 0);
+	YoshiSetModel(mActor, yoshiModel);
 	mActor->initNormalMotionBlend();
 	mActor->offMakeDL();
 
