@@ -449,19 +449,24 @@ void SMS_AddDamageFogEffect(J3DModelData* param_1,
 	Vec local_80;
 	MTXMultVec(param_3->getViewMtx(), param_2, &local_80);
 
-	// TODO: MWCC folds both differences to a single 300.0f here, but the
-	// target keeps four literals and subtracts at run time: @3041 -700,
-	// @3042 500, @3043 -400, @3044 800 (that is the whole .sdata2 delta
-	// for this TU, data 66.67%). Named peak locals do not stop the fold,
-	// so the subtraction must sit inside something whose operands MWCC
-	// will not constant-propagate -- most likely an inlined helper taking
-	// the base and peak as parameters. No such helper is UNUSED in the
-	// map for DrawUtil.cpp, so its shape is still unknown.
+	// MWCC constant-folds `(-400.0f - startBase) * s` to one 300.0f and
+	// loses two of the target's four literals; it does not propagate a
+	// constant into a compound assignment, so the peaks stay their own
+	// .sdata2 entries (@3041 -700, @3042 500, @3043 -400, @3044 800).
 	f32 startBase = -700.0f;
 	f32 endBase   = 500.0f;
 	f32 s         = JMASSin((s16)(gpMarDirector->unk58 * 0x888));
-	f32 startOsc  = (-400.0f - startBase) * s;
-	f32 endOsc    = (800.0f - endBase) * s;
+	f32 startOsc  = -400.0f;
+	f32 endOsc    = 800.0f;
+	startOsc -= startBase;
+	endOsc -= endBase;
+	startOsc *= s;
+	endOsc *= s;
+
+	// TODO: retail keeps the peaks in the volatile pair (f1/f0) and the
+	// bases in f31/f30; spelling the subtraction as one expression is what
+	// puts the peaks there, and that expression folds. The frame is also
+	// 0x30 short: retail reserves 0x28 of pool below the local_80 Vec.
 
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
 		J3DFog* fog
