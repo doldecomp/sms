@@ -52,6 +52,7 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 	}
 
 	char buf[0x100];
+	char trash[4];
 	snprintf(buf, sizeof(buf), "%s/%s", base, "glow.bmd");
 	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf),
 	                                     J3DMLF_MaterialPEFull
