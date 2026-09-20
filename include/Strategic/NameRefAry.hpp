@@ -24,7 +24,8 @@ public:
 		for (int i = 0; i < local_44; ++i) {
 			JSUMemoryInputStream stream2;
 			JDrama::TNameRef::getType(stream, stream2);
-			getChildren()[i].load(stream2);
+			T& child = getChildren()[i];
+			child.load(stream2);
 		}
 	}
 
