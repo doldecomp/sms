@@ -826,6 +826,19 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 	return false;
 }
 
+static inline THino2Params* Hino2Params(THinokuri2* self)
+{
+	THino2Params* params = (THino2Params*)self->getSaveParam();
+	return params;
+}
+
+// Parked TU-locally: retail binds the mask pointer at each use.
+static inline THino2Mask* Hino2Mask(THinokuri2* self)
+{
+	THino2Mask* mask = self->unk1A4;
+	return mask;
+}
+
 BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 {
 	if (sender->getActorType() == 0x1000001
@@ -840,15 +853,15 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 			return true;
 
 		unk190 += 1;
-		unk1A4->unkC += 1;
+		Hino2Mask(this)->unkC += 1;
 
-		unk168 = ((THino2Params*)getSaveParam())->mSLInvincibleTimer.get();
+		unk168 = Hino2Params(this)->mSLInvincibleTimer.get();
 
 		if (unk190 > 2) {
 			unk190 = 0;
 			setLevel(mLevel - 1);
 
-			unk1A4->reset();
+			Hino2Mask(this)->reset();
 
 			mHitPoints = calcHitPoints();
 		}
@@ -861,7 +874,7 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 			return true;
 
 		unk190 += 1;
-		unk1A4->unkC += 1;
+		Hino2Mask(this)->unkC += 1;
 
 		unk168 = ((THino2Params*)getSaveParam())->mSLInvincibleTimer.get();
 
@@ -869,7 +882,7 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 			unk190 = 0;
 			setLevel(mLevel - 1);
 
-			unk1A4->reset();
+			Hino2Mask(this)->reset();
 
 			mHitPoints = calcHitPoints();
 		} else {
