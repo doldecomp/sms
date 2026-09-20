@@ -59,11 +59,13 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan +2, hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3.
-- Landed `grptn` MapObjMonte ([MapObjMonte unit ladder](bf31ba18-adc1-4989-bfa5-a9a812075f3f)): +3 exact (`TFluff::appear`/`control`, `THangingBridge::perform`); unit 40.37→49.44; data 100. Catalog: TVec3 `operator=` vs `.set()`, nested fork +4.
-- Total: **61.46%** matched, game **53.33%**, linked **492 / 732**.
-- Running: `grpto` / popo ([popo unit ladder](f211851a-641e-41ee-ab1e-26b82567222a)). Refill: hinokuri2.
-- Stale unlanded: grpfg bosseel, grpfh WaterGun.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan +2, hamukuri +2, chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale land), WaterGun (stale land).
+- Landed stale `grpfg` bosseel (`85cd24b2` → `9217ed35`): spin nerves + dive camera callback; +fuzzy/exact without regressions.
+- Landed stale `grpfh` WaterGun (6 commits → `2a67a07f`): nozzle/Mario forks on calcGunAngle/emitCommon/movement/getPressure/calcAnimation/NozzleTrigger; All **61.46→61.59**, Game **53.33→53.50**, exact **11,330→11,338**.
+- Landed `grptn` MapObjMonte ([MapObjMonte unit ladder](bf31ba18-adc1-4989-bfa5-a9a812075f3f)): +3 exact (`TFluff::appear`/`control`, `THangingBridge::perform`); unit 40.37→49.44; data 100.
+- Total: **61.59%** matched, game **53.50%**, linked **492 / 732**.
+- Running: `grpto` / popo ([popo unit ladder](f211851a-641e-41ee-ab1e-26b82567222a)); `grptp` / hinokuri2 ([hinokuri2 unit ladder](bcb42251-eac5-4783-9400-eed2947f1b60)).
+- Abandoned worktrees still present (no unique unlanded unit work): grpfi, grpfj, grpfk.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
