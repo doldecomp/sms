@@ -648,9 +648,10 @@ void TBossGesso::rumblePad(int param_1, const JGeometry::TVec3<f32>& param_2)
 	if (!SMS_IsMarioTouchGround4cm())
 		return;
 
+	f32 fVar2;
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 	delta -= param_2;
-	f32 fVar2 = delta.length();
+	fVar2 = delta.length();
 	f32 fVar1 = (3000.0f - fVar2) / 1000.0f;
 
 	if (fVar1 < 0.0f)
