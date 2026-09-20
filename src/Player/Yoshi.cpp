@@ -497,15 +497,13 @@ void TYoshi::getOff(bool param_1)
 		if (param_1 == true) {
 			changeAnimation(1);
 
-			SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mTranslation, 0,
-			                                nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mTranslation);
 
 			SMSRumbleMgr->start(0x15, 0x14, (f32*)nullptr);
 		} else {
 			changeAnimation(0x17);
 
-			SMSGetMSound()->startSoundActor(MSD_SE_YV_PURU_PURU, &mTranslation,
-			                                0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_YV_PURU_PURU, &mTranslation);
 		}
 
 		SMS_RideMoveCalcLocalPos(unk94, mTranslation);
