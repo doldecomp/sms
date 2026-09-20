@@ -728,10 +728,13 @@ void TGesso::calcRootMatrix()
 	}
 
 	if (!isEaten()) {
-		J3DModel* model = mMActor->getModel();
+		// getMActor()->mModel (not mMActor->getModel()) plus getPosition().x
+		// (not mPosition.x) land the yaw matrix at 0x28 and the frame at
+		// 0x90. Raw mModel is 8 short / 4 low; getModel() is 8 long.
+		J3DModel* model = getMActor()->mModel;
 		MtxPtr mA       = model->getBaseTRMtx();
 
-		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y + unk1D0, mPosition.z,
+		MsMtxSetXYZRPH(mA, getPosition().x, mPosition.y + unk1D0, mPosition.z,
 		               mRotation.x, mRotation.y, mRotation.z);
 
 		f32 s = JMASin(mStayYaw);
