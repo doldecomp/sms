@@ -127,18 +127,22 @@ void TIgaiga::rollMove()
 	if (isReachedToGoalXZ()) {
 		if (jumpToNextGraphNode() >= 0)
 			flagJump();
-		if (!(unk124->getCurrent().getRailNode()->mFlags & 0x40))
-			goToRandomNextGraphNode();
-	} else {
-		walkBehavior(2, 1.0f);
+		const TGraphNode& current = getTracer()->getCurrent();
+		if (current.getRailNode()->mFlags & 0x40)
+			return;
+
+		goToRandomNextGraphNode();
 	}
+
+	walkBehavior(2, 1.0f);
 }
 
 // UNUSED, 0x48 in the map: pop after too many sprays.
 void TIgaiga::waterExplosion()
 {
+	TSpineBase<TLiveActor>* spine = mSpine;
 	onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
-	mSpine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
+	spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
 }
 
 // UNUSED, 0x94 in the map: only ever constructed inline by the manager.
@@ -817,14 +821,16 @@ DEFINE_NERVE(TNerveIgaigaWaterHit, TLiveActor)
 
 	// Fully swollen: twenty more hits and it bursts.
 	if (igaiga->unk1E4 >= igaiga->unk1A4->mSLExpandMax.get()) {
-		if (igaiga->unk1E8 > 20)
+		if (igaiga->unk1E8 > 20) {
 			igaiga->waterExplosion();
+			return TRUE;
+		}
 		igaiga->unk1E8++;
-	}
+	} else if (igaiga->checkCurAnmEnd(0)) {
+		bool sprayed = igaiga->unk165;
+		if (sprayed)
+			igaiga->unk165 = false;
 
-	if (igaiga->checkCurAnmEnd(0)) {
-		bool sprayed  = igaiga->unk165;
-		igaiga->unk165 = false;
 		if (!sprayed) {
 			igaiga->setBckAnm(3);
 			spine->pushAfterCurrent(&TNerveIgaigaRollOnGraph::theNerve());
@@ -848,9 +854,7 @@ DEFINE_NERVE(TNerveIgaigaShootFromCannon, TLiveActor)
 		igaiga->mPosition.y += 10.0f;
 		igaiga->mVelocity = igaiga->mShootVelocity;
 		igaiga->onLiveFlag(LIVE_FLAG_AIRBORNE);
-	}
-
-	if (igaiga->checkCurAnmEnd(0) && !igaiga->isAirborne()) {
+	} else if (igaiga->checkCurAnmEnd(0) && !igaiga->isAirborne()) {
 		igaiga->bound();
 		spine->pushAfterCurrent(&TNerveIgaigaRollOnGraph::theNerve());
 		return TRUE;
