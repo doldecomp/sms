@@ -50,30 +50,38 @@ bool JPABaseField::checkMaxDistance(JGeometry::TVec3<f32>& param_1,
 	return result;
 }
 
+// Retail re-reads the status word for every test here; the volatile reference
+// reproduces that by keeping the compiler from caching it in a register.
+static inline bool checkStatusNoCache(const volatile u16& status, u32 flag)
+{
+	return status & flag ? true : false;
+}
+
 f32 JPABaseField::calcFieldFadeScale(f32 progress)
 {
 	bool cutOff = false;
 	f32 result  = 1.0f;
-	if (checkStatus(STATUS_FADE_ENABLE_START_CUTOFF)
+	if (checkStatusNoCache(unk54, STATUS_FADE_ENABLE_START_CUTOFF)
 	    && progress < mFadeInStart) {
 		result = 0.0f;
 		cutOff = true;
 	}
 
-	if (checkStatus(STATUS_FADE_ENABLE_END_CUTOFF) && progress >= mFadeOutEnd) {
+	if (checkStatusNoCache(unk54, STATUS_FADE_ENABLE_END_CUTOFF)
+	    && progress >= mFadeOutEnd) {
 		result = 0.0f;
 		cutOff = true;
 	}
 
 	if (!cutOff) {
-		if (checkStatus(STATUS_FADE_ENABLE_FADE_OUT)
+		if (checkStatusNoCache(unk54, STATUS_FADE_ENABLE_FADE_OUT)
 		    && progress >= mFadeOutStart) {
 			f32 diff = mFadeOutEnd - mFadeOutStart;
 			if (diff > 0.0f) {
 				diff   = __fres(diff);
 				result = diff * (mFadeOutEnd - progress);
 			}
-		} else if (checkStatus(STATUS_FADE_ENABLE_FADE_IN)
+		} else if (checkStatusNoCache(unk54, STATUS_FADE_ENABLE_FADE_IN)
 		           && progress < mFadeInEnd) {
 			f32 diff = mFadeInEnd - mFadeInStart;
 			if (diff > 0.0f) {
