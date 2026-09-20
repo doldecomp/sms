@@ -1041,6 +1041,7 @@ DEFINE_NERVE(TNervePakkunFreeze, TLiveActor)
 
 DEFINE_NERVE(TNerveStayPakkunHide, TLiveActor)
 {
+	char trash[16];
 	TStayPakkun* self = (TStayPakkun*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
