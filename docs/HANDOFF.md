@@ -68,9 +68,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grpve` MarioJump ([MarioJump](baa4f7ad-fb76-44db-af1e-c79646c35b1f)): +2 exact. All **62.04→62.10**.
 - Landed `grpvf` MarioSound ([MarioSound](2a194a92-6f92-4dfe-a316-431a2b56ea93)): +2 exact; unit **97.38%**. All **62.10→62.31**.
 - Landed `grpvg` MarioReceiveMsg ([MarioReceiveMsg](80cd0104-162c-4497-b87a-c2b2eda658a1)): +0; park 120-byte frame.
-- Landed `grpvh` CardSave ([CardSave](632b7ca0-c6f0-44e4-96cf-e041b2152c1b)): +2 exact (`waitForSelect3`, `waitForAnyKeyBM`); data **100%**; unit code **17.95→27.46**. All **62.31→62.44**, Game **54.41→54.57**, exact **11,387→11,389**. Park setMessageC/initData/perform/waitForChoice*/waitForStop/saveBookmark.
-- Running: `grpvi` / CardLoad ([CardLoad](569a7982-2eb3-48d4-9866-073ac899bb92)); `grpvj` / BathWaterManager ([BathWaterManager](e7c65049-d748-4c20-9cdc-cd58e046e5c4)).
-- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers.
+- Landed `grpvh` CardSave ([CardSave](632b7ca0-c6f0-44e4-96cf-e041b2152c1b)): +2 exact; data **100%**. All **62.31→62.44**.
+- Landed `grpvi` CardLoad ([CardLoad](569a7982-2eb3-48d4-9866-073ac899bb92)): +1 exact (`waitForAnyKey`); raised setupScoreScreen/titleDraw. All **62.44→62.47**, exact **11,389→11,390**. Park changeScene frame, drawMessageBM ranking, titleDraw slots. (Pre-existing symbol-order FAIL on JSUInputStream ctor.)
+- Running: `grpvj` / BathWaterManager ([BathWaterManager](e7c65049-d748-4c20-9cdc-cd58e046e5c4)). Refill: MarNameRefGen.
+- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
