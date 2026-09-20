@@ -1219,19 +1219,29 @@ void TFireWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk194->perform(cue, graphics);
 }
 
+static inline MtxPtr FireWanwanBaseTRMtx(const TFireWanwan* p)
+{
+	J3DModel* model = p->getModel();
+	MtxPtr mtx      = model->getBaseTRMtx();
+	return mtx;
+}
+
 void TFireWanwan::calcRootMatrix()
 {
 	TSpineEnemy::calcRootMatrix();
 	if (mSpine->getLatestNerve() != &TNerveFireWanwanDie::theNerve())
 		return;
 	{
-		MtxPtr mtx = getModel()->getBaseTRMtx();
+		MtxPtr mtx = FireWanwanBaseTRMtx(this);
 		JGeometry::TVec3<f32> v1(mtx[0][1], mtx[1][1], mtx[2][1]);
 		JGeometry::TVec3<f32> v2(mtx[0][2], mtx[1][2], mtx[2][2]);
 		v1.normalize();
 		v2.normalize();
-		v1 *= 0.0f;
-		v2 *= -160.0f;
+		// Retail multiplies the Y column by -160 and the Z column by 0
+		// (@6628 / @3704). Frame lands via FireWanwanBaseTRMtx.
+		// TODO: extra f25 and Z loaded RTL (0x48,0x38,0x28 vs 0x28,0x38,0x48).
+		v1 *= -160.0f;
+		v2 *= 0.0f;
 		v1 += v2;
 
 		mtx[0][3] += v1.x;
@@ -1341,13 +1351,6 @@ void TFireWanwan::updateRumble()
 	} else {
 		mHungTailRumbleTimer = 0;
 	}
-}
-
-static inline MtxPtr FireWanwanBaseTRMtx(const TFireWanwan* p)
-{
-	J3DModel* model = p->getModel();
-	MtxPtr mtx      = model->getBaseTRMtx();
-	return mtx;
 }
 
 void TFireWanwan::updatePollute()
