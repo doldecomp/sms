@@ -448,6 +448,13 @@ void TItemSlotDrum::loadAfter()
 		TMapObjBaseManager::newAndRegisterObj("coin");
 }
 
+/// Reads one drum's roll speed; retail re-reads the array base at every site.
+static inline f32 drumRollSpeed(const TSirenaRollMapObj* drum, int idx)
+{
+	f32 speed = drum->unk138[idx];
+	return speed;
+}
+
 void TItemSlotDrum::moveObject()
 {
 	TLiveActor::moveObject();
@@ -501,15 +508,17 @@ void TItemSlotDrum::moveObject()
 					SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_SLT_STOP,
 					                                &mPosition, 0, nullptr, 0,
 					                                4);
-					bool allStopped = 0.0f == unk138[0] && 0.0f == unk138[1]
-					                  && 0.0f == unk138[2];
+					bool allStopped = true;
+					for (int k = 0; k < 3; ++k)
+						if (0.0f != drumRollSpeed(this, k))
+							allStopped = false;
 					if (allStopped) {
 						unk1A2 = true;
 						generateItem();
 					}
 					for (int j = 0; j < unk148; ++j) {
 						if (unk19F[j]) {
-							if (TMsRange<f32>(0.0f, 1.0f).rand() < 0.9f)
+							if (TMsRange<f32>(0.0f, 1.0f).rand() <= 0.9f)
 								unk19C[j] = true;
 							else
 								unk19F[j] = false;
