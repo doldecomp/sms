@@ -21,6 +21,38 @@
 
 TConductor* gpConductor;
 
+// TU-local binders: named return steps that close genEnemy / perform /
+// isBossDefeated frames. Do not lift them into Conductor.hpp.
+static inline f32 conductorRadiusMin(TConductor* c)
+{
+	f32 v = c->unk84.mGenerateRadiusMin.get();
+	return v;
+}
+
+static inline f32 conductorRadiusMax(TConductor* c)
+{
+	f32 v = c->unk84.mGenerateRadiusMax.get();
+	return v;
+}
+
+static inline TAreaCylinderManager* conductorAppearArea(TConductor* c)
+{
+	TAreaCylinderManager* area = c->unkF8;
+	return area;
+}
+
+static inline CPolarSubCamera* conductorCamera()
+{
+	CPolarSubCamera* camera = gpCamera;
+	return camera;
+}
+
+static inline int conductorObjNum(TLiveManager* mgr)
+{
+	int n = mgr->getObjNum();
+	return n;
+}
+
 TConductor::TCondParams::TCondParams()
     : TParams("/conductor.prm")
     , PARAM_INIT(mEnemyFarClip, 5000.0f)
@@ -134,15 +166,15 @@ void TConductor::polluterExterminated() { }
 
 BOOL TConductor::isBossDefeated()
 {
-	// TODO: retail's pivot is cmpwi 2 / cmpwi 4 and sends every map
-	// except 3 to the hinokuri arm. `default:` next to `case 2:` folds
-	// that tree to a single cmpwi 3 and costs ~3%.
+	// TODO: frame is exact. Residue is the switch pivot (retail cmpwi 2 /
+	// cmpwi 4, everything but map 3 to the hinokuri arm). `default:` next
+	// to `case 2:` and an empty `case 4:` both fold the tree and cost ~3%.
 	switch (gpMarDirector->mMap) {
 	case 2: {
 		TLiveManager* mgr = getManagerByName("ヒノクリ２マネージャー");
 		if (!mgr)
 			return true;
-		for (int i = 0; i < mgr->getObjNum(); ++i)
+		for (int i = 0; i < conductorObjNum(mgr); ++i)
 			if (!((TSpineEnemy*)mgr->getObj(i))->checkLiveFlag(LIVE_FLAG_UNK40))
 				return false;
 
@@ -174,7 +206,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 
 	int result = 0;
 
-	for (int i = 0; i < mgr->getObjNum(); ++i) {
+	for (int i = 0; i < mgr->mObjNum; ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
 		if (actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			((TSpineEnemy*)actor)->resetToPosition(param_1);
@@ -187,7 +219,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (param_4 == 0)
 		return result;
 
-	for (int i = 0; i < mgr->getObjNum(); ++i) {
+	for (int i = 0; i < mgr->mObjNum; ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
 		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && actor->checkLiveFlag(LIVE_FLAG_UNK800)
@@ -202,7 +234,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (param_4 == 1)
 		return result;
 
-	for (int i = 0; i < mgr->getObjNum(); ++i) {
+	for (int i = 0; i < mgr->mObjNum; ++i) {
 		TLiveActor* actor = (TLiveActor*)mgr->getObj(i);
 		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && !actor->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
@@ -217,16 +249,18 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	return result;
 }
 
-TSpineEnemy*
+	TSpineEnemy*
 TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
                                const char* param_2, int param_3)
 {
+	TSpineEnemy* actor;
 	TEnemyManager* mgr = (TEnemyManager*)getManagerByName(param_2);
 
 	if (!mgr)
 		return nullptr;
 
-	if (TSpineEnemy* actor = (TSpineEnemy*)mgr->getActorByFlag(0x1)) {
+	actor = (TSpineEnemy*)mgr->getActorByFlag(0x1);
+	if (actor) {
 		actor->resetToPosition(param_1);
 		return actor;
 	}
@@ -234,7 +268,8 @@ TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (param_3 == 0)
 		return nullptr;
 
-	if (TSpineEnemy* actor = (TSpineEnemy*)mgr->getActorByFlag(0x804)) {
+	actor = (TSpineEnemy*)mgr->getActorByFlag(0x804);
+	if (actor) {
 		actor->resetToPosition(param_1);
 		return actor;
 	}
@@ -279,14 +314,14 @@ void TConductor::genEnemyFromPollution()
 	if (!mgr)
 		return;
 
-	JGeometry::TVec3<f32> targetPos = *gpMarioPos;
-	f32 minR                        = unk84.mGenerateRadiusMin.get();
-	f32 maxR                        = unk84.mGenerateRadiusMax.get();
-	f32 r                           = MsRandF(minR, maxR);
+	JGeometry::TVec3<f32> targetPos = SMS_GetMarioPos();
+	f32 minR                        = conductorRadiusMin(this);
+	f32 maxR                        = conductorRadiusMax(this);
+	minR                            = MsRandF(minR, maxR);
 
 	f32 theta = MsRandF() * 360 * (65536.0f / 360.0f);
-	targetPos.x += r * JMASSin(theta);
-	targetPos.z += r * JMASCos(theta);
+	targetPos.x += minR * JMASSin(theta);
+	targetPos.z += minR * JMASCos(theta);
 
 	const TBGCheckData* data;
 	targetPos.y = gpMap->checkGround(targetPos, &data) + 1.0f;
@@ -295,7 +330,8 @@ void TConductor::genEnemyFromPollution()
 		return;
 
 	if (unkF8 != nullptr) {
-		TAreaCylinder* cyl = unkF8->getCylinderContains(targetPos);
+		TAreaCylinder* cyl
+		    = conductorAppearArea(this)->getCylinderContains(targetPos);
 		if (!cyl) {
 			f32 f = unk84.mGenerateProp.get();
 			if (MsRandF() > f)
@@ -325,8 +361,8 @@ void TConductor::clipAloneActors(JDrama::TGraphics* param_1)
 	JGadget::TList<TLiveActor*>::iterator it = unk30.begin(), e = unk30.end();
 
 	SetViewFrustumClipCheckPerspective(
-	    gpCamera->getFovy(), gpCamera->getAspect(), param_1->getNearPlane(),
-	    unk84.getEnemyFarClip());
+	    conductorCamera()->getFovy(), gpCamera->getAspect(),
+	    param_1->getNearPlane(), unk84.getEnemyFarClip());
 
 	for (; it != e; ++it) {
 		TLiveActor* actor = *it;
