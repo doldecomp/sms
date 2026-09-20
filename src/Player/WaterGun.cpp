@@ -1850,9 +1850,9 @@ BOOL TWaterGun::isPressureOn()
 
 f32 TWaterGun::getPressure()
 {
-	// TODO: Missing stack space
-	if (getCurrentNozzle()->getNozzleKind() == 1) {
-		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
+	if (WaterGunCurNozzle2(this)->getNozzleKind() == 1) {
+		TNozzleTrigger* triggerNozzle
+		    = (TNozzleTrigger*)mNozzleList[mCurrentNozzle];
 		return triggerNozzle->unk388;
 	}
 	return 0.0f;
