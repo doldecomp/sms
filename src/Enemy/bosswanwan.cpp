@@ -1196,15 +1196,21 @@ void TBossWanwan::rollNextGraphNode()
 	unk12C = 0.0f;
 }
 
+static inline const TPathNode& BosswanwanGoalNode(const TBossWanwan* p)
+{
+	const TPathNode& node = p->getUnkF4();
+	return node;
+}
+
 void TBossWanwan::slideToCurPathNode(f32 march_speed, f32 turn_speed)
 {
-	JGeometry::TVec3<f32> toGoal = getUnkF4().getPoint();
+	JGeometry::TVec3<f32> toGoal = BosswanwanGoalNode(this).getPoint();
 	toGoal -= mPosition;
 
 	f32 dist = VECMag(toGoal);
 
 	f32 yaw  = MsWrap(MsGetRotFromZaxisY(toGoal), 0.0f, 360.0f);
-	f32 diff = MsAngleDiff(yaw, mRotation.y);
+	f32 diff = MsAngleDiff(yaw, getRotation().y);
 
 	f32 turn;
 	if (diff > 0.0f) {
@@ -1215,6 +1221,9 @@ void TBossWanwan::slideToCurPathNode(f32 march_speed, f32 turn_speed)
 		diff = diff > -turn_speed ? diff : -turn_speed;
 		turn = diff;
 	}
+	// TODO: retail keeps the clamp in diff's own FPR and copies once at the
+	// merge (fmr f1, f30; fmr f2, f1); ours materialises turn early and pays
+	// one extra fmr. Dropping turn costs the merge copy instead.
 	mRotation.y = MsWrap(mRotation.y + turn, 0.0f, 360.0f);
 
 	JGeometry::TVec3<f32> velocity = mLinearVelocity;
