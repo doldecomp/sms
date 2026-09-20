@@ -1089,6 +1089,18 @@ void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+static inline J3DFrameCtrl* Hino2BckFrameCtrl(THinokuri2* self)
+{
+	MActor* actor = self->getMActor();
+	return actor->getFrameCtrl(ANM_TYPE_BCK);
+}
+
+static inline TMarDirector* Hino2MarDirector()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
 static inline THinokuri2* Hino2Self(TSpineBase<TLiveActor>* spine)
 {
 	TLiveActor* body = spine->getBody();
@@ -1138,7 +1150,8 @@ DEFINE_NERVE(TNerveHino2Appear, TLiveActor)
 
 DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 {
-	THinokuri2* self = (THinokuri2*)spine->getBody();
+	TLiveActor* body = spine->getBody();
+	THinokuri2* self = (THinokuri2*)body;
 
 	self->unk188 = 1;
 
@@ -1156,7 +1169,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		}
 	}
 
-	if (gpMarDirector->unk7D >= 2 && self->unk164 <= 0) {
+	if (Hino2MarDirector()->unk7D >= 2 && self->unk164 <= 0) {
 		if (self->getLevel() >= 1) {
 			spine->pushAfterCurrent(&TNerveHino2PrePol::theNerve());
 			return 1;
@@ -1165,8 +1178,9 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		self->unk15C = 0;
 
 		JGeometry::TVec3<f32> local_60;
+
 		if (self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-			local_60 = self->mPosition;
+			local_60 = self->getPosition();
 			local_60.y += 500.0f;
 		} else {
 			self->getJointTransByIndex(0x18, &local_60);
@@ -1179,17 +1193,18 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		self->changeBck(0x18);
 
 	if (self->getCurrentBck() == 0x18) {
-		self->walkToCurPathNode(self->mMarchSpeed, self->mTurnSpeed, 0.0f);
+		self->walkToCurPathNode(self->getMarchSpeed(), self->getTurnSpeed(), 0.0f);
 	}
 
-	int frame = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+	int frame = Hino2BckFrameCtrl(self)->getFrame();
 	if (self->getLevel() != 0 && !self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
 	    && !self->isAirborne() && (frame == 0x24 || frame == 0x55)) {
-		f32 ws = ((THino2Params*)self->getSaveParam())->mSLWalkShake.get();
-		if (!(ws * ws < self->mDistToMarioSquared))
-			gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY, 0.8f);
+		f32 ws = Hino2Params(self)->mSLWalkShake.get();
+		if (!(ws * ws < self->getDistToMarioSquared()))
+			Hino2CameraShake()->startShake(CAM_SHAKE_MODE_ENEMY, 0.8f);
 
 		JGeometry::TVec3<f32> TStack_3C;
+
 		if (frame == 0x24)
 			self->getJointTransByIndex(0x9, &TStack_3C);
 		else if (frame == 0x55)
