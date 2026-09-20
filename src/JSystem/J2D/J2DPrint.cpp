@@ -12,7 +12,6 @@ bool J2DPrint::mHeapFlag;
 u32 J2DPrint::mStrBuffSize;
 u8 J2DPrint::mBufferNotEnough;
 
-#pragma dont_inline on
 extern "C" float J2DPrint_print_alpha_va(J2DPrint* print, u8 opacity,
                                          const char* format, va_list args)
 {
@@ -35,7 +34,6 @@ extern "C" float J2DPrint_print_alpha_va(J2DPrint* print, u8 opacity,
 		return size.unk0;
 	}
 }
-#pragma dont_inline reset
 
 J2DPrint::J2DPrint(JUTFont* font, int param_2)
 {

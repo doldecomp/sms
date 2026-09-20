@@ -549,12 +549,10 @@ void TTamaNoko::requestShadow()
 	}
 }
 
-#pragma dont_inline on
-// TODO: the ROM scales mScaling by 0.8f into a per-block temporary and
-// *calls* JGeometry::TVec3<f>::scale(f) (weak, boid.cpp holds the surviving
-// copy) at all four sites; we expand it, which costs 42 instructions. The
-// literal and the temporaries are right, the inline decision is not.
-// Batch 106 closed it without any new level: `scale(f)` is three statements,
+// The ROM scales mScaling by 0.8f into a per-block temporary and *calls*
+// JGeometry::TVec3<f>::scale(f) (weak, boid.cpp holds the surviving copy) at
+// all four sites.  Batch 106 landed that without any new level: `scale(f)` is
+// three statements,
 // so it expands through depth 3 and is a `bl` from depth 4 down, and
 // `setGlobalScale(mScaling * 0.8f)` reaches exactly that depth --
 // `operator*` sits inside an inlined call's *argument*, which costs one
@@ -593,7 +591,6 @@ void TTamaNoko::landEffect()
 	gpCameraShake->startShake(CAM_SHAKE_MODE_TAMANOKO, 1.0f);
 	SMSRumbleMgr->start(8, 1, (float*)nullptr);
 }
-#pragma dont_inline off
 
 void TTamaNoko::forceWakeUp() { }
 
