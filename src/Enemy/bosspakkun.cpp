@@ -1789,6 +1789,20 @@ DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
 
 // Binding level over a raw member read, worth +8 of low region in
 // TNerveBPTumbleIn::execute (batch 127).
+// The 4-byte rung (frame ladder 318/320): a by-value scalar read through an
+// existing accessor, landing in a named local.
+static inline MActor* BosspakkunMActor(const TBossPakkun* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
+static inline f32 BosspakkunBckFrame(MActor* actor)
+{
+	f32 frame = actor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+	return frame;
+}
+
 static inline TCameraShake* BosspakkunGetCameraShake()
 {
 	TCameraShake* cameraShake = gpCameraShake;
@@ -1854,11 +1868,11 @@ DEFINE_NERVE(TNerveBPTumble, TLiveActor)
 DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
-	MActor* actor     = boss->getMActor();
+	MActor* actor     = BosspakkunMActor(boss);
 
 	if (spine->getTime() == 0) {
 		boss->changeBck(BOSSPAKU_BCK_GETUP);
-		gpCameraShake->startShake(
+		BosspakkunGetCameraShake()->startShake(
 		    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_GETUP, 1.0f);
 		boss->rumblePad(0, boss->mPosition);
 	}
@@ -1871,7 +1885,7 @@ DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
 			if (!boss->is2ndFightNow()) {
 				boss->unk1C4 -= 1;
 				if (boss->unk1C4 <= 0) {
-					gpMarDirector->getConsole()->startAppearBalloon(1, true);
+					BosspakkunGetMarDirector()->getConsole()->startAppearBalloon(1, true);
 					boss->unk1C4 = 3;
 				}
 			}
@@ -1881,8 +1895,10 @@ DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
 		}
 	}
 
+	// TODO: frame-exact; the `mouth` block inside the resetWaterMark
+	// expansion is still 4 low, and every rung here prices in 8s.
 	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_RETURN)) {
-		f32 frame = actor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+		f32 frame = BosspakkunBckFrame(actor);
 		if (140.0f < frame && frame < 160.0f && !boss->unk17C)
 			boss->resetWaterMark();
 		if (35.0f < frame)
