@@ -54,12 +54,20 @@ static int TKoopaJr_jointIndexTable[5];
 // the `l +` that a literal zero bound would let MWCC fold. Two levels are
 // needed rather than one because JGeometry::TUtil<f32>::mod and std::fmodf
 // are calls at every ROM site here, which only happens at depth four.
+// The wrapped value is named at both levels: each named result is +8 of low
+// region in every caller that expands the pair, which is what lands
+// TDirectionCalc::absDirection (0x40) and TDirectionCalc::sub (0x38).
 static inline f32 WrapDirection(f32 t, f32 l, f32 r)
 {
-	return l + JGeometry::TUtil<f32>::mod((r - l) + (t - l), r - l);
+	f32 wrapped = l + JGeometry::TUtil<f32>::mod((r - l) + (t - l), r - l);
+	return wrapped;
 }
 
-static inline f32 WrapRadian(f32 t) { return WrapDirection(t, 0.0f, TWO_PI); }
+static inline f32 WrapRadian(f32 t)
+{
+	f32 wrapped = WrapDirection(t, 0.0f, TWO_PI);
+	return wrapped;
+}
 
 // The same pair over std::fmodf: calcNearerDirection and calcTurnDirection
 // wrap with it where normalize() uses TUtil<f32>::mod, so the two families
@@ -193,8 +201,9 @@ f32 TDirectionCalc::absDirection(f32 dir)
 {
 	// The named result puts sub() at depth 1, where the original expands it;
 	// fabsf(sub(dir)) nests it one level deeper and leaves a bl.
-	f32 diff = sub(dir);
-	return fabsf(diff);
+	f32 diff   = sub(dir);
+	f32 result = fabsf(diff);
+	return result;
 }
 
 f32 TDirectionCalc::d2r(f32 deg)
