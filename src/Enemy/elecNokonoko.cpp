@@ -86,6 +86,15 @@ static inline bool ElecIsNerve(const TSpineBase<TLiveActor>* spine,
 	return false;
 }
 
+// The != polarity of ElecIsNerve: retail lays the false (`li 0`) arm first.
+static inline bool ElecIsNotNerve(const TSpineBase<TLiveActor>* spine,
+                                  TSpineBase<TLiveActor>::Nerve nerve)
+{
+	if (spine->getCurrentNerve() == nerve)
+		return false;
+	return true;
+}
+
 // The copy-and-subtract distance, the shape AnimalNerve.cpp's file-scope
 // `calcDist` and emario's `EMarioCalcDist` already park, and the second
 // spelling the tree needs beside TVec3::distance(): the by-value first
@@ -465,6 +474,14 @@ bool TElecNokonoko::isResignationAttack()
 // pointer is the +4 of low pool that lands setGoalPath's TPathNode on
 // retail's slot (the same lever WalkerEnemyMario uses).
 static inline THitActor* ElecMario() { return (THitActor*)gpMarioAddress; }
+
+// Binding level worth +8 of low region, landing
+// TNerveElecNokonokoFreeze::execute's frame at 0x70 (batch 121).
+static inline MActor* ElecNokonokoGetMActor(const TElecNokonoko* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
 
 void TElecNokonoko::behaveToFindMario()
 {
@@ -1017,12 +1034,14 @@ DEFINE_NERVE(TNerveElecNokonokoCollect, TLiveActor)
 		nokonoko->setGoalPath(nokonoko->getCarapace());
 	}
 
-	// The koopa only walks while the shell is still rolling; once the shell
-	// is waiting for it, it stands still and the animation freezes.
-	if (nokonoko->getCarapace()->mSpine->getCurrentNerve()
-	    != &TNerveElecCarapaceWait::theNerve())
-		nokonoko->getMActor()->setFrameRate(SMSGetAnmFrameRate(),
-		                                    ANM_TYPE_BCK);
+	// Name the shell before theNerve() so the compare's receiver is hoisted
+	// past the static init, and materialise the != as an inline predicate
+	// (retail's `li 0; b; li 1; clrlwi.`).
+	TElecCarapace* carapace = nokonoko->getCarapace();
+	if (ElecIsNotNerve(carapace->getSpine(),
+	                   &TNerveElecCarapaceWait::theNerve()))
+		ElecNokonokoGetMActor(nokonoko)->setFrameRate(SMSGetAnmFrameRate(),
+		                                             ANM_TYPE_BCK);
 	else
 		nokonoko->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 
@@ -1083,14 +1102,6 @@ DEFINE_NERVE(TNerveElecNokonokoTurn, TLiveActor)
 		return TRUE;
 
 	return FALSE;
-}
-
-// Binding level worth +8 of low region, landing
-// TNerveElecNokonokoFreeze::execute's frame at 0x70 (batch 121).
-static inline MActor* ElecNokonokoGetMActor(const TElecNokonoko* p)
-{
-	MActor* mActor = p->getMActor();
-	return mActor;
 }
 
 DEFINE_NERVE(TNerveElecNokonokoFreeze, TLiveActor)
