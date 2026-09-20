@@ -539,11 +539,13 @@ void TShellCup::perform(u32 cue, JDrama::TGraphics* graphics)
 			shell->calcJointMtx();
 		}
 
+		// TODO: 98.7%. Retail's Mtx sits 8 bytes higher still and seeds the
+		// loop's byte offset from the counter (`addi r30, r28, 0`).
 		TMapObjBase* blueCoin = mBlueCoin;
 		if (!blueCoin->checkLiveFlag(LIVE_FLAG_DEAD)) {
-			blueCoin->mPosition.x = mShells[0].mPosition.x;
-			blueCoin->mPosition.y = mShells[0].mPosition.y;
-			blueCoin->mPosition.z = mShells[0].mPosition.z;
+			blueCoin->mPosition.x = getShell(0)->mPosition.x;
+			blueCoin->mPosition.y = getShell(0)->mPosition.y;
+			blueCoin->mPosition.z = getShell(0)->mPosition.z;
 		}
 
 		TCoin* coin0 = mCoin0;

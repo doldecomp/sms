@@ -178,6 +178,8 @@ public:
 	virtual void initMapObj();
 	TShellCup(const char* name = "シェルカップ");
 
+	TPinnaShell* getShell(int i) { return &mShells[i]; }
+
 public:
 	static f32 mOpenRotMax;
 	static f32 mAutoOpenRot;
