@@ -632,7 +632,7 @@ void TBossManta::initNthGeneration(int gen)
 
 	switch (mGeneration) {
 	case 0:
-		mSpine->initWith(&TNerveMantaAppearDemo::theNerve());
+		getSpine()->initWith(&TNerveMantaAppearDemo::theNerve());
 		mSpine->pushAfterCurrent(&TNerveMantaMove::theNerve());
 		unk188 = 0x258;
 		unk190 = 2.0f;
@@ -641,7 +641,7 @@ void TBossManta::initNthGeneration(int gen)
 		unk1A0 = 0;
 		break;
 	case 1:
-		mSpine->initWith(&TNerveMantaMove::theNerve());
+		getSpine()->initWith(&TNerveMantaMove::theNerve());
 		unk188 = (s32)(100.0f * MsRandF()) + 0x258;
 		unk190 = 2.0f;
 		unk194 = 0.009f;
@@ -649,7 +649,7 @@ void TBossManta::initNthGeneration(int gen)
 		unk1A0 = 0x78;
 		break;
 	case 2:
-		mSpine->initWith(&TNerveMantaMove::theNerve());
+		getSpine()->initWith(&TNerveMantaMove::theNerve());
 		unk188 = (s32)(100.0f * MsRandF()) + 0xC8;
 		unk190 = 3.0f;
 		unk194 = 0.009f;
@@ -657,7 +657,7 @@ void TBossManta::initNthGeneration(int gen)
 		unk1A0 = 0x78;
 		break;
 	case 3:
-		mSpine->initWith(&TNerveMantaMove::theNerve());
+		getSpine()->initWith(&TNerveMantaMove::theNerve());
 		unk188 = (s32)(100.0f * MsRandF()) + 0x64;
 		unk190 = 4.0f;
 		unk194 = 0.019f;
@@ -665,7 +665,7 @@ void TBossManta::initNthGeneration(int gen)
 		unk1A0 = 0x78;
 		break;
 	case 4:
-		mSpine->initWith(&TNerveMantaMove::theNerve());
+		getSpine()->initWith(&TNerveMantaMove::theNerve());
 		unk188 = (s32)(100.0f * MsRandF()) + 0x64;
 		unk190 = 7.0f;
 		unk194 = 0.03f;
@@ -673,7 +673,7 @@ void TBossManta::initNthGeneration(int gen)
 		unk1A0 = 0x168;
 		break;
 	case 5:
-		mSpine->initWith(&TNerveMantaMove::theNerve());
+		getSpine()->initWith(&TNerveMantaMove::theNerve());
 		unk188 = (s32)(100.0f * MsRandF()) + 0x64;
 		unk190 = 3.0f;
 		unk194 = 0.03f;
@@ -686,7 +686,7 @@ void TBossManta::initNthGeneration(int gen)
 
 	offLiveFlag(LIVE_FLAG_DEAD);
 	if (mGeneration <= 2)
-		getManager()->adaptAdditionalCollision(this);
+		BossMantaGetManager(this)->adaptAdditionalCollision(this);
 }
 
 void TBossManta::control()
