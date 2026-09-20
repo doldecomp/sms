@@ -902,14 +902,16 @@ void TKiller::calcRootMatrix()
 	TSpineEnemy::calcRootMatrix();
 }
 
-// TODO: 99.8%. One float-register difference on the search-length fetch.
+// Same body as TSmallEnemy::isFindMarioFromParam: *= into the named
+// search-length local loads it straight into f1 (the first isInSight
+// argument) instead of f0-then-fmuls.
 bool TKiller::isFindMario(f32 rate)
 {
 	TSmallEnemyParams* params = getSaveParams();
 
 	f32 searchHeight = params->mSLSearchHeight.get();
 
-	if (fabsf(SMS_GetMarioPos().y - mPosition.y) < searchHeight) {
+	if (abs(SMS_GetMarioPos().y - mPosition.y) < searchHeight) {
 		JGeometry::TVec3<f32> marioPos(SMS_GetMarioPos().x,
 		                               SMS_GetMarioPos().y,
 		                               SMS_GetMarioPos().z);
@@ -918,8 +920,11 @@ bool TKiller::isFindMario(f32 rate)
 		f32 searchAngle  = params->mSLSearchAngle.get();
 		f32 searchAware  = params->mSLSearchAware.get();
 
-		if (isInSight(marioPos, searchLength * rate, searchAngle * rate,
-		              searchAware * rate))
+		searchLength *= rate;
+		searchAngle *= rate;
+		searchAware *= rate;
+
+		if (isInSight(marioPos, searchLength, searchAngle, searchAware))
 			return true;
 		else
 			return false;
