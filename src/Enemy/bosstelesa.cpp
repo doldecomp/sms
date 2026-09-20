@@ -334,6 +334,10 @@ BOOL TNerveBubbleLive::execute(TSpineBase<TLiveActor>* spine) const
 		bubble->setBckAnm(10);
 	}
 
+	// TODO: the ROM hoists the mParams load and the mSLAddPosBase read above
+	// the mIsSplit branch and loads mFloatHeight second; we load mFloatHeight
+	// first. Four bytes of pool below the setGoalPathMario block are the only
+	// other residue (frame 0xf8 exact).
 	if (!bubble->mIsSplit) {
 		if (bubble->mFloatHeight < bubble->mParams->mSLAddPosBase.get())
 			bubble->mFloatHeight += 2.0f;
@@ -354,17 +358,17 @@ BOOL TNerveBubbleLive::execute(TSpineBase<TLiveActor>* spine) const
 
 	bubble->mFloatHeight += 0.001f;
 	if (bubble->mFloatHeight
-	    > bubble->mPosition.y + bubble->mParams->mSLDeadHeight.get()) {
+	    > bubble->mPosition.y + bubble->getSaveParam2()->mSLDeadHeight.get()) {
 		bubble->unk1D2 = false;
 		bubble->kill();
 	}
 
-	if (bubble->mScaling.x < bubble->mParams->mSLMaxScale.get()) {
+	if (bubble->mScaling.x < bubble->getSaveParam2()->mSLMaxScale.get()) {
 		bubble->mScaling.x = bubble->mScaling.y = bubble->mScaling.z
-		    = bubble->mScaling.z * bubble->mParams->mSLRateExpand.get();
+		    = bubble->mScaling.z * bubble->getSaveParam2()->mSLRateExpand.get();
 	}
 
-	if (spine->getTime() > bubble->mParams->mSLLiveTime.get()) {
+	if (spine->getTime() > bubble->getSaveParam2()->mSLLiveTime.get()) {
 		spine->pushAfterCurrent(&TNerveBubbleSplit::theNerve());
 		return TRUE;
 	}
