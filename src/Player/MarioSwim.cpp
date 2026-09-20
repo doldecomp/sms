@@ -207,6 +207,7 @@ BOOL TMario::swimPaddleStart()
 
 BOOL TMario::swimPaddle()
 {
+	char trash[8];
 	f32 anmRate = 0.5f;
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		anmRate = 5.0f;
