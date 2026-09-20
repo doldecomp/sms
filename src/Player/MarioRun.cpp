@@ -342,14 +342,13 @@ void TMario::slideProcess(f32 baseAcc, f32 friction)
 	f32 slopeUp;
 	f32 slopeDown;
 	getSlopeSlideAccele(&slopeUp, &slopeDown);
-	f32 acc;
 	if (angDiff > -0x4000 && angDiff < 0x4000)
-		acc = slopeUp * mag + baseAcc;
+		baseAcc += slopeUp * mag;
 	else
-		acc = slopeDown * mag + baseAcc;
+		baseAcc += slopeDown * mag;
 
-	mSlideVelX += acc * JMASSin(dirAng);
-	mSlideVelZ += acc * JMASCos(dirAng);
+	mSlideVelX += baseAcc * JMASSin(dirAng);
+	mSlideVelZ += baseAcc * JMASCos(dirAng);
 	mSlideVelX *= friction;
 	mSlideVelZ *= friction;
 	unk9E = matan(mSlideVelZ, mSlideVelX);
