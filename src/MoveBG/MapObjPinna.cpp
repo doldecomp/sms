@@ -60,13 +60,13 @@ void TFerrisWheel::control()
 	// State 2 is "slowing down after the manta fight"; once the wheel has
 	// coasted back to the idle rate it goes back to state 1 for good.
 	if (isState(2) && !isStateTimerEngaged()) {
-		if (mAnmRate > SMSGetAnmFrameRate() * 0.25f)
+		if (mAnmRate > SMSGetAnmFrameRate() / 4.0f)
 			mAnmRate -= 0.015f;
 		else
 			setState(1);
 	}
 
-	if (mAnmRate > SMSGetAnmFrameRate() * 0.25f) {
+	if (mAnmRate > SMSGetAnmFrameRate() / 4.0f) {
 		MSound* sound = SMSGetMSound();
 		sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
 		                       &sound->unk80, 0, 4);
@@ -102,7 +102,7 @@ void TFerrisWheel::initMapObj()
 	if (SMSGetMarDirector()->getCurrentStage() == 2)
 		mAnmRate = 10.0f;
 	else
-		mAnmRate = SMSGetAnmFrameRate() * 0.25f;
+		mAnmRate = SMSGetAnmFrameRate() / 4.0f;
 }
 
 TFerrisWheel::TFerrisWheel(const char* name)
@@ -1031,7 +1031,7 @@ void TPinnaCoaster::initMapObj()
 	MsMtxSetXYZRPH(mRail->getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
 	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 
-	mRail->getFrameCtrl(0)->setRate(0.25f * SMSGetAnmFrameRate());
+	mRail->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate() / 4.0f);
 
 	mPrevPos.set(mPosition);
 }
