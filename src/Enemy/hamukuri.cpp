@@ -510,12 +510,20 @@ TSpineEnemy* TFireHamuKuriManager::createEnemyInstance()
 	return new TFireHamuKuri;
 }
 
+static inline MActor* FireHamuGetMActor(TFireHamuKuri* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 void TFireHamuKuriManager::initSetEnemies()
 {
+	TFireHamuKuri* hamu;
+
 	for (int i = 0; i < mObjNum; ++i) {
-		TFireHamuKuri* hamu = (TFireHamuKuri*)unk18[i];
-		hamu->unk21C        = mFireHamNoseColorStart;
-		hamu->unk224        = mFireHamOtherColorStart;
+		hamu         = (TFireHamuKuri*)unk18[i];
+		hamu->unk21C = mFireHamNoseColorStart;
+		hamu->unk224 = mFireHamOtherColorStart;
 
 		static const GXColorS10 tevColorData[] = {
 			{ 200, 200, 200, 161 },
@@ -529,11 +537,11 @@ void TFireHamuKuriManager::initSetEnemies()
 		                            ->getMaterialName()
 		                            ->getIndex("_mat_body_bottom1");
 		SMS_InitPacket_ThreeTevColor(
-		    hamu->getMActor()->getModel(), matBodyBottom1Idx, GX_TEVREG0,
+		    FireHamuGetMActor(hamu)->getModel(), matBodyBottom1Idx, GX_TEVREG0,
 		    &tevColorData[0], GX_TEVREG1, &tevColorData[1], GX_TEVREG2,
 		    &tevColorData[2]);
 
-		u32 matNose1Idx = hamu->getMActor()
+		u32 matNose1Idx = FireHamuGetMActor(hamu)
 		                      ->getModel()
 		                      ->getModelData()
 		                      ->getMaterialName()
