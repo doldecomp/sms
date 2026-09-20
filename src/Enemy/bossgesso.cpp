@@ -1242,6 +1242,9 @@ static inline J3DModel* BossgessoGetModel(const TBossGesso* p)
 	return model;
 }
 
+// A bare-return fork over getModel() is the +4 rung this TU's nerve pools
+// need (the binder BossgessoGetModel above is +8): one site closed
+// TNerveBGPollute and TNerveBGTug.
 static inline J3DModel* BossgessoModelOf(const TBossGesso* p)
 {
 	return p->getModel();
