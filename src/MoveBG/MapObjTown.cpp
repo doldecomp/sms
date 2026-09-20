@@ -30,6 +30,15 @@
 
 TMapObjSwitch* gpMapObjSwitch;
 
+// Named-local fork over gpMSound, worth +8 of low region at each site that
+// expands TMapObjBillboard::swing and in TMapObjChangeStage::touchPlayer
+// (batch 127).
+static inline MSound* MapObjTownGetMSound()
+{
+	MSound* mSound = gpMSound;
+	return mSound;
+}
+
 f32 TManhole::mDownHeight            = 12.0f;
 f32 TManhole::mDownSpeed             = 1.5f;
 f32 TManhole::mVibrationSpeed        = 0.05f;
@@ -80,7 +89,7 @@ void TManhole::touchPlayer(THitActor*)
 {
 	mState = STATE_NORMAL;
 	if (!animationFinished()) {
-		mPosition.y = mInitialPosition.y;
+		mPosition.y = getInitialPosition().y;
 		return;
 	}
 	if (gpMarioOriginal->getStatus() == MARIO_STATUS_HIP_DROP
@@ -177,6 +186,18 @@ bool TManhole::animationFinished()
 	return false;
 }
 
+static inline TMario* MapObjTownGetMario()
+{
+	TMario* mario = gpMarioOriginal;
+	return mario;
+}
+
+static inline TMapCollisionManager* MapObjTownColManager(const TManhole* p)
+{
+	TMapCollisionManager* manager = p->mMapCollisionManager;
+	return manager;
+}
+
 void TManhole::appeared()
 {
 	const TMapObjBase* assoc = unk154;
@@ -189,8 +210,8 @@ void TManhole::appeared()
 		}
 	}
 	if (unk150) {
-		if (gpMarioOriginal->mVel.y <= 0.0f) {
-			mMapCollisionManager->unk8->setAllBGType(
+		if (MapObjTownGetMario()->mVel.y <= 0.0f) {
+			MapObjTownColManager(this)->unk8->setAllBGType(
 			    BG_TYPE_GROUND_POUND_TO_PASS_THROUGH);
 			unk150 = 0;
 		}
@@ -198,12 +219,13 @@ void TManhole::appeared()
 	if (animationFinished()) {
 		if (unk152 == 1 && mColCount == 0) {
 			unk152 = 0;
-			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_UP, &mPosition,
-			                                0, nullptr, 0, 4);
+			MapObjTownGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_UP,
+			                                       &mPosition, 0, nullptr, 0,
+			                                       4);
 		}
 		if (unk14C > mVibrationEndHeight) {
 			mPosition.y = unk14C * JMASCos((s16)(unk148 * 32768.0f))
-			              + mInitialPosition.y;
+			              + getInitialPosition().y;
 			unk148 += mVibrationSpeed;
 			if (unk148 >= 2.0f)
 				unk148 = unk148 - 2.0f;
@@ -215,7 +237,7 @@ void TManhole::appeared()
 			unk151 = 1;
 		}
 		onMapObjFlag(MAP_OBJ_FLAG_UNK100);
-		mPosition.y = mInitialPosition.y;
+		mPosition.y = getInitialPosition().y;
 	}
 }
 
@@ -292,15 +314,6 @@ TManhole::TManhole(const char* name)
     , unk154(nullptr)
     , unk158(nullptr)
 {
-}
-
-// Named-local fork over gpMSound, worth +8 of low region at each site that
-// expands TMapObjBillboard::swing and in TMapObjChangeStage::touchPlayer
-// (batch 127).
-static inline MSound* MapObjTownGetMSound()
-{
-	MSound* mSound = gpMSound;
-	return mSound;
 }
 
 void TMapObjBillboard::swing(THitActor* param_1)
