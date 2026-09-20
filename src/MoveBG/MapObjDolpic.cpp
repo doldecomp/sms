@@ -262,6 +262,7 @@ void TBellDolpic::touchPlayer(THitActor* actor) { ring(actor->mPosition); }
 
 BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 {
+	char trash[8];
 	if (sender->isActorType(0x80000001)) {
 		ring(sender->mPosition);
 	}
