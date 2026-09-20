@@ -473,18 +473,42 @@ f32 TShine::mCircleRateY   = 0.5f;
 f32 TShine::mUpSpeed       = 1.0f;
 f32 TShine::mSpeedDownRate = 0.99f;
 
+static inline MActor* TShineCalcMActor(const TShine* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
+static inline J3DModel* TShineCalcModel(const TShine* p)
+{
+	J3DModel* model = TShineCalcMActor(p)->getModel();
+	return model;
+}
+
+static inline CPolarSubCamera* TShineCalcCamera()
+{
+	CPolarSubCamera* camera = gpCamera;
+	return camera;
+}
+
+static inline TMarioParticleManager* TShineCalcParticles()
+{
+	TMarioParticleManager* mgr = gpMarioParticleManager;
+	return mgr;
+}
+
 void TShine::calc()
 {
-	MtxPtr mtxPos = getMActor()->getModel()->getAnmMtx(2);
+	MtxPtr mtxPos = TShineCalcModel(this)->getAnmMtx(2);
 
 	if (checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT
 	                  | LIVE_FLAG_DEAD))
 		return;
 
-	unk198 = gpMarioParticleManager->emitAndBindToMtxPtr(
+	unk198 = TShineCalcParticles()->emitAndBindToMtxPtr(
 	    PARTICLE_MS_SHINE_SENKO, mtxPos, 1, this);
-	unk19C = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_SHINE_KIRA,
-	                                                     mtxPos, 1, this);
+	unk19C = TShineCalcParticles()->emitAndBindToMtxPtr(PARTICLE_MS_SHINE_KIRA,
+	                                                    mtxPos, 1, this);
 	if (unk1B4 == 0) {
 		unk194 = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_SHINE_PROMI, mtxPos, 1, this);
@@ -492,7 +516,7 @@ void TShine::calc()
 		    PARTICLE_MS_SHINE_BOW, mtxPos, 1, this);
 	}
 
-	f32 dist2 = gpCamera->unk124.squared(mPosition);
+	f32 dist2 = TShineCalcCamera()->unk124.squared(getPosition());
 	f32 dist  = JGeometry::TUtil<f32>::sqrt(dist2);
 
 	s16 promiLife;
@@ -626,7 +650,10 @@ void TShine::control()
 		J3DModel* model      = getMActor()->getModel();
 		MtxPtr mtx           = model->getAnmMtx(2);
 		const GXColor& color = (GXColor) { 0xff, 0xff, 0xff, 0xff };
-		JGeometry::TVec3<f32> trans(mtx[0][3], mtx[1][3], mtx[2][3]);
+		JGeometry::TVec3<f32> trans;
+		trans.x = mtx[0][3];
+		trans.y = mtx[1][3];
+		trans.z = mtx[2][3];
 		gpLightManager->setEffectLightColor(color);
 		gpLightManager->setEffectLightPos(trans);
 	} break;
@@ -1010,6 +1037,12 @@ void TEggYoshi::startBalloonAnim()
 	}
 }
 
+static inline MSound* EggYoshiTouchSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TEggYoshi::touchFruit(THitActor* fruit)
 {
 	if (isState(0xE) || isState(STATE_HOLDING))
@@ -1018,13 +1051,13 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 	if (unk14C == (u32)fruit->mActorType) {
 		startAnim(1);
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(11.0f);
-		mRotation.y = (360.0f / 65536.0f)
-		              * matan(fruit->mPosition.z - mPosition.z,
-		                      fruit->mPosition.x - mPosition.x);
+		f32 dx = fruit->getPosition().x - getPosition().x;
+		f32 dz = fruit->getPosition().z - getPosition().z;
+		mRotation.y = (360.0f / 65536.0f) * matan(dz, dx);
 		mState = 0xB;
 		unk150 = fruit;
-		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_YOSHI, 0, nullptr,
-		                                   0);
+		EggYoshiTouchSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_YOSHI, 0,
+		                                         nullptr, 0);
 	} else if (animIsFinished()) {
 		startAnim(2);
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(12.0f);
@@ -1159,14 +1192,6 @@ void TEggYoshi::startFruit()
 		receiveMessage(nullptr, HIT_MESSAGE_UNK10);
 }
 
-// Binding level over the address of a struct member, worth +16 of low region
-// in TEggYoshi::receiveMessage (batch 130).
-static inline const JGeometry::TVec3<f32>* ItemVelocity(const TEggYoshi* p)
-{
-	const JGeometry::TVec3<f32>* velocity = &p->mVelocity;
-	return velocity;
-}
-
 BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_TAKE) {
@@ -1182,9 +1207,12 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_UNK10) {
-		JGeometry::TVec3<f32> v = *ItemVelocity(this);
+		// Named scalar before the TVec3 so it ranks above the copy.
+		f32 y;
+		JGeometry::TVec3<f32> v = getVelocity();
 		makeObjAppeared();
-		mVelocity.y = v.y;
+		y           = v.y;
+		mVelocity.y = y;
 		offLiveFlag(LIVE_FLAG_UNK10);
 		decideRandomLoveFruit();
 		startBalloonAnim();
