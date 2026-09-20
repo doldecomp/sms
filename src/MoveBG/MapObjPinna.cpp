@@ -35,6 +35,17 @@
 
 // TFerrisWheel
 
+static inline J3DFrameCtrl* MapObjPinnaFrameCtrl(TMapObjBase* p)
+{
+	return p->getMActor()->getFrameCtrl(0);
+}
+
+static inline MSound* MapObjPinnaGetMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 s32 TFerrisWheel::becomeCalmlyCallback(u32 param_1, u32 param_2)
 {
 	if (param_2 == 0) {
@@ -67,14 +78,14 @@ void TFerrisWheel::control()
 	}
 
 	if (mAnmRate > SMSGetAnmFrameRate() / 4.0f) {
-		MSound* sound = SMSGetMSound();
+		MSound* sound = MapObjPinnaGetMSound();
 		sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
 		                       &sound->unk80, 0, 4);
 	}
 
 	f32 rate = mAnmRate;
-	getMActor()->getFrameCtrl(0)->setFrame(
-	    rate + getMActor()->getFrameCtrl(0)->getFrame());
+	MapObjPinnaFrameCtrl(this)->setFrame(
+	    rate + MapObjPinnaFrameCtrl(this)->getFrame());
 
 	for (int i = 0; i < mGondolaNum; i++) {
 		TMapObjBase* gondola = mGondolas[i];
