@@ -771,12 +771,13 @@ void TSmallEnemy::decHpByWater(THitActor* param_1)
 	if (uVar2 < 1)
 		uVar2 = 1;
 
-	if (mHitPoints < uVar2) {
+	int attack = uVar2;
+	if (mHitPoints < attack) {
 		mHitPoints = 0;
 		return;
 	}
 
-	mHitPoints -= uVar2;
+	mHitPoints -= attack;
 }
 
 void TSmallEnemy::kill()
@@ -821,7 +822,6 @@ bool TSmallEnemy::isMarioInWater() const
 	       || SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER);
 }
 
-#pragma dont_inline on
 bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 {
 	TSmallEnemyParams* prms = getSaveParams();
@@ -836,8 +836,12 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 		f32 searchAngle  = prms->mSLSearchAngle.get();
 		f32 searchAware  = prms->mSLSearchAware.get();
 
-		if (isInSight(marioPos, searchLength * param_1, searchAngle * param_1,
-		              searchAware * param_1))
+		searchLength *= param_1;
+		searchAngle *= param_1;
+		searchAware *= param_1;
+
+		BOOL found = isInSight(marioPos, searchLength, searchAngle, searchAware);
+		if (found)
 			return true;
 		else
 			return false;
@@ -845,7 +849,6 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 
 	return false;
 }
-#pragma dont_inline off
 
 void TSmallEnemy::generateEffectColumWater()
 {
