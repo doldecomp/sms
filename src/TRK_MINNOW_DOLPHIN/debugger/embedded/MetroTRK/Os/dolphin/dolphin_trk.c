@@ -64,8 +64,13 @@ asm void InitMetroTRK()
 	mtspr  0x3f2, r0
 	mtspr  0x3f5, r0
 	//Restore stack pointer
+#ifdef VERSION_GMSP01
+	lis r1, 0x80420D48@h
+	ori r1, r1, 0x80420D48@l
+#else
 	lis r1, 0x80426008@h
 	ori r1, r1, 0x80426008@l
+#endif
 	mr r3, r5
 	bl InitMetroTRKCommTable //Initialize comm table
 	/*
