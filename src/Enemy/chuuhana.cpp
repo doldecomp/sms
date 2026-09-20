@@ -1095,22 +1095,28 @@ DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
 		hana->setSafeGoal();
 
 	// Late in the jump it slams whatever it is standing on.
+	// Retail tests getActor() into r0, then mr r3, r0 inside the arm.
+	// getActor on the named receiver is the +8; the test stays raw.
+	// TODO: 99.9%, frame exact. Residue is setSafeGoal's TMsRange /
+	// point-vec slot order (known-open, chuuhana ladder 332).
 	if (hana->unk214 && hana->getCurAnmFrameNo(0) > 80.0f) {
-		if (hana->mGroundPlane->getActor()) {
-			((THitActor*)hana->mGroundPlane->getActor())
-			    ->receiveMessage(hana, HIT_MESSAGE_SUPER_HIP_DROP);
+		if (hana->mGroundPlane->mActor) {
+			THitActor* actor
+			    = (THitActor*)hana->mGroundPlane->getActor();
+			actor->receiveMessage(hana, HIT_MESSAGE_SUPER_HIP_DROP);
 		}
 		hana->unk214 = 0;
 	}
 
+	// Two return TRUE sharing one li r3, 1: if / else if, then one return.
 	if (hana->checkCurAnmEnd(0)) {
-		if (hana->unk1B1) {
+		if (hana->unk1B1)
 			spine->pushAfterCurrent(&TNerveChuuHanaRoll::theNerve());
-			return TRUE;
+		else {
+			spine->reset();
+			spine->setDefaultNext();
+			spine->pushAfterCurrent(spine->getDefault());
 		}
-		spine->reset();
-		spine->setDefaultNext();
-		spine->pushAfterCurrent(spine->getDefault());
 		return TRUE;
 	}
 	return FALSE;
@@ -1240,9 +1246,21 @@ DEFINE_NERVE(TNerveChuuHanaFall2, TLiveActor)
 
 DEFINE_NERVE(TNerveChuuHanaObject, TLiveActor) { return FALSE; }
 
+// Attack-local binder over the pollution-counter pointer, +8.
+static inline u8* ChuuHanaAttackFlag(const TChuuHana* p)
+{
+	u8* flag = p->unk21C;
+	return flag;
+}
+
 DEFINE_NERVE(TNerveChuuHanaAttack, TLiveActor)
 {
-	TChuuHana* hana = (TChuuHana*)spine->getBody();
+	// getBody two-local + unk21C binder: instruction-identical at 0xb0
+	// of 0xb8.  A third binder is +0x10 (0xc0); a gpMarioAddress fork
+	// lands the frame but shifts both TPathNode temps.
+	// TODO: 100% instructions, frame 8 short; need +8 that does not
+	// move the TPathNode block.
+	TChuuHana* hana = ChuuHanaWalkOnPanelBody(spine);
 
 	if (spine->getTime() == 0) {
 		hana->setBckAnm(12);
@@ -1256,7 +1274,7 @@ DEFINE_NERVE(TNerveChuuHanaAttack, TLiveActor)
 
 	// Mario stepping off this panel ends the chase.
 	if ((*gpMarioGroundPlane)->getActor() != hana->unk218)
-		*hana->unk21C = 0;
+		*ChuuHanaAttackFlag(hana) = 0;
 
 	if (spine->getTime() > hana->unk1B4->mSLAttackTimer.get()) {
 		spine->pushAfterCurrent(&TNerveChuuHanaWalkOnPanel::theNerve());
