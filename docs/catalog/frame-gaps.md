@@ -1802,3 +1802,16 @@ It does not generalise: a bare fork over `getMActor()` at 1 or 5 sites is 0 (`TN
 That level is the shared blocker behind `moveObject` (+8), `doAttackSingle` (51 missing instructions) and `doAttackShoot`'s last 4 bytes.
 - `tipPos.length()` for `squared()` plus `TUtil<f32>::sqrt` is instruction-identical and +4 in `lenFromToeToMario` but drops the pasting `TBossGesso::perform` 98.29 -> 82.22; this TU's `length()`/`squared()` split is caller-visible.
 - `TNerveBGWait` needs -0x30, none of it reachable from the nerve's own body; it sits below three pasted `changeBck` expansions, whose rung is shared with eight callers of disagreeing sign.
+
+## hinokuri2 ladder 376
+
+Seven exact and four lifts in `Enemy/hinokuri2` (44.05% -> 65.57%, 55 -> 62 of 72 exact), zero regressions; three real bugs (`TNerveHino2PrePol::execute` had an inverted wait compare; `THino2MtxCalc::calc` blends on `unk78`, not `mTwo[0]`, and declares its two blend `J3DTransformInfo`s in the reverse order).
+
+- A caller-level named local and a TU-local binder are both +8 but land in different regions: `TLiveActor* body = spine->getBody();` in the nerve body is +8 of named block, the same step inside a `static inline` fork is +8 of pool (`TNerveHino2Pollute::execute` needed the caller form; the binder form hit the frame but left a buffer 8 high).
+- A per-site `((THino2Params*)getSaveParam())->` cast blocks the `TParamRT` displacement fold; a TU-local binder returning the cast pointer restores retail's single `lwz 0x180(r3)`, prices +8/+0x10 per site, and fixes load order (retail loads the param before the member it is subtracted from).
+linking.md's "spell the cast out per site" note was about the virtual `getSaveParam2()` wrapper, not a TU-local binder.
+- `getCurrentBck()`/`getHitPoints()` by-value `int` accessors saturate at +0x10: one or two sites +8, three or more +0x10.
+- NpcEvent 353's -4 rule generalises off `char[N]`: `J3DJoint* joint;` declared before a `J3DTransformInfo` and assigned inside the `else` moved that buffer -4.
+- Site-count non-monotonicity again: five mask binder sites +0x38 but four +0x30; a params binder +0x10 at one site and +0x18 at two.
+- Inert or refused: a named `TWaterEmitInfo*` (breaks a CSE); a self binder that copies r31 to r28; two-local self/tracer binders (saturate); a named `params` inside the header's `calcHitPoints` (hoists the virtual call out of the switch).
+- Open: `TNerveHino2GraphWander` is 0x20 short with the pool saturated (retail keeps 0x18 between two block objects, so more vectors are declared there); `THino2MtxCalc::calc`'s four else-branch buffers are uniformly 4 low; `THino2Mask::perform` needs two buffer addresses bound into r26/r27 across two `Mtx` blocks.
