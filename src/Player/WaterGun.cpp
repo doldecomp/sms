@@ -1591,10 +1591,19 @@ void TWaterGun::movement()
 	getCurrentNozzle()->animation(mCurrentNozzle);
 }
 
+// The rotation matrix is the inlined callee's own local, not the caller's:
+// an inlined callee's block stacks below the caller's named locals here, and
+// the 4-byte gap its boundary leaves under `result` is exactly retail's.
+static inline void WaterGunRotateBase(Mtx dst, Mtx src, f32 roll)
+{
+	Mtx temp;
+	MsMtxSetRotRPH(temp, 0.0f, 0.0f, roll);
+	MTXConcat(src, temp, dst);
+}
+
 void TWaterGun::setBaseTRMtx(Mtx mtx)
 {
 	Mtx result;
-	Mtx temp;
 
 	f32 initialAngle = mtx[1][0];
 	if (initialAngle < 0.0f)
@@ -1604,17 +1613,7 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 	s16 angle = initialAngle * (unk1D04 - unk1D06) + unk1D06;
 
 	f32 angleDegrees = SHORTANGLE2DEG(angle);
-	MsMtxSetRotRPH(temp, 0.0f, 0.0f, angleDegrees);
-
-	MTXConcat(mtx, temp, result);
-	// TODO: `temp` sits at 0x20 where retail has 0x1c: the low
-	// (inline-temporary) region is 4 bytes over, while the frame total is
-	// already right (retail's 4 bytes are alignment padding under the
-	// doubles). Measured low-region sizes for the model fetch:
-	// `mFluddModel->mModel` 8, `getModel()` 12, `mFluddModel->getModel()`
-	// 20, `getModel()` forwarding to `MActor::getModel()` 24; retail wants
-	// 16. Dropping the named `angleDegrees` gives exactly 16 but permutes
-	// f3/f4/f5 (95.7%).
+	WaterGunRotateBase(result, mtx, angleDegrees);
 	mFluddModel->getModel()->setBaseTRMtx(result);
 }
 
