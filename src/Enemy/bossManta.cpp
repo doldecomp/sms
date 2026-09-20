@@ -988,9 +988,9 @@ void TBossMantaManager::TMantaMessageState::update()
 		}
 		break;
 	case 1: {
-		int i;
+		int i          = 0;
 		int aliveCount = 0;
-		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (; i < unk0->getActiveObjNum(); ++i) {
 			if (!unk0->getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
 				aliveCount++;
 		}
