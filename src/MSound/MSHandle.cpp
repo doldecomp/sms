@@ -90,6 +90,7 @@ f32 MSHandle::MSACos(f32 param_1)
 
 void MSHandle::setSeDistanceParameters()
 {
+	char trash[8];
 	u8 type = smSeCategory[get_thing(mSoundID)].mType;
 	if (mState == SOUNDSTATE_Prepared)
 		type = 0;
@@ -98,7 +99,7 @@ void MSHandle::setSeDistanceParameters()
 	setSeDistancePan(type);
 	setSeDistancePitch(type);
 	setSePositionDopplar();
-	setSeDistanceFir(type);
+	setSeDistanceFxmix(type);
 
 	if (!(getSwBit() & JAISeSwBit_NoMapFxmix)) {
 		f32 dVar4 = interPointer->getMapInfoFxParameter(mActorGroundNumber);
