@@ -1763,3 +1763,16 @@ Shadowing it in the derived template narrows the damage to `setBckTrack`; that f
 - This pool carries 4 bytes of slack: a probe of 2 or 4 bytes after the buffers moved nothing, 8 moved +8, so only an 8-byte item is a rung.
 - The non-trivial-class frame probe is not always per expansion: in `addFileTable` (six `getSimpleName` expansions) a `struct S { ~S(){} u32 a[N]; }` stepped 0x18 per word from a 0x20 base, so +0x60 is unreachable that way.
 `addFileTable` needs +0x60 of dead pool with no stack references plus an r28/r29 swap inside the expansions; `init` needs +0xc and retail ranks the parameter above the two locals (r30 `additional_files`); the default ctor needs +8 below a 1-byte `TAllocator` temp.
+
+## hamukuri ladder 373
+
+Four exact and one lift in `Enemy/hamukuri` (68.04% -> 70.01%, 199 -> 202 of 226 exact), one real bug (`TDangoHamuKuri::receiveMessage` emits the water-hit particle at the sender's position, not `this`).
+
+- A by-value `u8` fork over a narrow member feeding an index argument is a clean +4 of pool where `getRotation()` and named-pointer forms are +8 or 0 (`TDangoHamuKuri::getTakingMtx`); same family as bossgesso 319's `s8`/`s16` `int` fork.
+- `getRotation()` on a component read is +4 of pool below an inlined callee's pointer temp but +0 above it: at the `set()` site it moved only the pool floor, at the assignment site the whole named block; two such sites compose linearly (`THamuKuriLauncher::stateLaunch`, whose two uninitialised `TVec3`s also had to move above the `Mtx`).
+- A dead `int` local holding a division was a +4-below/+4-above carrier; removing it drops the frame 8, and two accessor rungs are the honest replacement.
+- `TParamRT<T>::get()` vs raw `.value` is a callee-saved ranking knob, not only a frame one: raw `.value` reordered r27/r28 to retail's at -0x10 (`THamuKuriManager::requestSerialKill`, repaid by `getObj(i)` over `unk18[i]`).
+The `params` local there is the 15th statement that keeps `TFireHamuKuri::isHitValid` from inlining the body.
+- A named local hoisted from a for-body to function scope moves above `this` in the callee-saved ladder at zero instruction cost (`TFireHamuKuriManager::initSetEnemies`, 98.56 -> 99.60; residue: `this` must outrank the for-init counter).
+- `TNerveHamuKuriBoundFreeze::execute`: two sibling `TVec3` block objects are first-declared-highest in ours and later-declared-highest in retail at an exact frame, so retail declares them inside an inlined callee (block-object order class).
+- `THaneHamuKuri::bind` and `TDangoHamuKuri::behaveToWater` are the `operator-` by-value temp allocation-order class; `THamuKuri::getTakingMtx` is instruction-exact with the pool 0x50 short below the `Mtx`.
