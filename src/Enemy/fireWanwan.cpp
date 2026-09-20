@@ -816,6 +816,12 @@ void TFireWanwan::setMActorAndKeeper()
 
 // TODO: TFireWanwan::unk194 and unk238 want accessors in FireWanwan.hpp;
 // parked here as TU-locals until a header batch adds them.
+static inline J3DModel* FireWanwanGetModel(const TFireWanwan* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 static inline TFireWanwanTailHit* FireWanwanGetTailHit(const TFireWanwan* p)
 {
 	return p->unk194;
@@ -1340,10 +1346,10 @@ void TFireWanwan::updateHitPoint()
 
 void TFireWanwan::emitEffects()
 {
-	MtxPtr mtx = getModel()->getAnmMtx(mCenterJointIdx);
+	MtxPtr mtx = FireWanwanGetModel(this)->getAnmMtx(mCenterJointIdx);
 	unk1F0.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-	if (mHitPoints != 0 && unk194->mIsOnFire) {
+	if (mHitPoints != 0 && FireWanwanGetTailHit(this)->mIsOnFire) {
 		SMS_EasyEmitParticle(FIREWANWAN_JPA_MS_CAN_YUGAMI, &unk1F0, this,
 		                     mScaling);
 	}
@@ -1355,7 +1361,7 @@ void TFireWanwan::emitEffects()
 	if (isFreeze() && mSpine->getTime() < mFreezeWait)
 		SMS_EasyEmitParticle(PARTICLE_MS_POI_KIZETSU, &unk1F0, this, mScaling);
 
-	if (isFlying() || unk194->isTaken()) {
+	if (isFlying() || FireWanwanGetTailHit(this)->isTaken()) {
 		MtxPtr pos;
 		if (isFlying()) {
 			pos = getModel()->getBaseTRMtx();
