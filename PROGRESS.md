@@ -4457,3 +4457,126 @@ calcRootMatrix` (zusammen 6+ echte Bugs, Differenzen um 90 % reduziert).
 **9025** (von 9021 zu Rundenbeginn), `matched_code_percent`: 45,26 %.
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`.
+
+### Nach siebenundfünfzigster Iterationsrunde (20-Kandidaten-Batch: 6 neue Matches, systemisches TFlagT<u16>-Argument-Rahmenproblem entdeckt, JGVec3-operator*-Hypothese erneut bestätigt)
+
+**6 neue Fixes, alle commitet:**
+
+1. `TMario::TSurfingParams::TSurfingParams` (`MarioInitSurfing`,
+   Commit `4acf881b`) — Feldtyp-Bug (Muster 4, neue Unterart): `mRoll`
+   war als `TParamRT<s32>` deklariert, muss `TParamRT<f32>` sein
+   (Header-Änderung in `include/Player/Mario.hpp`, 0 Regressionen im
+   vollen Report-Diff bestätigt).
+2. `TMapObjWaterSpray::calc` (`MapObjTownWaterSpray`, Commit
+   `32ddf2c1`) — Rotation in benannte `s16`-Lokale materialisiert +
+   `char trash[8]`.
+3. `TBaseNPC::setPosAndInitAfterSinkBottom` (`NpcChangeSink`, Commit
+   `814bd61f`) — drei Bugs: (a) `pos.y`/`pos.z` müssen in Lokalen
+   zwischengespeichert werden, wobei die **Register-Zuordnung der
+   Deklarationsreihenfolge folgt, die Lade-Reihenfolge aber der
+   Initialisierungsreihenfolge** (neue Verfeinerung von Regel 7: `f32
+   z; f32 y = pos.y; z = pos.z;` — `z` zuerst deklariert landet in
+   f31, `y` zuerst initialisiert wird zuerst geladen); (b) beide
+   `mSpine->setDefaultNext()`-Aufrufstellen müssen als
+   `setNext(getDefault())` geschrieben werden (Registerreihenfolge der
+   Argument-Auswertung); (c) zweiseitiges Trash-Padding (4 Bytes davor,
+   0x1c danach).
+4. `TMushroom1up::control` (`MapObjItem2Mushroom`, Commit `b0190e38`)
+   — `MsClamp` erzeugte in beiden if/else-Zweigen identischen toten
+   Code (Tell-Tale für Muster 1); durch anonyme-Namespace-Templates
+   `MsMin`/`MsMax` ersetzt (reproduziert Ein-Vergleich-pro-Zweig-Codegen
+   und plaziert die Literale in `.sdata` statt `.sdata2`), dazu
+   `mPosition = pos` (Wort-Kopie) statt `.set()` (Float-Kopie),
+   Anweisungsreihenfolge (y-Update vor sin/cos) und zweiseitiges
+   Trash-Padding.
+5. `TNPCManager::clipEnemies` (`NpcManagerClip`, Commit `c15ec3e8`) —
+   fünf gestapelte Bugs: De-Morgan-Negation fehlte, `fovy`/`aspect`
+   vertauscht, Deklarationsreihenfolge-Register-Fix, Accessor statt
+   Direktzugriff (rechts-nach-links-Auswertungsreihenfolge), expliziter
+   Cast statt impliziter `operator Vec*()`-Konversion.
+6. `TItemSlotDrum::getForcastResult` (`MapObjSirenaMisc`, Commit
+   `cd6e36d3`) — quantisierter Winkel muss in die bestehende
+   `angle`-Lokale zurückgeschrieben werden statt als Temporärwert an
+   `getResultFromAng` übergeben zu werden; sonst rematerialisiert MWCC
+   die Int→Float-Magic-Double-Konversion ein zweites Mal im inline
+   Vergleich.
+
+**Neue systemische Erkenntnis — `JDrama::TFlagT<u16>`-Trailing-Argument
+bricht Rahmengrößen-Buchhaltung an 8+ Aufrufstellen:** Bei
+`THideObjPictureTwin::afterFinishedAnim` (`MapObjHideAnim`, NO-MATCH,
+zurückgesetzt) wurde ein echter Muster-4-Bug gefunden (`&mPosition`
+statt `&obj->mPosition`) und behoben — danach war der Instruktions-
+Strom bis auf 2 von 120 Zeilen identisch, aber der Stack-Bereich unter
+den benannten Lokalen ist bei Retail durchgehend 0x14+ Bytes größer.
+Systematische Prüfung aller `fireStartDemoCamera`-Aufrufer zeigt
+dasselbe Muster in MapObjTown, Item (`TShine::appearWithDemo`/
+`control`), MapEventDolpic, MapObjSirena, MapEventSirena, cameragc
+(`CPolarSubCamera::loadAfter`) und NpcEvent — überall reserviert
+Retail mehr Stack für den `TFlagT<u16>`-Wertparameter als unser Build.
+Kein Konstrukt aus der `.cpp`-Datei kann den fehlenden Slot erzeugen;
+vermutlich eine kompilat-weite Inline-Rahmen-Buchhaltungslücke, deren
+Lösung mehrere Funktionen gleichzeitig lösen würde. Verwandt, aber
+bestätigt eigenständig: `TShine::appearWithTime`/`appearSimple`
+(`ItemAppearWithTime`, NO-MATCH) zeigen dasselbe „Retail reserviert
+Rahmenplatz für inline-Callees, die wir nicht reservieren"-Symptom in
+20 von 94 Funktionen derselben Datei; Compiler-Flag-Experimente
+(`-inline`-Varianten, `-O4`, `-RTTI`, `-enum min`, u.a.) schließen eine
+einfache Flag-Ursache aus.
+
+**`JGVec3.hpp::operator*(TVec3, f32)`-Bug erneut unabhängig
+bestätigt** (dritte Bestätigung nach `WarpInCallBackExecute`, Runde 51):
+`TEffectColumWater::generate` (`EffectObjMisc`, NO-MATCH) zeigt exakt
+dasselbe Muster — `operator*` sollte `const TVec3&` statt `TVec3`
+zurückgeben (derselbe Fabrikations-Trick, den `operator+`/`operator-`
+im selben Header schon nutzen); ein temporärer Header-Patch reproduziert
+die Retail-Instruktionsfolge exakt. Weiterhin nicht projektweit
+angewendet (Cross-TU-Regressionsrisiko), aber jetzt mit drei
+unabhängigen Fundstellen ein starker Kandidat für eine zukünftige,
+sorgfältig vollständig regressionsgeprüfte Runde.
+
+**Weitere gründlich dokumentierte Fast-Treffer/Sackgassen** (alle
+sauber zurückgesetzt, kein Commit): `MtxUtilJointsToArc` (reines
+Register-/FPR-Zähl-Rauschen, Algorithmus schon korrekt),
+`NpcCallbackNeck` (f30/f31-Vertauschung zweier nichtflüchtiger FPR-
+Kandidaten, 6 Varianten erfolglos), `PollutionManagerClean`
+(zyklische Register-Rotation r6/r7/r8/r9→r7/r8/r9/r6, PCH-Datei, 6
+Varianten erfolglos), `MapUpdate` (ein echter Bug in `updateDelfino`
+gefunden und behoben, aber zwei ungelöste Restprobleme: Boolean-Guard-
+Zweigform + 160-Byte-Rahmenlücke ohne sichtbare Ursache),
+`FishoidLoad` (echter Bug gefunden: `setFleeTarget()`-Accessor statt
+Direktzugriff; mathematisch bewiesen, dass die verbleibende 0x80-Byte-
+Stack-Lücke wegen Deklarationsreihenfolge-Zwängen nicht per einfachem
+Trash-Padding erreichbar ist), `JDRFrmGXSetPerform` (154/154
+Instruktionen exakt reproduzierbar, aber die letzten 0x70 Bytes
+Rahmenreserve wären nur durch Fabrikation unverifizierbaren toten Codes
+erreichbar — bewusst nicht gemacht), `TPictureTelesa::touchActor`
+(`MapObjSirenaMisc`, zweite Funktion — Rahmengröße korrekt, aber
+Scheduling-Reihenfolge in einem `distance()`-Inline weicht ab;
+`#pragma scheduling 604` behebt genau diesen Block, bricht aber den
+Rest der Funktion — Hinweis auf ein TU-abweichendes Scheduling-Modell),
+`TEffectObjBase::perform` (`EffectObjMisc`, zweite Funktion — Retail
+reserviert ein nie geschriebenes r31-Save + 20 Byte toter Lokale, aus
+der Instruktionsliste nicht rekonstruierbar), `MapObjHideAnim`,
+`MarioCheckColHangPole` (4 gestapelte Bugs behoben, 4-Zeilen-Rest durch
+einen 8-Byte-Spill-Slot der inline `std::sqrtf`-MSL-Expansion
+blockiert), `MapObjCloudRide` (Graph-Web-CSE-Bug behoben, 215/219
+Instruktionen identisch, Rest eine FPR-Permutation in einer
+Drei-Operanden-Multiplikation), `NpcPartsCtor` (schwerwiegender
+Struct-Layout-Bug in `include/NPC/NpcInitData.hpp` gefunden und exakt
+bewiesen — `unk4[i]` ist kein Array-of-TNpcModelDataEntry mit Stride
+0x2C, sondern ein Array-of-Pointer mit Stride 4 — sowie 8 weitere
+Bugs, Rest auf 8 Zeilen reduziert, blockiert durch eine MWCC-
+Konstantenfaltung, die Retail nicht durchführt), `ItemAppearWithTime`,
+`CameraLibRotate` (algorithmischer Bug in `RotateAboutAxis` gefunden —
+transponierte statt normale 3×3-Matrix-Multiplikation, Komponenten
+direkt statt über `TVec3::set()` geschrieben; 286/286 Instruktionen
+inkl. Register exakt reproduziert, letzte 8 `addi`-Stack-Immediates
+durch einen MWCC-1.2.5-Inline-Instanz-Overhead von 4 Byte pro
+Struct-Lokaler blockiert, gegen 6 Compiler-Versionen getestet).
+
+### Session-Gesamtstand nach Runde 57
+
+**444 verifizierte echte Fixes in 98 Commits.** `matched_functions`:
+**9031** (von 9025 zu Rundenbeginn), `matched_code_percent`: 45,38 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`.
