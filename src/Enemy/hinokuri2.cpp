@@ -904,7 +904,7 @@ BOOL THinokuri2::receiveMessage(THitActor* sender, u32 message)
 
 template <class T> static inline T symmetric_clamp(T v, T r)
 {
-	return v > 0 ? (v > r ? v : r) : (v > -r ? -r : v);
+	return v > 0 ? (v > r ? r : v) : (v > -r ? v : -r);
 }
 
 void THinokuri2::moveObject()
@@ -1187,11 +1187,23 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 	return false;
 }
 
+// Parked TU-locally: TPathNode::getPoint() reloads unk0 where retail tests and
+// dereferences one load. Shared-header need: a named local in PathNode.hpp.
+static inline const JGeometry::TVec3<f32>& Hino2NodePoint(const TPathNode& node)
+{
+	THitActor* owner = node.unk0;
+	if (owner != 0)
+		return owner->getPosition();
+
+	return node.unk4;
+}
+
 DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 
-	JGeometry::TVec3<f32> posDiff = self->unk104.getPoint();
+	const TPathNode& node         = self->unkF4;
+	JGeometry::TVec3<f32> posDiff = Hino2NodePoint(node);
 
 	posDiff -= self->mPosition;
 
@@ -1203,11 +1215,14 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 		self->changeBck(0x15);
 	}
 
-	f32 fVar3 = symmetric_clamp(angleDiff, self->mTurnSpeed);
+	f32 turnSpeed = self->mTurnSpeed;
+	f32 fVar3     = symmetric_clamp(angleDiff, turnSpeed);
+	// TODO: retail copies the clamped angle into its own FPR in each arm
+	// (`fmr f4, f31` twice); ours merges the two arms. Frame is 0x18 short.
 
 	self->mRotation.y = MsWrap(self->mRotation.y + fVar3, 0.0f, 360.0f);
 
-	if (fabsf(fVar3) < self->mTurnSpeed * 0.5f)
+	if (fabsf(fVar3) < turnSpeed * 0.5f)
 		return true;
 
 	return false;
