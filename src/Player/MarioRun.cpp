@@ -324,6 +324,11 @@ MarioRunGetNormal(const TBGCheckData* p)
 	return normal;
 }
 
+static inline const JGeometry::TVec3<f32>& MarioRunGetNormal2(const TBGCheckData* p)
+{
+	return MarioRunGetNormal(p);
+}
+
 void TMario::slideProcess(f32 baseAcc, f32 friction)
 {
 	const TBGCheckData* ground = mGroundPlane;
@@ -451,8 +456,10 @@ BOOL TMario::doSliding(f32 stopThreshold)
 
 void TMario::slopeProcess()
 {
+	// TODO: the named block still sits 4 bytes above retail's (slopeUp 0x70,
+	// slopeDown 0x6c); the two binder levels below carry the rest of the frame.
 	f32 mag = std::sqrtf(
-	    mGroundPlane->getNormal().x * mGroundPlane->getNormal().x
+	    MarioRunGetNormal2(mGroundPlane).x * MarioRunGetNormal(mGroundPlane).x
 	    + mGroundPlane->getNormal().z * mGroundPlane->getNormal().z);
 
 	s16 angDiff = mSlopeAngle - mFaceAngle.y;
