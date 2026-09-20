@@ -52,22 +52,10 @@ void CPolarSubCamera::endSimpleDemoCamera_()
 	}
 }
 
-// TODO: 93.2% (57.8% before closure batch 83). The rotation blocks are now
-// retail's shape: each offset is a three-argument TVec3 constructor over the
-// component differences (a `sub(a, b)` call interleaves the stfs where retail
-// batches the three fsubs), only the x component is named so that MWCC CSEs
-// `-x` into retail's early `fneg`, JMASSin/JMASCos are spelled out at every
-// use (naming `sn`/`cs` loads each table entry once where retail reloads them
-// four times from two CSE'd addresses), and the write-back is `origin +
-// offset`, whose by-value left operand is retail's three-word copy in front of
-// `bl TVec3::add`. What is left: retail keeps `origin.y` in f31 and `origin.z`
-// in f30 across both `bl add` calls and reloads only `origin.x` per block, so
-// its frame is 0xc8 to our 0xb8 -- exactly the two FPR saves, the local area
-// being the same size -- and the two `operator+` temporaries sit at 0x58/0x4c
-// instead of 0x7c/0x70, i.e. three more 12-byte temporaries are expanded ahead
-// of them. The same "x reloaded, y and z promoted to callee-saved FPRs"
-// asymmetry blocks TMapCollisionBase::updateTrans in Map/MapMakeData.cpp; it
-// is one unexplained MWCC pattern, not two.
+// Rotation blocks match retail (3-arg TVec3 offset, named x, spelled-out
+// JMASSin/JMASCos, `origin + offset` write-back). Frame is exact at 0xc8.
+// Residue is the 36-byte pool plus first-ctor load order; see the TODO
+// inside the body.
 void CPolarSubCamera::updateDemoCamera_(bool param_1)
 {
 	if (param_1) {
@@ -126,10 +114,19 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 				// a temporary in our build.  (2) Retail loads each
 				// unk124/unk148 component immediately before its
 				// subtrahend (0x128 then 0xa4, 0x12c then 0xa8) while we
-				// load origin's component first.  Measured and rejected:
-				// reading origin.y/origin.z raw instead of through the two
-				// named scalars (they lose their callee-saved FPRs
-				// entirely, 93.2%) and declaring y before z (99.6%).
+				// load origin's component first.  The named y/z locals
+				// that buy f30/f31 across `bl add` always hoist those
+				// origin loads ahead of unk124.y/z; that tension is the
+				// same research class as updateTrans / feetinv.
+				// Rejected this pass (all still 99.7%, same ~18 / 0x7c):
+				// declaring f31/f30 after the first ctor; assignment-in-
+				// expression `unk124.y - (f30 = origin.y)`; a TU-local
+				// offset helper returning TVec3 (RVO, no extra pool);
+				// a TU-local rotateY helper (instruction-neutral);
+				// an unread defaulted `const TVec3& = TVec3()` on that
+				// helper (MWCC drops an unused default).  Also rejected
+				// earlier: raw origin.y/z (lose the FPRs, 93.2%) and
+				// declaring y before z (99.6%).
 				f32 upX = mUp.x;
 				mUp.x   = upX * JMASCos(angle) + mUp.z * JMASSin(angle);
 				mUp.z   = -upX * JMASSin(angle) + mUp.z * JMASCos(angle);
@@ -153,11 +150,6 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 	}
 }
 
-// TODO: 99.9%. Instruction-exact and the frame is right (0x30); only `fovy`
-// sits 4 bytes low (0x18 vs 0x1c), i.e. we have one 4-byte temporary too many
-// between it and the int-to-float magic pair at 0x20. Removing an inline level
-// around `mInbetween->getUnk4()` or the `(f32)v` conversion is the lever to
-// try; a +4 low step is never an accessor (those come in 8s).
 void CPolarSubCamera::updateGateDemoCamera_()
 {
 	f32 fovy;
