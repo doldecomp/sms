@@ -2555,13 +2555,13 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 	if (spine->getTime() == 0)
 		boss->setBckAnm(11);
 
-	if (boss->getMActor()->checkCurBckFromIndex(11)) {
+	if (BosstelesaGetMActor(boss)->checkCurBckFromIndex(11)) {
 		if (boss->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(53.0f))
 			boss->slotStart();
 
 		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			boss->setBckAnm(15);
-			boss->getMActor()->setBtpFromIndex(2);
+			BosstelesaGetMActor(boss)->setBtpFromIndex(2);
 			boss->mSlot->forceStopSlot(1);
 		}
 	}
@@ -2569,16 +2569,22 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 	if (boss->slotStop())
 		return TRUE;
 
-	boss->unk364 = boss->unk364 * 0.99f;
+	boss->unk364 *= 0.99f;
 
 	return FALSE;
+}
+
+static inline TLiveActor* BosstelesaGetSlotItem(TBossTelesa* p, int index)
+{
+	TLiveActor* item = p->mSlotItems[index];
+	return item;
 }
 
 DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 
-	if (!boss->getMActor()->checkCurBckFromIndex(14)
+	if (!BosstelesaGetMActor(boss)->checkCurBckFromIndex(14)
 	    && boss->unk364 < TBossTelesa::mBaseHoseiPosY - 300.0f) {
 		boss->setBckAnm(14);
 		return FALSE;
@@ -2586,10 +2592,13 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 
 	if (boss->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() > 600) {
 		spine->pushAfterCurrent(&TNerveBossTelesaPrepareSlot::theNerve());
+		// TODO: two instructions left -- the ROM shares the zero it stores in
+		// unk368 with the loop counter (`mr r3, r4`) and merges this arm's
+		// `return FALSE` into the tail block; the 0x50 frame is exact.
 		boss->unk368 = 0;
 
 		for (int i = 0; i < boss->mSlotItemNum; ++i) {
-			TLiveActor* item = boss->mSlotItems[i];
+			TLiveActor* item = BosstelesaGetSlotItem(boss, i);
 			if (!item->checkLiveFlag(LIVE_FLAG_DEAD)) {
 				if (!item->isActorType(0x2000000E)) {
 					if (!item->isActorType(0x20000002))
