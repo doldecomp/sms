@@ -1062,7 +1062,9 @@ BOOL TMario::walkEnd()
 		break;
 	}
 
-	f32 rate = 0.25f * mForwardVel;
+	// TODO: considerRotateStart()'s inlined `direction` still lands at 0x10,
+	// retail's at 0xc; the low pool is short one 8-byte reference temporary.
+	f32 rate = getForwardVel() / 4.0f;
 	if (rate < 0.1f)
 		rate = 0.1f;
 	setAnimation(ANIM_RUN1, rate);
