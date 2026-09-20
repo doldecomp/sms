@@ -544,6 +544,7 @@ void TMarioParticleManager::emitTry(s32 param_1,
 		if (param_2->checkFlag(INFO_FLAG_BIND_TO_RT_MTX
 		                       | INFO_FLAG_BIND_TO_SRT_MTX)) {
 			JGeometry::TVec3<f32> local_14;
+			u8 trash = param_3;
 			local_14.x = ((MtxPtr)param_2->unk4)[0][3];
 			local_14.y = ((MtxPtr)param_2->unk4)[1][3];
 			local_14.z = ((MtxPtr)param_2->unk4)[2][3];
@@ -555,10 +556,10 @@ void TMarioParticleManager::emitTry(s32 param_1,
 				param_2->mEmitter->setUserWork((uintptr_t)param_2->unk4);
 				if (param_2->checkFlag(0x10))
 					param_2->mEmitter->setEmitterCallBackPtr(
-					    &emitterCallBackBindToSRTMtxPtr);
+					    &emitterCallBackBindToMtxPtr);
 				else
 					param_2->mEmitter->setEmitterCallBackPtr(
-					    &emitterCallBackBindToMtxPtr);
+					    &emitterCallBackBindToSRTMtxPtr);
 			}
 		} else {
 			param_2->mEmitter = unk3B8->createSimpleEmitterID(
