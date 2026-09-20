@@ -49,7 +49,11 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	unkC5 = 0;
 	JDrama::TNameRef::load(stream);
 	JKRMemArchive* archive = gpMarDirector->unkD8;
-	setup(archive);
+	if (archive != nullptr)
+		SMSMountAramArchive(archive, gArBkGuide);
+	else
+		setup_wait = 16;
+	unkC4 = 0;
 
 	mScreen = new J2DSetScreen("guide_1.blo", archive);
 
@@ -205,7 +209,7 @@ void TGuide::resetObjects()
 			mScores[i].mEtcShineNum = etcShines;
 			total += etcShines;
 
-			u16 coins = TFlagManager::getInstance()->getFlag(0x20005 + i);
+			int coins = (u16)TFlagManager::getInstance()->getFlag(0x20005 + i);
 			if (coins >= 1000)
 				coins = 999;
 			mScores[i].mCoinNum = coins;
@@ -657,6 +661,18 @@ static inline J2DPane* GuidePane(J2DPane** panes, int i)
 	return x;
 }
 
+static inline TExPane* GuideExPane(TExPane** panes, int i)
+{
+	TExPane* x = panes[i];
+	return x;
+}
+
+static inline J2DPane* GuideGetPane(TExPane* p)
+{
+	J2DPane* x = p->getPane();
+	return x;
+}
+
 int TGuide::checkPoint(int x, int y)
 {
 	int hit = -1;
@@ -859,25 +875,27 @@ void TGuide::placeMario()
 
 void TGuide::appearGuidePane(int stage)
 {
-	mOpenPanelA = mPanelsA[stage];
-	mOpenPanelB = mPanelsB[stage];
+	mOpenPanelA = GuideExPane(mPanelsA, stage);
+	mOpenPanelB = GuideExPane(mPanelsB, stage);
 
 	JUTRect rect   = mPanelRects[stage];
 	JUTRect bounds = mStagePanes[stage]->mBounds;
 
-	mOpenPanelA->getPane()->mVisible = true;
-	int height                       = rect.y2 - rect.y1;
-	int width                        = rect.x2 - rect.x1;
+	GuideGetPane(mOpenPanelA)->mVisible = true;
+	int height                       = rect.getHeight();
+	int width                        = rect.getWidth();
 	mOpenPanelA->setCenteredSize(20, width, height, 0, 0);
 	// TODO: rect.x1 twice really is what retail subtracts; the y term looks
 	// like a copy-paste slip in the original.
+	// TODO: r24/r29 swap on the offset y-term vs the reloaded mOpenPanelA;
+	// frame is exact (0x148). Known-open callee-saved ranking.
 	mOpenPanelA->setPaneOffset(20, 0, 0, bounds.x1 - rect.x1,
 	                           bounds.y1 - rect.x1 - 40);
 
 	mOpenPanelB->getPane()->setAlpha(0);
 	mOpenPanelB->getPane()->mVisible = true;
 	mOpenPanelB->setPaneAlpha(20, 255, 0);
-	mCursors[0]->setPaneAlpha(20, 0, 255);
+	GuideExPane(mCursors, 0)->setPaneAlpha(20, 0, 255);
 	mCursors[1]->setPaneAlpha(20, 0, 80);
 
 	if (stage == 1)
