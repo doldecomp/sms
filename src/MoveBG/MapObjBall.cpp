@@ -802,30 +802,21 @@ void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
-void TResetFruit::waitingToAppear()
+// By-value pointer fork over the model accessor, +4 of low region per site.
+static inline J3DModel* MapObjBallModel(const TLiveActor* p) { return p->getModel(); }
+
+// Binding level nested over the model fork, +8 of low region per site.
+static inline MtxPtr MapObjBallAnmMtx0(const TLiveActor* p)
 {
-	if (gpMarDirector->mMap == 3 && unk1A4)
-		makeObjDead();
+	MtxPtr mtx = MapObjBallModel(p)->getAnmMtx(0);
+	return mtx;
+}
 
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
-		return;
-
-	if (!isStateTimerEngaged() && mColCount == 0) {
-		onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-		makeObjAppeared();
-
-		Mtx small;
-		MTXScale(small, 0.2f, 0.2f, 0.2f);
-		concatOnlyRotFromLeft(small, getModel()->getAnmMtx(0),
-		                      getModel()->getAnmMtx(0));
-
-		mScaling.y = 0.2f;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
-		mState = STATE_APPEARING;
-
-		SMSGetMSound()->startSoundActor(MSD_SE_IT_COMMON_APPEAR, &mPosition, 0,
-		                                nullptr, 0, 4);
-	}
+// Binding level over the sound singleton, +8 of low region per site.
+static inline MSound* ResetFruitAppearSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
 }
 
 // Binding level over a raw member read, worth +16 of low region in
@@ -843,6 +834,33 @@ static inline u8 MapObjBallUnk1A4(const TResetFruit* p)
 	u8 v1A4 = p->unk1A4;
 	return v1A4;
 }
+
+void TResetFruit::waitingToAppear()
+{
+	if (MapObjBallGetMarDirector()->mMap == 3 && MapObjBallUnk1A4(this))
+		makeObjDead();
+
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000))
+		return;
+
+	if (!isStateTimerEngaged() && mColCount == 0) {
+		onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
+		makeObjAppeared();
+
+		Mtx small;
+		MTXScale(small, 0.2f, 0.2f, 0.2f);
+		concatOnlyRotFromLeft(small, MapObjBallModel(this)->getAnmMtx(0),
+		                      MapObjBallModel(this)->getAnmMtx(0));
+
+		mScaling.y = 0.2f;
+		onHitFlag(HIT_FLAG_NO_COLLISION);
+		mState = STATE_APPEARING;
+
+		ResetFruitAppearSound()->startSoundActor(MSD_SE_IT_COMMON_APPEAR, &mPosition, 0,
+		                                nullptr, 0, 4);
+	}
+}
+
 
 void TResetFruit::makeObjWaitingToAppear()
 {
@@ -1139,29 +1157,26 @@ void TResetFruit::breaking()
 	Mtx squash;
 	MTXScale(squash, 1.0f, mBreakingScaleSpeed, 1.0f);
 
-	MtxPtr mtx = getModel()->getAnmMtx(0);
+	MtxPtr mtx = MapObjBallModel(this)->getAnmMtx(0);
 	concatOnlyRotFromLeft(squash, mtx, mtx);
 
 	mScaling.y *= mBreakingScaleSpeed;
 	mtx[1][3] = mBodyRadius * mScaling.y + mPosition.y;
 
 	if (mScaling.y < 0.2f) {
-		mPosition.y += mBodyRadius * 0.5f;
+		mPosition.y += mBodyRadius / 2.0f;
 		mScaling.x = mInitialScaling.x;
 		mScaling.y = mInitialScaling.y;
 		mScaling.z = mInitialScaling.z;
 
 		emitAndScale(0xE5, 0, &mPosition);
-		SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0,
+		MapObjBallGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0,
 		                                nullptr, 0, 4);
 		mStateTimer = 240;
 		sleep();
 		mState = STATE_BROKEN;
 	}
 }
-
-// By-value pointer fork over the model accessor, +4 of low region per site.
-static inline J3DModel* MapObjBallModel(const TLiveActor* p) { return p->getModel(); }
 
 void TResetFruit::appearing()
 {
