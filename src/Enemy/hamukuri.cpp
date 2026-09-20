@@ -289,10 +289,10 @@ void THamuKuriManager::requestSerialKill(THamuKuri* param_1)
 
 	THamuKuriSaveLoadParams* params = (THamuKuriSaveLoadParams*)unk38;
 
-	s32 trampleBonusNum = params->getTrampleBonusNum();
+	s32 trampleBonusNum = params->mSLTrampleBonusNum.value;
 
 	for (int i = 0; i < getActiveObjNum(); ++i) {
-		THamuKuri* obj = (THamuKuri*)unk18[i];
+		THamuKuri* obj = (THamuKuri*)getObj(i);
 		if (obj == param_1)
 			continue;
 
