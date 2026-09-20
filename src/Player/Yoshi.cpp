@@ -250,10 +250,10 @@ void TYoshi::init(TMario* param_1)
 	mBodyAnmSoundTable[16] = JKRGetResource("/yoshi/bas/yoshi_sidewalk_l.bas");
 	mBodyAnmSoundTable[17] = JKRGetResource("/yoshi/bas/yoshi_sidewalk_r.bas");
 	mBodyAnmSoundTable[18] = JKRGetResource("/yoshi/bas/yoshi_slide_end.bas");
-	mBodyAnmSoundTable[20] = JKRGetResource("/yoshi/bas/yoshi_wait.bas");
-	mBodyAnmSoundTable[21] = JKRGetResource("/yoshi/bas/yoshi_wait_alone.bas");
-	mBodyAnmSoundTable[22] = JKRGetResource("/yoshi/bas/yoshi_walk.bas");
-	mBodyAnmSoundTable[23] = JKRGetResource("/yoshi/bas/yoshi_water_die.bas");
+	mBodyAnmSoundTable[22] = JKRGetResource("/yoshi/bas/yoshi_wait.bas");
+	mBodyAnmSoundTable[23] = JKRGetResource("/yoshi/bas/yoshi_wait_alone.bas");
+	mBodyAnmSoundTable[24] = JKRGetResource("/yoshi/bas/yoshi_walk.bas");
+	mBodyAnmSoundTable[25] = JKRGetResource("/yoshi/bas/yoshi_water_die.bas");
 	// clang-format on
 
 	changeAnimation(0x17);
@@ -469,6 +469,12 @@ static inline MSound* YoshiGetMSound()
 {
 	MSound* sound = SMSGetMSound();
 	return sound;
+}
+
+static inline J3DFrameCtrl* YoshiGetBckCtrl(TYoshi* p)
+{
+	MActor* actor = p->mActor;
+	return actor->getFrameCtrl(ANM_TYPE_BCK);
 }
 
 void TYoshi::ride()
@@ -1090,7 +1096,7 @@ void TYoshi::calcAnim()
 	}
 
 	{
-		MtxPtr m = mActor->getModel()->getAnmMtx(unkF6);
+		MtxPtr m = mActor->mModel->getAnmMtx(unkF6);
 		unkFC.x  = m[0][3];
 		unkFC.y  = m[1][3];
 		unkFC.z  = m[2][3];
@@ -1104,9 +1110,8 @@ void TYoshi::calcAnim()
 
 	u32 soundFlags = mMario->mSoundFlags;
 
-	mBodyAnmSound->animeLoop(&mTranslation,
-	                         mActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame(),
-	                         mActor->getFrameCtrl(ANM_TYPE_BCK)->getRate(),
+	mBodyAnmSound->animeLoop(&mTranslation, YoshiGetBckCtrl(this)->getFrame(),
+	                         YoshiGetBckCtrl(this)->getRate(),
 	                         soundFlags + 0x10000000, 4);
 	mTongueAnmSound->animeLoop(&unkFC, unk5C.getFrame(), unk5C.getRate(),
 	                           soundFlags + 0x10000000, 4);
