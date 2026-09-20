@@ -1175,7 +1175,8 @@ void TMario::thinkDirty()
 
 void TMario::thinkHeight()
 {
-	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
+	bool jumping = checkStatusType(MARIO_STATUS_FLAG_JUMPING);
+	if (jumping) {
 		f32 height = mPosition.y - mFloorPosition.y;
 		if (unk36C < height)
 			unk36C = height;
