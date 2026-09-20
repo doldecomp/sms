@@ -28,34 +28,35 @@ void TMapWarp::warp(int) { }
 
 void TMapWarp::watchToWarp()
 {
+	char trash1[0x4];
 	const TBGCheckData* checkData;
+	Mtx mtx;
+	JGeometry::TVec3<f32> vec2;
+	char trash2[0x8];
 	f32 fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
 	                                     gpMarioPos->z, &checkData);
 
 	if (checkData->isWarp()) {
-		int warp = unk4[checkData->getData()].unk0;
-		if (warp != unk8) {
+		int no   = checkData->mData;
+		int warp = unk4[no].unk0;
+		if (unk8 != warp) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
 			gpMap->getModelManager()->getJointModel(0)->getChild(warp)->awake();
-			unk8 = warp;
+			unk8 = unk4[no].unk0;
 
-			// TODO: inlines
-			JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-			marioPos += unk4[checkData->getData()].unk8;
+			JGeometry::TVec3<f32> marioPos = *gpMarioPos + unk4[no].unk8;
+			char trash3[0x3C];
 			SMS_MarioWarpRequest(marioPos,
 			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
 		}
 	}
 
 	if (checkData->isMapChange()) {
-		if (checkData->getData() != unk8) {
-			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
-			gpMap->getModelManager()
-			    ->getJointModel(0)
-			    ->getChild(checkData->getData())
-			    ->awake();
-
-			unk8 = checkData->getData();
+		int no = checkData->mData;
+		if (unk8 != no) {
+			gpMap->getModelManager()->getJointModel(0)->mChildren[unk8]->sleep();
+			gpMap->getModelManager()->getJointModel(0)->mChildren[no]->awake();
+			unk8 = no;
 		}
 	}
 
@@ -63,19 +64,19 @@ void TMapWarp::watchToWarp()
 	if (no == -1)
 		return;
 
-	TCubeStreamInfo& info = (TCubeStreamInfo&)(*gpCubeStream->unk14)[no];
-	Mtx mtx;
+	TCubeStreamInfo& info
+	    = (TCubeStreamInfo&)*gpCubeStream->unk14->begin()[no];
 	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
 	               info.unk18.z);
 
-	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
+	vec2.set(0.0f, 0.0f, 0.0f);
+	vec2.z = info.unk40 * 0.01f;
 	MTXMultVec(mtx, &vec2, &vec2);
 	if ((info.unk38 == 0 ? true : false) || (info.unk38 == 1 ? true : false))
 		SMS_FlowMoveMario(vec2);
 	else
 		SMS_WindMoveMario(vec2);
 }
-
 void TMapWarp::initModel()
 {
 	char trash[0x10];
