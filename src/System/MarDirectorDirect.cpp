@@ -248,7 +248,7 @@ static int decideNextScenario(u8 param_1)
 {
 	int scenario = 0;
 	if ((int)param_1 != 1)
-		return scenario;
+		return 0;
 
 	if (TFlagManager::smInstance->getBool(0x103AE))
 		return 2;
@@ -478,6 +478,8 @@ int TMarDirector::changeState()
 
 void TMarDirector::currentStateFinalize(u8 next_state)
 {
+	// TODO: frame 0x90 vs retail 0x120 (instruction-exact otherwise).
+	// MSMainProc dual-u8 args need scenario-then-stage named locals for RTL.
 	switch (mState) {
 	case STATE_UNK0:
 		JDrama::TNameRefGen::search<JDrama::TViewObj>("Group 2D")
@@ -493,8 +495,9 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		unk18[0]->mFlags &= ~0x1;
 		gpCamera->endDemoCamera();
 		mConsole->unk94->startOpenWipe();
-		MSMainProc::endStageEntranceDemo(gpApplication.mCurrArea.unk0,
-		                                 gpApplication.mCurrArea.unk1);
+		u8 scenario = gpApplication.mCurrArea.unk1;
+		u8 stage    = gpApplication.mCurrArea.unk0;
+		MSMainProc::endStageEntranceDemo(stage, scenario);
 		break;
 
 	case STATE_UNK4:
@@ -656,8 +659,8 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		const char* pcVar8 = "startcamera";
 		unk18[0]->onFlag(0x1);
 		unk68 = 0;
-		if (gpApplication.mCurrArea.unk0 == 1 && checkUnk4EFlag(2)) {
-			if (gpApplication.mCurrArea.unk1 == 8) {
+		if (currSeq.unk0 == 1 && checkUnk4EFlag(2)) {
+			if (currSeq.unk1 == 8) {
 				switch (TFlagManager::smInstance->getFlag(0x60003)) {
 				case 0:
 					if (TFlagManager::smInstance->getFlag(0x40000) >= 0x14)
@@ -687,14 +690,20 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 			mConsole->unk94->startAppearScenario();
 			unk50 &= ~0x4;
 		}
-		MSMainProc::startStageEntranceDemo(currSeq.unk0, currSeq.unk1);
+		{
+			u8 scenario = currSeq.unk1;
+			u8 stage    = currSeq.unk0;
+			MSMainProc::startStageEntranceDemo(stage, scenario);
+		}
 		break;
 	}
 
 	case 3:
 		unk68 = 0;
 		if (!(unk50 & 1)) {
-			MSMainProc::startStageBGM(currSeq.unk0, currSeq.unk1);
+			u8 scenario = currSeq.unk1;
+			u8 stage    = currSeq.unk0;
+			MSMainProc::startStageBGM(stage, scenario);
 			setMario();
 			unk50 |= 1;
 		}
@@ -702,7 +711,9 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 
 	case 2:
 		if (!(unk50 & 1)) {
-			MSMainProc::startStageBGM(currSeq.unk0, currSeq.unk1);
+			u8 scenario = currSeq.unk1;
+			u8 stage    = currSeq.unk0;
+			MSMainProc::startStageBGM(stage, scenario);
 			setMario();
 			unk50 |= 1;
 		}
@@ -720,7 +731,9 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 			unk50 &= ~0x2;
 		}
 		if (!(unk50 & 1)) {
-			MSMainProc::startStageBGM(currSeq.unk0, currSeq.unk1);
+			u8 scenario = currSeq.unk1;
+			u8 stage    = currSeq.unk0;
+			MSMainProc::startStageBGM(stage, scenario);
 			setMario();
 			unk50 |= 1;
 		}
