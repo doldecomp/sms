@@ -1184,10 +1184,10 @@ void TSamboHead::behaveToWater(THitActor*)
 	    || mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
 		return;
 
-	JGeometry::TVec3<f32> velocity(mVelocity);
+	JGeometry::TVec3<f32> velocity(getVelocity());
 	velocity.y = 0.0f;
-	JGeometry::TVec3<f32> away(mPosition.x - gpMarioPos->x, 0.0f,
-	                           mPosition.z - gpMarioPos->z);
+	JGeometry::TVec3<f32> away(getPosition().x - SMS_GetMarioPos().x, 0.0f,
+	                           getPosition().z - SMS_GetMarioPos().z);
 	MsVECNormalize(&away, &away);
 	away.scale(mSaveParams->mSLHitJumpSpXZ.get());
 	away.y = mSaveParams->mSLHitJumpSpY.get();

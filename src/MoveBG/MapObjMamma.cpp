@@ -1461,9 +1461,7 @@ void TGoalWatermelon::load(JSUMemoryInputStream& stream)
 
 	char shineName[0x20];
 	stream.readString(shineName, sizeof(shineName));
-	stream >> mShinePosition.x;
-	stream >> mShinePosition.y;
-	stream >> mShinePosition.z;
+	stream >> mShinePosition.x >> mShinePosition.y >> mShinePosition.z;
 }
 
 TGoalWatermelon::TGoalWatermelon(const char* name)
