@@ -160,9 +160,10 @@ void TEnemyAttachment::calcRootMatrix()
 
 void TEnemyAttachment::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	char trash[8]; // matching: stack padding
 	if (unk150 == nullptr) {
 		if (cue & CUE_CALC_ANIM)
-			kill();
+			behaveToHost();
 		return;
 	}
 
