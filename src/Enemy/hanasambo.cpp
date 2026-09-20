@@ -1357,25 +1357,25 @@ void TSamboHead::calcRootMatrix()
 void TSamboHead::genEventCoin()
 {
 	if (isBckAnm(1)) {
+		Mtx rot;
+		MtxPtr mtx = rot;
 		for (int i = 0; i < 3; ++i) {
 			s16 angle
 			    = DEG2SHORTANGLE(60.0f * (f32)i + (mRotation.y - 60.0f));
 			f32 s = JMASSin(angle);
 			f32 c = JMASCos(angle);
-			Mtx rot;
-			MtxPtr mtx = rot;
-			mtx[0][0]  = c;
-			mtx[0][1]  = 0.0f;
-			mtx[0][2]  = s;
-			mtx[0][3]  = 0.0f;
-			mtx[1][0]  = 0.0f;
-			mtx[1][1]  = 1.0f;
-			mtx[1][2]  = 0.0f;
-			mtx[1][3]  = 0.0f;
-			mtx[2][0]  = -s;
-			mtx[2][1]  = 0.0f;
-			mtx[2][2]  = c;
-			mtx[2][3]  = 0.0f;
+			mtx[0][0] = c;
+			mtx[0][1] = 0.0f;
+			mtx[0][2] = s;
+			mtx[0][3] = 0.0f;
+			mtx[1][0] = 0.0f;
+			mtx[1][1] = 1.0f;
+			mtx[1][2] = 0.0f;
+			mtx[1][3] = 0.0f;
+			mtx[2][0] = -s;
+			mtx[2][1] = 0.0f;
+			mtx[2][2] = c;
+			mtx[2][3] = 0.0f;
 			JGeometry::TVec3<f32> offset(0.0f, 0.0f, 100.0f);
 			MTXMultVec(mtx, &offset, &offset);
 
