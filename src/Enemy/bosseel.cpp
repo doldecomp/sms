@@ -1185,6 +1185,7 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 		mPosition.y = jointMtx[1][3];
 
 		TPosition3f heartMtx(mPosition.x, mPosition.y, mPosition.z);
+		char trash[44];
 		getMActor()->getModel()->setBaseTRMtx(heartMtx);
 	}
 	getMActor()->perform(cue, graphics);
