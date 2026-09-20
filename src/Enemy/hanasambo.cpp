@@ -671,10 +671,10 @@ void THanaSambo::init(TLiveManager* manager)
 	unk114.clear();
 
 	if (mInstanceIndex == 0) {
-		for (int i = 0; i < mMActorKeeper->getMActor("samboD.bmd")
-		                        ->getModel()
-		                        ->getModelData()
-		                        ->getJointNum();
+		for (u8 i = 0; i < getActorKeeper()->getMActor("samboD.bmd")
+		                       ->getModel()
+		                       ->getModelData()
+		                       ->getJointNum();
 		     ++i) { }
 	}
 
@@ -684,11 +684,16 @@ void THanaSambo::init(TLiveManager* manager)
 	    .push_back(mHead);
 	THanaSamboSaveLoadParams* params = mSaveParams;
 	f32 scale                        = mBodyScale;
-	mHead->initHitActor(0x1000001B, 2, 0x80000000,
-	                    params->mSLHeadAttackRadius.get() * scale,
-	                    params->mSLHeadAttackHeight.get() * scale,
-	                    params->mSLHeadDamageRadius.get() * scale,
-	                    params->mSLHeadDamageHeight.get() * scale);
+	f32 attackR                      = params->mSLHeadAttackRadius.get();
+	f32 attackH                      = params->mSLHeadAttackHeight.get();
+	f32 damageR                      = params->mSLHeadDamageRadius.get();
+	f32 damageH                      = params->mSLHeadDamageHeight.get();
+	attackR *= scale;
+	attackH *= scale;
+	damageR *= scale;
+	damageH *= scale;
+	mHead->initHitActor(0x1000001B, 2, 0x80000000, attackR, attackH, damageR,
+	                    damageH);
 	mHead->mOwner = this;
 }
 
