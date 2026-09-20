@@ -2164,26 +2164,38 @@ DEFINE_NERVE(TNerveFireWanwanRecover, TLiveActor)
 	return false;
 }
 
+static inline TMarDirector* FireWanwanMarDirector()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
+static inline MSound* FireWanwanMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 {
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
-		self->unk194->mIsOnFire = false;
+		FireWanwanGetTailHit(self)->mIsOnFire = false;
 		self->mRotation.x       = 90.0f;
 
-		TFireWanwanManager* manager = (TFireWanwanManager*)self->getManager();
+		TFireWanwanManager* manager = FireWanwanManagerOf(self);
 
 		manager->mLastKillerWanwan                = self;
 		manager->mWanwanRecoversBeforeHelpBalloon = -1;
 
 		if (++manager->mWanwansKilled == manager->getActiveObjNum()) {
-			gpMarDirector->getConsole()->startAppearBalloon(0x19, true);
+			FireWanwanMarDirector()->getConsole()->startAppearBalloon(0x19, true);
 		}
 
 		self->stopTriggerSound();
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_DOWN, &self->mPosition,
+		FireWanwanMSound()->startSoundActor(MSD_SE_EN_WANWAN_DOWN, &self->mPosition,
 		                                0, nullptr, 0, 4);
 
 		self->changeBodyToSilver(40);
@@ -2201,7 +2213,7 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 	vel.z *= 0.9f;
 	self->mVelocity = vel;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_AFTER, &self->mPosition, 0,
+	FireWanwanMSound()->startSoundActor(MSD_SE_EN_WANWAN_AFTER, &self->mPosition, 0,
 	                                nullptr, 0, 4);
 
 	return false;
