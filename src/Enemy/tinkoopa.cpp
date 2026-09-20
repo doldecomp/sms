@@ -558,6 +558,10 @@ TTinKoopaPartsBase::TTinKoopaPartsBase(const char* name, int index,
 {
 }
 
+// TODO: instruction-exact, and the frame total matches, but every stack slot sits
+// 4 bytes low: the ROM has one more 4-byte item below the JGadget iterator
+// pool.  A by-value `int` fork over mPartsIndex (raw, through getPartsIndex(),
+// and at each of the three call sites) is +0 here.
 void TTinKoopaPartsBase::initTinKoopaPartsBase()
 {
 	initHitActor(TTinKoopa_getActorType(mPartsIndex), 0, 0, 0.0f, 0.0f, 0.0f,
@@ -645,6 +649,9 @@ void TTinKoopaPartsBase::emitPartsTrackEffects(const char** joint_names,
 	JUTNameTab* jointNames
 	    = mPartsMActor->getModel()->getModelData()->getJointName();
 
+	// TODO: the ROM leaves this early return unfused (`bge +8; b epilogue`)
+	// where we emit a single `blt epilogue`.  An explicit `else` around the
+	// body is refuted -- MWCC normalises it back to our form.
 	for (int i = 0; i < num; i++) {
 		int joint = jointNames->getIndex(joint_names[i]);
 		if (joint < 0)
@@ -913,7 +920,8 @@ void TTinKoopa::makeHitCollision()
 	// TTinKoopa::reset at 99.9% and TNerveTinKoopaBreak::execute at 100%, but
 	// it is a mechanism, not a plausible source, so it is not committed.  A
 	// `switch` with an empty `case 2:` is refuted (reset 98.6% -> 94.2%: it
-	// builds a range tree).
+	// builds a range tree), and so is a call to the TU's own empty
+	// printTinKoopaDebugInfo (MWCC deletes the expansion before the arm).
 	if (mDamageStage == 0)
 		setHitParams(0.0f, 0.0f, getSaveParams()->mSLDamageRadius.get(),
 		             getSaveParams()->mSLDamageHeight0.get());
@@ -1034,7 +1042,9 @@ void TTinKoopa::makeEyeBeamEffect()
 // back (`addi r4, this, 0x178` then `stw r0, 0(r4)`), which is what an inlined
 // helper taking a pointer looks like; writing one (`countDownTimer(int*)`,
 // inline so it leaves no symbol) gives byte-identical code to the plain form,
-// so the address-of has another cause.
+// so the address-of has another cause.  A pointer local reassigned across the
+// three countdowns (`s32* timer = &m; if (*timer > 0) (*timer)--;`) also folds
+// straight back to base+displacement, load and store alike.
 void TTinKoopa::updateTimers()
 {
 	if (mKillerIntervalTimer > 0)
