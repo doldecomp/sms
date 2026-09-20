@@ -130,7 +130,7 @@ void TMario::stopCommon(int anim_id, int status_on_end)
 {
 	waitProcess();
 	setAnimation(anim_id, 1.0f);
-	if (onYoshi() && mYoshi->mActor->curAnmEndsNext(0, nullptr)) {
+	if (onYoshi() && mYoshi->mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		changePlayerStatus(status_on_end, 0, false);
 	} else if (isLast1AnimeFrame()) {
 		changePlayerStatus(status_on_end, 0, false);
@@ -323,7 +323,7 @@ BOOL TMario::squating()
 		return changePlayerStatus(MARIO_STATUS_SQUAT_STANDUP, 0, false);
 
 	if (mInput & 0x2) {
-		if ((mGamePad->mMeaning & TMarioGamePad::MEANING_0x400)
+		if ((mGamePad->checkMeaning(TMarioGamePad::MEANING_R))
 		    && mWaterGun != nullptr && (int)mWaterGun->mCurrentNozzle == 0) {
 			rumbleStart(0x15, mMotorParams.mMotorHipDrop.get());
 			return changePlayerStatus(MARIO_STATUS_BACK_JUMP, 0, false);
@@ -340,7 +340,7 @@ BOOL TMario::squating()
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
-	if (mGamePad->mMeaning & TMarioGamePad::MEANING_0x2000) {
+	if (mGamePad->checkMeaning(TMarioGamePad::MEANING_L)) {
 		E_SIDEWALK_TYPE type;
 		f32 v1, v2;
 		getSideWalkValues(&type, &v1, &v2);
@@ -358,7 +358,7 @@ BOOL TMario::squating()
 
 		mPosition.x += v2 * JMASCos(mFaceAngle.y);
 		mPosition.z -= v2 * JMASSin(mFaceAngle.y);
-	} else if (mGamePad->mMeaning & TMarioGamePad::MEANING_0x400) {
+	} else if (mGamePad->checkMeaning(TMarioGamePad::MEANING_R)) {
 		f32 absH      = fabsf(mGamePad->mCompSPos[0]);
 		bool positive = true;
 		if (mGamePad->mCompSPos[0] < 0.0f)

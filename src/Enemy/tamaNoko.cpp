@@ -82,23 +82,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 						JGeometry::TVec3<f32> local_88(0.0f, 0.0f, 350.0f);
 						Mtx local_b8;
 
-						f32 s = JMASin((i + 1) * 72.0f);
-						f32 c = JMACos((i + 1) * 72.0f);
-
-						local_b8[0][0] = c;
-						local_b8[0][1] = 0.0f;
-						local_b8[0][2] = s;
-						local_b8[0][3] = 0.0f;
-
-						local_b8[1][0] = 0.0f;
-						local_b8[1][1] = 1.0f;
-						local_b8[1][2] = 0.0f;
-						local_b8[1][3] = 0.0f;
-
-						local_b8[2][0] = -s;
-						local_b8[2][1] = 0.0f;
-						local_b8[2][3] = 0.0f;
-						local_b8[2][2] = c;
+						MsMtxSetRotY(local_b8, (i + 1) * 72.0f);
 
 						MTXMultVec(local_b8, &local_88, &unk20);
 
@@ -130,7 +114,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 		                  unk10->mPosition.z);
 		unk18->getModel()->setBaseTRMtx(magic);
 		if (unk2C != nullptr && unk30 != 0) {
-			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
 
 			unk20 = unk10->mPosition;
 
@@ -155,8 +139,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 void TTamaNokoFlower::setBckAnm(int idx)
 {
 	getMActor()->setBckFromIndex(0);
-	const char** basTable = unk10->getBasNameTable();
-	unk30                 = !basTable ? nullptr : basTable[idx];
+	unk30 = unk10->getBas(idx);
 	if (unk30 != nullptr) {
 		unk2C->initAnmSound(JKRGetResource(unk30), 1, 0.0f);
 	} else {
@@ -330,9 +313,9 @@ void TTamaNoko::walkBehavior(int param_1, f32 param_2)
 
 	f32 fVar3;
 	if (diff > 0.0f) {
-		fVar3 = diff > mTurnSpeed * param_2 ? mTurnSpeed * param_2 : diff;
+		fVar3 = MsMin(diff, mTurnSpeed * param_2);
 	} else {
-		fVar3 = diff > -mTurnSpeed * param_2 ? diff : -mTurnSpeed * param_2;
+		fVar3 = MsMax(diff, -mTurnSpeed * param_2);
 	}
 
 	mRotation.y = MsWrap(mRotation.y + fVar3, 0.0f, 360.0f);
@@ -445,24 +428,24 @@ void TTamaNoko::calcRootMatrix()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_TAMA_HIT, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
-	if (isBckAnm(11) && mMActor->getFrameCtrl(0)->getFrame() > 90.0f)
+	if (isBckAnm(11) && mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 90.0f)
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_TAMA_HIT, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 	if (isBckAnm(1)) {
-		if (mMActor->getFrameCtrl(0)->checkPass(0.0f)
-		    || mMActor->getFrameCtrl(0)->checkPass(46.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(0.0f)
+		    || mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(46.0f)) {
 			gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_JUMP_ED_B,
 			                                            &mPosition, 0, nullptr);
 		}
 
-		if (mMActor->getFrameCtrl(0)->checkPass(25.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(25.0f)) {
 			if (mGroundPlane->isSand()) {
 				landEffect();
 			} else {
@@ -471,21 +454,23 @@ void TTamaNoko::calcRootMatrix()
 
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_SMB_AP_ROCK, &mPosition, 0, nullptr)) {
-					emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+					emitter->setGlobalScale(
+					    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_SMB_AP_SMOKE, &mPosition, 0, nullptr)) {
-					emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+					emitter->setGlobalScale(
+					    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 				}
 			}
 		}
 	}
 
 	if (isBckAnm(7)) {
-		if (mMActor->getFrameCtrl(0)->checkPass(110.0f))
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(110.0f))
 			landEffect();
 
-		if (mMActor->getFrameCtrl(0)->checkPass(152.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(152.0f)) {
 			const TBGCheckData* local_18;
 			gpMap->checkGround(mPosition.x, mPosition.y + 500.0f, mPosition.z,
 			                   &local_18);
@@ -499,7 +484,7 @@ void TTamaNoko::calcRootMatrix()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_POI_ZZZ, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 	TSpineEnemy::calcRootMatrix();
@@ -520,20 +505,20 @@ void TTamaNoko::requestShadow()
 				local_38.y = mGroundHeight;
 				local_38.z = actor->getModel()->getAnmMtx(1)[2][3];
 				if (!isAirborne())
-					local_2c.unk1D = 0;
+					local_2c.mNeedsGroundCheck = 0;
 			} else {
 				local_38 = mPosition;
 				if (!isAirborne()) {
-					local_2c.unk1D = 0;
-					local_38.y     = mGroundHeight;
+					local_2c.mNeedsGroundCheck = 0;
+					local_38.y                 = mGroundHeight;
 				}
 			}
 
-			local_2c.unk0  = local_38;
-			local_2c.unkC  = mScaledBodyRadius;
-			local_2c.unk10 = local_2c.unkC;
-			local_2c.unk1C = getShadowType();
-			local_2c.unk14 = mRotation.y;
+			local_2c.mPosition   = local_38;
+			local_2c.mRadiusX    = mScaledBodyRadius;
+			local_2c.mRadiusZ    = local_2c.mRadiusX;
+			local_2c.mShadowType = getShadowType();
+			local_2c.mRotationY  = mRotation.y;
 			if (checkLiveFlag(LIVE_FLAG_UNK400)) {
 				gpBindShadowManager->forceRequest(local_2c, getActorType());
 			} else {
@@ -554,11 +539,11 @@ void TTamaNoko::landEffect()
 	if (mGroundPlane->isSand()) {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 
@@ -570,11 +555,11 @@ void TTamaNoko::landEffect()
 	} else {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_HIPDROP_B, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 
@@ -659,7 +644,7 @@ DEFINE_NERVE(TNerveTamaNokoSleep, TLiveActor)
 
 	if (!self->isBckAnm(15) && self->checkCurAnmEnd(0)) {
 		self->setBckAnm(15);
-		self->getMActor()->setFrameRate(0, 0.0f);
+		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 	}
 
 	self->walkBehavior(5, 0.0f);
@@ -676,7 +661,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 		if (!self->isBckAnm(9))
 			self->setBckAnm(10);
 
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	}
 
 	JGeometry::TVec3<f32> local_48 = self->getVelocity();
@@ -685,7 +670,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        PARTICLE_MS_TAMA_BLUR,
 		        self->getMActor()->getModel()->getAnmMtx(1), 1, self)) {
-			emitter->setScale(self->mScaling);
+			emitter->setGlobalScale(self->mScaling);
 		}
 	}
 
@@ -706,7 +691,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 			if (JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToPosPtr(
 			        PARTICLE_MS_M_BLUR2, &self->unk1AC, 1, self)) {
-				emitter->setScale(self->mScaling);
+				emitter->setGlobalScale(self->mScaling);
 			}
 
 			if (self->mAirAttackTimer < TTamaNoko::mStopOnAirTimeMax) {
@@ -769,7 +754,9 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 
 		// The "preparing to jump" animation?
 		if (self->isBckAnm(2)) {
-			if (self->getMActor()->getFrameCtrl(0)->checkPass(63.0f)) {
+			if (self->getMActor()
+			        ->getFrameCtrl(ANM_TYPE_BCK)
+			        ->checkPass(63.0f)) {
 				// ...and jump attack!
 				self->unk1A0 = self->calcVelocityToJumpToY(
 				    SMS_GetMarioPos(),
@@ -922,7 +909,7 @@ DEFINE_NERVE(TNerveTamaNokoHitWater, TLiveActor)
 
 	if (spine->getTime() < 2) {
 		self->setBckAnm(15);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
@@ -958,7 +945,7 @@ DEFINE_NERVE(TNerveTamaNokoWait, TLiveActor)
 
 	if (spine->getTime() < 2) {
 		self->setBckAnm(14);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
 	if (self->checkCurAnmEnd(0)) {

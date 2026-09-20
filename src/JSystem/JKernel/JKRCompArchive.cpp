@@ -56,6 +56,23 @@ JKRCompArchive::~JKRCompArchive()
 	mIsMounted = false;
 }
 
+void JKRCompArchive::fixedInit(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+void JKRCompArchive::mountFixed(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+void JKRCompArchive::mountFixed(const char* path)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+void JKRCompArchive::unmountFixed() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+
 static void dummy()
 {
 	const int unknownTable1[4]   = { 0, 2, 1, 3 };
@@ -231,7 +248,7 @@ bool JKRCompArchive::open(s32 entryNum)
 
 void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 {
-	JUT_ASSERT(597, isMounted());
+	JUT_ASSERT(isMounted());
 
 	if (fileEntry->mData == nullptr) {
 		u32 flag = fileEntry->mFlagsAndNameOffset >> 24;
@@ -245,7 +262,9 @@ void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 			    fileEntry->mDataOffset + mAramPart->getAddress()
 			        - mSizeOfMemPart,
 			    fileEntry->mSize, mHeap,
-			    JKRConvertAttrToCompressionType((u8)flag), &data);
+			    JKRArchive::convertAttrToCompressionType(
+			        fileEntry->mFlagsAndNameOffset >> 24),
+			    &data);
 			if (pSize)
 				*pSize = size;
 			fileEntry->mData = data;
@@ -253,8 +272,10 @@ void* JKRCompArchive::fetchResource(SDIFileEntry* fileEntry, u32* pSize)
 			u8* data;
 			u32 size = JKRDvdArchive::fetchResource_subroutine(
 			    mEntryNum, _68 + fileEntry->mDataOffset, fileEntry->mSize,
-			    mHeap, JKRConvertAttrToCompressionType((u8)flag), mCompression,
-			    &data);
+			    mHeap,
+			    JKRArchive::convertAttrToCompressionType(
+			        fileEntry->mFlagsAndNameOffset >> 24),
+			    mCompression, &data);
 			if (pSize)
 				*pSize = size;
 			fileEntry->mData = data;
@@ -285,7 +306,7 @@ void* JKRCompArchive::fetchResource(void* data, u32 compressedSize,
 		size = alignedSize;
 	} else {
 		u32 flags       = fileEntry->mFlagsAndNameOffset >> 24;
-		int compression = JKRConvertAttrToCompressionType((u8)flags);
+		int compression = JKRConvertAttrToCompressionType(flags);
 		if (flags & 0x10) {
 			if (alignedSize > ALIGN_PREV(compressedSize, 0x20))
 				alignedSize = ALIGN_PREV(compressedSize, 0x20);

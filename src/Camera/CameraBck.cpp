@@ -54,7 +54,7 @@ TCameraBck::TCameraBck()
 
 bool TCameraBck::isFileExist(const char* name) const
 {
-	return unk0->checkAnmFileExist(name, 0);
+	return unk0->checkAnmFileExist(name, ANM_TYPE_BCK);
 }
 
 void TCameraBck::getDemoFileName() const { }
@@ -71,7 +71,7 @@ void TCameraBck::startDemo(const char* name,
 int TCameraBck::getTotalDemoFrames() const
 {
 	int total              = 0;
-	const J3DFrameCtrl* fc = unk0->getFrameCtrl(0);
+	const J3DFrameCtrl* fc = unk0->getFrameCtrl(ANM_TYPE_BCK);
 	if (fc != nullptr) {
 		if (fc->getAttribute() != 0)
 			total = -1;
@@ -120,7 +120,7 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 	}
 
 	bool result      = true;
-	J3DFrameCtrl* fc = unk0->getFrameCtrl(0);
+	J3DFrameCtrl* fc = unk0->getFrameCtrl(ANM_TYPE_BCK);
 	if (fc != nullptr) {
 		if (fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE))
 			result = true;
@@ -133,8 +133,8 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 
 void TCameraBck::setFrame(f32 frame)
 {
-	if (unk0->getCurAnmIdx(0) != -1 ? true : false) {
-		J3DFrameCtrl* fc = unk0->getFrameCtrl(0);
+	if (unk0->getCurAnmIdx(ANM_TYPE_BCK) != -1 ? true : false) {
+		J3DFrameCtrl* fc = unk0->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != nullptr)
 			fc->setFrame(frame);
 	}

@@ -4,9 +4,12 @@
 #include <Map/MapData.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
+#include <System/Particles.hpp>
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Conductor.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
@@ -138,13 +141,13 @@ BOOL TRailMapObj::calcRecycle()
 		if (unk14A > 0) {
 			--unk14A;
 			if (unk14A < 90) {
-				int uVar2 = gpMarDirector->unk58 / 4;
+				int uVar2 = gpMarDirector->mMoveTickCount / 4;
 				if (uVar2 % 2 > 0)
 					unk14C = 1;
 				else
 					unk14C = 0;
 			} else {
-				int uVar2 = gpMarDirector->unk58 / 4;
+				int uVar2 = gpMarDirector->mMoveTickCount / 4;
 				if (uVar2 % 4 > 0)
 					unk14C = 1;
 				else
@@ -174,7 +177,7 @@ void TRailMapObj::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	mMActor->setLightType(2);
+	mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 }
 
 void TRailMapObj::load(JSUMemoryInputStream& stream)
@@ -205,7 +208,7 @@ void TRailMapObj::setGroundCollision()
 	}
 }
 
-u32 TRailMapObj::getShadowType() { return 1; }
+u32 TRailMapObj::getShadowType() { return SHADOW_TYPE_SQUARE; }
 
 void TRailMapObj::readRailFlag()
 {
@@ -373,7 +376,95 @@ void TRailBlock::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-void TRailBlock::control() { }
+void TRailBlock::control()
+{
+	TMapObjBase::control();
+	mDamageRadius = 300.0f;
+	mDamageHeight = 50.0f;
+	calcEntryRadius();
+
+	checkMarioRiding();
+	if (calcRecycle() || checkRailFlag(2))
+		return;
+
+	if (moveToNextNode(unk144)) {
+		TGraphNode& node = unk138->getCurrent();
+		if (node.getRailNode()->mFlags & 0x1000) {
+			unk14A = 180;
+			unk148 = 2;
+		}
+
+		unk138->moveToShortestNext();
+
+		TRailNode* nextNode = unk138->getCurrent().getRailNode();
+		u16 speed           = nextNode->mSpeed;
+		if (speed != 0xffff)
+			unk144 = speed * 0.01f;
+
+		JGeometry::TVec3<f32> nextPoint
+		    = unk138->unk0->indexToPoint(unk138->mCurrIdx);
+		f32 step = VECDistance(&nextPoint, &mPosition) / unk144;
+		unk13C   = step;
+
+		if (checkRailFlag(2)) {
+			MTXIdentity(unk174);
+			unk168.x = 0.0f;
+			unk168.y = 0.0f;
+			unk168.z = 0.0f;
+			return;
+		}
+
+		unk168 = unk15C;
+
+		Mtx rotMtx;
+		MsMtxSetRotRPH(rotMtx, unk168.x, unk168.y, unk168.z);
+		MTXConcat(rotMtx, unk174, unk174);
+
+		unk168.x = 0.0f;
+		unk168.y = 0.0f;
+		unk168.z = 0.0f;
+
+		JGeometry::TVec3<f32> xAxis(unk174[0][0], unk174[1][0], unk174[2][0]);
+		JGeometry::TVec3<f32> yAxis(unk174[0][1], unk174[1][1], unk174[2][1]);
+		JGeometry::TVec3<f32> zAxis(unk174[0][2], unk174[1][2], unk174[2][2]);
+		PSVECNormalize(&xAxis, &xAxis);
+		PSVECNormalize(&yAxis, &yAxis);
+		PSVECNormalize(&zAxis, &zAxis);
+
+		xAxis.x -= 1.0f;
+		yAxis.y -= 1.0f;
+		zAxis.z -= 1.0f;
+		if (fabsf(xAxis.x) < 0.02f && fabsf(xAxis.y) < 0.02f
+		    && fabsf(xAxis.z) < 0.02f && fabsf(yAxis.x) < 0.02f
+		    && fabsf(yAxis.y) < 0.02f && fabsf(yAxis.z) < 0.02f
+		    && fabsf(zAxis.x) < 0.02f && fabsf(zAxis.y) < 0.02f
+		    && fabsf(zAxis.z) < 0.02f)
+			MTXIdentity(unk174);
+
+		JGeometry::TVec3<f32> point;
+		TGraphNode& rotateNode = unk138->getCurrent();
+		rotateNode.getPoint(&point);
+		f32 rotateStep      = VECDistance(&mPosition, &point) / unk144;
+		TRailNode* railNode = rotateNode.getRailNode();
+		unk15C.x            = railNode->mPitch;
+		unk15C.y            = railNode->mYaw;
+		unk15C.z            = railNode->mRoll;
+		unk150              = MsAngleDiff(unk15C.x, unk168.x) / rotateStep;
+		unk154              = MsAngleDiff(unk15C.y, unk168.y) / rotateStep;
+		unk158              = MsAngleDiff(unk15C.z, unk168.z) / rotateStep;
+	} else {
+		mRotation.x += unk150;
+		mRotation.y += unk154;
+		mRotation.z += unk158;
+		unk168.x += unk150;
+		unk168.y += unk154;
+		unk168.z += unk158;
+
+		mRotation.x = MsWrap<f32>(mRotation.x, 0.0f, 360.0f);
+		mRotation.y = MsWrap<f32>(mRotation.y, 0.0f, 360.0f);
+		mRotation.z = MsWrap<f32>(mRotation.z, 0.0f, 360.0f);
+	}
+}
 
 TRollBlock::TRollBlock(const char* name)
     : TMapObjBase(name)
@@ -408,7 +499,21 @@ Mtx* TRollBlock::getRootJointMtx() const
 	return (Mtx*)getModel()->getAnmMtx(0);
 }
 
-void TRollBlock::calcRootMatrix() { }
+void TRollBlock::calcRootMatrix()
+{
+	J3DModel* model = getModel();
+	MtxPtr mtx      = model->getBaseTRMtx();
+	s16 rotZ        = mRotation.z * (65536.0f / 360.0f);
+	s16 rotY        = mRotation.y * (65536.0f / 360.0f);
+	s16 rotX        = mRotation.x * (65536.0f / 360.0f);
+	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z, rotX,
+	               rotY, rotZ);
+	model->setBaseScale(mScaling);
+
+	Mtx rot;
+	MsMtxSetRotZ(rot, unk138);
+	MTXConcat(mtx, rot, mtx);
+}
 
 void TRollBlock::control()
 {
@@ -462,11 +567,13 @@ BOOL TWoodBlock::calcRecycle()
 			unk14C   = 1;
 			return true;
 		}
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x6D, &mPosition, 0, nullptr)) {
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_EX_CUBE_DISA, &mPosition, 0, nullptr)) {
 			f32 scale = (mScaling.x + mScaling.y + mScaling.z) / 3.0f;
-			emitter->unk154.set(scale, scale, scale);
-			emitter->unk174.set(1.0f, 1.0f, 0.0f);
+			emitter->setGlobalDynamicsScale(
+			    JGeometry::TVec3<f32>(scale, scale, scale));
+			emitter->setGlobalParticleScale(
+			    JGeometry::TVec3<f32>(1.0f, 1.0f, 0.0f));
 		}
 		resetPosition();
 		unk164 = unk15C;

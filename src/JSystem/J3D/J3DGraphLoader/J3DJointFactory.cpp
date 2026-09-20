@@ -24,8 +24,8 @@ J3DJoint* J3DJointFactory::create(int jntNo)
 	joint->mMin = getMin(jntNo);
 	joint->mMax = getMax(jntNo);
 
-	joint->mMtxCalc    = nullptr;
-	joint->mOldMtxCalc = nullptr;
+	joint->mMtxCalcOverride = nullptr;
+	joint->mOldMtxCalc      = nullptr;
 
 	if (joint->mScaleCompensate == 0xFF) {
 		joint->mScaleCompensate = false;

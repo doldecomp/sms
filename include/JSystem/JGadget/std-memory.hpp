@@ -9,9 +9,14 @@ namespace JGadget {
 
 template <typename T> class TAllocator {
 public:
+	// NOTE: this calls ::operator new itself instead of going through
+	// AllocateRaw. Routing it through AllocateRaw adds a second temporary --
+	// the void* result, and then the cast of it -- and the compiler then
+	// tests that temporary rather than the variable the result is stored in,
+	// which costs the `mr.` in TVector::reserve and InsertRaw.
 	T* allocate(size_t count, const void* = 0)
 	{
-		return (T*)AllocateRaw(count * sizeof(T));
+		return (T*)::operator new(count * sizeof(T));
 	}
 
 	void* AllocateRaw(size_t rawSize) { return ::operator new(rawSize); }

@@ -13,6 +13,8 @@ J2DTextBox::J2DTextBox(const ResFONT* font, const char* str)
 	initiate(font, str, HBIND_LEFT, VBIND_TOP);
 }
 
+J2DTextBox::J2DTextBox(const char* fontName, const char* str) { }
+
 J2DTextBox::J2DTextBox(J2DPane* parent, JSURandomInputStream* stream,
                        bool is_ex)
     : J2DPane(parent, stream, is_ex)
@@ -118,6 +120,12 @@ J2DTextBox::J2DTextBox(u32 tag, const JUTRect& bounds, const ResFONT* font,
 	initiate(font, str, hbind, vbind);
 }
 
+J2DTextBox::J2DTextBox(u32 tag, const JUTRect& bounds, const char* fontName,
+                       const char* str, J2DTextBoxHBinding hBinding,
+                       J2DTextBoxVBinding vBinding)
+{
+}
+
 void J2DTextBox::initiate(const ResFONT* font, const char* str,
                           J2DTextBoxHBinding hbind, J2DTextBoxVBinding vbind)
 {
@@ -158,6 +166,8 @@ J2DTextBox::~J2DTextBox()
 		delete[] mText;
 }
 
+void J2DTextBox::setFontSize() { }
+
 void J2DTextBox::setFont(JUTFont* font)
 {
 	if (!font)
@@ -169,6 +179,8 @@ void J2DTextBox::setFont(JUTFont* font)
 	mFont          = font;
 	mTextFontOwned = false;
 }
+
+void J2DTextBox::setLineSpace() { }
 
 void J2DTextBox::draw(int x, int y)
 {
@@ -186,6 +198,10 @@ void J2DTextBox::draw(int x, int y)
 	MTXIdentity(mtx);
 	GXLoadPosMtxImm(mtx, GX_PNMTX0);
 }
+
+void J2DTextBox::draw(int x, int y, int z) { }
+
+void J2DTextBox::getString(char* out) { }
 
 char* J2DTextBox::getStringPtr() const { return mText; }
 

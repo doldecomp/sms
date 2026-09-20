@@ -73,7 +73,7 @@ TGKHitObj::TGKHitObj(TGateKeeperBase* owner, int joint_idx, const char* name)
 {
 	initHitActor(0x10000022, 1, 0x80000000, 0.0f, 0.0f, 150.0f, 200.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 }
@@ -211,27 +211,16 @@ TBGKMtxCalc::TBGKMtxCalc(TBiancoGateKeeper* owner)
 
 void TBGKMtxCalc::joinAnm(int param_1)
 {
-	J3DAnmTransformKey* anm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        param_1);
-
-	if (unk54 == anm)
-		return;
-
-	unk58 = unk54;
-	unk54 = anm;
-	unk50 = 1.0f;
+	M3UMtxCalcSIAnmBlendQuat::joinAnm(
+	    mOwner->getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(
+	        param_1));
 }
 
 void TBGKMtxCalc::setAnm(int param_1)
 {
-	J3DAnmTransformKey* anm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        param_1);
-
-	unk54 = anm;
-	unk58 = 0;
-	unk50 = 0.0f;
+	M3UMtxCalcSIAnmBlendQuat::setAnm(
+	    mOwner->getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(
+	        param_1));
 }
 
 void TBGKMtxCalc::calc(u16 param_1)
@@ -265,30 +254,17 @@ void TBGKMtxCalc::calc(u16 param_1)
 				f32 delta = MsAngleDiff(yaw, cur);
 				f32 turn;
 				if (0.0f < delta)
-					turn = 3.0f > delta ? delta : 3.0f;
+					turn = MsMin(3.0f, delta);
 				else
-					turn = -3.0f > delta ? -3.0f : delta;
+					turn = MsMax(-3.0f, delta);
 
 				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
 				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);
 			}
 		}
 
-		f32 s = JMASin(mOwner->unk180);
-		f32 c = JMACos(mOwner->unk180);
 		Mtx rot;
-		rot[0][0] = c;
-		rot[0][1] = 0.0f;
-		rot[0][2] = s;
-		rot[0][3] = 0.0f;
-		rot[1][0] = 0.0f;
-		rot[1][1] = 1.0f;
-		rot[1][2] = 0.0f;
-		rot[1][3] = 0.0f;
-		rot[2][0] = -s;
-		rot[2][1] = 0.0f;
-		rot[2][2] = c;
-		rot[2][3] = 0.0f;
+		MsMtxSetRotY(rot, mOwner->unk180);
 		MTXConcat(mtx, rot, mtx);
 		MTXCopy(mtx, J3DSys::mCurrentMtx);
 	}
@@ -301,7 +277,7 @@ TBGKObstacle::TBGKObstacle(TBiancoGateKeeper* owner, const char* name)
 	mPosition.y -= 1000.0f;
 	initHitActor(0x10000022, 1, 0x80000000, 800.0f, 800.0f, 800.0f, 800.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 }
@@ -365,7 +341,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 	}
 
 	initHitActor(0x10000022, 5, 0x81000000, 400.0f, 150.0f, 400.0f, 150.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -420,7 +396,7 @@ void TBiancoGateKeeper::kill()
 
 void TBiancoGateKeeper::changeBck(int param_1)
 {
-	int cur = mMActor->getCurAnmIdx(0);
+	int cur = mMActor->getCurAnmIdx(ANM_TYPE_BCK);
 	if ((cur == 0x11 && param_1 == 0xB) || (cur == 0x11 && param_1 == 0x12)
 	    || (cur == 0xB && param_1 == 0x12) || (cur == 0x12 && param_1 == 0xB)
 	    || (cur == 7 && param_1 == 7) || (cur == 7 && param_1 == 0x12)
@@ -431,7 +407,7 @@ void TBiancoGateKeeper::changeBck(int param_1)
 	} else {
 		unk178->joinAnm(param_1);
 		mMActor->getAnmBck()->setFrameCtrl(param_1);
-		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != NULL) {
 			f32 v = 0.25f * (f32)fc->getEnd();
 			if (v < 1.0f)
@@ -457,11 +433,11 @@ void TBiancoGateKeeper::launchGorogoro()
 
 void TBiancoGateKeeper::launchNamekuri()
 {
-	TNameKuriManager* mgr = JDrama::TNameRefGen::search<TNameKuriManager>(
-	    "拡散ナメクリマネージャー");
+	TNameKuriManager* mgr = static_cast<TNameKuriManager*>(
+	    JDrama::TNameRefGen::search("拡散ナメクリマネージャー"));
 	if (mgr == NULL)
-		mgr = JDrama::TNameRefGen::search<TNameKuriManager>(
-		    "ナメクリマネージャー");
+		mgr = static_cast<TNameKuriManager*>(
+		    JDrama::TNameRefGen::search("ナメクリマネージャー"));
 
 	if (mgr != NULL) {
 		for (int i = 0; i < 10; i++) {
@@ -517,7 +493,7 @@ void TBiancoGateKeeper::rumblePad()
 void TBiancoGateKeeper::deathRumble()
 {
 	if (SMS_IsMarioTouchGround4cm()) {
-		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != NULL) {
 			f32 t        = 1.0f - fc->getFrame() / (f32)fc->getEnd();
 			mRumblePower = t * getRumblePow();
@@ -528,7 +504,7 @@ void TBiancoGateKeeper::deathRumble()
 
 BOOL TBiancoGateKeeper::curBckFinished() const
 {
-	J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	BOOL done;
 	if (fc == NULL)
 		return true;
@@ -574,7 +550,7 @@ void TBiancoGateKeeper::startFinishDemo()
 #pragma dont_inline on
 BOOL TBiancoGateKeeper::isHeadHitActive() const
 {
-	J3DFrameCtrl* fc = getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* fc = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (getMActor()->checkCurBckFromIndex(0x12)) {
 		if (50.0f < fc->getFrame() && fc->getFrame() < 160.0f)
 			return true;
@@ -599,7 +575,7 @@ BOOL TBiancoGateKeeper::isDamageFogSituation() const
 		return true;
 
 	if (mMActor->checkCurBckFromIndex(0x12)) {
-		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (!(50.0f < fc->getFrame() && fc->getFrame() < 160.0f))
 			return false;
 	}
@@ -671,7 +647,7 @@ void TBiancoGateKeeper::controlCollision()
 		return;
 	}
 	if (mMActor->checkCurBckFromIndex(0xF)) {
-		if (mMActor->getFrameCtrl(0)->getFrame() > 40.0f)
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 40.0f)
 			mHead->mVulnerable = TRUE;
 		else
 			mHead->mVulnerable = FALSE;
@@ -724,13 +700,7 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		TBGKMtxCalc* mc = unk178;
-		f32 delta       = -unk158;
-		mc->unk50 += delta;
-		if (mc->unk50 < 0.0f)
-			mc->unk50 = 0.0f;
-		else if (mc->unk50 > 1.0f)
-			mc->unk50 = 1.0f;
+		unk178->advanceMotionBlend(-unk158);
 	}
 
 	if (cue & CUE_MOVE)
@@ -785,7 +755,7 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		self->changeBck(0xA);
 		self->offHitFlag(HIT_FLAG_NO_COLLISION);
 		self->getMActor()->setBpkFromIndex(0);
-		J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(2);
+		J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(ANM_TYPE_BPK);
 		if (fc != NULL) {
 			fc->setFrame(0.0f);
 			fc->setRate(0.0f);
@@ -843,7 +813,7 @@ DEFINE_NERVE(TNerveBGKAppear, TLiveActor)
 		self->rumblePad();
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (gpMarDirector->getCurrentMap() == 0)
 			spine->pushAfterCurrent(&TNerveBGKWait2::theNerve());
 		else
@@ -986,7 +956,7 @@ DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 		}
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBGKSleep::theNerve());
 		return true;
 	}
@@ -1023,7 +993,7 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 		     || self->unk296 != 0)) {
 			self->startFinishDemo();
 			self->getMActor()->setBpkFromIndex(0);
-			J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(2);
+			J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(ANM_TYPE_BPK);
 			if (fc != NULL) {
 				fc->setFrame(0.0f);
 				fc->setRate(SMSGetAnmFrameRate());
@@ -1051,7 +1021,7 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 
 	self->deathRumble();
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if ((self->mVariant == TBiancoGateKeeper::VARIANT_RICO_GATEKEEPER
 		     || self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 		    && self->unk296 == 0) {
@@ -1085,7 +1055,7 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 		self->rumblePad();
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (self->mVariant == TBiancoGateKeeper::VARIANT_GENERIC) {
 			int timer    = self->getSaveParams()->mSLLaunchTimerNormal.get();
 			self->unk298 = (s32)(240.0f * MsRandF()) + timer - 120;
@@ -1116,7 +1086,7 @@ DEFINE_NERVE(TNerveBGKLaunchGoro, TLiveActor)
 		return true;
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBGKSleep::theNerve());
 		return true;
 	}
@@ -1136,7 +1106,7 @@ DEFINE_NERVE(TNerveBGKLaunchName, TLiveActor)
 		self->rumblePad();
 	}
 
-	if (self->getMActor()->curAnmEndsNext(0, nullptr)) {
+	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBGKAppear::theNerve());
 		return true;
 	}

@@ -5,6 +5,8 @@
 #include <dolphin/gx.h>
 
 class J3DVertexData {
+	friend class J3DModelLoader;
+
 public:
 	J3DVertexData();
 	~J3DVertexData();
@@ -17,18 +19,22 @@ public:
 	GXColor* getVtxColorArray(u8 idx) const { return mVtxColorArray[idx]; }
 	void* getVtxTexCoordArray(u8 idx) const { return mVtxTexCoordArray[idx]; }
 
-	u32 getVtxNum() const { return unk0; }
-	u32 getNrmNum() const { return unk4; }
+	u32 getVtxNum() const { return mVtxNum; }
+	u32 getNrmNum() const { return mNrmNum; }
+	u32 getColNum() const { return mColNum; }
 
 	const GXVtxAttrFmtList* getVtxAttrFmtList() const
 	{
 		return mVtxAttrFmtList;
 	}
 
-public:
-	/* 0x0 */ u32 unk0;
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ u32 unk8;
+	// fabricated
+	void setVtxPosArray(void* ptr) { mVtxPosArray = ptr; }
+
+private:
+	/* 0x0 */ u32 mVtxNum;
+	/* 0x4 */ u32 mNrmNum;
+	/* 0x8 */ u32 mColNum;
 	/* 0xC */ GXVtxAttrFmtList* mVtxAttrFmtList;
 	/* 0x10 */ void* mVtxPosArray;
 	/* 0x14 */ void* mVtxNormArray;
@@ -42,14 +48,13 @@ enum J3DDeformAttachFlag {
 };
 
 class J3DVertexBuffer {
-public:
 	/* 0x00 */ J3DVertexData* mVertexData;
-	/* 0x04 */ void* unk4[2];
-	/* 0x0C */ void* unkC[2];
-	/* 0x14 */ GXColor* unk14[2];
+	/* 0x04 */ void* mVtxPosArray[2];
+	/* 0x0C */ void* mVtxNrmArray[2];
+	/* 0x14 */ GXColor* mVtxColArray[2];
 	// TODO: figure out what actually lives here
-	/* 0x1C */ void* unk1C[2];
-	/* 0x24 */ void* unk24[2];
+	/* 0x1C */ void* mTransformedVtxPosArray[2];
+	/* 0x24 */ void* mTransformedVtxNrmArray[2];
 	/* 0x2C */ void* unk2C;
 	/* 0x30 */ void* unk30;
 	/* 0x34 */ GXColor* unk34;
@@ -61,41 +66,49 @@ public:
 
 	void frameInit()
 	{
-		setCurrentVtxPos(unk4[0]);
-		setCurrentVtxNrm(unkC[0]);
-		setCurrentVtxCol(unk14[0]);
+		setCurrentVtxPos(mVtxPosArray[0]);
+		setCurrentVtxNrm(mVtxNrmArray[0]);
+		setCurrentVtxCol(mVtxColArray[0]);
 	}
 
 	void swapVtxPosArrayPointer()
 	{
-		void* tmp = unk4[0];
-		unk4[0]   = unk4[1];
-		unk4[1]   = tmp;
+		void* tmp       = mVtxPosArray[0];
+		mVtxPosArray[0] = mVtxPosArray[1];
+		mVtxPosArray[1] = tmp;
 	}
 
 	void swapVtxNrmArrayPointer()
 	{
-		void* tmp = unkC[0];
-		unkC[0]   = unkC[1];
-		unkC[1]   = tmp;
+		void* tmp       = mVtxNrmArray[0];
+		mVtxNrmArray[0] = mVtxNrmArray[1];
+		mVtxNrmArray[1] = tmp;
+	}
+
+	void swapVtxColArrayPointer()
+	{
+		GXColor* temp   = mVtxColArray[0];
+		mVtxColArray[0] = mVtxColArray[1];
+		mVtxColArray[1] = temp;
 	}
 
 	void swapTransformedVtxPos()
 	{
-		void* tmp = unk1C[0];
-		unk1C[0]  = unk1C[1];
-		unk1C[1]  = tmp;
+		void* tmp                  = mTransformedVtxPosArray[0];
+		mTransformedVtxPosArray[0] = mTransformedVtxPosArray[1];
+		mTransformedVtxPosArray[1] = tmp;
 	}
 
 	void swapTransformedVtxNrm()
 	{
-		void* tmp = unk24[0];
-		unk24[0]  = unk24[1];
-		unk24[1]  = tmp;
+		void* tmp                  = mTransformedVtxNrmArray[0];
+		mTransformedVtxNrmArray[0] = mTransformedVtxNrmArray[1];
+		mTransformedVtxNrmArray[1] = tmp;
 	}
 
-	void* getVtxPosArrayPointer(int idx) { return unk4[idx]; }
-	void* getVtxNrmArrayPointer(int idx) { return unkC[idx]; }
+	void* getVtxPosArrayPointer(int idx) { return mVtxPosArray[idx]; }
+	void* getVtxNrmArrayPointer(int idx) { return mVtxNrmArray[idx]; }
+	GXColor* getVtxColArrayPointer(int idx) { return mVtxColArray[idx]; }
 
 	J3DVertexData* getVertexData() { return mVertexData; }
 
@@ -107,12 +120,18 @@ public:
 	void* getCurrentVtxNrm() { return unk30; }
 	GXColor* getCurrentVtxCol() { return unk34; }
 
-	void* getTransformedVtxPos(int idx) { return unk1C[idx]; }
-	void* getTransformedVtxNrm(int idx) { return unk24[idx]; }
+	void* getTransformedVtxPos(int idx) { return mTransformedVtxPosArray[idx]; }
+	void* getTransformedVtxNrm(int idx) { return mTransformedVtxNrmArray[idx]; }
 
 	void copyLocalVtxArray(J3DDeformAttachFlag);
 	void copyVtxColorArray(J3DDeformAttachFlag);
 	void copyTransformedVtxArray();
+
+	// fabricated
+	void setVtxPosArrayPointer(int index, void* ptr)
+	{
+		mVtxPosArray[index] = ptr;
+	}
 };
 
 class J3DDrawMtxData {

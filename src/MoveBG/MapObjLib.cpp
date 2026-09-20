@@ -185,22 +185,23 @@ void TMapObjBase::startAllAnim(MActor* param_1, const char* param_2)
 	char lowerCased[128];
 	makeLowerStr(param_2, lowerCased);
 
-	if (param_1->checkAnmFileExist(lowerCased, 0))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BCK))
 		param_1->setBck(lowerCased);
-	if (param_1->checkAnmFileExist(lowerCased, 5))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BRK))
 		param_1->setBrk(lowerCased);
-	if (param_1->checkAnmFileExist(lowerCased, 2))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BPK))
 		param_1->setBpk(lowerCased);
-	if (param_1->checkAnmFileExist(lowerCased, 3))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BTP))
 		param_1->setBtp(lowerCased);
-	if (param_1->checkAnmFileExist(lowerCased, 4))
+	if (param_1->checkAnmFileExist(lowerCased, ANM_TYPE_BTK))
 		param_1->setBtk(lowerCased);
 }
 
 void TMapObjBase::joinToGroup(const char* param_1, THitActor* param_2)
 {
 	// TODO: The group type here is a wild guess
-	JDrama::TNameRefGen::search<JDrama::TViewObjPtrListT<THitActor> >(param_1)
+	static_cast<JDrama::TViewObjPtrListT<THitActor>*>(
+	    JDrama::TNameRefGen::search(param_1))
 	    ->push_back(param_2);
 }
 
@@ -767,7 +768,7 @@ void TMapObjBase::emitAndSRT(s32 param_1, u8 param_2,
 
 	if (emitter) {
 		emitter->setRotation(param_4.x, param_4.y, param_4.z);
-		emitter->setScale(param_5);
+		emitter->setGlobalScale(param_5);
 	}
 }
 
@@ -781,7 +782,7 @@ void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
 		emitter->setRotation(mRotation.x / 180.0f * 32768.0f,
 		                     mRotation.y / 180.0f * 32768.0f,
 		                     mRotation.z / 180.0f * 32768.0f);
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 }
 
@@ -793,12 +794,7 @@ TMapObjBase::emitAndScale(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
 
 	if (emitter) {
-		emitter->unk154.x = mScaling.x;
-		emitter->unk154.y = mScaling.y;
-		emitter->unk154.z = mScaling.z;
-		emitter->unk174.x = mScaling.x;
-		emitter->unk174.y = mScaling.y;
-		emitter->unk174.z = mScaling.z;
+		emitter->setGlobalScale(mScaling);
 	}
 
 	return emitter;
@@ -813,12 +809,7 @@ TMapObjBase::emitAndBindScale(s32 param_1, u8 param_2,
 	    param_1, param_3, param_2, this);
 
 	if (emitter) {
-		emitter->unk154.x = param_4.x;
-		emitter->unk154.y = param_4.y;
-		emitter->unk154.z = param_4.z;
-		emitter->unk174.x = param_4.x;
-		emitter->unk174.y = param_4.y;
-		emitter->unk174.z = param_4.z;
+		emitter->setGlobalScale(param_4);
 	}
 
 	return emitter;
@@ -833,12 +824,7 @@ TMapObjBase::emitAndScale(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
 
 	if (emitter) {
-		emitter->unk154.x = param_4.x;
-		emitter->unk154.y = param_4.y;
-		emitter->unk154.z = param_4.z;
-		emitter->unk174.x = param_4.x;
-		emitter->unk174.y = param_4.y;
-		emitter->unk174.z = param_4.z;
+		emitter->setGlobalScale(param_4);
 	}
 
 	return emitter;
@@ -962,63 +948,6 @@ void TMapObjTurn::turn()
 	}
 }
 
-// fabricated
-static inline void makeRotXMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = 1.0f;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = c;
-	mtx[1][2] = -s;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = s;
-	mtx[2][2] = c;
-	mtx[2][3] = 0.0f;
-}
-
-// fabricated
-static inline void makeRotYMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = c;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = s;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = 1.0f;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = -s;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = c;
-	mtx[2][3] = 0.0f;
-}
-
-// fabricated
-static inline void makeRotZMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = c;
-	mtx[0][1] = -s;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = s;
-	mtx[1][1] = c;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = 1.0f;
-	mtx[2][3] = 0.0f;
-}
-
 void TMapObjTurn::control()
 {
 	TMapObjBase::control();
@@ -1031,30 +960,30 @@ void TMapObjTurn::control()
 	switch (unk150) {
 	case 0:
 		mRotation.x = MsWrap(unk154 + mInitialRotation.x, 0.0f, 360.0f);
-		makeRotXMtx(mtx, mRotation.x);
+		MsMtxSetRotX(mtx, mRotation.x);
 		if (mRotation.y != 0.0f) {
-			makeRotXMtx(mtx, mRotation.x);
-			makeRotYMtx(yRot, mRotation.y);
+			MsMtxSetRotX(mtx, mRotation.x);
+			MsMtxSetRotY(yRot, mRotation.y);
 			MTXConcat(yRot, mtx, mtx);
 		} else {
-			makeRotXMtx(mtx, mRotation.x);
+			MsMtxSetRotX(mtx, mRotation.x);
 		}
 		break;
 
 	case 1:
 		mRotation.y = MsWrap(unk154 + mInitialRotation.y, 0.0f, 360.0f);
-		makeRotYMtx(mtx, mRotation.y);
+		MsMtxSetRotY(mtx, mRotation.y);
 		break;
 
 	case 2:
 		mRotation.z = MsWrap(unk154 + mInitialRotation.z, 0.0f, 360.0f);
-		makeRotZMtx(mtx, mRotation.z);
+		MsMtxSetRotZ(mtx, mRotation.z);
 		if (mRotation.y != 0.0f) {
-			makeRotZMtx(mtx, mRotation.z);
-			makeRotYMtx(yRot, mRotation.y);
+			MsMtxSetRotZ(mtx, mRotation.z);
+			MsMtxSetRotY(yRot, mRotation.y);
 			MTXConcat(yRot, mtx, mtx);
 		} else {
-			makeRotZMtx(mtx, mRotation.z);
+			MsMtxSetRotZ(mtx, mRotation.z);
 		}
 		break;
 	}

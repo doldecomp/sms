@@ -4,6 +4,10 @@
 #include <JSystem/JUtility/JUTFont.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <dolphin/os/OSMutex.h>
+#include <stdarg.h>
+
+class J2DPrint;
+extern "C" float J2DPrint_print_alpha_va(J2DPrint*, u8, const char*, va_list);
 
 class J2DPrint {
 public:
@@ -30,8 +34,12 @@ public:
 	void putChar(int, int, int);
 	void print(const char* format, ...);
 	void print(u8, const char* format, ...);
-	void print(int x, int y, const char* format, ...);
-	void print(int x, int y, u8 opacity, const char* format, ...);
+	float print_va(u8 opacity, const char* format, va_list args)
+	{
+		return J2DPrint_print_alpha_va(this, opacity, format, args);
+	}
+	float print(int x, int y, const char* format, ...);
+	float print(int x, int y, u8 opacity, const char* format, ...);
 	void getSize(J2DPrint::TSize&, const char*, ...);
 	float getWidth(const char* format, ...);
 	float getHeight(const char* format, ...);

@@ -13,7 +13,7 @@ void JDrama::TActor::load(JSUMemoryInputStream& stream)
 	char str[0x50];
 	stream.readString(str, 0x50);
 
-	unk3C = TNameRefGen::search<TCharacter>(str);
+	unk3C = static_cast<TCharacter*>(TNameRefGen::search(str));
 
 	TLightMap* lightMap = new TLightMap;
 
@@ -61,5 +61,3 @@ void JDrama::TActor::JSGSetRotation(const Vec& v)
 	mRotation.y = v.y;
 	mRotation.z = v.z;
 }
-
-int JDrama::TActor::getType() const { return 1; }

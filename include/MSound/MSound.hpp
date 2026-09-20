@@ -19,6 +19,25 @@ class JAIAnimeFrameSoundData;
 class MSModBgm;
 class MSBgmXFade;
 
+enum MSSeSwBit {
+	MSSeSwBit_AnimeSpeed                 = 0x00100000,
+	MSSeSwBit_AnimeSpeedShift            = 20,
+	MSSeSwBit_ModDistanceVolume          = 0x00200000,
+	MSSeSwBit_RandomVolumePSlopeMask     = 0x00C00000,
+	MSSeSwBit_RandomVolumePSlopeShift    = 22,
+	MSSeSwBit_RandomVolumeCSlopeMask     = 0x03000000,
+	MSSeSwBit_RandomVolumeCSlopeShift    = 24,
+	MSSeSwBit_RandomVolumeAmplitudeMask  = 0x0C000000,
+	MSSeSwBit_RandomVolumeAmplitudeShift = 26,
+	MSSeSwBit_RandomIDWeightMask         = 0x70000000,
+	MSSeSwBit_RandomIDWeightShift        = 28,
+	MSSeSwBit_RandomID                   = 0x80000000,
+};
+
+enum MSBgmSwBit {
+	MSBgmSwBit_YoshiPercussion = 0x10000000,
+};
+
 class MSSeCallBack {
 public:
 	static u16 setParameterSeqSync(JASystem::TTrack*, u16);
@@ -29,16 +48,13 @@ public:
 	static u16 smWaterFilter;
 };
 
-class MSLoadWave {
-public:
-	static bool loadWaveBackword(int, int);
-	static bool loadWaveBackword(JASystem::WaveArcLoader::TObject*);
-};
+namespace MSLoadWave {
+bool loadWaveBackword(int, int);
+}
 
-class MSMarioPosVolume {
-public:
-	static f32 getDistFromMario(const Vec&);
-};
+namespace MSMarioPosVolume {
+f32 getDistFromMario(const Vec&);
+}
 
 class MSound : public JAIBasic {
 public:
@@ -63,7 +79,7 @@ public:
 	bool checkSeqOnMemory(u32);
 
 	void stopAllSound();
-	void fadeOutAllSound(u32);
+	void fadeOutAllSound(u32 fadeout);
 	void stopAllSeInCategory(u8, u32);
 	void setCategoryAllVolume(u8, f32, u32, u8);
 	void setCategoryVOLs(u16, f32);
@@ -83,7 +99,8 @@ public:
 
 	void startSoundSet(u32, const Vec*, u32, f32, u32, u32, u8);
 	void startSoundSetGrp(u32, const Vec*, u32, f32, u32, u32, u8);
-	void startSoundActorSpecial(u32, const Vec*, f32, f32, u32, JAISound**, u32,
+	void startSoundActorSpecial(u32 id, const Vec* position, f32, f32,
+	                            u32 ground_no, JAISoundHandle* out_handle, u32,
 	                            u8);
 	void startBeeSe(Vec*, u32);
 
@@ -97,70 +114,71 @@ public:
 
 	u32 getWallSound(u32, f32);
 	u32 getBstPitch(u32);
-	static u32 getBstSwitch(u32);
-	static u32 getSwitch(u32, u32, u32);
+	static u32 getBstSwitch(u32 sound_id);
+	static u32 getSwitch(u32 sound_id, u32 mask, u32 offset);
 	bool gateCheck(u32);
 
 	bool resetAudioAll(u16);
 
 	// real
-	void startSoundSystemSE(u32 param_1, u32 param_2, JAISound** param_3,
-	                        u32 param_4)
+	void startSoundSystemSE(u32 id, u32 param_2, JAISoundHandle* out_handle,
+	                        u32 fade)
 	{
-		if (gateCheck(param_1))
-			MSoundSESystem::MSoundSE::startSoundSystemSE(param_1, param_2,
-			                                             param_3, param_4);
+		if (gateCheck(id))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(id, param_2,
+			                                             out_handle, fade);
 	}
 
 	// Fabricated, very likely due to real startSoundSystemSE
-	void startSoundActor(u32 param_1, const Vec* param_2, u32 param_3,
-	                     JAISound** param_4, u32 param_5, u8 param_6)
+	void startSoundActor(u32 id, const Vec* position, u32 ground_no,
+	                     JAISoundHandle* out_handle, u32 fade, u8 camera_idx)
 	{
-		if (gateCheck(param_1))
+		if (gateCheck(id))
 			MSoundSESystem::MSoundSE::startSoundActor(
-			    param_1, param_2, param_3, param_4, param_5, param_6);
+			    id, position, ground_no, out_handle, fade, camera_idx);
 	}
 
-	void startSoundActorWithInfo(u32 param_1, const Vec* param_2, Vec* param_3,
-	                             f32 param_4, u32 param_5, u32 param_6,
-	                             JAISound** param_7, u32 param_8, u8 param_9)
+	void startSoundActorWithInfo(u32 id, const Vec* position, Vec* param_3,
+	                             f32 param_4, u32 param_5, u32 ground_no,
+	                             JAISoundHandle* out_handle, u32 fade,
+	                             u8 camera_idx)
 	{
-		if (gateCheck(param_1))
+		if (gateCheck(id))
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    param_1, param_2, param_3, param_4, param_5, param_6, param_7,
-			    param_8, param_9);
+			    id, position, param_3, param_4, param_5, ground_no, out_handle,
+			    fade, camera_idx);
 	}
 
-	void startSeRandPlay(u32 param_1, u32 param_2)
+	void startSeRandPlay(u32 id, u32 param_2)
 	{
-		if (gateCheck(param_1))
-			MSoundSESystem::MSRandPlay::startSeRandPlay(param_1, param_2);
+		if (gateCheck(id))
+			MSoundSESystem::MSRandPlay::startSeRandPlay(id, param_2);
 	}
 
-	void startForceJumpSound(Vec* param_1, u32 param_2, f32 param_3,
+	void startForceJumpSound(Vec* position, u32 param_2, f32 param_3,
 	                         u32 param_4)
 	{
-		u32 r31;
+		u32 id;
 		switch (param_2 & 0xff) {
 		case 0x15:
 		case 0x17:
 		case 0x1D:
-			r31 = MSD_SE_MA_STALL_JUMP;
+			id = MSD_SE_MA_STALL_JUMP;
 			break;
 
 		case 0x1E:
 		default:
 			if (param_4 < 0x1770)
-				r31 = MSD_SE_MA_ROPE_JUMP_A;
+				id = MSD_SE_MA_ROPE_JUMP_A;
 			else if (param_4 < 0x2EE0)
-				r31 = MSD_SE_MA_ROPE_JUMP_B;
+				id = MSD_SE_MA_ROPE_JUMP_B;
 			else
-				r31 = MSD_SE_MA_ROPE_JUMP_C;
+				id = MSD_SE_MA_ROPE_JUMP_C;
 			break;
 		}
 
-		if (gateCheck(r31))
-			startSoundActor(r31, param_1, 0, nullptr, 0, 4);
+		if (gateCheck(id))
+			startSoundActor(id, position, 0, nullptr, 0, 4);
 	}
 
 	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }

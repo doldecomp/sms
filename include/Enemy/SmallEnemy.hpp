@@ -144,7 +144,7 @@ public:
 	virtual void attackToMario();
 	virtual void forceKill();
 	virtual void setMActorAndKeeper();
-	virtual void initAttacker(THitActor*);
+	virtual void initAttacker(THitActor*) { unk184 = 1; }
 	virtual bool isHitValid(u32)
 	{
 		return checkLiveFlag(LIVE_FLAG_HIDDEN) ? false : true;
@@ -199,6 +199,10 @@ public:
 			unk165 = false;
 		return result;
 	}
+
+	enum {
+		LIVE_FLAG_MELT_ON_DEATH = 0x10000,
+	};
 
 public:
 	/* 0x150 */ u32 unk150;

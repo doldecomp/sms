@@ -191,8 +191,8 @@ void J3DModelLoader::readInformation(const J3DModelInfoBlock* i_block,
 		mpModelData->unk14 = new J3DMtxCalcMaya();
 		break;
 	}
-	mpModelData->unk80                = i_block->mPacketNum;
-	mpModelData->getVertexData().unk0 = i_block->mVtxNum;
+	mpModelData->unk80                   = i_block->mPacketNum;
+	mpModelData->getVertexData().mVtxNum = i_block->mVtxNum;
 	mpModelData->unk8 = JSUConvertOffsetToPtr<J3DModelHierarchy>(
 	    i_block, i_block->mpHierarchy);
 }
@@ -237,12 +237,12 @@ void J3DModelLoader::readVertex(const J3DVertexBlock* i_block)
 	}
 
 	if (vertex_data.mVtxNormArray == NULL) {
-		vertex_data.unk4 = 0;
+		vertex_data.mNrmNum = 0;
 	} else if (nrm_end != NULL) {
-		vertex_data.unk4
+		vertex_data.mNrmNum
 		    = ((u32)nrm_end - (u32)vertex_data.mVtxNormArray) / 12 + 1;
 	} else {
-		vertex_data.unk4
+		vertex_data.mNrmNum
 		    = (i_block->mSize - (u32)i_block->mpVtxNrmArray) / 12 + 1;
 	}
 
@@ -254,12 +254,12 @@ void J3DModelLoader::readVertex(const J3DVertexBlock* i_block)
 	}
 
 	if (vertex_data.mVtxColorArray[0] == NULL) {
-		vertex_data.unk8 = 0;
+		vertex_data.mColNum = 0;
 	} else if (color0_end != NULL) {
-		vertex_data.unk8
+		vertex_data.mColNum
 		    = ((u32)color0_end - (u32)vertex_data.mVtxColorArray[0]) / 4 + 1;
 	} else {
-		vertex_data.unk8
+		vertex_data.mColNum
 		    = (i_block->mSize - (u32)i_block->mpVtxColorArray[0]) / 4 + 1;
 	}
 }
@@ -340,13 +340,14 @@ void J3DModelLoader_v26::readMaterial(const J3DMaterialBlock* i_block,
 	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 			mpModelData->mMaterials[i]->unk18
-			    = (u32)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
+			    = (uintptr_t)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
 			mpModelData->mMaterials[i]->mOriginalMaterial
 			    = &mpModelData->unk38[factory.getMaterialID(i)];
 		}
 	} else {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
-			mpModelData->mMaterials[i]->unk18 = 0xc0000000;
+			mpModelData->mMaterials[i]->unk18
+			    = J3DMaterial::DIFF_FLAG | J3DMaterial::UNIQUE_FLAG;
 		}
 	}
 }
@@ -381,13 +382,14 @@ void J3DModelLoader_v21::readMaterial_v21(const J3DMaterialBlock_v21* i_block,
 	if (i_flags & J3DMLF_UseUniqueMaterials) {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
 			mpModelData->mMaterials[i]->unk18
-			    = (u32)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
+			    = (uintptr_t)&mpModelData->unk38[factory.getMaterialID(i)] >> 4;
 			mpModelData->mMaterials[i]->mOriginalMaterial
 			    = &mpModelData->unk38[factory.getMaterialID(i)];
 		}
 	} else {
 		for (u16 i = 0; i < mpModelData->mMaterialNum; i++) {
-			mpModelData->mMaterials[i]->unk18 = 0xC0000000;
+			mpModelData->mMaterials[i]->unk18
+			    = J3DMaterial::DIFF_FLAG | J3DMaterial::UNIQUE_FLAG;
 		}
 	}
 }

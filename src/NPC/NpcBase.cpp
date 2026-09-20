@@ -659,7 +659,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	} else if ((cue & CUE_MOVE) && mHolder == nullptr && !isAirborne()
 	           && !belongToGround() && mSpine->getTime() != 0
 	           && mActorType != 0x4000018 && isNerveMaybeDontMovement()
-	           && !checkLiveFlag(LIVE_FLAG_SINK_BOTTOM)) {
+	           && !checkLiveFlag(TBaseNPC::LIVE_FLAG_SINK_BOTTOM)) {
 		TNPCManager* manager = (TNPCManager*)mManager;
 		f32 farClip          = gpConductor->unk84.mEnemyFarClip.get();
 		if (manager != nullptr)
@@ -676,7 +676,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (!bVar5) {
-		offLiveFlag(LIVE_FLAG_UNK10000);
+		offLiveFlag(LIVE_FLAG_DONT_TALK);
 		return;
 	}
 
@@ -696,7 +696,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 					            * rate,
 					        mIndividualParams->mTurnAnmMinRate.get() * rate,
 					        mIndividualParams->mTurnAnmMaxRate.get() * rate),
-					    0);
+					    ANM_TYPE_BCK);
 				}
 			}
 

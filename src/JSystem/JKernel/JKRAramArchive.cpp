@@ -10,6 +10,8 @@
 #include <JSystem/JUtility/JUTException.hpp>
 #include "dolphin/os.h"
 
+JKRAramArchive::JKRAramArchive() { }
+
 JKRAramArchive::JKRAramArchive(s32 entryNumber,
                                JKRArchive::EMountDirection mountDirection)
     : JKRArchive(entryNumber, MOUNT_ARAM)
@@ -51,6 +53,25 @@ JKRAramArchive::~JKRAramArchive()
 		mIsMounted = false;
 	}
 }
+
+void JKRAramArchive::fixedInit(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+}
+
+bool JKRAramArchive::mountFixed(s32 entryNum)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return false;
+}
+
+bool JKRAramArchive::mountFixed(const char* path)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return false;
+}
+
+void JKRAramArchive::unmountFixed() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 bool JKRAramArchive::open(s32 entryNum, EMountDirection mountDirection)
 {
@@ -162,6 +183,36 @@ void* JKRAramArchive::fetchResource(void* buffer, u32 bufferSize,
 	return buffer;
 }
 
+u32 JKRAramArchive::getAramAddress_Entry(SDIFileEntry* fileEntry)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
+u32 JKRAramArchive::getAramAddress(const char* file)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
+u32 JKRAramArchive::getAramAddress(u32 param_1, const char* file)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
+u32 JKRAramArchive::getAramAddress(u16 idx)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
+u32 JKRAramArchive::getIdxAramAddress(u32 idx)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
 u32 JKRAramArchive::fetchResource_subroutine(u32 srcAram, u32 srcLength,
                                              u8* dst, u32 dstLength,
                                              int compression)
@@ -199,7 +250,7 @@ u32 JKRAramArchive::fetchResource_subroutine(u32 entryNum, u32 length,
 	switch (compression) {
 	case JKR_COMPRESSION_NONE:
 		buffer = (u8*)JKRAllocFromHeap(pHeap, alignedLen, 0x20);
-		JUT_ASSERT(677, buffer != NULL);
+		JUT_ASSERT(buffer != NULL);
 		JKRAramToMainRam(entryNum, buffer, alignedLen, EXPAND_SWITCH_DEFAULT,
 		                 alignedLen, nullptr, -1, nullptr);
 		*out = buffer;
@@ -207,17 +258,17 @@ u32 JKRAramArchive::fetchResource_subroutine(u32 entryNum, u32 length,
 
 	case JKR_COMPRESSION_YAY0:
 	case JKR_COMPRESSION_YAZ0: {
+		u32 readLen;
 		u8* header = (u8*)JKRAllocFromHeap(pHeap, sizeof(SArcHeader), 0x20);
 		JKRAramToMainRam(entryNum, header, sizeof(SArcHeader),
 		                 EXPAND_SWITCH_DEFAULT, 0, nullptr, -1, nullptr);
-		u32 decompressedLen = JKRDecompExpandSize(header);
+		u32 expandSize = JKRDecompExpandSize(header);
 		JKRFreeToHeap(pHeap, header);
-		decompressedLen = ALIGN_NEXT(decompressedLen, sizeof(SArcHeader));
+		u32 decompressedLen = ALIGN_NEXT(expandSize, sizeof(SArcHeader));
 
 		buffer
 		    = (u8*)JKRAllocFromHeap(pHeap, decompressedLen, sizeof(SArcHeader));
-		JUT_ASSERT(703, buffer);
-		u32 readLen;
+		JUT_ASSERT(buffer);
 		JKRAramToMainRam(entryNum, buffer, alignedLen, EXPAND_SWITCH_DECOMPRESS,
 		                 decompressedLen, pHeap, -1, &readLen);
 		*out = buffer;

@@ -8,6 +8,7 @@
 #include <Strategic/Strategy.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
 #include <MSound/MSound.hpp>
@@ -130,7 +131,7 @@ void TMapObjBase::setUpMapCollision(u16 param_1)
 
 void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 {
-	f32 currFrame = mMActor->getFrameCtrl(0)->getFrame();
+	f32 currFrame = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	if (currFrame <= param_2 && param_2 < currFrame + param_3) {
 		SMSGetMSound()->startSoundActor(param_1, &mPosition, 0, nullptr, 0, 4);
 	}
@@ -181,7 +182,7 @@ bool TMapObjBase::animIsFinished() const
 	    || !mMapObjData->mAnim->unk4[unkFE].unk4)
 		return true;
 
-	if (mMActor->curAnmEndsNext(0, nullptr))
+	if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 		return true;
 	else
 		return false;
@@ -226,11 +227,11 @@ void TMapObjBase::startAnim(u16 param_1)
 		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
 			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
 			if (d2->unk4 != nullptr) {
-				u8 idx = d2->unk8;
-				mMActor->getFrameCtrl(idx)->setRate(0.0f);
-				mMActor->getFrameCtrl(idx)->setFrame(0.0f);
-				mMActor->getUnk28(idx)->unk0 = 0xffffffff;
-				unkFE                        = 0xffff;
+				u8 type = d2->unk8;
+				mMActor->getFrameCtrl(type)->setRate(0.0f);
+				mMActor->getFrameCtrl(type)->setFrame(0.0f);
+				mMActor->getUnk28(type)->unk0 = 0xffffffff;
+				unkFE                         = 0xffff;
 			}
 		}
 		stopAnmSound();
@@ -250,8 +251,8 @@ void TMapObjBase::startAnim(u16 param_1)
 			setAnmSound(data->unk10);
 	} else {
 		MActor* actor = mMActor;
-		actor->getModel()->mModelData->mJointNodePointer[0]->mMtxCalc
-		    = actor->unk8;
+		actor->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
+		    actor->unk8);
 	}
 }
 
@@ -300,7 +301,8 @@ void TMapObjBase::makeObjDead()
 		mHolder = nullptr;
 	}
 
-	onLiveFlag(0xD9);
+	onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10
+	           | LIVE_FLAG_UNK40 | LIVE_FLAG_AIRBORNE);
 	mState = STATE_DEAD;
 	if (mMActor)
 		SMS_HideAllShapePacket(getModel());
@@ -495,10 +497,10 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if ((cue & CUE_CALC_ANIM) && mMActor) {
 			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
-				if (getModel()->mShapePackets->unk30 != 0)
+				if (getModel()->getShapePacket(0)->isVisible())
 					SMS_HideAllShapePacket(getModel());
 			} else {
-				if (getModel()->mShapePackets->unk30 == 0)
+				if (!getModel()->getShapePacket(0)->isVisible())
 					SMS_ShowAllShapePacket(getModel());
 			}
 		}
@@ -550,17 +552,17 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		calc();
 		if (mMActor) {
 			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
-				if (getModel()->mShapePackets->unk30 != 0)
+				if (getModel()->getShapePacket(0)->isVisible())
 					SMS_HideAllShapePacket(getModel());
 			} else {
-				if (getModel()->mShapePackets->unk30 == 0)
+				if (!getModel()->getShapePacket(0)->isVisible())
 					SMS_ShowAllShapePacket(getModel());
 			}
 		}
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
 			cue &= ~CUE_CALC_ANIM;
 		} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK200)) {
-			if (mMActor && mMActor->curAnmEndsNext(0, nullptr))
+			if (mMActor && mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 				onMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		}
 	}
@@ -587,11 +589,11 @@ u32 TMapObjBase::getShadowType()
 	if (isActorType(0x40000034) || isActorType(0x40000035)
 	    || isActorType(0x40000036) || isActorType(0x40000037)
 	    || isActorType(0x40000039)) {
-		return 2;
+		return SHADOW_TYPE_TREE;
 	} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000)) {
-		return 1;
+		return SHADOW_TYPE_SQUARE;
 	} else {
-		return 0;
+		return SHADOW_TYPE_CIRCLE;
 	}
 }
 
@@ -628,7 +630,8 @@ void TMapObjBase::initAndRegister(const char* param_1)
 	unkF4 = param_1;
 	initMapObj();
 	if (mMapObjData->unkC) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>(mMapObjData->unkC)
+		static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search(mMapObjData->unkC))
 		    ->push_back(this);
 	}
 }

@@ -7,61 +7,70 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 
-// Matches 100% with dont_inline...
-// #pragma dont_inline on
-SampleCtrlJoint* SampleCtrlModelData::makeHierarchy(J3DJoint* param_1)
+SampleCtrlJoint* SampleCtrlModelData::makeHierarchy(J3DJoint* joint)
 {
-	for (J3DMaterial* it = param_1->getMesh(); it != nullptr;
+	// NOTE: I am almost certain that these were asserts, but it's impossible to
+	// tell which ones and where. More inlines is not the answer -- we're out of
+	// stack frame padding.
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+	(void)0;
+
+	for (J3DMaterial* it = joint->getMesh(); it != nullptr;
 	     it              = it->getNext()) {
-		J3DShape* shape                  = it->getShape();
-		unk8[param_1->getJntNo()]->unk14 = unkC[it->getIndex()];
-		unkC[it->getIndex()]->unk10      = unk10[shape->getIndex()];
+		J3DShape* shape                   = it->getShape();
+		mJoints[joint->getJntNo()]->unk14 = mMaterials[it->getIndex()];
+		mMaterials[it->getIndex()]->unk10 = mShapes[shape->getIndex()];
 	}
 
-	if (J3DJoint* child = (J3DJoint*)param_1->getChild()) {
-		unk8[param_1->getJntNo()]->unkC = makeHierarchy(child);
+	if (J3DJoint* child = (J3DJoint*)joint->getChild()) {
+		mJoints[joint->getJntNo()]->mChild = makeHierarchy(child);
 	}
 
-	if (J3DJoint* next = (J3DJoint*)param_1->getYounger()) {
-		unk8[param_1->getJntNo()]->unk10 = makeHierarchy(next);
+	if (J3DJoint* next = (J3DJoint*)joint->getYounger()) {
+		mJoints[joint->getJntNo()]->mYounger = makeHierarchy(next);
 	}
 
-	return unk8[param_1->getJntNo()];
+	return mJoints[joint->getJntNo()];
 }
-// #pragma dont_inline off
 
-SampleCtrlModelData::SampleCtrlModelData(J3DModelData* param_1)
+SampleCtrlModelData::SampleCtrlModelData(J3DModelData* model_data)
     : unk4(nullptr)
-    , unk14(nullptr)
+    , mRootJoint(nullptr)
     , unk18(0)
     , unk1A(0)
     , unk1C(0)
     , unk1E(0)
 {
-	unk8  = nullptr;
-	unkC  = nullptr;
-	unk10 = nullptr;
-	unk4  = param_1;
-	unk18 = param_1->getJointNum();
-	unk1A = param_1->getMaterialNum();
-	unk1C = param_1->getShapeNum();
-	unk1E = param_1->getTexture()->getNum();
-	unk8  = new SampleCtrlJoint*[param_1->getJointNum()];
-	unkC  = new SampleCtrlMaterial*[param_1->getMaterialNum()];
-	unk10 = new SampleCtrlShape*[param_1->getShapeNum()];
-	for (u16 i = 0; i < param_1->getJointNum(); ++i) {
-		unk8[i]       = new SampleCtrlJoint(param_1->getJointNodePointer(i));
-		unk8[i]->unk8 = param_1->getJointName()->getName(i);
+	mJoints    = nullptr;
+	mMaterials = nullptr;
+	mShapes    = nullptr;
+	unk4       = model_data;
+	unk18      = model_data->getJointNum();
+	unk1A      = model_data->getMaterialNum();
+	unk1C      = model_data->getShapeNum();
+	unk1E      = model_data->getTexture()->getNum();
+	mJoints    = new SampleCtrlJoint*[model_data->getJointNum()];
+	mMaterials = new SampleCtrlMaterial*[model_data->getMaterialNum()];
+	mShapes    = new SampleCtrlShape*[model_data->getShapeNum()];
+	for (u16 i = 0; i < model_data->getJointNum(); ++i) {
+		mJoints[i] = new SampleCtrlJoint(model_data->getJointNodePointer(i));
+		mJoints[i]->unk8 = model_data->getJointName()->getName(i);
 	}
 
-	for (u16 i = 0; i < param_1->getMaterialNum(); ++i) {
-		unkC[i] = new SampleCtrlMaterial(param_1->getMaterialNodePointer(i));
-		unkC[i]->unk8 = param_1->getMaterialName()->getName(i);
+	for (u16 i = 0; i < model_data->getMaterialNum(); ++i) {
+		mMaterials[i]
+		    = new SampleCtrlMaterial(model_data->getMaterialNodePointer(i));
+		mMaterials[i]->unk8 = model_data->getMaterialName()->getName(i);
 	}
 
-	for (u16 i = 0; i < param_1->getShapeNum(); ++i) {
-		unk10[i] = new SampleCtrlShape(param_1->getShapeNodePointer(i));
+	for (u16 i = 0; i < model_data->getShapeNum(); ++i) {
+		mShapes[i] = new SampleCtrlShape(model_data->getShapeNodePointer(i));
 	}
 
-	unk14 = makeHierarchy(param_1->getRootNode());
+	mRootJoint = makeHierarchy(model_data->getRootNode());
 }
+
+SampleCtrlModel::SampleCtrlModel(J3DModel*) { }

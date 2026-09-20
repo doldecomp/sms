@@ -2,6 +2,7 @@
 #include <Strategic/Spine.hpp>
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <MarioUtil/MapUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -191,8 +192,8 @@ void TBaseNPC::changeNerveFromTalk_()
 	mSpine->setNext(nullptr);
 
 	if (mThrowCtrl != nullptr) {
-		if (checkLiveFlag(LIVE_FLAG_UNK20000000)) {
-			offLiveFlag(LIVE_FLAG_UNK20000000);
+		if (checkLiveFlag(LIVE_FLAG_DONT_THROW)) {
+			offLiveFlag(LIVE_FLAG_DONT_THROW);
 		} else {
 			mSpine->setNext(&TNerveNPCThrow::theNerve());
 		}
@@ -347,7 +348,8 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		if (gpMarDirector->isTalkOrDemoModeNow())
 			return;
 
-		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		                             nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 		                              0.0f, 0, 0, 4);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_FIRE_FIGHTING))
@@ -456,7 +458,10 @@ void TBaseNPC::changeNerveProc_()
 			bVar5 = true;
 		} else if (mTalkForbidCount == 0 && !isJellyFishMare()
 		           && !gpCamera->isTalkCameraInbetween() && mHolder == nullptr
-		           && !checkLiveFlag(0xc10207)
+		           && !checkLiveFlag(
+		               LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
+		               | LIVE_FLAG_UNK200 | LIVE_FLAG_DONT_TALK
+		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
 			if (isSunflowerReviving() && isNerveCanGoToTalk()

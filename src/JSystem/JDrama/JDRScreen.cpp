@@ -25,9 +25,18 @@ TScreen::TScreen(const TRect& param_1, const char* name)
 	unk14 = new TCamConnecter;
 }
 
+void TScreen::isScissor() const { }
+
+TViewObj* TScreen::getCamera() const { return ((TViewConnecter*)unk14)->unk10; }
+
 void TScreen::assignCamera(TViewObj* cam)
 {
 	((TViewConnecter*)unk14)->unk10 = cam;
+}
+
+TViewObj* TScreen::getViewObj() const
+{
+	return ((TViewConnecter*)unk14)->unk14;
 }
 
 void TScreen::assignViewObj(TViewObj* view_obj)

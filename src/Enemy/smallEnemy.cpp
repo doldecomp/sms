@@ -205,7 +205,7 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	if (!unk124->getGraph() || unk124->getGraph()->isDummy())
 		unk124->init(gpConductor->getGraphByName("main"));
 
-	setGoalPathMario();
+	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	initAnmSound();
 }
 
@@ -274,7 +274,7 @@ void TSmallEnemy::reset()
 
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_UNK20000);
-	offLiveFlag(LIVE_FLAG_UNK10000);
+	offLiveFlag(LIVE_FLAG_MELT_ON_DEATH);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 
 	if (getSaveParams()->mSLGenerateOnlyDead.get())
@@ -369,23 +369,7 @@ void TSmallEnemy::genEventCoin()
 			Mtx44 local_c0;
 
 			f32 angle = 360.0f / unk18C * i + mRotation.y;
-			f32 s     = JMASin(angle);
-			f32 c     = JMACos(angle);
-
-			local_c0[0][0] = c;
-			local_c0[0][1] = 0.0f;
-			local_c0[0][2] = s;
-			local_c0[0][3] = 0.0f;
-
-			local_c0[1][0] = 0.0f;
-			local_c0[1][1] = 1.0f;
-			local_c0[1][2] = 0.0f;
-			local_c0[1][3] = 0.0f;
-
-			local_c0[2][0] = -s;
-			local_c0[2][1] = 0.0f;
-			local_c0[2][2] = c;
-			local_c0[2][3] = 0.0f;
+			MsMtxSetRotY(local_c0, angle);
 
 			Vec local_d0;
 			local_d0.x = 0.0f;
@@ -415,12 +399,12 @@ void TSmallEnemy::setAfterDeadEffect()
 {
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_ENM_DISAP_A, &mPosition, 0, nullptr)) {
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_ENM_DISAP_B, &mPosition, 0, nullptr)) {
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
@@ -643,7 +627,7 @@ bool TSmallEnemy::changeMove()
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
 
 		mJuiceBlock->mPosition.y += unk188 * 2.0f
-		                            * JMASin(mSpine->getTime() * 130.0f / time)
+		                            * MsSin(mSpine->getTime() * 130.0f / time)
 		                            * TSmallEnemyManager::mBlockWaitMoveY;
 
 		mJuiceBlock->mRotation.y += mSpine->getTime() * 1080.0f / time;
@@ -748,7 +732,7 @@ void TSmallEnemy::changeOut()
 	mJuiceBlock->mPosition = mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
-	getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
 	mJuiceBlock = nullptr;
 }
@@ -771,7 +755,7 @@ void TSmallEnemy::decHpByWater(THitActor* param_1)
 
 void TSmallEnemy::kill()
 {
-	if (!checkLiveFlag(LIVE_FLAG_DEAD))
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
 	mHitPoints = 1;
@@ -779,9 +763,9 @@ void TSmallEnemy::kill()
 		mSpine->reset();
 		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
-
-		onLiveFlag(LIVE_FLAG_UNK40);
 	}
+
+	onLiveFlag(LIVE_FLAG_UNK40);
 }
 
 bool TSmallEnemy::isFindMario(float param_1)
@@ -858,9 +842,8 @@ void TSmallEnemy::generateEffectColumWater()
 void TSmallEnemy::setBckAnm(int index)
 {
 	mCurrentBckAnm = index;
-	getMActor()->setBckFromIndex(index);
-	const char** table = getBasNameTable();
-	setAnmSound(!table ? nullptr : table[index]);
+	mMActor->setBckFromIndex(index);
+	setAnmSound(getBas(index));
 }
 
 void TSmallEnemy::expandCollision()
@@ -974,7 +957,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 				self->generateEffectColumWater();
 		}
 
-		if (self->checkLiveFlag(LIVE_FLAG_UNK10000)) {
+		if (self->checkLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH)) {
 			self->setMeltAnm();
 		} else {
 			if (self->checkUnk150(0x20)) {
@@ -1000,15 +983,17 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 		uVar8 = 0;
 
 	if (self->checkCurAnmEnd(0)
-	        && spine->getTime()
-	               > uVar8 + self->getMActor()->getFrameCtrl(0)->getEnd()
+	        && spine->getTime() > uVar8
+	                                  + self->getMActor()
+	                                        ->getFrameCtrl(ANM_TYPE_BCK)
+	                                        ->getEnd()
 	    || spine->getTime() > 360 || self->getUnk184() != 0) {
 		self->genRandomItem();
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
-		self->offLiveFlag(LIVE_FLAG_UNK10000);
+		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->stopAnmSound();
 
@@ -1114,7 +1099,7 @@ DEFINE_NERVE(TNerveSmallEnemyChange, TLiveActor)
 	int changeTime = self->getChangeBlockTime();
 
 	if (spine->getTime() == 0) {
-		self->getMActor()->setFrameRate(0.0f, 0);
+		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->getPosition(),
 		                                            0, nullptr);
 	}

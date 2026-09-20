@@ -132,6 +132,28 @@ Reconstructing correct inline calls is crucial in matching code correctly. When 
 
 UNUSED functions from the MAP must often be reconstructed even when they do not exist as standalone code in the final binary: their inlined bodies still determine caller codegen (register allocation, load offsets, branch layout). Treat their MAP signature and size as constraints, recover a plausible body from repeated callsite patterns, and validate by diffing the caller(s) after each inline-shape change rather than expecting a direct symbol-level match for the UNUSED function itself.
 
+### A getter that repeats before every operation is a wrapper inline
+
+m2c writes an inlined wrapper as one pointer local that is assigned again and again:
+
+```cpp
+pBuf = DSPInterface::getDSPHandle(channel->unk0);
+pBuf->setPauseFlag(1);
+pBuf = DSPInterface::getDSPHandle(channel->unk0);
+pBuf->flushChannel();
+```
+
+When the same lookup comes back before every single operation, the original source almost always called a wrapper that hides the lookup:
+
+```cpp
+DSPInterface::setPauseFlag(channel->unk0, 1);
+DSPInterface::flushChannel(channel->unk0);
+```
+
+Both forms give the same instructions, but the wrapper form reads correctly and it colours the registers correctly in long functions.
+`JAInter::StreamLib::callBack` went from 98.7% to 99.8% on this rewrite alone.
+Keep the pointer local only where the code **reads a field** through it.
+
 ## Reference Locals Affect Register Allocation
 
 Introducing a reference local before accessing struct members can change how the compiler allocates registers:
@@ -449,6 +471,177 @@ for (...) {
 ```
 Concrete case (`DrawUtil.cpp` `TTrembleModelEffect::init`): the typed-`src` form
 CSE'd + unrolled ×8 (54%); the `void*`-cast form reloaded + unrolled ×2 (100%).
+
+## `const` on an inline's pointer parameter also defeats CSE
+
+The same effect appears at an inline boundary, and there the fix is one word.
+When an inline reads a field through a pointer parameter and the caller reads
+the *same* field of the *same* object, MWCC normally merges the two into one
+load. Making the parameter point to `const` stops the merge, and both loads
+appear.
+
+```cpp
+// one load of symbol->mNameOffset, shared with the caller
+const char* getSymbolName(TSpcSymbol* symbol);
+// two loads: the inline's own, and the caller's
+const char* getSymbolName(const TSpcSymbol* symbol);
+```
+
+Concrete case (`Strategic/spcinterp.cpp` `TSpcInterp::dump`): the original loads
+`symbol->mNameOffset` twice, once inside the inlined `getSymbolName` and once as
+a `SpcTrace` argument. Adding `const` took `dump` from 98.8% to 100%, and left
+every other caller of `getSymbolName` matching.
+
+This is worth reaching for before restructuring anything: it is a smaller and
+far more plausible change than the usual alternatives (hoisting the field into a
+local, or dropping the intermediate local altogether), both of which were tried
+here and were worse.
+
+## An inline's locals are numbered in reverse when it is inlined
+
+This one explains a whole family of "the out-of-line copy and the inlined copy
+want opposite stack layouts" puzzles, so it is worth knowing the mechanism.
+
+`CParser_NewLocalDataObject` **prepends** each new local to the function's
+`locals` list, so the list is in reverse declaration order. Two consumers then
+walk that list forward:
+
+- `assign_locals_to_memory(locals)` gives out stack offsets, **increasing** —
+  so when a function is compiled normally, the **first-declared** local ends up
+  at the **highest** offset.
+- `CInline_SetupArgsExpression` recreates the callee's locals in the caller,
+  walking the packed array forward and prepending each one — which **reverses
+  the order a second time**. So in an inlined copy the **last-declared** local
+  ends up at the highest offset.
+
+The consequence: any two named locals of an inline function **swap places**
+between its out-of-line copy and every site that inlines it. No declaration
+order satisfies both. Measured on `TSpcInterp::fetchU32`: `src` first gives the
+four inline sites 100% and the out-of-line copy 99.8%; `result` first gives
+exactly the reverse.
+
+The escape is not to reorder but to **reduce the function to a single local
+that needs a stack home** — with nothing to swap, both layouts agree. A local
+whose initialiser carries a type-conversion node gets propagated into a compiler
+temporary and stops needing a home, so writing the accessor to return `void*`
+and casting at the call site is enough:
+
+```cpp
+void* getText(u32 offset);                        // was u8*
+u8* src = (u8*)mBinary->getText(mProgramCounter);  // now a temp, not a local
+u32 result;                                       // the only named local left
+```
+
+That took `fetchU32`, `fetchS32`, `execvar` and `execfunc` to 100% at once
+(`spcinterp` 62.2% -> 67.7% matched code). Note it also fixed the two call sites
+that fetch *twice*: a second named local was what pushed their temporaries out
+of step, not anything about the second fetch itself.
+
+Symptom to recognise: the out-of-line copy of a weak inline and its inline sites
+each want the same pair of slots in opposite orders, and both frames are already
+the right size.
+
+## `T x = f();` costs one more stack object than `T x; x = f();`
+
+When `f` is inlined, initialising a local from the call builds the return value
+in its own temporary and then copies it into `x` — **two** stack objects.
+Declaring first and assigning lands the inlined return straight in `x`'s slot —
+**one**. Neither spelling changes a single instruction; only the frame moves, so
+this is the cheapest knob there is when a frame is off by exactly the size of
+one object.
+
+```cpp
+ExecFunction f = chooseExecFunction(cmd);   // return temp + copy
+ExecFunction f; f = chooseExecFunction(cmd); // return lands in f
+```
+
+Both directions have paid off in `Strategic/spcinterp.cpp`:
+- `TSpcInterp::update` was 8 bytes too big holding an inlined 12-byte
+  pointer-to-member. Declare-then-assign took it to 100%. (Binding a
+  `const T&` instead is in between — it drops the copy but adds an address
+  register: 96.2%.)
+- `TSpcBinary::init` was 8 bytes too *small*. Spelling the inlined `calcKey`
+  result as a local — `u32 hash = calcKey(...); symbol->mNameHash = hash;`
+  instead of assigning the call directly — added exactly the two missing
+  objects and took it to 100%, with `calcAndStoreKeys` still size-exact
+  against the map.
+
+So: frame one object too big, look for an initialisation to split; one object
+too small, look for a call result that should have been named.
+
+## Reading a value into a local removes a bound temporary
+
+`CInline_SetupArgsExpression` binds an argument to a compiler temporary whenever
+the expression is unsafe to repeat — and a call is always unsafe. A read of an
+unmodified local is safe, so it gets substituted instead and **no temporary is
+created**. When a frame holds one 4-byte temporary too many, moving the argument
+into a local is often the whole fix:
+
+```cpp
+interp->push((int)interp->pop().typeof());   // binds a temp for the argument
+u32 type = interp->pop().typeof();           // no temp; `type` stays in a register
+interp->push((int)type);
+```
+
+Concrete case (`Strategic/spcinterp.cpp` `spcTypeof`): 96.3% to 100%.
+
+Beware the mirror image: this only helps when the local itself does not need a
+slot. If the enclosing function already has a settled set of named locals, the
+new local lands in the local region and shifts every offset above it, which
+costs more than the temporary saved. The same change in `execadd` dropped it
+from 100.0% to 96.6% for exactly that reason.
+
+## Each inline level in a call chain leaves one dead 4-byte temporary
+
+An expression such as `gpFoo->getBar()->baz()` builds one compiler temporary per
+inline level that it goes through, and each temporary keeps a stack slot even
+when the optimiser removes every instruction that touched it.
+The instruction stream is then identical to the ROM's and only the stack offsets
+disagree — the classic "our frame is 8 bytes short" symptom.
+
+Two levers add a level, and both are ordinary source that a person would write:
+
+- **Go through the global's inline accessor.**
+  `SMSGetMarDirector()->getConsole()` instead of `gpMarDirector->getConsole()`
+  adds exactly one temporary. This only works when the *next* member call is
+  itself inline; if the accessor result feeds an out-of-line `bl` at once, MWCC
+  reads the global in place and no temporary appears.
+- **Hold the chain result in a named local.**
+  `TGCConsole2* console = SMSGetMarDirector()->getConsole(); console->foo();`
+  adds one more temporary than the same expression written in one line, because
+  the local is used as the receiver of the following call.
+
+Concrete case (`System/EventWatcher.cpp` `evManiCoinDown`): the bare
+`gpMarDirector->getConsole()->startAppearStar()` gave 2 temporaries and a 0x28
+frame; the accessor gave 3 and 0x30 with the wrong layout; the accessor plus the
+`console` local gave 4 and a 100% match.
+
+Because the effect depends on what follows the accessor, do not convert a whole
+file blindly — measure each site. In the same file `evSetNextStage` is
+measurably *worse* with the accessor, which is real evidence that the original
+used the bare global there.
+
+## A by-value class parameter forces the copy through memory
+
+When a class is passed by value, MWCC materialises the copy and reads the copy
+back, even for a two-word POD:
+
+```
+lwz  r4, 0(r3)        ; source.mType stays in a register
+lwz  r0, 4(r3)
+stw  r0, 0x38(r1)     ; source.mData
+stw  r4, 0x3c(r1)     ; copy.mType
+lwz  r0, 0x38(r1)
+stw  r0, 0x40(r1)     ; copy.mData
+lwz  r0, 0x3c(r1)     ; the copy is read back from memory
+```
+
+Two stack objects, and the second field never gets forwarded through the
+register. Seeing this shape in the target is a reliable sign that the value goes
+into a by-value parameter — in `EventWatcher.cpp` that parameter is
+`getNameRefPtr(TSpcSlice)`. A named local initialised from the same call gives
+two objects as well, but forwards the first field through a register, so the two
+shapes are easy to tell apart.
 
 ## Working with JSUMemoryInputStream
 

@@ -8,53 +8,83 @@
 #include <Camera/Camera.hpp>
 #include <macros.h>
 
-void SDLModelData::entrySameMat(J3DMaterial* param_1, SDLDrawBufToken* param_2)
-{
-	SDLModel* model = param_2->unk8;
-	while (model != nullptr) {
-		if (model->unkA8 & 0x1)
-			break;
-		model = model->unkA4;
+class SDLDrawBufToken {
+public:
+	SDLDrawBufToken()
+	{
+		unk0[0] = nullptr;
+		unk0[1] = nullptr;
+		mHead   = nullptr;
 	}
 
-	if (model != nullptr) {
-		j3dSys.setModel(model);
+	void setDrawBufs()
+	{
+		unk0[0] = j3dSys.getDrawBuffer(0);
+		unk0[1] = j3dSys.getDrawBuffer(1);
+	}
+
+	bool checkDrawBufs()
+	{
+		return unk0[0] == j3dSys.getDrawBuffer(0)
+		       && unk0[1] == j3dSys.getDrawBuffer(1);
+	}
+
+	void push(SDLModel* model)
+	{
+		model->mNextSameMat = mHead;
+		mHead               = model;
+	}
+
+	/* 0x0 */ J3DDrawBuffer* unk0[2];
+	/* 0x8 */ SDLModel* mHead;
+};
+
+void SDLModelData::entrySameMat(J3DMaterial* material, SDLDrawBufToken* token)
+{
+	SDLModel* head = token->mHead;
+	while (head != nullptr) {
+		if (head->mSdlFlags & SDLModel::FLAG_UNK1)
+			break;
+		head = head->mNextSameMat;
+	}
+
+	if (head != nullptr) {
+		j3dSys.setModel(head);
 		j3dSys.setTexture(unk0->getTexture());
 
-		SDLMatPacket* matPacket
-		    = (SDLMatPacket*)model->getMatPacket(param_1->getIndex());
+		J3DMatPacket* matPacket = head->getMatPacket(material->getIndex());
 		matPacket->drawClear();
 
 		J3DShapePacket* shapePacket
-		    = model->getShapePacket(param_1->getShape()->getIndex());
+		    = head->getShapePacket(material->getShape()->getIndex());
 		shapePacket->drawClear();
 
 		matPacket->setShapePacket(shapePacket);
 
-		SDLModel* model2 = model->unkA4;
-		while (model2 != nullptr) {
-			if (model->unkA8 & 1) {
+		SDLModel* model = head->mNextSameMat;
+		while (model != nullptr) {
+			if (model->mSdlFlags & SDLModel::FLAG_UNK1) {
 				J3DShapePacket* shapePacket2
-				    = model2->getShapePacket(param_1->getShape()->getIndex());
+				    = model->getShapePacket(material->getShape()->getIndex());
 				shapePacket2->drawClear();
 				matPacket->addShapePacket(shapePacket2);
 			}
-			model2 = model2->unkA4;
+			model = model->mNextSameMat;
 		}
-		param_2->unk0[param_1->isDrawModeOpaTexEdge() ? 0 : 1]->entryImm(
+		token->unk0[material->isDrawModeOpaTexEdge() ? 0 : 1]->entryImm(
 		    matPacket, 0);
 	}
 }
 
-void SDLModelData::entryNode(J3DNode* param_1, SDLDrawBufToken* param_2)
+void SDLModelData::entryNode(J3DNode* node, SDLDrawBufToken* token)
 {
-	J3DJoint* joint       = (J3DJoint*)param_1;
+	J3DJoint* joint       = (J3DJoint*)node;
 	J3DMaterial* material = joint->getMesh();
 	while (material != nullptr) {
-		if (material->getShape()->checkFlag(0x1)) {
+		if (material->getShape()->checkFlag(J3DShpFlag_Visible)) {
 			material = material->getNext();
 		} else {
-			entrySameMat(material, param_2);
+			entrySameMat(material, token);
 			material = material->getNext();
 		}
 	}
@@ -71,13 +101,29 @@ void SDLModelData::recursiveEntry(J3DNode* param_1, SDLDrawBufToken* param_2)
 
 SDLModelData::SDLModelData(J3DModelData* model)
     : unk0(model)
-    , unk4(0)
+    , mDlHost(0)
     , unk18(0)
 {
 	gpConductor->registerSDLModelData(this);
 }
 
-void SDLModelData::registerSDLModel(SDLModel*) { }
+void SDLModelData::registerSDLModel(SDLModel* model)
+{
+	typedef JGadget::TList<SDLDrawBufToken*>::iterator I;
+	for (I it = mDbTokenList.begin(), e = mDbTokenList.end(); it != e; it++) {
+		if ((*it)->checkDrawBufs()) {
+			(*it)->push(model);
+			return;
+		}
+	}
+
+	SDLDrawBufToken* token = new SDLDrawBufToken;
+
+	token->setDrawBufs();
+	token->push(model);
+
+	mDbTokenList.push_back(token);
+}
 
 void SDLModelData::entrySDLModels()
 {
@@ -85,48 +131,73 @@ void SDLModelData::entrySDLModels()
 		return;
 
 	typedef JGadget::TList<SDLDrawBufToken*>::iterator I;
-	for (I it = unk8.begin(), e = unk8.end(); it != e; ++it) {
+	for (I it = mDbTokenList.begin(), e = mDbTokenList.end(); it != e; it++) {
 		recursiveEntry(unk0->getRootNode(), *it);
 
-		SDLModel* model = (*it)->unk8;
+		SDLModel* model = (*it)->mHead;
 		while (model != nullptr) {
-			model->unkA8 &= ~0x1;
-			model = model->unkA4;
+			model->mSdlFlags &= ~SDLModel::FLAG_UNK1;
+			model = model->mNextSameMat;
 		}
 
-		(*it)->unk8 = nullptr;
+		(*it)->mHead = nullptr;
 	}
 }
 
 SDLMatPacket::SDLMatPacket() { }
 
-void SDLMatPacket::beParasiteDL(J3DMatPacket*) { }
-
-void SDLMatPacket::newSingleDL(u32) { }
-
-SDLModel::SDLModel(SDLModelData* param_1, u32 param_2, u32 param_3)
-    : unkA0(param_1)
-    , unkA4(nullptr)
-    , unkA8(0)
+void SDLMatPacket::beParasiteDL(J3DMatPacket* host)
 {
-	initialize();
-	entryModelDataSDL(param_1, param_2, param_3);
+	mpDisplayListObj            = new J3DDisplayListObj;
+	mpDisplayListObj->mpData[0] = host->getDisplayListObj()->mpData[0];
+	mpDisplayListObj->mpData[1] = host->getDisplayListObj()->mpData[1];
+	mpDisplayListObj->mSize     = host->getDisplayListObj()->mSize;
+	mpDisplayListObj->mCapacity = host->getDisplayListObj()->mCapacity;
 }
 
-SDLModel::SDLModel(J3DModelData*, u32) { }
-
-void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
-                                 u32 param_3)
+void SDLMatPacket::newSingleDL(u32 size)
 {
-	J3DModelData* md = param_1->unk0;
+	mpDisplayListObj            = new J3DDisplayListObj;
+	mpDisplayListObj->mCapacity = ALIGN_NEXT(size, 0x20);
+	mpDisplayListObj->mpData[0] = new (0x20) u8[mpDisplayListObj->mCapacity];
+	mpDisplayListObj->mpData[1] = mpDisplayListObj->mpData[0];
+	mpDisplayListObj->mSize     = 0;
+}
+
+SDLModel::SDLModel(SDLModelData* model_data, u32 flags, u32 mtx_num)
+    : mSdlModelData(model_data)
+    , mNextSameMat(nullptr)
+    , mSdlFlags(0)
+{
+	initialize();
+	entryModelDataSDL(model_data, flags, mtx_num);
+}
+
+SDLModel::SDLModel(J3DModelData* model_data, u32 flags)
+    : mSdlModelData(nullptr)
+    , mNextSameMat(nullptr)
+    , mSdlFlags(0)
+{
+	// NOTE: this is guesswork on dead code
+	initialize();
+	// BUG: stack use-after-free. Don't call this ;)
+	SDLModelData sdlModelData(model_data);
+	mSdlModelData = &sdlModelData;
+	entryModelDataSDL(mSdlModelData, flags, 1);
+}
+
+void SDLModel::entryModelDataSDL(SDLModelData* model_data, u32 flags,
+                                 u32 mtx_num)
+{
+	J3DModelData* md = model_data->unk0;
 
 	mModelData = md;
-	if (param_2 & 1)
-		unkA8 |= 0x4;
-	if (param_2 & 2)
-		unkA8 |= 2;
-	if (param_2 & 4)
-		unkA8 |= 8;
+	if (flags & 1)
+		onSdlFlag(FLAG_UNK4);
+	if (flags & 2)
+		onSdlFlag(FLAG_UNK2);
+	if (flags & 4)
+		onSdlFlag(FLAG_UNK8);
 
 	if (md->getJointNum()) {
 		mScaleFlagArr = new u8[md->getJointNum()];
@@ -135,20 +206,19 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 		mNodeMatrices = new Mtx[md->getJointNum()];
 	}
 	if (md->getWEvlpMtxNum())
-		unk5C = new Mtx[md->getWEvlpMtxNum()];
-	if (param_3) {
+		mWeightEvlpMatrices = new Mtx[md->getWEvlpMtxNum()];
+	if (mtx_num) {
 		for (int i = 0; i < 2; ++i) {
-			mDrawMtxBuf[i] = new Mtx*[param_3];
-			mNrmMtxBuf[i]  = new Mtx33*[param_3];
+			mDrawMtxBuf[i] = new Mtx*[mtx_num];
+			mNrmMtxBuf[i]  = new Mtx33*[mtx_num];
 			mBumpMtxArr[i] = nullptr;
 		}
 	}
 	for (int i = 0; i < 2; ++i) {
-		for (int j = 0; j < param_3; ++j) {
-			u32 mats = md->getDrawMtxData().mEntryNum;
-			if (mats) {
-				mDrawMtxBuf[i][j] = new (0x20) Mtx[mats];
-				mNrmMtxBuf[i][j]  = new (0x20) Mtx33[mats];
+		for (int j = 0; j < mtx_num; ++j) {
+			if (md->getDrawMtxNum()) {
+				mDrawMtxBuf[i][j] = new (0x20) Mtx[md->getDrawMtxNum()];
+				mNrmMtxBuf[i][j]  = new (0x20) Mtx33[md->getDrawMtxNum()];
 			}
 		}
 	}
@@ -159,78 +229,62 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 			mShapePackets[i].setShape(md->getShapeNodePointer(i));
 	}
 
-	if (md->getMaterialNum()) {
-		if ((param_2 & 2) && param_1->unk4 != 0) {
-			J3DMatPacket* matPackets = new SDLMatPacket[md->getMaterialNum()];
-			J3DMatPacket* otherMatPackets = param_1->unk4->mMatPackets;
-			for (int i = 0; i < md->getMaterialNum(); ++i) {
-				J3DMatPacket* matPacket = &matPackets[i];
-				matPacket->unk38        = md->getMaterialNodePointer(i);
-				matPacket->addShapePacket(
-				    &mShapePackets[md->getMaterialNodePointer(i)
-				                       ->getShape()
-				                       ->getIndex()]);
-				matPacket->setTexture(md->getTexture());
-				matPacket->setDisplayListObj(new J3DDisplayListObj);
-				*matPacket->getDisplayListObj()
-				    = *otherMatPackets[i].getDisplayListObj();
+	if (md->mMaterialNum) {
+		if ((flags & 2) && model_data->mDlHost != nullptr) {
+			SDLMatPacket* matPackets = new SDLMatPacket[md->mMaterialNum];
+			J3DMatPacket* otherMatPackets
+			    = model_data->mDlHost->getMatPacket(0);
+			for (int i = 0; i < md->mMaterialNum; ++i) {
+				matPackets[i].setMaterial(md->getMaterialNodePointer(i));
+				matPackets[i].addShapePacket(getShapePacket(
+				    md->getMaterialNodePointer(i)->getShape()->getIndex()));
+				matPackets[i].setTexture(md->getTexture());
+				matPackets[i].beParasiteDL(&otherMatPackets[i]);
 			}
 			mMatPackets = matPackets;
 		} else {
-			J3DMatPacket* matPackets = new SDLMatPacket[md->getMaterialNum()];
-			for (int i = 0; i < md->getMaterialNum(); ++i) {
-				J3DMatPacket* matPacket = &matPackets[i];
-				matPacket->unk38        = md->getMaterialNodePointer(i);
-				matPacket->addShapePacket(
-				    &mShapePackets[md->getMaterialNodePointer(i)
-				                       ->getShape()
-				                       ->getIndex()]);
-				matPacket->setTexture(md->getTexture());
-				if (param_2 & 1) {
-					u32 dlSize = md->getMaterialNodePointer(i)->countDLSize();
-					matPacket->setDisplayListObj(new J3DDisplayListObj);
-					matPacket->getDisplayListObj()->unkC
-					    = ALIGN_NEXT(dlSize, 0x20);
-					matPacket->getDisplayListObj()->unk0
-					    = new (0x20) u8[matPacket->getDisplayListObj()->unkC];
-					matPacket->getDisplayListObj()->unk4
-					    = matPacket->getDisplayListObj()->unk0;
-					matPacket->getDisplayListObj()->unk8 = 0;
+			SDLMatPacket* matPackets = new SDLMatPacket[md->mMaterialNum];
+			for (int i = 0; i < md->mMaterialNum; ++i) {
+				matPackets[i].setMaterial(md->getMaterialNodePointer(i));
+				matPackets[i].addShapePacket(getShapePacket(
+				    md->getMaterialNodePointer(i)->getShape()->getIndex()));
+				matPackets[i].setTexture(md->getTexture());
+				if (flags & 1) {
+					matPackets[i].newSingleDL(
+					    md->getMaterialNodePointer(i)->countDLSize());
 				} else {
-					u32 dlSize = md->getMaterialNodePointer(i)->countDLSize();
-					matPacket->setDisplayListObj(new J3DDisplayListObj);
-					matPacket->getDisplayListObj()->newDisplayList(dlSize);
+					matPackets[i].newDisplayList(
+					    md->getMaterialNodePointer(i)->countDLSize());
 				}
 			}
 			mMatPackets = matPackets;
-			if (!param_1->unk4)
-				param_1->unk4 = this;
+			if (!model_data->mDlHost)
+				model_data->mDlHost = this;
 		}
 	}
 
 	u16 totalBumpMtxs         = 0;
 	u16 totalMatsWithBumpMtxs = 0;
-	for (int i = 0; i < md->getMaterialNum(); ++i) {
+	for (int i = 0; i < md->mMaterialNum; ++i) {
 		J3DMaterial* mat      = mModelData->getMaterialNodePointer(i);
-		J3DNBTScale* nbtScale = mat->getTexGenBlock()->getNBTScale();
+		J3DNBTScale* nbtScale = mat->getNBTScale();
 		if (nbtScale->mbHasScale == 1) {
 			totalBumpMtxs += mat->getShape()->countBumpMtxNum();
 			++totalMatsWithBumpMtxs;
 		}
 	}
 
-	if (totalBumpMtxs && param_3)
+	if (totalBumpMtxs && mtx_num)
 		for (int i = 0; i < 2; ++i)
 			mBumpMtxArr[i] = new Mtx33**[totalMatsWithBumpMtxs];
 
 	for (int i = 0; i < 2; ++i) {
 		u32 matsWithBumpMtxs = 0;
-		for (int j = 0; j < md->getMaterialNum(); ++j) {
-			J3DMaterial* mat      = mModelData->getMaterialNodePointer(j);
-			J3DNBTScale* nbtScale = mat->getTexGenBlock()->getNBTScale();
-			if (nbtScale->mbHasScale == 1) {
-				mBumpMtxArr[i][matsWithBumpMtxs] = new Mtx33*[param_3];
-				mat->getShape()->unk5C           = matsWithBumpMtxs;
+		for (int j = 0; j < md->mMaterialNum; ++j) {
+			J3DMaterial* mat = mModelData->getMaterialNodePointer(j);
+			if (mat->getNBTScale()->mbHasScale == 1) {
+				mBumpMtxArr[i][matsWithBumpMtxs] = new Mtx33*[mtx_num];
+				mat->getShape()->setBumpMtxOffset(matsWithBumpMtxs);
 				++matsWithBumpMtxs;
 			}
 		}
@@ -238,15 +292,14 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 
 	for (int i = 0; i < 2; ++i) {
 		u32 matsWithBumpMtxs = 0;
-		for (int j = 0; j < md->getMaterialNum(); ++j) {
-			J3DMaterial* mat      = mModelData->getMaterialNodePointer(j);
-			J3DNBTScale* nbtScale = mat->getTexGenBlock()->getNBTScale();
-			if (nbtScale->mbHasScale == 1) {
-				for (int k = 0; k < param_3; ++k) {
+		for (int j = 0; j < md->mMaterialNum; ++j) {
+			J3DMaterial* mat = mModelData->getMaterialNodePointer(j);
+			if (mat->getNBTScale()->mbHasScale == 1) {
+				for (int k = 0; k < mtx_num; ++k) {
 					mBumpMtxArr[i][matsWithBumpMtxs][k]
-					    = new (0x20) Mtx33[md->getDrawMtxData().mEntryNum];
-					++matsWithBumpMtxs;
+					    = new (0x20) Mtx33[md->getDrawMtxNum()];
 				}
+				++matsWithBumpMtxs;
 			}
 		}
 	}
@@ -259,36 +312,17 @@ void SDLModel::entryModelDataSDL(SDLModelData* param_1, u32 param_2,
 
 void SDLModel::entry()
 {
-	if (!(unkA8 & 0x8) || !(unkA8 & 2) || !unkA0 || (unkA0->unk18 & 0x1)) {
-		unkA8 &= ~0x1;
+	if (!checkSdlFlag(FLAG_UNK8) || !checkSdlFlag(FLAG_UNK2) || !mSdlModelData
+	    || (mSdlModelData->unk18 & 0x1)) {
+		offSdlFlag(FLAG_UNK1);
 		J3DModel::entry();
 		return;
 	}
 
-	unkA8 |= 0x1;
-	unkA4 = nullptr;
+	onSdlFlag(FLAG_UNK1);
+	mNextSameMat = nullptr;
 
-	typedef JGadget::TList<SDLDrawBufToken*>::iterator I;
-	for (I it = unkA0->unk8.begin(); it != unkA0->unk8.end(); ++it) {
-		SDLDrawBufToken* token = *it;
-
-		bool found = token->unk0[0] == j3dSys.getDrawBuffer(0)
-		             && token->unk0[1] == j3dSys.getDrawBuffer(1);
-
-		if (found) {
-			unkA4       = token->unk8;
-			token->unk8 = this;
-			return;
-		}
-	}
-
-	SDLDrawBufToken* token = new SDLDrawBufToken;
-
-	token->unk0[0] = j3dSys.getDrawBuffer(0);
-	token->unk0[1] = j3dSys.getDrawBuffer(1);
-	token->unk8    = this;
-
-	unkA0->unk8.push_back(token);
+	mSdlModelData->registerSDLModel(this);
 }
 
 void SDLModel::viewCalcSimple()

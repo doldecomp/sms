@@ -57,8 +57,8 @@ void TMarioEffect::init(TMario* mario)
 	unk80->setModel(waterboostModel, 0);
 	unk80->setBck("01_waterboost_in");
 	unk80->setBtk("01_waterboost");
-	unk80->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate());
-	unk80->getFrameCtrl(4)->setRate(SMSGetAnmFrameRate());
+	unk80->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+	unk80->getFrameCtrl(ANM_TYPE_BTK)->setRate(SMSGetAnmFrameRate());
 
 	gpConductor->registerOtherObj(this);
 }
@@ -104,10 +104,10 @@ void TMarioEffect::setJumpIntoWaterEffect()
 	unk74[idx]->setBtk("04_tobikomi");
 	unk74[idx]->setBrk("04_tobikomi");
 
-	unk74[idx]->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(2)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(4)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(5)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BPK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BTK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BRK)->setRate(SMSGetAnmFrameRate());
 
 	unk74[idx]->getModel()->setBaseTRMtx(localMtx);
 
@@ -137,10 +137,10 @@ void TMarioEffect::setJumpIntoWaterEffectSmall()
 	unk74[idx]->setBtk("04_tobikomi");
 	unk74[idx]->setBrk("04_tobikomi");
 
-	unk74[idx]->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(2)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(4)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(5)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BPK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BTK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BRK)->setRate(SMSGetAnmFrameRate());
 
 	unk74[idx]->getModel()->setBaseTRMtx(localMtx);
 
@@ -157,14 +157,14 @@ void TMarioEffect::startDashEffect()
 {
 	unk80->setBck("01_waterboost_in");
 	unk80->setBtk("01_waterboost");
-	unk80->getFrameCtrl(0)->setFrame(0.0f);
-	unk80->getFrameCtrl(4)->setFrame(0.0f);
+	unk80->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
+	unk80->getFrameCtrl(ANM_TYPE_BTK)->setFrame(0.0f);
 }
 
 void TMarioEffect::endDashEffect()
 {
 	unk80->setBck("01_waterboost_out");
-	unk80->getFrameCtrl(0)->setFrame(0.0f);
+	unk80->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 }
 
 void TMarioEffect::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -193,9 +193,9 @@ void TMarioEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 			break;
 
 		case 2:
-			if (unk80->getFrameCtrl(0)->checkState(
-			        J3DFrameCtrl::STATE_COMPLETED_ONCE
-			        | J3DFrameCtrl::STATE_LOOPED_ONCE))
+			if (unk80->getFrameCtrl(ANM_TYPE_BCK)
+			        ->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+			                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
 				unk7C = 0;
 			break;
 		}
@@ -217,9 +217,10 @@ void TMarioEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (int i = 0; i < 2; ++i) {
 		if (unk6C[i] == 1) {
 			unk74[i]->perform(cue, graphics);
-			if (unk74[i]->getFrameCtrl(0)->checkState(
-			        J3DFrameCtrl::STATE_COMPLETED_ONCE
-			        | J3DFrameCtrl::STATE_LOOPED_ONCE))
+			if (unk74[i]
+			        ->getFrameCtrl(ANM_TYPE_BCK)
+			        ->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+			                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
 				unk6C[i] = 0;
 		}
 	}

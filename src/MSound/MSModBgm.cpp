@@ -5,11 +5,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: this is from the PCH
-static Vec dummy1   = { 1.0f, 1.0f, 1.0f };
-static Vec dummy2   = { 1.0f, 1.0f, 1.0f };
-static u32 dummy3[] = { 0, 2, 1, 3 };
-
 JAISound* MSModBgm::modBgm(u8 param_1, u8 param_2)
 {
 	switch (param_1) {

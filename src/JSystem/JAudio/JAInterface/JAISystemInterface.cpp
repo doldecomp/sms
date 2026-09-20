@@ -22,14 +22,14 @@ BOOL JAISystemInterface::checkSeqActiveFlag(u32 param_1)
 {
 	JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(param_1);
 
-	if (track != 0 && track->unk3C4) {
+	if (track != 0 && track->mSeqState) {
 		if (track->getChild(0) || track->getChild(1) || track->getChild(2)
 		    || track->getChild(3) || track->getChild(4) || track->getChild(5)
 		    || track->getChild(6) || track->getChild(7) || track->getChild(8)
 		    || track->getChild(9) || track->getChild(10) || track->getChild(11)
 		    || track->getChild(12) || track->getChild(13) || track->getChild(14)
 		    || track->getChild(15)) {
-			return track->unk3C4;
+			return track->mSeqState;
 		} else {
 			return false;
 		}
@@ -40,164 +40,146 @@ BOOL JAISystemInterface::checkSeqActiveFlag(u32 param_1)
 JASystem::TTrack* JAISystemInterface::trackToSeqp(JAISound* param_1, u8 param_2)
 {
 	JASystem::TTrack* result = nullptr;
-	if (param_1->unk8 & 0x800) {
-		JASystem::TTrack* track
-		    = JASystem::TrackMgr::handleToSeq(param_1->getSeqParameter()->unk0);
+	if (param_1->mSoundID & 0x800) {
+		JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
+		    param_1->getSeqParameter()->mSeqHandle);
 		if (track->getChild(param_2 >> 4))
 			result = track->getChild(param_2 >> 4)->getChild(param_2 & 0xF);
 	} else {
-		JASystem::TTrack* track
-		    = JASystem::TrackMgr::handleToSeq(param_1->getSeqParameter()->unk0);
+		JASystem::TTrack* track = JASystem::TrackMgr::handleToSeq(
+		    param_1->getSeqParameter()->mSeqHandle);
 		result = track->getChild(param_2 & 0xF);
 	}
 	return result;
 }
 
-void JAISystemInterface::setSeqPortargsF32(JAISeqUpdateData* param_1,
-                                           u32 param_2, u8 param_3, f32 param_4)
+void JAISystemInterface::setSeqPortargsF32(JAISeqUpdateData* sud, u32 track_no,
+                                           u8 arg_no, f32 value)
 {
-	JAISeqUpdateData::FabricatedUnk4CStruct* s = &param_1->unk4C[param_2];
-
-	((f32*)&s->unk4)[param_3] = param_4;
+	sud->mPlayerParams[track_no].mArgsAsF32[arg_no] = value;
 }
 
-void JAISystemInterface::setSeqPortargsPS16(JAISeqUpdateData*, u32, u8, s16*) {
+void JAISystemInterface::setSeqPortargsPS16(JAISeqUpdateData* sud, u32 track_no,
+                                            u8 arg_no, s16* value)
+{
+	sud->mPlayerParams[track_no].mArgsAsPS16[arg_no] = value;
 }
 
-void JAISystemInterface::setSeqPortargsU32(JAISeqUpdateData* param_1,
-                                           u32 param_2, u8 param_3, u32 param_4)
+void JAISystemInterface::setSeqPortargsU32(JAISeqUpdateData* sud, u32 track_no,
+                                           u8 arg_no, u32 value)
 {
-	JAISeqUpdateData::FabricatedUnk4CStruct* s = &param_1->unk4C[param_2];
-
-	((u32*)&s->unk4)[param_3] = param_4;
+	sud->mPlayerParams[track_no].mArgsAsU32[arg_no] = value;
 }
 
 JAISeqParameter* JAISystemInterface::rootInit(JAISeqUpdateData* param_1)
 {
-	JAISound* sound = param_1->unk48;
+	JAISound* sound = param_1->mSound;
 	JASystem::TTrack* track
-	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->unk0);
+	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->mSeqHandle);
 	outerInit(param_1, track, JAIGlobalParameter::getParamSeqTrackMax(), 0xffff,
 	          0);
 	return sound->getSeqParameter();
 }
 
-void JAISystemInterface::trackInit(JAISeqUpdateData* param_1)
+void JAISystemInterface::trackInit(JAISeqUpdateData* sud)
 {
-	JAISound* sound = param_1->unk48;
+	JAISound* sound = sud->mSound;
 	u32 trackCnt    = 0x10;
-	if (sound->unk8 & 0x800)
+	if (sound->mSoundID & 0x800)
 		trackCnt = JAIGlobalParameter::getParamSeqTrackMax();
 
 	for (u32 i = 0; i < trackCnt; ++i)
-		if (!(param_1->unk4 & (1 << i))) {
+		if (!(sud->mTrackInitFlags & (1 << i))) {
 			JASystem::TTrack* track = trackToSeqp(sound, i);
-			outerInit(param_1, track, i, 0xffff, 0);
+			outerInit(sud, track, i, 0xffff, 0);
 		}
 }
 
-void JAISystemInterface::outerInit(JAISeqUpdateData* param_1, void* param_2,
-                                   u32 param_3, u16 param_4, u8 param_5)
+void JAISystemInterface::outerInit(JAISeqUpdateData* sud, void* track,
+                                   u32 track_no, u16 param_4, u8 param_5)
 {
-	if (!param_2)
-		return;
-
-	JASystem::Kernel::TPortArgs* args = &param_1->unk4C[param_3].unk4;
-	JASystem::TTrack* track           = ((JASystem::TTrack*)param_2);
-
-	param_1->unk4C[param_3].unk0 = track;
-	args->mTrack                 = ((JASystem::TTrack*)param_2);
-	param_1->unk4C[param_3].unk2C.setPortCmd(&setSePortParameter, args);
-
-	JASystem::TTrack::TOuterParam* outer = track->getOuterParam();
-
-	if (param_3 == JAIGlobalParameter::getParamSeqTrackMax()) {
-		args->mTrackVolume = param_1->unkC;
-		args->mTrackPitch  = param_1->unk10;
-		args->mTrackFxmix  = param_1->unk14;
-		args->mTrackPan    = param_1->unk18;
-		args->mTrackDolby  = param_1->unk1C;
-		args->mTrackTempo  = param_1->unk20;
-		args->mFlags       = 0xff;
-		outer->onSwitch(0x40);
-	} else {
-		JAISeqParameter* pJVar3 = param_1->unk48->getSeqParameter();
-		args->mTrackVolume      = pJVar3->unk754[param_3].unk4;
-		args->mTrackPitch       = pJVar3->unkB54[param_3].unk4;
-		args->mTrackFxmix       = pJVar3->unkD54[param_3].unk4;
-		args->mTrackPan         = pJVar3->unk954[param_3].unk4;
-		args->mTrackDolby       = pJVar3->unkF54[param_3].unk4;
-		args->unk20             = 0;
-		args->mFlags            = 0x7f;
-		track->muteTrack(pJVar3->unk1830[param_3].flag1);
-	}
-	outer->onSwitch(0x1);
-	outer->onSwitch(0x2);
-	outer->onSwitch(0x4);
-	outer->onSwitch(0x8);
-	outer->onSwitch(0x10);
-
-	if ((param_4 & 1) == 0)
-		outer->setParam(1, 0.0);
-
-	if ((param_4 & 2) == 0)
-		outer->setParam(2, 0.0);
-
-	if ((param_4 & 4) == 0)
-		outer->setParam(4, 0.0);
-
-	if ((param_4 & 8) == 0)
-		outer->setParam(8, 0.0);
-
-	if ((param_4 & 0x10) == 0)
-		outer->setParam(16, 0.0);
-
-	param_1->unk4C[param_3].unk2C.addPortCmdOnce();
-}
-
-void JAISystemInterface::setPortParameter(JASystem::Kernel::TPortArgs*,
-                                          JASystem::TTrack*, u32, u32)
-{
-}
-
-void JAISystemInterface::setSePortParameter(
-    JASystem::Kernel::TPortArgs* param_1)
-{
-	JASystem::TTrack* track = param_1->mTrack;
 	if (!track)
 		return;
 
-	// TODO: some weird stuff is happening here and with setSeqPortargsF32/U32,
-	// they seem to have a union somewhere making the params accessible by index
-	// and these 6 ifs seem to be setPortParameter called w/ different args and
-	// accessing the union
-	if ((param_1->mFlags & 1) != 0) {
-		track->getOuterParam()->setParam(0x1, param_1->mTrackVolume);
-		param_1->mFlags ^= 1;
+	JASystem::Kernel::TPortArgs* args = &sud->mPlayerParams[track_no].mArgs;
+	JASystem::TTrack* trackCasted     = (JASystem::TTrack*)track;
+
+	sud->mPlayerParams[track_no].mTrack = trackCasted;
+	args->mTrack                        = (JASystem::TTrack*)track;
+	sud->mPlayerParams[track_no].mCmd.setPortCmd(&setSePortParameter, args);
+
+	JASystem::TTrack::TOuterParam* outer = trackCasted->getOuterParam();
+
+	if (track_no == JAIGlobalParameter::getParamSeqTrackMax()) {
+		args->mTrackVolume = sud->mSeqVolume;
+		args->mTrackPitch  = sud->mSeqPitch;
+		args->mTrackFxmix  = sud->mSeqFxmix;
+		args->mTrackPan    = sud->mSeqPan;
+		args->mTrackDolby  = sud->mSeqDolby;
+		args->mTrackTempo  = sud->mSeqTempo;
+		args->mFlags       = 0xff;
+		outer->onSwitch(JASystem::TTrack::UPDATE_Tempo);
+	} else {
+		JAISeqParameter* pJVar3 = sud->mSound->getSeqParameter();
+		args->mTrackVolume      = pJVar3->mTrackVolume[track_no].mCurrentValue;
+		args->mTrackPitch       = pJVar3->mTrackPitch[track_no].mCurrentValue;
+		args->mTrackFxmix       = pJVar3->mTrackFxmix[track_no].mCurrentValue;
+		args->mTrackPan         = pJVar3->mTrackPan[track_no].mCurrentValue;
+		args->mTrackDolby       = pJVar3->mTrackDolby[track_no].mCurrentValue;
+		args->unk20             = 0;
+		args->mFlags            = 0x7f;
+		trackCasted->muteTrack(pJVar3->mMuteBits[track_no].mCurrent);
 	}
-	if ((param_1->mFlags & 2) != 0) {
-		track->getOuterParam()->setParam(0x2, param_1->mTrackPitch);
-		param_1->mFlags ^= 2;
+	outer->onSwitch(JASystem::TTrack::UPDATE_Volume);
+	outer->onSwitch(JASystem::TTrack::UPDATE_Pitch);
+	outer->onSwitch(JASystem::TTrack::UPDATE_Fxmix);
+	outer->onSwitch(JASystem::TTrack::UPDATE_Pan);
+	outer->onSwitch(JASystem::TTrack::UPDATE_Dolby);
+
+	if ((param_4 & 1) == 0)
+		outer->setParam(JASystem::TTrack::UPDATE_Volume, 0.0);
+
+	if ((param_4 & 2) == 0)
+		outer->setParam(JASystem::TTrack::UPDATE_Pitch, 0.0);
+
+	if ((param_4 & 4) == 0)
+		outer->setParam(JASystem::TTrack::UPDATE_Fxmix, 0.0);
+
+	if ((param_4 & 8) == 0)
+		outer->setParam(JASystem::TTrack::UPDATE_Pan, 0.0);
+
+	if ((param_4 & 0x10) == 0)
+		outer->setParam(JASystem::TTrack::UPDATE_Dolby, 0.0);
+
+	sud->mPlayerParams[track_no].mCmd.addPortCmdOnce();
+}
+
+void JAISystemInterface::setPortParameter(JASystem::Kernel::TPortArgs* args,
+                                          JASystem::TTrack* track, u32 param_3,
+                                          u32 param_4)
+{
+	if ((args->mFlags & (1 << param_4)) != 0) {
+		JASystem::TTrack::TOuterParam* outer = track->getOuterParam();
+		outer->setParam(param_3, (&args->mTrackVolume)[param_4]);
+		args->mFlags ^= 1 << param_4;
 	}
-	if ((param_1->mFlags & 4) != 0) {
-		track->getOuterParam()->setParam(0x8, param_1->mTrackPan);
-		param_1->mFlags ^= 4;
-	}
-	if ((param_1->mFlags & 8) != 0) {
-		track->getOuterParam()->setParam(0x4, param_1->mTrackFxmix);
-		param_1->mFlags ^= 8;
-	}
-	if ((param_1->mFlags & 0x80) != 0) {
-		track->getOuterParam()->setParam(0x40, param_1->mTrackTempo);
-		param_1->mFlags ^= 0x80;
-	}
-	if ((param_1->mFlags & 0x10) != 0) {
-		track->getOuterParam()->setParam(0x10, param_1->mTrackDolby);
-		param_1->mFlags ^= 0x10;
-	}
-	if ((param_1->mFlags & 0x40) != 0 && param_1->unk20 != 0) {
+}
+
+void JAISystemInterface::setSePortParameter(JASystem::Kernel::TPortArgs* args)
+{
+	JASystem::TTrack* track = args->mTrack;
+	if (!track)
+		return;
+
+	setPortParameter(args, track, JASystem::TTrack::UPDATE_Volume, 0);
+	setPortParameter(args, track, JASystem::TTrack::UPDATE_Pitch, 1);
+	setPortParameter(args, track, JASystem::TTrack::UPDATE_Pan, 2);
+	setPortParameter(args, track, JASystem::TTrack::UPDATE_Fxmix, 3);
+	setPortParameter(args, track, JASystem::TTrack::UPDATE_Tempo, 7);
+	setPortParameter(args, track, JASystem::TTrack::UPDATE_Dolby, 4);
+
+	if ((args->mFlags & 0x40) != 0 && args->unk20 != 0)
 		track->setInterrupt(5);
-	}
 }
 
 void* JAISystemInterface::JAIouterP(void*) { return nullptr; }

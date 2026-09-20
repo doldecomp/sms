@@ -47,7 +47,7 @@ const TLiveActor* SMS_GetGroundActor(const TBGCheckData* check_data,
 
 float SMS_GetSandRiseUpRatio(const TLiveActor* actor)
 {
-	float retvar = actor->getModel()->mNodeMatrices[0][1][1];
+	float retvar = actor->getModel()->getAnmMtx(0)[1][1];
 
 	if (retvar > 1.0f) {
 		retvar = 1.0f;

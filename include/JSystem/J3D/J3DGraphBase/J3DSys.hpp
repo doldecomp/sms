@@ -93,8 +93,14 @@ public:
 	int checkFlag4() { return mFlags & 4 ? TRUE : FALSE; }
 	int checkFlag8() { return mFlags & 8 ? TRUE : FALSE; }
 
-	void* getVtxPos() const { return unk10C; }
-	void setVtxPos(void* pVtxPos) { unk10C = pVtxPos; }
+	void* getVtxPos() const { return mVtxPos; }
+	void setVtxPos(void* pVtxPos) { mVtxPos = pVtxPos; }
+
+	void* getVtxNrm() { return mVtxNrm; }
+	void setVtxNrm(void* pVtxNrm) { mVtxNrm = pVtxNrm; }
+
+	GXColor* getVtxCol() { return mVtxCol; }
+	void setVtxCol(GXColor* pVtxCol) { mVtxCol = pVtxCol; }
 
 	void setUnk4C(u32 unk) { unk4C = unk; }
 
@@ -116,9 +122,9 @@ public:
 	/* 0x100 */ u32 unk100;
 	/* 0x104 */ Mtx* mCurrentDrawMtx;
 	/* 0x108 */ Mtx33* mCurrentNormMtx;
-	/* 0x10C */ void* unk10C;
-	/* 0x110 */ void* unk110;
-	/* 0x114 */ void* unk114;
+	/* 0x10C */ void* mVtxPos;
+	/* 0x110 */ void* mVtxNrm;
+	/* 0x114 */ GXColor* mVtxCol;
 	/* 0x118 */ u32 unk118;
 	/* 0x11C */ u32 unk11C;
 	/* 0x120 */ Vec* mNBTScale;
@@ -130,7 +136,6 @@ public:
 };
 
 extern J3DSys j3dSys;
-// TODO: type
 extern u32 j3dDefaultViewNo;
 
 #endif

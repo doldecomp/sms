@@ -20,7 +20,7 @@ struct CallbackObject {
 	/* 0x10 */ int param_4;
 };
 
-void search_name_part(u8*, u8*, int);
+static void search_name_part(u8*, u8*, int);
 
 const u32 dummy1[4] = { 0, 2, 1, 3 };
 const u32 dummy2[3] = { 0x3F800000, 0x3F800000, 0x3F800000 };
@@ -212,7 +212,7 @@ bool JUTException::searchPartialModule(u32 address, u32* module_id,
 	return false;
 }
 
-void search_name_part(u8* src, u8* dst, int dst_length)
+static void search_name_part(u8* src, u8* dst, int dst_length)
 {
 	for (u8* p = src; *p; p++) {
 		if (*p == '\\') {
@@ -256,8 +256,7 @@ void JUTException::showStack(OSContext* context)
 		sConsole->print_f("%08X:  %08X    %08X\n", stackPointer,
 		                  stackPointer[0], stackPointer[1]);
 		showMapInfo_subroutine(stackPointer[1], false);
-		JUTConsoleManager* manager = JUTConsoleManager::sManager;
-		manager->drawDirect(true);
+		JUTConsoleManager::getManager()->drawDirect(true);
 		waitTime(mPrintWaitTime1);
 		stackPointer = (u32*)stackPointer[0];
 	}
@@ -363,7 +362,7 @@ void JUTException::showGPRMap(OSContext* context)
 			if (!showMapInfo_subroutine(address, true)) {
 				sConsole->print("  no information\n");
 			}
-			JUTConsoleManager::sManager->drawDirect(true);
+			JUTConsoleManager::getManager()->drawDirect(true);
 			waitTime(mPrintWaitTime1);
 		}
 	}
@@ -477,32 +476,32 @@ void JUTException::printContext(OSError error, OSContext* context, u32 dsisr,
 	while (true) {
 		showMainInfo(error, context, dsisr, dar);
 
-		JUTConsoleManager::sManager->drawDirect(true);
+		JUTConsoleManager::getManager()->drawDirect(true);
 		waitTime(mPrintWaitTime0);
 
 		if ((mPrintFlags & JUT_PRINT_GPR) != 0) {
 			printDebugInfo(EINFO_PAGE_GPR, error, context, dsisr, dar);
-			JUTConsoleManager::sManager->drawDirect(true);
+			JUTConsoleManager::getManager()->drawDirect(true);
 			waitTime(mPrintWaitTime0);
 		}
 		if ((mPrintFlags & JUT_PRINT_GPR_MAP) != 0) {
 			printDebugInfo(EINFO_PAGE_GPR_MAP, error, context, dsisr, dar);
-			JUTConsoleManager::sManager->drawDirect(true);
+			JUTConsoleManager::getManager()->drawDirect(true);
 			waitTime(mPrintWaitTime0);
 		}
 		if ((mPrintFlags & JUT_PRINT_FLOAT) != 0) {
 			printDebugInfo(EINFO_PAGE_FLOAT, error, context, dsisr, dar);
-			JUTConsoleManager::sManager->drawDirect(true);
+			JUTConsoleManager::getManager()->drawDirect(true);
 			waitTime(mPrintWaitTime0);
 		}
 		if ((mPrintFlags & JUT_PRINT_STACK) != 0) {
 			printDebugInfo(EINFO_PAGE_STACK, error, context, dsisr, dar);
-			JUTConsoleManager::sManager->drawDirect(true);
+			JUTConsoleManager::getManager()->drawDirect(true);
 			waitTime(mPrintWaitTime1);
 		}
 
 		sConsole->print("--------------------------------\n");
-		JUTConsoleManager::sManager->drawDirect(true);
+		JUTConsoleManager::getManager()->drawDirect(true);
 
 		if (post_callback_executed == 0 && sPostUserCallback) {
 			BOOL enable            = OSEnableInterrupts();
@@ -563,7 +562,7 @@ void JUTException::printContext(OSError error, OSContext* context, u32 dsisr,
 				u32 start = VIGetRetraceCount();
 				while (start == VIGetRetraceCount())
 					;
-				JUTConsoleManager::sManager->drawDirect(true);
+				JUTConsoleManager::getManager()->drawDirect(true);
 			}
 
 			waitTime(30);
@@ -572,13 +571,13 @@ void JUTException::printContext(OSError error, OSContext* context, u32 dsisr,
 
 	while (true) {
 		sConsole->scrollToFirstLine();
-		JUTConsoleManager::sManager->drawDirect(true);
+		JUTConsoleManager::getManager()->drawDirect(true);
 		waitTime(2000);
 
 	next:
 		for (u32 i = sConsole->getHeight(); i > 0; i--) {
 			sConsole->scroll(1);
-			JUTConsoleManager::sManager->drawDirect(true);
+			JUTConsoleManager::getManager()->drawDirect(true);
 
 			if ((sConsole->getUsedLine() - sConsole->getHeight()) + 1U
 			    <= sConsole->getLineOffset())
@@ -630,34 +629,39 @@ void JUTException::createFB()
 	mFrameMemory = (JUTExternalFB*)object;
 }
 
-// TODO: this looks very asm-y but peephole is still on after
-// it so maybe not? IDK!
-asm u32 JUTException::getFpscr() {
+u32 JUTException::getFpscr()
+{
+	double tmp;
 #ifdef __MWERKS__ // clang-format off
-  stwu  r1, -0x10(r1)
+	asm {
+		// Set the "floating-point available" flag
+		mfmsr r5
+		ori   r5, r5, 0x2000
+		mtmsr r5
 
-  // Enable the "floating-point available" flag just in case?
-  mfmsr r5
-  ori   r5, r5, 0x2000
-  mtmsr r5
+		isync
 
-  isync
-
-  // Get contents of the "floating point status and control register"
-  mffs f1
-  stfd f1, 0x8(r1)
-  lwz  r3, 0xc(r1)
-
-  addi r1, r1, 0x10
+		// Read the "floating point status and control register".
+		mffs  f1
+		stfd  f1, tmp
+	}
 #endif // clang-format on
+	return ((u32*)&tmp)[1];
 }
 
-#pragma peephole on
+void JUTException::setFpscr(u32 value) { }
 
 OSErrorHandler JUTException::setPreUserCallback(OSErrorHandler callback)
 {
 	OSErrorHandler previous = sPreUserCallback;
 	sPreUserCallback        = callback;
+	return previous;
+}
+
+OSErrorHandler JUTException::setPostUserCallback(OSErrorHandler callback)
+{
+	OSErrorHandler previous = sPostUserCallback;
+	sPostUserCallback       = callback;
 	return previous;
 }
 
@@ -848,8 +852,7 @@ void JUTException::createConsole(void* console_buffer, u32 console_buffer_size)
 		sConsoleBufferSize = console_buffer_size;
 		sConsole = JUTConsole::create(0x32, sConsoleBuffer, sConsoleBufferSize);
 
-		JUTConsoleManager* manager = JUTConsoleManager::sManager;
-		manager->setDirectConsole(sConsole);
+		JUTConsoleManager::getManager()->setDirectConsole(sConsole);
 
 		sConsole->setFontSize(10.0, 6.0);
 		sConsole->setPosition(15, 26);

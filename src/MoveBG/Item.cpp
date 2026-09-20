@@ -206,8 +206,8 @@ void TCoin::taken(THitActor* param_1)
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
 
 	if (TFlagManager::smInstance->getFlag(0x40002) == 100) {
-		TShine* shine = JDrama::TNameRefGen::search<TShine>(
-		    "シャイン（１００枚コイン用）");
+		TShine* shine = static_cast<TShine*>(
+		    JDrama::TNameRefGen::search("シャイン（１００枚コイン用）"));
 
 		gpItemManager->makeShineAppearWithDemo(
 		    "シャイン（１００枚コイン用）",
@@ -361,6 +361,7 @@ void TCoinRed::taken(THitActor* param_1)
 TCoinRed::TCoinRed(const char* name)
     : TCoin(name)
 {
+	unk158.zero();
 }
 
 void TCoinBlue::makeObjAppeared()
@@ -459,20 +460,20 @@ void TShine::calc()
 	}
 
 	if (unk194) {
-		unk194->mBaseLifetime = promiLife;
-		unk194->setScale(unk1A8);
+		unk194->setLifeTime(promiLife);
+		unk194->setGlobalScale(unk1A8);
 	}
 	if (unk198) {
-		unk198->mChildSpawnRate = senkoRate;
-		unk198->setScale(unk1A8);
+		unk198->setRate(senkoRate);
+		unk198->setGlobalScale(unk1A8);
 	}
 	if (unk19C) {
-		unk19C->mChildSpawnRate = kiraRate;
-		unk19C->setScale(unk1A8);
+		unk19C->setRate(kiraRate);
+		unk19C->setGlobalScale(unk1A8);
 	}
 	if (unk1A0) {
-		unk1A0->mChildSpawnRate = bowRate;
-		unk1A0->setScale(unk1A8);
+		unk1A0->setRate(bowRate);
+		unk1A0->setGlobalScale(unk1A8);
 	}
 	unk1A4 = 1;
 }
@@ -490,7 +491,7 @@ void TShine::movingCircle()
 
 	mPosition.x += unk17C.x;
 
-	mPosition.y = unk160 * JMASin(unk158)
+	mPosition.y = unk160 * MsSin(unk158)
 	              + (tmp * (mInitialPosition.y - unk164) + unk164);
 	unk188 = mPosition.y - prevY;
 
@@ -551,18 +552,8 @@ void TShine::control()
 		MtxPtr mtx           = model->getAnmMtx(2);
 		const GXColor& color = (GXColor) { 0xff, 0xff, 0xff, 0xff };
 		JGeometry::TVec3<f32> trans(mtx[0][3], mtx[1][3], mtx[2][3]);
-		TLightWithDBSetManager* mgr = gpLightManager;
-
-		mgr->unk18.r = color.r;
-		mgr->unk18.g = color.g;
-		mgr->unk18.b = color.b;
-		mgr->unk18.a = color.a;
-
-		mgr->unk54 = 1;
-
-		mgr = gpLightManager;
-		mgr->unk1C.set(trans);
-		mgr->unk54 = 1;
+		gpLightManager->setEffectLightColor(color);
+		gpLightManager->setEffectLightPos(trans);
 	} break;
 
 	case STATE_UNKB:
@@ -674,8 +665,7 @@ BOOL TShine::receiveMessage(THitActor* sender, u32 message)
 void TShine::touchPlayer(THitActor* actor)
 {
 	actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
-	TLightWithDBSetManager* mgr = gpLightManager;
-	mgr->unk1C.set(200000.0f, 500000.0f, 200000.0f);
+	gpLightManager->setEffectLightPos2(200000.0f, 500000.0f, 200000.0f);
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_SHINE, &mPosition, 0, nullptr,
 	                                0, 4);
 	getMActor()->setBck("shine_float");
@@ -756,7 +746,7 @@ void TShine::appearSimple(int param_1)
 
 void TShine::appearWithDemo(const char* param_1)
 {
-	unk18C = JDrama::TNameRefGen::instance->search<TCameraMapTool>(param_1)
+	unk18C = static_cast<TCameraMapTool*>(JDrama::TNameRefGen::search(param_1))
 	             ->mDemoLengthFrames;
 	SMSGetMarDirector()->fireStartDemoCamera(
 	    param_1, &mPosition, -1, 0.0f, true, appearWithTimeCallback, (u32)this,
@@ -777,7 +767,7 @@ void TShine::makeMActors()
 	                                   | (2 << J3DMLF_TevStageNumShift);
 	MActor* result;
 	if (TFlagManager::smInstance->getShineFlag(mEventId)
-	    && strcmp("シャイン（１００枚コイン用）", getName()) != 0) {
+	    && strcmp("シャイン（マニ屋用）", getName()) != 0) {
 		result = initMActor("shine_empty.bmd", nullptr, getSDLModelFlag());
 		unk1B4 = 1;
 	} else {
@@ -894,19 +884,19 @@ void TEggYoshi::startBalloonAnim()
 {
 	switch (unk14C) {
 	case 0x40000394:
-		unk148->getFrameCtrl(3)->setFrame(1.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(1.0f);
 		break;
 	case 0x40000393:
-		unk148->getFrameCtrl(3)->setFrame(3.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(3.0f);
 		break;
 	case 0x40000391:
-		unk148->getFrameCtrl(3)->setFrame(5.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(5.0f);
 		break;
 	case 0x40000392:
-		unk148->getFrameCtrl(3)->setFrame(7.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(7.0f);
 		break;
 	case 0x40000390:
-		unk148->getFrameCtrl(3)->setFrame(9.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(9.0f);
 		break;
 	}
 }
@@ -918,7 +908,7 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 
 	if (unk14C == (u32)fruit->mActorType) {
 		startAnim(1);
-		unk148->getFrameCtrl(3)->setFrame(11.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(11.0f);
 		mRotation.y = (360.0f / 65536.0f)
 		              * matan(fruit->mPosition.z - mPosition.z,
 		                      fruit->mPosition.x - mPosition.x);
@@ -928,7 +918,7 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 		                                   0);
 	} else if (animIsFinished()) {
 		startAnim(2);
-		unk148->getFrameCtrl(3)->setFrame(12.0f);
+		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(12.0f);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT_YOSHI, 0,
 		                                   nullptr, 0);
 		mState = 0xD;
@@ -1088,7 +1078,7 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 	PSMTXCopy(src, unk148->getModel()->getBaseTRMtx());
 	unk148->setBck("eggyoshi_fukidashi_wait");
 	unk148->setBtp("eggyoshi_fukidashi");
-	unk148->getFrameCtrl(3)->setRate(0.0f);
+	unk148->getFrameCtrl(ANM_TYPE_BTP)->setRate(0.0f);
 
 	decideRandomLoveFruit();
 

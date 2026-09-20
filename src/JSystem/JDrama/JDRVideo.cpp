@@ -6,6 +6,19 @@
 
 using namespace JDrama;
 
+void InitRenderModeVIParams(GXRenderModeObj* obj)
+{
+	obj->viTVmode  = (VITVMode)-1;
+	obj->fbWidth   = 0;
+	obj->efbHeight = 0;
+	obj->xfbHeight = 0;
+	obj->viXOrigin = 0;
+	obj->viYOrigin = 0;
+	obj->viWidth   = 0;
+	obj->viHeight  = 0;
+	obj->xFBmode   = (VIXFBMode)-1;
+}
+
 TVideo::TVideo()
 {
 	mCurFrameBuffer   = nullptr;
@@ -13,15 +26,7 @@ TVideo::TVideo()
 	mLastRetraceTime  = OSGetTick();
 	mNextRetraceIndex = VIGetRetraceCount() + 1;
 
-	mNextRenderMode.viTVmode  = (VITVMode)-1;
-	mNextRenderMode.fbWidth   = 0;
-	mNextRenderMode.efbHeight = 0;
-	mNextRenderMode.xfbHeight = 0;
-	mNextRenderMode.viXOrigin = 0;
-	mNextRenderMode.viYOrigin = 0;
-	mNextRenderMode.viWidth   = 0;
-	mNextRenderMode.viHeight  = 0;
-	mNextRenderMode.xFBmode   = (VIXFBMode)-1;
+	InitRenderModeVIParams(&mNextRenderMode);
 
 	mCurRenderMode = mNextRenderMode;
 }

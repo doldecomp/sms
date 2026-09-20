@@ -2,9 +2,6 @@
 #include <types.h>
 
 // pch issues
-static f32 dummy0[3]       = { 1.0f, 1.0f, 1.0f };
-static f32 dummy1[3]       = { 1.0f, 1.0f, 1.0f };
-static u32 dummy2[4]       = { 0, 2, 1, 3 };
 static const char dummy3[] = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char dummy4[] = "メモリが足りません\n";
 static const char dummy5[] = "__ROOT_JOINT__";

@@ -276,7 +276,7 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->getMActor()->setBckFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		self->getMActor()->setMotionBlendRatioForBck(0.0f);
 	}
 
@@ -361,19 +361,21 @@ void TBossManta::startWalkAnim()
 	getMActor()->setBckFromIndex(3);
 
 	J3DAnmTransform* oldAnm
-	    = getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(4);
+	    = getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(4);
 	getMActor()->setBckOldMotionBlendAnmPtr(oldAnm);
 	getMActor()->setMotionBlendRatioForBck(0.5f);
 
-	getMActor()->setFrameRate(
-	    TBossManta::sFrameRate[mGeneration] * SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]
+	                              * SMSGetAnmFrameRate(),
+	                          ANM_TYPE_BCK);
 }
 
 void TBossManta::startDamageAnim()
 {
 	getMActor()->setBckFromIndex(1);
-	getMActor()->setFrameRate(
-	    TBossManta::sFrameRate[mGeneration] * SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]
+	                              * SMSGetAnmFrameRate(),
+	                          ANM_TYPE_BCK);
 	getMActor()->setMotionBlendRatioForBck(0.0f);
 }
 
@@ -454,7 +456,8 @@ void TBossManta::init(TLiveManager* manager)
 	calcRootMatrix();
 	kill();
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -827,8 +830,8 @@ void TBossMantaManager::TMantaBattleState::update()
 	}
 	case 3:
 		if (sDefeatSE == nullptr) {
-			JDrama::TNameRefGen::search<TMapEventSirenaSink>(
-			    "イベント（ホテル沈む）")
+			static_cast<TMapEventSirenaSink*>(
+			    JDrama::TNameRefGen::search("イベント（ホテル沈む）"))
 			    ->unk64
 			    = true;
 			mState++;
@@ -913,25 +916,25 @@ void TBossMantaAdditionalCollisionSet::update(u32 cue,
 			unk0[i]->perform(cue, graphics);
 
 		int centerIdx    = TBossManta::sCenterJointIndex;
-		MtxPtr centerMtx = unkC->getModel()->mNodeMatrices[centerIdx];
+		MtxPtr centerMtx = unkC->getModel()->getAnmMtx(centerIdx);
 		f32 centerX      = centerMtx[0][3];
 		f32 centerY      = centerMtx[1][3];
 		f32 centerZ      = centerMtx[2][3];
 
 		int bodyIdx    = TBossManta::sBodyJointIndex;
-		MtxPtr bodyMtx = unkC->getModel()->mNodeMatrices[bodyIdx];
+		MtxPtr bodyMtx = unkC->getModel()->getAnmMtx(bodyIdx);
 		f32 bodyX      = bodyMtx[0][3];
 		f32 bodyY      = bodyMtx[1][3];
 		f32 bodyZ      = bodyMtx[2][3];
 
 		int rwingIdx    = TBossManta::sRwingJointIndex;
-		MtxPtr rwingMtx = unkC->getModel()->mNodeMatrices[rwingIdx];
+		MtxPtr rwingMtx = unkC->getModel()->getAnmMtx(rwingIdx);
 		f32 rwingX      = rwingMtx[0][3];
 		f32 rwingY      = rwingMtx[1][3];
 		f32 rwingZ      = rwingMtx[2][3];
 
 		int lwingIdx    = TBossManta::sLwingJointIndex;
-		MtxPtr lwingMtx = unkC->getModel()->mNodeMatrices[lwingIdx];
+		MtxPtr lwingMtx = unkC->getModel()->getAnmMtx(lwingIdx);
 		f32 lwingX      = lwingMtx[0][3];
 		f32 lwingY      = lwingMtx[1][3];
 		f32 lwingZ      = lwingMtx[2][3];
@@ -957,7 +960,8 @@ TBossMantaAdditionalCollision::TBossMantaAdditionalCollision(const char* name)
 	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->insert(this);
 }
 
@@ -1047,7 +1051,8 @@ void TBossMantaManager::loadAfter()
 	for (int i = 0; i < 7; ++i) {
 		char name[0x40];
 		snprintf(name, 0x40, "palmOugi %d", i);
-		TLiveActor* palm = JDrama::TNameRefGen::search<TLiveActor>(name);
+		TLiveActor* palm
+		    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search(name));
 		unk74[i].set(palm->mPosition.x, 0.0f, palm->mPosition.z);
 	}
 
@@ -1318,7 +1323,8 @@ void TBossMantaManager::createEnemy()
 {
 	TSpineEnemy* enemy = createEnemyInstance();
 	if (enemy != nullptr) {
-		JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+		static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search("オブジェクトグループ"))
 		    ->getChildren()
 		    .push_back(enemy);
 		enemy->init(this);

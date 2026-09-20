@@ -15,14 +15,14 @@ JPABaseEmitter::JPABaseEmitter()
     : unk0(this)
     , mRng(0)
 {
-	MTXIdentity(unk124);
+	MTXIdentity(mGlobalRotation);
 
-	unk154.set(1.0f, 1.0f, 1.0f);
+	mGlobalDynamicsScale.set(1.0f, 1.0f, 1.0f);
 
-	unk174.set(1.0f, 1.0f, 1.0f);
+	mGlobalParticleScale.set(1.0f, 1.0f, 1.0f);
 
 	unk16C.zero();
-	unk160.zero();
+	mGlobalTranslation.zero();
 
 	mChildSpawnTimer = 0.0f;
 
@@ -68,7 +68,6 @@ void JPABaseEmitter::deleteParticle(JPABaseParticle* particle) { }
 
 void JPABaseEmitter::deleteAllParticle()
 {
-	// TODO: this is hella fake
 	JSUList<JPABaseParticle>* list;
 	JSULink<JPABaseParticle>* it;
 
@@ -94,7 +93,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 	JGeometry::TVec3<f32> local_c0(0.0f, 0.0f, 0.0f);
 
 	JPASweepShape* sweepShape = mEmitterDataBlockInfo->getSweepShape();
-	int count                 = sweepShape->unk42;
+	int count                 = sweepShape->getRate();
 
 	JGeometry::TVec3<f32> parentUnk20;
 	parentUnk20.set(parent->mLocalPosition);
@@ -109,12 +108,13 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 		if (mManager->unk0.getNumLinks() == 0)
 			break;
 
-		JPAParticle* particle = (JPAParticle*)newParticle();
+		JPABaseParticle* baseParticle = newParticle();
+		JPAParticle* particle         = (JPAParticle*)baseParticle;
 		mChildParticleList.prepend(particle->getLinkBufferPtr());
 
 		particle->setStatus(JPABaseParticle::FLAG_UNK4);
 		particle->mLifeProgress = 0.0f;
-		particle->mLifetime     = sweepShape->unk40;
+		particle->mLifetime     = sweepShape->getLife();
 		particle->unk50         = unk114;
 
 		if (ignoreFields) {
@@ -126,12 +126,12 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 
 		particle->mFieldVelocity.set(local_c0);
 
-		f32 sweepShapeUnk1C = sweepShape->unk1C;
-		if (sweepShapeUnk1C != 0.0f) {
+		f32 velInhRate = sweepShape->getVelInhRate();
+		if (velInhRate != 0.0f) {
 			JGeometry::TVec3<f32> baseVel;
-			baseVel.scale(sweepShapeUnk1C, parent->accessBaseVelVec());
+			baseVel.scale(velInhRate, parent->accessBaseVelVec());
 			JGeometry::TVec3<f32> fVel;
-			fVel.scale(sweepShapeUnk1C, parent->accessFVelVec());
+			fVel.scale(velInhRate, parent->accessFVelVec());
 			particle->setBaseVelVec(baseVel);
 			particle->mFieldAcceleration.set(fVel);
 		} else {
@@ -139,9 +139,10 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 			particle->mFieldAcceleration.set(local_c0);
 		}
 
-		if (sweepShape->unkC != 0.0f) {
-			f32 f18 = getRandomRF() * (sweepShape->unkC * sweepShape->unk20);
-			f18 += sweepShape->unkC;
+		f32 baseVel = sweepShape->getBaseVel();
+		if (baseVel != 0.0f) {
+			f32 f18 = (baseVel * sweepShape->getBaseVelRndm()) * getRandomRF();
+			f18 += baseVel;
 
 			JGeometry::TVec3<f32> vec(getRandomSF(), getRandomSF(),
 			                          getRandomSF());
@@ -151,7 +152,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 
 		particle->unk68.set(0.0f, -1.0f, 0.0f);
 
-		particle->unk78           = sweepShape->unk24;
+		particle->unk78           = sweepShape->getMoment();
 		particle->mAirResistance  = parent->getAirResistance();
 		particle->mDynamicsWeight = parent->getDynamicsWeight();
 		particle->setVelocity();
@@ -162,7 +163,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 		particle->unk14.set(parentUnk14);
 		particle->mLocalPosition.set(parentUnk20);
 
-		f32 sweepShapeUnk8 = sweepShape->unk8;
+		f32 sweepShapeUnk8 = sweepShape->getPosRndm();
 		if (sweepShapeUnk8 != 0.0f) {
 			Mtx rotMtx;
 			JPAGetXYRotateMtx(mRng.get(), mRng.get(), rotMtx);
@@ -172,7 +173,7 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 			particle->mLocalPosition.add(vec);
 		}
 
-		mDraw.initChild(parent, particle);
+		mDraw.initChild(parent, baseParticle);
 		particle->unk54 = parent->unk54;
 	}
 }
@@ -180,87 +181,77 @@ void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 void JPABaseEmitter::getEmitterGlobalTranslation(JGeometry::TVec3<f32>& vec)
 {
 	TPosition3f local_3c;
-	MTXScale(local_3c, unk154.x, unk154.y, unk154.z);
-	MTXConcat(unk124, local_3c, local_3c);
-	local_3c.setTrans(unk160);
+	MTXScale(local_3c, mGlobalDynamicsScale.x, mGlobalDynamicsScale.y,
+	         mGlobalDynamicsScale.z);
+	MTXConcat(mGlobalRotation, local_3c, local_3c);
+	local_3c.setTrans(mGlobalTranslation);
 	local_3c.mult(mTrans, vec);
 }
 
 void JPABaseEmitter::calcEmitterGlobalParams()
 {
-	JPAEmitterInfoObj.mCurrentEmitter      = this;
-	JPAEmitterInfoObj.mCurrentFieldManager = &mFieldManager;
+	JPAEmitterInfo& eio = JPAEmitterInfoObj;
+
+	eio.mCurrentEmitter      = this;
+	eio.mCurrentFieldManager = &mFieldManager;
 
 	if (mEmitterDataBlockInfo->getSweepShape() != nullptr
 	    && mEmitterDataBlockInfo->getSweepShape()->mChildrenAffectedByFields)
-		JPAEmitterInfoObj.mChildrenAffectedByFields = true;
+		eio.mChildrenAffectedByFields = true;
 	else
-		JPAEmitterInfoObj.mChildrenAffectedByFields = false;
+		eio.mChildrenAffectedByFields = false;
 
-	JPAGetXYZRotateMtx(mRot.x * 182, mRot.y * 182, mRot.z * 182,
-	                   JPAEmitterInfoObj.unkCC);
-	Mtx afStack_48;
-	MTXCopy(JPAEmitterInfoObj.unkCC, afStack_48);
+	JPAGetXYZRotateMtx(mRot.x * 182, mRot.y * 182, mRot.z * 182, eio.unkCC);
+	TPosition3f emitterMtx;
+	MTXCopy(eio.unkCC, emitterMtx);
 
-	JPAEmitterInfoObj.unk30.set(mScale);
+	eio.unk30.set(mScale);
 
-	TPosition3f local_A0;
-	MTXScale(local_A0, mScale.x, mScale.y, mScale.z);
-	MTXConcat(JPAEmitterInfoObj.unkCC, local_A0, JPAEmitterInfoObj.unkFC);
-	local_A0.setTrans(mTrans);
+	Mtx scaleMtx;
+	MTXScale(scaleMtx, mScale.x, mScale.y, mScale.z);
+	MTXConcat(eio.unkCC, scaleMtx, eio.unkFC);
+	emitterMtx.setTrans(mTrans);
 
-	JPAEmitterInfoObj.unk18.set(unk154);
-	JPAEmitterInfoObj.unk30.mul(unk154);
+	eio.unk18.set(mGlobalDynamicsScale);
+	eio.unk30.mul(mGlobalDynamicsScale);
 
-	JPAEmitterInfoObj.unkC.scale(1.0f, JPAEmitterInfoObj.unk18);
+	eio.unkC.scale(1.0f, eio.unk18);
 
-	MTXScale(JPAEmitterInfoObj.unk9C, unk154.x, unk154.y, unk154.z);
+	MTXScale(eio.unk9C, mGlobalDynamicsScale.x, mGlobalDynamicsScale.y,
+	         mGlobalDynamicsScale.z);
 
-	MTXCopy(unk124, JPAEmitterInfoObj.unk6C);
-	MTXConcat(JPAEmitterInfoObj.unk6C, JPAEmitterInfoObj.unkCC,
-	          JPAEmitterInfoObj.unkCC);
-	MTXConcat(JPAEmitterInfoObj.unk6C, JPAEmitterInfoObj.unkFC,
-	          JPAEmitterInfoObj.unkFC);
-	MTXConcat(JPAEmitterInfoObj.unk6C, JPAEmitterInfoObj.unk9C,
-	          JPAEmitterInfoObj.unk9C);
+	MTXCopy(mGlobalRotation, eio.unk6C);
+	MTXConcat(eio.unk6C, eio.unkCC, eio.unkCC);
+	MTXConcat(eio.unk6C, eio.unkFC, eio.unkFC);
+	MTXConcat(eio.unk6C, eio.unk9C, eio.unk9C);
 
-	JPAEmitterInfoObj.unk9C.setTrans(unk160);
+	eio.unk9C.setTrans(mGlobalTranslation);
 
-	MTXConcat(JPAEmitterInfoObj.unk9C, afStack_48, afStack_48);
-	local_A0.getTrans(JPAEmitterInfoObj.unk24);
+	MTXConcat(eio.unk9C, emitterMtx, emitterMtx);
+	emitterMtx.getTrans(eio.unk24);
 
-	JGeometry::TVec3<f32> xDir;
-	JPAEmitterInfoObj.unkCC.getXDir(xDir);
-	JPAEmitterInfoObj.unk48[0][0] = xDir.x;
-	JPAEmitterInfoObj.unk48[0][1] = xDir.y;
-	JPAEmitterInfoObj.unk48[0][2] = xDir.z;
-
-	JGeometry::TVec3<f32> yDir;
-	JPAEmitterInfoObj.unkCC.getXDir(yDir);
-	JPAEmitterInfoObj.unk48[1][0] = yDir.x;
-	JPAEmitterInfoObj.unk48[1][1] = yDir.y;
-	JPAEmitterInfoObj.unk48[1][2] = yDir.z;
-
-	JGeometry::TVec3<f32> zDir;
-	JPAEmitterInfoObj.unkCC.getXDir(zDir);
-	JPAEmitterInfoObj.unk48[2][0] = zDir.x;
-	JPAEmitterInfoObj.unk48[2][1] = zDir.y;
-	JPAEmitterInfoObj.unk48[2][2] = zDir.z;
+	eio.unkCC.getXDir(eio.mEmitterAxisX);
+	eio.unkCC.getYDir(eio.mEmitterAxisY);
+	eio.unkCC.getZDir(eio.mEmitterAxisZ);
 
 	JGeometry::TVec3<f32> local_84(0.0f, 0.0f, 1.0f);
 	JGeometry::TVec3<f32> local_90;
 	local_90.normalize(mEmitterDirection);
 
-	JPAEmitterInfoObj.unk3C.set(local_90);
+	eio.unk3C.set(local_90);
 	if (local_90 == local_84) {
-		MTXIdentity(JPAEmitterInfoObj.unk12C);
+		MTXIdentity(eio.unk12C);
 	} else {
-		JPAVecToRotaMtx(JPAEmitterInfoObj.unk12C, local_84, local_90);
+		JPAVecToRotaMtx(eio.unk12C, local_90, local_84);
 	}
 }
 
 void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 {
+	s16 fix;
+	JGeometry::TVec3<s16> fixVec;
+	JGeometry::TVec3<f32> floatVec;
+
 	JSUMemoryInputStream stream2(block->mRawData,
 	                             *(u32*)((u8*)block->mRawData + 4));
 
@@ -274,32 +265,42 @@ void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 	stream.skip(2);
 	stream >> mVolumeSubdivision;
 	stream >> mChildSpawnRate;
-	mChildSpawnRateVariance = JPAConvertFixToFloat(stream.readS16());
-	mMaxFrame               = stream.readS16();
+	stream >> fix;
+	mChildSpawnRateVariance = JPAConvertFixToFloat(fix);
+	stream >> fix;
+	mMaxFrame = fix;
 	stream >> mStartFrame;
 	stream >> mVolumeSize;
-	mVolumeYawSweep  = JPAConvertFixToFloat(stream.readS16());
-	mVolumeMinRadius = JPAConvertFixToFloat(stream.readS16());
+	stream >> fix;
+	mVolumeYawSweep = JPAConvertFixToFloat(fix);
+	stream >> fix;
+	mVolumeMinRadius = JPAConvertFixToFloat(fix);
 	stream >> mBaseLifetime;
-	mLifetimeRandomScale   = JPAConvertFixToFloat(stream.readS16());
-	mBaseWeight            = JPAConvertFixToFloat(stream.readS16());
-	mWeightRandomScale     = JPAConvertFixToFloat(stream.readS16());
-	unk1C4                 = JPAConvertFixToFloat(stream.readS16());
-	unk1CC                 = JPAConvertFixToFloat(stream.readS16());
-	mBaseAirResistance     = JPAConvertFixToFloat(stream.readS16());
-	mAirResistanceVariance = JPAConvertFixToFloat(stream.readS16());
+	stream >> fix;
+	mLifetimeRandomScale = JPAConvertFixToFloat(fix);
+	stream >> fix;
+	mBaseWeight = JPAConvertFixToFloat(fix);
+	stream >> fix;
+	mWeightRandomScale = JPAConvertFixToFloat(fix);
+	stream >> fix;
+	unk1C4 = JPAConvertFixToFloat(fix);
+	stream >> fix;
+	unk1CC = JPAConvertFixToFloat(fix);
+	stream >> fix;
+	mBaseAirResistance = JPAConvertFixToFloat(fix);
+	stream >> fix;
+	mAirResistanceVariance = JPAConvertFixToFloat(fix);
 	stream >> unk1FC;
 	stream >> unk200;
 	stream >> unk204;
 	stream >> unk208;
 	stream >> unk1C8;
 
-	JGeometry::TVec3<s16> fixVec;
 	stream.read(&fixVec, sizeof(fixVec));
-	JGeometry::TVec3<f32> floatVec;
 	JPAConvertFixVecToFloatVec(floatVec, fixVec);
 	mEmitterDirection.normalize(floatVec);
-	unk1E4 = JPAConvertFixToFloat(stream.readS16());
+	stream >> fix;
+	unk1E4 = JPAConvertFixToFloat(fix);
 	stream >> mEmitFlags;
 	stream >> mKeyAnmTypeMask;
 }
@@ -325,7 +326,6 @@ void JPABaseEmitter::drawEmitterCallBack()
 JPABaseParticle* JPABaseEmitter::createParticle()
 {
 	if (mManager->unk0.getNumLinks() != 0) {
-
 		JPAParticle* particle = (JPAParticle*)newParticle();
 		mParticleList.prepend(particle->getLinkBufferPtr());
 
@@ -485,8 +485,9 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 			f32 r = volumeSize
 			        * (mVolumeMinRadius + distance * (1.0f - mVolumeMinRadius));
 
-			local_468.set(r * JMASSin(uVar11), volumeSize * getRandomRF(),
-			              r * JMASCos(uVar11));
+			local_468.x = r * JMASSin(uVar11);
+			local_468.y = (2.0f * volumeSize) * getRandomSF();
+			local_468.z = r * JMASCos(uVar11);
 			break;
 		}
 		case VOLUME_TYPE_TORUS: {
@@ -500,15 +501,18 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 			Mtx afStack_170;
 			JPAGetYRotateMtx(theta, afStack_170);
 
-			local_468.set(volumeSize * JMASSin(theta), 0.0f,
-			              volumeSize * JMASCos(theta));
+			local_468.x = volumeSize * JMASSin(theta);
+			local_468.y = 0.0f;
+			local_468.z = volumeSize * JMASCos(theta);
 
 			JGeometry::TVec3<f32> local_3C8;
 
 			f32 rad = volumeSize * mVolumeMinRadius;
 			s16 phi = mRng.get();
 
-			local_3C8.set(0.0f, rad * JMASSin(phi), rad * JMASCos(phi));
+			local_3C8.x = 0.0f;
+			local_3C8.y = rad * JMASSin(phi);
+			local_3C8.z = rad * JMASCos(phi);
 
 			MTXMultVec(afStack_170, &local_3C8, &local_3C8);
 			local_468 += local_3C8;
@@ -530,6 +534,9 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 
 		JGeometry::TVec3<f32> local_398(0.0f, 0.0f, 0.0f);
 		JGeometry::TVec3<f32> f26_f25_f28(0.0f, 0.0f, 0.0f);
+		JGeometry::TVec3<f32> f22_f23_f24(0.0f, 0.0f, 0.0f);
+		JGeometry::TVec3<f32> add3_vec(0.0f, 0.0f, 0.0f);
+
 		if (unk1FC != 0.0f) {
 			if (mVolumeType == VOLUME_TYPE_POINT) {
 				f26_f25_f28.set(getRandomSF(), getRandomSF(), getRandomSF());
@@ -540,7 +547,6 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 			}
 		}
 
-		JGeometry::TVec3<f32> f22_f23_f24(0.0f, 0.0f, 0.0f);
 		if (unk200 != 0.0f) {
 			if (mVolumeType == VOLUME_TYPE_POINT) {
 				if (checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
@@ -557,11 +563,9 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 			}
 		}
 
-		JGeometry::TVec3<f32> add3_vec(0.0f, 0.0f, 0.0f);
 		if (unk204 != 0.0f) {
-			add3_vec.x = getRandomSF() * unk204;
-			add3_vec.y = getRandomSF() * unk204;
-			add3_vec.z = getRandomSF() * unk204;
+			add3_vec.set(getRandomSF(), getRandomSF(), getRandomSF());
+			add3_vec.scale(unk204);
 		}
 
 		if (unk208 != 0.0f) {
@@ -759,9 +763,9 @@ bool JPABaseEmitter::checkMaxFrame()
 
 void JPABaseEmitter::doParticle()
 {
-	JSUList<JPABaseParticle>* list = getParticleList();
+	JSUList<JPABaseParticle>* list = &mParticleList;
 
-	JSULink<JPABaseParticle>* link = mParticleList.getFirst();
+	JSULink<JPABaseParticle>* link = list->getFirst();
 	while (link) {
 		JPABaseParticle* particle      = link->getObject();
 		JSULink<JPABaseParticle>* next = link->getNext();
@@ -789,9 +793,9 @@ void JPABaseEmitter::doParticle()
 
 void JPABaseEmitter::doChildParticle()
 {
-	JSUList<JPABaseParticle>* list = getChildParticleList();
+	JSUList<JPABaseParticle>* list = &mChildParticleList;
 
-	JSULink<JPABaseParticle>* link = mChildParticleList.getFirst();
+	JSULink<JPABaseParticle>* link = list->getFirst();
 	while (link) {
 		JPABaseParticle* particle      = link->getObject();
 		JSULink<JPABaseParticle>* next = link->getNext();
@@ -887,7 +891,7 @@ void JPABaseEmitter::calcKeyFrameAnime()
 			unk1E4 = getKeyValue(time, frameNum, keyFrames);
 			break;
 		case 10:
-			unk1E4 = getKeyValue(time, frameNum, keyFrames);
+			mDraw.setKeyScl(getKeyValue(time, frameNum, keyFrames));
 			break;
 		}
 	}
@@ -923,12 +927,13 @@ void JPABaseEmitter::setGlobalRMatrix(MtxPtr) { }
 
 void JPABaseEmitter::setGlobalRTMatrix(MtxPtr param_1)
 {
-	JPAGetRMtxTVecElement(param_1, unk124, unk160);
+	JPAGetRMtxTVecElement(param_1, mGlobalRotation, getGlobalTranslation());
 }
 
 void JPABaseEmitter::setGlobalSRTMatrix(MtxPtr param_1)
 {
-	JPAGetRMtxSTVecElement(param_1, unk124, unk154, unk160);
+	JPAGetRMtxSTVecElement(param_1, mGlobalRotation, getGlobalDynamicsScale(),
+	                       getGlobalTranslation());
 }
 
 void JPABaseEmitter::getPivotX() { }

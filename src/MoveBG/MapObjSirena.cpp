@@ -88,7 +88,8 @@ void TRoulette::initMapObj()
 
 	unk150 = new TRouletteSw(this, "ルーレットスイッチ");
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(unk150);
 	f32 attackR = 500.0f;
@@ -524,22 +525,8 @@ void TItemSlotDrum::generateItem()
 		TTelesa* item = (TTelesa*)gpConductor->makeOneEnemyAppear(
 		    mPosition, "テレサマネージャー", 1);
 		if (item != nullptr) {
-			s16 ang = (s16)DEG2SHORTANGLE(mRotation.x);
-			f32 s   = JMASSin(ang);
-			f32 c   = JMASCos(ang);
 			Mtx m;
-			m[0][0] = c;
-			m[0][1] = 0.0f;
-			m[0][2] = s;
-			m[0][3] = 0.0f;
-			m[1][0] = 0.0f;
-			m[1][1] = 1.0f;
-			m[1][2] = 0.0f;
-			m[1][3] = 0.0f;
-			m[2][0] = -s;
-			m[2][1] = 0.0f;
-			m[2][2] = c;
-			m[2][3] = 0.0f;
+			MsMtxSetRotY(m, mRotation.x);
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 300.0f);
 			MTXMultVec(m, &off, &off);
 			item->mPosition += off;
@@ -555,23 +542,8 @@ void TItemSlotDrum::generateItem()
 			spread = 20.0f;
 		}
 		for (int i = 0; i < count; ++i) {
-			s16 ang = (s16)DEG2SHORTANGLE(spread * ((f32)i - 1.0f)
-			                              + (mRotation.x - spread));
-			f32 s   = JMASSin(ang);
-			f32 c   = JMASCos(ang);
 			Mtx m;
-			m[0][0] = c;
-			m[0][1] = 0.0f;
-			m[0][2] = s;
-			m[0][3] = 0.0f;
-			m[1][0] = 0.0f;
-			m[1][1] = 1.0f;
-			m[1][2] = 0.0f;
-			m[1][3] = 0.0f;
-			m[2][0] = -s;
-			m[2][1] = 0.0f;
-			m[2][2] = c;
-			m[2][3] = 0.0f;
+			MsMtxSetRotY(m, spread * ((f32)i - 1.0f) + (mRotation.x - spread));
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 200.0f);
 			MTXMultVec(m, &off, &off);
 			TMapObjBase* item = gpItemManager->makeObjAppear(
@@ -583,7 +555,7 @@ void TItemSlotDrum::generateItem()
 				item->mVelocity.x = 12.0f * off.x;
 				item->mVelocity.y = TMsRange<f32>(5.0f, 10.0f).rand();
 				item->mVelocity.z = 12.0f * off.z;
-				item->offLiveFlag(0x10);
+				item->offLiveFlag(LIVE_FLAG_UNK10);
 			}
 		}
 	} else {
@@ -677,7 +649,7 @@ void TCasinoPanelGate::moveObject()
 	TLiveActor::moveObject();
 	mPosition.y = unk150 - unk14C;
 	if (unk16D) {
-		J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc->getFrame() < (f32)fc->getEnd() - 8.0f) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_PANELPUZZLE_OPEN, 0,
 			                                   nullptr, 0);
@@ -853,8 +825,10 @@ void TDonchou::loadAfter()
 	TMapObjBase::loadAfter();
 	if (gpApplication.mCurrArea.getStage() == 14
 	    && gpMarDirector->getCurrentStage() == 0) {
-		unk144 = JDrama::TNameRefGen::search<TSlotDrum>("srotdram");
-		unk148 = JDrama::TNameRefGen::search<TItemSlotDrum>("itemsrotdram");
+		unk144
+		    = static_cast<TSlotDrum*>(JDrama::TNameRefGen::search("srotdram"));
+		unk148 = static_cast<TItemSlotDrum*>(
+		    JDrama::TNameRefGen::search("itemsrotdram"));
 	}
 }
 
@@ -872,8 +846,8 @@ void TDonchou::calcRootMatrix()
 	if (unk13C != 0) {
 		unk14C++;
 		if (unk14C > 100) {
-			if (mMActor->checkCurAnm("donchou", 0)) {
-				if (mMActor->curAnmEndsNext(0, 0))
+			if (mMActor->checkCurAnm("donchou", ANM_TYPE_BCK)) {
+				if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 					unk138->remove();
 			} else {
 				SMSGetMSound()->startSoundActor(MSD_SE_SY_DONCHO_OPEN,
@@ -882,7 +856,7 @@ void TDonchou::calcRootMatrix()
 				SMSGetMarDirector()->fireStartDemoCamera(
 				    "どん帳カメラ", &mPosition, -1, 0.0f, true, nullptr, 0,
 				    nullptr, JDrama::TFlagT<u16>(0));
-				J3DFrameCtrl* fc = mMActor->getFrameCtrl(0);
+				J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 				fc->setRate(0.5f * fc->getRate());
 			}
 		}
@@ -940,7 +914,7 @@ void TCloset::initMapObj()
 void TCloset::moveObject()
 {
 	TLiveActor::moveObject();
-	if (unk16C != 0 && !mMActor->checkCurAnm("closetopen", 0)) {
+	if (unk16C != 0 && !mMActor->checkCurAnm("closetopen", ANM_TYPE_BCK)) {
 		unk16D++;
 		if (unk16D == 60) {
 			mMActor->setBck("closetopen");
@@ -1016,8 +990,8 @@ void TCloset::calcRootMatrix()
 	model->setBaseTRMtx(mtx);
 	model->setBaseScale(mScaling);
 	mtx.ref(1, 3) += unk14C;
-	if (unk16C != 0 && mMActor->checkCurAnm("closetopen", 0)
-	    && mMActor->curAnmEndsNext(0, 0))
+	if (unk16C != 0 && mMActor->checkCurAnm("closetopen", ANM_TYPE_BCK)
+	    && mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 		mMapCollisionWarp->remove();
 }
 
@@ -1080,7 +1054,8 @@ void TSakuCasino::initMapObj()
 void TSakuCasino::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	unk144 = JDrama::TNameRefGen::search<TCasinoPanelGate>("pazul");
+	unk144
+	    = static_cast<TCasinoPanelGate*>(JDrama::TNameRefGen::search("pazul"));
 }
 
 void TSakuCasino::calcRootMatrix()

@@ -6,6 +6,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/FlagManager.hpp>
 #include <MSound/MSound.hpp>
+#include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -94,7 +95,8 @@ void TMonumentShine::hitByWater(THitActor* actor)
 BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->isActorType(0x01000001)) {
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
 		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 
@@ -143,7 +145,7 @@ void TMonumentShine::control()
 		if (unk144 == 2) {
 			if (unk148 > 0) {
 				f32 diff
-				    = MsAngleDiff(mRotation.y, mInitialRotation.y + 360.0f);
+				    = MsAngleDiff(mInitialRotation.y + 360.0f, mRotation.y);
 				if (diff > 0.1f)
 					diff = 0.1f;
 				if (0.0f == diff)
@@ -151,7 +153,7 @@ void TMonumentShine::control()
 				mAngularVelocity.y += diff;
 			} else {
 				f32 diff
-				    = MsAngleDiff(mRotation.y, mInitialRotation.y - 360.0f);
+				    = MsAngleDiff(mInitialRotation.y - 360.0f, mRotation.y);
 				if (diff < -0.1f)
 					diff = -0.1f;
 				if (0.0f == diff)
@@ -229,7 +231,7 @@ void TBellDolpic::calcRootMatrix()
 	TMapObjBase::calcRootMatrix();
 	J3DModel* model = getModel();
 	Mtx temp;
-	PSMTXRotAxisRad(temp, &unk140, 0.017453292f * unk14C);
+	PSMTXRotAxisRad(temp, &unk140, DEG_TO_RAD(unk14C));
 	PSMTXConcat(model->getBaseTRMtx(), temp, model->getBaseTRMtx());
 }
 
@@ -253,8 +255,7 @@ void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 
 	unk150 -= 0.5f;
 
-	int r   = rand();
-	f32 tmp = (f32)r * 0.000030517578f;
+	f32 tmp = (f32)rand() * 0.000030517578f;
 	unk158  = (int)(tmp * 14400.0f) + 0x5460;
 }
 
@@ -267,7 +268,8 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (sender->isActorType(0x01000001)) {
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 
 		if (unk154 == 0)
 			return 1;
@@ -315,7 +317,7 @@ void TBellDolpic::control()
 
 	TMapObjBase::control();
 
-	f32 sinVal = -JMASin(unk14C);
+	f32 sinVal = -MsSin(unk14C);
 	unk150     = 0.01f * sinVal + unk150;
 
 	unk14C = unk14C + unk150;
@@ -418,7 +420,7 @@ void TDemoCannon::initMapObj()
 	TMapObjBase::initMapObj();
 
 	mMActor->setBck("democannon_dpt");
-	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	frameCtrl->setFrame(frameCtrl->getEnd());
 
 	void* res
@@ -466,13 +468,13 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!(cue & CUE_CALC_ANIM))
 		return;
 
-	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->getFrame() < 174.0f) {
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_CANNON_MOVE, &mPosition, 0,
 		                                nullptr, 0, 4);
 	}
 
-	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
+	frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->checkPass(174.0f)) {
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK24, 1.0f);
 		SMSRumbleMgr->start(21, 10, (f32*)nullptr);
@@ -491,7 +493,7 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 		                                nullptr, 0, 4);
 	}
 
-	frameCtrl = unk13C->getMActor()->getFrameCtrl(0);
+	frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (frameCtrl->getFrame() > 175.0f) {
 		MtxPtr mtx = unk13C->getMActor()->getModel()->getAnmMtx(0);
 		gpMarioParticleManager->emitAndBindToMtxPtr(358, mtx, 1, this);
@@ -503,13 +505,17 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 void TTurboNozzleDoor::loadAfter()
 {
 	if (strcmp("空港ドアＡ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ１");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＡ１"));
 	} else if (strcmp("空港ドアＡ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＡ０");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＡ０"));
 	} else if (strcmp("空港ドアＢ０", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ１");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＢ１"));
 	} else if (strcmp("空港ドアＢ１", getName()) == 0) {
-		unk144 = JDrama::TNameRefGen::search<TLiveActor>("空港ドアＢ０");
+		unk144 = static_cast<TLiveActor*>(
+		    JDrama::TNameRefGen::search("空港ドアＢ０"));
 	}
 }
 

@@ -9,6 +9,12 @@ namespace JDrama {
 
 class TCharacter;
 
+/**
+ * @brief A scene graph object which is visible and has a position, rotation &
+ * scale.
+ * @details Basically, anything you can see on the scene and say "yep, that's a
+ * thing": enemies, npcs, map objects, the player, etc.
+ */
 class TActor : public TPlacement, public JStage::TActor {
 public:
 	TActor(const char* name)
@@ -23,9 +29,9 @@ public:
 
 	~TActor();
 
-	virtual int getType() const;
+	virtual int getType() const { return 1; }
 	virtual void load(JSUMemoryInputStream&);
-	void issueGXLight(unsigned long, JDrama::TGraphics*);
+	void issueGXLight(u32, JDrama::TGraphics*);
 
 	virtual void perform(u32 cue, TGraphics* graphics);
 

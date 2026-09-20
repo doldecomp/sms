@@ -40,6 +40,11 @@ void J2DDrawLine(int x1, int y1, int x2, int y2, JUtility::TColor color,
                  int line_width);
 void J2DFillBox(int x, int y, int width, int height, JUtility::TColor color);
 void J2DFillBox(JUTRect box, JUtility::TColor color);
+void J2DFillBox(int x, int y, int width, int height, JUtility::TColor colorTL,
+                JUtility::TColor colorTR, JUtility::TColor colorBR,
+                JUtility::TColor colorBL);
+void J2DFillBox(JUTRect box, JUtility::TColor colorTL, JUtility::TColor colorTR,
+                JUtility::TColor colorBR, JUtility::TColor colorBL);
 void J2DDrawFrame(int x, int y, int width, int height, JUtility::TColor color,
                   u8 line_width);
 void J2DDrawFrame(JUTRect box, JUtility::TColor color, u8 line_width);

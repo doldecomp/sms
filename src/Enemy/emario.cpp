@@ -82,8 +82,8 @@ void TEMario::load(JSUMemoryInputStream& stream)
 
 	// "Mario Character"
 	const char marioCharName[] = "マリオ キャラ";
-	mEnemyMario->setCharacter(
-	    JDrama::TNameRefGen::search<JDrama::TCharacter>(marioCharName));
+	mEnemyMario->setCharacter(static_cast<JDrama::TCharacter*>(
+	    JDrama::TNameRefGen::search(marioCharName)));
 
 	mEnemyMario->initValues();
 
@@ -113,8 +113,10 @@ void TEMario::init(TLiveManager* manager)
 			mMActorKeeper->mModelLoaderFlags = 0x11300000;
 			mMActor = mMActorKeeper->createMActorFromDefaultBmd(
 			    chara->getFolder(), 0);
-			for (int i = 0; i < mMActor->unk4->mModelData->mMaterialNum; i++) {
-				SMS_InitPacket_Fog(mMActor->unk4, i);
+			for (int i = 0;
+			     i < mMActor->getModel()->getModelData()->getMaterialNum();
+			     i++) {
+				SMS_InitPacket_Fog(mMActor->getModel(), i);
 			}
 			mMActor->setBtk("kagemario_scroll");
 		}
@@ -164,17 +166,14 @@ void TEMario::kill()
 		gpCamera->removeMultiPlayer(&mPosition);
 }
 
-BOOL TEMario::isGoal()
+bool TEMario::isGoal()
 {
-	// raw read (not checkEMFlag): the BOOL ? TRUE : FALSE return materializes
-	// straight into r3, matching retail; checkEMFlag's own bool adds a clrlwi
-	return (mEnemyMario->mEMFlags & TEnemyMario::EM_FLAG_GOAL_REACHED) ? TRUE
-	                                                                   : FALSE;
+	return mEnemyMario->checkEMFlag(TEnemyMario::EM_FLAG_GOAL_REACHED);
 }
 
-BOOL TEMario::isReachedToGate() const { return mEnemyMario->isReachedToGate(); }
+bool TEMario::isReachedToGate() const { return mEnemyMario->isReachedToGate(); }
 
-BOOL TEMario::isDownWaitingToTalk() const
+bool TEMario::isDownWaitingToTalk() const
 {
 	return mEnemyMario->isDownWaitingToTalk();
 }

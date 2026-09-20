@@ -19,15 +19,14 @@ void TLight::perform(u32 cue, TGraphics* graphics)
 	if (!(cue & CUE_LIGHT))
 		return;
 	correct(graphics);
-	GXLoadLightObjImm(&unk24, (GXLightID)(graphics->unkE4 + GX_LIGHT0));
+	GXLoadLightObjImm(getLightObj(), (GXLightID)(graphics->unkE4 + GX_LIGHT0));
 }
 
 void TLight::correct(TGraphics* param_1) const
 {
 	Vec pos;
-	MTXMultVec(param_1->mViewMtx.mMtx, (Vec*)&mPosition, &pos);
-	// Ewwwwwwwwwwwwwwwwwwwwwww
-	GXInitLightPos(const_cast<GXLightObj*>(&unk24), pos.x, pos.y, pos.z);
+	MTXMultVec(param_1->getViewMtx(), (Vec*)&mPosition, &pos);
+	GXInitLightPos(getLightObj(), pos.x, pos.y, pos.z);
 }
 
 JStage::TELight TLight::JSGGetLightType() const { return mLightType; }
@@ -59,7 +58,7 @@ GXColor TLight::JSGGetColor() const
 	return result;
 }
 
-void TLight::JSGSetColor(GXColor color) { GXInitLightColor(&unk24, color); }
+void TLight::JSGSetColor(GXColor color) { setColor(color); }
 
 void TLightAry::load(JSUMemoryInputStream& stream)
 {
@@ -104,11 +103,11 @@ void TLightAry::perform(u32 cue, TGraphics* graphics)
 	if (!(cue & CUE_LIGHT))
 		return;
 
-	for (int i = 0; i < mLightCount; ++i)
+	for (int i = 0; i < getLightNum(); ++i)
 		mLights[i].correct(graphics);
 
 	DCFlushRange(mLights, mLightCount * sizeof(TIdxLight));
-	GXSetArray(GX_LIGHT_ARRAY, &mLights[0].unk24, sizeof(TIdxLight));
+	GXSetArray(GX_LIGHT_ARRAY, mLights[0].getLightObj(), sizeof(TIdxLight));
 }
 
 void TAmbColor::load(JSUMemoryInputStream& stream)
@@ -128,7 +127,7 @@ void TAmbColor::perform(u32 cue, TGraphics* graphics)
 
 GXColor TAmbColor::JSGGetColor() const { return mColor; }
 
-void TAmbColor::JSGSetColor(GXColor color) { mColor = color; }
+void TAmbColor::JSGSetColor(GXColor color) { setColor(color); }
 
 void TAmbAry::load(JSUMemoryInputStream& stream)
 {

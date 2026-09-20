@@ -15,6 +15,8 @@ public:
 	JKRAMCommand();
 	~JKRAMCommand();
 
+	u32 getDestination();
+
 public:
 	/* 0x00 */ ARQRequest mRequest;
 	/* 0x20 */ JSULink<JKRAMCommand> mPieceLink;
@@ -50,6 +52,9 @@ public:
 	};
 
 public:
+	JKRAramPiece();
+	~JKRAramPiece();
+
 	static JKRAMCommand* prepareCommand(int, u32, u32, u32, JKRAramBlock*,
 	                                    JKRAMCommand::AsyncCallback);
 	static void sendCommand(JKRAMCommand*);
@@ -57,6 +62,7 @@ public:
 	static JKRAMCommand* orderAsync(int, u32, u32, u32, JKRAramBlock*,
 	                                JKRAMCommand::AsyncCallback);
 	static bool sync(JKRAMCommand*, int);
+	static void syncAll(int);
 	static bool orderSync(int, u32, u32, u32, JKRAramBlock*);
 	static void startDMA(JKRAMCommand*);
 	static void doneDMA(u32);
@@ -66,7 +72,7 @@ private:
 	static void unlock() { OSUnlockMutex(&mMutex); }
 };
 
-inline BOOL JKRAramPcs(int direction, u32 source, u32 destination, u32 length,
+inline bool JKRAramPcs(int direction, u32 source, u32 destination, u32 length,
                        JKRAramBlock* block)
 {
 	return JKRAramPiece::orderSync(direction, source, destination, length,

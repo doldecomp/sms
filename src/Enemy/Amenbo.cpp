@@ -183,7 +183,7 @@ void TAmenbo::checkMarioWaterIn()
 
 void TAmenbo::updateCollision()
 {
-	if (!isFreeze() && !mMActor->checkCurAnm("amenbo_hit1_end", 0)) {
+	if (!isFreeze() && !mMActor->checkCurAnm("amenbo_hit1_end", ANM_TYPE_BCK)) {
 		activateJumpBase();
 	} else {
 		deactivateJumpBase();
@@ -254,8 +254,8 @@ void TAmenbo::attackToMario()
 
 void TAmenbo::setDeadAnm()
 {
-	mMActor->getFrameCtrl(0)->init(1);
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->init(1);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 }
 
 bool TAmenbo::changeByJuice()
@@ -277,7 +277,7 @@ void TAmenbo::updateRipple()
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        AMENBO_JPA_MS_AME_HAMON, &effect->mPos, 1, effect)) {
 			JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
-			emitter->setScale(scale);
+			emitter->setGlobalScale(scale);
 		}
 	}
 }
@@ -286,7 +286,8 @@ void TAmenbo::changeBck(const char* param_1, f32 param_2)
 {
 	mMActor->setBck(param_1);
 	setCurAnmSound();
-	mMActor->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate() * param_2);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)
+	    ->setRate(SMSGetAnmFrameRate() * param_2);
 }
 
 void TAmenbo::prepareWalk()
@@ -325,7 +326,7 @@ void TAmenbo::doAdjustTarget()
 	vel *= 0.9f;
 	mVelocity = vel;
 
-	unk1E0 = mMActor->getFrameCtrl(0)->getFrame() / 63;
+	unk1E0 = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() / 63;
 
 	if (1.0f <= unk1E0)
 		unk1E0 = 1.0f;
@@ -336,10 +337,10 @@ void TAmenbo::doAdjustTarget()
 
 void TAmenbo::doChangeWaitAnm()
 {
-	if (checkCurAnmEnd(0)) {
-		if (mMActor->checkCurAnm("amenbo_wait1_start", 0))
+	if (checkCurAnmEnd(ANM_TYPE_BCK)) {
+		if (mMActor->checkCurAnm("amenbo_wait1_start", ANM_TYPE_BCK))
 			changeBck("amenbo_wait1_loop", 1.0f);
-		else if (mMActor->checkCurAnm("amenbo_wait1_loop", 0))
+		else if (mMActor->checkCurAnm("amenbo_wait1_loop", ANM_TYPE_BCK))
 			changeBck("amenbo_wait1_end", 1.0f);
 		else
 			changeBck("amenbo_wait1_start", 1.0f);
@@ -404,7 +405,7 @@ bool TAmenbo::isWalking() const
 
 bool TAmenbo::isStartMoving() const
 {
-	return mMActor->getFrameCtrl(0)->checkPass(63.0f);
+	return mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(63.0f);
 }
 
 bool TAmenbo::isFindOutMario() const
@@ -441,7 +442,7 @@ bool TAmenbo::isAttacking() const
 	bool result;
 	if (mSpine->getLatestNerve() != &TNerveAmenboHitWater::theNerve())
 		result = true;
-	else if (mMActor->checkCurAnm("amenbo_hit1_end", 0))
+	else if (mMActor->checkCurAnm("amenbo_hit1_end", ANM_TYPE_BCK))
 		result = true;
 	else
 		result = false;
@@ -586,7 +587,7 @@ DEFINE_NERVE(TNerveAmenboPreAttack, TLiveActor)
 
 	if (self->getSaveParam2()->mPreAttackTimer.get() < spine->getTime()) {
 		self->changeBck("amenbo_run1", self->mIsChasingMario ? 3.0f : 1.0f);
-		self->getMActor()->getFrameCtrl(0)->setFrame(63.0f);
+		self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(63.0f);
 		spine->pushAfterCurrent(&TNerveAmenboWalk::theNerve());
 		return true;
 	}
@@ -617,10 +618,12 @@ DEFINE_NERVE(TNerveAmenboHitWater, TLiveActor)
 	TAmenbo* self = (TAmenbo*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->getMActor()->checkCurAnm("amenbo_hit1_end", 0)
-		    || self->getMActor()->checkCurAnm("amenbo_hit1_loop", 0)) {
+		if (self->getMActor()->checkCurAnm("amenbo_hit1_end", ANM_TYPE_BCK)
+		    || self->getMActor()->checkCurAnm("amenbo_hit1_loop",
+		                                      ANM_TYPE_BCK)) {
 			self->changeBck("amenbo_hit1_loop", 1.0f);
-		} else if (!self->getMActor()->checkCurAnm("amenbo_hit1_start", 0)) {
+		} else if (!self->getMActor()->checkCurAnm("amenbo_hit1_start",
+		                                           ANM_TYPE_BCK)) {
 			self->changeBck("amenbo_hit1_start", 1.0f);
 		}
 	}
@@ -628,13 +631,15 @@ DEFINE_NERVE(TNerveAmenboHitWater, TLiveActor)
 	self->setVelocity(JGeometry::TVec3<f32>(0.0f));
 
 	if (self->checkCurAnmEnd(0)) {
-		if (self->getMActor()->checkCurAnm("amenbo_hit1_start", 0))
+		if (self->getMActor()->checkCurAnm("amenbo_hit1_start", ANM_TYPE_BCK))
 			self->changeBck("amenbo_hit1_loop", 1.0f);
-		else if (self->getMActor()->checkCurAnm("amenbo_hit1_loop", 0)
+		else if (self->getMActor()->checkCurAnm("amenbo_hit1_loop",
+		                                        ANM_TYPE_BCK)
 		         && self->getSaveParam2()->mHitWaterTimer.get()
 		                < spine->getTime())
 			self->changeBck("amenbo_hit1_end", 1.0f);
-		else if (self->getMActor()->checkCurAnm("amenbo_hit1_end", 0)) {
+		else if (self->getMActor()->checkCurAnm("amenbo_hit1_end",
+		                                        ANM_TYPE_BCK)) {
 			spine->pushAfterCurrent(&TNerveAmenboSearch::theNerve());
 			return true;
 		}

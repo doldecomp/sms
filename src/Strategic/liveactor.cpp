@@ -127,7 +127,7 @@ void TLiveActor::calcRideMomentum()
 	}
 }
 
-J3DModel* TLiveActor::getModel() const { return mMActor->unk4; }
+J3DModel* TLiveActor::getModel() const { return mMActor->mModel; }
 
 Mtx* TLiveActor::getRootJointMtx() const { return nullptr; }
 
@@ -170,7 +170,8 @@ void TLiveActor::load(JSUMemoryInputStream& stream)
 
 	char buffer[256];
 	stream.readString(buffer, 256);
-	TLiveManager* mgr = JDrama::TNameRefGen::search<TLiveManager>(buffer);
+	TLiveManager* mgr
+	    = static_cast<TLiveManager*>(JDrama::TNameRefGen::search(buffer));
 
 	mGroundPlane = TMap::getIllegalCheckData();
 
@@ -262,7 +263,7 @@ void TLiveActor::kill()
 
 BOOL TLiveActor::receiveMessage(THitActor*, u32) { return FALSE; }
 
-u32 TLiveActor::getShadowType() { return 0; }
+u32 TLiveActor::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 
 void TLiveActor::setGroundCollision()
 {
@@ -301,17 +302,17 @@ void TLiveActor::requestShadow()
 	    || (mLiveFlag & LIVE_FLAG_UNK400)) {
 		TCircleShadowRequest local_2c;
 
-		local_2c.unk0 = mPosition;
+		local_2c.mPosition = mPosition;
 
 		if (!isAirborne()) {
-			local_2c.unk0.y = mGroundHeight;
-			local_2c.unk1D  = 0;
+			local_2c.mPosition.y       = mGroundHeight;
+			local_2c.mNeedsGroundCheck = 0;
 		}
 
-		local_2c.unkC = local_2c.unk10 = mScaledBodyRadius;
+		local_2c.mRadiusX = local_2c.mRadiusZ = mScaledBodyRadius;
 
-		local_2c.unk1C = getShadowType();
-		local_2c.unk14 = mRotation.y;
+		local_2c.mShadowType = getShadowType();
+		local_2c.mRotationY  = mRotation.y;
 
 		if (mLiveFlag & LIVE_FLAG_UNK400) {
 			gpBindShadowManager->forceRequest(local_2c, getActorType());
@@ -421,7 +422,7 @@ int TLiveActor::getJointTransByIndex(int param_1,
 		return param_1;
 	}
 
-	MtxPtr mtx = mMActor->unk4->getAnmMtx(param_1);
+	MtxPtr mtx = mMActor->mModel->getAnmMtx(param_1);
 	param_2->set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	return param_1;
 }
@@ -433,7 +434,7 @@ MtxPtr TLiveActor::getTakingMtx()
 	if (!mMActor)
 		return nullptr;
 
-	return mMActor->unk4->unk20;
+	return mMActor->getModel()->getBaseTRMtx();
 }
 
 void TLiveActor::initAnmSound()
@@ -456,7 +457,7 @@ void TLiveActor::updateAnmSound()
 	if (!mAnmSoundPath)
 		return;
 
-	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	mAnmSound->animeLoop(&mPosition, ctrl->getFrame(), ctrl->getRate(), 0, 4);
 }
 
@@ -480,12 +481,9 @@ void TLiveActor::setCurAnmSound()
 	const char* name = nullptr;
 
 	if (mMActor) {
-		int idx = mMActor->getCurAnmIdx(0);
-		if (idx >= 0) {
-			const char** table = getBasNameTable();
-
-			name = !table ? nullptr : table[idx];
-		}
+		int idx = mMActor->getCurAnmIdx(ANM_TYPE_BCK);
+		if (idx >= 0)
+			name = getBas(idx);
 	}
 
 	setAnmSound(name);

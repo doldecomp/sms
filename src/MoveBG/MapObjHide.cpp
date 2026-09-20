@@ -70,7 +70,7 @@ void THideObjBase::appearObjFromPoint(const JGeometry::TVec3<f32>& point)
 
 void THideObjBase::emitEffect()
 {
-	gpMarioParticleManager->emit(0x57, &mPosition, 0, nullptr);
+	gpMarioParticleManager->emit(MAPOBJ_MS_WATCOIN_HIT, &mPosition, 0, nullptr);
 }
 
 BOOL THideObjBase::receiveMessage(THitActor* sender, u32 message)
@@ -598,9 +598,8 @@ void THideObjPictureTwin::loadAfter()
 		buffer2[len + 2] = buffer[2];
 		buffer2[len + 3] = buffer[3];
 
-		THideObjPictureTwin* hitActor
-		    = JDrama::TNameRefGen::getInstance()->search<THideObjPictureTwin>(
-		        buffer2);
+		THideObjPictureTwin* hitActor = static_cast<THideObjPictureTwin*>(
+		    JDrama::TNameRefGen::search(buffer2));
 		unk174         = hitActor;
 		unk174->unk174 = this;
 	}

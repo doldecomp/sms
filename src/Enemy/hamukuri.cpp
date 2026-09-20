@@ -13,6 +13,7 @@
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
@@ -378,6 +379,7 @@ void THaneHamuKuriManager::createAnmData() { TObjManager::createAnmData(); }
 
 TDoroHaneKuriManager::TDoroHaneKuriManager(const char* name)
     : THaneHamuKuriManager(name)
+    , unk74(nullptr)
 {
 }
 
@@ -661,7 +663,7 @@ void THamuKuri::init(TLiveManager* param_1)
 	unk1F4     = (THamuKuriSaveLoadParams*)getSaveParam();
 	onHitFlag(0x40000000);
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 }
 
 void THamuKuri::setMActorAndKeeper()
@@ -684,7 +686,7 @@ void THamuKuri::setMActorAndKeeper()
 void THamuKuri::reset()
 {
 	TWalkerEnemy::reset();
-	offLiveFlag(0x2);
+	offLiveFlag(LIVE_FLAG_HIDDEN);
 	unk194 = unk1F4->mSLGiveUpLength.get();
 	unk1F0 = 0;
 	unk1A3 = 0;
@@ -1013,20 +1015,23 @@ void THamuKuri::setAfterDeadEffect()
 
 	JPABaseEmitter* emitter;
 	if (isBckAnm(1)) {
-		emitter = gpMarioParticleManager->emit(0xE5, &mPosition, 0, nullptr);
+		emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A_W,
+		                                       &mPosition, 0, nullptr);
 
 		if (emitter)
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 	} else {
-		emitter = gpMarioParticleManager->emit(0xE4, &mPosition, 0, nullptr);
+		emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A,
+		                                       &mPosition, 0, nullptr);
 	}
 
 	if (emitter)
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
-	emitter = gpMarioParticleManager->emit(0xE6, &mPosition, 0, nullptr);
+	emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_B, &mPosition,
+	                                       0, nullptr);
 	if (emitter)
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -1059,8 +1064,9 @@ void THamuKuri::setDeadAnm()
 	}
 
 	if (unk184) {
-		onLiveFlag(0x20000);
-		gpMarioParticleManager->emit(0xE4, &mPosition, 0, nullptr);
+		onLiveFlag(LIVE_FLAG_UNK20000);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A, &mPosition, 0,
+		                             nullptr);
 	} else {
 		if (isBckAnm(3))
 			setBckAnm(10);
@@ -1471,7 +1477,7 @@ void TDoroHaneKuri::setBehavior()
 	    && mHeldObject && mHeldObject->receiveMessage(this, HIT_MESSAGE_PUT)) {
 		TMapObjBase* held = (TMapObjBase*)mHeldObject;
 		held->mHolder     = nullptr;
-		held->offLiveFlag(0x2);
+		held->offLiveFlag(LIVE_FLAG_HIDDEN);
 		held->mPosition   = mPosition;
 		held->mPosition.y = mGroundHeight;
 		held->offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -1544,7 +1550,7 @@ void THaneHamuKuri2::walkBehavior(int param_1, f32 param_2)
 	if (unk234 > flyBaseHeight)
 		unk234 -= 1.0f;
 
-	unk210      = JMASin(unk20C * 360.0f / flyBaseFrequency) * flyBaseAmplitude;
+	unk210      = MsSin(unk20C * 360.0f / flyBaseFrequency) * flyBaseAmplitude;
 	mPosition.y = unk210 + unk230 + unk234;
 	mTurnSpeed
 	    = ((THaneHamuKuriSaveLoadParams*)getSaveParam())->mSLTurnSpeedLow.get();
@@ -1753,7 +1759,8 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		                             nullptr);
 		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0.0f,
 		                        0.0f, 0, 0, 4);
 		if (mSprayedByWaterCooldown == 0) {
@@ -1856,7 +1863,7 @@ void TDangoHamuKuri::swingBody()
 		if (mAttackSw) {
 			if (mPrev != nullptr) {
 				if (mPrev == mBoss) {
-					mPosition = mBoss->mPosition;
+					mRotation = mBoss->mRotation;
 					unk210 += 10.0f;
 				}
 
@@ -1871,12 +1878,13 @@ void TDangoHamuKuri::swingBody()
 		fVar1 = 16.0f;
 	}
 
-	unk21C = fVar1 * JMACos(unk20C * 360.0f);
-	unk224 = fVar1 * JMASin(unk20C * 360.0f);
+	unk21C = fVar1 * MsCos(unk20C * 360.0f);
+	unk224 = fVar1 * MsSin(unk20C * 360.0f);
 }
 
 TBossDangoHamuKuri::TBossDangoHamuKuri(const char* name)
     : TDangoHamuKuri(name)
+    , unk238(0)
 {
 }
 
@@ -2022,8 +2030,9 @@ void TFireHamuKuri::behaveToWater(THitActor* param_1)
 			                                0, nullptr, 0, 4);
 			if (JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtxPtr(
-			        0x8B, mMActor->getModel()->getAnmMtx(unk1AC), 0, nullptr)) {
-				emitter->setScale(mScaling);
+			        PARTICLE_MS_MOE_FIRE_OFF,
+			        mMActor->getModel()->getAnmMtx(unk1AC), 0, nullptr)) {
+				emitter->setGlobalScale(mScaling);
 			}
 		}
 		mSprayedByWaterCooldown = 20;
@@ -2066,23 +2075,27 @@ void TFireHamuKuri::calcRootMatrix()
 	if (unk210 && !checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x1ED, mMActor->getModel()->getAnmMtx(unk1AC), 3, this)) {
-			emitter->setScale(mScaling);
+		        PARTICLE_MS_MOE_FIRE_C, mMActor->getModel()->getAnmMtx(unk1AC),
+		        3, this)) {
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x135, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
-			emitter->setScale(mScaling);
+		        PARTICLE_MS_MOE_FIRE_A, mMActor->getModel()->getAnmMtx(unk1AC),
+		        1, this)) {
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x136, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
-			emitter->setScale(mScaling);
+		        PARTICLE_MS_MOE_FIRE_B, mMActor->getModel()->getAnmMtx(unk1AC),
+		        1, this)) {
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x137, mMActor->getModel()->getAnmMtx(unk1AC), 1, this)) {
-			emitter->setScale(mScaling);
+		        PARTICLE_MS_MOE_FIRE_D, mMActor->getModel()->getAnmMtx(unk1AC),
+		        1, this)) {
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 }
@@ -2347,7 +2360,7 @@ DEFINE_NERVE(TNerveHamuKuriBoundFreeze, TLiveActor)
 		self->unk1E4.x              = thing.x;
 		self->unk1E4.y              = thing.y;
 		self->unk1E4.z              = thing.z;
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 		self->unk1E0 = 1;
 	}
 
@@ -2402,7 +2415,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
 		        PARTICLE_MS_ENM_WALLHIT, &local_34, 0,
 		        DEG2SHORTANGLE(self->mRotation.y), 0, 0, nullptr)) {
-			emitter->setScale(self->mScaling);
+			emitter->setGlobalScale(self->mScaling);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
@@ -2419,13 +2432,13 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 	} else {
 		int pTVar7 = self->getManager()->unk5C;
 		if (self->checkCurAnmEnd(0)) {
-			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
 			if (spine->getTime() > pTVar7 + ctrl->getEnd()) {
 				self->onLiveFlag(LIVE_FLAG_DEAD);
 				self->onLiveFlag(LIVE_FLAG_UNK8);
 				self->onLiveFlag(LIVE_FLAG_UNK20000);
-				self->offLiveFlag(LIVE_FLAG_UNK10000);
+				self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 				self->mHolder = nullptr;
 				self->stopAnmSound();
 				spine->reset();
@@ -2487,7 +2500,9 @@ DEFINE_NERVE(TNerveDangoHamuKuriWait, TLiveActor)
 
 	if (spine->getTime() < 2) {
 		self->setWaitAnm();
-		self->getMActor()->getFrameCtrl(0)->setFrame(MsRandF(0.0f, 30.0f));
+		self->getMActor()
+		    ->getFrameCtrl(ANM_TYPE_BCK)
+		    ->setFrame(MsRandF(0.0f, 30.0f));
 	}
 
 	return false;
@@ -2500,7 +2515,7 @@ DEFINE_NERVE(TNerveHaneHamuKuriUpWait, TLiveActor)
 	THaneHamuKuri* self = (THaneHamuKuri*)spine->getBody();
 	if (spine->getTime() < 1) {
 		self->setWaitAnm();
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	}
 
 	self->mScaling.x = self->mScaling.z
@@ -2526,7 +2541,7 @@ DEFINE_NERVE(TNerveHaneHamuKuriMoveOnGraph, TLiveActor)
 		self->setWalkAnm();
 		self->initialGraphNode();
 		if (self->getTracer()->getGraph()->getNodeNum() == 1)
-			self->setGoalPathMario();
+			self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	}
 
 	if (self->getTracer()->getGraph()->getNodeNum() == 1) {
@@ -2631,7 +2646,8 @@ DEFINE_NERVE(TNerveDoroHaneHitWater, TLiveActor)
 	TDoroHaneKuri* self = (TDoroHaneKuri*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setGoalPath((SMS_GetMarioPos()));
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate() * 1.5f, 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate() * 1.5f,
+		                                ANM_TYPE_BCK);
 	}
 
 	if (self->mPosition.y > self->getGroundHeight() + 50.0f)
@@ -2642,7 +2658,7 @@ DEFINE_NERVE(TNerveDoroHaneHitWater, TLiveActor)
 	self->unk20C = 0.0f;
 	self->unk230 = self->getGroundHeight();
 	if (spine->getTime() > 300) {
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		return true;
 	}
 

@@ -59,7 +59,7 @@ void TMario::getGesso(THitActor* param_1)
 			break;
 		}
 		mSurfGesso->setBck("surfgeso_run1");
-		mSurfGesso->getFrameCtrl(0)->setRate(0.5f);
+		mSurfGesso->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
 	}
 }
 

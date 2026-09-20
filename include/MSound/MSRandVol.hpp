@@ -26,12 +26,12 @@ public:
 	}
 
 public:
-	/* 0x4 */ JSULink<MSRandVol> unk4;
+	/* 0x4 */ JSULink<MSRandVol> mLink;
 	/* 0x14 */ u32 unk14;
-	/* 0x18 */ f32 unk18;
-	/* 0x1C */ f32 unk1C[4];
-	/* 0x2C */ f32 unk2C[4];
-	/* 0x3C */ f32 unk3C[4];
+	/* 0x18 */ f32 mAmplitude;
+	/* 0x1C */ f32 mPSlopes[4];
+	/* 0x2C */ f32 mCSlopes[4];
+	/* 0x3C */ f32 mAmplitudes[4];
 };
 
 } // namespace MSoundSESystem

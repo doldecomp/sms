@@ -10,7 +10,6 @@
 namespace JDrama {
 
 template <class T, class U = TViewObj>
-
 class TViewObjPtrListT : public U, public JGadget::TList_pointer<T*> {
 public:
 	TViewObjPtrListT(const char* name = "<TViewObjPtrListT>")
@@ -18,54 +17,12 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream& stream)
-	{
-		this->loadSuper(stream);
-		int count = stream.readS32();
-
-		JGadget::TList_pointer<T*>& lst = *this;
-
-		for (int i = 0; i < count; ++i) {
-			JSUMemoryInputStream stream2(nullptr, 0);
-			TNameRef* nr = TNameRef::genObject(stream, stream2);
-			if (nr) {
-				lst.push_back((T*)nr);
-				nr->load(stream2);
-			}
-		}
-	}
-
-	virtual void loadAfter()
-	{
-		loadAfterSuper();
-
-		typedef typename JGadget::TList_pointer<T*>::iterator I;
-
-		for (I it = getChildren().begin(); it != getChildren().end(); ++it)
-			it->loadAfter();
-	}
-
-	virtual TNameRef* searchF(u16 key, const char* name)
-	{
-		TNameRef* ref = TNameRef::searchF(key, name);
-		if (ref != nullptr)
-			return ref;
-
-		typedef typename JGadget::TList_pointer<T*>::iterator I;
-
-		for (I it = getChildren().begin(); it != getChildren().end(); ++it) {
-			TNameRef* r = it->searchF(key, name);
-			if (r != nullptr)
-				return r;
-		}
-		return nullptr;
-	}
-
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void loadAfter();
+	virtual TNameRef* searchF(u16 key, const char* name);
 	virtual void perform(u32 cue, TGraphics* graphics);
-
 	virtual void loadSuper(JSUMemoryInputStream& stream);
-
-	virtual void loadAfterSuper() { TNameRef::loadAfter(); }
+	virtual void loadAfterSuper();
 
 	// surprisingly, real.
 	JGadget::TList_pointer<T*>& getChildren() { return *this; }
@@ -73,21 +30,6 @@ public:
 	// fabricated
 	void insert(T* const& obj) { getChildren().push_back(obj); }
 };
-
-template <class T, class U>
-void TViewObjPtrListT<T, U>::perform(u32 cue, TGraphics* graphics)
-{
-	typedef typename JGadget::TList_pointer<T*>::iterator I;
-
-	for (I it = getChildren().begin(); it != getChildren().end(); ++it)
-		it->testPerform(cue, graphics);
-}
-
-template <class T, class U>
-void TViewObjPtrListT<T, U>::loadSuper(JSUMemoryInputStream& stream)
-{
-	TNameRef::load(stream);
-}
 
 } // namespace JDrama
 

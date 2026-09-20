@@ -10,7 +10,8 @@ GXPixelFmt DecidePixelFmt(bool, bool);
 bool IsCanEnableDither(GXPixelFmt);
 void IssueGXPixelFormatSetting(bool, bool, bool, bool, bool);
 void IssueGXPixelFormatSetting(const GXRenderModeObj&, bool, bool);
-void IssueGXSetCopyFilter(bool, const u8 (*)[2], bool, const u8*);
+void IssueGXSetCopyFilter(bool antialias, const u8 (*sample_pattern)[2],
+                          bool use_vfilter, const u8* vfilter);
 bool IssueGXSetCopyClear(JUtility::TColor clear_color, u32 clear_z, u16 flags);
 void IssueGXCopyDisp(void* param_1, const TRect& src_rect,
                      const GXRenderModeObj& render_mode,

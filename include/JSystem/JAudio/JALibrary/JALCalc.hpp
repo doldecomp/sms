@@ -23,7 +23,7 @@ f32 getParamByExp(f32 x, f32 xStart, f32 xEnd, f32 y, f32 yStart, f32 yEnd,
 // Unused / inlined
 f32 getParamByExp_0_1(f32, f32, f32, f32, CurveSign);
 
-f32 getRandom(f32 min, f32 max, f32 step);
+f32 getRandom(f32 amplitude, f32 curveSlope, f32 plusSlope);
 f32 getRandom_0_1();
 // Unused / inlined
 s32 getRandom_Sign();

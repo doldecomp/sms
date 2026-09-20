@@ -157,9 +157,9 @@ BOOL TMario::doRunningAnimation()
 					mix = (rate - lo) / (hi - lo);
 				unk414.z = 1.0f - mix;
 				if (onYoshi()) {
-					mModel->unk20->unk18->unk50 = 0.0f;
+					mModel->unk20->unk18->mMotionBlendRatio = 0.0f;
 				} else {
-					mModel->unk20->unk18->unk50 = unk414.z;
+					mModel->unk20->unk18->mMotionBlendRatio = unk414.z;
 				}
 				loop = false;
 			}

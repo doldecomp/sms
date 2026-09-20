@@ -52,7 +52,11 @@ public:
 
 class TFlowerCoin : public TCoin {
 public:
-	TFlowerCoin(const char* name = "コイン(フラワー用)");
+	TFlowerCoin(const char* name = "コイン(フラワー用)")
+	    : TCoin(name)
+	    , unk158(0)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 
@@ -75,6 +79,11 @@ class TCoinRed : public TCoin {
 public:
 	TCoinRed(const char* name = "赤コイン");
 	virtual void taken(THitActor*);
+
+	const JGeometry::TVec3<f32>& getUnk158() { return unk158; }
+
+public:
+	/* 0x158 */ JGeometry::TVec3<f32> unk158;
 };
 
 class TCoinBlue : public TCoin {

@@ -35,58 +35,67 @@ static int strcmp_ignore_case(const char* fst, const char* snd)
 
 void MActorAnmDataBase::checkLower(const char* param_1)
 {
-	for (int i = 0; i < unk0; ++i) {
-		if (strcmp_ignore_case(param_1, unk8[i])) {
+	for (int i = 0; i < mAnmNum; ++i) {
+		if (strcmp_ignore_case(param_1, mAnmNames[i])) {
 			// assert?
 		}
 	}
 }
 
-void MActorAnmDataBase::sortByFileNameRaw(void** param_1)
+MActorAnmDataBase::MActorAnmDataBase(int anm_num)
 {
-	if (unk0 > 1) {
-		for (int i = 1; i < unk0; ++i) {
+	mAnmNum      = anm_num;
+	mAnmNames    = new const char*[mAnmNum];
+	mAnmKeyCodes = new u16[mAnmNum];
+	mAnimations  = nullptr;
+}
+
+void MActorAnmDataBase::sortByFileNameRaw(void** anms)
+{
+	if (mAnmNum > 1) {
+		for (int i = 1; i < mAnmNum; ++i) {
 			int j;
 
-			const char* str = unk8[i];
-			u16 key         = unk4[i];
-			void* prm       = param_1[i];
+			const char* str = mAnmNames[i];
+			u16 key         = mAnmKeyCodes[i];
+			void* prm       = anms[i];
 
 			for (j = i - 1; j >= 0; --j) {
 
-				if (strcmp_ignore_case(str, unk8[j]) < 0)
+				if (strcmp_ignore_case(str, mAnmNames[j]) < 0)
 					break;
 
-				unk8[j + 1]    = unk8[j];
-				unk4[j + 1]    = unk4[j];
-				param_1[j + 1] = param_1[j];
+				mAnmNames[j + 1]    = mAnmNames[j];
+				mAnmKeyCodes[j + 1] = mAnmKeyCodes[j];
+				anms[j + 1]         = anms[j];
 			}
 
-			unk8[j + 1]    = str;
-			unk4[j + 1]    = key;
-			param_1[j + 1] = prm;
+			mAnmNames[j + 1]    = str;
+			mAnmKeyCodes[j + 1] = key;
+			anms[j + 1]         = prm;
 		}
 	}
 }
 
 MActorAnmData::MActorAnmData()
+    : unk0(0)
 {
-	unk2C = nullptr;
-	unk30 = nullptr;
-	unk34 = nullptr;
-	unk38 = nullptr;
-	unk3C = nullptr;
-	unk40 = nullptr;
+	mBckAnms = nullptr;
+	mBpkAnms = nullptr;
+	mBtpAnms = nullptr;
+	mBtkAnms = nullptr;
+	mBrkAnms = nullptr;
+	mBlkAnms = nullptr;
 
 	unk44 = 0;
 	unk48 = nullptr;
 
-	unk4  = 0;
-	unk8  = 0;
-	unkC  = 0;
-	unk10 = 0;
-	unk14 = 0;
-	unk18 = 0;
+	mBckNum = 0;
+	mBlkNum = 0;
+	mBpkNum = 0;
+	mBtpNum = 0;
+	mBtkNum = 0;
+	mBrkNum = 0;
 }
 
 u16 MActorCalcKeyCode(const char* name)
@@ -103,211 +112,163 @@ u32 MActorAnmData::partsNameToIdx(const char* name)
 	typedef JGadget::TList<MActorSubAnmInfo>::iterator I;
 	u32 idx = 0;
 	for (I it = unk1C.begin(), e = unk1C.end(); it != e; ++idx, ++it)
-		if (strcmp(it->unk4, name) == 0)
+		if (strcmp((*it).unk4, name) == 0)
 			return idx;
 	return -1;
 }
 
-void MActorAnmData::init(const char* param_1, const char** param_2)
+void MActorAnmData::addIncidentalAnm(const char* parts_name, int joint_index)
 {
-	char thing[256];
-	int uMVar1;
+	MActorSubAnmInfo info;
+	info.unk0 = joint_index;
+	info.unk4 = parts_name;
+	++unk0;
+	unk1C.push_back(info);
+}
 
-	if (*param_1 != '/')
-		uMVar1 = snprintf(thing, 0xff, "%s%s", "/", param_1);
+void MActorAnmData::init(const char* anm_folder, const char** additional_files)
+{
+	char fullAnmPath[256];
+	int fullAnmPathLength;
+
+	if (*anm_folder != '/')
+		fullAnmPathLength
+		    = snprintf(fullAnmPath, 0xff, "%s%s", "/", anm_folder);
 	else
-		uMVar1 = snprintf(thing, 0xff, "%s", param_1);
+		fullAnmPathLength = snprintf(fullAnmPath, 0xff, "%s", anm_folder);
 
-	if (uMVar1 < 0 || uMVar1 > 0xfe)
+	if (fullAnmPathLength < 0 || fullAnmPathLength > 254)
 		return;
 
-	char thing2[256];
-	snprintf(thing2, 0xff, "%s%s", thing, "/");
+	char anmFolder[256];
+	snprintf(anmFolder, 0xff, "%s%s", fullAnmPath, "/");
 
-	JKRFileFinder* fileFinder = JKRFileLoader::findFirstFile(thing2);
+	JKRFileFinder* fileFinder = JKRFileLoader::findFirstFile(fullAnmPath);
 
 	JKRFileFinder* finder = fileFinder;
 	do {
 		addFileNum(finder->mBase.mFileName);
 	} while (finder->findNextFile());
 
-	if (param_2 != nullptr)
-		for (int i = 0; i == 0 || param_2[i] != nullptr; ++i)
-			addFileNum(param_2[i]);
+	if (additional_files != nullptr)
+		for (int i = 0; i == 0 || additional_files[i] != nullptr; ++i)
+			addFileNum(additional_files[i]);
 
 	delete fileFinder;
 
-	if (unk4 > 0)
-		unk2C = new MActorAnmDataEach<J3DAnmTransformKey>(unk4);
-	if (unkC > 0)
-		unk30 = new MActorAnmDataEach<J3DAnmColorKey>(unkC);
-	if (unk10 > 0)
-		unk34 = new MActorAnmDataEach<J3DAnmTexPattern>(unk10);
-	if (unk14 > 0)
-		unk38 = new MActorAnmDataEach<J3DAnmTextureSRTKey>(unk14);
-	if (unk18 > 0)
-		unk3C = new MActorAnmDataEach<J3DAnmTevRegKey>(unk18);
-	if (unk8 > 0)
-		unk40 = new MActorAnmDataEach<J3DAnmClusterKey>(unk8);
+	if (mBckNum > 0)
+		mBckAnms = new MActorAnmDataEach<J3DAnmTransformKey>(mBckNum);
+	if (mBpkNum > 0)
+		mBpkAnms = new MActorAnmDataEach<J3DAnmColorKey>(mBpkNum);
+	if (mBtpNum > 0)
+		mBtpAnms = new MActorAnmDataEach<J3DAnmTexPattern>(mBtpNum);
+	if (mBtkNum > 0)
+		mBtkAnms = new MActorAnmDataEach<J3DAnmTextureSRTKey>(mBtkNum);
+	if (mBrkNum > 0)
+		mBrkAnms = new MActorAnmDataEach<J3DAnmTevRegKey>(mBrkNum);
+	if (mBlkNum > 0)
+		mBlkAnms = new MActorAnmDataEach<J3DAnmClusterKey>(mBlkNum);
 
-	unk4  = 0;
-	unk8  = 0;
-	unkC  = 0;
-	unk10 = 0;
-	unk14 = 0;
-	unk18 = 0;
+	mBckNum = 0;
+	mBlkNum = 0;
+	mBpkNum = 0;
+	mBtpNum = 0;
+	mBtkNum = 0;
+	mBrkNum = 0;
 
-	fileFinder = JKRFileLoader::findFirstFile(thing2);
+	fileFinder = JKRFileLoader::findFirstFile(fullAnmPath);
 	do {
 		strstr(fileFinder->mBase.mFileName, "#");
 		addFileTable(fileFinder->mBase.mFileName);
 	} while (fileFinder->findNextFile());
 
-	if (param_2 != nullptr && *param_2 != nullptr) {
-		for (int i = 0; i == 0 || param_2[i] != nullptr; ++i)
-			addFileTable(param_2[i]);
+	if (additional_files != nullptr && *additional_files != nullptr) {
+		for (int i = 0; i == 0 || additional_files[i] != nullptr; ++i)
+			addFileTable(additional_files[i]);
 	}
 
 	delete fileFinder;
 
-	if (unk2C)
-		unk2C->loadAnmPtrArray2(thing, ".bck");
-	if (unk30)
-		unk30->loadAnmPtrArray2(thing, ".bpk");
-	if (unk34)
-		unk34->loadAnmPtrArray2(thing, ".btp");
-	if (unk38)
-		unk38->loadAnmPtrArray2(thing, ".btk");
-	if (unk3C)
-		unk3C->loadAnmPtrArray2(thing, ".brk");
-	if (unk40)
-		unk40->loadAnmPtrArray2(thing, ".blk");
+	if (mBckAnms)
+		mBckAnms->loadAnmPtrArray2(anmFolder, ".bck");
+	if (mBpkAnms)
+		mBpkAnms->loadAnmPtrArray2(anmFolder, ".bpk");
+	if (mBtpAnms)
+		mBtpAnms->loadAnmPtrArray2(anmFolder, ".btp");
+	if (mBtkAnms)
+		mBtkAnms->loadAnmPtrArray2(anmFolder, ".btk");
+	if (mBrkAnms)
+		mBrkAnms->loadAnmPtrArray2(anmFolder, ".brk");
+	if (mBlkAnms)
+		mBlkAnms->loadAnmPtrArray2(anmFolder, ".blk");
 }
 
 void MActorAnmData::addFileNum(const char* name)
 {
 	if (strstr(name, ".bck"))
-		++unk4;
+		++mBckNum;
 	if (strstr(name, ".bpk"))
-		++unkC;
+		++mBpkNum;
 	if (strstr(name, ".btp"))
-		++unk10;
+		++mBtpNum;
 	if (strstr(name, ".btk"))
-		++unk14;
+		++mBtkNum;
 	if (strstr(name, ".brk"))
-		++unk18;
+		++mBrkNum;
 	if (strstr(name, ".blk"))
-		++unk8;
+		++mBlkNum;
+}
+
+char* MActorAnmData::getSimpleName(const char* file_name)
+{
+	u32 length = strlen(file_name) - (strlen(strrchr(file_name, '.')) - 1);
+	char* simple_name = new char[length];
+	snprintf(simple_name, length, "%s", file_name);
+	return simple_name;
 }
 
 void MActorAnmData::addFileTable(const char* param_1)
 {
-	char* pcVar1;
-	size_t sVar2;
-	size_t sVar3;
-	u16 uVar4;
-	u32 uVar5;
-
-	pcVar1 = strstr(param_1, ".bck");
-	if (pcVar1 != (char*)0x0) {
-		sVar2  = strlen(param_1);
-		pcVar1 = strrchr(param_1, 0x2e);
-		sVar3  = strlen(pcVar1);
-		uVar5  = sVar2 - (sVar3 - 1);
-		pcVar1 = new char[uVar5];
-		snprintf(pcVar1, uVar5, "%s", param_1);
-		uVar4             = 0;
-		unk2C->unk8[unk4] = pcVar1;
-		while (*pcVar1 != '\0') {
-			uVar4 = *pcVar1++ + uVar4 * 5;
-		}
-		unk2C->unk4[unk4] = uVar4;
-		++unk4;
+	if (strstr(param_1, ".bck") != nullptr) {
+		char* simple_name               = getSimpleName(param_1);
+		mBckAnms->mAnmNames[mBckNum]    = simple_name;
+		mBckAnms->mAnmKeyCodes[mBckNum] = MActorCalcKeyCode(simple_name);
+		++mBckNum;
 	}
 
-	pcVar1 = strstr(param_1, ".bpk");
-	if (pcVar1 != (char*)0x0) {
-		sVar2  = strlen(param_1);
-		pcVar1 = strrchr(param_1, 0x2e);
-		sVar3  = strlen(pcVar1);
-		uVar5  = sVar2 - (sVar3 - 1);
-		pcVar1 = new char[uVar5];
-		snprintf(pcVar1, uVar5, "%s", param_1);
-		uVar4             = 0;
-		unk30->unk8[unkC] = pcVar1;
-		while (*pcVar1 != '\0') {
-			uVar4 = *pcVar1++ + uVar4 * 5;
-		}
-		unk30->unk4[unkC] = uVar4;
-		++unkC;
+	if (strstr(param_1, ".bpk") != nullptr) {
+		char* simple_name               = getSimpleName(param_1);
+		mBpkAnms->mAnmNames[mBpkNum]    = simple_name;
+		mBpkAnms->mAnmKeyCodes[mBpkNum] = MActorCalcKeyCode(simple_name);
+		++mBpkNum;
 	}
 
-	pcVar1 = strstr(param_1, ".btp");
-	if (pcVar1 != (char*)0x0) {
-		sVar2  = strlen(param_1);
-		pcVar1 = strrchr(param_1, 0x2e);
-		sVar3  = strlen(pcVar1);
-		uVar5  = sVar2 - (sVar3 - 1);
-		pcVar1 = new char[uVar5];
-		snprintf(pcVar1, uVar5, "%s", param_1);
-		uVar4              = 0;
-		unk34->unk8[unk10] = pcVar1;
-		while (*pcVar1 != '\0') {
-			uVar4 = *pcVar1++ + uVar4 * 5;
-		}
-		unk34->unk4[unk10] = uVar4;
-		++unk10;
+	if (strstr(param_1, ".btp") != nullptr) {
+		char* simple_name               = getSimpleName(param_1);
+		mBtpAnms->mAnmNames[mBtpNum]    = simple_name;
+		mBtpAnms->mAnmKeyCodes[mBtpNum] = MActorCalcKeyCode(simple_name);
+		++mBtpNum;
 	}
 
-	pcVar1 = strstr(param_1, ".btk");
-	if (pcVar1 != (char*)0x0) {
-		sVar2  = strlen(param_1);
-		pcVar1 = strrchr(param_1, 0x2e);
-		sVar3  = strlen(pcVar1);
-		uVar5  = sVar2 - (sVar3 - 1);
-		pcVar1 = new char[uVar5];
-		snprintf(pcVar1, uVar5, "%s", param_1);
-		uVar4              = 0;
-		unk38->unk8[unk14] = pcVar1;
-		while (*pcVar1 != '\0') {
-			uVar4 = *pcVar1++ + uVar4 * 5;
-		}
-		unk38->unk4[unk14] = uVar4;
-		++unk14;
+	if (strstr(param_1, ".btk") != nullptr) {
+		char* simple_name               = getSimpleName(param_1);
+		mBtkAnms->mAnmNames[mBtkNum]    = simple_name;
+		mBtkAnms->mAnmKeyCodes[mBtkNum] = MActorCalcKeyCode(simple_name);
+		++mBtkNum;
 	}
 
-	pcVar1 = strstr(param_1, ".brk");
-	if (pcVar1 != (char*)0x0) {
-		sVar2  = strlen(param_1);
-		pcVar1 = strrchr(param_1, 0x2e);
-		sVar3  = strlen(pcVar1);
-		uVar5  = sVar2 - (sVar3 - 1);
-		pcVar1 = new char[uVar5];
-		snprintf(pcVar1, uVar5, "%s", param_1);
-		uVar4              = 0;
-		unk3C->unk8[unk18] = pcVar1;
-		while (*pcVar1 != '\0') {
-			uVar4 = *pcVar1++ + uVar4 * 5;
-		}
-		unk3C->unk4[unk18] = uVar4;
-		++unk18;
+	if (strstr(param_1, ".brk") != nullptr) {
+		char* simple_name               = getSimpleName(param_1);
+		mBrkAnms->mAnmNames[mBrkNum]    = simple_name;
+		mBrkAnms->mAnmKeyCodes[mBrkNum] = MActorCalcKeyCode(simple_name);
+		++mBrkNum;
 	}
 
-	pcVar1 = strstr(param_1, ".blk");
-	if (pcVar1 != (char*)0x0) {
-		sVar2  = strlen(param_1);
-		pcVar1 = strrchr(param_1, 0x2e);
-		sVar3  = strlen(pcVar1);
-		uVar5  = sVar2 - (sVar3 - 1);
-		pcVar1 = new char[uVar5];
-		snprintf(pcVar1, uVar5, "%s", param_1);
-		uVar4             = 0;
-		unk40->unk8[unk8] = pcVar1;
-		while (*pcVar1 != '\0') {
-			uVar4 = *pcVar1++ + uVar4 * 5;
-		}
-		unk40->unk4[unk8] = uVar4;
-		++unk8;
+	if (strstr(param_1, ".blk") != nullptr) {
+		char* simple_name               = getSimpleName(param_1);
+		mBlkAnms->mAnmNames[mBlkNum]    = simple_name;
+		mBlkAnms->mAnmKeyCodes[mBlkNum] = MActorCalcKeyCode(simple_name);
+		++mBlkNum;
 	}
 }
 

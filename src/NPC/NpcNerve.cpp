@@ -232,7 +232,7 @@ DEFINE_NERVE(TNerveNPCRecoverAfter, TLiveActor)
 		self->npcRecoverAfterIn();
 
 	if (self->unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK3
-	    && self->getMActor()->isCurAnmAlreadyEnd(0)) {
+	    && self->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		return true;
 	}
 

@@ -20,6 +20,8 @@ inline u32 read_big_endian_u32(void* ptr)
 class JKRAramBlock;
 class JKRFile;
 
+class JKRArcFinder;
+
 class JKRArchive : public JKRFileLoader {
 public:
 	enum EMountMode {
@@ -38,7 +40,7 @@ public:
 
 	class CArcName {
 	public:
-		CArcName() { }
+		CArcName();
 		CArcName(const char* data) { store(data); }
 		CArcName(const char** p1, char p2) { p1[0] = store(p1[0], p2); }
 
@@ -48,81 +50,85 @@ public:
 		const char* getString() const { return mString; }
 		u16 getHash() const { return mHash; }
 
-		u16 mHash;         // _00
-		u16 mLength;       // _02
-		char mString[256]; // _04
+	private:
+		/* 0x0 */ u16 mHash;
+		/* 0x2 */ u16 mLength;
+		/* 0x4 */ char mString[257];
 	};
 
 	struct SDIFileEntry {
-		u16 mFileID;             // _00
-		u16 mHash;               // _02
-		u32 mFlagsAndNameOffset; // _04
-		u32 mDataOffset;         // _08
-		u32 mSize;               // _0C
-		void* mData;             // _10
+		/* 0x00 */ u16 mFileID;
+		/* 0x02 */ u16 mHash;
+		/* 0x04 */ u32 mFlagsAndNameOffset;
+		/* 0x08 */ u32 mDataOffset;
+		/* 0x0C */ u32 mSize;
+		/* 0x10 */ void* mData;
 	};
 
 	struct SDirEntry {
-		u8 mFlags;         // _00
-		u8 _01;            // _01
-		u16 mID;           // _02
-		const char* mName; // _04
+		/* 0x0 */ u8 mFlags;
+		/* 0x1 */ u8 _01;
+		/* 0x2 */ u16 mID;
+		/* 0x4 */ const char* mName;
 	};
 
 	struct SDIDirEntry {
-		u32 mType;     // _00
-		u32 mOffset;   // _04
-		u16 _08;       // _08
-		u16 mNum;      // _0A
-		u32 mFirstIdx; // _0C
+		/* 0x0 */ u32 mType;
+		/* 0x4 */ u32 mOffset;
+		/* 0x8 */ u16 _08;
+		/* 0xA */ u16 mNum;
+		/* 0xC */ u32 mFirstIdx;
 	};
 
 	// NB: Fabricated name
 	struct SArcDataInfo {
-		u32 num_nodes;           // _00
-		u32 node_offset;         // _04
-		u32 num_file_entries;    // _08
-		u32 file_entry_offset;   // _0C
-		u32 string_table_length; // _10
-		u32 string_table_offset; // _14
-		u16 nextFreeFileID;      // _18
-		bool isSyncIDs;          // _1A
-		u8 _1B[5];               // _1B, unknown
+		/* 0x00 */ u32 num_nodes;
+		/* 0x04 */ u32 node_offset;
+		/* 0x08 */ u32 num_file_entries;
+		/* 0x0C */ u32 file_entry_offset;
+		/* 0x10 */ u32 string_table_length;
+		/* 0x14 */ u32 string_table_offset;
+		/* 0x18 */ u16 nextFreeFileID;
+		/* 0x1A */ bool isSyncIDs;
+		/* 0x1B */ u8 _1B[5];
 	};
 
 	// NB: Fabricated name - need to check size
 	struct SArcHeader {
-		u32 signature;        // _00
-		u32 file_length;      // _04
-		u32 header_length;    // _08
-		u32 file_data_offset; // _0C
-		u32 file_data_length; // _10
-		u32 _14;              // _14
-		u32 _18;              // _18
-		u32 _1C;              // _1C
+		/* 0x00 */ u32 signature;
+		/* 0x04 */ u32 file_length;
+		/* 0x08 */ u32 header_length;
+		/* 0x0C */ u32 file_data_offset;
+		/* 0x10 */ u32 file_data_length;
+		/* 0x14 */ u32 _14;
+		/* 0x18 */ u32 _18;
+		/* 0x1C */ u32 _1C;
 	};
 
 	JKRArchive();
 	JKRArchive(s32, EMountMode);
 
-	virtual ~JKRArchive();                                 // _08
-	virtual bool becomeCurrent(const char*);               // _10
-	virtual void* getResource(const char* path);           // _14
-	virtual void* getResource(u32 type, const char* name); // _18
+	virtual bool becomeCurrent(const char*);
+	virtual void* getResource(const char* path);
+	virtual void* getResource(u32 type, const char* name);
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize,
-	                            const char* path); // _1C
+	                            const char* path);
 	virtual size_t readResource(void* resourceBuffer, u32 bufferSize, u32 type,
-	                            const char* name);                      // _20
-	virtual void removeResourceAll();                                   // _24
-	virtual bool removeResource(void*);                                 // _28
-	virtual bool detachResource(void*);                                 // _2C
-	virtual s32 getResSize(const void*) const;                          // _30
-	virtual u32 countFile(const char*) const;                           // _34
-	virtual JKRFileFinder* getFirstFile(const char*) const;             // _38
-	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize) = 0; // _40
+	                            const char* name);
+	virtual void removeResourceAll();
+	virtual bool removeResource(void*);
+	virtual bool detachResource(void*);
+	virtual s32 getResSize(const void*) const;
+	virtual u32 countFile(const char*) const;
+	virtual JKRFileFinder* getFirstFile(const char*) const;
+	virtual void* fetchResource(SDIFileEntry* entry, u32* outSize) = 0;
 	virtual void* fetchResource(void* resourceBuffer, u32 bufferSize,
 	                            SDIFileEntry* entry, u32* resSize)
-	    = 0; // _44
+	    = 0;
+
+	// NOTE: has to be defined not first to get the vtable
+	// to emit to the correct TU
+	virtual ~JKRArchive();
 
 	SDIDirEntry* findDirectory(const char*, u32) const;
 	SDIFileEntry* findFsResource(const char*, u32) const;
@@ -135,21 +141,31 @@ public:
 
 	bool getDirEntry(SDirEntry*, u32) const;
 	void* getIdxResource(u32 index);
+	void* getResource(u16 id);
+	static size_t readTypeResource(void* resourceBuffer, u32 bufferSize,
+	                               u32 type, const char* name,
+	                               JKRArchive* archive);
+	size_t readIdxResource(void* resourceBuffer, u32 bufferSize, u32 index);
+	size_t readResource(void* resourceBuffer, u32 bufferSize, u16 id);
+	static u32 countResource(u32 type, const JKRArchive* archive);
+	u32 countResource() const;
+	u32 countResource(u32 type) const;
+	JKRArcFinder* getFirstResource(u32 type) const;
+	u32 getFileAttribute(u32 index) const;
 
 	static JKRArchive* mount(char const*, EMountMode, JKRHeap*,
-	                         EMountDirection);                  // yes
-	static JKRArchive* mount(void*, JKRHeap*, EMountDirection); // unused
+	                         EMountDirection);
+	static JKRArchive* mount(void*, JKRHeap*, EMountDirection);
 	static void* getGlbResource(u32 type, const char* name,
 	                            JKRArchive* archive);
 
-	// Unused/inlined:
 	JKRArchive(const char* p1, EMountMode mountMode);
 	static JKRArchive* check_mount_already(s32);
 	static JKRArchive* check_mount_already(s32, JKRHeap*);
 	SDIDirEntry* findResType(u32) const;
 	SDIFileEntry* findTypeResource(u32, u32) const;
 
-	static JKRCompression convertAttrToCompressionType(int attr)
+	static JKRCompression convertAttrToCompressionType(u8 attr)
 	{
 		if (!(attr & JKRARCHIVE_ATTR_COMPRESSION))
 			return JKR_COMPRESSION_NONE;
@@ -168,23 +184,21 @@ public:
 	static u32 sCurrentDirID;
 
 protected:
-	// _00     = VTBL
-	// _00-_38 = JKRFileLoader
-	JKRHeap* mHeap;                  // _38
-	u8 mMountMode;                   // _3C
-	s32 mEntryNum;                   // _40
-	SArcDataInfo* mArcInfoBlock;     // _44
-	SDIDirEntry* mDirectories;       // _48
-	SDIFileEntry* mFileEntries;      // _4C
-	const char* mStrTable;           // _50
-	int _54;                         // _54
-	JKRCompression mCompression;     // _58
-	EMountDirection mMountDirection; // _5C
+	/* 0x38 */ JKRHeap* mHeap;
+	/* 0x3C */ u8 mMountMode;
+	/* 0x40 */ s32 mEntryNum;
+	/* 0x44 */ SArcDataInfo* mArcInfoBlock;
+	/* 0x48 */ SDIDirEntry* mDirectories;
+	/* 0x4C */ SDIFileEntry* mFileEntries;
+	/* 0x50 */ const char* mStrTable;
+	/* 0x54 */ int _54;
+	/* 0x58 */ JKRCompression mCompression;
+	/* 0x5C */ EMountDirection mMountDirection;
 };
 
 enum JKRMemBreakFlag { MBF_0 = 0, MBF_1 = 1 };
 
-inline JKRCompression JKRConvertAttrToCompressionType(int attr)
+inline JKRCompression JKRConvertAttrToCompressionType(u8 attr)
 {
 	return JKRArchive::convertAttrToCompressionType(attr);
 }

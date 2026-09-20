@@ -147,7 +147,7 @@ static void initCountObjDegree(f32 fVar1, f32 fVar2)
 
 static void drawShape(J3DShape* shape)
 {
-	GXCallDisplayList(shape->getDrawList(), 0xC0);
+	GXCallDisplayList(shape->getVcdVatCmd(), J3DShape::kVcdVatDLSize);
 	shape->loadVtxArray();
 	for (u16 k = 0; k < shape->getMtxGroupNum(); ++k)
 		shape->getShapeDraw(k)->draw();

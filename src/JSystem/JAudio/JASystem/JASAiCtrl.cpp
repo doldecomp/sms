@@ -49,7 +49,11 @@ namespace Kernel {
 
 	u32 getCurrentVCounter() { return JASUniversalDacCounter; }
 
-	MixCallback getMixCallback(s32) { return extMixCallback; }
+	MixCallback getMixCallback(u8* mode)
+	{
+		*mode = extMixMode;
+		return extMixCallback;
+	}
 
 	void registerMixCallback(MixCallback callback, u8 mode)
 	{

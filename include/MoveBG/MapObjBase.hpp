@@ -153,8 +153,10 @@ public:
 	virtual void setGroundCollision();
 	virtual void control();
 	virtual u32 getShadowType();
-	virtual void kill();
-	virtual void appear();
+	// Both are defined here, not in the .cpp: the map records them as weak,
+	// and EventWatcher.cpp holds the copy that survives dead-strip.
+	virtual void kill() { makeObjDead(); }
+	virtual void appear() { makeObjAppeared(); }
 	virtual void makeObjAppeared();
 	virtual void makeObjDead();
 	virtual void changeObjSRT(const JGeometry::TVec3<f32>&,

@@ -27,11 +27,12 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 	if (count != 0 && actor->getInstanceIndex() >= count) {
 		TLiveActor* other = manager->getObj(actor->getInstanceIndex() % count);
 
-		int anmIdx = other->getMActor()->getCurAnmIdx(0);
+		int anmIdx = other->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 		mActor->setBckFromIndex(anmIdx);
 
-		J3DFrameCtrl* myCtrl    = mActor->getFrameCtrl(0);
-		J3DFrameCtrl* otherCtrl = other->getMActor()->getFrameCtrl(0);
+		J3DFrameCtrl* myCtrl = mActor->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* otherCtrl
+		    = other->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		myCtrl->setFrame(otherCtrl->getFrame());
 	} else if (actor->getActorType() != 0x800001) {
 		// not the right type, skip animation setup
@@ -50,9 +51,9 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 			timer[0] = timer[1];
 		}
 
-		BOOL anmEndsNext = mActor->curAnmEndsNext(0, 0);
+		BOOL anmEndsNext = mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr);
 
-		switch (mActor->getCurAnmIdx(0)) {
+		switch (mActor->getCurAnmIdx(ANM_TYPE_BCK)) {
 		case 1:
 			if (anmEndsNext) {
 				if (!mActor->checkCurBckFromIndex(0))

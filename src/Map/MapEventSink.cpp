@@ -87,7 +87,7 @@ void TMapEventSink::rising()
 	J3DTransformInfo& info = unk30->getTransformInfo();
 	info.mTranslate.y += unk3C;
 	unk30->setTransformInfo(info);
-	unk1C->mActor->unk4->calc();
+	unk1C->mActor->mModel->calc();
 }
 
 bool TMapEventSink::control()
@@ -134,7 +134,7 @@ void TMapEventSink::startControl()
 	info.mTranslate.y -= dVar4;
 	unk30->setTransformInfo(info);
 
-	unk1C->mActor->unk4->calc();
+	unk1C->mActor->mModel->calc();
 	int iVar3 = (unk40 - unk44) - unk48;
 	unk3C     = dVar4 / iVar3;
 	unk4C     = unk40;
@@ -266,14 +266,16 @@ void TMapEventSinkBianco::finishControl()
 		TMapObjBase::setJointTransY(unk64, 0.0f);
 		for (int i = 0; i < 6; ++i) {
 			snprintf(buffer, 0x40, "バナナツリー（スケール） %d", i);
-			JDrama::TNameRefGen::search<TLiveActor>(buffer)->receiveMessage(
-			    gpModelWaterManager->unk2514[0], HIT_MESSAGE_SPRAYED_BY_WATER);
+			static_cast<TLiveActor*>(JDrama::TNameRefGen::search(buffer))
+			    ->receiveMessage(gpModelWaterManager->unk2514[0],
+			                     HIT_MESSAGE_SPRAYED_BY_WATER);
 		}
 
 		for (int i = 0; i < 7; ++i) {
 			snprintf(buffer, 0x40, "落書き内%02d", i);
-			JDrama::TNameRefGen::search<TLiveActor>(buffer)->receiveMessage(
-			    gpModelWaterManager->unk2514[0], HIT_MESSAGE_SPRAYED_BY_WATER);
+			static_cast<TLiveActor*>(JDrama::TNameRefGen::search(buffer))
+			    ->receiveMessage(gpModelWaterManager->unk2514[0],
+			                     HIT_MESSAGE_SPRAYED_BY_WATER);
 		}
 	}
 
@@ -367,12 +369,13 @@ void TMapEventSinkBianco::loadAfter()
 {
 	TMapEventSinkInPollutionReset::loadAfter();
 
-	TMapStaticObj* ref = JDrama::TNameRefGen::search<TMapStaticObj>("鏡内地形");
-	unk64              = ref->getModelData()->getJointNodePointer(2);
+	TMapStaticObj* ref
+	    = static_cast<TMapStaticObj*>(JDrama::TNameRefGen::search("鏡内地形"));
+	unk64 = ref->getModelData()->getJointNodePointer(2);
 	TMapObjBase::moveJoint(unk64, 0.0f, -1700.0f, 0.0f);
 	SMS_ShowJoint(unk64->getMesh(), false);
-	mGateKeeper
-	    = JDrama::TNameRefGen::search<TGateKeeperBase>("ゲートキーパー");
+	mGateKeeper = static_cast<TGateKeeperBase*>(
+	    JDrama::TNameRefGen::search("ゲートキーパー"));
 }
 
 void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
@@ -406,7 +409,8 @@ void TMapEventSinkShadowMario::loadAfter()
 {
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
-		unk64[i] = JDrama::TNameRefGen::search<JDrama::TPlacement>(unk68[i]);
+		unk64[i] = static_cast<JDrama::TPlacement*>(
+		    JDrama::TNameRefGen::search(unk68[i]));
 		TJointObj* obj = getBuilding(i);
 		unk64[i]->mPosition.y
 		    -= obj->getJoint()->getMax().y - obj->getJoint()->getMin().y;

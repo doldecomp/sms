@@ -66,7 +66,7 @@ public:
 	void goToDirectedNextGraphNode(const JGeometry::TVec3<f32>&);
 	void goToDirLimitedNextGraphNode(f32);
 	void updateStayCount(f32);
-	bool turnToCurPathNode(f32);
+	BOOL turnToCurPathNode(f32);
 	void walkToCurPathNode(f32 march_speed, f32 turn_speed, f32);
 	void zigzagToCurPathNode(f32 march_speed, f32 turn_speed, f32 cycle,
 	                         f32 angle);
@@ -89,8 +89,6 @@ public:
 		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	}
 
-	// fabricated TODO: remove
-	void setGoalPathMario() { setGoalPath((THitActor*)gpMarioAddress); }
 	void setGoalPath(const TPathNode& point)
 	{
 		unkF4  = point;

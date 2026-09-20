@@ -118,10 +118,10 @@ public:
 	u16 getMaterialID(int idx) const { return mpMaterialID[idx]; }
 	u8 getMaterialMode(int idx) const
 	{
-		return mpMaterialInitData[getMaterialID(idx)].mMaterialMode;
+		return mpMaterialInitData[mpMaterialID[idx]].mMaterialMode;
 	}
 
-public:
+private:
 	/* 0x00 */ u16 mMaterialNum;
 	/* 0x04 */ J3DMaterialInitData_v21* mpMaterialInitData;
 	/* 0x08 */ u16* mpMaterialID;

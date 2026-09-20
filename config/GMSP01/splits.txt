@@ -17,9 +17,6 @@ main.cpp:
 	.ctors      start:0x8036B2E4 end:0x8036B2E8
 	.bss        start:0x803E10C0 end:0x803E1110
 
-Runtime.PPCEABI.H/__mem.c:
-	.init       start:0x80003100 end:0x80003244
-
 Animal/boid.cpp:
 	.text       start:0x8000566C end:0x80006B60
 	.data       start:0x803A39E0 end:0x803A3A28
@@ -2662,23 +2659,23 @@ System/TargetArrow.cpp:
 	.sdata      start:0x80404358 end:0x80404360
 	.sbss       start:0x804058F8 end:0x80405900
 
-JSystem/JKRArchivePri.cpp:
+JSystem/JKernel/JKRArchivePri.cpp:
 	.text       start:0x802B497C end:0x802B512C
 	.sbss       start:0x80405900 end:0x80405908
 
-JSystem/JKRAramArchive.cpp:
+JSystem/JKernel/JKRAramArchive.cpp:
 	.text       start:0x802B512C end:0x802B5948
 	.rodata     start:0x803A1690 end:0x803A16C0
 	.data       start:0x803D7728 end:0x803D7790
 
-JSystem/JKRAramHeap.cpp:
+JSystem/JKernel/JKRAramHeap.cpp:
 	.text       start:0x802B5948 end:0x802B5DC0
 	.ctors      start:0x8036B628 end:0x8036B62C
 	.data       start:0x803D7790 end:0x803D77A0
 	.bss        start:0x803F4CE8 end:0x803F4CF8
 	.bss        start:0x803FBA30 end:0x803FBA3C align:4 common
 
-JSystem/JKRAram.cpp:
+JSystem/JKernel/JKRAram.cpp:
 	.text       start:0x802B5DC0 end:0x802B6CAC
 	.ctors      start:0x8036B62C end:0x8036B630
 	.rodata     start:0x803A16C0 end:0x803A1750
@@ -2687,25 +2684,25 @@ JSystem/JKRAram.cpp:
 	.bss        start:0x803FBA3C end:0x803FBA48 align:4 common
 	.sbss       start:0x80405908 end:0x80405940
 
-JSystem/JKRArchivePub.cpp:
+JSystem/JKernel/JKRArchivePub.cpp:
 	.text       start:0x802B6CAC end:0x802B7558
 	.data       start:0x803D77E0 end:0x803D7828
 
-JSystem/JKRCompArchive.cpp:
+JSystem/JKernel/JKRCompArchive.cpp:
 	.text       start:0x802B7558 end:0x802B8088
 	.rodata     start:0x803A1750 end:0x803A17C8
 	.data       start:0x803D7828 end:0x803D7870
 
-JSystem/JKRDisposer.cpp:
+JSystem/JKernel/JKRDisposer.cpp:
 	.text       start:0x802B8088 end:0x802B8184
 	.data       start:0x803D7870 end:0x803D7880
 
-JSystem/JKRDvdArchive.cpp:
+JSystem/JKernel/JKRDvdArchive.cpp:
 	.text       start:0x802B8184 end:0x802B8AA0
 	.rodata     start:0x803A17C8 end:0x803A1820
 	.data       start:0x803D7880 end:0x803D78C8
 
-JSystem/JKRDvdFile.cpp:
+JSystem/JKernel/JKRDvdFile.cpp:
 	.text       start:0x802B8AA0 end:0x802B9020
 	.ctors      start:0x8036B630 end:0x8036B634
 	.rodata     start:0x803A1820 end:0x803A1848
@@ -2713,18 +2710,18 @@ JSystem/JKRDvdFile.cpp:
 	.bss        start:0x803F4D08 end:0x803F4D18
 	.bss        start:0x803FBA48 end:0x803FBA54 align:4 common
 
-JSystem/JKRExpHeap.cpp:
+JSystem/JKernel/JKRExpHeap.cpp:
 	.text       start:0x802B9020 end:0x802BACA8
 	.rodata     start:0x803A1848 end:0x803A1BD8
 	.data       start:0x803D78F0 end:0x803D7940
 	.sbss       start:0x80405940 end:0x80405960
 	.sdata2     start:0x8040E158 end:0x8040E188
 
-JSystem/JKRFileFinder.cpp:
+JSystem/JKernel/JKRFileFinder.cpp:
 	.text       start:0x802BACA8 end:0x802BAE58
 	.data       start:0x803D7940 end:0x803D7950
 
-JSystem/JKRFileLoader.cpp:
+JSystem/JKernel/JKRFileLoader.cpp:
 	.text       start:0x802BAE58 end:0x802BB498
 	.ctors      start:0x8036B634 end:0x8036B638
 	.data       start:0x803D7950 end:0x803D7990
@@ -2734,56 +2731,56 @@ JSystem/JKRFileLoader.cpp:
 	.sbss       start:0x80405960 end:0x80405968
 	.sdata2     start:0x8040E188 end:0x8040E190
 
-JSystem/JKRHeap.cpp:
+JSystem/JKernel/JKRHeap.cpp:
 	.text       start:0x802BB498 end:0x802BBF38
 	.rodata     start:0x803A1BD8 end:0x803A1C10
 	.data       start:0x803D7990 end:0x803D79E0
 	.sbss       start:0x80405968 end:0x80405990
 	.sdata2     start:0x8040E190 end:0x8040E198
 
-JSystem/JKRMemArchive.cpp:
+JSystem/JKernel/JKRMemArchive.cpp:
 	.text       start:0x802BBF38 end:0x802BC760
 	.rodata     start:0x803A1C10 end:0x803A1C40
 	.data       start:0x803D79E0 end:0x803D7A28
 
-JSystem/JKRSolidHeap.cpp:
+JSystem/JKernel/JKRSolidHeap.cpp:
 	.text       start:0x802BC760 end:0x802BCF10
 	.rodata     start:0x803A1C40 end:0x803A1DD8
 	.data       start:0x803D7A28 end:0x803D7A78
 	.sdata2     start:0x8040E198 end:0x8040E1A8
 
-JSystem/JKRStdHeap.cpp:
+JSystem/JKernel/JKRStdHeap.cpp:
 	.text       start:0x802BCF10 end:0x802BD344
 	.rodata     start:0x803A1DD8 end:0x803A1E80
 	.data       start:0x803D7A78 end:0x803D7AC8
 
-JSystem/JKRThread.cpp:
+JSystem/JKernel/JKRThread.cpp:
 	.text       start:0x802BD344 end:0x802BD624
 	.ctors      start:0x8036B638 end:0x8036B63C
 	.data       start:0x803D7AC8 end:0x803D7AD8
 	.bss        start:0x803F4D28 end:0x803F4D38
 	.bss        start:0x803FBA60 end:0x803FBA6C align:4 common
 
-JSystem/JSUOutputStream.cpp:
+JSystem/JSupport/JSUOutputStream.cpp:
 	.text       start:0x802BD624 end:0x802BD7A8
 	.data       start:0x803D7AD8 end:0x803D7B18
 
-JSystem/JSUInputStream.cpp:
+JSystem/JSupport/JSUInputStream.cpp:
 	.text       start:0x802BD7A8 end:0x802BDCC4
 	.data       start:0x803D7B18 end:0x803D7B58
 
-JSystem/JSUList.cpp:
+JSystem/JSupport/JSUList.cpp:
 	.text       start:0x802BDCC4 end:0x802BE1F8
 
-JSystem/JSUMemoryStream.cpp:
+JSystem/JSupport/JSUMemoryStream.cpp:
 	.text       start:0x802BE1F8 end:0x802BE414
 	.data       start:0x803D7B58 end:0x803D7BA8
 
-JSystem/JSUFileStream.cpp:
+JSystem/JSupport/JSUFileStream.cpp:
 	.text       start:0x802BE414 end:0x802BE6C0
 	.data       start:0x803D7BA8 end:0x803D7BD0
 
-JSystem/JUTException.cpp:
+JSystem/JUtility/JUTException.cpp:
 	.text       start:0x802BE6C0 end:0x802C02AC
 	.ctors      start:0x8036B63C end:0x8036B640
 	.rodata     start:0x803A1E80 end:0x803A2240
@@ -2794,17 +2791,17 @@ JSystem/JUTException.cpp:
 	.sbss       start:0x80405990 end:0x804059B0
 	.sdata2     start:0x8040E1A8 end:0x8040E1E0
 
-JSystem/JUTDirectPrint.cpp:
+JSystem/JUtility/JUTDirectPrint.cpp:
 	.text       start:0x802C02AC end:0x802C0814
 	.data       start:0x803D7C40 end:0x803D7EF8
 	.sbss       start:0x804059B0 end:0x804059B8
 	.sdata2     start:0x8040E1E0 end:0x8040E1E8
 
-JSystem/JUTFont.cpp:
+JSystem/JUtility/JUTFont.cpp:
 	.text       start:0x802C0814 end:0x802C0A34
 	.data       start:0x803D7EF8 end:0x803D7F30
 
-JSystem/JUTGamePad.cpp:
+JSystem/JUtility/JUTGamePad.cpp:
 	.text       start:0x802C0A34 end:0x802C2024
 	.ctors      start:0x8036B640 end:0x8036B644
 	.rodata     start:0x803A2240 end:0x803A2250
@@ -2815,20 +2812,20 @@ JSystem/JUTGamePad.cpp:
 	.sbss       start:0x804059B8 end:0x804059E8
 	.sdata2     start:0x8040E1E8 end:0x8040E230
 
-JSystem/JUTNameTab.cpp:
+JSystem/JUtility/JUTNameTab.cpp:
 	.text       start:0x802C2024 end:0x802C2144
 
-JSystem/JUTPalette.cpp:
+JSystem/JUtility/JUTPalette.cpp:
 	.text       start:0x802C2144 end:0x802C2274
 	.rodata     start:0x803A2250 end:0x803A2280
 
-JSystem/JUTRect.cpp:
+JSystem/JUtility/JUTRect.cpp:
 	.text       start:0x802C2274 end:0x802C2450
 
-JSystem/JUTResource.cpp:
+JSystem/JUtility/JUTResource.cpp:
 	.text       start:0x802C2450 end:0x802C2580
 
-JSystem/JUTTexture.cpp:
+JSystem/JUtility/JUTTexture.cpp:
 	.text       start:0x802C2580 end:0x802C2B20
 	.sdata2     start:0x8040E230 end:0x8040E248
 
@@ -2837,80 +2834,80 @@ JSystem/JMath.cpp:
 	.sbss       start:0x804059E8 end:0x804059F8
 	.sdata2     start:0x8040E248 end:0x8040E278
 
-JSystem/J2DPane.cpp:
+JSystem/J2D/J2DPane.cpp:
 	.text       start:0x802C2EAC end:0x802C3FC4
 	.data       start:0x803D7F50 end:0x803D7F80
 	.sdata2     start:0x8040E278 end:0x8040E298
 
-JSystem/J2DPicture.cpp:
+JSystem/J2D/J2DPicture.cpp:
 	.text       start:0x802C3FC4 end:0x802C5C50
 	.data       start:0x803D7F80 end:0x803D7FB0
 	.sdata2     start:0x8040E298 end:0x8040E2B8
 
-JSystem/J2DPrint.cpp:
+JSystem/J2D/J2DPrint.cpp:
 	.text       start:0x802C5C50 end:0x802C788C
 	.data       start:0x803D7FB0 end:0x803D8020
 	.bss        start:0x803FBD64 end:0x803FBD7C align:4 common
 	.sbss       start:0x804059F8 end:0x80405A08
 	.sdata2     start:0x8040E2B8 end:0x8040E2E0
 
-JSystem/J2DScreen.cpp:
+JSystem/J2D/J2DScreen.cpp:
 	.text       start:0x802C788C end:0x802C849C
 	.rodata     start:0x803A2280 end:0x803A22D8
 	.data       start:0x803D8020 end:0x803D80D8
 
-JSystem/J2DTextBox.cpp:
+JSystem/J2D/J2DTextBox.cpp:
 	.text       start:0x802C849C end:0x802C916C
 	.data       start:0x803D80D8 end:0x803D8108
 	.sdata2     start:0x8040E2E0 end:0x8040E2E8
 
-JSystem/J2DWindow.cpp:
+JSystem/J2D/J2DWindow.cpp:
 	.text       start:0x802C916C end:0x802CAB9C
 	.data       start:0x803D8108 end:0x803D8140
 	.sdata2     start:0x8040E2E8 end:0x8040E300
 
-JSystem/J3DTransform.cpp:
+JSystem/J3D/J3DGraphBase/J3DTransform.cpp:
 	.text       start:0x802CAB9C end:0x802CB688
 	.data       start:0x803D8140 end:0x803D8198
 	.sdata      start:0x80404378 end:0x80404380
 	.sdata2     start:0x8040E300 end:0x8040E310
 
-JSystem/J3DCluster.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DCluster.cpp:
 	.text       start:0x802CB688 end:0x802CCBA0
 	.rodata     start:0x803A22D8 end:0x803A22E8
 	.data       start:0x803D8198 end:0x803D81A8
 	.sdata2     start:0x8040E310 end:0x8040E348
 
-JSystem/J3DJoint.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DJoint.cpp:
 	.text       start:0x802CCBA0 end:0x802CE598
 	.rodata     start:0x803A22E8 end:0x803A2310
 	.data       start:0x803D81A8 end:0x803D8320
 	.sdata2     start:0x8040E348 end:0x8040E350
 
-JSystem/J3DMaterial.cpp:
+JSystem/J3D/J3DGraphBase/J3DMaterial.cpp:
 	.text       start:0x802CE598 end:0x802D5110
 	.rodata     start:0x803A2310 end:0x803A2320
 	.data       start:0x803D8320 end:0x803D8AC8
 	.sdata2     start:0x8040E350 end:0x8040E388
 
-JSystem/J3DModel.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DModel.cpp:
 	.text       start:0x802D5110 end:0x802D7BB0
 	.data       start:0x803D8AC8 end:0x803D8B40
 	.sdata      start:0x80404380 end:0x80404388
 	.sdata2     start:0x8040E388 end:0x8040E3A0
 
-JSystem/J3DNode.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DNode.cpp:
 	.text       start:0x802D7BB0 end:0x802D7C54
 	.data       start:0x803D8B40 end:0x803D8B68
 
-JSystem/J3DShape.cpp:
+JSystem/J3D/J3DGraphBase/J3DShape.cpp:
 	.text       start:0x802D7C54 end:0x802D8844
 	.ctors      start:0x8036B644 end:0x8036B648
 	.data       start:0x803D8B68 end:0x803D8C40
 	.sbss       start:0x80405A08 end:0x80405A10
 	.sdata2     start:0x8040E3A0 end:0x8040E3A8
 
-JSystem/J3DSys.cpp:
+JSystem/J3D/J3DGraphBase/J3DSys.cpp:
 	.text       start:0x802D8844 end:0x802D9308
 	.ctors      start:0x8036B648 end:0x8036B64C
 	.rodata     start:0x803A2320 end:0x803A2368
@@ -2918,37 +2915,37 @@ JSystem/J3DSys.cpp:
 	.bss        start:0x803FBD7C end:0x803FBFB0 align:4 common
 	.sbss       start:0x80405A10 end:0x80405A18
 
-JSystem/J3DAnimation.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DAnimation.cpp:
 	.text       start:0x802D9308 end:0x802DD180
 	.data       start:0x803D8C50 end:0x803D8D20
 	.sdata2     start:0x8040E3A8 end:0x8040E3D8
 
-JSystem/J3DClusterLoader.cpp:
+JSystem/J3D/J3DGraphLoader/J3DClusterLoader.cpp:
 	.text       start:0x802DD180 end:0x802DD1C8
 
-JSystem/J3DJointFactory.cpp:
+JSystem/J3D/J3DGraphLoader/J3DJointFactory.cpp:
 	.text       start:0x802DD1C8 end:0x802DD3F4
 
-JSystem/J3DMaterialFactory.cpp:
+JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp:
 	.text       start:0x802DD3F4 end:0x802DF0A8
 	.sdata2     start:0x8040E3D8 end:0x8040E3F0
 
-JSystem/J3DModelLoader.cpp:
+JSystem/J3D/J3DGraphLoader/J3DModelLoader.cpp:
 	.text       start:0x802DF0A8 end:0x802E09C4
 	.data       start:0x803D8D20 end:0x803D8DA8
 
-JSystem/J3DShapeFactory.cpp:
+JSystem/J3D/J3DGraphLoader/J3DShapeFactory.cpp:
 	.text       start:0x802E09C4 end:0x802E0E4C
 
-JSystem/J3DAnmLoader.cpp:
+JSystem/J3D/J3DGraphLoader/J3DAnmLoader.cpp:
 	.text       start:0x802E0E4C end:0x802E2840
 	.data       start:0x803D8DA8 end:0x803D8E08
 	.sdata2     start:0x8040E3F0 end:0x8040E3F8
 
-JSystem/std-list.cpp:
+JSystem/JGadget/std-list.cpp:
 	.text       start:0x802E2840 end:0x802E2AA4
 
-JSystem/JKRDvdRipper.cpp:
+JSystem/JKernel/JKRDvdRipper.cpp:
 	.text       start:0x802E2AA4 end:0x802E3608
 	.ctors      start:0x8036B64C end:0x8036B650
 	.rodata     start:0x803A2368 end:0x803A23C8
@@ -2957,12 +2954,12 @@ JSystem/JKRDvdRipper.cpp:
 	.sdata      start:0x80404388 end:0x80404390
 	.sbss       start:0x80405A18 end:0x80405A48
 
-JSystem/J2DGrafContext.cpp:
+JSystem/J2D/J2DGrafContext.cpp:
 	.text       start:0x802E3608 end:0x802E3D48
 	.data       start:0x803D8E08 end:0x803D8E30
 	.sdata2     start:0x8040E3F8 end:0x8040E408
 
-JSystem/JKRDvdAramRipper.cpp:
+JSystem/JKernel/JKRDvdAramRipper.cpp:
 	.text       start:0x802E3D48 end:0x802E4AC8
 	.ctors      start:0x8036B650 end:0x8036B654
 	.bss        start:0x803F4D78 end:0x803F4D88
@@ -2970,26 +2967,26 @@ JSystem/JKRDvdAramRipper.cpp:
 	.sdata      start:0x80404390 end:0x80404398
 	.sbss       start:0x80405A48 end:0x80405A88
 
-JSystem/JKRDecomp.cpp:
+JSystem/JKernel/JKRDecomp.cpp:
 	.text       start:0x802E4AC8 end:0x802E5174
 	.data       start:0x803D8E30 end:0x803D8E70
 	.sbss       start:0x80405A88 end:0x80405A90
 
-JSystem/J2DOrthoGraph.cpp:
+JSystem/J2D/J2DOrthoGraph.cpp:
 	.text       start:0x802E5174 end:0x802E57BC
 	.data       start:0x803D8E70 end:0x803D8E98
 	.sdata2     start:0x8040E408 end:0x8040E428
 
-JSystem/J3DVertex.cpp:
+JSystem/J3D/J3DGraphBase/J3DVertex.cpp:
 	.text       start:0x802E57BC end:0x802E5A24
 	.data       start:0x803D8E98 end:0x803D8EA8
 
-JSystem/J3DPacket.cpp:
+JSystem/J3D/J3DGraphBase/J3DPacket.cpp:
 	.text       start:0x802E5A24 end:0x802E6094
 	.data       start:0x803D8EA8 end:0x803D8F20
 	.sbss       start:0x80405A90 end:0x80405A98
 
-JSystem/J3DTevs.cpp:
+JSystem/J3D/J3DGraphBase/J3DTevs.cpp:
 	.text       start:0x802E6094 end:0x802E776C
 	.rodata     start:0x803A23C8 end:0x803A2438
 	.data       start:0x803D8F20 end:0x803D9098
@@ -2997,26 +2994,26 @@ JSystem/J3DTevs.cpp:
 	.sdata      start:0x80404398 end:0x80404418
 	.sdata2     start:0x8040E428 end:0x8040E440
 
-JSystem/J3DDrawBuffer.cpp:
+JSystem/J3D/J3DGraphBase/J3DDrawBuffer.cpp:
 	.text       start:0x802E776C end:0x802E7E94
 	.ctors      start:0x8036B654 end:0x8036B658
 	.data       start:0x803D9098 end:0x803D9158
 	.sbss       start:0x80405A98 end:0x80405AA0
 	.sdata2     start:0x8040E440 end:0x8040E450
 
-JSystem/J3DMaterialAnm.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DMaterialAnm.cpp:
 	.text       start:0x802E7E94 end:0x802E8174
 	.data       start:0x803D9158 end:0x803D9178
 
-JSystem/std-vector.cpp:
+JSystem/JGadget/std-vector.cpp:
 	.text       start:0x802E8174 end:0x802E8784
 	.sdata2     start:0x8040E450 end:0x8040E460
 
-JSystem/JKRAramBlock.cpp:
+JSystem/JKernel/JKRAramBlock.cpp:
 	.text       start:0x802E8784 end:0x802E89EC
 	.data       start:0x803D9178 end:0x803D9188
 
-JSystem/JKRAramPiece.cpp:
+JSystem/JKernel/JKRAramPiece.cpp:
 	.text       start:0x802E89EC end:0x802E8E98
 	.ctors      start:0x8036B658 end:0x8036B65C
 	.rodata     start:0x803A2438 end:0x803A2490
@@ -3024,29 +3021,29 @@ JSystem/JKRAramPiece.cpp:
 	.bss        start:0x803FEC50 end:0x803FEC8C align:4 common
 	.sdata2     start:0x8040E460 end:0x8040E468
 
-JSystem/JKRAramStream.cpp:
+JSystem/JKernel/JKRAramStream.cpp:
 	.text       start:0x802E8E98 end:0x802E93B0
 	.rodata     start:0x803A2490 end:0x803A24A8
 	.data       start:0x803D9188 end:0x803D91C8
 	.sbss       start:0x80405AA0 end:0x80405AB0
 	.sdata2     start:0x8040E468 end:0x8040E470
 
-JSystem/JUTAssert.cpp:
+JSystem/JUtility/JUTAssert.cpp:
 	.text       start:0x802E93B0 end:0x802E9448
 	.bss        start:0x803F4D98 end:0x803F4E38
 	.sdata      start:0x80404418 end:0x80404420
 	.sbss       start:0x80405AB0 end:0x80405AB8
 
-JSystem/JUTVideo.cpp:
+JSystem/JUtility/JUTVideo.cpp:
 	.sbss       start:0x80405AB8 end:0x80405AC0
 
-JSystem/JUTResFont.cpp:
+JSystem/JUtility/JUTResFont.cpp:
 	.text       start:0x802E9448 end:0x802EA634
 	.rodata     start:0x803A24A8 end:0x803A25A0
 	.data       start:0x803D91C8 end:0x803D9210
 	.sdata2     start:0x8040E470 end:0x8040E488
 
-JSystem/JUTRomFont.cpp:
+JSystem/JUtility/JUTRomFont.cpp:
 	.text       start:0x802EA634 end:0x802EAEA8
 	.rodata     start:0x803A25A0 end:0x803A25D8
 	.data       start:0x803D9210 end:0x803D9268
@@ -3059,142 +3056,142 @@ JSystem/JRenderer.cpp:
 	.sdata      start:0x80404420 end:0x80404430
 	.sdata2     start:0x8040E498 end:0x8040E4D0
 
-JSystem/JUTConsole.cpp:
+JSystem/JUtility/JUTConsole.cpp:
 	.text       start:0x802ED834 end:0x802EE9A0
 	.data       start:0x803D92D0 end:0x803D92E0
 	.sbss       start:0x80405AD0 end:0x80405AE0
 	.sdata2     start:0x8040E4D0 end:0x8040E4F0
 
-JSystem/JUTDirectFile.cpp:
+JSystem/JUtility/JUTDirectFile.cpp:
 	.text       start:0x802EE9A0 end:0x802EED44
 
-JSystem/linklist.cpp:
+JSystem/JGadget/linklist.cpp:
 	.text       start:0x802EED44 end:0x802EEF04
 
-JSystem/singlelinklist.cpp:
+JSystem/JGadget/singlelinklist.cpp:
 	.text       start:0x802EEF04 end:0x802EEF78
 
-JSystem/JDRActor.cpp:
+JSystem/JDrama/JDRActor.cpp:
 	.text       start:0x802EEF78 end:0x802EF25C
 	.rodata     start:0x803A25D8 end:0x803A25E8
 	.data       start:0x803D92E0 end:0x803D9380
 
-JSystem/JDRCamera.cpp:
+JSystem/JDrama/JDRCamera.cpp:
 	.text       start:0x802EF25C end:0x802EFCC4
 	.data       start:0x803D9380 end:0x803D96E8
 	.sdata2     start:0x8040E4F0 end:0x8040E500
 
-JSystem/JDRCharacter.cpp:
+JSystem/JDrama/JDRCharacter.cpp:
 	.text       start:0x802EFCC4 end:0x802EFE1C
 	.data       start:0x803D96E8 end:0x803D9710
 
-JSystem/JDRDirector.cpp:
+JSystem/JDrama/JDRDirector.cpp:
 	.text       start:0x802EFE1C end:0x802F0054
 	.data       start:0x803D9710 end:0x803D9780
 
-JSystem/JDRDisplay.cpp:
+JSystem/JDrama/JDRDisplay.cpp:
 	.text       start:0x802F0054 end:0x802F0314
 	.data       start:0x803D9780 end:0x803D9790
 
-JSystem/JDRDrawBufObj.cpp:
+JSystem/JDrama/JDRDrawBufObj.cpp:
 	.text       start:0x802F0314 end:0x802F0558
 	.rodata     start:0x803A25E8 end:0x803A25F8
 	.data       start:0x803D9790 end:0x803D97B8
 
-JSystem/JDRDStage.cpp:
+JSystem/JDrama/JDRDStage.cpp:
 	.text       start:0x802F0558 end:0x802F07B4
 	.rodata     start:0x803A25F8 end:0x803A2620
 	.data       start:0x803D97B8 end:0x803D97E0
 
-JSystem/JDRDStageGroup.cpp:
+JSystem/JDrama/JDRDStageGroup.cpp:
 	.text       start:0x802F07B4 end:0x802F091C
 	.data       start:0x803D97E0 end:0x803D9810
 
-JSystem/JDREfbCtrl.cpp:
+JSystem/JDrama/JDREfbCtrl.cpp:
 	.text       start:0x802F091C end:0x802F1054
 	.data       start:0x803D9810 end:0x803D9880
 
-JSystem/JDREfbSetting.cpp:
+JSystem/JDrama/JDREfbSetting.cpp:
 	.text       start:0x802F1054 end:0x802F14B8
 
-JSystem/JDRFrmGXSet.cpp:
+JSystem/JDrama/JDRFrmGXSet.cpp:
 	.text       start:0x802F14B8 end:0x802F16DC
 	.data       start:0x803D9880 end:0x803D98A8
 
-JSystem/JDRGraphics.cpp:
+JSystem/JDrama/JDRGraphics.cpp:
 	.text       start:0x802F16DC end:0x802F1860
 	.sdata2     start:0x8040E500 end:0x8040E508
 
-JSystem/JDRLighting.cpp:
+JSystem/JDrama/JDRLighting.cpp:
 	.text       start:0x802F1860 end:0x802F2680
 	.rodata     start:0x803A2620 end:0x803A2638
 	.data       start:0x803D98A8 end:0x803D9AB0
 	.sdata2     start:0x8040E508 end:0x8040E510
 
-JSystem/JDRNameRef.cpp:
+JSystem/JDrama/JDRNameRef.cpp:
 	.text       start:0x802F2680 end:0x802F2914
 	.data       start:0x803D9AB0 end:0x803D9AD0
 
-JSystem/JDRNameRefGen.cpp:
+JSystem/JDrama/JDRNameRefGen.cpp:
 	.text       start:0x802F2914 end:0x802F3948
 	.rodata     start:0x803A2638 end:0x803A2780
 	.data       start:0x803D9AD0 end:0x803D9B00
 	.sbss       start:0x80405AE0 end:0x80405AE8
 	.sdata2     start:0x8040E510 end:0x8040E548
 
-JSystem/JADHioNode.cpp:
+JSystem/JAudio/JADebug/JADHioNode.cpp:
 	.sbss       start:0x80405AE8 end:0x80405AF0
 
-JSystem/JDRPlacement.cpp:
+JSystem/JDrama/JDRPlacement.cpp:
 	.text       start:0x802F3948 end:0x802F39B0
 	.data       start:0x803D9B00 end:0x803D9B28
 
-JSystem/JDRRenderMode.cpp:
+JSystem/JDrama/JDRRenderMode.cpp:
 	.text       start:0x802F39B0 end:0x802F3D58
 	.rodata     start:0x803A2780 end:0x803A27C8
 	.sdata2     start:0x8040E548 end:0x8040E550
 
-JSystem/JDRResolution.cpp:
+JSystem/JDrama/JDRResolution.cpp:
 	.text       start:0x802F3D58 end:0x802F3DE8
 
-JSystem/JDRScreen.cpp:
+JSystem/JDrama/JDRScreen.cpp:
 	.text       start:0x802F3DE8 end:0x802F407C
 	.rodata     start:0x803A27C8 end:0x803A27E8
 	.data       start:0x803D9B28 end:0x803D9B70
 
-JSystem/JDRSmJ3DAct.cpp:
+JSystem/JDrama/JDRSmJ3DAct.cpp:
 	.text       start:0x802F407C end:0x802F46C0
 	.rodata     start:0x803A27E8 end:0x803A2808
 	.data       start:0x803D9B70 end:0x803D9C10
 	.sdata2     start:0x8040E550 end:0x8040E560
 
-JSystem/JDRSmJ3DScn.cpp:
+JSystem/JDrama/JDRSmJ3DScn.cpp:
 	.text       start:0x802F46C0 end:0x802F4A28
 	.rodata     start:0x803A2808 end:0x803A2818
 	.data       start:0x803D9C10 end:0x803D9C40
 
-JSystem/JDRVideo.cpp:
+JSystem/JDrama/JDRVideo.cpp:
 	.text       start:0x802F4A28 end:0x802F4CEC
 
-JSystem/JDRViewConnecter.cpp:
+JSystem/JDrama/JDRViewConnecter.cpp:
 	.text       start:0x802F4CEC end:0x802F4E24
 	.data       start:0x803D9C40 end:0x803D9C68
 
-JSystem/JDRViewObj.cpp:
+JSystem/JDrama/JDRViewObj.cpp:
 	.text       start:0x802F4E24 end:0x802F4E8C
 
-JSystem/JDRViewport.cpp:
+JSystem/JDrama/JDRViewport.cpp:
 	.text       start:0x802F4E8C end:0x802F50B8
 	.data       start:0x803D9C68 end:0x803D9C90
 	.sdata2     start:0x8040E560 end:0x8040E568
 
-JSystem/JALCalc.cpp:
+JSystem/JAudio/JALibrary/JALCalc.cpp:
 	.text       start:0x802F50B8 end:0x802F54D4
 	.sdata      start:0x80404430 end:0x80404438
 	.sbss       start:0x80405AF0 end:0x80405AF8
 	.sdata2     start:0x8040E568 end:0x8040E588
 
-JSystem/JALModSe.cpp:
+JSystem/JAudio/JALibrary/JALModSe.cpp:
 	.text       start:0x802F54D4 end:0x802F812C
 	.ctors      start:0x8036B65C end:0x8036B660
 	.data       start:0x803D9C90 end:0x803D9E70
@@ -3202,17 +3199,17 @@ JSystem/JALModSe.cpp:
 	.sbss       start:0x80405AF8 end:0x80405B00
 	.sdata2     start:0x8040E588 end:0x8040E590
 
-JSystem/JAIAsnData.cpp:
+JSystem/JAudio/JAInterface/JAIAsnData.cpp:
 	.rodata     start:0x803A2818 end:0x803A28D0
 	.sdata      start:0x80404438 end:0x80404440
 	.sbss       start:0x80405B00 end:0x80405B08
 
-JSystem/JAIAnimation.cpp:
+JSystem/JAudio/JAInterface/JAIAnimation.cpp:
 	.text       start:0x802F812C end:0x802F8B70
 	.data       start:0x803D9E70 end:0x803D9E80
 	.sdata2     start:0x8040E590 end:0x8040E5B8
 
-JSystem/JAIBasic.cpp:
+JSystem/JAudio/JAInterface/JAIBasic.cpp:
 	.text       start:0x802F8B70 end:0x802FB36C
 	.ctors      start:0x8036B660 end:0x8036B664
 	.rodata     start:0x803A28D0 end:0x803A28E0
@@ -3221,42 +3218,42 @@ JSystem/JAIBasic.cpp:
 	.sbss       start:0x80405B08 end:0x80405B18
 	.sdata2     start:0x8040E5B8 end:0x8040E5D8
 
-JSystem/JAIConst.cpp:
+JSystem/JAudio/JAInterface/JAIConst.cpp:
 	.text       start:0x802FB36C end:0x802FB3B0
 	.ctors      start:0x8036B664 end:0x8036B668
 	.data       start:0x803D9EE0 end:0x803D9F30
 	.bss        start:0x803FEC98 end:0x803FED38 align:4 common
 	.sbss       start:0x80405B18 end:0x80405B20
 
-JSystem/JAIDebug.cpp:
+JSystem/JAudio/JAInterface/JAIDebug.cpp:
 	.sbss       start:0x80405B20 end:0x80405B28
 
-JSystem/JAIData.cpp:
+JSystem/JAudio/JAInterface/JAIData.cpp:
 	.text       start:0x802FB3B0 end:0x802FCACC
 	.sdata2     start:0x8040E5D8 end:0x8040E5F0
 
-JSystem/JAIEntry.cpp:
+JSystem/JAudio/JAInterface/JAIEntry.cpp:
 	.text       start:0x802FCACC end:0x802FCC2C
 
-JSystem/JAIEntrySe.cpp:
+JSystem/JAudio/JAInterface/JAIEntrySe.cpp:
 	.text       start:0x802FCC2C end:0x802FCFA8
 
-JSystem/JAIEntrySequence.cpp:
+JSystem/JAudio/JAInterface/JAIEntrySequence.cpp:
 	.text       start:0x802FCFA8 end:0x802FD294
 	.sdata2     start:0x8040E5F0 end:0x8040E5F8
 
-JSystem/JAIEntryStream.cpp:
+JSystem/JAudio/JAInterface/JAIEntryStream.cpp:
 	.text       start:0x802FD294 end:0x802FD394
 
-JSystem/JAIGFrameSe.cpp:
+JSystem/JAudio/JAInterface/JAIGFrameSe.cpp:
 	.text       start:0x802FD394 end:0x802FEA68
 	.sdata2     start:0x8040E5F8 end:0x8040E640
 
-JSystem/JAIGFrameSequence.cpp:
+JSystem/JAudio/JAInterface/JAIGFrameSequence.cpp:
 	.text       start:0x802FEA68 end:0x803004FC
 	.sdata2     start:0x8040E640 end:0x8040E670
 
-JSystem/JAIGFrameStream.cpp:
+JSystem/JAudio/JAInterface/JAIGFrameStream.cpp:
 	.text       start:0x803004FC end:0x803023A8
 	.ctors      start:0x8036B668 end:0x8036B66C
 	.data       start:0x803D9F30 end:0x803D9F90
@@ -3266,99 +3263,99 @@ JSystem/JAIGFrameStream.cpp:
 	.sbss       start:0x80405B28 end:0x80405BC8
 	.sdata2     start:0x8040E670 end:0x8040E698
 
-JSystem/JAIGlobalParameter.cpp:
+JSystem/JAudio/JAInterface/JAIGlobalParameter.cpp:
 	.text       start:0x803023A8 end:0x80302518
 	.rodata     start:0x803A28E0 end:0x803A2938
 	.sdata      start:0x80404450 end:0x804044F8
 	.sbss       start:0x80405BC8 end:0x80405BD8
 	.sdata2     start:0x8040E698 end:0x8040E6B0
 
-JSystem/JAISound.cpp:
+JSystem/JAudio/JAInterface/JAISound.cpp:
 	.text       start:0x80302518 end:0x803052C8
 	.data       start:0x803D9F90 end:0x803D9FC8
 	.sbss       start:0x80405BD8 end:0x80405BE0
 	.sdata2     start:0x8040E6B0 end:0x8040E700
 
-JSystem/JAISystemInterface.cpp:
+JSystem/JAudio/JAInterface/JAISystemInterface.cpp:
 	.text       start:0x803052C8 end:0x80305BD4
 	.ctors      start:0x8036B66C end:0x8036B670
 	.bss        start:0x803F4F98 end:0x803F4FA8
 	.bss        start:0x803FED4C end:0x803FED60 align:4 common
 	.sdata2     start:0x8040E700 end:0x8040E708
 
-JSystem/JASBank.cpp:
+JSystem/JAudio/JASystem/JASBank.cpp:
 	.text       start:0x80305BD4 end:0x80305BE8
 	.sbss       start:0x80405BE0 end:0x80405BE8
 
-JSystem/JASBankMgr.cpp:
+JSystem/JAudio/JASystem/JASBankMgr.cpp:
 	.text       start:0x80305BE8 end:0x8030643C
 	.data       start:0x803D9FC8 end:0x803D9FF0
 	.sbss       start:0x80405BE8 end:0x80405BF8
 	.sdata2     start:0x8040E708 end:0x8040E728
 
-JSystem/JASBasicBank.cpp:
+JSystem/JAudio/JASystem/JASBasicBank.cpp:
 	.text       start:0x8030643C end:0x803065CC
 	.data       start:0x803D9FF0 end:0x803DA018
 
-JSystem/JASBasicInst.cpp:
+JSystem/JAudio/JASystem/JASBasicInst.cpp:
 	.text       start:0x803065CC end:0x80306BA0
 	.data       start:0x803DA018 end:0x803DA048
 	.sdata2     start:0x8040E728 end:0x8040E730
 
-JSystem/JASBasicWaveBank.cpp:
+JSystem/JAudio/JASystem/JASBasicWaveBank.cpp:
 	.text       start:0x80306BA0 end:0x803073FC
 	.data       start:0x803DA048 end:0x803DA0C0
 
-JSystem/JASBNKParser.cpp:
+JSystem/JAudio/JASystem/JASBNKParser.cpp:
 	.text       start:0x803073FC end:0x80307DDC
 	.data       start:0x803DA0C0 end:0x803DA0D0
 	.sbss       start:0x80405BF8 end:0x80405C00
 	.sdata2     start:0x8040E730 end:0x8040E750
 
-JSystem/JASDrumSet.cpp:
+JSystem/JAudio/JASystem/JASDrumSet.cpp:
 	.text       start:0x80307DDC end:0x803081F8
 	.data       start:0x803DA0D0 end:0x803DA0E8
 	.bss        start:0x803F4FA8 end:0x803F4FC0
 	.sbss       start:0x80405C00 end:0x80405C08
 	.sdata2     start:0x8040E750 end:0x8040E760
 
-JSystem/JASInstEffect.cpp:
+JSystem/JAudio/JASystem/JASInstEffect.cpp:
 	.text       start:0x803081F8 end:0x80308200
 
-JSystem/JASInstRand.cpp:
+JSystem/JAudio/JASystem/JASInstRand.cpp:
 	.text       start:0x80308200 end:0x803082A0
 	.data       start:0x803DA0E8 end:0x803DA0F8
 	.sbss       start:0x80405C08 end:0x80405C10
 	.sdata2     start:0x8040E760 end:0x8040E770
 
-JSystem/JASInstSense.cpp:
+JSystem/JAudio/JASystem/JASInstSense.cpp:
 	.text       start:0x803082A0 end:0x803083D8
 	.data       start:0x803DA0F8 end:0x803DA108
 	.sdata2     start:0x8040E770 end:0x8040E788
 
-JSystem/JASSimpleWaveBank.cpp:
+JSystem/JAudio/JASystem/JASSimpleWaveBank.cpp:
 	.text       start:0x803083D8 end:0x8030876C
 	.data       start:0x803DA108 end:0x803DA150
 
-JSystem/JASWaveArcLoader.cpp:
+JSystem/JAudio/JASystem/JASWaveArcLoader.cpp:
 	.text       start:0x8030876C end:0x80308A28
 	.ctors      start:0x8036B670 end:0x8036B674
 	.data       start:0x803DA150 end:0x803DA190
 	.bss        start:0x803F4FC0 end:0x803F4FF8
 
-JSystem/JASWaveBank.cpp:
+JSystem/JAudio/JASystem/JASWaveBank.cpp:
 	.text       start:0x80308A28 end:0x80308A3C
 	.sbss       start:0x80405C10 end:0x80405C18
 
-JSystem/JASWaveBankMgr.cpp:
+JSystem/JAudio/JASystem/JASWaveBankMgr.cpp:
 	.text       start:0x80308A3C end:0x80308D04
 	.sbss       start:0x80405C18 end:0x80405C20
 
-JSystem/JASWSParser.cpp:
+JSystem/JAudio/JASystem/JASWSParser.cpp:
 	.text       start:0x80308D04 end:0x80309220
 	.sbss       start:0x80405C20 end:0x80405C28
 
-JSystem/JASAudioThread.cpp:
+JSystem/JAudio/JASystem/JASAudioThread.cpp:
 	.text       start:0x80309220 end:0x80309670
 	.rodata     start:0x803A2938 end:0x803A2948
 	.bss        start:0x803F4FF8 end:0x803F5058
@@ -3366,87 +3363,87 @@ JSystem/JASAudioThread.cpp:
 	.sbss       start:0x80405C28 end:0x80405C48
 	.sdata2     start:0x8040E788 end:0x8040E790
 
-JSystem/JASChAllocQueue.cpp:
+JSystem/JAudio/JASystem/JASChAllocQueue.cpp:
 	.text       start:0x80309670 end:0x803099D4
 	.sdata      start:0x804044F8 end:0x80404500
 	.sbss       start:0x80405C48 end:0x80405C60
 
-JSystem/JASChannel.cpp:
+JSystem/JAudio/JASystem/JASChannel.cpp:
 	.text       start:0x803099D4 end:0x8030B508
 	.data       start:0x803DA190 end:0x803DA240
 	.sdata2     start:0x8040E790 end:0x8040E7B0
 
-JSystem/JASDriverTables.cpp:
+JSystem/JAudio/JASystem/JASDriverTables.cpp:
 	.data       start:0x803DA240 end:0x803DA980
 
-JSystem/JASChannelMgr.cpp:
+JSystem/JAudio/JASystem/JASChannelMgr.cpp:
 	.text       start:0x8030B508 end:0x8030BDE4
 	.rodata     start:0x803A2948 end:0x803A2958
 	.sdata2     start:0x8040E7B0 end:0x8040E7C0
 
-JSystem/JASChGlobal.cpp:
+JSystem/JAudio/JASystem/JASChGlobal.cpp:
 	.text       start:0x8030BDE4 end:0x8030C25C
 	.sbss       start:0x80405C60 end:0x80405C70
 
-JSystem/JASDriverIF.cpp:
+JSystem/JAudio/JASystem/JASDriverIF.cpp:
 	.text       start:0x8030C25C end:0x8030C2F0
 	.sdata      start:0x80404500 end:0x80404510
 	.sdata2     start:0x8040E7C0 end:0x8040E7C8
 
-JSystem/JASDSPBuf.cpp:
+JSystem/JAudio/JASystem/JASDSPBuf.cpp:
 	.text       start:0x8030C2F0 end:0x8030C7F0
 	.rodata     start:0x803A2958 end:0x803A2970
 	.bss        start:0x803F5058 end:0x803F5068
 	.sbss       start:0x80405C70 end:0x80405C78
 
-JSystem/JASDSPChannel.cpp:
+JSystem/JAudio/JASystem/JASDSPChannel.cpp:
 	.text       start:0x8030C7F0 end:0x8030D018
 	.data       start:0x803DA980 end:0x803DA9A8
 	.sdata      start:0x80404510 end:0x80404518
 	.sbss       start:0x80405C78 end:0x80405C90
 	.sdata2     start:0x8040E7C8 end:0x8040E7D0
 
-JSystem/JASDSPInterface.cpp:
+JSystem/JAudio/JASystem/JASDSPInterface.cpp:
 	.text       start:0x8030D018 end:0x8030D76C
 	.data       start:0x803DA9A8 end:0x803DA9D8
 	.sdata      start:0x80404518 end:0x80404530
 	.sbss       start:0x80405C90 end:0x80405C98
 
-JSystem/JASOscillator.cpp:
+JSystem/JAudio/JASystem/JASOscillator.cpp:
 	.text       start:0x8030D76C end:0x8030DED0
 	.rodata     start:0x803A2970 end:0x803A2A40
 	.data       start:0x803DA9D8 end:0x803DA9E8
 	.sdata2     start:0x8040E7D0 end:0x8040E808
 
-JSystem/JASAiCtrl.cpp:
+JSystem/JAudio/JASystem/JASAiCtrl.cpp:
 	.text       start:0x8030DED0 end:0x8030E5A4
 	.rodata     start:0x803A2A40 end:0x803A2A58
 	.bss        start:0x803F5068 end:0x803F5078
 	.sbss       start:0x80405C98 end:0x80405CC0
 	.sdata2     start:0x8040E808 end:0x8040E818
 
-JSystem/JASCalc.cpp:
+JSystem/JAudio/JASystem/JASCalc.cpp:
 	.text       start:0x8030E5A4 end:0x8030ED3C
 	.sbss       start:0x80405CC0 end:0x80405CC8
 	.sdata2     start:0x8040E818 end:0x8040E838
 
-JSystem/JASCallback.cpp:
+JSystem/JAudio/JASystem/JASCallback.cpp:
 	.text       start:0x8030ED3C end:0x8030F030
 	.sdata      start:0x80404530 end:0x80404538
 	.sbss       start:0x80405CC8 end:0x80405CD0
 
-JSystem/JASCmdStack.cpp:
+JSystem/JAudio/JASystem/JASCmdStack.cpp:
 	.text       start:0x8030F030 end:0x8030F1FC
 	.sbss       start:0x80405CD0 end:0x80405CE0
 
-JSystem/JASDvdThread.cpp:
+JSystem/JAudio/JASystem/JASDvdThread.cpp:
 	.text       start:0x8030F1FC end:0x803101F0
 	.data       start:0x803DA9E8 end:0x803DAA08
 	.bss        start:0x803F5078 end:0x803F52C0
 	.sdata      start:0x80404538 end:0x80404548
 	.sbss       start:0x80405CE0 end:0x80405D38
 
-JSystem/JASHardStream.cpp:
+JSystem/JAudio/JASystem/JASHardStream.cpp:
 	.text       start:0x803101F0 end:0x80310FA0
 	.ctors      start:0x8036B674 end:0x8036B678
 	.data       start:0x803DAA08 end:0x803DAA48
@@ -3455,53 +3452,53 @@ JSystem/JASHardStream.cpp:
 	.sbss       start:0x80405D38 end:0x80405D58
 	.sdata2     start:0x8040E838 end:0x8040E850
 
-JSystem/JASHeapCtrl.cpp:
+JSystem/JAudio/JASystem/JASHeapCtrl.cpp:
 	.text       start:0x80310FA0 end:0x803115B4
 	.sbss       start:0x80405D58 end:0x80405D60
 
-JSystem/JASRate.cpp:
+JSystem/JAudio/JASystem/JASRate.cpp:
 	.sdata      start:0x80404550 end:0x80404560
 	.sbss       start:0x80405D60 end:0x80405D68
 
-JSystem/JASKernelDebug.cpp:
+JSystem/JAudio/JASystem/JASKernelDebug.cpp:
 	.text       start:0x803115B4 end:0x80311684
 
-JSystem/JASProbe.cpp:
+JSystem/JAudio/JASystem/JASProbe.cpp:
 	.text       start:0x80311684 end:0x8031168C
 
-JSystem/JASSystemHeap.cpp:
+JSystem/JAudio/JASystem/JASSystemHeap.cpp:
 	.text       start:0x8031168C end:0x80311840
 	.ctors      start:0x8036B678 end:0x8036B67C
 	.bss        start:0x803F5730 end:0x803F5750
 	.sdata      start:0x80404560 end:0x80404568
 	.sbss       start:0x80405D68 end:0x80405D78
 
-JSystem/JASVload.cpp:
+JSystem/JAudio/JASystem/JASVload.cpp:
 	.text       start:0x80311840 end:0x80311D18
 	.sdata      start:0x80404568 end:0x80404570
 	.sbss       start:0x80405D78 end:0x80405D88
 	.sdata2     start:0x8040E850 end:0x8040E858
 
-JSystem/JASNoteMgr.cpp:
+JSystem/JAudio/JASystem/JASNoteMgr.cpp:
 	.text       start:0x80311D18 end:0x80311DE8
 
-JSystem/JASOuterParam.cpp:
+JSystem/JAudio/JASystem/JASOuterParam.cpp:
 	.text       start:0x80311DE8 end:0x80311FA0
 	.sdata2     start:0x8040E858 end:0x8040E860
 
-JSystem/JASPlayer_impl.cpp:
+JSystem/JAudio/JASystem/JASPlayer_impl.cpp:
 	.text       start:0x80311FA0 end:0x803120C4
 	.data       start:0x803DAA48 end:0x803DB018
 	.sdata      start:0x80404570 end:0x80404578
 	.sdata2     start:0x8040E860 end:0x8040E878
 
-JSystem/JASRegisterParam.cpp:
+JSystem/JAudio/JASystem/JASRegisterParam.cpp:
 	.text       start:0x803120C4 end:0x80312208
 
-JSystem/JASSeqCtrl.cpp:
+JSystem/JAudio/JASystem/JASSeqCtrl.cpp:
 	.text       start:0x80312208 end:0x8031247C
 
-JSystem/JASTrack.cpp:
+JSystem/JAudio/JASystem/JASTrack.cpp:
 	.text       start:0x8031247C end:0x80315B94
 	.ctors      start:0x8036B67C end:0x8036B680
 	.data       start:0x803DB018 end:0x803DB0E0
@@ -3510,66 +3507,66 @@ JSystem/JASTrack.cpp:
 	.sbss       start:0x80405D88 end:0x80405D90
 	.sdata2     start:0x8040E878 end:0x8040E8C0
 
-JSystem/JASTrackInterrupt.cpp:
+JSystem/JAudio/JASystem/JASTrackInterrupt.cpp:
 	.text       start:0x80315B94 end:0x80315D14
 
-JSystem/JASTrackMgr.cpp:
+JSystem/JAudio/JASystem/JASTrackMgr.cpp:
 	.text       start:0x80315D14 end:0x803162EC
 	.bss        start:0x803F57D8 end:0x803F58D8
 	.sbss       start:0x80405D90 end:0x80405DB8
 
-JSystem/JASTrackPort.cpp:
+JSystem/JAudio/JASystem/JASTrackPort.cpp:
 	.text       start:0x803162EC end:0x803163D4
 
 JSystem/random.cpp:
 	.text       start:0x803163D4 end:0x803164D0
 
-JSystem/J3DMaterialFactory_v21.cpp:
+JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp:
 	.text       start:0x803164D0 end:0x80317A88
 	.sdata2     start:0x8040E8C0 end:0x8040E8D0
 
-JSystem/JASSeqParser.cpp:
+JSystem/JAudio/JASystem/JASSeqParser.cpp:
 	.text       start:0x80317A88 end:0x80319D98
 	.ctors      start:0x8036B680 end:0x8036B684
 	.rodata     start:0x803A2A58 end:0x803A2B58
 	.data       start:0x803DB0E0 end:0x803DB660
 	.sdata2     start:0x8040E8D0 end:0x8040E910
 
-JSystem/J3DMaterialAttach.cpp:
+JSystem/J3D/J3DGraphAnimator/J3DMaterialAttach.cpp:
 	.text       start:0x80319D98 end:0x80319E28
 	.data       start:0x803DB660 end:0x803DB670
 
-JSystem/JPAEmitter.cpp:
+JSystem/JParticle/JPAEmitter.cpp:
 	.text       start:0x80319E28 end:0x8031CC60
 	.ctors      start:0x8036B684 end:0x8036B688
 	.data       start:0x803DB670 end:0x803DB6B8
 	.bss        start:0x803F58D8 end:0x803F5A58
 	.sdata2     start:0x8040E910 end:0x8040E950
 
-JSystem/JPAEmitterManager.cpp:
+JSystem/JParticle/JPAEmitterManager.cpp:
 	.text       start:0x8031CC60 end:0x8031D5F4
 	.sdata2     start:0x8040E950 end:0x8040E958
 
-JSystem/JPAField.cpp:
+JSystem/JParticle/JPAField.cpp:
 	.text       start:0x8031D5F4 end:0x8031FB3C
 	.ctors      start:0x8036B688 end:0x8036B68C
 	.data       start:0x803DB6B8 end:0x803DB7B0
 	.sbss       start:0x80405DB8 end:0x80405DC0
 	.sdata2     start:0x8040E958 end:0x8040E978
 
-JSystem/JPAMath.cpp:
+JSystem/JParticle/JPAMath.cpp:
 	.text       start:0x8031FB3C end:0x80320AE4
 	.sdata2     start:0x8040E978 end:0x8040E9B0
 
-JSystem/JPAParticle.cpp:
+JSystem/JParticle/JPAParticle.cpp:
 	.text       start:0x80320AE4 end:0x803210FC
 	.data       start:0x803DB7B0 end:0x803DB860
 	.sdata2     start:0x8040E9B0 end:0x8040E9C0
 
-JSystem/JPADrawSetupTev.cpp:
+JSystem/JParticle/JPADrawSetupTev.cpp:
 	.text       start:0x803210FC end:0x8032143C
 
-JSystem/JPADraw.cpp:
+JSystem/JParticle/JPADraw.cpp:
 	.text       start:0x8032143C end:0x8032754C
 	.ctors      start:0x8036B68C end:0x8036B690
 	.data       start:0x803DB860 end:0x803DB8F8
@@ -3577,70 +3574,70 @@ JSystem/JPADraw.cpp:
 	.bss        start:0x804036C4 end:0x80403960 align:4 common
 	.sdata2     start:0x8040E9C0 end:0x8040EA00
 
-JSystem/JPADrawVisitor.cpp:
+JSystem/JParticle/JPADrawVisitor.cpp:
 	.text       start:0x8032754C end:0x8032D300
 	.data       start:0x803DB8F8 end:0x803DBE28
 	.sbss       start:0x80405DC0 end:0x80405DC8
 	.sdata2     start:0x8040EA00 end:0x8040EA50
 
-JSystem/JPAExTexShape.cpp:
+JSystem/JParticle/JPAExTexShape.cpp:
 	.text       start:0x8032D300 end:0x8032D4C8
 	.data       start:0x803DBE28 end:0x803DBE40
 
-JSystem/JPADataBlock.cpp:
+JSystem/JParticle/JPADataBlock.cpp:
 	.text       start:0x8032D4C8 end:0x8032D548
 
-JSystem/JPAEmitterLoader.cpp:
+JSystem/JParticle/JPAEmitterLoader.cpp:
 	.text       start:0x8032D548 end:0x8032DB24
 	.data       start:0x803DBE40 end:0x803DBE68
 
-JSystem/JPABaseShape.cpp:
+JSystem/JParticle/JPABaseShape.cpp:
 	.text       start:0x8032DB24 end:0x8032E350
 	.data       start:0x803DBE68 end:0x803DBF20
 	.sdata2     start:0x8040EA50 end:0x8040EA70
 
-JSystem/JPAExtraShape.cpp:
+JSystem/JParticle/JPAExtraShape.cpp:
 	.text       start:0x8032E350 end:0x8032E660
 	.data       start:0x803DBF20 end:0x803DBF30
 	.sdata2     start:0x8040EA70 end:0x8040EA80
 
-JSystem/JPAResourceManager.cpp:
+JSystem/JParticle/JPAResourceManager.cpp:
 	.text       start:0x8032E660 end:0x8032E95C
 
-JSystem/JPASweepShape.cpp:
+JSystem/JParticle/JPASweepShape.cpp:
 	.text       start:0x8032E95C end:0x8032EB04
 	.data       start:0x803DBF30 end:0x803DBF40
 
-JSystem/JPATexture.cpp:
+JSystem/JParticle/JPATexture.cpp:
 	.text       start:0x8032EB04 end:0x8032F084
 	.data       start:0x803DBF40 end:0x803DBF50
 	.sdata2     start:0x8040EA80 end:0x8040EA88
 
-JSystem/JSGAmbientLight.cpp:
+JSystem/JStage/JSGAmbientLight.cpp:
 	.text       start:0x8032F084 end:0x8032F10C
 	.data       start:0x803DBF50 end:0x803DBF88
 	.sdata2     start:0x8040EA88 end:0x8040EA90
 
-JSystem/JSGCamera.cpp:
+JSystem/JStage/JSGCamera.cpp:
 	.text       start:0x8032F10C end:0x8032F1EC
 	.data       start:0x803DBF88 end:0x803DC010
 	.sdata2     start:0x8040EA90 end:0x8040EA98
 
-JSystem/JSGActor.cpp:
+JSystem/JStage/JSGActor.cpp:
 	.text       start:0x8032F1EC end:0x8032F29C
 	.data       start:0x803DC010 end:0x803DC078
 	.sdata2     start:0x8040EA98 end:0x8040EAA0
 
-JSystem/JSGLight.cpp:
+JSystem/JStage/JSGLight.cpp:
 	.text       start:0x8032F29C end:0x8032F350
 	.data       start:0x803DC078 end:0x803DC0D8
 	.sdata2     start:0x8040EAA0 end:0x8040EAA8
 
-JSystem/JSGObject.cpp:
+JSystem/JStage/JSGObject.cpp:
 	.text       start:0x8032F350 end:0x8032F3C8
 	.data       start:0x803DC0D8 end:0x803DC108
 
-JSystem/JSGSystem.cpp:
+JSystem/JStage/JSGSystem.cpp:
 	.text       start:0x8032F3C8 end:0x8032F460
 	.data       start:0x803DC108 end:0x803DC160
 
@@ -3656,7 +3653,7 @@ JSystem/dsptask.c:
 	.bss        start:0x803F5A80 end:0x803F7B60
 	.sbss       start:0x80405DD0 end:0x80405DD8
 
-MSL_C.PPCEABI.bare.H/ansi_files.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ansi_files.c:
 	.data       start:0x803DDE40 end:0x803DDF18
 
 JSystem/osdsp.c:
@@ -3670,201 +3667,204 @@ JSystem/osdsp_task.c:
 	.bss        start:0x803F7B60 end:0x803F7B70
 	.sbss       start:0x80405DE0 end:0x80405DF0
 
-Runtime.PPCEABI.H/__va_arg.c:
+PowerPC_EABI_Support/Runtime/__va_arg.c:
 	.text       start:0x8032FE4C end:0x8032FF40
 
-Runtime.PPCEABI.H/global_destructor_chain.c:
+PowerPC_EABI_Support/Runtime/global_destructor_chain.c:
 	.text       start:0x8032FF40 end:0x8032FFA0
 	.dtors      start:0x8036B6A8 end:0x8036B6AC
 	.sbss       start:0x80405DF0 end:0x80405DF8
 
-Runtime.PPCEABI.H/NMWException.cp:
+PowerPC_EABI_Support/Runtime/NMWException.cp:
 	extab       start:0x80005540 end:0x80005588
 	extabindex  start:0x800055A0 end:0x800055DC
 	.text       start:0x8032FFA0 end:0x80330354
 
-Runtime.PPCEABI.H/ptmf.c:
+PowerPC_EABI_Support/Runtime/ptmf.c:
 	.text       start:0x80330354 end:0x803303AC
 	.rodata     start:0x803A2C58 end:0x803A2C68
 
-Runtime.PPCEABI.H/ExceptionPPC.cp:
+PowerPC_EABI_Support/Runtime/ExceptionPPC.cp:
 	.text       start:0x803303AC end:0x8033041C
 	.bss        start:0x803F7B70 end:0x803F7B80
 
-Runtime.PPCEABI.H/runtime.c:
+PowerPC_EABI_Support/Runtime/runtime.c:
 	.text       start:0x8033041C end:0x80330A7C
 	.rodata     start:0x803A2C68 end:0x803A2C80
 
-Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
+PowerPC_EABI_Support/Runtime/__init_cpp_exceptions.cpp:
 	.text       start:0x80330A7C end:0x80330AF8
 	.ctors      start:0x8036B2E0 end:0x8036B2E4
 	.dtors      start:0x8036B6A0 end:0x8036B6A8
 	.sdata      start:0x80404580 end:0x80404588
 
-MSL_C.PPCEABI.bare.H/abort_exit.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/abort_exit.c:
 	.text       start:0x80330AF8 end:0x80330C04
 	.bss        start:0x803F7B80 end:0x803F7D80
 	.sbss       start:0x80405DF8 end:0x80405E10
 
-MSL_C.PPCEABI.bare.H/errno.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/errno.c:
 	.sbss       start:0x80405E10 end:0x80405E18
 
-MSL_C.PPCEABI.bare.H/ansi_fp.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/ansi_fp.c:
 	.text       start:0x80330C04 end:0x80330FB8
 	.rodata     start:0x803A2C80 end:0x803A2D08
 	.sdata2     start:0x8040EAB0 end:0x8040EAD8
 
-MSL_C.PPCEABI.bare.H/buffer_io.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/buffer_io.c:
 	.text       start:0x80330FB8 end:0x803310B8
 
-MSL_C.PPCEABI.bare.H/critical_regions.ppc_eabi.c:
+PowerPC_EABI_Support/Msl/MSL_C/PPC_EABI/critical_regions.ppc_eabi.c:
 	.text       start:0x803310B8 end:0x803310BC
 
-MSL_C.PPCEABI.bare.H/ctype.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/ctype.c:
 	.text       start:0x803310BC end:0x8033110C
 	.rodata     start:0x803A2D08 end:0x803A3008
 
-MSL_C.PPCEABI.bare.H/direct_io.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/direct_io.c:
 	.text       start:0x8033110C end:0x803313E8
 
-MSL_C.PPCEABI.bare.H/mbstring.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/mbstring.c:
 	.text       start:0x803313E8 end:0x80331424
 
-MSL_C.PPCEABI.bare.H/mem.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/mem.c:
 	.text       start:0x80331424 end:0x80331570
 
-MSL_C.PPCEABI.bare.H/mem_funcs.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/mem_funcs.c:
 	.text       start:0x80331570 end:0x8033184C
 
-MSL_C.PPCEABI.bare.H/misc_io.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/misc_io.c:
 	.text       start:0x8033184C end:0x80331850
 
-MSL_C.PPCEABI.bare.H/printf.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.c:
 	.text       start:0x80331850 end:0x8033331C
 	.rodata     start:0x803A3008 end:0x803A3018
 	.data       start:0x803DDF18 end:0x803DE138
 	.sdata      start:0x80404588 end:0x80404590
 	.sdata2     start:0x8040EAD8 end:0x8040EAE0
 
-MSL_C.PPCEABI.bare.H/rand.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/rand.c:
 	.text       start:0x8033331C end:0x80333348
 	.sdata      start:0x80404590 end:0x80404598
 
-MSL_C.PPCEABI.bare.H/scanf.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/scanf.c:
 	.text       start:0x80333348 end:0x803333D8
 
-MSL_C.PPCEABI.bare.H/string.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.c:
 	.text       start:0x803333D8 end:0x80333724
 	.sdata      start:0x80404598 end:0x804045A0
 
-MSL_C.PPCEABI.bare.H/strtoul.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/strtoul.c:
 	.text       start:0x80333724 end:0x80333C08
 	.data       start:0x803DE138 end:0x803DE180
 
-MSL_C.PPCEABI.bare.H/float.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/float.c:
 	.data       start:0x803DE180 end:0x803DE188
 
-MSL_C.PPCEABI.bare.H/uart_console_io.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/uart_console_io.c:
 	.text       start:0x80333C08 end:0x80333D88
 	.sbss       start:0x80405E18 end:0x80405E20
 
-MSL_C.PPCEABI.bare.H/wchar_io.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/wchar_io.c:
 	.text       start:0x80333D88 end:0x80333E08
 
-MSL_C.PPCEABI.bare.H/e_asin.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_asin.c:
 	.text       start:0x80333E08 end:0x80333E10
 
-MSL_C.PPCEABI.bare.H/e_atan2.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_atan2.c:
 	.text       start:0x80333E10 end:0x803340A8
 	.sdata2     start:0x8040EAE0 end:0x8040EB38
 
-MSL_C.PPCEABI.bare.H/s_atan.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_atan.c:
 	.text       start:0x803340A8 end:0x803342E8
 	.rodata     start:0x803A3018 end:0x803A30B0
 	.sdata2     start:0x8040EB38 end:0x8040EB60
 
-MSL_C.PPCEABI.bare.H/s_frexp.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_frexp.c:
 	.text       start:0x803342E8 end:0x80334384
 	.sdata2     start:0x8040EB60 end:0x8040EB68
 
-MSL_C.PPCEABI.bare.H/w_atan2.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_atan2.c:
 	.text       start:0x80334384 end:0x803343A4
 
-MSL_C.PPCEABI.bare.H/hyperbolicsf.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Single_precision/hyperbolicsf.c:
 	.text       start:0x803343A4 end:0x803343AC
 
-MSL_C.PPCEABI.bare.H/inverse_trig.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Single_precision/inverse_trig.c:
 	.text       start:0x803343AC end:0x8033474C
 	.rodata     start:0x803A30B0 end:0x803A3168
 	.sdata2     start:0x8040EB68 end:0x8040EB88
 
-MSL_C.PPCEABI.bare.H/trigf.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Single_precision/trigf.c:
 	.text       start:0x8033474C end:0x80334B38
 	.ctors      start:0x8036B690 end:0x8036B694
 	.rodata     start:0x803A3168 end:0x803A3178
 	.data       start:0x803DE188 end:0x803DE198
 	.sdata2     start:0x8040EB88 end:0x8040EBA0
 
-MSL_C.PPCEABI.bare.H/common_float_tables.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Single_precision/common_float_tables.c:
 	.rodata     start:0x803A3178 end:0x803A3690
 
-MSL_C.PPCEABI.bare.H/exponentialsf.c:
+PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Single_precision/exponentialsf.c:
 	.text       start:0x80334B38 end:0x80335360
 	.rodata     start:0x803A3690 end:0x803A38D8
 	.sdata2     start:0x8040EBA0 end:0x8040EBE8
 
-TRK_MINNOW_DOLPHIN/mainloop.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mainloop.c:
 	.text       start:0x80335360 end:0x803354C8
 
-TRK_MINNOW_DOLPHIN/nubevent.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/nubevent.c:
 	.text       start:0x803354C8 end:0x80335724
 	.bss        start:0x803F7D80 end:0x803F7DA8
 
-TRK_MINNOW_DOLPHIN/nubinit.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/nubinit.c:
 	.text       start:0x80335724 end:0x803358B8
 	.rodata     start:0x803A38D8 end:0x803A38F8
 	.bss        start:0x803F7DA8 end:0x803F7DB0
 
-TRK_MINNOW_DOLPHIN/msg.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/msg.c:
 	.text       start:0x803358B8 end:0x803358E0
 
-TRK_MINNOW_DOLPHIN/msgbuf.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/msgbuf.c:
 	.text       start:0x803358E0 end:0x80336128
 	.bss        start:0x803F7DB0 end:0x803F9760
 
-TRK_MINNOW_DOLPHIN/serpoll.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/serpoll.c:
 	.text       start:0x80336128 end:0x803362F0
 	.bss        start:0x803F9760 end:0x803F9778
 
-TRK_MINNOW_DOLPHIN/usr_put.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/usr_put.c:
 	.text       start:0x803362F0 end:0x803362F4
 
-TRK_MINNOW_DOLPHIN/dispatch.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/dispatch.c:
 	.text       start:0x803362F4 end:0x8033638C
 	.data       start:0x803DE198 end:0x803DE220
 	.bss        start:0x803F9778 end:0x803F9780
 
-TRK_MINNOW_DOLPHIN/msghndlr.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/msghndlr.c:
 	.text       start:0x8033638C end:0x80337630
 	.data       start:0x803DE220 end:0x803DE258
 
-TRK_MINNOW_DOLPHIN/support.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/support.c:
 	.text       start:0x80337630 end:0x80337AAC
 
-TRK_MINNOW_DOLPHIN/mutex_TRK.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mutex_TRK.c:
 	.text       start:0x80337AAC end:0x80337AC4
 
-TRK_MINNOW_DOLPHIN/notify.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/notify.c:
 	.text       start:0x80337AC4 end:0x80337B9C
 
-TRK_MINNOW_DOLPHIN/flush_cache.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/flush_cache.c:
 	.text       start:0x80337B9C end:0x80337BD4
 
-TRK_MINNOW_DOLPHIN/mem_TRK.c:
+PowerPC_EABI_Support/Runtime/__mem.c:
+	.init       start:0x80003100 end:0x80003244
+
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mem_TRK.c:
 	.init       start:0x80003244 end:0x80003298
 	.text       start:0x80337BD4 end:0x80337C98
 
-TRK_MINNOW_DOLPHIN/targimpl.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/targimpl.c:
 	.text       start:0x80337C98 end:0x80339274
 	.rodata     start:0x803A38F8 end:0x803A3948
 	.data       start:0x803DE258 end:0x803DE288
@@ -3873,24 +3873,24 @@ TRK_MINNOW_DOLPHIN/targimpl.c:
 TRK_MINNOW_DOLPHIN/__exception.s: comment:0
 	.init       start:0x80003298 end:0x800051CC
 
-TRK_MINNOW_DOLPHIN/dolphin_trk.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk.c:
 	.init       start:0x800051CC end:0x800051EC
 	.text       start:0x80339274 end:0x803394B4
 	.data       start:0x803DE288 end:0x803DE2C8
 	.bss        start:0x803F9D00 end:0x803F9D08
 
-TRK_MINNOW_DOLPHIN/mpc_7xx_603e.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/mpc_7xx_603e.c:
 	.text       start:0x803394B4 end:0x8033982C
 
-TRK_MINNOW_DOLPHIN/main_TRK.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/main_TRK.c:
 	.text       start:0x8033982C end:0x80339874
 	.bss        start:0x803F9D08 end:0x803F9D20
 
-TRK_MINNOW_DOLPHIN/dolphin_trk_glue.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk_glue.c:
 	.text       start:0x80339874 end:0x80339BCC
 	.data       start:0x803DE2C8 end:0x803DE2E8
 
-TRK_MINNOW_DOLPHIN/targcont.c:
+TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/targcont.c:
 	.text       start:0x80339BCC end:0x80339C00
 
 dolphin/base/PPCArch.c:

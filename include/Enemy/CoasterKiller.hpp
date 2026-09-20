@@ -40,7 +40,7 @@ class TCoasterEnemy : public TWalkerEnemy {
 public:
 	TCoasterEnemy(const char* name)
 	    : TWalkerEnemy(name)
-	    , mPathIdx(0) { };
+	    , mPathDir(0) { };
 	virtual ~TCoasterEnemy() { }
 
 	virtual void calcRootMatrix();

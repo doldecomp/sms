@@ -4,29 +4,29 @@
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DColorBlocks.hpp>
 #include <macros.h>
 
-void J3DMatColorAnm::calc(GXColor* color) const
+void J3DMatColorAnm::calc(GXColor* out) const
 {
-	mAnmColor->getColor(mAnmIndex, color);
+	mAnmColor->getColor(mAnmIndex, out);
 }
 
-void J3DTexMtxAnm::calc(J3DTextureSRTInfo* srt_info) const
+void J3DTexMtxAnm::calc(J3DTextureSRTInfo* out) const
 {
-	mAnmTransform->getTransform(mAnmIndex, srt_info);
+	mAnmTransform->getTransform(mAnmIndex, out);
 }
 
-void J3DTexNoAnm::calc(u16* tex_no) const
+void J3DTexNoAnm::calc(u16* out) const
 {
-	mAnmTexPattern->getTexNo(mAnmIndex, tex_no);
+	mAnmTexPattern->getTexNo(mAnmIndex, out);
 }
 
-void J3DTevColorAnm::calc(GXColorS10* color) const
+void J3DTevColorAnm::calc(GXColorS10* out) const
 {
-	mAnmTevReg->getTevColorReg(mAnmIndex, color);
+	mAnmTevReg->getTevColorReg(mAnmIndex, out);
 }
 
-void J3DTevKColorAnm::calc(GXColor* color) const
+void J3DTevKColorAnm::calc(GXColor* out) const
 {
-	mAnmTevReg->getTevKonstReg(mAnmIndex, color);
+	mAnmTevReg->getTevKonstReg(mAnmIndex, out);
 }
 
 void J3DMaterialAnm::initialize()
@@ -47,14 +47,13 @@ void J3DMaterialAnm::calc(J3DMaterial* pMaterial) const
 {
 	for (u32 i = 0; i < ARRAY_COUNT(mMatColorAnm); i++)
 		if (mMatColorAnm[i] != NULL)
-			mMatColorAnm[i]->calc(
-			    &pMaterial->getColorBlock()->getMatColor(i)->color);
+			mMatColorAnm[i]->calc(&pMaterial->getMatColor(i)->color);
 
 	for (u32 i = 0; i < ARRAY_COUNT(mTexNoAnm); i++) {
 		if (mTexNoAnm[i] != NULL) {
 			u16 texNo;
 			mTexNoAnm[i]->calc(&texNo);
-			pMaterial->getTevBlock()->setTexNo(i, texNo);
+			pMaterial->setTexNo(i, texNo);
 		}
 	}
 

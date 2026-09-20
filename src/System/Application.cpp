@@ -103,81 +103,80 @@ TApplication::TApplication()
 {
 }
 
-void* SMSLoadArchive(const char* param_1, void* param_2, u32 param_3,
-                     JKRHeap* param_4)
+void* SMSLoadArchive(const char* path, void* dst, u32 dstLength, JKRHeap* heap)
 {
-	if (param_4 == nullptr)
-		param_4 = JKRGetCurrentHeap();
+	if (heap == nullptr)
+		heap = JKRGetCurrentHeap();
 
 	void* result = nullptr;
 
 	// Try to load a compressed version of the archive first
 	char compressedArcPath[64];
-	strcpy(compressedArcPath, param_1);
+	strcpy(compressedArcPath, path);
 	char* loc = strstr(compressedArcPath, ".arc");
 	if (loc != nullptr) {
 		strcpy(loc, ".szs");
 		s32 entryNum = DVDConvertPathToEntrynum(compressedArcPath);
 		if (entryNum != -1) {
-			result = JKRDvdRipper::loadToMainRAM(
-			    compressedArcPath, (u8*)param_2, EXPAND_SWITCH_DECOMPRESS,
-			    param_3, param_4, JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0,
-			    nullptr);
+			result = JKRDvdToMainRam(compressedArcPath, (u8*)dst,
+			                         EXPAND_SWITCH_DECOMPRESS, dstLength, heap,
+			                         JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0,
+			                         nullptr);
 		}
 	}
 
 	// If that fails, then try to load the uncompressed version
 	if (result == nullptr)
-		result = JKRDvdRipper::loadToMainRAM(
-		    param_1, (u8*)param_2, EXPAND_SWITCH_DEFAULT, param_3, param_4,
+		result = JKRDvdToMainRam(
+		    path, (u8*)dst, EXPAND_SWITCH_DEFAULT, dstLength, heap,
 		    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0, nullptr);
 
 	return result;
 }
 
-void SMSLoadArchiveARAM(TARAMBlock* param_1, const char* param_2)
+void SMSLoadArchiveARAM(TARAMBlock* out_block, const char* path)
 {
 	// Try to load a compressed version of the archive first
 	char compressedArcPath[64];
-	strcpy(compressedArcPath, param_2);
+	strcpy(compressedArcPath, path);
 	char* loc = strstr(compressedArcPath, ".arc");
 	if (loc != nullptr) {
 		strcpy(loc, ".szs");
 		s32 entryNum = DVDConvertPathToEntrynum(compressedArcPath);
 		if (entryNum != -1) {
-			param_1->unk0 = JKRDvdAramRipper::loadToAram(
+			out_block->mBlock = JKRDvdAramRipper::loadToAram(
 			    compressedArcPath, 0, EXPAND_SWITCH_DEFAULT, 0, 0);
-			param_1->unk4 = true;
+			out_block->mIsCompressed = true;
 		}
 	}
 
 	// If that fails, then try to load the uncompressed version
-	if (param_1->unk0 == nullptr) {
-		param_1->unk0 = JKRDvdAramRipper::loadToAram(
-		    (char*)param_2, 0, EXPAND_SWITCH_DEFAULT, 0, 0);
-		param_1->unk4 = false;
+	if (out_block->mBlock == nullptr) {
+		out_block->mBlock = JKRDvdAramRipper::loadToAram(
+		    (char*)path, 0, EXPAND_SWITCH_DEFAULT, 0, 0);
+		out_block->mIsCompressed = false;
 	}
 }
 
-void SMSMountAramArchive(JKRMemArchive* param_1, TARAMBlock& param_2)
+void SMSMountAramArchive(JKRMemArchive* archive, TARAMBlock& block)
 {
-	if (param_2.unk4) {
-		JKRAram::aramToMainRam(param_2.unk0, (u8*)gpMarDirector->getUnkD4(), 0,
-		                       0, EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr,
-		                       -1, nullptr);
+	if (block.mIsCompressed) {
+		JKRAram::aramToMainRam(
+		    block.mBlock, (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
+		    EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr, -1, nullptr);
 	} else {
-		JKRAram::aramToMainRam(param_2.unk0, (u8*)gpMarDirector->getUnkD4(), 0,
-		                       0, EXPAND_SWITCH_DEFAULT, 0, nullptr, -1,
-		                       nullptr);
+		JKRAram::aramToMainRam(block.mBlock,
+		                       (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
+		                       EXPAND_SWITCH_DEFAULT, 0, nullptr, -1, nullptr);
 	}
-	param_1->mountFixed(gpMarDirector->getUnkD4(), MBF_0);
+	archive->mountFixed(SMSGetMarDirector()->getUnkD4(), MBF_0);
 }
 
-JKRArchive* SMSSwitch2DArchive(const char* param_1, TARAMBlock& param_2)
+JKRArchive* SMSSwitch2DArchive(const char* arc_path, TARAMBlock& block)
 {
-	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume(param_1);
+	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume(arc_path);
 	arch->unmountFixed();
-	SMSMountAramArchive(arch, param_2);
+	SMSMountAramArchive(arch, block);
 	return arch;
 }
 
@@ -237,7 +236,7 @@ void TApplication::initialize()
 
 	SMSRumbleMgr = new RumbleMgr(true, true, true, true);
 	SMSRumbleMgr->init();
-	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0),
+	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0xff),
 	                        SMSGetVSyncTimesPerSec(), "ルートフェーダー");
 	mFader->setDisplaySize(SMSGetGCLogoRenderWidth(),
 	                       SMSGetGCLogoRenderHeight());
@@ -260,9 +259,9 @@ void TApplication::initialize()
 
 void* TApplication::setupThreadFuncLogo()
 {
-	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK0))
+	while (!SMSGetMSound()->checkWaveOnAram(MS_WAVE_UNK0))
 		OSYieldThread();
-	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK210))
+	while (!SMSGetMSound()->checkWaveOnAram(MS_WAVE_UNK210))
 		OSYieldThread();
 
 	arcBufMario
@@ -271,7 +270,7 @@ void* TApplication::setupThreadFuncLogo()
 	arcBufCmn
 	    = SMSLoadArchive("/data/common.arc", nullptr, 0, JKRGetRootHeap());
 
-	bufStageArcBin = JKRDvdRipper::loadToMainRAM(
+	bufStageArcBin = JKRDvdToMainRam(
 	    "/data/stageArc.bin", nullptr, EXPAND_SWITCH_DEFAULT, 0, mHeap,
 	    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0, nullptr);
 
@@ -345,9 +344,9 @@ void TApplication::initialize_nlogoAfter()
 		u32 lVar3 = JKRGetRootHeap()->getSize(bufStageArcBin);
 		JSUMemoryInputStream stream(bufStageArcBin, lVar3);
 		JDrama::TNameRefGen::getInstance()->load(stream);
-		unk30 = JDrama::TNameRefGen::search<
-		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> > >(
-		    "ステージ毎シナリオアーカイブ名群");
+		unk30 = static_cast<
+		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >*>(
+		    JDrama::TNameRefGen::search("ステージ毎シナリオアーカイブ名群"));
 
 		delete JDrama::TNameRefGen::instance;
 		JDrama::TNameRefGen::instance = nullptr;
@@ -603,7 +602,7 @@ int TApplication::gameLoop()
 		TMarioGamePad::read();
 		for (int i = 0; i < 4; i++) {
 			mGamePads[i]->updateMeaning();
-			mGamePads[i]->onFlag(0x40);
+			mGamePads[i]->onFlag(TMarioGamePad::PAD_FLAG_0x40);
 		}
 
 		if (int dvderr = drawDVDErr()) {

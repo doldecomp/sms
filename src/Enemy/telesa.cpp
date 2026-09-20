@@ -7,6 +7,7 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JMath.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/SharedParts.hpp>
@@ -18,6 +19,7 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MoveBG/MapObjManager.hpp>
@@ -230,15 +232,15 @@ void TTelesa::init(TLiveManager* manager)
 
 	setFlyParam(1.0f);
 
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img    = tex->getTexture()->getTexInfo();
 	J3DSkinDeform* deform = new J3DSkinDeform;
 	mMActor->getModel()->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	mMActor->resetDL();
 	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(), "H_ma_rak_dummy",
 	                     *img);
-	mMActor->setLightType(3);
+	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	if (mInstanceIndex == 0) {
 		for (u16 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
 			;
@@ -286,12 +288,13 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
 				                   &pTStack_5c);
 				Mtx afStack_58;
-				MsMtxSetXYZRPH(afStack_58, mPosition.x, mPosition.y,
+				MtxPtr afStackPtr = afStack_58;
+				MsMtxSetXYZRPH(afStackPtr, mPosition.x, mPosition.y,
 				               mPosition.z, mRotation.x, mRotation.y,
 				               mRotation.z);
-				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
-				J3DModel* model = mImitatedBmd->getMActor()->getModel();
-				model->unk14    = JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f);
+				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStackPtr);
+				mImitatedBmd->getMActor()->getModel()->setBaseScale(
+				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 			}
 
 			if (cue & CUE_ENTRY)
@@ -336,8 +339,8 @@ void TTelesa::setBehavior()
 		mFlyBobPhase = 0.0f;
 
 	f32 phase      = (mFlyBobPhase * 360.0f) / mFlyBobFrequency;
-	mFlyBobOffsetY = mFlyBobAmplitude * JMASin(phase);
-	f32 newRotX    = 10.0f - mFlyAngMax * JMACos(phase);
+	mFlyBobOffsetY = mFlyBobAmplitude * MsSin(phase);
+	f32 newRotX    = 10.0f - mFlyAngMax * MsCos(phase);
 	if (abs(newRotX - mRotation.x) > 5.0f)
 		mRotation.x == -newRotX; // HUH???
 	else
@@ -446,13 +449,13 @@ void TTelesa::calcRootMatrix()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        0x187, mMActor->getModel()->getAnmMtx(4), 1, this)) {
-			emitter->unk180.a = mTelesaFadeColor.a;
+			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        0x188, mMActor->getModel()->getAnmMtx(4), 1, this)) {
-			emitter->unk180.a = mTelesaFadeColor.a;
+			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 	}
 
@@ -581,7 +584,7 @@ void TTelesa::changeOut()
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mPosition = mJuiceBlock->mPosition;
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
-	getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
 	mJuiceBlock = nullptr;
 }
@@ -680,7 +683,7 @@ void TTelesa::initAttacker(THitActor* param_1)
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 
 	MtxPtr mtx = ((TLiveActor*)param_1)->getModel()->getAnmMtx(5);
-	mPosition.set(mtx[3][0], mtx[3][1] - 150.0f, mtx[3][2]);
+	mPosition.set(mtx[0][3], mtx[1][3] - 150.0f, mtx[2][3]);
 	mDampenedGroundHeight = mPosition.y;
 
 	mVelocity.set(0.0f, 8.0f, 0.0f);
@@ -693,7 +696,7 @@ void TTelesa::initAttacker(THitActor* param_1)
 	offHitFlag(HIT_FLAG_UNK10000000);
 	unk150 &= ~0x40;
 	onLiveFlag(LIVE_FLAG_HIDDEN);
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
@@ -712,7 +715,7 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 
 	setFlyParam(1.0f);
 	unk150 &= ~0x40;
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -772,8 +775,8 @@ void TTelesa::setFirstAttackPoint()
 	JGeometry::TVec3<f32> pos = mPosition;
 
 	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
-	f32 s = JMASin(mRotation.y);
-	f32 c = JMACos(mRotation.y);
+	f32 s = MsSin(mRotation.y);
+	f32 c = MsCos(mRotation.y);
 
 	pos.x += c * 1000.0f;
 	pos.z += s * 1000.0f;
@@ -800,7 +803,7 @@ void TTelesa::setTypeCanSee()
 	mTelesaType = TELESA_TYPE_CAN_SEE;
 	mFadeState  = FADE_STATE_VISIBLE;
 	offLiveFlag(LIVE_FLAG_HIDDEN);
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 }
 
 void TTelesa::changeTevKColor()
@@ -820,7 +823,7 @@ void TTelesa::changeTevKColor()
 				loopAppearTime = unk194->mSLAppearTime.get();
 			if (mFadeLoopTimer <= loopAppearTime)
 				break;
-			mMActor->setLightType(3);
+			mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 			mFadeState     = FADE_STATE_FADE_OUT;
 			mFadeLoopTimer = 0;
 			break;
@@ -852,7 +855,7 @@ void TTelesa::changeTevKColor()
 			mFadeState         = FADE_STATE_VISIBLE;
 			mFadeTimer         = 0;
 			mTelesaFadeColor.a = 0xff;
-			mMActor->setLightType(1);
+			mMActor->setLightType(LIGHT_TYPE_OBJECT);
 		} else {
 			mTelesaFadeColor.a = progress;
 		}
@@ -1052,7 +1055,7 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 	self->walkBehavior(3, 1.0f);
 
 	if (spine->getTime() == 10) {
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 
 		if (imitatedItem != nullptr) {
 			((TMarioModokiTelesa*)self)->imitateAnm();
@@ -1108,7 +1111,8 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 		}
 
 		if (self->getUnk184()) {
-			gpMarioParticleManager->emit(0xCD, &self->mPosition, 0, nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &self->mPosition, 0, nullptr);
 		} else {
 			self->setBckAnm(2);
 		}
@@ -1119,7 +1123,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 	if (self->checkCurAnmEnd(0) || self->getUnk184()) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
-		self->offLiveFlag(LIVE_FLAG_UNK10000);
+		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->stopAnmSound();
@@ -1149,7 +1153,7 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	} else if (self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(4)) {
 			if (!self->isFlying()) {
@@ -1235,10 +1239,10 @@ void TKageMarioModoki::init(TLiveManager* manager)
 	TWalkerEnemy::init(manager);
 	mSpine->initWith(&TNerveKageMarioModokiWait::theNerve());
 	mMActor->resetDL();
-	mMActor->setLightType(3);
+	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img = tex->getTexture()->getTexInfo();
 	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
 	                     "H_kagemario_dummy", *img);
@@ -1256,8 +1260,8 @@ DEFINE_NERVE(TNerveKageMarioModokiWait, TLiveActor)
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD) && self->isFindMario(1.0f)) {
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
-		        0xCD, &self->mPosition, 0, nullptr)) {
-			emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+		        PARTICLE_MS_TLS_CHANGE, &self->mPosition, 0, nullptr)) {
+			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 		}
 
 		self->onLiveFlag(LIVE_FLAG_DEAD);

@@ -1,4 +1,5 @@
 #include <JSystem/JKernel/JKRFileLoader.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <ctype.h>
 #include <macros.h>
 
@@ -27,6 +28,8 @@ void JKRFileLoader::unmount()
 			delete this;
 	}
 }
+
+void JKRFileLoader::unmountAll() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 JKRFileLoader* JKRFileLoader::getVolume(const char* name)
 {
@@ -69,9 +72,60 @@ void* JKRFileLoader::getGlbResource(const char* name, JKRFileLoader* fileLoader)
 	return resource;
 }
 
-long JKRFileLoader::getResSize(void* resourceBuffer, JKRFileLoader* fileLoader)
+size_t JKRFileLoader::readGlbResource(void* resourceBuffer, u32 bufferSize,
+                                      const char* path)
 {
-	long ret = -1; // TODO: this feels wrong, but it matches, so whatever?
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
+size_t JKRFileLoader::readGlbResource(void* resourceBuffer, u32 bufferSize,
+                                      const char* name,
+                                      JKRFileLoader* fileLoader)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
+}
+
+bool JKRFileLoader::removeResource(void* resource, JKRFileLoader* fileLoader)
+{
+	if (fileLoader) {
+		return fileLoader->removeResource(resource);
+	}
+
+	JSUList<JKRFileLoader>& volumeList = getVolumeList();
+	JSUListIterator<JKRFileLoader> iterator;
+	for (iterator = volumeList.getFirst(); iterator != volumeList.getEnd();
+	     ++iterator) {
+		if (iterator->removeResource(resource)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool JKRFileLoader::detachResource(void* resource, JKRFileLoader* fileLoader)
+{
+	if (fileLoader) {
+		return fileLoader->detachResource(resource);
+	}
+
+	JSUList<JKRFileLoader>& volumeList = getVolumeList();
+	JSUListIterator<JKRFileLoader> iterator;
+	for (iterator = volumeList.getFirst(); iterator != volumeList.getEnd();
+	     ++iterator) {
+		if (iterator->detachResource(resource)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+s32 JKRFileLoader::getResSize(void* resourceBuffer, JKRFileLoader* fileLoader)
+{
+	s32 ret = -1; // TODO: this feels wrong, but it matches, so whatever?
 
 	if (fileLoader != nullptr)
 		return fileLoader->getResSize(resourceBuffer);
@@ -84,6 +138,12 @@ long JKRFileLoader::getResSize(void* resourceBuffer, JKRFileLoader* fileLoader)
 	}
 
 	return ret;
+}
+
+u32 JKRFileLoader::countFileGlb(const char* path)
+{
+	JUT_ASSERT_F(false, "UNIMPLEMENTED");
+	return 0;
 }
 
 JKRFileLoader* JKRFileLoader::findVolume(const char** volumeName)

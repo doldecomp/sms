@@ -44,7 +44,7 @@ public:
 
 	// fabricated
 	J3DFrameCtrl* getFrameCtrl() { return &unk4; }
-	s32 getUnk0() { return unk0; }
+	s32 getCurIdx() { return unk0; }
 	void setUnk1C(MActorAnmDataBase* param_1) { unk1C = param_1; }
 
 	BOOL endsNext()
@@ -121,9 +121,9 @@ public:
 	MActorAnmEach() { unk24 = nullptr; }
 	~MActorAnmEach() { }
 
-	virtual void setAnm(const char* param_1, u16* param_2)
+	virtual void setAnm(const char* name, u16* param_2)
 	{
-		this->setAnmFromIndex(findName(param_1), param_2);
+		this->setAnmFromIndex(findName(name), param_2);
 	}
 
 	// matches in bossgesso.cpp
@@ -154,7 +154,7 @@ public:
 
 template <class T> class MActorAnmMatEach : public MActorAnmEach<T> {
 public:
-	~MActorAnmMatEach();
+	~MActorAnmMatEach() { }
 
 	virtual void setAnmFromIndex(int param_1, u16* param_2)
 	{
@@ -271,12 +271,19 @@ public:
 	/* 0x28 */ J3DTexNoAnm** unk28;
 };
 
+enum MActorMtxCalcType {
+	MACTOR_MTX_CALC_BASIC,
+	MACTOR_MTX_CALC_SOFTIMAGE,
+	MACTOR_MTX_CALC_MOTION_BLEND,
+	MACTOR_MTX_CALC_USER,
+};
+
 class MActorAnmBck : public MActorAnmEach<J3DAnmTransformKey> {
 public:
 	MActorAnmBck()
 	{
 		unk28 = nullptr;
-		unk2A = 1;
+		unk2A = MACTOR_MTX_CALC_SOFTIMAGE;
 		unk2C = nullptr;
 		unk30 = nullptr;
 		unk34 = nullptr;
@@ -291,7 +298,7 @@ public:
 		return strstr(param_1, ".bck");
 	}
 
-	void setModel(J3DModel*);
+	void setModel(J3DModel* model);
 	float getOldMotionBlendFrame() const;
 	void setOldMotionBlendAnmPtr(J3DAnmTransform*);
 	J3DAnmTransform* getOldMotionBlendAnmPtr() const;
@@ -302,10 +309,13 @@ public:
 	void changeMtxCalcType(u8);
 
 	// fabricated
+	u8 getMtxCalcType() const { return unk2A; }
+
+	// fabricated
 	void setCalc(J3DMtxCalc* calc)
 	{
 		unk38 = calc;
-		unk2A = 3;
+		unk2A = MACTOR_MTX_CALC_USER;
 	}
 
 public:

@@ -10,22 +10,24 @@ typedef void (*callbackFn)(int, void*);
 
 class JUTGamePadRecord {
 public:
+	enum EOrigin {
+		EOrigin_Start   = 0,
+		EOrigin_Current = 1,
+		EOrigin_End     = 2,
+	};
+
+	JUTGamePadRecord();
+	~JUTGamePadRecord();
 	u8* read();
 	void write(PADStatus*);
 	void streamDataToPadStatus(PADStatus*, u8*);
 	void padStatusToStreamData(PADStatus*, u8*);
+	void setBuffer(void*, u32, u8, u32);
+	void clear();
+	void seek(int, EOrigin);
+	void accumeSize1Frame(u8);
 
 	bool isActive() const { return mStreamStart; }
-
-	inline void step() // fabricated
-	{
-		u8* next = mStream + mStep;
-		if (next < mStreamStart)
-			next = mStreamStart;
-		if (next > mStreamEnd)
-			next = mStreamEnd;
-		mStream = next;
-	}
 
 	/* 0x0 */ u8* mStreamStart;
 	/* 0x4 */ u8* mStreamEnd;
@@ -85,8 +87,14 @@ public:
 		MAINSTICK_UP    = 0x8000000,
 	};
 
+	JUTGamePad();
 	JUTGamePad(JUTGamePad::EPadPort port);
 	virtual ~JUTGamePad();
+
+	void clear();
+	void resetButtonRepeat();
+	void addButtonRepeat(u32 mask);
+	void removeButtonRepeat(u32 mask);
 
 	void initList();
 	static BOOL init();
@@ -224,7 +232,8 @@ public:
 		static void stopMotorHard(int port);
 		void update(s16 port);
 		void triggerPatternedRumble(u32 length);
-		void startPatternedRumble(void* data, ERumble rumble, u32 length);
+		void setPatternedRumble(s16 port, u16 length, u8* pattern);
+		void startPatternedRumble(u8* data, ERumble rumble, u32 length);
 		void stopPatternedRumble(s16 port);
 		void stopPatternedRumbleAtThePeriod();
 		static void setEnable(u32 mask);
@@ -239,7 +248,7 @@ public:
 
 	void startMotorWave(void* data, CRumble::ERumble rumble, u32 length)
 	{
-		mRumble.startPatternedRumble(data, rumble, length);
+		mRumble.startPatternedRumble((u8*)data, rumble, length);
 	}
 
 	void setButtonRepeat(u32, u32, u32);

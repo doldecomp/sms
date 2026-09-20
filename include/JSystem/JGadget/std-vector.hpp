@@ -193,7 +193,12 @@ public:
 
 	void resize(size_t new_size, const T& value = T())
 	{
-		size_t sz = size();
+		// NOTE: `sz` has to be const. The inliner duplicates an argument
+		// expression at each use when the expression is safe to repeat, and a
+		// read of a const local counts as safe. Without the const it binds
+		// `new_size - sz` to a temporary instead, and the subtraction happens
+		// once rather than twice.
+		const size_t sz = size();
 		if (new_size > sz) {
 			insert(end(), new_size - sz, value);
 		} else if (new_size != size()) {
@@ -233,21 +238,27 @@ public:
 		JGADGET_ASSERT((pBegin_<=pIt)&&(pIt<=pEnd_));
 		// clang-format on
 
+		// NOTE: the explicit conversion is required. It makes a second object
+		// that the compiler does not fold into pIt, which is what keeps pIt
+		// itself in its argument register for the returns below. A plain
+		// `iterator it = pIt;` does not match.
+		iterator it = iterator(pIt);
+
 		if (count == 0)
 			return pIt;
 
-		if (mCapacity <= count + size()) {
-			T* holeEnd = pIt + count;
+		if (count + size() <= mCapacity) {
+			T* holeEnd = it + count;
 			if (holeEnd < pEnd_) {
 				T* split = pEnd_ - count;
 				std::uninitialized_copy(split, pEnd_, pEnd_);
-				std::copy_backward(pIt, split, pEnd_);
-				DestroyElement_(pIt, holeEnd);
+				std::copy_backward(it, split, pEnd_);
+				DestroyElement_(it, holeEnd);
 				pEnd_ += count;
 				return pIt;
 			} else {
-				std::uninitialized_copy(pIt, pEnd_, holeEnd);
-				DestroyElement_(pIt, pEnd_);
+				std::uninitialized_copy(it, pEnd_, holeEnd);
+				DestroyElement_(it, pEnd_);
 				pEnd_ += count;
 				return pIt;
 			}
@@ -260,8 +271,8 @@ public:
 
 			TDestroyed_deallocate_ dealloc(mAllocator, newBegin);
 
-			T* holeStart = std::uninitialized_copy(pBegin_, pIt, newBegin);
-			std::uninitialized_copy(pIt, pEnd_, holeStart + count);
+			T* holeStart = std::uninitialized_copy(pBegin_, it, newBegin);
+			std::uninitialized_copy(it, pEnd_, holeStart + count);
 			DestroyElement_all_();
 
 			dealloc.set(pBegin_);

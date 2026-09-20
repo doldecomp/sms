@@ -151,13 +151,13 @@ void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 	TIdxGroupObj::iterator end = group->getChildren().end();
 	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
 	     ++it) {
-		it->mColCount = 0;
+		(*it)->mColCount = 0;
 
-		if (it->checkHitFlag(HIT_FLAG_NO_COLLISION))
+		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
 			continue;
 
 		u32 e;
-		u32 i = getTableIndex(it->mPosition, it->mEntryRadius, &e);
+		u32 i = getTableIndex((*it)->mPosition, (*it)->mEntryRadius, &e);
 
 		while (i != e) {
 			checkActorsInList(*it, unk0[i].unk0);
@@ -177,13 +177,13 @@ void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 	TIdxGroupObj::iterator end = group->getChildren().end();
 	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
 	     ++it) {
-		it->mColCount = 0;
+		(*it)->mColCount = 0;
 
-		if (it->checkHitFlag(HIT_FLAG_NO_COLLISION))
+		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
 			continue;
 
 		u32 e;
-		u32 i = getTableIndex(it->mPosition, it->getEntryRadius(), &e);
+		u32 i = getTableIndex((*it)->mPosition, (*it)->getEntryRadius(), &e);
 
 		while (i != e) {
 			entryActor(*it, &unk0[i]);
@@ -202,7 +202,7 @@ void TObjHitCheck::clearGroup(TIdxGroupObj* group)
 
 	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
 	     ++it)
-		it->mColCount = 0;
+		(*it)->mColCount = 0;
 }
 
 void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
@@ -212,12 +212,12 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 
 	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
 	     ++it) {
-		it->mColCount = 0;
-		if (it->checkHitFlag(HIT_FLAG_NO_COLLISION))
+		(*it)->mColCount = 0;
+		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
 			continue;
 
-		if (checkDistance(it->mPosition, it->getAttackRadius(),
-		                  it->getAttackHeight(), mario->mPosition,
+		if (checkDistance((*it)->mPosition, (*it)->getAttackRadius(),
+		                  (*it)->getAttackHeight(), mario->mPosition,
 		                  mario->getAttackRadius(), mario->getAttackHeight())) {
 			suffererIsInAttackArea(*it, mario);
 		}

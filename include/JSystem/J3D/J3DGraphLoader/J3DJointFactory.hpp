@@ -49,7 +49,7 @@ public:
 	Vec& getMin(int no) const { return mJointInitData[mIndexTable[no]].mMin; }
 	Vec& getMax(int no) const { return mJointInitData[mIndexTable[no]].mMax; }
 
-public:
+private:
 	/* 0x0 */ J3DJointInitData* mJointInitData;
 	/* 0x4 */ u16* mIndexTable;
 };

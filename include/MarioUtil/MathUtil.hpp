@@ -129,6 +129,20 @@ template <class T> inline T MsWrap(T t, T l, T r)
 	return t;
 }
 
+// fabricated
+// NOTE: these MUST take references, as constants passed to them are stored in
+// sdata, not sdata2. See also the note on TParamRT::set.
+template <class T> inline T MsMin(const T& a, const T& b)
+{
+	return a > b ? b : a;
+}
+
+// fabricated
+template <class T> inline T MsMax(const T& a, const T& b)
+{
+	return a > b ? a : b;
+}
+
 template <class T> inline T MsClamp(T t, T l, T r)
 {
 	if (t > r)
@@ -211,6 +225,67 @@ inline f32 MsSqrtf(f32 x)
 		return y;
 	}
 	return x;
+}
+
+// NOTE: MsCos is **real**.
+inline f32 MsSin(f32 v) { return JMASSin(v * (65536.0f / 360.0f)); }
+inline f32 MsCos(f32 v) { return JMASCos(v * (65536.0f / 360.0f)); }
+
+inline void MsMtxSetRotX(MtxPtr mtx, f32 x)
+{
+	f32 s = MsSin(x);
+	f32 c = MsCos(x);
+
+	mtx[0][0] = 1.0f;
+	mtx[0][1] = 0.0f;
+	mtx[0][2] = 0.0f;
+	mtx[0][3] = 0.0f;
+	mtx[1][0] = 0.0f;
+	mtx[1][1] = c;
+	mtx[1][2] = -s;
+	mtx[1][3] = 0.0f;
+	mtx[2][0] = 0.0f;
+	mtx[2][1] = s;
+	mtx[2][2] = c;
+	mtx[2][3] = 0.0f;
+}
+
+inline void MsMtxSetRotY(MtxPtr mtx, f32 y)
+{
+	f32 s = MsSin(y);
+	f32 c = MsCos(y);
+
+	mtx[0][0] = c;
+	mtx[0][1] = 0.0f;
+	mtx[0][2] = s;
+	mtx[0][3] = 0.0f;
+	mtx[1][0] = 0.0f;
+	mtx[1][1] = 1.0f;
+	mtx[1][2] = 0.0f;
+	mtx[1][3] = 0.0f;
+	mtx[2][0] = -s;
+	mtx[2][1] = 0.0f;
+	mtx[2][2] = c;
+	mtx[2][3] = 0.0f;
+}
+
+inline void MsMtxSetRotZ(MtxPtr mtx, f32 z)
+{
+	f32 s = MsSin(z);
+	f32 c = MsCos(z);
+
+	mtx[0][0] = c;
+	mtx[0][1] = -s;
+	mtx[0][2] = 0.0f;
+	mtx[0][3] = 0.0f;
+	mtx[1][0] = s;
+	mtx[1][1] = c;
+	mtx[1][2] = 0.0f;
+	mtx[1][3] = 0.0f;
+	mtx[2][0] = 0.0f;
+	mtx[2][1] = 0.0f;
+	mtx[2][2] = 1.0f;
+	mtx[2][3] = 0.0f;
 }
 
 #endif
