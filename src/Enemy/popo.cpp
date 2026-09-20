@@ -826,6 +826,23 @@ void TPopo::releaseNozzle()
 	}
 }
 
+static inline TWaterEmitInfo* PopoFlyWater(TPopoManager* manager)
+{
+	TWaterEmitInfo* water = manager->mFlyWater;
+	return water;
+}
+
+static inline TPopoManager* PopoFlyManager(TPopo* popo)
+{
+	TPopoManager* manager = (TPopoManager*)popo->mManager;
+	return manager;
+}
+
+static inline J3DModel* PopoFlyModel(TPopo* popo)
+{
+	return popo->getModel();
+}
+
 void TPopo::flyBehavior()
 {
 	mFlyTimer++;
@@ -837,15 +854,18 @@ void TPopo::flyBehavior()
 	if (mPumpScale > 1.0f)
 		mPumpScale *= 0.999f;
 
+	MtxPtr mtx;
 	JGeometry::TVec3<f32> pos;
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		pos = mPosition;
 	} else {
-		MtxPtr mtx = getModel()->getAnmMtx(mMouthJntIndex);
-		pos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		mtx = PopoFlyModel(this)->getAnmMtx(mMouthJntIndex);
+		pos.x      = mtx[0][3];
+		pos.y      = mtx[1][3];
+		pos.z      = mtx[2][3];
 	}
-	TPopoManager* manager = (TPopoManager*)mManager;
-	manager->mFlyWater->mPos.value = pos;
+	TPopoManager* manager = PopoFlyManager(this);
+	PopoFlyWater(manager)->mPos.value = pos;
 	gpModelWaterManager->emitRequest(*manager->mFlyWater);
 
 	if (gpMSound->gateCheck(0x20CE))
