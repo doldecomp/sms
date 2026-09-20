@@ -1516,6 +1516,17 @@ DEFINE_NERVE(TNerveSamboHeadHide, TLiveActor)
 	return false;
 }
 
+static inline TSamboHeadSaveLoadParams* SamboHeadWaterParamsRaw(const TSamboHead* p)
+{
+	return p->mSaveParams;
+}
+
+static inline TSamboHeadSaveLoadParams* SamboHeadWaterParams(const TSamboHead* p)
+{
+	TSamboHeadSaveLoadParams* params = SamboHeadWaterParamsRaw(p);
+	return params;
+}
+
 // Flung back by water: flies, lands, then bounces once more before it can
 // attack again.
 DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
@@ -1523,7 +1534,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 	TSamboHead* head = (TSamboHead*)spine->getBody();
 	if (spine->getTime() == 0) {
 		head->setBckAnm(5);
-		head->mHitVelocity = head->mVelocity;
+		head->mHitVelocity = head->getVelocity();
 	}
 	if (head->isHitWallInBound()) {
 		head->mRollAngle = 0.0f;
@@ -1535,7 +1546,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 		return true;
 	}
 
-	f32 angMax = head->mSaveParams->mSLJumpAngY.get();
+	f32 angMax = SamboHeadWaterParams(head)->mSLJumpAngY.get();
 	if (head->isBckAnm(6)) {
 		if (spine->getTime() < 100)
 			head->mRollAngle
@@ -1552,7 +1563,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 	}
 	if (head->isBckAnm(6)) {
 		head->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		head->mPosition.y = 1.0f + head->mGroundHeight;
+		head->mPosition.y = 1.0f + head->getGroundHeight();
 		head->mVelocity   = head->mHitVelocity;
 	}
 	if (!head->isAirborne())
@@ -1560,7 +1571,10 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 
 	if (head->checkCurAnmEnd(0)) {
 		if (head->isBckAnm(6)) {
-			f32 rate = head->mSaveParams->mSLHitJumpSpRateXZ.get();
+			// TODO: retail schedules the vtable load ahead of the receiver
+			// copy and the params read here; every spelling of these two
+			// statements tried keeps our order.
+			f32 rate = SamboHeadWaterParams(head)->mSLHitJumpSpRateXZ.get();
 			head->setBckAnm(6);
 			head->mHitVelocity.x *= rate;
 			head->mHitVelocity.z *= rate;
