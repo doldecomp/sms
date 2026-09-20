@@ -442,10 +442,13 @@ void JUTReportConsole_f_va(const char* fmt, va_list args)
 
 	if (JUTGetReportConsole() == nullptr) {
 		vsnprintf(buf, sizeof(buf), fmt, args);
-	} else if (JUTGetReportConsole()->getOutput()
-	           & (JUTConsole::OUTPUT_CONSOLE | JUTConsole::OUTPUT_OSREPORT)) {
-		vsnprintf(buf, sizeof(buf), fmt, args);
-		JUTGetReportConsole()->print(buf);
+	} else {
+		u32 output = JUTGetReportConsole()->getOutput();
+		if (output
+		    & (JUTConsole::OUTPUT_CONSOLE | JUTConsole::OUTPUT_OSREPORT)) {
+			vsnprintf(buf, sizeof(buf), fmt, args);
+			JUTGetReportConsole()->print(buf);
+		}
 	}
 }
 
@@ -455,7 +458,6 @@ void JUTReportConsole_f(const char* fmt, ...)
 	va_start(args, fmt);
 	JUTReportConsole_f_va(fmt, args);
 	va_end(args);
-	char trash[0x4];
 }
 
 void JUTReportConsole(const char* message)
@@ -483,7 +485,6 @@ void JUTWarningConsole_f(const char* fmt, ...)
 	va_start(args, fmt);
 	JUTReportConsole_f_va(fmt, args);
 	va_end(args);
-	char trash[0x4];
 }
 
 void JUTWarningConsole(const char* message)
