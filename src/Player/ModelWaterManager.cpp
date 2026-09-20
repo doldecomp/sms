@@ -39,6 +39,10 @@ GXColor gModelWaterManagerWaterColor[4] = {
 	{ 0xFD, 0x62, 0xA7, 0x6E },
 };
 
+// TODO: instruction-identical except the three TParamVec by-value TVec3
+// construction temps (retail spaces them 0x18 apart, we pack them 0x0c);
+// frame 0xb0 vs 0x80. Defaults for mHitRadius/mHitHeight are 50/80 (the
+// @4623/@4624 literals), matching TNozzleBase and the static hit actor.
 TWaterEmitInfo::TWaterEmitInfo(const char* name)
     : TParams(name)
     , PARAM_INIT(mNum, 1)
@@ -52,8 +56,8 @@ TWaterEmitInfo::TWaterEmitInfo(const char* name)
     , PARAM_INIT(mPowTremble, 0.0f)
     , PARAM_INIT(mSize, 17.0f)
     , PARAM_INIT(mSizeTremble, 0.0f)
-    , PARAM_INIT(mHitRadius, 0.0f)
-    , PARAM_INIT(mHitHeight, 0.0f)
+    , PARAM_INIT(mHitRadius, 50.0f)
+    , PARAM_INIT(mHitHeight, 80.0f)
     , PARAM_INIT(mFlag, 0)
     , PARAM_INIT(mType, 0)
     , PARAM_INIT(__padding, 0)
@@ -257,14 +261,17 @@ bool TModelWaterManager::askHitWaterParticleOnGround(
 }
 
 static inline f32 MsRandF() { return rand() * (1.f / (RAND_MAX + 1)); }
-static inline f32 rand11() { return ((rand() & 0xff) - 128) / 128.0f; }
+static inline f32 rand11()
+{
+	return ((rand() & 0xff) - 128) * (1.0f / 128.0f);
+}
 
 void TModelWaterManager::makeEmit(const TWaterEmitInfo& param_1)
 {
 	mParticleLifetimeSOA[mParticleCount] = param_1.mAlive.get();
 	mParticleFlagSOA[mParticleCount]     = param_1.mFlag.get() | 1;
 	mParticleAttackSOA[mParticleCount]   = param_1.mAttack.get();
-	mParticlePositionSOA[mParticleCount] = param_1.mPos.get();
+	mParticlePositionSOA[mParticleCount] = param_1.mPos.value;
 
 	{
 		JGeometry::TVec3<f32> local_3c(0.0f, 0.0f, 0.0f);
@@ -272,26 +279,30 @@ void TModelWaterManager::makeEmit(const TWaterEmitInfo& param_1)
 		local_3c.y = rand11();
 		local_3c.z = rand11();
 
-		f32 dirScale = param_1.mDirTremble.get();
-		VECScale(&local_3c, &local_3c, dirScale);
-		VECAdd(param_1.mDir.get(), &local_3c, &local_3c);
+		VECScale(&local_3c, &local_3c, param_1.mDirTremble.get());
+		VECAdd(param_1.mDir.value, &local_3c, &local_3c);
 		if (local_3c.x == 0.0f && local_3c.y == 0.0f && local_3c.z == 0.0f)
 			local_3c.y = -1.0f;
 
 		VECNormalize(&local_3c, &local_3c);
-		f32 scale = rand11() * param_1.mPowTremble.get() + param_1.mPow.get();
+		f32 scale = ((rand() & 0xff) - 128) / 128.0f
+		                * param_1.mPowTremble.get()
+		            + param_1.mPow.get();
 		VECScale(&local_3c, &local_3c, scale);
 
-		VECAdd(&local_3c, param_1.mV.get(), &local_3c);
+		const JGeometry::TVec3<f32>& emitV = param_1.mV.value;
+		VECAdd(&local_3c, emitV, &local_3c);
 		mParticleVelocitySOA[mParticleCount].x = local_3c.x;
 		mParticleVelocitySOA[mParticleCount].y = local_3c.y;
 		mParticleVelocitySOA[mParticleCount].z = local_3c.z;
 	}
 
 	mParticleSizeSOA[mParticleCount]
-	    = rand11() * param_1.mSizeTremble.get() + param_1.mSize.get();
+	    = ((rand() & 0xff) - 128) / 128.0f * param_1.mSizeTremble.get()
+	      + param_1.mSize.get();
 
-	mParticleTypeSOA[mParticleCount] = param_1.mType.get();
+	s16 type                         = param_1.mType.get();
+	mParticleTypeSOA[mParticleCount] = type;
 
 	unk2914[mParticleCount] = nullptr;
 	unk2514[mParticleCount] = nullptr;
