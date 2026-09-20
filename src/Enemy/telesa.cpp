@@ -1247,6 +1247,7 @@ void TKageMarioModoki::load(JSUMemoryInputStream& stream)
 
 void TKageMarioModoki::init(TLiveManager* manager)
 {
+	char trash[8];
 	TWalkerEnemy::init(manager);
 	mSpine->initWith(&TNerveKageMarioModokiWait::theNerve());
 	mMActor->resetDL();
