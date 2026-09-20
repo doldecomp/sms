@@ -1940,17 +1940,15 @@ void TBossTelesa::generateSlotItem()
 				mPeppers[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 				f32 speedZ = direction.z * speedRange.rand();
-				mPeppers[i]->mVelocity.x = direction.x * speedRange.rand();
-				mPeppers[i]->mVelocity.y = -2.0f;
-				mPeppers[i]->mVelocity.z = speedZ;
+				mPeppers[i]->mVelocity.set(
+				    direction.x * speedRange.rand(), -2.0f, speedZ);
 				mPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
 
 				if (i == 0) {
 					f32 fastZ = 2.0f * (direction.z * speedRange.rand());
-					mPeppers[i]->mVelocity.x
-					    = 2.0f * (direction.x * speedRange.rand());
-					mPeppers[i]->mVelocity.y = -2.0f;
-					mPeppers[i]->mVelocity.z = fastZ;
+					mPeppers[i]->mVelocity.set(
+					    2.0f * (direction.x * speedRange.rand()), -2.0f,
+					    fastZ);
 					mPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
 				}
 
@@ -1961,9 +1959,8 @@ void TBossTelesa::generateSlotItem()
 				mFruits[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 				f32 speedZ = direction.z * speedRange.rand();
-				mFruits[i]->mVelocity.x = direction.x * speedRange.rand();
-				mFruits[i]->mVelocity.y = -2.0f;
-				mFruits[i]->mVelocity.z = speedZ;
+				mFruits[i]->mVelocity.set(
+				    direction.x * speedRange.rand(), -2.0f, speedZ);
 				mFruits[i]->offLiveFlag(LIVE_FLAG_UNK10);
 
 				mSlotItems[mSlotItemNum] = mFruits[i];
@@ -1986,7 +1983,8 @@ void TBossTelesa::generateSlotItem()
 		if (num > 10)
 			num = 10;
 
-		f32 coinStep = 120.0f / (f32)num;
+		f32 coinStep       = 120.0f / (f32)num;
+		f32 coinHalfSpread = coinStep * (f32)num * 0.5f;
 
 		if (unk370)
 			unk370 -= 1;
@@ -2001,7 +1999,7 @@ void TBossTelesa::generateSlotItem()
 			Mtx mtx;
 			MsMtxSetRotRPH(mtx, mRotation.x,
 			               (coinStep * (f32)i)
-			                   + (mRotation.y - (coinStep * (f32)num * 0.5f)),
+			                   + (mRotation.y - coinHalfSpread),
 			               mRotation.z);
 			MTXMultVec(mtx, velocity, velocity);
 			MsVECNormalize(velocity, velocity);
@@ -2016,9 +2014,7 @@ void TBossTelesa::generateSlotItem()
 			TMapObjBase* coin = gpItemManager->makeObjAppeared(0x2000000E);
 			coin->mPosition.set(mouthMtx[0][3], mouthMtx[1][3] - 250.0f,
 			                    mouthMtx[2][3]);
-			coin->mVelocity.x = velocity.x;
-			coin->mVelocity.y = velocity.y;
-			coin->mVelocity.z = velocity.z;
+			coin->mVelocity.set(velocity.x, velocity.y, velocity.z);
 			coin->offLiveFlag(LIVE_FLAG_UNK10);
 			coin->mRotation.set(0.0f, 0.0f, 0.0f);
 			((TItem*)coin)->killByTimer(960);
@@ -2095,9 +2091,7 @@ void TBossTelesa::generateSlotItem()
 
 		enemy->mPosition.set(mouthMtx[0][3], mouthMtx[1][3] - 250.0f,
 		                     mouthMtx[2][3]);
-		enemy->mVelocity.x = velocity.x;
-		enemy->mVelocity.y = velocity.y;
-		enemy->mVelocity.z = velocity.z;
+		enemy->mVelocity = velocity;
 		enemy->mPosition.y += 10.0f;
 		enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
