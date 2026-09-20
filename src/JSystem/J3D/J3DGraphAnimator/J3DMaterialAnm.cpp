@@ -43,11 +43,17 @@ void J3DMaterialAnm::initialize()
 		mTexMtxAnm[i] = nullptr;
 }
 
+static inline J3DGXColor* getMatColor_(J3DMaterial* pMaterial, u32 idx)
+{
+	J3DColorBlock* block = pMaterial->getColorBlock();
+	return block->getMatColor(idx);
+}
+
 void J3DMaterialAnm::calc(J3DMaterial* pMaterial) const
 {
 	for (u32 i = 0; i < ARRAY_COUNT(mMatColorAnm); i++)
 		if (mMatColorAnm[i] != NULL)
-			mMatColorAnm[i]->calc(&pMaterial->getMatColor(i)->color);
+			mMatColorAnm[i]->calc(&getMatColor_(pMaterial, i)->color);
 
 	for (u32 i = 0; i < ARRAY_COUNT(mTexNoAnm); i++) {
 		if (mTexNoAnm[i] != NULL) {
@@ -68,7 +74,4 @@ void J3DMaterialAnm::calc(J3DMaterial* pMaterial) const
 	for (u32 i = 0; i < ARRAY_COUNT(mTexMtxAnm); i++)
 		if (mTexMtxAnm[i] != NULL)
 			mTexMtxAnm[i]->calc(&pMaterial->getTexMtx(i)->mSRT);
-
-	// TODO: more inlines? we may never know
-	char trash[0x8];
 }
