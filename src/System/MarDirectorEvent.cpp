@@ -140,14 +140,13 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 
 void TMarDirector::fireGetStar(TShine* shine)
 {
-	char trash[4];
 	unk25C = shine;
 	unk4C |= 1;
 	JGeometry::TVec3<f32>& v = shine->mInitialRotation;
 	fireStartDemoCamera(!shine->unk190 ? cCameraBckNameShineGetOutside
 	                                   : cCameraBckNameShineGetInside,
 	                    &gpMarioOriginal->mPosition, -1, v.y, false, nullptr, 0,
-	                    nullptr, JDrama::TFlagT<u16>(0));
+	                    nullptr, JDrama::TFlagT<u16>());
 }
 
 void TMarDirector::fireRideYoshi(TYoshi* param_1)
