@@ -461,12 +461,20 @@ void TBaseNPC::npcStepIn()
 	resetToWait_();
 }
 
+static inline int NpcAnmActorType(const TBaseNPC* p)
+{
+	int actorType = p->mActorType;
+	return actorType;
+}
+
 void TBaseNPC::npcTalkIn()
 {
 	onLiveFlag(LIVE_FLAG_UNK80000);
-	if (mActorType != 0x400001C && mActorType != 0x400001D) {
+	if (NpcAnmActorType(this) != 0x400001C
+	    && NpcAnmActorType(this) != 0x400001D) {
 		if (!isSunflowerReviving()) {
-			if (isPeachTired()) {
+			bool tired = isPeachTired();
+			if (tired) {
 				requestNpcAnm_(NPC_ANM_KIND_UNK1A, NPC_STOP_MOTION_BLEND_ON);
 			} else {
 				requestTalkAnm_();
