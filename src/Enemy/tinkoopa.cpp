@@ -669,9 +669,9 @@ void TTinKoopaPartsBase::emitPartsDisappearEffects()
 
 	// The frame stays an int all the way into checkPass: the retail object
 	// converts it at run time instead of loading a float constant.
+	J3DFrameCtrl* ctrl = mPartsMActor->getFrameCtrl(ANM_TYPE_BCK);
 	int disappearFrame = 60;
-	if (!mPartsMActor->getFrameCtrl(ANM_TYPE_BCK)
-	         ->checkPass((f32)disappearFrame))
+	if (!ctrl->checkPass((f32)disappearFrame))
 		return;
 
 	if (mPartsIndex == TINKOOPA_PARTS_BREAST)
