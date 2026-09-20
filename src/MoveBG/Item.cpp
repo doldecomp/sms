@@ -1097,6 +1097,12 @@ void TEggYoshi::control()
 	}
 }
 
+static inline MActor* EggYoshiGetFukidashi(const TEggYoshi* p)
+{
+	MActor* actor = p->unk148;
+	return actor;
+}
+
 void TEggYoshi::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TMapObjGeneral::perform(cue, graphics);
@@ -1105,9 +1111,10 @@ void TEggYoshi::perform(u32 cue, JDrama::TGraphics* graphics)
 	    && !isState(STATE_APPEARING) && !isState(0xE) && !isState(0xF)
 	    && !isState(0x10)) {
 		if (cue & CUE_CALC_ANIM)
-			unk148->getModel()->setBaseTRMtx(getModel()->getAnmMtx(0));
+			EggYoshiGetFukidashi(this)->getModel()->setBaseTRMtx(
+			    getModel()->getAnmMtx(0));
 
-		unk148->perform(cue, graphics);
+		EggYoshiGetFukidashi(this)->perform(cue, graphics);
 	}
 }
 
