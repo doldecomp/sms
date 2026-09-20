@@ -374,8 +374,9 @@ BOOL TMario::moveRoof()
 	if (mInput & 0x20)
 		return changePlayerStatus(MARIO_STATUS_WAIT_ROOF, mStatusArg, false);
 
-	f32 dist = JGeometry::TVec3<f32>(mPosition - mPrevPosition).length();
-	dist *= mHangRoofParams.mAnmMult.get();
+	f32 dist = JGeometry::TVec3<f32>(getPosition() - getPrevPosition()).length();
+	f32 mult = mHangRoofParams.mAnmMult.get();
+	dist *= mult;
 	if (mStatusArg & 1)
 		setAnimation(ANIM_LADDER_HANG_MOVE_L, dist);
 	else
