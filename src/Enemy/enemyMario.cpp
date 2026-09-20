@@ -838,7 +838,9 @@ void TEnemyMario::emWalkGraph()
 			mEMario->goToRandomEscapeGraphNode();
 	}
 	const JGeometry::TVec3<f32>& goal = mEMario->getUnkF4().getPoint();
-	u16 angle = matan(goal.z - mPosition.z, goal.x - mPosition.x);
+	f32 dx    = goal.x - mPosition.x;
+	f32 dz    = goal.z - mPosition.z;
+	u16 angle = matan(dz, dx);
 	setStickToAngle(angle, 1.0f);
 	++mEMDoingTimer;
 	if (mEMDoingTimer % 100 == 0)
