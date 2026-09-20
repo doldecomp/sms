@@ -125,6 +125,27 @@ static int PakkunSeedCallback(J3DNode* node, int param)
 	return 1;
 }
 
+static inline f32 PakkunExplosionScale(const TPakkun* p)
+{
+	return p->mExplosionScale;
+}
+
+static inline TPakkun* PakkunCur()
+{
+	TPakkun* p = gpCurPakkun;
+	return p;
+}
+
+static inline J3DModel* PakkunModelOf(TPakkun* p)
+{
+	return p->getMActor()->getModel();
+}
+
+static inline f32 PakkunCurExplosionScale()
+{
+	return PakkunExplosionScale(PakkunCur());
+}
+
 // The head swells as the stay pakkun takes damage. The y and z axes are
 // stretched half again as much once it is past its original size.
 // TODO: instruction-identical bar the u8 note below, 32 bytes of frame short.
@@ -132,21 +153,21 @@ static int PakkunSeedCallback(J3DNode* node, int param)
 static int PakkunRootCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
-		if (gpCurPakkun == nullptr
+		if (PakkunCur() == nullptr
 		    || gpCurPakkun->getHitPoints()
 		           == gpCurPakkun->getMaxHitPoints())
 			return 1;
 
 		J3DJoint* joint = (J3DJoint*)node;
 		MtxPtr anmMtx
-		    = gpCurPakkun->getMActor()->getModel()->getAnmMtx(joint->getJntNo());
+		    = PakkunModelOf(PakkunCur())->getAnmMtx(joint->getJntNo());
 
 		Mtx scale;
 		scale[0][3] = 0.0f;
 		scale[1][3] = 0.0f;
 		scale[2][3] = 0.0f;
 
-		f32 s  = gpCurPakkun->mExplosionScale;
+		f32 s  = PakkunCur()->mExplosionScale;
 		f32 sy = s;
 		f32 sz = s;
 		if (s > 1.0f) {
@@ -184,19 +205,20 @@ static int PakkunRootCallback(J3DNode* node, int param)
 static int PakkunRootCallback2(J3DNode* node, int param)
 {
 	if (param == 0) {
-		if (gpCurPakkun == nullptr)
+		if (PakkunCur() == nullptr)
 			return 1;
 
 		J3DJoint* joint = (J3DJoint*)node;
 		MtxPtr anmMtx
-		    = gpCurPakkun->getMActor()->getModel()->getAnmMtx(joint->getJntNo());
+		    = PakkunModelOf(gpCurPakkun)->getAnmMtx(joint->getJntNo());
 
 		Mtx scale;
 		scale[0][3] = 0.0f;
 		scale[1][3] = 0.0f;
 		scale[2][3] = 0.0f;
 
-		f32 s       = 1.0f / gpCurPakkun->mExplosionScale;
+		f32 s = 1.0f;
+		s /= PakkunCurExplosionScale();
 		scale[0][0] = s;
 		scale[0][1] = 0.0f;
 		scale[0][2] = 0.0f;
@@ -350,6 +372,12 @@ void TPakkun::load(JSUMemoryInputStream& stream)
 	setGoalPathMario();
 }
 
+static inline J3DModelData* PakkunModelData(const TPakkun* p)
+{
+	J3DModelData* data = p->getModel()->getModelData();
+	return data;
+}
+
 void TPakkun::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);
@@ -362,8 +390,8 @@ void TPakkun::init(TLiveManager* manager)
 
 	if (mInstanceIndex == 0) {
 		for (u8 i = 0;
-		     i < getModel()->getModelData()->getJointNum(); i++) {
-			if (strcmp(getModel()->getModelData()->getJointName()->getName(i),
+		     i < PakkunModelData(this)->getJointNum(); i++) {
+			if (strcmp(PakkunModelData(this)->getJointName()->getName(i),
 			           "null_seed")
 			    == 0) {
 				mHeadJntIndex = i;
