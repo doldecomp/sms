@@ -4580,3 +4580,104 @@ Struct-Lokaler blockiert, gegen 6 Compiler-Versionen getestet).
 **9031** (von 9025 zu Rundenbeginn), `matched_code_percent`: 45,38 %.
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`.
+
+### Nach achtundfünfzigster Iterationsrunde (24-Kandidaten-Batch: 9 neue Matches, vierte unabhängige Bestätigung der „Phantom-Frame-Reservierung"-Fehlerklasse, TFlagT<u16>-Trigger präzisiert)
+
+**9 neue Fixes, alle commitet — überwiegend reine Stack-Layout-Lücken
+(Muster 7):**
+
+1. `TLensFlare::TLensFlare(const char*)` (Commit `177bfa1a`) — 4-Byte-
+   Lücke zwischen `buf[0x100]` und dem gesicherten r30; `char trash[4]`
+   nach `buf` deklariert.
+2. `TLensGlow::TLensGlow(bool, const char*)` (Commit `8a45e440`) —
+   identisches Muster, 4-Byte-Lücke vor dem GPR-Save-Bereich.
+3. `JASystem::Driver::updatecallDSPChannel` (Commit `d1598668`) —
+   0x18-Byte-Rahmenlücke, exakt dieselbe Größe wie das etablierte
+   `TDSPChannel::updateAll()`-Pendant in derselben Datei-Gruppe.
+4. `JASystem::HardStream::main` (Commit `f66d778a`) — 16 Byte tote
+   Lokal-Reserve ohne jede Instruktion; `char trash[16]` behebt es.
+   Zwei weitere Funktionen derselben Datei (`startFirst`/`startSecond`,
+   `volFloatToU8`) zeigen dasselbe Muster mit anderen Lückengrößen,
+   nicht behoben (außerhalb des Auftrags).
+5. `TMapXlu::changeNormalJoint` (Commit `d0f3b462`) — Muster 5
+   (Accessor-vs-Direktzugriff): ein `getChild(i)`-Aufruf zu viel
+   reservierte einen ganzen Inline-Expansionsblock; Ersatz durch
+   `mChildren[i]` in der ersten Schleife entfernt ihn exakt.
+6. `TMarDirector::loadResource` (Commit `12d36834`) — verschachtelter
+   `{ JKRDvdFile sceneDvdFile; ... }`-Block brauchte 44 Byte mehr
+   Reserve; `char trash[44]` NACH `sceneDvdFile` (Reihenfolge kritisch:
+   davor deklariert hat keine Wirkung, da MWCC von oben nach unten
+   zuteilt).
+7. `TMBindShadowManager::TMBindShadowManager(const char*)` (Commit
+   `ea13ece7`) — Muster 5: `gpApplication.mCurrArea.unk0` (Rohzugriff)
+   musste durch `getStage()`-Accessor ersetzt werden, der einen
+   zusätzlichen 4-Byte-„this"-Temporärwert reserviert.
+8. `TMarioCap::TMarioCap(TMario*)` (Commit `2550d27e`) — fünf
+   gestapelte Bugs: fehlende `.rodata`-Statics (Nullblock +
+   Shift-JIS-„Speicher voll"-String, behebt zusätzlich die
+   `.rodata`-Sektion von 93 % auf 100 %), vertauschte
+   `setBaseTRMtx`/`getAnmMtx`-Kopierrichtung (Muster 4), 0x78 Byte
+   Stack-Padding, benannte Referenz-Lokale für ein `const ResTIMG&`-
+   Argument (Muster 6) und eine indexbasierte Neuladebasis-Optimierung.
+9. `TPollutionObj::getDepthFromMap` (Commit `026cf5ac`) — `tmp`-
+   Deklaration vor die Float-Lokalen verschoben plus ein zusätzliches
+   4-Byte-Dummy-Lokal, um die exakte MWCC-Rundungs-/Reihenfolge-Regel
+   für Stack-Slots zu treffen.
+
+**Vierte unabhängige Bestätigung der „Phantom-Frame-Reservierung"-
+Fehlerklasse, jetzt mit präziserem Auslöser:** `JDRActorLoad`
+(NO-MATCH) zeigt denselben 4-Byte-Rahmenunterschied wie die
+`TFlagT<u16>`-Fälle aus Runde 57, diesmal ausgelöst durch einen
+INLINE-Basisklassenkonstruktor (`TLightMap`s Default-Ctor konstruiert
+seine `TViewObj`-Basis, die wiederum `JDrama::TFlagT<u16>`s Ctor mit
+einem Trailing-Wertargument aufruft) statt durch eine direkte
+Trailing-Argument-Übergabe — verengt den Auslöser auf „`TFlagT<u16>`-
+Konstruktion irgendwo im Inline-Baum", nicht nur auf Aufrufstellen.
+Weitere Varianten derselben Fehlerfamilie, aber mit jeweils eigenem
+Auslöser (nicht identisch, aber strukturell verwandt — alle „Bytes,
+die keine Instruktion je berührt, aus Quelltext nicht platzierbar"):
+`MarDirectorPreEntry` (48 Byte um einen synthetisierten `TRect`-
+Wertrückgabe-Temporärwert, Padding landet immer oberhalb statt
+unterhalb), `ConductorMakeEnemy` (4-Byte-Verschiebung in einem
+inline-expandierten `JGadget::TList`-Iterator-Vergleich),
+`MapObjManagerAppear` (4-Byte-Positionsunterschied eines
+adressgenommenen Lokals, jede zusätzliche Variable rundet den Rahmen
+um volle 8 Byte auf), `NpcColorInit` (8 Byte, ausgelöst durch die
+Kombination `new`-Ausdruck in einem `switch`-Zweig + bedingter
+Doppelaufruf in einem anderen), `SampleCtrlMaterialCtor` (durch einen
+bereits im Repo dokumentierten TODO-Kommentar in
+`J3DColorChan.hpp:72-77` über PCH/sdata2-Plazierung erklärt — externe
+Bestätigung, dass dies ein bekanntes, ungelöstes Repo-Problem ist,
+nicht nur eine Session-Beobachtung), `PollutionCountDrawStamp` (ein
+Teil des Rahmens reparierbar, ein zweiter — ein `GXColor`-Argument-
+Temporärwert — nicht), `EventWatcherHideDead` (zwei Funktionen
+`evSetHide4LiveActor`/`evSetDead4LiveActor`, identischer 8-Byte-
+Rahmenunterschied bei sonst 100 % identischem Code; eine dritte
+Schwesterfunktion `evSetFlagNPCCanTaken` zeigt denselben Defekt, ist
+aber nicht Teil dieser Runde).
+
+**Weitere gründlich dokumentierte Sackgassen** (sauber zurückgesetzt):
+`SelectMenuOpenWindow` (eine echte Link-Zeit-Koinzidenz — Retail
+relokiert einen BGM-Enum-Wert gegen `showGPR__12JUTException+0x3C`,
+numerisch zufällig identisch, aus Quelltext nicht rekonstruierbar),
+`SpcInterpExecOps` (4 Funktionen `execadd`/`execsub`/`execmul`/
+`execdiv`, identisches gemeinsames 4-Byte-Problem in einem anonymen
+`TSpcSlice`-Temporärwert, ~10 Varianten erfolglos), `J3DClusterInitMtx`
+(~50 Quelltext-Varianten getestet — MWCC kann für `&dl[3+vtxSize*k]`
+entweder Basis-zuerst-Addition ODER nachgelagertes `addi +3` erzeugen,
+aber nie beides gleichzeitig wie Retail), `MirrorActorInit` (9
+Varianten, Iterator-Konstruktor-Temporärwerte in `JGadget::TList::
+insert` falsch gepackt), `SplashManagerMakeDL` (vertauschte
+Stack-Slot-Reihenfolge zwischen benanntem `GXColor`-Lokal und
+anonymem Compound-Literal-Temporärwert, 6 Varianten erfolglos).
+
+Zwei Agenten (`MarDirectorCtor`, `ObjManagerLoad`) brachen mit Fehler
+ab, bevor sie Quelltext änderten (sauberer Zustand bestätigt) — beide
+Kandidaten bleiben für eine künftige Runde offen.
+
+### Session-Gesamtstand nach Runde 58
+
+**453 verifizierte echte Fixes in 107 Commits.** `matched_functions`:
+**9039** (von 9031 zu Rundenbeginn), `matched_code_percent`: 45,57 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`.
