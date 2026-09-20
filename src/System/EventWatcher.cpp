@@ -280,11 +280,17 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push(count);
 }
 
+static inline TMarDirector* EventWatcherDirectorForTalkNPC()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
 static void evGetTalkNPC(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 
-	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
+	TBaseNPC* npc = EventWatcherDirectorForTalkNPC()->getTalkingNPC();
 
 	interp->push(!npc ? 0 : (int)npc);
 }
@@ -296,9 +302,15 @@ static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>* interp,
 
 	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 
-	if (!npc)
-		interp->push("");
-	else
+	// Named so push(const char*) cannot prove the pointer non-null and
+	// drop setDataString's `if (!v)` — `push("")` constant-folds it
+	// away (94.4% -> 98.1%). Merging both arms into one name local
+	// collapses the two push expansions (60%). Residue is the 4-byte
+	// slice-slot family.
+	if (!npc) {
+		const char* name = "";
+		interp->push(name);
+	} else
 		interp->push(npc->getName());
 }
 
@@ -330,40 +342,35 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
-// TODO: 92.8%, and this is the clearest case of a family that shares one
-// unexplained cause. Every builtin whose pushed value comes out of an
-// *inlined* accessor is short of low-region temporaries and reads the value
-// one instruction later than we do -- retail stores the slice's type word
-// first and only then loads the member:
-//
-//   evGetTalkMode          0x30 vs 0x38   push(gpTalk2D->getTalkMode())
-//   evGetTalkSelectedValue 0x30 vs 0x38   push(gpTalk2D->getSelectedValue())
-//   evGetTalkNPC           0x30 vs 0x38   push of getTalkingNPC()
-//   evGetTalkNPCName       frame equal, slice 4 low
-//   evGetRestTime          0x28 vs 0x30   push(getRestTime())
-//   evIsTalkModeNow        frame equal, slice 4 low
-//
-// Every builtin whose value comes from an out-of-line `bl` matches exactly
-// with no such temporaries (evGetPollutionLevel, evIsGraffitoCoverage0,
-// evGetSystemFlag, evGetTime), so the missing temporaries belong to the
-// accessor side, not to push(). Measured on evGetTalkMode, all still 0x30:
-// `interp->push(TSpcSlice((int)gpTalk2D->getTalkMode()))`, a named `int`
-// holding the mode, a named `u32` plus the cast at the push, and a
-// `static inline SMSGetTalk2D()` accessor for the global. The raw field
-// `gpTalk2D->mTalkMode` goes the wrong way (0x20), which does show that
-// `getTalkMode()` itself is worth 0x10 here, so retail is one level deeper
-// still.
+// TODO: frames now exact via TU-local binders (mode/selected int result,
+// director for getTalkNPC/getRestTime). Residue is load order: retail
+// stores the slice type word, then the inlined member. A helper that
+// both names the pointer and pushes made TSpcStack::push a `bl` (38%).
+// evGetTalkNPCName is the same family at a 4-byte slice slot; evIsTalkModeNow
+// is frame-exact with the slice 4 low.
+static inline u32 EventWatcherTalkMode()
+{
+	u32 mode = gpTalk2D->getTalkMode();
+	return mode;
+}
+
 static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	interp->push((int)gpTalk2D->getTalkMode());
+	interp->push((int)EventWatcherTalkMode());
+}
+
+static inline int EventWatcherSelectedValue()
+{
+	int value = gpTalk2D->getSelectedValue();
+	return value;
 }
 
 static void evGetTalkSelectedValue(TSpcTypedInterp<TEventWatcher>* interp,
                                    u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	interp->push((int)gpTalk2D->getSelectedValue());
+	interp->push((int)EventWatcherSelectedValue());
 }
 
 static void evSetValue2TalkVariable(TSpcTypedInterp<TEventWatcher>* interp,
@@ -518,13 +525,16 @@ static void evSetPollutionIncreaseCount(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
-// TODO: 96.1%. Same family as evGetTalkMode -- see the table there. The one
-// instruction out of place is the `lwz unk120` that retail issues after the
-// slice's type word is stored.
+static inline TMarDirector* EventWatcherDirectorForRestTime()
+{
+	TMarDirector* marDirector = gpMarDirector;
+	return marDirector;
+}
+
 static void evGetRestTime(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	interp->push(SMSGetMarDirector()->getRestTime());
+	interp->push(EventWatcherDirectorForRestTime()->getRestTime());
 }
 
 static void evGetPollutionLevel(TSpcTypedInterp<TEventWatcher>* interp,
