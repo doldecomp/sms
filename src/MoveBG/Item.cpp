@@ -823,7 +823,7 @@ void TShine::appearWithDemo(const char* param_1)
 {
 	TCameraMapTool* tool
 	    = JDrama::TNameRefGen::instance->search<TCameraMapTool>(param_1);
-	unk18C = tool->mDemoLengthFrames;
+	unk18C = tool->getDemoLengthFrames();
 	SMSGetMarDirector()->fireStartDemoCamera(
 	    param_1, &mPosition, -1, 0.0f, true, appearWithTimeCallback, (u32)this,
 	    nullptr, JDrama::TFlagT<u16>());
