@@ -60,10 +60,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 ### Session cursor-orchestrator (2026-09-20 morning)
 
 - Landed `grptc` MarioSpecial: `moveRoof` exact; `fenceMove` 95.4 -> 96.0.
-- Landed `grptd` bosspakkun ([bosspakkun unit ladder](0e9b4b32-6d06-465d-b58b-51038744e68f)): +3 exact; code 46.95 -> 51.79; data 100. Fly fuzzy trade accepted.
-- Landed `grpte` igaiga ([igaiga unit ladder](ec1b7d25-9431-4196-9cd2-b2f652d3353c)): +3 exact (RollOnGraph, WaterHit, setDeadAnm); code 50.42 -> 56.20; data 100. Symbol-order FAIL is pre-existing `MsWrap<f>` / UNUSED sizes.
-- Total after both lands: **61.32%** matched, game **53.16%**, **11,317** exact. Linked still **492 / 732**.
-- Running: `grptf` / bossManta ([bossManta unit ladder](12ccfdbd-f20d-4d11-9663-348f4fe456a6)). Refill after grpte remove.
+- Landed `grptd` bosspakkun ([bosspakkun unit ladder](0e9b4b32-6d06-465d-b58b-51038744e68f)): +3 exact; code 46.95 -> 51.79; data 100.
+- Landed `grpte` igaiga ([igaiga unit ladder](ec1b7d25-9431-4196-9cd2-b2f652d3353c)): +3 exact; code 50.42 -> 56.20; data 100.
+- Landed `grptf` bossManta ([bossManta unit ladder](12ccfdbd-f20d-4d11-9663-348f4fe456a6)): +0 exact; `TBossManta::init` frame-exact (raw `mManager` binder + named actor-type). Data already 100. Unit still 41.15% code — needs another ladder or research on setupEfbAlpha / drawMantaShadow.
+- Total: **61.32%** matched, game **53.16%**, **11,317** exact, linked **492 / 732**.
+- Running: `grptg` / gesso ([gesso unit ladder](02703244-19d4-4f7b-b3d4-937ccf3f4448)). Refill after grptf remove: fireWanwan (11 near-100s).
 - Stale unlanded: grpfg bosseel, grpfh WaterGun.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
