@@ -534,8 +534,8 @@ void TKoopaJr::checkNerveKillerLaunchNormal()
 	if (num == 0)
 		return;
 	mSubmarine->prepareKillerLaunch(num);
-	mSpine->pushNerve(&TNerveKoopaJrLaunch::theNerve());
-	mSubmarine->mSpine->pushNerve(
+	getSpine()->pushNerve(&TNerveKoopaJrLaunch::theNerve());
+	mSubmarine->getSpine()->pushNerve(
 	    &TNerveKoopaJrSubmarineCannonOpenClose::theNerve());
 	mSubmarine->setAnimationIndex(0);
 }
@@ -548,19 +548,21 @@ void TKoopaJr::checkNerveKillerLaunchFast()
 	if (num == 0)
 		return;
 	mSubmarine->prepareKillerLaunchFast(num);
-	mSpine->pushNerve(&TNerveKoopaJrLaunch::theNerve());
-	mSubmarine->mSpine->pushNerve(
+	getSpine()->pushNerve(&TNerveKoopaJrLaunch::theNerve());
+	mSubmarine->getSpine()->pushNerve(
 	    &TNerveKoopaJrSubmarineCannonOpenClose::theNerve());
 	mSubmarine->setAnimationIndex(0);
 }
 
-// Cheers when a killer has been sent back at the bathtub.
+// Cheers when a killer has been sent back at the bathtub. The spine goes
+// through getSpine() at every pushNerve site in this family: the raw member
+// ranks above the nerve address and swaps the two scratch registers the
+// inlined TSpineBase::pushNerve uses.
 void TKoopaJr::checkNerveKillerHit()
 {
 	for (int i = 0; i < mKillerManager->getActiveObjNum(); ++i) {
-		TBathtubKiller* killer = (TBathtubKiller*)mKillerManager->getObj(i);
-		if ((s32)killer->unk21C == 1) {
-			mSpine->pushNerve(&TNerveKoopaJrYahoo::theNerve());
+		if ((s32)((TBathtubKiller*)mKillerManager->getObj(i))->unk21C == 1) {
+			getSpine()->pushNerve(&TNerveKoopaJrYahoo::theNerve());
 			return;
 		}
 	}
