@@ -984,14 +984,13 @@ DEFINE_NERVE(TNerveHanaSamboDie, TLiveActor)
 			    jIndexTable[i]);
 			sambo->mDieEffectPos[i].set(mtx[0][3], mtx[1][3],
 			                            mtx[2][3]);
-			JGeometry::TVec3<f32>* pos = &sambo->mDieEffectPos[i];
 			JPABaseEmitter* emitter
-			    = gpMarioParticleManager->emit(0xE4, pos, 0, nullptr);
+			    = gpMarioParticleManager->emit(0xE4, &sambo->mDieEffectPos[i], 0, nullptr);
 			if (emitter) {
 				emitter->mGlobalDynamicsScale.set(sambo->mScaling);
 				emitter->mGlobalParticleScale.set(sambo->mScaling);
 			}
-			emitter = gpMarioParticleManager->emit(0xE6, pos, 0, nullptr);
+			emitter = gpMarioParticleManager->emit(0xE6, &sambo->mDieEffectPos[i], 0, nullptr);
 			if (emitter) {
 				emitter->mGlobalDynamicsScale.set(sambo->mScaling);
 				emitter->mGlobalParticleScale.set(sambo->mScaling);
