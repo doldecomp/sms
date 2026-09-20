@@ -1209,6 +1209,14 @@ static inline TBGBeakHit* BossgessoGetBeak(const TBossGesso* p)
 	return beak;
 }
 
+// +8 of low region at its one expansion in TNerveBGPollute (the named
+// TStack_24 there is still 4 bytes low: one 4-byte inline level short).
+static inline MActor* BossgessoGetUnk178(const TBossGesso* p)
+{
+	MActor* actor = p->unk178;
+	return actor;
+}
+
 static inline int BossgessoGetUnk195(const TBossGesso* p) { return p->unk195; }
 
 static inline TMario* BossgessoGetMario()
@@ -2129,7 +2137,7 @@ DEFINE_NERVE(TNerveBGPollute, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->changeBck(10);
-		self->unk178->setBckFromIndex(4);
+		BossgessoGetUnk178(self)->setBckFromIndex(4);
 		self->unk17C = 1;
 		self->changeAllTentacleState(0);
 		self->getMActor()->setBtpFromIndex(2);
