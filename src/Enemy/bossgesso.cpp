@@ -1209,6 +1209,24 @@ static inline TBGBeakHit* BossgessoGetBeak(const TBossGesso* p)
 	return beak;
 }
 
+static inline J3DModel* BossgessoGetModel(const TBossGesso* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
+static inline MSound* BossgessoGetMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
+static inline TMarioParticleManager* BossgessoGetParticleManager()
+{
+	TMarioParticleManager* manager = gpMarioParticleManager;
+	return manager;
+}
+
 // +8 of low region at its one expansion in TNerveBGPollute (the named
 // TStack_24 there is still 4 bytes low: one 4-byte inline level short).
 static inline MActor* BossgessoGetUnk178(const TBossGesso* p)
@@ -1786,7 +1804,8 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->changeBck(5);
 
-		if (self->mBeak->mHolder == nullptr && self->mAttackMode != 2) {
+		if (BossgessoGetBeakHolder(self) == nullptr
+		    && self->mAttackMode != 2) {
 			self->changeAttackMode(TBossGesso::ASTATE_UNISON);
 			self->changeAllTentacleState(1);
 		}
@@ -1806,10 +1825,12 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 		return true;
 	}
 
-	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 1, self);
-	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 1, self);
+	BossgessoGetParticleManager()->emitAndBindToMtxPtr(
+	    BGESO_JPA_MS_BOGE_NAMIDA, BossgessoGetModel(self)->getAnmMtx(7), 1,
+	    self);
+	BossgessoGetParticleManager()->emitAndBindToMtxPtr(
+	    BGESO_JPA_MS_BOGE_NAMIDA, BossgessoGetModel(self)->getAnmMtx(4), 1,
+	    self);
 
 	if (self->unk1AE == 0) {
 		self->unk1AE = 0x78;
