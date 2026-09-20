@@ -645,6 +645,13 @@ void TTelesaSlot::moveStart()
 
 u32 TTelesaSlot::touchWater(THitActor* actor) { return 0; }
 
+// TODO: TTelesaSlot::mOwner wants an accessor in BossTelesaObj.hpp; parked
+// here as a TU-local until a header batch adds it.
+static inline TBossTelesa* TelesaSlotGetOwner(const TTelesaSlot* p)
+{
+	return p->mOwner;
+}
+
 void TTelesaSlot::forceStopSlot(int index)
 {
 	TMsRange<f32> chance(0.0f, 1.0f);
@@ -652,7 +659,7 @@ void TTelesaSlot::forceStopSlot(int index)
 	if (!mStopRequested)
 		return;
 
-	f32 rate = mOwner->mParams->mSLSlotFirstHitCollectRate.get();
+	f32 rate = TelesaSlotGetOwner(this)->getSaveParam2()->mSLSlotFirstHitCollectRate.get();
 	if (SMS_GetMarioHP() == 1)
 		rate = 0.9f;
 
@@ -667,11 +674,11 @@ void TTelesaSlot::forceStopSlot(int index)
 		mIsRolling[index] = false;
 	}
 
-	if (mForcedResult == mOwner->unk1A8)
+	if (mForcedResult == TelesaSlotGetOwner(this)->unk1A8)
 		mForcedResult = 3;
 
 	if (mForcedResult == 0) {
-		if (!mOwner->unk370)
+		if (!TelesaSlotGetOwner(this)->unk370)
 			mForcedResult = 1;
 		else if (SMS_GetMarioHP() >= 6)
 			mForcedResult = 3;
