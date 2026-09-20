@@ -30,9 +30,10 @@ BOOL TMario::barWait()
 		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
 	}
 
-	mPosition.x = mHolder->mPosition.x;
-	mPosition.y = mHolder->mPosition.y + mHolderHeightDiff;
-	mPosition.z = mHolder->mPosition.z;
+	mPosition.x = getHolder()->mPosition.x;
+	f32 hy      = getHolder()->mPosition.y;
+	mPosition.y = hy + mHolderHeightDiff;
+	mPosition.z = getHolder()->mPosition.z;
 
 	if ((mInput & 0x8000) || mHolderHeightDiff <= 100.0f) {
 		setPlayerVelocity(-2.0f);
@@ -44,39 +45,36 @@ BOOL TMario::barWait()
 	if (unk108->mStickV > 16.0f)
 		return changePlayerStatus(MARIO_STATUS_BAR_CLIMB, 0, false);
 
-	// TODO: barWait's remaining difference is one fmadds operand order below
-	// (retail puts mStickV first; both source orders give the constant first)
-	// plus frame 0x80 vs 0xa8.
 	if (unk108->mStickV < -16.0f) {
-		mVel.y += unk108->mStickV * 0.001953125f;
+		mVel.y += unk108->mStickV / 512.0f;
 		mPosition.y += mVel.y;
-		mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
+		mHolderHeightDiff = mPosition.y - getHolder()->mPosition.y;
 		treeSlipEffect();
 		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_TREE, &mPosition, 0,
 		                                nullptr, 0, 4);
 	}
 
-	if (mHolder->getActorType() == 0x400000bb) {
+	if (getHolder()->getActorType() == 0x400000bb) {
 		if (unk108->mStickV <= 0.0f) {
 			mPosition.y -= 2.0f;
-			mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
+			mHolderHeightDiff = mPosition.y - getHolder()->mPosition.y;
 		}
 
-		if (mPosition.y < mHolder->mPosition.y + 200.0f) {
+		if (mPosition.y < getHolder()->mPosition.y + 200.0f) {
 			mPosition.y       = mHolder->mPosition.y + 200.0f;
 			mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
 		}
 	}
 
-	if (mHolder->getActorType() == 0x40000039) {
+	if (getHolder()->getActorType() == 0x40000039) {
 		if (mHolderHeightDiff > 500.0f) {
 			mHolderHeightDiff = 500.0f;
 			mPosition.y       = mHolder->mPosition.y + mHolderHeightDiff;
 		}
 	}
 
-	if (mHolder->getActorType() == 0x40000246) {
-		u8 map = gpMarDirector->getCurrentMap();
+	if (getHolder()->getActorType() == 0x40000246) {
+		u8 map = SMSGetMarDirector()->getCurrentMap();
 		if (map == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;
