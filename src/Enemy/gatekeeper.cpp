@@ -490,14 +490,16 @@ void TBiancoGateKeeper::launchNamekuri()
 			if (enemy == NULL)
 				break;
 
-			JGeometry::TVec3<f32> pos = mPosition;
+			JGeometry::TVec3<f32> pos = getPosition();
 			pos.y += 100.0f;
 			JGeometry::TVec3<f32> rot = mRotation;
 			JGeometry::TVec3<f32> scale;
 			scale.set(1.0f, 1.0f, 1.0f);
 			s16 angle = (s16)(182.04445f * (36.0f * (f32)i));
 			JGeometry::TVec3<f32> vel;
-			vel.set(4.0f * JMASSin(angle), 12.0f, 4.0f * JMASCos(angle));
+			vel.x = 4.0f * JMASSin(angle);
+			vel.y = 12.0f;
+			vel.z = 4.0f * JMASCos(angle);
 
 			enemy->reset();
 			enemy->mPosition  = pos;
@@ -509,7 +511,7 @@ void TBiancoGateKeeper::launchNamekuri()
 			enemy->offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
 			enemy->onLiveFlag(LIVE_FLAG_UNK8000);
 			enemy->offHitFlag(HIT_FLAG_NO_COLLISION);
-			enemy->mSpine->pushNerve(&TNerveNameKuriDiffuse::theNerve());
+			enemy->getSpine()->pushNerve(&TNerveNameKuriDiffuse::theNerve());
 		}
 	}
 }
