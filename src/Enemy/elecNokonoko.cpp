@@ -873,9 +873,7 @@ void TElecCarapace::calcRootMatrix()
 void TElecCarapace::sendMessage()
 {
 	for (int i = 0; i < getColNum(); i++) {
-		THitActor* other = getCollision(i);
-
-		if (other->isActorType(0x80000001)) {
+		if (getCollision(i)->isActorType(0x80000001)) {
 			// Mario: shock him and then sit still for a second.
 			if (SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK)) {
 				onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -883,9 +881,9 @@ void TElecCarapace::sendMessage()
 				    != &TNerveElecCarapaceWait::theNerve())
 					mSpine->pushNerve(&TNerveElecCarapaceWait::theNerve());
 			}
-		} else if (other == mNokonoko) {
+		} else if (getCollision(i) == mNokonoko) {
 			offHitFlag(HIT_FLAG_NO_COLLISION);
-		} else if (other->isActorType(0x01000001)) {
+		} else if (getCollision(i)->isActorType(0x01000001)) {
 			// Mario's water jet. The retail object draws three angles out of
 			// a 0..360 range five times over and uses none of them, so the
 			// five splashes those angles aimed are gone and only the draws
@@ -899,7 +897,7 @@ void TElecCarapace::sendMessage()
 				s32 roll  = spread.rand();
 			}
 		} else if (TElecNokonoko::mReflectSw) {
-			reflect(other);
+			reflect(getCollision(i));
 		}
 	}
 }
