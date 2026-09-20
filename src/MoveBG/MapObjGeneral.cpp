@@ -341,6 +341,7 @@ void TMapObjGeneral::kill()
 
 void TMapObjGeneral::appear()
 {
+	char trash[8];
 	makeObjAppeared();
 	startAnim(1);
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800000)) {
