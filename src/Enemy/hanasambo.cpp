@@ -1216,6 +1216,14 @@ void TSamboHead::behaveToWater(THitActor*)
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
+static inline TSpineBase<TLiveActor>* SamboHeadAtkSpine(const TSamboHead* p)
+{
+	TSpineBase<TLiveActor>* spine = p->mSpine;
+	return spine;
+}
+
+// TODO: retail reserves 0x10 above `away` (its slot is exact here); the
+// missing block is an inlined callee's own class object, not caller pool.
 void TSamboHead::attackToMario()
 {
 	sendAttackMsgToMario();
@@ -1227,8 +1235,8 @@ void TSamboHead::attackToMario()
 		mVelocity = away;
 		return;
 	}
-	if (mSpine->getCurrentNerve() == &TNerveSamboHeadAttack::theNerve())
-		mSpine->pushNerve(&TNerveSmallEnemyFreeze::theNerve());
+	if (SamboHeadAtkSpine(this)->getCurrentNerve() == &TNerveSamboHeadAttack::theNerve())
+		SamboHeadAtkSpine(this)->pushNerve(&TNerveSmallEnemyFreeze::theNerve());
 }
 
 f32 TSamboHead::getGravityY() const
