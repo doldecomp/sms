@@ -665,6 +665,13 @@ BOOL ViewFrustumClipCheck(JDrama::TGraphics* gfx, Vec* position, f32 radius)
 
 void ViewFrustumRectClipCheck(JDrama::TGraphics*, Vec*, f32, f32) { }
 
+// One consumed 4-byte inline level (research 312): it lands sizeTable at
+// 0x34 and the frame at 0x48.
+static inline int DrawUtilVtxSize(const int* table, const GXVtxDescList* desc)
+{
+	return table[desc->type];
+}
+
 int SMS_CountPolygonNumInShape(J3DShape* shape)
 {
 	int sizeTable[4] = {
@@ -678,7 +685,7 @@ int SMS_CountPolygonNumInShape(J3DShape* shape)
 	int vtxSize = 0;
 	for (GXVtxDescList* desc = shape->getVtxDesc(); desc->attr != GX_VA_NULL;
 	     desc++) {
-		vtxSize += sizeTable[desc->type];
+		vtxSize += DrawUtilVtxSize(sizeTable, desc);
 	}
 
 	for (u16 i = 0; i < shape->getMtxGroupNum(); i++) {
@@ -820,7 +827,7 @@ void SMS_CalcMatAnmAndMakeDL(J3DModel* param_1, u16 param_2)
 {
 	J3DMaterial* mat = param_1->getModelData()->getMaterialNodePointer(param_2);
 
-	param_1->getModelData()
+	DrawUtilGetModelData(param_1)
 	    ->getMaterialNodePointer(param_2)
 	    ->getMaterialAnm()
 	    ->calc(mat);
