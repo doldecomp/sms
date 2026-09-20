@@ -72,7 +72,7 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grpvi` CardLoad ([CardLoad](569a7982-2eb3-48d4-9866-073ac899bb92)): +1 exact. All **62.44→62.47**.
 - Landed `grpvj` BathWaterManager ([BathWaterManager](e7c65049-d748-4c20-9cdc-cd58e046e5c4)): +0 structural.
 - Landed `grpvk` MarNameRefGen ([MarNameRefGen](cd56fcce-fa2e-4304-bf6f-0c4b4cc5ef33)): +4 exact (`TNameRefAryT::load` ×4) via TU-local `begin()[i]` at(); unit **52.73→61.49**. All **62.47→62.53**, Game **54.62→54.69**, exact **11,390→11,394**. Park getNameRef `"?"` default + 4-low spills; InsertRaw copy_backward.
-- Running: `grpvl` / Guide ([Guide](4a9a5bc9-f616-4afd-9696-29615c0987f7)). Refill: ShadowUtil.
+- Running: `grpvl` / Guide ([Guide](4a9a5bc9-f616-4afd-9696-29615c0987f7)); `grpvm` / ShadowUtil ([ShadowUtil](750a29a9-2a94-4e96-9ddc-f428d2c6f57a)).
 - Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers, BathWater leftovers, MarNameRefGen leftovers.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
