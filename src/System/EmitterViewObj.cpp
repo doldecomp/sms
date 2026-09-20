@@ -487,14 +487,14 @@ JPABaseEmitter* TMarioParticleManager::emitParticleCallBack(
 {
 	if (param_3 == 1) {
 		int type    = param_1 - 253;
-		int idx     = getAvailableIdx(type, param_3, param_4);
+		int idx     = getAvailableIdx(type, param_3, param_5);
 		TInfo* info = &unk10[type][idx];
 		info->onFlag(INFO_FLAG_UNK4);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
 		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->unk0 = param_5;
 		if (info->mEmitter == nullptr)
 			emitTry(param_1, info, param_3);
 		if (info->mEmitter != nullptr) {
@@ -505,14 +505,14 @@ JPABaseEmitter* TMarioParticleManager::emitParticleCallBack(
 
 	if (param_3 == 3) {
 		int type    = param_1 - 486;
-		int idx     = getAvailableIdx(type, param_3, param_4);
+		int idx     = getAvailableIdx(type, param_3, param_5);
 		TInfo* info = &unk368[type][idx];
 		info->onFlag(INFO_FLAG_UNK4);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
 		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->unk0 = param_5;
 		if (info->mEmitter == nullptr)
 			emitTry(param_1, info, param_3);
 		if (info->mEmitter != nullptr) {
