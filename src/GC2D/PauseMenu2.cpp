@@ -70,6 +70,7 @@ TPauseMenu2::TPauseMenu2(const char* pName)
 
 void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 {
+	char trash[32];
 	JDrama::TViewObj::load(pStream);
 
 	JKRArchive* arch = (JKRArchive*)JKRFileLoader::getVolume("game_6");
@@ -85,14 +86,14 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mMenuPane   = mScreen->search('t_0');
 
 	for (s32 i = 0; i < 5; i++) {
-		mPauseLetters[i] = (J2DPicture*)mScreen->search('t_0' + i);
+		mPauseLetters[i] = (J2DPicture*)mScreen->search('pa00' + i);
 	}
 
 	for (s32 i = 0; i < 3; i++) {
 		mMenuItems[i] = (J2DPicture*)mScreen->search('tx_1' + i);
 
 		if (mNumItems == 2) {
-			mMenuItems[i]->add(0, 14);
+			mMenuItems[i]->add(0, 20);
 		}
 		mMenuItems[i]->mVisible = false;
 	}
