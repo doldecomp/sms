@@ -230,6 +230,12 @@ void TTelesa::load(JSUMemoryInputStream& stream)
 	setTypeNormal();
 }
 
+static inline J3DModel* TelesaInitGetModel(TTelesa* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TTelesa::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
@@ -253,7 +259,8 @@ void TTelesa::init(TLiveManager* manager)
 	                     *img);
 	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	if (mInstanceIndex == 0) {
-		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
+		for (u8 i = 0; i < TelesaInitGetModel(this)->getModelData()->getJointNum();
+		     ++i)
 			;
 	}
 
