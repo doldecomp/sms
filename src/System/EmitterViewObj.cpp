@@ -329,6 +329,7 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtxPtr(s32 param_1,
                                                            const void* param_4)
 {
 	JGeometry::TVec3<f32> local_24;
+	char trash[4];
 	local_24.x = param_2[0][3];
 	local_24.y = param_2[1][3];
 	local_24.z = param_2[2][3];
