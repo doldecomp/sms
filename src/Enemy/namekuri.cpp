@@ -121,6 +121,7 @@ static const GXColorS10 nameKuriTevColorData[7] = {
 
 void TNameKuriManager::initSetEnemies()
 {
+	char trash[16];
 	void* brainBmd           = JKRGetResource("/scene/namekuri2/brain.bmd");
 	SDLModelData* brainModel = new SDLModelData(J3DModelLoaderDataBase::load(
 	    brainBmd, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
