@@ -1402,8 +1402,10 @@ void TMario::initModel()
 				MTXIdentity(pinnaMtx);
 				mPinaRail->getModel()->setBaseTRMtx(pinnaMtx);
 				mPinaRail->calcAnm();
-				mPinaRail->getModel()->setBaseTRMtx(
-				    mTorocco->getModel()->getAnmMtx(0));
+				// Dest is the torocco: retail's r3 is the rail anmMtx and
+				// r4 is torocco+0x20, same as calcBaseMtxTorocco.
+				MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
+				        mTorocco->getModel()->getBaseTRMtx());
 			}
 			if (gpMarDirector->unk7D == 1) {
 				mRailType              = 1;
@@ -1427,8 +1429,8 @@ void TMario::initModel()
 				MTXIdentity(koopaMtx);
 				mKoopaRail->getModel()->setBaseTRMtx(koopaMtx);
 				mKoopaRail->calcAnm();
-				mKoopaRail->getModel()->setBaseTRMtx(
-				    mTorocco->getModel()->getAnmMtx(0));
+				MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
+				        mTorocco->getModel()->getBaseTRMtx());
 			}
 			onFlag(MARIO_FLAG_HAS_FLUDD);
 			mTorocco->calcAnm();
