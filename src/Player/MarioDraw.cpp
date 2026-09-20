@@ -2449,4 +2449,5 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 // mDashInc/mDashDec while the turbo nozzle is spraying and writes it into
 // gpAfterEffect scaled by those three params. What is missing is the TMario
 // member that holds the blend: no existing field fits, and inventing one in
-// Mario.hpp on this evidence alone is not justified. 63 instructions.() { }
+// Mario.hpp on this evidence alone is not justified. 63 instructions.
+void TMario::thinkDashEffect() { }
