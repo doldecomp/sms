@@ -28,7 +28,7 @@ void SMSSetupGCLogoRenderMode(GXRenderModeObj* rmo)
 	u32 format    = VIGetTvFormat();
 	rmo->viTVmode = (VITVMode)VI_TVMODE(format, VI_INTERLACE);
 #else
-	rmo->viTVmode        = (VITVMode)VI_TVMODE(VIGetTvFormat(), VI_INTERLACE);
+	rmo->viTVmode = (VITVMode)VI_TVMODE(VIGetTvFormat(), VI_INTERLACE);
 #endif
 	rmo->fbWidth         = SMSGetGCLogoRenderWidth();
 	rmo->efbHeight       = SMSGetGCLogoRenderHeight();
