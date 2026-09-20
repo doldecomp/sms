@@ -11,12 +11,12 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 53.93% | 12.06% | 166 / 385 |
+| Game | 53.96% | 12.06% | 166 / 385 |
 | JSystem | 90.24% | 75.06% | 180 / 198 |
 | SDK | 95.71% | 95.54% | 146 / 149 |
-| All | 61.93% | 26.71% | 492 / 732 |
+| All | 61.96% | 26.71% | 492 / 732 |
 
-11,372 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,375 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
 ## What recent batches have done
 
@@ -51,7 +51,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `GC2D/CardLoad` | 98.89% | 7 / 22 |
 | `GC2D/GCConsole2` | 92.31% | 34 / 70 |
 | `Map/BathWaterManager` | 96.82% | 31 / 41 |
-| `System/EventWatcher` | 99.24% | 47 / 99 |
+| `System/EventWatcher` | 99.37% | 66 / 99 |
 | `System/MSoundMainSide` | 95.66% | 19 / 29 |
 | `System/MarDirectorDirect` | 95.21% | 4 / 14 |
 | `Camera/CameraChange` | 98.64% | 15 / 18 |
