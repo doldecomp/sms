@@ -10,6 +10,17 @@
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// Binding level over a raw member read, worth +8 of low region in
+// TGraphWeb::getNeighborNodeIndexByFlag (batch 127) and
+// TGraphWeb::getRandomNextIndex (the TRailNode filter temporary sits at
+// 0x24 only with this named step; getGraphNode() on the start node
+// overshoots the frame by 8).
+static inline s16 GraphConnectionNum(const TRailNode* p)
+{
+	s16 connectionNum = p->mConnectionNum;
+	return connectionNum;
+}
+
 TGraphNode::TGraphNode()
     : unk0(nullptr)
     , unk4(0)
@@ -262,7 +273,7 @@ int TGraphWeb::getShortestNextIndex(int param_1, int param_2, u32 param_3) const
 
 int TGraphWeb::getRandomNextIndex(int param_1, int param_2, u32 param_3) const
 {
-	const TGraphNode* graphNode = &getGraphNode(param_1);
+	const TGraphNode* graphNode = &unk0[param_1];
 
 	TRailNode tmp;
 	const TRailNode* railNode;
@@ -273,7 +284,7 @@ int TGraphWeb::getRandomNextIndex(int param_1, int param_2, u32 param_3) const
 		railNode = &tmp;
 	}
 
-	s16 num = railNode->mConnectionNum;
+	s16 num = GraphConnectionNum(railNode);
 	if (num == 0)
 		return param_1;
 
@@ -777,14 +788,6 @@ TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 	}
 
 	return local_48;
-}
-
-// Binding level over a raw member read, worth +8 of low region in
-// TGraphWeb::getNeighborNodeIndexByFlag (batch 127).
-static inline s16 GraphConnectionNum(const TRailNode* p)
-{
-	s16 connectionNum = p->mConnectionNum;
-	return connectionNum;
 }
 
 int TGraphWeb::getNeighborNodeIndexByFlag(int param_1, int param_2,
