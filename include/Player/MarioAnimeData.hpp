@@ -27,6 +27,22 @@ public:
 };
 
 // BUG: Yes, ODR violation again.
+//
+// The 199 `unk0` flag words below are already byte-identical to retail. Both
+// copies of the table in the DOL (Player.a MarioDraw.cpp at 0x803dbf88 and
+// Enemy.a enemyMario.cpp at 0x803ae890) carry the same 1592 bytes, and every
+// one of our 199 words and 199 string relocations agrees with them. Header
+// round 52 checked this against the disassembly word by word and also
+// empirically: MarioDraw ladder 355's "corrected" table (86 flags inverted)
+// drops the object from 81.7% to 81.1%, so do not apply it.
+//
+// The object's remaining 18.3% is the string pool, not the flags. Ours and
+// retail's `.rodata` are both 0xca1 bytes with the same 90/109 split between
+// `.sdata2` and `.rodata`, but retail orders @1490, @1936 and @2445-@2448
+// (0xe0 bytes) ahead of the table's strings while we emit the table's strings
+// first, so 109 of the pointers resolve to unnamed `...rodata.0+N` targets.
+// That is the `@NNNN` generation-order lever of links 278, and it belongs to
+// MarioDraw.cpp's definition order, not to this table.
 static unkTMarioAnimeFilesStruct marioAnimeFiles[199] = {
 	/* 0x00 */ { 0x00000001, "hgup" },
 	/* 0x01 */ { 0x00000001, "bdwn" },
