@@ -2409,6 +2409,12 @@ void TMario::checkYoshiGetOff()
 		getOffYoshi(false);
 }
 
+static inline TMap* MarioMoveGetMap()
+{
+	TMap* map = gpMap;
+	return map;
+}
+
 void TMario::thinkYoshiHeadCollision()
 {
 	if (!onYoshi())
@@ -2425,7 +2431,7 @@ void TMario::thinkYoshiHeadCollision()
 	                          mYoshiParams.mHeadRadius.get(), 4, 0);
 	f32 z = headPos.z;
 
-	if (gpMap->isTouchedWallsAndMoveXZ(&record) == true) {
+	if (MarioMoveGetMap()->isTouchedWallsAndMoveXZ(&record) == true) {
 		f32 dx = record.mCenter.x - headPos.x;
 		f32 dz = record.mCenter.z - z;
 		f32 f4 = std::sqrtf(dx * dx + dz * dz);
