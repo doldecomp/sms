@@ -629,11 +629,16 @@ THanaSambo::THanaSambo(const char* name)
 {
 }
 
+static inline THitActor* SamboMarioAddress()
+{
+	return (THitActor*)gpMarioAddress;
+}
+
 void THanaSambo::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 	reset();
-	TPathNode node((THitActor*)gpMarioAddress);
+	TPathNode node(SamboMarioAddress());
 	unkF4  = node;
 	unk104 = node;
 	unk114.clear();
@@ -648,7 +653,7 @@ void THanaSambo::init(TLiveManager* manager)
 	mSpine->initWith(&TNerveHanaSamboHide::theNerve());
 	mShadow = new TMBindShadowBody(this, getModel(), 1.5f);
 
-	TPathNode node((THitActor*)gpMarioAddress);
+	TPathNode node(SamboMarioAddress());
 	unkF4  = node;
 	unk104 = node;
 	unk114.clear();
@@ -1137,7 +1142,7 @@ void TSamboHead::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 	reset();
-	TPathNode node((THitActor*)gpMarioAddress);
+	TPathNode node(SamboMarioAddress());
 	unkF4  = node;
 	unk104 = node;
 	unk114.clear();
