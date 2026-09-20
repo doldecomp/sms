@@ -1109,6 +1109,14 @@ void TBathtub::updatePosture_()
 
 // Binding level over a raw member read, worth +16 of low region in
 // TBathtub::load (batch 127).
+// The grip angle for index i. Spelling the whole expression as one level
+// puts the product in a volatile FPR and the quotient straight into the
+// named local's callee-saved one, as retail does (batch 356).
+static inline f32 MapObjCoronaGripAngle(int i)
+{
+	return 360.0f * (0.5f + (f32)i) / 5.0f;
+}
+
 static inline MActor* MapObjCoronaUnk29C(const TBathtub* p)
 {
 	MActor* v29C = p->unk29C;
@@ -1176,8 +1184,7 @@ void TBathtub::load(JSUMemoryInputStream& stream)
 	unk138 = new MActorAnmData;
 	unk138->init("scene/map/map/stand_effect", nullptr);
 	for (int i = 0; i < 5; ++i) {
-		f32 angle = 360.0f * (0.5f + (f32)i);
-		angle /= 5.0f;
+		f32 angle     = MapObjCoronaGripAngle(i);
 		f32 gripAngle = angle - 180.0f;
 		unk168[i % 5] = new TBathtubGrip(this, gripAngle, unk138,
 		    "\x89\xf3\x82\xea\x82\xa9\x82\xaf\x82\xcc\x83\x6f\x83"
