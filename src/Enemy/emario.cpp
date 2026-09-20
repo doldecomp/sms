@@ -44,8 +44,8 @@ void TEMario::load(JSUMemoryInputStream& stream)
 
 	stream >> mInitialState >> unk158 >> unk15C >> unk160;
 
-	stream.readU32();
-	stream.readU32();
+	u32 unused1, unused2;
+	stream >> unused1 >> unused2;
 
 	if (mInitialState == 0xFF)
 		mInitialState = 0;
@@ -82,6 +82,7 @@ void TEMario::load(JSUMemoryInputStream& stream)
 
 	// "Mario Character"
 	const char marioCharName[] = "マリオ キャラ";
+	char trash[0x44];
 	mEnemyMario->setCharacter(static_cast<JDrama::TCharacter*>(
 	    JDrama::TNameRefGen::search(marioCharName)));
 
