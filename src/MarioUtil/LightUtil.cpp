@@ -323,6 +323,7 @@ void TPlayerLightWithDBSet::makeDrawBuffer()
 
 void TObjectLightWithDBSet::makeDrawBuffer()
 {
+	char trash[32];
 	static const char lightName[] = "太陽（オブジェクト）";
 	static const char ambName[]   = "太陽アンビエント（オブジェクト）";
 
