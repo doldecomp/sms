@@ -453,6 +453,10 @@ int TGraphWeb::getRandomButDirLimited(int param_1, int param_2,
 		local_d8 -= param_4;
 		MsVECNormalize(&local_d8, &local_d8);
 
+		// TODO: retail's cross-product vector sits 0x10 below this loop's
+		// block and the second loop's point vector 0xc above it, i.e. the
+		// two loop blocks stack the other way round; the raw node pointer
+		// (inert here) and declaring the cross vector first are refuted.
 		JGeometry::TVec3<f32> local_f4;
 		local_f4.cross(local_cc, local_d8);
 		f32 angle = abs(matan(local_cc.dot(local_d8), MsVECMag2(&local_f4))
@@ -497,14 +501,14 @@ int TGraphWeb::getEscapeDirLimited(int param_1, int param_2,
                                    const JGeometry::TVec3<f32>& param_4,
                                    f32 param_5, u32 param_6) const
 {
-	const TGraphNode& graphNode = getGraphNode(param_1);
+	const TGraphNode* graphNode = &unk0[param_1];
 
 	TRailNode tmp;
 	const TRailNode* railNode;
 	if (param_6 == 0xffffffff) {
-		railNode = graphNode.getRailNode();
+		railNode = graphNode->getRailNode();
 	} else {
-		filterRailNode(param_6, graphNode.getRailNode(), unk4, &tmp);
+		filterRailNode(param_6, graphNode->getRailNode(), unk4, &tmp);
 		railNode = &tmp;
 	}
 
