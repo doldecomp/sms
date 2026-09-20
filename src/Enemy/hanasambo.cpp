@@ -313,7 +313,7 @@ void TSamboFlowerManager::loadAfter()
 		mLeaves[i] = new TSamboLeaf(this, modelData, "サンボリーフ");
 
 	mCoinUnitNum = 0;
-	for (int i = 0; i < gpItemManager->getObjNum(); ++i) {
+	for (int i = 0; i < gpItemManager->mObjNum; ++i) {
 		if (strstr(gpItemManager->getObj(i)->getName(), "コイン（フラワー用）"))
 			++mCoinUnitNum;
 	}
@@ -369,21 +369,28 @@ void TSamboFlowerManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		mLeaves[i]->perform(cue, graphics);
 }
 
+static inline TSamboFlowerSaveLoadParams*
+SamboDropParams(const TSamboFlowerManager* p)
+{
+	TSamboFlowerSaveLoadParams* params = p->getSaveParams();
+	return params;
+}
+
 // Throws up to three free leaves, 120 degrees apart.
 void TSamboFlowerManager::dropLeaf(JGeometry::TVec3<f32>& position,
                                    JGeometry::TVec3<f32>& scale)
 {
-	int dropped     = 0;
-	f32 angles[3]   = { 0.0f, 120.0f, 240.0f };
+	f32 angles[3] = { 0.0f, 120.0f, 240.0f };
+	int dropped   = 0;
 	for (int i = 0; i < 18; ++i) {
 		TSamboLeaf* leaf = mLeaves[i];
 		if (!leaf->mIsActive) {
 			leaf->generate(position);
-			TSamboFlowerSaveLoadParams* params = getSaveParams();
-			TMsRange<f32> rangeXZ(params->mSLLeafVelocityXZ.get(),
-			                      1.2f * params->mSLLeafVelocityXZ.get());
-			TMsRange<f32> rangeY(params->mSLLeafVelocityY.get(),
-			                     1.2f * params->mSLLeafVelocityY.get());
+			TSamboFlowerSaveLoadParams* params = SamboDropParams(this);
+			f32 velXZ                          = params->mSLLeafVelocityXZ.get();
+			f32 velY                           = params->mSLLeafVelocityY.get();
+			TMsRange<f32> rangeXZ(velXZ, 1.2f * velXZ);
+			TMsRange<f32> rangeY(velY, 1.2f * velY);
 			JGeometry::TVec3<f32> velocity(0.0f, rangeY.rand(),
 			                               rangeXZ.rand());
 			f32 angle = angles[i];
@@ -1349,54 +1356,55 @@ void TSamboHead::calcRootMatrix()
 // A crashed head scatters three coins in an arc in front of it.
 void TSamboHead::genEventCoin()
 {
-	if (!isBckAnm(1)) {
-		TSmallEnemy::genEventCoin();
+	if (isBckAnm(1)) {
+		for (int i = 0; i < 3; ++i) {
+			s16 angle
+			    = DEG2SHORTANGLE(60.0f * (f32)i + (mRotation.y - 60.0f));
+			f32 s = JMASSin(angle);
+			f32 c = JMASCos(angle);
+			Mtx rot;
+			MtxPtr mtx = rot;
+			mtx[0][0]  = c;
+			mtx[0][1]  = 0.0f;
+			mtx[0][2]  = s;
+			mtx[0][3]  = 0.0f;
+			mtx[1][0]  = 0.0f;
+			mtx[1][1]  = 1.0f;
+			mtx[1][2]  = 0.0f;
+			mtx[1][3]  = 0.0f;
+			mtx[2][0]  = -s;
+			mtx[2][1]  = 0.0f;
+			mtx[2][2]  = c;
+			mtx[2][3]  = 0.0f;
+			JGeometry::TVec3<f32> offset(0.0f, 0.0f, 100.0f);
+			MTXMultVec(mtx, &offset, &offset);
+
+			TMapObjBase* coin;
+			if (i == 1 && mCoin != nullptr) {
+				coin = mCoin;
+				if (coin->isActorType(0x2000000E))
+					coin = gpItemManager->makeObjAppear(0x2000000E);
+				if (coin) {
+					coin->appear();
+					coin->mPosition = mPosition;
+				}
+			} else {
+				coin = gpItemManager->makeObjAppear(
+				    mPosition.x + offset.x, mPosition.y,
+				    mPosition.z + offset.z, 0x2000000E, true);
+			}
+			if (coin) {
+				coin->mPosition.y = mPosition.y;
+				MsVECNormalize(&offset, &offset);
+				TMsRange<f32> range(8.0f, 16.0f);
+				coin->mVelocity.set(4.0f * offset.x, range.rand(),
+				                    4.0f * offset.z);
+				coin->offLiveFlag(LIVE_FLAG_UNK10);
+			}
+		}
 		return;
 	}
-	for (int i = 0; i < 3; ++i) {
-		s16 angle = DEG2SHORTANGLE(60.0f * (f32)i + (mRotation.y - 60.0f));
-		f32 s     = JMASSin(angle);
-		f32 c     = JMASCos(angle);
-		Mtx rot;
-		rot[0][0] = c;
-		rot[0][1] = 0.0f;
-		rot[0][2] = s;
-		rot[0][3] = 0.0f;
-		rot[1][0] = 0.0f;
-		rot[1][1] = 1.0f;
-		rot[1][2] = 0.0f;
-		rot[1][3] = 0.0f;
-		rot[2][0] = -s;
-		rot[2][1] = 0.0f;
-		rot[2][2] = c;
-		rot[2][3] = 0.0f;
-		JGeometry::TVec3<f32> offset(0.0f, 0.0f, 100.0f);
-		MTXMultVec(rot, &offset, &offset);
-
-		TMapObjBase* coin;
-		if (i == 1 && mCoin != nullptr) {
-			coin = mCoin;
-			if (coin->isActorType(0x2000000E))
-				coin = gpItemManager->makeObjAppear(0x2000000E);
-			if (coin) {
-				coin->appear();
-				coin->mPosition = mPosition;
-			}
-		} else {
-			coin = gpItemManager->makeObjAppear(mPosition.x + offset.x,
-			                                    mPosition.y,
-			                                    mPosition.z + offset.z,
-			                                    0x2000000E, true);
-		}
-		if (coin) {
-			coin->mPosition.y = mPosition.y;
-			MsVECNormalize(&offset, &offset);
-			TMsRange<f32> range(8.0f, 16.0f);
-			coin->mVelocity.set(4.0f * offset.x, range.rand(),
-			                    4.0f * offset.z);
-			coin->offLiveFlag(LIVE_FLAG_UNK10);
-		}
-	}
+	TSmallEnemy::genEventCoin();
 }
 
 // UNUSED, 0x140 in the map: inlined into SamboHeadRollCallback.
