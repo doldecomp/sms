@@ -115,6 +115,11 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(TSpcSlice(result));
 }
 
+// TODO: 99.9%, frame exact (0x90) once all three gpMarDirector reads go
+// through the TU-local binder (+32 over the raw global; SMSGetMarDirector() at
+// one of the three is -8). Both slice slots are still 4 bytes high (push 0x4c
+// vs 0x48, pop 0x70 vs 0x6c) against an exact stfd slot, i.e. one -4 of low
+// region below the whole block. Naming the popped NPC is +8.
 static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
@@ -122,11 +127,11 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 
 	int result = 0;
 
-	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
+	if (!NpcEventGetMarDirector()->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 
-		gpMarDirector->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
-		gpMarDirector->unk126 = 1;
+		NpcEventGetMarDirector()->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
+		NpcEventGetMarDirector()->unk126 = 1;
 
 		result = 1;
 	} else {
@@ -136,37 +141,32 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(result);
 }
 
-// TODO: 92.7%. The discarded pop is wrong: the ROM copies only the *second*
-// word of the popped slice (`addi r0, r3, 4; lwzx r0, r4, r0; stw r0,
-// 0x70(r1)`) and then re-stores it into a second slot at 0x7c, where we copy
-// both words of the slice into one temporary. So the argument is read through
-// something that yields just the data word (no getDataInt() type switch is
-// emitted), and it is still live afterwards -- the `(void)` below is a
-// placeholder, not the ROM's shape. 40 bytes of frame short as well.
+// TODO: 92.8%. The frame is exact (0x90) since the three gpMarDirector reads
+// went through the TU-local binder, and so is every slot but the discarded
+// pop. The ROM copies only the *second* word of the popped slice
+// (`addi r0, r3, 4; lwzx r0, r4, r0; stw r0, 0x70(r1)`) and then re-stores it
+// into a second 4-byte slot at 0x7c that nothing ever reads, i.e. it binds the
+// slice's data word to a named local it never uses. Every spelling that reads
+// only `.mData` (`.mData.asInt`, `.mData.asString`, `getDataString()`) is
+// dead-stripped by MWCC and loses both stores; binding the whole slice
+// (`TSpcSlice exceptNpc = interp->pop();`) keeps them but copies both words.
+// Open.
 static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
                                         u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int result = 0;
-	// TODO: the ROM's pop reads only the slice's data word
-	// (`lwz r0, [base + idx*8 + 4]`), stores it at 0x70 and copies it once
-	// more to 0x7c, i.e. it binds the popped value to a local it then never
-	// reads. Every spelling that reads only `.mData` (`.mData.asInt`,
-	// `.mData.asString`, `getDataString()`) is dead-stripped by MWCC and
-	// loses the two stores (92.7 -> 87.7); binding the whole slice
-	// (`TSpcSlice exceptNpc = interp->pop();`) keeps them but copies both
-	// words (87.7). Frame is also 40 bytes short. Open.
 	(void)interp->pop();
 
-	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
+	if (!NpcEventGetMarDirector()->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 
 		TBaseNPC* dummyNpc
 		    = JDrama::TNameRefGen::search<TBaseNPC>("ダミーＮＰＣ");
 
 		if (dummyNpc) {
-			gpMarDirector->unkA0  = dummyNpc;
-			gpMarDirector->unk126 = 1;
+			NpcEventGetMarDirector()->unkA0  = dummyNpc;
+			NpcEventGetMarDirector()->unk126 = 1;
 
 			result = 1;
 		}
