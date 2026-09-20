@@ -457,12 +457,12 @@ void TBPTornado::perform(u32 cue, JDrama::TGraphics* graphics)
 			rock->setGlobalScale(getScaling());
 
 		JPABaseEmitter* smoke = gpMarioParticleManager->emitAndBindToMtxPtr(
-		    BOSSPAKKUN_JPA_MS_BOPA_TR_SMOKE, mtx, 1, this + 1);
+		    BOSSPAKKUN_JPA_MS_BOPA_TR_SMOKE, mtx, 1, (const u8*)this + 1);
 		if (smoke)
 			smoke->setGlobalScale(getScaling());
 
 		JPABaseEmitter* weed = gpMarioParticleManager->emitAndBindToMtxPtr(
-		    BOSSPAKKUN_JPA_MS_BOPA_TR_WEED, mtx, 1, this + 2);
+		    BOSSPAKKUN_JPA_MS_BOPA_TR_WEED, mtx, 1, (const u8*)this + 2);
 		if (weed)
 			weed->setGlobalScale(mScaling);
 	}
@@ -988,6 +988,14 @@ static inline TMarDirector* BosspakkunGetMarDirector()
 {
 	TMarDirector* marDirector = gpMarDirector;
 	return marDirector;
+}
+
+// Binding level over TBossPakkun::getSaveParam2(): worth +8 of low region per
+// expansion where the plain accessor call is +0.
+static inline TBossPakkunParams* BosspakkunParams(const TBossPakkun* p)
+{
+	TBossPakkunParams* params = p->getSaveParam2();
+	return params;
 }
 
 void TBossPakkun::showMessage(u32 message)
@@ -1806,18 +1814,18 @@ DEFINE_NERVE(TNerveBPTumble, TLiveActor)
 		boss->mState = BOSSPAKU_STATE_BELLY_UP;
 	}
 
-	// TODO: the ROM's owner key is `boss + 8` bytes, which is
-	// JDrama::TNameRef::mKeyCode's address; that member is private, so the
-	// expression the original used is still unknown. One operand short.
+	// The owner key is a byte-offset token, as in TBPTornado::perform's
+	// three emitters (this, this + 1, this + 2).
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BOSSPAKKUN_JPA_MS_BOPA_JITA, boss->getModel()->getAnmMtx(0), 1, boss);
+	    BOSSPAKKUN_JPA_MS_BOPA_JITA, boss->getModel()->getAnmMtx(0), 1,
+	    (const u8*)boss + 8);
 	gpCameraShake->keepShake(
 	    (EnumCamShakeMode)CAM_SHAKE_MODE_BOPA_DOWN_LOOP, 1.0f);
 
 	if ((spine->getTime() / 60) % 2)
 		boss->rumblePad(0, boss->mPosition);
 
-	if (spine->getTime() >= boss->getSaveParam2()->mSLTumbleTime.get()) {
+	if (spine->getTime() >= BosspakkunParams(boss)->mSLTumbleTime.get()) {
 		boss->mState = BOSSPAKU_STATE_NORMAL;
 		spine->pushAfterCurrent(&TNerveBPTumbleOut::theNerve());
 		return TRUE;
@@ -2084,7 +2092,7 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
-	MActor* actor     = boss->getMActor();
+	MActor* actor     = boss->mMActor;
 
 	if (spine->getTime() == 0)
 		boss->changeBck(BOSSPAKU_BCK_FLY);
