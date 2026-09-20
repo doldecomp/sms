@@ -1241,15 +1241,40 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveCannonDamageDemo, TLiveActor)
+static inline MSound* CannonObjectSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
+static inline TConductor* CannonDamageDemoConductor()
+{
+	TConductor* conductor = gpConductor;
+	return conductor;
+}
+
+static inline MActor* CannonDamageDemoMActor(TCannon* cannon)
+{
+	TChorobei* chorobei = cannon->mChorobei;
+	MActor* actor = chorobei->mParts->getMActor();
+	return actor;
+}
+
+static inline TCannon* CannonDamageDemoBody(TSpineBase<TLiveActor>* spine)
 {
 	TCannon* cannon = (TCannon*)spine->getBody();
+	return cannon;
+}
+
+DEFINE_NERVE(TNerveCannonDamageDemo, TLiveActor)
+{
+	TCannon* cannon = CannonDamageDemoBody(spine);
 
 	if (spine->getTime() == 0)
 		cannon->mChorobei->setBckAnm(0xE);
 
 	if (spine->getTime() > 120
-	    && cannon->mChorobei->mParts->getMActor()->curAnmEndsNext()) {
+	    && CannonDamageDemoMActor(cannon)->curAnmEndsNext()) {
 		if (!cannon->isBckAnm(4)) {
 			cannon->setBckAnm(4);
 			if (gpMSound->gateCheck(MSD_SE_EN_CANNON_DOWN))
@@ -1257,7 +1282,7 @@ DEFINE_NERVE(TNerveCannonDamageDemo, TLiveActor)
 				    MSD_SE_EN_CANNON_DOWN, &cannon->mPosition, 0, nullptr, 0,
 				    4);
 			TEffectExplosion* explosion
-			    = (TEffectExplosion*)gpConductor->makeOneEnemyAppear(
+			    = (TEffectExplosion*)CannonDamageDemoConductor()->makeOneEnemyAppear(
 			        cannon->mPosition, "エフェクト爆発マネージャー", 1);
 			if (explosion) {
 				JGeometry::TVec3<f32> scale(2.5f, 2.5f, 2.5f);
@@ -1269,12 +1294,6 @@ DEFINE_NERVE(TNerveCannonDamageDemo, TLiveActor)
 		}
 	}
 	return FALSE;
-}
-
-static inline MSound* CannonObjectSound()
-{
-	MSound* sound = gpMSound;
-	return sound;
 }
 
 static inline J3DFrameCtrl* CannonObjectFrameCtrl(TCannon* cannon)
