@@ -114,10 +114,16 @@ void TFruitsBoat::setJumpReaction()
 
 // Replays mBckTrack by hand: joint 0 and joint 1 of the track carry the boat's
 // position, rotation and scaling as a sum/product pair.
+static inline f32 FruitsBoatTrackFrame(J3DFrameCtrl* ctrl)
+{
+	return ctrl->getFrame();
+}
+
 void TFruitsBoat::traceBckTrack()
 {
 	mBckTrackCtrl->update();
-	mBckTrack->setFrame(mBckTrackCtrl->getFrame());
+	f32 frame = FruitsBoatTrackFrame(mBckTrackCtrl);
+	mBckTrack->setFrame(frame);
 
 	J3DTransformInfo base;
 	mBckTrack->getTransform(0, &base);
