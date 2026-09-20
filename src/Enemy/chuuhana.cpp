@@ -857,10 +857,16 @@ void TChuuHana::setGoal()
 {
 	// Pick a point 1000 ahead, with the heading swung by up to 30 degrees
 	// either side, and walk there.
-	// TODO: 99.5%.  Instruction-identical; the low region is 16 bytes short
-	// and every slot shifts by the same amount.  getPosition() over
-	// mPosition and spelling setGoalPath out as a TPathNode plus two
-	// assignments both move nothing.
+	// TODO: 99.5%.  Instruction-identical; the pool below the implicit
+	// TPathNode temporary is 0xc short (the named block is otherwise the
+	// four locals below, in retail's order).  0xc is not on the 8-byte
+	// binder grid: a 12-byte by-value TVec3 level (a TU-local by-value
+	// parameter or return around setGoalPath) lands the frame at 0xa0
+	// exactly but adds the six-instruction copy, so the carrier has to be a
+	// zero-instruction 12-byte pool item.  Priced at 0 here: getPosition()
+	// over mPosition, getRotation() x3, a setGoalPath forwarder, a fork
+	// around swing.rand(), a named f32 for the swung heading, splitting the
+	// dir constructor into set(), and TVec3 goal(mPosition).
 	JGeometry::TVec3<f32> goal;
 	goal.set(mPosition);
 	TMsRange<f32> swing(-30.0f, 30.0f);
@@ -934,6 +940,20 @@ void TChuuHana::rollStart()
 	unk204.set(0.0f, 0.0f, 0.0f);
 }
 
+// Binder over the params pointer; the two later reverse-height reads carry
+// checkStretchType's remaining +0x10 of low region.
+static inline TChuuHanaSaveLoadParams* ChuuhanaParams(const TChuuHana* p)
+{
+	TChuuHanaSaveLoadParams* v = p->unk1B4;
+	return v;
+}
+
+// A by-value int fork over the s16 instance index, +8 of low region here.
+static inline int ChuuHanaIndex(const TChuuHana* p)
+{
+	return p->mInstanceIndex;
+}
+
 void TChuuHana::checkStretchType()
 {
 	unk1A0    = 0;
@@ -941,12 +961,12 @@ void TChuuHana::checkStretchType()
 
 	if (mSpine->getCurrentNerve() == &TNerveChuuHanaKeepBalance::theNerve()) {
 		// Balancing: a large enough bounce flips it over.
-		int size  = mInstanceIndex;
+		int size  = ChuuHanaIndex(this);
 		f32 limit = unk1B4->mSLReverseHeightS.get();
 		if (size > 0)
-			limit = unk1B4->mSLReverseHeightM.get();
+			limit = ChuuhanaParams(this)->mSLReverseHeightM.get();
 		if (size > 2)
-			limit = unk1B4->mSLReverseHeightL.get();
+			limit = ChuuhanaParams(this)->mSLReverseHeightL.get();
 
 		if (swing > limit) {
 			unk1B1 = 1;
@@ -960,7 +980,7 @@ void TChuuHana::checkStretchType()
 	// Otherwise it is being stretched: big, medium or small.
 	((TChuuHanaManager*)mManager)->unk6C++;
 
-	int size = mInstanceIndex;
+	int size = ChuuHanaIndex(this);
 	f32 big  = unk1B4->mSLStretchHeightS.get();
 	if (size > 0)
 		big = unk1B4->mSLStretchHeightM.get();
