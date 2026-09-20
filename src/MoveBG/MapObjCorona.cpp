@@ -841,13 +841,22 @@ namespace {
 BOOL CameraDemoCallBack(u32, u32) { return false; }
 }
 
+// A named-local fork over the director accessor: +0x28 of low region at
+// this function's three sites, and with the demo-camera flag named at
+// function scope (+8 of named block) TBathtub::startDemo is exact.
+static inline TMarDirector* MapObjCoronaMarDirector()
+{
+	TMarDirector* d = SMSGetMarDirector();
+	return d;
+}
+
 void TBathtub::startDemo()
 {
 	if (unk29A)
 		return;
 	MSBgm::stopTrackBGMs(7, 10);
 	if (!(unk2A0 & 0x20))
-		SMSGetMarDirector()->getConsole()->startAppearBalloon(0x23, true);
+		MapObjCoronaMarDirector()->getConsole()->startAppearBalloon(0x23, true);
 	unk2A0 |= 0x20;
 	unk290 = 10;
 	for (int i = 0; i < 5; ++i)
@@ -861,9 +870,10 @@ void TBathtub::startDemo()
 	if (mario->receiveMessage(this, HIT_MESSAGE_TAKE))
 		mHeldObject = mario;
 	gpMarioOriginal->mFaceAngle.y = 0x7FFF;
-	SMSGetMarDirector()->fireStartDemoCamera("koopa_last2", &mPosition, -1,
-	    mRotation.y, false, nullptr, 0, nullptr, JDrama::TFlagT<u16>(0));
-	SMSGetMarDirector()->fireStreamingMovie(0xE);
+	JDrama::TFlagT<u16> flag(0);
+	MapObjCoronaMarDirector()->fireStartDemoCamera("koopa_last2", &mPosition, -1,
+	    mRotation.y, false, nullptr, 0, nullptr, flag);
+	MapObjCoronaMarDirector()->fireStreamingMovie(0xE);
 	JDrama::TNameRefGen::search<TKoopa>("\x83\x4e\x83\x62\x83\x70")
 	    ->fall();
 	unk29A = 1;
