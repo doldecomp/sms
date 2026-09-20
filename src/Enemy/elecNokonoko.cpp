@@ -58,6 +58,20 @@ static inline f32 ElecCalcDist(const JGeometry::TVec3<f32>& a,
 	return ElecLength(a - b);
 }
 
+// Parked here, not in a header: the map has no symbol for it. The retail
+// object materialises this test into a byte (`li 1`/`li 0`/`clrlwi.`) instead
+// of branching on the compare, which is what an inline predicate with an
+// explicit if/return does -- the same shape TElecNokonoko::hasCarapace() has
+// at its call sites -- and it is also what stops the koopa pointer being
+// shared with the block the test guards.
+static inline bool ElecIsNerve(const TSpineBase<TLiveActor>* spine,
+                               TSpineBase<TLiveActor>::Nerve nerve)
+{
+	if (spine->getCurrentNerve() == nerve)
+		return true;
+	return false;
+}
+
 // The copy-and-subtract distance, the shape AnimalNerve.cpp's file-scope
 // `calcDist` and emario's `EMarioCalcDist` already park, and the second
 // spelling the tree needs beside TVec3::distance(): the by-value first
@@ -1159,12 +1173,12 @@ DEFINE_NERVE(TNerveElecCarapaceMove, TLiveActor)
 {
 	TElecCarapace* carapace = (TElecCarapace*)spine->getBody();
 
-	f32 spinSpeed
-	    = carapace->getNokonoko()->getSaveParams()->getSLCarapaceSpinSpeed();
+	f32 spinSpeed = carapace->getNokonoko()
+	                    ->getSaveParams()->mSLCarapaceSpinSpeed.value;
 	f32 speed
-	    = carapace->getNokonoko()->getSaveParams()->getSLCarapaceSpeed();
+	    = carapace->getNokonoko()->getSaveParams()->mSLCarapaceSpeed.value;
 	f32 turnSpeed
-	    = carapace->getNokonoko()->getSaveParams()->getSLCarapaceTurnSpeed();
+	    = carapace->getNokonoko()->getSaveParams()->mSLCarapaceTurnSpeed.value;
 
 	if (carapace->mStraight)
 		carapace->walkToCurPathNode(speed, turnSpeed, 0.0f);
@@ -1180,19 +1194,13 @@ DEFINE_NERVE(TNerveElecCarapaceMove, TLiveActor)
 	if (carapace->mLanded) {
 		// Once the shell has landed it homes on the koopa, and a near miss
 		// hands it back over.
-		// TODO: the retail object copies the goal point into a local and
-		// subtracts mPosition into it in place before squaring, then calls
-		// TUtil<f32>::sqrt; distance() gets the call but not the stores, and
-		// `TVec3 d = point; d -= mPosition; d.length()` gets the stores but
-		// expands sqrt. Same open shape as TElecNokonoko::isResignationAttack
-		// and TElecCarapace::shoot.
 		f32 catchRange = 64.0f
-		    * carapace->getNokonoko()->getSaveParams()->getSLCarapaceSpeed();
-		if (carapace->getUnk104().getPoint().distance(carapace->mPosition)
+		    * carapace->getNokonoko()->mSaveParams->mSLCarapaceSpeed.value;
+		if (ElecSubDist(carapace->unk104.getPoint(), carapace->mPosition)
 		    < catchRange) {
-			TElecNokonoko* nokonoko = carapace->getNokonoko();
-			if (nokonoko->mSpine->getCurrentNerve()
-			    != &TNerveElecNokonokoCollect::theNerve()) {
+			if (!ElecIsNerve(carapace->getNokonoko()->mSpine,
+			                 &TNerveElecNokonokoCollect::theNerve())) {
+				TElecNokonoko* nokonoko = carapace->getNokonoko();
 				if (nokonoko->mSpine->getCurrentNerve()
 				        != &TNerveSmallEnemyDie::theNerve()
 				    && nokonoko->mSpine->getCurrentNerve()
