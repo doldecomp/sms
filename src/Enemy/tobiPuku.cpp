@@ -430,15 +430,16 @@ void TTobiPuku::calcRootMatrix()
 
 		// Tipping over on landing lifts the body so it pivots on its edge
 		// rather than sinking into the ground.
-		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
+		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), getPosition().x,
 		               mPosition.y
 		                   + 70.0f * mRotation.x / TTobiPuku::mLandAngle,
 		               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	}
 
 	if (isPichiEffect()) {
-		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(1);
-		mFlamePos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		mFlamePos.set(getMActor()->getModel()->getAnmMtx(1)[0][3],
+		              getMActor()->getModel()->getAnmMtx(1)[1][3],
+		              getMActor()->getModel()->getAnmMtx(1)[2][3]);
 		gpMarioParticleManager->emitAndBindToPosPtr(0x177, &mFlamePos, 1,
 		                                            this);
 	}
