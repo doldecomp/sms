@@ -128,8 +128,8 @@ bool TMario::isForceSlip()
 
 BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 {
-	JGeometry::TVec3<f32> offset = pos - mPosition;
-	mPosition                    = pos;
+	const JGeometry::TVec3<f32> offset = pos - mPosition;
+	mPosition                          = pos;
 
 	unk160 += offset;
 	mPrevPosition += offset;
@@ -1265,7 +1265,7 @@ void TMario::thinkHeight()
 	}
 
 	JGeometry::TVec3<f32> point;
-	point.x = getPosition().x + unk15C * JMASSin(mFaceAngle.y);
+	point.x = mPosition.x + unk15C * JMASSin(mFaceAngle.y);
 	point.y = mPosition.y;
 	point.z = mPosition.z + unk15C * JMASCos(mFaceAngle.y);
 
