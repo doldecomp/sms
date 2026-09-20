@@ -137,12 +137,21 @@ void TArrowControl::updateAlpha()
 	    JGeometry::TUtil<s32>::clamp(iVar3 * 8 + mPane->getAlpha(), 0, 255));
 }
 
-// incorrect
+// setBounds is in-class, so the JUTRect temporary is one more level
+// (an inlined call's argument). That puts the 4-arg ctor at depth 5
+// (never) when updateScale expands into movementOption, and retail's
+// weak 0x30 copy is `bl`'d from there. The receiver is TArrowControl*
+// so mPane is loaded after the ctor, not bound before it.
+static inline void OptionSetShiftedBounds(TArrowControl* arrow, int move)
+{
+	arrow->mPane->setBounds(JUTRect(arrow->mBounds.x1 - move, arrow->mBounds.y1,
+	                               arrow->mBounds.x2, arrow->mBounds.y2));
+}
+
 void TArrowControl::updateScale()
 {
 	int move = calcMoveX(mPhase);
-	mPane->setBounds(
-	    JUTRect(mBounds.x1 - move, mBounds.y1, mBounds.x2, mBounds.y2));
+	OptionSetShiftedBounds(this, move);
 
 	mPhase = JGeometry::TUtil<int>::mod(mPhase + 101, 100);
 }
@@ -152,10 +161,6 @@ int TArrowControl::calcMoveX(int phase) const
 	int iVar3 = phase < 50 ? phase : 100 - phase;
 	f32 fVar1 = iVar3 / 50.0f;
 	f32 fVar2 = 1.0f - fVar1;
-	// TODO: the accumulation order is the ROM's, but MWCC still expands
-	// JUTRect::JUTRect(int, int, int, int) here where the ROM calls the weak
-	// copy; the remaining diff in movementOption is that call plus the
-	// register pair holding the int-to-float magic constant.
 	return fVar2 * -8.0f * fVar2 + fVar1 * fVar2 + fVar1 * 8.0f * fVar1;
 }
 
@@ -976,9 +981,19 @@ bool TOptionControl::movementCard2Option()
 	return false;
 }
 
+// +8 of low region in movementOption (target 0xa0, ours 0x98 after the
+// JUTRect ctor depth fix). One site, one binder.
+// TODO: the JUTRect temp still sits at 0x58(r1) vs retail 0x64 (0xC);
+// frame and every opcode match.
+static inline TArrowControl* OptionBackArrow(const TOptionControl* p)
+{
+	TArrowControl* arrow = p->mBackArrow;
+	return arrow;
+}
+
 bool TOptionControl::movementOption()
 {
-	mBackArrow->update();
+	OptionBackArrow(this)->update();
 	movementCommon();
 
 	checkInput();
@@ -1025,6 +1040,7 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 	// TODO: 8 bytes of frame short (target 0x30, ours 0x28); every
 	// instruction matches. A TU-local binder over mRumbleOption at any one
 	// site here is +0x10, not +8, so the rung is wrong, not the class.
+	// A raw gpMSound binder above the startSound bl is +0 (level-above-bl).
 	if (mSelectedOption != type || initial_options_entry) {
 		mSelectedOption = type;
 		switch (type) {
