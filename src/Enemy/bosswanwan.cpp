@@ -582,8 +582,8 @@ void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		for (int i = 0; i < getColNum(); ++i) {
 			THitActor* actor = getCollision(i);
 			if (mOwner->getHitPoints() != 0
-			    && actor->getActorType() == 0x80000001)
-				actor->receiveMessage(this, HIT_MESSAGE_UNKA);
+			    && actor->mActorType == 0x80000001)
+				actor->receiveMessage(mOwner, HIT_MESSAGE_UNKA);
 		}
 	}
 
