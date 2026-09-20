@@ -474,17 +474,17 @@ BOOL TBossTelesaTongue::receiveMessage(THitActor* sender, u32 message)
 // whole function falls out. The block-scoped `actor` is the ROM's second copy
 // of the collision pointer (`addi r28, r4, 0` inside the `if`, with the
 // unnamed CSE temp kept alive across the materialised bool) and it is also
-// worth the +4 of pool the frame needs.
-// TODO: one instruction left -- the ROM loads mCollisions[i] into r3 and
-// copies it to r4 before the mask test, i.e. it evaluates the element once
-// more than we do; every other instruction and the 0x38 frame are exact.
+// worth the +4 of pool the frame needs; the element goes through a named
+// `collision` local (the ROM's extra `addi r4, r3, 0`) and Mario's position
+// through SMS_GetMarioPos(), whose reference temporary is the last +8.
 void TBossTelesaKillSmallEnemy::checkHit()
 {
 	unk6C = false;
 
 	for (int i = 0; i < mColCount; ++i) {
-		if (mCollisions[i]->checkActorType(ACTOR_TYPE_ENEMY)) {
-			TLiveActor* actor = (TLiveActor*)mCollisions[i];
+		THitActor* collision = mCollisions[i];
+		if (collision->checkActorType(ACTOR_TYPE_ENEMY)) {
+			TLiveActor* actor = (TLiveActor*)collision;
 
 			if (actor->getActorType() == 0x10000013)
 				((THamuKuri*)actor)->selectCapHolder();
@@ -493,7 +493,7 @@ void TBossTelesaKillSmallEnemy::checkHit()
 		}
 	}
 
-	JGeometry::TVec3<f32> toMario = *gpMarioPos;
+	JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
 	toMario.sub(mPosition);
 	toMario.y = 0.0f;
 
