@@ -638,25 +638,45 @@ void TFireWanwanTailHit::clipNodes(JDrama::TGraphics*) { }
 // (@7893) and 10000.0f (@7894); ours reverses the two groups, so one of
 // init()/performNodes() is still missing its 4.0f/0.25f use. Definition
 // order already matches the map.
+static inline TFireWanwan* FireWanwanTailOwner(const TFireWanwanTailHit* p)
+{
+	return p->mOwner;
+}
+
+static inline TTailRubber* FireWanwanTailRubber(const TFireWanwanTailHit* p)
+{
+	return p->unkA4;
+}
+
+static inline TFireWanwanSaveLoadParams*
+FireWanwanTailParams(const TFireWanwanTailHit* p)
+{
+	return FireWanwanTailOwner(p)->getSaveParam2();
+}
+
 void TFireWanwanTailHit::movementBody(const JGeometry::TVec3<f32>& param_1)
 {
 	if (mOwner->isHungTailNerve() && !mOwner->unk194->isTaken()
 	    && !mOwner->isReadyToFly()) {
-		unkA4->mBoundRate
-		    = mOwner->getSaveParam2()->mRubberBoundRateHitting.get();
-		unkA4->mDecay = mOwner->getSaveParam2()->mRubberDecayHitting.get();
+		FireWanwanTailRubber(this)->mBoundRate
+		    = FireWanwanTailParams(this)->mRubberBoundRateHitting.get();
+		FireWanwanTailRubber(this)->mDecay
+		    = FireWanwanTailParams(this)->mRubberDecayHitting.get();
 	} else if (mOwner->isAttacking()) {
-		unkA4->mBoundRate = 0.7f;
-		unkA4->mDecay     = 0.4f;
+		FireWanwanTailRubber(this)->mBoundRate = 0.7f;
+		FireWanwanTailRubber(this)->mDecay     = 0.4f;
 	} else {
-		unkA4->mBoundRate = mOwner->getSaveParam2()->mRubberBoundRate.get();
-		unkA4->mDecay     = mOwner->getSaveParam2()->mRubberDecay.get();
+		FireWanwanTailRubber(this)->mBoundRate
+		    = FireWanwanTailParams(this)->mRubberBoundRate.get();
+		FireWanwanTailRubber(this)->mDecay
+		    = FireWanwanTailParams(this)->mRubberDecay.get();
 	}
 
 	if (mOwner->isFlying())
-		unkA4->mMaxLength = mOwner->getSaveParam2()->mTailMaxLength.get();
+		FireWanwanTailRubber(this)->mMaxLength
+		    = FireWanwanTailParams(this)->mTailMaxLength.get();
 	else
-		unkA4->mMaxLength = 10000.0f;
+		FireWanwanTailRubber(this)->mMaxLength = 10000.0f;
 
 	unkA4->unk0[0].mPos = param_1;
 	unkA4->movement();
@@ -696,7 +716,7 @@ BOOL TFireWanwanTailHit::moveRequest(const JGeometry::TVec3<f32>& param_1)
 	gpMap->isTouchedOneWallAndMoveXZ(&next.x, next.y, &next.z, 70.0f);
 	unkA4->unk0.back().mPos = next;
 	mPosition               = next;
-	unk74.translation(next);
+	unk74.translation(mPosition);
 	return true;
 }
 
