@@ -329,6 +329,19 @@ static inline const JGeometry::TVec3<f32>& MarioRunGetNormal2(const TBGCheckData
 	return MarioRunGetNormal(p);
 }
 
+// By-value fork over TParamRT<f32>::get(): +8 of pool per live site in
+// doRunning. The named-local binder is the extra +8 that lands 0xc0.
+static inline f32 MarioRunParam(const TParamRT<f32>& p)
+{
+	return p.get();
+}
+
+static inline f32 MarioRunParamBind(const TParamRT<f32>& p)
+{
+	f32 v = p.get();
+	return v;
+}
+
 void TMario::slideProcess(f32 baseAcc, f32 friction)
 {
 	const TBGCheckData* ground = mGroundPlane;
@@ -488,21 +501,21 @@ void TMario::doStopping() { }
 
 void TMario::doRunning()
 {
-	f32 sp = mIntendedMag < mRunParams.mMaxSpeed.get()
-	             ? mRunParams.mMaxSpeed.get()
-	             : mIntendedMag;
+	f32 maxSp = mRunParams.mMaxSpeed.get();
+	f32 sp    = mIntendedMag < maxSp ? mIntendedMag : maxSp;
 
 	if (onYoshi())
-		sp *= mYoshiParams.mRunYoshiMult.get();
+		sp *= MarioRunParam(mYoshiParams.mRunYoshiMult);
 
 	if (mForwardVel <= 0.0f) {
-		mForwardVel += mRunParams.mVelMinusBrake.get();
+		mForwardVel += MarioRunParam(mRunParams.mVelMinusBrake);
 	} else if (mForwardVel <= sp) {
-		mForwardVel += mRunParams.mAddBase.get()
-		               - mForwardVel * mRunParams.mAddVelDiv.get();
-	} else if (mGroundPlane->mNormal.y >= mRunParams.mDecStartNrmY.get()) {
-		mForwardVel -= mRunParams.mDecBrake.get();
-		mForwardVel -= mYoshiParams.mDecBrake.get();
+		mForwardVel += MarioRunParam(mRunParams.mAddBase)
+		               - mForwardVel * MarioRunParam(mRunParams.mAddVelDiv);
+	} else if (getGroundPlane()->getNormal().y
+	           >= MarioRunParam(mRunParams.mDecStartNrmY)) {
+		mForwardVel -= MarioRunParam(mRunParams.mDecBrake);
+		mForwardVel -= MarioRunParam(mYoshiParams.mDecBrake);
 	}
 
 	if (mForwardVel < 0.0f)
@@ -524,15 +537,17 @@ void TMario::doRunning()
 	}
 
 	if (onYoshi())
-		rotSp = (s16)((f32)rotSp * mYoshiParams.mRotYoshiMult.get());
+		rotSp = (s16)((f32)rotSp
+		              * MarioRunParamBind(mYoshiParams.mRotYoshiMult));
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		rotSp = mRunParams.mDashRotSp.get();
 
 	if (isRunningInWater()) {
 		mForwardVel *= -(
-		    (((mFloorPosition.z - mPosition.y) / mRunParams.mSwimDepth.get())
-		     * (1.0f - mRunParams.mInWaterBrake.get()))
+		    (((mFloorPosition.z - mPosition.y)
+		      / MarioRunParamBind(mRunParams.mSwimDepth))
+		     * (1.0f - MarioRunParam(mRunParams.mInWaterBrake)))
 		    - 1.0f);
 	}
 
@@ -1150,12 +1165,12 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 		}
 		if (isSlipStart()) {
 			if (mWallPlane != nullptr) {
-				s16 wallAng = matan(mWallPlane->getNormal().z,
-				                    mWallPlane->getNormal().x);
+				s16 wallAng = matan(MarioRunGetNormal(mWallPlane).z,
+				                    MarioRunGetNormal(mWallPlane).x);
 
 				f32 newMag
-				    = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ)
-				      * 0.9;
+				    = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
+				newMag *= 0.9;
 				if (newMag < 4.0f)
 					newMag = 4.0f;
 
