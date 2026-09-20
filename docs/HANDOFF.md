@@ -68,7 +68,7 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grpve` MarioJump ([MarioJump](baa4f7ad-fb76-44db-af1e-c79646c35b1f)): +2 exact (`rocketing`, `diving`) via getFludd / getIntendedMag + TU-local fludd binder. All **62.04→62.10**, Game **54.07→54.14**, exact **11,383→11,385**. Park jumpMain/jumpingBasic/hipAttacking frame holes and slipFalling FPR.
 - Yielded `grpvc` killer ([killer](04977864-8348-428c-8317-c99ec640d998)): +0; park ChaseFly/NormalFly frames + register-only.
 - Yielded `grpvd` MapObjPinna ([MapObjPinna](b8704e92-16c3-4a6b-a5d2-46ab846cfa09)): +0; park Coaster a=b-c, Ferris FPR, Merry +8, Shell slots, AmiKing CSE, ShellCup addi.
-- Running: `grpvf` / MarioSound ([MarioSound](2a194a92-6f92-4dfe-a316-431a2b56ea93)). Refill: MarioReceiveMsg.
+- Running: `grpvf` / MarioSound ([MarioSound](2a194a92-6f92-4dfe-a316-431a2b56ea93)); `grpvg` / MarioReceiveMsg ([MarioReceiveMsg](80cd0104-162c-4497-b87a-c2b2eda658a1)).
 - Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
