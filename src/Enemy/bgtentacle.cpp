@@ -560,6 +560,13 @@ void TBGTentacle::TNode::calcVelocity(TBGTentacle* param_1,
 	}
 }
 
+// by-value int fork over mTimeInCurrentState: +4 of low pool per site
+// (bgtentacle ladder 344). calcPosition's local_1c sits 4 bytes low.
+static inline int BGTentacleGetTimeInState(TBGTentacle* t)
+{
+	return t->mTimeInCurrentState;
+}
+
 void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 {
 	if (unk24)
@@ -585,11 +592,6 @@ void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 		return;
 	}
 
-	// TODO: local_1c sits 4 bytes low (0x40 for retail's 0x44) under a
-	// conversion buffer both sides put at 0x50, at the right total frame:
-	// one more 4-granular by-value read is missing.  Each `getState()` here
-	// is +4, `getPosition()`/`getVelocity()` +8 each; a TU-local fork over
-	// getState() and `isUnk24()` are both +0.
 	JGeometry::TVec3<f32> local_1c = unk18;
 	local_1c -= getPosition();
 	f32 len = local_1c.squared();
@@ -601,7 +603,7 @@ void TBGTentacle::TNode::calcPosition(TBGTentacle* param_1)
 			fVar2 = 1.0f;
 		} else {
 			if (param_1->getState() == 8) {
-				if (param_1->mTimeInCurrentState < 60)
+				if (BGTentacleGetTimeInState(param_1) < 60)
 					fVar2 = (param_1->mTimeInCurrentState * 0.5f) / 60.0f;
 				else
 					fVar2 = 0.5f;
