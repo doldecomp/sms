@@ -118,6 +118,8 @@ public:
 	void bumpUpZ();
 	void bumpDownZ();
 
+	f32 getBumpLimit() const { return unk144; }
+
 public:
 	/* 0x138 */ s32 unk138;
 	/* 0x13C */ J3DJoint* unk13C;

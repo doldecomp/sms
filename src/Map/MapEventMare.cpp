@@ -628,20 +628,11 @@ u32 TMareEventBumpyWall::touchWater(THitActor*)
 	return 1;
 }
 
-// TODO: all four bump* functions share one residue: retail's locals sit 4
-// bytes higher (`trans` at 0x14(r1), ours at 0x10) and retail keeps the
-// 0x144 limit in f1 across the `bge`, so its else arm needs no reload.
-// The frame total already matches (0x30), so this is 4 bytes of low region.
-// Exhausted: the two-argument `startSoundActor(id, &mPosition)` overload
-// (+8, frame 0x38), `&getPosition()` as the position argument (+0 and four
-// extra instructions), `setJointTransX(unk13C, trans.x)` after the store
-// (MWCC forwards the store, inert).
 void TMareEventBumpyWall::bumpDownZ()
 {
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
 	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
-	f32 limit = -unk144;
-	if (z > limit) {
+	if (z > -getBumpLimit()) {
 		if (!TMapObjBase::isDemo()) {
 			z -= unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -655,8 +646,9 @@ void TMareEventBumpyWall::bumpDownZ()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.z = limit;
-	TMapObjBase::setJointTransZ(unk13C, limit);
+	z = -unk144;
+	trans.z = z;
+	TMapObjBase::setJointTransZ(unk13C, z);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);
@@ -667,8 +659,7 @@ void TMareEventBumpyWall::bumpUpZ()
 {
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
 	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
-	f32 limit = unk144;
-	if (z < limit) {
+	if (z < getBumpLimit()) {
 		if (!TMapObjBase::isDemo()) {
 			z += unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -682,8 +673,9 @@ void TMareEventBumpyWall::bumpUpZ()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.z = limit;
-	TMapObjBase::setJointTransZ(unk13C, limit);
+	z = unk144;
+	trans.z = z;
+	TMapObjBase::setJointTransZ(unk13C, z);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);
@@ -694,8 +686,7 @@ void TMareEventBumpyWall::bumpDownX()
 {
 	f32 x = TMapObjBase::getJointTransX(unk13C);
 	JGeometry::TVec3<f32> trans(x, 0.0f, 0.0f);
-	f32 limit = -unk144;
-	if (x > limit) {
+	if (x > -getBumpLimit()) {
 		if (!TMapObjBase::isDemo()) {
 			x -= unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -709,8 +700,9 @@ void TMareEventBumpyWall::bumpDownX()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.x = limit;
-	TMapObjBase::setJointTransX(unk13C, limit);
+	x = -unk144;
+	trans.x = x;
+	TMapObjBase::setJointTransX(unk13C, x);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);
@@ -721,8 +713,7 @@ void TMareEventBumpyWall::bumpUpX()
 {
 	f32 x = TMapObjBase::getJointTransX(unk13C);
 	JGeometry::TVec3<f32> trans(x, 0.0f, 0.0f);
-	f32 limit = unk144;
-	if (x < limit) {
+	if (x < getBumpLimit()) {
 		if (!TMapObjBase::isDemo()) {
 			x += unk140;
 			SMSRumbleMgr->start(0x13, -1, (f32*)nullptr);
@@ -736,8 +727,9 @@ void TMareEventBumpyWall::bumpUpX()
 		unk14C->moveTrans(trans);
 		return;
 	}
-	trans.x = limit;
-	TMapObjBase::setJointTransX(unk13C, limit);
+	x = unk144;
+	trans.x = x;
+	TMapObjBase::setJointTransX(unk13C, x);
 	unk14C->remove();
 	unk148->setUpTrans(trans);
 	SMSRumbleMgr->stop(0x13);
