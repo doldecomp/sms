@@ -1012,6 +1012,12 @@ static inline TWaterEmitInfo* BosspakkunWaterEmitInfo(TBossPakkun* p)
 	return info;
 }
 
+static inline MSound* BosspakkunSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 // Binding level over a raw member read, worth +16 of low region in
 // TBossPakkun::showMessage (batch 127).
 static inline TMarDirector* BosspakkunGetMarDirector()
@@ -1115,36 +1121,45 @@ void TBossPakkun::gotHipDropDamage()
 	mState = BOSSPAKU_STATE_NORMAL;
 
 	if (getHitPoints() == 0) {
-		if (&TNerveBPPreDie::theNerve() == mSpine->getLatestNerve())
+		const TNerveBase<TLiveActor>* nerve = &TNerveBPPreDie::theNerve();
+		if (mSpine->getLatestNerve() == nerve)
 			return;
-		if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve())
+		nerve = &TNerveBPDie::theNerve();
+		if (mSpine->getLatestNerve() == nerve)
 			return;
 
 		mSpine->setNext(&TNerveBPPreDie::theNerve());
 
-		if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_DOWN))
+		if (BosspakkunSound()->gateCheck(MSD_SE_BS_BSPAKU_DOWN))
 			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_BSPAKU_DOWN, &mPosition, 0,
 			                          nullptr, 0, 4);
 		return;
 	}
 
-	if (&TNerveBPTumbleOut::theNerve() == mSpine->getLatestNerve())
+	const TNerveBase<TLiveActor>* tumbleOut = &TNerveBPTumbleOut::theNerve();
+	if (mSpine->getLatestNerve() == tumbleOut)
 		return;
 
-	if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_DAMAGE))
+	if (BosspakkunSound()->gateCheck(MSD_SE_BS_BSPAKU_DAMAGE))
 		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_BSPAKU_DAMAGE, &mPosition, 0,
 		                          nullptr, 0, 4);
 
-	if (gpMarDirector->unk7D == 4) {
-		mSpine->reset();
+	if (BosspakkunGetMarDirector()->unk7D == 4) {
+		// getSpine() at this one reset is the last +8; the sibling
+		// else-arm reset stays on the raw member.
+		getSpine()->reset();
 		mSpine->setNext(&TNerveBPTakeOff::theNerve());
-		mSpine->pushNerve(&TNerveBPGetUp::theNerve());
-		mSpine->pushNerve(&TNerveBPStompReact::theNerve());
+		const TNerveBase<TLiveActor>* getUp = &TNerveBPGetUp::theNerve();
+		mSpine->pushNerve(getUp);
+		const TNerveBase<TLiveActor>* stomp = &TNerveBPStompReact::theNerve();
+		mSpine->pushNerve(stomp);
 	} else {
 		mSpine->reset();
 		mSpine->setNext(&TNerveBPWait::theNerve());
-		mSpine->pushNerve(&TNerveBPGetUp::theNerve());
-		mSpine->pushNerve(&TNerveBPStompReact::theNerve());
+		const TNerveBase<TLiveActor>* getUp = &TNerveBPGetUp::theNerve();
+		mSpine->pushNerve(getUp);
+		const TNerveBase<TLiveActor>* stomp = &TNerveBPStompReact::theNerve();
+		mSpine->pushNerve(stomp);
 	}
 }
 
@@ -1272,21 +1287,21 @@ const char** TBossPakkun::getBasNameTable() const { return bosspakkun_bastable; 
 
 void TBossPakkun::setGroundCollision()
 {
-	// TODO: retail's two guards compare `cmplw nerve, instance`; writing them
-	// as `mSpine->getLatestNerve() == &...::theNerve()` flips the operands but
-	// lets MWCC hoist and CSE both expansions above the static-init guards
-	// (77.1%). Combined `if (a || b)` adds a dead `bne`. The remaining
-	// difference is these two compare operand orders.
-	if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve())
+	// Retail compares `cmplw nerve, instance`. Naming the instance keeps
+	// theNerve() from being CSE'd above its static-init guard, then the
+	// `getLatestNerve() == named` compare emits retail's operand order.
+	const TNerveBase<TLiveActor>* nerve = &TNerveBPDie::theNerve();
+	if (mSpine->getLatestNerve() == nerve)
 		return;
-	if (&TNerveBPTumbleOut::theNerve() == mSpine->getLatestNerve())
+	nerve = &TNerveBPTumbleOut::theNerve();
+	if (mSpine->getLatestNerve() == nerve)
 		return;
 	if (!mMapCollisionManager)
 		return;
 
 	JGeometry::SMatrix34C<f32> mtx;
 	mtx.set(getModel()->getAnmMtx(2));
-	if (mMapCollisionManager->getUnk8())
+	if (mMapCollisionManager->unk8)
 		mMapCollisionManager->getUnk8()->moveMtx(mtx);
 }
 
@@ -2092,6 +2107,20 @@ DEFINE_NERVE(TNerveBPTakeOff, TLiveActor)
 	return FALSE;
 }
 
+// TODO: park for a shared header. PathNode.hpp's getPoint() reaches the
+// node's actor through getPosition(); reading mPosition raw instead drops
+// the +8 reference temp. Header round 27 measured the same change in the
+// header as a wash (closes TNerveBPTouchDown, loses TNerveBPTakeOff and
+// isReachedToGoal), so it stays TU-local.
+static inline const JGeometry::TVec3<f32>&
+BosspakkunGetPoint(const TPathNode& node)
+{
+	if (node.unk0 != 0)
+		return node.unk0->mPosition;
+
+	return node.unk4;
+}
+
 DEFINE_NERVE(TNerveBPFly, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
@@ -2123,26 +2152,12 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 	// TODO: 99.8%, frame-exact 0xb8. BosspakkunParams lands the missing 8;
 	// the remaining ~s are the toGoal / flyToCurPathNode temps 8 high
 	// (allocation order). Swapping turn/speed declaration loses the f31
-	// hoist of mTurnSpeed.
+	// hoist of mTurnSpeed. BosspakkunGetPoint on toGoal drops the frame
+	// 8 (99.7%); declaring turn first loads f31 early (98.6%).
 	f32 speed = BosspakkunParams(boss)->mSLFlySpeed.get();
 	boss->flyToCurPathNode(speed, turn);
 
 	return FALSE;
-}
-
-// TODO: park for a shared header. PathNode.hpp's getPoint() reaches the
-// node's actor through getPosition(); reading mPosition raw instead drops
-// the +8 reference temp that keeps TNerveBPTouchDown at frame 0x50 vs
-// retail 0x48. Header round 27 measured the same change in the header as a
-// wash (closes this nerve, loses TNerveBPTakeOff and isReachedToGoal), so
-// it stays TU-local and is used only here.
-static inline const JGeometry::TVec3<f32>&
-BosspakkunGetPoint(const TPathNode& node)
-{
-	if (node.unk0 != 0)
-		return node.unk0->mPosition;
-
-	return node.unk4;
 }
 
 // +4 setter rung (MapObjBianco ladder 337): lands the goal TVec3 at
