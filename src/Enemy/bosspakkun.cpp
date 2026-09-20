@@ -1726,15 +1726,16 @@ DEFINE_NERVE(TNerveBPPivot, TLiveActor)
 	if (spine->getTime() == 0)
 		boss->changeBck(BOSSPAKU_BCK_WAIT);
 
-	JGeometry::TVec3<f32> toMario = boss->mPosition;
+	JGeometry::TVec3<f32> toMario = boss->getPosition();
 	toMario.x -= gpMarioPos->x;
 	toMario.y -= gpMarioPos->y;
 	toMario.z -= gpMarioPos->z;
 
 	f32 reach = boss->getSaveParam2()->mSLSwingLength.get();
+	reach *= reach;
 
 	f32 turn;
-	if (toMario.squared() < reach * reach)
+	if (toMario.squared() < reach)
 		turn = boss->getSaveParam2()->mSLPivotSpeedAware.get();
 	else
 		turn = boss->getSaveParam2()->mSLPivotSpeed.get();
@@ -2121,6 +2122,10 @@ DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_FLY)) {
 		boss->mPosition.y -= 5.0f;
 
+		// TODO: 99.9%, frame 0x50 vs retail 0x48. The by-value TVec3 copy of
+		// getUnk104().getPoint() is instruction-correct (lwz/stw); the const
+		// TVec3& form lands the frame but drops the copy. Declare-then-assign
+		// and a named-ref-plus-copy are both still 8 long.
 		JGeometry::TVec3<f32> goal = boss->getUnk104().getPoint();
 		if (goal.y > boss->mPosition.y) {
 			boss->mPosition.y = goal.y;
