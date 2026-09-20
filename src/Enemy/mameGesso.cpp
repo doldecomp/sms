@@ -642,6 +642,7 @@ DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 		self->setWaitAnm();
 
 	if (self->checkCurAnmEnd(0)) {
+		char trash[8];
 		int wait = self->getGroundPlane()->isWaterSurface()
 		               ? self->unk194->mSLWaitTimeInWater.get()
 		               : self->unk194->mSLWaitTimeOnGround.get();
