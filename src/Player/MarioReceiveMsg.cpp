@@ -89,38 +89,30 @@ void TMario::getCoinBlue()
 	emitGetCoinEffect(&mPosition);
 }
 
-// TODO: frame 0x1a8 vs 0x220. Every instruction matches. The gap splits into
-// two independent regions, which is worth knowing before applying more levers:
+// TODO: frame 0x1a8 vs 0x220. Every instruction matches (100%, 2225 insns,
+// only `~` stack operands). The `TVec3::sub` return temp stays at 0x150 on
+// both sides, so accessor/binder levers that grow the low region from 0xc
+// push a matching slot and must not be retried.
 //
-//   region                                    target  ours   short by
-//   above `diff` (incl. the two fcvt temps)     0x24   0x24      0
-//   between `diff` and the first `tmp`          0x44   0x00     68
-//   between the `tmp` pair and the `sub` temp   0x38   0x08     48
-//   below the `sub` temp (outgoing args +
-//     inline-expansion temporaries)            0x144  0x118     44
+// Named-block holes, ours ascending vs retail:
+//   tmp pair     0x164/0x170 vs 0x194/0x1a0
+//   68-byte hole     (none) vs 0x1ac..0x1ef
+//   `diff`           0x17c vs 0x1f0
+//   fcvt pair    0x188/0x190 vs 0x200/0x208
+// The 4-byte gap under retail's `diff` (0x1fc..0x1ff) appears for free once
+// the 68-byte hole is filled (alignment); it is not a separate local.
 //
-// Accessor levers only ever feed the bottom region: getStatus() (+32) and
-// getHeldObject() (+8) take it from 0x118 to 0x138, leaving 12. Going further
-// overshoots it -- getHolder() (+16), sender->getActorType() (+40) and
-// sender->getRotation() (+8) together put it 60 bytes past the target while
-// the two middle regions stay empty, so they are reverted. The 116 bytes in
-// the middle are named locals the original declared between `diff` and the
-// endpoint swaps, and there is no evidence yet for what they were.
-//
-// Closure batch 120 re-read the slot map after the rest of the unit closed,
-// and the split is now exact. Ours, ascending: 0x164 / 0x170 / 0x17c three
-// 12-byte vectors, an 8-byte hole, an f64 pair at 0x190, saves at 0x19c.
-// Retail: 0x194 / 0x1a0 two vectors, a **68-byte hole**, the third vector at
-// 0x1f0, a **12-byte** hole, the f64 pair at 0x208, saves at 0x214. So the
-// 120 bytes are 48 of low region (six binding levels, the same +8-per-
-// expansion rung that closed getGesso above and TMario::perform in MarioMain),
-// one 68-byte object between the second and third vector, and 4 more between
-// the third vector and the f64. 68 is not a JGeometry size; a Mtx plus a
-// 20-byte object, or a 68-byte struct, would fit.
+// Measured (reverted; unused locals are padding): `Mtx` then `TVec3` then
+// `TVec2` declared after `diff` fills the 68-byte hole; a second `Mtx`
+// declared last in the `mHolder == nullptr` arm, just before
+// `changePlayerStatus(WIRE_WAIT)`, fills the 48 below the tmp pair. Together
+// they land frame 0x220 with zero mismatches. `getOnWirePosAngle` uses three
+// Mtxs plus TVec3s but is a `bl` from this TU and cannot be the source: it
+// would replace the matched `sub`+`matan` sequence. No map-UNUSED helper in
+// this TU is left to host those objects. Parked for a named use, not a
+// second padding pass.
 BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 {
-	// TODO: GMSE01 instructions match apart from stack operands: frame 0x180
-	// vs 0x220, wire direction/swap locals and conversion scratch slots.
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
 		return FALSE;
 
