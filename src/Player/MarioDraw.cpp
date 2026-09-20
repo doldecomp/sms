@@ -2263,15 +2263,10 @@ void TMario::drawLogic()
 
 void TMario::boxDrawPrepare(MtxPtr mtx)
 {
-	// TODO: 8 bytes of frame short, and they belong in the named-local
-	// region: the ROM leaves a dead 4-byte slot above psave (0x8c) and
-	// another between psave and wpsave (0x6c). `getPosition()` over
-	// `mPosition` lands the same 8 bytes in the *temporary* region instead
-	// and shifts every local by 8.
 	f32 psave[7];
 	GXGetProjectionv(psave);
 
-	f32 wpsave[5];
+	f32 wpsave[6];
 	GXGetViewportv(wpsave);
 
 	JGeometry::TVec3<f32> pos = mPosition;
