@@ -189,6 +189,9 @@ void MSRandPlay::randPlay(u32 vec_idx)
 
 MSoundSE::MSoundSE() { }
 
+// TODO: construct is instruction-exact except frame 0xa0 vs 0x60
+// (64 bytes of dead low region). Same unnamed-carrier class as
+// MSSetSoundTL's 104-byte hole; do not pad.
 void MSoundSE::construct()
 {
 	mObj = new MSoundSE;
@@ -205,9 +208,9 @@ void MSoundSE::construct()
 	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 	MSRandPlay::construct(MSD_SE_OBJ_BIRD_DOL_CHUN, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(MSD_SE_OBJ_BIRD_BIA_1, 0x56, 0xf3,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 0x56, 0xf3,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 8,    0xd,   JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_BIRD_BIA_1, 0x2d, 0xad,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 0x2d, 0xad,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 0x2d, 0xad,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 	// clang-format on
 
 	// clang-format off
@@ -355,7 +358,7 @@ void MSoundSE::construct()
 
 	{
 		MSSetSoundGrp* grp = new MSSetSoundGrp(
-		    0, "カモメ", 3, 2, 13, 2, 3.0f, 1, 44.0f, 3.0f, 1.0f, 1.0f, 0.0f,
+		    0, "カモメ", 3, 2, 0x13, 2, 3.0f, 1, 44.0f, 3.0f, 1.0f, 1.0f, 0.0f,
 		    0xf, 200.0f, 0xb4, 1.0f, 1.0f, 0.0f, false);
 		// clang-format off
 		grp->append(new MSSetSoundMember(MSD_SE_OBJ_KAMOME_SOLO, nullptr, 60.0f));
@@ -370,6 +373,8 @@ void MSoundSE::construct()
 		// clang-format on
 	}
 }
+
+static inline u32 msWeightAt(u32* arr, u32 i) { return arr[i]; }
 
 u32 MSoundSE::getRandomID(u32 id)
 {
@@ -403,7 +408,7 @@ u32 MSoundSE::getRandomID(u32 id)
 
 	f32 dVar10 = 0.0f;
 	for (u32 j = 0; j < i; ++j)
-		dVar10 += (f32)local_a0[j];
+		dVar10 += (f32)msWeightAt(local_a0, j);
 
 	f32 dVar9 = JALCalc::getRandom_0_1();
 	f32 fVar1 = 0.0;
