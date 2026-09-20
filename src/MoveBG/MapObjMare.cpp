@@ -48,6 +48,26 @@ static f32 mGrowEndFrame   = 175.0f;
 /// Second emitter position for the waterfall's upper half.
 static JGeometry::TVec3<f32> fall_upper_pos(2827.0f, 8604.0f, 7202.0f);
 
+// Binding level over a raw member read, worth +16 of low region in
+// TMuddyBoat::kill (batch 127).
+static inline MSound* MapObjMareGetMSound()
+{
+	MSound* mSound = gpMSound;
+	return mSound;
+}
+
+static inline J3DModel* MapObjMareGetModel(const TMapObjBase* object)
+{
+	return object->getModel();
+}
+
+static inline J3DFrameCtrl* MapObjMareGetBckCtrl(const TMapObjBase* object)
+{
+	MActor* actor         = object->getMActor();
+	J3DFrameCtrl* control = actor->getFrameCtrl(ANM_TYPE_BCK);
+	return control;
+}
+
 u32 TCogwheelScale::touchWater(THitActor* water)
 {
 	if (mWaterAmount < mWaterAmountMax)
@@ -56,10 +76,15 @@ u32 TCogwheelScale::touchWater(THitActor* water)
 	return 1;
 }
 
+static inline f32 CogwheelSpeed(const TCogwheel* wheel)
+{
+	return wheel->mSpeed;
+}
+
 BOOL TCogwheelScale::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP) {
-		mCogwheel->mSpeed = mPushSpeed + mCogwheel->mSpeed;
+		mCogwheel->mSpeed = mPushSpeed + CogwheelSpeed(mCogwheel);
 		return true;
 	}
 
@@ -743,7 +768,7 @@ void TMapObjPuncher::control()
 
 	case 2:
 		soundBas(MSD_SE_OBJ_PUNCHER_RETURN, 101.0f,
-		         getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate());
+		         MapObjMareGetBckCtrl(this)->getRate());
 		if (animIsFinished()) {
 			JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 			emitAndScale(PARTICLE_MS_ENM_DISAP_A_W, 0, &mPosition, scale);
@@ -806,14 +831,6 @@ void TMuddyBoat::moveByWater()
 
 void TMuddyBoat::calcRootMatrix() { }
 
-// Binding level over a raw member read, worth +16 of low region in
-// TMuddyBoat::kill (batch 127).
-static inline MSound* MapObjMareGetMSound()
-{
-	MSound* mSound = gpMSound;
-	return mSound;
-}
-
 void TMuddyBoat::kill()
 {
 	mSpeed     = 0.0f;
@@ -824,7 +841,7 @@ void TMuddyBoat::kill()
 	MapObjMareGetMSound()->startSoundActor(MSD_SE_OBJ_DORO_BROKEN, &mPosition, 0, nullptr,
 	                          0, 4);
 
-	MTXCopy(getModel()->getAnmMtx(0), getModel()->getBaseTRMtx());
+	MTXCopy(MapObjMareGetModel(this)->getAnmMtx(0), getModel()->getBaseTRMtx());
 
 	offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 	onLiveFlag(LIVE_FLAG_UNK10);
