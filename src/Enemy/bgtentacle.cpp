@@ -270,11 +270,14 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	gpMap->isTouchedOneWallAndMoveXZ(&local_EC.x, local_EC.y, &local_EC.z,
 	                                 150.0f);
 
-	// TODO: tentacle inline?
+	// TODO: tentacle inline?  The frame is still 0x10 short of retail's
+	// 0x110: `.get()` over `.value` and `getOwner()` over the raw member are
+	// +8 each, and a named `TBGTentacle* owner` for the r30 binding retail
+	// makes at the `getOwner()->getPosition()` below costs two instructions.
 	JGeometry::TVec3<f32> delta = local_EC;
 	TBGTentacle* ten            = mOwner;
-	delta -= ten->mOwner->getPosition();
-	f32 totalLenLimit = ten->getParams()->mTotalLenLimit.value;
+	delta -= ten->getOwner()->getPosition();
+	f32 totalLenLimit = ten->getParams()->mTotalLenLimit.get();
 
 	if (delta.length() > totalLenLimit) {
 		unk74 = fromPolar(
