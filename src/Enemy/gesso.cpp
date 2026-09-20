@@ -1121,7 +1121,11 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 		if (self->isBckAnm(10)) {
 			self->setBckAnm(9);
 		} else if (self->isBckAnm(9)) {
-			if (spine->getTime() > self->unk1E8->mSLFreezeWait.get()) {
+			// getSaveParams() is +8 (0x98 -> 0xa0); target 0xa8. A named
+			// params local dropped it back; a second body binder scrambled
+			// GPRs. Remaining: TVec3::sub slots and the setBckAnm(8) `b`
+			// that if/else duplicates setFrame to recover (99.4 -> 97.6).
+			if (spine->getTime() > self->getSaveParams()->mSLFreezeWait.get()) {
 				u8 tmp = self->unk165;
 				if (tmp != 0)
 					self->unk165 = 0;
