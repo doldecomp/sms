@@ -63,11 +63,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grupp` hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)): `THamuKuri::isHitValid` exact via inlined `HamukuriSerialKill` binder; `generateBody` frame exact (TNerveBase `bl` still open). All **61.92→61.93**, exact **11,371→11,372**.
 - Landed `grpuo` MapObjMonte drawOneRope frame; Option +1 (`setType`).
 - Total: **61.93%** matched, game **53.93%**, linked **492 / 732**, exact **11,372**.
-- Landed `grpus` EventWatcher ([EventWatcher unit ladder](3fdb4ab7-a676-4984-8f88-1b518b637ce1)): +3 exact via bare-return `SMSGetMarDirector()->accessor()` forks (`evIsTalkModeNow`, `evLaunchEventClearDemo`, `evStartAppearJetBalloon`). Unit 59.98→62.30. All **61.93→61.96**, exact **11,372→11,375**. Do not third-pass remaining slice-slot sites with nested director binders.
-- Landed `grpur` fireWanwan ([fireWanwan unit ladder](ef2fe9cd-4277-488f-b265-1e317212100d)): `calcRootMatrix` frame exact + death-offset dest fix; +0 exact.
-- Running: `grput` / chuuhana ([chuuhana unit ladder](25b52cc4-0b82-482e-b190-4349feb540e6)). Refill: bossManta.
-- Yielded `grpuq` gesso ([gesso unit ladder](de17d3e6-08d8-4bc0-b954-db954c664a34)): no commit. BodyCallback +0x10 needs new carrier without refusing MsClamp.
-- Do not re-queue bosseel without binder/`TVector::begin()` header. hamukuri `generateBody` TNerveBase `bl` is per-site; skip without new lever. fireWanwan near-misses need a new lever.
+- Landed `grput` chuuhana ([chuuhana unit ladder](25b52cc4-0b82-482e-b190-4349feb540e6)): `isCollidMove` 97.6→99.8 via `theNerve` level; `setSafeGoal` range-first; ForceJumped instruction-exact (TMsRange +4). KeepBalance −0.01 fuzzy accepted. +0 exact. All stays **61.96%**. Do not third-pass bind/Attack/attackToMario (TVec3::sub) without new lever.
+- Landed `grpus` EventWatcher ([EventWatcher unit ladder](3fdb4ab7-a676-4984-8f88-1b518b637ce1)): +3 exact. All **61.93→61.96**, exact **11,372→11,375**.
+- Running: `grpuu` / bossManta ([bossManta unit ladder](f75c852c-ff95-42af-8542-4f64bd046451)). Refill: MapObjMamma.
+- Yielded gesso: BodyCallback +0x10 needs new carrier. Do not re-queue bosseel / hamukuri generateBody / fireWanwan near-misses without new levers.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 

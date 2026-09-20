@@ -75,7 +75,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `Enemy/popo` | 96.95% | 30 / 54 |
 | `Enemy/tobiPuku` | 94.71% | 90 / 120 |
 | `Enemy/igaiga` | 94.61% | 52 / 95 |
-| `Enemy/chuuhana` | 93.59% | 33 / 57 |
+| `Enemy/chuuhana` | 99.44% | 43 / 57 |
 | `MoveBG/MapObjMamma` | 90.52% | 66 / 103 |
 | `MoveBG/MapObjMonte` | 94.35% | 28 / 54 |
 | `MoveBG/MapObjRailBlock` | 99.48% | 37 / 46 |
