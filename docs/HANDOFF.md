@@ -63,10 +63,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grupp` hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)): `THamuKuri::isHitValid` exact via inlined `HamukuriSerialKill` binder; `generateBody` frame exact (TNerveBase `bl` still open). All **61.92→61.93**, exact **11,371→11,372**.
 - Landed `grpuo` MapObjMonte drawOneRope frame; Option +1 (`setType`).
 - Total: **61.93%** matched, game **53.93%**, linked **492 / 732**, exact **11,372**.
-- Landed `grpux` MapObjBall ([MapObjBall unit ladder](a14f150e-951d-474f-a58b-4d6ead8e0ca2)): +2 exact (`TMapObjBall::hold` consumed-ref length helper; `TBigWatermelon::startEvent` named SMS_GetMarioPos). Unit 63.52→66.55. All **61.98→62.00**, exact **11,377→11,379**. Do not third-pass control 0x68 / boundByActor FPR / touchWater flow-vs-drag without new lever.
-- Landed popo structural; MapObjMamma +1; bossManta +1; EventWatcher +3.
-- Running: `grpuy` / Option ([Option unit ladder](441b2924-b54c-4ede-9121-f12308bf5302)). Refill: elecNokonoko.
-- Parked: gesso BodyCallback, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slot-order, MapObjMamma flag/FPR, popo 99.5+ slots.
+- Landed `grpuy` Option ([Option unit ladder](441b2924-b54c-4ede-9121-f12308bf5302)): +1 exact `SMSGetMSound` via depth-5 OptionSetOutputMode; climbed checkInput/isChangedSetting/loadSetting. Unit fuzzy 99.68→99.82. All stays **62.00%**, exact **11,379→11,380**. Do not third-pass isChangedSetting mr-fold / loadSetting +0x18 / JUTRect slot / TPaneScalingControl FPR without new lever.
+- Landed MapObjBall +2 (crossed 62%); popo structural; MapObjMamma +1; bossManta +1; EventWatcher +3.
+- Running: `grpuz` / elecNokonoko ([elecNokonoko unit ladder](eea7bb08-9b6a-4a28-b60e-b64d81f6ed5d)). Refill: hanasambo.
+- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control/boundByActor.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 

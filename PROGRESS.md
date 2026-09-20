@@ -16,7 +16,7 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 | SDK | 95.71% | 95.54% | 146 / 149 |
 | All | 62.00% | 26.71% | 492 / 732 |
 
-11,379 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,380 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
 ## What recent batches have done
 
@@ -46,7 +46,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `Enemy/hamukuri` | 99.89% | 207 / 226 |
 | `GC2D/SelectShine2` | 94.11% | 8 / 13 |
 | `GC2D/Guide` | 90.34% | 6 / 17 |
-| `GC2D/Option` | 99.08% | 24 / 42 |
+| `GC2D/Option` | 99.82% | 30 / 42 |
 | `GC2D/CardSave` | 99.04% | 7 / 21 |
 | `GC2D/CardLoad` | 98.89% | 7 / 22 |
 | `GC2D/GCConsole2` | 92.31% | 34 / 70 |
