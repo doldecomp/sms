@@ -32,6 +32,8 @@ public:
 	void depress();
 	J3DModel* getMapModel() const;
 
+	void setIndex(u32 index) { unkF8 = index; }
+
 	static f32 mAppearSpeed;
 	static f32 mDepressSpeed;
 	static u32 mCleanedDegree;
@@ -59,6 +61,8 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 public:
+	s32 getNumRock() const { return unk10; }
+
 	/* 0x10 */ s32 unk10;
 	/* 0x14 */ TMareWallRock* unk14;
 };

@@ -235,13 +235,13 @@ TMareWallRock::TMareWallRock(const char*) { }
 void TMareEventWallRock::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
-	unk14 = new TMareWallRock[unk10];
+	unk14 = new TMareWallRock[getNumRock()];
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
 	    = JDrama::TNameRefGen::search<
 	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("マップグループ");
 	for (int i = 0; i < unk10; ++i) {
-		unk14[i].unkF8 = i;
-		group->getChildren().push_back((JDrama::TViewObj*)&unk14[i]);
+		unk14[i].setIndex(i);
+		group->getChildren().push_back(&unk14[i]);
 	}
 }
 
