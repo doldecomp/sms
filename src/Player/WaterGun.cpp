@@ -1878,6 +1878,23 @@ void TWaterGun::triggerPressureMovement(
 		mPreviousPressure = 0;
 	}
 }
+
+static inline MSound* WaterGunGetMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
+// Nested over WaterGunGetMSound at three of emit()'s four sound sites: the
+// flat fork alone is +0x30 of frame there and retail's is +0x50 (fireWanwan
+// ladder 322's nested-fork rung, tuned down by site count). Which three sites
+// carry it is unobservable.
+static inline MSound* WaterGunGetMSound2()
+{
+	MSound* sound = WaterGunGetMSound();
+	return sound;
+}
+
 void TWaterGun::emit()
 {
 	// TODO: Missing stack space
@@ -1917,19 +1934,19 @@ void TWaterGun::emit()
 	if (mCurrentWater > 0) {
 		switch (currentNozzleType) {
 		case Spray:
-			SMSGetMSound()->startSoundActorWithInfo(
+			WaterGunGetMSound2()->startSoundActorWithInfo(
 			    MSD_SE_PO_NORMAL_NOZZLE_IMI, &getEmitPos0(), nullptr,
 			    getCurrentNozzle()->unk374, 0, 0, nullptr, 0, 4);
 
 		case Yoshi:
 		case Turbo:
-			SMSGetMSound()->startSoundActorWithInfo(
+			WaterGunGetMSound2()->startSoundActorWithInfo(
 			    0x0, &getEmitPos0(), nullptr, getCurrentNozzle()->unk378, 0, 0,
 			    nullptr, 0, 4);
 			break;
 
 		case Underwater:
-			SMSGetMSound()->startSoundActor(MSD_SE_PO_HOVER, &getEmitPos0(), 0,
+			WaterGunGetMSound2()->startSoundActor(MSD_SE_PO_HOVER, &getEmitPos0(), 0,
 			                                nullptr, 0, 4);
 			break;
 
@@ -1938,7 +1955,7 @@ void TWaterGun::emit()
 
 		case Hover:
 			if (mIsEmitWater)
-				SMSGetMSound()->startSoundActor(MSD_SE_PO_HOVER, &getEmitPos0(),
+				WaterGunGetMSound()->startSoundActor(MSD_SE_PO_HOVER, &getEmitPos0(),
 				                                0, nullptr, 0, 4);
 			break;
 		}
