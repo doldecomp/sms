@@ -1381,40 +1381,40 @@ void TWaterGun::init()
 	                              ->getIndex("chn_muzzle_1"))
 	    ->setCallBack(&NozzleCtrl);
 
-	mNozzleList[Spray]
+	mNozzleList[Hover]
 	    ->unk380->getModel()
 	    ->getModelData()
-	    ->getJointNodePointer(mNozzleList[Spray]
+	    ->getJointNodePointer(mNozzleList[Hover]
 	                              ->unk380->getModel()
 	                              ->getModelData()
 	                              ->getJointName()
 	                              ->getIndex("jnt_nozzle_L"))
 	    ->setCallBack(&WaterGunDivingCtrlL);
 
-	mNozzleList[Spray]
+	mNozzleList[Hover]
 	    ->unk380->getModel()
 	    ->getModelData()
-	    ->getJointNodePointer(mNozzleList[Spray]
+	    ->getJointNodePointer(mNozzleList[Hover]
 	                              ->unk380->getModel()
 	                              ->getModelData()
 	                              ->getJointName()
 	                              ->getIndex("jnt_nozzle_R"))
 	    ->setCallBack(&WaterGunDivingCtrlR);
 
-	mNozzleList[Spray]
+	mNozzleList[Turbo]
 	    ->unk380->getModel()
 	    ->getModelData()
-	    ->getJointNodePointer(mNozzleList[Spray]
+	    ->getJointNodePointer(mNozzleList[Turbo]
 	                              ->unk380->getModel()
 	                              ->getModelData()
 	                              ->getJointName()
 	                              ->getIndex("chn_back_nozzle_prop"))
 	    ->setCallBack(&RotateCtrl);
 
-	mNozzleList[Spray]
+	mNozzleList[Turbo]
 	    ->unk380->getModel()
 	    ->getModelData()
-	    ->getJointNodePointer(mNozzleList[Spray]
+	    ->getJointNodePointer(mNozzleList[Turbo]
 	                              ->unk380->getModel()
 	                              ->getModelData()
 	                              ->getJointName()
