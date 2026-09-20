@@ -230,14 +230,14 @@ TBGKMtxCalc::TBGKMtxCalc(TBiancoGateKeeper* owner)
 void TBGKMtxCalc::joinAnm(int param_1)
 {
 	M3UMtxCalcSIAnmBlendQuat::joinAnm(
-	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	    mOwner->mMActorKeeper->getMActorAnmData()->getUnk2C()->getAnmPtr(
 	        param_1));
 }
 
 void TBGKMtxCalc::setAnm(int param_1)
 {
 	M3UMtxCalcSIAnmBlendQuat::setAnm(
-	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
+	    mOwner->mMActorKeeper->getMActorAnmData()->getUnk2C()->getAnmPtr(
 	        param_1));
 }
 
