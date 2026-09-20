@@ -186,6 +186,9 @@ static inline f32 BossgessoGetIntendedMag(const TMario* p)
 	return intendedMag;
 }
 
+static inline TBGBeakHit* BossgessoGetBeak(const TBossGesso* p);
+static inline MActor* BossgessoGetMActor(const TLiveActor* p);
+
 BOOL TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
 	TBossGessoParams* params = mOwner->getSaveParam2();
@@ -421,15 +424,15 @@ void TBossGessoMtxCalc::calc(u16 param_1)
 	if (param_1 != 26)
 		return;
 
-	if (mOwner->mBeak != nullptr && mOwner->mBeak->isTaken()) {
-		TBGBeakHit* beak = mOwner->mBeak;
+	TBGBeakHit* beak = BossgessoGetBeak(mOwner);
+	if (beak != nullptr && beak->isTaken()) {
 		MtxPtr mtx26     = mOwner->getModel()->getAnmMtx(param_1);
 		mtx26[0][3]      = beak->mPosition.x;
 		mtx26[1][3]      = beak->mPosition.y + 50.0f;
 		mtx26[2][3]      = beak->mPosition.z;
 
 		JGeometry::TVec3<f32> local_28 = beak->mPosition;
-		local_28 -= mOwner->mPosition;
+		local_28 -= mOwner->getPosition();
 
 		f32 fVar4 = VECMag(&local_28);
 		if (fVar4 > 0.0f)
@@ -639,9 +642,12 @@ void TBossGesso::init(TLiveManager* param_1)
 	mSpine->initWith(&TNerveBGWait::theNerve());
 	mMtxCalc = new TBossGessoMtxCalc(this);
 
-	getMActor()->setCalcForBck(mMtxCalc);
+	// Two getMActor binders land the 0x250 frame; the inlined `new` result
+	// still sits 12 bytes high (0x234 against retail 0x228).
+	// TODO: the remaining ~ mismatches are that allocation-order hole.
+	BossgessoGetMActor(this)->setCalcForBck(mMtxCalc);
 
-	getMActor()->calc();
+	BossgessoGetMActor(this)->calc();
 	getMActor()->setLightType(LIGHT_TYPE_OBJECT);
 
 	unk178   = getActorKeeper()->createMActor("bgeso_dirty_white.bmd", 0);
@@ -1242,6 +1248,14 @@ static inline J3DModel* BossgessoGetModel(const TBossGesso* p)
 	return model;
 }
 
+// +8 of pool per site. Two sites close TBossGesso::init and
+// TNerveBGDie's frames (both were 0x18 short).
+static inline MActor* BossgessoGetMActor(const TLiveActor* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
 // A bare-return fork over getModel() is the +4 rung this TU's nerve pools
 // need (the binder BossgessoGetModel above is +8): one site closed
 // TNerveBGPollute and TNerveBGTug.
@@ -1294,10 +1308,14 @@ void TBossGesso::doAttackDouble()
 	JGeometry::TVec3<f32> delta = mPosition;
 	delta -= SMS_GetMarioPos();
 
+	// Declare sightAngle first so it takes f30 and the squared length f29,
+	// matching retail. The leftover 4-byte TVec3 slot (0x80 vs 0x84) is the
+	// known-open `a = b - c` allocation-order residue.
+	f32 sightAngle;
 	f32 doubleAttackLen2 = BossgessoGetSaveParam2(this)->mSLDoubleAttackLen.get();
 	doubleAttackLen2 *= doubleAttackLen2;
 
-	f32 sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
+	sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
 	if (inSightAngle(0.5f * sightAngle)
 	    && delta.squared() < doubleAttackLen2) {
 
@@ -1991,6 +2009,10 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 	return false;
 }
 
+// TODO: frame 0x80 against retail 0x78. Dropping getMActor() at
+// curAnmEndsNext is 0 (the accessor decays). The +8 lives in the
+// pasted changeBck, whose getMActor()->mMActor rung disagrees in
+// sign across the nine callers.
 DEFINE_NERVE(TNerveBGTentacleDamage, TLiveActor)
 {
 	TBossGesso* self = (TBossGesso*)spine->getBody();
@@ -2085,9 +2107,12 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->changeBck(2);
 
-		self->getMActor()->setBtpFromIndex(1);
+		// Two getMActor binders land the 0x1c0 frame; the TFlagT<u16>
+		// camera flag still sits 0x18 high (0x198 against retail 0x180).
+		// TODO: slot order inside the exact-sized frame.
+		BossgessoGetMActor(self)->setBtpFromIndex(1);
 
-		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
+		J3DFrameCtrl* ctrl3 = BossgessoGetMActor(self)->getFrameCtrl(ANM_TYPE_BTP);
 		ctrl3->setFrame(1.5f);
 		ctrl3->setRate(0.0f);
 
