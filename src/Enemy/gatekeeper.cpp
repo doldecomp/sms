@@ -715,6 +715,24 @@ void TBiancoGateKeeper::controlCollision()
 	mVulnerable        = FALSE;
 }
 
+static inline TMarDirector* GateKeeperDirector()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
+static inline TBGKMtxCalc* GateKeeperMtxCalc(const TBiancoGateKeeper* p)
+{
+	TBGKMtxCalc* calc = p->unk178;
+	return calc;
+}
+
+static inline TGKHitObj* GateKeeperHead(const TBiancoGateKeeper* p)
+{
+	TGKHitObj* head = p->mHead;
+	return head;
+}
+
 void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -751,7 +769,7 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		unk178->advanceMotionBlend(-unk158);
+		GateKeeperMtxCalc(this)->advanceMotionBlend(-unk158);
 	}
 
 	if (cue & CUE_MOVE)
@@ -762,27 +780,27 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 		                                0, nullptr, 0, 4);
 
 	if (cue & CUE_CALC_ANIM) {
-		mMActor->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
-		    unk178);
+		getMActor()->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
+		    GateKeeperMtxCalc(this));
 	}
 
 	if (cue & CUE_ENTRY) {
 		if (isDamageFogSituation()) {
-			mMActor->offMakeDL();
-			SMS_AddDamageFogEffect(mMActor->getModel()->getModelData(),
+			getMActor()->offMakeDL();
+			SMS_AddDamageFogEffect(getMActor()->getModel()->getModelData(),
 			                       mPosition, graphics);
 		} else {
-			SMS_ResetDamageFogEffect(mMActor->getModel()->getModelData());
+			SMS_ResetDamageFogEffect(getMActor()->getModel()->getModelData());
 		}
 	}
 
-	mHead->perform(cue, graphics);
+	GateKeeperHead(this)->perform(cue, graphics);
 	mObstacle->perform(cue, graphics);
 
 	if (cue & CUE_CALC_ANIM)
 		mMultiBtk->update();
 
-	if (cue & CUE_MOVE && !mHintShown && mMActor->checkCurBckFromIndex(7)
+	if (cue & CUE_MOVE && !mHintShown && getMActor()->checkCurBckFromIndex(7)
 	    && unk154 > 0) {
 		mHintTimer += 1;
 		if (mHintTimer > 160) {
