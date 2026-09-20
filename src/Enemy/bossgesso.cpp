@@ -1215,6 +1215,15 @@ static inline TItemManager* BossgessoGetItemManager()
 	return manager;
 }
 
+// Mario's ear is 75 units above his feet.  Retail copies the vector into a
+// second slot before the getInCubeNo() call, which is this by-value return.
+static inline JGeometry::TVec3<f32> BossgessoMarioEarPos()
+{
+	JGeometry::TVec3<f32> earPos = SMS_GetMarioPos();
+	earPos.y += 75.0f;
+	return earPos;
+}
+
 static inline TMarDirector* BossgessoGetMarDirector()
 {
 	TMarDirector* director = gpMarDirector;
@@ -1947,20 +1956,17 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
 			MSBgm::startBGM(MSD_BGM_BOSSGESO_2DN3RD);
 
-			// Mario's ear is 75 units above his feet: outside every sound
-			// cube the boss theme plays on a muted track, and inside one the
-			// Sirena hotel (map 59) hands the volume back to the cube fader.
-			if (gpCubeSoundChange != nullptr) {
-				JGeometry::TVec3<f32> earPos = SMS_GetMarioPos();
-				earPos.y += 75.0f;
-				if (gpCubeSoundChange->getInCubeNo(earPos) == -1) {
-					MSBgm::setTrackVolume(1, 0.0f, 0, 0);
-					return true;
-				}
-			}
-			if (gpMarDirector->mMap == 59
-			    && MSStageCubeFade::smInstance != nullptr)
+			// Outside every sound cube the boss theme plays on a muted
+			// track; inside one the Sirena hotel (map 59) hands the volume
+			// back to the cube fader.
+			if (gpCubeSoundChange != nullptr
+			    && gpCubeSoundChange->getInCubeNo(BossgessoMarioEarPos())
+			           == -1) {
+				MSBgm::setTrackVolume(1, 0.0f, 0, 0);
+			} else if (gpMarDirector->mMap == 59
+			           && MSStageCubeFade::smInstance != nullptr) {
 				MSStageCubeFade::smInstance->setBgmVolumeForce();
+			}
 		}
 
 		return true;
