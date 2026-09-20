@@ -541,11 +541,35 @@ void TNozzleTrigger::init()
 	unk388 = 0.0f;
 }
 
+static inline TWaterGun* NozzleFludd(const TNozzleBase* p)
+{
+	TWaterGun* fludd = p->mFludd;
+	return fludd;
+}
+
+static inline TMario* NozzleMario(const TNozzleBase* p)
+{
+	TMario* mario = p->mFludd->mMario;
+	return mario;
+}
+
+static inline MSound* WaterGunMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
+static inline TMarDirector* WaterGunDirector()
+{
+	TMarDirector* d = gpMarDirector;
+	return d;
+}
+
 void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 {
 	f32 prevPressure = unk388;
 
-	if (mFludd->mCurrentWater <= 0) {
+	if (NozzleFludd(this)->mCurrentWater <= 0) {
 		unk385 = TNozzleTrigger::INACTIVE;
 		unk386 = 0;
 		unk388 = 0.0f;
@@ -557,7 +581,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 		// Very likely an inline
 		bool check;
-		if (mFludd->mMario->mUpperState == TMario::UPPER_STATE_PUMPING) {
+		if (NozzleMario(this)->mUpperState == TMario::UPPER_STATE_PUMPING) {
 			check = true;
 		} else {
 			check = false;
@@ -577,7 +601,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		if (unk38C != 0xffffffff) {
 			u32 soundId = unk378 < 1.0f ? MSD_SE_PO_WATER_LOW_TRG
 			                            : MSD_SE_PO_WATER_HI_TRG;
-			SMSGetMSound()->startSoundActor(soundId, mFludd->mEmitPos[0], 0,
+			WaterGunMSound()->startSoundActor(soundId, NozzleFludd(this)->mEmitPos[0], 0,
 			                                nullptr, 0, 4);
 		}
 		unk386 = mEmitParams.mTriggerTime.get();
@@ -585,19 +609,19 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 
 	bool canSpray = true;
 
-	if (!(mFludd->mMario->mUpperState == TMario::UPPER_STATE_PUMPING ? true
+	if (!(NozzleMario(this)->mUpperState == TMario::UPPER_STATE_PUMPING ? true
 	                                                                 : false))
 		canSpray = false;
 
-	if (mFludd->mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER) == true
-	    && mFludd->mCurrentWater < mEmitParams.mAmountMax.get())
+	if (NozzleMario(this)->checkFlag(MARIO_FLAG_IN_ANY_WATER) == true
+	    && NozzleFludd(this)->mCurrentWater < mEmitParams.mAmountMax.get())
 		canSpray = false;
 
 	if (canSpray == true) {
 		unk388 += 150.0f * controllerWork.mAnalogR;
 		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
-			if (gpMarDirector->unk58 % (int)mFludd->mMario->unk568 == 0)
-				SMSRumbleMgr->start(20, (int)mFludd->mMario->unk564,
+			if (WaterGunDirector()->unk58 % (int)NozzleMario(this)->unk568 == 0)
+				SMSRumbleMgr->start(20, (int)NozzleMario(this)->unk564,
 				                    (f32*)nullptr);
 		}
 	}
@@ -609,8 +633,8 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 	if (canSpray == true && unk384 != true
 	    && unk385 == TNozzleTrigger::INACTIVE
 	    && controllerWork.mAnalogR > 0.0f && prevPressure < unk388) {
-		SMSGetMSound()->startSoundActor(MSD_SE_SY_NEWP_AIR_TAME,
-		                                mFludd->mEmitPos[0], 0, nullptr, 0, 4);
+		WaterGunMSound()->startSoundActor(MSD_SE_SY_NEWP_AIR_TAME,
+		                                NozzleFludd(this)->mEmitPos[0], 0, nullptr, 0, 4);
 	}
 
 	if (unk388 > mEmitParams.mInsidePressureMax.get()) {
@@ -619,14 +643,14 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 			unk385      = TNozzleTrigger::ACTIVE;
 			unk386      = mEmitParams.mTriggerTime.get();
 			if (unk38C != 0xffffffff) {
-				SMSGetMSound()->startSoundActor(unk38C, &mFludd->mEmitPos[0],
+				WaterGunMSound()->startSoundActor(unk38C, &NozzleFludd(this)->mEmitPos[0],
 				                                0, nullptr, 0, 4);
 			}
-			if (mFludd->mCurrentNozzle == (s8)TWaterGun::Hover) {
+			if (NozzleFludd(this)->mCurrentNozzle == (s8)TWaterGun::Hover) {
 				SMSRumbleMgr->start((int)0x15, 0x8, (f32*)nullptr);
 			}
-			if (mFludd->mCurrentNozzle == (s8)TWaterGun::Rocket
-			    || mFludd->mCurrentNozzle == (s8)TWaterGun::Turbo) {
+			if (NozzleFludd(this)->mCurrentNozzle == (s8)TWaterGun::Rocket
+			    || NozzleFludd(this)->mCurrentNozzle == (s8)TWaterGun::Turbo) {
 				SMSRumbleMgr->start((int)0x15, 0x14, (f32*)nullptr);
 			}
 		}
