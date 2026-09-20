@@ -89,6 +89,12 @@ void TItem::calcRootMatrix()
 		TMapObjGeneral::calcRootMatrix();
 }
 
+static inline J3DModel* ItemCalcModel(const TItem* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TItem::calc()
 {
 	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && !isState(STATE_HOLDING)) {
@@ -96,14 +102,14 @@ void TItem::calc()
 
 		MtxPtr mtx;
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100))
-			mtx = getModel()->getAnmMtx(0);
+			mtx = ItemCalcModel(this)->getAnmMtx(0);
 		else
-			mtx = getModel()->getBaseTRMtx();
+			mtx = ItemCalcModel(this)->getBaseTRMtx();
 
 		mtx[0][0] = src[0][0];
 		mtx[0][1] = src[0][1];
 		mtx[0][2] = src[0][2];
-		mtx[0][3] = mPosition.x;
+		mtx[0][3] = getPosition().x;
 
 		mtx[1][0] = src[1][0];
 		mtx[1][1] = src[1][1];
