@@ -738,11 +738,10 @@ void TSwingBoard::initDraw() const
 	GXSetCullMode(GX_CULL_BACK);
 }
 
-// TODO: 87.6%. Retail binds &mInitialPosition.z into a third callee-saved GPR
-// (`addi r30, r29, 0x114`, one use in the second block) and carries 28 more
-// bytes of dead low region. A `const f32&` local and a TU-local static inline
-// returning `const f32&` both fold back to the 0x114 displacement and only cost
-// +8 of frame, so the carrier for the addi is still unknown.
+// TODO: 99.8%. Every instruction matches and the frame is retail's 0x58, but
+// the `bottom`/`top` block sits 8 bytes low: we carry 8 bytes too few of pool
+// and 8 too many above the block. The getInitialPosition()/getPosition()
+// component rungs saturate at +0x10 and all land above the block.
 void TSwingBoard::draw() const
 {
 	initDraw();
@@ -753,17 +752,17 @@ void TSwingBoard::draw() const
 	JGeometry::TVec3<f32> top;
 
 	f32 width = mBoardWidth;
-	top.x     = width * mtx[0][0] + mInitialPosition.x;
-	top.y     = mRopeLength + mInitialPosition.y;
-	top.z     = width * mtx[2][0] + mInitialPosition.z;
+	top.x     = width * mtx[0][0] + getInitialPosition().x;
+	top.y     = mRopeLength + getInitialPosition().y;
+	top.z     = width * mtx[2][0] + getInitialPosition().z;
 	bottom.x  = width * mtx[0][0] + mPosition.x;
 	bottom.y  = 60.0f + mPosition.y;
 	bottom.z  = width * mtx[2][0] + mPosition.z;
 	drawOneRope(bottom, top);
 
 	width    = mBoardWidth;
-	top.x    = mInitialPosition.x - width * mtx[0][0];
-	top.z    = mInitialPosition.z - width * mtx[2][0];
+	top.x    = getInitialPosition().x - width * mtx[0][0];
+	top.z    = getInitialPosition().z - width * mtx[2][0];
 	bottom.x = mPosition.x - width * mtx[0][0];
 	bottom.z = mPosition.z - width * mtx[2][0];
 	drawOneRope(bottom, top);
