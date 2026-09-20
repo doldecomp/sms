@@ -849,7 +849,7 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
-			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
+			int timer = self->getSaveParams()->getSLLaunchTimerNormal();
 			timer += (s32)(240.0f * MsRandF()) - 120;
 			self->unk298 = timer;
 			spine->pushAfterCurrent(&TNerveBGKLaunchGoro::theNerve());
@@ -887,18 +887,18 @@ DEFINE_NERVE(TNerveBGKAppear, TLiveActor)
 		if (self->unk28A < 0xFF)
 			self->unk28A++;
 		if (self->unk28A == 2)
-			gpMarDirector->getConsole()->startAppearBalloon(0x4A, true);
+			GateKeeperDirector()->getConsole()->startAppearBalloon(0x4A, true);
 	}
 
 	if (spine->getTime() == 8) {
-		gpMarioParticleManager->emitAndBindToMtxPtr(
+		GatekeeperGetMarioParticleManager()->emitAndBindToMtxPtr(
 		    GATEKEEPER_JPA_MS_GKPA_KEMURI, self->getModel()->getAnmMtx(12), 2,
 		    nullptr);
 		self->rumblePad();
 	}
 
 	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		if (gpMarDirector->getCurrentMap() == 0)
+		if (GateKeeperDirector()->getCurrentMap() == 0)
 			spine->pushAfterCurrent(&TNerveBGKWait2::theNerve());
 		else
 			spine->pushAfterCurrent(&TNerveBGKWait::theNerve());
@@ -911,12 +911,12 @@ DEFINE_NERVE(TNerveBGKAppear, TLiveActor)
 DEFINE_NERVE(TNerveBGKWait, TLiveActor)
 {
 	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
-	MActor* actor           = self->getMActor();
+	MActor* actor           = GatekeeperGetMActor(self);
 
 	if (spine->getTime() == 0)
 		self->changeBck(0x11);
 
-	if (self->unk154 > 0 && self->getMActor()->checkCurBckFromIndex(0x12)
+	if (self->unk154 > 0 && GatekeeperGetMActor(self)->checkCurBckFromIndex(0x12)
 	    && !self->isHeadHitActive()) {
 		self->changeBck(7);
 		return false;
@@ -941,7 +941,7 @@ DEFINE_NERVE(TNerveBGKWait, TLiveActor)
 	if (self->unk154 > 0 && actor->checkCurBckFromIndex(7))
 		self->resetUnk290();
 
-	if (spine->getTime() > self->getSaveParams()->mSLDiveTimer.get()
+	if (spine->getTime() > self->getSaveParams()->getSLDiveTimer()
 	    && !actor->checkCurBckFromIndex(0xD)) {
 		if (self->curBckFinished())
 			self->changeBck(0xD);
@@ -983,7 +983,7 @@ DEFINE_NERVE(TNerveBGKWait, TLiveActor)
 DEFINE_NERVE(TNerveBGKWait2, TLiveActor)
 {
 	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
-	MActor* actor           = self->getMActor();
+	MActor* actor           = GatekeeperGetMActor(self);
 
 	if (spine->getTime() == 0)
 		self->changeBck(0x11);
@@ -1005,9 +1005,9 @@ DEFINE_NERVE(TNerveBGKWait2, TLiveActor)
 		} else if (actor->checkCurBckFromIndex(0x10)) {
 			self->unk288++;
 			if (self->unk288 == 2 && self->unk28A == 1
-			    && gpMarDirector->getCurrentMap() == 0)
-				gpMarDirector->getConsole()->startAppearBalloon(0, true);
-			if (self->unk288 > self->getSaveParams()->mSLLoop2Dive.get()) {
+			    && GateKeeperDirector()->getCurrentMap() == 0)
+				GateKeeperDirector()->getConsole()->startAppearBalloon(0, true);
+			if (self->unk288 > self->getSaveParams()->getSLLoop2Dive()) {
 				self->changeBck(0xC);
 				self->unk288 = 0;
 			}
@@ -1034,7 +1034,7 @@ DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
-			int timer = self->getSaveParams()->mSLLaunchTimerDamage.get();
+			int timer = self->getSaveParams()->getSLLaunchTimerDamage();
 			timer += (s32)(240.0f * MsRandF()) - 120;
 			self->unk298 = timer;
 			self->launchGorogoro();
@@ -1158,7 +1158,7 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 
 	if (GatekeeperGetMActor(self)->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (self->mVariant == TBiancoGateKeeper::VARIANT_GENERIC) {
-			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
+			int timer = self->getSaveParams()->getSLLaunchTimerNormal();
 			timer += (s32)(240.0f * MsRandF()) - 120;
 			self->unk298 = timer;
 			self->launchGorogoro();
