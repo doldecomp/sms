@@ -232,9 +232,8 @@ BOOL TNerveMantaHitWater::execute(TSpineBase<TLiveActor>* spine) const
 		    = { MSD_SE_BS_MANTA_DAMAGE_1, MSD_SE_BS_MANTA_DAMAGE_2,
 			    MSD_SE_BS_MANTA_DAMAGE_3, MSD_SE_BS_MANTA_DAMAGE_4,
 			    MSD_SE_BS_MANTA_DAMAGE_5, MSD_SE_BS_MANTA_DAMAGE_5 };
-		u32 snd = hitSounds[self->mGeneration];
-		SMSGetMSound()->startSoundActor(snd, &self->mPosition, 0, nullptr, 0,
-		                                4);
+		gpMSound->startSoundActor(hitSounds[self->mGeneration],
+		                          &self->mPosition, 0, nullptr, 0, 4);
 	}
 
 	int effectCount = self->getSaveParams()->mSLDamageEffectNum.get();
@@ -302,7 +301,7 @@ BOOL TNerveMantaSpawn::execute(TSpineBase<TLiveActor>* spine) const
 		    = { MSD_SE_BS_MANTA_SEGMENT_1, MSD_SE_BS_MANTA_SEGMENT_2,
 			    MSD_SE_BS_MANTA_SEGMENT_3, MSD_SE_BS_MANTA_SEGMENT_4 };
 		u32 snd = sounds[self->mGeneration];
-		SMSGetMSound()->startSoundActor(snd, &self->mPosition, 0, nullptr, 0,
+		gpMSound->startSoundActor(snd, &self->mPosition, 0, nullptr, 0,
 		                                4);
 		BossMantaGetManager(self)->spawn(self->mGeneration + 1,
 		                                 self->mPosition);
