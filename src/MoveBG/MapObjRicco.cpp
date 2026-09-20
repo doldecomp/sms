@@ -31,6 +31,18 @@ static JGeometry::TVec3<f32> submarineSetWtPos_forSound(1956.0f, -100.0f,
 
 // TCraneRotY
 
+static inline MSound* MapObjRiccoGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
+static inline bool MapObjRiccoIsState(TMapObjBase* self, u32 state)
+{
+	bool v = self->isState(state);
+	return v;
+}
+
 int TCraneRotY::mWaitTime = 120;
 
 void TCraneRotY::calc() { setRootMtxRotY(); }
@@ -67,9 +79,9 @@ void TCraneRotY::control()
 		break;
 	}
 
-	if (isState(STATE_TURNING_UP) || isState(STATE_TURNING_DOWN))
-		SMSGetMSound()->startSoundActor(mSoundId, &mPosition, 0, nullptr, 0,
-		                                4);
+	if (MapObjRiccoIsState(this, STATE_TURNING_UP)
+	    || MapObjRiccoIsState(this, STATE_TURNING_DOWN))
+		MapObjRiccoGetMSound()->startSoundActor(mSoundId, &mPosition);
 }
 
 void TCraneRotY::load(JSUMemoryInputStream& stream)
@@ -142,9 +154,13 @@ void TCraneUpDown::control()
 	mCargo->mPosition.y += (mPosition.y - mYOffset) + mCargo->mYOffset;
 	mCargo->mPosition.z += mPosition.z;
 
-	if (isState(STATE_TIPPING_DOWN) || isState(STATE_TIPPING_UP))
-		SMSGetMSound()->startSoundActor(mSoundId, &mPosition, 0, nullptr, 0,
-		                                4);
+	// TODO: frame 0x90 vs 0xa0 and a commutative fadds on
+	// (mPosition.y - mYOffset) + mCargo->mYOffset. The sound/state binders
+	// that closed TCraneRotY::control take +0x18; getModel/cargo/dy binders
+	// skip 0xa0 (0x98 or 0xa8).
+	if (MapObjRiccoIsState(this, STATE_TIPPING_DOWN)
+	    || MapObjRiccoIsState(this, STATE_TIPPING_UP))
+		MapObjRiccoGetMSound()->startSoundActor(mSoundId, &mPosition);
 }
 
 void TCraneUpDown::initMapObj()
@@ -226,11 +242,12 @@ void TRiccoWatermill::control()
 {
 	TMapObjBase::control();
 
-	if (isState(STATE_RISING) || isState(STATE_SINKING_DONE)
-	    || isState(STATE_SINKING)) {
+	if (MapObjRiccoIsState(this, STATE_RISING)
+	    || MapObjRiccoIsState(this, STATE_SINKING_DONE)
+	    || MapObjRiccoIsState(this, STATE_SINKING)) {
 		if (0.0f != mRotSpeed) {
 			mRotation.z -= mRotSpeed;
-			SMSGetMSound()->startSoundActorWithInfo(
+			MapObjRiccoGetMSound()->startSoundActorWithInfo(
 			    0x3031, &mPosition, nullptr, fabsf(mRotSpeed), 0, 0,
 			    &mWheelSound, 0, 4);
 
@@ -263,8 +280,8 @@ void TRiccoWatermill::control()
 			mSubmarine->mPosition.y = mSubmarineMaxTransY;
 
 			if (!isStateTimerEngaged()) {
-				SMSGetMSound()->startSoundActor(
-				    0x3832, &mSubmarine->mPosition, 0, nullptr, 0, 4);
+				MapObjRiccoGetMSound()->startSoundActor(
+				    0x3832, &mSubmarine->mPosition);
 
 				if (!mCoinThrown) {
 					JGeometry::TVec3<f32> point(
@@ -290,8 +307,7 @@ void TRiccoWatermill::control()
 			mSubmarine->setUpMapCollision(0);
 			mRotSpeed = 0.0f;
 
-			SMSGetMSound()->startSoundActor(0x3832, &mSubmarine->mPosition, 0,
-			                                nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(0x3832, &mSubmarine->mPosition);
 
 			mStateTimer = mWaitTime;
 			mState       = STATE_SURFACED;
@@ -343,10 +359,12 @@ TRiccoWatermill::TRiccoWatermill(const char* name)
     , mWaterHitTimer(0)
     , mCoinThrown(false)
     , mBlueCoin(nullptr)
-    , mWheelSound(nullptr)
-    , mCraneSound(nullptr)
-    , mSubmarineSound(nullptr)
 {
+	// The three handles sit in a row at 0x14C; an unrolled clear is the +0x10
+	// ctor frame (research 292) that member-list nullptrs do not reserve.
+	JAISoundHandle* handles = &mWheelSound;
+	for (int i = 0; i < 3; ++i)
+		handles[i] = nullptr;
 }
 
 // TSurfGesoObj
@@ -413,6 +431,8 @@ void TFruitSwitch::pushDown()
 		mMapCollisionManager->getUnk8()->remove();
 }
 
+// TODO: frame 0x28 vs retail 0x20. Pasting pushDown's body does not shrink
+// it; the extra 8 lives in the inlined startBck/getUnk8/remove path.
 BOOL TFruitSwitch::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == 1) {
