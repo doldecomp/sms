@@ -223,6 +223,7 @@ void JAIBasic::sendPlayingSeCommand()
 {
 	u16 readStatus0;
 	u16 readStatus1;
+	u16 trash;
 	u8 j;
 	JAISound* sound;
 	u8 trackId = 0;
