@@ -742,15 +742,23 @@ void TBossManta::updateEpilogueFrame()
 		unk154++;
 }
 
+static inline J3DModel* BossMantaGetModel(const TBossManta* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TBossManta::calcRootMatrix()
 {
 	updateEpilogueFrame();
 
 	TPosition3f m;
-	m.setTrans(mPosition);
+	m.setTrans(getPosition());
 
 	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 	JGeometry::TVec3<f32> side;
+	// TODO: frame and every slot are exact; retail colours the 0.0f/1.0f
+	// literals f3/f1 where we get f2/f3 (volatile-FPR block trade).
 	side.cross2(up, unk170);
 	m.setXDir(side);
 	m.setYDir(up);
@@ -758,8 +766,8 @@ void TBossManta::calcRootMatrix()
 
 	MtxPtr joint = getModel()->getAnmMtx(sCenterJointIndex);
 	unk17C.set(joint[0][3], mPosition.y, joint[2][3]);
-	getModel()->setBaseScale(mScaling);
-	getModel()->setBaseTRMtx(m);
+	BossMantaGetModel(this)->setBaseScale(mScaling);
+	BossMantaGetModel(this)->setBaseTRMtx(m);
 }
 
 bool TBossManta::isDamageable()
