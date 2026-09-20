@@ -77,6 +77,7 @@ TEnemyMario::TSettingParams::TSettingParams(const char* path)
 
 void TEnemyMario::initValues()
 {
+	char trash[8];
 	mHealth     = mDeParams.mHpMax.get();
 	mDirty      = 0.0f;
 	mOilBrake   = 1.0f;
