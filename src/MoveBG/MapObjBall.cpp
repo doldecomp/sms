@@ -108,6 +108,14 @@ void TMapObjBall::touchPollution() { kill(); }
 
 void TMapObjBall::touchWaterSurface() { kill(); }
 
+// Binding level over the sound singleton, sized inside the body that
+// TBigWatermelon::rebound pastes as well.
+static inline MSound* MapObjBallBounceSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TMapObjBall::rebound(JGeometry::TVec3<f32>* param_1)
 {
 	calcReflectingVelocity(mGroundPlane, mMapObjData->mPhysical->unk4->unk4,
@@ -119,17 +127,17 @@ void TMapObjBall::rebound(JGeometry::TVec3<f32>* param_1)
 		// The watermelon has a big and a small bounce sample, chosen by how
 		// far it has been scaled up.
 		if (mScaling.y >= 5.0f) {
-			SMSGetMSound()->startSoundActorWithInfo(
+			MapObjBallBounceSound()->startSoundActorWithInfo(
 			    MSD_SE_OBJ_WATERMELON_BBUND, &mPosition, nullptr,
-			    abs(mGroundPlane->mNormal.y), 0, 0, nullptr, 0, 4);
+			    abs(getGroundPlane()->mNormal.y), 0, 0, nullptr, 0, 4);
 		} else {
-			SMSGetMSound()->startSoundActorWithInfo(
+			MapObjBallBounceSound()->startSoundActorWithInfo(
 			    MSD_SE_OBJ_WATERMELON_SBUND, &mPosition, nullptr,
-			    abs(mGroundPlane->mNormal.y), 0, 0, nullptr, 0, 4);
+			    abs(getGroundPlane()->mNormal.y), 0, 0, nullptr, 0, 4);
 		}
 	} else {
 		u32 sound = mMapObjData->mSound->unk4->unk0[4];
-		SMSGetMSound()->startSoundActorWithInfo(sound, &mPosition,
+		MapObjBallBounceSound()->startSoundActorWithInfo(sound, &mPosition,
 		                                        (Vec*)&mVelocity, 0.0f, 0, 0,
 		                                        nullptr, 0, 4);
 	}
