@@ -93,6 +93,24 @@ TBWParams::TBWParams(const char* path)
 	TParams::load(mPrmPath);
 }
 
+static inline TRope* BWLeashRope(const TBWLeash* p)
+{
+	TRope* rope = p->mRope;
+	return rope;
+}
+
+static inline TBWLeash* BWLeashNodeLeash(const TBWLeashNode* p)
+{
+	TBWLeash* leash = p->mLeash;
+	return leash;
+}
+
+static inline MActor* BWLeashNodeMActor(const TBWLeashNode* p)
+{
+	MActor* actor = p->mMActor;
+	return actor;
+}
+
 static inline TBossWanwan* BWLeashOwner(const TBWLeash* p)
 {
 	TBossWanwan* owner = p->mOwner;
@@ -213,7 +231,7 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 		calcMatrix();
 
 		// Only the eight links nearest the head are hot enough to burn.
-		if (mLeash->mOwner->getHitPoints() != 0 && mIndex < 8) {
+		if (BWLeashOwner(mLeash)->getHitPoints() != 0 && mIndex < 8) {
 			for (int i = 0; i < getColNum(); ++i) {
 				THitActor* actor = getCollision(i);
 				if (actor->getActorType() == 0x80000001)
@@ -223,19 +241,19 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BRK);
+		J3DFrameCtrl* ctrl = BWLeashNodeMActor(this)->getFrameCtrl(ANM_TYPE_BRK);
 		if (ctrl) {
 			int index  = mIndex;
 			f32 endFrm = mTemperature * (f32)(ctrl->getEnd() - 1);
 
 			f32 heat;
 			if (index < 5) {
-				heat = (f32)mIndex * 0.25f
-				       + (f32)mLeash->mOwner->getHitPoints()
-				             / (f32)mLeash->mOwner->getSaveParam2()
+				heat = (f32)mIndex / 4.0f
+				       + (f32)BWLeashOwner(mLeash)->getHitPoints()
+				             / (f32)BWLeashOwner(mLeash)->getSaveParam2()
 						   ->mSLBWHitPointMax.get();
 			} else {
-				u16 num = mLeash->mRope->mNumPoints;
+				u16 num = BWLeashRope(mLeash)->mNumPoints;
 				if (index >= (int)(num - 10))
 					heat = (f32)(num - index) / 10.0f;
 				else
@@ -247,14 +265,15 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 			else if (heat < 0.0f)
 				heat = 0.0f;
 
-			ctrl->setFrame(endFrm * heat);
+			endFrm *= heat;
+			ctrl->setFrame(endFrm);
 			ctrl->setRate(0.0f);
 		}
 	}
 
 	// The last link is hidden inside the stake.
-	if (mIndex < (int)(mLeash->mRope->mNumPoints - 1))
-		mMActor->perform(cue, graphics);
+	if (mIndex < (int)(BWLeashRope(mLeash)->mNumPoints - 1))
+		BWLeashNodeMActor(this)->perform(cue, graphics);
 }
 
 TBWLeash::TBWLeash(TBossWanwan* owner, int node_num, const char* name)
