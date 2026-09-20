@@ -341,7 +341,8 @@ void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 		unk10->perform(cue, graphics);
 	} else {
-		if (cue & CUE_CALC_ANIM) {
+		u32 calcAnim = cue & CUE_CALC_ANIM;
+		if (calcAnim) {
 			if (unk8 > 240) {
 				unk4 = 0;
 				return;
@@ -358,33 +359,28 @@ void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 			++unk8;
 		}
 
-		if (cue & CUE_CALC_ANIM) {
-			// TODO: retail binds &unk4C (r26) and &afStack_58 (r27) into
-			// callee-saved registers across both blocks; a MtxPtr local
-			// here or at either site costs an instruction and +8 frame.
+		if (calcAnim) {
 			Mtx afStack_58;
 			Mtx afStack_88;
-			{
-				MTXIdentity(afStack_58);
-				afStack_58[0][3] = unk28.x;
-				afStack_58[1][3] = unk28.y;
-				afStack_58[2][3] = unk28.z;
-				MsMtxSetRotRPH(afStack_88, 0.0f, 360.0f - unk8, 0.0f);
-				MTXConcat(getUnk4C(), afStack_88, afStack_88);
-				MTXConcat(afStack_58, afStack_88, afStack_58);
-				unk14->getModel()->setBaseTRMtx(afStack_58);
-			}
 
-			{
-				PSMTXIdentity(afStack_58);
-				afStack_58[0][3] = unk1C.x;
-				afStack_58[1][3] = unk1C.y;
-				afStack_58[2][3] = unk1C.z;
-				MsMtxSetRotRPH(afStack_88, 0.0f, unk8, 0.0f);
-				MTXConcat(getUnk4C(), afStack_58, afStack_58);
-				MTXConcat(afStack_58, afStack_88, afStack_58);
-				unk18->getModel()->setBaseTRMtx(afStack_58);
-			}
+			MTXIdentity(afStack_58);
+			afStack_58[0][3] = unk28.x;
+			afStack_58[1][3] = unk28.y;
+			afStack_58[2][3] = unk28.z;
+			MsMtxSetRotRPH(afStack_88, 0.0f, 360.0f - unk8, 0.0f);
+			MTXConcat(getUnk4C(), afStack_58, afStack_58);
+			MTXConcat(afStack_58, afStack_88, afStack_58);
+			MtxPtr transMtx = afStack_58;
+			unk14->getModel()->setBaseTRMtx(transMtx);
+
+			PSMTXIdentity(transMtx);
+			afStack_58[0][3] = unk1C.x;
+			afStack_58[1][3] = unk1C.y;
+			afStack_58[2][3] = unk1C.z;
+			MsMtxSetRotRPH(afStack_88, 0.0f, unk8, 0.0f);
+			MTXConcat(getUnk4C(), transMtx, transMtx);
+			MTXConcat(transMtx, afStack_88, transMtx);
+			unk18->getModel()->setBaseTRMtx(transMtx);
 		}
 
 		if ((cue & CUE_ENTRY) && unk8 > 60 && unk8 % 6 >= 3)
@@ -1282,9 +1278,11 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 			gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
 	}
 
-	// TODO: asserts or something? Hard to match
+	// TODO: retail converts getFrame() to int and tests CLIPPED_OUT
+	// (rlwinm. 29,29) then overwrites r0; unused locals DCE here.
+	// Frame is 0x30 short. shakeCamera is map-UNUSED 0xA8, not empty.
 	self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
-	self->checkLiveFlag(LIVE_FLAG_HIDDEN);
+	self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 
 	if (self->getMActor()->curAnmEndsNext())
 		return true;
