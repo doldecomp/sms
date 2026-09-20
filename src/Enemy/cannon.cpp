@@ -698,11 +698,16 @@ void TCannon::bombShoot()
 }
 
 // UNUSED, 0x5c in the map.
+static inline f32 CannonBombScaleStep(const TCannon* p)
+{
+	return 0.2f * p->mBombScale;
+}
+
 void TCannon::bombScaleUp()
 {
 	if (mHeldBomb) {
 		mHeldBomb->mScaling.x
-		    = MsClamp(mHeldBomb->mScaling.x + 0.2f * mBombScale, 0.0f,
+		    = MsClamp(mHeldBomb->mScaling.x + CannonBombScaleStep(this), 0.0f,
 		              mBombScale);
 		// TODO: the original really does overwrite the clamped value with
 		// the cannon's own x scale on all three axes.
