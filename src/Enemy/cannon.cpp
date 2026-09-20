@@ -228,7 +228,8 @@ TCannonDom::TCannonDom(TLiveActor* owner, int jnt_idx, SDLModelData* data,
     , mRoll(0.0f)
     , mSwingPhase(0.0f)
 {
-	mSwingPhase = TMsRange<f32>(0.0f, 360.0f).rand();
+	TMsRange<f32> range(0.0f, 360.0f);
+	mSwingPhase = range.rand();
 	if (CannonDomAnmSound(this))
 		return;
 	mAnmSound = new MAnmSound(SMSGetMSound());
