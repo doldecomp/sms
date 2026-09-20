@@ -846,11 +846,13 @@ void TPakkunSeed::forceKill()
 // conversion (3) -> the zero-init (4), and a 3-statement in-class TVec3
 // member is a `bl` at depth 4. Our PathNode.hpp constructor stores the three
 // zeros in place instead of calling `unk4.set(0.0f, 0.0f, 0.0f)`, so there is
-// nothing to call. Spelling the set there is the fix; TPakkun::load, which is
-// byte-exact today, then wants the node as a named local built at depth 1
-// (its retail body expands the same zeros in line, so the two loads differ by
-// exactly one inline level). Refuted here: delegating to TPakkun::load, which
-// pushes the constructor itself to depth 4 and turns *it* into a bl.
+// nothing to call. Refuted in header round 52: spelling the set there is NOT
+// the fix. The conversion temporary is built in setGoalPathMario's own body,
+// not inside setGoalPath (which takes the node by const reference), so the
+// zero-init lands at depth 3 and MWCC expands it either way -- this site
+// stays at 80.1% and the MISSING symbol stays, with the whole tree
+// byte-identical. Also refuted: delegating to TPakkun::load, which pushes the
+// constructor itself to depth 4 and turns *it* into a bl.
 void TStayPakkun::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);

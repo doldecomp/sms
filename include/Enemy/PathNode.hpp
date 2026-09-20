@@ -32,6 +32,20 @@ public:
 	//     regress, and it perturbs a linked unit (the DOL stops matching).
 	//   * `unk4.set(0.0f, 0.0f, 0.0f);` is codegen-identical everywhere (the
 	//     level is not deep enough to force the call), so it buys nothing.
+	//     Re-measured in header round 52 against pakkun ladder 352's reading
+	//     that it would become the map's weak `bl set<f>` at inline depth 4:
+	//     it does not. TStayPakkun::load stays at 80.1% with the three zeros
+	//     expanded, pakkun keeps `set<f>__Q29JGeometry8TVec3<f>Ffff` as its
+	//     MISSING map symbol, and nothing moves anywhere tree-wide (the whole
+	//     tree is byte-identical either way). The chain there is
+	//     TStayPakkun::load -> setGoalPathMario (1) -> the implicit TPathNode
+	//     conversion, built in *setGoalPathMario's* body (2) -> the zero-init
+	//     (3): one level short, because Enemy.hpp's `setGoalPath` takes the
+	//     node by const reference and so never builds it itself. Buying that
+	//     level (a `setGoalPath(THitActor*)` overload, or any extra step
+	//     inside this constructor) turns the zeroing into a `bl` at every
+	//     TPathNode(THitActor*) site at once, which is the fifteen-unit
+	//     regression measured above. Still per-call-site; still no fix here.
 	//   * Adding the level at BeeHive's call sites instead, through a
 	//     `TBoidLeader::setGoal` accessor in Animal/boid.hpp, moves frame
 	//     slots rather than the call: by-reference (`setGoal(const TPathNode&)`)
