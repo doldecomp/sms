@@ -1112,8 +1112,9 @@ DEFINE_NERVE(TNerveStayPakkunAppear, TLiveActor)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		    PARTICLE_MS_GENE_HIT, &self->mPosition, 1, self);
 		if (emitter) {
-			emitter->setGlobalDynamicsScale(JGeometry::TVec3<f32>(1.5f));
-			emitter->setGlobalParticleScale(JGeometry::TVec3<f32>(1.5f));
+			JGeometry::TVec3<f32> scale(1.5f);
+			emitter->setGlobalDynamicsScale(scale);
+			emitter->setGlobalParticleScale(scale);
 			SMSSetEmitterPolColor(emitter, 6);
 		}
 	}
