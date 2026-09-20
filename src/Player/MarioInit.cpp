@@ -364,6 +364,7 @@ void TMario::loadAfter()
 
 void TMario::initValues()
 {
+	char trash[8];
 	mHealth     = mDeParams.mHpMax.get();
 	mDirty      = 0.0f;
 	mOilBrake   = 1.0f;
