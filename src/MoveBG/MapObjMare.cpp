@@ -689,14 +689,14 @@ void TWireBell::draw() const
 	initDraw();
 
 	// A cross of two quads running up the wire from the bell to its hanger.
-	f32 bellY  = mPosition.y;
-	f32 wireY  = mWirePos.y;
-	f32 vWire  = mTexPosRate * (wireY - bellY);
-	f32 vBell  = mTexPosRate * (bellY - bellY);
-	f32 x1     = mWirePos.x + mRopeWidthX;
-	f32 x0     = mWirePos.x - mRopeWidthX;
-	f32 z1     = mWirePos.z + mRopeWidthZ;
-	f32 z0     = mWirePos.z - mRopeWidthZ;
+	f32 bellY = mPosition.y;
+	f32 x1    = mWirePos.x + mRopeWidthX;
+	f32 x0    = mWirePos.x - mRopeWidthX;
+	f32 z1    = mWirePos.z + mRopeWidthZ;
+	f32 z0    = mWirePos.z - mRopeWidthZ;
+	f32 wireY = mWirePos.y;
+	f32 vWire = mTexPosRate * (wireY - bellY);
+	f32 vBell = mTexPosRate * (bellY - bellY);
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 8);
 	GXPosition3f32(x0, wireY, z0);
