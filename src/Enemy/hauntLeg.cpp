@@ -334,11 +334,6 @@ bool THauntLeg::isCollidMove(THitActor* other)
 
 const char** THauntLeg::getBasNameTable() const { return hauntleg_bastable; }
 
-// TODO: 99.6% -- the frame is 8 bytes over (0xa0 against 0x98), i.e. one
-// 8-byte inline temporary too many somewhere in the two
-// getMActor()->getModel()->getBaseTRMtx() chains. Reading mMActor directly is
-// worse, and a named J3DModel* or MtxPtr does not move the frame at all.
-//
 // Mario grabs the leg by its third joint, except while it is clipped out --
 // then there is no animated matrix, so the base matrix is re-pointed at the
 // leg's own position instead.
@@ -347,7 +342,7 @@ MtxPtr THauntLeg::getTakingMtx()
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		TPosition3f mtx;
 		mtx.translation(mPosition.x, mPosition.y, mPosition.z);
-		J3DModel* model = getMActor()->getModel();
+		J3DModel* model = mMActor->getModel();
 		MTXCopy(mtx, model->getBaseTRMtx());
 		return getMActor()->getModel()->getBaseTRMtx();
 	}
