@@ -337,24 +337,62 @@ static f32 sMessengerPosZ = 200.0f;
 /// How far above it.
 static f32 sMessengerPosY = 6400.0f;
 
+/// Fabricated: the binder retail's frame shows at this unit's anm-matrix reads.
+static inline J3DModel* BiancoMiniWindmillModel(TBiancoMiniWindmill* p)
+{
+	return p->getModel();
+}
+
+static inline MtxPtr BiancoMiniWindmillAnmMtx(TBiancoMiniWindmill* p, int idx)
+{
+	J3DModel* model = BiancoMiniWindmillModel(p);
+	return model->getAnmMtx(idx);
+}
+
+/// Fabricated: the forks retail's frame shows at the tuning reads.
+static inline f32 BiancoMiniWindmillRotWaterAccel()
+{
+	return TBiancoMiniWindmill::mRotWaterAccel;
+}
+static inline f32 BiancoMiniWindmillRotSpeedMax()
+{
+	return TBiancoMiniWindmill::mRotSpeedMax;
+}
+
+/// Fabricated: the fork retail's frame shows at the messenger-height reads.
+static inline f32 BiancoMessengerPosY() { return sMessengerPosY; }
+
+/// Fabricated: the binder retail's frame shows at the messenger reads.
+static inline const JGeometry::TVec3<f32>& BiancoMiniWindmillMessengerPos(
+    TBiancoMiniWindmill* p)
+{
+	TMapObjMessenger* messenger = p->mMessenger;
+	return messenger->mPosition;
+}
+
+// TODO: the frame is retail's but `point` sits 8 bytes high: the low pool is
+// 8 too big and the named block 8 too small. Retail holds 0x10 above `point`
+// where `mtx` alone gives 8, and no caller-level spelling tried (a named
+// J3DModel*, an uninitialised `mtx` declared first) moves the split.
 u32 TBiancoMiniWindmill::touchWater(THitActor* water)
 {
 	const JGeometry::TVec3<f32>& pos = getWaterPos(water);
-	if (pos.y < mPosition.y + sMessengerPosY - 300.0f)
+	if (pos.y < mPosition.y + BiancoMessengerPosY() - 300.0f)
 		return 1;
 
 	// Only water hitting the front of the blades turns them.
 	const JGeometry::TVec3<f32>& speed = getWaterSpeed(water);
-	MtxPtr mtx                         = getModel()->getAnmMtx(0);
+	MtxPtr mtx                         = BiancoMiniWindmillAnmMtx(this, 0);
 	if (speed.z * mtx[2][2] + (speed.x * mtx[0][2] + speed.y * mtx[1][2])
 	    > 0.0f)
 		return 0;
 
-	mRotSpeed += mRotWaterAccel;
-	if (mRotSpeed > mRotSpeedMax) {
-		mRotSpeed = mRotSpeedMax;
+	mRotSpeed += BiancoMiniWindmillRotWaterAccel();
+	if (mRotSpeed > BiancoMiniWindmillRotSpeedMax()) {
+		mRotSpeed = BiancoMiniWindmillRotSpeedMax();
 		JGeometry::TVec3<f32> point(mPosition.x,
-		                            550.0f + mMessenger->mPosition.y,
+		                            550.0f
+		                                + BiancoMiniWindmillMessengerPos(this).y,
 		                            mPosition.z);
 		mAppearSpeed = 0.0f;
 		appearObjFromPoint(point);
