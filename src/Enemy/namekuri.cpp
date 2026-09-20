@@ -556,29 +556,40 @@ void TNameKuri::setGenerateAnm()
 
 void TNameKuri::setWalkAnm() { setBckAnm(7); }
 
-// TODO: setDeadAnm and setMeltAnm share one 40-byte frame gap (0x40 vs 0x68)
-// with every instruction exact. Located with a trailing `volatile char
-// trash[40]`: the unnamed `setVelocity(TVec3(0,0,0))` temporary belongs at
-// 0x48 with 12 bytes *above* it (one named 12-byte local, dead, declared
-// before the zero vector) and 28 more bytes of low region *below* it.
-// Measured levers, none of which reproduces that split: the two-argument
-// startSoundActor +8; one parked binding level on
-// getMActor()->getModel()->getAnmMtx() +16, two nested levels +16 (they do not
-// stack here), the pair +0x20; getScaling() at the setGlobalScale sites -8;
-// &getPosition() at the sound site costs an instruction. SMS_EasyEmitParticle
-// for the two emit-then-scale blocks is codegen-identical (+0), so it is not
-// the carrier either. TNameKuri::init is short by the same 40 bytes and
-// initSetEnemies and TNerveNKFollowMario by 16, so the cause is probably one
-// shared inline this TU reaches (getMActor()'s chain is the only callee all of
-// them have).
+// TODO: setDeadAnm and setMeltAnm now carry retail's 0x68 frame, but the
+// unnamed `setVelocity(TVec3(0,0,0))` temporary still sits at 0x54 where
+// retail puts it at 0x48 with 12 bytes *above* it -- the low region is 12
+// too tall and the named block 12 too short. Ladder measured here (base
+// 0x40): NameKuriAnmMtx as a three-local binder +0x18, nesting
+// NamekuriGetMActor inside it another +8, the two-local form plus that
+// nesting plus the NameKuriMSound binder +0x28 (the rungs saturate: the
+// three-local plus MSound is only +0x20 and all three +0x30). Priced at 0
+// here: a direct-return `gpMSound` fork, and `TVec3 zero; zero.set(0,0,0);
+// setVelocity(zero);` (ladder 266's +0x10 named-block hole does not appear
+// in this pool). TNameKuri::init is short by the same 40 bytes.
+static inline MActor* NamekuriGetMActor(const TNameKuri* p);
+
+static inline MSound* NameKuriMSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
+static inline MtxPtr NameKuriAnmMtx(const TNameKuri* p, int i)
+{
+	MActor* mActor  = NamekuriGetMActor(p);
+	J3DModel* model = mActor->getModel();
+	return model->getAnmMtx(i);
+}
+
 void TNameKuri::setDeadAnm()
 {
 	setBckAnm(0);
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_NAMEKURI_DOWN, &mPosition, 0,
+	NameKuriMSound()->startSoundActor(MSD_SE_EN_NAMEKURI_DOWN, &mPosition, 0,
 	                                nullptr, 0, 4);
 
-	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(2);
+	MtxPtr mtx = NameKuriAnmMtx(this, 2);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_O, mtx, 0, nullptr)) {
@@ -612,7 +623,7 @@ void TNameKuri::setMeltAnm()
 {
 	setBckAnm(1);
 
-	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(2);
+	MtxPtr mtx = NameKuriAnmMtx(this, 2);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        PARTICLE_MS_DEADNAMEKLI_O, mtx, 0, nullptr)) {
@@ -629,7 +640,7 @@ void TNameKuri::setMeltAnm()
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 	onLiveFlag(LIVE_FLAG_UNK10);
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_NAMEKURI_DOWN_WT, &mPosition, 0,
+	NameKuriMSound()->startSoundActor(MSD_SE_EN_NAMEKURI_DOWN_WT, &mPosition, 0,
 	                                nullptr, 0, 4);
 }
 
