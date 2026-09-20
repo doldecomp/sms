@@ -633,6 +633,13 @@ BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 
 // Binding level worth +8 of low region, landing TRedCoinSwitch::load's frame
 // at 0x30 (batch 121).
+// Setter level around the timer store, worth +4 of low region in
+// TRedCoinSwitch::load.
+static inline void MapObjTownSetTime(TRedCoinSwitch* p, s32 time)
+{
+	p->unk138 = time;
+}
+
 static inline TFlagManager* MapObjTownGetInstance()
 {
 	TFlagManager* instance = TFlagManager::getInstance();
@@ -681,13 +688,13 @@ void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 	TMapObjBase::load(stream);
 	u32 tmp;
 	stream >> tmp;
-	unk138 = tmp;
+	MapObjTownSetTime(this, tmp);
 	if (unk138 <= 0)
 		unk138 = 1200;
 	else
 		unk138 *= 10;
 
-	u8 shineId = SMS_getShineIDofExStage(gpMarDirector->getCurrentMap());
+	u8 shineId = SMS_getShineIDofExStage(gpMarDirector->mMap);
 	if (shineId != 0xFF
 	    && !MapObjTownGetInstance()->getShineFlag(shineId)) {
 		makeObjDead();
