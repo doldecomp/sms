@@ -38,6 +38,12 @@ J3DModel* TMareWallRock::getMapModel() const
 
 void TMareWallRock::depress() { }
 
+// TODO: instruction-exact and frame-exact; `trans` still lands at 0x44(r1)
+// where retail has 0x40, so the low pool below the named block is 4 bytes
+// too tall. Exhausted: the call-temporary spelling (whole frame +8), a
+// named rotation vector shared by both emitters (-0x10), `JPABaseEmitter*
+// em` declared before `trans` and assigned after (the if-condition
+// declaration is what shapes the two emitter blocks), `trans.set()`.
 void TMareWallRock::appear()
 {
 	// TODO: hack, remove me
@@ -48,7 +54,8 @@ void TMareWallRock::appear()
 
 	unk10C[0]->setUp();
 	unk104->awake();
-	unk10C[0]->moveTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, unkFC));
+	JGeometry::TVec3<f32> trans(0.0f, 0.0f, unkFC);
+	unk10C[0]->moveTrans(trans);
 	f32 rotY = unk128;
 
 	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
