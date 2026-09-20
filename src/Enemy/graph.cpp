@@ -307,13 +307,13 @@ int TGraphWeb::getEscapeFromMarioIndex(int param_1, int param_2,
                                        const JGeometry::TVec3<f32>& param_3,
                                        u32 param_4) const
 {
-	const TGraphNode& node = getGraphNode(param_1);
+	const TGraphNode* node = &unk0[param_1];
 	TRailNode fakeNode;
 	const TRailNode* railNode;
 	if (param_4 == -1) {
-		railNode = node.getRailNode();
+		railNode = node->getRailNode();
 	} else {
-		filterRailNode(param_4, node.getRailNode(), unk4, &fakeNode);
+		filterRailNode(param_4, node->getRailNode(), unk4, &fakeNode);
 		railNode = &fakeNode;
 	}
 
@@ -341,7 +341,7 @@ int TGraphWeb::getEscapeFromMarioIndex(int param_1, int param_2,
 			continue;
 
 		JGeometry::TVec3<f32> local_ac;
-		getGraphNode(railNode->mConnections[i]).getPoint(local_ac);
+		getGraphNode(railNode->mConnections[i]).getPoint(&local_ac);
 		local_ac -= param_3;
 		MsVECNormalize(&local_ac, &local_ac);
 
