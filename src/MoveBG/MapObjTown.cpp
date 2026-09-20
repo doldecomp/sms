@@ -632,15 +632,22 @@ TMapObjSwitch::TMapObjSwitch(const char* name)
 	gpMapObjSwitch = this;
 }
 
+static inline MActor* MapObjTownGetMActor(const TRedCoinSwitch* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("redcoinswitch");
-		gpMarDirector->unk18[0]->mDisabledFrames
-		    = (s32)(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2
+		MapObjTownGetMarDirector()->unk18[0]->mDisabledFrames
+		    = (s32)(MapObjTownGetMActor(this)->getFrameCtrl(ANM_TYPE_BCK)->getEnd()
+		                * 2
 		            + 0x3C);
-		gpMSound->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition, 0, nullptr,
-		                          0, 4);
+		MapObjTownGetMSound()->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition,
+		                                      0, nullptr, 0, 4);
 		removeMapCollision();
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mState = 2;
