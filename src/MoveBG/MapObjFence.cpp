@@ -101,11 +101,23 @@ void TRevolvingFenceOuter::initMapCollisionData()
 
 f32 TRevolvingFenceInner::mSpeed = 4.0f;
 
+static inline bool RevolvingFenceIsWall(const TRevolvingFenceInner* p)
+{
+	bool isWall = p->mIsWall;
+	return isWall;
+}
+
+static inline MSound* RevolvingFenceSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 BOOL TRevolvingFenceInner::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_SUPER_HIP_DROP && !mIsWall) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP && !RevolvingFenceIsWall(this)) {
 		if (isState(STATE_WAIT_FRONT)) {
-			gpMSound->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE1, &mPosition, 0,
+			RevolvingFenceSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE1, &mPosition, 0,
 			                          nullptr, 0, 4);
 			setState(STATE_TURN_TO_BACK_CW);
 			startBck("fence_revolve_inner_roll_down");
@@ -114,7 +126,7 @@ BOOL TRevolvingFenceInner::receiveMessage(THitActor* sender, u32 message)
 		}
 
 		if (isState(STATE_WAIT_BACK)) {
-			gpMSound->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE2, &mPosition, 0,
+			RevolvingFenceSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE2, &mPosition, 0,
 			                          nullptr, 0, 4);
 			setState(STATE_TURN_TO_FRONT_CW);
 			startBck("fence_revolve_inner_roll_up");
@@ -123,7 +135,7 @@ BOOL TRevolvingFenceInner::receiveMessage(THitActor* sender, u32 message)
 		}
 	}
 
-	if (message == HIT_MESSAGE_SUPER_HIP_DROP && mIsWall) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP && RevolvingFenceIsWall(this)) {
 		// Which side of the panel Mario is standing on decides the turn
 		// direction, so that he always gets pushed away from the fence.
 		f32 toMario = 180.0f * (getRotYFromAxisZ(SMS_GetMarioPos()) / 3.14f)
@@ -132,14 +144,14 @@ BOOL TRevolvingFenceInner::receiveMessage(THitActor* sender, u32 message)
 
 		if ((-180.0f < toMario && toMario < -90.0f)
 		    || (0.0f < toMario && toMario < 90.0f)) {
-			gpMSound->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE1, &mPosition, 0,
+			RevolvingFenceSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE1, &mPosition, 0,
 			                          nullptr, 0, 4);
 			if (isState(STATE_WAIT_FRONT))
 				setState(STATE_TURN_TO_BACK_CW);
 			else
 				setState(STATE_TURN_TO_FRONT_CW);
 		} else {
-			gpMSound->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE2, &mPosition, 0,
+			RevolvingFenceSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE2, &mPosition, 0,
 			                          nullptr, 0, 4);
 			if (isState(STATE_WAIT_FRONT))
 				setState(STATE_TURN_TO_BACK_CCW);
