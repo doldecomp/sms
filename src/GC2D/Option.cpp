@@ -757,6 +757,8 @@ void TOptionSoundUnit::adjust()
 	// visible in checkInput) and inlines it away in loadSetting's three
 	// copies; our build inlines the global read at both, so the dead call is
 	// missing. Per-site accessor inlining, not a spelling problem.
+	// A TU-local fork/binder over SMSGetMSound() decays; it does not
+	// create the `bl` or emit the weak 8-byte copy.
 	SMSGetMSound()->setParamSoundOutputMode(setting.mOutputMode);
 }
 
@@ -1037,16 +1039,14 @@ static inline TOptionRumbleUnit* OptionRumbleUnit(const TOptionControl* p)
 void TOptionControl::setType(TOptionControl::SelectType type,
                              bool initial_options_entry)
 {
-	// TODO: 8 bytes of frame short (target 0x30, ours 0x28); every
-	// instruction matches. A TU-local binder over mRumbleOption at any one
-	// site here is +0x10, not +8, so the rung is wrong, not the class.
-	// A raw gpMSound binder above the startSound bl is +0 (level-above-bl).
-	// A one-site sound-unit binder is +0x10, same as rumble.
+	// getRumbleOption() at the rumble activate site is the +8 of low
+	// region (header accessor, not a TU-local binder). Binders over
+	// mRumbleOption / mSoundOption here were +0x10.
 	if (mSelectedOption != type || initial_options_entry) {
 		mSelectedOption = type;
 		switch (type) {
 		case SELECT_TYPE_RUMBLE_OPTION:
-			mRumbleOption->activate();
+			getRumbleOption()->activate();
 			mSoundOption->deactivate(initial_options_entry);
 			mSubtitleOption->deactivate(initial_options_entry);
 			break;
