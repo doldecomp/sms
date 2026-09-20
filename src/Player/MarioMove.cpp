@@ -592,7 +592,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 				startVoice(MSD_SE_MV15_EXERT_INST_01);
 			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Hover)
 				startVoice(MSD_SE_MV21_JUMP_SMALL_01);
-			mVel.y = 10.0f;
+			setPlayerJumpSpeed(0.0f, 10.0f);
 		}
 		break;
 	}
