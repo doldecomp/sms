@@ -194,7 +194,9 @@ void TMapObjBase::stopAnim()
 	if (unkFE == 0xffff)
 		return;
 
-	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
+	// getMapObjData() here is the +8 that closes startAnim (0x58 -> 0x60);
+	// makeObjDead does not pay it (still +0x28 short).
+	const TMapObjAnimDataInfo* anim = getMapObjData()->mAnim;
 	if (!anim || anim->unk0 == 0)
 		return;
 
