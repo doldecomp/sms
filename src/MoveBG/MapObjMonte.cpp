@@ -252,18 +252,16 @@ void THangingBridge::drawLowerMinus(const JGeometry::TVec3<f32>& from,
 	f32 y        = from.y;
 	f32 z        = from.z;
 	f32 step     = 1.0f / divide;
-	f32 texRate  = mBetweenBoardsTexPosRate;
-	f32 ropeY    = mRopeWidthBetweenBoardsY;
 	f32 dx       = step * (to.x - from.x);
 	f32 dy       = step * (to.y - from.y);
 	f32 dz       = step * (to.z - from.z);
 
 	for (int i = 0; i < divide; i++) {
 		f32 sag = y - mRopeSag[i];
-		f32 tex = texRate * (x + z);
+		f32 tex = mBetweenBoardsTexPosRate * (x + z);
 		GXPosition3f32(x - width.x, sag, z - width.y);
 		GXTexCoord2f32(0.0f, tex);
-		GXPosition3f32(x, sag - ropeY, z);
+		GXPosition3f32(x, sag - mRopeWidthBetweenBoardsY, z);
 		GXTexCoord2f32(1.0f, tex);
 		x += dx;
 		y += dy;
@@ -271,9 +269,6 @@ void THangingBridge::drawLowerMinus(const JGeometry::TVec3<f32>& from,
 	}
 }
 
-// TODO: 88.4%. Same instructions as retail; only float-register numbering and
-// the scheduling of the 1.0f/divide load differ (declaring step first changes
-// nothing).
 void THangingBridge::drawLowerPlus(const JGeometry::TVec3<f32>& from,
                                    const JGeometry::TVec3<f32>& to,
                                    const JGeometry::TVec2<f32>& width,
@@ -283,16 +278,14 @@ void THangingBridge::drawLowerPlus(const JGeometry::TVec3<f32>& from,
 	f32 y        = from.y;
 	f32 z        = from.z;
 	f32 step     = 1.0f / divide;
-	f32 texRate  = mBetweenBoardsTexPosRate;
-	f32 ropeY    = mRopeWidthBetweenBoardsY;
 	f32 dx       = step * (to.x - from.x);
 	f32 dy       = step * (to.y - from.y);
 	f32 dz       = step * (to.z - from.z);
 
 	for (int i = 0; i < divide; i++) {
 		f32 sag = y - mRopeSag[i];
-		f32 tex = texRate * (x + z);
-		GXPosition3f32(x, sag - ropeY, z);
+		f32 tex = mBetweenBoardsTexPosRate * (x + z);
+		GXPosition3f32(x, sag - mRopeWidthBetweenBoardsY, z);
 		GXTexCoord2f32(0.0f, tex);
 		GXPosition3f32(x + width.x, sag, z + width.y);
 		GXTexCoord2f32(1.0f, tex);
@@ -311,14 +304,13 @@ void THangingBridge::drawUpper(const JGeometry::TVec3<f32>& from,
 	f32 y       = from.y;
 	f32 z       = from.z;
 	f32 step    = 1.0f / divide;
-	f32 texRate = mBetweenBoardsTexPosRate;
 	f32 dx      = step * (to.x - from.x);
 	f32 dy      = step * (to.y - from.y);
 	f32 dz      = step * (to.z - from.z);
 
 	for (int i = 0; i < divide; i++) {
 		f32 sag = y - mRopeSag[i];
-		f32 tex = texRate * (x + z);
+		f32 tex = mBetweenBoardsTexPosRate * (x + z);
 		GXPosition3f32(x + width.x, sag, z + width.y);
 		GXTexCoord2f32(0.0f, tex);
 		GXPosition3f32(x - width.x, sag, z - width.y);
