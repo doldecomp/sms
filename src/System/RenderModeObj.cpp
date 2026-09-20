@@ -116,7 +116,7 @@ void SMSSetupGameRenderingInfo(JDrama::TDisplay* param_1, bool param_2)
 	                                                      : VI_INTERLACE);
 #else
 	GXRenderModeObj& rmo = param_1->getRenderMode();
-	bool noFilter = VIGetTvFormat() == 0 && OSGetProgressiveMode() == 1;
+	bool noFilter        = VIGetTvFormat() == 0 && OSGetProgressiveMode() == 1;
 
 	rmo.viTVmode = (VITVMode)VI_TVMODE(
 	    VIGetTvFormat(), noFilter ? VI_PROGRESSIVE : VI_INTERLACE);
@@ -167,7 +167,7 @@ void SMSSetupMovieRenderingInfo(JDrama::TDisplay* param_1)
 	                                                      : VI_INTERLACE);
 #else
 	GXRenderModeObj& rmo = param_1->getRenderMode();
-	bool noFilter = VIGetTvFormat() == 0 && OSGetProgressiveMode() == 1;
+	bool noFilter        = VIGetTvFormat() == 0 && OSGetProgressiveMode() == 1;
 
 	rmo.viTVmode = (VITVMode)VI_TVMODE(
 	    VIGetTvFormat(), noFilter ? VI_PROGRESSIVE : VI_INTERLACE);

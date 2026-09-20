@@ -356,7 +356,7 @@ void TLiveActor::perform(u32 cue, JDrama::TGraphics* graphics)
 #ifdef VERSION_GMSP01
 			if (mLiveFlag & LIVE_FLAG_CALC_INT_FRAME) {
 				J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
-				frame               = ctrl->getFrame();
+				frame              = ctrl->getFrame();
 				ctrl->setFrame((int)frame);
 			}
 #endif
