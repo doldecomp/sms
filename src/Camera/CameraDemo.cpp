@@ -118,6 +118,7 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 void CPolarSubCamera::updateGateDemoCamera_()
 {
 	f32 fovy;
+	char trash[4];
 	unk2B0->updateDemo(nullptr, nullptr, nullptr, &fovy);
 
 	int v = mInbetween->getUnk4();
