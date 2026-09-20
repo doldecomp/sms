@@ -89,26 +89,29 @@ void TAfterEffect::calcDashBlurValue()
 	unk15 = 0;
 }
 
-// TODO: 99.8%, and the only difference in the whole function is that r30 and
-// r31 are swapped over 22 instructions. The ROM keeps the shared constant 0 in
-// r31 (hoisted to 0x494 for the four `color` byte stores and reused as the
-// false value of every `checkFlag(4)` materialisation) and `rect`'s address in
-// r30; we have it the other way round. Frame, slots, instruction count and
-// every other register already match.
+// TODO: 99.8% — pure r30/r31 swap over 22 instructions (frame/slots/count
+// exact). Retail keeps the CSE'd constant 0 in r31 (color byte stores + the
+// first `checkFlag(4)` false path; sites 2 and 3 materialise into r0) and
+// `rect`'s address in r30; we have it the other way round.
 //
-// Measured and rejected, all codegen-neutral or worse: declaring `rect` before
-// `color` (still r31 for rect), all six orderings of the color block, the rect
-// reference and the interpolation block (RAC/ACR/ARC cost six instructions),
-// `rect` as a pointer, by value, or as the raw graphics->mViewportRect (the
-// last also moves the frame to 0x98), `GXColor color = {0,0,0,0}` (129 diffs),
-// the chained `color.a = color.b = color.g = color.r = 0`, a ternary in place
-// of the three if/else pairs (212 diffs), `unk14 & 4` in place of checkFlag(4)
-// (162 diffs), and `checkFlag(4) != FALSE` (78 diffs).
+// This is the residual compiler-temp-vs-named-local ranking class
+// (codegen-tells / frame-gaps batch 144–145): our build ranks the named
+// `rect` above the hoisted 0, retail ranks the 0 above `rect`. Live-range
+// length is inert for that class.
 //
-// Best next hypothesis: the ROM's `rect` has a shorter live range than ours --
-// something between the GXBegin block's sixteen `rect.` reads is named in the
-// original (the repeated `(rect.x1 + rect.x2) / 2` midpoints are the obvious
-// candidate), which would drop rect below the constant in MWCC's ranking.
+// Measured and rejected (codegen-neutral or worse):
+// - declaration order of color / rect / interpolation (all six; RAC/ACR/ARC
+//   cost six instructions); `rect` as pointer, by value, or raw
+//   `graphics->mViewportRect` (frame -> 0x98); per-site `getViewport()`
+//   (frame -> 0xe8); TU-local getViewport / viewport-pointer wrappers (inert)
+// - `GXColor color = {0,0,0,0}` (129 diffs); chained `color.a = ... = 0`;
+//   named `u8 colorZero` (inert); `BOOL isDash = FALSE` feeding color + the
+//   first checkFlag (+8 frame, 99.7%)
+// - ternary for the three if/else pairs (212); `unk14 & 4` (162);
+//   `checkFlag(4) != FALSE` (78)
+// - named midX/midY (function- or block-scope; 89.9% / inert); named rect
+//   component scalars (85.3%); named `JUTTexture*` binder (+8 frame);
+//   named-scalar-count sweep N=0..7 (never flips the swap; N>=2 grows frame)
 void TAfterEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(unk14 & 1))
