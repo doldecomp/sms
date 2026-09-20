@@ -41,6 +41,22 @@ TConsoleStr::TConsoleStr(const char* name)
 
 f32 TConsoleStr::getWipeCloseTime() { return 30.0f / SMSGetVSyncTimesPerSec(); }
 
+// ShineTable.hpp indexes with the full u32; retail's expansion here masks to
+// u8 before lbzx (clrlwi r0, scenario, 24).
+static inline s16 ConsoleStrGetShineID(u32 stage, u32 scenario)
+{
+	const u8* table;
+
+	if (stage > 9)
+		return -1;
+
+	table = scShineConvTable[stage];
+	if (table == nullptr)
+		return -1;
+
+	return table[(u8)scenario];
+}
+
 void TConsoleStr::load(JSUMemoryInputStream& stream)
 {
 	JKRArchive* arch = SMSSwitch2DArchive("guide", gArBkConsole);
@@ -80,15 +96,16 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	unk294 = new TExPane(unk14, 'wp_l');
 	unk298 = new TExPane(unk14, 'wp_r');
 
-	u32 uVar1     = SMS_getShineStage(gpMarDirector->mMap);
-	u32 uVar9     = TFlagManager::getInstance()->getFlag(0x40003);
-	void* pvVar10 = JKRGetResource("/common/2d/stagename.bmg");
+	u32 uVar1        = SMS_getShineStage(gpMarDirector->mMap);
+	TFlagManager* fm = TFlagManager::getInstance();
+	u32 uVar9        = fm->getFlag(0x40003);
+	void* pvVar10    = JKRGetResource("/common/2d/stagename.bmg");
 	unk29C[0]->setString(SMSGetMessageData(pvVar10, uVar1));
 
 	if (gpMarDirector->mMap != 15) {
 		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
 
-		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
+		s16 uVar2 = ConsoleStrGetShineID(uVar1, uVar9);
 
 		const void* puVar15;
 		if (pvVar10 == nullptr || uVar2 == -1)
@@ -385,10 +402,11 @@ bool TConsoleStr::processReady(int param_1)
 			unk278[i]->getPane()->setAlpha(0);
 		} else if (param_1 < i * 10 + 30) {
 			unk278[i]->update();
-			u16 alpha = unk278[i]->getPane()->getAlpha() + 9;
+			J2DPane* pane = unk278[i]->getPane();
+			u16 alpha     = pane->getAlpha() + 9;
 			if (alpha > 0xFF)
 				alpha = 0xFF;
-			unk278[i]->getPane()->setAlpha(alpha);
+			pane->setAlpha(alpha);
 		} else if (param_1 >= i * 10 + 130) {
 			if (param_1 == i * 10 + 130) {
 				JUTRect rect = unk278[i]->getPane()->getBounds();
