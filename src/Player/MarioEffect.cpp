@@ -169,6 +169,7 @@ void TMarioEffect::endDashEffect()
 
 void TMarioEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	Mtx mtx;
 	if (cue & CUE_MOVE) {
 		switch (unk7C) {
 		case 0:
