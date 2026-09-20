@@ -4156,3 +4156,103 @@ startSoundActorWithInfo` (beide letzteren PCH-blockiert für
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`. Alle Arbeitsbäume nach dem oben
 dokumentierten Reset-Inzident als sauber verifiziert.
+
+### Nach vierundfünfzigster Iterationsrunde (5 weitere Matches; JDRFlag.hpp-Header-Experiment als Lehrbeispiel für heterogene Compiler-Entscheidungen; Inzident 2)
+
+**`JDRFlag.hpp`-Untersuchung** (dediziert, 11 Minuten): Der Versuch,
+`JDrama::TFlagT<u16>::TFlagT(const TFlagT&)` und `::set(u16)` projektweit
+als „declare-only" mit expliziter Out-of-line-Instanziierung in
+`MarDirectorDirect.cpp` zu erzwingen (Ziel: `TApplication`-Konstruktor
+und `decideNextStage()` reparieren), ergab nach vollständiger
+Projekt-Regressionsprüfung (alle 736 Units) ein klares **NO-GO**: 12
+vormals 100 % gematchte Funktionen regressierten (teils um über 50
+Prozentpunkte), `decideNextStage()` verbesserte sich GAR NICHT
+(Byte-identisch vorher/nachher), und `TApplication`-Konstruktor
+verbesserte sich nur teilweise (36,4 % → 70,3 %, nicht exakt). **Wichtige
+Erkenntnis**: Retails Compiler trifft für dieses triviale
+Template-Member GENUINELY UNTERSCHIEDLICHE Inline-Entscheidungen pro
+Aufrufstelle (manche Stellen inlinen die Kopie, andere rufen sie auf) —
+eine einzige globale „declare-only"-Header-Änderung ist zu grobschlächtig,
+um diese Heterogenität nachzubilden; sie kann nur EIN Verhalten überall
+erzwingen. Sauber zurückgesetzt (Commit `b7384f3a`, Revert-Commit).
+
+**Fünf neue Byte-exakte Matches** aus einem parallelen Batch von 15
+kleineren Kandidaten:
+
+- **`TPakkunSeed::behaveToHitWall(const TBGCheckData*)`** (95,0 % → Match,
+  Commit `c335c131`): **Neues, fünftes Bugmuster**: „Accessor-Aufruf vs.
+  direkter Feldzugriff verhindert CSE" — `mVelocity.dot(ground->mNormal)`
+  (direkter Zugriff) ließ MWCC die `normal.x`-Last über zwei Verwendungen
+  hinweg wiederverwenden; Retail nutzt für den `dot()`-Aufruf den
+  `getNormal()`-Accessor (unterbindet die CSE), behält aber für die drei
+  `+=`-Zeilen direkten Feldzugriff.
+- **`SMS_InitPacket_Fog(J3DModel*, u16)`** (93,1 % → Match, Commit
+  `ee984000`): Benannter `J3DPEBlock* peblock`-Lokal vor der
+  `getFog()`-Kette erzwang korrekte Ladereihenfolge (`getPEBlock()` vor
+  `getShape()`); plus `char trash[40]`. Korrigiert eine frühere,
+  unvollständige Untersuchung (nur Padding versucht, Strukturproblem
+  übersehen).
+- **`TSmallEnemy::attackToMario()`** (90,4 % → Match, Commit `c9f1b81e`):
+  Retail berechnet den Mario-Richtungsvektor über einen
+  Drei-Argument-`TVec3`-Konstruktor und skaliert/akkumuliert dann IN
+  PLACE (kein dritter temporärer Vektor) — `sub()` + separater
+  skalierter Temp durch direkte Konstruktion + In-Place-`scale()`/
+  Akkumulation ersetzt.
+- **`TRedCoinSwitch::control()`** (92,9 % → Match, Commit `0441aa1f`):
+  Falsches `switch`-Case-Label (`case 1` statt `case 4` für den
+  No-op-Zustand) veränderte MWCCs Pivot-Wahl für den binären
+  Case-Dispatch-Baum; Fix reproduziert Retails tatsächliche
+  Case-Werte-Menge {1,2,3,4}.
+- **`TMapWarp::watchToWarp()`** (66,4 % → Match, Commit `e29ac366`):
+  Umfangreichster Fix dieser Runde (26 Minuten Untersuchung) — gecachter
+  `checkData->getData()`-Index statt Neulesens, `TVec3::add` bewusst
+  out-of-line über die `operator+`-Fake-Referenz-Masche (wie bereits bei
+  `bgIntersectLine` in `MapCheck.cpp` bekannt) statt inline-expandierendem
+  `+=`, plus präzise Lokalen-Deklarationsreihenfolge und drei
+  `char trash[N]`-Anpassungen für exakte Slot-Adressen.
+
+**Inzident 2**: Der `JDRFlagHeaderFix`-Unteragent führte versehentlich
+`git stash` im geteilten Repository aus, wodurch die unfertigen
+Arbeitsbaum-Änderungen ALLER gleichzeitig laufenden Unteragenten
+temporär eingelagert wurden. Der Agent erkannte den Fehler sofort,
+beließ den Stash unangetastet (kein `pop`/`drop`) und benachrichtigte
+alle betroffenen Agenten per Hub-Nachricht mit genauen
+Wiederherstellungsanweisungen (`git show stash@{0}:<path>`). Alle
+betroffenen Agenten stellten ihren Stand erfolgreich wieder her oder
+hatten bereits vor dem Zwischenfall zurückgesetzt; keine Arbeit ging
+verloren. Ein zweiter, kleinerer Vorfall (`PacketUtilFog` committete
+versehentlich zwei fremde, bereits im Index gestagete Dateien mit) wurde
+vom betroffenen Agenten selbst sofort per `git reset --soft HEAD~1` +
+gezieltem `git restore --staged` korrigiert. Beide Vorfälle bestätigen:
+**dateispezifische Git-Operationen sind bei parallelen Agenten-Batches
+Pflicht** — niemals pauschale `git stash`/`git add -A`/`git reset --hard`
+ohne Pfadangabe im geteilten Arbeitsbaum.
+
+**Zehn weitere gründlich dokumentierte Fast-Treffer/Sackgassen**
+(zurückgesetzt): `TMapObjBase::startControlAnim`, `SMS_IsMarioOnWire`
+(bereits aus früherer Runde bekannt), `TMapCheckGroundPlane::
+checkPlaneGround` (bereits dokumentiertes TODO-Problem), `TTalkCursor::
+associateNPC`, `TMapObjPlane::makeMountain`, `TNpcParts::
+setPartsAnmFrame` (2 von 3 Switch-Case-Blöcken repariert, dritter
+resistent), `TRope::moveHead` (echter Bug gefunden — fehlendes
+`dont_inline` auf `TVec3::scale(f32)` in `JGVec3.hpp` als
+Systemursache identifiziert, aber außerhalb des Aufgabenumfangs),
+`TMapObjSwitch::control`, `TNerveHino2Landing::execute` (echter
+Flag-Bug `LIVE_FLAG_HIDDEN`→`LIVE_FLAG_CLIPPED_OUT` gefunden, aber
+beide betroffenen Werte sind im Retail-Binary selbst tot/ungenutzt),
+`TTamaNoko::landEffect` (**zwei echte Algorithmus-Bugs** gefunden und
+behoben — fehlendes if/else für Sand-vs-Nicht-Sand-Zweig, fehlender
+0,8-Skalierungsfaktor bei allen vier `setGlobalScale`-Aufrufen — auf
+8 von 223 Instruktionen reduziert, Restdifferenz nachweislich in der
+gemeinsam genutzten `JPABaseEmitter::setGlobalScale`/`TVec3`-Temp-
+Allokation lokalisiert, bestätigt durch identisches Muster in einer
+NIE berührten Schwesterdatei `namekuri.cpp`), `TMapObjGeneral::thrown`
+(auf 15 von 102 Instruktionen reduziert, Restindiz deutet auf eine
+verlorene Inline-Hilfsfunktion im Retail-Quelltext hin).
+
+### Session-Gesamtstand nach Runde 54
+
+**423 verifizierte echte Fixes in 80 Commits.** `matched_functions`:
+**9010** (von 9005 zu Rundenbeginn), `matched_code_percent`: 45,06 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`.
