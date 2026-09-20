@@ -46,6 +46,12 @@ static inline MSound* MapObjPinnaGetMSound()
 	return sound;
 }
 
+static inline J3DModel* MapObjPinnaGetModel(TLiveActor* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 s32 TFerrisWheel::becomeCalmlyCallback(u32 param_1, u32 param_2)
 {
 	if (param_2 == 0) {
@@ -627,7 +633,7 @@ void TShellCup::initMapObj()
 
 	TMapCollisionStatic* rink = new TMapCollisionStatic();
 	rink->init("/mapObj/ShellCup_rink", 2, this);
-	rink->setMtx(getModel()->getAnmMtx(0));
+	rink->setMtx(MapObjPinnaGetModel(this)->getAnmMtx(0));
 	rink->setUp();
 }
 
@@ -995,14 +1001,6 @@ void TAmiKing::touchPlayer(THitActor* sender)
 
 static int switchSnd;
 
-// Retail binds the model into the destination register and only then adds the
-// base-TR offset, so the accessor sat behind one more inline level here.
-static inline MtxPtr MapObjPinnaBaseTRMtx(TLiveActor* p)
-{
-	J3DModel* model = p->getModel();
-	return model->getBaseTRMtx();
-}
-
 void TPinnaCoaster::control()
 {
 	TMapObjBase::control();
@@ -1011,10 +1009,7 @@ void TPinnaCoaster::control()
 	mRail->calc();
 
 	MtxPtr railMtx = mRail->getModel()->getAnmMtx(0);
-	// TODO: 99.0%. Retail binds the model into the destination register and
-	// only then adds the base-TR offset (`addi r4, r3, 0` + `addi r4, r4,
-	// 0x20`), and the copy temporary of the speed vector sits 4 bytes higher.
-	MTXCopy(railMtx, MapObjPinnaBaseTRMtx(this));
+	MapObjPinnaGetModel(this)->setBaseTRMtx(railMtx);
 
 	getMActor()->frameUpdate();
 	getMActor()->calc();
@@ -1023,13 +1018,15 @@ void TPinnaCoaster::control()
 	mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
 	// Same idiom as TMario::soundTorocco, which drives the same sound id.
+	// TODO: 99.9%. Frame exact; the subtract TVec3 sits 4 bytes high
+	// (known `a = b - c` residue).
 	f32 speed = JGeometry::TVec3<f32>(mPosition - mPrevPos).length();
 
 	// Only every other frame, so two coaster cars don't fight over the channel.
 	if (switchSnd) {
-		SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_JET_COASTER,
-		                                        &mPosition, nullptr, speed, 0,
-		                                        0, nullptr, 0, 4);
+		MapObjPinnaGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_OBJ_JET_COASTER, &mPosition, nullptr, speed, 0, 0, nullptr,
+		    0, 4);
 	}
 	switchSnd ^= 1;
 
