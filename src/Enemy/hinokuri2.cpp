@@ -1034,7 +1034,7 @@ void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
-		if (getLevel() == 2 || unk1A4->unk4 == 2) {
+		if (mLevel == 2 || unk1A4->unk4 == 2) {
 			if (cue & CUE_CALC_ANIM) {
 				unk1A4->setMatrix(getModel()->getAnmMtx(0x17));
 			}
