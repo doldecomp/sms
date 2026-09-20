@@ -1230,7 +1230,7 @@ void TMario::thinkDirty()
 	}
 
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
-		if (mPosition.y > mFloorPosition.z - 1.0f)
+		if (mPosition.y > mFloorPosition.z - 200.0f)
 			meltInWaterEffect();
 		mFootPrintTimer = 0;
 		mDirty -= mDirtyParams.mDecSwimming.get();
