@@ -5518,3 +5518,110 @@ gegenseitig aufhebbare Stack-Layout-„Basisvektoren" identifiziert,
 **9114** (von 9102 zu Rundenbeginn, +12 exakt wie erwartet).
 `matched_code_percent`: **46,82 %**. Volles `ninja`-Rebuild
 erfolgreich, `dtk shasum -c` bestätigt `build/GMSJ01/mario.dol: OK`.
+
+### Nach sechsundsechzigster Iterationsrunde (24-Kandidaten-Batch, 19 Fixes — dritter Rekord in Folge, neue Fehlerklasse „ungenutzter Header-Include verschiebt .data-Layout" entdeckt)
+
+**19 neue Fix-Commits** (alle mit der seit Runde 64 etablierten
+strengen Byte-für-Byte-Instruktionswort-Verifikation bestätigt):
+
+1. `SMSSetupTitleRenderingInfo` (Commit `83a43956`) — `char trash[8]`,
+   drittes von vier Geschwister-Funktionen in derselben Datei.
+2. `TNameKuri::init` (Commit `0b5b72e7`) — `char trash[40]`.
+3. `TPollutionLayer::cleaned` (Commit `56875296`) — `char trash[0x30]`.
+4. `TBellDolpic::receiveMessage` (Commit `05819d0e`) — `char trash[8]`.
+5. `TMapObjectLightWithDBSet::makeDrawBuffer` (Commit `9aeb3d3c`) —
+   `char trash[32]`, komplettiert die Drei-Geschwister-Serie in
+   `LightUtil.cpp` (alle drei `makeDrawBuffer`-Varianten jetzt exakt).
+6. `TNerveBossEelAppear::execute` (Commit `ffbd27f0`) — `char
+   trash[32]`.
+7. `TCardManager::writeOptionBlock_` (Commit `76af12e7`) —
+   zweiseitiges Padding (`trash1[4]` davor, `trash2[12]` danach um
+   `CARDFileInfo info`).
+8. `TMario::fencePunch` (Commit `53e6628a`) — `char trash[16]` NACH
+   dem verschachtelten `if`-Block mit `Mtx mtx` (Platzierung DAVOR
+   bewirkte nichts Nützliches, bestätigt erneut Anker-Positions-
+   Empfindlichkeit).
+9. `MSHandle::setSeDistanceParameters` (Commit `6f6ff407`) — **echter
+   Bug**: rief `setSeDistanceFir()` (falscher virtueller Slot) statt
+   `setSeDistanceFxmix()` (Vtable-Slot 0x18) auf. Plus `char trash[8]`.
+10. `TMario::trampleExec` (Commit `228341ec`) — `char trash[8]` NACH
+    `scale`-Lokaler (nicht davor — unbenutzte konstante Trash-Arrays
+    vor einem Lokal werden als generisches Boden-Padding behandelt,
+    nicht als benannter Pool-Kandidat, Muster 7i-Verfeinerung).
+11. `CPolarSubCamera::ctrlOptionCamera_` (Commit `aa2ec607`) — `u8
+    trash[32]` NACH `probe`-Lokaler.
+12. `TSmallEnemy::generateItem` (Commit `1d0117f1`) — anonymer
+    `TMsRange<f32>(0.0f,100.0f).rand()`-Kettenaufruf in eine benannte
+    Lokale `TMsRange<f32> genRange(...)` materialisiert.
+13. `TEnemyAttachment::perform` (Commit `6a81c638`) — **echter Bug**:
+    falscher virtueller Slot — `kill()` (Vtable-Offset 0xE4) statt
+    `behaveToHost()` (0x128, ein leerer Inline-Hook) aufgerufen; per
+    vollständigem `__vt__16TEnemyAttachment`-Vtable-Dump verifiziert.
+    Plus `char trash[8]`.
+14. `TSpcTypedInterp<TEventWatcher>::evGetFruitNum` (Commit
+    `01646ec9`) — bestätigt den in Runde 63 vorhergesagten
+    Geschwister-Fix von `evSetFruitType`: gepoppter Wert von `int` auf
+    `u32` umgetypt.
+15. `TMario::~TMario` (Commit `3bf1ede1`) — **NEUE FEHLERKLASSE**:
+    `MarioInit.cpp` band `<System/StageUtil.hpp>` nur wegen
+    `SMS_isMultiPlayerMap()` ein, zog dabei aber ungenutzte `static`-
+    Hilfsfunktionen samt 0x168 Byte rückenden statischen Datentabellen
+    (`scShineConvTable`, `scEtcShineConvTable`, `scScenarioNameTable`)
+    in die Übersetzungseinheit — MWCC entfernt ungenutzte
+    Datei-statische Symbole mit echten Initialisierern NICHT zur
+    Kompilierzeit. Das verschob das komplette `.data`-Layout dieser
+    Übersetzungseinheit und damit alle vom Destruktor berechneten
+    literal-pool-relativen Offsets (+0x28/+0x4c/+0xdc wurden zu
+    +0x190/+0x1b4/+0x244). Fix: vollen Header-Include durch eine
+    Vorwärtsdeklaration der einzigen tatsächlich genutzten Funktion
+    ersetzt.
+16. `TSandBlock::control` (Commit `dbb4faff`) — `char trash[0xC]` NACH
+    `scaleCopy`-Lokaler.
+17. `CPolarSubCamera::ctrlGameCamera_` (Commit `58764055`) — Kombi-
+    Fix: `int code;`-Deklaration an den Funktionsanfang gezogen (für
+    Slot-Reihenfolge, tatsächliche Verwendung blieb an ursprünglicher
+    Stelle) PLUS zweiseitiges Padding (`trash[8]` vor, `trash2[24]`
+    nach `TCameraKindParam param`).
+18. `TEMario::load` (Commit `d4382af0`) — zwei kombinierte Fixes: (a)
+    zwei verworfene `stream.readU32()`-Methodenaufrufe zu verketteten
+    `stream >> unused1 >> unused2`-Operatoren umgeschrieben (ändert
+    MWCCs Registrierungsreihenfolge der Temporärwerte); (b) `char
+    trash[0x44]` nach einem `const char[]`-Array.
+19. `TRealoid::perform` (Commit `7dcb00c2`) — vier fehlende benannte
+    Zwischenwerte für inline-expandierte Accessor-Ergebnisse (`f32
+    nearPlane`, zwei `TBoid* boid`, ein `TRealoidActor* actor` über
+    den bereits deklarierten aber ungenutzten `getRealoid()`-Accessor)
+    — jede gebundene Inline-Accessor-Ergebnis-Lokale reserviert exakt
+    einen 4-Byte-Slot, vier fehlende × 4 Byte = die fehlenden 16 Byte.
+    Für zukünftige Runden vorgemerkt: die eigenständige (nicht-inline-
+    expandierte) `TRealoid::clipBoids` selbst braucht noch +8 Byte,
+    und `TFishoid::perform` braucht ein vollständig inline-
+    expandiertes `TRealoid::perform` (Retail-Rahmen 0xb8) statt eines
+    echten Funktionsaufrufs.
+
+**Fünf gründlich dokumentierte Sackgassen** (alle sauber
+zurückgesetzt, mehrere mit außergewöhnlicher Bisektionstiefe):
+`TMapObjBase::getDistance` (18+ Varianten, bestätigt als bereits
+früher dokumentierte Sackgasse), `TRiccoHook::init` (mathematischer
+Beweis: ein Slot braucht +4, eine Gruppe von drei benachbarten Slots
+braucht +8 — unmöglich aus einem einzigen linearen Pool, bestätigt
+zwei getrennte Pools; kreuzreferenziert mit einem bereits im
+Repo vorhandenen `// @non-matching`-Kommentar an exakt dieser
+Stelle), `TPauseMenu2::loadAfter` (7 Varianten, ein `JUtility::
+TColor::operator u32()`-Store/Reload-Bounce-Temporärwert sitzt auf
+einem fixen, durch Padding unerreichbaren Boden-Offset),
+`TSpineEnemy::resetToPosition` (bestätigt dieselbe „Boden-Bereich
+unterhalb des anonymen Temporärwerts"-Sackgasse wie bereits in Runde
+59 bei `CameraWarpPosAndAt`/`ModelUtilRideMove`/`ProgSelectPerform`
+dokumentiert), `TSunShine::perform` (~25 Varianten, ein „unsichtbare-
+Referenz-Argument"-Temporärwert für einen `TColor`-Werteparameter
+unbeeinflussbar durch jede Trash-Platzierung).
+
+### Session-Gesamtstand nach Runde 66
+
+**549 verifizierte echte Fixes in 206 Commits.** `matched_functions`:
+**9133** (von 9114 zu Rundenbeginn, +19 exakt wie erwartet — dritter
+Rekord-Zuwachs in Folge nach Runde 64 [+18] und Runde 65-Kontext).
+`matched_code_percent`: **47,12 %** (überschreitet erstmals die
+47-Prozent-Marke). Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c`
+bestätigt `build/GMSJ01/mario.dol: OK`.
