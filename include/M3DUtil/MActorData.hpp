@@ -41,6 +41,20 @@ public:
 	{
 	}
 
+	// TODO: fabricated name. The named step is what reserves the 8 bytes
+	// of low pool below the two path buffers in retail's
+	// loadAnmPtrArray frame (0x238); no caller-side spelling of
+	// `new J3DAnmBase*[mAnmNum]` produces them, and wrapping the whole
+	// `new` in a helper absorbs the step again. The step cannot move into
+	// MActorAnmDataBase::getAnmNum() because TFruitsBoat::setBckTrack
+	// reads the count through that accessor and stops matching; retail
+	// most likely read `mAnmNum` raw there.
+	int getAnmArraySize() const
+	{
+		int n = mAnmNum;
+		return n;
+	}
+
 	// TODO: fake, get rid of it
 	void loadAnmPtrArray2(const char* param_1, const char* param_2)
 	{
@@ -49,7 +63,7 @@ public:
 
 	void loadAnmPtrArray(const char* directory, const char* extension)
 	{
-		mAnimations = new J3DAnmBase*[mAnmNum];
+		mAnimations = new J3DAnmBase*[getAnmArraySize()];
 		for (int i = 0; i < mAnmNum; ++i) {
 			char buf[256];
 			if (*mAnmNames[i] != '/') {
