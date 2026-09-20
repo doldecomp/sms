@@ -679,18 +679,15 @@ void TElecCarapace::perform(u32 cue, JDrama::TGraphics* graphics)
 		TCircleShadowRequest request;
 		request.mPosition = getPosition();
 
-		bool airborne = isAirborne();
-		if (!airborne) {
+		if (!isAirborne()) {
 			request.mPosition.y       = mGroundHeight;
 			request.mNeedsGroundCheck = 0;
 		}
 
-		request.mRadiusZ = request.mRadiusX = mNokonoko->mScaledBodyRadius;
+		request.mRadiusX = request.mRadiusZ = mNokonoko->mScaledBodyRadius;
 		request.mRotationY                  = getRotation().y;
 
-		// TODO: two instructions left: the ROM loads mActorType before
-		// gpBindShadowManager, i.e. the request argument is bound first.
-		gpBindShadowManager->request(request, mActorType);
+		gpBindShadowManager->request(request, getActorType());
 	}
 }
 
