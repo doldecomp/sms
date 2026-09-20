@@ -18,26 +18,37 @@ f32 TMapWireActor::mCommonAttackHeight = 200.0f;
 // The `unk74->unk7C` guard is read off doActorToWire's inlined copy
 // (`lwz r3, 0x78(r30)` is unk4.unk74, not the manager's own unk7C), which is
 // what proves this block belongs to TMapWireActor rather than the manager.
-// TODO: doActorToWire is frame-only (0x30 vs 0x58, all 121 instructions
-// identical, target's 0xc..0x48 locals region wholly unreferenced), and it
-// needs exactly 40 more dead bytes, which a dead local of this UNUSED callee
-// would supply. Measured accounting for dead non-trivial locals, both here and
-// in doActorToWire's own body: the region grows by floor(total_size / 8) * 8,
-// so k dead `TVec3`s give +8/+24/+32/+48 for k = 1..4 -- 3 TVec3 (36 B) is 32,
-// 4 (48 B) is 48, and no TVec3-only spelling reaches 40. A total size of 40-47
-// does: `TQuat4<f32> + 2 TVec3` was verified exact (frame 0x58, 100%), as is 3
-// TVec3 here plus 1 in doActorToWire. All are implausible content for a
-// collision scan, so the lever is left unpulled rather than fabricated; the
-// body above is what the matching expansion proves, and the map's UNUSED 0xe8
-// stays 40 bytes above it.
+// doActorToWire's +0x28 frame (0x30 -> 0x58) is accessor pool inside this
+// inlined body: the four TU-local forks below (nested mgr/wire on the guard,
+// getCollision twice, mColCount once) are the minimal set that lands it.
+// Subsets stop at 0x40/0x48/0x50. The map's UNUSED size 0xe8 (ours 0xc0) is
+// separate — dead non-trivial locals price only on inlined expansion.
+
+static inline TMapWireActorManager* mapWireActor_getMgr(const TMapWireActor* self)
+{
+	return self->unk74;
+}
+static inline TMapWire* mapWireActor_getWire(const TMapWireActorManager* mgr)
+{
+	return mgr->unk7C;
+}
+static inline THitActor* mapWireActor_colAt(TMapWireActor* self, int i)
+{
+	return self->getCollision(i);
+}
+static inline u16 mapWireActor_colCount(const TMapWireActor* self)
+{
+	return self->mColCount;
+}
+
 void TMapWireActor::checkTakingActor()
 {
-	if (unk74->unk7C != nullptr) {
-		for (int i = 0; i < mColCount; ++i) {
-			THitActor* col = mCollisions[i];
+	if (mapWireActor_getWire(mapWireActor_getMgr(this)) != nullptr) {
+		for (int i = 0; i < mapWireActor_colCount(this); ++i) {
+			THitActor* col = mapWireActor_colAt(this, i);
 			if (col->isActorType(0x80000001)
 			    && col->receiveMessage(this, HIT_MESSAGE_TAKE))
-				mHeldObject = (TTakeActor*)mCollisions[i];
+				mHeldObject = (TTakeActor*)mapWireActor_colAt(this, i);
 		}
 	}
 }
@@ -47,24 +58,10 @@ void TMapWireActor::checkTakingActor()
 // buffer (0x80), and named locals are allocated top-down in declaration order;
 // `len` is named because f31 is saved across the second sqrt call, and only a
 // named scalar local of the function's own body gets a callee-saved FPR.
-// TODO: frame 0xb8 vs 0xa8, 99.3%, all 106 instructions present. Retail's low
-// region is 0xc..0x4c dead (64 B) then temps 0x4c, [4-byte hole at 0x58],
-// 0x5c, 0x68, 0x74; ours is 0xc..0x3c dead (48 B) then four contiguous 12-byte
-// temps, so the deficit is 16 dead bytes below the temps plus one dead 4-byte
-// temp after the first subtraction. Measured: `getTipPoints` works as a carrier
-// for those 16 bytes even though it has an out-of-line copy, because its leaf
-// copy allocates no frame for a dead local and keeps matching -- a 16-byte dead
-// local there, or one TU-local binding accessor `const TVec3& getStartPoint()`
-// (+16), makes the frame exactly 0xb8 and leaves only the 4-byte hole (99.6%,
-// 40 operand-only marks). Both spellings are fabricated, so neither is kept.
-// The 4 bytes are a temp allocated between the two `operator-` expansions:
-// splitting `len` off into its own statement reserves one, but then the temps
-// permute, because MWCC allocates inline temps statement by statement in
-// reverse statement order and within one statement by level (both subtractions,
-// then both TVec3 copies) -- which is why the quotient has to stay one
-// expression. not: `getPosition()` over `mPosition` (99.3 -> 96.5), two named
-// scalars for the two lengths (frame 0xc0), binding accessors on both tip
-// points (frame 0xc8).
+// getTipPoints reads start through TMapWire::getStartPoint() (+16 reference
+// temp). Named `num` then pins tip-point slots at retail offsets (frame 0xb8).
+// TODO: 99.6%, ~40 operand marks — shared-header `a = b - c` temp-order class
+// (return buffer 0x80 vs 0x78, hole at 0x58); same residue as MapWire::getPosInWire.
 f32 TMapWireActor::getPosInWire() const
 {
 	JGeometry::TVec3<f32> foot;
@@ -77,14 +74,15 @@ f32 TMapWireActor::getPosInWire() const
 	foot = MsPerpendicFootToLineR(start, end, mPosition);
 
 	f32 len = JGeometry::TVec3<f32>(end - start).length();
-	return JGeometry::TVec3<f32>(foot - start).length() / len;
+	f32 num = JGeometry::TVec3<f32>(foot - start).length();
+	return num / len;
 }
 
 void TMapWireActor::getTipPoints(JGeometry::TVec3<f32>* start,
                                  JGeometry::TVec3<f32>* end) const
 {
 	TMapWire* wire = unk74->unk7C;
-	*start         = wire->mStartPoint;
+	*start         = wire->getStartPoint();
 	*end           = wire->mEndPoint;
 }
 
