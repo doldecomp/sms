@@ -227,3 +227,22 @@ Matches 100% but shifts the DOL.
 
 - **ShadowUtil's `.data` deficit (70.77) and 19.6% of its `.text` are one cause outside the TU**: the six local classes in `drawShadowGD` (`TCylinder`, `TSetup1..5`) are byte-exact (all six `makeDL` bodies compared word-for-word against the DOL with relocated fields masked), and only the `$NNNN` MWCC mangles into the local-class name differs (ours `$906/907/925/930/942/951`, retail `$2171/2172/2190/2195/2207/2216`, identical relative spacing). **The id counter is a single parse-order counter seeded by the precompiled header**: an empty TU already reaches id 191 from `include/SMS.pch`; retail is +1074 before the TU's first aggregate `@136`, +181 more between `@136` and `@156`, +11 more by `@165`, then in sync to `TCylinder`. A header costs ids only for declarations not already included (measured: `Player/Mario.hpp` +279, `JPAEmitter.hpp` +151, `MSound.hpp` +47, `J3DMaterialAnm.hpp` +46, `MapObjBase.hpp` +23, `LiveActor.hpp` +17, `MarDirector.hpp` +13). objdiff rescues local data symbols positionally but not a mangled function name, so ShadowUtil is the only unit whose score is hostage to `SMS.pch`'s size: worth 4116 bytes of `.text` and 96 of `.data`. A header round item.
 - A by-value TU-local accessor returning a member `TVec3` converts a named caller local into an unnamed inline temporary at zero instruction cost (`TMBindShadowManager::forceRequest`, the inverse of the usual accessor rung); forks placed in later statements still allocate below an earlier by-value return temporary, so a frame that lands with the temporary in the wrong slot is a false positive (read the temporary's offset, not only `frame:`). Retail's 0x28 of dead pool above the temporary there is `align8(sizeof(TCircleShadowRequest))`, probably an unconsumed request object in an inlined callee. Unit unchanged at 13.85 / 70.77; 5 unpriced (`ladder_tried.txt`).
+
+## Header round 53 (batch 369): the PCH id counter counts anonymous entities, not declarations
+
+- A probe sweep over `class`, `struct`, `enum`, `typedef`, forward declarations, member functions, templates and global objects consumed zero `@NNNN` ids.
+Ids go only to anonymous compiler-generated entities: string literals, float/double pool entries, compound literals such as `(Vec){1,1,1}`, function-static locals and virtual-base thunks.
+- `include/SMS.pch` consumes 191 ids (math.h 32, J3DTexGenBlocks 48, J3DTevBlocks 29, J3DPEBlocks 16, J3DIndBlocks 10, J3DColorBlocks 8, J3DJoint 47).
+Compiling the seven includes directly reproduces the ids exactly, so the `.mch` need not be rebuilt to probe.
+- The anchors `@136/@156/@165` that batch 368 read as ShadowUtil's are PCH objects present in every TU (retail `@1210/@1411/@1431`, matched by size and by their 30-32 duplicate count in the map).
+`@156` and `@165` are the two `(Vec){1.0f,1.0f,1.0f}` compound literals in `J3DMtxCalcBasic::init` and `J3DMtxCalcMaya::init`.
+Retail's gap between them is 20; ours was 9 because `J3DMtxCalcAnm` (11 ids) was declared between them.
+Declaring it after `J3DMtxCalcBasic` gives the retail gap and moved nothing tree-wide.
+- The remaining residue is one contiguous block: retail has +1074 ids before `@136` and +192 between `@136` and `J3DMtxCalcBasic`, total +1266 (retail PCH = 1457 ids).
+ShadowUtil's six local classes need +1265, so one anonymous entity in the tail of `J3DJoint.hpp` or ShadowUtil's own includes is ours and not retail's.
+- Growing the PCH is free tree-wide: prepending `JUTConsole.hpp` shifted every id by +43 with zero `changes_all` rows and the DOL intact.
+Only ShadowUtil's six `makeDL`/`__dt__` names depend on the exact value.
+- No honest header set reaches +1074.
+The union of MSL, all `dolphin/*`, JKernel/JUtility/JSupport/JGadget, all J3D and J2D/JMath is 450 ids; the headers that may precede the J3D blocks total about 176.
+The deficit is the thinness of our `dolphin/` and MSL reconstructions (29 and 58 ids where the real headers hold hundreds of inline bodies with literals).
+It closes only as those headers are fleshed out; a set chosen to hit the number would be number-fitting.
