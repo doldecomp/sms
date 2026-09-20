@@ -834,9 +834,16 @@ void TFireWanwan::setMActorAndKeeper()
 
 // TODO: TFireWanwan::unk194 and unk238 want accessors in FireWanwan.hpp;
 // parked here as TU-locals until a header batch adds them.
+// Nested direct-return fork inside the binder: +4 of pool so emitEffects'
+// TVec3 temps land at retail 0x98/0x8c (were 4 low).
+static inline J3DModel* FireWanwanGetModelFork(const TFireWanwan* p)
+{
+	return p->getModel();
+}
+
 static inline J3DModel* FireWanwanGetModel(const TFireWanwan* p)
 {
-	J3DModel* model = p->getModel();
+	J3DModel* model = FireWanwanGetModelFork(p);
 	return model;
 }
 
@@ -1336,6 +1343,13 @@ void TFireWanwan::updateRumble()
 	}
 }
 
+static inline MtxPtr FireWanwanBaseTRMtx(const TFireWanwan* p)
+{
+	J3DModel* model = p->getModel();
+	MtxPtr mtx      = model->getBaseTRMtx();
+	return mtx;
+}
+
 void TFireWanwan::updatePollute()
 {
 	if (!unk194->mIsOnFire)
@@ -1347,13 +1361,15 @@ void TFireWanwan::updatePollute()
 	}
 
 	mPolluteTimer = getSaveParam2()->mPolluteTimerMax.get();
-	MtxPtr mtx    = getModel()->getBaseTRMtx();
-	JGeometry::TVec3<f32> v1(mtx[0][0], mtx[1][0], mtx[2][0]);
+	MtxPtr mtx    = FireWanwanBaseTRMtx(this);
+	JGeometry::TVec3<f32> v1;
+	v1.x = mtx[0][0];
+	v1.y = mtx[1][0];
+	v1.z = mtx[2][0];
 	v1.scaleAdd((MsRandF() - 0.5f) * 2.0f * mAttackRadius, v1, mPosition);
-
-	// TODO: retail reads mtx[0][0], mtx[1][0], mtx[2][0] in that order with an
-	// lfsu off the model pointer (f30/f29/f28); the TVec3 constructor here
-	// reads them z-first into f29/f30/f31, one instruction more.
+	// TODO: retail names radius in f31 so the column sits in f30/f29/f28;
+	// declaring `f32 radius = 375.0f` first lands those FPRs but loads 375
+	// before getModel. Frame is exact at 0x90.
 	f32 radius = 375.0f;
 	if (isAttacking())
 		radius *= getSaveParam2()->mPolluteAttackRate.get();
@@ -2291,7 +2307,7 @@ static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 
 DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)
 {
-	TFireWanwan* self = (TFireWanwan*)spine->getBody();
+	TFireWanwan* self = FireWanwanGetBody(spine);
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
