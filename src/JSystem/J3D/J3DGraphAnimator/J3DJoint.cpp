@@ -25,20 +25,25 @@ void J3DMtxCalcAnm::calc(u16 jntNo)
 
 J3DMtxCalcBasic::J3DMtxCalcBasic() { }
 
+static inline J3DNodeCallBack J3DGetNodeCallBack(J3DNode* node)
+{
+	J3DNodeCallBack cb = node->getCallBack();
+	return cb;
+}
+
 void J3DMtxCalcBasic::recursiveUpdate(J3DNode* node)
 {
 	if (!node)
 		return;
 
 	J3DMtxCalcBasic mtxCalc;
-	char trash[0x8]; // TODO:
 
 	MTXCopy(J3DSys::mCurrentMtx, mtxCalc.getBackupMtx());
 	mtxCalc.setBackupS(J3DSys::mCurrentS);
 	mtxCalc.setBackupParentS(J3DSys::mParentS);
 	node->updateIn();
 
-	if (node->getCallBack())
+	if (J3DGetNodeCallBack(node))
 		node->getCallBack()(node, 0);
 
 	recursiveUpdate(node->getChild());
@@ -47,7 +52,7 @@ void J3DMtxCalcBasic::recursiveUpdate(J3DNode* node)
 	J3DSys::mParentS  = mtxCalc.getBackupParentS();
 	node->updateOut();
 
-	if (node->getCallBack())
+	if (J3DGetNodeCallBack(node))
 		node->getCallBack()(node, 1);
 
 	recursiveUpdate(node->getYounger());
@@ -59,14 +64,13 @@ void J3DMtxCalcBasic::recursiveCalc(J3DNode* node)
 		return;
 
 	J3DMtxCalcBasic mtxCalc;
-	char trash[0x8]; // TODO:
 
 	MTXCopy(J3DSys::mCurrentMtx, mtxCalc.getBackupMtx());
 	mtxCalc.setBackupS(J3DSys::mCurrentS);
 	mtxCalc.setBackupParentS(J3DSys::mParentS);
 	node->calcIn();
 
-	if (node->getCallBack())
+	if (J3DGetNodeCallBack(node))
 		node->getCallBack()(node, 0);
 
 	recursiveCalc(node->getChild());
@@ -75,7 +79,7 @@ void J3DMtxCalcBasic::recursiveCalc(J3DNode* node)
 	J3DSys::mParentS  = mtxCalc.getBackupParentS();
 	node->calcOut();
 
-	if (node->getCallBack())
+	if (J3DGetNodeCallBack(node))
 		node->getCallBack()(node, 1);
 
 	recursiveCalc(node->getYounger());
