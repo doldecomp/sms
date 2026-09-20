@@ -373,6 +373,7 @@ u32 MSoundSE::getRandomID(u32 id)
 	u32 i = 0;
 
 	u32 local_a0[16];
+	char trash[4];
 	for (; i < 15; ++i) {
 		u32 soundId = id + i;
 		u32 swBit   = MSound::getBstSwitch(soundId);
