@@ -1827,9 +1827,9 @@ void TBigWatermelon::startEvent()
 	}
 
 	for (int i = 0; i < 10; ++i) {
+		const JGeometry::TVec3<f32>& marioPos = SMS_GetMarioPos();
 		TCoin* coin = (TCoin*)gpItemManager->makeObjAppear(
-		    SMS_GetMarioPos().x, SMS_GetMarioPos().y, SMS_GetMarioPos().z,
-		    0x2000000E, true);
+		    marioPos.x, marioPos.y, marioPos.z, 0x2000000E, true);
 		if (coin) {
 			coin->mVelocity.set(20.0f * (MsRandF() - 0.5f),
 			                    20.0f * MsRandF() + 20.0f,
