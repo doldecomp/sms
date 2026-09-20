@@ -708,10 +708,15 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 	}
 
 	// Whatever it is resting on or leaning against gets hit.
+	// Retail loads the actor into r0 for the null test and only then
+	// `mr`s it to r3, so the name is declared after both guards. The
+	// wall actor is the load destination and needs no name.
 	if (!isAirborne()) {
-		if (mGroundPlane && mGroundPlane->getActor())
-			((THitActor*)mGroundPlane->getActor())
+		if (mGroundPlane && mGroundPlane->getActor()) {
+			const TLiveActor* actor = mGroundPlane->getActor();
+			((THitActor*)actor)
 			    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
+		}
 	}
 	if (unk138 && unk138->getActor())
 		((THitActor*)unk138->getActor())->receiveMessage(this, HIT_MESSAGE_ATTACK);
@@ -974,6 +979,20 @@ TSpineEnemy* TGorogoroManager::createEnemyInstance()
 	return new TGorogoro;
 }
 
+// One-local binder over the manager's object array (+8). Paired with
+// IgaigaInitTracer (+0x10) this is the +0x18 that lands the frame.
+static inline TGorogoro* IgaigaGoroAt(TGorogoroManager* m, int i)
+{
+	TGorogoro* goro = (TGorogoro*)m->unk18[i];
+	return goro;
+}
+
+static inline TGraphTracer* IgaigaInitTracer(TGorogoro* g)
+{
+	TGraphTracer* t = g->unk124;
+	return t;
+}
+
 void TGorogoroManager::initSetEnemies()
 {
 	unk6C = new TGorogoroPolluteModelManager("ゴロゴロモデル汚染");
@@ -989,10 +1008,10 @@ void TGorogoroManager::initSetEnemies()
 		if (web->isDummy())
 			continue;
 
-		TGorogoro* goro = (TGorogoro*)unk18[i];
+		TGorogoro* goro = IgaigaGoroAt(this, i);
 		JGeometry::TVec3<f32> point;
 		web->unk0[0].getPoint((Vec*)&point);
-		goro->unk124->setGraph(web);
+		IgaigaInitTracer(goro)->setGraph(web);
 		goro->mPosition         = point;
 		goro->mGenerateGraphIdx = web->unk8 - 1;
 	}
@@ -1401,6 +1420,22 @@ void TGorogoro::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("bosspaku_head.bmd", 3);
 }
 
+// Binding level unique to generateByGateKeeper. A function-scope
+// SMS_GetMarioPos() name CSEd the three loads and dropped the match;
+// a per-site binder keeps the reloads and lands the frame.
+static inline const JGeometry::TVec3<f32>& IgaigaGateMarioPos()
+{
+	const JGeometry::TVec3<f32>& p = SMS_GetMarioPos();
+	return p;
+}
+
+// +4 setter level to shift the named TVec3/Mtx block up one slot
+// (target and rot sit 4 bytes low of retail).
+static inline void IgaigaSetCurr(TGraphTracer* t, int idx)
+{
+	t->mCurrIdx = idx;
+}
+
 void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
                                      const JGeometry::TVec3<f32>& dir)
 {
@@ -1410,15 +1445,16 @@ void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
 	// he is in sight or head for that node.
 	TGraphWeb* web    = unk124->unk0;
 	int nearest       = web->findNearestNodeIndex(pos, 0xffffffff);
-	unk124->mCurrIdx  = nearest;
+	IgaigaSetCurr(unk124, nearest);
 	unk124->mPrevIdx  = nearest - 1;
 	TGraphNode* node  = &web->unk0[nearest];
 
 	BOOL sawMario;
 	JGeometry::TVec3<f32> target;
-	if (MsIsInSight(pos, dir.y, SMS_GetMarioPos(), 2000.0f, 360.0f, -1.0f)) {
+	Mtx rot;
+	if (MsIsInSight(pos, dir.y, IgaigaGateMarioPos(), 2000.0f, 360.0f, -1.0f)) {
 		sawMario = true;
-		target   = SMS_GetMarioPos();
+		target   = IgaigaGateMarioPos();
 	} else {
 		node->getPoint((Vec*)&target);
 		sawMario = false;
@@ -1435,7 +1471,6 @@ void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
 		s16 angle = DEG2SHORTANGLE(30.0f * MsRandF() - 15.0f);
 		f32 s     = JMASSin(angle);
 		f32 c     = JMASCos(angle);
-		Mtx rot;
 		rot[0][0] = c;
 		rot[0][1] = 0.0f;
 		rot[0][2] = s;
@@ -1464,7 +1499,7 @@ void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
 
 	// Chasing Mario: push the current goal and make him the next one.
 	if (sawMario) {
-		TPathNode goal(SMS_GetMarioPos());
+		TPathNode goal(IgaigaGateMarioPos());
 		unk114.push(unkF4);
 		unkF4 = goal;
 	}
