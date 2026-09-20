@@ -8,7 +8,9 @@
 void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {
+		u8 trashA[4];
 		J2DOrthoGraph orthoGraph(graphics->getViewport());
+		u8 trashB[4];
 		orthoGraph.setup2D();
 		unk10->draw(0, 0, &orthoGraph);
 		const JUTRect& rect = graphics->getScissor();
