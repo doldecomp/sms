@@ -838,6 +838,19 @@ void TPakkunSeed::forceKill()
 // expands it. docs/catalog/codegen-tells.md rules out spelling the zero as
 // an initialiser in PathNode.hpp (it fixes this site and regresses about
 // fifteen other units), so the whole 20% gap stays per-call-site.
+// TODO: shared-header need, measured. Retail's body here `bl`s
+// JGeometry::TVec3<f>::set<f>(0,0,0) inside the inlined TPathNode(THitActor*)
+// constructor -- that call is this TU's one MISSING map symbol -- and keeps
+// the Mario pointer in r31 across it, which is the whole 20% gap. The chain
+// is setGoalPathMario (depth 1) -> setGoalPath (2) -> the implicit TPathNode
+// conversion (3) -> the zero-init (4), and a 3-statement in-class TVec3
+// member is a `bl` at depth 4. Our PathNode.hpp constructor stores the three
+// zeros in place instead of calling `unk4.set(0.0f, 0.0f, 0.0f)`, so there is
+// nothing to call. Spelling the set there is the fix; TPakkun::load, which is
+// byte-exact today, then wants the node as a named local built at depth 1
+// (its retail body expands the same zeros in line, so the two loads differ by
+// exactly one inline level). Refuted here: delegating to TPakkun::load, which
+// pushes the constructor itself to depth 4 and turns *it* into a bl.
 void TStayPakkun::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
@@ -1000,29 +1013,42 @@ TSpineEnemyParams* TStayPakkun::getSaveParam() const
 	return ((TPakkunManager*)mManager)->mStayParams;
 }
 
+static inline TPakkunSeed* PakkunSeedB(const TPakkun* p)
+{
+	TPakkunSeed* seed = p->mSeed;
+	return seed;
+}
+
+static inline TPakkun* PakkunBody(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	TPakkun* self    = (TPakkun*)body;
+	return self;
+}
+
 // Waits underground with the seed in its mouth until Mario walks close
 // enough, then drops the seed and opens up.
 DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 {
-	TPakkun* self = (TPakkun*)spine->getBody();
+	TPakkun* self = PakkunBody(spine);
 
 	if (spine->getTime() == 0) {
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_HIDDEN);
-		self->mSeed->appear();
+		PakkunSeedB(self)->appear();
 	}
 
 	if (self->mHolder != nullptr)
 		return FALSE;
 
-	TPakkunSeed* seed = self->mSeed;
-	if (seed->isHeld()) {
-		seed->seedSet();
+	if (PakkunSeedB(self)->isHeld()) {
+		PakkunSeedB(self)->seedSet();
 
 		if (spine->getTime() % 5 == 0) {
 			self->updateSquareToMario();
 			f32 dist = self->getSaveLoadParam()->getSLGenerateSeedDist();
-			if (self->getDistToMarioSquared() < dist * dist)
+			dist *= dist;
+			if (self->getDistToMarioSquared() < dist)
 				self->mSeed->unk150 = SEED_STATE_DROP;
 		}
 	}
@@ -1203,19 +1229,6 @@ DEFINE_NERVE(TNervePakkunAppear, TLiveActor)
 		return TRUE;
 	}
 	return FALSE;
-}
-
-static inline TPakkunSeed* PakkunSeedB(const TPakkun* p)
-{
-	TPakkunSeed* seed = p->mSeed;
-	return seed;
-}
-
-static inline TPakkun* PakkunBody(TSpineBase<TLiveActor>* spine)
-{
-	TLiveActor* body = spine->getBody();
-	TPakkun* self    = (TPakkun*)body;
-	return self;
 }
 
 // Ducks back into the ground; once the seed is gone the plant follows it to
