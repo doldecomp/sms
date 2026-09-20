@@ -345,6 +345,7 @@ BOOL TMario::squating()
 	if (mGamePad->checkMeaning(TMarioGamePad::MEANING_L)) {
 		E_SIDEWALK_TYPE type;
 		f32 v1, v2;
+		char trash[56];
 		getSideWalkValues(&type, &v1, &v2);
 		switch ((int)type) {
 		case 0:
