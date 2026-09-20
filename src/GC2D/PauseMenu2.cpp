@@ -25,7 +25,7 @@
 #include <System/MarDirector.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
-#include <System/StageUtil.hpp>
+#include <GC2D/ShineTable.hpp>
 #include <stdio.h>
 
 extern JPAEmitterManager* gpEmitterManager4D2;

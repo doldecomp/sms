@@ -20,7 +20,7 @@
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
-#include <System/StageUtil.hpp>
+#include <GC2D/ShineTable.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

@@ -11,7 +11,7 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/Application.hpp>
-#include <System/StageUtil.hpp>
+#include <GC2D/ShineTable.hpp>
 #include <System/MarDirector.hpp>
 #include <System/FlagManager.hpp>
 #include <MSound/MSound.hpp>

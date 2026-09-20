@@ -4,7 +4,7 @@
 #include <GC2D/MessageUtil.hpp>
 #include <System/Application.hpp>
 #include <System/MarDirector.hpp>
-#include <System/StageUtil.hpp>
+#include <GC2D/ShineTable.hpp>
 #include <System/FlagManager.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
