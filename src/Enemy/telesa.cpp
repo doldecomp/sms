@@ -148,11 +148,12 @@ void TTelesaManager::createModelData()
 	createModelDataArray(entry);
 }
 
-// TODO: 99.8%, frame 0x38 against retail's 0x40. Every instruction matches;
-// only the 8 missing bytes are unaccounted for. A one-local binder over
-// SMSGetMSound() (or the raw gpMSound global) lands exactly 8 short; naming
-// getObj(0)'s result or hoisting the mObjNum loop bound both change
-// instructions instead of paying rent, so neither is the real carrier.
+static inline MSound* TelesaForceKillSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+
 void TTelesaManager::telesaForceKill()
 {
 	bool anyKilled = false;
@@ -164,9 +165,8 @@ void TTelesaManager::telesaForceKill()
 		}
 	}
 	if (anyKilled) {
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_DISAPPEAR,
-		                                &getObj(0)->mPosition, 0, nullptr, 0,
-		                                4);
+		TelesaForceKillSound()->startSoundActor(MSD_SE_EN_TELESA_DISAPPEAR,
+		                                        &getObj(0)->mPosition);
 	}
 }
 
