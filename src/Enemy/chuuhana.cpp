@@ -599,7 +599,11 @@ bool TChuuHana::isCollidMove(THitActor* param_1)
 		}
 	}
 
-	return mSpine->getCurrentNerve() != &TNerveChuuHanaObject::theNerve();
+	// Retail is cmplw / bne / li 0 / b / li 1, not the branchless
+	// subf/subic/subfe of `return nerve != Object`.
+	if (mSpine->getCurrentNerve() == &TNerveChuuHanaObject::theNerve())
+		return false;
+	return true;
 }
 
 // UNUSED, 0x8c in the map.
