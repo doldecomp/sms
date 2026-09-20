@@ -80,6 +80,14 @@ static inline void MsGetVecFromRotY_L1(JGeometry::TVec3<f32>& dst, f32 rot_y,
 	MsGetVecFromRotY_L2(dst, rot_y, length);
 }
 
+// fabricated: consume getPosition() inside a by-value fork so the reference
+// address does not escape into a callee-saved GPR. Used on X because retail
+// already loads that component first.
+static inline f32 KillerPosX(const TKiller* k) { return k->getPosition().x; }
+
+static inline f32 FlyPosX(const TFlyEnemy* e) { return e->getPosition().x; }
+static inline f32 FlyMarioX() { return SMS_GetMarioPos().x; }
+
 const char* killer_bastable[] = {
 	"/scene/killer/bas/downkiller_down1.bas", nullptr, nullptr,
 	"/scene/killer/bas/killer_search1.bas",   nullptr,
@@ -178,12 +186,12 @@ void TFlyEnemy::fly()
 	mLinearVelocity = nextPos - mPosition;
 }
 
-// TODO: 99.5%. Naming the fly-speed local reused retail's f1 across both
-// products (98.7 -> 99.5). Frame is still 0x10 short; params pointer after
-// MsVECNormalize is r3 against retail's r4.
+// TODO: 99.9%. FlyMarioX + FlyPosX (by-value getPosition forks) land the
+// 0x90 frame and every stack slot (99.5 -> 99.9). Residue is the params
+// pointer after MsVECNormalize in r3 against retail's r4.
 void TFlyEnemy::calcChaseParam()
 {
-	JGeometry::TVec3<f32> toMario(SMS_GetMarioPos().x - mPosition.x,
+	JGeometry::TVec3<f32> toMario(FlyMarioX() - FlyPosX(this),
 	                              SMS_GetMarioPos().y - mPosition.y,
 	                              SMS_GetMarioPos().z - mPosition.z);
 	toMario.x *= 1.1f;
@@ -581,20 +589,21 @@ void TKiller::behaveToWater(THitActor* water)
 	}
 }
 
-// TODO: 99.3%. Parking &spread in a MtxPtr across the loop restores retail's
-// extra callee-saved GPR and the MTXMultVec setup (91.7 -> 99.3). Residue is
-// 8 bytes of frame and r30/r31 swapped (coinNum vs the parked matrix).
-// getPosition() lands the frame but adds another GPR and drops to 96.6%.
+// TODO: 99.7%. Function-scope offset + KillerPosX (getPosition().x consumed
+// inside a by-value fork) lands the 0xd8 frame and the 0x20/0x50 slots
+// without a new GPR (99.3 -> 99.7). Residue is r30/r31 swapped (coinNum vs
+// the parked matrix) and one commutative fadds operand order.
 void TKiller::genEventCoin()
 {
 	int coinNum = 2;
 	if (mIsGold)
 		coinNum = 8;
 
+	JGeometry::TVec3<f32> offset;
 	Mtx spread;
 	MtxPtr spreadMtx = spread;
 	for (int i = 0; i < coinNum; i++) {
-		JGeometry::TVec3<f32> offset(0.0f, 0.0f, 30.0f);
+		offset.set(0.0f, 0.0f, 30.0f);
 		f32 yaw = 360.0f * (1.0f / coinNum) * (i + 1);
 
 		f32 s        = JMASin(yaw);
@@ -614,7 +623,7 @@ void TKiller::genEventCoin()
 		MTXMultVec(spreadMtx, (Vec*)&offset, (Vec*)&offset);
 
 		TMapObjBase* coin = gpItemManager->makeObjAppear(
-		    mPosition.x + offset.x, mPosition.y, mPosition.z + offset.z,
+		    KillerPosX(this) + offset.x, mPosition.y, mPosition.z + offset.z,
 		    0x2000000E, true);
 		if (coin) {
 			coin->mPosition.y = mPosition.y;
