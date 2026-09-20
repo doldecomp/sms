@@ -232,7 +232,13 @@ void TMapEventSinkInPollution::initBuriedBuilding()
 
 void TMapEventSinkInPollution::loadAfter()
 {
-	char trash[0x48];
+	// The two extra locals raise this function's inline cost just enough that
+	// MWCC still inlines it into TMapEventSinkInPollutionReset::loadAfter(),
+	// but no longer into TMapEventSinkBianco::loadAfter() (one level deeper),
+	// which is what retail does. trash is shrunk to keep the frame size.
+	char trash[0x40];
+	int trash2 = 0;
+	int trash3 = 0;
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
 		gpPollution->getCounterObj().registerPollutionObj(
@@ -374,6 +380,7 @@ bool TMapEventSinkBianco::watch()
 
 void TMapEventSinkBianco::loadAfter()
 {
+	char trash[0x40];
 	TMapEventSinkInPollutionReset::loadAfter();
 
 	TMapStaticObj* ref
