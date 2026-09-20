@@ -6,6 +6,7 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <M3DUtil/M3UJoint.hpp>
 #include <Strategic/Nerve.hpp>
+#include <Strategic/Spine.hpp>
 
 class MActor;
 class TAreaCylinderManager;
@@ -18,6 +19,42 @@ class TBPNavel;
 class TBPPolDrop;
 class TBPTornado;
 class TBPVomit;
+
+DECLARE_NERVE(TNerveBPCannonL, TLiveActor);
+DECLARE_NERVE(TNerveBPWaitL, TLiveActor);
+DECLARE_NERVE(TNerveBPBreakSleep, TLiveActor);
+DECLARE_NERVE(TNerveBPSleep, TLiveActor);
+DECLARE_NERVE(TNerveBPFall, TLiveActor);
+DECLARE_NERVE(TNerveBPHover, TLiveActor);
+DECLARE_NERVE(TNerveBPFlyPivot, TLiveActor);
+DECLARE_NERVE(TNerveBPFlyCannon, TLiveActor);
+DECLARE_NERVE(TNerveBPTouchDown, TLiveActor);
+DECLARE_NERVE(TNerveBPFly, TLiveActor);
+DECLARE_NERVE(TNerveBPTakeOff, TLiveActor);
+DECLARE_NERVE(TNerveBPDie, TLiveActor);
+DECLARE_NERVE(TNerveBPPreDie, TLiveActor);
+DECLARE_NERVE(TNerveBPJumpReact, TLiveActor);
+DECLARE_NERVE(TNerveBPStompReact, TLiveActor);
+DECLARE_NERVE(TNerveBPSwing, TLiveActor);
+DECLARE_NERVE(TNerveBPGetUp, TLiveActor);
+DECLARE_NERVE(TNerveBPTumbleOut, TLiveActor);
+DECLARE_NERVE(TNerveBPTumble, TLiveActor);
+DECLARE_NERVE(TNerveBPTumbleIn, TLiveActor);
+DECLARE_NERVE(TNerveBPSwallow, TLiveActor);
+DECLARE_NERVE(TNerveBPPivot, TLiveActor);
+DECLARE_NERVE(TNerveBPTornado, TLiveActor);
+DECLARE_NERVE(TNerveBPVomit, TLiveActor);
+DECLARE_NERVE(TNerveBPCannon, TLiveActor);
+DECLARE_NERVE(TNerveBPWait, TLiveActor);
+
+DECLARE_NERVE(TNervePakkunGenerate, TLiveActor);
+DECLARE_NERVE(TNervePakkunStay, TLiveActor);
+DECLARE_NERVE(TNervePakkunAppear, TLiveActor);
+DECLARE_NERVE(TNervePakkunHide, TLiveActor);
+DECLARE_NERVE(TNervePakkunShoot, TLiveActor);
+DECLARE_NERVE(TNervePakkunFreeze, TLiveActor);
+DECLARE_NERVE(TNerveStayPakkunHide, TLiveActor);
+DECLARE_NERVE(TNerveStayPakkunAppear, TLiveActor);
 
 class TBossPakkunParams : public TSpineEnemyParams {
 public:
@@ -118,6 +155,20 @@ public:
 	{
 		return static_cast<TBossPakkunParams*>(getSaveParam());
 	}
+	int getWeakPoint() const { return mWeakPoint; }
+	const TNerveBase<TLiveActor>* getLatestNerve() const
+	{
+		return mSpine->getLatestNerve();
+	}
+
+	void showFlyMessage()
+	{
+		if (is2ndFightNow()) {
+			const TNerveBase<TLiveActor>* flyNerve = &TNerveBPFly::theNerve();
+			if (mSpine->isNerve(flyNerve))
+				showMessage(0xe0002);
+		}
+	}
 
 public:
 	/* 0x150 */ TBossPakkunMtxCalc* mMtxCalc;
@@ -200,6 +251,13 @@ public:
 	void vomitFinished();
 	void vomit();
 
+	// fabricated
+	void setMActors(MActor* param_1, MActor* param_2)
+	{
+		unk14 = param_1;
+		unk18 = param_2;
+	}
+
 public:
 	/* 0x10 */ TBossPakkun* mOwner;
 	/* 0x14 */ MActor* unk14;
@@ -216,6 +274,13 @@ public:
 	void move();
 	void drop();
 
+	// fabricated
+	void setMActors(MActor* ball, MActor* stamp)
+	{
+		unk78 = ball;
+		unk7C = stamp;
+	}
+
 public:
 	/* 0x68 */ TBossPakkun* mOwner;
 	/* 0x6C */ JGeometry::TVec3<f32> unk6C;
@@ -225,41 +290,5 @@ public:
 	/* 0x84 */ s32 unk84;
 	/* 0x88 */ f32 unk88;
 };
-
-DECLARE_NERVE(TNerveBPCannonL, TLiveActor);
-DECLARE_NERVE(TNerveBPWaitL, TLiveActor);
-DECLARE_NERVE(TNerveBPBreakSleep, TLiveActor);
-DECLARE_NERVE(TNerveBPSleep, TLiveActor);
-DECLARE_NERVE(TNerveBPFall, TLiveActor);
-DECLARE_NERVE(TNerveBPHover, TLiveActor);
-DECLARE_NERVE(TNerveBPFlyPivot, TLiveActor);
-DECLARE_NERVE(TNerveBPFlyCannon, TLiveActor);
-DECLARE_NERVE(TNerveBPTouchDown, TLiveActor);
-DECLARE_NERVE(TNerveBPFly, TLiveActor);
-DECLARE_NERVE(TNerveBPTakeOff, TLiveActor);
-DECLARE_NERVE(TNerveBPDie, TLiveActor);
-DECLARE_NERVE(TNerveBPPreDie, TLiveActor);
-DECLARE_NERVE(TNerveBPJumpReact, TLiveActor);
-DECLARE_NERVE(TNerveBPStompReact, TLiveActor);
-DECLARE_NERVE(TNerveBPSwing, TLiveActor);
-DECLARE_NERVE(TNerveBPGetUp, TLiveActor);
-DECLARE_NERVE(TNerveBPTumbleOut, TLiveActor);
-DECLARE_NERVE(TNerveBPTumble, TLiveActor);
-DECLARE_NERVE(TNerveBPTumbleIn, TLiveActor);
-DECLARE_NERVE(TNerveBPSwallow, TLiveActor);
-DECLARE_NERVE(TNerveBPPivot, TLiveActor);
-DECLARE_NERVE(TNerveBPTornado, TLiveActor);
-DECLARE_NERVE(TNerveBPVomit, TLiveActor);
-DECLARE_NERVE(TNerveBPCannon, TLiveActor);
-DECLARE_NERVE(TNerveBPWait, TLiveActor);
-
-DECLARE_NERVE(TNervePakkunGenerate, TLiveActor);
-DECLARE_NERVE(TNervePakkunStay, TLiveActor);
-DECLARE_NERVE(TNervePakkunAppear, TLiveActor);
-DECLARE_NERVE(TNervePakkunHide, TLiveActor);
-DECLARE_NERVE(TNervePakkunShoot, TLiveActor);
-DECLARE_NERVE(TNervePakkunFreeze, TLiveActor);
-DECLARE_NERVE(TNerveStayPakkunHide, TLiveActor);
-DECLARE_NERVE(TNerveStayPakkunAppear, TLiveActor);
 
 #endif

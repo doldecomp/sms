@@ -842,9 +842,8 @@ void TSmallEnemy::generateEffectColumWater()
 void TSmallEnemy::setBckAnm(int index)
 {
 	mCurrentBckAnm = index;
-	getMActor()->setBckFromIndex(index);
-	const char** table = getBasNameTable();
-	setAnmSound(!table ? nullptr : table[index]);
+	mMActor->setBckFromIndex(index);
+	setAnmSound(getBas(index));
 }
 
 void TSmallEnemy::expandCollision()
