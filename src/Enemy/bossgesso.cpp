@@ -2037,7 +2037,7 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_ASE, self->getModel()->getAnmMtx(47), 1, self);
+	    BGESO_JPA_MS_BOGE_ASE, BossgessoModelOf(self)->getAnmMtx(47), 1, self);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 1, self);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
