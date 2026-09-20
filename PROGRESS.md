@@ -3832,3 +3832,70 @@ dedizierte Header-Änderungsrunden dokumentierte Kandidaten
 (`JDRFlag.hpp`/`TFlagT` für `TApplication`-Konstruktoren, `JGVec3.hpp`s
 `operator*`-Rückgabe-für-Wert für Partikel-Code, `evIsNpcSinkBottom`s
 `TSpcStack::push`-Inlining-Asymmetrie).
+
+### Nach fünfzigster Iterationsrunde (`TMario::floorDamageExec(TEParams&)`: Argument-Vertauschungsbug gefunden und behoben)
+
+Fortsetzung der Suche nach kleinen, isolierten Kandidaten mit
+`fp=None`-Aufrufstellen (analog zum `defer_codegen`-Muster aus Runde 49,
+aber diesmal in kleinen Units mit ≤ 25 Funktionen, um die in Runde 49
+dokumentierte Regressionskaskaden-Gefahr großer Dateien zu vermeiden).
+
+**Fund**: `TMario::floorDamageExec(const TMario::TEParams&)`
+(`src/Player/MarioCollision.cpp`, 76,2 % Match, 220 Bytes) delegiert an
+`damageExec(THitActor*, int damage, int damageAnimType, int waterEmit,
+f32 knockbackSpeed, int rumbleFrames, f32 pollutionAmount, s16
+invincibilityFrames)`. Direkter Disassembly-Vergleich zeigte: Retails
+7. Argument (`pollutionAmount`, `f32`) wird per einfachem `lfs`-Ladebefehl
+aus `TEParams::mDirty` (Offset 0x7c) gelesen — unser Code übergab
+stattdessen `params.mDamage.get()` ein ZWEITES Mal (bereits als 1.
+Argument verwendet), was einen `u8`→`f32`-Konvertierungstrick
+(Magic-Double-Subtraktion) statt eines direkten Float-Ladebefehls
+erzeugte. Alle sieben `TParamRT<T>`-Felder in `TEParams` liegen exakt
+0x14 Bytes auseinander (0x18, 0x2c, 0x40, 0x54, 0x68, 0x7c, 0x90),
+wodurch sich die Feldreihenfolge aus dem Retail-Disassembly eindeutig
+rekonstruieren ließ. Fix: `params.mDamage.get()` (2. Vorkommen) durch
+`params.mDirty.get()` ersetzt. Ergebnis: **Byte-exakter Match** (58/58
+Instruktionen identisch nach Label-Kanonisierung), keine Regression im
+Rest der Unit (`git diff` nur die eine Zeile), volles `ninja`-Rebuild
+und `dtk shasum -c` bestätigen `build/GMSJ01/mario.dol: OK`. Commit
+`552a42ce`, gepusht.
+
+**Neue Kandidatenkategorie bestätigt**: „Duplizierte Argumente in
+Mehrfachaufrufen mit vielen Parametern gleichen Typs" — ein Copy-Paste-
+Fehler eines früheren Mitwirkenden, der sich über den ungewöhnlichen
+Magic-Double-Konvertierungscode im Disassembly (u8→f32-Promotion,
+erkennbar an `stw`+`stw`+`lfd`+`fsubs` statt einfachem `lfs`) zuverlässig
+aufspüren lässt, wenn das erwartete Argument eigentlich bereits ein
+`f32`-Feld ist.
+
+**`TAnimalBase::execWalk(bool)`** (78,4 % Match, 1020 Bytes) kurz
+geprüft: 371 Diff-Zeilen bei 258 vs. 270 Gesamtzeilen, UNSER Stackframe
+ist mit 0x118 GRÖSSER als Retails 0x0f0 (falsche Richtung für
+`char trash[N]`), zusätzlich unterscheidet sich die
+Multiplikations-Reihenfolge bei verketteten `SMSGetAnmFrameRate()`-
+Aufrufen strukturell (`fmr`-Zwischenkopien bei uns, direkte Verkettung
+bei Retail) — deutet auf eine größere Ausdrucks-Restrukturierung hin,
+keine Datei verändert, als zu aufwendig für diese Runde zurückgestellt.
+
+**Weitere für spätere Untersuchung notierte, aber nicht bearbeitete
+Kandidaten** aus dem `fp=None`-Kleindatei-Scan: `TMarDirectorDirect::
+decideNextStage` und `TApplication::TApplication()` (beide durch das
+bereits dokumentierte `JDRFlag.hpp`/`TFlagT`-Cross-TU-Problem
+blockiert), `getNameRef_BossEnemy`/`getNameRef_Enemy` (sehr groß,
+2676/8392 Bytes, vermutlich lange Namens-Vergleichsketten, nicht
+geprüft).
+
+### Session-Gesamtstand nach Runde 50
+
+**405 verifizierte echte Fixes in 64 Commits.** `matched_functions`:
+**8992** (von 8987 zu Beginn dieses Segments), `matched_code_percent`
+~44,9 %. Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`. `git fetch upstream` weiterhin 0 Commits
+Rückstand. Fünf neue Matches in diesem Segment: `TMameGesso::reset`,
+`TDoroHamuKuri::attackToMario`, `TSunModel::calcDispRatioAndScreenPos_`,
+`TMario::onYoshi`, `TMario::floorDamageExec(TEParams&)`. Zusätzlich ein
+grundlegender Methodik-Durchbruch (`#pragma defer_codegen off` für
+isolierte Dateien, mit dokumentierten Grenzen für große Dateien) und
+eine neue produktive Fehlerkategorie (duplizierte Argumente bei
+`TParamRT`-Strukturzugriffen, erkennbar am Magic-Double-
+Konvertierungsmuster im Disassembly).
