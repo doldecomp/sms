@@ -43,6 +43,7 @@ TAmenbo::TAmenbo(const char* name)
 
 void TAmenbo::init(TLiveManager* manager)
 {
+	char trash[8];
 	mManager = manager;
 	mManager->manageActor(this);
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
@@ -63,7 +64,7 @@ void TAmenbo::init(TLiveManager* manager)
 	mOutOfWaterDeathTimer  = 0;
 	for (int i = 0; i < 4; ++i) {
 		unk1EC[i].mJointIdx
-		    = getModel()->getModelData()->getMaterialName()->getIndex(
+		    = getModel()->getModelData()->getJointName()->getIndex(
 		        cJointNames[i]);
 	}
 }
