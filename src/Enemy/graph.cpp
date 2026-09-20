@@ -856,6 +856,10 @@ TGraphWeb* TGraphGroup::getGraphByName(const char* name)
 
 void TGraphGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	// TODO: retail's scratch registers start one higher (r5/r6/r7 for our
+	// r4/r5/r6), i.e. the `graphics` parameter stays live past the first
+	// temporary; the loop is fully elided otherwise. A named bound (-9pp), a
+	// getGraph(i) accessor (inert) and a named TGraphWeb* (worse) refuted.
 	for (int i = 0; i < unk4; ++i)
 		unk8[i]->perform(cue, graphics);
 }
@@ -908,35 +912,40 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 	if (mPrevIdx < 0)
 		return 0.001f;
 
-	JGeometry::TVec3<f32> v1;
-	unk0->unk0[mCurrIdx].getPoint(&v1);
-	JGeometry::TVec3<f32> v2;
-	unk0->unk0[mPrevIdx].getPoint(&v2);
+	// TODO: retail builds only two vectors here (getPoint's own `p` and the
+	// result), where the by-value getPoint() plus a TVec3 copy ctor gives us
+	// a third: the return temporary is copied into v1 instead of being v1.
+	// Returning a constructed temporary from getPoint() instead of `p` is
+	// -5pp here and -40pp in TSplineRail::TSplineRail, so the elision is
+	// caller-side. The fVar1/fVar2 FPR pair is also swapped (retail colours
+	// the second-computed f0); declaration order does not move it.
+	JGeometry::TVec3<f32> v1 = unk0->unk0[mCurrIdx].getPoint();
+	JGeometry::TVec3<f32> v2 = unk0->unk0[mPrevIdx].getPoint();
 
-	JGeometry::TVec3<f32> diff = v1;
-	diff -= v2;
-	f32 fVar13 = VECMag(&diff);
+	v1 -= v2;
+	f32 fVar13 = VECMag(&v1);
+
+	TSplineRail* rail = unk0->getSplineRail();
+	BOOL isLoop       = rail->isUnk4();
 
 	f32 fVar1;
 	f32 fVar2;
-	if (unk0->getSplineRail()->isUnk4() && mPrevIdx == unk0->unk8 - 1
-	    && mCurrIdx == 0) {
-		fVar1 = unk0->getSplineRail()->getNthT(0);
-		fVar2 = unk0->getSplineRail()->getNthT(1);
-	} else if (unk0->getSplineRail()->isUnk4() && mPrevIdx == 0
-	           && mCurrIdx == unk0->unk8 - 1) {
-		fVar1 = unk0->getSplineRail()->getNthT(mPrevIdx + 1);
-		fVar2 = unk0->getSplineRail()->getNthT(mPrevIdx);
+	if (isLoop && mPrevIdx == unk0->unk8 - 1 && mCurrIdx == 0) {
+		fVar1 = rail->getNthT(0);
+		fVar2 = rail->getNthT(1);
+	} else if (isLoop && mPrevIdx == 0 && mCurrIdx == unk0->unk8 - 1) {
+		fVar1 = rail->getNthT(mPrevIdx + 1);
+		fVar2 = rail->getNthT(mPrevIdx);
 	} else {
 		u32 uVar10 = mPrevIdx;
-		if (unk0->getSplineRail()->isUnk4())
+		if (isLoop)
 			uVar10 += 1;
-		fVar1 = unk0->getSplineRail()->getNthT(uVar10);
+		fVar1 = rail->getNthT(uVar10);
 
 		u32 uVar7 = mCurrIdx;
-		if (unk0->getSplineRail()->isUnk4())
+		if (isLoop)
 			uVar7 += 1;
-		fVar2 = unk0->getSplineRail()->getNthT(uVar7);
+		fVar2 = rail->getNthT(uVar7);
 	}
 
 	return param_1 * (fVar2 - fVar1) / fVar13;
