@@ -32,6 +32,7 @@ void TBaseNPC::offStopMotionBlend() { }
 
 void TBaseNPC::onStopMotionBlend() { }
 
+// TODO: 0x20 short; this in r29 vs retail r31, blend param inverted.
 void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
                           EnumNpcStopMotionBlendOnOff param_2)
 {
@@ -195,6 +196,9 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 	setCurAnmSound();
 }
 
+// TODO: keep() puts mKeepAnmCtrl in r6 and converts blend in r3; retail
+// reuses dead `this` (lwz r3, 0x190(r3); neg r5, r5). A TU-local keep
+// wrapper is inert. Catalog: levers are in shared NpcBase.hpp.
 void TBaseNPC::requestNpcAnm_(EnumNpcAnmKind param_1,
                               EnumNpcStopMotionBlendOnOff param_2)
 {
@@ -257,6 +261,11 @@ void TBaseNPC::randomizeBckAndBtpFrame_()
 	}
 }
 
+// TODO: MsSqrtf volatile at 0xb8 vs retail 0x7c (frame already -0xe0).
+// Blend flag lives in r5 so isMotionBlending does `li r0, 1` where retail
+// has the flag in r3 and `mr r0, r3`. Raw timer/ratio tests drop the
+// accessor's li/clrlwi expansion (94%). Reusing the chase BOOL, a stopped
+// intermediate, or scoping bVar7 adds instructions or `cmpwi`.
 void TBaseNPC::walkAnmRateChange_()
 {
 	f32 dVar13 = MsSqrtf(mLinearVelocity.x * mLinearVelocity.x
@@ -413,6 +422,8 @@ void TBaseNPC::npcFallIn()
 	resetToWait_();
 }
 
+// TODO: 8 short, r31/r30 inverted (retail r31=this, r30=result).
+// getMActor() at the checkPass site is inert.
 bool TBaseNPC::npcRecoverFromSinking()
 {
 	bool result = false;
