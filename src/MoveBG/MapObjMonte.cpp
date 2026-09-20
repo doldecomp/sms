@@ -5,6 +5,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JGeometry.hpp>
+#include <JSystem/JUtility/JUTColor.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <Map/Map.hpp>
@@ -152,8 +153,6 @@ void THangingBridgeBoard::pushNeighbor(f32 accel)
 	}
 }
 
-// TODO: 89.3%. pushNeighbor is expanded twice here as in retail; the residual
-// is register numbering around mBridge's two rates.
 void THangingBridgeBoard::control()
 {
 	TLeanBlock::control();
@@ -313,6 +312,12 @@ void THangingBridge::drawUpper(const JGeometry::TVec3<f32>& from,
 	}
 }
 
+static inline TMarDirector* MapObjMonteMarDirector()
+{
+	TMarDirector* director = SMSGetMarDirector();
+	return director;
+}
+
 static inline int HangingBridgeBoardNum(const THangingBridge* bridge)
 {
 	return bridge->mBoardNum;
@@ -322,6 +327,20 @@ static inline THangingBridgeBoard* HangingBridgeBoardAt(const THangingBridge* br
                                                        int i)
 {
 	THangingBridgeBoard* board = bridge->mBoards[i];
+	return board;
+}
+
+// Nested fork inside the binder is the +4 pool rung perform needs;
+// drawRopeBetweenBoards keeps the flat binder (sites are not additive).
+static inline THangingBridgeBoard** HangingBridgeBoards(const THangingBridge* bridge)
+{
+	return bridge->mBoards;
+}
+
+static inline THangingBridgeBoard* HangingBridgeBoardAtPerform(const THangingBridge* bridge,
+                                                              int i)
+{
+	THangingBridgeBoard* board = HangingBridgeBoards(bridge)[i];
 	return board;
 }
 
@@ -449,12 +468,8 @@ void THangingBridge::initDraw() const
 	              GX_DF_NONE, GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
 	              GX_DF_NONE, GX_AF_NONE);
-	// TODO: retail copies this named GXColor into a separate by-value argument
-	// temp (`stw` to the local, then `lwz`/`stw` into the outgoing slot); our
-	// build coalesces the two slots, and declaring it at the top of the
-	// function only moves the initialiser away from the call.
 	GXColor color = { 0, 0, 100, 255 };
-	GXSetChanMatColor(GX_COLOR0A0, color);
+	GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(color));
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
@@ -488,8 +503,8 @@ void THangingBridge::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & 8) {
 		initDraw();
 
-		for (int i = 0; i < mBoardNum; i++) {
-			THangingBridgeBoard* board = mBoards[i];
+		for (int i = 0; i < HangingBridgeBoardNum(this); i++) {
+			THangingBridgeBoard* board = HangingBridgeBoardAtPerform(this, i);
 			JGeometry::TVec3<f32> top;
 			top = board->mRopeTop[0];
 			board->drawOneRope(top);
@@ -497,7 +512,7 @@ void THangingBridge::perform(u32 cue, JDrama::TGraphics* graphics)
 			board->drawOneRope(top);
 		}
 
-		if (gpMarDirector->mMap == 0xD)
+		if (MapObjMonteMarDirector()->mMap == 0xD)
 			drawRopeBetweenBoards(-60.0f, mPointNumBetweenBoards);
 		else
 			drawRopeBetweenBoards(0.0f, mPointNumBetweenBoards);
@@ -709,12 +724,11 @@ void TSwingBoard::initDraw() const
 	              GX_DF_NONE, GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL,
 	              GX_DF_NONE, GX_AF_NONE);
-	// TODO: retail copies this named GXColor into a separate by-value argument
-	// temp (`stw` to the local, then `lwz`/`stw` into the outgoing slot); our
-	// build coalesces the two slots, and declaring it at the top of the
-	// function only moves the initialiser away from the call.
+	// TODO: 100% instructions, frame 0x88 vs retail 0x80. Same +8 TColor
+	// residue as TCogwheel/TWireBell::initDraw; a named TColor lands the
+	// frame but parks the color copy in the named block.
 	GXColor color = { 0, 0, 100, 255 };
-	GXSetChanMatColor(GX_COLOR0A0, color);
+	GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(color));
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
@@ -954,8 +968,9 @@ u32 TFluff::touchWater(THitActor* actor)
 	return 1;
 }
 
-// TODO: 87.4%. Load order around the wind vector and the swing term still
-// differs; the wind is probably read through a named local in the original.
+// TODO: 99.9%, every instruction matches; retail's frame is 0x78 against
+// our 0x28. isZero is called on unkD0 itself (lfsu); the missing 0x50 is
+// an unidentified carrier, not another wind copy.
 void TFluff::move()
 {
 	mPosition.y -= mFallSpeed;
@@ -988,9 +1003,7 @@ void TFluff::move()
 	mPosition.z = mDrift.z + (swing * (mSwingSin - mSwingCos)
 	                          + mInitialPosition.z);
 
-	JGeometry::TVec3<f32> wind;
-	wind.set(gpMapObjManager->unkD0);
-	if (wind.isZero()) {
+	if (gpMapObjManager->unkD0.isZero()) {
 		mSwingAngle += mSwingAngleSpeed;
 		if (mSwingAngle > 360.0f)
 			mSwingAngle -= 360.0f;
@@ -1019,6 +1032,20 @@ void TFluff::kill()
 	mState = STATE_VANISHING;
 }
 
+static inline TMap* MapObjMonteMapRaw() { return gpMap; }
+
+static inline TMap* MapObjMonteMap()
+{
+	TMap* map = gpMap;
+	return map;
+}
+
+static inline TMap* MapObjMonteMapNested()
+{
+	TMap* map = MapObjMonteMapRaw();
+	return map;
+}
+
 void TFluff::control()
 {
 	TMapObjBase::control();
@@ -1036,21 +1063,24 @@ void TFluff::control()
 		}
 		break;
 
-	case STATE_FLYING:
-		mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
-		if (mVelocity.y < 0.0f
+	case STATE_FLYING: {
+		mGroundHeight
+		    = MapObjMonteMapNested()->checkGround(mPosition, &mGroundPlane);
+		JGeometry::TVec3<f32> velocity = mVelocity;
+		if (velocity.y < 0.0f
 		    && (mGroundHeight > mPosition.y - mFallSpeed
 		        || mPosition.y < -1000.0f))
 			kill();
 
-		if (gpMap->isTouchedOneWall(mPosition.x, mPosition.y, mPosition.z,
-		                           100.0f))
+		if (MapObjMonteMap()->isTouchedOneWall(mPosition.x, mPosition.y,
+		                                      mPosition.z, 100.0f))
 			kill();
 
-		if (mPosition.x < -14848.0f || mPosition.x > 14848.0f
-		    || mPosition.z < -19968.0f || mPosition.z > 19968.0f)
+		if (mPosition.x < -14848.0f || 14848.0f < mPosition.x
+		    || mPosition.z < -19968.0f || 19968.0f < mPosition.z)
 			kill();
 		break;
+	}
 
 	case STATE_VANISHING:
 		mScaling.x -= mScaleDownSpeed;
@@ -1071,19 +1101,18 @@ void TFluff::control()
 		if (!isStateTimerEngaged()) {
 			appear();
 			mRotation.set(0.0f, 360.0f * MsRandF(), 0.0f);
-			mInitialRotation.set(mRotation);
+			mInitialRotation = mRotation;
 			mIsRideable = false;
-			if (!mManager->mNextFluff) {
-				mManager->mNextFluff = this;
-				mManager->mNextFluff->makeObjDead();
+			TFluffManager* man = mManager;
+			if (!man->mNextFluff) {
+				man->mNextFluff = this;
+				man->mNextFluff->makeObjDead();
 			}
 		}
 		break;
 	}
 }
 
-// TODO: 89.9%. The three MsRandF draws are evaluated in the right order but
-// the manager pointer is re-read where retail keeps it.
 void TFluff::appear()
 {
 	makeObjAppeared();
@@ -1091,7 +1120,7 @@ void TFluff::appear()
 	mPosition.set(mManager->getRandomX(),
 	              mManager->mPosition.y * MsRandF(),
 	              mManager->getRandomZ());
-	mInitialPosition.set(mPosition);
+	mInitialPosition = mPosition;
 
 	mScaling.set(0.0001f, 0.0001f, 0.0001f);
 	mDrift.zero();
