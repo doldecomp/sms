@@ -160,6 +160,13 @@ TSpineEnemy* TChuuHanaManager::createEnemyInstance()
 
 static inline int ChuuHanaGraphNodeNum(TGraphWeb* web) { return web->unk8; }
 
+static inline TGraphWeb* ChuuHanaGraphOf(const TChuuHana* p)
+{
+	TGraphTracer* tracer = p->unk124;
+	TGraphWeb* web       = tracer->unk0;
+	return web;
+}
+
 static inline TGraphNode* ChuuHanaGraphNode(TGraphWeb* web, int index)
 {
 	TGraphNode* node = &web->unk0[index];
@@ -372,9 +379,9 @@ void TChuuHana::reset()
 	unk1A4      = mCheckOnPanelTime;
 
 	// Head for a random node of the graph.
-	TMsRange<int> range(0, unk124->unk0->unk8);
+	TMsRange<int> range(0, ChuuHanaGraphNodeNum(ChuuHanaGraphOf(this)));
 	JGeometry::TVec3<f32> point;
-	unk124->unk0->unk0[range.rand()].getPoint((Vec*)&point);
+	ChuuHanaGraphNode(ChuuHanaGraphOf(this), range.rand())->getPoint((Vec*)&point);
 
 	TPathNode goal(point);
 	unkF4  = goal;
@@ -855,9 +862,9 @@ void TChuuHana::setSafeGoal()
 {
 	unk1A4 = mCheckOnPanelTime;
 
-	TMsRange<int> range(0, unk124->unk0->unk8);
+	TMsRange<int> range(0, ChuuHanaGraphNodeNum(ChuuHanaGraphOf(this)));
 	JGeometry::TVec3<f32> point;
-	unk124->unk0->unk0[range.rand()].getPoint((Vec*)&point);
+	ChuuHanaGraphNode(ChuuHanaGraphOf(this), range.rand())->getPoint((Vec*)&point);
 
 	TPathNode goal(point);
 	unkF4  = goal;
