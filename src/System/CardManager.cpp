@@ -681,7 +681,9 @@ s32 TCardManager::writeBlock_(u32 index)
 
 s32 TCardManager::writeOptionBlock_()
 {
+	char trash1[4];
 	CARDFileInfo info;
+	char trash2[12];
 	s32 result = open_(&info);
 	if (result != CARD_RESULT_READY)
 		return result;
