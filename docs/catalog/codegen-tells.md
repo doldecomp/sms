@@ -1723,3 +1723,14 @@ Proved by `TItemSlotDrum::moveObject` against the already exact `TItemSlotDrum::
 - `SMSGetMarDirector()` behaves exactly like the `SMSGetMSound()` named-local fork: +8 per site, non-monotone (`TCasinoPanelGate::moveObject`: 1 site +0x10, any 2 of 5 +0x18, 3 +0x28), super-additive across mixed fork kinds (`TDonchou::calcRootMatrix`: 3 director sites +0x20, plus the sound site +0x30).
 - The unfused `bcc next; b epilogue` early-return pair stays refractory: `if (!(a && b)) continue; return;` and nested `if`s are both byte-identical to the `&&` (`TCloset::moveObject`, `TSlotDrum::moveObject`, frames exact).
 - Real bug: `TItemSlotDrum::generateItem` spawns along `mRotation.y`, not `.x` (still 91.97).
+
+## fireWanwan ladder 374
+
+Three exact and three lifts in `Enemy/fireWanwan` (37.76% -> 41.99%, 66 -> 69 exact); accepted named fuzzy drop `TFireWanwan::moveObject` 75.64 -> 74.93 (it pastes the now retail-shaped UNUSED `isCameraShake`, whose size moved 0x138 -> 0x140 toward the map's 0x148).
+
+- A `BOOL`-returning callee read through a `bool`-returning header accessor is an operand-level tell: `neg; subic; subfe; clrlwi.` against a bare `cmpwi r3, 0` (`TFireWanwan::isCameraShake` reads the tail through `isTailTaken()`; `updateRumble` then closed with an `SMSRumbleMgr` named-local fork +8).
+- A fork over a manager cast (`FireWanwanManagerOf(self->getManager())`) can be a pure GPR-ranking lever at zero frame cost (`TNerveFireWanwanDie::execute`, 99.45 -> 99.9 with the frame untouched); try it before any frame rung.
+- The loop bound declared as its own statement before the accumulator `bool`, not in the `for` init clause, is the ranking spelling: `int e = n; bool f = false; for (int i = 0; i < e; ++i)` gives r26/r25/r24 (`TFireWanwan::checkWalls`, after a one-local binder over `rec.mResultWalls[i]` +0x10).
+- Dropping a reference-returning header accessor for the raw member is -0x10, not -8, inside a loop (`getNormal()` -> `mNormal`, `bindBody`); declaring `TBGWallCheckRecord` first in the loop body orders the block objects as retail.
+- A setter level over a pointer member assignment is a +4 pool rung (`mGroundPlane = plane`, `bindPoint`); the same setter over a `TVec3` member prices 0, and research 312's vector-assignment level is -4.
+- Open: an FPR colouring where retail gives the first-loaded operand the higher volatile (`TTailRubber::bindOne`'s three `fadds`, `bindPoint`'s `point.y > actualPoint.y`); and `TTailRubber::getNode`'s `idx * 0.25f * 4.0f`, where retail is `fmuls f0, f0, 0.25` (value first) and MWCC canonicalises every reassociation to the constant-first form.
