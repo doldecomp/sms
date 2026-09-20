@@ -745,7 +745,7 @@ void TPopo::bind()
 		        && abs(JGeometry::TVec3<f32>(mVelocity).z) < 1.0f))
 			mSpine->pushNerve(&TNervePopoExplosion::theNerve());
 
-		TBGWallCheckRecord record(mPosition,
+		TBGWallCheckRecord record(mPosition.x, mPosition.y, mPosition.z,
 		                          mPumpScale * (mBodyScale * mWallRadius), 1,
 		                          0);
 		if (gpMap->isTouchedWallsAndMoveXZ(&record))
