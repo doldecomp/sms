@@ -252,7 +252,7 @@ void TCannonDom::perform(u32 cue, JDrama::TGraphics* graphics)
 		Mtx rot;
 		MsMtxSetRotRPH(rot, mPitch, mRoll, 0.0f);
 		MTXConcat(mtx, rot, mtx);
-		MTXCopy(mtx, getMActor()->getModel()->getBaseTRMtx());
+		getMActor()->getModel()->setBaseTRMtx(mtx);
 	}
 	getMActor()->perform(cue, graphics);
 }
@@ -1054,39 +1054,58 @@ DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveCannonShoot, TLiveActor)
+// Shoot-local copies of the ForceBombShoot binders. Reusing those would
+// add sites to that already-exact nerve and move its frame.
+static inline MActor* CannonShootMActor(TCannon* p)
+{
+	MActor* actor = p->mChorobei->mParts->getMActor();
+	return actor;
+}
+
+static inline TChorobei* CannonShootChorobei(TCannon* p)
+{
+	TChorobei* chorobei = p->mChorobei;
+	return chorobei;
+}
+
+static inline J3DFrameCtrl* CannonShootFrameCtrl(TCannon* p)
+{
+	J3DFrameCtrl* ctrl = CannonShootMActor(p)->getFrameCtrl(0);
+	return ctrl;
+}
+
+static inline TCannon* CannonShootBody(TSpineBase<TLiveActor>* spine)
 {
 	TCannon* cannon = (TCannon*)spine->getBody();
+	return cannon;
+}
+
+DEFINE_NERVE(TNerveCannonShoot, TLiveActor)
+{
+	TCannon* cannon = CannonShootBody(spine);
 
 	if (spine->getTime() == 0) {
 		if (cannon->mShootMode == 0)
 			cannon->setKillerGoalPoint();
 		else
-			cannon->mChorobei->setBckAnm(0x11);
+			CannonShootChorobei(cannon)->setBckAnm(0x11);
 	}
 
 	if (cannon->mShootMode) {
-		if (cannon->mChorobei->mParts->getMActor()->checkCurBckFromIndex(
-		        0x11)) {
-			if (cannon->mChorobei->mParts->getMActor()->curAnmEndsNext()) {
-				cannon->mChorobei->setBckAnm(0x10);
+		if (CannonShootMActor(cannon)->checkCurBckFromIndex(0x11)) {
+			if (CannonShootMActor(cannon)->curAnmEndsNext()) {
+				CannonShootChorobei(cannon)->setBckAnm(0x10);
 				cannon->bombSet();
 			}
 			cannon->turnToGoal();
-		} else if (cannon->mChorobei->mParts->getMActor()->checkCurBckFromIndex(
-		               0x10)) {
-			if (cannon->mChorobei->mParts->getMActor()->curAnmEndsNext()) {
+		} else if (CannonShootMActor(cannon)->checkCurBckFromIndex(0x10)) {
+			if (CannonShootMActor(cannon)->curAnmEndsNext()) {
 				spine->pushAfterCurrent(&TNerveCannonSearch::theNerve());
 				return TRUE;
 			}
-			if (cannon->mChorobei->mParts->getMActor()
-			        ->getFrameCtrl(0)
-			        ->checkPass(38.0f))
+			if (CannonShootFrameCtrl(cannon)->checkPass(38.0f))
 				cannon->bombShoot();
-			if (cannon->mChorobei->mParts->getMActor()
-			        ->getFrameCtrl(0)
-			        ->getFrame()
-			    > 26.0f)
+			if (CannonShootFrameCtrl(cannon)->getFrame() > 26.0f)
 				cannon->bombScaleUp();
 		}
 	} else {
@@ -1216,22 +1235,43 @@ DEFINE_NERVE(TNerveCannonClose, TLiveActor)
 	return FALSE;
 }
 
+static inline MActor* CannonDamageMActor(TCannon* p)
+{
+	MActor* actor = p->mChorobei->mParts->getMActor();
+	return actor;
+}
+
+static inline TChorobei* CannonDamageChorobei(TCannon* p)
+{
+	TChorobei* chorobei = p->mChorobei;
+	return chorobei;
+}
+
+static inline TMarioParticleManager* CannonDamageParticles()
+{
+	TMarioParticleManager* mgr = gpMarioParticleManager;
+	return mgr;
+}
+
 DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 {
 	TCannon* cannon = (TCannon*)spine->getBody();
 
 	if (spine->getTime() == 0) {
 		JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
-		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-		    0xC4, &cannon->mPosition, 0, nullptr);
+		JPABaseEmitter* emitter
+		    = CannonDamageParticles()->emitAndBindToPosPtr(
+		        0xC4, &cannon->mPosition, 0, nullptr);
 		if (emitter)
 			emitter->setGlobalScale(scale);
-		emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-		    0xC5, &cannon->mPosition, 0, nullptr);
+		// Retail discards these two results and keeps scaling the C4 emitter
+		// (`mr. r29` once, then `cmplwi r29` after each later emit).
+		CannonDamageParticles()->emitAndBindToPosPtr(0xC5, &cannon->mPosition,
+		                                             0, nullptr);
 		if (emitter)
 			emitter->setGlobalScale(scale);
-		emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-		    0xC6, &cannon->mPosition, 0, nullptr);
+		CannonDamageParticles()->emitAndBindToPosPtr(0xC6, &cannon->mPosition,
+		                                             0, nullptr);
 		if (emitter)
 			emitter->setGlobalScale(scale);
 
@@ -1239,23 +1279,23 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 		if (cannon->mHitPoints == 0) {
 			if (cannon->mHeldBomb)
 				cannon->mHeldBomb->kill();
-			cannon->mChorobei->setBckAnm(0xD);
+			CannonDamageChorobei(cannon)->setBckAnm(0xD);
 			if (gpApplication.mCurrArea.unk0 == 5)
 				SMSRumbleMgr->start(0x18, (f32*)nullptr);
 			else
 				SMSRumbleMgr->start(0x17, (f32*)nullptr);
 
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+			emitter = CannonDamageParticles()->emitAndBindToMtxPtr(
 			    0xC8,
-			    cannon->mChorobei->mParts->getMActor()->getModel()->getAnmMtx(
-			        8),
+			    // 0x240 = joint 12 * sizeof(Mtx); 8 was 0x180.
+			    CannonDamageMActor(cannon)->getModel()->getAnmMtx(12),
 			    0, nullptr);
 			if (emitter)
-				emitter->setGlobalScale(cannon->mChorobei->mScaling);
-			emitter = gpMarioParticleManager->emitAndBindToPosPtr(
+				emitter->setGlobalScale(CannonDamageChorobei(cannon)->mScaling);
+			emitter = CannonDamageParticles()->emitAndBindToPosPtr(
 			    0xC7, &cannon->mEffectPos, 0, nullptr);
 			if (emitter)
-				emitter->setGlobalScale(cannon->mChorobei->mScaling);
+				emitter->setGlobalScale(CannonDamageChorobei(cannon)->mScaling);
 
 			if (gpApplication.mCurrArea.unk0 == 5) {
 				cannon->mDemoCamPos   = cannon->mPosition;
@@ -1274,14 +1314,17 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 			cannon->damage();
 		}
 
-		cannon->mVelocity = JGeometry::TVec3<f32>(0.0f, 4.0f, 0.0f);
+		// TODO: instruction-exact and frame-exact (0x168); every remaining
+		// slot is 4 high (TFlagT 0x138/0x134, vel 0x13c/0x138).
+		JGeometry::TVec3<f32> vel(0.0f, 4.0f, 0.0f);
+		cannon->mVelocity = vel;
 		cannon->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		cannon->mPosition.y += 10.0f;
 	}
 
-	if (cannon->mChorobei->mParts->getMActor()->curAnmEndsNext()) {
+	if (CannonDamageMActor(cannon)->curAnmEndsNext()) {
 		SMS_ResetDamageFogEffect(
-		    cannon->mChorobei->mParts->getMActor()->getModel()->getModelData());
+		    CannonDamageMActor(cannon)->getModel()->getModelData());
 		if (cannon->mHitPoints == 0) {
 			spine->pushAfterCurrent(&TNerveCannonDamageDemo::theNerve());
 			return TRUE;
