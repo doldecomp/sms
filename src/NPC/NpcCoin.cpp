@@ -41,9 +41,10 @@ void TNpcCoin::execAppearCoin_()
 
 void TNpcCoin::requestAppearCoin(const Vec& param_1, f32 param_2, int param_3)
 {
+	char trash[0x10];
 	unk4 = param_3;
 	unk8.set(param_1);
-	unk14.set(0.0f, MsSin(75), MsCos(75));
+	unk14.set(0.0f, JMASSin(75 * 182), JMASCos(75 * 182));
 	s16 sangle = CLBDegToShortAngle(param_2);
 	f32 x      = unk14.x;
 	unk14.x    = x * JMASCos(sangle) + unk14.z * JMASSin(sangle);
