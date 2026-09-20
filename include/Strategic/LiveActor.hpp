@@ -184,6 +184,10 @@ public:
 		result.add(velocity);
 	}
 	const JGeometry::TVec3<f32>& getVelocity() const { return mVelocity; }
+	const JGeometry::TVec3<f32>& getLinearVelocity() const
+	{
+		return mLinearVelocity;
+	}
 	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
 	void setVelocityAndFlag10(f32 x, f32 y, f32 z)
 	{
