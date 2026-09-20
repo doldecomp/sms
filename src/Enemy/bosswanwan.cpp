@@ -422,6 +422,12 @@ TBWPicket::TBWPicket(TBossWanwan* owner, const char* name)
 	mMActor = mOwner->getActorKeeper()->createMActor("bwanwan_picket.bmd", 0);
 }
 
+static inline TBWPicket* BosswanwanPicket(const TBossWanwan* p)
+{
+	TBWPicket* picket = p->mPicket;
+	return picket;
+}
+
 static inline MSound* BWPicketSound()
 {
 	MSound* sound = gpMSound;
@@ -1122,6 +1128,11 @@ void TBossWanwan::releasePicket()
 	mIsPicketPlanted = 0;
 }
 
+static inline const char* BosswanwanBasName(int index)
+{
+	return bwanwan_bastable[index];
+}
+
 // UNUSED, 0x144 in the map: every nerve that starts an animation spells this
 // out.
 void TBossWanwan::changeBck(int index)
@@ -1130,7 +1141,10 @@ void TBossWanwan::changeBck(int index)
 	mMActor->setFrameCtrlForBck(index);
 	mMotionBlendStep
 	    = 10.0f / (f32)mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd();
-	setAnmSound(bwanwan_bastable[index]);
+	// TODO: retail materialises the int-to-float 0x4330 constant before the
+	// bwanwan_bastable address and we do it the other way round; the same
+	// one-instruction flip is left in BWWakeup, BWShake and BWBark.
+	setAnmSound(BosswanwanBasName(index));
 }
 
 // UNUSED, 0x4 in the map: an empty function. The gold BRK the boss would have
@@ -1719,15 +1733,15 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 
 		if (boss->mIsPicketFixed == 0) {
 			boss->releasePicket();
-			gpMSound->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE1,
-			                          &boss->getPicket()->mPosition, 0,
+			BWPicketSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE1,
+			                          &BosswanwanPicket(boss)->mPosition, 0,
 			                          nullptr, 0, 4);
 		}
 	}
 
 	// The bark that makes the boss angry again.
 	if (spine->getTime() == 280)
-		boss->mHitPoints = boss->getSaveParam2()->mSLBWHitPointMax.get();
+		boss->mHitPoints = BosswanwanSaveParam2(boss)->mSLBWHitPointMax.get();
 
 	if (boss->getMActor()->curAnmEndsNext()) {
 		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
@@ -1970,8 +1984,8 @@ DEFINE_NERVE(TNerveBWShake, TLiveActor)
 
 	if (actor->curAnmEndsNext()) {
 		boss->releasePicket();
-		gpMSound->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE2,
-		                          &boss->getPicket()->mPosition, 0, nullptr, 0,
+		BWPicketSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE2,
+		                          &BosswanwanPicket(boss)->mPosition, 0, nullptr, 0,
 		                          4);
 		return TRUE;
 	}
