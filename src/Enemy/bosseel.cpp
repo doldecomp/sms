@@ -2118,6 +2118,7 @@ DEFINE_NERVE(TNerveBossEelSecondSpin, TLiveActor)
 
 DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
 {
+	char trash[32];
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_UP, &eel->mPosition, 0,
