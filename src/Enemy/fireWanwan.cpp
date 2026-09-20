@@ -1291,13 +1291,19 @@ void TFireWanwan::updateCameraShake()
 		gpCameraShake->keepShake(CAM_SHAKE_MODE_ENEMY, 0.5f);
 }
 
+static inline RumbleMgr* FireWanwanRumbleMgr()
+{
+	RumbleMgr* mgr = SMSRumbleMgr;
+	return mgr;
+}
+
 void TFireWanwan::updateRumble()
 {
 	f32 fVar1 = getSaveParam2()->mContShakeRange.get();
 
 	if (!isCameraShake() && mDistToMarioSquared < fVar1 * fVar1) {
 		if (!isOverApproachRumble()) {
-			SMSRumbleMgr->start(9, &mPosition);
+			FireWanwanRumbleMgr()->start(9, &mPosition);
 			mApproachRumbleTimer += 1;
 		}
 	} else {
@@ -1588,7 +1594,7 @@ bool TFireWanwan::isRecovering() const
 
 bool TFireWanwan::isCameraShake() const
 {
-	return isFreeze() || isDefeat() || unk194->isTaken() || isRecovering()
+	return isFreeze() || isDefeat() || isTailTaken() || isRecovering()
 	       || mSpine->getLatestNerve() == &TNerveFireWanwanEscape::theNerve();
 }
 
