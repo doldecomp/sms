@@ -73,9 +73,8 @@ void TMapObjPlane::initDraw()
 void TMapObjPlane::draw()
 {
 	for (int z = 0; z < mExtents - 1; ++z) {
-		f32 fVar1 = unkFC;
-
-		f32 worldZ = mCollision->gridToWorld(z);
+		f32 worldZ     = mCollision->gridToWorld(z);
+		f32 worldZNext = worldZ + unkFC;
 
 		GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mExtents * 2);
 		for (int x = 0; x < mExtents; ++x) {
@@ -85,7 +84,7 @@ void TMapObjPlane::draw()
 			GXNormal3f32(normalAt(x, z).x, normalAt(x, z).y, normalAt(x, z).z);
 			GXTexCoord2f32(getTexPos(x), getTexPos(z));
 
-			GXPosition3f32(worldX, heightAt(x, z + 1), worldZ + fVar1);
+			GXPosition3f32(worldX, heightAt(x, z + 1), worldZNext);
 			GXNormal3f32(normalAt(x, z + 1).x, normalAt(x, z + 1).y,
 			             normalAt(x, z + 1).z);
 			GXPosition2f32(getTexPos(x), getTexPos(z + 1));
