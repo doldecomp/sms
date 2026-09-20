@@ -323,18 +323,19 @@ void TBaseNPC::behaveToBeTrampled_()
 	switch (unkD0->getCurrentAnmKind()) {
 	case NPC_ANM_KIND_UNK1B:
 	case NPC_ANM_KIND_UNK7: {
-		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
-		const TNerveBase<TLiveActor>* latest  = mSpine->getLatestNerve();
-		if (latest == &TNerveNPCWet::theNerve()) {
+		const TNerveBase<TLiveActor>* current
+		    = getSpine()->getCurrentNerve();
+		const TNerveBase<TLiveActor>* latest = getSpine()->getLatestNerve();
+		if (current == &TNerveNPCWet::theNerve()) {
 			mSpine->pushNerve(&TNerveNPCWet::theNerve());
-			mSpine->setNext(nullptr);
+			getSpine()->setNext(nullptr);
 		} else if (current == nullptr && latest == &TNerveNPCWet::theNerve())
-			mSpine->setNext(&TNerveNPCWet::theNerve());
+			getSpine()->setNext(&TNerveNPCWet::theNerve());
 	} break;
 
 	default:
 		if (isNerveCanGoToWet())
-			mSpine->pushNerve(&TNerveNPCWet::theNerve());
+			getSpine()->pushNerve(&TNerveNPCWet::theNerve());
 		break;
 	}
 }
