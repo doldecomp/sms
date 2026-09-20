@@ -138,6 +138,12 @@ void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 // the two gaps between them are 8 bytes too wide each. Nothing in
 // std-list.hpp moves them -- see docs/catalog/frame-gaps.md, batch 133, for
 // the twenty-odd spellings measured.
+// Unit pass 2026-09-20, later-ladder spellings still inert or worse:
+// `mirrorScene->push_back(this)` frame 0xd0 and `addi r30, r3, 0`;
+// unnamed search plus a named `TList_pointer&` (launcher's packing knob)
+// +4 on every pair and pair 3 off 0xb4/0xb8; raw `unk14` at the
+// entryMirrorDrawBufferAlways site -8 frame and every pair -4; a TU-local
+// helper around search+push_back 87.1% (this stays in r30, end() is a `bl`).
 void TMirrorActor::init(J3DModel* param_1, u16 param_2)
 {
 	unk1A = param_2;
