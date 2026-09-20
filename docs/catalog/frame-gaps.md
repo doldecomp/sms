@@ -1776,3 +1776,16 @@ The `params` local there is the 15th statement that keeps `TFireHamuKuri::isHitV
 - A named local hoisted from a for-body to function scope moves above `this` in the callee-saved ladder at zero instruction cost (`TFireHamuKuriManager::initSetEnemies`, 98.56 -> 99.60; residue: `this` must outrank the for-init counter).
 - `TNerveHamuKuriBoundFreeze::execute`: two sibling `TVec3` block objects are first-declared-highest in ours and later-declared-highest in retail at an exact frame, so retail declares them inside an inlined callee (block-object order class).
 - `THaneHamuKuri::bind` and `TDangoHamuKuri::behaveToWater` are the `operator-` by-value temp allocation-order class; `THamuKuri::getTakingMtx` is instruction-exact with the pool 0x50 short below the `Mtx`.
+
+## bosstelesa ladder 375
+
+Three exact and five frame landings in `Enemy/bosstelesa` (36.33% -> 39.91%, 96 -> 99 of 118 exact); accepted named fuzzy drop `TTelesaSlot::moveObject` 99.87 -> 99.80 (frame now exact at 0xd0 from 0xa8; the residue is a pre-existing r26/r27 rank that scores lower once the frame agrees).
+
+- A named `u8` local for a clamped `int` expression splits the value across two GPRs: `u8 a = base + k * n; m = MsClamp<u8>(a, 0, 254);` keeps the wide sum in r3 and narrows into r0, so the clamp arms and the `stb` use r3; clamping the expression in place narrows once in r0 (`TNerveBossTelesaFreeze::execute`, `TNerveBossTelesaPrepareSlot::execute`).
+- `(int)((f32)x / 2.0f)` and `* 0.5f` both emit `fmuls` by 0.5, but the division puts the converted value first (retail), the int-conversion form of MapObjPinna 350.
+- `m *= k` on a float member loads the member first into the `fmuls`; `m = m * k` loads the constant first (`TNerveBossTelesaSlotStart::execute`), the member form of MapObjCorona 358's rule.
+- A TU-local `getMActor()` binder is +8 per site and stays linear to five sites (+0x48 in `PrepareSlot`) where in a short frame one site is +0x10; `getSaveParam2()` over raw `mParams` is +4 per site (four sites +0x10, five +0x18, and all five overshoot in `TNerveBubbleLive::execute`).
+- Rungs inside a pasted map-UNUSED helper are separately tunable: in `TTelesaSlot::moveObject` the same owner binder is +0x10 at the caller's params read and +8 inside the pasted `fanfale()` body, and the two compose.
+- `TelesaSlotGetOwner`'s bare fork is +0 where its binding form is +0x10 at the same site (the NpcEvent 353 pair).
+- A named `THitActor* collision` local is retail's extra `addi r4, r3, 0` (`TBossTelesaKillSmallEnemy::checkHit`, then `SMS_GetMarioPos()` over raw `*gpMarioPos` for the last +8).
+- `include/Enemy/BossTelesaObj.hpp` is shared with the two `MarNameRefGen_*` units; `TTelesaSlot::mOwner`'s accessor is parked as a TU-local.
