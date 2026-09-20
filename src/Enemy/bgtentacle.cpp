@@ -1204,7 +1204,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 		     && frame <= 160.0f)
 		    || (unk80->checkCurBckFromIndex(23) && 75.0f <= frame
 		        && frame <= 110.0f)) {
-			JGeometry::TVec3<f32> local_28 = getLastNode()->getPosition();
+			JGeometry::TVec3<f32> local_28 = mNodes[mNodeNum - 1].getPosition();
 			const TBGCheckData* pTStack_2c;
 			f32 dVar10 = gpMap->checkGround(local_28.x, local_28.y + 500.0f,
 			                                local_28.z, &pTStack_2c);
@@ -1234,7 +1234,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 	                ? 7
 	                : mOwner->getSaveParam2()->mSLBlurJoint.get();
 
-	unk80->getModel()->setAnmMtx(3, unk50);
+	MTXCopy(unk80->getModel()->getAnmMtx(3), unk50);
 	MTXScaleApply(unk50, unk50, fVar2, fVar2, fVar2);
 
 	MtxPtr mtx  = unk2C->getModel()->getAnmMtx(iVar5);
