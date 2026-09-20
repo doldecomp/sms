@@ -77,6 +77,7 @@ int TMarDirector::loadResource()
 
 	{
 		JKRDvdFile sceneDvdFile;
+		char trash[44];
 		if (!sceneDvdFile.open("/data/scenecmn.bin"))
 			return 1;
 
