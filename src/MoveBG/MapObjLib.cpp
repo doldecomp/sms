@@ -99,8 +99,9 @@ void TMapObjBase::checkOnManhole()
 {
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f,
 	                                   mPosition.z, &mGroundPlane);
-	if (mGroundPlane->mActor && mGroundPlane->mActor->isActorType(0x4000000b)) {
-		((TManhole*)mGroundPlane->mActor)->makeManholeUnuseful(this);
+	if (getGroundPlane()->getActor()
+	    && getGroundPlane()->getActor()->isActorType(0x4000000b)) {
+		((TManhole*)getGroundPlane()->getActor())->makeManholeUnuseful(this);
 	}
 }
 
@@ -113,6 +114,10 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
                                   f32 vertical_speed) const
 {
 	object->appear();
+	// TODO: 99.9%. Frame-exact; one `fadds` operand swap on
+	// `getPosition().y + y_offset` (catalog: commutative FPU ~ is
+	// register allocation). Raw `mPosition` matches the add and drops
+	// 0x10 of frame; a named `const TVec3& pos = getPosition()` is -8.
 	object->mPosition.set(getPosition().x, getPosition().y + y_offset,
 	                      getPosition().z);
 	if (getMActor()) {
@@ -143,14 +148,14 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
 {
 	object->appear();
 	object->mPosition.set(point);
-	if (mMActor) {
+	if (getMActor()) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
 		Mtx mtx;
-		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
+		MsMtxSetRotRPH(mtx, getRotation().x, getRotation().y, getRotation().z);
 		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
@@ -216,7 +221,8 @@ void TMapObjBase::startAllAnim(MActor* param_1, const char* param_2)
 
 void TMapObjBase::joinToGroup(const char* param_1, THitActor* param_2)
 {
-	// TODO: The group type here is a wild guess
+	// TODO: 99.6%, frame 0x60 against 0x68. Naming the search result
+	// drops to 99.0% and changes the list base (`+0x10` vs `+0`).
 	JDrama::TNameRefGen::search<JDrama::TViewObjPtrListT<THitActor> >(param_1)
 	    ->push_back(param_2);
 }
@@ -671,8 +677,16 @@ void TMapObjBase::calcReflectingVelocity(const TBGCheckData* wall, f32 param_2,
 	velocity->z -= onePlus * (dot * wall->getNormal().z);
 }
 
-// TODO: fabricated hack
-static inline void rotateVecByAxisY2(JGeometry::TVec3<f32>* vec, f32 angle)
+static inline void
+rotateVecByAxisYMult(JGeometry::TRotation3<TMtx33f>& rot,
+                     JGeometry::TVec3<f32>& vec)
+{
+	rot.mult33(vec, vec);
+}
+
+// One call-site level plus rotMult inside rotateVecByAxisY puts both
+// SMatrix33C() and at() at depth 5 (retail `bl`s both).
+static inline void rotateVecByAxisYInl(JGeometry::TVec3<f32>* vec, f32 angle)
 {
 	TMapObjBase::rotateVecByAxisY(vec, angle);
 }
@@ -683,7 +697,7 @@ void TMapObjBase::getVerticalVecToTargetXZ(f32 x, f32 z,
 	vec->set(x - mPosition.x, 0.0f, z - mPosition.z);
 	MsVECNormalize(vec, vec);
 
-	rotateVecByAxisY2(vec, 1.5707963f);
+	rotateVecByAxisYInl(vec, 1.5707963f);
 }
 
 // TODO: 0xb4 against the map's 0xb0; the sibling-call spelling
@@ -702,7 +716,7 @@ void TMapObjBase::rotateVecByAxisY(JGeometry::TVec3<f32>* vec, f32 angle)
 {
 	JGeometry::TRotation3<TMtx33f> rot;
 	rot.setEular(0.0f, angle, 0.0f);
-	rot.mult33(*vec, *vec);
+	rotateVecByAxisYMult(rot, *vec);
 }
 
 void TMapObjBase::getNormalVecFromOffsetXZ(f32 x, f32 z,
@@ -932,10 +946,12 @@ void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
 
 	if (emitter) {
-		emitter->setRotation(mRotation.x / 180.0f * 32768.0f,
-		                     mRotation.y / 180.0f * 32768.0f,
-		                     mRotation.z / 180.0f * 32768.0f);
-		emitter->setGlobalScale(mScaling);
+		// TODO: 96.3%, frame-exact. Retail loads mRotation.z before the
+		// 32768 constant; named component locals drop to 93.6%.
+		emitter->setRotation(getRotation().x / 180.0f * 32768.0f,
+		                     getRotation().y / 180.0f * 32768.0f,
+		                     getRotation().z / 180.0f * 32768.0f);
+		emitter->setGlobalScale(getScaling());
 	}
 }
 
