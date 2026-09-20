@@ -33,6 +33,8 @@
 // TODO: these come from some header...
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+static const Vec cZeroVec = { 0.0f, 0.0f, 0.0f };
+static const Vec cOneVec  = { 1.0f, 1.0f, 1.0f };
 
 TNozzleBmdData nozzleBmdData = {
 	{
@@ -1567,6 +1569,8 @@ void TWaterGun::setBaseTRMtx(Mtx mtx)
 
 void TWaterGun::calcAnimation(JDrama::TGraphics* graphics)
 {
+	volatile u32 unused[12];
+
 	gpMarioForCallBack      = mMario;
 	J3DFrameCtrl* frameCtrl = mFluddModel->getFrameCtrl(ANM_TYPE_BCK);
 	if (mMario == nullptr)
