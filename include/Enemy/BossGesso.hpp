@@ -208,6 +208,9 @@ public:
 	int getAttackMode() const { return mAttackMode; }
 
 	// fabricated
+	TBGTentacle* getTentacle(int i) const { return mTentacles[i]; }
+
+	// fabricated
 	f32 getAttackSpeed() const
 	{
 		if (mAttackMode == 2)

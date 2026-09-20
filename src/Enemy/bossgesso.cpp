@@ -1181,9 +1181,35 @@ void TBossGesso::doAttackSingle()
 	}
 }
 
+// Binding level worth +16 of low region, landing TBossGesso::doAttackShoot's
+// frame at 0x98 (batch 124).
+static inline TBossGessoParams* BossgessoGetSaveParam2(const TBossGesso* p)
+{
+	TBossGessoParams* saveParam2 = p->getSaveParam2();
+	return saveParam2;
+}
+
+static inline TBGBeakHit* BossgessoGetBeak(const TBossGesso* p)
+{
+	TBGBeakHit* beak = p->mBeak;
+	return beak;
+}
+
+static inline TMario* BossgessoGetMario()
+{
+	TMario* mario = gpMarioOriginal;
+	return mario;
+}
+
+static inline TTakeActor* BossgessoGetBeakHolder(const TBossGesso* p)
+{
+	TTakeActor* holder = BossgessoGetBeak(p)->mHolder;
+	return holder;
+}
+
 void TBossGesso::doAttackDouble()
 {
-	if (mBeak->mHolder != nullptr || tentacleHeld()) {
+	if (BossgessoGetBeak(this)->mHolder != nullptr || tentacleHeld()) {
 		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
@@ -1191,10 +1217,10 @@ void TBossGesso::doAttackDouble()
 	JGeometry::TVec3<f32> delta = mPosition;
 	delta -= SMS_GetMarioPos();
 
-	f32 doubleAttackLen2 = getSaveParam2()->mSLDoubleAttackLen.get();
+	f32 doubleAttackLen2 = BossgessoGetSaveParam2(this)->mSLDoubleAttackLen.get();
 	doubleAttackLen2 *= doubleAttackLen2;
 
-	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	f32 sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
 	if (inSightAngle(0.5f * sightAngle)
 	    && delta.squared() < doubleAttackLen2) {
 
@@ -1215,21 +1241,21 @@ void TBossGesso::doAttackDouble()
 
 void TBossGesso::doAttackSkipRope()
 {
-	if (mBeak->mHolder != nullptr) {
+	if (BossgessoGetBeakHolder(this) != nullptr) {
 		changeAttackMode(ASTATE_SKIP_ROPE);
 		return;
 	}
 
-	if (mBeak->mHolder == nullptr && !tentacleHeld()) {
+	if (BossgessoGetBeak(this)->mHolder == nullptr && !tentacleHeld()) {
 		changeAttackMode(ASTATE_SINGLE);
 		return;
 	}
 
-	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	f32 sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
 	if (inSightAngle(0.5f * sightAngle)) {
 		for (int i = 0; i < 2; ++i) {
 			static const int idxarray[2] = { 0, 2 };
-			TBGTentacle* tentacle        = mTentacles[idxarray[i]];
+			TBGTentacle* tentacle        = getTentacle(idxarray[i]);
 			if (tentacle->mState != 2 && tentacle->mState != 1
 			    && tentacle->mState != 4 && tentacle->mState != 5
 			    && tentacle->mState != 3 && tentacle->mState != 6) {
@@ -1249,12 +1275,12 @@ void TBossGesso::doAttackUnison()
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 	delta -= mPosition;
 
-	f32 unisonAttackLen2 = getSaveParam2()->mSLUnisonAttackLen.get();
+	f32 unisonAttackLen2 = BossgessoGetSaveParam2(this)->mSLUnisonAttackLen.get();
 	unisonAttackLen2 *= unisonAttackLen2;
 
-	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	f32 sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
 	if (inSightAngle(0.5f * sightAngle)
-	    && gpMarioOriginal->isTouchGround4cm()
+	    && BossgessoGetMario()->isTouchGround4cm()
 	    && delta.squared() < unisonAttackLen2) {
 
 		BOOL bVar3 = true;
@@ -1281,14 +1307,6 @@ void TBossGesso::doAttackUnison()
 
 		changeAttackMode(ASTATE_SINGLE);
 	}
-}
-
-// Binding level worth +16 of low region, landing TBossGesso::doAttackShoot's
-// frame at 0x98 (batch 124).
-static inline TBossGessoParams* BossgessoGetSaveParam2(const TBossGesso* p)
-{
-	TBossGessoParams* saveParam2 = p->getSaveParam2();
-	return saveParam2;
 }
 
 void TBossGesso::doAttackShoot()
@@ -1330,7 +1348,7 @@ void TBossGesso::doAttackGuard()
 		return;
 	}
 
-	f32 sightAngle = getSaveParam2()->mSLSightAngle.get();
+	f32 sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
 	if (!inSightAngle(0.5f * sightAngle))
 		return;
 
