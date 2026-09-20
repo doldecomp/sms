@@ -1045,11 +1045,17 @@ void TEggYoshi::touchActor(THitActor* other)
 		touchFruit(other);
 }
 
+static inline int EggYoshiGetState(const TEggYoshi* p)
+{
+	int state = p->mState;
+	return state;
+}
+
 void TEggYoshi::control()
 {
 	TMapObjBase::control();
 
-	switch (mState) {
+	switch (EggYoshiGetState(this)) {
 	case 0xD:
 		if (animIsFinished()) {
 			startAnim(0);
