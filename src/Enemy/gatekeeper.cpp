@@ -590,7 +590,12 @@ void TBiancoGateKeeper::startFinishDemo()
 	stopBGM();
 }
 
-// TODO: fake/temporary dont_inline
+// Pragma residue (sweep 360): protects TNerveBGKWait::execute (99.95 -> 84.1).
+// Measured and rejected: a named `MActor* actor` for the five getMActor()
+// reads costs bytes (100 -> 79.5), and a named `f32 frame` for the two
+// getFrame() reads in the first arm costs 2% *and* still does not tip the
+// budget -- so `return true;`/`return false;` of a constant is cheaper than a
+// statement and this body sits well under 14.
 #pragma dont_inline on
 BOOL TBiancoGateKeeper::isHeadHitActive() const
 {

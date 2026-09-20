@@ -94,6 +94,11 @@ TObjHitCheck::checkWaterWithActorsInList(const JGeometry::TVec3<f32>& pos,
 	return nullptr;
 }
 
+// Pragma residue (sweep 360): this protects TObjHitCheck::checkActorsHit
+// (99.84 -> 55.4 without it, the body pasted into the caller). checkWater is
+// itself 100% and map-size exact, and the spelling is about 12 statements
+// against the depth-1 budget of 14, so retail's body carried 3+ more
+// zero-codegen statements; no byte-free spelling found for them.
 #pragma dont_inline on
 void TObjHitCheck::checkWater()
 {

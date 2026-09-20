@@ -114,6 +114,7 @@ void TYoshiTongue::rest(const JGeometry::TVec3<f32>& a,
 {
 }
 
+// Pragma residue (sweep 360): protects TYoshiTongue::movement (82.3 -> 71.1).
 #pragma dont_inline on
 // Binding level over a raw member read, worth +8 of low region in
 // TYoshiTongue::canGo (batch 127).

@@ -348,6 +348,8 @@ void TMapStaticObj::initMapCollision(const char* name)
 	mCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
 }
 
+// Pragma residue (sweep 360): protects TMapStaticObj::init (99.82 -> 73.6)
+// and costs initModel itself 0.04 (100 -> 99.96) when removed.
 #pragma dont_inline on
 void TMapStaticObj::initModel(const char* name)
 {

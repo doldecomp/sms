@@ -1323,7 +1323,13 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 // spelled about five more statements here that leave no trace in the 0xcc bytes.
 // Named locals for `mCoins[i]` and the `getMActor()->getModel()->getAnmMtx(0)`
 // chain would buy three of the five, but nothing in the asm chooses them, so the
-// pragma stays until better evidence turns up.
+// pragma stays until better evidence turns up. Sweep 360 priced the five:
+// both `set(a, b, c)` calls are confirmed retail (hoisted loads, and the
+// `stfsu` heading the coin stores means the receiver was bound), so expanding
+// them into component stores is +4 but breaks the bytes here; retail also
+// binds `&mCoins[i]` into a register and reloads through it three times rather
+// than naming the TCoin*. Expanding both sets plus a named coin does reach 15
+// statements (the callers stay exact) but the body falls to 65.1 at 0xc4.
 #pragma dont_inline on
 void TBossEelHeartCoin::generate(JGeometry::TVec3<f32>& position)
 {
@@ -1870,6 +1876,12 @@ static inline TBossEelEye* BosseelShedEye(const TBossEel* p, s32 i)
 	return eye;
 }
 
+// Pragma residue (sweep 360): protects TBossEelTooth::receiveMessage
+// (100 -> 70.9), TNerveBossEelDie (99.95 -> 87.4) and
+// TNerveBossEelSleepOnBottom (100 -> 41.1). The body is 13 statements against a budget of 14; a
+// named `bool toggle` plus a named TBossEelEye* for the two BosseelEye() reads
+// is the +2 that reaches the floor -- the callers then stay exact -- but the
+// body itself drops to 91.0, so one of the two locals is not byte-free.
 #pragma dont_inline on
 void TBossEel::forceShedTears(bool rearEyes)
 {

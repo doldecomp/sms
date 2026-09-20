@@ -15,6 +15,10 @@ void TMapCollisionManager::changeCollision(u32 i)
 
 void TMapCollisionManager::getFileName(const char*, char*) { }
 
+// Pragma residue (sweep 360): protects TMapCollisionManager::init (100 -> 43).
+// The body is about 10 statements against the depth-1 budget of 14; its 228
+// bytes are the inlined TMapCollision* constructors, and statements a callee
+// gains from its own inlines are free.
 #pragma dont_inline on
 void TMapCollisionManager::createCollision(const char* param_1, u8 param_2)
 {

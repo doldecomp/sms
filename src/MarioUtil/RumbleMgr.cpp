@@ -215,7 +215,12 @@ void RumbleControllerMgr::reset()
 	unk12         = 0;
 }
 
-// Hmm... why does this inline in RumbleMgr::start(int, f32*)?
+// Pragma residue (sweep 360): protects RumbleMgr::start(int, f32*) and
+// start(int, int, f32*) (both 100 -> 0 without it). This body is already
+// byte- and map-size exact (0x58) at 7 statements against the depth-1 budget
+// of 14, so retail's spelling held 8 more zero-codegen statements. Measured
+// and rejected: `-inline noauto` on the whole object, which also stops the
+// in-class RumbleChannelMgr inlines (11 functions in this unit drop).
 #pragma dont_inline on
 void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
                                 f32* multiplierF)
@@ -229,7 +234,9 @@ void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
 }
 #pragma dont_inline reset
 
-// This one also inlines in RumbleMgr::start(int, Vec*)?
+// Pragma residue (sweep 360): protects RumbleMgr::start(int, Vec*) and
+// start(int, int, Vec*). Same shape as the f32* overload above: exact at the
+// map's 0x58, 7 statements against 14.
 #pragma dont_inline on
 void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
                                 Vec* worldPos)
@@ -253,7 +260,10 @@ void RumbleControllerMgr::stop()
 	}
 }
 
-// This one also inlines in RumbleMgr::stop(int)?
+// Pragma residue (sweep 360): protects RumbleMgr::stop(int) (100 -> 0).
+// Exact at the map's 0x13c -- the size is the inlined RumbleChannelMgr::reset,
+// and statements a callee gains from its own inlines are free, so this is 7
+// statements against 14.
 #pragma dont_inline on
 void RumbleControllerMgr::stop(int channelDataIdx)
 {

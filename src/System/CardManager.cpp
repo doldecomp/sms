@@ -112,7 +112,8 @@ void TCardManager::TCriteria::setEmpty()
 	}
 }
 
-// TODO: incorrect
+// Pragma residue (sweep 360): protects TCardManager::copyTo (99.8 -> 64.6)
+// and TCardManager::readBlock_ (99.1 -> 81.8).
 #pragma dont_inline on
 s32 TCardManager::decideUseSector(TCardManager::TCriteria* criteria)
 {

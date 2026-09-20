@@ -241,7 +241,9 @@ static BOOL WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
 	return true;
 }
 
-// Not sure why this get's inlined aggressively
+// Pragma residue (header round 51, re-measured in sweep 360): size-exact at
+// the map's 0x800 with a 14-instruction prologue-scheduling residue; removing
+// the pragma drops TWaterGun::TWaterGun 100 -> 65 and this unit's data to 19.
 #pragma dont_inline on
 TNozzleBase::TNozzleBase(const char* name, const char* prm, TWaterGun* fludd)
     : mEmitParams(prm)
@@ -1441,7 +1443,10 @@ TWaterGun::TDeParams::TDeParams()
 	TParams::load(mPrmPath);
 }
 
-// TODO: Do i really need to explcitly say this?
+// Pragma residue (header round 51, re-measured in sweep 360): getEmitMtx is
+// exact at the map's 0xf8 and the map attests the out-of-line symbol, but the
+// spelling is about 10 statements against the depth-1 budget of 14; removing
+// the pragma pastes it into emit(), perform() and getNozzleMtx().
 #pragma dont_inline on
 static inline TNozzleBase* WaterGunCurNozzle(const TWaterGun* p)
 {

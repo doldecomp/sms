@@ -14,6 +14,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// Pragma residue (sweep 360): protects TMario::demoMain (100 -> 77.8).
+// winDemo is exact and sits at about 14 statements -- right on the depth-1
+// budget. Measured and rejected: naming unk384 (`THitActor* shine`, a genuine
+// two-use reuse) reaches the floor but costs bytes (winDemo -> 87.2).
 #pragma dont_inline on
 BOOL TMario::winDemo()
 {

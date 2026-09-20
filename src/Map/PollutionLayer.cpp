@@ -174,6 +174,12 @@ void TPollutionLayer::stampModel(J3DModel* model)
 	gpPollution->unk70.pushModelStampTask(mIndexInParent & 0xff, model);
 }
 
+// Pragma residue (sweep 360): protects TPollutionLayer::cleaned (99.91 ->
+// 97.9). The body is *empty* and the map lists it (func,global) at 4 bytes,
+// yet retail bl's it from cleaned in the same TU -- a zero-statement body the
+// compiler must not expand, which no statement count can explain. Measured and
+// rejected: an explicitly qualified call (this->TPollutionLayer::appearItem)
+// does not suppress the expansion.
 #pragma dont_inline on
 void TPollutionLayer::appearItem(f32, f32, f32) { }
 #pragma dont_inline off

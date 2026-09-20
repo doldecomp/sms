@@ -102,6 +102,10 @@ static void initMare()
 	}
 }
 
+// Pragma residue (sweep 360): protects initStage() (99.94 -> 55.8) and, less
+// visibly, initMonte/initMare/initStageCommon and this unit's data (100 ->
+// 90.3). initPinnaParco is exact and static, and the map keeps it out of line,
+// but it is only 6 statements against a depth-1 budget of 14.
 #pragma dont_inline on
 // Binding level worth +8 of low region, landing initPinnaParco's frame at
 // 0x50 (batch 121).

@@ -289,6 +289,9 @@ void TSpineEnemy::goToInitialVisibleNode(f32, f32) { }
 
 void TSpineEnemy::goToInitialGraphNodeCheckY(f32 param_1) { }
 
+// Pragma residue (enemy ladder 339, re-measured in sweep 360): protects
+// TSpineEnemy::reset (100 -> 0, the body pasted into it). Our spelling is
+// about 12 statements against the depth-1 budget of 14.
 #pragma dont_inline on
 int TSpineEnemy::goToShortestNextGraphNode()
 {

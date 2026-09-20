@@ -524,6 +524,8 @@ void CPolarSubCamera::doLButtonCameraOn_()
 	}
 }
 
+// Pragma residue (sweep 360): protects the only caller,
+// CPolarSubCamera::execCameraModeChangeProc_ (98.79 -> 78.2 without it).
 #pragma dont_inline on
 void CPolarSubCamera::doLButtonCameraOff_(bool param_1)
 {

@@ -21,6 +21,9 @@ u32 TMapCollisionData::getEntryID()
 	return result;
 }
 
+// Pragma residue (sweep 360): protects TMapCollisionData::addCheckDataToGrid
+// (91.4 -> 11.2), the only caller of these list helpers. allocCheckList is 10
+// statements against the depth-1 budget of 14.
 #pragma dont_inline on
 TBGCheckList* TMapCollisionData::allocCheckList(int kind, int count)
 {

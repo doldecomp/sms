@@ -99,6 +99,10 @@ u32 Vload::getLogicalHandle(char* param) { return 0; }
 
 u32 Vload::getHandle(u32 param) { return 0; }
 
+// Pragma residue (sweep 360): protects Vload::checkSize (100 -> 0),
+// Vload::loadFile (-> 20.6) and Vload::loadFileAsync (-> 28.2), which all call
+// this. The body is exact; about 12 statements against the depth-1 budget of
+// 14, so retail's spelling carried 3+ more.
 #pragma dont_inline on
 Vload::VLArcEntry* Vload::getRealHandle(u32 param)
 {

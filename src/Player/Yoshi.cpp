@@ -375,6 +375,11 @@ u16 TYoshi::changeHand()
 	return 22;
 }
 
+// Pragma residue (sweep 360): protects TYoshi::doSearch (99.65 -> 87.7) and
+// TYoshi::movement. Only 7 statements against a budget of 14, so retail's body
+// was spelled very differently. The body is also 97.1% on its own: retail
+// keeps the anm-matrix chain in r6 and leaves r3 (this) live where we reuse
+// r3; routing it through the header's getTongueMtx() is inert.
 #pragma dont_inline on
 void TYoshi::getEmitPosDir(JGeometry::TVec3<f32>* dir,
                            JGeometry::TVec3<f32>* pos) const

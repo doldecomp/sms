@@ -647,6 +647,11 @@ void TGraphWeb::getNodeIndexInXZRange(const JGeometry::TVec3<f32>&, f32,
 {
 }
 
+// Pragma residue (sweep 360): protects itself (100 -> 23.5: MWCC expands the
+// *self-recursive* call one level, so recursion is not the inline refusal the
+// rules card claims) and TGraphWeb::initGoalIndex (100 -> 26.1). The body is
+// 14 statements by the budget model; measured and rejected: naming
+// railNode->mConnectionNum as the loop bound (+1) does not tip it.
 #pragma dont_inline on
 void TGraphWeb::calcGraphDirection(int n)
 {
