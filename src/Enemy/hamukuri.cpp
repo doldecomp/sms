@@ -1384,6 +1384,18 @@ bool THamuKuri::isSerialWallDie()
 	return false;
 }
 
+// TODO: shared-header need. JGVec3.hpp's `operator*(TVec3, f32)` returns by
+// value, which costs a third copy at every `v = v * k`; the reference-returning
+// spelling its `operator-`/`operator+` siblings use is what retail emits here
+// (header round 25 measured this body 90.23 -> 99.66 with it) but is a tree
+// -wide net loss until the regressing units are respelled. Parked TU-local.
+static inline const JGeometry::TVec3<f32>&
+HamukuriScaled(JGeometry::TVec3<f32> fst, f32 snd)
+{
+	fst *= snd;
+	return fst;
+}
+
 void THamuKuri::forceRoll(JGeometry::TVec3<f32> param_1, bool param_2)
 {
 	JGeometry::TVec3<f32> local_20(mPosition.x - param_1.x, 10.0f,
@@ -1391,16 +1403,11 @@ void THamuKuri::forceRoll(JGeometry::TVec3<f32> param_1, bool param_2)
 
 	MsVECNormalize(&local_20, &local_20);
 
-	// TODO: the ROM makes two copies here (into operator*'s by-value parameter
-	// and back); ours makes three because JGVec3.hpp's operator*(TVec3, f32)
-	// returns by value where operator-/operator+ return `const TVec3&`.
-	// Ruled out: making operator* return `const TVec3&` too -- it fixes this
-	// site but regresses ~15 functions across boid, telesa, beam, MapObjMare,
-	// MarioMove, MarioPhysics and Tongue.
 	if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
-		local_20 = local_20 * unk1F4->mSLWaterAttackCoeff.get();
+		local_20 = HamukuriScaled(local_20,
+		                          unk1F4->mSLWaterAttackCoeff.value);
 	} else {
-		local_20 = local_20 * unk1F4->mSLWaterCoeff.get();
+		local_20 = HamukuriScaled(local_20, unk1F4->mSLWaterCoeff.get());
 	}
 
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
