@@ -179,13 +179,11 @@ void TMonumentShine::control()
 			}
 		}
 	} else {
-		f32 rot   = mRotation.y;
-		f32 limit = 360.0f;
-		while (rot >= limit)
-			rot -= limit;
-		f32 zero = 0.0f;
-		while (rot < zero)
-			rot += limit;
+		f32 rot = mRotation.y;
+		while (rot >= 360.0f)
+			rot -= 360.0f;
+		while (rot < 0.0f)
+			rot += 360.0f;
 		mRotation.y = rot;
 	}
 }
