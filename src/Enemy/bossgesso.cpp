@@ -1209,6 +1209,8 @@ static inline TBGBeakHit* BossgessoGetBeak(const TBossGesso* p)
 	return beak;
 }
 
+static inline int BossgessoGetUnk195(const TBossGesso* p) { return p->unk195; }
+
 static inline TMario* BossgessoGetMario()
 {
 	TMario* mario = gpMarioOriginal;
@@ -1754,7 +1756,9 @@ DEFINE_NERVE(TNerveBGWait, TLiveActor)
 		self->setGoalPathMario();
 
 		self->getMActor()->setBtpFromIndex(2);
-		self->getMActor()->getFrameCtrl(ANM_TYPE_BTP)->setFrame(0.0f);
+
+		J3DFrameCtrl* ctrl3 = self->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
+		ctrl3->setFrame(0.0f);
 		self->getMActor()->resetDL();
 	}
 
@@ -2186,12 +2190,13 @@ DEFINE_NERVE(TNerveBGPolDrop, TLiveActor)
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 		delta -= self->mPosition;
 
-		f32 shootRadius2 = self->getSaveParam2()->mSLShootRadius.value;
+		f32 shootRadius2 = BossgessoGetSaveParam2(self)->mSLShootRadius.value;
 		shootRadius2 *= shootRadius2;
-		f32 singleAttackLen2 = self->getSaveParam2()->mSLSingleAttackLen.get();
+		f32 singleAttackLen2
+		    = BossgessoGetSaveParam2(self)->mSLSingleAttackLen.get();
 		singleAttackLen2 *= singleAttackLen2;
 
-		if (self->unk195 < 3) {
+		if (BossgessoGetUnk195(self) < 3) {
 			f32 len = delta.squared();
 			if (singleAttackLen2 <= len && len < shootRadius2) {
 				spine->pushAfterCurrent(&TNerveBGPolDrop::theNerve());
