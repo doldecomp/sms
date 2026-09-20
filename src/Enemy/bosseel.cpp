@@ -429,6 +429,7 @@ void TBEelTears::perform(u32 cue, JDrama::TGraphics* graphics)
 
 BOOL TBEelTears::receiveMessage(THitActor*, u32 message)
 {
+	char trash[8];
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		mStateTimer = 60;
 		if (mSpine->getCurrentNerve() == &TNerveBEelTearsMoveUp::theNerve()
