@@ -545,7 +545,7 @@ BOOL TMapObjSwitch::receiveMessage(THitActor*, u32 message)
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "オブジェスイッチ用カメラ", nullptr, -1, 0.0f, true, nullptr, 0,
 		    nullptr, JDrama::TFlagT<u16>(0));
-		mStateTimer = unk140;
+		startStateTimer(unk140);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		return TRUE;
 	}
