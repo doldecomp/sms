@@ -630,10 +630,11 @@ void TGesso::bind()
 		f32 fVar3 = SMS_GetMarioPos().x - mPosition.x;
 		f32 fVar4 = SMS_GetMarioPos().z - mPosition.z;
 		JGeometry::TVec3<f32> var2(fVar3, 0.0f, fVar4);
+		JGeometry::TVec3<f32> unused;
 		JGeometry::TVec3<f32> local_48;
 		local_48.cross(var1, var2);
 		f32 cos   = var1.dot(var2);
-		f32 angle = MsAtan2(cos, MsVECMag2(&local_48));
+		f32 angle = abs(matan(cos, MsVECMag2(&local_48)) * (360.0f / 65536.0f));
 		if (mBodyTrackingAngle != angle) {
 			if (mBodyTrackingAngle < angle) {
 				mBodyTrackingAngle += mBodyRotSpeed;
