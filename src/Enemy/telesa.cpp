@@ -955,6 +955,7 @@ void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 
 	stream >> mImitationIndex;
 
+	char trash[16];
 	SDLModelData* modelToUse = ((TTelesaManager*)mManager)->mModokiTelesaModel;
 	switch (mImitationIndex) {
 		// NOTE: IMITATION_INDEX_NOT_IMITATING=0 stands for no model change
