@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte (+3 then +0 structural), bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 (+0 structural then UNUSED restore), EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural, Option +1, elecNokonoko +3, hanasambo +2.
-- Landed `grpuk` hinokuri2 ([hinokuri2 unit ladder](8d6a0f95-b3e1-4d4d-9795-c62354e0929a)): restored UNUSED helpers to map size (`startDamageMotion`/`breakMask`/`makeQuake`/`emitPolParticle` exact; `shakeCamera` 0xA4/0xA8; `updatePolTrans` 0x78/0x70); pasted `startDamageMotion` at Lv2 hip-drop; +0 exact / 0 changes_all lines (UNUSED-only); All stays **61.88%**. Next: keep Landing’s 6-insn prefix live.
-- Landed MapObjMonte FluffManager structural; chuuhana isCollidMove; hanasambo +2.
-- Total: **61.88%** matched, game **53.87%**, linked **492 / 732**, exact **11,368**.
-- Running: `grpul` / gesso ([gesso unit ladder](f65be61c-7e3c-446e-bfeb-f58e53893919)). Refill: killer.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural then +2), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte (+3 then +0 structural), bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 (+0 structural then UNUSED restore), EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural, Option +1, elecNokonoko +3, hanasambo +2.
+- Landed `grpul` gesso ([gesso unit ladder](f65be61c-7e3c-446e-bfeb-f58e53893919)): +2 exact (`calcRootMatrix` via `getMActor()->mModel` + `getPosition().x`; `setPolluteGoal` via `getSaveParams`); Freeze frame raised; unit **70.02→74.22**; All **61.88→61.91**, Game **53.87→53.90**, exact **11,368→11,370**.
+- Landed hinokuri2 UNUSED restore; MapObjMonte structural.
+- Total: **61.91%** matched, game **53.90%**, linked **492 / 732**, exact **11,370**.
+- Running: `grpum` / killer ([killer unit ladder](a7828b26-e4d3-4fc6-8f80-9eb4228a5758)). Refill: Option.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
