@@ -972,6 +972,14 @@ static inline void MapObjCoronaSetAngle(f32* out, f32 v)
 	*out = v;
 }
 
+// Binding level over the matrix cast: +8 of low region, landing
+// getNextGrip / getNextJuncture frames (0x148 / 0x130).
+static inline const TPosition3f& MapObjCoronaMatrix(MtxPtr mtx)
+{
+	const TPosition3f& matrix = *(TPosition3f*)mtx;
+	return matrix;
+}
+
 namespace {
 /// Yaw of `pos` inside the frame of `mtx`, measured about the matrix's Y axis.
 s16 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos)
@@ -993,7 +1001,7 @@ s16 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos)
 s16 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos,
            const JGeometry::TVec3<f32>& offset)
 {
-	const TPosition3f& matrix = *(TPosition3f*)mtx;
+	const TPosition3f& matrix = MapObjCoronaMatrix(mtx);
 	JGeometry::TVec3<f32> x, z, origin, relative, radial, tangent;
 	matrix.getXDir(x);
 	matrix.getZDir(z);
@@ -1050,7 +1058,8 @@ f32 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>& pos,
                               const JGeometry::TVec3<f32>& offset) const
 {
 	s16 dir     = getDir(*getRootJointMtx(), pos, offset);
-	f32 angle   = (360.0f / 65536.0f) * dir;
+	f32 angle   = dir;
+	angle *= 360.0f / 65536.0f;
 	f32 nearest = 360.0f;
 	int index   = 0;
 	for (int i = 0; i < 5; ++i) {
@@ -1068,7 +1077,8 @@ u8 TBathtub::getNextGrip(const JGeometry::TVec3<f32>& pos,
                          f32* gripAngle) const
 {
 	s16 dir     = getDir(*getRootJointMtx(), pos, offset);
-	f32 angle   = (360.0f / 65536.0f) * dir;
+	f32 angle   = dir;
+	angle *= 360.0f / 65536.0f;
 	f32 nearest = 360.0f;
 	int index   = 0;
 	for (int i = 0; i < 5; ++i) {
