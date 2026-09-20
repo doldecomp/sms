@@ -585,9 +585,14 @@ void TBaseNPC::changeNerveProc_()
 
 void TBaseNPC::setPosAndInitAfterSinkBottom()
 {
+	char trash[4];
 	JGeometry::TVec3<f32> pos = unk194;
+	f32 z;
+	f32 y = pos.y;
+	z     = pos.z;
+	char trash2[0x1c];
 
-	bool cVar8 = gpPollution->isPolluted(pos.x, pos.y, pos.z);
+	bool cVar8 = gpPollution->isPolluted(pos.x, y, z);
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
 	            | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000
 	            | LIVE_FLAG_UNK40000 | LIVE_FLAG_UNK400000
@@ -608,18 +613,18 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	unk1D0 = 0.0f;
 	if (cVar8 && isPollutionNpc() && !checkActionFlag(NPC_ACTION_UNK400)) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
-		mSpine->setDefaultNext();
+		mSpine->setNext(mSpine->getDefault());
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
 		           | LIVE_FLAG_SINK_BOTTOM);
 		unk1C4 = mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
-		    pos.x, pos.y + getHeadHeight(), pos.z, &mGroundPlane);
+		    pos.x, y + getHeadHeight(), z, &mGroundPlane);
 		pos.y = unk1C4 - mIndividualParams->mSinkHeight.get();
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
-		mSpine->setDefaultNext();
+		mSpine->setNext(mSpine->getDefault());
 		mSpine->pushNerve(mSpine->getDefault());
 		pos.y += 2.0f;
 		mVelocity.set(0.0f, 5.0f, 0.0f);
