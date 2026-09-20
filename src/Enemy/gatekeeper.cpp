@@ -990,9 +990,18 @@ DEFINE_NERVE(TNerveBGKWait2, TLiveActor)
 	return false;
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveBGKLaunchGoro::execute's frame at 0x40 (batch 121).
+static inline MActor* GatekeeperGetMActor(const TBiancoGateKeeper* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 {
-	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
+	TLiveActor* body        = spine->getBody();
+	TBiancoGateKeeper* self = (TBiancoGateKeeper*)body;
 
 	if (spine->getTime() == 0)
 		self->changeBck(4);
@@ -1009,7 +1018,7 @@ DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
 		}
 	}
 
-	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	if (GatekeeperGetMActor(self)->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBGKSleep::theNerve());
 		return true;
 	}
@@ -1110,7 +1119,8 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 
 DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 {
-	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
+	TLiveActor* body        = spine->getBody();
+	TBiancoGateKeeper* self = (TBiancoGateKeeper*)body;
 
 	if (spine->getTime() == 0)
 		self->changeBck(6);
@@ -1122,7 +1132,7 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 		self->rumblePad();
 	}
 
-	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	if (GatekeeperGetMActor(self)->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if (self->mVariant == TBiancoGateKeeper::VARIANT_GENERIC) {
 			int timer = self->getSaveParams()->mSLLaunchTimerNormal.get();
 			timer += (s32)(240.0f * MsRandF()) - 120;
@@ -1135,14 +1145,6 @@ DEFINE_NERVE(TNerveBGKDive, TLiveActor)
 	}
 
 	return false;
-}
-
-// Binding level worth +8 of low region, landing
-// TNerveBGKLaunchGoro::execute's frame at 0x40 (batch 121).
-static inline MActor* GatekeeperGetMActor(const TBiancoGateKeeper* p)
-{
-	MActor* mActor = p->getMActor();
-	return mActor;
 }
 
 DEFINE_NERVE(TNerveBGKLaunchGoro, TLiveActor)
