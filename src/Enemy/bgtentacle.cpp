@@ -1534,13 +1534,13 @@ void TBGTentacle::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM)
-		unk2C->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
+		getUnk2C()->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
 		    mMtxCalc);
 
 	if (cue & CUE_ENTRY) {
-		unk2C->setLightData(mOwner->getGroundPlane(), mOwner->getPosition());
+		getUnk2C()->setLightData(mOwner->getGroundPlane(), mOwner->getPosition());
 
-		if (mState == 4) {
+		if (getState() == 4) {
 			if (mTimeInCurrentState
 			        >= mOwner->getSaveParam2()->getSLAmputeeTime() - 240
 			    && mTimeInCurrentState % 6 >= 3) {
@@ -1549,13 +1549,13 @@ void TBGTentacle::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if ((cue & CUE_MOVE) && mState == 4
+	if ((cue & CUE_MOVE) && getState() == 4
 	    && mTimeInCurrentState
 	           < mOwner->getSaveParam2()->getSLAmputeeTime() - 240) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND,
-		                                &mTakeHit->mPosition, 0, nullptr, 0, 4);
+		                                &mTakeHit->getPosition(), 0, nullptr, 0, 4);
 	}
 
-	if (mState != 6)
-		unk2C->perform(cue, graphics);
+	if (getState() != 6)
+		getUnk2C()->perform(cue, graphics);
 }
