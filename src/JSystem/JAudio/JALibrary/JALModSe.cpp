@@ -224,6 +224,16 @@ f32 JALSystem::processModDistFx(u32 param_1, f32 param_2)
 // seventeen `JADPrm` constructions, so "8 bytes per JADPrmS materialised" does
 // not generalise; either the two are independent, or both bodies declare one
 // dead object of the same unnamed ~104-byte audio-debug type.
+// Unit round 2026-09-20 -- TU-local landing path confirmed and reverted:
+//   struct JADPrmSF : JADPrmS<f32> { JADPrmSF(f32, const char*, Tag4=Tag4()); };
+//   JALPrmSet(f32, f32, Tag4=Tag4(), Tag4=Tag4());  // or one Tag8
+// with `JADPrmSF prm(...)` in append is frame 0x130, 100.0%, 371/371, zero
+// operand diffs; `changes_all` moves only this unit (matched_code 86.93->100,
+// fuzzy 99.98->100); DOL sha1 unchanged while unlinked. Tag4/Tag8 as invented
+// empty classes, or `JGeometry::TUtil<f32>` as the research-214 stand-in, are
+// still fakematches (no JAudio evidence for the type). Shared `JADPrm.hpp` is
+// not required: the derived ctor keeps the unread arg off the emitted
+// `JADPrm<T>` weak. Parked on naming the real type.
 void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
                        u32 param_3, f32 param_4, f32 param_5, f32 param_6,
                        f32 param_7, f32 param_8, JALCalc::CurveSign param_9,
