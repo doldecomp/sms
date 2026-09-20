@@ -1846,6 +1846,13 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 	*out_offset = actualPoint - point;
 }
 
+static inline const TBGCheckData* FireWanwanWall(const TBGWallCheckRecord& rec,
+                                                int i)
+{
+	const TBGCheckData* wall = rec.mResultWalls[i];
+	return wall;
+}
+
 bool TFireWanwan::checkWalls(JGeometry::TVec3<f32>* point,
                              TBGWallCheckRecord* out_record, f32 radius)
 {
@@ -1863,9 +1870,10 @@ bool TFireWanwan::checkWalls(JGeometry::TVec3<f32>* point,
 		return true;
 	}
 
+	int e      = local_58.mResultWallsNum;
 	bool bVar1 = false;
-	for (int i = 0, e = local_58.mResultWallsNum; i < e; ++i)
-		bVar1 |= behaveHitWallOnFlying(local_58.mResultWalls[i]);
+	for (int i = 0; i < e; ++i)
+		bVar1 |= behaveHitWallOnFlying(FireWanwanWall(local_58, i));
 
 	if (bVar1) {
 		checkWalls(point, out_record, radius);
