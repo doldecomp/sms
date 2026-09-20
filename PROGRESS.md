@@ -72,7 +72,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `Enemy/seal` | 98.65% | 12 / 18 |
 | `Enemy/hanasambo` | 97.51% | 63 / 96 |
 | `Enemy/cannon` | 97.26% | 33 / 55 |
-| `Enemy/popo` | 96.95% | 30 / 54 |
+| `Enemy/popo` | 97.82% | 40 / 54 |
 | `Enemy/tobiPuku` | 94.71% | 90 / 120 |
 | `Enemy/igaiga` | 94.61% | 52 / 95 |
 | `Enemy/chuuhana` | 99.44% | 43 / 57 |
