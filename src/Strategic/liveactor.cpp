@@ -139,21 +139,33 @@ void TLiveActor::initLodAnm(const TLodAnmIndex* param_1, int param_2,
 		unkD0 = new TLodAnm(this, param_1, param_2, param_3);
 }
 
+static inline TMActorKeeper* LiveactorActorKeeper(const TLiveActor* p)
+{
+	TMActorKeeper* keeper = p->mMActorKeeper;
+	return keeper;
+}
+
+static inline TLiveManager* LiveactorManager(const TLiveActor* p)
+{
+	TLiveManager* manager = p->mManager;
+	return manager;
+}
+
 void TLiveActor::init(TLiveManager* manager)
 {
 	if (!manager) {
 		if (TObjChara* chara = (TObjChara*)unk3C) {
 			mMActorKeeper = new TMActorKeeper(nullptr, 1);
 			// TODO: could be TSMSSmplChara instead
-			mMActor = mMActorKeeper->createMActorFromDefaultBmd(
+			mMActor = LiveactorActorKeeper(this)->createMActorFromDefaultBmd(
 			    chara->getFolder(), 0);
 		}
 		gpConductor->registerAloneActor(this);
 	} else {
 		mManager      = manager;
 		mMActorKeeper = new TMActorKeeper(mManager, 1);
-		mManager->manageActor(this);
-		mMActor = mMActorKeeper->createMActorFromNthData(0, 0);
+		LiveactorManager(this)->manageActor(this);
+		mMActor = LiveactorActorKeeper(this)->createMActorFromNthData(0, 0);
 	}
 
 	initHitActor(0, 1, 0, mBodyRadius, mHeadHeight, mBodyRadius, mHeadHeight);
