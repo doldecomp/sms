@@ -1276,6 +1276,26 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(result);
 }
 
+#ifdef VERSION_GMSP01
+static void evStartMontemanBGM(TSpcTypedInterp<TEventWatcher>* interp,
+                               u32 arg_num)
+{
+	interp->verifyArgNum(0, &arg_num);
+	MSBgm::stopTrackBGM(0, 10);
+	MSBgm::startBGM(MSD_STR_SPACEWORLD);
+	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_RACE_START, 0, nullptr, 0);
+	interp->push();
+}
+
+static void evStartMontemanFanfare(TSpcTypedInterp<TEventWatcher>* interp,
+                                   u32 arg_num)
+{
+	interp->verifyArgNum(0, &arg_num);
+	MSBgm::startBGM(MSD_BGM_CAMERA_KAGE);
+	interp->push();
+}
+#endif
+
 template <> void TSpcTypedBinary<TEventWatcher>::initUserBuiltin()
 {
 	// clang-format off
@@ -1356,6 +1376,10 @@ template <> void TSpcTypedBinary<TEventWatcher>::initUserBuiltin()
   bindSystemDataToSymbol("appearReadyGo", (u32)&evAppearReadyGo);
   bindSystemDataToSymbol("onNeutralMarioKey", (u32)&evOnNeutralMarioKey);
   bindSystemDataToSymbol("invalidatePad", (u32)&evInvalidatePad);
+#ifdef VERSION_GMSP01
+  bindSystemDataToSymbol("startMontemanBGM", (u32)&evStartMontemanBGM);
+  bindSystemDataToSymbol("startMontemanFanfare", (u32)&evStartMontemanFanfare);
+#endif
   bindSystemDataToSymbol("checkWoodBox", (u32)&evCheckWoodBox);
   bindSystemDataToSymbol("refreshWoodBox", (u32)&evRefreshWoodBox);
   bindSystemDataToSymbol("killWoodBox", (u32)&evKillWoodBox);

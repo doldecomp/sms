@@ -372,7 +372,7 @@ public:
 	TBossEelSaveParams& getBossEelParams() const { return *mSaveParams; }
 
 	enum {
-		LIVE_FLAG_UNK10000 = 0x10000,
+		LIVE_FLAG_UNK10000 = VERSION_SELECT(GMSJ01(0x10000), GMSP01(0x20000)),
 	};
 
 public:

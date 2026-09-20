@@ -18,10 +18,92 @@
 #include <GC2D/CardSave.hpp>
 #include <GC2D/ScrnFader.hpp>
 #include <GC2D/hx_wiper.h>
+#ifdef VERSION_GMSP01
+#include <JSystem/J2D/J2DOrthoGraph.hpp>
+#include <dolphin/vi.h>
+#endif
+#include <version.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+#ifdef VERSION_GMSP01
+#pragma dont_inline on
+TEndingString::TEndingString(const char* name)
+    : JDrama::TViewObj(name)
+    , mState(STATE_HIDDEN)
+    , mTimer(0)
+    , mScreen(nullptr)
+    , mRootPane(nullptr)
+{
+	JKRArchive* archive  = (JKRArchive*)JKRFileLoader::getVolume("endsave");
+	J2DSetScreen* screen = new J2DSetScreen("ending_1.blo", archive);
+	mScreen              = screen;
+	J2DPane* root        = mScreen->search('ROOT');
+	mRootPane            = root;
+	mRootPane->setAlpha(0);
+}
+#pragma dont_inline off
+
+void TEndingString::startFadeIn()
+{
+	if (gpApplication.getMovie() == 16) {
+		mScreen->search('tx_1')->show();
+		mScreen->search('tx_2')->hide();
+	} else if (gpApplication.getMovie() == 17) {
+		mScreen->search('tx_1')->hide();
+		mScreen->search('tx_2')->show();
+	}
+	mState = STATE_FADE_IN;
+}
+
+void TEndingString::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_MOVE) {
+		switch (mState) {
+		case STATE_HIDDEN:
+			break;
+		case STATE_FADE_IN: {
+			u16 alpha = mRootPane->getAlpha();
+			alpha += 8;
+			if (alpha > 0xFF) {
+				mState = STATE_SHOWN;
+				mTimer = 0;
+				alpha  = 0xFF;
+			}
+			mRootPane->setAlpha(alpha);
+		} break;
+		case STATE_SHOWN:
+			++mTimer;
+			if (mTimer > 225)
+				mState = STATE_FADE_OUT;
+			break;
+		case STATE_FADE_OUT: {
+			s16 alpha = mRootPane->getAlpha();
+			alpha -= 8;
+			if (alpha < 0) {
+				mState = STATE_HIDDEN;
+				alpha  = 0;
+			}
+			mRootPane->setAlpha(alpha);
+		} break;
+		}
+	}
+
+	if (cue & CUE_DRAW) {
+		switch (mState) {
+		case STATE_FADE_IN:
+		case STATE_SHOWN:
+		case STATE_FADE_OUT: {
+			J2DOrthoGraph graph(graphics->getViewport());
+			graph.setup2D();
+			mScreen->draw(0, 0, &graph);
+		} break;
+		}
+	}
+}
+#endif
 
 const char* TMovieDirector::getStreamMovieName(u32 idx)
 {
@@ -46,8 +128,8 @@ TMovieDirector::TMovieDirector()
     , unk24(nullptr)
     , unk30(0)
 #ifdef VERSION_GMSP01
-    , unk34(0)
-    , unk38(0)
+    , mEndingString(nullptr)
+    , mEndingTimer(0)
 #endif
 {
 }
@@ -75,21 +157,46 @@ void TMovieDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 
 int TMovieDirector::rsetup()
 {
+#ifdef VERSION_GMSP01
+	static const char* subtitleNames[] = {
+		"/data/subtitle_en.arc", "/data/subtitle_ge.arc",
+		"/data/subtitle_fr.arc", "/data/subtitle_sp.arc",
+		"/data/subtitle_it.arc",
+	};
+	static const char* endsaveNames[] = {
+		"/data/endsave_en.arc", "/data/endsave_ge.arc", "/data/endsave_fr.arc",
+		"/data/endsave_sp.arc", "/data/endsave_it.arc",
+	};
+
+	void* subtitleArcBlob = SMSLoadArchive(
+	    subtitleNames[TFlagManager::getInstance()->getFlag(0xA0001)], nullptr,
+	    0, nullptr);
+#else
 	void* subtitleArcBlob
 	    = SMSLoadArchive("/data/subtitle.arc", nullptr, 0, nullptr);
+#endif
 	JKRMemArchive* subtitleArc = new JKRMemArchive;
 	subtitleArc->mountFixed(subtitleArcBlob, MBF_0);
 
-	if (gpApplication.getMovie() < 20) {
-		if (gpApplication.getMovie() < 16) {
+	if ((s32)gpApplication.getMovie() < 20) {
+		if ((s32)gpApplication.getMovie() < 16) {
 			(void)gpApplication.getMovie();
 		} else {
+#ifdef VERSION_GMSP01
+			void* arcBlob = SMSLoadArchive(
+			    endsaveNames[TFlagManager::getInstance()->getFlag(0xA0001)],
+			    nullptr, 0, nullptr);
+#else
 			void* arcBlob
 			    = SMSLoadArchive("/data/endsave.arc", nullptr, 0, nullptr);
+#endif
 			JKRMemArchive* arc = new JKRMemArchive;
 			arc->mountFixed(arcBlob, MBF_0);
 		}
 	}
+#ifdef VERSION_GMSP01
+	load2DResource2Aram();
+#endif
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* rootViewObjs
 	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("root View Objs");
@@ -119,11 +226,19 @@ int TMovieDirector::rsetup()
 	unk2C->init(movie);
 	group2d->getChildren().push_back(unk2C);
 
-	if (gpApplication.getMovie() < 20) {
-		if (gpApplication.getMovie() < 16) {
+	if ((s32)gpApplication.getMovie() < 20) {
+		if ((s32)gpApplication.getMovie() < 16) {
 			(void)gpApplication.getMovie();
 		} else {
+#ifdef VERSION_GMSP01
+			if ((s32)gpApplication.getMovie() < 18) {
+				mEndingString = new TEndingString("EndingString");
+				group2d->getChildren().push_back(mEndingString);
+			}
+			unk24 = new TCardSave("card save", true);
+#else
 			unk24 = new TCardSave;
+#endif
 			unk24->initData(unk20);
 			group2d->getChildren().push_back(unk24);
 		}
@@ -256,6 +371,10 @@ int TMovieDirector::direct()
 		unk30.on(0x1);
 
 		gpMSound->initSound();
+#ifdef VERSION_GMSP01
+		if (gpApplication.getMovie() == 16)
+			mEndingString->startFadeIn();
+#endif
 		if (gpApplication.getMovie() == 9) {
 			gpApplication.mFader->startWipe(12, 0.0f, 0.0f);
 			unk18 = false;
@@ -286,10 +405,19 @@ int TMovieDirector::direct()
 		JDrama::TGraphics graphics;
 		graphics.unk2 = 1;
 		unk10->testPerform(CUE_MOVE, &graphics);
+#ifdef VERSION_GMSP01
+		if (VIGetTvFormat() != VI_PAL) {
+			graphics.unk2 = 0;
+			unk10->testPerform(CUE_MOVE, &graphics);
+			graphics.unk2 = 0;
+			unk10->testPerform(CUE_MOVE, &graphics);
+		}
+#else
 		graphics.unk2 = 0;
 		unk10->testPerform(CUE_MOVE, &graphics);
 		graphics.unk2 = 0;
 		unk10->testPerform(CUE_MOVE, &graphics);
+#endif
 		graphics.unk2 = 0;
 		unk10->testPerform(CUE_MOVE | CUE_CALC_ANIM, &graphics);
 		unk14->testPerform(CUE_DRAW, &graphics);
@@ -323,6 +451,14 @@ int TMovieDirector::direct()
 		} else if (THPPlayerGetState() == 3) {
 			desiredAppState = decideNextMode(&nextState);
 		}
+#ifdef VERSION_GMSP01
+		if (mEndingTimer < 300)
+			++mEndingTimer;
+		if (gpApplication.getMovie() == 17 && mEndingTimer == 30)
+			mEndingString->startFadeIn();
+		if (gpApplication.getMovie() == 17 && mEndingTimer == 220)
+			mEndingString->startFadeOut();
+#endif
 		break;
 
 	case STATE_FADE_OUT:
@@ -378,7 +514,8 @@ int TMovieDirector::direct()
 			THPPlayerStop();
 			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
 			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
-			gpApplication.mFader->startWipe(15, 0.3f, 0.0f);
+			gpApplication.mFader->startWipe(
+			    VERSION_SELECT(GMSJ01(15), GMSP01(14)), 0.3f, 0.0f);
 			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
 			unk24->init(gpApplication.getMovie() == 17 ? 8 : 0);
 			break;

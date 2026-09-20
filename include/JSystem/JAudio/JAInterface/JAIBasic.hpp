@@ -292,9 +292,6 @@ public:
 	/* 0x84 */ u32 unk84;
 	/* 0x88 */ u8 unk88;
 	/* 0x8C */ JAISound* unk8C[2];
-	/* 0x94 */ u16 unk94;
-	// TODO: some of the fields might actually be
-	// from a derived class, MSound.
 };
 
 #endif // JAIBASIC_HPP

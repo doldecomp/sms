@@ -150,7 +150,11 @@ and symbol-closure section.
 python tools/validate-symbol-order.py -u mario/MarioUtil/MathUtil
 ```
 
-Unit names are the same `mario/<path>` names as `decomp-diff.py`.
+Unit names are the same `mario/<path>` names as `decomp-diff.py`. Both
+versions use the `mario/` prefix; the tool compares the object of the version
+`objdiff.json` is configured for (the last `configure.py -v`) with the map that
+`config/<version>/config.yml` names, and prints which map it used. Give
+`--map` only to compare with a different map on purpose.
 
 What it reports:
 - **MISSING** (error) — a map symbol (used or UNUSED) that our object doesn't

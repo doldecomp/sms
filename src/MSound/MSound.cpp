@@ -120,6 +120,10 @@ void MSSeCallBack::setWaterCameraFir(bool enabled)
 		smWaterFilter = 0x78;
 	else
 		smWaterFilter = 0;
+#ifdef VERSION_GMSP01
+	if (MSGMSound->mWaterFirEnabled == true)
+		smWaterFilter = 0x78;
+#endif
 }
 
 void MSSeCallBack::setWaterFilter(u16 param_1) { }
@@ -133,7 +137,7 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 
 	switch (param_2) {
 	case 15:
-		return MSGMSound->unk94;
+		return MSGMSound->mTimerSyncValue;
 
 	case 20:
 		for (u16 i = 0; i < 2; ++i) {
@@ -431,6 +435,17 @@ f32 MSound::getDistFromCamera(Vec* pos)
 	return JALCalc::getDist(pos, mAudioCameras->mPosition);
 }
 
+#ifdef VERSION_GMSP01
+f32 MSound::getDistPowFromCamera(const Vec& pos)
+{
+	const Vec* cam = mAudioCameras->mPosition;
+	f32 dy         = std::powf(pos.y - cam->y, 2.0f);
+	f32 dx         = std::powf(pos.x - cam->x, 2.0f);
+	f32 dz         = std::powf(pos.z - cam->z, 2.0f);
+	return dx + dy + dz;
+}
+#endif
+
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
                u8* param_5, u32 param_6)
 {
@@ -491,6 +506,11 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 
 	unk7C = 0;
 	unk80 = 0;
+#ifdef VERSION_GMSP01
+	unk94            = -1;
+	mWaterFirEnabled = false;
+	MSSeCallBack::setWaterCameraFir(false);
+#endif
 
 	for (int i = 0; i < 5; ++i)
 		unkC8[i] = 0;
@@ -498,11 +518,11 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	unkAC[0] = JAInullCamera;
 	unkAC[1] = JAInullCamera;
 
-	unk84    = 0;
-	unk94    = 0;
-	unk8C[0] = 0;
-	unk8C[1] = 0;
-	unkC4    = 0;
+	unk84           = 0;
+	mTimerSyncValue = 0;
+	unk8C[0]        = 0;
+	unk8C[1]        = 0;
+	unkC4           = 0;
 
 	unkCF = 1;
 	unkD0 = 1;
@@ -520,10 +540,12 @@ void MSound::mainLoop()
 	if (unkCF == 0 && unkA8 == 0)
 		return;
 
+#ifndef VERSION_GMSP01
 	if (unkD1 == 1) {
 		MSBgm::startBGM(MSD_BGM_KUPPA);
 		unkD1 = 0;
 	}
+#endif
 
 	if (unkC8[1] != 0) {
 		MSMainProc::entranceDemoLoop(unkA4);
@@ -797,36 +819,36 @@ void MSound::playTimer(u32 time)
 		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);
 
 		if (time > 0x7530) {
-			unk94 = 0x6e;
+			mTimerSyncValue = 0x6e;
 			return;
 		}
 
 		if (time > 0x3A98) {
-			unk94 = 0x32;
+			mTimerSyncValue = 0x32;
 			return;
 		}
 
 		if (time > 0x2710) {
-			unk94 = 0x23;
+			mTimerSyncValue = 0x23;
 			return;
 		}
 
 		if (time > 0x1388) {
-			unk94 = 0x19;
+			mTimerSyncValue = 0x19;
 			return;
 		}
 
 		if (time > 0x7D0) {
-			unk94 = 10;
+			mTimerSyncValue = 10;
 			return;
 		}
 
 		if (time > 0x3E8) {
-			unk94 = 3;
+			mTimerSyncValue = 3;
 			return;
 		}
 
-		unk94 = 0;
+		mTimerSyncValue = 0;
 	}
 }
 

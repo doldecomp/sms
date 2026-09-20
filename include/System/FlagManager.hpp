@@ -1,9 +1,15 @@
 #ifndef FLAG_MANAGER_HPP
 #define FLAG_MANAGER_HPP
 
+#include <version.h>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
+
+enum {
+	FLAG_SAVED_OPTION_BOOL_END = VERSION_SELECT(GMSJ01(0x70002), GMSP01(0x70003)),
+	FLAG_OPTION_BOOL_END       = VERSION_SELECT(GMSJ01(0x90001), GMSP01(0x90002)),
+};
 
 class TFlagManager {
 public:
