@@ -873,27 +873,51 @@ void TPopo::flyBehavior()
 		                                          nullptr, 0, 4);
 }
 
+// The frame here is accessor pool: a bound pump scale, a bound manager, a
+// getPosition() copy and one bound mExplosionWater read land 0x90.
+// TODO: the two vector temporaries still sit 4 bytes low, and retail reads
+// mNum's address and value before the division.
+static inline f32 PopoPumpScale(TPopo* popo)
+{
+	f32 scale = popo->mPumpScale;
+	return scale;
+}
+
+static inline TPopoManager* PopoExplosionManager(TPopo* popo)
+{
+	TLiveManager* live    = popo->mManager;
+	TPopoManager* manager = (TPopoManager*)live;
+	return manager;
+}
+
+static inline TWaterEmitInfo* PopoExplosionWater(TPopoManager* manager)
+{
+	TWaterEmitInfo* water = manager->mExplosionWater;
+	return water;
+}
+
 void TPopo::explosion()
 {
-	if (mPumpScale > 1.0f)
+	if (PopoPumpScale(this) > 1.0f)
 		mPumpScale *= 0.9f;
 
-	TPopoManager* manager = (TPopoManager*)mManager;
-	JGeometry::TVec3<f32> pos(mPosition);
+	TPopoManager* manager = PopoExplosionManager(this);
+	JGeometry::TVec3<f32> pos(getPosition());
 	pos.y += 100.0f;
 	if (mSpine->getTime() % 2 == 0) {
-		JGeometry::TVec3<f32>& dirValue = manager->mExplosionWater->mDir.value;
+		JGeometry::TVec3<f32>& dirValue
+		    = PopoExplosionWater(manager)->mDir.value;
 		JGeometry::TVec3<f32> dir(dirValue);
 		dir.y *= -1.0f;
 		dirValue = dir;
 	}
 
-	s32& numValue = manager->mExplosionWater->mNum.value;
+	s32& numValue = PopoExplosionWater(manager)->mNum.value;
 	f32 num = numValue * (mPumpScale / mSaveParams->getSLWaterScaleMax());
 	if (num < 2.0f)
 		num = 2.0f;
 	numValue = num;
-	manager->mExplosionWater->mPos.value = pos;
+	PopoExplosionWater(manager)->mPos.value = pos;
 	gpModelWaterManager->emitRequest(*manager->mExplosionWater);
 }
 
