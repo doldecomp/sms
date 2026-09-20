@@ -435,7 +435,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	u32 nextStatus = status;
 
 	unk2BC = mPosition.y;
-	if (mSlopeAngle > mDeParams.mRocketRotSp.get() / 2)
+	if (mFootPrintTimer > mDeParams.mFootPrintTimerMax.get() / 2)
 		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
 		                   mDirtyParams.mPolSizeJump.get());
 
