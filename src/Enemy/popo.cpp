@@ -968,11 +968,26 @@ DEFINE_NERVE(TNervePopoPossessedNozzle, TLiveActor)
 	return FALSE;
 }
 
+static inline int PopoSpineTime(TSpineBase<TLiveActor>* spine)
+{
+	return spine->getTime();
+}
+
+// The two-local form of the `getBody()` binder: 0x10 of low region, which is
+// what this nerve's frame wants.
+// TODO: setGoalPathMario's TPathNode temporary still sits 4 bytes low.
+static inline TPopo* PopoAttackBody(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	TPopo* popo      = (TPopo*)body;
+	return popo;
+}
+
 DEFINE_NERVE(TNervePopoAttack, TLiveActor)
 {
-	TPopo* popo = (TPopo*)spine->getBody();
+	TPopo* popo = PopoAttackBody(spine);
 
-	if (spine->getTime() == 0)
+	if (PopoSpineTime(spine) == 0)
 		popo->setGoalPathMario();
 
 	if (!popo->isAirborne()) {
@@ -981,7 +996,7 @@ DEFINE_NERVE(TNervePopoAttack, TLiveActor)
 		if (gpMarioOriginal->checkFlag(MARIO_FLAG_VISIBLE))
 			return TRUE;
 		if (abs(gpMarioPos->y - popo->mPosition.y)
-		    > popo->getSaveParam2()->mSLGiveUpHeight.get())
+		    > popo->getSaveParam2()->getSLGiveUpHeight())
 			return TRUE;
 		if (popo->isResignationAttack())
 			return TRUE;
