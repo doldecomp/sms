@@ -506,7 +506,7 @@ void TBiancoGateKeeper::launchNamekuri()
 f32 TBiancoGateKeeper::getRumblePow()
 {
 	JGeometry::TVec3<f32> diff = mPosition;
-	diff -= SMS_GetMarioPos();
+	diff -= *gpMarioPos;
 	f32 dist = diff.length();
 	if (dist == 0.0f)
 		return 1.0f;
@@ -662,12 +662,12 @@ void TBiancoGateKeeper::emitParticles()
 			    (u8*)this + 1);
 			if (emitter)
 				SMSSetEmitterPolColor(emitter, 6);
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+			emitter = GatekeeperGetMarioParticleManager()->emitAndBindToMtxPtr(
 			    GATEKEEPER_JPA_MS_GKPA_YODARE_L, model->getAnmMtx(5), 1,
 			    (u8*)this + 2);
 			if (emitter)
 				SMSSetEmitterPolColor(emitter, 6);
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+			emitter = GatekeeperGetMarioParticleManager()->emitAndBindToMtxPtr(
 			    GATEKEEPER_JPA_MS_GKPA_YODARE_S, model->getAnmMtx(8), 1,
 			    (u8*)this + 3);
 			if (emitter)
@@ -821,15 +821,24 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 		emitParticles();
 }
 
+// Binding level worth +8 of low region, landing
+// TNerveBGKLaunchGoro::execute's frame at 0x40 (batch 121).
+static inline MActor* GatekeeperGetMActor(const TBiancoGateKeeper* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
 DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 {
-	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
+	TLiveActor* body        = spine->getBody();
+	TBiancoGateKeeper* self = (TBiancoGateKeeper*)body;
 
 	if (spine->getTime() == 0) {
 		self->changeBck(0xA);
 		self->offHitFlag(HIT_FLAG_NO_COLLISION);
-		self->getMActor()->setBpkFromIndex(0);
-		J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(ANM_TYPE_BPK);
+		GatekeeperGetMActor(self)->setBpkFromIndex(0);
+		J3DFrameCtrl* fc = GatekeeperGetMActor(self)->getFrameCtrl(ANM_TYPE_BPK);
 		if (fc != NULL) {
 			fc->setFrame(0.0f);
 			fc->setRate(0.0f);
@@ -1011,14 +1020,6 @@ DEFINE_NERVE(TNerveBGKWait2, TLiveActor)
 	}
 
 	return false;
-}
-
-// Binding level worth +8 of low region, landing
-// TNerveBGKLaunchGoro::execute's frame at 0x40 (batch 121).
-static inline MActor* GatekeeperGetMActor(const TBiancoGateKeeper* p)
-{
-	MActor* mActor = p->getMActor();
-	return mActor;
 }
 
 DEFINE_NERVE(TNerveBGKSleepDamage, TLiveActor)
