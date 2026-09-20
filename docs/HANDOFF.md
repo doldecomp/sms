@@ -67,7 +67,7 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed telesa +2; elecNokonoko Collect +1; Option +1; MapObjBall +2.
 - Yielded `grpvc` killer ([killer](04977864-8348-428c-8317-c99ec640d998)): +0; worktree clean. Park ChaseFly +0x30 / NormalFly +0x18 (need priced getBody / getPosition / getVelocity binders), KillerBodyCallback `1.0f` schedule, and register-only residues (Explosion 8-low, fly a=b-c, calcChaseParam r3/r4, flyBehavior r4/r5, genEventCoin r30/r31). Do not re-queue without a new lever.
 - Yielded `grpvd` MapObjPinna ([MapObjPinna](b8704e92-16c3-4a6b-a5d2-46ab846cfa09)): +0; clean. Park Coaster a=b-c, Ferris f31/f30, Merry +8, Shell control frame/slot, Shell ctor spill, AmiKing mState CSE, ShellCup addi-vs-li. Do not re-queue without a new lever.
-- Running: `grpve` / MarioJump ([MarioJump](baa4f7ad-fb76-44db-af1e-c79646c35b1f)). Refill: MarioSound.
+- Running: `grpve` / MarioJump ([MarioJump](baa4f7ad-fb76-44db-af1e-c79646c35b1f)); `grpvf` / MarioSound ([MarioSound](2a194a92-6f92-4dfe-a316-431a2b56ea93)).
 - Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
