@@ -714,7 +714,8 @@ void THamuKuri::reset()
 
 void THamuKuri::bind()
 {
-	if (unk1A4) {
+	u8 flying = unk1A4;
+	if (flying) {
 		if (mSpine->getTime() > unk1F4->getFlyTimer()
 		    || getGroundPlane()->isWaterSurface())
 			unk1A4 = 0;
@@ -1741,12 +1742,10 @@ static inline u8 HaneHamuUnk198(const THaneHamuKuri* p)
 	return v;
 }
 
-// TODO: instruction-exact; frame 8 short (0x28 vs 0x30) after the unk198
-// binder. A second binder over setBckAnm or a pasted held-object local
-// adds instructions.
 void THaneHamuKuri::setDeadAnm()
 {
-	if (HaneHamuUnk198(this))
+	u8 hasCap = HaneHamuUnk198(this);
+	if (hasCap)
 		releaseCap();
 	setBckAnm(1);
 }
@@ -2701,13 +2700,19 @@ void TDoroHamuKuri::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("dorokuri_model.bmd", 3);
 }
 
-// TODO: retail `bl`s THamuKuri::selectCapHolder here (map 0x506d0, 0xb0,
-// byte-exact and its only call site); we auto-inline it, which is the whole
-// 43.4%. This is the open "small global helper retail refuses to inline at
-// depth 1" class (codegen-tells.md research seed, same family as
-// TFireHamuKuri::changeTevColor in this TU): the depth-1 budget is a
-// statement count of 15 and no codegen-neutral spelling reaches it. A named
-// THamuKuriManager* local in the callee was measured: no effect.
+// selectCapHolder is ~8 statements: it expands at depth 1 (budget 14) and
+// depth 2 (budget 9). Two TU-local wrappers put the call at depth 3
+// (budget 6) so retail's `bl` is restored.
+static inline void DoroHamuSelectCapInner(THamuKuri* p)
+{
+	p->selectCapHolder();
+}
+
+static inline void DoroHamuSelectCap(THamuKuri* p)
+{
+	DoroHamuSelectCapInner(p);
+}
+
 void TDoroHamuKuri::attackToMario()
 {
 	if (mSpine->getCurrentNerve() == &TNerveHamuKuriJitabata::theNerve()) {
@@ -2716,7 +2721,7 @@ void TDoroHamuKuri::attackToMario()
 			SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
 		}
 	} else {
-		THamuKuri::selectCapHolder();
+		DoroHamuSelectCap(this);
 	}
 }
 
