@@ -19,6 +19,18 @@ static void startForceJumpSound2(Vec* param_1, u32 param_2, f32 param_3,
 	SMSGetMSound()->startForceJumpSound(param_1, param_2, param_3, param_4);
 }
 
+static inline const TBGCheckData* MarioSoundGetGround(const TMario* p)
+{
+	const TBGCheckData* ground = p->mGroundPlane;
+	return ground;
+}
+
+static inline TTakeActor* MarioSoundGetHolder(const TMario* p)
+{
+	TTakeActor* holder = p->mHolder;
+	return holder;
+}
+
 void TMario::soundMovement()
 {
 	// TODO: every instruction matches; frame 0x1a8 vs 0x2d0. All six stack
@@ -629,7 +641,7 @@ void TMario::soundMovement()
 
 void TMario::animSound()
 {
-	mSoundFlags = mGroundPlane->unk6;
+	mSoundFlags = MarioSoundGetGround(this)->unk6;
 
 	if (checkFlag(MARIO_FLAG_DIRTY)) {
 		if (mPollutionTypeStandingOn == POLLUTION_TYPE_SINK
@@ -640,7 +652,7 @@ void TMario::animSound()
 			mSoundFlags |= 0x500;
 	} else {
 		if (checkFlag(MARIO_FLAG_RECENTLY_LEFT_WATER)
-		    || mGroundPlane->isWetGround()) {
+		    || MarioSoundGetGround(this)->isWetGround()) {
 			mSoundFlags |= 0x700;
 		}
 
@@ -663,7 +675,8 @@ void TMario::animSound()
 
 	// TODO: inline
 	bool b;
-	if (mHolder && mHolder->getActorType() == 0x40000098)
+	if (MarioSoundGetHolder(this)
+	    && MarioSoundGetHolder(this)->getActorType() == 0x40000098)
 		b = true;
 	else
 		b = false;
@@ -685,7 +698,8 @@ void TMario::animSound()
 
 	if (!onYoshi()) {
 		mAnmSound->animeLoop(&mPosition, getCurrentFrame(0),
-		                     mModel->getFrameCtrl(0).getRate(), mSoundFlags, 4);
+		                     getM3UModel()->getFrameCtrl(0).getRate(),
+		                     mSoundFlags, 4);
 	}
 }
 
