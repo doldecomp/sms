@@ -29,21 +29,24 @@ void TPolarCamera::perform(u32 cue, TGraphics* graphics)
 	graphics->mFarPlane  = mFar;
 
 	TPosition3f tmp;
-	tmp.identity33();
-	tmp.setTrans(0.0f, 0.0f, -unk44);
+	tmp.mMtx[0][2] = tmp.mMtx[1][2] = tmp.mMtx[0][3] = 0.0f;
+	tmp.mMtx[0][1] = tmp.mMtx[2][1] = tmp.mMtx[1][0] = tmp.mMtx[2][0] = tmp.mMtx[1][3] = 0.0f;
+	tmp.mMtx[0][0] = tmp.mMtx[1][1] = tmp.mMtx[2][2] = 1.0f;
+	tmp.mMtx[2][3] = -unk44;
 
 	TPosition3f local_D4;
 	local_D4.setEularZ(DEG_TO_RAD(-unk40));
 	local_D4.setTrans(0.0f, 0.0f, 0.0f);
 
 	TPosition3f local_A4;
-	local_A4.concat(local_D4, tmp);
+	char trash[104];
+	local_A4.concat(tmp, local_D4);
 
-	tmp.setEularY(DEG_TO_RAD(-unk3C));
+	tmp.setEularX(DEG_TO_RAD(-unk3C));
 	tmp.setTrans(0.0f, 0.0f, 0.0f);
-	local_D4.concat(tmp, local_A4);
+	local_D4.concat(local_A4, tmp);
 
-	tmp.setEularX(DEG_TO_RAD(unk38));
+	tmp.setEularZ(DEG_TO_RAD(unk38));
 	tmp.setTrans(0.0f, 0.0f, 0.0f);
 	local_A4.concat(local_D4, tmp);
 
