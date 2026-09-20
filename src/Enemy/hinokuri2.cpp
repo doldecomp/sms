@@ -316,9 +316,20 @@ void THino2Mask::setMatrix(MtxPtr mtx)
 		MTXCopy(mtx, unk4C);
 }
 
-void THino2Mask::breakMask() { }
+void THino2Mask::breakMask()
+{
+	unk4 = 2;
+	unk8 = 0;
+	unk1C.zero();
+	unk28.zero();
+	unk34.set(0.0f, 0.0f, -5.0f);
+	unk40.set(0.0f, 0.0f, 5.0f);
+}
 
-void THino2Mask::startDamageMotion() { }
+void THino2Mask::startDamageMotion()
+{
+	unk10->setBckFromIndex(0xF);
+}
 
 static inline THino2Params* Hino2Params(THinokuri2* self)
 {
@@ -399,42 +410,42 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 
 		if (gpCurHinokuri->mLevel == 1) {
 			Mtx local_44;
-			local_44[0][3] = 0.0;
-			local_44[1][3] = 0.0;
-			local_44[2][3] = 0.0;
+			local_44[0][3] = 0.0f;
+			local_44[1][3] = 0.0f;
+			local_44[2][3] = 0.0f;
 
 			f32 scale      = gpCurHinokuri->unk194;
 			local_44[0][0] = scale;
-			local_44[0][1] = 0.0;
-			local_44[0][2] = 0.0;
+			local_44[0][1] = 0.0f;
+			local_44[0][2] = 0.0f;
 
-			local_44[1][0] = 0.0;
+			local_44[1][0] = 0.0f;
 			local_44[1][1] = scale;
-			local_44[1][2] = 0.0;
+			local_44[1][2] = 0.0f;
 
-			local_44[2][0] = 0.0;
-			local_44[2][1] = 0.0;
+			local_44[2][0] = 0.0f;
+			local_44[2][1] = 0.0f;
 			local_44[2][2] = scale;
 
 			f32 s = JMASin(gpCurHinokuri->unk198);
 			f32 c = JMACos(gpCurHinokuri->unk198);
 
 			Mtx local_74;
-			MtxPtr rot = local_74;
+			MtxPtr rot     = local_74;
 			local_74[0][0] = c;
-			local_74[0][1] = 0.0;
+			local_74[0][1] = 0.0f;
 			local_74[0][2] = s;
-			local_74[0][3] = 0.0;
+			local_74[0][3] = 0.0f;
 
-			local_74[1][0] = 0.0;
-			local_74[1][1] = 1.0;
-			local_74[1][2] = 0.0;
-			local_74[1][3] = 0.0;
+			local_74[1][0] = 0.0f;
+			local_74[1][1] = 1.0f;
+			local_74[1][2] = 0.0f;
+			local_74[1][3] = 0.0f;
 
 			local_74[2][0] = -s;
-			local_74[2][1] = 0.0;
+			local_74[2][1] = 0.0f;
 			local_74[2][2] = c;
-			local_74[2][3] = 0.0;
+			local_74[2][3] = 0.0f;
 
 			MTXConcat(mA, rot, mA);
 			MTXConcat(mA, local_44, mA);
@@ -446,19 +457,19 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 			f32 s          = JMASin(gpCurHinokuri->unk198);
 			f32 c          = JMACos(gpCurHinokuri->unk198);
 			local_a4[0][0] = c;
-			local_a4[0][1] = 0.0;
+			local_a4[0][1] = 0.0f;
 			local_a4[0][2] = s;
-			local_a4[0][3] = 0.0;
+			local_a4[0][3] = 0.0f;
 
-			local_a4[1][0] = 0.0;
-			local_a4[1][1] = 1.0;
-			local_a4[1][2] = 0.0;
-			local_a4[1][3] = 0.0;
+			local_a4[1][0] = 0.0f;
+			local_a4[1][1] = 1.0f;
+			local_a4[1][2] = 0.0f;
+			local_a4[1][3] = 0.0f;
 
 			local_a4[2][0] = -s;
-			local_a4[2][1] = 0.0;
+			local_a4[2][1] = 0.0f;
 			local_a4[2][2] = c;
-			local_a4[2][3] = 0.0;
+			local_a4[2][3] = 0.0f;
 
 			MTXConcat(mA, rot, mA);
 			MTXConcat(J3DSys::mCurrentMtx, rot, J3DSys::mCurrentMtx);
@@ -602,11 +613,34 @@ void THinokuri2::kill()
 
 // TODO: figure out which parts of code belong into these inlines
 
-void THinokuri2::emitPolParticle() { }
+void THinokuri2::emitPolParticle()
+{
+	JGeometry::TVec3<f32> pos;
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+		pos = getPosition();
+		pos.y += 500.0f;
+	} else {
+		getJointTransByIndex(0x18, &pos);
+	}
+}
 
 void THinokuri2::stopPolParticle() { }
 
-void THinokuri2::updatePolTrans() { }
+void THinokuri2::updatePolTrans()
+{
+	JGeometry::TVec3<f32> pos;
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+		pos = getPosition();
+		pos.y += 500.0f;
+	} else {
+		getJointTransByIndex(0x18, &pos);
+	}
+	if (unk164 <= 0)
+		return;
+	// TODO: map size 0x70, we emit 0x78 (8 long).
+}
 
 // TODO: fake & wrong
 static inline THino2Hit* Hino2BindHead(THinokuri2* self)
@@ -677,9 +711,37 @@ void THinokuri2::emitWaterParticle()
 	gpModelWaterManager->emitRequest(*unk19C);
 }
 
-void THinokuri2::shakeCamera(int) { }
+void THinokuri2::shakeCamera(int mode)
+{
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
+		return;
+	if (checkLiveFlag(LIVE_FLAG_AIRBORNE))
+		return;
 
-void THinokuri2::makeQuake(f32) { }
+	f32 range;
+	if (mode == CAM_SHAKE_MODE_ENEMY)
+		range = ((THino2Params*)getSaveParam())->mSLWalkShake.get();
+	else
+		range = ((THino2Params*)getSaveParam())->mSLJumpShake.get();
+
+	f32 dist = getDistToMarioSquared();
+	if (range * range < dist)
+		return;
+
+	TCameraShake* shake = gpCameraShake;
+	shake->startShake((EnumCamShakeMode)mode, 0.8f);
+	// TODO: map size 0xA8, we emit 0xA4 (4 short).
+}
+
+void THinokuri2::makeQuake(f32 len)
+{
+	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT))
+		return;
+
+	len *= len;
+	if (getDistToMarioSquared() < len)
+		SMS_SendMessageToMario(this, 3);
+}
 
 void THinokuri2::setLevel(int level)
 {
@@ -916,7 +978,7 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 
 			mHitPoints = calcHitPoints();
 		} else {
-			unk1A4->unk10->setBckFromIndex(0xF);
+			unk1A4->startDamageMotion();
 		}
 
 		return true;
@@ -1280,7 +1342,7 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 
 	// TODO: retail converts getFrame() to int and tests CLIPPED_OUT
 	// (rlwinm. 29,29) then overwrites r0; unused locals DCE here.
-	// Frame is 0x30 short. shakeCamera is map-UNUSED 0xA8, not empty.
+	// Frame is 0x30 short. shakeCamera is map-UNUSED 0xA8.
 	self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 
