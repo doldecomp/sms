@@ -73,8 +73,8 @@ f32 THangingBridgeBoard::mTexPosRate         = 0.01f;
 
 void THangingBridgeBoard::drawOneRope(const JGeometry::TVec3<f32>& top) const
 {
-	f32 bottom = top.y;
 	f32 hookY  = top.y + THangingBridge::mRopeHeight;
+	f32 bottom = top.y;
 
 	f32 xPlus  = top.x + mRopeWidthX;
 	f32 xMinus = top.x - mRopeWidthX;
