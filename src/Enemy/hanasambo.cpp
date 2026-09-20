@@ -854,6 +854,12 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 	return false;
 }
 
+static inline THanaSamboSaveLoadParams* HanasamboWaitParams(const THanaSambo* p)
+{
+	THanaSamboSaveLoadParams* params = p->mSaveParams;
+	return params;
+}
+
 DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 {
 	THanaSambo* sambo = (THanaSambo*)spine->getBody();
@@ -863,18 +869,20 @@ DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 	    && sambo->getMActor()->getFrameCtrl(0)->checkPass(16.0f))
 		sambo->createPollen();
 
-	if (spine->getTime() > sambo->mSaveParams->mSLAttackInterval.get()
+	if (spine->getTime() > HanasamboWaitParams(sambo)->mSLAttackInterval.get()
 	    && gpMarioPos->y < 100.0f + sambo->mPosition.y) {
 		sambo->updateSquareToMario();
-		f32 dist = sambo->mSaveParams->mSLAttackDist.get();
-		if (sambo->mDistToMarioSquared < dist * dist) {
+		f32 dist = HanasamboWaitParams(sambo)->mSLAttackDist.get();
+		dist *= dist;
+		if (sambo->mDistToMarioSquared < dist) {
 			spine->pushAfterCurrent(&TNerveHanaSamboAttack::theNerve());
 			return true;
 		}
 	}
 	sambo->updateSquareToMario();
-	f32 dist = sambo->mSaveParams->mSLHideDist.get();
-	if (sambo->mDistToMarioSquared > dist * dist) {
+	f32 dist = HanasamboWaitParams(sambo)->mSLHideDist.get();
+	dist *= dist;
+	if (sambo->mDistToMarioSquared > dist) {
 		spine->pushAfterCurrent(&TNerveHanaSamboHide::theNerve());
 		return true;
 	}
@@ -941,7 +949,8 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 	}
 	sambo->updateSquareToMario();
 	f32 dist = sambo->mSaveParams->mSLAppearDist.get();
-	if (sambo->mDistToMarioSquared < dist * dist) {
+	dist *= dist;
+	if (sambo->mDistToMarioSquared < dist) {
 		spine->pushAfterCurrent(&TNerveHanaSamboAppear::theNerve());
 		return true;
 	}
@@ -1483,7 +1492,8 @@ DEFINE_NERVE(TNerveSamboHeadHide, TLiveActor)
 	} else if (head->isFindMario(1.0f)) {
 		head->updateSquareToMario();
 		f32 dist = head->mSaveParams->mSLAppearDist.get();
-		if (head->mDistToMarioSquared < dist * dist) {
+		dist *= dist;
+		if (head->mDistToMarioSquared < dist) {
 			spine->pushAfterCurrent(&TNerveSamboHeadAppear::theNerve());
 			return true;
 		}
