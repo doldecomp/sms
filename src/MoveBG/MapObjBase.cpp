@@ -32,6 +32,12 @@ static inline u16 MapObjBaseColCount(TMapObjBase* self)
 	return self->mColCount;
 }
 
+static inline const JGeometry::TVec3<f32>&
+MapObjBaseInitialRot(TMapObjBase* self)
+{
+	return self->mInitialRotation;
+}
+
 void TMapObjBase::changeObjMtx(MtxPtr mtx)
 {
 	mPosition.x = mtx[0][3];
@@ -278,19 +284,21 @@ void TMapObjBase::startAnim(u16 param_1)
 
 void TMapObjBase::makeObjDefault()
 {
-	mPosition.set(mInitialPosition.x, mInitialPosition.y + mYOffset,
-	              mInitialPosition.z);
+	mPosition.set(getInitialPosition().x,
+	              getInitialPosition().y + getObjCollisionHeightOffset(),
+	              getInitialPosition().z);
 
-	mRotation = mInitialRotation;
-	mScaling  = mInitialScaling;
+	mRotation = MapObjBaseInitialRot(this);
+	mScaling  = getInitialScaling();
 
 	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
-	if (mMActor) {
+	MActor* actor = getMActor();
+	if (actor) {
 		calcRootMatrix();
 		getModel()->calc();
 	}
-	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
 }
 
 void TMapObjBase::makeObjDead()
