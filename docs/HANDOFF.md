@@ -59,11 +59,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1.
-- Landed `grpud` killer ([killer unit ladder](2f6e567b-0740-423f-9dc5-41ebbe3171b2)): +1 exact (`isFindMario` via `*=` search params); calcChaseParam + genEventCoin matrix park; unit **61.87→63.24**; All **61.84%**, Game **53.81→53.82**, exact **11,361→11,362**.
-- Landed BossHanachanParts +5; All **61.78→61.84**, exact **11,356→11,361**.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2), chuuhana +0, bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte +3, bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 +0 structural, EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer +1, MapObjBall +0 structural.
+- Landed `grpue` MapObjBall ([MapObjBall unit ladder](f757bdaf-3dd5-4fcf-87fd-67118b972e23)): `TResetFruit::kicked` 91.4→95.6 via `checkLiveFlag2` BOOL + Mario Y speed colouring; unit fuzzy 99.32→99.45; +0 exact; All stays **61.84%**.
+- Landed killer +1; BossHanachanParts +5.
 - Total: **61.84%** matched, game **53.82%**, linked **492 / 732**, exact **11,362**.
-- Running: `grpue` / MapObjBall ([MapObjBall unit ladder](f757bdaf-3dd5-4fcf-87fd-67118b972e23)). Refill: Option.
+- Running: `grpuf` / Option ([Option unit ladder](1922447e-b6be-4975-a19c-0f3463751825)). Refill: elecNokonoko.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
