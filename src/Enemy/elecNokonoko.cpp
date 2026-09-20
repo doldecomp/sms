@@ -228,7 +228,7 @@ void TElecNokonoko::init(TLiveManager* live_manager)
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
 	mCarapace->loadInit(this, "koura_model1.bmd");
 
-	MActor* carapaceActor = mCarapace->getMActor();
+	MActor* carapaceActor = getCarapace()->getMActor();
 	carapaceActor->getModel()->getModelData()->setMaterialTable(
 	    ((TElecNokonokoManager*)mManager)->mMaterialTable,
 	    (J3DMaterialCopyFlag)3);
@@ -259,7 +259,7 @@ void TElecNokonoko::setMActorAndKeeper()
 
 	MActor* actor = mMActor;
 	actor->getModel()->getModelData()->setMaterialTable(
-	    ((TElecNokonokoManager*)mManager)->mMaterialTable,
+	    ((TElecNokonokoManager*)mManager)->getMaterialTable(),
 	    (J3DMaterialCopyFlag)3);
 	actor->initDL();
 	actor->getModel()->lock();

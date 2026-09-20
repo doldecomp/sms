@@ -173,6 +173,7 @@ public:
 		return (TElecNokonokoSaveLoadParams*)unk38;
 	}
 	TElecNokonoko* getObj(int i) { return (TElecNokonoko*)unk18[i]; }
+	J3DMaterialTable* getMaterialTable() { return mMaterialTable; }
 
 	/* 0x60 */ J3DMaterialTable* mMaterialTable;
 };
