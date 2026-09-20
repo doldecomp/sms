@@ -86,7 +86,7 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Yielded `grpvy` riccohook ([riccohook](a1bf0083-7583-4f48-85e7-7f09dfa8c5da)): +0; park `init` JGadget inter-group gap (0xd0 vs 0xd8) — same class as Seal/MirrorActor/SDLModel.
 - Landed `grpvx` MirrorActor ([MirrorActor](4be99a7c-da1b-4385-aa8b-422320c0b405)): +0 (TODO docs only); park `init` JGadget between-group gap — do not third-pass with riccohook/SDLModel/seal.
 - Yielded `grpwa` wireBinder ([wireBinder](3d231004-d02a-4b71-82e3-98401cbc95fa)): +0; park `bind` a=b-c slot (0x3c vs 0x24).
-- Running: `grpvz` / walkerEnemy ([walkerEnemy](7c8aea17-167b-4e81-a7ba-a5d27c4ee815)); `grpwb` / next (spawning).
+- Running: `grpvz` / walkerEnemy ([walkerEnemy](7c8aea17-167b-4e81-a7ba-a5d27c4ee815)); `grpwb` / MActor ([MActor](284db032-b0d3-428b-97bc-357b2bcc54e5)).
 - Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers, BathWater leftovers, MarNameRefGen leftovers, Guide leftovers, ShadowUtil leftovers, WaterGun leftovers, MarioSpecial leftovers, MSoundSE leftovers, bgtentacle leftovers, MarioRun leftovers, MapObjTree initMapObj coalescing, MovieRumble UNUSED leftovers, PollutionCount UNUSED leftovers, riccohook init JGadget gap, MirrorActor init JGadget gap, wireBinder bind a=b-c.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
