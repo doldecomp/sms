@@ -59,10 +59,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Landed `grptc` MarioSpecial: `moveRoof` exact (`getPosition`/`getPrevPosition` + named `mAnmMult`); `fenceMove` 95.4 -> 96.0 (swapped wall-normal arms + named `fenceSp`). Total matched code **61.23%**, game **53.04%**.
-- Spawned two Grok 4.6 unit ladders (disjoint): `grptd` / `mario/Enemy/bosspakkun`, `grpte` / `mario/Enemy/igaiga`. Scratch `/home/netflix/sms-wt/grptd-scratch` and `grpte-scratch`.
-- Stale unlanded worktrees still present: `grpfg` (bosseel), `grpfh` (WaterGun), `grpfi`/`grpfj`/`grpfk` (older). Do not reassign those units until landed or abandoned.
-- Next after these land: bossManta 8 near-misses, then thin queue / sweeps.
+- Landed `grptc` MarioSpecial: `moveRoof` exact; `fenceMove` 95.4 -> 96.0. Then **61.23%** / game **53.04%**.
+- Landed `grptd` bosspakkun ([bosspakkun unit ladder](0e9b4b32-6d06-465d-b58b-51038744e68f)): +3 exact (Pivot, Navel, Fall); unit code 46.95 -> 51.79; data 100. Accepted Fly fuzzy 99.89 -> 99.77 (frame trade, no lost exact). Total **61.28%**, game **53.11%**.
+- Still running: `grpte` / igaiga ([igaiga unit ladder](ec1b7d25-9431-4196-9cd2-b2f652d3353c)).
+- Next refill after grptd remove: bossManta. Stale: grpfg bosseel, grpfh WaterGun.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
