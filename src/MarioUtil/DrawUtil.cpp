@@ -150,19 +150,19 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 	if (((cue & CUE_SET_PROJECTION) != 0)
 	    && DrawUtilGetJointModelNum(gpPollution)) {
+		Mtx afStack_50;
 		Mtx afStack_80;
 		C_MTXLightFrustum(afStack_80, -1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 0.5f,
 		                  0.5f, 0.5f, 0.5f);
 		Mtx afStack_b0;
 		PSMTXRotRad(afStack_b0, 0x58, 1.5707964f);
-		Mtx afStack_50;
 		PSMTXConcat(afStack_80, afStack_b0, afStack_50);
 		Mtx afStack_e0;
 		PSMTXScale(afStack_e0, unk3C, unk3C, unk3C);
 		Mtx afStack_110;
 		PSMTXTrans(afStack_110, -gpMarioPos->x, 0.0f, -gpMarioPos->z);
 		Mtx afStack_140;
-		PSMTXTrans(afStack_140, 1.75f, 1.75f, 0.0f);
+		PSMTXTrans(afStack_140, 0.5f, 0.5f, 0.0f);
 		PSMTXConcat(afStack_e0, afStack_110, afStack_e0);
 		PSMTXConcat(afStack_50, afStack_e0, afStack_50);
 		PSMTXConcat(afStack_140, afStack_50, afStack_50);
@@ -399,6 +399,14 @@ void TTrembleModelEffect::movement()
 	unk9 = 1 - unk9;
 }
 
+// +8 of pool at its one expansion, the rung that pays back half the -0x10 of
+// reading mVertexData raw at reset()'s setVtxPosArray site.
+static inline J3DModelData* DrawUtilGetModelData(J3DModel* p)
+{
+	J3DModelData* modelData = p->getModelData();
+	return modelData;
+}
+
 void TTrembleModelEffect::reset()
 {
 	switch (unk8 & 2) {
@@ -428,7 +436,7 @@ void TTrembleModelEffect::reset()
 
 	unk8 &= ~1;
 	GXInvalidateVtxCache();
-	unk0->getModelData()->getVertexData().setVtxPosArray(unk4);
+	DrawUtilGetModelData(unk0)->mVertexData.setVtxPosArray(unk4);
 	unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk4);
 	unk0->getVertexBuffer()->setVtxPosArrayPointer(1, unk4);
 	unk0->getVertexBuffer()->setCurrentVtxPos(unk4);
