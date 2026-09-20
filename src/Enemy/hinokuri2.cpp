@@ -1494,7 +1494,7 @@ DEFINE_NERVE(TNerveHino2Burst, TLiveActor)
 
 DEFINE_NERVE(TNerveHino2Die, TLiveActor)
 {
-	THinokuri2* self = (THinokuri2*)spine->getBody();
+	THinokuri2* self = Hino2Self(spine);
 	if (spine->getTime() == 0) {
 		self->changeBck(0xD);
 		JGeometry::TVec3<f32> local_1C = self->mPosition;
@@ -1504,7 +1504,7 @@ DEFINE_NERVE(TNerveHino2Die, TLiveActor)
 		self->emitWaterParticle();
 	}
 
-	if (self->getMActor()->curAnmEndsNext()) {
+	if (Hino2CurAnmEndsNext(self)) {
 		self->unk124->reset();
 		self->goToShortestNextGraphNode();
 		spine->reset();
@@ -1524,15 +1524,10 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 		self->setUnk160(0);
 	}
 
-	if (self->getMActor()->curAnmEndsNext()) {
+	if (Hino2CurAnmEndsNext(self)) {
 		int uVar7 = self->getUnk160();
 		++uVar7;
-		// TODO: retail folds this into one `lwz 0x180(r3)`; ours materialises
-		// the TParamRT address first (`addi 0x170` + `lwz 0x10`), i.e. get()
-		// expands one level deeper here. Reordering the read and a named
-		// THino2Params* local both change nothing; the wrapper form that used
-		// to fold cost TNerveHino2Burst 2.5%, so the per-site cast stays.
-		int stampCnt = ((THino2Params*)self->getSaveParam())->mSLStampCount.get();
+		int stampCnt = Hino2Params(self)->mSLStampCount.get();
 		if (uVar7 > stampCnt) {
 			self->setUnk160(0);
 			self->resetPolInterval();
@@ -1544,11 +1539,11 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 
 	int frame = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	if (!self->isAirborne() && (frame == 0x1C || frame == 0x3E)) {
-		f32 js = ((THino2Params*)self->getSaveParam())->mSLJumpShake.get();
+		f32 js = Hino2Params(self)->mSLJumpShake.get();
 		if (!(js * js < self->getDistToMarioSquared()))
-			gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
+			Hino2CameraShake()->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
 
-		f32 sql = ((THino2Params*)self->getSaveParam())->mSLStampQuakeLen.get();
+		f32 sql = Hino2Params(self)->mSLStampQuakeLen.get();
 		sql     = sql * sql;
 		if (self->getDistToMarioSquared() < sql)
 			SMS_SendMessageToMario(self, 3);
