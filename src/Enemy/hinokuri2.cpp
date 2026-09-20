@@ -902,6 +902,17 @@ BOOL THinokuri2::receiveMessage(THitActor* sender, u32 message)
 	return 0;
 }
 
+// Parked TU-locally: TPathNode::getPoint() reloads unk0 where retail tests and
+// dereferences one load. Shared-header need: a named local in PathNode.hpp.
+static inline const JGeometry::TVec3<f32>& Hino2NodePoint(const TPathNode& node)
+{
+	THitActor* owner = node.unk0;
+	if (owner != 0)
+		return owner->getPosition();
+
+	return node.unk4;
+}
+
 template <class T> static inline T symmetric_clamp(T v, T r)
 {
 	return v > 0 ? (v > r ? r : v) : (v > -r ? v : -r);
@@ -1154,10 +1165,11 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 		self->changeBck(0x9);
 
 	if (self->getMActor()->curAnmEndsNext()) {
-		const JGeometry::TVec3<f32>& p = self->unk104.getPoint();
-		f32 f                          = self->unk124->unkC;
-		f32 grav                       = self->getGravityY();
-		self->mVelocity = self->calcVelocityToJumpToY(p, f, grav);
+		const TPathNode& node          = self->unk104;
+		const JGeometry::TVec3<f32>& p = Hino2NodePoint(node);
+		f32 f = self->unk124->unkC;
+		self->mVelocity
+		    = self->calcVelocityToJumpToY(p, f, self->getGravityY());
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		spine->pushAfterCurrent(&TNerveHino2Fly::theNerve());
 		return true;
@@ -1185,17 +1197,6 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 		return true;
 
 	return false;
-}
-
-// Parked TU-locally: TPathNode::getPoint() reloads unk0 where retail tests and
-// dereferences one load. Shared-header need: a named local in PathNode.hpp.
-static inline const JGeometry::TVec3<f32>& Hino2NodePoint(const TPathNode& node)
-{
-	THitActor* owner = node.unk0;
-	if (owner != 0)
-		return owner->getPosition();
-
-	return node.unk4;
 }
 
 DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
