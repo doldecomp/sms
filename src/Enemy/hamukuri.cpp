@@ -2014,10 +2014,15 @@ void TDangoHamuKuri::attackToMario()
 	}
 }
 
+static inline u8 DangoHamuTakingJoint(const TDangoHamuKuri* p)
+{
+	return p->unk1AC;
+}
+
 MtxPtr TDangoHamuKuri::getTakingMtx()
 {
 	getMActor()->calc();
-	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(unk1AC);
+	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(DangoHamuTakingJoint(this));
 	f32 fVar2  = 0.0f;
 	if (mBoss == this)
 		fVar2 = 40.0f;
