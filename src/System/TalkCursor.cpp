@@ -9,6 +9,7 @@
 
 void TTalkCursor::loadAfter()
 {
+	char trash[8];
 	MActorAnmData* anmData = new MActorAnmData;
 	anmData->init("/common/cursor_b", nullptr);
 	unk10 = new MActor(anmData);
