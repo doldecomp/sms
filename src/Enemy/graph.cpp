@@ -21,6 +21,12 @@ static inline s16 GraphConnectionNum(const TRailNode* p)
 	return connectionNum;
 }
 
+static inline TGraphWeb* GraphGroupAt(TGraphGroup* g, int i)
+{
+	TGraphWeb* w = g->unk8[i];
+	return w;
+}
+
 TGraphNode::TGraphNode()
     : unk0(nullptr)
     , unk4(0)
@@ -843,15 +849,16 @@ TGraphGroup::~TGraphGroup() { }
 
 void TGraphGroup::initGraphGroup()
 {
-	// TODO: 8 short of retail's 0xc0 and the TVec3(0,0,0) temporary sits 4
-	// low. A getGraph(i) accessor for unk8[i] at all three sites lands 0xc0
-	// exactly but puts the temporary 4 high and swaps r28/r29 (99.8 ->
-	// 99.2); a named unk8[i] breaks the body (94%).
+	// TODO: GraphGroupAt at this site (or the unk10 check) lands frame 0xc0
+	// and 99.9%; the TVec3(0,0,0) temporary sits 4 high. attachToGround or
+	// all three sites swap r28/r29; a nested fork is +8 more. The 4-byte
+	// residue is the open "4 off the 8-byte binder grid" class.
 	for (int i = 0; i < unk4; ++i) {
 		if (unk8[i]->unk10 >= 0)
 			continue;
 
-		unk8[i]->initGoalIndex(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+		GraphGroupAt(this, i)->initGoalIndex(
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 		unk8[i]->attachToGround();
 	}
 }
