@@ -1051,7 +1051,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->checkLiveFlag2(0x8000)
+		if (self->checkLiveFlag2(LIVE_FLAG_UNK8000)
 		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
 			return true;
 

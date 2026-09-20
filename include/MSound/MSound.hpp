@@ -71,6 +71,9 @@ public:
 
 	void initSound();
 	void mainLoop();
+#ifdef VERSION_GMSP01
+	f32 getDistPowFromCamera(const Vec& pos);
+#endif
 	void exitStage();
 	void enterStage(MS_SCENE_WAVE, u8, u8);
 	void loadWave(MS_SCENE_WAVE);
@@ -184,6 +187,13 @@ public:
 	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }
 
 public:
+#ifdef VERSION_GMSP01
+	/* 0x94 */ s32 unk94;
+	/* 0x98 */ bool mWaterFirEnabled;
+	/* 0x9A */ u16 mTimerSyncValue;
+#else
+	/* 0x94 */ u16 mTimerSyncValue;
+#endif
 	/* 0x98 */ MSModBgm* unk98;
 	/* 0x9C */ MSBgmXFade* unk9C;
 	/* 0xA0 */ u32 unkA0;

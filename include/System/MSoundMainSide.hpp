@@ -43,12 +43,31 @@ public:
 	virtual void proc();
 
 	f32 calcParamRatioInCube(s32);
+#ifdef VERSION_GMSP01
+	void setBgmVolumeForce();
+
+	static MSStageCubeFade* smInstance;
+#endif
 
 public:
 	/* 0x4 */ int unk4;
 	/* 0x8 */ int unk8;
 	/* 0xC */ f32 unkC;
 };
+
+#ifdef VERSION_GMSP01
+class MSStageCubeFadeDouble : public MSStageCubeFade {
+public:
+	MSStageCubeFadeDouble();
+
+	virtual void proc();
+
+	static MSStageCubeFadeDouble* smInstance;
+
+public:
+	/* 0x10 */ bool mPlayFlag[2];
+};
+#endif
 
 class MSStageCubeSwitch : public MSStageCubeFade {
 public:
@@ -130,6 +149,10 @@ void startStageEntranceDemo(u8, u8);
 void entranceDemoLoop(u32);
 void endStageEntranceDemo(u8, u8);
 void startStageBGM(u8, u8);
+#ifdef VERSION_GMSP01
+bool getGateKeeperBGMStopFlag();
+void setGateKeeperBGMPlayFlag(u32, bool);
+#endif
 
 } // namespace MSMainProc
 

@@ -24,6 +24,7 @@ class JUTResFont;
 f32 SMSGetVSyncTimesPerSec();
 #ifdef VERSION_GMSP01
 f32 SMSGetRealVSyncTimesPerSec();
+void load2DResource2Aram();
 #endif
 f32 SMSGetAnmFrameRate();
 void* SMSLoadArchive(const char*, void*, u32, JKRHeap*);
