@@ -63,10 +63,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grupp` hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)): `THamuKuri::isHitValid` exact via inlined `HamukuriSerialKill` binder; `generateBody` frame exact (TNerveBase `bl` still open). All **61.92→61.93**, exact **11,371→11,372**.
 - Landed `grpuo` MapObjMonte drawOneRope frame; Option +1 (`setType`).
 - Total: **61.93%** matched, game **53.93%**, linked **492 / 732**, exact **11,372**.
-- Landed `grput` chuuhana ([chuuhana unit ladder](25b52cc4-0b82-482e-b190-4349feb540e6)): `isCollidMove` 97.6→99.8 via `theNerve` level; `setSafeGoal` range-first; ForceJumped instruction-exact (TMsRange +4). KeepBalance −0.01 fuzzy accepted. +0 exact. All stays **61.96%**. Do not third-pass bind/Attack/attackToMario (TVec3::sub) without new lever.
-- Landed `grpus` EventWatcher ([EventWatcher unit ladder](3fdb4ab7-a676-4984-8f88-1b518b637ce1)): +3 exact. All **61.93→61.96**, exact **11,372→11,375**.
-- Running: `grpuu` / bossManta ([bossManta unit ladder](f75c852c-ff95-42af-8542-4f64bd046451)). Refill: MapObjMamma.
-- Yielded gesso: BodyCallback +0x10 needs new carrier. Do not re-queue bosseel / hamukuri generateBody / fireWanwan near-misses without new levers.
+- Landed `grpuu` bossManta ([bossManta unit ladder](f75c852c-ff95-42af-8542-4f64bd046451)): +1 exact `TMantaMessageState::update` (loop index at declaration); `control` frame via two-site getMActor + getVelocity. Unit 41.15→43.14. All **61.96→61.97**, exact **11,375→11,376**. Do not third-pass setupEfbAlpha/moveObject slot-order or collidedWithWater +8 (data-breaking hitCounts).
+- Landed `grput` chuuhana structural `isCollidMove`; EventWatcher +3.
+- Running: `grpuv` / MapObjMamma ([MapObjMamma unit ladder](39a15cdb-036a-4882-84b0-52d526815708)). Refill: popo.
+- Parked without new lever: gesso BodyCallback, bosseel, hamukuri generateBody, fireWanwan near-misses, chuuhana bind/Attack TVec3::sub.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
