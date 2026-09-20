@@ -303,6 +303,7 @@ int TLightWithDBSet::getAmbIndex(const char* name)
 
 void TPlayerLightWithDBSet::makeDrawBuffer()
 {
+	char trash[32];
 	static const char lightName[] = "太陽（プレイヤー）";
 	static const char ambName[]   = "太陽アンビエント（プレイヤー）";
 
