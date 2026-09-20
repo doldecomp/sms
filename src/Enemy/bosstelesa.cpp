@@ -1105,6 +1105,11 @@ void TBossTelesa::reset()
 	                                         nullptr, 0);
 }
 
+// TODO: the ROM `bl`s JGeometry::TVec3<float>::set(const Vec&) at both
+// gpCamera->unk124 reads below (the only two such calls in this object), which
+// needs the site at inline depth 4; as plain statements they expand. lensflare
+// reaches depth 4 for the same callee through three nested wrappers, so the
+// two camera-distance blocks here are probably one inlined helper as well.
 void TBossTelesa::moveObject()
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -2469,6 +2474,12 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		}
 
 		boss->mSlot->mScaling.set(1.0f, 1.0f, 1.0f);
+		// TODO: the ROM `bl`s randomReset() here (its only call site in the
+		// object) while inlining it in TTelesaSlot::initMapObj, which matches.
+		// The out-of-line body is byte-exact at 0xec, so the body is right and
+		// the site is over budget: eight more statements would be needed at
+		// depth 1, which no honest spelling supplies. 46 of this function's
+		// instructions are the expanded loop.
 		boss->mSlot->randomReset();
 
 		boss->offAllCollision();
