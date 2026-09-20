@@ -172,24 +172,6 @@ static inline TWaterGun* WaterGunWaterGun(const TMario* p)
 	return waterGun;
 }
 
-// Parking spot: include/Player/WaterGun.hpp declares no accessor for the
-// hover nozzle speeds, and the diving callbacks read them one level deeper
-// than a raw member chain reaches (shared-header need).
-static inline s16 WaterGunHoverAngle(const TWaterGun* fludd)
-{
-	return fludd->unk1CD0;
-}
-
-static inline s32 WaterGunNozzleSpeedY(const TWaterGun* fludd)
-{
-	return fludd->unk1CC8;
-}
-
-static inline s32 WaterGunNozzleSpeedZ(const TWaterGun* fludd)
-{
-	return fludd->unk1CCC;
-}
-
 static BOOL NozzleCtrl(J3DNode* node, BOOL param_2)
 {
 	// TODO: Inlined stack space
@@ -214,7 +196,7 @@ static BOOL RotateCtrl(J3DNode* node, BOOL param_2)
 	if (!param_2 && gpMarioForCallBack != nullptr) {
 		Mtx mtx;
 		s16 local1cd0
-		    = WaterGunHoverAngle(WaterGunWaterGun(gpMarioForCallBack));
+		    = WaterGunWaterGun(gpMarioForCallBack)->getHoverAngle();
 		f32 roll = SHORTANGLE2DEG(local1cd0);
 		MsMtxSetRotRPH(mtx, roll, 0.0f, 0.0f);
 		MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
@@ -229,7 +211,7 @@ static BOOL WaterGunDivingCtrlL(J3DNode* node, BOOL param_2)
 		// I could imagine some s32 getNozzleSpeedY() and
 		// s16 localXXX = -getNozzleSpeedY();
 		s32 nozzleSpeedY
-		    = WaterGunNozzleSpeedY(WaterGunWaterGun(gpMarioForCallBack));
+		    = WaterGunWaterGun(gpMarioForCallBack)->getNozzleSpeedY();
 		s16 neg          = -nozzleSpeedY;
 		Mtx mtx;
 		// Unused stack space
@@ -247,7 +229,7 @@ static BOOL WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
 		// I could imagine some s32 getNozzleSpeedY() and
 		// s16 localXXX = -getNozzleSpeedY();
 		s32 nozzleSpeedY
-		    = WaterGunNozzleSpeedZ(WaterGunWaterGun(gpMarioForCallBack));
+		    = WaterGunWaterGun(gpMarioForCallBack)->getNozzleSpeedZ();
 		s16 neg          = -nozzleSpeedY;
 		Mtx mtx;
 		// Unused stack space

@@ -213,6 +213,15 @@ public:
 	// Fabricated
 	s32 getCurrentWater() const { return mCurrentWater; }
 
+	// Fabricated: the hover nozzle's two speeds are f32 members, but the
+	// diving callbacks truncate them before negating into an s16, i.e. retail
+	// read them through an s32-returning accessor (accessor sweep 304).
+	s32 getNozzleSpeedY() const { return unk1CC8; }
+	s32 getNozzleSpeedZ() const { return unk1CCC; }
+
+	// Fabricated
+	s16 getHoverAngle() const { return unk1CD0; }
+
 	// Fabricated: mIsEmitWater is a u8 but every reader tests it with a
 	// signed cmpwi and no extsb, i.e. retail read it through an int-returning
 	// accessor.
