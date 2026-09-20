@@ -619,8 +619,7 @@ void TPakkunSeed::moveObject()
 	if (unk168 == 0) {
 		mSpinAngle = MsWrap(5.0f + mSpinAngle, 0.0f, 360.0f);
 		if (mPosition.y > 20.0f + mGroundHeight) {
-			JGeometry::TVec3<f32> vel = getVelocity();
-			mRotation.x               = MsGetRotFromZaxis(vel).x;
+			mRotation.x = MsGetRotFromZaxis(JGeometry::TVec3<f32>(getVelocity())).x;
 		}
 	} else {
 		mSpinAngle = MsClamp(5.0f + mSpinAngle, 0.0f, 360.0f);
@@ -1178,11 +1177,24 @@ DEFINE_NERVE(TNervePakkunAppear, TLiveActor)
 	return FALSE;
 }
 
+static inline TPakkunSeed* PakkunSeedB(const TPakkun* p)
+{
+	TPakkunSeed* seed = p->mSeed;
+	return seed;
+}
+
+static inline TPakkun* PakkunBody(TSpineBase<TLiveActor>* spine)
+{
+	TLiveActor* body = spine->getBody();
+	TPakkun* self    = (TPakkun*)body;
+	return self;
+}
+
 // Ducks back into the ground; once the seed is gone the plant follows it to
 // wherever it landed and pops back up there.
 DEFINE_NERVE(TNervePakkunHide, TLiveActor)
 {
-	TPakkun* self = (TPakkun*)spine->getBody();
+	TPakkun* self = PakkunBody(spine);
 
 	if (spine->getTime() == 0)
 		self->setBckAnm(PAKKUN_ANM_HIDE);
@@ -1194,8 +1206,8 @@ DEFINE_NERVE(TNervePakkunHide, TLiveActor)
 
 	TPakkunSeed* seed = self->mSeed;
 	if (seed->isUnk150Zero()) {
-		self->mPosition   = seed->mPosition;
-		self->mPosition.y = self->mSeed->mGroundHeight;
+		self->mPosition   = seed->getPosition();
+		self->mPosition.y = PakkunSeedB(self)->mGroundHeight;
 		spine->pushAfterCurrent(&TNervePakkunAppear::theNerve());
 		self->setBckAnm(PAKKUN_ANM_SET);
 		return TRUE;
