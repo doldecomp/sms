@@ -340,9 +340,11 @@ void TSandBombBase::control()
 {
 	TMapObjBase::control();
 
+	TSandBomb* trigger = mTrigger;
+
 	switch (mState) {
 	case STATE_GROWN: {
-		f32 frame = mTrigger->getMActor()->getFrameCtrl(0)->getFrame()
+		f32 frame = trigger->getMActor()->getFrameCtrl(0)->getFrame()
 		    - mFiringFrameDownSpeed;
 		if (frame >= 0.0f) {
 			mTrigger->getMActor()->getFrameCtrl(0)->setFrame(frame);
@@ -351,19 +353,26 @@ void TSandBombBase::control()
 		break;
 	}
 
-	case STATE_FIRING:
-		mTrigger->getMActor()->getFrameCtrl(0)->setFrame(
-		    mExplodeFrameSpeed
-		    + mTrigger->getMActor()->getFrameCtrl(0)->getFrame());
-		mTrigger->getMActor()->getFrameCtrl(5)->setFrame(
-		    mExplodeFrameSpeed
-		    + mTrigger->getMActor()->getFrameCtrl(5)->getFrame());
-		mTrigger->getMActor()->getFrameCtrl(3)->setFrame(
-		    mExplodeFrameSpeed
-		    + mTrigger->getMActor()->getFrameCtrl(3)->getFrame());
+	case STATE_FIRING: {
+		f32 speed = mExplodeFrameSpeed;
+		trigger->getMActor()->getFrameCtrl(0)->setFrame(
+		    speed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
+		{
+			TSandBomb* t = mTrigger;
+			f32 speed    = mExplodeFrameSpeed;
+			t->getMActor()->getFrameCtrl(5)->setFrame(
+			    speed + t->getMActor()->getFrameCtrl(5)->getFrame());
+		}
+		{
+			TSandBomb* t = mTrigger;
+			f32 speed    = mExplodeFrameSpeed;
+			t->getMActor()->getFrameCtrl(3)->setFrame(
+			    speed + t->getMActor()->getFrameCtrl(3)->getFrame());
+		}
 		if (mTrigger->animIsFinished())
 			waitBeforeExplode();
 		break;
+	}
 
 	case STATE_WAIT_BOM:
 		if (!isStateTimerEngaged())
@@ -397,7 +406,7 @@ void TSandBombBase::control()
 	}
 
 	if (mTrigger->mColCount == 0)
-		mTrigger->unk140 = false;
+		trigger->unk140 = false;
 }
 
 TSandBomb* TSandBombBase::findTriggerActor()
