@@ -217,11 +217,11 @@ static void evResetFruitNum(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 static void evGetFruitNum(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
-	int fVar4                 = interp->pop().getDataInt();
+	u32 fVar4                 = interp->pop().getDataInt();
 	TFruitBasketEvent* basket = (TFruitBasketEvent*)interp->pop().getDataInt();
 
 	int iVar3 = 0;
-	switch (fVar4) {
+	switch ((int)fVar4) {
 	case 0:
 		iVar3 = 0;
 		break;
