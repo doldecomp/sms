@@ -646,14 +646,17 @@ int TSmallEnemy::getChangeBlockTime()
 
 bool TSmallEnemy::changeMove()
 {
-	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= mSpine->getTime()) {
+	if (mSpine->getTime() <= TSmallEnemyManager::mBlockWaitTime * 0.2f) {
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
 
-		mJuiceBlock->mPosition.y += unk188 * 2.0f
-		                            * JMASin(mSpine->getTime() * 130.0f / time)
-		                            * TSmallEnemyManager::mBlockWaitMoveY;
+		mJuiceBlock->mPosition.y
+		    = mPosition.y
+		      + unk188
+		            * (2.0f * TSmallEnemyManager::mBlockWaitMoveY
+		               * JMASin(mSpine->getTime() * 130.0f / time));
 
-		mJuiceBlock->mRotation.y += mSpine->getTime() * 1080.0f / time;
+		mJuiceBlock->mRotation.y
+		    = mRotation.y + mSpine->getTime() * 1080.0f / time;
 	} else {
 		if (mSpine->getTime() > TSmallEnemyManager::mBlockWaitTime) {
 			if (mSpine->getTime() > getChangeBlockTime() - 200) {
