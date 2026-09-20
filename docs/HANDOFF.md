@@ -71,7 +71,7 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grpvh` CardSave ([CardSave](632b7ca0-c6f0-44e4-96cf-e041b2152c1b)): +2 exact; data **100%**. All **62.31→62.44**.
 - Landed `grpvi` CardLoad ([CardLoad](569a7982-2eb3-48d4-9866-073ac899bb92)): +1 exact. All **62.44→62.47**.
 - Landed `grpvj` BathWaterManager ([BathWaterManager](e7c65049-d748-4c20-9cdc-cd58e046e5c4)): +0 exact; structural (CUE_DRAW→render, spawn cadence, size*=). Flat render fuzzy ↑. Park getPos slots, flat 0x70 frame, setLookDir shared hdr, initializeIfYet_ lfsu. Pre-existing symbol-order FAIL.
-- Running: `grpvk` / MarNameRefGen ([MarNameRefGen](cd56fcce-fa2e-4304-bf6f-0c4b4cc5ef33)). Refill: Guide.
+- Running: `grpvk` / MarNameRefGen ([MarNameRefGen](cd56fcce-fa2e-4304-bf6f-0c4b4cc5ef33)); `grpvl` / Guide ([Guide](4a9a5bc9-f616-4afd-9696-29615c0987f7)).
 - Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame, CardSave leftovers, CardLoad leftovers, BathWater leftovers.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
