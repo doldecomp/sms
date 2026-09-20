@@ -385,10 +385,16 @@ static void evSetValue2TalkVariable(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// Bare-return fork whose body calls the header accessor: +4 of pool.
+static inline bool EventWatcherIsTalkModeNow()
+{
+	return SMSGetMarDirector()->isTalkModeNow();
+}
+
 static void evIsTalkModeNow(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	int value = SMSGetMarDirector()->isTalkModeNow() ? 1 : 0;
+	int value = EventWatcherIsTalkModeNow() ? 1 : 0;
 	interp->push(value);
 }
 
@@ -645,11 +651,16 @@ static void evIsBossDefeated(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(gpConductor->isBossDefeated() ? 1 : 0);
 }
 
+static inline TGCConsole2* EventWatcherConsoleForClearDemo()
+{
+	return SMSGetMarDirector()->getConsole();
+}
+
 static void evLaunchEventClearDemo(TSpcTypedInterp<TEventWatcher>* interp,
                                    u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	TGCConsole2* console = SMSGetMarDirector()->getConsole();
+	TGCConsole2* console = EventWatcherConsoleForClearDemo();
 	console->unk94->startAppearShineGet();
 	console->unk47 = 1;
 	interp->push();
@@ -1498,10 +1509,9 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(result);
 }
 
-// TODO: 99.9%, every instruction matching, 4 bytes short in the low region.
-// The `startSoundSystemSE` wrapper is right: spelling out its
-// `gateCheck` + `MSoundSE::startSoundSystemSE` body, or reaching it through
-// the bare `gpMSound`, each cost 8 bytes of frame instead.
+// TODO: 99.9%, every instruction matching, slice 4 high (0x18 vs 0x14) at
+// retail's 0x28 frame. A TU-local push wrapper refuses TSpcStack::push
+// (`bl`); raw gpMSound is -8 of frame and slice.
 static void evStartMontemanBGM(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
