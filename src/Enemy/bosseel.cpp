@@ -2398,6 +2398,7 @@ DEFINE_NERVE(TNerveBossEelMouthOpenWait, TLiveActor)
 
 DEFINE_NERVE(TNerveBossEelSleepOnBottom, TLiveActor)
 {
+	char trash[16];
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 
 	if (spine->getTime() == 0) {
