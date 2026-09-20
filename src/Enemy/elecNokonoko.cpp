@@ -917,6 +917,7 @@ void TElecCarapace::reflect(THitActor* other)
 
 	// Snap the bounce onto whichever world axis the hit came from.
 	f32 axisX = 0.0f;
+	f32 axisY = 0.0f;
 	f32 axisZ = 0.0f;
 	if (fabsf(away.z / away.x) > 1.0f) {
 		if (other->mPosition.z > mPosition.z)
@@ -929,7 +930,7 @@ void TElecCarapace::reflect(THitActor* other)
 		axisX = -1.0f;
 	}
 
-	f32 along = -7.0f * (away.x * axisX + away.y * 0.0f + away.z * axisZ);
+	f32 along = -7.0f * (away.x * axisX + away.y * axisY + away.z * axisZ);
 	mVelocity.x = away.x * along;
 	mVelocity.y = 2.0f;
 	mVelocity.z = away.z * along;
