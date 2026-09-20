@@ -581,35 +581,37 @@ void TKiller::behaveToWater(THitActor* water)
 	}
 }
 
-// TODO: 91.7%. Same instructions in the same order; the ROM hoists the
-// scatter matrix's address into r31 across the loop and we recompute it, which
-// shifts every callee-saved register by one and leaves the frame 8 short.
+// TODO: 99.3%. Parking &spread in a MtxPtr across the loop restores retail's
+// extra callee-saved GPR and the MTXMultVec setup (91.7 -> 99.3). Residue is
+// 8 bytes of frame and r30/r31 swapped (coinNum vs the parked matrix).
+// getPosition() lands the frame but adds another GPR and drops to 96.6%.
 void TKiller::genEventCoin()
 {
 	int coinNum = 2;
 	if (mIsGold)
 		coinNum = 8;
 
+	Mtx spread;
+	MtxPtr spreadMtx = spread;
 	for (int i = 0; i < coinNum; i++) {
 		JGeometry::TVec3<f32> offset(0.0f, 0.0f, 30.0f);
 		f32 yaw = 360.0f * (1.0f / coinNum) * (i + 1);
 
-		Mtx spread;
-		f32 s         = JMASin(yaw);
-		f32 c         = JMACos(yaw);
-		spread[0][0]  = c;
-		spread[0][1]  = 0.0f;
-		spread[0][2]  = s;
-		spread[0][3]  = 0.0f;
-		spread[1][0]  = 0.0f;
-		spread[1][1]  = 1.0f;
-		spread[1][2]  = 0.0f;
-		spread[1][3]  = 0.0f;
-		spread[2][0]  = -s;
-		spread[2][1]  = 0.0f;
-		spread[2][2]  = c;
-		spread[2][3]  = 0.0f;
-		MTXMultVec(spread, (Vec*)&offset, (Vec*)&offset);
+		f32 s        = JMASin(yaw);
+		f32 c        = JMACos(yaw);
+		spread[0][0] = c;
+		spread[0][1] = 0.0f;
+		spread[0][2] = s;
+		spread[0][3] = 0.0f;
+		spread[1][0] = 0.0f;
+		spread[1][1] = 1.0f;
+		spread[1][2] = 0.0f;
+		spread[1][3] = 0.0f;
+		spread[2][0] = -s;
+		spread[2][1] = 0.0f;
+		spread[2][2] = c;
+		spread[2][3] = 0.0f;
+		MTXMultVec(spreadMtx, (Vec*)&offset, (Vec*)&offset);
 
 		TMapObjBase* coin = gpItemManager->makeObjAppear(
 		    mPosition.x + offset.x, mPosition.y, mPosition.z + offset.z,
