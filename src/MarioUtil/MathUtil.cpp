@@ -283,8 +283,10 @@ void MsMtxSetRotRPH(MtxPtr param_1, f32 r, f32 p, f32 h)
 	f32 cp = JMACos(p);
 	f32 ch = JMACos(h);
 
-	char trash[0x4]; // TODO: skill issue
-
+	// TODO: frame 0x48 vs retail's 0x50; every instruction matches. The three
+	// inlined JMASin/JMACos conversion buffers sit at 0x30/0x38/0x40 where
+	// retail has them at 0x38/0x40/0x48, so 8 bytes of low pool are missing
+	// below them. Binders over JMASin/JMACos overshoot by 0x40.
 	param_1[0][0] = ch * cp;
 	param_1[1][0] = sh * cp;
 	param_1[2][0] = -sp;
@@ -344,8 +346,9 @@ void MsMtxSetTRS(MtxPtr param_1, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
 	f32 cp = JMACos(p);
 	f32 ch = JMACos(h);
 
-	char trash[0x8]; // TODO: skill issue
-
+	// TODO: frame 0x88 vs retail's 0x90, instructions exact; same missing 8
+	// bytes of low pool below the inlined JMASin/JMACos conversion buffers as
+	// MsMtxSetRotRPH.
 	param_1[0][0] = (ch * cp) * sx;
 	param_1[1][0] = (sh * cp) * sx;
 	param_1[2][0] = -sp * sx;
@@ -370,8 +373,9 @@ BOOL MsIsInSight(const JGeometry::TVec3<f32>& eye, f32 sight,
 	JGeometry::TVec3<f32> tmp = target;
 	tmp -= eye;
 
-	char trash[0x4]; // TODO: skill issue
-
+	// TODO: frame 0x60 is exact and every instruction matches, but `tmp` sits
+	// at 0x30 where retail has it at 0x34: one 4-byte pool word is missing
+	// below it (research 312's 4-byte rung).
 	if (tmp.squared() < aware * aware)
 		return true;
 
