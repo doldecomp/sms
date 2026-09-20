@@ -1477,6 +1477,21 @@ void TNozzleBox::loadAfter()
 	}
 }
 
+static inline J3DModel* NozzleBoxLoadModel(const TNozzleBox* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
+static inline TFlagManager* NozzleBoxLoadFlags()
+{
+	TFlagManager* flagManager = TFlagManager::smInstance;
+	return flagManager;
+}
+
+// TODO: strBuf lands at 0x2c, retail 0x30; the low pool is 4 bytes short and
+// every lever left in this body (a fourth pointer fork, the director map read,
+// a setter level around unk15C) is 8-granular or free.
 void TNozzleBox::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
@@ -1498,7 +1513,7 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 		unk15E.r             = 0xFF;
 		unk15E.g             = 0;
 		unk15E.b             = 0;
-		if (TFlagManager::smInstance->getNozzleRight(gpMarDirector->mMap, 0)) {
+		if (NozzleBoxLoadFlags()->getNozzleRight(gpMarDirector->mMap, 0)) {
 			unk15C = true;
 			unk166 = true;
 		}
@@ -1507,7 +1522,7 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 		unk15E.r             = 0x5A;
 		unk15E.g             = 0x5A;
 		unk15E.b             = 0x78;
-		if (TFlagManager::smInstance->getNozzleRight(gpMarDirector->mMap, 1)) {
+		if (NozzleBoxLoadFlags()->getNozzleRight(gpMarDirector->mMap, 1)) {
 			unk15C = true;
 			unk166 = true;
 		}
@@ -1519,11 +1534,11 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 	if (unk154 < 0.0f)
 		unk154 = 20.0f;
 
-	initPacketMatColor(getModel(), GX_TEVREG1, &unk15E);
+	initPacketMatColor(NozzleBoxLoadModel(this), GX_TEVREG1, &unk15E);
 	startAnim(3);
-	initPacketMatColor(getModel(), GX_TEVREG1, &unk15E);
+	initPacketMatColor(NozzleBoxLoadModel(this), GX_TEVREG1, &unk15E);
 	startAnim(2);
-	initPacketMatColor(getModel(), GX_TEVREG1, &unk15E);
+	initPacketMatColor(NozzleBoxLoadModel(this), GX_TEVREG1, &unk15E);
 	startAnim(0);
 }
 
