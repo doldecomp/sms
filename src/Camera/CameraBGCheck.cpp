@@ -152,25 +152,37 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 			for (int i = 0; i < n; ++i) {
 				TBGCheckData* wall = record.mResultWalls[i];
 				if (should_clip_fabricated(wall)) {
-					JGeometry::TVec3<f32> posArg = mCurrentTarget.mPosition;
-					JGeometry::TVec3<f32> posCam = posArg;
+					// fabricated: retail's two position
+					// vectors live in one stack aggregate
+					// (member-expression codegen + the
+					// leading 4 bytes are load-bearing)
+					struct VecPair {
+						f32 unused;
+						JGeometry::TVec3<f32> cam;
+						JGeometry::TVec3<f32> arg;
+					};
+					VecPair p;
+					p.arg = mCurrentTarget.mPosition;
+					p.cam = p.arg;
 
-					f32 sd = posCam.dot(wall->getNormal())
-					         + wall->getPlaneDistance();
+					f32 sd = wall->getPlaneDistance()
+					         + p.cam.dot(wall->mNormal);
+					f32 nx    = wall->mNormal.x;
+					f32 nz    = wall->mNormal.z;
 					f32 absSd = sd >= 0.0f ? sd : -sd;
 					if (absSd < radius) {
 						moved      = true;
 						f32 pushSd = (radius - sd)
 						             * mSaveEx->mSLWallRevisionRatio.get();
-						posCam.x += pushSd * wall->getNormal().x;
-						posCam.z += pushSd * wall->getNormal().z;
-						mCurrentTarget.mPosition.x = posCam.x;
-						mCurrentTarget.mPosition.z = posCam.z;
+						p.cam.x += pushSd * nx;
+						p.cam.z += pushSd * nz;
+						mCurrentTarget.mPosition.x = p.cam.x;
+						mCurrentTarget.mPosition.z = p.cam.z;
 						f32 pushArg                = radius - sd;
-						posArg.x += pushArg * wall->getNormal().x;
-						posArg.z += pushArg * wall->getNormal().z;
-						param_1->x = posArg.x;
-						param_1->z = posArg.z;
+						p.arg.x += pushArg * wall->getNormal().x;
+						p.arg.z += pushArg * wall->getNormal().z;
+						param_1->x = p.arg.x;
+						param_1->z = p.arg.z;
 					}
 				}
 			}
