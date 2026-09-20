@@ -644,9 +644,18 @@ TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+// Binding level over the navel's owner pointer. One site on the
+// getLatestNerve() sleep test is +0x10, which closes receiveMessage.
+static inline TBossPakkun* BosspakkunNavelOwner(const TBPNavel* p)
+{
+	TBossPakkun* owner = p->mOwner;
+	return owner;
+}
+
 BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 {
-	if (mOwner->getLatestNerve() == &TNerveBPSleep::theNerve())
+	if (BosspakkunNavelOwner(this)->getLatestNerve()
+	    == &TNerveBPSleep::theNerve())
 		return mOwner->receiveMessage(sender, message);
 
 	u32 type = sender->getActorType();
@@ -659,12 +668,11 @@ BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 	if (type == 0x80000001) {
 		if (message == HIT_MESSAGE_HIP_DROP)
 			mOwner->gotHipDropDamage();
-		// TODO: retail keeps a `cmplwi r31, 0` for the trample arm with no
-		// branch (the dead-compare family, research 297); an empty arm drops
-		// it and a `return TRUE;` arm adds a whole return block. Frame is
-		// also 0x10 short.
-		else if (message == HIT_MESSAGE_TRAMPLE) {
-		}
+		// gotTrampleDamage is UNUSED (map size 0x4) and empty; the call
+		// inlines to the lone `cmplwi r31, 0` retail keeps after the hip-drop
+		// arm. An empty else-if drops that compare.
+		else if (message == HIT_MESSAGE_TRAMPLE)
+			mOwner->gotTrampleDamage();
 	}
 
 	return TRUE;
@@ -1262,7 +1270,8 @@ void TBossPakkun::setGroundCollision()
 	// TODO: retail's two guards compare `cmplw nerve, instance`; writing them
 	// as `mSpine->getLatestNerve() == &...::theNerve()` flips the operands but
 	// lets MWCC hoist and CSE both expansions above the static-init guards
-	// (77.1%). The remaining difference is these two compare operand orders.
+	// (77.1%). Combined `if (a || b)` adds a dead `bne`. The remaining
+	// difference is these two compare operand orders.
 	if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve())
 		return;
 	if (&TNerveBPTumbleOut::theNerve() == mSpine->getLatestNerve())
@@ -1534,13 +1543,14 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
 
-	JGeometry::TVec3<f32> toMario = boss->mPosition;
+	JGeometry::TVec3<f32> toMario = boss->getPosition();
 	toMario.x -= gpMarioPos->x;
 	toMario.y -= gpMarioPos->y;
 	toMario.z -= gpMarioPos->z;
 
 	f32 reach = boss->getSaveParam2()->mSLSwingLength.get();
-	if (toMario.squared() < reach * reach) {
+	reach *= reach;
+	if (toMario.squared() < reach) {
 		// Mario is within head-swinging range. If the boss is already facing
 		// him it swings; otherwise it spits and turns towards him.
 		JGeometry::TVec3<f32> toMarioBack(-toMario.x, -toMario.y, -toMario.z);
