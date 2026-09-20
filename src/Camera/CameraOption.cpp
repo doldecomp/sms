@@ -32,6 +32,7 @@ void CPolarSubCamera::chaseOptionCamera_(f32 param_1)
 void CPolarSubCamera::ctrlOptionCamera_()
 {
 	JGeometry::TVec3<f32> probe;
+	u8 trash[32];
 
 	if (gpCameraOption->unkA > 0) {
 		chaseOptionCamera_(gpCameraOption->unkA);
