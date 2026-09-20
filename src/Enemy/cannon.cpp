@@ -1103,6 +1103,27 @@ DEFINE_NERVE(TNerveCannonShoot, TLiveActor)
 	return FALSE;
 }
 
+static inline MActor* CannonFBSMActor(TCannon* p)
+{
+	MActor* actor = p->mChorobei->mParts->getMActor();
+	return actor;
+}
+
+static inline TChorobei* CannonFBSChorobei(TCannon* p)
+{
+	TChorobei* chorobei = p->mChorobei;
+	return chorobei;
+}
+
+// Binding levels landing TNerveCannonForceBombShoot's frame at 0x100: the
+// chorobei actor at all six sites, the chorobei at both setBckAnm sites and
+// the frame controller nested over the actor binder.
+static inline J3DFrameCtrl* CannonFBSFrameCtrl(TCannon* p)
+{
+	J3DFrameCtrl* ctrl = CannonFBSMActor(p)->getFrameCtrl(0);
+	return ctrl;
+}
+
 DEFINE_NERVE(TNerveCannonForceBombShoot, TLiveActor)
 {
 	TCannon* cannon = (TCannon*)spine->getBody();
@@ -1110,25 +1131,25 @@ DEFINE_NERVE(TNerveCannonForceBombShoot, TLiveActor)
 	if (spine->getTime() == 0) {
 		f32 bombDist = cannon->getSaveParams()->getSLBombDist();
 		if (cannon->mDistToMarioSquared < 2.0f * (bombDist * bombDist))
-			cannon->mChorobei->setBckAnm(0x11);
+			CannonFBSChorobei(cannon)->setBckAnm(0x11);
 		else
 			return TRUE;
 	}
 
-	if (cannon->mChorobei->mParts->getMActor()->checkCurBckFromIndex(0x11)) {
-		if (cannon->mChorobei->mParts->getMActor()->curAnmEndsNext()) {
-			cannon->mChorobei->setBckAnm(0x10);
+	if (CannonFBSMActor(cannon)->checkCurBckFromIndex(0x11)) {
+		if (CannonFBSMActor(cannon)->curAnmEndsNext()) {
+			CannonFBSChorobei(cannon)->setBckAnm(0x10);
 			cannon->bombSet();
 		}
 		cannon->turnToGoal();
-	} else if (cannon->mChorobei->mParts->getMActor()->checkCurBckFromIndex(
+	} else if (CannonFBSMActor(cannon)->checkCurBckFromIndex(
 	               0x10)) {
-		if (cannon->mChorobei->mParts->getMActor()->curAnmEndsNext())
+		if (CannonFBSMActor(cannon)->curAnmEndsNext())
 			return TRUE;
-		if (cannon->mChorobei->mParts->getMActor()->getFrameCtrl(0)->checkPass(
+		if (CannonFBSFrameCtrl(cannon)->checkPass(
 		        38.0f))
 			cannon->bombShoot();
-		if (cannon->mChorobei->mParts->getMActor()->getFrameCtrl(0)->getFrame()
+		if (CannonFBSFrameCtrl(cannon)->getFrame()
 		    > 26.0f)
 			cannon->bombScaleUp();
 	}
