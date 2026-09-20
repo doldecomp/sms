@@ -241,15 +241,15 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		local_74[2][2] = c;
 		local_74[2][3] = 0.0f;
 
-		// TODO: the residue is 0x10 of frame (0xc8 against the ROM's 0xb8)
-		// and the callee-saved binding that goes with it -- the ROM parks
-		// &local_74 in r30 for its two MTXConcat arguments and keeps its four
-		// f32 locals in volatile registers, where our four take a slot each
-		// and push local_44 0x10 up. Declaring local_74 above the scalars
-		// packs the matrices but costs 8 markers.
-		MTXConcat(anmMtx, local_74, anmMtx);
+		// Park &local_74 in a callee-saved register so both MTXConcat
+		// sites reuse it (retail r30). 91.9 -> 97.5. Residue is 0x10 of
+		// frame (scale mtx 0x10 high) and the 1.0/0.0 preload vs
+		// store-then-reload; named jntNo and .value both moved the rot
+		// mtx off 0x44.
+		MtxPtr rotMtx = local_74;
+		MTXConcat(anmMtx, rotMtx, anmMtx);
 		MTXConcat(anmMtx, local_44, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, local_74, J3DSys::mCurrentMtx);
+		MTXConcat(J3DSys::mCurrentMtx, rotMtx, J3DSys::mCurrentMtx);
 		MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
 	}
 	return true;
@@ -854,6 +854,8 @@ bool TGesso::turning()
 	// Named step+angle land the inlined frame at 0x28 and load
 	// mTurnAngle before 7.2f. Residue is a volatile FPR swap
 	// (retail f1=angle/f2=step; we emit the pair reversed).
+	// Declaration order, dropping step, and an in-place add helper
+	// were all inert or cost frame.
 	f32 angle = mTurnAngle;
 	f32 step  = 7.2f;
 	angle += step;
