@@ -883,7 +883,7 @@ BOOL TMario::turnEnd()
 	if (isThrowStart())
 		return 1;
 
-	if (getInput() & 0x8)
+	if (mInput & 0x8)
 		return changePlayerStatus(MARIO_STATUS_SLIP, 0, false);
 
 	if (getInput() & 0x2)
