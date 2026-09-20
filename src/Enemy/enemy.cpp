@@ -332,11 +332,12 @@ int TSpineEnemy::jumpToNextGraphNode()
 
 void TSpineEnemy::goToRandomNextGraphNode()
 {
-	if (unk124->getCurGraphIndex() < 0)
-		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+	if (getTracer()->getCurGraphIndex() < 0)
+		unk124->setTo(
+		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	else
-		unk124->moveTo(unk124->unk0->getRandomNextIndex(
-		    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1));
+		unk124->moveTo(getTracer()->getGraph()->getRandomNextIndex(
+		    getTracer()->getCurGraphIndex(), getTracer()->getPrevIndex(), -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
@@ -345,11 +346,12 @@ void TSpineEnemy::goToRandomNextGraphNode()
 
 void TSpineEnemy::goToRandomEscapeGraphNode()
 {
-	if (unk124->getCurGraphIndex() < 0)
-		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+	if (getTracer()->getCurGraphIndex() < 0)
+		unk124->setTo(
+		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	else
-		unk124->moveTo(unk124->unk0->getEscapeFromMarioIndex(
-		    unk124->getCurGraphIndex(), -1, mPosition, -1));
+		unk124->moveTo(getTracer()->getGraph()->getEscapeFromMarioIndex(
+		    getTracer()->getCurGraphIndex(), -1, mPosition, -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
@@ -361,16 +363,19 @@ void TSpineEnemy::goToExclusiveNextGraphNode()
 	if (mManager == nullptr) {
 		goToRandomNextGraphNode();
 	} else {
-		if (unk124->mCurrIdx < 0) {
-			unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+		if (getTracer()->getCurGraphIndex() < 0) {
+			unk124->setTo(
+			    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 		} else {
-			int idx = unk124->unk0->getRandomNextIndex(
-			    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1);
+			int idx = getTracer()->getGraph()->getRandomNextIndex(
+			    getTracer()->getCurGraphIndex(), getTracer()->getPrevIndex(),
+			    -1);
 			for (int i = 0; i < mManager->getObjNum(); ++i) {
 				TSpineEnemy* enemy = (TSpineEnemy*)mManager->getObj(i);
-				if (this != enemy && idx == enemy->unk124->mCurrIdx)
-					idx = unk124->unk0->getRandomNextIndex(
-					    unk124->getCurGraphIndex(), idx, -1);
+				if (this != enemy
+				    && idx == enemy->getTracer()->getCurGraphIndex())
+					idx = getTracer()->getGraph()->getRandomNextIndex(
+					    getTracer()->getCurGraphIndex(), idx, -1);
 			}
 			unk124->moveTo(idx);
 		}
@@ -384,13 +389,14 @@ void TSpineEnemy::goToExclusiveNextGraphNode()
 void TSpineEnemy::goToDirectedNextGraphNode(
     const JGeometry::TVec3<f32>& param_1)
 {
-	int currIdx = unk124->mCurrIdx;
-	int prevIdx = unk124->mPrevIdx;
+	int currIdx = getTracer()->getCurGraphIndex();
+	int prevIdx = getTracer()->getPrevIndex();
 	if (currIdx < 0) {
-		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+		unk124->setTo(
+		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	} else {
-		int idx = unk124->unk0->getAimToDirNextIndex(currIdx, prevIdx, param_1,
-		                                             mPosition, -1);
+		int idx = getTracer()->getGraph()->getAimToDirNextIndex(
+		    currIdx, prevIdx, param_1, mPosition, -1);
 		unk124->moveTo(idx);
 	}
 
@@ -409,12 +415,13 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 
 void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 {
-	int currIdx = unk124->mCurrIdx;
-	int prevIdx = unk124->mPrevIdx;
+	int currIdx = getTracer()->getCurGraphIndex();
+	int prevIdx = getTracer()->getPrevIndex();
 	if (currIdx < 0) {
-		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+		unk124->setTo(
+		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	} else {
-		TGraphWeb* web                 = unk124->unk0;
+		TGraphWeb* web                 = getTracer()->getGraph();
 		JGeometry::TVec3<f32> local_3c = polarXZ(mRotation.y, 1.0f);
 
 		int idx = web->getRandomButDirLimited(currIdx, prevIdx, local_3c,
