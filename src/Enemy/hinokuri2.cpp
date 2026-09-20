@@ -320,6 +320,12 @@ void THino2Mask::breakMask() { }
 
 void THino2Mask::startDamageMotion() { }
 
+static inline THino2Params* Hino2Params(THinokuri2* self)
+{
+	THino2Params* params = (THino2Params*)self->getSaveParam();
+	return params;
+}
+
 void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk4 == 0)
@@ -341,7 +347,7 @@ void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 				return;
 			}
 
-			f32 gravity = ((THino2Params*)unk0->getSaveParam())->mSLGravityY.get();
+			f32 gravity = Hino2Params(unk0)->mSLGravityY.get();
 
 			unk40.x -= gravity;
 			unk34.x -= gravity;
@@ -353,6 +359,9 @@ void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if (cue & CUE_CALC_ANIM) {
+			// TODO: retail binds &unk4C (r26) and &afStack_58 (r27) into
+			// callee-saved registers across both blocks; a MtxPtr local
+			// here or at either site costs an instruction and +8 frame.
 			Mtx afStack_58;
 			Mtx afStack_88;
 			{
@@ -614,12 +623,6 @@ static inline THino2Hit* Hino2BindBody(THinokuri2* self)
 {
 	THino2Hit* hit = self->mBody;
 	return hit;
-}
-
-static inline THino2Params* Hino2Params(THinokuri2* self)
-{
-	THino2Params* params = (THino2Params*)self->getSaveParam();
-	return params;
 }
 
 template <class T> static inline T randy(T l, T r)
