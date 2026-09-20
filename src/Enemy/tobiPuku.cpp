@@ -898,6 +898,14 @@ void TMoePuku::generateEffectColumWater()
 
 const char** TMoePuku::getBasNameTable() const { return moepuku_bastable; }
 
+// Binding level over spine->getBody(), worth +4 of low region and landing
+// TNerveTobiPukuAttack::execute exactly (ladder 341).
+static inline TTobiPuku* TobiPukuBody(TSpineBase<TLiveActor>* spine)
+{
+	TTobiPuku* body = (TTobiPuku*)spine->getBody();
+	return body;
+}
+
 // TODO: incorrect size. Map records 0x1ac (428 bytes).
 // TODO: 86.9% of 428 bytes. The structure and call order are right; what
 // differs is how the two MsGetRotFromZaxis results are stored. The original
@@ -963,14 +971,6 @@ DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
 	JGeometry::TVec3<f32> dir(puku->mVelocity);
 	puku->mRotation.x = MsGetRotFromZaxis(dir).x;
 	return FALSE;
-}
-
-// Binding level over spine->getBody(), worth +4 of low region and landing
-// TNerveTobiPukuAttack::execute exactly (ladder 341).
-static inline TTobiPuku* TobiPukuBody(TSpineBase<TLiveActor>* spine)
-{
-	TTobiPuku* body = (TTobiPuku*)spine->getBody();
-	return body;
 }
 
 // TODO: incorrect size. Map records 0x198 (408 bytes).
