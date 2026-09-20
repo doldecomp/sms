@@ -347,7 +347,8 @@ MtxPtr THauntLeg::getTakingMtx()
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		TPosition3f mtx;
 		mtx.translation(mPosition.x, mPosition.y, mPosition.z);
-		MTXCopy(mtx, getMActor()->getModel()->getBaseTRMtx());
+		J3DModel* model = getMActor()->getModel();
+		MTXCopy(mtx, model->getBaseTRMtx());
 		return getMActor()->getModel()->getBaseTRMtx();
 	}
 	return getMActor()->getModel()->getAnmMtx(2);
