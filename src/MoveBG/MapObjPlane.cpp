@@ -173,10 +173,14 @@ void TMapObjPlane::depress(f32 x, f32 z, f32 rate)
 	f32 xrem = x_ - x_00;
 	f32 zrem = z_ - z_00;
 
-	heightAt(x_00, z_00) -= rate * ((1.0f - xrem) + (1.0f - zrem));
-	heightAt(x_00 + 1, z_00) -= rate * (xrem + (1.0f - zrem));
-	heightAt(x_00, z_00 + 1) -= rate * ((1.0f - xrem) + zrem);
-	heightAt(x_00 + 1, z_00 + 1) -= rate * (xrem + zrem);
+	f32& h00 = heightAt(x_00, z_00);
+	h00      = h00 - rate * ((1.0f - xrem) + (1.0f - zrem));
+	f32& h10 = heightAt(x_00 + 1, z_00);
+	h10      = h10 - rate * (xrem + (1.0f - zrem));
+	f32& h01 = heightAt(x_00, z_00 + 1);
+	h01      = h01 - rate * ((1.0f - xrem) + zrem);
+	f32& h11 = heightAt(x_00 + 1, z_00 + 1);
+	h11      = h11 - rate * (xrem + zrem);
 
 	calcNrm(x_00, z_00 - 1);
 	calcNrm(x_00 + 1, z_00 - 1);
