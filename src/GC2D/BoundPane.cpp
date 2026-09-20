@@ -2,7 +2,9 @@
 #include <JSystem/J2D/J2DScreen.hpp>
 
 TBoundPane::TBoundPane(J2DScreen* param_1, u32 param_2)
+    : unk14(0, 0, 0, 0)
 {
+	char trash[8];
 	unk0  = param_1->search(param_2);
 	unk4  = unk0->mBounds;
 	unk28 = 0.0f;

@@ -9,6 +9,17 @@ class J2DScreen;
 class JUTTexture;
 class J2DPane;
 
+// fabricated: plain POD, no non-trivial ctor (unlike JUTRect)
+struct SBoundRect {
+	SBoundRect() : x1(0), y1(0), x2(0), y2(0) {}
+	SBoundRect(s32 a, s32 b, s32 c, s32 d) : x1(a), y1(b), x2(c), y2(d) {}
+	operator JUTRect() const { return JUTRect(x1, y1, x2, y2); }
+	s32 x1;
+	s32 y1;
+	s32 x2;
+	s32 y2;
+};
+
 class TBoundPane {
 public:
 	TBoundPane(J2DScreen*, u32);
@@ -25,7 +36,7 @@ public:
 public:
 	/* 0x0 */ J2DPane* unk0;
 	/* 0x4 */ JUTRect unk4;
-	/* 0x14 */ JUTRect unk14;
+	/* 0x14 */ SBoundRect unk14;
 	/* 0x24 */ bool unk24;
 	/* 0x25 */ bool unk25;
 	/* 0x28 */ f32 unk28;
