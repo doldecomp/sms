@@ -475,10 +475,8 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		    && SMSGetCamera()->mCurrentTarget.mPitch > 0) {
 			bodyAngle[0] = gpCamera->mCurrentTarget.mPitch;
 			Mtx transform;
-			s16 waistPitch = -bodyAngle[2];
-			s16 waistYaw   = bodyAngle[0];
-			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(waistPitch), 0.0f,
-			               SHORTANGLE2DEG(waistYaw));
+			MsMtxSetRotRPH(transform, SHORTANGLE2DEG((s16)-bodyAngle[2]),
+			               0.0f, SHORTANGLE2DEG(bodyAngle[0]));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else if (gpMarioForCallBack->checkStatusType(MARIO_FLAG_HAS_FLUDD)
@@ -499,17 +497,15 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		     || gpMarioForCallBack->mAnimationId == TMario::ANIM_RIDE_SHELL)
 		    && !gpMarioForCallBack->checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
 
-			// Ah, i love storing floats, casting them to s16
-			// and then transforming them to floats again...
-			// This matches for me...
-			// Definition from TMario
-			// /* 0x3D8 */ f32 unk3D8;
-			// /* 0x3DC */ f32 unk3DC;
-			s16 unk3D8 = gpMarioForCallBack->mWaistRoll;
-			s16 unk3DC = gpMarioForCallBack->mWaistPitch;
+			// TODO: retail shares one Mtx slot (0x88) across all three
+			// MsMtxSetRotRPH sites, i.e. one function-scope Mtx plus 0x60
+			// of low region below it; the conversion order of the second
+			// and fourth arguments is still reversed here.
 			Mtx transform;
-			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(unk3D8), 0.0f,
-			               SHORTANGLE2DEG(unk3DC));
+			MsMtxSetRotRPH(transform,
+			               SHORTANGLE2DEG((s16)gpMarioForCallBack->mWaistRoll),
+			               0.0f,
+			               SHORTANGLE2DEG((s16)gpMarioForCallBack->mWaistPitch));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else {
