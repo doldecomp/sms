@@ -307,7 +307,15 @@ inline void TSunModel::moveSun_()
 	// predicts its block lands below `mtx`, is +8 of frame and leaves
 	// `mtx` where it was), and `MTXCopy(mtx, getBaseTRMtx())` in place of
 	// `setBaseTRMtx`, and a scratch TU with the same two-callee shape shows
-	// no such pad, so it comes from something inside this body.  The named
+	// no such pad, so it comes from something inside this body.  Re-measured
+	// still inert (0 frame, mtx stays 0x70): used `J3DModel*` before mtx,
+	// TU-local `return unk48` fork (bare and named-inside), named fork
+	// result after mtx, `getScaling()` / 3-arg `MsMtxSetTRS` /
+	// `MTXCopy(mtx, getBaseTRMtx())`, `calcAnim_(J3DModel*)`,
+	// `getMaterialNodePointer` at both CUE_ENTRY sites, hoisted `dir`
+	// declaration, used `f32 scaleZ`, `getScaling` fork + named ref,
+	// `isInBounds(unk1A8)`, and dropping the named `rate` (schedule now
+	// matches either way; dir stays 0xa8).  The named
 	// `camera` is worth -8 of low region and is what makes the frame exact.
 	// Measured on the four camera reads with no binder: `gpCamera->` in
 	// place of `SMSGetCamera()` is -4 at each of the three subtraction
