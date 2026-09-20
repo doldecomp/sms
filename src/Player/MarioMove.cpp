@@ -781,8 +781,7 @@ BOOL TMario::changePlayerTriJump()
 			s16 angle = mFaceAngle.y - a;
 			f32 x     = mForwardVel * JMASSin(angle);
 			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;
-			f32 mag   = MsSqrtf(x * x + z * z);
-			setPlayerVelocity(mag);
+			setPlayerVelocity(MsSqrtf(x * x + z * z));
 			mFaceAngle.y = a + matan(z, x);
 		}
 		dropObject();
@@ -808,8 +807,7 @@ int TMario::changePlayerJumping(u32 param_1, u32 param_2)
 			s16 angle = mFaceAngle.y - a;
 			f32 x     = mForwardVel * JMASSin(angle);
 			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;
-			f32 mag   = MsSqrtf(x * x + z * z);
-			setPlayerVelocity(mag);
+			setPlayerVelocity(MsSqrtf(x * x + z * z));
 			mFaceAngle.y = a + matan(z, x);
 		}
 		dropObject();
