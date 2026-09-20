@@ -306,17 +306,12 @@ public:
 		f32 s = sin(param_1);
 		f32 c = cos(param_1);
 
-		this->ref(0, 0) = 1.0f;
-		this->ref(0, 1) = 0.0f;
-		this->ref(0, 2) = 0.0f;
-
-		this->ref(1, 0) = 0.0f;
 		this->ref(1, 1) = c;
-		this->ref(1, 2) = s;
-
-		this->ref(2, 0) = 0.0f;
-		this->ref(2, 1) = -s;
+		this->ref(1, 2) = -s;
+		this->ref(2, 1) = s;
 		this->ref(2, 2) = c;
+		this->ref(0, 0) = 1.0f;
+		this->ref(1, 0) = this->ref(0, 1) = this->ref(2, 0) = this->ref(0, 2) = 0.0f;
 	}
 
 	void setEularY(float param_1)
@@ -325,35 +320,24 @@ public:
 		f32 c = cos(param_1);
 
 		this->ref(0, 0) = c;
-		this->ref(0, 1) = 0.0f;
 		this->ref(0, 2) = s;
-
-		this->ref(1, 0) = 0.0f;
-		this->ref(1, 1) = 1.0f;
-		this->ref(1, 2) = 0.0f;
-
 		this->ref(2, 0) = -s;
-		this->ref(2, 1) = 0.0f;
 		this->ref(2, 2) = c;
+		this->ref(1, 1) = 1.0f;
+		this->ref(0, 1) = this->ref(1, 0) = this->ref(1, 2) = this->ref(2, 1) = 0.0f;
 	}
 
 	void setEularZ(float param_1)
 	{
-
 		f32 s = sin(param_1);
 		f32 c = cos(param_1);
 
 		this->ref(0, 0) = c;
 		this->ref(0, 1) = -s;
-		this->ref(0, 2) = 0.0f;
-
 		this->ref(1, 0) = s;
 		this->ref(1, 1) = c;
-		this->ref(1, 2) = 0.0f;
-
-		this->ref(2, 0) = 0.0f;
-		this->ref(2, 1) = 0.0f;
 		this->ref(2, 2) = 1.0f;
+		this->ref(0, 2) = this->ref(2, 0) = this->ref(1, 2) = this->ref(2, 1) = 0.0f;
 	}
 
 	void mult33(const TVec3<f32>& param_1, TVec3<f32>& param_2) const
