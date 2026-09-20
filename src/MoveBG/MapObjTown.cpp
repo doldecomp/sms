@@ -246,11 +246,24 @@ void TManhole::setGroundCollision()
 	}
 }
 
+// A setter level around the user store and a by-value fork over getModel()
+// are +0 apart but +8 of low region as a pair in
+// TManhole::makeManholeUnuseful.
+static inline void MapObjTownSetUser(TManhole* p, const TMapObjBase* user)
+{
+	p->unk154 = user;
+}
+
+static inline J3DModel* MapObjTownGetModel(const TManhole* p)
+{
+	return p->getModel();
+}
+
 void TManhole::makeManholeUnuseful(const TMapObjBase* param_1)
 {
 	if (unk154 == nullptr) {
-		unk154 = param_1;
-		unk158->setUpMtx(getModel()->getAnmMtx(0));
+		MapObjTownSetUser(this, param_1);
+		unk158->setUpMtx(MapObjTownGetModel(this)->getAnmMtx(0));
 	}
 }
 
