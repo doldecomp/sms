@@ -921,7 +921,7 @@ void TBossWanwan::init(TLiveManager* live_manager)
 
 	mSpine->initWith(&TNerveBWGraphWander::theNerve());
 
-	mMarchSpeed = getSaveParam2()->mSLMarchSpeed.get();
+	mMarchSpeed = getSaveParam2()->mSLMarchSpeed.value;
 	mTurnSpeed  = getSaveParam2()->mSLTurnSpeed.get();
 
 	mPosition = BW_HEAD_START;
@@ -955,15 +955,14 @@ void TBossWanwan::init(TLiveManager* live_manager)
 	mScaledBodyRadius = 500.0f;
 
 	mMtxCalc = new TBossWanwanMtxCalc(this);
-	// Retail sets both fields under one null check, which setCalcForBck's
-	// own guard cannot share with a following statement, so the guard is
+	// setCalc already writes unk38 and unk2A = MACTOR_MTX_CALC_USER (3);
+	// a second store of 3 is the extra stb retail lacks. setCalcForBck's
+	// own guard cannot share the named calc local, so the null check is
 	// spelled out here.
 	J3DMtxCalc* calc  = mMtxCalc;
 	MActorAnmBck* bck = mMActor->getAnmBck();
-	if (bck != nullptr) {
+	if (bck != nullptr)
 		bck->setCalc(calc);
-		bck->unk2A = 3;
-	}
 	mMActor->calc();
 	offLiveFlag(LIVE_FLAG_UNK100);
 
@@ -978,7 +977,7 @@ void TBossWanwan::init(TLiveManager* live_manager)
 	}
 
 	mHitPoints = getSaveParam2()->mSLBWHitPointMax.get();
-	mPullVelocity.set(0.0f, 0.0f, 0.0f);
+	mPullVelocity.x = mPullVelocity.y = mPullVelocity.z = 0.0f;
 
 	mMapCollisionManager = new TMapCollisionManager(1, "/scene/bwanwan", this);
 	mMapCollisionManager->init("bwanwan_ofuro_col.col", 2, nullptr);
@@ -1010,6 +1009,9 @@ void TBossWanwan::shakeCamera(int mode)
 	if (power < 0.0f)
 		return;
 
+	// TODO: retail divides into range's FPR (`fdivs f1, f3, f1`) and
+	// clamps there; every assign-back / `/=` / unnamed leftover still
+	// colours the quotient f0.
 	power /= range;
 	if (power > 1.0f)
 		power = 1.0f;
@@ -1268,7 +1270,8 @@ void TBossWanwan::slideToCurPathNode(f32 march_speed, f32 turn_speed)
 	}
 	// TODO: retail keeps the clamp in diff's own FPR and copies once at the
 	// merge (fmr f1, f30; fmr f2, f1); ours materialises turn early and pays
-	// one extra fmr. Dropping turn costs the merge copy instead.
+	// one extra fmr. Dropping turn, naming a limit, and both-ternary
+	// spellings all keep the extra copy.
 	mRotation.y = MsWrap(mRotation.y + turn, 0.0f, 360.0f);
 
 	JGeometry::TVec3<f32> velocity = mLinearVelocity;
@@ -1757,8 +1760,13 @@ DEFINE_NERVE(TNerveBWJump, TLiveActor)
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		const JGeometry::TVec3<f32>& goal = boss->getUnk104().getPoint();
-		f32 speed = boss->getTracer()->unkC;
+		// Named node + tracer land the 0x60 frame; the leftover r29/r30
+		// swap on the body versus the goal address is the this-vs-pool
+		// callee-saved class.
+		const TPathNode& node             = boss->getUnk104();
+		const JGeometry::TVec3<f32>& goal = node.getPoint();
+		TGraphTracer* tracer              = boss->getTracer();
+		f32 speed                         = tracer->unkC;
 		boss->setVelocity(
 		    boss->calcVelocityToJumpToY(goal, speed, boss->getGravityY()));
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -1877,7 +1885,8 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0) {
-		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+		JGeometry::TVec3<f32> zero;
+		zero.x = zero.y = zero.z = 0.0f;
 		boss->mVelocity       = zero;
 		boss->mLinearVelocity = zero;
 		boss->onLiveFlag(LIVE_FLAG_UNK10);
