@@ -1130,20 +1130,34 @@ DEFINE_NERVE(TNerveCannonForceBombShoot, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveCannonClose, TLiveActor)
+// Binding levels worth +8 each of low region, landing TNerveCannonClose's
+// frame at 0xb8 (the body binder plus the chorobei binder at two sites).
+static inline TCannon* CannonCloseBody(TSpineBase<TLiveActor>* spine)
 {
 	TCannon* cannon = (TCannon*)spine->getBody();
+	return cannon;
+}
+
+static inline TChorobei* CannonCloseChorobei(TCannon* p)
+{
+	TChorobei* chorobei = p->mChorobei;
+	return chorobei;
+}
+
+DEFINE_NERVE(TNerveCannonClose, TLiveActor)
+{
+	TCannon* cannon = CannonCloseBody(spine);
 
 	if (spine->getTime() < 2) {
 		cannon->deadCannon();
-		cannon->mChorobei->setBckAnm(0xF);
+		CannonCloseChorobei(cannon)->setBckAnm(0xF);
 		cannon->mEffectPos = cannon->mPosition;
 		cannon->mEffectPos.y += 300.0f;
 		gpMarioParticleManager->emitAndBindToPosPtr(0xC9, &cannon->mEffectPos,
 		                                            0, nullptr);
 	}
 
-	if (cannon->mChorobei->isDownEnd()) {
+	if (CannonCloseChorobei(cannon)->isDownEnd()) {
 		if (!cannon->isBckAnm(0))
 			cannon->setBckAnm(0);
 	}
@@ -1161,8 +1175,10 @@ DEFINE_NERVE(TNerveCannonClose, TLiveActor)
 	}
 
 	cannon->updateSquareToMario();
-	f32 hideDist = 3.0f * cannon->getSaveParams()->getSLHideDist();
-	if (cannon->mDistToMarioSquared > hideDist * hideDist) {
+	f32 hideDist = cannon->getSaveParams()->getSLHideDist();
+	hideDist *= 3.0f;
+	hideDist *= hideDist;
+	if (cannon->mDistToMarioSquared > hideDist) {
 		cannon->offHitFlag(HIT_FLAG_NO_COLLISION);
 		cannon->mChorobei->offHitFlag(HIT_FLAG_NO_COLLISION);
 		spine->pushAfterCurrent(&TNerveCannonOpen::theNerve());
