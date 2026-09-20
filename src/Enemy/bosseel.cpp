@@ -593,6 +593,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 
 DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 {
+	char trash[16];
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
