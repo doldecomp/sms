@@ -118,15 +118,16 @@ void TPollutionLayer::fire()
 			SMSGetMSound()->startSoundSet(MSD_SE_EF_FIRE,
 			                              &mEffectPositions[mCurEffectPosIndex],
 			                              0, 0.0f, 0, 0, 4);
+			JGeometry::TVec3<f32> scale(1.5f, 1.5f, 1.5f);
 			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 			        MAP_POLLUTION_MS_NEWFIRE_B,
 			        &mEffectPositions[mCurEffectPosIndex], 2, this)) {
-				em->setGlobalScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
+				em->setGlobalScale(scale);
 			}
 			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
 			        MAP_POLLUTION_MS_NEWFIRE_A,
 			        &mEffectPositions[mCurEffectPosIndex], 0, this)) {
-				em->setGlobalScale(JGeometry::TVec3<f32>(1.5f, 1.5f, 1.5f));
+				em->setGlobalScale(scale);
 			}
 			mCurEffectPosIndex += 1;
 			if (mCurEffectPosIndex >= mEffectPositionsCapacity)
