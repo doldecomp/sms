@@ -98,6 +98,7 @@ public:
 
 	// fabricated
 	TPopoSaveLoadParams* getSaveParams() const { return mSaveParams; }
+	TPopoCollision* getCollision() const { return mCollision; }
 
 	static u8 mRollSw;
 	static u8 mTriggerSw;

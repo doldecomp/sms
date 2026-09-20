@@ -358,7 +358,7 @@ void TPopo::init(TLiveManager* manager)
 	    .push_back(mCollision);
 	mCollision->initHitActor(0x1000000D, 2, 0x98000000, 80.0f, 80.0f, 80.0f,
 	                         80.0f);
-	mCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+	getCollision()->onHitFlag(HIT_FLAG_NO_COLLISION);
 	mCollision->mPopo = this;
 }
 
@@ -394,7 +394,7 @@ void TPopo::reset()
 		mPosition = mInitialPos;
 		offLiveFlag(LIVE_FLAG_UNK800);
 	}
-	mCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+	getCollision()->onHitFlag(HIT_FLAG_NO_COLLISION);
 	unk18C = 0;
 }
 
@@ -509,11 +509,20 @@ f32 TPopo::getGravityY() const
 	return gravity;
 }
 
+// The nozzle test reads the water gun through a bound local: that binding is
+// 8 bytes of low region, which is what the frame wants here.
+// TODO: still 4 bytes short below setGoalPathMario's block.
+static inline TWaterGun* PopoWaterGun()
+{
+	TWaterGun* gun = SMS_GetMarioWaterGun();
+	return gun;
+}
+
 void TPopo::behaveToFindMario()
 {
 	TPopoManager* manager = (TPopoManager*)mManager;
 	if (SMS_CheckMarioFlag(MARIO_FLAG_HAS_FLUDD) && manager->mIsNozzleFree
-	    && (s32)SMS_GetMarioWaterGun()->mCurrentNozzle == 0
+	    && (s32)PopoWaterGun()->mCurrentNozzle == 0
 	    && !gpMarioOriginal->onYoshi()) {
 		setGoalPathMario();
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
@@ -694,7 +703,7 @@ void TPopo::kill()
 {
 	releaseNozzle();
 	TSmallEnemy::kill();
-	mCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+	getCollision()->onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TPopo::forceKill()
