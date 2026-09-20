@@ -954,6 +954,7 @@ BOOL TFireWanwan::receiveMessage(THitActor* sender, u32 message)
 		return false;
 
 	case HIT_MESSAGE_SPRAYED_BY_WATER: {
+		u8 trash = sender->getActorType(); // matching: stack padding
 		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &sender->getPosition(),
 		                     nullptr, JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		u8 maxHp = getMaxHitPoints();
