@@ -1565,14 +1565,6 @@ BOOL TMario::fenceMove()
 	}
 }
 
-// Binding level over a raw member read, worth +16 of low region in
-// TMario::fencePunch (batch 127).
-static inline int MarioSpecialActorType(const TLiveActor* p)
-{
-	int actorType = p->mActorType;
-	return actorType;
-}
-
 BOOL TMario::fencePunch()
 {
 	JGeometry::TVec3<f32> pos = mPosition;
@@ -1608,7 +1600,7 @@ BOOL TMario::fencePunch()
 		if (unk2C0 != nullptr) {
 			((THitActor*)unk2C0)->receiveMessage(this, 3);
 			startVoice(MSD_SE_MV15_EXERT_INST_02);
-			if (MarioSpecialActorType(unk2C0) == 0x4000006a) {
+			if (unk2C0->getActorTypeID() == 0x4000006a) {
 				f32 x = unk2F4.x;
 				f32 z = unk2F4.y;
 				if (x < -120.0f)
