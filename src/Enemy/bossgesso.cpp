@@ -1209,6 +1209,18 @@ static inline TBGBeakHit* BossgessoGetBeak(const TBossGesso* p)
 	return beak;
 }
 
+static inline TItemManager* BossgessoGetItemManager()
+{
+	TItemManager* manager = gpItemManager;
+	return manager;
+}
+
+static inline TMarDirector* BossgessoGetMarDirector()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
 static inline J3DModel* BossgessoGetModel(const TBossGesso* p)
 {
 	J3DModel* model = p->getModel();
@@ -2059,30 +2071,30 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 
 		self->getMActor()->resetDL();
 
-		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
+		if (BossgessoGetMarDirector()->mMap == 3 || BossgessoGetMarDirector()->mMap == 59) {
 			MSBgm::stopTrackBGMs(7, 10);
 			MSMainProc::setBossLivesFlag(false);
-		} else if (gpMarDirector->mMap == 9) {
+		} else if (BossgessoGetMarDirector()->mMap == 9) {
 			MSBgm::stopTrackBGM(1, 10);
 			MSMainProc::setBossLivesFlagOnlyFlag(false);
 		}
 
-		if (gpMarDirector->mMap == 9) {
+		if (BossgessoGetMarDirector()->mMap == 9) {
 			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera3", nullptr,
 			                                   -1, 0.0f, true, nullptr, 0,
 			                                   nullptr, JDrama::TFlagT<u16>(0));
-		} else if (self->is2ndFightNow()) {
-			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera2", nullptr,
-			                                   -1, 0.0f, true, nullptr, 0,
-			                                   nullptr, JDrama::TFlagT<u16>(0));
-		} else {
+		} else if (!self->is2ndFightNow()) {
 			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera", nullptr, -1,
 			                                   0.0f, true, nullptr, 0, nullptr,
 			                                   JDrama::TFlagT<u16>(0));
+		} else {
+			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera2", nullptr,
+			                                   -1, 0.0f, true, nullptr, 0,
+			                                   nullptr, JDrama::TFlagT<u16>(0));
 		}
 
-		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
-			gpItemManager->makeShineAppearWithDemo(
+		if (BossgessoGetMarDirector()->mMap == 3 || BossgessoGetMarDirector()->mMap == 59) {
+			BossgessoGetItemManager()->makeShineAppearWithDemo(
 			    "シャイン（ボス用）", "ボスシャインカメラ", self->mPosition.x,
 			    6000.0f + self->mPosition.y, self->mPosition.z);
 		}
@@ -2093,13 +2105,13 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		if (nameKuriMgr)
 			nameKuriMgr->killChildren();
 
-		SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_MHIT_NOBOICE,
+		BossgessoGetMSound()->startSoundActor(MSD_SE_BS_GESO_MHIT_NOBOICE,
 		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
-	if (gpMarDirector->mMap == 9 && spine->getTime() >= 740
+	if (BossgessoGetMarDirector()->mMap == 9 && spine->getTime() >= 740
 	    && spine->getTime() <= 750) {
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &self->mPosition, 0,
+		BossgessoGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &self->mPosition, 0,
 		                                nullptr, 0, 4);
 
 		if (spine->getTime() == 745) {
@@ -2115,8 +2127,8 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->changeAllTentacleState(8);
 
 		JGeometry::TVec3<f32> local_24;
-		local_24.set(self->mPosition.x, -5000.0f,
-		             7000.0f + self->mPosition.z);
+		local_24.set(self->getPosition().x, -5000.0f,
+		             7000.0f + self->getPosition().z);
 
 		self->setGoalPath(local_24);
 
@@ -2132,7 +2144,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
-	if (self->isReachedToGoal() && gpMarDirector->unk124 != 3) {
+	if (self->isReachedToGoal() && BossgessoGetMarDirector()->unk124 != 3) {
 
 		self->changeAllTentacleState(0);
 		self->kill();
