@@ -1255,22 +1255,32 @@ void TTinKoopa::startTinKoopaMessage(u32 id)
 	SMSGetMarDirector()->getConsole()->startAppearBalloon(id, true);
 }
 
-// All 769 instructions match; only the frame does (0x240 against the ROM's
-// 0x2b8, 120 bytes of inline-expansion temporaries we do not reproduce).
+// The ten leading joint-matrix reads bind the model into a named local; the
+// nerve-tested tail below reads it straight through the accessor.
+static inline J3DModel* TinkoopaEffectModel(const TTinKoopa* p)
+{
+	J3DModel* model = p->getModel();
+	return model;
+}
+
 void TTinKoopa::emitTinKoopaEffects()
 {
 	MtxPtr mtx;
 
-	mtx = getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_HEAD));
+	mtx = TinkoopaEffectModel(this)->getAnmMtx(
+	    TTinKoopa_getJointIndex(TINKOOPA_JOINT_HEAD));
 	mHeadPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-	mtx = getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_BREAST));
+	mtx = TinkoopaEffectModel(this)->getAnmMtx(
+	    TTinKoopa_getJointIndex(TINKOOPA_JOINT_BREAST));
 	mBreastPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-	mtx = getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_RARM));
+	mtx = TinkoopaEffectModel(this)->getAnmMtx(
+	    TTinKoopa_getJointIndex(TINKOOPA_JOINT_RARM));
 	mRightArmPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-	mtx = getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM));
+	mtx = TinkoopaEffectModel(this)->getAnmMtx(
+	    TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM));
 	mLeftArmPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
 	gpMarioParticleManager->emitAndBindToPosPtr(TINKOOPA_JPA_MS_MKP_HIBANA_W1BR,
@@ -1279,14 +1289,14 @@ void TTinKoopa::emitTinKoopaEffects()
 	if (mDamageStage > 1)
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    TINKOOPA_JPA_MS_MKP_HIBANA_W3AR,
-		    getModel()->getAnmMtx(
+		    TinkoopaEffectModel(this)->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_RARM)),
 		    1, this);
 
 	if (mDamageStage > 2)
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    TINKOOPA_JPA_MS_MKP_HIBANA_W4AR,
-		    getModel()->getAnmMtx(
+		    TinkoopaEffectModel(this)->getAnmMtx(
 		        TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM)),
 		    1, this);
 
@@ -1294,22 +1304,22 @@ void TTinKoopa::emitTinKoopaEffects()
 		if (mSpine->getCurrentNerve() == &TNerveTinKoopaWait::theNerve())
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    TINKOOPA_JPA_MS_MKP_BIRI_W1ST,
-			    getModel()->getAnmMtx(
+			    TinkoopaEffectModel(this)->getAnmMtx(
 			        TTinKoopa_getJointIndex(TINKOOPA_JOINT_STOMACH)),
 			    1, this);
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    TINKOOPA_JPA_MS_MKP_BIRI_W1AR,
-	    getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_RARM)), 1,
+	    TinkoopaEffectModel(this)->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_RARM)), 1,
 	    this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    TINKOOPA_JPA_MS_MKP_BIRI_W1AR,
-	    getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM)), 1,
+	    TinkoopaEffectModel(this)->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_LARM)), 1,
 	    this + 1);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    TINKOOPA_JPA_MS_MKP_BIRI_W1FE,
-	    getModel()->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_FEMUR)),
+	    TinkoopaEffectModel(this)->getAnmMtx(TTinKoopa_getJointIndex(TINKOOPA_JOINT_FEMUR)),
 	    1, this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    TINKOOPA_JPA_MS_MKP_BIRI_W1HE,
