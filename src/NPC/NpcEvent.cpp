@@ -62,6 +62,13 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	interp->push(result);
 }
 
+// TODO: 99.9%, frame exact (0x68). Both the popped slice (0x48 vs 0x4c) and
+// the pushed slice (0x3c vs 0x40) sit 4 bytes low: one missing +4 of low
+// region below the whole block, not a slice-slot level. Measured and rejected:
+// `push(TSpcSlice((int)viewObj))` (fixes the push slot only, leaves the pop),
+// naming the pushed int (+0), declaring `viewObj` before `name` (+0), a
+// named-scalar binder over the cast (+16), a TU-local `search` wrapper that
+// binds the TNameRef* first (+8, and it moves every slot).
 static void evGetAddressFromViewObjName(TSpcTypedInterp<TEventWatcher>* interp,
                                         u32 arg_num)
 {
@@ -105,7 +112,7 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 	int result = 0;
 	if (NpcEventGetMarDirector()->unk124 == 0)
 		result = 1;
-	interp->push(result);
+	interp->push(TSpcSlice(result));
 }
 
 static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
@@ -327,7 +334,7 @@ static void evIsDemoMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int result = 0;
 	if (SMSGetMarDirector()->isDemoModeNow())
 		result = 1;
-	interp->push(result);
+	interp->push(TSpcSlice(result));
 }
 
 // Binding level worth +8 of low region, landing evCheckMonteClear's frame at
@@ -338,15 +345,23 @@ static inline bool NpcEventIsClean(const TBaseNPC* p)
 	return clean;
 }
 
+// TODO: 99.96%, frame exact (0x90) and the char[32] buffer now at 0x54: the
+// `npc` pointer declared before it and assigned after is the +4 of named
+// region above the buffer (`int b` declared there instead does nothing -- it
+// stays in a register). The pushed slice is still 4 low (0x3c vs 0x40) and no
+// lever moves it alone: `push(TSpcSlice(b))` is +4 without the pointer
+// declaration but +8 with it, a named `TSpcSlice slice(b)` moves the popped
+// slice instead, and dropping the NpcEventIsClean binder is -8 of frame.
 static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int fVar1 = interp->pop().getDataInt();
 
+	TBaseNPC* npc;
 	char buffer[32];
 	snprintf(buffer, 32, "モンテ%d", fVar1);
-	TBaseNPC* npc = JDrama::TNameRefGen::search<TBaseNPC>(buffer);
+	npc = JDrama::TNameRefGen::search<TBaseNPC>(buffer);
 
 	int b;
 	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && NpcEventIsClean(npc))
