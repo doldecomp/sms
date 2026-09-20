@@ -613,6 +613,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 
 DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 {
+	char trash[0x10];
 	TPoiHana* self = (TPoiHana*)spine->getBody();
 
 	if (spine->getTime() == 0) {
