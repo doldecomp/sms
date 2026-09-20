@@ -80,7 +80,9 @@ void TSunModel::load(JSUMemoryInputStream& param_1)
 		volumeName = cSunsetVolumeName;
 	}
 
+	char trash1[4];
 	char path[0x100];
+	char trash2[4];
 	snprintf(path, sizeof(path), "%s/%s", volumeName, "model.bmd");
 	unk44 = J3DModelLoaderDataBase::load(JKRGetResource(path), modelFlags);
 	unk48 = new J3DModel(unk44, 0, 1);
