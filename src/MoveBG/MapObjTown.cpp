@@ -85,6 +85,26 @@ TDoor::TDoor(const char* name)
 // &mInitialPosition.y once (`addi r3, r31, 0x110`) and reads the sink offset
 // through it; a TU-local reference-returning inline is folded straight back to
 // the member offset, so the binding has to come from somewhere else.
+// Binding level worth +16 of low region, landing
+// TManhole::animationFinished's frame at 0x58 (batch 121).
+static inline MActor* MapObjTownGetMActor(const TManhole* p)
+{
+	MActor* mActor = p->getMActor();
+	return mActor;
+}
+
+static inline TMario* MapObjTownGetMario()
+{
+	TMario* mario = gpMarioOriginal;
+	return mario;
+}
+
+static inline TMapCollisionManager* MapObjTownColManager(const TManhole* p)
+{
+	TMapCollisionManager* manager = p->mMapCollisionManager;
+	return manager;
+}
+
 void TManhole::touchPlayer(THitActor*)
 {
 	mState = STATE_NORMAL;
@@ -92,14 +112,14 @@ void TManhole::touchPlayer(THitActor*)
 		mPosition.y = getInitialPosition().y;
 		return;
 	}
-	if (gpMarioOriginal->getStatus() == MARIO_STATUS_HIP_DROP
-	    && gpMarioOriginal->mPosition.y < mPosition.y) {
+	if (MapObjTownGetMario()->getStatus() == MARIO_STATUS_HIP_DROP
+	    && MapObjTownGetMario()->mPosition.y < mPosition.y) {
 		getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
 		getMActor()
 		    ->getFrameCtrl(ANM_TYPE_BCK)
 		    ->setFrame(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 		               + SMSGetAnmFrameRate());
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
+		MapObjTownGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
 		                                nullptr, 0, 4);
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		SMSRumbleMgr->start(0x15, 0xF, (f32*)nullptr);
@@ -115,7 +135,7 @@ void TManhole::touchPlayer(THitActor*)
 		               + SMSGetAnmFrameRate());
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		mMapCollisionManager->unk8->setAllBGType(0x400);
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
+		MapObjTownGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
 		                                nullptr, 0, 4);
 		unk150 = 1;
 		SMSRumbleMgr->start(0x15, 0xF, (f32*)nullptr);
@@ -129,33 +149,25 @@ void TManhole::touchPlayer(THitActor*)
 		}
 		if (!unk152) {
 			unk152 = 1;
-			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_DOWN, &mPosition,
+			MapObjTownGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_DOWN, &mPosition,
 			                                0, nullptr, 0, 4);
 		}
-		if (mPosition.y > mInitialPosition.y - mDownHeight)
+		if (mPosition.y > getInitialPosition().y - mDownHeight)
 			mPosition.y = mPosition.y - mDownSpeed;
 		else
-			mPosition.y = mInitialPosition.y - mDownHeight;
+			mPosition.y = getInitialPosition().y - mDownHeight;
 		unk148 = 1.0f;
-		unk14C = mInitialPosition.y - mPosition.y;
+		unk14C = getInitialPosition().y - mPosition.y;
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		return;
 	}
 
 	if (unk152) {
 		unk152 = 0;
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_UP, &mPosition, 0,
+		MapObjTownGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_UP, &mPosition, 0,
 		                                nullptr, 0, 4);
 	}
 	appeared();
-}
-
-// Binding level worth +16 of low region, landing
-// TManhole::animationFinished's frame at 0x58 (batch 121).
-static inline MActor* MapObjTownGetMActor(const TManhole* p)
-{
-	MActor* mActor = p->getMActor();
-	return mActor;
 }
 
 bool TManhole::animationFinished()
@@ -184,18 +196,6 @@ bool TManhole::animationFinished()
 		return true;
 	}
 	return false;
-}
-
-static inline TMario* MapObjTownGetMario()
-{
-	TMario* mario = gpMarioOriginal;
-	return mario;
-}
-
-static inline TMapCollisionManager* MapObjTownColManager(const TManhole* p)
-{
-	TMapCollisionManager* manager = p->mMapCollisionManager;
-	return manager;
 }
 
 void TManhole::appeared()
