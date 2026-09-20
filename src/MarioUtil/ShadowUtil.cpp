@@ -257,6 +257,9 @@ void TMBindShadowBody::entryDrawShadow()
 {
 	f32 eps = JGeometry::TUtil<f32>::epsilon();
 
+	// TODO: instruction-identical and frame-exact at 0x98 after calc() reads
+	// getPosition(); remaining residue is FPR colouring on epsilonEquals
+	// (f0/f1) and the inlined calc() TVec3 vs TBGCheckData* slot order.
 	if (gpMarioPos->epsilonEquals(mActor->getPosition(), eps)) {
 		if (!gpBindShadowManager->unk65) {
 			gpBindShadowManager->unk65 = true;
@@ -269,7 +272,7 @@ void TMBindShadowBody::entryDrawShadow()
 
 void TMBindShadowBody::calc()
 {
-	JGeometry::TVec3<f32> pos = mActor->mPosition;
+	JGeometry::TVec3<f32> pos = mActor->getPosition();
 
 	f32 y = pos.y;
 	f32 z = pos.z;
