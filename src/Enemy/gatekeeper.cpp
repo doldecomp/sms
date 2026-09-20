@@ -542,7 +542,8 @@ void TBiancoGateKeeper::deathRumble()
 	if (SMS_IsMarioTouchGround4cm()) {
 		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != NULL) {
-			f32 t        = 1.0f - fc->getFrame() / (f32)fc->getEnd();
+			f32 t = fc->getFrame() / (f32)fc->getEnd();
+			t     = 1.0f - t;
 			mRumblePower = t * getRumblePow();
 			SMSRumbleMgr->start(8, &mRumblePower);
 		}
@@ -1089,6 +1090,13 @@ DEFINE_NERVE(TNerveBGKAwakeDamage, TLiveActor)
 	return false;
 }
 
+// A by-value read of the guard member: retail reloads unk296 for the
+// increment, so the test must not share the load (fireWanwan ladder 322).
+static inline s8 GateKeeperReviveCount(const TBiancoGateKeeper* p)
+{
+	return p->unk296;
+}
+
 DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 {
 	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
@@ -1099,26 +1107,26 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 		      && self->mVariant != TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 		     || self->unk296 != 0)) {
 			self->startFinishDemo();
-			self->getMActor()->setBpkFromIndex(0);
-			J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(ANM_TYPE_BPK);
+			GatekeeperGetMActor(self)->setBpkFromIndex(0);
+			J3DFrameCtrl* fc = GatekeeperGetMActor(self)->getFrameCtrl(ANM_TYPE_BPK);
 			if (fc != NULL) {
 				fc->setFrame(0.0f);
 				fc->setRate(SMSGetAnmFrameRate());
 			}
 			JPABaseEmitter* emitter
-			    = gpMarioParticleManager->emitAndBindToMtxPtr(
+			    = GatekeeperGetMarioParticleManager()->emitAndBindToMtxPtr(
 			        GATEKEEPER_JPA_MS_GKPA_DEAD, self->getModel()->getAnmMtx(6),
 			        0, nullptr);
 			if (emitter)
 				SMSSetEmitterPolColor(emitter, 6);
-			gpMarioParticleManager->emitAndBindToMtxPtr(
+			GatekeeperGetMarioParticleManager()->emitAndBindToMtxPtr(
 			    GATEKEEPER_JPA_MS_GKPA_DEADSMOKE,
 			    self->getModel()->getAnmMtx(0), 0, nullptr);
 		}
 	}
 
 	if (spine->getTime() == 0x154) {
-		gpMarioParticleManager->emitAndBindToMtxPtr(
+		GatekeeperGetMarioParticleManager()->emitAndBindToMtxPtr(
 		    GATEKEEPER_JPA_MS_GKPA_KEMURI, self->getModel()->getAnmMtx(0), 2,
 		    nullptr);
 		SMSGetMSound()->startSoundActor(MSD_SE_DM_OSEN_DISAPPEAR,
@@ -1131,7 +1139,7 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		if ((self->mVariant == TBiancoGateKeeper::VARIANT_RICO_GATEKEEPER
 		     || self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
-		    && self->unk296 == 0) {
+		    && GateKeeperReviveCount(self) == 0) {
 			self->unk296 += 1;
 			self->mHitPoints = 3;
 			if (self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
