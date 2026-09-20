@@ -120,6 +120,15 @@ TRollEnemySaveLoadParams::TRollEnemySaveLoadParams(const char* prm)
 	TParams::load(mPrmPath);
 }
 
+// Binding level over the raw tracer member. The getTracer() form was +0x10
+// on the two nerves that paste rollMove; the raw member is the +8 that
+// lands both frames.
+static inline TGraphTracer* IgaigaRollTracer(TIgaiga* p)
+{
+	TGraphTracer* tracer = p->unk124;
+	return tracer;
+}
+
 // UNUSED, 0xf8 in the map: the rolling-along-the-graph step that the three
 // igaiga nerves share.
 void TIgaiga::rollMove()
@@ -127,7 +136,7 @@ void TIgaiga::rollMove()
 	if (isReachedToGoalXZ()) {
 		if (jumpToNextGraphNode() >= 0)
 			flagJump();
-		const TGraphNode& current = getTracer()->getCurrent();
+		const TGraphNode& current = IgaigaRollTracer(this)->getCurrent();
 		if (current.getRailNode()->mFlags & 0x40)
 			return;
 
@@ -137,7 +146,9 @@ void TIgaiga::rollMove()
 	walkBehavior(2, 1.0f);
 }
 
-// UNUSED, 0x48 in the map: pop after too many sprays.
+// UNUSED, 0x48 in the map: pop after too many sprays. TNerveIgaigaWaterHit
+// pastes the flag-and-push through its own spine parameter; a named mSpine
+// local here is the extra lwz that kept that execute at 99.4.
 void TIgaiga::waterExplosion()
 {
 	TSpineBase<TLiveActor>* spine = mSpine;
@@ -282,6 +293,14 @@ static inline f32 IgaigaTraceSpeed(const TGraphTracer* tracer)
 	return tracer->unkC;
 }
 
+// Binding level over the raw tracer member, unique to TRollEnemy::flagJump
+// (the rollMove binder is a different function so the families stay separate).
+static inline TGraphTracer* IgaigaJumpTracer(TRollEnemy* p)
+{
+	TGraphTracer* tracer = p->unk124;
+	return tracer;
+}
+
 void TRollEnemy::flagJump()
 {
 	// Hop toward the current graph node, 30 up, at the tracer's speed.
@@ -289,12 +308,15 @@ void TRollEnemy::flagJump()
 	getTracer()->getCurrent().getPoint((Vec*)&target);
 	mPosition.y += 30.0f;
 
-	f32 speed = IgaigaTraceSpeed(getTracer());
+	f32 speed = IgaigaTraceSpeed(IgaigaJumpTracer(this));
 	JGeometry::TVec3<f32> vel
 	    = calcVelocityToJumpToY(target, speed, getGravityY());
 	unk1A8    = 1;
 	mVelocity = vel;
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	// TODO: frame-exact; the three 12-byte objects sit 4 bytes low of
+	// retail (allocation order). Declaration order of speed vs target
+	// does not move them.
 }
 
 bool TRollEnemy::isCollidMove(THitActor* param_1)
@@ -590,6 +612,14 @@ void TIgaiga::kill()
 	TSmallEnemy::kill();
 }
 
+// Binding level over the virtual getSaveParam(), unique to moveObject so
+// it does not reprice calcHitScale / behaveToWater.
+static inline TSmallEnemyParams* IgaigaMoveParams(TIgaiga* p)
+{
+	TSmallEnemyParams* params = p->getSaveParams();
+	return params;
+}
+
 void TIgaiga::moveObject()
 {
 	TWalkerEnemy::moveObject();
@@ -597,13 +627,16 @@ void TIgaiga::moveObject()
 	// It slowly deflates back toward half size after being swollen.
 	unk1CC = MsClamp(unk1CC - 0.0002f, 0.5f, 1.0f);
 
-	f32 attackRadius = getSaveParams()->getSLAttackRadius();
-	f32 attackHeight = getSaveParams()->getSLAttackHeight();
+	f32 attackRadius = IgaigaMoveParams(this)->getSLAttackRadius();
+	f32 attackHeight = IgaigaMoveParams(this)->getSLAttackHeight();
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
 	f32 damageHeight = getSaveParams()->getSLDamageHeight();
 
 	f32 base   = unk154 * unk1CC;
 	mBodyScale = MsClamp(unk1E4 * base, base, 3.0f * mBodyScale);
+	// TODO: frame-exact; the two MsClamp products sit in f6/f7 swapped
+	// and the getCurrent tracer/web pair is r3/r4 swapped. Naming the
+	// unk1E4*base product made the first clamp worse.
 
 	f32 ratio         = mBodyScale / unk154;
 	mScaledBodyRadius = 8.0f * (mBodyScale * mBodyRadius)
@@ -619,11 +652,15 @@ void TIgaiga::moveObject()
 	mTurnSpeed  = unk1A4->mSLTurnSpeedLow.get();
 
 	// Fallen below the node it is heading for: dead, and not by Mario.
-	JGeometry::TVec3<f32> node;
-	unk124->getCurrent().getPoint((Vec*)&node);
-	if (mPosition.y < 50.0f + node.y) {
-		kill();
-		unk1BC = 1;
+	// getCurrent() is expanded twice: once for the rail-flag test (lwzx of
+	// the rail pointer) and again for getPoint (add of the node address).
+	if (unk124->getCurrent().getRailNode()->mFlags & 0x40) {
+		JGeometry::TVec3<f32> node;
+		unk124->getCurrent().getPoint((Vec*)&node);
+		if (mPosition.y < 50.0f + node.y) {
+			kill();
+			unk1BC = 1;
+		}
 	}
 }
 
@@ -696,12 +733,22 @@ bool TIgaiga::isReachedToGoalXZ()
 
 void TIgaiga::setWalkAnm() { setBckAnm(3); }
 
+// Two-local binder over getMActor()->getModel(), unique to TIgaiga so it
+// does not reprice TGorogoro's IgaigaMActor family. +0x10 is the setDeadAnm
+// frame residue.
+static inline J3DModel* IgaigaIgaModel(TIgaiga* p)
+{
+	MActor* mActor = p->getMActor();
+	J3DModel* model = mActor->getModel();
+	return model;
+}
+
 void TIgaiga::setDeadAnm()
 {
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		unk1C0 = mPosition;
 	} else {
-		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(0);
+		MtxPtr mtx = IgaigaIgaModel(this)->getAnmMtx(0);
 		unk1C0.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	}
 
@@ -711,14 +758,15 @@ void TIgaiga::setDeadAnm()
 	else
 		setBckAnm(1);
 
-	// The goop it leaves is the body's scale, clamped.
+	// The goop it leaves is the body's scale, clamped. Retail loads the
+	// manager before the stamp copy so r6 is live across the clamp.
+	TIgaigaManager* mgr = (TIgaigaManager*)mManager;
 	JGeometry::TVec3<f32> stamp(mScaling);
 	stamp.scale(unk1CC * unk1E4);
 	mPosition.y = mGroundHeight;
-	stamp.x     = MsClamp(stamp.x, 0.8f, 1.5f);
-	stamp.z     = stamp.x;
-	stamp.y     = stamp.x;
-	((TIgaigaManager*)mManager)->unk60->generatePolluteModel(mPosition, stamp);
+	stamp.x = MsClamp(stamp.x, 0.8f, 1.5f);
+	stamp.y = stamp.z = stamp.x;
+	mgr->unk60->generatePolluteModel(mPosition, stamp);
 }
 
 void TIgaiga::setMeltAnm()
@@ -819,10 +867,13 @@ DEFINE_NERVE(TNerveIgaigaWaterHit, TLiveActor)
 	if (spine->getTime() == 0)
 		igaiga->setBckAnm(6);
 
-	// Fully swollen: twenty more hits and it bursts.
+	// Fully swollen: twenty more hits and it bursts. The die-nerve push
+	// goes through this execute's spine, not a reload of mSpine; that
+	// extra lwz is the whole remaining residue of waterExplosion.
 	if (igaiga->unk1E4 >= igaiga->unk1A4->mSLExpandMax.get()) {
 		if (igaiga->unk1E8 > 20) {
-			igaiga->waterExplosion();
+			igaiga->onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
+			spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
 			return TRUE;
 		}
 		igaiga->unk1E8++;
@@ -1272,18 +1323,29 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 	}
 }
 
+// Binding level unique to TGorogoro::flagJump so it does not share a
+// family with TRollEnemy::flagJump's IgaigaJumpTracer.
+static inline TGraphTracer* IgaigaGoroJumpTracer(TGorogoro* p)
+{
+	TGraphTracer* tracer = p->getTracer();
+	return tracer;
+}
+
 void TGorogoro::flagJump()
 {
 	JGeometry::TVec3<f32> target;
-	unk124->getCurrent().getPoint((Vec*)&target);
+	IgaigaGoroJumpTracer(this)->getCurrent().getPoint((Vec*)&target);
 	mPosition.y += 30.0f;
 
-	f32 speed = unk124->unkC;
+	f32 speed = IgaigaGoroJumpTracer(this)->unkC;
 	JGeometry::TVec3<f32> vel
 	    = calcVelocityToJumpToY(target, speed, getGravityY());
 	unk1A8    = 1;
 	mVelocity = vel;
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
+	// TODO: frame-exact; target and the jump-velocity return sit in
+	// each other's slots. Declaring vel first then assigning moves the
+	// copy and is worse.
 }
 
 void TGorogoro::setDeadAnm()
