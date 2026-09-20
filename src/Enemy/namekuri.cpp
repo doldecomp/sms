@@ -250,7 +250,13 @@ static BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 		if (gpCurNameKuri == nullptr || !gpCurNameKuri->isAttackJump())
 			return true;
 
-		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(
+		// TODO: the raw mModel read (one inline level fewer than
+		// getModel()) lands retail's 0xa0 frame, but the matrix still sits
+		// 4 low: retail's named block is Mtx + 0x10 where ours is Mtx +
+		// 0x14, so one 4-byte named item above the matrix belongs in the
+		// pool instead. Retail also binds &local_48 into r30 (`mr r4, r30`,
+		// the one missing instruction) and colours 1.0f into f1.
+		MtxPtr mA = gpCurNameKuri->getMActor()->mModel->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 
 		f32 s = JMASin(gpCurNameKuri->unk1AC);
