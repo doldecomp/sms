@@ -510,6 +510,14 @@ bool TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 	return false;
 }
 
+// +8 of low region for TBossManta::init (frame 0xa0 -> 0xa8).
+// Binder over the raw member: the same binder over getManager() is +0x10.
+static inline TBossMantaManager* BossMantaGetManagerForInit(TBossManta* p)
+{
+	TBossMantaManager* manager = (TBossMantaManager*)p->mManager;
+	return manager;
+}
+
 void TBossManta::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -521,7 +529,8 @@ void TBossManta::init(TLiveManager* manager)
 	mHitPoints = getMaxHitPoints();
 
 	mHeadHeight = 5000.0f;
-	initHitActor(0x8000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
+	u32 actorType = 0x8000004;
+	initHitActor(actorType, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
 	unk170.set(0.0f, 0.0f, 1.0f);
 	calcRootMatrix();
 	kill();
@@ -537,13 +546,15 @@ void TBossManta::init(TLiveManager* manager)
 		sRwingJointIndex       = jointNames->getIndex("jnt_Rwing2");
 		sLwingJointIndex       = jointNames->getIndex("jnt_Lwing2");
 
-		getManager()->initAdditionalCollision();
+		BossMantaGetManagerForInit(this)->initAdditionalCollision();
 	}
 
 	onLiveFlag(LIVE_FLAG_UNK8);
 	offLiveFlag(LIVE_FLAG_UNK100);
 	unk1A4 = 0;
 	unk150 = 0.5f;
+	// TODO: frame is exact (0xa8). Remaining is the known-open this-vs-
+	// rodata-pool callee-saved swap (retail r31=pool/r30=this).
 }
 
 void TBossManta::moveObject()
@@ -1418,6 +1429,9 @@ void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 	GXSetNumTevStages(1);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+	// TODO: instruction-identical; the GXColor by-value copy sits at
+	// 0x14/0x18 (low pool) where retail has it at 0x84/0x88 (named).
+	// Naming the colour or using TColor drops the two-slot copy.
 	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, 0x4 });
 	GXSetAlphaUpdate(GX_TRUE);
 	GXSetDstAlpha(GX_FALSE, 0);
