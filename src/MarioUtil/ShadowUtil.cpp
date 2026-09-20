@@ -783,6 +783,20 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 		SMS_SettingDrawShape(mModelDatas[1]->getModelData(), 0);
 }
 
+// NOTE: the six local classes below are the TU's whole `missing`/`extra` list
+// (4116 bytes of .text, 96 bytes of .data).  Their bodies are byte-exact --
+// every word of all six `makeDL`s matches retail once the relocated fields are
+// masked -- and the only difference is the `$NNNN` id MWCC mangles into the
+// local-class name: we emit `$906`/`$907`/`$925`/`$930`/`$942`/`$951` where
+// retail has `$2171`/`$2172`/`$2190`/`$2195`/`$2207`/`$2216`.  The relative
+// spacing (0, 1, 19, 24, 36, 45) is identical, so nothing in this file is
+// wrong; the counter simply starts ~1265 too low, and it starts too low in the
+// precompiled header: an empty TU already reaches id 191, and the TU's first
+// three .data aggregates are numbered @136/@156/@165 against retail's
+// @1210/@1411/@1431.  Fixing it means growing include/SMS.pch, not this file.
+// The same offset is why every `@NNNN` and `calctablex$NNNN` here is renamed;
+// objdiff rescues those positionally but cannot rescue a mangled function name.
+
 // TODO: two instructions apart (98.8%) -- one GXPosition3f32 in the first cube
 // wants f25 where we emit f28, and one local-static registration pair is
 // ordered differently -- but the frame is 0x190 against retail's 0x400. The
@@ -1354,16 +1368,30 @@ void TMBindShadowManager::request(const TCircleShadowRequest& param_1,
 	}
 }
 
-// TODO: retail copies the position into a slot at the bottom of the frame
-// (0x14) and `delta` into a named slot at 0x48, i.e. the first copy is an
-// inline-expansion temporary and only `delta` is a named local; ours names
-// both.  It also forwards that low copy into the `mRequests[n] = param_1`
-// struct assignment, which we reload from r4.
+// TODO: instruction-exact; the frame is 0x40 against retail's 0x58.  The
+// by-value TU-local accessor below restored retail's shape (the position copy
+// is an unnamed inline temporary, only `delta` is a named local), but 0x18 of
+// pool is still missing.  Measured rungs, all instruction-neutral: a one-local
+// `gpCamera` binder +8, nesting the position fork in a `const TVec3&` fork +8,
+// nesting the camera binder in a bare `gpCamera` fork +8 -- together they land
+// the frame at exactly 0x58 and `delta` at retail's 0x48/0x4c/0x50 (99.7%),
+// but they leave the position temporary at 0x38 where retail keeps it at 0x14,
+// so the pool is being grown below the temporary instead of above it and the
+// spelling is wrong.  Retail's pool is 8 bytes, then the temporary, then 0x28
+// dead -- 0x28 is align8(sizeof(TCircleShadowRequest)), so the carrier is
+// probably an unconsumed request object inside an inlined callee.  Retail also
+// forwards that low copy into the `mRequests[n] = param_1` struct assignment,
+// which we reload from r4.
+static inline JGeometry::TVec3<f32>
+ShadowUtilRequestPos(const TCircleShadowRequest& request)
+{
+	return request.mPosition;
+}
+
 void TMBindShadowManager::forceRequest(const TCircleShadowRequest& param_1,
                                        u32 param_2)
 {
-	JGeometry::TVec3<f32> pos   = param_1.mPosition;
-	JGeometry::TVec3<f32> delta = pos;
+	JGeometry::TVec3<f32> delta = ShadowUtilRequestPos(param_1);
 	delta -= gpCamera->getUnk124();
 	f32 dist = delta.squared();
 
