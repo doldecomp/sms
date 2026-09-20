@@ -92,6 +92,7 @@ void TSandBlock::control()
 		    && getDistance(SMS_GetMarioPos()) > mScaling.x * 100.0f) {
 			TMapObjBase::awake();
 			JGeometry::TVec3<f32> scaleCopy = mScaling;
+			char trash[0xC];
 			mScaling.set(mInitialScaling);
 			setUpMapCollision(0);
 			mScaling.set(scaleCopy);
