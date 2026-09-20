@@ -198,13 +198,21 @@ void TMapObjBall::put()
 	calcCurrentMtx();
 }
 
+// Consumed const-ref binding under the unnamed TVec3 copy: +4 of pool
+// so the copy sits at retail's 0x20 and the frame stays 0x38, while the
+// unnamed temporary still keeps TUtil<f32>::sqrt out of line.
+static inline f32 MapObjBallHoldSpeed(const JGeometry::TVec3<f32>& vel)
+{
+	return JGeometry::TVec3<f32>(vel).length();
+}
+
 void TMapObjBall::hold(TTakeActor* param_1)
 {
 	// A ball still moving fast cannot be picked up. The unnamed temporary
 	// is what keeps JGeometry::TUtil<f32>::sqrt out of line, as the ROM has
 	// it (weak from boid.cpp): a named copy puts sqrt one level shallower
 	// and expands it.
-	if (JGeometry::TVec3<f32>(getVelocity()).length() > 10.0f)
+	if (MapObjBallHoldSpeed(mVelocity) > 10.0f)
 		return;
 
 	TMapObjGeneral::hold(param_1);
@@ -272,7 +280,9 @@ u32 TMapObjBall::touchWater(THitActor* param_1)
 
 	const JGeometry::TVec3<f32>& flow = getWaterSpeed(param_1);
 	// TODO: retail loads flow.x before the drag factor; every spelling tried
-	// (scaleAdd, the fork at each site, the raw member) loads the drag first.
+	// (scaleAdd, the fork at each site, the raw member, a named flow.x)
+	// loads the drag first. The per-site fork loads flow first but drops
+	// CSE of drag, swaps the fmadds operands, and grows the frame +8.
 	f32 drag = MapObjBallWaterDrag(this);
 	pushed.x += flow.x * drag;
 	pushed.y += flow.y * drag;
@@ -921,12 +931,23 @@ void TResetFruit::thrown()
 	mState = STATE_LIVING;
 }
 
+// Inlined TMapObjBall::hold expansion for TResetFruit::hold. getVelocity()
+// inside this callee is what sizes the second TVec3; the standalone
+// TMapObjBall::hold uses MapObjBallHoldSpeed instead.
+static inline void MapObjBallDoHold(TMapObjBall* p, TTakeActor* actor)
+{
+	if (JGeometry::TVec3<f32>(p->getVelocity()).length() > 10.0f)
+		return;
+	p->TMapObjGeneral::hold(actor);
+	p->mVelocity.zero();
+}
+
 void TResetFruit::hold(TTakeActor* param_1)
 {
 	if (JGeometry::TVec3<f32>(mVelocity).length() > 10.0f)
 		return;
 
-	TMapObjBall::hold(param_1);
+	MapObjBallDoHold(this, param_1);
 	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
 
