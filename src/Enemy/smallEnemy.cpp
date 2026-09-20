@@ -249,19 +249,23 @@ void TSmallEnemy::attackToMario()
 {
 	sendAttackMsgToMario();
 
-	// TODO: wtf
-	JGeometry::TVec3<f32> local_14(0, 0, 0);
-	(void)&local_14;
+	JGeometry::TVec3<f32> linearVelocity(0.0f, 0.0f, 0.0f);
 
-	JGeometry::TVec3<f32> local_20;
-	local_20.sub(mPosition, SMS_GetMarioPos());
-	MsVECNormalize(&local_20, &local_20);
-	mVelocity.set(local_20);
+	JGeometry::TVec3<f32> toMario;
+	// NOTE: the first component is read through getPosition() and the rest
+	// raw; that mix is what lands the low pool retail's inlines leave behind.
+	toMario.set(getPosition().x - SMS_GetMarioPos().x,
+	            mPosition.y - SMS_GetMarioPos().y,
+	            mPosition.z - SMS_GetMarioPos().z);
+	MsVECNormalize(&toMario, &toMario);
 
-	JGeometry::TVec3<f32> v;
-	v.scale(mBodyScale * mBodyRadius, local_20);
-	v += local_14;
-	mLinearVelocity = v;
+	mVelocity.x = toMario.x;
+	mVelocity.z = toMario.z;
+
+	toMario.scale(mBodyScale * mBodyRadius);
+
+	linearVelocity += toMario;
+	mLinearVelocity = linearVelocity;
 }
 
 void TSmallEnemy::reset()
@@ -949,7 +953,9 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 	JGeometry::TVec3<f32> result(0.0f, 0.0f, 0.0f);
 
 	JGeometry::TVec3<f32> local_14;
-	local_14.sub(mPosition, param_1->getPosition());
+	local_14.set(mPosition.x - param_1->mPosition.x,
+	             mPosition.y - param_1->mPosition.y,
+	             mPosition.z - param_1->mPosition.z);
 
 	if (local_14.x == 0.0f && local_14.y == 0.0f && local_14.z == 0.0f)
 		local_14.x += 1.0f;
