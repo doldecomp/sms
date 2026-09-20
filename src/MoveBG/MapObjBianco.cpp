@@ -79,6 +79,9 @@ static void setMtxRotY(MtxPtr mtx, f32 degrees)
 	mtx[2][3] = 0.0f;
 }
 
+// TODO: instruction-exact; retail ranks `angle` in f31 above the three loop
+// literals where ours ranks it below them (f28). Declaring `angle` before the
+// sound call costs three instructions and splitting its initialiser is worse.
 void TBigWindmill::control()
 {
 	TMapObjBase::control();
@@ -977,12 +980,11 @@ u32 TBellWatermill::touchWater(THitActor* water)
 {
 	mSprayedThisFrame = true;
 
-	f32 speed = unk158;
-	if (fabsf(speed) > mRotSpeedMax) {
+	if (fabsf(unk158) > mRotSpeedMax) {
 		mRiseSpeed += mRiseAccel;
 		unk158 += unk15C;
 	} else {
-		unk158 = speed + unk15C;
+		unk158 = unk158 + unk15C;
 	}
 
 	if (unk158 > unk164)
