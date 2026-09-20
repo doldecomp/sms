@@ -261,6 +261,16 @@ inline static void identity34(MtxPtr mtx)
 	mtx[0][0] = 1.0f;
 }
 
+static inline TMirrorModelManager* MapMirrorGetManager()
+{
+	return gpMirrorModelManager;
+}
+
+static inline MActor* MapMirrorGetActor(const TMirrorModel* model)
+{
+	return model->unk4;
+}
+
 void TMirrorModel::init(const char* name)
 {
 	unk4 = SMS_MakeMActorWithAnmData(name, gpMirrorModelManager->getUnk20(), 2,
@@ -270,13 +280,13 @@ void TMirrorModel::init(const char* name)
 
 	TPosition3f local_44;
 	local_44.identity();
-	unk4->getModel()->setBaseTRMtx(local_44);
-	unk4->calc();
-	unk4->getModel()->getModelData()->getMaterialNodePointer(0)->change();
+	MapMirrorGetActor(this)->getModel()->setBaseTRMtx(local_44);
+	MapMirrorGetActor(this)->calc();
+	MapMirrorGetActor(this)->getModel()->getModelData()->getMaterialNodePointer(0)->change();
 
-	if (!gpMirrorModelManager->unk24)
-		gpMirrorModelManager->findMirrorCamera();
-	unk8 = gpMirrorModelManager->unk24;
+	if (!MapMirrorGetManager()->unk24)
+		MapMirrorGetManager()->findMirrorCamera();
+	unk8 = MapMirrorGetManager()->unk24;
 
 	initPlaneInfo();
 }
