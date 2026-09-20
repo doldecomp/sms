@@ -5288,3 +5288,142 @@ bestätigt `build/GMSJ01/mario.dol: OK`. Rundenfolge 61-63 zusammen:
 `matched_functions` 9050→9083 (+33), `matched_code_percent`
 45,73 %→46,34 % (+0,61 Prozentpunkte) — drei projektweite Header-Bug-
 Funde plus zwei starke reguläre Batch-Runden.
+
+### Regression entdeckt und behoben: `CPolarSubCamera::controlByCameraCode_` (Runde-59-Fix war unvollständig)
+
+Der beim frischen Kandidaten-Scan für Runde 64 erneut auftauchende
+99,93 %-Fuzzy-Match für eine bereits in Runde 59 als „byte-exakt"
+gemeldete Funktion deckte eine ECHTE Regression/unvollständige
+Verifikation auf: der Runde-59-Fix (`char trash[0x28]` VOR
+`local_24`) korrigierte nur die GESAMTE Rahmengröße (0x50→0x78),
+bewegte aber `local_24` selbst nicht — laut der etablierten Regel
+bewirkt vor einem Lokal deklariertes Trash nur Padding OBERHALB,
+ohne das Lokal selbst zu verschieben. `local_24` blieb bei 0x2c statt
+der benötigten 0x54(r1) — ein echter 0x28-Byte-Versatz in mehreren
+eingebetteten Stack-Offset-Immediates (`stw r3, 0x2c(r1)` statt
+`0x54(r1)` usw.), keine reine Label-/Adress-Normalisierungsdifferenz.
+Der Runde-59-Agent hatte demnach nur die Gesamtrahmengröße geprüft,
+nicht jedes einzelne eingebettete Offset-Immediate — genau die Lücke,
+die das neu erkannte Zwei-Pool-Modell (Muster 7k, Runde 63) erklärt.
+**Behoben** durch Verschieben von `char trash[0x28];` von VOR nach
+NACH der `local_24`-Deklaration (Commit `dacacbff`), per Byte-für-
+Byte-Diff gegen Retail direkt verifiziert (alle Instruktions-
+Hex-Wörter inkl. aller Stack-Offset-Immediates identisch). Volles
+Rebuild bestätigt: `matched_functions` 9083→9084 (+1, korrekt),
+`dtk shasum -c` weiterhin OK.
+
+**Lehre für alle künftigen Runden**: Byte-exakte Verifikation MUSS
+jedes einzelne eingebettete Stack-Offset-Immediate prüfen, nicht nur
+Opcode-Sequenz und Gesamt-Rahmengröße — ein Diff, der nur Mnemonics
+vergleicht, kann genau diese Klasse Fehler übersehen. Alle Runde-64-
+Subagenten wurden mit dieser verschärften Anforderung instruiert
+(literaler Hex-Byte-Spalten-Diff der rohen 4-Byte-Instruktions-
+kodierung, keine Normalisierung außer Adressen/Label-Nummerierung).
+
+### Nach vierundsechzigster Iterationsrunde (24-Kandidaten-Batch, 18 Fixes — neuer Rekord, verschärfte Byte-Verifikation)
+
+**18 neue Fix-Commits**, alle mit der oben beschriebenen verschärften
+Byte-für-Byte-Verifikation bestätigt (roher 4-Byte-Instruktions-
+encoding-Vergleich, nicht nur Opcode-Text):
+
+1. `TObjectLightWithDBSet::makeDrawBuffer` (Commit `a5d1b35b`) —
+   `char trash[32]`, identisches Muster zur Schwesterfunktion
+   `TPlayerLightWithDBSet::makeDrawBuffer` (Runde 63).
+2. `TMario::swimPaddle` (Commit `887775a4`) — `char trash[8]`.
+3. `TNerveFireWanwanEscape::execute` (Commit `8ec3a213`) — `char
+   trash[8]`.
+4. `TNerveBEelTearsWaterHit::execute` (Commit `592ad0b6`) — `char
+   trash[0x18]`.
+5. `TNerveTelesaDie::execute` (Commit `35eed88f`) — `char trash[8]`.
+6. `TNerveStayPakkunAppear::execute` (Commit `7304445c`) — zwei
+   identische `JGeometry::TVec3<f32>(1.5f)`-Konstruktor-Aufrufstellen
+   zu einer gemeinsamen benannten Lokalen zusammengeführt (identische
+   Technik zu `TPollutionLayer::fire`, Runde 63).
+7. `SMSSetupGameRenderingInfo` (Commit `b68ae85f`) — `char trash[16]`.
+8. `TSunModel::load` (Commit `3b27211e`) — zweiseitiges Padding
+   (`trash1[4]` davor, `trash2[4]` danach um `char path[0x100]`).
+9. `JAIBasic::checkEntriedSeq` (Commit `81c3977f`) — `u8 trash[8]`
+   nach `u8 pos`.
+10. `TCardManager::writeBlock_` (Commit `81022e2f`) — zweiseitiges
+    Padding (`trash[4]` davor, `trash2[20]` danach um `CARDFileInfo
+    info`).
+11. `TNerveHino2Damage::execute` (Commit `d38062ae`) — `char
+    trash[0x48]` (72 Byte).
+12. `JPABaseEmitter::calc` (Commit `712d3d39`) — `char trash[8]`.
+13. `TMarioParticleManager::emitTry` (Commit `b24ea779`) — **echter
+    Bug**: if/else-Zweige für `emitterCallBackBindToMtxPtr` vs.
+    `...BindToSRTMtxPtr` waren vertauscht (Flag-Semantik
+    `INFO_FLAG_BIND_TO_RT_MTX` zeigte auf die falsche Callback-
+    Variante). Plus Pattern 7i (`u8 trash = param_3;`, echter
+    Initialisierer statt totem `char trash[N]`).
+14. `MSRandPlay::randPlay` (Commit `8073cfe8`) — dreifach wiederholter
+    `vec->mTrans`-Unterausdruck in einem `JAIActor`-Konstruktor-Aufruf
+    beeinflusste MWCCs CSE-/Stack-Kandidaten-Registrierung; Ersatz
+    durch eine einmal initialisierte `const Vec* trans`-Lokale (für
+    Argument 2 und 3, Argument 1 bleibt der Direktausdruck) verschob
+    den `actor`-Lokal-Slot exakt um die nötigen 4 Byte.
+15. `TApplication::proc` (Commit `a1373f5d`, + Header
+    `include/System/MenuDir.hpp`) — **VIER unabhängige Bugs**: (a)
+    vertauschte Argumente bei `TFlagManager::setFlag(3, 0x20001)` →
+    `setFlag(0x20001, 3)`; (b) `sizeof(TMenuDirector)` war 4 Byte zu
+    klein (`new` allozierte 0x54 statt Retails 0x58) — geteilter
+    Header um ein `/* 0x54 */ u32 unk54;`-Feld ergänzt, mit vollem
+    Vorher/Nachher-Regressionsvergleich beider Einbinder-Dateien
+    (Application.cpp, MenuDir.cpp) verifiziert, null Regressionen;
+    (c) `delete mDirector;` (Flag `+1`, „zerstören UND freigeben")
+    musste `mDirector->~TDirector();` sein (expliziter Destruktor-
+    Aufruf, Flag `-1`, „nur zerstören, Speicher wird andernorts per
+    `mHeap->freeAll()` freigegeben") — Flag-Semantik aus Retails
+    eigenem `__dt__13TMenuDirectorFv`-Epilog dekodiert und gegen zwei
+    weitere `delete`-Aufrufstellen in derselben Datei kreuzverifiziert;
+    (d) `char trash[0x68]` (104 Byte) Stack-Padding.
+16. `TEnemyManager::copyFromShared` (Commit `378dbcf6`) — Deklarations-
+    reihenfolge-Fix zweier `Mtx`-Lokalen (identische Namen/Reihenfolge
+    bereits als Konvention in `hinokuri2.cpp` etabliert) plus `char
+    trash[12]`.
+17. `TCommonLauncher::stateLaunch` (Commit `dd4f91e4`) — subtiler
+    Deklarationsreihenfolge-Fix: einfaches Vertauschen zweier Lokalen
+    behob zwar die Stack-Offsets, regressierte aber eine FPR-Zuweisung
+    in einer nicht verwandten inline-expandierten `MsWrap`-Instruktion;
+    korrekte Lösung war, die Deklaration (ohne Konstruktor-Argumente)
+    an die richtige Stelle zu setzen, aber die tatsächliche Wert-
+    zuweisung (`.set(...)`) an ihrer ursprünglichen Verwendungsstelle
+    zu belassen — trennt Stack-Slot-Zuteilung von Instruktions-
+    Terminplanung.
+18. `TMario::kickFruitEffect` (Commit `b227e351`) — **echter Bug**:
+    `setEmitterTranslation()`-Wrapper schreibt tatsächlich in
+    `mTrans` (Offset +0x19c), aber Retail beschreibt direkt
+    `mGlobalTranslation` (Offset +0x160) — irreführend benannter
+    Wrapper, Direktzugriff auf das richtige Feld nötig.
+
+**Drei Kandidaten scheiterten sauber ohne Dateiänderung** (Agent
+brach während der Untersuchung ab, kein Commit, keine Änderung
+zurückzusetzen — für eine künftige Runde vorgemerkt):
+`TMario::~TMario` (Destruktor tatsächlich header-inline, nicht in
+MarioInit.cpp lokalisierbar wie angenommen), `TMapObjBase::
+getDistance`, `TMarDirector::fireGetStar`.
+
+**Weitere gründlich dokumentierte Sackgassen** (sauber
+zurückgesetzt): `TMareEventDepressWall::depressing` (Anonymer-Pool-
+Diskrepanz nicht-uniform über zwei bedingte Temporärwerte verteilt,
+ein Versuch mit dem bereits deklarierten aber leeren `emitEffect(int)`-
+Stub regressierte einen vorher exakten Codeblock, zurückgesetzt),
+`TWoodBox::kill` (152-Byte zusammenhängender unbenutzter Block am
+Boden des Rahmens, MWCC platziert Frontend-Lokale IMMER oberhalb von
+Inline-Temporärwerten unabhängig von der Deklarationsposition —
+bestätigt Muster 8 erneut), `MtxToQuat` (ein einziges vertauschtes
+Operandenpaar in einer kommutativen `fadds`-Instruktion, 24
+erschöpfend getestete Summierreihenfolgen, alle Varianten bestätigen
+die Original-Quelltextform als bereits optimal — vermutlich
+Compiler-internes Werteordnungs-/Scheduling-Verhalten, nicht aus
+Quelltext heraus beeinflussbar).
+
+### Session-Gesamtstand nach Runde 64
+
+**518 verifizierte echte Fixes in 175 Commits** (inkl. der Runde-59-
+Regressionskorrektur). `matched_functions`: **9102** (von 9083 zu
+Rundenbeginn, +18 exakt wie erwartet — bestätigt keine unentdeckten
+Regressionen durch den `MenuDir.hpp`-Header-Fix). `matched_code_percent`:
+**46,64 %** (weiterer Rekord-Einzelrunden-Zuwachs, +0,29
+Prozentpunkte). Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c`
+bestätigt `build/GMSJ01/mario.dol: OK`.
