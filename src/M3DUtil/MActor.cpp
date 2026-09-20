@@ -360,6 +360,15 @@ void MActor::setLightID(s16 light_id)
 	mLightId = light_id;
 }
 
+// Binding level over TBGCheckData::getNormal() at the three component
+// reads, landing MActor::setLightData's frame at 0x68.
+static inline const JGeometry::TVec3<f32>&
+MActorGetNormal(const TBGCheckData* p)
+{
+	const JGeometry::TVec3<f32>& n = p->getNormal();
+	return n;
+}
+
 void MActor::setLightData(const TBGCheckData* param_1,
                           const JGeometry::TVec3<f32>& param_2)
 {
@@ -376,9 +385,10 @@ void MActor::setLightData(const TBGCheckData* param_1,
 
 	mLightId = 0;
 	if (param_1->isShadow()) {
-		f32 dist = param_2.x * param_1->mNormal.x
-		    + param_2.z * param_1->mNormal.z + param_1->mPlaneDistance;
-		f32 planeY = -dist / param_1->mNormal.y;
+		f32 dist = param_2.x * MActorGetNormal(param_1).x
+		    + param_2.z * MActorGetNormal(param_1).z
+		    + param_1->getPlaneDistance();
+		f32 planeY = -dist / MActorGetNormal(param_1).y;
 
 		if (200.0f + planeY > param_2.y)
 			setLightID(param_1->getData());
