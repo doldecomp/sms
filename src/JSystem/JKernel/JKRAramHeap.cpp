@@ -116,7 +116,21 @@ int JKRAramHeap::freeGroup(u8 groupId)
 	return 0;
 }
 
-void JKRAramHeap::freeAll() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
+void JKRAramHeap::freeAll()
+{
+	lock();
+
+	JSUListIterator<JKRAramBlock> iterator(sAramList.getFirst());
+	while (iterator != sAramList.getEnd()) {
+		delete (iterator++).getObject();
+	}
+
+	JKRAramBlock* block
+	    = new (mHeap, 0) JKRAramBlock(mHeadAddress, 0, mSize, -1, false);
+	sAramList.append(&block->mBlockLink);
+
+	unlock();
+}
 
 void JKRAramHeap::freeTail() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
