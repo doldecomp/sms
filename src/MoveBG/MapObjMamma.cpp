@@ -264,31 +264,55 @@ void TSandBombBase::withered()
 	mTrigger->sleep();
 }
 
+static inline bool SandBombIsSandBomb(const TSandBombBase* p)
+{
+	bool isSandBomb = p->isActorType(0x400000CE) ? true : false;
+	return isSandBomb;
+}
+
+static inline JGeometry::TVec3<f32>* SandBombPos(TSandBomb* p)
+{
+	JGeometry::TVec3<f32>* pos = &p->mPosition;
+	return pos;
+}
+
+static inline MActor* SandBombMActor(const TLiveActor* p)
+{
+	MActor* actor = p->getMActor();
+	return actor;
+}
+
 void TSandBombBase::expanded()
 {
 	TSandBomb* trigger = mTrigger;
+	f32 speed          = mExpandFrameSpeed;
 	trigger->getMActor()->getFrameCtrl(0)->setFrame(
-	    mExpandFrameSpeed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
+	    speed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SAMDBOMB_REVERSE,
-	                          &mTrigger->mPosition, 0, nullptr, 0, 4);
+	                          SandBombPos(mTrigger), 0, nullptr, 0, 4);
 
 	if (mTrigger->animIsFinished())
 		mState = STATE_WITHER;
 }
 
-// TODO: 77.9%. The frame-control advance and the Mario throw are right; the
-// residual is the order of the mTrigger reloads.
+// TODO: frame and instruction count are exact; the residue is FPR colouring,
+// retail putting mExplodeFrameSpeed in f31 and the read frame in f30 where we
+// swap them (the same inversion as TSandBombBase::control's STATE_GROWN arm).
 void TSandBombBase::exploding()
 {
-	mMActor->getFrameCtrl(0)->setFrame(mExplodeFrameSpeed
-	                                   + mMActor->getFrameCtrl(0)->getFrame());
-	mTrigger->getMActor()->getFrameCtrl(0)->setFrame(
-	    mExplodeFrameSpeed + mTrigger->getMActor()->getFrameCtrl(0)->getFrame());
+	f32 speed = mExplodeFrameSpeed;
+	SandBombMActor(this)->getFrameCtrl(0)->setFrame(
+	    speed + mMActor->getFrameCtrl(0)->getFrame());
+
+	TSandBomb* trigger = mTrigger;
+	f32 speed2         = mExplodeFrameSpeed;
+	trigger->getMActor()->getFrameCtrl(0)->setFrame(
+	    speed2 + trigger->getMActor()->getFrameCtrl(0)->getFrame());
 
 	f32 distance = getDistanceXZ(*gpMarioPos);
 
-	if (!isActorType(0x400000CE) && mMActor->getFrameCtrl(0)->getFrame() < 80.0f
+	if (!SandBombIsSandBomb(this) && mMActor->getFrameCtrl(0)->getFrame() < 80.0f
 	    && SMS_GetMarioGrLevel() > gpMarioPos->y - 30.0f
 	    && distance < mMarioJumpRange) {
 		SMS_SendMessageToMario(this, 7);
@@ -336,12 +360,6 @@ void TSandBombBase::waitBeforeExplode()
 
 void TSandBombBase::grow() { mState = STATE_FIRING; }
 
-static inline MActor* SandBombMActor(const TSandBomb* p)
-{
-	MActor* actor = p->getMActor();
-	return actor;
-}
-
 // TODO: frame and instruction count are exact; the remaining difference is
 // FPR colouring in the STATE_GROWN arm, where retail gives `frame` f30 and we
 // give it f31 (retail reserves f31 for the STATE_FIRING speeds).
@@ -364,8 +382,8 @@ void TSandBombBase::control()
 
 	case STATE_FIRING: {
 		f32 speed0 = mExplodeFrameSpeed;
-		SandBombMActor(trigger)->getFrameCtrl(0)->setFrame(
-		    speed0 + trigger->getMActor()->getFrameCtrl(0)->getFrame());
+		trigger->getMActor()->getFrameCtrl(0)->setFrame(
+		    speed0 + SandBombMActor(trigger)->getFrameCtrl(0)->getFrame());
 
 		TSandBomb* t5 = mTrigger;
 		f32 speed5    = mExplodeFrameSpeed;
@@ -504,11 +522,12 @@ bool TSandCastle::withering()
 void TSandCastle::expanded()
 {
 	TSandBomb* trigger = mTrigger;
+	f32 speed          = mExpandFrameSpeed;
 	trigger->getMActor()->getFrameCtrl(0)->setFrame(
-	    mExpandFrameSpeed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
+	    speed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
 
 	gpMSound->startSoundActor(MSD_SE_OBJ_SAMDBOMB_REVERSE,
-	                          &mTrigger->mPosition, 0, nullptr, 0, 4);
+	                          SandBombPos(mTrigger), 0, nullptr, 0, 4);
 
 	if (mTrigger->animIsFinished())
 		mState = STATE_WITHER;
