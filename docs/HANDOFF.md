@@ -63,10 +63,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `grupp` hamukuri ([hamukuri unit ladder](8e496982-fd7d-4bd4-82c8-ba7b3537638c)): `THamuKuri::isHitValid` exact via inlined `HamukuriSerialKill` binder; `generateBody` frame exact (TNerveBase `bl` still open). All **61.92→61.93**, exact **11,371→11,372**.
 - Landed `grpuo` MapObjMonte drawOneRope frame; Option +1 (`setType`).
 - Total: **61.93%** matched, game **53.93%**, linked **492 / 732**, exact **11,372**.
-- Landed `grpuu` bossManta ([bossManta unit ladder](f75c852c-ff95-42af-8542-4f64bd046451)): +1 exact `TMantaMessageState::update` (loop index at declaration); `control` frame via two-site getMActor + getVelocity. Unit 41.15→43.14. All **61.96→61.97**, exact **11,375→11,376**. Do not third-pass setupEfbAlpha/moveObject slot-order or collidedWithWater +8 (data-breaking hitCounts).
-- Landed `grput` chuuhana structural `isCollidMove`; EventWatcher +3.
-- Running: `grpuv` / MapObjMamma ([MapObjMamma unit ladder](39a15cdb-036a-4882-84b0-52d526815708)). Refill: popo.
-- Parked without new lever: gesso BodyCallback, bosseel, hamukuri generateBody, fireWanwan near-misses, chuuhana bind/Attack TVec3::sub.
+- Landed `grpuv` MapObjMamma ([MapObjMamma unit ladder](39a15cdb-036a-4882-84b0-52d526815708)): +1 exact `TSandLeafBase::grow`; `TSandCastle::withering` 76→99.31 via named frame speed. Unit 53.65→55.59. All **61.97→61.98**, exact **11,376→11,377**. Do not third-pass waitBeforeExplode flag slot / SandBombBase FPR / castle expanded getMActor bl without header.
+- Landed bossManta +1; chuuhana structural; EventWatcher +3.
+- Running: `grpuw` / popo ([popo unit ladder](40047c15-af8b-491e-bdfb-67492dfe67f4)). Refill: MapObjBall.
+- Parked without new lever: gesso BodyCallback, bosseel, hamukuri generateBody, fireWanwan, chuuhana bind/Attack TVec3::sub, bossManta slot-order.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 

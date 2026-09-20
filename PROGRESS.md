@@ -11,12 +11,12 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 53.98% | 12.06% | 166 / 385 |
+| Game | 53.99% | 12.06% | 166 / 385 |
 | JSystem | 90.24% | 75.06% | 180 / 198 |
 | SDK | 95.71% | 95.54% | 146 / 149 |
-| All | 61.97% | 26.71% | 492 / 732 |
+| All | 61.98% | 26.71% | 492 / 732 |
 
-11,376 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,377 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
 ## What recent batches have done
 
@@ -76,7 +76,7 @@ Since then, work has been **whole-TU enemy reconstruction from the map**: scaffo
 | `Enemy/tobiPuku` | 94.71% | 90 / 120 |
 | `Enemy/igaiga` | 94.61% | 52 / 95 |
 | `Enemy/chuuhana` | 99.44% | 43 / 57 |
-| `MoveBG/MapObjMamma` | 90.52% | 66 / 103 |
+| `MoveBG/MapObjMamma` | 96.43% | 82 / 103 |
 | `MoveBG/MapObjMonte` | 94.35% | 28 / 54 |
 | `MoveBG/MapObjRailBlock` | 99.48% | 37 / 46 |
 | `MoveBG/MapObjDolpic` | 99.46% | 31 / 40 |
