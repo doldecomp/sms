@@ -985,9 +985,9 @@ void TMuddyBoat::control()
 	switch (mState) {
 	case 1:
 		mSpeed *= mSpeedDecay;
-		gpMSound->startSoundActorWithInfo(MSD_SE_OBJ_DORO_FLOAT, &mPosition,
-		                                  nullptr, fabsf(mSpeed), 0, 0,
-		                                  nullptr, 0, 4);
+		MapObjMareGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_OBJ_DORO_FLOAT, &mPosition, nullptr, fabsf(mSpeed), 0, 0,
+		    nullptr, 0, 4);
 		if (mTurnSpeed != 0.0f) {
 			mRotation.y += mTurnSpeed;
 			mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
@@ -1013,48 +1013,49 @@ void TMuddyBoat::control()
 			makeObjDefault();
 			makeObjAppeared();
 
-			JGeometry::TVec3<f32> scale(2.0f * mScaling.x, 2.0f * mScaling.y,
-			                            3.0f * mScaling.z);
+			JGeometry::TVec3<f32> scale(2.0f * mScaling.x,
+			                            2.0f * getScaling().y,
+			                            3.0f * getScaling().z);
 			mEffectPos.set(mPosition.x, mPosition.y - mYOffset, mPosition.z);
 			emitAndSRT(PARTICLE_MS_ENM_DISAP_A, 0, &mEffectPos, mRotation,
 			           scale);
 			emitAndSRT(PARTICLE_MS_ENM_DISAP_B, 0, &mEffectPos, mRotation,
 			           scale);
-			gpMSound->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0,
-			                          nullptr, 0, 4);
+			MapObjMareGetMSound()->startSoundActor(
+			    MSD_SE_SMOKE_EFFECT, &mPosition, 0, nullptr, 0, 4);
 			mState = 1;
 		}
 		break;
 	}
 }
 
+static inline MtxPtr MapObjMareGetAnmMtx0(const TMapObjBase* object)
+{
+	J3DModel* model = object->getModel();
+	MtxPtr mtx      = model->getAnmMtx(0);
+	return mtx;
+}
+
 void TMuddyBoat::calc()
 {
 	f32 z = mPosition.z;
-	f32 y = mPosition.y - mYOffset;
+	f32 y = mPosition.y - getObjCollisionHeightOffset();
 	f32 waveY = y + gpMapObjWave->getWaveHeight(mPosition.x, z);
 	f32 yaw   = mRotation.y;
 	f32 x     = mPosition.x;
-	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), x, waveY, z, 0,
+	MsMtxSetXYZRPH(MapObjMareGetAnmMtx0(this), x, waveY, z, 0,
 	               (s16)(182.04445f * yaw), 0);
 
-	// The redundant identity initialiser is the ROM's: MTXScale overwrites
-	// all twelve elements right after it.
+	// Column-wise `a = b = c = v` chains, retail's store order
+	// (MapObjBianco ladder 337). MTXScale overwrites all twelve afterwards.
 	Mtx scale;
-	scale[0][0] = 1.0f;
-	scale[0][1] = 0.0f;
-	scale[0][2] = 0.0f;
-	scale[0][3] = 0.0f;
-	scale[1][0] = 0.0f;
-	scale[1][1] = 1.0f;
-	scale[1][2] = 0.0f;
-	scale[1][3] = 0.0f;
-	scale[2][0] = 0.0f;
-	scale[2][1] = 0.0f;
-	scale[2][2] = 1.0f;
-	scale[2][3] = 0.0f;
+	scale[0][3] = scale[1][3] = scale[2][3] = 0.0f;
+	scale[0][2] = scale[1][2] = 0.0f;
+	scale[0][1] = scale[2][1] = 0.0f;
+	scale[1][0] = scale[2][0] = 0.0f;
+	scale[0][0] = scale[1][1] = scale[2][2] = 1.0f;
 	MTXScale(scale, mInitialScaling.x, mInitialScaling.y, mInitialScaling.z);
-	MTXConcat(getModel()->getAnmMtx(0), scale, getModel()->getAnmMtx(0));
+	MTXConcat(MapObjMareGetAnmMtx0(this), scale, MapObjMareGetAnmMtx0(this));
 
 	if (mSpeed != 0.0f) {
 		mEffectPos.set(mPosition.x, mPosition.y - mYOffset, mPosition.z);
