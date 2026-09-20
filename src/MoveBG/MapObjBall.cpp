@@ -1071,32 +1071,37 @@ void TResetFruit::pick(THitActor* actor)
 
 void TResetFruit::kicked()
 {
+	// Assigned in the last || term so the load sits after the two flag
+	// tests and the value stays in f5 through the later fmsubs.
+	f32 marioY;
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) || isState(STATE_HOLDING)
-	    || SMS_GetMarioSpeedY() < 0.0f)
+	    || (marioY = SMS_GetMarioSpeedY()) < 0.0f)
 		return;
 
 	JGeometry::TVec3<f32> vel(mVelocity);
 	if (JGeometry::TVec3<f32>(vel).y <= 0.0f) {
 		// Already in the air and heading away from Mario: leave it alone.
 		JGeometry::TVec3<f32> away(vel);
-		BOOL airborne = checkLiveFlag(LIVE_FLAG_AIRBORNE);
-		f32 toward    = away.x * (SMS_GetMarioPos().x - mPosition.x)
+		f32 toward = away.x * (SMS_GetMarioPos().x - mPosition.x)
 		    + away.y * 0.0f
 		    + away.z * (SMS_GetMarioPos().z - mPosition.z);
-		// TODO: 91.4%. The ROM materialises the airborne flag into a byte
-		// and tests it with cmpwi, i.e. the predicate went through an
-		// int/BOOL; neither checkLiveFlag nor isAirborne reproduces that
-		// here, and the ROM also reloads the 0.0f for the comparison
-		// instead of keeping it in a register.
+		// checkLiveFlag2 is the signed BOOL that emits retail's
+		// `li 1/0; cmpwi`. toward has to be computed first so that
+		// materialisation lands after the dot product.
+		BOOL airborne = checkLiveFlag2(LIVE_FLAG_AIRBORNE);
 		if (airborne) {
 			if (toward > 0.0f)
 				return;
 		}
+		// TODO: 95.6%. Frame is 0x98 against retail 0xe0 (ladder 330's
+		// TVec3-at-bottom-of-pool class). Retail also interleaves the
+		// mario.x-pos.x subtract with the away stores and multiplies
+		// away.y by the live 0.0f in f2 first.
 
 		if (JGeometry::TVec3<f32>(vel).y == 0.0f) {
 			mVelocity.y = unk178;
 		} else {
-			mVelocity.y = unk174 * SMS_GetMarioSpeedY()
+			mVelocity.y = unk174 * marioY
 			    - unk160 * JGeometry::TVec3<f32>(vel).y;
 		}
 
