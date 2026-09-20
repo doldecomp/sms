@@ -536,11 +536,12 @@ void TGesso::setPolluteGoal()
 		                     SMS_GetMarioPos().y,
 		                     SMS_GetMarioPos().z + range.rand());
 
-		// TODO: retail's third argument is the member at this+0x1b8, not a
-		// stack slot, so this call takes a member reference we do not have.
-		JGeometry::TVec3<f32> local;
-		calcVelocityToJumpToY(local, polluteObjSpeed, polluteObjGravity);
-		mPolluteVelocity = local;
+		// Retail passes this+0x1b8 (mPolluteVelocity) as the jump
+		// target. Frame is 0x10 short and the return dest sits at
+		// 0x44 vs 0x50; a named TVec3 copy of the return adds
+		// instructions, binders scramble the param FPRs.
+		mPolluteVelocity = calcVelocityToJumpToY(
+		    mPolluteVelocity, polluteObjSpeed, polluteObjGravity);
 	} else {
 		mPolluteVelocity = SMS_GetMarioPos();
 		mPolluteVelocity.x -= mPosition.x;
@@ -850,10 +851,16 @@ void TGesso::turnIn()
 
 bool TGesso::turning()
 {
-	if (mTurnAngle + 7.2f <= 180.0f) {
+	// Named step+angle land the inlined frame at 0x28 and load
+	// mTurnAngle before 7.2f. Residue is a volatile FPR swap
+	// (retail f1=angle/f2=step; we emit the pair reversed).
+	f32 angle = mTurnAngle;
+	f32 step  = 7.2f;
+	angle += step;
+	if (angle <= 180.0f) {
 		mBodyTrackingAngle = 90.0f;
-		mRotation.y += 7.2f;
-		mTurnAngle += 7.2f;
+		mRotation.y += step;
+		mTurnAngle += step;
 		return false;
 	}
 
@@ -950,14 +957,12 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 
 f32 TGessoPolluteObj::getNowGravity()
 {
-	// TODO: 98.1%, the whole residue is that the ROM parks the params
-	// pointer in r4 and keeps unk16C alive in r3. A named params local and
-	// testing the flag first were both measured worse (85.0 and 48.1).
-	f32 gravity = unk16C->getSaveParams()->mSLPolluteObjGravity.get();
-	if (unk16C->unk1D8 == 0)
+	TGesso* gesso = unk16C;
+	f32 gravity   = gesso->getSaveParams()->mSLPolluteObjGravity.get();
+	if (gesso->unk1D8 == 0)
 		return gravity;
 
-	return unk16C->getSaveParams()->mSLPolluteObjLinerG.get();
+	return gesso->getSaveParams()->mSLPolluteObjLinerG.get();
 }
 
 void TGessoPolluteObj::pollute()
