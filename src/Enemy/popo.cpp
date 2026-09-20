@@ -901,10 +901,11 @@ void TPopo::flyBehavior()
 		                                          nullptr, 0, 4);
 }
 
-// The frame here is accessor pool: a bound pump scale, a bound manager, a
-// getPosition() copy and one bound mExplosionWater read land 0x90.
-// TODO: the two vector temporaries still sit 4 bytes low, and retail reads
-// mNum's address and value before the division.
+// Frame 0x90: bound pump (two sites), bound manager, bound mExplosionWater.
+// mNum's address and value have to be taken after the named pump/scaleMax
+// loads so they sit between those lfs and the fdivs; `num = n; num *= ratio`
+// keeps the product in the converted-int FPR.
+// TODO: the two vector temporaries still sit 4 bytes low (open "4 low" class).
 static inline f32 PopoPumpScale(TPopo* popo)
 {
 	f32 scale = popo->mPumpScale;
@@ -930,7 +931,7 @@ void TPopo::explosion()
 		mPumpScale *= 0.9f;
 
 	TPopoManager* manager = PopoExplosionManager(this);
-	JGeometry::TVec3<f32> pos(getPosition());
+	JGeometry::TVec3<f32> pos(mPosition);
 	pos.y += 100.0f;
 	if (mSpine->getTime() % 2 == 0) {
 		JGeometry::TVec3<f32>& dirValue
@@ -940,8 +941,12 @@ void TPopo::explosion()
 		dirValue = dir;
 	}
 
-	s32& numValue = PopoExplosionWater(manager)->mNum.value;
-	f32 num = numValue * (mPumpScale / mSaveParams->getSLWaterScaleMax());
+	TWaterEmitInfo* water = PopoExplosionWater(manager);
+	f32 pump              = PopoPumpScale(this);
+	f32 scaleMax          = mSaveParams->mSLWaterScaleMax.value;
+	s32& numValue         = water->mNum.value;
+	f32 num               = numValue;
+	num *= pump / scaleMax;
 	if (num < 2.0f)
 		num = 2.0f;
 	numValue = num;
