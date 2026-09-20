@@ -559,12 +559,18 @@ void TMapObjSwitch::registerObjInfo(THideObjInfo* info)
 	unk13C += 1;
 }
 
-// Binding level over a raw member read, worth +16 of low region in
+// Setter level around the first colour store, worth +4 of low region in
+// TMapObjSwitch::load.
+static inline void MapObjTownSetColorR(TMapObjSwitch* p, u8 v)
+{
+	p->unk148.r = v;
+}
+
+// Binding level over a raw member read, worth +8 of low region in
 // TMapObjSwitch::load (batch 127).
 static inline s32 MapObjTownUnk138L0(const TMapObjSwitch* p)
 {
-	s32 v138 = p->unk138;
-	return v138;
+	return p->unk138;
 }
 
 static inline s32 MapObjTownUnk138(const TMapObjSwitch* p)
@@ -588,7 +594,7 @@ void TMapObjSwitch::load(JSUMemoryInputStream& stream)
 	stream >> r;
 	stream >> g;
 	stream >> b;
-	unk148.r = (u8)r;
+	MapObjTownSetColorR(this, (u8)r);
 	unk148.g = (u8)g;
 	unk148.b = (u8)b;
 
