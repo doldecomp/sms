@@ -146,6 +146,15 @@ void TBaseNPC::bind()
 	// the TU-local binding position (99.6%), `add()` for the two `+=`
 	// (identical), `mGroundPlane` for `getGroundPlane()` (99.8%), and a dead
 	// named `TVec3` after nextPos (+16 of frame).
+	// Also rejected here (caller-side consumed-inside helper, batch 282):
+	// a TU-local `void f(T*, TVec3 next, const TVec3&)` that does
+	// `next -= pos; setLinearVelocity(next)` puts the temp at 0x18 in a
+	// 0x38 frame (below=12, above=0, 134 instructions once an extra void
+	// level keeps `sub` a `bl`). A `gpMap` binder on top restores 0x48
+	// but lands those +0x10 *below* the temp (back to 0x28) and swaps
+	// r30/r31. Confirms RULES: caller-side levers cannot put bytes above
+	// the live `bl sub` temporary. Needs a header/research spelling of
+	// retail's (4, 24) geometry, not another TU-local binder.
 	JGeometry::TVec3<f32> nextPos = mPosition;
 	nextPos += mLinearVelocity;
 	nextPos += mVelocity;
