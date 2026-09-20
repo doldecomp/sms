@@ -109,9 +109,8 @@ void TOneShotGenerator::loadAfter()
 		initHitActor(0x2000001, 1, 0x80000000, 80.0f, 120.0f, 80.0f, 120.0f);
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 
-		static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
-		    ->getChildren()
-		    .push_back(this);
+		TIdxGroupObj* group = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
+		group->getChildren().push_back(this);
 		gpConductor->registerOtherObj(this);
 	}
 }
