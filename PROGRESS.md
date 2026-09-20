@@ -4681,3 +4681,95 @@ Kandidaten bleiben für eine künftige Runde offen.
 **9039** (von 9031 zu Rundenbeginn), `matched_code_percent`: 45,57 %.
 Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 `build/GMSJ01/mario.dol: OK`.
+
+### Nach neunundfünfzigster Iterationsrunde (25-Kandidaten-Batch: 12 neue Matches — stärkste Runde bisher, überwiegend reine Stack-Layout-Lücken)
+
+**12 neue Fixes, alle commitet — fast ausschließlich Muster-7-
+Stack-Layout-Lücken, jeweils in 1-2 Iterationen gelöst:**
+
+1. `CPolarSubCamera::controlByCameraCode_` (Commit `fa009596`) —
+   `char trash[0x28]` vor der `TVec3`-Lokalen.
+2. `TNpcThrow::throwMario` (Commit `cc4a82e1`) — `f32 trash;` nach der
+   Vec3-Lokalen.
+3. `TLiveManager::perform` (Commit `aae5ef05`) — `char trash[16]`,
+   klassische Phantom-Frame-Lücke, diesmal direkt lösbar.
+4. `TMarioGamePad::read` (Commit `4f3d0b32`) — `char trash[4]` nach
+   `resetPort`.
+5. `JDrama::TOrthoProj::perform` (Commit `857fd2a6`) — `char trash[8]`
+   am Funktionsanfang.
+6. `TDrawSyncManager::threadFunc` (Commit `3a1ee283`) — zweiseitiges
+   Padding (`t1[4]` davor, `t2[4]` danach) um die `msg`-Lokale in der
+   Schleife.
+7. `TOneShotGenerator::loadAfter` (Commit `ead51be7`) — Muster 6:
+   `TNameRefGen::search(...)`-Kettenausdruck musste in eine benannte
+   `TIdxGroupObj* group`-Lokale materialisiert werden, bevor
+   `->getChildren().push_back(this)` aufgerufen wird.
+8. `TMovieSubTitle::setupResource` (Commit `d939e52f`) — `char
+   trash[12]` nach `char buffer[256]`.
+9. `JAIBasic::sendPlayingSeCommand` (Commit `4f40e7f9`) — `u16 trash;`
+   nach zwei `u16`-Lokalen, verschiebt einen nachfolgenden
+   Doppel-Spill-Temporärwert über eine 8-Byte-Ausrichtungsgrenze.
+10. `TBGPolDrop::move` (Commit `6a7a7b9f`) — zwei Bugs: `char
+    trash[12]` nach `checkData` PLUS ein echter Logikfehler
+    (`unk50->setBckFromIndex(13)` benutzte den falschen MActor-
+    Zeiger, muss `unk54->setBckFromIndex(13)` sein).
+11. `TShimmer::perform` (Commit `1103319b`) — zwei Bugs: drei falsche
+    virtuelle Aufrufe (Vtable-Slots 0x0c/0x10/0x14 von J3DModel waren
+    je um eine Position verschoben — `entry()`/`calc()`/`update()`
+    vertauscht) PLUS eine neue Stack-Technik: fünf `Mtx`/
+    `J3DTransformInfo`-Lokale mussten von Block-Scope (innerhalb eines
+    `if`) auf Funktions-Scope gehoben werden, um sowohl die
+    Rahmengröße als auch jeden Einzeloffset zu treffen (Trash-Arrays
+    wurden hier vollständig wegoptimiert, da unbenutzt).
+12. `TMessageLoader::TMessageLoader(const char*)` (Commit `fb1fc4d2`)
+    — `char trash[8]`, MWCC hatte zwei adressgenommene `u32`-Lokale
+    volleliminiert (Wertfluss komplett registerbasiert), Retail
+    reservierte trotzdem 8 Byte ungenutzten Speicher dafür.
+
+**Fünfte bis achte unabhängige Bestätigung der „Phantom-Frame-
+Reservierung"-Fehlerklasse, mit neuen Auslöser-Varianten:**
+`ObjHitCheckActors` (NO-MATCH) fand DREI echte Logikfehler
+(`entryGroup` statt `checkAndEntryGroup` an 4 Aufrufstellen, falscher
+`TStrategy::unk10`-Index, `getAttackRadius/Height` statt
+`getDamageRadius/Height`) und behob sie korrekt — der Instruktions-
+Strom wurde dadurch 100 % identisch, blieb aber durch eine
+unerreichbare 32-Byte-Rahmenlücke um `JGadget::TList`-Iterator-
+Temporärwerte blockiert; nicht commitet trotz korrekter Logik-Fixes
+(Hard Rule). Weitere Varianten: `MapEventSirenaWatch`/
+`MapEventDolpicRiccoGate` (`TFlagT<u16>`-Trigger, aber Retail-Rahmen
+diesmal KLEINER als unserer statt größer — Trash-Padding kann nur
+hinzufügen, nicht entfernen, daher strukturell unlösbar in diese
+Richtung), `NpcCollisionBind`/`PerformListLoad` (inline `JGadget::
+TList`-Iterator-Temporärwerte, gleiche Fehlerfamilie wie
+`ObjHitCheckActors`), `AreaCylinderLoad` (ein `readS32()`-
+Schleifenzähler-Temporärwert bleibt trotz jeder Deklarationsreihen-
+folge auf einem fixen Slot gepinnt), `MarDirectorCtorRetry` (kombiniert
+zwei bekannte Auslöser: `JGadget::TVector_pointer<T>`-Standard-Ctor-
+Kette PLUS 5× vorausgehende `TFlagT<Us>`-Konstruktion — bestätigt,
+dass mehrere Auslöser sich in einer Funktion überlagern können),
+`CameraWarpPosAndAt`/`ModelUtilRideMove`/`ProgSelectPerform` (jeweils
+eine unerreichbare 4-12-Byte-Lücke im untersten „Outgoing-Parameter"-
+Bereich des Rahmens, unterhalb aller benannten Lokalen — Trash-Arrays
+werden dort entweder wegoptimiert oder nach oben verschoben, nie nach
+unten platziert), `WalkerCalcFarthestVertex` (ein `volatile f32`-
+Lokal bleibt bei jeder Padding-Kombination auf festem Offset 0x30
+gepinnt, obwohl ein Nachbar-Array frei verschiebbar ist).
+
+**`J3DModelEntryData`** (NO-MATCH, ~40 Varianten) — kein Phantom-
+Frame-Fall, sondern ein echtes Register-Pool-Dilemma: MWCC hat zwei
+getrennte Callee-saved-Register-Pools (einen für Compiler-CSE-
+Temporärwerte r24/r25, einen für Quelltext-Lokale r20/r21). Zwei von
+drei Diskrepanzen exakt gelöst (Zugriff über `getShapePacketArray()`
+statt Direktzugriff; If-Zweig ohne benannte Lokale, um CSE über
+`countDLSize()` zu erzwingen), aber der Else-Zweig verlangt
+widersprüchlich sowohl eine früh materialisierte Adresse (nur über
+eine benannte Lokale möglich) als auch deren Zuordnung zum Temp-Pool
+(nur ohne benannte Lokale möglich) — ein zirkulärer Constraint ohne
+Lösung auf Quelltext-Ebene.
+
+### Session-Gesamtstand nach Runde 59
+
+**465 verifizierte echte Fixes in 119 Commits.** `matched_functions`:
+**9048** (von 9039 zu Rundenbeginn), `matched_code_percent`: 45,67 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`.
