@@ -298,6 +298,11 @@ TBEelTears::TBEelTears(const char* name)
 {
 }
 
+static inline TMActorKeeper* BEelTearsKeeper(const TBEelTears* tears)
+{
+	return tears->mMActorKeeper;
+}
+
 void TBEelTears::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
@@ -312,14 +317,15 @@ void TBEelTears::init(TLiveManager* manager)
 	const ResTIMG& screenTexInfo = *screenTexture->getTexture()->getTexInfo();
 
 	J3DSkinDeform* deform = new J3DSkinDeform;
-	MActor* tearsActor    = mMActorKeeper->getMActor("tears.bmd");
+	MActor* tearsActor    = BEelTearsKeeper(this)->getMActor("tears.bmd");
 	tearsActor->getModel()->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	tearsActor->resetDL();
 	SMS_ChangeTextureAll(tearsActor->getModel()->getModelData(), "M_dummy",
 	                     screenTexInfo);
 	tearsActor->setLightType(LIGHT_TYPE_INDIRECT);
 
-	MActor* waterHitActor = mMActorKeeper->getMActor("tears_waterhit.bmd");
+	MActor* waterHitActor
+	    = BEelTearsKeeper(this)->getMActor("tears_waterhit.bmd");
 	SMS_ChangeTextureAll(waterHitActor->getModel()->getModelData(), "M_dummy",
 	                     screenTexInfo);
 	waterHitActor->setLightType(LIGHT_TYPE_INDIRECT);
