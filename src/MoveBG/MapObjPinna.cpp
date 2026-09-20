@@ -104,7 +104,7 @@ void TFerrisWheel::initMapObj()
 	mGondolaNum = getModel()->getModelData()->getJointNum() - 1;
 	mGondolas   = new TMapObjBase*[mGondolaNum];
 
-	for (u16 i = 0; i < mGondolaNum; i++) {
+	for (u16 i = 0; i < getGondolaNum(); i++) {
 		mGondolas[i] = TMapObjBaseManager::newAndRegisterObj("FerrisGondola");
 		mGondolas[i]->appear();
 	}

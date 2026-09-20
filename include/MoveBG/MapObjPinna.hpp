@@ -27,6 +27,8 @@ public:
 	virtual void initMapObj();
 	TFerrisWheel(const char* name = "観覧車");
 
+	int getGondolaNum() const { return mGondolaNum; }
+
 public:
 	/* 0x138 */ int mGondolaNum;
 	/* 0x13C */ TMapObjBase** mGondolas;
