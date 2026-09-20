@@ -24,6 +24,14 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// +4 low-pool fork: with getMapCollisionManager / getPosition /
+// getObjCollisionHeightOffset / getUnk8, the 0x60 frame lands but the
+// TVec3 sits at 0x48; reading mColCount through this fork puts it at 0x4c.
+static inline u16 MapObjBaseColCount(TMapObjBase* self)
+{
+	return self->mColCount;
+}
+
 void TMapObjBase::changeObjMtx(MtxPtr mtx)
 {
 	mPosition.x = mtx[0][3];
@@ -214,6 +222,10 @@ void TMapObjBase::stopAnim()
 void TMapObjBase::startControlAnim(u16 param_1)
 {
 	startAnim(param_1);
+	// TODO: retail keeps mMapObjData in r4 and reloads mAnim after the
+	// bounds compare (`lwz r4, 0x10(r4)`). CSE of mAnim into r4 eats that
+	// reload; named data/anim, getMapObjData(), getMActor(), and a TU-local
+	// unk8 helper all failed to break it (the helper also grew the frame).
 	if (mMapObjData->mAnim && param_1 < mMapObjData->mAnim->unk0)
 		mMActor->getFrameCtrl(mMapObjData->mAnim->unk4[param_1].unk8)
 		    ->setRate(0);
@@ -444,25 +456,27 @@ void TMapObjBase::control()
 
 void TMapObjBase::setGroundCollision()
 {
-	if (!mMapCollisionManager
-	    || mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_MOVE)
+	if (!getMapCollisionManager()
+	    || getMapCollisionManager()->unk8->mKind
+	           != TMapCollisionBase::KIND_MOVE)
 		return;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2)) {
-		if (mColCount == 0 && unk102 == 0)
+		if (MapObjBaseColCount(this) == 0 && unk102 == 0)
 			return;
 		--unk102;
-		if (mColCount != 0)
+		if (MapObjBaseColCount(this) != 0)
 			unk102 = 4;
 	}
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		if (mMapCollisionManager->unk8)
-			mMapCollisionManager->unk8->moveMtx(mtx);
+		if (mMapCollisionManager->getUnk8())
+			mMapCollisionManager->getUnk8()->moveMtx(mtx);
 	} else {
-		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
-		                          mPosition.z);
+		JGeometry::TVec3<f32> pos(getPosition().x,
+		                          getPosition().y - getObjCollisionHeightOffset(),
+		                          getPosition().z);
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4)) {
 			mMapCollisionManager->unk8->offFlag(
 			    TMapCollisionBase::FLAG_UNK8000);
@@ -473,7 +487,7 @@ void TMapObjBase::setGroundCollision()
 		} else {
 			mMapCollisionManager->unk8->offFlag(
 			    TMapCollisionBase::FLAG_UNK4000);
-			if (mMapCollisionManager->unk8)
+			if (mMapCollisionManager->getUnk8())
 				mMapCollisionManager->unk8->moveTrans(pos);
 		}
 	}
