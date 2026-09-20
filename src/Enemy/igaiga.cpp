@@ -279,14 +279,21 @@ void TRollEnemy::behaveToWater(THitActor* param_1)
 
 void TRollEnemy::attackToMario() { SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK); }
 
+// Graph.hpp declares no accessor for the tracer's trace speed; parked here
+// rather than in the shared header.
+static inline f32 IgaigaTraceSpeed(const TGraphTracer* tracer)
+{
+	return tracer->unkC;
+}
+
 void TRollEnemy::flagJump()
 {
 	// Hop toward the current graph node, 30 up, at the tracer's speed.
 	JGeometry::TVec3<f32> target;
-	unk124->getCurrent().getPoint((Vec*)&target);
+	getTracer()->getCurrent().getPoint((Vec*)&target);
 	mPosition.y += 30.0f;
 
-	f32 speed = unk124->unkC;
+	f32 speed = IgaigaTraceSpeed(getTracer());
 	JGeometry::TVec3<f32> vel
 	    = calcVelocityToJumpToY(target, speed, getGravityY());
 	unk1A8    = 1;
@@ -1332,7 +1339,7 @@ void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
 	unk124->mPrevIdx  = nearest - 1;
 	TGraphNode* node  = &web->unk0[nearest];
 
-	bool sawMario;
+	BOOL sawMario;
 	JGeometry::TVec3<f32> target;
 	if (MsIsInSight(pos, dir.y, SMS_GetMarioPos(), 2000.0f, 360.0f, -1.0f)) {
 		sawMario = true;
@@ -1376,7 +1383,7 @@ void TGorogoro::generateByGateKeeper(const JGeometry::TVec3<f32>& pos,
 		target.z += pos.z;
 		mVelocity = calcVelocityToJumpToY(target, 15.0f, getGravityY());
 	} else {
-		mVelocity   = calcVelocityToJumpToY(target, 15.0f, getGravityY());
+		mVelocity   = calcVelocityToJumpToY(pos, 15.0f, getGravityY());
 		mRotation.y = MsWrap(MsGetRotFromZaxisY(target), 0.0f, 360.0f);
 	}
 
