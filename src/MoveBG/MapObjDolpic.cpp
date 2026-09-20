@@ -541,6 +541,8 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	                                nullptr, 0, 4);
 
 	JGeometry::TVec3<f32> scale(1.3f);
+	char trash[20];
+	trash[0] = 0;
 
 	unk138.set(mPosition.x, mPosition.y + 100.0f, mPosition.z);
 
