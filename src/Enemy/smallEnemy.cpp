@@ -419,7 +419,8 @@ void TSmallEnemy::setAfterDeadEffect()
 
 void TSmallEnemy::generateItem()
 {
-	f32 rand = TMsRange<f32>(0.0f, 100.0f).rand();
+	TMsRange<f32> genRange(0.0f, 100.0f);
+	f32 rand = genRange.rand();
 	(void)rand; // TODO: due to rand being incorrect
 	f32 eggRate  = getSaveParams()->mSLGenEggRate.get();
 	f32 itemRate = getSaveParams()->mSLGenItemRate.get();
