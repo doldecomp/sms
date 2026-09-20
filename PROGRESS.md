@@ -4924,3 +4924,141 @@ Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
 (2/21) außergewöhnlich hoher Erkenntniswert: 12+ dokumentierte echte
 Gameplay-Bugs in drei Fast-Treffer-Funktionen, davon einer (`TMatrix34::
 concat`) mit projektweitem Einfluss auf mindestens drei Aufrufstellen.
+
+### Nach einundsechzigster Iterationsrunde (dedizierte Header-Fix-Runde: TMatrix34::concat + JGRotation3::setEular — 5 Header-/Funktions-Commits, darunter die schlechteste bisher bekannte Match-Funktion des Projekts geknackt)
+
+**Dediziert der in Runde 60 gefundenen `TMatrix34::concat`-Hypothese
+gewidmet, mit vollständiger Projekt-Regressionsprüfung vor jedem
+Commit.** Ergebnis: FÜNF Commits, zwei geteilte Header vollständig
+korrigiert, zwei Funktionen exakt getroffen — darunter
+`TPolarCamera::perform`, die mit Abstand am schlechtesten
+übereinstimmende nicht-triviale Funktion des gesamten Projekts
+(65,79 % Fuzzy-Match zu Rundenbeginn).
+
+**Commit 1 (`7520c7f5`) — `TMatrix34::concat(a,b)`-Translationsspalte:**
+Ursprüngliche Hypothese aus Runde 60 bestätigt und commitet: die
+Translationsspalte las über die 3×4-Matrixgrenze hinaus
+(`a.at(3,0)`, `b.at(3,1)`, `b.at(3,2)` — gültige Zeilenindizes sind
+nur 0-2). Verifiziert über zwei unabhängige Methoden: (a) algebraische
+Verallgemeinerung der bereits korrekten 1-Argument-`concat(b)`-Form,
+(b) direkter Soll/Ist-Abgleich gegen `PSMTXConcat` in
+`src/dolphin/mtx/mtx.c`, da Retail `concat()` an der
+`BathWaterManager.cpp:1149`-Aufrufstelle NICHT inlined, sondern
+identisch zu diesem SDK-Symbol code-gefaltet hat. Volle
+Projekt-Regressionsprüfung: 9050/9050 `matched_functions` unverändert,
+45,73091 % `matched_code_percent` unverändert — null Regressionen.
+
+**Commit 2 (`b80c4658`) — `TMatrix34::concat(a,b)`-3×3-Rotationsteil
+(vom ersten Commit übersehen):** DREI unabhängige Subagenten
+(`BathWaterManagerRender`, `TPolarCameraPerform`, `JDRSmJ3DActRetry`),
+die parallel an den drei betroffenen Aufrufstellen arbeiteten, fanden
+per Hub-Koordination unabhängig voneinander denselben zweiten Bug:
+auch der 3×3-Linearteil war transponiert (`out[i][j] = Σ_k a.at(k,i)*
+b.at(j,k)` statt der korrekten Standardform `Σ_k a.at(i,k)*b.at(k,j)`).
+Die Translationsspalte allein war zufällig numerisch unauffällig
+geblieben, weil die ersten Testfälle (Translations-only, Diagonal-
+Skalierung) den Rotationsteil-Bug maskierten. Alle drei Agenten
+koordinierten sauber über Hub (ein Agent übernahm probeweise die
+Header-Bearbeitung, die anderen bauten nur gegen den Arbeitsbaum-
+Zustand, niemand committete parallel) — Main verifizierte den finalen
+Diff manuell, führte ein volles Rebuild durch (9050/9050 unverändert,
+45,73091 % unverändert, `fuzzy_match_percent` leicht gestiegen) und
+committete.
+
+**Commit 3 (`72c8ca33`) — `JDrama::TPolarCamera::perform` EXAKT
+GETROFFEN (272/272 Instruktionen, 1088 Byte):** Vier unabhängige Bugs:
+(1) `concat()`-Operandenreihenfolge an 2 von 3 Aufrufstellen vertauscht;
+(2) Rotationskette ist Z-X-Z (nicht Z-Y-X — klassische Polar-/Orbit-
+Euler-Konvention, echter Verhaltensbug: Kamera rotierte um falsche
+Achsen); (3) präzise verkettete Zuweisungsgruppierung für eine
+Identitäts-plus-Translations-Temporärmatrix nötig (MWCC leitet das
+Literal an den ERSTEN Store einer Kette weiter, den Ketten-
+Temporärwert an die übrigen); (4) `-unk44` muss ein reiner
+Zuweisungs-RHS sein, kein inline-Aufrufargument. Plus `char
+trash[104]` nach etabliertem `TOrthoProj::perform`-Muster derselben
+Datei. **Entdeckte dabei zwei weitere Header-Bugs** (siehe unten).
+
+**Commit 4 (`258e617c`) — `JDrama::TSmJ3DAct::perform` EXAKT GETROFFEN
+(311/311 Instruktionen, 1244 Byte, Rahmen 0x208):** Vier unabhängige
+Bugs, drei echte Verhaltensfehler: (1) Euler-Reihenfolge war X-Y-Z,
+Retail ist Z-Y-X (verifiziert über Feld-Offsets 0x38/0x34/0x30 der
+DEG_TO_RAD-Ladeoperationen); (2) DREI statt zwei Matrix-Temporärwerte
+— Retail pingpongt zwischen exakt zwei; (3) Rotations-Temporärmatrix
+braucht `setTrans(0,0,0)` statt `identity()` (letzteres schreibt auch
+den 3×3-Teil und kostet dadurch +14 Instruktionen); (4) `char
+trash[0x48]` für 72 Byte toter Lokale unterhalb der letzten Matrix.
+Mit symbolischem Ausdrucksbaum-Interpreter verifiziert: alle 36
+Ausgabewerte aller drei `concat`-Aufrufe algebraisch identisch zu
+Retail, bevor überhaupt am Scheduling gearbeitet wurde.
+
+**Commit 5 (`38f64391`) — `JGRotation3.hpp::setEularX/Y/Z`, ZWEI
+weitere Bugs in einem zweiten geteilten Header:** Während der Arbeit
+an den beiden obigen Funktionen fanden `TPolarCameraPerform` und
+`JDRSmJ3DActRetry` unabhängig voneinander (an verschiedenen
+Aufrufstellen) zwei zusätzliche Fehler in `include/JSystem/JGeometry/
+JGRotation3.hpp`: (a) `setEularX` war transponiert (`ref(1,2)=s,
+ref(2,1)=-s` statt korrekt `ref(1,2)=-s, ref(2,1)=s`) — inkonsistent
+mit den bereits korrekten `setEularY`/`setEularZ` derselben Datei,
+echter Verhaltensbug; (b) alle drei `setEularX/Y/Z`-Funktionen
+brauchen ihre vier Null-Einträge als EINE verkettete Zuweisung
+(`ref(a)=ref(b)=ref(c)=ref(d)=0.0f;`) statt vier separater
+`= 0.0f;`-Anweisungen — ein reines Codegen-Ordnungsproblem (MWCC
+erzeugt den Null-Wert-Knoten bei vier separaten Anweisungen spät/pro
+Store, bei einer Kette früh/einmalig; das verändert die
+Scheduler-Eingabereihenfolge in JEDEM inline-expandierten `concat`-
+Block und verschiebt zusätzlich den Stack-Rahmen — kein semantischer
+Unterschied). `JDRSmJ3DActRetry` lieferte harte Evidenz auch für
+`setEularY` (168 Instruktionen Differenz ohne die Verkettung, exakt 0
+mit ihr) — widerlegt die ursprüngliche Annahme "keine Evidenz für Y".
+Volle Regressionsprüfung vor Commit: `matched_functions` 9050→9052
+(exakt die zwei oben genannten neuen Matches, keine unerklärten
+Verschiebungen), keine Regression in `bossManta.cpp` (einzige weitere
+Datei, die `setEularY` nutzt) oder irgendwo sonst im Projekt.
+
+**★ Herausragender Fast-Treffer, NICHT commitet:**
+`TBathWaterMeshRenderer::prerender` (`src/Map/BathWaterManager.cpp`,
+2624 Byte) — von 84,3 % (nach beiden `concat`-Fixes) auf 94,7 %
+gebracht, ZEHN unabhängige Bugs gefunden und bestätigt, darunter:
+- **Echter Gameplay-Bug**: `GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE)`
+  muss `GX_LESS` sein — der Tiefentest für den Badewasser-
+  Höhenkarten-Vorabdurchlauf ist im Dekompilat falsch.
+- Ein bemerkenswerter Fund in `include/JSystem/JGeometry/
+  JGProjection.hpp::orthographic()` (nur von dieser einen Funktion
+  genutzt): beide Translationsterme brauchen `+ n` (den Parameter,
+  NICHT das Literal `0.0f`) — mathematisch ein Bug im Retail-Code
+  selbst, der aber harmlos bleibt, weil jeder Aufrufer `n = 0.0f`
+  übergibt; muss dennoch als `+ n` transkribiert werden, um Retails
+  tatsächliches (fehlerhaftes) Verhalten exakt zu reproduzieren —
+  Kernprinzip der Dekompilation: Bugs mitkopieren, nicht korrigieren.
+- Sieben weitere Bugs/Techniken: Struct-Kopie statt Skalar-Extraktion
+  für eine Drop-Position, doppelt vorkommende negR/R3-Konstanten-
+  berechnung (Retail berechnet sie zweimal ohne CSE), Deklarations-
+  reihenfolge-Fix für einen Stack-Pool, hochgezogene `J3DModelData*`-
+  Lokale, ein als verworfene Anweisung transkribierter
+  `TUtil<f32>::sqrt`-Aufruf mit toter Domänenprüfung, Auswertungs-
+  reihenfolge-Fix (Retail ruft `SMSGetGameRenderHeight` vor `...Width`
+  auf), unbenannte Temporärwerte statt benannter `dir`/`up`-Lokalen.
+Restlücke (5,3 %): zwei Instruktions-Scheduling-Cluster (eine
+`drawCap`-Schleifeninvariante, die bei JEDER zusätzlichen Lokalen aus
+dem `-inline auto`-Budget fällt — bestätigt hauchdünn) sowie eine
+Stack-Pool-RICHTUNGS-Divergenz (Retail alloziert einen Temporär-Pool
+in der ENTGEGENGESETZTEN Richtung zu unserem Build, plus ein totes
+92-Byte-Sperrblock — klassisches Phantom-Frame-Muster, `char
+trash[92]` reproduziert zwar Größe und Abstand exakt, ändert aber den
+objdiff-Score nicht). Vollständiges 10-Punkte-Rezept im
+Agent-Transkript `history://BathWaterManagerRender` archiviert.
+
+### Session-Gesamtstand nach Runde 61
+
+**469 verifizierte echte Fixes in 126 Commits** (467 aus Runde 60 + 2
+neue Funktions-Matches; die 3 Header-Fix-Commits zählen als
+Infrastruktur-Korrekturen, nicht als eigene „Funktions-Fixes", tragen
+aber wesentlich zum Gesamtfortschritt bei). `matched_functions`:
+**9052** (von 9050 zu Rundenbeginn), `matched_code_percent`: 45,80 %.
+Volles `ninja`-Rebuild erfolgreich, `dtk shasum -c` bestätigt
+`build/GMSJ01/mario.dol: OK`. Diese Runde demonstriert den Wert
+koordinierter Parallel-Subagenten bei geteilten Headern: drei Agenten
+fanden denselben zweiten `concat`-Bug unabhängig voneinander aus drei
+verschiedenen Aufrufstellen und koordinierten sauber über Hub, um
+Merge-Konflikte am gemeinsamen Header zu vermeiden, bevor Main den
+finalen Commit nach vollständiger Regressionsprüfung durchführte.
