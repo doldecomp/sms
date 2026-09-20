@@ -21,9 +21,9 @@ void* JKRDvdRipper::loadToMainRAM(const char* name, u8* dst,
 	if (!file.open(name)) {
 		return nullptr;
 	}
-	char trash[0x4]; // uuuuh..???
-	return loadToMainRAM(&file, dst, expandSwitch, dstLength, heap,
-	                     allocDirection, offset, pCompression);
+	void* result = loadToMainRAM(&file, dst, expandSwitch, dstLength, heap,
+	                             allocDirection, offset, pCompression);
+	return result;
 }
 
 void* JKRDvdRipper::loadToMainRAM(s32 entryNumber, u8* dst,
@@ -35,9 +35,9 @@ void* JKRDvdRipper::loadToMainRAM(s32 entryNumber, u8* dst,
 	if (!file.open(entryNumber)) {
 		return nullptr;
 	}
-	char trash[0x4]; // uuuuh..???
-	return loadToMainRAM(&file, dst, expandSwitch, dstLength, heap,
-	                     allocDirection, offset, pCompression);
+	void* result = loadToMainRAM(&file, dst, expandSwitch, dstLength, heap,
+	                             allocDirection, offset, pCompression);
+	return result;
 }
 
 bool JKRDvdRipper::errorRetry = true;
