@@ -59,10 +59,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
-- Landed `grptc` MarioSpecial through `grpti` hamukuri (see prior lines): +11 exact across those units.
-- Landed `grptj` chuuhana ([chuuhana unit ladder](41923f14-a48a-435e-9cfc-0e81b25021f5)): +0 exact; ForceJumped 98.6→99.9 frame-exact; Attack instruction-exact (+0x18 of 0x20 frame). Data 100. Code still 49.09%.
-- Total: **61.37%** matched, game **53.22%**, **11,322** exact, linked **492 / 732**.
-- Running: `grptk` / bosstelesa ([bosstelesa unit ladder](af9255a1-6760-4f14-9dbe-1a904b318522)). Refill: MapObjLib.
+- Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso +1, fireWanwan +2, hamukuri +2, chuuhana +0, bosstelesa +1.
+- Landed `grptk` bosstelesa ([bosstelesa unit ladder](af9255a1-6760-4f14-9dbe-1a904b318522)): +1 exact (`checkHitObject`); calcRootMatrix 98.1→99.1; unit 39.91→41.68; data 100.
+- Total: **61.39%** matched, game **53.24%**, linked **492 / 732**.
+- Running: `grptl` / MapObjLib ([MapObjLib unit ladder](c4e52ba0-e8f5-4cba-afcf-34497d0e89c6)). Refill after grptk remove.
 - Stale unlanded: grpfg bosseel, grpfh WaterGun.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
