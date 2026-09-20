@@ -988,6 +988,11 @@ static inline TGraphTracer* FireWanwanTracer(TFireWanwan* p)
 	return p->getTracer();
 }
 
+static inline int FireWanwanPolluteTimer(const TFireWanwan* p)
+{
+	return p->mPolluteTimer;
+}
+
 static inline f32 dist(const JGeometry::TVec3<f32>& a,
                        const JGeometry::TVec3<f32>& b)
 {
@@ -1312,7 +1317,7 @@ void TFireWanwan::updatePollute()
 	if (!unk194->mIsOnFire)
 		return;
 
-	if (mPolluteTimer != 0) {
+	if (FireWanwanPolluteTimer(this) != 0) {
 		mPolluteTimer -= 1;
 		return;
 	}
@@ -1322,6 +1327,9 @@ void TFireWanwan::updatePollute()
 	JGeometry::TVec3<f32> v1(mtx[0][0], mtx[1][0], mtx[2][0]);
 	v1.scaleAdd((MsRandF() - 0.5f) * 2.0f * mAttackRadius, v1, mPosition);
 
+	// TODO: retail reads mtx[0][0], mtx[1][0], mtx[2][0] in that order with an
+	// lfsu off the model pointer (f30/f29/f28); the TVec3 constructor here
+	// reads them z-first into f29/f30/f31, one instruction more.
 	f32 radius = 375.0f;
 	if (isAttacking())
 		radius *= getSaveParam2()->mPolluteAttackRate.get();
