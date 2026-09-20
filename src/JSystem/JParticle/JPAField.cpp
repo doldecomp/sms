@@ -404,6 +404,8 @@ JPADragField::JPADragField() { unk50 = 6; }
 JPADragField::~JPADragField() { }
 void JPADragField::affect(JPAParticle* particle)
 {
+	char trash[4];
+	trash[0] = 0;
 	if (!particle->checkStatus(JPABaseParticle::FLAG_UNK4)) {
 		if (particle->getAge() == 0) {
 			f32 rnd = unk14 * (FieldRand.get_ufloat_1() - 0.5f) + unk10;
