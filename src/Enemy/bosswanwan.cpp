@@ -93,6 +93,18 @@ TBWParams::TBWParams(const char* path)
 	TParams::load(mPrmPath);
 }
 
+static inline TBossWanwan* BWLeashOwner(const TBWLeash* p)
+{
+	TBossWanwan* owner = p->mOwner;
+	return owner;
+}
+
+static inline TBWParams* BosswanwanSaveParam2(const TBossWanwan* p)
+{
+	TBWParams* params = p->getSaveParam2();
+	return params;
+}
+
 // UNUSED, 0x110 in the map: inlined into TBWLeash's constructor.
 TBWLeashNode::TBWLeashNode(TBWLeash* leash, int index, const char* name)
     : THitActor(name)
@@ -101,12 +113,12 @@ TBWLeashNode::TBWLeashNode(TBWLeash* leash, int index, const char* name)
     , mTemperature(0.0f)
     , mIndex(index)
 {
-	TBossWanwan* owner = mLeash->mOwner;
+	TBossWanwan* owner = BWLeashOwner(mLeash);
 	mMActor = owner->getActorKeeper()->createMActor("bwanwan_chain.bmd", 0);
 	mMActor->setBrkFromIndex(2);
 
-	f32 radius = owner->getSaveParam2()->mSLChainHitRadius.get();
-	f32 height = owner->getSaveParam2()->mSLChainHitHeight.get();
+	f32 radius = BosswanwanSaveParam2(owner)->mSLChainHitRadius.get();
+	f32 height = BosswanwanSaveParam2(owner)->mSLChainHitHeight.get();
 	initHitActor(0x0800000C, 1, 0x80000000, 1.2f * radius, 1.2f * height,
 	             radius, height);
 }
@@ -251,7 +263,7 @@ TBWLeash::TBWLeash(TBossWanwan* owner, int node_num, const char* name)
     , mRope(nullptr)
     , mNodes(nullptr)
 {
-	f32 nodeLen      = mOwner->getSaveParam2()->mSLLeashNodeLen.get();
+	f32 nodeLen = BosswanwanSaveParam2(mOwner)->mSLLeashNodeLen.get();
 	f32 groundRadius = mOwner->getSaveParam2()->mSLChainGroundRadius.get();
 	mRope  = new TRope(node_num, mOwner->mPosition, nodeLen, groundRadius, 0.7f,
 	                   -2.0f);
