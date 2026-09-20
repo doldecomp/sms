@@ -67,9 +67,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed telesa +2; elecNokonoko Collect +1; Option +1; MapObjBall +2.
 - Landed `grpve` MarioJump ([MarioJump](baa4f7ad-fb76-44db-af1e-c79646c35b1f)): +2 exact (`rocketing`, `diving`). All **62.04→62.10**.
 - Landed `grpvf` MarioSound ([MarioSound](2a194a92-6f92-4dfe-a316-431a2b56ea93)): +2 exact (`animSound`, `soundMovement`); unit code **15.19→97.38**. All **62.10→62.31**, Game **54.14→54.41**, exact **11,385→11,387**. Park `soundTorocco` a=b-c slot.
+- Landed `grpvg` MarioReceiveMsg ([MarioReceiveMsg](80cd0104-162c-4497-b87a-c2b2eda658a1)): +0 match; TODO records measured 120-byte frame recipe (padding probe only). Park until named use of those locals exists.
 - Yielded killer + MapObjPinna (+0 each).
-- Running: `grpvg` / MarioReceiveMsg ([MarioReceiveMsg](80cd0104-162c-4497-b87a-c2b2eda658a1)); `grpvh` / CardSave ([CardSave](632b7ca0-c6f0-44e4-96cf-e041b2152c1b)).
-- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco.
+- Running: `grpvh` / CardSave ([CardSave](632b7ca0-c6f0-44e4-96cf-e041b2152c1b)). Refill: CardLoad.
+- Parked: gesso, bosseel, hamukuri generateBody, fireWanwan, chuuhana TVec3::sub, bossManta slots, MapObjMamma FPR, popo slots, MapObjBall control, Option mr-fold, elecNokonoko Turn/loadInit, telesa bind a=b-c, killer, MapObjPinna, MarioJump leftovers, MarioSound soundTorocco, MarioReceiveMsg frame.
 
 ### Session 019Bu5iwgrAjisV84bihvCHv (2026-09-19, batches 270-295, in progress)
 
