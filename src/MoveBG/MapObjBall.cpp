@@ -1160,12 +1160,15 @@ void TResetFruit::breaking()
 	}
 }
 
+// By-value pointer fork over the model accessor, +4 of low region per site.
+static inline J3DModel* MapObjBallModel(const TLiveActor* p) { return p->getModel(); }
+
 void TResetFruit::appearing()
 {
 	Mtx grow;
 	MTXScale(grow, mScaleUpSpeed, mScaleUpSpeed, mScaleUpSpeed);
 
-	MtxPtr mtx = getModel()->getAnmMtx(0);
+	MtxPtr mtx = MapObjBallModel(this)->getAnmMtx(0);
 	concatOnlyRotFromLeft(grow, mtx, mtx);
 
 	mScaling.y *= mScaleUpSpeed;
