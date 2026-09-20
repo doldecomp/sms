@@ -1974,21 +1974,28 @@ void TMario::setUpperDamageRun()
 	mUpperState = UPPER_STATE_FIXED_ANIMATION;
 }
 
+// Binding level worth +8 of low region per site; four of the seven
+// getM3UModel() reads in TMario::addUpper carry it, landing the frame at 0x70.
+static inline M3UModelMario* MarioAddUpperM3UModel(const TMario* p)
+{
+	M3UModelMario* m3UModel = p->getM3UModel();
+	return m3UModel;
+}
+
 void TMario::addUpper()
 {
-	// volatile u32 padding[17];
-	J3DFrameCtrl& frameCtrl = getM3UModel()->getFrameCtrl(1);
+	J3DFrameCtrl& frameCtrl = MarioAddUpperM3UModel(this)->getFrameCtrl(1);
 	if (mUpperState != UPPER_STATE_FIXED_ANIMATION) {
 		switch (mUpperState) {
 		case UPPER_STATE_PUMPING:
 		case UPPER_STATE_HOLDING_PUMP:
 			if (onYoshi()) {
-				getM3UModel()->unk24[1].unk3 = -1;
+				MarioAddUpperM3UModel(this)->unk24[1].unk3 = -1;
 				return;
 			}
 			if (gMarioAnimeData[mAnimationId].unk2 != 0xC8) {
-				getM3UModel()->unk24[1].unk3 = 1;
-				getM3UModel()->changeMtxCalcSIAnmBQAnmTransform(
+				MarioAddUpperM3UModel(this)->unk24[1].unk3 = 1;
+				MarioAddUpperM3UModel(this)->changeMtxCalcSIAnmBQAnmTransform(
 				    1, 0, gMarioAnimeData[mAnimationId].unk2);
 			}
 			break;
