@@ -51,6 +51,16 @@ void TMapWarp::warp(int) { }
 // unnamed is much worse (80.2%) and an explicit `TVec3(...)` temporary bound
 // to the `const&` parameter worse still (76.5%), so the two vectors are not
 // plain temporaries either; the low region is the lead.
+static inline s32 MapWarpGetStreamType(const TCubeStreamInfo* info)
+{
+	return info->unk38;
+}
+
+static inline f32 MapWarpGetStreamSpeed(const TCubeStreamInfo* info)
+{
+	return info->unk40;
+}
+
 void TMapWarp::watchToWarp()
 {
 	const TBGCheckData* checkData;
@@ -66,9 +76,9 @@ void TMapWarp::watchToWarp()
 			unk8 = unk4[no].unk0;
 
 			JGeometry::TVec3<f32> warpPos
-			    = SMS_GetMarioPos() + unk4[no].unk8;
+			    = SMS_GetMarioPos() + unk4[no].getUnk8();
 			SMS_MarioWarpRequest(warpPos,
-			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
+			                     ((*gpMarioAngleY) * 180.0f) / 32768.0f);
 		}
 	}
 
@@ -92,9 +102,10 @@ void TMapWarp::watchToWarp()
 	               info->unk18.z);
 
 	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, 0.0f);
-	vec2.z = 0.01f * info->unk40;
+	vec2.z = 0.01f * MapWarpGetStreamSpeed(info);
 	MTXMultVec(mtx, &vec2, &vec2);
-	if ((info->unk38 == 0 ? true : false) || (info->unk38 == 1 ? true : false))
+	if ((MapWarpGetStreamType(info) == 0 ? true : false)
+	    || (MapWarpGetStreamType(info) == 1 ? true : false))
 		SMS_FlowMoveMario(vec2);
 	else
 		SMS_WindMoveMario(vec2);
