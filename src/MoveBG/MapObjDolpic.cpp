@@ -304,6 +304,7 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 void TBellDolpic::control()
 {
 	JGeometry::TVec3<f32> pos;
+	char trash[16];
 
 	if (unk154 == 0) {
 		if (unk158 == 0) {
