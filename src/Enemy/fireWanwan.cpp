@@ -1776,6 +1776,12 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 	return collisionNum;
 }
 
+static inline void FireWanwanSetGroundPlane(TFireWanwan* p,
+                                            const TBGCheckData* plane)
+{
+	p->mGroundPlane = plane;
+}
+
 void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
                             const JGeometry::TVec3<f32>& point,
                             const JGeometry::TVec3<f32>& param_3, f32 radius,
@@ -1818,7 +1824,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 		}
 	}
 
-	mGroundPlane = local_30;
+	FireWanwanSetGroundPlane(this, local_30);
 	if (actualPoint.y <= mGroundHeight + 0.05f) {
 		if (getGroundPlane()->isIllegalData()) {
 			reset();
