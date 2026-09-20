@@ -519,7 +519,7 @@ void TPakkunSeed::behaveToHost()
 
 void TPakkunSeed::behaveToHitWall(const TBGCheckData* ground)
 {
-	f32 reflect = -(1.5f * mVelocity.dot(ground->mNormal));
+	f32 reflect = -(1.5f * mVelocity.dot(ground->getNormal()));
 	mVelocity.x += reflect * ground->mNormal.x;
 	mVelocity.y += reflect * ground->mNormal.y;
 	if (unk150 == PAKKUN_SEED_STATE_SHOOT) {
