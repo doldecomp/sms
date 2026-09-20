@@ -31,7 +31,10 @@ class TPoiHana;
 
 class TPoiHanaCollision : public THitActor {
 public:
-	TPoiHanaCollision(const char* name = "ポイハナコリジョン") { }
+	TPoiHanaCollision(const char* name = "ポイハナコリジョン")
+	    : THitActor(name)
+	{
+	}
 
 	virtual BOOL receiveMessage(THitActor*, u32);
 
