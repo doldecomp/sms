@@ -607,23 +607,22 @@ void TFireWanwanTailHit::clipNodes(JDrama::TGraphics*) { }
 
 void TFireWanwanTailHit::movementBody(const JGeometry::TVec3<f32>& param_1)
 {
-	if (mOwner->isHungTailNerve() && !mOwner->unk194->isTaken()
+	if (mOwner->isHungTailNerve() && !mOwner->isTailTaken()
 	    && !mOwner->isReadyToFly()) {
-		unkA4->mBoundRate
-		    = mOwner->getSaveParam2()->mRubberBoundRateHitting.get();
-		unkA4->mDecay = mOwner->getSaveParam2()->mRubberDecayHitting.get();
+		unkA4->setBoundRate(mOwner->getSaveParam2()->mRubberBoundRateHitting.get());
+		unkA4->setDecay(mOwner->getSaveParam2()->mRubberDecayHitting.get());
 	} else if (mOwner->isAttacking()) {
-		unkA4->mBoundRate = 0.7f;
-		unkA4->mDecay     = 0.4f;
+		unkA4->setBoundRate(0.7f);
+		unkA4->setDecay(0.4f);
 	} else {
-		unkA4->mBoundRate = mOwner->getSaveParam2()->mRubberBoundRate.get();
-		unkA4->mDecay     = mOwner->getSaveParam2()->mRubberDecay.get();
+		unkA4->setBoundRate(mOwner->getSaveParam2()->mRubberBoundRate.get());
+		unkA4->setDecay(mOwner->getSaveParam2()->mRubberDecay.get());
 	}
 
 	if (mOwner->isFlying())
-		unkA4->mMaxLength = mOwner->getSaveParam2()->mTailMaxLength.get();
+		unkA4->setMaxLength(mOwner->getSaveParam2()->mTailMaxLength.get());
 	else
-		unkA4->mMaxLength = 10000.0f;
+		unkA4->setMaxLength(10000.0f);
 
 	unkA4->unk0[0].mPos = param_1;
 	unkA4->movement();

@@ -49,6 +49,9 @@ public:
 
 	// fabricated
 	Node* getNode(int idx) { return &unk0[idx * 0.25f * 4.0f]; }
+	void setBoundRate(f32 v) { mBoundRate = v; }
+	void setDecay(f32 v) { mDecay = v; }
+	void setMaxLength(f32 v) { mMaxLength = v; }
 
 public:
 	/* 0x0 */ ArrayWrapper<Node> unk0;
