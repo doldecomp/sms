@@ -222,8 +222,8 @@ void TElecNokonokoManager::clipEnemies(JDrama::TGraphics* graphics)
 	                                   gpCamera->getAspect(),
 	                                   graphics->mNearPlane, farClip);
 
-	for (int i = 0; i < getObjNum(); ++i) {
-		TElecNokonoko* nokonoko = getObj(i);
+	for (int i = 0; i < mObjNum; ++i) {
+		TElecNokonoko* nokonoko = (TElecNokonoko*)unk18[i];
 
 		if (ViewFrustumClipCheck(graphics, &nokonoko->mPosition, clipRadius))
 			nokonoko->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
@@ -269,10 +269,10 @@ void TElecNokonoko::init(TLiveManager* live_manager)
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
 	mCarapace->loadInit(this, "koura_model1.bmd");
 
-	MActor* carapaceActor = getCarapace()->getMActor();
+	MActor* carapaceActor            = getCarapace()->getMActor();
+	TElecNokonokoManager* manager    = (TElecNokonokoManager*)mManager;
 	carapaceActor->getModel()->getModelData()->setMaterialTable(
-	    ((TElecNokonokoManager*)mManager)->mMaterialTable,
-	    (J3DMaterialCopyFlag)3);
+	    manager->mMaterialTable, (J3DMaterialCopyFlag)3);
 	carapaceActor->initDL();
 	carapaceActor->getModel()->lock();
 
@@ -461,12 +461,17 @@ bool TElecNokonoko::isResignationAttack()
 	return false;
 }
 
+// Parked here, not in a header: a bare-return fork over the Mario actor
+// pointer is the +4 of low pool that lands setGoalPath's TPathNode on
+// retail's slot (the same lever WalkerEnemyMario uses).
+static inline THitActor* ElecMario() { return (THitActor*)gpMarioAddress; }
+
 void TElecNokonoko::behaveToFindMario()
 {
-	getSpine()->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-	getSpine()->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
+	mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+	mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 	mSpine->pushAfterCurrent(&TNerveElecNokonokoTurn::theNerve());
-	setGoalPathMario();
+	setGoalPath(ElecMario());
 }
 
 void TElecNokonoko::behaveToWater(THitActor* water)
@@ -1047,12 +1052,12 @@ DEFINE_NERVE(TNerveElecNokonokoTurn, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		nokonoko->setBckAnm(DENNOKO_ANM_TURN1_START);
-		nokonoko->setGoalPathMario();
+		nokonoko->setGoalPath(ElecMario());
 	}
 
 	if (nokonoko->isBckAnm(DENNOKO_ANM_TURN1_LOOP)
 	    && MsIsInSight(nokonoko->getPosition(), nokonoko->mRotation.y,
-	                   *gpMarioPos,
+	                   SMS_GetMarioPos(),
 	                   ((TSmallEnemyParams*)nokonoko->getSaveParam())
 	                       ->getSLSearchLength(),
 	                   60.0f, 0.0f))
