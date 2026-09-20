@@ -652,7 +652,9 @@ s32 TCardManager::writeBlock_(u32 index)
 	    || mSectorCriteria[crit_idx + 1].getState() == TCriteria::STATE_UNREAD)
 		return -0x80;
 
+	char trash[4];
 	CARDFileInfo info;
+	char trash2[20];
 	s32 result = open_(&info);
 	if (result != CARD_RESULT_READY)
 		return result;
