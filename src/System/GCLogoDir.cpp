@@ -100,7 +100,7 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	mProgSelect->unkC.on(0xffff);
 	group2d->getChildren().push_back(mProgSelect);
 
-	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp;
+	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp("<DStageDisp>");
 	unk14->getChildren().push_back(stageDisp);
 	JDrama::TRect logoRendArea(0, 0, SMSGetGCLogoRenderWidth(),
 	                           SMSGetGCLogoRenderHeight());
@@ -111,7 +111,7 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	f32 fVar2 = (480 - h) / 2;
 
 	JDrama::TOrthoProj* proj = new JDrama::TOrthoProj(
-	    -1.0f, 1.0f, fVar3, fVar2, fVar3 + logoRendArea.getWidth(), fVar2 + h);
+	    -1.0f, 1.0f, fVar2, fVar2 + h, fVar3, fVar3 + logoRendArea.getWidth());
 	group2d->getChildren().push_back(proj);
 
 	JDrama::TScreen* screen = new JDrama::TScreen(logoRendArea, "Screen 2D");

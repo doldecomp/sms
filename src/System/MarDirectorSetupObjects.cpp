@@ -240,9 +240,9 @@ bool TMarDirector::setupObjects()
 	}
 
 	gameObjs->insert(gpMarioParticleManager);
-	gameObjs->insert(new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f,
-	                                        (u16)SMSGetGameRenderWidth(),
-	                                        (u16)SMSGetGameRenderHeight()));
+	gameObjs->insert(new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f,
+	                                        (u16)SMSGetGameRenderHeight(), 0.0f,
+	                                        (u16)SMSGetGameRenderWidth()));
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* measurementGroup
 	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("計測グループ");
