@@ -102,11 +102,11 @@ int TMarDirector::loadResource()
 	if (!paramsArch->mountFixed(paramsBlob, MBF_0))
 		return 1;
 
-	unkB8 = gpApplication.mountStageArchive();
+	unkB8 = SMSGetApplication()->mountStageArchive();
 	if (!unkB8)
 		return 1;
 
-	if (gpApplication.mCurrArea.unk0 == 15) {
+	if (SMSGetApplication()->mCurrArea.getStage() == 15) {
 		void* optionBlob          = SMSLoadArchive("/data/option.arc", 0, 0, 0);
 		JKRMemArchive* optionArch = new JKRMemArchive;
 		if (!optionArch->mountFixed(optionBlob, MBF_0))

@@ -452,11 +452,12 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 	bool bVar3 = true;
 	if (local_a8 == 2000 || local_a8 == 200
 	    || (local_a8 >= 0 && local_a8 < 50)) {
-		bool bVar5 = local_a8 >= 0 && local_a8 < 50
-		                     && TFlagManager::getInstance()->getBlueCoinFlag(
-		                         gpApplication.mCurrArea.unk0, local_a8)
-		                 ? true
-		                 : false;
+		bool bVar5
+		    = local_a8 >= 0 && local_a8 < 50
+		              && TFlagManager::getInstance()->getBlueCoinFlag(
+		                  SMSGetApplication()->mCurrArea.getStage(), local_a8)
+		          ? true
+		          : false;
 
 		if (bVar4 && bVar5) {
 			bVar3 = false;

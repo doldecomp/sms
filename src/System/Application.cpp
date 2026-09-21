@@ -77,6 +77,7 @@ TARAMBlock gArBkGuide;
 extern "C" void ReInitializeGX();
 u8 SMS_getShineIDofExStage(u8);
 
+#ifdef VERSION_GMSP01
 f32 SMSGetRealVSyncTimesPerSec()
 {
 	f32 result = 60.0f;
@@ -94,6 +95,25 @@ f32 SMSGetRealVSyncTimesPerSec()
 }
 
 f32 SMSGetVSyncTimesPerSec() { return SMSGetRealVSyncTimesPerSec() / 2.0f; }
+#else
+
+f32 SMSGetVSyncTimesPerSec()
+{
+	f32 result = 60.0f;
+	switch (VIGetTvFormat()) {
+	case VI_MPAL:
+	case VI_NTSC:
+	case VI_EURGB60:
+		result = 60.0f;
+		break;
+	case VI_PAL:
+		result = 50.0f;
+		break;
+	}
+	return result / 2.0f;
+}
+
+#endif
 
 f32 SMSGetAnmFrameRate() { return 60.0f / SMSGetVSyncTimesPerSec(); }
 
@@ -478,9 +498,9 @@ bool TApplication::checkAdditionalMovie()
 {
 	bool result = false;
 
-	const TGameSequence& currArea = gpApplication.mCurrArea;
+	const TGameSequence& currArea = SMSGetApplication()->mCurrArea;
 
-	u8 uVar1 = SMS_getShineIDofExStage(currArea.unk0);
+	u8 uVar1 = SMS_getShineIDofExStage(currArea.getStage());
 	if (uVar1 != 0xFF) {
 		if (!TFlagManager::getInstance()->getShineFlag(uVar1)) {
 			if (!TFlagManager::getInstance()->getBool(0x3000D)) {
@@ -490,9 +510,9 @@ bool TApplication::checkAdditionalMovie()
 			}
 		}
 	} else {
-		switch (currArea.unk0) {
+		switch (currArea.getStage()) {
 		case 0:
-			if (currArea.unk1 == 0) {
+			if (currArea.getScenario() == 0) {
 				if (!TFlagManager::getInstance()->getBool(0x30009)) {
 					mMovie = 1;
 					TFlagManager::getInstance()->setBool(true, 0x30009);
@@ -502,13 +522,13 @@ bool TApplication::checkAdditionalMovie()
 			break;
 
 		case 1:
-			if (currArea.unk1 == 0) {
+			if (currArea.getScenario() == 0) {
 				if (!TFlagManager::getInstance()->getBool(0x3000B)) {
 					mMovie = 3;
 					TFlagManager::getInstance()->setBool(true, 0x3000B);
 					result = true;
 				}
-			} else if (currArea.unk1 == 1) {
+			} else if (currArea.getScenario() == 1) {
 				if (!TFlagManager::getInstance()->getBool(0x3000C)) {
 					mMovie = 4;
 					TFlagManager::getInstance()->setBool(true, 0x3000C);
@@ -518,7 +538,7 @@ bool TApplication::checkAdditionalMovie()
 			break;
 
 		case 8:
-			if (currArea.unk1 == 2) {
+			if (currArea.getScenario() == 2) {
 				if (!TFlagManager::getInstance()->getBool(0x3000D)) {
 					mMovie = 5;
 					TFlagManager::getInstance()->setBool(true, 0x3000D);
@@ -600,7 +620,7 @@ void TApplication::proc()
 		} break;
 
 		case APP_STATE_DONE:
-			gpApplication.mMovie = 9;
+			SMSGetApplication()->setMovie(9);
 			mNextArea.set(15, 0, 0);
 			// FALLTHROUGH
 

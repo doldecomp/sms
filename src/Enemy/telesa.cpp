@@ -1037,8 +1037,8 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 
 	TSharedParts* imitatedItem = self->mImitatedBmd;
 
-	if (gpApplication.mCurrArea.unk0 != 7
-	    && gpApplication.mCurrArea.unk0 != 14) {
+	if (SMSGetApplication()->mCurrArea.getStage() != 7
+	    && SMSGetApplication()->mCurrArea.getStage() != 14) {
 		if (spine->getTime() == 0 && imitatedItem != nullptr) {
 			((TMarioModokiTelesa*)self)->imitateAnm();
 			imitatedItem->getMActor()->setBckFromIndex(0);

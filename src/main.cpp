@@ -5,7 +5,7 @@ TApplication gpApplication;
 
 void main(void)
 {
-	gpApplication.initialize();
-	gpApplication.proc();
-	gpApplication.finalize();
+	SMSGetApplication()->initialize();
+	SMSGetApplication()->proc();
+	SMSGetApplication()->finalize();
 }

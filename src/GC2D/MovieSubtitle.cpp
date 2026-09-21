@@ -36,7 +36,7 @@ TMovieSubTitle::TMovieSubTitle(const TTHPRender* param_1)
 
 void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 {
-	if (is_longheight_movie(gpApplication.getMovie()))
+	if (is_longheight_movie(SMSGetApplication()->getMovie()))
 		unk14 = new J2DSetScreen("demo_1.blo", param_2);
 	else
 		unk14 = new J2DSetScreen("demo_2.blo", param_2);

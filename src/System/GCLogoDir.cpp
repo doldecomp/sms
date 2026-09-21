@@ -119,8 +119,8 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	screen->assignCamera(proj);
 	screen->assignViewObj(stageDisp);
 
-	gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 0));
-	gpApplication.mFader->startWipe(14, 0.4f, 0.0f);
+	SMSGetApplication()->getFader()->setColor(JUtility::TColor(0, 0, 0, 0));
+	SMSGetApplication()->getFader()->startWipe(14, 0.4f, 0.0f);
 }
 
 TGCLogoDir::~TGCLogoDir()
@@ -167,7 +167,7 @@ int TGCLogoDir::direct()
 			mLogoView->mLogoTex = mDolbyTexture;
 			mLogoView->mRect    = JUTRect(254, 201, 404, 271);
 			mLogoView->mColor   = JUtility::TColor(255, 255, 255, 255);
-			gpApplication.mFader->startWipe(14, 0.4f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(14, 0.4f, 0.0f);
 			nextState = OVERALL_STATE_DOLBY;
 		}
 		break;
@@ -192,7 +192,7 @@ bool TGCLogoDir::direct_nlogo()
 	int nextState = mState;
 	switch (mState) {
 	case STATE_WAIT_FADE_IN:
-		if (gpApplication.mFader->isFullyFadedIn()) {
+		if (SMSGetApplication()->getFader()->isFullyFadedIn()) {
 			nextState = !mProgSelect->unkC.check(0xffff) ? STATE_ASK_PROGRESSIVE
 			                                             : STATE_SHOW_LOGO;
 
@@ -230,7 +230,7 @@ bool TGCLogoDir::direct_nlogo()
 		break;
 
 	case STATE_FADE_OUT:
-		if (gpApplication.mFader->isFullyFadedOut())
+		if (SMSGetApplication()->getFader()->isFullyFadedOut())
 			ended = true;
 		break;
 	}
@@ -241,7 +241,7 @@ bool TGCLogoDir::direct_nlogo()
 	if (nextState != mState) {
 		switch (nextState) {
 		case STATE_FADE_OUT:
-			gpApplication.mFader->startWipe(15, 0.4f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(15, 0.4f, 0.0f);
 			break;
 		}
 		mState = nextState;
@@ -256,7 +256,7 @@ bool TGCLogoDir::direct_dolby()
 	int nextState = mState;
 	switch (mState) {
 	case STATE_WAIT_FADE_IN:
-		if (gpApplication.mFader->isFullyFadedIn()) {
+		if (SMSGetApplication()->getFader()->isFullyFadedIn()) {
 			mLogoShowTimer = 0;
 			nextState      = STATE_SHOW_LOGO;
 		}
@@ -269,7 +269,7 @@ bool TGCLogoDir::direct_dolby()
 		break;
 
 	case STATE_FADE_OUT:
-		if (gpApplication.mFader->isFullyFadedOut())
+		if (SMSGetApplication()->getFader()->isFullyFadedOut())
 			ended = true;
 		break;
 	}
@@ -280,7 +280,7 @@ bool TGCLogoDir::direct_dolby()
 	if (nextState != mState) {
 		switch (nextState) {
 		case STATE_FADE_OUT:
-			gpApplication.mFader->startWipe(15, 0.4f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(15, 0.4f, 0.0f);
 			break;
 		}
 		mState = nextState;
