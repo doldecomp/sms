@@ -13,7 +13,7 @@ public:
 	virtual void load(JSUMemoryInputStream& stream);
 
 public:
-	/* 0xC */ const char* unkC;
+	/* 0xC */ const char* mArcName;
 };
 
 #endif
