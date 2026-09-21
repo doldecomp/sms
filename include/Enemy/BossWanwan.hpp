@@ -33,6 +33,8 @@ class TBWPicket : public THitActor {
 public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	void getTakingMtx();
+	void moveRequest(const JGeometry::TVec3<float>&);
 };
 
 class TBWBinder : public TBinder {

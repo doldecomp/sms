@@ -70,6 +70,14 @@ TBWParams::TBWParams(const char* path)
 
 void TBossWanwan::kill() { return; }
 
+void TBossWanwan::init(TLiveManager* tlivemanager) { }
+
+void TBossWanwan::control() { }
+
+void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics) { }
+
+void TBossWanwan::slideToCurPathNode(float speed, float deltaTime) { }
+
 void TBossWanwan::calcRootMatrix()
 {
 	getModel()->setBaseScale(mScaling);
@@ -306,6 +314,10 @@ void TBossWanwanManager::load(JSUMemoryInputStream& stream)
 	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_kira.jpa", 0x168);
 }
 
+void TBossWanwanMtxCalc::calc(u16 index) { }
+
+void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics) { }
+
 void TBWLeashNode::calcTemperature()
 {
 	if (mIndex == 0) {
@@ -349,3 +361,43 @@ void TBWLeashNode::calcMatrix()
 	}
 	*/
 }
+
+void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics) { }
+
+void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics) { }
+
+/*
+
+    virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+    virtual BOOL receiveMessage(THitActor* sender, u32 message);
+    void getTakingMtx();
+    void moveRequest(const JGeometry::TVec3<float>&);
+
+
+*/
+
+BOOL TBWHit::receiveMessage(THitActor* sender, u32 message) { }
+
+void TBWHit::moveRequest(const JGeometry::TVec3<float>& pos) { }
+
+void TBWBinder::bind(TLiveActor* actor) { }
+
+void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics) { }
+
+BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message) { }
+
+void TBWPicket::getTakingMtx() { }
+
+void TBWPicket::moveRequest(const JGeometry::TVec3<float>& pos) { }
+
+DEFINE_NERVE(TNerveBWGraphWander, TLiveActor) { }
+DEFINE_NERVE(TNerveBWRoll, TLiveActor) { }
+DEFINE_NERVE(TNerveBWBark, TLiveActor) { }
+DEFINE_NERVE(TNerveBWJump, TLiveActor) { }
+DEFINE_NERVE(TNerveBWStun, TLiveActor) { }
+DEFINE_NERVE(TNerveBWWakeup, TLiveActor) { }
+DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor) { }
+DEFINE_NERVE(TNerveBWDie, TLiveActor) { }
+DEFINE_NERVE(TNerveBWJumpAway, TLiveActor) { }
+DEFINE_NERVE(TNerveBWShake, TLiveActor) { }
+DEFINE_NERVE(TNerveBWFall, TLiveActor) { }
