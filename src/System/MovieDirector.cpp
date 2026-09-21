@@ -27,6 +27,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 #ifdef VERSION_GMSP01
 #pragma dont_inline on
@@ -238,17 +239,13 @@ int TMovieDirector::rsetup()
 		// FALLTHROUGH
 	case 18:
 	case 19:
-#ifdef VERSION_GMSP01
 		unk24 = new TCardSave("card save", true);
-#else
-		unk24 = new TCardSave;
-#endif
 		unk24->initData(unk20);
 		group2d->getChildren().push_back(unk24);
 		break;
 	}
 
-	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp;
+	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp("<DStageDisp>");
 	unk14->getChildren().push_back(stageDisp);
 
 	JDrama::TRect rect(0, 0, SMSGetTitleRenderWidth(),
@@ -256,7 +253,7 @@ int TMovieDirector::rsetup()
 	stageDisp->getEfbCtrlDisp()->TEfbCtrl::setSrcRect(rect);
 
 	JDrama::TOrthoProj* camera = new JDrama::TOrthoProj(
-	    -1.0f, 1.0f, 0.0f, 0.0f, rect.getWidth(), rect.getHeight());
+	    -1.0f, 1.0f, 0.0f, rect.getHeight(), 0.0f, rect.getWidth());
 	group2d->getChildren().push_back(camera);
 
 	JDrama::TScreen* screen = new JDrama::TScreen(rect, "Screen 2D");
@@ -283,10 +280,10 @@ int TMovieDirector::rsetup()
 	THPVideoInfo videoInfo;
 	THPPlayerGetVideoInfo(&videoInfo);
 
-	// TODO: Huh? TBox2 or something?
-	thpRender->setParams(SMSGetGameRenderWidth() - videoInfo.xSize / 2,
-	                     SMSGetGameRenderHeight() - videoInfo.ySize / 2,
-	                     videoInfo.xSize, videoInfo.ySize);
+	thpRender->setPos(JGeometry::TVec2<u32>(
+	    (SMSGetGameRenderWidth() - videoInfo.xSize) / 2,
+	    (SMSGetGameRenderHeight() - videoInfo.ySize) / 2));
+	thpRender->setSize(JDrama::TSize(videoInfo.xSize, videoInfo.ySize));
 
 	DVDChangeDir("/");
 
