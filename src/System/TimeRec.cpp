@@ -18,52 +18,48 @@ bool TTimeArray::append(u32 time, u32 color)
 	return result;
 }
 
-TTimeRec* TTimeRec::start(u16 param_1)
+TTimeRec* TTimeRec::start(u16 tokenBase)
 {
 	if (_instance == nullptr)
-		_instance = new TTimeRec(param_1);
+		_instance = new TTimeRec(tokenBase);
 	return _instance;
 }
 
-void TTimeRec::end() { }
+void TTimeRec::end()
+{
+	if (_instance) {
+		delete _instance;
+		_instance = nullptr;
+	}
+}
 
-void TTimeRec::drawSyncCallbackSt(u16) { }
+void TTimeRec::drawSyncCallbackSt(u16 token)
+{
+	if (_instance)
+		_instance->TTimeRec::drawSyncCallback(token);
+}
 
-TTimeRec::TTimeRec(u16 param_1)
-    : unk814(0)
+TTimeRec::TTimeRec(u16 tokenBase)
+    : mCrIdx(0)
     , unk818(0)
-    , unk81A(param_1)
-    , unk81C(0)
+    , mTokenBase(tokenBase)
+    , mFlags(0)
 {
 }
 
 void TTimeRec::flip()
 {
-	TTimeArray& array = _instance->crTimeAry()[1];
-	int size          = array.mSize;
-	if (size >= 3) {
-		int i    = size - 1;
-		u32 curr = array.mEntries[i].time;
-		while (i > 0) {
-			--i;
-			if (array.mEntries[i].time == 0) {
-				array.mEntries[i].time = curr;
-			} else {
-				curr = array.mEntries[i].time;
-			}
-		}
-	}
-
-	unk814 ^= 1;
-	crTimeAry()[0].mSize = 0;
-	crTimeAry()[1].mSize = 0;
+	suppleGXTime();
+	mCrIdx ^= 1;
+	crTimeAry()[0].clear();
+	crTimeAry()[1].clear();
 }
 
-void TTimeRec::snapGXTime(u32 param_1)
+void TTimeRec::snapGXTime(u32 color)
 {
-	if (crTimeAry()[1].append(0, param_1)) {
-		if ((unk81C & 1) == 0) {
-			u16 token = unk81A + crTimeAry()[1].size() - 1;
+	if (appendGX(0, color)) {
+		if (!mFlags.check(1)) {
+			u16 token = mTokenBase + crTimeAry()[1].size() - 1;
 			if (TDrawSyncManager::smInstance)
 				TDrawSyncManager::smInstance->pushBreakPoint();
 			GXSetDrawSync(token);
@@ -71,9 +67,23 @@ void TTimeRec::snapGXTime(u32 param_1)
 	}
 }
 
-void TTimeRec::suppleGXTime() { }
-
-void TTimeRec::drawSyncCallback(u16 param_1)
+void TTimeRec::suppleGXTime()
 {
-	unk4[unk814][1][param_1 - unk81A].time = OSGetTick();
+	TTimeArray& array = _instance->crTimeAry()[1];
+	if (array.size() < 3)
+		return;
+	u32 curr = array[array.size() - 1].time;
+	int i    = array.size() - 1;
+	while (i > 0) {
+		--i;
+		if (array[i].time == 0)
+			array[i].time = curr;
+		else
+			curr = array[i].time;
+	}
+}
+
+void TTimeRec::drawSyncCallback(u16 token)
+{
+	crTimeAry()[1][token - mTokenBase].time = OSGetTick();
 }

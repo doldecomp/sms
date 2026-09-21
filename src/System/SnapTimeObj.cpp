@@ -5,12 +5,12 @@ void TSnapTimeObj::perform(u32 cue, JDrama::TGraphics*)
 {
 	if ((unk14 & 1)) {
 		if ((cue & CUE_DRAW_INIT) != 0) {
-			TTimeRec::snapGxTimeStatic(0);
-			TTimeRec::endTimer();
+			TTimeRec::snapGXTimeSt(0);
+			TTimeRec::snapCPUTime(0);
 		}
 		if ((cue & CUE_DRAW) != 0) {
-			TTimeRec::startTimer(unk10);
-			TTimeRec::snapGxTimeStatic(unk10);
+			TTimeRec::snapCPUTime(JUtility::TColor(unk10));
+			TTimeRec::snapGXTimeSt(unk10);
 		}
 	}
 }

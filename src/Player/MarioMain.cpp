@@ -69,7 +69,7 @@ void TMario::thinkAloha()
 void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk114 & UNK114_FLAG_PROFILE)
-		TTimeRec::startTimer(0xff, 0x00, 0x00, 0x80);
+		TTimeRec::snapCPUTime(JUtility::TColor(0xff, 0x00, 0x00, 0x80));
 
 	if (checkFlag(MARIO_FLAG_IS_PERFORMING))
 		return;
@@ -244,7 +244,7 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (unk114 & UNK114_FLAG_PROFILE)
-		TTimeRec::endTimer();
+		TTimeRec::snapCPUTime(0);
 }
 
 void TMario::drawSyncCallback(u16)
