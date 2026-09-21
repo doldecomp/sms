@@ -4,5 +4,5 @@ void TScenarioArchiveName::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
 
-	unkC = stream.readString();
+	mArcName = stream.readString();
 }

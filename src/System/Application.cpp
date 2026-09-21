@@ -363,15 +363,16 @@ void TApplication::initialize_bootAfter()
 	this_01->mountFixed(arcBufNLogo, MBF_0);
 
 	this_01->becomeCurrent("/font");
-	u32 uVar1
-	    = this_01->getResSize(this_01->getResource("standard_fontEx.bfn"));
+	void* fontRes = this_01->getResource("standard_fontEx.bfn");
+	u32 uVar1     = this_01->getResSize(fontRes);
 	ResFONT* font = (ResFONT*)new (0x20) u8[uVar1];
 	this_01->readResource(font, uVar1, "standard_fontEx.bfn");
 	gpSystemFont = new JUTResFont(font, nullptr);
 
 	this_01->becomeCurrent("/audi");
-	u32 uVar3 = this_01->getResSize(this_01->getResource("mSound.aaf"));
-	u8* buf   = new u8[uVar3];
+	void* aafRes = this_01->getResource("mSound.aaf");
+	u32 uVar3    = this_01->getResSize(aafRes);
+	u8* buf      = new u8[uVar3];
 	this_01->readResource(buf, uVar3, "mSound.aaf");
 	JKRHeap* prevHeap = JKRGetCurrentHeap();
 	gpMSound = new MSound(prevHeap, nullptr, 0xF40000, buf, nullptr, 0xb00000);
@@ -429,7 +430,7 @@ void TApplication::initialize_nlogoAfter()
 
 	gpRomFont = nullptr;
 	((JKRExpHeap*)mHeap)->destroy();
-	JKRGetRootHeap()->getSize(spGameHeapBlock);
+	JKRGetRootHeap()->free(spGameHeapBlock);
 
 	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
 	gpCardManager->mIcons
@@ -470,8 +471,8 @@ void TApplication::initialize_nlogoAfter()
 
 	JMANewSinTable(0xC);
 
-	JKRHeap* heap = JKRGetCurrentHeap();
-	mHeap         = JKRSolidHeap::create(heap->getFreeSize(), heap, true);
+	mHeap = JKRSolidHeap::create(JKRGetCurrentHeap()->getFreeSize(),
+	                             JKRGetCurrentHeap(), true);
 	mHeap->becomeCurrentHeap();
 }
 
@@ -641,7 +642,8 @@ void TApplication::proc()
 		if (!iVar9)
 			nextState = gameLoop();
 
-		delete mDirector;
+		if (mDirector != nullptr)
+			mDirector->~TDirector();
 		mDirector = nullptr;
 
 		switch (mAppState) {
@@ -734,19 +736,17 @@ int TApplication::gameLoop()
 			JDrama::TGraphics graphics;
 			graphics.unkFE = 0;
 
-			JDrama::TVideo* video = mDisplay->unk60;
-			GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
-			              video->mNextRenderMode.efbHeight, 0.0f, 1.0f);
-			GXSetScissor(0, 0, video->mNextRenderMode.fbWidth,
-			             video->mNextRenderMode.efbHeight);
+			const GXRenderModeObj& rmode
+			    = mDisplay->getVideo()->mNextRenderMode;
+			GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f,
+			              1.0f);
+			GXSetScissor(0, 0, rmode.fbWidth, rmode.efbHeight);
 			Mtx afStack_1ac;
-			C_MTXOrtho(afStack_1ac, 0.0f, (f32)video->mNextRenderMode.fbWidth,
-			           0.0f, (f32)video->mNextRenderMode.efbHeight, -1.0f,
-			           1.0f);
+			C_MTXOrtho(afStack_1ac, 0.0f, (f32)rmode.efbHeight, 0.0f,
+			           (f32)rmode.fbWidth, -1.0f, 1.0f);
 			GXSetProjection(afStack_1ac, GX_ORTHOGRAPHIC);
 			mFader->update();
-			mFader->draw(JDrama::TRect(0, 0, video->mNextRenderMode.fbWidth,
-			                           video->mNextRenderMode.efbHeight));
+			mFader->draw(JDrama::TRect(0, 0, rmode.fbWidth, rmode.efbHeight));
 			if (gpMSound != nullptr)
 				gpMSound->mainLoop();
 		}
@@ -951,10 +951,9 @@ int TApplication::drawDVDErr()
 	if (error != 0) {
 		ReInitializeGX();
 		SMS_DrawInit();
-		JDrama::TVideo* video = mDisplay->unk60;
+		const GXRenderModeObj& rmode = mDisplay->getVideo()->mNextRenderMode;
 
-		GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
-		              video->mNextRenderMode.efbHeight, 0.0f, 1.0f);
+		GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f, 1.0f);
 		Mtx afStack_260;
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
@@ -998,7 +997,7 @@ int TApplication::drawDVDErr()
 		print.unk44  = (GXColor) { 0xff, 0xff, 0, 0xff };
 		print.unk48  = (GXColor) { 0xff, 0xff, 0, 0xff };
 		f32 msgWidth = print.getWidth(message);
-		print.print((600.0f - msgWidth) / 2.0f, 230, message);
+		print.print(0.5f * (600.0f - msgWidth), 230, message);
 	}
 
 	return error;
@@ -1009,16 +1008,16 @@ JKRMemArchive* TApplication::mountStageArchive()
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getStage() < tmp.size()) {
-		if (mCurrArea.getScenario() < tmp[mCurrArea.getStage()].size()) {
+	if (mCurrArea.getStage() < tmp.getChildren().size()) {
+		TNameRefAryT<TScenarioArchiveName>& scenarios
+		    = tmp[mCurrArea.getStage()];
+		if (mCurrArea.getScenario() < scenarios.size()) {
 			const char* scenarioArcName
-			    = tmp[mCurrArea.getStage()][mCurrArea.getScenario()].getName();
+			    = scenarios[mCurrArea.getScenario()].mArcName;
 
 			DVDChangeDir("/data/scene");
-			void* archBlob
-			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr);
-
-			if (archBlob) {
+			if (void* archBlob
+			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr)) {
 				JKRMemArchive* arch = new JKRMemArchive;
 				arch->mountFixed(archBlob, MBF_0);
 				result = arch;
