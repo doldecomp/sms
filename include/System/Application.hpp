@@ -59,6 +59,8 @@ public:
 	// fabricated
 	void setNextArea(const TGameSequence& next_area) { mNextArea = next_area; }
 	u32 getMovie() const { return mMovie; }
+
+	TSMSFader* getFader() const { return mFader; }
 	void setMovie(u32 v) { mMovie = v; }
 
 public:
@@ -95,6 +97,9 @@ public:
 };
 
 extern TApplication gpApplication;
+
+// fabricated
+inline TApplication* SMSGetApplication() { return &gpApplication; }
 
 class TCardManager;
 extern TCardManager* gpCardManager;

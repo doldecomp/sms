@@ -70,7 +70,7 @@ void TPoiHanaManager::load(JSUMemoryInputStream& stream)
 
 TSmallEnemy* TPoiHanaManager::createEnemyInstance()
 {
-	if (gpApplication.mCurrArea.unk0 == 0x38)
+	if (SMSGetApplication()->mCurrArea.getStage() == 0x38)
 		return new TPoiHana;
 	return nullptr;
 }

@@ -109,8 +109,8 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 	if (!coin)
 		return;
 
-	TFlagManager::smInstance->setBlueCoinFlag(gpApplication.mCurrArea.unk0,
-	                                          coin->getEventId());
+	TFlagManager::smInstance->setBlueCoinFlag(
+	    SMSGetApplication()->mCurrArea.getStage(), coin->getEventId());
 	unk4C |= 0x200;
 	unk261 = 1;
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_BLUE_COIN_GET, &coin->mPosition,
@@ -122,18 +122,15 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 	if (!nozzle)
 		return;
 
+	u8 stage = SMSGetApplication()->mCurrArea.getStage();
 	if (nozzle->isActorType(0x20000022)
-	    && TFlagManager::smInstance->getNozzleRight(
-	        gpApplication.mCurrArea.unk0, 0)) {
-		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
-		                                         0);
+	    && !TFlagManager::smInstance->getNozzleRight(stage, 0)) {
+		TFlagManager::smInstance->setNozzleRight(stage, 0);
 		unk4C |= 0x200;
 		unk261 = 3;
 	} else if (nozzle->isActorType(0x2000002A)
-	           && TFlagManager::smInstance->getNozzleRight(
-	               gpApplication.mCurrArea.unk0, 1)) {
-		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
-		                                         1);
+	           && !TFlagManager::smInstance->getNozzleRight(stage, 1)) {
+		TFlagManager::smInstance->setNozzleRight(stage, 1);
 		unk4C |= 0x200;
 		unk261 = 4;
 	}
@@ -150,7 +147,18 @@ void TMarDirector::fireGetStar(TShine* shine)
 	                    nullptr, JDrama::TFlagT<u16>(0));
 }
 
-void TMarDirector::fireRideYoshi(TYoshi*) { }
+void TMarDirector::fireRideYoshi(TYoshi* yoshi)
+{
+	if (!yoshi)
+		return;
+
+	if (SMSGetApplication()->mCurrArea.getStage() == 1
+	    && !TFlagManager::smInstance->getBool(0x1038F)) {
+		TFlagManager::smInstance->setBool(true, 0x1038F);
+		unk4C |= 0x200;
+		unk261 = 5;
+	}
+}
 
 void TMarDirector::fireDefeatEnemy(TSpineEnemy*) { }
 
@@ -162,12 +170,42 @@ void TMarDirector::movement()
 		movement_game();
 }
 
-#pragma dont_inline on
 void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
 {
-	// TODO: wtf is happening in this function it's cursed
+	if (unk4C & 2)
+		return;
+
+	TGameSequence local;
+	int stage = param_1;
+	if (param_1 >= 0x100) {
+		local.unk0 = (stage >> 8) - 1;
+		local.unk1 = stage;
+	} else {
+		local.unk0 = param_1;
+		local.unk1 = 0xff;
+	}
+	SMSGetApplication()->setNextArea(local);
+
+	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	if (param_2) {
+		unk4C |= 4;
+		unk250 = param_2;
+	} else {
+		if ((curArea.getStage() == 1 && local.getStage() == 5)
+		    || (curArea.getStage() == 1 && local.getStage() == 6)
+		    || (curArea.getStage() == 1 && local.getStage() == 8))
+			unk4C |= 8;
+		else
+			unk4C |= 2;
+	}
+
+	switch (local.getStage()) {
+	case 0x37:
+		unk4C |= 0x100;
+		SMSGetApplication()->setMovie(6);
+		break;
+	}
 }
-#pragma dont_inline off
 
 void TMarDirector::fireStageEvent(TMapObjBase*) { }
 
@@ -207,7 +245,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 			setNextStage(0x1, nullptr);
 			TFlagManager::smInstance->setBool(true, 0x10389);
 			TFlagManager::smInstance->setBool(true, 0x30004);
-			gpApplication.mMovie = param_1;
+			SMSGetApplication()->setMovie(param_1);
 		}
 		break;
 
@@ -215,7 +253,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
 			setNextStage(0x3B, nullptr);
-			gpApplication.mMovie = param_1;
+			SMSGetApplication()->setMovie(param_1);
 		}
 		break;
 
@@ -223,7 +261,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
 			setNextStage(0xE06, nullptr);
-			gpApplication.mMovie = param_1;
+			SMSGetApplication()->setMovie(param_1);
 		}
 		break;
 
@@ -231,7 +269,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
 			setNextStage(0xE07, nullptr);
-			gpApplication.mMovie = param_1;
+			SMSGetApplication()->setMovie(param_1);
 		}
 		break;
 
@@ -239,7 +277,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
 			setNextStage(0x3C, nullptr);
-			gpApplication.mMovie = param_1;
+			SMSGetApplication()->setMovie(param_1);
 		}
 		break;
 
@@ -247,7 +285,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
 			setNextStage(0x101, nullptr);
-			gpApplication.mMovie = param_1;
+			SMSGetApplication()->setMovie(param_1);
 		}
 		break;
 
@@ -255,7 +293,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!(unk4C & 0x100)) {
 			unk4C |= 0x100;
 			setNextStage(0xF, nullptr);
-			gpApplication.mMovie = (u8)param_1;
+			SMSGetApplication()->setMovie((u8)param_1);
 		}
 		break;
 	}

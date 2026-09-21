@@ -44,10 +44,11 @@ void TMarDirector::decideMarioPosIdx()
 	unkD1 = 0;
 	unkE4 = 1;
 
-	switch (gpApplication.mCurrArea.unk0) {
+	const TGameSequence& prevArea = SMSGetApplication()->mPrevArea;
+	switch (SMSGetApplication()->mCurrArea.getStage()) {
 	case 15:
 		unkE4 = 14;
-		gpApplication.mFader->setColor(
+		SMSGetApplication()->getFader()->setColor(
 		    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 		break;
 
@@ -61,10 +62,10 @@ void TMarDirector::decideMarioPosIdx()
 	case 4:
 	case 5:
 	case 6:
-	case 7:
-	case 8: {
+	case 8:
+	case 9: {
 		unkE4 = 14;
-		gpApplication.mFader->setColor(
+		SMSGetApplication()->getFader()->setColor(
 		    JUtility::TColor(0xd2, 0xd2, 0xd2, 0xff));
 		unkD1 = 1;
 	} break;
@@ -77,7 +78,7 @@ void TMarDirector::decideMarioPosIdx()
 				TFlagManager::getInstance()->setBool(false, 0x30004);
 				unkD0 = 4;
 			} else {
-				switch (SMS_getShineStage(gpApplication.mPrevArea.unk0)) {
+				switch (SMS_getShineStage(prevArea.getStage())) {
 				case 2:
 					unkD0 = 1;
 					unkD1 = 2;
@@ -112,7 +113,7 @@ void TMarDirector::decideMarioPosIdx()
 					unkD0 = 7;
 					unkD1 = 2;
 					unkE4 = 0xe;
-					gpApplication.mFader->setColor(
+					SMSGetApplication()->getFader()->setColor(
 					    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 					break;
 				case 9:
@@ -130,7 +131,8 @@ bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
 	TFlagManager::getInstance()->setFlag(0x60003, 1);
-	switch (gpApplication.mCurrArea.unk0) {
+	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	switch (curArea.getStage()) {
 	case 1: {
 		TFlagManager::getInstance()->setBool(true, 0x3000D);
 		TFlagManager::getInstance()->setBool(true, 0x30005);
@@ -141,7 +143,7 @@ bool TMarDirector::setupObjects()
 			TFlagManager::getInstance()->setBool(true, 0x30000);
 		}
 
-		switch (gpApplication.mCurrArea.unk1) {
+		switch (curArea.getScenario()) {
 		case 0:
 		case 1:
 		case 7:
@@ -198,14 +200,14 @@ bool TMarDirector::setupObjects()
 		break;
 	}
 	case 5:
-		if (gpApplication.mCurrArea.unk1 != 3)
-			(void)gpApplication.mCurrArea.unk1;
+		if (curArea.getScenario() != 3)
+			(void)curArea.getScenario();
 		else
 			TFlagManager::getInstance()->setBool(true, 0x50003);
 		break;
 	}
 
-	u32 bVar28 = SMS_getShineStage(gpApplication.mCurrArea.unk0);
+	u32 bVar28 = SMS_getShineStage(curArea.getStage());
 	TFlagManager::getInstance()->setBool(true, 0x103A5 + bVar28);
 
 	MSMainProc::setMSoundEnterStage(mMap, unk7D);

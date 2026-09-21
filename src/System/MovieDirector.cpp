@@ -48,10 +48,10 @@ TEndingString::TEndingString(const char* name)
 
 void TEndingString::startFadeIn()
 {
-	if (gpApplication.getMovie() == 16) {
+	if (SMSGetApplication()->getMovie() == 16) {
 		mScreen->search('tx_1')->show();
 		mScreen->search('tx_2')->hide();
-	} else if (gpApplication.getMovie() == 17) {
+	} else if (SMSGetApplication()->getMovie() == 17) {
 		mScreen->search('tx_1')->hide();
 		mScreen->search('tx_2')->show();
 	}
@@ -178,21 +178,22 @@ int TMovieDirector::rsetup()
 	JKRMemArchive* subtitleArc = new JKRMemArchive;
 	subtitleArc->mountFixed(subtitleArcBlob, MBF_0);
 
-	if ((s32)gpApplication.getMovie() < 20) {
-		if ((s32)gpApplication.getMovie() < 16) {
-			(void)gpApplication.getMovie();
-		} else {
+	switch (SMSGetApplication()->getMovie()) {
+	case 16:
+	case 17:
+	case 18:
+	case 19: {
 #ifdef VERSION_GMSP01
-			void* arcBlob = SMSLoadArchive(
-			    endsaveNames[TFlagManager::getInstance()->getFlag(0xA0001)],
-			    nullptr, 0, nullptr);
+		void* arcBlob = SMSLoadArchive(
+		    endsaveNames[TFlagManager::getInstance()->getFlag(0xA0001)],
+		    nullptr, 0, nullptr);
 #else
-			void* arcBlob
-			    = SMSLoadArchive("/data/endsave.arc", nullptr, 0, nullptr);
+		void* arcBlob
+		    = SMSLoadArchive("/data/endsave.arc", nullptr, 0, nullptr);
 #endif
-			JKRMemArchive* arc = new JKRMemArchive;
-			arc->mountFixed(arcBlob, MBF_0);
-		}
+		JKRMemArchive* arc = new JKRMemArchive;
+		arc->mountFixed(arcBlob, MBF_0);
+	} break;
 	}
 #ifdef VERSION_GMSP01
 	load2DResource2Aram();
@@ -211,7 +212,8 @@ int TMovieDirector::rsetup()
 	const char* movie = "EX128x144_q0.thp";
 
 	{
-		const char* movieName = getStreamMovieName(gpApplication.getMovie());
+		const char* movieName
+		    = getStreamMovieName(SMSGetApplication()->getMovie());
 		if (movieName != nullptr)
 			if (DVDConvertPathToEntrynum((char*)movieName) != -1)
 				movie = movieName;
@@ -226,22 +228,24 @@ int TMovieDirector::rsetup()
 	unk2C->init(movie);
 	group2d->getChildren().push_back(unk2C);
 
-	if ((s32)gpApplication.getMovie() < 20) {
-		if ((s32)gpApplication.getMovie() < 16) {
-			(void)gpApplication.getMovie();
-		} else {
+	switch (SMSGetApplication()->getMovie()) {
+	case 16:
+	case 17:
 #ifdef VERSION_GMSP01
-			if ((s32)gpApplication.getMovie() < 18) {
-				mEndingString = new TEndingString("EndingString");
-				group2d->getChildren().push_back(mEndingString);
-			}
-			unk24 = new TCardSave("card save", true);
-#else
-			unk24 = new TCardSave;
+		mEndingString = new TEndingString("EndingString");
+		group2d->getChildren().push_back(mEndingString);
 #endif
-			unk24->initData(unk20);
-			group2d->getChildren().push_back(unk24);
-		}
+		// FALLTHROUGH
+	case 18:
+	case 19:
+#ifdef VERSION_GMSP01
+		unk24 = new TCardSave("card save", true);
+#else
+		unk24 = new TCardSave;
+#endif
+		unk24->initData(unk20);
+		group2d->getChildren().push_back(unk24);
+		break;
 	}
 
 	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp;
@@ -310,10 +314,11 @@ TMovieDirector::~TMovieDirector()
 u32 TMovieDirector::decideNextMode(s32* param_1)
 {
 
-	if (gpApplication.getMovie() != 14) {
-		if (!(gpApplication.getMovie() == 15 || gpApplication.getMovie() == 16
-		      || gpApplication.getMovie() == 17)) {
-			int flag = gpApplication.getMovie() + 0x10391;
+	if (SMSGetApplication()->getMovie() != 14) {
+		if (!(SMSGetApplication()->getMovie() == 15
+		      || SMSGetApplication()->getMovie() == 16
+		      || SMSGetApplication()->getMovie() == 17)) {
+			int flag = SMSGetApplication()->getMovie() + 0x10391;
 			TFlagManager::getInstance()->setBool(true, flag);
 		}
 	}
@@ -321,34 +326,34 @@ u32 TMovieDirector::decideNextMode(s32* param_1)
 	u32 nextMode = 1;
 	if (unk20->isSomethingPushed()) {
 		nextMode = 4;
-	} else if (gpApplication.getMovie() == 2) {
-		gpApplication.setMovie(18);
+	} else if (SMSGetApplication()->getMovie() == 2) {
+		SMSGetApplication()->setMovie(18);
 		nextMode = 6;
-	} else if (gpApplication.getMovie() == 0x12) {
+	} else if (SMSGetApplication()->getMovie() == 0x12) {
 		*param_1 = 4;
-	} else if (gpApplication.getMovie() == 3) {
-		gpApplication.setMovie(19);
+	} else if (SMSGetApplication()->getMovie() == 3) {
+		SMSGetApplication()->setMovie(19);
 		nextMode = 6;
-	} else if (gpApplication.getMovie() == 0x13) {
+	} else if (SMSGetApplication()->getMovie() == 0x13) {
 		*param_1 = 4;
-	} else if (gpApplication.getMovie() == 0xc) {
-		TGameSequence& nextArea = gpApplication.mNextArea;
+	} else if (SMSGetApplication()->getMovie() == 0xc) {
+		TGameSequence& nextArea = SMSGetApplication()->mNextArea;
 		nextArea.set(15, 0, 0);
 		nextMode = 5;
-	} else if (gpApplication.getMovie() == 0xe) {
+	} else if (SMSGetApplication()->getMovie() == 0xe) {
 		if (!TFlagManager::getInstance()->getShineFlag(0x77))
 			TFlagManager::getInstance()->setShineFlag(0x77);
 
-		gpApplication.setMovie(15);
+		SMSGetApplication()->setMovie(15);
 		nextMode = 6;
-	} else if (gpApplication.getMovie() == 15) {
+	} else if (SMSGetApplication()->getMovie() == 15) {
 		u8 movie
 		    = TFlagManager::getInstance()->getFlag(0x40000) < 120 ? 16 : 17;
-		gpApplication.setMovie(movie);
+		SMSGetApplication()->setMovie(movie);
 
 		nextMode = 6;
-	} else if (gpApplication.getMovie() == 16
-	           || gpApplication.getMovie() == 17) {
+	} else if (SMSGetApplication()->getMovie() == 16
+	           || SMSGetApplication()->getMovie() == 17) {
 		*param_1 = 3;
 	} else {
 		nextMode = 5;
@@ -372,15 +377,16 @@ int TMovieDirector::direct()
 
 		gpMSound->initSound();
 #ifdef VERSION_GMSP01
-		if (gpApplication.getMovie() == 16)
+		if (SMSGetApplication()->getMovie() == 16)
 			mEndingString->startFadeIn();
 #endif
-		if (gpApplication.getMovie() == 9) {
-			gpApplication.mFader->startWipe(12, 0.0f, 0.0f);
+		if (SMSGetApplication()->getMovie() == 9) {
+			SMSGetApplication()->getFader()->startWipe(12, 0.0f, 0.0f);
 			unk18 = false;
 		} else {
-			gpApplication.mFader->startWipe(14, 1.0f, 0.0f);
-			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
+			SMSGetApplication()->getFader()->startWipe(14, 1.0f, 0.0f);
+			SMSGetApplication()->getFader()->setColor(
+			    JUtility::TColor(0, 0, 0, 255));
 			THPPlayerPlay();
 		}
 	}
@@ -428,19 +434,19 @@ int TMovieDirector::direct()
 	s32 nextState = unk1C;
 	switch (unk1C) {
 	case STATE_FADE_IN:
-		if (TFlagManager::getInstance()->getBool(gpApplication.getMovie()
+		if (TFlagManager::getInstance()->getBool(SMSGetApplication()->getMovie()
 		                                         + 0x10391)
 		    && unk20->checkFrameMeaning(TMarioGamePad::MEANING_START
 		                                | TMarioGamePad::MEANING_MENU_A
 		                                | TMarioGamePad::MEANING_MENU_B)) {
 			nextState = STATE_FADE_OUT;
-		} else if (gpApplication.mFader->isFullyFadedIn()) {
+		} else if (SMSGetApplication()->getFader()->isFullyFadedIn()) {
 			nextState = STATE_PLAYING;
 		}
 		break;
 
 	case STATE_PLAYING:
-		if (TFlagManager::getInstance()->getBool(gpApplication.getMovie()
+		if (TFlagManager::getInstance()->getBool(SMSGetApplication()->getMovie()
 		                                         + 0x10391)
 		    && unk20->checkFrameMeaning(TMarioGamePad::MEANING_START
 		                                | TMarioGamePad::MEANING_MENU_A
@@ -454,15 +460,15 @@ int TMovieDirector::direct()
 #ifdef VERSION_GMSP01
 		if (mEndingTimer < 300)
 			++mEndingTimer;
-		if (gpApplication.getMovie() == 17 && mEndingTimer == 30)
+		if (SMSGetApplication()->getMovie() == 17 && mEndingTimer == 30)
 			mEndingString->startFadeIn();
-		if (gpApplication.getMovie() == 17 && mEndingTimer == 220)
+		if (SMSGetApplication()->getMovie() == 17 && mEndingTimer == 220)
 			mEndingString->startFadeOut();
 #endif
 		break;
 
 	case STATE_FADE_OUT:
-		if (gpApplication.mFader->isFullyFadedOut())
+		if (SMSGetApplication()->getFader()->isFullyFadedOut())
 			desiredAppState = decideNextMode(&nextState);
 		break;
 
@@ -470,7 +476,7 @@ int TMovieDirector::direct()
 		switch (unk24->getNextState()) {
 		case 0:
 		case 1:
-			gpApplication.mFader->setFadeStatus(
+			SMSGetApplication()->getFader()->setFadeStatus(
 			    TSMSFader::FADE_STATUS_FULLY_FADED_OUT);
 			desiredAppState = TApplication::APP_STATE_DONE;
 			break;
@@ -480,15 +486,15 @@ int TMovieDirector::direct()
 	case STATE_SAVE_AND_CONTINUE:
 		switch (unk24->getNextState()) {
 		case 1:
-			gpApplication.mFader->setFadeStatus(
+			SMSGetApplication()->getFader()->setFadeStatus(
 			    TSMSFader::FADE_STATUS_FULLY_FADED_OUT);
 			desiredAppState = TApplication::APP_STATE_MOVIE;
 			break;
 		case 0:
-			gpApplication.mFader->setFadeStatus(
+			SMSGetApplication()->getFader()->setFadeStatus(
 			    TSMSFader::FADE_STATUS_FULLY_FADED_OUT);
-			if (gpApplication.getMovie() == 19) {
-				gpApplication.setMovie(13);
+			if (SMSGetApplication()->getMovie() == 19) {
+				SMSGetApplication()->setMovie(13);
 				desiredAppState = TApplication::APP_STATE_MOVIE;
 			} else {
 				desiredAppState = TApplication::APP_STATE_GAMEPLAY;
@@ -514,30 +520,33 @@ int TMovieDirector::direct()
 			THPPlayerStop();
 			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
 			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
-			gpApplication.mFader->startWipe(
+			SMSGetApplication()->getFader()->startWipe(
 			    VERSION_SELECT(GMSJ01(15), GMSP01(14)), 0.3f, 0.0f);
-			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
-			unk24->init(gpApplication.getMovie() == 17 ? 8 : 0);
+			SMSGetApplication()->getFader()->setColor(
+			    JUtility::TColor(0, 0, 0, 255));
+			unk24->init(SMSGetApplication()->getMovie() == 17 ? 8 : 0);
 			break;
 
 		case STATE_SAVE_AND_CONTINUE:
 			THPPlayerStop();
 			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
 			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
-			gpApplication.mFader->startWipe(14, 0.3f, 0.0f);
-			gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
+			SMSGetApplication()->getFader()->startWipe(14, 0.3f, 0.0f);
+			SMSGetApplication()->getFader()->setColor(
+			    JUtility::TColor(0, 0, 0, 255));
 			unk24->init(9);
 			break;
 
 		case STATE_FADE_OUT:
 			if (unk20->isSomethingPushed()) {
-				gpApplication.mFader->startWipe(4, 1.0f, 0.0f);
+				SMSGetApplication()->getFader()->startWipe(4, 1.0f, 0.0f);
 			} else {
-				gpApplication.mFader->startWipe(15, 1.0f, 0.0f);
-				gpApplication.mFader->setColor(JUtility::TColor(0, 0, 0, 255));
+				SMSGetApplication()->getFader()->startWipe(15, 1.0f, 0.0f);
+				SMSGetApplication()->getFader()->setColor(
+				    JUtility::TColor(0, 0, 0, 255));
 			}
 
-			if (gpApplication.getMovie() == 9) {
+			if (SMSGetApplication()->getMovie() == 9) {
 				MSound* sound = gpMSound;
 				sound->fadeOutAllSound(SMSGetVSyncTimesPerSec());
 			}

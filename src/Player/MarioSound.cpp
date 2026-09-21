@@ -483,7 +483,7 @@ void TMario::soundMovement()
 			}
 		} else if (curStatus == MARIO_STATUS_FORCE_JUMP
 		           && mSoundValues.unk00 != MARIO_STATUS_FORCE_JUMP
-		           && gpApplication.mCurrArea.getStage() == 2) {
+		           && SMSGetApplication()->mCurrArea.getStage() == 2) {
 			SMSGetMSound()->startSoundActor(MSD_SE_MA_ROPE_JUMP_C, &mPosition,
 			                                0, nullptr, 0, 4);
 			if (mHealth > 2) {

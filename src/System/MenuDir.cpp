@@ -171,7 +171,7 @@ int TMenuDirector::direct()
 			return 0;
 		void* res;
 		OSJoinThread(&gSetupThread, &res);
-		gpApplication.mFader->startFadeinT(0.25f);
+		SMSGetApplication()->getFader()->startFadeinT(0.25f);
 		if (TFlagManager::getInstance()->getBool(0x30007)) {
 			TFlagManager::getInstance()->setBool(true, 0x30007);
 			gpMSound->loadWave(MS_WAVE_UNK128);
@@ -319,10 +319,8 @@ int TMenuDirector::direct()
 		if (unk44->checkFlag(0x1)) {
 			setFixedStageValue();
 			unk18 = 2;
-			gpApplication.mFader->startFadeoutT(0.25f);
-			TGameSequence nextArea;
-			nextArea.set(unk48, unk4C, 0);
-			gpApplication.setNextArea(nextArea);
+			SMSGetApplication()->getFader()->startFadeoutT(0.25f);
+			SMSGetApplication()->setNextArea(TGameSequence(unk48, unk4C));
 		} else if (unk44->checkFlag(0x2)) {
 			unk18 = 0;
 			unk40->unfade();
@@ -332,7 +330,7 @@ int TMenuDirector::direct()
 		break;
 
 	case 2:
-		if (gpApplication.mFader->isFullyFadedOut()
+		if (SMSGetApplication()->getFader()->isFullyFadedOut()
 		    && gpMSound->checkWaveOnAram(MS_WAVE_UNK128)) {
 			if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12)
 				uVar13 = TApplication::APP_STATE_MOVIE;
@@ -342,7 +340,7 @@ int TMenuDirector::direct()
 		break;
 
 	case 3:
-		if (gpApplication.mFader->isFullyFadedOut())
+		if (SMSGetApplication()->getFader()->isFullyFadedOut())
 			uVar13 = TApplication::APP_STATE_QUIT;
 		break;
 	}
@@ -361,7 +359,7 @@ void TMenuDirector::setFixedStageValue()
 		int movie = unk4C;
 		if (unk48 == 0x12)
 			movie += 0x14;
-		gpApplication.mMovie = movie;
+		SMSGetApplication()->setMovie(movie);
 
 		unk48 = 0xf;
 		unk4C = 0;

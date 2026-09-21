@@ -220,8 +220,8 @@ int TSelectDir::direct()
 		unk20->startMove();
 		unk20->startOpenWindow();
 
-		gpApplication.mFader->startWipe(0xe, 0.4f, 0.0f);
-		gpApplication.mFader->setColor(
+		SMSGetApplication()->getFader()->startWipe(0xe, 0.4f, 0.0f);
+		SMSGetApplication()->getFader()->setColor(
 		    unk40 == 9 ? JUtility::TColor(0xff, 0xff, 0xff, 0xff)
 		               : JUtility::TColor(0, 0, 0, 0xff));
 		gpMSound->initSound();
@@ -230,17 +230,17 @@ int TSelectDir::direct()
 
 	JDrama::TDirector::direct();
 
-	switch (gpApplication.mFader->mFadeStatus) {
+	switch (SMSGetApplication()->getFader()->mFadeStatus) {
 	case TSMSFader::FADE_STATUS_FULLY_FADED_IN:
 	case TSMSFader::FADE_STATUS_FADING_IN:
 		if (unk20->unk14B)
 			return TApplication::APP_STATE_DONE;
 
 		if (unk20->mCloseMenu) {
-			gpApplication.mNextArea.unk1 = unk20->mSelectedShine;
+			SMSGetApplication()->mNextArea.unk1 = unk20->mSelectedShine;
 			TFlagManager::smInstance->setFlag(0x40003, unk20->mSelectedShine);
-			gpApplication.mFader->startWipe(0xf, 1.0f, 0.0f);
-			gpApplication.mFader->setColor(
+			SMSGetApplication()->getFader()->startWipe(0xf, 1.0f, 0.0f);
+			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0xff, 0xff, 0xff, 0xff));
 			SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec());
 		}
@@ -249,12 +249,12 @@ int TSelectDir::direct()
 
 	if (unk18->isSomethingPushed() && !unk4C) {
 		unk4C = true;
-		gpApplication.mFader->startWipe(4, 1.0f, 0.0f);
+		SMSGetApplication()->getFader()->startWipe(4, 1.0f, 0.0f);
 		SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec() * 0.4f);
 		unk10->unkC.on(CUE_MOVE | CUE_CALC_ANIM);
 	}
 
-	if (gpApplication.mFader->mFadeStatus
+	if (SMSGetApplication()->getFader()->mFadeStatus
 	    == TSMSFader::FADE_STATUS_FULLY_FADED_OUT) {
 		gpMSound->stopAllSound();
 		if (unk18->isSomethingPushed())
