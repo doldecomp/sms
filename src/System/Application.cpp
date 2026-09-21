@@ -271,7 +271,7 @@ void TApplication::initialize()
 	                       SMSGetGCLogoRenderHeight());
 	TFlagManager::start(JKRGetCurrentHeap());
 	TTimeRec::start(0xDFC0);
-	TTimeRec::instance()->unk81C |= 1;
+	TTimeRec::instance()->mFlags.on(1);
 	TDrawSyncManager::smInstance->setCallback(0, 0xDFC0, 0xDFFF,
 	                                          TTimeRec::instance());
 	mMeter = new TProcessMeter(2);
@@ -688,9 +688,8 @@ int TApplication::gameLoop()
 	while (nextState <= APP_STATE_DEFAULT) {
 		mDisplay->startRendering();
 
-		// TODO: TimeRec BS
-		TTimeRec::startTimerTwice(mDisplay->unk60->mLastRetraceTime, 0);
-		TTimeRec::snapGxTimeStatic(0);
+		TTimeRec::startFrameSt(mDisplay->unk60->mLastRetraceTime);
+		TTimeRec::snapGXTimeSt(0);
 
 		TMarioGamePad::read();
 		for (int i = 0; i < 4; i++) {
@@ -752,7 +751,7 @@ int TApplication::gameLoop()
 				gpMSound->mainLoop();
 		}
 
-		TTimeRec::endTimer();
+		TTimeRec::snapCPUTime(0);
 
 		THPPlayerDrawDone();
 		mDisplay->endRendering();
