@@ -470,11 +470,12 @@ void TGuide::linkSelect()
 		appearGuidePane(point);
 
 	if (point != -1 && point < 10) {
-		int alpha = mPointPanes[point]->mAlpha;
+		u8 cur = mPointPanes[point]->mAlpha;
+		int alpha;
 		if (mCursorBlinkUp)
-			alpha += 4;
+			alpha = cur + 4;
 		else
-			alpha -= 4;
+			alpha = cur - 4;
 		if (alpha < 30) {
 			mCursorBlinkUp = 1;
 			alpha          = 30;
@@ -515,14 +516,7 @@ void TGuide::linkSelect()
 	rotatePattern(mBirdPane2, mTimer, 90, -45);
 
 	shinePattern(mShineBoundPane, mTimer, 90);
-	if (mTimer % 180u < 130)
-		mClickPane->mAlpha = 255;
-	else
-		mClickPane->mAlpha = 0;
-	mShineBoundPane->update();
-
 	mmarkPattern(mMarkPane, mTimer, 270);
-	mMarkPane->update();
 
 	if (mMapBlinkUp) {
 		mMapAlpha += 3;
@@ -597,14 +591,16 @@ void TGuide::rotatePattern(J2DPicture* pane, s16 timer, u32 period, s16 angle)
 // UNUSED
 void TGuide::shinePattern(TBoundPane* pane, s16 timer, u32 period)
 {
-	u16 t       = timer;
-	u32 phase   = t % period;
+	u16 t     = timer;
+	int phase = t % period;
 	if (phase == 0)
 		pane->setPanePosition(45, JUTPoint(0, 0), JUTPoint(0, -5),
 		                      JUTPoint(0, 0));
 	else if (phase == 45)
 		pane->setPanePosition(45, JUTPoint(0, 0), JUTPoint(0, 5),
 		                      JUTPoint(0, 0));
+	mClickPane->mAlpha = t % 180u < 130 ? 255 : 0;
+	pane->update();
 }
 
 // UNUSED
@@ -617,6 +613,7 @@ void TGuide::mmarkPattern(TExPane* pane, s16 timer, u32 period)
 		else
 			pane->setPaneAlpha(period, mMarkAlpha, 0);
 	}
+	pane->update();
 }
 
 // UNUSED; the cursor snap that shipped disabled.
