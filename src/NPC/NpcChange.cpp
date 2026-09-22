@@ -345,6 +345,9 @@ void TBaseNPC::behaveToBeTrampled_()
 	}
 }
 
+// TODO: 99.9%. The burning-branch spray particle is emitted at the hitting
+// object's position (retail's r4 + 0x10). Remaining: the frame is 0x30
+// short and isSunflowerReviving's result takes r29 where retail reuses r28.
 void TBaseNPC::behaveToHitObject_(THitActor* param_1,
                                   EnumHitNpcObjectKind param_2)
 {
@@ -355,8 +358,8 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		if (gpMarDirector->isTalkOrDemoModeNow())
 			return;
 
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
-		                             nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+		                             &param_1->mPosition, 0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 		                              0.0f, 0, 0, 4);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_FIRE_FIGHTING))
@@ -604,12 +607,16 @@ void TBaseNPC::changeNerveProc_()
 	}
 }
 
+// TODO: 99.5%. The frame is 0x40 short: retail's pos copy sits at 0x80 with
+// the whole low region below it, ours at 0x44; no rung found (getSpine() for
+// the reset is +8, raw mSinkHeight -8, plain `=` for the final copies breaks
+// 13 instructions). z declared before y gives retail's f31/f30 split.
 void TBaseNPC::setPosAndInitAfterSinkBottom()
 {
 	JGeometry::TVec3<f32> pos = unk194;
 
-	f32 y      = pos.y;
 	f32 z      = pos.z;
+	f32 y      = pos.y;
 	bool cVar8 = gpPollution->isPolluted(pos.x, y, z);
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
 	            | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000
