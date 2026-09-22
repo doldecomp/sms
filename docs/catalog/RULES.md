@@ -89,6 +89,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Pasted-UNUSED: a size-exact UNUSED helper is often written out at its call sites; conversely one can exist only to *be* a level (codegen-tells.md: "`bosswanwan`").
 - A retail frame far larger than ours plus base ctors called one level deeper means a missing `static inline` case helper (no map symbol); wrapping a whole `switch` case body in one restored CardLoad `perform`'s shared `li r28, 1` and its jump tables.
 - A plain callee expanded at some sites and `bl`ed at one is a depth-budget split: wrap only the calling site in a one-line static inline to push it to depth 2 (BathWaterManager mesh `render`, `drawCap` ~12 statements: 93.8 -> 98.1).
+- The case-helper rule needs its tell (ctors/dtors one level deeper than ours); without it, wrapping case bodies is inert (CardSave `execMovement_`, `waitForStop`).
+- Repeated blocks that get the same register pair in retail but rotate in ours are one TU-local inline call per repetition (CardSave `initData` caption rows).
 
 ## Frame-size gaps
 
@@ -234,6 +236,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Seven units' scores rest on fabricated padding, so they are not evidence; do not link MarioGamePad (frame-gaps.md: "Pre-existing padding").
 - A TU-local `static inline` returning a **reference** to a member, or an existing reference-returning accessor, binds the member's address (`addi rD, rBase, off`) at zero frame cost; a defaulted constructor argument is one inline level (codegen-tells.md: "Structural pass V").
 - `TVec3`'s `operator*` return type is a **consumption** split, not an overload one: a destination copy (`x = a*k`, `TVec3 v = a*k`) wants the reference return, a consumed temporary (argument, `+=`, `+`) the by-value one. not: a by-value `operator=` or implicit copy ctor (map-refuted), direct-init, the parameter form, V2/V3 header-wide (Tongue's sites are three-object V3, everything else two-object; closed, frame-gaps.md: "Research batch 159", "Header round 31").
+- A scalar slot below a local `char[N]` in ours but above it in retail: declare the scalar before the array (CardSave `setMessageC`).
 
 ## Register and scheduling residues
 
@@ -257,6 +260,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Known-open: the `this`-vs-pool-base callee-saved swap and zero-frame rotations; `M3UMtxCalcBlendAux` moves with declaration order but never lands, and `TRKSuppAccessFile` (all 120 orders) plus `emitParticle_`, `checkNextFrameSe`, `partsPerform` (fully inert) are exhausted (frame-gaps.md: "batch 145").
 - `int a = p->getAlpha(); a += 4;` works in the loaded register; the one-line `getAlpha() + 4` computes into r0 and adds an `mr` (CardLoad `perform`).
 - `T* bm = &arr[idx]; bm->f` gives `addi; lhzx`, inline `arr[idx].f` gives `add; lhz off` (CardLoad `waitForAnyKeyBM`).
+- A `(u16)x` call argument is narrowed in the prologue and moved with `mr`; `x & 0xFFFF` stays at the call as one `clrlwi` (CardSave `setMessageC`).
 
 ## Float and pool
 
