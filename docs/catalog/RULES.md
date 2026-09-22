@@ -122,6 +122,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Retail rematerialising `li r0, 0` in an `else` both outer and inner guards reach: the guards are one `&&` condition (MarioDraw `initModel`).
 - A one-statement in-class accessor that retail calls (weak, only this caller) sits at depth 5: add the missing level as a TU-local `static inline` wrapper (const pointer parameter for the const overload), and route every other use of that value through it too (enemyMario `consider`/`canJumpToNode`).
 - A callee retail reaches only through another inline sits at depth 2 (budget 9): ten statements with zero-cost named chain steps replace `#pragma dont_inline` (Yoshi `getEmitPosDir`).
+- A 10-14 statement callee called at one site and expanded at others: wrap the whole if/else at that site as a case helper, not just the call (MarDirectorDirect `decideNextStage`).
+- Retail folding the first member store into `stbu` and using base+`addi` for the rest: the receiver came through a reference-returning static inline accessor (MarDirectorDirect `getNextArea()`).
 
 ## Frame-size gaps
 
@@ -305,6 +307,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `mr. rX, r3` after a call is a direct local; `cmplwi r3,0; mr rX,r3` came through an inline wrapper: use `JKRFileLoader::getGlbResource`, not `JKRGetResource` (enemyMario `initEnemyValues`).
 - A counter zeroed in a block and copied out after (`addi rOld, rNew, 0`) is a block-local assigned at block end; an unmasked store then increment is `field = n++` (enemyMario).
 - `lbzx base, idx` vs our `add; lbz` means direct `links[i].field`, not a bound `T& link` (enemyMario).
+- `cmpwi` after `lhz`/`lbz` means the value was read as `int`: `(int)x.get() == 1` (MarDirectorDirect).
 
 ## Float and pool
 
@@ -337,6 +340,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Retail's fused length `fmadds f1,f2,f2,f1; fadds` means the vector went through a `Vec&` inside an inlined callee; `TVec3&`/`TVec3*`/same-function `Vec&` stay unfused (Tongue `movement`; also hauntLeg, amiNoko, bosstelesa, `warpIn`).
 - A length that copies the difference to a new slot and calls `sqrt` out of line: `f(TVec3 a, const TVec3& b) { a.sub(b); return len(a); }` with `len(TVec3 v) { return sqrt(v.squared()); }` (Tongue, ModelGate `perform`).
 - A by-value TVec3 argument copied with `lfs`/`stfs` has a `Vec` source through `TVec3(const Vec&)`; a word copy means a TVec3 source (ModelGate).
+- A literal passed as an inline parameter is not constant-folded, keeping retail's multiply by 1.0f (`secToFrame(1.0f, fader)`, MarDirectorDirect).
 
 ## Data and layout
 
