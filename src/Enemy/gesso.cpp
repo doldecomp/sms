@@ -245,7 +245,9 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		// sites reuse it (retail r30). 91.9 -> 97.5. Residue is 0x10 of
 		// frame (scale mtx 0x10 high) and the 1.0/0.0 preload vs
 		// store-then-reload; named jntNo and .value both moved the rot
-		// mtx off 0x44.
+		// mtx off 0x44. Also inert or worse (cc48): both matrices declared
+		// at the top in either order, rotMtx declared first and assigned
+		// later, .value, JMASSin/JMASCos over a named s16, cos before sin.
 		MtxPtr rotMtx = local_74;
 		MTXConcat(anmMtx, rotMtx, anmMtx);
 		MTXConcat(anmMtx, local_44, anmMtx);
@@ -687,6 +689,10 @@ void TGesso::bind()
 				var1.set(f1, 0.0f, 0.0f);
 		}
 
+		// TODO: local_48 sits at 0x40, retail 0x38. Raw gpMarioPos at both
+		// sites lands it (-8 of pool) but drops the conversion slot to 0x60
+		// (frame 0x78); no +8 above local_48 found (local_48/var2 declared
+		// early, named magnitude, named s16 matan, f1 as if/else) (cc48).
 		f32 fVar3 = SMS_GetMarioPos().x - mPosition.x;
 		f32 fVar4 = SMS_GetMarioPos().z - mPosition.z;
 		JGeometry::TVec3<f32> var2(fVar3, 0.0f, fVar4);
@@ -852,14 +858,8 @@ void TGesso::turnIn()
 
 bool TGesso::turning()
 {
-	// Named step+angle land the inlined frame at 0x28 and load
-	// mTurnAngle before 7.2f. Residue is a volatile FPR swap
-	// (retail f1=angle/f2=step; we emit the pair reversed).
-	// Declaration order, dropping step, and an in-place add helper
-	// were all inert or cost frame.
-	f32 angle = mTurnAngle;
 	f32 step  = 7.2f;
-	angle += step;
+	f32 angle = mTurnAngle + step;
 	if (angle <= 180.0f) {
 		mBodyTrackingAngle = 90.0f;
 		mRotation.y += step;
@@ -995,12 +995,8 @@ void TGessoPolluteObj::rebirth()
 
 	if (unk158 == 10) {
 		mVelocity.y = -15.0f;
-		// TODO: structure is exact; the ROM loads z, y, x and only then
-		// folds 0.5f into the radius and fetches gpPollution, while we fold
-		// the radius between x and z. Scheduling residue. Named 0.5/scaled,
-		// SMSGetPollution(), and getPosition() were inert or worse.
-		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-		                   TGesso::mPollRange * 32.0f * 0.5f);
+		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+		                     TGesso::mPollRange * 32.0f * 0.5f);
 
 		((TGesso*)unk160)
 		    ->getManager()
@@ -1040,7 +1036,12 @@ void TGessoPolluteObj::set()
 
 		JGeometry::TVec3<f32> local_54 = getVelocity();
 
-		// TODO: awful things happening with the stack frame here
+		// TODO: awful things happening with the stack frame here: retail's
+		// velocity copy is a low-pool temporary at 0xc (ours a named slot
+		// at 0x4c). Tried (cc48): a const reference to a TVec3 temporary,
+		// a by-value TU-local velocity fork (named or direct), a by-value
+		// predicate helper, a const local, declare-then-assign; all worse
+		// or inert.
 		JGeometry::TVec3<f32> local_C = getVelocity();
 		if (JGeometry::TVec3<f32>(local_C).x != 0.0f
 		    || JGeometry::TVec3<f32>(local_C).z != 0.0f)
@@ -1123,19 +1124,12 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 		} else if (self->isBckAnm(9)) {
 			// getSaveParams() is +8 (0x98 -> 0xa0); target 0xa8. A named
 			// params local dropped it back; a second body binder scrambled
-			// GPRs. Remaining: TVec3::sub slots and the setBckAnm(8) `b`
-			// that if/else duplicates setFrame to recover (99.4 -> 97.6).
-			if (spine->getTime() > self->getSaveParams()->mSLFreezeWait.get()) {
-				u8 tmp = self->unk165;
-				if (tmp != 0)
-					self->unk165 = 0;
-
-				if (tmp == 0)
-					self->setBckAnm(8);
-			}
-			// Retail branches over this reset after setBckAnm(8); sharing
-			// one setFrame() via if/else duplicates the call (99.4 -> 97.6).
-			self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
+			// GPRs. Remaining: TVec3::sub slots (frame only).
+			if (spine->getTime() > self->getSaveParams()->mSLFreezeWait.get()
+			    && !self->unsetUnk165())
+				self->setBckAnm(8);
+			else
+				self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 		} else if (self->isBckAnm(8)) {
 			return true;
 		}
