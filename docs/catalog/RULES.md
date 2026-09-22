@@ -71,6 +71,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - One shared `li r3, 0` return at the end where ours has one per branch: an if/else-if chain with one final `return FALSE` (tobiPuku Land).
 - A member reload after a `switch` whose default jumps to the next test: `default: goto next;` (Yoshi `thinkAnimation`).
 - An `addis`/`subis` mismatch in a range compare can be a wrong constant in source (`0xC000...` vs `0x0C00...`, Yoshi).
+- A `new` result stored at a fixed offset and reloaded via `this + idx*4` is a one-element array member indexed by a variable (MarioCap `unk30`).
 
 ## Inlining decisions
 
@@ -295,6 +296,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Price a binder in every function that inlines its host; a named `getModel()` local may cost 0 where the binder costs 8 (MActor `calcAnm`/`perform`).
 - An inline helper's return type sets its pool price (f32 0x20 vs s16 0x18 over three sites); a named-return accessor for a global ~+8 pool per site (camerashake, lensglow).
 - `v.x = v.y = v.z = s` costs no stack; a ctor, `set` or `setAll` costs 16 bytes of dead low region (MarioParticle `surfingEffect`).
+- Frame-only gaps with no stack references price additively: +0x10 per name-and-return binder over a two-level member chain, +8 per naming `new` factory, +8 per direct-return fork, 0 per direct-return `new` (MarioCap ctor). Caution: many combinations fit such a gap, so the choice is weakly evidenced; prefer the one that also fixes slot positions.
+- A helper assigning through a reference parameter puts a caller's aggregate back in its named block below top-declared aggregates (MapWarp `watchToWarp`).
 
 ## Register and scheduling residues
 
