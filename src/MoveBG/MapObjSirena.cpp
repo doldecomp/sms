@@ -193,13 +193,20 @@ void TRoulette::switchStop()
 	}
 }
 
+// TODO: 99.3%. The named model pointer is retail's 4-byte named slot above the
+// two matrices; the one residue is `mr r4, r31` in retail against our
+// `addi r4, r31, 0` for the decremented joint index. Tried: s32/u32/u16/s16
+// index, `jntNo--`, `-= 1`, `= jntNo - 1`, `jntNo - 1` at each call, a
+// separate `int idx`, a named J3DJoint*, a named gpCurObject receiver, a
+// second getJntNo() read; all equal or worse.
 static int partsRollCallback(J3DNode* node, int flag)
 {
 	if (flag == 0) {
 		if (gpCurObject == nullptr)
 			return 1;
-		int jntNo     = ((J3DJoint*)node)->getJntNo();
-		MtxPtr jntMtx = gpCurObject->getModel()->getAnmMtx(jntNo);
+		int jntNo       = ((J3DJoint*)node)->getJntNo();
+		J3DModel* model = gpCurObject->getModel();
+		MtxPtr jntMtx   = model->getAnmMtx(jntNo);
 
 		--jntNo;
 
@@ -379,17 +386,12 @@ void TSlotDrum::moveObject()
 						for (int j = 0; j < unk148; ++j) {
 							if (i == j)
 								continue;
-							if (unk138[j] != 0.0f)
-								return;
-							// `bge` past the return: the ROM bails out on a
-							// reel still short of a full turn, not past one.
-							// TODO: the ROM leaves the second test unfused
-							// (`bge next; b epilogue`) where the `&&` fuses
-							// it; a guard plus a bare return is worse (99.2),
-							// and neither `if (!(a && b)) continue; return;`
-							// nor nested `if`s unfold the pair.
-							if (unk13C[j] >= (f32)unk168
-							    && unk13C[j] < 360.0f)
+							// One `||` with the reel-range test as its last
+							// term: that is what leaves retail's unfused
+							// `bge next; b epilogue` pair.
+							if (unk138[j] != 0.0f
+							    || (unk13C[j] >= (f32)unk168
+							        && unk13C[j] < 360.0f))
 								return;
 						}
 						MSBgm::startBGM(MSD_BGM_FANFARE_CASINO);
@@ -464,6 +466,16 @@ static inline f32 drumRollSpeed(const TSirenaRollMapObj* drum, int idx)
 	return speed;
 }
 
+// TODO: 99.97%, slot-only. Retail parks each of the three TMsRange
+// temporaries with a 4-byte word above it (s32 range 0x54, f32(0,100) 0x48,
+// f32(0,1) 0x3c); ours packs them (0x50/0x48/0x40) with 8 of slack under the
+// 0x60 conversion buffer. A `static inline bool` that names the (0,1) draw and
+// returns the `<= 0.9f` test lands the two float ranges; a void helper for
+// the `unk19C[...] = true` store lands the s32 range; no combination lands
+// all three (the (0,100) range stays 4 high). Inert: named/`int`/`u8`/`s32`
+// index, `f32 v` declared early, direct-return and named-result rand forks,
+// a TMsRange taken by `const&`, forks over unk1A4/unk1A8, the if/else chain in
+// a helper, alternative TMsRange::rand() bodies (header, measured only).
 void TItemSlotDrum::moveObject()
 {
 	TLiveActor::moveObject();
@@ -1092,14 +1104,9 @@ void TCloset::moveObject()
 							for (int j = 0; j < unk148; ++j) {
 								if (i == j)
 									continue;
-								if (unk138[j] != 0.0f)
-									return;
-								// TODO: the ROM spells the second term as
-								// `bge continue; b return`, which this `&&`
-								// does not reproduce; two `continue`s are
-								// worse still (99.44 -> 98.49).
-								if (unk13C[j] >= 180.0f
-								    && unk13C[j] < 360.0f)
+								if (unk138[j] != 0.0f
+								    || (unk13C[j] >= 180.0f
+								        && unk13C[j] < 360.0f))
 									return;
 							}
 							unk16C = 1;
@@ -1367,12 +1374,35 @@ void TPictureTelesa::afterFinishedAnim()
 	}
 }
 
+// Squared distance for TPictureTelesa::touchActor: named products for x and y
+// and the in-place `dz` are what reproduce retail's FPR assignment (a 216-way
+// grid over `d = a - b` / `d = a; d -= b` and in-place / named / inline
+// squares per axis; only this one is register-exact).
+static inline f32 PictureTelesaSquaredDist(const JGeometry::TVec3<f32>& a,
+                                           const JGeometry::TVec3<f32>& b)
+{
+	f32 dx = a.x - b.x;
+	f32 dy = a.y - b.y;
+	f32 dz = a.z;
+	dz -= b.z;
+	f32 sx = dx * dx;
+	f32 sy = dy * dy;
+	dz *= dz;
+	return sx + sy + dz;
+}
+
+// TODO: 99.9%, instruction- and register-exact; the frame is 0x30 against
+// retail's 0x28 (the helper's named products cost 8). Inert: gpMSound for
+// SMSGetMSound(), pointer, `Vec&` or THitActor* parameters, a named result,
+// the products written out in this body (frame exact but 99.3).
 void TPictureTelesa::touchActor(THitActor* actor)
 {
 	TWaterHitPictureHideObj::touchActor(actor);
 	if (isActorType(0x400001A2) && !unk174 && isState(STATE_FINISHED)
 	    && !isStateTimerEngaged()) {
-		if (actor->mPosition.distance(mPosition) < 200.0f) {
+		if (JGeometry::TUtil<f32>::sqrt(
+		        PictureTelesaSquaredDist(actor->mPosition, mPosition))
+		    < 200.0f) {
 			startStateTimer(60);
 			SMSGetMSound()->startSoundActor(
 			    MSD_SE_BS_TELESA_DISAPPEAR, &mPosition);
