@@ -72,6 +72,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A member reload after a `switch` whose default jumps to the next test: `default: goto next;` (Yoshi `thinkAnimation`).
 - An `addis`/`subis` mismatch in a range compare can be a wrong constant in source (`0xC000...` vs `0x0C00...`, Yoshi).
 - A `new` result stored at a fixed offset and reloaded via `this + idx*4` is a one-element array member indexed by a variable (MarioCap `unk30`).
+- A two-pass body of N stores whose first address registers disagree with retail is one 2N-iteration loop MWCC unrolled by N, not a nested 2xN loop or a chain (JPAEmitterManager ctor, linked).
 
 ## Inlining decisions
 
@@ -343,6 +344,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A trivial TU-local accessor for a matrix member argument computes it before `this` (MarioParticle `surfingEffect`).
 - A returning helper for a bit-field value fixes a two-register swap; a named local keeps it, inline drops the `extsb` (MAnmSoundMario).
 - `x = x * f` and `x *= f` on a `u8` allocate differently (MAnmSoundNPC).
+- A one-line returning helper (`{ return p->getLinkInfo()[0]; }`) ranks a named local below a hoisted base temporary at zero stack; named-result and out-param forms cost 8/0x10 (JPAEmitterManager `createEmitterBase`).
+- Nested polynomial form `c0 + x*(c1 + x*(...))` versus repeated `e = x*e + c` changes constant FPR assignment; volatile FPRs are a source-order knob here (exponentialsf `expf`).
 
 ## Float and pool
 
