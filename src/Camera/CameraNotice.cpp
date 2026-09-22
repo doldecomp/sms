@@ -210,7 +210,7 @@ void CPolarSubCamera::execNoticeOnOffProc_(EnumNoticeOnOffMode mode)
 	}
 }
 
-// TODO (closure batch 152): 92.2%, up from 92.0%. The angle factor is
+// TODO (closure batch 152): 93.9%, up from 92.0%. The angle factor is
 // `|angle| * (2.0f / 65536.0f)` (a 0..1 fraction of a half turn), not
 // DEG2SHORTANGLE(1.0f) -- the old 182.04445f literal was displacing the whole
 // `.sdata2` pool. The angle difference is `mCurrentTarget.mYaw - ang` in that
@@ -223,11 +223,10 @@ void CPolarSubCamera::execNoticeOnOffProc_(EnumNoticeOnOffMode mode)
 //     `subf`; an `s16` local truncates once at the assignment instead.
 //     Rejected: `CLBAbs<s16>` (88.4%, it truncates its parameter on entry),
 //     and repeating `(s16)(mYaw - ang)` in all three positions (91.2%).
-//   - the `fmadds` pair for `diff * 500 + mPos` puts the literal on the left
-//     where retail has the vector component, which per the pool rule means
-//     retail's 500.0f reached the multiply as a *variable* (a named local or
-//     an inlined helper's parameter), not as a literal. Rejected: swapping the
-//     written operand order, and folding both terms into the `matan`
+//   - the `fmadds` pair for `diff * 500 + mPos` is exact with a named 500.0f
+//     distance; spelling the literal at each site put it on the wrong side of
+//     both multiplies. Rejected: swapping the written operand order, and
+//     folding both terms into the `matan`
 //     arguments -- MWCC still evaluates the z term first where retail, doing
 //     arguments right to left, does x first.
 void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
@@ -244,8 +243,9 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 		                           mPos.z - target.z);
 		MsVECNormalize(&diff, &diff);
 		// TODO: many inlines from cameralib maybe?
-		f32 dx       = diff.x * 500.0f + mPos.x;
-		f32 dz       = diff.z * 500.0f + mPos.z;
+		f32 distance = 500.0f;
+		f32 dx       = diff.x * distance + mPos.x;
+		f32 dz       = diff.z * distance + mPos.z;
 		s16 ang      = matan(dz - mCurrentTarget.mTarget.z,
 		                     dx - mCurrentTarget.mTarget.x);
 		s16 yawDiff  = mCurrentTarget.mYaw - ang;
