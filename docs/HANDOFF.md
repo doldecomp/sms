@@ -176,6 +176,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `TWalker::bind` rose **92.34174 -> 93.99%** and unit fuzzy similarity **94.12813 -> 95.38%**; aggregate fuzzy similarity rose **98.089490 -> 98.090935%**, while matched-code, exact-function, and linked-unit counters did not move.
 - Whole-file medium audit of `GC2D/Menu` returned clean with no safe gain.
   Its remaining differences are the known shared-header `JUTColor` temporary-stride class; do not repeat the TU without a new compiler-shape lead.
+- Landed `Player/MarioPhysics`: refined the scalar declaration and lifetime order in `keepDistance` to match the target floating-point register schedule.
+  `keepDistance` rose **93.964424 -> 94.12%** and unit fuzzy similarity **98.82285 -> 98.85%**; aggregate fuzzy similarity rose **98.090935 -> 98.090990%**, while matched-code, exact-function, and linked-unit counters did not move.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
