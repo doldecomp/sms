@@ -18,12 +18,6 @@
 
 JGeometry::TVec3<f32> TSelectShineManager::cCenter(300.0f, 160.0f, -9000.0f);
 
-static inline JGeometry::TVec3<f32>
-getSelectShinePosition(TSelectShineManager* manager, s16 angle)
-{
-	return manager->getPosition(angle);
-}
-
 // The member initialiser list is what puts the mPositions array construction
 // after every scalar store; assigning in the body emits __construct_array
 // first.
@@ -193,6 +187,32 @@ void TSelectShineManager::startDecrease(int count)
 	mShines[mIndex]->playEmitters();
 }
 
+// The per-shine update is its own inline level: that puts getPosition's
+// TVec3 constructor at depth 3 (so TVec3::set<f> is retail's `bl`) and
+// JMASSin/JMASCos and getAngle's TVec2::sub at the depth where retail calls
+// them out of line, which initData (one level shallower) inlines.
+// TVec3::add is not part of that puzzle: naming the sum gives it the
+// `a = b + c` depth (copy ctor 1, operator+ 2, operator+= 3, add 4) that
+// retail's `bl` measures, and the two copies retail makes out of operator+
+// say the sum was a local even though getAngle takes it by reference (the
+// map's getAngle__19TSelectShineManagerFRCQ29JGeometry8TVec3<f> settles
+// that).
+// TODO: the rest is getAngle's TVec2 copy spelling (lwz/stw against retail's
+// lfs/stfs, see getAngle) plus the frame (0x1b8 against 0x220); 92.5 (cc41).
+static inline void TSelectShineUpdate(TSelectShineManager* m, int i)
+{
+	JGeometry::TVec3<f32> pos = m->getPosition(m->mScroll + i * 40);
+	m->mShines[i]->mPosition  = pos;
+
+	JGeometry::TVec3<f32> anglePos
+	    = m->mShines[i]->mPosition + m->mShines[i]->mOffset;
+	s16 angle = m->getAngle(anglePos);
+	if (pos.x > TSelectShineManager::cCenter.x)
+		angle *= -1;
+
+	m->mShines[i]->setAngle(angle);
+}
+
 void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -211,34 +231,8 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 				mDecreasing = false;
 			}
 
-			// TVec3::add is not part of that puzzle: naming the sum gives
-			// it the `a = b + c` depth (copy ctor 1, operator+ 2,
-			// operator+= 3, add 4) that retail's `bl` measures, and the two
-			// copies retail makes out of operator+ say the sum was a local
-			// even though getAngle takes it by reference (the map's
-			// getAngle__19TSelectShineManagerFRCQ29JGeometry8TVec3<f>
-			// settles that). 79.6 -> 82.7.
-			// TODO: retail still calls TVec2::sub, TVec3::set<f>, JMASSin
-			// and JMASCos out of line inside this loop while inlining every
-			// one of them in initData, which has the same expressions at the
-			// same depth. Same per-call-site inlining puzzle as the
-			// MapObjBall table in docs/catalog/codegen-tells.md; TVec2::sub
-			// additionally wants the float-move spelling of getAngle noted
-			// above it. It also costs one 12-byte temporary between
-			// getPosition's result and `pos` (frame 0x1d0 against 0x220).
-			for (int i = 0; i < mShineNum; ++i) {
-				JGeometry::TVec3<f32> pos
-				    = getSelectShinePosition(this, mScroll + i * 40);
-				mShines[i]->mPosition     = pos;
-
-				JGeometry::TVec3<f32> anglePos
-				    = mShines[i]->mPosition + mShines[i]->mOffset;
-				s16 angle = getAngle(anglePos);
-				if (pos.x > cCenter.x)
-					angle *= -1;
-
-				mShines[i]->setAngle(angle);
-			}
+			for (int i = 0; i < mShineNum; ++i)
+				TSelectShineUpdate(this, i);
 		}
 	}
 
@@ -304,6 +298,11 @@ TSelectShine::TSelectShine(J3DModelData* model_data, J3DAnmColor* anm_color,
 	// TODO: instruction-identical from here on; the frame is 0x108 against
 	// our 0xd8, i.e. one 48-byte (Mtx-sized) inline-expansion temporary in
 	// retail that no spelling of this body has reproduced.
+	// Retail's pool is 0x34 higher between the operator+ temporary (0x4c)
+	// and emitPos (0x8c). Tried (cc41): the rotation in a TU-local helper
+	// with its own Mtx (moves the matrix into the pool), `facing` declared at
+	// the top, set()/zero()/chained-zero spellings of mPosition/mOffset, and
+	// emitPos declared then assigned.
 	MtxPtr mtx = mModel->getBaseTRMtx();
 	mtx[0][3]  = mPosition.x;
 	mtx[1][3]  = mPosition.y;
