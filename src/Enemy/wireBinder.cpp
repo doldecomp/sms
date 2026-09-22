@@ -41,8 +41,10 @@ bool TWireBinder::reset(const JGeometry::TVec3<f32>& param_1)
 // the operator- by-value temporary after the three isnan() scratch words, our
 // build hoists it above them, and every reachable spelling either moves
 // nothing or costs instructions.  Measured here and rejected: a by-value
-// destination helper, a block-scoped or named copy plus sub()/-= (the copy is
-// scalar-replaced, 91.8%), TVec3(unk_20) at the site, mLinearVelocity written
+// destination helper (a reference-argument forwarder keeps 174 instructions
+// but shifts the three isnan() words and the sub temporary together +0xc), a
+// block-scoped or named copy plus sub()/-= (the copy is scalar-replaced,
+// 91.8%), TVec3(unk_20) at the site, mLinearVelocity written
 // directly, actor->getPosition() at either or both reads (+8/+16 frame),
 // getVelocity(), the getPoint chain spelled out or its range position named
 // (97.8%), and a dead non-trivial local in getRangePos/getPoint/getWire (the
