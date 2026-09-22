@@ -709,7 +709,7 @@ static inline void updateMarioLifeCounter(TGCConsole2* console)
 // fabricated
 template <class Pane>
 static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
-                                    int value)
+                                    const s32& value)
 {
 	if (value < 100) {
 		setDigitPane(panes[0], textures, (int)(value * 0.1f));
@@ -747,7 +747,7 @@ static inline void setBlueCoinDigits(Pane** panes, JUTTexture** textures,
 // fabricated
 template <class Pane>
 static inline void setShineDigits(Pane** panes, JUTTexture** textures,
-                                  int value)
+                                  const s32& value)
 {
 	if (value < 100) {
 		setDigitPane(panes[0], textures, (int)(value * 0.1f));
@@ -2041,25 +2041,23 @@ void TGCConsole2::loadAfter()
 	unk520->getPane()->hide();
 	unk524->getPane()->show();
 	unk528->hide();
-	unk52C->hide();
-
 	unk528->setFont(gpSystemFont);
 
+	// The ROM calls the virtual resize() (slot 0x14) with the scaled glyph
+	// width, not the inline font-size setter.
 	JUTRect textBounds(unk528->mBounds);
-	unk528->setFontSize(gpSystemFont->getWidth() << 10,
-	                    textBounds.getHeight());
+	unk528->resize(gpSystemFont->getWidth() << 10, textBounds.getHeight());
+	unk52C->hide();
 	unk52C->setFont(gpSystemFont);
-	unk52C->setFontSize(gpSystemFont->getWidth() << 10,
-	                    textBounds.getHeight());
+	unk52C->resize(gpSystemFont->getWidth() << 10, textBounds.getHeight());
 
 	JUTRect telopBounds(unk524->getPane()->mBounds);
-	JUTRect telopPaneBounds(unk520->getPane()->mBounds);
-	telopBounds.add(telopPaneBounds.x1, telopPaneBounds.y1 - 3);
+	textBounds = unk520->getPane()->mBounds;
+	telopBounds.add(textBounds.x1, textBounds.y1 - 3);
 	unk544.set(telopBounds.x1 + 8, telopBounds.y1 + 8, telopBounds.x2 - 8,
 	           telopBounds.y2 - 8);
 
-	unk534 = unk528->mBounds;
-	unk534.add(unk544.x2, unk544.y1 + unk528->mBounds.getHeight());
+	unk534.add(unk544.x2, unk544.y1 + unk528->getHeight());
 
 	unk544.resize(unk544.getWidth() * (16.0f / 15.0f), unk544.getHeight());
 	unk544.add(0, -16);
@@ -2103,10 +2101,16 @@ void TGCConsole2::loadAfter()
 	unk144 = gpEmitterManager4D2->unkC8[0][0];
 	unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 
-	TNozzleBase* nozzle = gpMarioOriginal->mWaterGun->getCurrentNozzle();
-	unk28               = *(u32*)((u8*)nozzle + 0xCC);
+	unk28 = gpMarioOriginal->mWaterGun->getMaxWater();
 
 	unkBC = JDrama::TNameRefGen::search<TBathtub>("バスタブ");
+	if (unkBC) {
+		unk310 = TWaterGun::Rocket;
+		unk274 = unk278[2];
+		unk288 = unk28C[2];
+		unk274->getPane()->setBasePosition(J2DBasePosition_5);
+		unk288->show();
+	}
 	unkC0 = JDrama::TNameRefGen::search<TBossEel>("めおとウナギ");
 	unkC4 = JDrama::TNameRefGen::search<JDrama::TNameRef>("ピーチ姫");
 }
