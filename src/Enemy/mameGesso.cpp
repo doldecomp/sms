@@ -290,14 +290,23 @@ bool TMameGesso::isCollidMove(THitActor*)
 		return true;
 }
 
+// Binding level over the head joint's matrix: with the compiler-unrolled
+// loop below it lands calcObjCollision's 0x58 frame.
+static inline MtxPtr MameGessoHeadMtx(TMameGesso* p)
+{
+	MtxPtr mtx = p->mMActor->getModel()->getAnmMtx(1);
+	return mtx;
+}
+
 void TMameGesso::calcObjCollision()
 {
 	mHeadHeight = 50.0f;
 
-	f32 scale = unk194->mSLCollisionScale.get() * mAttackRadius * mBodyScale;
+	f32 scale = unk194->mSLCollisionScale.get();
+	scale *= mAttackRadius * mBodyScale;
 
-	MtxPtr mtx = mMActor->getModel()->getAnmMtx(1);
 	JGeometry::TVec3<f32> pos;
+	MtxPtr mtx = MameGessoHeadMtx(this);
 	pos.x = mtx[0][3];
 	pos.y = mtx[1][3];
 	pos.z = mtx[2][3];
@@ -306,25 +315,12 @@ void TMameGesso::calcObjCollision()
 		1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
 	};
 
-	unk19C[0] = pos;
-	unk19C[0].y += 90.0f;
-	unk19C[0].x += scale * xzTable[0];
-	unk19C[0].z += scale * xzTable[1];
-
-	unk19C[1] = pos;
-	unk19C[1].y += 90.0f;
-	unk19C[1].x += scale * xzTable[2];
-	unk19C[1].z += scale * xzTable[3];
-
-	unk19C[2] = pos;
-	unk19C[2].y += 90.0f;
-	unk19C[2].x += scale * xzTable[4];
-	unk19C[2].z += scale * xzTable[5];
-
-	unk19C[3] = pos;
-	unk19C[3].y += 90.0f;
-	unk19C[3].x += scale * xzTable[6];
-	unk19C[3].z += scale * xzTable[7];
+	for (int i = 0; i < 4; i++) {
+		unk19C[i] = pos;
+		unk19C[i].y += 90.0f;
+		unk19C[i].x += scale * xzTable[i * 2];
+		unk19C[i].z += scale * xzTable[i * 2 + 1];
+	}
 }
 
 void TMameGesso::entryObjCollision()
@@ -414,7 +410,7 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 				    local_34, returnJumpSp, self->getGravityY());
 				self->mPosition.y += 2.0f;
 				self->setVelocity(vel);
-				self->onHitFlag(LIVE_FLAG_AIRBORNE);
+				self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			}
 		}
 	}
@@ -436,6 +432,10 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 				// (drops the range), the negated `&&` form (keeps three
 				// unfolded terms), an empty `else` (inert). Retail's body
 				// most likely held a statement whose code MWCC stripped.
+				// Also refuted (cc36): a dead `bool` local, the bare call,
+				// an empty if/else, an empty inline call or `a = a` body,
+				// `if (c) return false;`/`if (!c) return false;`, a goto.
+				// The frame is also 0x10 long (0xf8 vs 0xe8).
 				if (MameGessoIsWaterSurface(self->getGroundPlane())) {
 				}
 			}
@@ -611,15 +611,24 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 
 		// The ROM groups the throw as `rate * (power * sin)`, not
 		// `rate * power * sin`: the first fmuls multiplies the power by the
-		// table value and only the second brings the rate in.
-		//
-		JGeometry::TVec3<f32> vel(
-		    params->mSLThrownRateXZ.get()
-		        * (*gpMarioThrowPower * JMASSin(SMS_GetMarioAngleY())),
-		    params->mSLThrownVY.get(),
-		    params->mSLThrownRateXZ.get()
-		        * (*gpMarioThrowPower * JMASCos(SMS_GetMarioAngleY())));
-
+		// table value and only the second brings the rate in. Named
+		// power/rate/z/x with component stores put the VY load after the
+		// x store as in the ROM (97.1 -> 99.8).
+		// TODO: frame 0x68 against 0x70 (the ROM has 8 bytes above `vel`)
+		// and power/cosine swapped between f2 and f3. Tried: every order of
+		// power/rate/angle, named s16/int angle (frame -8), named sin/cos,
+		// a named VY (+8 frame but `vel` 4 high), `vel` at function scope,
+		// params declared after `vel`, `set`/ctor/temporary forms, raw
+		// `*gpMarioAngleY`, product-returning helpers (frame +0x10..+0x20),
+		// a component-setter helper.
+		JGeometry::TVec3<f32> vel;
+		f32 power = *gpMarioThrowPower;
+		f32 rate = params->mSLThrownRateXZ.get();
+		f32 z = rate * (power * JMASCos(SMS_GetMarioAngleY()));
+		f32 x = rate * (power * JMASSin(SMS_GetMarioAngleY()));
+		vel.x = x;
+		vel.y = params->mSLThrownVY.get();
+		vel.z = z;
 		self->setVelocity(vel);
 
 		self->mPosition.y += 2.0f;
