@@ -135,6 +135,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `MoveBG/MapObjMamma`: preserved the frame-speed reads in `TSandBomb::touchWater` and used the binary-attested joint translation field in `TMammaBlockRotate::control`.
   Those functions rose **79.98 -> 89.41%** and **83.78 -> 95.36%**, raising unit fuzzy similarity **96.79317 -> 97.29004%**.
   No function became exact, so matched-code, linked-unit, and exact-function totals did not move; the DOL remains byte-identical.
+- Whole-file medium audits of `Enemy/Kazekun` and `Enemy/BathtubBinder` returned clean with no safe gain.
+  Their remaining large-looking gaps are verified quaternion/vector inlining, FPR allocation, and temporary-placement differences rather than missing control flow.
+- Landed `Camera/CameraJetCoaster`: corrected the balloon message IDs to `0x26..0x2a`, gated the L-button sound with `gateCheck`, and read stick Y from `mCompSPos[1]`.
+  `ctrlJetCoasterCamera_` rose **95.90804 -> 97.05173%**, raising unit fuzzy similarity **96.93434 -> 97.791176%**.
+  No function became exact, so matched-code, linked-unit, and exact-function totals did not move; the DOL remains byte-identical.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
