@@ -98,6 +98,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The other 17 residuals were audited in the same whole-file pass; most are frame-only, while the two stripe paths still need genuine matrix/vector temporary reconstruction.
 - Landed `Enemy/BossHanachanSub`: two TU-local collision forwarders restored the map-required weak `TBGCheckData::isIllegalData` body and the intended inline depth in `TSphereLink::moveHead`.
   The predicate is exact, `moveHead` rose **85.70 -> 91.80%**, and the unit rose **93.75 -> 96.56%**.
+- Landed `Enemy/wireTrap`: reconstructed collision reactions and tightened the root-matrix and three movement-nerve shapes.
+  `checkHitActors` rose **32.49 -> 64.01%**, the unit rose **88.84 -> 93.57%**, and its remaining blockers are recorded frame/inlining residues.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
