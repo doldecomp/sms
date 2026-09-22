@@ -11,8 +11,15 @@
 #include <Camera/CubeManagerBase.hpp>
 #include <Map/MapData.hpp>
 
+// As in setModel, the sub-animation iterators are declared at function scope
+// (their block-scope initialisation adds copy temporaries below the loop's
+// comparison pair). The four animations that need a key-pointer setup call
+// name their `new` result, each worth 4 bytes of named block below the pair.
 MActor::MActor(MActorAnmData* anm_data)
 {
+	JGadget::TList<MActorSubAnmInfo>::iterator it;
+	JGadget::TList<MActorSubAnmInfo>::iterator e;
+
 	mAnmData   = nullptr;
 	mModel     = nullptr;
 	unk8       = nullptr;
@@ -50,28 +57,32 @@ MActor::MActor(MActorAnmData* anm_data)
 	}
 
 	if (anm_data->getUnk30()) {
-		mAnmBpk = new MActorAnmBpk;
+		MActorAnmBpk* bpk = new MActorAnmBpk;
+		mAnmBpk = bpk;
 		mAnmBpk->setUnk1C(anm_data->getUnk30());
 		mAnmBpk->setMatColorAnmKeyPtr();
 		mAnmByType[ANM_TYPE_BPK] = mAnmBpk;
 	}
 
 	if (anm_data->getUnk34()) {
-		mAnmBtp = new MActorAnmBtp;
+		MActorAnmBtp* btp = new MActorAnmBtp;
+		mAnmBtp = btp;
 		mAnmBtp->setUnk1C(anm_data->getUnk34());
 		mAnmBtp->setTexNoAnmFullPtr();
 		mAnmByType[ANM_TYPE_BTP] = mAnmBtp;
 	}
 
 	if (anm_data->getUnk38()) {
-		mAnmBtk = new MActorAnmBtk;
+		MActorAnmBtk* btk = new MActorAnmBtk;
+		mAnmBtk = btk;
 		mAnmBtk->setUnk1C(anm_data->getUnk38());
 		mAnmBtk->setTexMtxAnmKeyPtr();
 		mAnmByType[ANM_TYPE_BTK] = mAnmBtk;
 	}
 
 	if (anm_data->getUnk3C()) {
-		mAnmBrk = new MActorAnmBrk;
+		MActorAnmBrk* brk = new MActorAnmBrk;
+		mAnmBrk = brk;
 		mAnmBrk->setUnk1C(anm_data->getUnk3C());
 		mAnmBrk->setTevColorAnmKeyPtr();
 		mAnmBrk->setTevKColorAnmKeyPtr();
@@ -84,11 +95,11 @@ MActor::MActor(MActorAnmData* anm_data)
 		mAnmByType[ANM_TYPE_BLK] = mAnmBlk;
 	}
 
-	if (anm_data->getUnk0() > 0) {
-		unk10 = new MActorAnmBck*[anm_data->getUnk0()];
+	if (anm_data->unk0 > 0) {
+		unk10 = new MActorAnmBck*[anm_data->unk0];
 
-		JGadget::TList<MActorSubAnmInfo>::iterator it = mAnmData->unk1C.begin();
-		JGadget::TList<MActorSubAnmInfo>::iterator e  = mAnmData->unk1C.end();
+		it = mAnmData->unk1C.begin();
+		e  = mAnmData->unk1C.end();
 
 		for (int i = 0; it != e; ++it, ++i) {
 			unk10[i] = new MActorAnmBck;
