@@ -143,6 +143,7 @@
     "JSystem/JAudio/JASystem/JASWaveBank.cpp",
     "JSystem/JAudio/JASystem/JASWaveBankMgr.cpp",
     "JSystem/JDrama/JDRActor.cpp",
+    "JSystem/JDrama/JDRCamera.cpp",
     "JSystem/JDrama/JDRCharacter.cpp",
     "JSystem/JDrama/JDRDStage.cpp",
     "JSystem/JDrama/JDRDStageGroup.cpp",
