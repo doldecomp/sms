@@ -112,6 +112,7 @@
     "JSystem/JAudio/JASystem/JASDSPChannel.cpp",
     "JSystem/JAudio/JASystem/JASDSPInterface.cpp",
     "JSystem/JAudio/JASystem/JASDriverIF.cpp",
+    "JSystem/JAudio/JASystem/JASDriverTables.cpp",
     "JSystem/JAudio/JASystem/JASDrumSet.cpp",
     "JSystem/JAudio/JASystem/JASDvdThread.cpp",
     "JSystem/JAudio/JASystem/JASHardStream.cpp",
