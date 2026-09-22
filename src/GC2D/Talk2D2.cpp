@@ -691,8 +691,8 @@ bool TTalk2D2::openNormalWindow()
 
 void TTalk2D2::moveBoardWindow()
 {
-	int alpha = mBoardCursor->getAlpha();
-	if (alpha < 255) {
+	int alpha;
+	if ((alpha = mBoardCursor->getAlpha()) < 255) {
 		alpha += 4;
 		if (alpha > 255) {
 			mBoardCursorOn->setAlpha(0);
@@ -710,21 +710,21 @@ void TTalk2D2::moveBoardWindow()
 	else
 		cursor = mBoardCursorOff;
 
-	int blink = cursor->getAlpha();
+	alpha = cursor->getAlpha();
 	if (mCursorBlinkUp) {
-		blink += 4;
-		if (blink > 255) {
+		alpha += 4;
+		if (alpha > 255) {
 			mCursorBlinkUp = false;
-			blink          = 255;
+			alpha          = 255;
 		}
 	} else {
-		blink -= 4;
-		if (blink < 0) {
+		alpha -= 4;
+		if (alpha < 0) {
 			mCursorBlinkUp = true;
-			blink          = 0;
+			alpha          = 0;
 		}
 	}
-	cursor->setAlpha(blink);
+	cursor->setAlpha(alpha);
 }
 
 void TTalk2D2::checkBoardControler()
