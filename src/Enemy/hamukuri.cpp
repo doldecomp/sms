@@ -1253,13 +1253,10 @@ MtxPtr THamuKuri::getTakingMtx()
 	return takingMtx;
 }
 
-// TODO: instruction-exact; frame 8 long (0x48 vs 0x40). `.value` lands the
-// frame but drops the calcDist by-value TVec3 8 low (allocation-order class).
 bool THamuKuri::isResignationAttack()
 {
-	const JGeometry::TVec3<f32>& goal = unk104.getPoint();
-	if (calcDist(goal, mPosition) > unk194) {
-		unk194 = unk1F4->mSLGiveUpLength.get();
+	if (calcDist(unk104.getPoint(), getPosition()) > unk194) {
+		unk194 = unk1F4->mSLGiveUpLength.value;
 		return true;
 	}
 
@@ -2832,7 +2829,8 @@ DEFINE_NERVE(TNerveHamuKuriGoForSearchActor, TLiveActor)
 		self->setRunAnm();
 
 	if (!self->isAirborne()) {
-		if ((self->unk104.getPoint() - self->mPosition).length() < 200.0f)
+		const JGeometry::TVec3<f32>& goal = self->unk104.getPoint();
+		if (THamuKuri::calcDist(goal, self->getPosition()) < 200.0f)
 			self->jumpToSearchActor();
 	}
 
@@ -3038,10 +3036,13 @@ DEFINE_NERVE(TNerveHaneHamuKuriMoveOnGraph, TLiveActor)
 			    ->getGraphNode(self->getTracer()->getCurGraphIndex())
 			    .getPoint(&prevPos);
 
-			JGeometry::TVec3<f32> toCur  = curPos - self->mPosition;
-			f32 distToCur                = toCur.length();
-			JGeometry::TVec3<f32> toPrev = prevPos - self->mPosition;
-			f32 distToPrev               = toPrev.length();
+			// TODO: frame and named block exact; the two `bl sub` temporaries
+			// sit above the setGoalPathMario node in our pool where retail
+			// puts them below it (the open `a = b - c` allocation-order class).
+			JGeometry::TVec3<f32> diff = curPos - self->mPosition;
+			f32 distToCur              = diff.length();
+			diff                       = prevPos - self->mPosition;
+			f32 distToPrev             = diff.length();
 			self->unk230                 = curPos.y
 			               + (distToCur * (prevPos.y - curPos.y))
 			                     / (distToCur + distToPrev);
