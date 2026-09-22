@@ -643,7 +643,7 @@ DEFINE_NERVE(TNerveBombHeiThrown, TLiveActor)
 	TBombHei* bombHei = (TBombHei*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		// TODO: 96.2%, frame closed. Reading the two params through
+		// TODO: 96.9%, frame closed. Reading the two params through
 		// `mSLFoo.get()` rather than the class's `getSLFoo()` wrapper is
 		// one inline level shallower and takes the frame from 0x70 to the
 		// ROM's 0x68 with every stack displacement exact. What is left is
@@ -654,13 +654,19 @@ DEFINE_NERVE(TNerveBombHeiThrown, TLiveActor)
 		// ahead of the two products. Retried at the new depth and still
 		// worse: three separate component assignments (84.7%) and
 		// `velocity.set(x, y, z)` (identical to the ctor, 96.2%).
+		// Naming `rate` then `power` (in that order) fixes the table-index
+		// rotation and the rate/cosine registers (96.9%). Left: the ROM loads
+		// `mSLThrownVY` after the x store and so holds `power` in f2; ours
+		// hoists it into f2 and pushes `power` to f5. Inert at this level:
+		// power-then-rate, the class getters, named x/z/s/c/angle (frame
+		// -8), `setVelocity(TVec3(...))`, raw `*gpMarioAngleY`, `sin * power`.
 		TBombHeiSaveLoadParams* params = bombHei->getSaveParams();
+		f32 rate  = params->mSLThrownRateXZ.get();
+		f32 power = *gpMarioThrowPower;
 		JGeometry::TVec3<f32> velocity(
-		    params->mSLThrownRateXZ.get()
-		        * (*gpMarioThrowPower * JMASSin(SMS_GetMarioAngleY())),
+		    rate * (power * JMASSin(SMS_GetMarioAngleY())),
 		    params->mSLThrownVY.get(),
-		    params->mSLThrownRateXZ.get()
-		        * (*gpMarioThrowPower * JMASCos(SMS_GetMarioAngleY())));
+		    rate * (power * JMASCos(SMS_GetMarioAngleY())));
 		bombHei->mVelocity = velocity;
 		bombHei->mPosition.y += 2.0f;
 		bombHei->onLiveFlag(LIVE_FLAG_AIRBORNE);
