@@ -107,10 +107,22 @@ static inline MActorAnmData* MActorGetAnmData(const MActor* p)
 	return p->mAnmData;
 }
 
-// TODO: frame-exact; the JGadget list iterator pair still sits 8 low and the
-// comparison temporaries 4 high.
+// Binding level over a raw member read, worth +8 of low region in
+// MActor::calc (frame ladder 271); MActor::setModel binds it at two sites.
+static inline J3DModel* MActorModelL0(const MActor* p)
+{
+	J3DModel* model = p->mModel;
+	return model;
+}
+
+// The sub-animation iterators are declared at function scope and assigned
+// later: initialising them at their block drops two copy temporaries into the
+// pool and leaves the pair 8 bytes low. The two `MActorModelL0` binders then
+// restore the pool below the loop's comparison temporaries.
 void MActor::setModel(J3DModel* param_1, u32 param_2)
 {
+	JGadget::TList<MActorSubAnmInfo>::iterator it;
+	JGadget::TList<MActorSubAnmInfo>::iterator e;
 	mModel       = param_1;
 	mMaterialNum = param_1->getModelData()->getMaterialNum();
 	unk2C        = new u16[mMaterialNum];
@@ -118,7 +130,7 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 	if ((~param_2 & 0x10000) != 0)
 		onMakeDL();
 
-	unk8 = getModel()->getModelData()->getJointNodePointer(0)->getMtxCalc();
+	unk8 = MActorModelL0(this)->getModelData()->getJointNodePointer(0)->getMtxCalc();
 	for (u16 i = 0; i < mMaterialNum; ++i) {
 		J3DMaterial* mat = getModel()->getModelData()->getMaterialNodePointer(i);
 		unk30[i]         = 0x32;
@@ -133,14 +145,14 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 
 	for (int i = 0; i < 6; ++i) {
 		if (mAnmByType[i]) {
-			mAnmByType[i]->setModel(getModel());
+			mAnmByType[i]->setModel(MActorModelL0(this));
 			mAnmByType[i]->checkUseMaterialIDInit(unk2C);
 		}
 	}
 
 	if (MActorGetAnmData(this)->getUnk0() > 0) {
-		JGadget::TList<MActorSubAnmInfo>::iterator it = MActorGetAnmData(this)->unk1C.begin();
-		JGadget::TList<MActorSubAnmInfo>::iterator e  = MActorGetAnmData(this)->unk1C.end();
+		it = MActorGetAnmData(this)->unk1C.begin();
+		e = MActorGetAnmData(this)->unk1C.end();
 		for (int i = 0; it != e; ++it, ++i) {
 			unk10[i]->setModel(getModel());
 		}
@@ -324,16 +336,9 @@ void MActor::calcAnm()
 	frameUpdate();
 
 	updateIn();
-	mModel->calc();
+	J3DModel* model = getModel();
+	model->calc();
 	updateOut();
-}
-
-// Binding level over a raw member read, worth +8 of low region in
-// MActor::calc (frame ladder 271).
-static inline J3DModel* MActorModelL0(const MActor* p)
-{
-	J3DModel* model = p->mModel;
-	return model;
 }
 
 void MActor::calc()
