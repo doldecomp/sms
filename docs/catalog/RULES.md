@@ -114,6 +114,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A callee `bl`ed at some sites where the size rules predict inlining means a helper level is missing above those sites (SelectMenu `perform`: `SMS_getShineID` via `selectPrev`/`selectNext` members; CameraChange `MsClamp`). This overturns batch 190's "emergent, don't retry" note.
 - An out-of-line `TColor::set` means the `TColor(r,g,b,a)` ctor sits at depth 3: a by-value `static inline TColor blackColor(u8 a)` called from a depth-1 helper (SelectMenu).
 - A redundant `li r0, 0` beside an inline `hide()`/clamp-to-zero goes when the clamp is a TU-local helper returning the value, `setAlpha(fadeOutArrow(arrow, alpha))` (SelectMenu).
+- A dead store to the slot after a stack `TVec3` is a 16-byte `{TVec3 normal; f32 d;}` plane object; `set<f>`/`setLength` called out of line from it sit at depth 4 (MarioDraw `calcBaseMtx`).
+- Retail rematerialising `li r0, 0` in an `else` both outer and inner guards reach: the guards are one `&&` condition (MarioDraw `initModel`).
 
 ## Frame-size gaps
 
@@ -288,6 +290,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - MWCC folds `-(a + 1) - b` to `-(a + b + 1)`; retail's `neg; subf` needs the negation in its own inline (GCConsole2 `GCConsole2HideAboveY`).
 - Fade alphas: `s16 a = pane->getAlpha(); a -= 16;` keeps the byte unextended and tests with `extsh.`; the one-line form adds an `extsh` copy (Talk2D2 `closeNormalWindow`, `eraseBoardWindow`).
 - A discarded inline call whose object ours keeps in a callee-saved register (plus an extra `mr`): bind the result to a named unused local; `(void)f()` and `if (f()) {}` are inert (Option `TOptionSubtitleUnit::toggle` -> `checkInput` instruction-exact).
+- Retail keeps a member load across a store to a local struct where ours reloads: the local is a plain `Vec`, not a `TVec3` (its `(Vec*)&` casts block CSE); `TVec3::operator=(const Vec&)` exists for this (bgtentacle `moveConstraint`).
+- A struct copy into `obj.member` folds the member offset only through a member function of the member's type; helpers and casts emit an `addi` (bgtentacle).
+- `MTXCopy(src..., dst->getModel()->getBaseTRMtx())` register swap: write `dst->getModel()->setBaseTRMtx(src...)` (MarioDraw, koopajr).
 
 ## Float and pool
 
@@ -332,6 +337,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - dtk infers false relocations in `.data` and `.text`; block with `block_relocations` (`target:`/`end:` for `.text`). Exactly 21 `.text` cases, all `MSD_BGM_*` (linking.md: "Structural batch 132").
 - A `.data` jump table mismatch with a verified case order means the code before some case labels is the wrong length: count instructions per case (CardLoad `perform`).
 - `.data` starting with the DummyStrings pair and no mtx-calc names: the TU includes `DummyStrings.hpp`, not `InfectiousStrings.hpp` (SelectMenu).
+- Jump tables can be fixed from relocations alone: compare retail vs ours `.rel` target minus function start; a constant shift from one case on points at the case before it (bgtentacle).
+- Retail filling a temp then word-copying to a named `Vec`, with 12-byte `.rodata` templates numbered two apart, is `Vec v = (Vec){...};` compound literals (MarioDraw foot ctrl).
+- Include order sets the string pool: MarioDraw needs `MarioAnimeData.hpp` after `InfectiousStrings.hpp`.
 
 ## Linking: why a 100/100 object changes the DOL
 
