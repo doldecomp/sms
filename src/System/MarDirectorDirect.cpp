@@ -276,6 +276,24 @@ static int decideNextScenario(u8 param_1)
 	return scenario;
 }
 
+// fabricated: retail forms &gpApplication.mNextArea as a pointer before the
+// inlined TGameSequence::set (`stbu`/`addi r4, r3, 0x12`), which a
+// reference-returning level reproduces.
+static inline TGameSequence& getNextArea() { return gpApplication.mNextArea; }
+
+// fabricated: a case helper retail expands in changeState. Its level puts
+// decideNextStage at depth 2, over the budget there, so retail calls it from
+// here while its other two sites expand it.
+static inline void decideNextStageOfClear()
+{
+	const TGameSequence& curArea = gpApplication.mCurrArea;
+	if (SMS_isExMap() || curArea.getStage() == 0 || curArea.getStage() == 60) {
+		getNextArea().set(curArea.getStage(), 0, 0);
+	} else {
+		decideNextStage();
+	}
+}
+
 int TMarDirector::changeState()
 {
 	int desiredAppState = TApplication::APP_STATE_DEFAULT;
@@ -394,9 +412,9 @@ int TMarDirector::changeState()
 				TFlagManager::smInstance->restore();
 				TFlagManager::smInstance->setBool(true, 0x30001);
 				if (!TFlagManager::smInstance->getFlag(0x40000)) {
-					gpApplication.mNextArea.set(0, 0, 0);
+					getNextArea().set(0, 0, 0);
 				} else {
-					gpApplication.mNextArea.set(1, 0xff, 0);
+					getNextArea().set(1, 0xff, 0);
 				}
 				offUnk4CFlag(0x100);
 				moveStage();
@@ -427,13 +445,7 @@ int TMarDirector::changeState()
 		    && (MSBgm::getHandle(2) == 0 || unk5C - unk60 >= 1200)) {
 			if (TFlagManager::smInstance->getFlag(0x20001) >= 0) {
 				TFlagManager::smInstance->setBool(true, 0x30002);
-				const TGameSequence& curArea = gpApplication.mCurrArea;
-				if (SMS_isExMap() || curArea.getStage() == 0
-				    || curArea.getStage() == 60) {
-					gpApplication.mNextArea.set(curArea.getStage(), 0, 0);
-				} else {
-					decideNextStage();
-				}
+				decideNextStageOfClear();
 				offUnk4CFlag(0x100);
 				moveStage();
 				unkE4 = 0xf;
