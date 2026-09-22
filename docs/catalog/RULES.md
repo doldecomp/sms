@@ -319,6 +319,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A counter zeroed in a block and copied out after (`addi rOld, rNew, 0`) is a block-local assigned at block end; an unmasked store then increment is `field = n++` (enemyMario).
 - `lbzx base, idx` vs our `add; lbz` means direct `links[i].field`, not a bound `T& link` (enemyMario).
 - `cmpwi` after `lhz`/`lbz` means the value was read as `int`: `(int)x.get() == 1` (MarDirectorDirect).
+- One FPR assigned to the wrong one of two dying values: compute the value directly as an inlined helper's argument (zero frame); a returning helper also works but costs 0x10, a named local is inert (NpcInbetween `execPosInbetween`, linked).
 
 ## Float and pool
 
