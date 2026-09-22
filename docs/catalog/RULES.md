@@ -62,6 +62,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A flag held in a callee-saved register across switch cases with its constant set before the switch is `x &= f()`; `x = x & f()` is folded into each case and shifts the jump table (Guide `perform`).
 - `v.set(a, 0, b)` fixes literal-pool order through right-to-left argument evaluation, where three component stores do not (Guide `placeMario`).
 - `search(tag)->show()`/`hide()` materialises the constant after the call; a direct `->mVisible = true` hoists it (Guide).
+- A `bne`/`beq` pair on one compare with dead code between them: the caller guards the call and the callee re-tests the flag; an early return inside the callee instead lets MWCC delete the block (koopajr `perform`/`checkNerve`).
+- `TDirectionCalc d; d.makeDirection(v);` avoids the double copy of the `TDirectionCalc(v)` ctor (koopajr).
 
 ## Inlining decisions
 
@@ -310,6 +312,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A branchless `fcmpo`/`cror` is a discarded `TUtil<f32>::sqrt(x);` call, which also blocks load sharing across it (BathWaterManager `prerender`).
 - `fneg` then `fmadds a, b, -c` is `-c + a*b`; `a*b - c` gives `fmsubs`.
 - A three-word `lwz`/`stw` copy then `+=` on one component is a named `TVec3 pos = src; pos.y += k;`, with pointer reads hoisted before the copy.
+- A `.set(k)` value in `.sdata2` rather than `.sdata` is a folded non-literal: `k * PI()` at float precision (koopajr params ctor; a literal bound to `const T&` lands in `.sdata`).
+- An inline call's constant argument folds into its body only as a front-end constant; a variable holding it is not propagated (koopajr `setRotate`: literal gives `sinf(0.314)`, variable `fmuls 0.5`).
 
 ## Data and layout
 
