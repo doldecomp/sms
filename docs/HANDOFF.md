@@ -130,6 +130,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The other fourteen residuals were audited; several still need genuine matrix/quaternion or nerve-flow reconstruction.
 - Landed `GC2D/PauseMenu2`: corrected visible-pane animation flow and used the retail in-place sign flip in `perform`, raising those functions **96.53 -> 96.57%** and **99.29 -> 99.39%**.
   The unit remains extracted; its known `set<f>` order and `appearWindow`/`disappearWindow` linkage blockers still prevent source linking.
+- Whole-file medium audits of `MapEventMare`, `MapObjCorona`, `MapObjPinna`, `sunmodel`, `MapObjTree`, `riccohook`, `wireBinder`, `seal`, `MapWireManager`, `MapMakeData`, `MapObjItem2`, `effectObj`, `bombhei`, `MapObjCloud`, `BathtubPeach`, and `CameraNotice` returned clean with no safe gain.
+  Their remaining differences were verified as stack/register allocation, shared-header inlining, or already-complete control flow; do not repeat them without a new compiler-shape or shared-header lead.
+- Landed `MoveBG/MapObjMamma`: preserved the frame-speed reads in `TSandBomb::touchWater` and used the binary-attested joint translation field in `TMammaBlockRotate::control`.
+  Those functions rose **79.98 -> 89.41%** and **83.78 -> 95.36%**, raising unit fuzzy similarity **96.79317 -> 97.29004%**.
+  No function became exact, so matched-code, linked-unit, and exact-function totals did not move; the DOL remains byte-identical.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
