@@ -186,24 +186,13 @@ int TMarDirector::direct()
 	return desiredAppState;
 }
 
-// TODO: the ROM still emits JDrama::TFlagT<u16>'s copy constructor (weak,
-// 0xc) for this TU and calls it twice here -- once for the by-value TFlagT
-// parameter of the TGameSequence constructor's `set` and once for the one in
-// `setNextArea` -- each time from a *second* stack temporary that our build
-// folds away. GameSequence.hpp's two-argument `set` forwarder (header round,
-// this batch) bought the depth that puts TFlagT::set out of line at both
-// sites, but not the parameter copy itself. Measured in scratch TUs with the
-// real flags: MWCC elides that copy for every in-class spelling of the copy
-// constructor -- prvalue or lvalue argument, member-initialiser or assignment
-// constructor, a defaulted third parameter, one or two forwarding levels, and
-// every inline depth from 1 to 5 (at depth 5 it calls the *converting* ctor
-// straight into the parameter slot instead, which is not retail's shape).
-// Only defining the copy constructor out of class without `inline` produces
-// the call, and that is refuted tree-wide (see JDRFlag.hpp). What is left is
-// whatever gives retail its extra temporary, most likely one more inline
-// level between decideNextStage's local and TGameSequence::set.
-// `changeState` inlines decideNextStage at one site and `bl`s it at another,
-// which no statement-count rule explains yet either.
+// TODO: the copy constructor calls and the inlined parameter copy now match
+// (by-value TFlagT::operator=, header round). Two differences remain: retail's
+// frame is 8 bytes larger (one more stack temporary, the same open class as
+// TApplication::TApplication's +0x10), and it holds &gpApplication in r31 for
+// setNextArea's stores where ours holds &mNextArea in r30. Spelling the copy as
+// `gpApplication.mNextArea = local_3C` or a direct three-argument `set` is
+// worse (84%) and breaks the expanded copies in changeState/updateGameMode.
 static void decideNextStage()
 {
 	TGameSequence local_3C;

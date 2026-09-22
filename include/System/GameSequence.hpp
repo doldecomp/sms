@@ -6,11 +6,18 @@
 
 class TGameSequence {
 public:
-	TGameSequence() { set(0, 0); }
+	// The defaulted arguments are the level that puts the flag member's
+	// converting constructor out of line where decideNextStage is expanded
+	// into TMarDirector::changeState/updateGameMode, while the argument
+	// TFlagT<u16>(0) stays inline and the three-argument set is called.
+	TGameSequence(u8 param_1 = 0, u8 param_2 = 0)
+	{
+		set(param_1, param_2, JDrama::TFlagT<u16>(0));
+	}
 
 	void set(u8 param_1, u8 param_2)
 	{
-		set(param_1, param_2, JDrama::TFlagT<u16>());
+		set(param_1, param_2, JDrama::TFlagT<u16>(0));
 	}
 
 	TGameSequence& operator=(const TGameSequence& other)

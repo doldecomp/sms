@@ -7,59 +7,17 @@ template <class T> class TFlagT {
 public:
 	TFlagT(T v = T()) { mValue = v; }
 
-	// TODO: retail *calls* this copy constructor (weak 0xc from
-	// MarDirectorDirect.o) twice in TMarDirector::decideNextStage, for
-	// TGameSequence::set's by-value TFlagT<u16> parameter, and copies the
-	// argument into a second stack temporary first (`lhz`/`sth` into one slot,
-	// then `bl` the copy ctor into the parameter slot) -- the two-stack-object
-	// shape of docs/AGENT_MATCHING_TIPS.md "A by-value class parameter forces
-	// the copy through memory". Our build elides both copies.
-	//
-	// Measured in a scratch TU with the game flags (probe*.cpp, a TGameSequence
-	// local plus `*gSeq = s`):
-	//   as written (everything in class):      no temporaries, no calls at all.
-	//   + `~TFlagT() { }`:                     TGameSequence::set becomes a
-	//     call with the parameter passed by address in r6, which is exactly
-	//     retail's ABI in updateGameMode/changeState -- but it also emits
-	//     __dt__13TGameSequenceFv, and the map has no TFlagT or TGameSequence
-	//     destructor, so the class is trivially destructible.
-	//   + every TFlagT member moved out of class: ctors, `set` and `operator=`
-	//     all become calls; retail inlines `operator=` (its `lhz` + `bl set`
-	//     is visible) and inlines the converting ctor in decideNextStage.
-	//   + only the ctors and `set` out of class: reproduces
-	//     decideNextStage's second block almost exactly (copy ctor call, then
-	//     `lhz` + `bl set`) but still lacks the intermediate temporary, and
-	//     the converting ctor comes out as a call where retail inlines it.
-	//   + only this copy ctor out of class (tried in the real tree): breaks
-	//     the DOL -- JDRDStage 100 -> 42 matched_code, JDREfbCtrl 100 -> 88,
-	//     JDRViewConnecter 100 -> 50, TAirportEventSink::watch 99.96 -> 47,
-	//     TApplication::proc 99.93 -> 94, and MarDirectorDirect itself drops
-	//     0.6. The three JDrama constructors that take a TFlagT<u16> by value
-	//     pin the in-class spelling.
-	// So the lever is not the declaration form of this constructor. The
-	// remaining suspect is the *argument* at the call sites in
-	// MarDirectorDirect.cpp (what makes MWCC materialise the extra temporary),
-	// not this header.
-	//
-	// Header round (this batch) added to the refuted list, all measured in
-	// scratch TUs compiled with the real flags: the argument's value category
-	// is inert (a prvalue `TFlagT<u16>()`, a literal `0` converted here, a
-	// member lvalue and a `const TFlagT<u16>&` parameter all elide the copy);
-	// so are a defaulted third parameter on TGameSequence::set, an explicit
-	// `unk2(0)` member initialiser, and a by-value TGameSequence parameter.
-	// Adding inline levels moves TFlagT::set and the *converting* constructor
-	// out of line at depth 5 -- `set(u16)` first, then `TFlagT(u16)` straight
-	// into the parameter slot -- but never calls this copy constructor, so
-	// depth alone cannot be the lever either. Only an out-of-class definition
-	// without `inline` (the class-template rule) calls it, and that is the
-	// spelling already refuted above.
+	// Retail calls this copy constructor (weak 0xc from MarDirectorDirect.o)
+	// for the by-value parameter of operator= below; taking that parameter by
+	// value is what produces the call. Defining this constructor out of class
+	// instead breaks the DOL (JDRDStage, JDREfbCtrl, JDRViewConnecter).
 	TFlagT(const TFlagT<T>& other)
 	    : mValue(other.mValue)
 	{
 	}
 
 	// fabricated
-	TFlagT& operator=(const TFlagT<T>& other)
+	TFlagT& operator=(TFlagT<T> other)
 	{
 		set(other.mValue);
 		return *this;
