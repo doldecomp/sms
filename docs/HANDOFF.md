@@ -182,6 +182,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `SMS_EmitSinkInPollutionEffect` rose **99.057% -> 100%**; All matched code **63.578255 -> 63.591797%**, Game **56.011887 -> 56.029022%**, exact functions **11,467 -> 11,468**, and linked units **499 -> 500** (Game **171 -> 172**).
 - Whole-file medium audits of `Strategic/spcinterp`, `JSystem/JDrama/JDREfbSetting`, MetroTRK `Portable/support`, and MSL `exponentialsf` returned clean with no safe gain.
   Their residues are established inline temporary-placement or scratch/callee-saved register permutations; do not repeat them without a new compiler-shape lead.
+- Landed `Player/MarioAutodemo`: corrected `warpIn` to advance from the balls phase only after `mStatusTimer` exceeds `mWarpInBallsTime`, rather than on the inverse comparison.
+  `warpIn` rose **95.39739 -> 95.46%** and unit fuzzy similarity **98.99821 -> 99.01%**; aggregate fuzzy similarity rose **98.091110 -> 98.091130%**, while matched-code, exact-function, and linked-unit counters did not move.
+- Whole-file medium audit of `NPC/NpcNerve` returned clean with no safe gain.
+  Its remaining graph-wander call depth, saved-register rotation, and frame gaps are already-classified compiler-shape residues; do not repeat it without a new inline-boundary lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
