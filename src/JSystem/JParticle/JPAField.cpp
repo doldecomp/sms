@@ -135,11 +135,16 @@ void JPABaseField::affect(JPAParticle* particle)
 {
 	calcFieldVelocity(particle);
 }
+// TODO: slots exact (getRawData() is the +8 of pool); the frame is 8 short
+// at the top of the named block. Only a dead `u8*` or a pointer alias
+// (`JSUInputStream* ps` declared first, `stream = *ps`) lands it, both
+// rejected as fabricated; a pointer-typed stream, chained `>>` (changes the
+// code), and a named data pointer or size are inert or worse.
 void JPABaseField::loadFieldBlock(JPADataBlock* block)
 {
 	s16 value;
-	JSUMemoryInputStream streamImpl(block->mRawData,
-	                                *(u32*)((u8*)block->mRawData + 4));
+	JSUMemoryInputStream streamImpl(block->getRawData(),
+	                                *(u32*)(block->getRawData() + 4));
 	JSUInputStream& stream = streamImpl;
 
 	stream.skip(0xC);
@@ -314,6 +319,11 @@ void JPAVortexField::set()
 	unk30 = unk18.z * unk18.z;
 	unk34 = 1.0f / unk30;
 }
+// TODO: FPR colouring only: retail gives thing3.z f29 and the blend f28
+// (ours the reverse), and reads unk58/unk60/unk30 through the saved `this`.
+// Tried: the blend declared before/after `tmp`, at the top, reusing fVar1,
+// `tmp` at the top, thing3 by copy/-=/set/sub(a), dot for squared, a
+// set-then-normalize tmp.
 void JPAVortexField::affect(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32> localPos;
@@ -411,6 +421,11 @@ bool JPAConvectionField::checkMaxDistance(JGeometry::TVec3<float>&,
 
 JPARandomField::JPARandomField() { unk50 = 5; }
 JPARandomField::~JPARandomField() { }
+static inline f32 JPARandomFieldRandom()
+{
+	return FieldRand.get_ufloat_1() - 0.5f;
+}
+
 void JPARandomField::affect(JPAParticle* particle)
 {
 	bool bVar3 = false;
@@ -425,9 +440,8 @@ void JPARandomField::affect(JPAParticle* particle)
 	}
 
 	if (bVar3) {
-		unk7C.set(FieldRand.get_ufloat_1() - 0.5f,
-		          FieldRand.get_ufloat_1() - 0.5f,
-		          FieldRand.get_ufloat_1() - 0.5f);
+		unk7C.set(JPARandomFieldRandom(), JPARandomFieldRandom(),
+		          JPARandomFieldRandom());
 		unk7C.scale(unk10);
 		calcFieldVelocity(particle);
 	}
