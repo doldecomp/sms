@@ -180,8 +180,9 @@ void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 
 void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 {
-	TIdxGroupObj::iterator end = group->getChildren().end();
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	JGadget::TList_pointer<THitActor*>& children = group->getChildren();
+	TIdxGroupObj::iterator end                   = children.end();
+	for (TIdxGroupObj::iterator it = children.begin(); it != end;
 	     ++it) {
 		(*it)->mColCount = 0;
 
@@ -204,19 +205,20 @@ void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 
 void TObjHitCheck::clearGroup(TIdxGroupObj* group)
 {
-	TIdxGroupObj::iterator end = group->getChildren().end();
+	JGadget::TList_pointer<THitActor*>& children = group->getChildren();
+	TIdxGroupObj::iterator end                   = children.end();
 
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
-	     ++it)
+	for (TIdxGroupObj::iterator it = children.begin(); it != end; ++it)
 		(*it)->mColCount = 0;
 }
 
 void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 {
-	TIdxGroupObj::iterator end = group->getChildren().end();
+	JGadget::TList_pointer<THitActor*>& children = group->getChildren();
+	TIdxGroupObj::iterator end                   = children.end();
 	THitActor* mario           = (THitActor*)gpMarioAddress;
 
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	for (TIdxGroupObj::iterator it = children.begin(); it != end;
 	     ++it) {
 		(*it)->mColCount = 0;
 		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
