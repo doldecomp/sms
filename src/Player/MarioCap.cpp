@@ -15,22 +15,44 @@
 #include <System/DummyStrings.hpp>
 #include <Player/MarioDirtyStrings.hpp>
 
-// The four mModel reads in this constructor stay raw: TMario::getM3UModel()
-// costs it 99.01 -> 98.89 (measured in header round 16), even though the same
-// level is what MarioDraw's setAnimation and MarioInit's loadAfter want.
-// TODO: every instruction matches; frame 0x108 vs 0x180, i.e. 120 bytes of
-// dead low region (no r1 displacement in the body, so any lever that prices
-// exactly +0x78 with no code change closes it). The commented-out
-// `volatile u32 padding[51]` below is the old placeholder for it.
-// cc28 closed the two instruction residues: the helmet matrix is
+// cc28 closed the constructor. Two instruction residues: the helmet matrix is
 // `unk10[2]->setBaseTRMtx(getAnmMtx(mJointIdHead))` (retail copies the head
 // joint into the helmet's base, not the reverse), and unk30 is a one-element
 // array, stored at [0] and re-read through `unk30[thingIdx]` -- that indexed
 // re-read is retail's "second copy of `this`" (`add r4, r31, idx*4`).
+// TMario::getM3UModel() at the four body-model reads still renumbers
+// registers (17 markers), so they go through the TU-local binder below.
+// Named-result levels (cc28). The body is instruction-exact without them;
+// retail's frame is 120 bytes larger, and every construction site plus the
+// four Mario body-model reads going through a level that names its result
+// prices exactly that (+0x10 per body-model binder, +8 per factory; the
+// direct-return forms are +8 / +0).
+static inline J3DModel* MarioCapBodyModel(TMario* mario)
+{
+	J3DModel* model = mario->mModel->getModel();
+	return model;
+}
+
+static inline J3DModel* MarioCapNewModel(J3DModelData* data)
+{
+	J3DModel* model = new J3DModel(data, 0, 1);
+	return model;
+}
+
+static inline TMultiMtxEffect* MarioCapNewMtxEffect()
+{
+	TMultiMtxEffect* effect = new TMultiMtxEffect();
+	return effect;
+}
+
+static inline TTrembleModelEffect* MarioCapNewTremble()
+{
+	TTrembleModelEffect* effect = new TTrembleModelEffect;
+	return effect;
+}
+
 TMarioCap::TMarioCap(TMario* mario)
 {
-	// Unused stack space
-	// volatile u32 padding[51];
 	mMario = mario;
 
 	J3DModelData* maCap1ModelData = J3DModelLoaderDataBase::load(
@@ -39,10 +61,10 @@ TMarioCap::TMarioCap(TMario* mario)
 	// Might be an inlined function?
 	maCap1ModelData->getTexture()->setResTIMG(
 	    0,
-	    *mMario->mModel->getModel()->getModelData()->getTexture()->getResTIMG(
+	    *MarioCapBodyModel(mMario)->getModelData()->getTexture()->getResTIMG(
 	        0));
 	DCFlushRange(maCap1ModelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
-	unk10[0] = new J3DModel(maCap1ModelData, 0, 1);
+	unk10[0] = MarioCapNewModel(maCap1ModelData);
 
 	J3DModelData* maCap3ModelData = J3DModelLoaderDataBase::load(
 	    JKRFileLoader::getGlbResource("/mario/bmd/ma_cap3.bmd"),
@@ -50,10 +72,10 @@ TMarioCap::TMarioCap(TMario* mario)
 	// I could see this being an inlined
 	maCap3ModelData->getTexture()->setResTIMG(
 	    0,
-	    *mMario->mModel->getModel()->getModelData()->getTexture()->getResTIMG(
+	    *MarioCapBodyModel(mMario)->getModelData()->getTexture()->getResTIMG(
 	        0));
 	DCFlushRange(maCap3ModelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
-	unk10[1] = new J3DModel(maCap3ModelData, 0, 1);
+	unk10[1] = MarioCapNewModel(maCap3ModelData);
 
 	if (mMario->mBodyPollutionTex != 0) {
 		for (int i = 0; i < 2; ++i) {
@@ -71,28 +93,28 @@ TMarioCap::TMarioCap(TMario* mario)
 	J3DModelData* diverHelmModelData = J3DModelLoaderDataBase::load(
 	    JKRFileLoader::getGlbResource("/mario/watergun2/body/diver_helm.bmd"),
 	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
-	unk10[2] = new J3DModel(diverHelmModelData, 0, 1);
+	unk10[2] = MarioCapNewModel(diverHelmModelData);
 
 	J3DModelData* maGlass1 = J3DModelLoaderDataBase::load(
 	    JKRFileLoader::getGlbResource("/mario/bmd/ma_glass1.bmd"),
 	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
-	unk10[3] = new J3DModel(maGlass1, 0, 1);
+	unk10[3] = MarioCapNewModel(maGlass1);
 
 	// Mmmh, nintendo plz? I hope this is forgotten and not a check to crash the
 	// game if it is missing this bone
 	unk10[2]->getModelData()->getJointName()->getIndex("null_airtube");
-	MtxPtr mtx = mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdMHead);
+	MtxPtr mtx = MarioCapBodyModel(mMario)->getAnmMtx(mMario->mJointIdMHead);
 
 	unk10[0]->setBaseTRMtx(mtx);
 	unk10[0]->calc();
 	unk10[1]->setBaseTRMtx(mtx);
 	unk10[1]->calc();
 	unk10[2]->setBaseTRMtx(
-	    mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdHead));
+	    MarioCapBodyModel(mMario)->getAnmMtx(mMario->mJointIdHead));
 	unk10[2]->calc();
 
-	unk20 = new TMultiMtxEffect();
-	unk24 = new TMultiMtxEffect();
+	unk20 = MarioCapNewMtxEffect();
+	unk24 = MarioCapNewMtxEffect();
 
 	// This feels very wrong
 	// Probably some inline constructor?
@@ -118,7 +140,7 @@ TMarioCap::TMarioCap(TMario* mario)
 	unkC = unk10[0];
 
 	int thingIdx = 0;
-	unk30[0]     = new TTrembleModelEffect;
+	unk30[0]     = MarioCapNewTremble();
 	unk30[thingIdx]->init(unk10[thingIdx]);
 	unk34 = 4.0f;
 
