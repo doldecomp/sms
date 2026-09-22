@@ -189,6 +189,9 @@ void TFlyEnemy::fly()
 // TODO: 99.9%. FlyMarioX + FlyPosX (by-value getPosition forks) land the
 // 0x90 frame and every stack slot (99.5 -> 99.9). Residue is the params
 // pointer after MsVECNormalize in r3 against retail's r4.
+// Tried: params named or not, getSLNormalFlySpeed()/.get()/.value (and the
+// same for the force gravity), speed-first products, velocity.set(), and
+// every MsVECNormalize argument spelling: none moves the register.
 void TFlyEnemy::calcChaseParam()
 {
 	JGeometry::TVec3<f32> toMario(FlyMarioX() - FlyPosX(this),
@@ -332,6 +335,10 @@ DEFINE_NERVE(TNerveFlyEnemyNormalFly, TLiveActor)
 // `MsAddVecFromRotY` doing the add itself only buys one level, 96.4%).
 // Remaining: the frame is 48 bytes short and one `fmr` is missing from the
 // negative turn clamp.
+// The ROM's toGoal sits low (0x88, a temporary) and the velocity copy high
+// (0xf4); ours are adjacent named locals. A by-value TVec3 helper doing the
+// sub/VECMag/MsGetRotFromZaxisY (with or without the wrap) adds 42
+// instructions, so the enclosing shape is still unknown.
 DEFINE_NERVE(TNerveFlyEnemyChaseFly, TLiveActor)
 {
 	TFlyEnemy* flyEnemy = (TFlyEnemy*)spine->getBody();
@@ -460,9 +467,12 @@ TSpineEnemy* TKillerManager::createEnemyInstance() { return new TKiller; }
 
 // The rolling killer spins its body joint around Z on top of whatever the
 // animation produced, then re-applies the body scale.
-// TODO: 93.0%. Instruction-identical; the ROM keeps the roll matrix's address
-// in r31 across the two MTXConcat pairs and has 4 more bytes below it, so the
-// local it declared after the matrix is still missing.
+// TODO: 96.9%. Frame, slots and r31 (the roll matrix) now match; the ROM
+// loads roll[2][2]'s 1.0f just before its store where ours hoists it to the
+// top, which shifts every FPR by one. Tried: the roll build as a TU-local
+// helper (-8 frame), a chained zero row, a named angle, killer-> reads, an
+// s16 angle through JMASSin, the scale build as a helper, a 1.0f-returning
+// helper and a named `one` local.
 static int KillerBodyCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
