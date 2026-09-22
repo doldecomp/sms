@@ -74,6 +74,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A `new` result stored at a fixed offset and reloaded via `this + idx*4` is a one-element array member indexed by a variable (MarioCap `unk30`).
 - A two-pass body of N stores whose first address registers disagree with retail is one 2N-iteration loop MWCC unrolled by N, not a nested 2xN loop or a chain (JPAEmitterManager ctor, linked).
 - After a register swap, re-read lines the diff shows equal: the same register name can hold a different variable in each build (MapObjHide `afterFinishedAnim`: `&obj->mPosition`, not `&mPosition`).
+- `x = a - 1; x += b;` with `K - x` in the loop condition restores retail's separate `subi` and unrolled trailing branches (MapEventMare `initCommon`).
+- `T c = (T){...}; f(c);` swaps the two temporaries relative to passing the literal (DrawUtil `TSilhouette::setting`).
 
 ## Inlining decisions
 
@@ -323,6 +325,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A TU-local by-value `f32` level over a member is +4 pool and moves a named slot by exactly 4 (Item `TNozzleBox::load`, `MsIsInSight`, `execRoofCheck_`).
 - Binders inside a small helper that others inline raise every caller's frame equally and leave the helper's own copy unchanged (MapObjBase `removeMapCollision` closed `changeObjMtx` and `makeObjDead`).
 - `TFlagT<u16>()` instead of `TFlagT<u16>(0)` moves the by-value flag temporary 4 bytes up at no instruction cost (MarDirectorEvent `fireGetStar`).
+- A named `int` holding a popped value costs a 4-byte named slot below the float-to-int buffer; `s32` (signed long) or `u32` removes it (NpcEvent `evGetFruitNum`).
 
 ## Register and scheduling residues
 
@@ -421,6 +424,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A by-value TVec3 argument copied with `lfs`/`stfs` has a `Vec` source through `TVec3(const Vec&)`; a word copy means a TVec3 source (ModelGate).
 - A literal passed as an inline parameter is not constant-folded, keeping retail's multiply by 1.0f (`secToFrame(1.0f, fader)`, MarDirectorDirect).
 - `(f32)rand() * k1 * k2` is the header's `MsRandF()`, which sets literal order and the f1/f0 chain (MapObjDolpic `ring`).
+- `f32 up = 1.0f; v = up * s * t;` keeps a `* 1.0f` the literal form folds (tobiPuku `forceLaunch`).
 
 ## Data and layout
 
