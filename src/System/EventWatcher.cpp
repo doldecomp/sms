@@ -854,13 +854,22 @@ static void evKillMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// Binder over the raw global, named again at the call site: retail's 0x88
+// frame with every pool slot in place. The SMSGetMSound() binder is 4 high,
+// and naming the popped mushroom as well moves the pop slices 4 high.
+static inline MSound* EventWatcherRawMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 static void evAppearMushroom1up(TSpcTypedInterp<TEventWatcher>* interp,
                                 u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TMushroom1up* mushroom = (TMushroom1up*)getNameRefPtr(interp->pop());
-	mushroom->appear();
-	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_1UP_APPEAR, 0, nullptr, 0);
+	((TMushroom1up*)getNameRefPtr(interp->pop()))->appear();
+	MSound* sound = EventWatcherRawMSound();
+	sound->startSoundSystemSE(MSD_SE_SY_1UP_APPEAR, 0, nullptr, 0);
 	interp->push();
 }
 
