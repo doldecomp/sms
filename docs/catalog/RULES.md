@@ -88,6 +88,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A `bl TNerveBase<T>::TNerveBase()` inside an inlined `theNerve()` guard means the site is one inline level too shallow: call the UNUSED helper on the owning actor whose body was pasted at the site; `pushNerve`-side wrappers are inert (codegen-tells.md: "Research batch 251").
 - Pasted-UNUSED: a size-exact UNUSED helper is often written out at its call sites; conversely one can exist only to *be* a level (codegen-tells.md: "`bosswanwan`").
 - A retail frame far larger than ours plus base ctors called one level deeper means a missing `static inline` case helper (no map symbol); wrapping a whole `switch` case body in one restored CardLoad `perform`'s shared `li r28, 1` and its jump tables.
+- A plain callee expanded at some sites and `bl`ed at one is a depth-budget split: wrap only the calling site in a one-line static inline to push it to depth 2 (BathWaterManager mesh `render`, `drawCap` ~12 statements: 93.8 -> 98.1).
 
 ## Frame-size gaps
 
@@ -279,6 +280,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A missing function **permutes** the pool rather than shifting it: diff the two `.rodata` blobs before chasing immediates (codegen-tells.md: "`EventWatcher`").
 - `RAD_TO_DEG` = `180.0f / M_PI` (`0x42652ee0`); `DEG_TO_RAD` is the single-precision `0.017453294f`, not the double fold; the integer 182 factor is real (linking.md: "Pool-order batch 96").
 - Count `frsqrte` refinements: none = `x * __frsqrte(x)`, one double step = `MsSqrtf`, one single step with `cror` = `TUtil<f32>::sqrt`, three = `std::sqrtf` (codegen-tells.md: "`bosswanwan`").
+- MWCC merges `a*b` with `b*a`; for retail's separate product write `v *= k` in place (BathWaterManager drop-pair push).
+- A branchless `fcmpo`/`cror` is a discarded `TUtil<f32>::sqrt(x);` call, which also blocks load sharing across it (BathWaterManager `prerender`).
+- `fneg` then `fmadds a, b, -c` is `-c + a*b`; `a*b - c` gives `fmsubs`.
+- A three-word `lwz`/`stw` copy then `+=` on one component is a named `TVec3 pos = src; pos.y += k;`, with pointer reads hoisted before the copy.
 
 ## Data and layout
 
