@@ -1364,81 +1364,78 @@ void TMario::initModel()
 	}
 
 	mSurfGesso = nullptr;
-	if (gpMarDirector->getCurrentMap() == 58) {
-		if (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1) {
-			MActorAnmData* anmData = new MActorAnmData();
-			anmData->init("/scene/map/map/Torocco", nullptr);
-			mTorocco = new MActor(anmData);
+	if (gpMarDirector->getCurrentMap() == 58
+	    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
+		MActorAnmData* anmData = new MActorAnmData();
+		anmData->init("/scene/map/map/Torocco", nullptr);
+		mTorocco = new MActor(anmData);
 
-			void* toroccoRes = JKRFileLoader::getGlbResource(
-			    "/scene/map/map/Torocco/Torocco.bmd");
-			mTorocco->setModel(
+		void* toroccoRes = JKRFileLoader::getGlbResource(
+		    "/scene/map/map/Torocco/Torocco.bmd");
+		mTorocco->setModel(
+		    new J3DModel(
+		        J3DModelLoaderDataBase::load(
+		            toroccoRes,
+		            J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
+		        0, 1),
+		    0);
+		if (gpMarDirector->unk7D == 0) {
+			mRailType              = 0;
+			MActorAnmData* anmData = new MActorAnmData();
+			anmData->init("/scene/map/map/Pinna_rail", nullptr);
+			mPinaRail = new MActor(anmData);
+
+			void* pinaRailRes = JKRFileLoader::getGlbResource(
+			    "/scene/map/map/Pinna_rail/Pinna_rail.bmd");
+			mPinaRail->setModel(
 			    new J3DModel(
 			        J3DModelLoaderDataBase::load(
-			            toroccoRes,
-			            J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
+			            pinaRailRes, J3DMLF_MaterialPEFull
+			                             | (4 << J3DMLF_TevStageNumShift)),
 			        0, 1),
 			    0);
-			if (gpMarDirector->unk7D == 0) {
-				mRailType              = 0;
-				MActorAnmData* anmData = new MActorAnmData();
-				anmData->init("/scene/map/map/Pinna_rail", nullptr);
-				mPinaRail = new MActor(anmData);
 
-				void* pinaRailRes = JKRFileLoader::getGlbResource(
-				    "/scene/map/map/Pinna_rail/Pinna_rail.bmd");
-				mPinaRail->setModel(
-				    new J3DModel(
-				        J3DModelLoaderDataBase::load(
-				            pinaRailRes, J3DMLF_MaterialPEFull
-				                             | (4 << J3DMLF_TevStageNumShift)),
-				        0, 1),
-				    0);
+			mPinaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
 
-				mPinaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
-
-				Mtx pinnaMtx;
-				MTXIdentity(pinnaMtx);
-				mPinaRail->getModel()->setBaseTRMtx(pinnaMtx);
-				mPinaRail->calcAnm();
-				// Dest is the torocco: retail's r3 is the rail anmMtx and
-				// r4 is torocco+0x20, same as calcBaseMtxTorocco.
-				MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
-				        mTorocco->getModel()->getBaseTRMtx());
-			}
-			if (gpMarDirector->unk7D == 1) {
-				mRailType              = 1;
-				MActorAnmData* anmData = new MActorAnmData();
-				anmData->init("/scene/map/map/Koopa_rail", nullptr);
-				mKoopaRail = new MActor(anmData);
-
-				void* koopaRailRes = JKRFileLoader::getGlbResource(
-				    "/scene/map/map/Koopa_rail/Koopa_rail.bmd");
-				mKoopaRail->setModel(
-				    new J3DModel(
-				        J3DModelLoaderDataBase::load(
-				            koopaRailRes, J3DMLF_MaterialPEFull
-				                              | (4 << J3DMLF_TevStageNumShift)),
-				        0, 1),
-				    0);
-
-				mKoopaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
-
-				Mtx koopaMtx;
-				MTXIdentity(koopaMtx);
-				mKoopaRail->getModel()->setBaseTRMtx(koopaMtx);
-				mKoopaRail->calcAnm();
-				MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
-				        mTorocco->getModel()->getBaseTRMtx());
-			}
-			onFlag(MARIO_FLAG_HAS_FLUDD);
-			mTorocco->calcAnm();
-			MtxPtr toroccoMtx = mTorocco->getModel()->getAnmMtx(2);
-			mPosition.x       = toroccoMtx[0][3];
-			mPosition.y       = toroccoMtx[1][3];
-			mPosition.z       = toroccoMtx[2][3];
-			mToroccoAngle     = mFaceAngle.y;
+			Mtx pinnaMtx;
+			MTXIdentity(pinnaMtx);
+			mPinaRail->getModel()->setBaseTRMtx(pinnaMtx);
+			mPinaRail->calcAnm();
+			mTorocco->getModel()->setBaseTRMtx(
+			    mPinaRail->getModel()->getAnmMtx(0));
 		}
+		if (gpMarDirector->unk7D == 1) {
+			mRailType              = 1;
+			MActorAnmData* anmData = new MActorAnmData();
+			anmData->init("/scene/map/map/Koopa_rail", nullptr);
+			mKoopaRail = new MActor(anmData);
+
+			void* koopaRailRes = JKRFileLoader::getGlbResource(
+			    "/scene/map/map/Koopa_rail/Koopa_rail.bmd");
+			mKoopaRail->setModel(
+			    new J3DModel(
+			        J3DModelLoaderDataBase::load(
+			            koopaRailRes, J3DMLF_MaterialPEFull
+			                              | (4 << J3DMLF_TevStageNumShift)),
+			        0, 1),
+			    0);
+
+			mKoopaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
+
+			Mtx koopaMtx;
+			MTXIdentity(koopaMtx);
+			mKoopaRail->getModel()->setBaseTRMtx(koopaMtx);
+			mKoopaRail->calcAnm();
+			mTorocco->getModel()->setBaseTRMtx(
+			    mKoopaRail->getModel()->getAnmMtx(0));
+		}
+		onFlag(MARIO_FLAG_HAS_FLUDD);
+		mTorocco->calcAnm();
+		MtxPtr toroccoMtx = mTorocco->getModel()->getAnmMtx(2);
+		mPosition.x       = toroccoMtx[0][3];
+		mPosition.y       = toroccoMtx[1][3];
+		mPosition.z       = toroccoMtx[2][3];
+		mToroccoAngle     = mFaceAngle.y;
 	} else {
 		mTorocco   = nullptr;
 		mPinaRail  = nullptr;
