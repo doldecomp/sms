@@ -69,6 +69,15 @@ TLimitKoopaJr::TLimitKoopaJr(const char* name)
 	offLiveFlag(LIVE_FLAG_UNK100);
 }
 
+// The shape loop as its own level keeps the loop counter in the callee-saved
+// register that already holds the zero of resetLimitKoopaJr's stores; the raw
+// damage params (no reference temporaries) then land the frame.
+static inline void LimitKoopaJrShowShapes(J3DModelData* modelData)
+{
+	for (u16 i = 0; i < modelData->getShapeNum(); ++i)
+		modelData->getShapeNodePointer(i)->onFlag(1);
+}
+
 void TLimitKoopaJr::init(TLiveManager* live_manager)
 {
 	mManager = live_manager;
@@ -80,9 +89,9 @@ void TLimitKoopaJr::init(TLiveManager* live_manager)
 
 	initAnmSound();
 
-	f32 damageHeight = getSaveParams()->mSLDamageHeight.get();
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.value;
 	initHitActor(0x0800002E, 1, 0, 0.0f, 0.0f,
-	             getSaveParams()->mSLDamageRadius.get(), damageHeight);
+	             getSaveParams()->mSLDamageRadius.value, damageHeight);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	mSpine->initWith(&TNerveLimitKoopaJrRun::theNerve());
@@ -92,9 +101,7 @@ void TLimitKoopaJr::init(TLiveManager* live_manager)
 
 	resetLimitKoopaJr();
 
-	J3DModelData* modelData = getModel()->getModelData();
-	for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-		modelData->getShapeNodePointer(i)->onFlag(1);
+	LimitKoopaJrShowShapes(getModel()->getModelData());
 }
 
 void TLimitKoopaJr::reset()
@@ -322,12 +329,16 @@ void TLimitKoopaJr::moveWait()
 	    mBodyDirection.d2r(getSaveParams()->mSLRotationSpeed.get()));
 }
 
+// TODO: UNUSED, 0x9c in the map and 0xac here. Returning `f32` (the
+// direction, `return calc.get();`, callers reading it straight) lands the map
+// size exactly and cuts the Run nerve's frame from 0x68 to 0x50 (retail 0x60),
+// but costs TNerveLimitKoopaJrWait 0.01 (frame 0xb8 -> 0xa0 against 0xb0), so
+// it is parked until the Wait nerve's moveWait paste is understood.
 TDirectionCalc TLimitKoopaJr::calcTargetDirection()
 {
 	TDirectionCalc calc;
 
-	THitActor* bathtub                      = mBathtub;
-	const JGeometry::TVec3<f32>& bathtubPos = bathtub->mPosition;
+	const JGeometry::TVec3<f32>& bathtubPos = mBathtub->mPosition;
 	JGeometry::TVec3<f32> toMario;
 	toMario.x = bathtubPos.x - gpMarioPos->x;
 	toMario.y = bathtubPos.y - gpMarioPos->y;

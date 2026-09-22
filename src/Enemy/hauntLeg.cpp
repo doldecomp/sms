@@ -76,6 +76,12 @@ static inline MActor* HauntLegGetMActor(const THauntLeg* p)
 
 // Every leg starts on a random node of the "main" rail, one of eight colour
 // pairs cycling over the group.
+//
+// TODO: 99.8%, frame exact: `point` sits at 0x6c, retail 0x68 (a 4-byte hole
+// between it and `range` at 0x78), and the range-min/graph-node loads swap
+// r3/r5. Tried: `point` declared at loop or function top (+8/+0x10 frame),
+// by-value/reference/out-param point helpers (94-99.7), a named node
+// pointer, an unnamed TMsRange temporary, a TU-local rand level.
 void THauntLegManager::initSetEnemies()
 {
 	static const GXColorS10 tevColorData1[] = {
@@ -160,6 +166,13 @@ THauntLeg::THauntLeg(const char* name)
 	unk19C = nullptr;
 }
 
+// TODO: instructions and frame exact; the two iterator copies feeding
+// insert() sit at 0x54/0x58 where retail has 0x58/0x5c. Naming the searched
+// group fixed the low JGadget block and naming the `new` result the frame
+// (+8). Tried: by-value levels over mBodyScale, unk194 (both uses), the
+// walker cast, getMActor() (bare and named), setter levels over unk130 and
+// mActorType, passing `obj` to push_back (moves unk194 to the stack): each
+// moves the low block or nothing.
 void THauntLeg::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
@@ -171,11 +184,12 @@ void THauntLeg::init(TLiveManager* manager)
 	unk130 = 2;
 	getMActor()->setJointCallback(1, HauntLegCallback);
 
-	unk194 = new THauntedObject("ハントオブジェクト");
+	THauntedObject* obj = new THauntedObject("ハントオブジェクト");
+	unk194              = obj;
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
-	    ->getChildren()
-	    .push_back(unk194);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ");
+	group->getChildren().push_back(unk194);
 
 	f32 radius = 30.0f * mBodyScale;
 	unk194->initHitActor(0x10000025, 2, 0x80000000, radius, radius, radius,
