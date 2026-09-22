@@ -145,6 +145,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `Enemy/rocket`: delayed the `THitActor*` collision casts until after their null checks in `TRocket::bind`, matching the retail branch placement and removing four extra instructions.
   `bind` rose **97.14384 -> 99.88%**, raising unit fuzzy similarity **99.22357 -> 99.44%**.
   No function became exact, so matched-code, linked-unit, and exact-function totals did not move; the DOL remains byte-identical.
+- Whole-file medium audits of `Camera/CameraBGCheck`, `Enemy/yunbo`, `Enemy/enemyAttachment`, `MSound/MSHandle`, `Camera/CameraChange`, `Animal/boid`, `Enemy/beam`, `MoveBG/MapObjPollution`, `Enemy/spider`, and `Camera/CameraNormal` returned clean with no safe gain.
+  Their remaining differences were traced to loop-unrolling, shared vector/quaternion return conventions, frame allocation, or register/temporary placement; do not repeat them without a new shared compiler-shape lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
