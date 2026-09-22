@@ -70,6 +70,10 @@ void TMario::hitNormal(THitActor* actor)
 		// wrong family, and batch 144's ranking rule only governs
 		// callee-saved allocation. This is the same volatile-coalescing class
 		// as TNpcInbetween::execPosInbetween's single `fmuls` destination.
+		// Batch cc22, all 98.3 or identical: the stores in a static inline
+		// returning the pointer as the message argument, taking the pointer
+		// and position (with or without the receiveMessage inside, any
+		// parameter order), and a separate receiveMessage wrapper.
 		TWaterHitActor* water = &TModelWaterManager::mStaticHitActor;
 		water->mPosition = mPosition;
 		water->mPosition.y += 80.0f;

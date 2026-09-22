@@ -205,6 +205,9 @@ void TMapObjTree::initEach()
 // the @3182 base r26) and there is no second value to pair it with as an
 // inlined call's `this` and parameter. An inlined `getLeafNum()` accessor for
 // the `new[]` count is worse (3 -> 6 markers).
+// Batch cc22, all worse or inert: zero-cost `static inline` factories for
+// `new TMapCollisionMove` and/or `new TMapObjLeaf[n]` (6-7 markers; the array
+// one +8 frame, cancelled by the raw manager read back to 3 markers).
 void TMapObjTree::initMapObj()
 {
 	TMapObjGeneral::initMapObj();

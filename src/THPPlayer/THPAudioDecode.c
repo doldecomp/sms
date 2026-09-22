@@ -156,6 +156,8 @@ static void* AudioDecoder(void* arg)
 // instructions, same rotation): the helper folds away and MWCC regenerates the
 // same global-address temporary, so a C helper cannot put a local into the
 // parameter bucket the way an inlined member's argument does in C++.
+// Batch cc22: making `frame` an inlined-callee parameter (a static inline
+// storing frameNumber and calling AudioDecode) is inert on the rotation.
 static void* AudioDecoderForOnMemory(void* arg)
 {
 	s32 frame;

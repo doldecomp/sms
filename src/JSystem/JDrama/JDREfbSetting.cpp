@@ -96,6 +96,10 @@ bool JDrama::IssueGXSetCopyClear(JUtility::TColor clear_color, u32 clear_z,
 // the *dead* `flags & 0x20` result into r4, the register `sample_pattern` is
 // loaded into at 0x348; we spend r0 on the dead value and run the bool chain
 // through r3/r4. Nothing at the call site reaches that coalescing.
+// Batch cc22, all identical or worse: `!= 0`, `!!`, `(bool)`, `(u32)`,
+// `(int)flags`, `1 << 5` and `(flags >> 5) & 1` (99.0) for the third argument,
+// a named `const GXRenderModeObj*`, and a TU-local inline level above the call
+// taking the render mode, the flags, or all four arguments.
 void JDrama::IssueGXCopyDisp(void* param_1, const TRect& src_rect,
                              const GXRenderModeObj& render_mode,
                              JUtility::TColor clear_color, u32 clear_z,

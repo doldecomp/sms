@@ -246,6 +246,9 @@ void SMS_IsMarioSpeedZero() { gpMarioOriginal->isSpeedZero(); }
 // on both sides of the &&): codegen is byte-identical to the raw spelling, so
 // a binding level is not a CSE breaker either. What is left untried is a
 // spelling in which the two loads are genuinely different memory to MWCC.
+// Batch cc22, all inert or worse: a `TTakeActor**` to the member (19
+// instructions), a `(u32)` null test, a ternary (82.4), two nested ifs with a
+// false default (76.1), and a named `TMario*` receiver (identical).
 bool SMS_IsMarioOnWire()
 {
 	bool ret;
