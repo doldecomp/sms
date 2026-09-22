@@ -218,6 +218,18 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 	return best;
 }
 
+// Writing the difference through a `Vec&` inside an inlined callee is what
+// gives retail's fused `fmadds` in the two `diff.length()` expansions below
+// (x*x folded onto y*y); a plain `TVec3 diff = a - b;` leaves both unfused,
+// is two instructions longer and shifts every later case of the jump table.
+// JPADrawCalcScaleXBySpeed::calc gets the same fusion from
+// `JPABaseParticle::getVelVec(Vec&)`. TODO: the retail helper's real name
+// and owner are unknown.
+static inline void TongueSubTo(Vec& out, const JGeometry::TVec3<f32>& a, const JGeometry::TVec3<f32>& b)
+{
+	out = a - b;
+}
+
 void TYoshiTongue::movement()
 {
 	if (unkD4 != 0) {
@@ -252,7 +264,8 @@ void TYoshiTongue::movement()
 		mAttackRadius = 10.0f;
 		calcEntryRadius();
 
-		JGeometry::TVec3<f32> diff = mTipPos - mHeadPos;
+		JGeometry::TVec3<f32> diff;
+		TongueSubTo(diff, mTipPos, mHeadPos);
 
 		if (mHeldObject != nullptr) {
 			if (diff.length() < mMaxReach) {
