@@ -89,6 +89,11 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed further medium whole-file gains in `MoveBG/ModelGate` (`loadAfter` **98.70 -> 99.64%**), `Animal/AnimalBase` (`execWalk` **79.12 -> 81.55%**), and `System/MSoundMainSide` (`MSStageDistFadeMonte::proc` **98.55 -> 98.87%**).
 - Source-linked the fully matching data-only `JSystem/JAudio/JASystem/JASDriverTables` unit after a manifest census found it omitted.
   JSystem linked **181 -> 182**, All linked **498 -> 499**; a follow-up census found no other fully matching unmanifested units.
+- Landed `MoveBG/MapObjInit`: restored `initBckMoveData`'s transform staging and made the function exact.
+  Exact functions rose **11,464 -> 11,465**; the rounded project percentages did not move.
+- Landed `JSystem/JParticle/JPAField`: decoded the field block status into the actual member instead of a detached local, raising `loadFieldBlock` **97.99 -> 99.84%** with no regressions.
+- Whole-file medium audits of `JASystem/JASTrack` and `JASystem/JASChannel` returned clean with no safe gain.
+  Their remaining bodies are instruction-exact frame/register-allocation residues already covered by the TU TODO ledgers; do not reassign them without a new compiler-shape lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
