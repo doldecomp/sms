@@ -57,6 +57,13 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ## State log
 
+### Session codex-orchestrator (2026-09-22)
+
+- Fixed `tools/worktree.sh` to configure new worktrees with the Python recorded by the main build, preventing false shared-tool download attempts.
+- Landed and source-linked `System/EmitterViewObj`.
+  The blocker was `.sbss` definition order: moving `gpMarioParticleManager` ahead of the three callback globals restored its retail address and 663 downstream SDA relocations.
+  The linked DOL is byte-identical; All linked **497 -> 498**, Game linked **170 -> 171**, matched code stays **63.54%**.
+
 ### Session cursor-orchestrator (2026-09-20 morning)
 
 - Session so far: MarioSpecial, bosspakkun +3, igaiga +3, bossManta +0, gesso (+1 then +0 structural then +2), fireWanwan (+2 then +0 structural), hamukuri (+2 then +2 then +1), chuuhana (+0 then +0 structural), bosstelesa +1, MapObjLib +3, bossgesso +1, MapObjMonte (+3 then +0 structural x2 then drawOneRope frame), bosseel (stale then yield), WaterGun (stale), popo +1, hinokuri2 (+0 structural then UNUSED restore), EventWatcher +0 structural, MapObjMamma +7, MapObjBase +3, MapObjPinna +1, telesa +2, conductor +1, NpcEvent +0 structural, smallEnemy +1, BossHanachanParts +5, killer (+1 then +0 structural), MapObjBall +0 structural, Option (+1 then +1), elecNokonoko +3, hanasambo +2.
