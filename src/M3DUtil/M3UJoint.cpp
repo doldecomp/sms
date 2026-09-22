@@ -66,6 +66,13 @@
 // blended-scale components raises it; all inert). Batch 145 exhausted the
 // declaration-order knob (`bVar5` at all seven positions). No new rule reaches
 // it; it needs the boundary itself researched.
+// cc26 (inert or worse, model address still r25): a named-result level
+// `BOOL r = checkScaleOne(v); return r;` (by value 90.2%, by const& 98.5%), a
+// TU-local setScaleFlag level taking the BOOL (byte-identical), one that
+// computes, stores and returns the flag (98.5%), a named-result model
+// accessor (98.5%), `setScaleFlag(param_1, bVar5 = checkScaleOne(...))`
+// (98.6%), an if/else or ternary assignment (96.5/96.7%), a named u16 copy of
+// the index (98.6%), and J3DSys::mCurrentS as the argument (95.6%).
 void M3UMtxCalcBlendAux(u16 param_1, J3DTransformInfo* param_2,
                         J3DTransformInfo* param_3, f32 param_4, bool basic)
 {

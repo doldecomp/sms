@@ -89,6 +89,13 @@ void TConeBeam::drawConeBeamAux(const GXColor& color, bool unk)
 // it then schedules the two lfsx in the opposite order, so the score is a
 // wash (95.67 -> 95.65); the register evidence still says the second loop
 // evaluates JMASin first and uses cosA first.
+// The "origin caching" is concrete: retail keeps coneInPlane's three origin
+// (unk00) loads from the dot product live in f5/f6/f0 and reuses them for the
+// final `+= origin`, where we reload all three from 0(r28)/4(r28)/8(r28).
+// cc26: building the result in a coneInPlane-local TVec3 and storing it
+// through outPos = &mVtx[i] (so no address-taken caller local) is still a
+// reload (95.6%, frame unchanged); passing &mVtx[i] with the original body is
+// 94.3%.
 void TConeBeam::calcVertices(int count)
 {
 	JGeometry::TVec3<f32> local_140;
