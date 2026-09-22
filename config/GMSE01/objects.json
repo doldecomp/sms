@@ -294,6 +294,7 @@
     "MoveBG/MapObjOption.cpp",
     "MoveBG/MapObjPole.cpp",
     "MoveBG/MapObjSample.cpp",
+    "MoveBG/MapObjTown.cpp",
     "MoveBG/MapObjTrap.cpp",
     "MoveBG/MapObjWater.cpp",
     "MoveBG/MapObjWave.cpp",
