@@ -557,9 +557,9 @@ void TFruitLauncher::loadAfter()
 
 	// The five fruit kinds have to exist before anything can be launched, and
 	// each one is flagged as "came out of a tank".
-	((TResetFruit*)TMapObjBaseManager::newAndRegisterObj("FruitCoconut"))
-	    ->unk1A4
-	    = true;
+	TResetFruit* coconut =
+	    (TResetFruit*)TMapObjBaseManager::newAndRegisterObj("FruitCoconut");
+	coconut->unk1A4 = true;
 	((TResetFruit*)TMapObjBaseManager::newAndRegisterObj("FruitDurian"))
 	    ->unk1A4
 	    = true;
