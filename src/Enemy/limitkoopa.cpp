@@ -230,9 +230,7 @@ BOOL TLimitKoopaFlame::receiveMessage(THitActor*, u32 message)
 void TLimitKoopaFlame::attack_(THitActor* other)
 {
 	if (other->receiveMessage(this, HIT_MESSAGE_UNKA)) {
-		TLimitKoopa* koopa = mOwner;
-		koopa->changeBck(KOOPA_ANM_FIRE_END,
-		                 koopa->getParam()->fireSpeed.get());
+		mOwner->stopFlame();
 	}
 }
 
@@ -253,24 +251,20 @@ TLimitKoopaHead::TLimitKoopaHead(TLimitKoopa* owner)
 {
 }
 
-// TODO: 73.8%. The three nerve comparisons and the two pushes are in the
-// ROM's order, but it compares the message signed and keeps one more of the
-// theNerve() guards expanded than our build does.
+// Owner binder (+8 of the frame).
+static inline TLimitKoopa* LimitKoopaHeadOwner(TLimitKoopaHead* head)
+{
+	TLimitKoopa* koopa = head->mOwner;
+	return koopa;
+}
+
+
 BOOL TLimitKoopaHead::receiveMessage(THitActor*, u32 message)
 {
-	if ((s32)message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		TLimitKoopa* koopa = mOwner;
-		if (koopa->mSpine->getCurrentNerve()
-		        != &TNerveLimitKoopaTumble::theNerve()
-		    && koopa->mSpine->getCurrentNerve()
-		           != &TNerveLimitKoopaGetDown::theNerve()) {
-			if (koopa->mSpine->getCurrentNerve()
-			    == &TNerveLimitKoopaStagger::theNerve())
-				koopa->mSpine->setNext(
-				    &TNerveLimitKoopaGetShowered::theNerve());
-			koopa->mSpine->pushNerve(
-			    &TNerveLimitKoopaGetShowered::theNerve());
-		}
+	switch (message) {
+	case HIT_MESSAGE_SPRAYED_BY_WATER:
+		LimitKoopaHeadOwner(this)->getShowered();
+		break;
 	}
 	return TRUE;
 }
@@ -596,8 +590,20 @@ void TLimitKoopa::calcRootMatrix()
 	TSpineEnemy::calcRootMatrix();
 }
 
-// TODO: UNUSED (0x78), body not reconstructed.
-void TLimitKoopa::stopFlame() { }
+// Fire-speed read: one level over getParam(). As an argument of the inlined
+// changeBck() it sits one level deeper than moveTurn's reader, so it needs
+// one binder fewer to put TEnemyManager::getSaveParam() at depth 5.
+static inline f32 LimitKoopaFireSpeed(const TLimitKoopa* koopa)
+{
+	TLimitKoopaParams* params = koopa->getParam();
+	return params->fireSpeed.get();
+}
+
+// UNUSED (0x78).
+void TLimitKoopa::stopFlame()
+{
+	changeBck(KOOPA_ANM_FIRE_END, LimitKoopaFireSpeed(this));
+}
 
 // TODO: UNUSED (0x1b8), body not reconstructed.
 void TLimitKoopa::breathFlame() { }
@@ -712,8 +718,32 @@ f32 TLimitKoopa::getNeckFocus() const { return 0.0f; }
 // TODO: UNUSED (0x2a0), body not reconstructed.
 void TLimitKoopa::getDown() { }
 
-// TODO: UNUSED (0x23c), body not reconstructed.
-void TLimitKoopa::getShowered() { }
+// The push is one level below getShowered(): retail calls pushNerve out of
+// line while the setNext beside it is expanded.
+static inline void LimitKoopaPushShowered(TLimitKoopa* koopa)
+{
+	koopa->mSpine->pushNerve(&TNerveLimitKoopaGetShowered::theNerve());
+}
+
+
+// Spine binder at the setNext site (+8 of the head's receiveMessage frame).
+static inline TSpineBase<TLiveActor>* LimitKoopaSpine(TLimitKoopa* koopa)
+{
+	TSpineBase<TLiveActor>* spine = koopa->mSpine;
+	return spine;
+}
+
+
+// UNUSED (0x23c).
+void TLimitKoopa::getShowered()
+{
+	if (&TNerveLimitKoopaTumble::theNerve() == mSpine->getCurrentNerve()
+	    || &TNerveLimitKoopaGetDown::theNerve() == mSpine->getCurrentNerve())
+		return;
+	if (&TNerveLimitKoopaStagger::theNerve() == mSpine->getCurrentNerve())
+		LimitKoopaSpine(this)->setNext(&TNerveLimitKoopaGetShowered::theNerve());
+	LimitKoopaPushShowered(this);
+}
 
 // TODO: UNUSED (0x240), body not reconstructed.
 void TLimitKoopa::stagger(bool) { }
