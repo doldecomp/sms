@@ -272,6 +272,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A scalar slot below a local `char[N]` in ours but above it in retail: declare the scalar before the array (CardSave `setMessageC`).
 - Naming the receiver, `T* p = <helper>(); p->call();`, is a frame lever separate from the chained call; pick the right-hand side (accessor, returning fork, binder) per site by measurement and brute-force the per-site combinations when rebuilds are cheap (EventWatcher: 5 of 7 closures; chained/raw global 8 short, unnamed binder 8 long).
 - A `u32` wrapper around a bool flag test adds exactly 4 bytes low in the frame; the raw test and a bool wrapper are 4 short (EventWatcher `evEggYoshiStartFruit`).
+- Some named scalars in an inlined callee take a 4-byte slot at the bottom of its block regardless of declaration position (not ones feeding a real `bl`); where retail has no slot, reuse an existing local to keep evaluation order at zero cost (sunmodel `perform`).
+- Each `SMSGetCamera()` read is +4 of low pool versus raw `gpCamera`; mix per site to tune in 4-byte steps (sunmodel).
 
 ## Register and scheduling residues
 
@@ -367,6 +369,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A unit that matches but shortens `.sdata2` has a pool-order problem, and pool order is evidence about UNUSED stub bodies (linking.md: "Batch 72").
 - Run `validate-symbol-order.py` before proposing a link: it catches missing UNUSED symbols and BINDING errors objdiff cannot see (linking.md: "Batch 72").
 - Editing a shared header linked units depend on (`PollutionPos.hpp`, `MActor::getModel()`) breaks the DOL even when scores improve (frame-gaps.md: "batch 110").
+- `report.json` matches `.rodata` by symbol, not position: a 100/100 unit can still change the DOL when header literals come out in another order; include `System/DummyStrings.hpp` first as `sunmgr.cpp` does (sunmodel link).
 
 ## TU reconstruction
 
