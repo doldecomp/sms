@@ -94,6 +94,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `JSystem/JParticle/JPAField`: decoded the field block status into the actual member instead of a detached local, raising `loadFieldBlock` **97.99 -> 99.84%** with no regressions.
 - Whole-file medium audits of `JASystem/JASTrack` and `JASystem/JASChannel` returned clean with no safe gain.
   Their remaining bodies are instruction-exact frame/register-allocation residues already covered by the TU TODO ledgers; do not reassign them without a new compiler-shape lead.
+- Landed `JSystem/JParticle/JPADrawVisitor`: reused the X-by-speed raw-member form for `JPADrawCalcScaleYBySpeed::calc`, raising it **99.83 -> 99.92%**.
+  The other 17 residuals were audited in the same whole-file pass; most are frame-only, while the two stripe paths still need genuine matrix/vector temporary reconstruction.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
