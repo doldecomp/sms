@@ -417,6 +417,9 @@ void TMario::frontSlipEffect()
 	}
 }
 
+// Fabricated name; see surfingEffect.
+static inline MtxPtr SurfingMtx(TMario* mario) { return mario->unk1F0; }
+
 void TMario::surfingEffect()
 {
 	f32 scale = 1.0f;
@@ -432,30 +435,26 @@ void TMario::surfingEffect()
 	if (spMax < mForwardVel)
 		scale = sMax;
 
-	// TODO: 99.5%; our dead low region is 16 bytes too big (frame 0x70 versus
-	// retail 0x60), even though `scaleVec` is fully scalarised into f31.
-	// A dead named `TVec3` here is only +8, so the surplus is not `scaleVec`
-	// as a slot; passing `TVec3(scale, scale, scale)` as a temporary at the
-	// four sites is far worse (frame 0xb8), and the `SMS_EasyEmitParticle`
-	// template, whose body is exactly these four blocks and whose
-	// type-to-flag map gives retail's 3/1/1/1, cannot be it either: a function
-	// template without `inline` never inlines, so it emits a `bl` (58.2%).
-	// Retail also computes the MtxPtr before `this` at the last three sites.
-	JGeometry::TVec3<f32> scaleVec(scale, scale, scale);
+	// A constructed or `set`/`setAll` vector pays 16 bytes of dead low
+	// region; the chained member assignment is scalarised for free. The
+	// three `unk1F0` matrices go through a TU-local level (SurfingMtx), which
+	// is what makes retail compute the matrix before `this`.
+	JGeometry::TVec3<f32> scaleVec;
+	scaleVec.x = scaleVec.y = scaleVec.z = scale;
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_GESOSURF_A, (MtxPtr)getRootAnmMtx(), 3, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_B, unk1F0, 1, this);
+	    PARTICLE_MS_GESOSURF_B, SurfingMtx(this), 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_D, unk1F0, 1, this);
+	    PARTICLE_MS_GESOSURF_D, SurfingMtx(this), 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_GESOSURF_C, unk1F0, 1, this);
+	    PARTICLE_MS_GESOSURF_C, SurfingMtx(this), 1, this);
 	if (emitter != nullptr)
 		emitter->setGlobalScale(scaleVec);
 }
