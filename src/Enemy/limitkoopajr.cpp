@@ -255,9 +255,10 @@ void TLimitKoopaJr::moveRun()
 	offset.scale(mRoundRadius);
 
 	const JGeometry::TVec3<f32>& center = mBathtub->mPosition;
-	mPosition.x                         = center.x + offset.x;
-	mPosition.y                         = center.y + offset.y;
-	mPosition.z                         = center.z + offset.z;
+	f32 x                               = center.x + offset.x;
+	f32 y                               = center.y + offset.y;
+	f32 z                               = center.z + offset.z;
+	mPosition.set(x, y, z);
 	mPosition.y = getSaveParams()->mSLRoundHeight.get();
 
 	offset.normalize();
