@@ -259,6 +259,26 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 
 void TNameIndParCallback::draw(JPABaseEmitter*, JPABaseParticle*) { }
 
+// A direct-return fork for the params cast, a named-result binder for the
+// march speed and a by-value level over the jump radius: the three pool rungs
+// that put TNerveNKFollowMario's TPathNode temporary at retail's 0x3c in a
+// 0x58 frame.
+static inline TNameKuriSaveLoadParams* NKParams(TNameKuri* self)
+{
+	return (TNameKuriSaveLoadParams*)self->getSaveParam();
+}
+
+static inline f32 NKMarchSpeed(TNameKuri* self)
+{
+	f32 speed = self->getMarchSpeed();
+	return speed;
+}
+
+static inline f32 NKJumpAttackRadius(const TNameKuriSaveLoadParams* params)
+{
+	return params->mSLJumpAttackRadius.get();
+}
+
 static BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
@@ -271,6 +291,11 @@ static BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 		// 0x14, so one 4-byte named item above the matrix belongs in the
 		// pool instead. Retail also binds &local_48 into r30 (`mr r4, r30`,
 		// the one missing instruction) and colours 1.0f into f1.
+		// Tried: a named `one` for the 1.0f lands every matrix slot (the
+		// named item above the Mtx) but not the r30 binding; a named MtxPtr
+		// for the rotation (declared early, late or at the Mtx) gives the
+		// `mr r4, r30` shape but swaps r30/r31 with param_1; chained zero
+		// rows and a named joint index change nothing useful.
 		MtxPtr mA = gpCurNameKuri->getMActor()->mModel->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 
@@ -382,6 +407,12 @@ void TNameKuri::init(TLiveManager* param_1)
 	}
 }
 
+// TODO: 83.6%. Retail keeps normal.y/z in f30/f31 across the first
+// MsVECNormalize and reloads normal.x after storing each cross product's x/y
+// (the aliasing shape of "two temporaries, z assigned directly"); ours loads
+// everything first. A TU-local cross with that shape, or with three direct
+// stores, is inert here (MWCC still sees the locals as distinct), and the
+// frame is 0x48 short.
 void TNameKuri::calcRootMatrix()
 {
 	gpCurNameKuri = this;
@@ -793,6 +824,11 @@ static inline MActor* NamekuriGetMActor(const TNameKuri* p)
 	return mActor;
 }
 
+// TODO: 99.9%. The animation id (0x15c) takes r5 and the params pointer r4
+// in retail, ours the reverse, and the named TVec3 block sits 4 bytes high.
+// Tried: params declared late/split/const, read at its use, through
+// getSaveParams()/getSaveParam(), a named isBckAnm(6) result; SMS_GetMarioPos
+// for local_44 and raw `.value` jump speed (frame -8/-0x10).
 DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 {
 	TNameKuri* self = (TNameKuri*)spine->getBody();
@@ -920,12 +956,11 @@ DEFINE_NERVE(TNerveNKFollowMario, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setGoalPath(SMS_GetMarioHitActor());
 
-	self->walkToCurPathNode(self->getMarchSpeed(), 3.0f, 0.0f);
+	self->walkToCurPathNode(NKMarchSpeed(self), 3.0f, 0.0f);
 
-	TNameKuriSaveLoadParams* params
-	    = ((TNameKuriSaveLoadParams*)self->getSaveParam());
-	f32 jumpAttackRadius = params->mSLJumpAttackRadius.get();
-	f32 jumpAttackAngle  = params->mSLJumpAttackAngle.get();
+	TNameKuriSaveLoadParams* params = NKParams(self);
+	f32 jumpAttackRadius            = NKJumpAttackRadius(params);
+	f32 jumpAttackAngle             = params->mSLJumpAttackAngle.get();
 	if (self->isInSight(SMS_GetMarioPos(), jumpAttackRadius, jumpAttackAngle,
 	                    0.0f)) {
 		spine->pushAfterCurrent(&TNerveNameKuriJumpAttackPrepare::theNerve());
