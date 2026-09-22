@@ -89,19 +89,19 @@ void TRoulette::initMapObj()
 		if (strstr(getModel()->getModelData()->getMaterialName()->getName(i),
 		           "_switch")
 		    != nullptr) {
-			SMS_InitPacket_OneTevColor(mMActor->getModel(), i, GX_TEVREG0,
+			SMS_InitPacket_OneTevColor(getMActor()->getModel(), i, GX_TEVREG0,
 			                           (GXColorS10*)&unk148);
 		}
 	}
 
 	unk150 = new TRouletteSw(this, "ルーレットスイッチ");
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
-	    ->getChildren()
+	TIdxGroupObj* group = JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ");
+	group->getChildren()
 	    .push_back(unk150);
 	f32 attackR = 500.0f;
 	f32 attackH = 100.0f;
-	if (gpApplication.mCurrArea.unk0 == 14) {
+	if (gpApplication.mCurrArea.getStage() == 14) {
 		attackR = 40.0f;
 		attackH = 80.0f;
 	}

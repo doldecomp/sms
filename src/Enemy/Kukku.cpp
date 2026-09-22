@@ -425,10 +425,10 @@ void TKukku::doFlyToCurPathNode()
 // keeping `length()` with the two bank locals (nerves back to 0.0/42.0 *and*
 // frame 0x90).
 //
-// TODO: the remaining 0x18 is 0x14 of inline-expansion temporaries below
-// `toGoal` plus one extra 4-byte named local above it -- the ROM has exactly
-// one there, we have two -- so one of our four scalars wants a register home
-// we cannot give it.
+// The last 0x18 of frame: each `TParamRT::get()` reference temporary is 0x10
+// of pool, so retail read one speed raw and the other through the plain
+// cast (0x88 -> 0x78; both raw is 0x68), and the two bank factors are one
+// reassigned local (the second named `f32` was the extra 4-byte slot).
 void TKukku::updateRotation()
 {
 	JGeometry::TVec3<f32> toGoal(getUnkF4().getPoint());
@@ -439,8 +439,8 @@ void TKukku::updateRotation()
 	if (dist < 100.0f)
 		return;
 
-	f32 marchSpeed = getSaveParams()->getMarchSpeed();
-	f32 turnSpeed  = getSaveParams()->getTurnSpeed();
+	f32 marchSpeed = getSaveParams()->mMarchSpeed.value;
+	f32 turnSpeed  = ((TKukkuParams*)getSaveParam())->getTurnSpeed();
 
 	if (dist <= 2.0f * calcMinimumTurnRadius(marchSpeed, turnSpeed))
 		turnSpeed = calcTurnSpeedToReach(marchSpeed, 0.5f * dist);
@@ -450,10 +450,10 @@ void TKukku::updateRotation()
 
 	// A falling gull keeps the yaw it had but loses its banking; retail
 	// evaluates isFalling() once per component.
-	f32 bankX = isFalling() ? 0.0f : 1.0f;
-	mRotation.x *= bankX;
-	f32 bankZ = isFalling() ? 0.0f : 1.0f;
-	mRotation.z *= bankZ;
+	f32 bank = isFalling() ? 0.0f : 1.0f;
+	mRotation.x *= bank;
+	bank = isFalling() ? 0.0f : 1.0f;
+	mRotation.z *= bank;
 }
 
 // 96.3%, frame exact at 0x78, all 71 opcodes in place.
@@ -865,8 +865,14 @@ DEFINE_NERVE(TNerveKukkuPostFall, TLiveActor)
 	return FALSE;
 }
 
-// 99.8%: the only residue is 8 bytes of frame (0x60 against the target's
-// 0x58) now that calcMomentum() is refused at this site as retail refuses it.
+// TODO: the frame is exact (0x60 -> 0x58 by reading the habataki timer
+// through the plain cast: `TParamRT::get()` behind getSaveParams() costs a
+// reference temporary), but calcMomentum's return slot sits at 0x38 against
+// retail's 0x30 with the velocity temporary exact at 0x44. Tried and inert:
+// a raw or cast march-speed read, a named result copied into
+// mLinearVelocity, `.set()`, a named zero vector for setVelocity (block or
+// function scope); `!spine->getTime()` moves the result to 0x34 but the
+// velocity temporary to 0x40.
 DEFINE_NERVE(TNerveKukkuRecoverGraph, TLiveActor)
 {
 	TKukku* kukku = (TKukku*)spine->getBody();
@@ -876,7 +882,7 @@ DEFINE_NERVE(TNerveKukkuRecoverGraph, TLiveActor)
 		kukku->setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 	}
 
-	if (kukku->getSaveParams()->getHabatakiTimer() < spine->getTime()) {
+	if (((TKukkuParams*)kukku->getSaveParam())->getHabatakiTimer() < spine->getTime()) {
 		spine->pushAfterCurrent(&TNerveKukkuGraphWander::theNerve());
 		return TRUE;
 	}

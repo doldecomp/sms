@@ -606,6 +606,13 @@ DEFINE_NERVE(TNerveKazekunWait, TLiveActor)
 // TODO: 99.9%. The zero-velocity temporary sits at 0x38 in retail and 0x34
 // here, so retail builds one more four-byte inline temporary ahead of it; the
 // frame size itself already agrees.
+// By-value level over the reset-time parameter: +4 of low pool, landing the
+// velocity temporary at retail's slot in TNerveKazekunHitWater::execute.
+static inline int KazekunResetTimeHitting(const TKazekun* kazekun)
+{
+	return kazekun->getSaveParams()->getResetTimeHitting();
+}
+
 DEFINE_NERVE(TNerveKazekunHitWater, TLiveActor)
 {
 	TKazekun* kazekun = (TKazekun*)spine->getBody();
@@ -618,7 +625,7 @@ DEFINE_NERVE(TNerveKazekunHitWater, TLiveActor)
 
 	if (kazekun->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKazekunDisappear::theNerve());
-		int sleep           = kazekun->getSaveParams()->getResetTimeHitting();
+		int sleep           = KazekunResetTimeHitting(kazekun);
 		kazekun->mSleepTime = sleep;
 		return TRUE;
 	}
