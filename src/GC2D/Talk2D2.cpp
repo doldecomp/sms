@@ -1038,7 +1038,7 @@ bool TTalk2D2::eraseBoardWindow()
 bool TTalk2D2::appearBoardBoxWindow()
 {
 	bool done = false;
-	s16 alpha = mBoardTextBox->getAlpha() + 4;
+	u16 alpha = mBoardTextBox->getAlpha() + 4;
 	if (alpha > 255) {
 		alpha = 255;
 		done  = true;
@@ -1108,19 +1108,10 @@ void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
 				}
 				break;
 
-			case TALK_MODE_BOARD_APPEAR: {
-				// appearBoardBoxWindow()'s body.
-				bool done = false;
-				s16 alpha = mBoardTextBox->getAlpha() + 4;
-				if ((u16)alpha > 255) {
-					alpha = 255;
-					done  = true;
-				}
-				mBoardTextBox->setAlpha(alpha);
-				if (done)
+			case TALK_MODE_BOARD_APPEAR:
+				if (appearBoardBoxWindow())
 					mTalkMode = TALK_MODE_OPEN;
 				break;
-			}
 			}
 			break;
 		}
