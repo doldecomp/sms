@@ -102,6 +102,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `checkHitActors` rose **32.49 -> 64.01%**, the unit rose **88.84 -> 93.57%**, and its remaining blockers are recorded frame/inlining residues.
 - Landed `Enemy/BathtubKiller`: reconstructed the avoidance deltas in `isAboided`, raising that function **86.64 -> 98.73%** and the unit **90.65 -> 91.18%**.
   The other large weak bodies were audited; their dominant remaining blocker is the verified nerve-singleton inlining artifact.
+- Landed `Enemy/hauntLeg`: preserving the haunt-distance scalar made a small verified gain in `TNerveHauntLegHaunt::execute` (**98.85 -> 98.86%**).
+  The whole file was audited; its root-matrix and callback residues remain allocation/header-inline shape issues.
+- Tested `gpt-5.6-luna` at medium on two fresh whole-file units (`MapObjRailBlock` and `BossHanachanMain`).
+  Both audits were clean but produced no retained gain, while Terra medium continued landing substantial reconstructions, so Luna is paused unless a simpler task class is identified.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
