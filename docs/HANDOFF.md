@@ -106,6 +106,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The whole file was audited; its root-matrix and callback residues remain allocation/header-inline shape issues.
 - Tested `gpt-5.6-luna` at medium on two fresh whole-file units (`MapObjRailBlock` and `BossHanachanMain`).
   Both audits were clean but produced no retained gain, while Terra medium continued landing substantial reconstructions, so Luna is paused unless a simpler task class is identified.
+- Landed `Enemy/poihana`: replaced fabricated volatile trap thresholds with real `TMsRange<f32>` objects and restored named collision-dimension computations.
+  `TNervePoihanaTrapped::execute` rose **86.07 -> 98.10%**, `init` rose **95.47 -> 98.30%**, and the unit rose **98.46 -> 99.71%**.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
