@@ -299,6 +299,19 @@ void TSelectDir::changeOrder()
 // as raw member reads and `getGamePad()` is used where its +8 is proved, in
 // the destructor. The remaining unknown is still the 4 bytes between the
 // colour temporaries and `res`.
+// cc32: that 4 is solved and the unknown moved. Fader binder at any five of
+// the six sites (not the first or last), menu binder at all seven and a
+// named `bool pushed = unk18->isSomethingPushed();` for the first pad test
+// (or a `u32` wrapper there) put `res`, all three colour pairs and the
+// OSJoinThread slot at retail's offsets; the frame is then 0xc8, 8 short,
+// i.e. retail's named block holds 8 more bytes *above* `res`. Only a dead
+// `u8` declared before `res` supplies them (exact, but padding, not
+// committed). Inert for it: a named BOOL for OSIsThreadTerminated, `res` or
+// `pushed` hoisted to function scope, a named second pad test, a named or
+// top-declared TColor for the ternary (97-98), a named fader pointer or
+// reference (95-97), a named `&gSetupThread` pointer or reference (99.3).
+// 120-combination sweep over fader/menu site subsets, the stage binder and
+// the pad spelling (raw, named, u32, bool wrapper): none exact.
 int TSelectDir::direct()
 {
 	if (!unk38) {
