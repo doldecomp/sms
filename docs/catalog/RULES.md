@@ -130,6 +130,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Defaulted constructor arguments push the member initialisers one level deeper without moving the body's calls: `TGameSequence(u8 a = 0, u8 b = 0)` makes retail's out-of-line `TFlagT(u16)`; `TFlagT::operator=` takes its argument by value (TApplication ctor 72.8 -> 99.6).
 - An out-of-line `TVec3::set(const Vec&)`: pass a `Vec`-typed value into a `const TVec3&` parameter three levels down (lensflare).
 - Replacing `#pragma dont_inline`: count the missing statements with zero-code `(void)0;` fillers (measure before a final `return <const>;`, which counts one extra), then spell them as real code: early-return guards for `&&` (+2), `else if` after returning `if`s (+1 each), a single-exit result chain, an empty `default: break;` (+1), named call results or chain steps (cost is site-dependent). UNUSED overloads whose map sizes include a callee's body mean the used overloads forward through them (RumbleMgr; forward a named `int idx = 0;` to keep `li r7, 0`). The pragma also blocks expansion inside the protected function (MapStaticObject). 17 of 27 game pragmas removed on 2026-09-22; the rest carry TODOs with the measured shortfall.
+- Moving a loop body into its own inline helper pushes its callees one level deeper and can restore missing weak symbols (SelectShine2 `perform`: `TVec2<f>::sub`).
 
 ## Frame-size gaps
 
@@ -316,6 +317,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Not accepted: a dead local added only to supply missing frame (LightUtil `perform`, 12 bytes). Leave a TODO even when it would link the unit.
 - Repeated expansions of one inline never share a slot in isolation (temps, by-value params, addressed named locals: one slot each, first expansion highest); apparent per-function sharing is frontend-eliminated binding temporaries keeping homes, which depends on distant code (frame-gaps.md: "Research batch cc39").
 - The JGadget stride class has no header fix: the TP clean-room `std-list.h` shape (empty `TIterator` base, body-assigned ctor, `iterator`-returning `push_back`) and eight other chain spellings are inert or worse at all nine sites; `getChildren`/`search` bindings move pools site-dependently. Close JGadget sites one at a time through their receiver/argument expressions (frame-gaps.md: "Research batch cc39").
+- A `TVec3` named at block scope only for an inline setter's `const TVec3&` sits above the argument temporaries (+8) (telesa KageMarioModokiWait).
+- A pass-through helper returning a pointer parameter, bound once and shared by three `JAIActor` arguments, adds 8 of pool (MSound `startSoundActorSpecial`).
 
 ## Register and scheduling residues
 
@@ -374,6 +377,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `x += a; f32 y = x - b;` reproduces retail's `fmr` into the local's register; `(x + a) - b` does not (gatekeeper `TBGKMtxCalc::calc`).
 - A member reloaded after a store proves the source read the member at each site (boid `calcBoids`).
 - Passing `&member` instead of relying on the implicit `TVec3`->`Vec*` conversion changes callee-saved order in every caller inlining the helper (LightUtil `setLight`s).
+- A `u16` local holding a computed key ranks above a hoisted table-address temporary; `u32` gives retail's order with identical code (MapObjInit `initActorData`).
+- An inline helper computing into its value parameter in place gives retail's volatile FPRs with no slot; a named result local leaves 4 bytes (cameralib `CLBCalc2DFPos`).
 
 ## Float and pool
 
