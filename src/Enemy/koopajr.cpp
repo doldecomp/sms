@@ -440,9 +440,13 @@ void TKoopaJr::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & 2)
 		checkSubmarineSwing();
 
+	// The ROM tests the demo flag here and again at the top of checkNerve():
+	// the expansion keeps checkNerve()'s demo block as unreachable code
+	// between a `bne` and a `beq` on the same compare.
 	if (cue & 1) {
 		updateTimers();
-		checkNerve();
+		if (!mBathtub->unk29A)
+			checkNerve();
 	}
 
 	TSpineEnemy::perform(cue, graphics);
@@ -482,6 +486,9 @@ void TKoopaJr::setAnimationIndex(int index)
 // UNUSED, 0x4c in the map.
 void TKoopaJr::updateTimers()
 {
+	// TODO: perform()'s expansion materialises each timer's address
+	// (addi r4, this, 0x150) before the store, and its frame is 0x18 longer;
+	// a by-reference TU-local countdown helper does not reproduce it.
 	if (mDamageTimer > 0)
 		--mDamageTimer;
 	if (mLaunchTimer > 0)
@@ -524,7 +531,11 @@ void TKoopaJr::checkSubmarineSwing()
 	if (mSubmarine->mSwingAmplitude
 	    < 0.5f * mSubmarine->getSaveParams()->mSLSwingAmplitudeMax.get())
 		return;
-	damageKoopaJr();
+	// The damage is written out rather than through damageKoopaJr(): the ROM
+	// expands startDamageNerve() one level shallower here than a call to
+	// damageKoopaJr() would put it.
+	mDamageTimer = getSaveParams()->mSLDamagePeriod.get();
+	startDamageNerve();
 }
 
 // UNUSED, 0x230 in the map.
@@ -543,17 +554,18 @@ void TKoopaJr::checkNerve()
 	if (mBathtub->unk29A) {
 		if (mSpine->getCurrentNerve() != &TNerveKoopaJrDemo::theNerve())
 			mSpine->pushNerve(&TNerveKoopaJrDemo::theNerve());
-	} else {
-		if (mSpine->getCurrentNerve() == &TNerveKoopaJrWait::theNerve()) {
-			checkNerveKillerLaunchNormal();
-			checkNerveKillerLaunchFast();
-			checkNerveKillerHit();
-		}
-		JGeometry::TVec3<f32> toMario(*gpMarioPos);
-		toMario.sub(mPosition);
-		toMario.y   = 0.0f;
-		mRotation.y = TDirectionCalc::r2d(atan2f(toMario.x, toMario.z));
 	}
+	if (mSpine->getCurrentNerve() == &TNerveKoopaJrWait::theNerve()) {
+		checkNerveKillerLaunchNormal();
+		checkNerveKillerLaunchFast();
+		checkNerveKillerHit();
+	}
+	JGeometry::TVec3<f32> toMario;
+	toMario.sub(*gpMarioPos, mPosition);
+	toMario.y = 0.0f;
+	TDirectionCalc toMarioDir;
+	toMarioDir.makeDirection(toMario);
+	mRotation.y = TDirectionCalc::r2d(toMarioDir.get());
 }
 
 void TKoopaJr::checkNerveKillerLaunchNormal()
@@ -669,7 +681,7 @@ TKoopaJrManager::TKoopaJrManager(const char* name)
 void TKoopaJrManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "koopajr_model.bmd", 0, 0 },
+		{ "koopajr_model.bmd", 0x54220000, 0 },
 		{ nullptr },
 	};
 	createModelDataArray(entry);
@@ -1295,7 +1307,7 @@ TKoopaJrSubmarineManager::TKoopaJrSubmarineManager(const char* name)
 void TKoopaJrSubmarineManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "LastKoopaJrSubmarine.bmd", 0, 0 },
+		{ "LastKoopaJrSubmarine.bmd", 0x54220000, 0 },
 		{ nullptr },
 	};
 	createModelDataArray(entry);
