@@ -116,6 +116,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A redundant `li r0, 0` beside an inline `hide()`/clamp-to-zero goes when the clamp is a TU-local helper returning the value, `setAlpha(fadeOutArrow(arrow, alpha))` (SelectMenu).
 - A dead store to the slot after a stack `TVec3` is a 16-byte `{TVec3 normal; f32 d;}` plane object; `set<f>`/`setLength` called out of line from it sit at depth 4 (MarioDraw `calcBaseMtx`).
 - Retail rematerialising `li r0, 0` in an `else` both outer and inner guards reach: the guards are one `&&` condition (MarioDraw `initModel`).
+- A one-statement in-class accessor that retail calls (weak, only this caller) sits at depth 5: add the missing level as a TU-local `static inline` wrapper (const pointer parameter for the const overload), and route every other use of that value through it too (enemyMario `consider`/`canJumpToNode`).
 
 ## Frame-size gaps
 
@@ -295,6 +296,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Retail keeps a member load across a store to a local struct where ours reloads: the local is a plain `Vec`, not a `TVec3` (its `(Vec*)&` casts block CSE); `TVec3::operator=(const Vec&)` exists for this (bgtentacle `moveConstraint`).
 - A struct copy into `obj.member` folds the member offset only through a member function of the member's type; helpers and casts emit an `addi` (bgtentacle).
 - `MTXCopy(src..., dst->getModel()->getBaseTRMtx())` register swap: write `dst->getModel()->setBaseTRMtx(src...)` (MarioDraw, koopajr).
+- `f(getPosition())` materialises `&mPosition` into a saved register before the receiver call; raw `mPosition` computes the `addi` after (enemyMario).
+- `mr. rX, r3` after a call is a direct local; `cmplwi r3,0; mr rX,r3` came through an inline wrapper: use `JKRFileLoader::getGlbResource`, not `JKRGetResource` (enemyMario `initEnemyValues`).
+- A counter zeroed in a block and copied out after (`addi rOld, rNew, 0`) is a block-local assigned at block end; an unmasked store then increment is `field = n++` (enemyMario).
+- `lbzx base, idx` vs our `add; lbz` means direct `links[i].field`, not a bound `T& link` (enemyMario).
 
 ## Float and pool
 
