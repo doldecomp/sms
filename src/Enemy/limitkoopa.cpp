@@ -185,7 +185,12 @@ TLimitKoopaParts::TLimitKoopaParts(const char* name, u32 actor_type,
     : TLiveActor(name)
     , mOwner(owner)
 {
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	// Spelled out rather than through search<T>: one level shallower, so the
+	// generator accessors and TNameRef::search expand inside loadAfter's four
+	// part constructors as they do in retail.
+	((TIdxGroupObj*)JDrama::TNameRefGen::getInstance()
+	     ->getRootNameRef()
+	     ->search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(actor_type, 5, 0x80000000, radius, radius, radius, radius);
@@ -208,6 +213,8 @@ void TLimitKoopaParts::perform(u32 cue, JDrama::TGraphics* graphics)
 void TLimitKoopaParts::set(const JGeometry::TVec3<f32>& position, f32 radius,
                            f32 height)
 {
+	if (height <= 0.0f)
+		height = 2.0f * radius;
 	mPosition.set(position);
 	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
@@ -327,9 +334,10 @@ void TLimitKoopa::load(JSUMemoryInputStream& stream)
 	TSpineEnemy::load(stream);
 }
 
-// TODO: 88.5%. The four allocation loops are right; the residual is the
-// name-ref group lookup, which the ROM spells out as a searchF on the
-// generator root rather than through the search<T> template.
+// TODO: 99.8%, instruction-exact; the frame is 0x168 against retail's 0x188.
+// Levers inside TLimitKoopaParts' constructor (a named group pointer) or a
+// factory level around each `new` push the constructors out of line; a named
+// `new` result for the head/body pair is +8 only.
 void TLimitKoopa::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
@@ -624,13 +632,14 @@ void TLimitKoopa::breathFlame()
 	LimitKoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_A, scale);
 }
 
-// TODO: 92.2%. The flame and head boxes go through TLimitKoopaParts::set and
-// remove (both at their map sizes now) and the flame offset is a
-// `(along, 0, 0)` vector through the head matrix. Left: the frame is 0x130
-// against 0x1a0 (0x70 of pool below the conversion buffer), retail keeps the
-// flame radius/height and the matrix row loads in a different FPR order and
-// multiplies `0.8f * (...)` before `* spread` as two products, and the head
-// radius is loaded after the three position reads.
+// TODO: 93.5%. The flame and head boxes go through TLimitKoopaParts::set
+// (which defaults a non-positive height to twice the radius; the head passes
+// 0) and remove, both at their map sizes, and the flame offset is an
+// `(along, 0, 0)` vector through the head matrix. Left: the frame is 0x128
+// against 0x1a0, and the loop's FPR assignment and load schedule differ
+// (retail computes the two zero-weighted products first). Inert: operand
+// order and association of the matrix rows, x/z statement order,
+// `along *= spread`.
 void TLimitKoopa::setUpHitActors()
 {
 	MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
@@ -655,8 +664,6 @@ void TLimitKoopa::setUpHitActors()
 			pos.y = mPosition.y;
 			pos.z = headMtx[2][0] * offset.x + headMtx[2][1] * offset.y
 			        + headMtx[2][2] * offset.z + headMtx[2][3];
-			if (height <= 0.0f)
-				height = 2.0f * radius;
 			mFlames[i]->set(pos, radius, height);
 		}
 	} else {
@@ -668,7 +675,7 @@ void TLimitKoopa::setUpHitActors()
 	f32 headRadius = getParam()->headRadius.get();
 	JGeometry::TVec3<f32> headPos(agoMtx[0][3], agoMtx[1][3] - 200.0f,
 	                              agoMtx[2][3]);
-	mHead->set(headPos, headRadius, 2.0f * headRadius);
+	mHead->set(headPos, headRadius, 0.0f);
 }
 
 // TODO: UNUSED (0x70), body not reconstructed.
