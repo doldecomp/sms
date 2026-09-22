@@ -45,7 +45,7 @@ public:
 	/* 0x20 */ TMultiMtxEffect* unk20;
 	/* 0x24 */ TMultiMtxEffect* unk24;
 	/* 0x28 */ TMirrorActor* unk28[2];
-	/* 0x30 */ TTrembleModelEffect* unk30;
+	/* 0x30 */ TTrembleModelEffect* unk30[1];
 	/* 0x34 */ f32 unk34;
 };
 

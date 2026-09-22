@@ -119,6 +119,11 @@ void TMushroom1up::load(JSUMemoryInputStream& stream)
 // objects @1431/@1411/@1210/MtxCalcTypeName), and item (a)'s slot is in the
 // named block anyway (0x5c, above `pos` at 0x50 and `diff` at 0x44), i.e. a
 // local of this body declared before `pos`, not a callee's.
+// cc28: C-style top declarations `scale, pos, diff` with `scale.set(1.5f,
+// 1.5f, 1.5f); mScaling = scale;` land frame 0x88 and every slot (3 markers)
+// but add the six-instruction word copy; every copy-free spelling
+// (`mScaling.set(scale)`, `.set(scale.x, ...)`, member-wise) scalarises
+// `scale` and costs +0x10/+0x18 of frame, so the 0x5c object is still unnamed.
 void TMushroom1up::control()
 {
 	TMapObjBase::control();
@@ -306,6 +311,9 @@ void TJumpBase::calcRootMatrix()
 // swap that RULES.md lists as known-open, confirmed here -- hoisting
 // `J3DFrameCtrl* ctrl` to function scope so the body holds two named locals
 // instead of one leaves the ranking untouched (97.2%, same 106 markers).
+// cc28: (2) is also inert to a TU-local wrapper over either JMASSin or
+// JMASCos (same 106 markers); `mVelocity.set(...)` and a velocity helper
+// taking the angle (int or s16, by out-reference or by value) are worse.
 void TJumpBase::control()
 {
 	int prevState = unk138;

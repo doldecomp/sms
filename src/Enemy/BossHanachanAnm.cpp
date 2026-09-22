@@ -41,6 +41,10 @@
 // parameter** (0x68 -> 0x88 with four), which this function has no named
 // pointer local to pay for -- so the one shape that moves `body` cannot be
 // afforded.  25 markers with the helper against 13 without it.
+// cc28: also inert or worse for `body`: `TBossHanachanPartsBody* const`,
+// `&mBodies[i]` bound first, a direct-return fork (17 markers, one opcode
+// off), a reference out-parameter level (+0x18 frame), a `T*&` to the element
+// and no named body at all (+0x18 frame).
 void TBossHanachan::setHeadAndBodyAnm(
     EnumBossHanachanAnmKind anm, EnumBossHanachanStopMotionBlendOnOff blend)
 {
@@ -179,13 +183,17 @@ void TBossHanachan::copyFrameFromOldAnmToNewAnm_()
 }
 
 // TODO: 99.9%. Frame is now exact; the only difference is that r26 and r28 are
-// swapped (retail parks the tumble-loop counter, the latest-nerve pointer and
-// the head MActor in r26, we use r28).
+// swapped (retail parks the tumble-loop counter and the head MActor in r26 --
+// the same register as the last loop's body MActor -- we use r28).
+// cc28: raw `mSpine->getLatestNerve()` instead of `getSpine()->` put the nerve
+// in retail's r29 (10 -> 6 markers). Inert on the rest: the head block in its
+// own `{}` scope or a TU-local helper; worse: one `actor` reused by the loop
+// (12), the head actor unnamed (frame -8), a named nerve (+8).
 void TBossHanachan::changeAnmRateAndFrameUpdate_()
 {
 	bool changeRate = true;
 	f32 rate = SMSGetAnmFrameRate();
-	if (getSpine()->getLatestNerve() == &TNerveBossHanachanTumble::theNerve()) {
+	if (mSpine->getLatestNerve() == &TNerveBossHanachanTumble::theNerve()) {
 		offHeadAndBodyNonstopMotionBlend_();
 		getHead()->changeTumbleAnmRate_();
 		for (int i = 0; i < 8; ++i)

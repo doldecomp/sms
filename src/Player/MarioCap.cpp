@@ -18,22 +18,15 @@
 // The four mModel reads in this constructor stay raw: TMario::getM3UModel()
 // costs it 99.01 -> 98.89 (measured in header round 16), even though the same
 // level is what MarioDraw's setAnimation and MarioInit's loadAfter want.
-// TODO: 99.1%, and after the include swap and the named ResTIMG reference the
-// residue is three things.
-// (a) Frame 0x108 vs 0x180, i.e. 120 bytes of dead low region; the commented
-// out `volatile u32 padding[51]` below is the old placeholder for it.
-// (b) Two r3/r4/r5/r6 rotations, in the SMS_ChangeTextureAll loop and in the
-// getAnmMtx block at 0xb04-0xb20, where retail keeps the model pointer in r4
-// and a second copy of `this` alive.
-// (c) `unk30 = new TTrembleModelEffect;` -- retail stores the result into
-// this->unk30 *before* the init call and then reloads it through that second
-// copy of `this` (`lwz r3, 0x30(r4)`), while we sink the store below the
-// reload. Measured and rejected: a named `TTrembleModelEffect* tremble`
-// assigned to unk30 reaches 99.4% but deletes retail's reload entirely (the
-// `lwz r3, 0x30(r4)` disappears), so retail really does re-read the member and
-// the lever has to be whatever gives it the second `this` copy. `unk10[0]`
-// instead of `unk10[thingIdx]` is worse (98.7%), which confirms the index
-// variable.
+// TODO: every instruction matches; frame 0x108 vs 0x180, i.e. 120 bytes of
+// dead low region (no r1 displacement in the body, so any lever that prices
+// exactly +0x78 with no code change closes it). The commented-out
+// `volatile u32 padding[51]` below is the old placeholder for it.
+// cc28 closed the two instruction residues: the helmet matrix is
+// `unk10[2]->setBaseTRMtx(getAnmMtx(mJointIdHead))` (retail copies the head
+// joint into the helmet's base, not the reverse), and unk30 is a one-element
+// array, stored at [0] and re-read through `unk30[thingIdx]` -- that indexed
+// re-read is retail's "second copy of `this`" (`add r4, r31, idx*4`).
 TMarioCap::TMarioCap(TMario* mario)
 {
 	// Unused stack space
@@ -94,8 +87,8 @@ TMarioCap::TMarioCap(TMario* mario)
 	unk10[0]->calc();
 	unk10[1]->setBaseTRMtx(mtx);
 	unk10[1]->calc();
-	mMario->mModel->getModel()->setAnmMtx(mMario->mJointIdHead,
-	                                      unk10[2]->getBaseTRMtx());
+	unk10[2]->setBaseTRMtx(
+	    mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdHead));
 	unk10[2]->calc();
 
 	unk20 = new TMultiMtxEffect();
@@ -125,8 +118,8 @@ TMarioCap::TMarioCap(TMario* mario)
 	unkC = unk10[0];
 
 	int thingIdx = 0;
-	unk30        = new TTrembleModelEffect;
-	unk30->init(unk10[thingIdx]);
+	unk30[0]     = new TTrembleModelEffect;
+	unk30[thingIdx]->init(unk10[thingIdx]);
 	unk34 = 4.0f;
 
 	for (int idx = 0; idx < 2; idx++) {
@@ -207,9 +200,9 @@ void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 
 			if (doTremble == true) {
-				unk30->clash(unk34);
+				unk30[0]->clash(unk34);
 			} else {
-				unk30->clash(0.0f);
+				unk30[0]->clash(0.0f);
 			}
 		} else {
 
@@ -264,7 +257,7 @@ void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((cue & CUE_UNK10000000) != 0 && isModelActive(E_CAP_MODEL_HAT)) {
-		unk30->movement();
+		unk30[0]->movement();
 	}
 }
 
