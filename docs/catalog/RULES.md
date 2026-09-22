@@ -106,6 +106,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Repeated blocks that get the same register pair in retail but rotate in ours are one TU-local inline call per repetition (CardSave `initData` caption rows).
 - Weak header callees the map attributes to a TU but ours never calls can mean an UNUSED helper sat at depth 2: wrap the calling case in a static inline; the helper then must fit 9 statements (Guide `perform`/`disappearGuidePane`).
 - An UNUSED helper whose map size exceeds ours while the caller reuses its parameter registers nearby has absorbed that neighbouring code (Guide `shinePattern`).
+- A callee `bl`ed at some sites where the size rules predict inlining means a helper level is missing above those sites (SelectMenu `perform`: `SMS_getShineID` via `selectPrev`/`selectNext` members; CameraChange `MsClamp`). This overturns batch 190's "emergent, don't retry" note.
+- An out-of-line `TColor::set` means the `TColor(r,g,b,a)` ctor sits at depth 3: a by-value `static inline TColor blackColor(u8 a)` called from a depth-1 helper (SelectMenu).
+- A redundant `li r0, 0` beside an inline `hide()`/clamp-to-zero goes when the clamp is a TU-local helper returning the value, `setAlpha(fadeOutArrow(arrow, alpha))` (SelectMenu).
 
 ## Frame-size gaps
 
@@ -318,6 +321,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A changed return type, covariant or not, appends a vtable slot instead of overriding, as does a fabricated declaration-only virtual (tu-reconstruction.md: "Override return types").
 - dtk infers false relocations in `.data` and `.text`; block with `block_relocations` (`target:`/`end:` for `.text`). Exactly 21 `.text` cases, all `MSD_BGM_*` (linking.md: "Structural batch 132").
 - A `.data` jump table mismatch with a verified case order means the code before some case labels is the wrong length: count instructions per case (CardLoad `perform`).
+- `.data` starting with the DummyStrings pair and no mtx-calc names: the TU includes `DummyStrings.hpp`, not `InfectiousStrings.hpp` (SelectMenu).
 
 ## Linking: why a 100/100 object changes the DOL
 
