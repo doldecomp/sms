@@ -308,6 +308,7 @@
     "Player/MarioInit.cpp",
     "Player/MarioPositionObj.cpp",
     "Player/MarioRecord.cpp",
+    "Player/MarioSound.cpp",
     "Player/MarioSwim.cpp",
     "Player/MarioUpper.cpp",
     "Player/MarioWait.cpp",
