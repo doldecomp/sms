@@ -1575,6 +1575,9 @@ void TBossEelTearsRecoverCollision::perform(u32 cue,
 
 // TODO: GMSE01 retains frame 0x300 vs 0x310, skin/eye register differences,
 // and an extra heart-model pointer copy before the heart-coin allocation.
+// mMActor->getModel() for the skin-deform model cut markers 90->75. Tried
+// without effect: unnamed/split-declared deform, hoisted skin deform, and
+// hoisting or splitting heartModelData (the copy survives all of them).
 void TBossEel::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -1596,7 +1599,7 @@ void TBossEel::init(TLiveManager* manager)
 	             mSaveParams->mSLBodyDamageRadius.get(),
 	             mSaveParams->mSLBodyDamageHeight.get());
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	J3DModel* model = getMActor()->getModel();
+	J3DModel* model = mMActor->getModel();
 	if (!model->getSkinDeform()) {
 		J3DSkinDeform* deform = new J3DSkinDeform;
 		model->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
