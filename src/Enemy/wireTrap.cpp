@@ -358,8 +358,9 @@ void TWireTrap::moveObject()
 void TWireTrap::calcMomentum()
 {
 	JGeometry::TVec3<f32> momentum = WireTrapWireDir(this);
-	f32 rate = mWaterTimer > 0 ? 1.0f + getWaterPow() : 1.0f;
-	momentum *= mMoveDir * rate;
+	f32 rate = getWaterTimer() > 0 ? 1.0f + getWaterPow() : 1.0f;
+	f32 k = mMoveDir * rate;
+	momentum *= k;
 	momentum *= mSpeed;
 	setLinearVelocity(momentum);
 }
@@ -496,7 +497,7 @@ void TWireTrap::checkHitActors()
 				mCollideTimer = 30;
 
 				JGeometry::TVec3<f32> reaction = getWireDir();
-				f32 rate = mWaterTimer > 0 ? 1.0f + getWaterPow() : 1.0f;
+				f32 rate = getWaterTimer() > 0 ? 1.0f + getWaterPow() : 1.0f;
 				reaction *= mMoveDir * rate;
 				reaction *= mSpeed;
 
