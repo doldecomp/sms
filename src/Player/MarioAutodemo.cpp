@@ -14,11 +14,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// Pragma residue (sweep 360): protects TMario::demoMain (100 -> 77.8).
-// winDemo is exact and sits at about 14 statements -- right on the depth-1
-// budget. Measured and rejected: naming unk384 (`THitActor* shine`, a genuine
-// two-use reuse) reaches the floor but costs bytes (winDemo -> 87.2).
-#pragma dont_inline on
+// Retail calls this from demoMain: the named `landed` result and the empty
+// `default` arm are the two statements over the depth-1 budget (either alone
+// does not tip it). Measured and rejected: naming unk384 (`THitActor* shine`)
+// or the kill radius, both cost bytes.
 BOOL TMario::winDemo()
 {
 	switch (mStatusState) {
@@ -28,7 +27,8 @@ BOOL TMario::winDemo()
 			mHeldObject = nullptr;
 		}
 		gpConductor->killEnemiesWithin(mPosition, 2000.0f);
-		if (jumpProcess(0) == TRUE) {
+		BOOL landed = jumpProcess(0);
+		if (landed == TRUE) {
 			gpMarDirector->fireGetStar((TShine*)unk384);
 			unk384->receiveMessage(this, HIT_MESSAGE_TAKE);
 			mStatusState = 1;
@@ -38,11 +38,12 @@ BOOL TMario::winDemo()
 		setAnimation(ANIM_DEMO_SHINE_GET, 1.0f);
 		stopProcess();
 		break;
+	default:
+		break;
 	}
 
 	return FALSE;
 }
-#pragma dont_inline off
 
 BOOL TMario::readBillboard()
 {
