@@ -12,10 +12,10 @@
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
+TMarioParticleManager* gpMarioParticleManager = nullptr;
 TMarioEmitterCallBackBindToPosPtr emitterCallBackBindToPosPtr;
 TMarioEmitterCallBackBindToMtxPtr emitterCallBackBindToMtxPtr;
 TMarioEmitterCallBackBindToSRTMtxPtr emitterCallBackBindToSRTMtxPtr;
-TMarioParticleManager* gpMarioParticleManager = nullptr;
 
 // Binding level over a raw member read, worth +8 of low region in the
 // emit family (frame ladder 271).
