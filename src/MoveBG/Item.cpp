@@ -631,6 +631,12 @@ void TShine::movingDown()
 	mState      = STATE_UNKF;
 }
 
+// TODO: every instruction matches; frame 0xa8 against 0xf8. Retail has the
+// GXColor temporary at 0xdc and appearWithDemo's TFlagT at 0xa0 (0x3c apart,
+// ours 0xc): about 0x30 of named block and 0x34 of pool are missing. Tried
+// 2026-09-22: MSound binder/raw-global forks over any subset of the six
+// startSoundActor sites (pool rungs to frame 0xd8, the 0xc gap never moves),
+// and `trans`/`mtx`/`model` declared at function top (inert).
 void TShine::control()
 {
 	if (!isState(0x10))
