@@ -381,6 +381,10 @@ bool THauntLeg::isUseCallBack()
 // unmodified local is safe too. The frame is 16 bytes short, which is the f31
 // slot plus one more object.
 //
+// 2026-09-22 (98.9): the remaining residue is the `a = b - c` bl-sub
+// temporary (retail 0x2c, ours 0x48) plus retail's fused `x*x + y*y` length;
+// Vec&-taking TU-local length/squared levels are inert here.
+//
 // Two hops: the first launches the leg at the object it has decided to possess,
 // the second lands on it and asks to be picked up. Missing twice hands the leg
 // back to the wander nerve.

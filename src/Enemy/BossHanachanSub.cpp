@@ -16,6 +16,11 @@ static inline bool BHSIsLegalData(const TBGCheckData* ground)
 	return BHSIsIllegalData(ground) == true ? false : true;
 }
 
+// TODO: 99.0%: frame 0x80 against 0xa0 plus one r3/r4 swap in the |angle|
+// step. `TVec3 firstDelta = first - middle` (and the same for secondDelta)
+// lands the 0xa0 frame but costs the operator- copies (67.5): the known-open
+// `a = b - c` class. Tried for the abs: named `int` with in-place negate,
+// by-value s16/int abs levels (97-98.4).
 f32 BHSCalcCentrifugalForce(const JGeometry::TVec3<f32>& first,
                           const JGeometry::TVec3<f32>& middle,
                           const JGeometry::TVec3<f32>& last, f32 degreeY)
@@ -98,6 +103,19 @@ BOOL TWaterHitActor::receiveMessage(THitActor*, u32 message)
 	return result;
 }
 
+// A named-result level per offset: fixes the `sin * length` operand order and
+// adds the 0x18 of pool the constructor's frame was short.
+static inline f32 BHSScaleLength(f32 value, f32 length)
+{
+	f32 scaled = value * length;
+	return scaled;
+}
+
+// TODO: 99.9%, instructions and frame exact; only `position` is 4 low (ours
+// 0x54, retail 0x58). Tried: `position` declared at function top (8 high) or
+// after `angle`, `position` before `point` in the loop, split `point`
+// declaration, `set()` for the copies, a velocity `=` chain, and every mix of
+// return / `*=` / named-result / reversed scale levels on the two offsets.
 TSphereLink::TSphereLink(u16 count, const JGeometry::TVec3<f32>& start,
                          f32 length, f32 radius, f32 velocityScale, f32 gravity,
                          f32 rotationMoveScale, f32 degreeY)
@@ -110,8 +128,8 @@ TSphereLink::TSphereLink(u16 count, const JGeometry::TVec3<f32>& start,
     , mHeadDegreeY(degreeY)
 {
 	s16 angle = (65536.0f / 360.0f) * mHeadDegreeY;
-	f32 offsetX = JMASSin(angle) * length;
-	f32 offsetZ = JMASCos(angle) * length;
+	f32 offsetX = BHSScaleLength(JMASSin(angle), length);
+	f32 offsetZ = BHSScaleLength(JMASCos(angle), length);
 	for (int i = 0; i < mPointCount; ++i) {
 		TSpherePoint* point = &mPoints[i];
 		JGeometry::TVec3<f32> position;
