@@ -160,14 +160,6 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 	f32 bestDist    = 10000.0f;
 
 	for (s32 i = 0; i < mColCount; ++i) {
-		s32 type = mCollisions[i]->mActorType;
-		if (type == 0x10000024 || type == 0x4000000A) {
-			mState = STATE_RETRACTING;
-			return nullptr;
-		}
-	}
-
-	for (s32 i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
 		s32 type         = actor->mActorType;
 		int ok           = 0;
@@ -194,8 +186,11 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 				ok = 1;
 			if (type == 0x4000005A)
 				ok = 1;
-			if (type & ACTOR_TYPE_ENEMY ? true : false)
-				ok = 1;
+			if (type & ACTOR_TYPE_ENEMY ? true : false) {
+				if (type != 0x10000024 && type != 0x10000005
+				    && type != 0x4000000A)
+					ok = 1;
+			}
 		}
 
 		if (ok != 1)
@@ -388,7 +383,7 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 	mHeadDir.z = mtx[2][0];
 
 	switch (mState) {
-	case STATE_EXTENDING: {
+	case STATE_IDLE: {
 		J3DModelData* modelData = mModel->getModelData();
 		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
 			modelData->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
