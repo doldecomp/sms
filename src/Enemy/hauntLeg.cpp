@@ -389,7 +389,8 @@ DEFINE_NERVE(TNerveHauntLegHaunt, TLiveActor)
 			leg->unk199 = 0;
 			JGeometry::TVec3<f32> toTarget
 			    = leg->getPosition() - leg->unk19C->mPosition;
-			if (toTarget.length() < 200.0f) {
+			f32 distance = toTarget.length();
+			if (distance < 200.0f) {
 				THitActor* target = leg->unk19C;
 				if (((TTakeActor*)target)->mHolder == nullptr
 				    && target->receiveMessage(leg, HIT_MESSAGE_TAKE)) {
