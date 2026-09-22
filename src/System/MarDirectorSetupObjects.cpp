@@ -38,20 +38,31 @@
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;
 
-// TODO: 99.4%. The outer and inner switch tables now match retail. The remaining
-// residue is the 0x20 frame gap (0x48 vs 0x68): retail's three TColor temporaries
-// are 0x1c higher, with no matching source-owned object identified yet.
+// Frame levels for decideMarioPosIdx (cc32): the fader binder (+8 at its
+// three sites) and a direct-return stage fork on the switch expression put
+// the three TColor temporaries at retail's 0x34/0x3c/0x44 in a 0x68 frame.
+// Names are fabricated.
+static inline TSMSFader* MarDirectorFader()
+{
+	TSMSFader* fader = gpApplication.mFader;
+	return fader;
+}
+
+static inline u8 MarDirectorCurrentStage() { return gpApplication.mCurrArea.unk0; }
+
+// Binding `prevArea` first gives the zero constant the higher callee-saved
+// register, as retail (cc32).
 void TMarDirector::decideMarioPosIdx()
 {
+	TGameSequence& prevArea = gpApplication.mPrevArea;
 	unkD0 = 0;
 	unkD1 = 0;
-	TGameSequence& prevArea = gpApplication.mPrevArea;
 	unkE4 = 1;
 
-	switch (gpApplication.mCurrArea.unk0) {
+	switch (MarDirectorCurrentStage()) {
 	case 15:
 		unkE4 = 14;
-		gpApplication.mFader->setColor(
+		MarDirectorFader()->setColor(
 		    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 		break;
 
@@ -68,7 +79,7 @@ void TMarDirector::decideMarioPosIdx()
 	case 8:
 	case 9: {
 		unkE4 = 14;
-		gpApplication.mFader->setColor(
+		MarDirectorFader()->setColor(
 		    JUtility::TColor(0xd2, 0xd2, 0xd2, 0xff));
 		unkD1 = 1;
 	} break;
@@ -116,7 +127,7 @@ void TMarDirector::decideMarioPosIdx()
 					unkD0 = 7;
 					unkD1 = 2;
 					unkE4 = 0xe;
-					gpApplication.mFader->setColor(
+					MarDirectorFader()->setColor(
 					    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 					break;
 				case 9:
@@ -140,6 +151,8 @@ void TMarDirector::decideMarioPosIdx()
 // we emit the cast form, which fits batch 105's note that search2's ROM return
 // type is looser than JDrama::TNameRef* (the identity cast below is
 // load-bearing for exactly that reason).
+// cc32: not attempted beyond triage -- the six `getChildren()` insert paths
+// are the known-open JGadget pool class and the function is 8 KB.
 bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
