@@ -92,13 +92,9 @@ TDirectionCalc::TDirectionCalc(f32 direction) { mDirection = direction; }
 
 TDirectionCalc::TDirectionCalc(JGeometry::TVec3<f32> dir)
 {
-	// TODO: this by-value parameter and makeDirection's own copy the vector
-	// twice wherever the constructor is inlined (six extra instructions in
-	// TKoopaJrSubmarine::makeRelativeAngle, where the ROM copies once).
-	// Writing makeDirection's body out here closes makeRelativeAngle
-	// (95.04% -> 99.79%) but costs this constructor 99.76% -> 70.62%, so it
-	// is a trade, not a fix; makeDirection is by-value in the map, so the
-	// reference form is not available.
+	// The ROM's callers (makeRelativeAngle, checkNerve, TKoopaJr::checkNerve)
+	// copy the vector once, which is a default-constructed TDirectionCalc
+	// plus makeDirection(); this constructor would copy it twice.
 	makeDirection(dir);
 }
 
@@ -1037,6 +1033,8 @@ void TKoopaJrSubmarine::launchKiller()
 		return;
 	killer->unk194 = mKillerTypes[mKillerIndex];
 	killer->reset();
+	// TODO: the ROM adds the 1 with its own addi after reset() instead of
+	// folding it into the table load's offset, and its frame is 0x18 longer.
 	MtxPtr mtx = getModel()->getAnmMtx(TKoopaJr_getJointIndex(launcher + 1));
 	killer->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	JGeometry::TVec3<f32> dir;
@@ -1154,7 +1152,9 @@ void TKoopaJrSubmarine::makeRelativeAngle()
 	toMario.sub(*gpMarioPos, mKoopaJr->mBathtub->getPosition());
 	toMario.y = 0.0f;
 	// The by-value TVec3 parameter is the copy the ROM makes before atan2f.
-	f32 marioDir    = TDirectionCalc(toMario).get();
+	TDirectionCalc toMarioDir;
+	toMarioDir.makeDirection(toMario);
+	f32 marioDir    = toMarioDir.get();
 	f32 nearerMario = mDirection.calcNearerDirection(marioDir);
 	f32 target      = mDirection.get();
 	f32 marioDiff   = fabsf(target - nearerMario);
@@ -1222,9 +1222,10 @@ void TKoopaJrSubmarine::makeDirection()
 	if (!mIsNearTarget) {
 		JGeometry::TVec3<f32> v(mVelocity);
 		v.normalize();
-		// Named, and through the by-value TDirectionCalc ctor: the ROM
-		// copies the vector, calls atan2f and keeps the result in f31
-		// before it fetches the rotation speed.
+		// Named: the ROM copies the vector once (makeDirection's by-value
+		// parameter), calls atan2f and keeps the result in f31 before it
+		// fetches the rotation speed.
+		// TODO: the frame is 0x28 short in checkNerve's expansion.
 		TDirectionCalc calc;
 		calc.makeDirection(v);
 		f32 dir                   = calc.get();
