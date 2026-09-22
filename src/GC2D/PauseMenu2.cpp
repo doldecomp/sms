@@ -68,11 +68,30 @@ TPauseMenu2::TPauseMenu2(const char* pName)
 {
 }
 
+// fabricated: name-and-return binders, each a pool slot in load().
+static inline JKRArchive* PauseArchive()
+{
+	JKRArchive* arch = (JKRArchive*)JKRFileLoader::getVolume("game_6");
+	return arch;
+}
+
+static inline J2DPicture* PauseSearchPicture(J2DScreen* screen, u32 tag)
+{
+	J2DPicture* pic = (J2DPicture*)screen->search(tag);
+	return pic;
+}
+
+static inline u8 PauseCurrentMap(TMarDirector* director)
+{
+	u8 map = director->getCurrentMap();
+	return map;
+}
+
 void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 {
 	JDrama::TViewObj::load(pStream);
 
-	JKRArchive* arch = (JKRArchive*)JKRFileLoader::getVolume("game_6");
+	JKRArchive* arch = PauseArchive();
 	mScreen          = new J2DSetScreen("pause_1.blo", arch);
 	mScreen->setCullBack(GX_CULL_BACK);
 
@@ -85,7 +104,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mMenuPane   = mScreen->search('t_0');
 
 	for (s32 i = 0; i < 5; i++) {
-		mPauseLetters[i] = (J2DPicture*)mScreen->search('pa00' + i);
+		mPauseLetters[i] = PauseSearchPicture(mScreen, 'pa00' + i);
 	}
 
 	for (s32 i = 0; i < 3; i++) {
@@ -94,7 +113,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 		if (mNumItems == 2) {
 			mMenuItems[i]->add(0, 20);
 		}
-		mMenuItems[i]->mVisible = false;
+		mMenuItems[i]->hide();
 	}
 
 	mStageName = (J2DTextBox*)mScreen->search('map');
@@ -112,7 +131,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mStageName->setString(SMSGetMessageData(
 	    JKRFileLoader::getGlbResource("/common/2d/stagename.bmg"), shineStage));
 
-	if (SMSGetMarDirector()->mMap != 0xF) {
+	if (PauseCurrentMap(SMSGetMarDirector()) != 0xF) {
 		void* scenarioBmg
 		    = JKRFileLoader::getGlbResource("/common/2d/scenarioname.bmg");
 		s16 shineID = SMS_getShineID(shineStage, flag, false);
@@ -127,8 +146,6 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 		}
 		snprintf(mScenarioName->getStringPtr(), 0x80, "%s", scenarioName);
 	}
-	// TODO: frame +0x20 (0x50 vs 0x30); instruction-identical otherwise after
-	// pa00/add(0,20). Same +0x20 class as appearWindow.
 }
 
 // fabricated: binding levels over the pane arrays, +8 of low region each.
