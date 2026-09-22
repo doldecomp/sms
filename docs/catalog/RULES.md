@@ -87,6 +87,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A size-exact UNUSED helper can still be **called**: an inline that expands at depth 1 but is a `bl` in retail proves the call (`doWalk`/`MsWrap`); `lfs fN, off(r3)` before the `bl` = a named `.get()` local (codegen-tells.md: "Closure 248").
 - A `bl TNerveBase<T>::TNerveBase()` inside an inlined `theNerve()` guard means the site is one inline level too shallow: call the UNUSED helper on the owning actor whose body was pasted at the site; `pushNerve`-side wrappers are inert (codegen-tells.md: "Research batch 251").
 - Pasted-UNUSED: a size-exact UNUSED helper is often written out at its call sites; conversely one can exist only to *be* a level (codegen-tells.md: "`bosswanwan`").
+- A retail frame far larger than ours plus base ctors called one level deeper means a missing `static inline` case helper (no map symbol); wrapping a whole `switch` case body in one restored CardLoad `perform`'s shared `li r28, 1` and its jump tables.
 
 ## Frame-size gaps
 
@@ -253,6 +254,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - An inlined callee's **parameter modified in place** (`amp *= scale`) loads straight into the result's register; a fresh named local loads to a scratch first, and it costs a statement plus 8 bytes of shared temp block (frame-gaps.md: "FPR re-pass 172").
 - Volatile GPRs: a pointer step's second SSA value dies at once and takes the **lowest free** volatile while the long-lived one takes the first register free across its range, so retail's one-register chain needs one value, not two; `p += n` keeps one register but MWCC flattens a following `p += const` into the uses' displacements, and only a basic-block boundary stops it (frame-gaps.md: "Research batch 220").
 - Known-open: the `this`-vs-pool-base callee-saved swap and zero-frame rotations; `M3UMtxCalcBlendAux` moves with declaration order but never lands, and `TRKSuppAccessFile` (all 120 orders) plus `emitParticle_`, `checkNextFrameSe`, `partsPerform` (fully inert) are exhausted (frame-gaps.md: "batch 145").
+- `int a = p->getAlpha(); a += 4;` works in the loaded register; the one-line `getAlpha() + 4` computes into r0 and adds an `mr` (CardLoad `perform`).
+- `T* bm = &arr[idx]; bm->f` gives `addi; lhzx`, inline `arr[idx].f` gives `add; lhz off` (CardLoad `waitForAnyKeyBM`).
 
 ## Float and pool
 
@@ -286,6 +289,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Dump the whole vtable and declare virtuals in slot order; null tail slots are pure virtuals (tu-reconstruction.md: "Virtual order from the vtable").
 - A changed return type, covariant or not, appends a vtable slot instead of overriding, as does a fabricated declaration-only virtual (tu-reconstruction.md: "Override return types").
 - dtk infers false relocations in `.data` and `.text`; block with `block_relocations` (`target:`/`end:` for `.text`). Exactly 21 `.text` cases, all `MSD_BGM_*` (linking.md: "Structural batch 132").
+- A `.data` jump table mismatch with a verified case order means the code before some case labels is the wrong length: count instructions per case (CardLoad `perform`).
 
 ## Linking: why a 100/100 object changes the DOL
 
