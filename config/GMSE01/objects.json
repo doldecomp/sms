@@ -13,6 +13,7 @@
     "Camera/CameraMapTool.cpp",
     "Camera/CameraMarioData.cpp",
     "Camera/CameraMode.cpp",
+    "Camera/CameraMultiPlayer.cpp",
     "Camera/CameraOption.cpp",
     "Camera/CameraSecureView.cpp",
     "Camera/CameraTalk.cpp",
