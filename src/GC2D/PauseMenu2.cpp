@@ -628,6 +628,9 @@ void TPauseMenu2::setDrawStart()
 	gpMSound->pauseOn(true);
 	// TODO: frame-exact; four stack markers on the TColor assignment temps
 	// (0x58/0x50 retail vs 0x60/0x5c) — known-open JUTColor temp stride.
+	// Tried (cc50): setWhite()/TColor()/TColor(u32)/set(u32)/(u32) spellings at
+	// both sites and binder/raw/fork per item site (81 combos); none moves the
+	// two temps without changing the frame.
 }
 
 void TPauseMenu2::setDrawEnd()
@@ -655,7 +658,10 @@ void TPauseMenu2::drawAppearPane(J2DPicture* picture, f32 anim, JUTRect& rect,
 		if (anim == 2.0f) {
 			JUTRect rect = picture->getGlobalBounds();
 
-			// TODO: This doesn't fully match.
+			// TODO: This doesn't fully match: retail stores the width conversion
+			// after both xoris (r6/r5 swap) and loads the 0.0f later; frame +8.
+			// Tried (cc50): operand orders, `/ 2.0f`, a named TVec3 (ctor or set),
+			// integer 0, named x/y, the copy-ctor and raw mGlobalBounds forms.
 			gpEmitterManager4D2->createEmitter(
 			    JGeometry::TVec3<f32>(rect.x1 + 0.5f * rect.getWidth(),
 			                          rect.y1 + 0.5f * rect.getHeight(), 0.0f),

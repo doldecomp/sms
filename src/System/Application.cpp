@@ -868,21 +868,25 @@ int TApplication::drawDVDErr()
 	return error;
 }
 
+// TODO: frame 8 short (the path buffer sits 0x14 low); and retail reloads the
+// outer vector's begin through the base pointer (`lwz r4, 4(r5)`) where ours
+// reuses the null-check load. Tried (cc50): raw `tmp.size()`, a pointer or
+// `unk30` receiver, getChildren() on each level, begin()[i], and archBlob as a
+// separate declaration or `!= nullptr` test.
 JKRMemArchive* TApplication::mountStageArchive()
 {
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getStage() < tmp.size()) {
-		if (mCurrArea.getScenario() < tmp[mCurrArea.getStage()]->size()) {
+	if (mCurrArea.getStage() < tmp.getChildren().size()) {
+		TNameRefAryT<TScenarioArchiveName>* stageAry = tmp.getChildren()[mCurrArea.getStage()];
+		if (mCurrArea.getScenario() < stageAry->size()) {
 			const char* scenarioArcName
-			    = (*tmp[mCurrArea.getStage()])[mCurrArea.getScenario()].getName();
+			    = stageAry->getChildren()[mCurrArea.getScenario()].unkC;
 
 			DVDChangeDir("/data/scene");
-			void* archBlob
-			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr);
-
-			if (archBlob) {
+			if (void* archBlob
+			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr)) {
 				JKRMemArchive* arch = new JKRMemArchive;
 				arch->mountFixed(archBlob, MBF_0);
 				result = arch;
