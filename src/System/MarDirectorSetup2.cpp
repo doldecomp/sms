@@ -57,16 +57,15 @@ static inline TMarioGamePad* Setup2GamePad(TMarDirector* dir)
 	return pad;
 }
 
-// TODO: 100% fuzzy, frame exact at 0x410. Every slot matches except the
-// setColor TColor temporary: retail constructs at 0x2ec / copies at 0x2f0
-// (contiguous with graphics at 0x2f4); ours is 4 low (0x2e8 / 0x2ec) with a
-// dead word in the hole. Same residue class as preEntry's closed 4-byte
-// ordering gap, but the instance/root forks that fixed preEntry are inert
-// here (every search site already shares one two-local binder). Rejected:
-// named fadeColor (lands in the named block at 0x3ec), u32 TColor ctor,
-// setColor-before-mRate, a shine-fade wrapper, search<T> at the shine site,
-// one-local binders (frame 0x3d0). Setup2Search + Setup2GamePad +
-// getCurrentMap/Stage are load-bearing for the exact frame and arg order.
+// The setColor TColor temporaries (0x2ec / 0x2f0, directly under graphics)
+// are compiler temporaries allocated above the inline pool, and the console's
+// cue write decides whether a dead word lands above them: `unkC = <cue>`
+// builds a TFlagT<u16> temporary that ours places after the TColor (4 dead
+// bytes under graphics, the colour 4 low), while `unkC.set(<cue>)` has none.
+// The 4 bytes retail has under the colour come from reading the map through
+// getCurrentMap() at the stage test, as the MSStage::init call below does.
+// Setup2Search + Setup2GamePad + getCurrentMap/Stage are load-bearing for the
+// exact frame and argument order; one-local binders drop the frame to 0x3d0.
 //
 // The `graphics.unk0 = 0` below is read off the target: retail's second `sth`
 // goes to graphics+0x00, not graphics+0xFE (the +0xF4 `stw -1` and +0xFC `sth
@@ -95,7 +94,7 @@ void TMarDirector::setup2()
 
 	mConsole = Setup2Search<TGCConsole2>("GCコンソール");
 
-	mConsole->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
+	mConsole->unkC.set(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 
 	unkDC = Setup2Search<TShineFader>("シャインフェーダー");
 
@@ -114,7 +113,7 @@ void TMarDirector::setup2()
 	unk78->mGamePad = unk18[0];
 
 	unk18[0]->mFlags = 0;
-	if (mMap == 15) {
+	if (getCurrentMap() == 15) {
 		unkAC->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 		unkB0->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 		unk18[0]->onFlag(0x20);
