@@ -238,9 +238,11 @@ void TSandBomb::makeObjAppeared()
 
 u32 TSandBomb::touchWater(THitActor* actor)
 {
-	mMActor->getFrameCtrl(0)->setFrame(TSandBombBase::mFiringFrameSpeed
+	f32 speed0 = TSandBombBase::mFiringFrameSpeed;
+	mMActor->getFrameCtrl(0)->setFrame(speed0
 	                                   + mMActor->getFrameCtrl(0)->getFrame());
-	mMActor->getFrameCtrl(5)->setFrame(TSandBombBase::mFiringFrameSpeed
+	f32 speed5 = TSandBombBase::mFiringFrameSpeed;
+	mMActor->getFrameCtrl(5)->setFrame(speed5
 	                                   + mMActor->getFrameCtrl(5)->getFrame());
 
 	mMActor->getFrameCtrl(0);
@@ -1286,13 +1288,13 @@ void TMammaBlockRotate::control()
 		mBuilding->getModel()->calc();
 
 		J3DJoint* joint = mUpJointObj->getJoint();
-		JGeometry::TVec3<f32> trans(0.0f, TMapObjBase::getJointTransY(joint),
+		JGeometry::TVec3<f32> trans(0.0f, joint->getTransformInfo().mTranslate.y,
 		                            0.0f);
 		mDownCollision->moveTrans(trans);
-		trans.set(0.0f, TMapObjBase::getJointTransY(joint), 0.0f);
+		trans.set(0.0f, joint->getTransformInfo().mTranslate.y, 0.0f);
 		mUpCollision->moveTrans(trans);
 
-		if (TMapObjBase::getJointTransY(joint) < 0.0f) {
+		if (joint->getTransformInfo().mTranslate.y < 0.0f) {
 			mStateTimer = mWaitTime;
 			mState      = STATE_GOAL_WAIT;
 		}
@@ -1309,15 +1311,15 @@ void TMammaBlockRotate::control()
 		moveJoint(mDownJointObj->getJoint(), 0.0f, mMapBackSpeed, 0.0f);
 
 		J3DJoint* joint = mUpJointObj->getJoint();
-		JGeometry::TVec3<f32> trans(0.0f, TMapObjBase::getJointTransY(joint),
+		JGeometry::TVec3<f32> trans(0.0f, joint->getTransformInfo().mTranslate.y,
 		                            0.0f);
 		mDownCollision->moveTrans(trans);
-		trans.set(0.0f, TMapObjBase::getJointTransY(joint), 0.0f);
+		trans.set(0.0f, joint->getTransformInfo().mTranslate.y, 0.0f);
 		mUpCollision->moveTrans(trans);
 
 		mBuilding->getModel()->calc();
 
-		if (TMapObjBase::getJointTransY(joint)
+		if (joint->getTransformInfo().mTranslate.y
 		    > mUpJointObj->getJoint()->getMax().y
 		        - mUpJointObj->getJoint()->getMin().y)
 			mState = STATE_WAIT;
