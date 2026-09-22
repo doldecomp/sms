@@ -1493,6 +1493,9 @@ TWaterGun::TDeParams::TDeParams()
 // exact at the map's 0xf8 and the map attests the out-of-line symbol, but the
 // spelling is about 10 statements against the depth-1 budget of 14; removing
 // the pragma pastes it into emit(), perform() and getNozzleMtx().
+// TODO (cc38): fillers before `return result;` measure the gap at exactly
+// four statements. Naming the nozzle and its model in the case 0-2 arm is +2
+// and does not tip it, and it costs bytes (99.85).
 #pragma dont_inline on
 static inline TNozzleBase* WaterGunCurNozzle(const TWaterGun* p)
 {
