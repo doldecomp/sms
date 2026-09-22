@@ -118,6 +118,12 @@ void TMapWireActor::init(TMapWireActorManager* manager)
 // function is worth more than two UNUSED sizes, so the pragma stays and
 // `__ct__10TTakeActorFPCc` stays MISSING in validate-symbol-order. A real fix
 // needs the inline decision per call site, which `dont_inline` cannot express.
+// TODO (cc38): the split is a budget one, not a per-site accident: two
+// `(void)0;` fillers in this empty body keep loadAfter exact (one is not
+// enough), so retail's body held two zero-code statements that are not
+// known. Measured and rejected: moving `unk70`/`unk74` into body assignments
+// (both, or `unk74` alone plus a filler, do not tip it; `unk70` first
+// reorders the stores).
 #pragma dont_inline on
 TMapWireActor::TMapWireActor(const char* name)
     : TTakeActor(name)
