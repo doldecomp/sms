@@ -32,9 +32,7 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	mYoshi = yoshi;
 	mModel = new J3DModel(modelData, 0x10000, 1);
 
-	J3DModelData* modelData2 = mModel->getModelData();
-	for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-		modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
+	mModel->getModelData()->onFlag1OnAllShapes();
 
 	mTipModel = new J3DModel(
 	    J3DModelLoaderDataBase::load(
@@ -42,9 +40,7 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	        J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
 	    0x10000, 1);
 
-	J3DModelData* modelData3 = mTipModel->getModelData();
-	for (u16 i = 0; i < modelData3->getShapeNum(); ++i)
-		modelData3->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
+	mTipModel->getModelData()->onFlag1OnAllShapes();
 
 	mState       = STATE_IDLE;
 	mProgress    = 0;
@@ -436,25 +432,23 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 
 	switch (mState) {
 	case STATE_IDLE: {
-		J3DModelData* modelData = mModel->getModelData();
-		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-			modelData->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
+		mModel->getModelData()->onFlag1OnAllShapes();
 
-		J3DModelData* modelData2 = mTipModel->getModelData();
-		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-			modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
+		mTipModel->getModelData()->onFlag1OnAllShapes();
 		break;
 	}
 	default:
-		J3DModelData* modelData = mModel->getModelData();
-		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-			modelData->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
+		mModel->getModelData()->offFlag1OnAllShapes();
 
-		J3DModelData* modelData2 = mTipModel->getModelData();
-		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-			modelData2->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
+		mTipModel->getModelData()->offFlag1OnAllShapes();
 
+		// TODO: retail's frame is 0x20 larger (0x120): its low pool sits
+		// 0x20 higher and `dir` 4 closer to the matrix, and the joint-count
+		// block loads mModel into r5 where ours uses r6. The expanded
+		// shape loops (named model data plus `u16 i`) land the frame but
+		// swap the loop registers; onFlag1OnAllShapes() is the loop order.
 		JGeometry::TVec3<f32> tip = mTipPos;
+		Mtx modelMtx;
 		tip.y += 50.0f;
 		SMS_MakeJointsToArc(mModel, mHeadPos, mHeadDir, tip);
 
@@ -469,26 +463,24 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 		MsVECNormalize(&dir, &dir);
 
 		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-		JGeometry::TVec3<f32> tmp;
-		tmp.cross(up, dir);
+		JGeometry::TVec3<f32> side;
+		side.cross(up, dir);
 
-		Mtx modelMtx;
-		modelMtx[0][0] = tmp.x;
-		modelMtx[0][1] = tmp.y;
-		modelMtx[0][2] = tmp.z;
+		// Columns are side, up, dir and the tip.
+		modelMtx[0][0] = side.x;
+		modelMtx[0][1] = up.x;
+		modelMtx[0][2] = dir.x;
 		modelMtx[0][3] = tip.x;
 
-		modelMtx[1][0] = up.x;
+		modelMtx[1][0] = side.y;
 		modelMtx[1][1] = up.y;
-		modelMtx[1][2] = up.z;
+		modelMtx[1][2] = dir.y;
 		modelMtx[1][3] = tip.y;
 
-		modelMtx[2][0] = dir.x;
-		modelMtx[2][1] = dir.y;
+		modelMtx[2][0] = side.z;
+		modelMtx[2][1] = up.z;
 		modelMtx[2][2] = dir.z;
 		modelMtx[2][3] = tip.z;
-
-		char kek[0x40];
 
 		mTipModel->setBaseTRMtx(modelMtx);
 		mTipModel->calc();
