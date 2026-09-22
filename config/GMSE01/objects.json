@@ -21,6 +21,7 @@
     "Camera/CubeManagerBase.cpp",
     "Camera/CubeMapTool.cpp",
     "Camera/camerasave.cpp",
+    "Camera/camerashake.cpp",
     "Camera/sunmgr.cpp",
     "Camera/sunmodel.cpp",
     "Enemy/BossHanachanNerve.cpp",
