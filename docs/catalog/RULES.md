@@ -319,6 +319,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - The JGadget stride class has no header fix: the TP clean-room `std-list.h` shape (empty `TIterator` base, body-assigned ctor, `iterator`-returning `push_back`) and eight other chain spellings are inert or worse at all nine sites; `getChildren`/`search` bindings move pools site-dependently. Close JGadget sites one at a time through their receiver/argument expressions (frame-gaps.md: "Research batch cc39").
 - A `TVec3` named at block scope only for an inline setter's `const TVec3&` sits above the argument temporaries (+8) (telesa KageMarioModokiWait).
 - A pass-through helper returning a pointer parameter, bound once and shared by three `JAIActor` arguments, adds 8 of pool (MSound `startSoundActorSpecial`).
+- Named `s16` angle locals before `JMASSin`/`JMASCos(s16)` are +8 of low pool; `JMASin(f32)` or a sin/cos wrapper is +0 or overshoots (MathUtil `MsMtxSetRotRPH`/`MsMtxSetTRS`).
+- A TU-local by-value `f32` level over a member is +4 pool and moves a named slot by exactly 4 (Item `TNozzleBox::load`, `MsIsInSight`, `execRoofCheck_`).
 
 ## Register and scheduling residues
 
@@ -379,6 +381,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Passing `&member` instead of relying on the implicit `TVec3`->`Vec*` conversion changes callee-saved order in every caller inlining the helper (LightUtil `setLight`s).
 - A `u16` local holding a computed key ranks above a hoisted table-address temporary; `u32` gives retail's order with identical code (MapObjInit `initActorData`).
 - An inline helper computing into its value parameter in place gives retail's volatile FPRs with no slot; a named result local leaves 4 bytes (cameralib `CLBCalc2DFPos`).
+- `s16 a = matan(dz, dx); x = k * a;` fixes the conversion's FPR order where `k * matan(...)` does not (Item `TEggYoshi::touchFruit`).
+- A loop counter that must share a callee-saved zero register used for member stores: move the loop into a TU-local level (limitkoopajr `init`).
 
 ## Float and pool
 
@@ -452,6 +456,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `PARAM_INIT` stringifies the member name, so names and defaults read off `.rodata`/`.sdata2` interleaved in id order; integer params are `TParamRT<s32>` (tu-reconstruction.md: "Names and defaults").
 - UNUSED bodies go in the `.cpp`, never `inline` or in-class; the size is necessary but not proof, and prunes contents statement by statement (tu-reconstruction.md: "UNUSED functions").
 - Nerve tells: `nerve$localstatic0$theNerve__X` = an inline header `theNerve()`; `instance$N` at stride 6 = a file-local `DEFINE_NERVE_INSTANCE` block; `{0,0,dtor,0}` = an abstract nerve (tu-reconstruction.md: "Nerve shapes from the map").
+- An UNUSED helper whose map size fits only with a different return type reveals that type (limitkoopajr `calcTargetDirection` -> `f32`).
 
 ## Known-open residue classes (stop spending budget)
 
