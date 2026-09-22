@@ -353,6 +353,15 @@ TBiancoGateKeeper::TBiancoGateKeeper(const char* name)
 // the Obstacle group's internal spacing already equals retail's, the
 // HitObj and own groups differ by 4-8 per group.  Naming the searched
 // TIdxGroupObj at any subset of the three sites moves 0 or +8 (cc32).
+// cc42 coordinate descent over the three push sites (named-reference and
+// pointer-then-reference child-list forks, a named-result search fork) plus
+// ~30 accessor/raw/named spellings of the distant statements: best is the
+// pointer-then-reference fork at the HitObj and Obstacle sites,
+// `GKList1(GKGroup())` at this body's own site, `getModel()->` in the
+// `SMS_ChangeTextureAll` argument, `owner->getPosition()` in the Obstacle
+// ctor and `getActorKeeper()` for the anmData fetch -- frame 0x1c8 exact but
+// the pool still 0x1c low at the bottom and one word short above the own-site
+// group (score 288 from 2000+), and `this` stays in r28. Not applied.
 void TBiancoGateKeeper::init(TLiveManager* manager)
 {
 	mManager = manager;

@@ -63,6 +63,16 @@ void TPerformList::forEachPerform(
 // change that lands perform at 0xe8 exactly but drops both
 // `TPerformList::push_back` overloads -- a std-list.hpp round item, not a
 // change this TU can make.
+// cc42 (slot-scored sweeps, nothing applied): TU-local receiver forks
+// (named-reference and pointer-then-reference getChildren binders),
+// begin()/end() forks (explicit base conversion, named base result, direct
+// `&mHead`/`mTail`, named derived result) in all 400 pairings, and loop-test
+// spellings in forEachPerform (`!(it == e)`, forks with by-value, `const&`,
+// named-bool and base-cast bodies, `++it`). Best: a named-reference list fork
+// with a named-base-result begin() and a `mTail` end() lands frame 0xe8 but
+// keeps our grouping ([it b0 b1] 4 [e0 e1] 8 [!= ==] for retail's
+// [it b0 b1 e0 e1] 4 [!=] 12 [==]); a named bool in the test adds one of the
+// three dead words retail has between the two comparison pairs, never more.
 void TPerformList::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	forEachPerform(getChildren().begin(), getChildren().end(), graphics, cue);

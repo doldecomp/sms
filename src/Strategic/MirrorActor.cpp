@@ -144,6 +144,13 @@ void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 // +4 on every pair and pair 3 off 0xb4/0xb8; raw `unk14` at the
 // entryMirrorDrawBufferAlways site -8 frame and every pair -4; a TU-local
 // helper around search+push_back 87.1% (this stays in r30, end() is a `bl`).
+// cc42 sweep (not applied): search spelled named/unnamed/TU-local fork (plain
+// and named-result) x getChildren binders (named reference, pointer,
+// pointer-then-reference, double reference) x push forks taking
+// `TViewObj* const&` x cast/static_cast `this` x raw/accessor/binder unk14 x
+// named/unnamed modelData x five getSDLModelData spellings: nothing exact;
+// best is an unnamed TU-local search fork (pairs 0x8c/0x88, 0xa8/0xa4,
+// 0xc0/0xbc for retail's 0x94/0x90, 0xa8/0xa4, 0xb8/0xb4).
 void TMirrorActor::init(J3DModel* param_1, u16 param_2)
 {
 	unk1A = param_2;

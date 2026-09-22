@@ -130,6 +130,12 @@ int TSelectDir::rsetup()
 	// not the receiver's naming here -- the padded sub-blocks are the first
 	// five expansions only, and whatever distinguishes them is upstream of
 	// the call site.
+	// cc42: a TU-local named-reference `getChildren()` binder at the first
+	// five push sites (the four root pushes and group2D's) lands frame 0x648
+	// exactly, but the per-expansion stride of the last six expansions is
+	// untouched (their low blocks still 4 short each, their upper blocks 4
+	// long each); descent over binder/pointer/pointer-then-reference/named-
+	// group forks at all twenty sites finds nothing better. Not applied.
 	void* arcData = SMSLoadArchive("/data/select.arc", 0, 0, 0);
 
 	JKRMemArchive* archive = new JKRMemArchive;
