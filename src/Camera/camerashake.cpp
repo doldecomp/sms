@@ -129,65 +129,88 @@ void TCameraShake::keepShake(EnumCamShakeMode mode, f32 scale)
 	}
 }
 
-// TODO: 95.9%. Every instruction in the body is exact; what is left is a
-// 56-byte low-region frame gap (retail 0x118, ours 0xe0) and ten structural
-// instructions, both fully diagnosed by re-pass 175's probes.
-//
-// Retail's slot map, read off the dtk asm (0xc0/0xc4 and everything below 0x90
-// are never referenced): dead 0xc..0x90, rot 0x90..0xb4, oldUp 0xb4..0xc0,
-// *8 dead bytes* 0xc0..0xc8, dir 0xc8, hAngle/vAngle/r 0xd4/0xd6/0xd8,
-// origPos 0xdc, three 8-byte conversion temps 0xe8/0xf0/0xf8, saves 0x100.
-// Ours is the same list with rot *below* oldUp, no 8-byte gap and only 80 dead
-// bytes instead of 132. Two spellings reproduce the map byte-for-byte:
-//   (1) `volatile char hole[8]` between dir and oldUp, `oldUp` declared
-//       uninitialised *before* rot and assigned `= *up` after it, and
-//       `volatile char trash[52]` declared last. Frame 0x118 exact, 345
-//       instructions, every stack displacement exact, 96.1%, leaving only the
-//       ten register markers below.
-//   (2) moving rot/oldUp into a TU-local `static inline` helper, which makes
-//       them inline temporaries growing *up* from the pool (rot then oldUp, so
-//       the copy lands after setRotate for free) and makes the 8-byte gap the
-//       region boundary. That alone is frame 0x110 - 48 of the 56 bytes - but
-//       leaves rot 60 bytes too low, because the helper's own expansion adds 52
-//       bytes of pool *above* rot where retail has 8.
-// So the residue is one dead 8-byte named local between dir and oldUp plus 52
-// dead pool bytes below rot, and no legal carrier is available: the TU's only
-// UNUSED callees (setShakeAngleAll_/One_) are not called from here, and the
-// inlined callees in scope (TVec3::set/setLength, TCamShakeInfo::isActive and
-// ::reset, JMASSin, TMatrix33::identity, SMatrix33C::at which returns by value)
-// all have empty local frames. Do not commit the padding.
-//
-// The ten structural markers are one phenomenon: retail CSEs the *constants*
-// that a bool flag shares with a neighbouring field store, and we do not.
-// In the entry block it materialises a single 0 in r8 before the prologue and
-// reuses it for `anyActive`, for `i` (`addi r4, r8, 0`) and for `mRollAccum = 0`
-// (`sth r8`), giving it=r3/i=r4; we emit three separate `li 0`s and get
-// it=r5/i=r6. In the shake loop `finished` lives in r0, sharing its 0 with
-// `it->mIsKeep = 0` and taking its 1 from the `li r6, 1` stored to
-// `mIsDecreasing` (`mr r0, r6`); ours keeps `finished` in r5 with its own
-// constants. `mRollAccum = 0` cannot move above the origPos copy (the store
-// would have to cross the loads from *pos, and retail's loads come first).
-// Rejected: `bool finished` hoisted above the angle accumulation or to the top
-// of the active block (both inert); a C-style `int i;` declaration block with
-// `it` fetched before the origPos copy (95.6 at the old frame).
+// execShake is built from six TU-local inline helpers, each one measured:
+//   * CSIsAnyActive / CSDecay: the two flag computations as bool-returning
+//     helpers with a `ret` local. That is what makes MWCC share one `li 0`
+//     (materialised before the prologue) between the flag, the loop counter
+//     and `mRollAccum = 0`, and share `finished`'s constants with the
+//     mIsKeep/mIsDecreasing stores -- the ten "structural" instructions the
+//     old note blamed on constant CSE. `int i;` must be declared before `it`.
+//   * CSRotateUp: rot and oldUp as callee block objects, which puts them in
+//     retail's order (rot below oldUp, 8 bytes under dir). upZ is named before
+//     upY for retail's f4/f5.
+//   * CSWaveF (f32 return, narrowed at the call) at all three axes, and
+//     CSRollRad over a CSShortToDeg that names its result: together exactly
+//     the 56 bytes of pool below rot (s16-returning waves price 0x18, f32
+//     0x20; the named/unnamed split of the two angle levels moves 4-byte
+//     slots between the pool and the named block).
+static inline bool CSIsAnyActive(TCameraShake* s)
+{
+	bool ret = false;
+	int i;
+	TCameraShake::TCamShakeInfo* it = s->mShakeInfo;
+	for (i = 0; i < ARRAY_COUNT(s->mShakeInfo); ++i, ++it) {
+		if (it->isActive()) {
+			ret = true;
+			break;
+		}
+	}
+	return ret;
+}
+
+static inline bool CSDecay(TCameraShake::TCamShakeInfo* it)
+{
+	bool ret = false;
+	if (it->mIsKeep != 0) {
+		it->mDuration += 1;
+		it->mIsKeep = 0;
+	} else {
+		it->mIsDecreasing = 1;
+		it->mAngleX.mAmp -= it->mAngleX.mDec;
+		it->mAngleY.mAmp -= it->mAngleY.mDec;
+		it->mAngleZ.mAmp -= it->mAngleZ.mDec;
+		if (it->mFrame >= it->mDuration)
+			ret = true;
+	}
+	return ret;
+}
+
+static inline void CSRotateUp(JGeometry::TVec3<f32>* up,
+                              const JGeometry::TVec3<f32>& dir, f32 angle)
+{
+	JGeometry::TRotation3<TMtx33f> rot(dir, angle);
+
+	JGeometry::TVec3<f32> oldUp = *up;
+	f32 upZ                     = oldUp.z;
+	f32 upY                     = oldUp.y;
+	up->x = oldUp.x * rot.at(0, 0) + upY * rot.at(1, 0) + upZ * rot.at(2, 0);
+	up->y = oldUp.x * rot.at(0, 1) + upY * rot.at(1, 1) + upZ * rot.at(2, 1);
+	up->z = oldUp.x * rot.at(0, 2) + upY * rot.at(1, 2) + upZ * rot.at(2, 2);
+}
+
+static inline f32 CSWaveF(const TCameraShake::TCamShakeAngle& a, u16 frame)
+{
+	return a.mAmp * JMASSin((s16)(a.mVel * frame));
+}
+
+static inline f32 CSShortToDeg(s16 a)
+{
+	f32 d = 0.005493164f * a;
+	return d;
+}
+
+static inline f32 CSRollRad(s16 roll)
+{
+	return -(0.017453294f * CSShortToDeg(roll));
+}
+
 void TCameraShake::execShake(const JGeometry::TVec3<f32>& origin,
                              JGeometry::TVec3<f32>* pos,
                              JGeometry::TVec3<f32>* up)
 {
-	bool anyActive                = false;
 	JGeometry::TVec3<f32> origPos = *pos;
-
 	mRollAccum = 0;
-
-	TCamShakeInfo* it = mShakeInfo;
-	for (int i = 0; i < ARRAY_COUNT(mShakeInfo); ++i, ++it) {
-		if (it->isActive()) {
-			anyActive = true;
-			break;
-		}
-	}
-
-	if (anyActive) {
+	if (CSIsAnyActive(this)) {
 		f32 r;
 		s16 vAngle, hAngle;
 		CLBCrossToPolar(origin, *pos, &r, &vAngle, &hAngle);
@@ -195,31 +218,12 @@ void TCameraShake::execShake(const JGeometry::TVec3<f32>& origin,
 		TCamShakeInfo* it = mShakeInfo;
 		for (int i = 0; i < ARRAY_COUNT(mShakeInfo); ++i, ++it) {
 			if (it->isActive()) {
-				vAngle
-				    += (s16)(it->mAngleX.mAmp
-				             * JMASSin((s16)(it->mAngleX.mVel * it->mFrame)));
-				hAngle
-				    += (s16)(it->mAngleY.mAmp
-				             * JMASSin((s16)(it->mAngleY.mVel * it->mFrame)));
-				mRollAccum
-				    += (s16)(it->mAngleZ.mAmp
-				             * JMASSin((s16)(it->mAngleZ.mVel * it->mFrame)));
+				vAngle += (s16)CSWaveF(it->mAngleX, it->mFrame);
+				hAngle += (s16)CSWaveF(it->mAngleY, it->mFrame);
+				mRollAccum += (s16)CSWaveF(it->mAngleZ, it->mFrame);
 				it->mFrame += 1;
 
-				bool finished = false;
-				if (it->mIsKeep != 0) {
-					it->mDuration += 1;
-					it->mIsKeep = 0;
-				} else {
-					it->mIsDecreasing = 1;
-					it->mAngleX.mAmp -= it->mAngleX.mDec;
-					it->mAngleY.mAmp -= it->mAngleY.mDec;
-					it->mAngleZ.mAmp -= it->mAngleZ.mDec;
-					if (it->mFrame >= it->mDuration)
-						finished = true;
-				}
-
-				if (finished)
+				if (CSDecay(it))
 					it->reset();
 			}
 		}
@@ -230,13 +234,5 @@ void TCameraShake::execShake(const JGeometry::TVec3<f32>& origin,
 	JGeometry::TVec3<f32> dir;
 	unitVecTo(origin, origPos, &dir);
 
-	JGeometry::TRotation3<TMtx33f> rot(
-	    dir, -(0.017453294f * (0.005493164f * (f32)mRollAccum)));
-
-	JGeometry::TVec3<f32> oldUp = *up;
-	f32 upY                     = oldUp.y;
-	f32 upZ                     = oldUp.z;
-	up->x = oldUp.x * rot.at(0, 0) + upY * rot.at(1, 0) + upZ * rot.at(2, 0);
-	up->y = oldUp.x * rot.at(0, 1) + upY * rot.at(1, 1) + upZ * rot.at(2, 1);
-	up->z = oldUp.x * rot.at(0, 2) + upY * rot.at(1, 2) + upZ * rot.at(2, 2);
+	CSRotateUp(up, dir, CSRollRad(mRollAccum));
 }
