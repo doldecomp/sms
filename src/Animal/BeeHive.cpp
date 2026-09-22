@@ -52,10 +52,13 @@ void SMS_EmitWaterHitParticleAndSound(JGeometry::TVec3<f32>* position)
 {
 	JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >
 	    mtx;
+	f32 x = position->x;
+	f32 y = position->y;
+	f32 z = position->z;
 	mtx.identity33();
-	mtx.ref(0, 3) = position->x;
-	mtx.ref(1, 3) = position->y;
-	mtx.ref(2, 3) = position->z;
+	mtx.ref(0, 3) = x;
+	mtx.ref(1, 3) = y;
+	mtx.ref(2, 3) = z;
 
 	gpMarioParticleManager->emitAndBindToMtx(PARTICLE_MS_ENM_WATHIT, mtx, 0,
 	                                         nullptr);
