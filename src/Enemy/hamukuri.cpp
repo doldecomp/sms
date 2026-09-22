@@ -995,7 +995,7 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 		    && !mGroundPlane->isWaterSurface()) {
 			holder = this;
 		} else {
-			param_1->mPosition = SMS_GetMarioPos();
+			param_1->mPosition = *gpMarioPos;
 			param_1->mVelocity.set(0.0f, 10.0f, 0.0f);
 			param_1->offLiveFlag(LIVE_FLAG_UNK10);
 			return;
@@ -1014,8 +1014,10 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 		holder->offLiveFlag(LIVE_FLAG_DEAD);
 		holder->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		holder->onHitFlag(HIT_FLAG_NO_COLLISION);
-		getManager()->unk70 = holder;
+		THamuKuriManager* manager = getManager();
+		manager->unk70            = holder;
 
+		JGeometry::TVec3<f32> local_6c;
 		int uVar11 = getTracer()->getCurGraphIndex();
 
 		int uVar10 = -1;
@@ -1031,14 +1033,13 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 		if (uVar11 < 0)
 			uVar11 = 0;
 
-		// TODO: instruction-exact with the right frame; the ROM lays the four
-		// aggregates out as local_3c, local_6c, hops, VStack_60 and declaring
-		// local_6c that early only grows the frame.
+		// local_6c is declared above the hop loop: the ROM lays the four
+		// aggregates out as local_3c, local_6c, hops, VStack_60.
 		JGeometry::TVec3<f32> VStack_60;
 		getTracer()->getGraph()->getGraphNode(uVar11).getPoint(&VStack_60);
 
-		JGeometry::TVec3<f32> local_6c = calcVelocityToJumpToY(
-		    VStack_60, mCapSpeed, holder->getGravityY());
+		local_6c = calcVelocityToJumpToY(VStack_60, mCapSpeed,
+		                                 holder->getGravityY());
 		holder->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		holder->mVelocity = local_6c;
 	} else {
@@ -2869,17 +2870,23 @@ DEFINE_NERVE(TNerveHamuKuriGoForSearchActor, TLiveActor)
 	return false;
 }
 
+// The by-value vector parameter puts the velocity copy in the low pool, below
+// the bounce vector the body names later.
+static inline void HamuSetBoundVel(THamuKuri* p, JGeometry::TVec3<f32> v)
+{
+	p->unk1E4.x = v.x;
+	p->unk1E4.y = v.y;
+	p->unk1E4.z = v.z;
+}
+
 DEFINE_NERVE(TNerveHamuKuriBoundFreeze, TLiveActor)
 {
 	THamuKuri* self = (THamuKuri*)spine->getBody();
 
 	if (spine->getTime() == 0) {
 		self->setRollAnm();
-		JGeometry::TVec3<f32> thing = self->mVelocity;
-		self->unk1E4.x              = thing.x;
-		self->unk1E4.y              = thing.y;
-		self->unk1E4.z              = thing.z;
-		self->setGoalPathMario();
+		HamuSetBoundVel(self, self->mVelocity);
+		self->setGoalPath((THitActor*)gpMarioAddress);
 		self->unk1E0 = 1;
 	}
 
