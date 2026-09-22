@@ -63,6 +63,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed and source-linked `System/EmitterViewObj`.
   The blocker was `.sbss` definition order: moving `gpMarioParticleManager` ahead of the three callback globals restored its retail address and 663 downstream SDA relocations.
   The linked DOL is byte-identical; All linked **497 -> 498**, Game linked **170 -> 171**, matched code stays **63.54%**.
+- Landed `MoveBG/MapObjFlag`: `TMapObjFlagManager::initDraw` is exact via a direct aggregate `GXColor` call.
+  Unit matched code **66.55 -> 74.21%**; All **63.54 -> 63.55%**, Game **55.96 -> 55.97%**, exact functions **11,461 -> 11,462**.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
