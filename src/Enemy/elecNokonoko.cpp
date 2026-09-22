@@ -505,11 +505,14 @@ void TElecNokonoko::behaveToWater(THitActor* water)
 		mSpine->pushNerve(&TNerveElecNokonokoFreeze::theNerve());
 }
 
-// UNUSED, 0x50 in the map.
+// UNUSED, 0x50 in the map: pasted into TNerveElecCarapaceMove, whose
+// setNext() site calls the TNerveBase constructor one level deeper than its
+// other theNerve() guards. Ours is 0x90: the standalone copy expands
+// theNerve() where retail's called it.
 // TODO: incorrect size.
 void TElecNokonoko::catchIn()
 {
-	mSpine->pushNerve(&TNerveElecNokonokoCollect::theNerve());
+	mSpine->setNext(&TNerveElecNokonokoCollect::theNerve());
 }
 
 // UNUSED, 0x44 in the map: pushing the shoot nerve, which
@@ -867,6 +870,22 @@ void TElecCarapace::calcRootMatrix()
 		emitter->setGlobalScale(mNokonoko->mScaling);
 }
 
+// The splash-angle draws below as their own level: the loop counter then
+// shares the callee-saved zero the spread's minimum is stored from (retail
+// r24).
+// TODO: the spread sits at 0x60 with frame 0xa8 (retail 0x54 / 0xa0): 0xc
+// more above it in retail. One reused angle local instead of three lands
+// the frame but not the slot (cc48).
+static inline void ElecDrawSplashAngles()
+{
+	TMsRange<s32> spread(0, 360);
+	for (int j = 0; j < 5; j++) {
+		s32 yaw   = spread.rand();
+		s32 pitch = spread.rand();
+		s32 roll  = spread.rand();
+	}
+}
+
 void TElecCarapace::sendMessage()
 {
 	for (int i = 0; i < getColNum(); i++) {
@@ -887,12 +906,7 @@ void TElecCarapace::sendMessage()
 			// are left.
 			// TODO: what the three angles fed is not recoverable from the
 			// retail object.
-			TMsRange<s32> spread(0, 360);
-			for (int j = 0; j < 5; j++) {
-				s32 yaw   = spread.rand();
-				s32 pitch = spread.rand();
-				s32 roll  = spread.rand();
-			}
+			ElecDrawSplashAngles();
 		} else if (TElecNokonoko::mReflectSw) {
 			reflect(getCollision(i));
 		}
@@ -1221,6 +1235,11 @@ DEFINE_NERVE(TNerveElecCarapaceMove, TLiveActor)
 		    * carapace->getNokonoko()->mSaveParams->mSLCarapaceSpeed.value;
 		if (ElecSubDist(carapace->unk104.getPoint(), carapace->mPosition)
 		    < catchRange) {
+			// TODO: retail loads the koopa pointer before this theNerve()
+			// guard and reloads it for `nokonoko` after (the guard's call
+			// clobbers it); ours loads it once after. Inert or worse (cc48):
+			// a raw != test, a named spine, raw mNokonoko, getSpine(), a
+			// koopa-taking predicate.
 			if (!ElecIsNerve(carapace->getNokonoko()->mSpine,
 			                 &TNerveElecNokonokoCollect::theNerve())) {
 				TElecNokonoko* nokonoko = carapace->getNokonoko();
@@ -1230,8 +1249,7 @@ DEFINE_NERVE(TNerveElecCarapaceMove, TLiveActor)
 				           != &TNerveElecNokonokoFreeze::theNerve()
 				    && nokonoko->mSpine->getCurrentNerve()
 				           != &TNerveElecNokonokoCollect::theNerve())
-					nokonoko->mSpine->setNext(
-					    &TNerveElecNokonokoCollect::theNerve());
+					nokonoko->catchIn();
 			}
 
 			spine->pushAfterCurrent(&TNerveElecCarapaceReturn::theNerve());
@@ -1289,8 +1307,7 @@ DEFINE_NERVE(TNerveElecCarapaceReturn, TLiveActor)
 			carapace->mNokonoko->setBckAnm(DENNOKO_ANM_CATCH1);
 	}
 
-	TElecNokonoko* nokonoko = carapace->mNokonoko;
-	if (ElecIsShockedNearCarapace(nokonoko)) {
+	if (ElecIsShockedNearCarapace(carapace->mNokonoko)) {
 		// Shocked with the shell almost home: the koopa melts away and the
 		// shell pops instead of being caught.
 		carapace->mNokonoko->onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
