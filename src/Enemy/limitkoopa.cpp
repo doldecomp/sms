@@ -62,10 +62,10 @@ BOOL TNerveLimitKoopaHipDropStart::execute(TSpineBase<TLiveActor>* spine) const
 
 	if (spine->getTime() == 0) {
 		koopa->changeBck(KOOPA_ANM_FIRE_START, 2.0f);
-		koopa->mHipDropTimer = 30;
+		koopa->mTimers[LIMITKOOPA_TIMER_HIPDROP] = 30;
 	}
 
-	if (koopa->mHipDropTimer <= 0) {
+	if (koopa->mTimers[LIMITKOOPA_TIMER_HIPDROP] <= 0) {
 		koopa->startHipDrop();
 		koopa->mLanded = false;
 		spine->pushAfterCurrent(&TNerveLimitKoopaHipDropJump::theNerve());
@@ -81,7 +81,7 @@ BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 
 	if (spine->getTime() == 0) {
 		koopa->changeBck(KOOPA_ANM_TURN_L, 2.0f);
-		koopa->mWaitTimer = 240;
+		koopa->mTimers[LIMITKOOPA_TIMER_WAIT] = 240;
 	}
 
 	koopa->moveTurn();
@@ -383,9 +383,9 @@ void TLimitKoopa::reset()
 	TSpineEnemy::reset();
 	changeBck(KOOPA_ANM_WAIT, LimitKoopaWaitSpeed(this));
 	mSpine->reset();
-	mWaitTimer     = 0;
-	mHipDropTimer  = 0;
-	mFlameTimer    = 0;
+	mTimers[LIMITKOOPA_TIMER_WAIT]     = 0;
+	mTimers[LIMITKOOPA_TIMER_HIPDROP]  = 0;
+	mTimers[LIMITKOOPA_TIMER_FLAME]    = 0;
 	mLanded        = true;
 	mBodyDirection.mDirection = 0.0f;
 }
@@ -393,10 +393,13 @@ void TLimitKoopa::reset()
 // TODO: UNUSED (0x2c), body not reconstructed.
 void TLimitKoopa::resetLimitKoopa() { }
 
-// TODO: 78.4%. The five particle emitters and the timer block are in place;
-// the ROM reaches TVec3::set<f32>(const&) out of line for four of the five
-// setGlobalScale calls and expands it for the first, which our build does not
-// reproduce (the same per-call-site divergence as bind()).
+// TODO: 99.9%, instruction-exact; the frame is 0x118 against retail's 0x170
+// (everything below breathFlame's scale vector, 0xf4 here and 0x144 there).
+// The restored isBreathing/breathFlame/updateTimers bodies are at their map
+// sizes. Measured and not taken (fabricated binders only): a named MtxPtr in
+// LimitKoopaEmitFlame +0x10, a named model binder for the head matrix at the
+// four puffs +0x20 and at the first +0x10, a bool binder over isBreathing +8
+// (best 0x148); a by-value scale parameter breaks the code.
 void TLimitKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSpineEnemy::perform(cue, graphics);
@@ -414,38 +417,8 @@ void TLimitKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		if (getAnmIndex() == KOOPA_ANM_FIRE_LOOP
-		    || (getAnmIndex() == KOOPA_ANM_FIRE_START
-		        && getAnmFrame() >= 127.0f)) {
-			f32 scale = getParam()->flameScale.get();
-			JGeometry::TVec3<f32> flameScale(scale, scale, scale);
-
-			JPABaseEmitter* emitter
-			    = gpMarioParticleManager->emitAndBindToMtxPtr(
-			        KOOPA_JPA_MS_KP_FIRE_E, getHeadMtx(), 3, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    KOOPA_JPA_MS_KP_FIRE_D, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    KOOPA_JPA_MS_KP_FIRE_C, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    KOOPA_JPA_MS_KP_FIRE_B, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    KOOPA_JPA_MS_KP_FIRE_A, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
-		}
+		if (isBreathing())
+			breathFlame();
 	}
 }
 
@@ -605,8 +578,34 @@ void TLimitKoopa::stopFlame()
 	changeBck(KOOPA_ANM_FIRE_END, LimitKoopaFireSpeed(this));
 }
 
-// TODO: UNUSED (0x1b8), body not reconstructed.
-void TLimitKoopa::breathFlame() { }
+// One flame puff after the first: the extra level is what puts
+// TVec3::set<f>(const TVec3&) inside setGlobalScale() at depth 4, where retail
+// calls it for these four emitters but not for the first.
+static inline void LimitKoopaEmitFlame(TLimitKoopa* koopa, s32 id,
+                                       const JGeometry::TVec3<f32>& scale)
+{
+	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+	    id, koopa->getHeadMtx(), 1, koopa);
+	if (emitter)
+		emitter->setGlobalScale(scale);
+}
+
+// UNUSED (0x1b8).
+void TLimitKoopa::breathFlame()
+{
+	f32 s = getParam()->flameScale.get();
+	JGeometry::TVec3<f32> scale(s, s, s);
+
+	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+	    KOOPA_JPA_MS_KP_FIRE_E, getHeadMtx(), 3, this);
+	if (emitter)
+		emitter->setGlobalScale(scale);
+
+	LimitKoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_D, scale);
+	LimitKoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_C, scale);
+	LimitKoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_B, scale);
+	LimitKoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_A, scale);
+}
 
 // TODO: 69.2%. The flame loop's matrix reads and the "no flames" branch's
 // unrolled flag stores are close but the parameter fetch order inside the
@@ -698,8 +697,15 @@ int TLimitKoopa::getAnmIndex() const
 // TODO: UNUSED (0x3c), body not reconstructed.
 BOOL TLimitKoopa::endsAnm() const { return FALSE; }
 
-// TODO: UNUSED (0x84), body not reconstructed.
-BOOL TLimitKoopa::isBreathing() const { return FALSE; }
+// UNUSED (0x84).
+bool TLimitKoopa::isBreathing() const
+{
+	if (getAnmIndex() == KOOPA_ANM_FIRE_LOOP)
+		return true;
+	if (getAnmIndex() == KOOPA_ANM_FIRE_START && getAnmFrame() >= 127.0f)
+		return true;
+	return false;
+}
 
 // TODO: UNUSED (0x180), body not reconstructed.
 JGeometry::TVec3<f32> TLimitKoopa::getFlameDir() const
@@ -778,12 +784,9 @@ void TLimitKoopa::checkMarioWhichSide() { }
 // UNUSED (0x4c).
 void TLimitKoopa::updateTimers()
 {
-	if (mWaitTimer > 0)
-		mWaitTimer--;
-	if (mHipDropTimer > 0)
-		mHipDropTimer--;
-	if (mFlameTimer > 0)
-		mFlameTimer--;
+	for (int i = 0; i < 3; i++)
+		if (mTimers[i] > 0)
+			mTimers[i]--;
 }
 
 // UNUSED (0xc).

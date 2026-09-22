@@ -164,6 +164,12 @@ public:
 	virtual TSpineEnemy* createEnemyInstance();
 };
 
+enum {
+	LIMITKOOPA_TIMER_WAIT,
+	LIMITKOOPA_TIMER_HIPDROP,
+	LIMITKOOPA_TIMER_FLAME,
+};
+
 class TLimitKoopa : public TSpineEnemy {
 public:
 	TLimitKoopa(const char* name = "クッパ");
@@ -193,7 +199,7 @@ public:
 	f32 getNeckFocus() const;
 	BOOL isFlaming() const;
 	JGeometry::TVec3<f32> getFlameDir() const;
-	BOOL isBreathing() const;
+	bool isBreathing() const;
 	BOOL endsAnm() const;
 	int getAnmIndex() const;
 	void changeBck(int index, f32 rate);
@@ -210,9 +216,9 @@ public:
 	void moveStop();
 	void resetLimitKoopa();
 
-	/* 0x150 */ int mWaitTimer;
-	/* 0x154 */ int mHipDropTimer;
-	/* 0x158 */ int mFlameTimer;
+	// One array: updateTimers counts the three down in an unrolled loop
+	// (retail's per-timer `addi rT, this, off` before each load).
+	/* 0x150 */ int mTimers[3]; // LIMITKOOPA_TIMER_*
 	/* 0x15C */ JGeometry::TVec3<f32> mAcceleration;
 	/* 0x168 */ bool mLanded;
 	/* 0x16C */ TDirectionCalc mBodyDirection;
