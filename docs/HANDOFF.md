@@ -77,6 +77,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Continued the medium trial: `System/CardManager` returned clean and remains blocked by the shared checksum inlining split; landed `Camera/CameraNotice`, raising `calcNoticeTargetYrot_` **92.24 -> 93.88%**.
 - Closed the `JGVec2<float>::sub` header lead with an xhigh research round.
   The exact weak 0x24 body emits only when `sub` is non-inline, which forces calls broadly and regresses both `SelectShine2` callers; the missing weak body is caller/per-expansion behavior, not a shared-header declaration fix.
+- Landed `Player/Tongue`: corrected Yoshi target filtering, raising `findTarget` **74.77 -> 87.99%**; `movement`'s eight-entry jump table still holds the unit data at **66.08%**.
+- Landed `Enemy/Amenbo`: corrected the water-entry nerve guard to require `!isChangedBlock()`; this is a semantic fix with a small fuzzy-score change.
+- Landed `NPC/NpcBase`: corrected balloon message IDs to retail `0x52/0x53/0x54`, raising `moveObject` **93.81 -> 99.96%** with all body instructions exact.
+  The remaining major `perform` mismatch has a concrete header lead: `getAnmOffDist_` is currently in-class/inlined, but the map requires a weak 0x104 out-of-line body and the sole caller invokes it.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
