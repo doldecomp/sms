@@ -96,6 +96,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   Their remaining bodies are instruction-exact frame/register-allocation residues already covered by the TU TODO ledgers; do not reassign them without a new compiler-shape lead.
 - Landed `JSystem/JParticle/JPADrawVisitor`: reused the X-by-speed raw-member form for `JPADrawCalcScaleYBySpeed::calc`, raising it **99.83 -> 99.92%**.
   The other 17 residuals were audited in the same whole-file pass; most are frame-only, while the two stripe paths still need genuine matrix/vector temporary reconstruction.
+- Landed `Enemy/BossHanachanSub`: two TU-local collision forwarders restored the map-required weak `TBGCheckData::isIllegalData` body and the intended inline depth in `TSphereLink::moveHead`.
+  The predicate is exact, `moveHead` rose **85.70 -> 91.80%**, and the unit rose **93.75 -> 96.56%**.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
