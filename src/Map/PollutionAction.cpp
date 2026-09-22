@@ -151,42 +151,39 @@ void TPollutionLayer::glassWall()
 // binds the reference once and MWCC charges one slot for the object and one for
 // the inlined setter's parameter binding.
 //
-// TODO: the `#pragma dont_inline` is still needed and is still a fakematch.
-// Retail calls fire() from action() at depth 1, so per docs the body should be
-// 15+ statements; this one is 10 and every spelling that pushes it over the
-// budget (splitting the scale into field assignments, two setters per site)
-// also costs the extra 24 bytes of frame. The other reading is batch 75's
-// caller-budget rule: action() is itself 40 bytes of dead low region short, so
-// retail's action may simply have spent its expansion budget before reaching
-// fire.
-#pragma dont_inline on
+// Retail calls fire() from action() at depth 1: the two guards are early
+// returns (the same bytes as the nested ifs, two statements more), which takes
+// the body over the depth-1 budget. Splitting the scale into field
+// assignments or two setters per site also tips it but costs 24 bytes of
+// frame.
 void TPollutionLayer::fire()
 {
 	JGeometry::TVec3<f32> scale(1.5f, 1.5f, 1.5f);
-	if (getPollutedPosNear(mFireArea, &mEffectPositions[mCurEffectPosIndex])) {
-		mEffectTimer += 1;
-		if (mEffectTimer > mFireEffectWaitTime) {
-			SMSGetMSound()->startSoundSet(MSD_SE_EF_FIRE,
-			                              &mEffectPositions[mCurEffectPosIndex],
-			                              0, 0.0f, 0, 0, 4);
-			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
-			        MAP_POLLUTION_MS_NEWFIRE_B,
-			        &mEffectPositions[mCurEffectPosIndex], 2, this)) {
-				em->setGlobalScale(scale);
-			}
-			if (JPABaseEmitter* em = gpMarioParticleManager->emit(
-			        MAP_POLLUTION_MS_NEWFIRE_A,
-			        &mEffectPositions[mCurEffectPosIndex], 0, this)) {
-				em->setGlobalScale(scale);
-			}
-			mCurEffectPosIndex += 1;
-			if (mCurEffectPosIndex >= mEffectPositionsCapacity)
-				mCurEffectPosIndex = 0;
-			mEffectTimer = 0;
-		}
+	if (!getPollutedPosNear(mFireArea, &mEffectPositions[mCurEffectPosIndex]))
+		return;
+
+	mEffectTimer += 1;
+	if (mEffectTimer <= mFireEffectWaitTime)
+		return;
+
+	SMSGetMSound()->startSoundSet(MSD_SE_EF_FIRE,
+	                              &mEffectPositions[mCurEffectPosIndex], 0,
+	                              0.0f, 0, 0, 4);
+	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
+	        MAP_POLLUTION_MS_NEWFIRE_B, &mEffectPositions[mCurEffectPosIndex],
+	        2, this)) {
+		em->setGlobalScale(scale);
 	}
+	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
+	        MAP_POLLUTION_MS_NEWFIRE_A, &mEffectPositions[mCurEffectPosIndex],
+	        0, this)) {
+		em->setGlobalScale(scale);
+	}
+	mCurEffectPosIndex += 1;
+	if (mCurEffectPosIndex >= mEffectPositionsCapacity)
+		mCurEffectPosIndex = 0;
+	mEffectTimer = 0;
 }
-#pragma dont_inline off
 
 void TPollutionLayer::action()
 {
