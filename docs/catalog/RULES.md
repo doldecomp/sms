@@ -446,6 +446,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Editing a shared header linked units depend on (`PollutionPos.hpp`, `MActor::getModel()`) breaks the DOL even when scores improve (frame-gaps.md: "batch 110").
 - `report.json` matches `.rodata` by symbol, not position: a 100/100 unit can still change the DOL when header literals come out in another order; include `System/DummyStrings.hpp` first as `sunmgr.cpp` does (sunmodel link).
 - An UNUSED override defined later decides `.sdata2` order ahead of a sibling's string literal; restoring the missing class (`TShadowObj`) was needed to link MapObjTown, together with including collision headers after `InfectiousStrings.hpp`.
+- A weak symbol the map shows once, in one TU, with no dropped duplicates is an out-of-class `inline` defined in that TU's `.cpp` only; an in-class body makes every vtable-referencing TU emit a copy, and the first in link order wins (J3DMatPacket::isSame; SDLModel linked).
+- A weak symbol with dropped duplicates in several TUs is an in-class/header inline (J3DMatPacket::entry).
 
 ## TU reconstruction
 
