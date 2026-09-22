@@ -161,6 +161,7 @@
     "JSystem/JDrama/JDRRenderMode.cpp",
     "JSystem/JDrama/JDRResolution.cpp",
     "JSystem/JDrama/JDRScreen.cpp",
+    "JSystem/JDrama/JDRSmJ3DAct.cpp",
     "JSystem/JDrama/JDRSmJ3DScn.cpp",
     "JSystem/JDrama/JDRVideo.cpp",
     "JSystem/JDrama/JDRViewConnecter.cpp",
