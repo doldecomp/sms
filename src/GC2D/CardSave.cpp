@@ -1639,10 +1639,14 @@ void TCardSave::selectBookmarks(TEProgress, TEProgress, TEProgress, TEProgress)
 
 void TCardSave::changePattern(J2DPicture*, s16, u32) { }
 
-// TODO: 98.5%. The six remaining differences are all the same shape, at the
-// inlined saveBookmark(): retail moves the stream's address with `mr` and
-// keeps it in one register, we re-derive it with `addi rD, rS, 0` and carry an
-// extra copy. saveBookmark() itself is size-exact against the map.
+// TODO: 99.2%, instruction-exact (only `~` rows). Frame 0x540 vs 0x5e8:
+// the low pool is 0x74 short and every inlined stream block but case 0x16's
+// sits 0xc (case 0x13: 8) lower than retail's. Registers rotate throughout
+// (e.g. the stream index is r24 in retail, r27 here; the bookmark pointer r6
+// vs r5 at every `getLastSaveTime()` compare). Wrapping whole case bodies
+// (0x13, the repeated save block of 0x2A/0x2B/0x33) or the score display of
+// case 2 in TU-local inline helpers moves neither the frame nor the colours,
+// and the compare's operand order is canonicalised away.
 void TCardSave::execMovement_()
 {
 
