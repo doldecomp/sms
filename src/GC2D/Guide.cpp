@@ -728,7 +728,7 @@ void TGuide::changeBotStatus(int stage)
 			    mNumberTextures[shines % 10]->mTexInfo, 0);
 		}
 
-		if (stage <= 1 || mScores[stage].mEtcShineNum == 0) {
+		if (stage == 0 || stage == 1 || mScores[stage].mEtcShineNum == 0) {
 			mEtcShineIcon->mVisible     = false;
 			mEtcShineMarks[0]->mVisible = false;
 			mEtcShineMarks[1]->mVisible = false;
