@@ -178,6 +178,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   Its remaining differences are the known shared-header `JUTColor` temporary-stride class; do not repeat the TU without a new compiler-shape lead.
 - Landed `Player/MarioPhysics`: refined the scalar declaration and lifetime order in `keepDistance` to match the target floating-point register schedule.
   `keepDistance` rose **93.964424 -> 94.12%** and unit fuzzy similarity **98.82285 -> 98.85%**; aggregate fuzzy similarity rose **98.090935 -> 98.090990%**, while matched-code, exact-function, and linked-unit counters did not move.
+- Landed and source-linked `MarioUtil/EffectUtil`: restored the pollution-sink cross product with a TU-local helper whose temporary order matches retail.
+  `SMS_EmitSinkInPollutionEffect` rose **99.057% -> 100%**; All matched code **63.578255 -> 63.591797%**, Game **56.011887 -> 56.029022%**, exact functions **11,467 -> 11,468**, and linked units **499 -> 500** (Game **171 -> 172**).
+- Whole-file medium audits of `Strategic/spcinterp`, `JSystem/JDrama/JDREfbSetting`, MetroTRK `Portable/support`, and MSL `exponentialsf` returned clean with no safe gain.
+  Their residues are established inline temporary-placement or scratch/callee-saved register permutations; do not repeat them without a new compiler-shape lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
