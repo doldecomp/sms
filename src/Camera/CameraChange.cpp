@@ -382,12 +382,12 @@ void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 		if (willBeFixedMode) {
 			const TCameraMapTool* tool = unk70;
 			bool bVar11                = (tool->unk28 & 0x2) != 0;
+			JGeometry::TVec3<f32> save;
 			switch (mMode) {
 			case CAMERA_MODE_FIX_A:
 			case CAMERA_MODE_FIX_B:
 			case CAMERA_MODE_DEFINITE_A:
 			case CAMERA_MODE_DEFINITE_B: {
-				JGeometry::TVec3<f32> save;
 				if (bVar11)
 					save = mCurrentTarget.mPosition;
 				tool->calcPosAndAt(&mCurrentTarget.mPosition,
@@ -397,7 +397,6 @@ void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 			} break;
 
 			default: {
-				JGeometry::TVec3<f32> save;
 				if (bVar11)
 					save = mPosition;
 				tool->calcPosAndAt(&mPosition, &mTarget);
