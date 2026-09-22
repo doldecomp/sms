@@ -544,48 +544,146 @@ void TCardLoad::loadAfter()
 //     Random 4, Input 5. The destructors ladder the same way: the first two
 //     sites reach the out-of-line `~JSUInputStream` with Random's weak
 //     destructor expanded, this one calls `~JSURandomInputStream`.
-// So retail's case 4 sits one inline level below `perform`, and our case 4
-// is written directly in the body. No static helper can be the level (all
-// eight of this TU's UNUSED symbols are accounted for and none fits), so it
-// would have to be an in-class TCardLoad method holding the case-4 block;
-// there is no independent evidence for one, so the level is left missing.
-// Declaring a constructor on JSUInputStream or on JSURandomInputStream does
-// not flip it.
+// So retail's case 4 sits one inline level below `perform`. A helper that is
+// always expanded leaves no symbol, so the map's silence does not rule one
+// out: the level is CardLoadFadeInScore below (possibly an in-class TCardLoad
+// method in the original; the codegen is the same). It also gives retail's
+// `li r28, 1` shared by `done` and the `unkB8`/`unk10` stores. Cases 0 and 5
+// are helpers of the same kind: the arrow blink as a helper is what fuses
+// retail's `lbzu`, and with all three the two `.data` jump tables (@7718,
+// @7721) match. Remaining: frame 0x318 vs 0x380 (the JUTRect temporary and
+// the stream sit lower than retail's) and a few register choices.
+static inline void CardLoadBlinkArrow(TCardLoad* p)
+{
+	int alpha = p->unk25C->getAlpha();
+	if (p->unk275 && alpha < 255) {
+		alpha += 8;
+		if (alpha > 255)
+			alpha = 255;
+		p->unk25C->setAlpha(alpha);
+	}
+
+	if (!p->unk275 && alpha > 0) {
+		alpha -= 8;
+		if (alpha < 0)
+			alpha = 0;
+		p->unk25C->setAlpha(alpha);
+	}
+
+	if (alpha != 0) {
+		// Same expression as TArrowControl::calcMoveX (Option.cpp).
+		int iVar9 = p->unk274;
+		int iVar3 = p->unk274 < 50 ? iVar9 : 100 - iVar9;
+		f32 fVar1 = iVar3 / 50.0f;
+		f32 fVar2 = 1.0f - fVar1;
+		s16 iVar8 = fVar2 * -8.0f * fVar2 + fVar1 * fVar2
+		            + fVar1 * 8.0f * fVar1;
+		p->unk25C->setBounds(JUTRect(p->unk260.x1, p->unk260.y1,
+		                          p->unk260.x2 + iVar8, p->unk260.y2));
+		p->unk274 += 1;
+		if (p->unk274 > 100)
+			p->unk274 = 0;
+	}
+}
+
+static inline void CardLoadFadeOutScore(TCardLoad* p)
+{
+	// The mirror of case 4: the score screen fades out while the
+	// bookmark screen fades back in.
+	bool done      = true;
+	J2DPane* root1 = p->unk2C->search('ROOT');
+	J2DPane* root2 = p->unk28->search('ROOT');
+
+	int alpha1 = root1->getAlpha();
+	alpha1 -= 4;
+	if (alpha1 < 0)
+		alpha1 = 0;
+	else
+		done = false;
+	root1->setAlpha(alpha1);
+	for (int i = 0; i < 7; ++i)
+		p->unk584[i].unk0->setAlpha(alpha1);
+	p->unk744->setAlpha(alpha1);
+	p->unk740->setAlpha(alpha1);
+
+	int alpha2 = root2->getAlpha();
+	alpha2 += 4;
+	if (alpha2 > 255)
+		alpha2 = 255;
+	else
+		done = false;
+	root2->setAlpha(alpha2);
+
+	if (done) {
+		if (p->unkB8) {
+			gpCameraOption->moveToDown();
+			p->unkB8 = 0;
+		} else if (gpCameraOption->unk16 == 0) {
+			p->unk14 = 0;
+			p->unk1C = PROGRESS_UNK2;
+			gpCardManager->getBookmarkInfos(p->unk40);
+			p->unk10 = 0;
+		}
+	}
+}
+
+static inline void CardLoadFadeInScore(TCardLoad* p)
+{
+	bool done = true;
+	int rc    = gpCardManager->getLastStatus();
+	if (rc != CARD_RESULT_BUSY) {
+		if (rc == CARD_RESULT_READY) {
+			if (p->unkB8 == 0) {
+				loadBookmark();
+				p->setupScoreScreen();
+				p->unkB8 = 1;
+			}
+		} else {
+			p->unk14 = 0;
+			p->unk1C = PROGRESS_UNK3;
+			p->unk10 = 1;
+		}
+	}
+
+	if (gpCameraOption->unk16 != 0)
+		p->unkB8 = 0;
+
+	if (p->unkB8 != 0) {
+		J2DPane* root1 = p->unk2C->search('ROOT');
+		J2DPane* root2 = p->unk28->search('ROOT');
+
+		int alpha1 = root1->getAlpha();
+		alpha1 += 4;
+		if (alpha1 > 255)
+			alpha1 = 255;
+		else
+			done = false;
+		root1->setAlpha(alpha1);
+		for (int i = 0; i < 7; ++i)
+			p->unk584[i].unk0->setAlpha(alpha1);
+		p->unk744->setAlpha(alpha1);
+		p->unk740->setAlpha(alpha1);
+
+		int alpha2 = root2->getAlpha();
+		alpha2 -= 4;
+		if (alpha2 < 0)
+			alpha2 = 0;
+		else
+			done = false;
+		root2->setAlpha(alpha2);
+
+		if (done)
+			p->unk14 = 1;
+	}
+}
+
 void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		switch (unk14) {
 		case 0: {
 			changeScene();
-			int alpha = unk25C->getAlpha();
-			if (unk275 && alpha < 255) {
-				alpha += 8;
-				if (alpha > 255)
-					alpha = 255;
-				unk25C->setAlpha(alpha);
-			}
-
-			if (!unk275 && alpha > 0) {
-				alpha -= 8;
-				if (alpha < 0)
-					alpha = 0;
-				unk25C->setAlpha(alpha);
-			}
-
-			if (alpha != 0) {
-				// TODO: copy-pasta from TArrowControl::calcMoveX? inline?
-				int iVar9 = unk274;
-				int iVar3 = unk274 < 50 ? iVar9 : 100 - iVar9;
-				f32 fVar1 = iVar3 / 50.0f;
-				f32 fVar2 = 1.0f - fVar1;
-				s16 iVar8 = fVar1 * 8.0f * fVar1 + fVar2 * -8.0f * fVar2
-				            + fVar1 * fVar2;
-				unk25C->setBounds(JUTRect(unk260.x1, unk260.y1,
-				                          unk260.x2 + iVar8, unk260.y2));
-				unk274 += 1;
-				if (unk274 > 100)
-					unk274 = 0;
-			}
+			CardLoadBlinkArrow(this);
 
 			if (unk1C == 19 || unk1C == 12 || unk1C == 13 || unk1C == 3
 			    || unk1C == 4 || unk1C == 5 || unk1C == 45 || unk1C == 16
@@ -600,90 +698,13 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		} break;
 
-		case 4: {
-			bool done = true;
-			int rc    = gpCardManager->getLastStatus();
-			if (rc != CARD_RESULT_BUSY) {
-				if (rc == CARD_RESULT_READY) {
-					if (unkB8 == 0) {
-						loadBookmark();
-						setupScoreScreen();
-						unkB8 = 1;
-					}
-				} else {
-					unk14 = 0;
-					unk1C = PROGRESS_UNK3;
-					unk10 = 1;
-				}
-			}
+		case 4:
+			CardLoadFadeInScore(this);
+			break;
 
-			if (gpCameraOption->unk16 != 0)
-				unkB8 = 0;
-
-			if (unkB8 != 0) {
-				J2DPane* root1 = unk2C->search('ROOT');
-				J2DPane* root2 = unk28->search('ROOT');
-
-				int alpha1 = root1->getAlpha() + 4;
-				if (alpha1 > 255)
-					alpha1 = 255;
-				else
-					done = false;
-				root1->setAlpha(alpha1);
-				for (int i = 0; i < 7; ++i)
-					unk584[i].unk0->setAlpha(alpha1);
-				unk744->setAlpha(alpha1);
-				unk740->setAlpha(alpha1);
-
-				int alpha2 = root2->getAlpha() - 4;
-				if (alpha2 < 0)
-					alpha2 = 0;
-				else
-					done = false;
-				root2->setAlpha(alpha2);
-
-				if (done)
-					unk14 = 1;
-			}
-		} break;
-
-		case 5: {
-			// The mirror of case 4: the score screen fades out while the
-			// bookmark screen fades back in.
-			bool done      = true;
-			J2DPane* root1 = unk2C->search('ROOT');
-			J2DPane* root2 = unk28->search('ROOT');
-
-			int alpha1 = root1->getAlpha() - 4;
-			if (alpha1 < 0)
-				alpha1 = 0;
-			else
-				done = false;
-			root1->setAlpha(alpha1);
-			for (int i = 0; i < 7; ++i)
-				unk584[i].unk0->setAlpha(alpha1);
-			unk744->setAlpha(alpha1);
-			unk740->setAlpha(alpha1);
-
-			int alpha2 = root2->getAlpha() + 4;
-			if (alpha2 > 255)
-				alpha2 = 255;
-			else
-				done = false;
-			root2->setAlpha(alpha2);
-
-			if (done) {
-				if (unkB8) {
-					gpCameraOption->moveToDown();
-					unkB8 = 0;
-				} else if (gpCameraOption->unk16 == 0) {
-					unk14 = 0;
-					unk1C = PROGRESS_UNK2;
-					gpCardManager->getBookmarkInfos(unk40);
-					unk10 = 0;
-				}
-			}
-		} break;
+		case 5: 
+			CardLoadFadeOutScore(this);
+			break;
 		case 1:
 			if (unk38->checkFrameMeaning(0x20)
 			    || unk38->checkFrameMeaning(0x40)) {
@@ -802,7 +823,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 		case 10:
 			MSBgm::startBGM(MSD_BGM_MAIN_TITLE);
 			unk38->onFlag(0x1);
-			gpMarioOriginal->offFlag(MARIO_FLAG_GAME_OVER);
+			gpMarioOriginal->offFlag(MARIO_FLAG_HAS_FLUDD);
 			unk14 = 9;
 			unk18 = 1;
 			unkF0->getPane()->setAlpha(0);
