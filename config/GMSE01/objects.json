@@ -38,6 +38,7 @@
     "Enemy/enemytable.cpp",
     "Enemy/generator.cpp",
     "Enemy/launcher.cpp",
+    "Enemy/riccohook.cpp",
     "Enemy/spline.cpp",
     "Enemy/typicalenemy.cpp",
     "Enemy/walkerEnemy.cpp",
