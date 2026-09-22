@@ -561,6 +561,10 @@ void TTalk2D2::makeBoxLine(s8 line, char* text)
 		if (curX > 0.0f)
 			angle *= -1.0f;
 
+		// TODO: retail computes negHalfX/negHalfY before cosf and keeps
+		// them in callee-saved FPRs, i.e. they are not forwarded into their
+		// single use as they are here (an inline parameter would do that);
+		// the extra register pressure is retail's larger spill area.
 		// Rotate the glyph's anchor about the midpoint of the segment it
 		// sits on.  The -0.5f and +0.5f terms cancel in exact arithmetic
 		// but retail emits both, so they were written out.
@@ -1047,9 +1051,11 @@ bool TTalk2D2::appearBoardBoxWindow()
 	return done;
 }
 
-// The calc-anim cue's mode switch sits one inline level below perform:
-// retail's pivot tree keeps the empty WAIT_CAMERA arm, which only a
-// `return` out of a helper does.
+// The calc-anim cue's mode switch sits one inline level below perform (the
+// level is worth +0.2% of perform's registers).
+// TODO: retail's pivot tree keeps a `cmpwi 2; bge` leaf for an empty case 2
+// arm landing on the switch's end; an empty `case`/`break` or `return` arm,
+// in any position, with or without `default:`, is folded away here.
 static inline void Talk2D2CalcAnim(TTalk2D2* p)
 {
 	switch (p->mTalkMode) {
