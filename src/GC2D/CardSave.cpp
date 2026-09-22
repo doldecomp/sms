@@ -468,6 +468,10 @@ void TCardSave::setMessageC(J2DTextBox* text_box, s32 message_id, u32 size)
 	}
 }
 
+// TODO: 98.2%. Frame 0x1b0 vs 0x1a8 (low pool 8 bytes long; the fourth
+// Wr site saturates) and a whole-function register rotation: retail colours
+// `this` r26 and `result` r27 below the shared constants (1 in r31, 0x4330 in
+// r30), we give them r30/r31. Case-body helpers do not move it.
 s8 TCardSave::waitForStop(TEProgress param_1)
 {
 	s8 result = -1;
@@ -481,10 +485,12 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 
 		unkA4->hide();
 		unk48->getPane()->show();
-		unk48->setCenteredSize(20, unk4C.getWidth(), unk4C.getHeight(), 0, 0);
+		setCenteredSizeWr(unk48, 20, unk4C.getWidth(), unk4C.getHeight(), 0,
+		                  0);
 
 		unkDC->hide();
-		unkC4->setCenteredSize(20, unkC8.getWidth(), unkC8.getHeight(), 0, 0);
+		setCenteredSizeWr(unkC4, 20, unkC8.getWidth(), unkC8.getHeight(), 0,
+		                  0);
 
 		if (unk310 == PROGRESS_UNK4 || unk310 == PROGRESS_UNK3
 		    || unk310 == PROGRESS_UNK5 || unk310 == PROGRESS_UNKC
@@ -514,10 +520,10 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 		if (unk270->mEnabledFrameMeaning & 0x20) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
 
-			unk48->setCenteredSize(20, 0, 0, unk4C.getWidth(),
-			                       unk4C.getHeight());
-			unkC4->setCenteredSize(20, 0, 0, unkC8.getWidth(),
-			                       unkC8.getHeight());
+			setCenteredSizeWr(unk48, 20, 0, 0, unk4C.getWidth(),
+			                  unk4C.getHeight());
+			setCenteredSizeWr(unkC4, 20, 0, 0, unkC8.getWidth(),
+			                  unkC8.getHeight());
 			unkA4->hide();
 			unkDC->hide();
 			unk10 = 3;
