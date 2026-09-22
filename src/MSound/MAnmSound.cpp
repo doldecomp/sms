@@ -58,6 +58,9 @@ static u32 get_thing(u32 param_1)
 	return 0xffffffff;
 }
 
+// Fabricated name; a TU-local level over the voice-number field (see case 7).
+static inline u32 MarioVoiceNo(u32 groundNo) { return (groundNo >> 24) & 0xF; }
+
 void MAnmSoundMario::startAnimSound(void* interface, u32 sound_id,
                                     JAISound** out_handle, JAIActor* actor,
                                     u8 camera_idx)
@@ -70,14 +73,13 @@ void MAnmSoundMario::startAnimSound(void* interface, u32 sound_id,
 				return;
 			break;
 
-		// TODO: instructions and frame exact; r0 and r5 are swapped between
-		// groundNo and voiceNo. Register-numbering residue only -- naming the
-		// volume, the MSound pointer, a const or an s32 voiceNo all leave it
-		// unchanged.
+		// The voice number comes out of a returning helper: a named local
+		// swaps r0/r5 against groundNo, an unnamed expression drops the
+		// `extsh`.
 		case 7: {
 			u32 groundNo = actor->mGroundNumber;
-			u32 voiceNo  = (groundNo >> 24) & 0xF;
-			MSGMSound->startMarioVoice(sound_id, voiceNo, groundNo >> 28);
+			MSGMSound->startMarioVoice(sound_id, MarioVoiceNo(groundNo),
+			                           groundNo >> 28);
 			return;
 		}
 		}
@@ -123,11 +125,20 @@ f32 MSMarioPosVolume::getDistFromMario(const Vec& pos)
 // `dist` pays 8 of the 16 bytes of frame this body is still short; a second
 // stacked level pays 16 and overshoots to 0x98, so retail's 0x90 wants one
 // +16 binding in a single level, which nothing natural here supplies.
+// (Closed since: the other 8 are the EntryWord level on the flag mask.)
 static inline f32 MarioDistance(JAIActor* actor)
 {
 	f32 dist = MSMarioPosVolume::getDistFromMario(actor->getTranslation());
 
 	return dist;
+}
+
+// Fabricated name: a TU-local level over the entry word, read through it only
+// for the flag mask. It reserves retail's four low bytes below the random
+// draw's float-bits slot (0x44); every further use adds 4-8 of frame.
+static inline u32 EntryWord(JAIAnimeSoundData* p, u32 i)
+{
+	return p->mEntries[i].unk10;
 }
 
 void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
@@ -142,7 +153,7 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 		// `clrrwi. r0, r4, 24` and `rlwinm. r0, r4, 0, 8, 15`), which is
 		// also what forces the raw word to be re-loaded for the 0xFF0000
 		// branch after `lbz r3, 0x98(r26)` clobbers it.
-		u32 flags = ptr->mEntries[mDataCounter].unk10 & 0xFFFF0000;
+		u32 flags = EntryWord(ptr, mDataCounter) & 0xFFFF0000;
 		if (flags) {
 			if (flags & 0xFF000000) {
 				// The divisor comes from the entry word, not from
@@ -160,14 +171,11 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 			}
 
 			if (flags & 0xFF0000) {
-				// TODO: r3/r0 vs r4 permutation over these three
-				// statements (5 operand-only markers). Folding the
-				// `+ 1` into the declaration, or going through a u32
-				// first, trades them for two opcode mismatches;
-				// folding the product as well is far worse.
+				// `b = b * r`, not `b *= r`: the compound form swaps
+				// r3/r0 against r4 over these three statements.
 				u8 b = ptr->mEntries[mDataCounter].unk10 >> 16;
 				b += 1;
-				b *= JAIConst::random.get_ufloat_1();
+				b = b * JAIConst::random.get_ufloat_1();
 				if (b != 0)
 					return;
 			}
@@ -180,6 +188,15 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 			if (*out_handle != nullptr
 			    && !(ptr->mEntries[mDataCounter].unk10 & 0x8000)) {
 
+				// TODO: 99.5%, frame and every stack slot exact. Left: a
+				// colouring rotation over the distance -- retail keeps
+				// the volume in f31 and the two first powf results in
+				// f29/f30, the translation pointer in r27 and Mario's in
+				// r29; ours f29, f30/f31, r29, r27. Inert: declaring
+				// either float at the top of the function or block, a
+				// ternary or if/else, `const`, a named sound pointer, a
+				// `const Vec&` Mario, a named sum, `x + (y + z)`, and a
+				// helper taking the position (-0x10 of frame).
 				f32 dVar10 = 1.0f;
 
 				f32 fVar11 = MarioDistance(actor);
