@@ -157,6 +157,8 @@ f32 TDirectionCalc::sub(f32 dir)
 // Returns the stored direction turned towards dir by at most step.
 f32 TDirectionCalc::calcTurnDirection(f32 dir, f32 step)
 {
+	// TODO: 98.2%; the frame is 8 short and the wrapped direction lands in
+	// f2 where the ROM has f3.
 	mDirection = WrapRadianF(mDirection);
 	normalize();
 	if (dir >= mDirection) {
@@ -169,16 +171,17 @@ f32 TDirectionCalc::calcTurnDirection(f32 dir, f32 step)
 			dir += TWO_PI;
 	}
 
+	f32 turn = step;
 	if (dir > mDirection) {
 		f32 diff = dir - mDirection;
 		if (diff < step)
-			step = diff;
-		return mDirection + step;
+			turn = diff;
+		return mDirection + turn;
 	} else {
 		f32 diff = mDirection - dir;
 		if (diff < step)
-			step = diff;
-		return mDirection - step;
+			turn = diff;
+		return mDirection - turn;
 	}
 }
 
@@ -255,6 +258,16 @@ TKoopaJrParams::TKoopaJrParams(const char* prm)
 	mSLLaunchKillerPeriod.set(840);
 }
 
+// The angle overrides are multiples of pi, folded at float precision into
+// .sdata2 (not bound as .sdata temporaries like the plain literals), and each
+// site costs 8 bytes of frame: 0x70 needs this one-level wrapper (a bare
+// `PI() * k` is 0x50, a folded `M_PI * k` lands in .sdata). The 0.18 value
+// (0x3f10c3bd) rules out a double-precision pi.
+static inline f32 KoopajrPiTimes(f32 k)
+{
+	return k * JGeometry::TUtil<f32>::PI();
+}
+
 TKoopaJrSubmarineParams::TKoopaJrSubmarineParams(const char* prm)
     : TSpineEnemyParams(prm)
     , PARAM_INIT(killerTargetDistanceMin, 500.0f)
@@ -288,15 +301,15 @@ TKoopaJrSubmarineParams::TKoopaJrSubmarineParams(const char* prm)
 	killerTargetDistance.set(700.0f);
 	bottomHeight.set(0.0f);
 	centerZ.set(200.0f);
-	aboidKoopaFlameAngle.set(0.62831855f);
-	traceMarioAngle.set(0.31415927f);
-	mSLWavePhaseVelocity.set(0.09424778f);
-	mSLWaveAmplitudeMin.set(0.12566371f);
-	mSLWaveAmplitudeMaxLaunch.set(0.37699112f);
-	mSLWaveAmplitudeMax.set(0.31415927f);
-	mSLSwingPhaseVelocity.set(0.18849556f);
-	mSLSwingAmplitudeMin.set(0.12566371f);
-	mSLSwingAmplitudeMax.set(0.5654867f);
+	aboidKoopaFlameAngle.set(KoopajrPiTimes(0.2f));
+	traceMarioAngle.set(KoopajrPiTimes(0.1f));
+	mSLWavePhaseVelocity.set(KoopajrPiTimes(0.03f));
+	mSLWaveAmplitudeMin.set(KoopajrPiTimes(0.04f));
+	mSLWaveAmplitudeMaxLaunch.set(KoopajrPiTimes(0.12f));
+	mSLWaveAmplitudeMax.set(KoopajrPiTimes(0.1f));
+	mSLSwingPhaseVelocity.set(KoopajrPiTimes(0.06f));
+	mSLSwingAmplitudeMin.set(KoopajrPiTimes(0.04f));
+	mSLSwingAmplitudeMax.set(KoopajrPiTimes(0.18f));
 	mSLRoundAngleVelocity.set(0.12f);
 	mSLRoundDistance.set(2000.0f);
 	mSLAcceleration.set(1.0f);
@@ -439,9 +452,7 @@ void TKoopaJr::calcRootMatrix()
 {
 	J3DModel* model = getModel();
 	if (mBathtub->unk29A) {
-		MtxPtr demoMtx   = mBathtub->getKoopaJrMtxInDemo();
-		J3DModel* target = getModel();
-		MTXCopy(demoMtx, target->getBaseTRMtx());
+		getModel()->setBaseTRMtx(mBathtub->getKoopaJrMtxInDemo());
 	} else {
 		mSubmarine->getJointTransByIndex(TKoopaJr_getJointIndex(0), &mPosition);
 		MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x, mPosition.y,
@@ -868,9 +879,7 @@ void TKoopaJrSubmarine::bind()
 void TKoopaJrSubmarine::calcRootMatrix()
 {
 	if (mKoopaJr->mBathtub->unk29A) {
-		MtxPtr demoMtx   = mKoopaJr->mBathtub->getSubmarineMtxInDemo();
-		J3DModel* target = getModel();
-		MTXCopy(demoMtx, target->getBaseTRMtx());
+		getModel()->setBaseTRMtx(mKoopaJr->mBathtub->getSubmarineMtxInDemo());
 	} else {
 		JGeometry::TQuat4<f32> swing;
 		swing.setEulerZ(getSwingAngle());
@@ -881,23 +890,25 @@ void TKoopaJrSubmarine::calcRootMatrix()
 
 		JGeometry::TQuat4<f32> q;
 		q.mul(yaw, swing);
+		// TODO: 94.8%. The second product's loads come out w, y, x, z where
+		// the ROM reads w, x, y, z, and the frame is 0x10 short. Not the
+		// one-argument mul(wave) (same score) nor a second quaternion for the
+		// product (frame 0x10 too long, 91.5%).
 		q.mul(q, wave);
 
 		JGeometry::TVec3<f32> center(0.0f, 0.0f,
 		                             getSaveParams()->centerZ.get());
 		TPosition3f offset;
-		offset.identity33();
-		offset.setTrans(center);
+		offset.translation(center);
 
 		JGeometry::TVec3<f32> trans(center);
 		trans.negate();
 		trans.add(mPosition);
 
 		TPosition3f mtx;
-		mtx.setQuat(q);
-		mtx.setTrans(trans);
+		mtx.setQT(q, trans);
 		mtx.concat(offset);
-		MTXCopy((MtxPtr)mtx, getModel()->getBaseTRMtx());
+		getModel()->setBaseTRMtx(mtx);
 	}
 	getModel()->setBaseScale(mScaling);
 }
@@ -1164,9 +1175,10 @@ void TKoopaJrSubmarine::makeRoundVelocity()
 	JGeometry::TVec3<f32> round(mDirection.calcDirectionVector());
 	round.scale(mRoundDistance);
 	JGeometry::TVec3<f32> toGoal;
-	toGoal.x = (mKoopaJr->mBathtub->mPosition.x + round.x) - mPosition.x;
+	const JGeometry::TVec3<f32>& center = mKoopaJr->mBathtub->mPosition;
+	toGoal.x = (center.x + round.x) - mPosition.x;
 	toGoal.y = 0.0f;
-	toGoal.z = (mKoopaJr->mBathtub->mPosition.z + round.z) - mPosition.z;
+	toGoal.z = (center.z + round.z) - mPosition.z;
 	if (toGoal.length() < 100.0f) {
 		mIsNearTarget = true;
 		return;
@@ -1175,9 +1187,13 @@ void TKoopaJrSubmarine::makeRoundVelocity()
 	toGoal.normalize();
 	toGoal.scale(getSaveParams()->mSLAcceleration.get());
 	mVelocity.add(toGoal);
-	if (mVelocity.length() > getSaveParams()->mSLSpeedMax.get()) {
+	// TODO: 99.5%; frame 0x10 short, and the normalised x and y land in
+	// f31/f29 where the ROM has f29/f31.
+	f32 speed    = mVelocity.length();
+	f32 speedMax = getSaveParams()->mSLSpeedMax.get();
+	if (speed > speedMax) {
 		mVelocity.normalize();
-		mVelocity.scale(getSaveParams()->mSLSpeedMax.get());
+		mVelocity.scale(speedMax);
 	}
 }
 
@@ -1190,7 +1206,9 @@ void TKoopaJrSubmarine::makeDirection()
 		// Named, and through the by-value TDirectionCalc ctor: the ROM
 		// copies the vector, calls atan2f and keeps the result in f31
 		// before it fetches the rotation speed.
-		f32 dir                   = TDirectionCalc(v).get();
+		TDirectionCalc calc;
+		calc.makeDirection(v);
+		f32 dir                   = calc.get();
 		mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
 		    dir,
 		    TDirectionCalc::d2r(getSaveParams()->mSLRotationSpeed.get()));
@@ -1211,10 +1229,13 @@ void TKoopaJrSubmarine::checkNerve()
 		return;
 	if (mSpine->getCurrentNerve()
 	    == &TNerveKoopaJrSubmarineCannonOpenClose::theNerve()) {
-		if (mKillerIndex == 0
-		    && getMActor()->getFrameCtrl(0)->checkPass(30.0f)) {
-			getMActor()->getFrameCtrl(0)->setRate(0.0f);
-			mSpine->pushNerve(&TNerveKoopaJrSubmarineLaunchKiller::theNerve());
+		if (mKillerIndex == 0) {
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+			if (ctrl->checkPass(30.0f)) {
+				ctrl->setRate(0.0f);
+				mSpine->pushNerve(
+				    &TNerveKoopaJrSubmarineLaunchKiller::theNerve());
+			}
 		}
 	} else if (mSpine->getCurrentNerve()
 	           == &TNerveKoopaJrSubmarineLaunchKiller::theNerve()) {
