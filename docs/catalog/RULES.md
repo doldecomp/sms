@@ -124,6 +124,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A callee retail reaches only through another inline sits at depth 2 (budget 9): ten statements with zero-cost named chain steps replace `#pragma dont_inline` (Yoshi `getEmitPosDir`).
 - A 10-14 statement callee called at one site and expanded at others: wrap the whole if/else at that site as a case helper, not just the call (MarDirectorDirect `decideNextStage`).
 - Retail folding the first member store into `stbu` and using base+`addi` for the rest: the receiver came through a reference-returning static inline accessor (MarDirectorDirect `getNextArea()`).
+- Defaulted constructor arguments push the member initialisers one level deeper without moving the body's calls: `TGameSequence(u8 a = 0, u8 b = 0)` makes retail's out-of-line `TFlagT(u16)`; `TFlagT::operator=` takes its argument by value (TApplication ctor 72.8 -> 99.6).
 
 ## Frame-size gaps
 
