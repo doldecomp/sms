@@ -278,9 +278,18 @@ void TFlyEnemy::flyMove()
 	mLinearVelocity = linear;
 }
 
-// TODO: 99.4%. Frame exact; the distance test allocates f0/f1 the other way
-// round and the MsGetRotFromZaxis call sets up r3 before r4, so the velocity
-// copy sits above the returned rotation instead of below it.
+// The normal-fly nerve's two chase tests share this squared range. The
+// `*=` puts the product in the range's own FPR (retail's f1 against the
+// distance in f0), and the direct-return params fork nested in it is the
+// pool rung that, with the raw mBodyScale read below, lands the 0x90 frame.
+static inline TFlyEnemyParams* FlyP(TFlyEnemy* e) { return e->mFlyParams; }
+static inline f32 FlyChaseDistSq(TFlyEnemy* e)
+{
+	f32 chaseDist = FlyP(e)->getSLChaseDist();
+	chaseDist *= chaseDist;
+	return chaseDist;
+}
+
 DEFINE_NERVE(TNerveFlyEnemyNormalFly, TLiveActor)
 {
 	TFlyEnemy* flyEnemy = (TFlyEnemy*)spine->getBody();
@@ -290,27 +299,27 @@ DEFINE_NERVE(TNerveFlyEnemyNormalFly, TLiveActor)
 
 	if (flyEnemy->unk1A4 && flyEnemy->mFlyTime > 500) {
 		flyEnemy->updateSquareToMario();
-		f32 chaseDist = flyEnemy->mFlyParams->getSLChaseDist();
-		if (flyEnemy->getDistToMarioSquared() < chaseDist * chaseDist) {
+		f32 chaseDist = FlyChaseDistSq(flyEnemy);
+		if (flyEnemy->getDistToMarioSquared() < chaseDist) {
 			spine->pushAfterCurrent(&TNerveFlyEnemyChaseFly::theNerve());
 			return TRUE;
 		}
 	} else if (!flyEnemy->mIsGold && flyEnemy->isFindMario(1.0f)
 	           && flyEnemy->mFlyTime > 100) {
 		flyEnemy->updateSquareToMario();
-		f32 chaseDist = flyEnemy->mFlyParams->getSLChaseDist();
-		if (flyEnemy->getDistToMarioSquared() < chaseDist * chaseDist) {
+		f32 chaseDist = FlyChaseDistSq(flyEnemy);
+		if (flyEnemy->getDistToMarioSquared() < chaseDist) {
 			spine->pushAfterCurrent(&TNerveFlyEnemyChaseFly::theNerve());
 			return TRUE;
 		}
 	}
 
-	JGeometry::TVec3<f32> velocity(flyEnemy->mVelocity);
-	flyEnemy->mRotation.x = MsGetRotFromZaxis(velocity).x;
+	flyEnemy->mRotation.x
+	    = MsGetRotFromZaxis(JGeometry::TVec3<f32>(flyEnemy->mVelocity)).x;
 
 	flyEnemy->mScaling.x = flyEnemy->mScaling.y = flyEnemy->mScaling.z
 	    = MsClamp(1.05f * flyEnemy->mScaling.x, 0.0f,
-	              flyEnemy->getBodyScale());
+	              flyEnemy->mBodyScale);
 	return FALSE;
 }
 
@@ -589,19 +598,22 @@ void TKiller::behaveToWater(THitActor* water)
 	}
 }
 
-// TODO: 99.7%. Function-scope offset + KillerPosX (getPosition().x consumed
-// inside a by-value fork) lands the 0xd8 frame and the 0x20/0x50 slots
-// without a new GPR (99.3 -> 99.7). Residue is r30/r31 swapped (coinNum vs
-// the parked matrix) and one commutative fadds operand order.
+// TODO: 99.9%. Function-scope offset + KillerPosX (getPosition().x consumed
+// inside a by-value fork) lands the 0xd8 frame and the 0x20/0x50 slots;
+// declaring spreadMtx first and assigning it later gives it r31 over coinNum.
+// Residue: the coin X argument's fadds operands (pos.x f3 first in retail).
+// Tried: swapping the operands, offset.get().x, a const-ref read, an
+// add-returning fork (+frame), getPosition().x raw (-8 frame).
 void TKiller::genEventCoin()
 {
+	MtxPtr spreadMtx;
 	int coinNum = 2;
 	if (mIsGold)
 		coinNum = 8;
 
 	JGeometry::TVec3<f32> offset;
 	Mtx spread;
-	MtxPtr spreadMtx = spread;
+	spreadMtx = spread;
 	for (int i = 0; i < coinNum; i++) {
 		offset.set(0.0f, 0.0f, 30.0f);
 		f32 yaw = 360.0f * (1.0f / coinNum) * (i + 1);
@@ -709,14 +721,12 @@ bool TKiller::isCollidMove(THitActor* other)
 	return true;
 }
 
-// TODO: 99.7%. Frame exact; the ROM parks the save-param pointer in r5 and we
-// use r4.
 void TKiller::flyBehavior()
 {
 	mTurnSpeed = mKillerParams->getSLTurnSpeedLow();
 
-	if (mSpine->getTime() > mKillerParams->getSLChaseTimer())
-		mGravityY -= mKillerParams->getSLWaterAddGravityY();
+	if (getSpine()->getTime() > mKillerParams->mSLChaseTimer.get())
+		mGravityY -= mKillerParams->mSLWaterAddGravityY.get();
 
 	if (checkCurAnmEnd(KILLER_ANM_DOWN1)) {
 		if (isBckAnm(KILLER_ANM_SEARCH1))
@@ -946,18 +956,14 @@ bool TKiller::isFindMario(f32 rate)
 	return false;
 }
 
-// TODO: 99.9%, instruction-identical; our frame is 8 bytes bigger.
 DEFINE_NERVE(TNerveKillerExplosion, TLiveActor)
 {
 	TKiller* killer = (TKiller*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		// TODO: the frame is exact with the raw read, but both `scaling`
-		// vectors sit 8 bytes low: `.get()` is +8 frame and still 4 high,
-		// getSLBombRange() is +16 / 8 high. Same residue as TNerveTamaNokoDown.
-		f32 bombRange = killer->getSaveParam3()->mSLBombRange.value;
-		f32 bombScale = bombRange * killer->getBodyScale();
-		killer->mExplosionScaleMax = bombScale / killer->mAttackRadius;
+		f32 bombRange = killer->getSaveParam3()->getSLBombRange();
+		killer->mExplosionScaleMax
+		    = bombRange * killer->getBodyScale() / killer->mAttackRadius;
 		killer->mRotation.x        = 0.0f;
 		killer->setDeadAnm();
 
@@ -973,7 +979,7 @@ DEFINE_NERVE(TNerveKillerExplosion, TLiveActor)
 				}
 			}
 
-			if (killer->getGroundPlane()->isSand()) {
+			if (killer->mGroundPlane->isSand()) {
 				TEffectColumSand* column
 				    = (TEffectColumSand*)gpConductor->makeOneEnemyAppear(
 				        killer->mPosition, "エフェクト砂柱マネージャー", 1);
