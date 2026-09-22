@@ -80,13 +80,19 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 
 	JGeometry::TVec3<f32> diff = newPos - mPosition;
 
+	// TODO: retail's length keeps the squared sum live in f1 (the sqrt runs
+	// into a fresh register) and normalize reuses it; our TUtil sqrt works in
+	// place and normalize recomputes it. Tried: a named squared(), sqrt of
+	// squared()/dot(), a returning length helper, std::sqrtf.
 	f32 step = diff.length();
-	if (50.0f < step)
-		step = 50.0f;
+	if (step > 0.0f) {
+		if (50.0f < step)
+			step = 50.0f;
 
-	diff.normalize();
+		diff.normalize();
 
-	mPosition += diff * step;
+		mPosition += diff * step;
+	}
 }
 
 void TMario::keepDistance(const THitActor& actor, f32 param_2)
@@ -96,23 +102,24 @@ void TMario::keepDistance(const THitActor& actor, f32 param_2)
 
 void TMario::checkDescent()
 {
-	// TODO: retail's test of `active` is a *signed* `cmpwi r0, 1` after the
-	// same `clrlwi r0, r29, 24`, so the flag is a byte promoted to int
-	// somewhere MWCC cannot prove is 0/1. Refuted: `!= TRUE` and `u8 active`
-	// (both still `cmplwi`). The frame is also 16 bytes short.
+	// TODO: instruction-exact (`(int)active != 1` gives retail's signed
+	// cmpwi); the frame is 8 short with floorY/ground swapped (retail floorY
+	// 0x28, ground 0x2c). getPosition() in the record ctor is +8; in the
+	// 160.0f test it lands the frame but adds a spilled temp; SMSGetMap(),
+	// swapping the floorY/ground declarations are inert.
 	bool active   = false;
 	f32 descentSp = mHangingParams.mDescentSp.get();
 	if (mHeldObject == nullptr && !onYoshi())
 		active = true;
 
-	if (active != true)
+	if ((int)active != 1)
 		return;
 
 	if (!(mForwardVel < descentSp))
 		return;
 
-	TBGWallCheckRecord rec(mPosition.x, mPosition.y - 10.0f, mPosition.z,
-	                       descentSp, 1, 0);
+	TBGWallCheckRecord rec(getPosition().x, getPosition().y - 10.0f,
+	                       getPosition().z, descentSp, 1, 0);
 	if (!gpMap->isTouchedWallsAndMoveXZ(&rec))
 		return;
 
@@ -248,7 +255,7 @@ int TMario::barProcess()
 
 	JGeometry::TVec3<f32> pos;
 	pos.x = mHolder->mPosition.x;
-	pos.y = mPosition.y;
+	pos.y = getPosition().y;
 	pos.z = mHolder->mPosition.z;
 
 	TBGCheckData* wall1 = checkWallPlane(&pos, 60.0f, 43.0f);
@@ -309,6 +316,9 @@ BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
 	newPos.x = curr.x - 60.0f * wall->getNormal().x;
 	newPos.z = curr.z - 60.0f * wall->getNormal().z;
 
+	// TODO: `ground` sits below `newPos` (0x40 vs 0x48, newPos 0x44 vs 0x3c).
+	// Declaring ground first (here or at the top), a plain Vec newPos and
+	// `mPosition = newPos` are inert or worse.
 	const TBGCheckData* ground;
 	checkGroundPlane(newPos.x, curr.y + 160.0f, newPos.z, &newPos.y, &ground);
 
@@ -490,6 +500,10 @@ void TMario::fallProcess()
 		mVel.y = -75.0f;
 }
 
+// TODO: the std::sqrtf spill sits at 0x2c, retail 0x28, with `next` at 0x30.
+// One raw mPosition read lands the spill but drops `next` to 0x2c; a
+// jumpMax() fork restores the +4 below the spill. Also tried: `next` at the
+// top, a named sum of squares, the ret test folded into the if.
 int TMario::jumpProcess(int param_1)
 {
 	int result = 0;
