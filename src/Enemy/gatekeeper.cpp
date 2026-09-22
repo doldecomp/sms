@@ -260,6 +260,7 @@ void TBGKMtxCalc::calc(u16 param_1)
 	} else if (param_1 == 0) {
 		MtxPtr mtx = mOwner->getMActor()->getModel()->getAnmMtx(param_1);
 		JGeometry::TVec3<f32> diff;
+		Mtx rot;
 		if (!GateKeeperDirector()->isDemoModeNow()) {
 			if (!GateKeeperDirector()->isTalkModeNow()
 			    && (mOwner->getMActor()->checkCurBckFromIndex(0xB)
@@ -286,18 +287,14 @@ void TBGKMtxCalc::calc(u16 param_1)
 				else
 					turn = std::max(-3.0f, delta);
 
-				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
+				turn += cur;
+				f32 newYaw     = turn - mOwner->mRotation.y;
 				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);
 			}
 		}
 
 		f32 s = JMASin(mOwner->unk180);
 		f32 c = JMACos(mOwner->unk180);
-		// TODO: retail's `rot` sits at 0xdc, ours at 0xc8: the low pool
-		// under it is 20 bytes short.  The frame, `diff` and every
-		// conversion buffer are exact, so the residue is one unnamed
-		// pool item inside the MsWrap/MsAngleDiff/std::min expansion.
-		Mtx rot;
 		rot[0][0] = c;
 		rot[0][1] = 0.0f;
 		rot[0][2] = s;
@@ -349,6 +346,13 @@ TBiancoGateKeeper::TBiancoGateKeeper(const char* name)
 	mRumblePower = 0.0f;
 }
 
+// TODO: frame 0x178 vs retail 0x1c8 and `this` reloaded into r28 where
+// retail uses r30 after the keeper ctor.  Every instruction else matches;
+// the slots are the three push_back pools (this body plus the pasted
+// TBGKObstacle/TGKHitObj ctors), the known-open JGadget stride class:
+// the Obstacle group's internal spacing already equals retail's, the
+// HitObj and own groups differ by 4-8 per group.  Naming the searched
+// TIdxGroupObj at any subset of the three sites moves 0 or +8 (cc32).
 void TBiancoGateKeeper::init(TLiveManager* manager)
 {
 	mManager = manager;
