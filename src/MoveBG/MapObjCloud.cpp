@@ -146,6 +146,15 @@ u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 // and operand order, reusing `fVar8` as the literal's home, naming one or both
 // member reads in both orders, raw `mScaling.x`, and `mDamageHeight` first):
 // all are four markers or worse, so the site is exhausted.
+// Batch cc24 (inline-argument lever) re-swept it again: passing unk160 as a
+// void helper's argument puts both loads in retail's registers (300.0f in f2,
+// unk160 in f1) but only in the groupings that multiply unk160 by the scale
+// first (`s * getScaling().x * 300.0f`, `300.0f * (x * s)`: two markers, the
+// two `fmuls`); every spelling that multiplies 300 by the scale first (all 12
+// orders and groupings, the scale or the literal as a parameter too,
+// setDamageParams, a returning level, fVar8 scoped or as a clamp helper's
+// argument) is back at four. Retail's product-first order with those loads
+// has not been reached.
 //
 // The 56 bytes of dead low region this body was missing are five inline
 // expansions, each a member read through one level that binds its result.

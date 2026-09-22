@@ -127,6 +127,18 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 				// helper (MWCC drops an unused default).  Also rejected
 				// earlier: raw origin.y/z (lose the FPRs, 93.2%) and
 				// declaring y before z (99.6%).
+				// Batch cc24: residue (2) is a CSE, not named locals.
+				// Declaring origin as a plain `Vec` (x/y/z stored
+				// separately, `origin = *unk0` as a slice) with raw
+				// origin.y/z in both offset constructors lets MWCC keep
+				// the two components across `bl add` and reproduces
+				// retail's interleaved load order exactly (TVec3's cast
+				// copy constructor blocks the CSE), but y then lands in
+				// f31 and z in f30, the named block drops 4 and the
+				// temporaries stay 0x20 high (95.6%); no component order
+				// or early-declared offset fixes the swap. Pool levels
+				// around the angle, the adds or the origin read, and a
+				// rotate-about-origin helper, all leave (1) in place.
 				f32 upX = mUp.x;
 				mUp.x   = upX * JMASCos(angle) + mUp.z * JMASSin(angle);
 				mUp.z   = -upX * JMASSin(angle) + mUp.z * JMASCos(angle);
