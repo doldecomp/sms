@@ -37,8 +37,7 @@
 struct MapMirrorPlane {
 	MapMirrorPlane(f32 x, f32 y, f32 z, f32 d)
 	{
-		mNormal.set(x, y, z);
-		mD = d;
+		mNormal.set(x, y, z), mD = d;
 	}
 
 	f32 calcReflectScale(const JGeometry::TVec3<f32>& point) const
@@ -93,8 +92,11 @@ void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
 		Mtx44Ptr projMtx = graphics->mProjMtx.mMtx;
-		C_MTXPerspective(projMtx, getUnk80() * gpCamera->mFovy, gpCamera->mAspect,
-		                 gpCamera->mNear, gpCamera->mFar);
+		f32 fovy = gpCamera->mFovy;
+		f32 far = gpCamera->mFar;
+		f32 near = gpCamera->mNear;
+		f32 aspect = gpCamera->mAspect;
+		C_MTXPerspective(projMtx, fovy * getUnk80(), aspect, near, far);
 		MTXCopy(unk30, graphics->mViewMtx);
 		graphics->mNearPlane = gpCamera->mNear;
 		graphics->mFarPlane  = gpCamera->mFar;
