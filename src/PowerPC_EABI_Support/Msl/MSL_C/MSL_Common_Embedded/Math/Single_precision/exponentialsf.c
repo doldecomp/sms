@@ -60,15 +60,6 @@ extern const float __two_to_log2e_m1_tI[178];
 #define V_EXPF_MAX (88.72284f)
 #define V_EXPF_MIN (-87.33655f)
 
-// TODO: 97.2%. Every instruction, the whole Horner chain and the 0x28 frame
-// match; the only residue is which FPRs the loaded constants land in. Retail
-// keeps the four long-lived values high (almost_recip_128 f6,
-// compliment_recip_128 f7, pow2 f8, the table entry f9) and spends f1-f5 on the
-// polynomial coefficients, while we do the opposite (f2/f3/f1/f4 long-lived,
-// f6-f9 on coefficients); the destination-follows-the-addend pattern inside the
-// chain is already identical. Rejected: spelling the two reciprocal constants
-// as literals in the return expression (+0), and writing the chain as
-// `for (i = 6; i >= 0; i--)` (not unrolled, 58.7%).
 float expf(float x)
 {
 	static const float __exp_to_x[] = {
@@ -96,14 +87,22 @@ float expf(float x)
 	x_fract = x - (float)(int_x);
 
 	// Horner expansion
-	estimate = __exp_to_x[7];
-	estimate = x_fract * estimate + __exp_to_x[6];
-	estimate = x_fract * estimate + __exp_to_x[5];
-	estimate = x_fract * estimate + __exp_to_x[4];
-	estimate = x_fract * estimate + __exp_to_x[3];
-	estimate = x_fract * estimate + __exp_to_x[2];
-	estimate = x_fract * estimate + __exp_to_x[1];
-	estimate = x_fract * estimate + __exp_to_x[0];
+	estimate
+	    = __exp_to_x[0]
+	      + x_fract
+	            * (__exp_to_x[1]
+	               + x_fract
+	                     * (__exp_to_x[2]
+	                        + x_fract
+	                              * (__exp_to_x[3]
+	                                 + x_fract
+	                                       * (__exp_to_x[4]
+	                                          + x_fract
+	                                                * (__exp_to_x[5]
+	                                                   + x_fract
+	                                                         * (__exp_to_x[6]
+	                                                            + x_fract
+	                                                                  * __exp_to_x[7]))))));
 	finalVal = x_fract * estimate;
 
 	return __two_to_log2e_m1_tI[int_x_index]
@@ -117,26 +116,29 @@ inline float __log2f(float x)
 	// inferred by presence of this var's mangled name
 	static const float __log2e_m1[2] = { 0.41015625f, 0.03253879088896f };
 
-	float unkConsts[2] = { -0.72135162353515625f, 0.4808933f };
-
+	int bits = *(int*)&x;
 	float frac, r;
 	int exp, index;
-	int hi_bits, lo_bits;
-	int bits = *(int*)&x;
+	int hi_bits;
+	float unkConsts[2] = { -0.72135162353515625f, 0.4808933f };
+	int lo_bits;
+	int mant;
 
+	mant = bits & 0x7FFFFF;
 	exp   = ((unsigned int)bits >> 23) - 0x80;
 	index = ((unsigned int)bits >> 16) & 0x7F;
 
 	if ((unsigned short)bits != 0) {
 		hi_bits = (bits & 0x7F0000) | 0x3F800000;
-		lo_bits = (bits & 0x7FFFFF) | 0x3F800000;
+		lo_bits = mant | 0x3F800000;
 
 		if (bits & 0x8000) {
 			index++;
 			hi_bits += 0x10000;
 		}
 
-		frac = (*(float*)&lo_bits - *(float*)&hi_bits) * __one_over_F[index];
+		frac = *(float*)&lo_bits - *(float*)&hi_bits;
+		frac *= __one_over_F[index];
 
 		r = 1.375f + (float)exp
 		    + (__log2_F[index]
@@ -152,147 +154,71 @@ inline float __log2f(float x)
 	return r;
 }
 
-// fabricated
-inline float __exp2f(float f)
+// No map symbol: a weak-free inline whose shape (the int-to-float split, the
+// range clamps and the `__two_to_x` polynomial) is read off powf's three
+// expansions.
+inline float __exp2f(float t)
 {
-	// assumed presence due to how powf tends to work, also seems like theres
-	// stack padding
-	float p;
+	int n;
+	float f, fp;
 
-	p = __two_to_x[8];
-	p = f * p + __two_to_x[7];
-	p = f * p + __two_to_x[6];
-	p = f * p + __two_to_x[5];
-	p = f * p + __two_to_x[4];
-	p = f * p + __two_to_x[3];
-	p = f * p + __two_to_x[2];
-	p = f * p + __two_to_x[1];
-	p = f * p + __two_to_x[0];
+	n = (int)t;
+	f = t - (float)n;
 
-	float fp = f * p;
-	return 0.75f + (0.25f + fp);
+	if (n > 128)
+		return __INFINITY;
+	if (n < -127)
+		return 0.0f;
+
+	n = n + 127;
+	n = n << 23;
+	fp = f * (__two_to_x[0] + f * (__two_to_x[1] + f * (__two_to_x[2] + f * (__two_to_x[3] + f * (__two_to_x[4] + f * (__two_to_x[5] + f * (__two_to_x[6] + f * (__two_to_x[7] + f * (__two_to_x[8])))))))));
+	return *(float*)&n * (0.75f + (0.25f + fp));
 }
 
 #pragma cplusplus off
 
-// TODO: 96.0%. Residues, in order of size: (1) our frame is 0x18 *larger*
-// (0xa8 vs 0x90) -- three 8-byte slots too many, and `__log2f` is expanded at
-// three sites here, each reserving its `unkConsts[2]`; (2) five instructions
-// are only scheduled differently (e.g. retail hoists `clrlwi r6, r9, 9` from
-// 0x48 to 0x38), reported as 5 missing plus 5 extra; (3) a wide GPR/FPR
-// permutation follows from those. Note the `lis r3, __log2_F@ha` vs
-// `...rodata.0@ha` pair at 0x4 is *not* a difference: the map has `__log2_F` as
-// the first object inside this file's `...rodata.0`, so objdiff is only naming
-// the same address by a different symbol.
+// TODO: 99.9%, every instruction, register and the 0x90 frame match; the
+// residue is one slot pair in each of the three `__log2f` expansions: retail
+// leaves a dead word between `unkConsts` and `lo_bits` (lo at +0x14 above the
+// block's `x`, ours +0x10, dead word on top). `fp` in `__exp2f` is the kind of
+// named float that reserves such a word (declaring `int n` before it put `n`
+// at retail's slot), but a named float intermediate in `__log2f` (`1.375f +
+// exp`, `frac * frac`, the polynomial tail, the whole sum) reserves 8 in the
+// first two expansions and grows the frame 0x10; every order of the register
+// locals around hi/consts/lo and dead locals are inert.
 float powf(float x, float y)
 {
-	// TODO: work on improving acc, im lazy right now so this is half assed
-	int ix, iy, n;
-	float logx, t, f, r;
-	int cx, cy;
+	int iy;
 
 	/* x > 0 */
 	if (x > 0.0f) {
-		logx = __log2f(x);
-		t    = y * logx;
-
-		n = (int)t;
-		f = t - (float)n;
-
-		if (n > 128)
-			return __INFINITY;
-		if (n < -127)
-			return 0.0f;
-
-		n = n + 127;
-		n = n << 23;
-		return *(float*)&n * __exp2f(f);
+		return __exp2f(y * __log2f(x));
 	}
 
 	/* x < 0 */
 	if (x < 0.0f) {
 		iy = (int)y;
-		if ((y - (float)iy) != 0.0f)
+		if (y - (float)iy)
 			return __NAN;
-		if (((int)y % 2) != 0) {
-			logx = __log2f(-x);
-			t    = y * logx;
-
-			n = (int)t;
-			f = t - (float)n;
-
-			if (n > 128)
-				r = __INFINITY;
-			else if (n < -127)
-				r = 0.0f;
-			else {
-				n = n + 127;
-				n = n << 23;
-				r = *(float*)&n * __exp2f(f);
-			}
-			return -r;
+		if ((iy % 2) != 0) {
+			return -__exp2f(y * __log2f(-x));
 		}
 
-		logx = __log2f(-x);
-		t    = y * logx;
-
-		n = (int)t;
-		f = t - (float)n;
-
-		if (n > 128)
-			return __INFINITY;
-		if (n < -127)
-			return 0.0f;
-
-		n = n + 127;
-		n = n << 23;
-		return *(float*)&n * __exp2f(f);
+		return __exp2f(y * __log2f(-x));
 	}
 
-	/* x classification */
-	{
-		float xc = x;
-		ix       = *(int*)&xc & 0x7F800000;
-		switch (ix) {
-		case 0x7F800000:
-			cx = (*(int*)&xc & 0x7FFFFF) ? 1 /* NaN */ : 2 /* inf */;
-			break;
-		case 0x0:
-			cx = (*(int*)&xc & 0x7FFFFF) ? 5 /* denorm */ : 3 /* zero */;
-			break;
-		default:
-			cx = 4; /* normal */
-			break;
-		}
-	}
-	if (cx == 1)
+	if (fpclassify(x) == FP_NAN)
 		return x; /* NaN */
 
-	/* y classification */
-	{
-		float yc = y;
-		iy       = *(int*)&yc & 0x7F800000;
-		switch (iy) {
-		case 0x7F800000:
-			cy = (*(int*)&yc & 0x7FFFFF) ? 1 /* NaN */ : 2 /* inf */;
-			break;
-		case 0x0:
-			cy = (*(int*)&yc & 0x7FFFFF) ? 5 /* denorm */ : 3 /* zero */;
-			break;
-		default:
-			cy = 4; /* normal */
-			break;
-		}
-	}
-
-	switch (cy) {
-	case 3:
+	switch (fpclassify(y)) {
+	case FP_ZERO:
 		return 1.0f;
-	case 1:
-	case 2:
+	case FP_NAN:
+	case FP_INFINITE:
 		return __NAN;
-	case 4:
-	case 5:
+	case FP_NORMAL:
+	case FP_SUBNORMAL:
 		if (y < 0.0f) {
 			if (x == -0.0f)
 				return -__INFINITY;
