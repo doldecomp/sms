@@ -183,28 +183,10 @@ void TPauseMenu2::loadAfter()
 	mGamePad = gpMarDirector->unk18[0];
 }
 
-// TODO (structural, blocks linking): the map has appearWindow and
-// disappearWindow as **weak** and still emitted out of line, with perform()
-// reaching both through a `bl`. Everything else in this TU is at 99.3% or
-// better, so this binding is the only thing keeping PauseMenu2 unlinkable.
-// Measured and rejected: `inline` on these two definitions does give them weak
-// linkage and fixes both the order and the binding check, but MWCC then
-// expands both bodies into perform() -- perform 99.28 -> 18.92, the unit
-// 99.40 -> 52.06, and the two symbols disappear entirely (2,020 bytes of
-// callee inlined, perform 0x1084 against retail's 0x940). Adding
-// `#pragma dont_inline on/off` around them changes nothing: with the inline
-// keyword present MWCC expands them anyway.
-// Also measured (batch 133): `__declspec(weak)` on these two definitions does
-// reproduce the map exactly -- weak linkage, both still emitted out of line at
-// their map sizes, perform() still reaching them with a `bl`, and
-// validate-symbol-order goes to PASS. It is rejected as a crutch: it is an
-// MWCC linkage attribute this codebase only uses in MSL/SDK stubs, and it buys
-// nothing yet because eight functions here are still short of 100%. What it
-// proves is that the retail linkage is reachable without the inline keyword, so
-// the remaining candidate is the call site: an `inline` body is expanded without
-// limit at depth 1 but refused deeper, and retail's perform() may reach both
-// through one more inlined level than ours does.
-void TPauseMenu2::appearWindow()
+// appearWindow and disappearWindow are weak but out of line in the map:
+// `inline` definitions reached from perform() through one more inline level
+// (depth 2, budget 9) are refused there and emitted as weak copies.
+inline void TPauseMenu2::appearWindow()
 {
 	if (mFadeAnim <= 45.0f) {
 		for (s32 i = 0; i < 5; i++) {
@@ -277,7 +259,7 @@ void TPauseMenu2::appearWindow()
 	// >= 46.0f compare fix. Same +0x20 class as load.
 }
 
-void TPauseMenu2::disappearWindow()
+inline void TPauseMenu2::disappearWindow()
 {
 	// Delete emitter and reset selected item back to its original size.
 	if (mFadeAnim == 0.0f && mEmitter != 0) {
@@ -305,8 +287,8 @@ void TPauseMenu2::disappearWindow()
 		for (s32 i = 0; i < 5; i++) {
 			JUTRect rect = mPauseLetters[i]->getBounds();
 
-			rect.add(0.025f * -rect.y1 + 0.01f * rect.getWidth(),
-			         0.025f * -rect.x1 + 0.01f * rect.getHeight());
+			rect.add(0.025f * -rect.x1 + 0.01f * rect.getWidth(),
+			         0.025f * -rect.y1 + 0.01f * rect.getHeight());
 
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 
@@ -316,8 +298,8 @@ void TPauseMenu2::disappearWindow()
 		// ... and now shrink the menu items in the same manner.
 		for (s32 i = 0; i < mNumItems; i++) {
 			JUTRect rect = mMenuItems[i]->getBounds();
-			rect.add(0.025f * -rect.y1 + 0.01f * rect.getWidth(),
-			         0.025f * -rect.x1 + 0.01f * rect.getHeight());
+			rect.add(0.025f * -rect.x1 + 0.01f * rect.getWidth(),
+			         0.025f * -rect.y1 + 0.01f * rect.getHeight());
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 			mMenuItems[i]->setBounds(rect);
 		}
@@ -333,6 +315,10 @@ void TPauseMenu2::disappearWindow()
 	// TODO: frame +8 (0x100 vs 0xf8). A one-site bg binder lands frame-exact
 	// but drops retail's `addi r5,r3,0xcc` alpha address bind and fuzzy score.
 }
+
+// fabricated: the level that keeps the inline window bodies out of perform().
+static inline void PauseAppear(TPauseMenu2* m) { m->appearWindow(); }
+static inline void PauseDisappear(TPauseMenu2* m) { m->disappearWindow(); }
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -373,7 +359,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (cue & CUE_MOVE) {
 				switch (mState) {
 				case MENU_APPEARING:
-					appearWindow();
+					PauseAppear(this);
 					break;
 				case MENU_OPEN: {
 					s32 curSelectedItem = mSelectedItem;
@@ -516,7 +502,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 					mBounceAnim += 0.5f;
 				} break;
 				case MENU_DISAPPEARING:
-					disappearWindow();
+					PauseDisappear(this);
 					break;
 				default:
 					break;
