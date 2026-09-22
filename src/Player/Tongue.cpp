@@ -120,17 +120,12 @@ void TYoshiTongue::rest(const JGeometry::TVec3<f32>& a,
 {
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// TYoshiTongue::canGo (batch 127).
-static inline TMap* TongueGetMap()
-{
-	TMap* map = gpMap;
-	return map;
-}
-
 // Retail calls canGo out of line from movement, so the body is at least 15
 // statements; the named `along` and `floorY` are the two that reach it
-// (instruction-neutral) and replace the old `#pragma dont_inline`.
+// (instruction-neutral) and replace the old `#pragma dont_inline`; they also
+// take the 8 bytes the old gpMap binder supplied. TODO: the `toTip` sub
+// temporary sits 0xc high (the `a = b - c` pool class) and retail tests the
+// wall hit with `ble` where we emit `beq`.
 BOOL TYoshiTongue::canGo()
 {
 	JGeometry::TVec3<f32> toTip = mTipPos - mHeadPos;
@@ -139,7 +134,7 @@ BOOL TYoshiTongue::canGo()
 	if (along < 0.0f)
 		return false;
 
-	if (TongueGetMap()->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
+	if (gpMap->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
 	                                     &mTipPos.z, 50.0f))
 		return false;
 
