@@ -224,10 +224,10 @@ public:
 	/* 0x16C */ TDirectionCalc mBodyDirection;
 	/* 0x170 */ f32 unk170;
 	/* 0x174 */ u32 unk174;
-	/* 0x178 */ THitActor* mFlames[10];
-	/* 0x1A0 */ THitActor* mHands[2];
-	/* 0x1A8 */ THitActor* mHead;
-	/* 0x1AC */ THitActor* mBody;
+	/* 0x178 */ TLimitKoopaFlame* mFlames[10];
+	/* 0x1A0 */ TLimitKoopaHand* mHands[2];
+	/* 0x1A8 */ TLimitKoopaHead* mHead;
+	/* 0x1AC */ TLimitKoopaBody* mBody;
 	/* 0x1B0 */ int mHeadJntIndex;
 	/* 0x1B4 */ int mNeckJntIndex;
 	/* 0x1B8 */ int mAgoJntIndex;

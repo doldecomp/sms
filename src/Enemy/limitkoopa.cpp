@@ -204,11 +204,28 @@ void TLimitKoopaParts::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-// TODO: UNUSED (0x84), body not reconstructed.
-void TLimitKoopaParts::set(const JGeometry::TVec3<f32>&, f32, f32) { }
+// UNUSED (0x84).
+void TLimitKoopaParts::set(const JGeometry::TVec3<f32>& position, f32 radius,
+                           f32 height)
+{
+	mPosition.set(position);
+	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	offHitFlag(HIT_FLAG_NO_COLLISION);
+	mAttackRadius = radius;
+	mAttackHeight = height;
+	mDamageRadius = radius;
+	mDamageHeight = height;
+	calcEntryRadius();
+}
 
-// TODO: UNUSED (0x28), body not reconstructed.
-void TLimitKoopaParts::remove() { }
+// UNUSED (0x28).
+void TLimitKoopaParts::remove()
+{
+	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	onHitFlag(HIT_FLAG_NO_COLLISION);
+}
 
 TLimitKoopaFlame::TLimitKoopaFlame(TLimitKoopa* owner)
     : TLimitKoopaParts("クッパの吐く炎", 0x08000030, owner, 100.0f)
@@ -607,19 +624,21 @@ void TLimitKoopa::breathFlame()
 	LimitKoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_A, scale);
 }
 
-// TODO: 69.2%. The flame loop's matrix reads and the "no flames" branch's
-// unrolled flag stores are close but the parameter fetch order inside the
-// loop is not established yet.
+// TODO: 92.2%. The flame and head boxes go through TLimitKoopaParts::set and
+// remove (both at their map sizes now) and the flame offset is a
+// `(along, 0, 0)` vector through the head matrix. Left: the frame is 0x130
+// against 0x1a0 (0x70 of pool below the conversion buffer), retail keeps the
+// flame radius/height and the matrix row loads in a different FPR order and
+// multiplies `0.8f * (...)` before `* spread` as two products, and the head
+// radius is loaded after the three position reads.
 void TLimitKoopa::setUpHitActors()
 {
 	MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
 
-	if (getAnmIndex() == KOOPA_ANM_FIRE_LOOP
-	    || (getAnmIndex() == KOOPA_ANM_FIRE_START
-	        && getAnmFrame() >= 127.0f)) {
+	if (isBreathing()) {
 		f32 spread = 1.0f;
 		if (getAnmIndex() == KOOPA_ANM_FIRE_START) {
-					J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
+			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			spread = (ctrl->getFrame() - 125.0f)
 			         / ((f32)ctrl->getEnd() - 125.0f);
 		}
@@ -628,51 +647,28 @@ void TLimitKoopa::setUpHitActors()
 			TLimitKoopaParams* params = getParam();
 			f32 height                = params->flameHeight.get();
 			f32 radius                = params->flameRadius.get();
-			THitActor* flame          = mFlames[i];
 			f32 along = 0.8f * ((2.0f + (f32)(i * 2)) * radius) * spread;
-			if (height == 0.0f)
+			JGeometry::TVec3<f32> offset(along, 0.0f, 0.0f);
+			JGeometry::TVec3<f32> pos;
+			pos.x = headMtx[0][0] * offset.x + headMtx[0][1] * offset.y
+			        + headMtx[0][2] * offset.z + headMtx[0][3];
+			pos.y = mPosition.y;
+			pos.z = headMtx[2][0] * offset.x + headMtx[2][1] * offset.y
+			        + headMtx[2][2] * offset.z + headMtx[2][3];
+			if (height <= 0.0f)
 				height = 2.0f * radius;
-
-			flame->mPosition.x = headMtx[0][3]
-			                     + (0.0f * headMtx[0][2]
-			                        + (along * headMtx[0][0]
-			                           + 0.0f * headMtx[0][1]));
-			flame->mPosition.y = mPosition.y;
-			flame->mPosition.z = headMtx[2][3]
-			                     + (0.0f * headMtx[2][2]
-			                        + (along * headMtx[2][0]
-			                           + 0.0f * headMtx[2][1]));
-			flame->offHitFlag(HIT_FLAG_CANNOT_ATTACK);
-			flame->offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-			flame->offHitFlag(HIT_FLAG_NO_COLLISION);
-			flame->mAttackRadius = radius;
-			flame->mAttackHeight = height;
-			flame->mDamageRadius = radius;
-			flame->mDamageHeight = height;
-			flame->calcEntryRadius();
+			mFlames[i]->set(pos, radius, height);
 		}
 	} else {
-		for (int i = 0; i < 10; i++) {
-			mFlames[i]->onHitFlag(HIT_FLAG_CANNOT_ATTACK);
-			mFlames[i]->onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-			mFlames[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
-		}
+		for (int i = 0; i < 10; i++)
+			mFlames[i]->remove();
 	}
 
-	MtxPtr agoMtx    = getMActor()->getModel()->getAnmMtx(mAgoJntIndex);
-	THitActor* head  = mHead;
-	f32 headRadius   = getParam()->headRadius.get();
-	head->mPosition.x = agoMtx[0][3];
-	head->mPosition.y = agoMtx[1][3] - 200.0f;
-	head->mPosition.z = agoMtx[2][3];
-	head->offHitFlag(HIT_FLAG_CANNOT_ATTACK);
-	head->offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-	head->offHitFlag(HIT_FLAG_NO_COLLISION);
-	head->mAttackRadius = headRadius;
-	head->mAttackHeight = 2.0f * headRadius;
-	head->mDamageRadius = headRadius;
-	head->mDamageHeight = 2.0f * headRadius;
-	head->calcEntryRadius();
+	MtxPtr agoMtx  = getMActor()->getModel()->getAnmMtx(mAgoJntIndex);
+	f32 headRadius = getParam()->headRadius.get();
+	JGeometry::TVec3<f32> headPos(agoMtx[0][3], agoMtx[1][3] - 200.0f,
+	                              agoMtx[2][3]);
+	mHead->set(headPos, headRadius, 2.0f * headRadius);
 }
 
 // TODO: UNUSED (0x70), body not reconstructed.
