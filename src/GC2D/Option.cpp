@@ -533,11 +533,11 @@ void TOptionSubtitleUnit::update()
 void TOptionSubtitleUnit::toggle()
 {
 	mSelectionText->toggle();
-	// TODO: the ROM discards this read. Whatever applied the new value here
+	// TODO: the ROM discards this value. Whatever applied the new value here
 	// was removed, and only the dead `bl ArrayWrapper<Ul>::begin()` inside
 	// TOptionControl::checkInput's copy is left of it. adjust() cannot be
 	// where it sat: the map gives adjust() four bytes, i.e. an empty body.
-	getValue();
+	SubtitleType value = getValue();
 	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0, nullptr, 0);
 }
 
