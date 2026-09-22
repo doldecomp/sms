@@ -48,6 +48,7 @@ public:
 	// TColor::set) show these case bodies were separate inline functions.
 	void selectPrev();
 	void selectNext();
+	void animateArrows();
 
 public:
 	enum SelectMenuState {

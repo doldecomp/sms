@@ -38,34 +38,6 @@
 // four InfectiousStrings mtx-calc names, and its .data has no MtxCalcTypeName.
 #include <System/DummyStrings.hpp>
 
-// fabricated and not matching
-inline void bzero(void* pDst, u32 len)
-{
-	u8* dst           = (u8*)pDst;
-	u32 alignedBlocks = len / 8;
-	if (alignedBlocks > 0) {
-		for (; alignedBlocks > 0; alignedBlocks--) {
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-		}
-
-		len = len % 8;
-		if (len == 0) {
-			return;
-		}
-	}
-
-	for (; len != 0; len--) {
-		*dst++ = 0;
-	}
-}
-
 TSelectGrad::TSelectGrad(const char* pName)
     : JDrama::TViewObj(pName)
 {
@@ -116,7 +88,9 @@ void TSelectGrad::setStageColor(u8 stage)
 // below the Mtx instead of retail's 0x50/0x54 above it. Named GXColor,
 // midA reorder, and ambScratch declarations move nothing useful on the
 // colour slot. midB/midG/midR declaration order (assign R/G/B) fixed the
-// r28/r30 mid-channel swap.
+// r28/r30 mid-channel swap. Moving the Mtx into a TU-local static inline
+// puts the colour temporary above it (0x4c/0x50 vs retail 0x54/0x50, Mtx
+// 0x1c vs 0x20) at no score change, so it is not kept.
 void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x2) {
@@ -295,6 +269,9 @@ TSelectMenu::TSelectMenu(const char* pName)
 {
 }
 
+// TODO: retail copies each `new JUTTexture(...)` result for the two sc_mark
+// textures into a second register (`addi r26, r25, 0` for storeTIMG's this),
+// ours reuses r25; plus a 0x20 frame gap.
 void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
                            TSelectShineManager* pShineMgr,
                            TSelectDir* pSelectDir)
@@ -502,11 +479,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		}
 		mSelectedShine = lastShineIdx;
 
-		if (mNumUnlockedShines < 8) {
-			// TODO: I tried matching this as best as I could but the compiler
-			// keeps unrolling the loops and I'm running out of ideas...
-			bzero(mShineUnlockStates + mNumUnlockedShines,
-			      8 - mNumUnlockedShines);
+		for (s32 i = mNumUnlockedShines; i < 8; i++) {
+			mShineUnlockStates[i] = 0;
 		}
 
 		// Show arrows if we have more than one shine unlocked.
@@ -809,6 +783,72 @@ static inline void fadeLetterBox(TExPane*& pane, bool& updated)
 	                     blackColor(var2));
 }
 
+inline void TSelectMenu::animateArrows()
+{
+	if (mNumUnlockedShines > 1) {
+		if (mArrowL->isVisible()) {
+			s32 x = mArrowAnimPos * 0.5f * SMSGetAnmFrameRate();
+			mArrowL->move(mArrowLBounds.x1 - x, mArrowLBounds.y1);
+		}
+
+		if (mArrowR->isVisible()) {
+			s32 x = mArrowAnimPos * 0.5f * SMSGetAnmFrameRate();
+			mArrowR->move(mArrowRBounds.x1 + x, mArrowRBounds.y1);
+		}
+
+		if (mArrowAnimDir) {
+			mArrowAnimPos++;
+			if (mArrowAnimPos > 10) {
+				mArrowAnimDir = false;
+			}
+		} else {
+			mArrowAnimPos--;
+			if (mArrowAnimPos == 0) {
+				mArrowAnimDir = true;
+			}
+		}
+
+		int alpha = mArrowL->getAlpha();
+		if (mSelectedShine == 0) {
+			if (alpha != 0) {
+				mArrowL->setAlpha(fadeOutArrow(mArrowL, alpha));
+			}
+		} else {
+			if (alpha < mMarkAlpha) {
+				s32 next = alpha + 4;
+				if (next > mMarkAlpha) {
+					next = mMarkAlpha;
+				}
+				mArrowL->setAlpha(next);
+			}
+		}
+
+		alpha = mArrowR->getAlpha();
+		if (getNextIndex() == -1) {
+			if (alpha != 0) {
+				alpha -= 4;
+				if (alpha < 0) {
+					mArrowR->hide();
+					alpha = 0;
+				}
+				mArrowR->setAlpha(alpha);
+			}
+		} else {
+			u8 alphaRef = mMarkAlpha;
+			if (alpha < alphaRef) {
+				alpha = alpha + 4;
+				if (alpha > alphaRef) {
+					alpha = alphaRef;
+				}
+				mArrowR->setAlpha(alpha);
+			}
+		}
+	}
+}
+
+// TODO: instruction-exact apart from stack offsets: retail's frame is 0xb8
+// larger, i.e. more of the case bodies sat in inline helpers with their own
+// locals than are recovered here.
 void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x1) {
@@ -1007,65 +1047,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 			// fall through
 		case MENU_ANIM_LOOP: {
-			if (mNumUnlockedShines > 1) {
-				if (mArrowL->isVisible()) {
-					s32 x = mArrowAnimPos * 0.5f * SMSGetAnmFrameRate();
-					mArrowL->move(mArrowLBounds.x1 - x, mArrowLBounds.y1);
-				}
+			animateArrows();
 
-				if (mArrowR->isVisible()) {
-					s32 x = mArrowAnimPos * 0.5f * SMSGetAnmFrameRate();
-					mArrowR->move(mArrowRBounds.x1 + x, mArrowRBounds.y1);
-				}
-
-				if (mArrowAnimDir) {
-					mArrowAnimPos++;
-					if (mArrowAnimPos > 10) {
-						mArrowAnimDir = false;
-					}
-				} else {
-					mArrowAnimPos--;
-					if (mArrowAnimPos == 0) {
-						mArrowAnimDir = true;
-					}
-				}
-
-				int alpha = mArrowL->getAlpha();
-				if (mSelectedShine == 0) {
-					if (alpha != 0) {
-						mArrowL->setAlpha(fadeOutArrow(mArrowL, alpha));
-					}
-				} else {
-					if (alpha < mMarkAlpha) {
-						s32 next = alpha + 4;
-						if (next > mMarkAlpha) {
-							next = mMarkAlpha;
-						}
-						mArrowL->setAlpha(next);
-					}
-				}
-
-				alpha = mArrowR->getAlpha();
-				if (getNextIndex() == -1) {
-					if (alpha != 0) {
-						alpha -= 4;
-						if (alpha < 0) {
-							mArrowR->hide();
-							alpha = 0;
-						}
-						mArrowR->setAlpha(alpha);
-					}
-				} else {
-					u8 alphaRef = mMarkAlpha;
-					if (alpha < alphaRef) {
-						alpha = alpha + 4;
-						if (alpha > alphaRef) {
-							alpha = alphaRef;
-						}
-						mArrowR->setAlpha(alpha);
-					}
-				}
-			}
 			if (mMenuState != MENU_INPUT_LOOP) {
 
 				bool updated = true;
@@ -1150,7 +1133,6 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 	}
 }
 
-#pragma dont_inline on
 s8 TSelectMenu::getNextIndex()
 {
 	s8 res    = -1;
@@ -1168,9 +1150,7 @@ s8 TSelectMenu::getNextIndex()
 	}
 	return res;
 }
-#pragma dont_inline off
 
-#pragma dont_inline on
 s8 TSelectMenu::getPrevIndex()
 {
 	s8 res    = -1;
@@ -1188,7 +1168,6 @@ s8 TSelectMenu::getPrevIndex()
 	}
 	return res;
 }
-#pragma dont_inline off
 
 void TSelectMenu::startOpenWindow()
 {
