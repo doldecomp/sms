@@ -112,35 +112,32 @@ void TCardManager::TCriteria::setEmpty()
 	}
 }
 
-// Pragma residue (sweep 360): protects TCardManager::copyTo (99.8 -> 64.6)
-// and TCardManager::readBlock_ (99.1 -> 81.8).
-#pragma dont_inline on
+// Retail calls this from copyTo and readBlock_: the single-exit result chain
+// (one assignment and one `else` per arm) is what takes the body over the
+// depth-1 budget; early returns cost the same bytes but three statements less.
 s32 TCardManager::decideUseSector(TCardManager::TCriteria* criteria)
 {
-	if (criteria[0].getState() == TCriteria::STATE_EMPTY)
-		return CARD_RESULT_WRONGDEVICE;
-
-	if (criteria[0].getState() == TCriteria::STATE_CHECKSUM_BAD) {
+	// TODO: retail keeps the last result in r0 and joins with a single
+	// `mr r3, r0`, so `result` did not get the return register there.
+	// Exhausted: early returns, an if/else, a ternary, and declaring the
+	// result before the early returns -- all emit `li r3, 0/1` into r3.
+	s32 result;
+	if (criteria[0].getState() == TCriteria::STATE_EMPTY) {
+		result = CARD_RESULT_WRONGDEVICE;
+	} else if (criteria[0].getState() == TCriteria::STATE_CHECKSUM_BAD) {
 		if (criteria[1].getState() == TCriteria::STATE_CHECKSUM_BAD)
-			return CARD_RESULT_BUSY;
-		return 1;
+			result = CARD_RESULT_BUSY;
+		else
+			result = 1;
+	} else if (criteria[1].getState() == TCriteria::STATE_CHECKSUM_BAD) {
+		result = 0;
+	} else if (criteria[0].getWriteCount() >= criteria[1].getWriteCount()) {
+		result = 0;
+	} else {
+		result = 1;
 	}
-
-	if (criteria[1].getState() == TCriteria::STATE_CHECKSUM_BAD)
-		return 0;
-
-	// TODO: retail keeps the result in r0 and joins with a single `mr r3, r0`,
-	// so `idx` did not get the return register. Exhausted: the if/else below,
-	// a ternary, and declaring `idx` at the top of the function before the
-	// early returns -- all three emit `li r3, 0/1` straight into r3.
-	s32 idx;
-	if (criteria[0].getWriteCount() >= criteria[1].getWriteCount())
-		idx = 0;
-	else
-		idx = 1;
-	return idx;
+	return result;
 }
-#pragma dont_inline off
 
 // TODO: what is this?
 s32 TCardManager::getLoadIndex(TCardManager::TCriteria* criteria) { }
