@@ -87,6 +87,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The remaining wiper data mismatch is `Hx_Logo`'s nine-entry jump table; the whole TU was audited, so do not reassign it without a new control-flow lead.
 - Landed the `NPC/NpcBase` header round: moving `getAnmOffDist_` out of class restored its map-required weak 0x104 body and call chain, raising `perform` **63.25 -> 71.38%** and the unit **89.05 -> 93.68%**.
 - Landed further medium whole-file gains in `MoveBG/ModelGate` (`loadAfter` **98.70 -> 99.64%**), `Animal/AnimalBase` (`execWalk` **79.12 -> 81.55%**), and `System/MSoundMainSide` (`MSStageDistFadeMonte::proc` **98.55 -> 98.87%**).
+- Source-linked the fully matching data-only `JSystem/JAudio/JASystem/JASDriverTables` unit after a manifest census found it omitted.
+  JSystem linked **181 -> 182**, All linked **498 -> 499**; a follow-up census found no other fully matching unmanifested units.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
