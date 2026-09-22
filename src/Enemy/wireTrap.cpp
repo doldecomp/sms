@@ -292,6 +292,9 @@ void TWireTrap::behaveHitWireTrap(
 	mSpine->pushNerve(&TNerveWireTrapWait::theNerve());
 }
 
+// TODO: retail saves one more callee-saved GPR (r30) and its frame is 8
+// smaller; the quaternion/matrix math is register-renumbered throughout.
+// Not attempted in cc50.
 void TWireTrap::calcRootMatrix()
 {
 	if (getHolder()) {
@@ -700,6 +703,10 @@ DEFINE_NERVE(TNerveWireTrapOnewayMoveEnd, TLiveActor)
 	return FALSE;
 }
 
+// TODO: frame 0x18 short and retail saves spine/this with `addi` (not `mr`).
+// Tried (cc50): SMS_GetMarioPos(), getWireDir()/WireTrapWireDir() for the
+// binder direction, getPosition(), a raw collide-timer test; the best (99.1)
+// still leaves 0x10.
 DEFINE_NERVE(TNerveWireTrapSearch, TLiveActor)
 {
 	TWireTrap* trap = (TWireTrap*)spine->getBody();
