@@ -100,6 +100,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The predicate is exact, `moveHead` rose **85.70 -> 91.80%**, and the unit rose **93.75 -> 96.56%**.
 - Landed `Enemy/wireTrap`: reconstructed collision reactions and tightened the root-matrix and three movement-nerve shapes.
   `checkHitActors` rose **32.49 -> 64.01%**, the unit rose **88.84 -> 93.57%**, and its remaining blockers are recorded frame/inlining residues.
+- Landed `Enemy/BathtubKiller`: reconstructed the avoidance deltas in `isAboided`, raising that function **86.64 -> 98.73%** and the unit **90.65 -> 91.18%**.
+  The other large weak bodies were audited; their dominant remaining blocker is the verified nerve-singleton inlining artifact.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
