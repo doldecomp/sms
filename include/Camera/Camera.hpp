@@ -356,6 +356,8 @@ private:
 	bool isChangeToCancanCamera_() const;
 	bool isChangeToParallelCameraByMoveBG_() const;
 	bool isChangeToParallelCameraCByMoveBG_() const;
+	bool isExMapCamera_() const;
+	void calcNewCameraMode_(int);
 	void execCameraModeChangeProc_(int);
 	void calcInHouseNoSub_();
 	void calcInHouseNo_(bool);

@@ -520,7 +520,7 @@ void CPolarSubCamera::doLButtonCameraOn_()
 }
 
 // Pragma residue (sweep 360): protects the only caller,
-// CPolarSubCamera::execCameraModeChangeProc_ (98.79 -> 78.2 without it).
+// CPolarSubCamera::execCameraModeChangeProc_ (99.99 -> 82.5 without it).
 #pragma dont_inline on
 void CPolarSubCamera::doLButtonCameraOff_(bool param_1)
 {
@@ -538,6 +538,8 @@ void CPolarSubCamera::doLButtonCameraOff_(bool param_1)
 	}
 }
 
+#pragma dont_inline off
+
 bool CPolarSubCamera::isChangeToBossGesoCamera_() const
 {
 	bool result     = false;
@@ -551,7 +553,6 @@ bool CPolarSubCamera::isChangeToBossGesoCamera_() const
 	}
 	return result;
 }
-#pragma dont_inline off
 
 bool CPolarSubCamera::isChangeToCancanCamera_() const
 {
@@ -609,67 +610,35 @@ bool CPolarSubCamera::isChangeToParallelCameraCByMoveBG_() const
 	return result;
 }
 
-// TODO: inlining is NOT working out in a bunch of places in this function,
-// hence the hacks above...
-// TODO: 80 bytes of frame short (0xb0 against retail's 0x100) with a
-// four-register callee-saved rotation (retail r26/r27/r28/r30 where we have
-// r28/r27/r30/r28) and one missing `mr r26, r27`. Not investigated in closure
-// batch 126.
-void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
+// Fabricated name; the level is measured. Its three expansions in
+// execCameraModeChangeProc_ put the flag in the same register as the mode
+// being chosen, which only a returned bool gives.
+inline bool CPolarSubCamera::isExMapCamera_() const
 {
-	if (SMS_isMultiPlayerMap()) {
-		changeCamMode_(CAMERA_MODE_MULTI_PLAYER);
-		return;
-	}
-
-	if (SMS_GetMarioStatus() == MARIO_STATUS_TOROCCO) {
-		changeCamMode_(CAMERA_MODE_JET_COASTER);
-		return;
-	}
-
-	if (isFixOrDefiniteCameraSpecifyMode(param_1)) {
-		if (unk120->checkFrameMeaning(0x4000))
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0,
-			                                   nullptr, 0);
-		return;
-	}
-
-	if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE)
-		execNoticeOnOffProc_(NOTICE_MODE_UNK1);
-
-	int prevMode = mMode;
-
-	if (gpMarioOriginal->isSleeping() || SMS_CheckMarioFlag(2)
-	    || (SMS_GetMarioStatus() & MARIO_STATUS_FLAG_UNK10000)
-	    || gpCameraMario->isMarioRocketing()
-	    || gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING)
-	    || gpCameraMario->isMarioClimb(SMS_GetMarioStatus())) {
-		if (isLButtonCameraSpecifyMode(mMode))
-			doLButtonCameraOff_(true);
-		if (unk120->checkFrameMeaning(0x8000))
-			execFrontRotate_();
-		if (unk120->checkFrameMeaning(0x4000))
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0,
-			                                   nullptr, 0);
-	} else {
-		if (isLButtonCameraSpecifyMode(mMode)) {
-			if (SMS_GetMarioStatus() & MARIO_STATUS_FLAG_UNK20000) {
-				doLButtonCameraOff_(true);
-			} else if (!isLButtonCameraInbetween()
-			           && unk120->checkFrameMeaning(0x14000) && unk282 == 0) {
-				doLButtonCameraOff_(false);
-			}
-		} else if (isNormalCameraSpecifyMode(mMode)
-		           || isTowerCameraSpecifyMode(mMode)) {
-			execLButtonCameraOnProc_();
+	bool exMap = false;
+	if (SMS_isExMap()) {
+		switch (gpMarDirector->getCurrentMap()) {
+		case 0x1D:
+		case 0x1E:
+			break;
+		default:
+			exMap = true;
+			break;
 		}
 	}
+	return exMap;
+}
 
-	if (prevMode != mMode)
-		return;
-	if (isLButtonCameraSpecifyMode(mMode))
-		return;
-
+// Fabricated name; the level is measured. The ROM keeps the chosen mode in
+// its own register (`mr r26, r27` at each `newMode = param_1`) rather than
+// coalescing it with the parameter, and puts isChangeToCancanCamera_ and
+// isChangeToParallelCameraCByMoveBG_ one level deeper than
+// execCameraModeChangeProc_'s own body, where they expand while
+// isChangeToBossGesoCamera_ stays a call. The changeCamMode_ belongs inside:
+// returning the mode instead is refused as a call argument and costs a final
+// `mr` as a named local.
+inline void CPolarSubCamera::calcNewCameraMode_(int param_1)
+{
 	u32 status     = SMS_GetMarioStatus();
 	u32 prevStatus = gpMarioOriginal->getPreviousStatus();
 	int currentMap = gpMarDirector->getCurrentMap();
@@ -752,12 +721,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 			} else if (isChangeToBossGesoCamera_()) {
 				newMode = CAMERA_MODE_BOSS_GESO;
 			} else {
-				bool isCancan = false;
-				if (gpMarioOriginal->getHeldObject() != nullptr
-				    && gpMarioOriginal->getHeldObject()->getActorType()
-				           == 0x10000028)
-					isCancan = true;
-				if (isCancan) {
+				if (isChangeToCancanCamera_()) {
 					newMode = CAMERA_MODE_CANCAN;
 				} else {
 					bool onPlatform_2C9 = false;
@@ -771,28 +735,13 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 					} else if (isChangeToParallelCameraByMoveBG_()) {
 						newMode = CAMERA_MODE_PARALLEL;
 					} else {
-						bool onPlatform_12F = false;
-						if (SMS_GetGroundActor(SMS_GetMarioGrPlane(),
-						                       0x4000012F))
-							onPlatform_12F = true;
-						if (onPlatform_12F) {
+						if (isChangeToParallelCameraCByMoveBG_()) {
 							newMode = CAMERA_MODE_PARALLEL_C;
 						} else if (status == MARIO_STATUS_HIP_DROP) {
 							if (isOverHipAttackSpecifyMode(param_1)) {
 								newMode = param_1;
 							} else {
-								bool exMap = false;
-								if (SMS_isExMap()) {
-									switch (gpMarDirector->getCurrentMap()) {
-									case 0x1D:
-									case 0x1E:
-										break;
-									default:
-										exMap = true;
-										break;
-									}
-								}
-								if (exMap)
+								if (isExMapCamera_())
 									newMode = CAMERA_MODE_EX_MAP_0;
 								else
 									newMode = CAMERA_MODE_HIP_ATTACK;
@@ -812,19 +761,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 								        || mPrevMode == CAMERA_MODE_CLIMB)) {
 									newMode = CAMERA_MODE_CLIMB_JUMP;
 								} else {
-									bool exMap = false;
-									if (SMS_isExMap()) {
-										switch (
-										    gpMarDirector->getCurrentMap()) {
-										case 0x1D:
-										case 0x1E:
-											break;
-										default:
-											exMap = true;
-											break;
-										}
-									}
-									if (exMap)
+									if (isExMapCamera_())
 										newMode = CAMERA_MODE_EX_MAP_0;
 									else
 										newMode = CAMERA_MODE_WALL_JUMP;
@@ -832,18 +769,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 								break;
 
 							default:
-								bool exMap = false;
-								if (SMS_isExMap()) {
-									switch (gpMarDirector->getCurrentMap()) {
-									case 0x1D:
-									case 0x1E:
-										break;
-									default:
-										exMap = true;
-										break;
-									}
-								}
-								if (exMap)
+								if (isExMapCamera_())
 									newMode = CAMERA_MODE_EX_MAP_0;
 								else if (isFollowCameraSpecifyMode(param_1))
 									newMode = param_1;
@@ -859,4 +785,64 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 	}
 
 	changeCamMode_(newMode);
+}
+
+// TODO: 0x50 of frame short (0xb0 against retail's 0x100); every instruction
+// but the frame setup and teardown matches.
+void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
+{
+	if (SMS_isMultiPlayerMap()) {
+		changeCamMode_(CAMERA_MODE_MULTI_PLAYER);
+		return;
+	}
+
+	if (SMS_GetMarioStatus() == MARIO_STATUS_TOROCCO) {
+		changeCamMode_(CAMERA_MODE_JET_COASTER);
+		return;
+	}
+
+	if (isFixOrDefiniteCameraSpecifyMode(param_1)) {
+		if (unk120->checkFrameMeaning(0x4000))
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0,
+			                                   nullptr, 0);
+		return;
+	}
+
+	if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE)
+		execNoticeOnOffProc_(NOTICE_MODE_UNK1);
+
+	int prevMode = mMode;
+
+	if (gpMarioOriginal->isSleeping() || SMS_CheckMarioFlag(2)
+	    || (SMS_GetMarioStatus() & MARIO_STATUS_FLAG_UNK10000)
+	    || gpCameraMario->isMarioRocketing()
+	    || gpMarioOriginal->checkFlag(MARIO_FLAG_FLUDD_EMITTING)
+	    || gpCameraMario->isMarioClimb(SMS_GetMarioStatus())) {
+		if (isLButtonCameraSpecifyMode(mMode))
+			doLButtonCameraOff_(true);
+		if (unk120->checkFrameMeaning(0x8000))
+			execFrontRotate_();
+		if (unk120->checkFrameMeaning(0x4000))
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_NOT_COLLECT, 0,
+			                                   nullptr, 0);
+	} else {
+		if (isLButtonCameraSpecifyMode(mMode)) {
+			if (SMS_GetMarioStatus() & MARIO_STATUS_FLAG_UNK20000) {
+				doLButtonCameraOff_(true);
+			} else if (!isLButtonCameraInbetween()
+			           && unk120->checkFrameMeaning(0x14000) && unk282 == 0) {
+				doLButtonCameraOff_(false);
+			}
+		} else if (isNormalCameraSpecifyMode(mMode)
+		           || isTowerCameraSpecifyMode(mMode)) {
+			execLButtonCameraOnProc_();
+		}
+	}
+
+	if (prevMode != mMode)
+		return;
+	if (isLButtonCameraSpecifyMode(mMode))
+		return;
+
+	calcNewCameraMode_(param_1);
 }
