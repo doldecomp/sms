@@ -239,6 +239,9 @@ DEFINE_NERVE(TNerveNPCTurnToMario, TLiveActor)
 				// and holds one uninitialised TVec3 (the 16 dead
 				// bytes); every by-value TU-local helper spelling of
 				// that is artificial, so it is left open.
+				// cc37: a TVec3 copy temporary into MsGetRotFromZaxisY and
+				// by-value TU-local levels (one, two nested, one holding an
+				// uninitialised TVec3) either stay 0x28 short or get refused.
 				JGeometry::TVec3<f32> axis = SMS_GetMarioPos();
 				axis -= self->mPosition;
 				JGeometry::TVec3<f32> toMario  = axis;

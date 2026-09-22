@@ -423,6 +423,11 @@ void TFenceWater::control()
 
 void TFenceWater::initMapCollisionData() { TMapObjBase::initMapCollisionData(); }
 
+// TODO: 99.3%, the one difference is `this` saved with `addi r31,r3,0`
+// where retail uses `mr` (the pointer-conversion tell). Inert (cc37):
+// mMessenger typed THitActor* (the push_back's T) with a cast at unk68,
+// `(THitActor*)this`, a reference-returning member fork or a TU-local push
+// helper (both regress), searching the group inline.
 void TFenceWater::initMapObj()
 {
 	TFence::initMapObj();
@@ -439,6 +444,12 @@ void TFenceWater::initMapObj()
 	group->getChildren().push_back(mMessenger);
 }
 
+// TODO: 99.6%, frame 0x30 *long* (0x128 vs 0xf8), instruction-exact: the two
+// matrices sit 0x30 high because our pool below them is 0x84 against
+// retail's 0x54. Deleting either setEular (TRotation3.hpp, shared) drops
+// 0x38/0x40, so the excess is setEular's expansion pool. Inert (cc37): raw
+// `.mMtx` arguments to MTXConcat/MTXCopy, dropping the MtxPtr local, both
+// matrices as TPosition3, declaring both at the top in either order.
 void TFenceWaterH::control()
 {
 	TMapObjBase::control();

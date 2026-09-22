@@ -272,12 +272,26 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 	}
 }
 
+// Two binding levels for getNozzleTopPos_'s frame (+0x18 together, cc37):
+// the water-gun test and the nozzle matrix are each named and returned.
+static inline TWaterGun* CameraNoticeWaterGun()
+{
+	TWaterGun* gun = SMS_GetMarioWaterGun();
+	return gun;
+}
+
+static inline MtxPtr CameraNoticeNozzleMtx(TWaterGun* gun)
+{
+	MtxPtr mtx = gun->getNozzleMtx();
+	return mtx;
+}
+
 void CPolarSubCamera::getNozzleTopPos_(JGeometry::TVec3<f32>* out) const
 {
-	if (SMS_GetMarioWaterGun() == nullptr) {
+	if (CameraNoticeWaterGun() == nullptr) {
 		out->set(gpCameraMario->unk0);
 	} else {
-		MtxPtr mtx = SMS_GetMarioWaterGun()->getNozzleMtx();
+		MtxPtr mtx = CameraNoticeNozzleMtx(SMS_GetMarioWaterGun());
 		out->x     = mtx[0][3];
 		out->y     = mtx[1][3];
 		out->z     = mtx[2][3];
@@ -292,7 +306,13 @@ void CPolarSubCamera::getNozzleTopPos_(JGeometry::TVec3<f32>* out) const
 // TODO (closure batch 87): pure frame gap, 0x70 vs 0x40. The one named local
 // (a scratch Vec) sits at 0x34 in retail and 0x10 here, so 36 of the 48 bytes
 // are low region (inline-expansion temporaries) and 12 sit above the vector.
-// getNozzleTopPos_ is the same shape at 0x58 vs 0x40.
+// getNozzleTopPos_ was the same shape at 0x58 vs 0x40 and closed with two
+// binders (cc37); here that lifted the frame to 0x50 with the vector at 0x24.
+// Best measured (cc37, not committed): a name-and-return reference binder
+// over gpCameraMario->unk0 at the set() plus mNoticeActor->getPosition()
+// lands the vector at 0x34 with the frame 0x68, 8 short *above* it; bool/u32
+// flag wrappers, a TVec3 copy temporary, target-address forks/binders and a
+// named notice actor or target reference all overshoot or move the vector.
 void CPolarSubCamera::ctrlLButtonCamera_()
 {
 	f32 stickX = -unk120->mCompSPos[4];
