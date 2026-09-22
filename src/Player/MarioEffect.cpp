@@ -19,33 +19,18 @@
 
 #include <Player/MarioDirtyStrings.hpp>
 
-// TODO (closure batch 87): all four non-exact functions in this TU share one
-// cause -- a one-step rotation of the callee-saved GPRs in which `this` gets
-// the wrong register. Retail puts `this` in r31 and the `.rodata` base in r29
-// (`init`), or `this` in r28 with the base in r31 and the getThing() index in
-// r29 (both setJumpIntoWaterEffect*); we hand the base and the index the higher
-// registers. Per docs/catalog/frame-gaps.md (batch 63) a pure rotation with
-// relative order preserved means one member read should go through an accessor.
-// Measured: `MActor* getEffectActor(int i) { return unk74[i]; }` over the nine
-// `unk74[idx]->` sites in setJumpIntoWaterEffectSmall is +0x18 of frame (0xe8
-// -> 0x100, target 0xf0) and does not move the registers; a `getMario()`
-// accessor over the single `unk68->unk220` read is +0. The low-region gaps are
-// 8 bytes (setJumpIntoWaterEffectSmall), 0x40 (setJumpIntoWaterEffect),
-// 0x30 (perform, which references no stack slot at all) and 0 (init, whose
-// residue is purely the rotation plus one `addi r4, r25, 0` where we emit
-// `mr r4, r25` -- retail's operand came from an accessor's returned address).
-//
-// Closure batch 152 re-confirmed the classification with `--clusters` (init
-// |1 <0 >0 at an exact frame; setJumpIntoWaterEffectSmall |1 <1 >2, and both
-// of those are the *same* `li rIdx, -1` and the recomputed `add`/`lwzu` that
-// the rotation drags along) and tried the batch-144 named-scalar knob, since
-// `init` is the direction the rule is about: retail gives `this` r31 and the
-// `.rodata` base r29, i.e. `this` outranks the pool base there. Rejected:
-// reusing one `anmData`/`bmd`/`model` variable across both halves of `init`
-// instead of six separate ones (98.5% -> 98.3%, registers unmoved), and, on
-// setJumpIntoWaterEffectSmall, declaring the two `Mtx` above `idx` and
-// splitting `int idx; idx = getThing();` (both exactly inert). This TU stays
-// filed under frame-gaps.md's known-open `this`-vs-pool-base swap.
+// TODO: init is the last non-exact function: a one-step rotation of the
+// callee-saved GPRs (retail `this` r31, loop offset r30, `.rodata` base r29;
+// ours base r31, `this` r30, offset r29) plus one `addi r4, r25, 0` where we
+// emit `mr r4, r25` before the second setModel. The frame is exact. Tried and
+// inert on the rotation: one shared `anmData`/`bmd`/`model` variable (closure
+// batch 152), an unnamed `flag` (-8 frame), an unnamed waterboost model, a
+// split `model` declaration, a function-scope `int i` (one or two counters),
+// a named string local, a TU-local `setModel(MActor*, J3DModel*)` level, and
+// each half of the body as a TU-local helper taking `this`. Both
+// setJumpIntoWaterEffect* closed by open-coding getThing()'s index (the header
+// inline's own named `idx` ranked above the base) plus MarioEffectMario
+// binders.
 void TMarioEffect::init(TMario* mario)
 {
 	unk68    = mario;
@@ -89,26 +74,38 @@ void TMarioEffect::init(TMario* mario)
 	gpConductor->registerOtherObj(this);
 }
 
+// fabricated
+static inline TMario* MarioEffectMario(TMarioEffect* p)
+{
+	TMario* mario = p->unk68;
+	return mario;
+}
+
 void TMarioEffect::setJumpIntoWaterEffect()
 {
-	f32 absVelY = unk68->mVel.y;
-	if (absVelY < 0.0f)
-		absVelY = -absVelY;
+	f32 velY = MarioEffectMario(this)->mVel.y;
+	f32 absVelY = velY;
+	if (velY < 0.0f)
+		absVelY = -velY;
 
-	if (absVelY < unk68->mWaterEffectParams.mJumpIntoMdlEffectSpY.get())
+	if (absVelY < MarioEffectMario(this)->mWaterEffectParams.mJumpIntoMdlEffectSpY.get())
 		return;
 
-	if (unk68->mFloorPosition.z - unk68->mFloorPosition.y < 50.0f)
+	if (MarioEffectMario(this)->mFloorPosition.z - MarioEffectMario(this)->mFloorPosition.y < 50.0f)
 		return;
 
-	int idx = getThing();
+	int idx = -1;
+	if (unk6C[0] == 0)
+		idx = 0;
+	if (unk6C[1] == 0)
+		idx = 1;
 	if (idx < 0)
 		return;
 
 	Mtx localMtx;
-	MTXCopy(unk68->unk220, localMtx);
+	MTXCopy(MarioEffectMario(this)->unk220, localMtx);
 
-	f32 minY = unk68->mWaterEffectParams.mJumpIntoMinY.get();
+	f32 minY = MarioEffectMario(this)->mWaterEffectParams.mJumpIntoMinY.get();
 	f32 maxY = unk68->mWaterEffectParams.mJumpIntoMaxY.get();
 
 	f32 ratio;
@@ -148,13 +145,17 @@ void TMarioEffect::setJumpIntoWaterEffect()
 
 void TMarioEffect::setJumpIntoWaterEffectSmall()
 {
-	int idx = getThing();
+	int idx = -1;
+	if (unk6C[0] == 0)
+		idx = 0;
+	if (unk6C[1] == 0)
+		idx = 1;
 	if (idx < 0)
 		return;
 
 	Mtx localMtx;
 	Mtx scaleMtx;
-	MTXCopy(unk68->unk220, localMtx);
+	MTXCopy(MarioEffectMario(this)->unk220, localMtx);
 	MTXScale(scaleMtx, 0.8f, 0.4f, 0.8f);
 	MTXConcat(localMtx, scaleMtx, localMtx);
 
