@@ -183,6 +183,13 @@ void TPauseMenu2::loadAfter()
 	mGamePad = gpMarDirector->unk18[0];
 }
 
+// fabricated: a direct-return fork over a menu item, +4 below and +4 above the
+// item rect.
+static inline J2DPicture* PauseMenuItemFork(const TPauseMenu2* p, s32 i)
+{
+	return p->mMenuItems[i];
+}
+
 // appearWindow and disappearWindow are weak but out of line in the map:
 // `inline` definitions reached from perform() through one more inline level
 // (depth 2, budget 9) are refused there and emitted as weak copies.
@@ -199,7 +206,7 @@ inline void TPauseMenu2::appearWindow()
 		// Fade in background.
 		s32 bgrAlpha = mBackgroundFadeInSpeed * mFadeAnim * 1.5f;
 		bgrAlpha = bgrAlpha > mBackgroundAlpha ? mBackgroundAlpha : bgrAlpha;
-		mBackground->mAlpha = bgrAlpha;
+		mBackground->setAlpha(bgrAlpha);
 	}
 
 	// Fade in stage/shine panel.
@@ -207,14 +214,14 @@ inline void TPauseMenu2::appearWindow()
 	if (stageAlpha > mBackgroundAlpha) {
 		stageAlpha = 0xFF;
 	}
-	mStagePane->mAlpha = stageAlpha;
+	mStagePane->setAlpha(stageAlpha);
 
 	// Animate in menu items.
 	if (mFadeAnim >= 30.0f) {
 		for (s32 i = 0; i < mNumItems; ++i) {
-			if (!mMenuItems[i]->mVisible) {
-				mMenuItems[i]->mVisible = true;
-				mMenuItems[i]->mAlpha   = 0;
+			if (!mMenuItems[i]->isVisible()) {
+				mMenuItems[i]->show();
+				mMenuItems[i]->setAlpha(0);
 			}
 
 			JUTRect rect = mOrigItemBounds[i];
@@ -232,12 +239,12 @@ inline void TPauseMenu2::appearWindow()
 				if ((s32)alphaF > 0xFF) {
 					alpha = 0xFF;
 				}
-				mMenuItems[i]->mAlpha = alpha;
+				mMenuItems[i]->setAlpha(alpha);
 
 				// The first item gets some extra "bounce".
 				if (i == 0) {
 					s16 angle = mFirstItemAngle * 0.1f * (mFadeAnim - 30.0f);
-					mMenuItems[i]->mRotation = angle;
+					PauseMenuItemFork(this, i)->mRotation = angle;
 				}
 			} else if (mFadeAnim <= 45.0f) {
 				s32 hx = 3.0f * (mFadeAnim - 45.0f);
@@ -255,8 +262,13 @@ inline void TPauseMenu2::appearWindow()
 	}
 
 	mFadeAnim += 0.5f;
-	// TODO: frame +0x20 (0xd0 vs 0xb0); instruction-identical after the
-	// >= 46.0f compare fix. Same +0x20 class as load.
+}
+
+// fabricated: a direct-return fork over the menu pane, +4 below and +4 above
+// the letter rects.
+static inline J2DPane* PauseMenuPane(const TPauseMenu2* p)
+{
+	return p->mMenuPane;
 }
 
 inline void TPauseMenu2::disappearWindow()
@@ -305,15 +317,13 @@ inline void TPauseMenu2::disappearWindow()
 		}
 
 		// Rotate menu clockwise.
-		mMenuPane->mRotation = -mFadeAnim * 2.0f;
+		PauseMenuPane(this)->mRotation = -mFadeAnim * 2.0f;
 	} else {
 		// Fade out animation complete; set state to MENU_CLOSED.
 		mState = MENU_CLOSED;
 	}
 
 	mFadeAnim += 0.5f;
-	// TODO: frame +8 (0x100 vs 0xf8). A one-site bg binder lands frame-exact
-	// but drops retail's `addi r5,r3,0xcc` alpha address bind and fuzzy score.
 }
 
 // fabricated: the level that keeps the inline window bodies out of perform().
