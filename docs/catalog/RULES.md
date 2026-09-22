@@ -299,6 +299,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `v.x = v.y = v.z = s` costs no stack; a ctor, `set` or `setAll` costs 16 bytes of dead low region (MarioParticle `surfingEffect`).
 - Frame-only gaps with no stack references price additively: +0x10 per name-and-return binder over a two-level member chain, +8 per naming `new` factory, +8 per direct-return fork, 0 per direct-return `new` (MarioCap ctor). Caution: many combinations fit such a gap, so the choice is weakly evidenced; prefer the one that also fixes slot positions.
 - A helper assigning through a reference parameter puts a caller's aggregate back in its named block below top-declared aggregates (MapWarp `watchToWarp`).
+- Reusing an existing float local for a final clamp instead of naming a new one removes 8 bytes (MSHandle `calcPan`).
+- `TColor` via `(u32)c` gives a 4-byte temporary where `c.get()` gives 8 (Menu `TMenuPlane::perform`).
 
 ## Register and scheduling residues
 
@@ -346,6 +348,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `x = x * f` and `x *= f` on a `u8` allocate differently (MAnmSoundNPC).
 - A one-line returning helper (`{ return p->getLinkInfo()[0]; }`) ranks a named local below a hoisted base temporary at zero stack; named-result and out-param forms cost 8/0x10 (JPAEmitterManager `createEmitterBase`).
 - Nested polynomial form `c0 + x*(c1 + x*(...))` versus repeated `e = x*e + c` changes constant FPR assignment; volatile FPRs are a source-order knob here (exponentialsf `expf`).
+- A TU-local helper modifying its value parameter in place fixes an FPR permutation in a conditional update (MSHandle `calcDolby`).
+- Named `s16 rx, ry, rz` locals order a three-way float-to-`s16` conversion as retail (MapObjTown, linked).
+- A `u16` accessor as an index argument fixes a two-register swap (MapObjTown `load`).
+- An explicit no-op upcast `((Base*)this)->f()` stops reuse of a member load; implicit conversion and qualified names do not (MapObjTown switch; also MapEventMare).
 
 ## Float and pool
 
@@ -406,6 +412,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Run `validate-symbol-order.py` before proposing a link: it catches missing UNUSED symbols and BINDING errors objdiff cannot see (linking.md: "Batch 72").
 - Editing a shared header linked units depend on (`PollutionPos.hpp`, `MActor::getModel()`) breaks the DOL even when scores improve (frame-gaps.md: "batch 110").
 - `report.json` matches `.rodata` by symbol, not position: a 100/100 unit can still change the DOL when header literals come out in another order; include `System/DummyStrings.hpp` first as `sunmgr.cpp` does (sunmodel link).
+- An UNUSED override defined later decides `.sdata2` order ahead of a sibling's string literal; restoring the missing class (`TShadowObj`) was needed to link MapObjTown, together with including collision headers after `InfectiousStrings.hpp`.
 
 ## TU reconstruction
 
