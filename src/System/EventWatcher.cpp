@@ -333,12 +333,18 @@ static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>* interp,
 // measurement: a named `TSpcSlice` local (fewer temporaries, not more), a
 // popInt() on TSpcInterp, `operator int()`, and an extra copy inside
 // TSpcInterp::pop() itself (that one makes the whole file worse).
+// Bare-return fork over the raw global. Named at the call site it lands
+// retail's 0x88 frame and the `addi r5, r30, 0` argument copy; the raw global
+// named directly, or the binder form of this fork, stays 8 or 4 bytes off.
+static inline TTalk2D2* EventWatcherTalk2DForMsgID() { return gpTalk2D; }
+
 static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
 	int p1 = TSpcSlice(interp->pop()).getDataInt();
 	int p2 = TSpcSlice(interp->pop()).getDataInt();
-	gpTalk2D->setMessageID(p2, p1);
+	TTalk2D2* talk2D = EventWatcherTalk2DForMsgID();
+	talk2D->setMessageID(p2, p1);
 	interp->push();
 }
 
