@@ -172,6 +172,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   Their remaining differences are IK temporary/register scheduling and instruction-identical frame gaps; do not repeat them without a new compiler-shape lead.
 - Landed `Map/MapMakeList`: corrected the commutative Z-bound min/max operand ordering in `getGridArea`, raising it **99.48333 -> 99.50%** with no regressions.
   The unit and aggregate percentages do not move at report precision; the DOL remains byte-identical.
+- Landed `Enemy/walker`: constructed each `TPathNode` directly from its final computed point instead of default-constructing and assigning afterward.
+  `TWalker::bind` rose **92.34174 -> 93.99%** and unit fuzzy similarity **94.12813 -> 95.38%**; aggregate fuzzy similarity rose **98.089490 -> 98.090935%**, while matched-code, exact-function, and linked-unit counters did not move.
+- Whole-file medium audit of `GC2D/Menu` returned clean with no safe gain.
+  Its remaining differences are the known shared-header `JUTColor` temporary-stride class; do not repeat the TU without a new compiler-shape lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
