@@ -84,6 +84,16 @@ void TYoshiTongue::initInLoadAfter()
 	mb->init(mTipModel, 4);
 }
 
+// Local form of a reference-returning `operator*` for a destination copy
+// (docs/catalog: "a destination copy wants the reference return"): retail
+// copies the scaled parameter straight into mInitialVelocity.
+static inline const JGeometry::TVec3<f32>&
+TongueScaled(JGeometry::TVec3<f32> v, f32 k)
+{
+	v *= k;
+	return v;
+}
+
 void TYoshiTongue::emit(const JGeometry::TVec3<f32>& src,
                         const JGeometry::TVec3<f32>& dir,
                         const JGeometry::TVec3<f32>& vel)
@@ -99,7 +109,7 @@ void TYoshiTongue::emit(const JGeometry::TVec3<f32>& src,
 		mHeadPos = src;
 		mHeadDir = dir;
 
-		mInitialVelocity = dir * mInitialSpeed;
+		mInitialVelocity = TongueScaled(dir, mInitialSpeed);
 		mInitialVelocity += vel * 0.5f;
 
 		if (mInitialVelocity.y < -50.0f)
