@@ -38,9 +38,9 @@ Every command in `docs/AGENT_GUIDE.md` works unchanged inside the worktree (`bui
 - If your unit needs a helper that belongs in a shared header (the map shows it weak, i.e. a header inline), park it as `static inline` **in your `.cpp`**, never in your unit's header: two units parking the same name in two headers broke the build for every TU that includes both.
 - No stack padding (`volatile char trash[]`, `u32 pad[]`), no `#pragma dont_inline`, no reinterpret casts, no fakematches. Temporary padding to confirm a body is otherwise exact is fine if removed.
 - One change at a time; rebuild and re-diff.
-- Do not run `ninja baseline` (one is saved in your worktree). Do not edit `configure.py` or `config/GMSE01/objects.json`; if a unit becomes fully matching in code and data, say so in the report.
+- Do not run `ninja baseline` (one is saved in your worktree). Do not edit `configure.py`. If a unit becomes fully matching in code and data, link-test it when your spawn message says so (the `objects.json` form of `git show be4b773e`, full `ninja` exit 0, SHA-1), otherwise say so in the report.
 - Verify each unit before its commit: `build/venv/bin/ninja changes_all` (zero regressions outside your units), `NM=build/binutils/powerpc-eabi-nm build/venv/bin/python3 tools/validate-symbol-order.py -u <unit> --map orig/GMSE01/files/marioUS.MAP`, and `sha1sum build/GMSE01/mario.dol` must print `a6782903ef79d4196c8489ecb1b57decb5b3728f`.
-- Commit on your `wt/` branch with a one-line imperative message in the repo's style (`git log --oneline -10`) and the trailer `Claude-Session: https://claude.ai/code/session_01Huz7AKb3D1FJWcxkF3SqS2`. Do not push or merge. Commit early and often; a cut-off loses only what is uncommitted.
+- Commit on your `wt/` branch with a one-line imperative message in the repo's style (`git log --oneline -10`) and the trailer `Claude-Session: https://claude.ai/code/<the trailer named in your spawn message>`. Do not push or merge. Commit early and often; a cut-off loses only what is uncommitted.
 - Scratch files go under the scratchpad directory named in your spawn message, never in the repo.
 
 ## Report back

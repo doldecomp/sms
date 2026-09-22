@@ -288,6 +288,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - C-style declarations at the top fix named-block order; an `MtxPtr` declared between vectors reserves 4 bytes even when register-held (fishoid `calcRootMatrix`, linked).
 - A caller-level named pointer takes a 4-byte named slot even when register-held; moving its statements into an inline helper makes it a low-region item (fishoid `load`).
 - Scalar pool items always land below `operator-`'s buffer regardless of source position (spider `bind`).
+- Temporary space is allocated per inlined function in order of first expansion; all expansions of one inline share its block, so a lever only reaches a gap when its function is first expanded inside it (riccohook `init`, MActor ctor).
+- Declaring an iterator at the top and assigning later is instruction-identical to in-place init but drops the copy temporaries (-0x10) and puts the pair at the top of the named block (MActor `setModel`/ctor, linked).
+- A retail dead virtual call is a dead named read of a reference `get()` (16-byte vector-slot stride) (walkerEnemy, linked).
+- Price a binder in every function that inlines its host; a named `getModel()` local may cost 0 where the binder costs 8 (MActor `calcAnm`/`perform`).
 
 ## Register and scheduling residues
 
