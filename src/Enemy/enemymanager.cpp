@@ -125,26 +125,28 @@ void TEnemyManager::createEnemies(int count)
 	if (count + getObjNum() > getCapacity())
 		count = getCapacity() - getObjNum();
 
-	if (unk38 != nullptr && count + getObjNum() > unk38->mSLInstanceNum.get())
-		count = unk38->mSLInstanceNum.get() - getObjNum();
+	if (unk38 != nullptr && count + getObjNum() > unk38->mSLInstanceNum.value)
+		count = unk38->mSLInstanceNum.value - getObjNum();
 
 	if (count < 0)
 		return;
 
-	// TODO: 8 bytes of frame short (0xa8 against retail's 0xb0). Slot
-	// triage: the JGadget iterator pool splits into a 5-word group (retail
-	// 0x5c..0x6f, ours 0x54..0x67) and a 3-word group (retail 0x78..0x83,
-	// ours 0x6c..0x77) with the `insert` hint at 0x84 in both, so group A is
-	// +8 short and group B +12, i.e. the gap between the two groups is 8 in
-	// retail and 4 here. That is the JGadget iterator temp-pool *grouping*
-	// residue (frame-gaps.md batch 133, also open on TSeal::init and
-	// TPerformList::perform), and its only known cause is the implicit
-	// derived-from-base conversion on TList::insert's return, which lives in
-	// a shared JGadget header. Rejected here: the loop body as a call to the
-	// UNUSED createEnemy() (map 0xf8, five structural differences), search2
-	// with the cast (codegen-identical), push_back instead of add() (lands
-	// the frame, breaks the body), a TU-local binding level on getObjNum()
-	// (+24).
+	// TODO: 99.7%, frame 0x98 against retail's 0xb0 (the direct `.value`
+	// reads above fix the register assignment of the capacity clamp; `.get()`
+	// was 0xa8 with objNum/capacity in r5/r3 for retail's r3/r4). The rest is
+	// the JGadget stride class (frame-gaps.md, research batch cc39): retail
+	// packs its 5-word iterator group at 0x5c..0x6f, the 3-word group at
+	// 0x78..0x83 and `enemy`'s home right above it at 0x84, with three dead
+	// words above `enemy`. Measured (cc42): a TU-local named-result search
+	// fork, a pointer-then-reference child-list fork and an add fork taking
+	// `THitActor* const&` land frame 0xb0 and six of nine pool slots (99.9%),
+	// but leave one dead word inside the 5-word group (its two lowest slots 4
+	// low) and two between the 3-word group and `enemy` (8 high). Inert on
+	// top of that: `this->`/cast on createEnemyInstance, `enemy == nullptr`,
+	// a cast or named `this` for init, `i++`, a cast on the pushed pointer.
+	// Rejected earlier: the loop body as a call to the UNUSED createEnemy()
+	// (map 0xf8, five structural differences), push_back instead of add()
+	// (breaks the body), a binding level on getObjNum() (+24).
 	for (int i = 0; i < count; ++i) {
 
 		TSpineEnemy* enemy = createEnemyInstance();
