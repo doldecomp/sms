@@ -39,24 +39,29 @@ static const s32 cParticleIDs[] = {
 	MAP_POLLUTION_MS_M_TOKEOS,
 };
 
-// `fileName` is declared before `i` because the callee-saved order is
-// i (r31), the 4*i offset (r30), the three pool bases (r29-r27),
-// SMS_LoadParticle's flag pointer (r26), fileName (r25), and that order only
-// comes out with both locals at function scope in this order.
-// TODO: 98.7%. The three pool bases sit one register low (r28-r26) and the
-// flag pointer one high (r29), i.e. the documented pool-base-versus-callee-temp
-// rotation, at zero frame cost. Block scope for `i` is inert, as is `i++`.
+// Keep the flag pointer as a function-scope local: its lifetime gives the
+// compiler the retail callee-saved allocation across both loading branches.
 void TMario::initParticle()
 {
 	const char* fileName;
+	bool* particleFlag;
 	int i;
 	for (i = 0; i < 3; ++i) {
 		fileName = cParticleFileNames[i];
 		if (JKRFileLoader::getGlbResource(fileName)) {
-			if (i < 1)
-				SMS_LoadParticle(fileName, cParticleIDs[i]);
-			else
-				SMS_LoadParticle(fileName, cParticleIDs[i]);
+			if (i < 1) {
+				particleFlag = &gParticleFlagLoaded[(u16)cParticleIDs[i]];
+				if (!*particleFlag) {
+					gpResourceManager->load(fileName, cParticleIDs[i]);
+					*particleFlag = true;
+				}
+			} else {
+				particleFlag = &gParticleFlagLoaded[(u16)cParticleIDs[i]];
+				if (!*particleFlag) {
+					gpResourceManager->load(fileName, cParticleIDs[i]);
+					*particleFlag = true;
+				}
+			}
 		}
 	}
 }
@@ -427,17 +432,15 @@ void TMario::surfingEffect()
 	if (spMax < mForwardVel)
 		scale = sMax;
 
-	// TODO: 99.5%, all 107 instructions exact; frame 0x70 vs 0x60, i.e. our
-	// dead low region is 16 bytes too *big* (retail 0xc..0x3c, ours 0xc..0x4c,
-	// neither referenced -- `scaleVec` is fully scalarised into f31 in both).
+	// TODO: 99.5%; our dead low region is 16 bytes too big (frame 0x70 versus
+	// retail 0x60), even though `scaleVec` is fully scalarised into f31.
 	// A dead named `TVec3` here is only +8, so the surplus is not `scaleVec`
 	// as a slot; passing `TVec3(scale, scale, scale)` as a temporary at the
 	// four sites is far worse (frame 0xb8), and the `SMS_EasyEmitParticle`
 	// template, whose body is exactly these four blocks and whose
 	// type-to-flag map gives retail's 3/1/1/1, cannot be it either: a function
 	// template without `inline` never inlines, so it emits a `bl` (58.2%).
-	// The `addi r5` / `addi r7` order at the last three sites (retail computes
-	// the MtxPtr argument before `this`) is part of the same residue.
+	// Retail also computes the MtxPtr before `this` at the last three sites.
 	JGeometry::TVec3<f32> scaleVec(scale, scale, scale);
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_GESOSURF_A, (MtxPtr)getRootAnmMtx(), 3, this);
