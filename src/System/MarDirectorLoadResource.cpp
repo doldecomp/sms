@@ -21,28 +21,29 @@ bool gParticleFlagLoaded[0x201];
 JPAResourceManager* gpResourceManager;
 JPAEmitterManager* gpEmitterManager4D2;
 
-// TODO: every instruction is exact; frame 0x130 vs 0x170. Slot triage: retail's
-// `sceneDvdFile` sits at 0x60 with 84 dead bytes below it, ours at 0x18 with 12,
-// so the residue is +72 bytes of dead low region and -8 bytes in the named block
-// above the JKRDvdFile. No inlined callee in the body is a plausible carrier
-// (every call here is a real bl), so the 72 bytes are unattributed.
+// Each plain archive allocation goes through a binder that names the new
+// archive; with the director accessors in the switch this is retail's pool.
+static inline JKRMemArchive* newMemArchive()
+{
+	JKRMemArchive* archive = new JKRMemArchive;
+	return archive;
+}
+
 int TMarDirector::loadResource()
 {
-	TMarioParticleManager* this_00 = new TMarioParticleManager;
-
-	gpMarioParticleManager = this_00;
+	gpMarioParticleManager = new TMarioParticleManager;
 
 	int particleNum = 1000;
 	int emitterNum  = 256;
 	int effectNum   = 32;
 
-	switch (gpMarDirector->mMap) {
+	switch (SMSGetMarDirector()->getCurrentMap()) {
 	case 33:
 		particleNum = 3000;
 		effectNum   = 120;
 		break;
 	case 5:
-		if (gpMarDirector->unk7D == 1)
+		if (SMSGetMarDirector()->getCurrentStage() == 1)
 			particleNum = 1500;
 		break;
 	case 58:
@@ -53,14 +54,14 @@ int TMarDirector::loadResource()
 		particleNum = 3000;
 		break;
 	case 9:
-		if (gpMarDirector->unk7D == 0)
+		if (SMSGetMarDirector()->getCurrentStage() == 0)
 			particleNum = 1500;
 		break;
 	case 52:
 		particleNum = 3000;
 		break;
 	case 4:
-		if (gpMarDirector->unk7D == 2)
+		if (SMSGetMarDirector()->getCurrentStage() == 2)
 			particleNum = 3000;
 		break;
 	case 60:
@@ -77,7 +78,7 @@ int TMarDirector::loadResource()
 	loadParticle();
 
 	void* rawArch = SMSLoadArchive("/data/yoshi.arc", nullptr, 0, nullptr);
-	JKRMemArchive* arch = new JKRMemArchive;
+	JKRMemArchive* arch = newMemArchive();
 	if (!arch->mountFixed(rawArch, MBF_0))
 		return 1;
 
@@ -108,13 +109,13 @@ int TMarDirector::loadResource()
 
 	if (gpApplication.mCurrArea.unk0 == 15) {
 		void* optionBlob          = SMSLoadArchive("/data/option.arc", 0, 0, 0);
-		JKRMemArchive* optionArch = new JKRMemArchive;
+		JKRMemArchive* optionArch = newMemArchive();
 		if (!optionArch->mountFixed(optionBlob, MBF_0))
 			return 1;
 	}
 
 	unkD4 = new (0x20) char[0x64000];
-	unkD8 = new JKRMemArchive;
+	unkD8 = newMemArchive();
 	int errc = thpInit();
 	if (errc)
 		return errc;
@@ -128,13 +129,26 @@ void TMarDirector::initLoadParticle()
 		gParticleFlagLoaded[i] = 0;
 }
 
-// TODO: every instruction is exact; frame 0x28 vs 0x40 = 24 bytes of dead low
-// region, and neither build references a single stack slot, so there is no
-// positional evidence. Measured: a named JKRHeap* for getCurrentHeap() and a
-// named JPAResourceManager* for the unkA4[0] store are both +0;
-// SMSGetMarDirector()->getCurrentMap() for the map test is +8 but costs an
-// instruction. Nothing in the body is inlined (every callee is a real bl), so
-// the carrier is not an inline-expansion local.
+// The map/scenario test and the heap fetch each go through a binder that
+// names its value; together they carry retail's 24 bytes of inline pool.
+static inline u8 getLoadMap(TMarDirector* director)
+{
+	u8 map = director->getCurrentMap();
+	return map;
+}
+
+static inline u8 getLoadStage(TMarDirector* director)
+{
+	u8 stage = director->getCurrentStage();
+	return stage;
+}
+
+static inline JKRHeap* getLoadHeap()
+{
+	JKRHeap* heap = JKRGetCurrentHeap();
+	return heap;
+}
+
 void TMarDirector::loadParticle()
 {
 	void* pvVar1 = new (-0x20) char[0x200000];
@@ -274,14 +288,14 @@ void TMarDirector::loadParticle()
 	gpEmitterManager4D2->unkA4[0] = gpResourceManager;
 	this_00->unmountFixed();
 
-	if (mMap == 4 && unk7D == 2) {
+	if (getLoadMap(this) == 4 && getLoadStage(this) == 2) {
 		SMSLoadArchive("/data/bosshanachanJpa.arc", pvVar1, 0x200000, nullptr);
 		this_00->mountFixed(pvVar1, MBF_0);
 		this_00->becomeCurrent("/");
 		TBossHanachan::staticLoadParticle();
 		this_00->unmountFixed();
 	}
-	JKRHeap::getCurrentHeap()->freeTail();
+	getLoadHeap()->freeTail();
 }
 
 void TMarDirector::loadParticleMario()
