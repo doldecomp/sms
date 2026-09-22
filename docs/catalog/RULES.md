@@ -294,6 +294,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A retail dead virtual call is a dead named read of a reference `get()` (16-byte vector-slot stride) (walkerEnemy, linked).
 - Price a binder in every function that inlines its host; a named `getModel()` local may cost 0 where the binder costs 8 (MActor `calcAnm`/`perform`).
 - An inline helper's return type sets its pool price (f32 0x20 vs s16 0x18 over three sites); a named-return accessor for a global ~+8 pool per site (camerashake, lensglow).
+- `v.x = v.y = v.z = s` costs no stack; a ctor, `set` or `setAll` costs 16 bytes of dead low region (MarioParticle `surfingEffect`).
 
 ## Register and scheduling residues
 
@@ -336,6 +337,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - The order of zeros in a rotation's `a = b = c = 0.0f` chain reschedules the concat that uses it; `setEularY` wants `(0,1) (1,0) (2,1) (1,2)` (JDRSmJ3DAct, linked).
 - One constant shared across a flag, a loop counter and a field store: a bool-returning inline helper with a `ret` local; declare `i` before `it` (camerashake, linked).
 - An `s16` parameter of an inline helper keeps retail's lazily narrowed raw int; a named `s16` local materialises it (CameraNormal).
+- A trivial TU-local accessor for a matrix member argument computes it before `this` (MarioParticle `surfingEffect`).
+- A returning helper for a bit-field value fixes a two-register swap; a named local keeps it, inline drops the `extsb` (MAnmSoundMario).
+- `x = x * f` and `x *= f` on a `u8` allocate differently (MAnmSoundNPC).
 
 ## Float and pool
 
