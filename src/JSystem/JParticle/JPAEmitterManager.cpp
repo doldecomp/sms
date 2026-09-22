@@ -7,21 +7,13 @@
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 #include <macros.h>
 
-// Binding level worth +8 of low region, landing
-// JPAEmitterManager::JPAEmitterManager's frame at 0x70 (batch 124).
-static inline JKRHeap* JPAEmitterManagerGetCurrentHeap()
-{
-	JKRHeap* currentHeap = JKRHeap::getCurrentHeap();
-	return currentHeap;
-}
-
 JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
                                      s32 param_3, s32 param_4, JKRHeap* param_5)
     : unk3C(0.0f)
     , unk40(1.0f)
 {
 	if (!param_5)
-		param_5 = JPAEmitterManagerGetCurrentHeap();
+		param_5 = JKRHeap::getCurrentHeap();
 
 	u32 bytesForParticles
 	    = ALIGN_NEXT(param_2 * sizeof(JPAParticle), 0x20) + 0x80;
@@ -65,31 +57,12 @@ JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
 
 	unkC4 = 0;
 
-	// TODO: the 16 stores below match, but retail's two-iteration loop body
-	// allocates the first four `addi` offset registers as r10/r9/r8/r7 where we
-	// reuse r0/r4, then both agree from 0xd8 on (a clean r10..r0 round robin in
-	// retail). It is the whole residue of this constructor and the frame is
-	// already 0x70. Rejected: a nested `for (j)` loop (85.2%, frame 0x80), one
-	// shared `int i` for every loop in the function (14 operand markers, worse),
-	// `i++`, `u32 i` and `i != 2` (all +0).
-	for (int i = 0; i < 2; ++i) {
-		unkC8[i][0]  = 0;
-		unkC8[i][1]  = 0;
-		unkC8[i][2]  = 0;
-		unkC8[i][3]  = 0;
-		unkC8[i][4]  = 0;
-		unkC8[i][5]  = 0;
-		unkC8[i][6]  = 0;
-		unkC8[i][7]  = 0;
-		unkC8[i][8]  = 0;
-		unkC8[i][9]  = 0;
-		unkC8[i][10] = 0;
-		unkC8[i][11] = 0;
-		unkC8[i][12] = 0;
-		unkC8[i][13] = 0;
-		unkC8[i][14] = 0;
-		unkC8[i][15] = 0;
-	}
+	// One flat 32-entry loop, which MWCC unrolls by 16 into retail's
+	// two-iteration body; a 2 x 16 nested spelling allocates the first four
+	// address temporaries differently. The member is probably a flat
+	// `JPABaseEmitter* [32]` (header TODO: its users only read [0][0]).
+	for (int i = 0; i < 32; ++i)
+		(&unkC8[0][0])[i] = 0;
 }
 
 u32 JPAEmitterManager::getEmitterNumber()
@@ -276,6 +249,14 @@ static inline u8 JPAEmitterManagerGetFieldNum(JPADataBlockLinkInfo* p)
 // rule would need the base temp `&unkA4[param_3]` to be the explicit parameter
 // of an inlined call whose receiver is `linkInfo`, and no such call exists
 // here (every use of `linkInfo` already has it as the receiver).
+// cc29: all 63 mixes of `getResourceManager(param_3)`, raw `unkA4[param_3]`
+// and two TU-local forks over the three sites, uninitialised declarations of
+// emitter/linkInfo/block/emitterData at function top, and a TU-local helper
+// for the field loop or the linkInfo tail all keep the swap. A named
+// `JPAResourceManager**` (or `*&`) slot for `&unkA4[param_3]` gives retail's
+// r30/r29 exactly, but the slot then computes `addi 0xa4` before the `add`
+// and loses retail's `lwzu` fold (+1 instruction, frame -0x10); `unkA4 +
+// param_3`, `&unkA4[0] + param_3`, an `int` index and `+=` all do the same.
 JPABaseEmitter* JPAEmitterManager::createEmitterBase(
     s32 param_1, u8 param_2, u8 param_3,
     JPACallBackBase<JPABaseEmitter*>* param_4,
