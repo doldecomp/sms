@@ -1574,7 +1574,7 @@ void JPADrawCalcScaleYBySpeed::calc(const JPADrawContext* dc,
 
 	if (dc->pcb->mScaleAnmTimer < dc->mExtraShape->getScaleInTiming()) {
 		params->mScaleY
-		    = params->unkC
+		    = JPADrawVisitorUnkC(params)
 		      * ((dc->mExtraShape->getIncreaseRateY() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueY());
 	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
