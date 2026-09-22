@@ -125,6 +125,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A 10-14 statement callee called at one site and expanded at others: wrap the whole if/else at that site as a case helper, not just the call (MarDirectorDirect `decideNextStage`).
 - Retail folding the first member store into `stbu` and using base+`addi` for the rest: the receiver came through a reference-returning static inline accessor (MarDirectorDirect `getNextArea()`).
 - Defaulted constructor arguments push the member initialisers one level deeper without moving the body's calls: `TGameSequence(u8 a = 0, u8 b = 0)` makes retail's out-of-line `TFlagT(u16)`; `TFlagT::operator=` takes its argument by value (TApplication ctor 72.8 -> 99.6).
+- An out-of-line `TVec3::set(const Vec&)`: pass a `Vec`-typed value into a `const TVec3&` parameter three levels down (lensflare).
 
 ## Frame-size gaps
 
@@ -292,6 +293,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Declaring an iterator at the top and assigning later is instruction-identical to in-place init but drops the copy temporaries (-0x10) and puts the pair at the top of the named block (MActor `setModel`/ctor, linked).
 - A retail dead virtual call is a dead named read of a reference `get()` (16-byte vector-slot stride) (walkerEnemy, linked).
 - Price a binder in every function that inlines its host; a named `getModel()` local may cost 0 where the binder costs 8 (MActor `calcAnm`/`perform`).
+- An inline helper's return type sets its pool price (f32 0x20 vs s16 0x18 over three sites); a named-return accessor for a global ~+8 pool per site (camerashake, lensglow).
 
 ## Register and scheduling residues
 
@@ -331,6 +333,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - One FPR assigned to the wrong one of two dying values: compute the value directly as an inlined helper's argument (zero frame); a returning helper also works but costs 0x10, a named local is inert (NpcInbetween `execPosInbetween`, linked).
 - A value clamped then used: pass the unclamped expression as an inlined helper's argument and clamp the parameter in place (`p = MsClamp(p, ...)`); caller locals add an `fmr` (CameraMultiPlayer, linked).
 - A named-result level (`f32 r = f(a, b); return r;`) reorders later temporaries; try it before parking a dead vector (CameraMultiPlayer `MultiSq`).
+- The order of zeros in a rotation's `a = b = c = 0.0f` chain reschedules the concat that uses it; `setEularY` wants `(0,1) (1,0) (2,1) (1,2)` (JDRSmJ3DAct, linked).
+- One constant shared across a flag, a loop counter and a field store: a bool-returning inline helper with a `ret` local; declare `i` before `it` (camerashake, linked).
+- An `s16` parameter of an inline helper keeps retail's lazily narrowed raw int; a named `s16` local materialises it (CameraNormal).
 
 ## Float and pool
 
