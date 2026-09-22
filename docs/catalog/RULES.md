@@ -310,6 +310,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Two frame levers that each give +8 alone can give only +8 together when they land in the same block; price combinations, not singles (yunbo `init`).
 - An inlined callee's `TVec3` block rounds to 16 and leaves a fixed 4-byte hole below the caller's named `TVec3` that pool levers cannot close (yunbo `isFindOutMario`).
 - Dropping a named `f32` that goes straight into a member store saves 8 of named block (yunbo dancing nerve).
+- Int-to-float conversion slots sit above the inline pool in creation order; read the pool gap from their position (PollutionLayer).
+- A level over an int-to-float conversion keeps an `fmadds`; a level returning the whole product breaks it (PollutionLayer `cleaned`).
+- Not accepted: a dead local added only to supply missing frame (LightUtil `perform`, 12 bytes). Leave a TODO even when it would link the unit.
 
 ## Register and scheduling residues
 
@@ -367,6 +370,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Binding a reference local before zero stores gives the zero constant the higher callee-saved register (MarDirectorSetupObjects `decideMarioPosIdx`).
 - `x += a; f32 y = x - b;` reproduces retail's `fmr` into the local's register; `(x + a) - b` does not (gatekeeper `TBGKMtxCalc::calc`).
 - A member reloaded after a store proves the source read the member at each site (boid `calcBoids`).
+- Passing `&member` instead of relying on the implicit `TVec3`->`Vec*` conversion changes callee-saved order in every caller inlining the helper (LightUtil `setLight`s).
 
 ## Float and pool
 
