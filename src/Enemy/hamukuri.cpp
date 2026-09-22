@@ -852,6 +852,11 @@ static inline f32 HamukuriGetGroundHeight(const TLiveActor* p)
 	return groundHeight;
 }
 
+// TODO: instruction-exact, frame 8 short (0x60 vs 0x68) with the low pool
+// 0xc high. Declaring `tgt` uninitialised at the top of the `if` and reading
+// the ground height through getGroundHeight() lands every pool slot but
+// leaves the named block 0xc low and the frame 0x10 short: retail has a
+// 12-byte object above local_1C that nothing here names.
 void THamuKuri::jumpToSearchActor()
 {
 	(void)0; // TODO: hack, need to figure out canGoForSearchActor?
