@@ -40,40 +40,49 @@ void TRealoidActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk70->perform(cue, graphics);
 }
 
-// TODO: 99.6%, all instructions match (58 `~` markers, frame/register only).
-// Retail frame 0xd0 vs our 0xa0; n/dir/up sit 0x40 low (0x94/0xa0/0xac vs
-// 0x54/0x60/0x6c) while the taking-path `v` already matches at 0x88. A dead
-// last-declared `Mtx` lands the frame but lifts `v` off 0x88 and leaves the
-// other temps 0x10 short. `boid->mPosition.set(...)` drops the word-copy
-// (95%). getHolder/getMActor already measured inert. Open: +0x40 of low
-// region that does not move the taking `v`.
+static inline J3DModel* getRealoidModel(TRealoidActor* actor)
+{
+	MActor* mactor  = actor->getMActor();
+	J3DModel* model = mactor->getModel();
+	return model;
+}
+
+static inline TTakeActor* getRealoidHolder(TRealoidActor* actor)
+{
+	TTakeActor* holder = actor->getHolder();
+	return holder;
+}
+
 void TRealoidActor::calcRootMatrix(TBoid* boid)
 {
+	JGeometry::TVec3<f32> trans;
+	MtxPtr root;
+	JGeometry::TVec3<f32> up, dir, n;
+
 	if (mFlags & FLAG_UNK2_OR_UNK4)
 		return;
 
 	mPosition = boid->mPosition;
 
-	if (mHolder != nullptr) {
+	if (getRealoidHolder(this) != nullptr) {
 		MtxPtr hm = mHolder->getTakingMtx();
 		JGeometry::TVec3<f32> v;
 		v.x             = hm[0][3];
 		v.y             = hm[1][3];
 		v.z             = hm[2][3];
 		boid->mPosition = v;
-		unk70->getModel()->setBaseTRMtx(mHolder->getTakingMtx());
+		getRealoidModel(this)->setBaseTRMtx(mHolder->getTakingMtx());
 		return;
 	}
 
 	mPosition = boid->mPosition;
 
-	JGeometry::TVec3<f32> trans = boid->mPosition;
+	trans = boid->mPosition;
 
-	MtxPtr root = unk70->getModel()->getBaseTRMtx();
+	root = getRealoidModel(this)->getBaseTRMtx();
 
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-	JGeometry::TVec3<f32> dir = boid->mHeading;
-	JGeometry::TVec3<f32> n;
+	up.set(0.0f, 1.0f, 0.0f);
+	dir = boid->mHeading;
 
 	n.cross(up, dir);
 	VECNormalize(&n, &n);
@@ -246,24 +255,20 @@ void TFishoid::init(TLiveManager* manager)
 
 void TFishoid::initBoids() { }
 
-// TODO: 99.9%, all instructions match; TPathNode/eventId slot *order* now
-// matches (0xb0 / 0xac) after moving the eventId read into `loadItem` (map
-// UNUSED 0x84, inlined here like Butterfly) plus `onFlag` and a
-// `gpMarioAddress` fork. Frame is 0xd8 against retail 0xd0: an 8-byte hole
-// sits above the TPathNode (r28 at 0xc8, node ends at 0xbf). Every -8 that
-// lands the frame also drops both slots 4 or 8 (drop `getPosition()`, one
-// `getBoidLeader()`, or `getBoidNum()`). `FishoidLeader` binder is +0x10 and
-// required; a named `TPathNode` local wrecks the copy (92.3%).
-
 static inline TBoidLeader* FishoidLeader(TRealoid* realoid)
 {
 	TBoidLeader* leader = realoid->getBoidLeader();
 	return leader;
 }
 
-static inline THitActor* FishoidMario()
+// The appearing item's setup is a helper of its own: retail keeps the last
+// realoid out of load's named block, as a named local of an inlined body.
+static inline void FishoidAppearItem(TFishoid* fishoid)
 {
-	return (THitActor*)gpMarioAddress;
+	TRealoidActor* realoid = fishoid->getRealoid(fishoid->getBoidNum() - 1);
+	realoid->onFlag(TRealoidActor::FLAG_UNK2);
+	fishoid->unk15C->makeObjAppeared();
+	fishoid->unk15C->mPosition = realoid->mPosition;
 }
 
 void TFishoid::load(JSUMemoryInputStream& stream)
@@ -278,7 +283,8 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 	getBoidLeader()->setMaxPitch(5.0f);
 	getBoidLeader()->setAlignmentStrength(0.5f);
 
-	FishoidLeader(this)->setFleeTarget(FishoidMario());
+	TPathNode node((THitActor*)gpMarioAddress);
+	FishoidLeader(this)->setFleeTarget(node);
 
 	getBoidLeader()->setFleeRadius(400.0f);
 	getBoidLeader()->setFleeStrength(3.0f);
@@ -287,12 +293,8 @@ void TFishoid::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < getBoidNum(); ++i)
 		getRealoid(i)->unk70->setBck("fish_swim");
 
-	if (unk15C) {
-		TRealoidActor* realoid = getRealoid(getBoidNum() - 1);
-		realoid->onFlag(TRealoidActor::FLAG_UNK2);
-		unk15C->makeObjAppeared();
-		unk15C->mPosition = realoid->getPosition();
-	}
+	if (unk15C)
+		FishoidAppearItem(this);
 }
 
 void TFishoid::loadItem(JSUMemoryInputStream& stream)
