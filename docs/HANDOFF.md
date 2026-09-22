@@ -85,6 +85,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   Unit data is **89.74 -> 100%**, `decideMarioPosIdx` **90.60 -> 99.41%**, and project matched data **96.45 -> 96.47%**.
 - Landed `GC2D/hx_wiper`: `Hx_CameraInit` and `Hx_MotionUpdate` are exact, raising project matched code **63.55 -> 63.57%**, Game **55.97 -> 56.00%**, and exact functions **11,462 -> 11,464**.
   The remaining wiper data mismatch is `Hx_Logo`'s nine-entry jump table; the whole TU was audited, so do not reassign it without a new control-flow lead.
+- Landed the `NPC/NpcBase` header round: moving `getAnmOffDist_` out of class restored its map-required weak 0x104 body and call chain, raising `perform` **63.25 -> 71.38%** and the unit **89.05 -> 93.68%**.
+- Landed further medium whole-file gains in `MoveBG/ModelGate` (`loadAfter` **98.70 -> 99.64%**), `Animal/AnimalBase` (`execWalk` **79.12 -> 81.55%**), and `System/MSoundMainSide` (`MSStageDistFadeMonte::proc` **98.55 -> 98.87%**).
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
