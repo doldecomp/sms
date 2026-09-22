@@ -321,6 +321,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A pass-through helper returning a pointer parameter, bound once and shared by three `JAIActor` arguments, adds 8 of pool (MSound `startSoundActorSpecial`).
 - Named `s16` angle locals before `JMASSin`/`JMASCos(s16)` are +8 of low pool; `JMASin(f32)` or a sin/cos wrapper is +0 or overshoots (MathUtil `MsMtxSetRotRPH`/`MsMtxSetTRS`).
 - A TU-local by-value `f32` level over a member is +4 pool and moves a named slot by exactly 4 (Item `TNozzleBox::load`, `MsIsInSight`, `execRoofCheck_`).
+- Binders inside a small helper that others inline raise every caller's frame equally and leave the helper's own copy unchanged (MapObjBase `removeMapCollision` closed `changeObjMtx` and `makeObjDead`).
+- `TFlagT<u16>()` instead of `TFlagT<u16>(0)` moves the by-value flag temporary 4 bytes up at no instruction cost (MarDirectorEvent `fireGetStar`).
 
 ## Register and scheduling residues
 
@@ -383,6 +385,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - An inline helper computing into its value parameter in place gives retail's volatile FPRs with no slot; a named result local leaves 4 bytes (cameralib `CLBCalc2DFPos`).
 - `s16 a = matan(dz, dx); x = k * a;` fixes the conversion's FPR order where `k * matan(...)` does not (Item `TEggYoshi::touchFruit`).
 - A loop counter that must share a callee-saved zero register used for member stores: move the loop into a TU-local level (limitkoopajr `init`).
+- An explicit no-op `const` pointer cast on one read stops MWCC reusing an earlier load of that member, like the explicit-upcast rule; implicit const binding does not (MapObjBase `startControlAnim`; replaces the `volatile` fakematch in `removeMapCollision`).
+- In the 99.9% band a register difference on an `isActorType` load can mean the test is on the wrong object (MapObjGeneral `receiveMessage`: the sender).
 
 ## Float and pool
 
