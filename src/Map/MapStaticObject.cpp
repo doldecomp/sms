@@ -353,9 +353,9 @@ void TMapStaticObj::initMapCollision(const char* name)
 	mCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
 }
 
-// Pragma residue (sweep 360): protects TMapStaticObj::init (99.82 -> 73.6)
-// and costs initModel itself 0.04 (100 -> 99.96) when removed.
-#pragma dont_inline on
+// Retail calls this from init: the named `actor` is the fifteenth statement
+// over the depth-1 budget. Measured and rejected: naming either anim-data
+// argument (the buffer moves 4 up, or the loads reorder).
 void TMapStaticObj::initModel(const char* name)
 {
 	char buffer[256];
@@ -380,9 +380,9 @@ void TMapStaticObj::initModel(const char* name)
 		    mActorData->unk24);
 	}
 
-	TMapObjBase::startAllAnim(mMActor, name);
+	MActor* actor = mMActor;
+	TMapObjBase::startAllAnim(actor, name);
 }
-#pragma dont_inline off
 
 void TMapStaticObj::init(const char* name)
 {
