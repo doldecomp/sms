@@ -304,6 +304,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A by-value TU-local level over a by-value-returning call puts the result slot address before the argument temporary (NpcWalkTurn `execUTurn`).
 - One UNUSED inline body can price differently in two callers: settle it for one, tune the other with site forks (MapObjRicco `pushDown`).
 - A named `s16` argument local takes a 4-byte slot at the bottom of the named block; compute it into the call (NpcWalkTurn).
+- Additivity holds for pool levers only; named locals in the caller saturate (nine gave +0x38, not +0x58) (NpcInitPrg `TBaseNPC::init`).
+- Wrapping `v * s` in a direct-return helper moves the operator's by-value argument below an out-of-line call's return slot (boid `calcForces`).
 
 ## Register and scheduling residues
 
@@ -358,6 +360,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A header inline's own named local can rank a value above the pool base; write the inline out in the caller (MarioEffect `setJumpIntoWaterEffect*`).
 - An existing header accessor on one operand fixes a commutative `fadds` order no parenthesisation reaches (MapObjRicco crane, linked).
 - Passing a `TMatrix34` member's raw array instead of the conversion operator evaluates that argument last (MapObjFlag `draw`).
+- Binding a reference local before zero stores gives the zero constant the higher callee-saved register (MarDirectorSetupObjects `decideMarioPosIdx`).
+- `x += a; f32 y = x - b;` reproduces retail's `fmr` into the local's register; `(x + a) - b` does not (gatekeeper `TBGKMtxCalc::calc`).
+- A member reloaded after a store proves the source read the member at each site (boid `calcBoids`).
 
 ## Float and pool
 
