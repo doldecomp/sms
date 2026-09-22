@@ -352,6 +352,19 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 		s16 r26_param164;
 		s32 r27_param168;
 
+		// TODO: this block is 3 instructions long, which shifts the volume
+		// switch's jump table (the only .data mismatch). Retail loads
+		// mVolumeEmitIdx here (`lwz r27`), reads mEmitCount through a fresh
+		// `lis/addi` of JPAEmitterInfoObj (`extsh r0; mr r26, r0`), and
+		// addresses the sphere fields straight off the r30 base; ours hoists
+		// six `addi rX, r30, 0x16c..0x17c` field addresses. Reading the
+		// sphere fields through a non-constant pointer
+		// (`JPAGetEmitterInfoPtr()` bound to a local) removes the hoisting
+		// but ranks that pointer above `this` (retail: this r31, base r30)
+		// and still CSEs the mEmitCount read. Not: a reference/`const`
+		// pointer local, a TU-local sphere helper (with or without an info
+		// parameter), an inline mEmitCount getter, reordered or widened
+		// r24-r27 declarations.
 		if (checkFlag(EMIT_FLAG_FIXED_INTERVAL)) {
 			r27_param168 = JPAEmitterInfoObj.mVolumeEmitIdx;
 			r26_param164 = JPAEmitterInfoObj.mEmitCount;
