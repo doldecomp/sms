@@ -396,19 +396,17 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 /// glyph colour. Unrecognised bytes are copied through untouched.
 void TCardSave::setMessageC(J2DTextBox* text_box, s32 message_id, u32 size)
 {
-	JSUMemoryInputStream in(SMSGetMessageData(unk2E4, (u16)message_id), size);
+	JSUMemoryInputStream in(SMSGetMessageData(unk2E4, message_id & 0xFFFF),
+	                        size);
 	JSUMemoryOutputStream out(text_box->getStringPtr(), size);
-	// TODO: 99.4%. Two residues, both slot-offset only (the frame size is
-	// already exact): the ROM narrows the id with `clrlwi r4, r5, 16` at the
-	// call while we hoist it into the prologue and move it, and the ROM's
-	// buffer starts four bytes lower, so our body carries one 4-byte inline
-	// temporary it does not have. `in.read(&c, 1)` instead of readU8(),
-	// per-site `u8` copies instead of write(u8), a 260-byte buffer and an
-	// extra named local before the buffer were all tried and are worse.
+	// The id is narrowed with a mask, not a `(u16)` cast: the cast is hoisted
+	// into the prologue, the mask stays at the call. `c` is declared before
+	// the buffer, which puts its slot above the buffer as in the ROM.
+	u8 c;
 	char buffer[256];
 
 	while (!in.isDrained() && !out.isDrained()) {
-		u8 c = in.readU8();
+		c = in.readU8();
 		JUtility::TColor color;
 
 		switch (c) {
