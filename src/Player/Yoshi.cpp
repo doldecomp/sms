@@ -732,8 +732,6 @@ void TYoshi::emitTongue()
 			break;
 		++tries;
 	} while (tries < 10);
-
-	unkDC = 3;
 }
 
 void TYoshi::doSearch()
@@ -760,6 +758,7 @@ void TYoshi::doSearch()
 		mEggRotSpeed = prev + delta;
 		if (delta > -256 && delta < 256) {
 			emitTongue();
+			unkDC = 3;
 			changeAnimation(3);
 		}
 		break;
@@ -768,6 +767,7 @@ void TYoshi::doSearch()
 	case 2:
 		if (mTongue->findTarget(false, true) != nullptr) {
 			emitTongue();
+			unkDC = 3;
 		} else {
 			unkDE = (s16)((f32)(unkEA - unkE8) * MsRandF() + (f32)unkE8);
 			unkDC = 0;
@@ -870,24 +870,23 @@ void TYoshi::thinkHoldOut()
 	}
 }
 
-// TODO: incorrect size (map 0x140, eighty instructions -- far more than the
-// three statements below, so the dead body also swallowed the plane test and
-// the disappear()/land branch that movement() runs twice around it). The
-// signature is read off the mangled name, and the pair of checkGround +
-// setLightData blocks in movement() (the egg-drop arm and the unmounted arm)
-// is what it was factored out of. Left uncalled so movement() is unchanged.
+// Map size 0x140 exactly. Both ground probes in movement() expand it: retail
+// walks down through Mario-passable, non-water planes up to five times, with
+// isMarioThrough()/isWaterSurface() called out of line at depth 2.
 f32 TYoshi::checkGroundYoshi(const JGeometry::TVec3<f32>& pos, f32* out_y,
                              const TBGCheckData** out_plane)
 {
 	*out_y = gpMap->checkGround(pos.x, 200.0f + pos.y, pos.z, out_plane);
-	mActor->setLightData(*out_plane, mTranslation);
+	for (int i = 0; i < 5; i++) {
+		if (!(*out_plane)->isMarioThrough() || (*out_plane)->isWaterSurface())
+			break;
+		*out_y = gpMap->checkGround(pos.x, *out_y - 1.0f, pos.z, out_plane);
+	}
+	mActor->setLightData(*out_plane, pos);
 	return *out_y;
 }
 
-// TODO: literal-pool order. The target asks for 1.0f (@3849) before 60.0f
-// (@3850), i.e. a 1.0f use inside movement() precedes the 60.0f; ours puts
-// 1.0f last in the TU (shared with init, thinkUpper, thinkAnimation and
-// appearFromEgg). Order only -- the value sets match.
+// TODO: frame 0x1a8 against retail's 0x240.
 void TYoshi::movement()
 {
 	if (!gpMarDirector->isDemoMode3() && !gpMarDirector->isDemoMode4()
@@ -916,11 +915,9 @@ void TYoshi::movement()
 		SMS_RideMoveByGroundActor(unk94, &mTranslation, &rot);
 		mEggRotSpeed = DEG2SHORTANGLE(rot);
 
-		const TBGCheckData* ground;
-		JGeometry::TVec3<f32> trans = mTranslation;
-		f32 groundY
-		    = gpMap->checkGround(trans.x, 200.0f + trans.y, trans.z, &ground);
-		mActor->setLightData(ground, mTranslation);
+		const TBGCheckData* ground = nullptr;
+		f32 groundY;
+		checkGroundYoshi(mTranslation, &groundY, &ground);
 		unk2C -= mMario->mJumpParams.mGravity.get();
 		mTranslation.y += unk2C;
 
@@ -951,7 +948,7 @@ void TYoshi::movement()
 		mTranslation = mMario->mPosition;
 		mEggRotSpeed = mMario->mFaceAngle.y;
 
-		if (mMario->mGamePad->checkMeaning(0x100)) {
+		if (mMario->mGamePad->checkFrameMeaning(0x100)) {
 			emitTongue();
 		}
 		if (unkC <= 0)
@@ -1002,9 +999,8 @@ void TYoshi::movement()
 		mTongue->movement();
 
 		const TBGCheckData* ground;
-		f32 groundY = gpMap->checkGround(
-		    mTranslation.x, 200.0f + mTranslation.y, mTranslation.z, &ground);
-		mActor->setLightData(ground, mTranslation);
+		f32 groundY;
+		checkGroundYoshi(mTranslation, &groundY, &ground);
 
 		if (mState == STATE_UNMOUNTED && groundY > mTranslation.y) {
 			if (ground->isWaterSurface()) {
