@@ -200,6 +200,7 @@
     "JSystem/JParticle/JPADraw.cpp",
     "JSystem/JParticle/JPADrawSetupTev.cpp",
     "JSystem/JParticle/JPAEmitterLoader.cpp",
+    "JSystem/JParticle/JPAEmitterManager.cpp",
     "JSystem/JParticle/JPAExTexShape.cpp",
     "JSystem/JParticle/JPAExtraShape.cpp",
     "JSystem/JParticle/JPAParticle.cpp",
