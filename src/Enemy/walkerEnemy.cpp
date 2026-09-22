@@ -65,29 +65,14 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
-// TODO: every instruction matches; the frame is 0x60 against retail's 0x88, a
-// uniform 40 bytes of dead pool below the `polarXZ` return temp (retail 0x50,
-// ours 0x30). The same 40 bytes are missing from TNerveWalkerEscape::execute,
-// and both functions are the two places in this TU with a bare
-// `getSaveParam();` statement whose result is discarded -- MWCC keeps the
-// virtual call and dead-strips the load, so retail's real statement there can
-// be anything whose values are all dead. 40 = 32 of pool + 8 of padding, which
-// is the signature of two 16-byte non-trivial class locals (TPathNode is 16 and
-// has a user constructor) inside an inlined callee. Finding that callee is one
-// research item for both functions; see docs/catalog/frame-gaps.md, "The dead
-// low region".
-// Measured this batch: the gap is not only 32 bytes of pool below the
-// `polarXZ` temp (ours 0x30, retail 0x50) but also a 4-byte pad on each
-// 12-byte vector slot -- retail strides 0x50 -> 0x60 -> 0x70 where we pack
-// 0x30 -> 0x3c -> 0x48. A 16-byte stride on a TVec3 is the signature of a
-// *callee's* class local (sizeof rounded to 8) rather than a caller temp, so
-// all four slots, the two live ones included, belong to inlined callees;
-// `local` being a named local here is itself wrong. TNerveWalkerEscape shows
-// the same 32+8 split around the `TSolidStack<TPathNode>::pop()` temp
-// (ours 0x24, retail 0x44, with 16 rather than 8 free bytes above it).
+// Retail keeps a virtual `getSaveParam()` call whose result is dead after the
+// polar temp. It is spelled here as a dead named read of a walker parameter
+// (which member it read is unobservable); the named `f32` from the reference
+// `get()` gives the vector slots their 16-byte stride, and the accessor reads
+// (`getGroundPlane`, `getSpine`, `getRotation`) carry the rest of the pool.
 void TWalkerEnemy::moveObject()
 {
-	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
+	if (!getGroundPlane()->checkFlag(BG_CHECK_FLAG_ILLEGAL)
 	    && (mInstanceIndex & 0xF) == (gpMarDirector->unk58 & 0xF)) {
 		doShortCut();
 	}
@@ -95,18 +80,18 @@ void TWalkerEnemy::moveObject()
 	TSmallEnemy::moveObject();
 
 	if (getWalker()->getUnk1C()
-	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyJump::theNerve()) {
+	    && getSpine()->getCurrentNerve() != &TNerveSmallEnemyJump::theNerve()) {
 
 		// TODO: some order of inlines should be used instead of tmps
-		f32 yAngle = mRotation.y;
+		f32 yAngle = getRotation().y;
 		f32 f      = getSaveParam2()->unk324.mMax;
 
 		JGeometry::TVec3<f32> local = polarXZ(yAngle, f);
 
-		getSaveParam();
+		f32 cycle = getSaveParam2()->mSLZigzagCycle.get();
 		mVelocity.x = local.x;
 		mVelocity.z = local.z;
-		mSpine->pushNerve(&TNerveSmallEnemyJump::theNerve());
+		getSpine()->pushNerve(&TNerveSmallEnemyJump::theNerve());
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		mPosition.y += 5.0f;
 	}
@@ -329,10 +314,9 @@ DEFINE_NERVE(TNerveWalkerPostAttack, TLiveActor)
 	return false;
 }
 
-// TODO: instruction-exact; frame 0x48 against retail's 0x70, the same missing
-// 40 bytes as TWalkerEnemy::moveObject and the same dead `getSaveParam();`
-// statement. `switchNextGoalPath()` in place of the two spelled-out statements
-// is frame-neutral here.
+// The two dead `getSaveParam()` calls are two dead named parameter reads, as
+// in TWalkerEnemy::moveObject; with them, `switchNextGoalPath()` spelled out
+// (rather than called) puts the `pop()` temp at retail's slot.
 DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 {
 	TWalkerEnemy* self = (TWalkerEnemy*)spine->getBody();
@@ -344,10 +328,11 @@ DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 	if (self->isReachedToGoal())
 		self->goToRandomEscapeGraphNode();
 
-	self->getSaveParam();
-	self->getSaveParam();
+	f32 cycle = self->getSaveParam2()->mSLZigzagCycle.get();
+	f32 angle = self->getSaveParam2()->mSLZigzagAngle.get();
 	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)) {
-		self->switchNextGoalPath();
+		if (!self->unk114.empty())
+			self->unkF4 = self->unk114.pop();
 		return true;
 	}
 
