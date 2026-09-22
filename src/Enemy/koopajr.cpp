@@ -1037,43 +1037,51 @@ void TKoopaJrSubmarine::launchKiller()
 		                                          0, nullptr, 0, 4);
 }
 
+// TODO: shared-header candidate. The ROM's cross product here stores each
+// component as soon as it is computed and reloads the operands after every
+// store; JGeometry::TVec3::cross batches all three through locals first.
+static inline void KoopajrCross(JGeometry::TVec3<f32>& dst,
+                                const JGeometry::TVec3<f32>& a,
+                                const JGeometry::TVec3<f32>& b)
+{
+	dst.x = a.y * b.z - a.z * b.y;
+	dst.y = a.z * b.x - a.x * b.z;
+	dst.z = a.x * b.y - a.y * b.x;
+}
+
 // Shine killers go up and then arc towards Mario; the others aim at a spot
 // on the bathtub's rim.
 void TKoopaJrSubmarine::makeKillerVelocity(TBathtubKiller* killer,
                                            JGeometry::TVec3<f32> dir)
 {
-	if (mKillerTypes[mKillerIndex] == 2) {
+	if ((int)mKillerTypes[mKillerIndex] == 2) {
 		dir.set(0.0f, 1.0f, 0.0f);
-		JGeometry::TVec3<f32> toMario(*gpMarioPos);
-		toMario.sub(killer->mPosition);
+		JGeometry::TVec3<f32> marioPos(*gpMarioPos);
+		JGeometry::TVec3<f32> toMario;
+		toMario.sub(marioPos, killer->mPosition);
 		toMario.y = 0.0f;
 		toMario.normalize();
 
 		JGeometry::TVec3<f32> axis;
-		axis.cross(dir, toMario);
+		KoopajrCross(axis, dir, toMario);
 		axis.normalize();
-		f32 angle = 0.62831855f;
+		f32 angle = 0.2f * M_PI;
 		JGeometry::TQuat4<f32> q;
-		q.setRotate(axis, angle);
-		q.rotate(dir);
+		q.setRotate(axis, 0.2f * M_PI);
+		q.rotate(dir, dir);
 
-		axis = toMario;
-		switch (mKillerIndex % 4) {
-		case 0:
-			angle = -0.15707964f;
-			break;
-		case 1:
-			angle = 0.15707964f;
-			break;
-		case 2:
-			angle = -0.31415927f;
-			break;
-		case 3:
-			angle = 0.31415927f;
-			break;
-		}
+		axis    = toMario;
+		int idx = mKillerIndex % 4;
+		if (idx == 0)
+			angle = -KoopajrPiTimes(0.05f);
+		else if (idx == 1)
+			angle = KoopajrPiTimes(0.05f);
+		else if (idx == 2)
+			angle = -KoopajrPiTimes(0.1f);
+		else if (idx == 3)
+			angle = KoopajrPiTimes(0.1f);
 		q.setRotate(axis, angle);
-		q.rotate(dir);
+		q.rotate(dir, dir);
 		dir.normalize();
 		dir.scale(killer->mPersonality.mInitialSpeed);
 	} else {
@@ -1088,15 +1096,14 @@ void TKoopaJrSubmarine::makeKillerVelocity(TBathtubKiller* killer,
 		toMario.y    = 0.0f;
 		f32 dist     = toMario.length()
 		           - getSaveParams()->killerTargetDistance.get();
-		f32 distMin = getSaveParams()->killerTargetDistanceMin.get();
-		if (dist >= distMin)
-			distMin = dist;
+		f32 distMin = JGeometry::max(
+		    dist, getSaveParams()->killerTargetDistanceMin.get());
 		toMario.normalize();
 		toMario.scale(distMin);
 		JGeometry::TVec3<f32> goal;
 		goal.add(killer->mPosition, toMario);
 		goal.y = target.y;
-		dir    = killer->calcVelocityToJumpToY(
+		dir    = calcVelocityToJumpToY(
             goal, dir.y, killer->getSaveParam2()->mSLFlyingGravityY.get());
 	}
 	killer->makeInitialVelocity(dir);
