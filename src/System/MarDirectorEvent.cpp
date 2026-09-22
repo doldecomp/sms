@@ -34,6 +34,9 @@ void TMarDirector::updateFlag(TBaseNPC*, u32, u32) { }
 // the hoisted `marioPos` component loads (retail reads y, z, then `unk88.end()`,
 // then x, giving f2/f4/f5 where we get f4/f3/f5) plus a 40-byte frame gap
 // (0x58 vs 0x30), so retail has temps we are missing; the two are one cause.
+// Inert (2026-09-22): named-component, Vec& and by-value-copy distance
+// helpers, SMS_GetMarioPos() or a split assignment for marioPos, and every
+// iterator declaration form (for-init, top, `it++`, a named end).
 TBaseNPC* TMarDirector::findNearestTalkNPC()
 {
 	TBaseNPC* result = nullptr;
@@ -77,27 +80,34 @@ TBaseNPC* TMarDirector::findNearestTakeNPC()
 	return result;
 }
 
+// Binders over the player, the pad and the talk cursor: with SMSGetCamera()
+// at the L-button test they are retail's 0x30 of pool in movement_game (one
+// of fourteen equally sized lever combinations; weakly evidenced).
+static inline TMario* MDEMario() { TMario* m = gpMarioOriginal; return m; }
+static inline TMarioGamePad* MDEPad(TMarDirector* d) { TMarioGamePad* p = d->unk18[0]; return p; }
+static inline TTalkCursor* MDECursor(TMarDirector* d) { TTalkCursor* c = d->unk84; return c; }
+
 void TMarDirector::movement_game()
 {
-	unk84->associateNPC(nullptr);
+	MDECursor(this)->associateNPC(nullptr);
 
 	switch (unk124) {
 	case 0:
 		unk18[0]->offFlag(0x4);
-		if (gpMarioOriginal->isHolding())
+		if (MDEMario()->isHolding())
 			return;
-		if (gpCamera->isLButtonCamera())
+		if (SMSGetCamera()->isLButtonCamera())
 			return;
 
 		if (!gpCamera->isDemoCamera()) {
 			if (TBaseNPC* takeNpc = findNearestTakeNPC()) {
-				unk84->associateNPC(takeNpc);
+				MDECursor(this)->associateNPC(takeNpc);
 			} else {
 				TBaseNPC* talkNpc = findNearestTalkNPC();
 				if (talkNpc != nullptr) {
 					unkA0 = talkNpc;
 					unk84->associateNPC(talkNpc);
-					unk18[0]->onFlag(4);
+					MDEPad(this)->onFlag(4);
 					unk128 |= 0x1;
 					if ((unk128 & 2)
 					    && (unk18[0]->mEnabledFrameMeaning & 0x800))
@@ -134,7 +144,7 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 	if (!nozzle)
 		return;
 
-	u8 area = gpApplication.mCurrArea.unk0;
+	u8 area = gpApplication.mCurrArea.getStage();
 	if (nozzle->isActorType(0x20000022)
 	    && !TFlagManager::smInstance->getNozzleRight(area, 0)) {
 		TFlagManager::smInstance->setNozzleRight(area, 0);
@@ -201,13 +211,16 @@ void TMarDirector::movement()
 	}
 }
 
-// TODO: 74%. Control flow, the stage/episode split and the tail switch are
-// instruction-exact; every remaining difference is the known TFlagT<u16>
-// by-value copy documented in JSystem/JDrama/JDRFlag.hpp -- retail builds the
-// TGameSequence default flag with an inlined ctor plus an out-of-line copy
-// constructor into the by-value parameter slot (twice), where MWCC here
-// constructs straight into the slot with the converting ctor. That accounts
-// for the 0x10 frame gap and the register-allocation shift as well.
+// TODO: 97.7%. Instructions match but for one scheduling pair (retail loads
+// next.unk0 before forming &gpApplication); the frame is 0x10 short with
+// `next` 0xc low and the flag temporaries 4 low. Inert or worse: `curr` or a
+// split `cur` declared at the top, an int/u16 copy of param_1, a conversion
+// helper (by reference, pointer or value), direct `mNextArea = next`/`set`,
+// a pointer-returning application accessor.
+// Reference-returning accessor: retail folds the TGameSequence stores onto
+// the &gpApplication base (0x12/0x13/0x14) instead of binding &mNextArea.
+static inline TApplication& MDEApp() { return gpApplication; }
+
 void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
 {
 	if (checkUnk4CFlag(0x2))
@@ -216,13 +229,13 @@ void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
 	TGameSequence next;
 	if (param_1 >= 0x100) {
 		next.unk0 = (param_1 >> 8) - 1;
-		next.unk1 = param_1;
+		next.unk1 = param_1 & 0xff;
 	} else {
 		next.unk0 = param_1;
 		next.unk1 = 0xFF;
 	}
 
-	gpApplication.setNextArea(next);
+	MDEApp().setNextArea(next);
 
 	const TGameSequence& curr = gpApplication.mCurrArea;
 	if (param_2 != nullptr) {
@@ -279,8 +292,8 @@ void TMarDirector::fireStartDemoCamera(const char* param_1,
 
 void TMarDirector::fireEndDemoCamera() { unk4C |= 0x80; }
 
-// TODO: 99.94% -- the frame is 0x40 in retail against our 0x18, a 40-byte
-// dead low region with no instruction difference left.
+// The 0x28 of pool is the setter level through MDEApp() at the seven movie
+// stores plus the flag-manager binder at the first setBool.
 void TMarDirector::fireStreamingMovie(u8 param_1)
 {
 	switch (param_1) {
@@ -288,9 +301,9 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!checkUnk4CFlag(0x100)) {
 			onUnk4CFlag(0x100);
 			setNextStage(0x1, nullptr);
-			TFlagManager::smInstance->setBool(true, 0x10389);
+			TMarDirectorGetFlagManager()->setBool(true, 0x10389);
 			TFlagManager::smInstance->setBool(true, 0x30004);
-			gpApplication.mMovie = param_1;
+			MDEApp().setMovie(param_1);
 		}
 		break;
 
@@ -298,7 +311,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!checkUnk4CFlag(0x100)) {
 			onUnk4CFlag(0x100);
 			setNextStage(0x3B, nullptr);
-			gpApplication.mMovie = param_1;
+			MDEApp().setMovie(param_1);
 		}
 		break;
 
@@ -306,7 +319,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!checkUnk4CFlag(0x100)) {
 			onUnk4CFlag(0x100);
 			setNextStage(0xE06, nullptr);
-			gpApplication.mMovie = param_1;
+			MDEApp().setMovie(param_1);
 		}
 		break;
 
@@ -314,7 +327,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!checkUnk4CFlag(0x100)) {
 			onUnk4CFlag(0x100);
 			setNextStage(0xE07, nullptr);
-			gpApplication.mMovie = param_1;
+			MDEApp().setMovie(param_1);
 		}
 		break;
 
@@ -322,7 +335,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!checkUnk4CFlag(0x100)) {
 			onUnk4CFlag(0x100);
 			setNextStage(0x3C, nullptr);
-			gpApplication.mMovie = param_1;
+			MDEApp().setMovie(param_1);
 		}
 		break;
 
@@ -330,7 +343,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!checkUnk4CFlag(0x100)) {
 			onUnk4CFlag(0x100);
 			setNextStage(0x101, nullptr);
-			gpApplication.mMovie = param_1;
+			MDEApp().setMovie(param_1);
 		}
 		break;
 
@@ -341,7 +354,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!checkUnk4CFlag(0x100)) {
 			onUnk4CFlag(0x100);
 			setNextStage(0xF, nullptr);
-			gpApplication.mMovie = (u8)param_1;
+			MDEApp().setMovie(param_1);
 		}
 		break;
 	}
