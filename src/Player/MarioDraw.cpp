@@ -1,5 +1,4 @@
 #include <Player/Mario.hpp>
-#include <Player/MarioAnimeData.hpp>
 #include <Player/MarioCap.hpp>
 #include <Player/WaterGun.hpp>
 
@@ -29,6 +28,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Player/MarioAnimeData.hpp>
 
 TMario* gpMarioForCallBack;
 
@@ -992,59 +992,58 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 		}
 
 		switch (mYoshi->mActor->getCurAnmIdx(ANM_TYPE_BCK)) {
-		case 0x1:
+		case 22:
 			anm_id = 0xB6;
 			break;
-		case 0x2:
+		case 24:
 			anm_id = 0xB7;
 			break;
-		case 0x3:
+		case 15:
 			anm_id = 0xB8;
 			break;
-		case 0x4:
+		case 3:
 			anm_id = 0xB9;
 			break;
-		case 0x6:
+		case 14:
 			anm_id = 0xBF;
 			break;
-		case 0x7:
+		case 4:
 			anm_id = 0xBA;
 			break;
-		case 0x8:
+		case 10:
 			anm_id = 0xBB;
 			break;
-		case 0x9:
+		case 12:
 			anm_id = 0xBC;
 			break;
-		case 0xA:
+		case 11:
 			anm_id = 0xBD;
 			break;
-		case 0xB:
+		case 9:
 			anm_id = 0xBE;
 			break;
-		case 0xC:
+		case 16:
+		case 17:
 			anm_id = 0xB8;
 			break;
-		case 0xE:
+		case 8:
 			anm_id = 0xC0;
 			break;
-		case 0xF:
+		case 7:
 			anm_id = 0xC1;
 			break;
-		case 0x10:
-		case 0x11:
+		case 6:
 			anm_id = 0xC2;
 			break;
-		case 0x12:
+		case 2:
 			anm_id = 0xC4;
 			break;
-		case 0x13:
+		case 19:
 			anm_id = 0xC5;
 			break;
-		case 0x16:
+		case 18:
 			anm_id = 0xC6;
 			break;
-		case 0x18:
 		default:
 			anm_id = 0xB6;
 			break;
