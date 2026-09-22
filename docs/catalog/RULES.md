@@ -49,6 +49,11 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A global read through its inline accessor (`&SMS_GetMarioPos()` for `gpMarioPos`) is a free evaluation-order knob: as an argument it loads ahead of the receiver, as the receiver ahead of the arguments (codegen-tells.md: "Reloc-target pass IV").
 - `a * b * c` association reads off the first `fmuls`; a retail `bne <true-arm>` with the false value in the fallthrough means the source negated the ternary's test (codegen-tells.md: "Reloc-target pass IV").
 - `f32 x = a - b;` subtracts into `b`'s register, `x = a; x -= b;` into `a`'s (codegen-tells.md: "batch 80").
+- Case bodies aligned by position but a jump table still wrong: the case labels are wrong; relabel from the table's entry order, retail's arm order may be non-numeric (GCConsole2 `perform`: 0-3, 7, 8, 4, 5, 6, 10).
+- A helper that reloads a value from `this` after each call takes it by reference (`TBoundPane*&`, `const s32&`), not by value (GCConsole2 `perform`/`loadAfter`, 1-3%).
+- `bool done = true; done &= a();` gives `li rN,1; and`; `bool done = a(); done &= b();` gives `mr; and` (GCConsole2).
+- Consecutive emitter-centring blocks reuse one `JUTRect` built once then word-assigned (GCConsole2).
+- `u8 v = s->read8b()` keeps the byte in a callee-saved register; `read(&v, 1)` reloads from the stack (GCConsole2).
 
 ## Inlining decisions
 
@@ -261,6 +266,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `int a = p->getAlpha(); a += 4;` works in the loaded register; the one-line `getAlpha() + 4` computes into r0 and adds an `mr` (CardLoad `perform`).
 - `T* bm = &arr[idx]; bm->f` gives `addi; lhzx`, inline `arr[idx].f` gives `add; lhz off` (CardLoad `waitForAnyKeyBM`).
 - A `(u16)x` call argument is narrowed in the prologue and moved with `mr`; `x & 0xFFFF` stays at the call as one `clrlwi` (CardSave `setMessageC`).
+- `lha` then `extsh.` for a zero test is an `s16`-returning getter; a raw member gives `cmpwi` (GCConsole2).
+- MWCC folds `-(a + 1) - b` to `-(a + b + 1)`; retail's `neg; subf` needs the negation in its own inline (GCConsole2 `GCConsole2HideAboveY`).
 
 ## Float and pool
 
