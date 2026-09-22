@@ -18,6 +18,12 @@
 
 JGeometry::TVec3<f32> TSelectShineManager::cCenter(300.0f, 160.0f, -9000.0f);
 
+static inline JGeometry::TVec3<f32>
+getSelectShinePosition(TSelectShineManager* manager, s16 angle)
+{
+	return manager->getPosition(angle);
+}
+
 // The member initialiser list is what puts the mPositions array construction
 // after every scalar store; assigning in the body emits __construct_array
 // first.
@@ -221,7 +227,8 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			// above it. It also costs one 12-byte temporary between
 			// getPosition's result and `pos` (frame 0x1d0 against 0x220).
 			for (int i = 0; i < mShineNum; ++i) {
-				JGeometry::TVec3<f32> pos = getPosition(mScroll + i * 40);
+				JGeometry::TVec3<f32> pos
+				    = getSelectShinePosition(this, mScroll + i * 40);
 				mShines[i]->mPosition     = pos;
 
 				JGeometry::TVec3<f32> anglePos
