@@ -609,22 +609,16 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 	if (spine->getTime() == 0) {
 		TMameGessoSaveLoadParams* params = self->getSaveLoadParam();
 
-		f32 thrownRateXZ = params->mSLThrownRateXZ.get();
-
 		// The ROM groups the throw as `rate * (power * sin)`, not
 		// `rate * power * sin`: the first fmuls multiplies the power by the
 		// table value and only the second brings the rate in.
 		//
-		// TODO: 95.0%. Two residues left, both scheduling: the ROM computes
-		// `(angle >> jmaSinShift) << 2` once per JMAS call where MWCC CSEs
-		// ours into one, and its frame is 16 bytes deeper below the velocity
-		// temp (a dead low-region carrier inside the inlined setVelocity,
-		// which has no out-of-line copy in the map).
-		s16 angle = *gpMarioAngleY & 0xffff;
 		JGeometry::TVec3<f32> vel(
-		    thrownRateXZ * (*gpMarioThrowPower * JMASSin(angle)),
+		    params->mSLThrownRateXZ.get()
+		        * (*gpMarioThrowPower * JMASSin(SMS_GetMarioAngleY())),
 		    params->mSLThrownVY.get(),
-		    thrownRateXZ * (*gpMarioThrowPower * JMASCos(angle)));
+		    params->mSLThrownRateXZ.get()
+		        * (*gpMarioThrowPower * JMASCos(SMS_GetMarioAngleY())));
 
 		self->setVelocity(vel);
 
