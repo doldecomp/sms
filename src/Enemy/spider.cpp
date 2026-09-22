@@ -63,6 +63,15 @@ TSpider::~TSpider() { }
 // plus the `operator-` return buffer at 0x40 is the by-value-return residue of
 // research batch 119 (this function is one of the 130 `bl sub` sites), so the
 // unit cannot close before that does.
+//
+// Re-measured 2026-09-22 (cc21): a zero-code caller-level `TVec3` temporary
+// (`local_50 += JGeometry::TVec3<f32>(local_114);`, or a discarded
+// `TVec3(0, 0, 0)`) does land in these holes by expansion order -- before the
+// first setVelocity temporary it fills the 12 above them, after the last one
+// the 52 below -- but each also adds 12 bytes of low pool under operator-'s
+// buffer, and retail's low pool is 4 bytes *smaller* than ours (0x40 vs
+// 0x44). A named `TVec3` local inside an inlined callee goes to the low pool,
+// not the block. So neither hole is a temporary of either kind.
 void TSpider::bind(TLiveActor* param_1)
 {
 	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
