@@ -332,7 +332,7 @@ bool TKazekun::doAttackPose(bool start)
 
 		TKazekunParams* params = getSaveParams();
 		JGeometry::TVec3<f32> vel(0.0f, 0.0f,
-		                          getSaveParams()->mPoseSpeed.get());
+		                          params->mPoseSpeed.get());
 		quat.rotate(vel, vel);
 		mVelocity = vel;
 	}
