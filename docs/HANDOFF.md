@@ -114,6 +114,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The other twelve residuals were audited and remain dominated by quaternion/vector inline depth and FPR allocation.
 - Landed `Map/MapEventSink`: restored Bianco's explicit parent setup and reset loop in `loadAfter`, raising it **56.72 -> 75.31%** and the unit **97.71 -> 98.59%**.
   The remaining sink residues are chiefly frame/inlining differences around the parent `loadAfter` call.
+- Landed `Enemy/amiNoko`: restored the fence-walk distance path and corrected the death item dispatch to `genRandomItem`.
+  `TNerveAmiNokoWalkOnFence::execute` rose **94.93 -> 99.83%** and the unit **98.74 -> 99.20%**.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
