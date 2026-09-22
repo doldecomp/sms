@@ -141,9 +141,21 @@ TYumbo::TYumbo(const char* name)
 	onLiveFlag(LIVE_FLAG_UNK10);
 }
 
-// TODO: instruction-identical, but 0x20 bytes of frame short. The inlined
-// initMActorAndKeeper body is now map-size exact (0xbc); its remaining frame
-// residue is an unaccounted inline temporary.
+// Binding levels, +0x20 of low region in TYumbo::init together with the named
+// keeper in initMActorAndKeeper.
+static inline JUTNameTab* YunboInitJointName(TYumbo* y)
+{
+	J3DModelData* data = y->getModel()->getModelData();
+	JUTNameTab* tab    = data->getJointName();
+	return tab;
+}
+
+static inline TMActorKeeper* YunboInitKeeper(TYumbo* y)
+{
+	TMActorKeeper* keeper = y->mMActorKeeper;
+	return keeper;
+}
+
 void TYumbo::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -156,7 +168,7 @@ void TYumbo::init(TLiveManager* manager)
 	TYumboSeed** end = &mSeeds[16];
 	for (TYumboSeed** seed = &mSeeds[0]; seed != end; ++seed) {
 		*seed = new TYumboSeed(
-		    mMActorKeeper->createMActor("samboSeed.bmd", 3), *this);
+		    YunboInitKeeper(this)->createMActor("samboSeed.bmd", 3), *this);
 		(*seed)->init();
 	}
 
@@ -165,14 +177,15 @@ void TYumbo::init(TLiveManager* manager)
 	initAnmSound();
 
 	mCenterJntIndex
-	    = getModel()->getModelData()->getJointName()->getIndex("center");
+	    = YunboInitJointName(this)->getIndex("center");
 }
 
 void TYumbo::reset() { }
 
 void TYumbo::initMActorAndKeeper()
 {
-	mMActorKeeper = new TMActorKeeper(mManager, 0x12);
+	TMActorKeeper* newKeeper = new TMActorKeeper(mManager, 0x12);
+	mMActorKeeper = newKeeper;
 
 	MActor* yumbo = mMActorKeeper->createMActor("yumbo.bmd", 0);
 	TMActorKeeper* keeper = mMActorKeeper;
@@ -494,12 +507,25 @@ void TYumboManager::loadMaterialTable(J3DMaterialTable** table,
 
 const char** TYumbo::getBasNameTable() const { return sambohead_bastable; }
 
-// TODO: instruction-identical, 8 bytes of frame short -- the retail nerve
-// gets lookatMario()'s inline-boundary temporaries that spelling its body out
-// here cannot reproduce. Same for TNerveYumboAppearing (8 bytes).
+// Binding level over the spine's body, +8 of low region in
+// TNerveYumboDancing::execute.
+static inline TYumbo* YunboDanceBody(TSpineBase<TLiveActor>* s)
+{
+	TYumbo* y = (TYumbo*)s->getBody();
+	return y;
+}
+
+// TODO: instruction-identical and frame-exact; isFindOutMario's inlined `pos`
+// sits at 0x70 against retail's 0x74. Its 16-byte block always leaves a 4-byte
+// hole below `toMario` that retail does not have. Tried without closing it:
+// fork/two-local/`TLiveActor*` body binders, fork or bool binder over
+// isFindOutMario, a u32 wrapper, getTime() forks, SMS_GetMarioPos() at every
+// subset of the four mario-position reads (Dancing and isFindOutMario), naming
+// or un-naming isFindOutMario's search values, `toMario` and `yaw` declared at
+// the top, and `pos` as a reference-bound or copy-initialised temporary.
 DEFINE_NERVE(TNerveYumboDancing, TLiveActor)
 {
-	TYumbo* yumbo = (TYumbo*)spine->getBody();
+	TYumbo* yumbo = YunboDanceBody(spine);
 
 	if (spine->getTime() == 0)
 		yumbo->setBckAnm(2);
@@ -508,10 +534,9 @@ DEFINE_NERVE(TNerveYumboDancing, TLiveActor)
 	// instead puts MsGetRotFromZaxisY at inline depth 2, where MWCC stops
 	// expanding it and emits a weak out-of-line copy the retail object does
 	// not have -- so the original cannot have gone through the method here.
-	JGeometry::TVec3<f32> toMario = *gpMarioPos;
+	JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
 	toMario.sub(yumbo->mPosition);
-	f32 yaw            = MsGetRotFromZaxisY(toMario);
-	yumbo->mRotation.y = yaw;
+	yumbo->mRotation.y = MsGetRotFromZaxisY(toMario);
 
 	if (yumbo->isFindOutMario()) {
 		spine->pushAfterCurrent(&TNerveYumboHiding::theNerve());
