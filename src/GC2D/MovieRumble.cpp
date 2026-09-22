@@ -85,22 +85,22 @@ void TMovieRumble::checkRumbleOn()
 	}
 }
 
-// TODO: the pragma is a placeholder. Retail emits checkRumbleOff and calls
-// it from the inlined `movement`, i.e. at depth 2, where the plain-callee
-// budget is 9 statements; this body has 5, so it expands without the
-// pragma. The missing statements are most likely `movement`'s (see its
-// UNUSED size above), not this function's.
-#pragma dont_inline on
+// Retail calls this from the inlined `movement` (depth 2, budget 9). The two
+// guards are early returns rather than one `&&` condition: the same bytes,
+// but two statements more, which is what keeps the body out of line.
 void TMovieRumble::checkRumbleOff()
 {
-	if (unk24 != -1 && unk20 <= MovieFrameNumber(unk10)) {
-		SMSRumbleMgr->stop();
-		unk18 += 1;
-		readCurInfo();
-		unk28 = false;
-	}
+	if (unk24 == -1)
+		return;
+	if (unk20 > MovieFrameNumber(unk10))
+		return;
+
+	RumbleMgr* mgr = SMSRumbleMgr;
+	mgr->stop();
+	unk18 += 1;
+	readCurInfo();
+	unk28 = false;
 }
-#pragma dont_inline off
 
 // The `addi r30, r3, 0` that used to be missing in both callers is the
 // binding inside getToolData(): the pointer is loaded into a volatile
