@@ -1219,6 +1219,11 @@ void THamuKuri::initAttacker(THitActor* param_1)
 
 const char** THamuKuri::getBasNameTable() const { return hamukurianm_bastable; }
 
+// TODO: instruction-exact; frame 0x28 short (0xb8 vs 0xe0), all of it pool
+// below the rotation buffer. Typing unk1B0 as a TPosition3f and writing the
+// identity rows through ref() bought the first 0x28 (Mtx + raw stores was 0x50
+// short); chained stores, an inlined identity33() and a TPosition3f rotation
+// buffer are inert.
 MtxPtr THamuKuri::getTakingMtx()
 {
 	f32 dVar4 = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
@@ -1233,24 +1238,21 @@ MtxPtr THamuKuri::getTakingMtx()
 	MsMtxSetRotRPH(afStack_84, 0.0f, 0.0f, 0.0f);
 	MTXConcat(mat, afStack_84, mat);
 
-	MtxPtr takingMtx = unk1B0;
+	unk1B0.ref(0, 0) = 1.0f;
+	unk1B0.ref(0, 1) = 0.0f;
+	unk1B0.ref(0, 2) = 0.0f;
 
-	// TODO: identity33 but order is transposed?!
-	unk1B0[0][0] = 1.0f;
-	unk1B0[0][1] = 0.0f;
-	unk1B0[0][2] = 0.0f;
+	unk1B0.ref(1, 0) = 0.0f;
+	unk1B0.ref(1, 1) = 1.0f;
+	unk1B0.ref(1, 2) = 0.0f;
 
-	unk1B0[1][0] = 0.0f;
-	unk1B0[1][1] = 1.0f;
-	unk1B0[1][2] = 0.0f;
+	unk1B0.ref(2, 0) = 0.0f;
+	unk1B0.ref(2, 1) = 0.0f;
+	unk1B0.ref(2, 2) = 1.0f;
 
-	unk1B0[2][0] = 0.0f;
-	unk1B0[2][1] = 0.0f;
-	unk1B0[2][2] = 1.0f;
+	MTXConcat(mat, unk1B0, unk1B0);
 
-	MTXConcat(mat, takingMtx, takingMtx);
-
-	return takingMtx;
+	return unk1B0;
 }
 
 bool THamuKuri::isResignationAttack()
@@ -2371,6 +2373,14 @@ static inline TSpineBase<TLiveActor>* HamukuriDangoSpine(TLiveActor* p)
 	return spine;
 }
 
+// One inline level around theNerve() puts retail's out-of-line
+// TNerveBase<TLiveActor>() call inside the guard (codegen-tells.md, the
+// TAnimalBird::receiveMessage entry).
+static inline const TNerveBase<TLiveActor>* DangoWaitNerve()
+{
+	return &TNerveDangoHamuKuriWait::theNerve();
+}
+
 void TBossDangoHamuKuri::generateBody()
 {
 	s32 numArray = unk23C->getNumArray();
@@ -2386,7 +2396,7 @@ void TBossDangoHamuKuri::generateBody()
 
 	newHamu->reset();
 	newHamu->mSpine->reset();
-	HamukuriDangoSpine(newHamu)->setNext(&TNerveDangoHamuKuriWait::theNerve());
+	HamukuriDangoSpine(newHamu)->setNext(DangoWaitNerve());
 	newHamu->mPosition.set(0.0f, 0.0f, 0.0f);
 	newHamu->unk124->unk0 = unk124->unk0;
 	++unk238;
@@ -2756,12 +2766,13 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 	if (param_1->isActorType(0x10000013)) {
 		TDoroHamuKuri* other = (TDoroHamuKuri*)param_1;
 		if (other->isUnk198() && !other->isAirborne()) {
-			other->mVelocity = JGeometry::TVec3<f32>(0.0f, 3.0f, 0.0f);
+			JGeometry::TVec3<f32> vel(0.0f, 3.0f, 0.0f);
+			other->mVelocity = vel;
 			other->mPosition.y += 2.0f;
 			other->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 			if (!isAirborne()) {
-				JGeometry::TVec3<f32> local_4c = param_1->mPosition;
+				JGeometry::TVec3<f32> local_4c = other->getPosition();
 				mVelocity
 				    = calcVelocityToJumpToY(local_4c, 6.0f, getGravityY());
 				mPosition.y += 2.0f;
@@ -2769,7 +2780,7 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 			}
 
 			if (!unk198 && isAirborne()
-			    && mPosition.y > param_1->mPosition.y + 10.0f) {
+			    && mPosition.y > other->getPosition().y + 10.0f) {
 				TTakeActor* pTVar1 = other->mHeldObject;
 				if (pTVar1 == nullptr) {
 					other->unk198      = 0;
@@ -2777,8 +2788,8 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 					return true;
 				}
 
-				if (pTVar1->receiveMessage(param_1, HIT_MESSAGE_PUT)) {
-					pTVar1->mPosition = param_1->mPosition;
+				if (pTVar1->receiveMessage(other, HIT_MESSAGE_PUT)) {
+					pTVar1->mPosition = other->mPosition;
 					if (pTVar1->receiveMessage(this, HIT_MESSAGE_TAKE)) {
 						other->unk198      = 0;
 						other->mHeldObject = nullptr;
@@ -2786,6 +2797,7 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 						mHeldObject = pTVar1;
 
 						// The cap hops along the *other* hamukuri's graph.
+						JGeometry::TVec3<f32> local_6c;
 						int uVar11 = other->getTracer()->getCurGraphIndex();
 
 						int uVar10 = -1;
@@ -2806,8 +2818,8 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 						    ->getGraphNode(uVar11)
 						    .getPoint(&VStack_60);
 
-						JGeometry::TVec3<f32> local_6c = calcVelocityToJumpToY(
-						    VStack_60, mCapSpeed, getGravityY());
+						local_6c = calcVelocityToJumpToY(VStack_60, mCapSpeed,
+						                                 getGravityY());
 						onLiveFlag(LIVE_FLAG_AIRBORNE);
 						mVelocity = local_6c;
 						return false;

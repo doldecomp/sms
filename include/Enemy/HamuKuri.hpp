@@ -294,7 +294,7 @@ public:
 	/* 0x1A4 */ u8 unk1A4;
 	/* 0x1A8 */ int unk1A8;
 	/* 0x1AC */ u8 unk1AC;
-	/* 0x1B0 */ Mtx unk1B0;
+	/* 0x1B0 */ TPosition3f unk1B0;
 	/* 0x1E0 */ int unk1E0;
 	/* 0x1E4 */ JGeometry::TVec3<f32> unk1E4;
 	/* 0x1F0 */ u8 unk1F0;
