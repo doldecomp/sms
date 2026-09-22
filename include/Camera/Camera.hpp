@@ -323,6 +323,12 @@ private:
 	s16 getCameraInbetweenFrame_(int);
 	void setUpToLButtonCamera_(int);
 	void setUpFromLButtonCamera_();
+	// Fabricated name; the level is measured. changeCamModeSub_ reaches the
+	// map's local out-of-line MsClamp<f> inside setUpToLButtonCamera_ only
+	// with one inlined level between them, while setUpToLButtonCamera_'s own
+	// standalone copy expands the clamp. Defined in CameraChange.cpp because
+	// Camera.hpp only forward-declares TMarioGamePad.
+	void setUpLButtonCameraChange_(int mode);
 	void changeCamMode_(int mode)
 	{
 		changeCamModeSpecifyFrame_(mode, getCameraInbetweenFrame_(mode));
