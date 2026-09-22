@@ -912,6 +912,7 @@ void TGuide::appearGuidePane(int stage)
 }
 
 // UNUSED: inlined into perform's STATE_SHOWING case, its only call site.
+// Nine statements: the depth-2 budget, so width and height are not named.
 void TGuide::disappearGuidePane(int stage)
 {
 	mOpenPanelB->setPaneAlpha(20, 0, 255);
@@ -937,21 +938,16 @@ static inline void GuideShowing(TGuide* guide)
 {
 	if (guide->mGamePad->mEnabledFrameMeaning
 	    & (TMarioGamePad::MEANING_0x20 | TMarioGamePad::MEANING_0x40)) {
-		s16 stage = guide->mCurrentStage;
-		guide->disappearGuidePane(stage);
+		guide->disappearGuidePane(guide->mCurrentStage);
 	} else if (guide->mGamePad->mButton.mTrigger & 0x10) {
 		guide->mState = TGuide::STATE_CLOSE;
 	}
 }
 
-// TODO: open. Retail *calls* TExPane::setPaneAlpha, setPaneSize and
-// setPaneOffset from here and from appearGuidePane -- setPaneSize and
-// setPaneAlpha are the two weak symbols the map puts in this TU -- while
-// inlining all three inside linkSelect's mmarkPattern. Ours expands them
-// everywhere, which is the only remaining difference in this function. They
-// are inline members of GC2D/ExPane.hpp, a shared header, so the fix is not
-// local to this unit; see the wireTrap rule in docs/catalog/codegen-tells.md
-// about MWCC refusing to inline once the caller is large enough.
+// TODO: frame 0x228 against retail's 0x2b8, and the disappearGuidePane
+// expansion's callee-saved registers rotate (retail: stage r27, height r31,
+// width r28). setPaneAlpha's out-of-line copy is 8 bytes short of frame in
+// GC2D/ExPane.hpp (shared header, not changed here).
 void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (setup_wait != 0) {
@@ -987,6 +983,7 @@ void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	u8 done = 1;
+	int i;
 	switch (mState) {
 	case STATE_MOVE_CURSOR:
 		if (unkC5 && gpApplication.mFader->isFullyFadedOut()) {
@@ -1018,7 +1015,7 @@ void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	case STATE_APPEARING:
 		done &= mOpenPanelA->update();
-		for (int i = 0; i < 2; ++i)
+		for (i = 0; i < 2; ++i)
 			done &= mCursors[i]->update();
 		if (done && mOpenPanelB->update())
 			mState = STATE_SHOWING;
@@ -1031,7 +1028,7 @@ void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 	case STATE_DISAPPEAR:
 		if (mOpenPanelB->update()) {
 			done &= mOpenPanelA->update();
-			for (int i = 0; i < 2; ++i)
+			for (i = 0; i < 2; ++i)
 				done &= mCursors[i]->update();
 			if (done) {
 				mOpenPanelA->getPane()->mVisible = false;
