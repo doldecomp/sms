@@ -128,6 +128,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Retail folding the first member store into `stbu` and using base+`addi` for the rest: the receiver came through a reference-returning static inline accessor (MarDirectorDirect `getNextArea()`).
 - Defaulted constructor arguments push the member initialisers one level deeper without moving the body's calls: `TGameSequence(u8 a = 0, u8 b = 0)` makes retail's out-of-line `TFlagT(u16)`; `TFlagT::operator=` takes its argument by value (TApplication ctor 72.8 -> 99.6).
 - An out-of-line `TVec3::set(const Vec&)`: pass a `Vec`-typed value into a `const TVec3&` parameter three levels down (lensflare).
+- Replacing `#pragma dont_inline`: count the missing statements with zero-code `(void)0;` fillers (measure before a final `return <const>;`, which counts one extra), then spell them as real code: early-return guards for `&&` (+2), `else if` after returning `if`s (+1 each), a single-exit result chain, an empty `default: break;` (+1), named call results or chain steps (cost is site-dependent). UNUSED overloads whose map sizes include a callee's body mean the used overloads forward through them (RumbleMgr; forward a named `int idx = 0;` to keep `li r7, 0`). The pragma also blocks expansion inside the protected function (MapStaticObject). 17 of 27 game pragmas removed on 2026-09-22; the rest carry TODOs with the measured shortfall.
 
 ## Frame-size gaps
 
