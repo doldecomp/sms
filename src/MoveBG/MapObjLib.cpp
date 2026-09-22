@@ -954,6 +954,9 @@ void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
 	if (emitter) {
 		// TODO: 96.3%, frame-exact. Retail loads mRotation.z before the
 		// 32768 constant; named component locals drop to 93.6%.
+		// Also tried: a TVec3 temporary or named TVec3 into the
+		// setRotation(const TVec3&) overload (+0x18 / -0x10 frame), raw
+		// mRotation (-0x10), the constant first.
 		emitter->setRotation(getRotation().x / 180.0f * 32768.0f,
 		                     getRotation().y / 180.0f * 32768.0f,
 		                     getRotation().z / 180.0f * 32768.0f);

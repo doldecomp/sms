@@ -45,6 +45,9 @@ TAnimalBase::TAnimalBase(u32 actorType, const char* name)
 	mActorType = actorType;
 }
 
+// TODO: 99.8%, instruction-exact; the frame is 0x28 short (the int-to-float
+// conversion slot sits at 0x50 against retail's 0x78). Tried: getManager(),
+// getSpine(), TMsRange<f32>(0, 1).rand() for either MsRandF (adds code).
 void TAnimalBase::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -223,7 +226,7 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TAnimalBase::resetRandomCurPathNode()
 {
-	TPathNode curNode = unkF4;
+	TPathNode curNode = getUnkF4();
 	if (curNode.unk0 != nullptr)
 		return;
 
@@ -237,7 +240,10 @@ void TAnimalBase::resetRandomCurPathNode()
 		pos.y -= 250.0f * MsRandF();
 	}
 
-	setGoalPath(pos);
+	// The goal is rebuilt in the copied node's own slot, not a temporary.
+	curNode.unk0 = nullptr;
+	curNode.unk4 = pos;
+	setGoalPath(curNode);
 }
 
 void TAnimalBase::getRotationFlyToDir(JGeometry::TVec3<f32>* current_rot,
