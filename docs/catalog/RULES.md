@@ -325,6 +325,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `lbzx base, idx` vs our `add; lbz` means direct `links[i].field`, not a bound `T& link` (enemyMario).
 - `cmpwi` after `lhz`/`lbz` means the value was read as `int`: `(int)x.get() == 1` (MarDirectorDirect).
 - One FPR assigned to the wrong one of two dying values: compute the value directly as an inlined helper's argument (zero frame); a returning helper also works but costs 0x10, a named local is inert (NpcInbetween `execPosInbetween`, linked).
+- A value clamped then used: pass the unclamped expression as an inlined helper's argument and clamp the parameter in place (`p = MsClamp(p, ...)`); caller locals add an `fmr` (CameraMultiPlayer, linked).
+- A named-result level (`f32 r = f(a, b); return r;`) reorders later temporaries; try it before parking a dead vector (CameraMultiPlayer `MultiSq`).
 
 ## Float and pool
 
