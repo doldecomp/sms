@@ -243,21 +243,22 @@ void TFruitBasket::countFruit(THitActor* param_1)
 	((TResetFruit*)param_1)->makeObjWaitingToAppear();
 }
 
-// TODO: frame exact (0x38) after reading mGroundPlane raw; roofPlane sits at
-// 0x2c, not retail's 0x28. gpMap binders were 0; getPosition inlines away.
+// roofPlane declared at function scope, the fruit named inside the first arm
+// and the roof's actor read raw put roofPlane at retail's 0x28.
 void TFruitBasket::touchFruit(THitActor* param_1)
 {
+	const TBGCheckData* roofPlane;
 	if (fabsf(mRotation.x) < 45.0f) {
+		TLiveActor* fruit = (TLiveActor*)param_1;
 		// Upwards facing basket -- check that the fruit's on top of us
-		if (((TLiveActor*)param_1)->mGroundPlane->getActor() != this)
+		if (fruit->getGroundPlane()->getActor() != this)
 			return;
 	} else {
 		// Basket lying on it's side -- check that the fruit rolled inside
 		// enough to be under our side
-		const TBGCheckData* roofPlane;
 		gpMap->checkRoof(param_1->mPosition.x, param_1->mPosition.y,
 		                 param_1->mPosition.z, &roofPlane);
-		if (roofPlane->getActor() != this)
+		if (roofPlane->mActor != this)
 			return;
 	}
 
@@ -561,6 +562,14 @@ TWaterHitPictureHideObj::TWaterHitPictureHideObj(const char* name)
 	mColor.a = 0;
 }
 
+// Binding level over the director: with getPosition() on the twin it lands
+// afterFinishedAnim's 0x70 frame and matrix slot.
+static inline TMarDirector* HideObjGetMarDirector()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
 void THideObjPictureTwin::afterFinishedAnim()
 {
 	removeMapCollision();
@@ -580,7 +589,7 @@ void THideObjPictureTwin::afterFinishedAnim()
 			obj->appear();
 		}
 
-		obj->mPosition.set(unk174->mPosition);
+		obj->mPosition.set(unk174->getPosition());
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, unk174->mRotation.x, unk174->mRotation.y,
 		               unk174->mRotation.z);
@@ -597,14 +606,20 @@ void THideObjPictureTwin::afterFinishedAnim()
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 		                                   nullptr, 0);
 
-		SMSGetMarDirector()->fireStartDemoCamera(unk178, &mPosition, -1, 0.0f,
-		                                         true, nullptr, 0, nullptr, 0);
+		HideObjGetMarDirector()->fireStartDemoCamera(
+		    unk178, &obj->mPosition, -1, 0.0f, true, nullptr, 0, nullptr, 0);
 	}
 	mState = 3;
 }
 
-// TODO: frame is exact (0x90) but the snprintf buffer sits at 0x24, not
-// retail's 0x28. Named hitActor / char[4] both grow the frame back to 0x98.
+// Setter level over the partner link: +4 of low region, putting the name
+// buffer at retail's 0x28.
+static inline void HideObjSetTwin(THideObjPictureTwin* obj,
+                                  THideObjPictureTwin* twin)
+{
+	obj->unk174 = twin;
+}
+
 void THideObjPictureTwin::loadAfter()
 {
 	TWaterHitPictureHideObj::loadAfter();
@@ -616,7 +631,7 @@ void THideObjPictureTwin::loadAfter()
 		char c2    = mName[len + 2];
 		char c3    = mName[len + 3];
 
-		char buffer2[0x4C];
+		char buffer2[0x48];
 		snprintf(buffer2, 0x40, "ふたご落書きＢ００");
 		buffer2[len]     = c0;
 		buffer2[len + 1] = c1;
@@ -625,7 +640,7 @@ void THideObjPictureTwin::loadAfter()
 
 		unk174 = JDrama::TNameRefGen::getInstance()->search<THideObjPictureTwin>(
 		    buffer2);
-		unk174->unk174 = this;
+		HideObjSetTwin(unk174, this);
 	}
 }
 
@@ -691,11 +706,25 @@ void TBreakHideObj::initMapObj()
 	}
 }
 
+// Binding levels: with kill()'s named sound pointer they supply the 0x98
+// bytes of low region killNearWoodBox's four expansions leave in retail.
+static inline const JGeometry::TVec3<f32>& MapObjHideMarioPos()
+{
+	const JGeometry::TVec3<f32>& pos = SMS_GetMarioPos();
+	return pos;
+}
+
+static inline MSound* MapObjHideMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 void TWoodBox::killNearWoodBox(f32 dX, f32 dY) const
 {
 	const TBGCheckData* groundPlane;
-	f32 resY = gpMap->checkGround(dX + gpMarioPos->x, gpMarioPos->y + 1000.0f,
-	                              dY + gpMarioPos->z, &groundPlane);
+	f32 resY = gpMap->checkGround(dX + MapObjHideMarioPos().x, MapObjHideMarioPos().y + 1000.0f,
+	                              dY + MapObjHideMarioPos().z, &groundPlane);
 	if (resY + 10.0f > gpMarioPos->y) {
 		const TLiveActor* actor = groundPlane->getActor();
 		if (actor != nullptr && actor != this
@@ -704,8 +733,6 @@ void TWoodBox::killNearWoodBox(f32 dX, f32 dY) const
 		}
 	}
 }
-// TODO: +0x98 frame (0x58 vs 0xf0) with killNearWoodBox inlined 4x.
-// Named SMS_GetMarioPos() CSE's the per-site gpMarioPos reloads (93.6%).
 void TWoodBox::kill()
 {
 	startAnim(2);
@@ -715,13 +742,14 @@ void TWoodBox::kill()
 	mStateTimer = -1;
 	mState      = 2;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
-	                                nullptr, 0, 4);
+	MSound* sound = MapObjHideMSound();
+	sound->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0, nullptr, 0,
+	                       4);
 
-	killNearWoodBox(50.0f, 50.0f);
+	killNearWoodBox(-50.0f, -50.0f);
 	killNearWoodBox(50.0f, -50.0f);
 	killNearWoodBox(-50.0f, 50.0f);
-	killNearWoodBox(-50.0f, -50.0f);
+	killNearWoodBox(50.0f, 50.0f);
 }
 
 void TWoodBox::loadAfter()

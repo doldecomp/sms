@@ -77,6 +77,11 @@ void MActorAnmDataBase::sortByFileNameRaw(void** anms)
 	}
 }
 
+// TODO: frame 0x10 against 0x20; retail's allocator temporary sits at 0x14,
+// 8 bytes higher. Tried (cc36): explicit `unk1C()` / `unk1C(TAllocator())`,
+// `unk0` assigned in the body, by-value TU-local allocator forks (named,
+// nested, by-value and const& parameters): they land 0x18/0x10, 0x20/0x18,
+// 0x28/0x18 or 0x30/0x20 (frame/temp), never 0x20/0x14.
 MActorAnmData::MActorAnmData()
     : unk0(0)
 {
