@@ -61,12 +61,19 @@ TMtxTimeLag::TDeParams::TDeParams(const char* path)
 	TParams::load(mPrmPath);
 }
 
+// fabricated: the zero vector as an inlined callee's local, which puts its
+// 12 bytes in the low region below the named vectors.
+static inline void MtxUtilClearVec(Vec& dst)
+{
+	Vec v = { 0.0f, 0.0f, 0.0f };
+	dst   = v;
+}
+
 void TMtxTimeLag::calc(MtxPtr mtx)
 {
 	if (checkFlag(2)) {
 		offFlag(2);
-		Vec v = { 0.0f, 0.0f, 0.0f };
-		unk08 = v;
+		MtxUtilClearVec(unk08);
 
 		Vec v2;
 		v2.x  = mtx[0][3];
@@ -81,6 +88,7 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		unk30 = q;
 	} else {
 		Vec trans;
+		Quaternion tmp;
 
 		trans.x = mtx[0][3];
 		trans.y = mtx[1][3];
@@ -136,8 +144,10 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		rot[1][2] = mtx[1][2] * inv2;
 		rot[2][2] = mtx[2][2] * inv2;
 
-		Quaternion tmp;
 		MtxToQuat(rot, &tmp);
+		// TODO: the scalarised quaternion takes f5/f4/f6/f0 where retail has
+		// f3-f6 ascending. Tried (cc50): copy-init or assigned newQuat, dot as
+		// a helper either way round, swapped dot operands.
 
 		Quaternion newQuat;
 		newQuat.x = tmp.x;
@@ -205,13 +215,20 @@ static inline bool MtxUtilCheckFlag(const TMtxSwingRZ* p, int i)
 	return flag;
 }
 
+// fabricated: calcLocalXY's own copy of the level above (a shared body would
+// share one .rodata zero vector between the two callers).
+static inline void MtxUtilClearSwingVec(Vec& dst)
+{
+	Vec v = { 0.0f, 0.0f, 0.0f };
+	dst   = v;
+}
+
 void TMtxSwingRZ::calcLocalXY(MtxPtr mtx, Vec* vecX, Vec* vecY)
 {
 	if (MtxUtilCheckFlag(this, 2)) {
 		offFlag(2);
 
-		Vec v = { 0.0f, 0.0f, 0.0f };
-		unk14 = v;
+		MtxUtilClearSwingVec(unk14);
 
 		Vec vec;
 		vec.x = mtx[0][3];
