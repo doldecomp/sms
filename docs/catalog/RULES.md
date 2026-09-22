@@ -76,6 +76,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - After a register swap, re-read lines the diff shows equal: the same register name can hold a different variable in each build (MapObjHide `afterFinishedAnim`: `&obj->mPosition`, not `&mPosition`).
 - `x = a - 1; x += b;` with `K - x` in the loop condition restores retail's separate `subi` and unrolled trailing branches (MapEventMare `initCommon`).
 - `T c = (T){...}; f(c);` swaps the two temporaries relative to passing the literal (DrawUtil `TSilhouette::setting`).
+- A far `ble` to the epilogue right after a length computation is a missing `if (len > 0.0f)` guard (MarioPhysics `keepDistance`).
 
 ## Inlining decisions
 
@@ -326,6 +327,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Binders inside a small helper that others inline raise every caller's frame equally and leave the helper's own copy unchanged (MapObjBase `removeMapCollision` closed `changeObjMtx` and `makeObjDead`).
 - `TFlagT<u16>()` instead of `TFlagT<u16>(0)` moves the by-value flag temporary 4 bytes up at no instruction cost (MarDirectorEvent `fireGetStar`).
 - A named `int` holding a popped value costs a 4-byte named slot below the float-to-int buffer; `s32` (signed long) or `u32` removes it (NpcEvent `evGetFruitNum`).
+- `!p` vs `p == nullptr` on an unnamed call result is a 4-byte pool lever in either direction (conductor).
+- `getSpine()` vs raw `mSpine` at a nerve test is +4 to +8 of pool (poihana `isCollidMove`, rocket `bind`).
 
 ## Register and scheduling residues
 
@@ -390,6 +393,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A loop counter that must share a callee-saved zero register used for member stores: move the loop into a TU-local level (limitkoopajr `init`).
 - An explicit no-op `const` pointer cast on one read stops MWCC reusing an earlier load of that member, like the explicit-upcast rule; implicit const binding does not (MapObjBase `startControlAnim`; replaces the `volatile` fakematch in `removeMapCollision`).
 - In the 99.9% band a register difference on an `isActorType` load can mean the test is on the wrong object (MapObjGeneral `receiveMessage`: the sender).
+- A union written through a reference cast (`(int&)mData = v`) is an aliasing store that forces reloads of stack-homed values; write the named member (spcinterp `TSpcSlice(int)`: closed the ctor and lifted four EventWatcher functions).
+- `(int)boolLocal != 1` reproduces retail's `clrlwi` plus signed `cmpwi` (MarioPhysics `checkDescent`).
 
 ## Float and pool
 
