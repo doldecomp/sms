@@ -278,6 +278,11 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Pool temporaries sit in creation order, not source order; a zero-cost direct-return level at unrelated sites reorders them (MarNameRefGen_BossEnemy `newNameRef<T>` factory).
 - Argument and conversion temporaries (by-value class args, `flag = int` converting construction) sit above the inline pool; `.set(x)` instead of `=` removes the dead word (MarDirectorSetup2).
 - Diagnose slot shuffles by deleting one statement at a time and watching which slots move (MarDirectorSetup2).
+- Two vectors in one retail slot: one local reassigned (`diff = a - p; ...; diff = b - p;`) (hamukuri MoveOnGraph).
+- Declare an uninitialised aggregate early and assign later to reproduce retail's named-block order (hamukuri `makeCapFly`, Doro `isCollidMove`).
+- Inside a type-checked branch use the cast local, not the parameter, to keep the parameter copy out of a callee-saved register (hamukuri Doro `isCollidMove`).
+- A TU-local setter taking `TVec3` by value moves a copy from the named block into the low pool (hamukuri BoundFreeze).
+- An inline helper with an `Mtx` local makes the matrix a callee block object at retail's slot (hamukuri Dango `calcRootMatrix`).
 
 ## Register and scheduling residues
 
