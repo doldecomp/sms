@@ -179,8 +179,9 @@ bool TBaseNPC::isNerveCanGoToBlown() const
 
 void TBaseNPC::changeNerveFromTalk_()
 {
-	const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
-	const TNerveBase<TLiveActor>* top     = mSpine->getTop();
+	TSpineBase<TLiveActor>* spine         = getSpine();
+	const TNerveBase<TLiveActor>* current = spine->getCurrentNerve();
+	const TNerveBase<TLiveActor>* top     = spine->getTop();
 
 	if (current == &TNerveNPCWet::theNerve()) {
 		mSpine->skip();
@@ -214,17 +215,21 @@ void TBaseNPC::changeNerveToMad_()
 	}
 }
 
+// Direct-return fork over the carrier's yaw: the pool rung that, with the
+// raw XZ speed read, lands releaseTaken_'s 0x50 frame (the velocity set()
+// alone, which fixes the load order, is 8 bytes over).
+static inline f32 NpcTakerRotY(const TTakeActor* taker)
+{
+	return taker->getRotation().y;
+}
+
 void TBaseNPC::releaseTaken_()
 {
-	f32 fVar1 = mPtrSaveNormal->mThrowSpeedXZ.get();
-	s16 uVar4 = CLBDegToShortAngle(unk158->getRotation().y);
-	f32 fVar2 = mPtrSaveNormal->mThrowSpeedY.get();
-	f32 s     = JMASSin(uVar4);
-	f32 c     = JMASCos(uVar4);
+	f32 fVar1 = mPtrSaveNormal->mThrowSpeedXZ.value;
+	s16 uVar4 = CLBDegToShortAngle(NpcTakerRotY(unk158));
 
-	mVelocity.x = fVar1 * s;
-	mVelocity.y = fVar2;
-	mVelocity.z = fVar1 * c;
+	mVelocity.set(fVar1 * JMASSin(uVar4), mPtrSaveNormal->mThrowSpeedY.get(),
+	              fVar1 * JMASCos(uVar4));
 
 	onLiveFlag(LIVE_FLAG_UNK10000000);
 
@@ -402,24 +407,27 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 	}
 }
 
+// Direct-return fork over the blown-velocity parameter: its pool rung puts
+// the velocity temporary at retail's 0x34 once the push arm reads mSpine raw.
+static inline f32 NpcBlownVelocity()
+{
+	return TBaseNPC::mPtrSaveNormal->mSLBlownVelocity.get();
+}
+
 void TBaseNPC::behaveToSandBomb_(const TLiveActor* param_1)
 {
 	f32 fVar1 = unk1C8;
 	unk1C8    = SMS_GetSandRiseUpRatio(param_1);
 	if (unk1C8 > fVar1 && unk1C8 > 0.05f && fVar1 > 0.001f
 	    && isNerveCanGoToBlown()) {
-		f32 fVar1 = mPtrSaveNormal->mSLBlownVelocity.get();
+		f32 fVar1 = NpcBlownVelocity();
 		mPosition.y += fVar1;
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
-		// TODO: 100% fuzzy, frame 0x60 exact. The blown-velocity TVec3
-		// temp sits at 0x38 here and 0x34 in retail (one extra 4-byte
-		// inline temp below it). Dropping the else-arm getSpine() lands
-		// the temp but shrinks the frame to 0x58.
 		mVelocity = JGeometry::TVec3<f32>(0.0f, fVar1, 0.0f);
 		if (getSpine()->getCurrentNerve() == &TNerveNPCWet::theNerve()) {
 			getSpine()->setNext(&TNerveNPCBlown::theNerve());
 		} else {
-			getSpine()->pushNerve(&TNerveNPCBlown::theNerve());
+			mSpine->pushNerve(&TNerveNPCBlown::theNerve());
 		}
 	}
 }
