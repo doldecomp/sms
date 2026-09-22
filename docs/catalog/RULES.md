@@ -67,6 +67,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Every field address a switch stores through hoisted as `addi` before the jump table: named `u8&` locals per field (ModelGate `perform`).
 - A dead `b <default>` before the first arm is a `case X:` label sharing the default arm (ModelGate).
 - Re-check old pads after structural fixes; Tongue's `char kek[0x40]` had become pure excess.
+- An UNUSED helper far larger than ours with a big `<` cluster at each call site can be missing a loop (Yoshi `checkGroundYoshi`'s five-step plane walk fixed size, sites, literal order and the jump table).
+- One shared `li r3, 0` return at the end where ours has one per branch: an if/else-if chain with one final `return FALSE` (tobiPuku Land).
+- A member reload after a `switch` whose default jumps to the next test: `default: goto next;` (Yoshi `thinkAnimation`).
+- An `addis`/`subis` mismatch in a range compare can be a wrong constant in source (`0xC000...` vs `0x0C00...`, Yoshi).
 
 ## Inlining decisions
 
@@ -117,6 +121,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A dead store to the slot after a stack `TVec3` is a 16-byte `{TVec3 normal; f32 d;}` plane object; `set<f>`/`setLength` called out of line from it sit at depth 4 (MarioDraw `calcBaseMtx`).
 - Retail rematerialising `li r0, 0` in an `else` both outer and inner guards reach: the guards are one `&&` condition (MarioDraw `initModel`).
 - A one-statement in-class accessor that retail calls (weak, only this caller) sits at depth 5: add the missing level as a TU-local `static inline` wrapper (const pointer parameter for the const overload), and route every other use of that value through it too (enemyMario `consider`/`canJumpToNode`).
+- A callee retail reaches only through another inline sits at depth 2 (budget 9): ten statements with zero-cost named chain steps replace `#pragma dont_inline` (Yoshi `getEmitPosDir`).
 
 ## Frame-size gaps
 
