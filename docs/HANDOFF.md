@@ -116,6 +116,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The remaining sink residues are chiefly frame/inlining differences around the parent `loadAfter` call.
 - Landed `Enemy/amiNoko`: restored the fence-walk distance path and corrected the death item dispatch to `genRandomItem`.
   `TNerveAmiNokoWalkOnFence::execute` rose **94.93 -> 99.83%** and the unit **98.74 -> 99.20%**.
+- Landed `Map/MapMirror`: improved the camera and mirror-manager update shapes.
+  `TMirrorModelManager::perform` rose **86.53 -> 91.33%**, `TMirrorCamera::perform` rose **99.28 -> 99.54%**, and the unit rose **97.14 -> 98.00%**.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
