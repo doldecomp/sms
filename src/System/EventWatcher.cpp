@@ -1217,12 +1217,20 @@ static void evStartBGM(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push(TSpcSlice());
 }
 
+// A by-value u32 predicate over checkLiveFlag: +4 of pool, retail's slots.
+// The raw flag test, checkLiveFlag() itself and a bool-returning fork are all
+// 4 short; a named bool inside the fork is 8 long.
+static inline u32 EventWatcherIsDead(TLiveActor* actor)
+{
+	return actor->checkLiveFlag(LIVE_FLAG_DEAD);
+}
+
 static void evEggYoshiStartFruit(TSpcTypedInterp<TEventWatcher>* interp,
                                  u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	TEggYoshi* egg = (TEggYoshi*)getNameRefPtr(interp->pop());
-	if (!egg->checkLiveFlag(LIVE_FLAG_DEAD))
+	if (!EventWatcherIsDead(egg))
 		egg->startFruit();
 	interp->push();
 }
