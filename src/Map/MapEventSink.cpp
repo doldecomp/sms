@@ -418,15 +418,13 @@ bool TMapEventSinkBianco::watch()
 	return false;
 }
 
-// TODO: 56.7%. Retail's only structural difference is that the inlined
-// TMapEventSinkInPollutionReset::loadAfter() keeps its own base call as
-// `bl TMapEventSinkInPollution::loadAfter()` (one `bl`, one alive/kill loop),
-// while MWCC expands ours at depth two and duplicates the registerPollutionObj
-// loop. Both bases are instruction-exact on their own, so this is an inline
-// refusal at depth two, not a wrong callee.
 void TMapEventSinkBianco::loadAfter()
 {
-	TMapEventSinkInPollutionReset::loadAfter();
+	TMapEventSinkInPollution::loadAfter();
+	for (int i = 0; i < mBuildingNum; ++i) {
+		getPollutionObj(i)->alive();
+		getResetPollutionObj(i)->kill();
+	}
 
 	TMapStaticObj* ref = JDrama::TNameRefGen::search<TMapStaticObj>("鏡内地形");
 	unk64              = ref->getModelData()->getJointNodePointer(2);
