@@ -187,9 +187,15 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 			if (type == 0x4000005A)
 				ok = 1;
 			if (type & ACTOR_TYPE_ENEMY ? true : false) {
-				if (type != 0x10000024 && type != 0x10000005
-				    && type != 0x4000000A)
+				switch (type) {
+				case 0x10000024:
+				case 0x10000005:
+				case 0x4000000A:
+					break;
+				default:
 					ok = 1;
+					break;
+				}
 			}
 		}
 
@@ -200,8 +206,17 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 		targetPos.y += 0.5f * actor->mDamageHeight;
 		JGeometry::TVec3<f32> delta = targetPos - mTipPos;
 
-		if (delta.isZero())
+		// The `!= false` materialises isZero()'s bool (retail's
+		// `mfcr; extrwi.`).
+		if (delta.isZero() != false)
 			continue;
+
+		// TODO: retail reuses the squared length from isZero() for both
+		// length() and normalize() (one set of three fmuls; the sqrt result
+		// lands in f26 with a `fmr` on the zero path while the square stays
+		// in f1). Ours recomputes it for normalize() and coalesces the
+		// square with `dist`. No spelling of the three calls tried here
+		// (named square, split declaration, if-block) keeps it.
 
 		f32 dist = delta.length();
 		delta.normalize();
