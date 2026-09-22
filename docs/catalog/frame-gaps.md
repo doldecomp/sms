@@ -1815,3 +1815,30 @@ linking.md's "spell the cast out per site" note was about the virtual `getSavePa
 - Site-count non-monotonicity again: five mask binder sites +0x38 but four +0x30; a params binder +0x10 at one site and +0x18 at two.
 - Inert or refused: a named `TWaterEmitInfo*` (breaks a CSE); a self binder that copies r31 to r28; two-local self/tracer binders (saturate); a named `params` inside the header's `calcHitPoints` (hoists the virtual call out of the switch).
 - Open: `TNerveHino2GraphWander` is 0x20 short with the pool saturated (retail keeps 0x18 between two block objects, so more vectors are declared there); `THino2MtxCalc::calc`'s four else-branch buffers are uniformly 4 low; `THino2Mask::perform` needs two buffer addresses bound into r26/r27 across two `Mtx` blocks.
+
+## Research batch cc12 (2026-09-22): frame-only census and three pricing facts
+
+Census (`frame_only_census.py`, kept in the cc12 scratchpad; rule: equal instruction count, equal mnemonics, every differing operand a signed immediate of an `r1`-based instruction) over the 232 unlinked units with code: 457 frame-or-slot-only functions (434 game, 23 library).
+176 have retail's frame larger (133,300 bytes of code), 48 smaller, 233 equal-frame slot shuffles.
+Deltas: +8 x37, +16 x25, +24 x16, +32 x13, +40 x16, +48 x15, +56 x7, +64 x9, +72..+200 x34; -8 x35, -16 x7, -24 x3, -32, -48, -176.
+22 units have nothing but such functions left (list in the batch report; the `gap_*` and pool-label data rows they show are not blockers).
+
+Measured in scratch TUs with the game flags (MWCC 1.2.5):
+
+- **Inline temporaries are all-or-nothing per function.**
+  A function with no callee-saved register and no stack local keeps the bare 0x8 frame however many inlined value-returning calls it expands (four `int getMV() const { int t = m; return t; }` expansions: 0x8).
+  Add one callee-saved register or one address-taken local and every expansion materialises (0x8 -> 0x48 for the same four), at a per-expansion price independent of register pressure (one to ten extra live callee-saved values move the four-expansion step by exactly 0 bytes), so the dead region is not a spill artefact.
+- **No slot sharing between expansions in exclusive branches.**
+  `if/else`, `else if` chains, `switch` cases, early `return` and `do { ... break; } while (0)` all price N expansions exactly like N sequential ones.
+  "Stack colouring across inlined scopes" is refuted as a lever in either direction.
+- **Compiler-generated temporaries sit above the whole inline pool, not at their source position.**
+  The `new`-result spill (`stw rN, X(r1)` feeding the inlined constructor's `this`) is placed after every inline temporary of the function: adding a dead `getObj(0);` *after* the `new` statement in `TGessoManager::initSetEnemies` moved the spill from 0xc to 0x18.
+  So such a spill's offset minus 0xc reads off the function's total inline-pool size, and the distance from it to the save area is the named/block region.
+- **Inline calls whose result is discarded, or whose guard only folds to false after inlining (`if (isPos(0))`), are zero-instruction carriers**; a literal `if (0)` is removed before inlining and costs nothing.
+
+Invisible-carrier evidence (do not ladder these):
+
+- `TGessoManager::initSetEnemies` and `TIgaigaManager::initSetEnemies` are the same two statements with the same 47 instructions, yet retail pools 0x5c/0x3c below the `new` spill and frames 0xe8/0x98; `TGorogoroManager::initSetEnemies` in `igaiga.cpp` runs the same `new` expression plus a graph loop and pools only 0x18.
+  The dead frame is therefore not produced by the visible code of either function (our ctor chain prices 0).
+- `changeBck`'s expansion costs ~36 bytes in the exact `TNerveBGTug::execute` (0x50 -> 0x78 -> 0xa0 -> 0xc0 over its three sites) and ~10 in retail's `TNerveBGRoll::execute` (eight expansions in 0xa8), same TU, identical expansion code.
+  Our BGRoll is 0xb0 over; the joinAnm chain's `getActorKeeper()`/`getUnk2C()` rungs are 12 per expansion each (raw both gives 0x98) but are pinned by five exact nerves (BGEyeDamage, BGTug, BGPollute, BGPolDrop go red), so the difference lives in how BGRoll reaches `changeBck`, not in the header.
