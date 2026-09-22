@@ -154,6 +154,12 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `Player/MarioParticle`: restored `TMario::initParticle` exactly by correcting the particle resource-loading shape.
   Unit fuzzy similarity rose **98.794266 -> 98.83%**, matched code **88.256714 -> 90.71%**, and exact functions **45/48 -> 46/48**.
   Project exact functions rose **11,466 -> 11,467** and matched code **63.572258 -> 63.578255%**; the DOL remains byte-identical.
+- Whole-file medium audit of `MoveBG/MapObjPlane` returned clean with no safe gain.
+  Its `calcNrm` geometry is still semantically suspect at the fourth triangle, but the binary requires a much deeper copy/temporary topology; tested direct corrections regressed and were not retained.
+- Landed `Enemy/coasterkiller`: corrected `moveCoaster` to pass the forward vector, rather than a precomputed cross-product, as the steering target to `setRotate`.
+  The function rose **82.67056 -> 85.25%** and unit fuzzy similarity **96.03392 -> 96.59%**; no exact-function or linked-unit counter moved.
+- Landed `Camera/lensflare`: restored the retail 17-sample z-buffer visibility pointer walk instead of the mismatching indexed helper loop.
+  `TLensFlare::perform` rose **79.83069 -> 81.18254%** and unit fuzzy similarity **85.31021 -> 86.29480%**; no exact-function or linked-unit counter moved.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
