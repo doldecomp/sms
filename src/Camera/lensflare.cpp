@@ -91,9 +91,16 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		if (!gpSunModel->isInBounds(unk44)) {
 			unk28 = 0.0f;
 		} else {
-			f32 hiddenCount = gpSunModel->calcHiddenRatio();
+			int hiddenCount = 0;
+			const JGeometry::TVec2<s16>* zBuffer = gpSunModel->unkB4;
+			const bool* visible               = gpSunModel->unk180;
+			for (int i = 0; i < 17; ++i, ++zBuffer, ++visible) {
+				if (zBuffer->x != -1 && zBuffer->y != -1 && !*visible)
+					++hiddenCount;
+			}
+			f32 hiddenRatio = hiddenCount * (1.0f / 17.0f);
 
-			unk28 = CLBEaseOutInbetween<f32>(unk48 * (1.0f - hiddenCount),
+			unk28 = CLBEaseOutInbetween<f32>(unk48 * (1.0f - hiddenRatio),
 			                                 255.0f, gpSunModel->getUnk194());
 		}
 
