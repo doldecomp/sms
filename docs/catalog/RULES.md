@@ -301,6 +301,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A helper assigning through a reference parameter puts a caller's aggregate back in its named block below top-declared aggregates (MapWarp `watchToWarp`).
 - Reusing an existing float local for a final clamp instead of naming a new one removes 8 bytes (MSHandle `calcPan`).
 - `TColor` via `(u32)c` gives a 4-byte temporary where `c.get()` gives 8 (Menu `TMenuPlane::perform`).
+- A by-value TU-local level over a by-value-returning call puts the result slot address before the argument temporary (NpcWalkTurn `execUTurn`).
+- One UNUSED inline body can price differently in two callers: settle it for one, tune the other with site forks (MapObjRicco `pushDown`).
+- A named `s16` argument local takes a 4-byte slot at the bottom of the named block; compute it into the call (NpcWalkTurn).
 
 ## Register and scheduling residues
 
@@ -352,6 +355,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Named `s16 rx, ry, rz` locals order a three-way float-to-`s16` conversion as retail (MapObjTown, linked).
 - A `u16` accessor as an index argument fixes a two-register swap (MapObjTown `load`).
 - An explicit no-op upcast `((Base*)this)->f()` stops reuse of a member load; implicit conversion and qualified names do not (MapObjTown switch; also MapEventMare).
+- A header inline's own named local can rank a value above the pool base; write the inline out in the caller (MarioEffect `setJumpIntoWaterEffect*`).
+- An existing header accessor on one operand fixes a commutative `fadds` order no parenthesisation reaches (MapObjRicco crane, linked).
+- Passing a `TMatrix34` member's raw array instead of the conversion operator evaluates that argument last (MapObjFlag `draw`).
 
 ## Float and pool
 
