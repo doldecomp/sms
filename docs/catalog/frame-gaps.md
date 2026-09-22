@@ -1876,3 +1876,21 @@ Nothing committed: the migration closes 16 functions but regresses 70.
   Lost exact: `soundTorocco`, `toroccoEffect`, `isTakeSituation`, `moveRoof`, `TMapObjBall::control`, `TNerveMameGessoJitabata::execute`.
   The copy constructor alone is +81 / -40 (fuzzy +0.054), `operator=` alone +13 / -5.
 - Next: land it as one migration (header, Tongue helper, and a respelling of each of the 70), starting with the `.length()`-on-a-temporary pool and the `MapObjBall` copy.
+
+## Header round cc31 (2026-09-22)
+
+- **`TBaseNPC::emitParticle_` is byte-exact with the wave-ripple block as an inline member that contains its own condition** (`emitWaveParticle_`, fabricated name, declared in `NpcBase.hpp`, defined `inline` in `NpcEffect.cpp`).
+  The TU-local free function that took the caller's `height`/`doEmit` by reference left `doEmit` in r29 and three slots off.
+  The member without the condition (caller keeps the `if`) fixes the register but leaves all three slots a uniform 4 low.
+  Moving the `getActorType() == 0x4000007 || SMSGetMarDirector()->getCurrentMap() == 4` test inside the member closes the 4 bytes, whether spelled as a wrapping `if` or an early return.
+  NpcEffect is linked.
+- **`TRotation3::setEularY`'s zero chain in axis-pair order `(0,1) (1,0) (2,1) (1,2)`** is inert on bossManta and MapObjCorona and exact in JDRSmJ3DAct, so it moved into `JGRotation3.hpp` and the TU-local copy went.
+- **`TSingleNodeLinkList::end()` cannot carry a named result.**
+  In `TPerformList::push_back` the copy constructor sits at inline depth 4 and is called out of line, so `iterator r(mTail); return r;` adds a `bl` copy (+3 instructions), not just a slot; retail's `end()` constructs straight into the return slot.
+  With `end()` unchanged, a named result in `begin()` alone is 0xd8 (retail 0xe8), `iterator r(&mHead); iterator s(r); return s;`, a named `TSingleLinkListNode**` or `iterator r = iterator(&mHead)` are 0xe0, and `return iterator(iterator(&mHead))` 0xc8; all keep `perform`'s 36 markers.
+  A named `TSingleLinkListNode** p` in `end()` keeps the `push_back` frame but trades one instruction (95.3 / 96.4).
+- **`TList_pointer<T>::push_back`'s body is pinned by the tree, not free.**
+  Taking `T` by value regresses about forty 100 % sites (`TLampTrap*::loadAfter`, `TMarDirector::registerEventWatcher`, the JDrama `TNameRefPtrListT`/`TViewObjPtrListT` `load`s, `TYoshiTongue::initInLoadAfter`, ...).
+  So `TRiccoHook::init`'s 8 bytes between the list-insert groups are a riccohook-context problem, not a `std-list.hpp` one.
+- **A `const Vec&` accessor for `CPolarSubCamera::unk148`** (`getUnk148Vec()`, the `getUnk124Vec()` sibling) is worse in `TLensFlare::perform` than the `(const Vec&)` casts: both accessors 94.83 -> 93.69, `unk148` alone 94.4 with one extra instruction.
+  Not added.
