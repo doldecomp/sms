@@ -140,10 +140,9 @@ class J3DMatPacket : public J3DDrawPacket {
 public:
 	J3DMatPacket();
 
-	virtual bool isSame(J3DMatPacket* other) const
-	{
-		return unk3C == other->unk3C && (unk3C >> DIFF_BIT) == 0;
-	}
+	// Defined inline in J3DPacket.cpp only: the map has it weak there and in
+	// no other unit, and SDLModel.cpp's vtable references it without a copy.
+	virtual bool isSame(J3DMatPacket* other) const;
 	virtual bool entry(J3DDrawBuffer* buffer)
 	{
 		J3DDrawBuffer::sortFunc func

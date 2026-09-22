@@ -105,6 +105,11 @@ J3DMatPacket::J3DMatPacket()
 
 J3DMatPacket::~J3DMatPacket() { }
 
+inline bool J3DMatPacket::isSame(J3DMatPacket* other) const
+{
+	return unk3C == other->unk3C && (unk3C >> DIFF_BIT) == 0;
+}
+
 void J3DMatPacket::addShapePacket(J3DShapePacket* packet)
 {
 	if (mpShapePacket == nullptr) {
