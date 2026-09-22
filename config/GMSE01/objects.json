@@ -247,6 +247,7 @@
     "M3DUtil/MActorUtil.cpp",
     "M3DUtil/MotionBlendCtrl.cpp",
     "M3DUtil/SampleCtrlModel.cpp",
+    "M3DUtil/SDLModel.cpp",
     "MSound/MSoundBGM.cpp",
     "MSound/MSoundDebug.cpp",
     "Map/JointModel.cpp",

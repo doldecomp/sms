@@ -8,13 +8,6 @@
 #include <Camera/Camera.hpp>
 #include <macros.h>
 
-// TODO: 100% code and data, but source-linking it shifts .text by 0x24: this
-// TU emits a weak J3DMatPacket::isSame (SDLMatPacket's vtable pulls it in),
-// and as the first definer in link order ours wins, while retail's map has
-// isSame only in J3DPacket.cpp (no duplicate anywhere), so retail's header
-// did not expose its body. Needs a shared-header change: move the body out
-// of J3DPacket.hpp's class into J3DPacket.cpp (cc42).
-
 class SDLDrawBufToken {
 public:
 	SDLDrawBufToken()
