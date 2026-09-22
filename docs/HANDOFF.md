@@ -160,6 +160,12 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The function rose **82.67056 -> 85.25%** and unit fuzzy similarity **96.03392 -> 96.59%**; no exact-function or linked-unit counter moved.
 - Landed `Camera/lensflare`: restored the retail 17-sample z-buffer visibility pointer walk instead of the mismatching indexed helper loop.
   `TLensFlare::perform` rose **79.83069 -> 81.18254%** and unit fuzzy similarity **85.31021 -> 86.29480%**; no exact-function or linked-unit counter moved.
+- Whole-file medium audit of `MarioUtil/PacketUtil` returned clean with no safe gain.
+  `ShapePacketCallBackFunc` already has the retail dispatch and GX/J3D state behavior; its residual is a 0x90 frame deficit propagated through inlined FIFO/fog helpers.
+- Landed `GC2D/SelectShine2`: restored the retail out-of-line trigonometry call depth in the shine-position loop with a TU-local position forwarder.
+  `TSelectShineManager::perform` rose **83.664406 -> 90.34%** and unit fuzzy similarity **94.88835 -> 96.25%**; no exact-function or linked-unit counter moved.
+- Landed `System/MarDirectorInitECT`: restored the named stage rectangle, shared glow/flare labels, and distinct sun/sunset `TLensGlow` flags in `initECDisp`.
+  `initECDisp` rose **97.549934 -> 99.75%** and unit fuzzy similarity **96.87826 -> 98.18%**; no exact-function or linked-unit counter moved.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
