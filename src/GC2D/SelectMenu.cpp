@@ -34,7 +34,9 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+// Retail .rodata carries only the DummyStrings pair (@1490/@2111), not the
+// four InfectiousStrings mtx-calc names, and its .data has no MtxCalcTypeName.
+#include <System/DummyStrings.hpp>
 
 // fabricated and not matching
 inline void bzero(void* pDst, u32 len)
