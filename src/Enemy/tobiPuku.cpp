@@ -452,9 +452,9 @@ BOOL TTobiPuku::isDeadBck() { return isBckAnm(PUKU_ANM_DEAD) ? TRUE : FALSE; }
 
 bool TTobiPuku::isAttackBck() { return isBckAnm(PUKU_ANM_ATTACK) ? true : false; }
 
-BOOL TTobiPuku::isFallEndLandBck()
+bool TTobiPuku::isFallEndLandBck()
 {
-	return isBckAnm(PUKU_ANM_FALL_END_LAND) ? TRUE : FALSE;
+	return isBckAnm(PUKU_ANM_FALL_END_LAND) ? true : false;
 }
 
 bool TTobiPuku::isJumpStartBck()
@@ -492,9 +492,9 @@ void TTobiPuku::setJumpStartAnm()
 // 0x24.
 bool TTobiPuku::canBound()
 {
-	unk1AE = 1;
 	if (mBoundCount < unk19C->mSLBoundNum.get())
 		return true;
+	unk1AE = 0;
 	return false;
 }
 
@@ -836,9 +836,9 @@ BOOL TMoePuku::isDeadBck() { return isBckAnm(PUKU_ANM_DEAD) ? TRUE : FALSE; }
 
 bool TMoePuku::isAttackBck() { return isBckAnm(PUKU_ANM_ATTACK) ? true : false; }
 
-BOOL TMoePuku::isFallEndLandBck()
+bool TMoePuku::isFallEndLandBck()
 {
-	return isBckAnm(PUKU_ANM_FALL_END_LAND) ? TRUE : FALSE;
+	return isBckAnm(PUKU_ANM_FALL_END_LAND) ? true : false;
 }
 
 bool TMoePuku::isJumpStartBck()
@@ -1126,22 +1126,12 @@ DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 0x5a8 (1448 bytes).
-// TODO: partial, 54.5% of 1448 bytes. Three of the four branches are written:
-// the water landing, the bound hand-off, and the fall-end-land interpolation
-// over twenty frames. The fourth, taken when TTobiPuku::mReturnLaunchSw is set,
-// is **not** written. It halves the launch velocity's x and z, recomputes y
-// from mFlyVelocityY against the 600-unit drop, advances mRotation.x by
-// mReturnPitchStep clamped to 0..180, scales the horizontal velocity by
-// cos(pitch) through the jma table, and hands off once the drop exceeds 600.
-// m2c's rendering of that block is ambiguous about which component receives
-// which product, so it is left out rather than guessed.
 DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 {
 	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
 
 	if (spine->getTime() < 2) {
-		if (puku->mGroundPlane->isWaterSurface()) {
+		if (puku->getGroundPlane()->isWaterSurface()) {
 			f32 y             = puku->mPosition.y;
 			puku->mPosition.y = y - 10.0f;
 			puku->onLiveFlag(LIVE_FLAG_UNK10);
@@ -1152,36 +1142,28 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 				    = (180.0f - puku->mRotation.x)
 				      / fabsf(600.0f / puku->mFlyVelocityY);
 			}
-			return FALSE;
-		}
-
-		if (TTobiPuku::mBoundSw) {
-			if (puku->mBoundCount < puku->unk19C->mSLBoundNum.get()) {
-				spine->pushAfterCurrent(&TNerveTobiPukuBound::theNerve());
-				return TRUE;
+		} else {
+			if (TTobiPuku::mBoundSw) {
+				if (puku->canBound()) {
+					spine->pushAfterCurrent(&TNerveTobiPukuBound::theNerve());
+					return TRUE;
+				}
 			}
-			puku->unk1AE = 0;
-		}
 
-		puku->mLand[0] = puku->mPosition;
-		puku->setFallEndLandAnm();
-		puku->mRotation.x = 0.0f;
-		return FALSE;
-	}
-
-	if (puku->isFallEndLandBck()) {
-		if (spine->getTime() == 1) {
-			puku->mLand[1].x = puku->mPosition.x - puku->mLand[0].x;
-			puku->mLand[1].y = puku->mPosition.y - puku->mLand[0].y;
-			puku->mLand[1].z = puku->mPosition.z - puku->mLand[0].z;
+			puku->mLand[0] = puku->mPosition;
+			puku->setFallEndLandAnm();
+			puku->mRotation.x = 0.0f;
 		}
+	} else if (puku->isFallEndLandBck()) {
+		if (spine->getTime() == 1)
+			puku->mLand[1].set(puku->mPosition.x - puku->mLand[0].x,
+			                   puku->mPosition.y - puku->mLand[0].y,
+			                   puku->mPosition.z - puku->mLand[0].z);
 
 		int time = spine->getTime();
 		if (time < 20) {
-			f32 t             = 0.05f * (f32)time;
-			puku->mPosition.x = puku->mLand[0].x;
-			puku->mPosition.y = puku->mLand[0].y;
-			puku->mPosition.z = puku->mLand[0].z;
+			f32 t          = 0.05f * (f32)time;
+			puku->mPosition = puku->mLand[0];
 			puku->mPosition.x += puku->mLand[1].x * t;
 			puku->mPosition.y += puku->mLand[1].y * t;
 			puku->mPosition.z += puku->mLand[1].z * t;
@@ -1191,22 +1173,56 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 			spine->pushAfterCurrent(&TNerveTobiPukuPitiPiti::theNerve());
 			return TRUE;
 		}
-		return FALSE;
+	} else if (TTobiPuku::mReturnLaunchSw) {
+		f32 drop = puku->mSwimBaseY - puku->mPosition.y;
+		JGeometry::TVec3<f32> vel(puku->mLaunchVelocity);
+		// TODO: retail halves the launch velocity's y into vel.x; read
+		// literally off the asm (an original x/y slip, most likely).
+		vel.x = puku->mLaunchVelocity.y *= 0.5f;
+		vel.z = puku->mLaunchVelocity.z *= 0.5f;
+		vel.y = puku->mFlyVelocityY * (600.0f - drop) / 600.0f;
+
+		f32 pitch = puku->mRotation.x + puku->mReturnPitchStep;
+		if (pitch > 180.0f)
+			pitch = 180.0f;
+		else if (pitch < 0.0f)
+			pitch = 0.0f;
+		puku->mRotation.x = pitch;
+
+		f32 cosPitch = JMASCos(DEG2SHORTANGLE(puku->mRotation.x));
+		vel.x *= cosPitch;
+		vel.z *= cosPitch;
+		vel.y = puku->mFlyVelocityY;
+		puku->mPosition += vel;
+
+		if (fabsf(drop) > 120.0f) {
+			f32 spread = 3.0f + puku->unk1EC;
+			if (spread > 180.0f)
+				spread = 180.0f;
+			else if (spread < 0.0f)
+				spread = 0.0f;
+			puku->unk1EC = spread;
+		}
+
+		if (fabsf(drop) > 600.0f) {
+			spine->pushAfterCurrent(&TNerveTobiPukuReturnLaunch::theNerve());
+			return TRUE;
+		}
+	} else {
+		f32 y             = puku->mPosition.y;
+		puku->mPosition.y = y - 12.0f;
+
+		if (puku->isJumpBck()) {
+			if (puku->mRotation.x < TTobiPuku::mLandAngle)
+				puku->mRotation.x += 1.2f;
+		}
+
+		if (spine->getTime() > 100) {
+			puku->onLiveFlag(LIVE_FLAG_DEAD);
+			return TRUE;
+		}
 	}
 
-	f32 y             = puku->mPosition.y;
-	puku->mPosition.y = y - 12.0f;
-
-	if (puku->isJumpBck()) {
-		f32 pitch = puku->mRotation.x;
-		if (pitch < TTobiPuku::mLandAngle)
-			puku->mRotation.x = pitch + 1.2f;
-	}
-
-	if (spine->getTime() > 100) {
-		puku->onLiveFlag(LIVE_FLAG_DEAD);
-		return TRUE;
-	}
 	return FALSE;
 }
 
