@@ -63,6 +63,8 @@ NpcEventGetLatestNerve(const TBaseNPC* npc)
 // evCheckLatestNerve4Npc at 0x98. Both then 99.96% / frame exact; leftover
 // is arg_num 4 low and the pushed slice 8-12 low. NerveGetByIndex binder
 // also lands the frame but drops the r28 save (ladder 353).
+// 2026-09-22: pop levels for nerveId/npc, `push(TSpcSlice(result))` and
+// `s32` locals all push this helper out of line in its callers (47-75%).
 static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
                             bool param_3)
 {
@@ -81,21 +83,15 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	interp->push(result);
 }
 
-// TODO: 99.9%, frame exact (0x68). Both the popped slice (0x48 vs 0x4c) and
-// the pushed slice (0x3c vs 0x40) sit 4 bytes low: one missing +4 of low
-// region below the whole block, not a slice-slot level. Measured and rejected:
-// `push(TSpcSlice((int)viewObj))` (fixes the push slot only, leaves the pop),
-// naming the pushed int (+0), declaring `viewObj` before `name` (+0), a
-// named-scalar binder over the cast (+16), a TU-local `search` wrapper that
-// binds the TNameRef* first (+8, and it moves every slot).
+// Pushing the search result straight (no named viewObj pointer) puts both
+// slices at retail's slots; the named pointer was 4 bytes of low region
+// short, a pop-string level +4 above, a direct-return search level +8.
 static void evGetAddressFromViewObjName(TSpcTypedInterp<TEventWatcher>* interp,
                                         u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	const char* name = interp->pop().getDataString();
-	JDrama::TViewObj* viewObj
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>(name);
-	interp->push((int)viewObj);
+	interp->push((int)JDrama::TNameRefGen::search<JDrama::TViewObj>(name));
 }
 
 static void evCheckCurNerve4Npc(TSpcTypedInterp<TEventWatcher>* interp,
@@ -139,6 +135,10 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 // one of the three is -8). Both slice slots are still 4 bytes high (push 0x4c
 // vs 0x48, pop 0x70 vs 0x6c) against an exact stfd slot, i.e. one -4 of low
 // region below the whole block. Naming the popped NPC is +8.
+// 2026-09-22: SMSGetMarDirector()/raw gpMarDirector for the unk126 store
+// lands the pushed slice but leaves the pop 4 low and the frame 8 short;
+// pop levels (int/s32/pointer, direct or named) reorder the two slices;
+// `(int)interp->pop()` and a named director local break instructions.
 static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
@@ -170,6 +170,10 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 // dead-stripped by MWCC and loses both stores; binding the whole slice
 // (`TSpcSlice exceptNpc = interp->pop();`) keeps them but copies both words.
 // Open.
+// 2026-09-22: `TSpcSlice exceptNpc; exceptNpc.mData = interp->pop().mData;`
+// copies only the data word from the pop (93.5%) but keeps the default
+// ctor's two zero stores and is +8 of frame; copy-init/assignment/ctor
+// forms from the popped int or string are 80-91%.
 static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
                                         u32 arg_num)
 {
@@ -277,7 +281,10 @@ static void evResetFruitNum(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 static void evGetFruitNum(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
-	int fVar4                 = interp->pop().getDataInt();
+	// `s32` (signed long), not `int`: an `int` local of the popped value
+	// costs a 4-byte named slot below the float-to-int conversion buffer (+8
+	// of frame); `u32` also lands it.
+	s32 fVar4                 = interp->pop().getDataInt();
 	TFruitBasketEvent* basket = (TFruitBasketEvent*)interp->pop().getDataInt();
 
 	int iVar3 = 0;
@@ -306,8 +313,8 @@ static void evGetFruitNum(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 static void evSetFruitType(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(3, &arg_num);
-	int fVar5                 = interp->pop().getDataInt();
-	int fVar4                 = interp->pop().getDataInt();
+	s32 fVar5                 = interp->pop().getDataInt();
+	s32 fVar4                 = interp->pop().getDataInt();
 	TFruitBasketEvent* basket = (TFruitBasketEvent*)interp->pop().getDataInt();
 
 	if (fVar5 != 0) {
@@ -371,6 +378,11 @@ static inline bool NpcEventIsClean(const TBaseNPC* p)
 // lever moves it alone: `push(TSpcSlice(b))` is +4 without the pointer
 // declaration but +8 with it, a named `TSpcSlice slice(b)` moves the popped
 // slice instead, and dropping the NpcEventIsClean binder is -8 of frame.
+// 2026-09-22: the if/else as a two-return TU-local predicate returning int
+// (`push(TSpcSlice(pred(npc)))`, no npc pre-declaration, raw isClean())
+// lands frame, buffer and pushed slice but leaves the popped slice 4 low;
+// `isClean() != 0`, u32/bool flag wrappers, a pop level and a search level
+// all move the three blocks together.
 static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
                               u32 arg_num)
 {
