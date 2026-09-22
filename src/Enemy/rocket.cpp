@@ -98,6 +98,9 @@ TSpineEnemy* TRocketManager::createEnemyInstance() { return new TRocket(); }
 // TODO: instruction-identical and the frame total is right, but the
 // TMsRange lands 4 bytes low: the ROM leaves a 4-byte hole between it and
 // `point`, i.e. one more 4-byte local was declared between the two.
+// Tried: point before node, a named int for rand(), a TGraphNode& or
+// pointer binding (lands node but lifts point 4), web or rocket declared
+// at function scope, `(int)web->unk8`, point at function scope.
 void TRocketManager::initSetEnemies()
 {
 	TGraphWeb* web;
@@ -165,12 +168,14 @@ void TRocket::init(TLiveManager* manager)
 	onHitFlag(HIT_FLAG_UNK8000000);
 }
 
-// TODO: instruction-identical; the frame is 0x110 against the ROM's 0x120,
-// so 16 bytes of locals are still missing below `rot`.
+// TODO: frame exact (getScaling() is the +8); the third column length's
+// sqrt runs in f2/f3 where the ROM uses f6 for lenZ and f3/f2 for the
+// scratch. Tried: lenX/lenY/lenZ declared up front in either order, lenZ
+// alone up front, getSpine() at the nerve test (+8, slots 4 low).
 void TRocket::calcRootMatrix()
 {
 	if (mIsPossessed) {
-		getModel()->setBaseScale(mScaling);
+		getModel()->setBaseScale(getScaling());
 
 		TPosition3f mtx;
 		if (mSpine->getCurrentNerve() == &TNerveRocketFly::theNerve()) {
@@ -272,17 +277,14 @@ void TRocket::attackToMario()
 
 void TRocket::behaveToWater(THitActor* param_1) { attackToMario(); }
 
-// TODO: 97.1%. Two residuals: the frame is 24 bytes short (0xa8 vs 0xc0),
-// and the ROM copies the wall's actor into r3 inside the guarded block while
-// we hoist the `mr` above the branch.
 void TRocket::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
 
-	if (mSpine->getCurrentNerve() == &TNerveRocketPossessedNozzle::theNerve()
-	    || mSpine->getCurrentNerve() == &TNerveRocketFly::theNerve()) {
-		TBGWallCheckRecord record(mPosition.x, mPosition.y, mPosition.z,
+	if (getSpine()->getCurrentNerve() == &TNerveRocketPossessedNozzle::theNerve()
+	    || getSpine()->getCurrentNerve() == &TNerveRocketFly::theNerve()) {
+		TBGWallCheckRecord record(getPosition().x, getPosition().y, getPosition().z,
 		                          getWallRadius(), 1, 0);
 		if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
 			// Whatever it hit gets hit back, then the bottle bursts.
@@ -293,11 +295,11 @@ void TRocket::bind()
 				hitActor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
 			kill();
-		} else if (mSpine->getCurrentNerve()
+		} else if (getSpine()->getCurrentNerve()
 		           == &TNerveRocketFly::theNerve()) {
 			TLiveActor::bind();
 			if (!isAirborne()) {
-				const TLiveActor* groundActor = getGroundPlane()->getActor();
+				const TLiveActor* groundActor = mGroundPlane->getActor();
 				if (groundActor) {
 					THitActor* hitActor = (THitActor*)groundActor;
 					hitActor->receiveMessage(this, HIT_MESSAGE_ATTACK);
