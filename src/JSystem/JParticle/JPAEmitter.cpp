@@ -596,9 +596,9 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 		}
 
 		JGeometry::TVec3<f32> local_35c;
-		local_35c.x = local_398.x + add3_vec.x + f26_f25_f28.x + f22_f23_f24.x;
-		local_35c.y = local_398.y + add3_vec.y + f26_f25_f28.y + f22_f23_f24.y;
-		local_35c.z = local_398.z + add3_vec.z + f26_f25_f28.z + f22_f23_f24.z;
+		local_35c.x = f26_f25_f28.x + f22_f23_f24.x + local_398.x + add3_vec.x;
+		local_35c.y = f26_f25_f28.y + f22_f23_f24.y + local_398.y + add3_vec.y;
+		local_35c.z = f26_f25_f28.z + f22_f23_f24.z + local_398.z + add3_vec.z;
 
 		if (unk1C4 != 0.0f)
 			local_35c *= random_scale;
