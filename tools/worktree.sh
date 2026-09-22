@@ -46,11 +46,13 @@ add)
 	done
 
 	cd "$path"
-	# Configure with the main tree's python by its real path: configure.py
+	# Configure with the same Python recorded by the main tree. configure.py
 	# bakes sys.executable into every command line, and ninja rebuilds any
-	# output whose recorded command differs, so a worktree-relative python
-	# path would make it re-download the shared tools through the symlinks.
-	"$ROOT/build/venv/bin/python3" configure.py --version "$VERSION"
+	# output whose recorded command differs, so even another valid Python
+	# would make it re-download the shared tools through the symlinks.
+	build_python=$(sed -n 's/^python = "\(.*\)"$/\1/p' "$ROOT/build.ninja" | head -1)
+	[ -x "$build_python" ] || { echo "main build Python is unavailable: $build_python" >&2; exit 1; }
+	"$build_python" configure.py --version "$VERSION"
 	# For the same reason the checkout's download_tool.py must not look newer
 	# than the tools, and the worktree needs the main tree's build log.
 	touch -r "$ROOT/tools/download_tool.py" "$path/tools/download_tool.py"
