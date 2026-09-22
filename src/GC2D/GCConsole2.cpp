@@ -2775,6 +2775,14 @@ bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
 }
 #pragma dont_inline off
 
+// fabricated: a by-value copy of the window's contents rect. The other two
+// readers of getContentsBounds() in this file copy it once, so this is not a
+// change to J2DWindow's accessor.
+static inline JUTRect GCConsole2ContentsBounds(const J2DWindow* window)
+{
+	return window->getContentsBounds();
+}
+
 bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 {
 	JMSMesgEntry* entry
@@ -2784,18 +2792,19 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 		return false;
 
 	if (unk10 != 0) {
-		if (unk3F4 != 0xffffffff)
-			return false;
-
-		unk3F4 = messageID;
-		// The ROM compares unk3E0 with itself here, so the middle term is
-		// always true. Probably a copy-paste slip in the original source.
-		if (unk3F4 != 0xffffffff || (unk3E0 == unk3E0 && unk3E4 == 0)) {
-			unk3B8->hide();
-			unk48 = 0;
-			unk10 = 4;
+		if (unk3F4 == 0xffffffff) {
+			unk3F4 = messageID;
+			// TODO: the ROM compares unk3E0 with itself here (`cmplw r4, r4`),
+			// so the middle term is always true; a literal self-compare is
+			// folded away, so the original spelled it some other way.
+			if (unk3F4 != 0xffffffff || (unk3E0 == unk3E0 && unk3E4 == 0)) {
+				unk3B8->hide();
+				unk48 = 0;
+				unk10 = 4;
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	if (gpMarDirector->mState == TMarDirector::STATE_UNK5 || !unk46)
@@ -2805,9 +2814,9 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	unk3B0->mAlpha = 0;
 	unk3B0->show();
 
-	// TODO: the ROM copies the contents rect twice here, as if
-	// J2DWindow::getContentsBounds() returned a JUTRect by value.
-	JUTRect contents(unk3B0->getContentsBounds());
+	// The ROM copies the contents rect twice here: once into a by-value
+	// return temporary and once into the local.
+	JUTRect contents(GCConsole2ContentsBounds(unk3B0));
 	unk3B0->resize(unk3BC.getWidth(),
 	               unk3BC.getHeight() - contents.getHeight());
 	unk3B0->add(0, contents.getHeight());
@@ -2818,11 +2827,17 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	const u8* messageText = unk3D0->getMessageData() + entry->mTextOffset;
 	((JSUMemoryInputStream*)unk3D4)->setBuffer(messageText, 0x400);
 
-	unk3E0 = messageID;
-	unk3F8 = autoClose;
-	unk3E4 = (s32)(strlen((const char*)messageText) * unk3EC + unk3E8);
+	unk3E0     = messageID;
+	size_t len = strlen((const char*)messageText);
+	unk3F8     = autoClose;
+	unk3E4     = (s32)(len * unk3EC + unk3E8);
 
+#if defined(VERSION_GMSE01)
+	if (unk3E0 == 0x2C)
+#else
+	// TODO: unverified for JP (no image here).
 	if (unk3E0 == 0x000E002F)
+#endif
 		unk3E4 = 0x96;
 
 	if (unk3E4 <= 0)
@@ -3689,7 +3704,7 @@ bool TGCConsole2::processAppearStar(int param_1)
 	for (int i = 0; i < 3; ++i) {
 		if (param_1 == i * 6 + 28) {
 			if (i == 2) {
-				if ((!unk50 && shines >= 100) || (unk50 && shines > 100))
+				if ((!unk50 && shines >= 100) || (shines > 100 && unk50))
 					unk134[i]->getPane()->show();
 			} else {
 				unk134[i]->getPane()->show();
@@ -3744,10 +3759,9 @@ bool TGCConsole2::processAppearStar(int param_1)
 	unk144->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
 	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
-	JUTRect bounds2(unk14C->getPane()->mGlobalBounds);
-	unk164->mGlobalTranslation.set(bounds2.x1 + bounds2.getWidth() * 0.5f,
-	                               bounds2.y1 + bounds2.getHeight() * 0.5f,
-	                               0.0f);
+	bounds = unk14C->getPane()->mGlobalBounds;
+	unk164->mGlobalTranslation.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
 	return isFinished;
 }
