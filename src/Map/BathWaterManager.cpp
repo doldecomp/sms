@@ -1171,20 +1171,20 @@ public:
 				f32 rad             = p->dropRadius.get()
 				          * (t * p->modelScale.get()
 				             + (1.0f - t) * p->modelScale2.get());
-				f32 px = d->unk0.x;
-				f32 py = d->unk0.y
-				         + (p->modelScaleY.get() * p->dropRadius.get() - rad);
-				f32 pz = d->unk0.z;
+				f32 lift = -rad + p->modelScaleY.get() * p->dropRadius.get();
+				JGeometry::TVec3<f32> pos = d->unk0;
+				pos.y += lift;
 
 				TPosition3f local;
-				local.set(rad, 0.0f, 0.0f, px, 0.0f, rad, 0.0f, py, 0.0f, 0.0f,
-				          rad, pz);
+				local.set(rad, 0.0f, 0.0f, pos.x, 0.0f, rad, 0.0f, pos.y, 0.0f,
+				          0.0f, rad, pos.z);
 				TPosition3f mtx;
 				mtx.concat(unk80020, local);
 				GXLoadPosMtxImm(mtx, GX_PNMTX0);
 
-				for (u16 s = 0; s < unk80144->getShapeNum(); s++) {
-					J3DShape* shape = unk80144->getShapeNodePointer(s);
+				J3DModelData* dropModel = unk80144;
+				for (u16 s = 0; s < dropModel->getShapeNum(); s++) {
+					J3DShape* shape = dropModel->getShapeNodePointer(s);
 					for (u16 mg = 0; mg < shape->getMtxGroupNum(); mg++) {
 						J3DShapeDraw* sd = shape->getShapeDraw(mg);
 						if (sd)
@@ -1523,11 +1523,13 @@ public:
 		f32 negR = -data.unk3C;
 		f32 R3   = 3.0f * data.unk3C;
 
-		// Half-stripped crap
+		// Half-stripped: the cap radius is computed and discarded. The ROM
+		// keeps sqrt's `mag <= 0` compare with no branch after it and
+		// reloads unk44 for the next getThing().
 		JGeometry::TVec3<f32> v1;
 		v1.set(data.getThing());
-		if (data.unk3C * data.unk3C - data.unk44 * data.unk44 <= 0)
-			(void)(data.unk3C * data.unk3C - data.unk44 * data.unk44);
+		JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
+		                            - data.unk44 * data.unk44);
 
 		JGeometry::TVec3<f32> v2;
 		v2.set(data.getThing());
