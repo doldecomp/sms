@@ -1232,10 +1232,11 @@ void TMarDirector::moveStage()
 	}
 
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		u32 r5 = gpMarioOriginal->mWaterGun->mSecondNozzle;
-		if (r5 == 3)
-			r5 = 4;
-		TFlagManager::smInstance->setFlag(0x40004, r5);
+		int nozzle      = gpMarioOriginal->mWaterGun->mSecondNozzle;
+		s32 savedNozzle = nozzle;
+		if (nozzle == 3)
+			savedNozzle = 4;
+		TFlagManager::smInstance->setFlag(0x40004, savedNozzle);
 	}
 }
 
