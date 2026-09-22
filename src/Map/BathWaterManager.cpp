@@ -254,8 +254,11 @@ public:
 		                 const JGeometry::TVec3<f32>& grav2, int& count,
 		                 JGeometry::TVec3<f32>& accum)
 		{
-			JGeometry::TVec3<f32> m(data.unk18.at(0, 1), data.unk18.at(1, 1),
-			                        data.unk18.at(2, 1));
+			// TODO: frame 0x110 against the ROM's 0xa8; the instruction
+			// stream differs only in scheduling and register numbering. Raw
+			// row reads instead of three at() calls are -8 of it.
+			JGeometry::TVec3<f32> m(data.unk18.mMtx[1][0], data.unk18.mMtx[1][1],
+			                        data.unk18.mMtx[1][2]);
 			JGeometry::TVec3<f32> delta;
 			delta.sub(unk0, data.mPos);
 			f32 outerR = data.unk40 + radius;

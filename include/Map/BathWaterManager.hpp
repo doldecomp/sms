@@ -38,16 +38,21 @@ public:
 
 	JGeometry::TVec3<f32> getPos(int i, int j, f32 h) const
 	{
-		// angle before amp: the ROM gives angle the higher float register, and
-		// register order follows declaration order while the int-to-float
-		// conversions follow assignment order.
-		// TODO: the three conversion temporaries still land in a different
-		// order (0x30/0x38/0x40 hold j, i, i in the ROM and i, j, i here);
-		// naming j first, `t = j; t = i / t`, and commuting the product do
-		// not move them.
-		f32 t     = (f32)i / (f32)j;
-		f32 angle = (f32)i * 0.31415927f;
-		f32 amp   = t * (unk3C - h);
+		// Declared as a block and assigned afterwards: the ROM hands the
+		// float registers out in declaration order (t, angle, amp) but
+		// converts angle's i first (the int-to-float temporaries at
+		// 0x30/0x38/0x40 hold j, i, i).
+		// TODO: the ROM converts angle's i into a volatile register and only
+		// lands the product in angle's; `angle *= k` puts the conversion in
+		// angle's register directly (99.9), `angle = (f32)i * k` and the
+		// commuted product both swap the two volatiles instead (99.8).
+		f32 t;
+		f32 angle;
+		f32 amp;
+		angle = (f32)i;
+		angle *= 0.31415927f;
+		t     = (f32)i / (f32)j;
+		amp   = t * (unk3C - h);
 
 		JGeometry::TVec3<f32> result;
 		result = mPos;
