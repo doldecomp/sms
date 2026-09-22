@@ -136,6 +136,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - An out-of-line `TVec3::set(const Vec&)`: pass a `Vec`-typed value into a `const TVec3&` parameter three levels down (lensflare).
 - Replacing `#pragma dont_inline`: count the missing statements with zero-code `(void)0;` fillers (measure before a final `return <const>;`, which counts one extra), then spell them as real code: early-return guards for `&&` (+2), `else if` after returning `if`s (+1 each), a single-exit result chain, an empty `default: break;` (+1), named call results or chain steps (cost is site-dependent). UNUSED overloads whose map sizes include a callee's body mean the used overloads forward through them (RumbleMgr; forward a named `int idx = 0;` to keep `li r7, 0`). The pragma also blocks expansion inside the protected function (MapStaticObject). 17 of 27 game pragmas removed on 2026-09-22; the rest carry TODOs with the measured shortfall.
 - Moving a loop body into its own inline helper pushes its callees one level deeper and can restore missing weak symbols (SelectShine2 `perform`: `TVec2<f>::sub`).
+- An `inline` member called from a depth-1 TU-local `static inline` comes out weak and out of line with callers keeping their `bl`; replaces `__declspec(weak)` (PauseMenu2 `appearWindow`/`disappearWindow`).
+- A by-value return from an inlined helper counts as one level; an out-parameter version drops it (wireTrap `checkHitActors`).
+- A discarded computation whose calls retail keeps is a `void` helper, not an unused named local (wireTrap `behaveHitWireTrap`).
 
 ## Frame-size gaps
 
@@ -335,6 +338,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A three-statement swap inside an inlined callee takes its temporary's slot after earlier inline locals; a one-level `static inline swap(TVec3&, TVec3&)` puts it where retail has it (MarioSpecial `specMain`).
 - A named `u16 flag = accessor()[i];` adds a 4-byte item between argument temporaries and a named `Mtx` (ModelWaterManager `drawWaterVolume`).
 - Before diffing a ranked target, skip functions whose TODO already records a deep search: most misses in the byte-ranked run were re-diffing explored residues.
+- A zero-initialised aggregate feeding only a member copy, moved into an inlined helper, drops from the named block to the low region; give each caller its own helper, since a shared one merges `.rodata` literals (MtxUtil `calcLocalXY`).
 
 ## Register and scheduling residues
 
@@ -405,6 +409,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `return !a() && b();` with no result local gives retail's shared-zero `mr r0, r30` (smallEnemy `isFindMario`).
 - A spine or params accessor spelled differently at one site (`getSpine()` vs `mSpine`, `getSLx()` vs `.get()`) renumbers volatile registers with no frame change (killer, NpcChange).
 - Known-open: '1.0f loaded just before its store, 1.0f and 0.0f sharing f1' in hand-built rotation matrices (KillerBodyCallback, NameKuriAttackCallback, TNameIndParCallback).
+- The receiver of a symmetric predicate (`a.epsilonEquals(b)` vs `b.epsilonEquals(a)`) decides the callee-saved split (MtxUtil `constraintTail`).
 
 ## Float and pool
 
