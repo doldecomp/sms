@@ -162,6 +162,9 @@ void TMarioCap::createMirrorCap()
 }
 
 // UNUSED
+// TODO: body unknown (map 0x90). The constructor's pollution loop (with its
+// `mBodyPollutionTex != 0` guard) compiles to 0x80 here, but calling it from
+// the constructor costs 7 markers, so the constructor does not inline it.
 void TMarioCap::addDirty() { }
 
 void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)

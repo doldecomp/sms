@@ -57,6 +57,16 @@ MSSceneSE::MSSceneSE(u32 param_1)
 // inline-expansion pool. The three UNUSED helpers below (calcPosVolume 0x134,
 // calcPosPanLR 0x124, calcPosPanSR 0xf0, all still empty stubs) are the only
 // candidates in the TU for locals that frameLoop declared and never read.
+// cc28: `(int)rank` at the null test and the first store (only those two)
+// puts `rank` in retail's r27 and leaves only the missing `lwzx` (99.4%); a
+// `(int)rank` at the distance argument does produce retail's `lwzx r4, row,
+// rank*4` but also in the depth-1 copy, where retail has none, and costs +8
+// of frame -- so the re-derived index is real but reached some other way.
+// Inert on both functions: a named `trans` distance, `!ptr`, `(u8)(rank + 1)`,
+// row-pointer / value / reference accessors at the distance argument, and
+// C-style top declarations of listenerTrans/angle/clampedAngle/direction in
+// frameLoop. A TU-local `DistOf(Vec*)` wrapper over getDistFromCamera is +8 on
+// frameLoop (0x98) but +8 on sortMaxTrans too.
 void MSSceneSE::frameLoop(u32 sound_id, Vec* trans, u8 trans_num)
 {
 	if (MSGMSound->gateCheck(sound_id) && trans_num <= ARRAY_COUNT(mTrans)) {
