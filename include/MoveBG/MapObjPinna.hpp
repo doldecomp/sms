@@ -122,6 +122,12 @@ public:
 		TMapObjBase::concatOnlyRotFromRight(mJointMtx, mtx, mJointMtx);
 	}
 	TPinnaShell(const char*);
+	// TODO: 99.9%. Retail spills `this` at 0xc(r1), ours at 8: one 4-byte
+	// item below it. A defaulted `int` parameter lands it (so it is an
+	// argument-shaped temporary) but the map fixes the Fv signature. Tried:
+	// a name-returning static/free inline (with and without a named local or
+	// a pass-through parameter), a trailing `return;`, a by-value f32 level
+	// around initHitActor, casts on the enum and the 0x80000000 argument.
 	TPinnaShell()
 	    : THitActor("シェル")
 	    , mState(STATE_CLOSED)

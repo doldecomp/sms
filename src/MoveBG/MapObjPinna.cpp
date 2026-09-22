@@ -70,6 +70,13 @@ s32 TFerrisWheel::becomeCalmlyCallback(u32 param_1, u32 param_2)
 	return 0;
 }
 
+// The rate as an inlined helper's argument gives retail's f31 (rate) / f30
+// (frame) colouring; a caller-level `f32 rate` local swaps them.
+static inline void MapObjPinnaAdvance(TMapObjBase* p, f32 rate)
+{
+	MapObjPinnaFrameCtrl(p)->setFrame(rate + MapObjPinnaFrameCtrl(p)->getFrame());
+}
+
 void TFerrisWheel::control()
 {
 	TMapObjBase::control();
@@ -89,9 +96,12 @@ void TFerrisWheel::control()
 		                       &sound->unk80, 0, 4);
 	}
 
-	f32 rate = mAnmRate;
-	MapObjPinnaFrameCtrl(this)->setFrame(
-	    rate + MapObjPinnaFrameCtrl(this)->getFrame());
+	// TODO: 99.9%. Retail keeps the gpMSound receiver in r30 (shared with the
+	// gondola loop's offset) where ours takes r29. Tried: SMSGetMSound(),
+	// raw gpMSound and the three-argument startSoundActor overload (all -8),
+	// sound declared at function scope, the gondola loop in a TU-local level
+	// (-8, rotates the loop), getGondolaNum() bound, gondola/mtx reordered.
+	MapObjPinnaAdvance(this, mAnmRate);
 
 	for (int i = 0; i < mGondolaNum; i++) {
 		TMapObjBase* gondola = mGondolas[i];
@@ -401,6 +411,13 @@ BOOL TPinnaShell::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
+// TODO: 99.9%, instruction exact; frame 0x80 against retail's 0xb0. Retail's
+// Mtx sits at 0x64 (ours 0x40) with 12 bytes between it and the MsRandF
+// conversion slot at 0xa0, and 0x24 more pool below. Measured: a TVec3
+// temporary into mPosition.set (+0x18, but recolours the position FPRs), the
+// Mtx at function scope (+4 Mtx), the two-argument startSoundActor (+8), a
+// TU-local rate helper around MsRandF (+4), a shared `s16` angle in the
+// MsMtxSetRotX header (+0x10 but breaks its weak copy; not made).
 void TPinnaShell::control()
 {
 	if (mTimer > 0)
@@ -528,6 +545,14 @@ void TShellCup::calcAfter()
 	}
 }
 
+// The shell loop as its own level shares the counter's zero with the byte
+// offset (retail's `li r28, 0; addi r30, r28, 0`).
+static inline void MapObjPinnaCalcShells(TShellCup* cup)
+{
+	for (int i = 0; i < 6; i++)
+		cup->mShells[i].calcJointMtx();
+}
+
 void TShellCup::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TMapObjBase::perform(cue, graphics);
@@ -540,13 +565,15 @@ void TShellCup::perform(u32 cue, JDrama::TGraphics* graphics)
 				return;
 		}
 
-		for (int i = 0; i < 6; i++) {
-			TPinnaShell* shell = &mShells[i];
-			shell->calcJointMtx();
-		}
+		MapObjPinnaCalcShells(this);
 
-		// TODO: 98.7%. Retail's Mtx sits 8 bytes higher still and seeds the
-		// loop's byte offset from the counter (`addi r30, r28, 0`).
+		// TODO: 99.4%. The loop as a TU-local level restores retail's
+		// `addi r30, r28, 0` offset seed; left: the shell pointer and the
+		// counter swap r28/r29 and the Mtx sits 8 bytes low (0x20 vs 0x28).
+		// Tried: getShell(i) and a named shell pointer/reference inside the
+		// level (+8/+0x10 frame), u32/pre-increment counters, a per-shell
+		// level, named rot/joint/getter steps in calcJointMtx,
+		// SMSGetMarDirector() at either test, the two tests as one `&&`.
 		TMapObjBase* blueCoin = mBlueCoin;
 		if (!blueCoin->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			blueCoin->mPosition.x = getShell(0)->mPosition.x;
@@ -649,8 +676,15 @@ TShellCup::TShellCup(const char* name)
 
 f32 TMerrygoround::mRotSpeed = 0.1f;
 
+// TODO: 99.9%, frame exact. Retail's warp-block joint is r28 (the loops'
+// joint register), ours r27. Tried: joint/mtx/i at function scope in every
+// order, int/u32 joint, a separate warp local, mWarpJoint direct, the warp
+// placement as a TU-local level, MapObjPinnaGetModel.
 void TMerrygoround::control()
 {
+	u16 joint;
+	MtxPtr mtx;
+
 	TMapObjBase::control();
 
 	mRotation.y += mRotSpeed;
@@ -658,15 +692,15 @@ void TMerrygoround::control()
 		mRotation.y -= 360.0f;
 
 	for (int i = 0; i < 2; i++) {
-		u16 joint  = mEggJoints[i];
-		MtxPtr mtx = getModel()->getAnmMtx(joint);
+		joint = mEggJoints[i];
+		mtx = getModel()->getAnmMtx(joint);
 		mEggs[i]->setModelMtx(mtx);
 		mEggs[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	}
 
 	for (int i = 0; i < 9; i++) {
-		u16 joint  = mPoleJoints[i];
-		MtxPtr mtx = getModel()->getAnmMtx(joint);
+		joint = mPoleJoints[i];
+		mtx = getModel()->getAnmMtx(joint);
 		mPoles[i]->unk138.set(mtx);
 		mPoles[i]->mPosition.set(mtx[0][3], mtx[1][3] - 600.0f, mtx[2][3]);
 	}
@@ -677,8 +711,8 @@ void TMerrygoround::control()
 	else
 		mWarp->onHitFlag(1);
 
-	u16 joint  = mWarpJoint;
-	MtxPtr mtx = getModel()->getAnmMtx(joint);
+	joint = mWarpJoint;
+	mtx = getModel()->getAnmMtx(joint);
 	mWarp->mPosition.set(mtx[0][3], mtx[1][3] - 600.0f, mtx[2][3]);
 }
 
@@ -870,11 +904,11 @@ void TAmiKing::initMapObj()
 // Parked here: retail materialises each of the four `isState` results and then
 // the whole `||` chain once more before the `if`, which is what a predicate
 // with a two-`return` body emits. It belongs on TMapObjBase in MapObjBase.hpp.
-// TODO: retail reloads `mState` between the first and the second `isState`
-// where this form keeps the first load; the remaining instruction.
-static inline bool MapObjPinnaIsGateBroken(TMapObjBase* gate)
+// The explicit no-op upcast on the first test stops MWCC reusing its
+// `mState` load for the second, which retail reloads.
+static inline bool MapObjPinnaIsGateBroken(TMapObjGeneral* gate)
 {
-	if (gate->isState(TMapObjGeneral::STATE_BREAKING)
+	if (((TMapObjBase*)gate)->isState(TMapObjGeneral::STATE_BREAKING)
 	    || gate->isState(TMapObjGeneral::STATE_TOUCHING_WATER)
 	    || gate->isState(TMapObjGeneral::STATE_TOUCHING_PLAYER)
 	    || gate->isState(TMapObjGeneral::STATE_HOLDING))
@@ -882,6 +916,12 @@ static inline bool MapObjPinnaIsGateBroken(TMapObjBase* gate)
 	return false;
 }
 
+// TODO: 99.9%, instruction exact; the frame is 0x88 against retail's 0xd8.
+// Retail's pool below the two TFlagT temporaries is 0x48 longer and 0x10
+// more sits above the column-water scale vector. Measured: the two-argument
+// startSoundActor +8 of pool; a named splash scale TVec3 moves only the
+// vector; raw gpMarDirector and getModel() for getMActor()->getModel() are
+// negative or break instructions.
 void TAmiKing::moveObject()
 {
 	TLiveActor::moveObject();
@@ -925,7 +965,7 @@ void TAmiKing::moveObject()
 		}
 	} else if (mGroundPlane->mActor) {
 		// Wake up when the gate the net is sitting on gets broken.
-		TMapObjBase* gate = (TMapObjBase*)mGroundPlane->mActor;
+		TMapObjGeneral* gate = (TMapObjGeneral*)mGroundPlane->mActor;
 		if (gate->mActorType == 0x4000006A) {
 			if (MapObjPinnaIsGateBroken(gate)) {
 				mFlying = true;
