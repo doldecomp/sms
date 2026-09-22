@@ -100,62 +100,34 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 	unk60 = unk64 = unk6C;
 }
 
-// TODO: 99.0%, and the whole residue is dead low region: frame 0x120 against
-// retail's 0x178. Every referenced slot in the lower group is exactly 0x60
-// higher in retail (`avg` 0x6c -> 0xcc, `mtx` 0x74 -> 0xd4, `scaleV` 0xa4 ->
-// 0x104) and every slot in the upper group exactly 0x58 higher (the three
-// int -> float magic-double pairs 0xc8/0xd0/0xd8 -> 0x120/0x128/0x130, the
-// stmw 0xe0 -> 0x138), so retail has **96 bytes more inline-expansion pool**
-// below `avg` and **8 bytes less** slack between `scaleV` and the conversion
-// temporaries. `volatile char trash[88]` reaches 0x178 and 99.1% with no new
-// instruction, confirming the body.
-// None of the four CLB helpers can be the carrier: CLBLinearInbetween,
-// CLBEaseOutInbetween, CLBChaseDecrease and CLBCalcScaleTranslateMatrix are
-// all real `bl`s here, and the carrier test needs a callee with no matching
-// out-of-line copy. That leaves the inlined ones, and all of them live in
-// shared headers: `TSunModel::isInBounds` (SunModel.hpp -- sunmgr.cpp
-// measured one dead 48-byte non-trivial local there taking this frame
-// 0x120 -> 0x150), `TSunModel::getUnk191/getUnk194`, the TVec2 accumulate
-// loop and the J3DMaterial colour accessors. `J3DFrameCtrl::update` is *not*
-// one of them: retail `bl`s it twice here (0x8002DD54, 0x8002DD5C), so it
-// carries no pool, and the "48 + 48" arithmetic that used to fit is gone.
-// A dead 48-byte *trivial* local (a bare `Mtx`) in isInBounds is worth zero,
-// because MWCC drops an unused POD array in an inlined callee; only a
-// non-trivial object moves the frame, and no such object is nameable for a
-// bounds predicate. Recorded at the declaration; header round 21 rejected it.
-// With the frame padded, three independent residues remain, all of them
-// zero-frame: (a) an f0/f1 swap inside the isInBounds expansion plus an r4/r5
-// swap in its position walk; (b) `gpSunModel->getUnk194()` lands in f29 in
-// retail and f31 in ours, which rotates f27/f29/f30/f31 through the rest of
-// the function; (c) the first two conversion temporaries are swapped (retail
-// uses 0x128 then 0x130, we use 0x130 then 0x128). Measured with the padding
-// in place and rejected: swapping the operands of
-// `(f32)(thing - unk5D) * (1.0f / (f32)(17 - unk5D))` (byte-identical) and
-// spelling it as a real division (95.3%, five extra instructions).
-// Batch 151: the carrier family is now confirmed productive elsewhere --
-// TMapCollisionData::polygonIsInGrid closed on exactly this mechanism, three
-// reserved `TVec3` locals per expansion of two UNUSED helpers -- so the 96
-// bytes here are very likely reserved locals of the inlined `SunModel.hpp`
-// bodies, at 12 bytes per `TVec3` (or 8 per `TVec2`) per expansion. This unit
-// cannot be closed without editing that shared header, which is out of scope
-// for a unit agent, and a TU-local wrapper cannot stand in: `isInBounds`
-// expands once, so parking 96 bytes there would mean eight dead vectors in one
-// forwarder. The exact requirement for whoever owns SunModel.hpp is +96 bytes
-// of reserved locals across the expansions below `avg` **and** -8 bytes of
-// slack between `scaleV` and the conversion temporaries; two dead 48-byte
-// non-trivial locals in `isInBounds` alone would give 0x180, eight over.
+// TODO: 99.1%, frame exact (0x178). The 88 missing bytes of pool were the
+// `gpSunModel` reads: a TU-local accessor that names and returns the pointer
+// is ~+8 of pool per site, and taking it at every read except `tx`'s is
+// retail's frame (a 2187-way per-site raw/named/plain sweep found this as the
+// only frame-exact assignment; naming the loop's second read changes the
+// `addi` pair, and a plain `return gpSunModel;` accessor prices ~+4).
+// Left: (a) an f0/f1 swap inside the isInBounds expansion; (b) getUnk194 in
+// f31 instead of f29, rotating f27-f31; (c) the two int -> float conversion
+// temporaries of `t` swapped (0x128/0x130); (d) the named block (c, mtx,
+// scaleV) sits 4 low with 4 extra bytes above scaleV; (e) r4/r5 in the avg
+// walk and r26/r27/r31 in the colour loop. Measured and rejected on top of
+// the accessors: `u32 inBounds` (+3 instructions), `1.0f / n` as a returning
+// helper (+8 frame, swap kept), a named `inv` local (+8), a named `sun`
+// receiver for isInBounds (named block exact but upper region +8 with the
+// division helper), isInBounds wrapped in TU-local helpers (inert).
+static inline TSunModel* lgSunN() { TSunModel* m = gpSunModel; return m; }
 void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	bool inBounds = false;
 	if (gpCameraMario->isMarioIndoor()) {
 		inBounds = false;
 	} else {
-		inBounds = gpSunModel->isInBounds(unk94);
+		inBounds = lgSunN()->isInBounds(unk94);
 	}
 
 	if (cue & CUE_MOVE) {
-		f32 dispRatio = gpSunModel->getUnk194();
-		u8 thing      = gpSunModel->getUnk191();
+		f32 dispRatio = lgSunN()->getUnk194();
+		u8 thing      = lgSunN()->getUnk191();
 
 		if (thing <= unk5D) {
 			unk4C = 0.0f;
@@ -181,9 +153,9 @@ void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		// Compute base screen-space center
 
-		f32 a  = gpSunModel->unkF8[0].x;
+		f32 a  = lgSunN()->unkF8[0].x;
 		f32 cx = (f32)(SMSGetGameRenderWidth() >> 1) * a;
-		f32 b  = gpSunModel->unkF8[0].y;
+		f32 b  = lgSunN()->unkF8[0].y;
 		f32 cy = (f32)(SMSGetGameRenderHeight() >> 1) * b;
 
 		if (thing == 0) {
@@ -196,8 +168,8 @@ void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 			} else {
 				JGeometry::TVec2<f32> avg(0.0f, 0.0f);
 
-				const JGeometry::TVec2<f32>* it2 = gpSunModel->unkF8;
-				const bool* it1                  = gpSunModel->unk180;
+				const JGeometry::TVec2<f32>* it2 = lgSunN()->unkF8;
+				const bool* it1                  = lgSunN()->unk180;
 				for (int i = 0; i < 17; ++i, ++it2, ++it1)
 					if (*it1)
 						avg += *it2;
@@ -207,7 +179,7 @@ void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 
 				f32 tx = CLBLinearInbetween(avgx, gpSunModel->unkF8[0].x,
 				                            dispRatio * 2.0f);
-				f32 ty = CLBLinearInbetween(avgy, gpSunModel->unkF8[0].y,
+				f32 ty = CLBLinearInbetween(avgy, lgSunN()->unkF8[0].y,
 				                            dispRatio * 2.0f);
 
 				u16 w  = SMSGetGameRenderWidth();
