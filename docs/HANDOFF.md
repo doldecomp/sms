@@ -81,6 +81,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `Enemy/Amenbo`: corrected the water-entry nerve guard to require `!isChangedBlock()`; this is a semantic fix with a small fuzzy-score change.
 - Landed `NPC/NpcBase`: corrected balloon message IDs to retail `0x52/0x53/0x54`, raising `moveObject` **93.81 -> 99.96%** with all body instructions exact.
   The remaining major `perform` mismatch has a concrete header lead: `getAnmOffDist_` is currently in-class/inlined, but the map requires a weak 0x104 out-of-line body and the sole caller invokes it.
+- Landed `System/MarDirectorSetupObjects`: corrected the outer switch mapping and setup flags, restoring all three switch tables and all 144 missing data bytes.
+  Unit data is **89.74 -> 100%**, `decideMarioPosIdx` **90.60 -> 99.41%**, and project matched data **96.45 -> 96.47%**.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
