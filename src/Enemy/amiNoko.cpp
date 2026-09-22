@@ -253,6 +253,11 @@ static inline const JGeometry::TVec3<f32>* AmiNokoUp(const TAmiNoko* p)
 	return up;
 }
 
+static inline f32 AmiNokoSqrt(f32 value)
+{
+	return JGeometry::TUtil<f32>::sqrt(value);
+}
+
 // TODO: 99.7%, frame 0x60 exact (the AmiNokoUp binder above pays the 16
 // bytes). The whole residue is one volatile-FPR block trade: retail loads
 // mPosition.x/gpMarioPos->x/mPosition.z into f5/f4/f3 where we use f3/f1/f2,
@@ -641,7 +646,8 @@ DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 
 	JGeometry::TVec3<f32> toGoal = amiNoko->unkF4.getPoint();
 	toGoal.sub(amiNoko->mPosition);
-	if (toGoal.length() < 1.5f && amiNoko->checkCurAnmEnd(0)) {
+	if (AmiNokoSqrt(toGoal.squared()) < 1.5f
+	    && amiNoko->checkCurAnmEnd(0)) {
 		if (amiNoko->isBckAnm(AMINOKO_ANM_RUN1_END)
 		    || amiNoko->isBckAnm(AMINOKO_ANM_RUN2_END)) {
 			amiNoko->goToRandomNextGraphNode();
@@ -774,7 +780,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 			spine->reset();
 			spine->setNext(&TNerveSmallEnemyDie::theNerve());
 			spine->pushAfterCurrent(spine->getDefault());
-			amiNoko->generateItem();
+			amiNoko->genRandomItem();
 			return TRUE;
 		}
 	}
