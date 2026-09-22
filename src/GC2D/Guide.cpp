@@ -273,18 +273,18 @@ void TGuide::resetScore()
 			continue;
 
 		if (TFlagManager::getInstance()->getBool(0x103A5 + i))
-			mScreen->search((i << 24) + '0_mn')->mVisible = true;
+			mScreen->search((i << 24) + '0_mn')->show();
 		else
-			mScreen->search((i << 24) + '0_mn')->mVisible = false;
+			mScreen->search((i << 24) + '0_mn')->hide();
 
 		if (i <= 1)
 			continue;
 
 		for (int j = 0; j < 8; ++j) {
 			if (j < mScores[i].mShineNum)
-				mScreen->search((i << 24) + '0ss1' + j)->mVisible = true;
+				mScreen->search((i << 24) + '0ss1' + j)->show();
 			else
-				mScreen->search((i << 24) + '0ss1' + j)->mVisible = false;
+				mScreen->search((i << 24) + '0ss1' + j)->hide();
 		}
 
 		J2DPane* etc1     = mScreen->search((i << 24) + '0sq1');
@@ -302,9 +302,9 @@ void TGuide::resetScore()
 
 	total += etcTotal;
 	if ((u8)etcTotal == 0)
-		mScreen->search('lqus')->mVisible = false;
+		mScreen->search('lqus')->hide();
 	else
-		mScreen->search('lqus')->mVisible = true;
+		mScreen->search('lqus')->show();
 
 	for (int i = 1; i < 10; ++i) {
 		mMarkerPanes[i] = mScreen->search('mi00' + i);
@@ -335,10 +335,10 @@ void TGuide::resetScore()
 		}
 
 		if (mScores[i].mHasFirstEtcShine) {
-			mScreen->search((i << 24) + '0c_s')->mVisible = true;
+			mScreen->search((i << 24) + '0c_s')->show();
 			total++;
 		} else {
-			mScreen->search((i << 24) + '0c_s')->mVisible = false;
+			mScreen->search((i << 24) + '0c_s')->hide();
 		}
 	}
 
@@ -383,19 +383,19 @@ void TGuide::resetScore()
 
 	switch (gpApplication.mSaveFile) {
 	case 0:
-		mScreen->search('ld_a')->mVisible = true;
-		mScreen->search('ld_b')->mVisible = false;
-		mScreen->search('ld_c')->mVisible = false;
+		mScreen->search('ld_a')->show();
+		mScreen->search('ld_b')->hide();
+		mScreen->search('ld_c')->hide();
 		break;
 	case 1:
-		mScreen->search('ld_a')->mVisible = false;
-		mScreen->search('ld_b')->mVisible = true;
-		mScreen->search('ld_c')->mVisible = false;
+		mScreen->search('ld_a')->hide();
+		mScreen->search('ld_b')->show();
+		mScreen->search('ld_c')->hide();
 		break;
 	case 2:
-		mScreen->search('ld_a')->mVisible = false;
-		mScreen->search('ld_b')->mVisible = false;
-		mScreen->search('ld_c')->mVisible = true;
+		mScreen->search('ld_a')->hide();
+		mScreen->search('ld_b')->hide();
+		mScreen->search('ld_c')->show();
 		break;
 	}
 
@@ -777,11 +777,11 @@ void TGuide::changeBotStatus(int stage)
 			blueCoins = 99;
 
 		if (stage == 0) {
-			mScreen->search('sb_i')->mVisible = false;
-			mScreen->search('sc_t')->mVisible = false;
+			mScreen->search('sb_i')->hide();
+			mScreen->search('sc_t')->hide();
 		} else {
-			mScreen->search('sb_i')->mVisible = true;
-			mScreen->search('sc_t')->mVisible = true;
+			mScreen->search('sb_i')->show();
+			mScreen->search('sc_t')->show();
 		}
 
 		if (blueCoins < 10) {
@@ -816,9 +816,9 @@ void TGuide::changeBotStatus(int stage)
 			    mNumberTextures[blueCoins % 10]->mTexInfo, 0);
 		}
 
-		mScreen->search('sb_i')->mVisible = true;
-		mScreen->search('sc_t')->mVisible = false;
-		mScreen->search('sq_i')->mVisible = false;
+		mScreen->search('sb_i')->show();
+		mScreen->search('sc_t')->hide();
+		mScreen->search('sq_i')->hide();
 
 		strncpy(mStageNameBox->getStringPtr(),
 		        SMSGetMessageData(mStageNameBmg, stage), 26);
