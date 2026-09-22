@@ -166,13 +166,15 @@ static void Hx_CameraInit(void)
 	Mtx view;
 	f32 cx = hx.width >> 1;
 	f32 cy = hx.height >> 1;
+	f32 near = 0.0f;
+	f32 far = 100.0f;
 
 	camLoc[0] = cx;
 	camLoc[1] = cy;
 	objPt[0]  = cx;
 	objPt[1]  = cy;
 
-	C_MTXOrtho(proj, cy, -cy, -cx, cx, 0.0f, 100.0f);
+	C_MTXOrtho(proj, cy, -cy, -cx, cx, near, far);
 	GXSetProjection(proj, GX_ORTHOGRAPHIC);
 	GXSetViewport(0.0f, 0.0f, 640.0f, 480.0f, 0.0f, 1.0f);
 	C_MTXLookAt(view, (Vec*)camLoc, (Vec*)up, (Vec*)objPt);
@@ -584,11 +586,9 @@ static void Hx_MotionSet(HxMotion* m, f32 distance, f32 accel_time,
 
 static f32 Hx_MotionUpdate(HxMotion* m)
 {
-	f32 frame = m->frame;
-
-	if (m->accelEnd > frame) {
+	if (m->accelEnd > m->frame) {
 		m->speed += m->accel;
-	} else if (m->holdEnd <= frame) {
+	} else if (m->holdEnd <= m->frame) {
 		m->speed += m->decel;
 	}
 
