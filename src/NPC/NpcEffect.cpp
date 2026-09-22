@@ -236,58 +236,37 @@ inline bool TBaseNPC::isPolWaitREffectEmitTime_() const
 	                        sCheckFrameMonte);
 }
 
-// TODO: frame-exact (0xf0) and instruction-exact, but 75 slot offsets still
-// differ. Retail's 12-byte pool runs 0x68, 0x78, 0x84, <12-byte hole at 0x90>,
-// 0x9c, 0xa8, 0xb4, 0xc0, 0xcc; ours runs 0x5c, <24-byte hole>, 0x80, 0x8c,
-// 0x98, 0xa4, 0xb0, 0xbc, 0xc8. So retail puts the third block's `scale`
-// (0x78) *below* that block's getEffectScale_ return buffer (0x84) while every
-// declaration order we tried puts it at the top of the pool, and retail keeps
-// a 12-byte hole above the second block's buffer. `doEmit` is r30 in retail
-// and r29 here. Frame reached 0xf0 with the accessor levers below
-// (getActorType x3 = +16 saturating, SMSGetMarDirector()->getCurrentMap() =
-// +16, getPosition() at the y guard = +8 and at mWaveParticlePos.set = +8);
-// declaration-order permutations of dVar11/doEmit/scale move nothing.
-// cc26: with the NpcEmitWaveParticle level below, the residue is 8 lines:
-// retail's wave block runs ret 0x84 / scale 0x78 / switch ret 0x68, ours
-// 0x90 / 0x74 / 0x64, and doEmit is r30 in retail, r29 here. As a diagnostic,
-// the same body as a TBaseNPC *member* (getEffectScale_ called inside, so the
-// return buffer is the callee's too; needs a declaration in NpcBase.hpp, not
-// made) puts the three at 0x80 / 0x74 / 0x64 -- uniformly 4 low. Removing an
-// accessor from the helper moves all three a further 4 low; adding one
-// (getPosition() at the height test or getLinearVelocity()) costs +8 frame;
-// one in the getWaveHeight arguments is inert. Also tried: scale by value,
-// a named `const TVec3&`/value binding of getEffectScale_() in the caller,
-// argument/declaration order of the references, C-style top declarations.
-// Fabricated: the wave-ripple block as a TU-local level. Taking the caller's
-// `height`/`doEmit` by reference keeps them the caller's f31/r30-class locals
-// (initialised before getEffectScale_ is called, as retail does), while the
-// scale copy becomes this callee's block object and moves below the
-// getEffectScale_ return buffer, where retail has it (99.80 -> 99.9, 75 -> 8
-// differing lines).
-static inline void NpcEmitWaveParticle(TBaseNPC* npc, f32& height,
-                                       bool& doEmit,
-                                       const JGeometry::TVec3<f32>& baseScale)
+// Fabricated name: the wave-ripple block of emitParticle_ as an inline
+// member, whole condition included. As a TU-local free function taking the
+// caller's height/doEmit by reference it left doEmit in r29 and three pool
+// slots 4-12 bytes off; as a member without the condition the slots sat a
+// uniform 4 low; with the condition inside it is byte-exact (header round
+// cc31).
+inline void TBaseNPC::emitWaveParticle_()
 {
-	JGeometry::TVec3<f32> scale = baseScale;
-	if (npc->getActorType() == 0x4000007) {
-		doEmit = true;
-		scale *= 1.5f;
-	} else if (npc->getPosition().y <= 30.0f
-	           && (npc->mLinearVelocity.x != 0.0f
-	               || npc->mLinearVelocity.z != 0.0f)) {
-		height = gpMapObjWave->getWaveHeight(npc->mPosition.x,
-		                                     npc->mPosition.z);
-		if (npc->mPosition.y <= height)
+	if (getActorType() == 0x4000007
+	    || SMSGetMarDirector()->getCurrentMap() == 4) {
+		f32 height  = 0.0f;
+		bool doEmit = false;
+		JGeometry::TVec3<f32> scale = getEffectScale_();
+		if (getActorType() == 0x4000007) {
 			doEmit = true;
-	}
+			scale *= 1.5f;
+		} else if (getPosition().y <= 30.0f
+		           && (mLinearVelocity.x != 0.0f
+		               || mLinearVelocity.z != 0.0f)) {
+			height = gpMapObjWave->getWaveHeight(mPosition.x, mPosition.z);
+			if (mPosition.y <= height)
+				doEmit = true;
+		}
 
-	if (doEmit) {
-		npc->mWaveParticlePos.set(npc->getPosition().x, height,
-		                          npc->getPosition().z);
-		SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &npc->mWaveParticlePos,
-		                     npc, scale);
-		SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_A, &npc->mWaveParticlePos,
-		                     npc, scale);
+		if (doEmit) {
+			mWaveParticlePos.set(getPosition().x, height, getPosition().z);
+			SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &mWaveParticlePos,
+			                     this, scale);
+			SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_A, &mWaveParticlePos,
+			                     this, scale);
+		}
 	}
 }
 
@@ -320,12 +299,7 @@ void TBaseNPC::emitParticle_()
 		SMS_EasyEmitParticle(PARTICLE_MS_YNB_ONPU, &unk1F0, this, scale);
 	}
 
-	if (getActorType() == 0x4000007
-	    || SMSGetMarDirector()->getCurrentMap() == 4) {
-		f32 height  = 0.0f;
-		bool doEmit = false;
-		NpcEmitWaveParticle(this, height, doEmit, getEffectScale_());
-	}
+	emitWaveParticle_();
 
 	switch (unkD0->getCurrentAnmKind()) {
 	case NPC_ANM_KIND_DIRTY:

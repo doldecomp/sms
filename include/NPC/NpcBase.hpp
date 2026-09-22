@@ -275,6 +275,7 @@ private:
 	bool isPolWaitLEffectEmitTime_() const;
 	bool isPolWaitREffectEmitTime_() const;
 	void emitParticle_();
+	void emitWaveParticle_(); // fabricated
 
 	void peachParasolIn_();
 	void peachParasolOut_();
