@@ -381,6 +381,11 @@ void TSmallEnemy::genEventCoin()
 		}
 	}
 
+	// TODO: frame 0x108 vs retail 0x100; the loop's Mtx and conversion
+	// slots sit 4-8 high and the TMsRange temporary/local_d0 4 low.
+	// getRotation().y for the angle lands the low pair but not the Mtx.
+	// Inert (cc48): Mtx/Vec at function, block or loop scope in either
+	// order; one function-scope TCoin* for both blocks.
 	if (unk18C > 0) {
 		for (int i = 0; i < unk18C; ++i) {
 			Mtx local_c0;
@@ -420,7 +425,7 @@ void TSmallEnemy::genEventCoin()
 				coin->mPosition.y = mPosition.y;
 				MsVECNormalize(&local_d0, &local_d0);
 				coin->mVelocity.set(local_d0.x * 4,
-				                    TMsRange<f32>(16.0f, 8.0f).rand(),
+				                    TMsRange<f32>(8.0f, 16.0f).rand(),
 				                    local_d0.z * 4);
 				coin->offLiveFlag(LIVE_FLAG_UNK10);
 			}
@@ -487,7 +492,7 @@ void TSmallEnemy::moveObject()
 		calcRideMomentum();
 
 	for (int i = 0; i < getColNum(); ++i) {
-		THitActor* col = getCollision(i);
+		THitActor* col = mCollisions[i];
 		if (col->isActorType(0x80000001)) {
 			attackToMario();
 			continue;
@@ -496,6 +501,9 @@ void TSmallEnemy::moveObject()
 		if (!isCollidMove(col))
 			continue;
 
+		// TODO: local_74/v sit 0x14 higher than retail (0x50/0x44 vs
+		// 0x3c/0x30) at an equal frame. Inert (cc48): both or either
+		// declared at function scope, at loop scope, swapped order.
 		JGeometry::TVec3<f32> local_74;
 		JGeometry::TVec3<f32> v(0.0f, 0.0f, 0.0f);
 
@@ -535,6 +543,10 @@ void TSmallEnemy::moveObject()
 
 void TSmallEnemy::updateAnmSound() { TSpineEnemy::updateAnmSound(); }
 
+// TODO: frame 0x58 vs ours 0x28 with no stack reference in the body. Inert
+// (cc48): SMSGetMSound(), SMSGetMarioParticleManager(), getPosition() on
+// either emitter argument (the frame never moves); isActorType() for the
+// punch test is structurally worse.
 BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 {
 	if (isEatenByYosshi() && message == HIT_MESSAGE_TAKE && !mHolder) {
@@ -653,17 +665,18 @@ int TSmallEnemy::getChangeBlockTime()
 
 bool TSmallEnemy::changeMove()
 {
-	if (mSpine->getTime() <= TSmallEnemyManager::mBlockWaitTime * 0.2f) {
-		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
+	const TBGCheckData* local_2C;
+	f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
+	if (mSpine->getTime() <= time) {
 
 		mJuiceBlock->mPosition.y
-		    = mPosition.y
+		    = getPosition().y
 		      + unk188
 		            * (2.0f * TSmallEnemyManager::mBlockWaitMoveY
 		               * JMASin(mSpine->getTime() * 130.0f / time));
 
 		mJuiceBlock->mRotation.y
-		    = mRotation.y + mSpine->getTime() * 1080.0f / time;
+		    = getRotation().y + mSpine->getTime() * 1080.0f / time;
 	} else {
 		if (mSpine->getTime() > TSmallEnemyManager::mBlockWaitTime) {
 			if (mSpine->getTime() > getChangeBlockTime() - 200) {
@@ -675,6 +688,9 @@ bool TSmallEnemy::changeMove()
 			}
 
 			switch (unk185) {
+			case 1:
+				return 0;
+
 			case 2: {
 				JGeometry::TVec3<f32> local_38(0.0f, 0.0f, 1.0f);
 				Mtx afStack_68;
@@ -694,7 +710,6 @@ bool TSmallEnemy::changeMove()
 				local_74.x += local_38.x * 300.0f;
 				local_74.z += local_38.z * 300.0f;
 
-				const TBGCheckData* local_2C;
 				f32 d = gpMap->checkGround(local_74.x, local_74.y + mHeadHeight,
 				                           local_74.z, &local_2C);
 				if (d > mJuiceBlock->mPosition.y)
@@ -704,19 +719,16 @@ bool TSmallEnemy::changeMove()
 
 			case 3: {
 				mJuiceBlock->mPosition.y += TSmallEnemyManager::mBlockMoveSpeed;
-				const TBGCheckData* local_2C;
 				f32 d = gpMap->checkRoof(mJuiceBlock->mPosition.x,
 				                         mJuiceBlock->mPosition.y + mHeadHeight,
 				                         mJuiceBlock->mPosition.z, &local_2C);
 				if (local_2C && mJuiceBlock->mPosition.y + mHeadHeight > d
-				    && local_2C->mActor != mJuiceBlock)
+				    && local_2C->getActor() != mJuiceBlock)
 					return 1;
 				break;
 			}
 
-			case 0:
-			case 1:
-			case 4:
+			default:
 				return 0;
 			}
 
@@ -738,6 +750,9 @@ bool TSmallEnemy::changeMove()
 			}
 		}
 	}
+
+	if (mJuiceBlock->checkLiveFlag(LIVE_FLAG_DEAD))
+		return 1;
 
 	return 0;
 }
@@ -812,12 +827,7 @@ bool TSmallEnemy::isFindMario(float param_1)
 	if (isAirborne())
 		return false;
 
-	bool result = false;
-
-	if (!isMarioInWater() && isFindMarioFromParam(param_1))
-		result = true;
-
-	return result;
+	return !isMarioInWater() && isFindMarioFromParam(param_1);
 }
 
 bool TSmallEnemy::isMarioInWater() const
