@@ -721,8 +721,13 @@ void TMario::soundHitBound() { }
 void TMario::soundTorocco()
 {
 	f32 len = JGeometry::TVec3<f32>(getPosition() - mToroccoPos).length();
-	SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_JET_COASTER, &mPosition,
-	                                        nullptr, len, 0, 0, nullptr, 0, 4);
+	// The gate is spelled out rather than through MSound's
+	// startSoundActorWithInfo wrapper: the wrapper is 4 bytes of pool short
+	// and the binder over the sound global supplies the other 8.
+	if (MarioSoundGetMSound()->gateCheck(MSD_SE_OBJ_JET_COASTER))
+		MSoundSESystem::MSoundSE::startSoundActorWithInfo(
+		    MSD_SE_OBJ_JET_COASTER, &mPosition, nullptr, len, 0, 0, nullptr, 0,
+		    4);
 }
 
 u8 TMario::getVoiceStatus()
