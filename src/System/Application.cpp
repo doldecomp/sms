@@ -360,6 +360,9 @@ void TApplication::initialize_bootAfter()
 	OSResumeThread(&gSetupThread);
 }
 
+// TODO: callee-saved ranking (retail: rodata base r30, zero r29, stream r28,
+// piVar2 r27) and frame 8 short. Tried (cc50): no inner block, gpRomFont
+// cleared after destroy(), raw TNameRefGen::instance, piVar2 declared apart.
 void TApplication::initialize_nlogoAfter()
 {
 	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("nintendo");
@@ -447,6 +450,9 @@ void TApplication::finalize()
 	OSResetSystem(unk44 & 2 ? 1 : 0, 0, FALSE);
 }
 
+// TODO: frame 0x38 short with no stack references. Tried (cc50):
+// SMSGetFlagManager() at all eleven reads with setMovie() at the five stores
+// (inert), and a flag/movie helper per block (77.7%).
 bool TApplication::checkAdditionalMovie()
 {
 	bool result = false;
@@ -855,6 +861,9 @@ int TApplication::drawDVDErr()
 		// `(600-width)*0.5` FPRs are swapped (retail 600 in f0, 0.5 in f2).
 		// Named `display`, `getVideo()`, and a caller-side pointer local
 		// all grow the frame. Need a +4 low-region temp that does not.
+		// Tried (cc50): the pair as a compound-literal argument, assigned
+		// later, const, or compound-initialised; TColor/named amb colour; the
+		// render-mode read without the `mode` reference.
 		J2DPrint::TColorPair colors
 		    = { { 0xff, 0xff, 0, 0xff }, { 0xff, 0xff, 0, 0xff } };
 		print.setEscapeColors(colors);
