@@ -98,28 +98,37 @@ inline void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 //   2. `fVar2` is retail's f29 and ours f30 (f31 for fVar3 is right).
 //      Swapping the two declarations swaps the *loads* instead, so it is
 //      allocator ranking, not declaration order. Unmoved by the frame fix.
-//   3. the `*gpMarioAngleY - 0x8000` block: retail keeps the **raw** int in
-//      r31 and narrows to s16 lazily at each use (`extsh` before the
-//      `unk258` subtraction in the CLBAbs arm, three more inside CLBAbs, none
-//      at all at the `CLBChaseGeneralConstantSpecifySpeed` call, and the raw
-//      r31 straight into the default arm's subtraction). Ours materialises the
-//      narrowed value into r31 and keeps the raw in r4, so it has one `extsh`
-//      too few and one live register too many. Re-measured with the frame
-//      landed: `int sVar9` with no casts is the closest (301 instructions
-//      against retail's 302, 15 rows) but deduces `CLBAbs<int>` and puts the
-//      one `extsh` at the call site where retail has none; spelling the
-//      default arm with `sVar9` instead of re-reading the global gives 302
-//      instructions and 17 rows, moving the spare `extsh` from the call into
-//      that arm. `int sVar9` with `(s16)` casts (0xa8, 39 rows),
-//      `CLBAbs<s16>(sVar9 - unk258)` (0xa8, 39) and dropping the variable
-//      entirely (0xa8, 129) are all much worse. What is wanted is an `s16`
-//      whose narrowing MWCC defers; no spelling found does that.
+//   3. the `*gpMarioAngleY - 0x8000` block: PARTLY CLOSED (cc25). Retail
+//      keeps the **raw** int in r31 and narrows lazily at each use, which is
+//      what an `s16` *parameter* of an inlined callee does: moving the
+//      diving/hovering switch into `CNBackRatio(this, sVar9)` gets the raw
+//      r31 and the narrowing at the CLBAbs site (98.1 -> 98.3). Left: retail
+//      narrows (angle - unk258) lazily inside CLBAbs as well (`extsh.` for
+//      the test, one `extsh` per arm, no re-narrowing after `neg`), and uses
+//      raw r31 in the default arm where we still `extsh` first.
+//      `CLBAbs<s16>` gets the in-arm `extsh`s but adds a materialised copy
+//      and a trailing `extsh` (97.0); an `int` parameter, a named `s16 d`,
+//      and re-reading the global in the default arm are all worse.
+//      The f29/f30 pair (item 2 and the two block locals) is inert to
+//      declaration order, C-style declarations and initialised declarations.
 // The residue left is 4 bytes: `ctrlTowerCamera_`'s `Vec v` sits at 0x74 here
 // against retail's 0x70, i.e. 4 bytes of pool too many below it.
 static inline TCameraKindParam* CNParams(const CPolarSubCamera* p)
 {
 	TCameraKindParam* v = p->mCurrentParams;
 	return v;
+}
+
+// Case helper for the back-angle ratio; see item 3 above.
+static inline f32 CNBackRatio(const CPolarSubCamera* cam, s16 angle)
+{
+	switch (cam->mMode) {
+	case CAMERA_MODE_DIVING:
+	case CAMERA_MODE_HOVERING:
+		return CLBAbs(angle - cam->unk258) * (2.0f / 65536.0f);
+	default:
+		return (1.0f - JMASCos((angle - cam->unk258) * 2)) * 0.5f;
+	}
 }
 
 void CPolarSubCamera::ctrlNormalOrTowerCamera_()
@@ -186,18 +195,7 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 					f32 f30;
 
 					s16 sVar9 = *gpMarioAngleY - 0x8000;
-					switch (mMode) {
-					case CAMERA_MODE_DIVING:
-					case CAMERA_MODE_HOVERING:
-						f30 = CLBAbs(sVar9 - unk258)
-						      * (2.0f / 65536.0f);
-						break;
-					default:
-						f30 = (1.0f
-						       - JMASCos((*gpMarioAngleY - 0x8000 - unk258)
-						                 * 2))
-						      * 0.5f;
-					} // 0,000030517578
+					f30 = CNBackRatio(this, sVar9);
 
 					f29 = 1.0f;
 					if (unk2CA != -1) {
