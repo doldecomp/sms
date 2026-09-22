@@ -126,6 +126,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The file's remaining four residues are stack/frame allocation plus one graph-node CSE difference.
 - Landed `NPC/NpcAnm`: refined the NPC parts-animation scopes, raising `setNpcAnm_` **97.54 -> 97.77%** and the unit **99.60 -> 99.61%**.
   The remaining animation residues are stack/register allocation layouts.
+- Landed `Animal/BeeHive`: preserved the incoming water-hit coordinates in `receiveMessage`, raising it **92.42 -> 98.80%** and the unit **96.10 -> 96.49%**.
+  The other fourteen residuals were audited; several still need genuine matrix/quaternion or nerve-flow reconstruction.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
