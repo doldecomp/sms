@@ -262,6 +262,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A TU-local `static inline` returning a **reference** to a member, or an existing reference-returning accessor, binds the member's address (`addi rD, rBase, off`) at zero frame cost; a defaulted constructor argument is one inline level (codegen-tells.md: "Structural pass V").
 - `TVec3`'s `operator*` return type is a **consumption** split, not an overload one: a destination copy (`x = a*k`, `TVec3 v = a*k`) wants the reference return, a consumed temporary (argument, `+=`, `+`) the by-value one. not: a by-value `operator=` or implicit copy ctor (map-refuted), direct-init, the parameter form, V2/V3 header-wide (Tongue's sites are three-object V3, everything else two-object; closed, frame-gaps.md: "Research batch 159", "Header round 31").
 - A scalar slot below a local `char[N]` in ours but above it in retail: declare the scalar before the array (CardSave `setMessageC`).
+- Naming the receiver, `T* p = <helper>(); p->call();`, is a frame lever separate from the chained call; pick the right-hand side (accessor, returning fork, binder) per site by measurement and brute-force the per-site combinations when rebuilds are cheap (EventWatcher: 5 of 7 closures; chained/raw global 8 short, unnamed binder 8 long).
+- A `u32` wrapper around a bool flag test adds exactly 4 bytes low in the frame; the raw test and a bool wrapper are 4 short (EventWatcher `evEggYoshiStartFruit`).
 
 ## Register and scheduling residues
 
