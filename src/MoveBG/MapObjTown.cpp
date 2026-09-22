@@ -465,7 +465,11 @@ void TMapObjWaterSpray::calc()
 	JPABaseEmitter* em
 	    = gpMarioParticleManager->emit(unk138, &mPosition, 1, this);
 	if (em) {
-		em->setRotation(mRotation.x, mRotation.y, mRotation.z);
+		// Named s16 components: the conversions land in retail's buffer order.
+		s16 rx = mRotation.x;
+		s16 ry = mRotation.y;
+		s16 rz = mRotation.z;
+		em->setRotation(rx, ry, rz);
 		em->setGlobalScale(getScaling());
 		em->setRate(unk13C);
 		em->setGlobalParticleScale(unk140);
@@ -474,15 +478,24 @@ void TMapObjWaterSpray::calc()
 	}
 }
 
+// Particle id read through a u16 accessor: the narrowing in the argument
+// gives the flag pointer r28 and the string base r29 as in retail (raw
+// `unk138`, a u32 accessor, a named-local accessor and a whole-call helper
+// all swap them).
+static inline u16 MapObjTownParticleID(const TMapObjWaterSpray* p)
+{
+	return p->unk138;
+}
+
 void TMapObjWaterSpray::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 	if (strcmp(unkF4, "WaterSprayCylinder") == 0) {
 		unk138 = 0x154;
-		SMS_LoadParticle("/scene/mapObj/ms_shib_cyl1.jpa", unk138);
+		SMS_LoadParticle("/scene/mapObj/ms_shib_cyl1.jpa", MapObjTownParticleID(this));
 	} else {
 		unk138 = 0x155;
-		SMS_LoadParticle("/scene/mapObj/ms_shib_cub1.jpa", unk138);
+		SMS_LoadParticle("/scene/mapObj/ms_shib_cub1.jpa", MapObjTownParticleID(this));
 	}
 
 	stream >> unk13C;
@@ -550,15 +563,24 @@ THideObjInfo::THideObjInfo(const char* name)
 	unk4C = 0.0f;
 }
 
-// TODO: 92.3%. Retail reloads mStateTimer at the call (`lwz r4, 0x104`
-// *after* the gate's own load) where MWCC keeps the gate's value alive; a
-// `getStateTimer()` argument and a TU-local const-pointer gate are both
-// byte-identical to this, so whatever breaks the CSE is not an accessor.
+// Forwarding level for playTimer: its arguments evaluate right to left, so
+// the timer is loaded before gpMSound as in retail.
+static inline void MapObjTownPlayTimer(MSound* sound, u32 timer)
+{
+	sound->playTimer(timer);
+}
+
+// Retail reloads mStateTimer at the call (`lwz r4, 0x104` after the gate's
+// own load). An explicit `(TMapObjBase*)this` on either the gate or the
+// argument is what stops MWCC reusing the gate's load (as in MapEventMare's
+// `((TMapObjBase*)this)->calcMap()`); a qualified `TMapObjBase::` name, an
+// implicit base conversion, const or reference forks, `getStateTimer()` and
+// a TU-local const-pointer gate all keep the CSE.
 void TMapObjSwitch::control()
 {
 	TMapObjBase::control();
-	if (isStateTimerEngaged())
-		SMSGetMSound()->playTimer(mStateTimer);
+	if (((TMapObjBase*)this)->isStateTimerEngaged())
+		MapObjTownPlayTimer(SMSGetMSound(), mStateTimer);
 }
 
 BOOL TMapObjSwitch::receiveMessage(THitActor*, u32 message)
