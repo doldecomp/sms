@@ -83,6 +83,12 @@ void TRevivalPolluter::pollute() { }
 //    buyable with accessor depth (getPos().getWidth()/getHeight() is +0x28 =
 //    exactly the ROM's 0x60) but costs the ROM's argument order, so it is not
 //    worth trading residue 1 for it.
+// 2b. Batch cc22: the frame is now retail's 0x60 with the argument order kept:
+//    height/width through `layer->getPos().getHeight()/getWidth()` as named
+//    locals (+0x30) and the counter layer as the raw `unk70` member instead of
+//    getCounterLayer() (-8). Only the register-group trade is left; named
+//    scalars added to the inlined callee (index, interval, texture), a named
+//    manager or element, reversed compare, while loops: all inert on it.
 // 3. Closure batch 211 checked research 210's rule: the counter/offset pair
 //    cannot be made one inlined call's `this` and parameter, because the only
 //    inlined call in the loop is `registerPolluteTex()`, whose receiver is the
@@ -93,9 +99,9 @@ void TRevivalPolluter::registerPolluteTex()
 {
 	// TODO: inlines make me cry
 	TPollutionLayer* layer = gpPollution->getLayer(mLayerIndex);
-	int height = layer->mPos.mHeight;
-	int width = layer->mPos.mWidth;
-	unk8 = gpPollution->getCounterLayer().registerRevivalTexStamp(
+	int height = layer->getPos().getHeight();
+	int width = layer->getPos().getWidth();
+	unk8 = gpPollution->unk70.registerRevivalTexStamp(
 	    mLayerIndex, 0, 0, width, height, getStampInterval(),
 	    getRevivalStampTex());
 }
