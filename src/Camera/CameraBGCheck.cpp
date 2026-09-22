@@ -154,21 +154,22 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 				if (should_clip_fabricated(wall)) {
 					JGeometry::TVec3<f32> posArg = mCurrentTarget.mPosition;
 					JGeometry::TVec3<f32> posCam = posArg;
+					const Vec* normal             = &wall->getNormal();
 
-					f32 sd = posCam.dot(wall->getNormal())
+					f32 sd = posCam.dot(*normal)
 					         + wall->getPlaneDistance();
 					f32 absSd = sd >= 0.0f ? sd : -sd;
 					if (absSd < radius) {
 						moved      = true;
 						f32 pushSd = (radius - sd)
 						             * mSaveEx->mSLWallRevisionRatio.get();
-						posCam.x += pushSd * wall->getNormal().x;
-						posCam.z += pushSd * wall->getNormal().z;
+						posCam.x += pushSd * normal->x;
+						posCam.z += pushSd * normal->z;
 						mCurrentTarget.mPosition.x = posCam.x;
 						mCurrentTarget.mPosition.z = posCam.z;
 						f32 pushArg                = radius - sd;
-						posArg.x += pushArg * wall->getNormal().x;
-						posArg.z += pushArg * wall->getNormal().z;
+						posArg.x += pushArg * normal->x;
+						posArg.z += pushArg * normal->z;
 						param_1->x = posArg.x;
 						param_1->z = posArg.z;
 					}
@@ -197,8 +198,8 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 	}
 
 	if (skipCheck || should_clip_fabricated(roof)) {
-		if (mCurrentTarget.mPosition.y
-		    > roofHeight - mSaveEx->mSLRoofHeight.get()) {
+		if (roofHeight - mSaveEx->mSLRoofHeight.get()
+		    < mCurrentTarget.mPosition.y) {
 			mCurrentTarget.mPosition.y
 			    = roofHeight - mSaveEx->mSLRoofHeight.get();
 			moved = true;
