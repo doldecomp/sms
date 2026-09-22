@@ -1820,7 +1820,7 @@ linking.md's "spell the cast out per site" note was about the virtual `getSavePa
 
 Census (`frame_only_census.py`, kept in the cc12 scratchpad; rule: equal instruction count, equal mnemonics, every differing operand a signed immediate of an `r1`-based instruction) over the 232 unlinked units with code: 457 frame-or-slot-only functions (434 game, 23 library).
 176 have retail's frame larger (133,300 bytes of code), 48 smaller, 233 equal-frame slot shuffles.
-Deltas: +8 x37, +16 x25, +24 x16, +32 x13, +40 x16, +48 x15, +56 x7, +64 x9, +72..+200 x34; -8 x35, -16 x7, -24 x3, -32, -48, -176.
+Deltas: +8 x37, +16 x25, +24 x16, +32 x13, +40 x16, +48 x15, +56 x7, +64 x9, +72..+200 x38; -8 x35, -16 x7, -24 x3, -32, -48, -176.
 22 units have nothing but such functions left (list in the batch report; the `gap_*` and pool-label data rows they show are not blockers).
 
 Measured in scratch TUs with the game flags (MWCC 1.2.5):
