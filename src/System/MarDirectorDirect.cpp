@@ -834,6 +834,13 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 	}
 }
 
+// fabricated: an inline parameter is not constant-folded, so `sec * rate`
+// keeps the multiply by 1.0f that retail's @3909 literal exists for.
+static inline u16 secToFrame(f32 sec, TShineFader* fader)
+{
+	return sec * fader->mRate;
+}
+
 u8 TMarDirector::updateGameMode()
 {
 	u8 r29 = mState;
@@ -880,13 +887,10 @@ u8 TMarDirector::updateGameMode()
 				MSBgm::startBGM(MSD_BGM_GET_SHINE);
 				TFlagManager::getInstance()->setBool(true, 0x30006);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
-				// TODO: the ROM keeps a real `fmuls` by 1.0f here (the
-				// .sdata2 literal @3909 exists only for it); every spelling
-				// of `1.0f * rate` MWCC folds away, so the first argument
-				// must reach the multiply through something it cannot
-				// constant-fold. Two instructions short.
-				f32 fVar3 = unkDC->mRate;
-				unkDC->registFadeout(1.0f * fVar3, 5.3333333f * fVar3);
+				// The fade lengths go through an inline seconds-to-frames
+				// helper, which is what keeps retail's real `fmuls` by 1.0f.
+				u16 fadeInFrames = secToFrame(1.0f, unkDC);
+				unkDC->registFadeout(fadeInFrames, secToFrame(5.3333333f, unkDC));
 				onUnk4CFlag(0x8202);
 				unk261 = 6;
 				decideNextStage();
@@ -908,7 +912,8 @@ u8 TMarDirector::updateGameMode()
 				offUnk4CFlag(0x8);
 				onUnk4CFlag(0x2);
 				unk126 = 3;
-				if (gpApplication.mNextArea.getStage() == 5) {
+				const TGameSequence& nextArea = gpApplication.mNextArea;
+				if (nextArea.getStage() == 5) {
 					fireStartDemoCamera("hodai_dpt_pinna1", nullptr, -1, 0.0f,
 					                    false, nullptr, 0, nullptr, 0);
 					if (unk254 != nullptr)
@@ -916,13 +921,13 @@ u8 TMarDirector::updateGameMode()
 					break;
 				}
 
-				if (gpApplication.mNextArea.getStage() == 6) {
+				if (nextArea.getStage() == 6) {
 					fireStartDemoCamera("camera_sirena_gate_in", nullptr, -1,
 					                    0.0f, false, nullptr, 0, nullptr, 0);
 					break;
 				}
 
-				if (gpApplication.mNextArea.getStage() == 8) {
+				if (nextArea.getStage() == 8) {
 					fireStartDemoCamera("camera_monte_gate_in", nullptr, -1,
 					                    0.0f, false, nullptr, 0, nullptr, 0);
 					break;
@@ -936,7 +941,7 @@ u8 TMarDirector::updateGameMode()
 				onUnk4CFlag(0x2);
 				unk126 = 3;
 				fireStartDemoCamera(nullptr, nullptr, -1, 0.0f, false, nullptr,
-				                    0, unk250, 0);
+				                    0, unk250, 1);
 				break;
 			}
 
@@ -957,6 +962,7 @@ u8 TMarDirector::updateGameMode()
 		}
 		break;
 
+	case 3:
 	case 4: {
 		bool bVar5  = false;
 		bool uVar15 = 0;
@@ -966,7 +972,7 @@ u8 TMarDirector::updateGameMode()
 			offUnk4CFlag(0x80);
 		} else {
 			if (!SMSGetCamera()->getRestDemoFrames()) {
-				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 1200) {
+				if (!MSBgm::getHandle(2) || unk5C - unk60 >= 720) {
 					bVar5  = true;
 					uVar15 = unk12C[unk24D].unk10;
 				}
@@ -1002,7 +1008,7 @@ u8 TMarDirector::updateGameMode()
 	}
 
 	if (unk24D == unk24C)
-		offUnk4CFlag(0x80);
+		offUnk4CFlag(0x40);
 
 	unk125 = unk124;
 
@@ -1012,7 +1018,7 @@ u8 TMarDirector::updateGameMode()
 			if (unk126 == 0) {
 				unkA0 = 0;
 				unkA4 = 0;
-				unk18[0]->mFlags &= ~0x2;
+				unk18[0]->mFlags &= ~0x8;
 				OSStartStopwatch(&unkE8);
 			}
 			break;
@@ -1023,7 +1029,7 @@ u8 TMarDirector::updateGameMode()
 				MSMainProc::fromTalkingCameraDemo(unk124 == 4);
 			else
 				MSMainProc::fromInnerCameraDemo();
-			unk18[0]->mFlags &= ~0x80;
+			unk18[0]->mFlags &= ~0x10;
 			OSStartStopwatch(&unkE8);
 			break;
 		}
@@ -1046,20 +1052,20 @@ u8 TMarDirector::updateGameMode()
 
 		case 3:
 		case 4:
-			if (unk124 == 4)
+			if (unk126 == 4)
 				MSMainProc::toTalkingCameraDemo();
 			else
 				MSMainProc::toInnerCameraDemo();
 			unk18[0]->mFlags |= 0x10;
-			if (unk12C[unk24D].unk20.mValue == 1) {
+			if ((int)unk12C[unk24D].unk20.get() == 1) {
 				SMSGetCamera()->startGateDemoCamera(unk12C[unk24D].unk1C);
 			} else {
-				TDemoInfo* info = &unk12C[unk24D];
-				SMSGetCamera()->startDemoCamera(info->unk0, info->unk4,
-				                                info->unk8, info->unkC,
-				                                info->unk10);
-				if (info->unk14 != nullptr)
-					(*info->unk14)(info->unk18, 0);
+				SMSGetCamera()->startDemoCamera(
+				    unk12C[unk24D].unk0, unk12C[unk24D].unk4,
+				    unk12C[unk24D].unk8, unk12C[unk24D].unkC,
+				    unk12C[unk24D].unk10);
+				if (unk12C[unk24D].unk14 != nullptr)
+					(*unk12C[unk24D].unk14)(unk12C[unk24D].unk18, 0);
 			}
 			OSStopStopwatch(&unkE8);
 			unk60 = unk5C;
