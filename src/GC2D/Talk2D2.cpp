@@ -1609,10 +1609,10 @@ void TTalk2D2::openWindow(s8 line, f32 scroll)
 	Mtx mtx;
 	Mtx rot;
 
-	f32 f31 = mBasePane->getBounds().x1 + 5;
-	f32 f30 = mBasePane->getBounds().y1 + 5;
+	f32 f31 = mBasePane->getGlobalBounds().x1 + 5;
+	f32 f30 = mBasePane->getGlobalBounds().y1 + 5;
 	MTXTrans(mtx, -f31, -f30, 0.0f);
-	MTXRotRad(rot, 'z', 0.017453292f * (-mBasePane->getRotation() - 1.0f));
+	MTXRotRad(rot, 'Z', 0.017453292f * (-mBasePane->getRotation() - 1.0f));
 	MTXConcat(rot, mtx, mtx);
 	MTXTrans(rot, f31, f30, 0.0f);
 	MTXConcat(rot, mtx, mtx);
@@ -1622,7 +1622,7 @@ void TTalk2D2::openWindow(s8 line, f32 scroll)
 	GXSetNumTexGens(2);
 	GXSetNumTevStages(2);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XY, GX_F32, 0);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_U8, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S8, 0);
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
@@ -1633,13 +1633,14 @@ void TTalk2D2::openWindow(s8 line, f32 scroll)
 	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
 	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 
-	((J2DPicture*)mBackPane[line])->getTexture(0)->load(GX_TEXMAP1);
+	JUTTexture* tex = ((J2DPicture*)mBackPane[line])->getTexture(0);
+	tex->load(GX_TEXMAP1);
 	mBackTexture->load(GX_TEXMAP0);
 
 	GXSetTevColor(GX_TEVREG0, JUtility::TColor(0x0000ff00));
 	GXSetTevColor(GX_TEVREG1, JUtility::TColor(0x0000ffa0));
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_C1, GX_CC_TEXC, GX_CC_ZERO);
-	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A1, GX_CA_A0, GX_CA_TEXA, GX_CA_ZERO);
+	GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A0, GX_CA_A1, GX_CA_TEXA, GX_CA_ZERO);
 	GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
