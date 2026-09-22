@@ -38,21 +38,14 @@
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;
 
-// TODO: 90.6%. Structural, not a frame gap: the ROM compiles the outer switch
-// as a 16-entry jump table (`@3897`, `cmplwi r0, 0xf; bgt default; lwzx; bctr`)
-// where we get a compare tree pivoting on 9 and 1. Adding the missing labels
-// 9-14 as an empty group does not flip it (MWCC folds a case whose body is the
-// default's). The ROM also keeps `&gpApplication + 0xa` (mPrevArea) in a
-// callee-saved register from the top and saves r26 where we save r27, so the
-// inner getShineStage switch's operand is a named local or reference there.
-// 32 bytes of frame short as well (0x48 vs 0x68). The two 50% `.ctors` rows
-// (`@3810`, `@3898`) are this function's and setupObjects' jump tables; their
-// entries are branch targets inside the functions, so they only match once the
-// code does.
+// TODO: 99.4%. The outer and inner switch tables now match retail. The remaining
+// residue is the 0x20 frame gap (0x48 vs 0x68): retail's three TColor temporaries
+// are 0x1c higher, with no matching source-owned object identified yet.
 void TMarDirector::decideMarioPosIdx()
 {
 	unkD0 = 0;
 	unkD1 = 0;
+	TGameSequence& prevArea = gpApplication.mPrevArea;
 	unkE4 = 1;
 
 	switch (gpApplication.mCurrArea.unk0) {
@@ -72,8 +65,8 @@ void TMarDirector::decideMarioPosIdx()
 	case 4:
 	case 5:
 	case 6:
-	case 7:
-	case 8: {
+	case 8:
+	case 9: {
 		unkE4 = 14;
 		gpApplication.mFader->setColor(
 		    JUtility::TColor(0xd2, 0xd2, 0xd2, 0xff));
@@ -88,7 +81,7 @@ void TMarDirector::decideMarioPosIdx()
 				TFlagManager::getInstance()->setBool(false, 0x30004);
 				unkD0 = 4;
 			} else {
-				switch (SMS_getShineStage(gpApplication.mPrevArea.unk0)) {
+				switch (SMS_getShineStage(prevArea.unk0)) {
 				case 2:
 					unkD0 = 1;
 					unkD1 = 2;
@@ -151,10 +144,11 @@ bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
 	TFlagManager::getInstance()->setFlag(0x60003, 1);
-	switch (gpApplication.mCurrArea.unk0) {
+	TGameSequence& currArea = gpApplication.mCurrArea;
+	switch (currArea.unk0) {
 	case 1: {
-		TFlagManager::getInstance()->setBool(true, 0x3000D);
-		TFlagManager::getInstance()->setBool(true, 0x30005);
+		TFlagManager::getInstance()->setBool(false, 0x3000D);
+		TFlagManager::getInstance()->setBool(false, 0x30005);
 		if (!TFlagManager::getInstance()->getBool(0x30003)) {
 			TFlagManager::getInstance()->setBool(true, 0x30003);
 			unk4E |= 0x2;
@@ -162,7 +156,7 @@ bool TMarDirector::setupObjects()
 			TFlagManager::getInstance()->setBool(true, 0x30000);
 		}
 
-		switch (gpApplication.mCurrArea.unk1) {
+		switch (currArea.unk1) {
 		case 0:
 		case 1:
 		case 7:
@@ -219,14 +213,14 @@ bool TMarDirector::setupObjects()
 		break;
 	}
 	case 5:
-		if (gpApplication.mCurrArea.unk1 != 3)
-			(void)gpApplication.mCurrArea.unk1;
+		if (currArea.unk1 != 3)
+			(void)currArea.unk1;
 		else
 			TFlagManager::getInstance()->setBool(true, 0x50003);
 		break;
 	}
 
-	u32 bVar28 = SMS_getShineStage(gpApplication.mCurrArea.unk0);
+	u32 bVar28 = SMS_getShineStage(currArea.unk0);
 	TFlagManager::getInstance()->setBool(true, 0x103A5 + bVar28);
 
 	MSMainProc::setMSoundEnterStage(mMap, unk7D);
