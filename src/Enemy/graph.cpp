@@ -662,18 +662,18 @@ void TGraphWeb::getNodeIndexInXZRange(const JGeometry::TVec3<f32>&, f32,
 {
 }
 
-// Pragma residue (sweep 360): protects itself (100 -> 23.5: MWCC expands the
-// *self-recursive* call one level, so recursion is not the inline refusal the
-// rules card claims) and TGraphWeb::initGoalIndex (100 -> 26.1). The body is
-// 14 statements by the budget model; measured and rejected: naming
-// railNode->mConnectionNum as the loop bound (+1) does not tip it.
-#pragma dont_inline on
+// Retail calls this from initGoalIndex and from itself (MWCC would expand the
+// self-recursive call one level): the named `period` is the fifteenth
+// statement over the depth-1 budget. Measured and rejected: naming
+// railNode->mConnectionNum as the loop bound (does not tip it), naming the
+// n-th graph node a second time, or an early `continue` (both cost bytes).
 void TGraphWeb::calcGraphDirection(int n)
 {
 	TGraphNode& graphNode = getGraphNode(n);
 	TRailNode* railNode   = getGraphNode(n).getRailNode();
 	for (int i = 0; i < railNode->mConnectionNum; ++i) {
-		f32 totalPeriod = railNode->mPeriods[i] + graphNode.getUnk8();
+		f32 period      = railNode->mPeriods[i];
+		f32 totalPeriod = period + graphNode.getUnk8();
 		u32 conn        = railNode->mConnections[i];
 
 		// are we trying to find shortest paths in a graph here and failing
@@ -687,7 +687,6 @@ void TGraphWeb::calcGraphDirection(int n)
 		}
 	}
 }
-#pragma dont_inline off
 
 void TGraphWeb::initGoalIndex(const Vec& param_1)
 {
