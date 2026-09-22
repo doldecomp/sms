@@ -108,6 +108,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   Both audits were clean but produced no retained gain, while Terra medium continued landing substantial reconstructions, so Luna is paused unless a simpler task class is identified.
 - Landed `Enemy/poihana`: replaced fabricated volatile trap thresholds with real `TMsRange<f32>` objects and restored named collision-dimension computations.
   `TNervePoihanaTrapped::execute` rose **86.07 -> 98.10%**, `init` rose **95.47 -> 98.30%**, and the unit rose **98.46 -> 99.71%**.
+- Landed `Enemy/limitkoopajr`: reshaped the position update in `moveRun`, raising it **87.83 -> 91.15%** and the unit **97.66 -> 98.13%**.
+  The remaining five-function residue is frame/register allocation and the inlined `moveWait` temporary layout.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
