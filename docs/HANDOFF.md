@@ -68,6 +68,9 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `Enemy/rocket`: `TRocket::calcRootMatrix` now uses the model setter shape, raising the unit's fuzzy match **99.17 -> 99.22%** with zero regressions.
 - Landed `Enemy/yunbo`: restored the second `TMActorKeeper` temporary in `TYumbo::init` and named dancing-nerve scalars.
   Unit fuzzy match rose **99.25 -> 99.39%**; the repository-wide two-decimal totals did not move.
+- Landed `MoveBG/MapObjRicco`: naming the first fruit-launcher registration result raised `TFruitLauncher::loadAfter` **98.18 -> 99.52%** and the unit fuzzy match **99.84 -> 99.94%**.
+- Trialed the local `deepseek-flash` profile on the whole `MoveBG/MapObjPlane` unit after several Terra successes.
+  It produced no retained improvement after an extended variant search, so the worktree was discarded and native Terra agents remain the default.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
