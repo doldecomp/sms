@@ -1248,19 +1248,16 @@ void TTalk2D2::setupBoardTextBox(const void* data, JMSMesgEntry* entry)
 	mMesgEntry = entry;
 
 	for (int line = 0; line < 6;) {
-		u8 c;
-		in.read(&c, 1);
+		u8 c = in.readU8();
 
 		switch (c) {
 		case 0x1a:
 			break;
 
-		case '\n': {
-			char nl = '\n';
-			out.write(&nl, 1);
+		case '\n':
+			out.write((u8)'\n');
 			line++;
 			break;
-		}
 
 		case '\0':
 			mIsLastPage = true;
@@ -1269,33 +1266,25 @@ void TTalk2D2::setupBoardTextBox(const void* data, JMSMesgEntry* entry)
 
 		default: {
 			in.skip(-1);
-			u8 lead;
-			in.read(&lead, 1);
-			char ch = lead;
-			out.write(&ch, 1);
-			if (lead >= 0x80) {
-				u8 trail;
-				in.read(&trail, 1);
-				char ch2 = trail;
-				out.write(&ch2, 1);
-			}
+			u8 lead = in.readU8();
+			out.write(lead);
+			if (lead >= 0x80)
+				out.write(in.readU8());
 			break;
 		}
 		}
 	}
 
 	if (!mIsLastPage) {
-		u8 c;
+		s8 c;
 		in.peek(&c, 1);
 		if (c == 0) {
 			mIsLastPage = true;
 			in.skip(1);
-			char nul = '\0';
-			out.write(&nul, 1);
+			out.write((u8)'\0');
 		}
 	} else {
-		char nul = '\0';
-		out.write(&nul, 1);
+		out.write((u8)'\0');
 	}
 
 	mTextOffset += in.getPosition();
@@ -1320,8 +1309,7 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 	while (line < LINE_NUM) {
 		char* dst = mCharBox[col + line * LINE_LENGTH]->getStringPtr();
 
-		u8 c;
-		in.read(&c, 1);
+		s8 c = in.readS8();
 
 		switch (c) {
 		case '\n':
@@ -1350,18 +1338,14 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 				mCurrentLine = line;
 
 			in.skip(-1);
-			u8 lead;
-			in.read(&lead, 1);
-			dst[0] = lead;
+			dst[0] = in.readU8();
 			if ((u8)dst[0] >= 0x80) {
-				u8 trail;
-				in.read(&trail, 1);
-				dst[1] = trail;
+				dst[1] = in.readU8();
 			} else {
 				dst[1] = '\0';
 			}
 
-			u16 idx = col + line * LINE_LENGTH;
+			int idx = col + line * LINE_LENGTH;
 			mCharBox[idx]->setGradColor(mCharColor, mCharColor);
 			mCharBox[idx]->setBlackWhite(mCharColor & 0xffffff00,
 			                             mCharColor);
@@ -1374,7 +1358,7 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 	}
 
 	if (!mIsLastPage) {
-		u8 c;
+		s8 c;
 		in.peek(&c, 1);
 		if (c == 0)
 			mIsLastPage = true;
