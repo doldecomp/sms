@@ -186,6 +186,9 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `warpIn` rose **95.39739 -> 95.46%** and unit fuzzy similarity **98.99821 -> 99.01%**; aggregate fuzzy similarity rose **98.091110 -> 98.091130%**, while matched-code, exact-function, and linked-unit counters did not move.
 - Whole-file medium audit of `NPC/NpcNerve` returned clean with no safe gain.
   Its remaining graph-wander call depth, saved-register rotation, and frame gaps are already-classified compiler-shape residues; do not repeat it without a new inline-boundary lead.
+- Landed `JSystem/JParticle/JPAEmitter`: corrected the order of particle velocity-vector accumulation in `createParticle`.
+  `createParticle` rose **96.948074 -> 97.11%** and unit fuzzy similarity **98.49662 -> 98.56%**; aggregate fuzzy similarity rose **98.091130 -> 98.091340%**, while matched-code, data, exact-function, and linked-unit counters did not move.
+  The validator still has the pre-existing missing UNUSED `JPADraw::~JPADraw()` failure and four pre-existing UNUSED-size warnings; the DOL and no-regression gates remain green.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
