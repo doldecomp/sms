@@ -461,11 +461,13 @@ bool TBaseNPC::isNowCanTaken() const
 	return result;
 }
 
-// TODO: 99.2%. Remaining: 0x48 frame, bVar4/bVar5 r29/r30 ranking,
-// canTalk's extra li r3, 1, throw-param FPR swap, isNerveCanGoToSink
-// ranking. Cube-as-gate and sink-path unk1C4 Y are in.
+// TODO: 99.3%. Remaining: 0x48 frame, canTalk's extra li r3, 1, throw-param
+// FPR swap, isNerveCanGoToSink ranking. Cube-as-gate and sink-path unk1C4 Y
+// are in; bVar5 declared at the top (before bVar4) fixes the r29/r30
+// ranking of the two flags.
 void TBaseNPC::changeNerveProc_()
 {
+	bool bVar5;
 	bool bVar4                                = false;
 	const TNerveBase<TLiveActor>* latestNerve = mSpine->getLatestNerve();
 	if (latestNerve == &TNerveNPCTalk::theNerve()) {
@@ -473,7 +475,7 @@ void TBaseNPC::changeNerveProc_()
 		onLiveFlag(LIVE_FLAG_UNK20000);
 		offLiveFlag(LIVE_FLAG_UNK40000);
 	} else {
-		bool bVar5 = false;
+		bVar5 = false;
 		if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
 			bVar5 = true;
 		} else if (mTalkForbidCount == 0 && !isJellyFishMare()
