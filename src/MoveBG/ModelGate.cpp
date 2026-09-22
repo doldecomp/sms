@@ -66,10 +66,11 @@ void TModelGate::loadAfter()
 		}
 	}
 
+	u32 modelFlags = 0x11100000;
 	char path[256];
 	snprintf(path, 256, "/scene/map/map/gate/%s.bmd",
 	         gateMActorNames[unk71]);
-	unk78 = SMS_MakeMActor("/scene/map/map/gate", path, 0, 0x11100000);
+	unk78 = SMS_MakeMActor("/scene/map/map/gate", path, 0, modelFlags);
 	unk72
 	    = unk78->getModel()->getModelData()->unkB0->getIndex("center");
 
