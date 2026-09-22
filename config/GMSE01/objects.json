@@ -20,6 +20,7 @@
     "Camera/CubeMapTool.cpp",
     "Camera/camerasave.cpp",
     "Camera/sunmgr.cpp",
+    "Camera/sunmodel.cpp",
     "Enemy/BossHanachanNerve.cpp",
     "Enemy/BossHanachanSave.cpp",
     "Enemy/BossHanachanSound.cpp",
