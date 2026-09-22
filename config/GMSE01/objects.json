@@ -265,6 +265,7 @@
     "Map/Sky.cpp",
     "Map/StickyStainManager.cpp",
     "MarioUtil/DLUtil.cpp",
+    "MarioUtil/EffectUtil.cpp",
     "MarioUtil/GDUtil.cpp",
     "MarioUtil/MapUtil.cpp",
     "MarioUtil/ModelUtil.cpp",
