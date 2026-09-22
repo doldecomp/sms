@@ -934,7 +934,8 @@ void TTalk2D2::checkControler()
 bool TTalk2D2::closeNormalWindow()
 {
 	bool done   = false;
-	s16 alpha   = mBasePane->getAlpha() - 16;
+	s16 alpha   = mBasePane->getAlpha();
+	alpha -= 16;
 
 	if (alpha < 0) {
 		mLineProgress[0] = 1.0f;
@@ -980,7 +981,8 @@ bool TTalk2D2::closeBoardWindow()
 bool TTalk2D2::eraseNormalWindow()
 {
 	bool done = false;
-	s16 alpha = mBasePane->getAlpha() - 16;
+	s16 alpha = mBasePane->getAlpha();
+	alpha -= 16;
 
 	if (alpha < 0) {
 		mLineProgress[0] = 1.0f;
@@ -1019,7 +1021,8 @@ bool TTalk2D2::eraseNormalWindow()
 bool TTalk2D2::eraseBoardWindow()
 {
 	bool done = false;
-	s16 alpha = mBoardTextBox->getAlpha() - 4;
+	s16 alpha = mBoardTextBox->getAlpha();
+	alpha -= 4;
 
 	if (alpha < 0) {
 		alpha = 0;
@@ -1045,6 +1048,64 @@ bool TTalk2D2::appearBoardBoxWindow()
 	}
 	mBoardTextBox->setAlpha(alpha);
 	return done;
+}
+
+// The calc-anim cue's mode switch sits one inline level below perform:
+// retail's pivot tree keeps the empty WAIT_CAMERA arm, which only a
+// `return` out of a helper does.
+static inline void Talk2D2CalcAnim(TTalk2D2* p)
+{
+	switch (p->mTalkMode) {
+	case TTalk2D2::TALK_MODE_WAIT_OPEN:
+		p->mWaitTimer--;
+		if (p->mWaitTimer < 0) {
+			p->mCharIndex = 0;
+			p->mTalkMode  = TTalk2D2::TALK_MODE_OPENING;
+		}
+		break;
+
+	case TTalk2D2::TALK_MODE_WAIT_CAMERA:
+		break;
+
+	case TTalk2D2::TALK_MODE_ERASING: {
+		// eraseNormalWindow()'s body again, with the window left
+		// fully opaque for the next page instead of returning.
+		s16 alpha = p->mBasePane->getAlpha();
+		alpha -= 16;
+		if (alpha < 0) {
+			p->mLineProgress[0] = 1.0f;
+			alpha            = 255;
+			p->mBackPane[0]->hide();
+			p->mCharCursor[0] = 0;
+			p->mCursor[0]->hide();
+			p->mLineProgress[1] = 2.0f;
+			p->mBackPane[1]->hide();
+			p->mCharCursor[1] = 0;
+			p->mCursor[1]->hide();
+			p->mLineProgress[2] = 3.0f;
+			p->mBackPane[2]->hide();
+			p->mCharCursor[2] = 0;
+			p->mCursor[2]->hide();
+
+			for (int i = 0; i < TTalk2D2::CHAR_NUM; i++) {
+				if (p->mCharBox[i] != nullptr)
+					p->mCharBox[i]->hide();
+			}
+
+			p->setupTextBox(p->mCurMessage->getMessageData(),
+			    p->mCurMessage->getMessageEntry((u16)p->mMessageID));
+			p->mFastForward = false;
+			p->mAlphaStep   = 0x40;
+			p->mCharColor   = 0xffffffff;
+			p->mCharColor   = 0xffffffff;
+			p->mCharIndex   = 0;
+			p->mCharTimer   = 0;
+			p->mTalkMode    = TTalk2D2::TALK_MODE_OPENING;
+		}
+		p->mBasePane->setAlpha(alpha);
+		break;
+	}
+	}
 }
 
 void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -1120,56 +1181,7 @@ void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_CALC_ANIM) {
 		switch (gpMarDirector->unk124) {
 		case 2:
-			switch (mTalkMode) {
-			case TALK_MODE_WAIT_OPEN:
-				mWaitTimer--;
-				if (mWaitTimer < 0) {
-					mCharIndex = 0;
-					mTalkMode  = TALK_MODE_OPENING;
-				}
-				break;
-
-			case TALK_MODE_ERASING: {
-				// eraseNormalWindow()'s body again, with the window left
-				// fully opaque for the next page instead of returning.
-				s16 alpha = mBasePane->getAlpha() - 16;
-				if (alpha < 0) {
-					mLineProgress[0] = 1.0f;
-					alpha            = 255;
-					mBackPane[0]->hide();
-					mCharCursor[0] = 0;
-					mCursor[0]->hide();
-					mLineProgress[1] = 2.0f;
-					mBackPane[1]->hide();
-					mCharCursor[1] = 0;
-					mCursor[1]->hide();
-					mLineProgress[2] = 3.0f;
-					mBackPane[2]->hide();
-					mCharCursor[2] = 0;
-					mCursor[2]->hide();
-
-					for (int i = 0; i < CHAR_NUM; i++) {
-						if (mCharBox[i] != nullptr)
-							mCharBox[i]->hide();
-					}
-
-					setupTextBox(mCurMessage->getMessageData(),
-					    mCurMessage->getMessageEntry((u16)mMessageID));
-					mFastForward = false;
-					mAlphaStep   = 0x40;
-					mCharColor   = 0xffffffff;
-					mCharColor   = 0xffffffff;
-					mCharIndex   = 0;
-					mCharTimer   = 0;
-					mTalkMode    = TALK_MODE_OPENING;
-				}
-				mBasePane->setAlpha(alpha);
-				break;
-			}
-
-			case TALK_MODE_WAIT_CAMERA:
-				break;
-			}
+			Talk2D2CalcAnim(this);
 			break;
 		}
 	}
