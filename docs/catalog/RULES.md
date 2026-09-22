@@ -64,6 +64,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `search(tag)->show()`/`hide()` materialises the constant after the call; a direct `->mVisible = true` hoists it (Guide).
 - A `bne`/`beq` pair on one compare with dead code between them: the caller guards the call and the callee re-tests the flag; an early return inside the callee instead lets MWCC delete the block (koopajr `perform`/`checkNerve`).
 - `TDirectionCalc d; d.makeDirection(v);` avoids the double copy of the `TDirectionCalc(v)` ctor (koopajr).
+- Every field address a switch stores through hoisted as `addi` before the jump table: named `u8&` locals per field (ModelGate `perform`).
+- A dead `b <default>` before the first arm is a `case X:` label sharing the default arm (ModelGate).
+- Re-check old pads after structural fixes; Tongue's `char kek[0x40]` had become pure excess.
 
 ## Inlining decisions
 
@@ -314,6 +317,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A three-word `lwz`/`stw` copy then `+=` on one component is a named `TVec3 pos = src; pos.y += k;`, with pointer reads hoisted before the copy.
 - A `.set(k)` value in `.sdata2` rather than `.sdata` is a folded non-literal: `k * PI()` at float precision (koopajr params ctor; a literal bound to `const T&` lands in `.sdata`).
 - An inline call's constant argument folds into its body only as a front-end constant; a variable holding it is not propagated (koopajr `setRotate`: literal gives `sinf(0.314)`, variable `fmuls 0.5`).
+- Retail's fused length `fmadds f1,f2,f2,f1; fadds` means the vector went through a `Vec&` inside an inlined callee; `TVec3&`/`TVec3*`/same-function `Vec&` stay unfused (Tongue `movement`; also hauntLeg, amiNoko, bosstelesa, `warpIn`).
+- A length that copies the difference to a new slot and calls `sqrt` out of line: `f(TVec3 a, const TVec3& b) { a.sub(b); return len(a); }` with `len(TVec3 v) { return sqrt(v.squared()); }` (Tongue, ModelGate `perform`).
+- A by-value TVec3 argument copied with `lfs`/`stfs` has a `Vec` source through `TVec3(const Vec&)`; a word copy means a TVec3 source (ModelGate).
 
 ## Data and layout
 
