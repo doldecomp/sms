@@ -221,11 +221,6 @@ TMapObjFlag::TMapObjFlag(const char* name)
 f32 TMapObjFlagManager::mDistNearMiddle = 5000.0f;
 f32 TMapObjFlagManager::mDistMiddleFar  = 10000.0f;
 
-// TODO: 99.9%, all instructions match. The `GXSetChanMatColor(4,
-// TColor(...))` conversion temporary is 8 bytes here and 4 for retail
-// (frame 0x28 vs 0x18) -- this is the JUTColor.hpp conversion-temporary
-// stride already documented and rejected there (an explicit copy ctor
-// regresses nine other units), not re-investigated.
 void TMapObjFlagManager::initDraw()
 {
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
@@ -240,8 +235,7 @@ void TMapObjFlagManager::initDraw()
 	              GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
-	GXColor color = { 0xff, 0xff, 0xff, 0xff };
-	GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(color));
+	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0xff });
 
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
