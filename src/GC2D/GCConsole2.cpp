@@ -147,13 +147,10 @@ static inline u32 getPressureFlashColor(int frame)
 // fabricated
 static inline void updateWaterGaugeFill(TGCConsole2* console)
 {
-	TMario* mario       = gpMarioOriginal;
-	TWaterGun* waterGun = mario->mWaterGun;
-	TNozzleBase* nozzle = waterGun->getCurrentNozzle();
+	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
 	s32 currentWater    = waterGun->mCurrentWater;
-	s32 maxWater        = nozzle->mEmitParams.mAmountMax.get();
+	s32 maxWater        = waterGun->getMaxWater();
 	int currentNozzle   = waterGun->mCurrentNozzle;
-	f32 fill;
 
 	if (console->unk2F8->isInterpolatorAtZero() && !console->unk45
 	    && currentNozzle != console->unk310) {
@@ -189,17 +186,16 @@ static inline void updateWaterGaugeFill(TGCConsole2* console)
 		MSoundSESystem::MSoundSE::startSoundSystemSE(0x4807, 0, nullptr, 0);
 	}
 
-	if (mario->mYoshi->onYoshi()) {
-		TYoshi* yoshi = mario->mYoshi;
-		fill          = (f32)yoshi->unkD4 / (f32)yoshi->unkD8;
+	if (gpMarioOriginal->mYoshi->onYoshi()) {
+		TYoshi* yoshi   = gpMarioOriginal->mYoshi;
+		console->unk2B8 = (f32)yoshi->unkC / (f32)yoshi->unk8;
 	} else {
-		fill = (f32)currentWater / (f32)maxWater;
+		console->unk2B8 = (f32)currentWater / (f32)maxWater;
 	}
 
-	console->unk2B8 = fill;
-	if (fill >= 1.0f)
+	if (console->unk2B8 >= 1.0f)
 		console->unk2A0[0]->mAlpha = 0xff;
-	else if (fill == 0.0f)
+	else if (console->unk2B8 == 0.0f)
 		console->unk2A0[0]->mAlpha = 0;
 	else
 		console->unk2A0[0]->mAlpha = 0x50;
@@ -836,10 +832,10 @@ static inline void changeCoinNum(TBoundPane* pane, JUTTexture** textures,
 // fabricated
 static inline void updateCoinCounterAnimation(TGCConsole2* console)
 {
-	if ((s8)console->unk68 <= 0)
+	if (console->unk68 <= 0)
 		return;
 
-	if ((s8)console->unk68 == 1) {
+	if (console->unk68 == 1) {
 		bool incrementing = true;
 		int target        = (int)console->unk20;
 		int display       = (int)console->unk6C;
@@ -1014,41 +1010,6 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 }
 
 // fabricated
-static inline void updateCounterState(TGCConsole2* console)
-{
-	TFlagManager* flags = TFlagManager::smInstance;
-
-	int coins = flags->getFlag(0x40002);
-	if (coins > 999)
-		coins = 999;
-	else if (coins < 0)
-		coins = 0;
-
-	if (coins != console->unk20) {
-		if (!console->unk68)
-			console->unk68 = 1;
-		console->unk20 = coins;
-	}
-
-	bool waitForStarHud = gpMarioOriginal->mStatus == 0xC400201
-	                      && gpMarDirector->mState != TMarDirector::STATE_UNK5
-	                      && !console->unk50
-	                      && !console->unk140->isInterpolatorAtZero();
-	if (waitForStarHud) {
-		++console->unk30;
-		if (console->unk30 > 0xc8) {
-			console->startAppearStar();
-			console->startAppearMario(false);
-			console->unk70 = 0xffff;
-			console->unk59 = 0;
-			console->unk30 = 0;
-		}
-	} else {
-		console->unk30 = 0;
-	}
-}
-
-// fabricated
 static inline void updateStarHudAutoHide(TGCConsole2* console)
 {
 	if (console->unk34)
@@ -1066,9 +1027,26 @@ static inline void updateStarHudAutoHide(TGCConsole2* console)
 		return;
 
 	console->startDisappearStar();
-	if (console->unk3A8->getPane()->isVisible() && !console->unk3B)
-		console->startDisappearMario();
+	console->startDisappearMario();
 	console->unk5A = 0;
+}
+
+// fabricated
+static inline void updateCounterState(TGCConsole2* console)
+{
+	TFlagManager* flags = TFlagManager::smInstance;
+
+	int coins = flags->getFlag(0x40002);
+	if (coins > 999)
+		coins = 999;
+	else if (coins < 0)
+		coins = 0;
+
+	if (coins != console->unk20) {
+		if (!console->unk68)
+			console->unk68 = 1;
+		console->unk20 = coins;
+	}
 }
 
 // fabricated
@@ -1634,7 +1612,7 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk24(0)
     , unk28(0)
     , unk2C(0)
-    , unk30(0xfffffe70)
+    , unk30(-400)
     , unk34(0)
     , unk35(0)
     , unk36(0)
@@ -4590,20 +4568,41 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 
 		updateLifeMeterState(this);
 		updateCounterState(this);
-		updateStarHudAutoHide(this);
+
+		if (gpMarioOriginal->mStatus == 0xC400201
+		    && gpMarDirector->mState != TMarDirector::STATE_UNK5 && !unk50
+		    && !unk140->isInterpolatorAtZero()) {
+			++unk30;
+			if (unk30 > 0xc8) {
+				startAppearStar();
+				startAppearMario(false);
+				unk70 = 0xffff;
+				unk59 = 0;
+				unk30 = 0;
+			}
+		} else {
+			unk30 = 0;
+			updateStarHudAutoHide(this);
+		}
 
 		if (unk35) {
 			bool done = true;
-			if (!unk140->update())
-				done = false;
-			if (!unk160->update())
-				done = false;
-			if (!unk108->update())
-				done = false;
+			done &= unk108->update();
+			done &= unk140->update();
+			done &= unk160->update();
 
-			setEmitterToPaneCenter(unk124, unkCC->getPane());
-			setEmitterToPaneCenter(unk164, unk14C->getPane());
-			setEmitterToPaneCenter(unk144, unk12C->getPane());
+			JUTRect bounds(unkCC->getPane()->mGlobalBounds);
+			unk124->mGlobalTranslation.set(
+			    bounds.x1 + bounds.getWidth() * 0.5f,
+			    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+			bounds = unk14C->getPane()->mGlobalBounds;
+			unk164->mGlobalTranslation.set(
+			    bounds.x1 + bounds.getWidth() * 0.5f,
+			    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+			bounds = unk12C->getPane()->mGlobalBounds;
+			unk144->mGlobalTranslation.set(
+			    bounds.x1 + bounds.getWidth() * 0.5f,
+			    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
 			if (done) {
 				unk140->getPane()->hide();

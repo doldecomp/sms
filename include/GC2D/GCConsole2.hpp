@@ -124,9 +124,9 @@ public:
 	/* 0x1C */ s16 unk1C;
 	/* 0x20 */ s32 unk20;
 	/* 0x24 */ s32 unk24;
-	/* 0x28 */ u32 unk28;
+	/* 0x28 */ s32 unk28;
 	/* 0x2C */ u32 unk2C;
-	/* 0x30 */ u32 unk30;
+	/* 0x30 */ s32 unk30;
 	/* 0x34 */ u8 unk34;
 	/* 0x35 */ u8 unk35;
 	/* 0x36 */ u8 unk36;
@@ -162,9 +162,9 @@ public:
 	/* 0x59 */ u8 unk59;
 	/* 0x5A */ u8 unk5A;
 	/* 0x5C */ u32 unk5C;
-	/* 0x60 */ u8 unk60;
+	/* 0x60 */ s8 unk60;
 	/* 0x64 */ u32 unk64;
-	/* 0x68 */ u8 unk68;
+	/* 0x68 */ s8 unk68;
 	/* 0x6C */ s32 unk6C;
 	/* 0x70 */ u16 unk70;
 	/* 0x72 */ u8 unk72;
