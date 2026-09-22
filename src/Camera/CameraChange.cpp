@@ -521,6 +521,13 @@ void CPolarSubCamera::doLButtonCameraOn_()
 
 // Pragma residue (sweep 360): protects the only caller,
 // CPolarSubCamera::execCameraModeChangeProc_ (99.99 -> 82.5 without it).
+// TODO: the body costs 9 statements and needs 15 (measured with fillers).
+// Byte-free spellings found for 3 (cc38): `if (!isThing2()) return;` as an
+// early-return guard, a named `bool active = isThing2();`, and a named
+// `MSound* sound = SMSGetMSound();`. Three more are missing; the call site
+// that tests only isLButtonCameraSpecifyMode sits at depth 1, so a missing
+// execLButtonCameraOffProc_-style level above the other two sites alone
+// cannot explain it.
 #pragma dont_inline on
 void CPolarSubCamera::doLButtonCameraOff_(bool param_1)
 {
