@@ -66,28 +66,22 @@ void TMario::thinkAloha()
 	}
 }
 
-// TODO: the frame is now exact (0x168) and every instruction matches; the only
-// residue left is a permutation of two slots in the named block. Retail lays
-// it out, top down, f64 0x148 / `dir` 0x13c / startTimer's four-byte colour
-// 0x138 / three scalars 0x134, 0x130, 0x12c / an 8-byte hole 0x124 / a 12-byte
-// vector 0x118; we put the colour *below* the three scalars (0x128) and the
-// vector 4 lower (0x114), with our own 8-byte hole at 0x120. The sizes all
-// agree, so the colour temporary of the very first statement wants to be
-// allocated before the two later colour conversions instead of after them.
-// TTimeRec::startTimer has one overload and its temporary placement is a
-// TimeRec.hpp question with its own trial table, so it is not a call-site fix.
-// Closure batch 205 measured that table's remaining rows against *this*
-// caller (frame / colour slot; the target is 0x168 / 0x138 and we are at
-// 0x168 / 0x128).  Inert, still 0x168 / 0x128: declaring `color` before
-// `inst` inside startTimer, and declaring both `color` and `col` before it.
-// Worse: an unnamed `JUtility::TColor(r, g, b, a)` temporary is +8 of frame
-// (0x170), and `TColor color; color.set(r, g, b, a);` costs two instructions.
-// A TU-local level around the call (`MarioMainStartTimer()`) is not neutral
-// here either -- it adds three instructions and drops the function to 98.4%.
-// So the colour's rank among this function's four-byte pool temporaries is
-// not reachable from startTimer's statement list at all: our descending pool
-// is GXSetChanMatColor#1, #2, startTimer, retail's is startTimer, #1, #2,
-// i.e. retail's is expansion order and ours puts the first expansion last.
+// TODO: frame exact (0x168), every instruction exact, and since the silhouette
+// colour is read through a named `TSilhouette* sil` every slot but two is
+// retail's: `dir` 0x13c and the three GXSetChanMatColor argument temporaries
+// 0x134/0x130/0x12c now land.  Left: startTimer's inlined TColor sits at 0x128
+// (below those temporaries) where retail has it at 0x138 (above them, where we
+// leave a dead word), and thinkCube's `pos` is 4 low (0x114 vs 0x118).
+// Retail allocates the colour first among the function's argument/compiler
+// temporaries; ours allocates it last.  Inert or worse against this caller
+// (the colour never rises above the GX temporaries): `Vec dir`, dir at
+// function scope, `dir.set(...)`/ctor (+4 instructions), named, static or
+// TColor-built GX colours (the named `GXColor color = unk12` and a
+// `const GXColor&` are equivalent to `sil`), checkUnk114 at either profile
+// test (+5), a block around startTimer, and in TimeRec.hpp: colour declared
+// before `inst`, `toUInt32()`, an unnamed TColor (+0x10 frame), copy-init
+// (+4), dropping `col`, a u32-built colour, a TU-local level around the call
+// (+3 instructions).
 //
 // The 104 bytes of dead low region the frame needed were measured in closure
 // batch 120: the parked MarioMainGetFludd binding level below is +16 of low
@@ -274,7 +268,8 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		j3dSys.setUnk4C(4);
 		unk398->draw();
 		boxDrawPrepare(graphics->mViewMtx);
-		GXSetChanMatColor(GX_COLOR0A0, gpSilhouetteManager->unk12);
+		TSilhouette* sil = gpSilhouetteManager;
+		GXSetChanMatColor(GX_COLOR0A0, sil->unk12);
 		GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA,
 		               GX_LO_NOOP);
