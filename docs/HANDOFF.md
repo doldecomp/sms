@@ -83,6 +83,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The remaining major `perform` mismatch has a concrete header lead: `getAnmOffDist_` is currently in-class/inlined, but the map requires a weak 0x104 out-of-line body and the sole caller invokes it.
 - Landed `System/MarDirectorSetupObjects`: corrected the outer switch mapping and setup flags, restoring all three switch tables and all 144 missing data bytes.
   Unit data is **89.74 -> 100%**, `decideMarioPosIdx` **90.60 -> 99.41%**, and project matched data **96.45 -> 96.47%**.
+- Landed `GC2D/hx_wiper`: `Hx_CameraInit` and `Hx_MotionUpdate` are exact, raising project matched code **63.55 -> 63.57%**, Game **55.97 -> 56.00%**, and exact functions **11,462 -> 11,464**.
+  The remaining wiper data mismatch is `Hx_Logo`'s nine-entry jump table; the whole TU was audited, so do not reassign it without a new control-flow lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
