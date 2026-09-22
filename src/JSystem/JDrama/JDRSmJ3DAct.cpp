@@ -33,50 +33,52 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 	initModDat();
 }
 
-// TODO: 74.5%.  Batch 152 pinned the shape down but did not commit it: the
-// three-matrix body below scores 74.06 against this one's 74.53, and a
-// per-function regression is not committable, so the finding lives here.  Retail's named
-// region is 0x110..0x1a4 -- exactly three 48-byte matrices, at 0x110 (the
-// concat destination), 0x140 (identity + translation) and 0x170 (the rotation
-// matrix, which never reaches memory) -- so the three concats reuse three
-// matrices and the last two are the one-argument in-place `concat(b)`.  The
-// four-matrix shape this function used to have put the translation matrix at
-// 0x170 and could not be right.  With three, our slots sit at exactly the same
-// relative positions, 0x30 lower, because the one difference left is 48 bytes
-// of *low* region: retail spills the in-place concat's twelve results to a
-// 48-byte temporary block (0xc..0x110 = 260 bytes against our 212) and
-// therefore needs only f21-f31, while we keep the twelve in registers and pay
-// f20 plus an extra 8 bytes of frame.  That also explains the one visible
-// register difference: retail reloads 0.0f after the sinf/cosf calls (f0/f6)
-// where we keep it in f31 across them.  The next step is a concat whose twelve
-// values are all live before the first store -- but `concat` lives in the
-// shared JGMatrix34.hpp, so it must be measured tree-wide, not changed here.
-// The Euler order Z, Y, X is confirmed by the first sinf argument (0x38 =
-// mRotation.z) and the last (0x30 = .x).  The `(void)&trans;` below is an
-// inherited hack: without it MWCC forwards the identity/setTrans stores and
-// the matrix never gets a stack home, which retail's 0x140 block contradicts.
+// Z, Y, X Euler chain applied to the actor's translation, the JDRCamera
+// shape: one rotation matrix (never in memory, 0x170) reset per axis with its
+// translation zeroed, and the two result matrices at 0x140/0x110 ping-ponging
+// through `concat(a, b)`. The two `TVec3` zero translations are code-free
+// +0x18 carriers that make up retail's low region; a third one overshoots by
+// 0x18, so the last is the float form. Declaration order rotation, translation,
+// result puts the three at 0x170/0x140/0x110.
+
+// `TRotation3::setEularY` with its zero chain in the axis-pair order
+// `setEularX`/`setEularZ` use, (0,1) (1,0) (2,1) (1,2): the header's
+// (2,1) (1,2) (0,1) (1,0) chain reschedules the whole second concat (94.2%).
+// TODO: move into JGRotation3.hpp once bossManta and MapObjCorona are
+// measured against it.
+static inline void SmJ3DActSetEularY(TPosition3f& m, f32 angle)
+{
+	f32 s = sin(angle);
+	f32 c = cos(angle);
+
+	m.ref(2, 2) = c;
+	m.ref(2, 0) = -s;
+
+	m.ref(0, 2) = s;
+	m.ref(0, 0) = c;
+
+	m.ref(1, 1) = 1.0f;
+
+	m.ref(0, 1) = m.ref(1, 0) = m.ref(2, 1) = m.ref(1, 2) = 0.0f;
+}
+
 void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
+		TPosition3f tmp;
 		TPosition3f local_148;
+		TPosition3f local_110;
 		local_148.identity();
 		local_148.setTrans(getPosition());
-
-		(void)&local_148;
-
-		TPosition3f tmp;
-		tmp.identity();
 		tmp.setEularZ(DEG_TO_RAD(getRotation().z));
-
-		TMtx34f local_110;
+		tmp.setTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 		local_110.concat(local_148, tmp);
-
-		tmp.setEularY(DEG_TO_RAD(getRotation().y));
-		TMtx34f local_140;
-		local_140.concat(local_110, tmp);
-
+		SmJ3DActSetEularY(tmp, DEG_TO_RAD(getRotation().y));
+		tmp.setTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
+		local_148.concat(local_110, tmp);
 		tmp.setEularX(DEG_TO_RAD(getRotation().x));
-		local_110.concat(local_140, tmp);
+		tmp.setTrans(0.0f, 0.0f, 0.0f);
+		local_110.concat(local_148, tmp);
 
 		unk48->setBaseTRMtx(local_110);
 		unk48->setBaseScale(getScaling());
