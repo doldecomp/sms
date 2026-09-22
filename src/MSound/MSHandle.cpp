@@ -136,21 +136,9 @@ void MSHandle::setSeDistancePan(u8 moveTime)
 	setSeInterPan(4, d, moveTime, 0);
 }
 
-// TODO: frame 0x38 vs 0x30, every one of the 72 instructions exact. We reserve
-// 8 bytes too much of low region, and it is tied to the *third* callee-saved
-// FPR, not to any statement: replacing the whole `cPan_HiSence_Dist` else
-// branch with `fVar4 *= param_3;` keeps 0x38, and so does dropping `+ 1.0f`,
-// dropping the `* (param_2 - ...)` factor, hoisting `cPan_HiSence_Dist` into a
-// local, spelling `*=` as `x = x * ...`, naming the rate, and folding the
-// `powf` product into one statement. Only removing every use of `param_3`
-// (so f30 stops being saved) brings it to 0x28, i.e. our low region is right
-// with two saved FPRs and 8 bytes too big with three: retail puts the save
-// area at 0x18 (8-aligned), we put it at 0x20 (16-aligned).
-// Also inert: `(f32)M_PI` (M_PI is already a float literal), `std::powf` (the
-// header wrapper is a level over a real bl, +0), and the `shift` declaration
-// between dVar3 and fVar4. Earlier trials: dropping `shift` costs two reloads
-// (95.2), declaring it at the top or right after fVar2 is 0x40.
-// calcDolby has the same shape with two saved FPRs and is frame-exact.
+// The final clamp reuses fVar4 rather than naming a fresh `r`: the extra
+// named local was the 8 bytes of frame (0x38 against retail's 0x30) that
+// earlier passes attributed to the third saved FPR.
 f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 {
 	f32 fVar2 = cPan_MaxAmp;
@@ -179,8 +167,8 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 
 	fVar4 += fVar2;
 
-	f32 r = fVar4 > 1.0f ? 1.0f : fVar4;
-	return r < 0.0f ? 0.0f : r;
+	fVar4 = fVar4 > 1.0f ? 1.0f : fVar4;
+	return fVar4 < 0.0f ? 0.0f : fVar4;
 }
 
 void MSHandle::setSeDistanceDolby(u8 moveTime)
@@ -189,12 +177,17 @@ void MSHandle::setSeDistanceDolby(u8 moveTime)
 	setSeInterDolby(4, d, moveTime, 0);
 }
 
-// TODO: pure FPR permutation (a known-open residue class). Retail merges the
-// four if/else results for dVar2 into f0 and the clamp result into f2; we use
-// f3 and f0. Every instruction and the frame are exact. FPR re-pass 172
-// classified it as a *volatile* block trade: both values are already named
-// locals, which research 171 establishes as the only knob on f0-f13, so there
-// is nothing left to spell differently here.
+// The near-distance blend is its own level with the value modified in place:
+// spelled inline, MWCC gave the four if/else results f3 and the clamp f0
+// where retail has f0 and f2 (every instruction and the frame were already
+// exact; a TU-local curve helper and clamp helpers were inert).
+static inline f32 MSDolHi(f32 a, f32 dist)
+{
+	if (dist < MSHandle::cPan_HiSence_Dist)
+		a = dist * ((a - 0.5f) / MSHandle::cPan_HiSence_Dist) + 0.5f;
+	return a;
+}
+
 f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 {
 	f32 dVar2 = dist <= 0.0f ? 0.0f : MSACos(-pos.z / dist);
@@ -213,9 +206,7 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 		dVar2 = 1.0f;
 	}
 
-	if (dist < cPan_HiSence_Dist) {
-		dVar2 = dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f;
-	}
+	dVar2 = MSDolHi(dVar2, dist);
 
 	f32 r = dVar2 > 1.0f ? 1.0f : dVar2;
 	return r < 0.0f ? 0.0f : r;
@@ -230,6 +221,13 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 // naming the category index (`u32 idx = get_thing(getID());`) and dropping
 // get_thing's `uVar1` so the shift is anonymous at all three compares (MWCC
 // re-CSEs it).
+// cc30, all inert or worse: TU-local returning helpers for the curve bits
+// (u32/u8/named, by receiver or by value), `u8`/`int`/top-declared `tmp`,
+// reusing `swBit`, a named id, a `SeCategory&` binder, a returning or
+// reference category helper, if/else-chain and switch get_thing forks, a
+// `const u32&`/`int` get_thing parameter or `int` return, a `MSSelf(this)`
+// receiver fork, a named receiver pointer, and a forwarding helper around
+// the virtual call (95.6: the category load moves ahead of `this`).
 void MSHandle::setSeDistanceVolume(u8 moveTime)
 {
 	u32 swBit = getSwBit();
