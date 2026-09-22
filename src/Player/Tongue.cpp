@@ -230,6 +230,21 @@ static inline void TongueSubTo(Vec& out, const JGeometry::TVec3<f32>& a, const J
 	out = a - b;
 }
 
+// The grab-range test copies the difference into a by-value parameter before
+// squaring it and calls TUtil<f32>::sqrt out of line while expanding `sub`
+// (AnimalNerve's calcDist shape plus one by-value length level).
+static inline f32 TongueLength(JGeometry::TVec3<f32> v)
+{
+	return JGeometry::TUtil<f32>::sqrt(v.squared());
+}
+
+static inline f32 TongueDist(JGeometry::TVec3<f32> a,
+                             const JGeometry::TVec3<f32>& b)
+{
+	a.sub(b);
+	return TongueLength(a);
+}
+
 void TYoshiTongue::movement()
 {
 	if (unkD4 != 0) {
@@ -269,11 +284,15 @@ void TYoshiTongue::movement()
 
 		if (mHeldObject != nullptr) {
 			if (diff.length() < mMaxReach) {
-				JGeometry::TVec3<f32> scale = mHeldObject->mScaling;
-				scale *= mElasticity;
+				// Retail binds &mScaling in one register for the copy in and
+				// out and loads the rate before the copy.
+				JGeometry::TVec3<f32>& held = mHeldObject->mScaling;
+				f32 rate                    = mElasticity;
+				JGeometry::TVec3<f32> scale = held;
+				scale *= rate;
 				if (scale.x < 0.01f)
 					scale.set(0.01f, 0.01f, 0.01f);
-				mHeldObject->mScaling = scale;
+				held = scale;
 			}
 		}
 
@@ -313,26 +332,19 @@ void TYoshiTongue::movement()
 		if (target != nullptr && mHeldObject == nullptr) {
 			JGeometry::TVec3<f32> tpos = target->mPosition;
 			tpos.y += 0.5f * target->mDamageHeight;
+			JGeometry::TVec3<f32> oldTip = mTipPos;
+			// TODO: retail `bl`s the TVec3 copy constructor twice and
+			// `__ami__` once for `(a - b) * k` here and in the retract arm,
+			// expanding only operator- and operator*; we expand everything.
+			// Wrapping the product or the difference in a TU-local inline
+			// puts operator- itself out of line (extra weak symbol) and
+			// drops `__ami__` to MISSING. Header-level (JGVec3.hpp,
+			// "Header round 47").
 			JGeometry::TVec3<f32> step = (tpos - mTipPos) * mExtendAmount;
-			// `a = a + b` rather than `a += b` at exactly these two sites:
-			// operator= is one inline level and the sum nested in its
-			// argument two more, which is the depth-4 allowance the map's
-			// out-of-line TVec3::add measures. The three other advances here
-			// keep `+=`, which is what retail expands.
-			// Still open: retail `bl`s four TVec3 copy constructors in this
-			// function, two per `(a - b) * k` site, where we expand all four
-			// -- one more level on the product. A shared
-			// `(to - from) * rate` helper over both sites buys movement only
-			// 82.3 -> 82.5 and stops anything from expanding
-			// TVec3::operator-=, so the weak `__ami__` symbol drops to
-			// MISSING and the unit falls 89.8 -> 89.1 (reverted). Same family
-			// as frame-gaps.md "batch 142": the level has to spare
-			// operator-=.
-			mTipPos = mTipPos + step;
-			mInitialVelocity = step;
+			mTipPos                      = mTipPos + step;
+			mInitialVelocity             = mTipPos - oldTip;
 
-			JGeometry::TVec3<f32> rem = tpos - mTipPos;
-			if (rem.length() < 200.0f
+			if (TongueDist(tpos, mTipPos) < 200.0f
 			    && target->receiveMessage(this, HIT_MESSAGE_TAKE) == true) {
 				mHeldObject = (TTakeActor*)target;
 				SMSGetMSound()->startSoundActor(MSD_SE_YV_PERON, &mTipPos, 0,
@@ -347,7 +359,6 @@ void TYoshiTongue::movement()
 	}
 
 	case STATE_GRABBED:
-		mTipPos += mInitialVelocity;
 		mProgress += 1;
 		if (mProgress > 10)
 			mState = STATE_RETRACTING;
@@ -356,18 +367,21 @@ void TYoshiTongue::movement()
 	case STATE_RETRACTING: {
 		JGeometry::TVec3<f32> diff = (mTipPos - mHeadPos) * mRetractAmount;
 
-		mTipPos = mHeadPos;
-		mTipPos = mTipPos + diff;
+		mTipPos = mHeadPos + diff;
 		break;
 	}
 
 	case STATE_PULLING:
 	case STATE_PULLING_SLOW: {
-		JGeometry::TVec3<f32> diff = mTipPos - mHeadPos;
-		f32 len                    = diff.length();
+		JGeometry::TVec3<f32> diff;
+		TongueSubTo(diff, mTipPos, mHeadPos);
+		f32 len = diff.length();
 
 		MtxPtr mtx = getTakingMtx();
-		JGeometry::TVec3<f32> step(-mtx[0][0], -mtx[1][0], -mtx[2][0]);
+		JGeometry::TVec3<f32> step;
+		step.x = -mtx[0][0];
+		step.y = -mtx[1][0];
+		step.z = -mtx[2][0];
 
 		f32 amount = len * mPullAmount;
 		if (mState == STATE_PULLING_SLOW)
