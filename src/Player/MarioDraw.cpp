@@ -583,26 +583,26 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
-			// TODO: the ROM copies each `Vec x = { a, b, c }` out of the
-			// aggregate-initialisation temporary into the named variable
-			// (temp at 0xa4/0x8c, variable at 0xe0/0xc8), where MWCC elides
-			// that copy for us; spelling the copies out by hand reaches
-			// 93.4% but only by inventing two temporaries. A named MtxPtr
-			// for mCurrentMtx (an aliasing lever) changes nothing, and the
-			// frame is 0x78 short, so more locals are missing besides.
+			// The vectors are C99 compound literals copied into the named
+			// Vecs: the ROM fills a temporary (0xa4/0x8c) and word-copies it,
+			// and each literal consumes a second `@NNNN` id (the ROM's
+			// templates are numbered two apart).
+			// TODO: instruction-exact; every stack slot sits 0xc low and the
+			// frame is 0x10 short (0xf8 vs 0x108), i.e. a 12-byte named
+			// object above checkData is still missing.
 			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 
-				Vec currentMtxDir = { J3DSys::mCurrentMtx[0][0],
-					                  J3DSys::mCurrentMtx[1][0],
-					                  J3DSys::mCurrentMtx[2][0] };
+				Vec currentMtxDir = (Vec){ J3DSys::mCurrentMtx[0][0],
+					                       J3DSys::mCurrentMtx[1][0],
+					                       J3DSys::mCurrentMtx[2][0] };
 				// Dead: its all-zero 12-byte .rodata template is emitted
 				// (@3170/@3195) but nothing reads it.
-				Vec currentMtxUp  = { J3DSys::mCurrentMtx[0][1],
-					                  J3DSys::mCurrentMtx[1][1],
-					                  J3DSys::mCurrentMtx[2][1] };
-				Vec normalDir     = { -checkData->getNormal().x,
-					                  -checkData->getNormal().y,
-					                  -checkData->getNormal().z };
+				Vec currentMtxUp  = (Vec){ J3DSys::mCurrentMtx[0][1],
+					                       J3DSys::mCurrentMtx[1][1],
+					                       J3DSys::mCurrentMtx[2][1] };
+				Vec normalDir     = (Vec){ -checkData->getNormal().x,
+					                       -checkData->getNormal().y,
+					                       -checkData->getNormal().z };
 				Vec currentNormalCross2;
 				Vec currentNormalCross1;
 				PSVECCrossProduct(&currentMtxDir, &normalDir,
@@ -685,26 +685,26 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
-			// TODO: the ROM copies each `Vec x = { a, b, c }` out of the
-			// aggregate-initialisation temporary into the named variable
-			// (temp at 0xa4/0x8c, variable at 0xe0/0xc8), where MWCC elides
-			// that copy for us; spelling the copies out by hand reaches
-			// 93.4% but only by inventing two temporaries. A named MtxPtr
-			// for mCurrentMtx (an aliasing lever) changes nothing, and the
-			// frame is 0x78 short, so more locals are missing besides.
+			// The vectors are C99 compound literals copied into the named
+			// Vecs: the ROM fills a temporary (0xa4/0x8c) and word-copies it,
+			// and each literal consumes a second `@NNNN` id (the ROM's
+			// templates are numbered two apart).
+			// TODO: instruction-exact; every stack slot sits 0xc low and the
+			// frame is 0x10 short (0xf8 vs 0x108), i.e. a 12-byte named
+			// object above checkData is still missing.
 			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
 
-				Vec currentMtxDir = { J3DSys::mCurrentMtx[0][0],
-					                  J3DSys::mCurrentMtx[1][0],
-					                  J3DSys::mCurrentMtx[2][0] };
+				Vec currentMtxDir = (Vec){ J3DSys::mCurrentMtx[0][0],
+					                       J3DSys::mCurrentMtx[1][0],
+					                       J3DSys::mCurrentMtx[2][0] };
 				// Dead: its all-zero 12-byte .rodata template is emitted
 				// (@3170/@3195) but nothing reads it.
-				Vec currentMtxUp  = { J3DSys::mCurrentMtx[0][1],
-					                  J3DSys::mCurrentMtx[1][1],
-					                  J3DSys::mCurrentMtx[2][1] };
-				Vec normalDir     = { -checkData->getNormal().x,
-					                  -checkData->getNormal().y,
-					                  -checkData->getNormal().z };
+				Vec currentMtxUp  = (Vec){ J3DSys::mCurrentMtx[0][1],
+					                       J3DSys::mCurrentMtx[1][1],
+					                       J3DSys::mCurrentMtx[2][1] };
+				Vec normalDir     = (Vec){ -checkData->getNormal().x,
+					                       -checkData->getNormal().y,
+					                       -checkData->getNormal().z };
 				Vec currentNormalCross2;
 				Vec currentNormalCross1;
 				PSVECCrossProduct(&currentMtxDir, &normalDir,
