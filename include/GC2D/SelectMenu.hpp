@@ -44,6 +44,11 @@ public:
 	void startOpenWindow();
 	void startCloseWindow();
 
+	// Inlined into perform; retail's calls one level down (SMS_getShineID,
+	// TColor::set) show these case bodies were separate inline functions.
+	void selectPrev();
+	void selectNext();
+
 public:
 	enum SelectMenuState {
 		// Close the menu.

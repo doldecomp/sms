@@ -623,6 +623,151 @@ void TSelectMenu::startMove()
 	mSelectShineMgr->mShines[mSelectedShine]->mSpinning = true;
 }
 
+inline void TSelectMenu::selectPrev()
+{
+	if (getPrevIndex() != -1) {
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SHINE_CURSOR,
+		                                   0, nullptr, 0);
+
+		u8 prevIndex = getPrevIndex();
+		mSelectShineMgr->startDecrease(mSelectedShine - prevIndex);
+
+		mSelectNext = false;
+
+		mScenarioPane2->getPane()->show();
+		mScenarioPane2->setPaneAlpha(10, 255, 0);
+		mScenarioPane2->setPaneOffset(10, -mScenarioPaneDist, 0,
+		                              -mScenarioPaneDist * 2, 0);
+
+		mScenarioPane1->getPane()->show();
+		mScenarioPane1->setPaneAlpha(10, 0, 255);
+		mScenarioPane1->setPaneOffset(10, mScenarioPaneDist, 0, 0,
+		                              0);
+
+		mScenarioImg2->changeTexture(
+		    mScenarioTex[prevIndex]->getTexInfo(), 0);
+		mScenarioShadow2->changeTexture(
+		    mScenarioTex[prevIndex]->getTexInfo(), 0);
+		mScenarioImg1->changeTexture(
+		    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+		mScenarioShadow1->changeTexture(
+		    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+
+		strncpy(mScenarioText1->getStringPtr(),
+		        SMSGetMessageData(
+		            mScenarioBmg2,
+		            (u16)SMS_getNormalStage(SMS_getShineID(
+		                SMS_getShineStage(mStage), mSelectedShine,
+		                false))),
+		        127);
+
+		mShineMarks[mSelectedShine]->mWhite = mMarkCol;
+		mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
+
+		mSelectShineMgr->mShines[mSelectedShine]->mSpinning
+		    = false;
+
+		mSelectedShine = prevIndex;
+
+		strncpy(mScenarioText2->getStringPtr(),
+		        SMSGetMessageData(
+		            mScenarioBmg2,
+		            (u16)SMS_getNormalStage(SMS_getShineID(
+		                SMS_getShineStage(mStage), mSelectedShine,
+		                false))),
+		        127);
+
+		mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
+		mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
+
+		mSelectShineMgr->mShines[mSelectedShine]->mSpinning
+		    = true;
+
+		if (mNumUnlockedShines > 1) {
+			if ((mSelectedShine != 0) && !mArrowL->isVisible()) {
+				mArrowL->show();
+			}
+			if (mSelectedShine != (mNumUnlockedShines - 1)
+			    && !mArrowR->isVisible()) {
+				mArrowR->show();
+			}
+		}
+
+		mMenuState = MENU_ANIM_LOOP;
+	}
+}
+
+inline void TSelectMenu::selectNext()
+{
+	if (getNextIndex() != -1) {
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SHINE_CURSOR,
+		                                   0, nullptr, 0);
+
+		u8 nextIndex = getNextIndex();
+		mSelectShineMgr->startIncrease(nextIndex - mSelectedShine);
+
+		mSelectNext = true;
+
+		mScenarioPane2->getPane()->show();
+		mScenarioPane2->setPaneAlpha(10, 255, 0);
+		mScenarioPane2->setPaneOffset(10, -mScenarioPaneDist, 0, 0,
+		                              0);
+
+		mScenarioPane1->getPane()->show();
+		mScenarioPane1->setPaneAlpha(10, 0, 255);
+		mScenarioPane1->setPaneOffset(10, -mScenarioPaneDist, 0, 0,
+		                              0);
+
+		mScenarioImg2->changeTexture(
+		    mScenarioTex[nextIndex]->getTexInfo(), 0);
+		mScenarioShadow2->changeTexture(
+		    mScenarioTex[nextIndex]->getTexInfo(), 0);
+		mScenarioImg1->changeTexture(
+		    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+		mScenarioShadow1->changeTexture(
+		    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+
+		s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
+		                             mSelectedShine, false);
+		const char* scenarioName = SMSGetMessageData(
+		    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
+
+		strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
+
+		mSelectShineMgr->mShines[mSelectedShine]->mSpinning
+		    = false;
+		mShineMarks[mSelectedShine]->mWhite = mMarkCol;
+		mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
+
+		mSelectedShine = nextIndex;
+
+		strncpy(mScenarioText2->getStringPtr(),
+		        SMSGetMessageData(mScenarioBmg2,
+		                          (u16)SMS_getNormalStage(SMS_getShineID(
+		                              SMS_getShineStage(mStage),
+		                              mSelectedShine, false))),
+		        127);
+
+		mSelectShineMgr->mShines[mSelectedShine]->mSpinning
+		    = true;
+
+		mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
+		mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
+
+		if (mNumUnlockedShines > 1) {
+			if ((mSelectedShine != (mNumUnlockedShines - 1))
+			    && !mArrowR->isVisible()) {
+				mArrowR->show();
+			}
+			if (mSelectedShine > 0 && !mArrowL->isVisible()) {
+				mArrowL->show();
+			}
+		}
+
+		mMenuState = MENU_ANIM_LOOP;
+	}
+}
+
 void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x1) {
@@ -814,143 +959,9 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 				mMenuState = DISAPPEAR_MENU;
 			} else if (mGamePad->checkFrameMeaning(0x8)) {
-				if (getPrevIndex() != -1) {
-					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SHINE_CURSOR,
-					                                   0, nullptr, 0);
-
-					u8 prevIndex = getPrevIndex();
-					mSelectShineMgr->startDecrease(mSelectedShine - prevIndex);
-
-					mSelectNext = false;
-
-					mScenarioPane2->getPane()->show();
-					mScenarioPane2->setPaneAlpha(10, 255, 0);
-					mScenarioPane2->setPaneOffset(10, -mScenarioPaneDist, 0,
-					                              -mScenarioPaneDist * 2, 0);
-
-					mScenarioPane1->getPane()->show();
-					mScenarioPane1->setPaneAlpha(10, 0, 255);
-					mScenarioPane1->setPaneOffset(10, mScenarioPaneDist, 0, 0,
-					                              0);
-
-					mScenarioImg2->changeTexture(
-					    mScenarioTex[prevIndex]->getTexInfo(), 0);
-					mScenarioShadow2->changeTexture(
-					    mScenarioTex[prevIndex]->getTexInfo(), 0);
-					mScenarioImg1->changeTexture(
-					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
-					mScenarioShadow1->changeTexture(
-					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
-
-					strncpy(mScenarioText1->getStringPtr(),
-					        SMSGetMessageData(
-					            mScenarioBmg2,
-					            (u16)SMS_getNormalStage(SMS_getShineID(
-					                SMS_getShineStage(mStage), mSelectedShine,
-					                false))),
-					        127);
-
-					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
-					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
-
-					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
-					    = false;
-
-					mSelectedShine = prevIndex;
-
-					strncpy(mScenarioText2->getStringPtr(),
-					        SMSGetMessageData(
-					            mScenarioBmg2,
-					            (u16)SMS_getNormalStage(SMS_getShineID(
-					                SMS_getShineStage(mStage), mSelectedShine,
-					                false))),
-					        127);
-
-					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
-					mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
-
-					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
-					    = true;
-
-					if (mNumUnlockedShines > 1) {
-						if ((mSelectedShine != 0) && !mArrowL->isVisible()) {
-							mArrowL->show();
-						}
-						if (mSelectedShine != (mNumUnlockedShines - 1)
-						    && !mArrowR->isVisible()) {
-							mArrowR->show();
-						}
-					}
-
-					mMenuState = MENU_ANIM_LOOP;
-				}
+				selectPrev();
 			} else if (mGamePad->checkFrameMeaning(0x10)) {
-				if (getNextIndex() != -1) {
-					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SHINE_CURSOR,
-					                                   0, nullptr, 0);
-
-					u8 nextIndex = getNextIndex();
-					mSelectShineMgr->startIncrease(nextIndex - mSelectedShine);
-
-					mSelectNext = true;
-
-					mScenarioPane2->getPane()->show();
-					mScenarioPane2->setPaneAlpha(10, 255, 0);
-					mScenarioPane2->setPaneOffset(10, -mScenarioPaneDist, 0, 0,
-					                              0);
-
-					mScenarioPane1->getPane()->show();
-					mScenarioPane1->setPaneAlpha(10, 0, 255);
-					mScenarioPane1->setPaneOffset(10, -mScenarioPaneDist, 0, 0,
-					                              0);
-
-					mScenarioImg2->changeTexture(
-					    mScenarioTex[nextIndex]->getTexInfo(), 0);
-					mScenarioShadow2->changeTexture(
-					    mScenarioTex[nextIndex]->getTexInfo(), 0);
-					mScenarioImg1->changeTexture(
-					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
-					mScenarioShadow1->changeTexture(
-					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
-
-					s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
-					                             mSelectedShine, false);
-					const char* scenarioName = SMSGetMessageData(
-					    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
-
-					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
-
-					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
-					    = false;
-					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
-					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
-
-					mSelectedShine = nextIndex;
-
-					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
-					                              mSelectedShine, false);
-					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, (u16)SMS_getNormalStage(shineID));
-					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
-
-					mSelectShineMgr->mShines[mSelectedShine]->mSpinning
-					    = true;
-
-					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
-					mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
-
-					if (mNumUnlockedShines > 1) {
-						if ((mSelectedShine != (mNumUnlockedShines - 1))
-						    && !mArrowR->isVisible()) {
-							mArrowR->show();
-						}
-						if (mSelectedShine > 0 && !mArrowL->isVisible()) {
-							mArrowL->show();
-						}
-					}
-
-					mMenuState = MENU_ANIM_LOOP;
-				}
+				selectNext();
 			}
 		}
 			// fall through
@@ -981,12 +992,32 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 				s32 alpha = mArrowL->getAlpha();
 				if (mSelectedShine == 0) {
 					if (alpha != 0) {
-						alpha -= 4;
-						if (alpha < 0) {
-							alpha = 0;
+						s32 next = alpha - 4;
+						if (next < 0) {
+							next = 0;
 							mArrowL->hide();
 						}
-						mArrowL->setAlpha(alpha);
+						mArrowL->setAlpha(next);
+					}
+				} else {
+					if (alpha < mMarkAlpha) {
+						s32 next = alpha + 4;
+						if (next > mMarkAlpha) {
+							next = mMarkAlpha;
+						}
+						mArrowL->setAlpha(next);
+					}
+				}
+
+				alpha = mArrowR->getAlpha();
+				if (getNextIndex() == -1) {
+					if (alpha != 0) {
+						alpha -= 4;
+						if (alpha < 0) {
+							mArrowR->hide();
+							alpha = 0;
+						}
+						mArrowR->setAlpha(alpha);
 					}
 				} else {
 					u8 alphaRef = mMarkAlpha;
@@ -995,28 +1026,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 						if (alpha > alphaRef) {
 							alpha = alphaRef;
 						}
-						mArrowL->setAlpha(alpha);
-					}
-				}
-
-				alpha = mArrowR->getAlpha();
-				if (getNextIndex() == -1) {
-					if (alpha > 0) {
-						s32 alpha2 = alpha - 4;
-						if (alpha2 < 0) {
-							alpha2 = 0;
-							mArrowR->hide();
-						}
-						mArrowR->setAlpha(alpha2);
-					}
-				} else {
-					u8 alphaRef = mMarkAlpha;
-					if (alpha < alphaRef) {
-						s32 alpha2 = alpha + 4;
-						if (alpha2 > alphaRef) {
-							alpha2 = alphaRef;
-						}
-						mArrowR->setAlpha(alpha2);
+						mArrowR->setAlpha(alpha);
 					}
 				}
 			}
