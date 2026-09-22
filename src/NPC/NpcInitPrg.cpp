@@ -38,6 +38,48 @@ static const char* cEyeMaterialName            = "_eye_mat";
 static const char* cFruitsBoatRideJointName    = "monte_koko";
 static const char* cNeckJointName              = "kubi";
 
+// Factory and binder levels for TBaseNPC::init's frame (cc32). Retail's
+// init references no stack slot at all, so its 0x168 frame is pure dead
+// region; these name-and-return levels price it additively (a naming `new`
+// factory +8 or +0x10, the two-level joint-name binder +0x10 per site) and
+// are the only structure this TU gives them. Names are fabricated.
+static inline TMActorKeeper* NpcNewKeeper(TLiveManager* manager)
+{
+	TMActorKeeper* keeper = new TMActorKeeper(manager);
+	return keeper;
+}
+
+static inline TBaseNPC::TNpcUnk22CStruct* NpcNew22C()
+{
+	TBaseNPC::TNpcUnk22CStruct* p = new TBaseNPC::TNpcUnk22CStruct;
+	return p;
+}
+
+static inline TBaseNPC::TNpcUnk230Struct* NpcNew230()
+{
+	TBaseNPC::TNpcUnk230Struct* p = new TBaseNPC::TNpcUnk230Struct;
+	return p;
+}
+
+static inline TMultiMtxEffect* NpcNewMtxEffect()
+{
+	TMultiMtxEffect* effect = new TMultiMtxEffect;
+	return effect;
+}
+
+static inline JUTNameTab* NpcJointNameTab(J3DModel* model)
+{
+	J3DModelData* data = model->getModelData();
+	JUTNameTab* tab    = data->getJointName();
+	return tab;
+}
+
+static inline TGraphWeb* NpcGraph(TGraphTracer* tracer)
+{
+	TGraphWeb* graph = tracer->getGraph();
+	return graph;
+}
+
 void TBaseNPC::initNpcLight_()
 {
 	mMActor->setLightType(LIGHT_TYPE_OBJECT);
@@ -87,13 +129,13 @@ inline void TBaseNPC::setMtxEffect_()
 		pInfo += 1;
 	}
 
-	mMultiMtxEffect            = new TMultiMtxEffect;
+	mMultiMtxEffect            = NpcNewMtxEffect();
 	mMultiMtxEffect->mNumBones = pInfo->unkD;
 
 	u16* boneIds       = new u16[pInfo->unkD];
 	u8* mtxEffectTypes = new u8[pInfo->unkD];
 
-	JUTNameTab* jointNameTab = getModel()->getModelData()->getJointName();
+	JUTNameTab* jointNameTab = NpcJointNameTab(getModel());
 	for (int i = 0; i < pInfo->unkD; ++i) {
 		boneIds[i]        = jointNameTab->getIndex(pInfo->unk4[i]);
 		mtxEffectTypes[i] = pInfo->unkC;
@@ -121,39 +163,22 @@ inline void TBaseNPC::initSinkNpc_()
 		sCheckPollutedStartCounter = 0;
 }
 
-// TODO: frame 0xf8 vs 0x168 -- every instruction and register is exact, so the
-// residue is 112 bytes of dead low region (retail references no stack slot at
-// all, leaving 0x130 dead bytes below the saves). Measured levers, all with no
-// instruction change: SMSGetMarDirector()->getCurrentMap() +0x10, getScaling().x
-// at the two mScaling reads +8, a named mSLHeadHeightNormal/mGravityY pair +8,
-// a named unk124->getGraph() +8, a named mWaitTurnSpeed +8 -- 48 of the 112 at
-// best, and getMActor()->getModel() for the joint-name fetch is +0x18 but costs
-// an instruction. Naming the setMtxEffect_ model fetch (below) was the register
-// fix, not a frame lever.
+// Frame closed in cc32 by pricing the dead region additively: the director
+// accessor for the map test (+0x10), getScaling() at both mScaling reads
+// (+8), the joint-name binder at its three sites (+0x30, one of them in
+// setMtxEffect_), the graph binder (+8), naming factories for the keeper,
+// the two NPC sub-structs and the matrix effect (+0x30) and a named
+// TNpcInbetween result (+8). Many other combinations fit (a named result
+// saturates in the caller's block; factory forms of the TNpcSink and
+// TNpcInbetween `new`s change instructions), so the choice is weakly
+// evidenced. Header round 25's reading below still stands: the inlined
+// constructors are not carriers.
 //
 // Header round 25 priced the inlined-constructor carrier and closed it. A
 // 12-byte non-trivial dead local is worth exactly +0x10 here in each of
 // TNpcSink, TNpcUnk22CStruct, TNpcUnk230Struct (NpcBase.hpp) and
-// TMultiMtxEffect (MtxUtil.hpp), so 112 needs *seven* such slots and this TU
-// only has nine expansions to spend them on. None of the four is legal:
-//   - TNpcInbetween's constructor is excluded outright, because
-//     TBossHanachanPartsBase::TBossHanachanPartsBase inlines it and is
-//     byte-exact at frame 0x50.
-//   - TNpcSink, TNpcUnk22CStruct and TNpcUnk230Struct are pure initialiser
-//     lists with no statement body, which is header round 24's JADPrm test:
-//     a constructor that is only `unkN = val;` holds no local.
-//   - TMultiMtxEffect's constructor is provably empty, because this function
-//     is instruction-exact and no member store follows any of its six
-//     `new TMultiMtxEffect` sites in the tree. Measured anyway, for the next
-//     agent: a dead 12-byte local there is +0x10 in TBaseNPC::init,
-//     TMario::initModel (0x500 -> 0x510, retail 0x5c0) and
-//     TEnemyMario::initModel (0x2a0 -> 0x2b0, retail 0x2f8) and +0x18 in
-//     TMarioCap::TMarioCap (two expansions, 0x108 -> 0x120, retail 0x180).
-//     No site lands, so it is padding, not a carrier.
-// That leaves only initNpcLight_ (UNUSED, two expansions here), setMtxEffect_
-// and initSinkNpc_ -- bodies private to this TU -- and none of the three has
-// an intermediate a 2002 developer would have named and then not used. The
-// 112 bytes stay open.
+// TMultiMtxEffect (MtxUtil.hpp); none of the four is legal (pure
+// initialiser lists, or a provably empty body).
 void TBaseNPC::init(TLiveManager* param_1)
 {
 	int iVar18 = mActorType - 0x4000001;
@@ -174,7 +199,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	mManager                   = param_1;
 	param_1->manageActor(this);
 
-	mMActorKeeper = new TMActorKeeper(param_1);
+	mMActorKeeper = NpcNewKeeper(param_1);
 	u32 uVar21    = 0;
 	if (mActorType == 0x400001d)
 		uVar21 = 3;
@@ -186,10 +211,10 @@ void TBaseNPC::init(TLiveManager* param_1)
 	mBodyScale        = 1.0f;
 	mBodyRadius       = 10.0f;
 	mMarchSpeed       = 0.0f;
-	mWallRadius       = pTVar3->mAttackRadius * mScaling.x;
+	mWallRadius       = pTVar3->mAttackRadius * getScaling().x;
 	mHeadHeight       = mPtrSaveNormal->mSLHeadHeightNormal.get();
 	mGravity          = mPtrSaveNormal->mGravityY.get();
-	mScaledBodyRadius = mScaling.x * mIndividualParams->mCircleShadowSize.get();
+	mScaledBodyRadius = getScaling().x * mIndividualParams->mCircleShadowSize.get();
 
 	if (mActorType == 0x400001d) {
 		onLiveFlag(LIVE_FLAG_UNK2000 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
@@ -203,7 +228,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	onLiveFlag(LIVE_FLAG_UNK1000000);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	onLiveFlag(LIVE_FLAG_UNK1000);
-	if (gpMarDirector->mMap != 8
+	if (SMSGetMarDirector()->getCurrentMap() != 8
 	    || (strcmp(mName, cNotUseFastCubeViewObjName0) != 0
 	        && strcmp(mName, cNotUseFastCubeViewObjName1) != 0)) {
 		onLiveFlag(LIVE_FLAG_UNK2000);
@@ -222,9 +247,9 @@ void TBaseNPC::init(TLiveManager* param_1)
 	if (isPollutionNpc())
 		initSinkNpc_();
 
-	unk22C = new TNpcUnk22CStruct;
+	unk22C = NpcNew22C();
 
-	if (unk124->getGraph()->isDummy()) {
+	if (NpcGraph(unk124)->isDummy()) {
 		mSpine->initWith(&TNerveNPCWaitMarioApproach::theNerve());
 	} else {
 		mSpine->initWith(&TNerveNPCGraphWander::theNerve());
@@ -235,11 +260,11 @@ void TBaseNPC::init(TLiveManager* param_1)
 	initNpcObjCollision_(pTVar3);
 	setMtxEffect_();
 
-	JUTNameTab* jointNameTab = getModel()->getModelData()->getJointName();
+	JUTNameTab* jointNameTab = NpcJointNameTab(getModel());
 	mNeckJointIndex          = jointNameTab->getIndex(cNeckJointName);
 
 	if (mNeckJointIndex != -1) {
-		unk230 = new TNpcUnk230Struct;
+		unk230 = NpcNew230();
 		extern int NPCNeckCallBack(J3DNode * param_1, int param_2);
 		getMActor()->setJointCallback(mNeckJointIndex, &NPCNeckCallBack);
 	}
@@ -256,15 +281,15 @@ void TBaseNPC::init(TLiveManager* param_1)
 
 	if (pTVar3->unk0 != nullptr) {
 		unk150  = SMS_CreateMinimumSDLModel(pTVar3->unk0->unk0);
-		u16 idx = unk150->getModelData()->getJointName()->getIndex(
-		    pTVar3->unk0->unk4);
+		u16 idx = NpcJointNameTab(unk150)->getIndex(pTVar3->unk0->unk4);
 		unk154 = unk150->getAnmMtx(idx);
 	}
 
 	initAnmSound();
-	mInbetweenCtrl = new TNpcInbetween(
+	TNpcInbetween* inb = new TNpcInbetween(
 	    CLBPalFrame(mPtrSaveNormal->mPosInbetweenFrame.get()),
 	    CLBPalFrame(mPtrSaveNormal->mMotionBlendFrame.get()));
+	mInbetweenCtrl = inb;
 	const TNpcInitAnmInfo* anmInitInfo = SMSGetNpcInitAnmData(iVar18);
 	initLodAnm(anmInitInfo->unk0, 0, mIndividualParams->mLodChangeDist.get());
 	initNpcLight_();
@@ -406,6 +431,9 @@ inline void TBaseNPC::initIndividualAnm_()
 // not CSE. Rejected: a named `row = initInfo->unk34[j]` used for the argument
 // (97.6), for the argument with the row fetched before the test (98.2), and for
 // the test with the raw expression as the argument (97.8, +8 frame).
+// cc32, all keep 569 instructions: a TU-local `unk34[j][i]` accessor at the
+// argument, the test or both (97.8/98.0/97.8), a row-returning accessor then
+// `[i]` (97.6/97.8), `*(initInfo->unk34[j] + i)` at the argument (98.0).
 void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 {
 	int iVar15                         = mActorType - 0x4000001;
