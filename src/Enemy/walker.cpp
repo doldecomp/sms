@@ -82,27 +82,15 @@ void TWalker::reset()
 	unk4.clear();
 }
 
-// TODO: 92.6% -> the residue is three separate things.
-// (1) The wall-record block is now retail's shape: retail builds a whole
-//     16-byte TPathNode in a local (one `li r0, 0` for unk0 plus the vector) and
-//     copies all four words into `enemy->unkF4` *after* the unk114 push, which
-//     is what identified the four m2c-era named vector locals as artifacts --
-//     the expression is one statement,
-//     `mPosition - normal * getWallRadius() + local_94 * fVar4`, with `normal`
-//     reused from the cross product rather than re-read through getNormal().
-//     What is left there is our TPathNode default ctor's four zero stores, which
-//     retail dead-strips entirely; declaring `node` block-scope inside each arm
-//     (91.1), once before the `empty()` test (91.2), once at the top of the wall
-//     block (92.2) and at function scope (92.6, but then the zero stores land in
-//     the prologue) all keep them, and an explicit `node.unk0 = nullptr` is
-//     worse (90.8).
-// (2) Retail copies each operator result through its own return slot (the
+// TODO: 94.0% -> the residue is two separate things.
+// (1) The wall-record block constructs TPathNode from the final point, so its
+//     null actor word and point copy occur after the vector arithmetic and before
+//     the four-word assignment to `enemy->unkF4`, as in retail. Retail still
+//     copies each operator result through its own return slot (the
 //     `<` run before `bl TVec3::add`), the batch-119 by-value-return geometry:
 //     a JGVec3.hpp property, not fixable here. That is also why our frame is now
-//     0x338 against retail's 0x360 -- those return slots are the missing 40
-//     bytes (the pre-rewrite version hit 0x360 by accident with four named
-//     locals standing in for them).
-// (3) done in header round 22: `TLiveActor::checkLiveFlag2` returns `BOOL`,
+//     0x348 against retail's 0x360 -- those return slots are the missing bytes.
+// (2) Done in header round 22: `TLiveActor::checkLiveFlag2` returns `BOOL`,
 //     which gives retail's `cmpwi r4, 0` at both sites (0x138 and 0x5b0).
 //     What is left at the first site is that retail reuses the zero it stored
 //     into `unk1C` instead of materialising `li r4, 0`.
@@ -222,7 +210,6 @@ void TWalker::bind(TLiveActor* param_1)
 
 			unk4.push(pTVar14);
 
-			TPathNode node;
 			JGeometry::TVec3<f32> normal = pTVar14->getNormal();
 			JGeometry::TVec3<f32> local_94;
 			local_94.cross(normal, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
@@ -269,15 +256,15 @@ void TWalker::bind(TLiveActor* param_1)
 			    = calcFarthestVertex(pTVar14, enemy->mPosition, local_94);
 			f32 fVar4 = (enemy->getWallRadius()) * 2.0f + dVar18;
 			if (enemy->unk114.empty()) {
-				node.unk4 = enemy->mPosition
-				            - normal * enemy->getWallRadius()
-				            + local_94 * fVar4;
+				TPathNode node(enemy->mPosition
+				               - normal * enemy->getWallRadius()
+				               + local_94 * fVar4);
 				enemy->unk114.push(enemy->unkF4);
 				enemy->unkF4 = node;
 			} else {
-				node.unk4 = enemy->mPosition
-				            - normal * enemy->getWallRadius()
-				            + local_94 * fVar4;
+				TPathNode node(enemy->mPosition
+				               - normal * enemy->getWallRadius()
+				               + local_94 * fVar4);
 				enemy->unkF4 = node;
 			}
 		}
