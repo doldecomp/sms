@@ -9,8 +9,6 @@
 #include <Player/Yoshi.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Map/MapData.hpp>
-#include <Map/MapCollisionEntry.hpp>
-#include <Map/MapCollisionManager.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/SoundEffects.hpp>
@@ -27,6 +25,8 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
+#include <Map/MapCollisionManager.hpp>
 
 TMapObjSwitch* gpMapObjSwitch;
 
@@ -458,7 +458,18 @@ void TDamageObj::load(JSUMemoryInputStream& stream)
 	}
 }
 
-void TShadowObj::load(JSUMemoryInputStream&) { }
+// UNUSED. The map gives TShadowObj TDamageObj's exact dtor (0x84) and vtable
+// (0xa4) sizes, so it is a THitActor overriding load. Its body is evidenced
+// only by the pool: it must request 50.0f before TDamageObj::load's
+// "normal", or .sdata2 comes out in the wrong order and the DOL changes.
+// TODO: 0x60 against the map's 0x70; four instructions (perhaps a flag
+// update like TDamageObj's) are unknown.
+void TShadowObj::load(JSUMemoryInputStream& stream)
+{
+	JDrama::TActor::load(stream);
+	initHitActor(0, 1, 0x80000000, 50.0f * mScaling.x, 100.0f * mScaling.y,
+	             0.0f, 0.0f);
+}
 
 void TMapObjWaterSpray::calc()
 {

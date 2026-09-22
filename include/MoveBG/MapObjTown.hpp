@@ -123,9 +123,9 @@ public:
 	void init(u32);
 };
 
-class TShadowObj {
+class TShadowObj : public THitActor {
 public:
-	void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream&);
 };
 
 class TMapObjWaterSpray : public TMapObjBase {
