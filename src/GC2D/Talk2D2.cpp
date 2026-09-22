@@ -1383,25 +1383,16 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
                            int* col, int* line)
 {
-	u8 sizeByte;
-	stream.read(&sizeByte, 1);
-	int size = sizeByte;
-	u8 groupByte;
-	stream.read(&groupByte, 1);
-	int group = groupByte;
-	u16 tagHalf;
-	stream.read(&tagHalf, 2);
-	u16 tag = tagHalf;
+	int size  = stream.readU8();
+	int group = stream.readU8();
+	u16 tag   = stream.readU16();
 
 	switch (group) {
 	case 0:
 		switch (tag) {
-		case 0: {
-			u8 delay;
-			stream.read(&delay, 1);
-			mCharDelay = delay;
+		case 0:
+			mCharDelay = stream.readU8();
 			return;
-		}
 		case 1:
 			mForceClose = true;
 			return;
@@ -1542,7 +1533,7 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 			}
 			snprintf(mCharBox[*col + *line * LINE_LENGTH]->getStringPtr(), 2,
 			         "%d", value / 100);
-			value %= 100;
+			value -= value / 100 * 100;
 			snprintf(
 			    mCharBox[*col + *line * LINE_LENGTH + 1]->getStringPtr(), 2,
 			    "%d", value / 10);
@@ -1551,8 +1542,7 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 		}
 
 		case 4: {
-			u8 which;
-			stream.read(&which, 1);
+			u8 which = stream.readU8();
 
 			TFruitBasketEvent* basket;
 			int max;
@@ -1598,16 +1588,15 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 			return;
 		}
 		}
-		return;
+		break;
 
-	case 0xff: {
-		if (tag != 0)
-			return;
-		u8 index;
-		stream.read(&index, 1);
-		mCharColor = cColorTable[index];
-		return;
-	}
+	case 0xff:
+		switch (tag) {
+		case 0:
+			mCharColor = cColorTable[stream.readU8()];
+			break;
+		}
+		break;
 
 	default:
 		stream.skip(size - 5);
