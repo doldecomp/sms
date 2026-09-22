@@ -101,73 +101,35 @@ bool CPolarSubCamera::removeMultiPlayer(const JGeometry::TVec3<f32>* param_1)
 // instructions retail does not have) where the same two statements in the
 // caller's own body are scalar-replaced.  The squares are named so the
 // products stay three `fmuls` (fp_contract fuses products of locals).
-//
-// TODO: with a dead `JGeometry::TVec3<f32> diff;` declared here the caller's
-// frame is 0x60 exactly, with no instruction change -- so retail's 28 bytes of
-// dead low region below the MsSqrtf slot are this helper's reserved locals
-// (MWCC reserves an inlined callee's slots even when its values live in
-// registers).  Left out because an unused local is not evidence on its own;
-// the real body is presumably the copy-and-subtract form above in a spelling
-// that our compiler scalar-replaces.
-//
-// Batch 131 narrowed what is left to two items and found a lever pair. The
-// helper's reserved size is **16, not 12**: with the dead vector here the
-// caller's `center` lands 4 low (0x38 against retail's 0x3c), and a named
-// `f32 maxDist = MsSqrtf(maxSqDist);` in the caller supplies exactly those 4
-// (it is +0 on its own -- the pair is what pays, as in batch 118). Together
-// they take the function 99.2 -> 99.5% and 61 markers -> 6, with the frame,
-// `center`, the accumulate loop, the int-to-float conversion buffer and both
-// CLB calls all exact. The two survivors are:
-//   * the MsSqrtf store/reload temp sits at 0x28 in retail and 0x18 here, i.e.
-//     retail's pool holds 16 bytes above that temp and 32 below it and ours
-//     holds 32 above and 16 below -- a pure pool *ordering* swap (the 16 bytes
-//     belong to expansions after the sqrt, not before it). Moving the dead
-//     vector into a TU-local level around `MsClamp` (224 insns) or around
-//     `mCurrentTarget.mTarget.set(center)` (51 markers) does not move it.
-//   * the `fmr f31, f0` below.
-// Batch 151 retained that pair -- the dead-carrier rule now makes it legal --
-// and the function is 99.5%, frame 0x60 exact, five operand markers plus one
-// insert. It also decomposed the ordering residue: both sides hold 48 bytes of
-// low region, ours as [12][sqrt 4][32] and retail's as [28][sqrt 4][16], so
-// the dead vector's 16 bytes are being allocated *after* the MsSqrtf slot even
-// though the helper expands before it. Class-object locals of inlined callees
-// are therefore a separate, later sub-region than the scalar temps, and the 16
-// bytes retail holds below the slot have to be scalar inline temps of an
-// expansion at or before the sqrt. Rejected for that: the dead vector declared
-// last in the helper (identical), the dead vector moved into a TU-local
-// `accumulate()` level around `center += *it->unk0` (50 markers), and a
-// `TMultiPlayerData::getPos()` accessor returning `const TVec3&` at the two
-// inner-loop sites, which is +4 per use rather than the +8 the return-type
-// price predicts and lands 0x58 with 68 markers.
-// Measured and rejected for the 16: pointer parameters (+0), a second level
-// above the helper (+8), `u8 pad[4]` or a dead `f32` next to the vector (+0 --
-// only a class object counts, and `f32 diff[4]` is dropped entirely, per
-// header round 21), `TVec3 diff(a.x - b.x, ...)` plus `squared()` (lands every
-// slot including the MsSqrtf temp, but costs the 7 store/reload instructions
-// the note above describes), and binding levels over `mCurrentParams`,
-// `unk2BC` and `mAtOffsetY` (+8/+0x10/+0x18, all overshooting).
 static inline f32 sqDistance(const JGeometry::TVec3<f32>& a,
                              const JGeometry::TVec3<f32>& b)
 {
-	// Dead 16-byte carrier: retail's low region holds 16 bytes that our
-	// expansion of this helper does not reserve (batch 151; the rule is that a
-	// dead uninitialised non-trivial local of an inlined callee with no
-	// out-of-line copy is a zero-instruction frame lever, and a `TVec3`
-	// reserves 16 rather than its 12 bytes).
-	JGeometry::TVec3<f32> diff;
 	f32 x2 = (a.x - b.x) * (a.x - b.x);
 	f32 y2 = (a.y - b.y) * (a.y - b.y);
 	f32 z2 = (a.z - b.z) * (a.z - b.z);
 	return x2 + y2 + z2;
 }
 
-// TODO: every instruction and the frame (0x60) now match; the one residue is
-// the MsSqrtf store/reload temp at 0x18 where retail has 0x28 (see the pool
-// ordering notes above sqDistance). With the helper below the sqrt slot does
-// not move for: the sqrt inside the helper (four spellings), the dead vector
-// moved from sqDistance into this helper (first or last; sqrt 0x20, centre 4
-// low), a by-value or `const Vec&` centre, and two-named or reordered
-// sqDistance bodies (z2 first is byte-identical).
+// The pair loop reaches sqDistance through two more levels, which is what
+// closed the frame without the dead 16-byte vector batch 151 had parked in
+// sqDistance: MultiSq (a named result, one binding level) makes MWCC allocate
+// the MsSqrtf slot at retail's 0x28 instead of below the loop's pool, and
+// reading the inner player's position through the reference-returning
+// MultiPlayerPos puts `center` at retail's 0x3c and the two position pointers
+// in retail's r4/r5. Both positions through the accessor swap r4/r5; the
+// accessor on the outer player alone, or a named reference, moves `center`.
+static inline const JGeometry::TVec3<f32>& MultiPlayerPos(TMultiPlayerData* data)
+{
+	return *data->unk0;
+}
+
+static inline f32 MultiSq(const JGeometry::TVec3<f32>& a,
+                          const JGeometry::TVec3<f32>& b)
+{
+	f32 sq = sqDistance(a, b);
+	return sq;
+}
+
 static inline void MultiCamPlace(CPolarSubCamera* cam,
                                  const JGeometry::TVec3<f32>& center, f32 dist)
 {
@@ -213,7 +175,7 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 			for (i = 0; i < count - 1; ++i, ++it) {
 				jt = it + 1;
 				for (j = i + 1; j < count; ++j, ++jt) {
-					f32 sq = sqDistance(*it->unk0, *jt->unk0);
+					f32 sq = MultiSq(*it->unk0, MultiPlayerPos(jt));
 					if (sq > maxSqDist)
 						maxSqDist = sq;
 				}
