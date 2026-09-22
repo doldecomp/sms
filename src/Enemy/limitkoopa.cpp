@@ -49,9 +49,16 @@ BOOL TNerveLimitKoopaHipDropJump::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
-BOOL TNerveLimitKoopaHipDropStart::execute(TSpineBase<TLiveActor>* spine) const
+// Named-body binder: +8 of low region, the HipDrop-start nerve's frame.
+static inline TLimitKoopa* LimitKoopaGetBody(TSpineBase<TLiveActor>* spine)
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
+	return koopa;
+}
+
+BOOL TNerveLimitKoopaHipDropStart::execute(TSpineBase<TLiveActor>* spine) const
+{
+	TLimitKoopa* koopa = LimitKoopaGetBody(spine);
 
 	if (spine->getTime() == 0) {
 		koopa->changeBck(KOOPA_ANM_FIRE_START, 2.0f);
@@ -476,26 +483,15 @@ void TLimitKoopa::bind()
 // TODO: UNUSED (0x20), body not reconstructed.
 void TLimitKoopa::moveStop() { }
 
-// TODO: 86.7%, and the ROM calls this from
-// TNerveLimitKoopaHipDropStart::execute while MWCC still inlines it here,
-// which is why that nerve scores 0%. The lever *is* the depth-1 statement
-// budget after all: this body is 10 statements, a plain method is inlined at
-// depth 1 up to 14, and exactly five extra zero-codegen statements here take
-// TNerveLimitKoopaHipDropStart::execute from 0.0% to 99.9% (four do not) while
-// costing this body nothing. So retail's startHipDrop is a 15-statement body
-// and five statements of it are missing from this reconstruction. Do not pad
-// -- find them. Not them, all measured: naming the three goal deltas
-// (`f32 dx = target.x - getPosition().x;` ...) neither counts nor reproduces
-// retail's schedule (-0.3); building `goal` as three assignments instead of
-// the three-argument constructor costs 2.0 and 8 bytes of frame; a named
-// `f32 speed = velocity.length();` before the test costs 0.3; and per
-// docs/catalog/codegen-tells.md "Closure 241" a named local feeding the next
-// statement's call does not count either.
-//
-// Two codegen residues are left to read: retail re-loads getPosition().y and
-// .z for the additions after computing all three differences (we keep both in
-// FPRs), and retail's inlined normalize() re-uses the squared length that the
-// length() test just computed where we recompute x*x + y*y + z*z.
+// TODO: 89.8%. Retail calls this from TNerveLimitKoopaHipDropStart::execute,
+// so the body has 15+ statements: the goal is a `diff` plus `goal.add(pos,
+// diff)` pair (retail reloads pos.y/.z after each goal store), and the jump's
+// launch speed and the length are named. Left: retail's normalize() reuses
+// the squared length the `len` test computed (sq stays in f1, `fmr f2, f1` in
+// the zero branch) where we recompute it; inert: sqrt(squared()),
+// sqrt(dot()), setLength(1.0f), normalize(velocity), setLength(v, 1.0f), a
+// named gravity. The FPR order of the three differences also differs (dy is
+// computed before the z loads here).
 void TLimitKoopa::startHipDrop()
 {
 	// One local carries the jump: first the straight-up launch speed, then the
@@ -507,13 +503,16 @@ void TLimitKoopa::startHipDrop()
 	JGeometry::TVec3<f32> target(SMS_GetMarioPos());
 	target.y = mGroundHeight;
 
-	JGeometry::TVec3<f32> goal(getPosition().x + (target.x - getPosition().x),
-	                           getPosition().y + (target.y - getPosition().y),
-	                           getPosition().z + (target.z - getPosition().z));
+	JGeometry::TVec3<f32> diff;
+	diff.sub(target, getPosition());
+	JGeometry::TVec3<f32> goal;
+	goal.add(getPosition(), diff);
 
-	velocity = calcVelocityToJumpToY(goal, velocity.y,
+	f32 speedY = velocity.y;
+	velocity = calcVelocityToJumpToY(goal, speedY,
 	                                 getParam()->hipDropGravityY.get());
-	if (velocity.length() > 200.0f) {
+	f32 len = velocity.length();
+	if (len > 200.0f) {
 		velocity.normalize();
 		velocity.scale(200.0f);
 	}
@@ -524,18 +523,12 @@ void TLimitKoopa::startHipDrop()
 // TODO: UNUSED (0x4c), body not reconstructed.
 void TLimitKoopa::moveHipDrop() { }
 
-// Rotation-speed read for moveTurn: two levels (a named params binder under a
-// reader) put TEnemyManager::getSaveParam() at depth 5 in the Wait nerve,
+// Rotation-speed read for moveTurn: two levels (the named params binder under
+// this reader) put TEnemyManager::getSaveParam() at depth 5 in the Wait nerve,
 // where retail calls it, and land the nerve's frame.
-static inline TLimitKoopaParams* LimitKoopaParams(const TLimitKoopa* koopa)
-{
-	TLimitKoopaParams* params = koopa->getParam();
-	return params;
-}
-
 static inline f32 LimitKoopaRotationSpeed(const TLimitKoopa* koopa)
 {
-	return LimitKoopaParams(koopa)->rotationSpeed.get();
+	return LimitKoopaGetParam(koopa)->rotationSpeed.get();
 }
 
 
