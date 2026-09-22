@@ -180,6 +180,10 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	unkC5 = 1;
 }
 
+// TODO: the extra-shine and blue-coin clamps are `bge; b` pairs that clamp in
+// place in retail (ours: `blt` for the if, an `mr` for a ternary); the first
+// isGetShine miss returns the zeroed counter (`mr r3, r24`); callee-saved
+// registers rotate (retail i r31, total r28); frame 0x50 against 0x60.
 void TGuide::resetObjects()
 {
 	int total = 0;
@@ -210,9 +214,7 @@ void TGuide::resetObjects()
 			total += etcShines;
 
 			int coins = (u16)TFlagManager::getInstance()->getFlag(0x20005 + i);
-			if (coins >= 1000)
-				coins = 999;
-			mScores[i].mCoinNum = coins;
+			mScores[i].mCoinNum = coins < 1000 ? coins : 999;
 
 			mScores[i].mHasFirstEtcShine = SMS_isGetShine(i, 0, true);
 			if (mScores[i].mHasFirstEtcShine)
@@ -225,9 +227,7 @@ void TGuide::resetObjects()
 					        scNormalStageTable[i], j))
 						blueCoins++;
 			}
-			if (blueCoins >= 1000)
-				blueCoins = 999;
-			mScores[i].mBlueCoinNum = blueCoins;
+			mScores[i].mBlueCoinNum = blueCoins < 1000 ? blueCoins : 999;
 
 			if (TFlagManager::getInstance()->getBool(0x103A5 + i)) {
 				mPointPanes[i]->mVisible = true;
