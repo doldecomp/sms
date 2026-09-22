@@ -197,6 +197,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `TTamaNokoManager::initSetEnemies` rose **97.21333 -> 99.88%** and unit fuzzy similarity **98.94871 -> 98.99709%**; aggregate fuzzy similarity rose **98.091680 -> 98.091910%**, while matched-code, exact-function, and linked-unit counters did not move.
 - Whole-file medium audits of `NPC/NpcWalkTurn`, `Player/MarioEffect`, and `Map/MapWarp` returned clean with no safe gain.
   Their remaining differences are documented temporary/frame, saved-register, and named-block placement residues; do not repeat them without a new compiler-shape lead.
+- Landed `System/MovieDirector`: reconstructed `rsetup`'s video placement rectangle as `JGeometry::TBox2<u32>`.
+  `rsetup` rose **96.634796 -> 96.93%** and unit fuzzy similarity **98.76760 -> 98.85%**; aggregate fuzzy similarity rose **98.091910 -> 98.092070%**, while matched-code, exact-function, and linked-unit counters did not move.
+- Whole-file medium audit of `JSystem/JParticle/JPAMath` returned clean with no safe gain.
+  Its two remaining functions are verified local-residency and FPR-allocation artifacts; do not repeat it without a new compiler-allocation lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
