@@ -506,12 +506,23 @@ static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// Binder over the director accessor; the raw-global
+// EventWatcherGetMarDirector binder is 8 cheaper.
+static inline TMarDirector* EventWatcherMarDirector()
+{
+	TMarDirector* marDirector = SMSGetMarDirector();
+	return marDirector;
+}
+
+// A named director for the stopwatch and the binder for the store: retail's
+// 0x68 frame with every slot in place.
 static void evSetTimeLimit(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	int time = TSpcSlice(interp->pop()).getDataInt();
-	OSResetStopwatch(&SMSGetMarDirector()->unkE8);
-	SMSGetMarDirector()->unk120 = time;
+	int time               = TSpcSlice(interp->pop()).getDataInt();
+	TMarDirector* director = SMSGetMarDirector();
+	OSResetStopwatch(&director->unkE8);
+	EventWatcherMarDirector()->unk120 = time;
 	interp->push();
 }
 
@@ -571,8 +582,7 @@ static void evSetEventEnd(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// evSetNextStage (batch 127).
+// Binding level over a raw member read, worth +8 of low region.
 static inline TMarDirector* EventWatcherGetMarDirector()
 {
 	TMarDirector* marDirector = gpMarDirector;
@@ -585,11 +595,11 @@ static void evSetNextStage(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int scenario = TSpcSlice(interp->pop()).getDataInt();
 	int stage    = TSpcSlice(interp->pop()).getDataInt();
 
-	// This function reads the global directly. The rest of the file goes
-	// through SMSGetMarDirector(), but here the accessor makes the match worse
-	// (94.8% -> 92.4%), so the original must have had the bare global.
-	EventWatcherGetMarDirector()->setNextStage((scenario & 0xff) + ((stage + 1) << 8),
-	                            nullptr);
+	// The director is a named local over the plain accessor: retail's 0x88
+	// frame. Chaining the accessor or the raw global is 8 short, a binder 8
+	// long.
+	TMarDirector* director = SMSGetMarDirector();
+	director->setNextStage((scenario & 0xff) + ((stage + 1) << 8), nullptr);
 
 	interp->push();
 }
@@ -598,15 +608,9 @@ static void evRegisterMovie(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int movieId = TSpcSlice(interp->pop()).getDataInt();
-	EventWatcherGetMarDirector()->fireStreamingMovie(movieId);
+	TMarDirector* director = SMSGetMarDirector();
+	director->fireStreamingMovie(movieId);
 	interp->push();
-}
-
-// Binder over the director accessor; the raw-global binder above is 8 cheaper.
-static inline TMarDirector* EventWatcherMarDirector()
-{
-	TMarDirector* marDirector = SMSGetMarDirector();
-	return marDirector;
 }
 
 // The nil push has two spellings and they are not interchangeable: writing the
