@@ -322,6 +322,13 @@ void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 				// is inert on it -- `u16 j` at four positions and `mtx`
 				// ahead of `mactor` all give 31 markers (batch 145,
 				// docs/catalog/frame-gaps.md).
+				// cc27: moving this block into a TU-local static inline
+				// taking `*it` lands `mtx` and j/matNum/starglowMatIdx at
+				// retail's ranks but hoists the "_starglow1" address into
+				// r23 (retail r31), shifting every outer register by one
+				// (97.9%, frame 0xe8); passing the string, the MActor or
+				// the model data as the parameter, a named J3DTexMtx or
+				// J3DModel, `u16 matNum` and `mtx` first are no better.
 				Mtx44 mtx;
 				SMS_GetLightPerspectiveForEffectMtx(mtx);
 				J3DModelData* data = mactor->getModel()->getModelData();
