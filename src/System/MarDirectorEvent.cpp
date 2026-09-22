@@ -134,18 +134,15 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 	if (!nozzle)
 		return;
 
+	u8 area = gpApplication.mCurrArea.unk0;
 	if (nozzle->isActorType(0x20000022)
-	    && TFlagManager::smInstance->getNozzleRight(
-	        gpApplication.mCurrArea.unk0, 0)) {
-		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
-		                                         0);
+	    && !TFlagManager::smInstance->getNozzleRight(area, 0)) {
+		TFlagManager::smInstance->setNozzleRight(area, 0);
 		unk4C |= 0x200;
 		unk261 = 3;
 	} else if (nozzle->isActorType(0x2000002A)
-	           && TFlagManager::smInstance->getNozzleRight(
-	               gpApplication.mCurrArea.unk0, 1)) {
-		TFlagManager::smInstance->setNozzleRight(gpApplication.mCurrArea.unk0,
-		                                         1);
+	           && !TFlagManager::smInstance->getNozzleRight(area, 1)) {
+		TFlagManager::smInstance->setNozzleRight(area, 1);
 		unk4C |= 0x200;
 		unk261 = 4;
 	}
