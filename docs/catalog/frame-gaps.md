@@ -1842,3 +1842,37 @@ Invisible-carrier evidence (do not ladder these):
   The dead frame is therefore not produced by the visible code of either function (our ctor chain prices 0).
 - `changeBck`'s expansion costs ~36 bytes in the exact `TNerveBGTug::execute` (0x50 -> 0x78 -> 0xa0 -> 0xc0 over its three sites) and ~10 in retail's `TNerveBGRoll::execute` (eight expansions in 0xa8), same TU, identical expansion code.
   Our BGRoll is 0xb0 over; the joinAnm chain's `getActorKeeper()`/`getUnk2C()` rungs are 12 per expansion each (raw both gives 0x98) but are pinned by five exact nerves (BGEyeDamage, BGTug, BGPollute, BGPolDrop go red), so the difference lives in how BGRoll reaches `changeBck`, not in the header.
+
+## Research batch cc23 (2026-09-22): retail's `operator-` returns by value; the `a = b - c` class is a header migration, not a lever
+
+Measured in scratch TUs with the game flags (a `TCoasterEnemy::bind` model compared byte for byte against retail) and tree-wide with `ninja changes_all`.
+Nothing committed: the migration closes 16 functions but regresses 70.
+
+- **Retail's `operator-` returns `TVec3` by value and copies its left operand into a local.**
+  `TYoshiTongue::movement`'s `(tpos - mTipPos) * k` is `bl __ct__(0x98 <- tpos); bl __ami__(0x98); bl __ct__(0x17c <- 0x98)`, then an inline copy 0x17c -> 0xb8 into `operator*`'s by-value parameter: the third call is `operator-`'s return copy, which no reference-returning shape produces.
+  The eleven `TMario::wire*` functions show the same return copy as `bl sub ; bl __ct__`.
+- **Batch 142's "+6 for a by-value return" is the copy constructor, not the return.**
+  MWCC builds the returned local directly in the result slot only when the copy constructor is base-init (`TVec3(const TVec3& other) : Vec(other) {}`) or implicit and `operator=` does not cast its *source* (`*(Vec*)this = other; return *this;` or implicit).
+  Any statement body in the copy constructor (`*(Vec*)this = ...`, `(Vec&)*this = other`, the stock cast) or `*(const Vec*)&other` in `operator=` keeps the second copy (61 instructions against 55).
+- **With the copy elided the result temporary sits at the pool floor and every site is uniformly 4 bytes short below it** (site census `d=[-4]`).
+  The 4 bytes are one pointer temporary holding the left operand's address, created before the result and invisible in the code.
+  The only spelling found is converting the left operand through the header's `operator const Vec*()`.
+  Inside the body (`TVec3 r; r = *(const Vec*)fst; r -= snd; return r;`) it is byte-exact but emits a weak `__opPC3Vec__...` in five TUs (the `TMario::wire*` family, `damageExec`, `TSphereLink::moveHead`, `TTailRubber::bind`, `TMapWire::init`), which the map does not have.
+  As the parameter type, `friend TVec3 operator-(const Vec* fst, const TVec3& snd) { TVec3 r; r = *fst; r -= snd; return r; }`, the conversion runs at the call boundary and nothing extra is emitted.
+  That signature exists only because it reproduces the slot; treat it as the measured shape, not as recovered source.
+- Not the 4 bytes, all (0, 12) or worse: `TVec3 r(fst)`, `r = fst`, `r.set(fst)`, `r.set((const Vec&)fst)`, a member `operator-`, a by-value left operand, a `const Vec&` left operand, `return r -= snd` (8 below).
+  A named pointer or reference local is 8 below or 4 + 4; a pointer to the *right* operand (or `getPosition()` on the right) lands the slot but hoists `addi r4` to the top.
+  A pointer conversion in the copy constructor (`: Vec(*(const Vec*)other)`) puts the 4 bytes under every copy tree-wide (-138 exact).
+  496 caller-side spellings of the coaster body (accessors, `set`, `add`, setter against `=`) under the plain by-value header: none exact.
+- **The weak `__ami__` in Tongue.cpp survives through a TU-local helper, so Header round 47 is refuted.**
+  A by-value-returning argument is not nested in the outer call's expansion, so every by-value `operator-` inlines the whole `(a - b) * k` site.
+  `TongueDiff(a, b)` (copy, `-=`, return) called from `TongueScaledDiff(a, b, k) { return TongueDiff(a, b) * k; }` reproduces retail's `ctor ; -= ; ctor ; scale ; add ; sub` call sequence exactly at both sites.
+- **Tree-wide** (copy constructor `: Vec(other) {}`, the `operator=` above, the `const Vec*` `operator-`, the Tongue helper): matched functions 11510 -> 11520 (+16 / -6), fuzzy 98.3567 -> 98.4007, 122 up / 70 down, nothing missing; the `wireBinder` unit reaches 100%.
+  Exact: the `bind` of `TLiveActor`, `TCoasterEnemy`, `TWireBinder`, `THamuKuri`, `TAmenbo`, `TAmiNoko`, `TChuuHana`, `TEnemyAttachment`, `TKoopaJrSubmarine`, `TLimitKoopa`, plus `TDangoHamuKuri::behaveToWater`, two `genEventCoin`, `TEffectColumWater::generate`, `TFireWanwan::initEscapeNextGraphNode`, `TMapCollisionBase::setCheckData`.
+  Large lifts outside the class: `TNameKuri::calcRootMatrix` 83.6 -> 99.4, `THauntLeg::calcRootMatrix` 85.1 -> 99.6, `TMapWire::getPosInWire` 85.9 -> 99.5, `TTailRubber::restrict` 83.8 -> 98.1, `TBathtubData::getGravityDir` 82.8 -> 97.9.
+- **Why it is not committed: 70 regressions of two kinds.**
+  (a) Sites whose crutches were tuned to the old header: `soundTorocco`/`toroccoEffect` spell `TVec3<f32>(a - b).length()` plus binders; dropping the wrapper is 89.8 -> 99.6 but the frame stays 0x10 over, from the pool of `.length()` on a by-value temporary (an open sub-class).
+  (b) Side effects of the copy-constructor change on ordinary copies: `TMapObjBall::control`'s `vel(getVelocity())` fuses `squared()` into an `fmadds` that retail does not, which only the cast constructor reproduces.
+  Lost exact: `soundTorocco`, `toroccoEffect`, `isTakeSituation`, `moveRoof`, `TMapObjBall::control`, `TNerveMameGessoJitabata::execute`.
+  The copy constructor alone is +81 / -40 (fuzzy +0.054), `operator=` alone +13 / -5.
+- Next: land it as one migration (header, Tongue helper, and a respelling of each of the 70), starting with the `.length()`-on-a-temporary pool and the `MapObjBall` copy.

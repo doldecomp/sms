@@ -363,6 +363,12 @@ public:
 	// header, in the map's TU, at the map's size, at 100% (all 21 of them,
 	// including the 4-byte `__ct__...Fv` in CameraBGCheck.cpp), so there is
 	// no missing out-of-line copy left to buy a reshape with.
+	//
+	// Research batch cc23 overturns the paragraph above: retail returns by
+	// value (Tongue's `ctor ; __ami__ ; ctor`), Tongue keeps `__ami__` through
+	// a TU-local helper, and the by-value return is free once the copy
+	// constructor is `: Vec(other) {}`. The measured shape and why it is not
+	// in yet (70 regressions) are in docs/catalog/frame-gaps.md.
 	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
 	{
 		fst -= snd;
