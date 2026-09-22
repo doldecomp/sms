@@ -373,8 +373,8 @@ public:
 
 		this->ref(1, 1) = 1.0f;
 
-		this->ref(2, 1) = this->ref(1, 2) = this->ref(0, 1)
-		    = this->ref(1, 0) = 0.0f;
+		this->ref(0, 1) = this->ref(1, 0) = this->ref(2, 1)
+		    = this->ref(1, 2) = 0.0f;
 	}
 
 	void setEularZ(float param_1)

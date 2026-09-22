@@ -41,27 +41,6 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 // 0x18, so the last is the float form. Declaration order rotation, translation,
 // result puts the three at 0x170/0x140/0x110.
 
-// `TRotation3::setEularY` with its zero chain in the axis-pair order
-// `setEularX`/`setEularZ` use, (0,1) (1,0) (2,1) (1,2): the header's
-// (2,1) (1,2) (0,1) (1,0) chain reschedules the whole second concat (94.2%).
-// TODO: move into JGRotation3.hpp once bossManta and MapObjCorona are
-// measured against it.
-static inline void SmJ3DActSetEularY(TPosition3f& m, f32 angle)
-{
-	f32 s = sin(angle);
-	f32 c = cos(angle);
-
-	m.ref(2, 2) = c;
-	m.ref(2, 0) = -s;
-
-	m.ref(0, 2) = s;
-	m.ref(0, 0) = c;
-
-	m.ref(1, 1) = 1.0f;
-
-	m.ref(0, 1) = m.ref(1, 0) = m.ref(2, 1) = m.ref(1, 2) = 0.0f;
-}
-
 void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
@@ -73,7 +52,7 @@ void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 		tmp.setEularZ(DEG_TO_RAD(getRotation().z));
 		tmp.setTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 		local_110.concat(local_148, tmp);
-		SmJ3DActSetEularY(tmp, DEG_TO_RAD(getRotation().y));
+		tmp.setEularY(DEG_TO_RAD(getRotation().y));
 		tmp.setTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
 		local_148.concat(local_110, tmp);
 		tmp.setEularX(DEG_TO_RAD(getRotation().x));
