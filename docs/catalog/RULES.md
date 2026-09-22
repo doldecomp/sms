@@ -332,6 +332,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `!p` vs `p == nullptr` on an unnamed call result is a 4-byte pool lever in either direction (conductor).
 - `getSpine()` vs raw `mSpine` at a nerve test is +4 to +8 of pool (poihana `isCollidMove`, rocket `bind`).
 - A reused slot holding two objects can be one local rebuilt in place (AnimalBase `resetRandomCurPathNode`).
+- A three-statement swap inside an inlined callee takes its temporary's slot after earlier inline locals; a one-level `static inline swap(TVec3&, TVec3&)` puts it where retail has it (MarioSpecial `specMain`).
+- A named `u16 flag = accessor()[i];` adds a 4-byte item between argument temporaries and a named `Mtx` (ModelWaterManager `drawWaterVolume`).
+- Before diffing a ranked target, skip functions whose TODO already records a deep search: most misses in the byte-ranked run were re-diffing explored residues.
 
 ## Register and scheduling residues
 
