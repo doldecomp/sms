@@ -74,6 +74,9 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Medium-effort Terra whole-file trial: the first six fresh TUs produced three verified improvements and three clean blocker audits, with no repeated file assignments.
   Landed `Camera/CameraBGCheck` (`execWallCheck_`, `execRoofCheck_`), `Map/MapWire` (`drawLower`, `drawUpper`), and `Strategic/ObjHitCheck` (`entryGroup`, `checkActorsHit`, `clearHitNum`).
   `Map/MapCheck`, `GC2D/SelectShine2`, and `MarioUtil/MtxUtil` returned clean; the latter two plus `MapWire` independently point to shared `JGVec2`/`JGVec3` inline-shape blockers, so use a header research round rather than reassigning those TUs.
+- Continued the medium trial: `System/CardManager` returned clean and remains blocked by the shared checksum inlining split; landed `Camera/CameraNotice`, raising `calcNoticeTargetYrot_` **92.24 -> 93.88%**.
+- Closed the `JGVec2<float>::sub` header lead with an xhigh research round.
+  The exact weak 0x24 body emits only when `sub` is non-inline, which forces calls broadly and regresses both `SelectShine2` callers; the missing weak body is caller/per-expansion behavior, not a shared-header declaration fix.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
