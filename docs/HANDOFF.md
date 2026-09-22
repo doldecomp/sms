@@ -128,6 +128,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The remaining animation residues are stack/register allocation layouts.
 - Landed `Animal/BeeHive`: preserved the incoming water-hit coordinates in `receiveMessage`, raising it **92.42 -> 98.80%** and the unit **96.10 -> 96.49%**.
   The other fourteen residuals were audited; several still need genuine matrix/quaternion or nerve-flow reconstruction.
+- Landed `GC2D/PauseMenu2`: corrected visible-pane animation flow and used the retail in-place sign flip in `perform`, raising those functions **96.53 -> 96.57%** and **99.29 -> 99.39%**.
+  The unit remains extracted; its known `set<f>` order and `appearWindow`/`disappearWindow` linkage blockers still prevent source linking.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
