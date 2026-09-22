@@ -282,10 +282,12 @@ int TMovieDirector::rsetup()
 	THPVideoInfo videoInfo;
 	THPPlayerGetVideoInfo(&videoInfo);
 
-	// TODO: Huh? TBox2 or something?
-	thpRender->setParams(SMSGetGameRenderWidth() - videoInfo.xSize / 2,
-	                     SMSGetGameRenderHeight() - videoInfo.ySize / 2,
-	                     videoInfo.xSize, videoInfo.ySize);
+	JGeometry::TBox2<u32> videoRect(
+	    SMSGetGameRenderWidth() - videoInfo.xSize / 2,
+	    SMSGetGameRenderHeight() - videoInfo.ySize / 2, videoInfo.xSize,
+	    videoInfo.ySize);
+	thpRender->setParams(videoRect.i.x, videoRect.i.y, videoRect.f.x,
+	                     videoRect.f.y);
 
 	DVDChangeDir("/");
 
