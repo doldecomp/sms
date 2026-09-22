@@ -137,16 +137,17 @@ void JPABaseField::affect(JPAParticle* particle)
 }
 void JPABaseField::loadFieldBlock(JPADataBlock* block)
 {
+	s16 value;
 	JSUMemoryInputStream streamImpl(block->mRawData,
 	                                *(u32*)((u8*)block->mRawData + 4));
-	JSUInputStream& stream = streamImpl; // TODO: fakematch?
+	JSUInputStream& stream = streamImpl;
 
 	stream.skip(0xC);
 	stream >> unk50;
 	stream >> unk51;
 	stream >> unk52;
 	stream >> unk53;
-	stream >> mMaxDistanceSq;
+	stream >> unk54;
 	stream.skip(0x2);
 	stream >> unk10;
 	stream >> unk14;
@@ -161,10 +162,14 @@ void JPABaseField::loadFieldBlock(JPADataBlock* block)
 	stream >> unk34;
 	stream >> unk38;
 
-	mFadeInEnd    = JPAConvertFixToFloat(stream.readS16());
-	mFadeOutStart = JPAConvertFixToFloat(stream.readS16());
-	mFadeInStart  = JPAConvertFixToFloat(stream.readS16());
-	mFadeOutEnd   = JPAConvertFixToFloat(stream.readS16());
+	stream >> value;
+	mFadeInEnd = JPAConvertFixToFloat(value);
+	stream >> value;
+	mFadeOutStart = JPAConvertFixToFloat(value);
+	stream >> value;
+	mFadeInStart = JPAConvertFixToFloat(value);
+	stream >> value;
+	mFadeOutEnd = JPAConvertFixToFloat(value);
 }
 
 JPAGravityField::JPAGravityField() { unk50 = 0; }
