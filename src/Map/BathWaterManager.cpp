@@ -403,28 +403,33 @@ public:
 
 							(void)&local_2E4;
 
-							f32 half = (twoR - dist) / 2.0f;
+							f32 half = 0.5f * (twoR - dist);
 
 							local_2D8.scale(half, local_2E4);
 
-							f32 hny = half * local_2E4.y;
+							// In place: the ROM overwrites half's register
+							// with the product and never CSEs it with the
+							// y term of the scale() above.
+							half *= local_2E4.y;
 
-							local_2D8.set(local_2E4.x * half,
-							              (1.0f + local_2E4.y) * hny,
-							              local_2E4.z * half);
+							// TODO: the ROM re-stores x and z from the
+							// scale() products still in registers; this
+							// reloads z and drops the x store.
+							local_2D8.set(local_2D8.x,
+							              (1.0f + local_2E4.y) * half,
+							              local_2D8.z);
 							b->unk18.extend(local_2D8);
 							local_2D8.x = -local_2D8.x;
 							local_2D8.z = -local_2D8.z;
-							local_2D8.y = (local_2E4.y - 1.0f) * hny;
+							local_2D8.y = (local_2E4.y - 1.0f) * half;
 							a->unk18.extend(local_2D8);
 
-							f32 mag = hny;
-							if (mag < twoR - dist)
-								mag = twoR - dist;
+							if (half < twoR - dist)
+								half = twoR - dist;
 
-							local_2E4.x *= mag * bw->unk8C->bounceXZ.get();
-							local_2E4.y *= mag * bw->unk8C->bounceY.get();
-							local_2E4.z *= mag * bw->unk8C->bounceXZ.get();
+							local_2E4.x *= half * bw->unk8C->bounceXZ.get();
+							local_2E4.y *= half * bw->unk8C->bounceY.get();
+							local_2E4.z *= half * bw->unk8C->bounceXZ.get();
 							b->unk30.extend(local_2E4);
 							local_2E4.negate();
 							a->unk30.extend(local_2E4);
