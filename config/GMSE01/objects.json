@@ -39,6 +39,7 @@
     "Enemy/launcher.cpp",
     "Enemy/spline.cpp",
     "Enemy/typicalenemy.cpp",
+    "Enemy/walkerEnemy.cpp",
     "GC2D/BlendPane.cpp",
     "GC2D/BoundPane.cpp",
     "GC2D/Coord2D.cpp",
