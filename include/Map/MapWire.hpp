@@ -35,7 +35,7 @@ public:
 	f32 getPointPowerAtReleased(f32) const;
 	void getPointPosAtReleased(f32, JGeometry::TVec3<f32>*) const;
 	void updatePointAtReleased(int);
-	void updateMovePointAtReleased();
+	bool updateMovePointAtReleased();
 	void initPointAtJustReleased(f32, TMapWirePoint*);
 	void release();
 	void getPointPosAtHanged(f32, JGeometry::TVec3<f32>*) const;

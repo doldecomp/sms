@@ -115,13 +115,6 @@ void TMapWire::drawUpper() const
 	GXEnd();
 }
 
-// very fake, but it helps fix some inlining issues.
-// see TODO in getPointPosAtReleased
-static f32 fake_getPointPowerAtReleased(const TMapWire* wire, f32 pos)
-{
-	return wire->getPointPowerAtReleased(pos);
-}
-
 f32 TMapWire::getPointPowerAtReleased(f32 pos) const
 {
 	// 1 = default height, 0 = stretched all the way down
@@ -132,7 +125,8 @@ f32 TMapWire::getPointPowerAtReleased(f32 pos) const
 		relativeHeightAtPos = 1.0f - pos / mHangPos;
 	}
 
-	return 1.0f - relativeHeightAtPos * relativeHeightAtPos;
+	f32 power = 1.0f - relativeHeightAtPos * relativeHeightAtPos;
+	return power;
 }
 
 void TMapWire::getPointPosAtReleased(f32 pos, JGeometry::TVec3<f32>* out) const
@@ -144,7 +138,7 @@ void TMapWire::getPointPosAtReleased(f32 pos, JGeometry::TVec3<f32>* out) const
 	getPointPosDefault(pos, &defaultPoint);
 
 	// TODO: fix this inlining issue
-	f32 power = fake_getPointPowerAtReleased(this, pos);
+	f32 power = getPointPowerAtReleased(pos);
 	// TODO: Regswaps for these calculations?
 	f32 yAdjusted
 	    = linePoint.y
@@ -167,8 +161,22 @@ void TMapWire::updatePointAtReleased(int index)
 	getPointPosAtReleased(pos, &mapWirePoint->mPosition);
 }
 
-// TODO: Unused, but exists in .map file. What is this?
-void TMapWire::updateMovePointAtReleased() { }
+bool TMapWire::updateMovePointAtReleased()
+{
+	mBounceRemainingPower -= mBounceDecayRate;
+
+	if (mBounceRemainingPower < TMapWire::mEndRate)
+		return true;
+
+	mMoveTimer += TMapWire::mMoveTimerSpeed;
+	if (mMoveTimer >= 2.0f) {
+		mMoveTimer -= 2.0f;
+	}
+
+	mHangOrBouncePoint.y = mBounceAmplitude * JMASCos(mMoveTimer * 32768.0f)
+	                       * mBounceRemainingPower;
+	return false;
+}
 
 void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
 {
@@ -177,7 +185,11 @@ void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
 	point->mPosReturnRate = (point->mDefaultPosOnWire - pos) / 1000.0f;
 }
 
-// TODO: Needs work, but otherwise mathematically equivalent
+// TODO: 99.8%: frame 0x138 vs ours 0xc8 (each getPointPosAtReleased
+// expansion's linePoint/defaultPoint pair sits 0x28 apart in retail, 0x18 in
+// ours, 0x3c more pool below) and the gpMarioSpeedX/Z pointer registers swap.
+// Tried: power/yAdjusted named vs inline, linePoint/defaultPoint declared
+// together (inert); component stores for the result (worse, 97.6).
 void TMapWire::release()
 {
 	if (mState == TMapWire::RELEASED)
@@ -202,17 +214,16 @@ void TMapWire::release()
 		}
 	}
 
-	if (mNumMapWirePoints - halfNumPoints != 0) {
+	if (mNumActiveMapWirePoints - halfNumPoints != 0) {
 		f32 posAdvancePerPoint
 		    = (1.0f - mHangPos) / (mNumActiveMapWirePoints - halfNumPoints);
 
 		for (int i = halfNumPoints; i < mNumActiveMapWirePoints; i++) {
-			TMapWirePoint* mapWirePoint = &mMapWirePoints[i];
-			mapWirePoint->reset();
+			mMapWirePoints[i].reset();
 
 			initPointAtJustReleased(posAdvancePerPoint * (i - halfNumPoints + 1)
 			                            + mHangPos,
-			                        mapWirePoint);
+			                        &mMapWirePoints[i]);
 		}
 	}
 
@@ -299,10 +310,11 @@ void TMapWire::calcViewAndDBEntry()
 	mEndFittingModel->viewCalc();
 }
 
+// TODO: 99.6%: frame 0xd8 vs ours 0x78 (the same getPointPosAtReleased pool
+// gap as release) and the JMASCos product lands in f1 in retail, f0 in ours;
+// operand order, a named cos result and a named s16 angle are all inert.
 void TMapWire::move()
 {
-	bool bounceFinished;
-
 	switch (mState) {
 	case IDLE:
 		break;
@@ -311,23 +323,7 @@ void TMapWire::move()
 		break;
 
 	case RELEASED:
-		mBounceRemainingPower -= mBounceDecayRate;
-
-		if (mBounceRemainingPower < TMapWire::mEndRate) {
-			bounceFinished = true;
-		} else {
-			mMoveTimer += TMapWire::mMoveTimerSpeed;
-			if (mMoveTimer >= 2.0f) {
-				mMoveTimer -= 2.0f;
-			}
-			bounceFinished = false;
-
-			mHangOrBouncePoint.y = mBounceAmplitude
-			                       * JMASCos(mMoveTimer * 32768.0f)
-			                       * mBounceRemainingPower;
-		}
-
-		if (bounceFinished) {
+		if (updateMovePointAtReleased()) {
 			TMapWirePoint* mapWirePoint;
 
 			for (int i = 0; i < mNumActiveMapWirePoints; i++) {
@@ -383,9 +379,8 @@ f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
 // out-of-line `set` in move()/release() must come from a deeper expansion.
 void TMapWire::getPointPosOnLine(f32 pos, JGeometry::TVec3<f32>* out) const
 {
-	out->x = mWireSpan.x * pos + mStartPoint.x;
-	out->y = mWireSpan.y * pos + mStartPoint.y;
-	out->z = mWireSpan.z * pos + mStartPoint.z;
+	out->set(mWireSpan.x * pos + mStartPoint.x, mWireSpan.y * pos + mStartPoint.y,
+	         mWireSpan.z * pos + mStartPoint.z);
 }
 
 void TMapWire::getPointPosOnWire(f32 pos, JGeometry::TVec3<f32>* out) const
@@ -413,11 +408,10 @@ void TMapWire::getPointPosOnWire(f32 pos, JGeometry::TVec3<f32>* out) const
  */
 void TMapWire::getPointPosDefault(f32 pos, JGeometry::TVec3<f32>* out) const
 {
-	JGeometry::TVec3<f32> basePoint;
-	getPointPosOnLine(pos, &basePoint);
-
-	out->set(basePoint.x, basePoint.y - mWireSag * JMASSin(pos * 32768.0f),
-	         basePoint.z);
+	out->set(mWireSpan.x * pos + mStartPoint.x,
+	         mWireSpan.y * pos + mStartPoint.y
+	             - mWireSag * JMASSin(pos * 32768.0f),
+	         mWireSpan.z * pos + mStartPoint.z);
 }
 
 void TMapWire::initTipPoints(const TCubeGeneralInfo* cubeInfo)
