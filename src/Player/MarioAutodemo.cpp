@@ -225,7 +225,7 @@ BOOL TMario::warpIn()
 			offUnk114(UNK114_FLAG_VISIBLE);
 			rumbleStart(0x15, 0x14);
 		}
-		if (mAutoDemoParams.mWarpInBallsTime.get() > (f32)mStatusTimer) {
+		if ((f32)mStatusTimer > mAutoDemoParams.mWarpInBallsTime.get()) {
 			mStatusTimer = 0;
 			unk468       = mAutoDemoParams.mWarpInVecBase.get();
 			mStatusState = 2;
