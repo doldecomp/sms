@@ -110,6 +110,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `TNervePoihanaTrapped::execute` rose **86.07 -> 98.10%**, `init` rose **95.47 -> 98.30%**, and the unit rose **98.46 -> 99.71%**.
 - Landed `Enemy/limitkoopajr`: reshaped the position update in `moveRun`, raising it **87.83 -> 91.15%** and the unit **97.66 -> 98.13%**.
   The remaining five-function residue is frame/register allocation and the inlined `moveWait` temporary layout.
+- Landed `Enemy/Kumokun`: corrected the wall-probe height in `initAttachPlane`, raising that function **91.02 -> 91.77%** and the unit **97.88 -> 97.91%**.
+  The other twelve residuals were audited and remain dominated by quaternion/vector inline depth and FPR allocation.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
