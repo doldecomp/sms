@@ -66,6 +66,12 @@ f32 TMapObjFlag::mFlutterSpeed = 4.0f;
 // save slots included, so all 80 bytes are dead low region below every local
 // -- a missing set of inlined expansions (twelve GX writer sites plus
 // `j3dSys.getViewMtx()`), not a named object.
+// Batch cc33: a vertex-address fork (`&p->mVertices[y][z]`) is a frame knob
+// here (+0x30 over the twelve component reads, +0x48 with both `last` pointers,
+// the named-binder form +0x80/+0xa0), but no fork, a `const TVec3&`
+// GXPosition3f32 wrapper, a GXTexCoord2f32 wrapper or an `mMtx` fork moves
+// the volatile-register differences or retail's MTXConcat argument order
+// (r3, r5, then `mMtx` in r4), so the gap is not only low region.
 void TMapObjFlag::draw()
 {
 	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > mtx;
@@ -112,14 +118,13 @@ void TMapObjFlag::draw()
 	}
 }
 
-// TODO: 99.8%, all instructions match, pure frame gap (0x38 vs our 0x30).
-// Batch 128: every slot (the two int<->float magic doubles at 0x28/0x30 and
-// their word reads) is exactly 8 higher in retail, so the 8 bytes are dead
-// low region under the doubles. Rejected: naming the `JMASin` result, binding
-// `mVertices[y][z]` to a reference, folding the `MsWrap` into the `angle`
-// initialiser, naming `(f32)mNumZ`, and dead `f64`/`u32[2]` locals (all leave
-// the same 16 markers; the frame has slack above, so caller-scope dead
-// objects are absorbed).
+// fabricated
+static inline JGeometry::TVec3<f32>* MapObjFlagVertex(TMapObjFlag* p, int y,
+                                                      int z)
+{
+	return &p->mVertices[y][z];
+}
+
 void TMapObjFlag::updateVertex()
 {
 	for (int y = 0; y < mNumY; y += mSkip) {
@@ -128,7 +133,7 @@ void TMapObjFlag::updateVertex()
 			f32 rate  = (f32)z / (f32)mNumZ;
 			f32 angle = mWaveAngle + (-z * mWavePhaseZ + rowPhase);
 			angle     = MsWrap(angle, -180.0f, 180.0f);
-			mVertices[y][z].x = mWaveAmplitude * rate * JMASin(angle);
+			MapObjFlagVertex(this, y, z)->x = mWaveAmplitude * rate * JMASin(angle);
 		}
 	}
 }
