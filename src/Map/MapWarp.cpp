@@ -51,6 +51,18 @@ void TMapWarp::warp(int) { }
 // unnamed is much worse (80.2%) and an explicit `TVec3(...)` temporary bound
 // to the `const&` parameter worse still (76.5%), so the two vectors are not
 // plain temporaries either; the low region is the lead.
+// cc28 (2026-09-22): 23 -> 11 mismatching slots, all r1 displacements. C-style
+// top declarations `fVar8, checkData, mtx, vec2, warpPos` (vec2 via `.set`)
+// put fVar8 (+4), checkData 0x13c, mtx 0x10c and vec2 0x100 exactly on
+// retail's slots once the destination goes through the TU-local reference
+// out-parameter level `MapWarpDest(warpPos, unk4[no])`. Left: warpPos 0xf4 vs
+// 0xe8 and the operator+ copy 0xc8 vs 0xa0 -- retail has 12 bytes between vec2
+// and warpPos and 0x1c more pool between warpPos and the copy, i.e. ~0x28 of
+// inline pool created before the copy that ours creates after it. Tried, all
+// worse or equal: helper returning by value (+8 frame), named-result helper
+// (+0x10), the helper also issuing the request (same or +8), `.set(a + b)`
+// (float copies), top-declared `TCubeStreamInfo* info`/`int no` (no slot),
+// dead named `f32 angle` (no slot), every order of the five top declarations.
 static inline s32 MapWarpGetStreamType(const TCubeStreamInfo* info)
 {
 	return info->unk38;
@@ -61,11 +73,21 @@ static inline f32 MapWarpGetStreamSpeed(const TCubeStreamInfo* info)
 	return info->unk40;
 }
 
+static inline void MapWarpDest(JGeometry::TVec3<f32>& out,
+                               TMapWarp::TMapWarpInfo& info)
+{
+	out = SMS_GetMarioPos() + info.getUnk8();
+}
+
 void TMapWarp::watchToWarp()
 {
+	f32 fVar8;
 	const TBGCheckData* checkData;
-	f32 fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
-	                                     gpMarioPos->z, &checkData);
+	Mtx mtx;
+	JGeometry::TVec3<f32> vec2;
+	JGeometry::TVec3<f32> warpPos;
+	fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
+	                                 gpMarioPos->z, &checkData);
 
 	if (checkData->isWarp()) {
 		int no   = checkData->getData();
@@ -75,8 +97,7 @@ void TMapWarp::watchToWarp()
 			gpMap->getModelManager()->getJointModel(0)->getChild(warp)->awake();
 			unk8 = unk4[no].unk0;
 
-			JGeometry::TVec3<f32> warpPos
-			    = SMS_GetMarioPos() + unk4[no].getUnk8();
+			MapWarpDest(warpPos, unk4[no]);
 			SMS_MarioWarpRequest(warpPos,
 			                     ((*gpMarioAngleY) * 180.0f) / 32768.0f);
 		}
@@ -97,11 +118,10 @@ void TMapWarp::watchToWarp()
 		return;
 
 	TCubeStreamInfo* info = (TCubeStreamInfo*)(*gpCubeStream->unk14)[no];
-	Mtx mtx;
 	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info->unk18.x, info->unk18.y,
 	               info->unk18.z);
 
-	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, 0.0f);
+	vec2.set(0.0f, 0.0f, 0.0f);
 	vec2.z = 0.01f * MapWarpGetStreamSpeed(info);
 	MTXMultVec(mtx, &vec2, &vec2);
 	if ((MapWarpGetStreamType(info) == 0 ? true : false)
@@ -204,6 +224,11 @@ void loadWarpPointPos(JSUMemoryInputStream& stream, int no, Vec* positions)
 // (205 instructions). loadWarpPointPos's own UNUSED copy is still 0xc4 against
 // the map's 0x12c, so its body is still 26 instructions short of retail's --
 // the standalone copy is the remaining lead.
+// cc28: moving the name lookup into loadWarpPointPos (`int no =
+// getWarpPointNo(stream.readString());` inside, the int parameter left as the
+// loop index) keeps init byte-identical and grows the standalone copy to 0x108
+// of 0x12c, but leaves an unused parameter, so not adopted. The third loop in
+// a TU-local `MapWarpSetInfo(this, ...)` level is worse (60 -> 81).
 void TMapWarp::init(JSUMemoryInputStream& stream)
 {
 	u32 data;

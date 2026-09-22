@@ -62,6 +62,10 @@ void TBossHanachan::staticLoadParticle()
 // block-scoped `int i` for the first two loops and `position` declared above
 // `waterHeight` all give exactly the same 103 markers. Declaration order
 // cannot reach a `this`-versus-local swap (frame-gaps.md, "batch 145").
+// cc28: the rotation is also inert to the nerve fetched through a TU-local
+// reference out-parameter level, a direct-return fork, a binder, raw
+// `mSpine->getLatestNerve()` and a named `self` receiver (103 markers each).
+// emitCamShake_'s 4-byte shift was closed by a bool wrapper plus params forks.
 void TBossHanachan::emitParticle_()
 {
 	const TNerveBase<TLiveActor>* nerve = getLatestNerve();
@@ -171,41 +175,45 @@ void TBossHanachan::emitOneTimeSandPillar_(TBossHanachanPartsBody* part)
 	gpMSound->startSoundActor(0x2884, &mSandPillarPosition);
 }
 
-// Binding level over a raw member read, worth +16 of low region in
-// TBossHanachan::emitCamShake_ (batch 127).
-static inline TBossHanachanCommonSaveParams* BossHanachanEffectCommonParams(const TBossHanachan* p)
+// Direct-return levels (cc28): with the grounded test through a bool
+// wrapper, the params fork at three of the four distance sites is what puts
+// MsSqrtf's `volatile float y` on retail's 0x40 at frame 0x78 (the old +16
+// binder at one site was 4 bytes off in pool order).
+static inline TBossHanachanCommonSaveParams*
+BossHanachanEffectCommonParams(const TBossHanachan* p)
 {
-	TBossHanachanCommonSaveParams* commonParams = p->mCommonParams;
-	return commonParams;
+	return p->mCommonParams;
 }
 
-// TODO: 100.0% (two operands), frame now exact at 0x78. The only difference
-// left is MsSqrtf's `volatile float y` slot: retail puts it at 0x40, we put it
-// at 0x44, so our temp pool holds 4 more bytes before the MsSqrtf expansion
-// and 4 fewer after it. Every documented lever moves the pool by 8, so a
-// construct worth 4 is missing -- a global fork or TUtil<f32>::one() per the
-// rules card. The hoisted `int j` is what puts the outer counter in r25 and
-// the inner in r26 as retail does; declaring it inside the inner `for` swaps
-// them. emitParticle_ above wants the same 4 bytes.
+static inline bool BossHanachanEffectGround4cm()
+{
+	return SMS_IsMarioTouchGround4cm();
+}
+
+// The hoisted `int j` is what puts the outer counter in r25 and the inner in
+// r26 as retail does; declaring it inside the inner `for` swaps them.
 void TBossHanachan::emitCamShake_()
 {
 	if (gpMarDirector->mState == 1)
 		return;
 	const TNerveBase<TLiveActor>* nerve = getLatestNerve();
 	J3DFrameCtrl* ctrl = mBodies[0]->mMActor->getFrameCtrl(0);
-	bool grounded = SMS_IsMarioTouchGround4cm();
+	bool grounded = BossHanachanEffectGround4cm();
 	if (nerve == &TNerveBossHanachanGraphWander::theNerve()) {
 		f32 distance = MsSqrtf(mDistToMarioSquared);
 		f32 ratio;
 		if (distance <= mCommonParams->mSLCamShakeMaxDist.get())
 			ratio = 1.0f;
-		else if (distance >= BossHanachanEffectCommonParams(this)->mSLCamShakeZeroDist.get())
+		else if (distance >= BossHanachanEffectCommonParams(this)
+		                         ->mSLCamShakeZeroDist.get())
 			ratio = 0.0f;
 		else
-			ratio = MsClamp(CLBCalcRatio(mCommonParams->mSLCamShakeZeroDist.get(),
-			                            mCommonParams->mSLCamShakeMaxDist.get(),
-			                            distance),
-			                0.0f, 1.0f);
+			ratio = MsClamp(
+			    CLBCalcRatio(
+			        BossHanachanEffectCommonParams(this)->mSLCamShakeZeroDist.get(),
+			        BossHanachanEffectCommonParams(this)->mSLCamShakeMaxDist.get(),
+			        distance),
+			    0.0f, 1.0f);
 		int j;
 		for (int i = 0; i < 2; ++i) {
 			if (ctrl->checkPass(sEmitSandFrameFoot[i])) {
