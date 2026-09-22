@@ -94,12 +94,8 @@ TObjHitCheck::checkWaterWithActorsInList(const JGeometry::TVec3<f32>& pos,
 	return nullptr;
 }
 
-// Pragma residue (sweep 360): this protects TObjHitCheck::checkActorsHit
-// (99.84 -> 55.4 without it, the body pasted into the caller). checkWater is
-// itself 100% and map-size exact, and the spelling is about 12 statements
-// against the depth-1 budget of 14, so retail's body carried 3+ more
-// zero-codegen statements; no byte-free spelling found for them.
-#pragma dont_inline on
+// Retail calls this from checkActorsHit: the body costs 15 statements, one
+// over the depth-1 budget, and the named `hit` result is the fifteenth.
 void TObjHitCheck::checkWater()
 {
 	f32 fVar2 = TModelWaterManager::mStaticHitActor.getEntryRadius();
@@ -119,11 +115,12 @@ void TObjHitCheck::checkWater()
 
 		TObjCheckList& list = unk0[j];
 
-		if (j != e)
-			particleHitActors[i] = checkWaterWithActorsInList(pos, list.unk0);
+		if (j != e) {
+			THitActor* hit = checkWaterWithActorsInList(pos, list.unk0);
+			particleHitActors[i] = hit;
+		}
 	}
 }
-#pragma dont_inline off
 
 void TObjHitCheck::entryActor(THitActor* actor, TObjCheckList* head)
 {
