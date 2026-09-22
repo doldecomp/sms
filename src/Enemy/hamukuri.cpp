@@ -527,6 +527,13 @@ static inline MActor* FireHamuGetMActor(TFireHamuKuri* p)
 	return mActor;
 }
 
+// Reading the first object through a manager-cast fork reranks this above
+// the loop counter (r29/r28) at zero frame cost.
+static inline TFireHamuKuri* FireHamuObj(TFireHamuKuriManager* m, int i)
+{
+	return (TFireHamuKuri*)m->unk18[i];
+}
+
 void TFireHamuKuriManager::initSetEnemies()
 {
 	TFireHamuKuri* hamu;
@@ -542,7 +549,7 @@ void TFireHamuKuriManager::initSetEnemies()
 			{ 200, 160, 130, 255 },
 		};
 
-		u32 matBodyBottom1Idx = ((TFireHamuKuri*)unk18[0])
+		u32 matBodyBottom1Idx = FireHamuObj(this, 0)
 		                            ->getModel()
 		                            ->getModelData()
 		                            ->getMaterialName()
@@ -1175,7 +1182,7 @@ void THamuKuri::setWallDeadEffect()
 {
 	JGeometry::TVec3<f32> local_34;
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		local_34 = getPosition();
+		local_34 = mPosition;
 	} else {
 		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(1);
 		local_34.x = mtx[0][3];
@@ -1195,7 +1202,8 @@ void THamuKuri::setWallDeadEffect()
 		SMSSetEmitterPolColor(emitter, 6);
 	}
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_HAMUKURI_CRUSHED, &mPosition, 0,
+	MSound* sound = SMSGetMSound();
+	sound->startSoundActor(MSD_SE_EN_HAMUKURI_CRUSHED, &mPosition, 0,
 	                                nullptr, 0, 4);
 }
 
@@ -1881,8 +1889,8 @@ bool TDoroHaneKuri::isCollidMove(THitActor* param_1)
 		if (mapObj->isHideObj(mapObj))
 			return false;
 
-		if (getSpine()->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
-			JGeometry::TVec3<f32> vel = mLinearVelocity;
+		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
+			JGeometry::TVec3<f32> vel = getLinearVelocity();
 			vel.x *= -5.0f;
 			vel.z *= -5.0f;
 			mPosition.x += vel.x;
@@ -2083,6 +2091,15 @@ static inline TTakeActor* DangoHamuGetHolder(TDangoHamuKuri* p)
 	return holder;
 }
 
+// The spin rotation as an inlined helper: its Mtx becomes a callee block
+// object, which is where retail keeps it (0x40, below the TMsRange).
+static inline void DangoHamuRotate(TDangoHamuKuri* p, MtxPtr m)
+{
+	Mtx rot;
+	MsMtxSetRotRPH(rot, 0.0f, p->unk210, p->unk214);
+	MTXConcat(m, rot, m);
+}
+
 void TDangoHamuKuri::calcRootMatrix()
 {
 	DangoHamuGetModel(this)->setBaseScale(mScaling);
@@ -2099,8 +2116,7 @@ void TDangoHamuKuri::calcRootMatrix()
 				}
 			}
 
-			TDangoHamuKuri* holder
-			    = (TDangoHamuKuri*)DangoHamuGetHolder(this);
+			TDangoHamuKuri* holder = (TDangoHamuKuri*)getHolder();
 			if (holder->unk230)
 				unk210 = -holder->unk210;
 			takingMtx[0][3] += unk21C;
@@ -2108,11 +2124,7 @@ void TDangoHamuKuri::calcRootMatrix()
 			takingMtx[2][3] += unk224;
 
 			DangoHamuGetModel(this)->setBaseScale(mScaling);
-			// TODO: instruction-exact at frame 0xa8; TMsRange sits 4 high
-			// and the rot Mtx 0x18 high (block-object order).
-			Mtx afStack_68;
-			MsMtxSetRotRPH(afStack_68, 0.0f, unk210, unk214);
-			MTXConcat(takingMtx, afStack_68, takingMtx);
+			DangoHamuRotate(this, takingMtx);
 			DangoHamuGetModel(this)->setBaseTRMtx(takingMtx);
 
 			mPosition.set(takingMtx[0][3], takingMtx[1][3], takingMtx[2][3]);
@@ -2913,7 +2925,8 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->mHitPoints = 0;
 	} else {
-		int pTVar7 = self->getManager()->unk5C;
+		THamuKuriManager* manager = self->getManager();
+		int pTVar7                = manager->unk5C;
 		if (self->checkCurAnmEnd(0)) {
 			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
