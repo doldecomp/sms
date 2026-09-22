@@ -159,6 +159,17 @@ void TCardSave::load(JSUMemoryInputStream& stream)
 	initData(SMSGetMarDirector()->getGamePad());
 }
 
+static inline void CardSaveInitRow(TCardSave* p, u32 upperTag, u32 lowerTag,
+                                   u32 msg)
+{
+	J2DTextBox* upper = (J2DTextBox*)p->unk14->search(upperTag);
+	J2DTextBox* lower = (J2DTextBox*)p->unk14->search(lowerTag);
+	p->makeBuffer(upper, 0x80);
+	p->makeBuffer(lower, 0x80);
+	p->setMessage(upper, 0x80, msg);
+	p->setMessage(lower, 0x80, msg);
+}
+
 void TCardSave::initData(TMarioGamePad* param_1)
 {
 
@@ -180,6 +191,9 @@ void TCardSave::initData(TMarioGamePad* param_1)
 			snprintf(acStack_48, 0x28, "/game_6/timg/coin_number_%d.bti", i);
 		}
 
+		// TODO: retail copies the new texture into a second register
+		// (`mr r28, r24`) for the inlined constructor's storeTIMG call;
+		// neither this spelling nor the direct store reproduces it.
 		JUTTexture* texture
 		    = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
 		unk1C[i] = texture;
@@ -320,58 +334,15 @@ void TCardSave::initData(TMarioGamePad* param_1)
 
 	// The default caption of every save-menu row. The panes are not kept:
 	// the rows that can change their text later look them up again. There is
-	// no `sm6` group.
-	J2DTextBox* upper;
-	J2DTextBox* lower;
-
-	upper = (J2DTextBox*)unk14->search('sm1a');
-	lower = (J2DTextBox*)unk14->search('sm1b');
-	makeBuffer(upper, 0x80);
-	makeBuffer(lower, 0x80);
-	setMessage(upper, 0x80, 0x1C);
-	setMessage(lower, 0x80, 0x1C);
-
-	upper = (J2DTextBox*)unk14->search('sm2a');
-	lower = (J2DTextBox*)unk14->search('sm2b');
-	makeBuffer(upper, 0x80);
-	makeBuffer(lower, 0x80);
-	setMessage(upper, 0x80, 0x1D);
-	setMessage(lower, 0x80, 0x1D);
-
-	upper = (J2DTextBox*)unk14->search('sm3a');
-	lower = (J2DTextBox*)unk14->search('sm3b');
-	makeBuffer(upper, 0x80);
-	makeBuffer(lower, 0x80);
-	setMessage(upper, 0x80, 0x1C);
-	setMessage(lower, 0x80, 0x1C);
-
-	upper = (J2DTextBox*)unk14->search('sm4a');
-	lower = (J2DTextBox*)unk14->search('sm4b');
-	makeBuffer(upper, 0x80);
-	makeBuffer(lower, 0x80);
-	setMessage(upper, 0x80, 0x1E);
-	setMessage(lower, 0x80, 0x1E);
-
-	upper = (J2DTextBox*)unk14->search('sm5a');
-	lower = (J2DTextBox*)unk14->search('sm5b');
-	makeBuffer(upper, 0x80);
-	makeBuffer(lower, 0x80);
-	setMessage(upper, 0x80, 0x1D);
-	setMessage(lower, 0x80, 0x1D);
-
-	upper = (J2DTextBox*)unk14->search('sm7a');
-	lower = (J2DTextBox*)unk14->search('sm7b');
-	makeBuffer(upper, 0x80);
-	makeBuffer(lower, 0x80);
-	setMessage(upper, 0x80, 0x1F);
-	setMessage(lower, 0x80, 0x1F);
-
-	upper = (J2DTextBox*)unk14->search('sm8a');
-	lower = (J2DTextBox*)unk14->search('sm8b');
-	makeBuffer(upper, 0x80);
-	makeBuffer(lower, 0x80);
-	setMessage(upper, 0x80, 0x20);
-	setMessage(lower, 0x80, 0x20);
+	// no `sm6` group. Each row is its own inline level: retail gives every
+	// row the same register pair, which one shared pair of locals does not.
+	CardSaveInitRow(this, 'sm1a', 'sm1b', 0x1C);
+	CardSaveInitRow(this, 'sm2a', 'sm2b', 0x1D);
+	CardSaveInitRow(this, 'sm3a', 'sm3b', 0x1C);
+	CardSaveInitRow(this, 'sm4a', 'sm4b', 0x1E);
+	CardSaveInitRow(this, 'sm5a', 'sm5b', 0x1D);
+	CardSaveInitRow(this, 'sm7a', 'sm7b', 0x1F);
+	CardSaveInitRow(this, 'sm8a', 'sm8b', 0x20);
 
 	unk270 = param_1;
 }
