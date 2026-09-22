@@ -47,6 +47,11 @@ static inline CPolarSubCamera* conductorCamera()
 	return camera;
 }
 
+static inline TSpineEnemy* conductorFirstObj(TObjManager* mgr)
+{
+	return (TSpineEnemy*)mgr->getObj(0);
+}
+
 static inline int conductorObjNum(TLiveManager* mgr)
 {
 	int n = mgr->getObjNum();
@@ -129,9 +134,8 @@ void TConductor::init()
 	for (JGadget::TList<TEnemyManager*>::iterator it = unk20.begin(),
 	                                              e  = unk20.end();
 	     it != e; ++it) {
-		JDrama::TNameRef* hinokuri = (*it)->search("ヒノクリ２マネージャー");
-		if (!hinokuri) {
-			if (!(*it)->search("ボスゲッソーマネージャー"))
+		if ((*it)->search("ヒノクリ２マネージャー") == nullptr) {
+			if ((*it)->search("ボスゲッソーマネージャー") == nullptr)
 				(*it)->createEnemies((*it)->getCapacity());
 		}
 	}
@@ -168,7 +172,9 @@ BOOL TConductor::isBossDefeated()
 {
 	// TODO: frame is exact. Residue is the switch pivot (retail cmpwi 2 /
 	// cmpwi 4, everything but map 3 to the hinokuri arm). `default:` next
-	// to `case 2:` and an empty `case 4:` both fold the tree and cost ~3%.
+	// to `case 2:` and an empty `case 4:` both fold the tree and cost ~3%;
+	// so do `default: ;`, `case 1:`/`case 0:` labels, an int switch operand,
+	// and `case 3:` first with `case 2: default:` after it.
 	switch (gpMarDirector->mMap) {
 	case 2: {
 		TLiveManager* mgr = getManagerByName("ヒノクリ２マネージャー");
@@ -277,9 +283,9 @@ TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& param_1,
 	if (param_3 == 1)
 		return nullptr;
 
-	TSpineEnemy* enemy = mgr->getObj(0);
-	enemy->resetToPosition(param_1);
-	return enemy;
+	actor = conductorFirstObj(mgr);
+	actor->resetToPosition(param_1);
+	return actor;
 }
 
 void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
@@ -288,11 +294,16 @@ void TConductor::killEnemiesWithin(const JGeometry::TVec3<f32>& param_1,
 	for (JGadget::TList<TEnemyManager*>::iterator it = unk20.begin(),
 	                                              e  = unk20.end();
 	     it != e; ++it) {
-		if ((*it)->search("ボスワンワンマネージャー") == nullptr)
+		if (!(*it)->search("ボスワンワンマネージャー"))
 			(*it)->killChildrenWithin(param_1, param_2);
 	}
 }
 
+// TODO: the inlined getManagerByName's `it != e` copies (0x60/0x64) and `data`
+// (0x88) sit 4 below retail. Tried: `== nullptr` vs `!` on unkF0/info/mgr/
+// enemy, naming the manager name or the TLiveManager result,
+// SMSGetMarDirector()/SMSGetMap()/SMSGetPollution() forks (+4 on every slot),
+// raw `.value`, raw *gpMarioPos, raw unkF8, data declared at the top.
 void TConductor::genEnemyFromPollution()
 {
 	if (unkFC == 0)
@@ -314,8 +325,9 @@ void TConductor::genEnemyFromPollution()
 	if (!mgr)
 		return;
 
+	f32 minR;
 	JGeometry::TVec3<f32> targetPos = SMS_GetMarioPos();
-	f32 minR                        = conductorRadiusMin(this);
+	minR = conductorRadiusMin(this);
 	f32 maxR                        = conductorRadiusMax(this);
 	minR                            = MsRandF(minR, maxR);
 
@@ -412,7 +424,7 @@ JDrama::TNameRef* TConductor::searchF(u16 key, const char* name)
 
 void TConductor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((cue & CUE_MOVE) && gpMarDirector->unk124 == 0)
+	if ((cue & CUE_MOVE) && SMSGetMarDirector()->unk124 == 0)
 		genEnemyFromPollution();
 
 	for (int i = 1; i >= 0; --i) {
