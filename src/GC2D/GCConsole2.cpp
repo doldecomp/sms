@@ -238,9 +238,11 @@ static inline void playHudMoveSound(u32 soundID)
 {
 	if (gpMarDirector->unk124 != 0)
 		return;
-	if (gpMarioOriginal->mHealth == 0)
+	if (gpMarioOriginal->getHealth() == 0)
 		return;
 	if ((s16)gpMarioOriginal->mAir == 0)
+		return;
+	if (gpMarDirector->mMap == 9 && gpMarDirector->unk7D == 2)
 		return;
 	SMSGetMSound()->startSoundSystemSE(soundID, 0, nullptr, 0);
 }
@@ -248,8 +250,8 @@ static inline void playHudMoveSound(u32 soundID)
 // fabricated
 static inline void writeBalloonTextByte(TGCConsole2* console, u8 value)
 {
-	console->unk3D8->write(&value, 1);
-	console->unk3DC->write(&value, 1);
+	console->unk3D8->write(value);
+	console->unk3DC->write(value);
 }
 
 // fabricated
@@ -268,15 +270,13 @@ static inline void processBalloonTextStep(TGCConsole2* console)
 	if (((JSUMemoryInputStream*)console->unk3D4)->getAvailable() != 0
 	    && ((JSUMemoryOutputStream*)console->unk3D8)->getAvailable() != 0) {
 		for (int i = 0; i < 2; ++i) {
-			u8 value;
-			console->unk3D4->read(&value, 1);
+			u8 value = console->unk3D4->read8b();
 
 			switch (value) {
 			case 0x1A: {
 				u8 skip;
 				console->unk3D4->read(&skip, 1);
-				((JSUMemoryInputStream*)console->unk3D4)
-				    ->seek((s32)skip - 2, JSUStreamSeekFrom_CUR);
+				console->unk3D4->skip(skip - 2);
 				break;
 			}
 			case 0:
@@ -399,7 +399,7 @@ static inline void playLifeLostSound(bool airMode)
 }
 
 // fabricated
-static inline void updateLifeMeterState(TGCConsole2* console)
+static inline u8 updateLifeMeterState(TGCConsole2* console)
 {
 	u8 amount;
 	bool airMode = true;
@@ -646,6 +646,8 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 			}
 		}
 	}
+
+	return amount;
 }
 
 // fabricated
@@ -1050,17 +1052,17 @@ static inline void updateCounterState(TGCConsole2* console)
 }
 
 // fabricated
-static inline void updateLifeMeterBlink(TGCConsole2* console)
+static inline void updateLifeMeterBlink(TGCConsole2* console, u8 amount)
 {
 	if (!console->unk1C4->getPane()->isVisible())
 		return;
 
 	f32 rate = 100.0f;
-	if (console->unk1CC[0] == 3)
+	if (amount == 3)
 		rate = 80.0f;
-	if (console->unk1CC[0] == 2)
+	if (amount == 2)
 		rate = 60.0f;
-	if (console->unk1CC[0] == 1)
+	if (amount == 1)
 		rate = 35.0f;
 
 	if ((f32)console->unk86 < rate * 2.0f) {
@@ -1073,12 +1075,12 @@ static inline void updateLifeMeterBlink(TGCConsole2* console)
 		}
 
 		f32 diff = (f32)console->unk86 - rate;
-		if (diff < 0.0f)
-			diff = -diff;
+		f32 ratio = (diff >= 0.0f ? diff : -diff) / rate;
 
-		f32 mul     = console->unk1CC[0] > 3 ? 3.0f : 5.0f;
-		int delta   = (int)(0.5f + diff / rate);
-		int scaledY = (int)(mul * (f32)(-delta));
+		f32 mul = 3.0f;
+		if (amount <= 3)
+			mul = 5.0f;
+		u8 scaledY = mul * (int)(0.5f + ratio);
 
 		for (int i = 0; i < 9; ++i) {
 			if (console->unk17C[i * 2]->isVisible()) {
@@ -1253,38 +1255,27 @@ static inline void updateShineAppearState(TGCConsole2* console)
 // fabricated
 static inline void updateJetAppearState(TGCConsole2* console)
 {
-	if (console->unk3D && console->processAppearJet(console->unk72++)) {
+	if (console->unk3D && console->processAppearJet(console->unk72++))
 		console->unk3D = 0;
-		console->unk72 = 0;
-	}
 }
 
 // fabricated
 static inline void updateRedCoinAppearState(TGCConsole2* console)
 {
-	if (console->unk3C && console->processAppearRed(console->unk74++)) {
+	if (console->unk3C && console->processAppearRed(console->unk74++))
 		console->unk3C = 0;
-		console->unk74 = 0;
-	}
 }
 
 // fabricated
 static inline void updateTimerAppearState(TGCConsole2* console)
 {
-	if (console->unk3E && console->processAppearTimer(console->unk76++)) {
+	if (console->unk3E && console->processAppearTimer(console->unk76++))
 		console->unk3E = 0;
-		console->unk76 = 0;
-	}
 }
 
 // fabricated
-static inline void updateTelopState(TGCConsole2* console, u32 flags)
+static inline void updateTelopState(TGCConsole2* console)
 {
-	if (console->unk3F && console->unk44C->update()) {
-		console->unk44C->getPane()->hide();
-		console->unk3F = 0;
-	}
-
 	if (console->unk42) {
 		if (console->unk520->update()) {
 			console->unk42 = 0;
@@ -1297,25 +1288,22 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 	}
 
 	if (console->unk44 && console->unk520->getPane()->isVisible()) {
-		++console->unk80;
-		if (console->processDrawTelop(flags)) {
-			console->unk534 = console->unk524->getPane()->mBounds;
+		if (console->processDrawTelop(console->unk80++)) {
+			JUTRect bounds(console->unk524->getPane()->mBounds);
 			console->unk568 = console->unk544.x2;
-			console->unk534.add(console->mTelopTextWidth + console->unk534.x2,
-			                    0);
+			console->unk534.add(console->mTelopTextWidth + bounds.x2, 0);
 
 			if (console->unk56D) {
 				console->unk56D = 0;
 			} else {
 				console->unk44  = 0;
 				console->unk55C = 0;
-				if (!console->unk43 && console->unk520->getPane()->isVisible())
-					console->startDisappearTelop();
+				console->startDisappearTelop();
 			}
 		}
 	}
 
-	u16 telopWait = console->unk56C ? console->unk562 : console->unk560;
+	s16 telopWait = console->unk56C ? console->unk562 : console->unk560;
 	TMessageLoader* telopMessages = console->unk530;
 	if (!console->unk44 && !console->unk42 && !console->unk43
 	    && telopMessages->unk4 != nullptr
@@ -1374,11 +1362,11 @@ static inline void updateWaterTankState(TGCConsole2* console)
 	}
 
 	if (console->unk4B) {
-		u8 done = 1;
-		done    = done & console->unk2F8->update();
-		done    = done & console->unk274->update();
-		done    = done & console->unk270->update();
-		done    = done & console->unk26C->update();
+		bool done = true;
+		done &= console->unk2F8->update();
+		done &= console->unk274->update();
+		done &= console->unk270->update();
+		done &= console->unk26C->update();
 		if (done) {
 			console->unk4B = 0;
 			console->unk46 = 0;
@@ -1413,6 +1401,17 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 		}
 	}
 
+#if defined(VERSION_GMSE01)
+	if (console->unk3A8->getPane()->isVisible()
+	    && gpMarioOriginal->mStatus != 0xC400201
+	    && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
+		++console->unk3AE_US;
+		if (console->unk3AE_US > 400)
+			console->startDisappearMario();
+	}
+#else
+	// TODO: the Japanese form is unverified (no JP image here); this is the
+	// earlier reconstruction over unk70.
 	if (!console->unk3A && !console->unk3B
 	    && console->unk3A8->getPane()->isVisible()
 	    && gpMarioOriginal->mStatus != 0xC400201
@@ -1420,7 +1419,12 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 		if (++console->unk70 > 0x190)
 			console->startDisappearMario();
 	}
+#endif
+}
 
+// fabricated
+static inline void updateMarioHideState(TGCConsole2* console)
+{
 	if (console->unk3B && console->unk3A8->update()) {
 		console->unk3B = 0;
 		console->unk3A8->getPane()->hide();
@@ -4566,7 +4570,7 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 				unk39 = 0;
 		}
 
-		updateLifeMeterState(this);
+		u8 amount = updateLifeMeterState(this);
 		updateCounterState(this);
 
 		if (gpMarioOriginal->mStatus == 0xC400201
@@ -4621,7 +4625,7 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		updateTankAppear(this);
 		updateWaterTankState(this);
 
-		updateLifeMeterBlink(this);
+		updateLifeMeterBlink(this, amount);
 		updateCoinAppearState(this);
 
 		if (unk4D) {
@@ -4636,15 +4640,24 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		updateMarioAppearState(this);
 
 		updateMarioLifeCounter(this);
+		updateMarioHideState(this);
 
-		updateTelopState(this, flags);
+		updateTelopState(this);
 		updateJetAppearState(this);
 		updateRedCoinCounter(this);
 		updateRedCoinAppearState(this);
+
+		if (unk58 && unk428->update())
+			unk58 = 0;
+
 		updateTimerAppearState(this);
 
-		if (!unk3F && unk4A)
+		if (unk3F) {
+			if (unk44C->update())
+				unk3F = 0;
+		} else if (unk4A) {
 			setTimer(-1);
+		}
 
 		if (unk59) {
 			playHudMoveSound(0x4819);

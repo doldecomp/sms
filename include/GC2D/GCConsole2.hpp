@@ -167,10 +167,10 @@ public:
 	/* 0x68 */ s8 unk68;
 	/* 0x6C */ s32 unk6C;
 	/* 0x70 */ u16 unk70;
-	/* 0x72 */ u8 unk72;
+	/* 0x72 */ s8 unk72;
 	/* 0x73 */ u8 unk73;
 	/* 0x74 */ u16 unk74;
-	/* 0x76 */ u8 unk76;
+	/* 0x76 */ s8 unk76;
 	/* 0x77 */ u8 unk77;
 	/* 0x78 */ u16 unk78;
 	/* 0x7A */ char unk7A[2];
@@ -178,7 +178,7 @@ public:
 	/* 0x80 */ u32 unk80;
 	/* 0x84 */ u16 unk84;
 	/* 0x86 */ u16 unk86;
-	/* 0x88 */ u8 unk88;
+	/* 0x88 */ s8 unk88;
 	/* 0x8A */ u16 unk8A;
 	/* 0x8C */ int unk8C;
 	/* 0x90 */ THelpActor** unk90;
@@ -337,8 +337,8 @@ public:
 	/* 0x554 */ s32 mTelopTextWidth;
 	/* 0x558 */ u8 unk558;
 	/* 0x55C */ u32 unk55C;
-	/* 0x560 */ u16 unk560;
-	/* 0x562 */ u16 unk562;
+	/* 0x560 */ s16 unk560;
+	/* 0x562 */ s16 unk562;
 	/* 0x564 */ f32 unk564;
 	/* 0x568 */ f32 unk568;
 	/* 0x56C */ u8 unk56C;
