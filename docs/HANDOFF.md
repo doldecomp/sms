@@ -147,6 +147,13 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   No function became exact, so matched-code, linked-unit, and exact-function totals did not move; the DOL remains byte-identical.
 - Whole-file medium audits of `Camera/CameraBGCheck`, `Enemy/yunbo`, `Enemy/enemyAttachment`, `MSound/MSHandle`, `Camera/CameraChange`, `Animal/boid`, `Enemy/beam`, `MoveBG/MapObjPollution`, `Enemy/spider`, and `Camera/CameraNormal` returned clean with no safe gain.
   Their remaining differences were traced to loop-unrolling, shared vector/quaternion return conventions, frame allocation, or register/temporary placement; do not repeat them without a new shared compiler-shape lead.
+- Landed `System/MarDirectorEvent`: restored the nozzle-acquisition flag updates in `fireGetNozzle`, raising it **77.80882 -> 99.87%** and unit fuzzy similarity **91.15783 -> 92.97%**.
+  No function became exact, so matched-code, linked-unit, and exact-function totals did not move; the DOL remains byte-identical.
+- Whole-file medium audit of `JSystem/JDrama/JDRSmJ3DAct` returned clean with no safe gain.
+  Its remaining `perform` mismatch is the shared `JGMatrix34.hpp` concatenation codegen and should not be repeated as a TU-local pass.
+- Landed `Player/MarioParticle`: restored `TMario::initParticle` exactly by correcting the particle resource-loading shape.
+  Unit fuzzy similarity rose **98.794266 -> 98.83%**, matched code **88.256714 -> 90.71%**, and exact functions **45/48 -> 46/48**.
+  Project exact functions rose **11,466 -> 11,467** and matched code **63.572258 -> 63.578255%**; the DOL remains byte-identical.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
