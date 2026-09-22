@@ -133,24 +133,35 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
 	}
 }
 
-// TODO: 99.9%, frame-exact. The else-branch Mtx sits 8 bytes low
-// (0x2c vs 0x34); a named getRotation() ref moves it to 0x30. Same
-// allocation-order residue as TMapObjTurn::touchWater.
+// A named-result binder over getMActor() tested directly and a by-value level
+// over the rotation's x put throwObjToFrontFromPoint's else-branch Mtx at
+// retail's 0x34 in the same 0x88 frame.
+static inline MActor* MapObjLibMActor(const TMapObjBase* obj)
+{
+	MActor* actor = obj->getMActor();
+	return actor;
+}
+
+static inline f32 MapObjLibRotX(const TMapObjBase* obj)
+{
+	return obj->getRotation().x;
+}
+
 void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
                                            const JGeometry::TVec3<f32>& point,
                                            f32 speed, f32 y_speed) const
 {
 	object->appear();
 	object->mPosition.set(point);
-	MActor* actor = getMActor();
-	if (actor) {
+	if (MapObjLibMActor(this)) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
 		Mtx mtx;
-		MsMtxSetRotRPH(mtx, getRotation().x, getRotation().y, getRotation().z);
+		MsMtxSetRotRPH(mtx, MapObjLibRotX(this), getRotation().y,
+		               getRotation().z);
 		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
@@ -216,10 +227,12 @@ void TMapObjBase::startAllAnim(MActor* param_1, const char* param_2)
 
 void TMapObjBase::joinToGroup(const char* param_1, THitActor* param_2)
 {
-	// TODO: 99.6%, frame 0x60 against 0x68. Naming the search result
-	// drops to 99.0% and changes the list base (`+0x10` vs `+0`).
-	JDrama::TNameRefGen::search<JDrama::TViewObjPtrListT<THitActor> >(param_1)
-	    ->push_back(param_2);
+	// The named group plus getChildren() lands the JGadget iterator pool
+	// (a named group calling push_back directly moves the list base).
+	JDrama::TViewObjPtrListT<THitActor>* group
+	    = JDrama::TNameRefGen::search<JDrama::TViewObjPtrListT<THitActor> >(
+	        param_1);
+	group->getChildren().push_back(param_2);
 }
 
 TMapCollisionWarp*
@@ -1055,10 +1068,18 @@ TMapObjMessenger::TMapObjMessenger(const char* name)
 {
 }
 
-// TODO: 99.9%, frame-exact. Remaining: `throwY += 200.0f` writes the
-// `fadds` into throwY's FPR (retail into the 200.0f literal's); else-branch
-// Mtx 8 bytes low (same class as throwObjToFrontFromPoint). getRotation()
-// there swaps this/obj (r30/r31).
+// TODO: 99.9%. The MActor binder and a by-value getRotation().x level (the
+// throwObjToFrontFromPoint levers) land the else-branch Mtx, and
+// `throwY = throwY + 200.0f` puts the sum in the literal's FPR as retail;
+// only the fadds operand order is left (retail throwY first). Tried: the
+// literal first, `+=`, the sum in the set() argument or a TU-local adder,
+// declaration order, getPosition() on either component (+8 frame, inert),
+// and calling throwObjToFront itself (inlines, 96.2%).
+static inline f32 MapObjTurnRotX(const TMapObjBase* obj)
+{
+	return obj->getRotation().x;
+}
+
 u32 TMapObjTurn::touchWater(THitActor*)
 {
 	if (fabsf(unk158) < unk164) {
@@ -1079,10 +1100,9 @@ u32 TMapObjTurn::touchWater(THitActor*)
 			obj->appear();
 			f32 throwY = mPosition.y;
 			f32 throwZ = mPosition.z;
-			throwY += 200.0f;
+			throwY = throwY + 200.0f;
 			obj->mPosition.set(mPosition.x, throwY, throwZ);
-			MActor* actor = getMActor();
-			if (actor) {
+			if (MapObjLibMActor(this)) {
 				MtxPtr mtx = getModel()->getAnmMtx(0);
 				obj->mVelocity.set(mtx[0][2] * speed,
 				                   mtx[1][2] * speed + ySpeed,
@@ -1090,7 +1110,8 @@ u32 TMapObjTurn::touchWater(THitActor*)
 				obj->offLiveFlag(LIVE_FLAG_UNK10);
 			} else {
 				Mtx mtx;
-				MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
+				MsMtxSetRotRPH(mtx, MapObjTurnRotX(this), mRotation.y,
+			               mRotation.z);
 				obj->mVelocity.set(mtx[0][2] * speed,
 				                   mtx[1][2] * speed + ySpeed,
 				                   mtx[2][2] * speed);
