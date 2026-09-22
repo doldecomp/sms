@@ -118,6 +118,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `TNerveAmiNokoWalkOnFence::execute` rose **94.93 -> 99.83%** and the unit **98.74 -> 99.20%**.
 - Landed `Map/MapMirror`: improved the camera and mirror-manager update shapes.
   `TMirrorModelManager::perform` rose **86.53 -> 91.33%**, `TMirrorCamera::perform` rose **99.28 -> 99.54%**, and the unit rose **97.14 -> 98.00%**.
+- Landed `Enemy/TabePuku`: restored the wall-collision flow in `TTPHitActor::bind`, raising it **84.38 -> 90.08%** and the unit **95.99 -> 96.27%**.
+  Symbol order/linkage is unchanged; the validator still reports the pre-existing missing weak `TVec3<f32>::set(float,float,float)` and three UNUSED-size warnings.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
