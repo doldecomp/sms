@@ -139,7 +139,7 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 	return mirrorTex;
 }
 
-// TODO: 97.55%. `initECDisp` is a *static* member in the ROM, like its
+// TODO: 99.8%. `initECDisp` is a *static* member in the ROM, like its
 // neighbours `initECTMir`, `initECTGft` and `preEntry`: retail's prologue
 // clobbers r4 with the `.rodata` base immediately and keeps r3 and r5, so the
 // `TPerformList*` the whole body uses as `push_back`'s receiver arrives in
@@ -153,20 +153,21 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 // `TMarDirector::setupObjects` 98.00 -> 98.08 (the `this` argument it no
 // longer has to set up).
 //
-// What is left after that is 112 bytes of frame (0x300 vs 0x370) and one
-// extra callee-saved register: retail saves r20-r31 (`stmw r20`) where we
-// save r21-r31, with the whole set shifted by one from the very first
-// expansion. The ECTSearch level above overshoots here (+152 over 13 sites),
-// so this function's low region is not the search chain; the rotation starts
-// at the TEfbCtrlDisp construction, before any search.
+// The named stage rectangle and named glow/flare labels recover retail's
+// object construction and register allocation; its sun-model branch passes
+// `false` to TLensGlow while the sunset branch passes `true`. The residue is
+// now a 0x78-byte frame deficit (0x2f8 vs 0x370), with all list temporaries
+// correspondingly low. The ECTSearch level above overshoots here (+152 over
+// 13 sites), so this function's low region is not the search chain.
 void TMarDirector::initECDisp(
     TPerformList* param_1,
     JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* param_2,
     JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* param_3)
 {
 	JDrama::TEfbCtrlDisp* stageDisp = new JDrama::TEfbCtrlDisp("stageDisp");
-	stageDisp->JDrama::TEfbCtrl::setSrcRect(JDrama::TRect(
-	    0, 0, (u16)SMSGetGameRenderWidth(), (u16)SMSGetGameRenderHeight()));
+	JDrama::TRect stageRect(0, 0, (u16)SMSGetGameRenderWidth(),
+	                         (u16)SMSGetGameRenderHeight());
+	stageDisp->JDrama::TEfbCtrl::setSrcRect(stageRect);
 	param_3->insert(stageDisp);
 
 	JDrama::TViewObj* composite3
@@ -174,6 +175,8 @@ void TMarDirector::initECDisp(
 	JDrama::TViewObj* specularSheen
 	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("スペキュラシーン");
 
+	const char* glowName       = "太陽遮蔽物グロー";
+	const char* flareName      = "レンズフレア";
 	TLensGlow* lensGlow       = nullptr;
 	TLensFlare* lensFlare     = nullptr;
 	JDrama::TOrthoProj* ortho = nullptr;
@@ -182,16 +185,16 @@ void TMarDirector::initECDisp(
 	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("太陽モデル");
 
 	if (sunModel) {
-		lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
+		lensGlow = new TLensGlow(false, glowName);
 		param_3->insert(lensGlow);
-		lensFlare = new TLensFlare("レンズフレア");
+		lensFlare = new TLensFlare(flareName);
 		param_3->insert(lensFlare);
 	} else {
 		sunModel = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("夕日モデル");
 		if (sunModel) {
-			lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
+			lensGlow = new TLensGlow(true, glowName);
 			param_3->insert(lensGlow);
-			lensFlare = new TLensFlare("レンズフレア");
+			lensFlare = new TLensFlare(flareName);
 			param_3->insert(lensFlare);
 		}
 	}
