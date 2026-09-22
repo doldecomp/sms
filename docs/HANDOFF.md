@@ -193,6 +193,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `TNerveMameGessoThrown::execute` rose **95.04794 -> 97.11%** and unit fuzzy similarity **99.608284 -> 99.70%**; aggregate fuzzy similarity rose **98.091340 -> 98.091680%**, while matched-code, exact-function, and linked-unit counters did not move.
 - Whole-file medium audit of `Enemy/BossHanachanEffect` returned clean with no safe gain.
   Its two remaining functions are documented frame/register-placement residues; do not repeat it without a new compiler-allocation lead.
+- Landed `Enemy/tamaNoko`: routed the flower sound construction through `SMSGetMSound()`, matching the retail accessor/inlining path.
+  `TTamaNokoManager::initSetEnemies` rose **97.21333 -> 99.88%** and unit fuzzy similarity **98.94871 -> 98.99709%**; aggregate fuzzy similarity rose **98.091680 -> 98.091910%**, while matched-code, exact-function, and linked-unit counters did not move.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
