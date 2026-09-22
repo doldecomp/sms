@@ -362,24 +362,24 @@ void TTalk2D2::setMessageID(u32 message_id, u32 flags)
 	mAlphaStep     = 0x40;
 
 	TMessageLoader* loader;
-	if (mMessageID & 0xffff0000)
-		loader = mMapMessage;
-	else
+	if (!(mMessageID & 0xffff0000))
 		loader = mSysMessage;
+	else
+		loader = mMapMessage;
 
 	if (loader->getMessageData() != nullptr) {
-		JMSMesgEntry* entry = loader->getMessageEntry((u16)mMessageID);
+		JMSMesgEntry* entry = loader->getMessageEntry(mMessageID & 0xffff);
 		if (entry == nullptr) {
 			mMessageID = 4;
 			loader     = mSysMessage;
-			entry = loader->getMessageEntry((u16)mMessageID);
+			entry = loader->getMessageEntry(mMessageID & 0xffff);
 		}
 		setupTextBox(loader->getMessageData(), entry);
 	} else {
 		mMessageID = 3;
 		loader     = mSysMessage;
 		setupTextBox(loader->getMessageData(),
-		    loader->getMessageEntry((u16)mMessageID));
+		    loader->getMessageEntry(mMessageID & 0xffff));
 	}
 	mCurMessage = loader;
 	mCharTimer  = 0;
