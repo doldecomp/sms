@@ -24,9 +24,14 @@
 static inline void CalcLensNearNinePosFromCamera(JGeometry::TVec3<f32>* out_grid,
                                                 S16Vec* out_euler)
 {
-	const Vec& camPos = gpCamera->unk124;
-	const Vec& camAt  = gpCamera->unk148;
-	CLBCalcNearNinePos(out_grid, out_euler, camPos, camAt,
+	// Both vectors pass as their `Vec` base so the `const TVec3&` parameters
+	// take the converting constructor: a stack temporary plus the out-of-line
+	// `TVec3::set(const Vec&)` retail calls here (at depth 4), with gpCamera
+	// re-read for each. Binding them to named `const Vec&` locals caches the
+	// two addresses in callee-saved registers instead (-1.4%), and the
+	// TVec3-typed members bind directly with no temporary (-5%).
+	CLBCalcNearNinePos(out_grid, out_euler, (const Vec&)gpCamera->unk124,
+	                   (const Vec&)gpCamera->unk148,
 	                   gpCamera->getFinalAngleZ(), gpCamera->getNear(),
 	                   gpCamera->getFovy(), gpCamera->getAspect());
 }
@@ -73,6 +78,32 @@ TLensFlare::TLensFlare(const char* name)
 	                                     J3DMLF_MaterialPEFull
 	                                         | (2 << J3DMLF_TevStageNumShift));
 	unk14 = new J3DModel(unk10, 0, 1);
+}
+
+static inline void LensDirTo(JGeometry::TVec3<f32>& dir, const Vec& from,
+                             const JGeometry::TVec3<f32>& to)
+{
+	JGeometry::TVec3<f32> f(from);
+	dir.x = to.x - f.x;
+	dir.y = to.y - f.y;
+	dir.z = to.z - f.z;
+}
+
+static inline JGeometry::TVec3<f32> LensRotTo(const Vec& from,
+                                             const JGeometry::TVec3<f32>& to)
+{
+	JGeometry::TVec3<f32> dir;
+	LensDirTo(dir, from, to);
+	return MsGetRotFromZaxis(dir);
+}
+
+static inline void LensSetTRS(Mtx mtx, const Vec& t,
+                              const JGeometry::TVec3<f32>& r,
+                              const JGeometry::TVec3<f32>& s)
+{
+	s16 rx = CLBDegToShortAngle(r.x);
+	s16 ry = CLBDegToShortAngle(r.y);
+	MsMtxSetTRS(mtx, t.x, t.y, t.z, rx, ry, 0, s.x, s.y, s.z);
 }
 
 void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
@@ -123,49 +154,37 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		const Vec& sunPosSrc              = gpSunModel->unk198;
-		JGeometry::TVec3<f32> sunWorldPos = sunPosSrc;
+		Vec sunWorldPos = gpSunModel->unk198;
 
 		S16Vec camEuler;
 		JGeometry::TVec3<f32> near9grid[9];
 		CalcLensNearNinePos(near9grid, &camEuler);
 
-		f32 tx = unk3C * -gpSunModel->unkF8[0].x;
-		f32 ty = unk3C * -gpSunModel->unkF8[0].y;
-		f32 lx = near9grid[4].x + (near9grid[5].x - near9grid[4].x) * tx
-		         + (near9grid[1].x - near9grid[4].x) * ty;
-		f32 ly = near9grid[4].y + (near9grid[5].y - near9grid[4].y) * tx
-		         + (near9grid[1].y - near9grid[4].y) * ty;
-		f32 lz = near9grid[4].z + (near9grid[5].z - near9grid[4].z) * tx
-		         + (near9grid[1].z - near9grid[4].z) * ty;
-
-		// TODO (header round 25): the three-deep chain above is doing its
-		// job -- two of retail's three `bl TVec3<f32>::set(const Vec&)`
-		// sites, plus both `bl JMAS{Cos,Sin}`, reproduce exactly. The third
-		// `bl set` is this one, and it is lost to the lerp above, not to a
-		// depth problem: retail computes the three components with separate
-		// `fmuls`/`fadds` pairs (six adds, f29/f30/f31 as three named scalar
-		// locals) and only then calls `set`, while this spelling lets
-		// fp_contract fuse every product into `fmadds` and then folds the
-		// `set` away with it. The multiplicands retail uses are reloaded from
-		// the stack between the subtraction and the product, so the deltas
-		// were stored -- i.e. retail built the two difference *vectors* as
-		// objects and scaled them, rather than writing nine scalar
-		// expressions. That is the next thing to try here, and it should also
-		// account for the four extra callee-saved FPRs (we name seven float
-		// locals in this body, retail three) and most of the 0x90 frame gap.
-		JGeometry::TVec3<f32> finalPos;
-		finalPos.set(sunWorldPos);
-
-		JGeometry::TVec3<f32> dir(lx - finalPos.x, ly - finalPos.y,
-		                          lz - finalPos.z);
-
-		JGeometry::TVec3<f32> rot = MsGetRotFromZaxis(dir);
+		const JGeometry::TVec2<f32>& sp = gpSunModel->unkF8[0];
+		f32 tx = unk3C * -sp.x;
+		f32 ty = unk3C * -sp.y;
+		JGeometry::TVec3<f32> d5;
+		d5.sub(near9grid[5], near9grid[4]);
+		d5.scale(tx);
+		JGeometry::TVec3<f32> d1;
+		d1.sub(near9grid[1], near9grid[4]);
+		d1.scale(ty);
+		JGeometry::TVec3<f32> l;
+		l.add(near9grid[4], d5);
+		l.add(d1);
+		// TODO: 94.8%. The lerp is two scaled difference vectors added to
+		// grid[4] (products and sums as separate fmuls/fadds, no fmadds);
+		// the sun position is a plain `Vec` copy (lwz/stw), and the direction
+		// helpers put its conversion to `TVec3` at depth 4 so `set(const
+		// Vec&)` is the third retail `bl`. Left: (a) the isInBounds f0/f1
+		// swap shared with TLensGlow::perform; (b) r3/r4/r5 rotation in the
+		// hidden-count loop and the float regs of hiddenRatio; (c) in the
+		// MsMtxSetTRS tail retail loads its constants first and `unk18`/the
+		// sun position last; (d) the frame is 0xb0 short (0x208 vs 0x2b8)
+		// and `this` is r28 instead of r29.
+		JGeometry::TVec3<f32> rot = LensRotTo(sunWorldPos, l);
 		Mtx mtx;
-		// Wrong! Need a different inline wrapper!
-		MsMtxSetTRS(mtx, sunWorldPos.x, sunWorldPos.y, sunWorldPos.z,
-		            CLBDegToShortAngle(rot.x), CLBDegToShortAngle(rot.y), 0,
-		            unk18.x, unk18.y, unk18.z);
+		LensSetTRS(mtx, sunWorldPos, rot, unk18);
 		unk14->setBaseTRMtx(mtx);
 		unk14->calc();
 	}
