@@ -21,6 +21,14 @@ void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 	// frame; `getScreen()` over `unk10`, spelling the scissor width out as
 	// `x2 - x1`, and taking the scissor by value (which is +0x10 and three
 	// instructions) all measured worse or inert.
+	// cc30 re-measure: with the MenuUnk10 binder orthoGraph now sits at 0x20
+	// (retail 0x18) at the right frame; raw `unk10` (or a direct fork) puts
+	// it at 0x18 but the frame drops to 0x110, so retail has 8 bytes more of
+	// *named* block above the object. Inert or worse for that: a named
+	// `J2DScreen*` (declared first, before the viewport, or assigned late),
+	// the scissor reference declared before orthoGraph, pointer forms of
+	// both rects, an unnamed viewport (0x1c), a scissor helper, and a
+	// named width.
 	if (cue & CUE_DRAW) {
 		const JUTRect& viewport = graphics->getViewport();
 		J2DOrthoGraph orthoGraph(viewport);
@@ -60,6 +68,12 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 	// else for the duration (it reloads `this` again after the loop), so
 	// there is one more value live in retail's loop than in ours; the
 	// candidate is a second iterator-derived local we have not identified.
+	// cc30: retail's three colour temporaries are 4-byte (0x9c/0x98/0x94)
+	// against our 8-byte stride, but the `(u32)c` conversion that fixed
+	// perform() removes them here (frame 0x4a0), so the ctor wants another
+	// spelling. A TU-local loop-body helper taking `this` (with get() or
+	// `(u32)` colours, with or without a `self` copy) keeps the cached
+	// unk28 and costs two more instructions.
 	J2DTextBox* local_420[256];
 
 	JSUTreeIterator<J2DPane> iterator;
@@ -86,20 +100,11 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 		unk30[i] = local_420[i];
 }
 
-// TODO: 99.5%. Every instruction matches; the frame is 0x98 against
-// retail's 0x78 because each `JUtility::TColor = <TColor>.get()` assignment
-// below parks its conversion temporary in an 8-byte slot where retail uses
-// 4 (ours 0x78/0x80/0x88/0x90, retail 0x64/0x68/0x6c/0x70 -- four temps,
-// four bytes each of difference, plus alignment = 0x20). The same stride
-// difference is the whole residue of TMenuPlane::TMenuPlane (0x4b8 vs
-// 0x4c0, three temps) and of TMenuBase::perform. The assignment spelling
-// itself is right: `J2DTextBox::setGradColor(a, b)` (the by-value pair)
-// collapses the temporaries away entirely (frame 0x48, 101 instructions,
-// 83.8%), and `mCharColor.set(x.get())`, `mCharColor = x` and
-// `set(x.toUInt32())` each drop an instruction per site. The suspect is the
-// commented-out `TColor(const TColor&)` copy constructor in
-// JSystem/JUtility/JUTColor.hpp -- a shared header with its own trial
-// table, so it is reported rather than changed here.
+// Colours are assigned through `(u32)c`, i.e. operator u32 and the TColor(u32)
+// conversion: each temporary is 4 bytes, retail's stride, where the
+// `c.get()` GXColor conversion is 8 (frame 0x98 against 0x78). The page step
+// compares a named copy of the current index, which puts unk2C in r0 and
+// unk3C in r5 as in retail.
 void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (unk18 & 0x4)
@@ -117,11 +122,12 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 		}
 
 		if (unk28 > 1 && unk10->checkFrameMeaning(0x1E)) {
-			unk30[unk2C]->mCharColor = unk24.get();
-			unk30[unk2C]->mGradColor = unk24.get();
+			unk30[unk2C]->mCharColor = (u32)unk24;
+			unk30[unk2C]->mGradColor = (u32)unk24;
 			if (unk10->checkFrameMeaning(0x18)) {
-				if (unk2C < unk3C) {
-					if (unk28 > unk2C + unk3C) {
+				int cur = unk2C;
+				if (cur < unk3C) {
+					if (unk28 > cur + unk3C) {
 						unk2C += unk3C;
 					}
 				} else {
@@ -141,8 +147,8 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 					unk2C = 0;
 			}
 
-			unk30[unk2C]->mCharColor = unk1C.get();
-			unk30[unk2C]->mGradColor = unk20.get();
+			unk30[unk2C]->mCharColor = (u32)unk1C;
+			unk30[unk2C]->mGradColor = (u32)unk20;
 		}
 	}
 }
