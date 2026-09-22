@@ -234,6 +234,12 @@ f32 JALSystem::processModDistFx(u32 param_1, f32 param_2)
 // still fakematches (no JAudio evidence for the type). Shared `JADPrm.hpp` is
 // not required: the derived ctor keeps the unread arg off the emitted
 // `JADPrm<T>` weak. Parked on naming the real type.
+// Closure follow-up 2026-09-22 -- `JAInter::TDebugHeap` is the one existing
+// empty JAudio class that reaches the landing: one ignored default on
+// `JADPrmS` and two on `JALPrmSet` are 100.0% with no other changed unit.
+// Its map-attested role is only a static debug-heap holder, though; no binary
+// or source evidence connects it to JAD parameter constructors, so this
+// spelling was tested only in shared headers and reverted rather than guessed.
 void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
                        u32 param_3, f32 param_4, f32 param_5, f32 param_6,
                        f32 param_7, f32 param_8, JALCalc::CurveSign param_9,
