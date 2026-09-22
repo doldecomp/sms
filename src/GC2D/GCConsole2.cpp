@@ -414,6 +414,8 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	case 2:
 	case 3:
 	case 7:
+	case 10:
+	default:
 		airMode = false;
 		amount  = gpMarioOriginal->mHealth;
 		break;
@@ -430,13 +432,16 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		amount = 8;
 
 	if (airMode && gpMarDirector->mState == TMarDirector::STATE_UNK5) {
-		s16 alpha = console->unk1C4->getPane()->mAlpha - 0x10;
+		s16 alpha = console->unk1C4->getPane()->mAlpha;
+		alpha -= 0x10;
 		if (alpha < 0)
 			alpha = 0;
 		console->unk1C4->getPane()->mAlpha = alpha;
-	} else if (console->unk1C4->getPane()->mAlpha != 0xff
+	}
+	if (console->unk1C4->getPane()->mAlpha != 0xff
 	           && gpMarDirector->mState != TMarDirector::STATE_UNK5) {
-		u16 alpha = console->unk1C4->getPane()->mAlpha + 0x10;
+		u16 alpha = console->unk1C4->getPane()->mAlpha;
+		alpha += 0x10;
 		if (alpha > 0xff)
 			alpha = 0xff;
 		console->unk1C4->getPane()->mAlpha = alpha;
@@ -453,6 +458,8 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		console->unk268 = 0;
 	}
 
+	// Arm order is retail's (read off @6848): 0-3, 7, 8, 4, 5, 6, 10. States 4-6 and
+	// 8-9 are the air meter (see the first switch), 7 and 10 the life meter.
 	switch (console->unk18) {
 	case 0:
 		if (console->unk1C4->getPane()->isVisible())
@@ -466,15 +473,13 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		if (airTimeout) {
 			console->resetLife(amount);
 			console->startAppearLife(1);
-			amount             = (s16)gpMarioOriginal->mAir;
-			console->unk1CC[0] = amount;
+			console->unk1CC[0] = amount = (s16)gpMarioOriginal->mAir;
 			if (gpMarDirector->mState == TMarDirector::STATE_UNK5)
 				console->unk1C4->getPane()->mAlpha = 0;
+			console->unk84 = 0;
 			console->unk18 = 4;
-		}
-
-		if (console->unk1CC[0] < 8 && !console->unk1C4->getPane()->isVisible()
-		    && amount != 0) {
+		} else if (!airMode && console->unk1CC[0] < 8
+		           && !console->unk1C4->getPane()->isVisible() && amount != 0) {
 			console->startAppearLife(0);
 			console->unk18 = 1;
 		}
@@ -489,10 +494,10 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		break;
 	case 2:
 		if (console->unk1CC[0] == 8) {
-			if (console->startDisappearLife(0))
-				console->unk18 = 3;
+			console->startDisappearLife(0);
+			console->unk18 = 3;
 		} else if (airTimeout) {
-			if (console->startDisappearLife(0))
+			if (console->startDisappearLife(1))
 				console->unk18 = 3;
 		}
 		break;
@@ -506,15 +511,19 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 			++console->unk84;
 		}
 		break;
-	case 4:
+	case 7:
 		if (console->processInsertLife(console->unk84++))
 			console->unk18 = 2;
 		break;
-	case 5:
-		if (console->processInsertLife(console->unk84++))
-			console->unk18 = SMS_isDivingMap() ? 9 : 5;
+	case 8:
+		if (console->processInsertLife(console->unk84++)) {
+			if (SMS_isDivingMap())
+				console->unk18 = 9;
+			else
+				console->unk18 = 5;
+		}
 		break;
-	case 6:
+	case 4:
 		if (console->processAppearLife(console->unk84)) {
 			console->unk18 = 5;
 			console->unk38 = 0;
@@ -524,11 +533,11 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		if (!(amount >= 8 && console->unk84 == 0) && console->unk84 < 1000)
 			++console->unk84;
 		break;
-	case 7:
+	case 5:
 		if (!gpMarioOriginal->isUnderWater()) {
 			if (console->unk1CC[0] == 8) {
-				if (console->startDisappearLife(0))
-					console->unk18 = 6;
+				console->startDisappearLife(0);
+				console->unk18 = 6;
 			} else if (console->unk1CC[0] != console->unk1C) {
 				console->startAppearLife(1);
 				amount             = gpMarioOriginal->mHealth;
@@ -538,7 +547,7 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 			}
 		}
 		break;
-	case 8:
+	case 6:
 		if (console->unk84 > 0x78) {
 			if (console->unk1C4->update()) {
 				console->unk4C = 0;
