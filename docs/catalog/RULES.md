@@ -279,6 +279,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `lha` then `extsh.` for a zero test is an `s16`-returning getter; a raw member gives `cmpwi` (GCConsole2).
 - MWCC folds `-(a + 1) - b` to `-(a + b + 1)`; retail's `neg; subf` needs the negation in its own inline (GCConsole2 `GCConsole2HideAboveY`).
 - Fade alphas: `s16 a = pane->getAlpha(); a -= 16;` keeps the byte unextended and tests with `extsh.`; the one-line form adds an `extsh` copy (Talk2D2 `closeNormalWindow`, `eraseBoardWindow`).
+- A discarded inline call whose object ours keeps in a callee-saved register (plus an extra `mr`): bind the result to a named unused local; `(void)f()` and `if (f()) {}` are inert (Option `TOptionSubtitleUnit::toggle` -> `checkInput` instruction-exact).
 
 ## Float and pool
 
