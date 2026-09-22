@@ -404,6 +404,10 @@ void TMario::slideProcess(f32 baseAcc, f32 friction)
 		mForwardVel *= -1.0f;
 }
 
+// TODO: instruction-exact; both MsSqrtf result slots are 4 high (0x50/0x4c vs
+// retail 0x4c/0x48), i.e. retail has +4 of pool before the first sqrt. Raw
+// mNormal or a named s16 angle give -8; bool result, reordered sums, `!= false`
+// tests, dropping `mult`, a named plane are inert or worse.
 BOOL TMario::doSliding(f32 stopThreshold)
 {
 	BOOL stopped = false;

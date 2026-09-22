@@ -972,6 +972,10 @@ void CPolarSubCamera::calcExternalData_()
 // has no size limit at depth 1 and is refused deeper, so retail's perform_ most
 // likely reaches both through one more inlined level than ours does. Leaving
 // them global costs only the BINDING check, not instructions.
+// TODO: instruction-exact; `param` sits at 0x40 vs retail 0x38 (retail has 8
+// more above it). Inert or worse: `param` declared at the top (any order),
+// yOffset initialised, marPos assigned later, named camera-mario/director
+// pointers, a named ratio, `code` in the inner block.
 void CPolarSubCamera::ctrlGameCamera_()
 {
 	if (!(unk64 & CAMERA_FLAG_DEAD_DEMO))

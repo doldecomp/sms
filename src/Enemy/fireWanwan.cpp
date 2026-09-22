@@ -1396,6 +1396,9 @@ void TFireWanwan::updateHitPoint()
 	ensureTakeSituation();
 }
 
+// TODO: instruction-exact; the inlined calcRipplePos keeps mtx[2][3] in f29
+// where retail uses f31. Inert or worse: named z/x/y locals, a named ground
+// height, component stores instead of set(), `200.0f + y`.
 void TFireWanwan::emitEffects()
 {
 	MtxPtr mtx = FireWanwanGetModel(this)->getAnmMtx(mCenterJointIdx);

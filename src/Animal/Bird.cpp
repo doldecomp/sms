@@ -171,6 +171,9 @@ void TAnimalBird::loadAfter()
 	MSRegisterRandPlayTrans(MSD_SE_OBJ_BIRD_DOL_CHUN, &mPosition);
 }
 
+// TODO: instruction-exact; both TVec3(1,1,1) temporaries sit 4 high (retail
+// 0x58/0x4c). `checkLiveFlag(...) != 0` is +8; raw mLiveFlag, getPosition()
+// at either emit or the sound call, a cast nullptr, a named gpMSound are inert.
 BOOL TAnimalBird::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
