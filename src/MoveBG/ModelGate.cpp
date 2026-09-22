@@ -317,28 +317,29 @@ BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
 // retail keeps only the 8-byte 0.5/3.0 double pair (@3049/@3050, MWCC's
 // inline sqrt), so one of this function's square roots is spelled on floats
 // here and on doubles in retail.
-// Two thin levels, a stand-in for unreconstructed inline structure inside
-// perform (its frame is still 232 bytes short of retail's 0x220, so real
-// levels are missing): retail reaches JGeometry::TUtil<f32>::sqrt as a `bl`
-// here, which needs depth 4, and through length() alone the site is at depth
-// 2. Same idiom as the WrapDirection/WrapRadian pair in wireTrap and
-// MapObjCorona. 699 -> 689 instructions against retail's 682.
-static inline f32 ModelGateLengthInner(const JGeometry::TVec3<f32>& v)
+// The open-range test copies Mario's position into a by-value parameter,
+// subtracts in place, then copies the difference into a by-value length
+// level that squares it and calls TUtil<f32>::sqrt out of line (the same
+// shape as TYoshiTongue::movement's grab-range test).
+static inline f32 ModelGateLength(JGeometry::TVec3<f32> v)
 {
-	return v.length();
+	return JGeometry::TUtil<f32>::sqrt(v.squared());
 }
 
-static inline f32 ModelGateLength(const JGeometry::TVec3<f32>& v)
+static inline f32 ModelGateDist(JGeometry::TVec3<f32> a,
+                                const JGeometry::TVec3<f32>& b)
 {
-	return ModelGateLengthInner(v);
+	a.sub(b);
+	return ModelGateLength(a);
 }
 
-// TODO: 232 bytes of frame short (0x138 against retail's 0x220) and retail
-// saves r23-r31 where we save r26-r31, so several inlined helpers are still
-// missing. @3054 is an 8-entry jump table whose grouping already matches and
-// whose addends are gated on this function's size (ours 0x698/0x650/... against
-// retail's 0x694/0x64c/...), so the unit's data score cannot reach 100% until
-// perform does.
+// TODO: frame 0x160 against retail's 0x220 (0xc0 short) and the callee-saved
+// and volatile register choices around the swirl stage references differ;
+// the instruction stream and the @3054 jump table match. The swirl fields
+// are written through `u8&` locals: retail hoists every field address the
+// switch stores through (`addi rN, base, off` before the table) and folds
+// the unconditional resets into displacements, which only named references
+// reproduce.
 void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(mFlags & GATE_FLAG_ACTIVE))
@@ -362,12 +363,7 @@ void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		if (!(mFlags & GATE_FLAG_OPENING)) {
-			JGeometry::TVec3<f32> toMario(*gpMarioPos);
-			toMario.x -= mPosition.x;
-			toMario.y -= mPosition.y;
-			toMario.z -= mPosition.z;
-			JGeometry::TVec3<f32> dist(toMario);
-			if (ModelGateLength(dist) < 1000.0f) {
+			if (ModelGateDist(*gpMarioPos, mPosition) < 1000.0f) {
 				mOpenRate += 0.01f;
 				if (mOpenRate > 1.0f) {
 					mOpenRate     = 1.0f;
@@ -452,6 +448,8 @@ void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 			break;
 
+		// The STATE_HIT label is retail's dead `b <default>` arm.
+		case STATE_HIT:
 		default:
 			mOpenRate -= mIdleCloseSpeed;
 			break;
@@ -462,8 +460,8 @@ void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mOpenRate < 0.0f)
 			mOpenRate = 0.0f;
 
-		J3DMaterial* material
-		    = unk78->getModel()->getModelData()->mMaterials[0];
+		J3DTevBlock* tevBlock
+		    = unk78->getModel()->getModelData()->mMaterials[0]->getTevBlock();
 		if (unkB8 == 1) {
 			unkBA = mSwirlStep;
 			mSwirlTimer--;
@@ -475,51 +473,61 @@ void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 
 			SampleCtrlMaterial* ctrl = mCtrlModelData->mMaterials[0];
-			ctrl->mTevStageInfo[0].field_0x5  = 0;
-			ctrl->mTevStageInfo[2].field_0x5  = 0;
-			ctrl->mTevStageInfo[3].field_0x5  = 0;
-			ctrl->mTevStageInfo[3].field_0x6  = 0;
-			ctrl->mTevStageInfo[3].field_0x7  = 0;
-			ctrl->mTevStageInfo[3].field_0x8  = 1;
-			ctrl->mTevStageInfo[5].field_0x11 = 1;
+			u8& swirl0              = ctrl->mTevStageInfo[0].field_0x5;
+			J3DTevStageInfo& info2 = ctrl->mTevStageInfo[2];
+			u8& swirl2              = info2.field_0x5;
+			J3DTevStageInfo& info3 = ctrl->mTevStageInfo[3];
+			u8& swirl3a             = info3.field_0x5;
+			u8& swirl3b             = info3.field_0x6;
+			u8& swirl3c             = info3.field_0x7;
+			u8& swirl3d             = info3.field_0x8;
+			J3DTevStageInfo& info5 = ctrl->mTevStageInfo[5];
+			u8& swirl5              = info5.field_0x11;
+			swirl0  = 0;
+			swirl2  = 0;
+			swirl3a = 0;
+			swirl3b = 0;
+			swirl3c = 0;
+			swirl3d = 1;
+			swirl5  = 1;
 
 			switch (mSwirlStep) {
 			case 0:
 				break;
 			case 1:
-				ctrl->mTevStageInfo[3].field_0x5 = 1;
-				ctrl->mTevStageInfo[3].field_0x8 = 0;
+				swirl3a = 1;
+				swirl3d = 0;
 				break;
 			case 2:
-				ctrl->mTevStageInfo[0].field_0x5 = 8;
+				swirl0 = 8;
 				break;
 			case 3:
-				ctrl->mTevStageInfo[3].field_0x5 = 8;
+				swirl3a = 8;
 				break;
 			case 4:
-				ctrl->mTevStageInfo[3].field_0x7 = 1;
+				swirl3c = 1;
 				break;
 			case 5:
-				ctrl->mTevStageInfo[5].field_0x11 = 0;
+				swirl5 = 0;
 				break;
 			case 6:
-				ctrl->mTevStageInfo[2].field_0x5 = 1;
+				swirl2 = 1;
 				break;
 			case 7:
-				ctrl->mTevStageInfo[3].field_0x5 = 0;
-				ctrl->mTevStageInfo[3].field_0x6 = 1;
-				ctrl->mTevStageInfo[3].field_0x8 = 0;
+				swirl3a = 0;
+				swirl3b = 1;
+				swirl3d = 0;
 				break;
 			}
 
-			material->getTevStage(0)->setTevStageInfo(
-			    ctrl->mTevStageInfo[0]);
-			material->getTevStage(2)->setTevStageInfo(
-			    ctrl->mTevStageInfo[2]);
-			material->getTevStage(3)->setTevStageInfo(
-			    ctrl->mTevStageInfo[3]);
-			material->getTevStage(5)->setTevStageInfo(
-			    ctrl->mTevStageInfo[5]);
+			J3DTevStageInfo& info0 = ctrl->mTevStageInfo[0];
+			tevBlock->getTevStage(0)->setTevStageInfo(info0);
+			tevBlock->getTevStage(2)->setTevStageInfo(
+			    info2);
+			tevBlock->getTevStage(3)->setTevStageInfo(
+			    info3);
+			tevBlock->getTevStage(5)->setTevStageInfo(
+			    info5);
 		}
 
 		f32 frame = mOpenRate * (f32)unk78->getFrameCtrl(5)->getEnd();
