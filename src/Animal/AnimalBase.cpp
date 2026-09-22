@@ -287,14 +287,19 @@ void TAnimalBase::execWalk(bool moving)
 	TAnimalSaveIndividual* save = ((TAnimalManagerBase*)mManager)->mAnimalSave;
 
 	if (moving) {
-		f32 speed = save->mSLMaxMarchSpeed.get() * SMSGetAnmFrameRate();
-		f32 accel = save->mSLMarchAccel.get() * SMSGetAnmFrameRate()
-		            * SMSGetAnmFrameRate();
-		CLBChaseGeneralConstantSpecifySpeed<f32>(&mMarchSpeed, speed, accel);
+		f32 speed = save->mSLMaxMarchSpeed.get();
+		f32 rate  = SMSGetAnmFrameRate();
+		speed *= SMSGetAnmFrameRate();
+		f32 accel = save->mSLMarchAccel.get();
+		accel *= SMSGetAnmFrameRate();
+		CLBChaseGeneralConstantSpecifySpeed<f32>(&mMarchSpeed, speed * rate,
+		                                         accel);
 	} else {
-		f32 decel = save->mSLMarchDecrease.get() * SMSGetAnmFrameRate()
-		            * SMSGetAnmFrameRate();
-		CLBChaseGeneralConstantSpecifySpeed<f32>(&mMarchSpeed, 0.0f, decel);
+		f32 decel = save->mSLMarchDecrease.get();
+		f32 rate  = SMSGetAnmFrameRate();
+		decel *= SMSGetAnmFrameRate();
+		CLBChaseGeneralConstantSpecifySpeed<f32>(&mMarchSpeed, 0.0f,
+		                                         decel * rate);
 	}
 
 	if (mMarchSpeed < 0.001f) {
@@ -305,10 +310,10 @@ void TAnimalBase::execWalk(bool moving)
 		mTurnSpeed    = walkSpeed * SMSGetAnmFrameRate();
 	}
 
-	f32 marchSpeed = mMarchSpeed;
 	f32 turnSpeed  = mTurnSpeed;
+	f32 marchSpeed = mMarchSpeed;
 
-	JGeometry::TVec3<f32> diff = unkF4.getPoint();
+	JGeometry::TVec3<f32> diff = getUnkF4().getPoint();
 	diff -= mPosition;
 
 	f32 dist = diff.length();
