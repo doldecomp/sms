@@ -88,6 +88,9 @@ void TMirrorCamera::makeMirrorViewMtx()
 	C_MTXLookAt(unk30, unk98, vecs.mUp, vecs.mTarget);
 }
 
+// TODO: frame 0x40 short (0x28 vs 0x68), instructions exact. Camera, matrix
+// and projection binders price +8 each at most (SMSGetCamera() reads 0); no
+// single spelling reaches 0x40.
 void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
@@ -96,7 +99,7 @@ void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 		f32 far = gpCamera->mFar;
 		f32 near = gpCamera->mNear;
 		f32 aspect = gpCamera->mAspect;
-		C_MTXPerspective(projMtx, fovy * getUnk80(), aspect, near, far);
+		C_MTXPerspective(projMtx, unk80 * fovy, aspect, near, far);
 		MTXCopy(unk30, graphics->mViewMtx);
 		graphics->mNearPlane = gpCamera->mNear;
 		graphics->mFarPlane  = gpCamera->mFar;
@@ -106,15 +109,30 @@ void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// Binders: the named fovy read loads the camera ahead of unk80 (retail's
+// f1/f0), and with the mirror-matrix binder they are drawSetting's 0x10 of
+// pool.
+static inline f32 MMFovy()
+{
+	f32 fovy = gpCamera->mFovy;
+	return fovy;
+}
+
+static inline MtxPtr MMBind30(TMirrorCamera* c)
+{
+	MtxPtr m = c->getUnk30();
+	return m;
+}
+
 void TMirrorCamera::drawSetting(MtxPtr param_1)
 {
 	GXLoadTexObj(&unk60, GX_TEXMAP0);
 	Mtx afStack_38;
-	C_MTXLightPerspective(afStack_38, getUnk80() * gpCamera->mFovy,
-	                      gpCamera->mAspect, 0.5f, -0.5f, 0.5f, 0.5f);
+	C_MTXLightPerspective(afStack_38, unk80 * MMFovy(), gpCamera->mAspect,
+	                      0.5f, -0.5f, 0.5f, 0.5f);
 
 	Mtx afStack_68;
-	MTXConcat(getUnk30(), param_1, afStack_68);
+	MTXConcat(MMBind30(this), param_1, afStack_68);
 	Mtx afStack_98;
 	MTXConcat(afStack_38, afStack_68, afStack_98);
 	GXLoadTexMtxImm(afStack_98, 0x1E, GX_MTX3x4);
@@ -128,6 +146,12 @@ void TMirrorCamera::calcEffectMtx(MtxPtr param_1)
 	MTXConcat(afStack_38, getUnk30(), param_1);
 }
 
+// TODO: 96.3%. Retail loads GXInitTexObj's arguments as format, height,
+// pointer, width (ours width, height, pointer, format) and schedules the
+// C_MTXLookAt address pair the other way. Forks on the image pointer and the
+// format reproduce the order (99.6) but add 0x18 of frame; a named ResTIMG*,
+// casts on the pointer, a whole-call helper and the six orders of the three
+// Vec literals are inert or worse.
 TMirrorCamera::TMirrorCamera(const char* name)
     : JDrama::TCamera(10.0f, 300000.0f, name)
     , unk80(1.3f)
@@ -340,10 +364,17 @@ TMirrorModelManager* gpMirrorModelManager;
 bool TMirrorModelManager::isUpperThanMirrorPlane(
     const JGeometry::TVec3<f32>& param_1) const
 {
-	const JGeometry::TVec3<f32>* normal
-	    = unk18 != -1 ? &unk1C[unk18]->getNormalVec() : nullptr;
+	const JGeometry::TVec3<f32>* normal;
+	if (unk18 != -1)
+		normal = &unk1C[unk18]->getNormalVec();
+	else
+		normal = nullptr;
 
-	f32 d   = unk18 != -1 ? unk1C[unk18]->getD() : 0.0f;
+	f32 d;
+	if (unk18 != -1)
+		d = unk1C[unk18]->getD();
+	else
+		d = 0.0f;
 	f32 dot = normal->dot(param_1);
 
 	return dot + d < -50.0f ? false : true;
