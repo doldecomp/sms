@@ -446,6 +446,7 @@ void TFireWanwanTailNode::setBarAnmMtx(MtxPtr mtx)
 
 // Pragma residue (sweep 360): protects TFireWanwanTailHit::performNodes
 // (95.7 -> 12.6), which calls this in a loop.
+// TODO (cc38): six statements short (fillers).
 #pragma dont_inline on
 void TFireWanwanTailNode::perform(u32 cue, JDrama::TGraphics* graphics,
                                   const JGeometry::TVec3<f32>& param_3,

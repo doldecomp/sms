@@ -106,6 +106,9 @@ static void initMare()
 // visibly, initMonte/initMare/initStageCommon and this unit's data (100 ->
 // 90.3). initPinnaParco is exact and static, and the map keeps it out of line,
 // but it is only 6 statements against a depth-1 budget of 14.
+// TODO (cc38): three statements short (fillers). Naming either constructor
+// argument tips it but hoists the argument above its `__nw__`
+// (initPinnaParco 63%).
 #pragma dont_inline on
 // Binding level worth +8 of low region, landing initPinnaParco's frame at
 // 0x50 (batch 121).

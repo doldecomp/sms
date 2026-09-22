@@ -24,6 +24,8 @@ u32 TMapCollisionData::getEntryID()
 // Pragma residue (sweep 360): protects TMapCollisionData::addCheckDataToGrid
 // (91.4 -> 11.2), the only caller of these list helpers. allocCheckList is 10
 // statements against the depth-1 budget of 14.
+// TODO (cc38): fillers before `return result;` put the gap at four
+// statements.
 #pragma dont_inline on
 TBGCheckList* TMapCollisionData::allocCheckList(int kind, int count)
 {
@@ -65,6 +67,9 @@ TBGCheckList* TMapCollisionData::getListRoot(int i, int j, int kind,
 	return result;
 }
 
+// TODO (cc38): measured per function with fillers, addAfterPreNode needs six
+// more statements and each of the three add*Node walkers at least one more;
+// the walkers sit at depth 2 under the inlined UNUSED addCheckDataToList.
 #pragma dont_inline on
 static void addAfterPreNode(int param_1, int param_2, TBGCheckList* param_3,
                             TBGCheckList* param_4, int kind)

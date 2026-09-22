@@ -2766,6 +2766,8 @@ void TGCConsole2::pauseOut()
 }
 
 // TODO: figure out inlining without pragmas
+// TODO (cc38): about six statements short (fillers); both in-TU call sites
+// are `bl` in retail, so this is not a per-site depth split.
 #pragma dont_inline on
 bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
 {
