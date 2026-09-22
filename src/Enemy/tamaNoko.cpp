@@ -66,7 +66,7 @@ TTamaNokoFlower::TTamaNokoFlower(const TLiveActor* param_1, int param_2,
     , unk34(0)
     , unk35(0)
 {
-	unk2C = new MAnmSound(gpMSound);
+	unk2C = new MAnmSound(SMSGetMSound());
 	unk2C->initAnmSound(nullptr, 1, 0.0f);
 }
 
