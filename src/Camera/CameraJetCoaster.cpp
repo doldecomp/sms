@@ -44,23 +44,23 @@ inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 	if (flagCount == objCount) {
 		TFlagManager::smInstance->setBool(true, 0x30005U);
 		unk2B8->unk38 = 300;
-		balloonCode   = 0xE002D;
+		balloonCode   = 0x2A;
 	} else {
 		switch (gpMarDirector->unk58) {
 		case 0x3C:
 			gpMarDirector->getConsole()->startAppearJetBalloon(0, objCount);
 			break;
 		case 0x1DB:
-			balloonCode = 0xE0029;
+			balloonCode = 0x26;
 			break;
 		case 0x1D4C:
-			balloonCode = 0xE002A;
+			balloonCode = 0x27;
 			break;
 		case 0x3A98:
 			if ((u32)(objCount - flagCount) >= 7U)
-				balloonCode = 0xE002B;
+				balloonCode = 0x28;
 			else
-				balloonCode = 0xE002C;
+				balloonCode = 0x29;
 			break;
 		case 0x57E4:
 			gpMarioOriginal->loserExec();
@@ -101,7 +101,8 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		unk2B8->toggleLButtonMode();
 		if (unk2B8->isLButtonMode())
 			soundID = 0x4824;
-		SMSGetMSound()->startSoundSystemSE(soundID, 0, nullptr, 0);
+		if (SMSGetMSound()->gateCheck(soundID))
+			MSoundSESystem::MSoundSE::startSoundSystemSE(soundID, 0, nullptr, 0);
 	}
 
 	JGeometry::TVec3<f32> newTarget;
@@ -110,7 +111,7 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		if (startedLButton)
 			setUpToLButtonCamera_(CAMERA_MODE_JET_COASTER);
 
-		f32 stickY = -unk120->mCompSPos[5];
+		f32 stickY = -unk120->mCompSPos[1];
 		if (mTargetFreezeFrames == 0)
 			getNozzleTopPos_(&mCurrentTarget.mTarget);
 
