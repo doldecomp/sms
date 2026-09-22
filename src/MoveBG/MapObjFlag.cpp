@@ -72,11 +72,17 @@ f32 TMapObjFlag::mFlutterSpeed = 4.0f;
 // GXPosition3f32 wrapper, a GXTexCoord2f32 wrapper or an `mMtx` fork moves
 // the volatile-register differences or retail's MTXConcat argument order
 // (r3, r5, then `mMtx` in r4), so the gap is not only low region.
+// Fixed since: passing the member's raw array `mMtx.mMtx` gives retail's
+// MTXConcat argument order (the conversion operator evaluates first), and
+// naming `s` after the first GXPosition3f32 gives retail's f0/f1. Left: the
+// row offset `y * 4` takes r6 where retail has r5 (and `z * 12` r5 for r6);
+// inert on it: named row pointers (worse), `TVec3&` vertex binders, the
+// vertex/last forks, `(f32)z * invZ`.
 void TMapObjFlag::draw()
 {
 	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > mtx;
 	mtx.set(j3dSys.getViewMtx());
-	MTXConcat(mtx, mMtx, mtx);
+	MTXConcat(mtx, mMtx.mMtx, mtx);
 	GXLoadPosMtxImm(mtx, GX_PNMTX0);
 
 	// Two rows at a time, so every strip is (columns + 2) * 2 vertices wide.
@@ -98,9 +104,9 @@ void TMapObjFlag::draw()
 		GXTexCoord2f32(0.0f, t1);
 
 		for (int z = 1; z < mNumZ - mSkip; z += mSkip) {
-			f32 s = invZ * (f32)z;
 			GXPosition3f32(mVertices[y][z].x, mVertices[y][z].y,
 			               mVertices[y][z].z);
+			f32 s = invZ * (f32)z;
 			GXTexCoord2f32(s, t0);
 			GXPosition3f32(mVertices[y + 1][z].x, mVertices[y + 1][z].y,
 			               mVertices[y + 1][z].z);
