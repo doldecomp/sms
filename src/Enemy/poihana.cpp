@@ -154,11 +154,12 @@ void TPoiHana::init(TLiveManager* param_1)
 	    ->getChildren()
 	    .push_back(unk1BC);
 
-	unk1BC->initHitActor(0, 2, 0x80000000,
-	                     unk19C->mSLAttackRadius.get() * mBodyScale,
-	                     unk19C->mSLAttackHeight.get() * mBodyScale,
-	                     unk19C->mSLDamageRadius.get() * mBodyScale,
-	                     unk19C->mSLDamageHeight.get() * mBodyScale);
+	f32 attackRadius = unk19C->mSLAttackRadius.get() * mBodyScale;
+	f32 attackHeight = unk19C->mSLAttackHeight.get() * mBodyScale;
+	f32 damageRadius = unk19C->mSLDamageRadius.get() * mBodyScale;
+	f32 damageHeight = unk19C->mSLDamageHeight.get() * mBodyScale;
+	unk1BC->initHitActor(0, 2, 0x80000000, attackRadius, attackHeight,
+	                     damageRadius, damageHeight);
 
 	unk1BC->unk68 = this;
 
@@ -735,15 +736,12 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				// TODO: rand interval class
-				volatile f32 trapJumpMaxSpY
-				    = self->unk19C->mSLTrapJumpMaxSpY.get();
-				volatile f32 trapJumpMaxSpXZ
-				    = self->unk19C->mSLTrapJumpMaxSpXZ.get();
-				volatile f32 trapJumpMinSpY
-				    = self->unk19C->mSLTrapJumpMinSpY.get();
-				volatile f32 trapJumpMinSpXZ
-				    = self->unk19C->mSLTrapJumpMinSpXZ.get();
+				TMsRange<f32> trapJumpSpXZ(
+				    self->unk19C->mSLTrapJumpMinSpXZ.get(),
+				    self->unk19C->mSLTrapJumpMaxSpXZ.get());
+				TMsRange<f32> trapJumpSpY(
+				    self->unk19C->mSLTrapJumpMinSpY.get(),
+				    self->unk19C->mSLTrapJumpMaxSpY.get());
 
 				JGeometry::TVec3<f32> local_48;
 				const TLiveActor* groundActor
@@ -761,10 +759,9 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
-				// TODO: rand interval class
-				local_48.x *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
-				local_48.y = MsRandF(trapJumpMinSpY, trapJumpMaxSpY);
-				local_48.z *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
+				local_48.x *= trapJumpSpXZ.rand();
+				local_48.y = trapJumpSpY.rand();
+				local_48.z *= trapJumpSpXZ.rand();
 
 				self->mVelocity             = local_48;
 				self->mCurrentFlungVelocity = local_48;
