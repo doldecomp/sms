@@ -1,3 +1,8 @@
+// DummyStrings.hpp must precede Camera/SunModel.hpp: retail's .rodata opens
+// with this pair's twelve zero bytes and the 20-byte Shift-JIS message, ahead
+// of SunModel.hpp's "/scene/sun" and "/scene/sunset" literals.
+#include <System/DummyStrings.hpp>
+
 #include <Camera/SunModel.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
@@ -14,9 +19,6 @@
 #include <System/Resolution.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <stdio.h>
-
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 TSunModel* gpSunModel;
 
