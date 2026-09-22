@@ -6,6 +6,16 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Camera/cameralib.hpp>
 
+static inline bool BHSIsIllegalData(const TBGCheckData* ground)
+{
+	return ground->isIllegalData();
+}
+
+static inline bool BHSIsLegalData(const TBGCheckData* ground)
+{
+	return BHSIsIllegalData(ground) == true ? false : true;
+}
+
 f32 BHSCalcCentrifugalForce(const JGeometry::TVec3<f32>& first,
                           const JGeometry::TVec3<f32>& middle,
                           const JGeometry::TVec3<f32>& last, f32 degreeY)
@@ -127,7 +137,7 @@ void TSphereLink::execMapCollision_(JGeometry::TVec3<f32>* position)
 	const TBGCheckData* ground;
 	f32 height = gpMap->checkGroundIgnoreWaterSurface(
 	    position->x, position->y + mCollisionRadius, position->z, &ground);
-	if (ground && (ground->isIllegalData() == true ? false : true)
+	if (ground && BHSIsLegalData(ground)
 	    && position->y < height)
 		position->y = height;
 }
@@ -153,22 +163,8 @@ void TSphereLink::moveHead(const JGeometry::TVec3<f32>& position)
 		execMapCollision_(&point->mPosition);
 	}
 	for (int i = 0; i < mPointCount; ++i) {
-		// TODO: retail `bl`s TVec3::sub here and expands operator-=, i.e. the
-		// difference is at inline depth 4, which only a named local reaches
-		// (nested in the product's argument it lands one lower and MWCC
-		// `bl`s operator-= instead). Retail's three copies -- operator-'s
-		// by-value operand, the named difference, operator*'s by-value
-		// operand -- also say the difference was named. Writing it that way
-		// (plus a named `mVelocityScale`, which retail keeps in a
-		// callee-saved FPR across the loop) does reach the `bl` and moves
-		// the frame 16 bytes towards the ROM's 0x108, but retail then
-		// assigns operator*'s operand slot straight into mVelocity while we
-		// materialise operator*'s by-value return as a fourth copy, so the
-		// function scores 85.7 -> 84.9 and it was reverted. The missing
-		// piece is why MWCC elides that return copy for retail and not for
-		// us; JGVec3.hpp's `operator*` returning a reference like
-		// `operator-`/`operator+` do is the obvious candidate and is a
-		// shared-header question.
+		// TODO: retail separately names and mutates this vector, which reaches
+		// its `sub` call but also changes the return-copy scheduling here.
 		mPoints[i].mVelocity
 		    = (mPoints[i].mPosition - mPoints[i].mPreviousPosition) * mVelocityScale;
 		mPoints[i].mPreviousPosition = mPoints[i].mPosition;
