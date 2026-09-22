@@ -449,6 +449,8 @@ void TGuide::startMoveCursor2()
 	changeBotStatus(-1);
 }
 
+// TODO: frame 0xd8 against 0x140; retail loads the stick x before 3.2f and
+// keeps x in r30 directly (ours copies it out of r5).
 void TGuide::linkSelect()
 {
 	mGamePad->onFlag(TMarioGamePad::PAD_FLAG_0x80);
@@ -595,7 +597,9 @@ void TGuide::rotatePattern(J2DPicture* pane, s16 timer, u32 period, s16 angle)
 	}
 }
 
-// UNUSED
+// UNUSED; the click-prompt blink and the pane update belong to it (retail's
+// linkSelect keeps the timer and pane in the helper's registers across both).
+// TODO: 0x11c against the map's 0x140; the expansion in linkSelect is exact.
 void TGuide::shinePattern(TBoundPane* pane, s16 timer, u32 period)
 {
 	u16 t     = timer;
@@ -702,6 +706,8 @@ int TGuide::checkPoint(int x, int y)
 	return hit;
 }
 
+// TODO: frame 0x28 against retail's 0xf8 with no stack use, and the
+// callee-saved ranking differs (retail stage r31, this r30, stage*8 r29).
 void TGuide::changeBotStatus(int stage)
 {
 	if (stage == -1 || stage >= 10) {
