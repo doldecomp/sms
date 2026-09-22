@@ -10,8 +10,19 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// @non-matching -- the issue seems to stem from the JDrama TNameRefGen
-// search/push_back calls.
+// Binding level over the group's child list: the pointer-then-reference
+// pair keeps two binding temporaries' homes inside the JGadget push chain,
+// which is where retail's between-group words sit (research batch cc39; with
+// one named reference the second pool group lands exact but the first is 4
+// high).
+static inline JGadget::TList_pointer<THitActor*>&
+RiccohookChildren(TIdxGroupObj* group)
+{
+	JGadget::TList_pointer<THitActor*>* list = &group->getChildren();
+	JGadget::TList_pointer<THitActor*>& children = *list;
+	return children;
+}
+
 THookTake::THookTake(TRiccoHook* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
@@ -22,8 +33,8 @@ THookTake::THookTake(TRiccoHook* owner, const char* name)
 	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
 	             mOwner->getSaveLoadParam()->mSLHitHeight.get());
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
-	    ->getChildren()
+	RiccohookChildren(
+	    JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ"))
 	    .push_back(this);
 }
 
@@ -82,37 +93,6 @@ TRiccoHook::TRiccoHook(const char* name)
 {
 }
 
-// TODO: 99.9%, frame 0xd0 vs 0xd8, all 151 instructions and registers match.
-// Closure batch 136 located the 8 bytes exactly: the JGadget list-insert
-// temps the `new THookTake(this)` expansion leaves fall in two groups, one
-// anchored to the bottom of the local area (0x5c/0x60/0x68/0x6c/0x70, already
-// exact) and one anchored to the top (0x84/0x88/0x8c, 8 low), with a 20-byte
-// hole between them where retail has 12; the `&hookTake` slot above wants +4.
-// So the 8 bytes belong *inside* that expansion, between two of its
-// sub-expansions -- not at either end. Every TU-local binding lever adds them
-// at the bottom instead and shifts the first group by the same 8 (`mSpine`,
-// `unk124`, `getSaveLoadParam()` all reach frame 0xd8 with the first group
-// then 8 high; `getTracer()` and a named `f32 speed` are +0). This is the
-// JGadget iterator temp-pool grouping known-open class (docs/catalog/
-// frame-gaps.md, "batch 133"), shared with TSeal::init and TMirrorActor::init.
-// Closure batch 221 decomposes it into two independent residues and prices
-// the first: R1 is 8 bytes missing *between* the two groups (group one,
-// 0x5c/0x60/0x68/0x6c/0x70, is exact; group two is 0x84/0x88/0x8c retail and
-// 0x7c/0x80/0x84 here), R2 is the `&hookTake` spill at 0xa4 for retail's
-// 0xa8. A TU-local binder over `mSpine` feeding `initWith` adds its 8 bytes
-// at the very bottom of the pool: frame 0xd8 exact and group two exactly
-// retail's, but group one then reads 0x64..0x78 and the spill 0xac -- 13
-// markers, all of them slot displacements. So the lever needed is 8 bytes
-// that land between the two groups, plus 4 above them.
-// Spellings measured on THookTake's inlined ctor (it has no out-of-line copy,
-// so its body is free): a named `TIdxGroupObj* group` with
-// `getChildren().push_back` packs group one another 4 (19 markers); a named
-// `JGadget::TList_pointer<THitActor*>&` receiver does the same (19);
-// `->add(this)` collapses to frame 0xc0 (22) and `->insert(this)` to 0xc8
-// (23, +2 instructions); a named `THitActor*` for the pushed object costs a
-// spill; a TU-local binder returning `&search(...)->getChildren()` hoists the
-// string base out of the prologue (88.6). Every honest lever tried so far
-// pads at the bottom or packs, never between.
 void TRiccoHook::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
@@ -121,7 +101,8 @@ void TRiccoHook::init(TLiveManager* manager)
 	mHookTake = new THookTake(this);
 	unk124->reset();
 	goToShortestNextGraphNode();
-	mMarchSpeed = getSaveLoadParam()->mSLMoveSpeed.get();
+	THookParams* params = getSaveLoadParam();
+	mMarchSpeed         = params->mSLMoveSpeed.get();
 	mTurnSpeed  = 10.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
 }
