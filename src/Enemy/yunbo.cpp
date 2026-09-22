@@ -141,11 +141,9 @@ TYumbo::TYumbo(const char* name)
 	onLiveFlag(LIVE_FLAG_UNK10);
 }
 
-// TODO: 0x20 bytes of frame short, and the second createMActor loads the
-// keeper into r0 before saving the first result instead of after. Both look
-// like one missing inline level around initMActorAndKeeper, whose UNUSED body
-// is also one instruction short (0xb8 vs 0xbc) while setMaterialToMActor is
-// one long (0x4c vs 0x48) -- i.e. one instruction belongs to the other helper.
+// TODO: instruction-identical, but 0x20 bytes of frame short. The inlined
+// initMActorAndKeeper body is now map-size exact (0xbc); its remaining frame
+// residue is an unaccounted inline temporary.
 void TYumbo::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -176,8 +174,9 @@ void TYumbo::initMActorAndKeeper()
 {
 	mMActorKeeper = new TMActorKeeper(mManager, 0x12);
 
-	MActor* yumbo  = mMActorKeeper->createMActor("yumbo.bmd", 0);
-	MActor* flower = mMActorKeeper->createMActor("flower.bmd", 0);
+	MActor* yumbo = mMActorKeeper->createMActor("yumbo.bmd", 0);
+	TMActorKeeper* keeper = mMActorKeeper;
+	MActor* flower = keeper->createMActor("flower.bmd", 0);
 	setMaterialToMActor(flower,
 	                    ((TYumboManager*)mManager)->mMaterialTable);
 
@@ -306,8 +305,9 @@ bool TYumbo::isFindOutMario() const
 	if (fabsf(gpMarioPos->y - mPosition.y) < searchHeight) {
 		JGeometry::TVec3<f32> pos(gpMarioPos->x, mPosition.y,
 		                          gpMarioPos->z);
-		return isInSight(pos, getSaveParams()->getSLSearchLength(),
-		                 getSaveParams()->getSLSearchAngle(),
+		f32 searchLength = getSaveParams()->getSLSearchLength();
+		f32 searchAngle  = getSaveParams()->getSLSearchAngle();
+		return isInSight(pos, searchLength, searchAngle,
 		                 getSaveParams()->getSLSearchAware())
 		    ? true
 		    : false;
@@ -494,7 +494,7 @@ void TYumboManager::loadMaterialTable(J3DMaterialTable** table,
 
 const char** TYumbo::getBasNameTable() const { return sambohead_bastable; }
 
-// TODO: instruction-identical, 0x10 bytes of frame short -- the retail nerve
+// TODO: instruction-identical, 8 bytes of frame short -- the retail nerve
 // gets lookatMario()'s inline-boundary temporaries that spelling its body out
 // here cannot reproduce. Same for TNerveYumboAppearing (8 bytes).
 DEFINE_NERVE(TNerveYumboDancing, TLiveActor)
