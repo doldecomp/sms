@@ -65,6 +65,14 @@ static inline int GCConsole2HideOffsetY(const TExPane* pane)
 	return 465 - pane->mInitialBounds.y1;
 }
 
+// fabricated: the life meter's slide-off offset. Retail negates y2 + 1 and
+// *then* subtracts the gauge height; written as one expression MWCC folds it
+// into -(y2 + height + 1), so the negation lived behind an inline of its own.
+static inline int GCConsole2HideAboveY(const TBoundPane* pane)
+{
+	return -(pane->unk4.y2 + 1);
+}
+
 // fabricated: one binder site, +8 of low region, lands
 // TGCConsole2::startDisappearTank's frame at 0xa0 (closure 262).
 static inline TExPane* GCConsole2Unk2F8(const TGCConsole2* p)
@@ -2474,13 +2482,16 @@ bool TGCConsole2::startDisappearLife(int frame)
 	unk4C = 1;
 	unk1C4->setPanePosition(
 	    40, JUTPoint(0, 0),
-	    JUTPoint(0, (-(unk1C4->unk4.y2 + 1) - unk174->getPane()->getHeight())
+	    JUTPoint(0, (GCConsole2HideAboveY(unk1C4)
+	                 - unk174->getPane()->getHeight())
 	                    >> 1),
-	    JUTPoint(0, -(unk1C4->unk4.y2 + 1) - unk174->getPane()->getHeight()));
+	    JUTPoint(0, GCConsole2HideAboveY(unk1C4)
+	                    - unk174->getPane()->getHeight()));
 	unk84 = frame;
-	// TODO: 0xec against the map's 0xf0. The inline sites are exact, so the
-	// original body has one more instruction here; separate `if`s for the two
-	// guards give 0xf4 and a named offset local 0xc4, so it is neither.
+	// TODO: 0xec against the map's 0xf0. The inline sites in perform() and
+	// startCameraDemo() match in instruction count, so the original body has
+	// one more instruction here; separate `if`s for the two guards give 0xf4
+	// and a named offset local 0xc4, so it is neither.
 	return true;
 }
 
