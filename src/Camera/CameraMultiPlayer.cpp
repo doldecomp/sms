@@ -161,6 +161,30 @@ static inline f32 sqDistance(const JGeometry::TVec3<f32>& a,
 	return x2 + y2 + z2;
 }
 
+// TODO: every instruction and the frame (0x60) now match; the one residue is
+// the MsSqrtf store/reload temp at 0x18 where retail has 0x28 (see the pool
+// ordering notes above sqDistance). With the helper below the sqrt slot does
+// not move for: the sqrt inside the helper (four spellings), the dead vector
+// moved from sqDistance into this helper (first or last; sqrt 0x20, centre 4
+// low), a by-value or `const Vec&` centre, and two-named or reordered
+// sqDistance bodies (z2 first is byte-identical).
+static inline void MultiCamPlace(CPolarSubCamera* cam,
+                                 const JGeometry::TVec3<f32>& center, f32 dist)
+{
+	dist = MsClamp(dist, cam->mCurrentParams->mDistMin,
+	               cam->mCurrentParams->mDistMax);
+
+	f32 ratio = CLBCalcRatio<f32>(cam->mCurrentParams->mDistMin,
+	                              cam->mCurrentParams->mDistMax, dist);
+
+	s16 camPitch = CLBLinearInbetween<s16>(cam->mCurrentParams->mXAngleMin,
+	                                       cam->mCurrentParams->mXAngleMax,
+	                                       ratio);
+
+	cam->mCurrentTarget.mTarget.set(center);
+	CLBPolarToCross(center, &cam->mCurrentTarget.unk18, dist, camPitch, 0);
+}
+
 void CPolarSubCamera::ctrlMultiPlayerCamera_()
 {
 	int count = unk2BC->mPlayerCount;
@@ -196,40 +220,13 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 			}
 		}
 
-		// TODO: retail's fmadds writes camDistance straight into f31, the
-		// register MsClamp then clamps in place; ours computes it in f0 and
-		// copies (one extra `fmr f31, f0`).  A single-expression
-		// `MsClamp(1.5f * MsSqrtf(...) + 300.0f, min, max)` moves the copy
-		// rather than removing it (the clamp then runs in f0), and the
-		// if/else-if spelling reloads mDistMin in both arms (+2).
-		// FPR re-pass 172: the in-place shape that fixed
-		// TCameraShake::setShakeAngleOne_ does not work here either --
-		// `f32 camDistance = MsSqrtf(maxSqDist); camDistance = 1.5f *
-		// camDistance + 300.0f;` keeps the `fmadds f0` plus `fmr f31, f0`
-		// and loses the 4 bytes `maxDist` contributes to the named block
-		// (99.5 -> 99.3, every stack displacement 4 low).
-		// Re-pass 203, both byte-identical to this spelling (99.5%, the same
-		// five operand markers plus the one `fmr`): an uninitialised
-		// `f32 camDistance;` declared ahead of `maxDist` with the fmadds as a
-		// plain assignment, and `f32 camDistance = maxDist; camDistance =
-		// 1.5f * camDistance + 300.0f;` (the in-place shape with `maxDist`
-		// kept, which re-pass 172 had only measured without it). The
-		// coalescing choice is inert to declaration order and to the in-place
-		// form alike.
-		f32 maxDist     = MsSqrtf(maxSqDist);
-		f32 camDistance = 1.5f * maxDist + 300.0f;
-		camDistance     = MsClamp(camDistance, mCurrentParams->mDistMin,
-		                          mCurrentParams->mDistMax);
-
-		f32 ratio = CLBCalcRatio<f32>(mCurrentParams->mDistMin,
-		                              mCurrentParams->mDistMax, camDistance);
-
-		s16 camPitch = CLBLinearInbetween<s16>(
-		    mCurrentParams->mXAngleMin, mCurrentParams->mXAngleMax, ratio);
-
-		mCurrentTarget.mTarget.set(center);
-		CLBPolarToCross(center, &mCurrentTarget.unk18, camDistance, camPitch,
-		                0);
+		// The clamp, the ratio, the pitch and both target writes go through
+		// MultiCamPlace with the unclamped distance as its argument: clamping
+		// the inlined callee's parameter in place computes the fmadds straight
+		// into f31, where a caller-local `camDistance` (in every spelling
+		// batches 172 and 203 measured) computed it in f0 and copied it.
+		f32 maxDist = MsSqrtf(maxSqDist);
+		MultiCamPlace(this, center, 1.5f * maxDist + 300.0f);
 	}
 
 	calcPosAndAt_();
