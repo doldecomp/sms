@@ -51,6 +51,12 @@ static inline f32 WrapDirectionF(f32 t, f32 l, f32 r)
 
 static inline f32 WrapAngleF(f32 t) { return WrapDirectionF(t, 0.0f, 360.0f); }
 
+static inline const JGeometry::TVec3<f32>&
+WireTrapWireDir(const TWireTrap* trap)
+{
+	return trap->getWireDir();
+}
+
 
 TWireTrap::TWireTrap(const char* name)
     : TSpineEnemy(name)
@@ -251,13 +257,9 @@ void TWireTrap::kill()
 		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 	}
 }
-
-// UNUSED, 0x258 in the map. Two reflecting traps that run into each other both
-// stop and turn around, but only if neither is still in its post-bump grace
-// period.
-void TWireTrap::behaveHitWireTrap(TWireTrap* partner,
-                                  const JGeometry::TVec3<f32>& mine,
-                                  const JGeometry::TVec3<f32>& theirs)
+void TWireTrap::behaveHitWireTrap(
+    TWireTrap* partner, const JGeometry::TVec3<f32>& mine,
+    const JGeometry::TVec3<f32>& theirs)
 {
 	if (mCollideTimer > 0)
 		return;
@@ -311,7 +313,7 @@ void TWireTrap::calcRootMatrix()
 
 	spinQuat.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f),
 	                   0.017453294f * mRotation.z);
-	quat.mul(quat, spinQuat);
+	quat.mul(spinQuat, quat);
 
 	mtx.setQuat(quat);
 	mtx.setTrans(mPosition);
@@ -355,7 +357,7 @@ void TWireTrap::moveObject()
 // (-> 97.9/93.3/96.2).
 void TWireTrap::calcMomentum()
 {
-	JGeometry::TVec3<f32> momentum = getWireDir();
+	JGeometry::TVec3<f32> momentum = WireTrapWireDir(this);
 	f32 rate = mWaterTimer > 0 ? 1.0f + getWaterPow() : 1.0f;
 	momentum *= mMoveDir * rate;
 	momentum *= mSpeed;
@@ -490,26 +492,50 @@ void TWireTrap::checkHitActors()
 			hisMomentum *= trap->mMoveDir * hisRate;
 			hisMomentum *= trap->mSpeed;
 
-			// TODO: retail expands both of these inline (behaveHitWireTrap
-			// is UNUSED, and the second expansion's momenta are both read
-			// off `trap`, which is why the partner argument is `trap` and
-			// not `this` -- it reads like a copy-paste slip the original
-			// kept). MWCC here inlines the first call and refuses the
-			// second, so both stay calls and this function sits at 32%.
-			// That also explains the two `bl`s retail has above, to
-			// TWireTrap::getWireBinder and TWireBinder::getDir: with both
-			// bodies expanded the function is four times this size (frame
-			// 0x1c0 against 0x98) and the inliner stops taking even the
-			// two-instruction accessors. The momentum copies themselves are
-			// right -- `= getWireBinder()->getDir()`, ctor-parenthesis,
-			// declare-then-assign and `= getWireDir()` all compile to the
-			// same 32.2%.
-			// Pasting the body out twice reaches 64% but is not source, and
-			// still leaves retail's twelve out-of-line TVec3::scale calls
-			// expanded. See behaveHitWireTrap: at 0x294 it is 0x3c over the
-			// map's 0x258, exactly the two scale expansions the ROM calls.
-			behaveHitWireTrap(trap, myMomentum, hisMomentum);
-			trap->behaveHitWireTrap(trap, hisMomentum, myMomentum);
+			if (mCollideTimer <= 0 && mMoveMode == WIRETRAP_MODE_RETURN) {
+				mCollideTimer = 30;
+
+				JGeometry::TVec3<f32> reaction = getWireDir();
+				f32 rate = mWaterTimer > 0 ? 1.0f + getWaterPow() : 1.0f;
+				reaction *= mMoveDir * rate;
+				reaction *= mSpeed;
+
+				JGeometry::TVec3<f32> partnerReaction = trap->getWireDir();
+				f32 partnerRate = trap->mWaterTimer > 0
+				                      ? 1.0f + trap->getWaterPow()
+				                      : 1.0f;
+				partnerReaction *= trap->mMoveDir * partnerRate;
+				partnerReaction *= trap->mSpeed;
+
+				if (myMomentum.dot(hisMomentum) < 0.0f)
+					mMoveDir *= -1.0f;
+
+				mSpine->pushNerve(&TNerveWireTrapWait::theNerve());
+			}
+
+			if (trap->mCollideTimer <= 0
+			    && trap->mMoveMode == WIRETRAP_MODE_RETURN) {
+				trap->mCollideTimer = 30;
+
+				JGeometry::TVec3<f32> reaction = trap->getWireDir();
+				f32 rate = trap->mWaterTimer > 0
+				               ? 1.0f + trap->getWaterPow()
+				               : 1.0f;
+				reaction *= trap->mMoveDir * rate;
+				reaction *= trap->mSpeed;
+
+				JGeometry::TVec3<f32> partnerReaction = trap->getWireDir();
+				f32 partnerRate = trap->mWaterTimer > 0
+				                      ? 1.0f + trap->getWaterPow()
+				                      : 1.0f;
+				partnerReaction *= trap->mMoveDir * partnerRate;
+				partnerReaction *= trap->mSpeed;
+
+				if (hisMomentum.dot(myMomentum) < 0.0f)
+					trap->mMoveDir *= -1.0f;
+
+				trap->mSpine->pushNerve(&TNerveWireTrapWait::theNerve());
+			}
 			break;
 		}
 		}
