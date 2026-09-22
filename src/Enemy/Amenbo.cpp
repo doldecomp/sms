@@ -172,7 +172,7 @@ void TAmenbo::checkMarioWaterIn()
 	JGeometry::TVec3<f32> local_60;
 
 	if (!isOverTerritory(&local_60) && mSearchDisableCooldown <= 0) {
-		if (isFreeze() && isChangedBlock()) {
+		if (isFreeze() && !isChangedBlock()) {
 			decideTargetOnFingingMario();
 			mSpine->reset();
 			mSpine->setNext(&TNerveAmenboTurn::theNerve());
