@@ -243,12 +243,12 @@ inline void TSunModel::moveSun_()
 	if (gpCameraMario->isMarioIndoor()) {
 		unkB0 = 0.0f;
 	} else {
-		f32 distSq = unkF8[0].squared();
-		if (distSq > 2.0f) {
+		f32 dist = unkF8[0].squared();
+		if (dist > 2.0f) {
 			unkB0 = 0.0f;
 		} else {
-			f32 rate = 0.5f * (2.0f - distSq) * unk194;
-			unkB0    = CLBLinearInbetween<f32>(0.0f, (f32)unk80, rate);
+			dist  = 0.5f * (2.0f - dist) * unk194;
+			unkB0 = CLBLinearInbetween<f32>(0.0f, (f32)unk80, dist);
 		}
 	}
 
@@ -263,11 +263,10 @@ inline void TSunModel::moveSun_()
 	// `dir.sub(mPosition, camPos)` cannot do (it stores each component as
 	// soon as it is computed): the three differences are arguments of
 	// `set`, so they are all evaluated before the body runs.
-	CPolarSubCamera* camera = SMSGetCamera();
 	JGeometry::TVec3<f32> dir;
-	dir.set(mPosition.x - camera->getUnk124().x,
-	    mPosition.y - camera->getUnk124().y,
-	    mPosition.z - camera->getUnk124().z);
+	dir.set(mPosition.x - SMSGetCamera()->getUnk124().x,
+	    mPosition.y - SMSGetCamera()->getUnk124().y,
+	    mPosition.z - SMSGetCamera()->getUnk124().z);
 	MsVECNormalize(&dir, &dir);
 
 	// Header round 30 closed this: the out-of-line `set(const Vec&)` is the
@@ -283,48 +282,16 @@ inline void TSunModel::moveSun_()
 	// (no temporary, no call) and `.set()` on a named local picks the
 	// `set<TY>` member template, which is why header round 24's forwarder
 	// chains never reached the `bl` (see the trial list in JGVec3.hpp).
-	// TODO: the frame is exact and one difference is left: the `Mtx mtx`
-	// slot (retail 0x78, ours 0x70, an 8-byte hole between `mtx` and
-	// `dir`).  The `unkB0` argument scheduling that used to sit beside it
-	// is closed: naming the third argument (`f32 rate = 0.5f *
-	// (2.0f - distSq) * unk194;`) puts every load and both `fmuls` of that
-	// call on retail's schedule and colouring, but only with `nearness`
-	// folded into it -- naming both locals is +8 of frame, naming just
-	// `nearness` (the old spelling) leaves the schedule wrong at the same
-	// frame, so the lever is exactly one named f32 there.
-	// Research batch 207 explains the slot order:
-	// an inlined callee's class-object locals form their own block, and the
-	// blocks stack downward in *expansion* order below the caller's own
-	// named locals, so a `Mtx` declared in perform can never sit below this
-	// expansion's `dir`/temp pair - it has to be a local of a *second*
-	// inlined callee, which is what calcAnim_ is.  What is left is a
-	// constant 8 bytes at the top of calcAnim_'s block (ours is
-	// dir - mtx = 0x38, retail 0x30; it was 4 before the named `rate`
-	// moved `dir` up): measured invariant under a 4- or
-	// 8-byte local declared before or after `mtx`, hoisting `calc()` out,
-	// a `J3DModel*` binder (re-measured after the `rate` change: a binder
-	// over `unk48` placed *after* `mtx`, where the expansion-order rule
-	// predicts its block lands below `mtx`, is +8 of frame and leaves
-	// `mtx` where it was), and `MTXCopy(mtx, getBaseTRMtx())` in place of
-	// `setBaseTRMtx`, and a scratch TU with the same two-callee shape shows
-	// no such pad, so it comes from something inside this body.  Re-measured
-	// still inert (0 frame, mtx stays 0x70): used `J3DModel*` before mtx,
-	// TU-local `return unk48` fork (bare and named-inside), named fork
-	// result after mtx, `getScaling()` / 3-arg `MsMtxSetTRS` /
-	// `MTXCopy(mtx, getBaseTRMtx())`, `calcAnim_(J3DModel*)`,
-	// `getMaterialNodePointer` at both CUE_ENTRY sites, hoisted `dir`
-	// declaration, used `f32 scaleZ`, `getScaling` fork + named ref,
-	// `isInBounds(unk1A8)`, and dropping the named `rate` (schedule now
-	// matches either way; dir stays 0xa8).  The named
-	// `camera` is worth -8 of low region and is what makes the frame exact.
-	// Measured on the four camera reads with no binder: `gpCamera->` in
-	// place of `SMSGetCamera()` is -4 at each of the three subtraction
-	// operands and +0 at the scaleAdd argument, and any single one of the
-	// three reaches the same 7 markers with `mtx` at 0x74.  With the binder
-	// the scaleAdd argument has to stay a fresh read of the global (retail
-	// reloads `gpCamera` there after MsVECNormalize, so it was never a
-	// named local in retail): `camera->getUnk124Vec()` costs 3 extra
-	// instructions and `SMSGetCamera()->` gives the 8 bytes back.
+	// Slot order (batch cc17): every named scalar of this inlined body that
+	// is not a register-only temporary costs a 4-byte slot at the bottom of
+	// its block, between `dir` and calcAnim_'s `mtx`, where retail has none.
+	// A named `rate` for CLBLinearInbetween's third argument and a named
+	// `CPolarSubCamera* camera` were each one such slot.  Reusing `dist`
+	// for the rate keeps retail's schedule (the product is evaluated before
+	// the `unk80` conversion) without a second local, and each
+	// `SMSGetCamera()` read is +4 of low pool, so the three dir operands
+	// through it and the scaleAdd argument through `gpCamera` land `mtx`
+	// at 0x78 directly under `dir`.
 	unk198.scaleAdd(250000.0f, dir, gpCamera->getUnk124Vec());
 
 	if (unk64)
