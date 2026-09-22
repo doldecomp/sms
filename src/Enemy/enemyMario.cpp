@@ -356,7 +356,8 @@ void TEnemyMario::initEnemyValues()
 		J3DModelData* pencilModelData = J3DModelLoaderDataBase::load(
 		    JKRGetResource("/scene/kagemario/kagemario_brush.bmd"), 0x11040000);
 		mBrushModel           = new J3DModel(pencilModelData, 0, 1);
-		ResTIMG* dirtyTexture = (ResTIMG*)JKRGetResource(cDirtyFileName);
+		ResTIMG* dirtyTexture
+		    = (ResTIMG*)JKRFileLoader::getGlbResource(cDirtyFileName);
 		if (dirtyTexture != nullptr)
 			SMS_ChangeTextureAll(pencilModelData, cDirtyTexName, *dirtyTexture);
 
@@ -412,7 +413,8 @@ void TEnemyMario::initEnemyValues()
 		         "/scene/map/map/pad%d/linkdata.bin", mPadIndex);
 	}
 
-	void* linkData = JKRGetResource(linkDataPath);
+	// TODO: frame only -- retail reserves 0xa0 more stack (0x590 against 0x4f0).
+	void* linkData = JKRFileLoader::getGlbResource(linkDataPath);
 	if (linkData != nullptr) {
 		s32 linkDataSize
 		    = JKRFileLoader::getVolume("scene")->getResSize(linkData);
@@ -422,14 +424,14 @@ void TEnemyMario::initEnemyValues()
 		stream.skip(2);
 		stream.readString();
 
-		u32 nodeCount;
-		stream.read(&nodeCount, sizeof(nodeCount));
+		u32 nodeCount = stream.read32b();
 		mReplayLinks    = new TReplayLink[nodeCount][3];
 		replayFileNames = new char*[nodeCount * 3];
 		for (u32 i = 0; i < nodeCount * 3; ++i) {
 			replayFileNames[i] = new char[3];
 		}
 
+		int linkCount = 0;
 		for (u32 node = 0; node < nodeCount; ++node) {
 			stream.skip(6);
 			stream.readString();
@@ -437,26 +439,19 @@ void TEnemyMario::initEnemyValues()
 			stream.readString();
 			for (int link = 0; link < 3; ++link) {
 				stream.skip(2);
-				// TODO: retail sign-extends the byte before comparing it
-				// (extsb, then cmpwi 0x2a), so this local was a signed char.
-				// Spelling it `char` reproduces those three instructions but
-				// permutes the whole function's callee-saved registers
-				// (97.4% -> 96.2%, 150 operand diffs -> 448), so it waits for
-				// whatever named locals retail keeps live here.
-				u8 replayLetter;
-				stream.read(&replayLetter, sizeof(replayLetter));
+				char replayLetter = stream.readS8();
 				if (replayLetter == '*') {
 					mReplayLinks[node][link].mNodeIndex   = 0xff;
 					mReplayLinks[node][link].mReplayIndex = 0xff;
 				} else {
-					snprintf(replayFileNames[replayCount], 3, "%c%c",
-					         (char)(node + 'A'), (char)replayLetter);
+					snprintf(replayFileNames[linkCount], 3, "%c%c",
+					         (char)(node + 'A'), replayLetter);
 					mReplayLinks[node][link].mNodeIndex   = replayLetter - 'A';
-					mReplayLinks[node][link].mReplayIndex = replayCount;
-					++replayCount;
+					mReplayLinks[node][link].mReplayIndex = linkCount++;
 				}
 			}
 		}
+		replayCount = linkCount;
 	}
 
 	if (mPadIndex != 0) {
@@ -466,14 +461,15 @@ void TEnemyMario::initEnemyValues()
 	}
 
 	mTrembleStrength = 2.5f;
+	int inputCount   = replayCount;
 	if (mPlayerType == PLAYER_TYPE_MONTE_MAN) {
 		replayFileNames = (char**)recordFileNamesMonteMan;
-		replayCount     = 3;
+		inputCount      = 3;
 	}
 
-	if (replayCount > 0) {
-		mInputReplays = new TMarioInputReplay*[replayCount];
-		for (int i = 0; i < replayCount; ++i) {
+	if (inputCount > 0) {
+		mInputReplays = new TMarioInputReplay*[inputCount];
+		for (int i = 0; i < inputCount; ++i) {
 			char replayPath[0x100];
 			if (mPadIndex == 0) {
 				snprintf(replayPath, sizeof(replayPath),
