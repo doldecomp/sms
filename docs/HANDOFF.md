@@ -122,6 +122,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   Symbol order/linkage is unchanged; the validator still reports the pre-existing missing weak `TVec3<f32>::set(float,float,float)` and three UNUSED-size warnings.
 - Terra-low experiment: `MoveBG/MapObjGeneral` returned a clean no-gain audit; `Enemy/limitkoopa` corrected the head-water comparison, raising that `receiveMessage` **73.88 -> 74.36%** and the unit **88.87 -> 88.89%**.
   Low is useful for bounded semantic checks but, at 1/2 with one small gain, has not matched medium's reconstruction yield; keep medium as the default and use low selectively.
+- Landed `MoveBG/MapObjFence`: binding the horizontal water-fence matrix pointer raised `TFenceWaterH::control` **97.17 -> 99.62%** and the unit **99.59 -> 99.79%**.
+  The file's remaining four residues are stack/frame allocation plus one graph-node CSE difference.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
