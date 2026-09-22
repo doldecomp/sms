@@ -189,6 +189,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `JSystem/JParticle/JPAEmitter`: corrected the order of particle velocity-vector accumulation in `createParticle`.
   `createParticle` rose **96.948074 -> 97.11%** and unit fuzzy similarity **98.49662 -> 98.56%**; aggregate fuzzy similarity rose **98.091130 -> 98.091340%**, while matched-code, data, exact-function, and linked-unit counters did not move.
   The validator still has the pre-existing missing UNUSED `JPADraw::~JPADraw()` failure and four pre-existing UNUSED-size warnings; the DOL and no-regression gates remain green.
+- Landed `Enemy/mameGesso`: restored thrown velocity from Mario's facing angle with independent per-component parameter reads and sine/cosine paths.
+  `TNerveMameGessoThrown::execute` rose **95.04794 -> 97.11%** and unit fuzzy similarity **99.608284 -> 99.70%**; aggregate fuzzy similarity rose **98.091340 -> 98.091680%**, while matched-code, exact-function, and linked-unit counters did not move.
+- Whole-file medium audit of `Enemy/BossHanachanEffect` returned clean with no safe gain.
+  Its two remaining functions are documented frame/register-placement residues; do not repeat it without a new compiler-allocation lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
