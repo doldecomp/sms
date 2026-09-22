@@ -8,6 +8,7 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <Camera/CameraShake.hpp>
@@ -258,19 +259,13 @@ void TBellDolpic::calcRootMatrix()
 	PSMTXConcat(model->getBaseTRMtx(), temp, model->getBaseTRMtx());
 }
 
-// TODO (closure batch 152): 98.8%, instruction-exact, frame exact (0x48). Two
-// clusters, both a pure FPR permutation: the cross2/normalise block rotates
-// f4-f7 by one, and the `rand()` scaling chain permutes f0-f3. Worth
-// recording: objdiff reports the two `.sdata2` relocations in that chain as
-// *equal* (@3200 == our @1513, @3201 == our @1512), so the literal order is
-// already right and this is not the pool-order problem the differing ids
-// suggest -- it is codegen-tells.md's known-open FPR permutation.
-// FPR re-pass 172: both clusters are volatile-FPR *block* trades, which
-// research 171 says have no source handle. In the rand() chain retail keeps
-// both literals in f1/f0 and chains each product into the literal's register
-// where we load them into f2/f3 and accumulate into f0; writing the products
-// as `0.000030517578f * (f32)r` and `14400.0f * tmp` is byte-identical, and
-// un-naming the whole chain is 30 markers with the frame 8 bytes short.
+// TODO: 99.4%, instruction-exact, frame exact (0x48). The rand() chain is
+// `f32 tmp = MsRandF();` (cc36: the inlined helper's product lands in
+// retail's f1/f0 chain; research 171's "no source handle" was wrong here).
+// Left: the cross2/normalise block rotates f4-f7 by one (retail f4-f7 =
+// diff.y, up.z, up.y, diff.x; ours diff.x takes f4). Tried (cc36): cross()
+// (97.8), a spelled-out set() with every operand order, cross2(diff, up)
+// plus negate(), diff.sub()/component subtraction/copy-ctor forms (inert).
 void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 {
 	if (fabsf(unk150) > 0.01f)
@@ -291,8 +286,7 @@ void TBellDolpic::ring(const JGeometry::TVec3<f32>& pos)
 
 	unk150 -= 0.5f;
 
-	int r   = rand();
-	f32 tmp = (f32)r * 0.000030517578f;
+	f32 tmp = MsRandF();
 	unk158  = (int)(tmp * 14400.0f) + 0x5460;
 }
 
@@ -425,11 +419,19 @@ void TBellDolpic::control()
 
 // TDptMonteFence
 
+// Binding level over gpMSound, +8 of low region per site (touchPlayer,
+// TDemoCannon::perform).
+static inline MSound* MapObjDolpicGetMSound()
+{
+	MSound* sound = gpMSound;
+	return sound;
+}
+
 void TDptMonteFence::touchPlayer(THitActor* actor)
 {
 	if (SMS_IsMarioStatusThrownDown()) {
-		SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
-		                                nullptr, 0, 4);
+		MapObjDolpicGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH,
+		                                         &mPosition, 0, nullptr, 0, 4);
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_GLASS_BREAK, &mPosition, 0,
 		                                nullptr, 0, 4);
 
@@ -561,10 +563,10 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 		gpMarioParticleManager->emitAndBindToMtxPtr(235, mtx, 0, nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(236, mtx, 0, nullptr);
 
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_CANNON_FIRE_MARIO, &mPosition,
-		                                0, nullptr, 0, 4);
-		SMSGetMSound()->startSoundActor(MSD_SE_DM_FLY_TO_PINNNA, &mPosition, 0,
-		                                nullptr, 0, 4);
+		MapObjDolpicGetMSound()->startSoundActor(MSD_SE_EN_CANNON_FIRE_MARIO,
+		                                         &mPosition, 0, nullptr, 0, 4);
+		MapObjDolpicGetMSound()->startSoundActor(MSD_SE_DM_FLY_TO_PINNNA,
+		                                         &mPosition, 0, nullptr, 0, 4);
 	}
 
 	frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
@@ -574,9 +576,7 @@ void TDemoCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		frameCtrl = unk13C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkPass(204.0f)) {
-			MSound* sound = gpMSound;
-			s16 hp        = SMS_GetMarioHP();
-			sound->startMarioVoice(30911, hp, 0);
+			MapObjDolpicGetMSound()->startMarioVoice(30911, SMS_GetMarioHP(), 0);
 
 			JAISound* voice = gpMSound->checkMarioVoicePlaying(0);
 			if (voice)
