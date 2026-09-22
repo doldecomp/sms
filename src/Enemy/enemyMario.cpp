@@ -261,13 +261,20 @@ void TEnemyMario::initModel()
 }
 
 // TODO: wrong! off by 1 instruction!
+// fabricated: retail reaches the graph through a const tracer one inline
+// level down (it calls the const getGraph overload out of line in consider).
+static inline const TGraphWeb* EMarioConstGraph(const TGraphTracer* tracer)
+{
+	return tracer->getGraph();
+}
+
 BOOL TEnemyMario::canJumpToNode() const
 {
-	// TODO: missing some inlines which getGraph should live inside of
-	int nodeIndex = mEMario->getTracer()->getGraph()->findNearestNodeIndex(
-	    getPosition(), -1);
-	return mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
-	    2);
+	int nodeIndex = EMarioConstGraph(mEMario->getTracer())
+	                    ->findNearestNodeIndex(mPosition, -1);
+	return EMarioConstGraph(mEMario->getTracer())
+	    ->getGraphNode(nodeIndex)
+	    .checkFlag(2);
 }
 
 // UNUSED in retail (inlined away), size 0x8 = 2 PPC instructions. A plain
@@ -825,7 +832,8 @@ void TEnemyMario::emWalkAround()
 // fabricated
 static inline f32 EMarioDistToNextNode(TEMario* em)
 {
-	JGeometry::TVec3<f32> toNode = em->getUnk104().getPoint() - em->mPosition;
+	JGeometry::TVec3<f32> toNode = em->getUnk104().getPoint();
+	toNode -= em->mPosition;
 	return toNode.length();
 }
 
@@ -994,8 +1002,9 @@ void TEnemyMario::emReplay()
 
 	int nodeIndex
 	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
-	if (mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
-	        0x40)) {
+	if (EMarioConstGraph(mEMario->getTracer())
+	        ->getGraphNode(nodeIndex)
+	        .checkFlag(0x40)) {
 		changeEMDoing(EM_DOING_WAITING_MARIO);
 		return;
 	}
@@ -1117,16 +1126,15 @@ void TEnemyMario::emReplayJumpToNearestNode()
 		int validLinks[3];
 		int validCount = 0;
 		for (int i = 0; i < 3; ++i) {
-			dots[i]           = 0.0f;
-			TReplayLink& link = links[i];
-			if (link.mNodeIndex == 0xFF) {
+			dots[i] = 0.0f;
+			if (links[i].mNodeIndex == 0xFF) {
 				continue;
 			}
 
 			JGeometry::TVec3<f32> candidatePoint;
 			mEMario->getTracer()
 			    ->getGraph()
-			    ->getGraphNode(link.mNodeIndex)
+			    ->getGraphNode(links[i].mNodeIndex)
 			    .getPoint(&candidatePoint);
 			JGeometry::TVec3<f32> candidateDirection(candidatePoint
 			                                         - currentPoint);
@@ -1157,10 +1165,9 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			}
 		}
 
-		TReplayLink& link = links[validLinks[selected]];
-		mReplayIndex      = link.mReplayIndex;
-		nextNode
-		    = &mEMario->getTracer()->getGraph()->getGraphNode(link.mNodeIndex);
+		mReplayIndex = replayLinks[nodeIndex][validLinks[selected]].mReplayIndex;
+		nextNode     = &mEMario->getTracer()->getGraph()->getGraphNode(
+		    links[validLinks[selected]].mNodeIndex);
 	}
 
 	JGeometry::TVec3<f32> nextPoint;
@@ -1471,13 +1478,7 @@ void TEnemyMario::emGetPad()
 // TODO: Reconstruct the retail deferred-inline boundaries that emit the
 // TMatrix34/TRotation3 constructors and TPathNode::getPoint without changing
 // shared JGeometry/Graph code generation.
-// TODO: retail's consider() *calls* three header inlines this TU never emits:
-// TGraphTracer::getGraph() twice and TPathNode::getPoint() once, both weak in
-// retail's object and both MISSING from ours. It is not the caller-size family:
-// our frame is larger (0x250 against retail's 0x220). The `bl`s go to the
-// **const** overload getGraph__12TGraphTracerCFv, which a const receiver would
-// select, so the lead is that retail reaches the graph through a const tracer
-// here; why a const header inline would then stay out of line is unexplained.
+// TODO: frame only -- ours reserves 0x18 more stack than retail's 0x220.
 void TEnemyMario::consider()
 {
 	switch (mEMDoing) {
