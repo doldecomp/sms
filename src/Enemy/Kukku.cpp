@@ -77,6 +77,11 @@ static inline J3DModel* KukkuGetModel(const MActor* p)
 	return model;
 }
 
+// TODO: 99.9%, slot-only: the end()/`what` pair of the push_back sits 4 bytes
+// high (0x6c/0x70 against 0x68/0x6c). Inert or worse: the chained search<T>
+// receiver, `group->insert(this)`, a `(THitActor*)this` or named `self`
+// argument, `image != nullptr`, raw mMActor->getModel(), one combined
+// onHitFlag.
 void TKukkuBall::init()
 {
 	initHitActor(0x1000002E, 1, -0x80000000, 30.0f, 30.0f, 0.0f, 0.0f);
@@ -558,9 +563,11 @@ void TKukku::shotBall()
 	                          4);
 }
 
-// TODO: 78.5%. Instruction differences are confined to one stfsu and one
-// reload of mOneUp; the rest is a 0x90 frame gap from the two inlined
-// TQuat4::rotate() expansions.
+// TODO: 80.7%. Retail keeps both quaternions scalar-replaced in FPRs (only
+// sinf/cosf pairs survive of setEulerY/X) and calls TVec3::set<f>(f, f, f)
+// out of line for `forward` (the unit's missing weak set<f>, depth 4), so
+// its frame is 0x158 against our 0x1e8. Inert or worse: one-argument
+// rotate(), rotating `forward` straight into `velocity`, `forward.set(...)`.
 void TKukku::dropCoins()
 {
 	if (mDroppedCoins > 10)

@@ -138,7 +138,10 @@ void TKazekun::initParticle()
 // our 0x70, i.e. we build 8 bytes more inline temporaries before the local
 // matrix. setTrans(x, y, z), getMActor()->getModel() and checkTakeFlag in
 // place of isTaken() are all worse, so the extra pair sits inside one of the
-// inlined helpers (hasWind or updateEffect), not here.
+// inlined helpers (hasWind or updateEffect), not here. Also inert or worse
+// (2026-09-22): raw mHolder tests, mMActor->getModel() in updateEffect,
+// three-float setTrans; `hasWind() == true` lands the frame but drops the
+// match to 80.8.
 void TKazekun::calcRootMatrix()
 {
 	if (isTaken()) {
