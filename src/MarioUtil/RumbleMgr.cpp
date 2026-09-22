@@ -215,13 +215,9 @@ void RumbleControllerMgr::reset()
 	unk12         = 0;
 }
 
-// Pragma residue (sweep 360): protects RumbleMgr::start(int, f32*) and
-// start(int, int, f32*) (both 100 -> 0 without it). This body is already
-// byte- and map-size exact (0x58) at 7 statements against the depth-1 budget
-// of 14, so retail's spelling held 8 more zero-codegen statements. Measured
-// and rejected: `-inline noauto` on the whole object, which also stops the
-// in-class RumbleChannelMgr inlines (11 functions in this unit drop).
-#pragma dont_inline on
+// Exact at the map's 0x58. The UNUSED four-argument RumbleMgr::start
+// overloads (0x94) expand this at depth 1, while the two- and three-argument
+// ones forward to them and so reach it at depth 2 or 3, where it is called.
 void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
                                 f32* multiplierF)
 {
@@ -232,12 +228,8 @@ void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
 		}
 	}
 }
-#pragma dont_inline reset
 
-// Pragma residue (sweep 360): protects RumbleMgr::start(int, Vec*) and
-// start(int, int, Vec*). Same shape as the f32* overload above: exact at the
-// map's 0x58, 7 statements against 14.
-#pragma dont_inline on
+// Same shape and the same call split as the f32* overload above.
 void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
                                 Vec* worldPos)
 {
@@ -248,7 +240,6 @@ void RumbleControllerMgr::start(int channelDataIdx, int repeatCount,
 		}
 	}
 }
-#pragma dont_inline reset
 
 // Size needed: 0x10C, current: 0x10C
 void RumbleControllerMgr::stop()
@@ -260,11 +251,9 @@ void RumbleControllerMgr::stop()
 	}
 }
 
-// Pragma residue (sweep 360): protects RumbleMgr::stop(int) (100 -> 0).
-// Exact at the map's 0x13c -- the size is the inlined RumbleChannelMgr::reset,
-// and statements a callee gains from its own inlines are free, so this is 7
-// statements against 14.
-#pragma dont_inline on
+// Exact at the map's 0x13c (the size is the inlined RumbleChannelMgr::reset).
+// Expanded by the UNUSED RumbleMgr::stop(int, int) (0x178) and called from
+// stop(int), which forwards to it.
 void RumbleControllerMgr::stop(int channelDataIdx)
 {
 	for (int i = 0; i < RUMBLE_CHANNELS_PER_CONTROLLER; i++) {
@@ -274,7 +263,6 @@ void RumbleControllerMgr::stop(int channelDataIdx)
 		}
 	}
 }
-#pragma dont_inline reset
 
 // Size needed: 0x11C, current: 0x11C
 bool RumbleControllerMgr::channelMgrIsAllFree()
@@ -403,74 +391,40 @@ void RumbleMgr::reset()
 
 void RumbleMgr::start(int channelDataIdx, f32* multiplierF)
 {
-	int controllerIdx = 0;
-
-	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
-		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, 1, multiplierF);
-	}
+	start(channelDataIdx, 1, multiplierF);
 }
 
 void RumbleMgr::start(int channelDataIdx, Vec* worldPos)
 {
-	int controllerIdx = 0;
-
-	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
-		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, 1, worldPos);
-	}
+	start(channelDataIdx, 1, worldPos);
 }
 
 // Size needed: 0x74, current: 0x74
 void RumbleMgr::start(int channelDataIdx, MtxPtr mtx)
 {
-	int controllerIdx = 0;
-
-	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
-		Vec worldPos;
-		worldPos.x = mtx[3][0];
-		worldPos.y = mtx[3][1];
-		worldPos.z = mtx[3][2];
-
-		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, 1, &worldPos);
-	}
+	start(channelDataIdx, 1, mtx);
 }
 
 void RumbleMgr::start(int channelDataIdx, int repeatCount, f32* multiplierF)
 {
 	int controllerIdx = 0;
-
-	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
-		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
-		                                        multiplierF);
-	}
+	start(controllerIdx, channelDataIdx, repeatCount, multiplierF);
 }
 
 void RumbleMgr::start(int channelDataIdx, int repeatCount, Vec* worldPos)
 {
 	int controllerIdx = 0;
-
-	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
-		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
-		                                        worldPos);
-	}
+	start(controllerIdx, channelDataIdx, repeatCount, worldPos);
 }
 
 // Size needed: 0x70, current: 0x70
 void RumbleMgr::start(int channelDataIdx, int repeatCount, MtxPtr mtx)
 {
 	int controllerIdx = 0;
-
-	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
-		Vec worldPos;
-		worldPos.x = mtx[3][0];
-		worldPos.y = mtx[3][1];
-		worldPos.z = mtx[3][2];
-
-		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
-		                                        &worldPos);
-	}
+	start(controllerIdx, channelDataIdx, repeatCount, mtx);
 }
 
-// Size needed: 0x94, current: 0x58
+// Size needed: 0x94, current: 0x84
 void RumbleMgr::start(int controllerIdx, int channelDataIdx, int repeatCount,
                       f32* multiplierF)
 {
@@ -480,7 +434,7 @@ void RumbleMgr::start(int controllerIdx, int channelDataIdx, int repeatCount,
 	}
 }
 
-// Size needed: 0x94, current: 0x58
+// Size needed: 0x94, current: 0x84
 void RumbleMgr::start(int controllerIdx, int channelDataIdx, int repeatCount,
                       Vec* worldPos)
 {
@@ -490,19 +444,16 @@ void RumbleMgr::start(int controllerIdx, int channelDataIdx, int repeatCount,
 	}
 }
 
-// Size needed: 0x7C, current: 0x74
+// Size needed: 0x7C, current: 0x70
 void RumbleMgr::start(int controllerIdx, int channelDataIdx, int repeatCount,
                       MtxPtr mtx)
 {
-	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
-		Vec worldPos;
-		worldPos.x = mtx[3][0];
-		worldPos.y = mtx[3][1];
-		worldPos.z = mtx[3][2];
+	Vec worldPos;
+	worldPos.x = mtx[3][0];
+	worldPos.y = mtx[3][1];
+	worldPos.z = mtx[3][2];
 
-		mControllerMgrTbl[controllerIdx]->start(channelDataIdx, repeatCount,
-		                                        &worldPos);
-	}
+	start(controllerIdx, channelDataIdx, repeatCount, &worldPos);
 }
 
 // @stack
@@ -522,13 +473,10 @@ void RumbleMgr::stop()
 void RumbleMgr::stop(int channelDataIdx)
 {
 	int controllerIdx = 0;
-
-	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
-		mControllerMgrTbl[controllerIdx]->stop(channelDataIdx);
-	}
+	stop(controllerIdx, channelDataIdx);
 }
 
-// Size needed: 0x178, current: 0x50
+// Size needed: 0x178, current: 0x168
 void RumbleMgr::stop(int controllerIdx, int channelDataIdx)
 {
 	if (!mPaused && mActive && mControllerMgrTbl[controllerIdx] != nullptr) {
