@@ -168,6 +168,10 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `initECDisp` rose **97.549934 -> 99.75%** and unit fuzzy similarity **96.87826 -> 98.18%**; no exact-function or linked-unit counter moved.
 - Whole-file medium audits of `THPPlayer/THPAudioDecode`, `NPC/NpcParts`, and `MSound/MSoundStruct` returned clean with no safe gain.
   Their remaining differences are callee-saved-register ordering, frame allocation, motion-blend scheduling, and template temporary placement; do not repeat them without a new compiler-shape lead.
+- Whole-file medium audits of `Enemy/feetinv` and `MoveBG/MapObjFlag` returned clean with no safe gain.
+  Their remaining differences are IK temporary/register scheduling and instruction-identical frame gaps; do not repeat them without a new compiler-shape lead.
+- Landed `Map/MapMakeList`: corrected the commutative Z-bound min/max operand ordering in `getGridArea`, raising it **99.48333 -> 99.50%** with no regressions.
+  The unit and aggregate percentages do not move at report precision; the DOL remains byte-identical.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
