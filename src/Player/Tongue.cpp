@@ -120,8 +120,6 @@ void TYoshiTongue::rest(const JGeometry::TVec3<f32>& a,
 {
 }
 
-// Pragma residue (sweep 360): protects TYoshiTongue::movement (82.3 -> 71.1).
-#pragma dont_inline on
 // Binding level over a raw member read, worth +8 of low region in
 // TYoshiTongue::canGo (batch 127).
 static inline TMap* TongueGetMap()
@@ -130,11 +128,15 @@ static inline TMap* TongueGetMap()
 	return map;
 }
 
+// Retail calls canGo out of line from movement, so the body is at least 15
+// statements; the named `along` and `floorY` are the two that reach it
+// (instruction-neutral) and replace the old `#pragma dont_inline`.
 BOOL TYoshiTongue::canGo()
 {
 	JGeometry::TVec3<f32> toTip = mTipPos - mHeadPos;
 
-	if (toTip.dot(mHeadDir) < 0.0f)
+	f32 along = toTip.dot(mHeadDir);
+	if (along < 0.0f)
 		return false;
 
 	if (TongueGetMap()->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
@@ -143,8 +145,9 @@ BOOL TYoshiTongue::canGo()
 
 	const TBGCheckData* ground;
 	f32 groundY = gpMap->checkGround(mTipPos.x, mTipPos.y, mTipPos.z, &ground);
-	if (50.0f + groundY > mTipPos.y) {
-		mTipPos.y = 50.0f + groundY;
+	f32 floorY = 50.0f + groundY;
+	if (floorY > mTipPos.y) {
+		mTipPos.y = floorY;
 		return true;
 	}
 
@@ -158,7 +161,6 @@ BOOL TYoshiTongue::canGo()
 
 	return true;
 }
-#pragma dont_inline off
 
 THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 {
