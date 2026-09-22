@@ -52,6 +52,21 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 // TODO: 98.7%. Frame 0x40 against 0x58 -- 24 bytes, and the ROM's locals start
 // at 0x38 where ours start at 0x24 -- plus the float register numbering that
 // follows.
+// Two levels for CLBCalc2DFPos: the reciprocal of the view depth and the
+// projected depth, computed in the value parameter in place. Together they
+// give retail's volatile FPR assignment and the frame (0x58).
+static inline f32 CLBInvDepth(f32 z)
+{
+	return 1.0f / -z;
+}
+
+static inline f32 CLBProjectDepth(const f32 (*proj_mtx)[4], f32 z, f32 scale)
+{
+	z = proj_mtx[2][2] * z + proj_mtx[2][3];
+	z *= scale;
+	return z;
+}
+
 void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
                    const f32 (*view_mtx)[4], const Vec& world_pos,
                    u32* out_depth, bool disable_z_clip)
@@ -65,10 +80,9 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
 		return;
 	}
 
-	f32 perspectiveFactor = 1.0f / -camSpacePos.z;
+	f32 perspectiveFactor = CLBInvDepth(camSpacePos.z);
 
-	f32 z = proj_mtx[2][2] * camSpacePos.z + proj_mtx[2][3];
-	z *= perspectiveFactor;
+	f32 z = CLBProjectDepth(proj_mtx, camSpacePos.z, perspectiveFactor);
 	if (!disable_z_clip && (z > 0.0f || z < -1.0f)) {
 		out_ndc_pos->x = out_ndc_pos->y = 10000.0f;
 		return;
@@ -196,6 +210,12 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
                       const Vec& param_3, const Vec& param_4)
 {
 	// TODO: Why is so much of this copy-pasted from CLBCalcPointInCubeRatio?
+	// TODO: frame 0x70 against 0x98. The header CLBDegToShortAngle fixed the
+	// angle-product registers (+0x18); tried (cc41) for the rest: JMASCos/
+	// JMASSin forks and binders (frame lands, lfsx pair swaps), a product
+	// helper for the cross terms, and direct/named half-extent helpers on the
+	// final test at every site subset (+0x20 clean at the two upper bounds,
+	// every frame-exact subset changes code).
 
 	f32 dx = param_1.x - param_2.x;
 	f32 dy = param_1.y - param_2.y;
@@ -205,7 +225,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 
 	if (param_3.y != 0.0f || param_3.x != 0.0f || param_3.z != 0.0f) {
 		if (param_3.z != 0.0f) {
-			s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
+			s16 zAngle = CLBDegToShortAngle(-param_3.z);
 			f32 cosZ   = JMASCos(zAngle);
 			f32 sinZ   = JMASSin(zAngle);
 
@@ -216,7 +236,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 		}
 
 		if (param_3.y != 0.0f) {
-			s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
+			s16 yAngle = CLBDegToShortAngle(-param_3.y);
 			f32 cosY   = JMASCos(yAngle);
 			f32 sinY   = JMASSin(yAngle);
 
@@ -227,7 +247,7 @@ bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,
 		}
 
 		if (param_3.x != 0.0f) {
-			s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
+			s16 xAngle = CLBDegToShortAngle(-param_3.x);
 			f32 cosX   = JMASCos(xAngle);
 			f32 sinX   = JMASSin(xAngle);
 
@@ -258,7 +278,7 @@ void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
 	f32 dz = param_1.z - param_2.z;
 
 	if (param_3.z != 0) {
-		s16 zAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.z));
+		s16 zAngle = CLBDegToShortAngle(-param_3.z);
 		f32 cosZ   = JMASCos(zAngle);
 		f32 sinZ   = JMASSin(zAngle);
 
@@ -269,7 +289,7 @@ void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
 	}
 
 	if (param_3.y != 0) {
-		s16 yAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.y));
+		s16 yAngle = CLBDegToShortAngle(-param_3.y);
 		f32 cosY   = JMASCos(yAngle);
 		f32 sinY   = JMASSin(yAngle);
 
@@ -280,7 +300,7 @@ void CLBCalcPointInCubeRatio(const Vec& param_1, const Vec& param_2,
 	}
 
 	if (param_3.x != 0) {
-		s16 xAngle = CLBRoundf<s16>(DEG2SHORTANGLE(-param_3.x));
+		s16 xAngle = CLBDegToShortAngle(-param_3.x);
 		f32 cosX   = JMASCos(xAngle);
 		f32 sinX   = JMASSin(xAngle);
 
