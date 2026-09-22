@@ -102,6 +102,9 @@ void TCraneRotY::load(JSUMemoryInputStream& stream)
 
 // TCraneUpDown
 
+static inline TCraneCargo* CraneCargoF(TCraneUpDown* p) { return p->mCargo; }
+static inline MtxPtr CraneAnmMtxF(TCraneUpDown* p) { return p->getModel()->getAnmMtx(0); }
+
 f32 TCraneUpDown::mRotSpeed = 0.1f;
 int TCraneUpDown::mWaitTime = 120;
 
@@ -139,9 +142,9 @@ void TCraneUpDown::control()
 
 	// The cargo hangs 1500 units out along the arm; rotate that offset by the
 	// crane's own X and Y and add the crane's position.
-	mCargo->mPosition.set(0.0f, 0.0f, 1500.0f);
+	CraneCargoF(this)->mPosition.set(0.0f, 0.0f, 1500.0f);
 
-	MtxPtr mtx = getModel()->getAnmMtx(0);
+	MtxPtr mtx = CraneAnmMtxF(this);
 
 	Mtx rotY;
 	MTXIdentity(rotY);
@@ -151,13 +154,9 @@ void TCraneUpDown::control()
 	MTXMultVec(mtx, &mCargo->mPosition, &mCargo->mPosition);
 
 	mCargo->mPosition.x += mPosition.x;
-	mCargo->mPosition.y += (mPosition.y - mYOffset) + mCargo->mYOffset;
+	mCargo->mPosition.y += (mPosition.y - mYOffset) + mCargo->getObjCollisionHeightOffset();
 	mCargo->mPosition.z += mPosition.z;
 
-	// TODO: frame 0x90 vs 0xa0 and a commutative fadds on
-	// (mPosition.y - mYOffset) + mCargo->mYOffset. The sound/state binders
-	// that closed TCraneRotY::control take +0x18; getModel/cargo/dy binders
-	// skip 0xa0 (0x98 or 0xa8).
 	if (MapObjRiccoIsState(this, STATE_TIPPING_DOWN)
 	    || MapObjRiccoIsState(this, STATE_TIPPING_UP))
 		MapObjRiccoGetMSound()->startSoundActor(mSoundId, &mPosition);
@@ -418,8 +417,8 @@ void TFruitSwitch::pullUp()
 	startBck("riccoswitch");
 	offHitFlag(1);
 
-	if (mMapCollisionManager->getUnk8())
-		mMapCollisionManager->getUnk8()->setUp();
+	if (mMapCollisionManager->unk8)
+		mMapCollisionManager->unk8->setUp();
 }
 
 void TFruitSwitch::pushDown()
@@ -427,12 +426,10 @@ void TFruitSwitch::pushDown()
 	startBck("riccoswitch");
 	onHitFlag(1);
 
-	if (mMapCollisionManager->getUnk8())
-		mMapCollisionManager->getUnk8()->remove();
+	if (mMapCollisionManager->unk8)
+		mMapCollisionManager->unk8->remove();
 }
 
-// TODO: frame 0x28 vs retail 0x20. Pasting pushDown's body does not shrink
-// it; the extra 8 lives in the inlined startBck/getUnk8/remove path.
 BOOL TFruitSwitch::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == 1) {
@@ -445,6 +442,11 @@ BOOL TFruitSwitch::receiveMessage(THitActor* sender, u32 message)
 }
 
 // TFruitLauncher
+
+static inline TFruitSwitch* FruitLauncherSwitch(TFruitLauncher* p, int i)
+{
+	return p->mSwitches[i];
+}
 
 f32 TFruitLauncher::mObjSpeedXZ   = 1.0f;
 f32 TFruitLauncher::mObjSpeedY    = 20.0f;
@@ -575,11 +577,11 @@ void TFruitLauncher::loadAfter()
 
 	mSwitches[0]
 	    = JDrama::TNameRefGen::search<TFruitSwitch>("タンクスイッチＡ");
-	mSwitches[0]->mLauncher = this;
+	FruitLauncherSwitch(this, 0)->mLauncher = this;
 
 	mSwitches[1]
 	    = JDrama::TNameRefGen::search<TFruitSwitch>("タンクスイッチＢ");
-	mSwitches[1]->mLauncher = this;
+	FruitLauncherSwitch(this, 1)->mLauncher = this;
 
 	mCurrentSwitch = 1;
 	mSwitches[0]->pushDown();
