@@ -314,6 +314,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Int-to-float conversion slots sit above the inline pool in creation order; read the pool gap from their position (PollutionLayer).
 - A level over an int-to-float conversion keeps an `fmadds`; a level returning the whole product breaks it (PollutionLayer `cleaned`).
 - Not accepted: a dead local added only to supply missing frame (LightUtil `perform`, 12 bytes). Leave a TODO even when it would link the unit.
+- Repeated expansions of one inline never share a slot in isolation (temps, by-value params, addressed named locals: one slot each, first expansion highest); apparent per-function sharing is frontend-eliminated binding temporaries keeping homes, which depends on distant code (frame-gaps.md: "Research batch cc39").
+- The JGadget stride class has no header fix: the TP clean-room `std-list.h` shape (empty `TIterator` base, body-assigned ctor, `iterator`-returning `push_back`) and eight other chain spellings are inert or worse at all nine sites; `getChildren`/`search` bindings move pools site-dependently. Close JGadget sites one at a time through their receiver/argument expressions (frame-gaps.md: "Research batch cc39").
 
 ## Register and scheduling residues
 

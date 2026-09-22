@@ -1902,3 +1902,39 @@ Not landed. The cc23 header shape (base-init copy constructor, uncast `operator=
 - Plain copies (about 46 of 67): the old cast copy constructor took the local's address and kept it in memory; the base-init form lets MWCC optimise fields (float copies, fused `fmadds`). `TVec3 v; v = src;` restores one declaration (MapObjBall `control`) but not repeated `TVec3(vel).y` temporaries. Implicit copy ctor (81 down), `: Vec((const Vec&)other)` (88 down), old ctor plus by-value `operator-` (98 down, `__ami__` MISSING) are all worse.
 - Hand-built copy chains (`npcMadding`, `TNerveNPCTurnToMario`) are one copy short; a by-value `MsGetRotFromZaxisY` costs ~40 functions.
 - The `const Vec*` operand has no binary evidence beyond the frame slot; the by-value `TVec3 fst` spelling loses 13 of 16 gains. Treat the class as still open: it needs an explanation of the copy count at the `.length()` sites before another migration.
+
+## Research batch cc39 (2026-09-22): the JGadget stride is not a function-set property of the chain; no header shape closes the class
+
+Scored nine sites at once from scratch compiles with a header override directory (`riccohook`, `createEnemies`, `gatekeeper`, `perform`, `TMirrorActor::init`, `SDLModel::entry`, `TLampTrapIron::loadAfter`, `rsetup`, `setupObjects`), about 60 header variants; driver `hv.py`/`atoms.py` in the session scratchpad `cc39/`.
+Nothing was committed.
+
+- **The "per-function block" reading does not hold for plain temporaries.**
+  In a scratch TU, two or three expansions of the same inline never share a slot, whether the object is a call-result temporary, a by-value parameter or an address-taken named local (`C(); C(); C();` gives three slots, first expansion highest).
+  Every case measured follows the locals-list order described in AGENT_MATCHING_TIPS ("An inline's locals are numbered in reverse"): new objects are prepended, so the first-created object gets the highest offset.
+  The `riccohook`/MActor observations that looked like block sharing are better read as **frontend-eliminated temporaries keeping a stack home**: an argument or `this` binding that copy propagation removes still gets a home, while one that survives to the backend takes a register and none.
+  So whether a given binding temporary costs a word depends on distant code.
+  In `TRiccoHook::init`, the `theNerve()` argument of the head statement `initWith` moves JGadget group 2 by 4 even though it is created before the push chain.
+- **The Twilight Princess clean-room header shape is inert or worse.**
+  The zeldaret/tp `std-list.h` differs from ours in three places, and none of them helps:
+  - An empty `TIterator<...>` base on `TList::iterator`, at one or two levels: byte-identical slot maps at all nine sites.
+  - The iterator constructor written as body assignment: also byte-identical.
+  - `push_back`/`push_front` returning `iterator` (on `TList_pointer`, `TList`, or both): moves only the `end()` return slot to the top of the pool, e.g. riccohook `7c 80 a0` for retail `84 88 8c`.
+- **Inert or worse, all nine sites.**
+  - A defaulted `iterator(TNode_* = nullptr)` replacing the default constructor.
+  - A user copy constructor on the base iterator (frames 0x10 to 0x18 smaller, collapses the pools) and on the derived iterator.
+  - A named `end()` in `push_back`.
+  - A cast `where` into `Base::insert`.
+  - The derived `iterator(Base)` constructor as a body assignment.
+  - `end()`/`begin()` through the implicit conversion.
+- **The receiver chain moves the pools, but site-dependently.**
+  - A named reference in `TViewObjPtrListT::getChildren()` (`TList_pointer<T*>& l = *this; return l;`) gives riccohook frame 0xd8 with group 1 and the `what` spill exact, and group 2 still 4 low (`80 84 88`).
+  - The same slot map comes from a dead 4-byte probe object in `push_back`; an 8-byte probe gives exact group 1 and group 2 but a spill 4 high.
+  - Adding a `search<T>` root or result binding lands `createEnemies`' whole iterator pool (`5c..6c 78 7c 80`) but puts the conversion temporary 0x10 high (0x94, frame 0xb8).
+  - Every such lever is global over ~250 `search`/`getChildren` sites (header round 21 already priced the `search` binding at -60 exact).
+  - No single lever and no pair of `getChildren`/`search`/`add`/`push_back`/ctor levers lands two sites.
+- **The retail residues are not one shift.**
+  - Riccohook wants +8 between groups and -4 above group 2.
+  - `createEnemies` wants +8 below group 1, +4 between the groups, and three dead words moved from above group 2 to below it, plus +8 above the conversion temporary.
+  - `TMirrorActor` wants +16/+8/+0; `SDLModel` wants +12 on its lower pool words and +8 on its upper ones.
+  - Each is a different set of eliminated binding temporaries, set by the site's own receiver and argument expressions.
+  - Treat these as per-site closures (which caller expressions are "unsafe" and bound), not a header round.
