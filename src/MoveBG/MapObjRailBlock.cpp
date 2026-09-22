@@ -30,16 +30,6 @@ TRailMapObj::TRailMapObj(const char* name)
 {
 }
 
-// TODO: the pragma is the only thing keeping this a `bl` where
-// TRailMapObj::load reaches it at depth 1, and it is pre-existing. Removing it
-// takes load 100% -> 0%. The depth-1 allowance is fourteen statements, so
-// retail's body had fifteen or more; this reconstruction counts about seven
-// (the `new`, the graph store, setTo, the position copy, moveToShortestNext,
-// onRailFlag and resetStep), and it is already 99.9% instruction-exact, so the
-// missing statements have to be spellings that cost no code -- naming the
-// findNearestNodeIndex result, the node and its rail node, and so on. Not
-// resolved here.
-#pragma dont_inline on
 // Binding level over a raw member read, worth +16 of low region in
 // TRailMapObj::initGraphTracer (batch 127).
 static inline TGraphTracer* MapObjRailBlockUnk138(const TRailMapObj* p)
@@ -48,6 +38,10 @@ static inline TGraphTracer* MapObjRailBlockUnk138(const TRailMapObj* p)
 	return v138;
 }
 
+// TRailMapObj::load calls this at depth 1, so the body is 15+ statements:
+// the named graph node and rail node of the flag test are the two that the
+// reconstruction was short. Measured and rejected: naming the
+// findNearestNodeIndex result (an extra `mr`).
 void TRailMapObj::initGraphTracer(TGraphWeb* graph)
 {
 	unk138 = new TGraphTracer;
@@ -60,16 +54,14 @@ void TRailMapObj::initGraphTracer(TGraphWeb* graph)
 			unk138->moveToShortestNext();
 		}
 
-		if (graph->getGraphNode(unk138->getCurGraphIndex())
-		        .getRailNode()
-		        ->mFlags
-		    & 0x80)
+		TGraphNode& node    = graph->getGraphNode(unk138->getCurGraphIndex());
+		TRailNode* railNode = node.getRailNode();
+		if (railNode->mFlags & 0x80)
 			onRailFlag(2);
 
 		resetStep(unk144);
 	}
 }
-#pragma dont_inline off
 
 void TRailMapObj::resetStep(float param_1)
 {
