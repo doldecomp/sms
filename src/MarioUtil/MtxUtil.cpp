@@ -527,6 +527,10 @@ void TRope::constraintHead(const JGeometry::TVec3<f32>& param)
 	collision();
 }
 
+// TODO: frame 0x18 short (delta sits 0x18 low); the epsilonEquals receiver
+// order sets the r30/r31 split but retail compares cur against prev. Tried
+// (cc50): a loop-body helper either parameter order, sub()/add()/`*=`
+// spellings and swapped declarations; none moves the frame.
 void TRope::constraintTail(const JGeometry::TVec3<f32>& param)
 {
 	mPoints[mNumPoints - 1].unkC = param;
@@ -534,7 +538,7 @@ void TRope::constraintTail(const JGeometry::TVec3<f32>& param)
 		TRopePoint& cur  = mPoints[i];
 		TRopePoint& prev = mPoints[i - 1];
 
-		if (!cur.unkC.epsilonEquals(prev.unkC)) {
+		if (!prev.unkC.epsilonEquals(cur.unkC)) {
 			JGeometry::TVec3<f32> delta = prev.unkC;
 			delta -= cur.unkC;
 			VECNormalize(&delta, &delta);
