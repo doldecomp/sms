@@ -120,6 +120,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `TMirrorModelManager::perform` rose **86.53 -> 91.33%**, `TMirrorCamera::perform` rose **99.28 -> 99.54%**, and the unit rose **97.14 -> 98.00%**.
 - Landed `Enemy/TabePuku`: restored the wall-collision flow in `TTPHitActor::bind`, raising it **84.38 -> 90.08%** and the unit **95.99 -> 96.27%**.
   Symbol order/linkage is unchanged; the validator still reports the pre-existing missing weak `TVec3<f32>::set(float,float,float)` and three UNUSED-size warnings.
+- Terra-low experiment: `MoveBG/MapObjGeneral` returned a clean no-gain audit; `Enemy/limitkoopa` corrected the head-water comparison, raising that `receiveMessage` **73.88 -> 74.36%** and the unit **88.87 -> 88.89%**.
+  Low is useful for bounded semantic checks but, at 1/2 with one small gain, has not matched medium's reconstruction yield; keep medium as the default and use low selectively.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
