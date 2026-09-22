@@ -871,28 +871,17 @@ BOOL TMario::wireWaitToSWaitL()
 	return 0;
 }
 
-// TODO: specMain inlines this endpoint swap at stack 0x68/0x6c/0x70; ours
-// lands at 0x7c/0x80/0x84. This is the only thing keeping specMain from being
-// exact -- 6 operand differences, frame size already correct, every other
-// instruction identical.
-//
-// Measured layout of specMain's frame, both sides (offset: reference count):
-//   target: 0x50 0x54 0x58 0x5c 0x60 0x64 | 0x68 0x6c 0x70 |       0x94..0xa4
-//   ours:   0x50 0x54 0x58 0x5c 0x60 0x64 |       0x7c 0x80 0x84 | 0x94..0xa4
-// Every other slot matches. The region 0x68..0x94 is 44 bytes on both sides and
-// holds this 12-byte temporary plus 32 bytes of inline locals that were
-// register-allocated and are never referenced. The original places the
-// temporary first in that region; we place it after 20 bytes of those unused
-// locals. So this is purely the order in which inline bodies get their slots,
-// not a missing or extra local.
-//
-// Ruled out:
-//   - hoisting or splitting the temporary's declaration (batch 40)
-//   - moving `case MARIO_STATUS_WIRE_WAIT_TO_S_WAIT_R` earlier in specMain's
-//     switch: case source order also drives the branch structure, not just
-//     inline expansion order, and this drops specMain to 90.0% / 89 diffs.
-// Note decomp-diff prints this function as "100.0%" while it is still
-// nonmatching; check the marker count, not the rounded percentage.
+// specMain inlines this endpoint swap. Written as a plain three-statement
+// swap its temporary lands below 20 bytes of other inline locals (0x7c vs
+// retail 0x68); as a one-level inline helper it takes retail's slot, closing
+// specMain.
+static inline void swapVec(JGeometry::TVec3<f32>& a, JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> t = a;
+	a                       = b;
+	b                       = t;
+}
+
 BOOL TMario::wireWaitToSWaitR()
 {
 	getOnWirePosAngle(&mPosition, &mModelFaceAngle);
@@ -900,9 +889,7 @@ BOOL TMario::wireWaitToSWaitR()
 	setAnimation(ANIM_ROPE_WTOSW_R, 1.0f);
 	if (isLast1AnimeFrame()) {
 		changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT, 0, false);
-		JGeometry::TVec3<f32> tmp = mWireStartPos;
-		mWireStartPos             = mWireEndPos;
-		mWireEndPos               = tmp;
+		swapVec(mWireStartPos, mWireEndPos);
 		mWirePosRatio             = 1.0f - mWirePosRatio;
 	}
 	return 0;
