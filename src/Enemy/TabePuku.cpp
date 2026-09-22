@@ -176,12 +176,12 @@ void TTPHitActor::bind()
 
 		// Push the mouth back out along the plane it sank into, then sit it
 		// exactly on the ground.
-		const JGeometry::TVec3<f32>& normal = mGroundPlane->getNormal();
-		JGeometry::TVec3<f32> sunk(pos.x, y, z);
-		JGeometry::TVec3<f32> onGround(pos.x, mGroundHeight, z);
-		f32 push = 1.0f - (normal.dot(sunk) - normal.dot(onGround));
+		f32 push = 1.0f
+		         - (mGroundPlane->getNormal().dot(pos)
+		            - mGroundPlane->getNormal().dot(
+		                JGeometry::TVec3<f32>(pos.x, mGroundHeight, z)));
 		if (push > 0.0f)
-			pos.scaleAdd(push, normal, pos);
+			pos.scaleAdd(push, mGroundPlane->getNormal(), pos);
 		pos.y = mGroundHeight;
 	} else {
 		mAirborne = true;
@@ -196,13 +196,14 @@ void TTPHitActor::bind()
 	record.mRadius      = mCheckRadius;
 	record.mMaxResults  = 1;
 	record.mFlags       = 0;
-	mTouchedWall = gpMap->isTouchedWallsAndMoveXZ(&record);
+	int touchedWall = gpMap->isTouchedWallsAndMoveXZ(&record);
 	pos.x        = record.mCenter.x;
 	pos.z        = record.mCenter.z;
 
 	// `a = b - c` reaches the map's out-of-line TVec3::sub: operator= is one
 	// inline level and the difference nested in its argument two more.
 	mVelocity = pos - mPosition;
+	mTouchedWall = touchedWall;
 	mPosition = pos;
 }
 
