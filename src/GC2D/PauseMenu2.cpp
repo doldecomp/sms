@@ -510,7 +510,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 					} else {
 						// Loop animation.
 						mBounceAnim = -0.5f;
-						unkFC       = -unkFC;
+						unkFC *= -1;
 					}
 
 					mBounceAnim += 0.5f;
@@ -633,9 +633,11 @@ void TPauseMenu2::drawAppearPane(J2DPicture* picture, f32 anim, JUTRect& rect,
 		if (picture->isVisible()) {
 			picture->hide();
 		}
-	} else if (!(anim >= 20.0f) && !picture->isVisible()) {
-		picture->show();
-		picture->setAlpha(0);
+	} else if (!(anim >= 20.0f)) {
+		if (!picture->isVisible()) {
+			picture->show();
+			picture->setAlpha(0);
+		}
 
 		if (anim == 2.0f) {
 			JUTRect rect = picture->getGlobalBounds();
