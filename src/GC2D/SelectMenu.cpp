@@ -770,6 +770,16 @@ inline void TSelectMenu::selectNext()
 
 // The letterbox fade sits two inline levels below perform: retail calls
 // TColor::set out of line from here, i.e. the TColor constructor is at depth 3.
+static inline s32 fadeOutArrow(J2DPane* arrow, s32 alpha)
+{
+	alpha -= 4;
+	if (alpha < 0) {
+		alpha = 0;
+		arrow->hide();
+	}
+	return alpha;
+}
+
 static inline JUtility::TColor blackColor(u8 alpha)
 {
 	return JUtility::TColor(0, 0, 0, alpha);
@@ -1020,15 +1030,10 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					}
 				}
 
-				s32 alpha = mArrowL->getAlpha();
+				int alpha = mArrowL->getAlpha();
 				if (mSelectedShine == 0) {
 					if (alpha != 0) {
-						s32 next = alpha - 4;
-						if (next < 0) {
-							next = 0;
-							mArrowL->hide();
-						}
-						mArrowL->setAlpha(next);
+						mArrowL->setAlpha(fadeOutArrow(mArrowL, alpha));
 					}
 				} else {
 					if (alpha < mMarkAlpha) {
