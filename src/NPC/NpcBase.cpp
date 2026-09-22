@@ -635,6 +635,36 @@ void TBaseNPC::movementOnlyTalk_(const JDrama::TGraphics* param_1)
 		changeNerveProc_();
 }
 
+inline f32 TBaseNPC::getAnmOffDist_()
+{
+	bool bVar3 = false;
+	f32 fVar1  = gpCamera->mFar;
+	int uVar5  = unkD0->getCurrentAnmKind();
+	f32 fVar2  = mPtrSaveNormal->mSLDanceAnmOffDist.get();
+	if (checkActionFlag(NPC_ACTION_HAPPY | NPC_ACTION_DANCE)
+	    || mActorType == 0x400000D || uVar5 == NPC_ANM_KIND_MAD
+	    || uVar5 == NPC_ANM_KIND_UNK17) {
+		bVar3 = true;
+	}
+
+	if (isNerveMaybeDontCalcAnim0()) {
+		fVar1 = mIndividualParams->mWaitAnmOffDist0.get();
+		if (bVar3)
+			fVar1 = fVar2 > fVar1 ? fVar2 : fVar1;
+	} else if (isNerveMaybeDontCalcAnim1()) {
+		fVar1 = mIndividualParams->mWaitAnmOffDist1.get();
+		if (bVar3)
+			fVar1 = fVar2 > fVar1 ? fVar2 : fVar1;
+	}
+
+	return fVar1;
+}
+
+inline f32 TBaseNPC::getAnmOffDistSquared_()
+{
+	return CLBSquared(getAnmOffDist_());
+}
+
 void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mActorType == 0x400001C) {
@@ -770,7 +800,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 			        || isNerveMaybeDontCalcAnim1())) {
 				JGeometry::TVec3<f32> diff;
 				diff.sub(mPosition, gpCamera->unk124);
-				if (CLBSquared(getAnmOffDist_()) < diff.squared() && !bVar6
+				if (getAnmOffDistSquared_() < diff.squared() && !bVar6
 				    && mSpine->getTime() > 2) {
 					r31 = true;
 					execMotionBlend_();

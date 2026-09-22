@@ -246,35 +246,8 @@ private:
 		if (mDamageParticleForbidCount != 0)
 			mDamageParticleForbidCount -= 1;
 	}
-	// TODO: retail keeps a weak out-of-line copy of this body (0x104) and `bl`s
-	// it from perform() at depth 1; an in-class body has no statement budget at
-	// depth 1, so it expands here instead (8 zero-codegen statements measured, no
-	// flip).  The caller must sit one inlined level deeper, or the body is not an
-	// in-class one.  The body below is the retail structure.
-	f32 getAnmOffDist_()
-	{
-		bool bVar3 = false;
-		f32 fVar1  = gpCamera->mFar;
-		int uVar5  = unkD0->getCurrentAnmKind();
-		f32 fVar2  = mPtrSaveNormal->mSLDanceAnmOffDist.get();
-		if (checkActionFlag(NPC_ACTION_HAPPY | NPC_ACTION_DANCE)
-		    || mActorType == 0x400000D || uVar5 == NPC_ANM_KIND_MAD
-		    || uVar5 == NPC_ANM_KIND_UNK17) {
-			bVar3 = true;
-		}
-
-		if (isNerveMaybeDontCalcAnim0()) {
-			fVar1 = mIndividualParams->mWaitAnmOffDist0.get();
-			if (bVar3)
-				fVar1 = fVar2 > fVar1 ? fVar2 : fVar1;
-		} else if (isNerveMaybeDontCalcAnim1()) {
-			fVar1 = mIndividualParams->mWaitAnmOffDist1.get();
-			if (bVar3)
-				fVar1 = fVar2 > fVar1 ? fVar2 : fVar1;
-		}
-
-		return fVar1;
-	}
+	inline f32 getAnmOffDist_();
+	inline f32 getAnmOffDistSquared_();
 	void setNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
 	void requestNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
 	void setKeepAnm_();
