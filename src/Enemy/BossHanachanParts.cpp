@@ -472,6 +472,11 @@ BossHanachanPartsGetActorModel(const TBossHanachanPartsBase* p)
 	return model;
 }
 
+// TODO: 93.1%, frame exact; callee-saved rotation only. Retail ranks
+// changed (r31) > anm (r30) > this (r29) > blend (r28); ours ranks this first.
+// Inert or worse: a TU-local blend helper (by TNpcInbetween* or by this), a
+// direct or MActor* model binder in place of the two-local one, and naming the
+// table index in the condition.
 bool TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
                                     EnumBossHanachanStopMotionBlendOnOff blend)
 {
@@ -507,6 +512,10 @@ bool TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind anm,
 	return changed;
 }
 
+// TODO: 97.7%, frame exact; the known-open this-vs-pool-base rotation
+// (retail: changed, anm, this, table base, anm*4, blend from r31 down). Inert or
+// worse: a one-line returning table-index helper, a blend helper, a named
+// mCurrentAnm, non-static const tables.
 bool TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
                                     EnumBossHanachanStopMotionBlendOnOff blend)
 {
