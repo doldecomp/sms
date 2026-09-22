@@ -125,7 +125,7 @@ public:
 	/* 0x20 */ s32 unk20;
 	/* 0x24 */ s32 unk24;
 	/* 0x28 */ s32 unk28;
-	/* 0x2C */ u32 unk2C;
+	/* 0x2C */ s32 unk2C;
 	/* 0x30 */ s32 unk30;
 	/* 0x34 */ u8 unk34;
 	/* 0x35 */ u8 unk35;

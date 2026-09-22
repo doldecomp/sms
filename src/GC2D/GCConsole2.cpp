@@ -819,7 +819,7 @@ static inline void updateRedCoinCounter(TGCConsole2* console)
 // fabricated: the coin counter's "swap the digit texture and puff a particle
 // over it" step. The five sites in updateCoinCounterAnimation share one JUTRect
 // and one position vector, so both are passed in.
-static inline void changeCoinNum(TBoundPane* pane, JUTTexture** textures,
+static inline void changeCoinNum(TBoundPane*& pane, JUTTexture** textures,
                                  int digit, JUTRect& bounds,
                                  JGeometry::TVec3<f32>& position)
 {
@@ -839,28 +839,18 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 
 	if (console->unk68 == 1) {
 		bool incrementing = true;
-		int target        = (int)console->unk20;
-		int display       = (int)console->unk6C;
 
-		if (target >= display)
-			++display;
-		if (target < display) {
-			--display;
+		if (console->unk20 >= console->unk6C)
+			++console->unk6C;
+		if (console->unk20 < console->unk6C) {
+			--console->unk6C;
 			incrementing = false;
 		}
 
-		if (display > 999) {
-			display        = 999;
-			target         = 999;
-			console->unk20 = target;
-		}
-		if (display < 0) {
-			display        = 0;
-			target         = 0;
-			console->unk20 = target;
-		}
-
-		console->unk6C = display;
+		if (console->unk6C > 999)
+			console->unk20 = console->unk6C = 999;
+		if (console->unk6C < 0)
+			console->unk20 = console->unk6C = 0;
 
 		if (incrementing) {
 			JUTRect bounds(0, 0, 0, 0);
@@ -926,7 +916,7 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 	bool done = true;
 	if (!console->unk34) {
 		for (int i = 0; i < 3; ++i)
-			done = console->unkD4[i]->update() && done;
+			done &= console->unkD4[i]->update();
 	}
 
 	if (done) {
@@ -949,21 +939,21 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 		int target = TFlagManager::smInstance->getFlag(0x60001);
 		if (target > 99)
 			target = 99;
-		if (target < (int)console->unk2C)
+		if (target < console->unk2C)
 			return;
 
-		u8 done = console->unk414[0]->update();
-		done    = done & console->unk414[1]->update();
+		bool done = console->unk414[0]->update();
+		done &= console->unk414[1]->update();
 		if (!done)
 			return;
 
-		if ((int)console->unk2C > 99)
+		if (console->unk2C > 99)
 			console->unk2C = 99;
-		if ((int)console->unk2C == target)
+		if (console->unk2C == target)
 			return;
 		++console->unk2C;
 
-		if ((int)console->unk2C >= 10) {
+		if (console->unk2C >= 10) {
 			if (!console->unk414[0]->getPane()->isVisible())
 				console->unk414[0]->getPane()->show();
 
@@ -981,9 +971,9 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 	} else if (console->unk404 == console->unk40C) {
 		int target = TFlagManager::smInstance->getFlag(0x60002);
 
-		u8 done = 1;
-		done    = done & console->unk414[0]->update();
-		done    = done & console->unk414[1]->update();
+		bool done = true;
+		done &= console->unk414[0]->update();
+		done &= console->unk414[1]->update();
 		if (!done)
 			return;
 
@@ -991,11 +981,11 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 			target = 99;
 		if (target < 0)
 			target = 0;
-		if ((int)console->unk2C >= target)
+		if (console->unk2C >= target)
 			return;
 		++console->unk2C;
 
-		if ((int)console->unk2C >= 10) {
+		if (console->unk2C >= 10) {
 			if (!console->unk414[0]->getPane()->isVisible())
 				console->unk414[0]->getPane()->show();
 
@@ -1459,21 +1449,16 @@ static inline bool updateBalloonAppearState(TGCConsole2* console)
 // fabricated
 static inline bool updateBalloonDisappearState(TGCConsole2* console)
 {
-	if (!console->processDisappearBalloon())
-		return false;
-
-	u32 nextMessage = console->unk3F4;
-	console->unk10  = 0;
-	console->unk3F0 = 0;
-	console->unk3B0->hide();
-	console->unk3B0->resize(0, console->unk3BC.getHeight());
-	JUTRect contents(console->unk3B0->getContentsBounds());
-	console->unk3B0->add(0, -contents.getHeight());
-
-	if (nextMessage != 0xffffffff)
-		console->startAppearBalloon(nextMessage, true);
-	console->unk3F4 = 0xffffffff;
-	return true;
+	bool finished = true;
+	if (console->processDisappearBalloon()) {
+		console->unk3B0->hide();
+		console->unk3B0->resize(0, console->unk3BC.getHeight());
+		JUTRect contents(console->unk3B0->getContentsBounds());
+		console->unk3B0->add(0, -contents.getHeight());
+	} else {
+		finished = false;
+	}
+	return finished;
 }
 
 // fabricated
@@ -4677,15 +4662,23 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 			break;
 		case 2:
 			processBalloonTextStep(this);
-			break;
+			// fallthrough: retail's loop exit branches straight into case 3.
 		case 3:
-			if (unk3E4 > 0)
+			if (unk3E4 > 0) {
 				--unk3E4;
-			if ((unk3F8 && unk3E4 == 0) || unk3F4 != 0xffffffff)
-				startDisappearBalloon(unk3E0, false);
+				if ((unk3F8 && unk3E4 == 0) || unk3F4 != 0xffffffff)
+					startDisappearBalloon(unk3E0, false);
+			}
 			break;
 		case 4:
-			updateBalloonDisappearState(this);
+			if (updateBalloonDisappearState(this)) {
+				unk3F0 = 0;
+				unk10  = 0;
+				if (unk3F4 != 0xffffffff) {
+					startAppearBalloon(unk3F4, true);
+					unk3F4 = 0xffffffff;
+				}
+			}
 			break;
 		}
 
