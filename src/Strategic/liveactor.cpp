@@ -89,6 +89,12 @@ BOOL TLiveActor::belongToGround() const
 	return false;
 }
 
+// TODO: 99.9%, the MsAngleDiff result lands in f1 and the member in f0
+// (retail f0/f1) before the `+=`'s fadds. Tried (cc37): `m = m + d`,
+// `m = d + m`, named `diff`, getRotation() on either operand, TU-local
+// forks/by-value adders (+8 frame), `f32 v = m; v += d;` (breaks the
+// schedule); `f32 d = diff; d += m; m = d;` fixes operand order but not
+// the colouring.
 void TLiveActor::calcRideMomentum()
 {
 	if (unkE8 == 0)
@@ -461,6 +467,12 @@ static inline MAnmSound* LiveactorAnmSound(const TLiveActor* p)
 	return anmSound;
 }
 
+// TODO: the MAnmSoundNPC ctor's random-float buffer sits at 0x24, retail
+// 0x2c (frame equal). Tried (cc37): gpMSound/SMSGetMSound forks and binders
+// at either `new` (+0 or frame +8/+0x10), naming/forking the `new`
+// (inlining breaks), a `u32` wrapper over checkActorType (+4 -> 0x28, the
+// only buffer-moving rung found), bool/nested/binder wrappers over it,
+// a nested fork over LiveactorAnmSound (frame +8).
 void TLiveActor::initAnmSound()
 {
 	if (LiveactorAnmSound(this))

@@ -37,16 +37,15 @@ TLightCommon::TLightCommon(const char* name)
 	mShininess = 50.0f;
 }
 
-// TODO: 97.7%. Two residues. (1) 32 bytes of frame too much (0xc0 vs 0xa0),
-// all of it low region: our named block has the same shape (the GXGetLightColor
-// out-parameter 0x10 below the register saves in both). (2) the ROM
-// round-trips the first `unk29` colour through a 4-byte temporary at 0x18(r1)
-// (`stw r0, 0x18(r1); lwz r0, 0x18(r1); stw r0, 0x29(r30)`) while the second
-// stores straight to 0x2d -- the signature of one extra inline level on the
-// FIRST amb read only (the batch-91 "+4 low goes on the earliest expansion"
-// family). JDRLighting.hpp's TAmbColor::getColor() returns
-// `const JUtility::TColor&`; a by-value return there would bind that
-// temporary, but it is a shared header and 23 other TUs read it.
+// TODO: 97.8%, frame exact since cc37 (the ambient reads go through the raw
+// mAmbColors array; getAmb() is fabricated and costs 0x10 of pool). Left:
+// retail round-trips the FIRST ambient colour through a 4-byte temporary at
+// 0x18(r1) (`stw; lwz; stw 0x29(r30)`), the second stores straight. Tried
+// (cc37): `.get()`, a named GXColor/TColor local, a by-value setter, a
+// by-value GXColor fork, `(GXColor)` cast -- no round trip; an explicit
+// `JUtility::TColor(...)` conversion (bare or inside a TU-local helper)
+// reproduces the round trip instruction-exact but its temporary is a class
+// object that lands at the top of the named block (0x78-0x8c), never at 0x18.
 void TLightCommon::loadAfter()
 {
 	mAmbAry    = (JDrama::TAmbAry*)JDrama::TNameRefGen::search2(
@@ -59,8 +58,8 @@ void TLightCommon::loadAfter()
 		unk31[i] = mLightAry->getLight(i + mLightIndex)->getColor();
 		unk44[i] = mLightAry->getLight(i + mLightIndex)->mPosition;
 	}
-	unk29[0] = mAmbAry->getAmb(mAmbIndex)->getColor();
-	unk29[1] = mAmbAry->getAmb(mAmbIndex + 1)->getColor();
+	unk29[0] = mAmbAry->mAmbColors[mAmbIndex].getColor();
+	unk29[1] = mAmbAry->mAmbColors[mAmbIndex + 1].getColor();
 }
 
 GXColor TLightCommon::getLightColor(int index) const
@@ -100,14 +99,6 @@ Vec* TLightCommon::getLightPosition(int index)
 	return &mLightAry->getLight(index)->mPosition;
 }
 
-// TODO: 99.1%, frame now exact (the ROM reuses one `Vec pos` for both
-// MTXMultVec results -- slot 0x3c is written twice). What is left is a pure
-// callee-saved rotation (ROM this=r29/gfx=r26/viewMtx=r28/manager=r27, ours
-// r28/r29/r27/r26) plus the two `addi`s of the inlined setEffectLight's
-// MTXMultVec in the opposite order (ROM CSEs the live viewMtx). Rejected:
-// named `MtxPtr viewMtx` in the caller (+8 frame); named viewMtx inside
-// setEffectLight (+4 low, UNUSED 0xf4 vs 0xf8); early-named manager (extra
-// lwz); manual inline of setEffectLight (90.8%); getShininess (97.1%).
 void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 {
 	ReInitializeGX();
@@ -134,21 +125,22 @@ void TLightCommon::setLight(const JDrama::TGraphics* gfx, int index)
 	GXSetChanAmbColor(GX_COLOR0A0, getAmbColor(index));
 }
 
-// TODO: 99.9%, frame 0x10 short (0x70 vs 0x80). Instruction-exact with light
-// at 0x18 vs retail 0x24; the 0x10 is pure low-region between the getLightColor
-// out-param at 0x14 and the GXLightObj. Named Vec* for the y/z getLightPosition
-// results match m2c (r31/r30) at zero frame. A defaulted 8-byte arg lands the
-// frame but leaves light at 0x28 (4 high); named color binders add copies.
-// Shared-header getColor shape may be the real carrier (parked).
+// TODO: 99.9%, frame 0x10 short (0x70 vs 0x80), instruction-exact: retail
+// has 12 bytes between the getLightColor out-parameter (0x14) and `light`
+// (0x24, ours 0x18). A dead `Vec pos;` declared after `light` lands it 100%
+// (diagnostic only, cc37), so retail very likely declared an unused Vec here;
+// not committed as it is a dead local. Binders over getLightPosition (+8 each)
+// land the frame but sit below the colour temporary (colour 0x20); forks and
+// binders on the setLight tail, the graphics parameter or the three loads are
+// inert or break the code.
 void TLightCommon::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW_INIT) {
 		ReInitializeGX();
 		SMS_DrawInit();
 		GXLightObj light;
-		Vec* posZ = getLightPosition(0);
-		Vec* posY = getLightPosition(0);
-		GXInitLightPos(&light, getLightPosition(0)->x, posY->y, posZ->z);
+		GXInitLightPos(&light, getLightPosition(0)->x, getLightPosition(0)->y,
+		               getLightPosition(0)->z);
 		GXInitLightColor(&light, getLightColor(0));
 		GXInitLightAttn(&light, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 		GXLoadLightObjImm(&light, GX_LIGHT0);
@@ -555,15 +547,16 @@ Vec* TLightWithDBSetManager::getLightPos() const
 void TLightWithDBSetManager::setEffectLight(const JDrama::TGraphics* gfx,
                                             GXLightObj* light)
 {
-	if (unk54 && unk55) {
-		Vec epos;
-		MTXMultVec(gfx->getViewMtx(), mEffectLightPos, &epos);
-		GXInitLightPos(light, epos.x, epos.y, epos.z);
-		GXInitLightColor(light, getEffectLightColor());
-		GXInitLightAttnA(light, 1.0f, 0.0f, 0.0f);
-		GXInitLightDistAttn(light, 1000.0f, 0.5f, GX_DA_STEEP);
-		GXLoadLightObjImm(light, GX_LIGHT1);
-	}
+	if (!unk54 || !unk55)
+		return;
+
+	Vec epos;
+	MTXMultVec(gfx->getViewMtx(), &mEffectLightPos, &epos);
+	GXInitLightPos(light, epos.x, epos.y, epos.z);
+	GXInitLightColor(light, getEffectLightColor());
+	GXInitLightAttnA(light, 1.0f, 0.0f, 0.0f);
+	GXInitLightDistAttn(light, 1000.0f, 0.5f, GX_DA_STEEP);
+	GXLoadLightObjImm(light, GX_LIGHT1);
 }
 
 GXColor TLightWithDBSetManager::getEffectLightColor() const
