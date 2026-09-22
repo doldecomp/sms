@@ -195,6 +195,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   Its two remaining functions are documented frame/register-placement residues; do not repeat it without a new compiler-allocation lead.
 - Landed `Enemy/tamaNoko`: routed the flower sound construction through `SMSGetMSound()`, matching the retail accessor/inlining path.
   `TTamaNokoManager::initSetEnemies` rose **97.21333 -> 99.88%** and unit fuzzy similarity **98.94871 -> 98.99709%**; aggregate fuzzy similarity rose **98.091680 -> 98.091910%**, while matched-code, exact-function, and linked-unit counters did not move.
+- Whole-file medium audits of `NPC/NpcWalkTurn`, `Player/MarioEffect`, and `Map/MapWarp` returned clean with no safe gain.
+  Their remaining differences are documented temporary/frame, saved-register, and named-block placement residues; do not repeat them without a new compiler-shape lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
