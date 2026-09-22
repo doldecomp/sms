@@ -516,19 +516,19 @@ void TBaseNPC::moveObject()
 		    && mBalloonCtrl->updateBalloon()) {
 			if (mHolder != nullptr) {
 				switch (prev) {
-				case 0xE004F:
-					mBalloonCtrl->setNextMessage(0xE0051, 0x1C20);
+				case 0x52:
+					mBalloonCtrl->setNextMessage(0x54, 0x1C20);
 					break;
-				case 0xE0050:
+				case 0x53:
 					break;
-				case 0xE0051:
-					mBalloonCtrl->setNextMessage(0xE004F, 0x1C20);
+				case 0x54:
+					mBalloonCtrl->setNextMessage(0x52, 0x1C20);
 					break;
 				}
 			} else {
 				switch (prev) {
-				case 0xE0050:
-					mBalloonCtrl->setNextMessage(0xE0050, 0x1C20);
+				case 0x53:
+					mBalloonCtrl->setNextMessage(0x53, 0x1C20);
 					break;
 				}
 			}
