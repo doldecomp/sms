@@ -58,6 +58,12 @@ void TBaseNPC::execWalk(bool param_1)
 		// unnested temporary drops to 92.7% (frame 0x110), and a TU-local
 		// copy of MsGetRotFromZaxisY taking its axis *by value* is 95.3%
 		// (frame 0x120), so the by-value header spelling is ruled out.
+		// Batch cc33 (after execUTurn closed with a by-value level over
+		// MsGetRotFromZaxis): by-value TU-local levels here are all worse --
+		// `a - b` returned by value (90.5%, frame exact but `bl sub`), named
+		// or `-=` difference helpers (frame 0x120-0x148), an identity copy
+		// level, and a by-value `NpcRotY(TVec3)` wrapper; retail's hoisted
+		// `.x` load before the `.z == 0` test is not reproduced by any.
 		JGeometry::TVec3<f32> direction = getUnkF4().getPoint();
 		direction -= mPosition;
 		JGeometry::TVec3<f32> copy;
@@ -110,27 +116,19 @@ void TBaseNPC::execWalk(bool param_1)
 // The compare really is `mRotation.y == targetYaw` (retail's `fcmpu cr0, f3,
 // f0` puts the member first); reversing it costs nothing and is the ROM's
 // operand order.
-// TODO: 99.0%, frame 0x60 exact and every stack offset exact. The unnamed
-// difference spelling reproduces retail's slot structure at 0x58, and the
-// missing 4 bytes are bought by a direct-return fork over `mIndividualParams`
-// (batch 172's +4 rung: +4 of pool below and +4 above, instruction-neutral
-// here, where the `getUnkF4()`/`getPosition()` route costs an instruction and
-// still lands 97.9%). Two `~` are left, and they are one residue: retail
-// materialises the struct-return slot address in r3 *before* the difference
-// temporary's in r4 (we emit them the other way round) and then loads the
-// returned `.y` into f0 for the compare, copying it into f2 with an `fmr` for
-// the MsWrap loop, where our reversed argument order lets the load land in f2
-// directly. Refuted here: naming the returned vector (78.9%), naming the
-// difference (98.8% at the wrong structure), two locals with the compare
-// reversed (97.3%).
-static inline TNpcSaveIndividual* NpcUTurnParams(const TBaseNPC* p)
+// A by-value level over MsGetRotFromZaxis materialises the struct-return
+// slot's address before the difference temporary's (retail's r3 before r4)
+// and loads the returned `.y` into f0 with an `fmr` into targetYaw's f2.
+// fabricated
+static inline JGeometry::TVec3<f32>
+NpcUTurnRotFromZaxis(const JGeometry::TVec3<f32>& axis)
 {
-	return p->mIndividualParams;
+	return MsGetRotFromZaxis(axis);
 }
 
 bool TBaseNPC::execUTurn()
 {
-	f32 targetYaw = MsGetRotFromZaxis(unkF4.getPoint() - mPosition).y;
+	f32 targetYaw = NpcUTurnRotFromZaxis(unkF4.getPoint() - mPosition).y;
 	if (mRotation.y == targetYaw)
 		return true;
 
@@ -150,7 +148,7 @@ bool TBaseNPC::execUTurn()
 	}
 
 	BOOL r = CLBChaseGeneralConstantSpecifySpeed(
-	    &mRotation.y, targetYaw, NpcUTurnParams(this)->mUTurnSpeed.get());
+	    &mRotation.y, targetYaw, mIndividualParams->mUTurnSpeed.get());
 	mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
 	if (!r)
 		result = true;
@@ -170,15 +168,9 @@ NpcWalkTurnGetUnk1A0(const TBaseNPC* p)
 // The `getUnk1A0()` level at the angle2 site alone is +8 with no instruction
 // change (frame 0x48 -> 0x50, which is exact) and saturates there: at the
 // compare site or the tail assignment it is +0 and costs 1-3 instructions.
-// TODO: 99.9%, frame 0x50 exact, one `~`: `angle1`'s slot, the only named
-// local whose address is taken, is at 0x34 where retail has 0x30, with the
-// same saved-register boundary above it -- so retail's named region is 4 bytes
-// bigger and its low region 4 bytes smaller, at equal totals. Nothing found
-// that reserves those 4 bytes above `angle1`: not `BOOL result` (93.6%), not
-// an `s16 angles[3]` group (85.9%, all three then spill), not a named
-// `TNpcSaveIndividual*` before it (+0), not a named `f32` for the params
-// fetch (87.0%, frame 0x58), not `getRotation().y` for angle1 (96.9%), not
-// splitting the three `s16` declarations from their assignments (+0).
+// The turn speed is converted straight into the call's argument: a named
+// `s16 angle3` takes a 4-byte slot at the bottom of the named block and pushes
+// `angle1` down to 0x34.
 bool TBaseNPC::execTurnToFirstState()
 {
 	if (mRotation.y == unk1A0.y)
@@ -188,9 +180,10 @@ bool TBaseNPC::execTurnToFirstState()
 
 	s16 angle1 = CLBDegToShortAngle(mRotation.y);
 	s16 angle2 = CLBDegToShortAngle(NpcWalkTurnGetUnk1A0(this).y);
-	s16 angle3
-	    = CLBDegToShortAngle(mIndividualParams->mFirstStateTurnSpeed.get());
-	if (!CLBChaseGeneralConstantSpecifySpeed(&angle1, angle2, angle3)) {
+	if (!CLBChaseGeneralConstantSpecifySpeed(
+	        &angle1, angle2,
+	        CLBDegToShortAngle(
+	            mIndividualParams->mFirstStateTurnSpeed.get()))) {
 		result      = true;
 		mRotation.y = unk1A0.y;
 	} else {
