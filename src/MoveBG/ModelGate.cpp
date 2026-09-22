@@ -216,17 +216,27 @@ void TModelGate::startOpen()
 	mFlags |= GATE_FLAG_OPENING;
 }
 
+static inline void ModelGateStartRadialBlur(u8 alpha, f32 radius,
+                                            JGeometry::TVec3<f32> dir)
+{
+	TAfterEffect* effect = gpAfterEffect;
+	effect->unk15        = 2;
+	effect->unk1C        = alpha;
+	effect->unk50        = radius;
+	effect->unk5C        = dir;
+}
+
 void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 {
 	// Direction from the gate to Mario, in view space, so the radial blur
 	// streaks towards the gate on screen.
-	JGeometry::TVec3<f32> viewDir;
+	Vec viewDir;
 	JGeometry::TVec3<f32> toMario;
 	toMario.x = gpMarioPos->x - mPosition.x;
 	toMario.y = 0.0f;
 	toMario.z = gpMarioPos->z - mPosition.z;
 	VECNormalize(toMario, toMario);
-	MTXMultVecSR(graphics->mViewMtx, toMario, viewDir);
+	MTXMultVecSR(graphics->mViewMtx, toMario, &viewDir);
 
 	JGeometry::TVec3<f32> localPos;
 	JGeometry::TVec3<f32> marioPos(*gpMarioPos);
@@ -254,24 +264,14 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 
 	mBlurAlpha += mBlurAlphaRate * (target - mBlurAlpha);
 
-	// TODO: header round 22 made 0x5C the single `JGeometry::TVec3<f32>`
-	// member retail's three integer `lwz`/`stw` prove (83.74 -> 87.07).
-	// What is left is the 0x30 frame gap, and the fifth 12-byte stack vector
-	// is *not* worth taking: retail copies `viewDir` into it with interleaved
-	// lfs/stfs before the integer copy into the member, but spelling that as
-	// `JGeometry::TVec3<f32> blurDir; blurDir.set(viewDir);` (declared last,
-	// which is where retail's 0x30 slot puts it) costs five instructions and
-	// scores 84.94, below the direct assignment. The gap breaks down as 12
-	// for that vector, 8 for a second `stfd` slot for the `(s16)(182.04445f *
-	// mRotation.y - ...)` conversion -- retail materialises the conversion
-	// twice from one `fctiwz`, i.e. the expression is written twice and only
-	// the float half is CSEd -- and 28 bytes of dead low region with no
-	// candidate. Declaration order is already confirmed exact by the four
-	// vector slots (viewDir, toMario, localPos, marioPos, highest first).
-	gpAfterEffect->unk15 = 2;
-	gpAfterEffect->unk1C = (u8)(mBlurAlpha * (1.0f - gpCamera->unk270));
-	gpAfterEffect->unk50 = mBlurRadius;
-	gpAfterEffect->unk5C = viewDir;
+	// Retail hands the blur to one inline: gpAfterEffect is loaded once for
+	// all four stores, `viewDir` is a plain Vec copied by floats into the
+	// by-value TVec3 parameter, and the alpha is computed first.
+	// TODO: frame 0x78 against retail's 0x98. Retail converts the facing
+	// angle twice into two stack slots, both before the first compare
+	// (ours converts the second one after the `blt`).
+	u8 alpha = mBlurAlpha * (1.0f - gpCamera->unk270);
+	ModelGateStartRadialBlur(alpha, mBlurRadius, viewDir);
 }
 
 BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
