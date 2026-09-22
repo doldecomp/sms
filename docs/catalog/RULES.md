@@ -139,6 +139,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - An `inline` member called from a depth-1 TU-local `static inline` comes out weak and out of line with callers keeping their `bl`; replaces `__declspec(weak)` (PauseMenu2 `appearWindow`/`disappearWindow`).
 - A by-value return from an inlined helper counts as one level; an out-parameter version drops it (wireTrap `checkHitActors`).
 - A discarded computation whose calls retail keeps is a `void` helper, not an unused named local (wireTrap `behaveHitWireTrap`).
+- An inlined call's argument counts as one extra inline level (limitkoopa `stopFlame` vs `moveTurn`).
+- A per-site divergence in a repeated block (one site expands `set<f>`, four call it) is usually a missing helper level over those sites (limitkoopa).
+- Constant arguments show where a condition lives: a default folded at one site and kept at others places the test inside the callee (limitkoopa `TLimitKoopaParts::set`).
 
 ## Frame-size gaps
 
@@ -339,6 +342,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A named `u16 flag = accessor()[i];` adds a 4-byte item between argument temporaries and a named `Mtx` (ModelWaterManager `drawWaterVolume`).
 - Before diffing a ranked target, skip functions whose TODO already records a deep search: most misses in the byte-ranked run were re-diffing explored residues.
 - A zero-initialised aggregate feeding only a member copy, moved into an inlined helper, drops from the named block to the low region; give each caller its own helper, since a shared one merges `.rodata` literals (MtxUtil `calcLocalXY`).
+- `TParamRT::get()` behind `getSaveParams()` costs 0x10 pool per site; mix raw and plain-cast reads (Kukku `updateRotation`).
 
 ## Register and scheduling residues
 
