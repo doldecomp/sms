@@ -99,21 +99,21 @@ static int TobiPukuRollCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 		TMoePuku* puku = gpCurTobiPuku;
-		if (puku) {
-			if (puku->isRoll()) {
-				J3DJoint* joint = (J3DJoint*)param_1;
-				MtxPtr anmMtx   = gpCurTobiPuku->getMActor()
-				                    ->getModel()
-				                    ->getAnmMtx(joint->getJntNo());
+		if (!puku || !puku->isRoll())
+			return true;
 
-				Mtx local_44;
-				MsMtxSetRotZ(local_44, gpCurTobiPuku->unk1EC);
+		J3DJoint* joint = (J3DJoint*)param_1;
+		MtxPtr anmMtx   = gpCurTobiPuku->getMActor()->getModel()->getAnmMtx(
+            joint->getJntNo());
 
-				MTXConcat(anmMtx, local_44, anmMtx);
-				MTXConcat(J3DSys::mCurrentMtx, local_44,
-				          J3DSys::mCurrentMtx);
-			}
-		}
+		// TODO: retail binds &local_44 into r30 once and loads the 0.0f/1.0f
+		// literals after the table reads; ours re-forms the address per call
+		// and hoists both literals.
+		Mtx local_44;
+		MsMtxSetRotZ(local_44, gpCurTobiPuku->unk1EC);
+
+		MTXConcat(anmMtx, local_44, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
 	}
 	return true;
 }
@@ -298,8 +298,8 @@ void TTobiPukuLaunchPad::forceLaunch(TTobiPuku* puku)
 	puku->unk1B0          = mPosition.y;
 	puku->mLaunchPad      = this;
 
-	JGeometry::TVec3<f32> vel(mVelocity);
-	puku->mLaunchAngle = MsGetRotFromZaxis(vel).x;
+	puku->mLaunchAngle
+	    = MsGetRotFromZaxis(JGeometry::TVec3<f32>(mVelocity)).x;
 }
 
 void TMoePukuLaunchPad::launch()
@@ -375,7 +375,9 @@ void TTobiPuku::hitWall()
 	if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
 		// TODO: 97.1%. One load short -- the original re-reads mNormal.x
 		// for the x bounce -- and its frame is 0x30 larger: accessor pool
-		// inside the inlined TBGWallCheckRecord constructor.
+		// inside the inlined TBGWallCheckRecord constructor. Tried:
+		// getVelocity().dot(mNormal) (adds an addi for the reference, 94.8)
+		// and getNormal() per component (92.6).
 		f32 dot = getVelocity().x * record.mResultWalls[0]->mNormal.x
 		          + getVelocity().y * record.mResultWalls[0]->mNormal.y
 		          + getVelocity().z * record.mResultWalls[0]->mNormal.z;
@@ -498,19 +500,16 @@ bool TTobiPuku::canBound()
 	return false;
 }
 
-// UNUSED, 0x140 in the map. Inlined into TobiPukuRollCallback, where the
-// materialised bool it returns is what shapes that function's branches.
+// UNUSED, 0x140 in the map and size-exact as one `||` condition (three
+// separate `if (c) return true;` gave 0x150 and three `li r0, 1` blocks where
+// retail's inlined copies converge on one). Inlined into
+// TobiPukuRollCallback.
 bool TTobiPuku::isRoll()
 {
-	// TODO: 0x150 against the map's 0x140, and when inlined the original's
-	// three tests converge on one `li r0, 1` where ours each get their own.
-	// Writing the body as a single `a || b || c` return gets the size down
-	// to 0xd4 but makes the inlined form much worse, so this stays.
-	if (mSpine->getCurrentNerve() == &TNerveTobiPukuLand::theNerve())
-		return true;
-	if (mSpine->getCurrentNerve() == &TNerveTobiPukuPrepareFly::theNerve())
-		return true;
-	if (mSpine->getCurrentNerve() == &TNerveTobiPukuReturnLaunch::theNerve())
+	if (mSpine->getCurrentNerve() == &TNerveTobiPukuLand::theNerve()
+	    || mSpine->getCurrentNerve() == &TNerveTobiPukuPrepareFly::theNerve()
+	    || mSpine->getCurrentNerve()
+	           == &TNerveTobiPukuReturnLaunch::theNerve())
 		return true;
 	return false;
 }
@@ -918,8 +917,8 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 	if (spine->getTime() == 0) {
 		puku->onLiveFlag(LIVE_FLAG_UNK10);
 		puku->mPosition.y -= 300.0f;
-		JGeometry::TVec3<f32> dir(puku->mVelocity);
-		puku->mRotation.x = MsGetRotFromZaxis(dir).x;
+		puku->mRotation.x
+		    = MsGetRotFromZaxis(JGeometry::TVec3<f32>(puku->mVelocity)).x;
 		puku->setJumpAnm();
 	}
 
@@ -929,7 +928,7 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 		puku->mBoundCount = 0;
 		puku->unk194      = 1;
 		puku->mVelocity   = puku->mLaunchVelocity;
-		puku->mLaunchAngle = MsGetRotFromZaxis(puku->mVelocity).x;
+		puku->mLaunchAngle = MsGetRotFromZaxis(puku->mLaunchVelocity).x;
 		puku->generateEffectColumWater();
 		puku->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		puku->offLiveFlag(LIVE_FLAG_UNK10);
@@ -1049,7 +1048,7 @@ DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
 // callers depend on.
 DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor)
 {
-	TTobiPuku* puku = TobiPukuBody(spine);
+	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
 
 	if (spine->getTime() == 0) {
 		puku->mRotation.x = 0.0f;
@@ -1057,7 +1056,7 @@ DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor)
 	}
 
 	if (!puku->isAirborne()) {
-		if (puku->mGroundPlane->isWaterSurface()) {
+		if (puku->getGroundPlane()->isWaterSurface()) {
 			spine->pushAfterCurrent(&TNerveTobiPukuDie::theNerve());
 			puku->generateEffectColumWater();
 			puku->onLiveFlag(LIVE_FLAG_UNK20000);
@@ -1262,7 +1261,6 @@ DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 	return FALSE;
 }
 
-// TODO: incorrect size. Map records 0x1a8 (424 bytes).
 DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
 {
 	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
@@ -1276,18 +1274,15 @@ DEFINE_NERVE(TNerveTobiPukuPrepareFly, TLiveActor)
 		puku->mRotStep = (angle - puku->mRotation.x) / 60.0f;
 	}
 
-	// TODO: 99.4%. Only the volatile FPR pair is left: retail puts the
-	// component in f1 and the 1/60 literal in f2, we have them the other
-	// way round in all three statements.
-	f32 x = puku->getPosition().x;
-	puku->mPosition.x
-	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.x - x) + x;
-	f32 y = puku->getPosition().y;
+	// `+=` on the member puts the component in f1 and the 1/60 literal in
+	// f2 (a named copy of the component swaps them); the one getPosition()
+	// read is the reference temporary that sizes the frame at 0x40.
+	puku->mPosition.x += (1.0f / 60.0f)
+	                     * (puku->mLaunchPad->getPosition().x - puku->mPosition.x);
 	puku->mPosition.y
-	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.y - y) + y;
-	f32 z = puku->getPosition().z;
+	    += (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.y - puku->mPosition.y);
 	puku->mPosition.z
-	    = (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.z - z) + z;
+	    += (1.0f / 60.0f) * (puku->mLaunchPad->mPosition.z - puku->mPosition.z);
 
 	f32 spread = puku->unk1EC - 3.0f;
 	if (spread > 180.0f)
@@ -1318,8 +1313,7 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
 	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		TTobiPukuLaunchPad* pad = puku->mLaunchPad;
-		puku->setGoalPath(pad->mPosition);
+		puku->setGoalPath(puku->mLaunchPad->getPosition());
 		puku->setSwimAnm();
 		puku->mSwimBaseY = puku->mPosition.y;
 	}
@@ -1334,11 +1328,8 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
 	// Copy-initialising from `a - b` is what reaches the map's out-of-line
 	// TVec3::sub: the copy constructor is one inline level and the
 	// difference nested in its argument two more.
-	JGeometry::TVec3<f32> toPad = puku->mLaunchPad->mPosition
-	                              - puku->mPosition;
-
-	JGeometry::TVec3<f32> dir(toPad);
-	dir.y = 0.0f;
+	JGeometry::TVec3<f32> dir = puku->mLaunchPad->mPosition - puku->mPosition;
+	dir.y                     = 0.0f;
 	MsVECNormalize(dir, dir);
 
 	f32 speed = puku->mMarchSpeed;
