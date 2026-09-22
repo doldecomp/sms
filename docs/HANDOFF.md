@@ -112,6 +112,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   The remaining five-function residue is frame/register allocation and the inlined `moveWait` temporary layout.
 - Landed `Enemy/Kumokun`: corrected the wall-probe height in `initAttachPlane`, raising that function **91.02 -> 91.77%** and the unit **97.88 -> 97.91%**.
   The other twelve residuals were audited and remain dominated by quaternion/vector inline depth and FPR allocation.
+- Landed `Map/MapEventSink`: restored Bianco's explicit parent setup and reset loop in `loadAfter`, raising it **56.72 -> 75.31%** and the unit **97.71 -> 98.59%**.
+  The remaining sink residues are chiefly frame/inlining differences around the parent `loadAfter` call.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
