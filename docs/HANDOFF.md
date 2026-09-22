@@ -201,6 +201,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   `rsetup` rose **96.634796 -> 96.93%** and unit fuzzy similarity **98.76760 -> 98.85%**; aggregate fuzzy similarity rose **98.091910 -> 98.092070%**, while matched-code, exact-function, and linked-unit counters did not move.
 - Whole-file medium audit of `JSystem/JParticle/JPAMath` returned clean with no safe gain.
   Its two remaining functions are verified local-residency and FPR-allocation artifacts; do not repeat it without a new compiler-allocation lead.
+- Whole-file medium audit of `MarioUtil/MathUtil` returned clean with no safe gain and confirmed the catalog's old padding note was stale.
+  The current source contains no `trash[]` or volatile padding; its five residuals are allocator-only, so do not repeat it without a new compiler-allocation lead.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
