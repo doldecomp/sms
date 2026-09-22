@@ -47,6 +47,11 @@ JAISound* MSModBgm::modBgm(u8 param_1, u8 param_2)
 	// scheduler sinks the `li` below the `stb` in every spelling tried,
 	// so the next lead is whatever pins the `li` above the store, not
 	// another spelling of the two statements.
+	// cc30: also inert or worse: `unk0 = sound = nullptr` / `= 0` chains
+	// (90.2%), `sound = (JAISound*)(unk0 = false)`, TU-local reset helpers
+	// (reference out-parameter: split zero kept; `ret`-local returning
+	// helpers: split zero plus +0x10/+0x18 frame), and `u8`/`u32 : 8`
+	// types for unk0.
 	JAISound* sound = MSBgm::getHandle(param_2);
 	if (!sound) {
 		sound = nullptr;
@@ -131,6 +136,12 @@ f32 MSBgmXFade::scExp[18] = {
 void MSBgmXFade::xFadeBgm(f32 param_1)
 {
 	// TODO: 99.4%. Two independent residues, both localised:
+	//  (cc30: the named-result lever that closed xFadeBgmForce, `u8 r = i;
+	//  return r;` at either or both returns of getTiming, is inert here, as
+	//  are a `ret`/`break` body, a named `scTiming[i]`, a named copy of
+	//  `param_1`, a caller-side `u32 timing` passed by address, and
+	//  null-checked/unconditional `*param_2` stores (the checked pair
+	//  pushes the body past the depth-1 budget: 0x88 and called).)
 	//  * frame 0x30 vs 0x38. No slot is referenced, so this is the dead
 	//    low region: an uninitialised **non-trivial 8-byte local of
 	//    getTiming** (the only inlined callee) takes the frame to 0x38
@@ -215,15 +226,16 @@ u8 MSBgmXFade::getTiming(f32 param_1, u32* param_2)
 	return 0xff;
 }
 
-// TODO: an uninitialised non-trivial **4-byte** local here takes
-// MSBgmXFade::xFadeBgmForce from 99.8% to exact (frame 0x28 -> 0x30) with
-// no instruction change and no size change to this UNUSED body. Left out
-// for want of a candidate object; same family as getTiming's 8 bytes.
+// Naming the found index before returning it (`u8 r = i; return r;`) is
+// the +8 of dead low region that took xFadeBgmForce's frame from 0x28 to
+// retail's 0x30; the body stays at its 0x4c map size.
 u8 MSBgmXFade::getTimingForce(f32 param_1)
 {
 	for (u8 i = 0; i < 17; ++i)
-		if (param_1 >= scTiming[i] && param_1 < scTiming[i + 1])
-			return i;
+		if (param_1 >= scTiming[i] && param_1 < scTiming[i + 1]) {
+			u8 r = i;
+			return r;
+		}
 
 	return 0xff;
 }
