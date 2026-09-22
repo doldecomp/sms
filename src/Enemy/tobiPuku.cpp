@@ -106,14 +106,18 @@ static int TobiPukuRollCallback(J3DNode* param_1, int param_2)
 		MtxPtr anmMtx   = gpCurTobiPuku->getMActor()->getModel()->getAnmMtx(
             joint->getJntNo());
 
-		// TODO: retail binds &local_44 into r30 once and loads the 0.0f/1.0f
-		// literals after the table reads; ours re-forms the address per call
-		// and hoists both literals.
+		// A named pointer to the rotation binds &local_44 into r30 once, as
+		// retail does.
+		// TODO: 96.8%. Retail loads the 0.0f/1.0f literals after the sine
+		// table reads; ours hoists both. Tried: the rotation body written out
+		// with one shared s16 angle, a named zero, chained zero stores, a
+		// TPosition3f matrix.
 		Mtx local_44;
-		MsMtxSetRotZ(local_44, gpCurTobiPuku->unk1EC);
+		MtxPtr rot = local_44;
+		MsMtxSetRotZ(rot, gpCurTobiPuku->unk1EC);
 
-		MTXConcat(anmMtx, local_44, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
+		MTXConcat(anmMtx, rot, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, rot, J3DSys::mCurrentMtx);
 	}
 	return true;
 }
@@ -262,6 +266,11 @@ void TTobiPukuLaunchPad::launch()
 	}
 }
 
+// TODO: 99.3%. Frame 0xa0 against retail's 0xd8 (the pool below the target
+// vector is 0x38 short) and, in the fixed-direction arm, retail puts the
+// pitch conversion's product in f1 and sinYaw*speed in f3 (ours swapped).
+// Tried: a direction TVec3 scaled by speed, velocity.set(...), both
+// launch-arc arguments named.
 void TTobiPukuLaunchPad::forceLaunch(TTobiPuku* puku)
 {
 	JGeometry::TVec3<f32> target(mPosition);
@@ -278,16 +287,19 @@ void TTobiPukuLaunchPad::forceLaunch(TTobiPuku* puku)
 		f32 dist = unk198->mSLFlyDist.get();
 		target.x += sinYaw * dist;
 		target.z += cosYaw * dist;
+		// Named so the pad's launch speed loads before the puku's gravity.
+		f32 vy   = unk198->mSLLaunchVelocityY.get();
 		velocity = calcVelocityToJumpToY(
-		    target, unk198->mSLLaunchVelocityY.get(),
-		    puku->unk19C->mSLFlyGravityY.get());
+		    target, vy, puku->unk19C->mSLFlyGravityY.get());
 	} else {
 		// Otherwise just fire along the pad's own facing at its own speed.
 		f32 speed    = unk19C;
 		s16 pitch    = (s16)(16384.0f * mRotation.x / 90.0f);
 		f32 cosPitch = JMASCos(pitch);
+		// Named, so the `* 1.0f` survives as retail's separate product.
+		f32 up       = 1.0f;
 		velocity.x   = sinYaw * speed * cosPitch;
-		velocity.y   = 1.0f * speed * JMASSin(pitch);
+		velocity.y   = up * speed * JMASSin(pitch);
 		velocity.z   = cosYaw * speed * cosPitch;
 	}
 
@@ -378,6 +390,8 @@ void TTobiPuku::hitWall()
 		// inside the inlined TBGWallCheckRecord constructor. Tried:
 		// getVelocity().dot(mNormal) (adds an addi for the reference, 94.8)
 		// and getNormal() per component (92.6).
+		// 2026-09-22: TU-local dot levels over TVec3&/Vec&/Vec* and
+		// PSVECDotProduct are 87-95%.
 		f32 dot = getVelocity().x * record.mResultWalls[0]->mNormal.x
 		          + getVelocity().y * record.mResultWalls[0]->mNormal.y
 		          + getVelocity().z * record.mResultWalls[0]->mNormal.z;
@@ -910,6 +924,10 @@ static inline TTobiPuku* TobiPukuBody(TSpineBase<TLiveActor>* spine)
 // differs is how the two MsGetRotFromZaxis results are stored. The original
 // keeps its returned vector in a stack temporary and copies a single float to
 // mRotation, where this assigns the whole vector.
+// 2026-09-22 (99.9%, frame exact, every slot 4 low): the TobiPukuBody binder
+// and by-value f32 levels on the launch-velocity add, the unk1B0 compare,
+// either rotation result, are all +8 (frame +8); getVelocity() for the copy
+// and the raw mVelocity argument likewise.
 DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 {
 	TTobiPuku* puku = (TTobiPuku*)spine->getBody();
@@ -1226,6 +1244,11 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 }
 
 // TODO: incorrect size. Map records 0x1c8 (456 bytes).
+// TODO: 99.9%. Frame 0x60 against 0x68; the trailing velocity copy sits at
+// 0x3c where retail has 0x54. `v` declared at the top and assigned from
+// getVelocity() lands the frame with both vector blocks 4 low (99.8); every
+// +4 level tried on top of it (by-value f32/int levels on each member read,
+// a setter level on unk1AE) is +8. Calling the UNUSED bound() is 94.5%.
 DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 {
 	TTobiPuku* puku = (TTobiPuku*)spine->getBody();

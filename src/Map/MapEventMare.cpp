@@ -203,6 +203,11 @@ void TMareWallRock::initEffect()
 	}
 }
 
+// TODO: 99.6%. Frame 0x128 against retail's 0x170: the path buffer sits at
+// 0x64 in retail (0x20 here), so 0x44 of pool is missing below it, and the
+// centre computation reads max.x before min.x through an `lfsu` on min.
+// Tried: Vec / TVec3 copies of min and max (declared or assigned), the two
+// references swapped, pointer locals.
 void TMareWallRock::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
