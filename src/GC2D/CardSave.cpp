@@ -193,7 +193,9 @@ void TCardSave::initData(TMarioGamePad* param_1)
 
 		// TODO: retail copies the new texture into a second register
 		// (`mr r28, r24`) for the inlined constructor's storeTIMG call;
-		// neither this spelling nor the direct store reproduces it.
+		// neither this spelling nor the direct store reproduces it; also inert:
+		// const/static_cast, JKRGetNameResource, a top-declared texture, a
+		// named ResTIMG* (moves the path buffer), the (timg, 0) ctor.
 		JUTTexture* texture
 		    = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
 		unk1C[i] = texture;

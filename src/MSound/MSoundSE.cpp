@@ -24,7 +24,8 @@ MSoundSE* MSoundSE::mObj = 0;
 
 void MSRandVol::construct(u32 param)
 {
-	smList.append(&(new MSRandVol(param))->mLink);
+	MSRandVol* p = new MSRandVol(param);
+	smList.append(&p->mLink);
 }
 
 MSRandVol::MSRandVol(u32 param)
@@ -66,9 +67,8 @@ f32 MSRandVol::getRandVol(u32 param_1)
 void MSRandPlay::construct(u32 sound_id, s32 wait_min, s32 wait_max,
                            f32 curve_slope, f32 plus_slope)
 {
-	smList.append(
-	    &(new MSRandPlay(sound_id, wait_min, wait_max, curve_slope, plus_slope))
-	         ->mLink);
+	MSRandPlay* p = new MSRandPlay(sound_id, wait_min, wait_max, curve_slope, plus_slope);
+	smList.append(&p->mLink);
 }
 
 int MSRandPlay::registerTrans(u32 sound_id, const Vec* trans)
@@ -189,12 +189,14 @@ void MSRandPlay::randPlay(u32 vec_idx)
 
 MSoundSE::MSoundSE() { }
 
-// TODO: construct is instruction-exact except frame 0xa0 vs 0x60
-// (64 bytes of dead low region). Same unnamed-carrier class as
-// MSSetSoundTL's 104-byte hole; do not pad.
+// TODO: construct is instruction-exact and the frame matches through the
+// named `new` factories; the inlined MSSetSoundGrp ctor's homed `this` sits
+// at 0x4c vs retail 0x50. Inert: grp declared at top or unnamed-block,
+// named MSSetSoundMember locals (+0x20), `se` declaration order.
 void MSoundSE::construct()
 {
-	mObj = new MSoundSE;
+	MSoundSE* se = new MSoundSE;
+	mObj = se;
 
 	MSRandVol::construct(0);
 	// clang-format off
