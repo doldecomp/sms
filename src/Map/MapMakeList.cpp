@@ -165,12 +165,12 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	f32 minX = std::min(param_1->mPoint1.x,
 	                    std::min(param_1->mPoint2.x, param_1->mPoint3.x));
 	f32 minZ = std::min(param_1->mPoint1.z,
-	                    std::min(param_1->mPoint2.z, param_1->mPoint3.z));
+	                    std::min(param_1->mPoint3.z, param_1->mPoint2.z));
 
 	f32 maxX
 	    = std::max(param_1->mPoint1.x, std::max(param_1->mPoint2.x, param_1->mPoint3.x));
 	f32 maxZ
-	    = std::max(param_1->mPoint1.z, std::max(param_1->mPoint2.z, param_1->mPoint3.z));
+	    = std::max(param_1->mPoint1.z, std::max(param_1->mPoint3.z, param_1->mPoint2.z));
 
 	if (maxX < -mGridExtentX || maxZ < -mGridExtentY || minX > mGridExtentX
 	    || minZ > mGridExtentY)
