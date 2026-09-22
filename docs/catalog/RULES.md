@@ -77,6 +77,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `x = a - 1; x += b;` with `K - x` in the loop condition restores retail's separate `subi` and unrolled trailing branches (MapEventMare `initCommon`).
 - `T c = (T){...}; f(c);` swaps the two temporaries relative to passing the literal (DrawUtil `TSilhouette::setting`).
 - A far `ble` to the epilogue right after a length computation is a missing `if (len > 0.0f)` guard (MarioPhysics `keepDistance`).
+- `pollute()` over `stamp(1, ...)` fixes argument evaluation order (gesso `rebirth`; try MarioMove, MarioRun, Kukku, fireWanwan).
+- A `.sdata2` literal that differs while `matched_data` is 100% can expose swapped bounds (smallEnemy `TMsRange<f32>(8, 16)`).
 
 ## Inlining decisions
 
@@ -395,6 +397,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - In the 99.9% band a register difference on an `isActorType` load can mean the test is on the wrong object (MapObjGeneral `receiveMessage`: the sender).
 - A union written through a reference cast (`(int&)mData = v`) is an aliasing store that forces reloads of stack-homed values; write the named member (spcinterp `TSpcSlice(int)`: closed the ctor and lifted four EventWatcher functions).
 - `(int)boolLocal != 1` reproduces retail's `clrlwi` plus signed `cmpwi` (MarioPhysics `checkDescent`).
+- Retail reloading a normal's component after a dot product: `v.dot(wall->getNormal())` and later reads through `getNormal()` (elecNokonoko `behaveToHitWall`, MapObjBianco `touchWall`; try `TMapObjBall::touchWall`).
+- `return !a() && b();` with no result local gives retail's shared-zero `mr r0, r30` (smallEnemy `isFindMario`).
 
 ## Float and pool
 
