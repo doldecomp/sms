@@ -825,14 +825,10 @@ void TGuide::changeBotStatus(int stage)
 	}
 }
 
-// TODO: all the arithmetic matches; retail reads gpMarioPos->z before
-// storing the scaled x and keeps 0.5f in f4 across the marker-bounds loads,
-// where ours reloads. Frame 0x100 against our 0x78.
-// TODO: literal-pool order. The target asks for 21200.0f (@2954) before
-// 25000.0f (@2955), so the z scaling is spelled before the x scaling in the
-// source. Swapping the two statements does reproduce the pool order but costs
-// placeMario 76.9 -> 73.1 (four extra instructions), so the statement order is
-// right and something else about the pair's spelling is not; left as is.
+// The scaled position is one TVec3::set: its right-to-left arguments request
+// 21200.0f (@2954) before 25000.0f (@2955), retail's pool order.
+// TODO: frame 0x88 against retail's 0x100, and our x clamp stores the
+// fctiwz result twice (two extra instructions).
 void TGuide::placeMario()
 {
 	if ((u8)SMS_getShineStage(gpMarDirector->mMap) != 1) {
@@ -840,16 +836,15 @@ void TGuide::placeMario()
 		return;
 	}
 
-	JGeometry::TVec3<f32> pos = *gpMarioPos;
-	int mapWidth              = mMapRect.x2 - mMapRect.x1;
-	int mapHeight             = mMapRect.y2 - mMapRect.y1;
-	pos.x                     = pos.x * (f32)mapWidth / 25000.0f;
-	pos.y                     = 0.0f;
-	pos.z                     = pos.z * (f32)mapHeight / 21200.0f;
+	JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
+	int mapWidth              = mMapRect.getWidth();
+	int mapHeight             = mMapRect.getHeight();
+	pos.set(pos.x * (f32)mapWidth / 25000.0f, 0.0f,
+	        pos.z * (f32)mapHeight / 21200.0f);
 
 	J2DPane* marker = mMarioMarker;
-	int paneWidth   = marker->mBounds.x2 - marker->mBounds.x1;
-	int paneHeight  = marker->mBounds.y2 - marker->mBounds.y1;
+	int paneWidth   = marker->getWidth();
+	int paneHeight  = marker->getHeight();
 	int x           = (int)(0.5f * (f32)mapWidth + pos.x
 	                        - 0.5f * (f32)paneWidth - 2.0f);
 	int y           = (int)(0.5f * (f32)mapHeight + pos.z
@@ -867,9 +862,9 @@ void TGuide::placeMario()
 
 	for (int i = 2; i < 10; ++i) {
 		if (TFlagManager::getInstance()->getBool(0x103A5 + i))
-			mScreen->search('01g0' + i - 1)->mVisible = true;
+			mScreen->search('01g0' + i - 1)->show();
 		else
-			mScreen->search('01g0' + i - 1)->mVisible = false;
+			mScreen->search('01g0' + i - 1)->hide();
 	}
 }
 
