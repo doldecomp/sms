@@ -38,7 +38,7 @@ public:
 	void doEat(u32 fruitID);
 	void doSearch();
 	void entry();
-	void getEmitPosDir(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*) const;
+	int getEmitPosDir(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*) const;
 	J3DFrameCtrl* getFrameCtrl() const;
 	MtxPtr getMtxPtrFootL() const;
 	MtxPtr getMtxPtrFootR() const;

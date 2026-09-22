@@ -9,6 +9,7 @@
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -381,26 +382,29 @@ u16 TYoshi::changeHand()
 	return 22;
 }
 
-// Pragma residue (sweep 360): protects TYoshi::doSearch (99.65 -> 87.7) and
-// TYoshi::movement. Only 7 statements against a budget of 14, so retail's body
-// was spelled very differently. The body is also 97.1% on its own: retail
-// keeps the anm-matrix chain in r6 and leaves r3 (this) live where we reuse
-// r3; routing it through the header's getTongueMtx() is inert.
-#pragma dont_inline on
-void TYoshi::getEmitPosDir(JGeometry::TVec3<f32>* dir,
-                           JGeometry::TVec3<f32>* pos) const
+// Retail reaches this only through emitTongue(), i.e. at inline depth 2
+// (budget 9): the four named chain steps bring it to 10 statements and restore
+// the out-of-line `bl` without `#pragma dont_inline`. The return type is not in
+// the mangled name; retail keeps r3 reserved for the whole body (the matrix
+// chain goes to r6), which is what a non-void function with no `return`
+// statement compiles to, so the declaration is non-void here.
+// TODO: the real return type is unknown; `int` is a placeholder.
+int TYoshi::getEmitPosDir(JGeometry::TVec3<f32>* pos,
+                           JGeometry::TVec3<f32>* dir) const
 {
-	MtxPtr mtx = mActor->getModel()->getAnmMtx(mJointIdxTongue);
+	MActor* actor   = mActor;
+	J3DModel* model = actor->getModel();
+	u16 joint       = mJointIdxTongue;
+	MtxPtr mtx      = model->getAnmMtx(joint);
 
-	pos->x = mtx[0][0];
-	pos->y = mtx[1][0];
-	pos->z = mtx[2][0];
+	dir->x = mtx[0][0];
+	dir->y = mtx[1][0];
+	dir->z = mtx[2][0];
 
-	dir->x = mtx[0][3];
-	dir->y = mtx[1][3];
-	dir->z = mtx[2][3];
+	pos->x = mtx[0][3];
+	pos->y = mtx[1][3];
+	pos->z = mtx[2][3];
 }
-#pragma dont_inline off
 
 void TYoshi::setEggYoshiPtr(TEggYoshi* egg) { mEgg = egg; }
 
@@ -417,10 +421,13 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 
 	changeAnimation(0);
 
-	TTakeActor* fruit = (TTakeActor*)egg->getFruit();
+	// TODO: instruction-exact; frame 0x48 against retail's 0x50 (the
+	// fctiwz buffer sits 8 higher in retail).
+	THitActor* fruit = egg->getFruit();
+	TTakeActor* held = (TTakeActor*)fruit;
 	if (mMario->getHeldObject() == fruit) {
-		fruit->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_UNK8);
-		fruit->mHolder      = nullptr;
+		held->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_UNK8);
+		held->mHolder       = nullptr;
 		mMario->mHeldObject = nullptr;
 	}
 
@@ -577,8 +584,8 @@ void TYoshi::thinkAnimation()
 				newIdx = 12;
 		}
 	} else if ((status & MARIO_STATUS_FLAG_UNK200)
-	           && (status == MARIO_STATUS_CATCH_LOST || status == 0xC000023D
-	               || status == 0xC000023E)) {
+	           && (status == MARIO_STATUS_CATCH_LOST || status == 0x0C00023D
+	               || status == 0x0C00023E)) {
 		newIdx = 18;
 	} else {
 		bool sliding = (status & MARIO_STATUS_FLAG_UNK8000) ? true : false;
@@ -597,11 +604,15 @@ void TYoshi::thinkAnimation()
 				case 2:
 					newIdx = 17;
 					break;
+				default:
+					goto dash;
 				}
-			} else if (mMario->mGamePad->checkMeaning(0x400)) {
-				newIdx = 13;
 			} else {
-				goto walking;
+			dash:
+				if (mMario->mGamePad->checkMeaning(0x400))
+					newIdx = 13;
+				else
+					goto walking;
 			}
 		} else {
 		walking:
@@ -665,47 +676,27 @@ void TYoshi::thinkUpper()
 
 	J3DJoint* joint
 	    = mActor->getModel()->getModelData()->getJointNodePointer(18);
-	const TWaterGun* waterGun = mMario->mWaterGun;
-
-	bool shouldUseEatMtx = false;
-
 	if (mTongue->mState != TYoshiTongue::STATE_IDLE
-	    && waterGun->mCurrentWater != 0) {
-		if (waterGun->getCurrentNozzle()->getNozzleKind() == 1) {
-			if (((TNozzleTrigger*)waterGun->getCurrentNozzle())
-			        ->getSprayState()
-			    == TNozzleTrigger::ACTIVE)
-				shouldUseEatMtx = true;
-			else
-				shouldUseEatMtx = false;
-		} else {
-			if (waterGun->getCurrentNozzle()->unk378 > 0.0f)
-				shouldUseEatMtx = true;
-			else
-				shouldUseEatMtx = false;
-		}
-	}
-
-	if (shouldUseEatMtx) {
+	    || mMario->mWaterGun->isEmitting()) {
 		if (joint->getMtxCalc() != unk54) {
 			unk5C.setFrame(unk5C.getStart());
 			unk5C.setRate(1.0f);
 			unk5C.setEnd(unk4C->getFrameMax());
 			unk5C.setFrame(0.0f);
 			joint->setMtxCalc(unk54);
-			mBodyAnmSound->initAnmSound(mBodyAnmSoundTable[3], 1, 0.0f);
+			mTongueAnmSound->initAnmSound(mBodyAnmSoundTable[3], 1, 0.0f);
 		}
 
 		unk4C->setFrame(unk5C.getFrame());
 	} else {
-		if (joint->getMtxCalc() == unk58) {
+		if (joint->getMtxCalc() == unk54) {
 			unk5C.setFrame(unk5C.getStart());
 			unk5C.setRate(1.0f);
 			unk5C.setEnd(unk50->getFrameMax());
 			unk5C.setFrame(0.0f);
 			joint->setMtxCalc(unk58);
-			mBodyAnmSound->initAnmSound(mBodyAnmSoundTable[4], 1, 0.0f);
-		} else if (joint->getMtxCalc() != unk58) {
+			mTongueAnmSound->initAnmSound(mBodyAnmSoundTable[4], 1, 0.0f);
+		} else if (joint->getMtxCalc() == unk58) {
 			if (unk5C.checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 			                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
 				joint->setMtxCalc(nullptr);
@@ -1146,6 +1137,10 @@ void TYoshi::entry()
 	if (mState == STATE_EGG)
 		bVar1 = false;
 
+	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
+	    || gpMarDirector->isTalkModeNow())
+		bVar1 = true;
+
 	if (unkC < 600)
 		mType = 0;
 
@@ -1155,18 +1150,23 @@ void TYoshi::entry()
 	if (bVar1 != true)
 		return;
 
+	// TODO: every named object sits 0x10 below retail's (tev colours 0xc4
+	// vs 0xd4, shadow request 0xcc vs 0xdc) at an equal frame, and retail
+	// re-reads unkC for the `< 360` compare while testing bit 3 on the first
+	// read.
+	J3DModelData* modelData = mActor->getModel()->getModelData();
 	s16 r = (s16)unk84.x;
 	s16 g = (s16)unk84.y;
 	s16 b = (s16)unk84.z;
 
-	J3DModelData* modelData = mActor->getModel()->getModelData();
 	for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
 		J3DGXColorS10 tevColor;
 		tevColor.color.r = r;
 		tevColor.color.g = g;
 		tevColor.color.b = b;
 		tevColor.color.a = 0xFF;
-		modelData->getMaterialNodePointer(i)->setTevColor(2, &tevColor);
+		modelData->getMaterialNodePointer(i)->getTevBlock()->setTevColor(
+		    2, tevColor);
 	}
 
 	{
@@ -1178,7 +1178,8 @@ void TYoshi::entry()
 		mMirrorModels[0]
 		    ->getModelData()
 		    ->getMaterialNodePointer(0)
-		    ->setTevColor(2, &tevColor);
+		    ->getTevBlock()
+		    ->setTevColor(2, tevColor);
 	}
 
 	{
@@ -1190,13 +1191,19 @@ void TYoshi::entry()
 		mMirrorModels[1]
 		    ->getModelData()
 		    ->getMaterialNodePointer(0)
-		    ->setTevColor(2, &tevColor);
+		    ->getTevBlock()
+		    ->setTevColor(2, tevColor);
 	}
 
 	mActor->entry();
+	// TODO: retail loads gpLightManager into r3 and the light id chain into
+	// r4 directly; ours routes the set through r5. A named set local, the raw
+	// mLightSets[1] and MActor.cpp's binder shape are all inert.
+	gpLightManager->getLightSet(1)->changeLightDrawBuffer(mActor->mLightId);
 	mMirrorModels[0]->entry();
 	mMirrorModels[1]->entry();
 	mTongue->entry();
+	gpLightManager->getLightSet(1)->resetLightDrawBuffer();
 
 	TCircleShadowRequest shadowRequest;
 	shadowRequest.mPosition = mTranslation;
