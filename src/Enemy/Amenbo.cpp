@@ -137,10 +137,10 @@ void TAmenbo::bind()
 
 void TAmenbo::control()
 {
-	if (mWaterGunHitCooldown > 0)
+	if (((const TAmenbo*)this)->mWaterGunHitCooldown > 0)
 		mWaterGunHitCooldown--;
 
-	if (mSearchDisableCooldown > 0)
+	if (((const TAmenbo*)this)->mSearchDisableCooldown > 0)
 		mSearchDisableCooldown--;
 
 	updateCollision();
@@ -225,7 +225,8 @@ void TAmenbo::calcRootMatrix()
 	mtx.setQT(mQuat, mPosition);
 	getModel()->setBaseScale(mScaling);
 	getModel()->setBaseTRMtx(mtx);
-	getModel()->getBaseTRMtx()[1][3] += mHeadHeight;
+	MtxPtr m = getModel()->getBaseTRMtx();
+	m[1][3] += mHeadHeight;
 
 	updateRipple();
 }
@@ -371,6 +372,10 @@ void TAmenbo::decideTarget()
 	// TODO: literal-pool order. The target asks for 1.5f (@3161) before
 	// pi (@3162); ours reverses the pair, so this expression is not yet
 	// spelled the way retail spells it (same instructions either way).
+	// Retail also multiplies MsRandF()'s scale into f31 before the axis
+	// temporary's set<f> call and subtracts from 1.5f after it; ours hoists
+	// the subtraction too. Inert (cc48): a named r or angle, M_PI first,
+	// (f32)M_PI, a literal pi, -(r - 1.5f); a named axis is worse.
 	q.setRotate(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f),
 	            (1.5f - MsRandF()) * M_PI);
 	setWalkDir(q);
@@ -440,7 +445,7 @@ bool TAmenbo::isOverTerritory(JGeometry::TVec3<f32>* param_1) const
 	*param_1 -= mPosition;
 	param_1->y = 0.0f;
 	f32 range  = getSaveParam2()->mTerritoryRange.get();
-	return param_1->squared() < range * range;
+	return range * range < param_1->squared();
 }
 
 bool TAmenbo::isAttacking() const
@@ -628,6 +633,10 @@ DEFINE_NERVE(TNerveAmenboWalk, TLiveActor)
 	return false;
 }
 
+// TODO: callee-saved GPRs rotate (retail: string base r31, self r30,
+// spine r29; ours spine r31) and the frame is 0x58 vs 0x70. Inert or worse
+// (cc48): a getBody() binder or fork, TVec3 zero spellings, .value for
+// mHitWaterTimer, self->getSpine() at any of the three spine uses.
 DEFINE_NERVE(TNerveAmenboHitWater, TLiveActor)
 {
 	TAmenbo* self = (TAmenbo*)spine->getBody();
