@@ -662,11 +662,9 @@ bool TTalk2D2::openNormalWindow()
 		int idx = mCharCursor[i] + i * LINE_LENGTH;
 		while (mCharCursor[i] <= mLineLength[i]) {
 			if (mCharBox[idx]->isVisible()) {
-				s16 alpha = mCharBox[idx]->getAlpha() + mAlphaStep;
-				s16 clamped = alpha;
-				if (clamped > 255)
-					clamped = 255;
-				mCharBox[idx]->setAlpha(clamped);
+				s16 alpha = mCharBox[idx]->getAlpha();
+				alpha += mAlphaStep;
+				mCharBox[idx]->setAlpha(alpha > 255 ? 255 : alpha);
 				mCharIndex = idx;
 				if (alpha < 255)
 					break;
@@ -776,25 +774,23 @@ void TTalk2D2::checkBoardControler()
 void TTalk2D2::moveTalkWindow()
 {
 	for (int i = 0; i < LINE_NUM; i++) {
+		int idx = mCharCursor[i] + i * LINE_LENGTH;
 		if (mCharCursor[i] == 0)
 			continue;
 		if (mCharCursor[i] > mLineLength[i])
 			continue;
 
-		int idx         = mCharCursor[i] + i * LINE_LENGTH;
-		J2DTextBox* box = mCharBox[idx];
+		J2DTextBox*& box = mCharBox[idx];
 		if (box->isVisible()) {
-			s16 alpha   = box->getAlpha() + mAlphaStep;
-			s16 clamped = alpha;
-			if (clamped > 255)
-				clamped = 255;
-			box->setAlpha(clamped);
+			s16 alpha = box->getAlpha();
+			alpha += mAlphaStep;
+			box->setAlpha(alpha > 255 ? 255 : alpha);
 			if (alpha >= 255)
 				mCharCursor[i]++;
 		} else if (mCharTimer <= 0) {
 			mCharTimer = mCharDelays[idx];
-			mCharBox[idx]->show();
-			mCharBox[idx]->setAlpha(0);
+			box->show();
+			box->setAlpha(0);
 		} else {
 			mCharTimer--;
 		}
@@ -821,11 +817,12 @@ void TTalk2D2::moveTalkWindow()
 		}
 
 		if (pane->isVisible()) {
-			if ((s16)pane->getAlpha() < 255) {
-				s16 alpha = pane->getAlpha() + 16;
-				if (alpha >= 255)
-					alpha = 255;
-				pane->setAlpha(alpha);
+			s16 paneAlpha = pane->getAlpha();
+			if (paneAlpha < 255) {
+				paneAlpha += 16;
+				if (paneAlpha >= 255)
+					paneAlpha = 255;
+				pane->setAlpha(paneAlpha);
 			}
 
 			s16 alpha = cursor->getAlpha();
