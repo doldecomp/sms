@@ -277,7 +277,7 @@ TLimitKoopaHead::TLimitKoopaHead(TLimitKoopa* owner)
 // theNerve() guards expanded than our build does.
 BOOL TLimitKoopaHead::receiveMessage(THitActor*, u32 message)
 {
-	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if ((s32)message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		TLimitKoopa* koopa = mOwner;
 		if (koopa->mSpine->getCurrentNerve()
 		        != &TNerveLimitKoopaTumble::theNerve()
