@@ -77,7 +77,7 @@ public:
 	TSpcSlice(int value)
 	    : mType(TYPE_INT)
 	{
-		(int&)mData = value;
+		mData.asInt = value;
 	}
 
 	TSpcSlice(f32 value)

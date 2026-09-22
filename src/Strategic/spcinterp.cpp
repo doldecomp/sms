@@ -228,6 +228,12 @@ void TSpcInterp::execdec()
 	mProcessStack.push(mStorageStack.getFromBottom(layer + arg2));
 }
 
+// TODO: execadd/sub/mul/div: the else arm's TSpcSlice(int) temporary sits at
+// 0x20, retail 0x24 (4 bytes of pool missing below it). Tried (inert or worse):
+// push(TSpcSlice(..)), mProcessStack.push, named slice or int, pushInt forks,
+// operator int casts, pop() over mProcessStack.pop(), raw mType tests (-4
+// each), function-scope result, raw float stores, typeof() in the header
+// getters, push(int) body spellings.
 void TSpcInterp::execadd()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
@@ -407,7 +413,7 @@ void TSpcInterp::execcall()
 {
 	u32 address = fetchU32();
 	s32 argNum  = fetchS32();
-	u32 counter = mProgramCounter;
+	int counter = mProgramCounter;
 
 	mContextStack.push(counter);
 	mContextStack.push(mStorageStack.size());
@@ -415,7 +421,7 @@ void TSpcInterp::execcall()
 	for (int i = 0; i < argNum; ++i)
 		mStorageStack.push(TSpcSlice());
 	for (int i = 0; i < argNum; ++i)
-		mStorageStack.setFromTop(i, mProcessStack.pop());
+		mStorageStack.getFromTop(i) = pop();
 	mProgramCounter = address;
 }
 
