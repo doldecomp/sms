@@ -264,6 +264,14 @@ void TGuide::resetObjects()
 	mCursors[1]->getPane()->mVisible = true;
 }
 
+// fabricated: retail reads the digit texture before the pane search at these
+// sites, so the search and the swap were one inline taking the texture.
+static inline void GuideSetTexture(J2DScreen* screen, u32 tag,
+                                   const ResTIMG* img)
+{
+	((J2DPicture*)screen->search(tag))->changeTexture(img, 0);
+}
+
 void TGuide::resetScore()
 {
 	int etcTotal = 0;
@@ -277,7 +285,7 @@ void TGuide::resetScore()
 		else
 			mScreen->search((i << 24) + '0_mn')->hide();
 
-		if (i <= 1)
+		if (i == 0 || i == 1)
 			continue;
 
 		for (int j = 0; j < 8; ++j) {
@@ -325,7 +333,7 @@ void TGuide::resetScore()
 			digit10->changeTexture(mNumberTextures[rest / 10]->mTexInfo, 0);
 			digit1->changeTexture(mNumberTextures[rest % 10]->mTexInfo, 0);
 		} else {
-			u16 hundreds       = rest / 100;
+			int hundreds       = rest / 100;
 			digit100->mVisible = true;
 			digit100->changeTexture(mNumberTextures[hundreds]->mTexInfo, 0);
 			coins -= hundreds * 100;
@@ -345,23 +353,22 @@ void TGuide::resetScore()
 	mMarkerPanes[0] = mScreen->search('mi00');
 	mClickPane      = mScreen->search('clic');
 
-	int bosses = 0;
+	s16 bosses = 0;
 	if (TFlagManager::getInstance()->getBool(0x10056))
 		bosses = 1;
 	if (TFlagManager::getInstance()->getBool(0x10058))
 		bosses++;
-	((J2DPicture*)mScreen->search('0s_1'))
-	    ->changeTexture(mNumberTextures[bosses]->mTexInfo, 0);
+	GuideSetTexture(mScreen, '0s_1', mNumberTextures[bosses]->mTexInfo);
 	total += bosses;
 
 	s32 allShines = TFlagManager::getInstance()->getFlag(0x40000);
 	u8 remaining  = allShines - (u8)total;
 	if (remaining > 99)
 		remaining = 99;
-	((J2DPicture*)mScreen->search('1s_1'))
-	    ->changeTexture(mNumberTextures[remaining / 10]->mTexInfo, 0);
-	((J2DPicture*)mScreen->search('1s_2'))
-	    ->changeTexture(mNumberTextures[remaining % 10]->mTexInfo, 0);
+	GuideSetTexture(mScreen, '1s_1',
+	                mNumberTextures[remaining / 10]->mTexInfo);
+	GuideSetTexture(mScreen, '1s_2',
+	                mNumberTextures[remaining % 10]->mTexInfo);
 
 	if (allShines > 999)
 		allShines = 999;
