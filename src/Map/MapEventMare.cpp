@@ -259,9 +259,29 @@ TMareEventWallRock::TMareEventWallRock(const char* name)
 	unk14 = nullptr;
 }
 
-void TMareEventDepressWall::finishEvent() { }
+void TMareEventDepressWall::finishEvent()
+{
+	JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+	unk28[unk48].remove();
+	unk24[unk48].setUpTrans(zero);
+	TMapObjBase::setJointTransX(unk30[unk48], 0.0f);
+	SMSRumbleMgr->stop(0x13);
+	unk48 += 1;
+	if (unk48 == unk10) {
+		unk44 = 4;
+		unk4C = mWaitTimeToWatch;
+		return;
+	}
+	unk4C = unk18[unk48];
+	unk44 = 2;
+}
 
-void TMareEventDepressWall::setJointPosX(float, int) { }
+void TMareEventDepressWall::setJointPosX(f32 x, int idx)
+{
+	TMapObjBase::setJointTransX(unk30[idx], x);
+	JGeometry::TVec3<f32> t(x, 0.0f, 0.0f);
+	unk28[idx].moveTrans(t);
+}
 
 // Binding level over a raw member read: a register lever in
 // TMareEventDepressWall::rising at an unchanged frame (batch 127).
@@ -271,6 +291,11 @@ static inline f32* MapEventMareUnk40(const TMareEventDepressWall* p)
 	return v40;
 }
 
+// TODO: 99.7%. Frame 0x80 against retail's 0x90 and the emitter block's
+// index/offset pair swaps r29/r30. The UNUSED emitEffect, setJointPosX and
+// finishEvent bodies (map-size exact) are this function's pieces, but
+// calling them instead of spelling them out is inert or worse (emitEffect
+// keeps the emitter in a saved register, 94.9%).
 void TMareEventDepressWall::rising()
 {
 	f32 x = TMapObjBase::getJointTransX(unk30[unk48]);
@@ -337,7 +362,16 @@ void TMareEventDepressWall::rising()
 
 void TMareEventDepressWall::startToRise() { }
 
-void TMareEventDepressWall::emitEffect(int) { }
+void TMareEventDepressWall::emitEffect(int idx)
+{
+	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
+	        MAP_MAP_MS_MARE_BLOCKUP, &unk34[idx], 1, &unk34[idx])) {
+		em->setGlobalScale(unk38[idx]);
+		em->setRate(unk3C[idx]);
+		em->setGlobalParticleScale(
+		    JGeometry::TVec3<f32>(unk40[idx], unk40[idx], unk40[idx]));
+	}
+}
 
 void TMareEventDepressWall::depressing()
 {
@@ -507,14 +541,17 @@ void TMareEventDepressWall::initCommon()
 	                     ->getYounger()
 	                     ->getChild();
 
-	// TODO: retail computes `unk10 - 1` on its own and only then adds unk14
-	// (`subi; add r0, r4, r0; subfic r4, r0, 0x43`); every spelling of the
-	// sum lets MWCC reassociate the -1 out to the end. This form at least
-	// fixes the load order and the add's operands. Exhausted:
-	// `unk14 + (unk10 - 1)` (loads unk14 first), a named `lastIdx` local
-	// (ditto, and the frame is already 8 bytes long).
-	int skipCount = 0x43 - (unk10 - 1 + unk14);
-	for (int i = 0; i < skipCount; ++i)
+	// The split sum with the subtraction left in the loop condition gives
+	// retail's `subi` before the add and its unrolled skip loop with the
+	// two trailing branches.
+	// TODO: 99.8%. The add's operands are swapped (retail `unk14 + last`)
+	// and the frame is 8 long (the char buffer 4 high). Tried:
+	// `skipCount = unk14 + skipCount` (98.3), the whole count named first,
+	// u32/s32/s16/u16 counters (u32 lands the frame, 93%), down-counting
+	// and offset-start loops, count/sum levels.
+	int skipCount = unk10 - 1;
+	skipCount += unk14;
+	for (int i = 0; i < 0x43 - skipCount; ++i)
 		joint = joint->getYounger();
 
 	for (int i = 0; i < unk10; ++i) {
