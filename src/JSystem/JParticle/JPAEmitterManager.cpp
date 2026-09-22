@@ -214,49 +214,24 @@ JPAEmitterManagerGetBaseEmitterBlock(JPADataBlockLinkInfo* p)
 	return baseEmitterBlock;
 }
 
-// Binding level worth +16 of low region, landing
-// JPAEmitterManager::createEmitterBase's frame at 0xc8 (batch 124).
-
-// TODO: 99.6%, frame 0xc8 exact, all 107 instructions exact; nine operands in
-// one callee-saved swap. Retail gives the long-lived base temp
-// `&unkA4[param_3]` (the `add`/`lwzu` pair reused for the second
-// `getResourceManager` at 0x78c) r30 and the named `linkInfo` local r29; we do
-// the reverse, i.e. retail ranks the base temp above the local exactly as
-// batch 144 says and we do not. Closure round 2026-09-18 measured seven ways
-// of changing the named-local count, none of which flips it: dropping `block`
-// (10 operands), `blocks` (frame 0xc0), `emitterData` (112 instructions,
-// frame 0xd8) or `count` (frame 0xc0), and adding a named `u8 type` (9),
-// a named `JPAFieldManager*` (28) or a named emitter resource (28).
+// Binding level (with the one above) landing createEmitterBase's frame at
+// 0xc8 (batch 124).
 static inline u8 JPAEmitterManagerGetFieldNum(JPADataBlockLinkInfo* p)
 {
 	u8 fieldNum = p->getFieldNum();
 	return fieldNum;
 }
 
-// TODO: 99.6%, every instruction and the 0xc8 frame match; the only residue is
-// a two-register swap. Retail puts the CSE of `&unkA4[param_3]` in r30 and
-// `linkInfo` in r29, we do the reverse, with r22/r23/r24/r25/r31 identical.
-// Declaration order is inert here: hoisting `linkInfo`, `block` or `emitter`
-// to an uninitialised declaration ahead of the others each left the swap
-// unchanged. `linkInfo` cannot be un-named (spelling it from `emitterData`
-// would have to keep `emitterData` alive across `createVolumeEmitter`), so the
-// callee-saved rotation is the whole residue.
-// Closure batch 211: the two TU-local binding levels are not the cause -- with
-// both `JPAEmitterManagerGetBaseEmitterBlock` and
-// `JPAEmitterManagerGetFieldNum` replaced by direct calls (frame 0xb8, i.e.
-// -0x10) the same r29/r30 swap survives, so `linkInfo` is not lifted above the
-// base temp by being an inlined call's explicit parameter. Research 210's
-// rule would need the base temp `&unkA4[param_3]` to be the explicit parameter
-// of an inlined call whose receiver is `linkInfo`, and no such call exists
-// here (every use of `linkInfo` already has it as the receiver).
-// cc29: all 63 mixes of `getResourceManager(param_3)`, raw `unkA4[param_3]`
-// and two TU-local forks over the three sites, uninitialised declarations of
-// emitter/linkInfo/block/emitterData at function top, and a TU-local helper
-// for the field loop or the linkInfo tail all keep the swap. A named
-// `JPAResourceManager**` (or `*&`) slot for `&unkA4[param_3]` gives retail's
-// r30/r29 exactly, but the slot then computes `addi 0xa4` before the `add`
-// and loses retail's `lwzu` fold (+1 instruction, frame -0x10); `unkA4 +
-// param_3`, `&unkA4[0] + param_3`, an `int` index and `+=` all do the same.
+// A direct-return level over the link-info lookup: it ranks `linkInfo` below
+// the `&unkA4[param_3]` base temp (retail's r29/r30), where the same read
+// spelled inline in the caller ranks it above. A named-result or
+// reference-out-parameter form of the same level costs 8/0x10 of frame.
+static inline JPADataBlockLinkInfo*
+JPAEmitterManagerGetLinkInfo(JPAEmitterData* p)
+{
+	return p->getLinkInfo()[0];
+}
+
 JPABaseEmitter* JPAEmitterManager::createEmitterBase(
     s32 param_1, u8 param_2, u8 param_3,
     JPACallBackBase<JPABaseEmitter*>* param_4,
@@ -272,7 +247,8 @@ JPABaseEmitter* JPAEmitterManager::createEmitterBase(
 		if (!emitterData)
 			return nullptr;
 
-		JPADataBlockLinkInfo* linkInfo = emitterData->getLinkInfo()[0];
+		JPADataBlockLinkInfo* linkInfo
+		    = JPAEmitterManagerGetLinkInfo(emitterData);
 		JPADataBlock* block
 		    = JPAEmitterManagerGetBaseEmitterBlock(linkInfo);
 

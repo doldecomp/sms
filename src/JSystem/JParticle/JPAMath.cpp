@@ -273,6 +273,10 @@ void JPAGetRMtxSTVecElement(MtxPtr param_1, MtxPtr param_2,
 // locals puts x above a reversed {z, y}. The sibling JPAGetRMtxSTVecElement
 // shares this body with a reference parameter in place of the local and is
 // byte-exact, which pins JPAGetSVecElement: any change there breaks it.
+// cc29: caller-level named copies of scale.x/y/z in four declaration orders
+// (xzy, xyz, zyx, yzx) are all inert (+8 frame), and routing the body through
+// the UNUSED JPAGetRMtxElement (plain: a `bl`; forced inline as a diagnostic:
+// 55%) is refuted.
 void JPAGetRMtxTVecElement(MtxPtr param_1, MtxPtr param_2,
                            JGeometry::TVec3<f32>& param_3)
 {
