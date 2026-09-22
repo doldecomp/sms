@@ -223,7 +223,7 @@ void TRocket::calcRootMatrix()
 		MsMtxSetRotRPH(rot, mTestAng_x, mTestAng_y, mTestAng_z);
 		MTXConcat((MtxPtr)mtx, rot, (MtxPtr)mtx);
 		MtxPtr rootMtx = (MtxPtr)mtx;
-		MTXCopy(rootMtx, getModel()->getBaseTRMtx());
+		getModel()->setBaseTRMtx(rootMtx);
 	} else {
 		TSpineEnemy::calcRootMatrix();
 	}
