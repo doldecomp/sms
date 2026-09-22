@@ -608,13 +608,10 @@ void TBiancoGateKeeper::startFinishDemo()
 	stopBGM();
 }
 
-// Pragma residue (sweep 360): protects TNerveBGKWait::execute (99.95 -> 84.1).
-// Measured and rejected: a named `MActor* actor` for the five getMActor()
-// reads costs bytes (100 -> 79.5), and a named `f32 frame` for the two
-// getFrame() reads in the first arm costs 2% *and* still does not tip the
-// budget -- so `return true;`/`return false;` of a constant is cheaper than a
-// statement and this body sits well under 14.
-#pragma dont_inline on
+// Retail calls this from TNerveBGKWait::execute: the `else if` chain (each
+// `else` one statement, the same bytes as independent `if`s after returns)
+// takes the body over the depth-1 budget. Measured and rejected: a named
+// `MActor* actor` or `f32 frame` (each +8 of frame).
 BOOL TBiancoGateKeeper::isHeadHitActive() const
 {
 	J3DFrameCtrl* fc = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
@@ -622,18 +619,16 @@ BOOL TBiancoGateKeeper::isHeadHitActive() const
 		if (50.0f < fc->getFrame() && fc->getFrame() < 160.0f)
 			return true;
 		return false;
-	}
-	if (getMActor()->checkCurBckFromIndex(0xF)) {
+	} else if (getMActor()->checkCurBckFromIndex(0xF)) {
 		if (fc->getFrame() > 40.0f)
 			return true;
 		return false;
-	}
-	if (getMActor()->checkCurBckFromIndex(0x10)
-	    || getMActor()->checkCurBckFromIndex(0xC))
+	} else if (getMActor()->checkCurBckFromIndex(0x10)
+	           || getMActor()->checkCurBckFromIndex(0xC)) {
 		return true;
+	}
 	return false;
 }
-#pragma dont_inline off
 
 BOOL TBiancoGateKeeper::isDamageFogSituation() const
 {
