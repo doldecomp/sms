@@ -3,6 +3,7 @@
     "Animal/AnimalNerve.cpp",
     "Animal/AnimalSave.cpp",
     "Animal/Butterfly.cpp",
+    "Animal/fishoid.cpp",
     "Camera/CamShakeDefine.cpp",
     "Camera/CameraBck.cpp",
     "Camera/CameraCodeControl.cpp",
