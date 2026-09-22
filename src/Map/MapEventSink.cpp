@@ -255,12 +255,21 @@ void TMapEventSinkInPollution::initBuriedBuilding()
 			makeBuildingRecovered(i);
 }
 
+// Two named steps put this body at cost 10: TMapEventSinkInPollutionReset::loadAfter
+// still expands it at depth 1, while TMapEventSinkBianco::loadAfter reaches it at
+// depth 2 through the Reset body and calls it, as retail does.
+// TODO: frame 0x18 short (0xa0 vs 0xb8). A binder on the first
+// getPollutionObj(i) lands it exactly but pushes the accessors in the Reset
+// expansion to depth 5 (called out of line); raw gpPollution, SMSGetPollution(),
+// a pointer counter, raw unk1EC and a named counter address are 0 or negative.
 void TMapEventSinkInPollution::loadAfter()
 {
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
-		MapEventSinkPollution()->getCounterObj().registerPollutionObj(
-		    getPollutionObj(i), &getPollutionObj(i)->mCounter);
+		TPollutionManager* pollution  = MapEventSinkPollution();
+		TPollutionCounterObj& counter = pollution->getCounterObj();
+		counter.registerPollutionObj(getPollutionObj(i),
+		                             &getPollutionObj(i)->mCounter);
 	}
 }
 
@@ -278,15 +287,24 @@ void TMapEventSinkInPollutionReset::makeBuildingRecovered(int i)
 	getResetPollutionObj(i)->updateDepthMap();
 }
 
+// TODO: frame 0x38 short (0x120 vs 0x158), 0x18 of it the InPollution
+// expansion's; binders or forks on either loop call push this body over the
+// inline budget in TMapEventSinkBianco::loadAfter.
 void TMapEventSinkInPollutionReset::loadAfter()
 {
 	TMapEventSinkInPollution::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
-		getPollutionObj(i)->alive();
-		getResetPollutionObj(i)->kill();
+		TPollutionObj* obj = getPollutionObj(i);
+		obj->alive();
+		TPollutionObj* reset = getResetPollutionObj(i);
+		reset->kill();
 	}
 }
 
+// TODO: `this` and the string-pool base are swapped (r31/r30, the known-open
+// this-vs-pool-base class) and the frame is 0x20 short (the buffer sits 0x1c
+// low). A block-scoped buffer, named search results and calling
+// TMapEventSink::finishControl directly are inert or worse.
 void TMapEventSinkBianco::finishControl()
 {
 	char buffer[64];
@@ -353,7 +371,7 @@ bool TMapEventSinkBianco::control()
 
 void TMapEventSinkBianco::startControl()
 {
-	switch (mRaisingBuildingIdx) {
+	switch (MapEventSinkRaisingIdx(this)) {
 	case 0: {
 		unk40 = 1320;
 		unk44 = 120;
@@ -384,10 +402,6 @@ void TMapEventSinkBianco::startControl()
 		SMS_MarioWarpRequest(unk6C, unk78);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0,
 		                                   nullptr, 0);
-		// TODO: 99.9%. Only the frame is short by 8 bytes: retail keeps the
-		// zero vector at 0x2c where we put it at 0x24, so one 8-byte inline
-		// temp is missing below it. A reference binding on this array element
-		// is inert (measured).
 		unk50[mRaisingBuildingIdx].set(7170.0f, 3675.0f, -185.0f);
 		TMarDirector* director = SMSGetMarDirector();
 		director->fireStartDemoCamera("bianco0_event0", nullptr, -1, 0.0f,
@@ -420,18 +434,15 @@ bool TMapEventSinkBianco::watch()
 
 void TMapEventSinkBianco::loadAfter()
 {
-	TMapEventSinkInPollution::loadAfter();
-	for (int i = 0; i < mBuildingNum; ++i) {
-		getPollutionObj(i)->alive();
-		getResetPollutionObj(i)->kill();
-	}
+	TMapEventSinkInPollutionReset::loadAfter();
 
 	TMapStaticObj* ref = JDrama::TNameRefGen::search<TMapStaticObj>("鏡内地形");
 	unk64              = ref->getModelData()->getJointNodePointer(2);
-	TMapObjBase::moveJoint(unk64, 0.0f, -1700.0f, 0.0f);
-	SMS_ShowJoint(unk64->getMesh(), false);
-	mGateKeeper
+	TMapObjBase::moveJoint(MapEventSinkBiancoJoint(this), 0.0f, -1700.0f, 0.0f);
+	SMS_ShowJoint(MapEventSinkBiancoJoint(this)->getMesh(), false);
+	TGateKeeperBase* keeper
 	    = JDrama::TNameRefGen::search<TGateKeeperBase>("ゲートキーパー");
+	mGateKeeper = keeper;
 }
 
 void TMapEventSinkBianco::load(JSUMemoryInputStream& stream)
@@ -471,14 +482,18 @@ void TMapEventSinkShadowMario::raiseBuilding(int i)
 	startControl();
 }
 
+// TODO: frame exact; retail copies the search result out of r3
+// (`addi r0, r3, 0; addi r3, r27, 0`) before the store so `this` is set up for
+// the getBuilding vcall ahead of `i`. Inert: a named TPlacement result, search2
+// with a cast, binding/forwarding search wrappers, a const joint, a
+// whole-body helper, height helpers.
 void TMapEventSinkShadowMario::loadAfter()
 {
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
 		unk64[i] = JDrama::TNameRefGen::search<JDrama::TPlacement>(unk68[i]);
-		TJointObj* obj = getBuilding(i);
-		unk64[i]->mPosition.y
-		    -= obj->getJoint()->getMax().y - obj->getJoint()->getMin().y;
+		J3DJoint* joint = getBuilding(i)->getJoint();
+		unk64[i]->mPosition.y -= joint->getMax().y - joint->getMin().y;
 	}
 }
 
