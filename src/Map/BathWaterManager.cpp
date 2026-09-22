@@ -1780,6 +1780,28 @@ void CalcJumpVelocityY(const JGeometry::TVec3<f32>&,
 }
 } // namespace
 
+// TVec3::setLength with the squared length handed in, in the same two-level
+// shape as the header's setLength(f32) -> setLength(v, f32) pair: the ROM
+// computes horiz.squared() once for both the distance test and the rescale,
+// and inv_sqrt must still sit three levels down to stay the `bl` it is.
+// TODO: this belongs next to setLength in JGVec3.hpp (shared header).
+static inline void setLengthFromSquared(JGeometry::TVec3<f32>& v,
+                                        const JGeometry::TVec3<f32>& src,
+                                        f32 sq, f32 length)
+{
+	if (sq <= JGeometry::TUtil<f32>::epsilon()) {
+		v.zero();
+		return;
+	}
+	v.scale(length * JGeometry::TUtil<f32>::inv_sqrt(sq), src);
+}
+
+static inline void setLengthFromSquared(JGeometry::TVec3<f32>& v, f32 sq,
+                                        f32 length)
+{
+	setLengthFromSquared(v, v, sq, length);
+}
+
 void TBathWaterManager::throwMario(f32 param_1)
 {
 	const TBathtubData& data = unk24->getBathtubData();
@@ -1788,12 +1810,12 @@ void TBathWaterManager::throwMario(f32 param_1)
 	JGeometry::TVec3<f32> horiz = data.getLocalPos(SMS_GetMarioPos());
 	horiz.y                     = 0.0f;
 
-	// TODO: the ROM shares one `squared()` between this length() and the
-	// setLength() below; ours recomputes it (nine instructions). Naming the
-	// distance, naming the squared value and spelling length() out as
-	// TUtil<f32>::sqrt(horiz.squared()) all leave the recomputation.
-	if (horiz.length() < 4500.0) {
-		horiz.setLength(4150.0f);
+	// One squared() shared by the distance test and the rescale: the ROM
+	// never recomputes it (length() then setLength() leaves nine extra
+	// instructions).
+	f32 sq = horiz.squared();
+	if (JGeometry::TUtil<f32>::sqrt(sq) < 4500.0) {
+		setLengthFromSquared(horiz, sq, 4150.0f);
 
 		// Local -> world, and only through the X and Z axes: the ROM never
 		// reads horiz.y here (it is the zero from above, but setLength has
@@ -1808,7 +1830,10 @@ void TBathWaterManager::throwMario(f32 param_1)
 		w.y += 120.0f;
 
 		// TODO: frame 0x98 against the ROM's 0xb0. The instruction stream
-		// only differs in register numbering from here on.
+		// only differs in register numbering: the ROM computes the X-axis
+		// terms into scratch registers (y, x, z) before adding the Z-axis
+		// terms into f30/f31/f29; a single expression per component is
+		// worse (98.8 -> 94.9).
 		f32 gravity = SMS_GetMarioGravity();
 		int count   = 1;
 		f32 vy      = 100.0f;
