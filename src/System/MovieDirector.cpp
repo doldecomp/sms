@@ -172,6 +172,11 @@ void* TMovieDirector::setupThreadFunc(void* self)
 extern OSThread gSetupThread;
 extern u8* gpSetupThreadStack;
 
+// TODO: frame 0x40 against retail 0x58, instruction-exact. A name-and-
+// return pad binder over param_2 plus an SMSRumbleMgr binder (or a display
+// fork) lands the frame and every slot but one: the TDStageGroup ctor's
+// TViewObjPtrListT temporary stays 4 low (0x2c against 0x30). Tried (cc41):
+// named group, factory fork, thread-address binder, stack forks (change code).
 void TMovieDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 {
 	unk14         = new JDrama::TDStageGroup(param_1);
@@ -294,6 +299,19 @@ int TMovieDirector::rsetup()
 	return 0;
 }
 
+// Frame levels for the destructor (+0x10 as a pair): a name-and-return
+// MSound binder and a direct-return fork over the game pad member.
+static inline MSound* MovieGetMSound()
+{
+	MSound* s = SMSGetMSound();
+	return s;
+}
+
+static inline TMarioGamePad* MovieGamePad(const TMovieDirector* d)
+{
+	return d->unk20;
+}
+
 TMovieDirector::~TMovieDirector()
 {
 	if (JKRMemArchive* arc
@@ -304,12 +322,19 @@ TMovieDirector::~TMovieDirector()
 	    = (JKRMemArchive*)JKRFileLoader::getVolume("subtitle"))
 		arc->unmountFixed();
 
-	SMSGetMSound()->stopAllSound();
+	MovieGetMSound()->stopAllSound();
 	THPPlayerStop();
 	THPPlayerClose();
 	THPPlayerQuit();
 	SMSRumbleMgr->reset();
-	unk20->offFlag(0x1);
+	MovieGamePad(this)->offFlag(0x1);
+}
+
+// Name-and-return flag-manager binder, +8 of frame per site.
+static inline TFlagManager* MovieFlags()
+{
+	TFlagManager* f = TFlagManager::getInstance();
+	return f;
 }
 
 u32 TMovieDirector::decideNextMode(s32* param_1)
@@ -324,7 +349,7 @@ u32 TMovieDirector::decideNextMode(s32* param_1)
 	}
 
 	u32 nextMode = 1;
-	if (unk20->isSomethingPushed()) {
+	if (MovieGamePad(this)->isSomethingPushed()) {
 		nextMode = 4;
 	} else if (gpApplication.getMovie() == 2) {
 		gpApplication.setMovie(18);
@@ -341,14 +366,14 @@ u32 TMovieDirector::decideNextMode(s32* param_1)
 		nextArea.set(15, 0, 0);
 		nextMode = 5;
 	} else if (gpApplication.getMovie() == 0xe) {
-		if (!TFlagManager::getInstance()->getShineFlag(0x77))
-			TFlagManager::getInstance()->setShineFlag(0x77);
+		if (!MovieFlags()->getShineFlag(0x77))
+			MovieFlags()->setShineFlag(0x77);
 
 		gpApplication.setMovie(15);
 		nextMode = 6;
 	} else if (gpApplication.getMovie() == 15) {
 		u8 movie
-		    = TFlagManager::getInstance()->getFlag(0x40000) < 120 ? 16 : 17;
+		    = MovieFlags()->getFlag(0x40000) < 120 ? 16 : 17;
 		gpApplication.setMovie(movie);
 
 		nextMode = 6;
