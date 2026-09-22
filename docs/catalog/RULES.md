@@ -59,6 +59,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `f(x & 0xffff)` evaluates the receiver before the mask; `(u16)x` masks first (Talk2D2 `setMessageID` +1.7).
 - An `if (tag != 0) return;` guard can be `switch (tag) { case 0: ... break; }` with outer `break;` for retail's trailing `b` (Talk2D2 `setTagParam`).
 - A member call in a `?:` arm is not inlined; the same pair as if/else inlines (Talk2D2).
+- A flag held in a callee-saved register across switch cases with its constant set before the switch is `x &= f()`; `x = x & f()` is folded into each case and shifts the jump table (Guide `perform`).
+- `v.set(a, 0, b)` fixes literal-pool order through right-to-left argument evaluation, where three component stores do not (Guide `placeMario`).
+- `search(tag)->show()`/`hide()` materialises the constant after the call; a direct `->mVisible = true` hoists it (Guide).
 
 ## Inlining decisions
 
@@ -101,6 +104,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A plain callee expanded at some sites and `bl`ed at one is a depth-budget split: wrap only the calling site in a one-line static inline to push it to depth 2 (BathWaterManager mesh `render`, `drawCap` ~12 statements: 93.8 -> 98.1).
 - The case-helper rule needs its tell (ctors/dtors one level deeper than ours); without it, wrapping case bodies is inert (CardSave `execMovement_`, `waitForStop`).
 - Repeated blocks that get the same register pair in retail but rotate in ours are one TU-local inline call per repetition (CardSave `initData` caption rows).
+- Weak header callees the map attributes to a TU but ours never calls can mean an UNUSED helper sat at depth 2: wrap the calling case in a static inline; the helper then must fit 9 statements (Guide `perform`/`disappearGuidePane`).
+- An UNUSED helper whose map size exceeds ours while the caller reuses its parameter registers nearby has absorbed that neighbouring code (Guide `shinePattern`).
 
 ## Frame-size gaps
 
