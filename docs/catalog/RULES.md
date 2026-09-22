@@ -275,6 +275,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A `u32` wrapper around a bool flag test adds exactly 4 bytes low in the frame; the raw test and a bool wrapper are 4 short (EventWatcher `evEggYoshiStartFruit`).
 - Some named scalars in an inlined callee take a 4-byte slot at the bottom of its block regardless of declaration position (not ones feeding a real `bl`); where retail has no slot, reuse an existing local to keep evaluation order at zero cost (sunmodel `perform`).
 - Each `SMSGetCamera()` read is +4 of low pool versus raw `gpCamera`; mix per site to tune in 4-byte steps (sunmodel).
+- Pool temporaries sit in creation order, not source order; a zero-cost direct-return level at unrelated sites reorders them (MarNameRefGen_BossEnemy `newNameRef<T>` factory).
+- Argument and conversion temporaries (by-value class args, `flag = int` converting construction) sit above the inline pool; `.set(x)` instead of `=` removes the dead word (MarDirectorSetup2).
+- Diagnose slot shuffles by deleting one statement at a time and watching which slots move (MarDirectorSetup2).
 
 ## Register and scheduling residues
 
