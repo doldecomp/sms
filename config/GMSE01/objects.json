@@ -294,6 +294,7 @@
     "NPC/NpcBalloon.cpp",
     "NPC/NpcCoin.cpp",
     "NPC/NpcColor.cpp",
+    "NPC/NpcInbetween.cpp",
     "NPC/NpcInitActionData.cpp",
     "NPC/NpcInitAnmData.cpp",
     "NPC/NpcInitData.cpp",
