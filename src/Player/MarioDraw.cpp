@@ -1601,13 +1601,11 @@ void TMario::calcBaseMtxTorocco(MtxPtr mtx)
 {
 	if (mRailType == 0) {
 		mPinaRail->calcAnm();
-		MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
-		        mTorocco->getModel()->getBaseTRMtx());
+		mTorocco->getModel()->setBaseTRMtx(mPinaRail->getModel()->getAnmMtx(0));
 	}
 	if (mRailType == 1) {
 		mKoopaRail->calcAnm();
-		MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
-		        mTorocco->getModel()->getBaseTRMtx());
+		mTorocco->getModel()->setBaseTRMtx(mKoopaRail->getModel()->getAnmMtx(0));
 	}
 
 	mTorocco->calcAnm();
@@ -1657,8 +1655,38 @@ void TMario::calcBaseMtxSwim(MtxPtr mtx)
 	J3DGetTranslateRotateMtx(ti, mtx);
 }
 
+// The ground triangle's plane: retail keeps the normal and the distance
+// together in one 16-byte stack object (the dead distance store lands right
+// after the normal), and calls `TVec3::set<f>` and `setLength` out of line
+// from inside it, i.e. at inline depth 4 below calcBaseMtx.
+struct MarioGroundPlane {
+	MarioGroundPlane(const JGeometry::TVec3<f32>& a,
+	                 const JGeometry::TVec3<f32>& b,
+	                 const JGeometry::TVec3<f32>& c)
+	{
+		set(a, b, c);
+	}
+
+	void set(const JGeometry::TVec3<f32>& a, const JGeometry::TVec3<f32>& b,
+	         const JGeometry::TVec3<f32>& c)
+	{
+		JGeometry::TVec3<f32> v1;
+		v1.sub(b, a);
+		JGeometry::TVec3<f32> v2;
+		v2.sub(c, b);
+		mNormal.cross2(v2, v1);
+		mNormal.normalize();
+		mD = mNormal.dot(a);
+	}
+
+	/* 0x0 */ JGeometry::TVec3<f32> mNormal;
+	/* 0xC */ f32 mD;
+};
+
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
+	// TODO: instruction-exact apart from register numbering in the surf
+	// clamps and the Swim wave sum; the frame is 0x38 short (0x2b8 vs 0x2f0).
 	if (mStatus == MARIO_STATUS_TOROCCO) {
 		calcBaseMtxTorocco(mtx);
 		return;
@@ -1714,31 +1742,12 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		forward.y = 0.0f;
 		forward.z = JMASCos(mFaceAngle.y);
 
-		JGeometry::TVec3<f32> v1;
-		v1.sub(p2, p1);
-		JGeometry::TVec3<f32> v2;
-		v2.sub(p3, p2);
-
-		// TODO: the ROM calls both TVec3::set<f>(f,f,f) (the local
-		// instantiation this TU is missing; emitted immediately after
-		// calcBaseMtx, i.e. this is the first site in codegen order that
-		// needs it out of line) and TVec3::setLength(const TVec3&, f32) here,
-		// which is what gives `cross` a stack home, keeps `d` below it and
-		// leaves the ROM's dot product in memory. We expand both, so `cross`
-		// is scalarised. cross2's one-expression set() is the ROM's shape
-		// (+0.6 over cross()'s named temporaries) but still inlines, and so
-		// does the set() written out at depth 1. Same family as the
-		// per-call-site set<f> problem in the catalog.
-		JGeometry::TVec3<f32> cross;
-		cross.cross2(v2, v1);
-		cross.normalize();
-
-		f32 d = cross.dot(p1);
+		MarioGroundPlane plane(p1, p2, p3);
 
 		JGeometry::TVec3<f32> ncross;
-		ncross.x = -cross.x;
-		ncross.y = -cross.y;
-		ncross.z = -cross.z;
+		ncross.x = -plane.mNormal.x;
+		ncross.y = -plane.mNormal.y;
+		ncross.z = -plane.mNormal.z;
 
 		JGeometry::TVec3<f32> axis;
 		axis.cross(ncross, forward);
@@ -1763,7 +1772,6 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		mtx[2][1] = ncross.z;
 		mtx[2][2] = bin.z;
 		mtx[2][3] = mPosition.z;
-		(void)d;
 	} else {
 		J3DTransformInfo ti;
 		ti.mScale.x     = 1.0f;
@@ -1846,8 +1854,8 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 	MTXIdentity(unk318);
 	if (isSinking()) {
 		MTXTrans(unk318, 0.0f,
-		         -(mSinkTimer / mGraffitoParams.mSinkTime.get())
-		             * mGraffitoParams.mSinkHeight.get(),
+		         -(mSinkTimer / mGraffitoParams.mSinkTime.value)
+		             * mGraffitoParams.mSinkHeight.value,
 		         0.0f);
 	}
 
@@ -1858,10 +1866,9 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		const TBGCheckData* gp;
 		gpMap->checkGround(mPosition.x, mPosition.y + 160.0f, mPosition.z, &gp);
 		if (gp->isWaterSurface()) {
-			MTXTrans(
-			    unk318, 0.0f,
-			    gpMapObjWave->getHeight(mPosition.x, mPosition.y, mPosition.z),
-			    0.0f);
+			f32 height = gpMapObjWave->getHeight(mPosition.x, mPosition.y,
+			                                     mPosition.z);
+			MTXTrans(unk318, 0.0f, height, 0.0f);
 		}
 	}
 	MTXConcat(mtx, unk318, mtx);
