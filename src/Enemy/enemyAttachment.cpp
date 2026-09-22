@@ -270,6 +270,11 @@ static inline bool EnemyAttachmentCheckFlag(const TBGCheckData* p, u32 i)
 // 12 bytes of dead low region. Reverted to calling `generate` (99.7%) because
 // the duplicated body scores lower and the 12-byte local has no evidence
 // beyond its size.
+// cc30: the frame now matches (0x98); only the slot order is left (check
+// 0x68 against 0x3c, matrix 0x30 against 0x40). Moving checkGround into a
+// TU-local helper (value return, named result, reference or pointer
+// out-parameter) leaves `check` at the top of the frame, and dropping the
+// flag binder costs the frame 8.
 void TEnemyPolluteModelManager::generatePolluteModel(
     JGeometry::TVec3<f32>& param_1, JGeometry::TVec3<f32>& param_2)
 {
@@ -295,27 +300,46 @@ TEnemyPolluteModel::TEnemyPolluteModel(TLiveActor* param_1, int param_2,
 	unk10 = new TSharedParts(param_1, param_2, param_3, 3);
 }
 
-// TODO: frame 0x48 vs retail's 0x80 -- 56 bytes of dead low region, plus a
-// callee-saved swap (retail keeps `cue` in r31 and `this` in r30). trash[56]
-// lands the frame and leaves the swap, so the two are independent.
+// Levels over the shared parts' actor, priced in perform's low region: the
+// direct fork at the first site moves `cue` into r31 as in retail, and the
+// one- and two-local binders at the other four make up the 0x38 bytes of
+// dead frame (0x48 -> 0x80).
+static inline MActor* EnemyAttachmentActorF(TEnemyPolluteModel* p)
+{
+	return p->unk10->unk18;
+}
+
+static inline MActor* EnemyAttachmentActor(TEnemyPolluteModel* p)
+{
+	MActor* actor = p->unk10->unk18;
+	return actor;
+}
+
+static inline MActor* EnemyAttachmentActor2(TEnemyPolluteModel* p)
+{
+	TSharedParts* parts = p->unk10;
+	MActor* actor       = parts->unk18;
+	return actor;
+}
+
 void TEnemyPolluteModel::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!unk5D || unk5C)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		if (unk10->unk18->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (EnemyAttachmentActorF(this)->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk5D = false;
 			return;
 		}
 
-		unk10->unk18->getModel()->setBaseTRMtx(unk14);
-		unk10->unk18->getModel()->setBaseScale(unk50);
-		unk10->unk18->calcAnm();
+		EnemyAttachmentActor(this)->getModel()->setBaseTRMtx(unk14);
+		EnemyAttachmentActor2(this)->getModel()->setBaseScale(unk50);
+		EnemyAttachmentActor2(this)->calcAnm();
 	}
 
 	if (cue & CUE_ENTRY)
-		gpPollution->stampModel(unk10->unk18->getModel());
+		gpPollution->stampModel(EnemyAttachmentActor2(this)->getModel());
 }
 
 // TODO: UNUSED 0x178 in the map, ours 0xf8 (32 instructions short). The body
