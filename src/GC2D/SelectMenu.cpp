@@ -768,6 +768,37 @@ inline void TSelectMenu::selectNext()
 	}
 }
 
+// The letterbox fade sits two inline levels below perform: retail calls
+// TColor::set out of line from here, i.e. the TColor constructor is at depth 3.
+static inline JUtility::TColor blackColor(u8 alpha)
+{
+	return JUtility::TColor(0, 0, 0, alpha);
+}
+
+static inline void fadeLetterBox(TExPane*& pane, bool& updated)
+{
+	u32 ccol1 = ((J2DPicture*)pane->getPane())->mCornerColor[0];
+	u32 ccol2 = ((J2DPicture*)pane->getPane())->mCornerColor[2];
+
+	u32 var1 = (ccol1 & 0xFFu) + 16u;
+	if (var1 > 255u) {
+		var1 = 255u;
+	} else {
+		updated = false;
+	}
+
+	u32 var2 = (ccol2 & 0xFFu) + 16u;
+	if (var2 > 255u) {
+		var2 = 255u;
+	} else {
+		updated = false;
+	}
+
+	((J2DPicture*)pane->getPane())
+	    ->setCornerColor(blackColor(var1), blackColor(var1), blackColor(var2),
+	                     blackColor(var2));
+}
+
 void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x1) {
@@ -1083,85 +1114,12 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			updated &= mLetterBoxTop->update();
 			updated &= mLetterBoxBottom->update();
 
-			// TODO: This needs to be matched properly.
-			// The compiler does a lot of inlining here that we don't want.
-			{
-				u32 ccol1
-				    = ((J2DPicture*)mLetterBoxTop->getPane())->mCornerColor[0];
-				u32 ccol2
-				    = ((J2DPicture*)mLetterBoxTop->getPane())->mCornerColor[2];
+			fadeLetterBox(mLetterBoxTop, updated);
+			fadeLetterBox(mLetterBoxBottom, updated);
 
-				u32 var1 = (ccol1 & 0xFFu) + 16u;
-
-				if (var1 > 255u) {
-					var1 = 255u;
-				} else {
-					updated = false;
-				}
-
-				u32 var2 = (ccol2 & 0xFF) + 16;
-
-				if (var2 > 255u) {
-					var2 = 255u;
-				} else {
-					updated = false;
-				}
-
-				// These are probably inlined functions.
-				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha = var1;
-				((J2DPicture*)mLetterBoxTop->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
-			}
-
-			{
-				u32 ccol1 = ((J2DPicture*)mLetterBoxBottom->getPane())
-				                ->mCornerColor[0];
-				u32 ccol2 = ((J2DPicture*)mLetterBoxBottom->getPane())
-				                ->mCornerColor[2];
-
-				u32 var1 = (ccol1 & 0xFFu) + 16u;
-
-				if (var1 > 255u) {
-					var1 = 255u;
-				} else {
-					updated = false;
-				}
-				u32 var2 = (ccol2 & 0xFF) + 16;
-
-				if (var2 > 255u) {
-					var2 = 255u;
-				} else {
-					updated = false;
-				}
-
-				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
-
-				alpha = var1;
-				((J2DPicture*)mLetterBoxBottom->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
-
-				if (updated) {
-					mMenuState            = WAIT_BEFORE_CLOSE;
-					mSelectShineAnimFrame = 0;
-				}
+			if (updated) {
+				mMenuState            = WAIT_BEFORE_CLOSE;
+				mSelectShineAnimFrame = 0;
 			}
 		} break;
 
@@ -1175,14 +1133,15 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 	}
 
 	if (flags & 0x8) {
-		if (mMenuState < 10 && mMenuState >= 0) {
-			ReInitializeGX();
-			SMS_DrawInit();
-			J2DOrthoGraph graph(gfx->getViewport());
-			graph.setup2D();
-			graph.setup2D();
-			mMenuScreen->draw(0, 0, &graph);
-		}
+		if (mMenuState >= 10 || mMenuState < 0)
+			return;
+
+		ReInitializeGX();
+		SMS_DrawInit();
+		J2DOrthoGraph graph(gfx->getViewport());
+		graph.setup2D();
+		graph.setup2D();
+		mMenuScreen->draw(0, 0, &graph);
 	}
 }
 
