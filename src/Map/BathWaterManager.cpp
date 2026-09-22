@@ -541,6 +541,17 @@ static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 	GXEnd();
 }
 
+// The mesh renderer's cap goes through one more inline level than the flat
+// renderer's: the ROM calls drawCap out of line from TBathWaterMeshRenderer::
+// render only (depth 2, where its cost is over budget) and expands it
+// everywhere else.
+static inline void drawBathtubCap(const TBathtubData& data)
+{
+	drawCap(data.getThing(),
+	        JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
+	                                    - data.unk44 * data.unk44));
+}
+
 namespace {
 void clearEFB_alpha(s16 x, s16 y, s16 wd, s16 ht, u8 alpha)
 {
@@ -1286,11 +1297,8 @@ public:
 			GXEnd();
 		}
 
-		if (unk80134->showsCap.get() && !data.unk65) {
-			drawCap(data.getThing(),
-			        JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-			                                    - data.unk44 * data.unk44));
-		}
+		if (unk80134->showsCap.get() && !data.unk65)
+			drawBathtubCap(data);
 
 		GXInitTexObj(&unk800D4, unk800A8, r23, r24, (GXTexFmt)1, GX_CLAMP,
 		             GX_CLAMP, GX_FALSE);
