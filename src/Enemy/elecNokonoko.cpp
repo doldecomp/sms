@@ -756,17 +756,14 @@ void TElecCarapace::behaveToHitWall(const TBGCheckData* wall)
 	mFlying       = true;
 	mStraight     = true;
 
-	f32 along = -1.5f
-	    * (mLinearVelocity.x * wall->mNormal.x
-	       + mLinearVelocity.y * wall->mNormal.y
-	       + mLinearVelocity.z * wall->mNormal.z);
+	f32 along = -1.5f * mLinearVelocity.dot(wall->getNormal());
 
-	mVelocity.x = along * wall->mNormal.x;
+	mVelocity.x = along * wall->getNormal().x;
 	mVelocity.y = 3.0f;
-	mVelocity.z = along * wall->mNormal.z;
+	mVelocity.z = along * wall->getNormal().z;
 	mPosition.y = 2.0f + mGroundHeight;
 
-	setGoalPath(mNokonoko->getPosition());
+	setGoalPath(mNokonoko->mPosition);
 }
 
 f32 TElecCarapace::getNowGravity()

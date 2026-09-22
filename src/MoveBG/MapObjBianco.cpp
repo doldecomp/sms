@@ -516,6 +516,12 @@ void TLeafBoat::touchActor(THitActor* other)
 	}
 }
 
+// TODO: 99.3%: frame 0x70 vs 0x78 (the two velocity copies sit 4
+// low). The TVec3::dot reads through getNormal() restore retail's post-dot
+// reloads of the normal, and the unnamed velocity temporary its second
+// wall register.
+// Inert or worse (cc48): the raw normal or plane distance at single sites,
+// a declare-then-assign reflected copy, re-reading mResultWalls[i].
 void TLeafBoat::touchWall(JGeometry::TVec3<f32>* pos,
                           TBGWallCheckRecord* record)
 {
@@ -523,17 +529,12 @@ void TLeafBoat::touchWall(JGeometry::TVec3<f32>* pos,
 	for (int i = 0; i < num; ++i) {
 		const TBGCheckData* wall = record->mResultWalls[i];
 
-		JGeometry::TVec3<f32> vel(mVelocity);
-		if (vel.z * wall->mNormal.z
-		        + (vel.x * wall->mNormal.x + vel.y * wall->mNormal.y)
-		    < 0.0f) {
-			f32 dist = pos->z * wall->mNormal.z
-			    + (pos->x * wall->mNormal.x + pos->y * wall->mNormal.y)
-			    + wall->mPlaneDistance;
-			pos->x += (mBodyRadius - dist) * wall->mNormal.x;
-			pos->z += (mBodyRadius - dist) * wall->mNormal.z;
+		if (JGeometry::TVec3<f32>(getVelocity()).dot(wall->getNormal()) < 0.0f) {
+			f32 dist = pos->dot(wall->getNormal()) + wall->getPlaneDistance();
+			pos->x += (mBodyRadius - dist) * wall->getNormal().x;
+			pos->z += (mBodyRadius - dist) * wall->getNormal().z;
 
-			JGeometry::TVec3<f32> reflected(mVelocity);
+			JGeometry::TVec3<f32> reflected(getVelocity());
 			calcReflectingVelocity(wall, 1.0f, &reflected);
 			mVelocity.x = reflected.x * mWallBounce;
 			mVelocity.z = reflected.z * mWallBounce;
@@ -803,13 +804,16 @@ void TLampSeesawMain::pushDown(f32 speed)
  * @details UNUSED in the map (0x90); control() inlines it in both of its
  * cases.
  */
+// TODO: in control()'s two expansions nextY lands in f2 (retail f1) and the
+// frame is 0x28 vs 0x48. Reading mSpeed unnamed fixed the load order
+// (cc48); an unnamed nextY with += or =, nextY += mSpeed and the partner's
+// getPosition() are inert or worse.
 void TLampSeesawMain::move()
 {
-	f32 speed = mSpeed;
-	f32 nextY = mPosition.y + speed;
+	f32 nextY = mPosition.y + mSpeed;
 	if (nextY < mLowerLimitY
-	    || mPartner->mPosition.y - speed < mPartner->mLowerLimitY) {
-		if (fabsf(speed) < mMinSpeed)
+	    || mPartner->mPosition.y - mSpeed < mPartner->mLowerLimitY) {
+		if (fabsf(mSpeed) < mMinSpeed)
 			mSpeed = 0.0f;
 		else
 			mSpeed *= -mReboundRate;
@@ -1005,19 +1009,18 @@ u32 TBellWatermill::touchWater(THitActor* water)
 	return 1;
 }
 
+// TODO: 96.6%: retail's frame is 0x60 larger (spin at 0x130, yaw at 0x100;
+// ours 0xd0/0xa0) and retail reloads jmaSinShift/jmaSinTable/jmaCosTable in
+// every setMtxRotZ/Y expansion where ours loads them once, as if the stores
+// went through a pointer MWCC could not resolve to the stack. MsClamp for
+// the spin speed removed the clamp's extra fmr (cc48); the if/else-if and
+// a named max are worse.
 void TBellWatermill::control()
 {
 	TMapObjBase::control();
 
 	if (unk158 != 0.0f || mRiseSpeed != 0.0f || mHeight != 0.0f) {
-		f32 speed = unk158;
-		f32 max   = mRotSpeedMax;
-		f32 min   = -max;
-		if (speed > max)
-			speed = max;
-		else if (speed < min)
-			speed = min;
-
+		f32 speed = MsClamp(unk158, -mRotSpeedMax, mRotSpeedMax);
 		unk154 += speed;
 		unk154 = MsWrap(unk154, 0.0f, 360.0f);
 
