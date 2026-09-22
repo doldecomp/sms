@@ -811,14 +811,20 @@ bool TBathtubKiller::isAboided()
 
 	JGeometry::TVec3<f32> marioPos = *gpMarioPos;
 	JGeometry::TVec3<f32> myPos = mPosition;
-	f32 diffY = fabsf(marioPos.y - myPos.y);
+	f32 heightDiff = fabsf(marioPos.y - myPos.y);
 	marioPos.y = 0.0f;
 	myPos.y = 0.0f;
-	JGeometry::TVec3<f32> toMario;
-	toMario.sub(marioPos, myPos);
-	f32 distXZ = toMario.length();
+	f32 diffY;
+	f32 diffX;
+	f32 diffZ = marioPos.z - myPos.z;
+	diffX = marioPos.x - myPos.x;
+	diffY = marioPos.y - myPos.y;
+	f32 squaredX = diffX * diffX;
+	f32 squaredY = diffY * diffY;
+	f32 squaredZ = diffZ * diffZ;
+	f32 distXZ = JGeometry::TUtil<f32>::sqrt(squaredX + squaredY + squaredZ);
 
-	if (diffY > getSaveParam2()->mSLAboidDistanceY.get())
+	if (heightDiff > getSaveParam2()->mSLAboidDistanceY.get())
 		if (distXZ <= getSaveParam2()->mSLAboidDistance.get())
 			return true;
 
@@ -831,11 +837,10 @@ bool TBathtubKiller::isAboided()
 		return true;
 	}
 
-	// TODO: 86.6%. The ROM keeps the three differences in f27-f29 across the
-	// parameter fetches and spills them into the vector only here, so its
-	// `sub` is scalarised and this store pair is deferred; ours stores at the
-	// `sub` above. `distance()` plus a three-argument constructor here defers
-	// the stores but loses the CSE (83.6%).
+	// The ROM holds the scalar deltas across the preceding tests, then
+	// materialises this vector only for the direction calculation.
+	JGeometry::TVec3<f32> toMario;
+	toMario.set(diffX, diffY, diffZ);
 	toMario.normalize();
 	TDirectionCalc marioDir(toMario);
 
@@ -843,8 +848,9 @@ bool TBathtubKiller::isAboided()
 	mQuat.getZDir(forward);
 	TDirectionCalc myDir(forward);
 
-	if (myDir.absDirection(marioDir.get())
-	    > TDirectionCalc::d2r(getSaveParam2()->aboidAngle.get()))
+	f32 direction = myDir.absDirection(marioDir.get());
+	f32 aboidAngle = TDirectionCalc::d2r(getSaveParam2()->aboidAngle.get());
+	if (direction > aboidAngle)
 		return false;
 
 	return true;
