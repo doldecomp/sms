@@ -238,6 +238,7 @@
     "JSystem/random.cpp",
     "M3DUtil/LodAnm.cpp",
     "M3DUtil/M3UModel.cpp",
+    "M3DUtil/MActor.cpp",
     "M3DUtil/MActorAnm.cpp",
     "M3DUtil/MActorUtil.cpp",
     "M3DUtil/MotionBlendCtrl.cpp",
