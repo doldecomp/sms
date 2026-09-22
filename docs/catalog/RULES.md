@@ -54,6 +54,11 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `bool done = true; done &= a();` gives `li rN,1; and`; `bool done = a(); done &= b();` gives `mr; and` (GCConsole2).
 - Consecutive emitter-centring blocks reuse one `JUTRect` built once then word-assigned (GCConsole2).
 - `u8 v = s->read8b()` keeps the byte in a callee-saved register; `read(&v, 1)` reloads from the stack (GCConsole2).
+- Clamp inside the setter's argument, `setAlpha(a > 255 ? 255 : a)`; a named clamped local adds an address temp and a copy (Talk2D2 `openNormalWindow` 96.9 -> 99.9).
+- Stream bytes use the header inlines (`readU8()`/`readS8()`/`readU16()`, `out.write((u8)x)`), not `read(&local, 1)`; a `char` read compares with `extsb` (Talk2D2 text boxes).
+- `f(x & 0xffff)` evaluates the receiver before the mask; `(u16)x` masks first (Talk2D2 `setMessageID` +1.7).
+- An `if (tag != 0) return;` guard can be `switch (tag) { case 0: ... break; }` with outer `break;` for retail's trailing `b` (Talk2D2 `setTagParam`).
+- A member call in a `?:` arm is not inlined; the same pair as if/else inlines (Talk2D2).
 
 ## Inlining decisions
 
@@ -268,6 +273,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A `(u16)x` call argument is narrowed in the prologue and moved with `mr`; `x & 0xFFFF` stays at the call as one `clrlwi` (CardSave `setMessageC`).
 - `lha` then `extsh.` for a zero test is an `s16`-returning getter; a raw member gives `cmpwi` (GCConsole2).
 - MWCC folds `-(a + 1) - b` to `-(a + b + 1)`; retail's `neg; subf` needs the negation in its own inline (GCConsole2 `GCConsole2HideAboveY`).
+- Fade alphas: `s16 a = pane->getAlpha(); a -= 16;` keeps the byte unextended and tests with `extsh.`; the one-line form adds an `extsh` copy (Talk2D2 `closeNormalWindow`, `eraseBoardWindow`).
 
 ## Float and pool
 
