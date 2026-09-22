@@ -922,17 +922,16 @@ void TShine::loadAfter()
 	}
 }
 
-// TODO: 99.7%, pure frame gap (0x50 vs our 0x48, every instruction matches).
-// Retail's slots are `name` 0x24, `eventId` 0x20, `v` 0x18 and it reuses
-// `eventId`'s 0x20 for `eventId = v`, exactly as below; ours are 0x1c / 0x18 /
-// 0x14. So retail has 12 bytes of low region where we have 8 *and* a dead
-// 4-byte slot at 0x1c between `eventId` and `v`. A dead-low-region carrier in
-// `TMapObjBase::setEventId` lands the frame on 0x50 and drops the diff from 19
-// to 12 markers, but it is not the answer -- see the note on `setEventId` in
-// MapObjBase.hpp for the six exact functions it costs. The 4 bytes at 0x1c
-// would be a dead named local declared between the two `s32`s, or an 8-byte
-// aggregate whose first word is what `stream >> v` reads; neither has a source
-// story yet, so the function is left as is.
+static inline u8 ShineLoadNo(s32 v) { return v + 1; }
+
+// TODO: 100% of instructions and frame (0x50, via the by-value u8 level
+// ShineLoadNo, +8); only `v` is 4 high (ours 0x1c, retail 0x18: retail has a
+// dead 4-byte slot between `eventId` 0x20 and `v`). Tried on 2026-09-22 with
+// no effect on that slot: an `s32` fork on each read (+8 each, v stays right
+// below eventId), `v` declared beside eventId or in a nested block, reading
+// straight into eventId, `u32`/`int` result levels (instruction changes), a
+// named scalar declared after `name` (moves name). The earlier setEventId
+// carrier note in MapObjBase.hpp still applies.
 void TShine::loadBeforeInit(JSUMemoryInputStream& stream)
 {
 	char name[0x20];
@@ -955,7 +954,7 @@ void TShine::loadBeforeInit(JSUMemoryInputStream& stream)
 	eventId = v;
 	if (v + 1 >= 2)
 		eventId = -1;
-	unk190 = eventId + 1;
+	unk190 = ShineLoadNo(eventId);
 }
 
 TShine::TShine(const char* name)
@@ -980,6 +979,10 @@ TShine::TShine(const char* name)
 	unk1A8.zero();
 }
 
+// TODO: every instruction matches; frame 0x28 against retail's 0x68. The
+// rand() conversion buffers sit at 0x10/0x18 where retail has 0x50/0x58, so
+// retail has 0x40 more dead low pool below them; a named gpMarDirector fork is
+// 0 (ladder 2026-09). No source story for 0x40 bytes yet.
 void TEggYoshi::decideRandomLoveFruit()
 {
 	u8 map = gpMarDirector->mMap;
@@ -1053,7 +1056,8 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(11.0f);
 		f32 dx = fruit->getPosition().x - getPosition().x;
 		f32 dz = fruit->getPosition().z - getPosition().z;
-		mRotation.y = (360.0f / 65536.0f) * matan(dz, dx);
+		s16 ang = matan(dz, dx);
+		mRotation.y = (360.0f / 65536.0f) * ang;
 		mState = 0xB;
 		unk150 = fruit;
 		EggYoshiTouchSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_YOSHI, 0,
@@ -1517,9 +1521,10 @@ static inline TFlagManager* NozzleBoxLoadFlags()
 	return flagManager;
 }
 
-// TODO: strBuf lands at 0x2c, retail 0x30; the low pool is 4 bytes short and
-// every lever left in this body (a fourth pointer fork, the director map read,
-// a setter level around unk15C) is 8-granular or free.
+// By-value scalar fork over unk154: +4 of low pool, lands strBuf at retail's
+// 0x30.
+static inline f32 NozzleBoxLoadSpeed(const TNozzleBox* p) { return p->unk154; }
+
 void TNozzleBox::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
@@ -1559,7 +1564,7 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 	stream >> unk150;
 	unk150 *= 0.02f;
 	stream >> unk154;
-	if (unk154 < 0.0f)
+	if (NozzleBoxLoadSpeed(this) < 0.0f)
 		unk154 = 20.0f;
 
 	initPacketMatColor(NozzleBoxLoadModel(this), GX_TEVREG1, &unk15E);

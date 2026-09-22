@@ -165,6 +165,9 @@ s16 matan(f32 param_1, f32 param_2)
 	// the whole body and is 4.6%, so the polarity is load-bearing.  What is
 	// left is a free-register choice inside this arm alone: ours reuses f3
 	// (the second arm's -param_2 register), retail reuses f4 (its -param_1).
+	// 2026-09-22, inert or worse: `-param_1` unnamed at each use (99.9),
+	// quadrant helpers negating their value parameter in place, naming it,
+	// or taking it pre-negated (99.1-99.2), a by-value `-x` level (99.4).
 	if (param_2 >= 0.0f) {
 		if (param_1 >= 0.0f) {
 			if (param_1 >= param_2)
@@ -259,6 +262,9 @@ static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
 // lands *above* the temporary and retail's 16 bytes are below it, so the size
 // is right and the pool position is not.  Nothing in either helper names a
 // vector, so it is left out rather than fabricated.
+// 2026-09-22, all inert (98.8): X2 taking `f32 y` by value, X2 reading
+// `axis.y` unnamed, MsSqrtf over the unnamed `1 - y*y`, `axis` declared then
+// assigned, `setLength(1.0f)` for `normalize()`.
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> result;
@@ -275,18 +281,18 @@ JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
 
 void MsMtxSetRotRPH(MtxPtr param_1, f32 r, f32 p, f32 h)
 {
-	f32 sr = JMASin(r);
-	f32 sp = JMASin(p);
-	f32 sh = JMASin(h);
+	s16 ar = DEG2SHORTANGLE(r);
+	s16 ap = DEG2SHORTANGLE(p);
+	s16 ah = DEG2SHORTANGLE(h);
 
-	f32 cr = JMACos(r);
-	f32 cp = JMACos(p);
-	f32 ch = JMACos(h);
+	f32 sr = JMASSin(ar);
+	f32 sp = JMASSin(ap);
+	f32 sh = JMASSin(ah);
 
-	// TODO: frame 0x48 vs retail's 0x50; every instruction matches. The three
-	// inlined JMASin/JMACos conversion buffers sit at 0x30/0x38/0x40 where
-	// retail has them at 0x38/0x40/0x48, so 8 bytes of low pool are missing
-	// below them. Binders over JMASin/JMACos overshoot by 0x40.
+	f32 cr = JMASCos(ar);
+	f32 cp = JMASCos(ap);
+	f32 ch = JMASCos(ah);
+
 	param_1[0][0] = ch * cp;
 	param_1[1][0] = sh * cp;
 	param_1[2][0] = -sp;
@@ -338,17 +344,18 @@ void MsMtxSetXYZRPH(MtxPtr param_1, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h)
 void MsMtxSetTRS(MtxPtr param_1, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
                  f32 sx, f32 sy, f32 sz)
 {
-	f32 sr = JMASin(r);
-	f32 sp = JMASin(p);
-	f32 sh = JMASin(h);
+	s16 ar = DEG2SHORTANGLE(r);
+	s16 ap = DEG2SHORTANGLE(p);
+	s16 ah = DEG2SHORTANGLE(h);
 
-	f32 cr = JMACos(r);
-	f32 cp = JMACos(p);
-	f32 ch = JMACos(h);
+	f32 sr = JMASSin(ar);
+	f32 sp = JMASSin(ap);
+	f32 sh = JMASSin(ah);
 
-	// TODO: frame 0x88 vs retail's 0x90, instructions exact; same missing 8
-	// bytes of low pool below the inlined JMASin/JMACos conversion buffers as
-	// MsMtxSetRotRPH.
+	f32 cr = JMASCos(ar);
+	f32 cp = JMASCos(ap);
+	f32 ch = JMASCos(ah);
+
 	param_1[0][0] = (ch * cp) * sx;
 	param_1[1][0] = (sh * cp) * sx;
 	param_1[2][0] = -sp * sx;
@@ -366,6 +373,11 @@ void MsMtxSetTRS(MtxPtr param_1, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
 	param_1[2][3] = z;
 }
 
+// By-value level over the half cone angle: +4 of pool, lands `tmp` on
+// retail's 0x34 (a squared-distance level over `aware` or `length` lands it
+// too).
+static inline f32 MsSightHalfAngle(f32 angle) { return angle * 0.5f; }
+
 BOOL MsIsInSight(const JGeometry::TVec3<f32>& eye, f32 sight,
                  const JGeometry::TVec3<f32>& target, f32 length, f32 angle,
                  f32 aware)
@@ -373,14 +385,12 @@ BOOL MsIsInSight(const JGeometry::TVec3<f32>& eye, f32 sight,
 	JGeometry::TVec3<f32> tmp = target;
 	tmp -= eye;
 
-	// TODO: frame 0x60 is exact and every instruction matches, but `tmp` sits
-	// at 0x30 where retail has it at 0x34: one 4-byte pool word is missing
-	// below it (research 312's 4-byte rung).
 	if (tmp.squared() < aware * aware)
 		return true;
 
 	if (tmp.squared() < length * length
-	    && abs(MsAngleDiff(MsGetRotFromZaxisY(tmp), sight)) < angle * 0.5f) {
+	    && abs(MsAngleDiff(MsGetRotFromZaxisY(tmp), sight))
+	           < MsSightHalfAngle(angle)) {
 		return true;
 	}
 

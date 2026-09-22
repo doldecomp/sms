@@ -87,9 +87,17 @@ bool CPolarSubCamera::isNeedGroundCheck_()
 	} else if (mMode != CAMERA_MODE_SLIDER
 	           && (isNormalCameraSpecifyMode(mMode)
 	               || isTowerCameraSpecifyMode(mMode))) {
-		f32 a = mCurrentParams->mDistMin * JMASSin(mCurrentParams->mXAngleMin);
+		// TODO: 99.8%, three volatile-FPR names: retail loads mDistMin into f2
+		// and the sine into f3 (product into f3); ours the other way round.
+		// This split `*=`/`-=` spelling fixed the rest (99.3 -> 99.8). Tried:
+		// sine first with `a = d * a` / `a *= d`, `a = a * s`, by-value
+		// product/sine/mDistMin levels, distY or a declared first, an
+		// NgMax-style helper, `(a > b ? a : b)`, JMASin over the s16.
+		f32 a = mCurrentParams->mDistMin;
+		a *= JMASSin(mCurrentParams->mXAngleMin);
 		f32 b = mCurrentParams->mDistMax * JMASSin(mCurrentParams->mXAngleMax);
-		f32 distY = mPosition.y - mTarget.y;
+		f32 distY = mPosition.y;
+		distY -= mTarget.y;
 		if (a > b)
 			b = a;
 		if (distY > 1.25f * b) {
@@ -180,6 +188,18 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 	return moved;
 }
 
+// By-value levels over the roof-height parameter and the target height (+4
+// of pool each) land execRoofCheck_'s frame and `roof` slot.
+static inline f32 CamRoofHeight(const CPolarSubCamera* p)
+{
+	return p->mSaveEx->mSLRoofHeight.get();
+}
+
+static inline f32 CamTargetY(const CPolarSubCamera* p)
+{
+	return p->mCurrentTarget.mPosition.y;
+}
+
 bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 {
 	bool moved               = false;
@@ -198,16 +218,21 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 	}
 
 	if (skipCheck || should_clip_fabricated(roof)) {
-		if (roofHeight - mSaveEx->mSLRoofHeight.get()
-		    < mCurrentTarget.mPosition.y) {
-			mCurrentTarget.mPosition.y
-			    = roofHeight - mSaveEx->mSLRoofHeight.get();
+		f32 limit = roofHeight - CamRoofHeight(this);
+		if (CamTargetY(this) > limit) {
+			mCurrentTarget.mPosition.y = limit;
 			moved = true;
 		}
 	}
 	return moved;
 }
 
+// TODO: instructions and frame exact; only `ground` is 4 high (ours 0x2c,
+// retail 0x28: retail has 4 more bytes above it in the named block). Tried:
+// named TCamSaveEx*/CameraUnk2ACStruct*/TMap* locals and forks (inert or
+// -0x10), by-value levels over the lerp ratio, groundChg, the lerp and
+// mPreviousTarget.y (+4/+8, ground moves up), `ground` declared first,
+// `groundY += groundOff` and a named sum.
 bool CPolarSubCamera::execGroundCheck_(Vec param_1)
 {
 	bool moved    = false;
