@@ -10825,6 +10825,10 @@ void TMapObjBase::setMatTableTex(J3DMaterialTable* table)
 void TMapObjBase::initUnique()
 {
 	// TODO: I hate switches, someone fix this please...
+	// TODO: instruction-exact; the frame is 0x100 against retail 0x2d8, a
+	// 0x1d8 dead region with no stack reference. The sixteen setMatTable/
+	// setMatTableTex expansions share one temp block, so the missing bytes
+	// are not per-expansion accessor pool; unexplained (cc41).
 	switch (getActorType()) {
 	case 0x2000003C:
 		mMActor->setLightType(LIGHT_TYPE_PLAYER);
@@ -10863,7 +10867,7 @@ void TMapObjBase::initUnique()
 		SMS_UnifyMaterial(getModel());
 		break;
 	case 0x40000263:
-		startAllAnim(getMActor(), unkF4);
+		startAllAnim(getMActor(), getUnkF4());
 		break;
 	case 0x4000003C:
 		mMActor->initSimpleMotionBlend(0x14);
@@ -11058,6 +11062,9 @@ bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 // stripped while the load survived (the walkerEnemy `getSaveParam()` pattern).
 // Nothing below uses it, so our copy drops the register and both call sites
 // drop the load. The missing statement is still unidentified.
+// cc41: an empty inline taking param_2 (before calc, before or after the
+// restore), a dead named copy, and a guarded empty body all compile away
+// without keeping the register.
 MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
                                 u32 param_3)
 {
@@ -11139,10 +11146,23 @@ void TMapObjBase::initModelData()
 	}
 }
 
+// Name-and-return levels for initActorData's frame (+8 each over +8).
+static inline TMapObjData* MapObjDataAt(int i)
+{
+	TMapObjData* data = sObjDataTable[i];
+	return data;
+}
+
+static inline TLiveManager* MapObjSearchManager(const char* name)
+{
+	TLiveManager* manager = JDrama::TNameRefGen::search<TLiveManager>(name);
+	return manager;
+}
+
 void TMapObjBase::initActorData()
 {
 	int i    = 0;
-	u16 code = JDrama::TNameRef::calcKeyCode(unkF4);
+	u32 code = JDrama::TNameRef::calcKeyCode(unkF4);
 	for (; sObjDataTable[i]->unk4; ++i) {
 		if (code == sObjDataTable[i]->unk38
 		    && strcmp(sObjDataTable[i]->unk0, unkF4) == 0)
@@ -11152,10 +11172,10 @@ void TMapObjBase::initActorData()
 	if (strcmp(mName, "地形オブジェ") == 0)
 		mName = unkF4;
 
-	mMapObjData = sObjDataTable[i];
+	mMapObjData = MapObjDataAt(i);
 	unkF8       = mMapObjData->unk34;
 
-	mManager = JDrama::TNameRefGen::search<TLiveManager>(mMapObjData->unk8);
+	mManager = MapObjSearchManager(mMapObjData->unk8);
 	mManager->manageActor(this);
 	if (mMapObjData->mHit)
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
