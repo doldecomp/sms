@@ -306,6 +306,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A named `s16` argument local takes a 4-byte slot at the bottom of the named block; compute it into the call (NpcWalkTurn).
 - Additivity holds for pool levers only; named locals in the caller saturate (nine gave +0x38, not +0x58) (NpcInitPrg `TBaseNPC::init`).
 - Wrapping `v * s` in a direct-return helper moves the operator's by-value argument below an out-of-line call's return slot (boid `calcForces`).
+- Two frame levers that each give +8 alone can give only +8 together when they land in the same block; price combinations, not singles (yunbo `init`).
+- An inlined callee's `TVec3` block rounds to 16 and leaves a fixed 4-byte hole below the caller's named `TVec3` that pool levers cannot close (yunbo `isFindOutMario`).
+- Dropping a named `f32` that goes straight into a member store saves 8 of named block (yunbo dancing nerve).
 
 ## Register and scheduling residues
 
