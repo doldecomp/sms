@@ -735,6 +735,7 @@ void TEnemyMario::emRunAway()
 	}
 }
 
+// TODO: frame only -- retail reserves 0x20 more stack (0x50 against 0x30).
 void TEnemyMario::emJumping()
 {
 	if (mStatus & MARIO_STATUS_FLAG_JUMPING) {
@@ -750,7 +751,7 @@ void TEnemyMario::emJumping()
 			unk108->mInput |= TMarioControllerWork::A;
 		}
 	} else if (mStatus & 0x600) {
-		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 384.0f);
 		changeEMDoing(EM_DOING_WAITING);
 	}
 }
@@ -791,7 +792,7 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 50) {
-		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 384.0f);
 		changeEMDoing(EM_DOING_HIDE);
 	}
 	if (mWallPlane != nullptr) {
