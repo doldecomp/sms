@@ -99,16 +99,41 @@ void TMapObjBase::setObjHitData(u16 param_1)
 	}
 }
 
+// Binders over the collision chain: retail's expansions of
+// removeMapCollision carry 0x28 of pool from them (changeObjMtx, makeObjDead).
+static inline TMapCollisionBase* MapObjBaseColl(const TMapObjBase* p)
+{
+	TMapCollisionManager* manager = p->mMapCollisionManager;
+	TMapCollisionBase* collision  = manager->unk8;
+	return collision;
+}
+
+static inline TMapCollisionBase*
+MapObjBaseCollL0(const TMapCollisionManager* manager)
+{
+	TMapCollisionBase* collision = manager->unk8;
+	return collision;
+}
+
+static inline TMapCollisionBase*
+MapObjBaseCollB(const TMapCollisionManager* manager)
+{
+	TMapCollisionBase* collision = MapObjBaseCollL0(manager);
+	return collision;
+}
+
 void TMapObjBase::removeMapCollision()
 {
 	if (!mMapCollisionManager)
 		return;
 
-	// TODO: fakematch fix properly!!!1111
-	if (mMapCollisionManager->unk8
-	    && mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_STATIC)
+	// The explicit const conversion makes MWCC reload unk8 for the call as
+	// retail does, where the plain read reuses the tested pointer.
+	if (MapObjBaseColl(this)
+	    && MapObjBaseCollB(mMapCollisionManager)->mKind
+	           != TMapCollisionBase::KIND_STATIC)
 		if (mMapCollisionManager->unk8)
-			((volatile TMapCollisionManager*)mMapCollisionManager)
+			((const TMapCollisionManager*)mMapCollisionManager)
 			    ->unk8->remove();
 }
 
@@ -228,12 +253,12 @@ void TMapObjBase::stopAnim()
 void TMapObjBase::startControlAnim(u16 param_1)
 {
 	startAnim(param_1);
-	// TODO: retail keeps mMapObjData in r4 and reloads mAnim after the
-	// bounds compare (`lwz r4, 0x10(r4)`). CSE of mAnim into r4 eats that
-	// reload; named data/anim, getMapObjData(), getMActor(), and a TU-local
-	// unk8 helper all failed to break it (the helper also grew the frame).
-	if (mMapObjData->mAnim && param_1 < mMapObjData->mAnim->unk0)
-		mMActor->getFrameCtrl(mMapObjData->mAnim->unk4[param_1].unk8)
+	// The explicit no-op const conversion stops MWCC reusing the mAnim load
+	// from the bounds test: retail reloads it for the index.
+	TMapObjData* data = mMapObjData;
+	if (data->mAnim && param_1 < data->mAnim->unk0)
+		mMActor->getFrameCtrl(
+		           ((const TMapObjData*)data)->mAnim->unk4[param_1].unk8)
 		    ->setRate(0);
 }
 
@@ -329,6 +354,22 @@ void TMapObjBase::makeObjDead()
 		SMS_HideAllShapePacket(getModel());
 }
 
+// Binder over the sound singleton (+8 of pool per site in makeObjAppeared and
+// perform).
+static inline MSound* MOBSound()
+{
+	MSound* sound = SMSGetMSound();
+	return sound;
+}
+static inline J3DFrameCtrl* MOBMoveCtrl(TMapObjBase* p)
+{
+	J3DFrameCtrl* ctrl = p->mMapObjData->mMove->unk8;
+	return ctrl;
+}
+
+// TODO: frame exact (the two sound binders and the move-ctrl binder); the
+// else arm's col->setMtx(mtx) is a `bl` in retail (the RULES.md "in-class
+// method retail always bls" dead end) and its Mtx sits 0x24 lower.
 void TMapObjBase::makeObjAppeared()
 {
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
@@ -343,12 +384,12 @@ void TMapObjBase::makeObjAppeared()
 	if (!mMapObjData->mSound) {
 		u32 sound = TMapObjGeneral::mDefaultSound.unk0[unk100];
 		if (sound != 0xffffffff)
-			SMSGetMSound()->startSoundActor(sound, &mPosition, 0, nullptr, 0,
+			MOBSound()->startSoundActor(sound, &mPosition, 0, nullptr, 0,
 			                                4);
 	} else {
 		u32 sound = mMapObjData->mSound->unk4->unk0[unk100];
 		if (sound != 0xffffffff)
-			SMSGetMSound()->startSoundActor(sound, &mPosition, 0, nullptr, 0,
+			MOBSound()->startSoundActor(sound, &mPosition, 0, nullptr, 0,
 			                                4);
 	}
 
@@ -361,7 +402,7 @@ void TMapObjBase::makeObjAppeared()
 		ctrl->setFrame((f32)ctrl->getStart());
 		ctrl->setRate(1.0f);
 
-		mMapObjData->mMove->unk8->setRate(SMSGetAnmFrameRate());
+		MOBMoveCtrl(this)->setRate(SMSGetAnmFrameRate());
 	}
 
 	startAnim(0);
@@ -501,9 +542,17 @@ void TMapObjBase::setGroundCollision()
 	}
 }
 
+// Binder over the director: with the two sound binders it is perform's 0x30
+// of pool.
+static inline TMarDirector* MOBDir()
+{
+	TMarDirector* director = gpMarDirector;
+	return director;
+}
+
 void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow()) {
+	if (MOBDir()->isTalkModeNow() && !MOBDir()->isDemoModeNow()) {
 		if (checkLiveFlag(LIVE_FLAG_DEAD) || isActorType(0x4000003B))
 			return;
 
@@ -537,12 +586,12 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (!mMapObjData->mSound) {
 				u32 sound = TMapObjGeneral::mDefaultSound.unk0[unk100];
 				if (sound != 0xffffffff)
-					SMSGetMSound()->startSoundActor(sound, &mPosition, 0,
+					MOBSound()->startSoundActor(sound, &mPosition, 0,
 					                                nullptr, 0, 4);
 			} else {
 				u32 sound = mMapObjData->mSound->unk4->unk0[unk100];
 				if (sound != 0xffffffff)
-					SMSGetMSound()->startSoundActor(sound, &mPosition, 0,
+					MOBSound()->startSoundActor(sound, &mPosition, 0,
 					                                nullptr, 0, 4);
 			}
 		}
