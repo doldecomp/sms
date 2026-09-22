@@ -156,13 +156,12 @@ void TMarDirector::fireGetStar(TShine* shine)
 	// The polarity is read off the branch: retail's `bne` leaves the Outside
 	// name in the fallthrough arm, so the test is spelled `!unk190` and a
 	// non-zero unk190 still selects Inside.
-	// TODO: 0%. The remaining residual is that retail calls
-	// fireStartDemoCamera out of line here while MWCC expands ours; its body
-	// is already byte-exact, so the missing level is on the caller side.
+	// The default-constructed flag (its ctor's defaulted argument is one more
+	// inline level) puts the temporary at the top of the frame as retail's.
 	fireStartDemoCamera(!shine->unk190 ? cCameraBckNameShineGetOutside
 	                                   : cCameraBckNameShineGetInside,
 	                    &gpMarioOriginal->mPosition, -1, v.y, false, nullptr, 0,
-	                    nullptr, JDrama::TFlagT<u16>(0));
+	                    nullptr, JDrama::TFlagT<u16>());
 }
 
 // TODO: 99.8%, instruction-exact; the only residue is a 16-byte frame gap
@@ -257,7 +256,10 @@ void TMarDirector::fireStartDemoCamera(const char* param_1,
                                        JDrama::TActor* param_8,
                                        JDrama::TFlagT<u16> param_9)
 {
-	if (((unk24C - unk24D) & 7) >= 7)
+	// The named difference is the 15th statement: retail calls this body
+	// out of line from fireGetStar where 14 statements would expand it.
+	u8 diff = unk24C - unk24D;
+	if ((diff & 7) >= 7)
 		return;
 
 	unk4C |= 0x40;
