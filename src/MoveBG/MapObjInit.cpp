@@ -11023,19 +11023,21 @@ void TMapObjBase::initBckMoveData()
 		    JKRGetResource(move->unk0));
 
 		J3DModelData* data         = mMActor->getModel()->getModelData();
-		data->mJointNodePointer[0] = data->getJointNodePointer(1);
+		J3DJoint* joint            = data->getJointNodePointer(1);
+		data->mJointNodePointer[0] = joint;
 
-		J3DJoint* joint = data->getJointNodePointer(0);
-		joint->getTransformInfo().mScale.x     = 1.0f;
-		joint->getTransformInfo().mScale.y     = 1.0f;
-		joint->getTransformInfo().mScale.z     = 1.0f;
-		joint->getTransformInfo().mRotation.x  = 0;
-		joint->getTransformInfo().mRotation.y  = 0;
-		joint->getTransformInfo().mRotation.z  = 0;
-		joint->getTransformInfo().mTranslate.x = 0.0f;
-		joint->getTransformInfo().mTranslate.y = 0.0f;
-		joint->getTransformInfo().mTranslate.z = 0.0f;
-		move->unk8        = new J3DFrameCtrl(move->unk4->getFrameMax());
+		J3DTransformInfo info;
+		info.mScale.x     = 1.0f;
+		info.mScale.y     = 1.0f;
+		info.mScale.z     = 1.0f;
+		info.mRotation.x  = 0;
+		info.mRotation.y  = 0;
+		info.mRotation.z  = 0;
+		info.mTranslate.x = 0.0f;
+		info.mTranslate.y = 0.0f;
+		info.mTranslate.z = 0.0f;
+		data->getJointNodePointer(0)->setTransformInfo(info);
+		move->unk8 = new J3DFrameCtrl(move->unk4->getFrameMax());
 		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
 		move->unk8->setRate(SMSGetAnmFrameRate());
 	}
