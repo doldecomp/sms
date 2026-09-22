@@ -1894,3 +1894,11 @@ Nothing committed: the migration closes 16 functions but regresses 70.
   So `TRiccoHook::init`'s 8 bytes between the list-insert groups are a riccohook-context problem, not a `std-list.hpp` one.
 - **A `const Vec&` accessor for `CPolarSubCamera::unk148`** (`getUnk148Vec()`, the `getUnk124Vec()` sibling) is worse in `TLensFlare::perform` than the `(const Vec&)` casts: both accessors 94.83 -> 93.69, `unk148` alone 94.4 with one extra instruction.
   Not added.
+
+## Migration attempt cc34 (2026-09-22): by-value `operator-`
+
+Not landed. The cc23 header shape (base-init copy constructor, uncast `operator=`, `const Vec*` left operand) plus site cleanups gives +16 / -5 exact but still 67 regressions (patch and list in the session scratchpad `cc34/`).
+- `(a - b).length()` sites: removing the old `TVec3(...)` wrapper makes every instruction match but leaves the frame 0x10-0x28 large; a wide by-value `operator-(TVec3 fst, ...)` is uniformly 8 over there but 4 short at `bind` sites.
+- Plain copies (about 46 of 67): the old cast copy constructor took the local's address and kept it in memory; the base-init form lets MWCC optimise fields (float copies, fused `fmadds`). `TVec3 v; v = src;` restores one declaration (MapObjBall `control`) but not repeated `TVec3(vel).y` temporaries. Implicit copy ctor (81 down), `: Vec((const Vec&)other)` (88 down), old ctor plus by-value `operator-` (98 down, `__ami__` MISSING) are all worse.
+- Hand-built copy chains (`npcMadding`, `TNerveNPCTurnToMario`) are one copy short; a by-value `MsGetRotFromZaxisY` costs ~40 functions.
+- The `const Vec*` operand has no binary evidence beyond the frame slot; the by-value `TVec3 fst` spelling loses 13 of 16 gains. Treat the class as still open: it needs an explanation of the copy count at the `.length()` sites before another migration.
