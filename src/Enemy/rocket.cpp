@@ -288,18 +288,20 @@ void TRocket::bind()
 			// Whatever it hit gets hit back, then the bottle bursts.
 			const TLiveActor* wallActor
 			    = record.mResultWalls[0]->getActor();
-			if (wallActor)
-				((THitActor*)wallActor)
-				    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
+			if (wallActor) {
+				THitActor* hitActor = (THitActor*)wallActor;
+				hitActor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+			}
 			kill();
 		} else if (mSpine->getCurrentNerve()
 		           == &TNerveRocketFly::theNerve()) {
 			TLiveActor::bind();
 			if (!isAirborne()) {
 				const TLiveActor* groundActor = getGroundPlane()->getActor();
-				if (groundActor)
-					((THitActor*)groundActor)
-					    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
+				if (groundActor) {
+					THitActor* hitActor = (THitActor*)groundActor;
+					hitActor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+				}
 				kill();
 			}
 		}
