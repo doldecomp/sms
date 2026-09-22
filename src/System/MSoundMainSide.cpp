@@ -821,8 +821,9 @@ void MSStageDistFadeMonte::proc()
 	Vec marioPos = SMS_GetMarioPos();
 	marioPos.y += 75.0f;
 	Vec marioPos2 = marioPos;
-	f32 fVar12    = vec_dist(*unk10, marioPos2);
-	f32 fVar2     = 0.0f;
+	f32 fVar2;
+	f32 fVar12 = vec_dist(*unk10, marioPos2);
+	fVar2       = 0.0f;
 	if (fVar12 < unkC) {
 		fVar2 = 1.0f;
 	} else if (fVar12 < unk8) {
