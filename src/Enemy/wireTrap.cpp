@@ -257,6 +257,16 @@ void TWireTrap::kill()
 		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 	}
 }
+// Fabricated level: the momentum both checkHitActors and behaveHitWireTrap
+// build, returned by value (retail copies it out of a temporary).
+static inline void WireTrapReaction(const TWireTrap* trap)
+{
+	JGeometry::TVec3<f32> momentum = WireTrapWireDir(trap);
+	f32 rate = trap->mWaterTimer > 0 ? 1.0f + trap->getWaterPow() : 1.0f;
+	momentum *= trap->mMoveDir * rate;
+	momentum *= trap->mSpeed;
+}
+
 void TWireTrap::behaveHitWireTrap(
     TWireTrap* partner, const JGeometry::TVec3<f32>& mine,
     const JGeometry::TVec3<f32>& theirs)
@@ -268,16 +278,8 @@ void TWireTrap::behaveHitWireTrap(
 
 	mCollideTimer = 30;
 
-	JGeometry::TVec3<f32> myMomentum = getWireDir();
-	f32 myRate = mWaterTimer > 0 ? 1.0f + getWaterPow() : 1.0f;
-	myMomentum *= mMoveDir * myRate;
-	myMomentum *= mSpeed;
-
-	JGeometry::TVec3<f32> hisMomentum = partner->getWireDir();
-	f32 hisRate
-	    = partner->mWaterTimer > 0 ? 1.0f + partner->getWaterPow() : 1.0f;
-	hisMomentum *= partner->mMoveDir * hisRate;
-	hisMomentum *= partner->mSpeed;
+	WireTrapReaction(this);
+	WireTrapReaction(partner);
 
 	if (mine.dot(theirs) < 0.0f)
 		mMoveDir *= -1.0f;
@@ -460,6 +462,27 @@ void TWireTrap::doResetToEdge()
 	                              + (0.0f < mMoveDir ? 0.0f : 1.0f));
 }
 
+// Fabricated level: pushes getWireBinder()/getDir() one inline level down,
+// where retail calls both out of line.
+static inline const JGeometry::TVec3<f32>& WireTrapBinderDir(const TWireTrap* t)
+{
+	return t->getWireBinder()->getDir();
+}
+
+// Fabricated level: the momentum of either trap, returned by value.
+static inline JGeometry::TVec3<f32> WireTrapMomentum(const TWireTrap* trap)
+{
+	JGeometry::TVec3<f32> momentum = WireTrapBinderDir(trap);
+	f32 rate;
+	if (trap->mWaterTimer > 0)
+		rate = 1.0f + trap->getWaterPow();
+	else
+		rate = 1.0f;
+	momentum *= trap->mMoveDir * rate;
+	momentum *= trap->mSpeed;
+	return momentum;
+}
+
 void TWireTrap::checkHitActors()
 {
 	THitActor** end = &mCollisions[mColCount];
@@ -474,69 +497,15 @@ void TWireTrap::checkHitActors()
 			if (trap == this)
 				break;
 
-			JGeometry::TVec3<f32> myMomentum = getWireBinder()->getDir();
-			f32 myRate;
-			if (mWaterTimer > 0)
-				myRate = 1.0f + getWaterPow();
-			else
-				myRate = 1.0f;
-			myMomentum *= mMoveDir * myRate;
-			myMomentum *= mSpeed;
+			// TODO: retail copies each momentum once (temporary to named); the
+			// by-value return copies twice. An out-parameter helper changes the
+			// inline depths (scale expands, or the helper is refused one level
+			// down) and a `const TVec3&` binding expands scale too.
+			JGeometry::TVec3<f32> myMomentum  = WireTrapMomentum(this);
+			JGeometry::TVec3<f32> hisMomentum = WireTrapMomentum(trap);
 
-			JGeometry::TVec3<f32> hisMomentum
-			    = trap->getWireBinder()->getDir();
-			f32 hisRate;
-			if (trap->mWaterTimer > 0)
-				hisRate = 1.0f + trap->getWaterPow();
-			else
-				hisRate = 1.0f;
-			hisMomentum *= trap->mMoveDir * hisRate;
-			hisMomentum *= trap->mSpeed;
-
-			if (mCollideTimer <= 0 && mMoveMode == WIRETRAP_MODE_RETURN) {
-				mCollideTimer = 30;
-
-				JGeometry::TVec3<f32> reaction = getWireDir();
-				f32 rate = getWaterTimer() > 0 ? 1.0f + getWaterPow() : 1.0f;
-				reaction *= mMoveDir * rate;
-				reaction *= mSpeed;
-
-				JGeometry::TVec3<f32> partnerReaction = trap->getWireDir();
-				f32 partnerRate = trap->mWaterTimer > 0
-				                      ? 1.0f + trap->getWaterPow()
-				                      : 1.0f;
-				partnerReaction *= trap->mMoveDir * partnerRate;
-				partnerReaction *= trap->mSpeed;
-
-				if (myMomentum.dot(hisMomentum) < 0.0f)
-					mMoveDir *= -1.0f;
-
-				mSpine->pushNerve(&TNerveWireTrapWait::theNerve());
-			}
-
-			if (trap->mCollideTimer <= 0
-			    && trap->mMoveMode == WIRETRAP_MODE_RETURN) {
-				trap->mCollideTimer = 30;
-
-				JGeometry::TVec3<f32> reaction = trap->getWireDir();
-				f32 rate = trap->mWaterTimer > 0
-				               ? 1.0f + trap->getWaterPow()
-				               : 1.0f;
-				reaction *= trap->mMoveDir * rate;
-				reaction *= trap->mSpeed;
-
-				JGeometry::TVec3<f32> partnerReaction = trap->getWireDir();
-				f32 partnerRate = trap->mWaterTimer > 0
-				                      ? 1.0f + trap->getWaterPow()
-				                      : 1.0f;
-				partnerReaction *= trap->mMoveDir * partnerRate;
-				partnerReaction *= trap->mSpeed;
-
-				if (hisMomentum.dot(myMomentum) < 0.0f)
-					trap->mMoveDir *= -1.0f;
-
-				trap->mSpine->pushNerve(&TNerveWireTrapWait::theNerve());
-			}
+			behaveHitWireTrap(trap, myMomentum, hisMomentum);
+			trap->behaveHitWireTrap(this, hisMomentum, myMomentum);
 			break;
 		}
 		}
