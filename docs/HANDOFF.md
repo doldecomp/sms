@@ -124,6 +124,8 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
   Low is useful for bounded semantic checks but, at 1/2 with one small gain, has not matched medium's reconstruction yield; keep medium as the default and use low selectively.
 - Landed `MoveBG/MapObjFence`: binding the horizontal water-fence matrix pointer raised `TFenceWaterH::control` **97.17 -> 99.62%** and the unit **99.59 -> 99.79%**.
   The file's remaining four residues are stack/frame allocation plus one graph-node CSE difference.
+- Landed `NPC/NpcAnm`: refined the NPC parts-animation scopes, raising `setNpcAnm_` **97.54 -> 97.77%** and the unit **99.60 -> 99.61%**.
+  The remaining animation residues are stack/register allocation layouts.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
