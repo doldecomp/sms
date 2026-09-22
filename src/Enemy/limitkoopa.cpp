@@ -68,9 +68,6 @@ BOOL TNerveLimitKoopaHipDropStart::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
-// TODO: 78.9%. Both TDirectionCalc locals and the two makeDirection calls are
-// in place; the residual is the d2r/r2d `this` setup noted in calcRootMatrix
-// plus an 8-byte frame gap.
 BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TLimitKoopa* koopa = (TLimitKoopa*)spine->getBody();
@@ -80,32 +77,9 @@ BOOL TNerveLimitKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 		koopa->mWaitTimer = 240;
 	}
 
-	TDirectionCalc toMario;
-	JGeometry::TVec3<f32> delta;
-	delta.sub(SMS_GetMarioPos(), koopa->getPosition());
-	delta.y = 0.0f;
-	toMario.makeDirection(delta);
+	koopa->moveTurn();
 
-	TLimitKoopaParams* params
-	    = (TLimitKoopaParams*)((TEnemyManager*)koopa->mManager)
-	          ->getSaveParam();
-	// TODO: the ROM calls TDirectionCalc::d2r and ::r2d without setting a
-	// `this`, so they are static members in the original. KoopaJr.hpp
-	// declares them non-static and is shared with koopajr.cpp, so the extra
-	// address setup stays until that header may be changed.
-	koopa->mBodyDirection.mDirection = koopa->mBodyDirection.calcTurnDirection(
-	    toMario.get(),
-	    TDirectionCalc::d2r(params->rotationSpeed.get()));
-
-	TDirectionCalc facing;
-	JGeometry::TVec3<f32> toMario2(
-	    SMS_GetMarioPos().x - koopa->getPosition().x,
-	    SMS_GetMarioPos().y - koopa->getPosition().y,
-	    SMS_GetMarioPos().z - koopa->getPosition().z);
-	toMario2.y = 0.0f;
-	facing.makeDirection(toMario2);
-
-	if (koopa->mBodyDirection.absDirection(facing.get()) <= 0.31415927f
+	if (koopa->finishedTurn()
 	    && koopa->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveLimitKoopaHipDropStart::theNerve());
 		return TRUE;
@@ -550,14 +524,55 @@ void TLimitKoopa::startHipDrop()
 // TODO: UNUSED (0x4c), body not reconstructed.
 void TLimitKoopa::moveHipDrop() { }
 
-// TODO: UNUSED (0xc0), body not reconstructed.
-void TLimitKoopa::moveTurn() { }
+// Rotation-speed read for moveTurn: two levels (a named params binder under a
+// reader) put TEnemyManager::getSaveParam() at depth 5 in the Wait nerve,
+// where retail calls it, and land the nerve's frame.
+static inline TLimitKoopaParams* LimitKoopaParams(const TLimitKoopa* koopa)
+{
+	TLimitKoopaParams* params = koopa->getParam();
+	return params;
+}
 
-// TODO: UNUSED (0xb4), body not reconstructed.
-BOOL TLimitKoopa::finishedTurn() { return FALSE; }
+static inline f32 LimitKoopaRotationSpeed(const TLimitKoopa* koopa)
+{
+	return LimitKoopaParams(koopa)->rotationSpeed.get();
+}
 
-// TODO: UNUSED (0x94), body not reconstructed.
-void TLimitKoopa::calcTargetDirection() { }
+
+// UNUSED (0xc0).
+void TLimitKoopa::moveTurn()
+{
+	TDirectionCalc target = calcTargetDirection();
+	mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
+	    target.get(),
+	    TDirectionCalc::d2r(LimitKoopaRotationSpeed(this)));
+}
+
+// UNUSED (0xb4).
+bool TLimitKoopa::finishedTurn()
+{
+	TDirectionCalc facing;
+	JGeometry::TVec3<f32> toMario;
+	toMario.x = SMS_GetMarioPos().x - getPosition().x;
+	toMario.y = SMS_GetMarioPos().y - getPosition().y;
+	toMario.z = SMS_GetMarioPos().z - getPosition().z;
+	toMario.y = 0.0f;
+	facing.makeDirection(toMario);
+	if (mBodyDirection.absDirection(facing.get()) > 0.31415927f)
+		return false;
+	return true;
+}
+
+// UNUSED (0x94).
+TDirectionCalc TLimitKoopa::calcTargetDirection()
+{
+	TDirectionCalc calc;
+	JGeometry::TVec3<f32> delta;
+	delta.sub(SMS_GetMarioPos(), mPosition);
+	delta.y = 0.0f;
+	calc.makeDirection(delta);
+	return calc;
+}
 
 // TODO: UNUSED (0x5c), body not reconstructed.
 f32 TLimitKoopa::makeDirection(f32) { return 0.0f; }

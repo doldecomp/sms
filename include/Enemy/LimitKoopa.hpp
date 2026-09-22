@@ -202,8 +202,8 @@ public:
 	void breathFlame();
 	void stopFlame();
 	f32 makeDirection(f32);
-	void calcTargetDirection();
-	BOOL finishedTurn();
+	TDirectionCalc calcTargetDirection();
+	bool finishedTurn();
 	void moveTurn();
 	void moveHipDrop();
 	void startHipDrop();
