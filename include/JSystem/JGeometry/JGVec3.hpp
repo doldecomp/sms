@@ -117,6 +117,12 @@ public:
 		return *this;
 	}
 
+	TVec3& operator=(const Vec& other)
+	{
+		*(Vec*)this = other;
+		return *this;
+	}
+
 	// fabricated
 	operator Vec*() const { return (Vec*)&x; }
 	operator const Vec*() const { return (Vec*)&x; }

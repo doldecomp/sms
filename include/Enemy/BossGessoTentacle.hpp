@@ -109,7 +109,7 @@ public:
 		void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
 
 		// fabricated
-		void setUnk18(const JGeometry::TVec3<f32>& v) { unk18 = v; }
+		void setUnk18(const Vec& v) { unk18 = v; }
 		void addVelocity(const JGeometry::TVec3<f32>& v) { mVelocity += v; }
 
 		void onUnk24() { unk24 = true; }
