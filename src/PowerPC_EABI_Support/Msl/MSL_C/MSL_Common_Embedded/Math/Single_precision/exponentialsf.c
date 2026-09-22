@@ -186,7 +186,10 @@ inline float __exp2f(float t)
 // at retail's slot), but a named float intermediate in `__log2f` (`1.375f +
 // exp`, `frac * frac`, the polynomial tail, the whole sum) reserves 8 in the
 // first two expansions and grows the frame 0x10; every order of the register
-// locals around hi/consts/lo and dead locals are inert.
+// locals around hi/consts/lo and dead locals are inert. Such a float does put
+// each block's inner layout exactly at retail's, only 4 too tall: dropping
+// `fp` to pay for it breaks the FPR colouring (98.6), and moving the `0.75 +
+// (0.25 + fp)` tail or the polynomial into a one-line inline adds 0x18.
 float powf(float x, float y)
 {
 	int iy;
