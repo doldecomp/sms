@@ -331,6 +331,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A named `int` holding a popped value costs a 4-byte named slot below the float-to-int buffer; `s32` (signed long) or `u32` removes it (NpcEvent `evGetFruitNum`).
 - `!p` vs `p == nullptr` on an unnamed call result is a 4-byte pool lever in either direction (conductor).
 - `getSpine()` vs raw `mSpine` at a nerve test is +4 to +8 of pool (poihana `isCollidMove`, rocket `bind`).
+- A reused slot holding two objects can be one local rebuilt in place (AnimalBase `resetRandomCurPathNode`).
 
 ## Register and scheduling residues
 
@@ -399,6 +400,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `(int)boolLocal != 1` reproduces retail's `clrlwi` plus signed `cmpwi` (MarioPhysics `checkDescent`).
 - Retail reloading a normal's component after a dot product: `v.dot(wall->getNormal())` and later reads through `getNormal()` (elecNokonoko `behaveToHitWall`, MapObjBianco `touchWall`; try `TMapObjBall::touchWall`).
 - `return !a() && b();` with no result local gives retail's shared-zero `mr r0, r30` (smallEnemy `isFindMario`).
+- A spine or params accessor spelled differently at one site (`getSpine()` vs `mSpine`, `getSLx()` vs `.get()`) renumbers volatile registers with no frame change (killer, NpcChange).
+- Known-open: '1.0f loaded just before its store, 1.0f and 0.0f sharing f1' in hand-built rotation matrices (KillerBodyCallback, NameKuriAttackCallback, TNameIndParCallback).
 
 ## Float and pool
 
