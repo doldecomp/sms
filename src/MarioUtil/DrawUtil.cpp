@@ -35,6 +35,10 @@ void TSilhouette::load(JSUMemoryInputStream& stream)
 	gpSilhouetteManager = this;
 }
 
+// TODO: 99.7%. In the unk38 determinant retail loads m[2][1] before m[1][0]
+// (f2/f1) where ours loads m[1][0] first (f4). Tried: operand swaps in either
+// product, named numerator/denominator in both orders, a determinant level,
+// negating the swapped difference.
 void TSilhouette::loadAfter()
 {
 	// TODO: ewwww floats
@@ -86,7 +90,8 @@ void TSilhouette::loadAfter()
 
 void TSilhouette::setting(MtxPtr param_1)
 {
-	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { unk12.r, unk12.g, unk12.b, 0 });
+	GXColor amb = (GXColor) { unk12.r, unk12.g, unk12.b, 0 };
+	GXSetChanAmbColor(GX_COLOR0A0, amb);
 	GXLightObj GStack_54;
 	Vec local_60;
 	Vec local_6C = SMS_GetMarioPos();
@@ -311,6 +316,13 @@ void TTrembleModelEffect::tremble(f32 magnitude, f32 spring, f32 damping,
 	unk8 &= ~4;
 }
 
+// TODO: 94.0%. Retail copies each `a + b` result into a low pool temporary
+// (0x1c / 0x10) and then into the named `t` (0xb0 / 0xa4), storing unk14[i]
+// / unk28[i] from the temporary; ours constructs `t` straight from
+// operator+'s by-value parameter. Tried: `t` declared then assigned,
+// direct-init, an explicit TVec3 temporary, a by-value copy level
+// (restores the double copy in the f32 arm, 95.3%, frame +0x18), by-value
+// add levels.
 void TTrembleModelEffect::clash(f32 magnitude)
 {
 	tremble(magnitude, 0.0f, 0.0f, 0);
@@ -442,8 +454,8 @@ void TTrembleModelEffect::reset()
 	unk0->getVertexBuffer()->setCurrentVtxPos(unk4);
 }
 
-// Three binder rungs (+0x10, +8, +8) and SMSGetCamera() (+8) carry this
-// body's 0x30 of accessor pool below the local_80 Vec.
+// Binder rungs and SMSGetCamera() (+8) carry this body's accessor pool below
+// the local_80 Vec.
 static inline J3DMaterial* DrawUtilGetMaterial(J3DModelData* md, u16 i)
 {
 	J3DMaterial* mat = md->getMaterialNodePointer(i);
@@ -456,10 +468,12 @@ static inline J3DPEBlock* DrawUtilGetPEBlock(J3DMaterial* mat)
 	return peBlock;
 }
 
-static inline J3DFog* DrawUtilGetFog(J3DPEBlock* peBlock)
+// The peak's delta computed into the parameter in place; the helper level is
+// +8 of pool, repaid by reading the fog through getFog() directly.
+static inline f32 DrawUtilPeakDelta(f32 peak, f32 base)
 {
-	J3DFog* fog = peBlock->getFog();
-	return fog;
+	peak -= base;
+	return peak;
 }
 
 void SMS_AddDamageFogEffect(J3DModelData* param_1,
@@ -476,21 +490,21 @@ void SMS_AddDamageFogEffect(J3DModelData* param_1,
 	f32 startBase = -700.0f;
 	f32 endBase   = 500.0f;
 	f32 s         = JMASSin((s16)(gpMarDirector->unk58 * 0x888));
-	f32 startOsc  = -400.0f;
-	f32 endOsc    = 800.0f;
-	startOsc -= startBase;
-	endOsc -= endBase;
+	f32 endOsc    = DrawUtilPeakDelta(800.0f, endBase);
+	f32 startOsc  = DrawUtilPeakDelta(-400.0f, startBase);
 	startOsc *= s;
 	endOsc *= s;
 
-	// TODO: retail keeps the peaks in the volatile pair (f1/f0) and the
-	// bases in f31/f30, which needs the peaks anonymous -- that is, the
-	// subtraction as one expression, and that expression folds. Frame and
-	// instruction count are exact; declaration order is inert here.
+	// TODO: 98.6%. The peak subtraction as an inlined helper's in-place
+	// parameter keeps the peaks anonymous in volatile FPRs (retail's shape),
+	// but ours colours start/end the other way round in both pairs (bases
+	// f30/f31 vs retail f31/f30, peaks f0/f1 vs f1/f0, products f28/f29) and
+	// the loop's `fadds` takes the product first. Declaration order of the
+	// bases, the osc locals, and parenthesising the sums are all inert.
 
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
-		J3DFog* fog = DrawUtilGetFog(
-		    DrawUtilGetPEBlock(DrawUtilGetMaterial(param_1, i)));
+		J3DFog* fog
+		    = DrawUtilGetPEBlock(DrawUtilGetMaterial(param_1, i))->getFog();
 		fog->mStartZ = -local_80.z + startBase + startOsc;
 		fog->mEndZ   = -local_80.z + endBase + endOsc;
 		fog->mNearZ  = SMSGetCamera()->getNear();
@@ -558,6 +572,11 @@ struct Plane {
 
 Plane sViewPlane[6];
 
+// TODO: 99.6%. The four far-plane products colour differently: retail holds
+// far/near in f9 (reused by farBottom), -near in f0, farTop f5, farRight f8.
+// Tried: a named ratio (also `ratio /= near`, `ratio *= bottom` in place,
+// farBottom as the ratio), ratio-first products, scale levels (+0x30 frame),
+// named -near/-far locals.
 static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
                                     f32 near, f32 far)
 {
@@ -862,6 +881,10 @@ void SMS_CalcMatAnmAndMakeDL(J3DModel* param_1, u16 param_2)
 
 void SMS_CopyMaterialToSort(J3DMaterial*, J3DModel*, u16) { }
 
+// TODO: 99.3%, frame exact. Retail keeps `unifier` in r27 and the loop's
+// `mat` in r28; ours swaps them. Tried: `mat` declared at function scope
+// (before and after modelData), unifier first, unifier through modelData,
+// materialID unnamed, the tex number named.
 void SMS_UnifyMaterial(J3DModel* param_1)
 {
 	J3DModelData* modelData = param_1->getModelData();
