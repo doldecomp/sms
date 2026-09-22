@@ -309,6 +309,10 @@ const TBGCheckData* TMap::intersectLine(const JGeometry::TVec3<f32>& param_1,
 	mCollisionData->intersectLine(param_1, param_2, param_3, param_4);
 }
 
+// TODO: frame exact but the wall record and the spilled x/z parameters sit
+// 4 bytes low (one 4-byte pool item missing below them). Inert: a named or
+// ternary result, an if/return pair, local copies of x/z; a TU-local
+// forwarding helper costs 14% of match.
 bool TMap::isTouchedOneWall(f32 x, f32 y, f32 z, f32 radius) const
 {
 	return isTouchedOneWallAndMoveXZ(&x, y, &z, radius);
