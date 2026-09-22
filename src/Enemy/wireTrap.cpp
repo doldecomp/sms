@@ -132,7 +132,9 @@ void TWireTrap::initParticle()
 // in one TU-local helper supplies that level: it restores retail's `bl`,
 // its right-to-left evaluation of `mSpine->reset()` against
 // `getNerveFromMode(mMoveMode)`, and the frame's shape, taking load from
-// 87.5% to 95.4%. What is left is 0x10 of low region (retail's facing temp
+// 87.5% to 95.4% (99.9% with cc50's named mode read before reset() and the
+// model/binder receivers; the frame then matches but the facing temp sits
+// 0x18 low). Before cc50, what was left was 0x10 of low region (retail's facing temp
 // sits at 0x80(r1) with the three stream ints packed directly above it at
 // 0x8c/0x90/0x94; ours sits at 0x5c with a 4-byte hole above the ints), so
 // the real shape is probably a named helper on TWireTrap rather than this
@@ -152,10 +154,12 @@ static inline f32 WireTrapDirFromAngleY(f32 angle,
 // wire the model is already facing.
 void TWireTrap::initWire()
 {
-	getWireBinder()->init(mPosition);
+	TWireBinder* binder = getWireBinder();
+	binder->init(mPosition);
 
+	int mode = mMoveMode;
 	mSpine->reset();
-	mSpine->setNext(getNerveFromMode(mMoveMode));
+	mSpine->setNext(getNerveFromMode(mode));
 
 	// The 1.0f factors are live loads from .sdata2 in the ROM, not folded
 	// constants, so they came through TUtil<f32>::one() rather than a
@@ -172,7 +176,7 @@ void TWireTrap::initWire()
 	// JGVec3.hpp in the batch report. Until then the last nine instructions of
 	// the block differ.
 	mMoveDir = 0.0f <= WireTrapDirFromAngleY(getRotation().y,
-	                                         getWireBinder()->getDir())
+	                                         getWireDir())
 	    ? 1.0f
 	    : -1.0f;
 
@@ -182,8 +186,9 @@ void TWireTrap::initWire()
 // UNUSED, 0x6c in the map.
 void TWireTrap::initThisColor(const GXColorS10* color)
 {
+	J3DModel* model = getModel();
 	int index
-	    = getModel()->getModelData()->getMaterialName()->getIndex(cMatName);
+	    = model->getModelData()->getMaterialName()->getIndex(cMatName);
 	SMS_InitPacket_OneTevColor(getModel(), index, GX_TEVREG2, color);
 }
 
