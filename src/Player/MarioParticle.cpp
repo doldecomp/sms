@@ -107,35 +107,29 @@ void TMario::emitSmoke(s16 rot)
 		    PARTICLE_MS_MARIWALK1_A, &mPosition, 0, rot, 0, 0, nullptr);
 }
 
-#pragma dont_inline on
+// The named model binder is the statement that puts this body over the
+// depth-2 budget: emitSweatSometimes() reaches it through the inlined
+// emitSweatSometimes(s16) and calls it, while the UNUSED overload (depth 1)
+// expands it.
 void TMario::emitSweat(s16 rot)
 {
 	if (!checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
 	    && !checkFlag(MARIO_FLAG_IN_ANY_WATER) && !isUnderWater()) {
 		JGeometry::TVec3<f32> pos;
-		MtxPtr mtx = getM3UModel()->getModel()->getAnmMtx(mJointIdHead);
-		pos.x      = mtx[0][3];
-		pos.y      = mtx[1][3];
-		pos.z      = mtx[2][3];
+		J3DModel* model = getM3UModel()->getModel();
+		MtxPtr mtx      = model->getAnmMtx(mJointIdHead);
+		pos.x           = mtx[0][3];
+		pos.y           = mtx[1][3];
+		pos.z           = mtx[2][3];
 		gpMarioParticleManager->emitWithRotate(PARTICLE_MS_ASE, &pos, 0, rot, 0,
 		                                       0, nullptr);
 	}
 }
-#pragma dont_inline off
 
-void TMario::emitSweatSometimes()
-{
-	s16 angle = mFaceAngle.y;
-	if (!(gpMarDirector->unk58 & 0xF))
-		emitSweat(angle);
-}
+void TMario::emitSweatSometimes() { emitSweatSometimes(mFaceAngle.y); }
 
-// UNUSED (0xe4). The size is the whole of emitSweat (0xd4) plus a four
-// instruction guard, so retail *inlined* emitSweat here while calling it out of
-// line from emitSweatSometimes() above -- a per-call-site inline split, which is
-// what the `#pragma dont_inline` around emitSweat is standing in for. With the
-// pragma in place this compiles to a `bl` and stays far under 0xe4.
-// TODO: incorrect size (pragma-bound, see above).
+// UNUSED (0xe4): emitSweat (0xd4) expanded at depth 1 plus a four
+// instruction guard.
 void TMario::emitSweatSometimes(s16 rot)
 {
 	if (!(gpMarDirector->unk58 & 0xF))
