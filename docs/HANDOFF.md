@@ -71,6 +71,9 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 - Landed `MoveBG/MapObjRicco`: naming the first fruit-launcher registration result raised `TFruitLauncher::loadAfter` **98.18 -> 99.52%** and the unit fuzzy match **99.84 -> 99.94%**.
 - Trialed the local `deepseek-flash` profile on the whole `MoveBG/MapObjPlane` unit after several Terra successes.
   It produced no retained improvement after an extended variant search, so the worktree was discarded and native Terra agents remain the default.
+- Medium-effort Terra whole-file trial: the first six fresh TUs produced three verified improvements and three clean blocker audits, with no repeated file assignments.
+  Landed `Camera/CameraBGCheck` (`execWallCheck_`, `execRoofCheck_`), `Map/MapWire` (`drawLower`, `drawUpper`), and `Strategic/ObjHitCheck` (`entryGroup`, `checkActorsHit`, `clearHitNum`).
+  `Map/MapCheck`, `GC2D/SelectShine2`, and `MarioUtil/MtxUtil` returned clean; the latter two plus `MapWire` independently point to shared `JGVec2`/`JGVec3` inline-shape blockers, so use a header research round rather than reassigning those TUs.
 
 ### Session cursor-orchestrator (2026-09-20 morning)
 
