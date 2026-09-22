@@ -80,6 +80,8 @@ void TPoiHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	TEnemyManager::perform(cue, graphics);
 }
 
+// TODO: retail's frame is 0xe0 against our 0x40 with identical instructions
+// (hauntLeg and tamaNoko share the 0xe0 frame); the carrier is unknown.
 void TPoiHanaManager::initSetEnemies()
 {
 	int bodyIdx
@@ -150,16 +152,19 @@ void TPoiHana::init(TLiveManager* param_1)
 	unk19C = (TPoihanaSaveLoadParams*)getSaveParam();
 	unk1BC = new TPoiHanaCollision;
 
+	// TODO: the push_back temporaries sit at 0x6c/0x70, retail 0x68/0x6c (the
+	// JGadget stride class). Naming the group is -8 of frame; a named
+	// collision pointer or an explicit THitActor* cast are inert.
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
 	    .push_back(unk1BC);
 
-	f32 attackRadius = unk19C->mSLAttackRadius.get() * mBodyScale;
-	f32 attackHeight = unk19C->mSLAttackHeight.get() * mBodyScale;
-	f32 damageRadius = unk19C->mSLDamageRadius.get() * mBodyScale;
-	f32 damageHeight = unk19C->mSLDamageHeight.get() * mBodyScale;
-	unk1BC->initHitActor(0, 2, 0x80000000, attackRadius, attackHeight,
-	                     damageRadius, damageHeight);
+	f32 attackRadius = unk19C->mSLAttackRadius.get();
+	f32 attackHeight = unk19C->mSLAttackHeight.get();
+	f32 damageRadius = unk19C->mSLDamageRadius.get();
+	f32 damageHeight = unk19C->mSLDamageHeight.get();
+	unk1BC->initHitActor(0, 2, 0x80000000, attackRadius * mBodyScale, attackHeight * mBodyScale,
+	                     damageRadius * mBodyScale, damageHeight * mBodyScale);
 
 	unk1BC->unk68 = this;
 
@@ -364,7 +369,7 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 		    || param_1->getActorType() == 0x400000D0)
 			return false;
 
-		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
+		if (getSpine()->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			mSpine->pushNerve(&TNervePoihanaFreeze::theNerve());
 			JGeometry::TVec3<f32> vel = getLinearVelocity();
 			vel.x *= -2.0f;
@@ -391,8 +396,13 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 	if (mSleepVersion && param_1 == 0) {
 		mGoToSleepTimer += 1;
 		if (checkCurAnmEnd(0)) {
+			// TODO: frame exact; the timer and the sum trade r0/r4 at the
+			// compare (retail cmpw timer, sum with the sum in r4). Tried: a
+			// named int timer or wake, `<` with swapped operands, a TU-local
+			// fork over the timer (+4 pool), over the wake frame, over the
+			// whole sum, casts, subtracting the wake frame first.
 			if (mGoToSleepTimer
-			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
+			    > unk19C->mSLWakeFrame.get() + getInstanceIndex() * 100) {
 				mGoToSleepTimer = 0;
 
 				mGoToSleepTimer = TMsRange<s32>(-500, 500).rand();
@@ -736,12 +746,17 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				TMsRange<f32> trapJumpSpXZ(
-				    self->unk19C->mSLTrapJumpMinSpXZ.get(),
-				    self->unk19C->mSLTrapJumpMaxSpXZ.get());
-				TMsRange<f32> trapJumpSpY(
-				    self->unk19C->mSLTrapJumpMinSpY.get(),
-				    self->unk19C->mSLTrapJumpMaxSpY.get());
+				// TODO: frame 8 short, the ranges/local_48 sit 0xc low and the
+				// operator- temporaries 0x24 high; MinSpY loads before MinSpXZ.
+				// Tried: a named params pointer (-0x20), raw mPosition/
+				// mGroundPlane/*gpMarioPos (each shrinks the frame), local_48
+				// at the top, declaration orders of the four floats.
+				f32 minXZ = self->unk19C->mSLTrapJumpMinSpXZ.get();
+				f32 maxXZ = self->unk19C->mSLTrapJumpMaxSpXZ.get();
+				f32 minY = self->unk19C->mSLTrapJumpMinSpY.get();
+				f32 maxY = self->unk19C->mSLTrapJumpMaxSpY.get();
+				TMsRange<f32> trapJumpSpXZ(minXZ, maxXZ);
+				TMsRange<f32> trapJumpSpY(minY, maxY);
 
 				JGeometry::TVec3<f32> local_48;
 				const TLiveActor* groundActor
