@@ -365,6 +365,12 @@ static inline JAISound* MSoundUnkC4(const MSound* p)
 	return vC4;
 }
 
+// TODO: the second JAICamera() temporary sits 4 bytes high (0x20 against
+// retail 0x1c) with the first right, or with a raw unkC4 test the second
+// is right and the first 4 low; retail keeps 4 bytes between them. Tried
+// (cc41): named cameras (block and function scope), a camera loop, a
+// `const JAICamera&` null-camera accessor, a `&unkAC[i]` pointer accessor
+// per site, and raw/fork/binder unkC4 at each site.
 void MSound::exitStage()
 {
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat)
@@ -939,6 +945,10 @@ void MSound::playTimer(u32 time)
 // low region*; nothing in the body touches it, so the missing bytes are
 // uninitialised non-trivial locals of an inlined callee, not a spelling of
 // this function.
+// cc41: a direct-return position level plus a named `pos` at either actor
+// (the lever that closed startSoundActorSpecial) is 0/+8, and iVar3/iVar6
+// declaration order and types (u8/int/u32-from-bool) do not move the
+// r28/r29/r30 rotation.
 //
 // Research pass (batch grpfj) narrowed the family sharply.  The fabricated
 // MSound::checkUnkA8 that used to gate every sound site here was really
@@ -956,8 +966,7 @@ void MSound::playTimer(u32 time)
 // MSoundSE::startSoundActor), loadWaveBackword via getBase() + named base
 // + incremental addr.  Still open, instruction-exact and frame-only:
 //   startMarioVoice        0xa0 / 0x78   (-0x28)
-//   startSoundActorSpecial 0x78 / 0x70   (-8; Inner bind lands the frame
-//                                         but splits retail's mr. r27, r3)
+//   startSoundActorSpecial closed by cc41 (position level + named pos)
 //   exitStage              0x40 / 0x40   (JAICamera temp 4 bytes high;
 //                                         nested fork-in-binder is +8)
 u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
@@ -1256,6 +1265,13 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 	}
 }
 
+// Direct-return level over the position parameter: the +8 of pool that
+// lifts the actor and both modulation outputs to retail's slots.
+static inline const Vec* MSoundActorPos(const Vec* p)
+{
+	return p;
+}
+
 void MSound::startSoundActorSpecial(u32 id, const Vec* position, f32 param_3,
                                     f32 param_4, u32 ground_no,
                                     JAISoundHandle* out_handle, u32 fade,
@@ -1263,7 +1279,8 @@ void MSound::startSoundActorSpecial(u32 id, const Vec* position, f32 param_3,
 {
 	if (gateCheck(id) && !JALSystem::gateCheckFunc(id, param_3)
 	    && !JALSystem::gateCheckFunc(id, param_4)) {
-		JAIActor actor(position, position, position, ground_no);
+		const Vec* pos = MSoundActorPos(position);
+		JAIActor actor(pos, pos, pos, ground_no);
 		JAISound* sound = MSoundSESystem::MSoundSE::startSoundActorInner(
 		    id, out_handle, &actor, fade, camera_idx);
 		if (sound != nullptr) {
