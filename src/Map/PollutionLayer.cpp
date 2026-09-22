@@ -63,6 +63,27 @@ void TPollutionLayerWave::initGX() const
 	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 }
 
+// Frame levels for TPollutionLayerWave::draw (cc37): the pure 0x38 pool gap
+// is priced by a TVec2 temporary into each texture-coordinate helper and one
+// direct-return plus one binding level over the two wave-height reads. Many
+// combinations of these fit a frame-only gap (16 exact arrangements measured,
+// none fully symmetric), so the choice between them is weakly evidenced.
+static inline void PollutionLayerWaveTexCoord(const JGeometry::TVec2<f32>& st)
+{
+	GXTexCoord2f32(st.x, st.y);
+}
+
+static inline f32 PollutionLayerWaveHeight(f32 x, f32 z)
+{
+	return gpMapObjWave->getWaveHeight(x, z);
+}
+
+static inline f32 PollutionLayerWaveHeightBound(f32 x, f32 z)
+{
+	f32 height = gpMapObjWave->getWaveHeight(x, z);
+	return height;
+}
+
 void TPollutionLayerWave::draw() const
 {
 	u16 xCount   = (u16)((mMaxX - mMinX) / mInterval);
@@ -74,13 +95,15 @@ void TPollutionLayerWave::draw() const
 		for (f32 x = mMinX; x < mMaxX - mInterval; x += mInterval) {
 			f32 zNext = z + mInterval;
 
-			f32 h1 = gpMapObjWave->getWaveHeight(x, z);
+			f32 h1 = PollutionLayerWaveHeight(x, z);
 			GXPosition3f32(x, h1 - 10.0f, z);
-			GXTexCoord2f32(invXSize * (x - mMinX), invZSize * (z - mMinZ));
+			PollutionLayerWaveTexCoord(JGeometry::TVec2<f32>(
+			    invXSize * (x - mMinX), invZSize * (z - mMinZ)));
 
-			f32 h2 = gpMapObjWave->getWaveHeight(x, zNext);
+			f32 h2 = PollutionLayerWaveHeightBound(x, zNext);
 			GXPosition3f32(x, h2 - 10.0f, zNext);
-			GXTexCoord2f32(invXSize * (x - mMinX), invZSize * (zNext - mMinZ));
+			PollutionLayerWaveTexCoord(JGeometry::TVec2<f32>(
+			    invXSize * (x - mMinX), invZSize * (zNext - mMinZ)));
 		}
 	}
 }
@@ -164,6 +187,10 @@ TPollutionLayerWallBase::TPollutionLayerWallBase()
 // TODO: 99.3%. Only the first two loads are swapped: retail reads mMinX before
 // mtx[0][3]. Refuted: dropping the x/z locals for raw mtx reads (88.9%, an extra
 // `addi r5, r4, 0x20`); the compare forms are already retail's.
+// Also inert (cc37): getMinX() or a TU-local fork/binder on the first
+// operand, a named minX before or after x, z declared before x, split
+// declarations, reading x/z through getBaseTRMtx() per site; `mMinX > x`
+// and a TU-local predicate for the whole test regress.
 void TPollutionLayer::stampModel(J3DModel* model)
 {
 	MtxPtr mtx = model->getBaseTRMtx();
@@ -184,6 +211,11 @@ void TPollutionLayer::stampModel(J3DModel* model)
 void TPollutionLayer::appearItem(f32, f32, f32) { }
 #pragma dont_inline off
 
+// A direct-return conversion level over each offset-table read: +0x18 of
+// pool for the pair in cleaned (the product stays in the caller, so fp_contract
+// still fuses the `+=`; a fork returning the product unfuses it).
+static inline f32 PollutionLayerOffset(int offset) { return offset; }
+
 void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 {
 	static int effect_counter = 1;
@@ -195,7 +227,7 @@ void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 		static JGeometry::TVec3<f32> pos[10];
 		static int now_pos_no = 0;
 
-		pos[now_pos_no].set(x, y, z);
+		pos[now_pos_no].set(JGeometry::TVec3<f32>(x, y, z));
 
 		static int x_offset_table[] = { -1, 0, 2, 4, 1, -1, -2, 0, 3, -3 };
 		static int z_offset_table[] = { -1, -1, 0, 2, -2, -3, 0, 3, 0, 1 };
@@ -203,8 +235,8 @@ void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 		static int counter_x = 0;
 		static int counter_z = 0;
 
-		pos[now_pos_no].x += 32.0f * (f32)x_offset_table[counter_x];
-		pos[now_pos_no].z += 32.0f * (f32)z_offset_table[counter_z];
+		pos[now_pos_no].x += 32.0f * PollutionLayerOffset(x_offset_table[counter_x]);
+		pos[now_pos_no].z += 32.0f * PollutionLayerOffset(z_offset_table[counter_z]);
 
 		counter_x += 1;
 		counter_z += 3;
@@ -309,6 +341,12 @@ static inline u8 readBmpPixel(const u8* bmp, int x, int y, int w, int h)
 	return bmp[0x436 + x + w * (h - 1 - y)];
 }
 
+// TODO: 99.9%, frame 0x70 short (0x168 vs 0x1d8; the path buffer sits at
+// 0x44, retail 0xb8, so about 0x74 of pool is missing below it) plus one
+// commuted `add` in the pixel index (retail w*(h-1-y) first). Tried (cc37):
+// every operand order and grouping of the readBmpPixel index, a named row or
+// index inside it, reading the pixel inline in the caller (frame -0x10) --
+// the `add` never moves, so it is allocation-driven, not a spelling.
 void TPollutionLayer::initTexImage(const char* name)
 {
 	char fullPath[256];
