@@ -458,7 +458,8 @@ void TFenceWaterH::control()
 
 	MTXConcat(mtx, spin, mtx);
 	mtx.setTrans(mPosition.x, mPosition.y, mPosition.z);
-	MTXCopy(mtx, getModel()->getAnmMtx(0));
+	MtxPtr matrix = mtx;
+	MTXCopy(matrix, getModel()->getAnmMtx(0));
 
 	mMessenger->mPosition.x = mPosition.x;
 	mMessenger->mPosition.y = mPosition.y - 150.0f;
