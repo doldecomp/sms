@@ -133,26 +133,6 @@ static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
 }
 
 // fabricated
-static inline u32 getPressureFlashColor(int frame)
-{
-	u32 color = 0xff3f3f00;
-
-	if (frame < 10) {
-		color += ((u32)(s16)(s32)((f32)frame * -6.3f)) << 8;
-		color += ((u32)(s32)((f32)frame * 19.2f)) << 16;
-	} else if (frame < 15) {
-		color = 0xffff0000;
-	} else if (frame < 25) {
-		// int, not u8: the ROM compares signed and converts with `xoris`.
-		int fade = 25 - frame;
-		color += ((u32)(s16)(s32)((f32)fade * -6.3f)) << 8;
-		color += ((u32)(s32)((f32)fade * 19.2f)) << 16;
-	}
-
-	return color;
-}
-
-// fabricated
 static inline void updateWaterGaugeFill(TGCConsole2* console)
 {
 	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
@@ -2949,19 +2929,14 @@ void TGCConsole2::drawWaterBack()
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 
-	JUTTexture* backgroundTexture;
-	if (((J2DPicture*)unk26C->getPane())->mTextureNum > 0)
-		backgroundTexture = ((J2DPicture*)unk26C->getPane())->mTextures[0];
-	else
-		backgroundTexture = nullptr;
-	backgroundTexture->load(GX_TEXMAP0);
+	((J2DPicture*)unk26C->getPane())->getTexture(0)->load(GX_TEXMAP0);
 	GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0,
 	                  GX_FALSE, GX_PTIDENTITY);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 
-	JUTRect bounds(((J2DPicture*)unk26C->getPane())->mBounds);
 	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
+	JUTRect bounds(((J2DPicture*)unk26C->getPane())->mBounds);
 	GXSetTevColor(GX_TEVREG0, JUtility::TColor(0x0000ff78));
 	GXSetTevColor(GX_TEVREG1, JUtility::TColor(0x0000ff00));
 
@@ -2982,10 +2957,22 @@ void TGCConsole2::drawWaterBack()
 			if (unk49)
 				unk49 = 0;
 
-			if (unk30C >= 25)
+			u32 color = 0xff3f3f00;
+			if (unk30C < 10) {
+				color += ((s16)(unk30C * -6.3f)) << 8;
+				color += ((s32)(unk30C * 19.2f)) << 16;
+			} else if (unk30C < 15) {
+				color = 0xffff0000;
+			} else if (unk30C < 25) {
+				// int, not u8: the ROM compares signed and converts with
+				// `xoris`.
+				int fade = 25 - unk30C;
+				color += ((s16)(fade * -6.3f)) << 8;
+				color += ((s32)(fade * 19.2f)) << 16;
+			} else {
 				unk30C = 0;
+			}
 
-			u32 color = getPressureFlashColor(unk30C);
 			GXSetTevColor(GX_TEVREG0, JUtility::TColor(color + 0xc8));
 			GXSetTevColor(GX_TEVREG1, JUtility::TColor(color));
 			++unk30C;
@@ -2997,16 +2984,14 @@ void TGCConsole2::drawWaterBack()
 		}
 
 		drawGaugeQuadF32(bounds, fillTop, bounds.y2, hiddenRatio, 1.0f);
-	} else if (unk48) {
-		if (unk30C != 0) {
+	} else {
+		if (unk48 && unk30C != 0) {
 			unk274->setPanePosition(90, JUTPoint(0, 0), JUTPoint(0, -100),
 			                        JUTPoint(0, 0));
 			unk30C = 0;
 			unk49  = 1;
 		}
 
-		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
-	} else {
 		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
 	}
 
@@ -4396,6 +4381,17 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 	}
 }
 
+// fabricated: J2DPicture's texture-load guard. Retail tests `idx < count`
+// (cmplwi; ble) and loads without a null check, which is neither the plain
+// `count > 0` test (beq) nor getTexture(idx) followed by a null test.
+// TODO: likely a J2DPicture header inline; parked here.
+static inline void loadPictureTexture(J2DPicture* picture, u8 idx,
+                                      GXTexMapID id)
+{
+	if (idx < picture->mTextureNum)
+		picture->mTextures[idx]->load(id);
+}
+
 void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 {
 	static const f32 height[2]  = { 0.16099999845f, 0.12999999523f };
@@ -4429,7 +4425,7 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	alpha[2]    = unk9E.a;
 
 	for (int layer = 2; layer > 0; --layer) {
-		GXSetTevColor(GX_TEVREG0, unk2EC[layer]);
+		GXSetTevColor(GX_TEVREG0, JUtility::TColor(unk2EC[layer]));
 		GXSetTevColor(GX_TEVREG1,
 		              JUtility::TColor((u32)unk2EC[layer] + alpha[layer]));
 
@@ -4441,10 +4437,8 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		                GX_TRUE, GX_TEVPREV);
 		GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 		                GX_TRUE, GX_TEVPREV);
-		if (unk2AC[layer]->mTextureNum > 0)
-			unk2AC[layer]->mTextures[0]->load(GX_TEXMAP0);
-		if (unk2A0[layer]->mTextureNum > 0)
-			unk2A0[layer]->mTextures[0]->load(GX_TEXMAP1);
+		loadPictureTexture(unk2AC[layer], 0, GX_TEXMAP0);
+		loadPictureTexture(unk2A0[layer], 0, GX_TEXMAP1);
 
 		MTXTrans(mtx, 0.0f, unk2B8 * (1.0f - height[layer - 1]), 0.0f);
 		GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
@@ -4466,18 +4460,16 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		                  GX_FALSE, GX_PTIDENTITY);
 		GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
 
-		int top    = unk29C->getPane()->mGlobalBounds.y1 + topDiff[layer - 1];
-		int bottom = top + unk2BC[layer].getHeight();
-		int left   = unk2BC[layer].x1;
-		int right  = unk2BC[layer].x2;
+		f32 top = unk29C->getPane()->mGlobalBounds.y1 + topDiff[layer - 1];
+		f32 bottom = top + unk2A0[layer]->getHeight();
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-		GXPosition2f32((f32)left, (f32)top);
+		GXPosition2f32(unk2BC[layer].x1, top);
 		GXTexCoord2s8(0, 0);
-		GXPosition2f32((f32)right, (f32)top);
+		GXPosition2f32(unk2BC[layer].x2, top);
 		GXTexCoord2s8(1, 0);
-		GXPosition2f32((f32)right, (f32)bottom);
+		GXPosition2f32(unk2BC[layer].x2, bottom);
 		GXTexCoord2s8(1, 1);
-		GXPosition2f32((f32)left, (f32)bottom);
+		GXPosition2f32(unk2BC[layer].x1, bottom);
 		GXTexCoord2s8(0, 1);
 	}
 
@@ -4486,6 +4478,9 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	JUTRect bounds = unk2A0[0]->getBounds();
 	f32 hidden     = 47.0f * (1.0f - unk2B8) - 0.5f;
 	int y          = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden;
+	// TODO: retail computes y + 1 into one register and clamps a copy of it
+	// (`addic.; addi r5, r3, 0`); a one-statement `+ 1` or a clamped ternary
+	// argument are both worse. The frame is also 0x50 short.
 	y += 1;
 	if (y < 0)
 		y = 0;
