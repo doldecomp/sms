@@ -396,6 +396,13 @@ void TTelesa::behaveToWater(THitActor* param_1)
 			fVar1 = unk194->mSLTelesaPowerByWater.get();
 			mPosition.y += 30.0f;
 		}
+		// TODO: retail copies local_20 into a pool temporary at 0x38, scales
+		// it and writes the result back into local_20 before the member copy
+		// (`local_20 = local_20 * f; mVelocity = local_20;`). The header
+		// operator* adds a return temporary; a `const TVec3&`-returning TU-local
+		// scale level gets the instructions but lifts its by-value parameter
+		// above the pool (0x70); out-parameter and by-value helper forms tried
+		// (cc41).
 		mVelocity = local_20 * fVar1;
 
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -1085,8 +1092,13 @@ static inline TSharedParts* TelesaImitatedBmd(TSpineBase<TLiveActor>* spine)
 	return parts;
 }
 
-// TODO: frame-exact at 0xb0; setGoalPathMario's TPathNode still sits 4
-// bytes low (0x64 against retail 0x68). Allocation order, not size.
+// A u32 view of the dead flag; its by-value level is the 4 bytes of pool
+// that lift setGoalPathMario's TPathNode to retail's slot.
+static inline u32 TelesaIsDead(const TTelesa* p)
+{
+	return p->checkLiveFlag(LIVE_FLAG_DEAD);
+}
+
 DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 {
 	TSharedParts* imitatedItem = TelesaImitatedBmd(spine);
@@ -1125,7 +1137,7 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 
 	f32 searchAware = params->mSLSearchAware.get();
 
-	if (!self->checkLiveFlag(LIVE_FLAG_DEAD)) {
+	if (!TelesaIsDead(self)) {
 		// TODO: this is an inline
 
 		if (self->resetBaseGround()
@@ -1246,6 +1258,11 @@ static inline TTelesa* TelesaAttackBody(TSpineBase<TLiveActor>* spine)
 
 // TODO: frame-exact at 0xf8; TPosition3f / pos / TPathNode still sit
 // 0x10 / 0x10 / 4 bytes low. Allocation order after the angle split.
+// setFirstAttackPoint's named s/c/ang cost 0xc of its block where retail
+// has none, and setAttackPoint's block is 0xc short between pos and the
+// TMsRange; tried (cc41): unnaming s/c (-8 frame), a TelesaAddScaled level,
+// reusing s for the cosine, a named TMsRange, split dx/dz/r declarations,
+// getPosition()/raw gpMarioPos in setAttackPoint -- none lands both blocks.
 DEFINE_NERVE(TNerveTelesaAttackMario, TLiveActor)
 {
 	TTelesa* self = TelesaAttackBody(spine);
@@ -1356,7 +1373,8 @@ DEFINE_NERVE(TNerveKageMarioModokiWait, TLiveActor)
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_TLS_CHANGE, &self->mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+			JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
+			emitter->setGlobalScale(scale);
 		}
 
 		self->onLiveFlag(LIVE_FLAG_DEAD);
