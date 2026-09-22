@@ -283,6 +283,11 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Inside a type-checked branch use the cast local, not the parameter, to keep the parameter copy out of a callee-saved register (hamukuri Doro `isCollidMove`).
 - A TU-local setter taking `TVec3` by value moves a copy from the named block into the low pool (hamukuri BoundFreeze).
 - An inline helper with an `Mtx` local makes the matrix a callee block object at retail's slot (hamukuri Dango `calcRootMatrix`).
+- A `TVec3` temporary built from floats into an inline `const TVec3&` parameter (`setTrans(TVec3(0, 0, x))`) is a code-free carrier, +0x18 each (JDRCamera `TPolarCamera::perform`, linked).
+- A helper that names and returns its value (`u8 m = d->getCurrentMap(); return m;`) is ~+8 per two sites; naming a `new` result in a helper ~+8 per site; an unnamed `g = new T;` drops 8 of named block (MarDirectorLoadResource, linked).
+- C-style declarations at the top fix named-block order; an `MtxPtr` declared between vectors reserves 4 bytes even when register-held (fishoid `calcRootMatrix`, linked).
+- A caller-level named pointer takes a 4-byte named slot even when register-held; moving its statements into an inline helper makes it a low-region item (fishoid `load`).
+- Scalar pool items always land below `operator-`'s buffer regardless of source position (spider `bind`).
 
 ## Register and scheduling residues
 
