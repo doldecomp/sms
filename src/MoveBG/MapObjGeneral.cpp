@@ -45,6 +45,16 @@ inline f32 distToMario(const JGeometry::TVec3<f32>& v)
 	return JGeometry::TUtil<f32>::sqrt(l);
 }
 
+// Sum level: gives the radius sum retail's f1 = mario + damage operand order
+// (and +8 of pool) in waitingToAppear's plain branch.
+static inline f32 MOGSum(f32 a, f32 b) { return a + b; }
+
+// The comparisons test the distance against the radii (retail's
+// `fcmpo dist, sum; ble`): the object appears once Mario is outside them.
+// TODO: 99.9%. The 0x4000005a branch's `mario + damage` fadds has its
+// operands swapped. Only reading getDamageRadius() in the sum while keeping
+// the (then unused) named local lands it, which is a dead local and refused;
+// MOGSum there, a reordered sum and 100.0f first are inert or cost frame.
 void TMapObjGeneral::waitingToAppear()
 {
 	if (isStateTimerEngaged())
@@ -52,13 +62,13 @@ void TMapObjGeneral::waitingToAppear()
 
 	if (isActorType(0x4000005a)) {
 		f32 damageRadius = getDamageRadius();
-		if (SMS_GetMarioDamageRadius() + damageRadius + 100.0f
-		    > distToMario(mInitialPosition))
+		if (distToMario(getInitialPosition())
+		    > SMS_GetMarioDamageRadius() + damageRadius + 100.0f)
 			appear();
 	} else {
 		f32 damageRadius = getDamageRadius();
-		if (SMS_GetMarioDamageRadius() + damageRadius
-		    > distToMario(mInitialPosition))
+		if (distToMario(getInitialPosition())
+		    > MOGSum(SMS_GetMarioDamageRadius(), damageRadius))
 			appear();
 	}
 }
@@ -114,6 +124,12 @@ void TMapObjGeneral::put()
 	mGroundHeight = MapObjGeneralGetMap()->checkGround(mPosition, &mGroundPlane);
 }
 
+// TODO: 91.8%. Retail derives the sine and cosine table index twice from
+// one angle load (cosine first) where ours shares one `sraw` (the
+// MapObjItem2 case-5 tell), the sine product's operands are swapped, and the
+// frame is 0x38 short (every temporary 0x38 low). Inert or worse: the raw
+// s16 argument, TU-local sin/cos table readers (by argument or reading the
+// global), per-component helpers, and a TVec3 temporary assigned whole.
 void TMapObjGeneral::thrown()
 {
 	mPosition.set(gpMarioPos->x, gpMarioPos->y, gpMarioPos->z);
@@ -312,6 +328,9 @@ void TMapObjGeneral::touchPlayer(THitActor* player)
 	}
 }
 
+// TODO: frame 0x28 short (0x28 vs 0x50) and the hit radius loads into f5
+// where ours takes f3. Inert: getMapObjData(), raw gpPollution, a named or
+// helper-converted u16 size, a table pointer, SMSGetPollution() forks.
 void TMapObjGeneral::recover()
 {
 	SMSGetPollution()->clean(mPosition.x, unk144, mPosition.z,
@@ -676,15 +695,24 @@ void TMapObjGeneral::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
+// Fork over the static flush interval (+8 of pool in perform).
+static inline int MapObjGeneralFlushInterval()
+{
+	return TMapObjGeneral::mNormalFlushInterval;
+}
+
 void TMapObjGeneral::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		if (isState(STATE_WAITING_TO_APPEAR))
 			waitingToAppear();
 	} else {
-		if (checkMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING) && isStateTimerEngaged()
+		// The explicit upcast stops MWCC reusing the timer load from the
+		// engaged test, as retail reloads it.
+		if (checkMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING)
+		    && ((TMapObjBase*)this)->isStateTimerEngaged()
 		    && getStateTimer() < getFlushTime()
-		    && ((getStateTimer() / mNormalFlushInterval) & 1) != 0) {
+		    && ((getStateTimer() / MapObjGeneralFlushInterval()) & 1) != 0) {
 			return;
 		}
 	}
@@ -692,6 +720,11 @@ void TMapObjGeneral::perform(u32 cue, JDrama::TGraphics* graphics)
 	TMapObjBase::perform(cue, graphics);
 }
 
+// The two actor-type tests read the sender's type (retail's `lwz 0x4c` off
+// the sender register), not this object's.
+// TODO: frame 0x10 short (0x48 vs 0x58); getVelocity() is +8 of it. Inert:
+// the base result unnamed or BOOL, getMapObjData(); a TTakeActor binder
+// costs 1% of match.
 BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 {
 	int ret = TMapObjBase::receiveMessage(sender, message);
@@ -699,7 +732,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 
 	if (message == HIT_MESSAGE_TAKE && checkMapObjFlag(MAP_OBJ_FLAG_UNK100000)
-	    && JGeometry::TVec3<f32>(mVelocity).isZero()
+	    && JGeometry::TVec3<f32>(getVelocity()).isZero()
 	    && (isState(STATE_APPEARING) || isState(STATE_NORMAL)
 	        || isState(STATE_TOUCHING_PLAYER)
 	        || isState(STATE_TOUCHING_WATER))) {
@@ -707,7 +740,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (message == HIT_MESSAGE_TAKE && isActorType(0x10000025)
+	if (message == HIT_MESSAGE_TAKE && sender->isActorType(0x10000025)
 	    && (isState(STATE_APPEARING) || isState(STATE_NORMAL))) {
 		hold((TTakeActor*)sender);
 		return 1;
@@ -730,7 +763,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (isActorType(0x80000001)
+	if (sender->isActorType(0x80000001)
 	    && (message == HIT_MESSAGE_TRAMPLE
 	        || message == HIT_MESSAGE_HIP_DROP)) {
 		receiveMessageFromPlayer();
