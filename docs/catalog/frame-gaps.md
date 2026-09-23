@@ -1948,3 +1948,18 @@ Nothing was committed.
 - Inert or worse on that base: an `int prev` for `getCurAnmIdx`, `ratio` declared first, a named `oldAnm` (+4 size), `rate` declared after `ctrl` (schedule breaks), a named `basName` (+4 size), a TU-local blend-ratio setter, a `getFrameCtrl` fork, and in FirstSpin `SMSGetMSound()`, a raw accel read, and a `gpMSound` roll sound.
 - Eat and Die stay 0x28 short on that base (Die uniform low region; Eat has an extra 8 bytes between the `TFlagT` and `canEatMario`'s vector). They are inert to `getMActor()` at all `mMActor` sites (Die -8) and to `getSpine()` or `!= nullptr` in the inlined `setBubble`/`generateBubble`.
 - Open: the low-region +4 per `setBckAnm` expansion that retail has and that no named local can supply.
+
+## Research js1 (2026-09-23): the JGadget loop residue is not the push_back stride
+
+Driver: the cc39 `hv.py`/`slots.py` copied to this session's scratch `js1/`, plus `sweep*.py` (combinatorial `std-list.hpp` bodies scored on the four ObjHitCheck loop functions) and `sv.py` (call-site variants, optionally over a header variant).
+Nothing committed.
+
+- **Sites.** `push_back` sites (MirrorActor, gatekeeper, `initAndRegister`, PerformList's own list) never read `operator==`/`!=`/`++`, and every comparison or increment variant below is byte-identical there.
+  The ObjHitCheck loop functions are a different residue: retail is **+8 per loop** (`clearHitNum` six inlined `clearGroup`s 0x1f8 -> 0x228, `entryGroup` 0xd8 -> 0xe0), one dead word above each named `end`/`it` group (5 dead words between groups, ours 4) and one beside each `!=` copy pair (stride 12, ours 8).
+  `checkAndEntryGroup` is frame-exact with the pool 0x14 high and `checkActorsHit` (inlined `checkGroupPlayer`, depth-exhausted `begin`/`end` `bl`s) is 0x20 short, so the four functions do not want the same header.
+- **Closest header:** derived `iterator operator++()` returning by value.
+  `clearHitNum` and `entryGroup` frames exact, all six `clearHitNum` named groups exact, but the six extra words land under the begin/end pool instead of in the `!=` block; tree-wide 21 functions down, 2 up (JDRNameRefGen 100 -> 75.7, MarNameRefGen -2.7). Rejected.
+- `static_cast<const Base&>(fst) != static_cast<const Base&>(snd)` in the derived `operator!=` (same as containment of a `Base::iterator it_` with `fst.it_ != snd.it_`) is exactly +8 per loop but adds four instructions (a second copy pair) per compare: `clearHitNum` 99.65 -> 90.2.
+- Inert or worse on the four functions (frame / slot distance): `!=`/`==` as members, by `const&` (either or both, mixed), `!operator==(...)`, a named `bool`, `(a == b) == false`, a copied `fst`, swapped operands, deleting the derived `==` (the base one then binds, +2 live slots, same frame), `==` through `operator->`, `(Base)` value casts (+0x18 to +0x1c per loop), derived `++` direct / cast / `void` / named reference, base `++` by value or `void`, `operator*` through the base `operator*`, `begin`/`end` via `TList<void*>` or named.
+  Site spellings on `entryGroup`: unnamed receiver, pointer receiver, `it++` (+0x30), `end` in the for-init, direct init, `it` first, declare-then-assign: none adds the word.
+
