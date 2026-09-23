@@ -523,10 +523,11 @@ THinokuri2::THinokuri2(const char* name)
 	unk1A0  = new THino2MtxCalc(5, 6, 9, 12, 13, 16, 15.0f);
 }
 
-// TODO: instruction-identical, frame 0x1c8 against the ROM's 0x1f8. The
-// push_back iterator temporaries keep their strides but sit 0x24 higher
-// (end() block) and the copy-ctor block 0x34 higher, so 0x30 of temporaries
-// the original expanded is missing; insert()/add() spellings are far worse.
+// TODO: instruction-identical, frame 0x1d8 against the ROM's 0x1f8 (reading
+// the director through SMSGetMarDirector() took it from 0x1c8). The
+// push_back iterator temporaries keep their strides but sit higher (end()
+// block) as does the copy-ctor block, so 0x20 of temporaries the original
+// expanded is still missing; insert()/add() spellings are far worse.
 void THinokuri2::init(TLiveManager* param_1)
 {
 	mManager = param_1;
@@ -565,8 +566,8 @@ void THinokuri2::init(TLiveManager* param_1)
 
 	getMActor()->setJointCallback(0x17, &Hino2HeadCallback);
 
-	if (gpMarDirector->mMap == 1) {
-		switch (gpMarDirector->unk7D) {
+	if (SMSGetMarDirector()->mMap == 1) {
+		switch (SMSGetMarDirector()->unk7D) {
 		case 4:
 			setLevel(2);
 			break;
@@ -581,8 +582,8 @@ void THinokuri2::init(TLiveManager* param_1)
 			setLevel(1);
 			break;
 		}
-	} else if (gpMarDirector->mMap == 0) {
-		switch (gpMarDirector->unk7D) {
+	} else if (SMSGetMarDirector()->mMap == 0) {
+		switch (SMSGetMarDirector()->unk7D) {
 		case 7:
 			setLevel(2);
 			break;
