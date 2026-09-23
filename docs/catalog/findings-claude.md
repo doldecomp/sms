@@ -19,3 +19,9 @@ Record binary-backed findings from Claude unit work here before promoting reusab
   Re-measured tree-wide: gains as in c-hdr1 plus Bird doLanding +0.22; losses doAttackPose -2.73, makeQuat -2.21, bindBody -1.14.
   Body variants with a q2 temporary or local copies of v or the quaternion all drop Kumokun's weak rotate below 100, so the member-read body stands; the old locals are what give bindBody retail's 0x1e8 frame and f5/f6 colouring.
   No honest call-site spelling recovers the three losers (details in the JGQuat4.hpp TODO); the blocker is regalloc and frame, not the call form.
+- **Header round c-pathnode, `TPathNode(THitActor*) : unk0(actor), unk4(0.0f, 0.0f, 0.0f)`, not landed.**
+  Tree-wide: TStayPakkun::load 80.1 -> 100, BeeHive Break/Attack/MarioWaterIn ~94-95 -> ~99, but ~20 functions that reach the ctor through `setGoalPathMario()` then `bl` the zero set at depth 4 where retail expands it (TPakkun::load 100 -> 78, TNerveBombHeiAttack 100 -> 81, TNervePopoWait 100 -> 81); total fuzzy 99.20 -> 99.18.
+  Retail gives TPakkun::load and TStayPakkun::load identical slots (node 0x18, frame 0x30) with only the zero set's depth differing.
+  Every honest depth-1 spelling at TPakkun::load (direct conversion, named `mario`, temporary, named node, copy-init) expands the zeros but leaves the node 4 low; a `const TPathNode&` binding costs 8 bytes of frame.
+  Delegating TStayPakkun::load to TPakkun::load (auto-inlined) puts the whole ctor out of line (45%).
+  Details in the PathNode.hpp comment.

@@ -52,6 +52,25 @@ public:
 	//     gives Break 94.7 / Attack 96.1 but regresses TNerveBeeHiveWait
 	//     97.9 -> 94.5, and letting the accessor build the node
 	//     (`setGoal(THitActor*)`) is worse still (Wait 97.9 -> 86.8).
+	//   * Header round c-pathnode re-ran the initialiser tree-wide: pakkun's
+	//     TStayPakkun::load 80.1 -> 100 and BeeHive's three nerves -> ~99, but
+	//     every setGoalPathMario() user retail expands (TPakkun::load,
+	//     TNervePakkunShoot, TGesso::behaveToFindMario, TNerveBombHeiAttack,
+	//     TNervePopoWait, TNerveWalkerTraceMario, ...) then `bl`s the zero set
+	//     at depth 4 (setGoalPathMario -> ctor -> TVec3(T,T,T) -> set); total
+	//     fuzzy 99.20 -> 99.18. Sites that convert at depth 1 (hamukuri's
+	//     `setGoalPath((THitActor*)gpMarioAddress)`) keep expanding it, so the
+	//     depth reading holds. Building the node in TPakkun::load's own body
+	//     (`setGoalPath((THitActor*)gpMarioAddress)`, a named `mario` local,
+	//     `TPathNode(...)` temporary, named node, copy-init node) expands the
+	//     zeros but puts the node 4 bytes low (retail 0x18, ours 0x14); a
+	//     `const TPathNode&` binding grows the frame by 8. Retail gives
+	//     TPakkun::load and TStayPakkun::load the same slots (node 0x18,
+	//     frame 0x30) and differs only in the zero set's depth, so no single
+	//     TPathNode(THitActor*) body serves both. Keeping body-form zeros and
+	//     giving TStayPakkun::load its level by delegating to TPakkun::load
+	//     (auto-inlined) pushes the whole constructor out of line (45%), and
+	//     direct `unk4.x = ...` position stores do not change that.
 	// Retail's spelling is therefore the one below plus a per-call-site level
 	// that BeeHive has and the other fifteen users do not; it is not a
 	// property of this constructor. Leave the header alone.
