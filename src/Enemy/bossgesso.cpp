@@ -263,6 +263,9 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 // TODO: frame 0xe8 against retail 0x138. Every named slot now sits exactly
 // (up is declared before offset and never materialised), but retail's low
 // region is 0xd0 of dead inline temporaries against our 0x7c.
+// getSpine() at gotBeakDamage's four spine reads buys +0x10 here and in
+// TBGBeakHit::receiveMessage (0xc0 vs 0x100) but scores lower; gotEyeDamage
+// must stay raw for TBGEyeHit::receiveMessage.
 void TBGBeakHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -2147,6 +2150,9 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		// matches, but retail keeps an unreferenced 12 bytes under local_24
 		// (0x19c in retail, 0x190 here), which also pushes the int->float
 		// conversion temp from 0x1a0 to 0x1a8.
+		// Naming calcVelocityToJumpToY's result (`vel`, then
+		// `mVelocity = vel`) lands that slot at 0x190 and the frame at 0x1c0,
+		// but retail copies the return temp straight into mVelocity (98.6).
 		BossgessoGetMActor(self)->setBtpFromIndex(1);
 
 		J3DFrameCtrl* ctrl3 = BossgessoGetMActor(self)->getFrameCtrl(ANM_TYPE_BTP);
