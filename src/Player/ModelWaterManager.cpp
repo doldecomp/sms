@@ -448,6 +448,11 @@ void TModelWaterManager::move()
 	// mStaticHitActor stores (getActor(), inline cast and const_cast are
 	// inert); and the merge distance fuses `x*x + y*y` into an fmadds
 	// where TVec3::length() keeps three fmuls.
+	// UNUSED-helper sizes: a `[9]` newSplash + splashSound body is 0xcc (the
+	// map's splashGround/splashWall size), sound-then-`[8]` splash 0xc4 (not
+	// touchingExec's 0xcc); routing the three splash sites through such
+	// helpers leaves the frame at 0x278, and inlining the loop-3 pollution
+	// bodies directly costs 22 instructions, so the helpers stay as they are.
 	f32 fVar1 = unk5E08 * unk5E08;
 	for (int i = 0; i < mParticleCount; ++i) {
 		if (unk2514[i] != nullptr) {
@@ -1779,6 +1784,9 @@ void init_sphere_glist()
 // TODO: frame 8 short (0x130 vs 0x138): retail has an unused 8-byte named
 // slot between shinePos and local_2C (every named local sits 4 low here, the
 // low temps 4 low); the li order of the second quad's constants follows it.
+// A dead 8-byte probe before local_2C fixes the frame and the named slots but
+// leaves the low temps 4 short, so there are two causes. Inert: calling the
+// UNUSED init_sphere_glist(), a TVec3 shinePos, the quads as an inline helper.
 void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 {
 
