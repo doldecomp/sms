@@ -1,0 +1,6 @@
+category	unit	section	size	fuzzy%
+game	mario/Camera/CameraChange	.data	496	79.44
+game	mario/MarioUtil/ShadowUtil	.data	304	47.83
+game	mario/System/CardManager	.data	136	93.33
+jsystem	mario/JSystem/JParticle/JPAEmitter	.data	72	80.56
+sdk	mario/TRK_MINNOW_DOLPHIN/__exception	.init	7988	0.00

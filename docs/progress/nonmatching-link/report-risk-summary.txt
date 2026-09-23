@@ -1,0 +1,49 @@
+overall: fuzzy 99.467%  matched_code 70.514%  matched_data 99.843%  funcs 11873/12904  complete_units 527/732  complete_code 31.735%
+  game     fuzzy 99.345% matched_code 63.923% complete_code 16.976% units 193/385
+  jsystem  fuzzy 99.891% matched_code 93.151% complete_code 81.220% units 186/198
+  sdk      fuzzy 99.999% matched_code 99.711% complete_code 99.544% units 148/149
+
+functions <100%% fuzzy by category: {'game': 998, 'jsystem': 32, 'sdk': 1} bytes {'game': 1027348, 'jsystem': 34540, 'sdk': 728}
+functions <95% fuzzy: 109, 71148 bytes
+  by band: {'<50': 23, '50-80': 3, '80-90': 16, '90-95': 67}
+  by category (count, bytes): {'game': (108, 70712), 'jsystem': (1, 436)}
+  zero-size/0%% (likely absent or stub): 21
+  units with most <95%% functions: [('mario/MarioUtil/ShadowUtil', 14), ('mario/Animal/BeeHive', 5), ('mario/Enemy/Koopa', 4), ('mario/MoveBG/MapObjMamma', 4), ('mario/Animal/AnimalBase', 3), ('mario/Enemy/pakkun', 3), ('mario/Enemy/bossgesso', 3), ('mario/Enemy/igaiga', 3), ('mario/Enemy/Kukku', 3), ('mario/Enemy/koopajr', 3), ('mario/Enemy/BathtubKiller', 3), ('mario/Player/WaterGun', 3), ('mario/Enemy/bosswanwan', 2), ('mario/Map/MapWire', 2), ('mario/MoveBG/MapObjCorona', 2)]
+data sections <100%%: 5 in 5 units; bytes 8996
+   sdk mario/TRK_MINNOW_DOLPHIN/__exception .init size=7988 0.00%
+   game mario/MarioUtil/ShadowUtil .data size=304 47.83%
+   game mario/Camera/CameraChange .data size=496 79.44%
+   jsystem mario/JSystem/JParticle/JPAEmitter .data size=72 80.56%
+   game mario/System/CardManager .data size=136 93.33%
+
+lowest 30 functions:
+   game    mario/MarioUtil/ShadowUtil                      0.00%   2884  TMBindShadowManager::TCylinder$2171ShadowUtil_cpp::makeDL()
+   game    mario/MarioUtil/ShadowUtil                      0.00%    260  TMBindShadowManager::TSetup1$2172ShadowUtil_cpp::makeDL()
+   game    mario/MarioUtil/ShadowUtil                      0.00%    100  TMBindShadowManager::TSetup1$2172ShadowUtil_cpp::~TSetup1$2172ShadowUtil_cpp()
+   game    mario/MarioUtil/ShadowUtil                      0.00%    100  TMBindShadowManager::TCylinder$2171ShadowUtil_cpp::~TCylinder$2171ShadowUtil_cpp()
+   game    mario/MarioUtil/ShadowUtil                      0.00%    100  TMBindShadowManager::TSetup2$2190ShadowUtil_cpp::~TSetup2$2190ShadowUtil_cpp()
+   game    mario/MarioUtil/ShadowUtil                      0.00%    100  TMBindShadowManager::TSetup3$2195ShadowUtil_cpp::~TSetup3$2195ShadowUtil_cpp()
+   game    mario/MarioUtil/ShadowUtil                      0.00%    100  TMBindShadowManager::TSetup4$2207ShadowUtil_cpp::~TSetup4$2207ShadowUtil_cpp()
+   game    mario/MarioUtil/ShadowUtil                      0.00%    100  TMBindShadowManager::TSetup5$2216ShadowUtil_cpp::~TSetup5$2216ShadowUtil_cpp()
+   game    mario/MarioUtil/ShadowUtil                      0.00%     96  TMBindShadowManager::TSetup2$2190ShadowUtil_cpp::makeDL()
+   game    mario/MarioUtil/ShadowUtil                      0.00%     96  TMBindShadowManager::TSetup4$2207ShadowUtil_cpp::makeDL()
+   game    mario/MarioUtil/ShadowUtil                      0.00%     96  TMBindShadowManager::TSetup5$2216ShadowUtil_cpp::makeDL()
+   game    mario/MarioUtil/ShadowUtil                      0.00%     84  TMBindShadowManager::TSetup3$2195ShadowUtil_cpp::makeDL()
+   game    mario/Enemy/igaiga                              0.00%     72  MsWrap<float>(float, float, float)
+   game    mario/Enemy/bosswanwan                          0.00%     44  TMapCollisionBase::setMtx(float(*)[4])
+   game    mario/Animal/AnimalBase                         0.00%     32  MsClamp<float>(float, float, float)
+   game    mario/Enemy/pakkun                              0.00%     16  JGeometry::TVec3<float>::set<float>(float, float, float)
+   game    mario/Enemy/Kukku                               0.00%     16  JGeometry::TVec3<float>::set<float>(float, float, float)
+   game    mario/Enemy/bossgesso                           0.00%      8  SMS_GetMarioPos()
+   game    mario/NPC/NpcNerve                              0.00%      8  TGraphTracer::getCurGraphIndex() const
+   game    mario/MarioUtil/ShadowUtil                      0.00%      8  J3DShapeMtx::getUseMtxNum() const
+   game    mario/MarioUtil/ShadowUtil                      0.00%      8  J3DShapeMtx::getUseMtxIndex(unsigned short) const
+   game    mario/Enemy/koopajr                             3.89%     72  TKoopaJrSubmarineManager::createEnemyInstance()
+   game    mario/Enemy/Koopa                              18.43%    196  TKoopaFlame::attack_(THitActor*)
+   game    mario/System/MarNameRefGen                     60.22%   1280  JGadget::TVector<TCameraMapTool, JGadget::TAllocator<TCameraMapTool>>::InsertRaw(TCameraMa
+   jsystem mario/JSystem/JParticle/JPAMath                62.31%    436  JPAVecToRotaMtx(float(*)[4], JGeometry::TVec3<float>, JGeometry::TVec3<float>)
+   game    mario/Enemy/koopajr                            69.88%    160  TDirectionCalc::calcNearerDirection(float)
+   game    mario/Enemy/pakkun                             80.09%    212  TStayPakkun::load(JSUMemoryInputStream&)
+   game    mario/Player/MarioParticle                     80.23%    388  TWarpInCallBack::execute(JPABaseEmitter*, JPABaseParticle*)
+   game    mario/Enemy/Koopa                              81.67%    780  TKoopa::calcRootMatrix()
+   game    mario/Animal/BeeHive                           85.90%    812  TBeeHive::getCenterOfGravity() const

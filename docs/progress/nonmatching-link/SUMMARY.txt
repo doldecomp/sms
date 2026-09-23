@@ -1,0 +1,75 @@
+FULL-SOURCE NON-MATCHING LINK: SCOPING RESULT (GMSE01, worktree wt/c-nm at a5f3d0f5; report.json from main 6e4228e3)
+=====================================================================================================
+
+VERDICT: IT LINKS. No blockers.
+  With one configure.py change (nonmatching-link-configure.patch: under --non-matching every Object counts
+  as completed) and `configure.py --version GMSE01 --non-matching`, `ninja -j2 -k 0` exits 0:
+  all 732 of 732 units come from src/ (731 C/C++ units and TRK_MINNOW_DOLPHIN/__exception.s through GNU as).
+  They are archived into mario.a, linked by mwldeppc with the dtk LCF, and converted by elf2dol.
+  Nothing failed to compile. The link reported no undefined symbols, no duplicates, no overflows and no
+  warnings; there is no linker output at all (build-round1.log, build-round2-map.log).
+  Every unit already compiles in the matching build, which compiles all of them for report.json.
+  The only new work is the link step, which takes seconds.
+  Built DOL: mario-nonmatching.dol, SHA-1 903f7505dbf73390849de795388e674ab334d831, with its map in mario-nonmatching.elf.MAP.
+  Afterwards the worktree was restored to the matching configuration, and its DOL is a6782903... again.
+
+DOL LAYOUT vs RETAIL (the entry point 8000522c is unchanged)
+  total   4,128,928 -> 4,128,384 bytes (-544)
+  .init    9280 same   (55 differing words, all branch or address relocations to moved code and data)
+  .text    3594944 -> 3594560 (-384; 190 functions differ in size)
+  .ctors   960 -> 992 (one new entry, __sinit_Kumokun_cpp, padded to 32)
+  .data    254112 -> 253920 (-192: coasterkiller -20, plus alignment)
+  bss      152728 -> 152920 (+192: Kumokun +180)
+  .rodata/.sdata/.sdata2/extab/extabindex/.dtors keep their sizes; only relocated words differ.
+  Per-object differences in live data (link-map-compare.txt):
+    Kumokun .bss +180: 15 extra 12-byte file-scope objects built at boot by a new static initializer
+        (retail has neither the objects nor the initializer). REVIEW: this is a real codegen or semantic divergence.
+    coasterkiller .data -20: killer_bastable was merged into killer.cpp's copy (see DUPLICATES below).
+    Application .rodata -6: two error-message strings have identical text; only the retail padding differs. Benign.
+    .sdata2 +20 across ModelWaterManager, BossHanachanMain and EventWatcher: extra float literals from non-matching code.
+    gpMapWireManager lands in wireBinder .sbss instead of MapWireManager: the header defines it (see below).
+  Named symbols live in retail but stripped here: 2 weak inline copies, SMS_GetMarioPos and TGraphTracer::getCurGraphIndex.
+  Named symbols live here only: TCameraMapTool::operator=, __sinit_Kumokun_cpp,
+  string-pool "dummy*" objects, and TCardSector::setCheckSum (UNUSED in retail).
+
+SILENT DUPLICATE STRONG DEFINITIONS (duplicate-globals.txt)
+  mwld accepted these with no diagnostic and kept the first definition.
+  The copies are identical, so they are benign at runtime, but GCC or Clang (-fno-common) will refuse to link them in a PC port.
+    killer_bastable            killer.cpp, coasterkiller.cpp   (retail has both copies with scope:local, so they should be `static`)
+    gpMapWireManager           include/Map/MapWireManager.hpp:45 defines the variable in the header (5 TUs)
+    cSunVolumeName, cSunsetVolumeName   defined in a header (5 TUs)
+    cCameraBckNameGate/ShineGetInside/ShineGetOutside   cameragc.cpp and MarDirectorEvent.cpp
+    cNpcPartsNameRootJoint     NpcAnm.cpp and NpcParts.cpp
+  Effort: trivial (add static or extern), but it touches shared headers.
+
+RUNTIME-LOGIC RISK (report-matching-main-6e4228e3.json; complete list in functions-below-95-fuzzy.tsv)
+  1031 functions are not byte-exact (998 game, 32 JSystem, 1 SDK), about 1.06 MB of code.
+  922 of them are at 95-100% fuzzy. They are presumed equivalent (register or scheduling differences) but unverified.
+  109 are below 95% (71,148 B).
+    21 of these at 0% are artifacts:
+      9 are weak inline copies that our callers inline instead (MsWrap/MsClamp<float>, TVec3::set, SMS_GetMarioPos, ...).
+      12 are ShadowUtil local classes whose $NNNN names differ ($2171 vs $909); the code is present.
+    88 are real (66,820 B): 2 below 50%, 3 at 50-80%, 16 at 80-90%, 67 at 90-95%.
+      Lowest: koopajr TKoopaJrSubmarineManager::createEnemyInstance 3.9%; Koopa TKoopaFlame::attack_ 18.4%;
+      MarNameRefGen TVector<TCameraMapTool>::InsertRaw 60.2%; JPAMath JPAVecToRotaMtx 62.3%;
+      koopajr TDirectionCalc::calcNearerDirection 69.9%; pakkun TStayPakkun::load 80.1%;
+      MarioParticle TWarpInCallBack::execute 80.2%; Koopa TKoopa::calcRootMatrix 81.7%; BeeHive getCenterOfGravity 85.9%.
+      Units with the most: BeeHive 5, Koopa 4, MapObjMamma 4, koopajr 3, BathtubKiller 3, WaterGun 3.
+  Data sections below 100% (data-sections-below-100.tsv): 5.
+    __exception .init at 0% is an objdiff artifact: comparing the DOL bytes shows relocation-only differences.
+    ShadowUtil .data 47.8% holds the vtables of the renamed local classes.
+    CameraChange .data 79.4%, JPAEmitter .data 80.6% and CardManager .data 93.3% are small (72-496 B).
+      They are most likely jump tables or vtables that point into non-matching code. REVIEW.
+
+PC-PORT NOTES (beyond "it links")
+  140 `asm` function bodies in 29 files: dolphin 19 files, TRK 5, PowerPC_EABI_Support 3,
+    JSystem 1 and game MarioUtil/MathUtil.cpp 1. There is also 1 .s file (TRK __exception.s).
+  One hard-coded pointer outside the SDK: JUTException.cpp:191 *(OSModuleInfo**)0x800030C8.
+  8 dtk auto-names (lbl_/func_) remain, all in TRK.
+  The source has no NON_MATCHING gates, so the C/C++ body is always the one compiled.
+  Not tested: booting. There is no Dolphin on this machine; the non-matching DOL has not been run.
+
+REPRODUCE (in the worktree only):
+  git apply nonmatching-link-configure.patch
+  /usr/bin/python3 configure.py --version GMSE01 --non-matching [--map]
+  build/venv/bin/ninja -j2

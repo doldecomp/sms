@@ -1,0 +1,13 @@
+diff --git a/configure.py b/configure.py
+index 16512a31..3b7dcff2 100644
+--- a/configure.py
++++ b/configure.py
+@@ -1307,7 +1307,7 @@ if config.version == "GMSE01":
+         sys.exit(f"Unknown US matching objects: {sorted(us_matching - configured_objects)}")
+     for lib in config.libs:
+         for obj in lib["objects"]:
+-            obj.completed = obj.name in us_matching or (config.non_matching and obj.completed)
++            obj.completed = obj.name in us_matching or config.non_matching  # SCOPING EXPERIMENT: link every unit from source
+ 
+ if args.mode == "configure":
+     # Write build.ninja and objdiff.json

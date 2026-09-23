@@ -1,0 +1,9 @@
+objects scanned: 732  strong globals: 14248  defined in >1 object: 8
+cCameraBckNameGate                                 ['Camera/cameragc.o', 'System/MarDirectorEvent.o']  retail copies/scopes: ['global']
+cCameraBckNameShineGetInside                       ['Camera/cameragc.o', 'System/MarDirectorEvent.o']  retail copies/scopes: ['global']
+cCameraBckNameShineGetOutside                      ['Camera/cameragc.o', 'System/MarDirectorEvent.o']  retail copies/scopes: ['global']
+cNpcPartsNameRootJoint                             ['NPC/NpcAnm.o', 'NPC/NpcParts.o']  retail copies/scopes: ['global']
+cSunVolumeName                                     ['Camera/lensflare.o', 'Camera/lensglow.o', 'Camera/sunmgr.o', 'Camera/sunmodel.o', 'System/MarNameRefGen_Map.o']  retail copies/scopes: ['global']
+cSunsetVolumeName                                  ['Camera/lensflare.o', 'Camera/lensglow.o', 'Camera/sunmgr.o', 'Camera/sunmodel.o', 'System/MarNameRefGen_Map.o']  retail copies/scopes: ['global']
+gpMapWireManager                                   ['Enemy/wireBinder.o', 'Map/MapWireManager.o', 'MoveBG/MapObjMare.o', 'Player/MarioReceiveMsg.o', 'System/MarNameRefGen_MapObj.o']  retail copies/scopes: ['global']
+killer_bastable                                    ['Enemy/coasterkiller.o', 'Enemy/killer.o']  retail copies/scopes: ['local', 'local']

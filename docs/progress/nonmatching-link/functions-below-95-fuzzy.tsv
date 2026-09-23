@@ -1,0 +1,110 @@
+category	unit	fuzzy%	size	demangled	symbol	vaddr
+game	mario/Animal/AnimalBase	0.00	32	MsClamp<float>(float, float, float)	MsClamp<f>__Ffff	2147517492
+game	mario/Enemy/pakkun	0.00	16	JGeometry::TVec3<float>::set<float>(float, float, float)	set<f>__Q29JGeometry8TVec3<f>Ffff	2147909260
+game	mario/Enemy/bossgesso	0.00	8	SMS_GetMarioPos()	SMS_GetMarioPos__Fv	2147971180
+game	mario/Enemy/bosswanwan	0.00	44	TMapCollisionBase::setMtx(float(*)[4])	setMtx__17TMapCollisionBaseFPA4_f	2148158772
+game	mario/Enemy/igaiga	0.00	72	MsWrap<float>(float, float, float)	MsWrap<f>__Ffff	2148216640
+game	mario/Enemy/Kukku	0.00	16	JGeometry::TVec3<float>::set<float>(float, float, float)	set<f>__Q29JGeometry8TVec3<f>Ffff	2148703036
+game	mario/NPC/NpcNerve	0.00	8	TGraphTracer::getCurGraphIndex() const	getCurGraphIndex__12TGraphTracerCFv	2149635348
+game	mario/MarioUtil/ShadowUtil	0.00	260	TMBindShadowManager::TSetup1$2172ShadowUtil_cpp::makeDL()	makeDL__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv	2149789732
+game	mario/MarioUtil/ShadowUtil	0.00	2884	TMBindShadowManager::TCylinder$2171ShadowUtil_cpp::makeDL()	makeDL__Q219TMBindShadowManager28TCylinder$2171ShadowUtil_cppFv	2149786792
+game	mario/MarioUtil/ShadowUtil	0.00	96	TMBindShadowManager::TSetup2$2190ShadowUtil_cpp::makeDL()	makeDL__Q219TMBindShadowManager26TSetup2$2190ShadowUtil_cppFv	2149786696
+game	mario/MarioUtil/ShadowUtil	0.00	84	TMBindShadowManager::TSetup3$2195ShadowUtil_cpp::makeDL()	makeDL__Q219TMBindShadowManager26TSetup3$2195ShadowUtil_cppFv	2149786612
+game	mario/MarioUtil/ShadowUtil	0.00	96	TMBindShadowManager::TSetup4$2207ShadowUtil_cpp::makeDL()	makeDL__Q219TMBindShadowManager26TSetup4$2207ShadowUtil_cppFv	2149786516
+game	mario/MarioUtil/ShadowUtil	0.00	96	TMBindShadowManager::TSetup5$2216ShadowUtil_cpp::makeDL()	makeDL__Q219TMBindShadowManager26TSetup5$2216ShadowUtil_cppFv	2149786420
+game	mario/MarioUtil/ShadowUtil	0.00	8	J3DShapeMtx::getUseMtxNum() const	getUseMtxNum__11J3DShapeMtxCFv	2149783232
+game	mario/MarioUtil/ShadowUtil	0.00	8	J3DShapeMtx::getUseMtxIndex(unsigned short) const	getUseMtxIndex__11J3DShapeMtxCFUs	2149783224
+game	mario/MarioUtil/ShadowUtil	0.00	100	TMBindShadowManager::TSetup1$2172ShadowUtil_cpp::~TSetup1$2172ShadowUtil_cpp()	__dt__Q219TMBindShadowManager26TSetup1$2172ShadowUtil_cppFv	2149778808
+game	mario/MarioUtil/ShadowUtil	0.00	100	TMBindShadowManager::TCylinder$2171ShadowUtil_cpp::~TCylinder$2171ShadowUtil_cpp()	__dt__Q219TMBindShadowManager28TCylinder$2171ShadowUtil_cppFv	2149778708
+game	mario/MarioUtil/ShadowUtil	0.00	100	TMBindShadowManager::TSetup2$2190ShadowUtil_cpp::~TSetup2$2190ShadowUtil_cpp()	__dt__Q219TMBindShadowManager26TSetup2$2190ShadowUtil_cppFv	2149778608
+game	mario/MarioUtil/ShadowUtil	0.00	100	TMBindShadowManager::TSetup3$2195ShadowUtil_cpp::~TSetup3$2195ShadowUtil_cpp()	__dt__Q219TMBindShadowManager26TSetup3$2195ShadowUtil_cppFv	2149778508
+game	mario/MarioUtil/ShadowUtil	0.00	100	TMBindShadowManager::TSetup4$2207ShadowUtil_cpp::~TSetup4$2207ShadowUtil_cpp()	__dt__Q219TMBindShadowManager26TSetup4$2207ShadowUtil_cppFv	2149778408
+game	mario/MarioUtil/ShadowUtil	0.00	100	TMBindShadowManager::TSetup5$2216ShadowUtil_cpp::~TSetup5$2216ShadowUtil_cpp()	__dt__Q219TMBindShadowManager26TSetup5$2216ShadowUtil_cppFv	2149778308
+game	mario/Enemy/koopajr	3.89	72	TKoopaJrSubmarineManager::createEnemyInstance()	createEnemyInstance__24TKoopaJrSubmarineManagerFv	2148627620
+game	mario/Enemy/Koopa	18.43	196	TKoopaFlame::attack_(THitActor*)	attack___11TKoopaFlameFP9THitActor	2148689104
+game	mario/System/MarNameRefGen	60.22	1280	JGadget::TVector<TCameraMapTool, JGadget::TAllocator<TCameraMapTool>>::InsertRaw(TCameraMapTool*, unsigned long)	InsertRaw__Q27JGadget66TVector<14TCameraMapTool,Q27JGadget28TAllocator<14TCameraMapTool>>FP14TCameraMapToolUl	2150239268
+game	mario/Enemy/koopajr	69.88	160	TDirectionCalc::calcNearerDirection(float)	calcNearerDirection__14TDirectionCalcFf	2148646316
+game	mario/Enemy/pakkun	80.09	212	TStayPakkun::load(JSUMemoryInputStream&)	load__11TStayPakkunFR20JSUMemoryInputStream	2147909048
+game	mario/Player/MarioParticle	80.23	388	TWarpInCallBack::execute(JPABaseEmitter*, JPABaseParticle*)	execute__15TWarpInCallBackFP14JPABaseEmitterP15JPABaseParticle	2149988636
+game	mario/Enemy/Koopa	81.67	780	TKoopa::calcRootMatrix()	calcRootMatrix__6TKoopaFv	2148673608
+game	mario/Animal/BeeHive	85.90	812	TBeeHive::getCenterOfGravity() const	getCenterOfGravity__8TBeeHiveCFv	2147548032
+game	mario/Map/MapWire	85.94	412	TMapWire::getPosInWire(const JGeometry::TVec3<float>&) const	getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3<f>	2149152336
+game	mario/Enemy/Kukku	86.49	1088	TKukku::dropCoins()	dropCoins__6TKukkuFv	2148703988
+game	mario/Enemy/BathtubKiller	86.98	400	TNerveBathtubKillerStraight::execute(TSpineBase<TLiveActor>*) const	execute__27TNerveBathtubKillerStraightCFP24TSpineBase<10TLiveActor>	2148726892
+game	mario/MoveBG/MapObjInit	87.09	172	TMapObjBase::initMActor(const char*, const char*, unsigned long)	initMActor__11TMapObjBaseFPCcPCcUl	2149261424
+game	mario/Enemy/Kazekun	87.64	1316	TKazekun::doAttackPose(bool)	doAttackPose__8TKazekunFb	2148588860
+game	mario/MoveBG/MapObjCorona	87.82	308	TBathtub::calcRootMatrix()	calcRootMatrix__8TBathtubFv	2149555632
+game	mario/Enemy/BathtubKiller	88.09	368	TBathtubKiller::setMActorAndKeeper()	setMActorAndKeeper__14TBathtubKillerFv	2148740896
+game	mario/System/EventWatcher	88.54	900	evIsNearActors(TSpcTypedInterp<TEventWatcher>*, unsigned long)	evIsNearActors__FP32TSpcTypedInterp<13TEventWatcher>Ul	2150176812
+game	mario/MoveBG/MapObjPollution	88.84	172	TMapObjRevivalPollution::loadAfter()	loadAfter__23TMapObjRevivalPollutionFv	2149484800
+game	mario/THPPlayer/THPAudioDecode	89.27	176	AudioDecoderForOnMemory(void*)	AudioDecoderForOnMemory__FPv	2147605536
+game	mario/MoveBG/MapObjMamma	89.41	332	TSandBomb::touchWater(THitActor*)	touchWater__9TSandBombFP9THitActor	2149396248
+game	mario/Animal/BeeHive	89.58	192	TBeeHive::controlCollision()	controlCollision__8TBeeHiveFv	2147551616
+game	mario/Animal/AnimalBase	90.25	1020	TAnimalBase::execWalk(bool)	execWalk__11TAnimalBaseFb	2147516452
+game	mario/Enemy/igaiga	90.34	1244	TGorogoroManager::perform(unsigned long, JDrama::TGraphics*)	perform__16TGorogoroManagerFUlPQ26JDrama9TGraphics	2148215396
+game	mario/Enemy/Kumokun	90.39	152	JGeometry::TQuat4<float>::rotate(const JGeometry::TVec3<float>&, JGeometry::TVec3<float>&) const	rotate__Q29JGeometry9TQuat4<f>CFRCQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>	2148651784
+game	mario/MoveBG/MapObjMamma	90.56	244	TSandCastle::expanded()	expanded__11TSandCastleFv	2149393404
+game	mario/Enemy/effectObj	90.77	88	TEffectObjBase::perform(unsigned long, JDrama::TGraphics*)	perform__14TEffectObjBaseFUlPQ26JDrama9TGraphics	2147713468
+game	mario/MoveBG/MapObjMamma	90.88	592	TMammaMirrorMapOperator::perform(unsigned long, JDrama::TGraphics*)	perform__23TMammaMirrorMapOperatorFUlPQ26JDrama9TGraphics	2149381228
+game	mario/Animal/BeeHive	91.05	256	JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>::setSQ(const JGeometry::TVec3<float>&, const JGeometry::TQuat4<float>&)	setSQ__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>RCQ29JGeometry9TQuat4<f>	2147551156
+game	mario/Map/MapCheck	91.14	968	bgIntersectLine(const TBGCheckData*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, bool, JGeometry::TVec3<float>*)	bgIntersectLine__FPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>bPQ29JGeometry8TVec3<f>	2149105092
+game	mario/Player/MarioMove	91.17	652	TMario::moveRequest(const JGeometry::TVec3<float>&)	moveRequest__6TMarioFRCQ29JGeometry8TVec3<f>	2149931660
+game	mario/Enemy/bosswanwan	91.26	560	TBossWanwanMtxCalc::calc(unsigned short)	calc__18TBossWanwanMtxCalcFUs	2148175004
+game	mario/GC2D/ConsoleStr	91.29	776	TConsoleStr::processShineGet(int)	processShineGet__11TConsoleStrFi	2148993552
+game	mario/Map/MapMirror	91.33	1080	TMirrorModelManager::perform(unsigned long, JDrama::TGraphics*)	perform__19TMirrorModelManagerFUlPQ26JDrama9TGraphics	2149134500
+game	mario/Enemy/limitkoopa	91.55	520	TLimitKoopa::startHipDrop()	startHipDrop__11TLimitKoopaFv	2148773776
+game	mario/Enemy/rocket	91.71	236	TRocket::setDeadAnm()	setDeadAnm__7TRocketFv	2148577100
+game	mario/Enemy/BossHanachanSub	91.80	980	TSphereLink::moveHead(const JGeometry::TVec3<float>&)	moveHead__11TSphereLinkFRCQ29JGeometry8TVec3<f>	2148454256
+game	mario/MoveBG/MapObjMare	91.83	1364	TMuddyBoat::bind()	bind__10TMuddyBoatFv	2149417920
+game	mario/Enemy/effectObj	91.95	312	TEffectColumWater::generate(JGeometry::TVec3<float>&, JGeometry::TVec3<float>&)	generate__17TEffectColumWaterFRQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>	2147709896
+game	mario/Camera/cameralib	91.98	1836	CLBCalcNearNinePos(JGeometry::TVec3<float>*, S16Vec*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, short, float, const JGeometry::TVec2<float>&)	CLBCalcNearNinePos__FPQ29JGeometry8TVec3<f>P6S16VecRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>sfRCQ29JGeometry8TVec2<f>	2147644752
+game	mario/GC2D/GCConsole2	92.11	2400	TGCConsole2::countShine()	countShine__11TGCConsole2Fv	2148825612
+game	mario/Map/MapMakeData	92.11	612	TMapCollisionBase::setCheckData(const float*, const short*, TBGCheckData*, int)	setCheckData__17TMapCollisionBaseFPCfPCsP12TBGCheckDatai	2149128212
+game	mario/Enemy/hinokuri2	92.35	500	Hino2HeadCallback(J3DNode*, int)	Hino2HeadCallback__FP7J3DNodei	2147867028
+game	mario/Map/MapWire	92.43	664	TMapWire::setFootPointsAtHanged(float(*)[4])	setFootPointsAtHanged__8TMapWireFPA4_f	2149153468
+game	mario/Enemy/igaiga	92.50	304	RollEnemyBodyCallback(J3DNode*, int)	RollEnemyBodyCallback__FP7J3DNodei	2148224212
+game	mario/Enemy/Kumokun	92.52	1048	TKumokun::initAttachPlane()	initAttachPlane__8TKumokunFv	2148668560
+game	mario/Animal/AnimalBase	92.54	824	TAnimalBase::perform(unsigned long, JDrama::TGraphics*)	perform__11TAnimalBaseFUlPQ26JDrama9TGraphics	2147518632
+game	mario/Enemy/BathtubKiller	92.61	1532	TBathtubKiller::makeQuat(JGeometry::TVec3<float>, float, float)	makeQuat__14TBathtubKillerFQ29JGeometry8TVec3<f>ff	2148734024
+game	mario/MarioUtil/MtxUtil	92.71	1304	TMultiMtxEffect::setup(J3DModel*, const char*)	setup__15TMultiMtxEffectFP8J3DModelPCc	2149760984
+game	mario/Player/ModelWaterManager	92.71	1000	TWaterEmitInfo::TWaterEmitInfo(const char*)	__ct__14TWaterEmitInfoFPCc	2150106868
+game	mario/NPC/NpcEvent	92.75	484	ev__ForceStartTalkExceptNpc__FP32TSpcTypedInterp<13TEventWatcher>Ul	ev__ForceStartTalkExceptNpc__FP32TSpcTypedInterp<13TEventWatcher>Ul	2149646136
+game	mario/MoveBG/MapObjPlane	92.77	1220	TMapObjPlane::calcNrm(int, int)	calcNrm__12TMapObjPlaneFii	2149444604
+game	mario/Enemy/TabePuku	93.04	420	TTPHitActor::updateTerrainCollsion()	updateTerrainCollsion__11TTPHitActorFv	2148766524
+game	mario/GC2D/Menu	93.07	464	TMenuPlane::TMenuPlane(const TMarioGamePad*, J2DPane*, unsigned long, unsigned long)	__ct__10TMenuPlaneFPC13TMarioGamePadP7J2DPaneUlUl	2148790808
+game	mario/Enemy/BossHanachanParts	93.10	308	TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind, EnumBossHanachanStopMotionBlendOnOff)	setAnm___22TBossHanachanPartsBodyF23EnumBossHanachanAnmKind36EnumBossHanachanStopMotionBlendOnOff	2148480220
+game	mario/Animal/Bird	93.12	896	TNerveAnimalBirdWalkOnGround::execute(TSpineBase<TLiveActor>*) const	execute__28TNerveAnimalBirdWalkOnGroundCFP24TSpineBase<10TLiveActor>	2147532104
+game	mario/Map/MapMakeList	93.14	1400	TMapCollisionData::addCheckDataToGrid(TBGCheckData*, int)	addCheckDataToGrid__17TMapCollisionDataFP12TBGCheckDatai	2149131008
+game	mario/Enemy/pakkun	93.24	272	PakkunSeedCallback(J3DNode*, int)	PakkunSeedCallback__FP7J3DNodei	2147917036
+game	mario/Enemy/bossgesso	93.29	2648	TBossGesso::doAttackSingle()	doAttackSingle__10TBossGessoFv	2147973568
+game	mario/System/EventWatcher	93.31	1288	evIsNearSameActors(TSpcTypedInterp<TEventWatcher>*, unsigned long)	evIsNearSameActors__FP32TSpcTypedInterp<13TEventWatcher>Ul	2150177712
+game	mario/Animal/Bird	93.40	964	TAnimalBird::doLanding(bool)	doLanding__11TAnimalBirdFb	2147536136
+game	mario/Enemy/TabePuku	93.45	388	TTabePuku::getTakingMtx()	getTakingMtx__9TTabePukuFv	2148763572
+game	mario/MarioUtil/MtxUtil	93.60	396	TRope::moveHead(const JGeometry::TVec3<float>&)	moveHead__5TRopeFRCQ29JGeometry8TVec3<f>	2149757276
+game	mario/Enemy/Koopa	93.72	2516	@unnamed@::KoopaNeckCallBack(J3DNode*, int)	KoopaNeckCallBack__9@unnamed@FP7J3DNodei	2148684704
+game	mario/Player/MarioAccess	93.83	72	SMS_IsMarioOnWire()	SMS_IsMarioOnWire__Fv	2150053820
+game	mario/Camera/CameraNotice	93.88	516	CPolarSubCamera::calcNoticeTargetYrot_(const Vec&)	calcNoticeTargetYrot___15CPolarSubCameraFRC3Vec	2147652848
+game	mario/System/CardManager	93.93	112	TCardManager::decideUseSector(TCardManager::TCriteria*)	decideUseSector__12TCardManagerFPQ212TCardManager9TCriteria	2150315040
+game	mario/Player/WaterGun	93.93	936	TNozzleDeform::emit(int)	emit__13TNozzleDeformFi	2150020480
+game	mario/Animal/BeeHive	93.99	660	TNerveBeeHiveBreak::execute(TSpineBase<TLiveActor>*) const	execute__18TNerveBeeHiveBreakCFP24TSpineBase<10TLiveActor>	2147545256
+game	mario/MarioUtil/DrawUtil	94.00	536	TTrembleModelEffect::clash(float)	clash__19TTrembleModelEffectFf	2149739900
+game	mario/Enemy/hauntLeg	94.01	368	HauntLegCallback(J3DNode*, int)	HauntLegCallback__FP7J3DNodei	2148561432
+game	mario/Enemy/BossHanachanSub	94.03	140	BHSCalcRevisionDistXZByRotateZ(float, float, float, float*, float*)	BHSCalcRevisionDistXZByRotateZ__FfffPfPf	2148455872
+game	mario/GC2D/SelectShine2	94.07	1180	TSelectShineManager::perform(unsigned long, JDrama::TGraphics*)	perform__19TSelectShineManagerFUlPQ26JDrama9TGraphics	2149024088
+game	mario/Enemy/bossgesso	94.12	164	TBossGesso::changeAllTentacleState(int)	changeAllTentacleState__10TBossGessoFi	2147976700
+game	mario/Player/WaterGun	94.15	716	TNozzleBase::emit(int)	emit__11TNozzleBaseFi	2150026172
+game	mario/NPC/NpcParts	94.19	1072	TNpcParts::TNpcParts(unsigned long, const J3DGXColorS10*, TBaseNPC*)	__ct__9TNpcPartsFUlPC13J3DGXColorS10P8TBaseNPC	2149655896
+game	mario/Enemy/Koopa	94.33	240	TKoopaFlame::control()	control__11TKoopaFlameFv	2148689328
+game	mario/Enemy/koopajr	94.44	1096	TKoopaJrSubmarine::init(TLiveManager*)	init__17TKoopaJrSubmarineFP12TLiveManager	2148636580
+game	mario/MoveBG/MapObjMamma	94.44	820	TLeanMirror::controlShake()	controlShake__11TLeanMirrorFv	2149388660
+game	mario/Map/BathWaterManager	94.49	2624	TBathWaterMeshRenderer::prerender(JDrama::TGraphics*, const TBathtubData&, TBathWater**, TBathWaterParams**, int)	prerender__22TBathWaterMeshRendererFPQ26JDrama9TGraphicsRC12TBathtubDataPP10TBathWaterPP16TBathWaterParamsi	2149235892
+game	mario/Animal/BeeHive	94.50	748	TNerveBeeHiveMarioWaterIn::execute(TSpineBase<TLiveActor>*) const	execute__25TNerveBeeHiveMarioWaterInCFP24TSpineBase<10TLiveActor>	2147543344
+game	mario/MoveBG/MapObjPlane	94.52	348	TMapObjPlane::makeMountain()	makeMountain__12TMapObjPlaneFv	2149443396
+game	mario/Enemy/Kukku	94.57	984	TNerveKukkuGraphWander::execute(TSpineBase<TLiveActor>*) const	execute__22TNerveKukkuGraphWanderCFP24TSpineBase<10TLiveActor>	2148702052
+game	mario/Player/WaterGun	94.64	776	TNozzleTrigger::emit(int)	emit__14TNozzleTriggerFi	2150023108
+game	mario/MoveBG/MapObjFlag	94.67	528	TMapObjFlagManager::perform(unsigned long, JDrama::TGraphics*)	perform__18TMapObjFlagManagerFUlPQ26JDrama9TGraphics	2149431828
+game	mario/Camera/lensflare	94.83	1512	TLensFlare::perform(unsigned long, JDrama::TGraphics*)	perform__10TLensFlareFUlPQ26JDrama9TGraphics	2147668308
+game	mario/Enemy/limitkoopa	94.90	1088	TLimitKoopa::setUpHitActors()	setUpHitActors__11TLimitKoopaFv	2148772556
+game	mario/Enemy/tinkoopa	94.97	1508	TTinKoopa::init(TLiveManager*)	init__9TTinKoopaFP12TLiveManager	2148145808
+game	mario/MoveBG/MapObjCorona	94.98	1172	TBathtub::setupCollisions_()	setupCollisions___8TBathtubFv	2149557252
+jsystem	mario/JSystem/JParticle/JPAMath	62.31	436	JPAVecToRotaMtx(float(*)[4], JGeometry::TVec3<float>, JGeometry::TVec3<float>)	JPAVecToRotaMtx__FPA4_fQ29JGeometry8TVec3<f>Q29JGeometry8TVec3<f>	2150792936
