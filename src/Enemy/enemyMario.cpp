@@ -706,6 +706,8 @@ bool TEnemyMario::tryTake()
 	return FALSE;
 }
 
+// TODO: frame 0x40 vs 0x38 (one extra 8-byte low temp). Inert (fo1): no named
+// difference, an int difference, a named angle argument, swapped tests.
 void TEnemyMario::emWaiting()
 {
 	s16 angleDifference = mAngleToMario - mFaceAngle.y;

@@ -88,6 +88,9 @@ JGeometry::TVec3<f32> TSplineRail::getPosition(f32 t)
 	return unk0->getPoint(wrapT(t));
 }
 
+// TODO: frame 0xf8 vs 0xe8: retail has 4 more above the point/dir block and
+// 0xc more low region. Inert (fo1): set() for either output, a named t + dt,
+// a named wrapT result, `dt` first; a named rot local fixes the frame at +6.
 void TSplineRail::getPosAndRot(f32 t, JGeometry::TVec3<f32>* out_pos,
                                JGeometry::TVec3<f32>* out_rot)
 {

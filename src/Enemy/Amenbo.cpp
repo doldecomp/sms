@@ -135,6 +135,8 @@ void TAmenbo::bind()
 	mLinearVelocity = local_14 - mPosition;
 }
 
+// TODO: frame 0x80 vs 0x88, low region 4 short. Inert (fo1): getPosition() in
+// updateCollision's copy or subtraction, a named position copy.
 void TAmenbo::control()
 {
 	if (((const TAmenbo*)this)->mWaterGunHitCooldown > 0)
