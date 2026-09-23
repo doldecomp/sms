@@ -751,7 +751,7 @@ DEFINE_NERVE(TNerveTabePukuDive, TLiveActor)
 {
 	TTabePuku* puku = (TTabePuku*)spine->getBody();
 
-	if (spine->getTime() == 0)
+	if (!spine->getTime())
 		puku->prepareDive();
 
 	if (puku->doDive()) {

@@ -610,8 +610,9 @@ void TRailFence::control()
 				mPosition.y = mInitialPosition.y;
 				mPosition.z = mInitialPosition.z;
 				setUpMapCollision(0);
+				TGraphTracer* tracer = RailFenceTracer(this);
 				mTracer->setTo(
-				    RailFenceTracer(this)->getGraph()->findNearestNodeIndex(
+				    tracer->getGraph()->findNearestNodeIndex(
 				        mPosition, 0xffffffff));
 				makeObjAppeared();
 				calcRootMatrix();

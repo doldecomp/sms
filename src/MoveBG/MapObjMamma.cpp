@@ -839,6 +839,18 @@ void TLeanMirror::release()
 
 static s32 startCameraShakeSE(u32 param_1, u32 param_2) { return 0; }
 
+static inline J3DModel* LeanMirrorModel(TLeanMirror* self)
+{
+	J3DModel* r = self->getModel();
+	return r;
+}
+
+static inline bool LeanMirrorTimerEngaged(TLeanMirror* self)
+{
+	bool r = self->isStateTimerEngaged();
+	return r;
+}
+
 // The three statements this body was missing are calcCurrentMtx's own: retail
 // spells that helper's four lines out here instead of calling it, which is
 // why the map has calcCurrentMtx UNUSED (nothing references it at all) and why
@@ -854,13 +866,13 @@ static s32 startCameraShakeSE(u32 param_1, u32 param_2) { return 0; }
 // bytes.
 void TLeanMirror::controlGoTarget()
 {
-	MtxPtr mtx = getModel()->getAnmMtx(0);
+	MtxPtr mtx = LeanMirrorModel(this)->getAnmMtx(0);
 	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > rot;
 	rot.identity();
 	makeMtxRotByAxis(mRotAxis, mRotSpeed, rot);
 	concatOnlyRotFromLeft(rot, mtx, mtx);
 
-	if (!isStateTimerEngaged()) {
+	if (!LeanMirrorTimerEngaged(this)) {
 		mShiningStone->putOnLight(this);
 
 		if (mShiningStone->mLitAll) {

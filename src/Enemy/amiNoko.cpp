@@ -125,7 +125,8 @@ void TAmiHit::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		mPosition = mOwner->mPosition;
 		mPosition.add(up);
-		mPosition.y -= 0.5f * getAttackHeight();
+		f32 attackHeight = getAttackHeight();
+		mPosition.y -= 0.5f * attackHeight;
 
 		if (!mOwner->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			for (int i = 0; i < getColNum(); ++i) {
