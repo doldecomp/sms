@@ -2177,6 +2177,12 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 	mBarrierCollision->perform(cue, graphics);
 }
 
+// TODO: this body is misspelled; several nerves only match through
+// compensating binders. docs/progress/lever-search/bosseel_setbckanm_248.patch
+// (named rate/ctrl locals, `!table ? nullptr : table[i]`, five binders
+// removed) is 248 B like the map and closes OutWait and SecondSpin, but
+// FirstSpin's spinSpeed drops to 0x68 (retail 0x6c); its `ratio` local is
+// frame-only. Find the missing inline level instead (2026-09-22).
 void TBossEel::setBckAnm(int index)
 {
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);

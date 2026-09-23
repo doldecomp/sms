@@ -1,0 +1,80 @@
+diff --git a/src/Enemy/bosseel.cpp b/src/Enemy/bosseel.cpp
+index 06593492..339874a2 100644
+--- a/src/Enemy/bosseel.cpp
++++ b/src/Enemy/bosseel.cpp
+@@ -2181,20 +2181,16 @@ void TBossEel::setBckAnm(int index)
+ {
+ 	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
+ 	mCurrentBckIndex  = index;
+-	mBckBlendRatio    = 1.0f;
++	f32 ratio = 1.0f;
++	mBckBlendRatio    = ratio;
+ 	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
+ 	getMActor()->setBckFromIndex(index);
+ 	getMActor()->setMotionBlendRatioForBck(mBckBlendRatio);
+-	getMActor()
+-	    ->getFrameCtrl(ANM_TYPE_BCK)
+-	    ->setRate(0.25f * SMSGetAnmFrameRate());
+-	const char** basTable = getBasNameTable();
+-	const char* basName;
+-	if (basTable == nullptr)
+-		basName = nullptr;
+-	else
+-		basName = basTable[index];
+-	setAnmSound(basName);
++	f32 rate = 0.25f * SMSGetAnmFrameRate();
++	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
++	ctrl->setRate(rate);
++	const char** table = getBasNameTable();
++	setAnmSound(!table ? nullptr : table[index]);
+ }
+ 
+ void TBossEel::deadCheck()
+@@ -2290,7 +2286,7 @@ DEFINE_NERVE(TNerveBossEelWaitAppear, TLiveActor)
+ 		eel->setBckAnm(10);
+ 
+ 	if (spine->getTime() == 2500)
+-		BosseelGetMarDirector()->getConsole()->startAppearBalloon(0x12, true);
++		gpMarDirector->getConsole()->startAppearBalloon(0x12, true);
+ 
+ 	JGeometry::TVec3<f32> marioPosition = *gpMarioPos;
+ 	marioPosition.y += 75.0f;
+@@ -2318,9 +2314,9 @@ void ExecSpinNerve_Sub(TBossEel* eel)
+ 	f32 spinSpeed = eel->mTurnSpeed;
+ 	f32 maxSpeed  = eel->getBossEelParams().mSLSpinMaxSpeed.get();
+ 	CLBChaseGeneralConstantSpecifySpeed(
+-	    &spinSpeed, maxSpeed, eel->getBossEelParams().mSLSpinAccel.get());
++	    &spinSpeed, maxSpeed, eel->mSaveParams->mSLSpinAccel.get());
+ 	eel->mTurnSpeed = spinSpeed;
+-	BosseelCameraShake()->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
++	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
+ 
+ 	if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_UNK10000)) {
+ 		eel->mRotation.y -= spinSpeed;
+@@ -2494,7 +2490,7 @@ static inline TBossEel* BosseelBackBody(TSpineBase<TLiveActor>* spine)
+ 
+ static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
+ {
+-	TBossEel* eel = BosseelBackBody(spine);
++	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+ 	if (spine->getTime() == 1) {
+ 		BosseelBackSound()->startSoundActor(MSD_SE_BS_UNG_DOWN,
+ 		                                    &eel->mPosition, 0, nullptr, 0, 4);
+@@ -2510,7 +2506,7 @@ static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
+ 
+ 	eel->mAppearOffset
+ 	    -= eel->getBossEelParams().mSLAppearMoveDistY.get()
+-	       / (BosseelBackFrameCtrl(eel)->getEnd() * 2);
++	       / (eel->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2);
+ 	if (eel->mAppearOffset < 0.0f) {
+ 		eel->mAppearOffset = 0.0f;
+ 		if (eel->checkCurAnmEnd(0)) {
+@@ -2697,7 +2693,7 @@ static inline TBossEel* BossEelSleepingBody(TSpineBase<TLiveActor>* spine)
+ 
+ DEFINE_NERVE(TNerveBossEelSleepOnBottom, TLiveActor)
+ {
+-	TBossEel* eel = BossEelSleepingBody(spine);
++	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
+ 
+ 	if (spine->getTime() == 0) {
+ 		eel->mBattleTimer = 0;

@@ -75,3 +75,4 @@ Prices are per site unless stated; always measure, since every price below has e
 No padding, `volatile`, `#pragma dont_inline`, reinterpret casts, or nonsensical temporaries (a `self = p` alias, a two-step cast, a dead local).
 Generated names from lever-search (`fabsf2`, `sMSGetMarDirector`, `colorChan6`) are renamed before commit.
 Verify every change with `ninja changes_all` (no regressions) and the DOL SHA-1 `a6782903ef79...`.
+Never use `git stash` in a worktree: the stash list is shared across all worktrees and a pop can take another agent's entry; copy files to scratch instead.
