@@ -193,6 +193,17 @@ public:
 	// set<f>) but inlines at Kumokun's Wait nerve, where retail `bl`s rotate,
 	// so the weak copy vanishes (90.39 -> 0). The one-level member-read body
 	// is very likely retail's; the three losing sites are what blocks it.
+	// Re-measured 2026-09-23 (c-hdr2): the same gains plus doLanding +0.22;
+	// losses doAttackPose 82.36 -> 79.63 (frame exact at 0x218, the loss is
+	// FPR colouring in getAroundQuat/mul), makeQuat 92.61 -> 90.40 (0x1f0
+	// vs 0x1e0; param FPRs f29/f30 vs retail f24/f25), bindBody 99.53 ->
+	// 98.39. Refuted as fixes: a q2 result temporary, vx/vy/vz or x/y/z/w
+	// copies in the body (all lose Kumokun's weak rotate; the old locals are
+	// what give bindBody retail's 0x1e8); at the sites, rotating a TVec3
+	// temporary or straight into mVelocity, in-place or rotateInPlace calls,
+	// split source/destination, scope and declaration order, and a
+	// `const TQuat4& cur = mQuat` binder (80.7). lever-search on bindBody
+	// finds only forks (98.42).
 	void rotateQ(const TVec3<T>& v, TVec3<T>& rDest) const
 	{
 		// clang-format off

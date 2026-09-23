@@ -15,3 +15,7 @@ Record binary-backed findings from Claude unit work here before promoting reusab
   Not landed, MsGetRotFromZaxisY with `return axis.x >= 0.0f ? 90.0f : -90.0f;`: no gain outside fireWanwan; MsIsInSight 100 -> 99.95, TBGKMtxCalc::calc 100 -> 99.60, walkToCurPathNode -0.25. Nested-if variants do not inline in fireWanwan; dropping `theta` costs ~40 functions.
   Not landed, two-argument rotate as a one-level member-read body: Kumokun weak rotate 90.39 -> 100, rotateGoalDirToLocal -> 100, +0.02..+2.32 on nine more sites; costs doAttackPose -3.25, makeQuat -2.21, fireWanwan bindBody -1.14. As a two-level forwarder it inlines at Kumokun's Wait nerve and the weak copy vanishes.
   Removing Bird's rotate fork for the now-identical `rotateInPlace` moves doLanding 93.40 -> 92.38 with doLanding's own text unchanged.
+- **Header round c-hdr2, one-level member-read two-argument rotate, not landed.**
+  Re-measured tree-wide: gains as in c-hdr1 plus Bird doLanding +0.22; losses doAttackPose -2.73, makeQuat -2.21, bindBody -1.14.
+  Body variants with a q2 temporary or local copies of v or the quaternion all drop Kumokun's weak rotate below 100, so the member-read body stands; the old locals are what give bindBody retail's 0x1e8 frame and f5/f6 colouring.
+  No honest call-site spelling recovers the three losers (details in the JGQuat4.hpp TODO); the blocker is regalloc and frame, not the call form.
