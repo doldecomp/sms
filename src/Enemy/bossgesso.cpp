@@ -2140,9 +2140,11 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->changeBck(2);
 
-		// Two getMActor binders land the 0x1c0 frame; the TFlagT<u16>
-		// camera flag still sits 0x18 high (0x198 against retail 0x180).
-		// TODO: slot order inside the exact-sized frame.
+		// Two getMActor binders land the low region exactly.
+		// TODO: frame 0x1b8 against retail's 0x1c0: every slot below 0x190
+		// matches, but retail keeps an unreferenced 12 bytes under local_24
+		// (0x19c in retail, 0x190 here), which also pushes the int->float
+		// conversion temp from 0x1a0 to 0x1a8.
 		BossgessoGetMActor(self)->setBtpFromIndex(1);
 
 		J3DFrameCtrl* ctrl3 = BossgessoGetMActor(self)->getFrameCtrl(ANM_TYPE_BTP);
@@ -2219,8 +2221,9 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	}
 
 	if (self->isReachedToGoal()) {
-		self->mLinearVelocity = self->mVelocity
-		    = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+		self->mVelocity       = zero;
+		self->mLinearVelocity = zero;
 		self->onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
