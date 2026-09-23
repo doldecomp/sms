@@ -893,12 +893,8 @@ void TStayPakkun::genRandomItem()
 	manager->mRipWater->mPos.value = mEffectPos;
 	gpModelWaterManager->emitRequest(*manager->mRipWater);
 
-	if (SMS_GetMarioWaterGun()->mCurrentWater * 4
-	    // TODO: the original loads the nozzle's mAmountMax value directly;
-	    // getMaxWater()'s extra inline level binds the reference TParamRT::
-	    // get() returns first. Spelling the read out at the call site with
-	    // the const cast costs 8 bytes of frame instead.
-	    < SMS_GetMarioWaterGun()->getMaxWater()) {
+	s32 maxWater = SMS_GetMarioWaterGun()->getMaxWater();
+	if (SMS_GetMarioWaterGun()->mCurrentWater * 4 < maxWater) {
 		gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
 		                             0x20000002, true);
 	} else {

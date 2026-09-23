@@ -228,7 +228,8 @@ static void CalcRevisionPosByRotateZ(const JGeometry::TVec3<f32>& rotation,
 		// into position, so both components are plain locals.
 		// TODO: 4 marks left, all volatile-FPR numbering (retail puts the
 		// rotated x in f3 and position->x in f2; declaration order and the
-		// `+=` spelling are both inert).
+		// `+=` spelling are both inert; so are swapped product order,
+		// inline JMASCos/JMASSin calls and a rotated TVec3 local).
 		f32 x = offset.x * cosine + offset.z * sine;
 		f32 z = -offset.x * sine + offset.z * cosine;
 		position->x += x;

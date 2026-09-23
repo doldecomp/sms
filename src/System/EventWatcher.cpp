@@ -1117,6 +1117,8 @@ static void evStartMareBottleDemo(TSpcTypedInterp<TEventWatcher>* interp,
 	// x word in r3 and only materialises `this` afterwards, with
 	// `addi r3, r7, 0`, while we emit `mr r3, r7` before the stores. A
 	// `TMario&` local instead of the pointer changes nothing.
+	// Also inert: `mPosition.set(...)`, per-component copies, and
+	// SMSGetMarioOriginal() at either site.
 	TMario* mario    = gpMarioOriginal;
 	mario->mPosition = obj->mPosition;
 	mario->changePlayerStatus(MARIO_STATUS_BOTTLE_IN, 0, true);
