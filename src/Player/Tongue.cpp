@@ -219,10 +219,13 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 		// lands in f26 with a `fmr` on the zero path while the square stays
 		// in f1). Ours recomputes it for normalize() and coalesces the
 		// square with `dist`. No spelling of the three calls tried here
-		// (named square, split declaration, if-block) keeps it.
+		// (named square, split declaration, if-block, a separate `dir`
+		// copy, normalize(delta) into a new local) keeps it. Frame is also
+		// 0x20 short: retail's low region has 0x18 more below `delta` and
+		// 8 more above `targetPos`; no carrier found.
 
 		f32 dist = delta.length();
-		delta.normalize();
+		delta.setLength(1.0f);
 
 		if (checkForward && !(delta.dot(mHeadDir) > 0.5f))
 			continue;

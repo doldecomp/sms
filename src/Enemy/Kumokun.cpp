@@ -778,6 +778,12 @@ static bool is_antiparallel(const JGeometry::TVec3<f32>& v1,
 	return -eps <= fVar8 && fVar8 <= eps;
 }
 
+// TODO: the frame matches; every slot is 4 below retail's and the inlined
+// setRotate keeps the TQuat4::setRotate header residue (cross in f29/f30/f31
+// ascending) plus a dot product retail builds from cross's unfused 0*v.x and
+// 0*v.y products while ours reloads `to`. A named `forward`, the two-argument
+// setRotate overload and a named forward only in the antiparallel test are
+// inert or worse.
 void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> local_C4 = param_1;
@@ -787,13 +793,12 @@ void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 	local_C4.y = 0.0f;
 	local_C4.normalize();
 
-	JGeometry::TVec3<f32> forward(0.0f, 0.0f, 1.0f);
-
 	JGeometry::TQuat4<f32> local_A4;
-	if (is_antiparallel(local_C4, forward)) {
+	if (is_antiparallel(local_C4, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f))) {
 		local_A4.setEulerY(JGeometry::TUtil<f32>::PI());
 	} else {
-		local_A4.setRotate(forward, local_C4, 1.0f);
+		local_A4.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f), local_C4,
+		                   1.0f);
 	}
 
 	local_b4.mul(local_A4);
