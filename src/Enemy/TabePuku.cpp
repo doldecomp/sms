@@ -362,7 +362,9 @@ BOOL TTabePuku::receiveMessage(THitActor* sender, u32 message)
 	}
 }
 
-// TODO: 93.1%. Frame and register numbering only.
+// TODO: the frame is exact with one of the two param reads raw (either one
+// measures the same; Z chosen arbitrarily). What remains is setQuat's FPR
+// scheduling in JGRotation3.hpp, the known regswap there.
 MtxPtr TTabePuku::getTakingMtx()
 {
 	mTakingMtx.setQuat(mQuat);
@@ -373,7 +375,7 @@ MtxPtr TTabePuku::getTakingMtx()
 	mTakingMtx.getYDir(ydir);
 
 	JGeometry::TVec3<f32> mouth;
-	mouth.scaleAdd(getSaveParams()->getCorrectZ(), zdir, mPosition);
+	mouth.scaleAdd(getSaveParams()->mCorrectZ.value, zdir, mPosition);
 	mouth.scaleAdd(getSaveParams()->getCorrectY(), ydir, mouth);
 	mTakingMtx.setTrans(mouth);
 

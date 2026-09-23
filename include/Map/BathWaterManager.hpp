@@ -14,7 +14,9 @@ class J3DModel;
 
 class TBathtubData {
 public:
-	// TODO: 82.8%. The instruction stream is right; what is left is the
+	// TODO: 97.9%, frame 0xf0 against retail's 0xd0 (the inlined setRotate's
+	// locals, see JGQuat4.hpp; declaring q first, a separate result vector and
+	// dropping the (void)0 are inert or worse). The instruction stream is right; what is left is the
 	// callee-saved float allocation around the inlined
 	// TQuat4::setRotate(from, to, amount) -- retail holds the cross
 	// product's components and the two constant `up` components in
