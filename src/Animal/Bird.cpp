@@ -818,11 +818,9 @@ DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 98.7%. Frame exact. Residue is only r30/r31 ranking (retail ranks
-// the else-arm obj above bird). Named getActorType() plus BirdItem binder
-// closed the type-reload and the 0x10 under-frame.
 DEFINE_NERVE(TNerveAnimalBirdChangeToCoin, TLiveActor)
 {
+	TMapObjBase* obj;
 	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
 
 	if (spine->getTime() == 0) {
@@ -834,7 +832,6 @@ DEFINE_NERVE(TNerveAnimalBirdChangeToCoin, TLiveActor)
 			item->JSGSetTranslation(bird->mPosition);
 			((TShine*)bird->mItem)->appearWithDemo("鳥シャインカメラ");
 		} else {
-			TMapObjBase* obj;
 			if (type == 0x2000000E ? true : false)
 				obj = gpItemManager->makeObjAppear(0x2000000E);
 			else
