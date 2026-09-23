@@ -1404,12 +1404,42 @@ void TMario::checkThrowObject()
 	}
 }
 
-void TMario::getDizzyAngle() { }
+int TMario::getDizzyAngle()
+{
+	return JMASSin(mDizzyTimer * mGraffitoParams.mDizzyAngleRate.get())
+	       * mGraffitoParams.mDizzyAngleY.get() * mDizzyTimer
+	       / mGraffitoParams.mDizzyWalkCtMax.get();
+}
 
-void TMario::getDizzyPower() { }
+f32 TMario::getDizzyPower()
+{
+	return JMASCos(mDizzyTimer * mGraffitoParams.mDizzyPowerRate.get())
+	       * mGraffitoParams.mDizzyPower.get();
+}
 
-void TMario::getLRLevel(u8) { }
+f32 TMario::getLRLevel(u8 level)
+{
+	u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
+	u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
+	u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
+	f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
+	f32 out;
+	if (level < zero)
+		out = 0.0f;
+	else if (level < middle)
+		out = (midLvl * (f32)(level - zero)) / (f32)(middle - zero);
+	else if (level < max)
+		out = midLvl
+		      + (((1.0f - midLvl) * (f32)(level - middle))
+		         / (f32)(max - middle));
+	else
+		out = 1.0f;
+	return out;
+}
 
+// TODO: the frame is 0xd8 short (0x118 against 0x1f0) with ~150 slot and
+// register markers; the UNUSED getLRLevel, getDizzyAngle and getDizzyPower
+// bodies (all at map size) closed 0x18 of it and +0.7.
 void TMario::checkController(JDrama::TGraphics*)
 {
 	unk108->mStickHS16 = (s16)(128.0f * mGamePad->mCompSPos[0]);
@@ -1452,88 +1482,15 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mAnalogRU8 = mGamePad->mCompSPos[3];
 	unk108->mAnalogLU8 = mGamePad->mCompSPos[2];
 
-	// 3-segment (zero, middle, max) trigger curve, run 4 times:
-	// for unk108->mAnalogR (R trigger), unk108->mAnalogL (L trigger),
-	// then again for unk10C (L) and unk110 (R) Mario-side copies.
-	// TODO: doesn't match at all!
+	// The UNUSED getLRLevel (map 0xd8) is the 3-segment trigger curve,
+	// expanded four times: R and L for the controller work, then the L and R
+	// Mario-side copies.
 	s32 rawR = (s32)mGamePad->mCompSPos[3];
 	s32 rawL = (s32)mGamePad->mCompSPos[2];
-	{
-		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
-		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
-		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
-		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		f32 out;
-		u8 v       = rawR;
-		if (v < zero)
-			out = 0.0f;
-		else if (v < middle)
-			out = (midLvl * (f32)(v - zero)) / (f32)(middle - zero);
-		else if (v < max)
-			out = midLvl
-			      + (((1.0f - midLvl) * (f32)(v - middle))
-			         / (f32)(max - middle));
-		else
-			out = 1.0f;
-		unk108->mAnalogR = out;
-	}
-	{
-		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
-		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
-		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
-		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		f32 out;
-		u8 v       = rawL;
-		if (v < zero)
-			out = 0.0f;
-		else if (v < middle)
-			out = (midLvl * (f32)(v - zero)) / (f32)(middle - zero);
-		else if (v < max)
-			out = midLvl
-			      + (((1.0f - midLvl) * (f32)(v - middle))
-			         / (f32)(max - middle));
-		else
-			out = 1.0f;
-		unk108->mAnalogL = out;
-	}
-	{
-		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
-		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
-		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
-		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		f32 out;
-		u8 v       = rawL;
-		if (v < zero)
-			out = 0.0f;
-		else if (v < middle)
-			out = (midLvl * (f32)(v - zero)) / (f32)(middle - zero);
-		else if (v < max)
-			out = midLvl
-			      + (((1.0f - midLvl) * (f32)(v - middle))
-			         / (f32)(max - middle));
-		else
-			out = 1.0f;
-		unk10C = out;
-	}
-	{
-		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
-		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
-		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
-		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		f32 out;
-		u8 v       = rawR;
-		if (v < zero)
-			out = 0.0f;
-		else if (v < middle)
-			out = (midLvl * (f32)(v - zero)) / (f32)(middle - zero);
-		else if (v < max)
-			out = midLvl
-			      + (((1.0f - midLvl) * (f32)(v - middle))
-			         / (f32)(max - middle));
-		else
-			out = 1.0f;
-		unk110 = out;
-	}
+	unk108->mAnalogR = getLRLevel(rawR);
+	unk108->mAnalogL = getLRLevel(rawL);
+	unk10C = getLRLevel(rawL);
+	unk110 = getLRLevel(rawR);
 
 	// Stick deadzone: subtract 6 if outside +/- 7
 	unk108->mStickH = 0.0f;
@@ -1576,15 +1533,8 @@ void TMario::checkController(JDrama::TGraphics*)
 
 	s32 yawJitter = 0;
 	if (mDizzyTimer > 0) {
-		yawJitter = JMASSin(mDizzyTimer * mGraffitoParams.mDizzyAngleRate.get())
-		            * mGraffitoParams.mDizzyAngleY.get() * mDizzyTimer
-		            / mGraffitoParams.mDizzyWalkCtMax.get();
-
-		f32 magDizzy
-		    = JMASCos(mDizzyTimer * mGraffitoParams.mDizzyPowerRate.get())
-		      * mGraffitoParams.mDizzyPower.get();
-
-		mIntendedMag += magDizzy;
+		yawJitter = getDizzyAngle();
+		mIntendedMag += getDizzyPower();
 		if (mIntendedMag < 0.0f)
 			mIntendedMag = 0.0f;
 	}

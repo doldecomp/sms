@@ -889,9 +889,9 @@ public:
 	void checkEnforceJump();
 	void doReturn();
 	void checkThrowObject();
-	void getDizzyAngle();
-	void getDizzyPower();
-	void getLRLevel(u8);
+	int getDizzyAngle();
+	f32 getDizzyPower();
+	f32 getLRLevel(u8);
 	int checkStickRotate(int*);
 	void checkStickSmash();
 	void makeHistory();
