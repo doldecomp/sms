@@ -692,6 +692,11 @@ void TOptionSoundUnit::initSurroundAnm()
 	mMonteIcons[2].set(mSurroundAnimations, ARRAY_COUNT(mSurroundAnimations));
 }
 
+// TODO: retail's low region is 0x1c larger (frame 0xf0 vs 0xd0; the
+// scaling JUTRect at 0x94 vs 0x78) with every instruction right. The gap
+// is in the updatePatternAnm/adjustSound path (rumble/subtitle frames
+// match). Inert or worse: stopSound() call in adjustSound, a named SE id
+// (+8), foreachPatternAnm(ary, &update) (+10 instructions, ptmf call).
 void TOptionSoundUnit::update()
 {
 	switch (mState) {
@@ -988,6 +993,11 @@ static inline TArrowControl* OptionBackArrow(const TOptionControl* p)
 	return arrow;
 }
 
+// TODO: equal frame, but the arrow's JUTRect temporary sits at 0x58 vs
+// retail 0x64: ours leaves 0x48 between it and the frame top, retail 0x3c.
+// writeValue's header accessors move the rect +4 each (and the frame with
+// it past two), raw mBackArrow / gpCameraOption move both down; no combo of
+// those narrows the 0x48 distance.
 bool TOptionControl::movementOption()
 {
 	OptionBackArrow(this)->update();
@@ -1137,7 +1147,8 @@ bool TOptionControl::isChangedSetting() const
 {
 	// TODO: retail `mr r29, r31` copies result into soundResult; MWCC
 	// folds `bool soundResult = result` to a second `li r29, 1`; chained
-	// assignments and a separate `soundResult = result` fold the same way.
+	// assignments and a separate `soundResult = result` fold the same way,
+	// as does a `bool changed = a != x || b != y;` expression (+8 frame).
 	bool result      = true;
 	bool soundResult = result;
 	if (mInitialRumbleValue == getRumbleOption()->mSelectionText->getNumber()
