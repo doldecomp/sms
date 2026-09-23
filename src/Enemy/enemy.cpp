@@ -496,31 +496,20 @@ BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
                                     f32 param_3)
 {
-	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
+	JGeometry::TVec3<f32> tmp = unkF4.getPoint();
 	tmp -= mPosition;
 
 	f32 fVar7 = tmp.length();
 	f32 angle = MsWrap(param_3 + MsGetRotFromZaxisY(tmp), 0.0f, 360.0f);
 	f32 fVar2 = MsAngleDiff(angle, mRotation.y);
 
-	// TODO: identical to a piece of code below, what is this?
-	f32 fVar3;
-	if (turn_speed >= 90.0f) {
-		fVar3 = 0.0f;
-	} else {
-		f32 s = JMASin(turn_speed);
-		if (fVar3 == 0.0f) {
-			fVar3 = 100000.0f;
-		} else {
-			fVar3 = march_speed * JMASin(90.0f - turn_speed * 0.5f) / s;
-		}
-	}
+	f32 fVar3 = calcMinimumTurnRadius(march_speed, turn_speed);
 
 	// TODO: tons of thi stuff should actually be inlines
 	f32 fVar5 = fVar2;
 	if (fVar7 > fVar3 * 2.0f) {
 		if (fVar2 > 0.0f) {
-			fVar5 = fVar2 > turn_speed ? fVar2 : turn_speed;
+			fVar5 = fVar2 > turn_speed ? turn_speed : fVar2;
 		} else {
 			fVar5 = fVar2 > -turn_speed ? fVar2 : -turn_speed;
 		}
@@ -528,7 +517,7 @@ void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
 		f32 fVar3 = calcTurnSpeedToReach(march_speed, fVar7 * 0.5f);
 
 		if (fVar2 > 0.0f) {
-			fVar5 = fVar2 > fVar3 ? fVar2 : fVar3;
+			fVar5 = fVar2 > fVar3 ? fVar3 : fVar2;
 		} else {
 			fVar5 = fVar2 > -fVar3 ? fVar2 : -fVar3;
 		}
@@ -548,6 +537,9 @@ void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
 	}
 }
 
+// TODO: 95.9%. Retail keeps march_speed in f31 and computes `dVar13 * cycle`
+// unfused after getPhaseShift(); its frame is 0x18 larger. Spelling the
+// product/phase sum other ways is inert or fuses into an fmadds.
 void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
                                       f32 cycle, f32 angle)
 {
@@ -562,8 +554,8 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 
 	f32 dVar13 = MsWrap(dVar9, 0.0f, cycle);
 
-	dVar13 *= 360.0f * (1.0f / cycle);
-	dVar13 += getPhaseShift();
+	cycle = 360.0f * (1.0f / cycle);
+	dVar13 = dVar13 * cycle + getPhaseShift();
 
 	f29 *= JMASin(dVar13);
 
@@ -573,22 +565,12 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 
 	f32 fVar1 = MsAngleDiff(dVar12, mRotation.y);
 
-	f32 fVar3;
-	if (turn_speed >= 90.0f) {
-		fVar3 = 0.0f;
-	} else {
-		f32 s = JMASin(turn_speed);
-		if (fVar3 == 0.0f) {
-			fVar3 = 100000.0f;
-		} else {
-			fVar3 = march_speed * JMASin(90.0f - turn_speed * 0.5f) / s;
-		}
-	}
+	f32 fVar3 = calcMinimumTurnRadius(march_speed, turn_speed);
 
-	f32 fVar2;
+	f32 fVar2 = fVar1;
 	if (dVar9 > fVar3 * 2.0f) {
 		if (fVar1 > 0.0f) {
-			fVar2 = fVar1 > turn_speed ? fVar1 : turn_speed;
+			fVar2 = fVar1 > turn_speed ? turn_speed : fVar1;
 		} else {
 			fVar2 = fVar1 > -turn_speed ? fVar1 : -turn_speed;
 		}
