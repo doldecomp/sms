@@ -597,20 +597,27 @@ void TSandCastle::explode()
 	startControlAnim(3);
 }
 
-// TODO: the ROM takes the address of each of the two camera vectors
-// (`addi r4, gpCamera, 0x124`, then reads at 0 and 8) where we read them at
-// absolute offsets off gpCamera.  Ruled out: TU-local `static inline`s
-// returning a reference to each member -- byte-identical.
+// The ROM takes both camera vectors' addresses (eye first) and reads them at
+// 0 and 8: the yaw half of cameralib's CLBCrossToPolar(origin, in, ...),
+// parked here as a TU-local inline.
+static inline s16 CLBCrossToYaw(const Vec& origin, const Vec& in)
+{
+	return matan(in.z - origin.z, in.x - origin.x);
+}
+
+// TODO: instructions exact except two `addi rD, rS, 0` copies (the matan
+// result and gpCamera into r4/r3) where we emit `mr`, and frame 0x20 short
+// (the TVec3 sits at 0x30 in retail).  Inert: a `warpCamera(cam, angle)`
+// wrapper, SMSGetCamera()/getUnk124() at any subset of sites, a named angle.
+
 static s32 SandCastleCallBack(u32 param_1, u32 param_2)
 {
 	if (param_2 == 1) {
 		gpTargetArrow->unk14 = 1;
 		gpTargetArrow->setPos(
 		    JGeometry::TVec3<f32>(8400.0f, 300.0f, 8150.0f));
-		const JGeometry::TVec3<f32>& eye = gpCamera->unk124;
-		const JGeometry::TVec3<f32>& at  = gpCamera->unk148;
 		gpCamera->warpPosAndAt(gpCamera->mCurrentTarget.unk28,
-		                       matan(eye.z - at.z, eye.x - at.x));
+		                       CLBCrossToYaw(gpCamera->unk148, gpCamera->unk124));
 	}
 
 	return 1;
