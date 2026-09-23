@@ -222,15 +222,14 @@ void TMapObjBall::hold(TTakeActor* param_1)
 void TMapObjBall::kicked()
 {
 	// Only a downward or level kick does anything.
-	JGeometry::TVec3<f32> vel(mVelocity);
-	if (JGeometry::TVec3<f32>(vel).y > 0.0f)
+	if (JGeometry::TVec3<f32>(mVelocity).y > 0.0f)
 		return;
 
-	if (JGeometry::TVec3<f32>(vel).y == 0.0f) {
+	if (JGeometry::TVec3<f32>(mVelocity).y == 0.0f) {
 		mVelocity.y = unk178;
 	} else {
 		mVelocity.y = unk174 * SMS_GetMarioSpeedY()
-		    - unk160 * JGeometry::TVec3<f32>(vel).y;
+		    - unk160 * JGeometry::TVec3<f32>(mVelocity).y;
 	}
 
 	mVelocity.x += unk170 * SMS_GetMarioSpeedX();
@@ -311,10 +310,8 @@ static inline MSound* MapObjBallBoundSound()
 
 // TODO: two residues. The first Mario-speed test holds fabs in f1 and the
 // minimum in f0 where retail has them swapped (const, fork, raw pointer,
-// fabsf, reversed compare all inert). Retail keeps both mVelocity copies
-// (`vel`) in the low region at 0x1c/0x10 with the TVec3 temporaries from
-// 0xfc down; ours name them in the high block. By-value helpers, reference
-// binds and copy-initialisation all add instructions.
+// fabsf, reversed compare all inert). Every velocity read is a fresh
+// unnamed `TVec3(mVelocity)` copy; a named `vel` adds copies.
 void TMapObjBall::boundByActor(THitActor* param_1)
 {
 	JGeometry::TVec3<f32> away;
@@ -354,11 +351,10 @@ void TMapObjBall::boundByActor(THitActor* param_1)
 			param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		}
 	} else {
-		JGeometry::TVec3<f32> vel(mVelocity);
-		f32 into = JGeometry::TVec3<f32>(vel).dot(away);
+		f32 into = JGeometry::TVec3<f32>(mVelocity).dot(away);
 
 		if (into >= 0.0f
-		    && abs(JGeometry::TVec3<f32>(vel).x)
+		    && abs(JGeometry::TVec3<f32>(mVelocity).x)
 		        > MapObjBallMinBoundSpeed(this)
 		    && abs(JGeometry::TVec3<f32>(mVelocity).z)
 		        > MapObjBallMinBoundSpeed(this)) {
@@ -381,11 +377,9 @@ void TMapObjBall::boundByActor(THitActor* param_1)
 	// A falling ball that lands on Mario's head bounces off him.
 	if (param_1->isActorType(0x80000001)
 	    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
-		JGeometry::TVec3<f32> vel;
-		vel = mVelocity;
-		if (JGeometry::TVec3<f32>(vel).y < 0.0f
+		if (JGeometry::TVec3<f32>(mVelocity).y < 0.0f
 		    && 130.0f + SMS_GetMarioPos().y < mPosition.y + mBodyRadius) {
-			mVelocity.y = unk160 * -JGeometry::TVec3<f32>(vel).y;
+			mVelocity.y = unk160 * -JGeometry::TVec3<f32>(mVelocity).y;
 			mVelocity.x += unk158 * SMS_GetMarioSpeedX();
 			mVelocity.y += unk15C * SMS_GetMarioSpeedY();
 			mVelocity.z += unk158 * SMS_GetMarioSpeedZ();
@@ -1114,7 +1108,7 @@ void TResetFruit::kicked()
 		return;
 
 	JGeometry::TVec3<f32> vel(mVelocity);
-	if (JGeometry::TVec3<f32>(vel).y <= 0.0f) {
+	if (vel.y <= 0.0f) {
 		// Already in the air and heading away from Mario: leave it alone.
 		JGeometry::TVec3<f32> away(vel);
 		f32 toward = away.x * (SMS_GetMarioPos().x - mPosition.x)
@@ -1128,16 +1122,16 @@ void TResetFruit::kicked()
 			if (toward > 0.0f)
 				return;
 		}
-		// TODO: 95.6%. Frame is 0x98 against retail 0xe0 (ladder 330's
+		// TODO: 96.3%. Frame is 0x90 against retail 0xe0 (ladder 330's
 		// TVec3-at-bottom-of-pool class). Retail also interleaves the
 		// mario.x-pos.x subtract with the away stores and multiplies
 		// away.y by the live 0.0f in f2 first.
 
-		if (JGeometry::TVec3<f32>(vel).y == 0.0f) {
+		if (JGeometry::TVec3<f32>(mVelocity).y == 0.0f) {
 			mVelocity.y = unk178;
 		} else {
 			mVelocity.y = unk174 * marioY
-			    - unk160 * JGeometry::TVec3<f32>(vel).y;
+			    - unk160 * JGeometry::TVec3<f32>(mVelocity).y;
 		}
 
 		mVelocity.x += unk170 * SMS_GetMarioSpeedX();
