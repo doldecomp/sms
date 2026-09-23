@@ -673,7 +673,9 @@ inline f32 TBaseNPC::getAnmOffDistSquared_()
 }
 
 // Retail squares the camera distance unfused (three fmuls, two fadds), the
-// shape of CameraNotice.cpp's helper; parked TU-local.
+// shape of CameraNotice.cpp's helper; parked TU-local. The two-step sum is
+// what keeps it computed before the CLBSquared call (one expression is
+// forwarded past the call; perform 94.7 -> 96.9).
 static inline f32 NpcSquaredDist(const JGeometry::TVec3<f32>& a,
                                   const JGeometry::TVec3<f32>& b)
 {
@@ -685,7 +687,8 @@ static inline f32 NpcSquaredDist(const JGeometry::TVec3<f32>& a,
 	f32 sqY = dy * dy;
 	f32 sqZ = dz * dz;
 
-	f32 sum = sqX + sqY + sqZ;
+	f32 sum = sqX + sqY;
+	sum += sqZ;
 	return sum;
 }
 
@@ -718,7 +721,7 @@ inline bool TBaseNPC::calcAnmOff_()
 		if (!isAirborne() && !belongToGround()
 		    && (isNerveMaybeDontCalcAnim0()
 		        || isNerveMaybeDontCalcAnim1())) {
-			if (getAnmOffDistSquared_() < NpcSquaredDist(mPosition, gpCamera->unk124) && !bVar6
+			if (NpcSquaredDist(mPosition, gpCamera->unk124) > getAnmOffDistSquared_() && !bVar6
 			    && mSpine->getTime() > 2) {
 				r31 = true;
 				execMotionBlend_();
@@ -861,10 +864,14 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
-	// TODO: the squared distances (here and in calcAnmOff_) now take
-	// retail's unfused shape via NpcSquaredDist, but retail sums them
-	// before the CLBSquared call where ours calls it first; a named result
-	// local is worse. The frame is still 0xa0 short of retail's.
+	// TODO: NpcSquaredDist's two-step sum now lands the sum in f31 before
+	// the CLBSquared call as retail does, but retail adds z*z first
+	// (`fadds f31, f3, f0`) where ours adds it last. The frame is still
+	// 0xb8 short of retail's: retail's low region is dead (no stores), so
+	// it is inline temporaries we have not found; accessor spellings
+	// (getPosition(), getUnk124()) move it but cost instructions, and the
+	// float-by-float `local_4C.set(gpCamera->unk124)` copy retail shows is
+	// worse (96.2) until the scheduling around it is found.
 	if (cue & CUE_ENTRY) {
 		offLiveFlag(LIVE_FLAG_UNK1000000);
 		if (NpcSquaredDist(mPosition, gpCamera->unk124) > CLBSquared(mIndividualParams->mAllDLLockDist.get())
