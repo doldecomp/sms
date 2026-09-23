@@ -1265,21 +1265,18 @@ void TBossWanwan::slideToCurPathNode(f32 march_speed, f32 turn_speed)
 	f32 dist = VECMag(toGoal);
 
 	f32 yaw  = MsWrap(MsGetRotFromZaxisY(toGoal), 0.0f, 360.0f);
-	f32 diff = MsAngleDiff(yaw, getRotation().y);
+	f32 diff = MsAngleDiff(yaw, mRotation.y);
 
 	f32 turn;
 	if (diff > 0.0f) {
-		if (diff > turn_speed)
-			diff = turn_speed;
+		diff = diff > turn_speed ? turn_speed : diff;
 		turn = diff;
 	} else {
 		diff = diff > -turn_speed ? diff : -turn_speed;
 		turn = diff;
 	}
-	// TODO: retail keeps the clamp in diff's own FPR and copies once at the
-	// merge (fmr f1, f30; fmr f2, f1); ours materialises turn early and pays
-	// one extra fmr. Dropping turn, naming a limit, and both-ternary
-	// spellings all keep the extra copy.
+	// TODO: velocity sits 4 bytes low (0x40 vs retail 0x44); the getRotation()
+	// accessor, a velocity copy-ctor, and += / *= spellings were inert.
 	mRotation.y = MsWrap(mRotation.y + turn, 0.0f, 360.0f);
 
 	JGeometry::TVec3<f32> velocity = mLinearVelocity;
