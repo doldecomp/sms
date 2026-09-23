@@ -95,6 +95,9 @@ static void unitVecTo(const JGeometry::TVec3<f32>& from,
 // 0x34 hole), `this` r29 vs r31, the drawJetCoasterBalloonMessage_ unk38
 // reload, and the f29-f31 order of the torocco axis loads. Inert: the rotate
 // as a TU-local helper (either declaration order) or a mult33-copy helper.
+// Assigning toroccoAxisZ's components x, y, z fixes its f30/f31/f29 order but
+// drops the vector's slot (frame -8, net +0.01); the three-argument ctor is
+// inert.
 void CPolarSubCamera::ctrlJetCoasterCamera_()
 {
 	if (gpMarDirector->getCurrentMap() == 0x3A
