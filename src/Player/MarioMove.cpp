@@ -455,6 +455,9 @@ void TMario::setPlayerJumpSpeed(f32 speed_mult, f32 force)
 // TODO: the frame is 0x48 short (0x190 against retail's 0x1d8), and retail
 // reloads mSinkTimer for the `-=` in the sinking block; `a = a - x`, a named
 // decrement and swapped factors were inert.
+// Also inert: setPlayerVelocity() for the four slide-velocity blocks (+8
+// frame, same code), SMSGetPollution() or an unnamed size for the stamp
+// (retail loads gpPollution after the z,y,x arguments).
 u32 TMario::setStatusToJumping(u32 status, u32 arg)
 {
 	u32 nextStatus = status;
