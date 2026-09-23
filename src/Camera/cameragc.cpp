@@ -1079,6 +1079,15 @@ void CPolarSubCamera::ctrlGameCamera_()
 // without the REPRODUCE_DEMO test) in one more inline member overshoots --
 // CLBCrossToPolar, which the ROM expands, goes out of line too (91.6%). The
 // ROM's extra cost lands between CLBCrossToPolar and the unk25C set().
+// Weak1 lead: define ctrlGameCamera_ `inline` in this file (the map's weak
+// binding) and move the option/game/calcFinalPosAndAt_/calcExternalData_
+// block into one inline member; with CLBCrossToPolar hoisted out of
+// calcLookatPolar_ into calcExternalData_ (set+normalize one level below it),
+// perform is instruction-exact (99.66%, frame 0x40 vs 0x68 left) and MsClamp
+// and TUtil::one link. It costs loadAfter the MsSqrtf call (expanded at depth
+// 3); padding MsSqrtf by one statement restores loadAfter (and makes the
+// UNUSED calcExternalData_ exactly 0x13c at +4) but breaks MarioMove's
+// changePlayerJumping/TriJump, so the two sites' depths still disagree.
 void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
