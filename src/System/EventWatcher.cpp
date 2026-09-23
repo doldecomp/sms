@@ -563,6 +563,10 @@ static void evGetRestTime(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	// TODO: frame exact with the raw global; the pushed slice sits 4 low
 	// (0x1c vs 0x20), the evIsTalkModeNow class. Inert: SMSGetMarDirector(),
 	// a named director or result, (int), an explicit TSpcSlice.
+	// Header lever (not taken here, MarDirector.hpp is not this unit's):
+	// binding the result inside TMarDirector::getRestTime
+	// (`int rest = unk120 - time; return rest;`) closes this function and
+	// moves nothing else in the unit; it is getRestTime's only caller.
 	interp->verifyArgNum(0, &arg_num);
 	interp->push(gpMarDirector->getRestTime());
 }
