@@ -99,3 +99,12 @@ Record binary-backed findings from Codex unit work here before promoting reusabl
 - `JSystem/JParticle/JPAMath`, `MoveBG/MapObjPlane`: Their sub-95% targets already have deep source TODOs for memory-resident vector state and by-value temporary/frame layout. No new semantic correction survived pre-screening.
 - GMSE01 branch/immediate scan: Across 87 sub-95% functions and the 95–99.5% game band, apparent literal differences reduced to documented switch pivots, equivalent range checks or diff alignment. No new unguarded US-only behavior was found.
 - `MSound` previous voice ID: Retail stores and loads a word at offset 0x94. Current `JAIBasic.hpp` already declares `u32 unk94`, and `startMarioVoice` emits the matching word store. `docs/catalog/region-us.md` still says halfword; that premise is stale. Base/derived ownership remains unproven, so no layout edit is justified.
+
+## 2026-09-23 addressability cleanup
+
+- `Enemy/gesso::setPolluteGoal`: Removing `(void)&range` leaves the function byte exact (476 bytes, zero markers, 0xa8 frame) because the real `range.rand()` uses the stack object. Landed as c57e63af.
+- `Map/BathWaterManager::calcWaterModel`: Removing `(void)&local_2D8` and `(void)&local_2E4` leaves `prerender`'s 94.5% fuzzy score, markers and 0x348 frame unchanged. Both vectors have real later uses. Landed as b97f680c.
+- `GC2D/ExPane::update`: Three natural alpha-clamp spellings scored 98.2%, 98.2% and 99.9% versus the existing exact body; no clean exact replacement established.
+- `NPC/NpcNerve::TNerveNPCGraphWander`: Retail stores and reloads `toGoal` from three stack slots. Removing `(void)&toGoal` or replacing it with the previously tested unnamed temporary changes the frame; no genuine address-using call appears in retail. No edit.
+- `Map/MapEventDolpic::TDolpicEventRiccoMammaGate::watch`: Retail constructs a matrix and writes `unk34` into it even though it is not read later. Removing `(void)&mtx` drops the exact function to 87.8% and changes the frame. No edit.
+- `JSystem/JParticle/JPADrawVisitor`: Removing three `(void)&mtx` casts regressed Stripe from 98.0% to 88.0% and StripeCross from 97.0% to 85.9%; the casts affect matrix addressability and code generation. No edit.
