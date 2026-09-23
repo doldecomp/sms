@@ -326,7 +326,9 @@ void TMapWire::calcViewAndDBEntry()
 // TODO: 99.6%: frame 0xd8 vs ours 0x88, every instruction right: retail's
 // linePoint/defaultPoint pair sits 0x34 higher and the JMASCos fctiwz slot
 // 0x1c further above it. getPointPosDefault spelled as component stores,
-// a named sag or scaleAdd changes code (move 90-92%). The JMASCos product
+// a named sag or scaleAdd changes code (move 90-92%); declaring newPos,
+// linePoint/defaultPoint or a named y earlier is frame-inert or +8, and
+// computing power first changes code. Needs a structural lead. The JMASCos product
 // lands in f1 in retail, f0 in ours; operand order, a named cos result and a
 // named s16 angle are all inert.
 void TMapWire::move()
