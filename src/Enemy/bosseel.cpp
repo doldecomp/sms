@@ -402,7 +402,8 @@ void TBEelTears::moveObject()
 
 // TODO: 97.3%. Retail loads the 0.1f literal right after the TPosition3f
 // ctor, before the translation stores; ours loads it after the mSpawnMtx read.
-// Tried: 0.1f as the left factor, `+=` forms, a named rate, a named at(0, 3).
+// Tried: 0.1f as the left factor, `+=` forms, a named rate, a named at(0, 3),
+// a named rate after the TPosition3f ctor (+8 frame, load still late).
 void TBEelTears::calcRootMatrix()
 {
 	if (mSpawnMtx != nullptr) {
@@ -515,7 +516,13 @@ void TBEelTears::setBubble()
 	mRecoverCollision->mColliding = true;
 }
 
-void TBEelTears::setRecoverTears() { }
+void TBEelTears::setRecoverTears()
+{
+	mRecoverCollision->mColliding = false;
+	mRecoverCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mRecoverCollision->mRecovering = true;
+	mRecoverCollision->mPosition   = mPosition;
+}
 
 void TBEelTears::deadEffect()
 {
@@ -944,16 +951,16 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		TBossEelSaveParams* params = mOwner->mSaveParams;
-		f32 scale                  = mOwner->mScaling.x;
 		f32 attackRadius           = params->mSLToothAttackRadius.get();
 		f32 attackHeight           = params->mSLToothAttackHeight.get();
 		f32 damageHeight           = params->mSLToothDamageHeight.get();
 		f32 damageRadius           = params->mSLToothDamageRadius.get();
-		attackRadius *= scale;
-		attackHeight *= scale;
-		damageRadius *= scale;
-		damageHeight *= scale;
-		setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
+		// TODO: retail keeps all four products live before the stores (AR
+		// product in f3, DR param in f5) and params in r5; ours reuses f1/f3/r4.
+		// Same residue as TBossEelVortex::perform; frame 0x40 short (low region).
+		f32 scale                  = mOwner->mScaling.x;
+		setHitParams(attackRadius * scale, attackHeight * scale,
+		             damageRadius * scale, damageHeight * scale);
 
 		for (s32 i = 0; i < mColCount; ++i) {
 			THitActor* collision = mCollisions[i];
@@ -1073,17 +1080,18 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 		{
 			TBossEel* owner            = mOwner;
 			TBossEelSaveParams* params = owner->mSaveParams;
-			f32 scale                  = owner->mScaling.x;
 			f32 attackRadius           = params->mSLVortexAttackRadius.get();
 			f32 attackHeight           = params->mSLVortexAttackHeight.get();
 			f32 damageHeight           = params->mSLVortexDamageHeight.get();
 			f32 damageRadius           = params->mSLVortexDamageRadius.get();
-			mAttackRadius              = attackRadius * scale;
-			mAttackHeight              = attackHeight * scale;
-			mDamageRadius              = damageRadius * scale;
-			mDamageHeight              = damageHeight * scale;
+			// TODO: retail keeps all four products live before the stores
+			// (AR product f3, DR param f5); scale named last fixed f4. The
+			// frame is 0xa8 short with every instruction right: a dead low
+			// region with no carrier found.
+			f32 scale                  = owner->mScaling.x;
+			setHitParams(attackRadius * scale, attackHeight * scale,
+			             damageRadius * scale, damageHeight * scale);
 		}
-		calcEntryRadius();
 
 		++mTimer;
 		if (mTimer > 30) {
