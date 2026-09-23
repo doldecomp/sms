@@ -457,7 +457,9 @@ void TGuide::startMoveCursor2()
 }
 
 // TODO: frame 0xd8 against 0x140; retail loads the stick x before 3.2f
-// (the operand order, a named stick value and `* 3.2f` are inert).
+// (the operand order, a named stick value and `* 3.2f` are inert, as are
+// named f32 stick pairs, s16 deltas, a stick pointer, `x = d + x` and
+// folding the delta into the declaration).
 void TGuide::linkSelect()
 {
 	mGamePad->onFlag(TMarioGamePad::PAD_FLAG_0x80);

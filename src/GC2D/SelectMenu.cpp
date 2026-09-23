@@ -851,9 +851,11 @@ inline void TSelectMenu::animateArrows()
 	}
 }
 
-// TODO: instruction-exact apart from stack offsets: retail's frame is 0xb8
-// larger, i.e. more of the case bodies sat in inline helpers with their own
-// locals than are recovered here.
+// TODO: instruction-exact apart from stack offsets: retail's frame is 0xa8
+// larger. Retail lays the banner cases' `bounds` (stride 0x18, ours 0x10)
+// and JUTPoint temporaries out ascending in source order; ours descend.
+// Inert (frame byte-identical): the three banner blocks as TU-local inline
+// helpers, whole or only the first.
 void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x1) {
