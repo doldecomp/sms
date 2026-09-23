@@ -1387,6 +1387,10 @@ void TTalk2D2::setupTextBox(const void* data, JMSMesgEntry* entry)
 	mTextOffset += in.getPosition();
 }
 
+// TODO: registers only: `size` takes r26 where retail has r27, swapping
+// it with the stopwatch `time`, and the fruit basket takes r22 (retail r26).
+// Inert: u8/int/s8 header types, C-style declarations, `time` hoisted,
+// u16 stopwatch fields, every basket/max/kind declaration order.
 void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
                            int* col, int* line)
 {
@@ -1490,9 +1494,9 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 			    "%d", (u16)hundreds % 10);
 
 			for (int i = 0; i < 8; i++) {
-				mCharBox[*col + i + *line * LINE_LENGTH]->setGradColor(
+				mCharBox[*col + *line * LINE_LENGTH + i]->setGradColor(
 				    mCharColor, mCharColor);
-				mCharBox[*col + i + *line * LINE_LENGTH]->setBlackWhite(
+				mCharBox[*col + *line * LINE_LENGTH + i]->setBlackWhite(
 				    mCharColor & 0xffffff00, mCharColor);
 				mCharDelays[i + *col + *line * LINE_LENGTH] = mCharDelay;
 			}
@@ -1549,12 +1553,10 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& stream, J2DTextBox& box,
 		}
 
 		case 4: {
-			u8 which = stream.readU8();
-
-			TFruitBasketEvent* basket;
 			int max;
 			int kind;
-			switch (which) {
+			TFruitBasketEvent* basket;
+			switch (stream.readU8()) {
 			case 0:
 				basket = JDrama::TNameRefGen::search<TFruitBasketEvent>(
 				    "フルーツかごＡ");
