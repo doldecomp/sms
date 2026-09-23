@@ -486,7 +486,7 @@ void TRailBlock::control()
 			f32 frames = VECDistance(&mPosition, &point) / unk144;
 
 			TRailNode* rail = node.getRailNode();
-			unk15C.set(rail->mPitch, rail->mYaw, rail->mRoll);
+			unk15C.set<f32>(rail->mPitch, rail->mYaw, rail->mRoll);
 
 			unk150 = MsAngleDiff(unk15C.x, unk168.x) / frames;
 			unk154 = MsAngleDiff(unk15C.y, unk168.y) / frames;
