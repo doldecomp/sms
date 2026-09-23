@@ -73,6 +73,10 @@ TTamaNokoFlower::TTamaNokoFlower(const TLiveActor* param_1, int param_2,
 // TODO: 97.0%. Retail hoists &local_b8 into a saved GPR (r30, with i in r29
 // and one more stmw register) and parks local_c4 8 bytes higher; declaring
 // the matrix outside the loop or before local_88 does not move either.
+// A `MtxPtr m = local_b8` alias passed to MsMtxSetRotY and MTXMultVec
+// reproduces the hoist (99.8%, local_c4 still 8 low) but is an alias
+// temporary, so it is not taken. Inert: TPosition3f/TRotation3f/TMatrix34
+// for the matrix, a named angle, PSMTXMultVec directly.
 void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -85,23 +89,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 						JGeometry::TVec3<f32> local_88(0.0f, 0.0f, 350.0f);
 						Mtx local_b8;
 
-						f32 s = JMASin((i + 1) * 72.0f);
-						f32 c = JMACos((i + 1) * 72.0f);
-
-						local_b8[0][0] = c;
-						local_b8[0][1] = 0.0f;
-						local_b8[0][2] = s;
-						local_b8[0][3] = 0.0f;
-
-						local_b8[1][0] = 0.0f;
-						local_b8[1][1] = 1.0f;
-						local_b8[1][2] = 0.0f;
-						local_b8[1][3] = 0.0f;
-
-						local_b8[2][0] = -s;
-						local_b8[2][1] = 0.0f;
-						local_b8[2][2] = c;
-						local_b8[2][3] = 0.0f;
+						MsMtxSetRotY(local_b8, (i + 1) * 72.0f);
 
 						MTXMultVec(local_b8, &local_88, &local_88);
 
@@ -893,11 +881,12 @@ DEFINE_NERVE(TNerveTamaNokoPickUp, TLiveActor)
 // multiplies the *sine* of gpMarioAngleY into x and the cosine into z
 // (`fmuls f1, f2, f0` with f0 out of jmaSinTable stores to 0x40 = x), and it
 // associates the product as rate * (power * trig), not (rate * power) * trig.
-// 75.9 -> 89.6%. TODO: the residue is the index arithmetic -- the ROM shifts
-// and scales the angle twice, once per trig expansion, where we compute it
-// once, and its frame is 0x60 against our 0x48.
-// Inert: s16/u16 angle, SMS_GetMarioAngleY, the trig calls inlined into the
-// vector, rate read first, a named velocity vector.
+// 75.9 -> 89.6%. Spelling it as TNerveMameGessoThrown does (power, rate,
+// z before x, a component-assigned `vel`) gives 99.6%.
+// TODO: the same residue as MameGesso: frame 0x58 against 0x60 (8 bytes
+// above `vel`) and power/cosine swapped between f2 and f3. Inert: rate
+// first, `vel` first, the ctor/temporary forms, `mVelocity = vel`, the
+// raw getSaveParam cast; `.value` is -8 frame.
 DEFINE_NERVE(TNerveTamaNokoThrown, TLiveActor)
 {
 	TTamaNoko* self = (TTamaNoko*)spine->getBody();
@@ -905,16 +894,15 @@ DEFINE_NERVE(TNerveTamaNokoThrown, TLiveActor)
 	if (spine->getTime() == 0) {
 		TTamaNokoSaveLoadParams* params = self->getSaveParams2();
 
-		int angle = *gpMarioAngleY;
-		f32 fVar2 = *gpMarioThrowPower;
-		f32 s     = JMASSin(angle);
-		f32 c     = JMASCos(angle);
-		f32 fVar3 = params->mSLThrownRateXZ.get();
-
-		self->setVelocity(JGeometry::TVec3<f32>(fVar3 * (fVar2 * s),
-		                                        params->mSLThrownVY.get(),
-		                                        fVar3 * (fVar2 * c)));
-
+		f32 power = *gpMarioThrowPower;
+		f32 rate  = params->mSLThrownRateXZ.get();
+		JGeometry::TVec3<f32> vel;
+		f32 z = rate * (power * JMASCos(SMS_GetMarioAngleY()));
+		f32 x = rate * (power * JMASSin(SMS_GetMarioAngleY()));
+		vel.x = x;
+		vel.y = params->mSLThrownVY.get();
+		vel.z = z;
+		self->setVelocity(vel);
 		self->mPosition.y += 2.0f;
 
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
