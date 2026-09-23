@@ -632,14 +632,15 @@ void TLimitKoopa::breathFlame()
 	LimitKoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_A, scale);
 }
 
-// TODO: 93.5%. The flame and head boxes go through TLimitKoopaParts::set
+// TODO: 94.9%. The flame and head boxes go through TLimitKoopaParts::set
 // (which defaults a non-positive height to twice the radius; the head passes
-// 0) and remove, both at their map sizes, and the flame offset is an
-// `(along, 0, 0)` vector through the head matrix. Left: the frame is 0x128
-// against 0x1a0, and the loop's FPR assignment and load schedule differ
-// (retail computes the two zero-weighted products first). Inert: operand
-// order and association of the matrix rows, x/z statement order,
-// `along *= spread`.
+// 0) and remove, both at their map sizes. The flame position is the head
+// matrix's rows 0 and 2 dotted with an `(along, 0, 0)` offset, built in the
+// TVec3 constructor; the row temporaries are what fill retail's 0x1a0 frame.
+// Left: the loop's FPR assignment (retail gives the 0.0f constant f31 and
+// spread f27; ours f27 and f28) and the head's x/z load order. Inert: an else
+// arm for spread, along folded into the offset, a zero-initialised offset,
+// headPos through set() or a temporary.
 void TLimitKoopa::setUpHitActors()
 {
 	MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
@@ -658,12 +659,14 @@ void TLimitKoopa::setUpHitActors()
 			f32 radius                = params->flameRadius.get();
 			f32 along = 0.8f * ((2.0f + (f32)(i * 2)) * radius) * spread;
 			JGeometry::TVec3<f32> offset(along, 0.0f, 0.0f);
-			JGeometry::TVec3<f32> pos;
-			pos.x = headMtx[0][0] * offset.x + headMtx[0][1] * offset.y
-			        + headMtx[0][2] * offset.z + headMtx[0][3];
-			pos.y = mPosition.y;
-			pos.z = headMtx[2][0] * offset.x + headMtx[2][1] * offset.y
-			        + headMtx[2][2] * offset.z + headMtx[2][3];
+			JGeometry::TVec3<f32> pos(
+			    headMtx[0][3]
+			        + offset.dot(JGeometry::TVec3<f32>(
+			            headMtx[0][0], headMtx[0][1], headMtx[0][2])),
+			    mPosition.y,
+			    headMtx[2][3]
+			        + offset.dot(JGeometry::TVec3<f32>(
+			            headMtx[2][0], headMtx[2][1], headMtx[2][2])));
 			mFlames[i]->set(pos, radius, height);
 		}
 	} else {
@@ -672,9 +675,9 @@ void TLimitKoopa::setUpHitActors()
 	}
 
 	MtxPtr agoMtx  = getMActor()->getModel()->getAnmMtx(mAgoJntIndex);
+	JGeometry::TVec3<f32> headPos(agoMtx[0][3], agoMtx[1][3], agoMtx[2][3]);
+	headPos.y -= 200.0f;
 	f32 headRadius = getParam()->headRadius.get();
-	JGeometry::TVec3<f32> headPos(agoMtx[0][3], agoMtx[1][3] - 200.0f,
-	                              agoMtx[2][3]);
 	mHead->set(headPos, headRadius, 0.0f);
 }
 
