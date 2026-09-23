@@ -138,6 +138,13 @@ bool MSSetSoundGrp::startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
 // 4-byte gap under `JAIActor local_94` is not a reference-return inline temp
 // (which is worth 4-8 bytes per expansion and is what landed camerashake's
 // startShake/keepShake).
+//
+// 98.4%: the "Huh" else belongs to the outer `unk5C[unk59] != nullptr` test
+// (retail's null-sound arm jumps straight to the end). Still open: the
+// linearTransform argument loads (retail loads unk28 before unk30/unk34);
+// raw `unk0` for unk28 at any call, and dropping the named unk2C read, are
+// inert or worse. So are `unk1E.get() * getRandom_0_1()` and swapping the
+// f30/f29 or f28/f27 declarations.
 template <typename T>
 bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
                                         u32 param_3, f32 param_4, u32 param_5,
@@ -288,13 +295,13 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 				JAISound* snd = unk5C[unk59];
 				snd->setVolume(f30 * f27, 3, 0);
 				snd->setPitch(f29 * f28, 3, 0);
-			} else {
-				// Huh.
-				if (unk5C[unk59] != nullptr)
-					unk5C[unk59]->setPortData(13, 1);
-				unk58 = 0;
-				unk54 = 0;
 			}
+		} else {
+			// Huh.
+			if (unk5C[unk59] != nullptr)
+				unk5C[unk59]->setPortData(13, 1);
+			unk58 = 0;
+			unk54 = 0;
 		}
 	}
 
