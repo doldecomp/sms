@@ -1833,8 +1833,8 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 
 void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	J3DModel* emarioModel = nullptr;
 	MActor* emarioActor   = nullptr;
+	J3DModel* emarioModel = nullptr;
 
 	if (mSpecialModel == nullptr) {
 		emarioActor = mEMario->getMActor();
@@ -1866,9 +1866,12 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if (mSpecialModel != nullptr) {
+			// TODO: retail computes the destination matrix before the source here
+			// (as in the loop below), and the frame is 0x18 short in the low region.
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
-				mSpecialModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
+				J3DModel* model = mModel->getModel();
+				mSpecialModel->setAnmMtx(i, model->getAnmMtx(i));
 			}
 			mSpecialModel->calcWeightEnvelopeMtx();
 		} else {
@@ -1876,7 +1879,7 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			animSound();
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
-				emarioModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
+				MTXCopy(mModel->getModel()->getAnmMtx(i), emarioModel->getAnmMtx(i));
 			}
 			emarioModel->calcWeightEnvelopeMtx();
 			mBrushModel->setBaseTRMtx(emarioModel->getAnmMtx(mJointIdHandL));
