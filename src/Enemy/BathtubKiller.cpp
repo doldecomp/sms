@@ -874,6 +874,10 @@ DEFINE_NERVE(TNerveBathtubKillerChase, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 95.1%, frame 0xb0 vs 0xa0. The residue is the inlined moveStraight
+// (dir at 0x40 below makeQuat's axis copy, getZDir loading 1.0f into f31
+// first; see the Straight nerve's TODO) plus isAttackable's distance order;
+// naming Mario's distance there costs this nerve another 8 bytes.
 DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor)
 {
 	TBathtubKiller* killer = (TBathtubKiller*)spine->getBody();

@@ -317,8 +317,8 @@ void TBWLeash::invalidateAllCollision()
 		mNodes[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
-// UNUSED, 0xc4 in the map: TBWPicket::moveRequest and TBWLeash::perform both
-// spell this out instead.
+// UNUSED, 0xc4 in the map: inlined into TBWPicket::moveRequest and
+// TBWLeash::perform.
 void TBWLeash::pullTail(const JGeometry::TVec3<f32>& where_to)
 {
 	JGeometry::TVec3<f32> before = mRope->mPoints[0].unkC;
@@ -328,6 +328,9 @@ void TBWLeash::pullTail(const JGeometry::TVec3<f32>& where_to)
 	mOwner->mPullVelocity = before;
 }
 
+// TODO: 98.7%, frame 0xc0 vs retail 0x130. Every block but the first turn
+// clamp is right: retail materialises both arms of `turn > limit ? limit :
+// turn` (ble; b; fmr; fmr), which <=, swapped and if-spellings do not give.
 void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -337,11 +340,7 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 		mOwner->mIsLeashStretched = 0;
 
 		if (mOwner->mIsPicketPlanted) {
-			JGeometry::TVec3<f32> before = mRope->mPoints[0].unkC;
-			mRope->constraintTail(mOwner->mPicket->mPosition);
-			before -= mRope->mPoints[0].unkC;
-			before.negate();
-			mOwner->mPullVelocity = before;
+			pullTail(mOwner->mPicket->mPosition);
 
 			JGeometry::TVec3<f32> toTail = mRope->mPoints[0].unkC;
 			JGeometry::TVec3<f32> headPos(mOwner->mPosition);
@@ -389,8 +388,8 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 				f32 push = 500.0f / dist;
 				toPoint.scale(push);
 				toPoint.add(neck);
-				point->unk18.set(0.0f, 0.0f, 0.0f);
-				point->unkC.set(toPoint.x, toPoint.y, toPoint.z);
+				point->unk18.zero();
+				point->unkC = toPoint;
 				point->unk0 = point->unkC;
 			}
 		}
