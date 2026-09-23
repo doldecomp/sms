@@ -361,6 +361,12 @@ void JPADrawExecBillBoard::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
+// Direct-return level over the raw angle read, taken by the sine only: it is
+// the 4 bytes of low region (JPADrawExecRotationCross frame 0x138,
+// JPADrawExecRotation 0xd8) that retail carries, and unlike the
+// same level over mScaleX it leaves every FPR operand order as retail's.
+static inline u16 JPADrawVisitorAngle(const JPADrawParams* p) { return p->unk34; }
+
 void JPADrawExecRotBillBoard::exec(const JPADrawContext* dc,
                                    JPABaseParticle* particle)
 {
@@ -369,7 +375,7 @@ void JPADrawExecRotBillBoard::exec(const JPADrawContext* dc,
 
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	f32 sin = JMASSin(params->unk34);
+	f32 sin = JMASSin(JPADrawVisitorAngle(params));
 	f32 cos = JMASCos(params->unk34);
 
 	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
@@ -445,7 +451,7 @@ void JPADrawExecRotYBillBoard::exec(const JPADrawContext* dc,
 
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	f32 sin = JMASSin(params->unk34);
+	f32 sin = JMASSin(JPADrawVisitorAngle(params));
 	f32 cos = JMASCos(params->unk34);
 
 	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
@@ -688,9 +694,10 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// TODO: The low region is 8 short (frame 0x178 vs 0x170); the side vector and `pt` take callee-saved FPRs
-// in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
-// and declaration moves were inert or worse.
+// TODO: Frame is right (angle level + rotation Mtx first), but the named block
+// sits 4 low (retail keeps 4 more bytes of low region), and the side vector and
+// `pt` take callee-saved FPRs mirrored (retail side.x f29, pt.x f31). Cross
+// clones, pt as scalars/ctor, setLength and declaration moves were inert or worse.
 void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
                                      JPABaseParticle* particle)
 {
@@ -699,7 +706,7 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	f32 sin = JMASSin(params->unk34);
+	f32 sin = JMASSin(JPADrawVisitorAngle(params));
 	f32 cos = JMASCos(params->unk34);
 
 	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
@@ -707,13 +714,13 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
+	Mtx local_120;
 	JGeometry::TVec3<f32> offs[4];
 	offs[0].set(x0, y0, 0.0f);
 	offs[1].set(x1, y0, 0.0f);
 	offs[2].set(x1, y1, 0.0f);
 	offs[3].set(x0, y1, 0.0f);
 
-	Mtx local_120;
 	dc->pcb->mRotTypeFunc(sin, cos, local_120);
 
 	JGeometry::TVec3<f32> local_E4;
@@ -852,9 +859,10 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// TODO: The low region is 8 short (frame 0x1d8 vs 0x1d0); the side vector and `pt` take callee-saved FPRs
-// in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
-// and declaration moves were inert or worse.
+// TODO: Frame is right (angle level + rotation Mtx first), but the named block
+// sits 4 low (retail keeps 4 more bytes of low region), and the side vector and
+// `pt` take callee-saved FPRs mirrored (retail side.x f29, pt.x f31). Cross
+// clones, pt as scalars/ctor, setLength and declaration moves were inert or worse.
 void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
                                           JPABaseParticle* particle)
 {
@@ -863,7 +871,7 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	f32 sin = JMASSin(params->unk34);
+	f32 sin = JMASSin(JPADrawVisitorAngle(params));
 	f32 cos = JMASCos(params->unk34);
 
 	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
@@ -871,6 +879,7 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
+	Mtx local_180;
 	JGeometry::TVec3<f32> offs[8];
 	offs[0].set(x0, y0, 0.0f);
 	offs[1].set(x1, y0, 0.0f);
@@ -885,7 +894,6 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	offs[7].set((offs[1].x + offs[0].x) * 0.5f, y1,
 	            (offs[1].x - offs[0].x) * 0.5f);
 
-	Mtx local_180;
 	dc->pcb->mRotTypeFunc(sin, cos, local_180);
 
 	JGeometry::TVec3<f32> local_BC;
@@ -1011,21 +1019,21 @@ void JPADrawExecRotation::exec(const JPADrawContext* dc,
 
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	f32 sin = JMASSin(params->unk34);
+	f32 sin = JMASSin(JPADrawVisitorAngle(params));
 	f32 cos = JMASCos(params->unk34);
 
 	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
-	f32 x1 = params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 	f32 y0 = params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
+	f32 x1 = params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
+	Mtx mtx;
 	JGeometry::TVec3<f32> offs[4];
 	offs[0].set(x0, y0, 0.0f);
 	offs[1].set(x1, y0, 0.0f);
 	offs[2].set(x1, y1, 0.0f);
 	offs[3].set(x0, y1, 0.0f);
 
-	Mtx mtx;
 	dc->pcb->mRotTypeFunc(sin, cos, mtx);
 	MTXMultVecArray(mtx, offs, offs, ARRAY_COUNT(offs));
 
@@ -1043,11 +1051,6 @@ void JPADrawExecRotation::exec(const JPADrawContext* dc,
 	GXTexCoord2f32(dc->pcb->mTexCoords[3].x, dc->pcb->mTexCoords[3].y);
 	GXEnd();
 }
-
-// Direct-return level over the raw angle read, taken by the sine only: it is
-// the 4 bytes of low region (frame 0x138) that retail carries, and unlike the
-// same level over mScaleX it leaves every FPR operand order as retail's.
-static inline u16 JPADrawVisitorAngle(const JPADrawParams* p) { return p->unk34; }
 
 void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
                                     JPABaseParticle* particle)
