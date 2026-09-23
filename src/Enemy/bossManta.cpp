@@ -1047,6 +1047,8 @@ bool TBossMantaAdditionalCollisionSet::isUsed()
 	return false;
 }
 
+// TODO: frame 0x98 against retail's 0xf0 with every instruction right; the
+// 0x58 is not a lever (loop and index spellings were inert).
 void TBossMantaAdditionalCollisionSet::update(u32 cue,
                                               JDrama::TGraphics* graphics)
 {
@@ -1058,26 +1060,26 @@ void TBossMantaAdditionalCollisionSet::update(u32 cue,
 		for (int i = 0; i < 3; ++i)
 			unk0[i]->perform(cue, graphics);
 
-		int centerIdx    = TBossManta::sCenterJointIndex;
-		MtxPtr centerMtx = unkC->getModel()->getAnmMtx(centerIdx);
+		MtxPtr centerMtx
+		    = unkC->getModel()->getAnmMtx(TBossManta::sCenterJointIndex);
 		f32 centerX      = centerMtx[0][3];
 		f32 centerY      = centerMtx[1][3];
 		f32 centerZ      = centerMtx[2][3];
 
-		int bodyIdx    = TBossManta::sBodyJointIndex;
-		MtxPtr bodyMtx = unkC->getModel()->getAnmMtx(bodyIdx);
+		MtxPtr bodyMtx
+		    = unkC->getModel()->getAnmMtx(TBossManta::sBodyJointIndex);
 		f32 bodyX      = bodyMtx[0][3];
 		f32 bodyY      = bodyMtx[1][3];
 		f32 bodyZ      = bodyMtx[2][3];
 
-		int rwingIdx    = TBossManta::sRwingJointIndex;
-		MtxPtr rwingMtx = unkC->getModel()->getAnmMtx(rwingIdx);
+		MtxPtr rwingMtx
+		    = unkC->getModel()->getAnmMtx(TBossManta::sRwingJointIndex);
 		f32 rwingX      = rwingMtx[0][3];
 		f32 rwingY      = rwingMtx[1][3];
 		f32 rwingZ      = rwingMtx[2][3];
 
-		int lwingIdx    = TBossManta::sLwingJointIndex;
-		MtxPtr lwingMtx = unkC->getModel()->getAnmMtx(lwingIdx);
+		MtxPtr lwingMtx
+		    = unkC->getModel()->getAnmMtx(TBossManta::sLwingJointIndex);
 		f32 lwingX      = lwingMtx[0][3];
 		f32 lwingY      = lwingMtx[1][3];
 		f32 lwingZ      = lwingMtx[2][3];

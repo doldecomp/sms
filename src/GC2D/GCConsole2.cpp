@@ -2560,7 +2560,10 @@ void TGCConsole2::startAppearTelop(bool param_1)
 	unk520->setPaneOffset(80, 0, 0, 0, 465 - unk520->mInitialBounds.y1);
 
 	if (param_1) {
-		// TODO: needs regswapping
+		// TODO: the index/base registers are swapped, and the frame is 0x30
+		// short (0xf0 retail; J2DPrint sits at 0x5c, ours 0x3c): a missing
+		// inline level, not a lever. Entry-pointer, named-index, named-loader
+		// and `data + offset` spellings were inert or worse.
 		const u8* messageText
 		    = &unk530->getMessageData()[unk530->unk8[unk570[unk558] & 0xffff]
 		                                    .mTextOffset];

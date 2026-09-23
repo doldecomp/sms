@@ -836,6 +836,9 @@ void TYoshi::thinkEat()
 	}
 }
 
+// TODO: frame 0x38 against retail's 0x80, and case 0 holds mMario in r4
+// (ours r3). The particle/sound binders reach only 0x50; a named bool, a named
+// f32 and a nested if leave r4 unchanged: likely a missing inline level.
 void TYoshi::thinkHoldOut()
 {
 	switch (mFlutterState) {

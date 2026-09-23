@@ -893,16 +893,16 @@ void TSwingBoard::load(JSUMemoryInputStream& stream)
 
 	mAnchor.set(mPosition.x, mPosition.y + mRopeLength, mPosition.z);
 
-	mAngleSpeedMax = 0.05f * ((1.0f + MsRandF()) * 0.5f);
+	mAngleSpeedMax = 0.05f * ((1.0f + MsRandF()) / 2.0f);
 	mAngle         = 20.0f * (MsRandF() - 0.5f);
 	if (mAngle > 0.0f)
 		mAngleSpeed = mAngleSpeedMax * -MsRandF();
 	else
 		mAngleSpeed = mAngleSpeedMax * MsRandF();
 
-	// 12x ref() is +0x30 over all-raw (0x68 vs 0x38). One ref() lands
-	// retail's 0x40 but swaps epilogue addi/mtlr (98.4%). Left as all
-	// ref(); the leftover is the `1.0f + MsRandF()` FPR pair.
+	// 12x ref() is +0x30 over all-raw (0x68 vs 0x38). One ref() (any of the
+	// twelve) lands retail's 0x40 with every other instruction right but
+	// swaps the epilogue addi/mtlr (98.5%). Left as all ref().
 	s16 yaw  = (s16)(182.04445f * mRotation.y);
 	f32 sinY = JMASSin(yaw);
 	f32 cosY = JMASCos(yaw);

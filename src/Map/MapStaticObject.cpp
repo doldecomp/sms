@@ -493,6 +493,11 @@ void TMapModelActor::perform(u32 cue, JDrama::TGraphics* graphics)
 	unk68->perform(cue, graphics);
 }
 
+// TODO: frame 0xca0 against retail's 0xcb8. Retail's slots, top down:
+// local_c18 0xa0, local_c24 0x94, local_c30 0x88, tmp 0x7c, the MsPerpendic
+// return 0x70, camPos 0x64 (address hoisted into r31), plus 0x18 more low
+// region; ours puts camPos above local_c30. Loop-scope and ctor spellings of
+// camPos were worse.
 void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mGraph->isDummy())

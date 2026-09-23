@@ -96,6 +96,9 @@ TObjHitCheck::checkWaterWithActorsInList(const JGeometry::TVec3<f32>& pos,
 
 // Retail calls this from checkActorsHit: the body costs 15 statements, one
 // over the depth-1 budget, and the named `hit` result is the fifteenth.
+// TODO: frame 8 short and saved GPRs rotated: retail gives pos r30 above
+// particlePositions r29, particleHitActors r28 and i r27, as if pos were a
+// base temp. Pointer/unnamed pos, i/e/pos declaration order were inert.
 void TObjHitCheck::checkWater()
 {
 	f32 fVar2 = TModelWaterManager::mStaticHitActor.getEntryRadius();
