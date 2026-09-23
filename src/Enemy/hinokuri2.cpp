@@ -1027,9 +1027,11 @@ static inline const JGeometry::TVec3<f32>& Hino2NodePoint(const TPathNode& node)
 
 template <class T> static inline T symmetric_clamp(T v, T r)
 {
-	return v > 0 ? (v > r ? r : v) : (v > -r ? v : -r);
+	return v > 0 ? std::min(v, r) : std::max(v, -r);
 }
 
+// TODO: frame is 0xa8 short (0xd0 vs 0x178) with every instruction exact;
+// a deficit that size is a missing inline level or helper, not a lever.
 void THinokuri2::moveObject()
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -1040,8 +1042,9 @@ void THinokuri2::moveObject()
 
 	if (mLevel == 1) {
 		f32 dhp    = calcHitPoints() - mHitPoints;
-		f32 fVar12 = (((THino2Params*)getSaveParam())->getSLDamageHeadScale() - 1.0f)
-		                 * (1.0f + dhp / calcHitPoints())
+		f32 fVar12 = 1.0f
+		             + (((THino2Params*)getSaveParam())->getSLDamageHeadScale() - 1.0f)
+		                   * (dhp / calcHitPoints())
 		             - unk194;
 
 		if (fVar12 > 0.0f)
@@ -1395,8 +1398,9 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 
 	f32 turnSpeed = self->mTurnSpeed;
 	f32 fVar3     = symmetric_clamp(angleDiff, turnSpeed);
-	// TODO: retail copies the clamped angle into its own FPR in each arm
-	// (`fmr f4, f31` twice); ours merges the two arms. Frame is 0x18 short.
+	// TODO: retail clamps f31 in place and copies it into its own FPR in each
+	// arm (`fmr f4, f31` twice); ours merges the two arms. Inert: assigning
+	// back to angleDiff, a named result in symmetric_clamp, an if/return body.
 
 	self->mRotation.y = MsWrap(self->mRotation.y + fVar3, 0.0f, 360.0f);
 
