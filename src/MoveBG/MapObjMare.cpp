@@ -783,6 +783,8 @@ TWireBell::TWireBell(const char* name)
 // TODO: retail's named block sits 4 bytes higher (dir at 0x54, not 0x50).
 // Worse: raw gpMarioPos / SMS_GetMarioPos() for dest, getPosition() at the
 // emit and sound sites, a named scaled copy of dir.
+// Inert: retail has a 4-byte low slot at 0x2c between the `dir * 100.0f`
+// temporary and the += copy; copy-init dest, dest.add(), scale(2.0f) move nothing.
 void TMapObjPuncher::touchPlayer(THitActor* player)
 {
 	awake();
@@ -957,6 +959,9 @@ bool TMuddyBoat::bindToWall(const JGeometry::TVec3<f32>& probe, f32 radius,
 // the probe reuses one mFrontOffset/mBackOffset load for both components.
 // touchWall()'s `100.0f +` for the effect height schedules after the x store
 // in retail and before it here.
+// Retail keeps one named probe (0x1d8); each record block is 0xc larger.
+// Inert or worse: per-site probe temporaries or named probes (+0x38 only),
+// `+ 100.0f` last, a named height, an f32-parameter set helper.
 void TMuddyBoat::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
