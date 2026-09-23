@@ -160,7 +160,7 @@ void TTPHitActor::bind()
 	pos.add(mVelocity);
 
 	TTabePuku* owner = mOwner;
-	JGeometry::TVec3<f32> velocity = owner->mVelocity;
+	Vec velocity = owner->mVelocity;
 	pos.add(velocity);
 	pos.add(owner->mLinearVelocity);
 
