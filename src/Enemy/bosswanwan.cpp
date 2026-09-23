@@ -848,6 +848,9 @@ void TBossWanwanMtxCalc::joinAnm(int index)
 
 // TODO: named block sits 4 bytes low (scratch 0x64/info 0x94 vs 0x68/0x98)
 // and retail schedules the jma table loads above scratch.zero()'s stores.
+// Same 4-byte-low J3DTransformInfo class as THino2MtxCalc::calc. Inert or
+// worse: a named angle (f32/s16/int, -0x10), JMASSin/JMASCos, cos first,
+// roll after zero(), no roll, raw j3dSys.mModel (-8), a named J3DJoint*.
 void TBossWanwanMtxCalc::calc(u16 joint)
 {
 	// While airborne the root joint's translation is thrown away so the boss
@@ -1090,6 +1093,10 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 // stayed a call in the dead copy. That is also why the weak setMtx the map
 // lists for this TU is missing from our object -- the Die nerve inlines it at
 // every spelling tried (setUpUnk8TRS, setUpMtx, setMtx + setUp).
+// Die's chain reaches setMtx at depth 3 (setUpUnk8TRS, setUpMtx); a bl by
+// the depth budget would need two more levels no symbol supports. Die also
+// keeps center/scale below the fireStartDemoCamera flag temporary (0xb0 vs
+// 0xcc), i.e. as inline temporaries rather than Die's own named locals.
 void TBossWanwan::takeBath()
 {
 	gpMarDirector->fireStartDemoCamera("bwanwan_down_camera", nullptr, -1, 0.0f,
