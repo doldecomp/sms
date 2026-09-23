@@ -121,8 +121,7 @@ void TMapObjPlane::updateCheckData(int x, int z)
 // JGeometry::TVec3<f32>::dot, ::scale(f, const&) and TUtil<f32>::inv_sqrt at
 // all four sites: it puts setLength at depth 3, scale and squared at 4 (the
 // three-statement allowance is 2 there) and dot at 5. Parked here because the
-// map has no symbol for it; retail's cross products are presumably spelled
-// inside the same helper, which is what the remaining frame gap is.
+// map has no symbol for it.
 static inline void MapObjPlaneNormalize(JGeometry::TVec3<f32>& v)
 {
 	v.normalize();
@@ -133,44 +132,61 @@ void TMapObjPlane::calcNrm(int x, int z)
 	if (x < 0 || mExtents <= x || z < 0 || mExtents <= z)
 		return;
 
-	f32 fVar1 = unkFC;
-	f32 fVar7 = -unkFC;
-
+	// TODO: 92.8%, frame 0x240 vs 0x230. The FPRs rank differently (retail
+	// gives h00..hP0 f31..f27, then w, nw), retail re-subtracts h0N - h00 and
+	// h0P - hP0 where ours reuses them, and its normal sum copies each partial
+	// sum through a temporary before the next operator+ (a by-value return).
+	// Inert: C-style top declarations, w read before h0N, s1/s2 sum locals.
 	f32 h00 = heightAt(x, z);
 	f32 h0N = heightAt(x, MsWrap(z - 1, 0, mExtents));
+	f32 w = unkFC;
+	f32 nw = -w;
 	f32 h0P = heightAt(x, MsWrap(z + 1, 0, mExtents));
 	f32 hN0 = heightAt(MsWrap(x - 1, 0, mExtents), z);
 	f32 hP0 = heightAt(MsWrap(x + 1, 0, mExtents), z);
 
-	// TODO: figure out the inlines here. Definitely some subtracting and
-	// cross producting is occurring.
+	JGeometry::TVec3<f32> p00(0.0f, h00, 0.0f);
+	JGeometry::TVec3<f32> p0N(0.0f, h0N, nw);
+	JGeometry::TVec3<f32> p0P(0.0f, h0P, w);
+	JGeometry::TVec3<f32> pN0(nw, hN0, 0.0f);
+	JGeometry::TVec3<f32> pP0(w, hP0, 0.0f);
 
+	JGeometry::TVec3<f32> e0a;
+	e0a.sub(p0N, pN0);
+	JGeometry::TVec3<f32> e0b;
+	e0b.sub(pN0, p00);
 	JGeometry::TVec3<f32> local_9c;
-	local_9c.x = (h0N - hN0) * 0.0f - (fVar7 - 0.0f) * (hN0 - h00);
-	local_9c.y = (fVar7 - 0.0f) * (fVar7 - 0.0f) - (0.0f - fVar7) * 0.0f;
-	local_9c.z = (0.0f - fVar7) * (hN0 - h00) - (h0N - hN0) * (fVar7 - 0.0f);
+	local_9c.cross(e0a, e0b);
 	MapObjPlaneNormalize(local_9c);
 
+	JGeometry::TVec3<f32> e1a;
+	e1a.sub(pP0, p0N);
+	JGeometry::TVec3<f32> e1b;
+	e1b.sub(p0N, p00);
 	JGeometry::TVec3<f32> local_a8;
-	local_a8.x = (hP0 - h0N) * (fVar7 - 0.0f) - (0.0f - fVar7) * (h0N - h00);
-	local_a8.z = (fVar1 - 0.0f) * (h0N - h00) - (hP0 - h0N) * 0.0f;
-	local_a8.y = (0.0f - fVar7) * 0.0f - (fVar1 - 0.0f) * (fVar7 - 0.0f);
+	local_a8.cross(e1a, e1b);
 	MapObjPlaneNormalize(local_a8);
 
+	JGeometry::TVec3<f32> e2a;
+	e2a.sub(pN0, p0P);
+	JGeometry::TVec3<f32> e2b;
+	e2b.sub(p0P, p00);
 	JGeometry::TVec3<f32> local_b4;
-	local_b4.x = (hN0 - h0P) * (fVar1 - 0.0f) - (0.0f - fVar1) * (h0P - h00);
-	local_b4.z = (fVar7 - 0.0f) * (h0P - h00) - (hN0 - h0P) * 0.0f;
-	local_b4.y = (0.0f - fVar1) * 0.0f - (fVar7 - 0.0f) * (fVar1 - 0.0f);
+	local_b4.cross(e2a, e2b);
 	MapObjPlaneNormalize(local_b4);
 
+	JGeometry::TVec3<f32> e3a;
+	e3a.sub(p0P, pP0);
+	JGeometry::TVec3<f32> e3b;
+	e3b.sub(pP0, p00);
 	JGeometry::TVec3<f32> local_c0;
-	local_c0.x = (h0P - hP0) * 0.0f - h0N * (hP0 - h00);
-	local_c0.y = h0N * h0N - (0.0f - fVar1) * 0.0f;
-	local_c0.z = (0.0f - fVar1) * (hP0 - h00) - (h0P - hP0) * h0N;
+	local_c0.cross(e3a, e3b);
 	MapObjPlaneNormalize(local_c0);
 
-	mNormalMap[x + z * mExtents] = local_9c + local_a8 + local_b4 + local_c0;
-	mNormalMap[x + z * mExtents].scale(0.25f);
+	JGeometry::TVec3<f32>& nrm = mNormalMap[x + z * mExtents];
+	JGeometry::TVec3<f32> sum = local_9c + local_a8 + local_b4 + local_c0;
+	nrm = sum;
+	nrm.scale(0.25f);
 }
 
 void TMapObjPlane::movement() { }
