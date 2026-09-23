@@ -417,8 +417,8 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			// I don't think this is correct, but was the closest i could get
 			u32 statusIdx
 			    = animationTypes[animOffset2][animOffset1][damageAnimType];
-			if (mHolder == nullptr || mHolder->isActorType(0x40000098)) {
-				// Knocked from a wire hang by damage?
+			if (mHolder != nullptr && mHolder->isActorType(0x40000098)) {
+				// Knocked off a wire (the holder is one) by damage
 				changePlayerDropping(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
 			} else {
 				changePlayerDropping(statusIdx, 0);
