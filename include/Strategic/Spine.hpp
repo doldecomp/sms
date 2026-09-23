@@ -56,9 +56,7 @@ public:
 	virtual void update()
 	{
 		if (mCurrent == nullptr) {
-			Nerve nerve = popNerve();
-
-			if (nerve) {
+			if (Nerve nerve = popNerve()) {
 				if (mCurrent != nullptr)
 					mPrevious = mCurrent;
 
