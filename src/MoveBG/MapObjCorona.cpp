@@ -431,27 +431,15 @@ void TBathtub::hipdrop(const JGeometry::TVec3<f32>& pos)
 {
 	if (unk29A)
 		return;
-	if (unk250 > getUnk16C()->hipdropRelease.get())
+	else if (unk250 > getUnk16C()->hipdropRelease.get())
 		return;
 	// The direction is thrown away in the shipped build, as in quake().
-	//
-	// This body is byte-exact, but it is also the whole loss of
-	// TBathtub::receiveMessage (0%, 192B): retail `bl`s hipdrop from its two
-	// hip-drop arms and we inline it, because a plain method is inlined at
-	// depth 1 up to 14 statements and this body is exactly 14. Measured: one
-	// extra zero-codegen statement here takes receiveMessage from 0% to 95.2%
-	// and costs hipdrop nothing, so retail's hipdrop has a 15th statement.
-	// TODO: it is not a named local of any kind. Naming the searched TKoopa
-	// (`TKoopa* koopa = search(...); koopa->stagger(false);`, the shape quake()
-	// uses) does not count towards the budget and costs hipdrop an `mr`, and
-	// naming the release threshold the second guard tests
-	// (`int release = getUnk16C()->hipdropRelease.get();`) does not flip
-	// receiveMessage either while costing 8 bytes of frame -- this body's
-	// frame is already exact at 0x98, so retail has no extra stack object
-	// here. The 15th statement is therefore one that takes neither a register
-	// nor a slot.
+	// The `else if` and the named `init` cost no code but carry this body
+	// past MWCC's depth-1 inline budget, which is what keeps it a call from
+	// both receiveMessage bodies, as retail has it.
 	JGeometry::TVec3<f32> dir;
-	dir.sub(pos, getInitialPosition());
+	const JGeometry::TVec3<f32>& init = getInitialPosition();
+	dir.sub(pos, init);
 	dir.y = 0.0f;
 	dir.normalize();
 	unk250 = getUnk16C()->hipdropRelease.get();
