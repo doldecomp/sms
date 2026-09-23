@@ -844,19 +844,12 @@ bool THamuKuri::isGiveUpSearchActor()
 	}
 }
 
-// Binding level worth +8 of low region in THamuKuri::jumpToSearchActor
-// (batch 121).
-static inline f32 HamukuriGetGroundHeight(const TLiveActor* p)
-{
-	f32 groundHeight = p->getGroundHeight();
-	return groundHeight;
-}
-
-// TODO: instruction-exact, frame 8 short (0x60 vs 0x68) with the low pool
-// 0xc high. Declaring `tgt` uninitialised at the top of the `if` and reading
-// the ground height through getGroundHeight() lands every pool slot but
-// leaves the named block 0xc low and the frame 0x10 short: retail has a
-// 12-byte object above local_1C that nothing here names.
+// TODO: instruction-exact, frame 8 short (0x60 vs 0x68). Reading the ground
+// height through getGroundHeight() lands every low temporary; copying the
+// actor position into a named `actorPos` before `tgt` fills retail's 12-byte
+// slot under the named block, but ours sits between local_1C and tgt (tgt 0xc
+// low). Retail also has a 12-byte object above local_1C (a `myPos` copy there
+// lands local_1C but overshoots to 0x70). Declaring tgt first changes code.
 void THamuKuri::jumpToSearchActor()
 {
 	(void)0; // TODO: hack, need to figure out canGoForSearchActor?
@@ -866,8 +859,9 @@ void THamuKuri::jumpToSearchActor()
 		local_1C -= pTVar5->mPosition;
 
 		if (local_1C.squared() > 40000.0f) {
-			JGeometry::TVec3<f32> tgt = pTVar5->mPosition;
-			tgt.y                     = HamukuriGetGroundHeight(pTVar5);
+			JGeometry::TVec3<f32> actorPos = pTVar5->mPosition;
+			JGeometry::TVec3<f32> tgt      = actorPos;
+			tgt.y                          = pTVar5->getGroundHeight();
 
 			setGoalPath(tgt);
 			return;
