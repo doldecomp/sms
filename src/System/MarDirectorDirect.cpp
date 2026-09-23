@@ -41,6 +41,9 @@
 
 extern OSThread gSetupThread;
 
+// TODO: 98.5%, frame 0x150 vs retail 0x198 (TGraphics sits 0x48 higher, a
+// dead low region) and the saved GPRs are permuted (retail: this r26, uVar8
+// r27, i r28, desiredAppState r29, the pad offset and ~uVar8 in r31).
 int TMarDirector::direct()
 {
 	int vsyncRate = 600 / (int)SMSGetVSyncTimesPerSec();
@@ -129,7 +132,7 @@ int TMarDirector::direct()
 				tmp |= 1;
 			if (checkUnk4CFlag(0x4000))
 				tmp |= 2;
-			local_140.unk2 = tmp;
+			local_140.unk0 = tmp;
 
 			// inline
 			bool bVar1 = true;
@@ -141,8 +144,7 @@ int TMarDirector::direct()
 			else
 				gpObjHitCheck->clearHitNum();
 
-			u32 uVar11 = ~uVar8;
-			u32 uVar4  = uVar11;
+			u32 uVar4 = ~uVar8;
 			if (unk58 & 1)
 				uVar4 &= ~CUE_MOVEMENT_GATE_A;
 			if (unk58 & 2)
@@ -159,18 +161,18 @@ int TMarDirector::direct()
 			movement();
 			if (!(uVar8 & 2)) {
 				if (checkUnk4EFlag(1))
-					mPerformListCalcAnim->perform(uVar11, &local_140);
+					mPerformListCalcAnim->perform(~uVar8, &local_140);
 				else
-					mShinePfLstAnm->perform(uVar11, &local_140);
+					mShinePfLstAnm->perform(~uVar8, &local_140);
 			}
 
 			if (checkUnk4CFlag(0x4000)) {
-				local_140.unk2 = 0;
+				local_140.unk0 = 0;
 				unk34->perform(CUE_ALL, &local_140);
 				break;
 			}
 		} else {
-			local_140.unk2 = 0;
+			local_140.unk0 = 0;
 			unk40->perform(CUE_ALL, &local_140);
 			unk38->perform(CUE_ALL, &local_140);
 			unk3C->perform(CUE_ALL, &local_140);
@@ -843,6 +845,9 @@ static inline u16 secToFrame(f32 sec, TShineFader* fader)
 	return sec * fader->mRate;
 }
 
+// TODO: 99.8%, frame 0xa8 vs retail 0x130 and the state/uVar15 registers
+// swapped (retail r29/r30). Inert (c-sys1): every top-level declaration order
+// of r29, bVar5 and uVar15.
 u8 TMarDirector::updateGameMode()
 {
 	u8 r29 = mState;
