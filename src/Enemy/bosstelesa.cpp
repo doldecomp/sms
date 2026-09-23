@@ -2321,6 +2321,8 @@ void TBossTelesa::fanfale()
 
 // TODO: no nerve body below is reconstructed; each carries its map size.
 
+// TODO: instruction-identical; retail's frame is 0x60 larger (0x128 vs 0xc8)
+// with no slot in the body using it, so some inlined callee reserves more.
 DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
@@ -2409,42 +2411,35 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 
 		boss->unk388 += 1;
 		}
+	} else if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
+		if (boss->getMActor()->checkCurBckFromIndex(5)) {
+			boss->getMActor()->setBrkFromIndex(2);
+			boss->setBckAnm(7);
+		} else if (boss->getMActor()->checkCurBckFromIndex(7)) {
+			boss->setBckAnm(6);
+		} else {
+			SMS_ResetDamageFogEffect(
+			    boss->getMActor()->getModel()->getModelData());
 
-		return FALSE;
+			if (boss->getMActor()->checkCurBckFromIndex(6)) {
+				boss->offAllCollision();
+
+				boss->setBckAnm(15);
+				boss->getMActor()->setBtpFromIndex(2);
+
+				spine->reset();
+				spine->setNext(&TNerveBossTelesaPrepareSlot::theNerve());
+				spine->pushAfterCurrent(
+				    &TNerveBossTelesaPrepareSlot::theNerve());
+			} else {
+				boss->damageRecover();
+			}
+
+			return TRUE;
+		}
 	}
 
-	if (!boss->checkCurAnmEnd(ANM_TYPE_BCK))
-		return FALSE;
-
-	if (boss->getMActor()->checkCurBckFromIndex(5)) {
-		boss->getMActor()->setBrkFromIndex(2);
-		boss->setBckAnm(7);
-
-		return FALSE;
-	}
-
-	if (boss->getMActor()->checkCurBckFromIndex(7)) {
-		boss->setBckAnm(6);
-
-		return FALSE;
-	}
-
-	SMS_ResetDamageFogEffect(boss->getMActor()->getModel()->getModelData());
-
-	if (boss->getMActor()->checkCurBckFromIndex(6)) {
-		boss->offAllCollision();
-
-		boss->setBckAnm(15);
-		boss->getMActor()->setBtpFromIndex(2);
-
-		spine->reset();
-		spine->setNext(&TNerveBossTelesaPrepareSlot::theNerve());
-		spine->pushAfterCurrent(&TNerveBossTelesaPrepareSlot::theNerve());
-	} else {
-		boss->damageRecover();
-	}
-
-	return TRUE;
+	return FALSE;
 }
 
 // Binding level worth +8 of low region, landing
