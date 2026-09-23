@@ -2070,21 +2070,24 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		else
 			mBodyCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
 
-		mHeadCollision->mPosition = mPosition;
+		mHeadCollision->mPosition = getPosition();
 		f32 bodyToHeadDistance    = mSaveParams->mSLBodyToHeadDistance.get();
 		bodyToHeadDistance *= mScaling.y;
 		mHeadCollision->mPosition.y += bodyToHeadDistance;
 
+		// TODO: retail schedules the head products differently (param * scale,
+		// store of the first result before the last two loads, f0-f5); the
+		// operand order and `.value` spellings leave the schedule unchanged.
 		mHeadCollision->setHitParams(
 		    mSaveParams->mSLHeadAttackRadius.get() * mScaling.x,
 		    mSaveParams->mSLHeadAttackHeight.get() * mScaling.x,
 		    mSaveParams->mSLHeadDamageRadius.get() * mScaling.x,
 		    mSaveParams->mSLHeadDamageHeight.get() * mScaling.x);
 
-		setHitParams(mSaveParams->mSLBodyAttackRadius.get() * mScaling.x,
-		             mSaveParams->mSLBodyAttackHeight.get() * mScaling.x,
-		             mSaveParams->mSLBodyDamageRadius.get() * mScaling.x,
-		             mSaveParams->mSLBodyDamageHeight.get() * mScaling.x);
+		setHitParams(mSaveParams->mSLBodyAttackRadius.get() * getScaling().x,
+		             mSaveParams->mSLBodyAttackHeight.get() * getScaling().x,
+		             mSaveParams->mSLBodyDamageRadius.get() * getScaling().x,
+		             mSaveParams->mSLBodyDamageHeight.get() * getScaling().x);
 
 		calcAndSetCollisionCubeBite_();
 
