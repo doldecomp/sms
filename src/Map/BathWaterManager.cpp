@@ -1900,16 +1900,13 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 	JGeometry::TVec3<f32> axis;
 	axis.set(data.unk18.at(0, 1), 0.0f, data.unk18.at(2, 1));
 
-	f32 sq = axis.squared();
-	if (sq <= JGeometry::TUtil<f32>::epsilon())
+	if (axis.isZero())
 		return false;
 
-	// Retail has a dead `fcmpo/cror` against 0.0f on the squared length here,
-	// with no branch: an inlined TUtil::sqrt whose result is discarded, over
-	// the squared length the zero test already computed. Naming that squared
-	// length keeps the frame (a named `len`, or `axis.length()`, grows it and
-	// the latter emits a real `bl dot` at this depth).
-	JGeometry::TUtil<f32>::sqrt(sq);
+	// TODO: retail has a dead `fcmpo/cror` against 0.0f on the squared length
+	// here, with no branch and with isZero's inlined squared CSE'd into it --
+	// i.e. one more discarded computation over `axis`. A plain
+	// `axis.length();` is not it (that emits a real `bl dot` at this depth).
 	JGeometry::TVec3<f32> nAxis;
 	nAxis.normalize(axis);
 
