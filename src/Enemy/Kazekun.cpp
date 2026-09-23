@@ -247,6 +247,11 @@ void TKazekun::setDeadAnm()
 // allocation and scheduling inside the inlined TQuat4::mul/rotate (f27-f30
 // rotated by one); rewriting JGeometry::TQuat4<f32>::rotate with scalar
 // locals (see the TODO in JGQuat4.hpp) regresses six other callers.
+// Retail's named block also sits 4 bytes higher (toMario 0x104, ours 0x100)
+// at an equal frame. Inert or worse (2026-09-23): a named clamp `dy` (moves
+// toMario only), 0.0025f first, / 400.0f, quat/vel/f31 declared up front,
+// named scale, speed and rate locals, and a named angle in getAroundQuat
+// (drops the Attack nerve to 68%).
 void TKazekun::flyAroundMario()
 {
 	JGeometry::TVec3<f32> toMario(*gpMarioPos);
@@ -549,6 +554,10 @@ DEFINE_NERVE(TNerveKazekunPreAttack, TLiveActor)
 // our 0x1e8 and the eight bytes renumber the float registers inside the second
 // inlined TQuat4::mul. toGoal.sub(getPosition()) and a named attack-speed local
 // each restore the size but shift every local by four bytes, which is worse.
+// Paired with a raw param read (mAttackSpeed/mAirFric .value) or with each
+// other they are all 98.7 (2026-09-23), and quat.mul(around) in
+// getAroundQuat is 97.3: the load order inside TQuat4::mul(a, b) is the
+// residue, a JGQuat4.hpp question.
 // Also unexplained: JGeometry::TRotation3<...>::getQuat is 99.5% here (an f3/f4
 // swap in its own TUtil<f32>::sqrt), which is a JGRotation3.hpp problem, not a
 // Kazekun one.
