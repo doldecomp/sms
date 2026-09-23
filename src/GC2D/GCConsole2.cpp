@@ -2344,6 +2344,11 @@ void TGCConsole2::startDisappearCoin()
 	unk124->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 }
 
+// TODO: frame 8 short (0x2e0 vs 0x2e8), instructions exact. Retail gives every
+// TColor(u32) conversion temp its own 8-byte slot, top-down in source order;
+// ours packs them at 4. Inert: TColor(...) cast, (u32) cast, by-value and
+// const-ref setWhite/setBlack helpers (+8..+16 per site), an explicit
+// TColor copy ctor; an empty ~TColor() packs tighter. JUTColor stride class.
 void TGCConsole2::startInsertLife(int param_1)
 {
 	if (param_1 == 0) {
@@ -2416,6 +2421,8 @@ static inline TBoundPane* GCConsole2Unk174(const TGCConsole2* p)
 	return v174;
 }
 
+// TODO: frame size right but 64 slot offsets differ: the TColor(u32)
+// conversion-temp stride (retail 8, ours 4), see startInsertLife().
 bool TGCConsole2::startAppearLife(int param_1)
 {
 	if (unk38 || unk50 || gpMarioOriginal->getHealth() == 0)
@@ -3392,6 +3399,9 @@ void TGCConsole2::changeNum(TBlendPane* pane, int digit, int frames)
 	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
 }
 
+// TODO: frame 0x50 short, instructions exact. The getWhite()/mWhite temps sit
+// at stride 8 in retail (4 here, see startInsertLife()) over ~0x40 more low
+// region; swapped compare, a u32/TColor unk508, raw mWhite and setWhite inert.
 void TGCConsole2::setTimer(s32 param_1)
 {
 	u32 timerValue;
