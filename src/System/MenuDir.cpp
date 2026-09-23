@@ -181,6 +181,10 @@ int TMenuDirector::rsetup()
 	return 0;
 }
 
+// Reference-returning accessor, as MarDirectorEvent's MDEApp() and
+// MarDirectorDirect's MDDApp(): setNextArea's stores fold onto &gpApplication.
+static inline TApplication& MNApp() { return gpApplication; }
+
 int TMenuDirector::direct()
 {
 	if (!unk50) {
@@ -346,7 +350,7 @@ int TMenuDirector::direct()
 			// MarDirectorDirect::decideNextStage (in-class TFlagT copy is
 			// elided; retail wants the weak copy-ctor bl and a 0xa8 frame).
 			nextArea.set(unk48, unk4C);
-			gpApplication.setNextArea(nextArea);
+			MNApp().setNextArea(nextArea);
 		} else if (unk44->checkFlag(0x2)) {
 			unk18 = 0;
 			unk40->unfade();
