@@ -1063,6 +1063,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 				emitter->createEmitter(emitterPos, 8, nullptr, nullptr);
 
 				mMenuState = DISAPPEAR_MENU;
+				break;
 			} else if (mGamePad->checkFrameMeaning(0x8)) {
 				selectPrev();
 			} else if (mGamePad->checkFrameMeaning(0x10)) {

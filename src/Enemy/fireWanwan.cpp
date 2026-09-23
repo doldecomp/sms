@@ -668,7 +668,7 @@ void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 
 	for (int i = 0; i < 4; ++i) {
 		TPosition3f afStack_a4;
-		MTXCopy(afStack_a4, unkA8[i]->mMActor->getModel()->getBaseTRMtx());
+		MTXCopy(unkA8[i]->mMActor->getModel()->getBaseTRMtx(), afStack_a4);
 
 		afStack_a4.setTrans(getBodyNthPos(i + 1));
 
@@ -1523,7 +1523,7 @@ void TFireWanwan::emitEffectsOnHittingWall(
 	JGeometry::TQuat4<f32> local_d8;
 
 	if (is_antiparallel(local_54, JGeometry::TVec3<f32>(0.0f, 0.0f, -1.0f))) {
-		local_d8.setEulerZ(JGeometry::TUtil<f32>::PI());
+		local_d8.setEulerY(JGeometry::TUtil<f32>::PI());
 	} else {
 		local_d8.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, -1.0f), local_54,
 		                   1.0f);
@@ -1917,11 +1917,11 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 			const TBGCheckData* local_34;
 			if (checkLiveFlag(LIVE_FLAG_UNK1000))
 				dVar9 = gpMap->checkGroundIgnoreWaterSurface(
-				    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
+				    actualPoint.x, point.y + mHeadHeight, actualPoint.z,
 				    &local_34);
 			else
 				dVar9 = gpMap->checkGround(actualPoint.x,
-				                           actualPoint.y + mHeadHeight,
+				                           point.y + mHeadHeight,
 				                           actualPoint.z, &local_34);
 
 			dVar9 += 1.0f;

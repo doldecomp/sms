@@ -1,0 +1,13 @@
+diff --git a/src/MSound/MSModBgm.cpp b/src/MSound/MSModBgm.cpp
+index ca8b96d6..69c7602c 100644
+--- a/src/MSound/MSModBgm.cpp
++++ b/src/MSound/MSModBgm.cpp
+@@ -219,7 +219,7 @@ u8 MSBgmXFade::getTiming(f32 param_1, u32* param_2)
+ 	for (u8 i = 0; i < 18; ++i) {
+ 		if (param_1 > scTiming[i] && f1 <= scTiming[i])
+ 			return i;
+-		if (param_1 < scTiming[i] && scTiming[i] >= f1)
++		if (param_1 < scTiming[i] && f1 >= scTiming[i])
+ 			return i;
+ 	}
+ 

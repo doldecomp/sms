@@ -748,15 +748,17 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			if (self->unk1A8) {
 				// Naming the three rand() results lands retail's frame and every
 				// named slot (99.7 -> 99.9); maxXZ first gives retail's load order.
+				// Retail builds the vertical range with MaxSpY as its minimum and
+				// MinSpY as its maximum (the stores put 0x3a0 into mMin).
 				// TODO: the two operator- temporaries sit 0x24 high (0xf4/0xe8
-				// against 0xd0/0xc4) and MinY/MaxY swap f2/f3. Inert: every order
-				// of the four floats with maxXZ first, naming only one rand().
+				// against 0xd0/0xc4). Inert: every order of the four floats with
+				// maxXZ first, naming only one rand().
 				f32 maxXZ = self->unk19C->mSLTrapJumpMaxSpXZ.get();
 				f32 minY = self->unk19C->mSLTrapJumpMinSpY.get();
 				f32 maxY = self->unk19C->mSLTrapJumpMaxSpY.get();
 				f32 minXZ = self->unk19C->mSLTrapJumpMinSpXZ.get();
 				TMsRange<f32> trapJumpSpXZ(minXZ, maxXZ);
-				TMsRange<f32> trapJumpSpY(minY, maxY);
+				TMsRange<f32> trapJumpSpY(maxY, minY);
 
 				JGeometry::TVec3<f32> local_48;
 				const TLiveActor* groundActor

@@ -1208,9 +1208,9 @@ static HxDrawPath drawpath_table[] = {
 static int hxs_logo_resetflag;
 static int hxs_logodraw_resetflag;
 
-/// Defined without a prototype: every call in Hx_Logo passes only the alpha
-/// (retail never loads r4 before the `bl`), yet the body reads `timg` from
-/// r4, so the original call sites dropped the texture argument.
+/// Defined without a prototype. Hx_Logo passes `buffer` as the texture: retail
+/// computes it into r4 at the top of Hx_Logo and keeps it there, so no call
+/// site needs to load r4 before the `bl`.
 static void Hxs_Logo_ExtraDraw(alpha_in, timg)
 u8 alpha_in;
 const ResTIMG* timg;
@@ -1451,11 +1451,8 @@ static inline u32 Hx_GetTimer(void) { return hx.timer; }
 
 // The fade-in test reads the timer through an inline, which gives the frame
 // retail's extra 8 bytes (as in Hx_Door).
-// TODO: case 2 keeps dp in r6 where ours uses r5 (r4 is never used there);
-// statement order, `else if` and a named copy of dp are inert.
-// Retail's case 2 skips r4 (dp r6, dp+1 r5): an extra short-lived value
-// there. count = count + 1, ++/+= spellings, dp = &dp[1], (dp++)->y,
-// !dp->wait, and count++ first are inert or worse.
+// Every Hxs_Logo_ExtraDraw call passes `buffer`, which keeps it live in r4
+// through case 2 (dp in r6, dp+1 in r5, as retail).
 static void Hx_Logo(void)
 {
 	static HxDrawPath* dp;
@@ -1486,9 +1483,9 @@ static void Hx_Logo(void)
 
 	case 1:
 		if (Hx_GetTimer() <= 0xC0)
-			Hxs_Logo_ExtraDraw(0xFF);
+			Hxs_Logo_ExtraDraw(0xFF, buffer);
 		else
-			Hxs_Logo_ExtraDraw(((0x100 - hx.timer) * 4) & 0xFC);
+			Hxs_Logo_ExtraDraw(((0x100 - hx.timer) * 4) & 0xFC, buffer);
 
 		Hx_TimerCountDown();
 		Hx_TimerCountDown();
@@ -1513,7 +1510,7 @@ static void Hx_Logo(void)
 		/* fall through */
 
 	case 3:
-		Hxs_Logo_ExtraDraw(0xFF);
+		Hxs_Logo_ExtraDraw(0xFF, buffer);
 		Hxs_Logo_TexSetup(0xFF, 0xFF, timg);
 		Hxs_PenDraw(bx, by, count, dp);
 		if (Hx_TimerCountDown() == 0) {
@@ -1532,7 +1529,7 @@ static void Hx_Logo(void)
 		/* fall through */
 
 	case 5:
-		Hxs_Logo_ExtraDraw(0xFF);
+		Hxs_Logo_ExtraDraw(0xFF, buffer);
 		Hxs_Logo_TexSetup(0xFF, 0xFF, timg);
 		Hxs_PenDraw(bx, by, count, dp);
 		if (Hx_TimerCountDown() == 0) {
@@ -1545,7 +1542,7 @@ static void Hx_Logo(void)
 		u32 i;
 
 		if (hx.timer >= 0xC0) {
-			Hxs_Logo_ExtraDraw(0xFF);
+			Hxs_Logo_ExtraDraw(0xFF, buffer);
 			Hxs_Logo_TexSetup(hx.timer, hx.timer, timg);
 			if (hx.timer > 0xF8)
 				Hxs_PenDraw(bx, by, count, dp);

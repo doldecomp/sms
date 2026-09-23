@@ -1,0 +1,246 @@
+unit	function	fuzzy	equiv-verdict	verdict	evidence
+mario/Animal/Bird	load__11TAnimalBirdFR20JSUMemoryInputStream	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MSound/MSound	startMarioVoice__6MSoundFUlsUc	99.82	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MSound/MSoundScene	sortMaxTrans__9MSSceneSEFP3VecUcUc	99.27	DIFFERENT	EQUIVALENT	retail lwzx r25+r28 and ours lwz 0(r26) with r26=r25+r28 address the same slot (CSE of the index add)
+mario/MSound/MSoundSE	getRandVol__Q214MSoundSESystem9MSRandVolFUl	99.29	DIFFERENT	EQUIVALENT	two independent lfs reordered; both builds load 0x1c(base+idx12) and 0x2c(base+idx10) into the same getRandom args
+mario/MSound/MSoundSE	randPlay__Q214MSoundSESystem10MSRandPlayFUl	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MSound/MSoundSE	startSoundActorWithInfo__Q214MSoundSESystem8MSoundSEFUlPC3VecP3VecfUlUlPP8JAISoundUlUc	99.92	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MSound/MSoundSE	startSoundNpcActor__Q214MSoundSESystem8MSoundSEFUlPC3VecUlPP8JAISoundUlUc	99.72	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MSound/MSModBgm	xFadeBgm__10MSBgmXFadeFf	99.40	DIFFERENT	BUG, fix pending	getTiming 2nd test: retail `unk0 >= scTiming[i]` (fcmpo unk0,tab; cror gt|eq), ours `scTiming[i] >= unk0`; fix drops xFadeBgm 99.4->99.2, see pending-MSModBgm-xFadeBgm.patch
+mario/Camera/CameraBGCheck	execWallCheck___15CPolarSubCameraFP3Vec	99.87	DIFFERENT	EQUIVALENT	retail reads the stack copy of 0x80..0x88(r28) it just made, ours reads the member directly; no store in between
+mario/Camera/CameraChange	changeCamModeSub___15CPolarSubCameraFiib	99.61	UNSUPPORTED	EQUIVALENT	retail `bgt next; b L` vs ours `ble L`: one extra jump block, CFG otherwise isomorphic
+mario/Camera/cameragc	loadAfter__15CPolarSubCameraFv	99.58	UNSUPPORTED	EQUIVALENT	C_MTXLookAt args identical; ours keeps this+0x1ec in r30
+mario/Camera/lensglow	perform__9TLensGlowFUlPQ26JDrama9TGraphics	99.11	UNSUPPORTED	EQUIVALENT	int->float temps use swapped stack slots; inbetween args renamed consistently
+mario/Enemy/conductor	genEnemyFromPollution__10TConductorFv	99.91	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/emario	load__7TEMarioFR20JSUMemoryInputStream	99.89	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/enemyAttachment	generatePolluteModel__25TEnemyPolluteModelManagerFRQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>	99.92	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/enemymanager	createEnemies__13TEnemyManagerFi	99.72	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/enemyMario	initModel__11TEnemyMarioFv	99.91	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/enemyMario	initEnemyValues__11TEnemyMarioFv	99.75	DIFFERENT	EQUIVALENT	branch on r19 (replayCount): retail reuses r19 for linkData, which is null on the only path that skips the loop, so both test 0/linkCount
+mario/Enemy/enemyMario	consider__11TEnemyMarioFv	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/enemyMario	drawHPMeter__11TEnemyMarioFPA4_f	99.17	DIFFERENT	EQUIVALENT	fmadds multiplicands commuted (conv*const vs const*conv); stores then carry the same value
+mario/Enemy/enemyMario	perform__11TEnemyMarioFUlPQ26JDrama9TGraphics	99.88	UNSUPPORTED	EQUIVALENT	PSMTXCopy src/dst built in a different order, same values
+mario/Enemy/hamukuri	walkBehavior__13THaneHamuKuriFif	99.90	DIFFERENT	EQUIVALENT	two lfs from the params block reordered into the same destination registers
+mario/Enemy/hinokuri2	moveObject__10THinokuri2Fv	99.87	UNSUPPORTED	EQUIVALENT	two lfs reordered before the same fcmpo
+mario/Enemy/hinokuri2	execute__22TNerveHino2GraphWanderCFP24TSpineBase<10TLiveActor>	99.91	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/mameGesso	execute__21TNerveMameGessoThrownCFP24TSpineBase<10TLiveActor>	99.78	DIFFERENT	EQUIVALENT	sin/cos fmuls operand registers swapped consistently; f2/f3 at the icall are stale (callee takes this only)
+mario/Enemy/namekuri	calcRootMatrix__9TNameKuriFv	99.44	UNSUPPORTED	EQUIVALENT	stack rotation matrix laid out at another base; element values identical
+mario/Enemy/namekuri	execute__24TNerveNameKuriJumpAttackCFP24TSpineBase<10TLiveActor>	99.87	DIFFERENT	EQUIVALENT	r4/r5 hold 0x15c/0x1a4 swapped; the vtable+0x190 call passes r3/r4=3 only, r5 is stale
+mario/Enemy/pakkun	loadInit__11TPakkunSeedFP11TSpineEnemyPCc	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/pakkun	execute__16TNervePakkunStayCFP24TSpineBase<10TLiveActor>	99.60	UNSUPPORTED	EQUIVALENT	stack temps relocated; calcVelocityToJumpToY f1/f2 loads reordered
+mario/Enemy/smallEnemy	genEventCoin__11TSmallEnemyFv	99.92	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/smallEnemy	moveObject__11TSmallEnemyFv	99.90	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/spider	bind__7TSpiderFP10TLiveActor	99.59	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossgesso	perform__10TBGBeakHitFUlPQ26JDrama9TGraphics	99.78	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossgesso	bind__9TBGBinderFP10TLiveActor	99.63	UNSUPPORTED	EQUIVALENT	stack temps relocated; fadds renamed
+mario/Enemy/bossgesso	init__10TBossGessoFP12TLiveManager	99.87	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossgesso	execute__18TNerveBGBeakDamageCFP24TSpineBase<10TLiveActor>	99.95	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossgesso	execute__22TNerveBGTentacleDamageCFP24TSpineBase<10TLiveActor>	99.89	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossgesso	execute__11TNerveBGDieCFP24TSpineBase<10TLiveActor>	99.95	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/elecNokonoko	loadInit__13TElecCarapaceFP11TSpineEnemyPCc	99.91	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/telesa	behaveToWater__7TTelesaFP9THitActor	99.92	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/fireWanwan	performNodes__18TFireWanwanTailHitFUlPQ26JDrama9TGraphics	99.39	DIFFERENT	BUG, fixed	performNodes: MTXCopy(src,dst) arguments swapped; retail copies the model base TR matrix into the stack matrix, ours overwrote the model matrix with an uninitialised one
+mario/Enemy/fireWanwan	bind__11TFireWanwanFv	99.64	UNSUPPORTED	BUG, fixed	emitEffectsOnHittingWall (inlined): antiparallel case is setEulerY(PI) in retail (y=sin), ours setEulerZ
+mario/Enemy/fireWanwan	bindBody__11TFireWanwanFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	99.53	UNSUPPORTED	EQUIVALENT	fnmsubs/fadds renamed; stack vector 4 bytes higher
+mario/Enemy/fireWanwan	bindPoint__11TFireWanwanFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fP18TBGWallCheckRecord	99.89	DIFFERENT	BUG, fixed	bindPoint: second ground probe uses point.y + mHeadHeight (f1 kept from the point.y > actualPoint.y test), ours used actualPoint.y
+mario/Enemy/fireWanwan	execute__28TNerveFireWanwanRecoverGraphCFP24TSpineBase<10TLiveActor>	99.42	DIFFERENT	EQUIVALENT	retail keeps &this->0x104 in r3 and adds 4; ours folds to r31+0x108; same pointer selection
+mario/Enemy/bosspakkun	perform__10TBPTornadoFUlPQ26JDrama9TGraphics	99.92	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bosspakkun	execute__12TNerveBPWaitCFP24TSpineBase<10TLiveActor>	99.91	UNSUPPORTED	EQUIVALENT	stack temps relocated
+mario/Enemy/tobiPuku	forceLaunch__18TTobiPukuLaunchPadFP9TTobiPuku	99.31	DIFFERENT	EQUIVALENT	jump-velocity fmuls chain register-renamed; f3/f4 at the icall are stale
+mario/Enemy/tinkoopa	initTinKoopaPartsBase__18TTinKoopaPartsBaseFv	99.84	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/tinkoopa	loadAfter__16TTinKoopaManagerFv	99.38	DIFFERENT	EQUIVALENT	JPAResourceManager::load id: ours passes r26+0xee unmasked vs clrlwi 16; loop index is < 0x10000 so the u16 value is identical
+mario/Enemy/tinkoopa	execute__19TNerveTinKoopaBreakCFP24TSpineBase<10TLiveActor>	99.18	UNSUPPORTED	EQUIVALENT	retail has a dead `b; cmpwi` pair; otherwise identical
+mario/Enemy/bosswanwan	init__11TBossWanwanFP12TLiveManager	99.74	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bosswanwan	perform__11TBossWanwanFUlPQ26JDrama9TGraphics	99.83	DIFFERENT	EQUIVALENT	r5/r6 renamed in the inlined list push; vtable+0x108 call takes this only
+mario/Enemy/bosswanwan	execute__12TNerveBWStunCFP24TSpineBase<10TLiveActor>	99.56	UNSUPPORTED	EQUIVALENT	bge->r0=1 vs blt->r0=0: same boolean; list-node registers renamed
+mario/Enemy/bosswanwan	execute__18TNerveBWJumpToBathCFP24TSpineBase<10TLiveActor>	99.71	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bosswanwan	execute__11TNerveBWDieCFP24TSpineBase<10TLiveActor>	99.13	UNSUPPORTED	EQUIVALENT	setMtx call vs inlined MTXCopy; loop counters renamed
+mario/Enemy/chuuhana	moveObject__9TChuuHanaFv	99.48	UNSUPPORTED	EQUIVALENT	velocity fmuls renamed; stores get the same products
+mario/Enemy/igaiga	moveObject__7TIgaigaFv	99.59	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/igaiga	walkBehavior__7TIgaigaFif	99.72	UNSUPPORTED	EQUIVALENT	two copies of the same vector at other slots; z*z identical
+mario/Enemy/igaiga	walkBehavior__9TGorogoroFif	99.90	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/poihana	walkBehavior__8TPoiHanaFif	99.79	DIFFERENT	EQUIVALENT	`a > b` vs `b < a` with the branch inverted (cmpw r0,r4;ble vs cmpw r3,r0;bge)
+mario/Enemy/poihana	execute__20TNervePoihanaTrappedCFP24TSpineBase<10TLiveActor>	99.92	DIFFERENT	BUG, fixed	Trapped nerve: retail builds the Y TMsRange as (MaxSpY value 0x3a0, MinSpY value 0x38c); ours had (min,max), so each rand() drew a different jump speed
+mario/Enemy/tamaNoko	execute__20TNerveTamaNokoAttackCFP24TSpineBase<10TLiveActor>	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bosstelesa	moveObject__11TBossTelesaFv	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/cannon	init__7TCannonFP12TLiveManager	99.81	DIFFERENT	EQUIVALENT	initHitActor float args loaded in a different order into the same f1..f4
+mario/Enemy/cannon	moveObject__7TCannonFv	99.91	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bosseel	__ct__14TBEelTearsDropFP10TBEelTearsiP12SDLModelDataPCc	99.98	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bosseel	__ct__13TBossEelToothFUcP8TBossEelPCcP12SDLModelDataPCc	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bosseel	perform__14TBossEelVortexFUlPQ26JDrama9TGraphics	99.67	UNSUPPORTED	EQUIVALENT	vortex scale fmuls renamed
+mario/Enemy/bosseel	init__8TBossEelFP12TLiveManager	99.79	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bosseel	execute__16TNerveBossEelEatCFP24TSpineBase<10TLiveActor>	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/killer	calcChaseParam__9TFlyEnemyFv	99.89	DIFFERENT	EQUIVALENT	void function; r4 at return is stale
+mario/Enemy/hanasambo	dropLeaf__19TSamboFlowerManagerFRQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>	99.97	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/hanasambo	init__10THanaSamboFP12TLiveManager	99.65	DIFFERENT	EQUIVALENT	r6/r7 renamed; r7 at initHitActor is not an argument (stale)
+mario/Enemy/hanasambo	execute__21TNerveSamboHeadAttackCFP24TSpineBase<10TLiveActor>	99.86	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/popo	PopoPossessedCallback__FP7J3DNodei	99.62	DIFFERENT	EQUIVALENT	PSMTXCopy/Concat operands built in a different order but the same (r30, popo+0x1d0); r4 at return stale (int in r3=1)
+mario/Enemy/fruitsboat	execute__27TNerveFruitsBoatGraphWanderCFP24TSpineBase<10TLiveActor>	99.85	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/amiNoko	init__8TAmiNokoFP12TLiveManager	99.91	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/amiNoko	calcDirection__8TAmiNokoFv	99.49	DIFFERENT	EQUIVALENT	fmadds accumulation chain register-renamed; dot products identical; f2 at icall stale
+mario/Enemy/gatekeeper	init__17TBiancoGateKeeperFP12TLiveManager	99.68	UNSUPPORTED	EQUIVALENT	setSkinDeform args loaded in a different order
+mario/Enemy/BossHanachanEffect	emitParticle___13TBossHanachanFv	99.61	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bgtentacle	calc__18TBGTentacleMtxCalcFUs	99.65	DIFFERENT	EQUIVALENT	six lfs from the same matrix reordered/renamed (r24/r25 hold the same pointer)
+mario/Enemy/bgtentacle	moveRequest__10TBGTakeHitFRCQ29JGeometry8TVec3<f>	99.76	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bgtentacle	__ct__11TBGTentacleFP10TBossGessoii	99.17	UNSUPPORTED	EQUIVALENT	lis r6 scheduled later
+mario/Enemy/bgtentacle	moveNode__11TBGTentacleFv	99.61	UNSUPPORTED	EQUIVALENT	`i <= 1` as cmplwi vs cmpwi: i is a non-negative loop index
+mario/Enemy/wireTrap	load__9TWireTrapFR20JSUMemoryInputStream	99.91	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/Kazekun	execute__19TNerveKazekunAttackCFP24TSpineBase<10TLiveActor>	99.89	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossManta	init__10TBossMantaFP12TLiveManager	99.14	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossManta	moveObject__10TBossMantaFv	99.97	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossManta	control__10TBossMantaFv	99.92	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossManta	__ct__32TBossMantaAdditionalCollisionSetFv	99.81	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/bossManta	drawMantaShadow__17TBossMantaManagerFPQ26JDrama9TGraphics	99.79	UNSUPPORTED	EQUIVALENT	clamp and int->float temps renamed
+mario/Enemy/koopajr	perform__8TKoopaJrFUlPQ26JDrama9TGraphics	99.94	UNSUPPORTED	EQUIVALENT	atan2f args from relocated stack copies, same components
+mario/Enemy/koopajr	makeRelativeAngle__17TKoopaJrSubmarineFv	99.63	UNSUPPORTED	EQUIVALENT	as perform: same atan2f components
+mario/Enemy/koopajr	checkNerve__17TKoopaJrSubmarineFv	99.56	UNSUPPORTED	EQUIVALENT	atan2f args same; list push renamed
+mario/Enemy/Kumokun	bind__8TKumokunFv	99.50	UNSUPPORTED	BUG, fixed	bind wall step: retail subtracts local_11C (pre-check position) from the checked position, ours subtracted mPosition
+mario/Enemy/Kumokun	checkOnMovingRoof__8TKumokunCFPQ29JGeometry8TVec3<f>PPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	99.86	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/Kumokun	bindOnFlying__8TKumokunFv	99.41	UNSUPPORTED	EQUIVALENT	f30/f31 renamed consistently in the range test
+mario/Enemy/Koopa	execute__15TNerveKoopaWaitCFP24TSpineBase<10TLiveActor>	99.83	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/Koopa	execute__16TNerveKoopaFlameCFP24TSpineBase<10TLiveActor>	99.86	UNSUPPORTED	EQUIVALENT	sign test renamed
+mario/Enemy/Koopa	updateAnmSound__6TKoopaFv	99.50	DIFFERENT	EQUIVALENT	void; f1 at return stale
+mario/Enemy/Kukku	init__10TKukkuBallFv	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/BathtubPeach	execute__17TNervePeachEscapeCFP24TSpineBase<10TLiveActor>	99.12	UNSUPPORTED	EQUIVALENT	int->float and scale renamed
+mario/Enemy/BathtubKiller	execute__25TNerveBathtubKillerWanderCFP24TSpineBase<10TLiveActor>	99.85	UNSUPPORTED	EQUIVALENT	inlined isAttackable measures Mario first in retail; same test my <= 100 + mario
+mario/Enemy/BathtubKiller	execute__24TNerveBathtubKillerChaseCFP24TSpineBase<10TLiveActor>	99.86	UNSUPPORTED	EQUIVALENT	same inlined isAttackable order difference
+mario/Enemy/TabePuku	swimTo__9TTabePukuFRCQ29JGeometry8TVec3<f>	99.33	DIFFERENT	EQUIVALENT	fmadds/fmsubs results renamed consistently; f4 at icall is an old input
+mario/Enemy/TabePuku	execute__19TNerveTabePukuFoundCFP24TSpineBase<10TLiveActor>	99.76	DIFFERENT	EQUIVALENT	same as swimTo: renamed cross-product temps, stale f4 at icall
+mario/Enemy/TabePuku	execute__20TNerveTabePukuAttackCFP24TSpineBase<10TLiveActor>	99.86	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/TabePuku	execute__18TNerveTabePukuDragCFP24TSpineBase<10TLiveActor>	99.76	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Enemy/limitkoopa	loadAfter__11TLimitKoopaFv	99.79	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/GC2D/Menu	perform__9TMenuBaseFUlPQ26JDrama9TGraphics	99.87	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/GC2D/GCConsole2	loadAfter__11TGCConsole2Fv	99.70	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/GC2D/GCConsole2	startCameraDemo__11TGCConsole2Fv	99.08	UNSUPPORTED	EQUIVALENT	coord arithmetic reassociated (subf/add order), same values
+mario/GC2D/GCConsole2	startAppearTelop__11TGCConsole2Fb	99.34	UNSUPPORTED	EQUIVALENT	string-table offset arithmetic renamed
+mario/GC2D/GCConsole2	setTimer__11TGCConsole2Fl	99.80	DIFFERENT	EQUIVALENT	equality compare with operands swapped (cmplw r0,r3 vs r3,r0) before beq
+mario/GC2D/GCConsole2	drawJuice__11TGCConsole2FR13J2DOrthoGraphUl	99.69	DIFFERENT	EQUIVALENT	unsigned byte `ble 0` vs `beq 0` (same for u8); fnmsubs operands renamed
+mario/GC2D/GCConsole2	drawWater__11TGCConsole2FR13J2DOrthoGraph	99.71	UNSUPPORTED	EQUIVALENT	rect x/y copied through relocated slots into the same r4/r5
+mario/GC2D/Talk2D2	loadAfter__8TTalk2D2Fv	99.79	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/GC2D/Talk2D2	moveTalkWindow__8TTalk2D2Fv	99.19	DIFFERENT	EQUIVALENT	r6..r10 renamed in the alpha loop; r10 at the call is stale
+mario/GC2D/Talk2D2	setTagParam__8TTalk2D2FR20JSUMemoryInputStreamR10J2DTextBoxPiPi	99.55	DIFFERENT	EQUIVALENT	int->float and scale renamed; f1/f2 at the varargs snprintf are stale
+mario/GC2D/PauseMenu2	perform__11TPauseMenu2FUlPQ26JDrama9TGraphics	99.39	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/GC2D/CardSave	waitForChoice__9TCardSaveF10TEProgress10TEProgressSc	99.27	DIFFERENT	EQUIVALENT	createEmitter args r5=0x1fa/r6=0/r7=0 loaded in a different order; r8 at icall stale
+mario/GC2D/CardSave	waitForChoiceBM__9TCardSaveF10TEProgress10TEProgressSc	99.37	DIFFERENT	EQUIVALENT	as waitForChoice: same createEmitter args, r8 stale
+mario/GC2D/CardSave	execMovement___9TCardSaveFv	99.19	UNSUPPORTED	EQUIVALENT	createEmitter args and flag XORs renamed/reordered
+mario/GC2D/CardLoad	load__9TCardLoadFR20JSUMemoryInputStream	99.23	UNSUPPORTED	EQUIVALENT	loop counters renamed; add operands commuted
+mario/GC2D/CardLoad	perform__9TCardLoadFUlPQ26JDrama9TGraphics	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/GC2D/CardLoad	waitForChoiceBM__9TCardLoadF10TEProgress10TEProgressi	99.31	DIFFERENT	EQUIVALENT	as TCardSave: same emitter args, rect maths renamed, r8 stale
+mario/GC2D/CardLoad	selectBookmark__9TCardLoadF10TEProgress10TEProgressb	99.09	DIFFERENT	EQUIVALENT	modulo/digit arithmetic renamed; r8 at icall stale
+mario/GC2D/CardLoad	selectFunction__9TCardLoadFv	99.40	DIFFERENT	EQUIVALENT	equality compares with swapped operands (cmpw r5,r0 vs r0,r5) before bne
+mario/GC2D/CardLoad	changeScene__9TCardLoadFv	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/GC2D/ConsoleStr	__sinit_ConsoleStr_cpp	99.23	DIFFERENT	BUG, fixed	cShineGetLeft2 is (-21, 7) in retail (r9=-0x15 stored), source had (-50, 7)
+mario/GC2D/ConsoleStr	startCloseWipe__11TConsoleStrFb	99.14	UNSUPPORTED	EQUIVALENT	0x2b1-x computed as 0x1d1-x+0xe0; int->float slots swapped consistently
+mario/GC2D/SelectMenu	initData__11TSelectMenuFUcP10JKRArchiveP19TSelectShineManagerP10TSelectDir	99.48	UNSUPPORTED	BUG, fix pending	initData low-coin arm: retail joins the shared shine-flag setup after the digits, source nests it in the else (codex finding); fix drops 99.4->99.2, see pending-SelectMenu-initData.patch
+mario/GC2D/SelectMenu	perform__11TSelectMenuFUlPQ26JDrama9TGraphics	99.68	UNSUPPORTED	BUG, fixed	perform MENU_INPUT_LOOP: retail breaks out of the switch after mMenuState = DISAPPEAR_MENU, ours fell through into MENU_ANIM_LOOP for that frame
+mario/GC2D/SelectDir	rsetup__10TSelectDirFv	99.63	UNSUPPORTED	EQUIVALENT	camera placement vectors built in other stack slots; each member gets the same constants
+mario/GC2D/Guide	linkSelect__6TGuideFv	99.53	UNSUPPORTED	EQUIVALENT	fmuls commuted; extsh scheduled
+mario/GC2D/hx_wiper	Hxs_GameOver	99.66	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/GC2D/hx_wiper	Hx_Logo	99.86	DIFFERENT	BUG, fixed	K&R Hxs_Logo_ExtraDraw(alpha, timg) was called with one arg; retail keeps `buffer` in r4 so timg=buffer, ours passed dp+0xc on the dp-advance frame. Passing buffer explicitly gives 100%
+mario/GC2D/hx_wiper	Hx_Test5	99.82	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/Map	initMonte__Fv	99.79	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/Map	isTouchedOneWall__4TMapCFffff	99.86	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapMakeList	getGridArea__17TMapCollisionDataFPC12TBGCheckDataiPiPiPiPi	99.50	DIFFERENT	EQUIVALENT	min(f5,f6) spelled with the compare operands and arms swapped
+mario/Map/MapWarp	watchToWarp__8TMapWarpFv	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapStaticObject	init__13TMapStaticObjFPCc	99.86	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapWire	release__8TMapWireFv	99.76	DIFFERENT	EQUIVALENT	void; r3/r4 at return stale
+mario/Map/MapWire	move__8TMapWireFv	99.64	DIFFERENT	EQUIVALENT	cos*amp commuted; f1 at return stale (void)
+mario/Map/MapWire	getPointPosOnWire__8TMapWireCFfPQ29JGeometry8TVec3<f>	99.71	DIFFERENT	EQUIVALENT	fmadds interpolation loads reordered; results renamed consistently
+mario/Map/PollutionLayer	stampModel__15TPollutionLayerFP8J3DModel	99.27	DIFFERENT	EQUIVALENT	two lfs reordered
+mario/Map/PollutionLayer	initTexImage__15TPollutionLayerFPCc	99.85	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapEventMare	appear__13TMareWallRockFv	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapEventMare	movement__13TMareWallRockFv	99.98	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapEventMare	loadAfter__13TMareWallRockFv	99.91	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapEventMare	rising__21TMareEventDepressWallFv	99.88	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapEventMare	depressing__21TMareEventDepressWallFv	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Map/MapEventMare	initCommon__21TMareEventDepressWallFv	99.85	UNSUPPORTED	EQUIVALENT	index arithmetic renamed
+mario/Map/BathWaterManager	render__22TBathWaterFlatRendererFPQ26JDrama9TGraphicsRC12TBathtubDataPP10TBathWaterPP16TBathWaterParamsi	99.89	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjBase	makeObjAppeared__11TMapObjBaseFv	99.93	DIFFERENT	EQUIVALENT	retail calls TMapCollisionBase::setMtx(m) out of line, ours inlines its body MTXCopy(m, this+0x20)
+mario/MoveBG/MapObjBase	initAndRegister__11TMapObjBaseFPCc	99.79	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjGeneral	thrown__14TMapObjGeneralFv	99.55	DIFFERENT	EQUIVALENT	throw-speed fmadds renamed; the three stores get the same values
+mario/MoveBG/MapObjGeneral	recover__14TMapObjGeneralFv	99.70	DIFFERENT	EQUIVALENT	0x20(r4) loaded into f5 vs f3; f3 is reloaded before clean(), f5 stale
+mario/MoveBG/MapObjGeneral	bind__14TMapObjGeneralFv	99.86	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/Item	control__6TShineFv	99.95	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/Item	loadBeforeInit__6TShineFR20JSUMemoryInputStream	99.97	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjBianco	touchWater__19TBiancoMiniWindmillFP9THitActor	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjBianco	bind__9TLeafBoatFv	99.28	UNSUPPORTED	EQUIVALENT	sub() this/arg pointers loaded in a different order
+mario/MoveBG/MapObjBianco	loadAfter__15TLampSeesawMainFv	99.90	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMamma	waitBeforeExplode__11TSandCastleFv	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMamma	control__17TMammaBlockRotateFv	99.95	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjPinna	control__11TPinnaShellFv	99.89	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjPinna	moveObject__8TAmiKingFv	99.92	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMare	initDraw__9TCogwheelCFv	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMare	initDraw__9TWireBellCFv	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMare	touchPlayer__14TMapObjPuncherFP9THitActor	99.72	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjBall	kicked__11TMapObjBallFv	99.81	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjBall	touchWater__11TMapObjBallFP9THitActor	99.66	DIFFERENT	EQUIVALENT	two lfs reordered, fmadds f1*f2 same
+mario/MoveBG/MapObjBall	boundByActor__11TMapObjBallFP9THitActor	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjBall	calcCurrentMtx__11TMapObjBallFv	99.29	DIFFERENT	EQUIVALENT	x*x+z*z vs z*z+x*x in one fmadds: last-ulp fma rounding difference only
+mario/MoveBG/MapObjBall	checkWallCollision__11TMapObjBallFPQ29JGeometry8TVec3<f>	99.29	UNSUPPORTED	EQUIVALENT	fadds operand loads reordered
+mario/MoveBG/MapObjBall	touchWater__11TResetFruitFP9THitActor	99.74	DIFFERENT	EQUIVALENT	two lfs reordered, fmadds same
+mario/MoveBG/MapObjBall	kicked__11TResetFruitFv	99.82	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/ModelGate	loadAfter__10TModelGateFv	99.95	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMonte	initDraw__14THangingBridgeCFv	99.87	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMonte	loadAfter__14THangingBridgeFv	99.87	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMonte	initDraw__11TSwingBoardCFv	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjMonte	control__13TFluffManagerFv	99.56	DIFFERENT	EQUIVALENT	three member += adds with commuted fadds operands
+mario/MoveBG/MapObjCorona	perform__8TBathtubFUlPQ26JDrama9TGraphics	99.59	DIFFERENT	EQUIVALENT	MActor::calc() takes this only; r5/r6 stale
+mario/MoveBG/MapObjCorona	control__8TBathtubFv	99.05	DIFFERENT	EQUIVALENT	li r30,0 vs mr r30,r29 (r29=0); cross product renamed and commuted; emitAndBindToMtxPtr args equal
+mario/MoveBG/MapObjCorona	allowsTumble__8TBathtubCFv	99.83	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MoveBG/MapObjCorona	getNextJuncture__8TBathtubCFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	99.47	UNSUPPORTED	EQUIVALENT	dot-product fmadds regrouped per component; matan args equal
+mario/MoveBG/MapObjCorona	getNextGrip__8TBathtubCFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fPf	99.49	UNSUPPORTED	EQUIVALENT	same as getNextJuncture
+mario/NPC/NpcAnm	walkAnmRateChange___8TBaseNPCFv	99.60	DIFFERENT	EQUIVALENT	mr r0,r3 (r3=1) vs li r0,1
+mario/NPC/NpcAnm	npcWetting__8TBaseNPCFv	99.83	DIFFERENT	EQUIVALENT	void; r4 at return stale
+mario/NPC/NpcChange	changeNerveProc___8TBaseNPCFv	99.63	DIFFERENT	EQUIVALENT	addi r27,r30,0 with r30==0 on the only path vs li r27,0
+mario/Strategic/liveactor	calcRideMomentum__10TLiveActorFv	99.85	DIFFERENT	EQUIVALENT	fadds commuted; void so f1 at return stale
+mario/Strategic/MirrorActor	init__12TMirrorActorFP8J3DModelUs	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MarioUtil/DrawUtil	loadAfter__11TSilhouetteFv	99.74	UNSUPPORTED	EQUIVALENT	cross-ratio fmuls/fmsubs renamed
+mario/MarioUtil/MtxUtil	constraintTail__5TRopeFRCQ29JGeometry8TVec3<f>	99.58	DIFFERENT	EQUIVALENT	epsilonEquals(prev,cur) vs (cur,prev): d and -d tested against symmetric [-eps,eps]
+mario/MarioUtil/ShadowUtil	__ct__16TMBindShadowBodyFP9THitActorP8J3DModelf	99.97	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MarioUtil/ShadowUtil	entryDrawShadow__16TMBindShadowBodyFv	99.41	DIFFERENT	EQUIVALENT	f29/f31 renamed consistently; void so f1 at return stale
+mario/MarioUtil/ShadowUtil	drawShadowVolume__19TMBindShadowManagerFbP16TAlphaShadowQuad	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/MarioUtil/ShadowUtil	forceRequest__19TMBindShadowManagerFRC20TCircleShadowRequestUl	99.50	DIFFERENT	EQUIVALENT	retail reads its stack copy of the request, ours the reference; no store in between
+mario/Player/MarioAutodemo	readBillboard__6TMarioFv	99.90	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/MarioDraw	MarioWaistCtrl__FP7J3DNodei	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/MarioDraw	initModel__6TMarioFv	99.64	UNSUPPORTED	EQUIVALENT	loop counters renamed
+mario/Player/MarioDraw	calcBaseMtx__6TMarioFPA4_f	99.67	UNSUPPORTED	EQUIVALENT	normalisation temps relocated and renamed
+mario/Player/MarioDraw	calcAnim__6TMarioFUlPQ26JDrama9TGraphics	99.44	UNSUPPORTED	EQUIVALENT	retail reloads 0xc(r31) after the null test, ours reuses it
+mario/Player/MarioJump	jumpMain__6TMarioFv	99.98	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/MarioMove	checkWallPlane__6TMarioFP3Vecff	99.69	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/MarioMove	checkController__6TMarioFPQ26JDrama9TGraphics	99.69	UNSUPPORTED	EQUIVALENT	input scaling fmadds renamed; constants map pairwise
+mario/Player/MarioMove	checkCurrentPlane__6TMarioFv	99.19	UNSUPPORTED	EQUIVALENT	plane-normal dot reordered; three instructions hoisted into a separate block
+mario/Player/MarioMove	thinkYoshiHeadCollision__6TMarioFv	99.73	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/MarioPhysics	keepDistance__6TMarioFRCQ29JGeometry8TVec3<f>ff	99.55	DIFFERENT	EQUIVALENT	emitParticle(int): f3/f5 stale
+mario/Player/MarioRun	walkEnd__6TMarioFv	99.99	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/MarioSpecial	hanging__6TMarioFv	99.46	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/MarioSpecial	wireWait__6TMarioFv	99.89	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/MarioSpecial	wireSWait__6TMarioFv	99.69	UNSUPPORTED	EQUIVALENT	s16 angle difference negated (r30-a vs a-r30) against the symmetric (-0x4000,0x4000) window
+mario/Player/MarioSpecial	wireRolling__6TMarioFv	99.63	UNSUPPORTED	EQUIVALENT	zero register choice
+mario/Player/MarioSpecial	fenceMove__6TMarioFv	99.78	DIFFERENT	EQUIVALENT	fmadds multiplicands commuted
+mario/Player/Yoshi	doSearch__6TYoshiFv	99.74	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/Yoshi	movement__6TYoshiFv	99.66	UNSUPPORTED	EQUIVALENT	getOffYoshi arg load scheduled after the compare
+mario/Player/Yoshi	entry__6TYoshiFv	99.94	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/Player/ModelWaterManager	loadAfter__18TModelWaterManagerFv	99.65	DIFFERENT	EQUIVALENT	fmadds multiplicands commuted
+mario/Player/MarioCheckCol	hitNormal__6TMarioFP9THitActor	99.70	DIFFERENT	EQUIVALENT	mStaticHitActor address in r3 vs r7; r7 at icall stale
+mario/Player/MarioReceiveMsg	receiveMessage__6TMarioFP9THitActorUl	99.98	UNSUPPORTED	EQUIVALENT	matan args from relocated copies, same components
+mario/System/EventWatcher	evSetGraffitoMultiplied__FP32TSpcTypedInterp<13TEventWatcher>Ul	99.21	DIFFERENT	EQUIVALENT	loop counters renamed; r5/r7 at SpcTrace are stale varargs
+mario/System/GCLogoDir	setup__10TGCLogoDirFPQ26JDrama8TDisplayP13TMarioGamePad	99.68	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/GCLogoDir	direct_nlogo__10TGCLogoDirFv	99.41	DIFFERENT	EQUIVALENT	retail reloads 0x1c(r29), ours reuses the earlier load; only loads/branches in between
+mario/System/MarDirectorDirect	updateGameMode__12TMarDirectorFv	99.80	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/MarDirectorInitECT	initECDisp__12TMarDirectorFP12TPerformListPQ26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>PQ26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>	99.75	UNSUPPORTED	EQUIVALENT	setSrcRect args loaded in a different order
+mario/System/MenuDir	rsetup__13TMenuDirectorFv	99.77	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/MenuDir	setFixedStageValue__13TMenuDirectorFv	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/Application	setupThreadFuncLogo__12TApplicationFv	99.96	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/Application	initialize_nlogoAfter__12TApplicationFv	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/Application	drawDVDErr__12TApplicationFv	99.81	UNSUPPORTED	EQUIVALENT	print x from (c-w)*k with renamed regs
+mario/System/CardManager	copyTo__12TCardManagerFPQ212TCardManager9TCriteriaP17TCardBookmarkInfo	99.80	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/CardManager	writeBlock___12TCardManagerFUl	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/MovieDirector	rsetup__14TMovieDirectorFv	99.69	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/System/MovieDirector	direct__14TMovieDirectorFv	99.34	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/JSystem/JAudio/JAInterface/JAIGFrameSequence	checkPlayingSeqTrack__8JAIBasicFUl	99.61	DIFFERENT	EQUIVALENT	r27+(r22<<5)+0x1354 folded in a different order
+mario/JSystem/JParticle/JPAField	loadFieldBlock__12JPABaseFieldFP12JPADataBlock	99.93	UNSUPPORTED	EQUIVALENT	only register renames, stack-slot offsets and frame size differ (stack)
+mario/JSystem/JParticle/JPADrawVisitor	exec__22JPADrawExecDirectionalFPC14JPADrawContextP15JPABaseParticle	99.67	UNSUPPORTED	EQUIVALENT	stack vectors relocated; two lfs reordered
+mario/JSystem/JParticle/JPADrawVisitor	exec__25JPADrawExecRotDirectionalFPC14JPADrawContextP15JPABaseParticle	99.96	DIFFERENT	EQUIVALENT	two lfs reordered
+mario/JSystem/JParticle/JPADrawVisitor	exec__27JPADrawExecDirectionalCrossFPC14JPADrawContextP15JPABaseParticle	99.65	DIFFERENT	EQUIVALENT	two lfs reordered; stack vector renamed
+mario/JSystem/JParticle/JPADrawVisitor	exec__30JPADrawExecRotDirectionalCrossFPC14JPADrawContextP15JPABaseParticle	99.97	DIFFERENT	EQUIVALENT	two lfs reordered
+mario/TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/support	TRKSuppAccessFile	99.64	UNSUPPORTED	EQUIVALENT	MetroTRK hand frame: only prologue/epilogue layout differs
