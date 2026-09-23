@@ -70,6 +70,9 @@ TTamaNokoFlower::TTamaNokoFlower(const TLiveActor* param_1, int param_2,
 	unk2C->initAnmSound(nullptr, 1, 0.0f);
 }
 
+// TODO: 97.0%. Retail hoists &local_b8 into a saved GPR (r30, with i in r29
+// and one more stmw register) and parks local_c4 8 bytes higher; declaring
+// the matrix outside the loop or before local_88 does not move either.
 void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -97,16 +100,18 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 
 						local_b8[2][0] = -s;
 						local_b8[2][1] = 0.0f;
-						local_b8[2][3] = 0.0f;
 						local_b8[2][2] = c;
+						local_b8[2][3] = 0.0f;
 
-						MTXMultVec(local_b8, &local_88, &unk20);
+						MTXMultVec(local_b8, &local_88, &local_88);
 
 						JGeometry::TVec3<f32> local_c4 = unk10->getPosition();
+						f32 x = local_c4.x;
+						f32 y = local_c4.y;
+						f32 z = local_c4.z;
 						if (TMapObjBase* mapObj = gpItemManager->makeObjAppear(
-						        local_c4.x + local_88.x, local_c4.y,
-						        local_c4.z + local_88.z, 0x2000000e, true)) {
-							mapObj->mPosition.y = local_c4.y;
+						        x + local_88.x, y, z + local_88.z, 0x2000000e, true)) {
+							mapObj->mPosition.y = y;
 							MsVECNormalize(&local_88, &local_88);
 							mapObj->mVelocity.set(local_88.x * 4.0f, 20.0f,
 							                      local_88.z * 4.0f);

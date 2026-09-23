@@ -766,6 +766,9 @@ const char** TKukku::getBasNameTable() const { return tori_bastable; }
 // calcMomentum() is the side that wins (RecoverGraph 67.7 -> 99.8, this nerve
 // 92.9 -> 94.5), and its cost is that TVec3::set<f> is no longer instantiated
 // in this object -- retail's only two `bl`s to it are here and in dropCoins().
+// Measured: the short body (quat = SMS_Eular2Quat, velocity.set, quat.rotate)
+// gives this nerve retail's 0x108 frame, but MWCC then also inlines TVec4's
+// copy and set<f> here (retail calls both) and RecoverGraph falls to 68.7%.
 DEFINE_NERVE(TNerveKukkuGraphWander, TLiveActor)
 {
 	TKukku* kukku = (TKukku*)spine->getBody();
