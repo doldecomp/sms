@@ -1293,6 +1293,9 @@ static void Hxs_Logo_TexSetup(u8 alpha_in, u8 fade_in, const ResTIMG* timg)
 // TODO: retail's frame is 8 bytes larger (its Vec sits at 0x38, ours at
 // 0x30) and its callee-saved FPRs are coloured differently (dx/dy in f31/f30,
 // u1..v2 in f22..f25); declaration order is inert.
+// TODO: frame is right; the saved-FPR colouring differs (retail: d.x/d.y
+// f31/f30, ox/oy f29/f28, u/v f22-f25) and the second vertex reloads d
+// earlier. Declaration and statement order are inert.
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 {
 	f32 sy = ht / 1.924138f;
@@ -1301,8 +1304,10 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 	f32 v2 = y2 / sy;
 	f32 u1 = x1 / sx;
 	f32 u2 = x2 / sx;
-	f32 ox = (f32)(hx.width >> 1) - (sx * 0.5f);
-	f32 oy = ((f32)(hx.height >> 1) - (sy * 0.5f)) - 32.0f;
+	f32 cx = hx.width >> 1;
+	f32 cy = hx.height >> 1;
+	f32 ox = cx - (sx * 0.5f);
+	f32 oy = (cy - (sy * 0.5f)) - 32.0f;
 	Vec d;
 	f32 dx;
 	f32 dy;
