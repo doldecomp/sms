@@ -71,7 +71,10 @@ void TMario::thinkAloha()
 // retail's: `dir` 0x13c and the three GXSetChanMatColor argument temporaries
 // 0x134/0x130/0x12c now land.  Left: startTimer's inlined TColor sits at 0x128
 // (below those temporaries) where retail has it at 0x138 (above them, where we
-// leave a dead word), and thinkCube's `pos` is 4 low (0x114 vs 0x118).
+// leave a dead word). thinkCube's `pos` (4 low, 0x114 vs 0x118) landed when the
+// one unbound fludd site moved from the CUE_SEMITRANSPARENT_PRIO_1 call to the
+// first CUE_MOVE null test (the first CUE_MOVE call site is equivalent; every
+// later site keeps `pos` low).
 // Retail allocates the colour first among the function's argument/compiler
 // temporaries; ours allocates it last.  Inert or worse against this caller
 // (the colour never rises above the GX temporaries): `Vec dir`, dir at
@@ -86,8 +89,8 @@ void TMario::thinkAloha()
 // The 104 bytes of dead low region the frame needed were measured in closure
 // batch 120: the parked MarioMainGetFludd binding level below is +16 of low
 // region per expansion at eight of the nine `mWaterGun` sites (+0x60; all nine
-// is +0x70 and overshoots, and dropping any one of the nine gives the same
-// 0x160, so which site retail spelled differently is not determined), and
+// is +0x70 and overshoots; the frame does not say which site is raw, but the
+// slot of thinkCube's `pos` does -- see above), and
 // `getM3UModel()` at the setBaseTRMtx site supplies the last +8. The real
 // accessor `getFludd()` at all nine sites is only +16 in total, so the missing
 // level is a binding one, not the accessor.
@@ -118,7 +121,7 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			setPositions();
 			if (mCap != nullptr)
 				mCap->perform(CUE_MOVE, graphics);
-			if (MarioMainGetFludd(this) != nullptr)
+			if (mWaterGun != nullptr)
 				MarioMainGetFludd(this)->perform(CUE_MOVE, graphics);
 			if (mYoshi != nullptr)
 				mYoshi->movement();
@@ -187,7 +190,7 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_SEMITRANSPARENT_PRIO_1)
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
-			mWaterGun->perform(CUE_SEMITRANSPARENT_PRIO_1, graphics);
+			MarioMainGetFludd(this)->perform(CUE_SEMITRANSPARENT_PRIO_1, graphics);
 
 	if (cue & CUE_UNK10000000) {
 		unk394->frameInit();
