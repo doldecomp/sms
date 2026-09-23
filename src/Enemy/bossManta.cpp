@@ -777,6 +777,8 @@ void TBossManta::calcRootMatrix()
 	JGeometry::TVec3<f32> side;
 	// TODO: frame and every slot are exact; retail colours the 0.0f/1.0f
 	// literals f3/f1 where we get f2/f3 (volatile-FPR block trade).
+	// Inert (h3): cross vs cross2 (worse), side declared first, up via
+	// set()/field stores/const, an explicit side.set(...) expression.
 	side.cross2(up, unk170);
 	m.setXDir(side);
 	m.setYDir(up);

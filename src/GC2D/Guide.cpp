@@ -956,7 +956,10 @@ static inline void GuideShowing(TGuide* guide)
 // TODO: frame 0x228 against retail's 0x2b8, and the disappearGuidePane
 // expansion's callee-saved registers rotate (retail: stage r27, height r31,
 // width r28). setPaneAlpha's out-of-line copy is 8 bytes short of frame in
-// GC2D/ExPane.hpp (shared header, not changed here).
+// GC2D/ExPane.hpp (shared header, not changed here). Clamping through a
+// second local, `s16 b = a > 255 ? s16(255) : a; mPane->setAlpha(b);`,
+// matches that copy 100% but costs the inlined sites (CardLoad::titleDraw,
+// ConsoleStr::startOpenWipe and appearGuidePane lose their matches).
 void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (setup_wait != 0) {

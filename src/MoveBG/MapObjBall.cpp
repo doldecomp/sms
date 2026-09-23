@@ -510,7 +510,11 @@ void TMapObjBall::checkWallCollision(JGeometry::TVec3<f32>* param_1)
 	// puts `centre` below the check record where ours puts it above, and
 	// loads param_1->y into f0 before the radius. Declaration order among
 	// the two named locals cannot be reversed (the record's constructor
-	// consumes centre).
+	// consumes centre). Measured (h3): declaring `TBGWallCheckRecord check;`
+	// first and filling it field by field from a named `radius` puts centre
+	// below the record as retail does, but every slot then sits 4 low (a
+	// hole at 0x5c) and the y/radius load order is still swapped; unnamed
+	// radius reloads it after the centre stores.
 	TBGWallCheckRecord check(centre, radius, 4,
 	                         MapObjBallWallCheckFlags(this));
 

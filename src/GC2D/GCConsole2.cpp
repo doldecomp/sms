@@ -2251,25 +2251,32 @@ void TGCConsole2::endCameraDemo()
 		startAppearCoin();
 }
 
+// fabricated: a named-result binder over getPane(). Retail's frame has one
+// more 8-byte low slot than the direct `unk2F8->getPane()->show()`.
+static inline J2DPane* GCConsole2ExPanePane(const TExPane* pane)
+{
+	J2DPane* p = pane->getPane();
+	return p;
+}
+
 void TGCConsole2::startAppearTank()
 {
 	if (unk45 || TFlagManager::smInstance->getBool(0x30002)) {
 		return;
 	}
 
-	// TODO: needs register swapping
 	unk45 = 1;
 	unk59 = 1;
 	unk7C = 0;
 
-	unk2F8->getPane()->show();
+	GCConsole2ExPanePane(unk2F8)->show();
 	unk2F8->setPaneOffset(unk98, 0, 0, 0, 465 - unk2F8->mInitialBounds.y1);
 
 	unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
 	                        JUTPoint(0, -30));
 
-	unk274->getPane()->show();
-	unk29C->getPane()->show();
+	unk274->getPane()->hide();
+	unk29C->getPane()->hide();
 }
 
 void TGCConsole2::startDisappearTank()
