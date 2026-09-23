@@ -2123,7 +2123,8 @@ BosspakkunGetPoint(const TPathNode& node)
 
 DEFINE_NERVE(TNerveBPFly, TLiveActor)
 {
-	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	TSpineEnemy* body = spine->getBody();
+	TBossPakkun* boss = (TBossPakkun*)body;
 
 	if (spine->getTime() == 0) {
 		boss->changeBck(BOSSPAKU_BCK_FLY);
@@ -2154,7 +2155,8 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 	// (allocation order). Swapping turn/speed declaration loses the f31
 	// hoist of mTurnSpeed. BosspakkunGetPoint on toGoal drops the frame
 	// 8 (99.7%); declaring turn first loads f31 early (98.6%).
-	f32 speed = BosspakkunParams(boss)->mSLFlySpeed.get();
+	TBossPakkunParams* params = BosspakkunParams(boss);
+	f32 speed = params->mSLFlySpeed.value;
 	boss->flyToCurPathNode(speed, turn);
 
 	return FALSE;
