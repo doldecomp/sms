@@ -518,26 +518,23 @@ void TTamaNoko::requestShadow()
 		    || checkLiveFlag(LIVE_FLAG_UNK400)) {
 			TCircleShadowRequest local_2c;
 
-			JGeometry::TVec3<f32> local_38;
+			Vec local_38;
 			if (!checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-				MActor* actor = getMActor();
-				// TODO: incorrect inlines used here!
-				local_38.x = actor->getModel()->getAnmMtx(1)[0][3];
-				local_38.y = mGroundHeight;
-				local_38.z = actor->getModel()->getAnmMtx(1)[2][3];
+				local_38.x = getMActor()->getModel()->getAnmMtx(1)[0][3];
+				local_38.y = getGroundHeight();
+				local_38.z = getMActor()->getModel()->getAnmMtx(1)[2][3];
 				if (!isAirborne())
 					local_2c.mNeedsGroundCheck = 0;
 			} else {
-				local_38 = mPosition;
+				local_38 = getPosition();
 				if (!isAirborne()) {
 					local_2c.mNeedsGroundCheck = 0;
-					local_38.y                 = mGroundHeight;
+					local_38.y                 = getGroundHeight();
 				}
 			}
 
 			local_2c.mPosition   = local_38;
-			local_2c.mRadiusX    = mScaledBodyRadius;
-			local_2c.mRadiusZ    = local_2c.mRadiusX;
+			local_2c.mRadiusX = local_2c.mRadiusZ = mScaledBodyRadius;
 			local_2c.mShadowType = getShadowType();
 			local_2c.mRotationY  = mRotation.y;
 			if (checkLiveFlag(LIVE_FLAG_UNK400)) {
