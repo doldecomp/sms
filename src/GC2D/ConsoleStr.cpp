@@ -608,6 +608,9 @@ bool TConsoleStr::processShineGet(int param_1)
 	return result;
 }
 
+// TODO: frame 0x190 vs 0x1a0 (low temps 0xc short, 4-byte hole below the
+// emitter vec) and the bounds conversions schedule x1 before the width;
+// named/set/ref/div2 vec spellings and alpha/rotation spellings inert.
 bool TConsoleStr::processMiss(int param_1)
 {
 	bool result = true;
@@ -629,6 +632,7 @@ bool TConsoleStr::processMiss(int param_1)
 		}
 
 		if (param_1 == i * 10 + 60) {
+			unk25C[i]->getPane()->mRotation = 0.0f;
 			unk25C[i]->setPanePosition(0x28, JUTPoint(0, 30), JUTPoint(0, -80),
 			                           JUTPoint(0, -80));
 		}
