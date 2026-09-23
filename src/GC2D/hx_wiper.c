@@ -1932,6 +1932,10 @@ static void Hx_Test4(void)
 /* Mosaic wipe: every 64x64 tile of the frame buffer is redrawn as a
    ring-shaped fan that closes up. */
 
+// TODO: retail's frame is 0x10 larger (GXTexObj at 0xc, the first-vertex
+// block and conversion slots higher), it carries the same dead `b` ahead of
+// case 0 as Hx_Test4, and the u/v fmadds and one fcmpo take their operands
+// the other way round; reordering the products and the compare is inert.
 static void Hx_Test5(void)
 {
 	GXTexObj obj;
@@ -1941,8 +1945,8 @@ static void Hx_Test5(void)
 	f32 firstV;
 	f32 mag_in;
 	f32 mag_out;
-	u16 y;
 	u32 x;
+	u32 y;
 	u32 i;
 	void* buffer = hx_buffer;
 
@@ -1988,6 +1992,8 @@ static void Hx_Test5(void)
 				f32 mag_use;
 				f32 twist;
 
+				cx = x;
+				cy = y;
 				Hx_GetFrBuffer(buffer, x, y, 0x40, 0x40);
 				GXInvalidateTexAll();
 				GXLoadTexObj(&obj, GX_TEXMAP0);
@@ -2002,8 +2008,8 @@ static void Hx_Test5(void)
 				else
 					twist = 0.0f;
 
-				cx = 32.0f + (f32)x;
-				cy = 32.0f + (f32)y;
+				cx = 32.0f + cx;
+				cy = 32.0f + cy;
 
 				GXBegin(GX_TRIANGLEFAN, GX_VTXFMT0, 18);
 				GXPosition3f32(cx, cy, 0.0f);
