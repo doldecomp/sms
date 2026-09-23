@@ -1,0 +1,27 @@
+# JSystem/JAudio/JAInterface/JAIGFrameSe sendPlayingSeCommand__8JAIBasicFv: exact
+# levers: acc->raw all 2 sites: getData() -> unk0 + raw->acc L298: mState -> getStatus()
+--- a/src/JSystem/JAudio/JAInterface/JAIGFrameSe.cpp
++++ b/src/JSystem/JAudio/JAInterface/JAIGFrameSe.cpp
+@@ -270,11 +270,11 @@
+ 	u8 trackId = 0;
+ 
+ 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
+-		for (j = 0; j < getData()
++		for (j = 0; j < unk0
+ 		                    ->mCategoryInfoTable[mSoundScene][(u8)cat]
+ 		                    .mMaxPlaying;
+ 		     ++trackId, ++j) {
+-			sound = getData()->mSeTrack[cat][j].mSound;
++			sound = unk0->mSeTrack[cat][j].mSound;
+ 			if (sound == nullptr)
+ 				continue;
+ 
+@@ -295,7 +295,7 @@
+ 				*dPtr     = std::sqrtf(*dPtr);
+ 			}
+ 
+-			u8 state = sound->mState;
++			u8 state = sound->getStatus();
+ 			if (state == SOUNDSTATE_Prepared) {
+ 				u32 swBit     = sound->getSwBit();
+ 				sound->mTrack = trackId;
