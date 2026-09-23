@@ -1058,9 +1058,6 @@ static void Hxs_GameOver(u8 fade_alpha, f32 scale, f32 rotation)
 // TODO: dead code; the map says 0xc bytes, i.e. a single store.
 static void InitWipe(void) { hx.state = 0; }
 
-// TODO: volatile FPRs are numbered the other way round in case 0 (0.0f/0.3f)
-// and in the final Hxs_GameOver call (2.0f/fade); store order, a shared
-// `fade = rot = 0.0f` and a cast on fade are inert.
 static void Hx_GameOver(void)
 {
 	static f32 mag = 1.0f;
@@ -1080,8 +1077,8 @@ static void Hx_GameOver(void)
 	switch (hx.step) {
 	case 0:
 		Hgx_ReadTexture("/data/wipe_gameover.bti", gmover_tex_buffer);
-		rot  = 0.0f;
 		mag  = 0.3f;
+		rot  = 0.0f;
 		fade = 0.0f;
 		hx.step++;
 		hx.timer = 50;
@@ -1185,10 +1182,12 @@ static void Hx_GameOver(void)
 		break;
 	}
 
-	if (hx.step >= 2)
+	if (hx.step >= 2) {
 		Hxs_GameOver(-1, 2.0f * mag, rot);
-	else
-		Hxs_GameOver(fade, 2.0f * mag, rot);
+	} else {
+		f32 scale = 2.0f * mag;
+		Hxs_GameOver(fade, scale, rot);
+	}
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1981,10 +1980,11 @@ static void Hx_Test4(void)
 /* Mosaic wipe: every 64x64 tile of the frame buffer is redrawn as a
    ring-shaped fan that closes up. */
 
-// TODO: retail's frame is 0x10 larger (GXTexObj at 0xc, the first-vertex
-// block and conversion slots higher), it carries the same dead `b` ahead of
-// case 0 as Hx_Test4, and the u/v fmadds and one fcmpo take their operands
-// the other way round; reordering the products and the compare is inert.
+// The finished step 2 shares the default's body (retail's second `b` ahead of
+// case 0), and the timer read through Hx_GetTimer puts GXTexObj at 0xc.
+// TODO: retail's frame is still 8 larger: 8 unused bytes sit above obj, and
+// the mag_out/mag_in spills land above the first-vertex block (ours below);
+// the u/v fmadds and one fcmpo also take their operands the other way round.
 static void Hx_Test5(void)
 {
 	GXTexObj obj;
@@ -2030,7 +2030,7 @@ static void Hx_Test5(void)
 		GXInitTexObjLOD(&obj, GX_LINEAR, GX_LINEAR, 0.0f, 10.0f, 0.0f,
 		                GX_FALSE, GX_TRUE, GX_ANISO_1);
 
-		t       = 1.41f * ((f32)hx.timer / 20.0f);
+		t       = 1.41f * ((f32)Hx_GetTimer() / 20.0f);
 		mag_out = 1.41f - t;
 		mag_in  = 0.1f + t;
 
@@ -2129,6 +2129,7 @@ static void Hx_Test5(void)
 		return;
 	}
 
+	case 2:
 	default:
 		hx.state = 3;
 		break;
