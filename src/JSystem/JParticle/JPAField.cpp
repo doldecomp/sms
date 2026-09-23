@@ -321,9 +321,11 @@ void JPAVortexField::set()
 }
 // TODO: FPR colouring only: retail gives thing3.z f29 and the blend f28
 // (ours the reverse), and reads unk58/unk60/unk30 through the saved `this`.
+// Naming the clamped product `ratio` fixed the clamp register; a ternary
+// clamp fixes f28/f29 but lays the branch out wrong (all five compare forms).
 // Tried: the blend declared before/after `tmp`, at the top, reusing fVar1,
 // `tmp` at the top, thing3 by copy/-=/set/sub(a), dot for squared, a
-// set-then-normalize tmp.
+// set-then-normalize tmp, `localPos.dot(unk58)`, a named dot.
 void JPAVortexField::affect(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32> localPos;
@@ -336,8 +338,8 @@ void JPAVortexField::affect(JPAParticle* particle)
 	f32 fVar1 = thing3.squared();
 	if (fVar1 > unk30)
 		fVar1 = unk30;
-	fVar1 *= unk34;
-	f32 fVar2 = (1.0f - fVar1) * unk10 + fVar1 * unk14;
+	f32 ratio = fVar1 * unk34;
+	f32 fVar2 = (1.0f - ratio) * unk10 + ratio * unk14;
 
 	JGeometry::TVec3<f32> tmp;
 	tmp.normalize(thing3);
@@ -380,6 +382,10 @@ void JPAConvectionField::set()
 	unk64.normalize();
 	unk70.normalize();
 }
+// TODO: 0x10 of frame short (0x100 against 0x110), the prologue schedules
+// the particle loads before the `up == unk64` compare (retail after), and
+// dir.y/dir.z trade f4/f5 inside the shared setLength body.  Inert: `up`
+// declared first or via set(), `unk64 == up`, the thing3/thing4 order.
 void JPAConvectionField::affect(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32> thing;
@@ -396,20 +402,21 @@ void JPAConvectionField::affect(JPAParticle* particle)
 		b.scale(unk70.dot(thing), unk70);
 		thing2.add(a, b);
 	}
-	thing2.setLength(thing2, unk30);
+	JGeometry::TVec3<f32> dir;
+	dir.setLength(thing2, unk30);
 
 	JGeometry::TVec3<f32> thing4;
-	thing4.sub(thing, thing2);
+	thing4.sub(thing, dir);
 
 	JGeometry::TVec3<f32> thing3;
-	thing3.cross(unk64, thing2);
+	thing3.cross(unk64, dir);
 
 	unk7C.cross(thing3, thing4);
 	unk7C.setLength(unk10);
 	if (unk34 != 0.0f) {
-		JGeometry::TVec3<f32> thing4;
-		thing4.setLength(thing4, unk34);
-		unk7C.add(thing4);
+		JGeometry::TVec3<f32> thing5;
+		thing5.setLength(thing4, unk34);
+		unk7C.add(thing5);
 	}
 	calcFieldVelocity(particle);
 }
