@@ -715,23 +715,22 @@ void TChuuHana::bind()
 // onLiveFlag(AIRBORNE) and the position bump belong to the call sites, which
 // order them differently (behaveToWater flags then bumps, moveObject bumps
 // then flags), so neither can be part of this body.
-// TODO: 0xc8 against the map's 0xc4, one instruction over, and both callers
-// stop at ~95-97% here.  Retail re-reads mVelocity into a low-region
-// temporary, copies it into *two* adjacent 12-byte locals, computes
-// `<copy1>.z * .z + <copy2>.x * .x` (two contracted terms, the y folded
-// away), compares it `<= 0.0f` and discards the result -- the branch and the
-// Newton step of TUtil<f32>::sqrt are both gone, which is what a discarded
-// length() leaves.  One nesting level is 0xb0 and leaves TVec3::dot a `bl`;
-// two is 0xc8 and still calls dot.  The two-term shape says the vector whose
-// length is taken had a statically zero y.  With TVec3's `: Vec(other)`
-// copy constructor the low-region copy only stays in memory when it is
-// assigned (`speed`); a nested unnamed copy of mVelocity elides (0xb0).
+// TODO: the discarded speed is sqrt(dotXZ(v, v)) with both copies by value,
+// which gives retail's two adjacent copies and x/z terms (moveObject 95.8 ->
+// 97.7, behaveToWater 97.3 -> 98.7). moveObject's frame is still 0xd8 against
+// retail's 0x110, and this body is 0xcc against the map's 0xc4 (was 0xc8).
+// The horizontal dot product, both vectors taken by value: retail copies
+// mVelocity into two adjacent 12-byte locals and multiplies z of one and x of
+// the other, with y never read.
+static inline f32 dotXZ(JGeometry::TVec3<f32> a, JGeometry::TVec3<f32> b)
+{
+	return a.x * b.x + a.z * b.z;
+}
+
 void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& push)
 {
 	JGeometry::TVec3<f32> vel(mVelocity);
-	JGeometry::TVec3<f32> speed;
-	speed = mVelocity;
-	JGeometry::TVec3<f32>(speed).length();
+	JGeometry::TUtil<f32>::sqrt(dotXZ(mVelocity, mVelocity));
 	VECAdd(&vel, &push, &vel);
 	vel.y     = 0.0f;
 	mVelocity = vel;
