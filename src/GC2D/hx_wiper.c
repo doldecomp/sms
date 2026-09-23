@@ -130,7 +130,7 @@ static void Hxs_Logo_ExtraDraw();
 static void Hxs_Logo_TexSetup(u8 alpha, u8 fade, const ResTIMG* timg);
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht);
 static void Hxs_Logo_MagDraw(f32 mag, f32 wd, f32 ht);
-static void Hxs_PenDraw(u32 num, const HxDrawPath* dp, f32 x, f32 y);
+static void Hxs_PenDraw(f32 x, f32 y, u32 num, const HxDrawPath* dp);
 static void Hx_Logo(void);
 static void Hx_Test1(void);
 static void Hxs1_Test1(f32 cx, f32 cy, f32 r);
@@ -1292,7 +1292,7 @@ static void Hxs_Logo_MagDraw(f32 mag_scale, f32 wd, f32 ht)
 	GXTexCoord2f32(u1, (1.0f - v1));
 }
 
-static void Hxs_PenDraw(u32 num, const HxDrawPath* dp, f32 x, f32 y)
+static void Hxs_PenDraw(f32 x, f32 y, u32 num, const HxDrawPath* dp)
 {
 	u32 i;
 	f32 px;
@@ -1335,6 +1335,9 @@ static void Hxs_PenDraw(u32 num, const HxDrawPath* dp, f32 x, f32 y)
 	}
 }
 
+// TODO: retail's frame is 8 bytes larger in the low region (the MagDraw
+// conversion slots sit at 0x10, ours at 0x08) and case 2 keeps dp in r6
+// where ours uses r5; a ternary or later `timg` load is worse.
 static void Hx_Logo(void)
 {
 	static HxDrawPath* dp;
@@ -1394,7 +1397,7 @@ static void Hx_Logo(void)
 	case 3:
 		Hxs_Logo_ExtraDraw(0xFF);
 		Hxs_Logo_TexSetup(0xFF, 0xFF, timg);
-		Hxs_PenDraw(count, dp, bx, by);
+		Hxs_PenDraw(bx, by, count, dp);
 		if (Hx_TimerCountDown() == 0) {
 			bx = dp->x;
 			by = dp->y;
@@ -1413,7 +1416,7 @@ static void Hx_Logo(void)
 	case 5:
 		Hxs_Logo_ExtraDraw(0xFF);
 		Hxs_Logo_TexSetup(0xFF, 0xFF, timg);
-		Hxs_PenDraw(count, dp, bx, by);
+		Hxs_PenDraw(bx, by, count, dp);
 		if (Hx_TimerCountDown() == 0) {
 			hx.timer = 0xFF;
 			hx.step++;
@@ -1421,13 +1424,13 @@ static void Hx_Logo(void)
 		break;
 
 	case 6: {
-		int i;
+		u32 i;
 
 		if (hx.timer >= 0xC0) {
 			Hxs_Logo_ExtraDraw(0xFF);
 			Hxs_Logo_TexSetup(hx.timer, hx.timer, timg);
 			if (hx.timer > 0xF8)
-				Hxs_PenDraw(count, dp, bx, by);
+				Hxs_PenDraw(bx, by, count, dp);
 			else
 				Hxs_Logo_MagDraw(1.0f, img_wx, img_wy);
 		} else {
