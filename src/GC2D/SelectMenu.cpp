@@ -271,7 +271,11 @@ TSelectMenu::TSelectMenu(const char* pName)
 
 // TODO: retail copies each `new JUTTexture(...)` result for the two sc_mark
 // textures into a second register (`addi r26, r25, 0` for storeTIMG's this),
-// ours reuses r25; plus a 0x20 frame gap.
+// ours reuses r25; and every loop counter is r25 in retail but r26/r28 here
+// (the loop `new` result takes r25 instead). Inert: header ctor spellings,
+// shared/int/outer loop counters, coinDigits placement, getGlbResource.
+// Frame 0x20 short: a TU-local `JUTTexture* tex = new ...; return tex;`
+// loader at all four sites lands 0x538 exactly but is a multi-site binder.
 void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
                            TSelectShineManager* pShineMgr,
                            TSelectDir* pSelectDir)
