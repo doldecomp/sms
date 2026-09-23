@@ -506,16 +506,21 @@ static inline f32 vecLengthOf(const Vec& vec)
 
 static f32 vecLength(const Vec& vec) { return vecLengthOf(vec); }
 
+// TODO: 99.9%, registers exact; our JAIActor sits 4 bytes low (0x4c, retail
+// 0x50) and the two fabs temporaries 4 bytes low with it.
 void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
                                        Vec* param_3, f32 param_4, u32 param_5,
                                        u32 ground_no,
                                        JAISoundHandle* out_handle, u32 fade,
                                        u8 camera_idx)
 {
-	f32 fVar7 = param_4;
+	f32 speed = param_4;
 	switch (id) {
+	case MSD_SE_OBJ_MA_MIRROR_MOVE:
+		return;
+
 	case MSD_SE_BS_BSPAKU_POLLUT_IMI:
-		fVar7 = position->y;
+		param_4 = position->y;
 		break;
 
 	case MSD_SE_OBJ_ROPE_CLEAK_A:
@@ -523,20 +528,17 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 	case MSD_SE_OBJ_ROPE_CLEAK_ROLL:
 	case MSD_SE_OBJ_ROPE_CLEAK_HALFA:
 	case MSD_SE_OBJ_ROPE_CLEAK_HALFB:
-		fVar7 = std::fabs(fVar7);
+		param_4 = std::fabs(param_4);
 		break;
 
 	case MSD_SE_OBJ_JET_COASTER_IMI:
-		fVar7 = position->y;
+		param_4 = position->y;
 		break;
-
-	case MSD_SE_OBJ_MA_MIRROR_MOVE:
-		return;
 
 	case MSD_SE_IT_EGG_BOUND:
 	case MSD_SE_IT_DRIAN_BOUND:
-		fVar7 = vecLength(*param_3);
-		fVar7 = std::fabs(fVar7);
+		param_4 = vecLength(*param_3);
+		param_4 = std::fabs(param_4);
 		break;
 
 	case MSD_SE_MA_KICK_ENEMY:
@@ -547,7 +549,7 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 		break;
 	}
 
-	if (JALSystem::gateCheckFunc(id, fVar7) != true) {
+	if (JALSystem::gateCheckFunc(id, param_4) != true) {
 		JAIActor actor(position, position, position, ground_no);
 		JAISound* sound
 		    = startSoundActorInner(id, out_handle, &actor, fade, camera_idx);
@@ -562,13 +564,13 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 			}
 
 			case MSD_SE_OBJ_JET_COASTER_IMI:
-				f32 d = JALCalc::linearTransform(param_4, 0.0f, 20.0f, 0.0f,
+				f32 d = JALCalc::linearTransform(speed, 0.0f, 20.0f, 0.0f,
 				                                 1.0f, true);
 				sound->setVolume(d, 0, 0);
 				break;
 			}
 
-			JALSystem::processModFunc(sound, fVar7, 0, 0);
+			JALSystem::processModFunc(sound, param_4, 0, 0);
 		}
 	}
 }
