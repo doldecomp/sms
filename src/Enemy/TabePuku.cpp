@@ -131,7 +131,9 @@ void TTPHitActor::updateTerrainCollsion()
 	f32 sink = (2.0f / 3.0f) * height;
 	// TODO: retail materialises this test as a BOOL (li 1 / li 0 / cmpwi),
 	// which means TTakeActor::isHolding() returned BOOL, not bool. Changing
-	// that is a shared-header fix in Strategic/TakeActor.hpp.
+	// that is a shared-header fix in Strategic/TakeActor.hpp, but TMario's
+	// callers need the bool (BOOL header: 93.0 -> 93.6 here, four Mario
+	// functions lose); a TU-local BOOL helper measures the same 93.6.
 	if (mOwner->isHolding()) {
 		sink += mOwner->getHeldObject()->getDamageHeight();
 		mCheckHeight += mOwner->getHeldObject()->getDamageHeight();
@@ -229,6 +231,9 @@ TTabePuku::TTabePuku(const char* name)
 	onLiveFlag(LIVE_FLAG_UNK1000);
 }
 
+// TODO: SMS_Eular2Quat's return slot is 4 bytes high (0x2c, retail 0x28): a
+// codeless low slot before initParams. Inert or worse: `mQuat =`, a named
+// quat, raw/accessor mPosition and mRotation, live_manager->manageActor.
 void TTabePuku::init(TLiveManager* live_manager)
 {
 	mManager = live_manager;
@@ -359,9 +364,11 @@ BOOL TTabePuku::receiveMessage(THitActor* sender, u32 message)
 	}
 }
 
-// TODO: the frame is exact with one of the two param reads raw (either one
-// measures the same; Z chosen arbitrarily). What remains is setQuat's FPR
-// scheduling in JGRotation3.hpp, the known regswap there.
+// TODO: the frame is exact. Retail builds the translation straight from
+// mouth into fresh FPRs (a second in-place scaleAdd keeps it in f29-f31);
+// x and y still swap f1/f2 there, inert under named components, raw ref()
+// stores and operand order. What remains is setQuat's FPR scheduling in
+// JGRotation3.hpp, the known regswap there.
 MtxPtr TTabePuku::getTakingMtx()
 {
 	mTakingMtx.setQuat(mQuat);
@@ -373,8 +380,10 @@ MtxPtr TTabePuku::getTakingMtx()
 
 	JGeometry::TVec3<f32> mouth;
 	mouth.scaleAdd(getSaveParams()->mCorrectZ.value, zdir, mPosition);
-	mouth.scaleAdd(getSaveParams()->getCorrectY(), ydir, mouth);
-	mTakingMtx.setTrans(mouth);
+	f32 correctY = getSaveParams()->mCorrectY.value;
+	mTakingMtx.setTrans(ydir.x * correctY + mouth.x,
+	                    ydir.y * correctY + mouth.y,
+	                    ydir.z * correctY + mouth.z);
 
 	return mTakingMtx;
 }
@@ -524,7 +533,10 @@ bool TTabePuku::doDrag()
 }
 
 // TODO: 94.0%, and all of it is a 0x80 frame gap plus the float register
-// numbering that follows from it. Every instruction matches.
+// numbering that follows from it. Every instruction matches. Retail puts
+// target above the first block's velocity and the slerp temporaries high;
+// declaring zaxis/target at the top is inert, and calling
+// setMomentumFromQuat() at either site outlines MsGetRotFromZaxisY (82.7).
 void TTabePuku::swimTo(const JGeometry::TVec3<f32>& dir)
 {
 	JGeometry::TVec3<f32> d(dir);
@@ -704,6 +716,9 @@ DEFINE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor)
 	return FALSE;
 }
 
+// TODO: frame 0x100 vs 0xf8: ours has 12 bytes above setGoalPathMario's
+// TPathNode and isMissMario's `-` temporary sits high (0xbc, retail 0x80).
+// A named (0, 150, 0) offset and the getAttackSpeed() accessor do not help.
 DEFINE_NERVE(TNerveTabePukuAttack, TLiveActor)
 {
 	TTabePuku* puku = (TTabePuku*)spine->getBody();
