@@ -292,12 +292,15 @@ void TWireTrap::behaveHitWireTrap(
 	mSpine->pushNerve(&TNerveWireTrapWait::theNerve());
 }
 
-// TODO: retail saves one more callee-saved GPR (r30) and its frame is 8
-// smaller; the quaternion/matrix math is register-renumbered throughout.
-// Retail holds &mtx in r31 (materialised before the fused mul/setQuat) and
-// passes it to MTXCopy after getModel(). Measured inert or worse (bb9):
-// setQT, a TU-local copy/setQuat helper, a TPosition3f* alias, spinQuat.mul,
-// a third result quat, `*=` for dir/scale, 2-arg scale, a named up vector.
+// The body spins about its own Z axis after the wire alignment, so the spin
+// is the right-hand factor (`quat * spinQuat`, as the ROM's products read),
+// and the matrix goes through J3DModel::setBaseTRMtx, which is what keeps
+// &mtx in r31 across getModel() (BeeHive's shape).
+// TODO: the frame is still 8 short in the low region (every inline temporary
+// 8 low), getQuat's trace sum is `f2 + f0` in retail vs our `f0 + f2`, and the
+// angle/half-angle loads are register-renumbered. Inert (bb9): setQT, a TU-local
+// copy/setQuat helper, `*=` for dir/scale, 2-arg scale, a named up vector,
+// getPosition() in setTrans, one-argument `quat.mul(spinQuat)` (frame +0x10).
 void TWireTrap::calcRootMatrix()
 {
 	if (getHolder()) {
@@ -326,12 +329,11 @@ void TWireTrap::calcRootMatrix()
 
 	spinQuat.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f),
 	                   0.017453294f * mRotation.z);
-	quat.mul(spinQuat, quat);
+	quat.mul(quat, spinQuat);
 
 	mtx.setQuat(quat);
 	mtx.setTrans(mPosition);
-	J3DModel* model = getModel();
-	MTXCopy(mtx, model->getBaseTRMtx());
+	getModel()->setBaseTRMtx(mtx);
 
 	JGeometry::TVec3<f32> scale = mScaling;
 	scale.scale(mScaleRate);

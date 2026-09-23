@@ -309,16 +309,14 @@ void TKukku::control()
 	TLiveActor::control();
 }
 
-// TODO: 96.5%, frame exact. The product is the two-argument
-// tilt.mul(tilt, yaw) (retail's CSE of the zero-component products and its
-// in-place store at 0xe0); what is left there is instruction scheduling
-// only. The copy out is really getModel()->setBaseTRMtx(mtx): that spelling
-// makes everything after setQuat byte-exact (the `mr r4, r3` and &mtx in
-// r30), but objdiff's alignment then scores 95.8% because of the up-vector
-// FPR colouring (retail x/y/z loaded into f25/f27/f28, ours f29/f28/f27)
-// earlier on, so the MtxPtr/model spelling is kept until that is fixed.
-// Inert for up: `up = normal`, set(n.x, n.y, n.z), normalize(normal) and
-// setLength(normal, 1) (worse), else-first, a (0,1,0) initialiser (worse).
+// The product is the two-argument tilt.mul(tilt, yaw) and the copy out is
+// getModel()->setBaseTRMtx(mtx) (the `mr r4, r3` and &mtx in r30).
+// TODO: 98.8%. Left: the up-vector FPR colouring (retail x/y/z in
+// f25/f27/f28, ours f29/f28/f27) and a low region 0x10 short, which the old
+// four-local mul(a, b) body used to fill; the one-argument tilt.mul(yaw) fills
+// the frame but schedules the product differently (96.0). Inert for up:
+// `up = normal`, set(n.x, n.y, n.z), normalize(normal) and setLength(normal,
+// 1) (worse), else-first, a (0,1,0) initialiser (worse).
 void TKukku::calcRootMatrix()
 {
 	if (mSpine->getLatestNerve() == &TNerveSmallEnemyDie::theNerve()) {
@@ -348,9 +346,7 @@ void TKukku::calcRootMatrix()
 		// setQT() is the one-line forwarder that keeps setQuat() a `bl`.
 		mtx.setQT(tilt, mPosition);
 
-		MtxPtr src      = mtx;
-		J3DModel* model = getModel();
-		MTXCopy(src, model->getBaseTRMtx());
+		getModel()->setBaseTRMtx(mtx);
 		getModel()->setBaseScale(getScaling());
 	} else {
 		TSpineEnemy::calcRootMatrix();
