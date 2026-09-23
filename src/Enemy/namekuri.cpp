@@ -413,12 +413,7 @@ void TNameKuri::init(TLiveManager* param_1)
 	}
 }
 
-// TODO: 83.6%. Retail keeps normal.y/z in f30/f31 across the first
-// MsVECNormalize and reloads normal.x after storing each cross product's x/y
-// (the aliasing shape of "two temporaries, z assigned directly"); ours loads
-// everything first. A TU-local cross with that shape, or with three direct
-// stores, is inert here (MWCC still sees the locals as distinct), and the
-// frame is 0x48 short.
+// TODO: only the frame differs: retail's is 0x160, ours 0x128 (0x38 short).
 void TNameKuri::calcRootMatrix()
 {
 	gpCurNameKuri = this;
@@ -489,7 +484,7 @@ void TNameKuri::calcRootMatrix()
 		JGeometry::TVec3<f32> local_88(JMASin(mRotation.y), 0.0f,
 		                               JMACos(mRotation.y));
 
-		JGeometry::TVec3<f32> normal = unk138->getNormal();
+		JGeometry::TVec3<f32> normal = mGroundPlane->getNormal();
 
 		JGeometry::TVec3<f32> local_a0;
 		local_a0.cross(normal, local_88);
