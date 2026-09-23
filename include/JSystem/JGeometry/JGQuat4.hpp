@@ -126,31 +126,34 @@ public:
 		this->w = cosf(pAngle * 0.5f);
 	}
 
-	// Matches the weak copy in BeeHive.o. The cross product is three named
-	// scalars stored one at a time into the axis, not axis.cross(): that is
-	// what puts cross.x/y/z in f30/f29/f28 and the length in f31. Writing the
-	// components through axis.set() or the TVec3(x, y, z) constructor also
-	// matches BeeHive's copy but costs TKukku::calcRootMatrix an 8-byte frame
-	// temporary.
+	// Matches the weak copy in BeeHive.o and colours the inlined copies
+	// (makeInitialVelocity, decideTargetAtDir, initAttachPlane, getGravityDir)
+	// as retail does: the cross product is stored straight into the axis
+	// component by component. The three named scalars (s, eps, c) are what
+	// give the weak copy its 0x70 frame; without them it is 0x68 with every
+	// instruction equal. Naming the cross terms instead (f32 cx = ...) also
+	// matches the weak copy but permutes f28-f31 at every inline site.
+	// TKukku::calcRootMatrix (-0.12) and TBathtubKiller::makeQuat (-0.16)
+	// lose a little here; both carry their own caller-side colouring residue.
 	void setRotate(const TVec3<T>& from, const TVec3<T>& to, T amount)
 	{
-		f32 cx = from.y * to.z - from.z * to.y;
-		f32 cy = from.z * to.x - from.x * to.z;
-		f32 cz = from.x * to.y - from.y * to.x;
 		TVec3<T> axis;
-		axis.x = cx;
-		axis.y = cy;
-		axis.z = cz;
+		axis.x = from.y * to.z - from.z * to.y;
+		axis.y = from.z * to.x - from.x * to.z;
+		axis.z = from.x * to.y - from.y * to.x;
 
 		f32 len = axis.length();
-		if (len <= TUtil<f32>::epsilon()) {
+		f32 eps = TUtil<f32>::epsilon();
+		if (len <= eps) {
 			this->set(0.0f, 0.0f, 0.0f, 1.0f);
 			return;
 		}
 
 		f32 halfAngle = 0.5f * atan2(len, from.dot(to)) * amount;
-		this->xyz().scale(sin(halfAngle) / len, axis);
-		this->w = cos(halfAngle);
+		f32 s = sin(halfAngle) / len;
+		this->xyz().scale(s, axis);
+		f32 c = cos(halfAngle);
+		this->w = c;
 	}
 
 	void setRotate(const TVec3<T>& a, const TVec3<T>& b)
