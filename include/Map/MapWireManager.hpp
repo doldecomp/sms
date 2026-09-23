@@ -42,7 +42,7 @@ public:
 
 class TMapWireManager;
 
-TMapWireManager* gpMapWireManager;
+extern TMapWireManager* gpMapWireManager;
 
 class TMapWireManager : public JDrama::TViewObj {
 public:
