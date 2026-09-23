@@ -720,6 +720,12 @@ void TMapObjGeneral::perform(u32 cue, JDrama::TGraphics* graphics)
 	TMapObjBase::perform(cue, graphics);
 }
 
+static inline const JGeometry::TVec3<f32>& MapObjGeneralVelocity(TMapObjGeneral* self)
+{
+	const JGeometry::TVec3<f32>& r = self->getVelocity();
+	return r;
+}
+
 // The two actor-type tests read the sender's type (retail's `lwz 0x4c` off
 // the sender register), not this object's.
 // TODO: frame 0x10 short (0x48 vs 0x58); getVelocity() is +8 of it. Inert:
@@ -732,7 +738,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 
 	if (message == HIT_MESSAGE_TAKE && checkMapObjFlag(MAP_OBJ_FLAG_UNK100000)
-	    && JGeometry::TVec3<f32>(getVelocity()).isZero()
+	    && JGeometry::TVec3<f32>(MapObjGeneralVelocity(this)).isZero()
 	    && (isState(STATE_APPEARING) || isState(STATE_NORMAL)
 	        || isState(STATE_TOUCHING_PLAYER)
 	        || isState(STATE_TOUCHING_WATER))) {
@@ -763,7 +769,8 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (sender->isActorType(0x80000001)
+	bool fromMario = sender->isActorType(0x80000001);
+	if (fromMario
 	    && (message == HIT_MESSAGE_TRAMPLE
 	        || message == HIT_MESSAGE_HIP_DROP)) {
 		receiveMessageFromPlayer();

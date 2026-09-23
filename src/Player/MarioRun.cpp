@@ -1142,8 +1142,8 @@ BOOL TMario::fireDashing()
 
 void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 {
-	isForceSlip();
-	if ((mInput & 0x2) && canSlipJump() == 1) {
+	bool forceSlip = isForceSlip();
+	if ((getInput() & 0x2) && canSlipJump() == 1) {
 		changePlayerStatus(MARIO_STATUS_JUMP, 0, false);
 		return;
 	}
@@ -1175,9 +1175,9 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 				emitParticle(PARTICLE_MS_DMG_C);
 		}
 		if (isSlipStart()) {
-			if (mWallPlane != nullptr) {
-				s16 wallAng = matan(MarioRunGetNormal(mWallPlane).z,
-				                    MarioRunGetNormal(mWallPlane).x);
+			if (getWallPlane() != nullptr) {
+				s16 wallAng = matan(MarioRunGetNormal(getWallPlane()).z,
+				                    MarioRunGetNormal(getWallPlane()).x);
 
 				f32 newMag
 				    = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
@@ -1189,7 +1189,7 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 				mVel.x = mSlideVelX = newMag * JMASSin(unk9E);
 				mVel.z = mSlideVelZ = newMag * JMASCos(unk9E);
 				u32 sndId
-				    = gpMSound->getWallSound(mWallPlane->unk6, mForwardVel);
+				    = gpMSound->getWallSound(getWallPlane()->unk6, mForwardVel);
 				SMSGetMSound()->startSoundActor(sndId, &mPosition, 0, nullptr,
 				                                0, 4);
 			}
