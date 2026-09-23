@@ -158,10 +158,11 @@ static inline bool should_clip_fabricated(const TBGCheckData* data)
 
 // The dot reads the raw normal, every push through getNormal(), and the plane
 // distance is named first: that lands the frame and every slot.
-// TODO: 97.3%. Retail keeps normal.x/z live in f4/f5 from the dot into the
-// posCam pushes; ours reloads normal.z after the posCam.x store. Tried: all
-// raw/accessor mixes over the four pushes, dot receiver swapped, `a = a + b`
-// pushes, posCam copy-constructed.
+// TODO: 99.9%. posCam copy-constructed from the member schedules the copy
+// like retail (x, y loaded before the first store), but retail reads the
+// three words from posArg's slot (0x60) rather than from mCurrentTarget.
+// Tried: posCam from posArg (copy-init, assigned, set(), xyz ctor, Vec cast),
+// posArg as a Vec.
 bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 {
 	bool moved = false;
@@ -178,7 +179,7 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 				if (should_clip_fabricated(wall)) {
 					JGeometry::TVec3<f32> posArg;
 					posArg = mCurrentTarget.mPosition;
-					JGeometry::TVec3<f32> posCam = posArg;
+					JGeometry::TVec3<f32> posCam = mCurrentTarget.mPosition;
 					f32 planeDist = wall->getPlaneDistance();
 					f32 sd        = posCam.dot(wall->mNormal) + planeDist;
 					f32 absSd = sd >= 0.0f ? sd : -sd;
