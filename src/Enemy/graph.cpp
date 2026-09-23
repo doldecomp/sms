@@ -952,7 +952,9 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 	// point blocks, so a missing inline level holds the rest. Taking VECMag of
 	// the `getPoint() -= getPoint()` temporary is worse (-3pp). The
 	// fVar1/fVar2 FPR pair is also swapped (retail colours the
-	// second-computed f0); declaration order does not move it.
+	// second-computed f0); declaration order does not move it. Neither an
+	// indexToPoint() spelling (frame 0xf0/0x100), a named second point, nor
+	// `operator-` (worse) reaches retail's layout.
 	JGeometry::TVec3<f32> v1 = unk0->unk0[mCurrIdx].getPoint();
 	v1 -= unk0->unk0[mPrevIdx].getPoint();
 	f32 fVar13 = VECMag(&v1);
@@ -966,8 +968,8 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 		fVar1 = rail->getNthT(0);
 		fVar2 = rail->getNthT(1);
 	} else if (isLoop && mPrevIdx == 0 && mCurrIdx == unk0->unk8 - 1) {
-		fVar1 = rail->getNthT(mPrevIdx + 1);
-		fVar2 = rail->getNthT(mPrevIdx);
+		fVar1 = rail->getNthT(unk0->unk8 + 1);
+		fVar2 = rail->getNthT(unk0->unk8);
 	} else {
 		u32 uVar10 = mPrevIdx;
 		if (isLoop)
