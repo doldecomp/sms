@@ -143,6 +143,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - A per-site divergence in a repeated block (one site expands `set<f>`, four call it) is usually a missing helper level over those sites (limitkoopa).
 - Constant arguments show where a condition lives: a default folded at one site and kept at others places the test inside the callee (limitkoopa `TLimitKoopaParts::set`).
 
+- In a member wrapper that copies into a local `TVec3` (`V3 v = mPos; return R(v);`), MWCC never inlines a callee body containing an `if` at any depth, whatever its cost; a pure ternary body inlines by statement count only (each initialised named local = 1, helper levels and expression size free); a caller-side `f32 t = s->w(); return t < k;` also blocks it where a bare `return s->w();` does not (MathUtil round, 2026-09-23: `MsGetRotFromZaxisY` in bossgesso `inSightAngle`).
+
 ## Frame-size gaps
 
 - Validate with `volatile char trash[N]` in the caller's own body only: inside an inlined callee a trivial POD prices 0, so probe a callee with a `struct S { ~S() {} u32 a; }` local (frame-gaps.md: "Research batch 233").
