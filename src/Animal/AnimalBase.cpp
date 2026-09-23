@@ -282,6 +282,34 @@ void TAnimalBase::getRotationFlyToDir(JGeometry::TVec3<f32>* current_rot,
 // UNUSED (Size: 0x4a0 in MAP)
 void TAnimalBase::flyToCurPathNode(f32 a1, f32 a2) { }
 
+// Shared-header need, parked here: execWalk's rotation is TQuat4::rotate done
+// in place on the velocity, with ONE TQuat4 temporary (retail's out-of-line
+// TVec4() call) and the result written straight back through v.set() (the
+// out-of-line set<f>), not JGQuat4.hpp's two-temporary rotate(v, rDest). The
+// header form is left alone because its seven other callers measure against it.
+static inline void QuatRotateInPlace(const JGeometry::TQuat4<f32>& q,
+                                     JGeometry::TVec3<f32>& v)
+{
+	f32 vx = v.x;
+	f32 vy = v.y;
+	f32 vz = v.z;
+
+	f32 w = q.w;
+	f32 z = q.z;
+	f32 y = q.y;
+	f32 x = q.x;
+
+	JGeometry::TQuat4<f32> r;
+	r.x = y * vz - z * vy + w * vx;
+	r.y = -x * vz + z * vx + w * vy;
+	r.z = x * vy - y * vx + w * vz;
+	r.w = -x * vx - y * vy - z * vz;
+
+	v.set(r.x * w + r.y * -z - r.z * -y + r.w * -x,
+	      -r.x * -z + r.y * w + r.z * -x + r.w * -y,
+	      r.x * -y - r.y * -x + r.z * w + r.w * -z);
+}
+
 // TODO: validate-symbol-order fails on this TU with four MISSING symbols, and
 // all four are the *same* fact about this function. Retail's execWalk calls
 // set<f>__Q29JGeometry8TVec3<f>Ffff (0x10), __ct__Q29JGeometry8TVec4<f>Fv
@@ -343,10 +371,14 @@ void TAnimalBase::execWalk(bool moving)
 	getRotationFlyToDir(&mRotation, diff, marchSpeed, turnSpeed);
 
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
-	JGeometry::TVec3<f32> tmp;
-	// TODO: quaternions are still wrong
-	quat.rotate(JGeometry::TVec3<f32>(0.0f, 0.0f, marchSpeed), tmp);
-	mLinearVelocity = tmp;
+	JGeometry::TVec3<f32> velocity(0.0f, 0.0f, marchSpeed);
+	// TODO: 83.5%. Retail calls TVec4(), the set<f> above and getRotationFlyToDir's
+	// MsClamp<f> out of line here; we expand all three (the caller-site family
+	// in MathUtil.hpp's MsClamp note). The frame is also 0x10 short: retail
+	// copies the quaternion once more (0xb8 -> 0x9c) before the rotate, but
+	// spelling that copy (a by-value or copied q) scores 81.6.
+	QuatRotateInPlace(quat, velocity);
+	mLinearVelocity = velocity;
 }
 
 // UNUSED (Size: 0x5c in MAP)

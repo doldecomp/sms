@@ -853,6 +853,11 @@ void TPakkunSeed::forceKill()
 // stays at 80.1% and the MISSING symbol stays, with the whole tree
 // byte-identical. Also refuted: delegating to TPakkun::load, which pushes the
 // constructor itself to depth 4 and turns *it* into a bl.
+// Round n6: TPakkun::load has the identical call (setGoalPathMario after
+// reset) and retail expands the zero there, so the choice is made by the
+// caller, not the chain. With the initialiser, this site is 100% and
+// TPakkun::load spelled `setGoalPath(mario)` directly is 99.7% (node slot
+// 4 low); the ~20 other TPathNode(THitActor*) sites in 14 units still regress.
 void TStayPakkun::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
