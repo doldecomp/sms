@@ -14,6 +14,9 @@
 #include <Camera/SunModel.hpp>
 #include <stdio.h>
 
+const char* cSunVolumeName    = "/scene/sun";
+const char* cSunsetVolumeName = "/scene/sunset";
+
 // fabricated. Retail calls JMASCos, JMASSin and TVec3<f32>::set(const Vec&)
 // out of line from the calc-anim block below, which only happens if the
 // CLBCalcNearNinePos fovy/aspect wrapper sits at inline depth 3: the wrapper

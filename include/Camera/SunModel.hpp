@@ -8,9 +8,13 @@
 class J3DModel;
 class TMapStaticObj;
 
-// NOTE: seems like they wrote something weird for these vars...
-extern const char* cSunVolumeName    = "/scene/sun";
-extern const char* cSunsetVolumeName = "/scene/sunset";
+// Defined in lensflare.cpp, which owns both in the map. Every retail TU that
+// includes this header (lensflare, lensglow, sunmgr, sunmodel and
+// MarNameRefGen_Map) still carries both strings at this point in its data,
+// unreferenced outside lensflare.cpp, so the header keeps a local copy.
+extern const char* cSunVolumeName;
+extern const char* cSunsetVolumeName;
+static const char* sSunVolumeNameStrings[] = { "/scene/sun", "/scene/sunset" };
 
 class TSunModel : public JDrama::TActor {
 public:
