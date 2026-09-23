@@ -1212,6 +1212,9 @@ static void Hxs_Logo_TexSetup(u8 alpha_in, u8 fade_in, const ResTIMG* timg)
 	               GX_LO_CLEAR);
 }
 
+// TODO: retail's frame is 8 bytes larger (its Vec sits at 0x38, ours at
+// 0x30) and its callee-saved FPRs are coloured differently (dx/dy in f31/f30,
+// u1..v2 in f22..f25); declaration order is inert.
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 {
 	f32 sy = ht / 1.924138f;
@@ -1223,6 +1226,10 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 	f32 ox = (f32)(hx.width >> 1) - (sx * 0.5f);
 	f32 oy = ((f32)(hx.height >> 1) - (sy * 0.5f)) - 32.0f;
 	Vec d;
+	f32 dx;
+	f32 dy;
+	f32 px;
+	f32 py;
 
 	// The pen stroke is a quad two units wide around the segment, so the
 	// offset is the segment's normal: (-dv, du).
@@ -1233,23 +1240,32 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 	if ((0.0f != d.y) || (0.0f != d.x)) {
 		VECNormalize(&d, &d);
 		VECScale(&d, &d, 0.08f);
+		dx = d.x;
+		dy = d.y;
+		px = u1 + dx;
+		py = v1 + dy;
+		px = (sx * px) + ox;
+		py = (sy * py) + oy;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-		GXPosition3f32((sx * (u1 + d.x)) + ox, (sy * (v1 + d.y)) + oy, 0.0f);
+		GXPosition3f32(px, py, 0.0f);
 		GXColor1u32(0);
 		GXTexCoord2f32(u1 + d.x, v1 + d.y);
-		GXPosition3f32((sx * (u2 + d.x)) + ox, (sy * (v2 + d.y)) + oy, 0.0f);
+		GXPosition3f32((sx * (u2 + dx)) + ox, (sy * (v2 + dy)) + oy, 0.0f);
 		GXColor1u32(0);
 		GXTexCoord2f32(u2 + d.x, v2 + d.y);
-		GXPosition3f32((sx * (u2 - d.x)) + ox, (sy * (v2 - d.y)) + oy, 0.0f);
+		GXPosition3f32((sx * (u2 - dx)) + ox, (sy * (v2 - dy)) + oy, 0.0f);
 		GXColor1u32(0);
 		GXTexCoord2f32(u2 - d.x, v2 - d.y);
-		GXPosition3f32((sx * (u1 - d.x)) + ox, (sy * (v1 - d.y)) + oy, 0.0f);
+		GXPosition3f32((sx * (u1 - dx)) + ox, (sy * (v1 - dy)) + oy, 0.0f);
 		GXColor1u32(0);
 		GXTexCoord2f32(u1 - d.x, v1 - d.y);
 	}
 }
 
+// TODO: retail's frame is 8 bytes larger in the low region (every conversion
+// slot sits 8 higher), and the hw/hh products schedule differently; unnaming
+// cx/cy is worse.
 static void Hxs_Logo_MagDraw(f32 mag_scale, f32 wd, f32 ht)
 {
 	f32 hw = (wd / 1.9230769f) * mag_scale * 0.5f;
@@ -1260,8 +1276,6 @@ static void Hxs_Logo_MagDraw(f32 mag_scale, f32 wd, f32 ht)
 	f32 y1 = cy - hh;
 	f32 u1 = x1 / (x1 - (cx + hw));
 	f32 v1 = y1 / (y1 - (cy + hh));
-	f32 u2 = 1.0f - u1;
-	f32 v2 = 1.0f - v1;
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(0.0f, -32.0f, 0.0f);
@@ -1269,21 +1283,22 @@ static void Hxs_Logo_MagDraw(f32 mag_scale, f32 wd, f32 ht)
 	GXTexCoord2f32(u1, v1);
 	GXPosition3f32(hx.width, -32.0f, 0.0f);
 	GXColor1u32(0);
-	GXTexCoord2f32(u2, v1);
+	GXTexCoord2f32((1.0f - u1), v1);
 	GXPosition3f32(hx.width, hx.height - 32, 0.0f);
 	GXColor1u32(0);
-	GXTexCoord2f32(u2, v2);
+	GXTexCoord2f32((1.0f - u1), (1.0f - v1));
 	GXPosition3f32(0.0f, hx.height - 32, 0.0f);
 	GXColor1u32(0);
-	GXTexCoord2f32(u1, v2);
+	GXTexCoord2f32(u1, (1.0f - v1));
 }
 
 static void Hxs_PenDraw(u32 num, const HxDrawPath* dp, f32 x, f32 y)
 {
 	u32 i;
 	f32 px;
+	f32 nx;
 	f32 py;
-	s32 wait;
+	f32 ny;
 
 	if (num != 0) {
 		px = drawpath_table[0].x;
@@ -1292,29 +1307,31 @@ static void Hxs_PenDraw(u32 num, const HxDrawPath* dp, f32 x, f32 y)
 		for (i = 0; i < num - 1; i++) {
 			const HxDrawPath* p = &drawpath_table[i];
 
-			if (p->wait == -1)
+			if (p[1].wait == -1)
 				break;
 
-			if (p->wait != 0) {
+			nx = p[1].x;
+			ny = p[1].y;
+			if (p[1].wait != 0) {
 				Vec d;
-				d.x = p[1].x - px;
-				d.y = p[1].y - py;
+				d.x = nx - px;
+				d.y = ny - py;
 				VECNormalize(&d, &d);
 				VECScale(&d, &d, 6.0f);
-				Hxs_Logo_TexDraw(px - d.x, py - d.y, p[1].x + d.x,
-				                 p[1].y + d.y, img_wx, img_wy);
+				Hxs_Logo_TexDraw(px - d.x, py - d.y, nx + d.x, ny + d.y,
+				                 img_wx, img_wy);
 			}
 
-			px = p[1].x;
-			py = p[1].y;
+			px = nx;
+			py = ny;
 		}
 	}
 
-	wait = dp->wait;
 	{
-		f32 t = (f32)(wait - hx.timer) / (f32)wait;
-		Hxs_Logo_TexDraw(x, y, (t * (dp->x - x)) + x, (t * (dp->y - y)) + y,
-		                 img_wx, img_wy);
+		f32 t = (f32)(dp->wait - hx.timer) / (f32)dp->wait;
+		f32 x2 = (t * (dp->x - x)) + x;
+		f32 y2 = (t * (dp->y - y)) + y;
+		Hxs_Logo_TexDraw(x, y, x2, y2, img_wx, img_wy);
 	}
 }
 
