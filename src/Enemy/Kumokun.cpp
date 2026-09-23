@@ -1169,6 +1169,10 @@ DEFINE_NERVE(TNerveKumokunSearch, TLiveActor)
 // TODO: only the saved-GPR colouring differs: retail keeps spine in r31, the
 // pool base in r30 and self in r29; ours puts the pool base first. Inert:
 // !getTime(), naming getBody(), dummy first, merged ifs, a named time local.
+// Since TVec3's copy constructor became `: Vec(other)` retail also keeps the
+// inlined isFindOutMario's direction x/y/z in f28/f27/f31 (ours reloads x and
+// saves one FPR fewer, frame 0x108 vs 0x110). Inert: assigning or
+// copy-constructing the direction in isFindOutMario or rotateGoalDirToLocal.
 DEFINE_NERVE(TNerveKumokunWait, TLiveActor)
 {
 	TKumokun* self = (TKumokun*)spine->getBody();
