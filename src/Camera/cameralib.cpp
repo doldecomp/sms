@@ -11,22 +11,15 @@ const JGeometry::TVec3<f32> CLBConstUpVec(0.0f, 1.0f, 0.0f);
 static const f32 SHORTANGLE_TO_DEGREES = 0.005493164f; // 360/65536
 static const f32 DEGREES_TO_RADIANS    = 0.017453294f; // pi/180
 
-// TODO: fabricated, and only the levels they add are evidence. Every site
-// needs TVec3::normalize() below the statement that spells it, so that
+// TODO: fabricated, and only the level it adds is evidence. Each normalize
+// site needs TVec3::normalize() one statement below it, so that
 // TVec3::setLength lands past its depth allowance and stays the ROM's `bl`;
 // called directly, setLength expands and its dot/inv_sqrt/scale leaves become
-// the calls instead. Two levels is what makes the UNUSED CLBCalcNearClipAngle
-// 0x150 against the map's 0x154 (one level gives 0x190), at the cost of 1.2
-// points on CLBCalcNearNinePos, which inlines it. The real names are unknown
-// -- nothing weak or UNUSED in the map covers them -- so they are parked here
-// rather than in cameralib.hpp.
+// the calls instead. The real name is unknown -- nothing weak or UNUSED in the
+// map covers it -- so it is parked here rather than in cameralib.hpp.
 static void normalizeInner1(JGeometry::TVec3<f32>& vec)
 {
 	vec.setLength(1.0f);
-}
-static void normalizeInner2(JGeometry::TVec3<f32>& vec)
-{
-	normalizeInner1(vec);
 }
 
 // The copy of the input vector is the ROM's: mult33 writes its result back over
@@ -406,7 +399,23 @@ CLBRotateVecByEulerAndRoll(JGeometry::TVec3<f32>* vec, const S16Vec& euler,
 	mtxT.mult33(in, *vec);
 }
 
-// UNUSED in the map (0x154); ours is 0x150. The body is CLBCalcNearNinePos'
+// The ROM calls MsSqrtf out of line inside the inlined CLBCalcNearClipAngle,
+// so the square root sits two TU-local levels below ClipAngle (the inline
+// allowance runs out there, one level deeper than in the standalone body).
+// Neither level leaves a map name when fully inlined; the split into a
+// point-pair distance over a component length is a reconstruction.
+static inline f32 CLBCalcLengthXZ(f32 dx, f32 dz)
+{
+	return MsSqrtf(dx * dx + dz * dz);
+}
+
+static inline f32 CLBCalcDistanceXZ(const JGeometry::TVec3<f32>& a,
+                                    const JGeometry::TVec3<f32>& b)
+{
+	return CLBCalcLengthXZ(a.x - b.x, a.z - b.z);
+}
+
+// UNUSED in the map (0x154); ours is 0x14c. The body is CLBCalcNearNinePos'
 // own head: the name, the argument list (NinePos' minus the near-plane
 // dimensions), the emission position (between setRotate and
 // CLBCalcScaleTranslateMatrix, so immediately before NinePos in source order)
@@ -419,24 +428,18 @@ void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_center, S16Vec* out_euler,
 	JGeometry::TVec3<f32> dir;
 
 	dir.sub(lookat, origin);
-	normalizeInner2(dir);
+	normalizeInner1(dir);
 
 	out_center->scaleAdd(near_dist, dir, origin);
 
-	f32 xzDistance = MsSqrtf(((origin.x - lookat.x) * (origin.x - lookat.x)
-	                          + (origin.z - lookat.z) * (origin.z - lookat.z)));
+	f32 xzDistance = CLBCalcDistanceXZ(origin, lookat);
 	out_euler->x   = -matan(xzDistance, origin.y - lookat.y);
 	out_euler->y   = matan(origin.z - lookat.z, origin.x - lookat.x);
 	out_euler->z   = roll;
 }
 
-// TODO: 65.6% would need MsSqrtf out of line inside the inlined
-// CLBCalcNearClipAngle -- the ROM's only remaining call-structure difference
-// here -- but that takes two more inline levels above it (measured: +2.3
-// points on this function) and nothing in the map names them, while the
-// standalone ClipAngle's 0x150-against-0x154 says its own body *does* expand
-// MsSqrtf. The rest is the frame (0x208 against 0x1f0) and the float register
-// numbering that follows it.
+// TODO: the call structure now matches the ROM. The rest is the frame (0x220
+// against 0x1f0) and the float register numbering that follows it.
 void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
                         const JGeometry::TVec3<f32>& origin,
                         const JGeometry::TVec3<f32>& lookat, s16 roll,
