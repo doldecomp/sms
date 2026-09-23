@@ -80,6 +80,9 @@ void TSpineEnemy::load(JSUMemoryInputStream& stream)
 	init(mgr);
 }
 
+// TODO: instruction-exact apart from FPRs and frame (0x100 vs 0x128). Retail
+// keeps the normal copy's y/z in f30/f31 across inv_sqrt; our TVec3 user copy
+// constructor stops that promotion (dropping it from JGVec3.hpp gives 97.8).
 void TSpineEnemy::calcEnemyRootMatrix()
 {
 	J3DModel* pJVar13 = getModel();

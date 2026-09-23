@@ -196,6 +196,8 @@ void TTailRubber::adjustOne(Node& curr, const Node& prev, const Node& next)
 	curr.mVel *= mDecay;
 }
 
+// TODO: retail reuses diff.length() from registers; blocked by the TVec3 user
+// copy constructor (dropping it from JGVec3.hpp gives 98.1).
 void TTailRubber::restrict()
 {
 	f32 avgHorLen = getLength();
