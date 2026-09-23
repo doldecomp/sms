@@ -145,6 +145,10 @@ void JPAGetZRotateMtx(s16 z, MtxPtr dst)
 // right to left), so the local really is a `TVec3<f32>` and not an array.
 // Note that JGVec3.hpp's `cross` body is the tree-wide-measured shape, so the
 // next step here is a mechanism for the memory residency, not a new `cross`.
+// Also inert on the residency (still 62.3%): `axis.scale(__fres(sin), axis)`,
+// a TU-local helper holding the zero-or-scale `if` (by reference or pointer,
+// with or without the sqrt), and `cross` through a pointer helper; routing
+// `cross` through a by-value return costs 23-49 instructions.
 void JPAVecToRotaMtx(MtxPtr dst, JGeometry::TVec3<f32> a,
                      JGeometry::TVec3<f32> b)
 {

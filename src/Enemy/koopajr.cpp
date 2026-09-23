@@ -114,6 +114,11 @@ f32 TDirectionCalc::calcNearerDirection(f32 dir)
 	// is still unidentified. With WrapRadianF this body is 99.8%, but none of
 	// named or split diff/other locals, per-branch returns or a named wrapped
 	// value lifts it back over the budget (makeRelativeAngle stays ~30%).
+	// The body itself closes (100%, frame 0x38) with WrapRadianF plus one
+	// named helper result (`f32 wrapped = ...; return wrapped;` in either
+	// helper, or `f32 range/offset` named inside WrapDirectionF), but the
+	// auto-inline into makeRelativeAngle counts only this body's own
+	// statements: extra statements inside the helpers leave it inlined (~30%).
 	f32 lo     = 0.0f;
 	f32 hi     = TWO_PI;
 	f32 range  = hi - lo;
