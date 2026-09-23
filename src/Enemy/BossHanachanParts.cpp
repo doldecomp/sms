@@ -349,6 +349,18 @@ bool TBossHanachanPartsBase::isReactToTrampleOrHipDrop_() const
 	return result;
 }
 
+// The blend test as its own inline level: retail CSEs its `true` with the
+// isMotionBlending() result, which the open-coded test does not.
+static inline bool BossHanachanIsBlending(const TNpcInbetween* p)
+{
+	bool blending = true;
+	if (!p->isMotionBlending() && !p->isForcedBlendRatio())
+		blending = false;
+	return blending;
+}
+
+// TODO: every instruction matches; the frame is 0x110 in retail against our
+// 0xe8, so 0x28 of inline temporaries is still missing (structural).
 void TBossHanachanPartsBase::considerSetAnm_(EnumBossHanachanNerveAnm nerve)
 {
 	if (nerve == BOSS_HANACHAN_NERVE_ANM_UNK0) {
@@ -382,10 +394,7 @@ void TBossHanachanPartsBase::considerSetAnm_(EnumBossHanachanNerveAnm nerve)
 			break;
 		default:
 			if (getActorType() == 0x08000015) {
-				bool blending = true;
-				if (!mInbetween->isMotionBlending()
-				    && !mInbetween->isForcedBlendRatio())
-					blending = false;
+				bool blending = BossHanachanIsBlending(mInbetween);
 				if (!blending) {
 					if (mCurrentAnm == BOSS_HANACHAN_ANM_UNK2) {
 						if (!marioOn)
