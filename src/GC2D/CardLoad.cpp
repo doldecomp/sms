@@ -130,6 +130,9 @@ TCardLoad::TCardLoad(const char* name)
 
 void TCardLoad::changePattern(J2DPicture*, s16, u32) { }
 
+// TODO: frame 0x220 vs retail 0x240: the low temporary region is 0x1c short
+// (buffer and local_90 sit adjacent in both); callee-saved GPRs are colored
+// one off in most loops. Function-scope loop counters are worse.
 void TCardLoad::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
@@ -1096,6 +1099,9 @@ void TCardLoad::setMessage(J2DTextBox* text_box, s32 param_2, int param_3)
 	        param_2);
 }
 
+// TODO: frame 0x368 vs retail 0x3a8 (first used slot 0x218 vs 0x24c, a dead
+// low region); this/old swap r31/r29 and bounds-conversion scheduling remain.
+// Declaring old at function scope or as int is inert or worse.
 s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 {
 	s8 result = -1;

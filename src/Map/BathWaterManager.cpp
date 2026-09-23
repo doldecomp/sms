@@ -254,21 +254,24 @@ public:
 		                 const JGeometry::TVec3<f32>& grav2, int& count,
 		                 JGeometry::TVec3<f32>& accum)
 		{
-			// TODO: frame 0x110 against the ROM's 0xa8; the instruction
-			// stream differs only in scheduling and register numbering. Raw
-			// row reads instead of three at() calls are -8 of it.
-			JGeometry::TVec3<f32> m(data.unk18.mMtx[1][0], data.unk18.mMtx[1][1],
-			                        data.unk18.mMtx[1][2]);
+			// The ROM re-reads the matrix's second row after the stores
+			// through this, so it is read in place at each use, not copied.
+			// TODO: frame 0x108 against the ROM's 0xa8; radius takes f28
+			// instead of f25 (below the r vector), and the entry block's
+			// loads are scheduled differently.
 			JGeometry::TVec3<f32> delta;
 			delta.sub(unk0, data.mPos);
 			f32 outerR = data.unk40 + radius;
 			f32 innerR = data.unk3C - radius;
 			f32 distSq = delta.squared();
-			f32 proj   = m.dot(delta);
+			f32 proj    = data.unk18.mMtx[1][0] * delta.x
+			            + data.unk18.mMtx[1][1] * delta.y
+			            + data.unk18.mMtx[1][2] * delta.z;
+			f32 innerR2 = innerR * innerR;
 
 			if (distSq <= outerR * outerR) {
 				if (proj < 0.0f) {
-					if (distSq >= innerR * innerR) {
+					if (distSq >= innerR2) {
 						f32 dist = JGeometry::TUtil<f32>::sqrt(distSq);
 						f32 pen  = dist - innerR;
 						f32 inv  = -1.0f / dist;
@@ -308,13 +311,16 @@ public:
 				unk30.extend(grav1);
 			} else {
 				if (proj > 0.0f && proj < radius + data.unk48
-				    && distSq > innerR * innerR && distSq < outerR * outerR) {
+				    && distSq > innerR2 && distSq < outerR * outerR) {
 					JGeometry::TVec3<f32> point;
-					point.scale((radius + data.unk48) - proj, m);
+					f32 k = (radius + data.unk48) - proj;
+					point.set(data.unk18.mMtx[1][0] * k, data.unk18.mMtx[1][1] * k, data.unk18.mMtx[1][2] * k);
 					unk18.extend(point);
 
 					JGeometry::TVec3<f32> r;
-					r.scale(1.5f * -m.dot(unkC), m);
+					f32 dot = data.unk18.mMtx[1][0] * unkC.x + data.unk18.mMtx[1][1] * unkC.y + data.unk18.mMtx[1][2] * unkC.z;
+					f32 d = 1.5f * -dot;
+					r.set(data.unk18.mMtx[1][0] * d, data.unk18.mMtx[1][1] * d, data.unk18.mMtx[1][2] * d);
 					JGeometry::TVec3<f32> thing;
 					thing.set(delta);
 					thing.setLength(0.01f * radius);
