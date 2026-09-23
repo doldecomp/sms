@@ -1001,15 +1001,26 @@ void TBossTelesa::loadAfter()
 	}
 
 	int fruit = 0;
-	for (int i = 0; i < 6; ++i)
-		mFruits[fruit++]
+	for (int i = 0; i < 6; ++i) {
+		mFruits[fruit]
 		    = TMapObjBaseManager::newAndRegisterObj("FruitCoconut");
-	for (int i = 0; i < 6; ++i)
-		mFruits[fruit++] = TMapObjBaseManager::newAndRegisterObj("FruitPapaya");
-	for (int i = 0; i < 2; ++i)
-		mFruits[fruit++] = TMapObjBaseManager::newAndRegisterObj("FruitPine");
-	for (int i = 0; i < 6; ++i)
-		mFruits[fruit++] = TMapObjBaseManager::newAndRegisterObj("FruitDurian");
+		fruit++;
+	}
+	for (int i = 0; i < 6; ++i) {
+		mFruits[fruit]
+		    = TMapObjBaseManager::newAndRegisterObj("FruitPapaya");
+		fruit++;
+	}
+	for (int i = 0; i < 2; ++i) {
+		mFruits[fruit]
+		    = TMapObjBaseManager::newAndRegisterObj("FruitPine");
+		fruit++;
+	}
+	for (int i = 0; i < 6; ++i) {
+		mFruits[fruit]
+		    = TMapObjBaseManager::newAndRegisterObj("FruitDurian");
+		fruit++;
+	}
 
 	for (int i = 0; i < 20; ++i) {
 		mFruits[i]->unkF8 |= TMapObjBase::MAP_OBJ_FLAG_UNK4000000;
