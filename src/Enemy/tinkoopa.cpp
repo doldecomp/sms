@@ -232,6 +232,11 @@ static const char* rightArmTrackJointNameTable[]
 static const char* leftArmTrackJointNameTable[]
     = { "larm_1", "larm_2", "larm_3", "larm_4" };
 
+// TODO: 93.3%. The ROM reads TTinKoopa_jointNameTable through the
+// `...data.0` section base (@1431 + 0x7c) and hoists that base and
+// &TTinKoopa_jointIndexTable into r29/r30 in the prologue, storing with
+// `stwx`; we address both tables by name just before the loop. The rest
+// (frame 0x170 vs 0x160, pool base) follows from that; not yet investigated.
 void TTinKoopa::init(TLiveManager* live_manager)
 {
 	mManager = live_manager;

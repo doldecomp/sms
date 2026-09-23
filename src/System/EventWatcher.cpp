@@ -248,7 +248,8 @@ static void evIsNearSameActors(TSpcTypedInterp<TEventWatcher>* interp,
 //
 // Also still open: retail computes the loop's stack index as one subtraction
 // (`mCount - (arg_num - i)`) while `arg_num - i - 1` lets MWCC hoist
-// `arg_num - 1` and strength-reduce; `arg_num - (i + 1)` was not tried.
+// `arg_num - 1` and strength-reduce; `arg_num - (i + 1)` is inert, and
+// TVec3::distance() in place of the diff/length() pair is worse in both.
 static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	int count = 0;
