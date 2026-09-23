@@ -520,28 +520,40 @@ void TShellCup::attachCoin(TCoin* coin, int index)
 
 void TShellCup::calcAfter()
 {
-	// UNUSED in the map: perform() is its only caller and inlines it. That
-	// extra level is what keeps MsMtxSetRotX a call there while
-	// TPinnaShell::control() expands it in place.
-	for (int i = 0; i < 6; i++)
-		mShells[i].calcJointMtx();
-
-	if (!mBlueCoin->checkLiveFlag(LIVE_FLAG_DEAD)) {
-		mBlueCoin->mPosition.x = mShells[0].mPosition.x;
-		mBlueCoin->mPosition.y = mShells[0].mPosition.y;
-		mBlueCoin->mPosition.z = mShells[0].mPosition.z;
+	// UNUSED, 0x1b4 in the map: that size needs perform()'s talk test here and
+	// MsMtxSetRotX expanded in the loop (a call in perform itself).
+	if (gpMarDirector->isTalkModeNow()) {
+		if (!gpMarDirector->isDemoModeNow())
+			return;
 	}
 
-	if (!mCoin0->checkLiveFlag(LIVE_FLAG_DEAD)) {
-		mCoin0->mPosition.x = mShells[2].mPosition.x;
-		mCoin0->mPosition.y = mShells[2].mPosition.y;
-		mCoin0->mPosition.z = mShells[2].mPosition.z;
+	for (int i = 0; i < 6; i++) {
+		TPinnaShell* shell = &mShells[i];
+		Mtx mtx;
+		MsMtxSetRotX(mtx, shell->mRotX);
+		TMapObjBase::concatOnlyRotFromRight(shell->mJointMtx, mtx,
+		                                    shell->mJointMtx);
 	}
 
-	if (!mCoin1->checkLiveFlag(LIVE_FLAG_DEAD)) {
-		mCoin1->mPosition.x = mShells[4].mPosition.x;
-		mCoin1->mPosition.y = mShells[4].mPosition.y;
-		mCoin1->mPosition.z = mShells[4].mPosition.z;
+	TMapObjBase* blueCoin = mBlueCoin;
+	if (!blueCoin->checkLiveFlag(LIVE_FLAG_DEAD)) {
+		blueCoin->mPosition.x = getShell(0)->mPosition.x;
+		blueCoin->mPosition.y = getShell(0)->mPosition.y;
+		blueCoin->mPosition.z = getShell(0)->mPosition.z;
+	}
+
+	TCoin* coin0 = mCoin0;
+	if (!coin0->checkLiveFlag(LIVE_FLAG_DEAD)) {
+		coin0->mPosition.x = mShells[2].mPosition.x;
+		coin0->mPosition.y = mShells[2].mPosition.y;
+		coin0->mPosition.z = mShells[2].mPosition.z;
+	}
+
+	TCoin* coin1 = mCoin1;
+	if (!coin1->checkLiveFlag(LIVE_FLAG_DEAD)) {
+		coin1->mPosition.x = mShells[4].mPosition.x;
+		coin1->mPosition.y = mShells[4].mPosition.y;
+		coin1->mPosition.z = mShells[4].mPosition.z;
 	}
 }
 

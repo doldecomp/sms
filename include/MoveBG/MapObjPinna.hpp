@@ -111,10 +111,9 @@ public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	void control();
 
-	/// fabricated: the map has no symbol for it, but TShellCup::calcAfter()
-	/// loops over the shells with the shell as `this` and reaches
-	/// MsMtxSetRotX one inline level down, which is what keeps that helper a
-	/// call there and an expansion in control().
+	/// fabricated: the map has no symbol for it, but TShellCup::perform()
+	/// reaches MsMtxSetRotX one inline level down through it, which keeps that
+	/// helper a call there and an expansion in control().
 	void calcJointMtx()
 	{
 		Mtx mtx;
