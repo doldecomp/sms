@@ -496,6 +496,8 @@ BOOL TBWPicket::moveRequest(const JGeometry::TVec3<f32>& where_to)
 
 MtxPtr TBWPicket::getTakingMtx() { return mTakingMtx; }
 
+// TODO: every instruction matches; the frame is 0x138 vs retail 0x1a0, a
+// uniform 0x68 shift of both direction blocks (a missing low region).
 void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -505,11 +507,11 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 		ensureTakeSituation();
 
 		if (mHolder) {
-			TRope* rope2 = mOwner->getLeash()->getRope();
+			TBWLeash* leash = mOwner->getLeash();
 
 			JGeometry::TVec3<f32> zDir;
 			zDir.set(mHolder->mPosition);
-			zDir -= rope2->mPoints[0].unkC;
+			zDir -= leash->getRope()->mPoints[0].unkC;
 
 			JGeometry::TVec3<f32> yDir(0.0f, 1.0f, 0.0f);
 
@@ -546,9 +548,10 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		// Aim the stake along the last three rope points so it lies flat when
 		// it has been pulled out.
-		TRope* rope = mOwner->getLeash()->getRope();
+		TBWLeash* leash = mOwner->getLeash();
 		JGeometry::TVec3<f32> zDir;
 		zDir.set(mPosition);
+		TRope* rope = leash->getRope();
 		zDir -= rope->mPoints[rope->mNumPoints - 3].unkC;
 		if (zDir.isZero())
 			zDir.set(0.0f, 0.0f, 1.0f);
