@@ -952,9 +952,8 @@ static void Hx_Door(void)
 /* Game-over wipe: the "GAME OVER" texture zooms in, bounces, then fades out
    behind a white panel. */
 
-// TODO: every instruction matches, but retail's frame is 0x68 bytes larger
-// (obj at 0xe0, axis at 0xa0, the colour at 0xac, and holes at 0x88, 0xb0 and
-// 0x100), which also costs it one more saved FPR.
+// TODO: every instruction matches; the frame is 0x18 short (0x170 vs
+// 0x188) with the texcoords in a Vec[4]. Where st is declared is inert.
 static void Hxs_GameOver(u8 fade_alpha, f32 scale, f32 rotation)
 {
 	GXTexObj obj;
@@ -963,7 +962,7 @@ static void Hxs_GameOver(u8 fade_alpha, f32 scale, f32 rotation)
 	f32 aspect;
 	f32 texAspect;
 	f32 u;
-	f32 s0, t0, s1, t1, s2, t2, s3, t3;
+	Vec st[4];
 	f32 r;
 	f32 cx;
 	f32 cy;
@@ -1025,31 +1024,31 @@ static void Hxs_GameOver(u8 fade_alpha, f32 scale, f32 rotation)
 	cx = 0.5f;
 	cy = 0.5f;
 	r = scale * sqrtf((cx * cx) + (cy * cy));
-	s0 = (u * (-axis.x * r)) + 0.5f;
-	t0 = (-axis.y * r) + 0.5f;
+	st[0].x = (u * (-axis.x * r)) + 0.5f;
+	st[0].y = (-axis.y * r) + 0.5f;
 	r = scale * sqrtf((cx * cx) + (cy * cy));
-	s1 = (u * (axis.y * r)) + 0.5f;
-	t1 = (-axis.x * r) + 0.5f;
+	st[1].x = (u * (axis.y * r)) + 0.5f;
+	st[1].y = (-axis.x * r) + 0.5f;
 	r = scale * sqrtf((cx * cx) + (cy * cy));
-	s2 = (u * (axis.x * r)) + 0.5f;
-	t2 = (axis.y * r) + 0.5f;
+	st[2].x = (u * (axis.x * r)) + 0.5f;
+	st[2].y = (axis.y * r) + 0.5f;
 	r = scale * sqrtf((cx * cx) + (cy * cy));
-	s3 = (u * (-axis.y * r)) + 0.5f;
-	t3 = (axis.x * r) + 0.5f;
+	st[3].x = (u * (-axis.y * r)) + 0.5f;
+	st[3].y = (axis.x * r) + 0.5f;
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(0.0f, 0.0f, 0.0f);
 	GXColor1u32(0);
-	GXTexCoord2f32(s0, t0);
+	GXTexCoord2f32(st[0].x, st[0].y);
 	GXPosition3f32(hx.width, 0.0f, 0.0f);
 	GXColor1u32(0);
-	GXTexCoord2f32(s1, t1);
+	GXTexCoord2f32(st[1].x, st[1].y);
 	GXPosition3f32(hx.width, hx.height, 0.0f);
 	GXColor1u32(0);
-	GXTexCoord2f32(s2, t2);
+	GXTexCoord2f32(st[2].x, st[2].y);
 	GXPosition3f32(0.0f, hx.height, 0.0f);
 	GXColor1u32(0);
-	GXTexCoord2f32(s3, t3);
+	GXTexCoord2f32(st[3].x, st[3].y);
 
 	GXSetBlendMode(GX_BM_NONE, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_CLEAR);
 }
