@@ -1262,16 +1262,6 @@ static void evStartSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
-// Binding level over the sound accessor, worth +8 of low region in
-// evStartEventSE; the plain accessor and a raw-global fork are both 0 there,
-// and at evStartSE's and evStartMontemanBGM's sound sites this binder is a
-// loss, so it stays per site.
-static inline MSound* EventWatcherMSound()
-{
-	MSound* sound = SMSGetMSound();
-	return sound;
-}
-
 static void evStartEventSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
@@ -1284,12 +1274,14 @@ static void evStartEventSE(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		se = 0x485B;
 		break;
 	}
-	EventWatcherMSound()->startSoundSystemSE(se, 0, nullptr, 0);
-	// TODO: 99.9%, all 98 instructions matching and the frame now retail's
-	// 0x58. The residue is slot order: every pool slot (the popped slice at
-	// 0x38, the float-to-int double at 0x44, the nil-push slice at 0x2c)
-	// sits 8 bytes high, i.e. retail reserves 8 more bytes above the popped
-	// slice than the binder does.
+	MSound* sound = EventWatcherRawMSound();
+	sound->startSoundSystemSE(se, 0, nullptr, 0);
+	// TODO: 99.9%, all 98 instructions matching at retail's 0x58 frame. The
+	// named receiver through the raw-global binder (as in
+	// evAppearMushroom1up) puts the pushed slice in place; the popped slice
+	// and its fctiwz reads remain 4 high (0x3c vs 0x38). The SMSGetMSound()
+	// binder, the plain accessor and the raw global, named or not, with the
+	// switch on a named int or a u32 `se`, are all 4-8 further off.
 	interp->push();
 }
 
