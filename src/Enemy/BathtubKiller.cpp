@@ -1000,11 +1000,8 @@ void TBathtubKillerManager::loadAfter()
 	static const char* loopFilenames[] = {
 		"/scene/map/map/ms_kp_kill_smoke.jpa",
 	};
-	// TODO: 90.6%. The residual is scheduling inside the inlined
-	// SMS_LoadParticle: the ROM hoists the flag's address and the stored `1`
-	// into r30/r31 before the test, ours materialises the `1` after the load
-	// call.
-	SMS_LoadParticle(loopFilenames[0], MAP_MAP_MS_KP_KILL_SMOKE);
+	for (int i = 0; i < 1; ++i)
+		SMS_LoadParticle(loopFilenames[i], MAP_MAP_MS_KP_KILL_SMOKE + i);
 }
 
 void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32> position)
