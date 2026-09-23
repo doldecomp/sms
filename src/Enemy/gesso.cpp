@@ -250,6 +250,8 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		// later, .value, JMASSin/JMASCos over a named s16, cos before sin.
 		// Also inert (c-mix3): MsMtxSetRotX for the rotation (97.4, same
 		// 0x10), raw mBodyScale (-0x10, 0xb0), .value (-8), both (0xb0).
+		// Also inert (c-ident): the rows written through rotMtx, as Mtx or
+		// TMtx34f, with s/c before or after the pointer (97.4-97.5).
 		MtxPtr rotMtx = local_74;
 		MTXConcat(anmMtx, rotMtx, anmMtx);
 		MTXConcat(anmMtx, local_44, anmMtx);

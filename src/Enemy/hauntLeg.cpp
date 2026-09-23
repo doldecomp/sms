@@ -45,6 +45,9 @@ static THauntLeg* gpCurHauntLeg;
 // register and literals loaded only after the preceding stores, recur in
 // TItemSlotDrum::generateItem and PopoRollCallback, so the cause is shared
 // by the MsMtxSetRot* expansions rather than local to this callback.
+// Also inert (c-ident): a TMtx34f (with or without identity()) and a named
+// MtxPtr for RotZ and/or the concats, hand-written rows through the pointer
+// (92.6-93.9), and the rotation plus concats as a TU-local helper (62-64).
 static int HauntLegCallback(J3DNode* node, int param)
 {
 	if (param == 0) {

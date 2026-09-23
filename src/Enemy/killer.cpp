@@ -473,6 +473,8 @@ TSpineEnemy* TKillerManager::createEnemyInstance() { return new TKiller; }
 // helper (-8 frame), a chained zero row, a named angle, killer-> reads, an
 // s16 angle through JMASSin, the scale build as a helper, a 1.0f-returning
 // helper and a named `one` local.
+// Also inert (c-ident): the rows or MsMtxSetRotZ through a named MtxPtr with
+// the concats on the array or the pointer (92.8-96.9).
 static int KillerBodyCallback(J3DNode* node, int param)
 {
 	if (param == 0) {

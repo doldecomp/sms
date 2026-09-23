@@ -93,6 +93,8 @@ static int PakkunRootCallback2(J3DNode* node, int param);
 // `MsMtxSetRotZ(spinMtx, angle)` (frame 0x90, same hoist; tobiPuku carries
 // the identical hoist TODO) and hanasambo's shared `s16 angle` with
 // JMASSin/JMASCos (0x90). Retail's Mtx is at 0x5c, ours 0x4c.
+// Also inert (c-ident): the rows or MsMtxSetRotZ through a named MtxPtr with
+// the concats on the array or the pointer, as Mtx or TMtx34f (88.7-93.2).
 static int PakkunSeedCallback(J3DNode* node, int param)
 {
 	if (param == 0) {

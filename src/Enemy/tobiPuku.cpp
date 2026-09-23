@@ -112,6 +112,8 @@ static int TobiPukuRollCallback(J3DNode* param_1, int param_2)
 		// table reads; ours hoists both. Tried: the rotation body written out
 		// with one shared s16 angle, a named zero, chained zero stores, a
 		// TPosition3f matrix.
+		// Also inert (c-ident): a TMtx34f, a named angle, the pointer declared
+		// above the joint (96.7-96.8); TMtx34f identity() first is 76.9.
 		Mtx local_44;
 		MtxPtr rot = local_44;
 		MsMtxSetRotZ(rot, gpCurTobiPuku->unk1EC);

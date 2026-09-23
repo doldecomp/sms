@@ -303,6 +303,8 @@ static BOOL NameKuriAttackCallback(J3DNode* param_1, int param_2)
 		// for the rotation (declared early, late or at the Mtx) gives the
 		// `mr r4, r30` shape but swaps r30/r31 with param_1; chained zero
 		// rows and a named joint index change nothing useful.
+		// c-ident: the rows through a named MtxPtr with the concats on the
+		// array keep r1-relative concats (96.5); MsMtxSetRotX via it is 96.3.
 		MtxPtr mA = gpCurNameKuri->getMActor()->mModel->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 
