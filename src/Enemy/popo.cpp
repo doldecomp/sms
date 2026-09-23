@@ -169,8 +169,10 @@ void TPopoCollision::checkHit()
 void TPopoCollision::kill() { onHitFlag(HIT_FLAG_NO_COLLISION); }
 
 // The center joint rolls the whole body in the direction of travel.
-// TODO: 94.9%, frame 0xb8 against retail's 0xd0 (every named slot 0x18 low)
-// plus the MsMtxSetRot* literal-scheduling tell noted at HauntLegCallback.
+// The roll matrix is written through a named row pointer in both branches,
+// which gives retail's literal loads after the preceding stores.
+// TODO: instruction-exact; frame 0xb8 against retail's 0xd0 (every named slot
+// 0x18 low). A second named pointer for the scale matrix is +8 (0xc0).
 // A TU-local RotX with the angle named as an `s16` is +0x10 (0xc8), and the
 // same for the else branch's RotY(180) +0x20 (0xd8); neither moves a marker.
 static int PopoRollCallback(J3DNode* node, int param)
@@ -198,23 +200,24 @@ static int PopoRollCallback(J3DNode* node, int param)
 		scale[2][2] = s;
 
 		Mtx roll;
+		MtxPtr rollPtr = roll;
 		if (popo->isRollJump()) {
-			MsMtxSetRotX(roll, gpCurPopo->mRollAngle);
+			MsMtxSetRotX(rollPtr, gpCurPopo->mRollAngle);
 		} else {
 			f32 s     = JMASSin(0x8000);
 			f32 c     = JMASCos(0x8000);
-			roll[0][0] = c;
-			roll[0][1] = 0.0f;
-			roll[0][2] = s;
-			roll[0][3] = 0.0f;
-			roll[1][0] = 0.0f;
-			roll[1][1] = 1.0f;
-			roll[1][2] = 0.0f;
-			roll[1][3] = 0.0f;
-			roll[2][0] = -s;
-			roll[2][1] = 0.0f;
-			roll[2][2] = c;
-			roll[2][3] = 0.0f;
+			rollPtr[0][0] = c;
+			rollPtr[0][1] = 0.0f;
+			rollPtr[0][2] = s;
+			rollPtr[0][3] = 0.0f;
+			rollPtr[1][0] = 0.0f;
+			rollPtr[1][1] = 1.0f;
+			rollPtr[1][2] = 0.0f;
+			rollPtr[1][3] = 0.0f;
+			rollPtr[2][0] = -s;
+			rollPtr[2][1] = 0.0f;
+			rollPtr[2][2] = c;
+			rollPtr[2][3] = 0.0f;
 		}
 		MTXConcat(anmMtx, roll, anmMtx);
 		MTXConcat(anmMtx, scale, anmMtx);
