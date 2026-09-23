@@ -70,7 +70,7 @@ mario/Camera/CameraNotice	ctrlLButtonCamera___15CPolarSubCameraFv	528	99.79	EQUI
 mario/Camera/CameraNormal	ctrlNormalOrTowerCamera___15CPolarSubCameraFv	1204	98.32	DIFFERENT	block 41 effect 3 address differs: 0x36c 'lfsx f0,r4,r0' vs 0x364 'lfsx f0,r4,r0'
 mario/Camera/lensflare	perform__10TLensFlareFUlPQ26JDrama9TGraphics	1512	94.83	UNSUPPORTED	stack: address-taken object layout differs (P 572 vs Q 164)
 mario/Camera/lensglow	perform__9TLensGlowFUlPQ26JDrama9TGraphics	1328	99.11	UNSUPPORTED	stack: address-taken object extent differs (P 204..376 vs Q 200..376)
-mario/Camera/CameraJetCoaster	ctrlJetCoasterCamera___15CPolarSubCameraFv	2784	97.79	UNSUPPORTED	stack: access inside address-taken object differs (P 412 vs Q 280)
+mario/Camera/CameraJetCoaster	ctrlJetCoasterCamera___15CPolarSubCameraFv	2784	97.79	DIFFERENT	block 3 effect 0: 0x124 'lhz r3,0(r4)' vs 0x280 'sth r0,0(r4)'
 mario/Camera/CameraDemo	updateDemoCamera___15CPolarSubCameraFb	852	99.73	EQUIVALENT	L1
 mario/Enemy/conductor	isBossDefeated__10TConductorFv	480	98.83	UNSUPPORTED	cfg: 29 vs 28 blocks
 mario/Enemy/conductor	genEnemyFromPollution__10TConductorFv	844	99.91	UNSUPPORTED	stack: address-taken object layout differs (P 140 vs Q 136)
@@ -188,11 +188,11 @@ mario/Enemy/telesa	behaveToWater__7TTelesaFP9THitActor	656	99.92	UNSUPPORTED	sta
 mario/Enemy/telesa	bind__7TTelesaFv	836	99.97	EQUIVALENT	L1
 mario/Enemy/telesa	execute__23TNerveTelesaAttackMarioCFP24TSpineBase<10TLiveActor>	716	99.61	EQUIVALENT	L1
 mario/Enemy/fireWanwan	bindOne__11TTailRubberFRQ211TTailRubber4Node	308	99.32	EQUIVALENT	L1
-mario/Enemy/fireWanwan	restrict__11TTailRubberFv	1140	98.06	DIFFERENT	block 9 branch: 0x8880 'bc 4,eq,888c <restrict__11TTailRubberFv+0x1e4>' vs 0xc204 'bc 4,eq,c210 <restrict__11TTailRubberFv+0x1e8>'
+mario/Enemy/fireWanwan	restrict__11TTailRubberFv	1140	98.41	EQUIVALENT	L2: frame 168/184
 mario/Enemy/fireWanwan	perform__19TFireWanwanTailNodeFUlPQ26JDrama9TGraphicsRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	496	97.26	EQUIVALENT	L1: frame 288/232
 mario/Enemy/fireWanwan	init__18TFireWanwanTailHitFv	1240	96.87	UNSUPPORTED	stack: address-taken object layout differs (P 180 vs Q 160)
 mario/Enemy/fireWanwan	perform__18TFireWanwanTailHitFUlPQ26JDrama9TGraphics	1628	98.95	UNSUPPORTED	stack: address-taken object layout differs (P 336 vs Q 324)
-mario/Enemy/fireWanwan	performNodes__18TFireWanwanTailHitFUlPQ26JDrama9TGraphics	712	99.39	DIFFERENT	block 8 effect 3 call args differ: r3/r4: 0x6c10 'bl 6c10 <performNodes__18TFireWanwanTailHitFUlPQ26JDrama9TGraphics+0x210>' vs 0x9e54 'bl 9e54 <performNodes__18TFireWanwanTailHitFUlPQ26JDrama9TGraphics+0x210>'
+mario/Enemy/fireWanwan	performNodes__18TFireWanwanTailHitFUlPQ26JDrama9TGraphics	712	99.61	EQUIVALENT	L1: frame 320/304
 mario/Enemy/fireWanwan	moveRequest__18TFireWanwanTailHitFRCQ29JGeometry8TVec3<f>	292	99.73	EQUIVALENT	L1
 mario/Enemy/fireWanwan	behaveToWater__11TFireWanwanFP9THitActor	904	99.92	EQUIVALENT	L1: frame 232/152
 mario/Enemy/fireWanwan	calcRootMatrix__11TFireWanwanFv	456	98.15	DIFFERENT	block 6 effect 4 address differs: 0x5520 'lfs f31,40(r3)' vs 0x6ee8 'lfs f26,72(r3)'
@@ -200,9 +200,9 @@ mario/Enemy/fireWanwan	moveObject__11TFireWanwanFv	1768	98.89	UNSUPPORTED	cfg: b
 mario/Enemy/fireWanwan	updatePollute__11TFireWanwanFv	456	98.77	DIFFERENT	block 9 effect 2 icall args differ: f4/f5: 0x4b14 'bclrl 20,lt,0' vs 0x61d8 'bclrl 20,lt,0'
 mario/Enemy/fireWanwan	emitEffects__11TFireWanwanFv	1372	99.96	EQUIVALENT	L1
 mario/Enemy/fireWanwan	setQuat__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry9TQuat4<f>	160	98.50	EQUIVALENT	L1
-mario/Enemy/fireWanwan	bind__11TFireWanwanFv	2052	99.64	UNSUPPORTED	stack: address-taken object layout differs (P 276 vs Q 256)
+mario/Enemy/fireWanwan	bind__11TFireWanwanFv	2052	99.66	UNSUPPORTED	stack: address-taken object layout differs (P 276 vs Q 256)
 mario/Enemy/fireWanwan	bindBody__11TFireWanwanFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	888	99.53	UNSUPPORTED	stack: address-taken object extent differs (P 300..488 vs Q 304..488)
-mario/Enemy/fireWanwan	bindPoint__11TFireWanwanFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fP18TBGWallCheckRecord	984	99.89	DIFFERENT	block 14 effect 4 call args differ: f2: 0x2ef8 'bl 2ef8 <bindPoint__11TFireWanwanFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fP18TBGWallCheckRecord+0x158>' vs 0x361c 'bl 361c <bindPoint__11TFireWanwanFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fP18TBGWallCheckRecord+0x158>'
+mario/Enemy/fireWanwan	bindPoint__11TFireWanwanFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fP18TBGWallCheckRecord	984	99.97	EQUIVALENT	L1
 mario/Enemy/fireWanwan	execute__25TNerveFireWanwanFindMarioCFP24TSpineBase<10TLiveActor>	1300	99.73	EQUIVALENT	L1: frame 232/224
 mario/Enemy/fireWanwan	execute__28TNerveFireWanwanRecoverGraphCFP24TSpineBase<10TLiveActor>	1444	99.42	DIFFERENT	block 4 effect 0 address differs: 0x1250 'lwz r5,0(r6)' vs 0x1444 'lwz r5,0(r6)'
 mario/Enemy/fireWanwan	execute__19TNerveFireWanwanFlyCFP24TSpineBase<10TLiveActor>	748	96.47	UNSUPPORTED	stack: inconsistent slot mapping (P 224 vs Q 172)
@@ -259,7 +259,7 @@ mario/Enemy/chuuhana	bind__9TChuuHanaFv	744	99.96	EQUIVALENT	L1
 mario/Enemy/chuuhana	willFall__9TChuuHanaFl	512	99.84	EQUIVALENT	L1
 mario/Enemy/chuuhana	setGoal__9TChuuHanaFv	360	99.50	EQUIVALENT	L1: frame 160/144
 mario/Enemy/chuuhana	execute__25TNerveChuuHanaKeepBalanceCFP24TSpineBase<10TLiveActor>	1004	99.92	EQUIVALENT	L1
-mario/Enemy/chuuhana	execute__18TNerveChuuHanaRollCFP24TSpineBase<10TLiveActor>	544	97.89	UNSUPPORTED	cfg: block 3 (bc->[12, 4] vs bc->[10, 4])
+mario/Enemy/chuuhana	execute__18TNerveChuuHanaRollCFP24TSpineBase<10TLiveActor>	544	97.93	DIFFERENT	block 12 effect 3 address differs: 0xb04 'lfs f1,516(r30)' vs 0xdf8 'lfs f1,524(r30)'
 mario/Enemy/igaiga	reset__10TRollEnemyFv	504	95.69	EQUIVALENT	L1: frame 176/88
 mario/Enemy/igaiga	walkBehavior__10TRollEnemyFif	524	97.93	EQUIVALENT	L2: frame 72/64
 mario/Enemy/igaiga	setBehavior__10TRollEnemyFv	552	95.45	DIFFERENT	block 7 effect 2 icall args differ: f1/f4: 0x44f0 'bclrl 20,lt,0' vs 0x4af8 'bclrl 20,lt,0'
@@ -279,7 +279,7 @@ mario/Enemy/poihana	initSetEnemies__15TPoiHanaManagerFv	160	99.72	EQUIVALENT	L1:
 mario/Enemy/poihana	init__8TPoiHanaFP12TLiveManager	644	99.98	EQUIVALENT	L1
 mario/Enemy/poihana	walkBehavior__8TPoiHanaFif	376	99.79	DIFFERENT	block 3 branch: 0x1894 'bc 4,gt,1984 <walkBehavior__8TPoiHanaFif+0x160>' vs 0x1bb8 'bc 4,lt,1ca8 <walkBehavior__8TPoiHanaFif+0x160>'
 mario/Enemy/poihana	genEventCoin__8TPoiHanaFv	304	99.91	EQUIVALENT	L1
-mario/Enemy/poihana	execute__20TNervePoihanaTrappedCFP24TSpineBase<10TLiveActor>	1232	99.92	DIFFERENT	block 12 effect 5 stored value differs: 0x264 'stfs f0,276(r1)' vs 0x264 'stfs f0,276(r1)'
+mario/Enemy/poihana	execute__20TNervePoihanaTrappedCFP24TSpineBase<10TLiveActor>	1232	99.95	EQUIVALENT	L1
 mario/Enemy/tamaNoko	perform__15TTamaNokoFlowerFUlPQ26JDrama9TGraphics	936	97.13	UNSUPPORTED	stack: unpaired address-taken slot
 mario/Enemy/tamaNoko	initSetEnemies__16TTamaNokoManagerFv	300	99.88	EQUIVALENT	L1: frame 224/56
 mario/Enemy/tamaNoko	walkBehavior__9TTamaNokoFif	1236	99.95	EQUIVALENT	L1
@@ -439,8 +439,8 @@ mario/Enemy/koopajr	makeRoundVelocity__17TKoopaJrSubmarineFv	716	99.61	EQUIVALEN
 mario/Enemy/koopajr	checkNerve__17TKoopaJrSubmarineFv	888	99.56	UNSUPPORTED	stack: store-only slot at a different SP offset (possible outgoing argument): 0x574 'stw r3,132(r1)' vs 0x738 'stw r3,148(r1)'
 mario/Enemy/koopajr	createEnemyInstance__24TKoopaJrSubmarineManagerFv	72	3.89	DIFFERENT	block 1 effect 0: 0x90 'bl 90 <createEnemyInstance__24TKoopaJrSubmarineManagerFv+0x2c>' vs 0x98 'bl 98 <createEnemyInstance__24TKoopaJrSubmarineManagerFv+0x2c>'
 mario/Enemy/Kumokun	initAttachPlane__8TKumokunFv	1048	96.51	UNSUPPORTED	stack: unpaired address-taken slot
-mario/Enemy/Kumokun	bind__8TKumokunFv	1780	99.50	UNSUPPORTED	stack: unpaired address-taken slot
-mario/Enemy/Kumokun	checkOnMovingWall__8TKumokunCFPQ29JGeometry8TVec3<f>PPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	884	95.55	UNSUPPORTED	stack: address-taken object extent differs (P 84..256 vs Q 80..288)
+mario/Enemy/Kumokun	bind__8TKumokunFv	1780	99.51	DIFFERENT	block 34 effect 0: - vs 0x7ad4 'lfs f0,4(r5)'
+mario/Enemy/Kumokun	checkOnMovingWall__8TKumokunCFPQ29JGeometry8TVec3<f>PPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	884	99.26	UNSUPPORTED	stack: address-taken object extent differs (P 84..256 vs Q 80..248)
 mario/Enemy/Kumokun	checkOnMovingFloor__8TKumokunCFPQ29JGeometry8TVec3<f>PPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	660	97.95	UNSUPPORTED	stack: unpaired address-taken slot
 mario/Enemy/Kumokun	checkOnMovingRoof__8TKumokunCFPQ29JGeometry8TVec3<f>PPC12TBGCheckDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>	920	99.86	UNSUPPORTED	stack: address-taken object layout differs (P 152 vs Q 152)
 mario/Enemy/Kumokun	bindOnFlying__8TKumokunFv	700	99.41	UNSUPPORTED	stack: address-taken object layout differs (P 20 vs Q 88)
@@ -536,7 +536,7 @@ mario/GC2D/GCConsole2	countBlueCoin__11TGCConsole2Fv	1168	96.61	EQUIVALENT	L2: f
 mario/GC2D/GCConsole2	processAppearStar__11TGCConsole2Fi	1816	95.99	UNSUPPORTED	stack: slot layout differs (P 320 vs Q 268)
 mario/GC2D/GCConsole2	drawJuice__11TGCConsole2FR13J2DOrthoGraphUl	1348	99.69	DIFFERENT	block 1 branch: 0x4224 'bc 4,gt,4234 <drawJuice__11TGCConsole2FR13J2DOrthoGraphUl+0x1bc>' vs 0x4224 'bc 12,eq,4234 <drawJuice__11TGCConsole2FR13J2DOrthoGraphUl+0x1bc>'
 mario/GC2D/GCConsole2	drawWater__11TGCConsole2FR13J2DOrthoGraph	1632	99.71	UNSUPPORTED	stack: access inside address-taken object differs (P 340 vs Q 256)
-mario/GC2D/GCConsole2	perform__11TGCConsole2FUlPQ26JDrama9TGraphics	14756	97.18	UNSUPPORTED	cfg: block 213 (bc->[238, 214] vs bc->[216, 214])
+mario/GC2D/GCConsole2	perform__11TGCConsole2FUlPQ26JDrama9TGraphics	14756	97.18	UNSUPPORTED	stack: address-taken object layout differs (P 3692 vs Q 2544)
 mario/GC2D/Talk2D2	load__8TTalk2D2FR20JSUMemoryInputStream	936	99.50	EQUIVALENT	L2
 mario/GC2D/Talk2D2	loadAfter__8TTalk2D2Fv	1412	99.79	UNSUPPORTED	stack: address-taken object extent differs (P 268..488 vs Q 248..464)
 mario/GC2D/Talk2D2	makeBoxLine__8TTalk2D2FScPc	1252	97.29	UNSUPPORTED	stack: address-taken object extent differs (P 272..648 vs Q 116..488)
@@ -561,7 +561,6 @@ mario/GC2D/CardLoad	waitForStart__9TCardLoadF10TEProgress	2440	98.09	EQUIVALENT	
 mario/GC2D/CardLoad	selectBookmark__9TCardLoadF10TEProgress10TEProgressb	3900	99.09	DIFFERENT	block 39 effect 26 icall args differ: r8: 0x3bf0 'bclrl 20,lt,0' vs 0x3e4c 'bclrl 20,lt,0'
 mario/GC2D/CardLoad	selectFunction__9TCardLoadFv	6480	99.40	DIFFERENT	block 103 branch: 0x3090 'bc 4,eq,30b8 <selectFunction__9TCardLoadFv+0x188c>' vs 0x32ec 'bc 4,eq,3314 <selectFunction__9TCardLoadFv+0x188c>'
 mario/GC2D/CardLoad	changeScene__9TCardLoadFv	5956	99.96	UNSUPPORTED	stack: address-taken object layout differs (P 372 vs Q 260)
-mario/GC2D/ConsoleStr	__sinit_ConsoleStr_cpp	104	99.23	DIFFERENT	block 0 effect 6 stored value differs: 0x2ae8 'stw r9,0(0)' vs 0x2d08 'stw r9,0(0)'
 mario/GC2D/ConsoleStr	perform__11TConsoleStrFUlPQ26JDrama9TGraphics	1852	98.25	UNSUPPORTED	cfg: 79 vs 78 blocks
 mario/GC2D/ConsoleStr	processGo__11TConsoleStrFf	1684	97.73	DIFFERENT	block 19 effect 13: 0x1220 'lfd f0,552(r1)' vs 0x126c 'stw r8,500(r1)'
 mario/GC2D/ConsoleStr	processShineGet__11TConsoleStrFi	776	91.29	EQUIVALENT	L2: frame 360/344
@@ -569,7 +568,7 @@ mario/GC2D/ConsoleStr	processMiss__11TConsoleStrFi	864	95.25	UNSUPPORTED	stack: 
 mario/GC2D/ConsoleStr	startCloseWipe__11TConsoleStrFb	1428	99.14	UNSUPPORTED	stack: inconsistent slot mapping (P 392 vs Q 328)
 mario/GC2D/SelectMenu	perform__11TSelectGradFUlPQ26JDrama9TGraphics	956	98.36	EQUIVALENT	L2
 mario/GC2D/SelectMenu	initData__11TSelectMenuFUcP10JKRArchiveP19TSelectShineManagerP10TSelectDir	3892	99.49	UNSUPPORTED	stack: address-taken object layout differs (P 336 vs Q 288)
-mario/GC2D/SelectMenu	perform__11TSelectMenuFUlPQ26JDrama9TGraphics	6060	99.68	UNSUPPORTED	cfg: block 42 (b->[124] vs b->[67])
+mario/GC2D/SelectMenu	perform__11TSelectMenuFUlPQ26JDrama9TGraphics	6060	99.68	UNSUPPORTED	cfg: block 44 (bc->[124, 45] vs bc->[67, 45])
 mario/GC2D/SelectDir	rsetup__10TSelectDirFv	4384	99.63	UNSUPPORTED	stack: inconsistent slot mapping (P 1456 vs Q 1392)
 mario/GC2D/SelectDir	direct__10TSelectDirFv	708	99.83	EQUIVALENT	L1: frame 208/80
 mario/GC2D/SelectShine2	initData__19TSelectShineManagerFPUcUcUcP17JPAEmitterManager	1384	98.38	UNSUPPORTED	stack: inconsistent slot mapping (P 192 vs Q 152)
@@ -588,7 +587,6 @@ mario/GC2D/Guide	perform__6TGuideFUlPQ26JDrama9TGraphics	1824	99.57	EQUIVALENT	L
 mario/GC2D/hx_wiper	Hxs2_Circle	976	99.65	EQUIVALENT	L1
 mario/GC2D/hx_wiper	Hxs_GameOver	1372	99.66	UNSUPPORTED	stack: address-taken object extent differs (P 224..392 vs Q 196..368)
 mario/GC2D/hx_wiper	Hxs_Logo_TexDraw	556	96.37	EQUIVALENT	L2: frame 184/168
-mario/GC2D/hx_wiper	Hx_Logo	1004	99.86	DIFFERENT	block 18 effect 0 call args differ: r4: 0x1954 'bl 1954 <Hx_Logo+0x164>' vs 0x1980 'bl 1980 <Hx_Logo+0x164>'
 mario/GC2D/hx_wiper	Hx_Test5	1272	99.82	UNSUPPORTED	stack: address-taken object extent differs (P 12..272 vs Q 12..264)
 mario/GC2D/Option	update__17TOptionRumbleUnitFv	964	99.81	EQUIVALENT	L1
 mario/GC2D/Option	update__19TOptionSubtitleUnitFv	644	99.68	EQUIVALENT	L1
@@ -917,7 +915,7 @@ mario/Player/Yoshi	entry__6TYoshiFv	800	99.94	UNSUPPORTED	stack: address-taken o
 mario/Player/MarioAccess	SMS_IsMarioOnWire__Fv	72	93.83	DIFFERENT	block 1 effect 0 address differs: 0x1dc 'lwz r3,104(r3)' vs 0x228 'lwz r3,76(r3)'
 mario/Player/ModelWaterManager	__ct__14TWaterEmitInfoFPCc	1000	92.71	UNSUPPORTED	stack: inconsistent slot mapping (P 52 vs Q 64)
 mario/Player/ModelWaterManager	loadAfter__18TModelWaterManagerFv	252	99.65	DIFFERENT	block 6 effect 0 stored value differs: 0x4318 'stfs f0,24076(r29)' vs 0x47e0 'stfs f0,24076(r29)'
-mario/Player/ModelWaterManager	move__18TModelWaterManagerFv	4180	96.55	UNSUPPORTED	stack: address-taken object layout differs (P 424 vs Q 316)
+mario/Player/ModelWaterManager	move__18TModelWaterManagerFv	4180	96.59	UNSUPPORTED	stack: address-taken object layout differs (P 424 vs Q 316)
 mario/Player/ModelWaterManager	calcDrawVtx__18TModelWaterManagerFPA4_f	748	98.84	UNSUPPORTED	stack: address-taken object layout differs (P 84 vs Q 84)
 mario/Player/ModelWaterManager	calcVMMtxGround__18TModelWaterManagerFPA4_ffRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PA4_f	316	97.22	EQUIVALENT	L1
 mario/Player/ModelWaterManager	calcVMMtxWall__18TModelWaterManagerFPA4_ffRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PA4_f	276	97.68	EQUIVALENT	L1
@@ -959,7 +957,7 @@ mario/System/MarDirectorDirect	updateGameMode__12TMarDirectorFv	2184	99.80	UNSUP
 mario/System/MarDirectorDirect	moveStage__12TMarDirectorFv	1072	98.57	EQUIVALENT	L1: frame 112/72
 mario/System/MarDirectorEvent	findNearestTalkNPC__12TMarDirectorFv	192	99.96	EQUIVALENT	L1: frame 88/80
 mario/System/MarDirectorEvent	setNextStage__12TMarDirectorFUsPQ26JDrama6TActor	400	99.66	EQUIVALENT	L1: frame 80/64
-mario/System/MarDirectorInitECT	initECTGft__12TMarDirectorFP12TPerformListP12TPerformListPQ26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>PQ26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>	1488	96.81	UNSUPPORTED	stack: address-taken object layout differs (P 288 vs Q 292)
+mario/System/MarDirectorInitECT	initECTGft__12TMarDirectorFP12TPerformListP12TPerformListPQ26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>PQ26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>	1488	99.62	UNSUPPORTED	stack: address-taken object layout differs (P 288 vs Q 292)
 mario/System/MarDirectorInitECT	initECDisp__12TMarDirectorFP12TPerformListPQ26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>PQ26JDrama55TViewObjPtrListT<Q26JDrama8TViewObj,Q26JDrama8TViewObj>	3084	99.75	UNSUPPORTED	stack: address-taken object layout differs (P 748 vs Q 628)
 mario/System/MarNameRefGen	InsertRaw__Q27JGadget66TVector<14TCameraMapTool,Q27JGadget28TAllocator<14TCameraMapTool>>FP14TCameraMapToolUl	1280	60.22	UNSUPPORTED	cfg: 54 vs 51 blocks
 mario/System/MarNameRefGen	getNameRef__14TMarNameRefGenCFPCc	7452	100.00	EQUIVALENT	L1
@@ -987,7 +985,7 @@ mario/System/CardManager	cmdLoop__12TCardManagerFv	552	96.89	UNSUPPORTED	cfg: bl
 mario/System/MovieDirector	setup__14TMovieDirectorFPQ26JDrama8TDisplayP13TMarioGamePad	308	99.79	EQUIVALENT	L1: frame 88/64
 mario/System/MovieDirector	rsetup__14TMovieDirectorFv	2092	99.69	UNSUPPORTED	stack: address-taken object layout differs (P 704 vs Q 704)
 mario/System/MovieDirector	direct__14TMovieDirectorFv	2200	99.34	UNSUPPORTED	stack: address-taken object extent differs (P 336..624 vs Q 164..448)
-mario/System/MarDirectorSetupObjects	setupObjects__12TMarDirectorFv	8356	98.19	UNSUPPORTED	stack: unpaired address-taken slot
+mario/System/MarDirectorSetupObjects	setupObjects__12TMarDirectorFv	8356	99.20	UNSUPPORTED	stack: address-taken object layout differs (P 2012 vs Q 1740)
 mario/System/MSoundMainSide	setMSoundEnterStage__10MSMainProcFUcUc	2512	99.99	EQUIVALENT	L1: frame 136/64
 mario/System/MSoundMainSide	init__7MSStageFUcUc	924	99.95	EQUIVALENT	L1: frame 128/40
 mario/System/MSoundMainSide	proc__15MSStageDistFadeFv	728	99.73	EQUIVALENT	L1: frame 216/152
@@ -1027,5 +1025,5 @@ mario/JSystem/JParticle/JPADrawVisitor	exec__27JPADrawExecDirectionalCrossFPC14J
 mario/JSystem/JParticle/JPADrawVisitor	exec__30JPADrawExecRotDirectionalCrossFPC14JPADrawContextP15JPABaseParticle	1440	99.97	DIFFERENT	block 15 effect 20 address differs: 0x2b6c 'lfs f31,44(r30)' vs 0x2ba0 'lfs f29,52(r30)'
 mario/JSystem/JParticle/JPADrawVisitor	exec__15JPADrawExecLineFPC14JPADrawContextP15JPABaseParticle	448	99.63	EQUIVALENT	L1: frame 120/112
 mario/JSystem/JParticle/JPADrawVisitor	exec__17JPADrawExecStripeFPC14JPADrawContext	1136	97.97	UNSUPPORTED	stack: address-taken object extent differs (P 264..504 vs Q 232..480)
-mario/JSystem/JParticle/JPADrawVisitor	exec__22JPADrawExecStripeCrossFPC14JPADrawContext	2024	97.01	UNSUPPORTED	stack: address-taken object extent differs (P 444..696 vs Q 468..696)
+mario/JSystem/JParticle/JPADrawVisitor	exec__22JPADrawExecStripeCrossFPC14JPADrawContext	2024	97.02	UNSUPPORTED	stack: address-taken object extent differs (P 444..696 vs Q 468..696)
 mario/TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/support	TRKSuppAccessFile	728	99.64	UNSUPPORTED	frame: LR not restored

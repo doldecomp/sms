@@ -5,13 +5,13 @@ Byte counts are retail function sizes.
 
 | verdict | functions | bytes |
 | --- | ---: | ---: |
-| exact (report.json 100%) | 11874 | 2542144 |
-| EQUIVALENT (L1 437, L2 71) | 508 | 388096 |
-| DIFFERENT | 167 | 189912 |
-| UNSUPPORTED | 355 | 483596 |
+| exact (report.json 100%) | 11876 | 2543252 |
+| EQUIVALENT (L1 440, L2 72) | 512 | 392164 |
+| DIFFERENT | 164 | 189844 |
+| UNSUPPORTED | 352 | 478488 |
 | **all code** | 12904 | 3603748 |
 
-**exact + certified: 2930240 / 3603748 bytes = 81.31% of all code** (exact alone 70.54%; certification adds 10.77 points).
+**exact + certified: 2935416 / 3603748 bytes = 81.45% of all code** (exact alone 70.57%; certification adds 10.88 points).
 
 Per-function verdicts: `equiv.tsv`.  How the checker was validated: `validation.md`.
 Regenerate with `python3 tools/equiv-check.py --write` after a build (about 20 s; the callee
@@ -21,29 +21,29 @@ Most common non-certified reasons (numbers and addresses elided):
 
 | verdict | reason | functions |
 | --- | --- | ---: |
-| UNSUPPORTED | stack: address-taken object layout differs | 97 |
+| UNSUPPORTED | stack: address-taken object layout differs | 99 |
 | UNSUPPORTED | stack: address-taken object extent differs | 96 |
-| DIFFERENT | block # effect # address differs: # vs # | 46 |
+| DIFFERENT | block # effect # address differs: # vs # | 47 |
 | UNSUPPORTED | cfg: # vs # blocks | 35 |
-| DIFFERENT | block # branch: # vs # | 24 |
-| UNSUPPORTED | stack: access inside address-taken object differs | 23 |
+| DIFFERENT | block # effect #: # vs # | 23 |
+| DIFFERENT | block # branch: # vs # | 23 |
 | UNSUPPORTED | stack: inconsistent slot mapping | 23 |
-| DIFFERENT | block # effect #: # vs # | 22 |
+| UNSUPPORTED | stack: access inside address-taken object differs | 22 |
 | UNSUPPORTED | ours | 21 |
-| UNSUPPORTED | stack: unpaired address-taken slot | 20 |
 | UNSUPPORTED | stack: store-only slot at a different SP offset | 19 |
-| UNSUPPORTED | cfg: block # (bc->[#, #] vs bc->[#, #]) | 12 |
+| UNSUPPORTED | stack: unpaired address-taken slot | 18 |
+| UNSUPPORTED | cfg: block # (bc->[#, #] vs bc->[#, #]) | 11 |
 | DIFFERENT | block # effect # icall args differ: r#: # vs # | 10 |
-| DIFFERENT | block # effect # stored value differs: # vs # | 8 |
-| DIFFERENT | block # effect # call args differ: r#: # vs # | 8 |
 | DIFFERENT | block # return value f# differs (#) | 7 |
 | DIFFERENT | block # return value r# differs (#) | 7 |
+| DIFFERENT | block # effect # call args differ: r#: # vs # | 7 |
 | DIFFERENT | block # effect # call args differ: f#/f#: # vs # | 6 |
+| DIFFERENT | block # effect # stored value differs: # vs # | 6 |
 | DIFFERENT | block # effect # icall args differ: f#/f#: # vs # | 6 |
-| DIFFERENT | block # effect # call args differ: f#: # vs # | 5 |
-| DIFFERENT | block # effect # call args differ: r#/r#: # vs # | 4 |
+| DIFFERENT | block # effect # call args differ: f#: # vs # | 4 |
 | DIFFERENT | block # effect # icall args differ: f#: # vs # | 4 |
 | UNSUPPORTED | stack: slot layout differs | 3 |
+| DIFFERENT | block # effect # call args differ: r#/r#: # vs # | 3 |
 | DIFFERENT | block # effect #: # vs - | 3 |
 | UNSUPPORTED | stack: address-taken slots only on one side | 2 |
 
