@@ -166,7 +166,7 @@ public:
 
 	void moveByWater();
 	void touchWall(JGeometry::TVec3<f32>*, const TBGWallCheckRecord&);
-	void bindToWall(const JGeometry::TVec3<f32>&, f32,
+	bool bindToWall(const JGeometry::TVec3<f32>&, f32,
 	                JGeometry::TVec3<f32>*);
 
 	TMuddyBoat(const char* name = "どろの船");

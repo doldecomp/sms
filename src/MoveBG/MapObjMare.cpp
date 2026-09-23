@@ -906,15 +906,21 @@ void TMuddyBoat::touchWall(JGeometry::TVec3<f32>* pos,
  *
  * @details UNUSED in the map (0x104); inlined into bind() three times.
  */
-void TMuddyBoat::bindToWall(const JGeometry::TVec3<f32>& probe, f32 radius,
+bool TMuddyBoat::bindToWall(const JGeometry::TVec3<f32>& probe, f32 radius,
                             JGeometry::TVec3<f32>* pos)
 {
 	TBGWallCheckRecord record(probe, radius, 4,
 	                          TBGWallCheckRecord::DONT_MOVE_XZ);
-	if (gpMap->isTouchedWallsAndMoveXZ(&record))
+	if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
 		touchWall(pos, record);
+		return true;
+	}
+	return false;
 }
 
+// TODO: retail's frame is 0x110 larger: each inlined bindToWall() record sits
+// 0x38 apart (0x2c here), the TVec3::sub temporary sits below the records, and
+// the probe reuses one mFrontOffset/mBackOffset load for both components.
 void TMuddyBoat::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
@@ -954,22 +960,19 @@ void TMuddyBoat::bind()
 	probe.x = mtx[0][2] * mFrontOffset + next.x;
 	probe.y = waterY;
 	probe.z = mtx[2][2] * mFrontOffset + next.z;
-	bindToWall(probe, mWallRadiusFront, &next);
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (bindToWall(probe, mWallRadiusFront, &next))
 		return;
 
 	probe.x = -(mtx[0][2] * mBackOffset - next.x);
 	probe.y = mPosition.y - mYOffset;
 	probe.z = -(mtx[2][2] * mBackOffset - next.z);
-	bindToWall(probe, mWallRadiusBack, &next);
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (bindToWall(probe, mWallRadiusBack, &next))
 		return;
 
 	probe.x = next.x;
 	probe.y = mPosition.y - mYOffset;
 	probe.z = next.z;
-	bindToWall(probe, mWallRadiusCenter, &next);
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (bindToWall(probe, mWallRadiusCenter, &next))
 		return;
 
 	// `a = b - c` reaches the map's out-of-line TVec3::sub: operator= is one
