@@ -703,22 +703,18 @@ void TOilBall::reset()
 	mHighPoly = false;
 }
 
-// TODO: 92.5%. Only the setHitParams prologue differs: retail loads the
-// scale first and parks the four int->float conversions 0x10 higher. Tried:
-// no named ints (0xf8), named f32 products (0xe0), `.value` reads (0xd0).
 void TOilBall::moveObject()
 {
-	f32 scale                        = mScaling.x;
-	TBEelTearsSaveLoadParams* params = mTearsParams;
-	s32 attackRadius                 = params->mSLTearsAttackRadius.get();
-	s32 attackHeight                 = params->mSLTearsAttackHeight.get();
-	s32 damageRadius                 = params->mSLTearsDamageRadius.get();
-	s32 damageHeight                 = params->mSLTearsDamageHeight.get();
+	f32 scale        = mScaling.x;
+	f32 attackRadius = mTearsParams->mSLTearsAttackRadius.get();
+	f32 attackHeight = mTearsParams->mSLTearsAttackHeight.get();
+	f32 damageRadius = mTearsParams->mSLTearsDamageRadius.get();
+	f32 damageHeight = mTearsParams->mSLTearsDamageHeight.get();
 	setHitParams(attackRadius * scale, attackHeight * scale,
 	             damageRadius * scale, damageHeight * scale);
 
-	for (int i = 0; i < getColNum(); ++i) {
-		THitActor* actor = getCollision(i);
+	for (int i = 0; i < mColCount; ++i) {
+		THitActor* actor = mCollisions[i];
 		if (actor->isActorType(0x80000001)) {
 			if (mSpine->getCurrentNerve() == &TNerveBEelTearsMoveUp::theNerve()
 			    || mSpine->getCurrentNerve()
