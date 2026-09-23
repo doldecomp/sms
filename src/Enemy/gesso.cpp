@@ -1017,13 +1017,9 @@ void TGessoPolluteObj::rebirth()
 	}
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// TGessoPolluteObj::set (batch 127).
-static inline TSpineEnemy* GessoUnk160(const TGessoPolluteObj* p)
-{
-	TSpineEnemy* v160 = p->unk160;
-	return v160;
-}
+// Direct-return level over a raw member read (a named local here is +0 of
+// frame but orders TGessoPolluteObj::set's slots worse).
+static inline TSpineEnemy* GessoUnk160(const TGessoPolluteObj* p) { return p->unk160; }
 
 void TGessoPolluteObj::set()
 {

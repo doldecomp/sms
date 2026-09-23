@@ -1044,13 +1044,9 @@ void JPADrawExecRotation::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// JPADrawExecRotationCross::exec (batch 127).
-static inline f32 JPADrawVisitorScaleX(const JPADrawParams* p)
-{
-	f32 scaleX = p->mScaleX;
-	return scaleX;
-}
+// Direct-return level over a raw member read (a named local here is +0 of
+// frame but orders JPADrawExecRotationCross::exec's slots worse).
+static inline f32 JPADrawVisitorScaleX(const JPADrawParams* p) { return p->mScaleX; }
 
 void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
                                     JPABaseParticle* particle)
