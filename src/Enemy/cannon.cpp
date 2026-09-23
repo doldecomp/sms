@@ -1276,7 +1276,7 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 			emitter->setGlobalScale(scale);
 
 		cannon->decHitPoints();
-		if (cannon->mHitPoints == 0) {
+		if (cannon->getHitPoints() == 0) {
 			if (cannon->mHeldBomb)
 				cannon->mHeldBomb->kill();
 			CannonDamageChorobei(cannon)->setBckAnm(0xD);
@@ -1285,10 +1285,11 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 			else
 				SMSRumbleMgr->start(0x17, (f32*)nullptr);
 
+			MActor* actor = CannonDamageMActor(cannon);
 			emitter = CannonDamageParticles()->emitAndBindToMtxPtr(
 			    0xC8,
 			    // 0x240 = joint 12 * sizeof(Mtx); 8 was 0x180.
-			    CannonDamageMActor(cannon)->getModel()->getAnmMtx(12),
+			    actor->getModel()->getAnmMtx(12),
 			    0, nullptr);
 			if (emitter)
 				emitter->setGlobalScale(CannonDamageChorobei(cannon)->mScaling);

@@ -1279,7 +1279,8 @@ DEFINE_NERVE(TNerveChuuHanaAttack, TLiveActor)
 	// move the TPathNode block.
 	TChuuHana* hana = ChuuHanaWalkOnPanelBody(spine);
 
-	if (spine->getTime() == 0) {
+	int time = spine->getTime();
+	if (time == 0) {
 		hana->setBckAnm(12);
 		hana->getMActor()->setFrameRate(2.0f * SMSGetAnmFrameRate(), 0);
 
