@@ -202,10 +202,12 @@ static int PakkunRootCallback(J3DNode* node, int param)
 
 // The joint under the swelling head has to be scaled back down so that the
 // stem keeps its shape.
+// TODO: frame exact; retail loads the 1.0f into f0 and the scale into f2 for
+// the divide (ours swapped). Inert: a named divisor, `s = s / x`, `1.0f / x`.
 static int PakkunRootCallback2(J3DNode* node, int param)
 {
 	if (param == 0) {
-		if (PakkunCur() == nullptr)
+		if (gpCurPakkun == nullptr)
 			return 1;
 
 		J3DJoint* joint = (J3DJoint*)node;
