@@ -1307,7 +1307,9 @@ static inline void Hx_TexVtx(f32 x, f32 y, f32 u, f32 v)
 // like parameters of a further inline level (an inlined callee's temporaries
 // take the saved FPRs first), not yet found. Before the helper: declaration
 // order (thirty orders), dx..py in the if block and in-place division of
-// x1..y2 were all inert.
+// x1..y2 were all inert. c-gc2d3: moving the quad into a static inline
+// taking d (by pointer and/or dx/dy by value, either order) moves the frame
+// (0xb0-0xc8) but never gives retail's colouring (d.y takes f31).
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 {
 	Vec d;

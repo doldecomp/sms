@@ -49,6 +49,9 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 		// a dead i increment; the euler slot also sits below local_12C in
 		// retail. Inert: top-scope local_12C/local_138 declarations, a near
 		// pointer walk, p[9], u8/s16/u32 counters, a do-while, a TVec3 temp.
+		// c-gc2d3: any loop without a pointer step in the for-increment unrolls
+		// fully (76%): [1][i], a far reference, near[i + 9], a second counter
+		// j (96.2), p[9] off a near walk (95.6).
 		f32 fVar1 = unk2C4;
 		JGeometry::TVec3<f32>* p = local_120[1];
 		for (int i = 0; i < 9; ++i, ++p) {
