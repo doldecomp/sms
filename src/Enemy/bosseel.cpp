@@ -2225,6 +2225,15 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 // removed) is 248 B like the map and closes OutWait and SecondSpin, but
 // FirstSpin's spinSpeed drops to 0x68 (retail 0x6c); its `ratio` local is
 // frame-only. Find the missing inline level instead (2026-09-22).
+// Sweep 2026-09-23 on the patch base (48 variants: ratio/rate/ctrl named or
+// not, three basName spellings, accel via getBossEelParams): with the five
+// binders gone, only `ratio` separates the two families -- named, WaitAppear,
+// SecondSpin, OutWait and SleepOnBottom are exact and FirstSpin is +8 (an
+// 8-byte hole between spinSpeed at 0x6c and the rand conversion); unnamed,
+// both spins are exact and the rest are 4 short per site. Inert on FirstSpin:
+// `!getTime()` (frame lands, spinSpeed 0x68), a named MsRandF result, a named
+// speed, ratio declared first or passed as the argument, getCurBckAnmPtr, and
+// `table == nullptr`. Appear, Eat, Die, MouthOpenWait stay 0x18-0x28 short.
 void TBossEel::setBckAnm(int index)
 {
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
