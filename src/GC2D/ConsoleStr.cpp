@@ -132,8 +132,44 @@ void TConsoleStr::loadAfter()
 	unk2A8[2] = nullptr;
 }
 
+// An inline level: retail lays trail/bounds/shrunk out ascending, as an
+// expanded callee's objects, not as perform's own named block.
+static inline void drawGoTrail(TConsoleStr* self, int i)
+{
+	int trail[3] = { 4, 10, 20 };
+
+	u8 alpha       = self->unk28[i]->getPane()->getAlpha();
+	u8 fadedAlpha  = alpha;
+	JUTRect bounds = self->unk28[i]->getPane()->getBounds();
+
+	for (int j = 0; j < 3; ++j) {
+		int slot = trail[j];
+		JUTPoint& pt = self->unk34[i][slot];
+		if (pt.x != 0) {
+			fadedAlpha = fadedAlpha * 0.7f;
+			self->unk28[i]->getPane()->setAlpha(fadedAlpha);
+			self->unk28[i]->getPane()->resize(
+			    bounds.getWidth() - slot * 3,
+			    bounds.getHeight() - slot * 3);
+
+			JUTRect shrunk = self->unk28[i]->getPane()->getBounds();
+			((J2DPicture*)self->unk28[i]->getPane())
+			    ->draw(pt.x, pt.y,
+			           shrunk.getWidth(), shrunk.getHeight(), false,
+			           false, false);
+		}
+	}
+
+	self->unk28[i]->getPane()->setAlpha(alpha);
+	self->unk28[i]->getPane()->resize(bounds.getWidth(),
+	                            bounds.getHeight());
+}
+
 // TODO: the trail test's `bne next; beq skip` pair and `&pt` computed before
-// the load are missing (bool/else/continue spellings inert); frame 0x2e0 vs 0x300.
+// the load are missing (bool/else/continue/pointer/raw spellings inert; only a
+// raw test and raw .y with pt.x scores higher); frame 0x2e8 vs 0x300, the trail
+// block sitting below the J2DOrthoGraph instead of above it.
+// The wipe loop's (&unk294)[i] says the header's unk294/unk298 are one array.
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -205,7 +241,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 			} else if (unk2B8 == 5) {
 				bool uVar13 = true;
 				for (int i = 0; i < 2; ++i)
-					uVar13 &= unk28C[i]->update();
+					uVar13 &= (&unk294)[i]->update();
 				if (uVar13) {
 					unk2B8 = 6;
 					bVar6  = true;
@@ -260,35 +296,8 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 		local_1a0.setup2D();
 
 		if (unk2B4 == 1 && unk18 > 60.0f) {
-			for (int i = 0; i < 3; ++i) {
-				int trail[3] = { 4, 10, 20 };
-
-				u8 alpha       = unk28[i]->getPane()->getAlpha();
-				u8 fadedAlpha  = alpha;
-				JUTRect bounds = unk28[i]->getPane()->getBounds();
-
-				for (int j = 0; j < 3; ++j) {
-					int slot = trail[j];
-					JUTPoint& pt = unk34[i][slot];
-					if (pt.x != 0) {
-						fadedAlpha = fadedAlpha * 0.7f;
-						unk28[i]->getPane()->setAlpha(fadedAlpha);
-						unk28[i]->getPane()->resize(
-						    bounds.getWidth() - slot * 3,
-						    bounds.getHeight() - slot * 3);
-
-						JUTRect shrunk = unk28[i]->getPane()->getBounds();
-						((J2DPicture*)unk28[i]->getPane())
-						    ->draw(pt.x, pt.y,
-						           shrunk.getWidth(), shrunk.getHeight(), false,
-						           false, false);
-					}
-				}
-
-				unk28[i]->getPane()->setAlpha(alpha);
-				unk28[i]->getPane()->resize(bounds.getWidth(),
-				                            bounds.getHeight());
-			}
+			for (int i = 0; i < 3; ++i)
+				drawGoTrail(this, i);
 		}
 
 		local_1a0.setup2D();
@@ -437,7 +446,8 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 
 // TODO: the frame is 0x30 short, all in the dead low region below the
 // setPanePosition points; the 95.0f branch also swaps r28/r29 (the 0x4330
-// conversion constant and the unk34 row base).
+// conversion constant and the unk34 row base). The 0x1FD emitter pos spellings
+// (swapped sum, 0.5f first, set(), / 2.0f) are inert.
 bool TConsoleStr::processGo(f32 param_1)
 {
 	bool result = false;
