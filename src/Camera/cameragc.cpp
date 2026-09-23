@@ -535,8 +535,9 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 	                   mSaveEx->mSLLimitMaxAngleX.get());
 }
 
-// TODO: 94.9%. Every member access matches; what is left is the frame and the
-// two inline decisions it drags along. (1) Frame 0x1d0 against the ROM's
+// TODO: 94.9%. The angle chase now reads the ROM's HoldAngleXChase field.
+// What is left is the frame and the two inline decisions it drags along.
+// (1) Frame 0x1d0 against the ROM's
 // 0x2d0 -- 0x100 of locals the ROM allocates and we do not; nearly every
 // remaining mismatch is an r1 offset shifted by that 0x100. The ROM also
 // re-extends the two s16 angles inside each arm of the abs below. (2) The ROM *calls* MsSqrtf
@@ -584,7 +585,7 @@ void CPolarSubCamera::calcPosAndAt_()
 	}
 
 	CLBChaseAngleDecrease(&unk2AC->unk0, holdOffsetAngleX,
-	                      mSaveEx->mSLAimAngleYChaseMin.get());
+	                      mSaveEx->mSLHoldAngleXChase.get());
 	CLBChaseDecrease(&unk2AC->unk4, holdAddDistXZ, mSaveEx->mSLHoldDistChase.get(),
 	                 0.0f);
 
