@@ -828,7 +828,8 @@ void TElecCarapace::shoot()
 	// early-return form hoists &unk104.unk4 into a saved register.
 	// TODO: every instruction matches; only the temporaries' slots differ
 	// (retail sub 0x5c, ranges 0x68/0x74, node copy 0x8c; ours 0x94, 0x7c,
-	// 0x84). An assign-later `goal` is inert.
+	// 0x84). Inert: an assign-later `goal`, a direct-init `goal`, named
+	// TMsRange locals; SMS_GetMarioPos() and a copy-then-sub are worse.
 	f32 cycle    = TMsRange<f32>(3.0f, 5.0f).rand();
 	mZigzagCycle = cycle
 	             * ElecCalcDist(unk104.unk0 ? unk104.unk0->mPosition
@@ -883,7 +884,8 @@ void TElecCarapace::calcRootMatrix()
 // r24).
 // TODO: the spread sits at 0x60 with frame 0xa8 (retail 0x54 / 0xa0): 0xc
 // more above it in retail. One reused angle local instead of three lands
-// the frame but not the slot (cc48).
+// the frame but not the slot (cc48). Also inert: the loop in the caller's
+// body, top-declared angles, a TVec3<s16> of angles (+8).
 static inline void ElecDrawSplashAngles()
 {
 	TMsRange<s32> spread(0, 360);
@@ -1265,7 +1267,8 @@ DEFINE_NERVE(TNerveElecCarapaceMove, TLiveActor)
 	// TODO: frame size exact through getPosition() here; the slot order is
 	// not: retail puts ElecSubDist's by-value copy lowest (0xd4) and the
 	// setGoalPath TPathNode above it (0xe8), we the reverse. operator-,
-	// a const& fork and an explicit temporary copy were inert or worse.
+	// a const& fork, an explicit temporary copy, raw mPosition or mNokonoko
+	// at setGoalPath, and getPosition() in ElecSubDist were inert or worse.
 	JGeometry::TVec3<f32> toGoal(carapace->getUnk104().getPoint());
 	toGoal.sub(carapace->getPosition());
 	toGoal.y = 0.0f;
@@ -1291,9 +1294,10 @@ DEFINE_NERVE(TNerveElecCarapaceWait, TLiveActor)
 	return FALSE;
 }
 
-// Instruction-identical to the ROM apart from r30/r31 being swapped (the
-// retail object keeps the spine in r31 and the shell in r30) and the operand
-// order of the three clamp compares.
+// TODO: every instruction matches; frame 0xb8 (retail 0xc0), and
+// ElecDistTo's operator- copy sits above ElecVecMag's parameter (retail 0x48
+// below 0x74). Inert: a named difference (VECMag or ElecVecMag), an explicit
+// TVec3 temporary, a copy-then-sub body.
 DEFINE_NERVE(TNerveElecCarapaceReturn, TLiveActor)
 {
 	TElecCarapace* carapace = (TElecCarapace*)spine->getBody();
