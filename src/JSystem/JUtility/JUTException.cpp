@@ -645,6 +645,9 @@ u32 JUTException::getFpscr()
 		mffs  f1
 		stfd  f1, tmp
 	}
+#else
+	// The host has no Gekko FPSCR to report.
+	tmp = 0.0;
 #endif // clang-format on
 	return ((u32*)&tmp)[1];
 }

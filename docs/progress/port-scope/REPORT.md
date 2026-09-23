@@ -362,3 +362,11 @@ Re-measured with `scripts/run.py` (before = `639c3ddd`):
 
 The compat-header/flag categories are declspec, MSL `size_t` width, PPC intrinsics, `typeof`, MSL cascade and libc names.
 The `s32` clean count cannot move without the compat header: MSL `string.h` `__declspec` now blocks 555 units and `__cntlzw` 345, up from 509 and 300 because the include-case fixes let 46 units past their fatal error.
+
+## Fixed since the scan
+
+- **Compiled-out asm bodies (2026-09-23, branch `wt/c-asmc`).**
+  Every Gekko-assembly body in game/JSystem code listed under "Inline asm inventory" now has an `#else` C/C++ body used only when `__MWERKS__` is not defined; whole-function `asm` definitions use a TU-local `ASM` macro.
+  `JASTrack.hpp`'s `TimedParam_()` zeroes the move parameters itself on non-MWCC compilers.
+  The MWCC build is byte-identical; a host test (random inputs, double-precision references) passes for every fallback.
+  Still open: the SDK header `dolphin/os.h` (`OSInitFastCast`, `OSf32tos8`), and the `J3DPSMulMtxVec` S16Vec overloads assume a GQR7 scale of zero.

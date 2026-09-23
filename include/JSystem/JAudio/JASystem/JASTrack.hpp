@@ -162,7 +162,19 @@ public:
 	};
 
 	struct TimedParam_ {
-		TimedParam_() { }
+		TimedParam_()
+		{
+#ifndef __MWERKS__
+			// Other compilers reject constructors on union members, so the
+			// zeroing MoveParam_() does under MWCC is done here instead.
+			for (int i = 0; i < TIMED_Count; i++) {
+				mMoveParams[i].mCurrentValue = 0.0f;
+				mMoveParams[i].mTargetValue  = 0.0f;
+				mMoveParams[i].mMoveTime     = 0.0f;
+				mMoveParams[i].mMoveAmount   = 0.0f;
+			}
+#endif
+		}
 
 		union {
 			AInnerParam_ mInnerParam;

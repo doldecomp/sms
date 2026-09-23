@@ -407,6 +407,19 @@ static f32 J3DHermiteInterpolationS(f32 t, s16* time0, s16* value0,
 		fmadds fout, f5, f7, fout
 		fsubs fout, fout, f3
 	}
+#else
+	// The keys are s16 loaded through GQR5, which OSInitFastCast sets to a
+	// plain s16 conversion with no scale.
+	f32 time0f    = *p2;
+	f32 value0f   = *p3;
+	f32 tangent0f = *p4;
+	f32 value1f   = *p6;
+	f32 range     = *p5 - time0f;
+	f32 kt        = (p1 - time0f) / range;
+	f32 kt2       = kt * kt;
+	f32 a         = (value1f - value0f) - range * tangent0f;
+	f32 b         = kt2 * (((*p7 * range + value0f) - value1f) - a);
+	fout          = (a * kt2 + ((range * tangent0f + b) * kt + value0f)) - b;
 #endif // clang-format on
 	return fout;
 }
