@@ -3604,7 +3604,11 @@ void TGCConsole2::countShine()
 }
 
 // TODO: 64 bytes of frame short (0x120 vs 0x160); the instructions match
-// except for the callee-saved numbering that follows from it.
+// except for the callee-saved numbering that follows from it (retail: this in
+// r31, the 0x4330 conversion word in r30). The shift is uniform, so it is low
+// region. Inert: no blueTotal local, one shared flag counter, the emitters
+// moved into a TU-local inline helper, a const-reference digit value; the
+// per-site emitCounterParticle helper rebuilds the rect and costs 20 points.
 void TGCConsole2::countBlueCoin()
 {
 	int blueTotal = TFlagManager::getInstance()->getFlag(0x40001);
