@@ -662,7 +662,10 @@ namespace {
 // TODO: 92.4%. Frame and statement order match; we save f14 as well
 // (retail stops at f15), which renumbers registers through the Ry product,
 // and that product keeps 1.0f in a saved register where retail reloads it
-// into a volatile one. `getFlameDirRate() * 2pi` also multiplies with the
+// into a volatile one. Hoisting zDir beside quat reproduces retail's
+// layout exactly (0x30 of named locals between focus and quat, none between
+// quat and twist; every slot then sits 4 below retail's for the f14 save)
+// but scores 0.01 lower until the f14 save is gone. `getFlameDirRate() * 2pi` also multiplies with the
 // operands swapped (inert when respelled, as are yaw/angle respellings).
 static inline f32 KoopaAngleBetween(const JGeometry::TVec3<f32>& a,
                                      const JGeometry::TVec3<f32>& b)
