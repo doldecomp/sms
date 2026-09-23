@@ -863,13 +863,9 @@ f32 JPABaseEmitter::getKeyValue(f32 time, u16 frame_num, f32* frames)
 	return JPAGetKeyFrameValue(time, frame_num, frames);
 }
 
-// Binding level over a raw member read, worth +32 of low region in
-// JPABaseEmitter::calcKeyFrameAnime (batch 127).
-static inline JPADataBlockLinkInfo* JPAEmitterEmitterDataBlockInfo(const JPABaseEmitter* p)
-{
-	JPADataBlockLinkInfo* emitterDataBlockInfo = p->mEmitterDataBlockInfo;
-	return emitterDataBlockInfo;
-}
+// Direct-return level over a raw member read: retail's key table pointer is
+// an inline temporary of JPABaseEmitter::calcKeyFrameAnime, not a named slot.
+static inline JPADataBlockLinkInfo* JPAEmitterEmitterDataBlockInfo(const JPABaseEmitter* p) { return p->mEmitterDataBlockInfo; }
 
 // Binding level over a raw member read, worth +32 of low region in
 // JPABaseEmitter::calcKeyFrameAnime (batch 127).
@@ -879,8 +875,6 @@ static inline u32 JPAEmitterKeyAnmTypeMask(const JPABaseEmitter* p)
 	return keyAnmTypeMask;
 }
 
-// TODO: frame 0x10 long. Raw key count and mask (binder kept at the key table)
-// lands the frame but swaps keyNum/mask (r29/r31); top declarations are inert.
 void JPABaseEmitter::calcKeyFrameAnime()
 {
 	u32 keyNum = JPAEmitterEmitterDataBlockInfo(this)->getKeyNum();
