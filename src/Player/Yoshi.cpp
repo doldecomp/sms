@@ -711,9 +711,9 @@ void TYoshi::emitTongue()
 	JGeometry::TVec3<f32> pos;
 	JGeometry::TVec3<f32> dir;
 	getEmitPosDir(&pos, &dir);
-	JGeometry::TVec3<f32> vel;
-	vel.set(mMario->mVel);
-	mTongue->emit(pos, dir, vel);
+	// The unnamed temporary, built through TVec3(const Vec&), is what makes
+	// retail compute the third argument's address before the first two.
+	mTongue->emit(pos, dir, JGeometry::TVec3<f32>((const Vec&)mMario->getVel()));
 
 	int tries = 0;
 	do {
@@ -725,6 +725,10 @@ void TYoshi::emitTongue()
 	} while (tries < 10);
 }
 
+// TODO: frame is 0x110, retail 0x158; every instruction matches. Retail
+// puts each emitTongue expansion's `mTipPos - pos` operand copy in the low
+// region (0xa8/0x88) under the named block; ours sits above it. Naming the
+// distance or routing it through a TU-local helper breaks the inlining.
 void TYoshi::doSearch()
 {
 	switch (unkDC) {
