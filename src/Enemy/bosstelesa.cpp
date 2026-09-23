@@ -1981,7 +1981,9 @@ bool TBossTelesa::checkSlotResult()
 // f16: the i == 0 pepper block takes f17/f16 for its rand ranges, ours reuses
 // f18/f17); the clamped count takes r27 where retail has r25. Worse: a
 // second TMsRange in the i == 0 block (frame exact, but its constants hoist
-// into saved FPRs), the fast speeds unnamed or scaled at the set. The retail `li r3, 1` on both arms of
+// into saved FPRs), the fast speeds unnamed or scaled at the set, a
+// function-scope `int num`. Naming the fruit step (160 / num) inside the loop
+// moves the hoisted 160.0f into retail's f21 load order. The retail `li r3, 1` on both arms of
 // the lastManager choice matches with a `firstManager = 1` set in each arm,
 // which the source has no reason for, so it is left out.
 void TBossTelesa::generateSlotItem()
@@ -2014,10 +2016,11 @@ void TBossTelesa::generateSlotItem()
 			if (mFruits[i]->mHolder != nullptr)
 				continue;
 
+			f32 fruitStep = 160.0f / (f32)num;
 			JGeometry::TVec3<f32> velocity(0.0f, 0.0f, 200.0f);
 			Mtx mtx;
 			MsMtxSetRotRPH(mtx, mRotation.x,
-			               ((160.0f / (f32)num) * (f32)slot)
+			               (fruitStep * (f32)slot)
 			                   + (mRotation.y - halfSpread),
 			               mRotation.z);
 
