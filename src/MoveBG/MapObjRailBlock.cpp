@@ -560,22 +560,18 @@ void TRollBlock::calcRootMatrix()
 {
 	J3DModel* model = getModel();
 	MtxPtr mtx      = model->getBaseTRMtx();
-	// TODO: 8 bytes of frame short (0x88 vs 0x90) and the local matrix sits
-	// at 0x20 where retail has it at 0x2c, so the whole residue is the low
-	// region. Reading mPosition through getPosition() moves it: three reads
-	// give the matrix its 0x2c but overshoot the frame to 0x98, two give the
-	// exact frame and 0x28, and one bound reference gives the frame and
-	// leaves the matrix at 0x20. None is exact and a mixture of raw and
-	// accessor reads of one member is not plausible source, so this keeps
-	// the plain reads.
+	// Declaring the roll matrix between the sine and cosine reads lands it at
+	// retail's 0x2c. TODO: 97.3%. Retail copies mScaling.x through r4 and
+	// computes &roll after it; ours uses r6 and hoists the addi. Tried: raw
+	// mScaling, a bound scaling reference, getModel() at the scale site.
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z,
 	               mInitialRotation.x, mInitialRotation.y, mInitialRotation.z);
 	model->setBaseScale(getScaling());
 
 	f32 sinRoll = JMASin(unk138);
+	Mtx roll;
 	f32 cosRoll = JMACos(unk138);
 
-	Mtx roll;
 	roll[0][0] = cosRoll;
 	roll[0][1] = -sinRoll;
 	roll[0][2] = 0.0f;

@@ -398,6 +398,9 @@ void TBEelTears::moveObject()
 	TLiveActor::moveObject();
 }
 
+// TODO: 97.3%. Retail loads the 0.1f literal right after the TPosition3f
+// ctor, before the translation stores; ours loads it after the mSpawnMtx read.
+// Tried: 0.1f as the left factor, `+=` forms, a named rate, a named at(0, 3).
 void TBEelTears::calcRootMatrix()
 {
 	if (mSpawnMtx != nullptr) {

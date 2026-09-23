@@ -425,18 +425,16 @@ void TBaseNPC::npcFallIn()
 	resetToWait_();
 }
 
-// TODO: 8 short, r31/r30 inverted (retail r31=this, r30=result).
-// getMActor() at the checkPass site is inert.
 bool TBaseNPC::npcRecoverFromSinking()
 {
 	bool result = false;
 
 	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
-		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
+		if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
 			onLiveFlag(LIVE_FLAG_UNK8000000);
 			f32 dVar6 = getGravityY();
 			f32 fVar1 = 0.0f;
-			f32 tmp   = unk1C4 - mPosition.y + 150.0f;
+			f32 tmp   = unk1C4 - getPosition().y + 150.0f;
 			if (dVar6 > 0.0f) {
 				fVar1 = dVar6 * 0.5f
 				        * (MsSqrtf(tmp * (1.0f / dVar6) * 8.0f + 1.0f) + 1.0f);
@@ -448,7 +446,7 @@ bool TBaseNPC::npcRecoverFromSinking()
 		}
 	}
 
-	if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
+	if (getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		result = true;
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.set(0.0f, 0.0f, 0.0f);

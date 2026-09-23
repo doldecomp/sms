@@ -147,6 +147,12 @@ static inline bool should_clip_fabricated(const TBGCheckData* data)
 	return result;
 }
 
+// The dot reads the raw normal, every push through getNormal(), and the plane
+// distance is named first: that lands the frame and every slot.
+// TODO: 97.3%. Retail keeps normal.x/z live in f4/f5 from the dot into the
+// posCam pushes; ours reloads normal.z after the posCam.x store. Tried: all
+// raw/accessor mixes over the four pushes, dot receiver swapped, `a = a + b`
+// pushes, posCam copy-constructed.
 bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 {
 	bool moved = false;
@@ -163,22 +169,20 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 				if (should_clip_fabricated(wall)) {
 					JGeometry::TVec3<f32> posArg = mCurrentTarget.mPosition;
 					JGeometry::TVec3<f32> posCam = posArg;
-					const Vec* normal             = &wall->getNormal();
-
-					f32 sd = posCam.dot(*normal)
-					         + wall->getPlaneDistance();
+					f32 planeDist = wall->getPlaneDistance();
+					f32 sd        = posCam.dot(wall->mNormal) + planeDist;
 					f32 absSd = sd >= 0.0f ? sd : -sd;
 					if (absSd < radius) {
 						moved      = true;
 						f32 pushSd = (radius - sd)
 						             * mSaveEx->mSLWallRevisionRatio.get();
-						posCam.x += pushSd * normal->x;
-						posCam.z += pushSd * normal->z;
+						posCam.x += pushSd * wall->getNormal().x;
+						posCam.z += pushSd * wall->getNormal().z;
 						mCurrentTarget.mPosition.x = posCam.x;
 						mCurrentTarget.mPosition.z = posCam.z;
 						f32 pushArg                = radius - sd;
-						posArg.x += pushArg * normal->x;
-						posArg.z += pushArg * normal->z;
+						posArg.x += pushArg * wall->getNormal().x;
+						posArg.z += pushArg * wall->getNormal().z;
 						param_1->x = posArg.x;
 						param_1->z = posArg.z;
 					}
