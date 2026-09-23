@@ -32,3 +32,4 @@ Record binary-backed findings from Claude unit work here before promoting reusab
   Other spellings that raise the cost enough to stay a call change the body: a `TVec3` of angles (82.5-82.6, or 76.5 via `scale`), an extra copied quaternion (62.4); a third named product `qxz` is still inlined.
   Moving the definition below `execWalk` changes nothing (deferred inlining).
   The one-argument `mul` in the same form adds makeQuat +4.03 and updatePosture +1.0, but shotSeeds then stays at 93.5 under every spelling tried.
+- **Hand-written GX FIFO writers want the `GXVert.h` inline level.** `ShapePacketCallBackFunc` (PacketUtil, linked) closed 91.7 -> 100 when its FIFO helpers wrote through `GXCmd1u8`/`GXParam1u16`/`GXParam1u32` instead of assigning `GXWGFifo` directly: each missing inline level was retail's 8 bytes per helper expansion, and the r0/r3 swap went with it. Read an 8-per-expansion frame gap in GX-writing code as this first.
