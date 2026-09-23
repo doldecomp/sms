@@ -272,6 +272,11 @@ static inline TMap* BossHanachanMainGetMap()
 	return map;
 }
 
+// The named scale loads the sphere link's factor before mRotation.z, as
+// retail does.
+// TODO: every instruction matches; the three vector temporaries at the end
+// sit at 0x68/0x5c/0x50 (retail 0x48/0x2c/0x3c) and `displacement` at 0x74
+// (retail 0x5c, with 0x18 unused above it).
 void TBossHanachan::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
@@ -288,8 +293,8 @@ void TBossHanachan::bind()
 		mVelocity.y = mVelocityMinY;
 	mCollisionPosition.set(nextPosition);
 	f32 offsetX, offsetZ;
-	BHSCalcRevisionDistXZByRotateZ(mRotation.y, mRotation.z,
-	    unk178->mRotationMoveScale, &offsetX, &offsetZ);
+	f32 scale = unk178->mRotationMoveScale;
+	BHSCalcRevisionDistXZByRotateZ(mRotation.y, mRotation.z, scale, &offsetX, &offsetZ);
 	mCollisionPosition.x += offsetX;
 	mCollisionPosition.z += offsetZ;
 	JGeometry::TVec3<f32> beforeCollision = mCollisionPosition;
@@ -829,14 +834,20 @@ bool TBossHanachan::isCanWalk() const
 	return result;
 }
 
+// Raw .value reads on the two chase calls land the frame at 0xb8 and load the
+// max speed before the accel as retail does.
+// TODO: every instruction matches; retail puts isCanWalk's target copy and the
+// squared temporary low (0x54/0x60) and execWalk's unnamed vector above its
+// named target. Inert: the squared-XZ helper here; a reference-bound
+// getPoint() in either body changes the code.
 void TBossHanachan::execWalk(bool accelerate)
 {
 	if (accelerate)
 		CLBChaseGeneralConstantSpecifySpeed(&mMarchSpeed,
-		    mChangeParams->mSLMaxMarchSpeed.get(), mChangeParams->mSLMarchAccel.get());
+		    mChangeParams->mSLMaxMarchSpeed.value, mChangeParams->mSLMarchAccel.value);
 	else
 		CLBChaseGeneralConstantSpecifySpeed(&mMarchSpeed, 0.0f,
-		    mChangeParams->mSLMarchDecrease.get());
+		    mChangeParams->mSLMarchDecrease.value);
 	mTurnSpeed = mChangeParams->mSLWalkTurnSpeed.get();
 	if (isCanWalk())
 		walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
