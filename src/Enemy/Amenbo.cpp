@@ -404,6 +404,11 @@ void TAmenbo::setWalkDir(const JGeometry::TVec3<f32>& param_1)
 	unk1E0 = 0.0f;
 }
 
+// TODO: 0x9c vs the map's 0xbc. A one-argument unk1D0.mul(mQuat) whose
+// terms follow the two-argument order (x*o.w + w*o.x + ...) compiles to
+// exactly 0xbc; the header's one-argument mul orders them w*o.x first,
+// which costs TNerveAmenboSearch::execute 0.8%. Needs a header change.
+// Inlined into the search nerve, retail still loads mQuat.z before .y.
 void TAmenbo::setWalkDir(const JGeometry::TQuat4<f32>& param_1)
 {
 	unk1C0 = getQuat();
