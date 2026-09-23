@@ -1423,6 +1423,10 @@ void TBossWanwan::showMessage(u32 message)
 	onBalloonShown(mask);
 }
 
+// TODO: 99.8%. Every instruction is right but the frame is 0x38 short
+// (0x168 retail, 0x130 here: a uniform shift of the conversion temporaries),
+// and the TNerveBWShake pushNerve expansion swaps r5/r6. The shortfall is
+// low-region, so a missing inline level or helper, not a lever.
 void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mIsInBath) {
@@ -1430,7 +1434,7 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 		TSpineEnemy::perform(cue, graphics);
 		if (cue & CUE_MOVE)
 			mMtxCalc->advanceMotionBlend(-mMotionBlendStep);
-		if (cue & CUE_CALC_ANIM) {
+		if (cue & CUE_ENTRY) {
 			J3DFrameCtrl* ctrl
 			    = mMActor->getFrameCtrl(ANM_TYPE_BRK);
 			if (ctrl && ctrl->getFrame() > 0.5f * (f32)ctrl->getEnd()) {
@@ -1477,9 +1481,8 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 		showMessage(BALLOON_MSG_BWANWAN_SPRAY_IT);
 
 	if (cue & CUE_MOVE) {
-		if (mSpine->getLatestNerve() != &TNerveBWDie::theNerve()
-		    && mSpine->getLatestNerve()
-		           != &TNerveBWJumpToBath::theNerve()) {
+		if (getLatestNerve() != &TNerveBWDie::theNerve()
+		    && getLatestNerve() != &TNerveBWJumpToBath::theNerve()) {
 			if (getHitPoints() != 0) {
 				if (mIsPicketPlanted && mIsPicketFixed == 0) {
 					mPulledTimer += 1;
@@ -1492,15 +1495,13 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 				mPulledTimer = 0;
 			}
 
-			if (getHitPoints() == 0) {
-				if (mSpine->getLatestNerve()
-				    != &TNerveBWBark::theNerve()) {
-					mCoolDownTimer += 1;
-					if (mCoolDownTimer > 2400) {
-						if (mSpine->getLatestNerve()
-						    != &TNerveBWBark::theNerve())
-							mSpine->setNext(&TNerveBWBark::theNerve());
-					}
+			if (getHitPoints() == 0
+			    && mSpine->getLatestNerve() != &TNerveBWBark::theNerve()) {
+				mCoolDownTimer += 1;
+				if (mCoolDownTimer > 2400) {
+					if (mSpine->getLatestNerve()
+					    != &TNerveBWBark::theNerve())
+						mSpine->setNext(&TNerveBWBark::theNerve());
 				}
 			} else {
 				if (gpMarDirector->unk58 % 20 == 0) {
@@ -1514,7 +1515,7 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		if (mSpine->getLatestNerve() == &TNerveBWGraphWander::theNerve()
+		if (getLatestNerve() == &TNerveBWGraphWander::theNerve()
 		    && mPicket->isTaken()) {
 			f32 pull = mPullVelocity.length();
 			gpMSound->startSoundActorWithInfo(
