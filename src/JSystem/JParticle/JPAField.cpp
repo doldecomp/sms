@@ -220,6 +220,8 @@ void JPAAirField::set()
 // to function scope puts it at 0x38 (structural pass 167), and a checkStatus
 // binder at any one of the three sites costs +8 of frame.  Normalising a
 // copy (`dir.set(diff); dir.normalize();`) fixed the old f4/f5 swap.
+// Worse (2026-09-23): getLocal/GlobalPosition into diff then sub(unk58),
+// a separate `pos` local, and `dir.normalize(diff)`.
 void JPAAirField::affect(JPAParticle* particle)
 {
 	if (checkStatus(STATUS_AIR_CONE)) {
@@ -390,6 +392,8 @@ void JPAConvectionField::set()
 // the particle loads before the `up == unk64` compare (retail after), and
 // dir.y/dir.z trade f4/f5 inside the shared setLength body.  Inert: `up`
 // declared first or via set(), `unk64 == up`, the thing3/thing4 order.
+// Also inert or worse (2026-09-23): a temporary `up` in the compare, a cross
+// temp for unk7C, field-wise thing2, dot(thing) operand swap, `+=` for thing5.
 void JPAConvectionField::affect(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32> thing;
