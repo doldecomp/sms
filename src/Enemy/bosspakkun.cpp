@@ -474,13 +474,14 @@ void TBPTornado::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & 2) {
 		JGeometry::TVec3<f32> toMario = mPosition;
-		toMario.x -= gpMarioPos->x;
-		toMario.y -= gpMarioPos->y;
-		toMario.z -= gpMarioPos->z;
-		// TODO: retail runs the sqrt in dist's own f30 (no `fmr`); spelling
-		// it `dist = squared(); dist = TUtil::sqrt(dist);` does that but drops
-		// the frame a further 8 (0x130 against retail's 0x140).
-		f32 dist = toMario.length();
+		toMario -= *gpMarioPos;
+		// TODO: frame 0x138 against retail's 0x140. Retail has toMario 8 lower,
+		// 8 more above toGoal and 8 more above toMario's block (12-byte codeless
+		// gaps above toGoal and ground, 4 in ours). Spelling the first
+		// setBaseScale site raw lands toMario; no vector-op spelling of
+		// toGoal, mCenter or mVelocity (-=, sub, +=, add, scale) adds the gaps.
+		f32 dist = toMario.squared();
+		dist      = JGeometry::TUtil<f32>::sqrt(dist);
 		if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_TORNADO))
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
 			    MSD_SE_BS_BSPAKU_TORNADO, &mPosition, nullptr, dist, 0, 0,
@@ -879,7 +880,7 @@ void TBossPakkun::init(TLiveManager* manager)
 
 	mPolDrop      = new TBPPolDrop(this, "<TBPPolDrop>");
 	MActor* stamp = mMActorKeeper->createMActor("pollut_ball_stamp.bmd", 0);
-	MActor* ball  = mMActorKeeper->createMActor("pollut_ball.bmd", 0);
+	MActor* ball  = getActorKeeper()->createMActor("pollut_ball.bmd", 0);
 
 	TBPPolDrop* drop  = mPolDrop;
 	drop->mBallMActor = ball;
@@ -896,7 +897,7 @@ void TBossPakkun::init(TLiveManager* manager)
 		mVomit = new TBPVomit(this, "<TBPVomit>");
 		MActor* white
 		    = mMActorKeeper->createMActor("bosspakuPollut_white.bmd", 0);
-		MActor* pollut = mMActorKeeper->createMActor("bosspakuPollut.bmd", 0);
+		MActor* pollut = getActorKeeper()->createMActor("bosspakuPollut.bmd", 0);
 
 		TBPVomit* vomit     = mVomit;
 		vomit->mMActor      = pollut;
@@ -1705,10 +1706,10 @@ DEFINE_NERVE(TNerveBPCannon, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 92.8%. Retail `bl`s TVec3::set<f> for `dir` (its only caller in the
-// map) with MsSin/MsCos still expanded in the arguments, and the frame is 8
-// smaller. A helper level over the set (by value, by reference, or taking
-// the boss) sends MsSin/MsCos out of line instead: 82-85%.
+// TODO: 99.5%. Retail keeps `dir` at 0xc8 below `front` (0xe4), as if it
+// were an inline temporary rather than a named local, and loads 700.0f
+// before the table read. A by-value helper returning the XZ vector into
+// `front` (over any depth of the set chain) falls to 88-91%.
 DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
