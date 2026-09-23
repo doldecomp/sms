@@ -1219,6 +1219,10 @@ void TEnemyMario::startRunAway()
 	changeEMDoing(EM_DOING_RUN_AWAY_TO_NEAREST_NODE);
 }
 
+// TODO: retail keeps the graph loaded by the loop test in r3 and reads its
+// node array directly (ours keeps the tracer and reloads the graph, one extra
+// lwz), frame 0x18 larger. Inert: tracer binder / const-graph fork on the test,
+// body or both, a named node reference, raw unk0, point declared outside.
 void TEnemyMario::findRunAwayNearestNode()
 {
 	int nearestIndex    = 0;
