@@ -358,7 +358,11 @@ void TFruitsBoat::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-// TODO: 93.7%. Everything matches except the "Mario is aboard" distance: the
+// TODO (2026-09-23): now 99.3%, frame 0x150 against 0x160. Retail keeps the
+// copied `center` in the low region at 0xc (bow/stern copy from it) and its
+// named block starts with `dir`; raw mPosition (-8), declare-then-assign and
+// a const `center` do not move it. The older note below predates that.
+// Earlier: 93.7%. Everything matches except the "Mario is aboard" distance: the
 // ROM keeps the squared length in f1 and lets the following normalize() reuse
 // it, so it spends one `fmr f31, f1` and no second squared(); ours coalesces
 // the sum into f31, the value dies, and both normalize() sites recompute
