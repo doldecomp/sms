@@ -90,11 +90,11 @@ void TMarDirector::initECTGft(
 		param_2->push_back(new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f,
 		                                          img->width, img->height),
 		                   CUE_SET_PROJECTION);
-		param_1->push_back(drawInit, CUE_DRAW);
-		param_1->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
+		param_2->push_back(drawInit, CUE_DRAW);
+		param_2->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
 		                                      | CUE_SEMITRANSPARENT_PRIO_2
 		                                      | CUE_DRAW);
-		param_1->push_back(efbTex, CUE_DRAW);
+		param_2->push_back(efbTex, CUE_DRAW);
 	}
 }
 
