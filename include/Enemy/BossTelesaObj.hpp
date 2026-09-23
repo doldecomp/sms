@@ -65,7 +65,7 @@ public:
 	virtual ~TBossTelesaBody() { }
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
-	bool checkHit();
+	void checkHit();
 
 public:
 	/* 0x68 */ TBossTelesa* mOwner;
@@ -83,7 +83,7 @@ public:
 	virtual ~TBossTelesaTongue() { }
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
-	bool checkHit();
+	void checkHit();
 
 public:
 	/* 0x68 */ TBossTelesa* mOwner;

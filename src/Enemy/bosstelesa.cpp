@@ -462,11 +462,31 @@ BOOL TBossTelesaBody::receiveMessage(THitActor* sender, u32 message)
 	return true;
 }
 
-// TODO: incorrect size. Map records 160 bytes.
-bool TBossTelesaBody::checkHit() { return false; }
+void TBossTelesaBody::checkHit()
+{
+	unk6C = false;
+	for (int i = 0; i < mColCount; ++i) {
+		THitActor* other = mCollisions[i];
+		if (other->isActorType(0x80000001))
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+		else
+			mOwner->checkHitObject(other);
+	}
+}
 
-// TODO: incorrect size. Map records 568 bytes.
-bool TBossTelesaTongue::checkHit() { return false; }
+void TBossTelesaTongue::checkHit()
+{
+	for (int i = 0; i < mColCount; ++i) {
+		THitActor* other = mCollisions[i];
+		if (other->isActorType(0x80000001)) {
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+		} else if (other->isActorType(0x40000395)) {
+			mOwner->setSpicy((TLiveActor*)other);
+		} else if (100.0f + mPosition.y < other->mPosition.y) {
+			mOwner->checkHitObject(other);
+		}
+	}
+}
 
 BOOL TBossTelesaTongue::receiveMessage(THitActor* sender, u32 message)
 {
@@ -1283,28 +1303,8 @@ void TBossTelesa::moveObject()
 		                       tongueMtx[2][3]);
 	}
 
-	TBossTelesaBody* body = mBody;
-	body->unk6C           = false;
-	for (int i = 0; i < body->mColCount; ++i) {
-		THitActor* other = body->mCollisions[i];
-		if (other->isActorType(0x80000001))
-			SMS_SendMessageToMario(body, HIT_MESSAGE_ATTACK);
-		else
-			body->mOwner->checkHitObject(other);
-	}
-
-	TBossTelesaTongue* tongue = mTongue;
-	for (int i = 0; i < tongue->mColCount; ++i) {
-		THitActor* other = tongue->mCollisions[i];
-		if (other->isActorType(0x80000001)) {
-			SMS_SendMessageToMario(tongue, HIT_MESSAGE_ATTACK);
-		} else if (other->isActorType(0x40000395)) {
-			tongue->mOwner->setSpicy((TLiveActor*)other);
-		} else if (100.0f + tongue->mPosition.y < other->mPosition.y) {
-			tongue->mOwner->checkHitObject(other);
-		}
-	}
-
+	mBody->checkHit();
+	mTongue->checkHit();
 	mKillSmallEnemy->checkHit();
 }
 
