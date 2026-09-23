@@ -615,6 +615,9 @@ void rotTypeYJiggle(f32 sin, f32 cos, Mtx& out)
 	out[2][3] = 0.0f;
 }
 
+// TODO: The low region is 0x20 short (frame 0x128 vs 0x100); the side vector and `pt` take callee-saved FPRs
+// in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
+// and declaration moves were inert or worse.
 void JPADrawExecDirectional::exec(const JPADrawContext* dc,
                                   JPABaseParticle* particle)
 {
@@ -646,7 +649,7 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 		return;
 	f29_f30_f31.normalize();
 
-	params->unk0.cross(local_BC, f29_f30_f31);
+	params->unk0.cross2(local_BC, f29_f30_f31);
 	params->unk0.normalize();
 
 	Mtx local_80;
@@ -682,6 +685,9 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
+// TODO: The low region is 8 short (frame 0x178 vs 0x170); the side vector and `pt` take callee-saved FPRs
+// in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
+// and declaration moves were inert or worse.
 void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
                                      JPABaseParticle* particle)
 {
@@ -719,7 +725,7 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 		return;
 	f29_f30_f31.normalize();
 
-	params->unk0.cross(local_E4, f29_f30_f31);
+	params->unk0.cross2(local_E4, f29_f30_f31);
 	params->unk0.normalize();
 
 	Mtx local_a8;
@@ -757,6 +763,9 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
+// TODO: The low region is 8 short (frame 0x168 vs 0x160); the side vector and `pt` take callee-saved FPRs
+// in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
+// and declaration moves were inert or worse.
 void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
                                        JPABaseParticle* particle)
 {
@@ -796,7 +805,7 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 		return;
 	f29_f30_f31.normalize();
 
-	params->unk0.cross(local_BC, f29_f30_f31);
+	params->unk0.cross2(local_BC, f29_f30_f31);
 	params->unk0.normalize();
 
 	Mtx local_80;
@@ -840,6 +849,9 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
+// TODO: The low region is 8 short (frame 0x1d8 vs 0x1d0); the side vector and `pt` take callee-saved FPRs
+// in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
+// and declaration moves were inert or worse.
 void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
                                           JPABaseParticle* particle)
 {
@@ -885,7 +897,7 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 		return;
 	f29_f30_f31.normalize();
 
-	params->unk0.cross(local_BC, f29_f30_f31);
+	params->unk0.cross2(local_BC, f29_f30_f31);
 	params->unk0.normalize();
 
 	Mtx local_d8;
