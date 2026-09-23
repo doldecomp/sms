@@ -95,14 +95,14 @@ bool TWallAtGraph::init(const TGraphWeb* param_1,
 
 	for (int i = 0; i < sz; ++i) {
 		JGeometry::TVec3<f32> diff
-		    = param_1->indexToPoint(i + 1 - ((i + 1) / sz) * sz);
+		    = param_1->indexToPoint((i + 1) % sz);
 		diff -= param_1->indexToPoint(i);
 
 		JGeometry::TVec3<f32> local_54 = param_2;
 		local_54 -= param_1->indexToPoint(i);
 
 		JGeometry::TVec3<f32> local_70;
-		local_70.cross(param_3, diff);
+		local_70.cross2(param_3, diff);
 		local_70.normalize();
 		if (local_70.dot(local_54) < 0.0f)
 			local_70.negate();
