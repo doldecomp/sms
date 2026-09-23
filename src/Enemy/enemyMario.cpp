@@ -135,6 +135,9 @@ void TEnemyMario::initValues()
 	unk390 = new TMBindShadowBody(this, getM3UModel()->getModel(), 1.0f);
 }
 
+// TODO: frame 0x2a0 vs retail 0x2f8. Retail stacks buffer 0x1b8, a 0x10 hole,
+// transform 0x178 above transformInfo 0x158, and its low temps start at 0x13c.
+// Inert: Mtx before transformInfo, either or both hoisted, buffer hoisted.
 void TEnemyMario::initModel()
 {
 	unk394 = nullptr;
@@ -416,6 +419,10 @@ void TEnemyMario::initEnemyValues()
 	// TODO: frame only -- retail reserves 0xa0 more stack (0x590 against 0x4f0).
 	// The same missing structure swaps r25/r26 (the .data base and the zero
 	// constant); a 0xa0 deficit needs a missing inline level, not a lever.
+	// Probed by removal: retail's low region is dead below 0x120 (temps at
+	// 0x120-0x12b); ours below 0x80. The TSettingParams, J3DModel,
+	// TMarioInputReplay, particle and tremble expansions add nothing; the
+	// getGraphNode(...).getPoint line below is 0x28 and the modelIndex loop 8.
 	void* linkData = JKRFileLoader::getGlbResource(linkDataPath);
 	if (linkData != nullptr) {
 		s32 linkDataSize
@@ -1882,6 +1889,8 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mSpecialModel != nullptr) {
 			// TODO: retail computes the destination matrix before the source here
 			// (as in the loop below), and the frame is 0x18 short in the low region.
+			// A direct MTXCopy(src, mSpecialModel->getAnmMtx(i)) fixes this loop
+			// but swaps the parameter/local GPR colouring (20 -> 36 markers).
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
 				J3DModel* model = mModel->getModel();
