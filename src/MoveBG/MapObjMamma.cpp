@@ -236,22 +236,18 @@ void TSandBomb::makeObjAppeared()
 	startControlAnim(2);
 }
 
-// The frame setter is a level of its own: retail reads mMActor for the
-// store before the frame load (`lwz r0, 0x74(r31)` then `mr r3, r0`), which
-// only an MActor argument evaluated ahead of the inlined body reproduces.
-static inline void SandBombSetFrame(MActor* actor, int i, f32 frame)
-{
-	actor->getFrameCtrl(i)->setFrame(frame);
-}
-
-// TODO: 97.1%: frame 0x38 vs retail's 0x68 (no slot is used), and retail
-// loads the second mFiringFrameSpeed after `lwz r3, 0x74(r31)`.
+// TODO: 89.4%. Retail reads mMActor for each frame store before the frame
+// load (`lwz r0, 0x74(r31)` then `mr r3, r0`); a TU-local
+// SandBombSetFrame(MActor*, int, f32) setter reproduces it (97.1%) but no
+// such setter exists in the map, so it is not applied. Frame 0x38 vs 0x68.
 u32 TSandBomb::touchWater(THitActor* actor)
 {
 	f32 speed0 = TSandBombBase::mFiringFrameSpeed;
-	SandBombSetFrame(mMActor, 0, speed0 + mMActor->getFrameCtrl(0)->getFrame());
+	mMActor->getFrameCtrl(0)->setFrame(speed0
+	                                   + mMActor->getFrameCtrl(0)->getFrame());
 	f32 speed5 = TSandBombBase::mFiringFrameSpeed;
-	SandBombSetFrame(mMActor, 5, speed5 + mMActor->getFrameCtrl(5)->getFrame());
+	mMActor->getFrameCtrl(5)->setFrame(speed5
+	                                   + mMActor->getFrameCtrl(5)->getFrame());
 
 	mMActor->getFrameCtrl(0);
 	soundBas(MSD_SE_OBJ_SANDBOMB_WATER_1, 7.0f,
