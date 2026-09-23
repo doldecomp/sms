@@ -2516,10 +2516,10 @@ void TMario::checkWet()
 // WaterGun.hpp shape), and retail reuses the sin index for JMASCos.
 void TMario::gunExec()
 {
-	bool yoshi = false;
-	if (onYoshi())
-		yoshi = true;
-	if (!yoshi)
+	// TODO: retail materialises onYoshi() as a bool in its own saved register
+	// before this test (`bool y = false; if (onYoshi()) y = true;` reproduces
+	// it, +1.5%, refused as a nonsensical temporary).
+	if (!onYoshi())
 		gpModelWaterManager->unk5D5F = 0;
 
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD) && !onYoshi())
