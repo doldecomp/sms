@@ -50,3 +50,13 @@ Record binary-backed findings from Codex unit work here before promoting reusabl
 - `GC2D/ConsoleStr`: The 0x34/0x38 versus 0/4 loads in `perform` use equivalent pointer bases for `unk34`.
 - `Enemy/bossgesso`: `perform` has the correct source `mMActor` and destination `unk178` for its matrix copy; three named-local variants did not change load order. A comment-only agent commit was discarded.
 - `System/MarDirectorInitECT`: Both builds store image width and height in the correct projection fields; only load/conversion order differs.
+
+## 2026-09-23 refreshed operand scan
+
+- `Animal/AnimalBase`: Retail applies the frame-rate factor once to max march speed and twice to march acceleration in `execWalk`; the source had the factors reversed. Correcting both operands improved the function from 89.89% to 90.25%. Landed as 73d9cc33.
+- `System/CardManager`: `cmdLoop`'s 0x1ffc versus 0 immediate reflects a documented `setCheckSum`/`CalcCheckSum` inline split, not a bad buffer length. No edit.
+- `MarioUtil/ShadowUtil`: The old scan's load-offset clue was stale at current HEAD. `drawShadowVolume` is 99.9% with a documented stack slot shift; `calcVtx` retains a known frame deficit. No edit.
+- `Enemy/hanasambo`: `SamboHeadRollCallback` reads the same matrix columns in both builds; the 0x10/0 load difference is scheduling. No edit.
+- `Map/MapWire`: Naming x in `getPointPosDefault` improved `getPointPosOnWire` but regressed `move`; naming x/z changed the frame. Source restored.
+- `Player/MarioDraw`: The paired waist pitch/roll loads follow right-to-left argument evaluation. Swapping source arguments would rotate the wrong axes; `calcBaseMtx` retains documented frame residue. No edit.
+- `Camera/CameraBGCheck`: `calcInHouseNo_` has a documented deep search of its far-vector pointer and loop layout. No justified change from the isolated store offset.
