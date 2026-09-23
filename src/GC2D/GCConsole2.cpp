@@ -3489,11 +3489,13 @@ void TGCConsole2::setTimer(s32 param_1)
 	unk4FC = timerValue;
 }
 
-// TODO: 128 bytes of frame short (0x228 vs 0x2a8). The ROM leaves an 80-byte
-// hole between the dead JUTRect and the five inlined changeNum() locals -- one
-// extra 16-byte rect per expansion -- plus 48 bytes below them, and the surplus
-// register pressure is why the ROM recomputes `value % 10` at two sites instead
-// of parking it in a callee-saved register as we do.
+// TODO: 128 bytes of frame short (0x228 vs 0x2a8): the ROM's changeNum()
+// sites are 0x20 apart (0x1c here), its hole under the dead JUTRect is 0x50
+// (0x38 here) and the rest is low region. Inside each changeNum() expansion
+// the emitter position's int-to-float temps also take r5-r7 where we use
+// r3/r5-r9; the rect and position spellings tried there are inert.
+// `value` is s32 (long): as int, the `value % 10` test is kept in a saved
+// register and reused as the changeNum() digit instead of recomputed.
 void TGCConsole2::countShine()
 {
 	int shines    = TFlagManager::getInstance()->getFlag(0x40000);
@@ -3543,7 +3545,7 @@ void TGCConsole2::countShine()
 		}
 
 		if (unk8A == 0xFC) {
-			int value = unk64;
+			s32 value = unk64;
 			// TODO: dead 16-byte local the original still zeroes before the
 			// digit updates; each emitter site builds its own rect instead.
 			JUTRect rect(0, 0, 0, 0);
