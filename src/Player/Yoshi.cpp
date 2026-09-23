@@ -887,7 +887,9 @@ f32 TYoshi::checkGroundYoshi(const JGeometry::TVec3<f32>& pos, f32* out_y,
 	return *out_y;
 }
 
-// TODO: frame 0x1a8 against retail's 0x240.
+// TODO: frame 0x1a8 against retail's 0x240. After doSearch() retail loads
+// mMario into r3 before the `unkC <= 0` test (mState then in r4); the other
+// three inlined disappear() sites match, so this one reads mMario earlier.
 void TYoshi::movement()
 {
 	if (!gpMarDirector->isDemoMode3() && !gpMarDirector->isDemoMode4()
@@ -1165,6 +1167,8 @@ void TYoshi::entry()
 	// request and the fctiwz slots where retail leaves 0x10. Every object
 	// below is at its retail offset. Spelling the demo test as
 	// isDemoModeNow() or raw unk124 compares, and int r/g/b, are worse.
+	// Raw mTranslation at both requests lands the frame but drops every object
+	// 0x10; declaring shadowRequest earlier (four spots) moves its ctor.
 	J3DModelData* modelData = mActor->getModel()->getModelData();
 	s16 r = (s16)unk84.x;
 	s16 g = (s16)unk84.y;
