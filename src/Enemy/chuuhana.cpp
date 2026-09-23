@@ -398,9 +398,13 @@ void TChuuHana::reset()
 	unk1A4      = mCheckOnPanelTime;
 
 	// Head for a random node of the graph.
-	TMsRange<int> range(0, ChuuHanaGraphNodeNum(ChuuHanaGraphOf(this)));
+	// TODO: retail stacks goal above point (0x68 / 0x5c); ours is the reverse.
+	// setGoalPath(), a TPathNode temporary and chained copies were worse.
 	JGeometry::TVec3<f32> point;
-	ChuuHanaGraphNode(ChuuHanaGraphOf(this), range.rand())->getPoint((Vec*)&point);
+	ChuuHanaGraphNode(ChuuHanaGraphOf(this),
+	                  TMsRange<int>(0, ChuuHanaGraphNodeNum(ChuuHanaGraphOf(this)))
+	                      .rand())
+	    ->getPoint((Vec*)&point);
 
 	TPathNode goal(point);
 	unkF4  = goal;
