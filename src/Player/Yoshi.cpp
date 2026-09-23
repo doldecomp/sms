@@ -837,24 +837,24 @@ void TYoshi::thinkEat()
 	}
 }
 
-// TODO: frame 0x38 against retail's 0x80, and case 0 holds mMario in r4
-// (ours r3). The particle/sound binders reach only 0x50; a named bool, a named
-// f32 and a nested if leave r4 unchanged: likely a missing inline level.
+// Retail reads Mario's velocity and pad through their accessors and binds both
+// singletons: case 0's getVel() moves mMario to r4, and the seven
+// accessor/binder sites together land the 0x80 frame.
 void TYoshi::thinkHoldOut()
 {
 	switch (mFlutterState) {
 	case 0:
-		if (mMario->mVel.y < mMaxVSpdStartFlutter
-		    && mMario->mGamePad->checkMeaning(0x80))
+		if (mMario->getVel().y < mMaxVSpdStartFlutter
+		    && mMario->getGamePad()->checkMeaning(0x80))
 			mFlutterState = 1;
 		break;
 	case 1:
-		gpMarioParticleManager->emitAndBindToMtxPtr(
+		YoshiGetMarioParticleManager()->emitAndBindToMtxPtr(
 		    0x119, mActor->getModel()->getAnmMtx(unkF6), 1, this);
-		if (mMario->mVel.y < 0.0f
-		    && 0.0f <= mFlutterAcceleration + mMario->mVel.y)
-			SMSGetMSound()->startSoundActor(MSD_SE_YV_FUNBARI, &mTranslation, 0,
-			                                nullptr, 0, 4);
+		if (mMario->getVel().y < 0.0f
+		    && 0.0f <= mFlutterAcceleration + mMario->getVel().y)
+			YoshiGetMSound()->startSoundActor(MSD_SE_YV_FUNBARI, &mTranslation,
+			                                  0, nullptr, 0, 4);
 		if (mFlutterTimer != 0) {
 			mFlutterTimer -= 1;
 			mMario->mVel.y += mFlutterAcceleration;
@@ -862,7 +862,7 @@ void TYoshi::thinkHoldOut()
 			mFlutterState = 2;
 		}
 
-		if (!mMario->mGamePad->checkMeaning(0x80))
+		if (!mMario->getGamePad()->checkMeaning(0x80))
 			mFlutterState = 2;
 		break;
 	case 2:
