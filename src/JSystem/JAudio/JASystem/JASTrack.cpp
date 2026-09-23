@@ -902,7 +902,9 @@ void TTrack::writeTimeParam(u8 param)
 // bytes of low region missing (batch 138 closed the body; batch 152 found no
 // lever).  Two binding levels, or one worth +16, over the readByte/readReg
 // results would do it; every receiver-binder shape tried on the register
-// parameter overshoots.
+// parameter overshoots.  Measured (not landed, shared header): the binder
+// `u8 readByte() { u8 b = *mCurrentFilePtr++; return b; }` in JASSeqCtrl.hpp
+// gives the exact 0x48 frame, leaving only `this` in r31 against retail's r30.
 void TTrack::writeRegParam(u8 param)
 {
 

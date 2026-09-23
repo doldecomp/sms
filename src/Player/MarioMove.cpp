@@ -2562,6 +2562,12 @@ void TMario::gunExec()
 	}
 }
 
+// TODO: 100.0%, every instruction present; the inlined thinkHeight `point`
+// and checkRideReCalc `ridingMtx` sit 4 low. Raw `mPosition.y` in thinkHeight
+// gives retail's relative layout except a 4-byte slot missing between
+// `ridingMtx` and checkPlayerAround's `outPlane` (a by-value f32 fork over
+// getPosition() leaves only `outPlane` 4 high); getRidingMtx and
+// checkRideReCalc spellings are inert.
 void TMario::playerControl(JDrama::TGraphics* param_1)
 {
 	unk9C         = mFaceAngle.y;
