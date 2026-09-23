@@ -27,27 +27,11 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// TODO: the residual in behaveToWater (54.5%), receiveMessage (58.9%),
-// isCollidMove (67.2%), bind (76.1%) and perform (78.6%) is one MWCC inlining
-// artifact, not a source difference: every instruction of those bodies matches,
-// but the ROM keeps `theNerve()` a `bl` at most comparison sites and emits
-// `bl TNerveBase<TLiveActor>::TNerveBase()` inside the expansions it does make,
-// while our build expands `theNerve()` at every site with the base constructor
-// folded in. The decision is emergent -- the ROM inlines the first comparison
-// in attackToMario/isCollidMove/bind and calls it in receiveMessage and
-// behaveToWater from identical source -- so it is not a depth or wrapper
-// question. Ruled out: a TU-local `isCurrentNerve(spine, nerve)` wrapper
-// (52.3%, the expansion survives), and the ROM's own `theNerve` is byte-exact,
-// so the callee is not the difference.
-//
-// TODO: every site that asks "am I already dying?" spells the two-nerve test
-// out, because the map records no symbol for a helper that would hold it --
-// neither a weak TBathtubKiller method nor a TSpineBase one. A header inline
-// that MWCC expands at every site in every TU leaves no trace either, so the
-// eight copies below are *consistent* with the map rather than proven by it.
-// The ROM's shape (a flag register preset to 1, each comparison materialised as
-// a bool, no flag merge) is what the `||` chain gives here, so it is what is
-// written out.
+// Every site that asks "am I already dying?" goes through the BKIsDying chain
+// below. The map records no symbol for it, so these are TU-local inlines, but
+// the depth is pinned by the ROM: theNerve() is called at the comparisons
+// (depth 4) and expanded at the push sites with the TNerveBase constructor
+// left as a call (depth 2), and each comparison is materialised as a bool.
 
 static const char* bathtubkiller_bastable[] = {
 	"/scene/bathtubkiller/bas/bathtubdownkiller_down1.bas",
@@ -350,6 +334,33 @@ void TBathtubKiller::explodeBathtubKiller()
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+static inline bool BKIsExploding(TBathtubKiller* k)
+{
+	return k->mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve();
+}
+
+static inline bool BKIsBreaking(TBathtubKiller* k)
+{
+	return k->mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+}
+
+static inline bool BKIsDying(TBathtubKiller* k)
+{
+	return BKIsExploding(k) || BKIsBreaking(k);
+}
+
+static inline void BKPushBreak(TBathtubKiller* k)
+{
+	if (!BKIsDying(k))
+		k->mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
+}
+
+static inline void BKPushExplosion(TBathtubKiller* k)
+{
+	if (!BKIsDying(k))
+		k->mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+}
+
 void TBathtubKiller::bind()
 {
 	JGeometry::TVec3<f32> nextPos = mPosition;
@@ -358,22 +369,12 @@ void TBathtubKiller::bind()
 
 	mVelocity += mAcceleration;
 
-	bool dying
-	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
-	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
-	if (!dying) {
+	if (!BKIsDying(this)) {
 		mGroundHeight = gpMap->checkGround(nextPos.x, nextPos.y + mHeadHeight,
 		                                   nextPos.z, &mGroundPlane);
 		mGroundHeight += 1.0f;
 		if (nextPos.y <= 0.05f + mGroundHeight) {
-			bool landingDying
-			    = mSpine->getCurrentNerve()
-			          == &TNerveBathtubKillerExplosion::theNerve()
-			      || mSpine->getCurrentNerve()
-			             == &TNerveBathtubKillerBreak::theNerve();
-			if (!landingDying)
-				mSpine->pushNerve(
-				    &TNerveBathtubKillerExplosion::theNerve());
+			BKPushExplosion(this);
 			mAcceleration.set(0.0f, 0.0f, 0.0f);
 			mVelocity.set(mAcceleration);
 			nextPos.y = mGroundHeight;
@@ -381,14 +382,7 @@ void TBathtubKiller::bind()
 		if (gpMap->isTouchedOneWallAndMoveXZ(&nextPos.x,
 		                                     nextPos.y + mHeadHeight,
 		                                     &nextPos.z, mBodyRadius)) {
-			bool wallDying
-			    = mSpine->getCurrentNerve()
-			          == &TNerveBathtubKillerExplosion::theNerve()
-			      || mSpine->getCurrentNerve()
-			             == &TNerveBathtubKillerBreak::theNerve();
-			if (!wallDying)
-				mSpine->pushNerve(
-				    &TNerveBathtubKillerExplosion::theNerve());
+			BKPushExplosion(this);
 		}
 	}
 
@@ -405,14 +399,7 @@ void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 	if ((cue & CUE_MOVE) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
 		updateTimers();
 		if (unk208 <= 0) {
-			bool dying
-			    = mSpine->getCurrentNerve()
-			          == &TNerveBathtubKillerExplosion::theNerve()
-			      || mSpine->getCurrentNerve()
-			             == &TNerveBathtubKillerBreak::theNerve();
-			if (!dying)
-				mSpine->pushNerve(
-				    &TNerveBathtubKillerExplosion::theNerve());
+			BKPushExplosion(this);
 		}
 		if (!gpMap->isInArea(getPosition().x, getPosition().z)) {
 			unk21C = 0;
@@ -427,12 +414,7 @@ void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((cue & CUE_CALC_ANIM) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
-		bool dying
-		    = mSpine->getCurrentNerve()
-		          == &TNerveBathtubKillerExplosion::theNerve()
-		      || mSpine->getCurrentNerve()
-		             == &TNerveBathtubKillerBreak::theNerve();
-		if (!dying) {
+		if (!BKIsDying(this)) {
 			makeNoseColor();
 			unk1D4++;
 			if (unk1D4 >= getSaveParam2()->mSLSmokeInterval.get()) {
@@ -628,24 +610,12 @@ BOOL TBathtubKiller::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_SUPER_HIP_DROP
 	    || message <= HIT_MESSAGE_HIP_DROP) {
-		bool dying
-		    = mSpine->getCurrentNerve()
-		          == &TNerveBathtubKillerExplosion::theNerve()
-		      || mSpine->getCurrentNerve()
-		             == &TNerveBathtubKillerBreak::theNerve();
-		if (!dying)
-			mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
+		BKPushBreak(this);
 		return TRUE;
 	}
 
 	if (message == HIT_MESSAGE_UNKA) {
-		bool dying
-		    = mSpine->getCurrentNerve()
-		          == &TNerveBathtubKillerExplosion::theNerve()
-		      || mSpine->getCurrentNerve()
-		             == &TNerveBathtubKillerBreak::theNerve();
-		if (!dying)
-			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		BKPushExplosion(this);
 		return TRUE;
 	}
 
@@ -664,10 +634,7 @@ BOOL TBathtubKiller::receiveMessage(THitActor* sender, u32 message)
 
 void TBathtubKiller::attackToMario()
 {
-	bool dying
-	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
-	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
-	if (!dying && gpMarioPos->y < mPosition.y) {
+	if (!BKIsDying(this) && gpMarioPos->y < mPosition.y) {
 		mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 60.0f);
@@ -677,60 +644,32 @@ void TBathtubKiller::attackToMario()
 
 bool TBathtubKiller::isCollidMove(THitActor* other)
 {
-	bool dying
-	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
-	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
-	if (dying)
+	if (BKIsDying(this))
 		return false;
 
 	// Another killer bursting next to us.
 	if (other->isActorType(0x08000029)) {
-		bool hitDying
-		    = mSpine->getCurrentNerve()
-		          == &TNerveBathtubKillerExplosion::theNerve()
-		      || mSpine->getCurrentNerve()
-		             == &TNerveBathtubKillerBreak::theNerve();
-		if (!hitDying)
-			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		BKPushExplosion(this);
 		return true;
 	}
 
 	if (other->isActorType(0x08000021) || other->isActorType(0x0800002A)
 	    || other->isActorType(0x0800002C)) {
-		bool hitDying
-		    = mSpine->getCurrentNerve()
-		          == &TNerveBathtubKillerExplosion::theNerve()
-		      || mSpine->getCurrentNerve()
-		             == &TNerveBathtubKillerBreak::theNerve();
-		if (!hitDying)
-			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		BKPushExplosion(this);
 		other->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		return true;
 	}
 
 	// Two killers launched together are allowed to overlap for a while.
 	if (other->isActorType(0x08000024) && unk214 <= 0) {
-		bool hitDying
-		    = mSpine->getCurrentNerve()
-		          == &TNerveBathtubKillerExplosion::theNerve()
-		      || mSpine->getCurrentNerve()
-		             == &TNerveBathtubKillerBreak::theNerve();
-		if (!hitDying)
-			mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		BKPushExplosion(this);
 		return true;
 	}
 
 	return true;
 }
 
-void TBathtubKiller::behaveToWater(THitActor* water)
-{
-	bool dying
-	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
-	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
-	if (!dying)
-		mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
-}
+void TBathtubKiller::behaveToWater(THitActor* water) { BKPushBreak(this); }
 
 const char** TBathtubKiller::getBasNameTable() const
 {
