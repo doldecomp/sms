@@ -988,7 +988,7 @@ void TMario::changeHandByRate(f32 rate)
 f32 TMario::setAnimation(int anm_id, f32 rate)
 {
 	// TODO: instruction-identical apart from register numbering. 88 bytes of
-	// locals are missing (frame 0xb0 vs 0x108; validated with padding), and
+	// locals are missing (frame 0xc8 vs 0x108 as of bb28; validated with padding), and
 	// separately the ROM reuses one callee-saved register for anm_id and for
 	// the gMarioAnimeData element pointer, so it saves r28-r31 individually
 	// where we save r27-r31 with stmw. The padding alone does not merge them.

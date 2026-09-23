@@ -376,6 +376,13 @@ bool TRollEnemy::isReachedToGoalXZ()
 	return false;
 }
 
+// TODO: 94.3%. Two residues. The amplitude arm's u32 -> f32 magic-double
+// slots: retail converts `rmax - rmin` after JMASin's fctiwz (slot 0x80),
+// ours first (0x98); inert: operand swap, a named `f32 amp`, `(f32)` casts,
+// `int` params, MsSin, `mBodyScale * (...) + rmin`. And stampGround's
+// arguments: retail computes z, then `32.0f * range`, then x, with range in
+// f4; named z/x locals before the call are +0.5% only, `range * 32.0f`,
+// `range *= 32.0f`, a TVec3 stamp and position-first sums are inert/worse.
 void TRollEnemy::setBehavior()
 {
 	if (getPosition().y > 50.0f + mGroundHeight)
