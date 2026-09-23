@@ -372,23 +372,24 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
 // TODO: fabricated. CLBCalcNearNinePos transforms the camera-space up and
 // right vectors identically, and the ROM *calls* TRotation3::setRotate at both
 // sites (the map's weak 0x154 copy) while our spelled-out blocks expand it,
-// which needs the statement to sit one inline level down.
+// which needs the statement to sit one inline level down. The ROM rotates the
+// vector in place, about X and then about Y, reading the Y angle only after
+// the X rotation is stored.
 static inline void
 CLBRotateVecByEulerAndRoll(JGeometry::TVec3<f32>* vec, const S16Vec& euler,
                            const JGeometry::TVec3<f32>& axis, f32 roll)
 {
-	f32 sinX = JMASSin(euler.x);
 	f32 cosX = JMASCos(euler.x);
-	f32 sinY = JMASSin(euler.y);
-	f32 cosY = JMASCos(euler.y);
+	f32 sinX = JMASSin(euler.x);
+	f32 y  = vec->y;
+	vec->y = y * cosX - vec->z * sinX;
+	vec->z = y * sinX + vec->z * cosX;
 
-	// This transformation appears to be the following:
-	// [ cosY, 0, sinY]   [1,   0,     0 ]
-	// [   0,  1,   0 ] * [0, cosX, -sinX]
-	// [-sinY, 0, cosY]   [0, sinX,  cosX]
-	vec->set(vec->x * cosY + (vec->y * sinX + vec->z * cosX) * sinY,
-	         vec->y * cosX - vec->z * sinX,
-	         -vec->x * sinY + (vec->y * sinX + vec->z * cosX) * cosY);
+	f32 cosY = JMASCos(euler.y);
+	f32 sinY = JMASSin(euler.y);
+	f32 x  = vec->x;
+	vec->x = x * cosY + vec->z * sinY;
+	vec->z = -x * sinY + vec->z * cosY;
 
 	JGeometry::TRotation3<TMtx33f> mtxT;
 
@@ -439,9 +440,10 @@ void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_center, S16Vec* out_euler,
 }
 
 // TODO: the call structure and the scalarised offset vectors now match the
-// ROM. The rest is the frame (0x218 against 0x1f0: a 4-byte hole between dir
+// ROM. The rest is the frame (0x208 against 0x1f0: a 4-byte hole between dir
 // and corner in the ROM, and a larger inline-temporary region here) and the
-// float register numbering (the ROM keeps the half-diagonal in f31).
+// float register numbering (the ROM keeps the squared half-diagonal in f31,
+// above the scalarised upOfs; a named squared local declared early is worse).
 void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
                         const JGeometry::TVec3<f32>& origin,
                         const JGeometry::TVec3<f32>& lookat, s16 roll,
@@ -481,7 +483,7 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 	rightOfs.scale(halfWidth, side);
 	out_grid[5].add(out_grid[4], rightOfs);
 
-	f32 halfDiagonal = MsSqrtf(halfWidth * halfWidth + halfHeight * halfHeight);
+	f32 halfDiagonal = MsSqrtf(halfHeight * halfHeight + halfWidth * halfWidth);
 
 	corner.set(leftOfs);
 	corner.add(upOfs);
