@@ -46,7 +46,9 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 	mtxT.setRotate(param_axis, angle);
 
 	JGeometry::TVec3<f32> in(*vec);
-	mtxT.mult33(in, *vec);
+	vec->x = mtxT.at(0, 0) * in.x + mtxT.at(1, 0) * in.y + mtxT.at(2, 0) * in.z;
+	vec->y = mtxT.at(0, 1) * in.x + mtxT.at(1, 1) * in.y + mtxT.at(2, 1) * in.z;
+	vec->z = mtxT.at(0, 2) * in.x + mtxT.at(1, 2) * in.y + mtxT.at(2, 2) * in.z;
 }
 
 // TODO: 98.7%. Frame 0x40 against 0x58 -- 24 bytes, and the ROM's locals start
@@ -178,6 +180,8 @@ void CLBRevisionLookatByAngleX(s16 vAngleMin, s16 vAngleMax, const Vec& origin,
 	CLBPolarToCross(origin, inOut, radius, vAngle, hAngle);
 }
 
+// TODO: frame 0x18 short; RotateAboutAxis's identity33 stores the zeros
+// before the ones in retail, and the vector registers swap.
 void CLBRotatePosAndUp(s16 sAngle1, s16 sAngle2,
                        const JGeometry::TVec3<f32>& axis1,
                        const JGeometry::TVec3<f32>& axis2,

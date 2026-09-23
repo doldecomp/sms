@@ -173,6 +173,11 @@ void TKumokun::initCollision()
 	initAttachPlane();
 }
 
+// TODO: frame 0x10 short. Retail calls set<f> for the wall record (one
+// inline level deeper than here, like the UNUSED checkWallPlane but with no
+// write-back and reading mPosition directly) and tests the result with
+// `ble` (an int count `> 0`); inlining checkWallPlane on a copy gives the
+// exact frame and the call but adds the copy and write-back.
 void TKumokun::initAttachPlane()
 {
 	TBGWallCheckRecord record;
