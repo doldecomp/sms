@@ -528,6 +528,9 @@ void TRailFence::falling()
 	}
 }
 
+// TODO: 98.8, frame 0x68 against 0x88. Retail keeps the current index in r4
+// for moveToShortestNext and reloads the graph; ours reloads the index.
+// Naming the tracer (either node spelling) keeps both in registers.
 void TRailFence::goOnRail()
 {
 	if (mTracer->getGraph()) {
@@ -538,8 +541,7 @@ void TRailFence::goOnRail()
 
 		if (toNode.x * toNode.x + toNode.y * toNode.y + toNode.z * toNode.z
 		    < 50.0f) {
-			TGraphTracer* tracer = mTracer;
-			TRailNode* node      = tracer->getCurrent().getRailNode();
+			TRailNode* node = mTracer->getCurrent().getRailNode();
 			if (node->mConnectionNum == 0 && (node->mFlags & 8)) {
 				gpMSound->startSoundActor(MSD_SE_OBJ_MVING_FENCT_SET,
 				                          &mPosition, 0, nullptr, 0, 4);
@@ -549,7 +551,7 @@ void TRailFence::goOnRail()
 				return;
 			}
 
-			tracer->moveToShortestNext();
+			mTracer->moveToShortestNext();
 			toNode.set(mTracer->getCurrentPos());
 		}
 
