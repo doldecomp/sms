@@ -1466,15 +1466,21 @@ static inline void KoopaConcat(JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> >
 // Bowser rides the bathtub: his world matrix is the tub's matrix times his own
 // Y rotation, with the origin pushed 1500 units down the tub's up axis.
 //
-// TODO: 79%. The frame is 0x30 short (0x110 against 0x140), retail saves f15
-// as well, and the product scheduling around the set() arguments differs.
+// The down offset is a TVec3 scaled in place (retail multiplies the loaded
+// column by -1500, not the constant by it), the position is set() then add()ed,
+// and the copy out is J3DModel::setBaseTRMtx, which is what keeps &mtx in r31.
+//
+// TODO: 81.7%. The frame is 0x18 short (0x128 against 0x140): retail saves f15
+// too and its low region holds one more 12-byte temporary. The twelve products
+// feeding set() schedule differently; swapping product operands, moving the
+// translation term last, the scale spelled as a temporary or assigned late, and
+// down.set() were all inert.
 void TKoopa::calcRootMatrix()
 {
 	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 	MtxPtr tub        = *bathtub->getRootJointMtx();
-	f32 downX         = -1500.0f * tub[0][1];
-	f32 downY         = -1500.0f * tub[1][1];
-	f32 downZ         = -1500.0f * tub[2][1];
+	JGeometry::TVec3<f32> down(tub[0][1], tub[1][1], tub[2][1]);
+	down.scale(-1500.0f);
 
 	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > mtx;
 	MsMtxSetRotRPH(mtx, 0.0f, mRotation.y, 0.0f);
@@ -1484,17 +1490,13 @@ void TKoopa::calcRootMatrix()
 
 	KoopaConcat(mtx, tub, mtx);
 
-	mPosition.x = mtx.at(0, 3);
-	mPosition.y = mtx.at(1, 3);
-	mPosition.z = mtx.at(2, 3);
-	mPosition.x += downX;
-	mPosition.y += downY;
-	mPosition.z += downZ;
+	mPosition.set(mtx.at(0, 3), mtx.at(1, 3), mtx.at(2, 3));
+	mPosition.add(down);
 	mtx.ref(0, 3) = mPosition.x;
 	mtx.ref(1, 3) = mPosition.y;
 	mtx.ref(2, 3) = mPosition.z;
 
-	MTXCopy(mtx, getModel()->getBaseTRMtx());
+	getModel()->setBaseTRMtx(mtx);
 
 	JGeometry::TVec3<f32> scale(1.0f, 1.0f, 1.0f);
 	getModel()->setBaseScale(scale);
