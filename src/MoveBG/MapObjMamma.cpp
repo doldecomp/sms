@@ -1597,24 +1597,22 @@ void TMammaMirrorMapOperator::hide(int i)
 	}
 }
 
+// TODO: retail's two lengths are unfused (three fmuls, two fadds) and it
+// schedules camPos.x before the mirror's x; TVec3::length() fuses here.
 void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(cue & 2))
 		return;
 
 	if (gpMirrorModelManager->isUnk18Present()) {
-		TMirrorCamera* camera = gpMirrorModelManager->unk24;
-		JGeometry::TVec3<f32> toMirror(
-		    camera->unk98.x - mMirrorPos[gpMirrorModelManager->unk18].x,
-		    camera->unk98.y - mMirrorPos[gpMirrorModelManager->unk18].y,
-		    camera->unk98.z - mMirrorPos[gpMirrorModelManager->unk18].z);
+		const JGeometry::TVec3<f32>& camPos = gpMirrorModelManager->unk24->unk98;
+		JGeometry::TVec3<f32> toMirror;
+		toMirror.sub(camPos, mMirrorPos[gpMirrorModelManager->getUnk18()]);
 		f32 mirrorDist = toMirror.length();
 
 		for (int i = 0; i < MIRROR_JOINT_NUM; i++) {
-			JGeometry::TVec3<f32> toJoint(camera->unk98.x - mJointCenter[i].x,
-			                              camera->unk98.y - mJointCenter[i].y,
-			                              camera->unk98.z
-			                                  - mJointCenter[i].z);
+			JGeometry::TVec3<f32> toJoint;
+			toJoint.sub(camPos, mJointCenter[i]);
 			f32 jointDist = toJoint.length();
 
 			if (jointDist > mJointRadius[i] || jointDist > mirrorDist)
@@ -1630,14 +1628,24 @@ void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics* graphics)
 		hide(i);
 }
 
+// TODO: instructions match; retail's frame is 8 bytes larger (0xb8).
 void TMammaMirrorMapOperator::loadAfter()
 {
-	mMirrorPos[0].set(
-	    ((JDrama::TActor*)JDrama::TNameRefGen::search2("mirrorS"))->mPosition);
-	mMirrorPos[1].set(
-	    ((JDrama::TActor*)JDrama::TNameRefGen::search2("mirrorM"))->mPosition);
-	mMirrorPos[2].set(
-	    ((JDrama::TActor*)JDrama::TNameRefGen::search2("mirrorL"))->mPosition);
+	JDrama::TActor* mirrorS
+	    = (JDrama::TActor*)JDrama::TNameRefGen::search2("mirrorS");
+	mMirrorPos[0].x = mirrorS->mPosition.x;
+	mMirrorPos[0].y = mirrorS->mPosition.y;
+	mMirrorPos[0].z = mirrorS->mPosition.z;
+	JDrama::TActor* mirrorM
+	    = (JDrama::TActor*)JDrama::TNameRefGen::search2("mirrorM");
+	mMirrorPos[1].x = mirrorM->mPosition.x;
+	mMirrorPos[1].y = mirrorM->mPosition.y;
+	mMirrorPos[1].z = mirrorM->mPosition.z;
+	JDrama::TActor* mirrorL
+	    = (JDrama::TActor*)JDrama::TNameRefGen::search2("mirrorL");
+	mMirrorPos[2].x = mirrorL->mPosition.x;
+	mMirrorPos[2].y = mirrorL->mPosition.y;
+	mMirrorPos[2].z = mirrorL->mPosition.z;
 
 	J3DJoint* joint = ((TMapStaticObj*)JDrama::TNameRefGen::search2("鏡内地形"))
 	                      ->getModelData()
