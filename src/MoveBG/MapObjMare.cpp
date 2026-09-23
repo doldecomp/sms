@@ -780,6 +780,9 @@ TWireBell::TWireBell(const char* name)
 	mWirePos.x = mWirePos.y = mWirePos.z = 0.0f;
 }
 
+// TODO: retail's named block sits 4 bytes higher (dir at 0x54, not 0x50).
+// Worse: raw gpMarioPos / SMS_GetMarioPos() for dest, getPosition() at the
+// emit and sound sites, a named scaled copy of dir.
 void TMapObjPuncher::touchPlayer(THitActor* player)
 {
 	awake();

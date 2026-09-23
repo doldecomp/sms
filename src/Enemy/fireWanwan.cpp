@@ -754,6 +754,9 @@ f32 TFireWanwanTailHit::calcApartPow()
 
 MtxPtr TFireWanwanTailHit::getTakingMtx() { return unk74; }
 
+// TODO: retail's named block sits 4 bytes higher (next at 0x34, not 0x30).
+// Inert or worse: next as Vec, declaring checkData first, set()/chained copies,
+// translation(next) and translation(x, y, z).
 BOOL TFireWanwanTailHit::moveRequest(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> next = param_1;
