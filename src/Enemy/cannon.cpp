@@ -1025,15 +1025,18 @@ DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
 	return FALSE;
 }
 
+// TODO: instruction-identical; frame 0x170 vs 0x198, the setGoalPathMario
+// TPathNode temporary sitting 0x28 lower than retail's.
 DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 {
 	TCannon* cannon = CannonBody(spine);
 
 	cannon->updateSquareToMario();
 	f32 dist = cannon->getDistToMarioSquared();
+	f32 bombDist = cannon->getSaveParams()->getSLBombDist();
+	f32 bombDistSq = bombDist * bombDist;
 	if (spine->getTime() == 0) {
-		f32 bombDist = cannon->getSaveParams()->getSLBombDist();
-		if (dist < bombDist * bombDist)
+		if (dist < bombDistSq)
 			cannon->setGoalPathMario();
 		cannon->getChorobei()->setBckAnm(0x13);
 	}
