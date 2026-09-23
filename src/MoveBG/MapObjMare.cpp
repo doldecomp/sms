@@ -337,22 +337,33 @@ void TCogwheel::control()
 	}
 }
 
+// The ROM keeps a literal `0.0f * sin` and `0.0f * cos`: the unrotated
+// (sRadius, 0, 0) offset goes through an inlined Y rotation, and MWCC does not
+// fold a multiply by zero across the inline boundary.
+static inline void CogwheelRotY(JGeometry::TVec3<f32>* v, f32 deg)
+{
+	f32 rad = 0.017453294f * deg;
+	f32 c   = cosf(rad);
+	f32 s   = sinf(rad);
+	f32 x   = v->x;
+	f32 z   = v->z;
+	v->x    = x * c - z * s;
+	v->z    = x * s + z * c;
+}
+
+// TODO: 96.7%, frame exact. Retail's named slots sit 8 higher (pos at 0x50,
+// ours 0x48) and it keeps offsetX in f31, offsetZ in f30 where we swap them.
+// Inert: sin/cos or x/z read order in the helper, offsetZ named first, raw
+// mRotation, the helper taking the rotation vector or f32 outputs, `pos`
+// declared before the offset.
 void TCogwheel::initMapObj()
 {
 	TMapObjBase::initMapObj();
 
-	// TODO: the ROM keeps a literal `0.0f * sin` and `0.0f * cos` here (the
-	// z component of the unrotated (sRadius, 0, 0) offset), which means the
-	// rotation came out of an inlined helper -- MWCC only fails to fold a
-	// multiply by zero across an inline boundary. No such helper has been
-	// found: TMapObjBase::rotateVecByAxisY is a full three-axis rotation and
-	// is never called here, and spelling the zeros out folds them away.
-	f32 radius  = sRadius;
-	f32 rad     = 0.017453294f * getRotation().y;
-	f32 cos     = cosf(rad);
-	f32 sin     = sinf(rad);
-	f32 offsetX = radius * cos - 0.0f * sin;
-	f32 offsetZ = radius * sin + 0.0f * cos;
+	JGeometry::TVec3<f32> offset(sRadius, 0.0f, 0.0f);
+	CogwheelRotY(&offset, getRotation().y);
+	f32 offsetX = offset.x;
+	f32 offsetZ = offset.z;
 
 	JGeometry::TVec3<f32> pos(mPosition.x + offsetX, mPosition.y,
 	                          mPosition.z - offsetZ);
