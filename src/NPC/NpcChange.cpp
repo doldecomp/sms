@@ -611,6 +611,18 @@ void TBaseNPC::changeNerveProc_()
 	}
 }
 
+static inline TPollutionManager* NpcChangePollution()
+{
+	TPollutionManager* r = gpPollution;
+	return r;
+}
+
+static inline f32 NpcChangeHeadHeight(TBaseNPC* self)
+{
+	f32 r = self->getHeadHeight();
+	return r;
+}
+
 // TODO: frame 0x20 short (retail 0xa8): retail's pos copy sits at 0x80 with
 // a 4-byte hole above it, ours at 0x64. Every instruction matches.
 // getSpine() at any one or two sites is +8 and saturates; raw mSinkHeight is
@@ -623,7 +635,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	f32 z;
 	f32 y = pos.y;
 	z      = pos.z;
-	bool cVar8 = gpPollution->isPolluted(pos.x, y, z);
+	bool cVar8 = NpcChangePollution()->isPolluted(pos.x, y, z);
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
 	            | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000
 	            | LIVE_FLAG_UNK40000 | LIVE_FLAG_UNK400000
@@ -650,7 +662,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
 		           | LIVE_FLAG_SINK_BOTTOM);
 		unk1C4 = mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
-		    pos.x, y + getHeadHeight(), z, &mGroundPlane);
+		    pos.x, y + NpcChangeHeadHeight(this), z, &mGroundPlane);
 		pos.y = unk1C4 - mIndividualParams->mSinkHeight.get();
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {
@@ -666,8 +678,8 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	mPosition.set(pos);
 	mRotation.set(unk1A0);
 	mLinearVelocity.set(0.0f, 0.0f, 0.0f);
-	unk124->reset();
-	unk124->reset2();
+	getTracer()->reset();
+	getTracer()->reset2();
 	goToShortestNextGraphNode();
 	npcWaitIn();
 	randomizeBckAndBtpFrame_();
