@@ -4,8 +4,6 @@
 #include <System/Particles.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <Map/Map.hpp>
-#include <Map/MapCollisionManager.hpp>
-#include <Map/MapCollisionEntry.hpp>
 #include <Strategic/Strategy.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Player/ModelWaterManager.hpp>
@@ -16,6 +14,8 @@
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionManager.hpp>
+#include <Map/MapCollisionEntry.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
@@ -26,18 +26,8 @@ TSeal::TSeal(const char* name)
 	mLiveFlag |= LIVE_FLAG_UNK10;
 }
 
-// TODO: every instruction and the frame (0xc0) are exact; the one residue is
-// the setUpUnk8TRS scratch Mtx at 0x70 against retail's 0x6c (two markers).
-// The group binding (retail's `addi rD, r3, 0x10` list base) and the r30/r31
-// rotation close only as a pair: a named `TList_pointer<THitActor*>&` receiver
-// for push_back (alone: frame 0xc8, 62 markers) together with `getMActor()`
-// for offMakeDL (alone: inert). Earlier batches priced the Mtx hole as an
-// allocation-order difference in a pinned low region: `mSpine->` for
-// `getSpine()->` put the Mtx at 0x6c but dropped 8 bytes of frame; on this
-// base it keeps 0xc0 and misplaces two more slots. Inert here, singly and in
-// pairs/triples:
-// getMapCollisionManager() at either site, the list reference bound straight
-// from the search, operand order in `radius`/`angle`, offHitFlag().
+// The rotation wrap is MsWrap's inlined body (its named locals give retail's
+// Mtx slot at 0x6c), and the raw mSpine drops the low-region reference slot.
 void TSeal::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -55,12 +45,7 @@ void TSeal::init(TLiveManager* manager)
 	JGadget::TList_pointer<THitActor*>& list = *group;
 	list.push_back(this);
 
-	f32 angle = 270.0f + mRotation.x;
-	while (angle >= 360.0f)
-		angle -= 360.0f;
-	while (angle < 0.0f)
-		angle += 360.0f;
-	mRotation.x = angle;
+	mRotation.x = MsWrap(270.0f + mRotation.x, 0.0f, 360.0f);
 
 	mMapCollisionManager = new TMapCollisionManager(1, "/scene/seal", this);
 	mMapCollisionManager->init("gene_orange_col1.col", 2, nullptr);
@@ -69,7 +54,7 @@ void TSeal::init(TLiveManager* manager)
 
 	mHitPoints = getMaxHitPoints();
 
-	getSpine()->initWith(&TNerveSealSleep::theNerve());
+	mSpine->initWith(&TNerveSealSleep::theNerve());
 }
 
 BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
