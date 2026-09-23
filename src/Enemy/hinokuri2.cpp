@@ -150,8 +150,7 @@ static inline THinokuri2* Hino2Cur()
 
 static inline J3DJoint* Hino2JointNode(u16 idx)
 {
-	J3DModelData* data = j3dSys.getModel()->getModelData();
-	return data->getJointNodePointer(idx);
+	return j3dSys.getModel()->getModelData()->getJointNodePointer(idx);
 }
 
 void THino2MtxCalc::calc(u16 param_1)
@@ -176,17 +175,10 @@ void THino2MtxCalc::calc(u16 param_1)
 
 		calcTransform(param_1, info);
 	} else {
-
-		// TODO: the four J3DTransformInfo objects of the branches below
-		// sit 4 bytes low at an exact frame -- one 4-byte pool level is
-		// missing above `info` and below them.
 		if (!mOne[0] && !mOne[1]) {
 			J3DTransformInfo info;
-			J3DJoint* joint
-			    = j3dSys.getModel()->getModelData()->getJointNodePointer(
-			        param_1);
 
-			info = joint->getTransformInfo();
+			info = Hino2JointNode(param_1)->getTransformInfo();
 
 			calcTransform(param_1, info);
 		} else if (unk78 == 0.0f || !mOne[1]) {
