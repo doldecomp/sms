@@ -1147,63 +1147,9 @@ void TMapObjTurn::turn()
 	}
 }
 
-// fabricated
-static inline void makeRotXMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = 1.0f;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = c;
-	mtx[1][2] = -s;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = s;
-	mtx[2][2] = c;
-	mtx[2][3] = 0.0f;
-}
-
-// fabricated
-static inline void makeRotYMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = c;
-	mtx[0][1] = 0.0f;
-	mtx[0][2] = s;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = 0.0f;
-	mtx[1][1] = 1.0f;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = -s;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = c;
-	mtx[2][3] = 0.0f;
-}
-
-// fabricated
-static inline void makeRotZMtx(MtxPtr mtx, f32 angle)
-{
-	f32 s     = JMASin(angle);
-	f32 c     = JMACos(angle);
-	mtx[0][0] = c;
-	mtx[0][1] = -s;
-	mtx[0][2] = 0.0f;
-	mtx[0][3] = 0.0f;
-	mtx[1][0] = s;
-	mtx[1][1] = c;
-	mtx[1][2] = 0.0f;
-	mtx[1][3] = 0.0f;
-	mtx[2][0] = 0.0f;
-	mtx[2][1] = 0.0f;
-	mtx[2][2] = 1.0f;
-	mtx[2][3] = 0.0f;
-}
-
+// TODO: retail materialises the matrix pointer inside each case (after the
+// MsWrap store) rather than before the switch, and its frame is 0x10 larger in
+// the dead low region below the case-2 yRot block.
 void TMapObjTurn::control()
 {
 	TMapObjBase::control();
@@ -1211,45 +1157,47 @@ void TMapObjTurn::control()
 		return;
 
 	turn();
-	Mtx yRot;
 	Mtx mtx;
+	MtxPtr ptr = mtx;
 	switch (unk150) {
 	case 0:
 		mRotation.x = MsWrap(unk154 + mInitialRotation.x, 0.0f, 360.0f);
-		makeRotXMtx(mtx, mRotation.x);
+		MsMtxSetRotX(ptr, mRotation.x);
 		if (mRotation.y != 0.0f) {
-			makeRotXMtx(mtx, mRotation.x);
-			makeRotYMtx(yRot, mRotation.y);
-			MTXConcat(yRot, mtx, mtx);
+			MsMtxSetRotX(ptr, mRotation.x);
+			Mtx yRot;
+			MsMtxSetRotY(yRot, mRotation.y);
+			MTXConcat(yRot, ptr, ptr);
 		} else {
-			makeRotXMtx(mtx, mRotation.x);
+			MsMtxSetRotX(ptr, mRotation.x);
 		}
 		break;
 
 	case 1:
 		mRotation.y = MsWrap(unk154 + mInitialRotation.y, 0.0f, 360.0f);
-		makeRotYMtx(mtx, mRotation.y);
+		MsMtxSetRotY(ptr, mRotation.y);
 		break;
 
 	case 2:
 		mRotation.z = MsWrap(unk154 + mInitialRotation.z, 0.0f, 360.0f);
-		makeRotZMtx(mtx, mRotation.z);
+		MsMtxSetRotZ(ptr, mRotation.z);
 		if (mRotation.y != 0.0f) {
-			makeRotZMtx(mtx, mRotation.z);
-			makeRotYMtx(yRot, mRotation.y);
-			MTXConcat(yRot, mtx, mtx);
+			MsMtxSetRotZ(ptr, mRotation.z);
+			Mtx yRot;
+			MsMtxSetRotY(yRot, mRotation.y);
+			MTXConcat(yRot, ptr, ptr);
 		} else {
-			makeRotZMtx(mtx, mRotation.z);
+			MsMtxSetRotZ(ptr, mRotation.z);
 		}
 		break;
 	}
 
-	MtxPtr ptr = mtx;
-	ptr[0][3]  = mPosition.x;
-	ptr[1][3]  = mPosition.y;
-	ptr[2][3]  = mPosition.z;
-	ptr[1][3] -= mYOffset;
-	getModel()->setAnmMtx(0, ptr);
+	MtxPtr m = mtx;
+	m[0][3]  = mPosition.x;
+	m[1][3]  = mPosition.y;
+	m[2][3]  = mPosition.z;
+	m[1][3] -= mYOffset;
+	getModel()->setAnmMtx(0, m);
 }
 
 BOOL TMapObjTurn::receiveMessage(THitActor* sender, u32 message)
