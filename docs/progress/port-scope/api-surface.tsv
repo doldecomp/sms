@@ -1,0 +1,378 @@
+subsystem	function	total_uses	game_src	jsystem_src	non_sdk_headers	thpplayer_src	odemuexi2_src	files	declared_in
+GX	GXPosition3f32	388	315	73	0	0	0	23	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXTexCoord2f32	227	154	73	0	0	0	15	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXSetVtxDesc	171	138	31	0	2	0	41	dolphin/gx/GXGeometry.h
+GX	GXSetVtxAttrFmt	168	133	33	0	2	0	40	dolphin/gx/GXGeometry.h
+GX	GXSetTevOrder	148	108	35	0	5	0	42	dolphin/gx/GXTev.h
+GX	GXSetChanCtrl	127	117	10	0	0	0	38	dolphin/gx/GXLighting.h
+GX	GXBegin	112	86	25	0	1	0	36	dolphin/gx/GXGeometry.h
+GX	GXColor1u32	110	82	28	0	0	0	10	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXSetBlendMode	108	93	13	0	2	0	38	dolphin/gx/GXPixel.h
+GX	GXLoadPosMtxImm	90	75	14	0	1	0	40	dolphin/gx/GXTransform.h
+GX	GXSetNumTevStages	90	76	12	0	2	0	42	dolphin/gx/GXTev.h
+GX	GXClearVtxDesc	85	74	10	0	1	0	40	dolphin/gx/GXGeometry.h
+GX	GXSetCullMode	85	77	8	0	0	0	35	dolphin/gx/GXGeometry.h
+GX	GXSetNumTexGens	83	67	14	0	2	0	42	dolphin/gx/GXGeometry.h
+GX	GXSetTevColorIn	81	62	15	0	4	0	26	dolphin/gx/GXTev.h
+GX	GXEnd	80	56	23	0	1	0	29	dolphin/gx/GXGeometry.h
+GX	GXPosition3s16	79	47	28	0	4	0	11	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXSetTevAlphaIn	79	57	18	0	4	0	26	dolphin/gx/GXTev.h
+GX	GXSetZMode	79	69	8	0	2	0	36	dolphin/gx/GXPixel.h
+GX	GXSetTevColorOp	77	58	15	0	4	0	26	dolphin/gx/GXTev.h
+GX	GXSetNumChans	76	66	8	0	2	0	39	dolphin/gx/GXLighting.h
+GX	GXSetTevAlphaOp	75	56	15	0	4	0	26	dolphin/gx/GXTev.h
+GX	GXSetTexCoordGen2	69	63	6	0	0	0	29	dolphin/gx/GXGeometry.h
+GX	GXSetTevColor	59	37	22	0	0	0	14	dolphin/gx/GXTev.h
+GX	GXSetCurrentMtx	57	51	5	0	1	0	34	dolphin/gx/GXTransform.h
+GX	GXSetChanMatColor	55	52	3	0	0	0	25	dolphin/gx/GXLighting.h
+GX	GXSetAlphaUpdate	54	47	6	0	1	0	17	dolphin/gx/GXPixel.h
+GX	GXSetColorUpdate	53	45	7	0	1	0	16	dolphin/gx/GXPixel.h
+GX	GXSetAlphaCompare	49	42	7	0	0	0	23	dolphin/gx/GXTev.h
+GX	GXColor4u8	44	44	0	0	0	0	5	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXSetTevOp	44	35	8	0	1	0	25	dolphin/gx/GXTev.h
+GX	GXSetDstAlpha	42	42	0	0	0	0	10	dolphin/gx/GXPixel.h
+OS cache	DCStoreRange	41	14	27	0	0	0	19	dolphin/os/OSCache.h
+GX	GXLoadTexObj	41	26	11	1	3	0	12	dolphin/gx/GXTexture.h
+GD	GDOverflowCheck	36	0	33	3	0	0	4	dolphin/gd/GDBase.h
+GX	GXTexCoord2u16	36	24	8	0	4	0	5	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+OS	OSPanic	32	1	26	5	0	0	15	dolphin/os.h
+GX	GXPosition2u16	30	26	4	0	0	0	4	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+OS	OSRestoreInterrupts	30	0	20	0	6	4	15	dolphin/os.h
+OS	OSSendMessage	28	4	14	1	9	0	13	dolphin/os/OSMessage.h
+GX	GXPosition2f32	25	25	0	0	0	0	3	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+OS	OSReceiveMessage	25	1	13	2	9	0	14	dolphin/os/OSMessage.h
+OS cache	DCFlushRange	24	13	10	0	1	0	12	dolphin/os/OSCache.h
+GX	GXSetProjection	24	19	4	0	1	0	9	dolphin/gx/GXTransform.h
+GX	GXSetZCompLoc	24	19	5	0	0	0	15	dolphin/gx/GXPixel.h
+OS	OSInitMessageQueue	23	1	13	0	9	0	14	dolphin/os/OSMessage.h
+GX	GXInitTexObj	22	14	5	0	3	0	12	dolphin/gx/GXTexture.h
+OS	OSUnlockMutex	22	8	11	3	0	0	7	dolphin/os/OSMutex.h
+GX	GXInitTexObjLOD	21	13	5	0	3	0	10	dolphin/gx/GXTexture.h
+GX	GXLoadTexMtxImm	21	15	6	0	0	0	10	dolphin/gx/GXTransform.h
+DVD	DVDReadPrio	20	1	12	0	7	0	7	dolphin/dvd.h
+GX	GXPosition2s16	20	20	0	0	0	0	3	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+OS	OSDisableInterrupts	20	0	11	0	5	4	13	dolphin/os.h
+GX	GXEnableTexOffsets	19	8	11	0	0	0	3	dolphin/gx/GXGeometry.h
+OS	OSReport	19	1	12	6	0	0	11	dolphin/os.h
+GX	GXCmd1u8	18	9	9	0	0	0	4	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXTexCoord1s16	16	0	16	0	0	0	1	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+OS	OSCreateThread	16	8	3	0	5	0	12	dolphin/os/OSThread.h
+OS	OSLockMutex	16	6	7	3	0	0	7	dolphin/os/OSMutex.h
+DVD	DVDClose	15	1	7	0	7	0	5	dolphin/dvd.h
+GX	GXCallDisplayList	15	9	5	1	0	0	9	dolphin/gx/GXDispList.h
+GX	GXSetChanAmbColor	15	13	2	0	0	0	11	dolphin/gx/GXLighting.h
+VI	VIWaitForRetrace	15	2	13	0	0	0	4	dolphin/vi/vifuncs.h
+OS	OSResumeThread	14	8	2	1	3	0	12	dolphin/os/OSThread.h
+GX	GXLoadNrmMtxImm	13	11	2	0	0	0	9	dolphin/gx/GXTransform.h
+GX	GXSetArray	13	10	1	2	0	0	6	dolphin/gx/GXGeometry.h
+GX	GXSetClipMode	13	4	9	0	0	0	4	dolphin/gx/GXTransform.h
+GX	GXSetTevSwapModeTable	13	4	4	0	5	0	3	dolphin/gx/GXTev.h
+GX	GXTexCoord2u8	13	13	0	0	0	0	2	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+VI	VIGetTvFormat	13	10	2	0	1	0	6	dolphin/vi/vifuncs.h
+GX	GXParam1f32	12	12	0	0	0	0	1	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXTexCoord2s8	12	12	0	0	0	0	2	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+OS	OSGetTick	12	4	5	3	0	0	7	dolphin/os.h
+MTX (C)	C_MTXOrtho	11	8	2	0	1	0	7	dolphin/mtx.h
+GX	GXLoadLightObjImm	11	10	1	0	0	0	4	dolphin/gx/GXLighting.h
+GX	GXSetScissor	11	7	2	1	1	0	6	dolphin/gx/GXCull.h
+GX	GXSetTevDirect	11	7	4	0	0	0	5	dolphin/gx/GXBump.h
+GX	GXSetTexCoordGen	11	0	9	0	2	0	2	dolphin/gx/GXGeometry.h
+GX	GXInitLightColor	10	8	1	1	0	0	5	dolphin/gx/GXLighting.h
+GX	GXSetLineWidth	10	5	5	0	0	0	7	dolphin/gx/GXGeometry.h
+GX	GXSetTevSwapMode	10	1	1	0	8	0	3	dolphin/gx/GXTev.h
+GX	GXSetViewport	10	7	2	0	1	0	6	dolphin/gx/GXTransform.h
+MTX (C)	C_MTXLookAt	9	7	2	0	0	0	7	dolphin/mtx.h
+OS cache	DCInvalidateRange	9	1	5	0	3	0	6	dolphin/os/OSCache.h
+GD	GDSetCurrent	9	4	5	0	0	0	4	dolphin/gd/GDBase.h
+GX	GXSetIndTexCoordScale	9	6	3	0	0	0	5	dolphin/gx/GXBump.h
+GX	GXSetMisc	9	0	9	0	0	0	2	dolphin/gx/GXManage.h
+OS	OSEnableInterrupts	9	0	8	0	1	0	4	dolphin/os.h
+MTX (paired-single)	PSMTXCopy	9	9	0	0	0	0	4	dolphin/mtx.h
+MTX (paired-single)	PSVECNormalize	9	9	0	0	0	0	4	dolphin/mtx.h
+MTX (C)	C_MTXPerspective	8	6	2	0	0	0	5	dolphin/mtx.h
+GD	GDSetZMode	8	4	3	1	0	0	3	dolphin/gd/GDPixel.h
+GX	GXParam1s32	8	0	8	0	0	0	1	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXSetNumIndStages	8	5	3	0	0	0	7	dolphin/gx/GXBump.h
+GX	GXSetTevKColor	8	2	3	0	3	0	5	dolphin/gx/GXTev.h
+GX	GXSetTexCoordCylWrap	8	8	0	0	0	0	1	dolphin/gx/GXTexture.h
+GX	GXSetTexCoordScaleManually	8	8	0	0	0	0	1	dolphin/gx/GXTexture.h
+OS	OSGetTime	8	2	6	0	0	0	4	dolphin/os.h
+OS	OSJoinThread	8	8	0	0	0	0	7	dolphin/os/OSThread.h
+PAD	PADControlMotor	8	5	3	0	0	0	2	dolphin/pad.h
+MTX (paired-single)	PSMTXConcat	8	8	0	0	0	0	4	dolphin/mtx.h
+DSP	DSPCheckMailToDSP	7	0	7	0	0	0	2	dolphin/dsp.h
+DVD	DVDOpen	7	1	5	0	1	0	7	dolphin/dvd.h
+GX	GXCmd1u32	7	0	7	0	0	0	2	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXCopyTex	7	6	1	0	0	0	4	dolphin/gx/GXFrameBuffer.h
+GX	GXInitLightPos	7	6	1	0	0	0	4	dolphin/gx/GXLighting.h
+GX	GXParam1u32	7	7	0	0	0	0	1	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXSetCopyFilter	7	6	1	0	0	0	3	dolphin/gx/GXFrameBuffer.h
+GX	GXSetTevKColorSel	7	3	1	0	3	0	5	dolphin/gx/GXTev.h
+GX	GXSetTexCopyDst	7	6	1	0	0	0	4	dolphin/gx/GXFrameBuffer.h
+GX	GXSetTexCopySrc	7	6	1	0	0	0	4	dolphin/gx/GXFrameBuffer.h
+OS	OSIsThreadTerminated	7	6	1	0	0	0	6	dolphin/os/OSThread.h
+MTX (paired-single)	PSMTXIdentity	7	5	1	0	1	0	6	dolphin/mtx.h
+VI	VIGetRetraceCount	7	0	7	0	0	0	3	dolphin/vi/vifuncs.h
+CARD	CARDClose	6	6	0	0	0	0	1	dolphin/card/CARDOpen.h
+DSP	DSPSendMailToDSP	6	0	6	0	0	0	2	dolphin/dsp.h
+DVD	DVDConvertPathToEntrynum	6	3	3	0	0	0	5	dolphin/dvd.h
+GX	GXColor1x8	6	6	0	0	0	0	1	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXInvalidateTexAll	6	5	0	0	1	0	3	dolphin/gx/GXTexture.h
+GX	GXSetDrawSync	6	6	0	0	0	0	3	dolphin/gx.h
+GX	GXSetTevKAlphaSel	6	3	1	0	2	0	5	dolphin/gx/GXTev.h
+MTX	MTXMultVecSR	6	3	3	0	0	0	4	dolphin/mtx.h
+OS	OSInitMutex	6	1	5	0	0	0	5	dolphin/os/OSMutex.h
+OS	OSProtectRange	6	2	4	0	0	0	2	dolphin/os/OSMemory.h
+OS	OSSetErrorHandler	6	0	6	0	0	0	1	dolphin/os/OSError.h
+OS	OSYieldThread	6	5	1	0	0	0	4	dolphin/os/OSThread.h
+MTX (C)	C_MTXLightPerspective	5	3	2	0	0	0	3	dolphin/mtx.h
+GD	GDSetBlendMode	5	1	3	1	0	0	3	dolphin/gd/GDPixel.h
+GX	GXCmd1u16	5	3	2	0	0	0	2	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXDrawDone	5	4	0	0	1	0	2	dolphin/gx/GXManage.h
+GX	GXPixModeSync	5	5	0	0	0	0	3	dolphin/gx/GXManage.h
+GX	GXSetIndTexMtx	5	2	3	0	0	0	4	dolphin/gx/GXBump.h
+GX	GXSetTevColorS10	5	3	1	0	1	0	3	dolphin/gx/GXTev.h
+OS	OSCancelThread	5	0	2	0	3	0	5	dolphin/os/OSThread.h
+OS	OSErrorLine	5	0	2	3	0	0	3	dolphin/os.h
+OS	OSPhysicalToCached	5	0	5	0	0	0	3	dolphin/os.h
+OS	OSSuspendThread	5	0	0	0	5	0	3	dolphin/os/OSThread.h
+VI	VIGetNextField	5	0	1	0	4	0	2	dolphin/vi/vifuncs.h
+VI	VISetBlack	5	1	4	0	0	0	3	dolphin/vi/vifuncs.h
+ARQ	ARQPostRequest	4	0	4	0	0	0	2	dolphin/ar.h
+DSP	DSPCheckMailFromDSP	4	0	4	0	0	0	3	dolphin/dsp.h
+DVD	DVDChangeDir	4	4	0	0	0	0	2	dolphin/dvd.h
+DVD	DVDGetDriveStatus	4	1	3	0	0	0	2	dolphin/dvd.h
+GD	GDBegin	4	4	0	0	0	0	2	dolphin/gd/GDGeometry.h
+GD	GDEnd	4	4	0	0	0	0	2	dolphin/gd/GDGeometry.h
+GD	GDFlushCurrToMem	4	2	2	0	0	0	4	dolphin/gd/GDBase.h
+GD	GDInitGDLObj	4	2	2	0	0	0	4	dolphin/gd/GDBase.h
+GD	GDPadCurr32	4	2	2	0	0	0	4	dolphin/gd/GDBase.h
+GD	GDSetAlphaCompare	4	0	3	1	0	0	2	dolphin/gd/GDTev.h
+GD	GDSetCullMode	4	4	0	0	0	0	1	dolphin/gd/GDGeometry.h
+GD	GDSetDstAlpha	4	4	0	0	0	0	1	dolphin/gd/GDPixel.h
+GX	GXColor3u8	4	4	0	0	0	0	1	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXGetTexBufferSize	4	3	1	0	0	0	4	dolphin/gx/GXTexture.h
+GX	GXInitLightAttn	4	3	0	1	0	0	2	dolphin/gx/GXLighting.h
+GX	GXInvalidateVtxCache	4	3	1	0	0	0	3	dolphin/gx/GXGeometry.h
+GX	GXSetCoPlanar	4	2	2	0	0	0	4	dolphin/gx/GXCull.h
+GX	GXSetDither	4	2	2	0	0	0	4	dolphin/gx/GXPixel.h
+GX	GXSetIndTexOrder	4	2	2	0	0	0	3	dolphin/gx/GXBump.h
+GX	GXSetPixelFmt	4	2	1	0	1	0	3	dolphin/gx/GXPixel.h
+GX	GXSetPointSize	4	1	3	0	0	0	3	dolphin/gx/GXGeometry.h
+OS	OSGetCurrentThread	4	0	4	0	0	0	3	dolphin/os/OSThread.h
+OS	OSGetProgressiveMode	4	4	0	0	0	0	2	dolphin/os/OSRtc.h
+OS	OSSignalCond	4	4	0	0	0	0	1	dolphin/os/OSMutex.h
+MTX (paired-single)	PSVECCrossProduct	4	4	0	0	0	0	1	dolphin/mtx.h
+VI	VIFlush	4	1	3	0	0	0	3	dolphin/vi/vifuncs.h
+VI	VI_TVMODE	4	4	0	0	0	0	1	dolphin/vi/vitypes.h
+AI	AISetStreamVolLeft	3	0	3	0	0	0	1	dolphin/ai.h
+AI	AISetStreamVolRight	3	0	3	0	0	0	1	dolphin/ai.h
+AR	ARAlloc	3	0	3	0	0	0	1	dolphin/ar.h
+DSP	DSPReadMailFromDSP	3	0	3	0	0	0	3	dolphin/dsp.h
+DVD	DVDGetCommandBlockStatus	3	0	3	0	0	0	2	dolphin/dvd.h
+GD	GDSetBlendModeEtc	3	3	0	0	0	0	1	dolphin/gd/GDPixel.h
+GX	GXDrawCube	3	3	0	0	0	0	1	dolphin/gx/GXDraw.h
+GX	GXInitTexCacheRegion	3	0	3	0	0	0	1	dolphin/gx/GXTexture.h
+GX	GXSetTevIndWarp	3	3	0	0	0	0	2	dolphin/gx/GXBump.h
+GX	GXSetTevIndirect	3	0	3	0	0	0	2	dolphin/gx/GXBump.h
+OS	OSCheckStopwatch	3	1	0	2	0	0	2	dolphin/os/OSStopwatch.h
+OS	OSInitFastCast	3	1	2	0	0	0	3	dolphin/os.h
+OS	OSSetProgressiveMode	3	3	0	0	0	0	2	dolphin/os/OSRtc.h
+OS	OSSetSoundMode	3	3	0	0	0	0	1	dolphin/os.h
+OS	OSStartStopwatch	3	3	0	0	0	0	1	dolphin/os/OSStopwatch.h
+OS	OSStopStopwatch	3	3	0	0	0	0	1	dolphin/os/OSStopwatch.h
+OS	OSTicksToMilliseconds	3	2	0	1	0	0	2	dolphin/os.h
+AI	AIInitDMA	2	0	2	0	0	0	1	dolphin/ai.h
+AI	AISetStreamPlayState	2	0	2	0	0	0	1	dolphin/ai.h
+CARD	CARDGetFileNo	2	2	0	0	0	0	1	dolphin/card.h
+CARD	CARDGetStatus	2	2	0	0	0	0	1	dolphin/card/CARDStat.h
+CARD	CARDSetIconFormat	2	2	0	0	0	0	1	dolphin/card.h
+CARD	CARDSetIconSpeed	2	2	0	0	0	0	1	dolphin/card.h
+DVD	DVDCheckDisk	2	2	0	0	0	0	1	dolphin/dvd.h
+DVD	DVDFastOpen	2	0	2	0	0	0	2	dolphin/dvd.h
+DVD	DVDPrepareStreamAsync	2	0	2	0	0	0	1	dolphin/dvd.h
+DVD	DVDReadAsync	2	0	2	0	0	0	1	dolphin/dvd.h
+DVD	DVDReadAsyncPrio	2	0	2	0	0	0	2	dolphin/dvd.h
+DVD	DVDStopStreamAtEndAsync	2	0	2	0	0	0	1	dolphin/dvd.h
+GD	GDGetCurrOffset	2	1	1	0	0	0	2	dolphin/gd/GDBase.h
+GD	GDGetCurrPointer	2	0	2	0	0	0	1	dolphin/gd/GDBase.h
+GD	GDSetChanCtrl	2	2	0	0	0	0	1	dolphin/gd/GDLight.h
+GD	GDSetGenMode2	2	1	1	0	0	0	2	dolphin/gd/GDGeometry.h
+GD	GDSetVtxDescv	2	1	1	0	0	0	2	dolphin/gd/GDGeometry.h
+GX	GXClearPixMetric	2	2	0	0	0	0	1	dolphin/gx/GXPerf.h
+GX	GXEnableBreakPt	2	2	0	0	0	0	1	dolphin/gx/GXFifo.h
+GX	GXFlush	2	1	1	0	0	0	2	dolphin/gx/GXManage.h
+GX	GXGetLightColor	2	0	1	1	0	0	2	dolphin/gx/GXGet.h
+GX	GXGetYScaleFactor	2	0	2	0	0	0	1	dolphin/gx/GXFrameBuffer.h
+GX	GXInitLightAttnA	2	2	0	0	0	0	2	dolphin/gx/GXLighting.h
+GX	GXInitLightShininess	2	2	0	0	0	0	1	dolphin/gx/GXLighting.h
+GX	GXInitSpecularDir	2	2	0	0	0	0	1	dolphin/gx/GXLighting.h
+GX	GXInitTlutObj	2	0	2	0	0	0	1	dolphin/gx/GXTexture.h
+GX	GXNormal3f32	2	2	0	0	0	0	1	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXParam1u16	2	2	0	0	0	0	1	dolphin/gx/GXVert.h (macro-generated WGPipe writers)
+GX	GXSetCopyClamp	2	0	2	0	0	0	2	dolphin/gx/GXFrameBuffer.h
+GX	GXSetCopyClear	2	1	1	0	0	0	2	dolphin/gx/GXFrameBuffer.h
+GX	GXSetDispCopyGamma	2	0	1	0	1	0	2	dolphin/gx/GXFrameBuffer.h
+GX	GXSetFog	2	2	0	0	0	0	2	dolphin/gx/GXPixel.h
+OS	OSCachedToUncached	2	0	2	0	0	0	1	dolphin/os.h
+OS	OSCheckHeap	2	0	0	2	0	0	1	dolphin/os/OSAlloc.h
+OS	OSCreateHeap	2	0	2	0	0	0	1	dolphin/os/OSAlloc.h
+OS	OSDestroyHeap	2	0	2	0	0	0	1	dolphin/os/OSAlloc.h
+OS	OSGetArenaHi	2	0	2	0	0	0	2	dolphin/os.h
+OS	OSGetFontEncode	2	0	2	0	0	0	1	dolphin/os/OSFont.h
+OS	OSGetSoundMode	2	2	0	0	0	0	2	dolphin/os.h
+OS	OSJamMessage	2	0	1	1	0	0	2	dolphin/os/OSMessage.h
+OS	OSTryLockMutex	2	2	0	0	0	0	1	dolphin/os/OSMutex.h
+OS	OSf32tos8	2	0	2	0	0	0	1	dolphin/os.h
+MTX (paired-single)	PSMTXMultVec	2	2	0	0	0	0	2	dolphin/mtx.h
+MTX (paired-single)	PSMTXTrans	2	2	0	0	0	0	1	dolphin/mtx.h
+VI	VIConfigure	2	0	2	0	0	0	2	dolphin/vi/vifuncs.h
+VI	VISetNextFrameBuffer	2	0	2	0	0	0	2	dolphin/vi/vifuncs.h
+VI	VISetPostRetraceCallback	2	0	0	0	2	0	1	dolphin/vi/vifuncs.h
+AI	AIGetDSPSampleRate	1	0	0	0	1	0	1	dolphin/ai.h
+AI	AIInit	1	0	1	0	0	0	1	dolphin/ai.h
+AI	AIRegisterDMACallback	1	0	1	0	0	0	1	dolphin/ai.h
+AI	AIResetStreamSampleCount	1	0	1	0	0	0	1	dolphin/ai.h
+AI	AISetDSPSampleRate	1	0	1	0	0	0	1	dolphin/ai.h
+AI	AISetStreamSampleRate	1	0	1	0	0	0	1	dolphin/ai.h
+AI	AIStartDMA	1	0	1	0	0	0	1	dolphin/ai.h
+AR	ARGetBaseAddress	1	0	1	0	0	0	1	dolphin/ar.h
+AR	ARGetSize	1	0	1	0	0	0	1	dolphin/ar.h
+AR	ARInit	1	0	1	0	0	0	1	dolphin/ar.h
+ARQ	ARQInit	1	0	1	0	0	0	1	dolphin/ar.h
+CARD	CARDCheck	1	1	0	0	0	0	1	dolphin/card/CARDCheck.h
+CARD	CARDCreate	1	1	0	0	0	0	1	dolphin/card/CARDCreate.h
+CARD	CARDFormat	1	1	0	0	0	0	1	dolphin/card/CARDFormat.h
+CARD	CARDFreeBlocks	1	1	0	0	0	0	1	dolphin/card.h
+CARD	CARDInit	1	1	0	0	0	0	1	dolphin/card.h
+CARD	CARDMount	1	1	0	0	0	0	1	dolphin/card/CARDMount.h
+CARD	CARDOpen	1	1	0	0	0	0	1	dolphin/card/CARDOpen.h
+CARD	CARDProbeEx	1	1	0	0	0	0	1	dolphin/card/CARDMount.h
+CARD	CARDRead	1	1	0	0	0	0	1	dolphin/card/CARDRead.h
+CARD	CARDSetBannerFormat	1	1	0	0	0	0	1	dolphin/card.h
+CARD	CARDSetCommentAddress	1	1	0	0	0	0	1	dolphin/card.h
+CARD	CARDSetIconAddress	1	1	0	0	0	0	1	dolphin/card.h
+CARD	CARDSetIconAnim	1	1	0	0	0	0	1	dolphin/card.h
+CARD	CARDSetStatus	1	1	0	0	0	0	1	dolphin/card/CARDStat.h
+CARD	CARDUnmount	1	1	0	0	0	0	1	dolphin/card/CARDMount.h
+CARD	CARDWrite	1	1	0	0	0	0	1	dolphin/card/CARDWrite.h
+MTX (C)	C_MTXLightFrustum	1	1	0	0	0	0	1	dolphin/mtx.h
+MTX (C)	C_MTXLightOrtho	1	1	0	0	0	0	1	dolphin/mtx.h
+DB	DBClose	1	0	0	0	0	1	1	dolphin/odemuexi/DebuggerDriver.h
+DB	DBInitComm	1	0	0	0	0	1	1	dolphin/odemuexi/DebuggerDriver.h
+DB	DBInitInterrupts	1	0	0	0	0	1	1	dolphin/odemuexi/DebuggerDriver.h
+DB	DBOpen	1	0	0	0	0	1	1	dolphin/odemuexi/DebuggerDriver.h
+DB	DBQueryData	1	0	0	0	0	1	1	dolphin/odemuexi/DebuggerDriver.h
+DB	DBRead	1	0	0	0	0	1	1	dolphin/odemuexi/DebuggerDriver.h
+DB	DBWrite	1	0	0	0	0	1	1	dolphin/odemuexi/DebuggerDriver.h
+OS cache	DCFlushRangeNoSync	1	0	1	0	0	0	1	dolphin/os/OSCache.h
+OS cache	DCZeroRange	1	0	1	0	0	0	1	dolphin/os/OSCache.h
+DSP	DSPAddTask	1	0	1	0	0	0	1	dolphin/dsp.h
+DSP	DSPAssertInt	1	0	1	0	0	0	1	dolphin/dsp.h
+DSP	DSPInit	1	0	1	0	0	0	1	dolphin/dsp.h
+DVD	DVDCancel	1	0	0	0	1	0	1	dolphin/dvd.h
+DVD	DVDCancelStreamAsync	1	0	1	0	0	0	1	dolphin/dvd.h
+DVD	DVDCloseDir	1	0	1	0	0	0	1	dolphin/dvd.h
+DVD	DVDGetStreamPlayAddrAsync	1	0	1	0	0	0	1	dolphin/dvd.h
+DVD	DVDInit	1	1	0	0	0	0	1	dolphin/dvd.h
+DVD	DVDOpenDir	1	0	1	0	0	0	1	dolphin/dvd.h
+DVD	DVDReadDir	1	0	1	0	0	0	1	dolphin/dvd.h
+GD	GDGetCurrent	1	1	0	0	0	0	1	dolphin/gd/GDBase.h
+GD	GDSetArray	1	0	1	0	0	0	1	dolphin/gd/GDGeometry.h
+GD	GDSetArrayRaw	1	0	1	0	0	0	1	dolphin/gd/GDGeometry.h
+GD	GDSetChanMatColor	1	1	0	0	0	0	1	dolphin/gd/GDLight.h
+GD	GDSetCurrOffset	1	0	1	0	0	0	1	dolphin/gd/GDBase.h
+GD	GDSetCurrentMtx	1	1	0	0	0	0	1	dolphin/gd/GDTransform.h
+GD	GDSetLightAttn	1	0	1	0	0	0	1	dolphin/gd/GDLight.h
+GD	GDSetLightColor	1	0	1	0	0	0	1	dolphin/gd/GDLight.h
+GD	GDSetLightDir	1	0	1	0	0	0	1	dolphin/gd/GDLight.h
+GD	GDSetLightPos	1	0	1	0	0	0	1	dolphin/gd/GDLight.h
+GD	GDSetOverflowCallback	1	1	0	0	0	0	1	dolphin/gd/GDBase.h
+GD	GDSetTevOp	1	1	0	0	0	0	1	dolphin/gd/GDTev.h
+GD	GDSetTevOrder	1	1	0	0	0	0	1	dolphin/gd/GDTev.h
+GD	GDSetVtxAttrFmtv	1	1	0	0	0	0	1	dolphin/gd/GDGeometry.h
+GX	GXCopyDisp	1	0	1	0	0	0	1	dolphin/gx/GXFrameBuffer.h
+GX	GXDisableBreakPt	1	1	0	0	0	0	1	dolphin/gx/GXFifo.h
+GX	GXDrawSphere	1	1	0	0	0	0	1	dolphin/gx/GXDraw.h
+GX	GXGetCPUFifo	1	1	0	0	0	0	1	dolphin/gx/GXFifo.h
+GX	GXGetFifoPtrs	1	1	0	0	0	0	1	dolphin/gx/GXFifo.h
+GX	GXGetNumXfbLines	1	0	1	0	0	0	1	dolphin/gx/GXFrameBuffer.h
+GX	GXGetProjectionv	1	1	0	0	0	0	1	dolphin/gx/GXGet.h
+GX	GXGetTexObjAll	1	0	1	0	0	0	1	dolphin/gx/GXGet.h
+GX	GXGetTexObjHeight	1	1	0	0	0	0	1	dolphin/gx/GXGet.h
+GX	GXGetTexObjWidth	1	1	0	0	0	0	1	dolphin/gx/GXGet.h
+GX	GXGetViewportv	1	1	0	0	0	0	1	dolphin/gx/GXGet.h
+GX	GXInit	1	1	0	0	0	0	1	dolphin/gx/GXManage.h
+GX	GXInitLightAttnK	1	1	0	0	0	0	1	dolphin/gx/GXLighting.h
+GX	GXInitLightDistAttn	1	1	0	0	0	0	1	dolphin/gx/GXLighting.h
+GX	GXInitTexObjCI	1	0	1	0	0	0	1	dolphin/gx/GXTexture.h
+GX	GXLoadNrmMtxIndx3x3	1	0	1	0	0	0	1	dolphin/gx/GXTransform.h
+GX	GXLoadPosMtxIndx	1	0	1	0	0	0	1	dolphin/gx/GXTransform.h
+GX	GXLoadTlut	1	0	1	0	0	0	1	dolphin/gx/GXTexture.h
+GX	GXPeekARGB	1	1	0	0	0	0	1	dolphin/gx/GXCpu2Efb.h
+GX	GXPeekZ	1	1	0	0	0	0	1	dolphin/gx/GXCpu2Efb.h
+GX	GXPokeAlphaRead	1	1	0	0	0	0	1	dolphin/gx/GXCpu2Efb.h
+GX	GXProject	1	1	0	0	0	0	1	dolphin/gx/GXTransform.h
+GX	GXReadPixMetric	1	1	0	0	0	0	1	dolphin/gx/GXPerf.h
+GX	GXSetDispCopyDst	1	0	1	0	0	0	1	dolphin/gx/GXFrameBuffer.h
+GX	GXSetDispCopyFrame2Field	1	0	1	0	0	0	1	dolphin/gx/GXFrameBuffer.h
+GX	GXSetDispCopySrc	1	0	1	0	0	0	1	dolphin/gx/GXFrameBuffer.h
+GX	GXSetDispCopyYScale	1	0	1	0	0	0	1	dolphin/gx/GXFrameBuffer.h
+GX	GXSetDrawDone	1	1	0	0	0	0	1	dolphin/gx/GXManage.h
+GX	GXSetDrawSyncCallback	1	1	0	0	0	0	1	dolphin/gx.h
+GX	GXSetFieldMode	1	0	1	0	0	0	1	dolphin/gx/GXPixel.h
+GX	GXSetFogRangeAdj	1	1	0	0	0	0	1	dolphin/gx/GXPixel.h
+GX	GXSetViewportJitter	1	0	1	0	0	0	1	dolphin/gx/GXTransform.h
+GX	GXSetVtxAttrFmtv	1	1	0	0	0	0	1	dolphin/gx/GXGeometry.h
+GX	GXSetZTexture	1	1	0	0	0	0	1	dolphin/gx/GXTev.h
+GX	GXWaitDrawDone	1	1	0	0	0	0	1	dolphin/gx/GXManage.h
+OS cache	LCDisable	1	0	0	0	1	0	1	dolphin/os/OSCache.h
+OS cache	LCEnable	1	0	0	0	1	0	1	dolphin/os/OSCache.h
+OS	OSAllocFromHeap	1	0	1	0	0	0	1	dolphin/os/OSAlloc.h
+OS	OSDetachThread	1	0	1	0	0	0	1	dolphin/os/OSThread.h
+OS	OSDumpHeap	1	0	0	1	0	0	1	dolphin/os/OSAlloc.h
+OS	OSEnableScheduler	1	0	1	0	0	0	1	dolphin/os/OSThread.h
+OS	OSExitThread	1	0	1	0	0	0	1	dolphin/os/OSThread.h
+OS	OSFillFPUContext	1	0	1	0	0	0	1	dolphin/os/OSContext.h
+OS	OSFreeToHeap	1	0	1	0	0	0	1	dolphin/os/OSAlloc.h
+OS	OSGetArenaLo	1	0	1	0	0	0	1	dolphin/os.h
+OS	OSGetFontTexture	1	0	1	0	0	0	1	dolphin/os/OSFont.h
+OS	OSGetFontWidth	1	0	1	0	0	0	1	dolphin/os/OSFont.h
+OS	OSGetResetSwitchState	1	0	1	0	0	0	1	dolphin/os/OSResetSW.h
+OS	OSGetThreadPriority	1	0	1	0	0	0	1	dolphin/os/OSThread.h
+OS	OSInitAlloc	1	0	1	0	0	0	1	dolphin/os/OSAlloc.h
+OS	OSInitCond	1	1	0	0	0	0	1	dolphin/os/OSMutex.h
+OS	OSInitFont	1	0	1	0	0	0	1	dolphin/os/OSFont.h
+OS	OSInitStopwatch	1	1	0	0	0	0	1	dolphin/os/OSStopwatch.h
+OS	OSInitThreadQueue	1	0	1	0	0	0	1	dolphin/os/OSThread.h
+OS	OSReferentSize	1	0	0	1	0	0	1	dolphin/os/OSAlloc.h
+OS	OSResetStopwatch	1	1	0	0	0	0	1	dolphin/os/OSStopwatch.h
+OS	OSResetSystem	1	1	0	0	0	0	1	dolphin/__start.h
+OS	OSRoundDown32B	1	0	1	0	0	0	1	dolphin/os.h
+OS	OSRoundUp32B	1	0	1	0	0	0	1	dolphin/os.h
+OS	OSSetArenaHi	1	0	1	0	0	0	1	dolphin/os.h
+OS	OSSetArenaLo	1	0	1	0	0	0	1	dolphin/os.h
+OS	OSSleepThread	1	0	1	0	0	0	1	dolphin/os/OSThread.h
+OS	OSTicksToCalendarTime	1	1	0	0	0	0	1	dolphin/os.h
+OS	OSWaitCond	1	1	0	0	0	0	1	dolphin/os/OSMutex.h
+OS	OSWakeupThread	1	0	1	0	0	0	1	dolphin/os/OSThread.h
+PAD	PADClamp	1	0	1	0	0	0	1	dolphin/pad.h
+PAD	PADInit	1	0	1	0	0	0	1	dolphin/pad.h
+PAD	PADRead	1	0	1	0	0	0	1	dolphin/pad.h
+PAD	PADRecalibrate	1	0	1	0	0	0	1	dolphin/pad.h
+PAD	PADReset	1	0	1	0	0	0	1	dolphin/pad.h
+PAD	PADSetAnalogMode	1	0	0	1	0	0	1	dolphin/pad.h
+PAD	PADSetSpec	1	0	1	0	0	0	1	dolphin/pad.h
+OS/PPC	PPCMfmsr	1	0	1	0	0	0	1	dolphin/base/PPCArch.h
+OS/PPC	PPCSync	1	0	1	0	0	0	1	dolphin/base/PPCArch.h
+MTX (paired-single)	PSMTXInverse	1	1	0	0	0	0	1	dolphin/mtx.h
+MTX (paired-single)	PSMTXRotAxisRad	1	1	0	0	0	0	1	dolphin/mtx.h
+MTX (paired-single)	PSMTXRotRad	1	1	0	0	0	0	1	dolphin/mtx.h
+MTX (paired-single)	PSMTXScale	1	1	0	0	0	0	1	dolphin/mtx.h
+MTX (paired-single)	PSVECMag	1	1	0	0	0	0	1	dolphin/mtx.h
+MTX (paired-single)	PSVECSquareDistance	1	1	0	0	0	0	1	dolphin/mtx.h
+THP	THPAudioDecode	1	0	0	0	1	0	1	dolphin/thp.h
+THP	THPInit	1	0	0	0	1	0	1	dolphin/thp.h
+THP	THPVideoDecode	1	0	0	0	1	0	1	dolphin/thp.h
+VI	VIGetDTVStatus	1	1	0	0	0	0	1	dolphin/vi/vifuncs.h
+VI	VIInit	1	1	0	0	0	0	1	dolphin/vi/vifuncs.h
