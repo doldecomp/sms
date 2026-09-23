@@ -139,7 +139,11 @@ void JPABaseField::affect(JPAParticle* particle)
 // at the top of the named block. Only a dead `u8*` or a pointer alias
 // (`JSUInputStream* ps` declared first, `stream = *ps`) lands it, both
 // rejected as fabricated; a pointer-typed stream, chained `>>` (changes the
-// code), and a named data pointer or size are inert or worse.
+// code), and a named data pointer or size are inert or worse.  Four named
+// s16 fade locals land the frame but give each read its own slot (retail
+// reuses 0x34 for all four); four scoped `s16 value` blocks land the frame
+// but move the stream to 0x28; an f32 temp and a `readFixed` helper are inert
+// or worse.
 void JPABaseField::loadFieldBlock(JPADataBlock* block)
 {
 	s16 value;
@@ -206,17 +210,16 @@ void JPAAirField::set()
 			unk58.set(unk18);
 	}
 }
-// TODO: 96.5%.  Three residues, none of them a wrong statement: (1) the x
-// component of the `diff.sub(...)` pair loads the subtrahend first in retail
+// TODO: two residues, none of them a wrong statement: (1) the x component
+// of the `diff.sub(...)` pair loads the subtrahend first in retail
 // (`0x58(r30)` then `0x20(r31)`) and the minuend first for us, with the `0x5c`
-// load one slot early -- a schedule difference inside the shared `cross`/`sub`
-// body, whose spelling was already measured tree-wide in JGVec3.hpp; (2) an
-// f4/f5 swap around the inlined `inv_sqrt`; (3) `vec` sits at 0x28(r1) in
-// retail against our 0x20 although the frame total matches at 0x68, i.e.
-// retail has 8 more bytes of low region below it.  Structural pass 167 tried
-// hoisting `vec` to function scope: that puts it at 0x38 (too high, retail is
-// 0x28), so retail's `vec` is block-scoped as written here and the 8 bytes are
-// an inline temp, not a declaration.
+// load one slot early -- a schedule difference inside the shared `sub` body
+// (set-then-sub, and sub straight into `dir`, are worse); (2) `vec` sits at
+// 0x28(r1) in retail against our 0x20 although the frame total matches at
+// 0x68, i.e. retail has 8 more bytes of low region below it.  Hoisting `vec`
+// to function scope puts it at 0x38 (structural pass 167), and a checkStatus
+// binder at any one of the three sites costs +8 of frame.  Normalising a
+// copy (`dir.set(diff); dir.normalize();`) fixed the old f4/f5 swap.
 void JPAAirField::affect(JPAParticle* particle)
 {
 	if (checkStatus(STATUS_AIR_CONE)) {
@@ -228,7 +231,8 @@ void JPAAirField::affect(JPAParticle* particle)
 		}
 
 		JGeometry::TVec3<f32> dir;
-		dir.normalize(diff);
+		dir.set(diff);
+		dir.normalize();
 		if (unk70.dot(dir) >= unk64.x)
 			calcFieldVelocity(particle);
 	} else {
