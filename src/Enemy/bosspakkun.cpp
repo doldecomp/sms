@@ -1322,6 +1322,8 @@ const char** TBossPakkun::getBasNameTable() const { return bosspakkun_bastable; 
 
 void TBossPakkun::setGroundCollision()
 {
+	// Declared first: retail's named block holds `mtx` above `nerve`.
+	JGeometry::SMatrix34C<f32> mtx;
 	// Retail compares `cmplw nerve, instance`. Naming the instance keeps
 	// theNerve() from being CSE'd above its static-init guard, then the
 	// `getLatestNerve() == named` compare emits retail's operand order.
@@ -1334,7 +1336,6 @@ void TBossPakkun::setGroundCollision()
 	if (!mMapCollisionManager)
 		return;
 
-	JGeometry::SMatrix34C<f32> mtx;
 	mtx.set(getModel()->getAnmMtx(2));
 	if (mMapCollisionManager->unk8)
 		mMapCollisionManager->getUnk8()->moveMtx(mtx);
