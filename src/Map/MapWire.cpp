@@ -97,6 +97,10 @@ void TMapWire::drawLower() const
 
 // TODO: frame is 0x40, retail 0x58; helpers on the start/end points, a
 // const getPoint(), and TVec2/TVec3 offset locals were inert or wrong.
+// lever-search closes it only with a mixed spelling (a named
+// `startPoint` ref for the first vertex's x/z, getStartPoint() elsewhere):
+// docs/progress/lever-search/mapwire_drawupper.patch. Not applied as
+// implausible; addPoint/subPoint on either spelling stays at 99.9.
 void TMapWire::drawUpper() const
 {
 	f32 xOffset = mDrawAxes.x;
