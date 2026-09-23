@@ -21,12 +21,6 @@ u32 TMapCollisionData::getEntryID()
 	return result;
 }
 
-// Pragma residue (sweep 360): protects TMapCollisionData::addCheckDataToGrid
-// (91.4 -> 11.2), the only caller of these list helpers. allocCheckList is 10
-// statements against the depth-1 budget of 14.
-// TODO (cc38): fillers before `return result;` put the gap at four
-// statements.
-#pragma dont_inline on
 TBGCheckList* TMapCollisionData::allocCheckList(int kind, int count)
 {
 	TBGCheckList* result;
@@ -46,31 +40,24 @@ TBGCheckList* TMapCollisionData::allocCheckList(int kind, int count)
 	}
 	return result;
 }
-#pragma dont_inline off
 
 TBGCheckList* TMapCollisionData::getListRoot(int i, int j, int kind,
                                              int param_4) const
 {
-	TBGCheckList* result;
 	switch (kind) {
 	case TMapCollisionBase::KIND_WARP:
 	case TMapCollisionBase::KIND_STATIC:
-		result = &unk14[j + i * unk8].unk0[param_4];
-		break;
+		return &unk14[j + i * unk8].unk0[param_4];
 	case TMapCollisionBase::KIND_MOVE:
-		result = &unk18[j + i * unk8].unk0[param_4];
-		break;
+		return &unk18[j + i * unk8].unk0[param_4];
 	default:
-		result = nullptr;
-		break;
+		return nullptr;
 	}
-	return result;
 }
 
-// TODO (cc38): measured per function with fillers, addAfterPreNode needs six
-// more statements and each of the three add*Node walkers at least one more;
-// the walkers sit at depth 2 under the inlined UNUSED addCheckDataToList.
-#pragma dont_inline on
+// addCheckDataToGrid reaches these walkers, allocCheckList and addAfterPreNode
+// at depth 2 through the inlined UNUSED addCheckDataToList, so they stay calls
+// there; the out-of-line addCheckDataToList expands them at depth 1.
 static void addAfterPreNode(int param_1, int param_2, TBGCheckList* param_3,
                             TBGCheckList* param_4, int kind)
 {
@@ -130,7 +117,6 @@ static TBGCheckList* addGroundNode(TBGCheckList* param_1, TBGCheckData* param_2)
 	}
 	return param_1;
 }
-#pragma dont_inline off
 
 void TMapCollisionData::addCheckDataToList(int i, int j, int param_3,
                                            int param_4, TBGCheckData* param_5)
@@ -207,29 +193,19 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 	return true;
 }
 
-// TODO: 91.4%. Two independent residues.
-//  - Frame 0xd8 vs retail's 0x108. The 48 bytes are priced: a dead
-//    *non-trivial* 12-byte local (a TVec3, say) inside `getListRoot` lands
-//    0x108 exactly with no instruction change (8 bytes gives 0x100, 16 gives
-//    0x118), and `getListRoot` is UNUSED in the map, so it is a legal carrier
-//    per the batch-69 rule. Nothing in a "fetch the list root" function wants
-//    a 12-byte object, so it is measured and not committed.
-//  - In each of the three copies of the addCheckDataToList block retail's
-//    inlined getListRoot accumulates the address straight into r3 (`lwz r4,
-//    0x14(r31)` for the base, `add r3, r0, r24`, `add r3, r4, r3`) where ours
-//    keeps the base in r3, accumulates in r0 and adds `mr r3, r0`. Measured:
-//    splitting `TBGCheckList* list;` from its assignment is +0; spelling
-//    `addGroundNode(getListRoot(...), param_1)` in each switch arm expands
-//    getListRoot three times per block (46.7%, 511 instructions); reusing one
-//    `list2` variable for the root and the node is 86.8% and +10 instructions.
-//    The addGroundNode/addRoofNode/addWallNode trio really are file-static
-//    free functions (the map mangles them `__FP12TBGCheckList...`), which is
-//    why the root has to reach r3 and not r4.
-//  - The UNUSED out-of-line addCheckDataToList is 0x27c against our 0x124,
-//    but that is the same depth artifact as enemyAttachment's `generate`: at
-//    depth 1 the out-of-line copy expands helpers that the three inlined
-//    copies here reach at depth 2 and call. It is not evidence of missing
-//    statements.
+// TODO: 93.1%. Retail calls the UNUSED addCheckDataToList at each of the
+// three sites, which expands the UNUSED getListRoot at depth 2 and keeps the
+// list helpers as calls.
+//  - Frame 0xd0 against retail's 0x108: 0x38 bytes of dead low region below
+//    the four getGridArea outputs (retail 0x50..0x5c).
+//  - The hoisted constants take f31 = 1024.0f, f30 = the int-conversion
+//    magic in retail; ours are swapped.
+//  - The int<->float conversion slots and their scheduling around the two
+//    polygonIsInGrid calls differ (retail's temporaries are allocated in
+//    z1, x1, z0, x0 order, the call's right-to-left argument order).
+//    Declaring the four ints in other orders, spelling the products
+//    constant-first or passing the conversions inline were inert or worse.
+//  - addCheckDataToList out of line is 0x270 against the map's 0x27c.
 void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 {
 	int iVar7 = param_1->getPlaneType();
@@ -242,45 +218,14 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 		for (int i = local_b4; i <= local_b8; ++i) {
 			for (int j = local_ac; j <= local_b0; ++j) {
 				if (kind == TMapCollisionBase::KIND_MOVE) {
-					TBGCheckList* list = getListRoot(i, j, kind, iVar7);
-					TBGCheckList* list2;
-					switch (iVar7) {
-					case 0:
-						list2 = addGroundNode(list, param_1);
-						break;
-					case 1:
-						list2 = addRoofNode(list, param_1);
-						break;
-					case 2:
-						list2 = addWallNode(list, param_1);
-						break;
-					}
-
-					TBGCheckList* list3 = allocCheckList(kind, 1);
-					list3->unk8         = param_1;
-					addAfterPreNode(j, i, list2, list3, kind);
+					addCheckDataToList(i, j, kind, iVar7, param_1);
 				} else if (iVar7 != 2) {
 					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
 					int iVar2 = (i * 1024.0f) - mGridExtentY;
 					int iVar3 = (j + 1) * 1024.0f - mGridExtentX;
 					int iVar4 = j * 1024.0f - mGridExtentX;
 					if (polygonIsInGrid(iVar4, iVar2, iVar3, iVar1, param_1)) {
-						TBGCheckList* list = getListRoot(i, j, kind, iVar7);
-						TBGCheckList* list2;
-						switch (iVar7) {
-						case 0:
-							list2 = addGroundNode(list, param_1);
-							break;
-						case 1:
-							list2 = addRoofNode(list, param_1);
-							break;
-						case 2:
-							list2 = addWallNode(list, param_1);
-							break;
-						}
-						TBGCheckList* list3 = allocCheckList(kind, 1);
-						list3->unk8         = param_1;
-						addAfterPreNode(j, i, list2, list3, kind);
+						addCheckDataToList(i, j, kind, iVar7, param_1);
 					}
 				} else {
 					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
@@ -290,23 +235,7 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 					if (polygonIsInGrid(iVar4 - 80.0f, iVar2 - 80.0f,
 					                    iVar3 + 80.0f, iVar1 + 80.0f,
 					                    param_1)) {
-						TBGCheckList* list = getListRoot(i, j, kind, iVar7);
-						TBGCheckList* list2;
-						switch (iVar7) {
-						case 0:
-							list2 = addGroundNode(list, param_1);
-							break;
-						case 1:
-							list2 = addRoofNode(list, param_1);
-							break;
-						case 2:
-							list2 = addWallNode(list, param_1);
-							break;
-						}
-
-						TBGCheckList* list3 = allocCheckList(kind, 1);
-						list3->unk8         = param_1;
-						addAfterPreNode(j, i, list2, list3, kind);
+						addCheckDataToList(i, j, kind, iVar7, param_1);
 					}
 				}
 			}
