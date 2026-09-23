@@ -198,19 +198,12 @@ void JPABaseEmitter::getEmitterGlobalTranslation(JGeometry::TVec3<f32>& vec)
 	local_3c.mult(mTrans, vec);
 }
 
-// TODO: 98.5%.  Two clusters.  The first (0xad4..0xb30) is a systematic f1/f2
-// swap across the `getTrans`/`getXDir`/`getYDir`/`getZDir` reads; that is the
-// three-temporary `set(a, b, c)` shape in the shared JGRotation3.hpp, whose
-// per-component alternative was already measured tree-wide and refuted there
-// (see the note above `getXDir`).  The second (0xbc8..0xc04) is two extra
-// loads: retail keeps `local_90.y`/`.z` in f2/f3 from the `eio.unk3C.set(...)`
-// copy and reuses them in `local_90 == local_84`, while we reload 0x8c/0x90.
-// Structural pass 167 refuted both rewrites of that statement: the explicit
-// three-argument `eio.unk3C.set(local_90.x, local_90.y, local_90.z)` costs a
-// temp (98.54 -> 96.28, frame 0x118 -> 0x120) and `eio.unk3C = local_90` is
-// worse still (95.34, five opcode diffs).  `operator==` being non-`const` is
-// inert.  So the source statement is right and the residue is the same
-// per-function CSE decision as JPABaseField::calcFieldFadeScale.
+// TODO: 99.9%, frame-exact.  The emitter axes read eio.unkCC's columns
+// through `ref()` (non-const `f32&`): the `getXDir`/`getYDir`/`getZDir`
+// header shape (`set(at(), at(), at())`) swaps f1/f2 at every site, raw
+// `mMtx` reads fix the registers but drop 0xc of frame per site.  The one
+// remaining swap is `getTrans`: ref() there fixes it but loses 8 of frame,
+// and every per-component ref/at/raw mix was either wrong-framed or off.
 void JPABaseEmitter::calcEmitterGlobalParams()
 {
 	JPAEmitterInfo& eio = JPAEmitterInfoObj;
@@ -253,9 +246,12 @@ void JPABaseEmitter::calcEmitterGlobalParams()
 	MTXConcat(eio.unk9C, emitterMtx, emitterMtx);
 	emitterMtx.getTrans(eio.unk24);
 
-	eio.unkCC.getXDir(eio.mEmitterAxisX);
-	eio.unkCC.getYDir(eio.mEmitterAxisY);
-	eio.unkCC.getZDir(eio.mEmitterAxisZ);
+	eio.mEmitterAxisX.set(eio.unkCC.ref(0, 0), eio.unkCC.ref(1, 0),
+	                      eio.unkCC.ref(2, 0));
+	eio.mEmitterAxisY.set(eio.unkCC.ref(0, 1), eio.unkCC.ref(1, 1),
+	                      eio.unkCC.ref(2, 1));
+	eio.mEmitterAxisZ.set(eio.unkCC.ref(0, 2), eio.unkCC.ref(1, 2),
+	                      eio.unkCC.ref(2, 2));
 
 	JGeometry::TVec3<f32> local_84(0.0f, 0.0f, 1.0f);
 	JGeometry::TVec3<f32> local_90;
@@ -681,6 +677,9 @@ void JPABaseEmitter::calcCurrentRateTimerStep()
 	}
 }
 
+// TODO: instruction-exact; get_ufloat_1's `s` slot sits at 0x2c (retail
+// 0x24). Inert: raw mRng read, forks over getRandomRF/mChildSpawnRate,
+// eio as JPAGetEmitterInfoPtr() or declared first, `-=` timer spellings.
 int JPABaseEmitter::calcCreateParticle()
 {
 	int numToCreate = 0;
