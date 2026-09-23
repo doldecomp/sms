@@ -57,18 +57,18 @@ static void initMonte()
 	obj->init("SeaIndirect");
 	group->getChildren().push_back(obj);
 
-	if (gpMarDirector->getCurrentStage() == 0
-	    || gpMarDirector->getCurrentStage() == 2
-	    || gpMarDirector->getCurrentStage() == 5
-	    || gpMarDirector->getCurrentStage() == 6) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0
+	    || SMSGetMarDirector()->getCurrentStage() == 2
+	    || SMSGetMarDirector()->getCurrentStage() == 5
+	    || SMSGetMarDirector()->getCurrentStage() == 6) {
 		SMS_LoadParticle("/scene/map/pollution/ms_newfire_b.jpa", 0x1DC);
 		SMS_LoadParticle("/scene/map/pollution/ms_newfire_a.jpa", 0x65);
 	}
 
-	if (gpMarDirector->getCurrentStage() == 1
-	    || gpMarDirector->getCurrentStage() == 3
-	    || gpMarDirector->getCurrentStage() == 5
-	    || gpMarDirector->getCurrentStage() == 7) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1
+	    || SMSGetMarDirector()->getCurrentStage() == 3
+	    || SMSGetMarDirector()->getCurrentStage() == 5
+	    || SMSGetMarDirector()->getCurrentStage() == 7) {
 		SMS_LoadParticle("/scene/map/map/ms_monte_yuge.jpa", 0x156);
 	}
 }
@@ -260,17 +260,17 @@ void TMap::updateDelfino()
 	if (cube != warp->unk8) {
 		if (cube != -1)
 			warp->changeModel(cube);
-		else if (gpMarDirector->getCurrentStage() != 0)
+		else if (SMSGetMarDirector()->getCurrentStage() != 0)
 			warp->changeModel(3);
 	}
 }
 
 void TMap::updateMonte()
 {
-	if (gpMarDirector->getCurrentStage() == 1
-	    || gpMarDirector->getCurrentStage() == 3
-	    || gpMarDirector->getCurrentStage() == 5
-	    || gpMarDirector->getCurrentStage() == 7)
+	if (SMSGetMarDirector()->getCurrentStage() == 1
+	    || SMSGetMarDirector()->getCurrentStage() == 3
+	    || SMSGetMarDirector()->getCurrentStage() == 5
+	    || SMSGetMarDirector()->getCurrentStage() == 7)
 		gpMarioParticleManager->emit(MAP_MAP_MS_MONTE_YUGE,
 		                             &gpMapObjManager->unk44, 1, this);
 }
@@ -283,7 +283,7 @@ static void updateRicco()
 
 void TMap::update()
 {
-	switch (gpMarDirector->mMap) {
+	switch (SMSGetMarDirector()->getCurrentMap()) {
 	case 3:
 		updateRicco();
 		break;
@@ -297,17 +297,17 @@ void TMap::update()
 		break;
 	}
 
-	if (gpMarDirector->unk124 != 0 || gpCamera->isDemoCamera())
+	if (SMSGetMarDirector()->unk124 != 0 || gpCamera->isDemoCamera())
 		return;
 
-	if (gpMarDirector->getCurrentMap() == 0x39
-	    || gpMarDirector->getCurrentMap() == 0x10
+	if (SMSGetMarDirector()->getCurrentMap() == 0x39
+	    || SMSGetMarDirector()->getCurrentMap() == 0x10
 	    || SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
 		return;
 
-	const JGeometry::TVec3<f32>& camPos = gpCamera->getUnk124();
+	const JGeometry::TVec3<f32>& camPos = SMSGetCamera()->getUnk124();
 	f32 height = gpMapObjWave->getHeight(camPos.x, camPos.y, camPos.z);
-	if (height == gpCamera->getUnk124().y || gpCamera->getUnk124().y > height) {
+	if (height == SMSGetCamera()->getUnk124().y || SMSGetCamera()->getUnk124().y > height) {
 		if (!unk20) {
 			unk20 = 1;
 			MSSeCallBack::setWaterCameraFir(false);
