@@ -694,10 +694,10 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// TODO: Frame is right (angle level + rotation Mtx first), but the named block
-// sits 4 low (retail keeps 4 more bytes of low region), and the side vector and
-// `pt` take callee-saved FPRs mirrored (retail side.x f29, pt.x f31). Cross
-// clones, pt as scalars/ctor, setLength and declaration moves were inert or worse.
+// TODO: Stack-exact (angle level on sine and cosine, rotation Mtx first); the
+// side vector and `pt` take callee-saved FPRs mirrored (retail side.x f29,
+// pt.x f31). Cross clones, pt as scalars/ctor/reference, the side as named
+// scalars, setLength and declaration moves were inert or worse.
 void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
                                      JPABaseParticle* particle)
 {
@@ -707,7 +707,7 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
 	f32 sin = JMASSin(JPADrawVisitorAngle(params));
-	f32 cos = JMASCos(params->unk34);
+	f32 cos = JMASCos(JPADrawVisitorAngle(params));
 
 	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
 	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
@@ -859,10 +859,10 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// TODO: Frame is right (angle level + rotation Mtx first), but the named block
-// sits 4 low (retail keeps 4 more bytes of low region), and the side vector and
-// `pt` take callee-saved FPRs mirrored (retail side.x f29, pt.x f31). Cross
-// clones, pt as scalars/ctor, setLength and declaration moves were inert or worse.
+// TODO: Stack-exact (angle level on sine and cosine, rotation Mtx first); the
+// side vector and `pt` take callee-saved FPRs mirrored (retail side.x f29,
+// pt.x f31). Cross clones, pt as scalars/ctor/reference, the side as named
+// scalars, setLength and declaration moves were inert or worse.
 void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
                                           JPABaseParticle* particle)
 {
@@ -872,7 +872,7 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
 	f32 sin = JMASSin(JPADrawVisitorAngle(params));
-	f32 cos = JMASCos(params->unk34);
+	f32 cos = JMASCos(JPADrawVisitorAngle(params));
 
 	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
 	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
