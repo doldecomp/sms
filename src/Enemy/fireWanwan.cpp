@@ -1831,7 +1831,7 @@ void TFireWanwan::bind()
 	}
 
 	if (isFlying() && !checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
-		mVelocity *= getSaveParam2()->mAirFric.get();
+		mVelocity *= getSaveParam2()->mFloorFric.get();
 		mVelocity.y *= -0.05f;
 	}
 }
