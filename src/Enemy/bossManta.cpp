@@ -98,7 +98,11 @@ DEFINE_NERVE_INSTANCE(TNerveMantaAppearDemo)
 // named step reserves slots per expansion, but the unnamed and one-helper-per-
 // vector spellings fuse into fmadds or undershoot (0xf0/0x158/0x190/0x228).
 // Both random picks multiply `nodes * rand` in retail; swapping the operands
-// or casting nodes to f32 was inert or worse.
+// or casting nodes to f32 was inert or worse. Also tried: a per-vector
+// helper over lerp_hack (0x228); a product-returning step helper (0x290,
+// 0x2c8 inside a vector helper); unnamed `v = v + k * (t - v)` or
+// `v = k * (t - v) + v` in a vector helper (0xf0, fmadds). Retail keeps the
+// fsubs/fmuls/fadds split at a frame between those.
 BOOL TNerveMantaMove::execute(TSpineBase<TLiveActor>* spine) const
 {
 	s32 time         = spine->getTime();
@@ -1022,6 +1026,11 @@ void TBossMantaManager::TMantaMessageState::update()
 	}
 }
 
+// TODO: instructions exact; the inlined ctor's `this` sits at 0x4c against
+// retail's 0x50, and the list iterator temps 4-0xc low (iterator stride).
+// `add(this)` binds the ctor's own `this` slot as retail does; the named
+// group closes the frame. Inert: a named col for the new, a raw hit-flag
+// clear; getChildren().push_back(this) adds a copy of `this`.
 TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 {
 	unkC = nullptr;
@@ -1029,16 +1038,21 @@ TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 		unk0[i] = new TBossMantaAdditionalCollision("マンタ追加コリジョン");
 }
 
+// TODO: frame 0x78 against retail's 0x80 (each getScaling() site reserves
+// 8; raw mScaling gives 0x38), and each radius product colours the literal
+// f1 and the scale f0 where retail has f0/f1. Inert: operands swapped, a
+// named radius as in setCollision, a TU helper taking (col, radius, scale),
+// setManta unrolled or through a named col.
 void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
 {
 	unkC = manta;
 
-	unk0[0]->setHitParams(54.0f * unkC->mScaling.x, 100.0f,
-	                      54.0f * unkC->mScaling.x, 100.0f);
-	unk0[1]->setHitParams(26.0f * unkC->mScaling.x, 100.0f,
-	                      26.0f * unkC->mScaling.x, 100.0f);
-	unk0[2]->setHitParams(26.0f * unkC->mScaling.x, 100.0f,
-	                      26.0f * unkC->mScaling.x, 100.0f);
+	unk0[0]->setHitParams(54.0f * unkC->getScaling().x, 100.0f,
+	                      54.0f * unkC->getScaling().x, 100.0f);
+	unk0[1]->setHitParams(26.0f * unkC->getScaling().x, 100.0f,
+	                      26.0f * unkC->getScaling().x, 100.0f);
+	unk0[2]->setHitParams(26.0f * unkC->getScaling().x, 100.0f,
+	                      26.0f * unkC->getScaling().x, 100.0f);
 
 	for (int i = 0; i < 3; ++i)
 		unk0[i]->setManta(unkC);
@@ -1109,8 +1123,9 @@ TBossMantaAdditionalCollision::TBossMantaAdditionalCollision(const char* name)
 	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
-	    ->insert(this);
+	TIdxGroupObj* group
+	    = JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ");
+	group->add(this);
 }
 
 BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor* sender,
@@ -1493,13 +1508,17 @@ void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
 		TPosition3f mtx;
 		JGeometry::TVec3<f32> dir(0.0f, 0.0f, 1.0f);
 
-		f32 angle = baseAngle + (2.0f * (f32)i * M_PI) / (f32)count;
+		f32 angle = 2.0f * (f32)i;
+		angle *= M_PI;
+		angle = baseAngle + angle / (f32)count;
 
 		// Retail never sets the translation column: mult's translation adds
 		// read one uninitialised saved FPR, and the unused 0x30 slot sits
 		// between counts and dir.
-		// TODO: 98.8%. dir sits at 0x68 against retail's 0x64, and mult's
+		// TODO: dir sits at 0x68 against retail's 0x64, and mult's
 		// dir.x/dir.z loads and result sums take swapped volatile FPRs.
+		// Inert: dir declared before mtx, dir.set(), a non-const counts,
+		// count as a pointer, a top `int i`.
 		mtx.setEularY(angle);
 		mtx.mult(dir, dir);
 
