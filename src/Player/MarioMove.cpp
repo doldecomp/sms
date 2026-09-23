@@ -1980,7 +1980,7 @@ void TMario::thinkSituation()
 		if (mAnimationId != ANIM_THROWN)
 			startSoundActor(MSD_SE_MV10B_CRY_JUMP_01);
 		gpCamera->unk64 |= CPolarSubCamera::CAMERA_FLAG_HELL_DEAD_DEMO;
-		gpMarDirector->unk4E |= 0x8;
+		gpMarDirector->onDemoFlag(TMarDirector::DEMO_FLAG_HELL_DEAD);
 		return;
 	}
 

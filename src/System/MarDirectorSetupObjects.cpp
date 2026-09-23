@@ -138,7 +138,7 @@ bool TMarDirector::setupObjects()
 		TFlagManager::getInstance()->setBool(true, 0x30005);
 		if (!TFlagManager::getInstance()->getBool(0x30003)) {
 			TFlagManager::getInstance()->setBool(true, 0x30003);
-			unk4E |= 0x2;
+			onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 		} else {
 			TFlagManager::getInstance()->setBool(true, 0x30000);
 		}
@@ -148,19 +148,19 @@ bool TMarDirector::setupObjects()
 		case 1:
 		case 7:
 		case 9:
-			unk4E |= 0x2;
+			onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			break;
 
 		case 5:
 			if (!TFlagManager::getInstance()->getBool(0x10386)
 			    && TFlagManager::getInstance()->getFlag(0x40000) >= 3) {
 				TFlagManager::getInstance()->setBool(true, 0x50001);
-				unk4E |= 0x2;
+				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 			if (!TFlagManager::getInstance()->getBool(0x10387)
 			    && TFlagManager::getInstance()->getFlag(0x40000) >= 5) {
 				TFlagManager::getInstance()->setBool(true, 0x50002);
-				unk4E |= 0x2;
+				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 			break;
 
@@ -170,24 +170,24 @@ bool TMarDirector::setupObjects()
 			if (!TFlagManager::getInstance()->getBool(0x1038F)
 			    && TFlagManager::getInstance()->getShineFlag(33)) {
 				lVar9 = true;
-				unk4E |= 0x2;
+				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 			if (lVar9 == 0 && !TFlagManager::getInstance()->getNozzleRight(1, 1)
 			    && TFlagManager::getInstance()->getBool(0x1038F)
 			    && iVar6 >= 25) {
 				lVar9 = 2;
-				unk4E |= 0x2;
+				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 			if (lVar9 == 0 && !TFlagManager::getInstance()->getNozzleRight(1, 0)
 			    && TFlagManager::getInstance()->getNozzleRight(1, 1)
 			    && iVar6 >= 30) {
 				lVar9 = 3;
-				unk4E |= 0x2;
+				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 			TFlagManager::getInstance()->setFlag(0x60003, lVar9);
 			if (TFlagManager::getInstance()->getFlag(0x40000) >= 20
 			    && !TFlagManager::getInstance()->getFlag(0x60003)) {
-				unk4E |= 0x2;
+				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 		}
 			// FALLTHROUGH!!!

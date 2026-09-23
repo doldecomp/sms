@@ -137,9 +137,15 @@ public:
 	// fabricated
 	u8 getCurrentMap() { return mMap; }
 	u8 getCurrentStage() { return unk7D; }
-	bool checkUnk4CFlag(int flag) { return unk4C & flag; }
-	void onUnk4CFlag(int flag) { unk4C |= flag; }
-	void offUnk4CFlag(int flag) { unk4C &= ~flag; }
+	BOOL checkFlag(u16 flag) const { return mFlags & flag; }
+	void onFlag(u16 flag) { mFlags |= flag; }
+	void offFlag(u16 flag) { mFlags &= ~flag; }
+	bool checkDemoFlag(int flag) const { return mDemoFlags & flag; }
+	void onDemoFlag(int flag) { mDemoFlags |= flag; }
+	void offDemoFlag(int flag) { mDemoFlags &= ~flag; }
+	BOOL checkTransitionFlag(int flag) const { return mTransitionFlags & flag; }
+	void onTransitionFlag(int flag) { mTransitionFlags |= flag; }
+	void offTransitionFlag(int flag) { mTransitionFlags &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
 	bool isTalkModeNow() const { return unk124 == 1 || unk124 == 2; }
@@ -185,6 +191,36 @@ public:
 		STATE_UNK12      = 12,
 	};
 
+	enum {
+		DIRECTOR_FLAG_SHINE_GET_PENDING                   = 0x1,
+		DIRECTOR_FLAG_STAGE_TRANSITION_PENDING            = 0x2,
+		DIRECTOR_FLAG_ACTOR_DEMO_STAGE_TRANSITION_PENDING = 0x4,
+		DIRECTOR_FLAG_GATE_DEMO_STAGE_TRANSITION_PENDING  = 0x8,
+		DIRECTOR_FLAG_GAME_OVER_PENDING                   = 0x20,
+		DIRECTOR_FLAG_DEMO_PENDING                        = 0x40,
+		DIRECTOR_FLAG_END_DEMO_PENDING                    = 0x80,
+		DIRECTOR_FLAG_MOVIE_PENDING                       = 0x100,
+		DIRECTOR_FLAG_CARD_SAVE_PENDING                   = 0x200,
+		DIRECTOR_FLAG_FIRST_SIMULATION_TICK               = 0x2000,
+		DIRECTOR_FLAG_LAST_SIMULATION_TICK                = 0x4000,
+		DIRECTOR_FLAG_SHINE_TAKEN                         = 0x8000,
+	};
+
+	enum {
+		DEMO_FLAG_SHINE_GET_STOP_THE_WORLD = 0x1,
+		DEMO_FLAG_CAMERA_DEMO_ON_START     = 0x2,
+		DEMO_FLAG_CAMERA_DEMO_WIPE_STARTED = 0x4,
+		DEMO_FLAG_HELL_DEAD                = 0x8,
+	};
+
+	enum {
+		TRANSITION_FLAG_STAGE_BGM_STARTED            = 0x1,
+		TRANSITION_FLAG_GO_BANNER_PENDING            = 0x2,
+		TRANSITION_FLAG_SCENARIO_NAME_BANNER_PENDING = 0x4,
+		TRANSITION_FLAG_OPENING_WIPE_PENDING         = 0x8,
+		TRANSITION_FLAG_RESET_HANDLED                = 0x10,
+	};
+
 	/* 0x18 */ TMarioGamePad** unk18;
 	/* 0x1C */ TPerformList* mPerformListGX;
 	/* 0x20 */ TPerformList* mPerformListSilhouette;
@@ -198,10 +234,10 @@ public:
 	/* 0x40 */ TPerformList* unk40;
 	/* 0x44 */ TPerformList* mShinePfLstMov;
 	/* 0x48 */ TPerformList* mShinePfLstAnm;
-	/* 0x4C */ u16 unk4C;
-	/* 0x4E */ u16 unk4E;
-	/* 0x50 */ u16 unk50;
-	/* 0x54 */ int unk54;
+	/* 0x4C */ u16 mFlags;
+	/* 0x4E */ u16 mDemoFlags;
+	/* 0x50 */ u16 mTransitionFlags;
+	/* 0x54 */ int mPendingSimulationTime;
 	/* 0x58 */ int mMoveTickCount;
 	/* 0x5C */ int mTickCount;
 	/* 0x60 */ int unk60;
@@ -242,14 +278,14 @@ public:
 	/* 0x125 */ u8 unk125;
 	/* 0x126 */ u8 unk126; // Next game state
 	/* 0x128 */ u16 unk128;
-	/* 0x12C */ TDemoInfo unk12C[8];
-	/* 0x24C */ u8 unk24C;
-	/* 0x24D */ u8 unk24D;
+	/* 0x12C */ TDemoInfo mDemoQueue[8];
+	/* 0x24C */ u8 mDemoQueueTail;
+	/* 0x24D */ u8 mDemoQueueHead;
 	/* 0x250 */ JDrama::TActor* unk250;
 	/* 0x254 */ TDemoCannon* unk254;
 	/* 0x258 */ MSStage* unk258;
 	/* 0x25C */ TShine* unk25C;
-	/* 0x260 */ u8 unk260;
+	/* 0x260 */ bool mSetupDone;
 	/* 0x261 */ u8 unk261;
 };
 

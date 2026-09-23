@@ -38,6 +38,13 @@ enum MSBgmSwBit {
 	MSBgmSwBit_YoshiPercussion = 0x10000000,
 };
 
+enum MSSeGate {
+	MSSeGate_None       = 0,
+	MSSeGate_Continuous = 1 << 0,
+	MSSeGate_OneShot    = 1 << 1,
+	MSSeGate_All        = MSSeGate_Continuous | MSSeGate_OneShot,
+};
+
 class MSSeCallBack {
 public:
 	static u16 setParameterSeqSync(JASystem::TTrack*, u16);
@@ -184,7 +191,10 @@ public:
 			startSoundActor(id, position, 0, nullptr, 0, 4);
 	}
 
-	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }
+	bool checkSeGate(MSSeGate gate)
+	{
+		return !(mSeGateMask & gate) ? false : true;
+	}
 
 public:
 #ifdef VERSION_GMSP01
@@ -198,7 +208,7 @@ public:
 	/* 0x9C */ MSBgmXFade* unk9C;
 	/* 0xA0 */ u32 unkA0;
 	/* 0xA4 */ u32 unkA4;
-	/* 0xA8 */ u8 unkA8;
+	/* 0xA8 */ u8 mSeGateMask;
 	/* 0xAC */ JAICamera unkAC[2];
 	/* 0xC4 */ JAISound* unkC4;
 	/* 0xC8 */ u8 unkC8[5];

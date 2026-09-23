@@ -24,7 +24,7 @@ void TMario::soundMovement()
 	bool hasShineHolder = true;
 	u32 curStatus       = mStatus;
 
-	if (SMSGetMSound()->unkA8 & 1)
+	if (SMSGetMSound()->mSeGateMask & MSSeGate_Continuous)
 		mSoundValues.unk18 = 0;
 	else
 		mSoundValues.unk18 = 1;
