@@ -83,6 +83,15 @@
 template class TNameRefPtrAryT<TStageEventInfo>;
 template class TNameRefAryT<TScenarioArchiveName>;
 template class TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >;
+// TODO: TVector<TCameraMapTool>::InsertRaw (60.2%) calls the implicit
+// TCameraMapTool::operator= out of line where retail inlines it into the
+// copy_backward loop; the copied bytes are identical. Measured threshold: the
+// implicit operator= inlines at that depth with the base plus at most five
+// members and not with six (TVec3 vs Vec is irrelevant), while retail's copy
+// shows six distinct pieces (12-byte and 8-byte block copies, then four
+// single words), and grouping any of them into a struct or array changes the
+// copy pattern (93.5-96.7%). TStageEventInfo's operator= must stay out of
+// line, so the __copy_backward level cannot be flattened (see std-vector.hpp).
 template class TNameRefAryT<TCameraMapTool>;
 
 namespace JDrama {
