@@ -375,6 +375,29 @@ public:
 	// a TU-local helper, and the by-value return is free once the copy
 	// constructor is `: Vec(other) {}`. The measured shape and why it is not
 	// in yet (70 regressions) are in docs/catalog/frame-gaps.md.
+	//
+	// Re-measured under the `: Vec(other)` copy constructor (header round
+	// hs), exact functions against 11760, Tongue's `TongueScaledDiff` helper
+	// in every row that changes this operator:
+	//   `operator=` source uncast (`*(Vec*)this = other`) alone
+	//                                       +2 / -0, 24 up, 11 down
+	//   `TVec3 operator-(const Vec*, const TVec3&)`, cast `operator=`
+	//                                       +3 / -6, 71 down
+	//   the same with the uncast `operator=` +15 / -6, 50 down
+	//   ... plus the cc34 site respellings   +15 / -6, 47 down
+	//   `TVec3 operator-(TVec3, const TVec3&)` (by-value return)
+	//                                       +0 / -6 (uncast `=`: +2 / -6)
+	//   `const TVec3&` or `const Vec&` left operand, by-value return
+	//                                       +0 / -6
+	// Nothing goes MISSING (`__ami__` survives through the helper). The best
+	// row still loses soundTorocco (unlinks MarioSound), toroccoEffect,
+	// isTakeSituation, moveRoof, TNerveMameGessoJitabata::execute and
+	// TBaseNPC::execUTurn, and of the class's link blockers it closes only
+	// TWireBinder::bind (wireBinder links); TMarioCap::perform
+	// (99.93 -> 98.49), TMapWireActor::getPosInWire, TBaseNPC::bind,
+	// TSpider::bind, NPCNeckCallBack, THauntLeg::calcRootMatrix and
+	// TMario::moveRequest stay open or regress. The copy-constructor change
+	// cut the regression count (70 -> 50), not the lost set.
 	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
 	{
 		fst -= snd;
