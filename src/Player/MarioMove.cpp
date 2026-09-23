@@ -447,14 +447,18 @@ void TMario::setPlayerJumpSpeed(f32 speed_mult, f32 force)
 	mVel.y = (mForwardVel * speed_mult) + force;
 }
 
+// TODO: the frame is 0x48 short (0x190 against retail's 0x1d8), and retail
+// reloads mSinkTimer for the `-=` in the sinking block; `a = a - x`, a named
+// decrement and swapped factors were inert.
 u32 TMario::setStatusToJumping(u32 status, u32 arg)
 {
 	u32 nextStatus = status;
 
 	unk2BC = mPosition.y;
-	if (mFootPrintTimer > mDeParams.mFootPrintTimerMax.get() / 2)
-		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-		                   mDirtyParams.mPolSizeJump.get());
+	if (mFootPrintTimer > mDeParams.mFootPrintTimerMax.get() / 2) {
+		f32 size = mDirtyParams.mPolSizeJump.get();
+		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, size);
+	}
 
 	switch (status) {
 	case MARIO_STATUS_JUMP:
@@ -616,16 +620,17 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case MARIO_STATUS_TRAMPLE:
 		switch (mAnimationId) {
+		case ANIM_STEP1:
+		default:
+			startVoice(MSD_SE_MV21_JUMP_SMALL_01);
+			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep1.get());
+			break;
 		case ANIM_STEP2:
 			startVoice(MSD_SE_MV22_JUMP_MID_01);
-			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep1.get());
+			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep2.get());
 			break;
 		case ANIM_STEP3:
 			startVoice(MSD_SE_MV23_JUMP_LARGE_01);
-			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep2.get());
-			break;
-		default:
-			startVoice(MSD_SE_MV21_JUMP_SMALL_01);
 			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep3.get());
 			break;
 		}
@@ -645,8 +650,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 
 	case MARIO_STATUS_WIRE_ROLL_JUMP: {
+		// Retail multiplies by 1.0f at run time, so the scale was a variable.
+		f32 scale = 1.0f;
 		if (arg == 0) {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * scale;
 			mVel.y        = jumpPower * JMASSin(0xE000);
 
 			mForwardVel = jumpPower * -JMASCos(0xE000);
@@ -655,7 +662,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			mVel.x      = mSlideVelX;
 			mVel.z      = mSlideVelZ;
 		} else {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * scale;
 			mVel.y        = jumpPower * JMASSin(0x6000);
 
 			mForwardVel = jumpPower * -JMASCos(0x6000);
@@ -699,8 +706,9 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	if (onYoshi()) {
 		mVel.y *= mYoshiParams.mJumpYoshiMult.get();
-		mYoshi->mFlutterState = 0;
-		mYoshi->mFlutterTimer = mYoshi->mMaxFlutterTimer;
+		TYoshi* yoshi         = mYoshi;
+		yoshi->mFlutterState = 0;
+		yoshi->mFlutterTimer = yoshi->mMaxFlutterTimer;
 	}
 
 	unk104 = mPosition.y;
