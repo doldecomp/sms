@@ -562,6 +562,15 @@ s32 TCardManager::open_(CARDFileInfo* file)
 	return result;
 }
 
+// Binding level over a raw member read, worth +16 of low region in
+// TCardManager::writeOptionBlock_ (batch 127) and readBlock_. In writeBlock_
+// it is +0x10 of the +0x18 retail needs, so that site keeps the raw member.
+static inline void* CardManagerSector(const TCardManager* p)
+{
+	void* sector = p->mSector;
+	return sector;
+}
+
 // TODO: retail keeps the inlined TCardSector::read's CARDRead result in its
 // own register (r30) and copies it into result with `mr.`; ours coalesces the
 // two. Swapping read's writeCount/data declarations fixes this function but
@@ -619,7 +628,7 @@ s32 TCardManager::readBlock_(u32 index)
 	if (result != CARD_RESULT_READY)
 		return result;
 
-	TCardSector* sector = (TCardSector*)mSector;
+	TCardSector* sector = (TCardSector*)CardManagerSector(this);
 
 	u32 crit_idx = index * 2 + 1;
 
@@ -702,14 +711,6 @@ s32 TCardManager::writeBlock_(u32 index)
 		unmount_();
 
 	return result;
-}
-
-// Binding level over a raw member read, worth +16 of low region in
-// TCardManager::writeOptionBlock_ (batch 127).
-static inline void* CardManagerSector(const TCardManager* p)
-{
-	void* sector = p->mSector;
-	return sector;
 }
 
 s32 TCardManager::writeOptionBlock_()
