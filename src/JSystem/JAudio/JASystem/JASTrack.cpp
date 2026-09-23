@@ -897,14 +897,12 @@ void TTrack::writeTimeParam(u8 param)
 	}
 }
 
-// TODO: This is pure pain
-// TODO: 100.0% instruction-exact, frame 0x38 against retail's 0x48 -- 16
-// bytes of low region missing (batch 138 closed the body; batch 152 found no
-// lever).  Two binding levels, or one worth +16, over the readByte/readReg
-// results would do it; every receiver-binder shape tried on the register
-// parameter overshoots.  Measured (not landed, shared header): the binder
-// `u8 readByte() { u8 b = *mCurrentFilePtr++; return b; }` in JASSeqCtrl.hpp
-// gives the exact 0x48 frame, leaving only `this` in r31 against retail's r30.
+// Header round: the two switch-case operand reads go through the header
+// accessor getSeq(), +8 each, which lands retail's 0x48 frame exactly.  The
+// pair is frame-determined, not byte-determined: case 0 with case 4 or 8, or
+// the readReg32 operand with case 4 or 8, all compile identically.  A named
+// step in TSeqCtrl::readByte itself also gives 0x48 here but costs 7+ exact
+// functions across JASSeqParser/JASSeqCtrl/JASTrack, so the header stays plain.
 void TTrack::writeRegParam(u8 param)
 {
 
@@ -943,10 +941,10 @@ void TTrack::writeRegParam(u8 param)
 
 	switch (bVar9) {
 	case 0:
-		r24 = readRegDirect(mSeqCtrl.readByte());
+		r24 = readRegDirect(getSeq()->readByte());
 		break;
 	case 4:
-		r24 = mSeqCtrl.readByte();
+		r24 = getSeq()->readByte();
 		break;
 	case 8: {
 		u16 byte = mSeqCtrl.readByte();
