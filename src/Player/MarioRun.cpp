@@ -669,7 +669,7 @@ void TMario::doSurfing()
 		surfingEffect();
 }
 
-// UNUSED (0x6c in the map): braking's deceleration step.
+// UNUSED (0x6c in the map): the deceleration step braking and turnning share.
 // TODO: 0x68 out of line, one instruction short of the map; a body that
 // reloads mForwardVel for the compare reaches 0x6c but adds that reload to
 // moveMain's inlined copy, and the other spellings tried stay at 0x68.
@@ -903,14 +903,7 @@ BOOL TMario::turnning()
 	if (!isRunningTurnning())
 		return changePlayerStatus(MARIO_STATUS_RUN, 0, false);
 
-	BOOL zeroed = false;
-	f32 v       = FConverge(getForwardVel(), 0.0f, 4.0f, 4.0f);
-	mForwardVel = v;
-	if (v == 0.0f)
-		zeroed = true;
-
-	slopeProcess();
-	if (zeroed) {
+	if (doBraking(4.0f)) {
 		mFaceAngle.y = mIntendedYaw;
 		setPlayerVelocity(8.0f);
 		return changePlayerStatus(MARIO_STATUS_TURN_END, 0, false);
