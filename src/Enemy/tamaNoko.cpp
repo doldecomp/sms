@@ -572,21 +572,21 @@ void TTamaNoko::landEffect()
 		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
 			emitter->setGlobalScale(mScaling * 0.8f);
 		}
-	}
-
-	const TBGCheckData* local_10;
-	gpMap->checkGround(mPosition.x, mPosition.y + 500.0f, mPosition.z,
-	                   &local_10);
-	if (local_10 && local_10->isWaterSurface()) {
-		generateEffectColumWater();
 	} else {
-		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-		        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(mScaling * 0.8f);
-		}
-		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-		        PARTICLE_MS_HIPDROP_B, &mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(mScaling * 0.8f);
+		const TBGCheckData* local_10;
+		gpMap->checkGround(mPosition.x, mPosition.y + 500.0f, mPosition.z,
+		                   &local_10);
+		if (local_10 && local_10->isWaterSurface()) {
+			generateEffectColumWater();
+		} else {
+			if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+			        PARTICLE_MS_HIPDROP_C, &mPosition, 0, nullptr)) {
+				emitter->setGlobalScale(mScaling * 0.8f);
+			}
+			if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+			        PARTICLE_MS_HIPDROP_B, &mPosition, 0, nullptr)) {
+				emitter->setGlobalScale(mScaling * 0.8f);
+			}
 		}
 	}
 
@@ -600,7 +600,8 @@ void TTamaNoko::forceSleep()
 {
 	updateSquareToMario();
 	f32 giveUpLen = getSaveParams2()->mSLGiveUpLength.get();
-	if (mDistToMarioSquared > giveUpLen * giveUpLen) {
+	giveUpLen *= giveUpLen;
+	if (mDistToMarioSquared > giveUpLen) {
 		setBckAnm(11);
 		mSpine->reset();
 		mSpine->setNext(mSpine->getDefault());
