@@ -544,8 +544,8 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	unk7C = 0;
 	unk80 = 0;
 #if defined(VERSION_GMSE01)
-	// TODO: retail stores -1 to unk94 (0x94) here; adding it is right but
-	// scores -0.04 until the `this` spill above is fixed.
+	// Retail stores -1 here; costs -0.04 fuzzy until the `this` spill is fixed.
+	unk94 = -1;
 	mWaterFilterOverride = 0;
 	MSSeCallBack::setWaterCameraFir(false);
 #endif
