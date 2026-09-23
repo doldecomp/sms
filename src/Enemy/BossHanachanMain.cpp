@@ -431,6 +431,18 @@ static inline void BossHanachanUpdateBodyRotateZ(TBossHanachan* self)
 	}
 }
 
+static inline void BossHanachanSaveHistory(TBossHanachan* self)
+{
+	for (int i = 0; i < 8; ++i) {
+		TBossHanachanPartsBody* body = self->mBodies[i];
+		body->mOlderPosition = body->mPreviousPosition;
+		body->mPreviousPosition = body->mPosition;
+		body->mOlderRoll = body->mPreviousRoll;
+		body->mPreviousRoll = body->mRotation.z;
+		body->unk148 = body->unk144;
+	}
+}
+
 void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(0x201))
@@ -479,13 +491,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 			moveObject();
 			const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
-			for (int i = 0; i < 8; ++i) {
-				mBodies[i]->mOlderPosition = mBodies[i]->mPreviousPosition;
-				mBodies[i]->mPreviousPosition = mBodies[i]->mPosition;
-				mBodies[i]->mOlderRoll = mBodies[i]->mPreviousRoll;
-				mBodies[i]->mPreviousRoll = mBodies[i]->mRotation.z;
-				mBodies[i]->unk148 = mBodies[i]->unk144;
-			}
+			BossHanachanSaveHistory(this);
 			s16 angle = CLBDegToShortAngle(mBodies[0]->mRotation.y);
 			CLBChaseAngleDecrease(&angle, CLBDegToShortAngle(getRotation().y),
 			                      20);
