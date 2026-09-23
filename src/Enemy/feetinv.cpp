@@ -95,6 +95,10 @@ void FeetInvCalc(J3DModel* model, u16 jnt_hip, u16 jnt_knee, u16 jnt_foot,
 	// TMapCollisionBase::updateTrans and CPolarSubCamera::updateDemoCamera_
 	// (closure batch 83, still unexplained), so this unit is blocked on the
 	// same research item rather than on anything local to it.
+	// Now 96.6%. Also measured (bb11): constructing the three joint
+	// positions with the TVec3 constructor or set() is +0x20 of frame but
+	// 96.0; FeetInvAxisLength as a TVec3 temporary's length() is +0x80 and
+	// 86.8; copy-constructing the ground normal is inert.
 
 	MtxPtr kneeMtx = model->getAnmMtx(jnt_knee);
 	MtxPtr footMtx = model->getAnmMtx(jnt_foot);
