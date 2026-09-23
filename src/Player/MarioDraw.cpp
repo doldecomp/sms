@@ -1520,6 +1520,12 @@ void TMario::finalDrawInitialize()
 		                                  nullptr);
 }
 
+static inline f32 MarioDrawForwardVel(TMario* self)
+{
+	f32 r = self->getForwardVel();
+	return r;
+}
+
 // TODO: instructions match; frame is 0x90 against retail's 0xa8, a uniform
 // 0x18 shift of the low region (the int-to-float slot). A symmetric clamp
 // inline for either block was tried and costs instructions.
@@ -1556,7 +1562,7 @@ void TMario::considerWaist()
 	}
 
 	// Likely clamp inline, but i couldn't find an existing that worked
-	f32 targetPitchCopy = targetPitch * mForwardVel;
+	f32 targetPitchCopy = targetPitch * MarioDrawForwardVel(this);
 	if (targetPitchCopy > maxPitch) {
 		targetPitchCopy = maxPitch;
 	}
@@ -1568,7 +1574,7 @@ void TMario::considerWaist()
 
 	f32 targetRoll;
 	f32 rollMax;
-	s16 diffAngle = mFaceAngle.y - unk9C;
+	s16 diffAngle = mFaceAngle.y - getUnk9C();
 	// Possibly unused get params function?
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
@@ -1596,7 +1602,7 @@ void TMario::considerWaist()
 	}
 
 	// Likely clamp inline, but i couldn't find an existing that worked
-	f32 targetRollCopy = targetRoll * (diffAngle * mForwardVel);
+	f32 targetRollCopy = targetRoll * (diffAngle * getForwardVel());
 	if (targetRollCopy > rollMax) {
 		targetRollCopy = rollMax;
 	}
