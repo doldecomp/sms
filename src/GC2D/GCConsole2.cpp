@@ -2186,10 +2186,17 @@ void TGCConsole2::startCameraDemo()
 // pane set or the timings, so it stays a stub rather than a guess.
 void TGCConsole2::resetMoveTank() { }
 
-// TODO: frame 0xa8, retail 0xc0; the tank block is startAppearTank() inlined
-// (identical code), but retail stacks its three JUTPoint temps top-down with
-// 0x14 more low region below them, where the standalone startAppearTank stacks
-// them bottom-up. Named JUTPoint locals in either order are inert.
+// fabricated: a named-result binder over getPane(). Retail's frame has one
+// more 8-byte low slot than the direct `unk2F8->getPane()->show()`.
+static inline J2DPane* GCConsole2ExPanePane(const TExPane* pane)
+{
+	J2DPane* p = pane->getPane();
+	return p;
+}
+
+// Retail reads the director, the tank pane and the coin pane through their
+// accessors here (+8 of low region each); the tank block is startAppearTank()
+// inlined.
 void TGCConsole2::endCameraDemo()
 {
 	if (unk39 || !unk50)
@@ -2202,7 +2209,7 @@ void TGCConsole2::endCameraDemo()
 
 	unk50 = 0;
 
-	if (!unk2F8->isInterpolatorAtZero())
+	if (!GCConsole2Unk2F8(this)->isInterpolatorAtZero())
 		startAppearTank();
 
 	unk40 = 1;
@@ -2224,17 +2231,9 @@ void TGCConsole2::endCameraDemo()
 		unk426 = 0;
 	}
 
-	if (!gpMarDirector->checkUnk4CFlag(0x8000)
-	    && !unk108->getPane()->isVisible())
+	if (!SMSGetMarDirector()->checkUnk4CFlag(0x8000)
+	    && !GCConsole2ExPanePane(unk108)->isVisible())
 		startAppearCoin();
-}
-
-// fabricated: a named-result binder over getPane(). Retail's frame has one
-// more 8-byte low slot than the direct `unk2F8->getPane()->show()`.
-static inline J2DPane* GCConsole2ExPanePane(const TExPane* pane)
-{
-	J2DPane* p = pane->getPane();
-	return p;
 }
 
 void TGCConsole2::startAppearTank()
