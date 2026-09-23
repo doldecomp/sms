@@ -359,6 +359,8 @@ BOOL TNerveBubbleLive::execute(TSpineBase<TLiveActor>* spine) const
 	// Closest shape: `damped.set(TVec3<f32>(getVelocity()))` plus a named
 	// `zero` for the reset reproduces the ROM's named block order (damped
 	// then zero, copy unnamed) but is 8 short (0xf0) and still 0xc low.
+	// On that shape (c-tel2): a named startFrame roll is inert, raw
+	// `mSLAddPosBase.value` is -0x10, the copy from raw mVelocity is -8.
 	f32 addPosBase = bubble->mParams->mSLAddPosBase.get();
 	if (!bubble->mIsSplit) {
 		if (bubble->mFloatHeight < addPosBase)
@@ -1755,7 +1757,8 @@ void TBossTelesa::openWaterPlace() { }
 
 // TODO: the unrolled loop's counter takes r8 in retail (r6 here), and the
 // coin's flag address is still missing. Inert: s32 phase, i++, a coin flag
-// reference, flags read through the reference, a shared TU-local helper.
+// reference, flags read through the reference, a shared TU-local helper;
+// also (c-tel2) a function-scope `int i`, `u32` counters, a `u32*` flag pointer.
 void TBossTelesa::flashItem(int timer)
 {
 	int phase = timer % 16;
@@ -1822,6 +1825,8 @@ const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
 // (`f32 roll = chance.rand();`, the lever that closed rouletteStart) puts
 // chance at 0x58 but lifts mtx/velocity 4 (0x64/0x94); no pair with the
 // param `.value`, getMActor(), getPosition() or a named second roll fixes both.
+// Also inert or worse (c-tel2): the speed param read twice (+8/+0x10 frame),
+// `Mtx` declared before the velocity with the named roll.
 void TBossTelesa::genAttacker()
 {
 	if (unk150) {
