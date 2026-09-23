@@ -1823,6 +1823,8 @@ DEFINE_NERVE(TNerveBWStun, TLiveActor)
 	return FALSE;
 }
 
+// TODO: frame 0x10 long in the low region (uniform shift). Inert: raw mMActor
+// at either site, a named MActor local as in BWShake.
 DEFINE_NERVE(TNerveBWWakeup, TLiveActor)
 {
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();

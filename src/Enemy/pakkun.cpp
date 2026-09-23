@@ -380,6 +380,8 @@ static inline J3DModelData* PakkunModelData(const TPakkun* p)
 	return data;
 }
 
+// TODO: frame 8 long. Raw mMActor at either material-loop site lands the frame
+// but leaves setGoalPathMario's path node 4 low; accessor swaps elsewhere are worse.
 void TPakkun::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);

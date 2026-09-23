@@ -879,6 +879,8 @@ static inline u32 JPAEmitterKeyAnmTypeMask(const JPABaseEmitter* p)
 	return keyAnmTypeMask;
 }
 
+// TODO: frame 0x10 long. Raw key count and mask (binder kept at the key table)
+// lands the frame but swaps keyNum/mask (r29/r31); top declarations are inert.
 void JPABaseEmitter::calcKeyFrameAnime()
 {
 	u32 keyNum = JPAEmitterEmitterDataBlockInfo(this)->getKeyNum();

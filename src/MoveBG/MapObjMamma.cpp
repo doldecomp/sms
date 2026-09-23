@@ -1687,6 +1687,7 @@ void TMammaMirrorMapOperator::loadAfter()
 	}
 }
 
+// TODO: frame 8 long with no stack use. Inert: set(0, 0, 0) for zero() in either loop.
 TMammaMirrorMapOperator::TMammaMirrorMapOperator(const char* name)
     : JDrama::TViewObj(name)
 {

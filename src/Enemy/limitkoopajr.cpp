@@ -373,6 +373,8 @@ static inline TLimitKoopaJr* LimitKoopaJrGetBody(TSpineBase<TLiveActor>* spine)
 	return body;
 }
 
+// TODO: frame 8 long below canRun's temporaries. Inert: a named target or f32,
+// raw bathtub position or late `calc` in calcTargetDirection; raw .mDirection is 8 short.
 DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor)
 {
 	TLimitKoopaJr* koopaJr = (TLimitKoopaJr*)spine->getBody();
