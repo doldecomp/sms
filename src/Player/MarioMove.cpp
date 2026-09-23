@@ -1823,6 +1823,8 @@ void TMario::checkCurrentPlane()
 		// are hoisted into registers (addi +0x34) where retail folds them into
 		// the loads. The two by-value position copies reproduce retail's 0xc
 		// temporary copied twice; a single shared copy or dot(mPosition) is worse.
+		// Also inert or worse: getNormal()/getPlaneDistance() at either dot,
+		// pos.dot(normal), PSVECDotProduct, and the dot written out by hand.
 		if (record.mResultWallsNum == 2
 		    && record.mResultWalls[0]->mNormal.dot(
 		           record.mResultWalls[1]->mNormal)
