@@ -814,8 +814,8 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 					score -= 100;
 					unk140->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
 					unk144->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
-					unk134->show();
 					unk138->hide();
+					unk134->show();
 				}
 			} else {
 				if (getBookmarkInfo().unk0 == 1) {
@@ -1772,7 +1772,7 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK6:
 	case PROGRESS_UNK7:
 		if (gpCardManager->getLastStatus() != CARD_RESULT_NOCARD) {
-			waitForChoice(PROGRESS_UNK8, PROGRESS_UNK4, 1);
+			waitForChoice(PROGRESS_UNK8, PROGRESS_UNK35, 1);
 			gpCardManager->probe();
 		} else {
 			if (unkF8->isVisible())
@@ -1788,7 +1788,7 @@ void TCardSave::execMovement_()
 			break;
 
 		if (status == CARD_RESULT_READY) {
-			s8 r = waitForChoice(PROGRESS_UNK9, PROGRESS_UNK4, 1);
+			s8 r = waitForChoice(PROGRESS_UNK9, PROGRESS_UNK35, 1);
 			if (r == 0) {
 				unk2E0 = 0;
 				gpCardManager->format();
@@ -1930,11 +1930,11 @@ void TCardSave::execMovement_()
 			unk310 = PROGRESS_UNK16;
 			saveBookmark(unk2EA);
 		} else if (bm.unk18 == 0
-		           || bm.unk8
-		                  == TFlagManager::getInstance()->getLastSaveTime()) {
-			unk310 = PROGRESS_UNK2C;
-		} else {
+		           || TFlagManager::getInstance()->getLastSaveTime()
+		                  == bm.unk8) {
 			unk310 = PROGRESS_UNK16;
+		} else {
+			unk310 = PROGRESS_UNK2C;
 		}
 		break;
 	}

@@ -1342,7 +1342,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		}
 
 		if (unkC4 == 4) {
-			unk4D8[unkB7]->setCenteredSize(20, unk4E0[unkB7].getWidth() * 0.5f,
+			unk4D8[unkB7]->setCenteredSize(40, unk4E0[unkB7].getWidth() * 0.5f,
 			                               unk4E0[unkB7].getHeight() * 0.5f,
 			                               unk4E0[unkB7].getWidth(),
 			                               unk4E0[unkB7].getHeight());
@@ -1852,11 +1852,21 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 		                        0);
 		if (unk1C == PROGRESS_UNK1C) {
 			unk278[unkB1]->makeBlockRock();
+#if defined(VERSION_GMSE01)
+			setMessage(unk29C, 0xFF, 0x1E);
+			setMessage(unk2A0, 0xFF, 0x1E);
+#else
 			setMessage(unk29C, 30, 0x1B);
 			setMessage(unk2A0, 30, 0x1B);
+#endif
 		} else {
+#if defined(VERSION_GMSE01)
+			setMessage(unk29C, 0xFF, 0x1D);
+			setMessage(unk2A0, 0xFF, 0x1D);
+#else
 			setMessage(unk29C, 30, 0x1A);
 			setMessage(unk2A0, 30, 0x1A);
+#endif
 		}
 
 		for (int i = 0; i < 3; ++i) {
@@ -2036,7 +2046,7 @@ s8 TCardLoad::selectFunction()
 
 	case 1: {
 		bool done = true;
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < 3; ++i)
 			done &= unk2A4[i]->update();
 		done &= unk33C[unkB0]->update();
 		if (done) {
@@ -2147,7 +2157,7 @@ s8 TCardLoad::selectFunction()
 				unkAC->setEmitterScale(JGeometry::TVec3<f32>(0.9f, 1.0f, 0.1f));
 			} else if (unkC4 == 44) {
 				unk378[unkB0][unkB6]->setCenteredSize(
-				    20, unk3A8[unkB0][unkB6].getWidth(),
+				    40, unk3A8[unkB0][unkB6].getWidth(),
 				    unk3A8[unkB0][unkB6].getHeight(),
 				    unk3A8[unkB0][unkB6].getWidth() * 1.5f,
 				    unk3A8[unkB0][unkB6].getHeight() * 1.5f);
@@ -2192,8 +2202,8 @@ s8 TCardLoad::selectFunction()
 				unk2CC[i]->hide();
 				unk2D8[i]->hide();
 				unk2FC[i]->hide();
-				unk2A4[i]->setCenteredSize(30, 0, 0, rect.getWidth(),
-				                           rect.getHeight());
+				unk2A4[i]->setCenteredSize(30, 0, 0, unk2B0.getWidth(),
+				                           unk2B0.getHeight());
 			}
 		}
 	} break;
@@ -2201,7 +2211,7 @@ s8 TCardLoad::selectFunction()
 	case 4: {
 		bool done = true;
 		done &= unk33C[unkB0]->update();
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < 3; ++i)
 			done &= unk2A4[i]->update();
 		if (done) {
 			unk33C[unkB0]->getPane()->hide();
