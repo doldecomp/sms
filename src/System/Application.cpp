@@ -360,12 +360,11 @@ void TApplication::initialize_bootAfter()
 	OSResumeThread(&gSetupThread);
 }
 
-// TODO: instructions and frame size match; the option stream sits 4 low
-// (0x50 vs 0x54) and the name-ref stream's ctor temp at 0x48 vs 0x4c, with
-// a 4-byte hole between the two streams that retail does not have. Tried:
+// TODO: instructions match; frame 8 short, the option stream 4 low (0x50 vs
+// 0x54) and the name-ref stream's ctor temp at 0x48 vs 0x4c. Tried:
 // status/outputMode hoisted, lVar3 inlined, a default-ctor stream spelled
-// an identity binder over gpCardManager in the status loop gives the missing
-// 8 bytes of frame but is a fabricated level (refused) (nullptr, 0).
+// (nullptr, 0). An identity binder over gpCardManager in the status loop
+// supplies the 8 bytes but is a fabricated level (refused).
 void TApplication::initialize_nlogoAfter()
 {
 	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("nintendo");
