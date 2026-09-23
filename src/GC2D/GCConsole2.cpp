@@ -118,21 +118,6 @@ static inline void detachPaneFromParent(J2DPane* pane)
 }
 
 // fabricated
-static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
-                                    f32 topTex, f32 bottomTex)
-{
-	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-	GXPosition2f32((f32)rect.x1, (f32)top);
-	GXTexCoord2f32(0.0f, topTex);
-	GXPosition2f32((f32)rect.x2, (f32)top);
-	GXTexCoord2f32(1.0f, topTex);
-	GXPosition2f32((f32)rect.x2, (f32)bottom);
-	GXTexCoord2f32(1.0f, bottomTex);
-	GXPosition2f32((f32)rect.x1, (f32)bottom);
-	GXTexCoord2f32(0.0f, bottomTex);
-}
-
-// fabricated
 static inline void updateWaterGaugeFill(TGCConsole2* console)
 {
 	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
@@ -2944,6 +2929,9 @@ void TGCConsole2::startAppearStar()
 	unk34 = 1;
 }
 
+// TODO: frame 0x28 short; the `unk30C < 15` and `< 25` tests are signed
+// (`cmpwi`) in the ROM after an unsigned `< 10`, and the first colour ramp
+// schedules its two int-to-float conversions differently.
 void TGCConsole2::drawWaterBack()
 {
 	if (gpMarioOriginal->getHealth() == 0 || gpMarioOriginal->getAir() == 0)
@@ -2990,7 +2978,15 @@ void TGCConsole2::drawWaterBack()
 		f32 hiddenRatio = 1.0f - pressure / pressureMax;
 		int fillTop     = bounds.y1 + (int)(hiddenRatio * bounds.getHeight());
 
-		drawGaugeQuadF32(bounds, bounds.y1, fillTop, 0.0f, hiddenRatio);
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32(bounds.x1, bounds.y1);
+		GXTexCoord2f32(0.0f, 0.0f);
+		GXPosition2f32(bounds.x2, bounds.y1);
+		GXTexCoord2f32(1.0f, 0.0f);
+		GXPosition2f32(bounds.x2, fillTop);
+		GXTexCoord2f32(1.0f, hiddenRatio);
+		GXPosition2f32(bounds.x1, fillTop);
+		GXTexCoord2f32(0.0f, hiddenRatio);
 
 		if (!unk50 && pressure != 0.0f && !unk48) {
 			unk14 = 1;
@@ -3027,7 +3023,15 @@ void TGCConsole2::drawWaterBack()
 			GXSetTevColor(GX_TEVREG1, JUtility::TColor(0xff3f3f00));
 		}
 
-		drawGaugeQuadF32(bounds, fillTop, bounds.y2, hiddenRatio, 1.0f);
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32(bounds.x1, fillTop);
+		GXTexCoord2f32(0.0f, hiddenRatio);
+		GXPosition2f32(bounds.x2, fillTop);
+		GXTexCoord2f32(1.0f, hiddenRatio);
+		GXPosition2f32(bounds.x2, bounds.y2);
+		GXTexCoord2f32(1.0f, 1.0f);
+		GXPosition2f32(bounds.x1, bounds.y2);
+		GXTexCoord2f32(0.0f, 1.0f);
 	} else {
 		if (unk48 && unk30C != 0) {
 			unk274->setPanePosition(90, JUTPoint(0, 0), JUTPoint(0, -100),
@@ -3036,7 +3040,15 @@ void TGCConsole2::drawWaterBack()
 			unk49  = 1;
 		}
 
-		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32(bounds.x1, bounds.y1);
+		GXTexCoord2f32(0.0f, 0.0f);
+		GXPosition2f32(bounds.x2, bounds.y1);
+		GXTexCoord2f32(1.0f, 0.0f);
+		GXPosition2f32(bounds.x2, bounds.y2);
+		GXTexCoord2f32(1.0f, 1.0f);
+		GXPosition2f32(bounds.x1, bounds.y2);
+		GXTexCoord2f32(0.0f, 1.0f);
 	}
 
 	if (unk334[unk330]->isVisible())
