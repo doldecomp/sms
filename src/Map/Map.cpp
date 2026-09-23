@@ -30,6 +30,22 @@
 
 TMap* gpMap;
 
+// UNUSED, 0x5c in the map: inlined into initStage().
+static void initOption()
+{
+	TMapObjOptionWall* wall = new TMapObjOptionWall("オプション用壁");
+	wall->init();
+	TMapObjBase::joinToGroup("マップグループ", wall);
+}
+
+// UNUSED, 0x48 in the map: inlined into initStage().
+static void initSirena()
+{
+	if (SMSGetMarDirector()->getCurrentStage() == 0)
+		return;
+	TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+}
+
 static void initMonte()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
@@ -130,6 +146,31 @@ static void initPinnaParco()
 }
 #pragma dont_inline off
 
+// UNUSED, 0x58 in the map: inlined into initStage().
+static void initPinnaBeach()
+{
+	SMS_LoadParticle("/scene/mapObj/SandSteam.jpa", 0x6A);
+}
+
+// UNUSED, 0x64 in the map: inlined into initStage().
+static void initBianco()
+{
+	if (SMSGetMarDirector()->getCurrentStage() == 0)
+		return;
+	TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+	TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+}
+
+// UNUSED, 0x6c in the map: inlined into initStage().
+static void initDolpic()
+{
+	if (SMSGetMarDirector()->getCurrentStage() != 5
+	    && SMSGetMarDirector()->getCurrentStage() != 9) {
+		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+	}
+}
+
 // TODO: 99.6%. Every instruction matches; retail's frame is 0x78 larger, with
 // all push_back temporaries 0x74 higher (an unidentified low-region block).
 static void initStageCommon()
@@ -174,27 +215,22 @@ static void initStageCommon()
 	}
 }
 
+// TODO: every instruction matches; the frame is 0x18 short (0x58 vs 0x70).
+// The director accessor bought 0x20; naming the warp objects and restoring
+// the UNUSED per-area helpers are inert.
 static void initStage()
 {
-	if (gpMarDirector->getCurrentStage() > 9)
+	if (SMSGetMarDirector()->getCurrentStage() > 9)
 		return;
 
 	initStageCommon();
 
-	switch (gpMarDirector->getCurrentMap()) {
-	case 1: { // Bianco
-		if (gpMarDirector->getCurrentStage() == 5
-		    || gpMarDirector->getCurrentStage() == 9)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
-		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+	switch (SMSGetMarDirector()->getCurrentMap()) {
+	case 1:
+		initDolpic();
 		break;
-	}
-	case 2: // Ricco
-		if (gpMarDirector->getCurrentStage() == 0)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
-		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+	case 2:
+		initBianco();
 		break;
 	case 9: // Mare
 		initMare();
@@ -202,23 +238,18 @@ static void initStage()
 	case 8: // Monte
 		initMonte();
 		break;
-	case 6: // Pinna
-		if (gpMarDirector->getCurrentStage() == 0)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+	case 6:
+		initSirena();
 		break;
-	case 5: // Sirena
-		SMS_LoadParticle("/scene/mapObj/SandSteam.jpa", 0x6A);
+	case 5:
+		initPinnaBeach();
 		break;
 	case 13: // Pinna Parco
 		initPinnaParco();
 		break;
-	case 15: { // Option
-		TMapObjOptionWall* wall = new TMapObjOptionWall("オプション用壁");
-		wall->init();
-		TMapObjBase::joinToGroup("マップグループ", wall);
+	case 15:
+		initOption();
 		break;
-	}
 	}
 }
 
