@@ -26,6 +26,7 @@ public:
 	int getAnmNum() const { return mAnmNum; }
 	u16 getKeyCode(int i) { return mAnmKeyCodes[i]; }
 	const char* getName(int i) { return mAnmNames[i]; }
+	void setKeyCode(int i, u16 key) { mAnmKeyCodes[i] = key; }
 
 public:
 	/* 0x0 */ int mAnmNum;

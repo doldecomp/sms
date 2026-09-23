@@ -131,6 +131,14 @@ void MActorAnmData::addIncidentalAnm(const char* parts_name, int joint_index)
 	unk1C.push_back(info);
 }
 
+// TODO: fabricated binder; its named step is the +8 of low pool and the
+// ranking (additional_files above the finder) retail shows in init.
+static inline JKRFileFinder* findFirst(const char* path)
+{
+	JKRFileFinder* finder = JKRFileLoader::findFirstFile(path);
+	return finder;
+}
+
 void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 {
 	char fullAnmPath[256];
@@ -148,12 +156,11 @@ void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 	char anmFolder[256];
 	snprintf(anmFolder, 0xff, "%s%s", fullAnmPath, "/");
 
-	JKRFileFinder* fileFinder = JKRFileLoader::findFirstFile(fullAnmPath);
+	JKRFileFinder* fileFinder = findFirst(fullAnmPath);
 
-	JKRFileFinder* finder = fileFinder;
 	do {
-		addFileNum(finder->mBase.mFileName);
-	} while (finder->findNextFile());
+		addFileNum(fileFinder->mBase.mFileName);
+	} while (fileFinder->findNextFile());
 
 	if (additional_files != nullptr)
 		for (int i = 0; i == 0 || additional_files[i] != nullptr; ++i)
@@ -181,7 +188,7 @@ void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 	mBtkNum = 0;
 	mBrkNum = 0;
 
-	fileFinder = JKRFileLoader::findFirstFile(fullAnmPath);
+	fileFinder = findFirst(fullAnmPath);
 	do {
 		strstr(fileFinder->mBase.mFileName, "#");
 		addFileTable(fileFinder->mBase.mFileName);
@@ -232,47 +239,51 @@ char* MActorAnmData::getSimpleName(const char* file_name)
 	return simple_name;
 }
 
+// TODO: fabricated wrapper; the extra inline level is what gives retail's
+// r28/r29 ranking and per-site frame in addFileTable.
+static inline u16 calcKey(const char* name) { return MActorCalcKeyCode(name); }
+
 void MActorAnmData::addFileTable(const char* param_1)
 {
 	if (strstr(param_1, ".bck") != nullptr) {
-		char* simple_name               = getSimpleName(param_1);
-		mBckAnms->mAnmNames[mBckNum]    = simple_name;
-		mBckAnms->mAnmKeyCodes[mBckNum] = MActorCalcKeyCode(simple_name);
+		char* simple_name = getSimpleName(param_1);
+		mBckAnms->mAnmNames[mBckNum] = simple_name;
+		mBckAnms->setKeyCode(mBckNum, calcKey(simple_name));
 		++mBckNum;
 	}
 
 	if (strstr(param_1, ".bpk") != nullptr) {
-		char* simple_name               = getSimpleName(param_1);
-		mBpkAnms->mAnmNames[mBpkNum]    = simple_name;
-		mBpkAnms->mAnmKeyCodes[mBpkNum] = MActorCalcKeyCode(simple_name);
+		char* simple_name = getSimpleName(param_1);
+		mBpkAnms->mAnmNames[mBpkNum] = simple_name;
+		mBpkAnms->setKeyCode(mBpkNum, calcKey(simple_name));
 		++mBpkNum;
 	}
 
 	if (strstr(param_1, ".btp") != nullptr) {
-		char* simple_name               = getSimpleName(param_1);
-		mBtpAnms->mAnmNames[mBtpNum]    = simple_name;
-		mBtpAnms->mAnmKeyCodes[mBtpNum] = MActorCalcKeyCode(simple_name);
+		char* simple_name = getSimpleName(param_1);
+		mBtpAnms->mAnmNames[mBtpNum] = simple_name;
+		mBtpAnms->setKeyCode(mBtpNum, calcKey(simple_name));
 		++mBtpNum;
 	}
 
 	if (strstr(param_1, ".btk") != nullptr) {
-		char* simple_name               = getSimpleName(param_1);
-		mBtkAnms->mAnmNames[mBtkNum]    = simple_name;
-		mBtkAnms->mAnmKeyCodes[mBtkNum] = MActorCalcKeyCode(simple_name);
+		char* simple_name = getSimpleName(param_1);
+		mBtkAnms->mAnmNames[mBtkNum] = simple_name;
+		mBtkAnms->setKeyCode(mBtkNum, calcKey(simple_name));
 		++mBtkNum;
 	}
 
 	if (strstr(param_1, ".brk") != nullptr) {
-		char* simple_name               = getSimpleName(param_1);
-		mBrkAnms->mAnmNames[mBrkNum]    = simple_name;
-		mBrkAnms->mAnmKeyCodes[mBrkNum] = MActorCalcKeyCode(simple_name);
+		char* simple_name = getSimpleName(param_1);
+		mBrkAnms->mAnmNames[mBrkNum] = simple_name;
+		mBrkAnms->setKeyCode(mBrkNum, calcKey(simple_name));
 		++mBrkNum;
 	}
 
 	if (strstr(param_1, ".blk") != nullptr) {
-		char* simple_name               = getSimpleName(param_1);
-		mBlkAnms->mAnmNames[mBlkNum]    = simple_name;
-		mBlkAnms->mAnmKeyCodes[mBlkNum] = MActorCalcKeyCode(simple_name);
+		char* simple_name = getSimpleName(param_1);
+		mBlkAnms->mAnmNames[mBlkNum] = simple_name;
+		mBlkAnms->setKeyCode(mBlkNum, calcKey(simple_name));
 		++mBlkNum;
 	}
 }
