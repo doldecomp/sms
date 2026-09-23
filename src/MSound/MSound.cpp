@@ -478,6 +478,9 @@ f32 MSound::getDistPowFromCamera(const Vec& pos)
 }
 #endif
 
+// TODO: retail keeps `this` in r31 all the way (8 saved GPRs, frame 0x88);
+// ours spills it to 8(r1) and gives r31 to the string base (frame 0x80).
+// aramSize/loop-type/receiver/new-temp spellings inert.
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
                u8* param_5, u32 param_6)
 {
@@ -541,8 +544,8 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	unk7C = 0;
 	unk80 = 0;
 #if defined(VERSION_GMSE01)
-	// TODO: recover the previous voice ID word at 0x94 once ownership of
-	// JAIBasic's tail fields is established.
+	// TODO: retail stores -1 to unk94 (0x94) here; adding it is right but
+	// scores -0.04 until the `this` spill above is fixed.
 	mWaterFilterOverride = 0;
 	MSSeCallBack::setWaterCameraFir(false);
 #endif
