@@ -1075,6 +1075,9 @@ static inline void KoopajrCross(JGeometry::TVec3<f32>& dst,
 
 // Shine killers go up and then arc towards Mario; the others aim at a spot
 // on the bathtub's rim.
+// TODO: 96.6%. Frame 0x190 vs 0x178 (low temporaries 0x1c too many), both
+// TQuat4::rotate expansions colour their FPRs differently, and the cross
+// product reloads dir after each store where retail reloads toMario instead.
 void TKoopaJrSubmarine::makeKillerVelocity(TBathtubKiller* killer,
                                            JGeometry::TVec3<f32> dir)
 {
@@ -1086,10 +1089,10 @@ void TKoopaJrSubmarine::makeKillerVelocity(TBathtubKiller* killer,
 		toMario.y = 0.0f;
 		toMario.normalize();
 
+		f32 angle = 0.2f * M_PI;
 		JGeometry::TVec3<f32> axis;
 		KoopajrCross(axis, dir, toMario);
 		axis.normalize();
-		f32 angle = 0.2f * M_PI;
 		JGeometry::TQuat4<f32> q;
 		q.setRotate(axis, 0.2f * M_PI);
 		q.rotate(dir, dir);
