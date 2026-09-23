@@ -1399,8 +1399,12 @@ void TEnemyMario::emDrawStamp()
 		decideDoingAfterCarry();
 }
 
+// TODO: gatePoint sits 8 bytes high (0x80 vs retail 0x78); retail has an
+// 8-byte slot between the two points. Inert: dx/dz or angleDifference or
+// gatePoint declared at top, a named *gpMarioPos, param .value/accessor forks.
 void TEnemyMario::emWaitingToInviteMario()
 {
+	f32 distanceToMario;
 	JGeometry::TVec3<f32> waitingPoint;
 	mEMario->getTracer()->getGraph()->getGraphNode(7).getPoint(&waitingPoint);
 	mPosition           = waitingPoint;
@@ -1409,7 +1413,7 @@ void TEnemyMario::emWaitingToInviteMario()
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	changeMontemanWaitingAnim();
 
-	f32 distanceToMario = EMarioDistance(mPosition, *gpMarioPos);
+	distanceToMario = EMarioDistance(mPosition, *gpMarioPos);
 	if (distanceToMario < getSettingsParams()->mSearchDist.get()
 	    && gpMarioPos->y < mPosition.y + mSettingParams->mSearchHeight.get()) {
 		JGeometry::TVec3<f32> gatePoint;
