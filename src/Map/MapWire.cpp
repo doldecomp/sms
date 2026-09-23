@@ -148,15 +148,14 @@ void TMapWire::getPointPosAtReleased(f32 pos, JGeometry::TVec3<f32>* out) const
 	JGeometry::TVec3<f32> defaultPoint;
 	getPointPosDefault(pos, &defaultPoint);
 
-	// TODO: fix this inlining issue
 	f32 power = getPointPowerAtReleased(pos);
-	// TODO: Regswaps for these calculations?
-	f32 yAdjusted
-	    = linePoint.y
-	      + (1.0f - mBounceRemainingPower) * (defaultPoint.y - linePoint.y)
-	      + power * mHangOrBouncePoint.y;
 
-	out->set(linePoint.x, yAdjusted, linePoint.z);
+	// Component stores: retail stores x before the y blend is finished.
+	out->x = linePoint.x;
+	out->y = linePoint.y
+	         + (1.0f - mBounceRemainingPower) * (defaultPoint.y - linePoint.y)
+	         + power * mHangOrBouncePoint.y;
+	out->z = linePoint.z;
 }
 
 void TMapWire::updatePointAtReleased(int index)
@@ -169,7 +168,11 @@ void TMapWire::updatePointAtReleased(int index)
 		pos = mapWirePoint->mPosOnWire + mapWirePoint->mPosReturnRate;
 	}
 
-	getPointPosAtReleased(pos, &mapWirePoint->mPosition);
+	// The point is computed into a local and then copied: writing straight
+	// into mPosition puts move()/release() instructions off retail.
+	JGeometry::TVec3<f32> newPos;
+	getPointPosAtReleased(pos, &newPos);
+	mapWirePoint->mPosition.set(newPos.x, newPos.y, newPos.z);
 }
 
 bool TMapWire::updateMovePointAtReleased()
@@ -192,15 +195,14 @@ bool TMapWire::updateMovePointAtReleased()
 void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
 {
 	point->mPosOnWire = pos;
-	getPointPosAtReleased(pos, &point->mPosition);
+	JGeometry::TVec3<f32> newPos;
+	getPointPosAtReleased(pos, &newPos);
+	point->mPosition.set(newPos.x, newPos.y, newPos.z);
 	point->mPosReturnRate = (point->mDefaultPosOnWire - pos) / 1000.0f;
 }
 
-// TODO: 99.8%: frame 0x138 vs ours 0xc8 (each getPointPosAtReleased
-// expansion's linePoint/defaultPoint pair sits 0x28 apart in retail, 0x18 in
-// ours, 0x3c more pool below) and the gpMarioSpeedX/Z pointer registers swap.
-// Tried: power/yAdjusted named vs inline, linePoint/defaultPoint declared
-// together (inert); component stores for the result (worse, 97.6).
+// TODO: 99.8%: frame 0x138 vs ours 0xf0, every instruction right; the
+// gpMarioSpeedX/Z pointer registers swap. Same missing slots as move().
 void TMapWire::release()
 {
 	if (mState == TMapWire::RELEASED)
@@ -321,9 +323,12 @@ void TMapWire::calcViewAndDBEntry()
 	mEndFittingModel->viewCalc();
 }
 
-// TODO: 99.6%: frame 0xd8 vs ours 0x78 (the same getPointPosAtReleased pool
-// gap as release) and the JMASCos product lands in f1 in retail, f0 in ours;
-// operand order, a named cos result and a named s16 angle are all inert.
+// TODO: 99.6%: frame 0xd8 vs ours 0x88, every instruction right: retail's
+// linePoint/defaultPoint pair sits 0x34 higher and the JMASCos fctiwz slot
+// 0x1c further above it. getPointPosDefault spelled as component stores,
+// a named sag or scaleAdd changes code (move 90-92%). The JMASCos product
+// lands in f1 in retail, f0 in ours; operand order, a named cos result and a
+// named s16 angle are all inert.
 void TMapWire::move()
 {
 	switch (mState) {
@@ -394,9 +399,9 @@ void TMapWire::getPointPosOnLine(f32 pos, JGeometry::TVec3<f32>* out) const
 	         mWireSpan.z * pos + mStartPoint.z);
 }
 
-// TODO: 95.8%, frame 0x78 vs 0x68 and the line point's x/z order. Component
-// stores in getPointPosAtReleased fix this frame (0x68) but shrink release,
-// move and init further from retail, so the shared helper is left as is (k5).
+// TODO: 99.7%: the line point's x/z loads are ordered x before z in retail,
+// z before x here (getPointPosDefault's set arguments); spelling it as
+// component stores or a scaleAdd shrinks the frame to 0x58 and costs move.
 void TMapWire::getPointPosOnWire(f32 pos, JGeometry::TVec3<f32>* out) const
 {
 	if (pos < 0.0f) {
