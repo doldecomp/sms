@@ -413,26 +413,29 @@ void SMS_MakeJointsToArc(J3DModel* model, const JGeometry::TVec3<f32>& start,
 	for (u16 i = 0; i < jointNum; ++i) {
 		f32 t = (f32)i / (f32)(jointNum - 1);
 
-		JGeometry::TVec3<f32> a = dir * t;
-		JGeometry::TVec3<f32> b = up * (1.0f - t);
-		JGeometry::TVec3<f32> c = b + a;
+		JGeometry::TVec3<f32> c = up * (1.0f - t) + dir * t;
 		c.normalize();
 
 		MtxPtr jm = model->getAnmMtx(i);
 
 		f32 dist = (f32)i * (mag / (f32)(jointNum - 1));
 
+		// TODO: retail keeps xAxis.y/.z in f29/f30 (x spilled to its slot),
+		// which our TVec3 user copy constructor blocks; removing it from
+		// JGVec3.hpp takes this function 84.6 -> 90.6 on the old body. Retail
+		// also copies up * (1 - t) once more before operator+.
+		JGeometry::TVec3<f32> xAxis = c;
 		JGeometry::TVec3<f32> zAxis(jm[0][2], jm[1][2], jm[2][2]);
 		JGeometry::TVec3<f32> side;
-		side.cross(zAxis, c);
+		side.cross(zAxis, xAxis);
 		JGeometry::TVec3<f32> fwd;
-		fwd.cross(c, side);
+		fwd.cross(xAxis, side);
 		side.normalize();
 		fwd.normalize();
 
-		jm[0][0] = c.x;
-		jm[1][0] = c.y;
-		jm[2][0] = c.z;
+		jm[0][0] = xAxis.x;
+		jm[1][0] = xAxis.y;
+		jm[2][0] = xAxis.z;
 		jm[0][1] = side.x;
 		jm[1][1] = side.y;
 		jm[2][1] = side.z;
