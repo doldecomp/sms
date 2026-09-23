@@ -174,6 +174,11 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 // copies only the data word from the pop (93.5%) but keeps the default
 // ctor's two zero stores and is +8 of frame; copy-init/assignment/ctor
 // forms from the popped int or string are 80-91%.
+// 2026-09-23: a reference bound to the pop, `TSpcSlice x(interp->pop())`,
+// and a copy of the data union (union named in the header for the probe)
+// are all dead-stripped whole (87.7%). Retail's pop temporary is at 0x6c
+// (as in ev__ForceStartTalk, where ours is also 4 high), so both residues
+// likely share one cause in the fabricated TSpcStack::pop.
 static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
                                         u32 arg_num)
 {
