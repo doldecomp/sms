@@ -233,6 +233,9 @@ void TRollEnemy::reset()
 	unk124->mCurrIdx = 0;
 }
 
+// TODO: frame 8 short (0x40 vs 0x48, `vel` sits 8 low) and retail loads the
+// 0.0f before unk1A0. Inert: unnamed temporary, setVelocity (temp or named),
+// vel.set, a named f32, getPosition() at the first or last y read.
 void TRollEnemy::walkBehavior(int param_1, f32 param_2)
 {
 	if (!unk1A8)
