@@ -126,7 +126,8 @@ TChorobei::TChorobei(TCannon* cannon, int jnt_idx, const char* name)
 // TODO: instruction-exact; the matrix sits at 0x48 against retail's 0x44
 // (retail's low region is 4 bytes smaller). Inert: Mtx declared first, a
 // named frame or connected-matrix source, getPosition(); raw unk18 at
-// either MActor site is -8.
+// either MActor site is -8, taking the frame to 0x80; no 4-byte lever found
+// (can1 triples over the null tests, getPosition(), cue test).
 void TChorobei::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!mCannon->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
@@ -453,6 +454,8 @@ void TCannon::moveObject()
 	}
 	mChorobei->checkHit();
 
+	// can1: declaration order, top-declared zeroVel/mtx and spelling pairs are
+	// inert; the updateAttachPos sum sits at 0x48 vs retail 0x28.
 	// The slot order (the zeroing vector above `vel`) says both were
 	// function-scope locals and the zero one was declared first.
 	JGeometry::TVec3<f32> zeroVel;
@@ -656,7 +659,9 @@ MtxPtr TCannon::getTakingMtx()
 
 // TODO: only the two TMsRange slots differ (retail f32 range 0x48 / int
 // range 0x3c, ours 0x3c / 0x34); a named range object and the declaration
-// order of r/rate are inert.
+// order of r/rate are inert. can1 pair sweeps (rate raw/get x getPosition
+// x named/top-declared ranges, a TU-local range helper) never lift the
+// ranges; setKillerGoalPoint shares the cause (retail range above `pos`).
 void TCannon::bombSet()
 {
 	f32 r       = TMsRange<f32>(0.0f, 1.0f).rand();
@@ -1015,7 +1020,8 @@ static inline TCannon* CannonBody(TSpineBase<TLiveActor>* spine)
 // TODO: frame 0x58, retail 0x60; every instruction matches. Inert: getChorobei()
 // at either site, `!getTime()` (-8), a named nerve pointer, a named MActor in
 // isUpEnd; re-reading CannonBody(spine) for checkCurAnmEnd lands 0x60 but
-// reloads the body where retail reuses r29.
+// reloads the body where retail reuses r29. can1: every spelling measured
+// shrinks (raw unk18 in isUpEnd -8/-0x10, `!getTime()` -8); no honest +8.
 DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
 {
 	TCannon* cannon = CannonBody(spine);
