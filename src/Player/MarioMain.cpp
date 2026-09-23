@@ -88,6 +88,30 @@ void TMario::thinkAloha()
 // survives raw `mWaterGun` (frame 0x108), a union colour, and dropping
 // `timeArray`/`tick`/`col` or declaring the colour first (pairs too).
 //
+// Diagnosed (header research c-tcolor): this is not a JUTColor stride.  The
+// dead word at 0x138 is the named slot of `sil` (a caller-level pointer takes
+// a named slot even when register-held), and retail's colour is a *call-site*
+// temporary, created while the body is parsed and so allocated above the GX
+// argument temporaries, not an inlined local in the deferred-inline pool.
+// With `sil` dropped and a TU-local `startTimer(const JUtility::TColor&)`
+// called as `(JUtility::TColor(0xff, 0x00, 0x00, 0x80))`, every slot is
+// retail's shifted 4 low (dir 0x138, colour 0x134): retail has 4 more bytes
+// between thinkCube's `pos` and the last argument temporary.  Two ways to
+// supply them, both refused:
+//   - a copy alias `TTimeArray* ary = timeArray;` in that helper (+4 at the
+//     top of the pool): 100.0%, frame and every slot exact -- a fabricated
+//     local;
+//   - the endTimer site as a call-site temporary too, `(JUtility::TColor(0))`:
+//     every slot lands but the temporary's stw/lwz survives (+3 instructions,
+//     99.3%) where retail has a bare `li r5, 0`.
+// Inert (layout = the 4-low one): a by-value TColor parameter (0x170), the
+// u32 overload fed a TColor (0x170/0x180), `instance()` (0x170), forwarding
+// to appendTime/a u32 helper (pos moves instead), `inst == nullptr`, `const
+// u32 col`, timeArray declared early, as a reference, or before OSGetTick.
+// So retail's endTimer (or something parsed after the silhouette colour)
+// owns one dead 4-byte temporary whose value folds to a constant; its
+// spelling is the open lead.
+//
 // The 104 bytes of dead low region the frame needed were measured in closure
 // batch 120: the parked MarioMainGetFludd binding level below is +16 of low
 // region per expansion at eight of the nine `mWaterGun` sites (+0x60; all nine

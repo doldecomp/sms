@@ -59,6 +59,22 @@ struct TColor : public GXColor {
 	//     `mCharColor.set(unk24.get())` is also 85.3%.
 	// So the temporary is the get()-plus-conversion chain in both builds and
 	// only its width differs; nothing spellable in this class changes that.
+	//
+	// Header research c-tcolor re-measured the class against the seven sites
+	// filed under it (unit builds; frames target/ours at baseline: Menu ctor
+	// 0x4c0/0x4b8, TSwingBoard::initDraw 0x80/0x88, TGCConsole2::setTimer
+	// 0x1a0/0x150; TMario::perform, drawRefracAndSpec, addDamageFog frame-exact):
+	//   `const GXColor& get() const`          inert at all seven
+	//   `TColor(GXColor c) : GXColor(c) {}`   SwingBoard frame lands but every
+	//                                         slot 8 low (100 -> 99.9); Menu
+	//                                         ctor temporaries vanish (0x4a0)
+	//   `operator=(const TColor&)` as
+	//     `*(GXColor*)this = other`           Menu ctor 0x4a0, rest inert
+	//     `set(other.toUInt32())`             TMenuPlane::perform 100 -> 98.7,
+	//                                         setTimer 0x158
+	//   copy ctor `set(other.toUInt32())`     setTimer 0x158, rest inert
+	// TMario::perform is not this class at all: its colour slot is a call-site
+	// temporary versus an inlined local (see the TODO above it in MarioMain.cpp).
 
 	operator u32() const { return toUInt32(); }
 	u32 toUInt32() const { return *(u32*)&r; }
