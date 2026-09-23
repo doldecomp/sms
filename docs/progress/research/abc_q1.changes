@@ -1,0 +1,2859 @@
+[1/377] MWCC build/GMSE01/src/Animal/AnimalSave.o
+[2/377] MWCC build/GMSE01/src/Animal/boid.o
+[3/377] MWCC build/GMSE01/src/Animal/AnimalManager.o
+[4/377] MWCC build/GMSE01/src/Animal/AnimalNerve.o
+sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Animal\AnimalNerve.cpp contains Shift JIS encoding errors
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Animal\AnimalNerve.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[5/377] MWCC build/GMSE01/src/Animal/fishoid.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Animal\fishoid.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[6/377] MWCC build/GMSE01/src/Animal/Bird.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Animal\Bird.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[7/377] MWCC build/GMSE01/src/Animal/AnimalBase.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Animal\AnimalBase.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[8/377] MWCC build/GMSE01/src/MSound/MAnmSound.o
+[9/377] MWCC build/GMSE01/src/MSound/MSoundScene.o
+[10/377] MWCC build/GMSE01/src/Animal/BeeHive.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Animal\BeeHive.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[11/377] MWCC build/GMSE01/src/Animal/Butterfly.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Animal\Butterfly.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[12/377] MWCC build/GMSE01/src/MSound/MSoundBGM.o
+[13/377] MWCC build/GMSE01/src/MSound/MSound.o
+[14/377] MWCC build/GMSE01/src/MSound/MSoundSE.o
+### mwcceppc.exe Compiler:
+#    File: src\MSound\MSoundSE.cpp
+# --------------------------------
+#      52: u32 MSRandVol::getRandomVolume(u32 param_1, u32 param_2) { }
+# Warning:                                                            ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     860: }
+# Warning: ^
+#   return value expected
+[15/377] MWCC build/GMSE01/src/MSound/MSoundStruct.o
+[16/377] MWCC build/GMSE01/src/Camera/CameraCodeControl.o
+[17/377] MWCC build/GMSE01/src/Camera/CameraBGCheck.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraBGCheck.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[18/377] MWCC build/GMSE01/src/MSound/MSHandle.o
+[19/377] MWCC build/GMSE01/src/Camera/CameraInbetween.o
+[20/377] MWCC build/GMSE01/src/Camera/CameraHeightPan.o
+[21/377] MWCC build/GMSE01/src/Camera/CameraKindParam.o
+[22/377] MWCC build/GMSE01/src/Camera/cameralib.o
+[23/377] MWCC build/GMSE01/src/Camera/CameraChange.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraChange.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[24/377] MWCC build/GMSE01/src/Camera/cameragc.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\cameragc.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[25/377] MWCC build/GMSE01/src/Camera/CameraMarioData.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraMarioData.cpp
+# ---------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Camera\CameraMarioData.cpp
+# ---------------------------------------
+#     113: bool TCameraMarioData::isMarioBathtub() const { }
+# Warning:                                                 ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     115: bool TCameraMarioData::isMarioDoorDemoStart() const { }
+# Warning:                                                       ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     117: bool TCameraMarioData::isMarioDoorDemoEnd() const { }
+# Warning:                                                     ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     131: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     131: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     131: }
+# Warning: ^
+#   return value expected
+[26/377] MWCC build/GMSE01/src/Camera/CameraNormal.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraNormal.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[27/377] MWCC build/GMSE01/src/Camera/camerasave.o
+[28/377] MWCC build/GMSE01/src/Camera/CameraNotice.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraNotice.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[29/377] MWCC build/GMSE01/src/Camera/camerashake.o
+[30/377] MWCC build/GMSE01/src/Camera/CameraTalk.o
+[31/377] MWCC build/GMSE01/src/Camera/CubeManagerBase.o
+[32/377] MWCC build/GMSE01/src/Camera/sunmgr.o
+[33/377] MWCC build/GMSE01/src/Camera/lensflare.o
+[34/377] MWCC build/GMSE01/src/Camera/lensglow.o
+[35/377] MWCC build/GMSE01/src/Camera/sunmodel.o
+[36/377] MWCC build/GMSE01/src/Camera/CameraMapTool.o
+[37/377] MWCC build/GMSE01/src/Camera/CubeMapTool.o
+[38/377] MWCC build/GMSE01/src/Camera/CameraMultiPlayer.o
+[39/377] MWCC build/GMSE01/src/Camera/CameraOption.o
+[40/377] MWCC build/GMSE01/src/Camera/CameraWarp.o
+[41/377] MWCC build/GMSE01/src/Camera/CamShakeDefine.o
+[42/377] MWCC build/GMSE01/src/Camera/CameraMode.o
+[43/377] MWCC build/GMSE01/src/Camera/CameraJetCoaster.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraJetCoaster.cpp
+# ----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[44/377] MWCC build/GMSE01/src/Camera/CameraBck.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraBck.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[45/377] MWCC build/GMSE01/src/Camera/CameraDemo.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraDemo.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[46/377] MWCC build/GMSE01/src/Camera/CameraSecureView.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Camera\CameraSecureView.cpp
+# ----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[47/377] MWCC build/GMSE01/src/Enemy/conductor.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\conductor.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<TLiveManager *, 
+#   JGadget::TAllocator<TLiveManager *>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<TEnemyManager *, 
+#   JGadget::TAllocator<TEnemyManager *>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<TLiveActor *, 
+#   JGadget::TAllocator<TLiveActor *>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<JDrama::TViewObj *, 
+#   JGadget::TAllocator<JDrama::TViewObj *>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<TAreaCylinderManager *, 
+#   JGadget::TAllocator<TAreaCylinderManager *>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<TGenerator *, 
+#   JGadget::TAllocator<TGenerator *>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<SDLModelData *, 
+#   JGadget::TAllocator<SDLModelData *>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\conductor.cpp
+# --------------------------------
+#     494: }
+# Warning: ^
+#   return value expected
+[48/377] MWCC build/GMSE01/src/Enemy/effectObj.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\effectObj.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<TEffectObjBase *, 
+#   JGadget::TAllocator<TEffectObjBase *>>::Confirm()')
+[49/377] MWCC build/GMSE01/src/Enemy/enemy.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\enemy.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[50/377] MWCC build/GMSE01/src/Enemy/enemyAttachment.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\enemyAttachment.cpp
+# --------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[51/377] MWCC build/GMSE01/src/Enemy/enemyinterp.o
+[52/377] MWCC build/GMSE01/src/Enemy/emario.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\emario.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[53/377] MWCC build/GMSE01/src/Enemy/feetinv.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\feetinv.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[54/377] MWCC build/GMSE01/src/Enemy/graph.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\graph.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\graph.cpp
+# ----------------------------
+#     629: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     661: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1021: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1021: }
+# Warning: ^
+#   return value expected
+[55/377] MWCC build/GMSE01/src/Enemy/enemymanager.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\enemymanager.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[56/377] MWCC build/GMSE01/src/Enemy/gesso.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\gesso.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[57/377] MWCC build/GMSE01/src/Enemy/hinokuri2.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\hinokuri2.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[58/377] MWCC build/GMSE01/src/Enemy/enemyMario.o
+sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Enemy\enemyMario.cpp contains Shift JIS encoding errors
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\enemyMario.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[59/377] MWCC build/GMSE01/src/Enemy/mameGesso.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\mameGesso.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[60/377] MWCC build/GMSE01/src/Enemy/hamukuri.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\hamukuri.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\hamukuri.cpp
+# -------------------------------
+#    3023: DEFINE_NERVE(TNerveDangoHamuKuriAttack, TLiveActor) { }
+# Warning:                                                       ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    3208: }
+# Warning: ^
+#   return value expected
+[61/377] MWCC build/GMSE01/src/Enemy/spline.o
+[62/377] MWCC build/GMSE01/src/Enemy/namekuri.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\namekuri.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\namekuri.cpp
+# -------------------------------
+#     757: bool TNameKuri::canJumpAttack() const { }
+# Warning:                                         ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     977: }
+# Warning: ^
+#   return value expected
+[63/377] MWCC build/GMSE01/src/Enemy/spider.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\spider.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[64/377] MWCC build/GMSE01/src/Enemy/walker.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\walker.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[65/377] MWCC build/GMSE01/src/Enemy/pakkun.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\pakkun.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[66/377] MWCC build/GMSE01/src/Enemy/typicalenemy.o
+[67/377] MWCC build/GMSE01/src/Enemy/smallEnemy.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\smallEnemy.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[68/377] MWCC build/GMSE01/src/Enemy/walkerEnemy.o
+[69/377] MWCC build/GMSE01/src/Enemy/enemytable.o
+[70/377] MWCC build/GMSE01/src/Enemy/generator.o
+[71/377] MWCC build/GMSE01/src/Enemy/telesa.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\telesa.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\telesa.cpp
+# -----------------------------
+#     697: bool TTelesa::isResetTransY() { }
+# Warning:                                 ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1395: }
+# Warning: ^
+#   return value expected
+[72/377] MWCC build/GMSE01/src/Enemy/elecNokonoko.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\elecNokonoko.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[73/377] MWCC build/GMSE01/src/Enemy/fireWanwan.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\fireWanwan.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\fireWanwan.cpp
+# ---------------------------------
+#     723: JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyNthPos(int i) const { }
+# Warning:                                                                        ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     725: f32 TFireWanwanTailHit::getBodyTailPow() const { }
+# Warning:                                                  ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     727: f32 TFireWanwanTailHit::getBodyHeadPow() const { }
+# Warning:                                                  ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     798: f32 TFireWanwanTailHit::getTailLength() const { }
+# Warning:                                                 ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    2430: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    2430: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    2430: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    2430: }
+# Warning: ^
+#   return value expected
+[74/377] MWCC build/GMSE01/src/Enemy/bossgesso.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bossgesso.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[75/377] MWCC build/GMSE01/src/Enemy/tobiPuku.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\tobiPuku.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\tobiPuku.cpp
+# -------------------------------
+#     896: enemy->generate(getPosition(), mScaling);
+# Warning:                                        ^
+#   illegal const/volatile '&' reference initialization
+[76/377] MWCC build/GMSE01/src/Enemy/launcher.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\launcher.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[77/377] MWCC build/GMSE01/src/Enemy/tinkoopa.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\tinkoopa.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\tinkoopa.cpp
+# -------------------------------
+#    1101: TNerveBase<TLiveActor>* nerve = &TNerveTinKoopaBreak::theNerve();
+# Warning:                                                                 ^
+#   illegal implicit const/volatile pointer conversion from 'const 
+#   TNerveTinKoopaBreak *' to
+#   'TNerveBase<TLiveActor> *'
+### mwcceppc.exe Compiler:
+#    1106: TNerveBase<TLiveActor>* nerve = &TNerveTinKoopaDamage::theNerve();
+# Warning:                                                                  ^
+#   illegal implicit const/volatile pointer conversion from 'const 
+#   TNerveTinKoopaDamage *' to
+#   'TNerveBase<TLiveActor> *'
+[78/377] MWCC build/GMSE01/src/Enemy/bosspakkun.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bosspakkun.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[79/377] MWCC build/GMSE01/src/Enemy/chuuhana.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\chuuhana.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[80/377] MWCC build/GMSE01/src/Enemy/bosswanwan.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bosswanwan.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[81/377] MWCC build/GMSE01/src/Enemy/igaiga.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\igaiga.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[82/377] MWCC build/GMSE01/src/Enemy/poihana.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\poihana.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[83/377] MWCC build/GMSE01/src/Enemy/riccohook.o
+[84/377] MWCC build/GMSE01/src/Enemy/tamaNoko.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\tamaNoko.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[85/377] MWCC build/GMSE01/src/Enemy/bombhei.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bombhei.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\bombhei.cpp
+# ------------------------------
+#     278: smoke->generate(*BombheiPosition(this), mScaling);
+# Warning:                                                 ^
+#   illegal const/volatile '&' reference initialization
+[86/377] MWCC build/GMSE01/src/Enemy/beam.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\beam.cpp
+# ---------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[87/377] MWCC build/GMSE01/src/Enemy/bosstelesa.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bosstelesa.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[88/377] MWCC build/GMSE01/src/Enemy/cannon.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\cannon.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[89/377] MWCC build/GMSE01/src/Enemy/killer.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\killer.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[90/377] MWCC build/GMSE01/src/Enemy/SleepBossHanachan.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\SleepBossHanachan.cpp
+# ----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[91/377] MWCC build/GMSE01/src/Enemy/bosseel.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bosseel.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\bosseel.cpp
+# ------------------------------
+#    1838: BOOL TBossEel::isEyeBlurOn() { }
+# Warning:                                ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    2737: }
+# Warning: ^
+#   return value expected
+[92/377] MWCC build/GMSE01/src/Enemy/DemoBossHanachanBase.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\DemoBossHanachanBase.cpp
+# -------------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[93/377] MWCC build/GMSE01/src/Enemy/BossHanachanSub.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\BossHanachanSub.cpp
+# --------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[94/377] MWCC build/GMSE01/src/Enemy/hanasambo.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\hanasambo.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[95/377] MWCC build/GMSE01/src/Enemy/popo.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\popo.cpp
+# ---------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[96/377] MWCC build/GMSE01/src/Enemy/fruitsboat.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\fruitsboat.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[97/377] MWCC build/GMSE01/src/Enemy/BossHanachanNerve.o
+[98/377] MWCC build/GMSE01/src/Enemy/BossHanachanSave.o
+[99/377] MWCC build/GMSE01/src/Enemy/BossHanachanMain.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\BossHanachanMain.cpp
+# ---------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[100/377] MWCC build/GMSE01/src/Enemy/BossHanachanAnm.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\BossHanachanAnm.cpp
+# --------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[101/377] MWCC build/GMSE01/src/Enemy/BossHanachanParts.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\BossHanachanParts.cpp
+# ----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[102/377] MWCC build/GMSE01/src/Enemy/amiNoko.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\amiNoko.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[103/377] MWCC build/GMSE01/src/Enemy/seal.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\seal.cpp
+# ---------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[104/377] MWCC build/GMSE01/src/Enemy/BossHanachanEffect.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\BossHanachanEffect.cpp
+# -----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[105/377] MWCC build/GMSE01/src/Enemy/egggen.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\egggen.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[106/377] MWCC build/GMSE01/src/Enemy/bgpoldrop.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bgpoldrop.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[107/377] MWCC build/GMSE01/src/Enemy/gatekeeper.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\gatekeeper.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[108/377] MWCC build/GMSE01/src/Enemy/areacylinder.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\areacylinder.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<TAreaCylinder *, 
+#   JGadget::TAllocator<TAreaCylinder *>>::Confirm()')
+[109/377] MWCC build/GMSE01/src/Enemy/effectEnemy.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\effectEnemy.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[110/377] MWCC build/GMSE01/src/Enemy/hauntLeg.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\hauntLeg.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[111/377] MWCC build/GMSE01/src/Enemy/BossHanachanSound.o
+[112/377] MWCC build/GMSE01/src/Enemy/wireTrap.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\wireTrap.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[113/377] MWCC build/GMSE01/src/Enemy/bgtentacle.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bgtentacle.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\bgtentacle.cpp
+# ---------------------------------
+#     717: BOOL TBGTentacle::isAttacking() const { }
+# Warning:                                         ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     719: bool TBGTentacle::canTake() const { }
+# Warning:                                     ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1584: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1584: }
+# Warning: ^
+#   return value expected
+[114/377] MWCC build/GMSE01/src/Enemy/wireBinder.o
+[115/377] MWCC build/GMSE01/src/Enemy/Kazekun.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\Kazekun.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[116/377] MWCC build/GMSE01/src/Enemy/rocket.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\rocket.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[117/377] MWCC build/GMSE01/src/Enemy/yunbo.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\yunbo.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[118/377] MWCC build/GMSE01/src/Enemy/koopajr.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\koopajr.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[119/377] MWCC build/GMSE01/src/Enemy/bossManta.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\bossManta.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[120/377] MWCC build/GMSE01/src/Enemy/Kumokun.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\Kumokun.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Enemy\Kumokun.cpp
+# ------------------------------
+#     945: bool TKumokun::isCrashing() const { }
+# Warning:                                     ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1280: }
+# Warning: ^
+#   return value expected
+[121/377] MWCC build/GMSE01/src/Enemy/Kukku.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\Kukku.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[122/377] MWCC build/GMSE01/src/Enemy/Koopa.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\Koopa.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[123/377] MWCC build/GMSE01/src/Enemy/BathtubPeach.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\BathtubPeach.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[124/377] MWCC build/GMSE01/src/Enemy/Amenbo.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\Amenbo.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[125/377] MWCC build/GMSE01/src/Enemy/coasterkiller.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\coasterkiller.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[126/377] MWCC build/GMSE01/src/Enemy/BathtubBinder.o
+[127/377] MWCC build/GMSE01/src/Enemy/BathtubKiller.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\BathtubKiller.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[128/377] MWCC build/GMSE01/src/GC2D/Coord2D.o
+[129/377] MWCC build/GMSE01/src/Enemy/DebuTelesa.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\DebuTelesa.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[130/377] MWCC build/GMSE01/src/Enemy/TabePuku.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\TabePuku.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[131/377] MWCC build/GMSE01/src/GC2D/Menu.o
+[132/377] MWCC build/GMSE01/src/GC2D/ScrnFader.o
+[133/377] MWCC build/GMSE01/src/Enemy/limitkoopa.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\limitkoopa.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[134/377] MWCC build/GMSE01/src/Enemy/limitkoopajr.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Enemy\limitkoopajr.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[135/377] MWCC build/GMSE01/src/GC2D/HelpActor.o
+[136/377] MWCC build/GMSE01/src/GC2D/PauseMenu2.o
+sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\GC2D\PauseMenu2.cpp contains Shift JIS encoding errors
+[137/377] MWCC build/GMSE01/src/GC2D/Talk2D2.o
+[138/377] MWCC build/GMSE01/src/GC2D/ConsoleStr.o
+[139/377] MWCC build/GMSE01/src/GC2D/SelectDir.o
+### mwcceppc.exe Compiler:
+#    File: src\GC2D\SelectDir.cpp
+# -------------------------------
+#      81: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     381: }
+# Warning: ^
+#   return value expected
+[140/377] MWCC build/GMSE01/src/GC2D/CardSave.o
+[141/377] MWCC build/GMSE01/src/GC2D/SelectMenu.o
+[142/377] MWCC build/GMSE01/src/GC2D/ShineFader.o
+[143/377] MWCC build/GMSE01/src/GC2D/SelectShine2.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGeometry\JGVec2.hpp
+#    From: src\GC2D\SelectShine2.cpp
+# ----------------------------------
+#     176: return result;
+# Warning:              ^
+#   function result is a pointer/reference to an automatic variable
+#    (instantiating: 'JGeometry::TVec2<float>::operator-(const 
+#   JGeometry::TVec2<float> &)const ')
+[144/377] MWCC build/GMSE01/src/GC2D/SunGlass.o
+[145/377] MWCC build/GMSE01/src/GC2D/Guide.o
+[146/377] MWCC build/GMSE01/src/GC2D/MovieSubtitle.o
+[147/377] MWCC build/GMSE01/src/GC2D/ProgSelect.o
+[148/377] MWCC build/GMSE01/src/GC2D/CardLoad.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\GC2D\CardLoad.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[149/377] MWCC build/GMSE01/src/GC2D/MovieRumble.o
+[150/377] MWCC build/GMSE01/src/GC2D/Option.o
+[151/377] MWCC build/GMSE01/src/Map/MapArea.o
+[152/377] MWCC build/GMSE01/src/Map/JointModelManager.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\JointModelManager.cpp
+# --------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[153/377] MWCC build/GMSE01/src/Map/Map.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\Map.cpp
+# ------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Map\Map.cpp
+# ------------------------
+#     312: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     454: }
+# Warning: ^
+#   return value expected
+[154/377] MWCC build/GMSE01/src/Map/MapCollisionData.o
+[155/377] MWCC build/GMSE01/src/Map/MapCheck.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGeometry\JGVec2.hpp
+#    From: src\Map\MapCheck.cpp
+# -----------------------------
+#     176: return result;
+# Warning:              ^
+#   function result is a pointer/reference to an automatic variable
+#    (instantiating: 'JGeometry::TVec2<float>::operator-(const 
+#   JGeometry::TVec2<float> &)const ')
+[156/377] MWCC build/GMSE01/src/Map/JointModel.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\JointModel.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[157/377] MWCC build/GMSE01/src/Map/MapCollisionManager.o
+[158/377] MWCC build/GMSE01/src/Map/MapCollisionEntry.o
+[159/377] MWCC build/GMSE01/src/Map/MapMakeData.o
+[160/377] MWCC build/GMSE01/src/Map/MapMakeList.o
+[161/377] MWCC build/GMSE01/src/Map/MapEvent.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapEvent.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[162/377] MWCC build/GMSE01/src/Map/MapDraw.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapDraw.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[163/377] MWCC build/GMSE01/src/Map/MapEventSink.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapEventSink.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[164/377] MWCC build/GMSE01/src/Map/MapModel.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapModel.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[165/377] MWCC build/GMSE01/src/Map/MapWarp.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapWarp.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[166/377] MWCC build/GMSE01/src/Map/MapMirror.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapMirror.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[167/377] MWCC build/GMSE01/src/Map/MapStaticObject.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapStaticObject.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[168/377] MWCC build/GMSE01/src/GC2D/GCConsole2.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\GC2D\GCConsole2.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[169/377] MWCC build/GMSE01/src/Map/MapXlu.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapXlu.cpp
+# ---------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[170/377] MWCC build/GMSE01/src/Map/MapWireManager.o
+sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Map\MapWireManager.cpp contains Shift JIS encoding errors
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapWireManager.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[171/377] MWCC build/GMSE01/src/Map/MapWire.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapWire.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[172/377] MWCC build/GMSE01/src/Map/PollutionAction.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\PollutionAction.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[173/377] MWCC build/GMSE01/src/Map/PollutionCount.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\PollutionCount.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[174/377] MWCC build/GMSE01/src/Map/PollutionManager.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\PollutionManager.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[175/377] MWCC build/GMSE01/src/Map/PollutionObj.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\PollutionObj.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[176/377] MWCC build/GMSE01/src/Map/PollutionPos.o
+[177/377] MWCC build/GMSE01/src/Map/Shimmer.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\Shimmer.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[178/377] MWCC build/GMSE01/src/Map/Sky.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\Sky.cpp
+# ------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[179/377] MWCC build/GMSE01/src/Map/MapEventSirena.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapEventSirena.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[180/377] MWCC build/GMSE01/src/Map/PollutionEvent.o
+[181/377] MWCC build/GMSE01/src/Map/MapCollisionPlane.o
+[182/377] MWCC build/GMSE01/src/Map/PollutionLayer.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\PollutionLayer.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[183/377] MWCC build/GMSE01/src/Map/MarineSnow.o
+[184/377] MWCC build/GMSE01/src/Map/StickyStainManager.o
+[185/377] MWCC build/GMSE01/src/Map/MapData.o
+[186/377] MWCC build/GMSE01/src/Map/MapEventDolpic.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapEventDolpic.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[187/377] MWCC build/GMSE01/src/MoveBG/WoodBarrel.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\WoodBarrel.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[188/377] MWCC build/GMSE01/src/Map/MapEventMare.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Map\MapEventMare.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[189/377] MWCC build/GMSE01/src/MoveBG/MapObjBase.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjBase.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[190/377] MWCC build/GMSE01/src/MoveBG/MapObjGeneral.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjGeneral.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[191/377] MWCC build/GMSE01/src/MoveBG/MapObjInit.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjInit.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[192/377] MWCC build/GMSE01/src/MoveBG/MapObjLib.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjLib.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\MoveBG\MapObjLib.cpp
+# ---------------------------------
+#     261: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1024: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1251: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1251: }
+# Warning: ^
+#   return value expected
+[193/377] MWCC build/GMSE01/src/Map/BathWaterManager.o
+[194/377] MWCC build/GMSE01/src/MoveBG/MapObjManager.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjManager.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[195/377] MWCC build/GMSE01/src/MoveBG/ItemManager.o
+[196/377] MWCC build/GMSE01/src/MoveBG/Item.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\Item.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[197/377] MWCC build/GMSE01/src/MoveBG/MapObjBlock.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjBlock.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[198/377] MWCC build/GMSE01/src/MoveBG/MapObjTown.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjTown.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[199/377] MWCC build/GMSE01/src/MoveBG/MapObjBianco.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjBianco.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[200/377] MWCC build/GMSE01/src/MoveBG/MapObjSirena.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjSirena.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[201/377] MWCC build/GMSE01/src/MoveBG/MapObjRicco.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjRicco.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[202/377] MWCC build/GMSE01/src/MoveBG/MapObjSample.o
+[203/377] MWCC build/GMSE01/src/MoveBG/MapObjMamma.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjMamma.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[204/377] MWCC build/GMSE01/src/MoveBG/MapObjFlag.o
+[205/377] MWCC build/GMSE01/src/MoveBG/MapObjWave.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjWave.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[206/377] MWCC build/GMSE01/src/MoveBG/MapObjPinna.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjPinna.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[207/377] MWCC build/GMSE01/src/MoveBG/MapObjFloat.o
+[208/377] MWCC build/GMSE01/src/MoveBG/MapObjPlane.o
+[209/377] MWCC build/GMSE01/src/MoveBG/MapObjCloud.o
+[210/377] MWCC build/GMSE01/src/MoveBG/MapObjMare.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjMare.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[211/377] MWCC build/GMSE01/src/MoveBG/MapObjAirport.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjAirport.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[212/377] MWCC build/GMSE01/src/MoveBG/MapObjPole.o
+[213/377] MWCC build/GMSE01/src/MoveBG/MapObjPollution.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjPollution.cpp
+# ---------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[214/377] MWCC build/GMSE01/src/MoveBG/MapObjDolpic.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjDolpic.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[215/377] MWCC build/GMSE01/src/MoveBG/MapObjGrass.o
+[216/377] MWCC build/GMSE01/src/MoveBG/MapObjBall.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjBall.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[217/377] MWCC build/GMSE01/src/MoveBG/MapObjWater.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjWater.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[218/377] MWCC build/GMSE01/src/MoveBG/MapObjOption.o
+[219/377] MWCC build/GMSE01/src/MoveBG/MapObjRailBlock.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjRailBlock.cpp
+# ---------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[220/377] MWCC build/GMSE01/src/MoveBG/ModelGate.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\ModelGate.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[221/377] MWCC build/GMSE01/src/MoveBG/MapObjFence.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjFence.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[222/377] MWCC build/GMSE01/src/MoveBG/MapObjMonte.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjMonte.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[223/377] MWCC build/GMSE01/src/MoveBG/Pool.o
+[224/377] MWCC build/GMSE01/src/MoveBG/MapObjTree.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjTree.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[225/377] MWCC build/GMSE01/src/MoveBG/MapObjEx.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjEx.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[226/377] MWCC build/GMSE01/src/MoveBG/MapObjItem2.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjItem2.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[227/377] MWCC build/GMSE01/src/MoveBG/MapObjTrap.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjTrap.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\MoveBG\MapObjTrap.cpp
+# ----------------------------------
+#      80: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     307: static void dummy2(f32* f) { *f = 0.0f; }
+# Warning:                                         ^
+#   return value expected
+[228/377] MWCC build/GMSE01/src/NPC/NpcAnm.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcAnm.cpp
+# ---------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[229/377] MWCC build/GMSE01/src/MoveBG/MapObjHide.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjHide.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[230/377] MWCC build/GMSE01/src/MoveBG/MapObjCorona.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MoveBG\MapObjCorona.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[231/377] MWCC build/GMSE01/src/NPC/NpcBase.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcBase.cpp
+# ----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[232/377] MWCC build/GMSE01/src/NPC/NpcCallback.o
+[233/377] MWCC build/GMSE01/src/NPC/NpcManager.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcManager.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[234/377] MWCC build/GMSE01/src/NPC/NpcNerve.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcNerve.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[235/377] MWCC build/GMSE01/src/NPC/NpcSave.o
+[236/377] MWCC build/GMSE01/src/NPC/NpcInbetween.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcInbetween.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[237/377] MWCC build/GMSE01/src/NPC/NpcEvent.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcEvent.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[238/377] MWCC build/GMSE01/src/NPC/NpcInitPrg.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcInitPrg.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[239/377] MWCC build/GMSE01/src/NPC/NpcSound.o
+[240/377] MWCC build/GMSE01/src/NPC/NpcThrow.o
+[241/377] MWCC build/GMSE01/src/NPC/NpcColor.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcColor.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[242/377] MWCC build/GMSE01/src/NPC/NpcParts.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcParts.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[243/377] MWCC build/GMSE01/src/NPC/NpcTrample.o
+[244/377] MWCC build/GMSE01/src/NPC/NpcInitActionData.o
+[245/377] MWCC build/GMSE01/src/NPC/NpcBalloon.o
+[246/377] MWCC build/GMSE01/src/NPC/NpcCoin.o
+[247/377] MWCC build/GMSE01/src/NPC/NpcChange.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcChange.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\NPC\NpcChange.cpp
+# ------------------------------
+#     146: bool TBaseNPC::isNerveCanGoToThrow() const { }
+# Warning:                                              ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     688: void TBaseNPC::kill() { }
+# Warning:                         ^
+#   return value expected
+[248/377] MWCC build/GMSE01/src/NPC/NpcWalkTurn.o
+[249/377] MWCC build/GMSE01/src/NPC/NpcEffect.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcEffect.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[250/377] MWCC build/GMSE01/src/NPC/NpcCollision.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\NPC\NpcCollision.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[251/377] MWCC build/GMSE01/src/Strategic/liveactor.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Strategic\liveactor.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[252/377] MWCC build/GMSE01/src/Strategic/livemanager.o
+[253/377] MWCC build/GMSE01/src/Strategic/ObjHitCheck.o
+[254/377] MWCC build/GMSE01/src/Strategic/ObjModel.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Strategic\ObjModel.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[255/377] MWCC build/GMSE01/src/Strategic/objmanager.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Strategic\objmanager.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[256/377] MWCC build/GMSE01/src/Strategic/liveinterp.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Strategic\liveinterp.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[257/377] MWCC build/GMSE01/src/Strategic/question.o
+[258/377] MWCC build/GMSE01/src/Strategic/HitActor.o
+[259/377] MWCC build/GMSE01/src/Strategic/Strategy.o
+[260/377] MWCC build/GMSE01/src/MarioUtil/DLUtil.o
+### mwcceppc.exe Compiler:
+#    File: src\MarioUtil\DLUtil.cpp
+# ---------------------------------
+#     121: bool TDLTexQuadMulti::request(const JGeometry::TVec3<f32>*) { }
+# Warning:                                                               ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     208: }
+# Warning: ^
+#   return value expected
+[261/377] MWCC build/GMSE01/src/Strategic/SharedParts.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Strategic\SharedParts.cpp
+# --------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[262/377] MWCC build/GMSE01/src/Strategic/MirrorActor.o
+[263/377] MWCC build/GMSE01/src/MarioUtil/MathUtil.o
+### mwcceppc.exe Compiler:
+#    File: src\MarioUtil\MathUtil.cpp
+# -----------------------------------
+#     494: psq_l   f6, Vec.x(v1), 0, qr0
+# Warning: ^^^^^
+#   ambiguous use of argument(v1) and assembler register(v1) name
+### mwcceppc.exe Compiler:
+#     494: psq_l   f6, Vec.x(v1), 0, qr0
+# Warning: ^^^^^
+#   ambiguous use of argument(v2) and assembler register(v2) name
+[264/377] MWCC build/GMSE01/src/MarioUtil/DrawUtil.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MarioUtil\DrawUtil.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[265/377] MWCC build/GMSE01/src/MarioUtil/LightUtil.o
+[266/377] MWCC build/GMSE01/src/MarioUtil/EffectUtil.o
+[267/377] MWCC build/GMSE01/src/MarioUtil/ScreenUtil.o
+sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\MarioUtil\ScreenUtil.cpp contains Shift JIS encoding errors
+[268/377] MWCC build/GMSE01/src/MarioUtil/MtxUtil.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MarioUtil\MtxUtil.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[269/377] MWCC build/GMSE01/src/MarioUtil/RumbleMgr.o
+[270/377] MWCC build/GMSE01/src/M3DUtil/M3UModel.o
+[271/377] MWCC build/GMSE01/src/M3DUtil/MActor.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\M3DUtil\MActor.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\M3DUtil\MActor.cpp
+# -------------------------------
+#     318: const char* MActor::getCurAnmName(int) const { }
+# Warning:                                                ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     737: void MActor::dumpReport() { }
+# Warning:                             ^
+#   return value expected
+[272/377] MWCC build/GMSE01/src/MarioUtil/ShadowUtil.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MarioUtil\ShadowUtil.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<TMBindShadowBody *, 
+#   JGadget::TAllocator<TMBindShadowBody *>>::Confirm()')
+[273/377] MWCC build/GMSE01/src/MarioUtil/MapUtil.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MarioUtil\MapUtil.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[274/377] MWCC build/GMSE01/src/MarioUtil/ModelUtil.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\MarioUtil\ModelUtil.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[275/377] MWCC build/GMSE01/src/M3DUtil/SDLModel.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\M3DUtil\SDLModel.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<SDLDrawBufToken *, 
+#   JGadget::TAllocator<SDLDrawBufToken *>>::Confirm()')
+[276/377] MWCC build/GMSE01/src/M3DUtil/SampleCtrlNode.o
+[277/377] MWCC build/GMSE01/src/M3DUtil/SampleCtrlModel.o
+[278/377] MWCC build/GMSE01/src/M3DUtil/MotionBlendCtrl.o
+[279/377] MWCC build/GMSE01/src/M3DUtil/MActorUtil.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\M3DUtil\MActorUtil.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[280/377] MWCC build/GMSE01/src/Player/MarioBlend.o
+[281/377] MWCC build/GMSE01/src/M3DUtil/LodAnm.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\M3DUtil\LodAnm.cpp
+# -------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[282/377] MWCC build/GMSE01/src/Player/MarioAction.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioAction.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[283/377] MWCC build/GMSE01/src/Player/MarioCap.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioCap.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[284/377] MWCC build/GMSE01/src/Player/MarioAutodemo.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioAutodemo.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[285/377] MWCC build/GMSE01/src/Player/MarioCollision.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioCollision.cpp
+# --------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[286/377] MWCC build/GMSE01/src/Player/MarioJump.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioJump.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[287/377] MWCC build/GMSE01/src/Player/MarioMain.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioMain.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[288/377] MWCC build/GMSE01/src/Player/MarioDraw.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioDraw.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[289/377] MWCC build/GMSE01/src/Player/MarioPhysics.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioPhysics.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[290/377] MWCC build/GMSE01/src/Player/MarioMove.o
+sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Player\MarioMove.cpp contains Shift JIS encoding errors
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioMove.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[291/377] MWCC build/GMSE01/src/Player/MarioUpper.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioUpper.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[292/377] MWCC build/GMSE01/src/Player/MarioRun.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioRun.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[293/377] MWCC build/GMSE01/src/Player/SplashManager.o
+[294/377] MWCC build/GMSE01/src/Player/MarioWait.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioWait.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[295/377] MWCC build/GMSE01/src/Player/MarioSpecial.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioSpecial.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[296/377] MWCC build/GMSE01/src/Player/MarioParticle.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioParticle.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[297/377] MWCC build/GMSE01/src/Player/Tongue.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\Tongue.cpp
+# ------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[298/377] MWCC build/GMSE01/src/Player/WaterGun.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\WaterGun.cpp
+# --------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[299/377] MWCC build/GMSE01/src/Player/MarioEffect.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioEffect.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[300/377] MWCC build/GMSE01/src/Player/Yoshi.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\Yoshi.cpp
+# -----------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Player\Yoshi.cpp
+# -----------------------------
+#     409: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#    1222: }
+# Warning: ^
+#   return value expected
+[301/377] MWCC build/GMSE01/src/Player/MarioAccess.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioAccess.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\Player\MarioAccess.cpp
+# -----------------------------------
+#      90: bool SMS_IsMarioStatusHipDropEnd() { }
+# Warning:                                      ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     114: bool SMS_IsStatusHipDropOrHipDropEnd(THitActor* actor) { }
+# Warning:                                                          ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     342: bool SMS_IsMarioRoofing() { return gpMarioOriginal->isRoofing(); }
+# Warning:                                                                  ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     342: bool SMS_IsMarioRoofing() { return gpMarioOriginal->isRoofing(); }
+# Warning:                                                                  ^
+#   return value expected
+[302/377] MWCC build/GMSE01/src/Player/MarioSwim.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioSwim.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[303/377] MWCC build/GMSE01/src/Player/MarioPositionObj.o
+[304/377] MWCC build/GMSE01/src/System/EmitterViewObj.o
+[305/377] MWCC build/GMSE01/src/Player/MarioSound.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioSound.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[306/377] MWCC build/GMSE01/src/Player/ModelWaterManager.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\ModelWaterManager.cpp
+# -----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[307/377] MWCC build/GMSE01/src/Player/MarioCheckCol.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioCheckCol.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[308/377] MWCC build/GMSE01/src/Player/MarioReceiveMsg.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioReceiveMsg.cpp
+# ---------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[309/377] MWCC build/GMSE01/src/System/J3DSysFlag.o
+[310/377] MWCC build/GMSE01/src/System/GCLogoDir.o
+[311/377] MWCC build/GMSE01/src/System/MarDirector.o
+### mwcceppc.exe Compiler:
+#    File: src\System\MarDirector.cpp
+# -----------------------------------
+#      75: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#      96: }
+# Warning: ^
+#   return value expected
+[312/377] MWCC build/GMSE01/src/System/MarDirectorInitECT.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\MarDirectorInitECT.cpp
+# ------------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+### mwcceppc.exe Compiler:
+#    File: src\System\MarDirectorInitECT.cpp
+# ------------------------------------------
+#     118: GXTexObj& obj = *MarDirectorInitECTUnk60(mirrorCam);
+# Warning:                                                    ^
+#   illegal const/volatile '&' reference initialization
+[313/377] MWCC build/GMSE01/src/System/MarDirectorPreEntry.o
+[314/377] MWCC build/GMSE01/src/System/MarDirectorEvent.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\MarDirectorEvent.cpp
+# ----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[315/377] MWCC build/GMSE01/src/System/MarDirectorDirect.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\MarDirectorDirect.cpp
+# -----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[316/377] MWCC build/GMSE01/src/System/EventWatcher.o
+sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\System\EventWatcher.cpp contains Shift JIS encoding errors
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\EventWatcher.cpp
+# ------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[317/377] MWCC build/GMSE01/src/System/ParamInst.o
+[318/377] MWCC build/GMSE01/src/System/PerformList.o
+[319/377] MWCC build/GMSE01/src/System/MenuDir.o
+sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\System\MenuDir.cpp contains Shift JIS encoding errors
+### mwcceppc.exe Compiler:
+#    File: src\System\MenuDir.cpp
+# -------------------------------
+#      62: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     491: }
+# Warning: ^
+#   return value expected
+[320/377] MWCC build/GMSE01/src/System/RenderModeObj.o
+[321/377] MWCC build/GMSE01/src/System/SnapTimeObj.o
+[322/377] MWCC build/GMSE01/src/System/MarDirectorSetup2.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\MarDirectorSetup2.cpp
+# -----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[323/377] MWCC build/GMSE01/src/System/TalkCursor.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\TalkCursor.cpp
+# ----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[324/377] MWCC build/GMSE01/src/System/ZBufferCatch.o
+[325/377] MWCC build/GMSE01/src/System/StageUtil.o
+[326/377] MWCC build/GMSE01/src/System/MarNameRefGen.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\MarNameRefGen.cpp
+# -------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[327/377] MWCC build/GMSE01/src/System/MarioGamePad.o
+[328/377] MWCC build/GMSE01/src/System/PositionHolder.o
+[329/377] MWCC build/GMSE01/src/System/THPRender.o
+[330/377] MWCC build/GMSE01/src/System/Application.o
+[331/377] MWCC build/GMSE01/src/System/MarNameRefGen_Map.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\MarNameRefGen_Map.cpp
+# -----------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[332/377] MWCC build/GMSE01/src/System/MarNameRefGen_NPC.o
+[333/377] MWCC build/GMSE01/src/System/MarNameRefGen_BossEnemy.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\MarNameRefGen_BossEnemy.cpp
+# -----------------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[334/377] MWCC build/GMSE01/src/System/MarNameRefGen_Enemy.o
+[335/377] MWCC build/GMSE01/src/System/MarDirectorLoadResource.o
+[336/377] MWCC build/GMSE01/src/System/MovieDirector.o
+### mwcceppc.exe Compiler:
+#    File: src\System\MovieDirector.cpp
+# -------------------------------------
+#     170: }
+# Warning: ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     573: }
+# Warning: ^
+#   return value expected
+[337/377] MWCC build/GMSE01/src/System/MarDirectorCreateObjects.o
+[338/377] MWCC build/GMSE01/src/System/MarNameRefGen_MapObj.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\MarNameRefGen_MapObj.cpp
+# --------------------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[339/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRActor.o
+[340/377] MWCC build/GMSE01/src/System/MSoundMainSide.o
+[341/377] MWCC build/GMSE01/src/System/TargetArrow.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\System\TargetArrow.cpp
+# -----------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[342/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRDirector.o
+[343/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRDisplay.o
+[344/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRCamera.o
+[345/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRDrawBufObj.o
+[346/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRDStage.o
+[347/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRFrmGXSet.o
+[348/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRDStageGroup.o
+[349/377] MWCC build/GMSE01/src/JSystem/JDrama/JDREfbCtrl.o
+[350/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRGraphics.o
+[351/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRPlacement.o
+[352/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRLighting.o
+[353/377] MWCC build/GMSE01/src/Player/MarioInit.o
+### mwcceppc.exe Compiler:
+#      In: include\JSystem\JGadget\std-list.hpp
+#    From: src\Player\MarioInit.cpp
+# ---------------------------------
+#     201: }
+# Warning: ^
+#   return value expected
+#    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
+#   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
+[354/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRScreen.o
+[355/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRNameRefGen.o
+[356/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRViewConnecter.o
+[357/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRViewObj.o
+[358/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRSmJ3DScn.o
+[359/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRViewport.o
+[360/377] MWCC build/GMSE01/src/JSystem/JDrama/JDRSmJ3DAct.o
+[361/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAMath.o
+### mwcceppc.exe Compiler:
+#    File: src\JSystem\JParticle\JPAMath.cpp
+# ------------------------------------------
+#     198: s16 JPAConvertFloatToFix(f32) { }
+# Warning:                                 ^
+#   return value expected
+### mwcceppc.exe Compiler:
+#     198: s16 JPAConvertFloatToFix(f32) { }
+# Warning:                                 ^
+#   return value expected
+[362/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAEmitterManager.o
+[363/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAEmitter.o
+[364/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAField.o
+[365/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAParticle.o
+[366/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAExTexShape.o
+[367/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAEmitterLoader.o
+[368/377] MWCC build/GMSE01/src/JSystem/JParticle/JPABaseShape.o
+[369/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAExtraShape.o
+[370/377] MWCC build/GMSE01/src/JSystem/JParticle/JPAResourceManager.o
+[371/377] MWCC build/GMSE01/src/JSystem/JParticle/JPADraw.o
+[372/377] MWCC build/GMSE01/src/JSystem/JParticle/JPASweepShape.o
+[373/377] MWCC build/GMSE01/src/JSystem/JParticle/JPADrawVisitor.o
+[374/377] MWCC build/GMSE01/src/System/MarDirectorSetupObjects.o
+[375/377] REPORT
+ INFO Loading project .
+ INFO Generating report for 732 units (using 4 threads)
+ INFO Report generated in 1.026s
+ INFO Writing to build/GMSE01/report.json
+[376/377] CHANGES
+ INFO Writing to build/GMSE01/report_changes.json
+[377/377] CHANGESFMT
+                                                                                               Total | matched_code |  69.07% ->  69.27%
+                                                                                   mario/Animal/Bird | fuzzy_match  |  97.42% ->  97.50%
+                                                                 doFlyToCurPathNode__11TAnimalBirdFv | fuzzy_match  |  95.33% ->  96.45%
+                                                                          doLanding__11TAnimalBirdFb | fuzzy_match  |  88.27% ->  88.52%
+                                                                               mario/Enemy/effectObj | fuzzy_match  |  99.62% ->  99.84%
+                                                                               mario/Enemy/effectObj | matched_code |  89.79% ->  92.51%
+                          generate__17TEffectColumWaterFRQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f> | fuzzy_match  |  91.95% -> 100.00%
+                                                                         mario/Enemy/enemyAttachment | fuzzy_match  |  99.98% ->  99.99%
+                                                                         mario/Enemy/enemyAttachment | matched_code |  72.26% ->  89.46%
+                                                                          bind__16TEnemyAttachmentFv | fuzzy_match  |  99.96% -> 100.00%
+                                                                                   mario/Enemy/gesso | fuzzy_match  |  99.93% ->  99.93%
+                                           execute__17TNerveGessoFreezeCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  99.80% ->  99.83%
+                                                                                mario/Enemy/hamukuri | matched_code |  84.75% ->  88.67%
+                                                                                  bind__9THamuKuriFv | fuzzy_match  |  99.95% -> 100.00%
+                                                         behaveToWater__14TDangoHamuKuriFP9THitActor | fuzzy_match  |  99.98% -> 100.00%
+                                                                               mario/Enemy/bossgesso | fuzzy_match  |  99.10% ->  99.12%
+                                                        perform__10TBossGessoFUlPQ26JDrama9TGraphics | fuzzy_match  |  98.29% ->  98.47%
+                                                                              mario/Enemy/fireWanwan | fuzzy_match  |  97.89% ->  97.96%
+                                                        bindOne__11TTailRubberFRQ211TTailRubber4Node | fuzzy_match  |  99.32% ->  99.42%
+                                                                        init__18TFireWanwanTailHitFv | fuzzy_match  |  96.14% ->  96.19%
+                                         execute__19TNerveFireWanwanFlyCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  96.47% ->  99.78%
+                                                           perform__8TBWLeashFUlPQ26JDrama9TGraphics | fuzzy_match  |  96.08% ->  96.66%
+                                                                                mario/Enemy/chuuhana | fuzzy_match  |  99.44% ->  99.45%
+                                                                                mario/Enemy/chuuhana | matched_code |  57.18% ->  63.62%
+                                                                         attackToMario__9TChuuHanaFv | fuzzy_match  |  99.95% -> 100.00%
+                                                                                  bind__9TChuuHanaFv | fuzzy_match  |  99.96% -> 100.00%
+                                                                                  mario/Enemy/igaiga | fuzzy_match  |  98.03% ->  98.18%
+                                                                       walkBehavior__10TRollEnemyFif | fuzzy_match  |  97.93% ->  99.92%
+                                                                              setMeltAnm__7TIgaigaFv | fuzzy_match  |  92.14% ->  96.06%
+                                                                                 mario/Enemy/poihana | fuzzy_match  |  99.96% ->  99.96%
+                                                                                 mario/Enemy/poihana | matched_code |  79.49% ->  81.79%
+                                                                           genEventCoin__8TPoiHanaFv | fuzzy_match  |  99.91% -> 100.00%
+                                                                                 mario/Enemy/bombhei | fuzzy_match  |  99.87% ->  99.98%
+                                         execute__19TNerveBombHeiThrownCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  96.88% ->  99.58%
+                                                                                 mario/Enemy/bosseel | fuzzy_match  |  99.55% ->  99.57%
+                                                                         collideToMario__8TBossEelFv | fuzzy_match  |  98.34% ->  99.49%
+                                                        setDegreeZAndRevisionPosXZ__11TSphereLinkFif | fuzzy_match  |  98.19% ->  98.24%
+                                                                                 mario/Enemy/amiNoko | fuzzy_match  |  99.50% ->  99.50%
+                                                                                 mario/Enemy/amiNoko | matched_code |  49.68% ->  54.18%
+                                                                                   bind__8TAmiNokoFv | fuzzy_match  |  99.95% -> 100.00%
+                                                                                 mario/Enemy/Kazekun | fuzzy_match  |  97.00% ->  97.29%
+                                                                         flyAroundMario__8TKazekunFv | fuzzy_match  |  93.47% ->  93.71%
+                                                                           doAttackPose__8TKazekunFb | fuzzy_match  |  78.94% ->  81.55%
+                                                                               mario/Enemy/bossManta | fuzzy_match  |  99.49% ->  99.52%
+                                                 spawn__17TBossMantaManagerFiRCQ29JGeometry8TVec3<f> | fuzzy_match  |  96.51% ->  97.69%
+                                                                              mario/Enemy/wireBinder | fuzzy_match  |  99.98% -> 100.00%
+                                                                              mario/Enemy/wireBinder | matched_code |  59.35% -> 100.00%
+                                                                   bind__11TWireBinderFP10TLiveActor | fuzzy_match  |  99.96% -> 100.00%
+                                                                                   mario/Enemy/yunbo | fuzzy_match  |  99.40% ->  99.66%
+                                                                                shotSeeds__6TYumboFv | fuzzy_match  |  95.69% ->  97.55%
+                                                                                 mario/Enemy/koopajr | matched_code |  48.96% ->  50.16%
+                                                                         bind__17TKoopaJrSubmarineFv | fuzzy_match  |  99.89% -> 100.00%
+                                                                                   mario/Enemy/Kukku | fuzzy_match  |  96.99% ->  97.17%
+                                             execute__15TNerveKukkuFallCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  96.99% ->  99.77%
+                                                                                  mario/Enemy/Amenbo | fuzzy_match  |  99.18% ->  99.18%
+                                                                                  mario/Enemy/Amenbo | matched_code |  47.33% ->  54.47%
+                                                                                    bind__7TAmenboFv | fuzzy_match  |  99.96% -> 100.00%
+                                                                           mario/Enemy/BathtubKiller | fuzzy_match  |  97.91% ->  97.91%
+                                                                           mario/Enemy/BathtubKiller | matched_code |  42.38% ->  47.60%
+                                                                            bind__14TBathtubKillerFv | fuzzy_match  |  99.97% -> 100.00%
+                                                                           mario/Enemy/coasterkiller | fuzzy_match  |  98.11% ->  98.11%
+                                                                           mario/Enemy/coasterkiller | matched_code |  70.99% ->  73.77%
+                                                                             bind__13TCoasterEnemyFv | fuzzy_match  |  99.87% -> 100.00%
+                                                                              mario/Enemy/limitkoopa | fuzzy_match  |  98.97% ->  98.97%
+                                                                              mario/Enemy/limitkoopa | matched_code |  67.27% ->  70.20%
+                                                                               bind__11TLimitKoopaFv | fuzzy_match  |  99.92% -> 100.00%
+                                                                             mario/GC2D/SelectShine2 | fuzzy_match  |  97.67% ->  98.14%
+                                               perform__19TSelectShineManagerFUlPQ26JDrama9TGraphics | fuzzy_match  |  92.48% ->  94.75%
+                                                                               mario/Map/MapMakeData | fuzzy_match  |  98.47% ->  99.96%
+                                                                               mario/Map/MapMakeData | matched_code |  68.52% ->  87.41%
+                                            setCheckData__17TMapCollisionBaseFPCfPCsP12TBGCheckDatai | fuzzy_match  |  92.11% -> 100.00%
+                                                                                   mario/Map/MapWire | fuzzy_match  |  97.90% ->  99.11%
+                                                              setFootPointsAtHanged__8TMapWireFPA4_f | fuzzy_match  |  92.43% ->  99.59%
+                                                    getPosInWire__8TMapWireCFRCQ29JGeometry8TVec3<f> | fuzzy_match  |  85.94% ->  99.32%
+                                                                            mario/MoveBG/MapObjMamma | fuzzy_match  |  98.89% ->  98.89%
+                                                                            mario/MoveBG/MapObjMamma | matched_code |  61.17% ->  62.62%
+                                                                          loadAfter__11TLeanMirrorFv | fuzzy_match  |  99.91% -> 100.00%
+                                                                               mario/NPC/NpcCallback | fuzzy_match  |  98.60% ->  98.61%
+                                                                        NPCNeckCallBack__FP7J3DNodei | fuzzy_match  |  98.28% ->  98.28%
+                                                                           mario/Strategic/liveactor | fuzzy_match  |  99.98% ->  99.98%
+                                                                           mario/Strategic/liveactor | matched_code |  70.56% ->  79.88%
+                                                                                bind__10TLiveActorFv | fuzzy_match  |  99.95% -> 100.00%
+                                                                            mario/MarioUtil/DrawUtil | fuzzy_match  |  99.58% ->  99.75%
+                                                                      clash__19TTrembleModelEffectFf | fuzzy_match  |  94.00% ->  97.28%
+                                                                             mario/MarioUtil/MtxUtil | fuzzy_match  |  97.83% ->  98.16%
+SMS_MakeJointsToArc__FP8J3DModelRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TV[...] | fuzzy_match  |  96.64% ->  96.82%
+                                                            moveHead__5TRopeFRCQ29JGeometry8TVec3<f> | fuzzy_match  |  93.60% ->  99.75%
+                                                                                 wireMove__6TMarioFf | fuzzy_match  |  99.69% ->  99.86%
+                                                                      mario/Player/ModelWaterManager | fuzzy_match  |  96.92% ->  96.93%
+                                                                        move__18TModelWaterManagerFv | fuzzy_match  |  95.89% ->  95.95%
+                                                                                               Total | fuzzy_match  |  98.95% ->  98.93%
+                                                                                               Total | matched_data |  98.65% ->  98.60%
+                                                                                  mario/Enemy/emario | fuzzy_match  |  99.63% ->  98.42%
+                                                            perform__7TEMarioFUlPQ26JDrama9TGraphics | fuzzy_match  |  98.18% ->  91.80%
+                                                                                   mario/Enemy/enemy | fuzzy_match  |  99.20% ->  98.79%
+                                                             zigzagToCurPathNode__11TSpineEnemyFffff | fuzzy_match  |  95.96% ->  94.03%
+                                                                         doShortCut__11TSpineEnemyFv | fuzzy_match  |  99.64% ->  96.64%
+                                                                              mario/Enemy/enemyMario | fuzzy_match  |  99.63% ->  99.32%
+                                                             findRunAwayNearestNode__11TEnemyMarioFv | fuzzy_match  |  98.82% ->  88.10%
+                                                                                mario/Enemy/hamukuri | fuzzy_match  |  99.99% ->  99.98%
+                                                                    walkBehavior__13THaneHamuKuriFif | fuzzy_match  |  99.90% ->  99.81%
+                                                                               mario/Enemy/mameGesso | fuzzy_match  |  99.98% ->  99.78%
+                                                                               mario/Enemy/mameGesso | matched_code |  82.64% ->  78.63%
+                                     execute__23TNerveMameGessoJitabataCFP24TSpineBase<10TLiveActor> | fuzzy_match  | 100.00% ->  95.13%
+                                                                            mario/Enemy/elecNokonoko | fuzzy_match  |  99.73% ->  99.58%
+                                                                            shoot__13TElecCarapaceFv | fuzzy_match  |  96.36% ->  92.87%
+                                    execute__24TNerveElecCarapaceReturnCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  99.89% ->  99.86%
+                                                                                  mario/Enemy/telesa | fuzzy_match  |  99.98% ->  99.86%
+                                                                 behaveToWater__7TTelesaFP9THitActor | fuzzy_match  |  99.92% ->  96.17%
+                                                                                mario/Enemy/tobiPuku | fuzzy_match  |  99.84% ->  99.84%
+                                  execute__26TNerveTobiPukuReturnLaunchCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  99.83% ->  99.78%
+                                                                              mario/Enemy/bosswanwan | fuzzy_match  |  98.19% ->  97.91%
+                                                                        calcMatrix__12TBWLeashNodeFv | fuzzy_match  |  99.15% ->  87.03%
+                                                                      bind__9TBWBinderFP10TLiveActor | fuzzy_match  |  98.61% ->  98.60%
+                                          execute__18TNerveBWJumpToBathCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  99.71% ->  98.29%
+                                                                                mario/Enemy/tamaNoko | fuzzy_match  |  99.59% ->  99.51%
+                                        execute__20TNerveTamaNokoThrownCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  89.61% ->  84.76%
+                                                                              mario/Enemy/bosstelesa | fuzzy_match  |  99.62% ->  99.58%
+                                                                         moveObject__11TBossTelesaFv | fuzzy_match  |  99.93% ->  99.29%
+                                                                                  mario/Enemy/cannon | fuzzy_match  |  99.45% ->  99.34%
+                                          execute__18TNerveCannonSearchCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  98.91% ->  97.52%
+                                                                         mario/Enemy/BossHanachanSub | fuzzy_match  |  96.61% ->  96.10%
+                                                     moveHead__11TSphereLinkFRCQ29JGeometry8TVec3<f> | fuzzy_match  |  91.80% ->  90.11%
+                                                                        mario/Enemy/BossHanachanMain | fuzzy_match  |  98.78% ->  98.54%
+                                                                             bind__13TBossHanachanFv | fuzzy_match  |  99.75% ->  99.62%
+                                                     perform__13TBossHanachanFUlPQ26JDrama9TGraphics | fuzzy_match  |  98.19% ->  97.61%
+                                            execute__16TNerveAmiNokoDieCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  99.87% ->  99.85%
+                                                                                 mario/Enemy/koopajr | fuzzy_match  |  98.25% ->  98.07%
+                                                               calcRootMatrix__17TKoopaJrSubmarineFv | fuzzy_match  |  94.78% ->  93.30%
+                      makeKillerVelocity__17TKoopaJrSubmarineFP14TBathtubKillerQ29JGeometry8TVec3<f> | fuzzy_match  |  96.08% ->  94.93%
+                                                                                mario/Enemy/TabePuku | fuzzy_match  |  97.29% ->  96.89%
+                                        execute__20TNerveTabePukuAttackCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  99.77% ->  96.84%
+                                          execute__18TNerveTabePukuDragCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  75.31% ->  72.20%
+                                                                init__8TMapWireFPC16TCubeGeneralInfo | fuzzy_match  |  98.86% ->  97.82%
+                                                                            mario/Map/MapWireManager | fuzzy_match  |  99.96% ->  98.79%
+                                                                    getPosInWire__13TMapWireActorCFv | fuzzy_match  |  99.62% ->  88.13%
+                                                                           mario/MoveBG/MapObjBianco | fuzzy_match  |  99.13% ->  99.13%
+                                                                                  bind__9TLeafBoatFv | fuzzy_match  |  99.28% ->  99.25%
+                                                                            mario/MoveBG/MapObjPinna | fuzzy_match  |  99.96% ->  99.78%
+                                                                          control__13TPinnaCoasterFv | fuzzy_match  |  99.88% ->  93.85%
+                                                                                  mario/NPC/NpcNerve | fuzzy_match  |  99.55% ->  99.22%
+                                        execute__20TNerveNPCTurnToMarioCFP24TSpineBase<10TLiveActor> | fuzzy_match  |  99.87% ->  97.15%
+                                                                               mario/NPC/NpcWalkTurn | fuzzy_match  |  99.00% ->  97.86%
+                                                                               mario/NPC/NpcWalkTurn | matched_code |  54.16% ->  31.98%
+                                                                              execUTurn__8TBaseNPCFv | fuzzy_match  | 100.00% ->  94.84%
+                                                                          mario/MarioUtil/ShadowUtil | fuzzy_match  |  79.76% ->  79.35%
+                                      forceRequest__19TMBindShadowManagerFRC20TCircleShadowRequestUl | fuzzy_match  |  99.50% ->  89.45%
+                                                                    calcVtx__19TMBindShadowManagerFv | fuzzy_match  |  97.23% ->  95.27%
+                                                                               mario/Player/MarioCap | fuzzy_match  |  99.96% ->  99.21%
+                                                          perform__9TMarioCapFUlPQ26JDrama9TGraphics | fuzzy_match  |  99.93% ->  98.49%
+                                                                         mario/Player/MarioCollision | fuzzy_match  |  99.33% ->  98.53%
+                                                                         mario/Player/MarioCollision | matched_code |  65.06% ->  56.49%
+                                                                isTakeSituation__6TMarioFP9THitActor | fuzzy_match  | 100.00% ->  95.12%
+                                                              damageExec__6TMarioFP9THitActoriiififs | fuzzy_match  |  97.37% ->  95.77%
+                                                                              mario/Player/MarioMove | fuzzy_match  |  98.96% ->  98.96%
+                                                        moveRequest__6TMarioFRCQ29JGeometry8TVec3<f> | fuzzy_match  |  91.17% ->  91.09%
+                                                       warpRequest__6TMarioFRCQ29JGeometry8TVec3<f>f | fuzzy_match  |  99.88% ->  99.75%
+                                                                           mario/Player/MarioSpecial | fuzzy_match  |  98.28% ->  97.91%
+                                                                           mario/Player/MarioSpecial | matched_code |  42.77% ->  39.87%
+                                                                                 moveRoof__6TMarioFv | fuzzy_match  | 100.00% ->  95.92%
+                                                                                 wireWait__6TMarioFv | fuzzy_match  |  96.56% ->  95.00%
+                                                                                wireSWait__6TMarioFv | fuzzy_match  |  93.13% ->  92.17%
+                                                                              wireHanging__6TMarioFv | fuzzy_match  |  95.94% ->  95.34%
+                                                                              wireRolling__6TMarioFv | fuzzy_match  |  97.59% ->  96.65%
+                                                                                  pulling__6TMarioFv | fuzzy_match  |  98.23% ->  98.16%
+                                                                                fenceMove__6TMarioFv | fuzzy_match  |  96.64% ->  96.62%
+                                                                          mario/Player/MarioParticle | fuzzy_match  |  99.13% ->  98.84%
+                                                                          mario/Player/MarioParticle | matched_code |  95.58% ->  92.31%
+                                                                            toroccoEffect__6TMarioFv | fuzzy_match  | 100.00% ->  91.32%
+                                                                                 mario/Player/Tongue | fuzzy_match  |  98.68% ->  96.59%
+                                                                                 mario/Player/Tongue | matched_code |  30.96% ->  30.14%
+                                                                                 mario/Player/Tongue | matched_data | 100.00% ->  66.08%
+                                                                             canGo__12TYoshiTongueFv | fuzzy_match  |  99.85% ->  99.75%
+                                                __ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f> | fuzzy_match  | 100.00% ->   0.00%
+                                                                          movement__12TYoshiTongueFv | fuzzy_match  |  96.69% ->  93.11%
+                                                                                  mario/Player/Yoshi | fuzzy_match  |  99.76% ->  99.29%
+                                                                                  mario/Player/Yoshi | matched_data | 100.00% ->  95.32%
+                                                                                 doSearch__6TYoshiFv | fuzzy_match  |  99.74% ->  96.38%
+                                                                                 movement__6TYoshiFv | fuzzy_match  |  99.66% ->  98.95%
+                                                                        mario/Player/MarioReceiveMsg | fuzzy_match  |  99.99% ->  99.98%
+                                                               receiveMessage__6TMarioFP9THitActorUl | fuzzy_match  |  99.98% ->  99.98%
+                                                                             mario/Player/MarioSound | fuzzy_match  | 100.00% ->  99.73%
+                                                                             mario/Player/MarioSound | matched_code | 100.00% ->  97.38%
+                                                                             soundTorocco__6TMarioFv | fuzzy_match  | 100.00% ->  89.75%

@@ -151,6 +151,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
   `d.x = (f32)sqrtf(...)` moved sqrtf's slot from 0xa8 to retail's 0xa4 in `Hxs1_Circle`.
   Inside a larger expression (`scale * (f32)sqrtf(...)`) the cast is inert.
 
+- **`a = b - c` (research rs1, 2026-09-23):** the missing 4 bytes appear whenever an inlined member call is made on the left operand before a real copy construction (`TVec3 r(fst.anyAccessor())`), not specifically the `const Vec*` conversion.
+  The best header (`operator-` as a friend building `r` that way, `r -= snd; return r;`) is +17/-7 functions tree-wide and links wireBinder, but loses weak `__ami__` (Tongue) and leaves a dead 12-byte object under every `(a - b).length()` site.
+  Header and change list: `docs/progress/research/abc_q1_JGVec3.hpp`, `abc_q1.changes`. Open question: why retail keeps one 12-byte object for `(a - b).length()` but two for `a = b - c`.
+
 ## Frame-size gaps
 
 - Validate with `volatile char trash[N]` in the caller's own body only: inside an inlined callee a trivial POD prices 0, so probe a callee with a `struct S { ~S() {} u32 a; }` local (frame-gaps.md: "Research batch 233").
