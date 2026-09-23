@@ -360,9 +360,17 @@ void TApplication::initialize_bootAfter()
 	OSResumeThread(&gSetupThread);
 }
 
-// TODO: callee-saved ranking (retail: rodata base r30, zero r29, stream r28,
-// piVar2 r27) and frame 8 short. Tried (cc50): no inner block, gpRomFont
-// cleared after destroy(), raw TNameRefGen::instance, piVar2 declared apart.
+// TODO: instructions and frame size match; the option stream sits 4 low
+// (0x50 vs 0x54) and the name-ref stream's ctor temp at 0x48 vs 0x4c, with
+// a 4-byte hole between the two streams that retail does not have. Tried:
+// status/outputMode hoisted, lVar3 inlined, fork/binder over gpCardManager at
+// every subset of its three sites, a default-ctor stream spelled (nullptr, 0).
+static inline TCardManager* ApplicationCardManager()
+{
+	TCardManager* p = gpCardManager;
+	return p;
+}
+
 void TApplication::initialize_nlogoAfter()
 {
 	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("nintendo");
@@ -384,7 +392,7 @@ void TApplication::initialize_nlogoAfter()
 		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> > >(
 		    "ステージ毎シナリオアーカイブ名群");
 
-		delete JDrama::TNameRefGen::instance;
+		delete JDrama::TNameRefGen::getInstance();
 		JDrama::TNameRefGen::instance = nullptr;
 	}
 
@@ -401,7 +409,7 @@ void TApplication::initialize_nlogoAfter()
 	    = (ResTIMG*)piVar2->getResource("/card/mariobnr.bti") + 1;
 
 	int status;
-	while ((status = gpCardManager->getLastStatus()) == -1)
+	while ((status = ApplicationCardManager()->getLastStatus()) == -1)
 		OSYieldThread();
 
 	if (status == 0) {
@@ -426,8 +434,7 @@ void TApplication::initialize_nlogoAfter()
 
 	JMANewSinTable(0xC);
 
-	JKRHeap* heap = JKRGetCurrentHeap();
-	mHeap         = JKRSolidHeap::create(heap->getFreeSize(), heap, true);
+	mHeap = JKRSolidHeap::create(JKRGetCurrentHeap()->getFreeSize(), JKRGetCurrentHeap(), true);
 	mHeap->becomeCurrentHeap();
 }
 
@@ -661,6 +668,9 @@ static inline void ApplicationStartTimerTwice(u32 tick, u32 param)
 	ApplicationCrTimeAry1(inst)[1].append(tick, param);
 }
 
+// TODO: frame 0x70 short: retail's low region runs to 0xac (the TRect
+// temp) where ours ends at 0x38, i.e. 0x74 bytes of inline temporaries from
+// an expansion this body lacks; plus the gpMSound reload noted below.
 int TApplication::gameLoop()
 {
 	u32 nextState = APP_STATE_DEFAULT;
@@ -711,7 +721,7 @@ int TApplication::gameLoop()
 			}
 
 			JDrama::TGraphics graphics;
-			graphics.unkFE = 0;
+			graphics.unk0 = 0;
 
 			JDrama::TVideo* video = mDisplay->unk60;
 			GXRenderModeObj& mode = video->mNextRenderMode;
