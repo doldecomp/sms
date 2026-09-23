@@ -1164,6 +1164,11 @@ const char** TKoopaJrSubmarine::getBasNameTable() const
 }
 
 // Turns the round direction away from Koopa's flame and towards Mario.
+// TODO: 99.6%; frame 0xd8 against 0xf0 with every instruction right. The
+// ROM has 4 more bytes above toMario and its atan2f copy 0x10 lower with
+// 0x24 more above it. Raw mDirection reads (all sites: 0xb8), raw tub
+// position (0xc8), SMS_GetMarioPos(), and declaring toMarioDir first or
+// before toMario are inert or move the wrong way.
 void TKoopaJrSubmarine::makeRelativeAngle()
 {
 	f32 flameDir
@@ -1217,7 +1222,7 @@ void TKoopaJrSubmarine::makeRoundVelocity()
 	JGeometry::TVec3<f32> round(mDirection.calcDirectionVector());
 	round.scale(mRoundDistance);
 	JGeometry::TVec3<f32> toGoal;
-	const JGeometry::TVec3<f32>& center = mKoopaJr->mBathtub->mPosition;
+	const JGeometry::TVec3<f32>& center = mKoopaJr->mBathtub->getPosition();
 	toGoal.x = (center.x + round.x) - mPosition.x;
 	toGoal.y = 0.0f;
 	toGoal.z = (center.z + round.z) - mPosition.z;
@@ -1229,8 +1234,12 @@ void TKoopaJrSubmarine::makeRoundVelocity()
 	toGoal.normalize();
 	toGoal.scale(getSaveParams()->mSLAcceleration.get());
 	mVelocity.add(toGoal);
-	// TODO: 99.5%; frame 0x10 short, and the normalised x and y land in
-	// f31/f29 where the ROM has f29/f31.
+	// TODO: 99.6%; the tub position read through getPosition() lands the
+	// frame (0xa0), but the round vector sits 4 low (0x70 against 0x74),
+	// the set<float> temporary 0x10 high, and the normalised x and y land
+	// in f31/f29 where the ROM has f29/f31. Reordering toGoal's component
+	// stores, its constructor or set() spellings, a named goal vector and
+	// moving `center` above or below the vectors are all inert or worse.
 	f32 speed    = mVelocity.length();
 	f32 speedMax = getSaveParams()->mSLSpeedMax.get();
 	if (speed > speedMax) {
