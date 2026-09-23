@@ -57,6 +57,23 @@ public:
 
 extern TNozzleBmdData nozzleBmdData;
 
+// Abandoned: every member and the vtable are UNUSED in the map, and the
+// turbo nozzle that shipped is a TNozzleTrigger (mNozzleTurbo). The base is
+// TNozzleDeform: the UNUSED constructor is exactly 0xd0 as TNozzleDeform's
+// shape plus init(), and TMario::checkController still stores the prop
+// rotation through this type at 0x714 == sizeof(TNozzleDeform), i.e. past the
+// end of the TNozzleTrigger it actually points to.
+class TNozzleTurbo : public TNozzleDeform {
+public:
+	TNozzleTurbo(const char* name, const char* prm, TWaterGun* fludd);
+
+	virtual s32 getNozzleKind() const;
+	virtual void movement(const TMarioControllerWork&);
+	virtual void animation(int);
+
+	/* 0x714 */ f32 unk714; // prop rotation
+};
+
 class TWaterGun {
 public:
 	// The map has __ct__Q29TWaterGun9TDeParamsFv (UNUSED 0x1f8) rather than

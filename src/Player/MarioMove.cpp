@@ -1446,9 +1446,7 @@ f32 TMario::getLRLevel(u8 level)
 // 0x1f0), so every slot and a few FPR tie-breaks differ. The UNUSED
 // getLRLevel, getDizzyAngle and getDizzyPower bodies (all at map size), a
 // single MsSqrtf (it carries its own `> 0` test), the camera's getUnk258()
-// and an `int` (not `long`) jitter closed the instruction diffs. Retail
-// stores the turbo prop rotation at nozzle+0x714 (sizeof(TNozzleDeform)),
-// past any TNozzleTrigger member, so the cast in the source is still wrong.
+// and an `int` (not `long`) jitter closed the instruction diffs.
 void TMario::checkController(JDrama::TGraphics*)
 {
 	unk108->mStickHS16 = (s16)(128.0f * mGamePad->mCompSPos[0]);
@@ -1608,10 +1606,11 @@ void TMario::checkController(JDrama::TGraphics*)
 		    && ((mStatus + 0xF3C00000) == 0x201
 		        || ((mStatus + 0xFC000000) & 0xFFFFFFFF) == 0x440)) {
 			f32 propRot = mIntendedMag / 32.0f;
-			// TODO: wrong??? Correct offset is 0x714 which is way past
-			// the end of a TNozzleTrigger???
-			((TNozzleTrigger*)((const TWaterGun*)mWaterGun)->getCurrentNozzle())
-			    ->unk388
+			// Retail's own bug: the shipped turbo nozzle is a TNozzleTrigger,
+			// but this stores through the abandoned TNozzleTurbo, 0x384 past
+			// the trigger's end.
+			((TNozzleTurbo*)((const TWaterGun*)mWaterGun)->getCurrentNozzle())
+			    ->unk714
 			    = propRot;
 		}
 	}

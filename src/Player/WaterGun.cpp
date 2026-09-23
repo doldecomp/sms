@@ -128,25 +128,14 @@ TNozzleBmdData nozzleBmdData = {
 	},
 };
 
-// TNozzleTurbo and TNozzleButton are abandoned nozzle implementations. Every
-// one of their members is UNUSED in the map, as are both of their vtables, so
-// nothing in retail ever constructed one -- the turbo nozzle that shipped is
-// the TNozzleTrigger built with "/Mario/WaterGun/NozzleTrgTurbo.prm". They are
-// declared here rather than in a header because no other TU mentions them.
-// Both vtables are 0x28, exactly TNozzleBase's ten slots, so neither class
-// adds a virtual; the declaration order below is the vtable's.
-// TODO: TNozzleTurbo's constructor is 0xd0 against TNozzleButton's 0x44 and
-// TNozzleTrigger's 0x60, so it initialises considerably more state -- extra
-// members of its own, or a TNozzleTrigger base. Not decidable from the map.
-class TNozzleTurbo : public TNozzleBase {
-public:
-	TNozzleTurbo(const char* name, const char* prm, TWaterGun* fludd);
-
-	virtual s32 getNozzleKind() const;
-	virtual void movement(const TMarioControllerWork&);
-	virtual void animation(int);
-};
-
+// TNozzleTurbo (declared in WaterGun.hpp) and TNozzleButton are abandoned
+// nozzle implementations. Every one of their members is UNUSED in the map, as
+// are both of their vtables, so nothing in retail ever constructed one -- the
+// turbo nozzle that shipped is the TNozzleTrigger built with
+// "/Mario/WaterGun/NozzleTrgTurbo.prm". TNozzleButton is declared here
+// because no other TU mentions it. Its vtable is 0x28, exactly TNozzleBase's
+// ten slots, so it adds no virtual; the declaration order below is the
+// vtable's.
 class TNozzleButton : public TNozzleBase {
 public:
 	TNozzleButton(const char* name, const char* prm, TWaterGun* fludd);
@@ -1209,12 +1198,15 @@ void TNozzleDeform::animation(int param)
 	}
 }
 
-// TODO: bodies unknown. The map gives 0xd0 / 0x134 / 0x4e4: real code, but
+// The constructor is TNozzleDeform's own shape (base, then init()) and
+// compiles to the map's 0xd0. TODO: movement and animation bodies unknown
+// (map 0x134 / 0x4e4, against TNozzleDeform's 0x128 / 0x78c): real code, but
 // dead by the time the disc was mastered and with no inline site left in the
 // TU to recover it from.
 TNozzleTurbo::TNozzleTurbo(const char* name, const char* prm, TWaterGun* fludd)
-    : TNozzleBase(name, prm, fludd)
+    : TNozzleDeform(name, prm, fludd)
 {
+	init();
 }
 
 void TNozzleTurbo::movement(const TMarioControllerWork& controllerWork) { }
