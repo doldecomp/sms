@@ -1,7 +1,7 @@
 # Agent guide for the SMS decompilation (GMSE01)
 
 This is the full working guide for unit, closure, research and structural agents.
-`CLAUDE.md` holds only the non-negotiable rules; read this file once per batch, then `docs/BATCH_BRIEF.md` (or `docs/CLOSURE_BRIEF.md`) and `docs/catalog/RULES.md`.
+`CLAUDE.md` holds only the non-negotiable rules; read this file once per batch, then `docs/BATCH_BRIEF.md` (or `docs/CLOSURE_BRIEF.md`) and `docs/catalog/LEVERS.md` (grep `docs/catalog/RULES.md` for anything else).
 Open the long catalog topic files only for the rule you are applying.
 
 ## Project Goal

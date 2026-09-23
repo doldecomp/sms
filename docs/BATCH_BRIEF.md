@@ -16,7 +16,7 @@ Every command in `docs/AGENT_GUIDE.md` works unchanged inside the worktree (`bui
 1. `docs/AGENT_GUIDE.md` (the working guide; `CLAUDE.md` is already in your context).
 2. `docs/AGENT_MATCHING_TIPS.md` (general MWCC codegen).
 3. `docs/PROGRAM_STRUCTURE_REVVING.md` (scaffolding a TU from the map) only if your unit lacks scaffolding.
-4. `docs/catalog/RULES.md`, the one-line rules card. Open a long catalog topic file (`codegen-tells.md`, `frame-gaps.md`, `linking.md`, `tu-reconstruction.md`) only at the section a rule points you to; never read them end to end.
+4. `docs/catalog/LEVERS.md`, the thirty-lever card; grep `docs/catalog/RULES.md` (the full one-line rules list) only for a tell the card lacks. Open a long catalog topic file (`codegen-tells.md`, `frame-gaps.md`, `linking.md`, `tu-reconstruction.md`) only at the section a rule points you to; never read them end to end.
 5. Two finished units in the same subsystem as yours, for style: enemies `src/Enemy/bombhei.cpp` + `include/Enemy/BombHei.hpp` and `src/Enemy/Kazekun.cpp`; MoveBG `src/MoveBG/MapObjBall.cpp` and `src/MoveBG/MapObjWave.cpp`; animals `src/Animal/BeeHive.cpp`.
 
 ## Method, per unit
