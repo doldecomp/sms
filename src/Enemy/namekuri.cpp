@@ -230,21 +230,26 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 
 		MTXConcat(mA, local_4c, mA);
 
-		// TODO: the ROM builds each column in a real stack TVec3 and reloads
-		// it (`lfs 0(r29); stfs 0xb0(r1)` ... then three unfused `fmuls`),
-		// where we forward the stores straight into the squares and contract
-		// them into `fmadds`. Component assignments instead of the
-		// constructor do not stop the forwarding (identical 80 markers,
-		// frame 0x108 against the constructor form's 0x128 and the ROM's
-		// 0x120), so the block is something that takes the vector's address.
+		// The columns are a TVec3 array: retail gives them contiguous 12-byte
+		// homes and reads them back unfused. TODO: the frame is 0x18 short
+		// (retail 0x120): the whole named block sits 0x24 lower, with the
+		// `local_7c * 0.5f` temporaries 0x34 closer together than retail's
+		// 0x58/0x98, and one pool load schedules early.
+		JGeometry::TVec3<f32> cols[3];
 		JGeometry::TVec3<f32> local_7c;
 
-		JGeometry::TVec3<f32> tmp1(mA[0][0], mA[1][0], mA[2][0]);
-		local_7c.y = tmp1.length();
-		JGeometry::TVec3<f32> tmp2(mA[0][1], mA[1][1], mA[2][1]);
-		local_7c.z = tmp2.length();
-		JGeometry::TVec3<f32> tmp3(mA[0][2], mA[1][2], mA[2][2]);
-		local_7c.x = tmp3.length();
+		cols[0].x = mA[0][0];
+		cols[0].y = mA[1][0];
+		cols[0].z = mA[2][0];
+		local_7c.y = cols[0].length();
+		cols[1].x = mA[0][1];
+		cols[1].y = mA[1][1];
+		cols[1].z = mA[2][1];
+		local_7c.z = cols[1].length();
+		cols[2].x = mA[0][2];
+		cols[2].y = mA[1][2];
+		cols[2].z = mA[2][2];
+		local_7c.x = cols[2].length();
 
 		param_1->setGlobalRTMatrix(m0);
 
