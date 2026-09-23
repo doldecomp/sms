@@ -1354,7 +1354,7 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32 message)
 	if (((TBossPakkunManager*)getManager())->mIsLightVersion)
 		return FALSE;
 
-	if (&TNerveBPSleep::theNerve() == mSpine->getLatestNerve()) {
+	if (getLatestNerve() == &TNerveBPSleep::theNerve()) {
 		if (sender->getActorType() == 0x1000000D) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPBreakSleep::theNerve());
@@ -1365,18 +1365,12 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32 message)
 	if (mState == BOSSPAKU_STATE_FLYING) {
 		if (sender->getActorType() == 0x1000000D
 		    || sender->getActorType() == 0x1000001) {
-			if (mPosition.y - 300.0f > sender->mPosition.y)
+			if (getPosition().y - 300.0f > sender->getPosition().y)
 				return TRUE;
-			if (1500.0f + mPosition.y < sender->mPosition.y)
+			if (1500.0f + getPosition().y < sender->getPosition().y)
 				return TRUE;
 
-			mState = BOSSPAKU_STATE_NORMAL;
-			mSpine->reset();
-			mSpine->setNext(&TNerveBPFall::theNerve());
-
-			if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_FALL))
-				MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_BSPAKU_FALL, &mPosition, 0,
-				                          nullptr, 0, 4);
+			gotFlyingDamage();
 			return TRUE;
 		}
 	}
