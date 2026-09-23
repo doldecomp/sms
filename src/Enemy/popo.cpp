@@ -221,6 +221,8 @@ static int PopoRollCallback(J3DNode* node, int param)
 }
 
 // The mouth joint swells with the pumped water.
+// TODO: retail copies each column to a stack TVec3 and reloads it (unfused
+// fmuls/fadds), frame 0x148 vs 0x130; same open class as TNameIndParCallback.
 static int PopoPossessedCallback(J3DNode* node, int param)
 {
 	if (param == 0) {

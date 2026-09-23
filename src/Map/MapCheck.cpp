@@ -356,6 +356,8 @@ static f32 angle_between(const JGeometry::TVec3<f32>& a,
 	return fabsf(angle);
 }
 
+// TODO: frame 0x178 vs retail 0x1d8 (0x60 of missing inline temporaries,
+// likely per-angle_between blocks); the rest is FPR allocation/scheduling.
 static bool bgIntersectLine(const TBGCheckData* data,
                             const JGeometry::TVec3<f32>& start,
                             const JGeometry::TVec3<f32>& end, bool front_only,
