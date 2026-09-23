@@ -47,15 +47,6 @@ public:
 		}                                                                      \
 	};
 
-DECLARE_KOOPA_NERVE(TNerveKoopaFall, TNerveBase<TLiveActor>)
-DECLARE_KOOPA_NERVE(TNerveKoopaGetDown, TNerveBase<TLiveActor>)
-DECLARE_KOOPA_NERVE(TNerveKoopaGetShowered, TNerveBase<TLiveActor>)
-DECLARE_KOOPA_NERVE(TNerveKoopaProvoke, TNerveBase<TLiveActor>)
-DECLARE_KOOPA_NERVE(TNerveKoopaStagger, TNerveBase<TLiveActor>)
-
-DECLARE_KOOPA_NERVE(TNerveKoopaFlame, TNerveKoopaTurn)
-DECLARE_KOOPA_NERVE(TNerveKoopaTumble, TNerveKoopaTurn)
-DECLARE_KOOPA_NERVE(TNerveKoopaWait, TNerveKoopaTurn)
 // These two nerves' execute symbols are weak, so the bodies were written in
 // the class. They need the complete TKoopa, which is why the whole nerve set
 // lives in this header rather than in Koopa.hpp.
@@ -110,5 +101,18 @@ public:
 		return nerve;
 	}
 };
+
+// Declaration order is the retail .sbss/.bss order of the nerve statics
+// (TurnR, TurnL, Tumble, Provoke, Wait, Flame, GetDown, Stagger, Fall,
+// GetShowered): MWCC lays out an inline function's local static in the order
+// the inline *definitions* appear in the TU, not by first use.
+DECLARE_KOOPA_NERVE(TNerveKoopaTumble, TNerveKoopaTurn)
+DECLARE_KOOPA_NERVE(TNerveKoopaProvoke, TNerveBase<TLiveActor>)
+DECLARE_KOOPA_NERVE(TNerveKoopaWait, TNerveKoopaTurn)
+DECLARE_KOOPA_NERVE(TNerveKoopaFlame, TNerveKoopaTurn)
+DECLARE_KOOPA_NERVE(TNerveKoopaGetDown, TNerveBase<TLiveActor>)
+DECLARE_KOOPA_NERVE(TNerveKoopaStagger, TNerveBase<TLiveActor>)
+DECLARE_KOOPA_NERVE(TNerveKoopaFall, TNerveBase<TLiveActor>)
+DECLARE_KOOPA_NERVE(TNerveKoopaGetShowered, TNerveBase<TLiveActor>)
 
 #endif

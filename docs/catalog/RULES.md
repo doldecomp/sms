@@ -517,6 +517,7 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - `PARAM_INIT` stringifies the member name, so names and defaults read off `.rodata`/`.sdata2` interleaved in id order; integer params are `TParamRT<s32>` (tu-reconstruction.md: "Names and defaults").
 - UNUSED bodies go in the `.cpp`, never `inline` or in-class; the size is necessary but not proof, and prunes contents statement by statement (tu-reconstruction.md: "UNUSED functions").
 - Nerve tells: `nerve$localstatic0$theNerve__X` = an inline header `theNerve()`; `instance$N` at stride 6 = a file-local `DEFINE_NERVE_INSTANCE` block; `{0,0,dtor,0}` = an abstract nerve (tu-reconstruction.md: "Nerve shapes from the map").
+- Inline `theNerve()` statics (`nerve$localstatic0$...` in .sbss, their 12-byte dtor-registration `@NNN` in .bss) are laid out in the order the inline *definitions* appear in the TU, not first use: read the retail .sbss address order from the map and declare the nerve classes in that order; wrong .bss offsets also flip base/`this` register choice (Koopa getDown/getShowered/stagger 99.5 -> 100).
 - An UNUSED helper whose map size fits only with a different return type reveals that type (limitkoopajr `calcTargetDirection` -> `f32`).
 
 ## Known-open residue classes (stop spending budget)

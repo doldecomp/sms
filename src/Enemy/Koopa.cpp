@@ -221,8 +221,7 @@ BOOL TNerveKoopaFall::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
-// TODO: 99.8%. Frame 0x148 short (retail 0x368), nerve-static .bss order,
-// and diff/focusRange swap f1/f2 at both side tests (top declarations,
+// TODO: 99.9%. Frame 0x148 short (retail 0x368), and diff/focusRange swap f1/f2 at both side tests (top declarations,
 // .value, and operand order are inert).
 BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 {
@@ -1085,8 +1084,6 @@ bool TKoopa::allowsLaunch() const
 	return true;
 }
 
-// TODO: retail keeps the .bss base in r31 and `this` in r30 (ours swapped);
-// the nerve guard objects' .bss offsets differ too (TU static order).
 void TKoopa::getDown()
 {
 	if (&TNerveKoopaFall::theNerve() == getSpine()->getCurrentNerve())
@@ -1113,8 +1110,6 @@ bool TKoopa::effectsTumble() const
 	return false;
 }
 
-// TODO: retail keeps `this` in r31 and the .bss base in r30 (ours swapped),
-// and its nerve guard objects sit at other .bss offsets (TU static order).
 bool TKoopa::getShowered()
 {
 	if (&TNerveKoopaFall::theNerve() == getSpine()->getCurrentNerve())
@@ -1150,7 +1145,6 @@ static inline void KoopaPushNerve(TKoopa* koopa,
 	koopa->getSpine()->pushNerve(nerve);
 }
 
-// TODO: only the nerve guard objects' .bss offsets differ (TU static order).
 void TKoopa::stagger(bool force)
 {
 	if (&TNerveKoopaFall::theNerve() == getSpine()->getCurrentNerve())
