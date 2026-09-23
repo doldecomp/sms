@@ -70,6 +70,8 @@ void TMapObjPlane::initDraw()
 	GXSetCullMode(GX_CULL_NONE);
 }
 
+// TODO: frame is 0xb0, retail 0xb8, every slot shifted by 8 (one more low
+// inline temporary); split worldZNext, s32 counters and named texcoords were inert.
 void TMapObjPlane::draw()
 {
 	for (int z = 0; z < mExtents - 1; ++z) {
@@ -93,7 +95,7 @@ void TMapObjPlane::draw()
 	}
 }
 
-f32 TMapObjPlane::getTexPos(f32 v) const { return mTexScale * v; }
+f32 TMapObjPlane::getTexPos(f32 v) const { return v * mTexScale; }
 
 void TMapObjPlane::updateCheckData(int x, int z)
 {
@@ -101,8 +103,8 @@ void TMapObjPlane::updateCheckData(int x, int z)
 		return;
 
 	f32 x1 = mCollision->gridToWorld(x);
-	f32 z1 = mCollision->gridToWorld(z);
 	f32 x2 = mCollision->gridToWorld(x + 1);
+	f32 z1 = mCollision->gridToWorld(z);
 	f32 z2 = mCollision->gridToWorld(z + 1);
 
 	JGeometry::TVec3<f32> local_64(x1, heightAt(x, z) + 2.0f, z1);
