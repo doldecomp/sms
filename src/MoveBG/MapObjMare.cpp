@@ -354,21 +354,23 @@ void TCogwheel::initMapObj()
 	JGeometry::TVec3<f32> pos(mPosition.x + offsetX, mPosition.y,
 	                          mPosition.z - offsetZ);
 	JGeometry::TVec3<f32> scale(1.0f, 1.0f, 1.0f);
-	mPlate = (TCogwheelScale*)TMapObjBaseManager::newAndRegisterObj(
+	TCogwheelScale* plate = (TCogwheelScale*)TMapObjBaseManager::newAndRegisterObj(
 	    "cogwheel_plate", pos, mRotation, scale);
+	mPlate = plate;
 	mPlate->mIsUpper  = true;
 	mPlate->mCogwheel = this;
-	mPlate->appear();
+	plate->appear();
 
 	mPlateRopePos.set(pos.x, mPosition.y, pos.z);
 
 	pos.set(mPosition.x - offsetX, mPosition.y, mPosition.z + offsetZ);
 	JGeometry::TVec3<f32> potScale(1.0f, 1.0f, 1.0f);
-	mPot = (TCogwheelScale*)TMapObjBaseManager::newAndRegisterObj(
+	TCogwheelScale* pot = (TCogwheelScale*)TMapObjBaseManager::newAndRegisterObj(
 	    "cogwheel_pot", pos, getRotation(), potScale);
+	mPot = pot;
 	mPot->mIsUpper  = false;
 	mPot->mCogwheel = this;
-	mPot->appear();
+	pot->appear();
 
 	mPotRopePos.set(pos.x, mPosition.y, pos.z);
 
