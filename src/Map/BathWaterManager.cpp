@@ -1098,6 +1098,10 @@ public:
 	void calcCoord();
 	void clearHeightMap();
 
+	// TODO: frame is 0x50 short (retail -0x380): retail leaves 0x5c unused
+	// between the look-dir vector (0x158) and up (0x1c0) and 0x38 between the
+	// drop position (0x23c) and proj (0x280), and holds `this` in r27, not r26
+	// (one callee-saved GPR fewer in use); moving the drop matrices is inert.
 	virtual void prerender(JDrama::TGraphics* graphics,
 	                       const TBathtubData& data, TBathWater** waters,
 	                       TBathWaterParams** params, int num)
