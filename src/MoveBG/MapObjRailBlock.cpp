@@ -565,6 +565,8 @@ void TRollBlock::calcRootMatrix()
 	// retail's 0x2c. TODO: 97.3%. Retail copies mScaling.x through r4 and
 	// computes &roll after it; ours uses r6 and hoists the addi. Tried: raw
 	// mScaling, a bound scaling reference, getModel() at the scale site.
+	// c-mbg: a named `MtxPtr` over `roll` (Mtx or TMtx34f) gives 97.6 with
+	// the MTXConcat argument setup reordered (r4 first, r3/r5 last).
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z,
 	               mInitialRotation.x, mInitialRotation.y, mInitialRotation.z);
 	model->setBaseScale(getScaling());

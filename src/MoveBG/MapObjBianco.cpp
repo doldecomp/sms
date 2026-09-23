@@ -376,7 +376,8 @@ static inline const JGeometry::TVec3<f32>& BiancoMiniWindmillMessengerPos(
 // TODO: the frame is retail's but `point` sits 8 bytes high: the low pool is
 // 8 too big and the named block 8 too small. Retail holds 0x10 above `point`
 // where `mtx` alone gives 8, and no caller-level spelling tried (a named
-// J3DModel*, an uninitialised `mtx` declared first) moves the split.
+// J3DModel*, an uninitialised `mtx` declared first) moves the split; nor do
+// a named `f32 y` or `point.set(...)` (c-mbg).
 u32 TBiancoMiniWindmill::touchWater(THitActor* water)
 {
 	const JGeometry::TVec3<f32>& pos = getWaterPos(water);
@@ -512,7 +513,8 @@ void TLeafBoat::touchActor(THitActor* other)
 // reloads of the normal, and the unnamed velocity temporary its second
 // wall register.
 // Inert or worse (cc48): the raw normal or plane distance at single sites,
-// a declare-then-assign reflected copy, re-reading mResultWalls[i].
+// a declare-then-assign reflected copy, re-reading mResultWalls[i];
+// c-mbg: no `num` local, a non-const wall, raw mVelocity at either copy (-8).
 void TLeafBoat::touchWall(JGeometry::TVec3<f32>* pos,
                           TBGWallCheckRecord* record)
 {

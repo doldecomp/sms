@@ -1154,7 +1154,9 @@ void TMapObjTurn::turn()
 
 // TODO: retail materialises the matrix pointer inside each case (after the
 // MsWrap store) rather than before the switch, and its frame is 0x10 larger in
-// the dead low region below the case-2 yRot block.
+// the dead low region below the case-2 yRot block. Worse or inert (c-mbg):
+// `mtx` passed directly (91.5), `ptr = mtx;` inside each case (94.2), a
+// TMtx34f matrix (96.2), one function-scope yRot (frame 0x100).
 void TMapObjTurn::control()
 {
 	TMapObjBase::control();
