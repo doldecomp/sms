@@ -78,13 +78,13 @@ static inline TMarDirector* MapObjMonteMarDirector()
 	return director;
 }
 
-// TODO: 99.3%. Frame is retail's 0x78 via MapObjMonteMarDirector (was
-// 0x10 short). Leftover is volatile colouring of top.y (f4 vs f2).
-// A by-value top.y fork is +0x10 and swaps the hookY fadds operands.
+// The frame is retail's 0x78 via MapObjMonteMarDirector; the named `y`
+// colours top.y into f4 as retail does.
 void THangingBridgeBoard::drawOneRope(const JGeometry::TVec3<f32>& top) const
 {
-	f32 hookY  = top.y + THangingBridge::mRopeHeight;
-	f32 bottom = top.y;
+	f32 y      = top.y;
+	f32 hookY  = y + THangingBridge::mRopeHeight;
+	f32 bottom = y;
 
 	f32 xPlus  = top.x + mRopeWidthX;
 	f32 xMinus = top.x - mRopeWidthX;
@@ -94,8 +94,8 @@ void THangingBridgeBoard::drawOneRope(const JGeometry::TVec3<f32>& top) const
 	if (MapObjMonteMarDirector()->mMap == 0xD)
 		bottom -= 60.0f;
 
-	f32 texTop    = mTexPosRate * (hookY - top.y);
-	f32 texBottom = mTexPosRate * (bottom - top.y);
+	f32 texTop    = mTexPosRate * (hookY - y);
+	f32 texBottom = mTexPosRate * (bottom - y);
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 8);
 	GXPosition3f32(top.x, hookY, zPlus);
