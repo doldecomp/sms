@@ -793,10 +793,11 @@ void TBossGesso::showMessage(u32 param_1)
 	unk198 |= flag;
 }
 
-// TODO: the map size is 0x11c (284 bytes) and this body compiles to less; the
-// best candidates for the remainder are the CUE_MOVE rumble/timer block that
-// follows it in perform and the CUE_CALC_ANIM pull-sound block above it, and
-// neither reads as part of "check take message".
+// Compiles to the map's 0x11c. TODO: perform inlines this body but retail
+// `bl`s its showMessage(4) there, while inlining showMessage(3) at perform's
+// own site; wrapping this call in one more TU-local level makes the whole
+// body a call instead (perform 98.3 -> 91.5), and naming the rumble block
+// continuousRumble() is -8 of frame.
 void TBossGesso::checkTakeMsg()
 {
 	if (unk1A0)
@@ -1785,11 +1786,9 @@ void TBossGesso::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		if (mBeak->mHolder != nullptr && unk190.color.a == 0) {
-			// TODO: retail `bl`s showMessage here and inlines it at the
-			// other two call sites, and showMessage is byte-exact at five
-			// statements, so this site must sit at depth four -- three
-			// inline levels of perform are still missing. Forcing the call
-			// takes perform 98.3 -> 99.2. With showMessage(3) the flag is
+			// Retail inlines showMessage here (the `bl` it keeps is the
+			// showMessage(4) inside checkTakeMsg's expansion; see there).
+			// With showMessage(3) the flag is
 			// 0, so the balloon always appears, which is why spelling the
 			// console call directly here was byte-identical.
 			if (!(isTentacleBusy(mTentacles[1])
