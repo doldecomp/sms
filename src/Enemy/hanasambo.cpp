@@ -1496,6 +1496,10 @@ SamboHeadGetPoint(const TSamboHead* p)
 }
 
 // Hops toward Mario, one jump every mSLJumpPrepareTime frames.
+// TODO: instruction-exact; retail's stack block sits 0xc lower for goal and
+// 0x14 lower for the call temporaries (a 12-byte hole above goal and another
+// between goal and the calcVelocityToJumpToY result). A by-value getPoint,
+// a top-declared goal and a temporary for goal.set were all inert or worse.
 DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 {
 	TSamboHead* head = (TSamboHead*)spine->getBody();
@@ -1531,8 +1535,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 		}
 		SamboHeadAtkMActor(head)->setFrameRate(SMSGetAnmFrameRate(), 0);
 	} else {
-		JGeometry::TVec3<f32> velocity(head->getVelocity());
-		if (velocity.y < 0.0f) {
+		if (JGeometry::TVec3<f32>(head->getVelocity()).y < 0.0f) {
 			if (head->isBckAnm(8)) {
 				head->setBckAnm(7);
 				SamboHeadAtkMActor(head)->setFrameRate(0.0f, 0);
@@ -1542,9 +1545,9 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 
 	if (head->mPosition.y > 30.0f + head->mGroundHeight) {
 		f32 angMax = SamboHeadAtkParams(head)->mSLJumpAngY.get();
-		JGeometry::TVec3<f32> velocity(head->getVelocity());
-		head->mRollAngle
-		    = MsClamp(MsGetRotFromZaxis(velocity).x, -angMax, angMax);
+		head->mRollAngle = MsClamp(
+		    MsGetRotFromZaxis(JGeometry::TVec3<f32>(head->getVelocity())).x,
+		    -angMax, angMax);
 	} else {
 		head->mRollAngle *= 0.8f;
 	}
