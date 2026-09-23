@@ -513,9 +513,9 @@ void dirTypePrevPtcl(JPABaseParticle* particle, JPABaseEmitter* emitter,
 {
 	JGeometry::TVec3<f32> pos;
 	particle->getGlobalPosition(pos);
-	JSULink<JPABaseParticle>* prev = particle->getLinkBufferPtr()->getPrev();
-	if (prev != nullptr)
-		prev->getObject()->getGlobalPosition(result);
+	if (particle->getLinkBufferPtr()->getPrev() != nullptr)
+		particle->getLinkBufferPtr()->getPrev()->getObject()->getGlobalPosition(
+		    result);
 	else
 		emitter->getEmitterGlobalTranslation(result);
 
