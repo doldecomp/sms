@@ -624,12 +624,26 @@ void rotTypeYJiggle(f32 sin, f32 cos, Mtx& out)
 	out[2][3] = 0.0f;
 }
 
-// TODO: The low region is 0x20 short (frame 0x128 vs 0x100); the side vector and `pt` take callee-saved FPRs
-// in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
-// and declaration moves were inert or worse.
-// Retail also has a 12-byte named slot above offs. The RotDirectional fix (angle
-// level) has no counterpart here; direct-return levels over mScaleX/mScaleY at
-// any site subset flip fmuls operand order.
+// The four directional draws want the side vector colored x f29 .. z f31,
+// which the header cross (stores x, y, z) cannot give: the same body storing
+// z, y, x does. Changing TVec3::cross itself regresses the tree (see its
+// TODO in JGVec3.hpp) and the Stripe draws here, so it stays TU-local.
+static inline void JPACross(JGeometry::TVec3<f32>& out, const JGeometry::TVec3<f32>& a,
+                            const JGeometry::TVec3<f32>& b)
+{
+	f32 _x = a.y * b.z - a.z * b.y;
+	f32 _y = a.z * b.x - a.x * b.z;
+	f32 _z = a.x * b.y - a.y * b.x;
+	out.z = _z;
+	out.y = _y;
+	out.x = _x;
+}
+
+// TODO: The low region is 0x20 short (frame 0x128 vs 0x100) and `pt` takes
+// callee-saved FPRs mirrored (retail pt.x f31); the side vector is right
+// through JPACross. Retail also has a 12-byte named slot above offs. Declaration
+// moves of pt are inert (pt has no slot). Without the angle level the Rot
+// siblings are 8 short too, so one 8-byte site is shared by all four.
 void JPADrawExecDirectional::exec(const JPADrawContext* dc,
                                   JPABaseParticle* particle)
 {
@@ -656,7 +670,7 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 	local_BC.normalize();
 
 	JGeometry::TVec3<f32> f29_f30_f31;
-	f29_f30_f31.cross(params->unk0, local_BC);
+	JPACross(f29_f30_f31, params->unk0, local_BC);
 	if (f29_f30_f31.isZero())
 		return;
 	f29_f30_f31.normalize();
@@ -697,10 +711,11 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// TODO: Stack-exact (angle level on sine and cosine, rotation Mtx first); the
-// side vector and `pt` take callee-saved FPRs mirrored (retail side.x f29,
-// pt.x f31). Cross clones, pt as scalars/ctor/reference, the side as named
-// scalars, setLength and declaration moves were inert or worse.
+// TODO: Stack-exact (angle level on sine and cosine, rotation Mtx first); `pt`
+// takes callee-saved FPRs mirrored (retail pt.x f31, z f29). Storing pt z, y, x
+// fixes the registers but loads z first (retail loads x first); loading into
+// temporaries first costs 0x10 of frame. pt as scalars/ctor/reference/`=`
+// and declaration moves were inert or worse.
 void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
                                      JPABaseParticle* particle)
 {
@@ -733,7 +748,7 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 	local_E4.normalize();
 
 	JGeometry::TVec3<f32> f29_f30_f31;
-	f29_f30_f31.cross(params->unk0, local_E4);
+	JPACross(f29_f30_f31, params->unk0, local_E4);
 	if (f29_f30_f31.isZero())
 		return;
 	f29_f30_f31.normalize();
@@ -776,9 +791,9 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// TODO: The low region is 8 short (frame 0x168 vs 0x160); the side vector and `pt` take callee-saved FPRs
-// in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
-// and declaration moves were inert or worse.
+// TODO: The low region is 8 short (frame 0x168 vs 0x160), the same 8 bytes
+// the Rot siblings get from their angle level; `pt` takes callee-saved FPRs
+// mirrored as in JPADrawExecRotDirectional.
 // Direct-return levels over mScaleX/mScaleY at any site subset flip fmuls
 // operand order.
 void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
@@ -815,7 +830,7 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 	local_BC.normalize();
 
 	JGeometry::TVec3<f32> f29_f30_f31;
-	f29_f30_f31.cross(params->unk0, local_BC);
+	JPACross(f29_f30_f31, params->unk0, local_BC);
 	if (f29_f30_f31.isZero())
 		return;
 	f29_f30_f31.normalize();
@@ -864,10 +879,11 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// TODO: Stack-exact (angle level on sine and cosine, rotation Mtx first); the
-// side vector and `pt` take callee-saved FPRs mirrored (retail side.x f29,
-// pt.x f31). Cross clones, pt as scalars/ctor/reference, the side as named
-// scalars, setLength and declaration moves were inert or worse.
+// TODO: Stack-exact (angle level on sine and cosine, rotation Mtx first); `pt`
+// takes callee-saved FPRs mirrored (retail pt.x f31, z f29). Storing pt z, y, x
+// fixes the registers but loads z first (retail loads x first); loading into
+// temporaries first costs 0x10 of frame. pt as scalars/ctor/reference/`=`
+// and declaration moves were inert or worse.
 void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
                                           JPABaseParticle* particle)
 {
@@ -908,7 +924,7 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	local_BC.normalize();
 
 	JGeometry::TVec3<f32> f29_f30_f31;
-	f29_f30_f31.cross(params->unk0, local_BC);
+	JPACross(f29_f30_f31, params->unk0, local_BC);
 	if (f29_f30_f31.isZero())
 		return;
 	f29_f30_f31.normalize();
