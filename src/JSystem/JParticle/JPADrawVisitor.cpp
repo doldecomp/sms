@@ -832,7 +832,7 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 	JGeometry::TVec3<f32> pt;
 	particle->getGlobalPosition(pt);
 
-	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+	GXBegin(GX_QUADS, GX_VTXFMT0, 8);
 	GXPosition3f32(offs[0].x + pt.x, offs[0].y + pt.y, offs[0].z + pt.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
 	GXPosition3f32(offs[1].x + pt.x, offs[1].y + pt.y, offs[1].z + pt.z);
@@ -926,7 +926,7 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	JGeometry::TVec3<f32> pt;
 	particle->getGlobalPosition(pt);
 
-	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+	GXBegin(GX_QUADS, GX_VTXFMT0, 8);
 	GXPosition3f32(offs[0].x + pt.x, offs[0].y + pt.y, offs[0].z + pt.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
 	GXPosition3f32(offs[1].x + pt.x, offs[1].y + pt.y, offs[1].z + pt.z);
