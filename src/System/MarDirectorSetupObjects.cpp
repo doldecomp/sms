@@ -262,12 +262,12 @@ bool TMarDirector::setupObjects()
 	JDrama::TNameRef* root
 	    = (JDrama::TNameRef*)JDrama::TNameRefGen::search2("Root View Obj");
 
-	JDrama::TNameRefPtrListT<JDrama::TViewObj>* gameObjs;
+	JDrama::TViewObjPtrListT<JDrama::TViewObj>* gameObjs;
 	if (root) {
-		gameObjs = (JDrama::TNameRefPtrListT<JDrama::TViewObj>*)root->search(
+		gameObjs = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)root->search(
 		    "ゲームオブジェクト");
 	} else {
-		gameObjs = (JDrama::TNameRefPtrListT<JDrama::TViewObj>*)
+		gameObjs = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)
 		    JDrama::TNameRefGen::search2("ゲームオブジェクト");
 	}
 
@@ -426,7 +426,7 @@ bool TMarDirector::setupObjects()
 	    ->getDrawBuffer()
 	    ->setMatAnmSort();
 	gpLightManager->addChildGroupObj(drawBufferGroup);
-	unk40->push_back(drawBufferGroup, CUE_DRAW);
+	unk40->push_back(drawInit, CUE_DRAW);
 	initECTGft(unk38, unk3C, perfEventGroup, normalScene);
 	initECTMir(mPerformListGX, perfEventGroup);
 
@@ -452,13 +452,12 @@ bool TMarDirector::setupObjects()
 	{
 		JKRDvdFile auStack_1d8;
 		auStack_1d8.open("/data/PerformLists.bin");
-		JKRDvdRipper::loadToMainRAM(
-		    &auStack_1d8, nullptr, EXPAND_SWITCH_DEFAULT, 0, nullptr,
-		    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0, nullptr);
-
 		{
-			JSUMemoryInputStream stream(auStack_1d8.getFileInfo(),
-			                            auStack_1d8.getFileSize());
+			JSUMemoryInputStream stream(
+			    JKRDvdRipper::loadToMainRAM(
+			        &auStack_1d8, nullptr, EXPAND_SWITCH_DEFAULT, 0, nullptr,
+			        JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0, nullptr),
+			    auStack_1d8.getFileSize());
 			JSUMemoryInputStream leftoversStream(nullptr, nullptr);
 			JDrama::TViewObj* performLists
 			    = (JDrama::TViewObj*)JDrama::TNameRef::genObject(
@@ -485,8 +484,9 @@ bool TMarDirector::setupObjects()
 
 	initECDisp(mPerformListGXPost, perfEventGroup, normalScene);
 
-	mPerformListMovement->push_back(
-	    (JDrama::TViewObj*)JDrama::TNameRefGen::search2("合成3"), CUE_MOVE);
+	JDrama::TViewObj* composite3
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("合成3");
+	mPerformListMovement->push_back(composite3, CUE_MOVE);
 	JDrama::TViewObj* specularSheen
 	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("スペキュラシーン");
 	if (specularSheen)
@@ -508,13 +508,13 @@ bool TMarDirector::setupObjects()
 	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search2("ターゲット矢印");
 
 	mPerformListMovement->push_back(dialogueCursor, CUE_MOVE);
-	mPerformListCalcAnim->push_back(dialogueCursor, CUE_CALC_ANIM);
+	mPerformListCalcAnim->push_back(composite3, CUE_CALC_ANIM);
 
 	if (specularSheen)
 		mPerformListCalcAnim->push_back(specularSheen, CUE_CALC_ANIM);
 	if (lensFlare) {
-		mPerformListCalcAnim->push_back(lensFlare, CUE_CALC_ANIM);
 		mPerformListCalcAnim->push_back(sunOcclusionGlow, CUE_CALC_ANIM);
+		mPerformListCalcAnim->push_back(lensFlare, CUE_CALC_ANIM);
 	}
 
 	mPerformListCalcAnim->push_back(dialogueCursor, CUE_CALC_ANIM);
