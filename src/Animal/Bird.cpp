@@ -495,23 +495,21 @@ void TAnimalBird::doWalk()
 	mLinearVelocity = velocity;
 }
 
-// TODO: 85.8%. Two residuals. (1) Retail never computes the rotated y of the
-// take-off velocity: with `velocity.y = 0.0f` right after the rotate MWCC is
-// expected to kill the dead store and its arithmetic, and ours keeps four
-// fmadds plus the frame they need (0x170 vs 0x158). (2) `velocity.length()`
-// expands TUtil<f32>::sqrt here while retail calls it -- the same per-call-site
-// inconsistency the catalog records for MapObjBall and amiNoko; a named speed
-// local changes nothing.
+// TODO: 88.2%, frame 0x178 against 0x158. The take-off velocity is rotated in
+// place and rebuilt flat, which lets MWCC drop the rotated y as retail does.
+// Left: (1) `velocity.length()` expands TUtil<f32>::sqrt here while retail
+// calls it -- the same per-call-site inconsistency the catalog records for
+// MapObjBall and amiNoko; a named speed local changes nothing. (2) MsAngleDiff
+// loads mRotation.y before mHomeRotation.y; retail the other way round.
 bool TAnimalBird::doLanding(bool takeoff)
 {
 	if (takeoff) {
 		f32 marchSpeed = getMyMarchSpeed() * SMSGetAnmFrameRate();
 		JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
 		JGeometry::TVec3<f32> dir(0.0f, 0.0f, marchSpeed);
-		JGeometry::TVec3<f32> velocity;
-		quat.rotate(dir, velocity);
-		velocity.y = 0.0f;
-		mVelocity  = velocity;
+		quat.rotate(dir, dir);
+		JGeometry::TVec3<f32> velocity(dir.x, 0.0f, dir.z);
+		mVelocity = velocity;
 	}
 
 	bool landed = false;
