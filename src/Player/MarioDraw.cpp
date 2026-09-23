@@ -1507,12 +1507,14 @@ void TMario::finalDrawInitialize()
 		                                  nullptr);
 }
 
+// TODO: instructions match; frame is 0x90 against retail's 0xa8, a uniform
+// 0x18 shift of the low region (the int-to-float slot). A symmetric clamp
+// inline for either block was tried and costs instructions.
 void TMario::considerWaist()
 {
-	// volatile u32 padding[6];
 	f32 maxPitch;
-	f32 targetPitch;
 	f32 angleChangeRate;
+	f32 targetPitch;
 
 	// Possibly unused get params function?
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
@@ -1551,8 +1553,8 @@ void TMario::considerWaist()
 	targetPitch = targetPitchCopy;
 	mWaistPitch += angleChangeRate * (targetPitch - mWaistPitch);
 
-	f32 rollMax;
 	f32 targetRoll;
+	f32 rollMax;
 	s16 diffAngle = mFaceAngle.y - unk9C;
 	// Possibly unused get params function?
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
@@ -1581,7 +1583,7 @@ void TMario::considerWaist()
 	}
 
 	// Likely clamp inline, but i couldn't find an existing that worked
-	f32 targetRollCopy = targetRoll * diffAngle * mForwardVel;
+	f32 targetRollCopy = targetRoll * (diffAngle * mForwardVel);
 	if (targetRollCopy > rollMax) {
 		targetRollCopy = rollMax;
 	}

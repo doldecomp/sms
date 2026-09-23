@@ -678,6 +678,9 @@ void TMario::doPushingAnimation(const Vec& vec)
 	mModelFaceAngle = wallAngle + 0x8000;
 }
 
+// TODO: frame 0x58 against retail's 0x90, and retail keeps `pushed`'s zero in
+// r30 and stores it to mStatusState (ours `li r0`). bool/int/BOOL/u8/u16 for
+// `pushed`, `mStatusState = pushed`, and every declaration order were inert.
 BOOL TMario::running()
 {
 	mStatusTimer++;
@@ -1416,8 +1419,8 @@ BOOL TMario::oilSlope()
 		mOilBrake   = 0.0f;
 		changePlayerStatus(MARIO_STATUS_CATCH, 0, false);
 	}
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-	                   mDirtyParams.mPolSizeSlip.get());
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+	                     mDirtyParams.mPolSizeSlip.get());
 	return slipBackCommon(MARIO_STATUS_CATCH_LOST, MARIO_STATUS_LANDING, 0x89);
 }
 
@@ -1714,6 +1717,7 @@ BOOL TMario::broadJumpSlip()
 	return 0;
 }
 
+// TODO: instructions match; frame 0x48 against retail's 0x60.
 BOOL TMario::moveMain()
 {
 	BOOL ret = 0;
