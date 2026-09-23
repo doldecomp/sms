@@ -321,6 +321,7 @@
     "OdemuExi2/DebuggerDriver.c",
     "Player/MarioAction.cpp",
     "Player/MarioBlend.cpp",
+    "Player/MarioEffect.cpp",
     "Player/MarioInit.cpp",
     "Player/MarioPositionObj.cpp",
     "Player/MarioRecord.cpp",
