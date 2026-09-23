@@ -656,7 +656,8 @@ void TGesso::bind()
 		mVelocity.y -= getGravityY();
 		if (mVelocity.y < mVelocityMinY)
 			mVelocity.y = mVelocityMinY;
-		if (isBckAnm(18)) // geso_turn_hit1.bas
+		bool turnHit = isBckAnm(18);
+		if (turnHit) // geso_turn_hit1.bas
 			mState = 4;
 		else if (mThroughHoseiDistY * 0.5f + mPosition.y < unk1A4)
 			mState = 4;
@@ -671,6 +672,7 @@ void TGesso::bind()
 	}
 
 	if (isNotWandering()) {
+		f32 angle;
 		JGeometry::TVec3<f32> var1;
 		f32 f1 = 1.0f;
 
@@ -693,13 +695,13 @@ void TGesso::bind()
 		// sites lands it (-8 of pool) but drops the conversion slot to 0x60
 		// (frame 0x78); no +8 above local_48 found (local_48/var2 declared
 		// early, named magnitude, named s16 matan, f1 as if/else) (cc48).
-		f32 fVar3 = SMS_GetMarioPos().x - mPosition.x;
-		f32 fVar4 = SMS_GetMarioPos().z - mPosition.z;
+		f32 fVar3 = (*gpMarioPos).x - mPosition.x;
+		f32 fVar4 = (*gpMarioPos).z - mPosition.z;
 		JGeometry::TVec3<f32> var2(fVar3, 0.0f, fVar4);
 		JGeometry::TVec3<f32> local_48;
 		local_48.cross(var1, var2);
 		f32 cos   = var1.dot(var2);
-		f32 angle = MsAtan2(cos, MsVECMag2(&local_48));
+		angle = MsAtan2(cos, MsVECMag2(&local_48));
 		if (mBodyTrackingAngle != angle) {
 			if (mBodyTrackingAngle < angle) {
 				mBodyTrackingAngle += mBodyRotSpeed;

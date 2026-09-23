@@ -137,6 +137,11 @@ void TBathtubGrip::reset()
 	unk260 = 0;
 }
 
+static inline J3DModel* BathtubGripModel(TBathtubGrip* self)
+{
+	return self->getModel();
+}
+
 // TODO: Match constructor register allocation and inlined initialization.
 TBathtubGrip::TBathtubGrip(TBathtub* bathtub, f32 angle, MActorAnmData* anmData,
                          const char* name)
@@ -145,16 +150,15 @@ TBathtubGrip::TBathtubGrip(TBathtub* bathtub, f32 angle, MActorAnmData* anmData,
 	unk25C = new MActor(anmData);
 	void* resource = JKRGetResource("/scene/map/map/stand_effect/stand_effect.bmd");
 	u32 flags = 0x50050000;
-	J3DModel* model = new J3DModel(
-	    J3DModelLoaderDataBase::load(resource, flags), 0, 1);
-	unk25C->setModel(model, flags);
+	unk25C->setModel(new J3DModel(
+	    J3DModelLoaderDataBase::load(resource, flags), 0, 1), flags);
 	unk254 = 0;
 	mBathtub = bathtub;
 	unk24C = angle;
 	initAndRegister("stand_break");
 	calcRootMatrix();
 	getModel()->calc();
-	JUTNameTab* names = getModel()->getModelData()->getJointName();
+	JUTNameTab* names = BathtubGripModel(this)->getModelData()->unkB0;
 	for (int i = 0; i < 17; ++i) {
 		char jointName[0x10];
 		char path[0x100];
