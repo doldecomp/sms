@@ -249,6 +249,9 @@ f32 TSpineEnemy::calcTurnSpeedToReach(f32 march_speed, f32 param_2) const
 	// fnmsubs/frsqrte pair swaps f0/f1; a HitActor-style TU-local sqrt inline
 	// (volatile-first, double guess, inline argument) is inert, as are
 	// 1.0f - d * d, the unnamed operand, a named guess and swapped operands.
+	// feetinv's FeetInvAcosDeg (the same ==1/==-1/acos tail) as a TU-local
+	// helper is inert too, with or without a named result; inlining the
+	// MsClamp result into its argument is 8 shorter still.
 	volatile f32 f = fVar32 * __frsqrte(fVar32);
 	f32 tmp        = matan(f, dVar11) * (360.0f / 65536.0f);
 	return 90.0f - tmp;
@@ -625,7 +628,11 @@ void TSpineEnemy::doShortCut()
 	//
 	// TODO: the frame is exact now (the TU-local raw getPoint below is -0x10),
 	// but every temporary sits 0x10 above retail's slot, so retail reserves
-	// 0x10 more below them than we do.
+	// 0x10 more below them than we do. Retail's slots (frame 0xb0): node
+	// 0x94, local_28 0x88, first diff 0x70, first pop 0x60, second pop 0x48,
+	// sub temp 0x38 -- the second pop is allocated before the sub temp, ours
+	// the other way round. switchNextGoalPath() at either or both pop sites
+	// is +8 frame each, and node.getPoint() at the second site +0x10.
 	TPathNode node;
 	node = unk114.top();
 
