@@ -17,18 +17,18 @@ class TPauseMenu2;
 
 class TCardSave : public JDrama::TViewObj {
 public:
-	TEProgress changeMode(long);
+	TEProgress changeMode(s32);
 
 	TCardSave(const char* name = "<TCardSave>", bool = false);
 
 	void load(JSUMemoryInputStream& stream);
 	void initData(TMarioGamePad*);
-	void changeMessage(unsigned long, unsigned long, int);
+	void changeMessage(u32, u32, int);
 	void init(int);
-	void perform(unsigned long cue, JDrama::TGraphics* graphics);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void makeBuffer(J2DTextBox*, int);
-	void setMessage(J2DTextBox*, long, unsigned long);
-	void setMessageC(J2DTextBox*, long, unsigned long);
+	void setMessage(J2DTextBox*, s32, u32);
+	void setMessageC(J2DTextBox*, s32, u32);
 	s8 waitForStop(TEProgress);
 	void endWaitForChoice();
 	s8 waitForChoice(TEProgress, TEProgress, signed char);
@@ -42,7 +42,7 @@ public:
 	s8 waitForSelect3(TEProgress, TEProgress, TEProgress);
 	s8 waitForAnyKeyBM(TEProgress);
 	void selectBookmarks(TEProgress, TEProgress, TEProgress, TEProgress);
-	void changePattern(J2DPicture*, short, unsigned long);
+	void changePattern(J2DPicture*, s16, u32);
 	void execMovement_();
 	u8 getNextState();
 	void execIssueGX_(JDrama::TGraphics*);

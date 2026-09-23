@@ -273,7 +273,7 @@ class TPollutionLayerWave : public TPollutionLayer {
 public:
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);
-	virtual void perform(unsigned long cue, JDrama::TGraphics* graphics);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual int getPlaneType() const { return 6; }
 	virtual ResTIMG* getTexResource(const char*);
 

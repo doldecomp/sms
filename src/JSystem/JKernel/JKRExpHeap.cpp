@@ -1027,7 +1027,7 @@ JKRExpHeap::CMemBlock* JKRExpHeap::CMemBlock::allocFore(u32 size, u8 groupId1,
 }
 
 JKRExpHeap::CMemBlock*
-JKRExpHeap::CMemBlock::allocBack(unsigned long size, unsigned char groupID,
+JKRExpHeap::CMemBlock::allocBack(u32 size, unsigned char groupID,
                                  unsigned char p3, unsigned char allocGroupID,
                                  unsigned char p5)
 {

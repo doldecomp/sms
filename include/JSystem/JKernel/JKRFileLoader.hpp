@@ -26,7 +26,7 @@ public:
 	virtual void removeResourceAll()                       = 0;
 	virtual bool removeResource(void*)                     = 0;
 	virtual bool detachResource(void*)                     = 0;
-	virtual long getResSize(const void*) const             = 0;
+	virtual s32 getResSize(const void*) const              = 0;
 	virtual u32 countFile(const char*) const               = 0;
 	virtual JKRFileFinder* getFirstFile(const char*) const = 0;
 
