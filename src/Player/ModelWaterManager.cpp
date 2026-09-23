@@ -440,15 +440,15 @@ void TModelWaterManager::garbageCollect()
 
 void TModelWaterManager::move()
 {
-	// TODO: 94.6%. Control flow, members and constants now follow retail.
-	// Left: the frame is 0x68 short (0x280 vs 0x2e8); retail keeps
+	// TODO: 96.4%. Control flow, members and constants now follow retail.
+	// Left: the frame is 0x70 short (0x278 vs 0x2e8); retail keeps
 	// gWaterManagerPlaneInfo and the splash-argument temporary in saved
 	// registers from the prologue; retail reads `local_248->mActor` and
 	// `local_b4->mActor` through an `lwzu` address it reloads after the
 	// mStaticHitActor stores (getActor(), inline cast and const_cast are
 	// inert); and the merge distance fuses `x*x + y*y` into an fmadds
 	// where TVec3::length() keeps three fmuls.
-	f32 fVar1 = unk5E08;
+	f32 fVar1 = unk5E08 * unk5E08;
 	for (int i = 0; i < mParticleCount; ++i) {
 		if (unk2514[i] != nullptr) {
 			mStaticHitActor.mPosition = mParticlePositionSOA[i];
@@ -469,7 +469,7 @@ void TModelWaterManager::move()
 		JGeometry::TVec3<f32> thing;
 		thing.sub(SMS_GetMarioPos(), mParticlePositionSOA[i]);
 
-		if (thing.x * thing.x + thing.z * thing.z > fVar1 * fVar1) {
+		if (thing.x * thing.x + thing.z * thing.z > fVar1) {
 			mParticleLifetimeSOA[i] = 0.0f;
 			continue;
 		}
@@ -522,7 +522,8 @@ void TModelWaterManager::move()
 	for (int i = 0; i < mParticleCount; ++i) {
 		if (mParticleVelocitySOA[i].y < 0.0f) {
 			f31 = gpMap->checkGroundIgnoreWaterThrough(
-			    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y - fVar1,
+			    mParticlePositionSOA[i].x,
+			    mParticlePositionSOA[i].y - mParticleVelocitySOA[i].y,
 			    mParticlePositionSOA[i].z, &local_248);
 
 			if (local_248->isLegal() && !(1.0f + f31 < mParticlePositionSOA[i].y)) {
