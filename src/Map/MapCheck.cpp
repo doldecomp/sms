@@ -289,7 +289,7 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 	}
 
 	*result = &mIllegalCheckData;
-	return 9999999.0f;
+	return -32767.0f;
 }
 
 // HEADER NEED: TBGCheckListRoot has getRoofList()/getWallList() but no
