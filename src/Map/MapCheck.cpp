@@ -45,7 +45,7 @@ inline static bool someUnknownInline(TBGCheckData* r31, TBGWallCheckRecord* r29)
 	f32 y2 = r31->getPoint2().y;
 	f32 y3 = r31->getPoint3().y;
 
-	if (r31->checkFlag(0x4)) {
+	if (r31->checkFlag(0x8)) {
 		if (nx > 0.0f) {
 			cz = -cz;
 
@@ -116,6 +116,11 @@ inline static bool someUnknownInline(TBGCheckData* r31, TBGWallCheckRecord* r29)
 	return true;
 }
 
+// TODO: 97.4%. Retail's frame is 0xe0 larger (0x310 against 0x230) with no
+// extra stack traffic, so the fabricated someUnknownInline/skewProduct shape
+// is missing inline levels; the volatile FPR numbering of cx/cy/cz and the
+// early `mr r3, r31` before the first mMinY compare follow from that.
+// A named result in skewProduct is +0x30 and inert otherwise.
 int TMapCollisionData::checkWallList(const TBGCheckList* param_1,
                                      TBGWallCheckRecord* param_2)
 {
@@ -126,9 +131,10 @@ int TMapCollisionData::checkWallList(const TBGCheckList* param_1,
 	// param_1: r28
 	// param_2: r29
 
+	TBGCheckData* r31;
 	int r30 = 0;
 	while (param_1) {
-		TBGCheckData* r31 = param_1->unk8;
+		r31 = param_1->unk8;
 		param_1           = param_1->mNext;
 
 		if (r31->mMinY > f27)
