@@ -416,6 +416,7 @@
     "THPPlayer/THPPlayer.c",
     "THPPlayer/THPRead.c",
     "THPPlayer/THPVideoDecode.c",
+    "TRK_MINNOW_DOLPHIN/__exception.s",
     "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk.c",
     "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk_glue.c",
     "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/targcont.c",
