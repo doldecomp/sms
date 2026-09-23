@@ -1135,6 +1135,9 @@ static inline void Talk2D2CalcAnim(TTalk2D2* p)
 	}
 }
 
+// TODO: frame 0x178 vs retail 0x1c8. SMSGetMarDirector() at the director
+// sites (as in openTalkWindow) moves it to 0x190 at no instruction change;
+// Talk2D2GetMSound() at the sound sites is inert here.
 void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {

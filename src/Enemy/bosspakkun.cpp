@@ -1969,6 +1969,9 @@ DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
 
 	// TODO: frame-exact; the `mouth` block inside the resetWaterMark
 	// expansion is still 4 low, and every rung here prices in 8s.
+	// Inert in resetWaterMark (standalone still 0x98 against the map's
+	// 0xa4): mPos.set(mouth), raw mWaterEmitInfo, raw gpModelWaterManager,
+	// `mouth.y = mouth.y + 250.0f`.
 	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_RETURN)) {
 		f32 frame = BosspakkunBckFrame(actor);
 		if (140.0f < frame && frame < 160.0f && !boss->unk17C)
