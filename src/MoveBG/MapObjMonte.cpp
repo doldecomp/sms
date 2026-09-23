@@ -358,6 +358,9 @@ void THangingBridge::setDrawPos(int i, f32 yOffset,
 // 8 bytes of dead region above the class-object block that no pool or binder
 // rung reaches (two-local binder subsets all land 0x108 but 8 bytes too low).
 // The board-number fork is also what swaps `mullw r0, r0, r30`'s operands.
+// Priced: raw mBoardNum is 0xf8 (slots shift), the fork 0x100, a name-and-
+// return binder 0x108 with shifted slots; fork in any loop condition, `<< 1`,
+// `divide *` first, `* 2 * divide`, and inlining setDrawPos are inert/worse.
 void THangingBridge::drawRopeBetweenBoards(f32 yOffset, int divide) const
 {
 	f32 offsetX = mSideDir.x * mRopeOffset;

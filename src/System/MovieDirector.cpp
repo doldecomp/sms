@@ -193,6 +193,12 @@ void TMovieDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 // TODO: frame 0x310 against retail 0x318; every instruction is right and
 // only stack slots differ (8 bytes missing below the THP locals). Naming
 // the pos/size temporaries or keeping a TBox2 is worse (98.1-98.6%).
+// Also: retail converts the camera's width before its height (width in f30),
+// we convert height first; the TDStageDisp TFlagT default-argument temporary
+// sits at 0x280 in retail's upper block but in our low region. Inert: explicit
+// (f32) casts, an explicit TDStageDisp("<DStageDisp>", 0 / TFlagT(0)),
+// splitting the camera declaration; raw `rect.x2 - rect.x1` is -8 frame
+// (0x308), named f32/int width/height before `new` change code.
 int TMovieDirector::rsetup()
 {
 	void* subtitleArcBlob

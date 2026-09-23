@@ -1869,6 +1869,10 @@ static inline void FireWanwanSetGroundPlane(TFireWanwan* p,
 	p->mGroundPlane = plane;
 }
 
+// TODO: frame exact; retail's `actualPoint - point` temporary sits at 0x4c
+// (below the inline region) where ours is at 0x88, and the `point.y >
+// actualPoint.y` loads swap f0/f1. Inert or worse: `actualPoint.y < point.y`,
+// a named offset or point copy, `sub()`, assign-then-`-=`.
 void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
                             const JGeometry::TVec3<f32>& point,
                             const JGeometry::TVec3<f32>& param_3, f32 radius,
