@@ -109,6 +109,10 @@ static inline u8 KoopaFindGrip(TKoopa* koopa, TBathtub* bathtub)
 	return onGrip;
 }
 
+// TODO: 91.1%. Retail calls TKoopa::getTargetDir out of line here and in
+// TNerveKoopaFlame; ours auto-inlines it. Retail's getTargetDir has a 0xe8
+// frame (ours 0x40), so its source is larger; a TVec3 origin/xDir/zDir
+// spelling reaches 99.1% there but is still inlined at depths 1-3.
 BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
@@ -145,7 +149,8 @@ BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 			koopa->changeAnm(KOOPA_ANM_WAIT, 1,
 			                 koopa->getParam()->waitSpeed.get());
 			if (koopa->canTumble()) {
-				if (bathtub->allowsTumble())
+				if (((TBathtub*)JDrama::TNameRefGen::search2("バスタブ"))
+				        ->allowsTumble())
 					spine->pushNerve(&TNerveKoopaTumble::theNerve());
 			}
 			break;
@@ -1157,28 +1162,27 @@ f32 TKoopa::getAnmFrameNext() const
 // UNUSED (0x90). True on the frame the animation steps past `frame`.
 bool TKoopa::passesAnmFrame(f32 frame) const
 {
-	if (getAnmFrame() <= frame) {
-		if (0.005f + getAnmFrameNext() >= frame)
-			return true;
-	}
-	return false;
+	bool passes = false;
+	if (getAnmFrame() <= frame && frame <= 0.005f + getAnmFrameNext())
+		passes = true;
+	return passes;
 }
 
 // UNUSED (0x1a8). Bowser only agrees to hip-drop on the wait animation, and
 // only as it crosses one of its three rest points.
-BOOL TKoopa::canTumble() const
+bool TKoopa::canTumble() const
 {
 	if (getAnmIndex() != KOOPA_ANM_WAIT)
-		return FALSE;
+		return false;
 	if (getAnmEnd())
-		return TRUE;
+		return true;
 	if (passesAnmFrame(2.0f))
-		return TRUE;
+		return true;
 	if (passesAnmFrame(400.0f))
-		return TRUE;
+		return true;
 	if (passesAnmFrame(700.0f))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 void TKoopa::fall()

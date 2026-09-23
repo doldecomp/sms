@@ -211,7 +211,7 @@ public:
 	MtxPtr getHeadMtx() const;
 	BOOL getAnmEnd() const;
 	void fall();
-	BOOL canTumble() const;
+	bool canTumble() const;
 	bool passesAnmFrame(f32 frame) const;
 	f32 getAnmFrameNext() const;
 	f32 getAnmFrame() const;
