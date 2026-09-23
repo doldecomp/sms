@@ -410,6 +410,23 @@ public:
 	// return type cannot be settled until those are respelled.
 	// The member form alone (by-value return, no argument level) is inert on
 	// TWarpInCallBack and +0.01 total, but still loses `__ami__`.
+	// Re-measured under the `: Vec(other)` copy constructor (header round
+	// hm): still a net loss, and TWarpInCallBack (80.23) and THamuKuri
+	// (99.89) no longer move at all.
+	//   friend reference return: exact 11755 -> 11749, 5 up, 24 down; boid's
+	//     `div`/`dot`/`TUtil<f>::sqrt`, Tongue's `__ami__` AND
+	//     MarioCollision's weak copy ctor go MISSING. Up: TEffectColumWater
+	//     ::generate 91.95 -> 99.79, TRope::moveHead 93.60 -> 99.69,
+	//     TIgaiga::setMeltAnm 92.14 -> 96.06. Down: TTamaNoko::landEffect
+	//     99.19 -> 82.97, TBoidLeader::calcBoids 96.09 -> 86.36,
+	//     TConeBeam::calcVertices 95.65 -> 88.45, TMapObjPuncher::touchPlayer
+	//     99.72 -> 92.86, TYoshiTongue::emit 99.73 -> 93.95, TWalker::bind
+	//     98.04 -> 92.55 and 13 more.
+	//   member `const TVec3& operator*(f32) const`: exact 11755 -> 11750,
+	//     4 up, 23 down; the same boid and Tongue weak bodies go MISSING and
+	//     TBoidLeader::calcForces drops 100 -> 93.56. Same three gains.
+	// No gain closes a function, so respelling the ~20 regressing sites
+	// cannot pay for it; keep the by-value return.
 	friend TVec3 operator*(TVec3 fst, f32 snd)
 	{
 		fst *= snd;
