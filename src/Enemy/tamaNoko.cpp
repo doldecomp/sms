@@ -316,11 +316,14 @@ void TTamaNoko::behaveToWater(THitActor*)
 // TODO: fake
 static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 {
-	return JGeometry::TVec3<f32>(radius * JMASSin(theta * (65536.0f / 360.0f)),
-	                             0.0f,
-	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
+	f32 angle = theta * (65536.0f / 360.0f);
+	return JGeometry::TVec3<f32>(radius * JMASSin(angle), 0.0f,
+	                             radius * JMASCos(angle));
 }
 
+// TODO: frame and instructions match; local_34 sits 4 above retail (0xe0 vs
+// 0xdc). Inert: raw unkF4, getPosition()/getRotation() at the angle reads,
+// raw mSLTurnSpeedLow, fVar3 or local_40 declared at the top.
 void TTamaNoko::walkBehavior(int param_1, f32 param_2)
 {
 	mTurnSpeed  = getSaveParams2()->mSLTurnSpeedLow.get();
@@ -344,17 +347,18 @@ void TTamaNoko::walkBehavior(int param_1, f32 param_2)
 
 	if (param_1 != 5 && param_1 != 3) {
 		JGeometry::TVec3<f32> local_40 = mLinearVelocity;
-		local_40 += fromPolar(mRotation.y, mMarchSpeed * param_2);
+		f32 speed = mMarchSpeed * param_2;
+		local_40 += fromPolar(mRotation.y, speed);
 		mLinearVelocity = local_40;
 	}
 
-	if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
-	    && mSpine->getTime() % 200 == 1) {
+	if (getSpine()->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
+	    && getSpine()->getTime() % 200 == 1) {
 		forceSleep();
 	}
 
 	if (mWakeUpTimer > 0
-	    && mSpine->getCurrentNerve() == &TNerveTamaNokoSleep::theNerve()) {
+	    && getSpine()->getCurrentNerve() == &TNerveTamaNokoSleep::theNerve()) {
 		++mWakeUpTimer;
 		if (mWakeUpTimer > 400) {
 			mWakeUpTimer = 0;
