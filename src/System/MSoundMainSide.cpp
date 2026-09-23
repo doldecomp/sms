@@ -739,7 +739,8 @@ void MSStageProc::setBgmPosition(const Vec& pos, f32 dist, bool fade, u32 cur,
 	f32 pan    = MSHandle::calcPan(camPos, dist, 10000.0f);
 	f32 dolby  = MSHandle::calcDolby(camPos, dist);
 	if (fade && cur < max) {
-		pan = (pan - 0.5f) * cur / max;
+		pan -= 0.5f;
+		pan = pan * cur / max;
 		pan += 0.5f;
 		dolby = dolby * cur / max;
 	}
@@ -813,6 +814,10 @@ MSStageDistFadeMonte::MSStageDistFadeMonte(const Vec* param_1, f32 param_2,
 {
 }
 
+// TODO: frame 0xb0 vs retail 0x118 and fVar2/fVar12 in f30/f31 swapped.
+// Inert on the FPRs (c-sys1): every declaration order of fVar2 and fVar12.
+// `MSGetEarPos(SMS_GetMarioPos())` for the two copies gives 0xc8 with the same
+// instructions, but retail's copy sits directly above the ear-pos temporary.
 void MSStageDistFadeMonte::proc()
 {
 	JAISound* sound1 = MSBgm::getHandle(1);
