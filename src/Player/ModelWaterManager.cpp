@@ -437,6 +437,14 @@ void TModelWaterManager::garbageCollect()
 
 void TModelWaterManager::move()
 {
+	// TODO: 94.6%. Control flow, members and constants now follow retail.
+	// Left: the frame is 0x68 short (0x280 vs 0x2e8); retail keeps
+	// gWaterManagerPlaneInfo and the splash-argument temporary in saved
+	// registers from the prologue; retail reads `local_248->mActor` and
+	// `local_b4->mActor` through an `lwzu` address it reloads after the
+	// mStaticHitActor stores (getActor(), inline cast and const_cast are
+	// inert); and the merge distance fuses `x*x + y*y` into an fmadds
+	// where TVec3::length() keeps three fmuls.
 	f32 fVar1 = unk5E08;
 	for (int i = 0; i < mParticleCount; ++i) {
 		if (unk2514[i] != nullptr) {

@@ -632,6 +632,10 @@ TBWBinder::TBWBinder() { }
 
 void TBWBinder::bind(TLiveActor* actor)
 {
+	// TODO: 97.6%. Left: the frame is 0xb8 short (0x1c0 vs 0x278), the
+	// leash block keeps tail.y/z in f31/f30 and reloads tail.x (the open
+	// "reload x, keep y/z" pattern), and `checkGround() + 1.0f` adds with
+	// its operands swapped (`height += 1.0f` and `1.0f + ...` are inert).
 	TBossWanwan* boss = (TBossWanwan*)actor;
 
 	JGeometry::TVec3<f32> velocity = actor->mLinearVelocity;
@@ -677,7 +681,7 @@ void TBWBinder::bind(TLiveActor* actor)
 			}
 		}
 
-		if (next.y <= height && !ground->checkFlag(BG_CHECK_FLAG_ILLEGAL)
+		if (nextY <= height && !ground->checkFlag(BG_CHECK_FLAG_ILLEGAL)
 		    && !ground->isEnemyThrough()) {
 			next.y = height;
 			JGeometry::TVec3<f32> stopped(0.0f, 0.0f, 0.0f);
@@ -707,18 +711,18 @@ void TBWBinder::bind(TLiveActor* actor)
 
 				JGeometry::TVec3<f32> link;
 				JGeometry::TVec3<f32> back;
-				nodes[curr].getPoint(link);
-				nodes[prev].getPoint(back);
+				const TGraphNode& currNode = nodes[curr];
+				const TGraphNode& prevNode = nodes[prev];
+				currNode.getPoint(link);
+				prevNode.getPoint(back);
 
 				link.x -= back.x;
 				link.y -= back.y;
 				link.z -= back.z;
 				VECNormalize(link, link);
 
-				f32 along = 0.0f;
 				f32 lsq   = link.squared();
-				if (lsq != 0.0f)
-					along = velocity.dot(link) / lsq;
+				f32 along = lsq == 0.0f ? 0.0f : velocity.dot(link) / lsq;
 
 				f32 step = along;
 				if (along < 0.0f) {
@@ -741,20 +745,22 @@ void TBWBinder::bind(TLiveActor* actor)
 		if (dist != 0.0f) {
 			f32 roll = 360.0f * (dist / 3141.5928f);
 
-			JGeometry::TVec3<f32> facing
+			JGeometry::TVec3<f32> dir
 			    = MsGetVecFromRotY(actor->mRotation.y, 1.0f);
-			JGeometry::TVec3<f32> dir = facing;
 			if (dir.dot(velocity) < 0.0f)
 				roll = -roll;
 
 			roll *= 2.0f;
 			if (boss->mIsRolling) {
-				boss->mRollAngle = MsAngleWrap(boss->mRollAngle + roll);
-			} else if (boss->mRollAngle != 0.0f) {
-				f32 wrapped = boss->mRollAngle + roll;
-				if (wrapped > 360.0f)
-					wrapped = 0.0f;
-				boss->mRollAngle = wrapped;
+				boss->mRollAngle = MsAngleWrap(roll + boss->mRollAngle);
+			} else {
+				f32 angle = boss->mRollAngle;
+				if (angle != 0.0f) {
+					angle += roll;
+					if (angle > 360.0f)
+						angle = 0.0f;
+					boss->mRollAngle = angle;
+				}
 			}
 		}
 	}
@@ -784,14 +790,15 @@ void TBWBinder::bind(TLiveActor* actor)
 	if (!actor->isAirborne()) {
 		TGraphTracer* tracer      = ((TSpineEnemy*)actor)->getTracer();
 		const TGraphNode* nodes   = tracer->getGraph()->unk0;
-		const TGraphNode* backOne = &nodes[tracer->getPrevIndex()];
+		const TGraphNode& aheadNode = nodes[tracer->getCurGraphIndex()];
+		const TGraphNode& behindNode = nodes[tracer->getPrevIndex()];
 
 		JGeometry::TVec3<f32> ahead;
 		JGeometry::TVec3<f32> behind;
-		nodes[tracer->getCurGraphIndex()].getPoint(ahead);
-		backOne->getPoint(behind);
+		aheadNode.getPoint(ahead);
+		behindNode.getPoint(behind);
 
-		JGeometry::TVec3<f32> foot
+		JGeometry::TVec3<f32> toFoot
 		    = MsPerpendicFootToLineR(behind, ahead, actor->mPosition);
 
 		// The link vector the original computed here and never used.
@@ -799,7 +806,6 @@ void TBWBinder::bind(TLiveActor* actor)
 		ahead.y -= behind.y;
 		ahead.z -= behind.z;
 
-		JGeometry::TVec3<f32> toFoot(foot);
 		toFoot.sub(actor->mPosition);
 
 		f32 pull = VECMag(toFoot);
@@ -816,7 +822,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		velocity.add(toFoot);
 	}
 
-	actor->mLinearVelocity.set(velocity.x, velocity.y, velocity.z);
+	actor->mLinearVelocity = velocity;
 }
 
 // UNUSED, 0x98 in the map: inlined into TBossWanwan::init.
