@@ -161,9 +161,9 @@ int TMarDirector::direct()
 			movement();
 			if (!(uVar8 & 2)) {
 				if (checkUnk4EFlag(1))
-					mPerformListCalcAnim->perform(~uVar8, &local_140);
-				else
 					mShinePfLstAnm->perform(~uVar8, &local_140);
+				else
+					mPerformListCalcAnim->perform(~uVar8, &local_140);
 			}
 
 			if (checkUnk4CFlag(0x4000)) {
