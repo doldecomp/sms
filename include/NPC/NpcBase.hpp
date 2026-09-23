@@ -249,6 +249,7 @@ private:
 	inline f32 getAnmOffDist_();
 	inline f32 getAnmOffDistSquared_();
 	inline bool calcAnmOff_();
+	inline void performMove_();
 	void setNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
 	void requestNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
 	void setKeepAnm_();

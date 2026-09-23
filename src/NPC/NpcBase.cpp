@@ -718,6 +718,43 @@ inline bool TBaseNPC::calcAnmOff_()
 	return r31;
 }
 
+// Retail calls isPollutionNpc here but inlines isJellyFishMare, so this block
+// also sits one inline level below perform. The name is ours.
+inline void TBaseNPC::performMove_()
+{
+	changeNerveProc_();
+	if (mHolder == nullptr) {
+		if (isNerveWalk())
+			walkAnmRateChange_();
+		if (unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4) {
+			f32 rate = SMSGetAnmFrameRate();
+			mMActor->setFrameRate(
+			    MsClamp(
+			        mTurnSpeed * mIndividualParams->mTurnAnmRate.get()
+			            * rate,
+			        mIndividualParams->mTurnAnmMinRate.get() * rate,
+			        mIndividualParams->mTurnAnmMaxRate.get() * rate),
+			    ANM_TYPE_BCK);
+		}
+	}
+
+	mInbetweenCtrl->execPosInbetween(&mPosition);
+	if (unk1DC > 0) {
+		unk1DC -= 1;
+		if (unk1DC == 0 && mHolder == nullptr) {
+			offHitFlag(HIT_FLAG_NO_COLLISION);
+			offLiveFlag(LIVE_FLAG_UNK10000000);
+		}
+	}
+
+	if (!isJellyFishMare() && mActorType != 0x4000007)
+		setVariableDamageRadius_();
+
+	if (isPollutionNpc())
+		unk174.a
+		    = mPollutionAmount * mIndividualParams->mPollutionMax.get();
+}
+
 void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mActorType == 0x400001C) {
@@ -761,8 +798,9 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (manager != nullptr)
 			farClip = *manager->unk58;
 
-		s16 angle = matan(gpCamera->unk148.z - gpCamera->unk124.z,
-		                  gpCamera->unk148.x - gpCamera->unk124.x);
+		const JGeometry::TVec3<f32>& at  = gpCamera->unk148;
+		const JGeometry::TVec3<f32>& pos = gpCamera->unk124;
+		s16 angle = matan(at.z - pos.z, at.x - pos.x);
 		JGeometry::TVec3<f32> local_4C = gpCamera->unk124;
 		if (!MsIsInSight(local_4C, SHORTANGLE2DEG(angle), mPosition,
 		                 farClip + 500.0f, 120.0f, 800.0f)) {
@@ -772,7 +810,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (!bVar5) {
-		offLiveFlag(LIVE_FLAG_DONT_TALK);
+		offLiveFlag(LIVE_FLAG_UNK20000 | LIVE_FLAG_UNK40000);
 		return;
 	}
 
@@ -780,37 +818,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		moveObject();
 		if (graphics->unk0 & 0x2) {
-			changeNerveProc_();
-			if (mHolder == nullptr) {
-				if (isNerveWalk())
-					walkAnmRateChange_();
-				if (unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4) {
-					f32 rate = SMSGetAnmFrameRate();
-					mMActor->setFrameRate(
-					    MsClamp(
-					        mTurnSpeed * mIndividualParams->mTurnAnmRate.get()
-					            * rate,
-					        mIndividualParams->mTurnAnmMinRate.get() * rate,
-					        mIndividualParams->mTurnAnmMaxRate.get() * rate),
-					    ANM_TYPE_BCK);
-				}
-			}
-
-			mInbetweenCtrl->execPosInbetween(&mPosition);
-			if (unk1DC > 0) {
-				unk1DC -= 1;
-				if (unk1DC == 0 && mHolder == nullptr) {
-					offHitFlag(HIT_FLAG_NO_COLLISION);
-					offLiveFlag(LIVE_FLAG_UNK10000000);
-				}
-			}
-
-			if (!isJellyFishMare() && mActorType != 0x4000007)
-				setVariableDamageRadius_();
-
-			if (isPollutionNpc())
-				unk174.a
-				    = mPollutionAmount * mIndividualParams->mPollutionMax.get();
+			performMove_();
 		}
 
 		cue &= ~CUE_MOVE;
@@ -838,6 +846,12 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
+	// TODO: retail computes both camera distances here and in calcAnmOff_
+	// unfused and before CLBSquared, reading mPosition and the camera
+	// directly (no stack TVec3), from a frame 0xb0 larger than ours: a
+	// squared-distance inline level is missing. Named locals, the
+	// TVec3::squared(other) overload and a TU-local summed-squares helper
+	// were measured and are inert or worse.
 	if (cue & CUE_ENTRY) {
 		offLiveFlag(LIVE_FLAG_UNK1000000);
 		JGeometry::TVec3<f32> diff;
