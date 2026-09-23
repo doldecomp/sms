@@ -1005,19 +1005,24 @@ void TBossGesso::launchPolDrop()
 	unk195 += 1;
 }
 
-// TODO: map size 0x8c (140 bytes); this body is 0x64 and the two spellings
-// used by the nerves (index 1 with frame 1.5/rate 0, index 2 with frame 0)
-// both have to fit, so the real body probably branches on the index. Not
-// called anywhere: retail pastes the block at each nerve site.
+// Both btp spellings the nerves paste (index 1 held at frame 1.5, index 2
+// at frame 0) as one flag-selected body; this is the map's 0x8c. Calling it
+// at the eight nerve sites compiles to the same code but adds 0x18 of frame
+// per site under the current changeBck spelling, so the sites stay pasted.
 void TBossGesso::setEyeDamageBtp(int index)
 {
-	getMActor()->setBtpFromIndex(index);
-
-	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BTP);
-	ctrl->setFrame(1.5f);
-	ctrl->setRate(0.0f);
-
-	getMActor()->resetDL();
+	if (index != 0) {
+		getMActor()->setBtpFromIndex(1);
+		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BTP);
+		ctrl->setFrame(1.5f);
+		ctrl->setRate(0.0f);
+		getMActor()->resetDL();
+	} else {
+		getMActor()->setBtpFromIndex(2);
+		J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BTP);
+		ctrl->setFrame(0.0f);
+		getMActor()->resetDL();
+	}
 }
 
 BOOL TBossGesso::tentacleHeld() const
@@ -1821,6 +1826,9 @@ void TBossGessoManager::load(JSUMemoryInputStream& stream)
 	initJParticle();
 }
 
+// TODO: frame 0xd0 against retail 0xa0, all low-region temps. The pasted
+// changeBck's accessor spelling is the knob (raw mMActorKeeper in joinAnm
+// gives 0xa0 here) but it breaks Tug/Eye/Die, which match with it as is.
 DEFINE_NERVE(TNerveBGWait, TLiveActor)
 {
 	TBossGesso* self = (TBossGesso*)spine->getBody();
@@ -1846,7 +1854,11 @@ DEFINE_NERVE(TNerveBGWait, TLiveActor)
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 	delta -= self->mPosition;
 	f32 len   = delta.length();
-	f32 fVar2 = len > 800.0f ? 1.0f : 3000.0f / len;
+	f32 fVar2;
+	if (len > 800.0f)
+		fVar2 = 1.0f;
+	else
+		fVar2 = 3000.0f / len;
 	self->walkToCurPathNode(0.0f, fVar2 * self->getTurnSpeed(), 0.0f);
 
 	return false;
