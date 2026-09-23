@@ -242,6 +242,9 @@ void TMapObjPlane::perform(u32 cue, JDrama::TGraphics*)
 	}
 }
 
+// TODO: frame 0x38 short (0x28 vs 0x60) in the low region and the header adds
+// are scheduled differently. Inert: height first, |, reassociated or reversed
+// sums; a little-endian read helper adds only 8 per call.
 void TMapObjPlane::makeMountain()
 {
 	int width = (unk118[0x15] << 24) + (unk118[0x14] << 16)

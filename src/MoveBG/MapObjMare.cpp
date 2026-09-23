@@ -200,6 +200,9 @@ void TCogwheel::initDraw() const
 	GXSetCullMode(GX_CULL_BACK);
 }
 
+// TODO: frame 0x58 short (0x58 vs 0xb0) with no stack use in the body, and
+// the callee-saved FPRs are assigned in a different order; a missing inline
+// level per rope is the likely cause (none tried yet).
 void TCogwheel::draw() const
 {
 	initDraw();

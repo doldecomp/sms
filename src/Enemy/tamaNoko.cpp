@@ -888,6 +888,8 @@ DEFINE_NERVE(TNerveTamaNokoPickUp, TLiveActor)
 // 75.9 -> 89.6%. TODO: the residue is the index arithmetic -- the ROM shifts
 // and scales the angle twice, once per trig expansion, where we compute it
 // once, and its frame is 0x60 against our 0x48.
+// Inert: s16/u16 angle, SMS_GetMarioAngleY, the trig calls inlined into the
+// vector, rate read first, a named velocity vector.
 DEFINE_NERVE(TNerveTamaNokoThrown, TLiveActor)
 {
 	TTamaNoko* self = (TTamaNoko*)spine->getBody();

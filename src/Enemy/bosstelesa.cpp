@@ -1739,6 +1739,9 @@ bool TBossTelesa::slotFall()
 // TODO: incorrect size. Map records 44 bytes.
 void TBossTelesa::openWaterPlace() { }
 
+// TODO: the unrolled loop's counter takes r8 in retail (r6 here), and the
+// coin's flag address is still missing. Inert: s32 phase, i++, a coin flag
+// reference, flags read through the reference, a shared TU-local helper.
 void TBossTelesa::flashItem(int timer)
 {
 	int phase = timer % 16;

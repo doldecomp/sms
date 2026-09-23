@@ -207,6 +207,8 @@ TRollEnemy::TRollEnemy(const char* name)
 	unk1B0     = 1.0f;
 }
 
+// TODO: frame 0x58 short (0x58 vs 0xb0) in the low region, and retail keeps
+// `this` in r31. Inert: Vec point, separate TVec3/Vec locals, an unnamed range.
 void TRollEnemy::reset()
 {
 	gpCurRollEnemy = this;
