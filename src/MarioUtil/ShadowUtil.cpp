@@ -800,12 +800,43 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 // The same offset is why every `@NNNN` and `calctablex$NNNN` here is renamed;
 // objdiff rescues those positionally but cannot rescue a mangled function name.
 
+// fabricated name; the immediate-mode twin of SMS_DrawCube (DrawUtil.cpp)
+static inline void drawCubeImm(const JGeometry::TVec3<f32>& min,
+                               const JGeometry::TVec3<f32>& max)
+{
+	GXCmd1u8(GX_QUADS | GX_VTXFMT0);
+	GXCmd1u16(24);
+	GXPosition3f32(min.x, min.y, min.z);
+	GXPosition3f32(min.x, min.y, max.z);
+	GXPosition3f32(max.x, min.y, max.z);
+	GXPosition3f32(max.x, min.y, min.z);
+	GXPosition3f32(min.x, min.y, min.z);
+	GXPosition3f32(max.x, min.y, min.z);
+	GXPosition3f32(max.x, max.y, min.z);
+	GXPosition3f32(min.x, max.y, min.z);
+	GXPosition3f32(min.x, min.y, min.z);
+	GXPosition3f32(min.x, max.y, min.z);
+	GXPosition3f32(min.x, max.y, max.z);
+	GXPosition3f32(min.x, min.y, max.z);
+	GXPosition3f32(max.x, max.y, max.z);
+	GXPosition3f32(min.x, max.y, max.z);
+	GXPosition3f32(min.x, max.y, min.z);
+	GXPosition3f32(max.x, max.y, min.z);
+	GXPosition3f32(max.x, max.y, max.z);
+	GXPosition3f32(max.x, min.y, max.z);
+	GXPosition3f32(min.x, min.y, max.z);
+	GXPosition3f32(min.x, max.y, max.z);
+	GXPosition3f32(max.x, max.y, max.z);
+	GXPosition3f32(max.x, max.y, min.z);
+	GXPosition3f32(max.x, min.y, min.z);
+	GXPosition3f32(max.x, min.y, max.z);
+	GXEnd();
+}
+
 // TODO: two instructions apart (98.8%) -- one GXPosition3f32 in the first cube
 // wants f25 where we emit f28, and one local-static registration pair is
-// ordered differently -- but the frame is 0x190 against retail's 0x400. The
-// 624 missing bytes are all unreferenced inline-expansion stack; the only
-// numeric coincidence found is 800 + 48 (TCylinder::makeDL's two f32[100]
-// tables), which cannot be reached from this scope.
+// ordered differently. The frame matches (0x400) once both cubes go through
+// drawCubeImm with named TVec3 corners, as drawShadow does via SMS_DrawCube.
 void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 {
 	class TCylinder : public TGDLStatic {
@@ -939,36 +970,12 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 		minZ = blend->mMin.z;
 		maxX = blend->mMax.x;
 		maxZ = blend->mMax.z;
+		JGeometry::TVec3<f32> min(minX, y1, minZ);
+		JGeometry::TVec3<f32> max(maxX, y2, maxZ);
 
 		loadPosMtxImm(param_2->getViewMtx());
 
-		GXCmd1u8(GX_QUADS | GX_VTXFMT0);
-		GXCmd1u16(24);
-		GXPosition3f32(minX, y1, minZ);
-		GXPosition3f32(minX, y1, maxZ);
-		GXPosition3f32(maxX, y1, maxZ);
-		GXPosition3f32(maxX, y1, minZ);
-		GXPosition3f32(minX, y1, minZ);
-		GXPosition3f32(maxX, y1, minZ);
-		GXPosition3f32(maxX, y2, minZ);
-		GXPosition3f32(minX, y2, minZ);
-		GXPosition3f32(minX, y1, minZ);
-		GXPosition3f32(minX, y2, minZ);
-		GXPosition3f32(minX, y2, maxZ);
-		GXPosition3f32(minX, y1, maxZ);
-		GXPosition3f32(maxX, y2, maxZ);
-		GXPosition3f32(minX, y2, maxZ);
-		GXPosition3f32(minX, y2, minZ);
-		GXPosition3f32(maxX, y2, minZ);
-		GXPosition3f32(maxX, y2, maxZ);
-		GXPosition3f32(maxX, y1, maxZ);
-		GXPosition3f32(minX, y1, maxZ);
-		GXPosition3f32(minX, y2, maxZ);
-		GXPosition3f32(maxX, y2, maxZ);
-		GXPosition3f32(maxX, y2, minZ);
-		GXPosition3f32(maxX, y1, minZ);
-		GXPosition3f32(maxX, y1, maxZ);
-		GXEnd();
+		drawCubeImm(min, max);
 
 		TAlphaShadowQuad* quad = mQuadArys[i].mQuadHead;
 		u8 lowPoly             = 0;
@@ -1055,33 +1062,7 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 
 		loadPosMtxImm(viewMtx);
 
-		GXCmd1u8(GX_QUADS | GX_VTXFMT0);
-		GXCmd1u16(24);
-		GXPosition3f32(minX, y1, minZ);
-		GXPosition3f32(minX, y1, maxZ);
-		GXPosition3f32(maxX, y1, maxZ);
-		GXPosition3f32(maxX, y1, minZ);
-		GXPosition3f32(minX, y1, minZ);
-		GXPosition3f32(maxX, y1, minZ);
-		GXPosition3f32(maxX, y2, minZ);
-		GXPosition3f32(minX, y2, minZ);
-		GXPosition3f32(minX, y1, minZ);
-		GXPosition3f32(minX, y2, minZ);
-		GXPosition3f32(minX, y2, maxZ);
-		GXPosition3f32(minX, y1, maxZ);
-		GXPosition3f32(maxX, y2, maxZ);
-		GXPosition3f32(minX, y2, maxZ);
-		GXPosition3f32(minX, y2, minZ);
-		GXPosition3f32(maxX, y2, minZ);
-		GXPosition3f32(maxX, y2, maxZ);
-		GXPosition3f32(maxX, y1, maxZ);
-		GXPosition3f32(minX, y1, maxZ);
-		GXPosition3f32(minX, y2, maxZ);
-		GXPosition3f32(maxX, y2, maxZ);
-		GXPosition3f32(maxX, y2, minZ);
-		GXPosition3f32(maxX, y1, minZ);
-		GXPosition3f32(maxX, y1, maxZ);
-		GXEnd();
+		drawCubeImm(min, max);
 	}
 }
 
