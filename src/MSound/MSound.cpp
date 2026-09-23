@@ -132,6 +132,9 @@ void MSSeCallBack::setWaterCameraFir(bool enabled)
 
 void MSSeCallBack::setWaterFilter(u16 param_1) { }
 
+// TODO: 98.8%. Retail loads the grandchild track straight into r3 (ours via
+// r0 + `mr r3, r0`; split getChild, raw mChildren, assign-in-test inert) and
+// has a dead 0x30 low frame region, likely a missing inline level.
 u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 {
 	u16 local_26;
