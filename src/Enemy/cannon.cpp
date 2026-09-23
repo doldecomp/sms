@@ -597,6 +597,8 @@ void TCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// TODO: every instruction matches; the frame is 0x28 short and every slot,
+// from the inlined calcObjCollision copy up, sits 0x24-0x28 low.
 void TCannon::calcRootMatrix()
 {
 	if (mSpine->getCurrentNerve() != &TNerveCannonObject::theNerve())
@@ -605,7 +607,7 @@ void TCannon::calcRootMatrix()
 	if (mHolder) {
 		MtxPtr mtx = mHolder->getTakingMtx();
 		if (mSpine->getCurrentNerve() == &TNerveCannonObject::theNerve()) {
-			MTXCopy(mtx, getModel()->getBaseTRMtx());
+			getModel()->setBaseTRMtx(mtx);
 			mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		} else {
 			if (gpMarDirector->isDemoModeNow())
@@ -613,9 +615,7 @@ void TCannon::calcRootMatrix()
 			mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 			MsMtxSetXYZRPH(getMActor()->getModel()->getBaseTRMtx(), mPosition.x,
 			               mPosition.y, mPosition.z,
-			               DEG2SHORTANGLE(mRotation.x),
-			               DEG2SHORTANGLE(mRotation.y),
-			               DEG2SHORTANGLE(mRotation.z));
+			               mRotation.x, mRotation.y, mRotation.z);
 		}
 	} else {
 		TSpineEnemy::calcRootMatrix();
