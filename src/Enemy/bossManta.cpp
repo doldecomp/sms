@@ -720,7 +720,7 @@ void TBossManta::control()
 
 	JGeometry::TVec3<f32> vel(unk170);
 	vel *= unk190;
-	JGeometry::TVec3<f32> curVel(getVelocity());
+	Vec curVel = getVelocity();
 	vel.y     = curVel.y;
 	mVelocity = vel;
 
