@@ -179,6 +179,9 @@ void TBathtubKiller::init(TLiveManager* manager)
 	resetBathtubKiller();
 }
 
+// TODO: 87.6%, frame exact; the known-open this-vs-pool-base rotation
+// (retail: string base r31, this r30, new/nose r27). Inert: u32/u16 indices,
+// a named keeper local.
 void TBathtubKiller::setMActorAndKeeper()
 {
 	mMActorKeeper = new TMActorKeeper(mManager, 2);

@@ -1168,12 +1168,38 @@ void TBossPakkun::gotHipDropDamage()
 // only a hip drop on the navel takes a hit point off.
 void TBossPakkun::gotTrampleDamage() { }
 
+// fabricated: retail calls TVec3::set<f32> out of line from launchPolDrop and
+// the Vomit nerve, while expanding the MsSin/MsCos arguments in the caller.
+// A three-statement member only goes out of line at inline depth 4, so the
+// flat vector is set three expansions below the caller. Both sites land on
+// retail's call set through the same chain (94.2 -> 99.7, 92.8 -> 99.5).
+// TODO: replace these three levels with the real enclosing functions.
+static inline void BosspakkunSetXZ(JGeometry::TVec3<f32>& v, f32 x, f32 z)
+{
+	v.set(x, 0.0f, z);
+}
+
+static inline void BosspakkunSetXZ_L2(JGeometry::TVec3<f32>& v, f32 x, f32 z)
+{
+	BosspakkunSetXZ(v, x, z);
+}
+
+static inline void BosspakkunSetXZ_L3(JGeometry::TVec3<f32>& v, f32 x, f32 z)
+{
+	BosspakkunSetXZ_L2(v, x, z);
+}
+
+// TODO: every instruction matches; the frame is 0x70 against 0x88 (named
+// block 4 low, 0x14 less inline-temporary space below it).
 void TBossPakkun::launchPolDrop()
 {
 	if (mPolDrop->mState != BOSSPAKU_POLDROP_DEAD)
 		return;
 
 	JGeometry::TVec3<f32> from;
+	JGeometry::TVec3<f32> velocity;
+	JGeometry::TVec3<f32> goal;
+	JGeometry::TVec3<f32> front;
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		from = mPosition;
 		from.x += 1.0f;
@@ -1185,16 +1211,13 @@ void TBossPakkun::launchPolDrop()
 	f32 marioYaw = gpMarioOriginal->mRotation.y;
 	f32 reach    = getSaveParam2()->mSLPollBallFront.get();
 
-	JGeometry::TVec3<f32> front;
-	front.set(reach * MsSin(marioYaw), 0.0f, reach * MsCos(marioYaw));
+	BosspakkunSetXZ_L3(front, reach * MsSin(marioYaw), reach * MsCos(marioYaw));
 
-	JGeometry::TVec3<f32> goal;
 	goal = front;
 	goal.x += gpMarioPos->x;
 	goal.y += gpMarioPos->y;
 	goal.z += gpMarioPos->z;
 
-	JGeometry::TVec3<f32> velocity;
 	SMSCalcJumpVelocityXZ(goal, from, getSaveParam2()->mSLPollBallSpeed.get(),
 	                      0.1f, &velocity);
 
@@ -1695,8 +1718,8 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 	if (actor->checkCurBckFromIndex(BOSSPAKU_BCK_POLLUT_END)) {
 		if (MsRandF() < 0.2f && spine->getTime() == 500) {
 			JGeometry::TVec3<f32> dir;
-			dir.set(700.0f * MsSin(boss->mRotation.y), 0.0f,
-			        700.0f * MsCos(boss->mRotation.y));
+			BosspakkunSetXZ_L3(dir, 700.0f * MsSin(boss->mRotation.y),
+			                   700.0f * MsCos(boss->mRotation.y));
 			JGeometry::TVec3<f32> front = dir;
 			gpItemManager->makeObjAppear(boss->mPosition.x + front.x,
 			                             1.0f + boss->mPosition.y,
