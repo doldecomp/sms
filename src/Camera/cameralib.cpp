@@ -35,7 +35,7 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 {
 	JGeometry::TRotation3<TMtx33f> mtxT;
 
-	mtxT.identity33();
+	mtxT.identity();
 	mtxT.setRotate(param_axis, angle);
 
 	JGeometry::TVec3<f32> in(*vec);
@@ -173,8 +173,8 @@ void CLBRevisionLookatByAngleX(s16 vAngleMin, s16 vAngleMax, const Vec& origin,
 	CLBPolarToCross(origin, inOut, radius, vAngle, hAngle);
 }
 
-// TODO: frame 0x18 short; RotateAboutAxis's identity33 stores the zeros
-// before the ones in retail, and the vector registers swap.
+// TODO: 97.8%. Frame 0x18 short, and the third row of RotateAboutAxis's
+// product reloads in.x/m(0,2) in retail where ours reuses a register.
 void CLBRotatePosAndUp(s16 sAngle1, s16 sAngle2,
                        const JGeometry::TVec3<f32>& axis1,
                        const JGeometry::TVec3<f32>& axis2,
@@ -392,7 +392,7 @@ CLBRotateVecByEulerAndRoll(JGeometry::TVec3<f32>* vec, const S16Vec& euler,
 
 	JGeometry::TRotation3<TMtx33f> mtxT;
 
-	mtxT.identity33();
+	mtxT.identity();
 	mtxT.setRotate(axis, roll);
 
 	JGeometry::TVec3<f32> in(*vec);

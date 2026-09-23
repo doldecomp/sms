@@ -333,6 +333,11 @@ int TMtxSwingRZReverseXZCallBack(J3DNode* node, int param)
 	return 1;
 }
 
+// TODO: 92.6%. The residue is all in the inlined TMtxSwingRZReverseXZ
+// constructor (one level deeper than TMtxSwingRZ's): retail copies mAcc's
+// TVec3(0, -4, 0) into the by-value TParamT argument with inline lwz/stw
+// (through a 0x74 temp), ours calls the user TVec3 copy constructor out of
+// line. Same header-level copy-constructor issue as SMS_MakeJointsToArc.
 void TMultiMtxEffect::setup(J3DModel* model, const char* prmLocation)
 {
 	mModel        = model;

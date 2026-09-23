@@ -294,7 +294,10 @@ void TWireTrap::behaveHitWireTrap(
 
 // TODO: retail saves one more callee-saved GPR (r30) and its frame is 8
 // smaller; the quaternion/matrix math is register-renumbered throughout.
-// Not attempted in cc50.
+// Retail holds &mtx in r31 (materialised before the fused mul/setQuat) and
+// passes it to MTXCopy after getModel(). Measured inert or worse (bb9):
+// setQT, a TU-local copy/setQuat helper, a TPosition3f* alias, spinQuat.mul,
+// a third result quat, `*=` for dir/scale, 2-arg scale, a named up vector.
 void TWireTrap::calcRootMatrix()
 {
 	if (getHolder()) {
