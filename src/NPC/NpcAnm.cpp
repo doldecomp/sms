@@ -26,11 +26,19 @@ const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 
 void CalcJumpVelocityY(f32, f32) { }
 
-void TBaseNPC::isNowMotionBlend() const { }
+bool TBaseNPC::isNowMotionBlend() const
+{
+	bool result = false;
+	if (!(mActorType < 0x400001E && mActorType >= 0x400001C)) {
+		if (mInbetweenCtrl->isMotionBlending())
+			result = true;
+	}
+	return result;
+}
 
-void TBaseNPC::offStopMotionBlend() { }
+void TBaseNPC::offStopMotionBlend() { mInbetweenCtrl->stopMotionBlend(); }
 
-void TBaseNPC::onStopMotionBlend() { }
+void TBaseNPC::onStopMotionBlend() { mInbetweenCtrl->startMotionBlend(); }
 
 // TODO: 0x20 short; this in r29 vs retail r31, blend param inverted.
 void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
@@ -638,10 +646,12 @@ void TBaseNPC::npcWetIn()
 	resetToTurn_();
 }
 
-// TODO: GMSE01 frame is 0x160 retail, 0x100 here; remaining register differences
-// are the sunflower predicate (r29/r28) and the 0x4000016 animation switch
-// (kind r4/r3). A named int kind, a named sunflowerReviving() result, the
-// reversed requestNpcAnm_ compare and switch (getActorTypeID()) are inert.
+// TODO: frame exact (0x160) since npcWetOut reads its spine and actor type
+// through the header accessors (+0x50 over its nine expansions) and the
+// default arm names its animation kind (+0x10). Remaining: the sunflower
+// predicate's bool is r29 vs retail r28, and the 0x4000016 switch's kind is r4
+// vs retail r3. A named int kind there (+8 frame), `(int)` on the switch value
+// and hoisting the default arm's kind out of its if are inert or worse.
 bool TBaseNPC::npcWetting()
 {
 	bool result = false;
@@ -759,7 +769,8 @@ bool TBaseNPC::npcWetting()
 
 					default:
 						if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
-							switch (unkD0->getCurrentAnmKind()) {
+							int kind = unkD0->getCurrentAnmKind();
+							switch (kind) {
 							case NPC_ANM_KIND_UNK5:
 							case NPC_ANM_KIND_UNKB:
 							case NPC_ANM_KIND_UNK14:
@@ -782,9 +793,9 @@ void TBaseNPC::npcWetOut()
 {
 	offLiveFlag(LIVE_FLAG_UNK2000000);
 	offLiveFlag(LIVE_FLAG_UNK4000000);
-	if (mSpine->getTop() == &TNerveNPCTalk::theNerve())
+	if (getSpine()->getTop() == &TNerveNPCTalk::theNerve())
 		requestTalkAnm_();
-	else if (mActorType == 0x4000006)
+	else if (getActorType() == 0x4000006)
 		requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_ON);
 }
 
