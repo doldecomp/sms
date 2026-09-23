@@ -209,11 +209,6 @@ private:
 	void calcFinalPosAndAt_();
 	void calcExternalData_();
 
-	// Fabricated name. This level is measured, not invented: the ROM reaches
-	// MsSqrtf (inside CLBCrossToPolar) and TVec3::setLength (inside
-	// normalize) one step deeper than calcExternalData_'s own body, while the
-	// MsClamp of the X-rotation ratio is one step shallower and still expands.
-	// Fully inlined at both sites, so the map carries no symbol for it.
 	// Fabricated name; the body is measured. changeCamModeSub_ restores the
 	// pre-fixed-mode target with a chained assignment whose *inner*
 	// TTargetCamera::operator= the ROM leaves out of line as the weak 0x74
@@ -229,14 +224,19 @@ private:
 	{
 		mPreviousTarget = mCurrentTarget = mTargetBeforeFixedMode;
 	}
+	// Fabricated name. This level is measured, not invented: the ROM reaches
+	// TVec3::set and TVec3::setLength (inside normalize) one step deeper than
+	// calcExternalData_'s own body, while its CLBCrossToPolar and the MsClamp
+	// of the X-rotation ratio sit in that body. Fully inlined at both sites,
+	// so the map carries no symbol for it.
 	void calcLookatPolar_()
 	{
-		CLBCrossToPolar(mTarget, mPosition, &unk256, &unk258);
 		unk25C.set(unk148.x - unk124.x, unk148.y - unk124.y,
 		           unk148.z - unk124.z);
 		unk25C.normalize();
 	}
 	void ctrlGameCamera_();
+	void ctrlCamera_(); // fabricated name; see perform in cameragc.cpp
 
 	void drawJetCoasterBalloonMessage_();
 

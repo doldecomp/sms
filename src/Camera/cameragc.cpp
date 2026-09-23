@@ -535,16 +535,14 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 	                   mSaveEx->mSLLimitMaxAngleX.get());
 }
 
-// TODO: 94.9%. The angle chase now reads the ROM's HoldAngleXChase field.
+// TODO: 96.3%. The angle chase now reads the ROM's HoldAngleXChase field.
 // What is left is the frame and the two inline decisions it drags along.
 // (1) Frame 0x1d0 against the ROM's
 // 0x2d0 -- 0x100 of locals the ROM allocates and we do not; nearly every
 // remaining mismatch is an r1 offset shifted by that 0x100. The ROM also
-// re-extends the two s16 angles inside each arm of the abs below. (2) The ROM *calls* MsSqrtf
-// out of the CLBCrossToPolar below the wall check while inlining it at the
-// earlier site in this same function (one frsqrte in the ROM's body, two in
-// ours), so that site sits two inline levels deeper than ours; one fabricated
-// wrapper around the call was measured and is not enough. (3) The two
+// re-extends the two s16 angles inside each arm of the abs below. (2) CLOSED: the ROM
+// *calls* MsSqrtf out of the CLBCrossToPolar below the wall check, which the
+// CLBDistXZ level in cameralib.hpp reproduces (94.9 -> 96.3). (3) The two
 // checkStatusType blocks: see the note on isMarioReadyGun_.
 void CPolarSubCamera::calcPosAndAt_()
 {
@@ -943,9 +941,12 @@ void CPolarSubCamera::calcFinalPosAndAt_()
 
 // UNUSED (map size 0x13c): inlined into both loadAfter() and perform(), which
 // is where the polar angles, the lookat direction and the X-rotation ratio are
-// recomputed from the freshly calculated position and target.
+// recomputed from the freshly calculated position and target. CLBCrossToPolar
+// sits here and the set/normalize one level below it: in perform the ROM
+// expands the former and calls TVec3::set, setLength and TUtil::one.
 void CPolarSubCamera::calcExternalData_()
 {
+	CLBCrossToPolar(mTarget, mPosition, &unk256, &unk258);
 	calcLookatPolar_();
 	unk270 = MsClamp(CLBCalcRatio(mCurrentParams->mXAngleMin,
 	                              mCurrentParams->mXAngleMax, unk256),
@@ -977,7 +978,7 @@ void CPolarSubCamera::calcExternalData_()
 // more above it). Inert or worse: `param` declared at the top (any order),
 // yOffset initialised, marPos assigned later, named camera-mario/director
 // pointers, a named ratio, `code` in the inner block.
-void CPolarSubCamera::ctrlGameCamera_()
+inline void CPolarSubCamera::ctrlGameCamera_()
 {
 	if (!(unk64 & CAMERA_FLAG_DEAD_DEMO))
 		execDeadDemoProc_();
@@ -1070,25 +1071,26 @@ void CPolarSubCamera::ctrlGameCamera_()
 	unk148.set(mTarget);
 }
 
-// TODO: 94.7%. Two residues. (1) Frame 0x48 against the ROM's 0x68, which also
-// flips the argument-setup order of TCameraBck::updateDemo and of the view
-// matrix copy from right-to-left to left-to-right. (2) calcExternalData_ is
-// inlined here exactly as in loadAfter, yet the ROM calls TVec3::set<f>,
-// TUtil<f32>::one() and MsClamp<f> from this site and expands all three in
-// loadAfter -- the per-call-site inlining family from docs/catalog. Measured:
-// wrapping the ctrl/calcFinalPosAndAt_/calcExternalData_ block (with or
-// without the REPRODUCE_DEMO test) in one more inline member overshoots --
-// CLBCrossToPolar, which the ROM expands, goes out of line too (91.6%). The
-// ROM's extra cost lands between CLBCrossToPolar and the unk25C set().
-// Weak1 lead: define ctrlGameCamera_ `inline` in this file (the map's weak
-// binding) and move the option/game/calcFinalPosAndAt_/calcExternalData_
-// block into one inline member; with CLBCrossToPolar hoisted out of
-// calcLookatPolar_ into calcExternalData_ (set+normalize one level below it),
-// perform is instruction-exact (99.66%, frame 0x40 vs 0x68 left) and MsClamp
-// and TUtil::one link. It costs loadAfter the MsSqrtf call (expanded at depth
-// 3); padding MsSqrtf by one statement restores loadAfter (and makes the
-// UNUSED calcExternalData_ exactly 0x13c at +4) but breaks MarioMove's
-// changePlayerJumping/TriJump, so the two sites' depths still disagree.
+// Fabricated name for a real level. The map makes ctrlGameCamera_ weak, so it
+// is `inline`; an inline body has no budget at depth 1, so retail's `bl` to
+// it must sit one inlined level down, which is this member. The same level
+// puts calcExternalData_ at depth 2 here and at depth 1 in loadAfter, which
+// is why perform calls MsClamp, TVec3::set, TUtil::one and setLength while
+// loadAfter expands the first three (the UNUSED calcExternalData_ is then
+// exactly its map size, 0x13c). perform 94.7 -> 99.66, instruction-exact.
+// TODO: frame 0x40 against the ROM's 0x68; the argument setup of
+// TCameraBck::updateDemo and of the view-matrix copy follows the frame.
+inline void CPolarSubCamera::ctrlCamera_()
+{
+	if (SMS_isOptionMap())
+		ctrlOptionCamera_();
+	else
+		ctrlGameCamera_();
+	calcFinalPosAndAt_();
+
+	calcExternalData_();
+}
+
 void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -1103,13 +1105,7 @@ void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 		mUp.set(CLBConstUpVec);
 		unk254 = 0;
 		if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {
-			if (SMS_isOptionMap())
-				ctrlOptionCamera_();
-			else
-				ctrlGameCamera_();
-			calcFinalPosAndAt_();
-
-			calcExternalData_();
+			ctrlCamera_();
 		}
 
 		if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {

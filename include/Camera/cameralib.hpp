@@ -292,13 +292,22 @@ BOOL CLBChaseSpecialDecrease(f32* value, f32 desired, f32 ratio, f32 speed);
 void CLBCrossToPolar(const Vec& origin, const Vec& in, f32* out_radius,
                      s16* pitch, s16* yaw);
 
-inline void CLBCrossToPolar(const Vec& origin, const Vec& in, s16* out_pitch,
-                            s16* out_yaw)
+// Fabricated name for a measured level: the ROM calls MsSqrtf out of line
+// from every expansion of the polar conversion below (UNUSED
+// CPolarSubCamera::calcExternalData_ is 0x13c only with the call, and
+// calcPosAndAt_'s wall-check site calls it too), while MarioMove expands the
+// same MsSqrtf one level shallower.
+inline f32 CLBDistXZ(const Vec& origin, const Vec& in)
 {
 	f32 dx = in.x - origin.x;
 	f32 dz = in.z - origin.z;
+	return MsSqrtf(dx * dx + dz * dz);
+}
 
-	*out_pitch = matan(MsSqrtf(dx * dx + dz * dz), in.y - origin.y);
+inline void CLBCrossToPolar(const Vec& origin, const Vec& in, s16* out_pitch,
+                            s16* out_yaw)
+{
+	*out_pitch = matan(CLBDistXZ(origin, in), in.y - origin.y);
 	*out_yaw   = matan(in.z - origin.z, in.x - origin.x);
 }
 
