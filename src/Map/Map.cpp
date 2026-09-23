@@ -73,49 +73,48 @@ static void initMonte()
 	}
 }
 
+// TODO: every instruction matches; frame 0x138 against retail's 0x148. The
+// three events share one `event` slot as in retail, and the director reads go
+// through SMSGetMarDirector() (the `!= 0 && != 0` pair is +8 each, the first
+// two are inert), leaving a uniform 0x10 of low region. Inert: a named warp
+// local in the loop, split declarations, a group alias at the gate.
 static void initMare()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
 	    = JDrama::TNameRefGen::search<
 	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("マップグループ");
 
-	if (gpMarDirector->getCurrentStage() == 5) {
+	if (SMSGetMarDirector()->getCurrentStage() == 5) {
 		TMapStaticObj* gate = new TMapStaticObj("マーレ５ＥＸゲート");
 		gate->init("Mare5ExGate");
 		group->getChildren().push_back(gate);
 	}
 
-	if (gpMarDirector->getCurrentStage() == 0) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0) {
 		SMS_LoadParticle("/scene/map/map/ms_mare_objup_a.jpa",
 		                 MAP_MAP_MS_MARE_OBJUP_A);
 		SMS_LoadParticle("/scene/map/map/ms_mare_objup_b.jpa",
 		                 MAP_MAP_MS_MARE_OBJUP_B);
 	}
 
-	if (gpMarDirector->getCurrentStage() != 0
-	    && gpMarDirector->getCurrentStage() != 0) {
+	if (SMSGetMarDirector()->getCurrentStage() != 0
+	    && SMSGetMarDirector()->getCurrentStage() != 0) {
 		for (int i = 1; i < 8; ++i)
 			TMapObjBase::newAndInitBuildingCollisionWarp(i, nullptr)->setUp();
 	}
 
-	{
-		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
-		event->init1stEvent();
-		group->getChildren().push_back(event);
-	}
-	{
-		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
-		event->init2ndEvent();
-		group->getChildren().push_back(event);
-	}
-	{
-		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
-		event->init3rdEvent();
-		group->getChildren().push_back(event);
-	}
+	TMareEventDepressWall* event
+	    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
+	event->init1stEvent();
+	group->getChildren().push_back(event);
+
+	event = new TMareEventDepressWall("イベント（マーレへこむ壁）");
+	event->init2ndEvent();
+	group->getChildren().push_back(event);
+
+	event = new TMareEventDepressWall("イベント（マーレへこむ壁）");
+	event->init3rdEvent();
+	group->getChildren().push_back(event);
 }
 
 // Pragma residue (sweep 360): protects initStage() (99.94 -> 55.8) and, less
