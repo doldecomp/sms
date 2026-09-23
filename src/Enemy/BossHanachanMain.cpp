@@ -657,12 +657,12 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			    position.x, position.y - mCommonParams->mSLHeadHitOffsetY.get(),
 			    position.z);
 			if (walking) {
-				if (!(mHead->unk100->checkHitFlag(0x80000000) ? true : false)) {
+				if (!((mHead->unk100->mHitFlags & 0x80000000) ? true : false)) {
 					mHead->unk100->onHitFlag(0x80000000);
 					mHead->unk104->remove();
 				}
 			} else {
-				if (mHead->unk100->checkHitFlag(0x80000000) ? true : false) {
+				if ((mHead->unk100->mHitFlags & 0x80000000) ? true : false) {
 					mHead->unk100->offHitFlag(0x80000000);
 					mHead->unk104->setUpTrans(position);
 				}
