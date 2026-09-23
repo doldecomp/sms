@@ -443,6 +443,11 @@ static inline void BossHanachanSaveHistory(TBossHanachan* self)
 	}
 }
 
+// TODO: frame 0x400 against the ROM's 0x570. The ROM keeps the target-arrow
+// vector, the ground-check pointer and the sand delta in its high named block,
+// which points at more inline levels (the ROM inlines far more here); left over
+// are volatile-FPR orders in the head offset call, the side-vector ground probes,
+// the wave-roll constants and the tumble chase, plus &mRotation.z held in r22.
 void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(0x201))
