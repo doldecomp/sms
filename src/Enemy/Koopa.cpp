@@ -834,7 +834,7 @@ void TKoopa::laugh()
 {
 	if (mLaughPending) {
 		gpMSound->startSoundActor(MSD_SE_BS_KOOPA_VO_LAUGH,
-		                          (Vec*)&mAnmSoundPos, 0, nullptr, 4, 1);
+		                          (Vec*)&mAnmSoundPos, 0, nullptr, 0, 4);
 		mLaughPending = false;
 	}
 }
