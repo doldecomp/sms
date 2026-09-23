@@ -795,12 +795,14 @@ void TIgaiga::setDeadAnm()
 	mgr->unk60->generatePolluteModel(mPosition, stamp);
 }
 
+// TODO: the operator* temporary sits at 0x44 (retail 0x38) and the named
+// block 4 bytes low (scale 0x64 vs 0x68); every instruction matches.
 void TIgaiga::setMeltAnm()
 {
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		unk1C0 = mPosition;
 	} else {
-		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(0);
+		MtxPtr mtx = IgaigaIgaModel(this)->getAnmMtx(0);
 		unk1C0.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	}
 
@@ -812,15 +814,12 @@ void TIgaiga::setMeltAnm()
 	}
 
 	// Burst into water, then a puff of smoke.
-	TWaterEmitInfo* info = ((TIgaigaManager*)mManager)->unk68;
-	info->mPos.value     = mPosition;
-	gpModelWaterManager->emitRequest(*info);
+	TIgaigaManager* mgr = (TIgaigaManager*)mManager;
+	mgr->unk68->mPos.value = mPosition;
+	gpModelWaterManager->emitRequest(*mgr->unk68);
 
-	// The assignment is the level that reaches the map's out-of-line
-	// TVec3::scale: operator= is depth 1, operator* (nested in its
-	// argument) 2, operator*= 3 and scale 4.
-	JGeometry::TVec3<f32> scale;
-	scale = mScaling * 0.5f;
+	// Copy-initialised from operator*, so retail copies its temporary once.
+	JGeometry::TVec3<f32> scale = mScaling * 0.5f;
 
 	JPABaseEmitter* emitter
 	    = gpMarioParticleManager->emit(0xA1, &unk1C0, 0, nullptr);

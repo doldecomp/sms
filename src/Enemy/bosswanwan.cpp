@@ -841,6 +841,8 @@ void TBossWanwanMtxCalc::joinAnm(int index)
 	        index));
 }
 
+// TODO: named block sits 4 bytes low (scratch 0x64/info 0x94 vs 0x68/0x98)
+// and retail schedules the jma table loads above scratch.zero()'s stores.
 void TBossWanwanMtxCalc::calc(u16 joint)
 {
 	// While airborne the root joint's translation is thrown away so the boss
@@ -876,8 +878,8 @@ void TBossWanwanMtxCalc::calc(u16 joint)
 	MtxPtr roll = scratch;
 	scratch.zero();
 
-	f32 s = JMASSin(DEG2SHORTANGLE(mOwner->mRollAngle));
-	f32 c = JMASCos(DEG2SHORTANGLE(mOwner->mRollAngle));
+	f32 s = JMASin(mOwner->mRollAngle);
+	f32 c = JMACos(mOwner->mRollAngle);
 
 	scratch.set(1.0f, 0.0f, 0.0f, 0.0f, //
 	            0.0f, c, -s, 0.0f,      //
