@@ -534,7 +534,7 @@ JPABaseParticle* JPABaseEmitter::createParticle()
 			local_468.y = 0.0f;
 			local_468.z = volumeSize * JMASCos(theta);
 
-			JGeometry::TVec3<f32> local_3C8;
+			Vec local_3C8;
 
 			f32 rad = volumeSize * mVolumeMinRadius;
 			s16 phi = mRng.get();
