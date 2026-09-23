@@ -731,10 +731,14 @@ void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 // TODO: the one instruction left is the squared() contraction -- retail loads
 // y and z first and fuses `x * x` into the first `fadds` as an `fmadds`, which
 // needs x to become available last; ours materialises all three products.
+// Naming `end` lands the 0x68 frame (retail keeps its 12-byte slot between
+// start and dir); the named block still sits 4 low and the operator- temp 8
+// high. Inert: end declared first, dir(end - start), split dir declaration.
 BOOL TMario::wireMove(f32 param_1)
 {
 	JGeometry::TVec3<f32> start = mWireStartPos;
-	JGeometry::TVec3<f32> dir   = mWireEndPos - start;
+	JGeometry::TVec3<f32> end   = mWireEndPos;
+	JGeometry::TVec3<f32> dir   = end - start;
 	f32 lenSq                   = dir.squared();
 	f32 len                     = JGeometry::TUtil<f32>::sqrt(lenSq);
 	f32 delta                   = param_1 / len;
