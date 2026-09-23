@@ -1188,6 +1188,8 @@ void TBossMantaManager::loadEffects()
 		SMS_LoadParticle(loopFilenames[i], 0x1C7 + i);
 }
 
+// TODO: GPR numbering only: retail gives the particle loops' i r26 and the
+// palm loop's i r25 (ours swapped). Inert: `i + 0xF8`, shared top `int i`.
 void TBossMantaManager::loadAfter()
 {
 	loadEffects();

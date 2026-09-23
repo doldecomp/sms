@@ -478,6 +478,9 @@ void TEffectColumSand::init(TLiveManager* param_1)
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+// TODO: GPR swap only: retail keeps this in r31 and the string pool base in
+// r30, although the same-shaped TEffectExplosion::reset matches with the
+// opposite ranking. Inert: ANM_TYPE_BRK for 5.
 void TEffectColumSand::reset()
 {
 	TEffectModel::reset();

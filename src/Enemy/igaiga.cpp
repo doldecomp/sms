@@ -1112,6 +1112,8 @@ void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	unk6C->perform(cue, graphics);
 }
 
+// TODO: retail keeps this in r31 and mirror in r30 (ours swapped). Inert:
+// top-declared mirror, timg or i.
 void TGorogoro::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
