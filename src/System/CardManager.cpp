@@ -60,6 +60,16 @@ void TCardSector::clearData()
 // CalcCheckSum itself (100 -> 24.94) without flipping either decision. The
 // loop below is the four-site shape and is kept until the cost can be cut
 // without changing CalcCheckSum's own codegen.
+// c-sys2: `u32 i; for (i = 0, top = bottom = 0; ...)` (or a comma-joined loop
+// body) is cheap enough and keeps CalcCheckSum exact: writeOptionBlock_,
+// writeBlock_ and filledInitData_ expand it again, but then read() expands it
+// too, where retail calls it (readBlock_ 98.4 -> 53, getBookmarkInfos_ 100 ->
+// ~60). Retail's read is 0xc8 and calls both CalcCheckSum and set even out of
+// line, so read reaches CalcCheckSum through at least one more inline level
+// than setCheckSum does. One TU-local level (`!(CalcCheckSum(s, 0x1FFC) -
+// s->mCheckSum)` in a helper) gives cmdLoop every instruction and its 0x58
+// frame, but read-inlining callers gain +8/+0x10 frame; read and set are the
+// next thing to fix.
 void TCardSector::setCheckSum(u32 write_count)
 {
 	mWriteCount = write_count;
@@ -126,6 +136,9 @@ s32 TCardManager::decideUseSector(TCardManager::TCriteria* criteria)
 	// `mr r3, r0`, so `result` did not get the return register there.
 	// Exhausted: early returns, an if/else, a ternary, and declaring the
 	// result before the early returns -- all emit `li r3, 0/1` into r3.
+	// The join is a conversion: early returns plus `? false : true` gives
+	// `li r0; mr` with a `clrlwi` (97.9), `(s16)` an `extsh`; u32, int and an
+	// inline helper returning 0/1 are inert. A same-width conversion is open.
 	s32 result;
 	if (criteria[0].getState() == TCriteria::STATE_EMPTY) {
 		result = CARD_RESULT_WRONGDEVICE;
