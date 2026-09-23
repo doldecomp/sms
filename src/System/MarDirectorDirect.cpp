@@ -233,6 +233,9 @@ static bool checkDefeatShadowMarioAll()
 	return true;
 }
 
+// TODO: 97.6%, frame 0x18 vs retail 0x30 (a dead 0x18 low region) and
+// retail hoists `li r3, 0` above the first beq. Inert (k5): `return scenario`
+// first, an uncast compare, one nested `if (param_1 == 1)` with else-ifs.
 static int decideNextScenario(u8 param_1)
 {
 	int scenario = 0;

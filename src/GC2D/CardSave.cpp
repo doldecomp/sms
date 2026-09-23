@@ -373,6 +373,9 @@ void TCardSave::init(int param_1)
 	}
 }
 
+// TODO: 98.3%, graphics/cue swap r30/r31 (retail keeps graphics in r31 and
+// reuses r30 for the scissor rect). Inert (k5): nested `if (!unk2DF)`, raw
+// mScissorRect/mViewportRect, a scissor pointer local.
 void TCardSave::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk2DF)

@@ -555,6 +555,10 @@ void TRope::constraintTail(const JGeometry::TVec3<f32>& param)
 	collision();
 }
 
+// TODO: 93.6%, frame 0x80 vs 0x88. Retail is `(unkC - unk0) * scale` through
+// a reference-returning `operator*` (JGVec3.hpp header note: 99.80 here);
+// with the by-value header operator the spelling is left as is. Refuted
+// here (k5): named `v` with `*=`/`scale()` (scale inlines, 90.7%).
 void TRope::moveHead(const JGeometry::TVec3<f32>& param)
 {
 	for (int i = 0; i < mNumPoints; ++i) {

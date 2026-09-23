@@ -1122,6 +1122,9 @@ void JPADrawExecPoint::exec(const JPADrawContext* dc, JPABaseParticle* particle)
 	GXEnd();
 }
 
+// TODO: 99.6%, instruction-exact; frame 0x70 vs 0x78 with local_40 at 0x44
+// (retail 0x40): retail keeps a dead 16-byte slot above it. Swapping the two
+// declarations is inert, swapping the two getter calls worse (k5).
 void JPADrawExecLine::exec(const JPADrawContext* dc, JPABaseParticle* particle)
 {
 	if (particle->isInvisibleParticle())

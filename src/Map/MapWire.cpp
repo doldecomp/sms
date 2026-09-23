@@ -390,6 +390,9 @@ void TMapWire::getPointPosOnLine(f32 pos, JGeometry::TVec3<f32>* out) const
 	         mWireSpan.z * pos + mStartPoint.z);
 }
 
+// TODO: 95.8%, frame 0x78 vs 0x68 and the line point's x/z order. Component
+// stores in getPointPosAtReleased fix this frame (0x68) but shrink release,
+// move and init further from retail, so the shared helper is left as is (k5).
 void TMapWire::getPointPosOnWire(f32 pos, JGeometry::TVec3<f32>* out) const
 {
 	if (pos < 0.0f) {

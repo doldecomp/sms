@@ -261,6 +261,9 @@ bool TGCLogoDir::direct_nlogo()
 	return ended;
 }
 
+// TODO: 98.6%, frame 0x38 vs retail 0x68, and retail reloads mState after
+// the isSomethingPushed test. direct (+0x30) and direct_nlogo (+0xb0) share
+// the dead low region, so the carrier is TU-wide, not a lever here (k5).
 bool TGCLogoDir::direct_dolby()
 {
 	bool ended    = false;
