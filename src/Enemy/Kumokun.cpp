@@ -252,7 +252,7 @@ void TKumokun::bind()
 
 	if (isOnFloor()) {
 		JGeometry::TVec3<f32> local_140 = local_168;
-		local_140.normalize();
+		local_140.setLength(50.0f);
 
 		local_140 += mPosition;
 
@@ -260,7 +260,7 @@ void TKumokun::bind()
 		bVar7 |= checkOnMovingFloor(&local_15C, &floor, mPosition, local_168);
 	} else if (isOnRoof()) {
 		JGeometry::TVec3<f32> local_134 = local_168;
-		local_134.normalize();
+		local_134.setLength(50.0f);
 
 		local_134 += mPosition;
 
