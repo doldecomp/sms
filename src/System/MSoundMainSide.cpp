@@ -1006,6 +1006,10 @@ MSStageCubeFadeMonte::MSStageCubeFadeMonte()
 {
 }
 
+// TODO: frame 0x108 vs retail 0x1c8, and retail keeps d in f30 and dVar6 in
+// f31 (one more saved FPR). Structural, shared with the other cube-fade procs;
+// candidate carrier: the pan block (dist, toCamSpace, calcPan/Dolby, setPan/
+// Dolby) is close to the UNUSED MSStageProc::setBgmPosition's 0x160.
 void MSStageCubeFadeMonte::proc()
 {
 	JAISound* sound1 = MSBgm::getHandle(1);
