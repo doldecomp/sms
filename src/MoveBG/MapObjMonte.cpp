@@ -123,8 +123,11 @@ void THangingBridgeBoard::drawOneRope(const JGeometry::TVec3<f32>& top) const
 // UNUSED (0x6c): the pair of rope draws THangingBridge::perform expands.
 void THangingBridgeBoard::drawRopes() const
 {
-	drawOneRope(mRopeTop[0]);
-	drawOneRope(mRopeTop[1]);
+	JGeometry::TVec3<f32> top;
+	top = mRopeTop[0];
+	drawOneRope(top);
+	top = mRopeTop[1];
+	drawOneRope(top);
 }
 
 // UNUSED (0x10).
@@ -510,12 +513,7 @@ void THangingBridge::perform(u32 cue, JDrama::TGraphics* graphics)
 		initDraw();
 
 		for (int i = 0; i < HangingBridgeBoardNum(this); i++) {
-			THangingBridgeBoard* board = HangingBridgeBoardAtPerform(this, i);
-			JGeometry::TVec3<f32> top;
-			top = board->mRopeTop[0];
-			board->drawOneRope(top);
-			top = board->mRopeTop[1];
-			board->drawOneRope(top);
+			HangingBridgeBoardAtPerform(this, i)->drawRopes();
 		}
 
 		if (MapObjMonteMarDirector()->mMap == 0xD)
@@ -527,23 +525,55 @@ void THangingBridge::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-// UNUSED (0x120): the per-map parameter set-up at the head of loadAfter.
+// UNUSED (0x120): the Monte (map 8) board placement table loadAfter expands.
 void THangingBridge::initMonte()
 {
-	mStart.set(0.0f, 0.0f, 11356.0f);
-	mEnd.set(0.0f, -750.0f, 17743.0f);
-	mRopeHeight     = 1000.0f;
-	mNeighborRate   = 1.0f;
-	mNeighbor2Rate  = 0.5f;
-	mRopeOffset     = 315.0f;
+	f32 board[21][4] = {
+		{ 0.0f, -130.0f, 11965.0f, 30.0f },
+		{ 0.0f, -275.0f, 12225.0f, 29.0f },
+		{ 0.0f, -415.0f, 12490.0f, 28.0f },
+		{ 0.0f, -540.0f, 12760.0f, 26.0f },
+		{ 0.0f, -660.0f, 13035.0f, 24.0f },
+		{ 0.0f, -770.0f, 13315.0f, 22.0f },
+		{ 0.0f, -875.0f, 13595.0f, 20.0f },
+		{ 0.0f, -960.0f, 13895.0f, 12.0f },
+		{ 0.0f, -1020.0f, 14190.0f, 8.0f },
+		{ 0.0f, -1060.0f, 14490.0f, 4.0f },
+		{ 0.0f, -1090.0f, 14790.0f, 2.0f },
+		{ 0.0f, -1090.0f, 15090.0f, 0.0f },
+		{ 0.0f, -1080.0f, 15395.0f, -4.0f },
+		{ 0.0f, -1040.0f, 15695.0f, -6.0f },
+		{ 0.0f, -995.0f, 15990.0f, -8.0f },
+		{ 0.0f, -945.0f, 16285.0f, -8.0f },
+		{ 0.0f, -900.0f, 16580.0f, -8.0f },
+		{ 0.0f, -855.0f, 16880.0f, -8.0f },
+		{ 0.0f, -800.0f, 17175.0f, -10.0f },
+		{ -1.0f, 0.0f, 0.0f, 0.0f },
+		{ -99999.0f, 0.0f, 0.0f, 0.0f },
+	};
+
+	for (int i = 0; i < mBoardNum; i++) {
+		if (board[i][0] == -1.0f)
+			break;
+		if (board[i][0] == -1.0f)
+			continue;
+
+		mBoards[i]->mInitialPosition.set(board[i][0], board[i][1],
+		                                 board[i][2]);
+		mBoards[i]->mPosition.set(mBoards[i]->mInitialPosition);
+		mBoards[i]->mRotation.x = board[i][3];
+		mBoards[i]->calcDefaultMtx();
+	}
 }
 
 // TODO: every instruction matches but the frame is 0x2a8 against our 0x208,
 // and the board-fixup loop counter lands in r25 where retail uses r27.
 // Retail puts the two unit-scale temporaries at 0x208/0x214 just under
 // `rot`, leaves 0x18 above the board table (0xa0) and 0x94 below it; ours
-// put the scale temporaries low at 0x1c/0x28. A named scale, rot declared
-// first, and inlining initMonte() all fail. Likely a structural frame gap.
+// put the scale temporaries low at 0x1c/0x28. A named scale and rot declared
+// first fail. With initMonte() holding the board table (map size exact) the
+// scale temporaries sit high like retail's; the board is at 0xc against
+// retail's 0x98, so 0x8c of low region still has no carrier.
 void THangingBridge::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
@@ -601,44 +631,8 @@ void THangingBridge::loadAfter()
 		mBoards[i]->appear();
 	}
 
-	if (gpMarDirector->mMap == 8) {
-		f32 board[21][4] = {
-			{ 0.0f, -130.0f, 11965.0f, 30.0f },
-			{ 0.0f, -275.0f, 12225.0f, 29.0f },
-			{ 0.0f, -415.0f, 12490.0f, 28.0f },
-			{ 0.0f, -540.0f, 12760.0f, 26.0f },
-			{ 0.0f, -660.0f, 13035.0f, 24.0f },
-			{ 0.0f, -770.0f, 13315.0f, 22.0f },
-			{ 0.0f, -875.0f, 13595.0f, 20.0f },
-			{ 0.0f, -960.0f, 13895.0f, 12.0f },
-			{ 0.0f, -1020.0f, 14190.0f, 8.0f },
-			{ 0.0f, -1060.0f, 14490.0f, 4.0f },
-			{ 0.0f, -1090.0f, 14790.0f, 2.0f },
-			{ 0.0f, -1090.0f, 15090.0f, 0.0f },
-			{ 0.0f, -1080.0f, 15395.0f, -4.0f },
-			{ 0.0f, -1040.0f, 15695.0f, -6.0f },
-			{ 0.0f, -995.0f, 15990.0f, -8.0f },
-			{ 0.0f, -945.0f, 16285.0f, -8.0f },
-			{ 0.0f, -900.0f, 16580.0f, -8.0f },
-			{ 0.0f, -855.0f, 16880.0f, -8.0f },
-			{ 0.0f, -800.0f, 17175.0f, -10.0f },
-			{ -1.0f, 0.0f, 0.0f, 0.0f },
-			{ -99999.0f, 0.0f, 0.0f, 0.0f },
-		};
-
-		for (int i = 0; i < mBoardNum; i++) {
-			if (board[i][0] == -1.0f)
-				break;
-			if (board[i][0] == -1.0f)
-				continue;
-
-			mBoards[i]->mInitialPosition.set(board[i][0], board[i][1],
-			                                 board[i][2]);
-			mBoards[i]->mPosition.set(mBoards[i]->mInitialPosition);
-			mBoards[i]->mRotation.x = board[i][3];
-			mBoards[i]->calcDefaultMtx();
-		}
-	}
+	if (gpMarDirector->mMap == 8)
+		initMonte();
 
 	if (gpMarDirector->mMap == 0xD) {
 		mStart.set(1436.32f, 3201.477f - mRopeHeight, -9417.205f);
@@ -795,11 +789,14 @@ void TSwingBoard::draw() const
 	drawOneRope(bottom, top);
 }
 
-// UNUSED (0xa8): the water-jet push at the head of control.
+// UNUSED (0xa8): the water-jet push at the head of control, which retail
+// reaches behind its own marioIsOn() guard (control tests it twice).
+// TODO: calling it as `if (marioIsOn()) swing();` keeps every instruction
+// but swaps dirX/dirZ between f31/f30 (99.9 -> 99.7); a TVec3 dir grows the
+// frame (0x88, with a TVec3 axis and dot() 0xb0) toward retail's 0x118.
 void TSwingBoard::swing()
 {
-	if (marioIsOn() && marioIsOn()
-	    && SMS_GetMarioWaterGun()->isEmitWater()) {
+	if (marioIsOn() && SMS_GetMarioWaterGun()->isEmitWater()) {
 		MtxPtr emit = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		f32 dirX    = -emit[0][0];
 		f32 dirY    = 0.0f;
@@ -811,7 +808,8 @@ void TSwingBoard::swing()
 }
 
 // TODO: 99.9%, every instruction exact; retail's frame is 0x118 against our
-// 0x70, i.e. 0xa8 more dead low region with no carrier identified.
+// 0x70, i.e. 0xa8 more dead low region; swing() (see above) is the likely
+// carrier.
 void TSwingBoard::control()
 {
 	TMapObjBase::control();
@@ -1279,13 +1277,11 @@ void TFluffManager::registerNextFluff(TFluff* fluff)
 	mFluffNum++;
 }
 
-// UNUSED (0x10c): the placement loadAfter expands for both of the named
-// seeds. TODO: the map size is 0x10c and this body compiles to 0x128, so the
-// exact statement set is still a guess.
+// UNUSED (0x10c): matches the map size only without a rotation copy, so
+// loadAfter's seeds (which copy mRotation in between) spell it out.
 void TFluffManager::setUpNextFluff()
 {
 	mNextFluff->mPosition.set(mPosition);
-	mNextFluff->mRotation.set(mRotation);
 	mNextFluff->mInitialPosition.set(getRandomX(), mPosition.y * MsRandF(),
 	                                 getRandomZ());
 }
@@ -1310,7 +1306,10 @@ f32 TFluffManager::getRandomZ() const
 	return mRangeZ * (2.0f * MsRandF() - 1.0f);
 }
 
-// TODO: 99.8%. Both named seeds now word-copy a stack TVec3 into
+// TODO: 99.8%. Calling a registerNextFluff that also appear()s the stored
+// slot from the tail loop is instruction-exact and takes the frame to 0x80,
+// but that helper compiles to 0x64 against the map's 0x40, so it is not
+// taken. Both named seeds now word-copy a stack TVec3 into
 // mInitialPosition (`stfs` then `lwz`/`stw`); retail's frame is 0x78
 // against our 0x88. The extra 0x10 is not absorbed by a ctor temporary
 // (two slots, 0x98) or an inlined assign helper (97.8%, extra fluff
