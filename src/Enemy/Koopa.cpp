@@ -94,6 +94,17 @@ static inline void KoopaEstimateMarioFire(TKoopa* koopa,
 	out.scale(koopa->getParam()->marioEstimationFire.get(), speed);
 }
 
+// Retail calls TKoopa::getTargetDir out of line in both nerves that use this
+// but expands it in TKoopa::init and checkMarioWhichSide: one inline level
+// between the nerve and the call is what keeps it out of line there, and
+// only while getTargetDir names its matan result (one statement fewer and
+// it inlines through this helper too).
+static inline bool KoopaIsMarioLeft(TKoopa* koopa)
+{
+	f32 toMario = koopa->getTargetDir(SMS_GetMarioPos());
+	return KOOPA_WRAP_DEGREES(toMario - koopa->mTargetDir) < 0.0f;
+}
+
 static inline u8 KoopaFindGrip(TKoopa* koopa, TBathtub* bathtub)
 {
 	JGeometry::TVec3<f32> estimated;
@@ -109,10 +120,8 @@ static inline u8 KoopaFindGrip(TKoopa* koopa, TBathtub* bathtub)
 	return onGrip;
 }
 
-// TODO: 91.1%. Retail calls TKoopa::getTargetDir out of line here and in
-// TNerveKoopaFlame; ours auto-inlines it. Retail's getTargetDir has a 0xe8
-// frame (ours 0x40), so its source is larger; a TVec3 origin/xDir/zDir
-// spelling reaches 99.1% there but is still inlined at depths 1-3.
+// TODO: 99.4%. Frame 0x88 short (retail 0x260) and one scheduling swap of
+// the spine load at entry; instructions otherwise match.
 BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
@@ -167,9 +176,7 @@ BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 		break;
 	default:
 	case 0: {
-		f32 toMario = koopa->getTargetDir(SMS_GetMarioPos());
-		koopa->mTurnsLeft
-		    = KOOPA_WRAP_DEGREES(toMario - koopa->mTargetDir) < 0.0f;
+		koopa->mTurnsLeft = KoopaIsMarioLeft(koopa);
 		spine->setNext(&TNerveKoopaFlame::theNerve());
 		break;
 	}
@@ -210,6 +217,8 @@ BOOL TNerveKoopaFall::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
+// TODO: 98.5%. Frame 0x148 short (retail 0x368), a few register swaps and a
+// handful of missing/extra instructions remain.
 BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
@@ -259,10 +268,7 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 					spine->pushNerve(&TNerveKoopaTurnR::theNerve());
 					break;
 				case 0: {
-					f32 toMario = koopa->getTargetDir(SMS_GetMarioPos());
-					koopa->mTurnsLeft
-					    = KOOPA_WRAP_DEGREES(toMario - koopa->mTargetDir)
-					      < 0.0f;
+					koopa->mTurnsLeft = KoopaIsMarioLeft(koopa);
 					koopa->changeAnm(KOOPA_ANM_FIRE_START, 0,
 					                 koopa->getParam()->fireSpeed.get());
 					spine->setNext(&TNerveKoopaFlame::theNerve());
@@ -1134,16 +1140,21 @@ BOOL TKoopa::isTumbling() const
 	return FALSE;
 }
 
+// TODO: frame 0x28 short in the low (inline temporary) region, and 0x3c
+// short where TKoopa::init inlines this; every instruction else matches.
 f32 TKoopa::getTargetDir(const JGeometry::TVec3<f32>& target) const
 {
 	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 	MtxPtr mtx        = *bathtub->getRootJointMtx();
-	f32 dy            = target.y - mtx[1][3];
-	f32 dx            = target.x - mtx[0][3];
-	f32 dz            = target.z - mtx[2][3];
-	return (360.0f / 65536.0f)
-	       * matan(mtx[2][2] * dz + (mtx[0][2] * dx + mtx[1][2] * dy),
-	               mtx[2][0] * dz + (mtx[0][0] * dx + mtx[1][0] * dy));
+	JGeometry::TVec3<f32> origin(mtx[0][3], mtx[1][3], mtx[2][3]);
+	JGeometry::TVec3<f32> toTarget;
+	JGeometry::TVec3<f32> xDir(mtx[0][0], mtx[1][0], mtx[2][0]);
+	JGeometry::TVec3<f32> zDir(mtx[0][2], mtx[1][2], mtx[2][2]);
+	toTarget.sub(target, origin);
+	f32 z = zDir.dot(toTarget);
+	f32 x = xDir.dot(toTarget);
+	f32 angle = matan(z, x);
+	return (360.0f / 65536.0f) * angle;
 }
 
 // UNUSED (0x2c).
@@ -1239,6 +1250,8 @@ void TKoopa::loadAfter()
 	mBody = new TKoopaBody(this);
 }
 
+// TODO: 95.8%. Frame 0x38 short (retail 0x150) in the inlined getTargetDir
+// temporaries; a few loads are scheduled differently.
 void TKoopa::init(TLiveManager* manager)
 {
 	mBodyRadius = 800.0f;
@@ -1256,15 +1269,7 @@ void TKoopa::init(TLiveManager* manager)
 	if (bck)
 		bck->initSimpleMotionBlend(0x10);
 
-	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
-	MtxPtr mtx        = *bathtub->getRootJointMtx();
-	JGeometry::TVec3<f32> origin(mtx[0][3], mtx[1][3], mtx[2][3]);
-	JGeometry::TVec3<f32> toMario;
-	toMario.sub(SMS_GetMarioPos(), origin);
-	JGeometry::TVec3<f32> xDir(mtx[0][0], mtx[1][0], mtx[2][0]);
-	JGeometry::TVec3<f32> zDir(mtx[0][2], mtx[1][2], mtx[2][2]);
-	mTargetDir
-	    = (360.0f / 65536.0f) * matan(zDir.dot(toMario), xDir.dot(toMario));
+	mTargetDir = getTargetDir(SMS_GetMarioPos());
 
 	initAnmSound();
 	reset();
@@ -1457,8 +1462,7 @@ void TKoopa::calcRootMatrix()
 // calcRootMatrix's -1500 retail holds 360/65536, 360, -180, 0.0f and the
 // int-to-float double, i.e. getTargetDir expanded here, a degree wrap and a
 // comparison with zero.
-// TODO: ours is 0x150 against the map's 0x1a0 and claims -180 before 360;
-// the missing 0x50 uses no new literal.
+// TODO: ours is 0x1b0 against the map's 0x1a0 and claims -180 before 360.
 int TKoopa::checkMarioWhichSide()
 {
 	f32 toMario = getTargetDir(SMS_GetMarioPos());
