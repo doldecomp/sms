@@ -162,6 +162,11 @@ s32 TCardManager::getWriteCount(TCardManager::TCriteria* criteria)
 	return count;
 }
 
+// TODO: instructions exact, frame 0xa0 vs retail 0x98. Retail's two u64
+// reads share one slot at 0x60 and the u32/u16 temps sit low (0x30-0x38).
+// One named u64 read twice through read() drops 21 -> 16 markers but lands
+// 0x78; two named u64s 0x80; mixing with readU64 0x90. operator>> reads
+// lose the copies.
 void TCardManager::copyTo(TCardManager::TCriteria* param_1,
                           TCardBookmarkInfo* param_2)
 {
