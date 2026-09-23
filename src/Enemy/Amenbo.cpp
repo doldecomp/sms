@@ -138,8 +138,6 @@ void TAmenbo::bind()
 	mLinearVelocity = local_14 - mPosition;
 }
 
-// TODO: frame 0x80 vs 0x88, low region 4 short. Inert (fo1): getPosition() in
-// updateCollision's copy or subtraction, a named position copy.
 void TAmenbo::control()
 {
 	if (((const TAmenbo*)this)->mWaterGunHitCooldown > 0)
@@ -150,9 +148,7 @@ void TAmenbo::control()
 
 	updateCollision();
 
-	if (SMS_AskJumpIntoWaterEffectExist()) {
-		checkMarioWaterIn();
-	}
+	checkMarioWaterIn();
 
 	TLiveActor::control();
 }
@@ -172,15 +168,21 @@ void TAmenbo::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// UNUSED in the map (0x2d4). The water-entry test is the helper's own guard:
+// with it here and the spine read through getSpine(), the standalone copy is
+// the map size and control()'s inlined copy lands its 0x88 frame.
 void TAmenbo::checkMarioWaterIn()
 {
+	if (!SMS_AskJumpIntoWaterEffectExist())
+		return;
+
 	JGeometry::TVec3<f32> local_60;
 
 	if (!isOverTerritory(&local_60) && mSearchDisableCooldown <= 0) {
 		if (isFreeze() && !isChangedBlock()) {
 			decideTargetOnFingingMario();
-			mSpine->reset();
-			mSpine->setNext(&TNerveAmenboTurn::theNerve());
+			getSpine()->reset();
+			getSpine()->setNext(&TNerveAmenboTurn::theNerve());
 			mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		}
 	}
