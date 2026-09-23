@@ -1361,11 +1361,14 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 			gpCameraShake->startShake(CAM_SHAKE_MODE_ENEMY2, 0.8f);
 	}
 
-	// TODO: retail converts getFrame() to int and tests CLIPPED_OUT
-	// (rlwinm. 29,29) then overwrites r0; unused locals DCE here.
-	// Frame is 0x30 short. shakeCamera is map-UNUSED 0xA8.
-	self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
-	self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+	// TODO: retail converts the frame to int, tests CLIPPED_OUT and reloads
+	// the int with no compare or branch after it: a frame test whose body
+	// compiled to nothing. The compared frame number is lost (0x10 is a
+	// placeholder); a body with a TVec3 local drops the whole test instead.
+	// Frame is 0x20 short (0x40 vs 0x60), all below the fctiwz slot.
+	int frame = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+	if (!self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT) && frame == 0x10) {
+	}
 
 	if (self->getMActor()->curAnmEndsNext())
 		return true;
