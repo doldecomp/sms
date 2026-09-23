@@ -1982,7 +1982,9 @@ bool TBossTelesa::checkSlotResult()
 // loads into r0 and `mr`s into the saved register.
 // TODO: frame 0x2b8 vs 0x2c0 and one callee-saved FPR short (retail saves
 // f16: the i == 0 pepper block takes f17/f16 for its rand ranges, ours reuses
-// f18/f17); the clamped count takes r27 where retail has r25. The retail `li r3, 1` on both arms of
+// f18/f17); the clamped count takes r27 where retail has r25. Worse: a
+// second TMsRange in the i == 0 block (frame exact, but its constants hoist
+// into saved FPRs), the fast speeds unnamed or scaled at the set. The retail `li r3, 1` on both arms of
 // the lastManager choice matches with a `firstManager = 1` set in each arm,
 // which the source has no reason for, so it is left out.
 void TBossTelesa::generateSlotItem()
@@ -2238,8 +2240,6 @@ bool TBossTelesa::checkAllItemDead()
 // to 98.7/98.4. `slot` is the address the ROM binds in r30 and reloads
 // through at every use; `zero` is the callee-saved f31 the ROM holds the
 // literal in across the loop.
-// TODO: +8 frame (0x38 vs 0x40), instruction-exact. A holder binder is
-// +0x10; a particle-manager binder lands the frame but swaps r28/r30.
 void TBossTelesa::forceAllItemKill()
 {
 	f32 zero = 0.0f;
