@@ -1183,15 +1183,14 @@ bool TBossWanwan::isMarioInSight() { return true; }
 
 // UNUSED, 0x70 in the map: TBossWanwan::control, TNerveBWStun::execute and
 // TNerveBWGraphWander::execute all spell this out.
-// TODO: 0xa0 here. All three call sites reproduce the two materialised bools
-// exactly, so the shape is right and the standalone copy is carrying twelve
-// instructions the original did not.
+// TODO: 0x98 here. Falling through to the shared return FALSE lets a failed
+// isTaken() branch straight past the callers' bodies, but retail tests the
+// pull as a bge onto the TRUE arm where this spelling gives a blt.
 BOOL TBossWanwan::isHeadPulled()
 {
 	if (mPicket->isTaken()) {
-		if (mPullVelocity.squared() < getSaveParam2()->mSLPullLimit.get())
-			return FALSE;
-		return TRUE;
+		if (!(mPullVelocity.squared() < getSaveParam2()->mSLPullLimit.get()))
+			return TRUE;
 	}
 	return FALSE;
 }
@@ -1791,6 +1790,8 @@ DEFINE_NERVE(TNerveBWJump, TLiveActor)
 	return FALSE;
 }
 
+// TODO: the frame is 0x108 in retail against 0xb8 here, with the node point
+// at 0xe0 and toMario at 0xc8, and prev/graph take r28/r29 swapped.
 DEFINE_NERVE(TNerveBWStun, TLiveActor)
 {
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();
@@ -1800,9 +1801,8 @@ DEFINE_NERVE(TNerveBWStun, TLiveActor)
 		const TGraphWeb* graph = tracer->getGraph();
 		int prev               = tracer->getPrevIndex();
 
-		Vec point;
-		graph->getGraphNode(prev).getPoint(&point);
-		JGeometry::TVec3<f32> toNode(point.x, point.y, point.z);
+		JGeometry::TVec3<f32> toNode;
+		graph->getGraphNode(prev).getPoint(&toNode);
 		toNode -= boss->mPosition;
 
 		if (VECMag(toNode) < 100.0f) {
