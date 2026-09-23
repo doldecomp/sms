@@ -1129,15 +1129,15 @@ void TKoopa::stagger(bool force)
 	getSpine()->pushNerve(&TNerveKoopaStagger::theNerve());
 }
 
-// TODO: UNUSED (0xec), body not reconstructed. Two inlined theNerve() guards
-// would be about this size.
+// UNUSED (0xec): TKoopa::perform inlines it, which is what makes the
+// TNerveKoopaTumble::theNerve() constructor a call there.
+// TODO: this copy compiles to 0xf0, one instruction long.
 BOOL TKoopa::isTumbling() const
 {
-	if (&TNerveKoopaTumble::theNerve() == mSpine->getCurrentNerve())
-		return TRUE;
-	if (&TNerveKoopaGetDown::theNerve() == mSpine->getCurrentNerve())
-		return TRUE;
-	return FALSE;
+	f32 frame = getAnmFrame();
+	return mSpine->getCurrentNerve() == &TNerveKoopaTumble::theNerve()
+	       && frame >= getParam()->tumbleStartFrame.get()
+	       && frame <= getParam()->tumbleEndFrame.get();
 }
 
 // TODO: frame 0x28 short in the low (inline temporary) region, and 0x3c
@@ -1312,6 +1312,10 @@ void TKoopa::reset()
 	mWaitTimer = 600;
 }
 
+// TODO: 88.8%. The ROM keeps flameScale in memory and `bl`s TVec3::set for
+// the last four emitters while inlining it for the first; ours keeps the
+// scale in f31 and inlines all five. A one-level helper over setGlobalScale
+// at those four sites is inert.
 void TKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -1330,15 +1334,7 @@ void TKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 	mBody->perform(cue, graphics);
 
 	if (cue & CUE_MOVE) {
-		f32 frame = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
-		bool inTumbleWindow = false;
-		bool tumbles        = false;
-		if (mSpine->getCurrentNerve() == &TNerveKoopaTumble::theNerve()
-		    && frame >= getParam()->tumbleStartFrame.get())
-			inTumbleWindow = true;
-		if (inTumbleWindow && frame <= getParam()->tumbleEndFrame.get())
-			tumbles = true;
-		if (tumbles) {
+		if (isTumbling()) {
 			TBathtub* bathtub
 			    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 			bathtub->tumble(mRotation.y, getParam()->tumbleWeight.get());
