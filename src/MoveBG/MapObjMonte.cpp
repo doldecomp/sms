@@ -901,24 +901,24 @@ void TSwingBoard::load(JSUMemoryInputStream& stream)
 	else
 		mAngleSpeed = mAngleSpeedMax * MsRandF();
 
-	// 12x ref() is +0x30 over all-raw (0x68 vs 0x38). One ref() (any of the
-	// twelve) lands retail's 0x40 with every other instruction right but
-	// swaps the epilogue addi/mtlr (98.5%). Left as all ref().
+	// The base matrix is written through one MtxPtr (all ref() is 0x68,
+	// raw mMtx 0x38 against retail's 0x40).
 	s16 yaw  = (s16)(182.04445f * mRotation.y);
 	f32 sinY = JMASSin(yaw);
 	f32 cosY = JMASCos(yaw);
-	mBaseMtx.ref(0, 0) = cosY;
-	mBaseMtx.ref(0, 1) = 0.0f;
-	mBaseMtx.ref(0, 2) = sinY;
-	mBaseMtx.ref(0, 3) = 0.0f;
-	mBaseMtx.ref(1, 0) = 0.0f;
-	mBaseMtx.ref(1, 1) = 1.0f;
-	mBaseMtx.ref(1, 2) = 0.0f;
-	mBaseMtx.ref(1, 3) = 0.0f;
-	mBaseMtx.ref(2, 0) = -sinY;
-	mBaseMtx.ref(2, 1) = 0.0f;
-	mBaseMtx.ref(2, 2) = cosY;
-	mBaseMtx.ref(2, 3) = 0.0f;
+	MtxPtr m = mBaseMtx;
+	m[0][0] = cosY;
+	m[0][1] = 0.0f;
+	m[0][2] = sinY;
+	m[0][3] = 0.0f;
+	m[1][0] = 0.0f;
+	m[1][1] = 1.0f;
+	m[1][2] = 0.0f;
+	m[1][3] = 0.0f;
+	m[2][0] = -sinY;
+	m[2][1] = 0.0f;
+	m[2][2] = cosY;
+	m[2][3] = 0.0f;
 }
 
 TSwingBoard::TSwingBoard(const char* name)
