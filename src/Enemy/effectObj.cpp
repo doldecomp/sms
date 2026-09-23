@@ -326,6 +326,10 @@ void TEffectColumWater::reset()
 	mMActor->getFrameCtrl(2)->setFrame(0.0f);
 }
 
+// TODO: 91.9%. Retail stores the scale() result straight into mScaling; ours
+// copies the by-value operator* return once more. That is the JGVec3.hpp
+// operator* return-type note (99.79 with a reference return, a tree-wide
+// loss); a named local with `*=` inlines scale (79.0).
 void TEffectColumWater::generate(JGeometry::TVec3<f32>& param_1,
                                  JGeometry::TVec3<f32>& param_2)
 {

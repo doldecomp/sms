@@ -486,7 +486,8 @@ void TIgaigaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 // TODO: 92%. The joint number and the roll matrix's address take each other's
 // callee-saved register, and our roll matrix sits 0xc low: retail packs it at
 // 0x2c with nothing above it but the int-to-float buffer, ours leaves a
-// 12-byte hole there.
+// 12-byte hole there. Inert (bb29): the header MsMtxSetRotX with or without
+// the rollMtx pointer, an f32 angle local, and dropping the pointer (81.9).
 // A binding level over the file-scope current-roller pointer.
 static inline TRollEnemy* IgaigaCurRoller()
 {

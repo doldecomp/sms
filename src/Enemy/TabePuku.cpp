@@ -110,8 +110,10 @@ void TTPHitActor::updateObjCollision()
 	             mOwner->getSaveParams()->getSLDamageHeight());
 }
 
-// TODO: 86.7%. Residual: retail loads the 2/3 constant before anything else
-// and keeps the owner position base in one register with lfsu; the rest is
+// TODO: 93.0%, frame 0xd0 vs retail 0xe8: retail has 0x24 more low region
+// below pos (0xb4, ours 0x90) and 4 less between pos and quat. `pos -
+// mPosition` lands the frame size but calls sub out of line; `-=`, two-arg
+// sub and raw mHeldObject/getPosition() do not move it (bb29). The rest is
 // float register numbering plus the isHolding() BOOL note below.
 void TTPHitActor::updateTerrainCollsion()
 {
