@@ -1101,27 +1101,29 @@ bool TKoopa::effectsTumble() const
 	return false;
 }
 
+// TODO: retail keeps `this` in r31 and the .bss base in r30 (ours swapped),
+// and its nerve guard objects sit at other .bss offsets (TU static order).
 bool TKoopa::getShowered()
 {
-	if (&TNerveKoopaFall::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaFall::theNerve() == getSpine()->getCurrentNerve())
 		return false;
-	if (&TNerveKoopaProvoke::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaProvoke::theNerve() == getSpine()->getCurrentNerve())
 		return false;
-	if (&TNerveKoopaTumble::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaTumble::theNerve() == getSpine()->getCurrentNerve())
 		return false;
-	if (&TNerveKoopaGetDown::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaGetDown::theNerve() == getSpine()->getCurrentNerve())
 		return false;
 	if (&TNerveKoopaGetShowered::theNerve() == mSpine->getCurrentNerve())
 		return true;
 	if (&TNerveKoopaStagger::theNerve() == mSpine->getCurrentNerve()) {
-		mSpine->setNext(&TNerveKoopaGetShowered::theNerve());
+		getSpine()->setNext(&TNerveKoopaGetShowered::theNerve());
 		return true;
 	}
 	if (&TNerveKoopaFlame::theNerve() == mSpine->getCurrentNerve()) {
-		mSpine->setNext(&TNerveKoopaWait::theNerve());
+		getSpine()->setNext(&TNerveKoopaWait::theNerve());
 		return false;
 	}
-	mSpine->pushNerve(&TNerveKoopaGetShowered::theNerve());
+	getSpine()->pushNerve(&TNerveKoopaGetShowered::theNerve());
 	return true;
 }
 
