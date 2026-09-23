@@ -601,12 +601,13 @@ static inline TNpcInbetween* NpcBaseInbetween(const TBaseNPC* p)
 
 void TBaseNPC::execMotionBlend_()
 {
-	if (!NpcBaseInbetween(this)->isMotionBlending())
+	bool blending = NpcBaseInbetween(this)->isMotionBlending();
+	if (!blending)
 		setKeepAnm_();
-
-	NpcBaseInbetween(this)->execMotionBlend(getMActor());
-
-	if (mInbetweenCtrl->isForcedBlendRatio())
+	MActor* mactor = getMActor();
+	mInbetweenCtrl->execMotionBlend(mactor);
+	bool forced = mInbetweenCtrl->isForcedBlendRatio();
+	if (forced)
 		mKeepAnmCtrl->reset();
 }
 
@@ -669,6 +670,52 @@ inline f32 TBaseNPC::getAnmOffDist_()
 inline f32 TBaseNPC::getAnmOffDistSquared_()
 {
 	return CLBSquared(getAnmOffDist_());
+}
+
+// Retail calls execMotionBlend_ and isPartsAnmNpc from perform but inlines
+// execMotionBlend_ into calcRootMatrix: the animation-skip block sits one
+// inline level below perform. The name is ours.
+inline bool TBaseNPC::calcAnmOff_()
+{
+	bool r31 = false;
+
+	// Raw, not checkLiveFlag2: these two want the bool-returning twin of
+	// that accessor, which has no name yet. See the note on
+	// checkLiveFlag2 in Strategic/LiveActor.hpp for the four spellings
+	// that were measured here and lost.
+	bool bVar12 = mLiveFlag
+	        & (LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_DEAD)
+	    ? true
+	    : false;
+	bool bVar6 = mLiveFlag & LIVE_FLAG_UNK1000000 ? true : false;
+
+	if (bVar12) {
+		r31 = true;
+		updateAnmSound();
+		execMotionBlend_();
+		mMActor->frameUpdate();
+		if (unk168 != nullptr && isPartsAnmNpc()) {
+			unk168->partsFrameUpdate();
+		}
+	} else if (mHolder == nullptr) {
+		if (!isAirborne() && !belongToGround()
+		    && (isNerveMaybeDontCalcAnim0()
+		        || isNerveMaybeDontCalcAnim1())) {
+			JGeometry::TVec3<f32> diff;
+			diff.sub(mPosition, gpCamera->unk124);
+			if (getAnmOffDistSquared_() < diff.squared() && !bVar6
+			    && mSpine->getTime() > 2) {
+				r31 = true;
+				execMotionBlend_();
+			}
+		}
+	}
+
+	if (bVar6 && !r31 && mMultiMtxEffect != nullptr) {
+		mMultiMtxEffect->flagOn(0x2);
+	}
+
+	return r31;
 }
 
 void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -780,47 +827,8 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		                   | LIVE_FLAG_CLIPPED_OUT))
 			emitParticle_();
 
-		bool r31 = false;
-
-		// Raw, not checkLiveFlag2: these two want the bool-returning twin of
-		// that accessor, which has no name yet. See the note on
-		// checkLiveFlag2 in Strategic/LiveActor.hpp for the four spellings
-		// that were measured here and lost.
-		bool bVar12 = mLiveFlag
-		        & (LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_DEAD)
-		    ? true
-		    : false;
-		bool bVar6 = mLiveFlag & LIVE_FLAG_UNK1000000 ? true : false;
-
-		if (bVar12) {
-			r31 = true;
-			updateAnmSound();
-			execMotionBlend_();
-			mMActor->frameUpdate();
-			if (unk168 != nullptr && isPartsAnmNpc()) {
-				unk168->partsFrameUpdate();
-			}
-		} else if (mHolder == nullptr) {
-			if (!isAirborne() && !belongToGround()
-			    && (isNerveMaybeDontCalcAnim0()
-			        || isNerveMaybeDontCalcAnim1())) {
-				JGeometry::TVec3<f32> diff;
-				diff.sub(mPosition, gpCamera->unk124);
-				if (getAnmOffDistSquared_() < diff.squared() && !bVar6
-				    && mSpine->getTime() > 2) {
-					r31 = true;
-					execMotionBlend_();
-				}
-			}
-		}
-
-		if (bVar6 && !r31 && mMultiMtxEffect != nullptr) {
-			mMultiMtxEffect->flagOn(0x2);
-		}
-
-		if (r31) {
+		if (calcAnmOff_())
 			cue &= ~CUE_CALC_ANIM;
-		}
 	}
 
 	if ((cue & CUE_CALC_ANIM) && mMultiMtxEffect != nullptr) {
