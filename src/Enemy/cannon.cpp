@@ -160,10 +160,21 @@ void TChorobei::setBckAnm(int idx)
 		mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }
 
+// The bomb arm's push sits one inline level deeper than the killer arm's,
+// which is what leaves the TNerveCannonDamage constructor a call there.
+static inline void CannonPushDamage(TCannon* cannon)
+{
+	cannon->mSpine->pushNerve(&TNerveCannonDamage::theNerve());
+}
+
+// TODO: every instruction matches; the instance address retail keeps in r25
+// (allocated before i and col) is our last saved register.  Wrapping the
+// whole bomb arm in a helper is inert here and gets checkHit auto-inlined
+// into TCannon::moveObject; a swapped compare and nested ifs are inert.
 void TChorobei::checkHit()
 {
 	for (int i = 0; i < getColNum(); ++i) {
-		THitActor* col = getCollision(i);
+		THitActor* col = mCollisions[i];
 		if (col->isActorType(0x80000001))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 
@@ -172,7 +183,7 @@ void TChorobei::checkHit()
 			if (cannon->mSpine->getCurrentNerve()
 			        != &TNerveCannonDamage::theNerve()
 			    && ((TBombHei*)col)->isDamageToCannon()) {
-				cannon->mSpine->pushNerve(&TNerveCannonDamage::theNerve());
+				CannonPushDamage(cannon);
 				((TBombHei*)col)->kill();
 			}
 		}
