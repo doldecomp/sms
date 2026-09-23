@@ -547,14 +547,15 @@ void TPakkun::onShootLiner(JGeometry::TVec3<f32>& dir)
 // Lobs the seed at a goal point instead of spitting it straight: the arc is
 // the one that lands on the goal from where the plant stands. Size-exact
 // against the map's 0xfc, which is what fixes the body: the goal feeds
-// setGoalPath and the plant's own position feeds the jump velocity. The map
+// both setGoalPath and the jump velocity (retail passes the goal copy, not
+// mPosition, at every inlined site). The map
 // dead-strips it because TNervePakkunStay inlines it at all three lob sites,
 // where the velocity is a word copy (`=`, not set(x, y, z)).
 void TPakkun::onShootCurve(JGeometry::TVec3<f32>& goal)
 {
 	setGoalPath(TPathNode(goal));
 	JGeometry::TVec3<f32> vel
-	    = calcVelocityToJumpToY(mPosition, getSaveLoadParam()->getSLSeedSpeedC(),
+	    = calcVelocityToJumpToY(goal, getSaveLoadParam()->getSLSeedSpeedC(),
 	                            getSaveLoadParam()->getSLSeedGravityC());
 	mIsCurveShot = 1;
 	mSeed->mVelocity = vel;

@@ -677,7 +677,7 @@ void TBPNavel::perform(u32 cue, JDrama::TGraphics* graphics)
 
 // UNUSED, 0x90 in the map: TBossPakkun::init spells it out.
 TBossPakkunMtxCalc::TBossPakkunMtxCalc(TBossPakkun* owner)
-    : M3UMtxCalcSIAnmBlendQuat(false)
+    : M3UMtxCalcSIAnmBlendQuat(true)
     , mOwner(owner)
 {
 }

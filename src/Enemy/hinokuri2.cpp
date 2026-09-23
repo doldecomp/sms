@@ -1072,8 +1072,8 @@ void THinokuri2::moveObject()
 
 	f32 headHitR = ((THino2Params*)getSaveParam())->mSLHeadHitR.value;
 	mHead->setDamageRadius(unk194 * (headHitR * mBodyScale));
-	f32 bodyScale = ((THino2Params*)getSaveParam())->mSLBodyScale.value;
-	mHead->setDamageHeight(unk194 * (mBodyScale * bodyScale));
+	f32 headHitH = ((THino2Params*)getSaveParam())->mSLHeadHitH.value;
+	mHead->setDamageHeight(unk194 * (headHitH * mBodyScale));
 
 	if (mLevel == 0) {
 		f32 bodyHitR0 = ((THino2Params*)getSaveParam())->mSLBodyHitR0.value;
