@@ -499,7 +499,9 @@ void TBathtubKiller::moveParabolic()
 // TODO: every instruction present; frame 0x88 against retail 0xa8 and the
 // normalised chase vector stays in f27-f29 where retail drops it to volatiles.
 // A second vector for normalize(v), setLength(1.0f), operator- and
-// normalising mAcceleration in place are all inert or worse.
+// normalising mAcceleration in place are all inert or worse. Of these,
+// `unit.normalize(toTarget)` alone moves the result into volatiles as retail
+// does, but frame 0x90 and FPR numbering (retail minY f29) stay off.
 void TBathtubKiller::moveChasing()
 {
 	JGeometry::TVec3<f32> target = *gpMarioPos;
@@ -733,7 +735,9 @@ void TBathtubKiller::updateTimers()
 // distance first and keeps bathtubPos.y/.z live in f5/f6 across both sqrt
 // blocks; we reload them. Naming the Mario distance fixes the order but costs
 // the Chase nerve 8 bytes of frame; flipped comparison, top declarations and
-// a named reference to the tub position were inert.
+// a named reference to the tub position were inert. `f32 marioDist` named
+// before the test makes the Wander nerve instruction-exact (block placement
+// only) but costs Chase 8; `100.0f + mario < my` fixes the order, not the compare.
 bool TBathtubKiller::isAttackable()
 {
 	if (!unk1CC->isKillerAttackable())
