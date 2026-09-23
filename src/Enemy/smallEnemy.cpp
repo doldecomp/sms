@@ -1125,7 +1125,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 {
 	TSmallEnemy* self = SmallEnemyGetBody(spine);
 
-	if (spine->getTime() == 0) {
+	if (!spine->getTime()) {
 		if (self->checkLiveFlag2(0x8000)
 		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
 			return true;
@@ -1145,7 +1145,8 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 
 	self->mRotation.y += TMsRange<f32>(4.0f, 10.0f).rand();
 
-	if (!self->isAirborne() || spine->getTime() > 360) {
+	bool airborne = self->isAirborne();
+	if (!airborne || spine->getTime() > 360) {
 		self->endHitWaterJump();
 		return true;
 	} else {

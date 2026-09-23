@@ -400,7 +400,8 @@ void JPADrawExecRotBillBoard::exec(const JPADrawContext* dc,
 void JPADrawExecYBillBoard::exec(const JPADrawContext* dc,
                                  JPABaseParticle* particle)
 {
-	if (particle->isInvisibleParticle())
+	bool invisible = particle->isInvisibleParticle();
+	if (invisible)
 		return;
 
 	f32 scaleX = particle->getDrawParamPPtr()->mScaleX;

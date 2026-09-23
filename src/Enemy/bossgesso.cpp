@@ -1418,7 +1418,7 @@ void TBossGesso::doAttackShoot()
 	}
 
 	if (mTimeInCurrentAttackMode > 120
-	    && mSpine->getLatestNerve() != &TNerveBGPolDrop::theNerve()) {
+	    && getSpine()->getLatestNerve() != &TNerveBGPolDrop::theNerve()) {
 		changeAttackMode(ASTATE_SINGLE);
 		return;
 	}
@@ -1427,7 +1427,7 @@ void TBossGesso::doAttackShoot()
 	if (!inSightAngle(0.5f * sightAngle))
 		return;
 
-	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
+	JGeometry::TVec3<f32> delta = *gpMarioPos;
 	delta -= mPosition;
 
 	f32 singleAttackLen2 = getSaveParam2()->mSLSingleAttackLen.get();
