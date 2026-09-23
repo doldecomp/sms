@@ -713,9 +713,11 @@ s32 TShine::appearWithTimeCallback(u32 param_1, u32 param_2)
 	TShine* shine = (TShine*)param_1;
 	if (param_2 == 0) {
 		shine->appearWithTime(shine->unk18C, -1, -1, -1);
-		gpMarDirector->onDemoFlag(TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
+		gpMarDirector->onDemoFlag(
+		    TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
 	} else if (param_2 == 1) {
-		gpMarDirector->offDemoFlag(TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
+		gpMarDirector->offDemoFlag(
+		    TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
 	}
 	return 0;
 }

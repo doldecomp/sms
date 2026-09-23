@@ -746,7 +746,7 @@ bool MSound::resetAudioAll(u16 param_1)
 		JASystem::Driver::setMixerLevel(0.802f, 0.0f);
 		JASystem::AudioThread::stop();
 		mSeGateMask = MSSeGate_None;
-		unkD0 = 0;
+		unkD0       = 0;
 		return true;
 	}
 
