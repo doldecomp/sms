@@ -123,11 +123,15 @@ TChorobei::TChorobei(TCannon* cannon, int jnt_idx, const char* name)
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }
 
+// TODO: instruction-exact; the matrix sits at 0x48 against retail's 0x44
+// (retail's low region is 4 bytes smaller). Inert: Mtx declared first, a
+// named frame or connected-matrix source, getPosition(); raw unk18 at
+// either MActor site is -8.
 void TChorobei::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!mCannon->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                            | LIVE_FLAG_CLIPPED_OUT)
-	    && unk70 == 0.0f) {
+	    && !unk70) {
 		if (cue & CUE_CALC_ANIM) {
 			if (mAnmSound != nullptr && mAnmSoundName != nullptr) {
 				J3DFrameCtrl* ctrl = mParts->getMActor()->getFrameCtrl(0);
