@@ -627,6 +627,9 @@ void rotTypeYJiggle(f32 sin, f32 cos, Mtx& out)
 // TODO: The low region is 0x20 short (frame 0x128 vs 0x100); the side vector and `pt` take callee-saved FPRs
 // in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
 // and declaration moves were inert or worse.
+// Retail also has a 12-byte named slot above offs. The RotDirectional fix (angle
+// level) has no counterpart here; direct-return levels over mScaleX/mScaleY at
+// any site subset flip fmuls operand order.
 void JPADrawExecDirectional::exec(const JPADrawContext* dc,
                                   JPABaseParticle* particle)
 {
@@ -776,6 +779,8 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 // TODO: The low region is 8 short (frame 0x168 vs 0x160); the side vector and `pt` take callee-saved FPRs
 // in reverse (retail side.x f29, pt.x f31). Cross clones, a helper level
 // and declaration moves were inert or worse.
+// Direct-return levels over mScaleX/mScaleY at any site subset flip fmuls
+// operand order.
 void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
                                        JPABaseParticle* particle)
 {
@@ -1559,13 +1564,10 @@ void JPADrawCalcScaleY::calc(const JPADrawContext* dc,
 	}
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// JPADrawCalcScaleXBySpeed::calc (batch 127).
-static inline f32 JPADrawVisitorUnkC(const JPADrawParams* p)
-{
-	f32 vC = p->unkC;
-	return vC;
-}
+// Direct-return level over the base scale, taken by the scale-in and scale-out
+// branches of the two BySpeed calcs (+4 of low region each); the plain branch
+// reads the member raw.
+static inline f32 JPADrawVisitorUnkC(const JPADrawParams* p) { return p->unkC; }
 
 void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext* dc,
                                     JPABaseParticle* particle)
@@ -1581,7 +1583,7 @@ void JPADrawCalcScaleXBySpeed::calc(const JPADrawContext* dc,
 		      * ((dc->mExtraShape->getIncreaseRateX() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueX());
 	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
-		params->mScaleX = params->unkC
+		params->mScaleX = JPADrawVisitorUnkC(params)
 		                  * ((dc->mExtraShape->getDecreaseRateX()
 		                      * (dc->pcb->mScaleAnmTimer
 		                         - dc->mExtraShape->getScaleOutTiming()))
@@ -1606,7 +1608,7 @@ void JPADrawCalcScaleYBySpeed::calc(const JPADrawContext* dc,
 		      * ((dc->mExtraShape->getIncreaseRateY() * dc->pcb->mScaleAnmTimer)
 		         + dc->mExtraShape->getScaleInValueY());
 	} else if (dc->pcb->mScaleAnmTimer > dc->mExtraShape->getScaleOutTiming()) {
-		params->mScaleY = params->unkC
+		params->mScaleY = JPADrawVisitorUnkC(params)
 		                  * ((dc->mExtraShape->getDecreaseRateY()
 		                      * (dc->pcb->mScaleAnmTimer
 		                         - dc->mExtraShape->getScaleOutTiming()))
