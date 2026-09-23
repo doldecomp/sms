@@ -204,7 +204,10 @@ void TBaseNPC::changeNerveFromTalk_()
 	offLiveFlag(LIVE_FLAG_UNK2000000);
 }
 
-void TBaseNPC::changeNerveToWet_() { }
+void TBaseNPC::changeNerveToWet_()
+{
+	mSpine->pushNerve(&TNerveNPCWet::theNerve());
+}
 
 void TBaseNPC::changeNerveToMad_()
 {
@@ -348,6 +351,11 @@ void TBaseNPC::behaveToBeTrampled_()
 // TODO: 99.9%. The burning-branch spray particle is emitted at the hitting
 // object's position (retail's r4 + 0x10). Remaining: the frame is 0x30
 // short and isSunflowerReviving's result takes r29 where retail reuses r28.
+// The low region is all dead (no stack slot used). Inert: getSpine(),
+// getActorType() and SMSGetMarDirector() at each single site, the map-size
+// changeNerveToWet_ at the final push, nested-if or early-return
+// isSunflowerReviving bodies; getSpine() in isNerveCanGoToWet is +8 here but
+// costs behaveToBeTrampled_ the same 8.
 void TBaseNPC::behaveToHitObject_(THitActor* param_1,
                                   EnumHitNpcObjectKind param_2)
 {

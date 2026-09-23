@@ -24,7 +24,15 @@
 // TODO: should be in a header and violate ODR
 const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 
-void CalcJumpVelocityY(f32, f32) { }
+f32 CalcJumpVelocityY(f32 height, f32 gravity)
+{
+	f32 velocity = 0.0f;
+	if (gravity > 0.0f) {
+		velocity = gravity * 0.5f
+		           * (MsSqrtf(height * (1.0f / gravity) * 8.0f + 1.0f) + 1.0f);
+	}
+	return velocity;
+}
 
 bool TBaseNPC::isNowMotionBlend() const
 {
@@ -440,15 +448,8 @@ bool TBaseNPC::npcRecoverFromSinking()
 	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
 		if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
 			onLiveFlag(LIVE_FLAG_UNK8000000);
-			f32 dVar6 = getGravityY();
-			f32 fVar1 = 0.0f;
-			f32 tmp   = unk1C4 - getPosition().y + 150.0f;
-			if (dVar6 > 0.0f) {
-				fVar1 = dVar6 * 0.5f
-				        * (MsSqrtf(tmp * (1.0f / dVar6) * 8.0f + 1.0f) + 1.0f);
-			}
-
-			mVelocity.y = fVar1;
+			mVelocity.y = CalcJumpVelocityY(unk1C4 - getPosition().y + 150.0f,
+			                                getGravityY());
 			if (mVelocity.y < 5.0f)
 				mVelocity.y = 5.0f;
 		}
