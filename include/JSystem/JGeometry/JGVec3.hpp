@@ -102,12 +102,18 @@ public:
 
 	explicit TVec3(f32 value) { setAll(value); }
 
-	TVec3(const TVec3& other)
-	{
-		// NOTE: yes, this has to use lwz/stw and not lfs/stf.
-		// Checked via MarioCollision.cpp where this is not inlined
-		*(Vec*)this = *(Vec*)&other;
-	}
+	// The map fixes a user copy constructor: MarioCollision.cpp and Tongue.cpp
+	// both emit a weak 0x1c `__ct__...FRCQ29JGeometry8TVec3<f>` (three
+	// lwz/stw). The base-class initialiser is the form that gives that body
+	// and still lets inlined copies behave like retail's: a statement body
+	// (`*(Vec*)this = *(Vec*)&other;`) makes every inlined copy go through
+	// memory, which cost TNameKuri::calcRootMatrix, THauntLeg::calcRootMatrix,
+	// TTailRubber::restrict and some seventy others (header round hv: +2
+	// exact, 79 up, 38 down tree-wide). Deleting the constructor outright is
+	// worse: the implicit one still emits the weak body, but the by-value
+	// parameter copies of the calcDist family lose 8 bytes of frame and
+	// Tongue's weak `__ami__` stops being emitted (-12 exact).
+	TVec3(const TVec3& other) : Vec(other) { }
 
 	TVec3& operator=(const TVec3& other)
 	{

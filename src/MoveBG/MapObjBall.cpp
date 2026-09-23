@@ -586,7 +586,10 @@ void TMapObjBall::control()
 		return;
 	}
 
-	JGeometry::TVec3<f32> vel(getVelocity());
+	// Assigned, not copy-constructed: retail's isZero keeps its three
+	// fmuls apart (no fmadds), which only operator='s cast copy gives.
+	JGeometry::TVec3<f32> vel;
+	vel = getVelocity();
 	if (!vel.isZero() || mGroundPlane->getActor() != nullptr)
 		calcCurrentMtx();
 }
@@ -1612,7 +1615,10 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 
 	// Once it is falling, touching anything at all bursts it.
 	if (!isState(STATE_NORMAL)) {
-		JGeometry::TVec3<f32> vel(getVelocity());
+		// Assigned, not copy-constructed: retail's isZero keeps its three
+	// fmuls apart (no fmadds), which only operator='s cast copy gives.
+	JGeometry::TVec3<f32> vel;
+	vel = getVelocity();
 		if (vel.y < 0.0f) {
 			kill();
 			return;
