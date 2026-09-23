@@ -327,6 +327,14 @@ void TBossHanachan::moveObject()
 	mHead->mGroundPlane = mGroundPlane;
 }
 
+// Wraps a yaw into [-180, 180). Retail calls MsWrap<f> out of line at all three
+// sand-slope sites while inlining MsGetRotFromZaxisY beside them, so the wrap is
+// one inline level deeper than the vector yaw.
+static inline f32 BossHanachanWrapDegree(f32 angle)
+{
+	return MsWrap(angle, -180.0f, 180.0f);
+}
+
 void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(0x201))
@@ -376,12 +384,11 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			moveObject();
 			const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 			for (int i = 0; i < 8; ++i) {
-				TBossHanachanPartsBody* body = mBodies[i];
-				body->mOlderPosition = body->mPreviousPosition;
-				body->mPreviousPosition = body->mPosition;
-				body->mOlderRoll = body->mPreviousRoll;
-				body->mPreviousRoll = body->mRotation.z;
-				body->unk148 = body->unk144;
+				mBodies[i]->mOlderPosition = mBodies[i]->mPreviousPosition;
+				mBodies[i]->mPreviousPosition = mBodies[i]->mPosition;
+				mBodies[i]->mOlderRoll = mBodies[i]->mPreviousRoll;
+				mBodies[i]->mPreviousRoll = mBodies[i]->mRotation.z;
+				mBodies[i]->unk148 = mBodies[i]->unk144;
 			}
 			s16 angle = CLBDegToShortAngle(mBodies[0]->mRotation.y);
 			CLBChaseAngleDecrease(&angle, CLBDegToShortAngle(getRotation().y),
@@ -446,11 +453,9 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 						    <= CLBSquared(50.0f)) {
 							body->unk120 = 0.0f;
 						} else {
-							f32 yaw = MsWrap(MsGetRotFromZaxisY(direction),
-							                 -180.0f, 180.0f);
-							f32 difference = MsWrap(
-							    yaw - MsWrap(mRotation.y, -180.0f, 180.0f),
-							    -180.0f, 180.0f);
+							f32 yaw = BossHanachanWrapDegree(MsGetRotFromZaxisY(direction));
+							f32 difference = BossHanachanWrapDegree(
+							    yaw - BossHanachanWrapDegree(mRotation.y));
 							f32 absolute = CLBAbs(difference);
 							if (absolute <= 15.0f || absolute >= 165.0f) {
 								body->unk120 = 0.0f;
