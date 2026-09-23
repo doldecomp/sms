@@ -232,7 +232,7 @@ static const char* rightArmTrackJointNameTable[]
 static const char* leftArmTrackJointNameTable[]
     = { "larm_1", "larm_2", "larm_3", "larm_4" };
 
-// TODO: 93.3%. The ROM reads TTinKoopa_jointNameTable through the
+// TODO: 94.8%. The ROM reads TTinKoopa_jointNameTable through the
 // `...data.0` section base (@1431 + 0x7c) and hoists that base and
 // &TTinKoopa_jointIndexTable (= `...bss.0`) into r29/r30 in the prologue,
 // storing with `stwx`; we address both tables by name just before the loop.
@@ -243,6 +243,8 @@ static const char* leftArmTrackJointNameTable[]
 // one more live reference in each, most likely in the joint loop. Inert:
 // `= {0}` (merges, but moves the table to .data), sizeof bounds, pointer
 // forms, inline name/setter accessors, jointNames fetched in the loop.
+// The rest of the residue is frame (0x170 vs 0x160) in the inlined
+// makeCoasterDistanceTable/iterator blocks.
 void TTinKoopa::init(TLiveManager* live_manager)
 {
 	mManager = live_manager;
@@ -553,7 +555,7 @@ TTinKoopaLaunchSchedule::TTinKoopaLaunchSchedule(u8 num, TTinKoopa* tin_koopa)
 {
 	mOrders = new TTinKoopaLaunchOrder*[mOrderNum];
 	for (int i = 0; i < mOrderNum; i++)
-		mOrders[i] = new TTinKoopaLaunchOrder(mTinKoopa);
+		mOrders[i] = new TTinKoopaLaunchOrder(tin_koopa);
 }
 
 // UNUSED, 0x64 in the map: inlined into TTinKoopa::perform.
@@ -803,9 +805,8 @@ void TTinKoopa::makeCoasterDistanceTable()
 
 	// The running total is never used afterwards, but the retail object adds
 	// it up all the same, so the original kept the lap length around.
-	f32 total = 0.0f;
-
 	JGeometry::TVec3<f32> next = mKillerGraph->indexToPoint(0);
+	f32 total = 0.0f;
 	for (int i = 0; i < mKillerGraph->getNodeNum() - 1; i++) {
 		JGeometry::TVec3<f32> cur = next;
 		next                      = mKillerGraph->indexToPoint(i + 1);
@@ -996,6 +997,10 @@ bool TTinKoopa::checkTruckAnimationPass(int frame)
 // TODO: incorrect size.
 static void printTinKoopaDebugInfo(TTinKoopa* tin_koopa) { }
 
+// TODO: 96.5%. The ROM decrements each updateTimers counter through its
+// address (`addi r4, r29, 0x178` then `stw r0, 0(r4)`; 0x4c matches that
+// shape); a TU-local by-reference or by-pointer decrement helper, a template
+// and a named value are inert -- MWCC folds the address back in.
 void TTinKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & 2) {
