@@ -2526,21 +2526,21 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 
 		s16 end = boss->getMActor()->getFrameCtrl(ANM_TYPE_BRK)->getEnd();
 		boss->getMActor()->getFrameCtrl(ANM_TYPE_BRK)->setFrame(end);
+	} else {
+		// Another unused distance, as in TNerveBossTelesaFallDemo.
+		// `a = b - c`, not a copy plus an in-place sub: only the former
+		// reaches inline depth 4 (copy ctor 1, operator- 2, operator-= 3),
+		// where the ROM `bl`s TVec3::sub.
+		// TODO: the sub temporary sits at 0x48, retail 0x38 (the open
+		// `a = b - c` class); getPosition()/SMS_GetMarioPos() are inert.
+		JGeometry::TVec3<f32> toMario = boss->mPosition - *gpMarioPos;
 
-		return FALSE;
-	}
+		if (spine->getTime() > 400 && !boss->mKillSmallEnemy->unk6C) {
+			spine->pushAfterCurrent(&TNerveBossTelesaAppear::theNerve());
+			boss->offLiveFlag(LIVE_FLAG_HIDDEN);
 
-	// Another unused distance, as in TNerveBossTelesaFallDemo.
-	// `a = b - c`, not a copy plus an in-place sub: only the former reaches
-	// inline depth 4 (copy ctor 1, operator- 2, operator-= 3), where the ROM
-	// `bl`s TVec3::sub.
-	JGeometry::TVec3<f32> toMario = boss->mPosition - *gpMarioPos;
-
-	if (spine->getTime() > 400 && !boss->mKillSmallEnemy->unk6C) {
-		spine->pushAfterCurrent(&TNerveBossTelesaAppear::theNerve());
-		boss->offLiveFlag(LIVE_FLAG_HIDDEN);
-
-		return TRUE;
+			return TRUE;
+		}
 	}
 
 	return FALSE;
