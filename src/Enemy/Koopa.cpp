@@ -74,6 +74,41 @@ static inline TKoopa* KoopaGetBody(TSpineBase<TLiveActor>* spine)
 	return koopa;
 }
 
+// Where Mario will be after the given estimation time. Retail calls
+// TVec3::set<f> and TEnemyManager::getSaveParam out of line in every nerve
+// that picks a grip, which puts the speed vector and the parameter read two
+// levels below the nerve: KoopaFindGrip, then these.
+static inline void KoopaEstimateMarioWait(TKoopa* koopa,
+                                          JGeometry::TVec3<f32>& out)
+{
+	JGeometry::TVec3<f32> speed(*gpMarioSpeedX, *gpMarioSpeedY,
+	                            *gpMarioSpeedZ);
+	out.scale(koopa->getParam()->marioEstimationWait.get(), speed);
+}
+
+static inline void KoopaEstimateMarioFire(TKoopa* koopa,
+                                          JGeometry::TVec3<f32>& out)
+{
+	JGeometry::TVec3<f32> speed(*gpMarioSpeedX, *gpMarioSpeedY,
+	                            *gpMarioSpeedZ);
+	out.scale(koopa->getParam()->marioEstimationFire.get(), speed);
+}
+
+static inline u8 KoopaFindGrip(TKoopa* koopa, TBathtub* bathtub)
+{
+	JGeometry::TVec3<f32> estimated;
+	KoopaEstimateMarioWait(koopa, estimated);
+	u8 onGrip = bathtub->getNextGrip(SMS_GetMarioPos(), estimated,
+	                                 koopa->getParam()->waitRange.get(),
+	                                 &koopa->mTargetDir);
+	if (!onGrip) {
+		KoopaEstimateMarioFire(koopa, estimated);
+		koopa->mTargetDir
+		    = bathtub->getNextJuncture(SMS_GetMarioPos(), estimated);
+	}
+	return onGrip;
+}
+
 BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
@@ -85,27 +120,7 @@ BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 	}
 
 	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
-
-	JGeometry::TVec3<f32> marioSpeed(*gpMarioSpeedX, *gpMarioSpeedY,
-	                                 *gpMarioSpeedZ);
-	f32 waitEstimation = koopa->getParam()->marioEstimationWait.get();
-	JGeometry::TVec3<f32> estimated(marioSpeed.x * waitEstimation,
-	                                marioSpeed.y * waitEstimation,
-	                                marioSpeed.z * waitEstimation);
-	u8 onGrip
-	    = bathtub->getNextGrip(SMS_GetMarioPos(), estimated,
-	                           koopa->getParam()->waitRange.get(),
-	                           &koopa->mTargetDir);
-	if (!onGrip) {
-		JGeometry::TVec3<f32> marioSpeed2(*gpMarioSpeedX, *gpMarioSpeedY,
-		                                  *gpMarioSpeedZ);
-		f32 fireEstimation = koopa->getParam()->marioEstimationFire.get();
-		JGeometry::TVec3<f32> estimated2(marioSpeed2.x * fireEstimation,
-		                                 marioSpeed2.y * fireEstimation,
-		                                 marioSpeed2.z * fireEstimation);
-		koopa->mTargetDir
-		    = bathtub->getNextJuncture(SMS_GetMarioPos(), estimated2);
-	}
+	u8 onGrip = KoopaFindGrip(koopa, bathtub);
 
 	f32 diff = KOOPA_WRAP_DEGREES(koopa->mTargetDir - koopa->mRotation.y);
 	f32 focusRange = koopa->getParam()->focusRange.get();
@@ -215,29 +230,7 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 
 			TBathtub* bathtub
 			    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
-
-			JGeometry::TVec3<f32> marioSpeed(*gpMarioSpeedX, *gpMarioSpeedY,
-			                                 *gpMarioSpeedZ);
-			f32 waitEstimation = koopa->getParam()->marioEstimationWait.get();
-			JGeometry::TVec3<f32> estimated(marioSpeed.x * waitEstimation,
-			                                marioSpeed.y * waitEstimation,
-			                                marioSpeed.z * waitEstimation);
-			u8 onGrip
-			    = bathtub->getNextGrip(SMS_GetMarioPos(), estimated,
-			                           koopa->getParam()->waitRange.get(),
-			                           &koopa->mTargetDir);
-			if (!onGrip) {
-				JGeometry::TVec3<f32> marioSpeed2(
-				    *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ);
-				f32 fireEstimation
-				    = koopa->getParam()->marioEstimationFire.get();
-				JGeometry::TVec3<f32> estimated2(
-				    marioSpeed2.x * fireEstimation,
-				    marioSpeed2.y * fireEstimation,
-				    marioSpeed2.z * fireEstimation);
-				koopa->mTargetDir
-				    = bathtub->getNextJuncture(SMS_GetMarioPos(), estimated2);
-			}
+			u8 onGrip = KoopaFindGrip(koopa, bathtub);
 
 			f32 diff
 			    = KOOPA_WRAP_DEGREES(koopa->mTargetDir - koopa->mRotation.y);
@@ -281,31 +274,7 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 			if (!(time & 7)) {
 				TBathtub* bathtub
 				    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
-
-				JGeometry::TVec3<f32> marioSpeed(*gpMarioSpeedX, *gpMarioSpeedY,
-				                                 *gpMarioSpeedZ);
-				f32 waitEstimation
-				    = koopa->getParam()->marioEstimationWait.get();
-				JGeometry::TVec3<f32> estimated(
-				    marioSpeed.x * waitEstimation,
-				    marioSpeed.y * waitEstimation,
-				    marioSpeed.z * waitEstimation);
-				u8 onGrip
-				    = bathtub->getNextGrip(SMS_GetMarioPos(), estimated,
-				                           koopa->getParam()->waitRange.get(),
-				                           &koopa->mTargetDir);
-				if (!onGrip) {
-					JGeometry::TVec3<f32> marioSpeed2(
-					    *gpMarioSpeedX, *gpMarioSpeedY, *gpMarioSpeedZ);
-					f32 fireEstimation
-					    = koopa->getParam()->marioEstimationFire.get();
-					JGeometry::TVec3<f32> estimated2(
-					    marioSpeed2.x * fireEstimation,
-					    marioSpeed2.y * fireEstimation,
-					    marioSpeed2.z * fireEstimation);
-					koopa->mTargetDir = bathtub->getNextJuncture(
-					    SMS_GetMarioPos(), estimated2);
-				}
+				u8 onGrip = KoopaFindGrip(koopa, bathtub);
 
 				TKoopaParams* params = koopa->getParam();
 				f32 diff = KOOPA_WRAP_DEGREES(koopa->mTargetDir
@@ -1486,21 +1455,12 @@ int TKoopa::checkMarioWhichSide()
 {
 	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 
-	JGeometry::TVec3<f32> marioSpeed(*gpMarioSpeedX, *gpMarioSpeedY,
-	                                 *gpMarioSpeedZ);
-	f32 waitEstimation = getParam()->marioEstimationWait.get();
-	JGeometry::TVec3<f32> estimated(marioSpeed.x * waitEstimation,
-	                                marioSpeed.y * waitEstimation,
-	                                marioSpeed.z * waitEstimation);
+	JGeometry::TVec3<f32> estimated;
+	KoopaEstimateMarioWait(this, estimated);
 	if (!bathtub->getNextGrip(SMS_GetMarioPos(), estimated,
 	                          getParam()->waitRange.get(), &mTargetDir)) {
-		JGeometry::TVec3<f32> marioSpeed2(*gpMarioSpeedX, *gpMarioSpeedY,
-		                                  *gpMarioSpeedZ);
-		f32 fireEstimation = getParam()->marioEstimationFire.get();
-		JGeometry::TVec3<f32> estimated2(marioSpeed2.x * fireEstimation,
-		                                 marioSpeed2.y * fireEstimation,
-		                                 marioSpeed2.z * fireEstimation);
-		mTargetDir = bathtub->getNextJuncture(SMS_GetMarioPos(), estimated2);
+		KoopaEstimateMarioFire(this, estimated);
+		mTargetDir = bathtub->getNextJuncture(SMS_GetMarioPos(), estimated);
 	}
 
 	f32 diff       = KOOPA_WRAP_DEGREES(mTargetDir - mRotation.y);
