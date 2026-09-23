@@ -15,6 +15,7 @@
 // earlier copy of MSoundBGM.hpp.
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <algorithm>
 
 namespace MSMainProc {
 
@@ -968,8 +969,7 @@ void MSStageCubeFadeDouble::proc()
 
 	// The pair test is materialised as a bool first (`li r0,1 ... mr r0,r4`).
 	// TODO: retail reloads unk4 for the unk10 index and copies the false
-	// value from bVar1's register; the calcParamRatioInCube expansion's
-	// out-of-line begin() is the shared-header gap noted in std-vector.hpp.
+	// value from bVar1's register.
 	bool bVar1      = false;
 	bool isPairCube = unk4 == 0 || unk4 == 1;
 	if (isPairCube && unk10[unk4] != 0)
@@ -1076,38 +1076,38 @@ void MSStageCubeFadeMonte::proc()
 	unk14 = unk10;
 }
 
+// The cube lookup sits two inline levels below calcParamRatioInCube, which
+// puts JGadget::TVector<void*>::begin() five levels down: deep enough that the
+// ROM `bl`s it in every caller, while the depth-0 lookups in the procs fold it.
+static inline TCubeGeneralInfo* getCube(TCubeManagerBase* mgr, s32 id)
+{
+	return mgr->unk14->getChildren().begin()[id];
+}
+
+static inline TCubeGeneralInfo* getSoundCube(s32 id)
+{
+	return getCube(gpCubeSoundChange, id);
+}
+
 // UNUSED, 0x108: inlined into all four callers (proc, MSStageCubeFadeMonte and
-// MSStageCubeFadeDouble's procs and setBgmVolumeForce), which is why each of
-// them has exactly one out-of-line
-// JGadget::TVector<void*>::begin() call -- the ROM reaches it one level deep
-// there while the ear-position read at depth 0 folds it away.
+// MSStageCubeFadeDouble's procs and setBgmVolumeForce).
 //
-// TODO: our expansion still inlines that begin(), and every caller's frame is
-// 60-170 bytes short of the ROM's (proc 0xe8 vs 0x190, Monte 0x138 vs 0x1c8,
-// Double 0x118 vs 0x1a0, setBgmVolumeForce 0x68 vs 0xa0). Per
-// docs/catalog/codegen-tells.md ("caller size gates two-instruction
-// accessors") the stray inline is a symptom of those missing locals, not of a
-// wrong spelling here: the ROM's low region runs from 0xc to 0xc0 with nothing
-// referenced in it, i.e. ~120 bytes of inline temporaries we do not reproduce.
+// TODO: every caller's frame is still short of the ROM's (setBgmVolumeForce
+// 0x90 vs 0xa0, the procs 0x80-0xc0 short), and setBgmVolumeForce's result
+// `fmr` sits inside the ratio branch instead of after the join.
 f32 MSStageCubeFade::calcParamRatioInCube(s32 id)
 {
-	Vec local_74;
-	local_74.x = 0.0f;
-	local_74.y = 0.0f;
-	local_74.z = 0.0f;
+	f32 ratioX = 0.0f;
+	f32 ratioY = 0.0f;
+	f32 ratioZ = 0.0f;
 
 	Vec local_68 = *gpMarioPos;
-	local_68.y = 75.0f
-	             + gpCubeSoundChange->unk14->getChildren().begin()[id]->unkC.y;
+	local_68.y = 75.0f + getSoundCube(id)->unkC.y;
 
-	gpCubeSoundChange->calcPointInCubeRatio(local_68, id, &local_74.x,
-	                                        &local_74.y, &local_74.z);
+	gpCubeSoundChange->calcPointInCubeRatio(local_68, id, &ratioX,
+	                                        &ratioY, &ratioZ);
 
-	f32 local_ac = local_74.x - 0.5f;
-	f32 local_b0 = local_74.z - 0.5f;
-	local_ac     = std::fabs(local_ac);
-	local_b0     = std::fabs(local_b0);
-	f32 fVar2    = local_ac > local_b0 ? local_ac : local_b0;
+	f32 fVar2 = std::max(std::fabs(ratioX - 0.5f), std::fabs(ratioZ - 0.5f));
 
 	if (fVar2 < unkC)
 		return 1.0f;
