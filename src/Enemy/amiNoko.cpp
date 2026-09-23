@@ -420,7 +420,7 @@ void TAmiNoko::calcDirection()
 		mPrevUp    = mUp;
 		mPrevFront = mFront;
 	}
-	toGoal.cross(side, mUp);
+	toGoal.cross2(side, mUp);
 	if (!toGoal.isZero())
 		mFront = toGoal;
 }
@@ -475,7 +475,10 @@ void TAmiNoko::calcRootMatrix()
 	emitEffects();
 
 	// TODO: the original keeps this pointer in r31 and `this` in r30; we get
-	// the opposite, plus the register numbering of the second cross product.
+	// the opposite. The frame is 0x10 short in the low region, and the
+	// fallback cross product reloads front.x and up.y from the stack for z
+	// in the original. Inert: cross2 on the fallback, the root copy inlined
+	// into setBaseTRMtx, mtx declared first or per branch, else-branch first.
 	MtxPtr mtx;
 	if (isBckAnm(AMINOKO_ANM_FLYING1_LOOP)) {
 		// While falling the orientation is frozen, only the position moves.
@@ -490,10 +493,10 @@ void TAmiNoko::calcRootMatrix()
 
 	mtx = getModel()->getBaseTRMtx();
 
+	JGeometry::TVec3<f32> side;
 	JGeometry::TVec3<f32> up;
 	JGeometry::TVec3<f32> front;
-	JGeometry::TVec3<f32> side;
-	side.cross(mUp, mFront);
+	side.cross2(mUp, mFront);
 	if (side.isZero()) {
 		up    = mPrevUp;
 		front = mPrevFront;

@@ -842,12 +842,16 @@ DEFINE_NERVE(TNerveKukkuFall, TLiveActor)
 		return TRUE;
 	}
 
-	JGeometry::TVec3<f32> velocity(kukku->mVelocity);
+	// TODO: retail keeps this copy low in the frame (0x48, below the
+	// temporaries of the first block) and stores the setVelocity temporary's
+	// zero x before loading the water power. Inert: a named block vector
+	// (ctor or set()), a named power scalar.
+	JGeometry::TVec3<f32> velocity(kukku->getVelocity());
 	velocity.scale(kukku->getSaveParams()->getAirFric());
 
-	bool landed = false;
 	velocity.y += kukku->getSaveParams()->getUpperVelocityY();
-	if (velocity.y > -0.1f) {
+	bool landed = false;
+	if (-0.1f < velocity.y) {
 		landed     = true;
 		velocity.y = 0.0f;
 	}
