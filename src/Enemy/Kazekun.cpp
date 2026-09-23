@@ -294,16 +294,19 @@ f32 TKazekun::getAroundRate(const JGeometry::TVec3<f32>& dir) const
 // `dir`, banked `rate` of the way from a full right angle (rate 0) to straight
 // at `dir` (rate 2). The rotation axis is the frame's own up vector, which is
 // what makes the spirit bank into the turn instead of yawing flat.
-// TODO: incorrect size -- 0x3dc against the map's 0x3d8, one instruction over.
+// The up vector is an unnamed argument: retail builds it right before the call
+// and materialises its address first (r5), which a named `up` does not.
+// TODO: incorrect size -- 0x3e0 against the map's 0x3d8, two instructions over
+// (0x3dc with a named `up`, which misorders the argument registers at both
+// inlined sites in TNerveKazekunAttack).
 void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
                              const JGeometry::TVec3<f32>& dir, f32 rate)
 {
 	TPosition3f mtx;
 	JGeometry::TQuat4<f32> around;
 	JGeometry::TVec3<f32> axis;
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 
-	SMS_CalcToDirMatrix(mtx, dir, up);
+	SMS_CalcToDirMatrix(mtx, dir, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 	mtx.getQuat(quat);
 	mtx.getYDir(axis);
 
@@ -550,17 +553,13 @@ DEFINE_NERVE(TNerveKazekunPreAttack, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 98.9%. No structural differences; the frame is 0x1f0 in retail against
-// our 0x1e8 and the eight bytes renumber the float registers inside the second
-// inlined TQuat4::mul. toGoal.sub(getPosition()) and a named attack-speed local
-// each restore the size but shift every local by four bytes, which is worse.
-// Paired with a raw param read (mAttackSpeed/mAirFric .value) or with each
-// other they are all 98.7 (2026-09-23), and quat.mul(around) in
-// getAroundQuat is 97.3: the load order inside TQuat4::mul(a, b) is the
-// residue, a JGQuat4.hpp question.
-// Also unexplained: JGeometry::TRotation3<...>::getQuat is 99.5% here (an f3/f4
-// swap in its own TUtil<f32>::sqrt), which is a JGRotation3.hpp problem, not a
-// Kazekun one.
+// TODO: 99.9%, every instruction right. Frame 0x1e8 against retail's 0x1f0:
+// retail's `vel` sits 0xc higher (right under the saved registers) and the
+// second inlined getAroundQuat block (mtx 0x8c, up 0xd8) 4 bytes lower.
+// Inert or worse after the TQuat4::mul rewrite (2026-09-23): the five
+// doAttack orders of target/quat/dir, quat assigned after declaration,
+// toGoal.sub(getPosition()), a named attack speed, raw mAirFric/mResetTime
+// reads and their pairs (these restore the size but shift every slot).
 DEFINE_NERVE(TNerveKazekunAttack, TLiveActor)
 {
 	TKazekun* kazekun = (TKazekun*)spine->getBody();

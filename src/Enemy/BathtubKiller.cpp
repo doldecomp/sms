@@ -462,24 +462,17 @@ f32 TBathtubKiller::getBathtubY()
 	return (*unk1CC->getRootJointMtx())[1][3];
 }
 
-// TODO: frame 8 long (0xd0 vs 0xc8; raw `.value` took 0x10 off); setRotate's
-// cross product permutes f28-f31 (the JGQuat4.hpp family), and retail
-// schedules the product aim * mQuat differently with the result stored
-// straight into mQuat. Worse: aim.mul(mQuat) + copy; a TU-local mul computing
-// _w first clears the <3 >3 but misorders the loads (98.9% on the old frame,
-// yet not retail's instruction stream); a.w * b.x-first terms; speedMax named
-// first; forward before the normalize; mVelocity.set(x, y, z).
 void TBathtubKiller::makeInitialVelocity(JGeometry::TVec3<f32> velocity)
 {
 	f32 speed = velocity.length();
-	f32 speedMax = getSaveParam2()->mSLFlyingSpeedMax.value;
+	f32 speedMax = getSaveParam2()->mSLFlyingSpeedMax.get();
 	if (speed > speedMax) {
 		velocity.normalize();
 		velocity.scale(speedMax);
 	}
 	mVelocity.set(velocity);
 
-	velocity.normalize();
+	velocity.setLength(1.0f);
 	JGeometry::TVec3<f32> forward;
 	mQuat.getZDir(forward);
 	JGeometry::TQuat4<f32> aim;
