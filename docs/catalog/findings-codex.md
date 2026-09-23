@@ -36,3 +36,17 @@ Record binary-backed findings from Codex unit work here before promoting reusabl
 - `MoveBG/MapObjInit`: `TMapObjBase::initMActor` is the unit's only sub-95% function; its unresolved `param_2` use and inert probes are already documented. No edit.
 - `MSound/MSound`: Three constructor declaration/size variants were inert or worse than 86.9%; the remaining functions have known-open TODOs. No edit.
 - `Enemy/hamukuri`: All nine open functions are 99.67–99.98% fuzzy. Three previously unexplored functions differ only by a known `operator-` temporary stack-slot class; the other six have deep-search TODOs. No edit.
+
+## 2026-09-23 targeted operand follow-up
+
+- `Enemy/fireWanwan`: `TFireWanwan::bind` loaded `mAirFric` at 0x370 in the grounded flying branch; retail loads `mFloorFric` at 0x384. Corrected member, reducing one mismatch. Landed as f2e59f60.
+- `Player/Tongue`: `TYoshiTongue::movement` called virtual `ensureTakeSituation` (slot 0xa8) where retail calls `checkTaking` (slot 0xbc). Corrected call, reducing one mismatch. Landed as 51fbcfee.
+- `System/MarDirectorSetupObjects`: The final heap virtual call in `setupObjects` was `freeTail` (slot 0x18); retail calls `getTotalFreeSize` (slot 0x28). Corrected call. Landed as 2d090efc.
+- `MarioUtil/PacketUtil`: The apparent 0xe1/0xe0 discrepancy in `ShapePacketCallBackFunc` is diff alignment. Both binaries emit 0xe0 for the first TEV register and 0xe1 for the second.
+- `Enemy/chuuhana`: The 0x204/0x20c loads in the Roll nerve read the same x/z members in both builds; inlined `rolling` changes their schedule.
+- `Player/MarioMove`: `checkCurrentPlane` retains documented structural residue. `checkController` stores at `getCurrentNozzle()+0x714` in retail, beyond the declared turbo nozzle size; no justified source member change was found.
+- `Enemy/pakkun`: `TPakkunSeed::rebirth` tests the same water-surface enum values in both builds; the 0x101/0x102 subtraction and 4/3 bounds are equivalent range groupings.
+- `MoveBG/MapObjMamma`: `TLeanMirror::controlShake` computes the same `getBaseTRMtx` address; retail performs +0 then +0x20, while the compiler folds them into +0x20.
+- `GC2D/ConsoleStr`: The 0x34/0x38 versus 0/4 loads in `perform` use equivalent pointer bases for `unk34`.
+- `Enemy/bossgesso`: `perform` has the correct source `mMActor` and destination `unk178` for its matrix copy; three named-local variants did not change load order. A comment-only agent commit was discarded.
+- `System/MarDirectorInitECT`: Both builds store image width and height in the correct projection fields; only load/conversion order differs.
