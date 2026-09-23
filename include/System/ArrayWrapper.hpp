@@ -32,8 +32,7 @@ public:
 	const T* begin() const { return mData; }
 	const T* end() const { return mData + mSize; }
 	s32 size() const { return mSize; }
-	const T& operator[](int idx) const { return mData[idx]; }
-	T& operator[](int idx) { return mData[idx]; }
+	T& operator[](int idx) const { return mData[idx]; }
 	const T& front() const { return mData[0]; }
 	T& front() { return mData[0]; }
 	const T& back() const { return mData[mSize - 1]; }

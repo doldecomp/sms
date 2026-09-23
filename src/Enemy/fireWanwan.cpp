@@ -599,9 +599,9 @@ void TFireWanwanTailHit::init()
 }
 
 // TODO: 99.0%. The ROM's inlined bindBody -> getBodyTailPow calls the weak
-// *const* ArrayWrapper<Node>::operator[] out of line; ours picks the
-// non-const one (unkA4 is non-const), and a const binder or a const accessor
-// on TTailRubber was worse. The frame is also 0x30 short.
+// *const* ArrayWrapper<Node>::operator[] out of line (the map has no
+// non-const overload anywhere, so ArrayWrapper.hpp now carries only the const
+// one). The frame is 0x30 short.
 void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	THitActor::perform(cue, graphics);
