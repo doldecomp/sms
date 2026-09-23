@@ -469,6 +469,13 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
+// Roll/pitch rotation with no yaw. Taking the angles as f32 parameters is
+// what makes retail convert the last argument first.
+static inline void MarioSetRotXZ(MtxPtr m, f32 x, f32 z)
+{
+	MsMtxSetRotRPH(m, x, 0.0f, z);
+}
+
 static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
@@ -480,8 +487,8 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 		    && SMSGetCamera()->mCurrentTarget.mPitch > 0) {
 			bodyAngle[0] = gpCamera->mCurrentTarget.mPitch;
 			Mtx transform;
-			MsMtxSetRotRPH(transform, SHORTANGLE2DEG((s16)-bodyAngle[2]),
-			               0.0f, SHORTANGLE2DEG(bodyAngle[0]));
+			MarioSetRotXZ(transform, SHORTANGLE2DEG((s16)-bodyAngle[2]),
+			              SHORTANGLE2DEG(bodyAngle[0]));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else if (gpMarioForCallBack->checkStatusType(MARIO_FLAG_HAS_FLUDD)
@@ -505,13 +512,11 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			// TODO: retail shares one Mtx slot (0x88) across all three
 			// MsMtxSetRotRPH sites; hoisting a function-scope Mtx unifies
 			// the slot but drops the frame 0xe0 -> 0x80 (the 0x60 below
-			// 0x88 is still unaccounted). Conversion order of the second
-			// and fourth arguments is still reversed here.
+			// 0x88 is still unaccounted; MarioHeadCtrl is 0x60 short too).
+			// The argument conversion order closed through MarioSetRotXZ.
 			Mtx transform;
-			MsMtxSetRotRPH(transform,
-			               SHORTANGLE2DEG((s16)gpMarioForCallBack->mWaistRoll),
-			               0.0f,
-			               SHORTANGLE2DEG((s16)gpMarioForCallBack->mWaistPitch));
+			MarioSetRotXZ(transform, SHORTANGLE2DEG((s16)gpMarioForCallBack->mWaistRoll),
+			              SHORTANGLE2DEG((s16)gpMarioForCallBack->mWaistPitch));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else {
@@ -1708,9 +1713,9 @@ struct MarioGroundPlane {
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
 	// TODO: instruction-exact apart from register numbering in the ground
-	// plane's f28/f30 cross products, the unk414 fctiwz order before
-	// MsMtxSetRotRPH (named s16/f32 locals inert) and the sink-offset
-	// divide; the frame is 0x40 short (0x2b0 vs 0x2f0).
+	// plane's f28/f30 cross products and the sink-offset divide; the frame is
+	// 0x40 short (0x2b0 vs 0x2f0). The unk414 fctiwz order before
+	// MsMtxSetRotRPH closed through MarioSetRotXZ's f32 parameters.
 	if (mStatus == MARIO_STATUS_TOROCCO) {
 		calcBaseMtxTorocco(mtx);
 		return;
@@ -1866,8 +1871,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		}
 
 		Mtx rot;
-		MsMtxSetRotRPH(rot, SHORTANGLE2DEG((s16)unk414.y), 0.0f,
-		               SHORTANGLE2DEG((s16)unk414.x));
+		MarioSetRotXZ(rot, SHORTANGLE2DEG((s16)unk414.y), SHORTANGLE2DEG((s16)unk414.x));
 		MTXConcat(mtx, rot, mtx);
 	}
 
@@ -2244,14 +2248,12 @@ void TMario::drawSpecial(JDrama::TGraphics* graphics)
 	}
 }
 
-// Binding level worth +8 of low region, landing TMario::drawLogic's frame at
-// 0x28 (batch 124).
-// TODO: drawLogic's GXColor literal/copy sit at 0x18/0x1c against retail's
-// 0x14/0x18. A named `GXColor white` (assigned at the call) with the binder
-// dropped lands the literal at 0x14 but puts the by-value copy at 0x10.
+// Binding level over the raw flag test: it keeps TMario::drawLogic's frame at
+// 0x28 and its GXColor literal/copy at retail's 0x14/0x18 (the checkUnk114
+// accessor inside the binder costs 4 more bytes of low region).
 static inline bool MarioDrawCheckUnk114(const TMario* p, u32 i)
 {
-	bool unk114 = p->checkUnk114(i);
+	bool unk114 = p->unk114 & i ? true : false;
 	return unk114;
 }
 
