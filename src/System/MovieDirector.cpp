@@ -387,6 +387,12 @@ u32 TMovieDirector::decideNextMode(s32* param_1)
 	return nextMode;
 }
 
+// TODO: 99.3%, instruction-exact apart from registers and frame. Retail keeps
+// `this` in r31 and every gpApplication base temp in r29 (ours: base r31,
+// this r29), and its frame is 0xb0 deeper (0x270): the low region below the
+// TColor temps is 0x124 against our 0x78. Graphics/errc/desiredAppState
+// declared at the top and switch (nextState) are inert or worse; likely a
+// missing inline level, not a per-site lever.
 int TMovieDirector::direct()
 {
 	if (!unk30.check(0x1)) {
