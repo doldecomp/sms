@@ -21,10 +21,10 @@
 // rogue
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// Defined in NpcAnm.cpp, which owns it in the map. Retail still carries an
-// unreferenced copy of the string here, ahead of the peach texture names.
-extern const char* cNpcPartsNameRootJoint;
-static const char* sNpcPartsNameRootJointString = "__ROOT_JOINT__";
+// TODO: figure out the odr violations with this symbol
+// Defined in both NpcAnm and NpcParts, as retail keeps the string in both; the
+// linker keeps the first. A PC build must give it internal or weak linkage.
+const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 const char* cPeachPartsTextureName = "H_peach_main_dummy";
 const char* cPeachHostTextureName  = "H_peach_main_s3tc";
 

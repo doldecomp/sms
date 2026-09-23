@@ -8,13 +8,12 @@
 class J3DModel;
 class TMapStaticObj;
 
-// Defined in lensflare.cpp, which owns both in the map. Every retail TU that
-// includes this header (lensflare, lensglow, sunmgr, sunmodel and
-// MarNameRefGen_Map) still carries both strings at this point in its data,
-// unreferenced outside lensflare.cpp, so the header keeps a local copy.
-extern const char* cSunVolumeName;
-extern const char* cSunsetVolumeName;
-static const char* sSunVolumeNameStrings[] = { "/scene/sun", "/scene/sunset" };
+// Defined in the header, as retail shows: every TU that includes this keeps
+// its own copy of both strings, while the map lists one global (the linker
+// keeps lensflare's definition and drops the rest). A PC build must give
+// these internal or weak linkage; the GameCube build keeps retail's form.
+extern const char* cSunVolumeName    = "/scene/sun";
+extern const char* cSunsetVolumeName = "/scene/sunset";
 
 class TSunModel : public JDrama::TActor {
 public:

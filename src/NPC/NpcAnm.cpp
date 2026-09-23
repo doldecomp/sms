@@ -21,8 +21,9 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// The map puts the only definition here; NpcParts.cpp and NpcInitData.cpp
-// refer to it as an extern.
+// TODO: should be in a header and violate ODR
+// Defined in both NpcAnm and NpcParts, as retail keeps the string in both; the
+// linker keeps the first. A PC build must give it internal or weak linkage.
 const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 
 f32 CalcJumpVelocityY(f32 height, f32 gravity)
