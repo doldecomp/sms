@@ -491,6 +491,10 @@ void TBathtubKiller::moveParabolic()
 	makeVelocityQuat();
 }
 
+// TODO: every instruction present; frame 0x88 against retail 0xa8 and the
+// normalised chase vector stays in f27-f29 where retail drops it to volatiles.
+// A second vector for normalize(v), setLength(1.0f), operator- and
+// normalising mAcceleration in place are all inert or worse.
 void TBathtubKiller::moveChasing()
 {
 	JGeometry::TVec3<f32> target = *gpMarioPos;
@@ -507,12 +511,10 @@ void TBathtubKiller::moveChasing()
 	JGeometry::TVec3<f32> dir;
 	mQuat.getZDir(dir);
 	dir.normalize();
-	if (mPosition.y > maxY) {
-		if (0.0f < dir.y)
-			dir.y = 0.0f;
-	}
+	if (mPosition.y > maxY)
+		dir.y = 0.0f >= dir.y ? dir.y : 0.0f;
 	if (mPosition.y < minY)
-		dir.y = 0.0f < dir.y ? dir.y : 0.0f;
+		dir.y = 0.0f >= dir.y ? 0.0f : dir.y;
 	mVelocity.scale(mPersonality.mChaseSpeed, dir);
 }
 

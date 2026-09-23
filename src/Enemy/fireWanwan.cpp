@@ -2349,6 +2349,11 @@ static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
+// TODO: frame 0xd0, retail 0x100. Retail copies fromPolar's result (built at
+// 0xc4, returned at 0x10) into a separate stack `vel` at 0xdc before
+// mVelocity, and fuses x*x + y*y in the squared test; ours elides that copy.
+// Assign-later vel, vel.set(), a chained assign, dot() and a hand-written
+// sum are inert or worse.
 DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)
 {
 	TFireWanwan* self = FireWanwanGetBody(spine);

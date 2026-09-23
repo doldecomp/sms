@@ -1066,8 +1066,23 @@ DEFINE_NERVE(TNerveHanaSamboFreeze, TLiveActor)
 // TSamboHead
 // ---------------------------------------------------------------------------
 
+// Projection of `a` onto the column `c`; its early return is the
+// `bne; b` shape retail has at all three sites.
+static inline f32 SamboProject(const JGeometry::TVec3<f32>& a,
+                               const JGeometry::TVec3<f32>& c)
+{
+	f32 len = c.dot(c);
+	if (0.0f == len)
+		return 0.0f;
+	f32 r = a.dot(c) / len;
+	return r;
+}
+
 // Rolls the body joint about the axis perpendicular to the velocity while
 // the head is airborne.
+// TODO: every instruction present; mRollAngle loads early (retail reads it
+// between the colZ length and the column loads), which renumbers the FPRs,
+// and localAxis sits at 0xa0 (retail 0xac).
 static int SamboHeadRollCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -1078,11 +1093,12 @@ static int SamboHeadRollCallback(J3DNode* node, int param)
 		MtxPtr anmMtx   = gpCurSamboHead->getModel()->getAnmMtx(
                     joint->getJntNo());
 
+		Mtx roll;
 		JGeometry::TVec3<f32> velocity(gpCurSamboHead->mVelocity);
 		if (velocity.x == 0.0f && velocity.z == 0.0f)
 			velocity.x = 0.001f;
-		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 		JGeometry::TVec3<f32> axis;
+		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 		VECCrossProduct(&up, &velocity, &axis);
 
 		JGeometry::TVec3<f32> colZ(anmMtx[0][2], anmMtx[1][2],
@@ -1093,21 +1109,11 @@ static int SamboHeadRollCallback(J3DNode* node, int param)
 		                           anmMtx[2][1]);
 		f32 angle = gpCurSamboHead->mRollAngle;
 
-		f32 pz   = 0.0f;
-		f32 lenZ = colZ.dot(colZ);
-		if (0.0f != lenZ)
-			pz = axis.dot(colZ) / lenZ;
-		f32 py   = 0.0f;
-		f32 lenY = colY.dot(colY);
-		if (0.0f != lenY)
-			py = axis.dot(colY) / lenY;
-		f32 px   = 0.0f;
-		f32 lenX = colX.dot(colX);
-		if (0.0f != lenX)
-			px = axis.dot(colX) / lenX;
+		f32 pz = SamboProject(axis, colZ);
+		f32 py = SamboProject(axis, colY);
+		f32 px = SamboProject(axis, colX);
 		JGeometry::TVec3<f32> localAxis(px, py, pz);
 
-		Mtx roll;
 		MTXRotAxisRad(roll, &localAxis, 0.017453292f * angle);
 		MTXConcat(anmMtx, roll, anmMtx);
 		MTXConcat(J3DSys::mCurrentMtx, roll, J3DSys::mCurrentMtx);

@@ -824,8 +824,16 @@ void TElecCarapace::shoot()
 	mSpine->initWith(&TNerveElecCarapaceMove::theNerve());
 	setGoalPath(goal);
 
+	// The path point is spelled as the raw two-way choice: getPoint()'s
+	// early-return form hoists &unk104.unk4 into a saved register.
+	// TODO: every instruction matches; only the temporaries' slots differ
+	// (retail sub 0x5c, ranges 0x68/0x74, node copy 0x8c; ours 0x94, 0x7c,
+	// 0x84). An assign-later `goal` is inert.
 	f32 cycle    = TMsRange<f32>(3.0f, 5.0f).rand();
-	mZigzagCycle = cycle * ElecCalcDist(unk104.getPoint(), mPosition);
+	mZigzagCycle = cycle
+	             * ElecCalcDist(unk104.unk0 ? unk104.unk0->mPosition
+	                                        : unk104.unk4,
+	                            mPosition);
 	mZigzagAngle = TMsRange<f32>(20.0f, 30.0f).rand();
 }
 

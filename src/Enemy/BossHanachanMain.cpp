@@ -904,6 +904,10 @@ void TBossHanachan::goToInitialRecoverGraphNode()
 	unk12C = 0.0f;
 }
 
+// TODO: frame 0x38, retail 0x60, with no stack use in the retail body; the
+// dying loop also takes mHead into r4 where retail uses r3. A named loop
+// body, getHead(), an unnamed sound position and a default rail arm are
+// all inert or worse.
 void TBossHanachan::execDamage()
 {
 	mSpine->reset();
@@ -925,7 +929,8 @@ void TBossHanachan::execDamage()
 	} else {
 		mSpine->setNext(&TNerveBossHanachanDamage::theNerve());
 		setAnmTimerWhenDamage();
-		mChangeParams = ((TBossHanachanManager*)mManager)->mChangeParams[3 - mHitPoints];
+		TBossHanachanManager* manager = (TBossHanachanManager*)mManager;
+		mChangeParams = manager->mChangeParams[3 - mHitPoints];
 		const char* railName = cHitPoint1_RailName;
 		switch (mHitPoints) {
 		case 1:
