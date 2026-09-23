@@ -122,6 +122,9 @@ public:
 			            unk68.get_float01());
 		}
 
+		// TODO: retail loads the radius once with `lfsu` and multiplies it
+		// value-first; a named f32, a const reference and `.value` for both
+		// arguments are all worse than this spelling.
 		initHitActor(0x4000025B, 1, 0x80000000, unk8C->dropRadius.get(),
 		             unk8C->dropRadius.value * 2.0f, 0.0f, 0.0f);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
