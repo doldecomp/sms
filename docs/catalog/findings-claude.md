@@ -42,3 +42,18 @@ Record binary-backed findings from Claude unit work here before promoting reusab
   Details in the MathUtil.hpp comment.
 - **Consecutive countdown members are one array.** `int mTimers[N]` with `updateTimers` as `for (i < N) if (mTimers[i] > 0) mTimers[i]--;` (retail unrolls it; each store's address is materialised) closed `TLimitKoopaJr::perform`, `TTinKoopa::perform` (96.5 -> 100) and `TKoopaJrSubmarine::perform` (a one-element array), and lifted `TKoopaJr::perform` and `TBathtubKiller::perform`; each `updateTimers` then hits its map size. All map `updateTimers` owners are now done.
 - **A destructor declared in a header but absent from the map costs derived constructors a `this` spill.** Dropping `~JAIBasic();` (no `__dt__8JAIBasic` in the map) took `MSound::MSound` 86.9 -> 99.78 with no regression tree-wide. Scan other classes for declared-but-unmapped destructors.
+- **Scan c-dtor: declared destructors with no `__dt__` in the map, tree-wide; JAIBasic was the only live one.**
+  Every `~X(` in include/ and src/ was checked against the map's `__dt__` symbols (length-prefixed name, global or `Q`-nested, templates by `<`).
+  Twelve hits have no map symbol:
+  | Declaration | Form | Result |
+  | --- | --- | --- |
+  | `JAIBasic` (JAIBasic.hpp) | declared, no body | landed in 6311a94c (MSound ctor 86.9 -> 99.78) |
+  | `MSound` (MSound.hpp) | in-class `{ }` | removed and measured: `changes_all` shows no function change; not landed |
+  | `JUTNameTab` (JUTNameTab.hpp) | in-class `{ }` | removed and measured: no function change; not landed |
+  | `JAIAnimeSound` (JAIAnimation.hpp) | in-class `{ }` | kept on purpose: MAnmSound's UNUSED destructor needs it inlined (see MAnmSound.hpp) |
+  | `JKRFileCache`, `CCacheBlock`, `JKRThreadSwitch`, `JUTVideo` | various | the class has no ctor or code in the map, so nothing can move |
+  | `JGadget_outMessage`, two template `T`s, `TColor` in GCConsole2.cpp | debug helper, templates, comment | not candidates |
+  An empty in-class destructor is inert: MWCC treats it like an implicit one for EH cleanup.
+  Only a destructor that is declared but not defined inline (a call that might throw) makes derived constructors spill `this`.
+  The reverse check, a non-inline declaration whose map symbol is only weak, finds no live case either: the fishoid and TMap hits are comments that already record the implicit destructor.
+  The scanner is at /home/netflix/sms-wt/c-dtor-scratch/scan.py (scratch, not committed).
