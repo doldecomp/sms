@@ -398,11 +398,11 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			JGeometry::TVec3<f32> vec1(mtx[0][0], mtx[1][0], mtx[2][0]);
 
 			JGeometry::TVec3<f32> vec2;
-			vec2.cross(vec1, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+			vec2.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), vec1);
 			vec2.normalize();
 
 			JGeometry::TVec3<f32> vec3;
-			vec3.cross(vec2, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f));
+			vec3.cross(vec2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 			vec3.normalize();
 
 			unk80.mMtx[0][0] = vec2.x;
@@ -700,7 +700,7 @@ void TBGTentacle::incDamage()
 void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 {
 	JGeometry::TVec3<f32> local_e0 = param_1->getPosition();
-	local_e0 -= param_2->getPosition();
+	local_e0 -= param_2->mPosition;
 
 	local_e0.normalize();
 	local_e0.scale(2.0f);
