@@ -414,6 +414,8 @@ void TEnemyMario::initEnemyValues()
 	}
 
 	// TODO: frame only -- retail reserves 0xa0 more stack (0x590 against 0x4f0).
+	// The same missing structure swaps r25/r26 (the .data base and the zero
+	// constant); a 0xa0 deficit needs a missing inline level, not a lever.
 	void* linkData = JKRFileLoader::getGlbResource(linkDataPath);
 	if (linkData != nullptr) {
 		s32 linkDataSize
@@ -1260,6 +1262,10 @@ void TEnemyMario::runAwayMoveEffect()
 	    SCENE_KAGEMARIO_JPA_MS_KGM_MOVE_B, &mDisappearPosition, 1, this);
 }
 
+// TODO: instruction-identical, frame size right; retail's named block has an
+// 8-byte hole above targetPoint and another above direction (targetPoint 0x110,
+// direction 0xfc, waitingPoint 0xf0) and the operator- temp sits 0x38 lower
+// (0xb8 vs 0xf0). Declaration permutations and the accessor forks don't move it.
 void TEnemyMario::emRunAwayToNearestNode()
 {
 	JGeometry::TVec3<f32> targetPoint;
