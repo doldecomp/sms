@@ -672,37 +672,36 @@ void TPopo::calcRootMatrix()
 			mtx.translation(mPosition.x, mPosition.y, mPosition.z);
 		} else {
 			MTXCopy(SMS_GetMarioWaterGun()->getEmitMtx(0), (MtxPtr)mtx);
-			// TODO: the original keeps each column vector on the stack and
-			// squares it from memory (unfused); every spelling tried here is
-			// scalar-replaced and fused instead. Making
-			// TRotation3::getXDir/getYDir/getZDir assign per component -- which
-			// is what the interleaved lfs/stfs here asks for -- gains 0.05
-			// points and costs JPABaseEmitter::calcEmitterGlobalParams 5.6, so
-			// the columns have to be read out here instead (rocket.cpp already
-			// does that; see the note on getXDir in JGRotation3.hpp).
-			JGeometry::TVec3<f32> col0;
-			mtx.getXDir(col0);
-			f32 len0 = col0.length();
-			JGeometry::TVec3<f32> col1;
-			mtx.getYDir(col1);
-			f32 len1 = col1.length();
-			JGeometry::TVec3<f32> col2;
-			mtx.getZDir(col2);
-			f32 len2 = col2.length();
-			if (len0 != 0.0f) {
-				mtx.ref(0, 0) /= len0;
-				mtx.ref(1, 0) /= len0;
-				mtx.ref(2, 0) /= len0;
+			JGeometry::TVec3<f32> dir[3];
+			dir[0].x = mtx.ref(0, 0);
+			dir[0].y = mtx.ref(1, 0);
+			dir[0].z = mtx.ref(2, 0);
+			f32 lenX = dir[0].length();
+			dir[1].x = mtx.ref(0, 1);
+			dir[1].y = mtx.ref(1, 1);
+			dir[1].z = mtx.ref(2, 1);
+			f32 lenY = dir[1].length();
+			dir[2].x = mtx.ref(0, 2);
+			dir[2].y = mtx.ref(1, 2);
+			dir[2].z = mtx.ref(2, 2);
+			f32 lenZ = dir[2].length();
+
+			// The guards are shifted by one against the divisors in the ROM,
+			// exactly as in TRocket::calcRootMatrix.
+			if (lenZ != 0.0f) {
+				mtx.ref(0, 0) /= lenX;
+				mtx.ref(1, 0) /= lenX;
+				mtx.ref(2, 0) /= lenX;
 			}
-			if (len1 != 0.0f) {
-				mtx.ref(0, 1) /= len1;
-				mtx.ref(1, 1) /= len1;
-				mtx.ref(2, 1) /= len1;
+			if (lenX != 0.0f) {
+				mtx.ref(0, 1) /= lenY;
+				mtx.ref(1, 1) /= lenY;
+				mtx.ref(2, 1) /= lenY;
 			}
-			if (len2 != 0.0f) {
-				mtx.ref(0, 2) /= len2;
-				mtx.ref(1, 2) /= len2;
-				mtx.ref(2, 2) /= len2;
+			if (lenY != 0.0f) {
+				mtx.ref(0, 2) /= lenZ;
+				mtx.ref(1, 2) /= lenZ;
+				mtx.ref(2, 2) /= lenZ;
 			}
 
 			TPosition3f nozzle;
@@ -719,9 +718,9 @@ void TPopo::calcRootMatrix()
 				MtxPtr pumpMtx = mPumpMtx;
 				MTXCopy(getMActor()->getModel()->getAnmMtx(mCenterJntIndex),
 				        pumpMtx);
-				pumpMtx[0][3] = body.ref(0, 3);
-				pumpMtx[1][3] = body.ref(1, 3);
-				pumpMtx[2][3] = body.ref(2, 3);
+				mPumpMtx[0][3] = body.ref(0, 3);
+				mPumpMtx[1][3] = body.ref(1, 3);
+				mPumpMtx[2][3] = body.ref(2, 3);
 				JPABaseEmitter* emitter
 				    = gpMarioParticleManager->emitAndBindToMtxPtr(
 				        0x13D, pumpMtx, 1, this);
@@ -733,7 +732,7 @@ void TPopo::calcRootMatrix()
 		Mtx rot;
 		MsMtxSetRotRPH(rot, mTestAng_x, mTestAng_y, mTestAng_z);
 		MTXConcat((MtxPtr)mtx, rot, (MtxPtr)mtx);
-		MTXCopy((MtxPtr)mtx, getModel()->getBaseTRMtx());
+		getModel()->setBaseTRMtx((MtxPtr)mtx);
 	} else {
 		TSpineEnemy::calcRootMatrix();
 	}
