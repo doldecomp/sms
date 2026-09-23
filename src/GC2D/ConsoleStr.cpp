@@ -542,6 +542,9 @@ bool TConsoleStr::processGo(f32 param_1)
 	return result;
 }
 
+// TODO: frame 0x168 vs 0x158: retail gives each bounds centre its own four
+// int-to-float slots (x pair, then y pair 0x10 higher) where we reuse two,
+// and converts x1 before the width; same residue as processMiss below.
 bool TConsoleStr::processShineGet(int param_1)
 {
 	bool result = true;

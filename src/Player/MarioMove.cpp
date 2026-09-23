@@ -126,6 +126,9 @@ bool TMario::isForceSlip()
 	return false;
 }
 
+// TODO: the `a = b - c` class: retail's operator- temporary sits at 0x14, ours
+// at 0x50, and retail keeps offset.y/z in f0/f1 across the member adds where
+// we reload them. Non-const, assigned, direct-init, add() calls inert.
 BOOL TMario::moveRequest(const JGeometry::TVec3<f32>& pos)
 {
 	const JGeometry::TVec3<f32> offset = pos - mPosition;

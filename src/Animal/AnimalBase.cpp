@@ -22,6 +22,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: retail's product lands in qy's own slot (0x90), as if multiplied in
+// place (`qx.mul(qx, qz); qy.mul(qy, qx); return qy;`). That spelling keeps
+// this body at 91.9% with the frame 0x30 closer, but its expansion in
+// execWalk drops 81.6% -> 49.0%, so the in-place form waits on that caller.
 JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>& rot)
 {
 	JGeometry::TQuat4<f32> qz;
@@ -94,11 +98,14 @@ void TAnimalBase::init(TLiveManager* manager)
 		frameCtrl2->setFrame(frameCtrl2->getEnd() * MsRandF());
 }
 
+// TODO: 99.9%; the push_back iterator temporaries sit 4 below retail's
+// (JGadget iterator block stride). Named group/graph/check-data locals,
+// getManager(), getScaling() and an inline MsWrap argument are inert or worse.
 void TAnimalBase::initNoLoad_(TAnimalBase* other)
 {
-	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + getPosition().x;
-	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + getPosition().z;
-	if (mActorType == 0x800001)
+	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + mPosition.x;
+	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + mPosition.z;
+	if (getActorType() == 0x800001)
 		other->mPosition.y = 1000.0f * MsRandF() + mPosition.y;
 	else
 		other->mPosition.y = mPosition.y - 250.0f * MsRandF();
@@ -117,7 +124,7 @@ void TAnimalBase::initNoLoad_(TAnimalBase* other)
 
 	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
 	    ->getChildren()
-	    .push_back(other);
+	    .push_back(this);
 }
 
 void TAnimalBase::load(JSUMemoryInputStream& stream)
