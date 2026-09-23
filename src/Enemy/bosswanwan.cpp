@@ -1324,7 +1324,9 @@ void TBossWanwan::control()
 		mRotation.y = MsWrap(mRotation.y + turn, 0.0f, 360.0f);
 	}
 
-	mPullVelocity.set(0.0f, 0.0f, 0.0f);
+	mPullVelocity.z = 0.0f;
+	mPullVelocity.y = 0.0f;
+	mPullVelocity.x = 0.0f;
 	updateSquareToMario();
 }
 
