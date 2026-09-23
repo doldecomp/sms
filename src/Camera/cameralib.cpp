@@ -427,7 +427,7 @@ void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_center, S16Vec* out_euler,
 {
 	JGeometry::TVec3<f32> dir;
 
-	dir.sub(lookat, origin);
+	dir.set(lookat.x - origin.x, lookat.y - origin.y, lookat.z - origin.z);
 	normalizeInner1(dir);
 
 	out_center->scaleAdd(near_dist, dir, origin);
@@ -438,72 +438,66 @@ void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_center, S16Vec* out_euler,
 	out_euler->z   = roll;
 }
 
-// TODO: the call structure now matches the ROM. The rest is the frame (0x220
-// against 0x1f0) and the float register numbering that follows it.
+// TODO: the call structure and the scalarised offset vectors now match the
+// ROM. The rest is the frame (0x218 against 0x1f0: a 4-byte hole between dir
+// and corner in the ROM, and a larger inline-temporary region here) and the
+// float register numbering (the ROM keeps the half-diagonal in f31).
 void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
                         const JGeometry::TVec3<f32>& origin,
                         const JGeometry::TVec3<f32>& lookat, s16 roll,
                         f32 near_dist, const JGeometry::TVec2<f32>& near_dims)
 {
-	// TODO: This needs matching work, but it's mathematically correct
-
-	JGeometry::TVec3<f32> fVar16;
-	JGeometry::TVec3<f32> fVar19;
-
-	JGeometry::TVec3<f32> local_a8;
-	JGeometry::TVec3<f32> local_90;
-	JGeometry::TVec3<f32> local_80;
-	JGeometry::TVec3<f32> local_74;
-	JGeometry::TVec3<f32> local_68;
+	JGeometry::TVec3<f32> up;
+	JGeometry::TVec3<f32> side;
+	JGeometry::TVec3<f32> dir;
+	JGeometry::TVec3<f32> corner;
+	JGeometry::TVec3<f32> upOfs;
+	JGeometry::TVec3<f32> leftOfs;
+	JGeometry::TVec3<f32> rightOfs;
 
 	CLBCalcNearClipAngle(&out_grid[4], out_euler, origin, lookat, roll,
 	                     near_dist);
 
-	local_68.set(0.0f, 1.0f, 0.0f);
-	local_74.set(1.0f, 0.0f, 0.0f);
+	up.set(0.0f, 1.0f, 0.0f);
+	side.set(1.0f, 0.0f, 0.0f);
 
-	// We already did this, so maybe we're calling another function here?
-	local_80.sub(lookat, origin);
-	normalizeInner1(local_80);
+	dir.set(lookat.x - origin.x, lookat.y - origin.y, lookat.z - origin.z);
+	normalizeInner1(dir);
 
-	fVar16.z = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+	f32 rollRad = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 
 	// Transform the up/right vectors from cam space into world space.
-	CLBRotateVecByEulerAndRoll(&local_68, *out_euler, local_80, fVar16.z);
-	CLBRotateVecByEulerAndRoll(&local_74, *out_euler, local_80, fVar16.z);
+	CLBRotateVecByEulerAndRoll(&up, *out_euler, dir, rollRad);
+	CLBRotateVecByEulerAndRoll(&side, *out_euler, dir, rollRad);
 
-	f32 fVar3 = near_dims.y * 0.5f;
-	f32 fVar5 = near_dims.x * 0.5f;
-	f32 fVar6 = -fVar3;
-	f32 fVar7 = -fVar5;
+	f32 halfHeight = near_dims.y * 0.5f;
+	f32 halfWidth  = near_dims.x * 0.5f;
 
-	out_grid[1].scaleAdd(fVar3, local_68, out_grid[4]);
-	out_grid[7].scaleAdd(fVar6, local_68, out_grid[4]);
-	out_grid[3].scaleAdd(fVar7, local_74, out_grid[4]);
-	out_grid[5].scaleAdd(fVar5, local_74, out_grid[4]);
+	upOfs.scale(halfHeight, up);
+	out_grid[1].add(out_grid[4], upOfs);
+	out_grid[7].scaleAdd(-halfHeight, up, out_grid[4]);
+	leftOfs.scale(-halfWidth, side);
+	out_grid[3].add(out_grid[4], leftOfs);
+	rightOfs.scale(halfWidth, side);
+	out_grid[5].add(out_grid[4], rightOfs);
 
-	// Anything below here could be part of CLBCalcNearFourPos?
+	f32 halfDiagonal = MsSqrtf(halfWidth * halfWidth + halfHeight * halfHeight);
 
-	fVar16.scale(fVar5, local_74);
-	fVar19.scale(fVar3, local_68);
+	corner.set(leftOfs);
+	corner.add(upOfs);
 
-	f32 halfPlaneDiagonal = MsSqrtf(fVar3 * fVar3 + fVar5 * fVar5);
+	MsVECNormalize(&corner, &corner);
+	out_grid[0].scaleAdd(halfDiagonal, corner, out_grid[4]);
+	corner.negate();
+	out_grid[8].scaleAdd(halfDiagonal, corner, out_grid[4]);
 
-	local_90.scaleAdd(fVar7, local_74, fVar19);
-	MsVECNormalize(&local_90, &local_90);
+	corner.set(rightOfs);
+	corner.add(upOfs);
 
-	out_grid[0].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
-	local_90.negate();
-	out_grid[8].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
-
-	local_90.x = (f32)(fVar16.x + fVar19.x);
-	local_90.y = (f32)(fVar16.y + fVar19.y);
-	local_90.z = (f32)(fVar16.z + fVar19.z);
-	MsVECNormalize(&local_90, &local_90);
-
-	out_grid[2].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
-	local_90.negate();
-	out_grid[6].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
+	MsVECNormalize(&corner, &corner);
+	out_grid[2].scaleAdd(halfDiagonal, corner, out_grid[4]);
+	corner.negate();
+	out_grid[6].scaleAdd(halfDiagonal, corner, out_grid[4]);
 }
 
 // UNUSED in the map (0x104), and emitted before CLBCalcNearNinePos, so in
