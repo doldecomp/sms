@@ -436,9 +436,7 @@ bool TTabePuku::isMissMario() const
 // UNUSED, 0x3c in the map.
 bool TTabePuku::isTouchedPlane() const
 {
-	if (isAirborne() && !mTouchedWall)
-		return false;
-	return true;
+	return !isAirborne() || mTouchedWall;
 }
 
 // UNUSED, 0xac in the map.
@@ -682,9 +680,6 @@ DEFINE_NERVE(TNerveTabePukuFound, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 89.5%. Instruction-identical apart from r30/r31 being swapped (retail
-// puts the spine in the lower register here but the higher one in
-// TNerveTabePukuGraphWander) and a 0x18 frame gap.
 DEFINE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor)
 {
 	TTabePuku* puku = (TTabePuku*)spine->getBody();
@@ -693,7 +688,7 @@ DEFINE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor)
 		puku->getTracer()->reset();
 		puku->getTracer()->reset2();
 		puku->goToShortestNextGraphNode();
-		puku->mMarchSpeed = puku->getSaveParams()->getMarchSpeed();
+		puku->mMarchSpeed = ((TTabePukuParams*)puku->getSaveParam())->mMarchSpeed.get();
 	}
 
 	if (puku->isReachedToGoal()) {
@@ -707,7 +702,7 @@ DEFINE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor)
 	if (puku->isTouchedPlane())
 		offset.set(0.0f, 10000.0f, 0.0f);
 	else
-		offset.set(0.0f, 0.0f, 0.0f);
+		offset.zero();
 	puku->swimToCurPathNode(offset);
 	return FALSE;
 }
