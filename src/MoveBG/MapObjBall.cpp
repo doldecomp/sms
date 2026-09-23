@@ -292,11 +292,11 @@ u32 TMapObjBall::touchWater(THitActor* param_1)
 	return 1;
 }
 
-// Binding level over the physical-parameter chain, used in
-// TMapObjBall::boundByActor.
+// Reference binding over the physical-parameter chain, used in
+// TMapObjBall::boundByActor (a value copy orders its slots worse).
 static inline f32 MapObjBallMinBoundSpeed(const TMapObjBall* p)
 {
-	f32 min = p->mMapObjData->mPhysical->unk4->unkC;
+	const f32& min = p->mMapObjData->mPhysical->unk4->unkC;
 	return min;
 }
 
