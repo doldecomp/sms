@@ -1183,18 +1183,19 @@ void TBossGesso::doAttackSingle()
 		f32 shootRadius2 = getSaveParam2()->mSLShootRadius.get();
 		shootRadius2 *= shootRadius2;
 
-		// TODO: retail expands TVec3::sub and MsGetRotFromZaxisY inside this
-		// one inSightAngle() expansion while keeping them as calls at the
-		// three other sites in this function; MsWrap stays a call at all
-		// four. Spelling the body out here reproduces the two expansions but
-		// also expands MsWrap, which is worse, so the call stands.
-		// Retail's `li 1 / li 0; cmpwi` here is inSightAngle's BOOL, so the
-		// call is right; `inSight() < 30.0f` expands sub but still calls
-		// MsGetRotFromZaxisY (92.1%, loses the BOOL). MsGetRotFromZaxisY
-		// expands at depth 3 only in retail: a header-level statement-count
-		// difference, not a site lever. Frame 0x1a8 vs 0x280 follows from it.
+		// Retail compares inSight() directly here: this is the one site where
+		// TVec3::sub expands and the `li 1 / li 0; cmpwi` BOOL stands without
+		// an inSightAngle() level (91.5 -> 93.3).
+		// TODO: retail also expands MsGetRotFromZaxisY at this site (41
+		// missing instructions, frame 0x1a8 vs 0x280) and inside the UNUSED
+		// inSightAngle (map 0x16c, ours 0xc4), while calling it at depth 3
+		// from every inSightAngle site. Our MathUtil.hpp spelling costs too
+		// much for depth 2: a TU-local probe copy costing 8-10 filler units
+		// inlines at depth 2 but not 3 and lifts this function to 99.5 with
+		// every other caller unchanged; the if/else spellings tried (single
+		// or multiple returns) all stay out of line. A shared-header fix.
 		if (mTimeInCurrentAttackMode > getSaveParam2()->mSLUnisonInter.get()
-		    && distToMario2 < shootRadius2 && inSightAngle(30.0f))
+		    && distToMario2 < shootRadius2 && (inSight() < 30.0f ? TRUE : FALSE))
 			changeAttackMode(ASTATE_SHOOT);
 
 		return;
