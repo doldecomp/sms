@@ -2406,6 +2406,8 @@ static inline TMap* MarioMoveGetMap()
 	return map;
 }
 
+// TODO: record and the sqrt temporary sit 4 and 8 bytes low, and both head
+// offsets multiply front-first; operand swaps, named radius and inlined angle were inert.
 void TMario::thinkYoshiHeadCollision()
 {
 	if (!onYoshi())
@@ -2413,7 +2415,7 @@ void TMario::thinkYoshiHeadCollision()
 
 	JGeometry::TVec3<f32> headPos = mPosition;
 
-	f32 front = mYoshiParams.mHeadFront.get();
+	f32 front = mYoshiParams.mHeadFront.value;
 	s16 angle = mFaceAngle.y;
 	headPos.x += JMASSin(angle) * front;
 	headPos.z += JMASCos(angle) * front;
