@@ -343,28 +343,15 @@ void TMameGesso::checkMarioState() { }
 
 const char** TMameGesso::getBasNameTable() const { return mameGesso_bastable; }
 
-// fabricated: retail's dead water test inside TNerveMameGessoGraphJumpWander
-// covers six ground types, one fewer than TBGCheckData::isWaterSurface(), which
-// also takes BG_TYPE_SHADED_POOL. Spelling the chain at the site instead lets
-// MWCC drop terms, because the guarded statement is gone; inside an inlined
-// predicate the whole chain survives, which is what retail emits.
-static inline bool MameGessoIsWaterSurface(const TBGCheckData* data)
-{
-	if (data->mBGType == BG_TYPE_WATER
-	    || data->mBGType == BG_TYPE_DAMAGING_WATER
-	    || data->mBGType == BG_TYPE_SEA_WATER
-	    || data->mBGType == BG_TYPE_DAMAGING_SEA_WATER
-	    || data->mBGType == BG_TYPE_POOL
-	    || data->mBGType == BG_TYPE_INDOOR_POOL)
-		return true;
-	return false;
-}
-
+// TODO: instruction-exact at retail's frame 0xe8, but every stack object sits
+// 4 bytes high (the low region is one 4-byte item too big). Inert: explicit
+// `!= 0`/`== 0` at every call condition; `.get()` -> `.value` on the return
+// jump params is -8 each, as is `getTime() == 0`.
 DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
 
-	if (spine->getTime() == 0) {
+	if (!spine->getTime()) {
 		if (self->getGroundPlane()->isWaterSurface())
 			self->setBckAnm(12);
 		else
@@ -381,7 +368,7 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 
 			if (self->unk1EC) {
 				self->goToShortestNextGraphNode();
-				f32 jumpWanderSpeed = self->unk194->mSLJumpWanderSpeed.get();
+				f32 jumpWanderSpeed = self->unk194->mSLJumpWanderSpeed.value;
 				JGeometry::TVec3<f32> local_4c = self->calcVelocityToJumpToY(
 				    self->getUnk104().getPoint(), jumpWanderSpeed,
 				    self->getGravityY());
@@ -418,25 +405,11 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 	if (self->unk1EC != 0) {
 		if (self->isReachedToGoal()) {
 			if (self->isAirborne()) {
-				// TODO: retail evaluates this water-surface chain and then
-				// does nothing with it -- every path leaves the block -- so
-				// whatever statement it guarded was stripped. The chain is
-				// spelled out at the site (direct branches, no materialised
-				// bool) and covers six types, one fewer than
-				// TBGCheckData::isWaterSurface(), which also takes
-				// BG_TYPE_SHADED_POOL.
-				// TODO: 4 instructions short. Retail keeps both compare
-				// groups (0x100 peeled, 0x101-0x105 folded); with the body
-				// gone MWCC merges them and emits only the first, whatever
-				// the chain's spelling. Refuted: the chain at the site
-				// (drops the range), the negated `&&` form (keeps three
-				// unfolded terms), an empty `else` (inert). Retail's body
-				// most likely held a statement whose code MWCC stripped.
-				// Also refuted (cc36): a dead `bool` local, the bare call,
-				// an empty if/else, an empty inline call or `a = a` body,
-				// `if (c) return false;`/`if (!c) return false;`, a goto.
-				// The frame is also 0x10 long (0xf8 vs 0xe8).
-				if (MameGessoIsWaterSurface(self->getGroundPlane())) {
+				// Retail evaluates isWaterSurface() here and does nothing
+				// with it: the guarded statement was stripped, but the
+				// inlined predicate's compare chain survives (all but its
+				// last term).
+				if (self->getGroundPlane()->isWaterSurface()) {
 				}
 			}
 		} else {
