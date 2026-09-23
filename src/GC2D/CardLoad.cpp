@@ -1167,7 +1167,7 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 			                               unk48C[unkB7].getWidth(),
 			                               unk48C[unkB7].getHeight());
 			JUTRect bounds = unk484[unkB7]->getPane()->mGlobalBounds;
-			JGeometry::TVec3<f32> local_108;
+			Vec local_108;
 			local_108.x = bounds.x1 + bounds.getWidth() * 0.5f;
 			local_108.y = bounds.y1 + bounds.getHeight() * 0.5f;
 			local_108.z = 0.0f;
@@ -1347,7 +1347,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			                               unk4E0[unkB7].getWidth(),
 			                               unk4E0[unkB7].getHeight());
 			JUTRect bounds = unk4D8[unkB7]->getPane()->mGlobalBounds;
-			JGeometry::TVec3<f32> local_108;
+			Vec local_108;
 			local_108.x = bounds.x1 + bounds.getWidth() * 0.5f;
 			local_108.y = bounds.y1 + bounds.getHeight() * 0.5f;
 			local_108.z = 0.0f;
@@ -2136,7 +2136,7 @@ s8 TCardLoad::selectFunction()
 
 				JUTRect rect
 				    = unk378[unkB0][unkB6]->getPane()->getGlobalBounds();
-				JGeometry::TVec3<f32> pos;
+				Vec pos;
 				pos.x = rect.x1 + rect.getWidth() * 0.5f;
 				pos.y = rect.y1 + rect.getHeight() * 0.5f;
 				pos.z = 0.0f;
