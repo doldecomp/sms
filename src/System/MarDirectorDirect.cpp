@@ -651,6 +651,10 @@ void TMarDirector::setMario()
 		gpMarioOriginal->offFlag(MARIO_FLAG_HAS_FLUDD);
 }
 
+// TODO: every instruction matches except the saved-register rotation (retail
+// r31 this, r30 pool, r29 currSeq, r28 camera name, r27 gpApplication) and the
+// frame (retail 0x160: 0xc0 dead low region plus 8 bytes above the TColor).
+// Top-declared name, const/ref-to-app spellings were inert.
 void TMarDirector::nextStateInitialize(u8 next_state)
 {
 	TGameSequence& currSeq = gpApplication.mCurrArea;

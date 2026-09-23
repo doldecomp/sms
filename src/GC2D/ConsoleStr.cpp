@@ -132,6 +132,8 @@ void TConsoleStr::loadAfter()
 	unk2A8[2] = nullptr;
 }
 
+// TODO: the trail test's `bne next; beq skip` pair and `&pt` computed before
+// the load are missing (bool/else/continue spellings inert); frame 0x2e0 vs 0x300.
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -267,7 +269,8 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 
 				for (int j = 0; j < 3; ++j) {
 					int slot = trail[j];
-					if (unk34[i][slot].x != 0) {
+					JUTPoint& pt = unk34[i][slot];
+					if (pt.x != 0) {
 						fadedAlpha = fadedAlpha * 0.7f;
 						unk28[i]->getPane()->setAlpha(fadedAlpha);
 						unk28[i]->getPane()->resize(
@@ -276,7 +279,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 
 						JUTRect shrunk = unk28[i]->getPane()->getBounds();
 						((J2DPicture*)unk28[i]->getPane())
-						    ->draw(unk34[i][slot].x, unk34[i][slot].y,
+						    ->draw(pt.x, pt.y,
 						           shrunk.getWidth(), shrunk.getHeight(), false,
 						           false, false);
 					}

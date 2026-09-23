@@ -43,7 +43,7 @@ public:
 	/* 0x14 */ J2DSetScreen* unk14;
 	/* 0x18 */ f32 unk18;
 	/* 0x1C */ int unk1C;
-	/* 0x20 */ u32 unk20;
+	/* 0x20 */ int unk20;
 	/* 0x24 */ u32 unk24;
 	// Layout read off load()/the constructor: the 'sg00' loop runs six times
 	// and the 'ms00' loop seven, __construct_array builds 66 JUTPoints at
