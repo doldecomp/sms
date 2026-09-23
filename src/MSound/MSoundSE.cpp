@@ -187,6 +187,8 @@ void MSRandPlay::randPlay(u32 vec_idx)
 	}
 }
 
+MSoundSE::MSoundSE() { }
+
 // TODO: construct is instruction-exact; the inlined MSSetSoundGrp ctor's
 // homed `this` sits at 0x4c vs retail 0x50. Retail has no `se` slot (frame
 // 0x98 without it) and one more inline temporary below that `this` (twelve
@@ -744,7 +746,7 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
 	}
 }
 
-inline u32 MSoundSE::getNewIDByGroundCode(u32 id, JAIActor* actor)
+u32 MSoundSE::getNewIDByGroundCode(u32 id, JAIActor* actor)
 {
 	u32 ground = actor->mGroundNumber;
 	if (ground & 0xf00)
