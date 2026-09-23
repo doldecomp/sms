@@ -126,6 +126,8 @@ BOOL TEffectObjBase::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
+// TODO: the three setGlobalScale copies load x/y/z into f2/f0/f1; retail uses
+// f0/f1/f2. A TVec3 local, direct set() calls and an xyz constructor were inert.
 void TEffectObjBase::moveObject()
 {
 	if (unk68 == 2) {
