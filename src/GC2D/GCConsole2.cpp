@@ -2879,6 +2879,12 @@ void TGCConsole2::startDisappearStar()
 
 // TODO: the unk108 updatePaneOffset takes r29/r27 for getCurrentY/X where
 // retail reuses r30/r29; inert: raw mVisible, named pane, explicit setPaneOffset.
+// Frame is 8 over (0x168 vs 0x160): raw `unk160` at any one of the four
+// getUnk160() sites lands 0x160 (two or more undershoot), leaving the register
+// pair above and the JUTPoint(0, 0) temp at 0x11c vs 0x120, but objdiff scores
+// that 99.86 against 99.88 now, so it is not taken. Inert at the exact frame:
+// named `start` point, named coin pane/J2DPane, explicit setPaneOffset or named
+// x/y (both +0x10).
 void TGCConsole2::startAppearStar()
 {
 	if (unk34 || unk140->isInterpolatorAtZero())
@@ -3095,6 +3101,12 @@ void TGCConsole2::startAppearMario(bool param_1)
 	unk70     = 0;
 }
 
+// TODO: frame 0x60 vs 0xa8: 0x40 of dead low region under the nine JUTPoint
+// temps and 8 above them, nothing in the body reaches it. Refuted: a JUTPoint
+// header spelling (`: x(x), y(y)` shrinks perform by 0x20; `set(const int&, ...)`
+// lands 0xa8 with the temps 8 high but breaks the exact
+// TTalk2D2::checkBoardControler), and wrapping the three calls in a scalar or
+// const-ref helper (inert); a by-value JUTPoint helper is +0x20 and 70%.
 void TGCConsole2::processMoveNozzle()
 {
 	if (!unk274->update())
@@ -4582,6 +4594,13 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	           false, false, false);
 }
 
+// TODO: frame 0x368 short (0xc48 vs 0xfb0). Instruction count (3729) and the
+// call set already equal retail's; the <40/>40 markers are scheduling around
+// stack slots, so the residue is the low region. Its referenced slots are
+// permuted, not shifted (deltas 0x130..0x77c), and the out-of-line siblings
+// perform expands are short too: countShine 0x68, setTimer 0x50,
+// processMoveNozzle 0x48, countBlueCoin 0x40, processAppearStar 0x38 (all dead
+// low region under instruction-exact bodies). Close those first.
 void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 {
 	if (flags & 1) {
