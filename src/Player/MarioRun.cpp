@@ -71,7 +71,18 @@ BOOL TMario::isThrowStart()
 
 void TMario::postureControl() { }
 
-void TMario::clashStandard(u32, u32) { }
+// UNUSED (0x90 in the map): the wall-hit reaction braking and slippingBasic
+// share.
+void TMario::clashStandard(u32 dropStatus, u32 stopStatus)
+{
+	if (mForwardVel > 16.0f) {
+		playerRefrection(1);
+		changePlayerDropping(dropStatus, 0);
+	} else {
+		setPlayerVelocity(0.0f);
+		changePlayerStatus(stopStatus, 0, false);
+	}
+}
 
 void TMario::changePlayerPower(f32, u32, u32) { }
 
@@ -658,7 +669,21 @@ void TMario::doSurfing()
 		surfingEffect();
 }
 
-void TMario::doBraking(f32) { }
+// UNUSED (0x6c in the map): braking's deceleration step.
+// TODO: 0x68 out of line, one instruction short of the map; a body that
+// reloads mForwardVel for the compare reaches 0x6c but adds that reload to
+// moveMain's inlined copy, and the other spellings tried stay at 0x68.
+BOOL TMario::doBraking(f32 brake)
+{
+	BOOL zeroed = 0;
+	f32 tmp     = FConverge(mForwardVel, 0.0f, brake, brake);
+	mForwardVel = tmp;
+	if (tmp == 0.0f)
+		zeroed = 1;
+
+	slopeProcess();
+	return zeroed;
+}
 
 void TMario::changePlayerWaiting() { }
 
@@ -945,30 +970,14 @@ BOOL TMario::turnEnd()
 	return 0;
 }
 
-// TODO (structural, blocks linking): the `inline` keyword is why
-// validate-symbol-order reports braking__6TMarioFv MISSING -- an explicit
-// `inline` on a cpp member makes MWCC drop the out-of-line copy, and the map
-// has one (UNUSED 0x158, stripped because every reference was inlined away).
-// Measured: dropping the keyword does emit the symbol and the unit passes, but
-// moveMain then emits `bl braking__6TMarioFv`, which the ROM does not have
-// anywhere (0 occurrences in the whole disassembly), and the unit goes
-// 99.51 -> 98.05. So retail's braking is a plain method that moveMain still
-// inlines, i.e. it had at most 14 statements at depth 1; this body has about
-// 22, the switch below accounting for nine of them. Recovering the helper that
-// hides those statements is what unblocks the keyword, not the keyword itself.
-inline BOOL TMario::braking()
+// UNUSED in the map (0x158, all references inlined): moveMain still expands
+// it once doBraking and clashStandard hide the brake and wall-hit statements.
+BOOL TMario::braking()
 {
 	if (!(mInput & 0x10) && (mInput & 0xF))
 		return checkAllMotions();
 
-	// TODO: inline
-	BOOL zeroed = 0;
-	f32 tmp     = FConverge(mForwardVel, 0.0f, 4.0f, 4.0f);
-	mForwardVel = tmp;
-	if (tmp == 0.0f)
-		zeroed = 1;
-
-	slopeProcess();
+	BOOL zeroed = doBraking(4.0f);
 	if (zeroed)
 		return changePlayerStatus(MARIO_STATUS_BRAKE_END, 0, false);
 
@@ -981,13 +990,7 @@ inline BOOL TMario::braking()
 		break;
 
 	case 2:
-		if (mForwardVel > 16.0f) {
-			playerRefrection(1);
-			changePlayerDropping(MARIO_STATUS_SHORT_BACK_DOWN, 0);
-		} else {
-			setPlayerVelocity(0.0f);
-			changePlayerStatus(MARIO_STATUS_BRAKE_END, 0, false);
-		}
+		clashStandard(MARIO_STATUS_SHORT_BACK_DOWN, MARIO_STATUS_BRAKE_END);
 		break;
 	}
 	setAnimation(ANIM_BRAKE, 1.0f);
@@ -1198,12 +1201,8 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 				SMSGetMSound()->startSoundActor(sndId, &mPosition, 0, nullptr,
 				                                0, 4);
 			}
-		} else if (mForwardVel > 16.0f) {
-			playerRefrection(1);
-			changePlayerDropping(MARIO_STATUS_CATCH_DOWN, 0);
 		} else {
-			setPlayerVelocity(0.0f);
-			changePlayerStatus(statusOnStop, 0, false);
+			clashStandard(MARIO_STATUS_CATCH_DOWN, statusOnStop);
 		}
 		onUnk114(UNK114_FLAG_UNK8);
 		return;
@@ -1725,16 +1724,13 @@ BOOL TMario::broadJumpSlip()
 	return 0;
 }
 
-// TODO: instructions match; frame 0x48 against retail's 0x60.
-// TODO: lever-search closes this only by wrapping running()/rotating()/turnning()
-// in one-use binders (+8 frame each, 0x18 total): the same class as
-// jumpMain's state-handler gap (MarioJump.cpp); refused, needs one real cause.
-// Measured: the +8 is a named local whose value an inline body returns
-// (`BOOL r = ...; return r;`); a direct-return forwarder is +0 and per-case
-// `return f();` is -8. The same +8 comes from braking() naming a result of an
-// inlined helper (`BOOL zeroed = doBraking(4.0f);`), but doBraking's map size
-// 0x6c only fits a body that reloads mForwardVel, which moveMain does not do.
-// So three of the inlined handlers probably return a named result in retail.
+// TODO: instructions match; frame 0x50 against retail's 0x60. braking's
+// named doBraking result supplies 8 of the original 0x18 gap.
+// lever-search closes the rest only by wrapping handlers in one-use binders
+// (+8 frame each): the same class as jumpMain's state-handler gap
+// (MarioJump.cpp); refused, needs one real cause. The +8 is a named local
+// whose value an inline body returns (`BOOL r = ...; return r;`); a
+// direct-return forwarder is +0 and per-case `return f();` is -8.
 BOOL TMario::moveMain()
 {
 	BOOL ret = 0;

@@ -960,7 +960,7 @@ public:
 	TSurfingParams* getSurfingParamsWater();
 	TSurfingParams* getSurfingParamsGround();
 	void doSurfing();
-	void doBraking(f32);
+	BOOL doBraking(f32);
 	void changePlayerWaiting();
 	void doPushingAnimation(const Vec&);
 	BOOL running();

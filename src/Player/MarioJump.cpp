@@ -322,11 +322,7 @@ BOOL TMario::jumping()
 		jumpingBasic(MARIO_STATUS_THROWN_DOWN, ANIM_THROWN, 0);
 		break;
 	case MARIO_STATUS_FORCE_JUMP: {
-		int anim;
-		if (mVel.y >= 0.0f)
-			anim = ANIM_2JMP1;
-		else
-			anim = ANIM_2JMP2;
+		int anim = mVel.y >= 0.0f ? ANIM_2JMP1 : ANIM_2JMP2;
 		jumpingBasic(MARIO_STATUS_JUMP_SLIP, anim, 3);
 		break;
 	}
@@ -344,11 +340,7 @@ BOOL TMario::secJumping()
 		rumbleStart(0x14, mMotorParams.mMotorWall.get());
 	}
 
-	int anim;
-	if (mVel.y >= 0.0f)
-		anim = ANIM_2JMP1;
-	else
-		anim = ANIM_2JMP2;
+	int anim = mVel.y >= 0.0f ? ANIM_2JMP1 : ANIM_2JMP2;
 
 	if (jumpingCommonEvents())
 		return 1;
@@ -1336,9 +1328,9 @@ BOOL TMario::fallDead()
 // `return f();` and jumpingCommonEvents() rewrites all leave the frame at 0x60.
 // Narrowed: the +8 is specifically an inline body returning a named local
 // (fallDead as `BOOL r = FALSE; jumpProcess(0); return r;` gives 0x68);
-// direct-return forwarders are +0. Out of line, jumping/secJumping are 4 bytes
-// under their map sizes (0x180/0x15c), which fits a result-local spelling of
-// those handlers or jumpingCommonEvents, but the forms tried either vanish or change code.
+// direct-return forwarders are +0. Every handler now matches its map size out
+// of line (jumping/secJumping took the named `anim` ternary), so the missing
+// levels are not visible in the handlers' own sizes.
 BOOL TMario::jumpMain()
 {
 	int result;
