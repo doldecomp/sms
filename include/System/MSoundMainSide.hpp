@@ -18,11 +18,6 @@ public:
 	static MSStage* smMSStage;
 };
 
-class MSSTageSimpleEnvironmentMonte {
-public:
-	void proc();
-};
-
 class MSSTageSimpleEnvironment : public MSStage {
 public:
 	MSSTageSimpleEnvironment()
@@ -30,6 +25,14 @@ public:
 	{
 	}
 
+	virtual void proc();
+
+public:
+	/* 0x4 */ u32 unk4;
+};
+
+class MSSTageSimpleEnvironmentMonte : public MSStage {
+public:
 	virtual void proc();
 
 public:
@@ -71,8 +74,8 @@ public:
 
 class MSStageCubeSwitch : public MSStageCubeFade {
 public:
-	MSStageCubeSwitch(u8 param_1)
-	    : unk10(param_1)
+	MSStageCubeSwitch()
+	    : unk10(0)
 	{
 	}
 
@@ -123,10 +126,11 @@ public:
 	/* 0x20 */ int unk20;
 };
 
-class MSStageProc {
-public:
-	void setBgmPosition(const Vec&, f32, bool, u32, u32);
-};
+namespace MSStageProc {
+
+void setBgmPosition(const Vec&, f32, bool, u32, u32);
+
+} // namespace MSStageProc
 
 namespace MSMainProc {
 
