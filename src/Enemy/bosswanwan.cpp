@@ -1230,21 +1230,21 @@ void TBossWanwan::reverseNextGraphNode()
 void TBossWanwan::rollNextGraphNode()
 {
 	TGraphTracer* tracer   = getTracer();
-	int curr               = tracer->getCurGraphIndex();
 	int prev               = tracer->getPrevIndex();
+	int curr               = tracer->getCurGraphIndex();
 	const TGraphWeb* graph = tracer->getGraph();
 
 	// Standing at a fork long enough into the fight earns the hint about
 	// leading the boss to the hot spring.
-	if (curr >= 0
-	    && graph->getGraphNode(curr).getRailNode()->mConnectionNum >= 2
+	if (prev >= 0
+	    && graph->getGraphNode(prev).getRailNode()->mConnectionNum >= 2
 	    && gpMarDirector->unk58 >= 14400)
 		showMessage(BALLOON_MSG_BWANWAN_LEAD_TO_HOT);
 
 	JGeometry::TVec3<f32> facing = MsGetVecFromRotY(mRotation.y, 1.0f);
 
 	getTracer()->moveTo(
-	    graph->getEscapeDirLimited(prev, curr, facing, mPosition, 100.0f, -1));
+	    graph->getEscapeDirLimited(curr, prev, facing, mPosition, 100.0f, -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
@@ -1632,12 +1632,10 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		if (VECMag(toNode) < 400.0f)
 			boss->reverseNextGraphNode();
 
-		f32 speed
-		    = 3.0f
-		      * (((f32)boss->getHitPoints()
-		          / (f32)boss->getSaveParam2()->mSLBWHitPointMax.get())
-		         * boss->getMarchSpeed());
-		boss->slideToCurPathNode(speed, boss->getTurnSpeed());
+		f32 heat = (f32)boss->getHitPoints()
+		           / (f32)boss->getSaveParam2()->mSLBWHitPointMax.get();
+		boss->slideToCurPathNode(3.0f * (heat * boss->getMarchSpeed()),
+		                         boss->getTurnSpeed());
 		return FALSE;
 	}
 
@@ -1649,19 +1647,21 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 			spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
 
 			TGraphTracer* tracer   = boss->getTracer();
-			int curr               = tracer->getCurGraphIndex();
 			int prev               = tracer->getPrevIndex();
+			int curr               = tracer->getCurGraphIndex();
 			const TGraphWeb* graph = tracer->getGraph();
 
-			if (curr >= 0
-			    && graph->getGraphNode(curr).getRailNode()->mConnectionNum >= 2
+			if (prev >= 0
+			    && graph->getGraphNode(prev).getRailNode()->mConnectionNum >= 2
 			    && gpMarDirector->unk58 >= 14400)
 				boss->showMessage(BALLOON_MSG_BWANWAN_LEAD_TO_HOT);
 
 			JGeometry::TVec3<f32> facing
 			    = MsGetVecFromRotY(boss->mRotation.y, 1.0f);
-			boss->getTracer()->moveTo(graph->getEscapeDirLimited(
-			    prev, curr, facing, boss->getPosition(), 100.0f, -1));
+			int next = graph->getEscapeDirLimited(
+			    curr, prev, facing, boss->mPosition, 100.0f, -1);
+			boss->unk124->moveTo(next);
+
 			boss->setGoalPathFromGraph();
 			boss->unk128 = 0;
 			boss->unk12C = 0.0f;
@@ -1679,21 +1679,19 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 	if (taken) {
 		// Mario dragging the stake against the boss's own direction slows it
 		// down; dragging with it speeds it up.
-		f32 marioYaw = gpMarioOriginal->mIntendedYaw * (360.0f / 65536.0f);
-		JGeometry::TVec3<f32> marioDir;
-		marioDir.set(MsSin(marioYaw) * 1.0f, 0.0f, MsCos(marioYaw) * 1.0f);
+		JGeometry::TVec3<f32> marioDir = MsGetVecFromRotY(
+		    gpMarioOriginal->mIntendedYaw * (360.0f / 65536.0f), 1.0f);
 
 		JGeometry::TVec3<f32> toBoss(boss->getPosition());
 		toBoss -= gpMarioOriginal->getPosition();
 		VECNormalize(toBoss, toBoss);
 
-		f32 rate
-		    = 1.0f
-		      - (f32)((f64)(gpMarioOriginal->mIntendedMag * 0.03125f) * 0.75)
-		            * -toBoss.dot(marioDir);
+		f32 pull = (f32)((f64)(gpMarioOriginal->mIntendedMag * 0.03125f) * 0.75)
+		           * -toBoss.dot(marioDir);
+		f32 rate = 1.0f - pull;
 		if (rate < 0.0f)
 			rate = 0.0f;
-		else if (rate > 1.5f)
+		else if (1.5f < rate)
 			rate = 1.5f;
 
 		boss->slideToCurPathNode(rate * (heat * boss->getMarchSpeed()),
