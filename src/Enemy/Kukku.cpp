@@ -305,6 +305,10 @@ void TKukku::control()
 	TLiveActor::control();
 }
 
+// TODO: 96.1%, frame exact. Residue is FPR colouring of up (retail y/x/z in
+// f27/f25/f28) and the tilt.mul(yaw) expansion, where retail leaves one
+// product unfused (TQuat4::mul, shared header). Inert: MTXCopy spellings,
+// `up = normal`, a named yaw angle.
 void TKukku::calcRootMatrix()
 {
 	if (mSpine->getLatestNerve() == &TNerveSmallEnemyDie::theNerve()) {

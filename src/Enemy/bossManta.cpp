@@ -1496,6 +1496,9 @@ void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
 		// temporary region is 0x20 larger.  Ruled out: `(void)&dir` (it was
 		// never needed), swapping setTrans/setEularY, the TPosition3f(x,y,z)
 		// constructor and translation() (identity33 stops folding, 72%).
+		// Also inert: declaring mtx before dir, and `(f32)i * 2.0f` in the
+		// angle. Retail's named block has dir 0x40 below counts, as if a
+		// 0x30 matrix slot sat between them.
 		TPosition3f mtx;
 		mtx.setTrans(0.0f, 0.0f, 0.0f);
 		mtx.setEularY(angle);
