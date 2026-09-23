@@ -311,17 +311,18 @@ void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
 	quat.mul(quat, around);
 }
 
-// TODO: 76.8%. Two known differences. First, retail *calls*
-// JGeometry::TUtil<f32>::sqrt for velocity.length() at the end while we expand
-// it; the same callee is called from flyAroundMario, where it sits one inline
-// level deeper, so length() here is reached through a wrapper we have not
-// found (set(), a named speed local, squared() and TVec3(mVelocity) all make no
-// difference). Second, retail materialises &mQuat in r30 before the tumble
-// block and reads the quaternion through it for spin.mul, where we fold the
-// 0x1a0 into each load; a TQuat4& local for mQuat does not reproduce it.
-// Measured 2026-09-23: a TU-local wrapper over length() (or over
-// sqrt(squared()) / sqrt(dot())) either keeps sqrt expanded or, one level
-// deeper, calls both sqrt and dot; retail calls only sqrt. Stop here.
+// TODO: 82.4%. The speed is the length of an unnamed copy of mVelocity:
+// that is what keeps the copy in memory and makes MWCC call
+// TUtil<f32>::sqrt out of line, as retail does (a named copy, by assignment
+// or construction, expands sqrt). Left: the frame is 0x218 in retail against
+// our 0x280. Retail keeps spin above toMario and forward above the velocity
+// copy; the rest of the gap is the rotate temporaries (quat.rotateInPlace at
+// the start site alone is -0x10 at equal match), which is the JGQuat4 rotate
+// body, not this function. Retail also materialises &mQuat in r30 for
+// spin.mul: a `const TQuat4<f32>& cur = mQuat` read by the down rotate and
+// the mul reproduces it (83.7) but is an invented binder, so it is not used.
+// Inert: spin declared first, forward declared before the copy, vel.set with
+// a raw param read, one-argument in-place rotates (worse).
 bool TKazekun::doAttackPose(bool start)
 {
 	JGeometry::TVec3<f32> toMario(*gpMarioPos);
@@ -351,9 +352,8 @@ bool TKazekun::doAttackPose(bool start)
 	spin.mul(spin, mQuat);
 	mQuat = spin;
 
-	JGeometry::TVec3<f32> velocity;
-	velocity = mVelocity;
-	JGeometry::TVec3<f32> forward(0.0f, 0.0f, velocity.length());
+	JGeometry::TVec3<f32> forward(0.0f, 0.0f,
+	                              JGeometry::TVec3<f32>(mVelocity).length());
 	spin.rotate(forward, forward);
 	mVelocity = forward;
 
