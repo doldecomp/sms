@@ -101,7 +101,7 @@ void TTailRubber::reset(const JGeometry::TVec3<f32>& param_1,
 
 		Node& node = unk0[i];
 		node.mPos.set(pos);
-		node.mVel.set(0.0f, 0.0f, 0.0f);
+		node.mVel.zero();
 	}
 }
 
@@ -109,14 +109,14 @@ void TTailRubber::setHeadPos(const JGeometry::TVec3<f32>& param_1)
 {
 	Node& node = unk0.front();
 	node.mPos  = param_1;
-	node.mVel.set(0.0f, 0.0f, 0.0f);
+	node.mVel.zero();
 }
 
 void TTailRubber::setTailPos(const JGeometry::TVec3<f32>& param_1)
 {
 	Node& node = *(unk0.end() - 1);
 	node.mPos  = param_1;
-	node.mVel.set(0.0f, 0.0f, 0.0f);
+	node.mVel.zero();
 }
 
 void TTailRubber::movement()
@@ -546,6 +546,10 @@ void TFireWanwanTailHit::behaveApart()
 	mHolder         = nullptr;
 }
 
+// TODO: 96.9%, frame 0x1d8 vs 0x208. The residue is the inlined
+// TTailRubber::reset loop: retail keeps param_1.y/.z in registers across it
+// and converts i/size in a different order. A copy-built diff, operator-,
+// `mPos = pos` and a named scale factor were all worse or frame-only.
 void TFireWanwanTailHit::init()
 {
 	unkA4      = new TTailRubber(5);

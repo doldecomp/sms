@@ -48,7 +48,7 @@ public:
 	static u32 cNodeRadius;
 
 	// fabricated
-	Node* getNode(int idx) { return &unk0[idx * 0.25f * 4.0f]; }
+	Node* getNode(int idx) { return &unk0[idx / 4.0f * 4.0f]; }
 
 public:
 	/* 0x0 */ ArrayWrapper<Node> unk0;
