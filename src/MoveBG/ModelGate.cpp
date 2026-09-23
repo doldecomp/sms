@@ -210,8 +210,9 @@ void TModelGate::startOpen()
 	mFlags |= GATE_FLAG_OPENING;
 }
 
-static inline void ModelGateStartRadialBlur(u8 alpha, f32 radius,
-                                            JGeometry::TVec3<f32> dir)
+static inline void ModelGateStartRadialBlur(u8 alpha,
+                                            JGeometry::TVec3<f32> dir,
+                                            f32 radius)
 {
 	TAfterEffect* effect = gpAfterEffect;
 	effect->unk15        = 2;
@@ -226,9 +227,9 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 	// streaks towards the gate on screen.
 	Vec viewDir;
 	JGeometry::TVec3<f32> toMario;
-	toMario.x = gpMarioPos->x - mPosition.x;
+	toMario.x = SMS_GetMarioPos().x - getPosition().x;
 	toMario.y = 0.0f;
-	toMario.z = gpMarioPos->z - mPosition.z;
+	toMario.z = SMS_GetMarioPos().z - getPosition().z;
 	VECNormalize(toMario, toMario);
 	MTXMultVecSR(graphics->mViewMtx, toMario, &viewDir);
 
@@ -252,8 +253,8 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 
 	// Only blur while the camera is roughly facing the gate.
 	f32 target = (f32)mBlurStrength * strength;
-	if ((s16)(182.04445f * mRotation.y - gpCamera->unk258) < -0x2AAA
-	    || (s16)(182.04445f * mRotation.y - gpCamera->unk258) > 0x2AAA)
+	s16 angle = 182.04445f * mRotation.y - SMSGetCamera()->unk258;
+	if (angle < -0x2AAA || angle > 0x2AAA)
 		target = 0.0f;
 
 	mBlurAlpha += mBlurAlphaRate * (target - mBlurAlpha);
@@ -261,11 +262,8 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 	// Retail hands the blur to one inline: gpAfterEffect is loaded once for
 	// all four stores, `viewDir` is a plain Vec copied by floats into the
 	// by-value TVec3 parameter, and the alpha is computed first.
-	// TODO: frame 0x78 against retail's 0x98. Retail converts the facing
-	// angle twice into two stack slots, both before the first compare
-	// (ours converts the second one after the `blt`).
-	u8 alpha = mBlurAlpha * (1.0f - gpCamera->unk270);
-	ModelGateStartRadialBlur(alpha, mBlurRadius, viewDir);
+	u8 alpha = mBlurAlpha * (1.0f - SMSGetCamera()->unk270);
+	ModelGateStartRadialBlur(alpha, viewDir, mBlurRadius);
 }
 
 BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
