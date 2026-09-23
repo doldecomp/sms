@@ -918,6 +918,8 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 	}
 }
 
+// TODO: 97.7%, register allocation only; the rows are one loop, as in
+// calcVMMtxGround. Every order of the four row locals was measured.
 void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
                                        const JGeometry::TVec3<f32>& param_3,
                                        const JGeometry::TVec3<f32>& param_4,
@@ -930,37 +932,15 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 	f32 fVar10 = 2.0f * param_4.x + param_3.x;
 	f32 fVar9  = 2.0f * param_4.z + param_3.z;
 
-	{
-		f32 fVar3     = param_1[0][1];
-		f32 fVar5     = param_1[0][2];
-		f32 fVar6     = param_1[0][0];
-		f32 fVar1     = param_1[0][3];
-		(*param_5)[0] = fVar6 * fVar8 + fVar5 * fVar11;
-		(*param_5)[1] = fVar3 * scale;
-		(*param_5)[2] = fVar6 * fVar7 + fVar5 * fVar8;
-		(*param_5)[3]
-		    = fVar1 + (fVar6 * fVar10 + fVar3 * fVar4 + fVar5 * fVar9);
-	}
-	{
-		f32 fVar1     = param_1[1][2];
-		f32 fVar2     = param_1[1][1];
-		f32 fVar3     = param_1[1][0];
-		f32 fVar5     = param_1[1][3];
-		param_5[1][0] = fVar3 * fVar8 + fVar1 * fVar11;
-		param_5[1][1] = fVar2 * scale;
-		param_5[1][2] = fVar3 * fVar7 + fVar1 * fVar8;
-		param_5[1][3]
-		    = fVar5 + (fVar3 * fVar10 + fVar2 * fVar4 + fVar1 * fVar9);
-	}
-	{
-		f32 fVar1     = param_1[2][2];
-		f32 fVar2     = param_1[2][1];
-		f32 fVar3     = param_1[2][0];
-		f32 fVar5     = param_1[2][3];
-		param_5[2][0] = fVar3 * fVar8 + fVar1 * fVar11;
-		param_5[2][1] = fVar2 * scale;
-		param_5[2][2] = fVar3 * fVar7 + fVar1 * fVar8;
-		param_5[2][3]
+	for (int i = 0; i < 3; ++i) {
+		f32 fVar1     = param_1[i][2];
+		f32 fVar2     = param_1[i][1];
+		f32 fVar3     = param_1[i][0];
+		f32 fVar5     = param_1[i][3];
+		param_5[i][0] = fVar3 * fVar8 + fVar1 * fVar11;
+		param_5[i][1] = fVar2 * scale;
+		param_5[i][2] = fVar3 * fVar7 + fVar1 * fVar8;
+		param_5[i][3]
 		    = fVar5 + (fVar3 * fVar10 + fVar2 * fVar4 + fVar1 * fVar9);
 	}
 }
