@@ -456,14 +456,14 @@ TBGCheckData* TMario::findNearestWall(const TBGWallCheckRecord& record)
 	return found;
 }
 
-// TODO: frame 0x208 against retail's 0x278. The inlined findNearestWall's
-// `pos` sits at 0xe0 (retail 0x16c); hangingCommon(int, int) (UNUSED, 0x78)
-// is likely a second missing level -- the pulledUp animation block as a
-// helper emits 160 bytes, so that is not its body.
-// Retail builds record, record3 and record4 in one 0x198 slot and loads
-// gpMap after each record, as if one inline built and tested them.
-// Retail's record3 centre y is `10.0f + newPos.y` (fadds of @4950 = 10);
-// spelling it so scores -0.01 until the record scheduling is fixed.
+// Retail reuses one record for the side-step probe and the corner probe (one
+// slot, gpMap loaded after the stores), the second filled through set(); with
+// that the first probe's centre y is `10.0f + newPos.y` (fadds of @4950).
+// TODO: every instruction matches; frame 0x1d8 against retail's 0x278. The
+// first record sits at 0x16c (retail 0x210) and the inlined findNearestWall's
+// `pos` at 0xdc (retail 0x16c); hangingCommon(int, int) (UNUSED, 0x78) is
+// likely a missing level -- the pulledUp animation block as a helper emits
+// 160 bytes, so that is not its body.
 BOOL TMario::hanging()
 {
 	BOOL pulledUp = FALSE;
@@ -541,22 +541,23 @@ BOOL TMario::hanging()
 			}
 
 			TBGCheckData* foundWall2 = nullptr;
-			TBGWallCheckRecord record3(newPos.x, newPos.y, newPos.z, 50.0f, 1,
-			                           0);
-			gpMap->isTouchedWallsAndMoveXZ(&record3);
-			newPos = record3.mCenter;
+			TBGWallCheckRecord wallRec(newPos.x, 10.0f + newPos.y, newPos.z,
+			                           50.0f, 1, 0);
+			gpMap->isTouchedWallsAndMoveXZ(&wallRec);
+			newPos = wallRec.mCenter;
 
 			const TBGCheckData* groundDummy;
 			f32 groundY = gpMap->checkGround(newPos.x, 50.0f + newPos.y,
 			                                 newPos.z, &groundDummy);
 			if (mPosition.y - 100.0f < groundY
 			    && groundY < 50.0f + mPosition.y) {
-				TBGWallCheckRecord record4(
-				    newPos.x - 30.0f * JMASSin(mFaceAngle.y), groundY - 20.0f,
-				    newPos.z - 30.0f * JMASCos(mFaceAngle.y), 30.0f, 4, 0);
-				gpMap->isTouchedWallsAndMoveXZ(&record4);
+				wallRec.set(newPos.x - 30.0f * JMASSin(mFaceAngle.y),
+				            groundY - 20.0f,
+				            newPos.z - 30.0f * JMASCos(mFaceAngle.y), 30.0f, 4,
+				            0);
+				gpMap->isTouchedWallsAndMoveXZ(&wallRec);
 
-				foundWall2 = findNearestWall(record4);
+				foundWall2 = findNearestWall(wallRec);
 
 				if (foundWall2 != nullptr
 				    && mDeParams.mHangWallMovableAngle.get()
@@ -571,9 +572,9 @@ BOOL TMario::hanging()
 					                     foundWall2->getNormal().x)
 					               + 0x8000;
 					mPosition.x
-					    = record4.mCenter.x - 40.0f * foundWall2->getNormal().x;
+					    = wallRec.mCenter.x - 40.0f * foundWall2->getNormal().x;
 					mPosition.z
-					    = record4.mCenter.z - 40.0f * foundWall2->getNormal().z;
+					    = wallRec.mCenter.z - 40.0f * foundWall2->getNormal().z;
 					const TBGCheckData* dummy2;
 					mPosition.y
 					    = gpMap->checkGround(mPosition.x, 160.0f + mPosition.y,
@@ -1309,14 +1310,14 @@ BOOL TMario::pulling()
 
 	default:
 		JGeometry::TVec3<f32> delta;
-		// TODO: retail reloads mActorType for the second test (the const
-		// getActorType() lets MWCC CSE it for us); isActorType() instead
-		// costs 12 bytes of frame, so the ternary form stays. A named
-		// `TTakeActor* held` gives the reload (98.5) but 0x10 short of frame.
-		// Also open: animRate gets f31 (retail f30, sinF's register; spelling
-		// inert) and length()'s squared() contraction (see wireMove).
-		if ((mHeldObject->getActorType() == 0x8000006 ? true : false)
-		    || (mHeldObject->getActorType() == 0x8000008 ? true : false)) {
+		// The mixed spelling is the lever pair that reloads mActorType through
+		// one held pointer at retail's frame: two getHeldObject() sites alone
+		// are +8, two isActorType() sites -8, a named held pointer -0x10.
+		// TODO: animRate gets f31 (retail f30, sinF's register; spelling
+		// inert) and length()'s squared() contraction (see wireMove; the
+		// explicit sum, squared()+sqrt and dot(delta) spellings are inert).
+		if (getHeldObject()->isActorType(0x8000006)
+		    || (getHeldObject()->getActorType() == 0x8000008 ? true : false)) {
 			delta = pos - mPrevPosition;
 		} else {
 			delta = mPosition - mPrevPosition;
