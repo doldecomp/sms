@@ -1018,7 +1018,8 @@ static inline TPollutionManager* MarioMoveGetPollution()
 
 void TMario::checkGraffito()
 {
-	if (MarioGraffitoGround(this)->isIllegalData())
+	const TBGCheckData* ground = MarioGraffitoGround(this);
+	if (ground->isIllegalData())
 		return;
 
 	if (onYoshi())
