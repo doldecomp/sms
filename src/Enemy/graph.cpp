@@ -755,10 +755,16 @@ BOOL TGraphWeb::isDummy() const
 	return false;
 }
 
+// TODO: retail keeps param_1's three components and point2's y/z in
+// registers across the stores to `thing` (f30/f31 are saved to make room),
+// where we reload param_1 for `thing.sub` and point2 for the scaleAdd; it
+// also forms &nodes[i] with an `add` before loading the rail node. Neither
+// `thing -= param_1`, a by-value getPoint(), a named node pointer nor
+// hoisting `nodes` out of the loop reproduces that.
 JGeometry::TVec3<f32>
 TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 {
-	bool bVar9 = true;
+	BOOL bVar9 = true;
 
 	JGeometry::TVec3<f32> local_48(param_1);
 	f32 min;
@@ -779,9 +785,12 @@ TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 			point2.z = connNode->mPosition.z;
 			point2 -= point;
 
-			f32 fVar4 = MsClamp((param_1.dot(point2) - point.dot(point2))
-			                        / point2.squared(),
-			                    0.0f, 1.0f);
+			f32 fVar4 = (param_1.dot(point2) - point.dot(point2))
+			            / point2.squared();
+			if (fVar4 < 0.0f)
+				fVar4 = 0.0f;
+			else if (fVar4 > 1.0f)
+				fVar4 = 1.0f;
 			JGeometry::TVec3<f32> thing(point2);
 			thing.scale(fVar4);
 			thing.add(point);
@@ -935,17 +944,17 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 	if (mPrevIdx < 0)
 		return 0.001f;
 
-	// TODO: retail builds only two vectors here (getPoint's own `p` and the
-	// result), where the by-value getPoint() plus a TVec3 copy ctor gives us
-	// a third: the return temporary is copied into v1 instead of being v1.
-	// Returning a constructed temporary from getPoint() instead of `p` is
-	// -5pp here and -40pp in TSplineRail::TSplineRail, so the elision is
-	// caller-side. The fVar1/fVar2 FPR pair is also swapped (retail colours
-	// the second-computed f0); declaration order does not move it.
+	// TODO: retail subtracts the second point as an unnamed getPoint()
+	// temporary (p at 0x88 copied to 0x100, then `-=`), which this spelling
+	// reproduces, but it builds v1 straight from the first getPoint's `p`
+	// (0x9c -> 0x10c) where we copy through a return temporary. Retail's frame
+	// is 0x158 against our 0xc8, with 0x58 bytes unused between the two
+	// point blocks, so a missing inline level holds the rest. Taking VECMag of
+	// the `getPoint() -= getPoint()` temporary is worse (-3pp). The
+	// fVar1/fVar2 FPR pair is also swapped (retail colours the
+	// second-computed f0); declaration order does not move it.
 	JGeometry::TVec3<f32> v1 = unk0->unk0[mCurrIdx].getPoint();
-	JGeometry::TVec3<f32> v2 = unk0->unk0[mPrevIdx].getPoint();
-
-	v1 -= v2;
+	v1 -= unk0->unk0[mPrevIdx].getPoint();
 	f32 fVar13 = VECMag(&v1);
 
 	TSplineRail* rail = unk0->getSplineRail();
