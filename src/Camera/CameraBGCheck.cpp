@@ -38,23 +38,28 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 		}
 
 		JGeometry::TVec3<f32> local_120[2][9];
-		S16Vec SStack_134[9];
+		S16Vec euler;
 
-		CLBCalcNearNinePos(local_120[0], SStack_134, unk124, unk148,
+		CLBCalcNearNinePos(local_120[0], &euler, unk124, unk148,
 		                   getFinalAngleZ(), mNear, mFovy, mAspect);
 
-		// TODO: retail unrolls this loop three times (ctr 3) where ours
-		// unrolls it fully; frame 0x1c0 vs 0x200. Inert: unk2C4 read in the
-		// body, near/far pointers, a named far reference, a flat [18] array.
+		// TODO: 97.3%, frame 0x1c8 vs 0x1c0. Walking a far pointer gives
+		// retail's ctr-3 unroll (a plain [1][i] store unrolls fully), but
+		// retail derives far from near (+0x6c) off one i*12 offset and keeps
+		// a dead i increment; the euler slot also sits below local_12C in
+		// retail. Inert: top-scope local_12C/local_138 declarations, a near
+		// pointer walk, p[9], u8/s16/u32 counters, a do-while, a TVec3 temp.
 		f32 fVar1 = unk2C4;
-		for (int i = 0; i < 9; ++i) {
-			local_120[1][i].scaleAdd(fVar1, unk25C, local_120[0][i]);
+		JGeometry::TVec3<f32>* p = local_120[1];
+		for (int i = 0; i < 9; ++i, ++p) {
+			p->scaleAdd(fVar1, unk25C, local_120[0][i]);
 		}
 
+		f32 fVar2;
 		f32 tmp = unk2C0;
 		for (int i = 0; i < 9; ++i) {
 			for (int j = 0; j < 2; ++j) {
-				f32 fVar2 = 0.0f;
+				fVar2 = 0.0f;
 				for (int k = 0; k < 2; ++k) {
 					JGeometry::TVec3<f32> local_12C(local_120[j][i].x,
 					                                local_120[j][i].y
