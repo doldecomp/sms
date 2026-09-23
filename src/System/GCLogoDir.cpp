@@ -170,6 +170,34 @@ int TGCLogoDir::direct()
 	return desiredAppState;
 }
 
+// Cases 0 and 1 of direct_nlogo share this block; expanding it as a helper
+// gives retail's register reuse of the zero `cancelled` for the stores.
+static inline bool GCLogoCancelProgressive(TGCLogoDir* dir)
+{
+	bool cancelled = false;
+
+	if ((int)dir->mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
+	    && VIGetDTVStatus() == 1) {
+		if (OSGetProgressiveMode() == 1) {
+			dir->mProgSelect->unkC = 0;
+			cancelled              = true;
+		} else if (dir->mGamePad->getButton() & JUTGamePad::B) {
+			dir->unk44 += 1;
+			if (dir->unk44 / SMSGetVSyncTimesPerSec() > 1.0f) {
+				dir->mProgSelect->unkC = 0;
+				cancelled              = true;
+			}
+		} else {
+			dir->unk44 = 0;
+		}
+	}
+
+	return cancelled;
+}
+
+// TODO: 99.4%, the frame 0xa8 short (the TU-wide dead low region noted at
+// direct_dolby) and retail reloads mState after the isSomethingPushed test;
+// a shared state-change helper for the tail is inert or worse.
 bool TGCLogoDir::direct_nlogo()
 {
 	bool ended    = false;
@@ -182,18 +210,7 @@ bool TGCLogoDir::direct_nlogo()
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_MV_CHAO, 0, nullptr, 0);
 			mLogoShowTimer = 0;
 		} else {
-			if ((int)mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
-			    && VIGetDTVStatus() == 1) {
-				if (OSGetProgressiveMode() == 1) {
-					mProgSelect->unkC = 0;
-				} else if (mGamePad->getButton() & JUTGamePad::B) {
-					unk44 += 1;
-					if (unk44 / SMSGetVSyncTimesPerSec() > 1.0f)
-						mProgSelect->unkC = 0;
-				} else {
-					unk44 = 0;
-				}
-			}
+			GCLogoCancelProgressive(this);
 		}
 		break;
 
@@ -203,25 +220,7 @@ bool TGCLogoDir::direct_nlogo()
 			nextState = 2;
 			OSSetProgressiveMode(0);
 		} else {
-			bool bVar1 = false;
-
-			if ((int)mProgSelect->unkC.mValue != 0 && VIGetTvFormat() == 0
-			    && VIGetDTVStatus() == 1) {
-				if (OSGetProgressiveMode() == 1) {
-					mProgSelect->unkC = 0;
-					bVar1             = true;
-				} else if (mGamePad->getButton() & JUTGamePad::B) {
-					unk44 += 1;
-					if (unk44 / SMSGetVSyncTimesPerSec() > 1.0f) {
-						mProgSelect->unkC = 0;
-						bVar1             = true;
-					}
-				} else {
-					unk44 = 0;
-				}
-			}
-
-			if (bVar1) {
+			if (GCLogoCancelProgressive(this)) {
 				mLogoShowTimer = 0;
 				nextState      = 3;
 			}
