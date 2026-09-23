@@ -960,7 +960,19 @@ void TBathtub::calcRootMatrix()
 }
 
 // Unused; TODO: Recover quaternion and direction helpers from their callers.
-void QuatRotate(JGeometry::TQuat4<f32>&, const JGeometry::TVec3<f32>&) { }
+// Integrates angular velocity `w` into `q` over one frame.
+void QuatRotate(JGeometry::TQuat4<f32>& q, const JGeometry::TVec3<f32>& w)
+{
+	JGeometry::TQuat4<f32> dq;
+	dq.xyz().scale(0.5f, w);
+	dq.w = 0.0f;
+	dq.mul(q);
+	q.x += dq.x;
+	q.y += dq.y;
+	q.z += dq.z;
+	q.w += dq.w;
+	q.normalize();
+}
 
 // A setter level around the found-angle store: +4 of low region, the
 // rung that lands TBathtub::getNearGrip's inlined getDir block.
@@ -1110,13 +1122,14 @@ void TBathtub::showMessage(u32 message)
 	unk2A0 |= 1 << message;
 }
 
+// TODO: retail keeps `excess` as an unfused fmuls/fsubs (ours fuses to
+// fnmsubs), and mQuat.mul(limit, mQuat) reads limit.w * q.x first, the
+// term order of TQuat4::mul(other); the rest is FPR numbering.
 void TBathtub::updatePosture_()
 {
-	static JGeometry::TVec3<f32> y(0.0f, 1.0f, 0.0f);
+	static JGeometry::TVec3<f32> yDown(0.0f, 1.0f, 0.0f);
 
-	if (unk250 != 0) {
-		unk250--;
-	} else {
+	if (unk250 == 0) {
 		f32 rate;
 		if (unk258 == 0) {
 			rate = 1.0f;
@@ -1127,31 +1140,24 @@ void TBathtub::updatePosture_()
 		JGeometry::TVec3<f32> up;
 		mQuat.getYDir(up);
 		JGeometry::TVec3<f32> axis;
-		axis.cross(y, up);
+		axis.cross(yDown, up);
 		axis.normalize();
-		axis.scale(unk16C->rebound.get() * (rate * -acosf(y.dot(up))));
-		mAngleVel.scaleAdd(unk16C->angleVelDamp.get(), mAngleVel, axis);
+		f32 rebound = unk16C->rebound.value;
+		axis.scale(rebound * (rate * -acosf(yDown.dot(up))));
+		mAngleVel.scaleAdd(unk16C->angleVelDamp.value, mAngleVel, axis);
+	} else {
+		unk250--;
 	}
 
-	JGeometry::TQuat4<f32> dq;
-	dq.x = 0.5f * mAngleVel.x;
-	dq.y = 0.5f * mAngleVel.y;
-	dq.z = 0.5f * mAngleVel.z;
-	dq.w = 0.0f;
-	dq.mul(dq, mQuat);
-	mQuat.x += dq.x;
-	mQuat.y += dq.y;
-	mQuat.z += dq.z;
-	mQuat.w += dq.w;
-	mQuat.normalize();
+	QuatRotate(mQuat, mAngleVel);
 
 	JGeometry::TVec3<f32> up;
 	mQuat.getYDir(up);
-	f32 angle = acosf(y.dot(up));
-	f32 excess = angle - unk16C->maxAngle.get() * 0.017453292f;
+	f32 angle = acosf(yDown.dot(up));
+	f32 excess = angle - unk16C->maxAngle.value * 0.017453292f;
 	if (excess > 0.0f) {
 		JGeometry::TQuat4<f32> limit;
-		limit.setRotate(up, y, excess / angle);
+		limit.setRotate(up, yDown, excess / angle);
 		mQuat.mul(limit, mQuat);
 	}
 	mQuat.normalize();
