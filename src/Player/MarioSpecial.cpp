@@ -439,8 +439,27 @@ BOOL TMario::startHangLanding(u32 status)
 
 void TMario::hangingCommon(int, int) { }
 
-void TMario::findNearestWall(const TBGWallCheckRecord&) { }
+TBGCheckData* TMario::findNearestWall(const TBGWallCheckRecord& record)
+{
+	TBGCheckData* found = nullptr;
+	for (int i = 0; i < record.mResultWallsNum; i++) {
+		TBGCheckData* w = record.mResultWalls[i];
+		s16 ang = matan(w->mNormal.z, w->mNormal.x) - (mFaceAngle.y + 0x8000);
+		if (ang > -0x2000 && ang < 0x2000) {
+			JGeometry::TVec3<f32> pos = mPosition;
+			f32 d = w->mNormal.x * pos.x + w->mNormal.y * pos.y
+			        + w->mNormal.z * pos.z + w->mPlaneDistance;
+			if (d < 50.0f)
+				found = record.mResultWalls[i];
+		}
+	}
+	return found;
+}
 
+// TODO: frame 0x208 against retail's 0x278. The inlined findNearestWall's
+// `pos` sits at 0xe0 (retail 0x16c); hangingCommon(int, int) (UNUSED, 0x78)
+// is likely a second missing level -- the pulledUp animation block as a
+// helper emits 160 bytes, so that is not its body.
 BOOL TMario::hanging()
 {
 	BOOL pulledUp = FALSE;
@@ -472,17 +491,7 @@ BOOL TMario::hanging()
 	                          30.0f, 4, 0);
 	gpMap->isTouchedWallsAndMoveXZ(&record);
 
-	for (int i = 0; i < record.mResultWallsNum; i++) {
-		TBGCheckData* w = record.mResultWalls[i];
-		s16 ang = matan(w->mNormal.z, w->mNormal.x) - (mFaceAngle.y + 0x8000);
-		if (ang > -0x2000 && ang < 0x2000) {
-			JGeometry::TVec3<f32> pos = mPosition;
-			f32 d = w->mNormal.x * pos.x + w->mNormal.y * pos.y
-			        + w->mNormal.z * pos.z + w->mPlaneDistance;
-			if (d < 50.0f)
-				foundWall = record.mResultWalls[i];
-		}
-	}
+	foundWall = findNearestWall(record);
 
 	if (foundWall == nullptr)
 		changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
@@ -543,18 +552,7 @@ BOOL TMario::hanging()
 				    newPos.z - 30.0f * JMASCos(mFaceAngle.y), 30.0f, 4, 0);
 				gpMap->isTouchedWallsAndMoveXZ(&record4);
 
-				for (int j = 0; j < record4.mResultWallsNum; j++) {
-					TBGCheckData* w = record4.mResultWalls[j];
-					s16 ang         = matan(w->mNormal.z, w->mNormal.x)
-					          - (mFaceAngle.y + 0x8000);
-					if (ang > -0x2000 && ang < 0x2000) {
-						JGeometry::TVec3<f32> pos = mPosition;
-						f32 d = w->mNormal.x * pos.x + w->mNormal.y * pos.y
-						        + w->mNormal.z * pos.z + w->mPlaneDistance;
-						if (d < 50.0f)
-							foundWall2 = record4.mResultWalls[j];
-					}
-				}
+				foundWall2 = findNearestWall(record4);
 
 				if (foundWall2 != nullptr
 				    && mDeParams.mHangWallMovableAngle.get()
@@ -746,6 +744,9 @@ BOOL TMario::wireMove(f32 param_1)
 	return clean;
 }
 
+// TODO: the rest is the inlined getOnWirePosAngle: retail keeps one named
+// `dir` and `bl`s the copy constructor off it; dropping `dirCopy` gets the
+// four wire callers ~1 point each but costs the emitted copy 99.5 -> 95.3.
 BOOL TMario::wireWait()
 {
 	s16 wireAngle;
@@ -778,7 +779,7 @@ BOOL TMario::wireWait()
 		}
 	}
 
-	if (mInput & 0x10000) {
+	if (mInput & 0x8000) {
 		mWireBounceVel = 5.0f;
 		return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_HANG, 0, false);
 	}
@@ -836,7 +837,7 @@ BOOL TMario::wireSWait()
 		}
 	}
 
-	if (mInput & 0x10000) {
+	if (mInput & 0x8000) {
 		mWireBounceVelPrev = 5.0f;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
 		return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_HANG, 0, false);
@@ -1325,7 +1326,10 @@ BOOL TMario::pulling()
 		JGeometry::TVec3<f32> delta;
 		// TODO: retail reloads mActorType for the second test (the const
 		// getActorType() lets MWCC CSE it for us); isActorType() instead
-		// costs 12 bytes of frame, so the ternary form stays.
+		// costs 12 bytes of frame, so the ternary form stays. A named
+		// `TTakeActor* held` gives the reload (98.5) but 0x10 short of frame.
+		// Also open: animRate gets f31 (retail f30, sinF's register; spelling
+		// inert) and length()'s squared() contraction (see wireMove).
 		if ((mHeldObject->getActorType() == 0x8000006 ? true : false)
 		    || (mHeldObject->getActorType() == 0x8000008 ? true : false)) {
 			delta = pos - mPrevPosition;

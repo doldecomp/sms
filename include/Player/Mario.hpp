@@ -1019,7 +1019,7 @@ public:
 	BOOL kickRoofRollDown();
 	BOOL startHangLanding(u32);
 	void hangingCommon(int, int);
-	void findNearestWall(const TBGWallCheckRecord&);
+	TBGCheckData* findNearestWall(const TBGWallCheckRecord&);
 	BOOL hanging();
 	BOOL ascend();
 	BOOL descend();
