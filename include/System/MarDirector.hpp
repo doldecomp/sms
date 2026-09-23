@@ -107,7 +107,7 @@ public:
 	void getTalkMsgID(TBaseNPC*);
 	void entryNPC(TBaseNPC*);
 	void setupPerformList_console();
-	void
+	static void
 	initECDisp(TPerformList*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*,
 	           JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*);

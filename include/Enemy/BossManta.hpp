@@ -74,7 +74,7 @@ public:
 
 class TBossMantaAdditionalCollision : public THitActor {
 public:
-	TBossMantaAdditionalCollision(const char* name);
+	TBossMantaAdditionalCollision(const char* name = "マンタ追加コリジョン");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32);

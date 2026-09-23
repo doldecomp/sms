@@ -10,7 +10,7 @@ class J3DAnmBase;
 
 class TLensGlow : public JDrama::TViewObj {
 public:
-	TLensGlow(bool, const char*);
+	TLensGlow(bool, const char* name);
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:

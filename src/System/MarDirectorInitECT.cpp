@@ -46,9 +46,9 @@ void TMarDirector::initECTGft(
 	param_1->push_back(graffitiEfbTex, CUE_DRAW_INIT);
 
 	param_1->push_back(new JDrama::TViewport(rect, "graffito"), CUE_DRAW);
-	param_1->push_back(
-	    new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 512.0f, 0.0f, 512.0f),
-	    CUE_SET_PROJECTION);
+	JDrama::TOrthoProj* ortho
+	    = new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 512.0f, 0.0f, 512.0f);
+	param_1->push_back(ortho, CUE_SET_PROJECTION);
 	param_1->push_back(drawInit, CUE_DRAW);
 	param_1->push_back(graffitiGroup, CUE_UNK1000000);
 	param_1->push_back(graffitiEfbTex, CUE_DRAW);
@@ -59,7 +59,7 @@ void TMarDirector::initECTGft(
 
 		const ResTIMG* img = gpPollution->getLayer(i)->getPollutionImage();
 
-		efbTex->setImgPtr((u8*)&img + img->imageDataOffset);
+		efbTex->setImgPtr((u8*)img + img->imageDataOffset);
 		JDrama::TSize size(img->width, img->height);
 		efbTex->setDstSize(size);
 		efbTex->setTexFmt(GX_CTF_R8);
@@ -69,15 +69,14 @@ void TMarDirector::initECTGft(
 
 		param_2->push_back(efbTex, CUE_DRAW_INIT);
 		param_2->push_back(new JDrama::TViewport(rect, "graffito"), CUE_DRAW);
-		param_2->push_back(new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f,
-		                                          img->height, 0.0f,
-		                                          img->width),
-		                   CUE_SET_PROJECTION);
-		param_1->push_back(drawInit, CUE_DRAW);
-		param_1->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
+		JDrama::TOrthoProj* ortho = new JDrama::TOrthoProj(
+		    -1.0f, 1.0f, 0.0f, img->height, 0.0f, img->width);
+		param_2->push_back(ortho, CUE_SET_PROJECTION);
+		param_2->push_back(drawInit, CUE_DRAW);
+		param_2->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
 		                                      | CUE_SEMITRANSPARENT_PRIO_2
 		                                      | CUE_DRAW);
-		param_1->push_back(efbTex, CUE_DRAW);
+		param_2->push_back(efbTex, CUE_DRAW);
 	}
 }
 
@@ -96,8 +95,8 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 
 	GXTexObj& obj = mirrorCam->unk60;
 	mirrorTex->setTexAttb(obj);
-	mirrorTex->setSrcRect(
-	    JDrama::TRect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj)));
+	JDrama::TRect rect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj));
+	mirrorTex->setSrcRect(rect);
 
 	return mirrorTex;
 }
@@ -106,40 +105,37 @@ extern void marker();
 
 void TMarDirector::initECDisp(
     TPerformList* param_1,
-    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* param_2,
-    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* param_3)
+    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*
+        perf_event_group,
+    JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>* scene)
 {
 	JDrama::TEfbCtrlDisp* stageDisp = new JDrama::TEfbCtrlDisp("stageDisp");
 	stageDisp->JDrama::TEfbCtrl::setSrcRect(JDrama::TRect(
 	    0, 0, (u16)SMSGetGameRenderWidth(), (u16)SMSGetGameRenderHeight()));
-	param_2->insert(stageDisp);
+	scene->insert(stageDisp);
 
 	JDrama::TViewObj* composite3
 	    = static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("合成3"));
 	JDrama::TViewObj* specularSheen = static_cast<JDrama::TViewObj*>(
 	    JDrama::TNameRefGen::search("スペキュラシーン"));
 
+	const char* glowName  = "太陽遮蔽物グロー";
+	const char* flareName = "レンズフレア";
+
 	TLensGlow* lensGlow       = nullptr;
 	TLensFlare* lensFlare     = nullptr;
 	JDrama::TOrthoProj* ortho = nullptr;
 
-	JDrama::TViewObj* sunModel = static_cast<JDrama::TViewObj*>(
-	    JDrama::TNameRefGen::search("太陽モデル"));
-
-	if (sunModel) {
-		lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
-		param_2->insert(lensGlow);
-		lensFlare = new TLensFlare("レンズフレア");
-		param_2->insert(lensFlare);
-	} else {
-		sunModel = static_cast<JDrama::TViewObj*>(
-		    JDrama::TNameRefGen::search("夕日モデル"));
-		if (sunModel) {
-			lensGlow = new TLensGlow(true, "太陽遮蔽物グロー");
-			param_2->insert(lensGlow);
-			lensFlare = new TLensFlare("レンズフレア");
-			param_2->insert(lensFlare);
-		}
+	if (JDrama::TNameRefGen::search("太陽モデル")) {
+		lensGlow = new TLensGlow(false, glowName);
+		scene->insert(lensGlow);
+		lensFlare = new TLensFlare(flareName);
+		scene->insert(lensFlare);
+	} else if (JDrama::TNameRefGen::search("夕日モデル")) {
+		lensGlow = new TLensGlow(true, glowName);
+		scene->insert(lensGlow);
+		lensFlare = new TLensFlare(flareName);
+		scene->insert(lensFlare);
 	}
 
 	if (specularSheen || lensFlare || lensGlow) {
