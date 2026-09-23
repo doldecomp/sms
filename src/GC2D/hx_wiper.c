@@ -1819,6 +1819,9 @@ static void Hxs1_Test2(u32 num, u32 dir, f32 cx, f32 cy, f32 r_out, f32 r_in)
 /* ------------------------------------------------------------------------- */
 /* Spiral wipe. */
 
+// TODO: retail's frame is 8 bytes larger in the low region (its conversion
+// slots start at 0x10, the gap Hx_Door shows), and it carries a dead `b` to
+// the epilogue ahead of case 0; `default` first or last does not produce it.
 static void Hx_Test4(void)
 {
 	static f32 thin;
@@ -1827,6 +1830,8 @@ static void Hx_Test4(void)
 	static f32 rstep_d;
 
 	f32 r;
+	f32 ro;
+	f32 ri;
 	f32 a;
 	f32 x1;
 	f32 y1;
@@ -1859,33 +1864,36 @@ static void Hx_Test4(void)
 		thin += thin_d;
 
 		r  = (hx.width >> 1) + 200;
-		x1 = ((r + thin) * sinf(0.0f)) + hx.centerX;
-		y1 = ((r + thin) * cosf(0.0f)) + hx.centerY;
-		x2 = ((r - thin) * sinf(0.0f)) + hx.centerX;
-		y2 = ((r - thin) * cosf(0.0f)) + hx.centerY;
 		a  = 0.0f;
+		ro = r + thin;
+		x1 = (ro * sinf(a)) + hx.centerX;
+		y1 = (ro * cosf(a)) + hx.centerY;
+		ri = r - thin;
+		x2 = (ri * sinf(a)) + hx.centerX;
+		y2 = (ri * cosf(a)) + hx.centerY;
 
+		a = 0.0f;
 		Hx_CameraInit();
 		Hx_GxInit(0, 1);
 
 		for (i = 0; i < rstep; i++) {
-			f32 nr;
 			f32 nx1;
 			f32 ny1;
 			f32 nx2;
 			f32 ny2;
 
 			r -= 2.4f;
+			ro = r + thin;
 			if (r < thin)
-				nr = 0.0f;
+				ri = 0.0f;
 			else
-				nr = r - thin;
+				ri = r - thin;
 			a += 0.12f;
 
-			nx1 = ((r + thin) * sinf(a)) + hx.centerX;
-			ny1 = ((r + thin) * cosf(a)) + hx.centerY;
-			nx2 = (nr * sinf(a)) + hx.centerX;
-			ny2 = (nr * cosf(a)) + hx.centerY;
+			nx1 = (ro * sinf(a)) + hx.centerX;
+			ny1 = (ro * cosf(a)) + hx.centerY;
+			nx2 = (ri * sinf(a)) + hx.centerX;
+			ny2 = (ri * cosf(a)) + hx.centerY;
 
 			GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 			GXPosition3f32(x1, y1, 0.0f);
