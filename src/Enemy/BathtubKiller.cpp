@@ -468,6 +468,10 @@ f32 TBathtubKiller::getBathtubY()
 	return (*unk1CC->getRootJointMtx())[1][3];
 }
 
+// TODO: frame 0x18 long (0xe0 vs 0xc8); setRotate's cross product permutes
+// f28-f31 (the JGQuat4.hpp family), and retail schedules the product
+// aim * mQuat in mul(other)'s w-first order with the result stored straight
+// into mQuat. Worse: aim.mul(mQuat) + copy, w-first order in mul(a, b).
 void TBathtubKiller::makeInitialVelocity(JGeometry::TVec3<f32> velocity)
 {
 	f32 speed = velocity.length();
@@ -483,7 +487,7 @@ void TBathtubKiller::makeInitialVelocity(JGeometry::TVec3<f32> velocity)
 	mQuat.getZDir(forward);
 	JGeometry::TQuat4<f32> aim;
 	aim.setRotate(forward, velocity, 1.0f);
-	mQuat.mul(aim);
+	mQuat.mul(aim, mQuat);
 }
 
 // TODO: dead in the ROM (UNUSED 0x78) and reconstructed from bind()'s
