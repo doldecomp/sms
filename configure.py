@@ -836,7 +836,7 @@ config.libs = [
             Object(NonMatching, "M3DUtil/MActorData.cpp"),
             PCHObject(NonMatching, "M3DUtil/SDLModel.cpp"),
             Object(Matching, "M3DUtil/MActorUtil.cpp"),
-            PCHObject(Matching, "M3DUtil/SampleCtrlNode.cpp"),
+            PCHObject(NonMatching, "M3DUtil/SampleCtrlNode.cpp"),
             PCHObject(Matching, "M3DUtil/SampleCtrlModel.cpp"),
             Object(Matching, "M3DUtil/MotionBlendCtrl.cpp"),
             Object(Matching, "M3DUtil/LodAnm.cpp"),
