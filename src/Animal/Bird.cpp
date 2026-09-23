@@ -458,8 +458,40 @@ void TAnimalBird::doDropCoin()
 	}
 }
 
-// TODO: 95.3%. Instruction-identical except the quaternion temporary's
-// register numbering inside the inlined rotate; frame exact.
+// TODO(JGQuat4.hpp): parked header need. Retail's two-argument
+// TQuat4::rotate is a two-level body: the inner level declares the TQuat4
+// temporary (the `bl TVec4<f>::TVec4()`), reads the quaternion's members
+// directly after that call, has no `* 0` terms, and ends in the
+// TVec3<f>::set<f> that goes out of line one level deeper (WalkOnGround's
+// weak set<f>). Move this into the header's rotate(v, dest) once the header
+// round lands.
+static inline void BirdRotateQ(const JGeometry::TQuat4<f32>& r,
+                               const JGeometry::TVec3<f32>& v,
+                               JGeometry::TVec3<f32>& rDest)
+{
+	// clang-format off
+	JGeometry::TQuat4<f32> q;
+	q.x =  r.y * v.z - r.z * v.y + r.w * v.x;
+	q.y = -r.x * v.z + r.z * v.x + r.w * v.y;
+	q.z =  r.x * v.y - r.y * v.x + r.w * v.z;
+	q.w = -r.x * v.x - r.y * v.y - r.z * v.z;
+
+	rDest.set( q.x *  r.w + q.y * -r.z - q.z * -r.y + q.w * -r.x,
+	          -q.x * -r.z + q.y *  r.w + q.z * -r.x + q.w * -r.y,
+	           q.x * -r.y - q.y * -r.x + q.z *  r.w + q.w * -r.z);
+	// clang-format on
+}
+
+static inline void BirdRotate(const JGeometry::TQuat4<f32>& r,
+                              const JGeometry::TVec3<f32>& v,
+                              JGeometry::TVec3<f32>& rDest)
+{
+	BirdRotateQ(r, v, rDest);
+}
+
+
+// TODO: 95.4%. Instruction-identical except the quaternion temporary's
+// register numbering inside the inlined rotate and toGoal 4 bytes low.
 void TAnimalBird::doFlyToCurPathNode()
 {
 	JGeometry::TVec3<f32> toGoal = getUnkF4().getPoint();
@@ -481,7 +513,7 @@ void TAnimalBird::doFlyToCurPathNode()
 
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
 	JGeometry::TVec3<f32> velocity(0.0f, 0.0f, marchSpeed);
-	quat.rotate(velocity, velocity);
+	BirdRotate(quat, velocity, velocity);
 	velocity.scale(1.0f - getWaterDamageRate());
 	velocity.y -= getWaterPowerY();
 	mLinearVelocity = velocity;
@@ -499,11 +531,11 @@ void TAnimalBird::doWalk()
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
 	JGeometry::TVec3<f32> velocity(0.0f, 0.0f,
 	                               getSaveParams()->mWalkingSpeed.get());
-	quat.rotate(velocity, velocity);
+	BirdRotate(quat, velocity, velocity);
 	mLinearVelocity = velocity;
 }
 
-// TODO: 88.2%, frame 0x178 against 0x158. The take-off velocity is rotated in
+// TODO: 88.8%, frame exact with the final rotate through BirdRotate. The take-off velocity is rotated in
 // place and rebuilt flat, which lets MWCC drop the rotated y as retail does.
 // Left: (1) `velocity.length()` expands TUtil<f32>::sqrt here while retail
 // calls it -- the same per-call-site inconsistency the catalog records for
@@ -547,7 +579,7 @@ bool TAnimalBird::doLanding(bool takeoff)
 	velocity = mVelocity;
 	JGeometry::TVec3<f32> forward(0.0f, 0.0f, velocity.length());
 	forward.scale(getSaveParams()->mLandingFric.get());
-	SMS_Eular2Quat(mRotation).rotate(forward, forward);
+	BirdRotate(SMS_Eular2Quat(mRotation), forward, forward);
 	mVelocity = forward;
 
 	return landed && fabsf(turn) < 0.01f;
@@ -722,23 +754,10 @@ DEFINE_NERVE(TNerveAnimalBirdActionOnGround, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 75.9%. Retail's inlined TQuat4::rotate keeps its TQuat4 temporary in
-// memory and calls both TVec4<f32>::TVec4() and the TU-local
-// set<f>__Q29JGeometry8TVec3<f>Ffff; that local instantiation is the open
-// JGVec3.hpp problem in docs/catalog (our in-class member template always
-// expands), so the quaternion temporary is scalarised here and the whole
-// expansion renumbers.
-//
-// Both of this TU's validate-symbol-order failures are that one fact. A local
-// template instantiation is emitted immediately after the first function in
-// *emission* order that needs its out-of-line body, so the map's
-// `execute__WalkOnGround, set<f>, MsWrap<f>, theNerve__WalkOnGround` says this
-// function calls both; ours inlines both, MsWrap's first real caller is
-// doLanding thirty symbols later, and set<f> is never called at all -- hence
-// one MISSING and one ORDER error from a single missing refusal. The same
-// three inlines (MsWrap, TVec3::set<f>, TVec4::TVec4) flip together in
-// TAnimalBase::execWalk, so it is the caller-size family, not a spelling
-// here.
+// TODO: 93.1%, frame 0xb0 against 0xb8. With doWalk's rotate going through
+// the two-level BirdRotate the TVec4() and TVec3::set<f> calls and the
+// weak set<f> are retail's; left is 0xc of low region below the quaternion
+// temporary and the -z/-x negation schedule inside BirdRotateQ.
 DEFINE_NERVE(TNerveAnimalBirdWalkOnGround, TLiveActor)
 {
 	TAnimalBird* bird = (TAnimalBird*)spine->getBody();
@@ -761,7 +780,7 @@ DEFINE_NERVE(TNerveAnimalBirdWalkOnGround, TLiveActor)
 	// set, not this call site.
 	bird->doWalk();
 
-	if (bird->isWantToRest()) {
+	if (bird->getSaveParams()->mWalkTimer.get() < spine->getTime()) {
 		spine->pushAfterCurrent(&TNerveAnimalBirdWaitOnGround::theNerve());
 		return TRUE;
 	}
