@@ -28,6 +28,9 @@ void MSRandVol::construct(u32 param)
 	smList.append(&p->mLink);
 }
 
+// TODO: instruction-exact; frame 0x18 vs retail 0x20 (8 bytes of low region,
+// as in MSRandPlay's ctor). Inert: body assignments instead of initialisers,
+// an empty base, an inline dtor, dropping `virtual`.
 MSRandVol::MSRandVol(u32 param)
     : mLink(this)
     , unk14(param)
@@ -123,6 +126,8 @@ void MSRandPlay::startSeRandPlay(u32 sound_id, u32 vec_idx)
 	}
 }
 
+// TODO: instruction-exact; frame 0x40 vs retail 0x48, same 8-byte low-region
+// gap as MSRandVol's ctor. Inert: members assigned in the body (all or some).
 MSRandPlay::MSRandPlay(u32 sound_id, s32 wait_min, s32 wait_max,
                        f32 curve_slope, f32 plus_slope)
     : mLink(this)
@@ -826,6 +831,10 @@ u32 MSoundSE::getNewIDBySurfaceCode(u32 id, JAIActor* actor)
 	return id;
 }
 
+// TODO: instruction-exact; frame 0x78 vs retail 0x88 (actor 0x58 vs 0x64,
+// the inlined checkMonoSound's info slot shifted with it). Inert: `if`
+// on checkMonoSound's result, early return, qualified calls; a copy-initialised
+// actor is +0x20.
 void MSoundSE::startSoundNpcActor(u32 id, const Vec* position, u32 ground_no,
                                   JAISoundHandle* out_handle, u32 fade,
                                   u8 camera_idx)
