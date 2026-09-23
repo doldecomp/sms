@@ -47,23 +47,23 @@ BOOL TMario::winDemo()
 
 BOOL TMario::readBillboard()
 {
-	// Missing stack space
-	// volatile u32 padding[16];
+	// TODO: frame 0x28 against retail's 0x70: every slot sits 0x40 low (the
+	// inlined sqrt temporary is 0x4c there), and retail loads the NPC into r5
+	// and copies it to r30, reading case 0's positions through r5.
 
 	TBaseNPC* talkingNpc = gpMarDirector->unkA0;
 	switch (mStatusState) {
 	case 0: {
-		const JGeometry::TVec3<f32>& targetPos = talkingNpc->getPosition();
-		f32 dx                                 = mPosition.x - targetPos.x;
-		f32 dz                                 = mPosition.z - targetPos.z;
+		f32 dx = mPosition.x - talkingNpc->mPosition.x;
+		f32 dz = mPosition.z - talkingNpc->mPosition.z;
 		if (dx == 0.0f && dz == 0.0f)
 			dx += 1.0f;
 
 		f32 dist = std::sqrtf(dx * dx + dz * dz);
 		if (dist < 100.0f) {
 			JGeometry::TVec3<f32> moveDist;
-			moveDist.x = dx / dist * 2.0f * 50.0f + mPosition.x;
-			moveDist.z = dz / dist * 2.0f * 50.0f + mPosition.z;
+			moveDist.x = dx / dist * 2.0f * 50.0f + talkingNpc->mPosition.x;
+			moveDist.z = dz / dist * 2.0f * 50.0f + talkingNpc->mPosition.z;
 			moveDist.y = mFloorPosition.y;
 			moveRequest(moveDist);
 		}
