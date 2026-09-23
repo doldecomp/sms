@@ -1,0 +1,26 @@
+rs2 findings (nothing committed; worktree restored to HEAD, dol SHA-1 verified)
+
+1. Cast-free left-operand spelling: `friend TVec3 operator-(const TVec3& fst, const TVec3& snd)
+   { TVec3 r; r = *(const Vec*)fst; r -= snd; return r; }` (t16.txt; header best_t16_JGVec3.hpp,
+   also needs uncast operator=(const TVec3&)). The only call is the existing `operator const Vec*`,
+   no downcast. TWireBinder::bind is 100% with 0 markers. Tree-wide: +17 / -7 exact, 45 up, 52 down
+   (t16_regressions.txt), the same as q1.
+   BUT retail contradicts both q1 and t16 at Tongue: retail's operator- at TYoshiTongue::movement
+   is bl __ct__(r <- tpos), bl __ami__(r), bl __ct__(ret <- r). That is a copy ctor with no
+   accessor call. Under q1 our extend arm emits a refused `bl operator const Vec*()` there.
+   t16 has no copy ctor at all. A plain `TVec3 r(fst); r -= snd; return r;` (t10) gives
+   exactly retail's three calls.
+   Not +4 at bind: a member form with `*this`, a named `const TVec3&`/`const TVec3*` local
+   (+8 each), `TVec3 r = TVec3(fst)`, `return TVec3(fst) -= snd` (+8 or +0x10),
+   `TVec3(const Vec&)` routes (177 instructions).
+2a. __ami__: a TU-local `static inline TVec3 TongueDiff(a,b){ return a - b; }` at the retract site
+   (`TongueDiff(mTipPos, mHeadPos) * mRetractAmount`) makes retail's ct/__ami__/ct sequence exact
+   there under q1, and __ami__ stops going MISSING. Under t10 both arms' call sequences match.
+   movement is still 94.0-94.5 against 96.69 at HEAD (frame 0x38 short), so it is still a regression.
+2b. (a-b).length(): drop the `TVec3(...)` wrapper, use mPosition not getPosition(), and pass the
+   difference to a by-value TU-local `f32 L(TVec3 v){ return v.length(); }`. Every instruction
+   matches and the frame matches under the plain header (t10), but every slot sits 4 short, the same
+   as the a = b - c sites under t10. Under q1 it is 4 over. So the conversion accessor costs +8 at
+   length sites and +4 at bind; retail sits between the two.
+3. The 52-function regression set makes zero regressions out of reach, so moveRoof, MameGessoJitabata
+   and execUTurn were not tried.

@@ -153,7 +153,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 
 - **`a = b - c` (research rs1, 2026-09-23):** the missing 4 bytes appear whenever an inlined member call is made on the left operand before a real copy construction (`TVec3 r(fst.anyAccessor())`), not specifically the `const Vec*` conversion.
   The best header (`operator-` as a friend building `r` that way, `r -= snd; return r;`) is +17/-7 functions tree-wide and links wireBinder, but loses weak `__ami__` (Tongue) and leaves a dead 12-byte object under every `(a - b).length()` site.
-  Header and change list: `docs/progress/research/abc_q1_JGVec3.hpp`, `abc_q1.changes`. Open question: why retail keeps one 12-byte object for `(a - b).length()` but two for `a = b - c`.
+  Header and change list: `docs/progress/research/abc_q1_JGVec3.hpp`, `abc_q1.changes`.
+  Follow-up rs2: retail's Tongue `operator-` calls copy-ctor, `__ami__`, copy-ctor with no accessor between, so the q1 accessor is wrong; plain `TVec3 r(fst); r -= snd; return r;` gives retail's calls but is 4 bytes short, and at `.length()` sites the accessor form is 4 high, so retail sits between the two (`abc_rs2_findings.txt`). Open question: why retail keeps one 12-byte object for `(a - b).length()` but two for `a = b - c`.
 
 ## Frame-size gaps
 
