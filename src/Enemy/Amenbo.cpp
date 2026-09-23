@@ -339,16 +339,19 @@ void TAmenbo::doAdjustTarget()
 	mQuat.normalize();
 }
 
-void TAmenbo::doChangeWaitAnm()
+bool TAmenbo::doChangeWaitAnm()
 {
-	if (checkCurAnmEnd(ANM_TYPE_BCK)) {
-		if (mMActor->checkCurAnm("amenbo_wait1_start", ANM_TYPE_BCK))
-			changeBck("amenbo_wait1_loop", 1.0f);
-		else if (mMActor->checkCurAnm("amenbo_wait1_loop", ANM_TYPE_BCK))
-			changeBck("amenbo_wait1_end", 1.0f);
-		else
-			changeBck("amenbo_wait1_start", 1.0f);
-	}
+	if (!checkCurAnmEnd(ANM_TYPE_BCK))
+		return false;
+
+	if (mMActor->checkCurAnm("amenbo_wait1_start", ANM_TYPE_BCK))
+		changeBck("amenbo_wait1_loop", 1.0f);
+	else if (mMActor->checkCurAnm("amenbo_wait1_loop", ANM_TYPE_BCK))
+		changeBck("amenbo_wait1_end", 1.0f);
+	else
+		changeBck("amenbo_wait1_start", 1.0f);
+
+	return true;
 }
 
 void TAmenbo::decideTarget()

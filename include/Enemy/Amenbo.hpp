@@ -38,7 +38,7 @@ public:
 	void prepareWalk();
 	bool doWalk();
 	void doAdjustTarget();
-	void doChangeWaitAnm();
+	bool doChangeWaitAnm();
 	void decideTarget();
 	void decideTargetOnFingingMario();
 	void setWalkDir(const JGeometry::TVec3<f32>&);
