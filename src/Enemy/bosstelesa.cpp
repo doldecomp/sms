@@ -1906,6 +1906,9 @@ static inline TCameraShake* BossTelesaRouletteGetCameraShake()
 	return shake;
 }
 
+// TODO: both TMsRange locals sit 4 low (0x4c/0x44, retail 0x50/0x48) and
+// retail keeps speedUp in f26, sign in f27 (ours swapped). Inert (co2): sign
+// declared before the loop, speedUp declared first.
 void TBossTelesa::rouletteStart()
 {
 	// A real ROM bug: the count is never used, so only the three speed loads
