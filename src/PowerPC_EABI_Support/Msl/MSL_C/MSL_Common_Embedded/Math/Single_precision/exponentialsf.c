@@ -117,10 +117,11 @@ inline float __log2f(float x)
 	static const float __log2e_m1[2] = { 0.41015625f, 0.03253879088896f };
 
 	int bits = *(int*)&x;
-	float frac, r;
+	float frac;
 	int exp, index;
 	int hi_bits;
 	float unkConsts[2] = { -0.72135162353515625f, 0.4808933f };
+	float frac2;
 	int lo_bits;
 	int mant;
 
@@ -139,19 +140,18 @@ inline float __log2f(float x)
 
 		frac = *(float*)&lo_bits - *(float*)&hi_bits;
 		frac *= __one_over_F[index];
+		frac2 = frac * frac;
 
-		r = 1.375f + (float)exp
+		return 1.375f + (float)exp
 		    + (__log2_F[index]
 		       + (frac
 		          + ((__log2e_m1[0] * frac)
 		             + ((__log2e_m1[1] * frac)
-		                + (frac * frac
+		                + (frac2
 		                   * ((frac * unkConsts[1]) + unkConsts[0]))))));
 	} else {
-		r = 1.375f + (float)exp + __log2_F[index];
+		return 1.375f + (float)exp + __log2_F[index];
 	}
-
-	return r;
 }
 
 // No map symbol: a weak-free inline whose shape (the int-to-float split, the
@@ -178,21 +178,6 @@ inline float __exp2f(float t)
 
 #pragma cplusplus off
 
-// TODO: 99.9%, every instruction, register and the 0x90 frame match; the
-// residue is one slot pair in each of the three `__log2f` expansions: retail
-// leaves a dead word between `unkConsts` and `lo_bits` (lo at +0x14 above the
-// block's `x`, ours +0x10, dead word on top). `fp` in `__exp2f` is the kind of
-// named float that reserves such a word (declaring `int n` before it put `n`
-// at retail's slot), but a named float intermediate in `__log2f` (`1.375f +
-// exp`, `frac * frac`, the polynomial tail, the whole sum) reserves 8 in the
-// first two expansions and grows the frame 0x10; every order of the register
-// locals around hi/consts/lo and dead locals are inert. Such a float does put
-// each block's inner layout exactly at retail's, only 4 too tall: dropping
-// `fp` to pay for it breaks the FPR colouring (98.6), and moving the `0.75 +
-// (0.25 + fp)` tail or the polynomial into a one-line inline adds 0x18.
-// Unit round 2026-09-23, all identical: `const unkConsts`, unsigned `lo_bits`, `lo_bits`
-// scoped to or initialised in the `if`, a float `lo_f` punned the other way,
-// `frac` declared at use, `unsigned bits`. Moving `hi_bits` into the `if` is worse.
 float powf(float x, float y)
 {
 	int iy;
