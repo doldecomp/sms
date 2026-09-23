@@ -441,26 +441,36 @@ static const TBGCheckData* intersectLineList(const TBGCheckList* head,
 	return nullptr;
 }
 
+// Retail copies both endpoints before subtracting the origin from either.
+static inline f32 LineSide(const JGeometry::TVec2<f32>& o,
+                           const JGeometry::TVec2<f32>& a,
+                           const JGeometry::TVec2<f32>& b)
+{
+	JGeometry::TVec2<f32> p = a;
+	JGeometry::TVec2<f32> q = b;
+	p -= o;
+	q -= o;
+	return p.cross(q);
+}
+
 static bool LineInLineXZ(const JGeometry::TVec2<f32>& a0,
                          const JGeometry::TVec2<f32>& a1,
                          const JGeometry::TVec2<f32>& b0,
                          const JGeometry::TVec2<f32>& b1)
 {
-	if ((b0 - a0).cross(a1 - a0) * (b1 - a0).cross(a1 - a0) <= 0.0f
-	    && (a0 - b0).cross(b1 - b0) * (a1 - b0).cross(b1 - b0) <= 0.0f)
+	if (LineSide(a0, a1, b0) * LineSide(a0, a1, b1) <= 0.0f
+	    && LineSide(b0, b1, a0) * LineSide(b0, b1, a1) <= 0.0f)
 		return true;
 
 	return false;
 }
 
-// TODO: 87%. Frame 0x28 too large and the LineInLineXZ temporaries are
-// evaluated in a different order: retail builds (a1 - a0) before (b - a0) in
-// each cross product, ours builds the argument first (formula spellings with
-// either operand order measured, none better). Retail converts start.x/end.x
-// twice (once for the swap test) but start.z/end.z once, which the int swap
-// below reproduces. Retail keeps the parameters in r24-r28 above the grid
-// bounds (r20-r23); ours puts the bounds above the parameters (declaring the
-// loop counters first, or the bounds as named ints, changes nothing).
+// TODO: 96.6%. Frame 0x18 too small and a register permutation: retail
+// keeps the parameters in r24-r28 above the grid bounds (r20-r23); ours puts
+// the bounds above the parameters (declaring the loop counters first, or the
+// bounds as named ints, changes nothing). Retail converts start.x/end.x twice
+// (once for the swap test) but start.z/end.z once, which the int swap below
+// reproduces.
 const TBGCheckData* TMapCollisionData::intersectLine(
     const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
     bool front_only, JGeometry::TVec3<f32>* hit_pos) const
