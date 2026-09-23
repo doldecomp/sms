@@ -342,6 +342,11 @@ const TBGCheckData* TMap::intersectLine(const JGeometry::TVec3<f32>& param_1,
 	mCollisionData->intersectLine(param_1, param_2, param_3, param_4);
 }
 
+bool TMap::isTouchedOneWall(const JGeometry::TVec3<f32>& pos, f32 radius) const
+{
+	return isTouchedOneWall(pos.x, pos.y, pos.z, radius);
+}
+
 // TODO: frame exact but the wall record and the spilled x/z parameters sit
 // 4 bytes low (one 4-byte pool item missing below them). Inert: a named or
 // ternary result, an if/return pair, local copies of x/z; a TU-local
@@ -414,6 +419,12 @@ f32 TMap::checkGroundExactY(f32 x, f32 y, f32 z,
                             const TBGCheckData** result) const
 {
 	return mCollisionData->checkGround(x, y - -78.0f, z, 0, result);
+}
+
+f32 TMap::checkGroundExactY(const JGeometry::TVec3<f32>& pos,
+                            const TBGCheckData** result) const
+{
+	return checkGroundExactY(pos.x, pos.y, pos.z, result);
 }
 
 f32 TMap::checkGround(const JGeometry::TVec3<f32>& pos,
