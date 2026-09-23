@@ -378,6 +378,9 @@ void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 // TODO: frame 0x98 against retail's 0x158 (low region short); retail
 // re-derives the sin/cos table index twice (two `sraw`, no CSE), swaps the
 // emitInfo/pow-reference registers, and depleteWater indexes through `add`.
+// Inert or worse on the register swap (c-wgun): the two references declared
+// before emitCommon (88.0), after mPow.set (94.2, unchanged), no pow reference
+// (90.3), emitInfo named after emitCommon's argument read (92.8).
 void TNozzleBase::emit(int param_1)
 {
 	if (mFludd->mCurrentWater > 0 && unk378 != 0.0f) {

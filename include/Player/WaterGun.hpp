@@ -250,11 +250,12 @@ public:
 		mIsEmitWater = emittedWater;
 		// TODO: one more inline for getting emit params
 		// rather than separate getMaxWater, getDecRate, etc. functions?
-		// TODO: the const receiver is load-bearing: plain getCurrentNozzle()
-		// buys ~0.7 in TNozzleTrigger/TNozzleDeform::emit but costs
-		// TMario::gunExec (MarioMove) 2.0, so the real shape is still open.
 		// The decrement rate is read inside the one expression (no named
 		// local): gunExec needs it, and the emit functions are unchanged.
+		// TODO: the const receiver is load-bearing. Plain getCurrentNozzle()
+		// in this form: TNozzleTrigger::emit +0.64, TNozzleDeform::emit
+		// +0.54, but TNozzleBase::emit -0.14 and TMario::gunExec -4.6, so
+		// retail's `add` + `lwz 0x1c68` indexing is still open.
 		unk1C88 += 10.0f
 		           * ((f32)emittedWater
 		              * (f32)((const TWaterGun*)this)
