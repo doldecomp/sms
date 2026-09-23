@@ -511,15 +511,18 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
-// TODO: 96.9%. Frame 0xb8 against the ROM's 0x110, and the ROM keeps the
-// head-to-Mario z in f31 across both yaw computations.
+// TODO: 98.4%. Frame 0xb8 against the ROM's 0x110: the ROM's 0x58 extra is
+// all dead low region (nothing below toMario at 0xdc is touched). Also left:
+// the state byte and actor type swap r3/r4, and the angle difference lands
+// in f0 then f31 instead of f31 directly. Inert: s8 state, no state local,
+// the operand order of the two actor-type tests.
 BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (mOwner->getLatestNerve() == &TNerveBPSleep::theNerve())
 		return mOwner->receiveMessage(sender, message);
 
+	int state         = mOwner->mState;
 	TBossPakkun* boss = mOwner;
-	int state         = boss->mState;
 
 	if (state == BOSSPAKU_STATE_FLYING) {
 		// Sprayed while flying -- either by the nozzle's own hit actor or by
@@ -542,8 +545,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 
 	if (sender->getActorType() == 0x1000001
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		JGeometry::TVec3<f32> toMario;
-		toMario = *gpMarioPos;
+		JGeometry::TVec3<f32> toMario = *gpMarioPos;
 		toMario.x -= mPosition.x;
 		toMario.y -= mPosition.y;
 		toMario.z -= mPosition.z;
@@ -551,10 +553,9 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 		// The wrapped value is overwritten before it is ever read: the ROM
 		// computes the head-to-Mario yaw twice here.
 		f32 angle = MsWrap(MsGetRotFromZaxisY(toMario), 0.0f, 360.0f);
-		angle     = MsGetRotFromZaxisY(toMario);
-		f32 diff  = MsAngleDiff(angle, mOwner->mRotation.y);
+		angle     = MsAngleDiff(MsGetRotFromZaxisY(toMario), mOwner->mRotation.y);
 
-		if (fabsf(diff) < 0.5f * mOwner->getSaveParam2()->mSLDamageAngle.get()) {
+		if (fabsf(angle) < mOwner->getSaveParam2()->mSLDamageAngle.get() / 2.0f) {
 			mOwner->gotWaterDamage();
 		}
 
@@ -1043,7 +1044,7 @@ bool TBossPakkun::is2ndFightNow() const
 void TBossPakkun::ignoreWaterCheck()
 {
 	if (is2ndFightNow()) {
-		if (&TNerveBPFly::theNerve() == getLatestNerve())
+		if (getLatestNerve() == &TNerveBPFly::theNerve())
 			showMessage(2);
 	}
 }
@@ -1115,7 +1116,7 @@ void TBossPakkun::gotWaterDamage()
 			mWaterMark += 1;
 		unk174 = getSaveParam2()->mSLWaterHitTimer.get();
 
-		if (&TNerveBPSwallow::theNerve() != getLatestNerve()) {
+		if (getLatestNerve() != &TNerveBPSwallow::theNerve()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPSwallow::theNerve());
 		}

@@ -675,6 +675,10 @@ void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+// TODO: 99.0%. Left: the star position's z/y land in swapped FPRs (a
+// getTrans through TPosition3f fixes them but costs 8 bytes of frame), the
+// first remove loop's counter copy, and the torque's FPR numbering (cross2,
+// +=, scaleAdd are inert or worse).
 void TBathtub::control()
 {
 	if (unk29A) {
@@ -724,13 +728,14 @@ void TBathtub::control()
 	if (unk248 > 0)
 		unk248--;
 	if (unk250 > unk16C->hipdropRelease.get() || (marioIsOn() && !mHeldObject)) {
+		const JGeometry::TVec3<f32>& marioPos = SMS_GetMarioPos();
 		f32 weight = unk16C->marioWeight.get();
 		if (unk250 > 0)
 			weight += unk16C->marioDropWeight.get();
 		if (!(weight <= 0.0000000001f)) {
 			static JGeometry::TVec3<f32> yDown(0.0f, -1.0f, 0.0f);
 			JGeometry::TVec3<f32> lever;
-			lever.sub(*gpMarioPos, getPosition());
+			lever.sub(marioPos, mPosition);
 			JGeometry::TVec3<f32> torque;
 			torque.cross(lever, yDown);
 			torque.scale(0.00000001f * weight);
