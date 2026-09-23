@@ -1595,8 +1595,11 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 	return result;
 }
 
-// TODO: 97.9%, instruction-identical. Our frame is 32 bytes *larger* than
-// retail's 0x1a8, and the callee-saved registers are rotated with it.
+// TODO: instruction-identical. Our frame is 0x1c0, retail's 0x1a8, and
+// `this`/`result` take r30/r31 where retail gives them r26/r27 below the
+// setMessage temporaries. Dropping the cMessageID setMessage pair alone
+// restores retail's order, but no spelling of that pair (mask, local,
+// pointer, scope) moves it; case helpers and brace scopes are inert too.
 s8 TCardLoad::waitForStart(TEProgress param_1)
 {
 	s8 result = -1;
@@ -1643,11 +1646,11 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 		unk53C->hide();
 		for (int i = 0; i < 3; ++i)
 			unk540[i]->hide();
-		unk524->setCenteredSize(20, 0, 0, unk528.getWidth(),
-		                        unk528.getHeight());
+		setCenteredSizeWr(unk524, 20, 0, 0, unk528.getWidth(),
+		                  unk528.getHeight());
 		unk564->hide();
-		unk54C->setCenteredSize(20, 0, 0, unk550.getWidth(),
-		                        unk550.getHeight());
+		setCenteredSizeWr(unk54C, 20, 0, 0, unk550.getWidth(),
+		                  unk550.getHeight());
 		unk10 = 4;
 		break;
 
