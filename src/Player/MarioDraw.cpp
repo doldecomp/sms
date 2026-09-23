@@ -1671,9 +1671,9 @@ void TMario::calcBaseMtxSwim(MtxPtr mtx)
 	ti.mTranslate.x = mPosition.x;
 	ti.mTranslate.y = mPosition.y;
 	ti.mTranslate.z = mPosition.z;
-	ti.mTranslate.y
-	    += gpMapObjWave->getHeight(mPosition.x, mFloorPosition.z, mPosition.z)
-	       - mFloorPosition.z;
+	f32 height
+	    = gpMapObjWave->getHeight(mPosition.x, mFloorPosition.z, mPosition.z);
+	ti.mTranslate.y += height - mFloorPosition.z;
 	J3DGetTranslateRotateMtx(ti, mtx);
 }
 
@@ -1707,8 +1707,10 @@ struct MarioGroundPlane {
 
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
-	// TODO: instruction-exact apart from register numbering in the surf
-	// clamps and the Swim wave sum; the frame is 0x38 short (0x2b8 vs 0x2f0).
+	// TODO: instruction-exact apart from register numbering in the ground
+	// plane's f28/f30 cross products, the unk414 fctiwz order before
+	// MsMtxSetRotRPH (named s16/f32 locals inert) and the sink-offset
+	// divide; the frame is 0x40 short (0x2b0 vs 0x2f0).
 	if (mStatus == MARIO_STATUS_TOROCCO) {
 		calcBaseMtxTorocco(mtx);
 		return;
@@ -1813,23 +1815,21 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 			// Use water-side surf params
 			s16 pitchMax  = mSurfingParamsWaterRed.mPitchMax.get();
 			f32 pitchRate = mSurfingParamsWaterRed.mPitch.get();
-			f32 rollRate  = mSurfingParamsWaterRed.mRoll.get();
-			s16 rollMax   = mSurfingParamsWaterRed.mRollMax.get();
 
 			s16 pitch = (s16)(mForwardVel * pitchRate);
 			s16 delta = mFaceAngle.y - unk9C;
-			s16 roll  = (s16)((f32)delta * mForwardVel * rollRate);
+			s16 roll    = (s16)((f32)delta * mForwardVel
+			              * mSurfingParamsWaterRed.mRoll.get());
+			s16 rollMax = mSurfingParamsWaterRed.mRollMax.get();
 			if (pitch > pitchMax)
 				pitch = pitchMax;
-			s16 pitchMin = -pitchMax;
-			if (pitch < pitchMin)
-				pitch = pitchMin;
+			if (pitch < (s16)-pitchMax)
+				pitch = -pitchMax;
 
 			if (roll > rollMax)
 				roll = rollMax;
-			s16 rollMin = -rollMax;
-			if (roll < rollMin)
-				roll = rollMin;
+			if (roll < (s16)-rollMax)
+				roll = -rollMax;
 
 			unk414.y = ((f32)pitch - unk414.y)
 			               * mSurfingParamsWaterRed.mAngleChangeRate.get()
@@ -1841,23 +1841,21 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 			// Use ground-side surf params
 			s16 pitchMax  = mSurfingParamsGroundRed.mPitchMax.get();
 			f32 pitchRate = mSurfingParamsGroundRed.mPitch.get();
-			f32 rollRate  = mSurfingParamsGroundRed.mRoll.get();
-			s16 rollMax   = mSurfingParamsGroundRed.mRollMax.get();
 
 			s16 pitch = (s16)(mForwardVel * pitchRate);
 			s16 delta = mFaceAngle.y - unk9C;
-			s16 roll  = (s16)((f32)delta * mForwardVel * rollRate);
+			s16 roll    = (s16)((f32)delta * mForwardVel
+			              * mSurfingParamsGroundRed.mRoll.get());
+			s16 rollMax = mSurfingParamsGroundRed.mRollMax.get();
 			if (pitch > pitchMax)
 				pitch = pitchMax;
-			s16 pitchMin = -pitchMax;
-			if (pitch < pitchMin)
-				pitch = pitchMin;
+			if (pitch < (s16)-pitchMax)
+				pitch = -pitchMax;
 
 			if (roll > rollMax)
 				roll = rollMax;
-			s16 rollMin = -rollMax;
-			if (roll < rollMin)
-				roll = rollMin;
+			if (roll < (s16)-rollMax)
+				roll = -rollMax;
 
 			unk414.y = ((f32)pitch - unk414.y)
 			               * mSurfingParamsGroundRed.mAngleChangeRate.get()
