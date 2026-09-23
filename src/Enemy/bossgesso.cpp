@@ -1188,6 +1188,11 @@ void TBossGesso::doAttackSingle()
 		// three other sites in this function; MsWrap stays a call at all
 		// four. Spelling the body out here reproduces the two expansions but
 		// also expands MsWrap, which is worse, so the call stands.
+		// Retail's `li 1 / li 0; cmpwi` here is inSightAngle's BOOL, so the
+		// call is right; `inSight() < 30.0f` expands sub but still calls
+		// MsGetRotFromZaxisY (92.1%, loses the BOOL). MsGetRotFromZaxisY
+		// expands at depth 3 only in retail: a header-level statement-count
+		// difference, not a site lever. Frame 0x1a8 vs 0x280 follows from it.
 		if (mTimeInCurrentAttackMode > getSaveParam2()->mSLUnisonInter.get()
 		    && distToMario2 < shootRadius2 && inSightAngle(30.0f))
 			changeAttackMode(ASTATE_SHOOT);
