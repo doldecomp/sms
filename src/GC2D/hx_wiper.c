@@ -1759,36 +1759,33 @@ static void Hx_Test2R(void)
 static void Hxs1_Test2(u32 num, u32 dir, f32 cx, f32 cy, f32 r_out, f32 r_in)
 {
 	s32 i;
-	s32 step;
+	s32 start;
 	s32 end;
+	s32 step;
 	f32 ro2;
 	f32 ri2;
+	Vec p[2];
 
 	Hx_CameraInit();
 	Hx_GxInit(0, 1);
 
-	// TODO: frame 0xc0 against retail's 0x108 (its sqrt temporaries sit at
-	// 0x44/0x48, the int->float slot at 0x70), and our x1/x2 joins cost five
-	// `fmr` and a duplicated `ble`. Top-declaring the loop's locals is inert.
 	ro2 = r_out * r_out;
 	ri2 = r_in * r_in;
 
 	if (dir == 0) {
-		step = 1;
-		end  = r_out;
-		i    = -cy;
+		step  = 1;
+		start = -cy;
+		end   = r_out;
 	} else {
-		step = -1;
-		i    = r_out;
-		end  = -cy;
+		step  = -1;
+		start = r_out;
+		end   = -cy;
 	}
 
-	for (; i != end; i += step) {
+	for (i = start; i != end; i += step) {
 		f32 y = cy + (f32)i;
 		f32 dx_out;
 		f32 dx_in;
-		f32 x1;
-		f32 x2;
 
 		if (y < 0.0f || y > hx.height)
 			continue;
@@ -1796,30 +1793,29 @@ static void Hxs1_Test2(u32 num, u32 dir, f32 cx, f32 cy, f32 r_out, f32 r_in)
 			break;
 		num--;
 
-		dx_out = ro2 - (f32)(i * i);
-		if (dx_out > 0.0f)
-			dx_out = sqrtf(dx_out);
-
-		dx_in = ri2 - (f32)(i * i);
-		if (dx_in > 0.0f)
-			dx_in = sqrtf(dx_in);
+		dx_out = sqrtf(ro2 - (f32)(i * i));
+		dx_in = sqrtf(ri2 - (f32)(i * i));
 
 		if (cx < hx.centerX) {
-			x2 = cx + dx_out;
-			x1 = cx + dx_in;
-			if (x2 < 0.0f)
+			p[1].x = cx + dx_out;
+			p[0].x = cx + dx_in;
+			if (p[1].x < 0.0f)
 				continue;
 		} else {
-			x1 = cx - dx_out;
-			x2 = cx - dx_in;
-			if (x1 > hx.width)
+			p[0].x = cx - dx_out;
+			p[1].x = cx - dx_in;
+			if (p[0].x > hx.width)
 				continue;
 		}
 
+		p[0].y = y;
+		p[0].z = 1.0f;
+		p[1].y = y;
+		p[1].z = 1.0f;
 		GXBegin(GX_LINES, GX_VTXFMT0, 2);
-		GXPosition3f32(x1, y, 1.0f);
+		GXPosition3f32(p[0].x, p[0].y, p[0].z);
 		GXColor1u32(0xFF);
-		GXPosition3f32(x2, y, 1.0f);
+		GXPosition3f32(p[1].x, p[1].y, p[1].z);
 		GXColor1u32(0xFF);
 	}
 }
