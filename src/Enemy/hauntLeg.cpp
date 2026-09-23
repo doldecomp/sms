@@ -39,6 +39,12 @@ static THauntLeg* gpCurHauntLeg;
 // stores. A named MtxPtr gets the register but lands it in r31 (92.5);
 // declaration order of the pointer, the Mtx, the angle and the joint is
 // inert, and spelling MsMtxSetRotZ's body out or reordering the concats loses.
+// TU-local RotZ bodies are inert too (named s16 angle, s16 parameter, cos
+// before sin, JMASin/JMACos, `Mtx` parameter, a named `-sin`, non-inline
+// static, an internal MtxPtr copy). The same two tells, &mtx held in a saved
+// register and literals loaded only after the preceding stores, recur in
+// TItemSlotDrum::generateItem and PopoRollCallback, so the cause is shared
+// by the MsMtxSetRot* expansions rather than local to this callback.
 static int HauntLegCallback(J3DNode* node, int param)
 {
 	if (param == 0) {

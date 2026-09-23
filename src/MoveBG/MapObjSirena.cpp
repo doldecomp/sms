@@ -609,6 +609,12 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 // Every named slot (both `m`s, both `off`s, the TMsRange) sits 0x14 higher in
 // retail, so the missing 20 bytes are inline temporaries below 0x54, plus the
 // r25 save; the instruction stream is otherwise right.
+// Both MsMtxSetRotY expansions also load their 0.0f/1.0f/300.0f literals only
+// after the preceding stores in retail (ours hoists them); HauntLegCallback
+// and PopoRollCallback show the same tells, see the note there.
+// Separately, the UNUSED getSlotResult below compiles to 0xe4 against the
+// map's 0x8c: ours inlines getResultFromAng through getDrumResult and unrolls
+// the loop; a `result = -1; break;` spelling is 0xe8.
 void TItemSlotDrum::generateItem()
 {
 	if (getSlotResult() == 0) {

@@ -188,6 +188,13 @@ void TSphereLink::moveHead(const JGeometry::TVec3<f32>& position)
 		// result into a high slot (0xb8) and scales a second copy (0x6c): the
 		// header operator*(TVec3, f32) shape (see JGVec3.hpp) -- 91.80 ->
 		// 91.79, so not applied. Named locals for it are all worse.
+		// The `bl sub` count gap (ours 1, retail 2) is not a missing
+		// subtraction: nested as `operator*`'s by-value argument, the header
+		// `operator-` inlines but its `operator-=` does not, so ours calls
+		// (and emits) a weak `__ami__` that retail's map does not list here.
+		// A named `diff` local restores the `bl sub` but costs 89.7; retail's
+		// copy chain (0x3c -> 0xb8 -> scale at 0x6c -> store) is the
+		// reference-return `operator*(TVec3, f32)` shape from JGVec3.hpp.
 		mPoints[i].mVelocity
 		    = (mPoints[i].mPosition - mPoints[i].mPreviousPosition) * mVelocityScale;
 		mPoints[i].mPreviousPosition = mPoints[i].mPosition;

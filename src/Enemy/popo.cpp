@@ -169,6 +169,10 @@ void TPopoCollision::checkHit()
 void TPopoCollision::kill() { onHitFlag(HIT_FLAG_NO_COLLISION); }
 
 // The center joint rolls the whole body in the direction of travel.
+// TODO: 94.9%, frame 0xb8 against retail's 0xd0 (every named slot 0x18 low)
+// plus the MsMtxSetRot* literal-scheduling tell noted at HauntLegCallback.
+// A TU-local RotX with the angle named as an `s16` is +0x10 (0xc8), and the
+// same for the else branch's RotY(180) +0x20 (0xd8); neither moves a marker.
 static int PopoRollCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
