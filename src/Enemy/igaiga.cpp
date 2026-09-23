@@ -1317,6 +1317,9 @@ void TGorogoro::boundSE()
 	    abs(IgaigaNormal(mGroundPlane)->y), 0, 0, nullptr, 0, 4);
 }
 
+// TODO: 99.9%, every instruction in place; the frame is 0xb8 against
+// retail's 0x150, the whole gap sitting below the wall record (a missing
+// inline level's temporaries, not found yet).
 void TGorogoro::walkBehavior(int param_1, f32 param_2)
 {
 	if (mPosition.y > mGroundHeight)
@@ -1325,12 +1328,13 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 	// Rolling into a watermill turns the wheel and slows the roll; the
 	// ground, the roof and every touched wall are all checked for one.
 	if (!checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		const TBGCheckData* ground = mGroundPlane;
-		if (ground) {
-			const TLiveActor* actor = ground->getActor();
+		if (mGroundPlane) {
+			const TLiveActor* actor = mGroundPlane->getActor();
 			if (actor && actor->mActorType == 0x4000009A) {
-				((TBiancoWatermill*)actor)->turnByEnemy(this, ground);
+				TBiancoWatermill* mill = (TBiancoWatermill*)actor;
+				mill->turnByEnemy(this, mGroundPlane);
 				TRollEnemy::walkBehavior(param_1, 0.2f * param_2);
+				return;
 			}
 		}
 
@@ -1340,8 +1344,10 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 		if (roof) {
 			const TLiveActor* actor = roof->getActor();
 			if (actor && actor->mActorType == 0x4000009A) {
-				((TBiancoWatermill*)actor)->turnByEnemy(this, roof);
+				TBiancoWatermill* mill = (TBiancoWatermill*)actor;
+				mill->turnByEnemy(this, roof);
 				TRollEnemy::walkBehavior(param_1, 0.3f * param_2);
+				return;
 			}
 		}
 
@@ -1351,12 +1357,14 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 			                          0);
 			if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
 				for (int i = 0; i < record.mResultWallsNum; ++i) {
-					const TBGCheckData* wall = record.mResultWalls[i];
-					const TLiveActor* actor  = wall->getActor();
-					if (actor && actor->mActorType == 0x4000009A)
-						((TBiancoWatermill*)actor)->turnByEnemy(this, wall);
+					const TLiveActor* actor = record.mResultWalls[i]->getActor();
+					if (actor && actor->mActorType == 0x4000009A) {
+						TBiancoWatermill* mill = (TBiancoWatermill*)actor;
+						mill->turnByEnemy(this, record.mResultWalls[i]);
+					}
 				}
 				TRollEnemy::walkBehavior(param_1, 0.2f * param_2);
+				return;
 			}
 		}
 	}
@@ -1368,7 +1376,7 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 	// Rolling onto water while alive drowns it.
 	if (mSpine->getCurrentNerve() != &TNerveGorogoroDie::theNerve()
 	    && mPosition.y < 10.0f + mGroundHeight
-	    && mGroundPlane->isWaterSurface()) {
+	    && getGroundPlane()->isWaterSurface()) {
 		onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		onLiveFlag(LIVE_FLAG_UNK20000);
 		kill();
