@@ -834,6 +834,10 @@ void J3DModel::calcWeightEnvelopeMtx()
 		ps_merge00 var_f12, var_f27, var_f27
 		ps_merge00 var_f31, var_f27, var_f27
 	}
+#else
+	// Portable fallback: weightAnmMtx accumulates
+	// sum(weight * (worldMtx * invMtx)) over each envelope's mix matrices.
+	Mtx acc;
 #endif // clang-format on
 
 	while (++i < max)
@@ -848,6 +852,10 @@ void J3DModel::calcWeightEnvelopeMtx()
 			ps_merge00 var_f11, var_f27, var_f27
 			ps_merge00 var_f13, var_f27, var_f27
 		}
+#else
+		for (int r = 0; r < 3; r++)
+			for (int c = 0; c < 4; c++)
+				acc[r][c] = 0.0f;
 #endif // clang-format on
 
 		j      = 0;
@@ -877,6 +885,8 @@ void J3DModel::calcWeightEnvelopeMtx()
 				psq_l var_f6, 0x28(worldMtx), 0, qr0
 				ps_madds0 var_f8, var_f7, var_f2, var_f8
 			}
+#else
+			// The product is formed below, once the weight is loaded.
 #endif // clang-format on
 
 			weight = *++weights;
@@ -910,6 +920,17 @@ void J3DModel::calcWeightEnvelopeMtx()
 				ps_madds0 var_f12, var_f29, weight, var_f12
 				ps_madds0 var_f31, var_f28, weight, var_f31
 			}
+#else
+			for (int r = 0; r < 3; r++) {
+				for (int c = 0; c < 4; c++) {
+					f32 v = (*worldMtx)[r][0] * invMtx[0][c]
+					        + (*worldMtx)[r][1] * invMtx[1][c]
+					        + (*worldMtx)[r][2] * invMtx[2][c];
+					if (c == 3)
+						v += (*worldMtx)[r][3];
+					acc[r][c] += v * weight;
+				}
+			}
 #endif // clang-format on
 
 			*pScale &= mScaleFlagArr[idx];
@@ -924,6 +945,10 @@ void J3DModel::calcWeightEnvelopeMtx()
 			psq_st var_f31, 0x28(weightAnmMtx), 0, qr0
 			ps_merge00 var_f31, var_f27, var_f27
 		}
+#else
+		for (int r = 0; r < 3; r++)
+			for (int c = 0; c < 4; c++)
+				weightAnmMtx[r][c] = acc[r][c];
 #endif // clang-format on
 	}
 }
