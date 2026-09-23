@@ -580,8 +580,9 @@ void TKoopaJr::checkNerveKillerLaunchNormal()
 		return;
 	mSubmarine->prepareKillerLaunch(num);
 	getSpine()->pushNerve(&TNerveKoopaJrLaunch::theNerve());
-	mSubmarine->getSpine()->pushNerve(
-	    &TNerveKoopaJrSubmarineCannonOpenClose::theNerve());
+	const TNerveBase<TLiveActor>* nerve
+	    = &TNerveKoopaJrSubmarineCannonOpenClose::theNerve();
+	mSubmarine->mSpine->pushNerve(nerve);
 	mSubmarine->setAnimationIndex(0);
 }
 
@@ -594,8 +595,9 @@ void TKoopaJr::checkNerveKillerLaunchFast()
 		return;
 	mSubmarine->prepareKillerLaunchFast(num);
 	getSpine()->pushNerve(&TNerveKoopaJrLaunch::theNerve());
-	mSubmarine->getSpine()->pushNerve(
-	    &TNerveKoopaJrSubmarineCannonOpenClose::theNerve());
+	const TNerveBase<TLiveActor>* nerve
+	    = &TNerveKoopaJrSubmarineCannonOpenClose::theNerve();
+	mSubmarine->mSpine->pushNerve(nerve);
 	mSubmarine->setAnimationIndex(0);
 }
 
