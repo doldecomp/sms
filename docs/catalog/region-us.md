@@ -43,3 +43,8 @@ Life sounds: `0x480C` under water, `0x4823` on land, `0x4801` on gain; segment c
 ## Linker-computed stack symbols (library pass 135, 2026-09-18)
 
 - **A linker-computed stack symbol is a region constant.** The US map's linker-generated list (lines ~102828-102872 of `marioUS.MAP`) gives `_stack_end 0x804177e4`, `_stack_addr 0x804277e8`, `_db_stack_addr 0x804297e8`, and `__ArenaLo = (_db_stack_addr + 0x1f) & ~0x1f = 0x80429800`. `__init_registers` (`__start`), `__OSThreadInit` (OSThread), `InitMetroTRK` (dolphin_trk) and `OSInit` (OS.c, still at the Japanese 0x80424008; `OSInit`'s three remaining operands are exactly `_stack_addr` and `__ArenaLo`) each materialise one as a literal, and three units had the Japanese values. Guard with `#if defined(VERSION_GMSE01)`; keep `AT_ADDRESS` rather than letting the lcf define the symbol, because the extracted target object has no relocation there. `__start`, OSThread and dolphin_trk linked from this.
+
+## Immediate-constant scan (rg1, 2026-09-23)
+
+- `TCardSave::execMovement_`: the two `waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1, x)` calls (cases UNK15 and UNK33) pass 0 on US, 1 in the JP source.
+- `TMarDirector::setupObjects`: debug `TSnapTimeObj` colours differ on US: Pollution Draw and MapObj Draw are `0x0000FFFF` (JP source `0xFF00FFFF`), Shadow Draw is `0xFF0000FF` (JP source `0xFFFF00FF`).

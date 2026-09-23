@@ -282,11 +282,21 @@ bool TMarDirector::setupObjects()
 	    new TSnapTimeObj(0xFFFFFFFF, "Mirror Draw SnapTime"));
 	measurementGroup->insert(
 	    new TSnapTimeObj(0xFF00FFFF, "Pollution Check SnapTime"));
+#if defined(VERSION_GMSE01)
+	measurementGroup->insert(
+	    new TSnapTimeObj(0x0000FFFF, "Pollution Draw SnapTime"));
+#else
 	measurementGroup->insert(
 	    new TSnapTimeObj(0xFF00FFFF, "Pollution Draw SnapTime"));
+#endif
 	measurementGroup->insert(new TSnapTimeObj(0xFFFFFFFF, "Map Draw SnapTime"));
+#if defined(VERSION_GMSE01)
+	measurementGroup->insert(
+	    new TSnapTimeObj(0x0000FFFF, "MapObj Draw SnapTime"));
+#else
 	measurementGroup->insert(
 	    new TSnapTimeObj(0xFF00FFFF, "MapObj Draw SnapTime"));
+#endif
 	measurementGroup->insert(
 	    new TSnapTimeObj(0xFF00FFFF, "Player Draw SnapTime"));
 	measurementGroup->insert(
@@ -294,8 +304,13 @@ bool TMarDirector::setupObjects()
 	measurementGroup->insert(new TSnapTimeObj(0xFFFF00FF, "Sky Draw SnapTime"));
 	measurementGroup->insert(
 	    new TSnapTimeObj(0xFF00FFFF, "PollutionModel Draw SnapTime"));
+#if defined(VERSION_GMSE01)
+	measurementGroup->insert(
+	    new TSnapTimeObj(0xFF0000FF, "Shadow Draw SnapTime"));
+#else
 	measurementGroup->insert(
 	    new TSnapTimeObj(0xFFFF00FF, "Shadow Draw SnapTime"));
+#endif
 	measurementGroup->insert(
 	    new TSnapTimeObj(0x000000FF, "Silhouette Draw SnapTime"));
 	measurementGroup->insert(
