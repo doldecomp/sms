@@ -123,7 +123,7 @@ public:
 		}
 
 		initHitActor(0x4000025B, 1, 0x80000000, unk8C->dropRadius.get(),
-		             unk8C->dropRadius.get() * 2.0f, 0.0f, 0.0f);
+		             unk8C->dropRadius.value * 2.0f, 0.0f, 0.0f);
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 		// Three reverse stores, not a descending chain: `z = y = x = 0`
@@ -178,7 +178,7 @@ public:
 				f32 dz = mz - drop->unk0.z;
 				if (dx * dx + dz * dz < radH2) {
 					setAttackRadius(unk8C->dropRadius.get());
-					setAttackRadius(unk8C->dropRadius.get() * 2.0f);
+					setAttackRadius(unk8C->dropRadius.value * 2.0f);
 					mPosition.set(drop->unk0);
 					mPosition.y -= unk8C->dropRadius.get();
 					mario->receiveMessage(this, HIT_MESSAGE_UNKA);
@@ -380,9 +380,8 @@ public:
 			if (count * 30 > bw->unk74) {
 				f32 inv = 1.0f / (f32)count;
 				accum *= inv;
-				f32 t     = 3.0f * (f32)count;
-				t         = t / (f32)bw->unk74;
-				heightVal = JGeometry::TUtil<f32>::sqrt(t);
+				heightVal = JGeometry::TUtil<f32>::sqrt(3.0f * (f32)count
+				                                        / (f32)bw->unk74);
 				if (heightVal > 1.0f)
 					heightVal = 1.0f;
 			}
