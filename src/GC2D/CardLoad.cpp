@@ -375,6 +375,7 @@ void TCardLoad::setupTitleScreen() { }
 
 void TCardLoad::setupScoreScreen()
 {
+	const ResTIMG* tens;
 	int iVar2 = TFlagManager::getInstance()->getFlag(0x40000);
 	if (iVar2 < 100) {
 		unk748->changeTexture(unkC8[iVar2 / 10]->getTexInfo(), 0);
@@ -387,7 +388,7 @@ void TCardLoad::setupScoreScreen()
 		unk750->show();
 	}
 
-	int iVar8      = 0;
+	u16 iVar8      = 0;
 	int local_90[] = { 2, 3, 4, 5, 6, 7, 8 };
 
 	for (int i = 0; i < 7; ++i) {
@@ -495,17 +496,16 @@ void TCardLoad::setupScoreScreen()
 		thing -= thing / 100 * 100;
 		((J2DPicture*)unk2C->search('n_7b'))
 		    ->changeTexture(unkC8[thing / 10]->getTexInfo(), 0);
-		thing %= 10;
 		((J2DPicture*)unk2C->search('n_7c'))
-		    ->changeTexture(unkC8[thing]->getTexInfo(), 0);
+		    ->changeTexture(unkC8[thing % 10]->getTexInfo(), 0);
 	}
 
-	int asdf2 = TFlagManager::getInstance()->getFlag(0x40000) - (u16)iVar8;
+	int asdf2 = TFlagManager::getInstance()->getFlag(0x40000) - iVar8;
 	if (asdf2 > 100)
 		asdf2 = 99;
 	if (asdf2 < 0)
 		asdf2 = 0;
-	const ResTIMG* tens = unkC8[asdf2 / 10]->getTexInfo();
+	tens = unkC8[asdf2 / 10]->getTexInfo();
 	((J2DPicture*)unk2C->search('\0n_d'))->changeTexture(tens, 0);
 	((J2DPicture*)unk2C->search('\0n_e'))
 	    ->changeTexture(unkC8[asdf2 % 10]->getTexInfo(), 0);
