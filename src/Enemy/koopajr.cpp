@@ -720,6 +720,10 @@ TKoopaJrSubmarine::TKoopaJrSubmarine(const char* name)
 	offLiveFlag(LIVE_FLAG_UNK100);
 }
 
+// TODO: the ROM hoists `...bss.0` (TKoopaJr_jointIndexTable) into r30 in the
+// prologue and reaches the Wait nerve's dtor chain at +0x50 and the table by
+// `stwx`; we name both. Same open class as TTinKoopa::init: MWCC needs 3+ live
+// same-section references before it uses the section base, we have 2.
 void TKoopaJrSubmarine::init(TLiveManager* manager)
 {
 	mManager = manager;

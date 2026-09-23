@@ -234,9 +234,15 @@ static const char* leftArmTrackJointNameTable[]
 
 // TODO: 93.3%. The ROM reads TTinKoopa_jointNameTable through the
 // `...data.0` section base (@1431 + 0x7c) and hoists that base and
-// &TTinKoopa_jointIndexTable into r29/r30 in the prologue, storing with
-// `stwx`; we address both tables by name just before the loop. The rest
-// (frame 0x170 vs 0x160, pool base) follows from that; not yet investigated.
+// &TTinKoopa_jointIndexTable (= `...bss.0`) into r29/r30 in the prologue,
+// storing with `stwx`; we address both tables by name just before the loop.
+// Probed: MWCC here switches a section to base+offset only once the function
+// holds 3+ surviving references to local objects of that section (dead reads
+// are dropped first). The ROM merges with 2 per section (name table + the
+// collision-name table; index table + the Wait nerve's dtor chain), so it had
+// one more live reference in each, most likely in the joint loop. Inert:
+// `= {0}` (merges, but moves the table to .data), sizeof bounds, pointer
+// forms, inline name/setter accessors, jointNames fetched in the loop.
 void TTinKoopa::init(TLiveManager* live_manager)
 {
 	mManager = live_manager;
