@@ -126,19 +126,21 @@ public:
 		this->w = cosf(pAngle * 0.5f);
 	}
 
-	// TODO: 98.8% against the weak copy in BeeHive.o (0x15c). Every
-	// instruction matches; the four callee-saved float registers around the
-	// inlined cross()/length() are permuted. Retail holds cross.x/y/z in
-	// f30/f29/f28 (descending) and the squared length in f31; we get
-	// f29/f30/f31 ascending with the length in f28. cross() batches its three
-	// components through set(x, y, z), so the order is decided inside that
-	// inline and no spelling here reaches it -- the same family as the
-	// "An inline's locals are numbered in reverse" rule in
-	// docs/AGENT_MATCHING_TIPS.md.
+	// Matches the weak copy in BeeHive.o. The cross product is three named
+	// scalars stored one at a time into the axis, not axis.cross(): that is
+	// what puts cross.x/y/z in f30/f29/f28 and the length in f31. Writing the
+	// components through axis.set() or the TVec3(x, y, z) constructor also
+	// matches BeeHive's copy but costs TKukku::calcRootMatrix an 8-byte frame
+	// temporary.
 	void setRotate(const TVec3<T>& from, const TVec3<T>& to, T amount)
 	{
+		f32 cx = from.y * to.z - from.z * to.y;
+		f32 cy = from.z * to.x - from.x * to.z;
+		f32 cz = from.x * to.y - from.y * to.x;
 		TVec3<T> axis;
-		axis.cross(from, to);
+		axis.x = cx;
+		axis.y = cy;
+		axis.z = cz;
 
 		f32 len = axis.length();
 		if (len <= TUtil<f32>::epsilon()) {
