@@ -386,6 +386,9 @@ void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 	param_2->mHitHeight   = mEmitParams.mHitHeight;
 }
 
+// TODO: frame 0x98 against retail's 0x158 (low region short); retail
+// re-derives the sin/cos table index twice (two `sraw`, no CSE), swaps the
+// emitInfo/pow-reference registers, and depleteWater indexes through `add`.
 void TNozzleBase::emit(int param_1)
 {
 	if (mFludd->mCurrentWater > 0 && unk378 != 0.0f) {
@@ -425,12 +428,11 @@ void TNozzleBase::emit(int param_1)
 
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
 
+			f32 dirScale = -dirVec.x * JMASSin(mFludd->mMario->mFaceAngle.y)
+			               - dirVec.z * JMASCos(mFludd->mMario->mFaceAngle.y);
 			f32 reactionPow
 			    = refEmitPow * mEmitParams.mReactionPow.get();
-			mFludd->mMario->addVelocity(
-			    (-dirVec.x * JMASSin(mFludd->mMario->mFaceAngle.y)
-			     - dirVec.z * JMASCos(mFludd->mMario->mFaceAngle.y))
-			    * reactionPow);
+			mFludd->mMario->addVelocity(dirScale * reactionPow);
 
 			mFludd->mMario->mVel.x -= dirVec.x * reactionPow;
 			mFludd->mMario->mVel.z -= dirVec.z * reactionPow;
@@ -762,10 +764,9 @@ void TNozzleTrigger::emit(int param_1)
 			// in r30 and the pow reference in r31, and depleteWater indexes
 			// the nozzle list through `add` rather than `lwzx`.
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
-			mFludd->mMario->addVelocity(
-			    (-dirVec.x * JMASSin(mFludd->mMario->mFaceAngle.y)
-			     - dirVec.z * JMASCos(mFludd->mMario->mFaceAngle.y))
-			    * (reaction * refEmitPow));
+			f32 dirScale = -dirVec.x * JMASSin(mFludd->mMario->mFaceAngle.y)
+			               - dirVec.z * JMASCos(mFludd->mMario->mFaceAngle.y);
+			mFludd->mMario->addVelocity(dirScale * (reaction * refEmitPow));
 
 			f32 accelY = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
 			mFludd->mMario->mVel.y += accelY;
@@ -1037,24 +1038,15 @@ void TNozzleDeform::emit(int param_1)
 			f32 reaction
 			    = localUnk378 * (reactionPow - reactionPowMin) + reactionPowMin;
 
-			// TODO: frame 0xd8 against retail's 0x178; retail re-derives the
-			// sin/cos table index twice (two `sraw`, no CSE), holds emitInfo
-			// in r30 and the pow reference in r31, and depleteWater indexes
-			// the nozzle list through `add` rather than `lwzx`.
-			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
-			f32 dirX           = emitInfo->mDir.get().x;
-			f32 dirZ           = emitInfo->mDir.get().z;
-			f32 cosAngle       = JMASCos(faceAngleY);
-			f32 sinAngle       = JMASSin(faceAngleY);
-			f32 directionScale = (-dirX * sinAngle - cosAngle * dirZ);
-
-			f32 velocity = reaction;
-			velocity *= directionScale;
-			velocity *= refEmitPow;
-
-			mFludd->mMario->addVelocity(velocity);
-
+			// TODO: frame 0x110 against retail's 0x1b8 (low region short);
+			// retail re-derives the sin/cos table index twice (two `sraw`,
+			// no CSE), holds emitInfo in r30 and the pow reference in r31,
+			// and depleteWater indexes the nozzle list through `add`.
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
+			f32 dirScale = -dirVec.x * JMASSin(mFludd->mMario->mFaceAngle.y)
+			               - dirVec.z * JMASCos(mFludd->mMario->mFaceAngle.y);
+			mFludd->mMario->addVelocity(dirScale * (reaction * refEmitPow));
+
 			f32 accelY = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
 			mFludd->mMario->mVel.y += accelY;
 		}
