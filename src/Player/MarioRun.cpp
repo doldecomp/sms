@@ -1315,7 +1315,7 @@ BOOL TMario::oilRun()
 	}
 
 	f32 tmp = mDirtyParams.mPolSizeRun.get();
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, tmp);
 
 	{
 		f32 rotSp = mDirtyParams.mSlipRotate.get();
@@ -1384,7 +1384,7 @@ BOOL TMario::oilSlip()
 	}
 
 	f32 tmp = mDirtyParams.mPolSizeSlip.get();
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, tmp);
 	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT_CP, &mPosition, 0,
 	                                nullptr, 0, 4);
 
