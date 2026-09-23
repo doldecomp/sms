@@ -593,6 +593,10 @@ void TMapObjGeneral::calcVelocity()
 	}
 }
 
+// TODO: 99.9%, frame exact; retail's inline-object block (the roof test's
+// velocity copy and the three rest-test copies) sits 0xc lower, as if one
+// more TVec3 temporary were expanded before them. Inert: `vec` copy-
+// initialised, `+=` for add, getVelocity() in the sum.
 void TMapObjGeneral::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
@@ -613,9 +617,7 @@ void TMapObjGeneral::bind()
 		checkWallCollision(&vec);
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_ENABLE_ROOF_COLLISION)) {
-		JGeometry::TVec3<f32> vel;
-		vel = mVelocity;
-		if (vel.y > 0.0f)
+		if (JGeometry::TVec3<f32>(mVelocity).y > 0.0f)
 			checkRoofCollision(&vec);
 	}
 
@@ -625,21 +627,10 @@ void TMapObjGeneral::bind()
 	}
 
 	if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
-		JGeometry::TVec3<f32> vel;
-		vel = mVelocity;
-		JGeometry::TVec3<f32> velCopy;
-		velCopy = vel;
-		if (velCopy.x == 0.0f) {
-			JGeometry::TVec3<f32> velCopy2;
-			velCopy2 = vel;
-			if (velCopy2.y == 0.0f) {
-				JGeometry::TVec3<f32> velCopy3;
-				velCopy3 = vel;
-				if (velCopy3.z == 0.0f) {
-					onLiveFlag(LIVE_FLAG_UNK10);
-				}
-			}
-		}
+		if (JGeometry::TVec3<f32>(getVelocity()).x == 0.0f
+		    && JGeometry::TVec3<f32>(getVelocity()).y == 0.0f
+		    && JGeometry::TVec3<f32>(getVelocity()).z == 0.0f)
+			onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
 	mLinearVelocity = vec - mPosition;

@@ -1172,7 +1172,10 @@ DEFINE_NERVE(TNerveKumokunSearch, TLiveActor)
 // Since TVec3's copy constructor became `: Vec(other)` retail also keeps the
 // inlined isFindOutMario's direction x/y/z in f28/f27/f31 (ours reloads x and
 // saves one FPR fewer, frame 0x108 vs 0x110). Inert: assigning or
-// copy-constructing the direction in isFindOutMario or rotateGoalDirToLocal.
+// copy-constructing the direction in isFindOutMario or rotateGoalDirToLocal;
+// `*param_1 = rotate...` (89.1) and an if/return split (94.7) are worse, and
+// reading the result through `const Vec&` into set(const Vec&) reaches 97.4
+// here but frames 0x138, drops the weak getQuat and costs Search 0.6.
 DEFINE_NERVE(TNerveKumokunWait, TLiveActor)
 {
 	TKumokun* self = (TKumokun*)spine->getBody();

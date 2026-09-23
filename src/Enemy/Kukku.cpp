@@ -305,10 +305,12 @@ void TKukku::control()
 	TLiveActor::control();
 }
 
-// TODO: 96.1%, frame exact. Residue is FPR colouring of up (retail y/x/z in
+// TODO: 96.0%, frame exact. Residue is FPR colouring of up (retail y/x/z in
 // f27/f25/f28) and the tilt.mul(yaw) expansion, where retail leaves one
-// product unfused (TQuat4::mul, shared header). Inert: MTXCopy spellings,
-// `up = normal`, a named yaw angle.
+// product unfused (TQuat4::mul, shared header); the setRotate respelling in
+// JGQuat4.hpp cost 0.1 here. Inert: MTXCopy spellings, `up = normal`, a
+// named yaw angle, a named from-axis; `1.0f` for one() and the two-argument
+// setRotate are worse.
 void TKukku::calcRootMatrix()
 {
 	if (mSpine->getLatestNerve() == &TNerveSmallEnemyDie::theNerve()) {
@@ -492,6 +494,8 @@ void TKukku::updateRotation()
 // parks SMS_Eular2Quat's return slot at 0x38 with 44 bytes of temporaries
 // below it, we park it at 0x1c with 48 bytes split around it. Both totals are
 // 0x78, so no frame lever applies; this is the known-open volatile-FPR class.
+// (96.3 before TVec3's copy constructor became `: Vec(other)`, 95.8 after;
+// inert under it: direct-init or assigned `quat`, `velocity.set(...)`.)
 JGeometry::TVec3<f32> TKukku::calcMomentum(f32 speed)
 {
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
