@@ -1827,6 +1827,8 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 	return result;
 }
 
+// TODO: `result` lands in r24 (retail r28) and rotates r24-r28; frame and
+// every other instruction match.
 s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
                              bool param_3)
 {
@@ -1837,7 +1839,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 		unk338 = 0;
 		unk2A0->hide();
 		unk288->getPane()->show();
-		unk288->setCenteredSize(30, unk28C.getWidth(), unk28C.getHeight(), 0,
+		unk288->setCenteredSize(30, unk28C.getWidth(), CardLoadGetHeight(&unk28C), 0,
 		                        0);
 		if (unk1C == PROGRESS_UNK1C) {
 			unk278[unkB1]->makeBlockRock();
