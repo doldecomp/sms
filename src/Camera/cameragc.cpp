@@ -1074,7 +1074,11 @@ void CPolarSubCamera::ctrlGameCamera_()
 // matrix copy from right-to-left to left-to-right. (2) calcExternalData_ is
 // inlined here exactly as in loadAfter, yet the ROM calls TVec3::set<f>,
 // TUtil<f32>::one() and MsClamp<f> from this site and expands all three in
-// loadAfter -- the per-call-site inlining family from docs/catalog.
+// loadAfter -- the per-call-site inlining family from docs/catalog. Measured:
+// wrapping the ctrl/calcFinalPosAndAt_/calcExternalData_ block (with or
+// without the REPRODUCE_DEMO test) in one more inline member overshoots --
+// CLBCrossToPolar, which the ROM expands, goes out of line too (91.6%). The
+// ROM's extra cost lands between CLBCrossToPolar and the unk25C set().
 void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
