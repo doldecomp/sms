@@ -616,6 +616,9 @@ static s32 SandCastleCallBack(u32 param_1, u32 param_2)
 	return 1;
 }
 
+// TODO: instruction-exact; the flag sits at 0x18, retail 0x1c (frame equal).
+// Inert or worse: flag declared after the stores, `= 0`, default-constructed,
+// an unnamed TFlagT(0)/0/(u16)0 argument (frame -8), raw gpMarDirector.
 void TSandCastle::waitBeforeExplode()
 {
 	JDrama::TFlagT<u16> flag(0);
