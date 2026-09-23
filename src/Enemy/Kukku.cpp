@@ -584,6 +584,9 @@ void TKukku::shotBall()
 // out of line for `forward` (the unit's missing weak set<f>, depth 4), so
 // its frame is 0x158 against our 0x1e8. Inert or worse: one-argument
 // rotate(), rotating `forward` straight into `velocity`, `forward.set(...)`.
+// Retail also loads mRotation.y into f26 before the dropSpeed getSaveParams()
+// call and looks up the cosine before the sine (the out-of-line set's
+// right-to-left arguments), so `forward` is built one inline level down.
 void TKukku::dropCoins()
 {
 	if (mDroppedCoins > 10)
@@ -781,6 +784,15 @@ const char** TKukku::getBasNameTable() const { return tori_bastable; }
 // Measured: the short body (quat = SMS_Eular2Quat, velocity.set, quat.rotate)
 // gives this nerve retail's 0x108 frame, but MWCC then also inlines TVec4's
 // copy and set<f> here (retail calls both) and RecoverGraph falls to 68.7%.
+// Depth evidence (2026-09-23): the short body reached one level deeper, via
+// `kukku->doRecoverToCurPathNode()` with doRecover reading
+// `getSaveParams()->mMarchSpeed.get()`, gives this nerve all four retail
+// `bl`s in order (97.0%, frame 0x100 vs 0x108); what is left there is an
+// extra copy of calcMomentum's return temporary (retail stores velocity at
+// 0x74 straight into mLinearVelocity). The UNUSED doRecoverToCurPathNode is
+// 0xa0 in the map, which fits exactly that shape (calcMomentum expanded with
+// its callees out of line), not a `bl calcMomentum` (ours 0x68). Still open:
+// RecoverGraph then expands the short body too, where retail calls it.
 DEFINE_NERVE(TNerveKukkuGraphWander, TLiveActor)
 {
 	TKukku* kukku = (TKukku*)spine->getBody();
