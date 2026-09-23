@@ -256,7 +256,8 @@ static inline void TongueSubTo(Vec& out, const JGeometry::TVec3<f32>& a, const J
 // (AnimalNerve's calcDist shape plus one by-value length level).
 static inline f32 TongueLength(JGeometry::TVec3<f32> v)
 {
-	return JGeometry::TUtil<f32>::sqrt(v.squared());
+	f32 r = JGeometry::TUtil<f32>::sqrt(v.squared());
+	return r;
 }
 
 static inline f32 TongueDist(JGeometry::TVec3<f32> a,
