@@ -222,6 +222,9 @@ void JPAAirField::set()
 // copy (`dir.set(diff); dir.normalize();`) fixed the old f4/f5 swap.
 // Worse (2026-09-23): getLocal/GlobalPosition into diff then sub(unk58),
 // a separate `pos` local, and `dir.normalize(diff)`.
+// Also inert or worse (2026-09-23 sweep): diff stored x,y,z / z,y,x or via
+// set(a-b,...), `diff = pos; diff -= unk58`, `pos - unk58`, set + `-=`, and
+// dir as a copy-constructed/assigned local, setLength(diff, 1) or in place.
 void JPAAirField::affect(JPAParticle* particle)
 {
 	if (checkStatus(STATUS_AIR_CONE)) {
@@ -332,6 +335,10 @@ void JPAVortexField::set()
 // Tried: the blend declared before/after `tmp`, at the top, reusing fVar1,
 // `tmp` at the top, thing3 by copy/-=/set/sub(a), dot for squared, a
 // set-then-normalize tmp, `localPos.dot(unk58)`, a named dot.
+// Inert or worse (2026-09-23 component sweep): projected and thing3 stored
+// z,y,x / y,x,z / field-wise or via the 3-float ctor, the blend's operands
+// swapped or `1 - ratio` named, a named dot, a copy or reference localPos,
+// thing3 normalised in place, and localPos reused as thing3.
 void JPAVortexField::affect(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32> localPos;
@@ -394,6 +401,10 @@ void JPAConvectionField::set()
 // declared first or via set(), `unk64 == up`, the thing3/thing4 order.
 // Also inert or worse (2026-09-23): a temporary `up` in the compare, a cross
 // temp for unk7C, field-wise thing2, dot(thing) operand swap, `+=` for thing5.
+// Also inert or worse (2026-09-23 sweep): thing2 stored field-wise (x,y,z
+// or z,y,x; -8 frame, so set() is a real inline call), thing4 stored z,y,x,
+// set + sub for thing4, a/b hoisted, `up` before thing, dir.set + setLength
+// (frame lands 0x110 but three extra saved FPRs), thing4/thing2 in place.
 void JPAConvectionField::affect(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32> thing;
