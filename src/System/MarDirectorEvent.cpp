@@ -30,17 +30,17 @@ void TMarDirector::getTalkMsgID(TBaseNPC*) { }
 
 void TMarDirector::updateFlag(TBaseNPC*, u32, u32) { }
 
-// TODO: 94.8%. Structure and the distance expression are exact; the residue is
-// the hoisted `marioPos` component loads (retail reads y, z, then `unk88.end()`,
-// then x, giving f2/f4/f5 where we get f4/f3/f5) plus a 40-byte frame gap
-// (0x58 vs 0x30), so retail has temps we are missing; the two are one cause.
-// Inert (2026-09-22): named-component, Vec& and by-value-copy distance
-// helpers, SMS_GetMarioPos() or a split assignment for marioPos, and every
-// iterator declaration form (for-init, top, `it++`, a named end).
+// TODO: every instruction and slot exact; the frame is 0x50 against retail's
+// 0x58. The getStatus()/getPosition() accessors (+8 and +0x18) put `marioPos`
+// on retail's 0x44, so retail has 8 more bytes *above* it, not in the low
+// region. SMS_GetMarioPos() reaches 0x58 but only by adding 4 of low region
+// (marioPos 0x48). Inert (l5): marioPos declared before bestDist, copy-ctor
+// or assignment spellings, `it` at function scope, `it++`, a named `npc` or
+// `dist` split, raw mPosition at one or two sites.
 TBaseNPC* TMarDirector::findNearestTalkNPC()
 {
 	TBaseNPC* result = nullptr;
-	if (gpMarioOriginal->mStatus == MARIO_STATUS_WAIT) {
+	if (gpMarioOriginal->getStatus() == MARIO_STATUS_WAIT) {
 		f32 bestDist                   = 5000000.0f;
 		JGeometry::TVec3<f32> marioPos = *gpMarioPos;
 		JGadget::TVector_pointer<TBaseNPC*>::iterator it;
@@ -51,12 +51,12 @@ TBaseNPC* TMarDirector::findNearestTalkNPC()
 			    || !npc->checkLiveFlag(LIVE_FLAG_UNK20000))
 				continue;
 
-			f32 dist = (npc->mPosition.x - marioPos.x)
-			               * (npc->mPosition.x - marioPos.x)
-			           + (npc->mPosition.y - marioPos.y)
-			                 * (npc->mPosition.y - marioPos.y)
-			           + (npc->mPosition.z - marioPos.z)
-			                 * (npc->mPosition.z - marioPos.z);
+			f32 dist = (npc->getPosition().x - marioPos.x)
+			               * (npc->getPosition().x - marioPos.x)
+			           + (npc->getPosition().y - marioPos.y)
+			                 * (npc->getPosition().y - marioPos.y)
+			           + (npc->getPosition().z - marioPos.z)
+			                 * (npc->getPosition().z - marioPos.z);
 			if (dist < bestDist) {
 				bestDist = dist;
 				result   = npc;
