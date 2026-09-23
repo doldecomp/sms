@@ -520,7 +520,7 @@ BOOL TMario::hanging()
 		if (mStatusTimer < mHangingParams.mRapidTime.get()
 		    && record.mResultWallsNum > 0) {
 			f32 moveSp = mHangingParams.mMoveSp.get();
-			JGeometry::TVec3<f32> newPos;
+			Vec newPos;
 			if (yawDiff > 0x400 && yawDiff < 0x71c7) {
 				newPos.x = mPosition.x
 				           - moveSp * (mIntendedMag * foundWall->mNormal.z);
