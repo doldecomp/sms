@@ -835,11 +835,12 @@ static void Hxs_FrBufferMorf2(f32 x)
 static void Hxs_FrBufferMorf2B(f32 x)
 {
 	GXTexObj obj;
+	s32 left = hx.width / 2 + hx.width / 4;
+	f32 right;
 	f32 y;
-	u32 left = hx.centerX + (hx.width >> 2);
-	f32 right = hx.width - x;
 
 	Frb2_InitGx(&obj);
+	right = hx.width - x;
 
 	if (x < (f32)(hx.width >> 2)) {
 		for (y = 0.0f; y < hx.height; y += 16.0f) {
