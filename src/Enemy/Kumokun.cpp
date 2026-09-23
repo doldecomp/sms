@@ -175,9 +175,8 @@ void TKumokun::initCollision()
 
 // TODO: frame 0x10 short. Retail calls set<f> for the wall record (one
 // inline level deeper than here, like the UNUSED checkWallPlane but with no
-// write-back and reading mPosition directly) and tests the result with
-// `ble` (an int count `> 0`); inlining checkWallPlane on a copy gives the
-// exact frame and the call but adds the copy and write-back.
+// write-back and reading mPosition directly); inlining checkWallPlane on a
+// copy gives the exact frame and the call but adds the copy and write-back.
 void TKumokun::initAttachPlane()
 {
 	TBGWallCheckRecord record;
@@ -186,9 +185,8 @@ void TKumokun::initAttachPlane()
 	record.mMaxResults = 1;
 	record.mFlags      = 0;
 
-	const TBGCheckData* wall = gpMap->isTouchedWallsAndMoveXZ(&record)
-	                               ? record.mResultWalls[0]
-	                               : nullptr;
+	int hitNum = gpMap->isTouchedWallsAndMoveXZ(&record);
+	const TBGCheckData* wall = hitNum > 0 ? record.mResultWalls[0] : nullptr;
 	if (wall) {
 		unk198 = wall;
 		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
@@ -464,8 +462,7 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 
 // TODO: named slots sit 4 low (retail puts the final `local_74 - mPosition`
 // temporary at 0x14 below the wall record); the inlined roof check swaps
-// f30/f31 (param_2 vs y); retail tests the wall hit with `ble`, which only an
-// int local compared `> 0` reproduces.
+// f30/f31 (param_2 vs y).
 void TKumokun::bindOnFlying()
 {
 	bool hit = false;
@@ -985,7 +982,9 @@ const TBGCheckData* TKumokun::checkWallPlane(JGeometry::TVec3<f32>* param_1,
 	TBGWallCheckRecord record(param_1->x, param_1->y + param_2, param_1->z,
 	                          param_3, 1, 0);
 
-	if (gpMap->isTouchedWallsAndMoveXZ(&record))
+	// Retail tests the hit with `ble`: the result went through an int.
+	int hitNum = gpMap->isTouchedWallsAndMoveXZ(&record);
+	if (hitNum > 0)
 		wall = record.mResultWalls[0];
 
 	param_1->x = record.mCenter.x;
