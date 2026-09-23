@@ -666,6 +666,8 @@ void TCannon::bombSet()
 	hitHead(bomb);
 }
 
+// TODO: the final lift's volatiles differ (retail r3 for the bomb, 2.0f
+// loaded first). Inert: a position reference, a named y, a bomb local.
 void TCannon::bombShoot()
 {
 	if (mHeldBomb == nullptr)
@@ -677,9 +679,9 @@ void TCannon::bombShoot()
 		dir.x = 1.0f;
 	MsVECNormalize((Vec*)&dir, (Vec*)&dir);
 
+	TMsRange<f32> range(-30.0f, 30.0f);
 	Mtx mtx;
-	MsMtxSetRotRPH(mtx, 0.0f,
-	               mRotation.y + TMsRange<f32>(-30.0f, 30.0f).rand(), 0.0f);
+	MsMtxSetRotRPH(mtx, 0.0f, mRotation.y + range.rand(), 0.0f);
 
 	f32 speed = mSaveParams->getSLThrowXZSpeed();
 	dir.y     = speed;
@@ -687,7 +689,7 @@ void TCannon::bombShoot()
 	dir.z *= speed;
 	if (mBombThrown) {
 		TBombHei* bomb = mHeldBomb;
-		bomb->mVelocity.set(dir);
+		bomb->mVelocity.set(dir.x, dir.y, dir.z);
 		bomb->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
 		TBombHei* bomb  = mHeldBomb;
@@ -695,7 +697,7 @@ void TCannon::bombShoot()
 		bomb->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		bomb->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
 	}
-	mHeldBomb->mPosition.y += 2.0f;
+	mHeldBomb->mPosition.y = mHeldBomb->getPosition().y + 2.0f;
 	mHeldBomb->receiveMessage(this, HIT_MESSAGE_PUT);
 }
 
