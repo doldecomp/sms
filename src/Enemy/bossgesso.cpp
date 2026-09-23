@@ -502,7 +502,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 			    &pTStack_50);
 			dVar8 += 1.0f;
 
-			if (dVar7 < dVar8) {
+			if (dVar8 > dVar7) {
 				TEffectColumWater* enemy
 				    = (TEffectColumWater*)gpConductor->makeOneEnemyAppear(
 				        gesso->mPosition, "エフェクト水柱マネージャー", 1);
