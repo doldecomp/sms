@@ -1,0 +1,200 @@
+diff --git a/include/JSystem/JGeometry/JGVec3.hpp b/include/JSystem/JGeometry/JGVec3.hpp
+index d7c3f4fd..c36e170a 100644
+--- a/include/JSystem/JGeometry/JGVec3.hpp
++++ b/include/JSystem/JGeometry/JGVec3.hpp
+@@ -117,9 +117,7 @@ public:
+ 
+ 	TVec3& operator=(const TVec3& other)
+ 	{
+-		// NOTE: yes, this has to use lwz/stw and not lfs/stf.
+-		// Checked via enemy.cpp where this is not inlined
+-		*(Vec*)this = *(Vec*)&other;
++		*(Vec*)this = other;
+ 		return *this;
+ 	}
+ 
+@@ -398,10 +396,12 @@ public:
+ 	// TSpider::bind, NPCNeckCallBack, THauntLeg::calcRootMatrix and
+ 	// TMario::moveRequest stay open or regress. The copy-constructor change
+ 	// cut the regression count (70 -> 50), not the lost set.
+-	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
++	friend TVec3 operator-(const Vec* fst, const TVec3& snd)
+ 	{
+-		fst -= snd;
+-		return fst;
++		TVec3 r;
++		r = *fst;
++		r -= snd;
++		return r;
+ 	}
+ 
+ 	// fabricated and fake and UB but it makes things match??
+diff --git a/src/Enemy/enemyMario.cpp b/src/Enemy/enemyMario.cpp
+index 93ae149b..95b1dc00 100644
+--- a/src/Enemy/enemyMario.cpp
++++ b/src/Enemy/enemyMario.cpp
+@@ -1244,7 +1244,7 @@ void TEnemyMario::findRunAwayNearestNode()
+ 	for (int i = 0; i < mEMario->getTracer()->getGraph()->getNodeNum(); ++i) {
+ 		JGeometry::TVec3<f32> point;
+ 		mEMario->getTracer()->getGraph()->getGraphNode(i).getPoint(&point);
+-		f32 distance = JGeometry::TVec3<f32>(point - mPosition).length();
++		f32 distance = (point - mPosition).length();
+ 		if (distance < nearestDistance) {
+ 			secondDistance  = nearestDistance;
+ 			secondIndex     = nearestIndex;
+@@ -1259,8 +1259,8 @@ void TEnemyMario::findRunAwayNearestNode()
+ 		}
+ 	}
+ 
+-	if (JGeometry::TVec3<f32>(mPosition - nearestPoint).length()
+-	    < JGeometry::TVec3<f32>(mPosition - secondPoint).length()) {
++	if ((mPosition - nearestPoint).length()
++	    < (mPosition - secondPoint).length()) {
+ 		mRunAwayNodeIndex = nearestIndex;
+ 	} else {
+ 		mRunAwayNodeIndex = secondIndex;
+diff --git a/src/Map/MapWireManager.cpp b/src/Map/MapWireManager.cpp
+index c463a34d..82f729f6 100644
+--- a/src/Map/MapWireManager.cpp
++++ b/src/Map/MapWireManager.cpp
+@@ -73,8 +73,8 @@ f32 TMapWireActor::getPosInWire() const
+ 
+ 	foot = MsPerpendicFootToLineR(start, end, mPosition);
+ 
+-	f32 len = JGeometry::TVec3<f32>(end - start).length();
+-	f32 num = JGeometry::TVec3<f32>(foot - start).length();
++	f32 len = (end - start).length();
++	f32 num = (foot - start).length();
+ 	return num / len;
+ }
+ 
+diff --git a/src/MoveBG/MapObjPinna.cpp b/src/MoveBG/MapObjPinna.cpp
+index e1588f53..d4ec50c8 100644
+--- a/src/MoveBG/MapObjPinna.cpp
++++ b/src/MoveBG/MapObjPinna.cpp
+@@ -1078,7 +1078,7 @@ void TPinnaCoaster::control()
+ 	// Same idiom as TMario::soundTorocco, which drives the same sound id.
+ 	// TODO: 99.9%. Frame exact; the subtract TVec3 sits 4 bytes high
+ 	// (known `a = b - c` residue).
+-	f32 speed = JGeometry::TVec3<f32>(mPosition - mPrevPos).length();
++	f32 speed = (mPosition - mPrevPos).length();
+ 
+ 	// Only every other frame, so two coaster cars don't fight over the channel.
+ 	if (switchSnd) {
+diff --git a/src/Player/MarioCollision.cpp b/src/Player/MarioCollision.cpp
+index 59ab3d28..e0cc2ac3 100644
+--- a/src/Player/MarioCollision.cpp
++++ b/src/Player/MarioCollision.cpp
+@@ -125,7 +125,7 @@ bool TMario::isTakeSituation(THitActor* object)
+ 	}
+ 
+ 	f32 dist
+-	    = JGeometry::TVec3<f32>(object->mPosition - getPosition()).length();
++	    = (object->mPosition - getPosition()).length();
+ 	if (dist > mAttackRadius + object->getDamageRadius()) {
+ 		return false;
+ 	}
+diff --git a/src/Player/MarioParticle.cpp b/src/Player/MarioParticle.cpp
+index 3194f8f2..68412f88 100644
+--- a/src/Player/MarioParticle.cpp
++++ b/src/Player/MarioParticle.cpp
+@@ -887,7 +887,7 @@ void TMario::sleepingEffectKill()
+ 
+ void TMario::toroccoEffect()
+ {
+-	f32 dist = JGeometry::TVec3<f32>(getPosition() - mToroccoPos).length();
++	f32 dist = (getPosition() - mToroccoPos).length();
+ 
+ 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+ 	    PARTICLE_MS_TORO_WIND, mTorocco->getModel()->getAnmMtx(0), 1, this);
+diff --git a/src/Player/MarioSound.cpp b/src/Player/MarioSound.cpp
+index e5871bee..56362262 100644
+--- a/src/Player/MarioSound.cpp
++++ b/src/Player/MarioSound.cpp
+@@ -720,7 +720,7 @@ void TMario::soundHitBound() { }
+ 
+ void TMario::soundTorocco()
+ {
+-	f32 len = JGeometry::TVec3<f32>(getPosition() - mToroccoPos).length();
++	f32 len = (getPosition() - mToroccoPos).length();
+ 	// The gate is spelled out rather than through MSound's
+ 	// startSoundActorWithInfo wrapper: the wrapper is 4 bytes of pool short
+ 	// and the binder over the sound global supplies the other 8.
+diff --git a/src/Player/MarioSpecial.cpp b/src/Player/MarioSpecial.cpp
+index 1b1b1840..042b5f38 100644
+--- a/src/Player/MarioSpecial.cpp
++++ b/src/Player/MarioSpecial.cpp
+@@ -363,7 +363,7 @@ BOOL TMario::moveRoof()
+ 	if (mInput & 0x20)
+ 		return changePlayerStatus(MARIO_STATUS_WAIT_ROOF, mStatusArg, false);
+ 
+-	f32 dist = JGeometry::TVec3<f32>(getPosition() - getPrevPosition()).length();
++	f32 dist = (getPosition() - getPrevPosition()).length();
+ 	f32 mult = mHangRoofParams.mAnmMult.get();
+ 	dist *= mult;
+ 	if (mStatusArg & 1)
+@@ -1514,7 +1514,7 @@ BOOL TMario::fenceMove()
+ 				hDot  = unk2F4.x - unk300.x;
+ 				if ((s16)((182.04445f * unk30C) - (f32)mFaceAngle.y) != 0)
+ 					hDot = -hDot;
+-				dist = JGeometry::TVec3<f32>(unk2F4 - unk300).length();
++				dist = (unk2F4 - unk300).length();
+ 			}
+ 
+ 			f32 absH = hDot;
+diff --git a/src/Player/Tongue.cpp b/src/Player/Tongue.cpp
+index 7e97580f..1ecd759c 100644
+--- a/src/Player/Tongue.cpp
++++ b/src/Player/Tongue.cpp
+@@ -247,6 +247,20 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
+ // JPADrawCalcScaleXBySpeed::calc gets the same fusion from
+ // `JPABaseParticle::getVelVec(Vec&)`. TODO: the retail helper's real name
+ // and owner are unknown.
++static inline JGeometry::TVec3<f32> TongueDiff(const JGeometry::TVec3<f32>& a,
++                                             const JGeometry::TVec3<f32>& b)
++{
++	JGeometry::TVec3<f32> d(a);
++	d -= b;
++	return d;
++}
++
++static inline JGeometry::TVec3<f32> TongueScaledDiff(const JGeometry::TVec3<f32>& a,
++                                                   const JGeometry::TVec3<f32>& b, f32 k)
++{
++	return TongueDiff(a, b) * k;
++}
++
+ static inline void TongueSubTo(Vec& out, const JGeometry::TVec3<f32>& a, const JGeometry::TVec3<f32>& b)
+ {
+ 	out = a - b;
+@@ -363,7 +377,7 @@ void TYoshiTongue::movement()
+ 			// puts operator- itself out of line (extra weak symbol) and
+ 			// drops `__ami__` to MISSING. Header-level (JGVec3.hpp,
+ 			// "Header round 47").
+-			JGeometry::TVec3<f32> step = (tpos - mTipPos) * mExtendAmount;
++			JGeometry::TVec3<f32> step = TongueScaledDiff(tpos, mTipPos, mExtendAmount);
+ 			mTipPos                      = mTipPos + step;
+ 			mInitialVelocity             = mTipPos - oldTip;
+ 
+@@ -388,7 +402,7 @@ void TYoshiTongue::movement()
+ 		break;
+ 
+ 	case STATE_RETRACTING: {
+-		JGeometry::TVec3<f32> diff = (mTipPos - mHeadPos) * mRetractAmount;
++		JGeometry::TVec3<f32> diff = TongueScaledDiff(mTipPos, mHeadPos, mRetractAmount);
+ 
+ 		mTipPos = mHeadPos + diff;
+ 		break;
+diff --git a/src/Player/Yoshi.cpp b/src/Player/Yoshi.cpp
+index a91b6e58..2fda3113 100644
+--- a/src/Player/Yoshi.cpp
++++ b/src/Player/Yoshi.cpp
+@@ -724,7 +724,7 @@ void TYoshi::emitTongue()
+ 	do {
+ 		mTongue->movement();
+ 		// TODO: dumb but matches?
+-		if (JGeometry::TVec3<f32>(mTongue->mTipPos - pos).length() > unk90)
++		if ((mTongue->mTipPos - pos).length() > unk90)
+ 			break;
+ 		++tries;
+ 	} while (tries < 10);
