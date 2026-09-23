@@ -443,6 +443,12 @@ static bool LineInLineXZ(const JGeometry::TVec2<f32>& a0,
 	return false;
 }
 
+// TODO: 0x5c short of retail. Retail loads start.x, end.x, start.z, end.z
+// once into f25/f26/f24/f23 and reuses them for the int endpoints and for
+// lineA/lineB, so they are named f32 locals (measured: register diffs 17 -> 7
+// but +6 instructions, not yet net positive). Each grid corner is converted
+// and stored to its own stack TVec2 (0x3c0..0x3d8, rereading mGridExtentX/Y
+// per corner) before LineInLineXZ reads it; ours keeps them in FPRs.
 const TBGCheckData* TMapCollisionData::intersectLine(
     const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
     bool front_only, JGeometry::TVec3<f32>* hit_pos) const
