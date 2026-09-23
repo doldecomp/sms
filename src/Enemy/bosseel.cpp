@@ -2023,7 +2023,9 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		// JGadget::TVector<void*>::begin() and dereferences its result at +4,
 		// where our chain (getChildren() -> TVector_pointer<T>::begin() ->
 		// TVector<void*>::begin(), depth 3) expands it and reads +0. Fix (2)
-		// and (3) before re-adding (1).
+		// and (3) before re-adding (1).  The later calcAndSetCollisionCubeBite_
+		// site has the same begin() residue; a one-line wrapper level over it
+		// and a named begin() result are inert.
 		TCubeGeneralInfo* mouthCube
 		    = *mMouthCubeManager->unk14->getChildren().begin();
 		mouthCube->unkC.set(mPosition.x, mPosition.y + 9600.0f * mScaling.y,
@@ -2038,7 +2040,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		TPosition3f collisionMtx;
 		collisionMtx.set(
-		    mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[0]));
+		    mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[2]));
 		mMapCollisions[2]->moveMtx(collisionMtx);
 
 		if (mUseMapCollision) {
