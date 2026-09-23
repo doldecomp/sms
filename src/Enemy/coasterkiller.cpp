@@ -98,14 +98,20 @@ void TCoasterEnemy::makeCoasterGoalPath()
 	unk12C = 0.0f;
 }
 
+// TODO: frame 0x18 long (0x220 vs 0x208) with one extra callee-saved FPR
+// (f20): retail keeps delta.y/z in volatiles from mVelocity.set() through the
+// first setRotate() cross product, which we reload. The rest is the JGQuat4.hpp
+// family: setRotate()'s cross permutes f22-f28, and retail schedules
+// steer * mQuat in mul(other)'s w-first order stored straight into mQuat
+// (as in TBathtubKiller::makeInitialVelocity).
 void TCoasterEnemy::moveCoaster()
 {
 	JGeometry::TVec3<f32> delta = unk124->getCurrentPos();
 	delta -= getPosition();
 	delta.normalize();
 
-	f32 t = getPathDir() == 0 ? getSaveParam2()->mSLCoasterSpeedInOrder.get()
-	                          : getSaveParam2()->mSLCoasterSpeedReverse.get();
+	f32 t = mPathDir == 0 ? getSaveParam2()->mSLCoasterSpeedInOrder.value
+	                          : getSaveParam2()->mSLCoasterSpeedReverse.value;
 	mVelocity.set(delta);
 	mVelocity.scale(t);
 
@@ -117,7 +123,7 @@ void TCoasterEnemy::moveCoaster()
 
 	JGeometry::TQuat4<f32> steer;
 	steer.setRotate(forward, delta, 0.1f);
-	mQuat.mul(steer);
+	mQuat.mul(steer, mQuat);
 
 	// Y-axis rotation
 	JGeometry::TVec3<f32> right;
@@ -132,10 +138,10 @@ void TCoasterEnemy::moveCoaster()
 		tiltQuat.rotate(forward, curUp);
 
 		steer.setRotate(up, curUp, 0.1f);
-		mQuat.mul(steer);
+		mQuat.mul(steer, mQuat);
 	}
 
-	static_cast<JGeometry::TVec4<f32>&>(mQuat).normalize();
+	mQuat.normalize();
 }
 
 void TCoasterEnemy::calcRootMatrix()
