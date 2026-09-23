@@ -601,12 +601,6 @@ void TTelesaSlot::calcRootMatrix()
 // TODO: TTelesaSlot::mOwner wants an accessor in BossTelesaObj.hpp; parked
 // here as a TU-local until a header batch adds it.
 
-static inline int TelesaSlotForcastResult(TTelesaSlot* p, int index)
-{
-	int result = p->getForcastResult(index);
-	return result;
-}
-
 static inline MSound* TelesaSlotGetMSound()
 {
 	MSound* sound = gpMSound;
@@ -619,17 +613,16 @@ static inline TBossTelesa* TelesaSlotBindOwner(const TTelesaSlot* p)
 	return owner;
 }
 
-// The 0xd0 frame is three rungs: the owner binder at the params read (+0x10)
-// and at the pasted fanfale() body (+8), and the sound fork (+0x10).
-// TODO: one callee-saved register left -- the ROM keeps the fanfale() owner in
-// r27 where we rank it r26 (a pre-existing gap); every instruction is exact.
+// The 0xd0 frame is the owner binder at the params read (+0x10, read through
+// getSaveParam2() as forceStopSlot does), the sound fork (+0x10) and the named
+// roll; the fanfale() owner is the raw member, which ranks it r27 as in the ROM.
 void TTelesaSlot::moveObject()
 {
 	TLiveActor::moveObject();
 
 	for (int i = 0; i < unk148; ++i) {
 		if (mForceHit[i]
-		    && mForcedResult == TelesaSlotForcastResult(this, i)) {
+		    && mForcedResult == getForcastResult(i)) {
 			mIsRolling[i] = false;
 			mForceHit[i]  = false;
 		}
@@ -673,9 +666,10 @@ void TTelesaSlot::moveObject()
 						if (mIsRolling[j]) {
 							TMsRange<f32> chance(0.0f, 1.0f);
 							f32 rate = TelesaSlotBindOwner(this)
-							               ->mParams->mSLSlotHitCollectRate
-							               .get();
-							if (chance.rand() <= rate)
+							               ->getSaveParam2()
+							               ->mSLSlotHitCollectRate.get();
+							f32 roll = chance.rand();
+							if (roll <= rate)
 								mForceHit[j] = true;
 							else
 								mIsRolling[j] = false;
@@ -689,7 +683,7 @@ void TTelesaSlot::moveObject()
 					}
 
 					if (allStopped)
-						TelesaSlotBindOwner(this)->fanfale();
+						mOwner->fanfale();
 				}
 			}
 		}
