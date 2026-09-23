@@ -650,10 +650,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 
 	case MARIO_STATUS_WIRE_ROLL_JUMP: {
-		// Retail multiplies by 1.0f at run time, so the scale was a variable.
-		f32 scale = 1.0f;
+		// TODO: retail multiplies by 1.0f at run time (a hoisted `f32 scale =
+		// 1.0f` reproduces it, but nothing else sets it, so it is not applied).
 		if (arg == 0) {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * scale;
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
 			mVel.y        = jumpPower * JMASSin(0xE000);
 
 			mForwardVel = jumpPower * -JMASCos(0xE000);
@@ -662,7 +662,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			mVel.x      = mSlideVelX;
 			mVel.z      = mSlideVelZ;
 		} else {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * scale;
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
 			mVel.y        = jumpPower * JMASSin(0x6000);
 
 			mForwardVel = jumpPower * -JMASCos(0x6000);
