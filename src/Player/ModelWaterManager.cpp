@@ -342,7 +342,7 @@ void TModelWaterManager::splashGround(int i)
 	gpPollution->clean(
 	    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y,
 	    mParticlePositionSOA[i].z,
-	    mWaterParticleTypes[mParticleTypeSOA[i]]->mCleanSize.get() * 10.0f);
+	    mWaterParticleTypes[mParticleTypeSOA[i]]->mCleanSize.get() * 32.0f);
 }
 
 void TModelWaterManager::touchingExec(int i) { }
