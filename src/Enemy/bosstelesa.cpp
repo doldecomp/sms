@@ -1341,12 +1341,9 @@ void TBossTelesa::calcRootMatrix()
 	TPosition3f mtx;
 	Mtx rotation;
 
-	// TODO: retail hoists mSLTransYOffset.get() into f3 before mBaseHoseiPosY
-	// (same delay slot as the z load). Named getSaveParam2() recovered the
-	// params load and took 98.1 -> 99.1; frame is still 8 short of 0x2a8.
-	TBossTelesaSaveLoadParams* params = getSaveParam2();
+	f32 yOffset = getSaveParam2()->mSLTransYOffset.get();
 	mtx.translation(mPosition.x,
-	                mPosition.y + params->mSLTransYOffset.get()
+	                mPosition.y + yOffset
 	                    + MsClamp<f32>(unk364, mBaseHoseiPosY, 0.0f),
 	                mPosition.z);
 	MsMtxSetRotRPH(rotation, mRotation.x, mRotation.y, mRotation.z);
