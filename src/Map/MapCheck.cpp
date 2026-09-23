@@ -443,32 +443,36 @@ static bool LineInLineXZ(const JGeometry::TVec2<f32>& a0,
 	return false;
 }
 
-// TODO: 0x5c short of retail. Retail loads start.x, end.x, start.z, end.z
-// once into f25/f26/f24/f23 and reuses them for the int endpoints and for
-// lineA/lineB, so they are named f32 locals (measured: register diffs 17 -> 7
-// but +6 instructions, not yet net positive). Each grid corner is converted
-// and stored to its own stack TVec2 (0x3c0..0x3d8, rereading mGridExtentX/Y
-// per corner) before LineInLineXZ reads it; ours keeps them in FPRs.
+// TODO: 85%. Frame 0x38 too large and the LineInLineXZ temporaries are
+// evaluated in a different order: retail builds (a1 - a0) before (b - a0) in
+// each cross product, ours builds the argument first (formula spellings with
+// either operand order measured, none better). Retail also assigns start.x,
+// end.x, start.z, end.z to f25/f26/f24/f23 and keeps the grid bounds in
+// r20-r23 below the parameters.
 const TBGCheckData* TMapCollisionData::intersectLine(
     const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
     bool front_only, JGeometry::TVec3<f32>* hit_pos) const
 {
-	JGeometry::TVec2<int> start2d(start.x, start.z);
-	JGeometry::TVec2<int> end2d(end.x, end.z);
+	f32 startX = start.x;
+	f32 endX   = end.x;
+	f32 startZ = start.z;
+	f32 endZ   = end.z;
+	JGeometry::TVec2<f32> lineA(startX, startZ);
+	JGeometry::TVec2<f32> lineB(endX, endZ);
+	JGeometry::TVec2<int> start2d(startX, startZ);
+	JGeometry::TVec2<int> end2d(endX, endZ);
 
-	int minXi = start2d.x;
-	int maxXi = end2d.x;
+	JGeometry::TVec2<int> min2d(start2d);
+	JGeometry::TVec2<int> max2d(end2d);
 	if (start2d.x > end2d.x) {
-		minXi = end2d.x;
-		maxXi = start2d.x;
+		min2d.x = end2d.x;
+		max2d.x = start2d.x;
 	}
-
-	int minZi = start2d.y;
-	int maxZi = end2d.y;
 	if (start2d.y > end2d.y) {
-		minZi = end2d.y;
-		maxZi = start2d.y;
+		min2d.y = end2d.y;
+		max2d.y = start2d.y;
 	}
+	int minXi = min2d.x, maxXi = max2d.x, minZi = min2d.y, maxZi = max2d.y;
 
 	int minGridZ = (int)((minZi + mGridExtentY) * (1.0f / 1024));
 	int minGridX = (int)((minXi + mGridExtentX) * (1.0f / 1024));
@@ -484,22 +488,17 @@ const TBGCheckData* TMapCollisionData::intersectLine(
 				f32 x1i = (gridX + 1) * 1024.0f;
 				f32 z1i = (gridZ + 1) * 1024.0f;
 
-				JGeometry::TVec2<f32> p00((s32)(x0i - mGridExtentX),
-				                          (s32)(z0i - mGridExtentY));
-				JGeometry::TVec2<f32> p10((s32)(x1i - mGridExtentX),
-				                          (s32)(z0i - mGridExtentY));
-				JGeometry::TVec2<f32> p01((s32)(x0i - mGridExtentX),
-				                          (s32)(z1i - mGridExtentY));
-				JGeometry::TVec2<f32> p11((s32)(x1i - mGridExtentX),
-				                          (s32)(z1i - mGridExtentY));
+				JGeometry::TVec2<f32> corner[4];
+				corner[0].set((s32)(x0i - mGridExtentX), (s32)(z0i - mGridExtentY));
+				corner[1].set((s32)(x1i - mGridExtentX), (s32)(z0i - mGridExtentY));
+				corner[2].set((s32)(x0i - mGridExtentX), (s32)(z1i - mGridExtentY));
+				corner[3].set((s32)(x1i - mGridExtentX), (s32)(z1i - mGridExtentY));
 
-				JGeometry::TVec2<f32> lineA(start.x, start.z);
-				JGeometry::TVec2<f32> lineB(end.x, end.z);
 
-				if (!LineInLineXZ(lineA, lineB, p10, p00)
-				    && !LineInLineXZ(lineA, lineB, p01, p00)
-				    && !LineInLineXZ(lineA, lineB, p11, p01)
-				    && !LineInLineXZ(lineA, lineB, p10, p11))
+				if (!LineInLineXZ(lineA, lineB, corner[0], corner[1])
+				    && !LineInLineXZ(lineA, lineB, corner[0], corner[2])
+				    && !LineInLineXZ(lineA, lineB, corner[2], corner[3])
+				    && !LineInLineXZ(lineA, lineB, corner[3], corner[1]))
 					continue;
 			}
 
