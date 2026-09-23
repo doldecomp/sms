@@ -333,3 +333,32 @@ Greedy fix curve (category fixed -> clean TUs): declspec 174 -> ppc-intrinsic 22
 | main-signature | 1 | 1 | 1 | `src/main.cpp:6: '::main' must return 'int'` |
 
 Greedy fix curve (category fixed -> clean TUs): ppc-intrinsic 329 -> implicit-conv 456 -> case-include 502 -> libc-decl 533 -> gnu-keyword 556 -> two-phase-lookup 571 -> ref-binding 575 -> jump-over-init 579 -> overload-ambiguity 581 -> asm-function 583 -> host-libc-clash 585 -> explicit-msl-include 586 -> main-signature 587 -> access-control 588 -> conflicting-redecl 589
+
+## Neutral fixes landed (2026-09-23, `wt/c-portfix`)
+
+Commits `9937a819` and `7886505a`.
+All 732 objects rebuilt byte-identical to the pre-fix tree, so `changes_all` is empty and the DOL hash is unchanged.
+
+- 2: `JKRHeap.cpp` `operator new`/`new[]` take `size_t`.
+  The `s32` pass still reports them because MSL's `size_t` is `unsigned long`; they clear with host headers.
+- 4: `typename` in MSL `iterator` (`iterator_traits`).
+- 5: `(void**)` at `MActorData.hpp:82`; const-correct locals at `linklist.hpp:287`, `tinkoopa.cpp:1104,1109` and `MapObjHide.cpp:626`.
+- 6: all six include-case fixes.
+- 9: `this->set` in `JGQuat4.hpp`; `this->append/prepend/remove/insert` in `JSUTree`.
+  **Not fixed: `cameralib.hpp:86`.**
+  MWCC orders weak template instances by the template's first declaration, so a forward declaration of `CLBTwoDegreeGeneralInbetween` (or moving either template) reorders code in `cameragc`, `CameraNormal`, `lensglow`, `sunmodel` and `NpcCallback`, three of which pass symbol order today.
+  Treat it as **verify**; a port can add the declaration behind a non-MWCC guard.
+- 13: `JKRArchive((s32)0, ...)` in `JKRDvdArchive.cpp` and `JKRMemArchive.cpp`, the overload MWCC already calls.
+- 15: `TSpineBase<>::Nerve` is public.
+- 19: `<string.h>` in `MapObjTown.cpp`, `<math.h>` in `JMath.cpp`.
+- 22: every listed site, respelled to the `s32`/`u32` of the base or definition (`JKRFileLoader::getResSize`, `CardSave.hpp`, `SunMgr.hpp`, `MapEvent.hpp`, `PollutionLayer.hpp`, `MapObjTown.hpp`, `NpcBase.hpp`, `MapObjGrass.hpp`, `ToolData`, `MapDraw.cpp`, `JKRFileFinder.cpp`, `JKRExpHeap.cpp`).
+
+Re-measured with `scripts/run.py` (before = `639c3ddd`):
+
+| Pass | Clean TUs | Clean once only compat-header/flag categories remain | Unique error locations |
+| --- | ---: | ---: | ---: |
+| `s32` | 32 -> 32 | 298 -> 575 | 113 -> 94 |
+| `host64` | 160 -> 163 | 353 -> 573 | 171 -> 163 |
+
+The compat-header/flag categories are declspec, MSL `size_t` width, PPC intrinsics, `typeof`, MSL cascade and libc names.
+The `s32` clean count cannot move without the compat header: MSL `string.h` `__declspec` now blocks 555 units and `__cntlzw` 345, up from 509 and 300 because the include-case fixes let 46 units past their fatal error.
