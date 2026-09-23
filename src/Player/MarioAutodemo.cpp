@@ -62,8 +62,8 @@ BOOL TMario::readBillboard()
 		f32 dist = std::sqrtf(dx * dx + dz * dz);
 		if (dist < 100.0f) {
 			JGeometry::TVec3<f32> moveDist;
-			moveDist.x = dx / dist * 2.0f * 50.0f + talkingNpc->mPosition.x;
-			moveDist.z = dz / dist * 2.0f * 50.0f + talkingNpc->mPosition.z;
+			moveDist.x = dx / dist * 50.0f * 2.0f + talkingNpc->mPosition.x;
+			moveDist.z = dz / dist * 50.0f * 2.0f + talkingNpc->mPosition.z;
 			moveDist.y = mFloorPosition.y;
 			moveRequest(moveDist);
 		}
