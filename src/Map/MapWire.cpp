@@ -38,6 +38,25 @@ f32 TMapWire::mFootLength     = 26.0f;
 f32 TMapWire::mDrawWidth      = 5.0f;
 f32 TMapWire::mDrawHeight     = 6.0f;
 
+// Retail adds the point before the offset inside the strip loops, which only
+// happens when the vertex goes through a helper taking the point by reference.
+static inline void addPoint(const JGeometry::TVec3<f32>& p, f32 dx, f32 dz)
+{
+	GXPosition3f32(p.x + dx, p.y, p.z + dz);
+}
+
+static inline void subPoint(const JGeometry::TVec3<f32>& p, f32 dx, f32 dz)
+{
+	GXPosition3f32(p.x - dx, p.y, p.z - dz);
+}
+
+static inline void downPoint(const JGeometry::TVec3<f32>& p, f32 h)
+{
+	GXPosition3f32(p.x, p.y - h, p.z);
+}
+
+// TODO: frame is 0x70, retail 0x78; helper placement on the start/end points
+// moves it in 8-byte steps but no tried split reaches 0x78.
 void TMapWire::drawLower() const
 {
 	f32 xOffset = mDrawAxes.x;
@@ -47,45 +66,37 @@ void TMapWire::drawLower() const
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
-	GXPosition3f32(mStartPoint.x - xOffset, mStartPoint.y,
-	               mStartPoint.z - zOffset);
-	GXPosition3f32(mStartPoint.x, mStartPoint.y - mDrawHeight, mStartPoint.z);
+	subPoint(mStartPoint, xOffset, zOffset);
+	downPoint(mStartPoint, mDrawHeight);
 
 	for (int i = 0; i < mNumActiveMapWirePoints; i++) {
-		GXPosition3f32(mMapWirePoints[i].mPosition.x - xOffset,
-		               mMapWirePoints[i].mPosition.y,
-		               mMapWirePoints[i].mPosition.z - zOffset);
-		GXPosition3f32(mMapWirePoints[i].mPosition.x,
-		               mMapWirePoints[i].mPosition.y - mDrawHeight,
-		               mMapWirePoints[i].mPosition.z);
+		subPoint(mMapWirePoints[i].mPosition, xOffset, zOffset);
+		downPoint(mMapWirePoints[i].mPosition, mDrawHeight);
 	}
 
-	GXPosition3f32(mEndPoint.x - xOffset, mEndPoint.y, mEndPoint.z - zOffset);
-	GXPosition3f32(mEndPoint.x, mEndPoint.y - mDrawHeight, mEndPoint.z);
+	subPoint(mEndPoint, xOffset, zOffset);
+	downPoint(mEndPoint, mDrawHeight);
 
 	GXEnd();
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
-	GXPosition3f32(mStartPoint.x, mStartPoint.y - mDrawHeight, mStartPoint.z);
-	GXPosition3f32(mStartPoint.x + xOffset, mStartPoint.y,
-	               mStartPoint.z + zOffset);
+	downPoint(mStartPoint, mDrawHeight);
+	addPoint(mStartPoint, xOffset, zOffset);
 
 	for (int i = 0; i < mNumActiveMapWirePoints; i++) {
-		GXPosition3f32(mMapWirePoints[i].mPosition.x,
-		               mMapWirePoints[i].mPosition.y - mDrawHeight,
-		               mMapWirePoints[i].mPosition.z);
-		GXPosition3f32(mMapWirePoints[i].mPosition.x + xOffset,
-		               mMapWirePoints[i].mPosition.y,
-		               mMapWirePoints[i].mPosition.z + zOffset);
+		downPoint(mMapWirePoints[i].mPosition, mDrawHeight);
+		addPoint(mMapWirePoints[i].mPosition, xOffset, zOffset);
 	}
 
-	GXPosition3f32(mEndPoint.x, mEndPoint.y - mDrawHeight, mEndPoint.z);
-	GXPosition3f32(mEndPoint.x + xOffset, mEndPoint.y, mEndPoint.z + zOffset);
+	downPoint(mEndPoint, mDrawHeight);
+	addPoint(mEndPoint, xOffset, zOffset);
 
 	GXEnd();
 }
 
+// TODO: frame is 0x40, retail 0x58; helpers on the start/end points, a
+// const getPoint(), and TVec2/TVec3 offset locals were inert or wrong.
 void TMapWire::drawUpper() const
 {
 	f32 xOffset = mDrawAxes.x;
@@ -101,12 +112,8 @@ void TMapWire::drawUpper() const
 	               mStartPoint.z - zOffset);
 
 	for (int index = 0; index < mNumActiveMapWirePoints; index++) {
-		GXPosition3f32(mMapWirePoints[index].mPosition.x + xOffset,
-		               mMapWirePoints[index].mPosition.y,
-		               mMapWirePoints[index].mPosition.z + zOffset);
-		GXPosition3f32(mMapWirePoints[index].mPosition.x - xOffset,
-		               mMapWirePoints[index].mPosition.y,
-		               mMapWirePoints[index].mPosition.z - zOffset);
+		addPoint(mMapWirePoints[index].mPosition, xOffset, zOffset);
+		subPoint(mMapWirePoints[index].mPosition, xOffset, zOffset);
 	}
 
 	GXPosition3f32(mEndPoint.x + xOffset, mEndPoint.y, mEndPoint.z + zOffset);
