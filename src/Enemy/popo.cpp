@@ -221,8 +221,9 @@ static int PopoRollCallback(J3DNode* node, int param)
 }
 
 // The mouth joint swells with the pumped water.
-// TODO: retail copies each column to a stack TVec3 and reloads it (unfused
-// fmuls/fadds), frame 0x148 vs 0x130; same open class as TNameIndParCallback.
+// TODO: instruction-exact, frame 0xe8 vs retail's 0x148. Retail's named
+// block has a 0x30 hole between `scale` (0xfc) and `rot` (0x9c), and the low
+// region (the column array at 0x78, ours 0x4c) is 0x2c deeper.
 static int PopoPossessedCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -258,16 +259,19 @@ static int PopoPossessedCallback(J3DNode* node, int param)
 			MsMtxSetRotRPH(rot, 0.0f, 270.0f, 0.0f);
 			MTXConcat(gpCurPopo->mMouthMtx, rot, gpCurPopo->mMouthMtx);
 
-			TRotation3f* anmRot = (TRotation3f*)anmMtx;
-			JGeometry::TVec3<f32> col0;
-			anmRot->getXDir(col0);
-			gpCurPopo->mEffectScale.y = col0.length();
-			JGeometry::TVec3<f32> col1;
-			anmRot->getYDir(col1);
-			gpCurPopo->mEffectScale.z = col1.length();
-			JGeometry::TVec3<f32> col2;
-			anmRot->getZDir(col2);
-			gpCurPopo->mEffectScale.x = col2.length();
+			JGeometry::TVec3<f32> dir[3];
+			dir[0].x = anmMtx[0][0];
+			dir[0].y = anmMtx[1][0];
+			dir[0].z = anmMtx[2][0];
+			gpCurPopo->mEffectScale.y = dir[0].length();
+			dir[1].x = anmMtx[0][1];
+			dir[1].y = anmMtx[1][1];
+			dir[1].z = anmMtx[2][1];
+			gpCurPopo->mEffectScale.z = dir[1].length();
+			dir[2].x = anmMtx[0][2];
+			dir[2].y = anmMtx[1][2];
+			dir[2].z = anmMtx[2][2];
+			gpCurPopo->mEffectScale.x = dir[2].length();
 
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtxPtr(
