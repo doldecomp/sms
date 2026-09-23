@@ -668,7 +668,7 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 {
 	TAmiNoko* amiNoko = (TAmiNoko*)spine->getBody();
 
-	if (spine->getTime() == 0) {
+	if (!spine->getTime()) {
 		if (amiNoko->mUseAnmSet1)
 			amiNoko->setBckAnm(AMINOKO_ANM_TURN1_START);
 		else
@@ -686,7 +686,7 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 	}
 
 	JGeometry::TVec3<f32> toGoal = amiNoko->getUnkF4().getPoint();
-	toGoal.sub(amiNoko->mPosition);
+	toGoal.sub(amiNoko->getPosition());
 	if (toGoal.x == 0.0f && toGoal.y == 0.0f && toGoal.z == 0.0f)
 		toGoal.x = 1.0f;
 	VECNormalize(toGoal, toGoal);

@@ -1000,7 +1000,8 @@ void CPolarSubCamera::ctrlGameCamera_()
 	if (isNormalDeadDemo()) {
 		yOffset = 35.0f;
 	} else {
-		yOffset = mCurrentTarget.unk28 * CameragcParams(this)->mXRotRatioAtOffsetY
+		TCameraKindParam* params = CameragcParams(this);
+		yOffset = mCurrentTarget.unk28 * params->mXRotRatioAtOffsetY
 		          + CameragcParams(this)->mAtOffsetY;
 		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
 			yOffset += 260.0f;
@@ -1008,14 +1009,15 @@ void CPolarSubCamera::ctrlGameCamera_()
 			yOffset += unk290;
 	}
 	marPos.y += yOffset;
-	SMSGetCameraMario()->unk0.set(marPos);
+	gpCameraMario->unk0.set(marPos);
 	SMSGetCameraMario()->calcAndSetMarioData();
 
 	mPreviousTarget = mCurrentTarget;
 
 	if (SMSGetMarDirector()->mState == 4 && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
 		if (isTalkCameraSpecifyMode(mMode)) {
-			if (!SMSGetMarDirector()->isTalkModeNow())
+			TMarDirector* director = SMSGetMarDirector();
+			if (!director->isTalkModeNow())
 				changeCamMode_(mInitialMode);
 		} else if (!isSimpleDemoCamera()) {
 			if (controlByCameraCode_(&code))

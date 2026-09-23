@@ -107,7 +107,8 @@ SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* material)
 		unk18[i].mAmbSrc    = material->getColorChan(i)->getAmbSrc();
 		unk18[i].mLightMask = material->getColorChan(i)->getLightMask();
 		unk18[i].mDiffuseFn = material->getColorChan(i)->getDiffuseFn();
-		unk18[i].mAttnFn    = material->getColorChan(i)->getAttnFn();
+		J3DColorChan* chan = material->getColorChan(i);
+		unk18[i].mAttnFn    = chan->getAttnFn();
 	}
 
 	unk38 = *(J3DTevOrderInfo*)material->getTevOrder(0);

@@ -490,6 +490,12 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 	return result;
 }
 
+static inline TMarDirector* npcMarDirector()
+{
+	TMarDirector* r = gpMarDirector;
+	return r;
+}
+
 void TBaseNPC::moveObject()
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -512,9 +518,9 @@ void TBaseNPC::moveObject()
 
 	if (mBalloonCtrl != nullptr) {
 		int prev = mBalloonCtrl->unk0;
-		if (!gpMarDirector->isTalkOrDemoModeNow()
+		if (!npcMarDirector()->isTalkOrDemoModeNow()
 		    && mBalloonCtrl->updateBalloon()) {
-			if (mHolder != nullptr) {
+			if (getHolder() != nullptr) {
 				switch (prev) {
 				case 0x52:
 					mBalloonCtrl->setNextMessage(0x54, 0x1C20);
@@ -559,18 +565,18 @@ void TBaseNPC::moveObject()
 	    && !checkLiveFlag(LIVE_FLAG_UNK1000000))
 		emitSinkEffect_();
 
-	if (mSpine->getLatestNerve()
+	if (getSpine()->getLatestNerve()
 	    != &TNerveNPCSetPosAfterSinkBottom::theNerve()) {
 		execNpcObjCollision_();
 
 		if (!checkLiveFlag(LIVE_FLAG_UNK10))
 			bind();
 
-		if (mHolder != nullptr) {
-			MtxPtr mtx = mHolder->getTakingMtx();
+		if (getHolder() != nullptr) {
+			MtxPtr mtx = getHolder()->getTakingMtx();
 			mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 			if (unk150 == nullptr) {
-				s16 angle = CLBDegToShortAngle(mHolder->mRotation.y)
+				s16 angle = CLBDegToShortAngle(getHolder()->getRotation().y)
 				            - mAngleYDiffWhenTaken;
 				mRotation.y = SHORTANGLE2DEG(angle);
 			}
@@ -579,7 +585,7 @@ void TBaseNPC::moveObject()
 			    && !belongToGround() && mLinearVelocity.y > 5.0f) {
 				mLinearVelocity.y = 5.0f;
 			}
-			mPosition += mLinearVelocity;
+			mPosition += getLinearVelocity();
 			mRotation += mAngularVelocity;
 		}
 		calcRidePos();

@@ -1149,14 +1149,14 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 
 	if (spine->getTime() < 2) {
 		if (puku->getGroundPlane()->isWaterSurface()) {
-			f32 y             = puku->mPosition.y;
+			f32 y             = puku->getPosition().y;
 			puku->mPosition.y = y - 10.0f;
 			puku->onLiveFlag(LIVE_FLAG_UNK10);
 			puku->generateEffectColumWater();
 			if (TTobiPuku::mReturnLaunchSw) {
 				puku->mFlyVelocityY *= 0.8f;
 				puku->mReturnPitchStep
-				    = (180.0f - puku->mRotation.x)
+				    = (180.0f - puku->getRotation().x)
 				      / fabsf(600.0f / puku->mFlyVelocityY);
 			}
 		} else {
@@ -1167,7 +1167,7 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 				}
 			}
 
-			puku->mLand[0] = puku->mPosition;
+			puku->mLand[0] = puku->getPosition();
 			puku->setFallEndLandAnm();
 			puku->mRotation.x = 0.0f;
 		}
@@ -1177,7 +1177,7 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 			                   puku->mPosition.y - puku->mLand[0].y,
 			                   puku->mPosition.z - puku->mLand[0].z);
 
-		int time = spine->getTime();
+		s32 time = spine->getTime();
 		if (time < 20) {
 			f32 t          = 0.05f * (f32)time;
 			puku->mPosition = puku->mLand[0];
@@ -1212,7 +1212,8 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 		vel.y = puku->mFlyVelocityY;
 		puku->mPosition += vel;
 
-		if (fabsf(drop) > 120.0f) {
+		f32 absDrop = fabsf(drop);
+		if (absDrop > 120.0f) {
 			f32 spread = 3.0f + puku->unk1EC;
 			if (spread > 180.0f)
 				spread = 180.0f;

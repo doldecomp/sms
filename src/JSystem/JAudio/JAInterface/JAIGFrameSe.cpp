@@ -270,11 +270,11 @@ void JAIBasic::sendPlayingSeCommand()
 	u8 trackId = 0;
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
-		for (j = 0; j < getData()
+		for (j = 0; j < unk0
 		                    ->mCategoryInfoTable[mSoundScene][(u8)cat]
 		                    .mMaxPlaying;
 		     ++trackId, ++j) {
-			sound = getData()->mSeTrack[cat][j].mSound;
+			sound = unk0->mSeTrack[cat][j].mSound;
 			if (sound == nullptr)
 				continue;
 
@@ -295,7 +295,7 @@ void JAIBasic::sendPlayingSeCommand()
 				*dPtr     = std::sqrtf(*dPtr);
 			}
 
-			u8 state = sound->mState;
+			u8 state = sound->getStatus();
 			if (state == SOUNDSTATE_Prepared) {
 				u32 swBit     = sound->getSwBit();
 				sound->mTrack = trackId;
