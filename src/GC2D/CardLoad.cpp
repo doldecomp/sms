@@ -552,7 +552,8 @@ void TCardLoad::loadAfter()
 // are helpers of the same kind: the arrow blink as a helper is what fuses
 // retail's `lbzu`, and with all three the two `.data` jump tables (@7718,
 // @7721) match. Remaining: frame 0x318 vs 0x380 (the JUTRect temporary and
-// the stream sit lower than retail's) and a few register choices.
+// the stream sit lower than retail's); every instruction but the frame
+// offsets matches. TODO: frame 0x68 short (structural).
 static inline void CardLoadBlinkArrow(TCardLoad* p)
 {
 	int alpha = p->unk25C->getAlpha();
@@ -677,6 +678,17 @@ static inline void CardLoadFadeInScore(TCardLoad* p)
 	}
 }
 
+// Cases 3 and 9 skip the title fade the same way; as one helper the
+// two TExPane pointers and the pane loop counter take retail's registers.
+static inline void CardLoadSkipTitle(TCardLoad* p)
+{
+	p->unkF0->setPaneAlpha(10, 255, p->unkF0->getPane()->getAlpha());
+	p->unkF4->setPaneAlpha(10, 255, p->unkF4->getPane()->getAlpha());
+	for (int i = 0; i < TCardLoad::TITLE_PANE_COUNT; ++i)
+		p->unk1D4[i]->getPane()->setAlpha(0);
+	p->unk258 = 0;
+}
+
 void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -752,7 +764,8 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			break;
 
 		case 8: {
-			int alpha = (s16)(unk208->getAlpha() - 4);
+			s16 alpha = unk208->getAlpha();
+			alpha -= 4;
 			if (alpha < 0)
 				alpha = 0;
 			unk208->setAlpha(alpha);
@@ -780,11 +793,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				unkBC += 1;
 			} else if (unk38->checkFrameMeaning(0x20)
 			           || unk38->getTrigger() & 0x1000) {
-				unkF0->setPaneAlpha(10, 255, unkF0->getPane()->getAlpha());
-				unkF4->setPaneAlpha(10, 255, unkF4->getPane()->getAlpha());
-				for (int i = 0; i < TITLE_PANE_COUNT; ++i)
-					unk1D4[i]->getPane()->setAlpha(0);
-				unk258 = 0;
+				CardLoadSkipTitle(this);
 				if (unk18 < 4)
 					unk18 = 4;
 			}
@@ -808,11 +817,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			if (unk38->checkFrameMeaning(0x20)
 			    || unk38->getTrigger() & 0x1000) {
-				unkF0->setPaneAlpha(10, 255, unkF0->getPane()->getAlpha());
-				unkF4->setPaneAlpha(10, 255, unkF4->getPane()->getAlpha());
-				for (int i = 0; i < TITLE_PANE_COUNT; ++i)
-					unk1D4[i]->getPane()->setAlpha(0);
-				unk258 = 0;
+				CardLoadSkipTitle(this);
 				unkBC  = 0;
 				unk18  = 4;
 				unk14  = 3;
