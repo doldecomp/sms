@@ -330,28 +330,25 @@ bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
 		local_3C.y = dVar10;
 	}
 
-	JGeometry::TVec3<f32> local_70 = getPlaneNormal();
-	JGeometry::TVec3<f32> local_48;
-	local_48.scaleAdd(-10.0f, local_70, local_3C);
+	JGeometry::TVec3<f32> local_48 = getPlaneNormal();
+	local_48.scaleAdd(-10.0f, local_48, local_3C);
 
 	const TBGCheckData* wall = checkWallPlane(&local_48, mHeadHeight, 100.0f);
 
-	JGeometry::TVec3<f32> local_3C2;
+	// No wall ahead: fall back to the probe start above param_3.
 	if (!wall) {
 		result = true;
-		local_3C2.set(local_48);
+		local_3C.set(normal);
 	} else {
-		local_3C2.x = local_48.x;
-		local_3C2.z = local_48.z;
+		local_3C.x = local_48.x;
+		local_3C.z = local_48.z;
 	}
-	(void)local_48; // hmmmmm....
 
 	JGeometry::TVec3<f32> offset = getPlaneNormal();
 	offset *= -100.0f;
-	JGeometry::TVec3<f32> vec = local_3C2;
-	vec += offset;
+	local_3C += offset;
 
-	param_1->set(vec);
+	param_1->set(local_3C);
 	*param_1 -= param_3;
 
 	return result;
