@@ -82,6 +82,12 @@ void MActorAnmDataBase::sortByFileNameRaw(void** anms)
 // `unk0` assigned in the body, by-value TU-local allocator forks (named,
 // nested, by-value and const& parameters): they land 0x18/0x10, 0x20/0x18,
 // 0x28/0x18 or 0x30/0x20 (frame/temp), never 0x20/0x14.
+// Retail's temp is the third inline temporary (0xc, 0x10 taken first) plus
+// 8 bytes of named-local area; SDLModelData and TConductor pin TList's own
+// ctor at zero extra slots, so the extra slots belong to this ctor, not
+// std-list.hpp. Inert in the header (tl1): mSize/mAllocator set in the body,
+// `const A&` parameter, TList()/TList(const A&) overloads, a named node local
+// or a static InitNode_(&oEnd_) in Initialize_; a derived list wrapper type.
 MActorAnmData::MActorAnmData()
     : unk0(0)
 {
