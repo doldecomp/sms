@@ -110,7 +110,16 @@ BOOL TMario::isRunningTurnning()
 	return result;
 }
 
-void TMario::changePlayerCatching() { }
+// UNUSED (0x6c in the map): running's fence-catch reaction.
+// TODO: 0x68 out of line, one instruction short; a named angle, a chained
+// store and raw mNormal reads are 0x64 and cost running bytes.
+BOOL TMario::changePlayerCatching()
+{
+	mFaceAngle.y
+	    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x) + 0x8000;
+	mModelFaceAngle = mFaceAngle.y;
+	return changePlayerStatus(MARIO_STATUS_FENCE_CATCH, 0, false);
+}
 
 bool TMario::isRunningInWater()
 {
@@ -121,7 +130,14 @@ bool TMario::isRunningInWater()
 	return false;
 }
 
-void TMario::getRunningInWaterBrake() { }
+// UNUSED (0x28 in the map): the in-water brake doRunning and
+// doRunningAnimation scale by; both retail sites keep their own fused
+// fnmsubs expansion, which a call through this body does not reproduce.
+f32 TMario::getRunningInWaterBrake()
+{
+	return (mFloorPosition.z - mPosition.y) / mRunParams.mSwimDepth.get()
+	       * (1.0f - mRunParams.mInWaterBrake.get());
+}
 
 BOOL TMario::doRunningAnimation()
 {
@@ -694,7 +710,20 @@ BOOL TMario::doBraking(f32 brake)
 	return zeroed;
 }
 
-void TMario::changePlayerWaiting() { }
+// UNUSED (0xb0 in the map): running's stop-input reaction, inlined at both
+// of its sites.
+BOOL TMario::changePlayerWaiting()
+{
+	if (mStatusState == 1) {
+		mFaceAngle.y = (s16)mStatusArg;
+		return changePlayerStatus(0xC400209, 0, false);
+	}
+	if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
+	    && mGroundPlane->mNormal.y >= 0.17364818f) {
+		return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
+	}
+	return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
+}
 
 void TMario::doPushingAnimation(const Vec& vec)
 {
@@ -739,17 +768,8 @@ BOOL TMario::running()
 	if (isRunningSlipStart())
 		return changePlayerStatus(MARIO_STATUS_SLIP, 0, false);
 
-	if (mInput & 0x10) {
-		if (mStatusState == 1) {
-			mFaceAngle.y = (s16)mStatusArg;
-			return changePlayerStatus(0xC400209, 0, false);
-		}
-		if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
-		    && mGroundPlane->mNormal.y >= 0.17364818f) {
-			return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
-		}
-		return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
-	}
+	if (mInput & 0x10)
+		return changePlayerWaiting();
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING) && (mInput & 0x2)
 	    && mForwardVel > mDeParams.mDashMax.get() - 1.0f)
@@ -764,17 +784,8 @@ BOOL TMario::running()
 		changePlayerStatus(MARIO_STATUS_TAKE_POSE, 0, false);
 	}
 
-	if (mInput & 0x20) {
-		if (mStatusState == 1) {
-			mFaceAngle.y = (s16)mStatusArg;
-			return changePlayerStatus(0xC400209, 0, false);
-		}
-		if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
-		    && mGroundPlane->mNormal.y >= 0.17364818f) {
-			return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
-		}
-		return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
-	}
+	if (mInput & 0x20)
+		return changePlayerWaiting();
 
 	if (isRunningTurnning() && mForwardVel >= mRunParams.mTurnNeedSp.get()) {
 		emitParticle(PARTICLE_MS_MARIWALK1_A, mFaceAngle.y + 0x8000);
@@ -836,13 +847,8 @@ BOOL TMario::running()
 				return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
 			}
 
-			if (mWallPlane != nullptr && mWallPlane->isFence()) {
-				mFaceAngle.y = matan(mWallPlane->getNormal().z,
-				                     mWallPlane->getNormal().x)
-				               + 0x8000;
-				mModelFaceAngle = mFaceAngle.y;
-				return changePlayerStatus(MARIO_STATUS_FENCE_CATCH, 0, false);
-			}
+			if (mWallPlane != nullptr && mWallPlane->isFence())
+				return changePlayerCatching();
 
 			doPushingAnimation(prevPos);
 			mDashTimer = 0;

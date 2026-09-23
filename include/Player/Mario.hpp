@@ -943,9 +943,9 @@ public:
 	void changePlayerPower(f32, u32, u32);
 	BOOL isRunningSlipStart();
 	BOOL isRunningTurnning();
-	void changePlayerCatching();
+	BOOL changePlayerCatching();
 	bool isRunningInWater();
-	void getRunningInWaterBrake();
+	f32 getRunningInWaterBrake();
 	BOOL doRunningAnimation();
 	void getSlopeNormalAccele(f32*, f32*);
 	void getSlopeSlideAccele(f32*, f32*);
@@ -961,7 +961,7 @@ public:
 	TSurfingParams* getSurfingParamsGround();
 	void doSurfing();
 	BOOL doBraking(f32);
-	void changePlayerWaiting();
+	BOOL changePlayerWaiting();
 	void doPushingAnimation(const Vec&);
 	BOOL running();
 	BOOL rotating();
