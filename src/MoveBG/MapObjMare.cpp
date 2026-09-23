@@ -201,8 +201,11 @@ void TCogwheel::initDraw() const
 }
 
 // TODO: frame 0x58 short (0x58 vs 0xb0) with no stack use in the body, and
-// the callee-saved FPRs are assigned in a different order; a missing inline
-// level per rope is the likely cause (none tried yet).
+// the callee-saved FPRs are assigned in a different order (retail wheelY f29,
+// plateX1 f31, plateVB f28). The float literals and their load order match.
+// Inert: per-rope block scopes, a const-ref rope position, a static inline
+// drawRope(x0, x1, z0, z1, top, bottom, vT, vB, u2, u3). Worse: TVec3 corner
+// locals (frame 0x138) and TVec3 rope-position copies (extra loads).
 void TCogwheel::draw() const
 {
 	initDraw();
