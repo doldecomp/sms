@@ -104,7 +104,7 @@ static void Hgx_ReadTexture(char* path, void* buffer);
 static void Hx_GetFrBuffer(void* dest, u32 left, u32 top, u32 wd, u32 ht);
 static void Hx_SetVFilter(f32 rate);
 static void Hx_SetVFilterFade(f32 rate);
-static void __Hx_FrBufferMorf(u16 x, u16 y);
+static void __Hx_FrBufferMorf(u32 x, u32 y);
 static void Hx_FrBufferMorf(f32 rate);
 static void Frb2_InitGx(GXTexObj* obj);
 static void Frb2_InitBlackBox(void);
@@ -334,11 +334,9 @@ static void Hx_SetVFilterFade(f32 rate)
 	GXSetCopyFilter(GX_FALSE, NULL, GX_TRUE, vtable);
 }
 
-static void __Hx_FrBufferMorf(u16 x, u16 y)
+static void __Hx_FrBufferMorf(u32 x, u32 y)
 {
 	GXTexObj obj;
-	f32 x2;
-	f32 y2;
 
 	Hx_CameraInit();
 	GXClearVtxDesc();
@@ -362,18 +360,16 @@ static void __Hx_FrBufferMorf(u16 x, u16 y)
 	GXLoadTexObj(&obj, GX_TEXMAP0);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-	x2 = x + 0x30;
-	y2 = y + 0x30;
 	GXPosition3f32(x, y, 0.0f);
 	GXColor1u32(0);
 	GXTexCoord2f32(0.0f, 0.0f);
-	GXPosition3f32(x2, y, 0.0f);
+	GXPosition3f32(x + 0x30, y, 0.0f);
 	GXColor1u32(0);
 	GXTexCoord2f32(1.0f, 0.0f);
-	GXPosition3f32(x2, y2, 0.0f);
+	GXPosition3f32(x + 0x30, y + 0x30, 0.0f);
 	GXColor1u32(0);
 	GXTexCoord2f32(1.0f, 1.0f);
-	GXPosition3f32(x, y2, 0.0f);
+	GXPosition3f32(x, y + 0x30, 0.0f);
 	GXColor1u32(0);
 	GXTexCoord2f32(0.0f, 1.0f);
 }
