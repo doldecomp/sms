@@ -1116,13 +1116,17 @@ void TNozzleDeform::animation(int param)
 
 	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
+	// TODO: retail keeps the inlined isAnmEnd() result and isEmitting()
+	// receiver (cases 2, 3, 8) in r29 where ours reuses ctrl's r31, and the
+	// frame is 0xa8 larger; hoisting ctrl or mactor to the top is inert.
 	switch (unk36C) {
 	case 0: {
 		MActor* mactor = unk380;
 		if (!mactor->checkCurBckFromIndex(4))
 			mactor->setBckFromIndex(4);
 
-		ctrl->setFrame(ctrl->getEnd() * mFludd->unk1CEC);
+		f32 end = ctrl->getEnd();
+		ctrl->setFrame(end * mFludd->unk1CEC);
 		break;
 	}
 	case 1:
