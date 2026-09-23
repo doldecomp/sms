@@ -201,7 +201,7 @@ public:
 	virtual void initSetEnemies();
 
 	// UNUSED in the map.
-	bool inArea(const JGeometry::TVec3<f32>&);
+	BOOL inArea(const JGeometry::TVec3<f32>&);
 	void requestPolluteModel(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
 
 	// Frames since the last spawn, the sinking event it waits on, whether the

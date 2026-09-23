@@ -205,9 +205,9 @@ void TGorogoroManager::requestPolluteModel(JGeometry::TVec3<f32>& pos,
 }
 
 // UNUSED, 0x34 in the map.
-bool TGorogoroManager::inArea(const JGeometry::TVec3<f32>& pos)
+BOOL TGorogoroManager::inArea(const JGeometry::TVec3<f32>& pos)
 {
-	return unk70 ? unk70->contain(pos) : true;
+	return unk70 ? unk70->contain(pos) : TRUE;
 }
 
 TRollEnemy::TRollEnemy(const char* name)
@@ -1068,8 +1068,10 @@ void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk60 > interval) {
 			unk60 = 0;
 
-			// Only spawn while Mario is inside the spawning area.
-			if (inArea(SMS_GetMarioPos())) {
+			// Only spawn while Mario is inside the spawning area. Retail
+			// tests the cylinder manager twice and normalises inArea's BOOL,
+			// which is this spelling (+2.5% over a bare inArea call).
+			if (unk70 ? (inArea(SMS_GetMarioPos()) ? TRUE : FALSE) : TRUE) {
 				for (int i = 0; i < getActiveObjNum(); ++i) {
 					TGorogoro* goro = (TGorogoro*)unk18[i];
 					if (!goro->checkLiveFlag(LIVE_FLAG_DEAD))
