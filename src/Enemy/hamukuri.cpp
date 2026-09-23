@@ -850,9 +850,15 @@ bool THamuKuri::isGiveUpSearchActor()
 // slot under the named block, but ours sits between local_1C and tgt (tgt 0xc
 // low). Retail also has a 12-byte object above local_1C (a `myPos` copy there
 // lands local_1C but overshoots to 0x70). Declaring tgt first changes code.
+// Retail's layout is 12 bytes above local_1C (0x58), local_1C 0x4c, the
+// actor-position copy written straight into 0x40, and a dead 12 below it. The
+// pair sweep (ham1: myPos, named/unnamed actor pointer, actorPos before or
+// after tgt, an uninitialised tgt assigned later, named f32 ground height /
+// distance / gravity, TPathNode temporary or named) found no combination: a
+// named ground height reaches 0x68 but reorders code, and the uninitialised
+// tgt lands 0x40 only with an extra copy.
 void THamuKuri::jumpToSearchActor()
 {
-	(void)0; // TODO: hack, need to figure out canGoForSearchActor?
 	TLiveActor* pTVar5 = (TLiveActor*)unk1F8;
 	if (pTVar5) {
 		JGeometry::TVec3<f32> local_1C = mPosition;
@@ -1517,7 +1523,11 @@ static inline f32 HaneClampScale(f32 value, f32 min, f32 max)
 // 12-byte hole at 0x118 -- looks like an unreferenced TVec3 local we have not
 // identified), the amplitude/frequency load order (declaring the amplitude
 // first fixes the order but swaps f29/f30) and the params pointer landing in
-// r5 instead of r6.
+// r5 instead of r6. Pair sweep (ham1): amplitude/frequency declared in either
+// order at block or function top, C-style then assigned, each read through the
+// accessor / `.get()` / raw `unk22C` / `.value` (64 variants), plus the
+// amplitude-first product and a named sine angle: the load order and f29/f30
+// never come right together, and every non-accessor read moves the frame.
 void THaneHamuKuri::walkBehavior(int param_1, f32 param_2)
 {
 	f32 flyBaseHeight = getSaveLoadParam()->getSLFlyBaseHeight();
@@ -2181,6 +2191,9 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 
 	// TODO: instruction-exact; frame still 0x20 short (0x28 vs 0x48) after
 	// the particle-manager binder. getPosition/SMSGetMSound swap this/sender.
+	// All 16 pairings of binder/raw, getPosition()/raw on both emitters and
+	// SMSGetMSound()/raw move the frame by at most the binder's 8. The same
+	// 0x20 is missing in TTamaNoko::receiveMessage (TSmallEnemy's is 0x30).
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		HamukuriGetMarioParticleManager()->emit(
 		    PARTICLE_MS_ENM_WATHIT, &sender->mPosition, 0, nullptr);
