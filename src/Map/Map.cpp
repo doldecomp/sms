@@ -170,8 +170,12 @@ static void initDolpic()
 	}
 }
 
-// TODO: 99.6%. Every instruction matches; retail's frame is 0x78 larger, with
-// all push_back temporaries 0x74 higher (an unidentified low-region block).
+// TODO: 99.6%. Every instruction matches; the frame is 0x190 against retail's
+// 0x1d0 (the director accessor bought 0x38 over the raw global). All push_back
+// temporaries sit 0x3c low and the iterator block is 4 short of the `new`
+// spills: a dead low region with no UNUSED carrier. Inert or worse: binding
+// either search (+8 each, lands high), `group->insert()` (77%), a named stage
+// local. SMS_LoadParticle spellings are frame-inert in this TU.
 static void initStageCommon()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
@@ -181,14 +185,14 @@ static void initStageCommon()
 	JDrama::TNameRefGen::search<JDrama::TViewObjPtrListT<JDrama::TViewObj> >(
 	    "マップグループ");
 
-	if (gpMarDirector->getCurrentMap() == 4
-	    || gpMarDirector->getCurrentMap() == 3
-	    || gpMarDirector->getCurrentMap() == 0xD
-	    || gpMarDirector->getCurrentMap() == 9
-	    || gpMarDirector->getCurrentMap() == 5
-	    || gpMarDirector->getCurrentMap() == 6
-	    || gpMarDirector->getCurrentMap() == 0x14
-	    || gpMarDirector->getCurrentMap() <= 1) {
+	if (SMSGetMarDirector()->getCurrentMap() == 4
+	    || SMSGetMarDirector()->getCurrentMap() == 3
+	    || SMSGetMarDirector()->getCurrentMap() == 0xD
+	    || SMSGetMarDirector()->getCurrentMap() == 9
+	    || SMSGetMarDirector()->getCurrentMap() == 5
+	    || SMSGetMarDirector()->getCurrentMap() == 6
+	    || SMSGetMarDirector()->getCurrentMap() == 0x14
+	    || SMSGetMarDirector()->getCurrentMap() <= 1) {
 		TMapStaticObj* obj = new TMapStaticObj("波（遠景）");
 		obj->init("sea");
 
@@ -206,7 +210,7 @@ static void initStageCommon()
 		sceneIndirect->init();
 		group->getChildren().push_back(sceneIndirect);
 	}
-	if (gpMarDirector->mMap == 2) {
+	if (SMSGetMarDirector()->getCurrentMap() == 2) {
 		TMapObjSeaIndirect* sceneIndirect
 		    = new TMapObjSeaIndirect("水中カメラインダイレクト");
 		sceneIndirect->init();
@@ -277,9 +281,13 @@ void TMap::updateMonte()
 static void updateRicco()
 {
 	static JGeometry::TVec3<f32> pos(1815.0f, 1500.0f, 1550.0f);
-	SMSGetMSound()->startSoundActor(0x3000, &pos, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(0x3000, &pos);
 }
 
+// TODO: every instruction matches and nothing is on the stack; the frame is
+// 0xc0 against retail's 0x110 (the short startSoundActor overload in
+// updateRicco bought 8). The remaining 0x50 is dead low region; only the
+// UNUSED update helpers could carry it and nothing in them evidences a local.
 void TMap::update()
 {
 	switch (SMSGetMarDirector()->getCurrentMap()) {
