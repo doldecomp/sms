@@ -477,6 +477,9 @@ void TBPTornado::perform(u32 cue, JDrama::TGraphics* graphics)
 		toMario.x -= gpMarioPos->x;
 		toMario.y -= gpMarioPos->y;
 		toMario.z -= gpMarioPos->z;
+		// TODO: retail runs the sqrt in dist's own f30 (no `fmr`); spelling
+		// it `dist = squared(); dist = TUtil::sqrt(dist);` does that but drops
+		// the frame a further 8 (0x130 against retail's 0x140).
 		f32 dist = toMario.length();
 		if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_TORNADO))
 			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
