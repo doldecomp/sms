@@ -721,8 +721,17 @@ JGeometry::TVec3<f32> TLimitKoopa::getFlameDir() const
 	return JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 }
 
-// TODO: UNUSED (0x48), body not reconstructed.
-BOOL TLimitKoopa::isFlaming() const { return FALSE; }
+// UNUSED (0x48). Same body as TKoopa::isFlaming, which the ROM keeps.
+BOOL TLimitKoopa::isFlaming() const
+{
+	switch (getMActor()->getCurAnmIdx(ANM_TYPE_BCK)) {
+	case KOOPA_ANM_FIRE_END:
+	case KOOPA_ANM_FIRE_LOOP:
+	case KOOPA_ANM_FIRE_START:
+		return true;
+	}
+	return false;
+}
 
 // TODO: UNUSED (0xe8), body not reconstructed. TKoopa::getNeckFocus() returns
 // f32 (the yaw the neck callback aims at) and this is the same boss on the same
@@ -771,8 +780,8 @@ f32 TLimitKoopa::getAnmFrame() const
 	return getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 }
 
-// TODO: UNUSED (0x90), body not reconstructed.
-void TLimitKoopa::fall() { }
+// UNUSED (0x90): TKoopa::fall (0x98) without its yaw reset.
+void TLimitKoopa::fall() { mSpine->setNext(&TNerveLimitKoopaFall::theNerve()); }
 
 // UNUSED (0x48).
 BOOL TLimitKoopa::getAnmEnd() const
