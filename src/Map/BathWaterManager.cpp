@@ -403,13 +403,10 @@ public:
 					do {
 						JGeometry::TVec3<f32> local_2D8;
 						local_2D8.sub(b->unk0, a->unk0);
-						(void)&local_2D8;
 						if (!(local_2D8.squared() > sep2)) {
 							f32 dist = local_2D8.length();
 							JGeometry::TVec3<f32> local_2E4;
 							local_2E4.scale(1.0f / dist, local_2D8);
-
-							(void)&local_2E4;
 
 							f32 half = 0.5f * (twoR - dist);
 
