@@ -1294,15 +1294,22 @@ static void Hxs_Logo_TexSetup(u8 alpha_in, u8 fade_in, const ResTIMG* timg)
 
 // Declaring d first puts it at retail's 0x38, and halving by 2.0f gives the
 // fnmsubs retail's operand order.
+/// One textured vertex of the pen stroke.
+static inline void Hx_TexVtx(f32 x, f32 y, f32 u, f32 v)
+{
+	GXPosition3f32(x, y, 0.0f);
+	GXColor1u32(0);
+	GXTexCoord2f32(u, v);
+}
+
 // TODO: the saved-FPR colouring differs (retail: dx/dy f31/f30, ox/oy
-// f29/f28, sy/sx f27/f26, v2/u2/v1/u1 f25-f22) and the second vertex reloads
-// d earlier. Declaration order (C-style, any of five orders), dx..py in the
-// if block, and dividing x1..y2 and wd/ht in place are all inert here;
-// dividing x1..y2 in place does get ox/oy into f29/f28.
-// With x1..y2 divided in place, the named f32 locals take f31 down in
-// declaration order and the parameters follow in reverse, except dx, which
-// lands in f22 wherever it is declared (30 orders tried); dx's colouring is
-// the blocker, together with the d.y reload retail hoists above GXBegin.
+// f29/f28, sy/sx f27/f26, v2/u2/v1/u1 f25-f22) and retail's low region is
+// 0x10 larger (d at 0x38, ours 0x28). Routing the vertices through
+// Hx_TexVtx fixed the instruction order; retail colouring dx/dy first reads
+// like parameters of a further inline level (an inlined callee's temporaries
+// take the saved FPRs first), not yet found. Before the helper: declaration
+// order (thirty orders), dx..py in the if block and in-place division of
+// x1..y2 were all inert.
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 {
 	Vec d;
@@ -1349,18 +1356,10 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 		py = (sy * py) + oy;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-		GXPosition3f32(px, py, 0.0f);
-		GXColor1u32(0);
-		GXTexCoord2f32(u1 + d.x, v1 + d.y);
-		GXPosition3f32((sx * (u2 + dx)) + ox, (sy * (v2 + dy)) + oy, 0.0f);
-		GXColor1u32(0);
-		GXTexCoord2f32(u2 + d.x, v2 + d.y);
-		GXPosition3f32((sx * (u2 - dx)) + ox, (sy * (v2 - dy)) + oy, 0.0f);
-		GXColor1u32(0);
-		GXTexCoord2f32(u2 - d.x, v2 - d.y);
-		GXPosition3f32((sx * (u1 - dx)) + ox, (sy * (v1 - dy)) + oy, 0.0f);
-		GXColor1u32(0);
-		GXTexCoord2f32(u1 - d.x, v1 - d.y);
+		Hx_TexVtx(px, py, u1 + d.x, v1 + d.y);
+		Hx_TexVtx((sx * (u2 + dx)) + ox, (sy * (v2 + dy)) + oy, u2 + d.x, v2 + d.y);
+		Hx_TexVtx((sx * (u2 - dx)) + ox, (sy * (v2 - dy)) + oy, u2 - d.x, v2 - d.y);
+		Hx_TexVtx((sx * (u1 - dx)) + ox, (sy * (v1 - dy)) + oy, u1 - d.x, v1 - d.y);
 	}
 }
 
