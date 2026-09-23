@@ -1560,40 +1560,47 @@ static void Hx_Test1(void)
 	Hxs1_Test1(0.0f, hx.height, r);
 }
 
+// TODO: every instruction matches, but retail's frame is 0x10 larger (the
+// sqrtf temporary sits at 0x34, ours at 0x2c, and the Vec block is 8 bytes
+// taller); a Vec for dx, a Vec array and hoisted z stores do not close it.
 static void Hxs1_Test1(f32 cx, f32 cy, f32 r)
 {
 	u32 i;
+	f32 rr;
+	f32 dx;
+	Vec p1;
+	Vec p2;
 
 	Hx_CameraInit();
 	Hx_GxInit(0, 1);
 	GXSetLineWidth(7, GX_TO_ZERO);
+	rr = r * r;
 	GXBegin(GX_LINES, GX_VTXFMT0, ((u32)r * 2) + 2);
 
 	for (i = 0; i <= (u32)r; i++) {
-		f32 dx = (r * r) - (f32)(i * i);
-		f32 y;
-		f32 x1;
-		f32 x2;
+		p1.z = 1.0f;
+		p2.z = 1.0f;
+		dx = sqrtf(rr - (f32)(i * i));
 
-		if (dx > 0.0f)
-			dx = sqrtf(dx);
-
-		if (cy < hx.centerY)
-			y = cy + i;
-		else
-			y = cy - i;
-
-		if (cx < hx.centerX) {
-			x1 = cx;
-			x2 = cx + dx;
+		if (cy < hx.centerY) {
+			p1.y = cy + i;
+			p2.y = p1.y;
 		} else {
-			x1 = cx - dx;
-			x2 = cx;
+			p1.y = cy - i;
+			p2.y = p1.y;
 		}
 
-		GXPosition3f32(x1, y, 1.0f);
+		if (cx < hx.centerX) {
+			p1.x = cx;
+			p2.x = cx + dx;
+		} else {
+			p1.x = cx - dx;
+			p2.x = cx;
+		}
+
+		GXPosition3f32(p1.x, p1.y, p1.z);
 		GXColor1u32(0xFF);
-		GXPosition3f32(x2, y, 1.0f);
+		GXPosition3f32(p2.x, p2.y, p2.z);
 		GXColor1u32(0xFF);
 	}
 }
