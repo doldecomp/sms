@@ -9,6 +9,7 @@ class JMSMesgEntry;
 class TBaseNPC;
 
 class TTalk2D2;
+class TMarioGamePad;
 
 extern TTalk2D2* gpTalk2D;
 
@@ -52,7 +53,8 @@ public:
 	/* 0x214 */ s8 unk214; // the line the player selected in a choice window
 	/* 0x215 */ char unk215[0x248 - 0x215];
 	/* 0x248 */ u32 unk248; // talk mode
-	/* 0x24C */ char unk24C[0x344 - 0x24C];
+	/* 0x24C */ TMarioGamePad* unk24C;
+	/* 0x250 */ char unk250[0x344 - 0x250];
 };
 
 #endif

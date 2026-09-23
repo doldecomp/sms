@@ -57,6 +57,8 @@ public:
 		NOTICE_MODE_UNK2 = 2,
 	};
 
+	void setGamePad(TMarioGamePad* pad) { unk120 = pad; }
+
 	CPolarSubCamera(const char* = "<CPolarCamera>");
 
 	virtual void loadAfter();
