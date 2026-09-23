@@ -116,7 +116,11 @@ int TMarDirector::direct()
 					pad->mButton.mRelease = 0;
 
 					unk18[i]->updateMeaning();
+#if defined(VERSION_GMSE01)
+					unk18[i]->offFlag(0x40);
+#else
 					unk18[i]->offFlag(0x10);
+#endif
 				}
 			}
 
