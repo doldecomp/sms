@@ -368,6 +368,12 @@ TNameKuri::TNameKuri(const char* name)
 {
 }
 
+static inline TWalker* NameKuriWalker(TNameKuri* self)
+{
+	TWalker* r = self->getWalker();
+	return r;
+}
+
 void TNameKuri::init(TLiveManager* param_1)
 {
 	JKRHeap::getCurrentHeap()->getTotalFreeSize();
@@ -376,11 +382,11 @@ void TNameKuri::init(TLiveManager* param_1)
 	onHitFlag(0x40000000);
 	mActorType = 0x10000003;
 	unk150     = 0x3A;
-	getWalker()->setMode(1);
+	NameKuriWalker(this)->setMode(1);
 	unk130 = 2;
 	unk1A4 = (TNameKuriSaveLoadParams*)getSaveParam();
 
-	if (mInstanceIndex == 0) {
+	if (getInstanceIndex() == 0) {
 		for (u8 i = 0;
 		     i < getMActor()->getModel()->getModelData()->getJointNum(); ++i) {
 			;
@@ -391,18 +397,16 @@ void TNameKuri::init(TLiveManager* param_1)
 	getMActor()->setJointCallback(1, &NameKuriScaleCallback);
 	getMActor()->resetDL();
 	getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
 
 	SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(),
-	                     "H_ma_rak_dummy", *tex->getTexture()->getTexInfo());
+	                     "H_ma_rak_dummy", *(JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ"))->getTexture()->getTexInfo());
 
 	unk1BC.b = 0;
 	unk1BC.g = 0;
 	unk1BC.r = 0;
 	unk1BC.a = 168;
 
-	if (unk124->unk0 == nullptr || unk124->unk0->isDummy()) {
+	if (getTracer()->getGraph() == nullptr || unk124->getGraph()->isDummy()) {
 		unk124->unk0 = gpConductor->getGraphByName("main");
 	}
 }

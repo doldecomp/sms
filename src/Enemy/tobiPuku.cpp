@@ -942,7 +942,7 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 
 	puku->mPosition.y += puku->mLaunchVelocity.y;
 
-	if (puku->mPosition.y > puku->unk1B0) {
+	if (puku->getPosition().y > puku->unk1B0) {
 		puku->mBoundCount = 0;
 		puku->unk194      = 1;
 		puku->mVelocity   = puku->mLaunchVelocity;

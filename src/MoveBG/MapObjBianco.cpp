@@ -498,7 +498,8 @@ void TLeafBoat::touchActor(THitActor* other)
 	f32 into;
 	JGeometry::TVec3<f32> toOther(other->mPosition.x - mPosition.x, 0.0f,
 	                              other->mPosition.z - mPosition.z);
-	JGeometry::TVec3<f32> vel(getVelocity());
+	const JGeometry::TVec3<f32>& velocity = getVelocity();
+	JGeometry::TVec3<f32> vel(velocity);
 	if (toOther.dot(vel) < 0.0f)
 		return;
 

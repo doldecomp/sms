@@ -109,7 +109,7 @@ void TMario::checkDescent()
 	// swapping the floorY/ground declarations are inert.
 	bool active   = false;
 	f32 descentSp = mHangingParams.mDescentSp.get();
-	if (mHeldObject == nullptr && !onYoshi())
+	if (getHeldObject() == nullptr && !onYoshi())
 		active = true;
 
 	if ((int)active != 1)
@@ -123,8 +123,8 @@ void TMario::checkDescent()
 	if (!gpMap->isTouchedWallsAndMoveXZ(&rec))
 		return;
 
-	f32 floorY;
 	const TBGCheckData* ground;
+	f32 floorY;
 	checkGroundPlane(rec.mCenter.x, mPosition.y + 30.0f, rec.mCenter.z, &floorY,
 	                 &ground);
 
