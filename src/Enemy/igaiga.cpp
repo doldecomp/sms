@@ -1045,6 +1045,10 @@ void TGorogoroManager::createModelData()
 // the ROM's `bl`, but MsGetRotFromZaxisY then stays out of line at depth 2
 // (the MathUtil.hpp known-open block; named angle, MsAngleWrap and a
 // temporary axis all inert), 87.8 -> 68.9, so the blocks stay expanded.
+// Retail's frame (0x170, two separate point/goal blocks) confirms the two
+// expansions. Rechecked 2026-09-23 with setGenerateGraphIdx moved to its map
+// slot (after setMActorAndKeeper, before generateByGateKeeper): same 71.4%,
+// MsGetRotFromZaxisY still out of line, so definition order is not the lever.
 void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
