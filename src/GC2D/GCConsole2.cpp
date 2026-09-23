@@ -2463,11 +2463,11 @@ bool TGCConsole2::startDisappearLife(int frame)
 	                    >> 1),
 	    JUTPoint(0, GCConsole2HideAboveY(unk1C4)
 	                    - unk174->getPane()->getHeight()));
-	unk84 = frame;
-	// TODO: 0xec against the map's 0xf0. The inline sites in perform() and
-	// startCameraDemo() match in instruction count, so the original body has
-	// one more instruction here; separate `if`s for the two guards give 0xf4
-	// and a named offset local 0xc4, so it is neither.
+	// The s16 conversion is the map's missing instruction: out of line it
+	// emits an `extsh` before the store (0xf0, the map size), while every
+	// inline site passes a constant and is unchanged. Separate `if`s for the
+	// two guards give 0xf4, a named offset local 0xc4.
+	unk84 = (s16)frame;
 	return true;
 }
 
@@ -3743,6 +3743,9 @@ bool TGCConsole2::processInsertLife(int param_1)
 // at 0xf0, not 0xc0, so 0x30 of low temporaries are missing before it, and
 // retail keeps the clamped blue-coin value in blueCoins' own r25 (reusing the
 // counter removes our `mr r25, r0` but scores lower until the frame is right).
+// Inert for the 0x30: the spent-blue-coin loops as a TU-local helper (with or
+// without the clamp inside) are +8 only; a JUTPoint(0, 0) temp in the
+// updateDownPaneState() zero test adds code, not a dead slot.
 bool TGCConsole2::processAppearStar(int param_1)
 {
 	bool isFinished = true;
