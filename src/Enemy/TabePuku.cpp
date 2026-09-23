@@ -150,18 +150,16 @@ void TTPHitActor::updateTerrainCollsion()
 	mPosition = pos;
 }
 
-// TODO: 76.7%. The two dot products fuse their x and z terms into fmadds in
-// retail while ours common-subexpressions them into one fmuls each, and the
-// closing TVec3::sub() is a `bl` in retail but expands here (the known
-// per-call-site TVec3::sub problem in docs/catalog/codegen-tells.md).
+// TODO: 96.5%. The frame is 0x10 too deep (the closing sub temporary sits at
+// 0x84, retail 0x34), y and z swap f30/f31, and retail reuses the normal and
+// pos.x loaded for the dots inside scaleAdd where ours reloads them.
 void TTPHitActor::bind()
 {
 	JGeometry::TVec3<f32> pos(mPosition);
 	pos.add(mVelocity);
 
 	TTabePuku* owner = mOwner;
-	Vec velocity = owner->mVelocity;
-	pos.add(velocity);
+	pos.add(JGeometry::TVec3<f32>(owner->mVelocity));
 	pos.add(owner->mLinearVelocity);
 
 	f32 y = pos.y;
@@ -176,13 +174,13 @@ void TTPHitActor::bind()
 
 		// Push the mouth back out along the plane it sank into, then sit it
 		// exactly on the ground.
+		JGeometry::TVec3<f32> ground(pos.x, mGroundHeight, z);
 		f32 push = 1.0f
-		         - (mGroundPlane->getNormal().dot(pos)
-		            - mGroundPlane->getNormal().dot(
-		                JGeometry::TVec3<f32>(pos.x, mGroundHeight, z)));
+		         - (mGroundPlane->getNormal().dot(JGeometry::TVec3<f32>(pos.x, y, z))
+		            - mGroundPlane->getNormal().dot(ground));
 		if (push > 0.0f)
 			pos.scaleAdd(push, mGroundPlane->getNormal(), pos);
-		pos.y = mGroundHeight;
+		pos.y = ground.y;
 	} else {
 		mAirborne = true;
 	}
@@ -191,12 +189,8 @@ void TTPHitActor::bind()
 	if (0.0f <= pos.y + mCheckHeight)
 		pos.y = -mCheckHeight;
 
-	TBGWallCheckRecord record;
-	record.mCenter.set(pos);
-	record.mRadius      = mCheckRadius;
-	record.mMaxResults  = 1;
-	record.mFlags       = 0;
-	int touchedWall = gpMap->isTouchedWallsAndMoveXZ(&record);
+	TBGWallCheckRecord record(pos.x, pos.y, pos.z, mCheckRadius, 1, 0);
+	bool touchedWall = gpMap->isTouchedWallsAndMoveXZ(&record);
 	pos.x        = record.mCenter.x;
 	pos.z        = record.mCenter.z;
 
