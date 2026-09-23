@@ -168,21 +168,19 @@ void TChorobei::checkHit()
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 
 		if (col->isActorType(0x1000001E)) {
-			TBombHei* bomb  = (TBombHei*)col;
 			TCannon* cannon = mCannon;
 			if (cannon->mSpine->getCurrentNerve()
 			        != &TNerveCannonDamage::theNerve()
-			    && bomb->isDamageToCannon()) {
+			    && ((TBombHei*)col)->isDamageToCannon()) {
 				cannon->mSpine->pushNerve(&TNerveCannonDamage::theNerve());
-				bomb->kill();
+				((TBombHei*)col)->kill();
 			}
 		}
 
 		if (col->isActorType(0x1000001F)) {
-			TKiller* killer = (TKiller*)col;
-			if (killer->isRollFly()) {
+			if (((TKiller*)col)->isRollFly()) {
 				mCannon->mSpine->pushNerve(&TNerveCannonDamage::theNerve());
-				killer->kill();
+				((TKiller*)col)->kill();
 			}
 		}
 	}
@@ -641,14 +639,18 @@ MtxPtr TCannon::getTakingMtx()
 	return (MtxPtr)mTakingMtx;
 }
 
+// TODO: only the two TMsRange slots differ (retail f32 range 0x48 / int
+// range 0x3c, ours 0x3c / 0x34); a named range object and the declaration
+// order of r/rate are inert.
 void TCannon::bombSet()
 {
 	f32 r       = TMsRange<f32>(0.0f, 1.0f).rand();
+	f32 rate    = mSaveParams->getSLBombHeiGenerateRate();
 	mBombThrown = 0;
 	mHeldBomb   = nullptr;
 
 	TBombHei* bomb;
-	if (r < mSaveParams->getSLBombHeiGenerateRate()) {
+	if (r < rate) {
 		bomb = (TBombHei*)gpConductor->makeOneEnemyAppear(
 		    mPosition, "ボム兵マネージャー", 1);
 	} else if (TMsRange<int>(0, 100).rand() % 2 == 1) {
