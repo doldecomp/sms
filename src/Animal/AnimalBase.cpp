@@ -22,25 +22,25 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: retail's product lands in qy's own slot (0x90), as if multiplied in
-// place (`qx.mul(qx, qz); qy.mul(qy, qx); return qy;`). That spelling keeps
-// this body at 91.9% with the frame 0x30 closer, but its expansion in
-// execWalk drops 81.6% -> 49.0%, so the in-place form waits on that caller.
+// TODO: 97.0%, frame 0x18 short of retail's 0xd8 (register allocation in
+// the second product follows from the slots). The named angles keep this out
+// of line in execWalk as retail has it: without them the body is auto-inlined
+// there (execWalk 89.9 -> 50.1), while two angle locals already suffice to
+// keep it called.
 JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>& rot)
 {
+	f32 z = 0.017453294f * rot.z;
 	JGeometry::TQuat4<f32> qz;
-	qz.setEulerZ(0.017453294f * rot.z);
+	qz.setEulerZ(z);
+	f32 y = 0.017453294f * rot.y;
 	JGeometry::TQuat4<f32> qy;
-	qy.setEulerY(0.017453294f * rot.y);
-	(void)&qy;
+	qy.setEulerY(y);
+	f32 x = 0.017453294f * rot.x;
 	JGeometry::TQuat4<f32> qx;
-	qx.setEulerX(0.017453294f * rot.x);
-
-	JGeometry::TQuat4<f32> result2;
-	result2.mul(qx, qz);
-	JGeometry::TQuat4<f32> result;
-	result.mul(qy, result2);
-	return result;
+	qx.setEulerX(x);
+	qx.mul(qx, qz);
+	qy.mul(qy, qx);
+	return qy;
 }
 
 TAnimalBase::TAnimalBase(u32 actorType, const char* name)

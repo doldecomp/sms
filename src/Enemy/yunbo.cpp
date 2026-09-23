@@ -392,8 +392,8 @@ void TYumbo::shotSeeds()
 	roll.setEulerY(6.2831855f * MsRandF());
 	JGeometry::TQuat4<f32> pitch;
 	pitch.setEulerX(-3.1415927f * getSaveParams()->getSLShootAngleX());
-	q.mul(roll, pitch);
-	q.rotate(dir, dir);
+	roll.mul(pitch);
+	roll.rotate(dir, dir);
 
 	seed->startToMove(mPosition, dir, getSaveParams()->getSLSeedLife());
 }

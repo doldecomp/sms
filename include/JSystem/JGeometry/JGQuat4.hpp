@@ -49,31 +49,21 @@ public:
 		set(_x, _y, _z, _w);
 	}
 
-	// TODO: measured tree-wide on 2026-09-23 (header round c-qmul): writing
-	// both products straight into set() with no _x.._w locals (BeeHive's
-	// mulQuat) gains 13 functions: flyAroundMario +3.62, doAttackPose +5.23,
-	// Kazekun attack execute 98.93 -> 99.79, KoopaJrSubmarine calcRootMatrix
-	// +3.28, decideTargetAtDir +3.48, makeInitialVelocity 96.29 -> 99.88,
-	// moveCoaster +3.74, updatePosture +2.06, Kukku calcRootMatrix +1.91,
-	// wireTrap calcRootMatrix +0.96, KoopaNeckCallBack +1.28, two nerves.
-	// TYumbo::shotSeeds (-2.12) is recovered by `roll.mul(pitch);
-	// roll.rotate(dir, dir);` (95.74). The blocker is SMS_Eular2Quat: its
-	// two-result spelling falls 91.88 -> 91.36, and every in-place spelling
-	// (97.0, retail's slots) is auto-inlined into TAnimalBase::execWalk,
-	// which retail calls out of line (89.89 -> 50.1); ten more respellings
-	// are listed in docs/catalog/findings-claude.md. The same no-locals form
-	// for the one-argument mul adds makeQuat +4.03 and updatePosture +1.0
-	// but drops shotSeeds under every spelling tried (93.5).
+	// Both products go straight into set() with no _x.._w locals (BeeHive's
+	// mulQuat spelling). Measured tree-wide on 2026-09-23 against the
+	// four-local form: +14 functions (doAttackPose +5.2, moveCoaster +3.7,
+	// flyAroundMario +3.6, makeInitialVelocity 96.3 -> 99.9, SMS_Eular2Quat
+	// 91.9 -> 97.0 in place, ...), none worse. The same form for the
+	// one-argument mul adds makeQuat +4.03 and updatePosture +1.0 but drops
+	// TYumbo::shotSeeds under every spelling tried (93.5).
 	void mul(const TQuat4& a, const TQuat4& b)
 	{
 		// clang-format off
-		T _x = a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y;
-		T _y = a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z;
-		T _z = a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x;
-		T _w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
+		set(a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y,
+		    a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z,
+		    a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x,
+		    a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z);
 		// clang-format on
-
-		set(_x, _y, _z, _w);
 	}
 
 	// NOTE: SMG contains a "normalize" implementation here that reset the

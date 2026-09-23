@@ -449,25 +449,6 @@ void TBeeHive::controlSound()
 	gpMSound->startBeeSe(mBeeCenter, alive);
 }
 
-// TQuat4::mul(a, b) with the four components computed inside the set() call
-// rather than through named locals. The ROM's calcRootMatrix frame (0xa0)
-// and product order need exactly this: the header's named _x.._w locals
-// reserve 0x10-0x18 of dead frame per expansion, and the one-argument mul
-// reads its products in w-first order where the ROM reads x-first.
-// TODO: this is a parked header need (JGQuat4.hpp's two-argument mul); it
-// stays TU-local until a header round measures the body tree-wide.
-static inline void mulQuat(JGeometry::TQuat4<f32>& q,
-                           const JGeometry::TQuat4<f32>& a,
-                           const JGeometry::TQuat4<f32>& b)
-{
-	// clang-format off
-	q.set(a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y,
-	      a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z,
-	      a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x,
-	      a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z);
-	// clang-format on
-}
-
 // Both products are the two-argument form written in place; setSQT is the
 // level that keeps setSQ a `bl` here (see JGPosition3.hpp), and the copy goes
 // through J3DModel::setBaseTRMtx, which is why &rot sits in r31 across
@@ -478,8 +459,8 @@ void TBeeHive::calcRootMatrix()
 	JGeometry::TQuat4<f32> quat = mBaseRotation;
 	swing.setEulerX(mSwingAngle);
 
-	mulQuat(quat, quat, mRotation168);
-	mulQuat(quat, quat, swing);
+	quat.mul(quat, mRotation168);
+	quat.mul(quat, swing);
 
 	TBeeHiveMtx rot;
 	rot.setSQT(mScaling, quat, mPosition);

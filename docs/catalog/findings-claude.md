@@ -25,10 +25,10 @@ Record binary-backed findings from Claude unit work here before promoting reusab
   Every honest depth-1 spelling at TPakkun::load (direct conversion, named `mario`, temporary, named node, copy-init) expands the zeros but leaves the node 4 low; a `const TPathNode&` binding costs 8 bytes of frame.
   Delegating TStayPakkun::load to TPakkun::load (auto-inlined) puts the whole ctor out of line (45%).
   Details in the PathNode.hpp comment.
-- **Header round c-qmul, no-locals `TQuat4::mul(a, b)` (BeeHive's `mulQuat`), not landed.**
-  Tree-wide it gains 13 functions (+0.01 total; largest: doAttackPose +5.23, moveCoaster +3.74, flyAroundMario +3.62, decideTargetAtDir +3.48, makeInitialVelocity -> 99.88); BeeHive stays 100 without its fork.
-  `TYumbo::shotSeeds` drops 95.69 -> 93.57 but `roll.mul(pitch); roll.rotate(dir, dir);` takes it to 95.74.
-  Blocker: `SMS_Eular2Quat` 91.88 -> 91.36. The in-place spelling `qx.mul(qx, qz); qy.mul(qy, qx); return qy;` scores 97.0 with retail's slots, but it and every other in-place form (with `(void)&qy`, a `result` copy, one declaration line, a `K` constant local) is auto-inlined into `TAnimalBase::execWalk` (89.89 -> 50.1); retail calls it there.
-  Out-of-line spellings (two named results in any declaration order, `result(qy)` then in-place, angle locals, one-argument forms) score 46-91.4 on it.
+- **Header round c-qmul, no-locals `TQuat4::mul(a, b)` (BeeHive's `mulQuat`), landed in c-qmul2.**
+  Tree-wide +14 functions, none worse (doAttackPose +5.23, moveCoaster +3.74, flyAroundMario +3.62, decideTargetAtDir +3.48, makeInitialVelocity -> 99.88, SMS_Eular2Quat 91.88 -> 96.97); BeeHive stays 100 without its fork, and `TYumbo::shotSeeds` needs `roll.mul(pitch); roll.rotate(dir, dir);` (95.74).
+  The former blocker was the in-place `SMS_Eular2Quat` (`qx.mul(qx, qz); qy.mul(qy, qx); return qy;`, 97.0) being auto-inlined into `TAnimalBase::execWalk` (89.89 -> 50.1).
+  Naming the angles as `f32` locals, each just before its quaternion (`f32 z = K * rot.z; TQuat4 qz; qz.setEulerZ(z);` and so on for y and x), keeps the same 97.0 body and stays a call; two of the three already suffice, one does not.
+  Other spellings that raise the cost enough to stay a call change the body: a `TVec3` of angles (82.5-82.6, or 76.5 via `scale`), an extra copied quaternion (62.4); a third named product `qxz` is still inlined.
+  Moving the definition below `execWalk` changes nothing (deferred inlining).
   The one-argument `mul` in the same form adds makeQuat +4.03 and updatePosture +1.0, but shotSeeds then stays at 93.5 under every spelling tried.
-  To land it, `execWalk` has to stop inlining the in-place `SMS_Eular2Quat`, which belongs with the known-open execWalk family (retail also calls TVec4(), set<f> and MsClamp out of line there).
