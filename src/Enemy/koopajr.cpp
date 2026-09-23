@@ -905,10 +905,11 @@ void TKoopaJrSubmarine::calcRootMatrix()
 
 		JGeometry::TQuat4<f32> q;
 		q.mul(yaw, swing);
-		// TODO: 94.8%. The second product's loads come out w, y, x, z where
-		// the ROM reads w, x, y, z, and the frame is 0x10 short. Not the
-		// one-argument mul(wave) (same score) nor a second quaternion for the
-		// product (frame 0x10 too long, 91.5%).
+		// TODO: 95.2%. The frame and every slot match; the second product's
+		// loads come out w, y, x, z where the ROM reads w, x, y, z, and the
+		// ROM loads mWavePhase before saving the first cosf. Inert: the
+		// one-argument mul(wave), any declaration order of the quaternions,
+		// a second quaternion for the product (frame 0x10 too long).
 		q.mul(q, wave);
 
 		JGeometry::TVec3<f32> center(0.0f, 0.0f,
@@ -919,14 +920,14 @@ void TKoopaJrSubmarine::calcRootMatrix()
 		JGeometry::TVec3<f32> trans;
 		trans = center;
 		trans.negate();
-		trans.add(mPosition);
+		trans.add(getPosition());
 
 		TPosition3f mtx;
 		mtx.setQT(q, trans);
 		mtx.concat(offset);
 		getModel()->setBaseTRMtx(mtx);
 	}
-	getModel()->setBaseScale(mScaling);
+	getModel()->setBaseScale(getScaling());
 }
 
 BOOL TKoopaJrSubmarine::receiveMessage(THitActor* sender, u32 message)
