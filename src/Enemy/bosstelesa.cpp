@@ -1978,10 +1978,11 @@ bool TBossTelesa::checkSlotResult()
 	return false;
 }
 
-// TODO: frame 0x2a8 vs 0x2c0 and one callee-saved FPR short (retail saves
+// The fruit-count clamps read the param twice, as a ternary: an `if` clamp
+// loads into r0 and `mr`s into the saved register.
+// TODO: frame 0x2b8 vs 0x2c0 and one callee-saved FPR short (retail saves
 // f16: the i == 0 pepper block takes f17/f16 for its rand ranges, ours reuses
-// f18/f17). Both fruit-count clamps load into r0 and `mr` into the saved
-// register; retail loads straight into it. The retail `li r3, 1` on both arms of
+// f18/f17); the clamped count takes r27 where retail has r25. The retail `li r3, 1` on both arms of
 // the lastManager choice matches with a `firstManager = 1` set in each arm,
 // which the source has no reason for, so it is left out.
 void TBossTelesa::generateSlotItem()
@@ -2005,9 +2006,7 @@ void TBossTelesa::generateSlotItem()
 	f32 halfSpread  = step * (f32)itemNum / 2.0f;
 
 	if (result == 2) {
-		int num = mParams->mSLSlotFruitNum.get();
-		if (num > 20)
-			num = 20;
+		int num = mParams->mSLSlotFruitNum.get() > 20 ? 20 : mParams->mSLSlotFruitNum.get();
 
 		TMsRange<s32> startRange(0, num);
 		int slot = startRange.rand();
@@ -2078,9 +2077,7 @@ void TBossTelesa::generateSlotItem()
 	}
 
 	if (result == 0) {
-		int num = mParams->mSLSlotFruitNum.get();
-		if (num > 10)
-			num = 10;
+		int num = mParams->mSLSlotFruitNum.get() > 10 ? 10 : mParams->mSLSlotFruitNum.get();
 
 		f32 coinStep       = 120.0f / (f32)num;
 		f32 coinHalfSpread = coinStep * (f32)num / 2.0f;
