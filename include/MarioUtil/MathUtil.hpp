@@ -137,6 +137,22 @@ void MsMtxSetRotRPH(MtxPtr mtx, f32 x, f32 y, f32 z);
 // MapObjFence.o), so they are header inlines. jmaSinTable is an f32*, so every
 // store below would invalidate the cached table pointer: both lookups have to
 // be named up front.
+// The inlined expansions at HauntLegCallback, PopoRollCallback and
+// TItemSlotDrum::generateItem differ from retail by two tells: retail keeps
+// &mtx in a saved register across the following MTXConcat/MTXMultVec, and
+// loads the 0.0f/1.0f literals only after the preceding stores (the stores
+// go through a pointer, as in the weak out-of-line bodies). The one spelling
+// found that reproduces both is a two-level pointer: a non-substitutable
+// argument (`MsMtxSetRotZ((MtxPtr)spin, a)`) plus `MtxPtr m = mtx;` in the
+// body (HauntLegCallback 94.0 -> 100, generateItem 94.5 -> 99.6 with its old
+// 0x10 frame gap, PopoRollCallback 94.9 -> 96.6). Neither half alone moves
+// anything, the copy in this header regresses at least 9 functions,
+// including the weak MsMtxSetRotX/Y bodies (100 -> 99.87), and the cast is
+// a no-op conversion, so neither is landed. Inert: row pointers, `&mtx[0]`,
+// an `Mtx` or `Mtx&` parameter, a forwarding level (loses the sin/cos
+// expansion), a switch on the axis, a guard on `mtx`, and
+// TRotation3f/TPosition3f/TMtx34f locals at the call site (their conversion
+// operator adds 8 bytes of frame).
 inline void MsMtxSetRotX(MtxPtr mtx, f32 angle)
 {
 	f32 sin = JMASSin(DEG2SHORTANGLE(angle));

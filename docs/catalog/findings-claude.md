@@ -33,3 +33,10 @@ Record binary-backed findings from Claude unit work here before promoting reusab
   Moving the definition below `execWalk` changes nothing (deferred inlining).
   The one-argument `mul` in the same form adds makeQuat +4.03 and updatePosture +1.0, but shotSeeds then stays at 93.5 under every spelling tried.
 - **Hand-written GX FIFO writers want the `GXVert.h` inline level.** `ShapePacketCallBackFunc` (PacketUtil, linked) closed 91.7 -> 100 when its FIFO helpers wrote through `GXCmd1u8`/`GXParam1u16`/`GXParam1u32` instead of assigning `GXWGFifo` directly: each missing inline level was retail's 8 bytes per helper expansion, and the r0/r3 swap went with it. Read an 8-per-expansion frame gap in GX-writing code as this first.
+- **Header round c-rotmtx, the `MsMtxSetRotX/Y/Z` expansion tells, not landed.**
+  Retail keeps `&mtx` in a saved register across the next `MTXConcat`/`MTXMultVec` and loads the 0.0f/1.0f literals only after the preceding stores, which is what stores through a pointer look like.
+  Reproduced only by a two-level pointer: a cast argument (`MsMtxSetRotZ((MtxPtr)spin, a)`) plus `MtxPtr m = mtx;` in the body; HauntLegCallback 94.0 -> 100, TItemSlotDrum::generateItem 94.5 -> 99.6, PopoRollCallback 94.9 -> 96.6.
+  Neither half alone moves anything.
+  The copy in the header alone regresses at least 9 functions, including the weak MsMtxSetRotX/Y bodies (100 -> 99.87), BGPolDrop::perform and TCraneUpDown::control, so retail's body is the plain one; the no-op cast is not an honest spelling.
+  The real source is still a caller-side construct that makes the argument non-substitutable and adds one more pointer copy; matrix-class locals (`TRotation3f` and similar) are not it (+8 frame).
+  Details in the MathUtil.hpp comment.
