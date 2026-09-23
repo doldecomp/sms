@@ -1316,19 +1316,26 @@ DEFINE_NERVE(TNerveHino2Fly, TLiveActor)
 	return false;
 }
 
+// TODO: the node test swaps r3/r4 (retail loads the owner into r4) and the
+// frame is 0x50, retail 0x68; every other instruction matches.
 DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 {
+	const JGeometry::TVec3<f32>* p;
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 
 	if (spine->getTime() == 0)
 		self->changeBck(0x9);
 
 	if (self->getMActor()->curAnmEndsNext()) {
-		const TPathNode& node          = self->unk104;
-		const JGeometry::TVec3<f32>& p = Hino2NodePoint(node);
+		const TPathNode& node = self->unk104;
+		THitActor* owner = node.unk0;
+		if (owner != 0)
+			p = &owner->getPosition();
+		else
+			p = &node.unk4;
 		f32 f = self->unk124->unkC;
 		self->mVelocity
-		    = self->calcVelocityToJumpToY(p, f, self->getGravityY());
+		    = self->calcVelocityToJumpToY(*p, f, self->getGravityY());
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		spine->pushAfterCurrent(&TNerveHino2Fly::theNerve());
 		return true;
