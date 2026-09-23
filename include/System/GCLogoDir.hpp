@@ -18,7 +18,11 @@ public:
 	    : JDrama::TViewObj(name)
 	    , unk10(tex)
 	    , unk14(133, 170, 509, 274)
+#if defined(VERSION_GMSE01)
+	    , unk24(220, 0, 0, 255)
+#else
 	    , unk24(0, 70, 255, 255)
+#endif
 	{
 	}
 
