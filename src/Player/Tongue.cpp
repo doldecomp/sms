@@ -123,11 +123,10 @@ void TYoshiTongue::rest(const JGeometry::TVec3<f32>& a,
 }
 
 // Retail calls canGo out of line from movement, so the body is at least 15
-// statements; the named `along` and `floorY` are the two that reach it
-// (instruction-neutral) and replace the old `#pragma dont_inline`; they also
-// take the 8 bytes the old gpMap binder supplied. TODO: the `toTip` sub
-// temporary sits 0xc high (the `a = b - c` pool class) and retail tests the
-// wall hit with `ble` where we emit `beq`.
+// statements; the named `along` and the int `hit` (retail tests it with `ble`,
+// i.e. `hit > 0`) are the two that reach it and replace the old
+// `#pragma dont_inline`. TODO: the `toTip` sub temporary sits 0xc high (the
+// `a = b - c` pool class).
 BOOL TYoshiTongue::canGo()
 {
 	JGeometry::TVec3<f32> toTip = mTipPos - mHeadPos;
@@ -136,15 +135,15 @@ BOOL TYoshiTongue::canGo()
 	if (along < 0.0f)
 		return false;
 
-	if (gpMap->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
-	                                     &mTipPos.z, 50.0f))
+	int hit = gpMap->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
+	                                           &mTipPos.z, 50.0f);
+	if (hit > 0)
 		return false;
 
 	const TBGCheckData* ground;
 	f32 groundY = gpMap->checkGround(mTipPos.x, mTipPos.y, mTipPos.z, &ground);
-	f32 floorY = 50.0f + groundY;
-	if (floorY > mTipPos.y) {
-		mTipPos.y = floorY;
+	if (50.0f + groundY > mTipPos.y) {
+		mTipPos.y = 50.0f + groundY;
 		return true;
 	}
 
