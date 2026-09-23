@@ -557,7 +557,7 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 
 	JGeometry::TQuat4<f32> steer;
 	steer.setRotate(forward, normAxis, moveAmountY);
-	mQuat.mul(steer);
+	mQuat.mul(steer, mQuat);
 
 	// Y-axis rotation
 	JGeometry::TVec3<f32> right;
@@ -572,7 +572,7 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 		tiltQuat.rotate(forward, curUp);
 
 		steer.setRotate(up, curUp, moveAmountX);
-		mQuat.mul(steer);
+		mQuat.mul(steer, mQuat);
 	}
 
 	mQuat.normalize();

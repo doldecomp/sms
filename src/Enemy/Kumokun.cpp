@@ -190,7 +190,7 @@ void TKumokun::initAttachPlane()
 	if (wall) {
 		unk198 = wall;
 		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-		unk19C.setRotate(getPlaneNormal(), up, 0.0f);
+		unk19C.setRotate(up, getPlaneNormal(), 1.0f);
 		return;
 	}
 
@@ -222,7 +222,7 @@ void TKumokun::initAttachPlane()
 		unk198 = floor;
 
 		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-		unk19C.setRotate(getPlaneNormal(), up, 0.0f);
+		unk19C.setRotate(up, getPlaneNormal(), 1.0f);
 	}
 }
 

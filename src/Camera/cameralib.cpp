@@ -396,8 +396,12 @@ CLBRotateVecByEulerAndRoll(JGeometry::TVec3<f32>* vec, const S16Vec& euler,
 	mtxT.identity();
 	mtxT.setRotate(axis, roll);
 
+	// The ROM multiplies by the transpose (the inverse roll): each output
+	// component reads a column of mtxT, not a row as mult33 would.
 	JGeometry::TVec3<f32> in(*vec);
-	mtxT.mult33(in, *vec);
+	vec->set(mtxT.at(0, 0) * in.x + mtxT.at(1, 0) * in.y + mtxT.at(2, 0) * in.z,
+	         mtxT.at(0, 1) * in.x + mtxT.at(1, 1) * in.y + mtxT.at(2, 1) * in.z,
+	         mtxT.at(0, 2) * in.x + mtxT.at(1, 2) * in.y + mtxT.at(2, 2) * in.z);
 }
 
 // The ROM calls MsSqrtf out of line inside the inlined CLBCalcNearClipAngle,

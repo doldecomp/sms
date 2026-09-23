@@ -345,7 +345,7 @@ bool TKazekun::doAttackPose(bool start)
 	if (start) {
 		// rate 1 is halfway between flying around Mario and flying
 		// straight at him, so the pose leans 45 degrees into the charge;
-		// MWCC folds getAroundQuat's angle down to sinf/cosf(pi/4).
+		// MWCC folds getAroundQuat's angle spinAxis to sinf/cosf(pi/4).
 		JGeometry::TQuat4<f32> quat;
 		getAroundQuat(quat, toMario, 1.0f);
 		mQuat = quat;
@@ -357,11 +357,11 @@ bool TKazekun::doAttackPose(bool start)
 		mVelocity = vel;
 	}
 
-	JGeometry::TVec3<f32> down;
-	mQuat.rotate(JGeometry::TVec3<f32>(0.0f, -1.0f, 0.0f), down);
+	JGeometry::TVec3<f32> spinAxis;
+	mQuat.rotate(JGeometry::TVec3<f32>(-1.0f, 0.0f, 0.0f), spinAxis);
 
 	JGeometry::TQuat4<f32> spin;
-	spin.setRotate(down, 3.1415927f * getSaveParams()->getPoseOmegaRate());
+	spin.setRotate(spinAxis, 3.1415927f * getSaveParams()->getPoseOmegaRate());
 	spin.mul(spin, mQuat);
 	mQuat = spin;
 
