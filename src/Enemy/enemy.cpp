@@ -426,16 +426,19 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
+// TODO: only setGoalPathFromGraph's inline temporaries remain, 0x10 low; the
+// same frame gap as the other goTo*GraphNode siblings.
 void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 {
-	int currIdx = getTracer()->getCurGraphIndex();
 	int prevIdx = getTracer()->getPrevIndex();
+	int currIdx = getTracer()->getCurGraphIndex();
 	if (currIdx < 0) {
 		unk124->setTo(
 		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	} else {
 		TGraphWeb* web                 = getTracer()->getGraph();
-		JGeometry::TVec3<f32> local_3c = polarXZ(mRotation.y, 1.0f);
+		f32 rotY                       = mRotation.y;
+		JGeometry::TVec3<f32> local_3c = polarXZ(rotY, 1.0f);
 
 		int idx = web->getRandomButDirLimited(currIdx, prevIdx, local_3c,
 		                                      mPosition, param_1, -1);
