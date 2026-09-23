@@ -1745,17 +1745,33 @@ void TBossEel::init(TLiveManager* manager)
 
 MtxPtr TBossEel::getTakingMtx() { return mMActor->getModel()->getAnmMtx(7); }
 
+// The mouth-cube lookup sits two inline levels below
+// calcAndSetCollisionCubeBite_, which puts JGadget::TVector<void*>::begin()
+// deep enough in TBossEel::perform's expansion that the ROM `bl`s it, as in
+// MSStageCubeFade::calcParamRatioInCube.
+static inline TCubeGeneralInfo* getCube(TCubeManagerBase* mgr, s32 id)
+{
+	return mgr->unk14->getChildren().begin()[id];
+}
+
+static inline TCubeGeneralInfo* getMouthCube(const TBossEel* p, s32 id)
+{
+	TCubeManagerBase* mgr = p->mMouthCubeManager;
+	return getCube(mgr, id);
+}
+
 void TBossEel::calcAndSetCollisionCubeBite_()
 {
 	// Element [1], not [0]: retail's expansion of this body inside
 	// TBossEel::perform reads `lwz r3,4(r3)` off the begin() result, while the
 	// eel's other two mouth-cube sites read +0. The manager is built with two
 	// cubes.
-	TCubeGeneralInfo* mouthCube
-	    = mMouthCubeManager->unk14->getChildren().begin()[1];
+	TCubeGeneralInfo* mouthCube = getMouthCube(this, 1);
 	mouthCube->unk18.set(mRotation);
 	mouthCube->unkC.set(mPosition.x, mPosition.y + 1900.0f, mPosition.z);
-	mouthCube->unk24.set(1100.0f, 1000.0f, 1100.0f);
+	mouthCube->unk24.x = 1100.0f;
+	mouthCube->unk24.y = 1000.0f;
+	mouthCube->unk24.z = 1100.0f;
 	mouthCube->unkC.set(mPosition.x, mPosition.y + 9600.0f * mScaling.y,
 	                    mPosition.z);
 	mouthCube->unk24.set(7000.0f * mScaling.x, 10000.0f * mScaling.y,
@@ -2024,8 +2040,8 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		// where our chain (getChildren() -> TVector_pointer<T>::begin() ->
 		// TVector<void*>::begin(), depth 3) expands it and reads +0. Fix (2)
 		// and (3) before re-adding (1).  The later calcAndSetCollisionCubeBite_
-		// site has the same begin() residue; a one-line wrapper level over it
-		// and a named begin() result are inert.
+		// site now gets its `bl` from the getMouthCube -> getCube levels; the
+		// mouth cube there still lands in r6 where retail keeps r3.
 		TCubeGeneralInfo* mouthCube
 		    = *mMouthCubeManager->unk14->getChildren().begin();
 		mouthCube->unkC.set(mPosition.x, mPosition.y + 9600.0f * mScaling.y,
