@@ -319,6 +319,9 @@ void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
 // difference). Second, retail materialises &mQuat in r30 before the tumble
 // block and reads the quaternion through it for spin.mul, where we fold the
 // 0x1a0 into each load; a TQuat4& local for mQuat does not reproduce it.
+// Measured 2026-09-23: a TU-local wrapper over length() (or over
+// sqrt(squared()) / sqrt(dot())) either keeps sqrt expanded or, one level
+// deeper, calls both sqrt and dot; retail calls only sqrt. Stop here.
 bool TKazekun::doAttackPose(bool start)
 {
 	JGeometry::TVec3<f32> toMario(*gpMarioPos);
