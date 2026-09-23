@@ -345,12 +345,9 @@ int TMenuDirector::direct()
 			setFixedStageValue();
 			unk18 = 2;
 			gpApplication.mFader->startFadeoutT(0.25f);
-			TGameSequence nextArea;
-			// TODO: setNextArea / TFlagT copy-ctor temps — same open class as
-			// MarDirectorDirect::decideNextStage (in-class TFlagT copy is
-			// elided; retail wants the weak copy-ctor bl and a 0xa8 frame).
-			nextArea.set(unk48, unk4C);
-			MNApp().setNextArea(nextArea);
+			// TODO: instructions match; frame 0x78 vs retail 0x128 (a dead
+			// low region, as MarDirectorDirect::decideNextStage).
+			MNApp().setNextArea(TGameSequence(unk48, unk4C));
 		} else if (unk44->checkFlag(0x2)) {
 			unk18 = 0;
 			unk40->unfade();
