@@ -31,7 +31,7 @@ bool TBaseNPC::isCanWalk() const
 
 void TBaseNPC::execWalk(bool param_1)
 {
-	if (mWalkForbidCount != 0 || gpMarDirector->isThing() || !isClean()
+	if (mWalkForbidCount != 0 || SMSGetMarDirector()->isThing() || !isClean()
 	    || checkActionFlag(NPC_ACTION_HAPPY)) {
 		mMarchSpeed = 0.0f;
 		mTurnSpeed  = 0.0f;
@@ -64,6 +64,12 @@ void TBaseNPC::execWalk(bool param_1)
 		// or `-=` difference helpers (frame 0x120-0x148), an identity copy
 		// level, and a by-value `NpcRotY(TVec3)` wrapper; retail's hoisted
 		// `.x` load before the `.z == 0` test is not reproduced by any.
+		// Frame now exact (0x130) via the SMSGetMarDirector() accessor at
+		// the guard, which also lands the 0xfc copy on retail's slot; left
+		// are the first temp (ours 0x108, retail 0xdc) and the last copy
+		// (ours 0xec, retail 0x10c). Under the `: Vec(other)` copy ctor,
+		// nested TVec3(TVec3(a - b)) elides the inner copy (95.4), and
+		// named/assigned/by-value-wrapper spellings are all worse.
 		JGeometry::TVec3<f32> direction = getUnkF4().getPoint();
 		direction -= mPosition;
 		JGeometry::TVec3<f32> copy;
