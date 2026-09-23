@@ -325,13 +325,19 @@ int TSpineEnemy::goToShortestNextGraphNode()
 }
 #pragma dont_inline off
 
+// TODO: instruction-exact and the frame agrees; setGoalPathFromGraph's
+// block still sits 0xc low (0x88 vs 0x94), the family's shared residue.
 int TSpineEnemy::jumpToNextGraphNode()
 {
-	if (unk124->mCurrIdx < 0 || !unk124->getCurrent().checkFlag(0x1))
+	if (getTracer()->getCurGraphIndex() < 0
+	    || !getTracer()
+	            ->getGraph()
+	            ->getGraphNode(getTracer()->getCurGraphIndex())
+	            .checkFlag(0x1))
 		return -1;
 
-	int idx = unk124->unk0->getNeighborNodeIndexByFlag(unk124->mCurrIdx,
-	                                                   unk124->mPrevIdx, 2);
+	int idx = getTracer()->getGraph()->getNeighborNodeIndexByFlag(
+	    getTracer()->getCurGraphIndex(), getTracer()->getPrevIndex(), 2);
 	if (idx >= 0) {
 		unk124->moveTo(idx);
 		setGoalPathFromGraph();
@@ -343,6 +349,9 @@ int TSpineEnemy::jumpToNextGraphNode()
 	return -1;
 }
 
+// TODO: setGoalPathFromGraph's block sits 0x14 low at an exact frame. All
+// 243 raw/tracer/getTracer() spellings of the five index/graph reads leave
+// it at 0x60 or lower: each extra accessor adds slots above the block too.
 void TSpineEnemy::goToRandomNextGraphNode()
 {
 	if (getTracer()->getCurGraphIndex() < 0)
