@@ -545,11 +545,9 @@ void TPakkun::onShootLiner(JGeometry::TVec3<f32>& dir)
 // Lobs the seed at a goal point instead of spitting it straight: the arc is
 // the one that lands on the goal from where the plant stands. Size-exact
 // against the map's 0xfc, which is what fixes the body: the goal feeds
-// setGoalPath and the plant's own position feeds the jump velocity.
-// TODO: the original inlines this at all three of TNervePakkunStay's lob
-// sites (which is why the map dead-stripped it); our MWCC refuses and emits a
-// call, so the sites are pasted out. Same family as TAnimalBird::doWalk in
-// docs/catalog/codegen-tells.md.
+// setGoalPath and the plant's own position feeds the jump velocity. The map
+// dead-strips it because TNervePakkunStay inlines it at all three lob sites,
+// where the velocity is a word copy (`=`, not set(x, y, z)).
 void TPakkun::onShootCurve(JGeometry::TVec3<f32>& goal)
 {
 	setGoalPath(TPathNode(goal));
@@ -557,7 +555,7 @@ void TPakkun::onShootCurve(JGeometry::TVec3<f32>& goal)
 	    = calcVelocityToJumpToY(mPosition, getSaveLoadParam()->getSLSeedSpeedC(),
 	                            getSaveLoadParam()->getSLSeedGravityC());
 	mIsCurveShot = 1;
-	mSeed->mVelocity.set(vel.x, vel.y, vel.z);
+	mSeed->mVelocity = vel;
 	mSeed->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f, 0.0f);
 }
 
@@ -1063,13 +1061,12 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 }
 
 // The plant is out of the ground and turning to face Mario; it decides here
-// whether to spit, to lob or to duck back down.
-// TODO: all three distance tests below call JGeometry::TUtil<f32>::sqrt in
-// the original and expand it here, which is the whole residual gap. Same
-// shape as the three open elecNokonoko sites in
-// docs/catalog/codegen-tells.md: the goal point is copied to a local,
-// subtracted in place with stores, and sqrt is still a bl. length(),
-// squared() and an explicit sqrt() all expand at this depth.
+// whether to spit, to lob or to duck back down. The three distance tests are
+// TSpineEnemy::calcDist, which is what keeps TUtil<f32>::sqrt a call.
+// TODO: instruction-exact, frame 0x70 long (0x340 vs 0x2d0). marioPos sits
+// 0x68 high, the lob goal and the liner dir are allocated in the opposite
+// order to retail, and the low region is 0x38-0x40 deep. Inert: dir built by
+// set(), the lob goal declared above the if, a raw *gpMarioPos copy.
 DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 {
 	TPakkun* self = (TPakkun*)spine->getBody();
@@ -1077,24 +1074,21 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
-	s32 waitTime  = self->getSaveParams()->getSLWaitTime();
+	int waitTime  = self->getSaveParams()->getSLWaitTime();
 	s32 readyTime = self->getSaveLoadParam()->getSLReadyTime();
 
 	if (self->mSeed->isUnk150Zero() && self->checkCurAnmEnd(0)
 	    && (!(spine->getTime() < readyTime) || spine->getTime() >= waitTime
 	        || self->mIsHoldingSeed != 0)) {
-		JGeometry::TVec3<f32> toGoal(self->unk104.getPoint());
-		toGoal.x -= self->mPosition.x;
-		toGoal.y -= self->mPosition.y;
-		toGoal.z -= self->mPosition.z;
-		f32 dist = toGoal.length();
+		f32 dist = self->calcDist(self->unk104.getPoint(), self->mPosition);
 
+		f32 range = self->getSaveLoadParam()->getSLShootRange();
 		f32 rate = 1.0f;
 		if (self->mIsStay != 0)
 			rate = 3.0f;
 
 		JGeometry::TVec3<f32> marioPos(SMS_GetMarioPos());
-		if (dist < self->getSaveLoadParam()->getSLShootRange() * rate
+		if (dist < range * rate
 		    || self->mIsStay != 0) {
 			f32 searchHeight
 			    = self->getSaveParams()->getSLSearchHeight() * rate;
@@ -1117,17 +1111,8 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 						self->onShootLiner(dir);
 					} else {
 						self->mSeedHitWall = 0;
-						JGeometry::TVec3<f32> goal(self->unk104.getPoint());
-						self->setGoalPath(TPathNode(goal));
-						JGeometry::TVec3<f32> vel
-						    = self->calcVelocityToJumpToY(
-						        self->mPosition,
-						        self->getSaveLoadParam()->getSLSeedSpeedC(),
-						        self->getSaveLoadParam()->getSLSeedGravityC());
-						self->mIsCurveShot = 1;
-						self->mSeed->mVelocity.set(vel.x, vel.y, vel.z);
-						self->mSeed->mRotation.set(TPakkunManager::mTestFlyAngX,
-						                           0.0f, 0.0f);
+						JGeometry::TVec3<f32> goal(self->getUnk104().getPoint());
+						self->onShootCurve(goal);
 					}
 					return TRUE;
 				}
@@ -1139,43 +1124,24 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 			TMsRange<f32> yawRange(0.0f, 36000.0f);
 			s32 yaw = yawRange.rand();
 
-			JGeometry::TVec3<f32> goal(self->unk104.getPoint());
-			JGeometry::TVec3<f32> toGoal2(self->unk104.getPoint());
-			toGoal2.x -= self->mPosition.x;
-			toGoal2.y -= self->mPosition.y;
-			toGoal2.z -= self->mPosition.z;
+			JGeometry::TVec3<f32> goal(self->getUnk104().getPoint());
 
-			TPakkunSaveLoadParams* params = self->getSaveLoadParam();
-			if (toGoal2.length() > params->getSLLimitMove()) {
-				goal.x = SMS_GetMarioPos().x - self->mPosition.x;
-				goal.y = 0.0f;
-				goal.z = SMS_GetMarioPos().z - self->mPosition.z;
+			if (self->calcDist(self->unk104.getPoint(), self->mPosition)
+			    > self->getSaveLoadParam()->getSLLimitMove()) {
+				goal.set(SMS_GetMarioPos().x - self->mPosition.x, 0.0f,
+				         SMS_GetMarioPos().z - self->mPosition.z);
 				if (goal.x == 0.0f && goal.y == 0.0f && goal.z == 0.0f)
 					goal.x += 1.0f;
 				MsVECNormalize(goal, goal);
 				f32 dist = self->getSaveLoadParam()->getSLMoveDist();
 				goal.x   = goal.x * dist + self->mPosition.x;
 				goal.z   = goal.z * dist + self->mPosition.z;
-				self->setGoalPath(TPathNode(goal));
-				JGeometry::TVec3<f32> vel = self->calcVelocityToJumpToY(
-				    self->mPosition, self->getSaveLoadParam()->getSLSeedSpeedC(),
-				    self->getSaveLoadParam()->getSLSeedGravityC());
-				self->mIsCurveShot = 1;
-				self->mSeed->mVelocity.set(vel.x, vel.y, vel.z);
-				self->mSeed->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f,
-				                           0.0f);
+				self->onShootCurve(goal);
 			} else {
-				f32 circle = params->getSLMarioCircle();
+				f32 circle = self->getSaveLoadParam()->getSLMarioCircle();
 				goal.x += circle * JMASCos(yaw);
 				goal.z += circle * JMASSin(yaw);
-				self->setGoalPath(TPathNode(goal));
-				JGeometry::TVec3<f32> vel = self->calcVelocityToJumpToY(
-				    self->mPosition, self->getSaveLoadParam()->getSLSeedSpeedC(),
-				    self->getSaveLoadParam()->getSLSeedGravityC());
-				self->mIsCurveShot = 1;
-				self->mSeed->mVelocity.set(vel.x, vel.y, vel.z);
-				self->mSeed->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f,
-				                           0.0f);
+				self->onShootCurve(goal);
 			}
 			return TRUE;
 		}
@@ -1185,11 +1151,7 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 
 	if (self->mIsStay != 0 && !self->isFindMario(1.0f)) {
 		f32 giveUp = self->getSaveParams()->getSLGiveUpLength();
-		JGeometry::TVec3<f32> toGoal(self->unk104.getPoint());
-		toGoal.x -= self->mPosition.x;
-		toGoal.y -= self->mPosition.y;
-		toGoal.z -= self->mPosition.z;
-		if (toGoal.length() > giveUp) {
+		if (self->calcDist(self->unk104.getPoint(), self->mPosition) > giveUp) {
 			spine->pushAfterCurrent(&TNerveStayPakkunHide::theNerve());
 			return TRUE;
 		}
