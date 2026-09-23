@@ -351,13 +351,15 @@ static f32 angle_between(const JGeometry::TVec3<f32>& a,
 	JGeometry::TVec3<f32> cross;
 	cross.cross(a, b);
 	f32 crossMag = cross.length();
-	f32 dot      = a.x * b.x + a.y * b.y + a.z * b.z;
+	f32 dot      = a.dot(b);
 	f32 angle    = atan2f(crossMag, dot);
 	return fabsf(angle);
 }
 
-// TODO: frame 0x178 vs retail 0x1d8 (0x60 of missing inline temporaries,
-// likely per-angle_between blocks); the rest is FPR allocation/scheduling.
+// TODO: frame 0x188 vs retail 0x1d8 (0x50 of missing inline temporaries;
+// a.dot(b) in angle_between gave 0x10). Retail's named block is 0x24 taller
+// (a/b/c reserve slots) -- early declarations, by-value angle_between
+// parameters and `a = p - hit` are all worse. The rest is FPR scheduling.
 static bool bgIntersectLine(const TBGCheckData* data,
                             const JGeometry::TVec3<f32>& start,
                             const JGeometry::TVec3<f32>& end, bool front_only,

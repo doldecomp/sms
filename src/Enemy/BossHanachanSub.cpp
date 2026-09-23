@@ -183,6 +183,11 @@ void TSphereLink::moveHead(const JGeometry::TVec3<f32>& position)
 	for (int i = 0; i < mPointCount; ++i) {
 		// TODO: retail separately names and mutates this vector, which reaches
 		// its `sub` call but also changes the return-copy scheduling here.
+		// A TU-local `{ TVec3 r = a; r.sub(b); return r; }` helper gets the
+		// `bl sub` and the 0x3c temp exactly, but retail then copies the
+		// result into a high slot (0xb8) and scales a second copy (0x6c): the
+		// header operator*(TVec3, f32) shape (see JGVec3.hpp) -- 91.80 ->
+		// 91.79, so not applied. Named locals for it are all worse.
 		mPoints[i].mVelocity
 		    = (mPoints[i].mPosition - mPoints[i].mPreviousPosition) * mVelocityScale;
 		mPoints[i].mPreviousPosition = mPoints[i].mPosition;
