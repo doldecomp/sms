@@ -57,6 +57,18 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ## State log
 
+### Session 2c772c1a (2026-09-22 evening, Opus orchestrator)
+
+- Numbers: All 66.32 -> 67.43% matched, 520 -> 521 linked (SampleCtrlNode); Game 59.34 -> 60.65%.
+- Landed `wt/low2` (bosseel `init` +0.02; dropped the obsolete specMain note). Low-effort Opus (headless, $0.83, ~25 calls) closed 0 of 6 and wrote off `jumpMain` as a frame deficit; default-effort agents closed ~15 functions at 55-150k tokens each. Use default effort.
+- Applied the 7 tool1 lever-search patches (renamed identifiers; dropped the unnecessary tobiPuku two-step cast). `docs/catalog/LEVERS.md` is the 30-lever agent card; `tools/agent-timing.py` splits an agent transcript into model vs tool time.
+- Unattended lever-search (`ls2`, 60 s/function, -j 3, results in the session scratchpad `ls2/results.tsv`, resumable): 163 of 669 functions, 16 exact; 10 applied, 6 rejected (fabricated multi-site forks/identity levels/aliases: jumpMain, TAfterEffect::perform, JPAEmitter loadBaseEmitterBlock). Hits concentrate in 1-3 KB functions.
+- Agent targeting that paid: classify open functions by `--clusters` markers and count mismatches not on r1 (real instruction differences); skip any function with a long comment block above it (deep search recorded). Every closure came from non-stack differences (declaration/statement order, `/ 2.0f`, naming a call argument or discarded result, an existing header accessor at a site subset, a case helper for duplicated code, a helper at the wrong inline level: Option `TPatternAnmControl::set`). Pure frame gaps (every instruction right, low region short) never closed: 49+ such functions, research r1 found no shared cause (docs/catalog/frame-gaps.md "Research r1").
+- Real bugs fixed: graph dir-limited fallback tests and vector, ModelGate `mCenterYaw` matrix cells, `traceSpline` wrap-around knot indices (deliberately accepted a fuzzy drop 99.42 -> 99.05; baseline refreshed).
+- Link candidates: every one-function-from-link unit checked today (11) is blocked by a known-open class (`a = b - c` header migration: MapWireManager, NpcCollision; std-list iterators: PerformList, MirrorActor; register tie-breaks; `operator*` return type: MarioParticle). Links now need header research, not closure passes.
+- Process rules added: never `git stash` in worktrees (shared stash list; one pop took another agent's entry); agents run lever-search at most once per function in the foreground; symbol-order check before commit (an agent inlined two UNUSED symbols; reverted).
+- Open leads: bosseel `setBckAnm` 248 B patch (`docs/progress/lever-search/bosseel_setbckanm_248.patch`) swaps OutWait/SecondSpin against FirstSpin; SelectMenu `initData` frame closes with a 4-site texture-loader binder (refused); bossgesso `changeBck` spelling trades frame between nerves.
+
 ### Session d828ce34 (2026-09-22, Opus orchestrator)
 
 - Numbers: All 63.59 -> 66.32% matched, 500 -> 520 linked; Game 56.03 -> 59.34%, 172 -> 189 linked; matched data 96.47 -> ~98.6%; ~150 functions to exact; ~40 real gameplay bugs fixed; 17 of 27 game `#pragma dont_inline` removed.
