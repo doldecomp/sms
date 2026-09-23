@@ -585,20 +585,25 @@ static inline const JAICamera* MSoundSEUnkACAt(const MSound* p, int i)
 	return vAC;
 }
 
+// TODO: the passed vectors (vec1, vec3) now sit at retail 0x44/0x38; the
+// adjusted copies (vec, vec2) are at 0x2c/0x20 vs retail 0x28/0x18 (retail
+// strides them 16 apart). Inert: int locals in the top declaration, any
+// order; raw unkAC[0] (frame -0x10).
 bool MSoundSE::checkSoundArea(u32 param_1, const Vec& param_2)
 {
 	bool result = true;
 
 	switch (param_1) {
 	case 7: {
-		Vec vec = *MSoundSEUnkACAt(MSGMSound, 0)->mPosition;
+		Vec vec1, vec3, vec, vec2;
+		vec = *MSoundSEUnkACAt(MSGMSound, 0)->mPosition;
 		vec.y += 75.0f;
-		Vec vec1  = vec;
+		vec1  = vec;
 		int iVar2 = gpCubeCamera->getInCubeNo(vec1);
 
-		Vec vec2 = param_2;
+		vec2 = param_2;
 		vec2.y += 75.0f;
-		Vec vec3  = vec2;
+		vec3  = vec2;
 		int iVar3 = gpCubeCamera->getInCubeNo(vec3);
 
 		if (iVar3 != -1) {
