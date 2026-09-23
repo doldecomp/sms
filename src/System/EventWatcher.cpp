@@ -488,7 +488,7 @@ static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
                                 u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
-	int value             = TSpcSlice(interp->pop()).getDataInt();
+	s32 value             = TSpcSlice(interp->pop()).getDataInt();
 	const char* actorName = interp->pop().getDataString();
 
 	TLiveActor* liveActor

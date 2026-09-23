@@ -986,7 +986,7 @@ bool TTalk2D2::closeBoardWindow()
 bool TTalk2D2::eraseNormalWindow()
 {
 	bool done = false;
-	s16 alpha = mBasePane->getAlpha();
+	s16 alpha = mBasePane->mAlpha;
 	alpha -= 16;
 
 	if (alpha < 0) {

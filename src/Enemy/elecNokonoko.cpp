@@ -1105,7 +1105,7 @@ DEFINE_NERVE(TNerveElecNokonokoTurn, TLiveActor)
 	// Standing exactly on top of the shell leaves the turn with no direction
 	// to aim at, so nudge along X.
 	if (nokonoko->mPosition.x - nokonoko->getCarapace()->mPosition.x == 0.0f
-	    && nokonoko->mPosition.z - nokonoko->getCarapace()->mPosition.z
+	    && nokonoko->getPosition().z - nokonoko->getCarapace()->mPosition.z
 	           == 0.0f)
 		nokonoko->mPosition.x += 1.0f;
 
