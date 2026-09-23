@@ -92,10 +92,10 @@ struct PacketUserData_TwoTevColorAndOneTevKColor {
 // the GX register cache.
 static void FifoSetChanMatColor(GXChannelID chan, GXColor color)
 {
-	GXWGFifo.u8  = 0x10;
-	GXWGFifo.u16 = 0;
-	GXWGFifo.u16 = 0x100C + (chan & 1);
-	GXWGFifo.u32 = color.r << 24 | color.g << 16 | color.b << 8 | color.a;
+	GXCmd1u8(0x10);
+	GXParam1u16(0);
+	GXParam1u16(0x100C + (chan & 1));
+	GXParam1u32(color.r << 24 | color.g << 16 | color.b << 8 | color.a);
 }
 
 static void FifoSetTevColorS10(GXTevRegID id, GXColorS10 color)
@@ -105,14 +105,14 @@ static void FifoSetTevColorS10(GXTevRegID id, GXColorS10 color)
 	u32 regBG = (color.b & 0x7FF) | (color.g & 0x7FF) << 12
 	            | (225 + id * 2) << 24;
 
-	GXWGFifo.u8  = 0x61;
-	GXWGFifo.u32 = regRA;
-	GXWGFifo.u8  = 0x61;
-	GXWGFifo.u32 = regBG;
-	GXWGFifo.u8  = 0x61;
-	GXWGFifo.u32 = regBG;
-	GXWGFifo.u8  = 0x61;
-	GXWGFifo.u32 = regBG;
+	GXCmd1u8(0x61);
+	GXParam1u32(regRA);
+	GXCmd1u8(0x61);
+	GXParam1u32(regBG);
+	GXCmd1u8(0x61);
+	GXParam1u32(regBG);
+	GXCmd1u8(0x61);
+	GXParam1u32(regBG);
 }
 
 static void FifoSetTevKColor(GXTevKColorID id, GXColor color)
@@ -120,10 +120,10 @@ static void FifoSetTevKColor(GXTevKColorID id, GXColor color)
 	u32 regRA = color.r | color.a << 12 | 8 << 20 | (224 + id * 2) << 24;
 	u32 regBG = color.b | color.g << 12 | 8 << 20 | (225 + id * 2) << 24;
 
-	GXWGFifo.u8  = 0x61;
-	GXWGFifo.u32 = regRA;
-	GXWGFifo.u8  = 0x61;
-	GXWGFifo.u32 = regBG;
+	GXCmd1u8(0x61);
+	GXParam1u32(regRA);
+	GXCmd1u8(0x61);
+	GXParam1u32(regBG);
 }
 
 // Local re-implementations of GXSetFogRangeAdj/GXSetFog that write straight
@@ -222,45 +222,10 @@ static void SetFogBase(const J3DFogInfo* fog)
 	                   (GXFogAdjTable*)fog->mFogAdjTable);
 }
 
-// TODO: frame 0xe8 vs retail's 0x178. All four inlined helpers' UNUSED sizes
-// are byte-exact (0x48/0x60/0x58/0x174), so the bodies are right; the residue
-// is 8 bytes of low region per inlined expansion, the header-round-15
-// depth-surcharge shape. The register numbering differences all follow from it.
-//
-// Closure re-pass (batch 161) measured the shape exactly.  The four carriers
-// are the four functions the map marks UNUSED -- FifoSetChanMatColor,
-// FifoSetTevColorS10, FifoSetTevKColor and SetFogBase -- and they have
-// eighteen expansions here (1 + 9 + 6 + 2); FifoSetFog and FifoSetFogRangeAdj
-// are emitted and stay real `bl`s, so their three call sites pay nothing.
-// 18 * 8 = 0x90 = the whole gap.  A dead uninitialised non-trivial class local
-// in each of the four lands it: a 12-byte one gives +0xd8 (= 18 * 12, so the
-// price of a dead class local in an inlined callee is its *exact* sizeof here,
-// not sizeof rounded down to 8), an 8-byte one gives retail's 0x178 to the
-// byte with no instruction change (91.7% -> 91.9%, every stack displacement
-// exact).  So the missing thing is an 8-byte non-trivial class object in each
-// of the four bodies; nothing in a FIFO register writer or in
-// `SetFogBase(const J3DFogInfo*)` names one, so it stays open rather than
-// padded.  With the frame right the whole remaining residue is a volatile
-// register permutation inside the FifoSetTevColorS10 and FifoSetTevKColor
-// expansions (identical instruction sequence, r8/r9/r5 where we use r3/r4/r8,
-// 0x61 in r0 where we use r7); FifoSetChanMatColor's expansion then matches.
-// Also measured and rejected: writing regRA straight into `GXWGFifo.u32`
-// instead of binding it, the shape FifoSetFog uses two functions above --
-// frame 0x178 -> 0x150 and the permutation unchanged.
-//
-// Closure batch 164 re-read the permutation and it is not a spelling: the two
-// expansions are instruction-for-instruction identical, and the difference is
-// that retail parks the two loop-invariant constants (0x61 and the 0xcc01
-// FIFO base) in the *low* volatiles r0/r3 and spreads the per-colour
-// temporaries across r4/r6/r7/r8/r9, while we do the exact inverse -- r7/r6
-// for the constants and r0/r3/r4/r5, reused, for the temporaries.  That is the
-// signature of retail holding one more value live across the block, i.e. the
-// same missing 8-byte object the frame gap wants, so the permutation is not an
-// independent residue and no reordering can reach it.  Swapping the regRA and
-// regBG declarations in both helpers is inert (MWCC schedules regRA's `lha`
-// pair first either way, 91.7% unchanged), which also rules out declaration
-// order as the ranking knob here.  Next step is naming the object, not another
-// trial.
+// The FIFO writers go through GXVert.h's GXCmd1u8/GXParam1u16/GXParam1u32
+// inlines rather than assigning GXWGFifo directly: each extra inline level is
+// what gave retail its 0x178 frame (0x90 more than the flat spelling, 8 bytes
+// per helper expansion) and its r0/r3 constant registers.
 //
 // Dispatches the per-packet colour/fog override recorded by the
 // SMS_InitPacket_* helpers. The user area's first word is the packet type; the

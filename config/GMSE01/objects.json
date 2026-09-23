@@ -283,6 +283,7 @@
     "MarioUtil/GDUtil.cpp",
     "MarioUtil/MapUtil.cpp",
     "MarioUtil/ModelUtil.cpp",
+    "MarioUtil/PacketUtil.cpp",
     "MarioUtil/RumbleData.cpp",
     "MarioUtil/RumbleMgr.cpp",
     "MarioUtil/RumbleType.cpp",
