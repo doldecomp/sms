@@ -106,7 +106,7 @@ void TAnimalBase::initNoLoad_(TAnimalBase* other)
 	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + mPosition.x;
 	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + mPosition.z;
 	if (getActorType() == 0x800001)
-		other->mPosition.y = 1000.0f * MsRandF() + mPosition.y;
+		other->mPosition.y = 1000.0f * MsRandF() + getPosition().y;
 	else
 		other->mPosition.y = mPosition.y - 250.0f * MsRandF();
 

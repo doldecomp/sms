@@ -1629,7 +1629,7 @@ void TMammaMirrorMapOperator::loadAfter()
 	JDrama::TActor* mirrorS
 	    = (JDrama::TActor*)JDrama::TNameRefGen::search2("mirrorS");
 	mMirrorPos[0].x = mirrorS->mPosition.x;
-	mMirrorPos[0].y = mirrorS->mPosition.y;
+	mMirrorPos[0].y = mirrorS->getPosition().y;
 	mMirrorPos[0].z = mirrorS->mPosition.z;
 	JDrama::TActor* mirrorM
 	    = (JDrama::TActor*)JDrama::TNameRefGen::search2("mirrorM");
