@@ -37,7 +37,7 @@ Old batch history is archived under `docs/progress/` and does not need reading.
 
 ## Read next
 
-- Agents (unit, closure, research, structural): `docs/AGENT_GUIDE.md`, then your brief (`docs/BATCH_BRIEF.md` or `docs/CLOSURE_BRIEF.md`), then `docs/catalog/RULES.md`.
+- Agents (unit, closure, research, structural): `docs/AGENT_GUIDE.md`, then your brief (`docs/BATCH_BRIEF.md` or `docs/CLOSURE_BRIEF.md`), then `docs/catalog/LEVERS.md` (grep `RULES.md` only for lookup).
 - The orchestrating session: `docs/HANDOFF.md` first (the previous orchestrator's judgement and open leads), then `docs/ORCHESTRATION.md`, `STRATEGY.md`, `PROGRESS.md`, `docs/TIMELINE.md`.
 
 This file is loaded into every session and every agent, so it holds only the rules that are not negotiable.
