@@ -418,7 +418,7 @@ void TYoshiTongue::movement()
 	}
 	}
 
-	ensureTakeSituation();
+	checkTaking();
 	mPosition   = mTipPos;
 	mPosition.y = -((0.5f * mAttackHeight) - mPosition.y);
 }
