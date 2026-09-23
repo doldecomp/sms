@@ -1758,8 +1758,9 @@ TGCConsole2::TGCConsole2(const char* name)
 	unk90 = new THelpActor*[32];
 }
 
-// TODO: GMSE01 frame is 0x120 vs 0x118; color/buffer slots are +8.
-// Texture construction also lacks the original r24-to-r29 copy before lookup.
+// TODO: texture construction lacks the original r24-to-r29 copy of the new
+// JUTTexture before the lookup (same open tell as CardSave/SelectMenu initData;
+// ctor-shape, helper and cast spellings are inert).
 void TGCConsole2::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
@@ -1820,7 +1821,7 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	unk274 = unk278[0];
 	unk288 = unk28C[0];
 
-	unk274->getPane()->setBasePosition(J2DBasePosition_5);
+	unk274->unk0->setBasePosition(J2DBasePosition_5);
 	unk288->show();
 
 	unk29C = new TBoundPane(unkB0, 'w_t0');

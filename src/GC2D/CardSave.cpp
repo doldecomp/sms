@@ -195,7 +195,11 @@ void TCardSave::initData(TMarioGamePad* param_1)
 		// (`mr r28, r24`) for the inlined constructor's storeTIMG call;
 		// neither this spelling nor the direct store reproduces it; also inert:
 		// const/static_cast, JKRGetNameResource, a top-declared texture, a
-		// named ResTIMG* (moves the path buffer), the (timg, 0) ctor.
+		// named ResTIMG* (moves the path buffer), the (timg, 0) ctor, a
+		// TU-local new-wrapper, and JUTTexture ctor shapes (an inner inline
+		// around storeTIMG, a defaulted lut argument). Same open tell in
+		// GCConsole2 load and SelectMenu's sc_mark textures, while CardLoad's
+		// identical loop has no copy: likely allocator-level, not spelling.
 		JUTTexture* texture
 		    = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
 		unk1C[i] = texture;
