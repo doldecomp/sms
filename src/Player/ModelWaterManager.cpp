@@ -238,7 +238,7 @@ void TModelWaterManager::loadAfter()
 f32 TModelWaterManager::getWPGravity(int i) const
 {
 	if (SMS_isDivingMap())
-		return unk5D88[0];
+		return unk5D88[12];
 	else
 		return mWaterParticleTypes[mParticleTypeSOA[i]]->mGravity.get();
 }
@@ -443,65 +443,65 @@ void TModelWaterManager::move()
 			mStaticHitActor.mPosition = mParticlePositionSOA[i];
 			mStaticHitActor.mParticleIndex = i;
 
-			if (!unk2514[i]->receiveMessage(&mStaticHitActor,
-			                                HIT_MESSAGE_SPRAYED_BY_WATER))
-				continue;
+			if (unk2514[i]->receiveMessage(&mStaticHitActor,
+			                               HIT_MESSAGE_SPRAYED_BY_WATER)) {
+				splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
 
-			splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
+				if (MsRandF() < unk5D88[8])
+					gpSplashManager->newSplash(mParticlePositionSOA[i], 5.0f);
 
-			if (MsRandF() < unk5D88[8])
-				gpSplashManager->newSplash(mParticlePositionSOA[i], 5.0f);
-
-			mParticleLifetimeSOA[i] = 0.0f;
-		} else {
-			JGeometry::TVec3<f32> thing;
-			thing.sub(SMS_GetMarioPos(), mParticlePositionSOA[i]);
-
-			if (thing.x * thing.x + thing.z * thing.z > fVar1 * fVar1) {
 				mParticleLifetimeSOA[i] = 0.0f;
 				continue;
 			}
+		}
 
-			f32 horVelSq
-			    = mParticleVelocitySOA[i].x * mParticleVelocitySOA[i].x
-			      + mParticleVelocitySOA[i].z * mParticleVelocitySOA[i].z;
-			if (horVelSq > mParticleSizeSOA[i] * mParticleSizeSOA[i]) {
-				f32 horLen = std::sqrtf(horVelSq);
+		JGeometry::TVec3<f32> thing;
+		thing.sub(SMS_GetMarioPos(), mParticlePositionSOA[i]);
 
-				mParticleVelocitySOA[i].x
-				    *= (mParticleSizeSOA[i] - 0.1f) * (1.0f / horLen);
-				mParticleVelocitySOA[i].z
-				    *= (mParticleSizeSOA[i] - 0.1f) * (1.0f / horLen);
-			}
+		if (thing.x * thing.x + thing.z * thing.z > fVar1 * fVar1) {
+			mParticleLifetimeSOA[i] = 0.0f;
+			continue;
+		}
 
-			switch (mParticleFlagSOA[i] & 0xf) {
-			case 1:
-				mParticleVelocitySOA[i].y += getWPGravity(i);
+		f32 horVelSq
+		    = mParticleVelocitySOA[i].x * mParticleVelocitySOA[i].x
+		      + mParticleVelocitySOA[i].z * mParticleVelocitySOA[i].z;
+		if (horVelSq > mParticleSizeSOA[i] * mParticleSizeSOA[i]) {
+			f32 horLen = std::sqrtf(horVelSq);
 
-				mParticlePositionSOA[i].x += mParticleVelocitySOA[i].x;
-				mParticlePositionSOA[i].y += mParticleVelocitySOA[i].y;
-				mParticlePositionSOA[i].z += mParticleVelocitySOA[i].z;
-				break;
+			mParticleVelocitySOA[i].x
+			    *= (mParticleSizeSOA[i] - 0.1f) * (1.0f / horLen);
+			mParticleVelocitySOA[i].z
+			    *= (mParticleSizeSOA[i] - 0.1f) * (1.0f / horLen);
+		}
 
-			case 2: {
-				mParticleVelocitySOA[i].x
-				    = mParticleVelocitySOA[i].x * getPlaneFriction(unk2914[i])
-				      + unk2914[i]->getNormal().x;
-				mParticleVelocitySOA[i].y = getWPGravity(i);
-				mParticleVelocitySOA[i].x
-				    = mParticleVelocitySOA[i].x * getPlaneFriction(unk2914[i])
-				      + unk2914[i]->getNormal().z;
+		switch (mParticleFlagSOA[i] & 0xf) {
+		case 1:
+			mParticleVelocitySOA[i].y += getWPGravity(i);
 
-				mParticlePositionSOA[i].x += mParticleVelocitySOA[i].x;
-				mParticlePositionSOA[i].y += mParticleVelocitySOA[i].y;
-				mParticlePositionSOA[i].z += mParticleVelocitySOA[i].z;
-				break;
-			}
+			mParticlePositionSOA[i].x += mParticleVelocitySOA[i].x;
+			mParticlePositionSOA[i].y += mParticleVelocitySOA[i].y;
+			mParticlePositionSOA[i].z += mParticleVelocitySOA[i].z;
+			break;
 
-			case 3:
-				mParticlePositionSOA[i].y += getPlaneFall(unk2914[i]);
-				break;
-			}
+		case 2: {
+			mParticleVelocitySOA[i].x
+			    = mParticleVelocitySOA[i].x * getPlaneFriction(unk2914[i])
+			      + unk2914[i]->getNormal().x;
+			mParticleVelocitySOA[i].y = getWPGravity(i);
+			mParticleVelocitySOA[i].z
+			    = mParticleVelocitySOA[i].z * getPlaneFriction(unk2914[i])
+			      + unk2914[i]->getNormal().z;
+
+			mParticlePositionSOA[i].x += mParticleVelocitySOA[i].x;
+			mParticlePositionSOA[i].y += mParticleVelocitySOA[i].y;
+			mParticlePositionSOA[i].z += mParticleVelocitySOA[i].z;
+			break;
+		}
+
+		case 3:
+			mParticlePositionSOA[i].y += getPlaneFall(unk2914[i]);
+			break;
 		}
 	}
 
@@ -514,171 +514,167 @@ void TModelWaterManager::move()
 			    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y - fVar1,
 			    mParticlePositionSOA[i].z, &local_248);
 
-			if (!local_248->isLegal() || 1.0f + f31 < mParticlePositionSOA[i].y)
-				continue;
+			if (local_248->isLegal() && !(1.0f + f31 < mParticlePositionSOA[i].y)) {
+				if (local_248->isWaterSurface()) {
+					if (MsRandF() < unk5D88[11])
+						SMS_EmitRippleTiny(&mParticlePositionSOA[i]);
 
-			if (local_248->isWaterSurface()) {
-				if (MsRandF() < unk5D88[11])
-					SMS_EmitRippleTiny(&mParticlePositionSOA[i]);
-
-				mParticleLifetimeSOA[i] = 0.0f;
-
-				gpMSound->startSoundSet(MSD_SE_WT_INTO_WATER,
-				                        &mParticlePositionSOA[i], 0.0f, 0.0f,
-				                        0.0f, 0, 4);
-				continue;
-			}
-
-			if (local_248->isPool()) {
-				mParticleLifetimeSOA[i] = 0.0f;
-				if (MsRandF() < unk5D88[11])
-					SMS_EmitRippleTiny(&mParticlePositionSOA[i]);
-
-				splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
-				continue;
-			}
-
-			mParticlePositionSOA[i].y = f31 - getWPGravity(i);
-
-			if (getFlagBottom4Bits(i) == 3) {
-				mParticleLifetimeSOA[i] = 0.0f;
-				continue;
-			}
-
-			if (getFlagBottom4Bits(i) == 1) {
-				if (MsRandF() < unk5D88[9])
-					gpSplashManager->newSplash(mParticlePositionSOA[i], 5.0f);
-
-				splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
-
-				mParticleSizeSOA[i]
-				    *= mWaterParticleTypes[mParticleTypeSOA[i]]->mMagnify.get();
-				f32 fVar1;
-				if (gpCamera->isLButtonCamera())
-					fVar1 = unk5D88[0];
-				else
-					fVar1 = unk5D88[1];
-
-				if (MsRandF() < fVar1) {
-					setFlagBottom4Bits(i, 2);
-				} else {
 					mParticleLifetimeSOA[i] = 0.0f;
+
+					gpMSound->startSoundSet(MSD_SE_WT_INTO_WATER,
+					                        &mParticlePositionSOA[i], 0.0f, 0.0f,
+					                        0.0f, 0, 4);
+					continue;
 				}
 
-				continue;
-			}
-
-			unk2914[i] = local_248;
-			if (local_248->mActor != nullptr) {
-				mStaticHitActor.mPosition = mParticlePositionSOA[i];
-				mStaticHitActor.mParticleIndex = i;
-				THitActor* hit            = (THitActor*)local_248->mActor;
-				if (hit->receiveMessage(&mStaticHitActor,
-				                        HIT_MESSAGE_SPRAYED_BY_WATER))
+				if (local_248->isPool()) {
 					mParticleLifetimeSOA[i] = 0.0f;
-			}
-		} else {
-			static TBGWallCheckRecord wcheck;
+					if (MsRandF() < unk5D88[11])
+						SMS_EmitRippleTiny(&mParticlePositionSOA[i]);
 
-			wcheck.set(mParticlePositionSOA[i].x,
-			           mParticlePositionSOA[i].y + mParticleSizeSOA[i] * 0.5f,
-			           mParticlePositionSOA[i].z, mParticleSizeSOA[i], 1,
-			           TBGWallCheckRecord::IGNORE_WATER_THROUGH);
+					splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
+					continue;
+				}
 
-			if (gpMap->isTouchedWallsAndMoveXZ(&wcheck)) {
-				const TBGCheckData* r27 = wcheck.mResultWalls[0];
+				mParticlePositionSOA[i].y = f31 - getWPGravity(i);
 
-				if (getFlagBottom4Bits(i) == 2) {
+				if (getFlagBottom4Bits(i) == 3) {
 					mParticleLifetimeSOA[i] = 0.0f;
-				} else {
-					if (local_248 != nullptr && local_248->isLegal()
-					    && mParticlePositionSOA[i].y
-					           < mParticleSizeSOA[i]
-					                     * mWaterParticleTypes
-					                           [mParticleTypeSOA[i]]
-					                               ->mMagnify.get()
-					                 + f31) {
-						mParticleLifetimeSOA[i] = 0.0f;
+					continue;
+				}
+
+				if (getFlagBottom4Bits(i) == 1) {
+					if (MsRandF() < unk5D88[9])
+						gpSplashManager->newSplash(mParticlePositionSOA[i], 5.0f);
+
+					splashSound(mParticlePositionSOA[i], mParticleSizeSOA[i]);
+
+					mParticleSizeSOA[i]
+					    *= mWaterParticleTypes[mParticleTypeSOA[i]]->mMagnify.get();
+					f32 fVar1;
+					if (gpCamera->isLButtonCamera())
+						fVar1 = unk5D88[1];
+					else
+						fVar1 = unk5D88[0];
+
+					if (MsRandF() < fVar1) {
+						setFlagBottom4Bits(i, 2);
 					} else {
-						if (r27->mActor != nullptr) {
-							mStaticHitActor.mPosition = mParticlePositionSOA[i];
-							mStaticHitActor.mParticleIndex = i;
-							THitActor* hit            = (THitActor*)r27->mActor;
-							hit->receiveMessage(&mStaticHitActor,
-							                    HIT_MESSAGE_SPRAYED_BY_WATER);
-						}
-
-						// `a = b * k`, not a copy plus an in-place scale:
-						// only the former puts TVec3::scale(f32) at inline
-						// depth 4 (copy ctor 1, operator* 2, operator*= 3),
-						// where the ROM `bl`s it. Retail's two copies here
-						// -- operator*'s by-value operand and the named
-						// result -- are the tell.
-						JGeometry::TVec3<f32> local_194
-						    = r27->getNormal()
-						      * (r27->mPlaneDistance
-						         + mParticlePositionSOA[i].dot(
-						             r27->getNormal()));
-
-						mParticlePositionSOA[i] -= local_194;
-
-						if (getFlagBottom4Bits(i) == 1) {
-							JGeometry::TVec3<f32> local_1d4
-							    = r27->getNormal() * mParticleSizeSOA[i];
-
-							JGeometry::TVec3<f32> local_1A4
-							    = mParticlePositionSOA[i] + local_1d4;
-							if (MsRandF() < unk5D88[10])
-								gpSplashManager->newSplash(local_1A4, 5.0f);
-
-							splashSound(mParticlePositionSOA[i],
-							            mParticleSizeSOA[i]);
-
-							mParticleSizeSOA[i]
-							    *= mWaterParticleTypes[mParticleTypeSOA[i]]
-							           ->mMagnify.get();
-							if (MsRandF() < unk5D88[2]) {
-								setFlagBottom4Bits(i, 3);
-							} else {
-								mParticleLifetimeSOA[i] = 0.0f;
-								continue;
-							}
-						}
+						mParticleLifetimeSOA[i] = 0.0f;
+						continue;
 					}
 				}
 
-				unk2914[i] = r27;
+				unk2914[i] = local_248;
+				if (local_248->mActor != nullptr) {
+					mStaticHitActor.mPosition = mParticlePositionSOA[i];
+					mStaticHitActor.mParticleIndex = i;
+					THitActor* hit            = (THitActor*)local_248->mActor;
+					if (hit->receiveMessage(&mStaticHitActor,
+					                        HIT_MESSAGE_SPRAYED_BY_WATER))
+						mParticleLifetimeSOA[i] = 0.0f;
+				}
+
+				continue;
+			}
+		}
+
+		static TBGWallCheckRecord wcheck;
+
+		wcheck.set(mParticlePositionSOA[i].x,
+		           mParticlePositionSOA[i].y + mParticleSizeSOA[i] * 0.5f,
+		           mParticlePositionSOA[i].z, mParticleSizeSOA[i], 1,
+		           TBGWallCheckRecord::IGNORE_WATER_THROUGH);
+
+		if (gpMap->isTouchedWallsAndMoveXZ(&wcheck)) {
+			const TBGCheckData* r27 = wcheck.mResultWalls[0];
+
+			if (getFlagBottom4Bits(i) == 2) {
+				mParticleLifetimeSOA[i] = 0.0f;
+				continue;
 			} else {
-				if (mParticleVelocitySOA[i].y >= 0.0f) {
-					const TBGCheckData* local_b4 = nullptr;
-					f32 dVar24 = gpMap->checkRoofIgnoreWaterThrough(
-					    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y,
-					    mParticlePositionSOA[i].z, &local_b4);
-					if (local_b4) {
-						if (local_b4->mActor != nullptr) {
-							mStaticHitActor.mPosition = mParticlePositionSOA[i];
-							mStaticHitActor.mParticleIndex = i;
-							THitActor* hit = (THitActor*)local_b4->mActor;
-							hit->receiveMessage(&mStaticHitActor,
-							                    HIT_MESSAGE_SPRAYED_BY_WATER);
-						}
+				if (local_248 != nullptr && local_248->isLegal()
+				    && mParticlePositionSOA[i].y
+				           < mParticleSizeSOA[i]
+				                     * mWaterParticleTypes
+				                           [mParticleTypeSOA[i]]
+				                               ->mMagnify.get()
+				                 + f31) {
+					mParticleLifetimeSOA[i] = 0.0f;
+					continue;
+				} else {
+					if (r27->mActor != nullptr) {
+						mStaticHitActor.mPosition = mParticlePositionSOA[i];
+						mStaticHitActor.mParticleIndex = i;
+						THitActor* hit            = (THitActor*)r27->mActor;
+						hit->receiveMessage(&mStaticHitActor,
+						                    HIT_MESSAGE_SPRAYED_BY_WATER);
+					}
 
-						if (mParticlePositionSOA[i].y + mParticleSizeSOA[i]
-						    > dVar24) {
-							mParticlePositionSOA[i].y
-							    = dVar24 - mParticleSizeSOA[i];
-							mParticleVelocitySOA[i].x = 0.0f;
-							mParticleVelocitySOA[i].y = 0.0f;
-							mParticleVelocitySOA[i].z = 0.0f;
+					// Unnamed `b * k`, not a copy plus an in-place scale:
+					// only the former puts TVec3::scale(f32) at inline
+					// depth 4 (copy ctor 1, operator* 2, operator*= 3),
+					// where the ROM `bl`s it. Retail's two copies here
+					// are operator*'s by-value operand and its result.
+					mParticlePositionSOA[i]
+					    -= r27->getNormal()
+					       * (r27->mPlaneDistance
+					          + mParticlePositionSOA[i].dot(r27->getNormal()));
 
-							setFlagBottom4Bits(i, 1);
+					if (getFlagBottom4Bits(i) == 1) {
+						JGeometry::TVec3<f32> local_1A4
+						    = mParticlePositionSOA[i]
+						      + r27->getNormal() * mParticleSizeSOA[i];
+						if (MsRandF() < unk5D88[10])
+							gpSplashManager->newSplash(local_1A4, 5.0f);
+
+						splashSound(mParticlePositionSOA[i],
+						            mParticleSizeSOA[i]);
+
+						mParticleSizeSOA[i]
+						    *= mWaterParticleTypes[mParticleTypeSOA[i]]
+						           ->mMagnify.get();
+						if (MsRandF() < unk5D88[2]) {
+							setFlagBottom4Bits(i, 3);
+						} else {
+							mParticleLifetimeSOA[i] = 0.0f;
 							continue;
 						}
 					}
 				}
-
-				setFlagBottom4Bits(i, 1);
 			}
+
+			unk2914[i] = r27;
+		} else {
+			if (mParticleVelocitySOA[i].y >= 0.0f) {
+				const TBGCheckData* local_b4 = nullptr;
+				f32 dVar24 = gpMap->checkRoofIgnoreWaterThrough(
+				    mParticlePositionSOA[i].x, mParticlePositionSOA[i].y,
+				    mParticlePositionSOA[i].z, &local_b4);
+				if (local_b4) {
+					if (local_b4->mActor != nullptr) {
+						mStaticHitActor.mPosition = mParticlePositionSOA[i];
+						mStaticHitActor.mParticleIndex = i;
+						THitActor* hit = (THitActor*)local_b4->mActor;
+						hit->receiveMessage(&mStaticHitActor,
+						                    HIT_MESSAGE_SPRAYED_BY_WATER);
+					}
+
+					if (mParticlePositionSOA[i].y + mParticleSizeSOA[i]
+					    > dVar24) {
+						mParticlePositionSOA[i].y
+						    = dVar24 - mParticleSizeSOA[i];
+						mParticleVelocitySOA[i].x = 0.0f;
+						mParticleVelocitySOA[i].y = 0.0f;
+						mParticleVelocitySOA[i].z = 0.0f;
+
+						setFlagBottom4Bits(i, 1);
+						continue;
+					}
+				}
+			}
+
+			setFlagBottom4Bits(i, 1);
 		}
 	}
 
@@ -702,7 +698,7 @@ void TModelWaterManager::move()
 				if (r20 < 0) {
 					r20 = i;
 				} else {
-					JGeometry::TVec3<f32> kek = vecBetweenParticles(i, r20);
+					JGeometry::TVec3<f32> kek = mParticlePositionSOA[i] - mParticlePositionSOA[r20];
 
 					f32 max = unk5D88[6]
 					          * (mParticleSizeSOA[i] + mParticleSizeSOA[r20]);
@@ -712,10 +708,10 @@ void TModelWaterManager::move()
 						mParticleSizeSOA[r20]     = mParticleSizeSOA[i];
 						mParticleLifetimeSOA[r20] = mParticleLifetimeSOA[i];
 						mParticleLifetimeSOA[i]   = 0.0f;
+					} else {
+						r20 = i;
 					}
 				}
-			} else {
-				r20 = i;
 			}
 			break;
 		}
@@ -729,7 +725,7 @@ void TModelWaterManager::move()
 				if (r26 < 0) {
 					r26 = i;
 				} else {
-					JGeometry::TVec3<f32> kek = vecBetweenParticles(i, r26);
+					JGeometry::TVec3<f32> kek = mParticlePositionSOA[i] - mParticlePositionSOA[r26];
 
 					f32 max = unk5D88[6]
 					          * (mParticleSizeSOA[i] + mParticleSizeSOA[r26]);
@@ -739,10 +735,10 @@ void TModelWaterManager::move()
 						mParticleSizeSOA[r26]     = mParticleSizeSOA[i];
 						mParticleLifetimeSOA[r26] = mParticleLifetimeSOA[i];
 						mParticleLifetimeSOA[i]   = 0.0f;
+					} else {
+						r26 = i;
 					}
 				}
-			} else {
-				r26 = i;
 			}
 			break;
 		}
