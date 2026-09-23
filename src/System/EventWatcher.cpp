@@ -350,7 +350,7 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 }
 
 // evGetTalkMode matches with a direct-return fork and a named int result.
-// TODO: frames now exact via TU-local binders (selected int result,
+// TODO: frames now exact via TU-local binders (the
 // director for getTalkNPC). Residue is load order: retail
 // stores the slice type word, then the inlined member. A helper that
 // both names the pointer and pushes made TSpcStack::push a `bl` (38%).
@@ -368,17 +368,21 @@ static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push(mode);
 }
 
-static inline int EventWatcherSelectedValue()
+// Binding level over a raw member read, worth +8 of low region in
+// evForceCloseTalk (batch 127); with a named int result it also closes
+// evGetTalkSelectedValue.
+static inline TTalk2D2* EventWatcherGetTalk2D()
 {
-	int value = gpTalk2D->getSelectedValue();
-	return value;
+	TTalk2D2* talk2D = gpTalk2D;
+	return talk2D;
 }
 
 static void evGetTalkSelectedValue(TSpcTypedInterp<TEventWatcher>* interp,
                                    u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	interp->push((int)EventWatcherSelectedValue());
+	int value = EventWatcherGetTalk2D()->getSelectedValue();
+	interp->push(value);
 }
 
 static void evSetValue2TalkVariable(TSpcTypedInterp<TEventWatcher>* interp,
@@ -755,14 +759,6 @@ static void evRaiseBuilding(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		event->raiseBuilding(id);
 
 	interp->push();
-}
-
-// Binding level over a raw member read, worth +8 of low region in
-// evForceCloseTalk (batch 127).
-static inline TTalk2D2* EventWatcherGetTalk2D()
-{
-	TTalk2D2* talk2D = gpTalk2D;
-	return talk2D;
 }
 
 static void evForceCloseTalk(TSpcTypedInterp<TEventWatcher>* interp,
