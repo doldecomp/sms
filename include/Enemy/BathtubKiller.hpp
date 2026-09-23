@@ -127,11 +127,8 @@ public:
 	/* 0x1FC */ f32 unk1FC;
 	/* 0x200 */ f32 unk200;
 	/* 0x204 */ f32 unk204;
-	/* 0x208 */ int unk208;
-	/* 0x20C */ int unk20C;
-	/* 0x210 */ int unk210;
-	/* 0x214 */ int unk214;
-	/* 0x218 */ int unk218;
+	// Countdown timers, stepped together by updateTimers.
+	/* 0x208 */ int mTimers[5];
 	/* 0x21C */ u32 unk21C;
 	/* 0x220 */ TPosition3f unk220;
 };

@@ -217,11 +217,11 @@ void TBathtubKiller::resetBathtubKiller()
 
 	mSpine->initWith(&TNerveBathtubKillerWander::theNerve());
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
-	unk208 = 0;
-	unk20C = 0;
-	unk210 = 0;
-	unk214 = 0;
-	unk218 = 0;
+	mTimers[0] = 0;
+	mTimers[1] = 0;
+	mTimers[2] = 0;
+	mTimers[3] = 0;
+	mTimers[4] = 0;
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 	zero.set(0.0f, 0.0f, 0.0f);
 	mVelocity.set(zero);
@@ -255,9 +255,9 @@ void TBathtubKiller::resetBathtubKiller()
 
 	unk1FC = 0.0f;
 	unk1F8 = getSaveParam2()->mSLColorChangeRateDelta.get();
-	unk208 = mPersonality.mDeadPeriod;
-	unk20C = getSaveParam2()->mSLLaunchingPeriod.get();
-	unk214 = getSaveParam2()->noCollisionAmongKillers.get();
+	mTimers[0] = mPersonality.mDeadPeriod;
+	mTimers[1] = getSaveParam2()->mSLLaunchingPeriod.get();
+	mTimers[3] = getSaveParam2()->noCollisionAmongKillers.get();
 	unk200 = getSaveParam2()->mSLChaseMinY.get();
 	unk204 = getSaveParam2()->mSLChaseMaxY.get();
 	if (unk194 == 2) {
@@ -394,10 +394,10 @@ void TBathtubKiller::bind()
 	mLinearVelocity = nextPos - mPosition;
 }
 
-// TODO: 96.6%. Besides updateTimers' per-timer address registers (see its
-// TODO), ours holds &mPosition in r29 across the distance and the sound call
-// where retail rematerialises it; raw mPosition at either or both sites is
-// inert or shrinks the frame by 8/0x10.
+// TODO: 98.5%, frame exact. Ours holds &mPosition in r29 across the distance
+// and the sound call where retail rematerialises it; every raw/accessor
+// combination over the five mPosition sites is inert or shrinks the frame by
+// 8/0x10.
 void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSmallEnemy::perform(cue, graphics);
@@ -407,7 +407,7 @@ void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_MOVE) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
 		updateTimers();
-		if (unk208 <= 0) {
+		if (mTimers[0] <= 0) {
 			BKPushExplosion(this);
 		}
 		if (!gpMap->isInArea(getPosition().x, getPosition().z)) {
@@ -675,7 +675,7 @@ bool TBathtubKiller::isCollidMove(THitActor* other)
 	}
 
 	// Two killers launched together are allowed to overlap for a while.
-	if (other->isActorType(0x08000024) && unk214 <= 0) {
+	if (other->isActorType(0x08000024) && mTimers[3] <= 0) {
 		BKPushExplosion(this);
 		return true;
 	}
@@ -719,28 +719,14 @@ void TBathtubKiller::setDeadBathtubKillerAnm()
 	unk1E0 = unk1D8;
 }
 
-// TODO: the ROM materialises each timer's address in its own register before
-// the test (`addi r4, r30, 0x208`; the load still folds to `0x208(r30)` but the
-// store goes through `0(r4)`), and the map's updateTimers is 20 bytes -- exactly
-// five instructions, one per timer -- larger than the direct form below. A
-// TU-static helper taking the timer by `int&` or by `int*` (both spellings
-// tried, including read-into-a-local-then-store) is folded straight back by
-// MWCC and changes nothing. The remaining hypothesis is that 0x208..0x218 are
-// one `int mTimers[5]` member and this is a fully unrolled loop over it, whose
-// indexed element addresses would survive; that needs the array to be plausible
-// at the fifteen sites that use the five timers by name, which it is not yet.
+// The ROM materialises each timer's address in its own register before the
+// test, the unrolled-loop shape of an indexed array, and the map's 0x7c
+// matches this loop exactly.
 void TBathtubKiller::updateTimers()
 {
-	if (unk208 > 0)
-		unk208--;
-	if (unk20C > 0)
-		unk20C--;
-	if (unk210 > 0)
-		unk210--;
-	if (unk214 > 0)
-		unk214--;
-	if (unk218 > 0)
-		unk218--;
+	for (int i = 0; i < 5; ++i)
+		if (mTimers[i] > 0)
+			mTimers[i]--;
 }
 
 // TODO: out of line 0x1a4 against the map's 0x19c. Retail measures Mario's
@@ -797,7 +783,7 @@ bool TBathtubKiller::isAboided()
 		return false;
 
 	if (SMS_GetMarioStatus() == MARIO_STATUS_HANGING) {
-		unk218 = 240;
+		mTimers[4] = 240;
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		return true;
 	}
@@ -823,7 +809,7 @@ bool TBathtubKiller::isAboided()
 
 bool TBathtubKiller::canChase()
 {
-	if (unk20C > 0)
+	if (mTimers[1] > 0)
 		return false;
 
 	f32 chaseDistanceY = getSaveParam2()->mSLChaseDistanceY.get();
@@ -897,7 +883,7 @@ DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor)
 	TBathtubKiller* killer = (TBathtubKiller*)spine->getBody();
 	if (spine->getTime() == 0) {
 		killer->setStraightBathtubKillerAnm();
-		killer->unk210
+		killer->mTimers[2]
 		    = killer->getSaveParam2()->mSLChaseStraightPeriod.get();
 	}
 
@@ -906,10 +892,10 @@ DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor)
 		return TRUE;
 	}
 
-	if (killer->unk218 <= 0)
+	if (killer->mTimers[4] <= 0)
 		killer->offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	if (killer->unk210 <= 0) {
+	if (killer->mTimers[2] <= 0) {
 		spine->pushAfterCurrent(&TNerveBathtubKillerChase::theNerve());
 		return TRUE;
 	}
@@ -930,7 +916,7 @@ DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor)
 	if (spine->getTime() == 0)
 		killer->setStraightBathtubKillerAnm();
 
-	if (killer->unk218 <= 0)
+	if (killer->mTimers[4] <= 0)
 		killer->offHitFlag(HIT_FLAG_NO_COLLISION);
 
 	killer->moveStraight();
