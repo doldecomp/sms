@@ -827,7 +827,7 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 {
 	TTamaNoko* self = (TTamaNoko*)spine->getBody();
 
-	if (spine->getTime() == 0) {
+	if (!spine->getTime()) {
 		// If hit sand -- we get stuck
 		if (self->getGroundPlane()->isSand()) {
 			spine->pushAfterCurrent(&TNerveTamaNokoSink::theNerve());
