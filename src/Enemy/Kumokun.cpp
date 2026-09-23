@@ -228,6 +228,8 @@ void TKumokun::initAttachPlane()
 
 void TKumokun::reset() { }
 
+// TODO: frame 0x198 vs retail 0x188; retail keeps the mVelocity copy at 0x104,
+// below local_110 rather than under local_168. Every instruction is right.
 void TKumokun::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
@@ -238,14 +240,15 @@ void TKumokun::bind()
 		return;
 	}
 
+	const TBGCheckData* floor;
 	JGeometry::TVec3<f32> local_168 = mLinearVelocity;
 	JGeometry::TVec3<f32> local_104 = mVelocity;
 	local_168 += local_104;
 
 	bool bVar7;
 
-	JGeometry::TVec3<f32> local_150;
 	JGeometry::TVec3<f32> local_15C;
+	JGeometry::TVec3<f32> local_150;
 
 	if (isOnFloor()) {
 		JGeometry::TVec3<f32> local_140 = local_168;
@@ -253,7 +256,6 @@ void TKumokun::bind()
 
 		local_140 += mPosition;
 
-		const TBGCheckData* floor;
 		bVar7 = checkOnMovingFloor(&local_150, &floor, local_140, local_168);
 		bVar7 |= checkOnMovingFloor(&local_15C, &floor, mPosition, local_168);
 	} else if (isOnRoof()) {
@@ -262,7 +264,6 @@ void TKumokun::bind()
 
 		local_134 += mPosition;
 
-		const TBGCheckData* floor;
 		bVar7 = checkOnMovingRoof(&local_150, &floor, local_134, local_168);
 		bVar7 |= checkOnMovingRoof(&local_15C, &floor, mPosition, local_168);
 	} else {
@@ -271,7 +272,6 @@ void TKumokun::bind()
 
 		local_128 += mPosition;
 
-		const TBGCheckData* floor;
 		bVar7 = checkOnMovingWall(&local_150, &floor, local_128, local_168);
 		bVar7 |= checkOnMovingWall(&local_15C, &floor, mPosition, local_168);
 	}
@@ -287,7 +287,7 @@ void TKumokun::bind()
 
 		JGeometry::TVec3<f32> local_f8 = local_110 - mPosition;
 
-		local_168 += local_f8;
+		local_15C += local_f8;
 	}
 
 	if (bVar7)
@@ -809,7 +809,8 @@ void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 
 // TODO: inlined into TNerveKumokunSearch, retail multiplies MsRandF()'s scale
 // into f30 before the axis temporary's set<f> call and adds 0.5f after it (the
-// TAmenbo::decideTarget residue). Inert: a named r; a named axis stops inlining.
+// TAmenbo::decideTarget residue). Inert: a named r; a named axis stops inlining;
+// (0.5f + MsRandF()), M_PI * (...) and MsRandF(0.5f, 1.5f) (97.4).
 void TKumokun::decideTargetAtRandom()
 {
 	JGeometry::TQuat4<f32> q = getQuat();
