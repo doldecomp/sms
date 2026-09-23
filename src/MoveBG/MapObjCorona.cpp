@@ -958,6 +958,13 @@ bool TBathtub::allowsTumble() const
 	return false;
 }
 
+// TODO: 87.8%. The else branch is the header TRotation3::setQuat, whose FPR
+// schedule differs here (retail forms 2y, 2z, 2x, 2w, then yy, zz, xy, xx)
+// and whose twelve named f32 locals cost this frame 8 bytes (0x68 against
+// 0x60). A TU-local copy with nine locals in retail's product order reaches
+// 93.2% (frame still 0x68); with no locals the frame lands but the stores
+// block CSE (7%). setQuat's own weak copy (fireWanwan, 98.5%) points at the
+// header, which this unit may not edit.
 void TBathtub::calcRootMatrix()
 {
 	if (unk29A) {
