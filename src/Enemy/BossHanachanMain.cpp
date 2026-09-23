@@ -329,8 +329,9 @@ void TBossHanachan::moveObject()
 
 // Wraps a yaw into [-180, 180). Retail calls MsWrap<f> out of line at all three
 // sand-slope sites while inlining MsGetRotFromZaxisY beside them, so the wrap is
-// one inline level deeper than the vector yaw.
-static inline f32 BossHanachanWrapDegree(f32 angle)
+// one inline level deeper than the vector yaw. The angle is taken by reference
+// because retail loads mRotation.y straight into f1 for the third call.
+static inline f32 BossHanachanWrapDegree(const f32& angle)
 {
 	return MsWrap(angle, -180.0f, 180.0f);
 }
@@ -493,7 +494,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 			BossHanachanSaveHistory(this);
 			s16 angle = CLBDegToShortAngle(mBodies[0]->mRotation.y);
-			CLBChaseAngleDecrease(&angle, CLBDegToShortAngle(getRotation().y),
+			CLBChaseAngleDecrease(&angle, CLBDegToShortAngle(mRotation.y),
 			                      20);
 			mBodies[0]->mRotation.y = (360.0f / 65536.0f) * angle;
 			for (int i = 1; i < 8; ++i) {
@@ -508,7 +509,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 				unk178->setDegreeZAndRevisionPosXZ(i, mBodies[i]->mRotation.z);
 			JGeometry::TVec3<f32> headPosition = mPosition;
 			headPosition.x
-			    -= JMASin(getRotation().y) * mCommonParams->mSLHeadLength.get();
+			    -= JMASin(mRotation.y) * mCommonParams->mSLHeadLength.get();
 			headPosition.z -= JMACos(mRotation.y) * mCommonParams->mSLHeadLength.get();
 			f32 offsetX, offsetZ;
 			BHSCalcRevisionDistXZByRotateZ(mRotation.y, mRotation.z,
