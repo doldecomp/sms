@@ -688,7 +688,7 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			                              selectedRect.getHeight());
 			if (!unk18) {
 				JUTRect bounds = selectedPane->getPane()->mGlobalBounds;
-				JGeometry::TVec3<f32> pos;
+				Vec pos;
 				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
 				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
 				pos.z = 0.0f;
@@ -912,7 +912,7 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			                              selectedRect.getHeight());
 			if (!unk18) {
 				JUTRect bounds = selectedPane->getPane()->getGlobalBounds();
-				JGeometry::TVec3<f32> pos;
+				Vec pos;
 				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
 				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
 				pos.z = 0.0f;
