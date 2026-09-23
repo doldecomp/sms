@@ -272,6 +272,9 @@ static inline void GuideSetTexture(J2DScreen* screen, u32 tag,
 	((J2DPicture*)screen->search(tag))->changeTexture(img, 0);
 }
 
+// TODO: every instruction matches; the callee-saved set is permuted (retail
+// this r31, total r27, etcTotal r20) and the frame is 0x68 vs 0xd8 (0x70 dead
+// low region). Declaration order and getInstance()/smInstance were inert.
 void TGuide::resetScore()
 {
 	int etcTotal = 0;
@@ -708,6 +711,7 @@ int TGuide::checkPoint(int x, int y)
 
 // TODO: frame 0x28 against retail's 0xf8 with no stack use, and the
 // callee-saved ranking differs (retail stage r31, this r30, stage*8 r29).
+// A named `TStageScore&` and a split -1/10 guard were worse.
 void TGuide::changeBotStatus(int stage)
 {
 	if (stage == -1 || stage >= 10) {
