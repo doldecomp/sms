@@ -74,14 +74,19 @@ void TCardSector::setCheckSum(u32 write_count)
 }
 
 // TODO: incorrect
+// writeCount/data declared before the read: closes getBookmarkInfos_ and
+// lifts filledInitData_/cmdLoop, but readBlock_'s last two inlined reads stop
+// sharing result's register (99.19 -> 98.39); open (2026-09-23).
 s32 TCardSector::read(CARDFileInfo* file, s32 index,
                       TCardManager::TCriteria* criteria)
 {
+	s32 writeCount;
+	const void* data;
 	s32 errc = CARDRead(file, this, sizeof(TCardSector),
 	                    index * sizeof(TCardSector));
 	if (errc == CARD_RESULT_READY) {
-		s32 writeCount   = mWriteCount;
-		const void* data = &mHeader;
+		writeCount = mWriteCount;
+		data       = &mHeader;
 		bool eq          = !(CalcCheckSum(this, 0x1FFC) - mCheckSum);
 		criteria->set(eq ? TCardManager::TCriteria::STATE_VALID
 		                 : TCardManager::TCriteria::STATE_CHECKSUM_BAD,
