@@ -653,6 +653,11 @@ void TPopo::attackToMario()
 	}
 }
 
+// TODO: 8 bytes short at the top of the frame (retail has 0xc between mtx
+// and the saved registers, ours 4); getSpine() at the fly-nerve test fills it
+// but in the low region. lenZ's sqrt runs in f2/f3 where retail uses f6, the
+// same open residue as TRocket::calcRootMatrix; and retail passes mPumpMtx to
+// PSMTXCopy through r30 before loading mCenterJntIndex.
 void TPopo::calcRootMatrix()
 {
 	gpCurPopo = this;
@@ -665,11 +670,11 @@ void TPopo::calcRootMatrix()
 		if (unk190 < mColMinVal)
 			unk190 = mColMinVal;
 		expandCollision();
-		getModel()->setBaseScale(mScaling);
+		getModel()->setBaseScale(getScaling());
 
 		TPosition3f mtx;
 		if (mSpine->getCurrentNerve() == &TNervePopoFly::theNerve()) {
-			mtx.translation(mPosition.x, mPosition.y, mPosition.z);
+			mtx.translation(getPosition().x, getPosition().y, getPosition().z);
 		} else {
 			MTXCopy(SMS_GetMarioWaterGun()->getEmitMtx(0), (MtxPtr)mtx);
 			JGeometry::TVec3<f32> dir[3];
