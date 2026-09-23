@@ -449,6 +449,10 @@ void TNozzleBase::emit(int param_1)
 // UNUSED (map size 0x94). Emitted between TNozzleBase::emit and
 // TNozzleBase::animation, i.e. defined here in source order; inlined into all
 // three animation() overrides.
+// TODO: the three animation()s are 0x28/0x30/0xa8 short in frame with every
+// instruction right. Measured per expansion: isAnmEnd 0x18, isEmitting 0x70,
+// setFrame 8, isSwitchingTo* 8; no one-helper change fits all three (a
+// named `done` bool is +8 each and code-exact but unjustified; setBck() inert).
 bool TNozzleBase::isAnmEnd() const
 {
 	bool end = false;

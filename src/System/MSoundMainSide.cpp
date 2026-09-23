@@ -728,6 +728,10 @@ MSStage* MSStage::init(u8 param_1, u8 param_2)
 
 void MSStage::stageLoop() { proc(); }
 
+// TODO: both users are short (0x40, 0x68). Retail puts toCamSpace's `out`
+// directly above its by-value `in` copy (0x50/0x5c) with camPos at 0x70; ours
+// leaves `out` and camPos in the low region. Assign-later, a `pos` copy and a
+// named camera receiver move the frame but not that layout.
 void MSStageProc::setBgmPosition(const Vec& pos, f32 dist, bool fade, u32 cur,
                                  u32 max)
 {
