@@ -1,0 +1,14 @@
+Rules for this task (read once):
+- Read docs/catalog/LEVERS.md first (short). Grep docs/catalog/RULES.md for a specific tell only; never read it or the topic files whole. Read only the function body and its TODO, not the whole .cpp.
+- Loop: edit -> `build/venv/bin/ninja build/GMSE01/src/<Unit>.o` -> `python3 tools/decomp-diff.py -u mario/<Unit> -d <sym> --clusters` (read markers + frame, not the rounded %). Batch several variants per tool call when you can (a script that builds and scores N copies via `python3 tools/lever-search.py -u <Unit> -f <sym> --source <copy.cpp>`), rather than one edit per turn.
+- lever-search already tried the mechanical accessor/fork/binder levers; do not repeat them by hand. Look for structural causes: missing inline levels, UNUSED helpers from orig/GMSE01/files/marioUS.MAP, statement order, wrong members.
+- No padding, dead locals, volatile, reinterpret casts, pragmas, or fabricated multi-site binders.
+- Before each commit: `build/venv/bin/ninja changes_all` zero regressions (no right value lower), full `build/venv/bin/ninja` exit 0, `sha1sum build/GMSE01/mario.dol` = a6782903ef79d4196c8489ecb1b57decb5b3728f. Commit message: one imperative line, blank line, `Claude-Session: https://claude.ai/code/session_01GxNbJJss6cKkrpEydx1Jms`. Do not push.
+- Budget: ~50 tool calls. If a function's residue is a known-open class (LEVERS.md bottom), write a 2-line TODO and move on. Commit partial gains.
+- Final report, short: per function closed/not, lever, bytes, tool calls, commit hashes, and one line on what cost you the most time.
+- Also before each commit: `NM=build/binutils/powerpc-eabi-nm build/venv/bin/python3 tools/validate-symbol-order.py -u mario/<Unit> --map orig/GMSE01/files/marioUS.MAP` must not get worse. A map symbol marked UNUSED must stay defined out of line in the .cpp; never make it `inline` or in-class to drop it.
+- Stop rule: after 3 inert variants on one residue, write the TODO and move to the next target. Never test statement deletions or slot-order probes one per turn; script them.
+- Never use `git stash`: the stash list is shared by every worktree, and a pop can take another agent's entry. To measure HEAD, copy the file to scratch and `git show HEAD:<path> > <path>`, then copy yours back.
+- Before starting a target, read the comment block above it; if it records a deep search (many inert variants), skip it immediately.
+- lever-search already ran on your targets; run it yourself at most once per function, in the foreground, with `--budget 60 -j 2`. Never poll a background job with sleep loops. Never `pkill` broadly (other agents and the unattended sweep share this machine); kill only PIDs you started.
+- Before making any function `inline` or in-class, grep its map entry: `(func,global)` means retail emits it out of line with global binding; making it inline changes linkage and breaks symbol order even if sizes improve.

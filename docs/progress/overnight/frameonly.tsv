@@ -1,0 +1,395 @@
+unit	function	pct	size	retail_frame	our_frame	gap	stackrows
+mario/Animal/AnimalBase	TAnimalBase::init(TLiveManager*)	99.823	656	0x98	0x70	0x28	29
+mario/Animal/Bird	TAnimalBird::load(JSUMemoryInputStream&)	99.965	340	0x48	0x48	0x0	3
+mario/Animal/Bird	TAnimalBird::receiveMessage(THitActor*, unsigned long)	99.966	932	0x78	0x78	0x0	8
+mario/Animal/Bird	TNerveAnimalBirdGraphWander::execute(TSpineBase<TLiveActor>*) const	99.760	800	0xa0	0xb8	-0x18	48
+mario/Animal/BeeHive	TBeeHive::bind()	99.783	608	0x68	0x68	0x0	33
+mario/MSound/MSound	MSound::exitStage()	99.925	320	0x40	0x40	0x0	6
+mario/MSound/MSoundSE	__sinit_MSoundSE_cpp	99.967	856	0x38	0x10	0x28	7
+mario/MSound/MSoundSE	MSSetSoundTL<MSSetSoundGrp>::MSSetSoundTL(unsigned long, const char*, MSSetSoundGrp*, unsigned char, unsigned char, unsigned char, unsigned char, float, unsigned char, float, float, float, float, float, long, float, long, float, float, float, bool)	99.793	600	0x128	0xc0	0x68	31
+mario/MSound/MSoundSE	MSoundSESystem::MSRandVol::MSRandVol(unsigned long)	99.833	168	0x20	0x18	0x8	7
+mario/MSound/MSoundSE	MSoundSESystem::MSRandPlay::MSRandPlay(unsigned long, long, long, float, float)	99.625	160	0x48	0x40	0x8	15
+mario/MSound/MSoundSE	MSoundSESystem::MSRandPlay::randPlay(unsigned long)	99.956	452	0x40	0x40	0x0	5
+mario/MSound/MSoundSE	MSoundSESystem::MSoundSE::construct()	99.998	4828	0xa0	0xa0	0x0	2
+mario/MSound/MSoundSE	MSoundSESystem::MSoundSE::startSoundActorWithInfo(unsigned long, const Vec*, Vec*, float, unsigned long, unsigned long, JAISound**, unsigned long, unsigned char)	99.917	624	0x88	0x88	0x0	13
+mario/MSound/MSoundSE	MSoundSESystem::MSoundSE::checkSoundArea(unsigned long, const Vec&)	99.724	348	0x58	0x58	0x0	24
+mario/MSound/MSoundSE	MSoundSESystem::MSoundSE::startSoundActorInner(unsigned long, JAISound**, JAIActor*, unsigned long, unsigned char)	99.979	960	0x58	0x50	0x8	5
+mario/MSound/MSoundSE	MSoundSESystem::MSoundSE::startSoundNpcActor(unsigned long, const Vec*, unsigned long, JAISound**, unsigned long, unsigned char)	99.721	272	0x88	0x78	0x10	19
+mario/MSound/MSoundStruct	MSSetSoundTL<MSSetSound>::MSSetSoundTL(unsigned long, const char*, MSSetSound*, unsigned char, unsigned char, unsigned char, unsigned char, float, unsigned char, float, float, float, float, float, long, float, long, float, float, float, bool)	99.793	600	0x128	0xc0	0x68	31
+mario/Camera/CameraBGCheck	CPolarSubCamera::execWallCheck_(Vec*)	99.872	564	0xb0	0xb0	0x0	3
+mario/Camera/CameraBGCheck	CPolarSubCamera::execGroundCheck_(Vec)	99.976	336	0x50	0x50	0x0	2
+mario/Camera/CameraChange	CPolarSubCamera::execCameraModeChangeProc_(int)	99.992	2544	0x100	0xb0	0x50	5
+mario/Camera/CameraNotice	CPolarSubCamera::ctrlLButtonCamera_()	99.788	528	0x70	0x50	0x20	28
+mario/Enemy/emario	TEMario::load(JSUMemoryInputStream&)	99.894	720	0xf0	0xa8	0x48	19
+mario/Enemy/emario	TEMario::init(TLiveManager*)	99.917	436	0x88	0x60	0x28	9
+mario/Enemy/enemy	TSpineBase<TLiveActor>::update()	99.924	264	0x18	0x20	-0x8	5
+mario/Enemy/enemy	TSpineEnemy::goToShortestNextGraphNode()	99.781	292	0xb8	0xb8	0x0	16
+mario/Enemy/enemy	TSpineEnemy::jumpToNextGraphNode()	99.778	288	0xc0	0xc0	0x0	16
+mario/Enemy/enemy	TSpineEnemy::goToRandomNextGraphNode()	99.754	260	0x98	0x98	0x0	16
+mario/Enemy/enemy	TSpineEnemy::goToRandomEscapeGraphNode()	99.758	264	0x90	0x90	0x0	16
+mario/Enemy/enemy	TSpineEnemy::goToExclusiveNextGraphNode()	99.755	588	0x170	0x160	0x10	36
+mario/Enemy/enemy	TSpineEnemy::goToDirectedNextGraphNode(const JGeometry::TVec3<float>&)	99.696	276	0x98	0x90	0x8	21
+mario/Enemy/enemy	TSpineEnemy::goToDirLimitedNextGraphNode(float)	99.852	432	0xd8	0xd8	0x0	16
+mario/Enemy/enemy	TSpineEnemy::doShortCut()	99.635	800	0xb0	0xb0	0x0	73
+mario/Enemy/enemyAttachment	TEnemyAttachment::bind()	99.956	640	0x78	0x78	0x0	7
+mario/Enemy/enemyAttachment	TEnemyPolluteModelManager::generatePolluteModel(JGeometry::TVec3<float>&, JGeometry::TVec3<float>&)	99.918	392	0x98	0x98	0x0	8
+mario/Enemy/enemymanager	TEnemyManager::createEnemies(int)	99.718	340	0xb0	0x98	0x18	24
+mario/Enemy/enemyMario	TEnemyMario::initModel()	99.913	1560	0x2f8	0x2a0	0x58	34
+mario/Enemy/enemyMario	TEnemyMario::emWaiting()	99.871	280	0x38	0x40	-0x8	9
+mario/Enemy/enemyMario	TEnemyMario::emRunAwayToNearestNode()	99.837	1248	0x128	0x128	0x0	51
+mario/Enemy/enemyMario	TEnemyMario::emWaitingToInviteMario()	99.913	412	0xa8	0xa8	0x0	9
+mario/Enemy/enemyMario	TEnemyMario::consider()	99.932	2132	0x220	0x238	-0x18	36
+mario/Enemy/gesso	TGessoManager::initSetEnemies()	99.787	188	0xe8	0x20	0xc8	10
+mario/Enemy/gesso	TGessoPolluteObj::set()	99.737	320	0x70	0x78	-0x8	21
+mario/Enemy/gesso	TNerveGessoFreeze::execute(TSpineBase<TLiveActor>*) const	99.804	1100	0xa8	0xa0	0x8	54
+mario/Enemy/gesso	TNerveGessoFall::execute(TSpineBase<TLiveActor>*) const	99.969	1808	0xc8	0xc8	0x0	14
+mario/Enemy/graph	TSplineRail::TSplineRail(const TGraphWeb*)	99.680	1452	0x188	0x140	0x48	116
+mario/Enemy/graph	TSplineRail::getPosAndRot(float, JGeometry::TVec3<float>*, JGeometry::TVec3<float>*)	99.603	564	0xf8	0xe8	0x10	56
+mario/Enemy/graph	TGraphWeb::getRandomButDirLimited(int, int, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float, unsigned long) const	99.985	1068	0x138	0x138	0x0	4
+mario/Enemy/graph	TGraphWeb::getEscapeDirLimited(int, int, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float, unsigned long) const	99.941	1148	0x148	0x148	0x0	17
+mario/Enemy/graph	TGraphGroup::initGraphGroup()	99.901	484	0xc0	0xc0	0x0	12
+mario/Enemy/hamukuri	THamuKuri::bind()	99.954	608	0x68	0x68	0x0	7
+mario/Enemy/hamukuri	THamuKuri::jumpToSearchActor()	99.807	436	0x68	0x60	0x8	21
+mario/Enemy/hamukuri	THamuKuri::getTakingMtx()	99.672	256	0xe0	0xb8	0x28	21
+mario/Enemy/hamukuri	THamuKuri::forceRoll(JGeometry::TVec3<float>, bool)	99.891	516	0xb0	0xb0	0x0	14
+mario/Enemy/hamukuri	THaneHamuKuri::bind()	99.942	480	0x48	0x48	0x0	7
+mario/Enemy/hamukuri	TDangoHamuKuri::receiveMessage(THitActor*, unsigned long)	99.945	512	0x48	0x28	0x20	7
+mario/Enemy/hamukuri	TDangoHamuKuri::behaveToWater(THitActor*)	99.976	1184	0xc0	0xc0	0x0	7
+mario/Enemy/hamukuri	TNerveHaneHamuKuriMoveOnGraph::execute(TSpineBase<TLiveActor>*) const	99.849	768	0x148	0x148	0x0	29
+mario/Enemy/hinokuri2	THino2MtxCalc::calc(unsigned short)	99.967	856	0x148	0x148	0x0	7
+mario/Enemy/hinokuri2	THinokuri2::init(TLiveManager*)	99.846	1376	0x1f8	0x1c8	0x30	53
+mario/Enemy/hinokuri2	TNerveHino2GraphWander::execute(TSpineBase<TLiveActor>*) const	99.907	1248	0x110	0xf0	0x20	29
+mario/Enemy/hinokuri2	TNerveHino2Die::execute(TSpineBase<TLiveActor>*) const	99.892	556	0x80	0x80	0x0	15
+mario/Enemy/namekuri	TNameKuri::calcRootMatrix()	99.444	928	0x160	0x128	0x38	94
+mario/Enemy/namekuri	TNameKuri::setDeadAnm()	99.930	344	0x68	0x68	0x0	6
+mario/Enemy/namekuri	TNameKuri::setMeltAnm()	99.930	344	0x68	0x68	0x0	6
+mario/Enemy/pakkun	TPakkun::init(TLiveManager*)	99.947	680	0xb8	0xc0	-0x8	9
+mario/Enemy/pakkun	TPakkunSeed::loadInit(TSpineEnemy*, const char*)	99.927	384	0xb0	0xb0	0x0	7
+mario/Enemy/smallEnemy	TSmallEnemy::init(TLiveManager*)	99.934	908	0x128	0x128	0x0	15
+mario/Enemy/smallEnemy	TSmallEnemy::genEventCoin()	99.648	772	0x100	0x108	-0x8	68
+mario/Enemy/smallEnemy	TSmallEnemy::moveObject()	99.896	1116	0xb0	0xb0	0x0	29
+mario/Enemy/smallEnemy	TSmallEnemy::receiveMessage(THitActor*, unsigned long)	99.936	560	0x58	0x28	0x30	9
+mario/Enemy/spider	TSpider::bind(TLiveActor*)	99.590	1396	0x158	0x120	0x38	143
+mario/Enemy/walker	calcFarthestVertex(const TBGCheckData*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&)	99.807	456	0x70	0x58	0x18	22
+mario/Enemy/bossgesso	TBossGesso::init(TLiveManager*)	99.866	2240	0x250	0x250	0x0	75
+mario/Enemy/bossgesso	TNerveBGWait::execute(TSpineBase<TLiveActor>*) const	99.833	1028	0xa0	0xd0	-0x30	43
+mario/Enemy/bossgesso	TNerveBGBeakDamage::execute(TSpineBase<TLiveActor>*) const	99.946	1408	0x158	0x158	0x0	19
+mario/Enemy/bossgesso	TNerveBGTentacleDamage::execute(TSpineBase<TLiveActor>*) const	99.893	712	0x78	0x80	-0x8	19
+mario/Enemy/bossgesso	TNerveBGDie::execute(TSpineBase<TLiveActor>*) const	99.898	1812	0x1c0	0x1c0	0x0	31
+mario/Enemy/bossgesso	TNerveBGRoll::execute(TSpineBase<TLiveActor>*) const	99.927	1820	0xa8	0x158	-0xb0	33
+mario/Enemy/elecNokonoko	TElecCarapace::loadInit(TSpineEnemy*, const char*)	99.911	496	0xa8	0xa8	0x0	11
+mario/Enemy/elecNokonoko	TElecCarapace::shoot()	99.847	756	0xd0	0xd0	0x0	29
+mario/Enemy/elecNokonoko	TElecCarapace::sendMessage()	99.944	504	0xa0	0xa8	-0x8	7
+mario/Enemy/elecNokonoko	TNerveElecCarapaceReturn::execute(TSpineBase<TLiveActor>*) const	99.895	912	0xc0	0xb8	0x8	24
+mario/Enemy/telesa	TTelesa::behaveToWater(THitActor*)	99.921	656	0x98	0x98	0x0	13
+mario/Enemy/telesa	TTelesa::bind()	99.967	836	0xd0	0xd0	0x0	7
+mario/Enemy/fireWanwan	TTailRubber::adjust()	99.586	1208	0xc0	0xb0	0x10	125
+mario/Enemy/fireWanwan	TFireWanwanTailHit::moveRequest(const JGeometry::TVec3<float>&)	99.726	292	0x48	0x48	0x0	20
+mario/Enemy/fireWanwan	TFireWanwan::behaveToWater(THitActor*)	99.916	904	0xe8	0x98	0x50	19
+mario/Enemy/bosspakkun	TBPPolDrop::move()	99.846	780	0x70	0x30	0x40	30
+mario/Enemy/bosspakkun	TBossPakkun::setGroundCollision()	99.988	332	0x60	0x60	0x0	1
+mario/Enemy/bosspakkun	TNerveBPTumbleOut::execute(TSpineBase<TLiveActor>*) const	99.962	628	0xa0	0xa0	0x0	6
+mario/Enemy/tobiPuku	TNerveTobiPukuBound::execute(TSpineBase<TLiveActor>*) const	99.921	456	0x68	0x60	0x8	9
+mario/Enemy/tobiPuku	TNerveTobiPukuReturnLaunch::execute(TSpineBase<TLiveActor>*) const	99.826	596	0x70	0x70	0x0	26
+mario/Enemy/tinkoopa	TTinKoopaPartsBase::initTinKoopaPartsBase()	99.842	480	0xa8	0xa8	0x0	19
+mario/Enemy/bosswanwan	TBWPicket::moveRequest(const JGeometry::TVec3<float>&)	99.836	440	0x68	0x68	0x0	18
+mario/Enemy/bosswanwan	TBWPicket::perform(unsigned long, JDrama::TGraphics*)	99.630	1328	0x1a0	0x138	0x68	123
+mario/Enemy/bosswanwan	TBossWanwan::slideToCurPathNode(float, float)	99.931	696	0x90	0x90	0x0	12
+mario/Enemy/bosswanwan	TNerveBWRoll::execute(TSpineBase<TLiveActor>*) const	99.912	320	0x100	0x38	0xc8	7
+mario/Enemy/bosswanwan	TNerveBWWakeup::execute(TSpineBase<TLiveActor>*) const	99.881	404	0x48	0x58	-0x10	12
+mario/Enemy/bosswanwan	TNerveBWJumpToBath::execute(TSpineBase<TLiveActor>*) const	99.707	820	0xa0	0x98	0x8	60
+mario/Enemy/chuuhana	TChuuHana::reset()	99.784	388	0xa0	0xa0	0x0	21
+mario/Enemy/chuuhana	TChuuHana::attackToMario()	99.954	612	0xc0	0xc0	0x0	7
+mario/Enemy/chuuhana	TChuuHana::isCollidMove(THitActor*)	99.816	1020	0x118	0x128	-0x10	47
+mario/Enemy/chuuhana	TChuuHana::bind()	99.962	744	0x88	0x88	0x0	7
+mario/Enemy/chuuhana	TChuuHana::willFall(long)	99.836	512	0xd0	0xd0	0x0	21
+mario/Enemy/chuuhana	TChuuHana::setGoal()	99.500	360	0xa0	0x90	0x10	45
+mario/Enemy/chuuhana	TNerveChuuHanaForceJumped::execute(TSpineBase<TLiveActor>*) const	99.971	688	0xd8	0xd8	0x0	5
+mario/Enemy/chuuhana	TNerveChuuHanaKeepBalance::execute(TSpineBase<TLiveActor>*) const	99.916	1004	0xf0	0xf0	0x0	21
+mario/Enemy/igaiga	TRollEnemy::flagJump()	99.778	216	0x78	0x78	0x0	12
+mario/Enemy/igaiga	TIgaigaManager::initSetEnemies()	99.787	188	0x98	0x20	0x78	10
+mario/Enemy/igaiga	TIgaiga::walkBehavior(int, float)	99.718	412	0xc8	0x68	0x60	19
+mario/Enemy/igaiga	TIgaiga::setMeltAnm()	99.850	612	0x90	0x90	0x0	23
+mario/Enemy/igaiga	TGorogoro::walkBehavior(int, float)	99.905	756	0x150	0xb8	0x98	18
+mario/Enemy/igaiga	TGorogoro::flagJump()	99.889	216	0x78	0x78	0x0	6
+mario/Enemy/igaiga	TGorogoro::generateByGateKeeper(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&)	99.955	1412	0xe8	0xe8	0x0	16
+mario/Enemy/poihana	TPoiHanaManager::initSetEnemies()	99.725	160	0xe0	0x40	0xa0	11
+mario/Enemy/poihana	TPoiHana::init(TLiveManager*)	99.981	644	0xd0	0xd0	0x0	3
+mario/Enemy/poihana	TPoiHana::genEventCoin()	99.908	304	0x48	0x48	0x0	7
+mario/Enemy/tamaNoko	TTamaNokoManager::initSetEnemies()	99.880	300	0xe0	0x38	0xa8	9
+mario/Enemy/tamaNoko	TTamaNoko::walkBehavior(int, float)	99.841	1236	0x110	0xf8	0x18	49
+mario/Enemy/tamaNoko	TTamaNoko::receiveMessage(THitActor*, unsigned long)	99.919	344	0x40	0x20	0x20	7
+mario/Enemy/tamaNoko	TTamaNoko::landEffect()	99.713	808	0x90	0x80	0x10	58
+mario/Enemy/bosstelesa	TBubble::appendEnemy()	99.872	532	0x50	0x40	0x10	17
+mario/Enemy/bosstelesa	TBossTelesa::init(TLiveManager*)	99.932	1932	0x258	0x258	0x0	33
+mario/Enemy/bosstelesa	TBossTelesa::moveObject()	99.926	2276	0x1d0	0x190	0x40	42
+mario/Enemy/bosstelesa	TBossTelesa::genAttacker()	99.968	884	0x138	0x138	0x0	7
+mario/Enemy/bosstelesa	TNerveBossTelesaDie::execute(TSpineBase<TLiveActor>*) const	99.980	2248	0x128	0xc8	0x60	11
+mario/Enemy/bosstelesa	TNerveBossTelesaAppear::execute(TSpineBase<TLiveActor>*) const	99.971	972	0x80	0x58	0x28	7
+mario/Enemy/bosstelesa	TNerveBossTelesaFallDemo::execute(TSpineBase<TLiveActor>*) const	99.967	492	0x68	0x68	0x0	4
+mario/Enemy/bombhei	TBombHei::genEventCoin()	99.706	272	0x50	0x48	0x8	20
+mario/Enemy/cannon	TCannon::moveObject()	99.907	732	0x80	0x80	0x0	17
+mario/Enemy/cannon	TCannon::calcRootMatrix()	99.887	1164	0xf8	0xd0	0x28	33
+mario/Enemy/cannon	TCannon::bombSet()	99.935	612	0x80	0x80	0x0	10
+mario/Enemy/cannon	TCannon::setKillerGoalPoint()	99.896	576	0x80	0x80	0x0	15
+mario/Enemy/cannon	TNerveCannonOpen::execute(TSpineBase<TLiveActor>*) const	99.921	456	0x60	0x58	0x8	9
+mario/Enemy/cannon	TNerveCannonSearch::execute(TSpineBase<TLiveActor>*) const	99.905	1732	0x198	0x170	0x28	41
+mario/Enemy/bosseel	TBEelTearsDrop::TBEelTearsDrop(TBEelTears*, int, SDLModelData*, const char*)	99.978	556	0x138	0x138	0x0	3
+mario/Enemy/bosseel	TBossEelTooth::TBossEelTooth(unsigned char, TBossEel*, const char*, SDLModelData*, const char*)	99.942	552	0x110	0x110	0x0	8
+mario/Enemy/bosseel	TNerveBossEelAppear::execute(TSpineBase<TLiveActor>*) const	99.919	844	0xa8	0x88	0x20	17
+mario/Enemy/bosseel	TNerveBossEelOutWait::execute(TSpineBase<TLiveActor>*) const	99.964	1460	0xb0	0x80	0x30	13
+mario/Enemy/bosseel	TNerveBossEelEat::execute(TSpineBase<TLiveActor>*) const	99.937	1588	0x118	0xc8	0x50	25
+mario/Enemy/bosseel	TNerveBossEelDie::execute(TSpineBase<TLiveActor>*) const	99.955	1152	0x120	0xe0	0x40	13
+mario/Enemy/killer	TFlyEnemy::fly()	99.952	580	0x78	0x78	0x0	7
+mario/Enemy/hanasambo	TSamboFlowerManager::loadAfter()	99.987	952	0xc8	0xc8	0x0	3
+mario/Enemy/hanasambo	TSamboFlowerManager::dropLeaf(JGeometry::TVec3<float>&, JGeometry::TVec3<float>&)	99.971	560	0x110	0x110	0x0	4
+mario/Enemy/hanasambo	TSamboHead::attackToMario()	99.948	388	0x60	0x50	0x10	5
+mario/Enemy/hanasambo	TSamboHead::genEventCoin()	99.922	716	0xf0	0xf0	0x0	14
+mario/Enemy/hanasambo	TNerveSamboHeadAttack::execute(TSpineBase<TLiveActor>*) const	99.862	896	0x120	0x120	0x0	31
+mario/Enemy/popo	PopoNonScaleCallback(J3DNode*, int)	99.796	412	0xc0	0x80	0x40	21
+mario/Enemy/popo	TPopo::init(TLiveManager*)	99.925	588	0xd0	0xd0	0x0	11
+mario/Enemy/fruitsboat	TFruitsBoat::init(TLiveManager*)	99.980	1188	0xf8	0xf8	0x0	6
+mario/Enemy/fruitsboat	TNerveFruitsBoatGraphWander::execute(TSpineBase<TLiveActor>*) const	99.853	1060	0x120	0x128	-0x8	39
+mario/Enemy/BossHanachanSub	BHSCalcCentrifugalForce(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float)	99.837	688	0xa0	0x80	0x20	28
+mario/Enemy/BossHanachanSub	TSphereLink::TSphereLink(unsigned short, const JGeometry::TVec3<float>&, float, float, float, float, float, float)	99.892	480	0xb8	0xb8	0x0	13
+mario/Enemy/BossHanachanMain	TBossHanachan::execSlip()	99.897	928	0xa8	0xa8	0x0	24
+mario/Enemy/BossHanachanParts	TBossHanachanPartsBase::considerSetAnm_(EnumBossHanachanNerveAnm)	99.954	1844	0x110	0xe8	0x28	21
+mario/Enemy/amiNoko	TAmiNoko::init(TLiveManager*)	99.905	548	0x98	0x98	0x0	13
+mario/Enemy/amiNoko	TAmiNoko::bind()	99.950	556	0x40	0x40	0x0	7
+mario/Enemy/amiNoko	TNerveAmiNokoWalkOnFence::execute(TSpineBase<TLiveActor>*) const	99.829	1144	0xa0	0x98	0x8	49
+mario/Enemy/amiNoko	TNerveAmiNokoDie::execute(TSpineBase<TLiveActor>*) const	99.866	1192	0xe8	0xe8	0x0	40
+mario/Enemy/hauntLeg	THauntLeg::init(TLiveManager*)	99.956	364	0x78	0x78	0x0	4
+mario/Enemy/hauntLeg	TNerveHauntLegHaunt::execute(TSpineBase<TLiveActor>*) const	99.963	756	0x80	0x80	0x0	7
+mario/Enemy/wireTrap	TWireTrap::load(JSUMemoryInputStream&)	99.912	544	0xa8	0xa8	0x0	12
+mario/Enemy/wireTrap	TNerveWireTrapReturnMove::execute(TSpineBase<TLiveActor>*) const	99.902	488	0x68	0x60	0x8	12
+mario/Enemy/wireTrap	TNerveWireTrapOnewayMove::execute(TSpineBase<TLiveActor>*) const	99.904	912	0x88	0x80	0x8	22
+mario/Enemy/rocket	TRocketManager::initSetEnemies()	99.944	356	0x90	0x90	0x0	5
+mario/Enemy/rocket	TNerveRocketPossessedNozzle::execute(TSpineBase<TLiveActor>*) const	99.946	668	0xa0	0x40	0x60	9
+mario/Enemy/bossManta	TBossManta::getIntoGraphVec(JGeometry::TVec3<float>*)	99.890	656	0x130	0x130	0x0	18
+mario/Enemy/bossManta	TBossManta::moveObject()	99.975	480	0x60	0x60	0x0	3
+mario/Enemy/bossManta	TBossManta::collidedWithWater()	99.914	1164	0xa0	0xa8	-0x8	25
+mario/Enemy/bossManta	TBossManta::control()	99.921	604	0x178	0x178	0x0	12
+mario/Enemy/bossManta	TBossMantaAdditionalCollisionSet::update(unsigned long, JDrama::TGraphics*)	99.808	480	0xf0	0x98	0x58	23
+mario/Enemy/bossManta	TBossMantaManager::setupEfbAlpha(JDrama::TGraphics*)	99.954	692	0xd8	0xd8	0x0	8
+mario/Enemy/wireBinder	TWireBinder::bind(TLiveActor*)	99.960	696	0x78	0x78	0x0	7
+mario/Enemy/yunbo	TNerveYumboDancing::execute(TSpineBase<TLiveActor>*) const	99.977	688	0xb0	0xb0	0x0	4
+mario/Enemy/koopajr	TKoopaJr::checkNerveKillerLaunchNormal()	99.949	548	0x28	0x38	-0x10	7
+mario/Enemy/koopajr	TKoopaJr::checkNerveKillerLaunchFast()	99.949	548	0x28	0x38	-0x10	7
+mario/Enemy/koopajr	TKoopaJrSubmarine::makeCollisionPositions()	99.800	220	0x80	0x48	0x38	11
+mario/Enemy/koopajr	TKoopaJrSubmarine::bind()	99.885	244	0x40	0x40	0x0	7
+mario/Enemy/koopajr	JGeometry::TUtil<float>::mod(float, float)	99.696	92	0x28	0x20	0x8	7
+mario/Enemy/Kumokun	TKumokun::calcRootMatrix()	99.974	920	0x178	0x178	0x0	6
+mario/Enemy/Koopa	TNerveKoopaTurnL::execute(TSpineBase<TLiveActor>*) const	99.931	408	0x1a8	0x90	0x118	7
+mario/Enemy/Koopa	TNerveKoopaTurnR::execute(TSpineBase<TLiveActor>*) const	99.930	400	0x1a0	0x90	0x110	7
+mario/Enemy/Koopa	TNerveKoopaTumble::execute(TSpineBase<TLiveActor>*) const	99.888	464	0x78	0x68	0x10	13
+mario/Enemy/Koopa	TKoopa::getTargetDir(const JGeometry::TVec3<float>&) const	99.810	252	0xe8	0xc0	0x28	12
+mario/Enemy/Koopa	TKoopa::perform(unsigned long, JDrama::TGraphics*)	99.919	1192	0x1f0	0x1a0	0x50	24
+mario/Enemy/Kukku	TKukkuBall::init()	99.944	288	0x88	0x88	0x0	4
+mario/Enemy/Kukku	TNerveKukkuRecoverGraph::execute(TSpineBase<TLiveActor>*) const	99.956	364	0x58	0x58	0x0	4
+mario/Enemy/Amenbo	TAmenbo::bind()	99.962	728	0x48	0x48	0x0	7
+mario/Enemy/Amenbo	TAmenbo::control()	99.881	1012	0x88	0x80	0x8	30
+mario/Enemy/Amenbo	TNerveAmenboTurn::execute(TSpineBase<TLiveActor>*) const	99.932	704	0x60	0x60	0x0	12
+mario/Enemy/BathtubKiller	TBathtubKiller::bind()	99.972	1004	0x90	0x90	0x0	7
+mario/Enemy/BathtubKiller	TNerveBathtubKillerBreak::execute(TSpineBase<TLiveActor>*) const	99.944	284	0x30	0x30	0x0	4
+mario/Enemy/BathtubKiller	TNerveBathtubKillerExplosion::execute(TSpineBase<TLiveActor>*) const	99.950	320	0x30	0x30	0x0	4
+mario/Enemy/coasterkiller	TCoasterEnemy::bind()	99.873	220	0x40	0x40	0x0	7
+mario/Enemy/TabePuku	TTabePuku::init(TLiveManager*)	99.954	432	0x48	0x48	0x0	5
+mario/Enemy/TabePuku	TNerveTabePukuAttack::execute(TSpineBase<TLiveActor>*) const	99.772	912	0xf8	0xf8	0x0	52
+mario/Enemy/limitkoopa	TLimitKoopa::loadAfter()	99.786	1216	0x188	0x168	0x20	65
+mario/Enemy/limitkoopa	TLimitKoopa::perform(unsigned long, JDrama::TGraphics*)	99.896	844	0x170	0x118	0x58	22
+mario/Enemy/limitkoopa	TLimitKoopa::bind()	99.922	360	0x40	0x40	0x0	7
+mario/Enemy/limitkoopajr	TLimitKoopaJr::moveRun()	99.575	932	0x118	0x100	0x18	99
+mario/Enemy/limitkoopajr	TNerveLimitKoopaJrRun::execute(TSpineBase<TLiveActor>*) const	99.802	424	0x60	0x68	-0x8	21
+mario/Enemy/limitkoopajr	TNerveLimitKoopaJrWait::execute(TSpineBase<TLiveActor>*) const	99.846	884	0xb0	0xb0	0x0	34
+mario/GC2D/Menu	TMenuBase::perform(unsigned long, JDrama::TGraphics*)	99.868	152	0x118	0x118	0x0	5
+mario/GC2D/GCConsole2	TGCConsole2::endCameraDemo()	99.863	612	0xc0	0xa0	0x20	21
+mario/GC2D/GCConsole2	TGCConsole2::startInsertLife(int)	99.762	1212	0x2e8	0x2e0	0x8	72
+mario/GC2D/GCConsole2	TGCConsole2::startAppearLife(int)	99.815	1384	0x2c8	0x2c8	0x0	64
+mario/GC2D/GCConsole2	TGCConsole2::processMoveNozzle()	99.575	320	0xa8	0x60	0x48	34
+mario/GC2D/Talk2D2	TTalk2D2::loadAfter()	99.788	1412	0x1e8	0x1d0	0x18	75
+mario/GC2D/Talk2D2	TTalk2D2::openTalkWindow(TBaseNPC*)	99.857	532	0x98	0x60	0x38	19
+mario/GC2D/Talk2D2	TTalk2D2::checkBoardControler()	99.873	440	0x70	0x38	0x38	14
+mario/GC2D/Talk2D2	TTalk2D2::checkControler()	99.975	796	0xa8	0x40	0x68	5
+mario/GC2D/PauseMenu2	TPauseMenu2::setDrawStart()	99.966	464	0xb8	0xb8	0x0	4
+mario/GC2D/CardLoad	TCardLoad::perform(unsigned long, JDrama::TGraphics*)	99.937	3624	0x380	0x318	0x68	57
+mario/GC2D/CardLoad	TCardLoad::changeScene()	99.959	5956	0x1e0	0x178	0x68	61
+mario/GC2D/SelectDir	TSelectDir::direct()	99.831	708	0xd0	0x50	0x80	30
+mario/GC2D/SelectShine2	TSelectShine::TSelectShine(J3DModelData*, J3DAnmColor*, JPAEmitterManager*, JGeometry::TVec3<float>&, short, unsigned char, float, float, float)	99.828	696	0x108	0xd8	0x30	30
+mario/GC2D/hx_wiper	Hx_Test5	99.821	1272	0x110	0x108	0x8	57
+mario/GC2D/Option	TOptionControl::movementOption()	99.963	536	0xa0	0xa0	0x0	5
+mario/GC2D/Option	TOptionControl::checkInput()	99.981	1076	0xc8	0x70	0x58	5
+mario/Map/Map	initMonte()	99.795	448	0xe8	0x98	0x50	23
+mario/Map/Map	initMare()	99.654	752	0x148	0x130	0x18	65
+mario/Map/Map	initStageCommon()	99.636	736	0x1d0	0x158	0x78	67
+mario/Map/Map	initStage()	99.935	432	0x70	0x38	0x38	7
+mario/Map/Map	TMap::update()	99.941	612	0x110	0x70	0xa0	9
+mario/Map/Map	TMap::isTouchedOneWall(float, float, float, float) const	99.861	144	0x68	0x68	0x0	5
+mario/Map/MapCheck	TMapCollisionData::checkRoof(float, float, float, unsigned char, const TBGCheckData**) const	99.954	348	0x90	0x90	0x0	4
+mario/Map/MapEventSink	TMapEventSinkInPollution::loadAfter()	99.763	152	0xb8	0xa0	0x18	9
+mario/Map/MapEventSink	TMapEventSinkInPollutionReset::loadAfter()	99.883	308	0x158	0x120	0x38	9
+mario/Map/MapMakeData	TMapCollisionBase::updateTrans(const JGeometry::TVec3<float>&)	99.706	408	0x70	0x58	0x18	30
+mario/Map/MapMakeList	TMapCollisionData::updateCheckListNode(long, long, long)	99.922	256	0x60	0x48	0x18	5
+mario/Map/MapMakeList	TMapCollisionData::removeCheckListData(unsigned short, long)	99.967	608	0x70	0x48	0x28	5
+mario/Map/MapWarp	TMapWarp::watchToWarp()	99.945	800	0x170	0x170	0x0	11
+mario/Map/MapWire	TMapWire::drawUpper() const	99.882	304	0x58	0x40	0x18	9
+mario/Map/MapWireManager	TMapWireActor::getPosInWire() const	99.623	424	0xb8	0xb8	0x0	40
+mario/Map/MapEventMare	TMareWallRock::appear()	99.961	408	0x78	0x78	0x0	4
+mario/Map/MapEventMare	TMareWallRock::movement()	99.965	904	0xf0	0xf0	0x0	8
+mario/Map/MapEventMare	TMareEventDepressWall::depressing()	99.938	1100	0xe8	0xc0	0x28	17
+mario/MoveBG/MapObjBase	TMapObjBase::initAndRegister(const char*)	99.788	208	0x70	0x70	0x0	11
+mario/MoveBG/MapObjInit	TMapObjBase::initUnique()	99.979	2116	0x2d8	0x100	0x1d8	11
+mario/MoveBG/MapObjGeneral	TMapObjGeneral::bind()	99.856	640	0xb0	0xb0	0x0	23
+mario/MoveBG/MapObjLib	TMapObjBase::rotateVecByAxisY(JGeometry::TVec3<float>*, float)	99.776	268	0xd0	0xf0	-0x20	15
+mario/MoveBG/Item	TShine::control()	99.953	1536	0xf8	0xa8	0x50	18
+mario/MoveBG/Item	TShine::loadBeforeInit(JSUMemoryInputStream&)	99.967	240	0x50	0x50	0x0	2
+mario/MoveBG/Item	TEggYoshi::decideRandomLoveFruit()	99.872	312	0x68	0x28	0x40	10
+mario/MoveBG/MapObjBianco	TBiancoWatermillVertical::TBiancoWatermillVertical(const char*)	99.800	100	0x28	0x18	0x10	5
+mario/MoveBG/MapObjBianco	TBiancoMiniWindmill::touchWater(THitActor*)	99.944	284	0x60	0x60	0x0	4
+mario/MoveBG/MapObjBianco	TLampSeesawMain::loadAfter()	99.898	196	0x90	0x88	0x8	5
+mario/MoveBG/MapObjSirena	TItemSlotDrum::moveObject()	99.971	1388	0xd8	0xd8	0x0	10
+mario/MoveBG/MapObjSirena	TPictureTelesa::touchActor(THitActor*)	99.921	356	0x28	0x30	-0x8	7
+mario/MoveBG/MapObjMamma	TSandCastle::waitBeforeExplode()	99.938	128	0x28	0x28	0x0	2
+mario/MoveBG/MapObjMamma	TLeanMirror::draw() const	99.477	352	0x58	0x50	0x8	46
+mario/MoveBG/MapObjMamma	TLeanMirror::loadAfter()	99.905	296	0x58	0x58	0x0	7
+mario/MoveBG/MapObjMamma	TLeanMirror::load(JSUMemoryInputStream&)	99.848	316	0xd0	0xa0	0x30	12
+mario/MoveBG/MapObjMamma	TMammaBlockRotate::control()	99.947	608	0xb8	0xb8	0x0	8
+mario/MoveBG/MapObjMamma	TMammaBlockRotate::initMapObj()	99.840	376	0x138	0xc8	0x70	15
+mario/MoveBG/MapObjMamma	TSandBird::control()	99.938	580	0x78	0x48	0x30	9
+mario/MoveBG/MapObjMamma	TMammaMirrorMapOperator::TMammaMirrorMapOperator(const char*)	99.913	412	0x30	0x38	-0x8	9
+mario/MoveBG/MapObjPinna	TPinnaShell::control()	99.891	884	0xb0	0x80	0x30	24
+mario/MoveBG/MapObjPinna	TPinnaShell::TPinnaShell()	99.929	168	0x18	0x18	0x0	3
+mario/MoveBG/MapObjPinna	TAmiKing::moveObject()	99.922	872	0xd8	0x88	0x50	17
+mario/MoveBG/MapObjPinna	TPinnaCoaster::control()	99.882	408	0x88	0x88	0x0	12
+mario/MoveBG/MapObjMare	TCogwheel::initDraw() const	99.962	524	0x80	0x88	-0x8	5
+mario/MoveBG/MapObjMare	TWireBell::initDraw() const	99.962	524	0x80	0x88	-0x8	5
+mario/MoveBG/MapObjMare	TMapObjPuncher::touchPlayer(THitActor*)	99.720	372	0x68	0x68	0x0	26
+mario/MoveBG/MapObjMare	TMuddyBoat::calc()	99.827	440	0xd0	0xd0	0x0	19
+mario/MoveBG/MapObjBall	TMapObjBall::kicked()	99.815	540	0xb8	0x78	0x40	25
+mario/MoveBG/MapObjBall	TResetFruit::control()	99.947	1584	0xf8	0x90	0x68	21
+mario/MoveBG/ModelGate	TModelGate::loadAfter()	99.952	2168	0x2b0	0x268	0x48	26
+mario/MoveBG/MapObjFence	TFenceWaterH::control()	99.624	712	0xf8	0x128	-0x30	67
+mario/MoveBG/MapObjRailBlock	TNormalLift::control()	99.927	436	0x78	0x78	0x0	8
+mario/MoveBG/MapObjRailBlock	TRailBlock::control()	99.809	1380	0x1b0	0x158	0x58	66
+mario/MoveBG/MapObjMonte	THangingBridge::initDraw() const	99.872	596	0xf0	0xd8	0x18	19
+mario/MoveBG/MapObjMonte	TSwingBoard::initDraw() const	99.962	524	0x80	0x88	-0x8	5
+mario/MoveBG/MapObjMonte	TSwingBoard::control()	99.873	756	0x118	0x70	0xa8	24
+mario/MoveBG/MapObjMonte	TSwingBoard::load(JSUMemoryInputStream&)	99.844	540	0x40	0x68	-0x28	21
+mario/MoveBG/MapObjMonte	TFluff::move()	99.923	572	0x78	0x28	0x50	11
+mario/MoveBG/MapObjMonte	TFluffManager::loadAfter()	99.822	964	0x78	0x88	-0x10	43
+mario/MoveBG/MapObjCorona	TBathtub::quake(const JGeometry::TVec3<float>&)	99.949	316	0xa0	0xa0	0x0	4
+mario/MoveBG/MapObjItem2	TMushroom1up::control()	99.806	1072	0x88	0x80	0x8	52
+mario/NPC/NpcAnm	TBaseNPC::npcMadding()	99.871	712	0xb8	0xb8	0x0	23
+mario/NPC/NpcNerve	TNerveNPCTurnToMario::execute(TSpineBase<TLiveActor>*) const	99.872	872	0xb0	0x88	0x28	28
+mario/NPC/NpcEvent	evCheckCurNerve4Npc(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.957	464	0xa0	0xa0	0x0	5
+mario/NPC/NpcEvent	evCheckLatestNerve4Npc(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.957	468	0x98	0x98	0x0	5
+mario/NPC/NpcEvent	ev__ForceStartTalk__FP32TSpcTypedInterp<13TEventWatcher>Ul	99.917	532	0x90	0x90	0x0	11
+mario/NPC/NpcEvent	evCheckMonteClear(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.963	432	0x90	0x90	0x0	4
+mario/NPC/NpcCollision	TBaseNPC::bind()	99.948	536	0x48	0x48	0x0	7
+mario/Strategic/liveactor	TLiveActor::init(TLiveManager*)	99.959	492	0x60	0x60	0x0	5
+mario/Strategic/liveactor	TLiveActor::bind()	99.954	604	0x40	0x40	0x0	7
+mario/Strategic/liveactor	TLiveActor::initAnmSound()	99.971	272	0x40	0x40	0x0	2
+mario/Strategic/liveinterp	linGetSRT(TSpcTypedInterp<TLiveActor>*, unsigned long)	99.860	1944	0xe0	0xe0	0x0	68
+mario/Strategic/ObjHitCheck	TObjHitCheck::entryGroup(TIdxGroupObj*)	99.763	472	0xe0	0xd8	0x8	28
+mario/Strategic/ObjHitCheck	TObjHitCheck::checkActorsHit()	99.896	844	0xd8	0xb8	0x20	22
+mario/Strategic/ObjHitCheck	TObjHitCheck::clearHitNum()	99.651	1044	0x228	0x1f8	0x30	91
+mario/Strategic/spcinterp	TSpcInterp::execadd()	99.978	728	0x70	0x70	0x0	4
+mario/Strategic/spcinterp	TSpcInterp::execsub()	99.978	728	0x70	0x70	0x0	4
+mario/Strategic/spcinterp	TSpcInterp::execmul()	99.978	728	0x70	0x70	0x0	4
+mario/Strategic/spcinterp	TSpcInterp::execdiv()	99.978	728	0x70	0x70	0x0	4
+mario/Strategic/MirrorActor	TMirrorActor::init(J3DModel*, unsigned short)	99.945	508	0xd8	0xd8	0x0	7
+mario/MarioUtil/DrawUtil	TTrembleModelEffect::movement()	99.889	1220	0x130	0x138	-0x8	34
+mario/MarioUtil/LightUtil	TLightCommon::perform(unsigned long, JDrama::TGraphics*)	99.857	308	0x80	0x70	0x10	11
+mario/MarioUtil/ShadowUtil	TMBindShadowBody::TMBindShadowBody(THitActor*, J3DModel*, float)	99.972	984	0x98	0x98	0x0	7
+mario/MarioUtil/ShadowUtil	TMBindShadowManager::drawShadowVolume(bool, TAlphaShadowQuad*)	99.934	2188	0x1b0	0x1b0	0x0	36
+mario/MarioUtil/ShadowUtil	TMBindShadowManager::request(const TCircleShadowRequest&, unsigned long)	99.866	808	0x70	0x48	0x28	27
+mario/MarioUtil/ShadowUtil	TMBindShadowManager::forceRequest(const TCircleShadowRequest&, unsigned long)	99.500	304	0x58	0x40	0x18	23
+mario/M3DUtil/MActorData	MActorAnmData::MActorAnmData()	99.880	100	0x20	0x10	0x10	3
+mario/Player/MarioAutodemo	TMario::warpIn()	99.792	1228	0xf8	0xf0	0x8	64
+mario/Player/MarioAutodemo	TMario::warpOut()	99.937	700	0x38	0x28	0x10	11
+mario/Player/MarioCap	TMarioCap::perform(unsigned long, JDrama::TGraphics*)	99.930	1668	0x1e0	0x178	0x68	29
+mario/Player/MarioCollision	TMario::incHP(int)	99.857	280	0x50	0x30	0x20	10
+mario/Player/MarioCollision	TMario::calcDamagePos(const JGeometry::TVec3<float>&)	99.489	376	0x80	0x98	-0x18	48
+mario/Player/MarioDraw	TMario::drawLogic()	99.961	408	0x28	0x28	0x0	4
+mario/Player/MarioDraw	TMario::addDamageFog(JDrama::TGraphics*)	99.937	764	0x150	0x150	0x0	12
+mario/Player/MarioJump	TMario::jumpingBasic(int, int, int)	99.988	1668	0xa0	0x58	0x48	5
+mario/Player/MarioJump	TMario::jumpMain()	99.985	4224	0x88	0x60	0x28	16
+mario/Player/MarioMain	TMario::perform(unsigned long, JDrama::TGraphics*)	99.974	2148	0x168	0x168	0x0	14
+mario/Player/MarioMove	TMario::warpRequest(const JGeometry::TVec3<float>&, float)	99.883	240	0x68	0x68	0x0	7
+mario/Player/MarioMove	TMario::checkWallPlane(Vec*, float, float)	99.692	312	0x78	0x88	-0x10	24
+mario/Player/MarioMove	TMario::playerControl(JDrama::TGraphics*)	99.973	1196	0xe0	0xe0	0x0	8
+mario/Player/MarioPhysics	TMario::hangonCheck(const TBGCheckData*, const Vec&, const Vec&)	99.887	496	0x60	0x60	0x0	14
+mario/Player/MarioPhysics	TMario::jumpProcess(int)	99.978	364	0x48	0x48	0x0	2
+mario/Player/MarioRun	TMario::getSlideStickMult()	99.881	168	0x48	0x28	0x20	5
+mario/Player/MarioRun	TMario::slideProcess(float, float)	99.967	968	0x88	0x88	0x0	8
+mario/Player/MarioRun	TMario::slopeProcess()	99.957	372	0x90	0x90	0x0	4
+mario/Player/MarioRun	TMario::walkEnd()	99.986	584	0x20	0x20	0x0	2
+mario/Player/MarioRun	TMario::moveMain()	99.983	2588	0x60	0x50	0x10	11
+mario/Player/MarioSpecial	TMario::getOnWirePosAngle(JGeometry::TVec3<float>*, short*)	99.516	488	0x148	0x150	-0x8	59
+mario/Player/MarioSpecial	TMario::wireMove(float)	99.692	312	0x68	0x58	0x10	24
+mario/Player/MarioSpecial	TMario::wireWait()	99.797	1104	0x158	0x148	0x10	56
+mario/Player/MarioSpecial	TMario::wireHanging()	99.853	1524	0x198	0x190	0x8	56
+mario/Player/Tongue	TYoshiTongue::emit(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&)	99.733	404	0x60	0x58	0x8	27
+mario/Player/Tongue	TYoshiTongue::findTarget(bool, bool)	99.736	788	0xe0	0xc0	0x20	52
+mario/Player/WaterGun	TWaterGun::perform(unsigned long, JDrama::TGraphics*)	99.940	332	0xb0	0x58	0x58	5
+mario/Player/Yoshi	TYoshi::init(TMario*)	99.966	2724	0x290	0x270	0x20	23
+mario/Player/Yoshi	TYoshi::appearFromEgg(const JGeometry::TVec3<float>&, float, TEggYoshi*)	99.867	392	0x50	0x48	0x8	13
+mario/Player/Yoshi	TYoshi::doSearch()	99.741	1376	0x158	0x110	0x48	89
+mario/Player/Yoshi	TYoshi::entry()	99.945	800	0x148	0x158	-0x10	11
+mario/Player/ModelWaterManager	TModelWaterManager::drawSilhouette(float(*)[4])	99.865	1004	0xb0	0x90	0x20	34
+mario/Player/ModelWaterManager	TModelWaterManager::drawRefracAndSpec() const	99.956	1360	0xc8	0xc8	0x0	15
+mario/Player/MarioReceiveMsg	TMario::receiveMessage(THitActor*, unsigned long)	99.984	8900	0x220	0x1a8	0x78	35
+mario/System/EventWatcher	evGetTalkMode(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.763	152	0x38	0x40	-0x8	9
+mario/System/EventWatcher	evGetTalkSelectedValue(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.897	156	0x38	0x38	0x0	4
+mario/System/EventWatcher	evIsOnLiveActorFlag(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.844	616	0xb0	0xb0	0x0	24
+mario/System/EventWatcher	evSetAttentionTime(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.804	184	0x70	0x58	0x18	9
+mario/System/EventWatcher	evSetPollutionIncreaseCount(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.804	184	0x70	0x58	0x18	9
+mario/System/EventWatcher	evGetRestTime(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.800	220	0x30	0x38	-0x8	11
+mario/System/EventWatcher	evInsertTimer(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.872	564	0xa0	0xa0	0x0	18
+mario/System/EventWatcher	evIsInsideCube(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.825	388	0x60	0x60	0x0	17
+mario/System/EventWatcher	evStartSE(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.876	356	0x50	0x50	0x0	11
+mario/System/EventWatcher	evStartEventSE(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.888	392	0x58	0x58	0x0	11
+mario/System/EventWatcher	evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.967	488	0xa0	0xa0	0x0	4
+mario/System/EventWatcher	evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.794	564	0xb0	0xb0	0x0	29
+mario/System/EventWatcher	evInvalidatePad(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.951	324	0x68	0x68	0x0	4
+mario/System/EventWatcher	evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.957	368	0x68	0x68	0x0	4
+mario/System/EventWatcher	evStartMontemanBGM(TSpcTypedInterp<TEventWatcher>*, unsigned long)	99.923	208	0x28	0x28	0x0	4
+mario/System/GCLogoDir	TGCLogoDir::direct()	99.787	356	0x78	0x48	0x30	19
+mario/System/MarDirectorDirect	decideNextStage()	99.649	228	0x50	0x48	0x8	20
+mario/System/MarDirectorDirect	TMarDirector::currentStateFinalize(unsigned char)	99.950	720	0x120	0x90	0x90	9
+mario/System/MarDirectorEvent	TMarDirector::findNearestTalkNPC()	99.958	192	0x58	0x50	0x8	2
+mario/System/MarDirectorEvent	TMarDirector::setNextStage(unsigned short, JDrama::TActor*)	99.660	400	0x50	0x40	0x10	34
+mario/System/MarNameRefGen	TMarNameRefGen::getNameRef(const char*) const	99.998	7452	0x178	0x178	0x0	4
+mario/System/MenuDir	TMenuDirector::setup(JDrama::TDisplay*, TMarioGamePad*)	99.787	300	0x58	0x40	0x18	16
+mario/System/MenuDir	TMenuDirector::rsetup()	99.770	2316	0x2f0	0x298	0x58	133
+mario/System/MenuDir	TMenuDirector::direct()	99.963	2296	0x128	0x78	0xb0	21
+mario/System/MenuDir	TMenuDirector::setFixedStageValue()	99.926	1080	0x58	0x38	0x20	20
+mario/System/PerformList	TPerformList::perform(unsigned long, JDrama::TGraphics*)	99.333	216	0xe8	0xc0	0x28	36
+mario/System/Application	TApplication::TApplication()	99.635	208	0x40	0x30	0x10	19
+mario/System/Application	TApplication::setupThreadFuncLogo()	99.960	804	0x140	0x140	0x0	8
+mario/System/Application	TApplication::checkAdditionalMovie()	99.926	484	0x58	0x20	0x38	9
+mario/System/Application	TApplication::proc()	99.982	1104	0xc8	0x78	0x50	5
+mario/System/DrawSyncManager	TDrawSyncManager::setCallback(unsigned long, unsigned short, unsigned short, TDrawSyncCallback*)	99.615	52	0x30	0x30	0x0	5
+mario/System/CardManager	TCardManager::copyTo(TCardManager::TCriteria*, TCardBookmarkInfo*)	99.796	412	0x98	0xa0	-0x8	21
+mario/System/CardManager	TCardManager::writeBlock_(unsigned long)	99.926	544	0x70	0x58	0x18	10
+mario/System/MovieDirector	TMovieDirector::setup(JDrama::TDisplay*, TMarioGamePad*)	99.792	308	0x58	0x40	0x18	16
+mario/System/MSoundMainSide	MSMainProc::getMonteVillageActorArea(const Vec&)	99.907	172	0x30	0x30	0x0	4
+mario/System/MSoundMainSide	MSMainProc::setMSoundEnterStage(unsigned char, unsigned char)	99.992	2512	0x88	0x40	0x48	5
+mario/System/MSoundMainSide	MSStage::init(unsigned char, unsigned char)	99.952	924	0x80	0x28	0x58	11
+mario/JSystem/JAudio/JALibrary/JALModSe	JALSystem::append(JALSystem::ModType, const char*, unsigned long, float, float, float, float, float, JALCalc::CurveSign, float, float, unsigned char)	99.849	1484	0x130	0xc8	0x68	56
+mario/JSystem/JAudio/JASystem/JASChannel	JASystem::Driver::__UpdateJcToDSP(JASystem::TChannel*)	99.890	328	0x30	0x20	0x10	9
+mario/JSystem/JAudio/JASystem/JASChannel	JASystem::Driver::__UpdateJcToDSPInit(JASystem::TChannel*)	99.864	264	0x30	0x20	0x10	9
+mario/JSystem/JAudio/JASystem/JASChannel	JASystem::Driver::updatecallDSPChannel(JASystem::TDSPChannel*, unsigned long)	99.979	932	0x48	0x30	0x18	5
+mario/JSystem/JAudio/JASystem/JASTrack	JASystem::TTrack::writeRegDirect(unsigned char, unsigned short)	99.784	204	0x28	0x20	0x8	11
+mario/JSystem/JParticle/JPAEmitter	JPABaseEmitter::JPABaseEmitter()	99.929	280	0x28	0x20	0x8	5
+mario/JSystem/JParticle/JPAEmitter	JPABaseEmitter::deleteAllParticle()	99.792	212	0x40	0x48	-0x8	11
+mario/JSystem/JParticle/JPAEmitter	JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock*)	99.810	968	0x58	0x50	0x8	46
+mario/JSystem/JParticle/JPAEmitter	JPABaseEmitter::calcCreateParticle()	99.990	784	0x58	0x58	0x0	2
+mario/JSystem/JParticle/JPAEmitter	JPABaseEmitter::calcKeyFrameAnime()	99.845	464	0x88	0x98	-0x10	18
+mario/JSystem/JParticle/JPAField	JPABaseField::loadFieldBlock(JPADataBlock*)	99.927	604	0x50	0x48	0x8	11
+mario/JSystem/JParticle/JPADrawVisitor	JPADrawExecRotBillBoard::exec(const JPADrawContext*, JPABaseParticle*)	99.830	540	0x80	0x80	0x0	23
+mario/JSystem/JParticle/JPADrawVisitor	JPADrawExecRotYBillBoard::exec(const JPADrawContext*, JPABaseParticle*)	99.792	616	0x90	0x90	0x0	32
+mario/JSystem/JParticle/JPADrawVisitor	dirTypePrevPtcl(JPABaseParticle*, JPABaseEmitter*, JGeometry::TVec3<float>&)	99.738	168	0x68	0x58	0x10	11
+mario/JSystem/JParticle/JPADrawVisitor	JPADrawExecLine::exec(const JPADrawContext*, JPABaseParticle*)	99.634	448	0x78	0x70	0x8	41
+mario/JSystem/JParticle/JPADrawVisitor	JPADrawCalcScaleXBySpeed::calc(const JPADrawContext*, JPABaseParticle*)	99.921	304	0x78	0x78	0x0	6
+mario/JSystem/JParticle/JPADrawVisitor	JPADrawCalcScaleYBySpeed::calc(const JPADrawContext*, JPABaseParticle*)	99.921	304	0x78	0x78	0x0	6
+mario/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Single_precision/exponentialsf	powf	99.987	1856	0x90	0x90	0x0	6
