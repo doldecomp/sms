@@ -2511,9 +2511,15 @@ void TMario::checkWet()
 	MarioMoveWaterManager()->emitRequest(*unk158);
 }
 
+// TODO: the frame is 0x10 short; updateUnk1C88's inline takes
+// &mNozzleList[0]->...mAmountMax before calling getCurrentNozzle (a
+// WaterGun.hpp shape), and retail reuses the sin index for JMASCos.
 void TMario::gunExec()
 {
-	if (!onYoshi())
+	bool yoshi = false;
+	if (onYoshi())
+		yoshi = true;
+	if (!yoshi)
 		gpModelWaterManager->unk5D5F = 0;
 
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD) && !onYoshi())
@@ -2536,7 +2542,7 @@ void TMario::gunExec()
 			mWaterGun->emit();
 			mWaterGun->resetWaterToFull();
 		}
-	} else if (unk390 == 0) {
+	} else if (mUpperState == 0) {
 		mWaterGun->emit();
 	}
 
