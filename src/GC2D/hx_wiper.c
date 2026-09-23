@@ -686,18 +686,15 @@ static void Hx_Circle(void)
 }
 
 /// The black field outside the iris, drawn as a stack of horizontal lines.
-// TODO: partial. Retail converts each scanline's y twice (two Vec-like points
-// per line) and the far edge per block, with no guard around sqrtf; the
-// remaining gap is ~7 extra instructions per 8-vertex block, the dx
-// adds/subtracts that retail reuses, and a 0x28-byte frame deficit.
+// TODO: frame only (0x150 vs 0x168). Retail's named block is 0x18 larger,
+// with the sqrtf slot at 0xa4 unchanged; p[4] or a spare Vec[2] fits it, but
+// neither is used, and a real bottom-row array costs +0x28.
 static void Hxs1_Circle(f32 r)
 {
 	u32 y;
 	f32 rr;
-	Vec top1;
-	Vec top2;
-	Vec bot1;
-	Vec bot2;
+	Vec p[2];
+	Vec d;
 
 	Hx_CameraInit();
 	Hx_GxInit(0, 1);
@@ -706,41 +703,51 @@ static void Hxs1_Circle(f32 r)
 	for (y = 0; y <= hx.centerY; y++) {
 		f32 dy = hx.centerY - y;
 
-		top1.y = y;
-		top2.y = y;
+		p[0].z = 1.0f;
+		p[1].z = 1.0f;
+		p[0].y = y;
+		p[1].y = y;
 
 		if ((f32)(hx.centerY - y) >= r) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
-			bot1.y = hx.height - y;
-			bot2.y = hx.height - y;
-			GXPosition3f32(0.0f, top1.y, 1.0f);
+			p[0].x = 0.0f;
+			p[1].x = hx.width;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.width, top2.y, 1.0f);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(0.0f, bot1.y, 1.0f);
+			p[0].y = hx.height - y;
+			p[1].y = hx.height - y;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.width, bot2.y, 1.0f);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
 			GXColor1u32(0xFF);
 		} else {
-			f32 dx = sqrtf(rr - (dy * dy));
+			d.x = sqrtf(rr - (dy * dy));
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
-			bot1.y = hx.height - y;
-			bot2.y = hx.height - y;
-			GXPosition3f32(0.0f, top1.y, 1.0f);
+			p[0].x = 0.0f;
+			p[1].x = hx.centerX - d.x;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.centerX - dx, top2.y, 1.0f);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.centerX + dx, top1.y, 1.0f);
+			p[0].x = hx.centerX + d.x;
+			p[1].x = hx.width;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.width, top2.y, 1.0f);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.centerX + dx, bot1.y, 1.0f);
+			p[0].y = hx.height - y;
+			p[1].y = hx.height - y;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.width, bot2.y, 1.0f);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(0.0f, bot1.y, 1.0f);
+			p[0].x = 0.0f;
+			p[1].x = hx.centerX - d.x;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.centerX - dx, bot2.y, 1.0f);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
 			GXColor1u32(0xFF);
 		}
 	}
