@@ -692,6 +692,9 @@ static void Hx_Circle(void)
 // with the sqrtf slot at 0xa4 unchanged; p[4] or a spare Vec[2] fits it, but
 // neither is used, and a real bottom-row array costs +0x28.
 // An inline read of hx.centerY in a compare adds 8 (the Hx_Door lever), not 0x18.
+// Note retail's sqrtf slot is 0xa4 with 0x28 above it and 0x9c below; ours is
+// at 0x68 (0x4c above, 0x60 below). Vec d[2] gives +0x10, and with the
+// compare accessor still +0x10.
 static void Hxs1_Circle(f32 r)
 {
 	u32 y;
@@ -757,8 +760,11 @@ static void Hxs1_Circle(f32 r)
 }
 
 /// One translucent ring of the iris.
-// TODO: GPR colouring (retail: colour r28, y r25) and the sqrtf slots
-// (retail 0xb0/0xac, adjacent) differ; instructions are otherwise exact.
+// TODO: GPR colouring (retail: colour r28, &centerX r27, &centerY r26) and
+// the sqrtf slots (retail 0xb0/0xac, adjacent) differ; instructions are
+// otherwise exact. Passing alpha straight to GXColor1u32 gets r28 but sinks
+// the clrlwi past the loop setup; color as s32/int/u8, or declared or
+// assigned elsewhere, is inert.
 static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out)
 {
 	u32 color;
@@ -956,7 +962,13 @@ static void Hx_Door(void)
    behind a white panel. */
 
 // TODO: every instruction matches; the frame is 0x18 short (0x170 vs
-// 0x188) with the texcoords in a Vec[4]. Where st is declared is inert.
+// 0x188) with the texcoords in a Vec[4]. Retail's fadeColor sits in the named
+// block (0xac, between st at 0xb0 and axis at 0xa0), not low: declaring
+// `GXColor fadeColor = {0}` at function scope in the order obj, st, fadeColor,
+// axis, rotMtx gives the 0x188 frame and retail's slot order (named -4, low
+// -0xc) but hoists the initialiser to the top; C89 forbids declaring it at
+// its use, a nested block sends it low, and a static const source changes
+// the pool and the sqrtf colouring.
 static void Hxs_GameOver(u8 fade_alpha, f32 scale, f32 rotation)
 {
 	GXTexObj obj;
