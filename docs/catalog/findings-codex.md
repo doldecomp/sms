@@ -33,3 +33,6 @@ Record binary-backed findings from Codex unit work here before promoting reusabl
 - `MoveBG/MapObjMare`: The 0x174/0x170 store difference in `TMuddyBoat::bind` is instruction alignment within the third `touchWall` expansion; both builds write `mEffectPos.x/y/z`.
 - `Enemy/limitkoopa`: `setUpHitActors` reads the same fields in both builds; the 0xc/0x2c difference is load order. Its five open functions all have deep-search TODOs.
 - `GC2D/SelectShine2`: The swapped f30/f31 constants in `perform` accompany a different but equivalent up-vector construction and angle arithmetic. No edit.
+- `MoveBG/MapObjInit`: `TMapObjBase::initMActor` is the unit's only sub-95% function; its unresolved `param_2` use and inert probes are already documented. No edit.
+- `MSound/MSound`: Three constructor declaration/size variants were inert or worse than 86.9%; the remaining functions have known-open TODOs. No edit.
+- `Enemy/hamukuri`: All nine open functions are 99.67–99.98% fuzzy. Three previously unexplored functions differ only by a known `operator-` temporary stack-slot class; the other six have deep-search TODOs. No edit.
