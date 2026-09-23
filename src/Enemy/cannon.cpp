@@ -756,6 +756,10 @@ void TCannon::updateAttachPos()
 	}
 }
 
+// TODO: 98.2%. Frame 0x268 vs 0x2c0 (the named block sits 0x50-0x68 lower
+// throughout, so something retail declares or expands is missing), and both
+// translation(0, -60, 150) sites load -60 before storing x (ctor, TVec3 and
+// split identity33/setTrans spellings measured, none better).
 void TCannon::killerShoot()
 {
 	if (mAimAtMario) {
@@ -796,9 +800,9 @@ void TCannon::killerShoot()
 		JGeometry::TVec3<f32> diff = target - mPosition;
 		f32 dist                   = MsVECMag2((Vec*)&diff);
 
+		f32 flyTime = abs(dist / (vel.x * mVelocityRate));
 		killer->unk1A5 = 0;
 		TMsRange<int> irange(0, 100);
-		f32 flyTime = abs(dist / (vel.x * mVelocityRate));
 		f32 rate    = mVelocityRate;
 		if (irange.rand() % 5 == 0) {
 			killer->unk1A5 = 1;
@@ -848,7 +852,6 @@ void TCannon::killerShoot()
 			return;
 
 		igaiga->reset();
-		mShootMtx = mDoms[mDomIdx]->getMActor()->getModel()->getBaseTRMtx();
 		mShootMtx = mDoms[mDomIdx]->getMActor()->getModel()->getAnmMtx(1);
 		TPosition3f mtx;
 		mtx.translation(0.0f, -60.0f, 150.0f);
