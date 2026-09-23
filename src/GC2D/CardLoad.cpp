@@ -240,7 +240,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		unk32C[i] = (J2DPicture*)unk28->search('cra1' + i * 0x100);
 
 		unk32C[i]->insert(pJVar5, unk32C[i]->mTextureNum, 0.0f);
-		unk28->search('cra2' + i)->hide();
+		unk28->search('cra2' + i * 0x100)->hide();
 	}
 
 	unk2B0 = unk2A4[0]->getPane()->getBounds();
