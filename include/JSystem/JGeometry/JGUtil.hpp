@@ -36,7 +36,8 @@ template <> struct TUtil<f32> {
 	{
 		if (fabsf(modulus) > fabsf(value))
 			return value;
-		return value - modulus * (f32)(s64)(u64)(value / modulus);
+		u64 quotient = (u64)(value / modulus);
+		return value - modulus * (f32)(s64)quotient;
 	}
 
 	// from SMG
