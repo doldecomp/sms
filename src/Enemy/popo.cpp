@@ -755,10 +755,9 @@ void TPopo::kill()
 
 void TPopo::forceKill()
 {
-	const TBGCheckData* ground = mGroundPlane;
-	if ((!ground->isIllegalData()
-	     && (ground->isDeathPlane() || ground->isPool()
-	         || ground->isWaterSurface())
+	if ((!mGroundPlane->isIllegalData()
+	     && (mGroundPlane->isDeathPlane() || mGroundPlane->isPool()
+	         || mGroundPlane->isWaterSurface())
 	     && !isAirborne() && !checkLiveFlag(LIVE_FLAG_UNK10))
 	    || !gpMap->isInArea(mPosition.x, mPosition.z)) {
 		if (mSpine->getCurrentNerve() == &TNervePopoExplosion::theNerve())
