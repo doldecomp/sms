@@ -4353,6 +4353,16 @@ bool TGCConsole2::processDisappearBalloon()
 	return isFinished;
 }
 
+// Parked here for a J2DPicture member inline (load a texture slot if the
+// picture has one); the `idx < mTextureNum` test is retail's `ble`.
+static inline void loadPictureTexture(J2DPicture* p, GXTexMapID id, u8 idx)
+{
+	if (idx < p->mTextureNum)
+		p->mTextures[idx]->load(id);
+}
+
+// TODO: instructions match; frame 0x108 against retail's 0x128 (a uniform
+// 0x20 shift of the low inline-temporary region).
 void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 {
 	if (unk50)
@@ -4385,10 +4395,8 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 
-	if (unk32C->mTextureNum > 0)
-		unk32C->mTextures[0]->load(GX_TEXMAP0);
-	if (unk328->mTextureNum > 0)
-		unk328->mTextures[0]->load(GX_TEXMAP1);
+	loadPictureTexture(unk32C, GX_TEXMAP0, 0);
+	loadPictureTexture(unk328, GX_TEXMAP1, 0);
 
 	u8 selected = 0x17;
 	for (u8 i = 0x16; (u8)i != 0; --i) {
@@ -4401,7 +4409,7 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 
 	f32 translateY;
 	if (selected < 0x17)
-		translateY = 1.0f - (f32)unk334[selected]->mBounds.y1 * 0.015625f;
+		translateY = 1.0f - (f32)unk334[selected]->mBounds.y1 / 64.0f;
 	else
 		translateY = 1.0f;
 
