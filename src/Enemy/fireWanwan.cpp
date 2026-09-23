@@ -1362,7 +1362,8 @@ void TFireWanwan::updateRumble()
 		mApproachRumbleTimer = 0;
 	}
 
-	if (unk194->isTaken()) {
+	bool taken = unk194->isTaken();
+	if (taken) {
 		if (!isOverHungTailRumble()) {
 			SMSRumbleMgr->start(9, (f32*)nullptr);
 			mHungTailRumbleTimer += 1;
