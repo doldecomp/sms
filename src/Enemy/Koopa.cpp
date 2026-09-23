@@ -1176,6 +1176,8 @@ BOOL TKoopa::isTumbling() const
 
 // TODO: frame 0x28 short in the low (inline temporary) region, and 0x3c
 // short where TKoopa::init inlines this; every instruction else matches.
+// Default-constructed vectors filled by set(), a reversed dot and a
+// one-argument sub are inert or worse.
 f32 TKoopa::getTargetDir(const JGeometry::TVec3<f32>& target) const
 {
 	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
@@ -1236,6 +1238,8 @@ void TKoopa::fall()
 	mSpine->setNext(&TNerveKoopaFall::theNerve());
 }
 
+// TODO: 99.5%. Frame 0x18 short and the set()'s y/z loads swap f1/f2; a
+// TVec3 temporary, direct stores, `= mPosition` and getAnmIndex() are inert.
 void TKoopa::updateAnmSound()
 {
 	if (getMActor()->getCurAnmIdx(ANM_TYPE_BCK) == KOOPA_ANM_HIPDROP) {
