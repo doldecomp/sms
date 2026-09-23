@@ -221,6 +221,10 @@ void TTalk2D2::load(JSUMemoryInputStream& stream)
 	mBoardCursorOn  = mBoardScreen->search('cs_1');
 }
 
+// TODO: every instruction matches; the frame is 0x18 short (0x1d0 vs 0x1e8).
+// Retail's named arrays sit 0x14 higher and the conversion slots 0x18 higher,
+// so 0x14 is missing in the low temporaries and 4 above the name table.
+// Inert: x/y, t, dx/dy, i or select at function scope, a named bounds ref.
 void TTalk2D2::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
@@ -233,11 +237,11 @@ void TTalk2D2::loadAfter()
 	JUTPoint end(mBezierEnd[1]->getBounds().x2 - 10,
 	             mBezierEnd[1]->getBounds().y1);
 
+	f32 length = 0.0f;
 	f32 f3f4x;
 	f32 f3f4y;
 	makeLine(&f3f4x, &f3f4y, 0.0f, start, ctrl, end);
 
-	f32 length = 0.0f;
 	for (f32 t = 0.01f; t <= 1.0f; t += 0.01f) {
 		f32 x;
 		f32 y;
@@ -261,7 +265,7 @@ void TTalk2D2::loadAfter()
 		                             gpSystemFont->getResFont(), "あ",
 		                             HBIND_LEFT, VBIND_CENTER);
 		mCharBox[i]->setFontSize(20, 24);
-		mCharBox[i]->setBlackWhite(0xffffffff, 0xffffff00);
+		mCharBox[i]->setBlackWhite(0xffffff00, 0xffffffff);
 		mCharBox[i]->hide();
 	}
 
