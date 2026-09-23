@@ -1210,7 +1210,7 @@ void JPADrawExecStripe::exec(const JPADrawContext* dc)
 		else
 			f29_f30_f31.normalize();
 
-		params->unk0.cross(local_BC, f29_f30_f31);
+		params->unk0.cross2(local_BC, f29_f30_f31);
 		params->unk0.normalize();
 
 		mtx.setXYZDir(f29_f30_f31, local_BC, params->unk0);
@@ -1290,7 +1290,7 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		else
 			f29_f30_f31.normalize();
 
-		params->unk0.cross(local_BC, f29_f30_f31);
+		params->unk0.cross2(local_BC, f29_f30_f31);
 		params->unk0.normalize();
 
 		mtx.setXYZDir(f29_f30_f31, local_BC, params->unk0);
@@ -1339,7 +1339,7 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		else
 			f29_f30_f31.normalize();
 
-		params->unk0.cross(local_BC, f29_f30_f31);
+		params->unk0.cross2(local_BC, f29_f30_f31);
 		params->unk0.normalize();
 
 		mtx.setXYZDir(f29_f30_f31, local_BC, params->unk0);
