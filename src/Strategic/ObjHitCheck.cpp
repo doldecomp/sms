@@ -178,6 +178,9 @@ void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 	}
 }
 
+// TODO: frame and instructions match; retail places the four iterator
+// temporaries 4 bytes lower (0x64 vs 0x68). Moving `e`, splitting `i`,
+// naming `*it` and re-spelling begin()/end() were inert or worse.
 void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 {
 	JGadget::TList_pointer<THitActor*>& children = group->getChildren();
@@ -190,7 +193,7 @@ void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 			continue;
 
 		u32 e;
-		u32 i = getTableIndex((*it)->mPosition, (*it)->getEntryRadius(), &e);
+		u32 i = getTableIndex((*it)->getPosition(), (*it)->getEntryRadius(), &e);
 
 		while (i != e) {
 			entryActor(*it, &unk0[i]);
