@@ -461,11 +461,17 @@ bool TBaseNPC::isNowCanTaken() const
 	return result;
 }
 
-// TODO: 99.3%. Remaining: 0x48 frame, canTalk's extra li r3, 1 (else-assign,
-// `if (!cube) canTalk = false`, hoisted decl all worse), isNerveCanGoToSink
-// ranking and the sunflower result's `mr r27, r30` (merged early returns,
-// `if (!sink) return` inert). Cube-as-gate and sink-path unk1C4 Y
-// are in; bVar5 declared at the top (before bVar4) fixes the r29/r30
+static inline bool isInSameCameraCubeAtHead(const JGeometry::TVec3<f32>& pos)
+{
+	JGeometry::TVec3<f32> head = pos;
+	head.y += 75.0f;
+	return SMS_IsInSameCameraCube(head);
+}
+
+// TODO: 99.6%. Remaining: 0x48 frame, isNerveCanGoToSink ranking and the
+// sunflower result's `mr r27, r30` (merged early returns, `if (!sink) return`
+// inert). The camera-cube test is an `||` gate (a canTalk flag costs an extra
+// `li r3, 1`); bVar5 declared at the top (before bVar4) fixes the r29/r30
 // ranking of the two flags.
 void TBaseNPC::changeNerveProc_()
 {
@@ -492,14 +498,8 @@ void TBaseNPC::changeNerveProc_()
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
-				bool canTalk = true;
-				if (gpMarDirector->mMap == 7) {
-					JGeometry::TVec3<f32> local_58 = mPosition;
-					local_58.y += 75.0f;
-					canTalk = SMS_IsInSameCameraCube(local_58);
-				}
-
-				if (canTalk) {
+				if (gpMarDirector->mMap != 7
+				    || isInSameCameraCubeAtHead(mPosition)) {
 					f32 fVar1;
 					f32 fVar2;
 					if (mThrowCtrl != nullptr) {
