@@ -489,12 +489,13 @@ void Hx_StartWipe(int wipe_no, int param)
 		hx.resourceSize = sizeof(hx_buffer);
 	}
 
-	// TODO: the ROM's `beq body; b skip` here is still unfused where ours
-	// fuses to `bne skip`; the `(int)` cast is what buys retail's signed
-	// compare on this u8 (Hx_RemoveResource's plain `hx.state == 2` is
-	// cmplwi and byte-exact).
-	if ((int)hx.state == 2)
+	// A one-case switch: its signed compare and unfused `beq body; b skip`
+	// are what retail has (a plain `if` gives cmplwi and fuses to `bne`).
+	switch (hx.state) {
+	case 2:
 		Hx_Warning(1);
+		break;
+	}
 
 	hx.state  = 1;
 	hx.wipeNo = wipe_no;
