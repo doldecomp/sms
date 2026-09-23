@@ -260,6 +260,9 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
+// TODO: frame 0xe8 against retail 0x138. Every named slot now sits exactly
+// (up is declared before offset and never materialised), but retail's low
+// region is 0xd0 of dead inline temporaries against our 0x7c.
 void TBGBeakHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -283,11 +286,10 @@ void TBGBeakHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			else
 				us2mario.set(0.0f, 0.0f, 1.0f);
 
+			JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 			JGeometry::TVec3<f32> offset = us2mario;
 			JGeometry::TVec3<f32> perp;
-			// TODO: cross is incorrect?
-			JGeometry::TVec3<f32> up(0.0f, 1.0f, 1.0f);
-			perp.cross(offset, up);
+			perp.cross(up, us2mario);
 			if (!perp.isZero())
 				VECNormalize(&perp, &perp);
 			else
