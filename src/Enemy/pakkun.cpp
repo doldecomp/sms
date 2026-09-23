@@ -89,7 +89,10 @@ static int PakkunRootCallback2(J3DNode* node, int param);
 // TODO: 8 bytes of frame short, and the 0.0f/1.0f the matrix is filled with
 // are hoisted above the sine table lookups instead of loaded at their first
 // use. MsSin/MsCos, swapping the sine and cosine locals and naming the model
-// all leave it unchanged.
+// all leave it unchanged. So do the sibling spellings: tobiPuku/hauntLeg's
+// `MsMtxSetRotZ(spinMtx, angle)` (frame 0x90, same hoist; tobiPuku carries
+// the identical hoist TODO) and hanasambo's shared `s16 angle` with
+// JMASSin/JMASCos (0x90). Retail's Mtx is at 0x5c, ours 0x4c.
 static int PakkunSeedCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
@@ -861,6 +864,19 @@ void TPakkunSeed::forceKill()
 // caller, not the chain. With the initialiser, this site is 100% and
 // TPakkun::load spelled `setGoalPath(mario)` directly is 99.7% (node slot
 // 4 low); the ~20 other TPathNode(THitActor*) sites in 14 units still regress.
+// Re-measured 2026-09-23 (c-pakkun): the ctor that gives retail's shape is
+// `TPathNode(THitActor* actor) : unk0(actor), unk4(0.0f, 0.0f, 0.0f)`: the
+// zero set sits one level below the actor-position set (through TVec3's
+// (T, T, T) constructor), so here it is a `bl` at depth 4 while the position
+// set at depth 3 expands, exactly as retail. `unk4.set(0, 0, 0)` in the body
+// plus TStayPakkun::load delegating to TPakkun::load `bl`s both sets (52%).
+// With the initialiser, TPakkun::load needs the node built in its own body
+// (`setGoalPath(mario)`, 99.7%, node 4 bytes low whatever the spelling), and
+// changes_all loses TGesso::behaveToFindMario, TNerveHaneHamuKuriUpWait,
+// TNervePakkunShoot, TNerveWalkerTraceMario, TNerveBombHeiAttack,
+// TNervePopoWait and ~15 more; BeeHive's three nerves gain ~5 points. So the
+// 4-byte low slot setGoalPathMario gives those callers and the zero set's
+// depth conflict under one ctor; a header-round question, not this unit's.
 void TStayPakkun::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
