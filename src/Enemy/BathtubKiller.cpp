@@ -903,7 +903,9 @@ DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor)
 // TODO: 87.0%, frame 0x58 vs 0x48: retail keeps moveStraight's dir at 0x1c
 // below makeQuat's axis copy and schedules the inlined TQuat4::getZDir with
 // the 1.0f load first. Inert: makeQuat called directly, mVelocity.scale(s, dir),
-// `mVelocity = dir`, and moveStraight written out in the nerve.
+// `mVelocity = dir`, and moveStraight written out in the nerve; also
+// dir.set(x, 0, z) (84.9%), getZDir straight into mVelocity (80.3%), and a
+// TU-local helper level around the nerve's moveStraight call (68.8%).
 DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor)
 {
 	TBathtubKiller* killer = (TBathtubKiller*)spine->getBody();
