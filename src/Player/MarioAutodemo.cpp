@@ -385,8 +385,9 @@ BOOL TMario::toroccoStart()
 
 BOOL TMario::warpOut()
 {
-	// Missing stack space
-	// volatile u32 padding[4];
+	// TODO: instruction-exact, frame 0x28 vs retail 0x38 (both conversion
+	// buffers 0x10 higher). Named warpOutEffect args, a named jumpProcess
+	// result and a named mStatusArg are inert.
 
 	mStatusTimer += 1;
 	onUnk114(UNK114_FLAG_VISIBLE);

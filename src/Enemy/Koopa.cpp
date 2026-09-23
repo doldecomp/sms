@@ -186,6 +186,9 @@ BOOL TNerveKoopaWait::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
+// TODO: instruction-exact, frame 0x68 vs retail 0x78. KoopaGetBody(spine)
+// lands the frame but keeps a second copy of koopa (stmw r27); a named
+// speed, .value, and a nested anm-end test are inert.
 BOOL TNerveKoopaTumble::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
