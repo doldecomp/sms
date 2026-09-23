@@ -204,9 +204,11 @@ TSamboLeaf::TSamboLeaf(TSamboFlowerManager* manager, SDLModelData* data,
 	mModel    = new SDLModel(data, 3, 1);
 }
 
-// TODO: 95.5%, frame size right. Our named block sits 4 low (ground at 0xa0
+// TODO: 96.5%, frame size right. Our named block sits 4 low (ground at 0xa0
 // against 0x9c) with 4 less below it, and the 1.0f/0.0f roll literals are
 // hoisted above the sine lookups where retail loads them at their stores.
+// Inert or worse: dropping either MtxPtr alias, declaring roll before the
+// sine lookups, cos before sin, a named groundY.
 void TSamboLeaf::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!mIsActive)
@@ -225,8 +227,8 @@ void TSamboLeaf::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & 2) {
 		Mtx base;
 		MtxPtr mtx = base;
-		MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, 0,
-		               (s16)DEG2SHORTANGLE(mRotation.y), 0);
+		MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, 0.0f,
+		               mRotation.y, 0.0f);
 		s16 angle = DEG2SHORTANGLE(-MsGetRotFromZaxis(mVelocity).x);
 		f32 s     = JMASSin(angle);
 		f32 c     = JMASCos(angle);
