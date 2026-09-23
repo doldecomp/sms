@@ -236,11 +236,13 @@ public:
 		// TODO: the const receiver is load-bearing: plain getCurrentNozzle()
 		// buys ~0.7 in TNozzleTrigger/TNozzleDeform::emit but costs
 		// TMario::gunExec (MarioMove) 2.0, so the real shape is still open.
-		s16 decRate = (((const TWaterGun*)this)->getCurrentNozzle())
-		                  ->mEmitParams.mDecRate.get();
-
+		// The decrement rate is read inside the one expression (no named
+		// local): gunExec needs it, and the emit functions are unchanged.
 		unk1C88 += 10.0f
-		           * ((f32)emittedWater * (f32)decRate
+		           * ((f32)emittedWater
+		              * (f32)((const TWaterGun*)this)
+		                    ->getCurrentNozzle()
+		                    ->mEmitParams.mDecRate.get()
 		              / mNozzleList[0]->mEmitParams.mAmountMax.get());
 	}
 
