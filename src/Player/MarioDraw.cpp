@@ -2068,8 +2068,7 @@ void TMario::addUpper()
 	}
 }
 
-// UNUSED (0x90 -- removeCallBack). Dead: `calcAnim` carries the same block
-// written out.
+// UNUSED (0x90 -- removeCallBack); `calcAnim` inlines it.
 void TMario::removeCallBack()
 {
 	gpMarioForCallBack      = nullptr;
@@ -2082,6 +2081,9 @@ void TMario::removeCallBack()
 	modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
 }
 
+// TODO: 99.4%. Retail's frame is 0x28 larger, and both Yoshi
+// setMotionBlendRatioForBck sites test mAnmBck in r0 and reload it for the
+// call; ours caches it (raw mAnmBck / getAnmBck() spellings are worse).
 void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 {
 	addCallBack(graphics);
@@ -2091,15 +2093,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	considerWaist();
 	MTXCopy(baseMtx, getM3UModel()->unk8->getBaseTRMtx());
 	getM3UModel()->perform(param_1, graphics);
-	gpMarioForCallBack = nullptr;
-
-	J3DModelData* modelData = getM3UModel()->unk8->getModelData();
-	modelData->getJointNodePointer(mJointIdHead)->setCallBack(nullptr);
-	modelData->getJointNodePointer(mJointIdChnChest)->setCallBack(nullptr);
-	modelData->getJointNodePointer(mJointIdChnFootR)->setCallBack(nullptr);
-	modelData->getJointNodePointer(mJointIdFootR)->setCallBack(nullptr);
-	modelData->getJointNodePointer(mJointIdChnFootL)->setCallBack(nullptr);
-	modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
+	removeCallBack();
 
 	if (mHandModels[0][0] != nullptr) {
 		mHandModels[0][0]->setBaseTRMtx(getM3UModel()->unk8->getAnmMtx(mJointIdHandR));
