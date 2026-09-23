@@ -527,7 +527,8 @@ void CPolarSubCamera::doLButtonCameraOn_()
 // `MSound* sound = SMSGetMSound();`. Three more are missing; the call site
 // that tests only isLButtonCameraSpecifyMode sits at depth 1, so a missing
 // execLButtonCameraOffProc_-style level above the other two sites alone
-// cannot explain it.
+// cannot explain it. Writing isThing2() out in place (as a guard or a named
+// bool, with the named sound) is +0 and still inlines.
 #pragma dont_inline on
 void CPolarSubCamera::doLButtonCameraOff_(bool param_1)
 {
