@@ -23,3 +23,13 @@ Record binary-backed findings from Codex unit work here before promoting reusabl
 - `Enemy/mameGesso`: Three new reference-lifetime variants for `TNerveMameGessoThrown::execute` worsened its 99.8% baseline, even when a variant reached the retail 0x70 frame. Its 0x248 object size matches the map; the remaining slot and FPR allocation is unresolved.
 - `Player/MarioParticle`: Six TU-local copy/chain/reference variants did not reproduce the six vector slots in `TWarpInCallBack::execute`; the best preserved the 80.2% baseline. The shared `JGVec3.hpp` reference-return form previously raised the function to 92.47% but regresses the tree and loses weak out-of-line bodies, so it remains parked.
 - `Enemy/Amenbo`, `MarioUtil/MtxUtil`, and `Enemy/rocket`: Unit audits and scored variants found only documented stack, register, quaternion, or inline residues. No source changes were retained.
+
+## 2026-09-23 operand scan follow-up
+
+- `Enemy/bgtentacle`: Two switch cases had `unk40` and `unk44` feeding the wrong sine terms. Swapping the source inputs reduced mismatch markers from 160 to 158. Landed as 33707b4e.
+- `Enemy/bosswanwan`: Retail clears `mPullVelocity` in z/y/x order. Explicit field clears reduced `TBossWanwan::control` mismatches from 33 to 31. The shared inverted `li 0/1` residue remains. Landed as e74b5986.
+- `Camera/cameragc`: `calcPosAndAt_` read `mSLAimAngleYChaseMin` at 0x194 where retail reads `mSLHoldAngleXChase` at 0x16c. Correcting the member removed one mismatch. Landed as cfa6b3f5.
+- `Enemy/Koopa`: The apparent 0x68/0x74 access in `TKoopaFlame::attack_` belongs to a documented inline-depth mismatch. Related variants gave no defensible improvement.
+- `MoveBG/MapObjMare`: The 0x174/0x170 store difference in `TMuddyBoat::bind` is instruction alignment within the third `touchWall` expansion; both builds write `mEffectPos.x/y/z`.
+- `Enemy/limitkoopa`: `setUpHitActors` reads the same fields in both builds; the 0xc/0x2c difference is load order. Its five open functions all have deep-search TODOs.
+- `GC2D/SelectShine2`: The swapped f30/f31 constants in `perform` accompany a different but equivalent up-vector construction and angle arithmetic. No edit.
