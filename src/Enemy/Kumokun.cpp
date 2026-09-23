@@ -781,7 +781,8 @@ static bool is_antiparallel(const JGeometry::TVec3<f32>& v1,
 // ascending) plus a dot product retail builds from cross's unfused 0*v.x and
 // 0*v.y products while ours reloads `to`. A named `forward`, the two-argument
 // setRotate overload and a named forward only in the antiparallel test are
-// inert or worse.
+// inert or worse. The two-argument mul (as decideTargetAtRandom spells it)
+// fixed the quaternion product order; only scheduling from the shift remains.
 void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> local_C4 = param_1;
@@ -799,7 +800,7 @@ void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 		                   1.0f);
 	}
 
-	local_b4.mul(local_A4);
+	local_b4.mul(local_b4, local_A4);
 
 	unk1AC = unk19C;
 	unk1BC = local_b4;
