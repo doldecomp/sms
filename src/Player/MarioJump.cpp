@@ -1326,6 +1326,11 @@ BOOL TMario::fallDead()
 
 // TODO: Body opcodes/registers match; recover the original inline stack layout.
 // Frame is 0x60 instead of 0x88; pullJumping's position is at 0x34, not 0x60.
+// Measured: routing any one handler call through an extra inline level
+// (a forwarding static inline, or `BOOL r = f(); return r;`) adds 8 bytes,
+// even for non-inlined landing(); five such levels close it exactly. Named
+// locals inside the handlers, getVel()/getStatus() spellings, per-case
+// `return f();` and jumpingCommonEvents() rewrites all leave the frame at 0x60.
 BOOL TMario::jumpMain()
 {
 	int result;
