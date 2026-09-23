@@ -67,7 +67,7 @@ void TMapWire::drawLower() const
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
 	subPoint(mStartPoint, xOffset, zOffset);
-	downPoint(mStartPoint, mDrawHeight);
+	downPoint(getStartPoint(), mDrawHeight);
 
 	for (int i = 0; i < mNumActiveMapWirePoints; i++) {
 		subPoint(mMapWirePoints[i].mPosition, xOffset, zOffset);

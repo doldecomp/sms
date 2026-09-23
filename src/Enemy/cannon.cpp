@@ -666,15 +666,22 @@ void TCannon::bombSet()
 	hitHead(bomb);
 }
 
+static inline JGeometry::TVec3<f32>* CannonMarioPos()
+{
+	JGeometry::TVec3<f32>* r = gpMarioPos;
+	return r;
+}
+
 // TODO: the final lift's volatiles differ (retail r3 for the bomb, 2.0f
 // loaded first). Inert: a position reference, a named y, a bomb local.
 void TCannon::bombShoot()
 {
+	f32 speed;
 	if (mHeldBomb == nullptr)
 		return;
 
 	JGeometry::TVec3<f32> dir(gpMarioPos->x - mPosition.x, 0.0f,
-	                          gpMarioPos->z - mPosition.z);
+	                          CannonMarioPos()->z - mPosition.z);
 	if (dir.x == 0.0f && dir.z == 0.0f)
 		dir.x = 1.0f;
 	MsVECNormalize((Vec*)&dir, (Vec*)&dir);
@@ -683,7 +690,7 @@ void TCannon::bombShoot()
 	Mtx mtx;
 	MsMtxSetRotRPH(mtx, 0.0f, mRotation.y + range.rand(), 0.0f);
 
-	f32 speed = mSaveParams->getSLThrowXZSpeed();
+	speed = mSaveParams->getSLThrowXZSpeed();
 	dir.y     = speed;
 	dir.x *= speed;
 	dir.z *= speed;
@@ -697,7 +704,7 @@ void TCannon::bombShoot()
 		bomb->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		bomb->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
 	}
-	mHeldBomb->mPosition.y = mHeldBomb->getPosition().y + 2.0f;
+	mHeldBomb->mPosition.y += 2.0f;
 	mHeldBomb->receiveMessage(this, HIT_MESSAGE_PUT);
 }
 

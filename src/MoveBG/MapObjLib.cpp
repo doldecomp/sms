@@ -665,7 +665,7 @@ void TMapObjBase::makeObjMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
 {
 	makeMtxRotByAxis(param_1, param_2, param_3);
 	param_3[0][0] *= mScaling.x;
-	param_3[0][1] *= mScaling.y;
+	param_3[0][1] *= getScaling().y;
 	param_3[0][2] *= mScaling.z;
 	param_3[0][3] = mPosition.x;
 

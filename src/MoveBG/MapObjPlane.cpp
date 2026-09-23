@@ -82,7 +82,8 @@ void TMapObjPlane::draw()
 		for (int x = 0; x < mExtents; ++x) {
 			f32 worldX = mCollision->gridToWorld(x);
 
-			GXPosition3f32(worldX, heightAt(x, z), worldZ);
+			f32& height = heightAt(x, z);
+			GXPosition3f32(worldX, height, worldZ);
 			GXNormal3f32(normalAt(x, z).x, normalAt(x, z).y, normalAt(x, z).z);
 			GXTexCoord2f32(getTexPos(x), getTexPos(z));
 

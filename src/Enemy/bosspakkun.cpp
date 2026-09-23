@@ -1207,14 +1207,14 @@ void TBossPakkun::launchPolDrop()
 	JGeometry::TVec3<f32> goal;
 	JGeometry::TVec3<f32> front;
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		from = mPosition;
+		from = getPosition();
 		from.x += 1.0f;
 	} else {
 		getJointTransByIndex(0x12, &from);
 	}
 
 	// Aim a little ahead of Mario, in the direction he is facing.
-	f32 marioYaw = gpMarioOriginal->mRotation.y;
+	f32 marioYaw = gpMarioOriginal->getRotation().y;
 	f32 reach    = getSaveParam2()->mSLPollBallFront.get();
 
 	BosspakkunSetXZ_L3(front, reach * MsSin(marioYaw), reach * MsCos(marioYaw));
