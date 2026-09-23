@@ -290,7 +290,7 @@ void TLimitKoopaJr::moveRun()
 
 	TDirectionCalc bodyTarget(dir);
 	mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
-	    bodyTarget.get(),
+	    bodyTarget.mDirection,
 	    mBodyDirection.d2r(getSaveParams()->mSLRotationSpeed.get()));
 }
 
@@ -325,7 +325,7 @@ void TLimitKoopaJr::moveWait()
 
 	TDirectionCalc target(dir);
 	mBodyDirection.mDirection = mBodyDirection.calcTurnDirection(
-	    target.get(),
+	    target.mDirection,
 	    mBodyDirection.d2r(getSaveParams()->mSLRotationSpeed.get()));
 }
 
@@ -389,6 +389,9 @@ DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor)
 	return FALSE;
 }
 
+// TODO: only slots differ: retail keeps moveWait's `target` and its by-value
+// TVec3 argument copy low (0x44/0x48, below canRun's temporaries); ours
+// places them above the named vectors.
 DEFINE_NERVE(TNerveLimitKoopaJrWait, TLiveActor)
 {
 	TLimitKoopaJr* koopaJr = (TLimitKoopaJr*)spine->getBody();
