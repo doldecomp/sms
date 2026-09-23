@@ -1117,11 +1117,7 @@ void TFluff::control()
 			mRotation.set(0.0f, 360.0f * MsRandF(), 0.0f);
 			mInitialRotation = mRotation;
 			mIsRideable = false;
-			TFluffManager* man = mManager;
-			if (!man->mNextFluff) {
-				man->mNextFluff = this;
-				man->mNextFluff->makeObjDead();
-			}
+			mManager->registerNextFluff(this);
 		}
 		break;
 	}
@@ -1270,11 +1266,13 @@ void TFluffManager::control()
 	}
 }
 
-// UNUSED (0x40).
+// UNUSED (0x40): the wait-appear branch of TFluff::control expands it.
 void TFluffManager::registerNextFluff(TFluff* fluff)
 {
-	mFluffs[mFluffNum] = fluff;
-	mFluffNum++;
+	if (!mNextFluff) {
+		mNextFluff = fluff;
+		mNextFluff->makeObjDead();
+	}
 }
 
 // UNUSED (0x10c): matches the map size only without a rotation copy, so
@@ -1306,10 +1304,9 @@ f32 TFluffManager::getRandomZ() const
 	return mRangeZ * (2.0f * MsRandF() - 1.0f);
 }
 
-// TODO: 99.8%. Calling a registerNextFluff that also appear()s the stored
-// slot from the tail loop is instruction-exact and takes the frame to 0x80,
-// but that helper compiles to 0x64 against the map's 0x40, so it is not
-// taken. Both named seeds now word-copy a stack TVec3 into
+// TODO: 99.8%. registerNextFluff is the mNextFluff registration
+// TFluff::control expands (0x40 exactly), so the seeds and the tail loop
+// spell their mFluffs appends out. Both named seeds now word-copy a stack TVec3 into
 // mInitialPosition (`stfs` then `lwz`/`stw`); retail's frame is 0x78
 // against our 0x88. The extra 0x10 is not absorbed by a ctor temporary
 // (two slots, 0x98) or an inlined assign helper (97.8%, extra fluff
@@ -1329,7 +1326,8 @@ void TFluffManager::loadAfter()
 	JGeometry::TVec3<f32> initPos;
 	initPos.set(getRandomX(), mPosition.y * MsRandF(), getRandomZ());
 	mRideFluff->mInitialPosition = initPos;
-	registerNextFluff(mRideFluff);
+	mFluffs[mFluffNum] = mRideFluff;
+	mFluffNum++;
 
 	mNextFluff = newFluff("２つ目のわた毛");
 	mNextFluff->mPosition.set(mPosition);
@@ -1337,7 +1335,8 @@ void TFluffManager::loadAfter()
 	initPos.set(getRandomX(), mPosition.y * MsRandF(), getRandomZ());
 	mNextFluff->mInitialPosition = initPos;
 	mNextFluff->makeObjDead();
-	registerNextFluff(mNextFluff);
+	mFluffs[mFluffNum] = mNextFluff;
+	mFluffNum++;
 
 	for (int i = 2; i < mFluffMax; i++) {
 		TFluff* fluff      = newFluff("わた毛");
