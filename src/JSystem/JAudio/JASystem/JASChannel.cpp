@@ -166,6 +166,8 @@ namespace Driver {
 	// same chain as `buf` in retail (it CSEs `lwz r3,0x20(r3); lwz r3,0xc(r3)`
 	// and copies the result into r30 with `addi`), so whatever carries the 16
 	// has to leave that CSE intact.
+	// Also inert or worse (session c-jas): isDolbyMode() as a ternary fork,
+	// with or without a named result (92%, frame unchanged).
 	static void __UpdateJcToDSP(TChannel* channel)
 	{
 		DSPInterface::DSPBuffer* buf = channel->unk20->mDSPHandle;
@@ -402,13 +404,19 @@ namespace Driver {
 		}
 	}
 
-	// TODO: instruction-exact but 24 bytes of frame short (retail 0x48, ours
-	// 0x30); unlike overwriteOsc/playLogicalChannel this site does keep the
-	// bankOscToOfs level, so retail had three more 8-byte inline temporaries
-	// here than we do.
+	// TDSPChannel::getLogicalChannel as retail spelled it: the ternary through a
+	// named result is 8 bytes of frame per site, and lands updatecallDSPChannel's
+	// 0x48.  Parked here because JASDSPChannel.hpp is shared; the header body
+	// should become this one.
+	static inline TChannel* JASDSPChannelGetLogicalChannel(TDSPChannel* d)
+	{
+		TChannel* ch = d->mCallback != nullptr ? (TChannel*)d->mSign : nullptr;
+		return ch;
+	}
+
 	int updatecallDSPChannel(TDSPChannel* dspChannel, u32 param)
 	{
-		TChannel* channel = dspChannel->getLogicalChannel();
+		TChannel* channel = JASDSPChannelGetLogicalChannel(dspChannel);
 		TChannelMgr* mgr  = channel->unk4;
 
 		u32 i;
@@ -423,7 +431,7 @@ namespace Driver {
 
 		if (channel->unk20 != dspChannel) {
 			if (channel->unk20 != nullptr
-			    && channel == channel->unk20->getLogicalChannel()) {
+			    && channel == JASDSPChannelGetLogicalChannel(channel->unk20)) {
 				killBrokenLogicalChannels(dspChannel);
 			} else {
 				channel->stopLogicalChannel();
@@ -955,6 +963,9 @@ void TChannel::updateEffectorParam()
 	// f0/f1), and a Clamp01 written with a named result (adds fmr pairs).
 	// Also worse: clamps in reverse order, unk98 before the clamps, volume
 	// after unk98, and the branch inverted (updateAutoMixer first).
+	// Also inert (session c-jas): isDolbyMode() in the condition, `volume`
+	// declared at the top, four Clamp01 body shapes as TU forks, and a named
+	// DSPBuffer or `32767.5f * volume` in updateAutoMixer.
 	f32 volume = unkA4 * (unk54 * unk90);
 
 	pan   = Driver::Clamp01(pan);
