@@ -173,6 +173,9 @@ void MSMainProc::setBossNotDamagedFlag(bool param_1)
 	MSStageInfo::bossNotDamaged = param_1;
 }
 
+// TODO: every instruction matches; retail's frame is 0x88 against our 0x40
+// with no stack use in the body, so 0x48 of inline temporaries is missing
+// (likely an unrecovered inline level, not a per-site lever).
 void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 {
 
@@ -295,11 +298,11 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::stageBgm = MSD_BGM_BOSS;
 		}
 		if (param_2 == 6) {
-			MSStageInfo::switchBgm = 0xfffffff0;
-			MSStageInfo::demoBgm   = MSD_BGM_KAGEMARIO;
-			MSStageInfo::flags     = 3;
+			MSStageInfo::demoBgm = MSD_BGM_KAGEMARIO;
+			MSStageInfo::flags   = 3;
 			MSStageInfo::volOffCategory -= 0x83;
 			MSStageInfo::fadeEvent           = 1;
+			MSStageInfo::switchBgm           = 0xfffffff0;
 			MSStageInfo::switchBgm2          = 0xfffffff0;
 			MSStageInfo::distFadeStageToKage = 0;
 		} else if (param_2 == 2) {
@@ -365,17 +368,17 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			break;
 		}
 		if (param_2 == 6) {
-			MSStageInfo::switchBgm = 0xfffffff0;
 			MSStageInfo::demoBgm   = MSD_BGM_KAGEMARIO;
 			MSStageInfo::flags     = 6;
 			MSStageInfo::volOffCategory -= 0x83;
 			MSStageInfo::fadeEvent  = 1;
+			MSStageInfo::switchBgm = 0xfffffff0;
 			MSStageInfo::switchBgm2 = 0xfffffff0;
 		} else if (param_2 == 1) {
 			break;
 		} else {
-			MSStageInfo::switchBgm  = 0xfffffff0;
 			MSStageInfo::fadeEvent  = 2;
+			MSStageInfo::switchBgm  = 0xfffffff0;
 			MSStageInfo::switchBgm2 = 0xfffffff0;
 
 			switch (scenario) {
@@ -411,8 +414,8 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::switchBgm2          = 0xfffffff0;
 			MSStageInfo::distFadeStageToKage = 0;
 		} else if (param_2 == 1) {
-			MSStageInfo::switchBgm  = MSD_BGM_CHUBOSS;
 			MSStageInfo::fadeEvent  = 3;
+			MSStageInfo::switchBgm  = MSD_BGM_CHUBOSS;
 			MSStageInfo::switchBgm2 = MSD_BGM_CHUBOSS;
 		}
 		break;
