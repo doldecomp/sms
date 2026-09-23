@@ -316,10 +316,12 @@ void TBathtubKiller::killBathtubKiller()
 	stopAnmSound();
 }
 
-// TODO: the map records 0x14c for this and for explodeBathtubKiller alike; our
-// bodies come out 0x120 short of that apiece even though the inlined copies in
-// the Break/Explosion nerves are exact. Both are dead symbols, so the shape is
-// pinned by the nerves, not by the size.
+// TODO: the map records 0x14c for this and for explodeBathtubKiller alike; ours
+// are 0xd4 and 0xf8, while the inlined copies in the Break/Explosion nerves are
+// instruction-exact. Explode with generateExplosion called rather than expanded
+// would be 0xd4 too, so retail's two bodies are probably the same shape (setDead
+// expanded, one bl, onHitFlag) plus 0x78 of common code the nerves never show
+// (an effect or sound?); nothing in the binary pins it, so it is not guessed.
 void TBathtubKiller::breakBathtubKiller()
 {
 	setDeadBathtubKillerAnm();
@@ -932,6 +934,12 @@ DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor)
 	return FALSE;
 }
 
+// TODO: this and the Explosion nerve are instruction-exact but retail keeps
+// setDeadBathtubKillerAnm's TVec3 temporary at 0x1c, ours at 0x18 (same 0x30
+// frame). Inert: a named MActor, a named model name, a named zero TVec3, a
+// named GXColorS10 copy, a named getTime, and setDead/generateExplosion called
+// from the nerve directly; named int/f32 zeros and setDead's body written in
+// the nerve are worse.
 DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
 {
 	TBathtubKiller* killer = (TBathtubKiller*)spine->getBody();
