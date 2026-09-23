@@ -456,6 +456,10 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 	return uVar7;
 }
 
+// TODO: named slots sit 4 low (retail puts the final `local_74 - mPosition`
+// temporary at 0x14 below the wall record); the inlined roof check swaps
+// f30/f31 (param_2 vs y); retail tests the wall hit with `ble`, which only an
+// int local compared `> 0` reproduces.
 void TKumokun::bindOnFlying()
 {
 	bool hit = false;
@@ -483,7 +487,7 @@ void TKumokun::bindOnFlying()
 	}
 
 	const TBGCheckData* wall
-	    = checkWallPlane(&local_74, mWallRadius, mBodyRadius);
+	    = checkWallPlane(&local_74, mHeadHeight, mBodyRadius);
 
 	if (wall)
 		hit = true;
@@ -963,10 +967,10 @@ JGeometry::TVec3<f32> TKumokun::getPlaneNormal() const
 const TBGCheckData* TKumokun::checkWallPlane(JGeometry::TVec3<f32>* param_1,
                                              f32 param_2, f32 param_3)
 {
+	const TBGCheckData* wall = nullptr;
 	TBGWallCheckRecord record(param_1->x, param_1->y + param_2, param_1->z,
 	                          param_3, 1, 0);
 
-	const TBGCheckData* wall = nullptr;
 	if (gpMap->isTouchedWallsAndMoveXZ(&record))
 		wall = record.mResultWalls[0];
 
