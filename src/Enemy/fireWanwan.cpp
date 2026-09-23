@@ -1245,14 +1245,15 @@ void TFireWanwan::calcRootMatrix()
 		v2.normalize();
 		// Retail multiplies the Y column by -160 and the Z column by 0
 		// (@6628 / @3704). Frame lands via FireWanwanBaseTRMtx.
-		// TODO: extra f25 and Z loaded RTL (0x48,0x38,0x28 vs 0x28,0x38,0x48).
+		// TODO: frame 8 short (0x88 vs 0x90) and retail gives v2 f31-f29,
+		// v1 f28-f26. Inert: declaring v2 first, set() after v1, scale order.
 		v1 *= -160.0f;
 		v2 *= 0.0f;
-		v1 += v2;
+		v2 += v1;
 
-		mtx[0][3] += v1.x;
-		mtx[1][3] += v1.y;
-		mtx[2][3] += v1.z;
+		mtx[0][3] += v2.x;
+		mtx[1][3] += v2.y;
+		mtx[2][3] += v2.z;
 	}
 }
 
