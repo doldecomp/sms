@@ -409,7 +409,7 @@ TBWPicket::TBWPicket(TBossWanwan* owner, const char* name)
 	MTXIdentity(mTakingMtx);
 
 	initHitActor(0x0800000D, 1, 0x80000000,
-	             mOwner->getSaveParam2()->mSLPicketRadius.get(),
+	             mOwner->getSaveParam2()->mSLPicketRadius.value,
 	             mOwner->getSaveParam2()->mSLPicketHeight.get(),
 	             mOwner->getSaveParam2()->mSLPicketRadius.get(),
 	             mOwner->getSaveParam2()->mSLPicketHeight.get());
@@ -908,6 +908,9 @@ TBossWanwan::TBossWanwan(const char* name)
 	mBinder = new TBWBinder();
 }
 
+// TODO: retail colours the .rodata base r29 and the .bss base r30 (ours the
+// other way round), and its low temporaries sit 0xc higher; every accessor
+// subset over the save params and the TBWPicket ctor has been measured.
 void TBossWanwan::init(TLiveManager* live_manager)
 {
 	mManager = live_manager;
@@ -921,7 +924,7 @@ void TBossWanwan::init(TLiveManager* live_manager)
 
 	mSpine->initWith(&TNerveBWGraphWander::theNerve());
 
-	mMarchSpeed = getSaveParam2()->mSLMarchSpeed.value;
+	mMarchSpeed = getSaveParam2()->mSLMarchSpeed.get();
 	mTurnSpeed  = getSaveParam2()->mSLTurnSpeed.get();
 
 	mPosition = BW_HEAD_START;
