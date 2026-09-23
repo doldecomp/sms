@@ -2002,3 +2002,12 @@ Nothing in `include/` changed.
   Header work on JGeometry is not the lever for the dead low region; closure agents should treat these gaps as site spellings.
 - **Leads (unit-local, all users short, none exact):** `TNozzleBase::isAnmEnd` (UNUSED 0x94, all three `animation`s, 40-168 short), `TMapWire::getPointPos*` (two users, 96/112), `loadBookmark` (CardLoad, 104 twice), `MSStageProc::setBgmPosition` (104/64), the `TGameSequence` set/copy chain (`decideNextStage` 8, `setNextStage` 16, `TApplication` ctor 16, `proc` 80; `decideNextMode` exact with one `set`), `TKoopa` turn helpers (`TNerveKoopaTurnL`/`R` 280/272 short, the `getParam` users with one expansion exact).
   Three JPADrawVisitor `exec`s (`RotDirectional`, `DirectionalCross`, `RotDirectionalCross`) are each exactly 8 short and reach frame parity (slots still off) under the 8-byte probe in `cross`, overshooting under `isZero` or `normalize`: one 8-byte site-level temporary around their shared `cross` is the likely fix.
+
+## Research uf1 (2026-09-23): the frame-short skew is not a unit-level cause
+
+Per-function `stwu r1` frames compared over 719 units (retail `build/GMSE01/obj` vs ours); driver and tables in the session scratch `uf1-scratch/` (`frames.py`, `rank.py`, `variants.py`, `unit_rank.tsv`, `flag_variants.tsv`).
+
+- 1021 non-exact game functions: 514 frame-short, 92 long, 85 identical frames with offset-only residue. The short share is broad (quartiles 0.33/0.50/0.62 over units with 6+ open functions); Koopa (14/17) and Map (5/6) are the tail, not outliers. No PCH correlation (0.51 vs 0.48). Deficits are a smooth spread in steps of 8, the signature of individual missing locals and inline levels.
+- Koopa, Map, MarDirectorDirect, GCConsole2 and Guide recompiled one flag at a time: `-O`/`,s`/`,p`/`-opt level`/`-inline smart|all`/`nodeadcode`/`nocolor`/exceptions are byte-identical; `-fp_contract off`, `nolifetimes`, `noloop`, text PCH, compilers 1.1/1.2.5n only lose instructions; dropping `-inline deferred`, `-inline noauto`, `-sym on`, the other `-opt no*` and compilers 1.0/1.1p1/1.3/1.3.2 are worse; `-proc 750` does not compile.
+- `-inline level=N` is the only lever that grows frames, and it does so by auto-inlining extra calls (Koopa exact 62 -> 55-59). So retail's frames come from deeper source-written inline chains and codeless locals, fixed per function.
+- Largest codeless gaps left (aggregate-local leads): Koopa TurnL/TurnR 0x108 and Flame 0x148 with no stack slots used, GCConsole2 `perform` 0x368, `TMapObjBase::initUnique` 0x1d8, `drawShadowGD` 0x270.
