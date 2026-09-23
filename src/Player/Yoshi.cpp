@@ -543,10 +543,12 @@ BOOL TYoshi::thinkJumpEnd(u16 curIdx, u16* newIdx)
 	return false;
 }
 
-// TODO: frame 0x60 against retail's 0x140 (named block matches; the low
-// region is 0xe0 short), and the final setRate loads nextFrame before
-// `lwz r3, mActor; li r4, 0` instead of after. Naming oldAnm early, naming the
-// frame ctrl, and TYoshi::getFrameCtrl() at either site are inert.
+// TODO: frame 0x68 against retail's 0x140: the named block is (0x118 dummy,
+// 0x11c type, 0x120 nextFrame) with no hole, ours has a 4-byte hole below
+// nextFrame and a 0xd8 shorter low region. The YoshiGetBckCtrl() binder on the
+// final setRate fixes its load order. getStatus/getVel/getGamePad/
+// getForwardVel at all eight sites reach only 0xb8 (0xc8 with the binder on
+// the oldAnm site too), so the rest is likely a missing inline level.
 void TYoshi::thinkAnimation()
 {
 	f32 nextFrame = mMario->getMotionFrameCtrl().getRate();
@@ -667,7 +669,7 @@ void TYoshi::thinkAnimation()
 		mActor->setMotionBlendRatioForBck(0.0f);
 	}
 
-	mActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(nextFrame);
+	YoshiGetBckCtrl(this)->setRate(nextFrame);
 }
 
 void TYoshi::thinkUpper()
@@ -837,9 +839,9 @@ void TYoshi::thinkEat()
 	}
 }
 
-// Retail reads Mario's velocity and pad through their accessors and binds both
-// singletons: case 0's getVel() moves mMario to r4, and the seven
-// accessor/binder sites together land the 0x80 frame.
+// Retail reads Mario's velocity, pad and Yoshi's position through their
+// accessors and binds both singletons: case 0's getVel() moves mMario to r4,
+// and the eight accessor/binder sites together land the 0x80 frame.
 void TYoshi::thinkHoldOut()
 {
 	switch (mFlutterState) {
@@ -853,8 +855,8 @@ void TYoshi::thinkHoldOut()
 		    0x119, mActor->getModel()->getAnmMtx(unkF6), 1, this);
 		if (mMario->getVel().y < 0.0f
 		    && 0.0f <= mFlutterAcceleration + mMario->getVel().y)
-			YoshiGetMSound()->startSoundActor(MSD_SE_YV_FUNBARI, &mTranslation,
-			                                  0, nullptr, 0, 4);
+			YoshiGetMSound()->startSoundActor(MSD_SE_YV_FUNBARI, &mTranslation, 0,
+			                                nullptr, 0, 4);
 		if (mFlutterTimer != 0) {
 			mFlutterTimer -= 1;
 			mMario->mVel.y += mFlutterAcceleration;
