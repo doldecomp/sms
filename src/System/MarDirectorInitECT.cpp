@@ -30,8 +30,11 @@ static inline JDrama::TNameRef* ECTSearch(const char* name)
 	return ref;
 }
 
-// TODO: 93.9%, 16 bytes of frame short (0x208 vs 0x218) after the ECTSearch
-// level (+32 over three sites).
+// TODO: 96.5%, 16 bytes of frame short (0x208 vs 0x218) after the ECTSearch
+// level (+32 over three sites). Retail converts the TOrthoProj width before
+// the height and keeps one fewer vtable spilled; inert: size.mWidth/mHeight
+// for the projection, reusing the outer rect, TRect constructors, raw
+// search2 at either remaining site.
 void TMarDirector::initECTGft(
     TPerformList* param_1, TPerformList* param_2,
     JDrama::TViewObjPtrListT<JDrama::TViewObj>* perf_event_group,
@@ -74,7 +77,7 @@ void TMarDirector::initECTGft(
 
 		const ResTIMG* img = gpPollution->getLayer(i)->getPollutionImage();
 
-		efbTex->setImgPtr((u8*)&img + img->imageDataOffset);
+		efbTex->setImgPtr((u8*)img + img->imageDataOffset);
 		JDrama::TSize size(img->width, img->height);
 		efbTex->setDstSize(size);
 		efbTex->setTexFmt(GX_CTF_R8);
