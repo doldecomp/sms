@@ -547,18 +547,12 @@ bool TSandCastle::withering()
 	return false;
 }
 
+// TODO: 90.5%. Retail inlines TSandBombBase::expanded (the f31/f30 order
+// now matches) but calls TLiveActor::getMActor() out of line at both sites,
+// 0x10 less frame. Inert: TU-local getMActor binders at one or both sites.
 void TSandCastle::expanded()
 {
-	TSandBomb* trigger = mTrigger;
-	f32 speed          = mExpandFrameSpeed;
-	trigger->getMActor()->getFrameCtrl(0)->setFrame(
-	    speed + trigger->getMActor()->getFrameCtrl(0)->getFrame());
-
-	gpMSound->startSoundActor(MSD_SE_OBJ_SAMDBOMB_REVERSE,
-	                          SandBombPos(mTrigger), 0, nullptr, 0, 4);
-
-	if (mTrigger->animIsFinished())
-		mState = STATE_WITHER;
+	TSandBombBase::expanded();
 
 	if (mTrigger->animIsFinished()) {
 		mState = STATE_WITHER;
