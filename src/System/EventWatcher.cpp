@@ -350,7 +350,7 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 }
 
 // TODO: frames now exact via TU-local binders (mode/selected int result,
-// director for getTalkNPC/getRestTime). Residue is load order: retail
+// director for getTalkNPC). Residue is load order: retail
 // stores the slice type word, then the inlined member. A helper that
 // both names the pointer and pushes made TSpcStack::push a `bl` (38%).
 // evGetTalkNPCName is the same family at a 4-byte slice slot; evIsTalkModeNow
@@ -549,16 +549,13 @@ static void evSetPollutionIncreaseCount(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
-static inline TMarDirector* EventWatcherDirectorForRestTime()
-{
-	TMarDirector* marDirector = gpMarDirector;
-	return marDirector;
-}
-
 static void evGetRestTime(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
+	// TODO: frame exact with the raw global; the pushed slice sits 4 low
+	// (0x1c vs 0x20), the evIsTalkModeNow class. Inert: SMSGetMarDirector(),
+	// a named director or result, (int), an explicit TSpcSlice.
 	interp->verifyArgNum(0, &arg_num);
-	interp->push(EventWatcherDirectorForRestTime()->getRestTime());
+	interp->push(gpMarDirector->getRestTime());
 }
 
 static void evGetPollutionLevel(TSpcTypedInterp<TEventWatcher>* interp,

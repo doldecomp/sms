@@ -374,23 +374,24 @@ void TSmallEnemy::genEventCoin()
 		}
 
 		if (coin) {
-			coin->mPosition = getPosition();
+			coin->mPosition = mPosition;
 			coin->mVelocity.set(0, 20, 0);
 			coin->offLiveFlag(LIVE_FLAG_UNK10);
 			--unk18C;
 		}
 	}
 
-	// TODO: frame 0x108 vs retail 0x100; the loop's Mtx and conversion
-	// slots sit 4-8 high and the TMsRange temporary/local_d0 4 low.
-	// getRotation().y for the angle lands the low pair but not the Mtx.
-	// Inert (cc48): Mtx/Vec at function, block or loop scope in either
-	// order; one function-scope TCoin* for both blocks.
+	// TODO: frame and Mtx exact (raw mPosition for the single coin,
+	// getRotation().y for the angle); local_d0 and the TMsRange temporary
+	// still sit 8 low. Inert: getPosition() at any makeObjAppear or
+	// coin->mPosition.y site, `coin != nullptr`; earlier (cc48): Mtx/Vec at
+	// function, block or loop scope in either order; one function-scope
+	// TCoin* for both blocks.
 	if (unk18C > 0) {
 		for (int i = 0; i < unk18C; ++i) {
 			Mtx local_c0;
 
-			f32 angle = 360.0f / unk18C * i + mRotation.y;
+			f32 angle = 360.0f / unk18C * i + getRotation().y;
 			f32 s     = JMASin(angle);
 			f32 c     = JMACos(angle);
 
