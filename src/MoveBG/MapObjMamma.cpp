@@ -1602,6 +1602,11 @@ void TMammaMirrorMapOperator::hide(int i)
 
 // TODO: retail's two lengths are unfused (three fmuls, two fadds) and it
 // schedules camPos.x before the mirror's x; TVec3::length() fuses here.
+// camPos.distance(other) gives exactly retail's unfused sub/mul/add shape but
+// drops the TVec3 slots (frame 0x80 vs 0x98) and moves the sqrt compare:
+// 85.4% for both sites, 91.4% for the joint site only (frame 0x90). Also
+// inert or worse: a copy-and-sub local, operator-, sqrt(dot()), a TU-local
+// named-squares distance helper.
 void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(cue & 2))

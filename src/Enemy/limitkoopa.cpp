@@ -475,15 +475,17 @@ void TLimitKoopa::bind()
 // TODO: UNUSED (0x20), body not reconstructed.
 void TLimitKoopa::moveStop() { }
 
-// TODO: 89.8%. Retail calls this from TNerveLimitKoopaHipDropStart::execute,
-// so the body has 15+ statements: the goal is a `diff` plus `goal.add(pos,
-// diff)` pair (retail reloads pos.y/.z after each goal store), and the jump's
-// launch speed and the length are named. Left: retail's normalize() reuses
-// the squared length the `len` test computed (sq stays in f1, `fmr f2, f1` in
-// the zero branch) where we recompute it; inert: sqrt(squared()),
-// sqrt(dot()), setLength(1.0f), normalize(velocity), setLength(v, 1.0f), a
-// named gravity. The FPR order of the three differences also differs (dy is
-// computed before the z loads here).
+// TODO: 91.6%, frame 0xb0 vs 0xb8. Retail calls this from
+// TNerveLimitKoopaHipDropStart::execute, so the body has 15+ statements: the
+// goal is a `diff` plus `goal.add(pos, diff)` pair (retail reloads pos.y/.z
+// after each goal store), and the jump's launch speed and the length are
+// named. Raw mPosition in both is what orders dy after the z loads. Left:
+// retail's normalize() reuses the squared length the `len` test computed (sq
+// stays in f1, `fmr f2, f1` in the zero branch) where we recompute it; inert:
+// sqrt(squared()), sqrt(dot()), setLength(1.0f), setLength(200.0f),
+// normalize(velocity), setLength(v, 1.0f), a named gravity, a named sq. The
+// low region is 8 short; lever-search reaches it only with a fabricated
+// ground-height binder.
 void TLimitKoopa::startHipDrop()
 {
 	// One local carries the jump: first the straight-up launch speed, then the
@@ -493,12 +495,12 @@ void TLimitKoopa::startHipDrop()
 	velocity.scale(getParam()->hipDropInitialSpeedY.get());
 
 	JGeometry::TVec3<f32> target(SMS_GetMarioPos());
-	target.y = mGroundHeight;
+	target.y = getGroundHeight();
 
 	JGeometry::TVec3<f32> diff;
-	diff.sub(target, getPosition());
+	diff.sub(target, mPosition);
 	JGeometry::TVec3<f32> goal;
-	goal.add(getPosition(), diff);
+	goal.add(mPosition, diff);
 
 	f32 speedY = velocity.y;
 	velocity = calcVelocityToJumpToY(goal, speedY,
