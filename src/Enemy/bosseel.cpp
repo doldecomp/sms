@@ -1578,11 +1578,12 @@ void TBossEelTearsRecoverCollision::perform(u32 cue,
 	THitActor::perform(cue, graphics);
 }
 
-// TODO: GMSE01 retains frame 0x300 vs 0x310, skin/eye register differences,
-// and an extra heart-model pointer copy before the heart-coin allocation.
-// mMActor->getModel() for the skin-deform model cut markers 90->75. Tried
-// without effect: unnamed/split-declared deform, hoisted skin deform, and
-// hoisting or splitting heartModelData (the copy survives all of them).
+// The heart coin takes its model data straight from the `new` expression:
+// naming it (at any scope) costs retail's missing pointer copy.
+// TODO: instruction-exact; the frame is 0x318 vs retail 0x310, with skin/eye
+// register differences. mMActor->getModel() for the skin-deform model cut
+// markers 90->75. Tried without effect: unnamed/split-declared deform,
+// hoisted skin deform.
 void TBossEel::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -1693,12 +1694,12 @@ void TBossEel::init(TLiveManager* manager)
 
 	{
 		resource = JKRGetResource("/scene/bosseel/meoto_heartcoin.bmd");
-		SDLModelData* heartModelData
-		    = new SDLModelData(J3DModelLoaderDataBase::load(
+		mHeartCoin = new TBossEelHeartCoin(
+		    this, 0,
+		    new SDLModelData(J3DModelLoaderDataBase::load(
 		        resource, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
-		                      | (4 << J3DMLF_TevStageNumShift)));
-		mHeartCoin = new TBossEelHeartCoin(this, 0, heartModelData, 3,
-		                                   "めおとウナギハートコイン");
+		                      | (4 << J3DMLF_TevStageNumShift))),
+		    3, "めおとウナギハートコイン");
 	}
 
 	{
