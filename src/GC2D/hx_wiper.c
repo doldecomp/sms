@@ -1348,27 +1348,27 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 	}
 }
 
-// TODO: frame is right; the 0.5f load is scheduled ahead of sx * mag_scale and
-// cx takes f3 where retail takes f5 (x1/y1 swap f3/f4 in turn).
+// Halving by 2.0f keeps the product ahead of the constant, and declaring cx/cy
+// after the corners gives them retail's volatile FPRs.
 static void Hxs_Logo_MagDraw(f32 mag_scale, f32 wd, f32 ht)
 {
 	f32 sx;
 	f32 sy;
 	f32 hw;
 	f32 hh;
-	f32 cx;
-	f32 cy;
 	f32 x1;
 	f32 y1;
 	f32 u1;
 	f32 v1;
+	f32 cx;
+	f32 cy;
 
 	sx = wd / 1.9230769f;
 	sy = ht / 1.924138f;
 	cx = hx.width >> 1;
 	cy = hx.height >> 1;
-	hw = sx * mag_scale * 0.5f;
-	hh = sy * mag_scale * 0.5f;
+	hw = sx * mag_scale / 2.0f;
+	hh = sy * mag_scale / 2.0f;
 	x1 = cx - hw;
 	y1 = cy - hh;
 	u1 = x1 / (x1 - (cx + hw));
@@ -1984,16 +1984,17 @@ static void Hx_Test4(void)
 
 // The finished step 2 shares the default's body (retail's second `b` ahead of
 // case 0), and the timer read through Hx_GetTimer puts GXTexObj at 0xc.
-// TODO: retail's frame is still 8 larger: 8 unused bytes sit above obj, and
-// the mag_out/mag_in spills land above the first-vertex block (ours below);
-// the u/v fmadds and one fcmpo also take their operands the other way round.
+// TODO: every instruction matches; retail's frame is still 8 larger: 8
+// unused bytes sit above obj, and the mag_out/mag_in spills land above the
+// first-vertex block (ours below). Declaring them in case 1, in either order,
+// or accessor compares on dir/width/height are all inert.
 static void Hx_Test5(void)
 {
 	GXTexObj obj;
-	f32 firstX;
-	f32 firstY;
 	f32 firstU;
 	f32 firstV;
+	f32 firstX;
+	f32 firstY;
 	f32 mag_in;
 	f32 mag_out;
 	u32 x;
@@ -2074,9 +2075,9 @@ static void Hx_Test5(void)
 					f32 px = mag_use * sinf(a + twist);
 					f32 py = mag_use * cosf(a + twist);
 
-					if (mag_use <= 1.0f) {
-						u = (mag_use * sinf(a) * 0.5f) + 0.5f;
-						v = (mag_use * cosf(a) * 0.5f) + 0.5f;
+					if (mag_use >= 1.0f) {
+						u = (mag_use * sinf(a) / 2.0f) + 0.5f;
+						v = (mag_use * cosf(a) / 2.0f) + 0.5f;
 					}
 					if (px < -1.0f) {
 						u  = 0.0f;
