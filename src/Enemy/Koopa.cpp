@@ -18,6 +18,7 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/Strategy.hpp>
 #include <System/Particles.hpp>
+#include <JSystem/JGeometry.hpp>
 #include <JSystem/JMath.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
@@ -669,22 +670,30 @@ namespace {
 //     a second quaternion around the up axis when not flaming, and finally
 //     turned into a rotation matrix concatenated onto mtx;
 //   * PSMTXCopy(mtx, J3DSys::mCurrentMtx).
+static inline f32 KoopaAngleBetween(const JGeometry::TVec3<f32>& a,
+                                     const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> c;
+	c.cross(a, b);
+	return atan2f(c.length(), a.dot(b));
+}
+
 int KoopaNeckCallBack(J3DNode* node, int flag)
 {
 	if (flag != 0)
 		return 1;
 
 	TKoopa* koopa = (TKoopa*)node->getCallBackUserData();
-	MtxPtr mtx
-	    = j3dSys.getModel()->getAnmMtx(((J3DJoint*)node)->getJntNo());
+	TPosition3f* mtx = (TPosition3f*)j3dSys.getModel()->getAnmMtx(
+	    ((J3DJoint*)node)->getJntNo());
 
 	// The integer copy is the ROM's: the whole vector is moved with
 	// lwz/stw before the first component is touched.
 	JGeometry::TVec3<f32> focus = SMS_GetMarioPos();
 	focus.y += 85.0f;
-	focus.x -= mtx[0][3];
-	focus.y -= mtx[1][3];
-	focus.z -= mtx[2][3];
+	focus.x -= mtx->at(0, 3);
+	focus.y -= mtx->at(1, 3);
+	focus.z -= mtx->at(2, 3);
 
 	if (koopa->isFlaming()) {
 		f32 yaw = (koopa->getFlameDirRate() * 6.2831855f
@@ -698,28 +707,56 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 
 		f32 sinYaw = sinf(yaw);
 		f32 cosYaw = cosf(yaw);
-		// TODO: mtx = Ry(yaw) * mtx, written out with the literal factors.
-		// TODO: mtx = mtx * Rz(pitch), likewise.
+		TMtx34f rotY;
+		rotY.set(cosYaw, 0.0f, sinYaw, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, -sinYaw,
+		         0.0f, cosYaw, 0.0f);
+		mtx->concat(rotY, *mtx);
+
+		f32 sinPitch = sinf(pitch);
+		f32 cosPitch = cosf(pitch);
+		TMtx34f rotZ;
+		rotZ.set(cosPitch, -sinPitch, 0.0f, 0.0f, sinPitch, cosPitch, 0.0f,
+		         0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+		mtx->concat(*mtx, rotZ);
 	}
 
-	// TODO: the aim below is an outline only. The ROM normalises `focus` in
-	// place, builds the quaternion from the axis/angle between column 0 and
-	// `flat`, multiplies in a second quaternion around the up axis when not
-	// flaming, and concatenates the resulting rotation onto mtx.
 	f32 neckFocus = koopa->getNeckFocus();
 
-	JGeometry::TVec3<f32> up(mtx[0][1], mtx[1][1], mtx[2][1]);
+	JGeometry::TVec3<f32> up(mtx->at(0, 1), mtx->at(1, 1), mtx->at(2, 1));
 	JGeometry::TVec3<f32> flat;
-	flat.scaleAdd(-up.dot(focus), focus, up);
+	flat.scaleAdd(-up.dot(focus), up, focus);
 	flat.normalize();
 	focus.normalize();
 
-	JGeometry::TVec3<f32> front(mtx[0][0], mtx[1][0], mtx[2][0]);
+	JGeometry::TVec3<f32> front(mtx->at(0, 0), mtx->at(1, 0), mtx->at(2, 0));
 	// The ROM's threshold is a `double` literal, so the comparison promotes.
-	if (front.dot(flat) < 0.5)
-		neckFocus *= (1.0f + front.dot(flat)) / 1.5f;
+	f32 frontDot = front.dot(flat);
+	if (frontDot < 0.5)
+		neckFocus *= (1.0f + frontDot) / 1.5f;
 
-	PSMTXCopy(mtx, J3DSys::mCurrentMtx);
+	JGeometry::TQuat4<f32> quat;
+	quat.setRotate(front, flat, neckFocus);
+	quat.normalize();
+
+	if (!koopa->isFlaming()) {
+		f32 angle = fabsf(KoopaAngleBetween(flat, focus));
+		if (focus.dot(up) < 0.0f)
+			angle = -angle;
+
+		JGeometry::TVec3<f32> zDir;
+		quat.getZDir(zDir);
+		JGeometry::TQuat4<f32> twist;
+		twist.setRotate(zDir, angle * neckFocus);
+		twist.normalize();
+		quat.mul(twist, quat);
+	}
+
+	TPosition3f rot;
+	rot.setQuat(quat);
+	rot.setTrans(0.0f, 0.0f, 0.0f);
+	mtx->concat(*mtx, rot);
+
+	PSMTXCopy(*mtx, J3DSys::mCurrentMtx);
 	return 1;
 }
 } // namespace
