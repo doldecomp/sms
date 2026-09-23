@@ -784,14 +784,17 @@ void TLeanMirror::touchEnemy(THitActor* actor)
 		updateSpeedVec(actor->mPosition, mEnemyPower);
 }
 
-// UNUSED (0x100): the rotation step shared by controlShake and
-// controlGoTarget. TMatrix34::identity()'s chained assignments reproduce the
-// ROM's exact store order for the scratch matrix.
+// UNUSED (0x100): controlShake's lean step, inlined there. This body
+// compiles to the map's 0x100 exactly; TMatrix34::identity()'s chained
+// assignments reproduce the ROM's store order for the scratch matrix.
 void TLeanMirror::calcCurrentMtx(Mtx mtx)
 {
+	JGeometry::TVec3<f32> axis(mSpeed.x, 0.0f, mSpeed.z);
+	rotateVecByAxisY(&axis, 1.5707963f);
+	f32 speed = MsSqrtf(mSpeed.x * mSpeed.x + mSpeed.z * mSpeed.z) * mSpeedRate;
 	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > rot;
 	rot.identity();
-	makeMtxRotByAxis(mRotAxis, mRotSpeed, rot);
+	makeMtxRotByAxis(axis, speed, rot);
 	concatOnlyRotFromLeft(rot, mtx, mtx);
 }
 
@@ -861,11 +864,9 @@ static inline bool LeanMirrorTimerEngaged(TLeanMirror* self)
 	return r;
 }
 
-// The three statements this body was missing are calcCurrentMtx's own: retail
-// spells that helper's four lines out here instead of calling it, which is
-// why the map has calcCurrentMtx UNUSED (nothing references it at all) and why
-// control() `bl`s this -- 1 statement becomes 4, putting the body over the
-// 14-statement depth-1 inline budget (control() 29.4 -> 99.9).
+// The rotation step is spelled out over mRotAxis/mRotSpeed here (four
+// statements, not a call), putting the body over the 14-statement depth-1
+// inline budget so control() `bl`s this (control() 29.4 -> 99.9).
 //
 // TODO: instruction-exact, but the frame is 0x80 against retail's 0x98. The
 // 24 bytes are not the statements: named f32 locals for startFall's three
@@ -934,28 +935,14 @@ void TLeanMirror::controlShake()
 
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 
-		JGeometry::TVec3<f32> axis(mSpeed.x, 0.0f, mSpeed.z);
-		rotateVecByAxisY(&axis, 1.5707963f);
-
-		// The ROM never stores mRotAxis/mRotSpeed here: the rotation step is
-		// spelled out over locals instead of going through calcCurrentMtx,
-		// which is why that UNUSED helper only shows up in controlGoTarget.
-		f32 f31 = MsSqrtf(mSpeed.x * mSpeed.x + mSpeed.z * mSpeed.z)
-		    * mSpeedRate;
-
 		// TODO: retail `bl`s the weak JGeometry::SMatrix34C<f32> default
-		// constructor for `rot` here and we expand it to nothing, so this
-		// block still sits at the wrong inline depth; that and the 0x40
-		// frame gap are all that is left (86.7 -> 91.3). Inert: moving
-		// just these four lines, or the whole axis-to-concat step, into a
-		// TU-local static inline, nor that step wrapped two or three
-		// static-inline levels deep (depth 3 expands rot's ctor and falls
-		// to 69.9). Retail also multiplies the z term of the lean test
+		// constructor for calcCurrentMtx's `rot` here, keeps it above `axis`
+		// in the frame (0x40 more) and puts the speed in f31; we expand the
+		// ctor to nothing. The same inert result as the TU-local wrappers
+		// tried before (two or three static-inline levels deep, 69.9 at
+		// depth 3). Retail also multiplies the z term of the lean test
 		// first; swapping its addends or operands is inert.
-		JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > rot;
-		rot.identity();
-		makeMtxRotByAxis(axis, f31, rot);
-		concatOnlyRotFromLeft(rot, mtx, mtx);
+		calcCurrentMtx(mtx);
 
 		if (getModel()->getAnmMtx(0)[1][1] < mLeanLimit) {
 			MtxPtr now = getModel()->getAnmMtx(0);
