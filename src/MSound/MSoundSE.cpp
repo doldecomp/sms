@@ -57,6 +57,8 @@ u32 MSRandVol::getRandomVolume(u32 param_1, u32 param_2) { }
 // TODO: instructions exact but for scheduling; retail computes the CSlope
 // index before the PSlope one (and swaps their registers). Named u32 indices,
 // named slope locals, parenthesised or pre-masked indices are inert.
+// Also inert (2026-09-23): mAmplitude * amp, named product, `d += 1.0f`,
+// `1.0f + ...`, a pointer to the CSlope entry; named p/c locals cost 3-4 insns.
 f32 MSRandVol::getRandVol(u32 param_1)
 {
 	f32 d = JALCalc::getRandom(
@@ -514,7 +516,9 @@ static inline f32 vecLengthOf(const Vec& vec)
 static f32 vecLength(const Vec& vec) { return vecLengthOf(vec); }
 
 // TODO: 99.9%, registers exact; our JAIActor sits 4 bytes low (0x4c, retail
-// 0x50) and the two fabs temporaries 4 bytes low with it.
+// 0x50) and the two fabs temporaries 4 bytes low with it (retail has 4 more
+// low bytes). Inert (2026-09-23): `sound != nullptr`, unnamed linearTransform,
+// one-line fabs(vecLength), split fVar1 init; raw frame counter is -8.
 void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
                                        Vec* param_3, f32 param_4, u32 param_5,
                                        u32 ground_no,
@@ -658,7 +662,9 @@ static u32 get_thing(u32 param_1)
 // TODO: instruction-exact; frame is 0x50 vs retail 0x58 (8 bytes of
 // inline temporaries, no stack traffic). Inert: get_thing inline/named
 // call result, uVar3 at top, unkCD local, && condition merge; a result
-// local in get_thing is +0x10 (one slot per expansion).
+// local in get_thing is +0x10 (one slot per expansion). Also inert
+// (2026-09-23): getTranslation() at either checkSoundArea site, `if (out_handle)`,
+// `uVar3 != 0`, a u32 actor compare, a braced getRandomID, `id == -1`.
 JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
                                          JAIActor* actor, u32 fade,
                                          u8 camera_idx)
@@ -835,6 +841,8 @@ u32 MSoundSE::getNewIDBySurfaceCode(u32 id, JAIActor* actor)
 // the inlined checkMonoSound's info slot shifted with it). Inert: `if`
 // on checkMonoSound's result, early return, qualified calls; a copy-initialised
 // actor is +0x20.
+// Also inert (2026-09-23): raw basic/getID/getNextSound/getAct/stop/category
+// in checkMonoSound, alone or paired (only shrink NpcActor); a named actor ptr.
 void MSoundSE::startSoundNpcActor(u32 id, const Vec* position, u32 ground_no,
                                   JAISoundHandle* out_handle, u32 fade,
                                   u8 camera_idx)
