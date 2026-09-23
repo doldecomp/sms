@@ -54,6 +54,8 @@ using namespace JDrama;
 // extra live value cannot be materialised anywhere: `cue` itself has to stay
 // live past the guard, and no guard spelling, accessor or named copy tried so
 // far does that.
+// Lib pass 2026-09-23: two chained named copies with the early-return guard
+// still leave the 84 low operands (frame 0x138); a named `TDisplay*` is 86.6.
 void TFrmGXSet::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {

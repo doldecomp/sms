@@ -216,6 +216,9 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 // by the scheduler's pre-`stwu` slot, not by source order, so the mask cannot
 // be pushed below the rounding from the source side; this needs a reason for
 // the slot to be unavailable, not another spelling of the mask.
+// Lib pass 2026-09-23, all no better: C-style top declarations (0x40 frame),
+// `int foundSize` (98.5), the `ALIGN_PREV(align - 1 + content, align)` offset
+// spelling (0x30 frame or 186 instructions), and `u32`/`u8*` content (184).
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
 	size                    = ALIGN_NEXT(size, 4);

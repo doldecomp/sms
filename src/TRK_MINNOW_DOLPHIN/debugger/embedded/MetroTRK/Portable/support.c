@@ -27,6 +27,8 @@
    writing the length clamp as a ternary (26).
    Unit round 2026-09-23: `int done` is identical; `replyBuffer` (or all
    four reply locals) scoped to the `need_reply` block is worse (27/39). */
+/* Lib pass 2026-09-23: a `u8 replyIOResult` read without the cast is
+   identical; the error/replyBufferId/.../exit declaration order is worse (41). */
 DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
                           DSIOResult* io_result, BOOL need_reply, BOOL read)
 {
