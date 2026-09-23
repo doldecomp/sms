@@ -74,9 +74,10 @@ public:
 	// Bowser himself, the first object of クッパマネージャー; the messages
 	// Bowser Jr. relays go to him.
 	/* 0x154 */ THitActor* mKoopa;
-	/* 0x158 */ int unk158;
-	// Counts down from mSLShotDoodlePeriod; at zero he launches a doodle.
-	/* 0x15C */ int mShotTimer;
+	// Countdowns decremented together by updateTimers(); the ROM's unrolled
+	// indexed loop there is the evidence for the array. [1] counts down from
+	// mSLShotDoodlePeriod; at zero he launches a doodle. [0] is never read.
+	/* 0x158 */ int mTimers[2];
 	/* 0x160 */ JGeometry::TVec3<f32> unk160;
 	/* 0x16C */ f32 unk16C;
 	/* 0x170 */ TDirectionCalc mRoundDirection;

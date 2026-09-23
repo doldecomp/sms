@@ -121,9 +121,9 @@ void TLimitKoopaJr::resetLimitKoopaJr()
 {
 	mSpine->reset();
 
-	unk158     = 0;
-	mShotTimer = 0;
-	mShotTimer = LimitKoopaJrShotPeriod(this);
+	mTimers[0] = 0;
+	mTimers[1] = 0;
+	mTimers[1] = LimitKoopaJrShotPeriod(this);
 
 	unk160.x = 0.0f;
 	unk160.y = 0.0f;
@@ -188,28 +188,14 @@ void TLimitKoopaJr::setAnimationIndex(int index)
 	setAnmSound(table == nullptr ? nullptr : table[index]);
 }
 
-// TODO: incorrect size. Map records 52 bytes, ours 44: the ROM materialises
-// &unk158 and &mShotTimer and stores through the pointer while still loading
-// the value at a displacement off `this` (visible in perform, 97.9%). Neither
-// a static helper taking int& nor one taking int* reproduces it -- MWCC folds
-// the address back into the store and, worse, emits a symbol the map lacks.
-// TODO: the map's updateTimers is 0x34 = 13 instructions, i.e. six per timer
-// plus the blr, and `perform`'s expansion materialises each timer's address
-// (`addi r4, this, 0x158`) before loading it. The same six-per-timer shape
-// holds for TKoopaJr (0x4c, three timers), TTinKoopa (0x4c) and
-// TKoopaJrSubmarine (0x1c), so the level is shared. Refuted: a TU-local
-// `static inline decreaseTimer(int*)` and, structural pass IX, the same helper
-// with an `int&` parameter -- MWCC folds `&member` back into a direct member
-// access either way and the body stays 0x2c. Note retail's *load* keeps the
-// direct `0x158(this)` form and only the store goes through the bound
-// address, so whatever creates it is not a plain reference binding.
+// UNUSED (0x34). The timers are an array: MWCC's unrolled indexed loop is
+// what materialises each element's address for the store while loading it at
+// a displacement (perform 97.9 -> 100), as in TBathtubKiller::updateTimers.
 void TLimitKoopaJr::updateTimers()
 {
-	if (unk158 > 0)
-		unk158 -= 1;
-
-	if (mShotTimer > 0)
-		mShotTimer -= 1;
+	for (int i = 0; i < 2; ++i)
+		if (mTimers[i] > 0)
+			mTimers[i]--;
 }
 
 const char** TLimitKoopaJr::getBasNameTable() const { return koopajr_bastable; }
@@ -411,7 +397,7 @@ DEFINE_NERVE(TNerveLimitKoopaJrWait, TLiveActor)
 		return TRUE;
 	}
 
-	if (koopaJr->mShotTimer <= 0) {
+	if (koopaJr->mTimers[1] <= 0) {
 		spine->pushAfterCurrent(&TNerveLimitKoopaJrLaunch::theNerve());
 		return TRUE;
 	}
@@ -426,7 +412,7 @@ DEFINE_NERVE(TNerveLimitKoopaJrLaunch, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		koopaJr->setAnimationIndex(TLimitKoopaJr::LIMITKOOPAJR_ANM_DAMAGE);
-		koopaJr->mShotTimer
+		koopaJr->mTimers[1]
 		    = koopaJr->getSaveParams()->mSLShotDoodlePeriod.get();
 	}
 
