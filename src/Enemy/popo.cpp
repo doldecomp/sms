@@ -571,20 +571,23 @@ void TPopo::behaveToFindMario()
 	}
 }
 
+// TODO: 98.6%. Retail passes &unk104 to each inlined getPoint() instead of
+// folding it into r31+0x108, and its frame is 8 smaller with the low
+// temporaries (calcVelocityToJumpToY's result, the TPathNode, vel) 8-0x30
+// lower and an unexplained 12-byte slot between range and goal.
 void TPopo::walkBehavior(int param_1, f32 param_2)
 {
 	if (!isAirborne()) {
 		JGeometry::TVec3<f32> goal(unk104.getPoint());
-		JGeometry::TVec3<f32> dir;
-		dir.set(unk104.getPoint().x - mPosition.x, 0.0f,
-		        unk104.getPoint().z - mPosition.z);
-		if (dir.x == 0.0f && dir.y == 0.0f && dir.z == 0.0f)
-			dir.x += 1.0f;
-		MsVECNormalize((Vec*)&dir, (Vec*)&dir);
+		goal.set(unk104.getPoint().x - mPosition.x, 0.0f,
+		         unk104.getPoint().z - mPosition.z);
+		if (goal.x == 0.0f && goal.y == 0.0f && goal.z == 0.0f)
+			goal.x += 1.0f;
+		MsVECNormalize((Vec*)&goal, (Vec*)&goal);
 
-		TMsRange<f32> range(-20.0f, 20.0f);
 		f32 dist    = mSaveParams->getSLMoveDist();
 		f32 jumpSp  = mSaveParams->getSLMoveJumpSp();
+		TMsRange<f32> range(-20.0f, 20.0f);
 		f32 scatter = 1.0f;
 		if (mSpine->getCurrentNerve() == &TNervePopoAttack::theNerve()) {
 			jumpSp  = mSaveParams->getSLAttackJumpSp();
@@ -592,8 +595,8 @@ void TPopo::walkBehavior(int param_1, f32 param_2)
 			scatter = 10.0f;
 			setBckAnm(0);
 		}
-		goal.x = scatter * range.rand() + (dir.x * dist + mPosition.x);
-		goal.z = scatter * range.rand() + (dir.z * dist + mPosition.z);
+		goal.x = scatter * range.rand() + (goal.x * dist + mPosition.x);
+		goal.z = scatter * range.rand() + (goal.z * dist + mPosition.z);
 		goal.y = mPosition.y;
 
 		f32 rate = 1.0f;
