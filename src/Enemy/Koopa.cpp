@@ -1075,20 +1075,22 @@ bool TKoopa::allowsLaunch() const
 	return true;
 }
 
+// TODO: retail keeps the .bss base in r31 and `this` in r30 (ours swapped);
+// the nerve guard objects' .bss offsets differ too (TU static order).
 void TKoopa::getDown()
 {
-	if (&TNerveKoopaFall::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaFall::theNerve() == getSpine()->getCurrentNerve())
 		return;
-	if (&TNerveKoopaProvoke::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaProvoke::theNerve() == getSpine()->getCurrentNerve())
 		return;
-	if (&TNerveKoopaTumble::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaTumble::theNerve() == getSpine()->getCurrentNerve())
 		return;
 
-	if (&TNerveKoopaStagger::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaStagger::theNerve() == getSpine()->getCurrentNerve())
 		mSpine->setNext(&TNerveKoopaGetDown::theNerve());
 	if (&TNerveKoopaGetShowered::theNerve() == mSpine->getCurrentNerve())
 		mSpine->setNext(&TNerveKoopaGetDown::theNerve());
-	mSpine->pushNerve(&TNerveKoopaGetDown::theNerve());
+	getSpine()->pushNerve(&TNerveKoopaGetDown::theNerve());
 }
 
 bool TKoopa::effectsTumble() const
@@ -1127,22 +1129,23 @@ bool TKoopa::getShowered()
 	return true;
 }
 
+// TODO: only the nerve guard objects' .bss offsets differ (TU static order).
 void TKoopa::stagger(bool force)
 {
-	if (&TNerveKoopaFall::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaFall::theNerve() == getSpine()->getCurrentNerve())
 		return;
-	if (&TNerveKoopaProvoke::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaProvoke::theNerve() == getSpine()->getCurrentNerve())
 		return;
 	if (!force
-	    && mSpine->getCurrentNerve() == &TNerveKoopaFlame::theNerve())
+	    && getSpine()->getCurrentNerve() == &TNerveKoopaFlame::theNerve())
 		return;
-	if (&TNerveKoopaTumble::theNerve() == mSpine->getCurrentNerve())
+	if (&TNerveKoopaTumble::theNerve() == getSpine()->getCurrentNerve())
 		return;
 	if (&TNerveKoopaGetDown::theNerve() == mSpine->getCurrentNerve())
 		return;
 	if (&TNerveKoopaGetShowered::theNerve() == mSpine->getCurrentNerve())
 		return;
-	mSpine->pushNerve(&TNerveKoopaStagger::theNerve());
+	getSpine()->pushNerve(&TNerveKoopaStagger::theNerve());
 }
 
 // TODO: UNUSED (0xec), body not reconstructed. Two inlined theNerve() guards
