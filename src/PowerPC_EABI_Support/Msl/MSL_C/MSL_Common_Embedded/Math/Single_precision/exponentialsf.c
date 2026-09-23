@@ -190,6 +190,9 @@ inline float __exp2f(float t)
 // each block's inner layout exactly at retail's, only 4 too tall: dropping
 // `fp` to pay for it breaks the FPR colouring (98.6), and moving the `0.75 +
 // (0.25 + fp)` tail or the polynomial into a one-line inline adds 0x18.
+// Unit round 2026-09-23, all identical: `const unkConsts`, unsigned `lo_bits`, `lo_bits`
+// scoped to or initialised in the `if`, a float `lo_f` punned the other way,
+// `frac` declared at use, `unsigned bits`. Moving `hi_bits` into the `if` is worse.
 float powf(float x, float y)
 {
 	int iy;

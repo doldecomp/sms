@@ -24,7 +24,9 @@
    Codegen-neutral: dropping the `(TRKBuffer*)` cast on TRKGetBuffer's `void*`,
    `done = done + length`, a named `remain` for `*count - done`, and extra
    parentheses in the `while`. Worse: reordering the `while` conditions (19) and
-   writing the length clamp as a ternary (26). */
+   writing the length clamp as a ternary (26).
+   Unit round 2026-09-23: `int done` is identical; `replyBuffer` (or all
+   four reply locals) scoped to the `need_reply` block is worse (27/39). */
 DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
                           DSIOResult* io_result, BOOL need_reply, BOOL read)
 {
