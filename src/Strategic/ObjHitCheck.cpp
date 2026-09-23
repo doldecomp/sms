@@ -233,7 +233,31 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 	}
 }
 
-void TObjHitCheck::checkGroup(TIdxGroupObj* group) { }
+// Only the map records this (UNUSED, 0x274): checkAndEntryGroup without the
+// entryActor step compiles to exactly that size.
+void TObjHitCheck::checkGroup(TIdxGroupObj* group)
+{
+	TIdxGroupObj::iterator end = group->getChildren().end();
+	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
+	     ++it) {
+		(*it)->mColCount = 0;
+
+		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
+			continue;
+
+		u32 e;
+		u32 i = getTableIndex((*it)->mPosition, (*it)->mEntryRadius, &e);
+
+		while (i != e) {
+			checkActorsInList(*it, unk0[i].unk0);
+
+			if (i == 0xff)
+				i = 0;
+			else
+				i += 1;
+		}
+	}
+}
 
 void TObjHitCheck::checkActorsHit()
 {
