@@ -1535,19 +1535,21 @@ void TMario::checkController(JDrama::TGraphics*)
 		unk108->mStickV = (f32)(unk108->mStickVS16 - 6);
 
 	// Stick distance, then mLengthMult^mLengthMultTimes (unrolled in 8s)
-	f32 dist = (unk108->mStickH * unk108->mStickH)
-	           + (unk108->mStickV * unk108->mStickV);
-	if (dist > 0.0f)
-		dist = MsSqrtf(dist);
+	f32 sq = (unk108->mStickH * unk108->mStickH)
+	         + (unk108->mStickV * unk108->mStickV);
+	f32 dist = sq;
+	if (sq > 0.0f)
+		dist = MsSqrtf(sq);
 
+	f32 len = dist;
 	for (int i = 0; i < mControllerParams.mLengthMultTimes.get(); ++i)
-		dist *= mControllerParams.mLengthMult.get();
+		len *= mControllerParams.mLengthMult.get();
 
-	unk108->mStickDist = dist;
+	unk108->mStickDist = len;
 
 	if (unk108->mStickDist > 64.0f) {
-		unk108->mStickH    = unk108->mStickH * (64.0f / unk108->mStickDist);
-		unk108->mStickV    = unk108->mStickV * (64.0f / unk108->mStickDist);
+		unk108->mStickH    *= 64.0f / unk108->mStickDist;
+		unk108->mStickV    *= 64.0f / unk108->mStickDist;
 		unk108->mStickDist = 64.0f;
 	}
 
@@ -1575,10 +1577,10 @@ void TMario::checkController(JDrama::TGraphics*)
 	}
 
 	if (mIntendedMag > 0.0f) {
-		// camera angle at offset 0x258 lives inside the unk21C[..]
-		// placeholder array of CPolarSubCamera -- TODO: name & expose it
+		// TODO: retail adds the camera yaw to the jitter before matan's
+		// result (no extsh); ours reassociates matan + jitter first.
 		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH)
-		               + (*(s16*)((char*)gpCamera + 0x258) + yawJitter);
+		               + (gpCamera->unk258 + yawJitter);
 	} else {
 		mIntendedYaw = mFaceAngle.y;
 	}
@@ -1640,7 +1642,7 @@ void TMario::checkController(JDrama::TGraphics*)
 		if ((s32)mWaterGun->mCurrentNozzle == TWaterGun::Turbo
 		    && ((mStatus + 0xF3C00000) == 0x201
 		        || ((mStatus + 0xFC000000) & 0xFFFFFFFF) == 0x440)) {
-			f32 propRot = mIntendedMag * 0.03125f;
+			f32 propRot = mIntendedMag / 32.0f;
 			// TODO: wrong??? Correct offset is 0x714 which is way past
 			// the end of a TNozzleTrigger???
 			((TNozzleTrigger*)((const TWaterGun*)mWaterGun)->getCurrentNozzle())
