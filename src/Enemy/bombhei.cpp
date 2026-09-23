@@ -208,6 +208,9 @@ void TBombHei::kill()
 // belongs to `operator-`'s own body or to a second *named* local declared
 // after `dir` (a dead 12-byte TVec3 plus 4 of alignment fits it exactly), not
 // to anything expanded later such as setVelocityAndFlag10.
+// Copying Mario's position into a named local before the subtraction now
+// reserves the missing slot (frame 0x50 exact); what is left is the eight
+// bytes of pool too many, which put `dir` at 0x30 and the receiver at 0x24.
 void TBombHei::genEventCoin()
 {
 	TBombHeiManager* manager = (TBombHeiManager*)mManager;
@@ -221,7 +224,8 @@ void TBombHei::genEventCoin()
 			// out-of-line TVec3::sub: the copy constructor is one
 			// inline level and the difference nested in its argument
 			// two more.
-			JGeometry::TVec3<f32> dir = *gpMarioPos - mPosition;
+			JGeometry::TVec3<f32> marioPos = *gpMarioPos;
+			JGeometry::TVec3<f32> dir      = marioPos - mPosition;
 			MsVECNormalize((Vec*)&dir, (Vec*)&dir);
 			coin->setVelocityAndFlag10(20.0f * dir.x, 20.0f, 20.0f * dir.z);
 		}
