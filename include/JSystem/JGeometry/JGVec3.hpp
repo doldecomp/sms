@@ -398,6 +398,47 @@ public:
 	// TSpider::bind, NPCNeckCallBack, THauntLeg::calcRootMatrix and
 	// TMario::moveRequest stay open or regress. The copy-constructor change
 	// cut the regression count (70 -> 50), not the lost set.
+	//
+	// Re-measured 2026-09-23 (research c-abc), exact functions against 11873:
+	//   uncast `operator=` alone            +2 / -0, 21 up, 11 down
+	//   full cc34 migration (uncast `=`, `const Vec*` operator-, Tongue
+	//   helper, the cc34 `.length()` unwraps)
+	//                                       +15 / -6, 43 up, 56 down
+	// The 56 losers fall into four groups:
+	//   (a) 11 from the uncast `=` alone, which want the cast `=`'s memory
+	//       copy: TBWLeashNode::calcMatrix 99.15 -> 87.03 (frame 0x78 against
+	//       retail's 0xe8), TMBindShadowManager::forceRequest/calcVtx,
+	//       TTelesa::behaveToWater, TNerveNPCTurnToMario, the koopajr pair
+	//       calcRootMatrix/makeKillerVelocity, TNerveBWJumpToBath,
+	//       TMapObjPlane::calcNrm, TBossHanachan::perform, TTPHitActor::bind.
+	//       Elision needs the uncast `operator=(const TVec3&)` and these need
+	//       the cast one, and nothing in the binary shows a second vector
+	//       type that could hold the other spelling (TRopePoint::unkC is a
+	//       TVec3: its weak default constructor needs one).
+	//   (b) 14 with exactly 6 extra instructions: the return copy is not
+	//       elided when the result initialises a named local or a by-value
+	//       argument (`TVec3 d = a - b;`, `d(a - b)` and `d; d = a - b` all
+	//       keep it; operator- bodies `r(*fst)`, `r.set(*fst)` and a raw Vec
+	//       copy do too). Passing `a - b` straight on or binding `const TVec3&`
+	//       drops the copy but leaves the frame 0x10 short
+	//       (TNerveCannonSearch). The wire* family, execUTurn,
+	//       TNerveMameGessoJitabata, TElecCarapace::shoot, the two TabePuku
+	//       nerves, doShortCut, TMarioCap::perform, TBombHei::genEventCoin.
+	//   (c) about 20 frame-only (no missing or extra instructions): the
+	//       `.length()` on a temporary sites 0x18-0x30 over (soundTorocco,
+	//       toroccoEffect, isTakeSituation, moveRoof, TPinnaCoaster::control,
+	//       TMapWireActor::getPosInWire, findRunAwayNearestNode), and 8 over
+	//       at sites whose binders were tuned to the current header.
+	//       In warpRequest, dropping either of its two binders lands the
+	//       frame, but the temporary is then 4 bytes low: the same 4-byte
+	//       residue as before.
+	//   (d) mixed: TYoshiTongue::movement 96.70 -> 94.47, TEMario::perform,
+	//       zigzagToCurPathNode, wireRolling, fenceMove, TBossTelesa::
+	//       moveObject, throwMario_, moveRequest, pulling, TBWBinder::bind.
+	// Lost exact: soundTorocco, toroccoEffect, isTakeSituation, moveRoof,
+	// TNerveMameGessoJitabata::execute, TBaseNPC::execUTurn. The uncast `=`
+	// alone closes TEffectColumWater::generate and
+	// TMapCollisionBase::setCheckData but costs group (a).
 	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
 	{
 		fst -= snd;
