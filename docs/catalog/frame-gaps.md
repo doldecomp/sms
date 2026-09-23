@@ -1980,3 +1980,25 @@ Model `TCoasterEnemy::bind` (retail 55 instructions, frame 0x40, `bl sub` temp 0
   Spot check on exact units `Enemy/spline`, `Player/MarioAction`, `NPC/NpcTrample` (9 functions): 1.2.5 9/9, 1.1 9/9, 1.2.5n 6/9, 1.1p1 5/9, 1.0 5/9, 1.3+ 0/9.
   1.3-2.7 crash on the precompiled-header prefix under wibo; the text `SMS.pch` prefix shifts some offsets, so compare versions under the same prefix mode.
 - Consequence: the 130-site class needs the cc23 migration (copy members that allow the elision, plus an honest source for the 4-byte left-operand pointer temporary). Do not look for it in compiler versions or return-value flags.
+
+
+## Research fd1 (2026-09-23): no shared header inline carries the dead low region
+
+Driver: `pop.py`, `noinl.py`, `graph.py`, `rank.py`, `nnls.py`, `enrich.py`, `probe.py`, `measure.sh` and `score.py` in `sms-wt/fd1-scratch/` (outputs `ranked_callees_top15.tsv`, `unused_carrier_leads.tsv`, `pop_*.tsv`).
+Nothing in `include/` changed.
+
+- **Population.** Functions whose instructions equal retail modulo `r1` offsets (and relocation names), objdump of `build/GMSE01/obj` against `build/GMSE01/src`: 200 with our frame short (121 register-exact, 79 register-renamed), 33 over, 10,281 frame- and slot-exact controls.
+  Deficits are 8 mod 16 in 122 of the 200 and 0 mod 16 in 78, so a 12-byte `TVec3` local (+16 each) cannot be the common carrier.
+- **Inline sets without reading source.** Recompiling every TU with the build's flags plus `-inline off` (30 s for 706 TUs) turns every expansion into a `bl`; a function's expanded callees are its `-inline off` call targets minus its real-build `bl` targets, closed transitively through the weak copies.
+  This is reusable for any "which inlines does this function expand" question.
+- **Statistics.** The only family enriched after matching on size and expansion count is `JGeometry::TVec3<f32>`/`TUtil<f32>` (users 1.4x as likely to be short, z 3.2; per method `cross` z 5.7, `epsilon`, default ctor, `dot`, `sub`, `squared` z 5).
+  No method is short at every user: each has frame-exact users (`cross` 2, `setLength` 20, `isZero` 9, default ctor 271), and a non-negative least-squares fit gives at most 4-6 bytes per expansion with R² 0.40, where a real carrier would give a constant 8 or 16.
+  Expanding a map-UNUSED callee looks predictive raw (8.9% short against 1.6%) but not after the size match (z 1.6): big functions both expand helpers and have gaps.
+- **Probes (dead non-trivial local inserted into one header inline, full rebuild, frame and slot compare over the population).**
+  8-byte local in `cross` is the only one that shrinks the total gap (-160 bytes, 4 frames fixed) and still breaks 7, including the two exact users (`TRealoidActor::calcRootMatrix` with three `cross`es, `TGesso::bind`).
+  Every other site loses more than it fixes (exact functions lost): `isZero` 9, `normalize()` 13, `setLength(v, f)` 21, `scale(f, v)` 20, `sub(a, b)` 6, `zero` 58, `squared` 64, `dot` 73, `set(const Vec&)` 10, `operator=` 174, copy ctor 142, default ctor 252, `TVec3(T, T, T)` 155, `TUtil::epsilon` 30, `TUtil::one` 18.
+  A 16-byte `TVec3` local in `cross` fixes 1 and loses 2.
+- **Reading.** The `TVec3` enrichment is per call site, not per header function: retail wrote the vector math differently at some sites (a by-value temporary, a named copy) while other sites use the same inline as ours.
+  Header work on JGeometry is not the lever for the dead low region; closure agents should treat these gaps as site spellings.
+- **Leads (unit-local, all users short, none exact):** `TNozzleBase::isAnmEnd` (UNUSED 0x94, all three `animation`s, 40-168 short), `TMapWire::getPointPos*` (two users, 96/112), `loadBookmark` (CardLoad, 104 twice), `MSStageProc::setBgmPosition` (104/64), the `TGameSequence` set/copy chain (`decideNextStage` 8, `setNextStage` 16, `TApplication` ctor 16, `proc` 80; `decideNextMode` exact with one `set`), `TKoopa` turn helpers (`TNerveKoopaTurnL`/`R` 280/272 short, the `getParam` users with one expansion exact).
+  Three JPADrawVisitor `exec`s (`RotDirectional`, `DirectionalCross`, `RotDirectionalCross`) are each exactly 8 short and reach frame parity (slots still off) under the 8-byte probe in `cross`, overshooting under `isZero` or `normalize`: one 8-byte site-level temporary around their shared `cross` is the likely fix.
