@@ -1347,8 +1347,8 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		}
 
 		if (unkC4 == 4) {
-			unk4D8[unkB7]->setCenteredSize(40, unk4E0[unkB7].getWidth() * 0.5f,
-			                               unk4E0[unkB7].getHeight() * 0.5f,
+			unk4D8[unkB7]->setCenteredSize(40, unk4E0[unkB7].getWidth() * 1.5f,
+			                               unk4E0[unkB7].getHeight() * 1.5f,
 			                               unk4E0[unkB7].getWidth(),
 			                               unk4E0[unkB7].getHeight());
 			JUTRect bounds = unk4D8[unkB7]->getPane()->mGlobalBounds;
