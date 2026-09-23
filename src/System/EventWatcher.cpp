@@ -635,20 +635,22 @@ static void evIsGraffitoCoverage0(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(gpPollution->cleanedAll() ? 1 : 0);
 }
 
+// TODO: 99.2%, frame exact; only the loop counter/layer registers differ
+// (retail i in r7 with the layer in r5 in both loops).
 static void evSetGraffitoMultiplied(TSpcTypedInterp<TEventWatcher>* interp,
                                     u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int enable = TSpcSlice(interp->pop()).getDataInt();
 
-	TPollutionManager* pollution = gpPollution;
 	int i                        = 0;
+	TPollutionManager* pollution = gpPollution;
 	if (enable) {
 		for (; i < pollution->getJointModelNum(); ++i)
-			pollution->getLayer(i)->startSpread();
+			((TPollutionLayer*)pollution->getJointModel(i))->startSpread();
 	} else {
 		for (; i < pollution->getJointModelNum(); ++i)
-			pollution->getLayer(i)->stopSpread();
+			((TPollutionLayer*)pollution->getJointModel(i))->stopSpread();
 	}
 
 	interp->push();

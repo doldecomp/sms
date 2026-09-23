@@ -130,6 +130,8 @@ static void initPinnaParco()
 }
 #pragma dont_inline off
 
+// TODO: 99.6%. Every instruction matches; retail's frame is 0x78 larger, with
+// all push_back temporaries 0x74 higher (an unidentified low-region block).
 static void initStageCommon()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
@@ -147,12 +149,12 @@ static void initStageCommon()
 	    || gpMarDirector->getCurrentMap() == 6
 	    || gpMarDirector->getCurrentMap() == 0x14
 	    || gpMarDirector->getCurrentMap() <= 1) {
-		TMapStaticObj* sea = new TMapStaticObj("波（遠景）");
-		sea->init("sea");
+		TMapStaticObj* obj = new TMapStaticObj("波（遠景）");
+		obj->init("sea");
 
-		TMapStaticObj* indirect = new TMapStaticObj("インダイレクト波");
-		indirect->init("SeaIndirect");
-		group->getChildren().push_back(indirect);
+		obj = new TMapStaticObj("インダイレクト波");
+		obj->init("SeaIndirect");
+		group->getChildren().push_back(obj);
 
 		TMapObjWaterFilter* filter
 		    = new TMapObjWaterFilter("水中カメラフィルタ");
