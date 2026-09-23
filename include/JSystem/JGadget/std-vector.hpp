@@ -386,6 +386,9 @@ public:
 
 	size_t size() const { return Base::size(); }
 
+	// UPDATE (rs4): MSoundMainSide gets the `bl` with no header change, by
+	// reaching the cube through two TU-local levels (getSoundCube -> getCube)
+	// inside calcParamRatioInCube; bosseel's site is still open. Old notes:
 	// TODO: the ROM `bl`s JGadget::TVector<void*>::begin() (weak 0x8, `lwz
 	// r3,4(r3)`, emitted only from bosseel.cpp and MSoundMainSide.cpp) at
 	// exactly two places: TBossEel::perform's inlined
