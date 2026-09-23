@@ -975,9 +975,18 @@ static inline f32 CannonRotYToPoint(const JGeometry::TVec3<f32>& from,
 	return MsGetRotFromZaxis(diff).y;
 }
 
-DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
+// The spine's body as a binding level: the nerves that read it through
+// this level keep the spine in r31 and the body below it.
+static inline TCannon* CannonBody(TSpineBase<TLiveActor>* spine)
 {
 	TCannon* cannon = (TCannon*)spine->getBody();
+	return cannon;
+}
+
+// TODO: frame 0x58, retail 0x60; every instruction matches.
+DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
+{
+	TCannon* cannon = CannonBody(spine);
 
 	if (spine->getTime() == 0) {
 		cannon->mChorobei->setBckAnm(0xC);
@@ -993,7 +1002,7 @@ DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
 
 DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 {
-	TCannon* cannon = (TCannon*)spine->getBody();
+	TCannon* cannon = CannonBody(spine);
 
 	cannon->updateSquareToMario();
 	f32 dist = cannon->getDistToMarioSquared();
@@ -1074,15 +1083,9 @@ static inline J3DFrameCtrl* CannonShootFrameCtrl(TCannon* p)
 	return ctrl;
 }
 
-static inline TCannon* CannonShootBody(TSpineBase<TLiveActor>* spine)
-{
-	TCannon* cannon = (TCannon*)spine->getBody();
-	return cannon;
-}
-
 DEFINE_NERVE(TNerveCannonShoot, TLiveActor)
 {
-	TCannon* cannon = CannonShootBody(spine);
+	TCannon* cannon = CannonBody(spine);
 
 	if (spine->getTime() == 0) {
 		if (cannon->mShootMode == 0)
@@ -1177,12 +1180,6 @@ DEFINE_NERVE(TNerveCannonForceBombShoot, TLiveActor)
 
 // Binding levels worth +8 each of low region, landing TNerveCannonClose's
 // frame at 0xb8 (the body binder plus the chorobei binder at two sites).
-static inline TCannon* CannonCloseBody(TSpineBase<TLiveActor>* spine)
-{
-	TCannon* cannon = (TCannon*)spine->getBody();
-	return cannon;
-}
-
 static inline TChorobei* CannonCloseChorobei(TCannon* p)
 {
 	TChorobei* chorobei = p->mChorobei;
@@ -1191,7 +1188,7 @@ static inline TChorobei* CannonCloseChorobei(TCannon* p)
 
 DEFINE_NERVE(TNerveCannonClose, TLiveActor)
 {
-	TCannon* cannon = CannonCloseBody(spine);
+	TCannon* cannon = CannonBody(spine);
 
 	if (spine->getTime() < 2) {
 		cannon->deadCannon();
@@ -1355,15 +1352,9 @@ static inline MActor* CannonDamageDemoMActor(TCannon* cannon)
 	return actor;
 }
 
-static inline TCannon* CannonDamageDemoBody(TSpineBase<TLiveActor>* spine)
-{
-	TCannon* cannon = (TCannon*)spine->getBody();
-	return cannon;
-}
-
 DEFINE_NERVE(TNerveCannonDamageDemo, TLiveActor)
 {
-	TCannon* cannon = CannonDamageDemoBody(spine);
+	TCannon* cannon = CannonBody(spine);
 
 	if (spine->getTime() == 0)
 		cannon->mChorobei->setBckAnm(0xE);
