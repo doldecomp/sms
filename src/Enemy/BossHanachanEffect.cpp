@@ -43,7 +43,14 @@ void TBossHanachan::staticLoadParticle()
 	SMS_LoadParticle("ms_boha_kizetsu.jpa", 0x16F);
 }
 
-// TODO: 98.3%, frame 0xc8 vs 0x90, no missing/extra/opcode differences.
+// TODO: 99.6%, frame 0xc8 vs 0xa8. The `this`/nerve rotation below is now
+// CLOSED: `getMActor()` at the two frame-control sites plus the named
+// particle-manager level at the 0x7D emit put `this` in r31 and the nerve in
+// r30 as retail does. Left: 0x20 of low frame, `position` 4 bytes low
+// (0x4c+0x20 vs 0x70), and r22/r23 swapped between the loop counter and the
+// SL-probability address. A rooted lever-search only reaches 0xc0 by stacking
+// more binders (mHead->getHead(), gpSunMgr, a second particle level) with no
+// operand change, so they are not taken. History of the old base follows.
 // Batch 136 measured the whole lever curve for the 56 bytes: a TU-local
 // binding over any one of mHead, unk178, mChangeParams, mBodies[i]->mFeet[],
 // mBodies[i]->mLegMtx[] or gpSunMgr->unk20 is +8 alone, but in combination the
@@ -66,6 +73,12 @@ void TBossHanachan::staticLoadParticle()
 // reference out-parameter level, a direct-return fork, a binder, raw
 // `mSpine->getLatestNerve()` and a named `self` receiver (103 markers each).
 // emitCamShake_'s 4-byte shift was closed by a bool wrapper plus params forks.
+static inline TMarioParticleManager* BHParticles()
+{
+	TMarioParticleManager* manager = gpMarioParticleManager;
+	return manager;
+}
+
 void TBossHanachan::emitParticle_()
 {
 	const TNerveBase<TLiveActor>* nerve = getLatestNerve();
@@ -102,7 +115,7 @@ void TBossHanachan::emitParticle_()
 	}
 	if (nerve == &TNerveBossHanachanGraphWander::theNerve()) {
 		for (int i = 0; i < 8; ++i) {
-			J3DFrameCtrl* ctrl = mBodies[i]->mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mBodies[i]->getMActor()->getFrameCtrl(0);
 			for (int foot = 0; foot < 2; ++foot) {
 				if (ctrl->checkPass(sEmitSandFrameFoot[foot])) {
 					MtxPtr mtx = mBodies[i]->mFeet[foot]->mJointMtx;
@@ -113,8 +126,7 @@ void TBossHanachan::emitParticle_()
 							position.set(leg[0][3], waterHeight, leg[2][3]);
 							gpMarioParticleManager->emit(0x7C, &position, 0,
 							                            nullptr);
-							gpMarioParticleManager->emit(0x7D, &position, 0,
-							                            nullptr);
+							BHParticles()->emit(0x7D, &position, 0, nullptr);
 						} else {
 							position.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 							gpMarioParticleManager->emit(0x77, &position, 0,
@@ -127,7 +139,7 @@ void TBossHanachan::emitParticle_()
 			}
 		}
 	} else if (nerve == &TNerveBossHanachanSnort::theNerve()) {
-		if (mHead->mMActor->getFrameCtrl(0)->checkPass(134.0f)) {
+		if (mHead->getMActor()->getFrameCtrl(0)->checkPass(134.0f)) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    0x78, mHead->mRightNoseMtx, 0, nullptr);
 			gpMarioParticleManager->emitAndBindToMtxPtr(
