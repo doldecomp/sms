@@ -1194,12 +1194,14 @@ void TBossTelesa::reset()
 // out-of-line TVec3::set(const Vec&) at both camera reads.
 static inline JGeometry::TVec3<f32> BossTelesaGetCameraPos()
 {
-	return gpCamera->getUnk124Vec();
+	return SMSGetCamera()->getUnk124Vec();
 }
 
-// TODO: 99.9%; every instruction matches but the frame is 0x40 short (0x190
-// vs 0x1d0): retail puts operator-'s by-value copy of Mario's position in the
-// low region (0xec/0xd0) instead of the named block beside the camera temps.
+// TODO: 99.9%; every instruction matches but the frame is 0x18 short (0x1b8
+// vs 0x1d0; the accessor spellings account for 0x28 of the old 0x40): retail
+// puts operator-'s by-value copy of Mario's position in the low region
+// (0xec/0xd0) instead of beside the camera temps. Wrapping the difference in
+// a static inline is worse (98.8%).
 void TBossTelesa::moveObject()
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -1207,15 +1209,15 @@ void TBossTelesa::moveObject()
 
 	JGeometry::TVec3<f32> toCamera = SMS_GetMarioPos() - BossTelesaGetCameraPos();
 	if (toCamera.length() < mCameraMoveLimit) {
-		unk360 += mCameraMoveSp * (gpMarioPos->y - gpCamera->unk148.y);
-		gpCamera->unk290 = unk360;
+		unk360 += mCameraMoveSp * (SMS_GetMarioPos().y - SMSGetCamera()->unk148.y);
+		SMSGetCamera()->unk290 = unk360;
 	} else if (fabsf(unk360) > 1.0f) {
 		unk360           = unk360 * mCameraMoveSp;
-		gpCamera->unk290 = unk360;
+		SMSGetCamera()->unk290 = unk360;
 	}
 
 	if (SMS_CheckMarioFlag(0x400))
-		gpMSound->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1, &mPosition, 0,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1, &mPosition, 0,
 		                          nullptr, 0, 4);
 
 	if (mSpine->getCurrentNerve() == &TNerveBossTelesaFallDemo::theNerve()) {
@@ -1263,17 +1265,17 @@ void TBossTelesa::moveObject()
 
 	switch (spinning) {
 	case 1:
-		gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE1, &mSoundPos, 0,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE1, &mSoundPos, 0,
 		                          nullptr, 0, 4);
 		break;
 
 	case 2:
-		gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE2, &mSoundPos, 0,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE2, &mSoundPos, 0,
 		                          nullptr, 0, 4);
 		break;
 
 	case 3:
-		gpMSound->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE3, &mSoundPos, 0,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE3, &mSoundPos, 0,
 		                          nullptr, 0, 4);
 		break;
 	}
