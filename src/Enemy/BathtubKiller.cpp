@@ -783,6 +783,11 @@ void TBathtubKiller::updateTimers()
 		unk218--;
 }
 
+// TODO: out of line 0x1a4 against the map's 0x19c. Retail measures Mario's
+// distance first and keeps bathtubPos.y/.z live in f5/f6 across both sqrt
+// blocks; we reload them. Naming the Mario distance fixes the order but costs
+// the Chase nerve 8 bytes of frame; flipped comparison, top declarations and
+// a named reference to the tub position were inert.
 bool TBathtubKiller::isAttackable()
 {
 	if (!unk1CC->isKillerAttackable())
@@ -862,7 +867,8 @@ bool TBathtubKiller::canChase()
 		return false;
 
 	f32 chaseDistanceY = getSaveParam2()->mSLChaseDistanceY.get();
-	if (mPosition.y > unk200 + getBathtubY() + chaseDistanceY)
+	f32 minY = unk200 + getBathtubY();
+	if (mPosition.y > minY + chaseDistanceY)
 		return false;
 
 	return true;
