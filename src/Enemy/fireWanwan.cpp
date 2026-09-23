@@ -177,7 +177,7 @@ void TTailRubber::adjust()
 	fake.mPos.set(unk0.front().mPos);
 	adjustOne(unk0[0], fake, unk0[1]);
 
-	fake.mPos.set(unk0.back().mPos);
+	fake.mPos.set(unk0[unk0.size() - 1].mPos);
 	adjustOne(unk0[unk0.size() - 1], unk0[unk0.size() - 2], fake);
 }
 
