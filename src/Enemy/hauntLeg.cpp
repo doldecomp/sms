@@ -155,7 +155,7 @@ BOOL THauntedObject::receiveMessage(THitActor* sender, u32 message)
 // optimiser removed.
 void THauntedObject::checkHit()
 {
-	for (int i = mColCount; i != 0; --i) { }
+	for (int i = mColCount; i > 0; --i) { }
 }
 
 // TODO: UNUSED (0x10). THauntLeg::setDeadAnm switches the box off with exactly
