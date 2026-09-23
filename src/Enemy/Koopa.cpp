@@ -1452,26 +1452,20 @@ void TKoopa::calcRootMatrix()
 	mScaling.z = 1.0f;
 }
 
-// UNUSED (0x1a0). Picks the grip Mario is heading for, stores its angle in
-// mTargetDir, and says whether Bowser has to turn left (-1), right (1) or not
-// at all. Every nerve that needs the grip flag as well spells the body out.
+// UNUSED (0x1a0). Says which side of Bowser Mario is on. The body is gone,
+// but its .sdata2 claims survive: between TKoopaManager::load's pool and
+// calcRootMatrix's -1500 retail holds 360/65536, 360, -180, 0.0f and the
+// int-to-float double, i.e. getTargetDir expanded here, a degree wrap and a
+// comparison with zero.
+// TODO: ours is 0x150 against the map's 0x1a0 and claims -180 before 360;
+// the missing 0x50 uses no new literal.
 int TKoopa::checkMarioWhichSide()
 {
-	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
-
-	JGeometry::TVec3<f32> estimated;
-	KoopaEstimateMarioWait(this, estimated);
-	if (!bathtub->getNextGrip(SMS_GetMarioPos(), estimated,
-	                          getParam()->waitRange.get(), &mTargetDir)) {
-		KoopaEstimateMarioFire(this, estimated);
-		mTargetDir = bathtub->getNextJuncture(SMS_GetMarioPos(), estimated);
-	}
-
-	f32 diff       = KOOPA_WRAP_DEGREES(mTargetDir - mRotation.y);
-	f32 focusRange = getParam()->focusRange.get();
-	if (diff < -focusRange)
+	f32 toMario = getTargetDir(SMS_GetMarioPos());
+	f32 diff    = KOOPA_WRAP_DEGREES(toMario - mRotation.y);
+	if (diff < 0.0f)
 		return -1;
-	if (diff > focusRange)
+	if (diff > 0.0f)
 		return 1;
 	return 0;
 }
