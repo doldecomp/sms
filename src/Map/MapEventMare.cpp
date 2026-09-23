@@ -85,6 +85,9 @@ static inline TCameraShake* MareWallRockCameraShake()
 	return shake;
 }
 
+// TODO: case 4's t sits 8 bytes low (0xc4 vs retail 0xcc). Inert or worse:
+// every combination of dropping case 4's joint and z locals (frame +8),
+// joint->setTransformInfo, t.set(...).
 void TMareWallRock::movement()
 {
 	switch (unkF4) {
@@ -98,8 +101,7 @@ void TMareWallRock::movement()
 		break;
 
 	case 2: {
-		J3DJoint* joint                 = unk104->getJoint();
-		J3DTransformInfo& transformInfo = joint->getTransformInfo();
+		J3DTransformInfo& transformInfo = unk104->getJoint()->getTransformInfo();
 		if (!TMapObjBase::isDemo()) {
 			transformInfo.mTranslate.z -= mAppearSpeed;
 			if (TMapObjBase::marioIsOn(this))

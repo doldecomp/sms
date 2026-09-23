@@ -363,6 +363,9 @@ static inline void BKPushExplosion(TBathtubKiller* k)
 		k->mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
 }
 
+// TODO: the final `nextPos - mPosition` temporary sits at 0x60, retail 0x4c.
+// Inert or worse: copy-init nextPos, mVelocity = / .set(x, y, z), zero(),
+// add(), sub(a, b), -= in place, a named copy of mPosition, velocity order.
 void TBathtubKiller::bind()
 {
 	JGeometry::TVec3<f32> nextPos = mPosition;

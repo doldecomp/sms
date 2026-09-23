@@ -408,6 +408,10 @@ bool TKumokun::checkOnMovingFloor(JGeometry::TVec3<f32>* param_1,
 	return uVar7;
 }
 
+// TODO: the inline temporaries (getPlaneNormal copies, the wall record) sit
+// 4 low, and retail loads mHeadHeight after the `dVar10 - yTmp` subtraction
+// (spelling it `dVar10 - yTmp > mHeadHeight` fixes the registers but flips
+// the branch).
 bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
                                  const TBGCheckData** param_2,
                                  const JGeometry::TVec3<f32>& param_3,
@@ -416,7 +420,7 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 	bool uVar7 = false;
 
 	JGeometry::TVec3<f32> local_C0 = getPlaneNormal();
-	local_C0 *= -mHeadHeight / 2.0f;
+	local_C0 *= -mHeadHeight * 0.5f;
 
 	JGeometry::TVec3<f32> local_b4 = param_3;
 	local_b4 += local_C0;
@@ -429,13 +433,14 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 	local_A8 += local_9C;
 
 	f32 yTmp = local_A8.y;
+	const TBGCheckData* roof;
 	f32 dVar10
-	    = gpMap->checkRoof(local_A8.x, yTmp - mHeadHeight, local_A8.z, param_2);
+	    = gpMap->checkRoof(local_A8.x, yTmp - mHeadHeight, local_A8.z, &roof);
 	dVar10 -= 1.0f;
 	if (yTmp > dVar10 - 0.05f) {
-		local_A8.y = yTmp;
+		local_A8.y = dVar10;
 	} else if (mHeadHeight < dVar10 - yTmp) {
-		local_A8.y = yTmp;
+		local_A8.y = dVar10;
 	} else {
 		uVar7 = true;
 		local_A8.set(local_b4);
