@@ -1344,7 +1344,8 @@ void TKoopaJrSubmarineManager::loadAfter()
 // costs the constructor nothing. Mem-initialisers are not it: neither
 // `mDirection()` nor `mDirection(0.0f), mBodyDirection(0.0f)` counts towards
 // the budget (both measured, both inert), so the missing statement is a real
-// one in the body.
+// one in the body. Also inert: `setKoopaJr(nullptr)` (the map's UNUSED 0x8
+// setter) in place of the mKoopaJr store.
 TSpineEnemy* TKoopaJrSubmarineManager::createEnemyInstance()
 {
 	return new TKoopaJrSubmarine;
