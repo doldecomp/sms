@@ -606,6 +606,9 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 
 // TODO: 94.5%. Retail keeps &m of the coin loop in r25 across iterations and
 // its frame is 0x18 larger; Mtx scope and `off` placement are inert.
+// Every named slot (both `m`s, both `off`s, the TMsRange) sits 0x14 higher in
+// retail, so the missing 20 bytes are inline temporaries below 0x54, plus the
+// r25 save; the instruction stream is otherwise right.
 void TItemSlotDrum::generateItem()
 {
 	if (getSlotResult() == 0) {
