@@ -820,6 +820,9 @@ void TKoopaJrSubmarine::perform(u32 cue, JDrama::TGraphics* graphics)
 
 // The rear hit box sits between the two rear launchers, the front one on
 // the KoopaJr seat.
+// TODO: frame 0x70 against retail's 0x80; every instruction matches. A TVec3
+// accumulator reaches 0x78 here but is then inlined into perform(), which
+// retail keeps out of line.
 void TKoopaJrSubmarine::makeCollisionPositions()
 {
 	f32 x = 0.0f;
@@ -834,7 +837,8 @@ void TKoopaJrSubmarine::makeCollisionPositions()
 	x *= 0.5f;
 	y *= 0.5f;
 	z *= 0.5f;
-	mRearBody->mPosition.set(x, y, z);
+	JGeometry::TVec3<f32> center(x, y, z);
+	mRearBody->mPosition.set(center.x, center.y, center.z);
 	getJointTransByIndex(TKoopaJr_getJointIndex(0), &mFrontBody->mPosition);
 }
 
