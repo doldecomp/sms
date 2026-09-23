@@ -595,6 +595,9 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 		// params declared after `vel`, `set`/ctor/temporary forms, raw
 		// `*gpMarioAngleY`, product-returning helpers (frame +0x10..+0x20),
 		// a component-setter helper.
+		// Also inert or worse: `.value` on either or both params (-8 frame
+		// with both), raw `mVelocity = vel`, a named or raw ground plane,
+		// `!spine->getTime()`, computing x before z (92.7%).
 		JGeometry::TVec3<f32> vel;
 		f32 power = *gpMarioThrowPower;
 		f32 rate = params->mSLThrownRateXZ.get();
