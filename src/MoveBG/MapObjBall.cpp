@@ -308,9 +308,10 @@ static inline MSound* MapObjBallBoundSound()
 	return sound;
 }
 
-// TODO: two residues. The first Mario-speed test holds fabs in f1 and the
-// minimum in f0 where retail has them swapped (const, fork, raw pointer,
-// fabsf, reversed compare all inert). Every velocity read is a fresh
+// TODO: 99.9%, every instruction matches. The unnamed TVec3 copies sit 4
+// low (retail's first at 0xfc, ours 0xf8) under an equal frame. Inert:
+// minSpeed as raw value, const ref or per-site fork; reach initialised;
+// `into` declared at the top; away.dot(vel). Every velocity read is a fresh
 // unnamed `TVec3(mVelocity)` copy; a named `vel` adds copies.
 void TMapObjBall::boundByActor(THitActor* param_1)
 {
@@ -1115,14 +1116,13 @@ void TResetFruit::kicked()
 	    || (marioY = SMS_GetMarioSpeedY()) < 0.0f)
 		return;
 
-	JGeometry::TVec3<f32> vel(mVelocity);
-	if (vel.y <= 0.0f) {
+	if (JGeometry::TVec3<f32>(mVelocity).y <= 0.0f) {
 		// Already in the air and heading away from Mario: leave it alone.
 		JGeometry::TVec3<f32> diff;
 		diff.x = SMS_GetMarioPos().x - mPosition.x;
 		diff.y = 0.0f;
 		diff.z = SMS_GetMarioPos().z - mPosition.z;
-		f32 toward = JGeometry::TVec3<f32>(vel).dot(diff);
+		f32 toward = JGeometry::TVec3<f32>(mVelocity).dot(diff);
 		// checkLiveFlag2 is the signed BOOL that emits retail's
 		// `li 1/0; cmpwi`. toward has to be computed first so that
 		// materialisation lands after the dot product.
@@ -1131,11 +1131,11 @@ void TResetFruit::kicked()
 			if (toward > 0.0f)
 				return;
 		}
-		// TODO: 97.5%. Frame is 0xb0 against retail 0xe0 (ladder 330's
-		// TVec3-at-bottom-of-pool class). Retail stores the dot product's
-		// velocity copy from the registers that loaded `vel`'s source
-		// temporary rather than reloading `vel`; copying from `vel` at the
-		// later mVelocity sites or at the `<= 0` test is worse.
+		// TODO: 99.8%, every instruction matches. Frame is 0xb8 against
+		// retail 0xe0 (ladder 330's TVec3-at-bottom-of-pool class): the
+		// velocity copies sit 0x30 low. Each test copies mVelocity itself,
+		// as in TMapObjBall::kicked; a named `vel` copied again for the dot
+		// product reloads it instead of reusing the source registers.
 
 		if (JGeometry::TVec3<f32>(mVelocity).y == 0.0f) {
 			mVelocity.y = unk178;
@@ -1635,7 +1635,10 @@ void TBigWatermelon::touchActor(THitActor* param_1)
 		// TODO: 97.3%. The ROM batches the fourth component load before the
 		// first fsubs here; distance()'s doubled subtraction, a named
 		// squared() and sqrt(squared(other)) all schedule it later. The
-		// frame is also 16 bytes short after getVelocity() above.
+		// frame is also 16 bytes short after getVelocity() above. A named
+		// `TVec3 diff; diff.sub(mPosition, param_1->mPosition);` tested by
+		// diff.length() gives the exact frame and vel slots, but then fuses
+		// the squares into fmadds (95.9%); retail keeps three fmuls.
 		if (mPosition.distance(param_1->mPosition) < 0.6f * mBodyRadius) {
 			kill();
 			return;
