@@ -828,6 +828,8 @@ f32 TChuuHana::getGravityY() const
 
 // UNUSED, 0x148 in the map: every 20 frames check whether the panel is
 // still there, and drop when it is not. Inlined into WalkOnPanel and Attack.
+// TODO: 0x154 here; both callers are 100%. Inert or worse: ++unk1A4 in the
+// test, raw checkLiveFlag, != 0 on willFall, operand order, an else return.
 bool TChuuHana::checkOnPanel()
 {
 	unk1A4++;
@@ -914,6 +916,13 @@ void TChuuHana::setGoal()
 
 // UNUSED, 0x13c in the map: pick a random node of the graph and walk there.
 // Inlined into ForceJumped, KeepBalance, willFall and isCollidMove.
+// TODO: every retail expansion stacks range, a 4-byte gap, point, goal
+// (range 8-aligned); ours has range against point and the block 0x18 high in
+// willFall/KeepBalance/isCollidMove. reset() calling setSafeGoal() inlines
+// instruction-identically with the same +0x18 (retail likely does this).
+// Temporary TMsRange via ChuuHanaSafeNode/NodeNum closes KeepBalance but costs
+// ForceJumped; the raw GraphNode/GraphOf spellings fix reset and cost -0x18
+// in the other four.
 void TChuuHana::setSafeGoal()
 {
 	unk1A4 = mCheckOnPanelTime;

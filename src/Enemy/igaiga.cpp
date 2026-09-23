@@ -1414,7 +1414,8 @@ void TGorogoro::flagJump()
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	// TODO: frame-exact; target and the jump-velocity return sit in
 	// each other's slots. Declaring vel first then assigning moves the
-	// copy and is worse.
+	// copy and is worse; vel(calc(...)), a const-ref bind and assigning
+	// mVelocity directly are inert or worse.
 }
 
 void TGorogoro::setDeadAnm()
