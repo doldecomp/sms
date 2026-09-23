@@ -198,24 +198,13 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		// An object with a rand-play index at 0x7c plays through
-		// MSRandPlay instead of the positional SE. The gateCheck is spelled
-		// out rather than routed through MSound::startSeRandPlay because the
-		// wrapper's inline temp costs 8 bytes of frame the ROM does not have.
-		//
-		// TODO: 99.3%. The ROM loads mSoundId straight into r27 and
-		// mRandPlayHandle straight into r31 and keeps both across the
-		// gateCheck call, where we reload the members at the call. Naming
-		// either or both as locals (function scope, block scope, initialised
-		// or uninitialised) always lands them in r25/r26 *below* `this` with
-		// an extra `addi` copy after the compare, so the carrier is not a
-		// named local of this function.
+		// MSRandPlay instead of the positional SE.
 		if (mSoundId != -1) {
 			if (mRandPlayHandle == -1)
-				SMSGetMSound()->startSoundActor(mSoundId, &mPosition, 0,
-				                                nullptr, 0, 4);
-			else if (SMSGetMSound()->gateCheck(mSoundId))
-				MSoundSESystem::MSRandPlay::startSeRandPlay(mSoundId,
-				                                            mRandPlayHandle);
+				gpMSound->startSoundActor(mSoundId, &mPosition, 0, nullptr,
+				                          0, 4);
+			else
+				gpMSound->startSeRandPlay(mSoundId, mRandPlayHandle);
 		}
 
 		JPABaseEmitter* emitter = nullptr;
@@ -493,11 +482,6 @@ void TMapModelActor::perform(u32 cue, JDrama::TGraphics* graphics)
 	unk68->perform(cue, graphics);
 }
 
-// TODO: frame 0xca0 against retail's 0xcb8. Retail's slots, top down:
-// local_c18 0xa0, local_c24 0x94, local_c30 0x88, tmp 0x7c, the MsPerpendic
-// return 0x70, camPos 0x64 (address hoisted into r31), plus 0x18 more low
-// region; ours puts camPos above local_c30. Loop-scope and ctor spellings of
-// camPos were worse.
 void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mGraph->isDummy())
@@ -506,20 +490,16 @@ void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		JGeometry::TVec3<f32> local_c18[0x100];
 		JGeometry::TVec3<f32> local_c24;
-		mGraph->unk0->getPoint(&local_c24);
-
-		JGeometry::TVec3<f32> tmp;
-		JGeometry::TVec3<f32>& camPos = tmp;
+		mGraph->getGraphNode(0).getPoint(&local_c24);
 
 		int count = 0;
-		for (int i = 1; i < mGraph->getNodeNum(); ++i) {
+		for (int i = 1; i < mGraph->getNodeNum(); ++i, ++count) {
 			JGeometry::TVec3<f32> local_c30;
 			mGraph->getGraphNode(i).getPoint(&local_c30);
 
-			camPos.set(gpCamera->unk124);
-
-			JGeometry::TVec3<f32> tmp
-			    = MsPerpendicFootToLineR(local_c24, local_c30, camPos);
+			JGeometry::TVec3<f32> tmp = MsPerpendicFootToLineR(
+			    local_c24, local_c30,
+			    JGeometry::TVec3<f32>(gpCamera->getUnk124Vec()));
 			local_c18[count].set(tmp);
 
 			local_c24 = local_c30;
@@ -529,8 +509,6 @@ void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 				++i;
 				mGraph->getGraphNode(i).getPoint(&local_c24);
 			}
-
-			++count;
 		}
 		mSceneSE->frameLoop(mSoundID, local_c18, count);
 	}
