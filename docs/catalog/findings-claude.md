@@ -61,3 +61,9 @@ Record binary-backed findings from Claude unit work here before promoting reusab
   `TBiancoMiniWindmill::calc` closed 89.7 -> 100 as `TMtx34f spin; spin.identity(); MtxPtr spinPtr = spin;` with the Z rotation and the translation written through `spinPtr`: the row pointer is what lets MWCC interleave the literal and sin-table loads into the identity stores.
   Calling `MsMtxSetRotZ(spinPtr, a)` instead of writing the rows loses 8 bytes of frame (99.6).
   The same named-pointer spelling moves `TRollBlock::calcRootMatrix` only 97.3 -> 97.6 and leaves `TBellWatermill::control`'s 0x60 frame gap untouched.
+- **Header round c-jdrctor, the `new TDStageGroup` ctor-chain frame gap, not landed.**
+  MenuDir/MovieDirector/GCLogoDir `setup` (and MenuDir/MovieDirector `rsetup`) are instruction-exact; retail has one dead 4-byte slot above each inlined TDStageGroup, TViewObjPtrListT and list-chain TViewObj `this` slot, none above the TViewObj inside TFrmGXSet, and 12 more dead bytes in the low region.
+  Inert on all five: `U(name)` base init, explicit template args, no TViewObj default name, TNameRef ctor as assignments, explicit `TList_pointer<T*>()`, out-of-class `inline` ctors, user-declared `virtual ~T() { }` at any level (the map does list every level's dtor), explicit name at the call, a named `TDStageGroup*` local (+8 pad only).
+  Out-of-class template list ctor goes out of line; `unkC(0)` inlines TFlagT.
+  A dead `const char*` local in each ctor body (probe only) lands the three upper slots exactly: the residue is one temporary per inline level that our spelling lets MWCC substitute.
+  Details in the JDRDStageGroup.hpp comment.
