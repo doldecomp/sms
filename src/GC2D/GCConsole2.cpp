@@ -4545,9 +4545,9 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	JUTRect bounds = unk2A0[0]->getBounds();
 	f32 hidden     = 47.0f * (1.0f - unk2B8) - 0.5f;
 	int top        = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden;
-	// TODO: instruction-exact; the frame is 0x50 short (0x1c8 against 0x218).
-	top += 1;
-	int y = top;
+	// TODO: the frame is 0x50 short (0x1c8 against 0x218), and retail adds
+	// the pane's y1 as the first operand of the `add` whichever way it is spelled.
+	int y = ++top;
 	if (top < 0)
 		y = 0;
 
