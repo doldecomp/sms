@@ -166,7 +166,13 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		offset = mUp;
 		JGeometry::TRotation3<TMtx33f> rotation(toTarget, -1.570796f);
 		JGeometry::TVec3<f32> rotSrc(offset);
-		rotation.mult33(rotSrc, offset);
+		// Retail applies the transpose (the inverse rotation).
+		offset.set(rotation.at(0, 0) * rotSrc.x + rotation.at(1, 0) * rotSrc.y
+		               + rotation.at(2, 0) * rotSrc.z,
+		           rotation.at(0, 1) * rotSrc.x + rotation.at(1, 1) * rotSrc.y
+		               + rotation.at(2, 1) * rotSrc.z,
+		           rotation.at(0, 2) * rotSrc.x + rotation.at(1, 2) * rotSrc.y
+		               + rotation.at(2, 2) * rotSrc.z);
 		offset *= mCurrentParams->mOffsetLookatXZ;
 
 		mCurrentTarget.unk18 += offset;
