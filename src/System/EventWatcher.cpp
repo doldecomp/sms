@@ -486,7 +486,7 @@ static void evRegisterMovie(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 static void evGameOver(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	SMSGetMarDirector()->onUnk4CFlag(0x1);
+	SMSGetMarDirector()->onFlag(TMarDirector::DIRECTOR_FLAG_SHINE_GET_PENDING);
 	interp->push();
 }
 

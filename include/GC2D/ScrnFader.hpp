@@ -65,6 +65,7 @@ public:
 	{
 		return mFadeStatus == FADE_STATUS_FULLY_FADED_OUT;
 	}
+	f32 getRate() const { return mRate; }
 
 public:
 	/* 0x10 */ u16 unk10;

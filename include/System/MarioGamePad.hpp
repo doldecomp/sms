@@ -172,6 +172,13 @@ public:
 	}
 
 	// Fabricated
+	void resetButtons()
+	{
+		mButton.mTrigger = 0;
+		mButton.mRelease = 0;
+	}
+
+	// Fabricated
 	inline bool checkFlag(u32 flag) { return (mFlags & flag) != 0; }
 	void onFlag(u32 flag) { mFlags |= flag; }
 	void offFlag(u32 flag) { mFlags &= ~flag; }
