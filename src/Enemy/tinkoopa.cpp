@@ -438,9 +438,6 @@ bool TTinKoopaFlame::isHighPosition()
 	return mTinKoopa->mDamageStage != 0;
 }
 
-// TODO: instruction-exact except the post-clamp mScale reload: retail
-// `lfs f0; fmuls f30, f0, f2`, ours `lfs f30; fmuls f30, f30, f2`.
-// `scale = mScale * height` restores the f0 load but adds a second `fmr`.
 void TTinKoopaFlame::emitFlameEffects()
 {
 	if (mTinKoopa->mSpine->getCurrentNerve()
@@ -465,9 +462,8 @@ void TTinKoopaFlame::emitFlameEffects()
 	}
 
 	f32 scaleY;
-	f32 scale = mScale;
-	scale *= height;
-	scaleY = scale;
+	f32 scale;
+	scaleY = scale = mScale * height;
 	if (mTinKoopa->mFlameStopTimer > 0)
 		scaleY *= 0.5f;
 
