@@ -691,6 +691,7 @@ static void Hx_Circle(void)
 // TODO: frame only (0x150 vs 0x168). Retail's named block is 0x18 larger,
 // with the sqrtf slot at 0xa4 unchanged; p[4] or a spare Vec[2] fits it, but
 // neither is used, and a real bottom-row array costs +0x28.
+// An inline read of hx.centerY in a compare adds 8 (the Hx_Door lever), not 0x18.
 static void Hxs1_Circle(f32 r)
 {
 	u32 y;
@@ -1295,7 +1296,8 @@ static void Hxs_Logo_TexSetup(u8 alpha_in, u8 fade_in, const ResTIMG* timg)
 // u1..v2 in f22..f25); declaration order is inert.
 // TODO: frame is right; the saved-FPR colouring differs (retail: d.x/d.y
 // f31/f30, ox/oy f29/f28, u/v f22-f25) and the second vertex reloads d
-// earlier. Declaration and statement order are inert.
+// earlier. Declaration and statement order are inert. Dividing x1..y2 in
+// place gets ox/oy and the u/v order right but leaves sx/sy above dx/dy.
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 {
 	f32 sy = ht / 1.924138f;
