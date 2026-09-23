@@ -489,6 +489,9 @@ void TMario::slopeProcess()
 {
 	// TODO: the named block still sits 4 bytes above retail's (slopeUp 0x70,
 	// slopeDown 0x6c); the two binder levels below carry the rest of the frame.
+	// Retail has one more 4-byte named slot above slopeUp. Inert: both locals
+	// or angDiff declared at the top, `f32 mag;` assigned later, an int
+	// angDiff; declaring slopeDown first lands slopeUp at 0x70 but not both.
 	f32 mag = std::sqrtf(
 	    MarioRunGetNormal2(mGroundPlane).x * MarioRunGetNormal(mGroundPlane).x
 	    + mGroundPlane->getNormal().z * mGroundPlane->getNormal().z);

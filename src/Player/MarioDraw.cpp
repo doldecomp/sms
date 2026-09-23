@@ -2248,6 +2248,9 @@ void TMario::drawSpecial(JDrama::TGraphics* graphics)
 
 // Binding level worth +8 of low region, landing TMario::drawLogic's frame at
 // 0x28 (batch 124).
+// TODO: drawLogic's GXColor literal/copy sit at 0x18/0x1c against retail's
+// 0x14/0x18. A named `GXColor white` (assigned at the call) with the binder
+// dropped lands the literal at 0x14 but puts the by-value copy at 0x10.
 static inline bool MarioDrawCheckUnk114(const TMario* p, u32 i)
 {
 	bool unk114 = p->checkUnk114(i);

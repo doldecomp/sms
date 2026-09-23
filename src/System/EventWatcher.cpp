@@ -1515,6 +1515,10 @@ static void evOnNeutralMarioKey(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(TSpcSlice());
 }
 
+// TODO: the pushed slice sits at 0x34 against retail's 0x38. Through the
+// EventWatcherMarDirector accessor binder the slice and fctiwz slots land but
+// the popped slice is 4 high (0x4c); push(TSpcSlice()) with SMSGetMarDirector
+// lands the slice at frame 0x60; named pad/director locals move everything.
 static void evInvalidatePad(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
