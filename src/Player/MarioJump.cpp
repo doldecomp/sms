@@ -1119,8 +1119,8 @@ BOOL TMario::hipAttacking()
 			mPosition.y = 1.0f + mFloorPosition.y;
 			changePlayerStatus(MARIO_STATUS_HIP_ATTACK_END, 0, 0);
 		}
-		if (mStatusTimer < 0x28) {
-			f32 lift = (f32)(0x28 - mStatusTimer);
+		if (getStatusTimer() < 0x28) {
+			f32 lift = (f32)(0x28 - getStatusTimer());
 			lift *= 0.5f;
 			if (160.0f + (mPosition.y + lift) < mFloorPosition.x) {
 				mPosition.y += lift / 4.0f;
@@ -1131,7 +1131,7 @@ BOOL TMario::hipAttacking()
 		setAttackRadius(0.0f);
 		setAnimation(ANIM_HIPSR, 1.0f);
 		mStatusTimer += 1;
-		if (mStatusTimer >= 60) {
+		if (getStatusTimer() >= 60) {
 			mStatusTimer = 0;
 			mStatusState = 2;
 		}
@@ -1156,7 +1156,7 @@ BOOL TMario::hipAttacking()
 	case 3:
 		setAnimation(ANIM_HIPAT, 1.0f);
 		mStatusTimer += 1;
-		if (mStatusTimer > mJumpParams.mSuperHipAttackCt.get())
+		if (getStatusTimer() > mJumpParams.mSuperHipAttackCt.get())
 			mStatusState = 3;
 
 		if (mStatusState == 2)
@@ -1185,25 +1185,25 @@ BOOL TMario::hipAttacking()
 				}
 			}
 
-			if (mGroundPlane->mActor != nullptr) {
+			if (mGroundPlane->getActor() != nullptr) {
 				if (!onYoshi()
-				    && mGroundPlane->mActor->mActorType == 0x4000006A) {
+				    && mGroundPlane->getActor()->mActorType == 0x4000006A) {
 					emitParticle(PARTICLE_MS_M_AMIATTACK, &mPosition);
 					f32 oldY    = mPosition.y;
 					mPosition.y = oldY - 160.0f;
-					((THitActor*)mGroundPlane->mActor)
+					((THitActor*)mGroundPlane->getActor())
 					    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 					startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
 					return changePlayerStatus(MARIO_STATUS_KICK_ROOF_ROLL_DOWN,
 					                          0, 0);
 				}
 				if (mStatusState == 2) {
-					((THitActor*)mGroundPlane->mActor)
+					((THitActor*)mGroundPlane->getActor())
 					    ->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 				} else {
-					((THitActor*)mGroundPlane->mActor)
+					((THitActor*)mGroundPlane->getActor())
 					    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
-					((THitActor*)mGroundPlane->mActor)
+					((THitActor*)mGroundPlane->getActor())
 					    ->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 				}
 			}
