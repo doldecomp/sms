@@ -481,6 +481,9 @@ BosswanwanGetLatestNerve(const TBossWanwan* p)
 	return latestNerve;
 }
 
+// TODO: pullTail's copy sits 0xc low (0x3c vs retail 0x48) in the right frame.
+// Inert or worse: dropping the binder (0x58), raw mLeash or mHitPoints (0x60),
+// a named TBWLeash* local.
 BOOL TBWPicket::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
 	if (BosswanwanGetLatestNerve(mOwner) == &TNerveBWJumpToBath::theNerve()
@@ -1190,6 +1193,9 @@ bool TBossWanwan::isMarioInSight() { return true; }
 // TODO: 0x98 here. Falling through to the shared return FALSE lets a failed
 // isTaken() branch straight past the callers' bodies, but retail tests the
 // pull as a bge onto the TRUE arm where this spelling gives a blt.
+// `sq < limit ? FALSE : TRUE` gets the bge arm order right but adds a
+// `b; li r0, 0` for the isTaken() miss (+2 in Stun, control, GraphWander),
+// whether spelled as an early return, a nested ternary, a BOOL local or &&.
 BOOL TBossWanwan::isHeadPulled()
 {
 	if (mPicket->isTaken()) {
@@ -1707,6 +1713,8 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 	return FALSE;
 }
 
+// TODO: frame 0x38 vs retail 0x100 with every instruction right and no stack
+// access at all: a 0xc8 dead region with no carrier in the body.
 DEFINE_NERVE(TNerveBWRoll, TLiveActor)
 {
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();
@@ -1823,7 +1831,8 @@ DEFINE_NERVE(TNerveBWStun, TLiveActor)
 }
 
 // TODO: frame 0x10 long in the low region (uniform shift). Inert: raw mMActor
-// at either site, a named MActor local as in BWShake.
+// at either site or both, a named MActor local as in BWShake (before either
+// site), curAnmEndsNext(ANM_TYPE_BCK, nullptr).
 DEFINE_NERVE(TNerveBWWakeup, TLiveActor)
 {
 	TBossWanwan* boss = (TBossWanwan*)spine->getBody();
@@ -1874,6 +1883,10 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 		                          nullptr, 0, 4);
 	}
 
+	// TODO: retail keeps this copy of BW_BATH_POS in the lowest stack slot
+	// (0x10, below every inline temporary) and toBath 4 bytes above the named
+	// block; declaring bath at the top, assigning it later, or dropping it for
+	// a reload of BW_BATH_POS did not move it.
 	JGeometry::TVec3<f32> bath(BW_BATH_POS);
 	JGeometry::TVec3<f32> toBath(bath);
 	toBath -= boss->mPosition;
