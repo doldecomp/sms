@@ -47,9 +47,6 @@ public:
 
 	static u32 cNodeRadius;
 
-	// fabricated
-	Node* getNode(int idx) { return &unk0[idx / 4.0f * 4.0f]; }
-
 public:
 	/* 0x0 */ ArrayWrapper<Node> unk0;
 	/* 0x8 */ bool mFixHeadPos;
@@ -164,7 +161,7 @@ public:
 	void clipNodes(JDrama::TGraphics*);
 	void movementBody(const JGeometry::TVec3<f32>&);
 	void bindBody();
-	JGeometry::TVec3<f32> getBodyNthPos(int) const;
+	const JGeometry::TVec3<f32>& getBodyNthPos(int) const;
 	JGeometry::TVec3<f32> getBodyTailPow() const;
 	JGeometry::TVec3<f32> getBodyHeadPow() const;
 	f32 calcApartPow();

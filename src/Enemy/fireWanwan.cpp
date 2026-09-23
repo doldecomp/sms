@@ -583,7 +583,7 @@ void TFireWanwanTailHit::init()
 		unkA8[i]->setScale(local_78);
 
 		TPosition3f mtx;
-		mtx.translation(unkA4->getNode(i)->mPos);
+		mtx.translation(getBodyNthPos(i));
 		actor->getModel()->setBaseTRMtx(mtx);
 		actor->getModel()->setBaseScale(local_78);
 		actor->getModel()->calc();
@@ -659,7 +659,7 @@ void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 		if (i == 4) {
 			local_74.set(0.0f, 0.0f, 1.0f);
 		} else {
-			local_74.set(unkA4->getNode(i + 1)->mPos);
+			local_74.set(getBodyNthPos(i + 1));
 			local_74 -= local_68;
 			local_74.normalize();
 		}
@@ -670,7 +670,7 @@ void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 		TPosition3f afStack_a4;
 		MTXCopy(afStack_a4, unkA8[i]->mMActor->getModel()->getBaseTRMtx());
 
-		afStack_a4.setTrans(unkA4->getNode(i + 1)->mPos);
+		afStack_a4.setTrans(getBodyNthPos(i + 1));
 
 		unkA8[i]->setBarAnmMtx(afStack_a4);
 	}
@@ -724,10 +724,10 @@ void TFireWanwanTailHit::bindBody()
 	mHolder->moveRequest(holderPos);
 }
 
-// TODO: 0x6c against the map's 0x54. The named rate is what keeps perform's
-// inlined getBodyNthPos(4) as a runtime fctiwz of 4.0f, as in the ROM, but the
-// real index expression is still unknown.
-JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyNthPos(int i) const
+// Returns by reference: the map's 0x54 has room for the index conversion but
+// not for a by-value copy. The named rate keeps perform's inlined
+// getBodyNthPos(4) as a runtime fctiwz of 4.0f, as in the ROM.
+const JGeometry::TVec3<f32>& TFireWanwanTailHit::getBodyNthPos(int i) const
 {
 	f32 rate = i / 4.0f;
 	return unkA4->unk0[rate * 4.0f].mPos;
