@@ -288,6 +288,12 @@ void TMarDirector::initECDisp(
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+static inline JPAEmitterManager* MarDirectorEmitterManager4D2()
+{
+	JPAEmitterManager* r = gpEmitterManager4D2;
+	return r;
+}
+
 // TODO: 99.8%, frame exact; every referenced slot is 4 bytes low, i.e. one
 // +4 of low region below the ECTSearch expansion, which is the earliest one.
 // Rejected: a second pointer-returning level over ECTSearch (a typed
@@ -313,8 +319,7 @@ void TMarDirector::setupPerformList_console()
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* list
 	    = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)ECTSearch("Group 2D");
 
-	TEmitterViewObj* emitter = new TEmitterViewObj(gpEmitterManager4D2);
-	list->insert(emitter);
+	list->insert(new TEmitterViewObj(MarDirectorEmitterManager4D2()));
 
 	unk30->push_back(list, CUE_MOVE | CUE_CALC_ANIM);
 	unk30->push_back("Group 2D 2", CUE_MOVE | CUE_CALC_ANIM);

@@ -4280,8 +4280,8 @@ bool TGCConsole2::processAppearBalloon()
 		unk3B0->setAlpha(alpha);
 	} else {
 		JUTRect bounds = unk3B0->getBounds();
-		int nextHeight = getUnk3CC() + bounds.getHeight();
-		int maxHeight  = unk3BC.getHeight();
+		s32 nextHeight = getUnk3CC() + bounds.getHeight();
+		s32 maxHeight  = unk3BC.getHeight();
 
 		if (nextHeight > maxHeight) {
 			nextHeight = maxHeight;

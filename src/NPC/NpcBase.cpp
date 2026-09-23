@@ -644,7 +644,7 @@ void TBaseNPC::movementOnlyTalk_(const JDrama::TGraphics* param_1)
 inline f32 TBaseNPC::getAnmOffDist_()
 {
 	bool bVar3 = false;
-	f32 fVar1  = gpCamera->mFar;
+	f32 fVar1  = SMSGetCamera()->getFar();
 	int uVar5  = unkD0->getCurrentAnmKind();
 	f32 fVar2  = mPtrSaveNormal->mSLDanceAnmOffDist.get();
 	if (checkActionFlag(NPC_ACTION_HAPPY | NPC_ACTION_DANCE)

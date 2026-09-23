@@ -758,8 +758,7 @@ bool TBossHanachan::checkFallDecideAndSetup()
 				unk194 = 179.0f;
 			else
 				unk194 = -179.0f;
-			f32 change = CLBAbs(body->mPreviousRoll - body->mRotation.z);
-			unk198 = change * mChangeParams->mSLWaveFallDownSpeed.get();
+			unk198 = CLBAbs(body->mPreviousRoll - body->mRotation.z) * mChangeParams->mSLWaveFallDownSpeed.value;
 			f32 minimum = mChangeParams->mSLFallDecideMinSpeed.get();
 			if (unk198 < minimum)
 				unk198 = minimum;
