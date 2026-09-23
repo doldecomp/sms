@@ -16,7 +16,7 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 | SDK | 95.80% | 95.54% | 146 / 149 |
 | All | 68.06% | 30.73% | 521 / 732 |
 
-11,722 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,724 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
 ## What recent batches have done
 
