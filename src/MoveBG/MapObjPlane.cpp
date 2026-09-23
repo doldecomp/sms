@@ -137,6 +137,11 @@ void TMapObjPlane::calcNrm(int x, int z)
 	// h0P - hP0 where ours reuses them, and its normal sum copies each partial
 	// sum through a temporary before the next operator+ (a by-value return).
 	// Inert: C-style top declarations, w read before h0N, s1/s2 sum locals.
+	// The extra FPR (f23) is ours carrying face 1's `0 - nw` into face 2 (a
+	// cross-call CSE retail does not do). Retail's four normals are named and
+	// contiguous (0x194..0x170) with no edge slots between them. Inert (c-mix1):
+	// a face-normal helper taking three points (edges as its locals), normals
+	// declared together, cross over operator- temporaries (48%).
 	f32 h00 = heightAt(x, z);
 	f32 h0N = heightAt(x, MsWrap(z - 1, 0, mExtents));
 	f32 w = unkFC;

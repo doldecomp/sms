@@ -124,35 +124,32 @@ void TMapObjGeneral::put()
 	mGroundHeight = MapObjGeneralGetMap()->checkGround(mPosition, &mGroundPlane);
 }
 
-// TODO: 91.8%. Retail derives the sine and cosine table index twice from
-// one angle load (cosine first) where ours shares one `sraw` (the
-// MapObjItem2 case-5 tell), the sine product's operands are swapped, and the
-// frame is 0x38 short (every temporary 0x38 low). Inert or worse: the raw
-// s16 argument, TU-local sin/cos table readers (by argument or reading the
-// global), per-component helpers, and a TVec3 temporary assigned whole.
-// Also worse: `power * (sin * unk2C)` grouping, named speed/sin/cos f32
-// locals, and a TVec3 dir(sin, 0, cos) local (bb19).
+// TODO: 99.5%, frame exact. The accessors (Mario position, angles, one
+// speed, getMapObjData, getVelocity) give retail's unshared sin/cos shifts
+// and its 0x90 frame. Left: r5/r6 on the cosine index vs the throw-power
+// pointer and f1/f4/f5 on y/z/rate. Inert: component stores in either
+// order, named x/y/z locals, both speed accessors, rate operand order.
 void TMapObjGeneral::thrown()
 {
-	mPosition.set(gpMarioPos->x, gpMarioPos->y, gpMarioPos->z);
-	mRotation.set(*gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ);
+	mPosition.set(SMS_GetMarioPos().x, SMS_GetMarioPos().y, SMS_GetMarioPos().z);
+	mRotation.set(SMS_GetMarioAngleX(), SMS_GetMarioAngleY(), SMS_GetMarioAngleZ());
 
-	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
+	mGroundHeight = MapObjGeneralGetMap()->checkGround(mPosition, &mGroundPlane);
 	unk138        = 0;
 	mHolder       = nullptr;
 
-	mVelocity.set(JMASSin((s32)*gpMarioAngleY)
-	                      * mMapObjData->mPhysical->unk4->unk2C
+	mVelocity.set(JMASSin(SMS_GetMarioAngleY())
+	                      * getMapObjData()->mPhysical->unk4->unk2C
 	                      * *gpMarioThrowPower
-	                  + (mNormalThrowSpeedRate * *gpMarioSpeedX),
-	              mMapObjData->mPhysical->unk4->unk30,
-	              JMASCos((s32)*gpMarioAngleY)
-	                      * mMapObjData->mPhysical->unk4->unk2C
+	                  + (mNormalThrowSpeedRate * SMS_GetMarioSpeedX()),
+	              getMapObjData()->mPhysical->unk4->unk30,
+	              JMASCos(SMS_GetMarioAngleY())
+	                      * getMapObjData()->mPhysical->unk4->unk2C
 	                      * *gpMarioThrowPower
 	                  + (mNormalThrowSpeedRate * *gpMarioSpeedZ));
 
 	offLiveFlag(LIVE_FLAG_UNK10);
-	JGeometry::TVec3<f32> vel = mVelocity;
+	JGeometry::TVec3<f32> vel = getVelocity();
 	mPosition.add(vel);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	removeMapCollision();

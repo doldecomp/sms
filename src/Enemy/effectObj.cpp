@@ -104,6 +104,9 @@ void TEffectObjBase::reset()
 	unk74 = 0;
 }
 
+// TODO: 90.8%. Every instruction matches; retail's frame is 0x20 with r31
+// saved and never used (a dead callee-saved GPR plus 0x10 dead bytes). Inert:
+// a switch on unk68, an early `!(cue & CUE_MOVE)` return.
 void TEffectObjBase::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (cue & CUE_MOVE) {
