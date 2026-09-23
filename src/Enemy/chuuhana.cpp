@@ -1256,13 +1256,14 @@ DEFINE_NERVE(TNerveChuuHanaRoll, TLiveActor)
 	if (spine->getTime() == 0)
 		hana->rollStart();
 
-	if (hana->unk1B0 && hana->willFall(TChuuHana::mCheckOnPanelTimeRoll)) {
-		spine->pushAfterCurrent(&TNerveChuuHanaKeepBalance::theNerve());
+	if (hana->unk1B0) {
+		if (hana->willFall(TChuuHana::mCheckOnPanelTimeRoll)) {
+			spine->pushAfterCurrent(&TNerveChuuHanaKeepBalance::theNerve());
+			return TRUE;
+		}
+	} else if (spine->getTime() > 5000) {
 		return TRUE;
 	}
-
-	if (spine->getTime() > 5000)
-		return TRUE;
 
 	hana->rolling();
 	return FALSE;
