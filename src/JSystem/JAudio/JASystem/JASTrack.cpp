@@ -191,11 +191,6 @@ static inline u16 JASTrackGetPanPowerBank(const TRegisterParam* p)
 	return panPowerBank;
 }
 
-// TODO: 99.9%, frame exact, five operands left: retail puts the `else`
-// branch's channel in r24 (mParent's register, dead there) and keeps r23 for
-// the `if` branch's, where we coalesce both into r23.  Both blocks' locals are
-// inner-block, on which declaration order is inert (batch 145), so this is the
-// known-open zero-frame rotation class.
 int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 {
 	if (mMute && (mPauseStatus & 0x40))
@@ -217,12 +212,14 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 		r3  = r3->getParent();
 	}
 
+	u32 reg;
+	TChannel* chan;
 	if (unk3BC == 4) {
 		if (r24 == nullptr)
 			return -1;
 
 		if (r30 != &r24->mChannelUpdater) {
-			TChannel* chan = r30->getListHead(0);
+			chan = r30->getListHead(0);
 			if (chan) {
 				--r30->mManagedChannels;
 				mChannelUpdater.addListHead(chan, 0);
@@ -233,7 +230,7 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 		}
 	} else {
 		if (r30 != &mChannelUpdater) {
-			TChannel* chan = r30->getListHead(0);
+			chan = r30->getListHead(0);
 			if (chan) {
 				--r30->mManagedChannels;
 				mChannelUpdater.addListHead(chan, 0);
@@ -244,19 +241,19 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 		}
 	}
 
-	u32 reg     = readRegDirect(6);
+	reg     = readRegDirect(6);
 	u32 physNum = BankMgr::getPhysicalNumber((reg >> 8) & 0xFF);
 
-	TChannel* chan
+	TChannel* newChan
 	    = BankMgr::noteOn(r30, (u8)physNum, (u8)reg, param_2, param_3, param_4);
 
-	if (!chan)
+	if (!newChan)
 		return -1;
 
-	mNoteMgr.unk0[index]  = chan;
-	mNoteMgr.unk20[index] = chan->unkC6;
+	mNoteMgr.unk0[index]  = newChan;
+	mNoteMgr.unk20[index] = newChan->unkC6;
 
-	chan->setPanPower(
+	newChan->setPanPower(
 	    JASTrackGetPanPowerBank(&mRegisterParam),
 	    mRegisterParam.getPanPowerExt(),
 	    mRegisterParam.getPanPowerOsc(), mRegisterParam.getPanPowerParent());
@@ -266,24 +263,24 @@ int TTrack::noteOn(u8 param_1, s32 param_2, s32 param_3, s32 param_4)
 		if (someThing != 0xF && someThing != 0xE) {
 			if (someThing >= 8) {
 				someThing -= 8;
-				if (chan->isOsc(someThing))
-					chan->copyOsc(someThing, &mOscData[i]);
+				if (newChan->isOsc(someThing))
+					newChan->copyOsc(someThing, &mOscData[i]);
 			} else if (someThing >= 4) {
 				someThing -= 4;
 				s16* v = mOscData[i].mRelTable;
-				if (chan->isOsc(someThing)) {
-					chan->copyOsc(someThing, &mOscData[i]);
+				if (newChan->isOsc(someThing)) {
+					newChan->copyOsc(someThing, &mOscData[i]);
 					mOscData[i].mRelTable = v;
 				}
 			}
-			chan->overwriteOsc(someThing, &mOscData[i]);
+			newChan->overwriteOsc(someThing, &mOscData[i]);
 		}
 	}
 
 	if (sUpdateSyncMode == 0)
 		updateTrack(UPDATE_Volume | UPDATE_Pitch | UPDATE_Pan);
 
-	chan->resetInitialVolume();
+	newChan->resetInitialVolume();
 
 	return 0;
 }
@@ -1423,14 +1420,6 @@ u16 TTrack::readRegDirect(u8 reg)
 	return result;
 }
 
-// TODO: 99.8%, instruction-exact, frame 0x20 against retail's 0x28.  Measured
-// (batch 152): one binding level on `setFlag`'s argument lands the frame
-// exactly and makes every instruction match, so retail passed that value
-// through a u16 accessor (the catalog's price for such an accessor's binding
-// form is exactly +8); a reference or pointer binder on mRegisterParam is +16
-// and overshoots, and widening `r4` to u32/s32/s16 does nothing.  Left open
-// rather than parked as an identity wrapper, which would be padding in
-// disguise.
 void TTrack::writeRegDirect(u8 reg, u16 value)
 {
 	u16 top;
@@ -1456,8 +1445,9 @@ void TTrack::writeRegDirect(u8 reg, u16 value)
 		mRegisterParam.unk0[0] = top;
 		mRegisterParam.setFlag(uVar1);
 
+		u16 lo = value & 0xff;
 		r4    = value;
-		value = value & 0xff;
+		value = lo;
 		r30   = 1;
 		break;
 	}

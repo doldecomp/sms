@@ -139,6 +139,7 @@
     "JSystem/JAudio/JASystem/JASSeqParser.cpp",
     "JSystem/JAudio/JASystem/JASSimpleWaveBank.cpp",
     "JSystem/JAudio/JASystem/JASSystemHeap.cpp",
+    "JSystem/JAudio/JASystem/JASTrack.cpp",
     "JSystem/JAudio/JASystem/JASTrackInterrupt.cpp",
     "JSystem/JAudio/JASystem/JASTrackMgr.cpp",
     "JSystem/JAudio/JASystem/JASTrackPort.cpp",
