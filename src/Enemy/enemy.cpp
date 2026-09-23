@@ -351,7 +351,10 @@ int TSpineEnemy::jumpToNextGraphNode()
 
 // TODO: setGoalPathFromGraph's block sits 0x14 low at an exact frame. All
 // 243 raw/tracer/getTracer() spellings of the five index/graph reads leave
-// it at 0x60 or lower: each extra accessor adds slots above the block too.
+// it at 0x60 or lower: each inline call taking the tracer as an argument
+// (member accessor or free function alike) puts about 4 bytes above the
+// block, where retail has them below. goToExclusiveNextGraphNode shows the
+// same 0x14 between its two pasted blocks.
 void TSpineEnemy::goToRandomNextGraphNode()
 {
 	if (getTracer()->getCurGraphIndex() < 0)
