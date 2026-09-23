@@ -719,22 +719,22 @@ void TChuuHana::bind()
 // onLiveFlag(AIRBORNE) and the position bump belong to the call sites, which
 // order them differently (behaveToWater flags then bumps, moveObject bumps
 // then flags), so neither can be part of this body.
-// TODO: the discarded speed is sqrt(dotXZ(v, v)) with both copies by value,
-// which gives retail's two adjacent copies and x/z terms (moveObject 95.8 ->
-// 97.7, behaveToWater 97.3 -> 98.7). moveObject's frame is still 0xd8 against
-// retail's 0x110, and this body is 0xcc against the map's 0xc4 (was 0xc8).
-// The horizontal dot product, both vectors taken by value: retail copies
-// mVelocity into two adjacent 12-byte locals and multiplies z of one and x of
-// the other, with y never read.
-static inline f32 dotXZ(JGeometry::TVec3<f32> a, JGeometry::TVec3<f32> b)
+// The discarded speed is sqrt(sqXZ(v, v)) with both copies by value: retail
+// copies mVelocity into two adjacent 12-byte locals and squares z of the
+// first and x of the second, with y never read. This spelling is
+// instruction-identical in moveObject and behaveToWater and lands this body
+// on the map's 0xc4.
+// TODO: moveObject's frame is still 0xd8 against retail's 0x110, and
+// behaveToWater's 0x160 against 0x1a0.
+static inline f32 sqXZ(JGeometry::TVec3<f32> zSrc, JGeometry::TVec3<f32> xSrc)
 {
-	return a.x * b.x + a.z * b.z;
+	return xSrc.x * xSrc.x + zSrc.z * zSrc.z;
 }
 
 void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& push)
 {
 	JGeometry::TVec3<f32> vel(mVelocity);
-	JGeometry::TUtil<f32>::sqrt(dotXZ(mVelocity, mVelocity));
+	JGeometry::TUtil<f32>::sqrt(sqXZ(mVelocity, mVelocity));
 	VECAdd(&vel, &push, &vel);
 	vel.y     = 0.0f;
 	mVelocity = vel;
