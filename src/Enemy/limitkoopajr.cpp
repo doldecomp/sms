@@ -320,6 +320,11 @@ void TLimitKoopaJr::moveWait()
 // size exactly and cuts the Run nerve's frame from 0x68 to 0x50 (retail 0x60),
 // but costs TNerveLimitKoopaJrWait 0.01 (frame 0xb8 -> 0xa0 against 0xb0), so
 // it is parked until the Wait nerve's moveWait paste is understood.
+// With the f32 return, SMS_GetMarioPos() for the three *gpMarioPos reads puts
+// every Run slot on retail (99.93, only 8 missing above the argument copy)
+// but Wait drops 99.85 -> 99.81 (frame 0xa0); the getPosition() accessor on
+// top lands Wait's frame and costs Run. Named canRun results, a Run body
+// binder, `calc` declared late and a `set()` form were inert or worse.
 TDirectionCalc TLimitKoopaJr::calcTargetDirection()
 {
 	TDirectionCalc calc;
