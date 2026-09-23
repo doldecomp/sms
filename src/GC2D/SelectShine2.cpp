@@ -136,7 +136,7 @@ void TSelectShineManager::initData(u8* shine_states, u8 shine_num, u8 index,
 s16 TSelectShineManager::getAngle(const JGeometry::TVec3<f32>& position)
 {
 	JGeometry::TVec2<f32> toCenter(300.0f, 1300.0f);
-	toCenter = toCenter - JGeometry::TVec2<f32>(position.x, position.z);
+	toCenter.set(toCenter - JGeometry::TVec2<f32>(position.x, position.z));
 	JGeometry::TVec2<f32> up(0.0f, 1.0f);
 	return (s16)(57.295776f
 	             * fabsf(atan2f(toCenter.cross(up), toCenter.dot(up))));
@@ -197,8 +197,12 @@ void TSelectShineManager::startDecrease(int count)
 // say the sum was a local even though getAngle takes it by reference (the
 // map's getAngle__19TSelectShineManagerFRCQ29JGeometry8TVec3<f> settles
 // that).
-// TODO: the rest is getAngle's TVec2 copy spelling (lwz/stw against retail's
-// lfs/stfs, see getAngle) plus the frame (0x1b8 against 0x220); 92.5 (cc41).
+// TODO: 94.0, frame 0x1b8 against 0x220. getAngle's `toCenter.set(...)`
+// gives retail's lfs/stfs copy, but retail copies the difference twice and
+// never stores `up` (cross/dot read its constants from f30/f31), and it
+// copies getPosition's result through a low temporary (0x1c) into both `pos`
+// and mPosition. Inert: a named difference, a functional-cast copy, `-=`,
+// chained `mPosition = pos = ...` either way round, mPosition.set(pos).
 static inline void TSelectShineUpdate(TSelectShineManager* m, int i)
 {
 	JGeometry::TVec3<f32> pos = m->getPosition(m->mScroll + i * 40);
