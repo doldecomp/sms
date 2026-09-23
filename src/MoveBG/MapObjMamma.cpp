@@ -939,7 +939,9 @@ void TLeanMirror::controlShake()
 		// TODO: retail `bl`s the weak JGeometry::SMatrix34C<f32> default
 		// constructor for `rot` here and we expand it to nothing, so this
 		// block still sits at the wrong inline depth; that and the 0x40
-		// frame gap are all that is left (86.7 -> 91.3).
+		// frame gap are all that is left (86.7 -> 91.3). Inert: moving
+		// just these four lines, or the whole axis-to-concat step, into a
+		// TU-local static inline.
 		JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > rot;
 		rot.identity();
 		makeMtxRotByAxis(axis, f31, rot);
@@ -965,7 +967,10 @@ void TLeanMirror::controlShake()
 			}
 		}
 
-		MTXCopy(getModel()->getAnmMtx(0), getModel()->getBaseTRMtx());
+		// Retail fetches the animation matrix before the base matrix here
+		// (91.3 -> 94.4).
+		MtxPtr anm = getModel()->getAnmMtx(0);
+		MTXCopy(anm, getModel()->getBaseTRMtx());
 	}
 }
 

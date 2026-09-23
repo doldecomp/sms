@@ -170,9 +170,25 @@ TGorogoro::TGorogoro(const char* name)
 // inline here (that function itself matches to 99.8%) where our build
 // calls it. Either MWCC inlined the call or the original pasted the body;
 
-// UNUSED, 0x1e8 in the map.
-// TODO: only the field it sets is known; the body is a guess.
-void TGorogoro::setGenerateGraphIdx(int idx) { mGenerateGraphIdx = idx; }
+// UNUSED, 0x1e8 in the map, and this body compiles to exactly that. The ROM
+// inlines it twice into TGorogoroManager::perform (nodes 10 and 16, each
+// after a reset()), which is where its code comes from.
+void TGorogoro::setGenerateGraphIdx(int idx)
+{
+	JGeometry::TVec3<f32> point;
+	unk124->unk0->unk0[idx].getPoint((Vec*)&point);
+	mPosition        = point;
+	unk124->mCurrIdx = idx;
+	unk124->mPrevIdx = idx - 1;
+	unk124->unk0->unk0[idx + 1].getPoint((Vec*)&point);
+	JGeometry::TVec3<f32> dir(point.x - mPosition.x, 0.0f,
+	                          point.z - mPosition.z);
+	mRotation.y = MsWrap(MsGetRotFromZaxisY(dir), 0.0f, 360.0f);
+	TPathNode goal(point);
+	unkF4  = goal;
+	unk104 = goal;
+	unk114.clear();
+}
 
 // UNUSED, 0x24 in the map.
 void TIgaigaManager::requestPolluteModel(JGeometry::TVec3<f32>& pos,
@@ -1038,7 +1054,11 @@ void TGorogoroManager::createModelData()
 
 // TODO: 88%. The original calls a local out-of-line MsWrap<f> twice here
 // (the map's MsWrap<f>__Ffff, 72 bytes, our one missing symbol); ours
-// inlines the header template at both sites.
+// inlines the header template at both sites. The two seating blocks are
+// TGorogoro::setGenerateGraphIdx(10/16) inlined: calling it does make MsWrap
+// the ROM's `bl`, but MsGetRotFromZaxisY then stays out of line at depth 2
+// (the MathUtil.hpp known-open block; named angle, MsAngleWrap and a
+// temporary axis all inert), 87.8 -> 68.9, so the blocks stay expanded.
 void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
