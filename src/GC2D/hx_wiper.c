@@ -686,47 +686,61 @@ static void Hx_Circle(void)
 }
 
 /// The black field outside the iris, drawn as a stack of horizontal lines.
+// TODO: partial. Retail converts each scanline's y twice (two Vec-like points
+// per line) and the far edge per block, with no guard around sqrtf; the
+// remaining gap is ~7 extra instructions per 8-vertex block, the dx
+// adds/subtracts that retail reuses, and a 0x28-byte frame deficit.
 static void Hxs1_Circle(f32 r)
 {
 	u32 y;
+	f32 rr;
+	Vec top1;
+	Vec top2;
+	Vec bot1;
+	Vec bot2;
 
 	Hx_CameraInit();
 	Hx_GxInit(0, 1);
+	rr = r * r;
 
 	for (y = 0; y <= hx.centerY; y++) {
 		f32 dy = hx.centerY - y;
 
-		if (dy >= r) {
+		top1.y = y;
+		top2.y = y;
+
+		if ((f32)(hx.centerY - y) >= r) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
-			GXPosition3f32(0.0f, y, 1.0f);
+			bot1.y = hx.height - y;
+			bot2.y = hx.height - y;
+			GXPosition3f32(0.0f, top1.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.width, y, 1.0f);
+			GXPosition3f32(hx.width, top2.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(0.0f, hx.height - y, 1.0f);
+			GXPosition3f32(0.0f, bot1.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.width, hx.height - y, 1.0f);
+			GXPosition3f32(hx.width, bot2.y, 1.0f);
 			GXColor1u32(0xFF);
 		} else {
-			f32 dx = -((dy * dy) - (r * r));
-			if (dx > 0.0f)
-				dx = sqrtf(dx);
-
+			f32 dx = sqrtf(rr - (dy * dy));
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
-			GXPosition3f32(0.0f, y, 1.0f);
+			bot1.y = hx.height - y;
+			bot2.y = hx.height - y;
+			GXPosition3f32(0.0f, top1.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.centerX - dx, y, 1.0f);
+			GXPosition3f32(hx.centerX - dx, top2.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.centerX + dx, y, 1.0f);
+			GXPosition3f32(hx.centerX + dx, top1.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.width, y, 1.0f);
+			GXPosition3f32(hx.width, top2.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.centerX + dx, hx.height - y, 1.0f);
+			GXPosition3f32(hx.centerX + dx, bot1.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.width, hx.height - y, 1.0f);
+			GXPosition3f32(hx.width, bot2.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(0.0f, hx.height - y, 1.0f);
+			GXPosition3f32(0.0f, bot1.y, 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(hx.centerX - dx, hx.height - y, 1.0f);
+			GXPosition3f32(hx.centerX - dx, bot2.y, 1.0f);
 			GXColor1u32(0xFF);
 		}
 	}
@@ -869,6 +883,8 @@ static void Hxs_FrBufferMorf2B(f32 x)
 	Frb2_RendBox(0xFF, right, 0.0f, hx.width, hx.height);
 }
 
+// TODO: every instruction matches, but retail's frame is 8 bytes larger in
+// the low region (conversion slots 8 higher), the same gap Hx_Logo shows.
 static void Hx_Door(void)
 {
 	s32 x;
