@@ -494,13 +494,16 @@ int TBathtub::getNumGripsDead() const
 }
 
 // Unused
+// TODO: inlined into receiveMessage, retail keeps &trampleRelease.value in r5
+// and rereads the threshold through it for the store; a named const s32&
+// (via get() or .value) and the guard-return shape do not reproduce it.
 void TBathtub::trample(const JGeometry::TVec3<f32>&)
 {
-	if (!unk29A && unk250 <= unk16C->trampleRelease.get()) {
-		unk250 = unk16C->trampleRelease.get();
-		unk258 = unk16C->trampleRecover.get();
-		unk25C = unk16C->trampleRecover.get();
-		unk254 = unk16C->hipdropRelease.get();
+	if (!unk29A && unk250 <= unk16C->trampleRelease.value) {
+		unk250 = unk16C->trampleRelease.value;
+		unk258 = unk16C->trampleRecover.value;
+		unk25C = unk16C->trampleRecover.value;
+		unk254 = unk16C->hipdropRelease.value;
 	}
 }
 
