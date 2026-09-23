@@ -10829,6 +10829,12 @@ void TMapObjBase::initUnique()
 	// 0x1d8 dead region with no stack reference. The sixteen setMatTable/
 	// setMatTableTex expansions share one temp block, so the missing bytes
 	// are not per-expansion accessor pool; unexplained (cc41).
+	// agg1: switch arms do not share slots (emptying any one arm drops 0 or
+	// 8 bytes; the 0x2000000E arm 0x20). Each extra accessor or named local
+	// in the UNUSED setMatTable/setMatTableTex bodies costs 0x40 over the 16
+	// expansions at equal instructions (max tried 0x1c0 with getMActor() and
+	// two binders), so 0x1d8 is not a multiple of that price: a 0x18
+	// remainder must come from another arm. No stack aggregate is visible.
 	switch (getActorType()) {
 	case 0x2000003C:
 		mMActor->setLightType(LIGHT_TYPE_PLAYER);
