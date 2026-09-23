@@ -141,20 +141,17 @@ void TMarDirector::decideMarioPosIdx()
 	}
 }
 
-// TODO: 98.0%. The final heap virtual call is getTotalFreeSize() (slot
-// 0x28); the earlier call is freeTail() (slot 0x18). The remaining residue
-// is one repeated shape, six sites: the ROM
-// materialises `<list> + 0x10` into a callee-saved register before each
-// `JGadget::TList<void*>::end()` (`addi r21, r27, 0x10`, `addi r20, r28,
-// 0x10`) where we pass a different base plus 0xc recomputed inline, so its
-// insert path goes through one more level -- the batch-89 `getChildren()`
-// lever -- than ours. The rest is the `mr` vs `addi rD, rS, 0` family: the ROM
+// TODO: 99.0%. The final heap virtual call is getTotalFreeSize() (slot
+// 0x28); the earlier call is freeTail() (slot 0x18). "ゲームオブジェクト" is a
+// TViewObjPtrListT (its list sits at +0x10, which the ROM's `addi rN, rM,
+// 0x10` before each end() shows); typing it as a TNameRefPtrListT wrote
+// every insert 4 bytes low and corrupted the group at boot. The rest is the
+// `mr` vs `addi rD, rS, 0` family: the ROM
 // has `mr. r20, r3` (assign-and-test on a `new` result) and `mr r3, r20` where
 // we emit the cast form, which fits batch 105's note that search2's ROM return
 // type is looser than JDrama::TNameRef* (the identity cast below is
-// load-bearing for exactly that reason).
-// cc32: not attempted beyond triage -- the six `getChildren()` insert paths
-// are the known-open JGadget pool class and the function is 8 KB.
+// load-bearing for exactly that reason), and a frame 0x160 bytes short.
+// cc32: not attempted beyond triage; the function is 8 KB.
 bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
