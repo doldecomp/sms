@@ -1473,6 +1473,14 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 	return result;
 }
 
+static inline int CardLoadGetHeight(const JUTRect* p)
+{
+	int height = p->getHeight();
+	return height;
+}
+
+// TODO: `this` and `result` swap r30/r31 throughout; frame and every other
+// instruction match (int/char result types are inert).
 s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 {
 	s8 result = -1;
@@ -1491,7 +1499,7 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 		for (int i = 0; i < 3; ++i)
 			unk4CC[i]->hide();
 
-		unk4AC->setCenteredSize(20, unk4B0.getWidth(), unk4B0.getHeight(), 0,
+		unk4AC->setCenteredSize(20, unk4B0.getWidth(), CardLoadGetHeight(&unk4B0), 0,
 		                        0);
 		unk10 = 1;
 		break;
@@ -1716,12 +1724,6 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 
 // Binding level worth +8 of low region, landing TCardLoad::drawMessageBM's
 // frame at 0x178 (batch 124).
-static inline int CardLoadGetHeight(const JUTRect* p)
-{
-	int height = p->getHeight();
-	return height;
-}
-
 s8 TCardLoad::drawMessageBM(TEProgress param_1)
 {
 	s8 result = -1;
