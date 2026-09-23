@@ -14,11 +14,9 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-const char* cCameraBckNameShineGetInside
-    = "/common/camera/camera_demo_shine_get_inside";
-const char* cCameraBckNameShineGetOutside
-    = "/common/camera/camera_demo_shine_get_outside";
-const char* cCameraBckNameGate = "/common/camera/camera_demo_gate_in";
+// Defined in cameragc.cpp, which owns them in the map.
+extern const char* cCameraBckNameShineGetInside;
+extern const char* cCameraBckNameShineGetOutside;
 
 void TMarDirector::entryNPC(TBaseNPC* npc) { unk88.push_back(npc); }
 

@@ -34,9 +34,9 @@ static const char* MtxCalcTypeName[] = {
 
 CPolarSubCamera* gpCamera;
 
-// The map has all three of these in this TU's .sdata ahead of cStartCamName,
-// with MarDirectorEvent.cpp, CameraDemo.cpp and CameraBck.cpp carrying
-// unreferenced duplicates.
+// The map has all three of these in this TU's .sdata ahead of cStartCamName.
+// MarDirectorEvent.cpp and CameraDemo.cpp refer to them as externs;
+// CameraBck.cpp carries unreferenced copies of the strings.
 const char* cCameraBckNameShineGetInside
     = "/common/camera/camera_demo_shine_get_inside";
 const char* cCameraBckNameShineGetOutside
