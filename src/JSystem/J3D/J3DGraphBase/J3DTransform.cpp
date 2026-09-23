@@ -19,6 +19,29 @@ f32 Unit01[2] = { 0.0f, 1.0f };
 
 #define qr0 0
 
+// Whole-function Gekko assembly below is only meaningful to MWCC; other
+// compilers get an ordinary function with the portable body in each #else.
+#ifdef __MWERKS__
+#define ASM asm
+#else
+#define ASM
+
+// out = a * b for 3x4 affine matrices; b's implicit fourth row is (0 0 0 1).
+// Computed into a temporary so out may alias either input.
+static void J3DPCConcat(const f32 (*a)[4], const f32 (*b)[4], f32 (*out)[4])
+{
+	Mtx tmp;
+	for (int r = 0; r < 3; r++) {
+		for (int c = 0; c < 4; c++)
+			tmp[r][c] = a[r][0] * b[0][c] + a[r][1] * b[1][c] + a[r][2] * b[2][c];
+		tmp[r][3] += a[r][3];
+	}
+	for (int r = 0; r < 3; r++)
+		for (int c = 0; c < 4; c++)
+			out[r][c] = tmp[r][c];
+}
+#endif
+
 #pragma push
 #pragma fp_contract off
 // TODO: several other functions in this TU use fp_contract,
@@ -30,7 +53,7 @@ f32 J3DCalcZValue(MtxPtr m, Vec v)
 }
 #pragma pop
 
-asm bool J3DPSCalcInverseTranspose(register MtxPtr src, register ROMtxPtr dst)
+ASM bool J3DPSCalcInverseTranspose(register MtxPtr src, register ROMtxPtr dst)
 {
 	// NOTE: copy-paste of PSMTXInverse
 #ifdef __MWERKS__ // clang-format off
@@ -89,6 +112,32 @@ skip:
 	// #pragma optimizewithasm on doesn't work
 	li r3, 0x1
 	psq_st   f8, 0x20(dst), 1, qr0
+#else
+	// Portable fallback: dst = transpose(inverse(src)) of the 3x3 part,
+	// written as the cofactor matrix divided by the determinant.
+	f32 c00 = src[1][1] * src[2][2] - src[2][1] * src[1][2];
+	f32 c01 = src[1][2] * src[2][0] - src[2][2] * src[1][0];
+	f32 c02 = src[1][0] * src[2][1] - src[1][1] * src[2][0];
+	f32 c10 = src[2][1] * src[0][2] - src[0][1] * src[2][2];
+	f32 c11 = src[2][2] * src[0][0] - src[0][2] * src[2][0];
+	f32 c12 = src[0][1] * src[2][0] - src[0][0] * src[2][1];
+	f32 c20 = src[0][1] * src[1][2] - src[1][1] * src[0][2];
+	f32 c21 = src[0][2] * src[1][0] - src[1][2] * src[0][0];
+	f32 c22 = src[0][0] * src[1][1] - src[0][1] * src[1][0];
+	f32 det = src[0][0] * c00 + src[1][0] * c10 + src[2][0] * c20;
+	if (det == 0.0f)
+		return false;
+	f32 inv   = 1.0f / det;
+	dst[0][0] = c00 * inv;
+	dst[0][1] = c01 * inv;
+	dst[0][2] = c02 * inv;
+	dst[1][0] = c10 * inv;
+	dst[1][1] = c11 * inv;
+	dst[1][2] = c12 * inv;
+	dst[2][0] = c20 * inv;
+	dst[2][1] = c21 * inv;
+	dst[2][2] = c22 * inv;
+	return true;
 #endif // clang-format on
 }
 
@@ -270,6 +319,12 @@ void J3DScaleNrmMtx33(register ROMtxPtr mtx, const register Vec& scl)
 		psq_st mtx2_xy, 24(mtx), 0, qr0
 		stfs   mtx2_z_, 32(mtx)
 	}
+#else
+	for (int r = 0; r < 3; r++) {
+		mtx[r][0] *= scl.x;
+		mtx[r][1] *= scl.y;
+		mtx[r][2] *= scl.z;
+	}
 #endif // clang-format on
 }
 
@@ -357,6 +412,18 @@ void J3DMtxProjConcat(register Mtx param_1, register Mtx param_2,
 		ps_madd    f0, f9, f13, f0
 		psq_st     f0, 0x28(result), 0, qr0
 	}
+#else
+	// result (3x4) = param_1 (3x4) * param_2 (4x4), one row at a time.
+	for (int r = 0; r < 3; r++) {
+		f32 a0 = param_1[r][0], a1 = param_1[r][1];
+		f32 a2 = param_1[r][2], a3 = param_1[r][3];
+		f32 row[4];
+		for (int c = 0; c < 4; c++)
+			row[c] = a0 * param_2[0][c] + a1 * param_2[1][c]
+			         + a2 * param_2[2][c] + a3 * param_2[3][c];
+		for (int c = 0; c < 4; c++)
+			result[r][c] = row[c];
+	}
 #endif // clang-format on
 }
 
@@ -385,10 +452,16 @@ void J3DPSMtx33Copy(register ROMtxPtr src, register ROMtxPtr dst)
 		psq_st x3_y3, 24(dst), 0, qr0
 		stfs z3, 32(dst)
 	}
+#else
+	for (int r = 0; r < 3; r++) {
+		dst[r][0] = src[r][0];
+		dst[r][1] = src[r][1];
+		dst[r][2] = src[r][2];
+	}
 #endif // clang-format on
 }
 
-asm void J3DPSMtx33CopyFrom34(register MtxPtr src, register ROMtxPtr dst)
+ASM void J3DPSMtx33CopyFrom34(register MtxPtr src, register ROMtxPtr dst)
 {
 #ifdef __MWERKS__ // clang-format off
 	psq_l  f0, 0(src), 0, qr0
@@ -408,10 +481,16 @@ asm void J3DPSMtx33CopyFrom34(register MtxPtr src, register ROMtxPtr dst)
 
 	lfs    f5, 40(src)
 	stfs   f5, 32(dst)
+#else
+	for (int r = 0; r < 3; r++) {
+		dst[r][0] = src[r][0];
+		dst[r][1] = src[r][1];
+		dst[r][2] = src[r][2];
+	}
 #endif // clang-format on
 }
 
-asm void J3DPSMtxArrayCopy(register MtxPtr src, register MtxPtr dst,
+ASM void J3DPSMtxArrayCopy(register MtxPtr src, register MtxPtr dst,
                            register u32 size)
 {
 	// NOTE: I'm almost sure this weird `subi` was not generated automatically
@@ -439,6 +518,13 @@ loop:
 	psq_lu  f5, 0x30(src), 0, qr0
 	psq_stu f5, 0x30(dst), 0, qr0
 	bdnz loop
+#else
+	for (u32 i = 0; i < size * 3; i++) {
+		dst[i][0] = src[i][0];
+		dst[i][1] = src[i][1];
+		dst[i][2] = src[i][2];
+		dst[i][3] = src[i][3];
+	}
 #endif // clang-format on
 }
 
@@ -533,10 +619,15 @@ void J3DMTXConcatArrayIndexedSrc(register const float (*mat1)[4],
 		b loop
 	end:
 	}
+#else
+	(void)unit01;
+	(void)tmp;
+	for (u32 i = 0; i < count; i++)
+		J3DPCConcat(mat1, mat2[param_3[i]], dst[i]);
 #endif // clang-format on
 }
 
-asm void J3DPSMtxArrayConcat(register Mtx fst, register Mtx snd,
+ASM void J3DPSMtxArrayConcat(register Mtx fst, register Mtx snd,
                              register Mtx dst, register u32 size)
 {
 #ifdef __MWERKS__ // clang-format off
@@ -604,6 +695,9 @@ loop:
 	addi r1, r1, 0x40
 
 	blr
+#else
+	for (u32 i = 0; i < size; i++)
+		J3DPCConcat(fst, snd + i * 3, dst + i * 3);
 #endif // clang-format on
 }
 

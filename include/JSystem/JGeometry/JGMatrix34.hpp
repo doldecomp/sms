@@ -23,6 +23,12 @@ inline void gekko_ps_copy12(register void* dst, register void* src)
 		psq_st f8, 32(dst), 0, 0
 		psq_st f10, 40(dst), 0, 0
 	}
+#else
+	// Copy twelve floats (one 3x4 matrix).
+	f32* d       = (f32*)dst;
+	const f32* s = (const f32*)src;
+	for (int i = 0; i < 12; i++)
+		d[i] = s[i];
 #endif // clang-format on
 }
 

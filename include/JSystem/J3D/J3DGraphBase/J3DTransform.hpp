@@ -47,6 +47,19 @@ void J3DMTXConcatArrayIndexedSrc(const float (*)[4], const float (*)[3][4],
                                  const u16*, float (*)[3][4], u32);
 void J3DPSMtxArrayConcat(Mtx, Mtx, Mtx, u32);
 
+#ifndef __MWERKS__
+// Portable stand-in for a paired-single quantised store to s16:
+// saturate to the s16 range, then truncate toward zero.
+inline s16 J3DPCQuantizeS16(f32 v)
+{
+    if (v >= 32767.0f)
+        return 32767;
+    if (v <= -32768.0f)
+        return -32768;
+    return (s16)v;
+}
+#endif
+
 inline void J3DPSMulMtxVec(register MtxPtr mtx, register Vec* vec,
                            register Vec* dst)
 {
@@ -73,6 +86,12 @@ inline void J3DPSMulMtxVec(register MtxPtr mtx, register Vec* vec,
         ps_sum0 f6, f5, f6, f5
         psq_st f6, 8(dst), 1, 0
     }
+#else
+    // dst = mtx * (x y z 1); the sum order follows the paired-single lanes.
+    f32 x = vec->x, y = vec->y, z = vec->z;
+    dst->x = (mtx[0][2] * z + mtx[0][0] * x) + (mtx[0][3] + mtx[0][1] * y);
+    dst->y = (mtx[1][2] * z + mtx[1][0] * x) + (mtx[1][3] + mtx[1][1] * y);
+    dst->z = (mtx[2][2] * z + mtx[2][0] * x) + (mtx[2][3] + mtx[2][1] * y);
 #endif // clang-format on
 }
 
@@ -102,6 +121,16 @@ inline void J3DPSMulMtxVec(register MtxPtr mtx, register S16Vec* vec,
         ps_sum0 f6, f5, f6, f5
         psq_st f6, 4(dst), 1, 7
     }
+#else
+    // Loads and stores go through GQR7 (s16); the caller sets its scale.
+    // This fallback assumes a scale of zero, i.e. whole units.
+    f32 x = vec->x, y = vec->y, z = vec->z;
+    dst->x = J3DPCQuantizeS16((mtx[0][2] * z + mtx[0][0] * x)
+                              + (mtx[0][3] + mtx[0][1] * y));
+    dst->y = J3DPCQuantizeS16((mtx[1][2] * z + mtx[1][0] * x)
+                              + (mtx[1][3] + mtx[1][1] * y));
+    dst->z = J3DPCQuantizeS16((mtx[2][2] * z + mtx[2][0] * x)
+                              + (mtx[2][3] + mtx[2][1] * y));
 #endif // clang-format on
 }
 
@@ -135,6 +164,12 @@ inline void J3DPSMulMtxVec(register ROMtxPtr mtx, register Vec* vec,
         ps_sum0 f6, f5, f6, f5
         psq_st f6, 8(dst), 1, 0
     }
+#else
+    // dst = mtx * (x y z) for a 3x3 matrix.
+    f32 x = vec->x, y = vec->y, z = vec->z;
+    dst->x = (mtx[0][2] * z + mtx[0][0] * x) + mtx[0][1] * y;
+    dst->y = (mtx[1][2] * z + mtx[1][0] * x) + mtx[1][1] * y;
+    dst->z = (mtx[2][2] * z + mtx[2][0] * x) + mtx[2][1] * y;
 #endif // clang-format on
 }
 
@@ -168,6 +203,12 @@ inline void J3DPSMulMtxVec(register ROMtxPtr mtx, register S16Vec* vec,
         ps_sum0 f6, f5, f6, f5
         psq_st f6, 4(dst), 1, 7
     }
+#else
+    // GQR7 (s16) loads and stores; a 3x3 product is independent of its scale.
+    f32 x = vec->x, y = vec->y, z = vec->z;
+    dst->x = J3DPCQuantizeS16((mtx[0][2] * z + mtx[0][0] * x) + mtx[0][1] * y);
+    dst->y = J3DPCQuantizeS16((mtx[1][2] * z + mtx[1][0] * x) + mtx[1][1] * y);
+    dst->z = J3DPCQuantizeS16((mtx[2][2] * z + mtx[2][0] * x) + mtx[2][1] * y);
 #endif // clang-format on
 }
 
