@@ -677,7 +677,9 @@ BOOL TMario::taken()
 // layout differs. Retail places the operator-/operator+ by-value temporaries
 // low (0x34/0x28 in wireSWait) and leaves a 12-byte hole between `start` and
 // `dir`; ours puts those temporaries above the named block and is 8 bytes
-// short (wireSWait 0x140 vs 0x148, emitted copy 0x150 vs 0x148).
+// short (wireSWait 0x140 vs 0x148, emitted copy 0x150 vs 0x148). Naming
+// `end` fills the hole and lands wireWait/wireHanging's frames (wireSWait
+// and the emitted copy now overshoot by 8/0x18); the temporaries stay high.
 // Retail's own names for the two helper levels are unrecoverable (inlined).
 // fabricated
 static inline JGeometry::TVec3<f32>
@@ -697,7 +699,8 @@ MarioWireScaleDir(const JGeometry::TVec3<f32>& dir, f32 ratio)
 void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 {
 	JGeometry::TVec3<f32> start = mWireStartPos;
-	JGeometry::TVec3<f32> dir   = mWireEndPos - start;
+	JGeometry::TVec3<f32> end   = mWireEndPos;
+	JGeometry::TVec3<f32> dir   = end - start;
 
 	*outPos = start + MarioWireScaleDir(dir, mWirePosRatio);
 	outPos->y -= 160.0f;
