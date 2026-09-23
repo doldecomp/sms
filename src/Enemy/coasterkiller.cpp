@@ -41,7 +41,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-const char* killer_bastable[] = {
+static const char* killer_bastable[] = {
 	"/scene/killer/bas/downkiller_down1.bas", nullptr, nullptr,
 	"/scene/killer/bas/killer_search1.bas",   nullptr,
 };

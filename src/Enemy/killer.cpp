@@ -88,7 +88,7 @@ static inline f32 KillerPosX(const TKiller* k) { return k->getPosition().x; }
 static inline f32 FlyPosX(const TFlyEnemy* e) { return e->getPosition().x; }
 static inline f32 FlyMarioX() { return SMS_GetMarioPos().x; }
 
-const char* killer_bastable[] = {
+static const char* killer_bastable[] = {
 	"/scene/killer/bas/downkiller_down1.bas", nullptr, nullptr,
 	"/scene/killer/bas/killer_search1.bas",   nullptr,
 };
