@@ -322,7 +322,10 @@ void TTrembleModelEffect::tremble(f32 magnitude, f32 spring, f32 damping,
 // operator+'s by-value parameter. Tried: `t` declared then assigned,
 // direct-init, an explicit TVec3 temporary, a by-value copy level
 // (restores the double copy in the f32 arm, 95.3%, frame +0x18), by-value
-// add levels.
+// add levels, and chained assignments (`unk14[i] = t = a + b`, `t = unk14[i]
+// = a + b`, `unk18[0][i] = unk14[i] = t`, no `t` at all): 78.6-93.6%. The
+// shape is a by-value `operator+` result copied into `t` without elision,
+// i.e. the header operator's return type, which is settled tree-wide.
 void TTrembleModelEffect::clash(f32 magnitude)
 {
 	tremble(magnitude, 0.0f, 0.0f, 0);
@@ -885,6 +888,10 @@ void SMS_CopyMaterialToSort(J3DMaterial*, J3DModel*, u16) { }
 // `mat` in r28; ours swaps them. Tried: `mat` declared at function scope
 // (before and after modelData), unifier first, unifier through modelData,
 // materialID unnamed, the tex number named.
+// TODO: 99.3%, frame exact. Retail keeps `unifier` in r27 and `mat` in r28;
+// ours swaps them. Inert or worse: `mat` declared at the top or before the
+// loop, `unifier` declared first or read through `modelData`, a named texNo,
+// unnamed materialID, setTexNo through the TEV block.
 void SMS_UnifyMaterial(J3DModel* param_1)
 {
 	J3DModelData* modelData = param_1->getModelData();
