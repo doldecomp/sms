@@ -109,7 +109,7 @@ public:
 		fVar432.normalize(param_1);
 		fVar432.negate();
 		fVar958.cross(param_2, fVar432);
-		fVar1076.cross(fVar958, fVar432);
+		fVar1076.cross(fVar432, fVar958);
 		fVar958.normalize();
 		fVar1076.normalize();
 
