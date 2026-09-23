@@ -513,6 +513,10 @@ THinokuri2::THinokuri2(const char* name)
 	unk1A0  = new THino2MtxCalc(5, 6, 9, 12, 13, 16, 15.0f);
 }
 
+// TODO: instruction-identical, frame 0x1c8 against the ROM's 0x1f8. The
+// push_back iterator temporaries keep their strides but sit 0x24 higher
+// (end() block) and the copy-ctor block 0x34 higher, so 0x30 of temporaries
+// the original expanded is missing; insert()/add() spellings are far worse.
 void THinokuri2::init(TLiveManager* param_1)
 {
 	mManager = param_1;
@@ -1223,6 +1227,10 @@ DEFINE_NERVE(TNerveHino2Appear, TLiveActor)
 	return false;
 }
 
+// TODO: instruction-identical, frame 0xf0 against the ROM's 0x110. The ROM
+// keeps TStack_3C (0xd4) above local_60 (0xb0) and the rand() conversion
+// block 0x20 higher; moving either declaration to the top, or wrapping
+// either block in a TU-local inline, leaves the layout unchanged.
 DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 {
 	TLiveActor* body = spine->getBody();

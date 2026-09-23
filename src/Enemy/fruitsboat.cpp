@@ -218,11 +218,11 @@ void TFruitsBoat::load(JSUMemoryInputStream& stream)
 	}
 }
 
-// TODO: instruction-identical, frame 0xf0 against the ROM's 0xf8. Eight bytes
-// of locals are missing: routing more member reads through their accessors
-// (getMapCollisionManager, getMActor, getTracer) does not add any further
-// temporaries, so the two missing objects are named locals the original
-// declared and this reconstruction does not need.
+// TODO: instruction-identical and frame 0xf8 agrees, but the getCurrentPos()
+// temporary sits at 0xd8 where the ROM has 0xc4, and setUpUnk8TRS's Mtx at
+// 0xa0 against 0x90: the ROM has 0x14 more above the position temporary.
+// Accessor/raw spellings of the TRS arguments, a named or const-ref
+// position, and indexToPoint() spelled directly all move it the wrong way.
 void TFruitsBoat::init(TLiveManager* manager)
 {
 	mManager = manager;
