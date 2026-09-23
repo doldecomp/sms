@@ -24,6 +24,11 @@ void TMario::playerRefrection(int param_1)
 	}
 }
 
+// A zero distance resets dx too: retail loads 1.0f into dx's register and
+// copies it to dist, and matan later reads that dx.
+// TODO: instruction-exact; the three entry loads take f5/f4/f3 where retail
+// has f4/f3/f5 (declaration order of thresh/dx/dz is inert or worse), and
+// newPos/floorY sit 4/8 high and the diff sub temporary 0x2c high.
 void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
                           f32 param_3)
 {
@@ -37,7 +42,7 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 	f32 dist   = MsSqrtf(dx * dx + dz * dz);
 
 	if (dist == 0.0f)
-		dist = 1.0f;
+		dist = dx = 1.0f;
 
 	if (!(dist < thresh))
 		return;
