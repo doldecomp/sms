@@ -577,34 +577,31 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 	}
 }
 
-// Binding level over the address of a array element, worth +16 of low region
-// in MSoundSESystem::MSoundSE::checkSoundArea (batch 130).
-static inline const JAICamera* MSoundSEUnkACAt(const MSound* p, int i)
+// The same ear-height helper MSoundMainSide.cpp spells for
+// MSMainProc::getMonteVillageActorArea: the copy it returns is the inline
+// temporary retail keeps below each probe vector.
+static inline Vec MSGetEarPos(const Vec& p)
 {
-	const JAICamera* vAC = &p->unkAC[i];
-	return vAC;
+	Vec v = p;
+	v.y += 75.0f;
+	return v;
 }
 
-// TODO: the passed vectors (vec1, vec3) now sit at retail 0x44/0x38; the
-// adjusted copies (vec, vec2) are at 0x2c/0x20 vs retail 0x28/0x18 (retail
-// strides them 16 apart). Inert: int locals in the top declaration, any
-// order; raw unkAC[0] (frame -0x10).
+// Direct-return level over the camera's position pointer.
+static inline const Vec* MSoundSECameraPos(const MSound* p, int i)
+{
+	return p->unkAC[i].mPosition;
+}
+
 bool MSoundSE::checkSoundArea(u32 param_1, const Vec& param_2)
 {
 	bool result = true;
 
 	switch (param_1) {
 	case 7: {
-		Vec vec1, vec3, vec, vec2;
-		vec = *MSoundSEUnkACAt(MSGMSound, 0)->mPosition;
-		vec.y += 75.0f;
-		vec1  = vec;
-		int iVar2 = gpCubeCamera->getInCubeNo(vec1);
-
-		vec2 = param_2;
-		vec2.y += 75.0f;
-		vec3  = vec2;
-		int iVar3 = gpCubeCamera->getInCubeNo(vec3);
+		int iVar2 = gpCubeCamera->getInCubeNo(
+		    MSGetEarPos(*MSoundSECameraPos(MSGMSound, 0)));
+		int iVar3 = gpCubeCamera->getInCubeNo(MSGetEarPos(param_2));
 
 		if (iVar3 != -1) {
 			if (iVar3 == iVar2)
