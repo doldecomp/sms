@@ -186,6 +186,9 @@ void TPaneScalingControl::stopAnm()
 	mFrameCtrl.reset();
 }
 
+// TODO: at every inlined site (rumble/subtitle/sound update) retail colours
+// the progress FPRs frame f2, pool f0, end f1 (fmuls progress first); ours
+// is f1/f2/f0. Inert: named angle/deg, TAU first, /=, folded 360.
 void TPaneScalingControl::update()
 {
 	int iVar10 = mInitialBounds.getWidth();
