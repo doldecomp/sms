@@ -246,16 +246,11 @@ public:
 		this->slerp(a2, a3);
 	}
 
-	// TODO: 99.8% against the weak copy in fireWanwan.o (0x248), and it is a
-	// pure frame gap: all 146 instructions match and the frame is 0xa8 against
-	// retail's 0xb8. A temporary `volatile char trash[16]` takes it to exactly
-	// 100.0%, so the body below is right and retail declared one more 16-byte
-	// aggregate -- a third TQuat4 -- that nothing in the code needs. Ruled out:
-	// `TQuat4<f32> q1 = *this; q1.normalize();` and the ctor-parenthesis form
-	// both move the frame the wrong way (0x68) and drop it to 35.4%, because
-	// normalize() then reads the quaternion back out of memory. The byte count
-	// is the only evidence for the missing local, so per
-	// docs/catalog/frame-gaps.md it stays unwritten.
+	// Matches the weak copy in fireWanwan.o (0x248). The result goes out
+	// through TVec4::set(x, y, z, w) in one call, not four member stores:
+	// the set's four by-value parameters are the 16 bytes of frame the
+	// member-store spelling was missing (0xb8, not 0xa8). A TQuat4 temporary
+	// passed to set(const TVec4&) overshoots to 0xc8 and 0xd8.
 	void slerp(const TQuat4<T>& param_1, T param_2)
 	{
 		TQuat4<f32> q1;
@@ -287,10 +282,8 @@ public:
 		if (bVar9)
 			param_2 = -param_2;
 
-		this->x = fVar92 * q1.x + param_2 * q2.x;
-		this->y = fVar92 * q1.y + param_2 * q2.y;
-		this->z = fVar92 * q1.z + param_2 * q2.z;
-		this->w = fVar92 * q1.w + param_2 * q2.w;
+		this->set(fVar92 * q1.x + param_2 * q2.x, fVar92 * q1.y + param_2 * q2.y,
+		          fVar92 * q1.z + param_2 * q2.z, fVar92 * q1.w + param_2 * q2.w);
 	}
 };
 
