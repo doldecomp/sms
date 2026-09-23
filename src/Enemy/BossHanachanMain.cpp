@@ -121,8 +121,11 @@ void TBossHanachan::setRandomWeakBodyIndex()
 	mWeakBodyIndex = 8.0f * rand;
 }
 
-// TODO: every instruction matches; the frame is 0x130 against the ROM's
-// 0x188, with every stack slot lower (likely a missing inline level).
+// Frame 0x188 exact: accessor reads in the inlined execHeadCalcAnim_ and
+// execBodyCalcAnim_ plus the three getPosition()/getRotation() part copies.
+// TODO: the sphere-link and CalcAnim temporaries still sit 0x10-0x4c low
+// (0x140/0x100/0xc4/0xd0 against 0x150/0x11c/0x110/0xe0), and the last loop
+// swaps r28/r29 for `group` and `i`.
 void TBossHanachan::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -164,15 +167,15 @@ void TBossHanachan::init(TLiveManager* manager)
 	    JGeometry::TVec3<f32>(bodyPosition.x, bodyPosition.y, bodyPosition.z),
 	    mCommonParams->mSLBodyLength.get(), mCommonParams->mSLBodyAttackRadius.get(),
 	    0.2f, -2.0f, -3.5f, mRotation.y);
-	mHead->mPosition = mPosition;
-	mHead->mRotation = mRotation;
+	mHead->mPosition = getPosition();
+	mHead->mRotation = getRotation();
 	mHead->mGroundPlane = mGroundPlane;
 	for (int i = 0; i < 8; ++i) {
 		TBossHanachanPartsBody* body = mBodies[i];
 		body->mPosition = unk178->mPoints[i].mPosition;
 		body->mPreviousPosition = body->mPosition;
 		body->mOlderPosition = body->mPreviousPosition;
-		body->mRotation = mRotation;
+		body->mRotation = getRotation();
 	}
 	setHeadAndBodyAnm(BOSS_HANACHAN_ANM_UNK0, BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 	execHeadCalcAnim_();
@@ -185,28 +188,31 @@ void TBossHanachan::init(TLiveManager* manager)
 	}
 }
 
+// TODO: frame exact; the `*gpMarioPos - actor->mPosition` temporary sits at
+// 0x8c where retail has 0x68, and CLBAbs's positive arm copies into r0 (retail
+// keeps r3) with the 1 - k*|d| FPRs renumbered. Inert: a named or s16 abs,
+// the one-statement ratio, `ratio -=`, and product order.
 void TBossHanachan::throwMario_(THitActor* actor)
 {
 	JGeometry::TVec3<f32> direction = *gpMarioPos - actor->mPosition;
 	f32 speed;
 	if (direction.isZero()) {
 		direction.set(0.0f, 1.0f, 0.0f);
-		speed = mMarchSpeed * mChangeParams->mSLThrowTotalPower.get();
+		speed = mMarchSpeed * getChangeParams()->mSLThrowTotalPower.get();
 	} else {
 		s16 moveAngle = CLBDegToShortAngle(MsGetRotFromZaxisY(mPreviousLinearVelocity));
 		s16 marioAngle = CLBDegToShortAngle(MsGetRotFromZaxisY(direction));
 		s16 angleDifference = moveAngle - marioAngle;
-		int absoluteDifference = CLBAbs<int>(angleDifference);
-		f32 ratio = (1.0f / 32768.0f) * absoluteDifference;
+		f32 ratio = (1.0f / 32768.0f) * CLBAbs<int>(angleDifference);
 		ratio = 1.0f - ratio;
-		speed = ratio * (mMarchSpeed * mChangeParams->mSLThrowTotalPower.get());
+		speed = ratio * (mMarchSpeed * getChangeParams()->mSLThrowTotalPower.get());
 		JGeometry::TVec3<f32> movement = mPreviousLinearVelocity;
-		movement.scale(ratio * mChangeParams->mSLThrowMoveDirPower.get());
+		movement.scale(ratio * getChangeParams()->mSLThrowMoveDirPower.get());
 		direction += movement;
-		direction.y = mChangeParams->mSLThrowVecY.get();
+		direction.y = getChangeParams()->mSLThrowVecY.get();
 	}
-	speed = MsClamp(speed, mChangeParams->mSLThrowSpeedMin.get(),
-	                 mChangeParams->mSLThrowSpeedMax.get());
+	speed = MsClamp(speed, getChangeParams()->mSLThrowSpeedMin.get(),
+	                 getChangeParams()->mSLThrowSpeedMax.get());
 	SMS_SendMessageToMario(mHead, 0xE);
 	SMS_SendMessageToMario(mHead, 7);
 	SMS_ThrowMario(direction, speed);
@@ -240,25 +246,25 @@ static void CalcRevisionPosByRotateZ(const JGeometry::TVec3<f32>& rotation,
 
 void TBossHanachan::execHeadCalcAnim_()
 {
-	JGeometry::TVec3<f32> position = mPosition;
+	JGeometry::TVec3<f32> position = getPosition();
 	CalcRevisionPosByRotateZ(mRotation, mCommonParams->mSLHeadPlusYByRotateZ.get(),
 	                        &position);
-	CLBCalcRotateZXYTranslateMatrix(mHead->mMActor->getModel()->getBaseTRMtx(),
+	CLBCalcRotateZXYTranslateMatrix(getHead()->getMActor()->getModel()->getBaseTRMtx(),
 	                               mRotation, position);
-	mHead->mMActor->calc();
+	getHead()->getMActor()->calc();
 }
 
 void TBossHanachan::execBodyCalcAnim_()
 {
 	for (int i = 0; i < 8; ++i) {
 		TBossHanachanPartsBody* body = mBodies[i];
-		JGeometry::TVec3<f32> position = body->mPosition;
+		JGeometry::TVec3<f32> position = body->getPosition();
 		CalcRevisionPosByRotateZ(body->mRotation,
 		    mCommonParams->mSLBodyPlusYByRotateZ.get(), &position);
 		Mtx transform;
 		CLBCalcRotateZXYTranslateMatrix(transform, body->mRotation, position);
-		body->mMActor->getModel()->setBaseTRMtx(transform);
-		body->mMActor->calc();
+		body->getMActor()->getModel()->setBaseTRMtx(transform);
+		body->getMActor()->calc();
 	}
 }
 
@@ -862,6 +868,9 @@ void TBossHanachan::execWalk(bool accelerate)
 	}
 }
 
+// TODO: every instruction matches; `goal` and setGoalPath's node sit 0x10
+// low (0x50/0x40, retail 0x60/0x50). Inert or worse: an unnamed isZero()
+// test, an unnamed roll, a rotated TVec3, and unnamed angle/cos/sin.
 void TBossHanachan::execSlip()
 {
 	CLBChaseGeneralConstantSpecifySpeed(&mMarchSpeed, 0.0f,
@@ -915,30 +924,28 @@ void TBossHanachan::goToInitialRecoverGraphNode()
 	unk12C = 0.0f;
 }
 
-// TODO: frame 0x38, retail 0x60, with no stack use in the retail body; the
-// dying loop also takes mHead into r4 where retail uses r3. A named loop
-// body, getHead(), an unnamed sound position and a default rail arm are
-// all inert or worse.
+// TODO: frame exact (the accessors and the two-argument sound calls are
+// retail's 0x28 of codeless frame); the dying loop still takes mHead's hit
+// actor into r4 where retail uses r3. A named loop body, a named head hit
+// actor, a function-scope `i` and `!=`/post-increment loop forms are inert.
 void TBossHanachan::execDamage()
 {
-	mSpine->reset();
+	getSpine()->reset();
 	if (mHitPoints != 0)
 		--mHitPoints;
 	if (mHitPoints == 0) {
-		mHead->unk100->onHitFlag(HIT_FLAG_NO_COLLISION);
+		getHead()->unk100->onHitFlag(HIT_FLAG_NO_COLLISION);
 		for (int i = 0; i < 8; ++i) {
 			mBodies[i]->unk100->onHitFlag(HIT_FLAG_NO_COLLISION);
 			mBodies[i]->mFeet[0]->onHitFlag(HIT_FLAG_NO_COLLISION);
 			mBodies[i]->mFeet[1]->onHitFlag(HIT_FLAG_NO_COLLISION);
 		}
-		mSpine->setNext(&TNerveBossHanachanDead::theNerve());
+		getSpine()->setNext(&TNerveBossHanachanDead::theNerve());
 		setAnmTimerWhenDead();
-		mDeathSoundPosition = *gpMarioPos;
-		if (gpMSound->gateCheck(0x28E6))
-			MSoundSESystem::MSoundSE::startSoundActor(0x28E6,
-			    &mDeathSoundPosition, 0, nullptr, 0, 4);
+		mDeathSoundPosition = SMS_GetMarioPos();
+		SMSGetMSound()->startSoundActor(0x28E6, &mDeathSoundPosition);
 	} else {
-		mSpine->setNext(&TNerveBossHanachanDamage::theNerve());
+		getSpine()->setNext(&TNerveBossHanachanDamage::theNerve());
 		setAnmTimerWhenDamage();
 		TBossHanachanManager* manager = (TBossHanachanManager*)mManager;
 		mChangeParams = manager->mChangeParams[3 - mHitPoints];
@@ -954,9 +961,7 @@ void TBossHanachan::execDamage()
 		unk124->setGraph(gpConductor->getGraphByName(railName));
 		onLiveFlag(LIVE_FLAG_UNK20000);
 		const JGeometry::TVec3<f32>* soundPosition = &mBodies[mWeakBodyIndex]->unk154;
-		if (gpMSound->gateCheck(0x280F))
-			MSoundSESystem::MSoundSE::startSoundActor(0x280F,
-			    soundPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(0x280F, soundPosition);
 	}
 }
 
