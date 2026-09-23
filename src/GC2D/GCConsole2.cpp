@@ -3720,6 +3720,10 @@ bool TGCConsole2::processInsertLife(int param_1)
 	return isFinished;
 }
 
+// TODO: the frame is 0x168 in retail against 0x130 here: the bounds rect sits
+// at 0xf0, not 0xc0, so 0x30 of low temporaries are missing before it, and
+// retail keeps the clamped blue-coin value in blueCoins' own r25 (reusing the
+// counter removes our `mr r25, r0` but scores lower until the frame is right).
 bool TGCConsole2::processAppearStar(int param_1)
 {
 	bool isFinished = true;

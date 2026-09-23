@@ -765,6 +765,10 @@ void TBathtub::control()
 	}
 }
 
+// TODO: the frame is 0x150 in retail against 0x190 here (the quaternion sits
+// at 0xf0, not 0x130), and retail keeps the normalised axis in a fifth saved
+// FPR (f27). Angle spellings, `.value` and setLength(1.0f) are all inert; the
+// excess is the inlined TQuat4 setRotate/rotate locals (see JGQuat4.hpp).
 void TBathtub::calcBathtubData()
 {
 	const TPosition3f& mtx = *(TPosition3f*)getRootJointMtx();
