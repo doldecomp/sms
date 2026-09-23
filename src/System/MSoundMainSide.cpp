@@ -966,8 +966,13 @@ void MSStageCubeFadeDouble::proc()
 
 	unk4 = gpCubeSoundChange->getInCubeNo(local_170);
 
-	bool bVar1 = false;
-	if ((unk4 == 0 || unk4 == 1) && unk10[unk4] != 0)
+	// The pair test is materialised as a bool first (`li r0,1 ... mr r0,r4`).
+	// TODO: retail reloads unk4 for the unk10 index and copies the false
+	// value from bVar1's register; the calcParamRatioInCube expansion's
+	// out-of-line begin() is the shared-header gap noted in std-vector.hpp.
+	bool bVar1      = false;
+	bool isPairCube = unk4 == 0 || unk4 == 1;
+	if (isPairCube && unk10[unk4] != 0)
 		bVar1 = true;
 
 	if (!bVar1) {
