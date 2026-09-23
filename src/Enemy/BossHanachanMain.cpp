@@ -370,10 +370,9 @@ static inline void BossHanachanUpdateBodyRotateZ(TBossHanachan* self)
 	                   * (velocity * velocity));
 	for (int i = 0; i < 8; ++i) {
 		TBossHanachanPartsBody* body = self->mBodies[i];
-		bool overturned = (-179.0f == body->mRotation.z
-		                   || 179.0f == body->mRotation.z)
-		                      ? true : false;
-		if (!overturned || body->mRotation.z != maxRoll) {
+		f32 angle = body->mRotation.z;
+		bool overturned = (-179.0f == angle || 179.0f == angle) ? true : false;
+		if (!overturned || angle != maxRoll) {
 			f32 previous = i == 0 ? self->mBodies[i + 1]->mPreviousRoll
 			                      : self->mBodies[i - 1]->mPreviousRoll;
 			f32 next = i == 7 ? self->mBodies[i - 1]->mPreviousRoll
