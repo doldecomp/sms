@@ -466,11 +466,10 @@ s32 TCardManager::filledInitData_(CARDFileInfo* file)
 	sector->setCheckSum(0);
 
 	for (int i = 1; i < ARRAY_COUNT(mSectorCriteria); ++i) {
-		TCriteria* crit = &mSectorCriteria[i];
-		if (crit->getState() != TCriteria::STATE_EMPTY)
+		if (mSectorCriteria[i].getState() != TCriteria::STATE_EMPTY)
 			continue;
 
-		s32 errc = writeCardSector_(file, i, sector, crit);
+		s32 errc = writeCardSector_(file, i, sector, &mSectorCriteria[i]);
 
 		if (errc != 0)
 			return errc;
