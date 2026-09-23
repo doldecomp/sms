@@ -1407,6 +1407,10 @@ void TMBindShadowManager::forceRequest(const TCircleShadowRequest& param_1,
 	}
 }
 
+// TODO: the frame is 0x90 short (0x198 against retail's 0x228) with
+// non-uniform slot deltas (oldPos +0x90, pos +0x5c, base +0x64), so inline
+// temporaries are missing around the square-shadow projection; the array
+// merge loop also indexes arrays[i]/[j] through byte offsets in retail.
 void TMBindShadowManager::calcVtx()
 {
 	static const f32 calctablex[4] = { -1.0f, 1.0f, 1.0f, -1.0f };

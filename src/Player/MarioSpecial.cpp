@@ -460,6 +460,10 @@ TBGCheckData* TMario::findNearestWall(const TBGWallCheckRecord& record)
 // `pos` sits at 0xe0 (retail 0x16c); hangingCommon(int, int) (UNUSED, 0x78)
 // is likely a second missing level -- the pulledUp animation block as a
 // helper emits 160 bytes, so that is not its body.
+// Retail builds record, record3 and record4 in one 0x198 slot and loads
+// gpMap after each record, as if one inline built and tested them.
+// Retail's record3 centre y is `10.0f + newPos.y` (fadds of @4950 = 10);
+// spelling it so scores -0.01 until the record scheduling is fixed.
 BOOL TMario::hanging()
 {
 	BOOL pulledUp = FALSE;
