@@ -418,13 +418,12 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 	mLastTranslation = pos;
 	mTranslation     = pos;
 	mTranslation.y += 1.0f;
-	mEggRotSpeed = DEG2SHORTANGLE(yrot);
+	s16 rotSpeed = DEG2SHORTANGLE(yrot);
+	mEggRotSpeed = rotSpeed;
 	mState       = STATE_UNK2;
 
 	changeAnimation(0);
 
-	// TODO: instruction-exact; frame 0x48 against retail's 0x50 (the
-	// fctiwz buffer sits 8 higher in retail).
 	THitActor* fruit = egg->getFruit();
 	TTakeActor* held = (TTakeActor*)fruit;
 	if (mMario->getHeldObject() == fruit) {
