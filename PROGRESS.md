@@ -11,12 +11,12 @@ Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the 
 
 | | Matched code | Source-linked code | Linked units |
 | --- | ---: | ---: | ---: |
-| Game | 63.46% | 16.66% | 191 / 385 |
+| Game | 63.59% | 16.81% | 192 / 385 |
 | JSystem | 92.76% | 78.42% | 185 / 198 |
 | SDK | 96.54% | 96.37% | 147 / 149 |
-| All | 69.87% | 30.87% | 523 / 732 |
+| All | 69.97% | 30.99% | 524 / 732 |
 
-11,846 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,851 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
 
 ## What recent batches have done
 
