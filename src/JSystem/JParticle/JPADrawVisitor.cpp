@@ -1044,9 +1044,10 @@ void JPADrawExecRotation::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
-// Direct-return level over a raw member read (a named local here is +0 of
-// frame but orders JPADrawExecRotationCross::exec's slots worse).
-static inline f32 JPADrawVisitorScaleX(const JPADrawParams* p) { return p->mScaleX; }
+// Direct-return level over the raw angle read, taken by the sine only: it is
+// the 4 bytes of low region (frame 0x138) that retail carries, and unlike the
+// same level over mScaleX it leaves every FPR operand order as retail's.
+static inline u16 JPADrawVisitorAngle(const JPADrawParams* p) { return p->unk34; }
 
 void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
                                     JPABaseParticle* particle)
@@ -1056,10 +1057,10 @@ void JPADrawExecRotationCross::exec(const JPADrawContext* dc,
 
 	JPADrawParams* params = particle->getDrawParamPPtr();
 
-	f32 sin = JMASSin(params->unk34);
+	f32 sin = JMASSin(JPADrawVisitorAngle(params));
 	f32 cos = JMASCos(params->unk34);
 
-	f32 x0 = -JPADrawVisitorScaleX(params) * (dc->pcb->unk4.x + dc->pcb->unkC.x);
+	f32 x0 = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
 	f32 y0 = +params->mScaleY * (dc->pcb->unk4.y + dc->pcb->unkC.y);
 	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
