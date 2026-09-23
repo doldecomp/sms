@@ -1116,10 +1116,11 @@ void TResetFruit::kicked()
 	JGeometry::TVec3<f32> vel(mVelocity);
 	if (vel.y <= 0.0f) {
 		// Already in the air and heading away from Mario: leave it alone.
-		JGeometry::TVec3<f32> away(vel);
-		f32 toward = away.x * (SMS_GetMarioPos().x - mPosition.x)
-		    + away.y * 0.0f
-		    + away.z * (SMS_GetMarioPos().z - mPosition.z);
+		JGeometry::TVec3<f32> diff;
+		diff.x = SMS_GetMarioPos().x - mPosition.x;
+		diff.y = 0.0f;
+		diff.z = SMS_GetMarioPos().z - mPosition.z;
+		f32 toward = JGeometry::TVec3<f32>(vel).dot(diff);
 		// checkLiveFlag2 is the signed BOOL that emits retail's
 		// `li 1/0; cmpwi`. toward has to be computed first so that
 		// materialisation lands after the dot product.
@@ -1128,10 +1129,11 @@ void TResetFruit::kicked()
 			if (toward > 0.0f)
 				return;
 		}
-		// TODO: 96.3%. Frame is 0x90 against retail 0xe0 (ladder 330's
-		// TVec3-at-bottom-of-pool class). Retail also interleaves the
-		// mario.x-pos.x subtract with the away stores and multiplies
-		// away.y by the live 0.0f in f2 first.
+		// TODO: 97.5%. Frame is 0xb0 against retail 0xe0 (ladder 330's
+		// TVec3-at-bottom-of-pool class). Retail stores the dot product's
+		// velocity copy from the registers that loaded `vel`'s source
+		// temporary rather than reloading `vel`; copying from `vel` at the
+		// later mVelocity sites or at the `<= 0` test is worse.
 
 		if (JGeometry::TVec3<f32>(mVelocity).y == 0.0f) {
 			mVelocity.y = unk178;

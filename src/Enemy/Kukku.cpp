@@ -100,6 +100,10 @@ void TKukkuBall::init()
 		                     "K_name_dummy", *image);
 }
 
+// TODO: 97.2%. Frame is 0x98 against retail 0xb0 (bind()'s pos sits 0x20
+// low, mtx 0x18 low), and retail loads mAttackHeight before pos.y for both
+// map calls in bind(). `pos += mVelocity`, pos.add(), an aggregate sum and a
+// separate `groundY += 1.0f` are inert or worse.
 void TKukkuBall::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mFlags & KUKKUBALL_FLAG_DEAD)
@@ -186,7 +190,7 @@ void TKukkuBall::kill()
 {
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mFlags |= KUKKUBALL_FLAG_DEAD;
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 500.0f);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 500.0f);
 }
 
 // UNUSED, 0x28 in the map.

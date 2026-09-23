@@ -760,7 +760,9 @@ BOOL TGraphWeb::isDummy() const
 // where we reload param_1 for `thing.sub` and point2 for the scaleAdd; it
 // also forms &nodes[i] with an `add` before loading the rail node. Neither
 // `thing -= param_1`, a by-value getPoint(), a named node pointer nor
-// hoisting `nodes` out of the loop reproduces that.
+// hoisting `nodes` out of the loop reproduces that; neither do a bool
+// flag, named dot products or reordering the three top declarations.
+// Retail's frame is 8 bytes smaller (local_48 sits 0xc lower).
 JGeometry::TVec3<f32>
 TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 {
@@ -797,7 +799,7 @@ TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 			thing.sub(param_1);
 			f32 dVar18 = thing.squared();
 			if (bVar9 || dVar18 < min) {
-				local_48.scaleAdd(fVar4, point, point2);
+				local_48.scaleAdd(fVar4, point2, point);
 				bVar9 = false;
 				min   = dVar18;
 			}

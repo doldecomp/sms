@@ -687,14 +687,13 @@ void TBossPakkunMtxCalc::calcBellyScale(u16 joint)
 	if (joint != 4 && joint != 0x24)
 		return;
 
+	Mtx scaleMtx;
 	f32 swell;
 	if (mOwner->unk17C) {
 		swell = (f32)mOwner->unk1B8 / 50.0f;
 	} else {
 		int limit = mOwner->getSaveParam2()->mSLWaterMarkLimit.get();
-		int mark  = mOwner->mWaterMark;
-		if (mark > limit)
-			mark = limit;
+		int mark  = std::min(mOwner->mWaterMark, limit);
 		swell = (f32)mark / (f32)limit;
 	}
 
@@ -703,19 +702,22 @@ void TBossPakkunMtxCalc::calcBellyScale(u16 joint)
 
 	MtxPtr jointMtx = mOwner->getModel()->getAnmMtx(joint);
 
-	Mtx scaleMtx;
 	if (joint == 0x24) {
 		static JGeometry::TVec3<f32> goal(1.4f, 1.4f, 1.6f);
 		static JGeometry::TVec3<f32> start(1.0f, 0.8f, 0.8f);
-		MTXScale(scaleMtx, start.x + rate * (goal.x - start.x),
-		         start.y + rate * (goal.y - start.y),
-		         start.z + rate * (goal.z - start.z));
+		JGeometry::TVec3<f32> scale;
+		scale.x = start.x + rate * (goal.x - start.x);
+		scale.y = start.y + rate * (goal.y - start.y);
+		scale.z = start.z + rate * (goal.z - start.z);
+		MTXScale(scaleMtx, scale.x, scale.y, scale.z);
 	} else {
 		static JGeometry::TVec3<f32> goal(1.3f, 1.7f, 1.7f);
 		static JGeometry::TVec3<f32> start(1.0f, 0.9f, 0.9f);
-		MTXScale(scaleMtx, start.x + rate * (goal.x - start.x),
-		         start.y + rate * (goal.y - start.y),
-		         start.z + rate * (goal.z - start.z));
+		JGeometry::TVec3<f32> scale;
+		scale.x = start.x + rate * (goal.x - start.x);
+		scale.y = start.y + rate * (goal.y - start.y);
+		scale.z = start.z + rate * (goal.z - start.z);
+		MTXScale(scaleMtx, scale.x, scale.y, scale.z);
 	}
 
 	MTXConcat(jointMtx, scaleMtx, jointMtx);
