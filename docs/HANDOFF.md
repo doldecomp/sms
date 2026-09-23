@@ -57,6 +57,16 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ## State log
 
+### Session d828ce34 (2026-09-22, Opus orchestrator)
+
+- Numbers: All 63.59 -> 66.32% matched, 500 -> 520 linked; Game 56.03 -> 59.34%, 172 -> 189 linked; matched data 96.47 -> ~98.6%; ~150 functions to exact; ~40 real gameplay bugs fixed; 17 of 27 game `#pragma dont_inline` removed.
+- Links made: sunmodel, MarioSound, MarNameRefGen_BossEnemy, MarDirectorSetup2, NpcInbetween, MarDirectorLoadResource, fishoid, JDRCamera, CameraMultiPlayer, MActor, walkerEnemy, JDRSmJ3DAct, camerashake, JPAEmitterManager, NpcEffect, MapObjTown, MapObjRicco, MapObjHide, riccohook, SDLModel.
+- What worked: per-function brute-force spelling search (0.3 s object rebuilds) scored on stack-slot positions; data-deficit passes (jump tables: relabel from table order, or fix code length before labels; include order for string pools). All levers are appended at the ends of the sections of `docs/catalog/RULES.md` (now 106 KB: condense it before the next round).
+- Measured cost (56 transcripts): ~68% of agent wall time is model turns, 65% of tool time is hand-driven search; 2.5B cached input tokens vs 5M output (context re-reading). Hand closure batches yield ~0.05-0.15 points each.
+- Plan agreed with the user: (1) land `tools/lever-search.py` (built on `wt/tool1`) and run it unattended over the byte-ranked list (`byte_ranked.tsv`: 687 functions >= 99%, ~624 KB; regenerate from report.json), agents only review its patches; (2) rank work by bytes; keep agents short (1-3 functions); condense RULES.md into a top-30 lever card.
+- Experiment: Opus 5.5 at low effort. `.claude/agents/decomp-low.md` (model `claude-opus-5-5`, `effort: low`) loads only after a restart (the watcher ignores agents dirs created mid-session). A headless run (`claude -p --model claude-opus-5-5 --effort low`) is working in worktree `low2` on six byte-ranked targets; its cost is in the session scratchpad `low2/result.json`. Control (normal effort, 238k tokens, ~135 calls) closed 2 functions / 5.8 KB. Land `wt/low2` (resolve the MarioSpecial TODO against the landed `specMain` closure) and compare.
+- Open leads: the `a = b - c` migration (research cc23/cc34 in frame-gaps.md: +16/-5 exact, 67 regressions; `const Vec*` operand has no binary evidence); JGadget sites are per-site only (cc39); `TTargetArrow(const char* name = "?")` header lead for MarNameRefGen `getNameRef`; `JGRotation3.hpp` `setEular` for MapObjFence; LightUtil `perform` would link with a dead `Vec` local (refused).
+
 ### Session codex-orchestrator (2026-09-22)
 
 - Fixed `tools/worktree.sh` to configure new worktrees with the Python recorded by the main build, preventing false shared-tool download attempts.
