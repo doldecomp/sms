@@ -1061,9 +1061,9 @@ void TEnemyMario::emReplayWaiting()
 
 void TEnemyMario::emReplayJumpToNearestNode()
 {
-	// TODO: Recover the original vector temporary and inline lifetimes; the
-	// logic matches, but retail reserves a larger stack frame and saves two
-	// additional floating-point registers.
+	// TODO: the frame is 0x18 short and retail keeps replayLinks and the
+	// nearest-link row in separate saved GPRs (r20-r31, ours r21-r31);
+	// hoisting `links` or the random-flag test spelling were inert.
 	if (canJumpToNode()) {
 		unk108->mFrameInput |= TMarioControllerWork::A;
 		unk108->mInput |= TMarioControllerWork::A;
@@ -1094,10 +1094,10 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	JGeometry::TVec3<f32> marioDirection(*gpMarioPos - currentPoint);
 	marioDirection.normalize();
 	TGraphNode* nextNode = nullptr;
+	f32 smallestDot      = 1.0f;
 
 	if (mSettingParams->mRandomFlag.get() == 0) {
 		TReplayLink* links = replayLinks[nodeIndex];
-		f32 smallestDot    = 1.0f;
 		for (int i = 0; i < 3; ++i) {
 			TReplayLink& link = links[i];
 			if (link.mNodeIndex == 0xFF) {
