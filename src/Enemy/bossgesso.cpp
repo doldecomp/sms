@@ -748,13 +748,19 @@ void TBossGesso::continuousRumble()
 // before assigning it (pass 167's TSolidStack::top() shape) are exactly those
 // four, and none of them changes a single instruction here: 412 bytes and
 // 107 instructions either way, while perform goes 82.2 -> 98.3.
-// TODO: the body's own residue is one contraction: retail loads y and z before
-// x and fuses `x * x` into `y * y` with an `fmadds` that our squared()/dot()
-// spelling does not produce. TMario::wireMove has the identical residue, so it
-// is a shared JGVec3 spelling question, not a local one. The literal pool
-// agrees that retail expands nothing here: its 100000.0f is @7822, the highest
-// id in the TU, because this function alone requests it, while ours lands it
-// near perform's own literals.
+// Copying the node position through a `Vec&` inside an inlined callee gives
+// retail's `fmadds` (x*x folded onto y*y) and its y, z, x load order, as in
+// Tongue's TongueSubTo; the retail helper's real name is unknown.
+// TODO: every instruction now matches; the frame is 0x30 against retail's
+// 0x48, with tipPos at 0x1c instead of 0x30. An unused `SMS_GetMarioPos()`
+// copy (the name suggests a dropped Mario term) reaches 0x48 but not the
+// slot, so it is not committed. The literal pool agrees that retail expands
+// nothing here: its 100000.0f is @7822, the highest id in the TU.
+static inline void BGCopyTo(Vec& out, const JGeometry::TVec3<f32>& p)
+{
+	out = p;
+}
+
 f32 TBossGesso::lenFromToeToMario()
 {
 	f32 min = 100000.0f;
@@ -766,8 +772,7 @@ f32 TBossGesso::lenFromToeToMario()
 
 		TBGTentacle::TNode* node = tentacle->getLastNode();
 		JGeometry::TVec3<f32> tipPos;
-		tipPos = node->getPosition();
-
+		BGCopyTo(tipPos, node->getPosition());
 		f32 lenSq = tipPos.squared();
 		f32 len   = JGeometry::TUtil<f32>::sqrt(lenSq);
 		if (len < min)
