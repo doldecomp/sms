@@ -407,7 +407,8 @@ CLBRotateVecByEulerAndRoll(JGeometry::TVec3<f32>* vec, const S16Vec& euler,
 // point-pair distance over a component length is a reconstruction.
 static inline f32 CLBCalcLengthXZ(f32 dx, f32 dz)
 {
-	return MsSqrtf(dx * dx + dz * dz);
+	f32 r = MsSqrtf(dx * dx + dz * dz);
+	return r;
 }
 
 static inline f32 CLBCalcDistanceXZ(const JGeometry::TVec3<f32>& a,

@@ -256,7 +256,8 @@ static inline const JGeometry::TVec3<f32>* AmiNokoUp(const TAmiNoko* p)
 
 static inline f32 AmiNokoSqrt(f32 value)
 {
-	return JGeometry::TUtil<f32>::sqrt(value);
+	f32 r = JGeometry::TUtil<f32>::sqrt(value);
+	return r;
 }
 
 // TODO: 99.7%, frame 0x60 exact (the AmiNokoUp binder above pays the 16

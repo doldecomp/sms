@@ -34,7 +34,8 @@
 // shape as emario's EMarioCalcDist and AnimalNerve's calcDist).
 static inline f32 TabePukuLength(const JGeometry::TVec3<f32>& v)
 {
-	return v.length();
+	f32 r = v.length();
+	return r;
 }
 
 // The three .bck slots of the tabepuku model, in the alphabetical order the

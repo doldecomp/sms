@@ -88,8 +88,7 @@ static inline u16 BGTentacleGetJointNum(J3DModelData* d)
 static inline J3DModel* BGTentacleGetModel(TBGTentacle* t)
 {
 	MActor* actor = t->getUnk2C();
-	J3DModel* model = actor->getModel();
-	return model;
+	return actor->getModel();
 }
 
 void TBGTentacleMtxCalc::calc(u16 param_1)
