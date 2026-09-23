@@ -1208,14 +1208,16 @@ void TBossWanwan::calcRootMatrix()
 // TNerveBWGraphWander::execute spell this out.
 void TBossWanwan::reverseNextGraphNode()
 {
-	TGraphTracer* tracer = getTracer();
-	int prev             = tracer->getPrevIndex();
+	TGraphTracer* tracer   = getTracer();
+	int prev               = tracer->getPrevIndex();
+	int curr               = tracer->getCurGraphIndex();
+	const TGraphWeb* graph = tracer->getGraph();
 
 	JGeometry::TVec3<f32> toMario = *gpMarioPos;
 	toMario.sub(mPosition);
 
-	getTracer()->mPrevIdx = tracer->getGraph()->getAimToDirNextIndex(
-	    prev, tracer->getCurGraphIndex(), toMario, mPosition, -1);
+	int next = graph->getAimToDirNextIndex(prev, curr, toMario, mPosition, -1);
+	getTracer()->mPrevIdx = next;
 	getTracer()->mCurrIdx = prev;
 
 	setGoalPathFromGraph();
