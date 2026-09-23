@@ -421,7 +421,7 @@ static inline void BossHanachanUpdateBodyRotateZ(TBossHanachan* self)
 	}
 	f32 limit = self->mChangeParams->mSLDiffMaxRotateZ.get();
 	for (int i = 1; i < 8; ++i) {
-		f32 previous = self->mBodies[i - 1]->mRotation.z;
+		const f32& previous = self->mBodies[i - 1]->mRotation.z;
 		f32& roll = self->mBodies[i]->mRotation.z;
 		if (fabs(previous - roll) > limit) {
 			if (roll < previous)
@@ -668,8 +668,8 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 					mHead->unk104->setUpTrans(position);
 				}
 			}
-			f32 footOffset = mCommonParams->mSLFootHitOffsetY.get();
 			f32 bodyOffset = mCommonParams->mSLBodyHitOffsetY.get();
+			f32 footOffset = mCommonParams->mSLFootHitOffsetY.get();
 			for (int i = 0; i < 8; ++i) {
 				TBossHanachanPartsBody* body = mBodies[i];
 				TWaterHitActor* hit = body->unk100;
