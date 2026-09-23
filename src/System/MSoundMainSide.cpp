@@ -732,7 +732,20 @@ MSStage* MSStage::init(u8 param_1, u8 param_2)
 
 void MSStage::stageLoop() { proc(); }
 
-void MSStageProc::setBgmPosition(const Vec&, f32, bool, u32, u32) { }
+void MSStageProc::setBgmPosition(const Vec& pos, f32 dist, bool fade, u32 cur,
+                                 u32 max)
+{
+	Vec camPos = gpMSound->mAudioCameras->toCamSpace(pos);
+	f32 pan    = MSHandle::calcPan(camPos, dist, 10000.0f);
+	f32 dolby  = MSHandle::calcDolby(camPos, dist);
+	if (fade && cur < max) {
+		pan = (pan - 0.5f) * cur / max;
+		pan += 0.5f;
+		dolby = dolby * cur / max;
+	}
+	MSBgm::setPan(1, pan, 1, 0);
+	MSBgm::setDolby(1, dolby, 1, 0);
+}
 
 MSStageDistFade::MSStageDistFade(const Vec* param_1, f32 param_2, f32 param_3,
                                  u32 param_4, bool param_5)
@@ -787,24 +800,7 @@ void MSStageDistFade::proc()
 		gpMSound->unk9C->xFadeBgm(fVar1);
 	}
 
-	// TODO: inline? Retail's frame is 0x40 larger (every low-region temporary
-	// sits 0x40 higher, nothing referenced below them), and calcPan's result
-	// goes straight to f30 where ours passes through f0.
-	u32 r30 = unk4;
-	u32 r29 = unk14;
-
-	Vec local_68 = gpMSound->mAudioCameras->toCamSpace(*unk10);
-
-	f32 dVar6 = MSHandle::calcPan(local_68, fVar8, 10000.0f);
-	f32 dVar7 = MSHandle::calcDolby(local_68, fVar8);
-	if (r29 < r30) {
-		dVar6 = (dVar6 - 0.5f) * r30 / r29;
-		dVar6 += 0.5f;
-		dVar7 = dVar7 * r30 / r29;
-	}
-
-	MSBgm::setPan(1, dVar6, 1, 0);
-	MSBgm::setDolby(1, dVar7, 1, 0);
+	MSStageProc::setBgmPosition(*unk10, fVar8, true, unk4, unk14);
 	unk4 += 1;
 }
 
@@ -815,25 +811,6 @@ MSStageDistFadeMonte::MSStageDistFadeMonte(const Vec* param_1, f32 param_2,
     , unk1C(3)
     , unk20(3)
 {
-}
-
-// TU-local: retail inlines the pan/dolby tail as its own level (calcPan's
-// result goes straight to a saved FPR, with no copy through f0).
-// TODO: f30/f31 are swapped between the distance and the fade ratio, and
-// retail's frame is 0x68 larger; declaration-order and in-place pan spellings
-// were inert.
-static inline void setMontePanDolby(const Vec* pos, f32 dist, u32 cur, u32 max)
-{
-	Vec local_88 = gpMSound->mAudioCameras->toCamSpace(*pos);
-	f32 dVar10   = MSHandle::calcPan(local_88, dist, 10000.0f);
-	f32 dVar11   = MSHandle::calcDolby(local_88, dist);
-	if (cur < max) {
-		dVar10 = (dVar10 - 0.5f) * cur / max;
-		dVar10 += 0.5f;
-		dVar11 = dVar11 * cur / max;
-	}
-	MSBgm::setPan(1, dVar10, 1, 0);
-	MSBgm::setDolby(1, dVar11, 1, 0);
 }
 
 void MSStageDistFadeMonte::proc()
@@ -884,7 +861,7 @@ void MSStageDistFadeMonte::proc()
 			gpMSound->unk9C->xFadeBgm(fVar2);
 		}
 
-		setMontePanDolby(unk10, fVar12, unk4, unk14);
+		MSStageProc::setBgmPosition(*unk10, fVar12, true, unk4, unk14);
 	}
 	unk20 = unk1C;
 	unk4 += 1;
@@ -925,11 +902,7 @@ void MSStageCubeFade::proc()
 
 			f32 d = vec_dist(local_158, local_14c);
 
-			Vec local_c0 = gpMSound->mAudioCameras->toCamSpace(local_158);
-			f32 dVar6    = MSHandle::calcPan(local_c0, d, 10000.0f);
-			f32 dVar7    = MSHandle::calcDolby(local_c0, d);
-			MSBgm::setPan(1, dVar6, 1, 0);
-			MSBgm::setDolby(1, dVar7, 1, 0);
+			MSStageProc::setBgmPosition(local_158, d, false, 0, 0);
 		}
 	}
 	unk8 = unk4;
@@ -990,11 +963,7 @@ void MSStageCubeFadeDouble::proc()
 
 			f32 d = vec_dist(local_160, local_154);
 
-			Vec local_c8 = gpMSound->mAudioCameras->toCamSpace(local_160);
-			f32 dVar6    = MSHandle::calcPan(local_c8, d, 10000.0f);
-			f32 dVar7    = MSHandle::calcDolby(local_c8, d);
-			MSBgm::setPan(1, dVar6, 1, 0);
-			MSBgm::setDolby(1, dVar7, 1, 0);
+			MSStageProc::setBgmPosition(local_160, d, false, 0, 0);
 		}
 	}
 	unk8 = unk4;
@@ -1006,10 +975,8 @@ MSStageCubeFadeMonte::MSStageCubeFadeMonte()
 {
 }
 
-// TODO: frame 0x108 vs retail 0x1c8, and retail keeps d in f30 and dVar6 in
-// f31 (one more saved FPR). Structural, shared with the other cube-fade procs;
-// candidate carrier: the pan block (dist, toCamSpace, calcPan/Dolby, setPan/
-// Dolby) is close to the UNUSED MSStageProc::setBgmPosition's 0x160.
+// TODO: frame still 0x80 short of retail's and the pan/dolby FPRs are
+// swapped, as in the other cube-fade procs (calcParamRatioInCube residue).
 void MSStageCubeFadeMonte::proc()
 {
 	JAISound* sound1 = MSBgm::getHandle(1);
@@ -1068,11 +1035,7 @@ void MSStageCubeFadeMonte::proc()
 
 			f32 d = vec_dist(local_190, local_184);
 
-			Vec local_e0 = gpMSound->mAudioCameras->toCamSpace(local_190);
-			f32 dVar6    = MSHandle::calcPan(local_e0, d, 10000.0f);
-			f32 dVar7    = MSHandle::calcDolby(local_e0, d);
-			MSBgm::setPan(1, dVar6, 1, 0);
-			MSBgm::setDolby(1, dVar7, 1, 0);
+			MSStageProc::setBgmPosition(local_190, d, false, 0, 0);
 		}
 	}
 

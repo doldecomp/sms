@@ -137,7 +137,7 @@ public:
 
 class MSStageProc {
 public:
-	void setBgmPosition(const Vec&, f32, bool, u32, u32);
+	static void setBgmPosition(const Vec&, f32, bool, u32, u32);
 };
 
 namespace MSMainProc {
