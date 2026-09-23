@@ -11,9 +11,9 @@
 #include <Map/MapCollisionData.hpp>
 #include <Player/MarioAccess.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <MSound/MSSetSound.hpp>
-#include <MSound/MSoundBGM.hpp>
+// rogue include: retail's data carries the mtx calc type names. Retail has
+// no static initializer, so the MSound headers, whose JALList<T>::smList
+// members need one, are not included here.
 #include <M3DUtil/InfectiousStrings.hpp>
 
 static const char* kumokun_bastable[] = {
