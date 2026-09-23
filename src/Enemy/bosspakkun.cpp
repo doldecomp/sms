@@ -1382,6 +1382,8 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+// TODO: frame is 0x48 short (0x130 vs retail 0x178) with every instruction
+// right, and the JumpReact push swaps r5/r6 between theNerve and mSpine.
 void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mPolDrop)
@@ -1403,16 +1405,17 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 		mMtxCalc->advanceMotionBlend(-mMotionBlendStep);
 
 		if (unk17C) {
-			if (mWaterMark > 0) {
-				int drain = getSaveParam2()->mSLWaterMarkLimit.get() / 50;
+			if (mWaterMark <= 0) {
+				unk17C     = 0;
+				mWaterMark = 0;
+			} else {
+				int drain = getSaveParam2()->mSLWaterMarkLimit.get();
+				drain /= 100;
 				if (drain == 0)
 					drain = 1;
 				mWaterMark -= drain;
 				if (mWaterMark < 0)
 					mWaterMark = 0;
-			} else {
-				unk17C     = 0;
-				mWaterMark = 0;
 			}
 		}
 
@@ -1422,16 +1425,16 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if (unk1BC) {
-			if (unk1B8 > 0)
-				unk1B8 -= 1;
-			else {
+			if (unk1B8 <= 0) {
 				unk1BC = 0;
 				unk1B8 = 0;
+			} else {
+				unk1B8 -= 1;
 			}
 		}
 
 		if (mState == BOSSPAKU_STATE_BELLY_UP && checkMarioRiding()) {
-			if (&TNerveBPJumpReact::theNerve() != mSpine->getLatestNerve())
+			if (getLatestNerve() != &TNerveBPJumpReact::theNerve())
 				mSpine->pushNerve(&TNerveBPJumpReact::theNerve());
 		}
 	}
@@ -1445,7 +1448,7 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if (getMActor()->checkCurBckFromIndex(BOSSPAKU_BCK_SLEEP)) {
-			MtxPtr nose = getMActor()->getModel()->getAnmMtx(32);
+			MtxPtr nose = getMActor()->getModel()->getAnmMtx(20);
 			unk1AC.set(nose[0][3], nose[1][3], nose[2][3]);
 
 			JPABaseEmitter* zzz = gpMarioParticleManager->emitAndBindToPosPtr(
@@ -1464,22 +1467,22 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 			    this);
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    BOSSPAKKUN_JPA_MS_BOPA_BLUR2, getModel()->getAnmMtx(46), 1,
-			    this + 1);
+			    (u8*)this + 1);
 		}
 
 		if (getMActor()->checkCurBckFromIndex(BOSSPAKU_BCK_FLY)
 		    || getMActor()->checkCurBckFromIndex(BOSSPAKU_BCK_DOWN_LOOP)
 		    || getMActor()->checkCurBckFromIndex(BOSSPAKU_BCK_WATER_HIT)) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    BOSSPAKKUN_JPA_MS_BOPA_ASE, getModel()->getAnmMtx(32), 1,
-			    this + 1);
+			    BOSSPAKKUN_JPA_MS_BOPA_ASE, getModel()->getAnmMtx(20), 1,
+			    (u8*)this + 1);
 		}
 	}
 
 	if (!((TBossPakkunManager*)mManager)->mIsLightVersion) {
 		// The death animation lives on its own model, so the base class is
 		// handed mEndMActor for one frame.
-		if (&TNerveBPDie::theNerve() == mSpine->getLatestNerve()) {
+		if (getLatestNerve() == &TNerveBPDie::theNerve()) {
 			MActor* body = getMActor();
 			mMActor      = mEndMActor;
 			TSpineEnemy::perform(cue, graphics);
@@ -1506,8 +1509,8 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (!((TBossPakkunManager*)mManager)->mIsLightVersion && (cue & 0x200)) {
-		if (&TNerveBPPreDie::theNerve() == mSpine->getLatestNerve()
-		    || &TNerveBPStompReact::theNerve() == mSpine->getLatestNerve()) {
+		if (getLatestNerve() == &TNerveBPPreDie::theNerve()
+		    || getLatestNerve() == &TNerveBPStompReact::theNerve()) {
 			getMActor()->offMakeDL();
 			SMS_AddDamageFogEffect(getMActor()->getModel()->getModelData(),
 			                       mPosition, graphics);

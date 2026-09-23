@@ -2929,9 +2929,9 @@ void TGCConsole2::startAppearStar()
 	unk34 = 1;
 }
 
-// TODO: frame 0x28 short; the `unk30C < 15` and `< 25` tests are signed
-// (`cmpwi`) in the ROM after an unsigned `< 10`, and the first colour ramp
-// schedules its two int-to-float conversions differently.
+// TODO: frame 0x28 short, and the first colour ramp schedules its two
+// int-to-float conversions differently. The `< 15` and `< 25` tests are signed
+// (`cmpwi`) in the ROM after an unsigned `< 10`, hence the `(int)` casts.
 void TGCConsole2::drawWaterBack()
 {
 	if (gpMarioOriginal->getHealth() == 0 || gpMarioOriginal->getAir() == 0)
@@ -3001,9 +3001,9 @@ void TGCConsole2::drawWaterBack()
 			if (unk30C < 10) {
 				color += ((s16)(unk30C * -6.3f)) << 8;
 				color += ((s32)(unk30C * 19.2f)) << 16;
-			} else if (unk30C < 15) {
+			} else if ((int)unk30C < 15) {
 				color = 0xffff0000;
-			} else if (unk30C < 25) {
+			} else if ((int)unk30C < 25) {
 				// int, not u8: the ROM compares signed and converts with
 				// `xoris`.
 				int fade = 25 - unk30C;

@@ -94,10 +94,15 @@ DEFINE_NERVE_INSTANCE(TNerveMantaAppearDemo)
 
 #undef DEFINE_NERVE_INSTANCE
 
+// TODO: frame 0xc8 too big (0x1f8 vs 0x130), all low region: lerp_hack's
+// named step reserves slots per expansion, but the unnamed and one-helper-per-
+// vector spellings fuse into fmadds or undershoot (0xf0/0x158/0x190/0x228).
+// Both random picks multiply `nodes * rand` in retail; swapping the operands
+// or casting nodes to f32 was inert or worse.
 BOOL TNerveMantaMove::execute(TSpineBase<TLiveActor>* spine) const
 {
-	TBossManta* self = (TBossManta*)spine->getBody();
 	s32 time         = spine->getTime();
+	TBossManta* self = (TBossManta*)spine->getBody();
 	TGraphWeb* graph = self->getTracer()->getGraph();
 
 	if (time == 0) {
@@ -119,10 +124,7 @@ BOOL TNerveMantaMove::execute(TSpineBase<TLiveActor>* spine) const
 		SMSGetMSound()->startSoundSet(MSD_SE_BS_MANTA_ATTACK, &self->mPosition,
 		                              0, 0.0f, 0, 0, 4);
 
-	JGeometry::TVec3<f32> toTarget;
-	toTarget.sub(self->mPosition, self->unk158);
-
-	if (toTarget.length() < 500.0f || time % 150 == 0) {
+	if (self->mPosition.distance(self->unk158) < 500.0f || time % 150 == 0) {
 		JGeometry::TVec3<f32> pt
 		    = graph->indexToPoint((int)(MsRandF() * graph->getNodeNum()));
 
