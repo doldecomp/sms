@@ -464,13 +464,24 @@ bool TNozzleBase::isAnmEnd() const
 
 void TNozzleBase::animation(int param_1)
 {
+	int bckIdleOut;
+	int bckIdle;
+	int bckStart;
+	int bckSwapOut;
+	int bckSwapIn;
+
 	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 
-	// TODO: retail emits `beq body; b ret; b body; b ret` here -- two dead
-	// branches more than this switch produces, and `case 3: return;` makes it
-	// a range test instead. The extra pair is still unexplained.
+	// The case assigns the animation indices the way TNozzleTrigger does; they
+	// fold to constants, but the dead `b body; b ret` pair retail keeps after
+	// the dispatch is the leftover of that non-empty case block.
 	switch (param_1) {
 	case 2:
+		bckIdleOut = 4;
+		bckIdle    = 2;
+		bckStart   = 3;
+		bckSwapOut = 1;
+		bckSwapIn  = 0;
 		break;
 	default:
 		return;
@@ -482,13 +493,15 @@ void TNozzleBase::animation(int param_1)
 	if (mFludd->isSwitchingToSprayNozzle())
 		unk36C = 3;
 
+	// TODO: retail keeps the inlined isEmitting() receiver in cases 1-2 in
+	// r29 (ours r30) and the frame is 0x28 larger; the Trigger-style case
+	// bodies, moving ctrl's declaration and NozzleFludd() at those sites are
+	// all inert on the registers.
 	switch (unk36C) {
 	case 0: {
-
-		// TODO: inline
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(4))
-			mactor->setBckFromIndex(4);
+		if (!mactor->checkCurBckFromIndex(bckIdleOut))
+			mactor->setBckFromIndex(bckIdleOut);
 
 		if (!isAnmEnd())
 			return;
@@ -499,8 +512,8 @@ void TNozzleBase::animation(int param_1)
 
 	case 1: {
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(2))
-			mactor->setBckFromIndex(2);
+		if (!mactor->checkCurBckFromIndex(bckIdle))
+			mactor->setBckFromIndex(bckIdle);
 
 		if (mFludd->isEmitting())
 			return;
@@ -511,8 +524,8 @@ void TNozzleBase::animation(int param_1)
 
 	case 2: {
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(3))
-			mactor->setBckFromIndex(3);
+		if (!mactor->checkCurBckFromIndex(bckStart))
+			mactor->setBckFromIndex(bckStart);
 
 		if (mFludd->isEmitting() == true)
 			unk36C = 0;
@@ -521,8 +534,8 @@ void TNozzleBase::animation(int param_1)
 
 	case 3: {
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(1))
-			mactor->setBckFromIndex(1);
+		if (!mactor->checkCurBckFromIndex(bckSwapOut))
+			mactor->setBckFromIndex(bckSwapOut);
 
 		// Use external tween value
 		ctrl->setFrame(
@@ -534,8 +547,8 @@ void TNozzleBase::animation(int param_1)
 
 	case 4:
 		MActor* mactor = unk380;
-		if (!mactor->checkCurBckFromIndex(0))
-			mactor->setBckFromIndex(0);
+		if (!mactor->checkCurBckFromIndex(bckSwapIn))
+			mactor->setBckFromIndex(bckSwapIn);
 
 		// Use external tween value
 		ctrl->setFrame(2.0f * (mFludd->mSwitchToSecondNozzleProgress - 0.5f)
