@@ -615,6 +615,11 @@ DEFINE_NERVE(TNerveAmenboPreAttack, TLiveActor)
 	return false;
 }
 
+// TODO: GPRs rotate (retail: string base r31, self r30, spine r29) and the
+// frame is 8 long (0xa0 vs 0x98), both from prepareWalk's quaternion: a
+// struct copy `q = mQuat` fixes both but adds the word copy retail lacks.
+// Inert: getQuat() (direct, ref, set), a const ref, set/ctor of four floats,
+// mQuat.getZDir directly (frame 0x88).
 DEFINE_NERVE(TNerveAmenboWalk, TLiveActor)
 {
 	TAmenbo* self = (TAmenbo*)spine->getBody();
