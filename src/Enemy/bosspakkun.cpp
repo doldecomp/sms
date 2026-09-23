@@ -511,6 +511,8 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+// TODO: 96.9%. Frame 0xb8 against the ROM's 0x110, and the ROM keeps the
+// head-to-Mario z in f31 across both yaw computations.
 BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (mOwner->getLatestNerve() == &TNerveBPSleep::theNerve())
@@ -524,21 +526,13 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 		// a water-gun droplet: drop out of the sky.
 		if (sender->getActorType() == 0x1000000D
 		    || sender->getActorType() == 0x1000001) {
-			boss->mState = BOSSPAKU_STATE_NORMAL;
-			boss->mSpine->reset();
-			boss->mSpine->setNext(&TNerveBPFall::theNerve());
-			if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_FALL))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_BS_BSPAKU_FALL, &boss->mPosition, 0, nullptr, 0, 4);
+			boss->gotFlyingDamage();
 			return TRUE;
 		}
 	}
 
 	if (state != BOSSPAKU_STATE_UNK2) {
-		if (boss->is2ndFightNow()) {
-			if (&TNerveBPFly::theNerve() == boss->getLatestNerve())
-				boss->showMessage(2);
-		}
+		boss->ignoreWaterCheck();
 
 		if (sender->getActorType() == 0x1000001)
 			return TRUE;
@@ -546,37 +540,25 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 		return FALSE;
 	}
 
-	if (sender->getActorType() != 0x1000001)
-		return TRUE;
-	if (message != HIT_MESSAGE_SPRAYED_BY_WATER)
-		return TRUE;
+	if (sender->getActorType() == 0x1000001
+	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		JGeometry::TVec3<f32> toMario;
+		toMario = *gpMarioPos;
+		toMario.x -= mPosition.x;
+		toMario.y -= mPosition.y;
+		toMario.z -= mPosition.z;
 
-	JGeometry::TVec3<f32> toMario;
-	toMario = *gpMarioPos;
-	toMario.x -= mPosition.x;
-	toMario.y -= mPosition.y;
-	toMario.z -= mPosition.z;
+		// The wrapped value is overwritten before it is ever read: the ROM
+		// computes the head-to-Mario yaw twice here.
+		f32 angle = MsWrap(MsGetRotFromZaxisY(toMario), 0.0f, 360.0f);
+		angle     = MsGetRotFromZaxisY(toMario);
+		f32 diff  = MsAngleDiff(angle, mOwner->mRotation.y);
 
-	// The wrapped value is overwritten before it is ever read: the ROM
-	// computes the head-to-Mario yaw twice here.
-	f32 angle = MsAngleWrap(MsGetRotFromZaxisY(toMario));
-	angle     = MsGetRotFromZaxisY(toMario);
-	f32 diff  = MsAngleDiff(angle, mOwner->mRotation.y);
-
-	if (fabsf(diff) < 0.5f * mOwner->getSaveParam2()->mSLDamageAngle.get()) {
-		boss = mOwner;
-		if (!boss->unk17C) {
-			boss->unk170 += 1;
-			if (boss->mWaterMark
-			    < boss->getSaveParam2()->mSLWaterMarkLimit.get())
-				boss->mWaterMark += 1;
-			boss->unk174 = boss->getSaveParam2()->mSLWaterHitTimer.get();
-
-			if (&TNerveBPSwallow::theNerve() != boss->getLatestNerve()) {
-				boss->mSpine->reset();
-				boss->mSpine->setNext(&TNerveBPSwallow::theNerve());
-			}
+		if (fabsf(diff) < 0.5f * mOwner->getSaveParam2()->mSLDamageAngle.get()) {
+			mOwner->gotWaterDamage();
 		}
+
+		return TRUE;
 	}
 
 	return TRUE;
@@ -1056,10 +1038,15 @@ bool TBossPakkun::is2ndFightNow() const
 	return false;
 }
 
-// UNUSED, 0xec in the map, and genuinely dead: no call site of this shape is
-// left anywhere in the unit once every function is reconstructed.
-// TODO: body unknown.
-void TBossPakkun::ignoreWaterCheck() { }
+// UNUSED, 0xec in the map: TBPHeadHit::receiveMessage inlines it when a
+// spray lands outside the spray arm, and it calls showMessage out of line.
+void TBossPakkun::ignoreWaterCheck()
+{
+	if (is2ndFightNow()) {
+		if (&TNerveBPFly::theNerve() == getLatestNerve())
+			showMessage(2);
+	}
+}
 
 // UNUSED, 0x58 in the map: the Tornado nerve inlines it. unk194 and unk1A0 are
 // the two hand joints perform() samples while the tornado animation plays.
@@ -1105,16 +1092,35 @@ BOOL TBossPakkun::inArea(const JGeometry::TVec3<f32>& pos)
 	return mVomitArea->contain(pos);
 }
 
-// UNUSED, 0xd0 in the map, and genuinely dead: the flying damage reaction now
-// lives in TBPHeadHit::receiveMessage's BOSSPAKU_STATE_FLYING arm, which is
-// its own code rather than an expansion of this.
-// TODO: body unknown.
-void TBossPakkun::gotFlyingDamage() { }
+// UNUSED, 0xd0 in the map: TBPHeadHit::receiveMessage's
+// BOSSPAKU_STATE_FLYING arm inlines it, which is what makes the
+// TNerveBPFall::theNerve() constructor a call there.
+void TBossPakkun::gotFlyingDamage()
+{
+	mState = BOSSPAKU_STATE_NORMAL;
+	mSpine->reset();
+	mSpine->setNext(&TNerveBPFall::theNerve());
+	if (gpMSound->gateCheck(MSD_SE_BS_BSPAKU_FALL))
+		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_BSPAKU_FALL,
+		                                          &mPosition, 0, nullptr, 0, 4);
+}
 
-// UNUSED, 0x160 in the map, and genuinely dead: the spray reaction now lives
-// in TBPHeadHit::receiveMessage's BOSSPAKU_STATE_UNK2 arm.
-// TODO: body unknown.
-void TBossPakkun::gotWaterDamage() { }
+// UNUSED, 0x160 in the map: TBPHeadHit::receiveMessage's spray arm inlines
+// it once the head-to-Mario angle is inside the damage cone.
+void TBossPakkun::gotWaterDamage()
+{
+	if (!unk17C) {
+		unk170 += 1;
+		if (mWaterMark < getSaveParam2()->mSLWaterMarkLimit.get())
+			mWaterMark += 1;
+		unk174 = getSaveParam2()->mSLWaterHitTimer.get();
+
+		if (&TNerveBPSwallow::theNerve() != getLatestNerve()) {
+			mSpine->reset();
+			mSpine->setNext(&TNerveBPSwallow::theNerve());
+		}
+	}
+}
 
 void TBossPakkun::gotHipDropDamage()
 {

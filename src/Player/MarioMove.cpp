@@ -1604,7 +1604,10 @@ void TMario::checkController(JDrama::TGraphics*)
 					               ->getSprayState()
 					           == TNozzleTrigger::ACTIVE) {
 						onFlag(MARIO_FLAG_FLUDD_EMITTING);
+#if !defined(VERSION_GMSE01)
+						// The US ROM drops the trigger sound here.
 						startSoundActor(MSD_SE_PO_SNIPER_TRIGGER);
+#endif
 						if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 							changePlayerStatus(MARIO_STATUS_SWIM_PADDLE, 0,
 							                   false);
