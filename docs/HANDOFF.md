@@ -57,6 +57,16 @@ Tokens per tool call are ~2,300 for every agent regardless of policy; savings co
 
 ## State log
 
+### Session 5eae6404 (2026-09-23 day, Opus orchestrator, parallel with a Codex orchestrator)
+
+- Numbers: All 69.72 -> 70.12% matched, linked 522 -> 525 (MSL exponentialsf, Enemy/seal, JASTrack); Game 63.42 -> 63.71%.
+- **Parallel orchestrators are live** (docs/CODEX_INTEGRATION.md): claim every unit/header with `tools/claim.py` (owner claude, worktree `c-*`), `tools/worktree.sh add c-<name> <Dir/Unit>` refuses without the claim, `land` holds a flock, other main-checkout commits go through `tools/worktree.sh locked`. Claude notes go to docs/catalog/findings-claude.md; never edit docs/HANDOFF-codex.md. Codex takes the <95%/real-instruction band, Claude the near-exact band and links.
+- Machine: 4 cores shared by both pools; keep Claude at 3-4 agents, agents at 2 concurrent builds; `tools/score-variant.sh` replaces `lever-search --source` as the scorer (the latter overloaded the box). Sub-agents here are NOT in bypass mode: every `rm` prompts the user, so the brief forbids `rm`; the orchestrator clears only the landed agent's scratch dir.
+- What closed functions today: pairs of opposite frame levers (each alone wrong), sibling spelling transfer (JPADrawVisitor x5), naming a `TMsRange` `rand()` result, component store order for FPR mirrors, one function-scope local reused via `set()`, UNUSED map helpers compiled to map size then called, `setLength(1.0f)` for a second `normalize()` + `.get()`.
+- Header landings: `TQuat4::rotateQ` member-read body; `TQuat4::mul(a, b)` without locals (+14 functions; `SMS_Eular2Quat` keeps out of line with named angles). Parked with measurements in the header comments: one-level two-argument `rotate` (Kumokun weak copy 100, three blockers), `MsGetRotFromZaxisY` ternary spelling, `TPathNode` initialiser zeroing (StayPakkun load 100 vs ~20 losers), `TRotation3::setQuat` product order.
+- Refuted (frame-gaps.md): other compiler builds/return-value flags (rvo1), shared header inlines as the dead-low-region cause (fd1), unit-level compile flags (uf1).
+- Open leads: `TFrmGXSet::perform` needs a later real read of `cue` (84 register operands fixed by it); cameragc `ctrlGameCamera_` inline lead vs MarioMove `MsSqrtf`; MapObjCorona `liftMario`/`getDir`/`trample` UNUSED bodies mis-sized; GCConsole2 `perform` gap is 0x1b8 in five inlined helpers.
+
 ### Session 2c772c1a (2026-09-22 evening, Opus orchestrator)
 
 - Numbers: All 66.32 -> 67.43% matched, 520 -> 521 linked (SampleCtrlNode); Game 59.34 -> 60.65%.
