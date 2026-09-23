@@ -1221,7 +1221,8 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 		    && getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			++mAnimationLoopCount;
 			if (mAnimationLoopCount > 3) {
-				mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
+				MActor* actor = getMActor();
+				mPreviousBckIndex = actor->getCurAnmIdx(ANM_TYPE_BCK);
 				mAnimationMode    = 0;
 				mBlendRatio       = 1.0f;
 				getMActor()->setBckOldMotionBlendAnmPtr(

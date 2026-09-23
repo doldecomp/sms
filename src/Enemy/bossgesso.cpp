@@ -1321,7 +1321,8 @@ void TBossGesso::doAttackDouble()
 	doubleAttackLen2 *= doubleAttackLen2;
 
 	sightAngle = BossgessoGetSaveParam2(this)->mSLSightAngle.get();
-	if (inSightAngle(0.5f * sightAngle)
+	BOOL inSight = inSightAngle(0.5f * sightAngle);
+	if (inSight
 	    && delta.squared() < doubleAttackLen2) {
 
 		for (int i = 0; i < 2; ++i) {
