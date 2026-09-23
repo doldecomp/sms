@@ -1334,6 +1334,11 @@ BOOL TMario::fallDead()
 // even for non-inlined landing(); five such levels close it exactly. Named
 // locals inside the handlers, getVel()/getStatus() spellings, per-case
 // `return f();` and jumpingCommonEvents() rewrites all leave the frame at 0x60.
+// Narrowed: the +8 is specifically an inline body returning a named local
+// (fallDead as `BOOL r = FALSE; jumpProcess(0); return r;` gives 0x68);
+// direct-return forwarders are +0. Out of line, jumping/secJumping are 4 bytes
+// under their map sizes (0x180/0x15c), which fits a result-local spelling of
+// those handlers or jumpingCommonEvents, but the forms tried either vanish or change code.
 BOOL TMario::jumpMain()
 {
 	int result;

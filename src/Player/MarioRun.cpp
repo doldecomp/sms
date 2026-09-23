@@ -505,7 +505,17 @@ void TMario::slopeProcess()
 
 void TMario::doSlipping(f32) { }
 
-void TMario::doStopping() { }
+BOOL TMario::doStopping()
+{
+	BOOL zeroed = false;
+	f32 v       = FConverge(mForwardVel, 0.0f, 1.0f, 1.0f);
+	mForwardVel = v;
+	if (v == 0.0f)
+		zeroed = true;
+
+	setPlayerVelocity(mForwardVel);
+	return zeroed;
+}
 
 void TMario::doRunning()
 {
@@ -1071,16 +1081,7 @@ BOOL TMario::walkEnd()
 	if (considerRotateStart())
 		return true;
 
-	// TODO: inline
-	BOOL zeroed = false;
-	f32 v       = FConverge(mForwardVel, 0.0f, 1.0f, 1.0f);
-	mForwardVel = v;
-	if (v == 0.0f)
-		zeroed = true;
-
-	setPlayerVelocity(mForwardVel);
-
-	if (zeroed)
+	if (doStopping())
 		return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 
 	switch (walkProcess()) {
@@ -1568,7 +1569,9 @@ BOOL TMario::loserDown()
 	return 0;
 }
 
-BOOL TMario::jumpSlipCommon(s16 anim, u32 status)
+// `inline`: the six UNUSED *JumpSlip handlers in the map (0x130/0x148/0x15c)
+// are these handlers with this body expanded; moveMain still calls it (depth 2).
+inline BOOL TMario::jumpSlipCommon(s16 anim, u32 status)
 {
 	if (mInput & 0x1) {
 		slopeProcess();
@@ -1725,6 +1728,12 @@ BOOL TMario::broadJumpSlip()
 // TODO: lever-search closes this only by wrapping running()/rotating()/turnning()
 // in one-use binders (+8 frame each, 0x18 total): the same class as
 // jumpMain's state-handler gap (MarioJump.cpp); refused, needs one real cause.
+// Measured: the +8 is a named local whose value an inline body returns
+// (`BOOL r = ...; return r;`); a direct-return forwarder is +0 and per-case
+// `return f();` is -8. The same +8 comes from braking() naming a result of an
+// inlined helper (`BOOL zeroed = doBraking(4.0f);`), but doBraking's map size
+// 0x6c only fits a body that reloads mForwardVel, which moveMain does not do.
+// So three of the inlined handlers probably return a named result in retail.
 BOOL TMario::moveMain()
 {
 	BOOL ret = 0;
