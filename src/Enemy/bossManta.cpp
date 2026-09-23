@@ -1488,21 +1488,16 @@ void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
 		if (manta == nullptr)
 			return;
 
+		TPosition3f mtx;
 		JGeometry::TVec3<f32> dir(0.0f, 0.0f, 1.0f);
 
 		f32 angle = baseAngle + (2.0f * (f32)i * M_PI) / (f32)count;
 
-		// TODO: 96.5%.  Every instruction matches; retail keeps the folded
-		// translation element in its own FPR (f23..f31, nine saved) where
-		// we reuse the 0.0f literal's register (eight saved), and our low
-		// temporary region is 0x20 larger.  Ruled out: `(void)&dir` (it was
-		// never needed), swapping setTrans/setEularY, the TPosition3f(x,y,z)
-		// constructor and translation() (identity33 stops folding, 72%).
-		// Also inert: declaring mtx before dir, and `(f32)i * 2.0f` in the
-		// angle. Retail's named block has dir 0x40 below counts, as if a
-		// 0x30 matrix slot sat between them.
-		TPosition3f mtx;
-		mtx.setTrans(0.0f, 0.0f, 0.0f);
+		// Retail never sets the translation column: mult's translation adds
+		// read one uninitialised saved FPR, and the unused 0x30 slot sits
+		// between counts and dir.
+		// TODO: 98.8%. dir sits at 0x68 against retail's 0x64, and mult's
+		// dir.x/dir.z loads and result sums take swapped volatile FPRs.
 		mtx.setEularY(angle);
 		mtx.mult(dir, dir);
 

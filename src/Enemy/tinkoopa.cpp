@@ -522,13 +522,13 @@ void TTinKoopaLaunchOrder::checkOrder()
 
 	int count = 1;
 	if (mCount == -1) {
-		if (mTinKoopa->getDamageStage() == 0)
+		if (mTinKoopa->mDamageStage == 0)
 			count = 1;
-		else if (mTinKoopa->getDamageStage() == 1)
+		else if (mTinKoopa->mDamageStage == 1)
 			count = 1;
-		else if (mTinKoopa->getDamageStage() == 2)
+		else if (mTinKoopa->mDamageStage == 2)
 			count = 2;
-		else if (mTinKoopa->getDamageStage() == 3)
+		else if (mTinKoopa->mDamageStage == 3)
 			count = 3;
 	} else {
 		count = mCount;
@@ -539,10 +539,15 @@ void TTinKoopaLaunchOrder::checkOrder()
 	if ((int)mDirection == 1)
 		count = count <= 2 ? count : 2;
 
+	// TODO: 98.8%, every instruction right. Retail's getLap() compare takes
+	// the operands the other way round, and the count, direction and
+	// receiver sit in r6/r5/r4 where ours rotate to r5/r4/r6. Inert: a
+	// named direction, casts on it, `count` assigned per branch.
+	TTinKoopa* tinKoopa = mTinKoopa;
 	int num = count;
 	if (num > 4)
 		num = 4;
-	mTinKoopa->makeKillerQueue(num, mDirection);
+	tinKoopa->makeKillerQueue(num, mDirection);
 }
 
 // UNUSED, 0xa4 in the map: inlined into TTinKoopa::init.
