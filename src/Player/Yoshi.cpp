@@ -89,6 +89,8 @@ MtxPtr TYoshi::getMtxPtrFootR() const
 	return mActor->getModel()->getAnmMtx(mJointIdxFootR);
 }
 
+// TODO: frame is 0x20 short (0x270 vs retail 0x290); every instruction
+// matches. A TU-local texture-copy helper reaches 0x288 but not 0x290.
 void TYoshi::init(TMario* param_1)
 {
 	mMario = param_1;
@@ -137,18 +139,18 @@ void TYoshi::init(TMario* param_1)
 	    J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift));
 
 	{
+		ResTIMG* timg
+		    = mActor->getModel()->getModelData()->getTexture()->getResTIMG(0);
 		J3DModelData* modelData = mMirrorModels[0]->getModelData();
-		modelData->getTexture()->setResTIMG(
-		    0,
-		    *mActor->getModel()->getModelData()->getTexture()->getResTIMG(0));
+		modelData->getTexture()->setResTIMG(0, *timg);
 		DCFlushRange(modelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
 	}
 
 	{
+		ResTIMG* timg
+		    = mActor->getModel()->getModelData()->getTexture()->getResTIMG(0);
 		J3DModelData* modelData = mMirrorModels[1]->getModelData();
-		modelData->getTexture()->setResTIMG(
-		    0,
-		    *mActor->getModel()->getModelData()->getTexture()->getResTIMG(0));
+		modelData->getTexture()->setResTIMG(0, *timg);
 		DCFlushRange(modelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
 	}
 

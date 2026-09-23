@@ -46,6 +46,8 @@ static inline void setGateTexRes(ResTIMG* res, u16 width, u16 height)
 	res->height = height;
 }
 
+// TODO: frame is 0x48 short (0x268 vs retail 0x2b0); every instruction
+// matches.
 void TModelGate::loadAfter()
 {
 	initHitActor(0x080000C0, 5, 0x80000000, 300.0f, 400.0f, 300.0f,
@@ -81,18 +83,10 @@ void TModelGate::loadAfter()
 		THPPlayerGetVideoInfo(&videoInfo);
 		u16 width       = videoInfo.xSize;
 		u16 height      = videoInfo.ySize;
-		// TODO: retail's halves are `extrwi rD, rS, 15, 16`, i.e.
-		// `(x >> 1) & 0x7fff` -- fifteen bits, so it knew the dividend
-		// was already 16-bit -- while `videoInfo.xSize / 2` on the u32
-		// field gives `extrwi rD, rS, 16, 15`. Deriving them from the
-		// `width`/`height` u16 locals is not it either (556 instructions
-		// against retail's 548: MWCC re-materialises the truncation).
-		u16 halfX       = width >> 1;
-		u16 halfY       = height >> 1;
 		J3DTexture* tex = unk78->getModel()->getModelData()->unkAC;
 		setGateTexRes(&tex->mResources[0], width, height);
-		setGateTexRes(&tex->mResources[1], halfX, halfY);
-		setGateTexRes(&tex->mResources[2], halfX, halfY);
+		setGateTexRes(&tex->mResources[1], width >> 1, height >> 1);
+		setGateTexRes(&tex->mResources[2], width >> 1, height >> 1);
 	}
 
 	unkB8          = 0;
@@ -138,11 +132,11 @@ void TModelGate::loadAfter()
 	unkAC.x = 0.0f;
 	unkAC.y = 0.0f;
 	unkAC.z = 0.0f;
-	MTXMultVec(mtx, unkAC, unkAC);
+	MTXMultVec(mtx, &unkAC, &unkAC);
 
 	MTXInverse(unk78->getModel()->getAnmMtx(unk72), mInvCenterMtx);
-	MtxPtr center = unk78->getModel()->getAnmMtx(unk72);
-	mCenterYaw    = matan(center[2][0], center[0][0]);
+	mCenterYaw = matan(unk78->getModel()->getAnmMtx(unk72)[2][2],
+	                   unk78->getModel()->getAnmMtx(unk72)[0][2]);
 
 	mBlurStrength    = 0;
 	mBlurAlpha       = 0.0f;
