@@ -1896,9 +1896,8 @@ static inline TCameraShake* BossTelesaRouletteGetCameraShake()
 	return shake;
 }
 
-// TODO: both TMsRange locals sit 4 low (0x4c/0x44, retail 0x50/0x48) and
-// retail keeps speedUp in f26, sign in f27 (ours swapped). Inert (co2): sign
-// declared before the loop, speedUp declared first.
+// The named first speed puts both TMsRange locals at the ROM's 0x50/0x48, and
+// `sign` declared with `direction` gives it f27 above speedUp's f26.
 void TBossTelesa::rouletteStart()
 {
 	// A real ROM bug: the count is never used, so only the three speed loads
@@ -1913,6 +1912,7 @@ void TBossTelesa::rouletteStart()
 	TMsRange<f32> directionRange(-1.0f, 1.0f);
 
 	f32 direction = directionRange.rand();
+	f32 sign;
 	// TODO: the u8 local is what puts the ROM's `clrlwi` after the merge of
 	// getMaxHitPoints()' two arms; TSpineEnemy::getMaxHitPoints() probably
 	// returned u8 rather than u32 (open shared-header fix in Enemy.hpp).
@@ -1920,7 +1920,6 @@ void TBossTelesa::rouletteStart()
 	f32 speedUp     = mRouletteUpRate * (f32)(maxHitPoints - mHitPoints);
 
 	for (int i = 0; i < 3; ++i) {
-		f32 sign;
 		if (direction > 0.0f) {
 			sign = -1.0f;
 			if (i == 0 || i == 2)
@@ -1931,7 +1930,8 @@ void TBossTelesa::rouletteStart()
 				sign = -1.0f;
 		}
 
-		mRoulettes[i]->unk144 = sign * (speedUp + speedRange.rand());
+		f32 speed = speedRange.rand();
+		mRoulettes[i]->unk144 = sign * (speedUp + speed);
 		mSlot->mRollSp[i]     = sign * (speedUp + speedRange.rand());
 	}
 
