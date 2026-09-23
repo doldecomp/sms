@@ -700,7 +700,7 @@ void TPopo::calcRootMatrix()
 
 			// The guards are shifted by one against the divisors in the ROM,
 			// exactly as in TRocket::calcRootMatrix.
-			if (lenZ != 0.0f) {
+			if (lenZ) {
 				mtx.ref(0, 0) /= lenX;
 				mtx.ref(1, 0) /= lenX;
 				mtx.ref(2, 0) /= lenX;

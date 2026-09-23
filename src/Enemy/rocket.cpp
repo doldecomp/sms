@@ -200,7 +200,7 @@ void TRocket::calcRootMatrix()
 			// The guards really are shifted by one against the divisors in
 			// the ROM (popo.cpp has the identical codegen), so the original
 			// mixed the three length locals up when copy-pasting the blocks.
-			if (lenZ != 0.0f) {
+			if (lenZ) {
 				mtx.ref(0, 0) /= lenX;
 				mtx.ref(1, 0) /= lenX;
 				mtx.ref(2, 0) /= lenX;
