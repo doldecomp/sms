@@ -461,8 +461,10 @@ bool TBaseNPC::isNowCanTaken() const
 	return result;
 }
 
-// TODO: 99.3%. Remaining: 0x48 frame, canTalk's extra li r3, 1, throw-param
-// FPR swap, isNerveCanGoToSink ranking. Cube-as-gate and sink-path unk1C4 Y
+// TODO: 99.3%. Remaining: 0x48 frame, canTalk's extra li r3, 1 (else-assign,
+// `if (!cube) canTalk = false`, hoisted decl all worse), isNerveCanGoToSink
+// ranking and the sunflower result's `mr r27, r30` (merged early returns,
+// `if (!sink) return` inert). Cube-as-gate and sink-path unk1C4 Y
 // are in; bVar5 declared at the top (before bVar4) fixes the r29/r30
 // ranking of the two flags.
 void TBaseNPC::changeNerveProc_()
@@ -501,8 +503,8 @@ void TBaseNPC::changeNerveProc_()
 					f32 fVar1;
 					f32 fVar2;
 					if (mThrowCtrl != nullptr) {
-						fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
 						fVar2 = mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
+						fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
 					} else {
 						if (mActorType == 0x400001A) {
 							fVar2 = mPtrSaveNormal->mSLSunflowerLTalkDist
@@ -609,16 +611,18 @@ void TBaseNPC::changeNerveProc_()
 	}
 }
 
-// TODO: 99.5%. The frame is 0x40 short: retail's pos copy sits at 0x80 with
-// the whole low region below it, ours at 0x44; no rung found (getSpine() for
-// the reset is +8, raw mSinkHeight -8, plain `=` for the final copies breaks
-// 13 instructions). z declared before y gives retail's f31/f30 split.
+// TODO: frame 0x20 short (retail 0xa8): retail's pos copy sits at 0x80 with
+// a 4-byte hole above it, ours at 0x64. Every instruction matches.
+// getSpine() at any one or two sites is +8 and saturates; raw mSinkHeight is
+// -8. setNext(getDefault()) gives the spine/nerve registers; y is loaded
+// before z but z still ranks f31.
 void TBaseNPC::setPosAndInitAfterSinkBottom()
 {
 	JGeometry::TVec3<f32> pos = unk194;
 
-	f32 z      = pos.z;
-	f32 y      = pos.y;
+	f32 z;
+	f32 y = pos.y;
+	z      = pos.z;
 	bool cVar8 = gpPollution->isPolluted(pos.x, y, z);
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
 	            | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000
@@ -640,7 +644,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	unk1D0 = 0.0f;
 	if (cVar8 && isPollutionNpc() && !checkActionFlag(NPC_ACTION_UNK400)) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
-		mSpine->setDefaultNext();
+		mSpine->setNext(mSpine->getDefault());
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
@@ -651,7 +655,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
-		mSpine->setDefaultNext();
+		mSpine->setNext(mSpine->getDefault());
 		mSpine->pushNerve(mSpine->getDefault());
 		pos.y += 2.0f;
 		mVelocity.set(0.0f, 5.0f, 0.0f);
