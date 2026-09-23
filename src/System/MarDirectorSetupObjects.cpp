@@ -253,11 +253,11 @@ bool TMarDirector::setupObjects()
 		sceneCommon = JDrama::TNameRefGen::getInstance()->load(stream);
 	}
 
-	// NOTE: the (JDrama::TNameRef*) cast is an identity cast here and still
-	// changes codegen (97.99% with it, 97.70% without), which suggests the
-	// real entry point does not return TNameRef* -- see JDRNameRefGen.hpp.
-	JDrama::TNameRef* root
-	    = (JDrama::TNameRef*)JDrama::TNameRefGen::search2("Root View Obj");
+	// Retail keeps the root view object as a list: the measurement group, the
+	// event group and the PERF event group go straight into it, and it (not
+	// the normal scene) becomes the director's view object.
+	JDrama::TViewObjPtrListT<JDrama::TViewObj>* root
+	    = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)JDrama::TNameRefGen::search2("Root View Obj");
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* gameObjs;
 	if (root) {
@@ -275,7 +275,7 @@ bool TMarDirector::setupObjects()
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* measurementGroup
 	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("計測グループ");
-	gameObjs->insert(measurementGroup);
+	root->insert(measurementGroup);
 
 	measurementGroup->insert(
 	    new TSnapTimeObj(0xFFFFFFFF, "Mirror Draw SnapTime"));
@@ -356,7 +356,7 @@ bool TMarDirector::setupObjects()
 	}
 
 	unk80 = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("イベントグループ");
-	gameObjs->insert(unk80);
+	root->insert(unk80);
 
 	if (JKRFileFinder* finder = JKRFileLoader::findFirstFile("/common/sp")) {
 		JKRFileLoader::changeDirectory("/common/sp");
@@ -396,18 +396,18 @@ bool TMarDirector::setupObjects()
 	    = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)root->search(
 	        "通常シーン");
 	if (!normalScene)
-		normalScene = (JDrama::TViewObjPtrListT<JDrama::TViewObj>*)root;
+		normalScene = root;
 
 	normalScene->insert(gpConductor);
 	gpLightManager->makeDrawBuffer();
 	normalScene->insert(gpLightManager);
 
 	gpCamera->setNoticeInfo();
-	unk10 = normalScene;
+	unk10 = root;
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* perfEventGroup
 	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("PERF Event Group");
-	normalScene->push_back(perfEventGroup);
+	root->push_back(perfEventGroup);
 	JDrama::TFrmGXSet* drawInit = new JDrama::TFrmGXSet(unkC0);
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* drawBufferGroup
