@@ -51,6 +51,10 @@ TBoidLeader::TBoidLeader(int num, const char* name)
 // by-value-return class (JGVec3.hpp's comment above operator*). Rejected: an
 // explicit `JGeometry::TVec3<f32>(d / d2)` temporary (93.1), `BoidMul2` with
 // a named copy and `*=` (97.7), `BoidDiv(d, d2) * r` (90.3).
+// c-link5 re-measure: `BoidMul` at the two separation sites now scores 96.1
+// (frame 0x168, markers unchanged), not 98.3; adding it at the final
+// `mHeading * speed * length()` product (0x178), nesting it there (93.9) or
+// a copy-and-`*=` body (96.1) are no better.
 void TBoidLeader::calcBoids()
 {
 	TBoid* i;

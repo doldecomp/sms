@@ -112,6 +112,11 @@ void TAfterEffect::calcDashBlurValue()
 // - named midX/midY (function- or block-scope; 89.9% / inert); named rect
 //   component scalars (85.3%); named `JUTTexture*` binder (+8 frame);
 //   named-scalar-count sweep N=0..7 (never flips the swap; N>=2 grows frame)
+// - c-link5: `rect` declared just before the fVar block or GXBegin (99.2),
+//   `color` set after the interpolation (97.0), `!checkFlag(4)` arms swapped
+//   (99.7), per-site `checkFlag(4) ? unk24 : unk20` argument (85.2),
+//   `JUtility::TColor color(0, 0, 0, 0)` (inert), `TColor color(0)` (99.1),
+//   an unnamed `TColor(0, 0, 0, 0)` argument (96.6)
 void TAfterEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(unk14 & 1))
