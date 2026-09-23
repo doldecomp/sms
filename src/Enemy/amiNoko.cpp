@@ -734,6 +734,8 @@ DEFINE_NERVE(TNerveAmiNokoAttack, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 99.9%. Declaring mtx ahead of jump puts jump on retail's slot; toMario
+// still sits 4 above retail and both operator- temporaries sit 0x44 above theirs.
 DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 {
 	TAmiNoko* amiNoko = (TAmiNoko*)spine->getBody();
@@ -749,11 +751,12 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 			// TODO: this direction away from Mario is overwritten right away
 			// by the model's own Y axis; the original kept an older attempt at
 			// picking the tumble direction.
+			MtxPtr mtx;
 			JGeometry::TVec3<f32> jump(amiNoko->getPosition() - *gpMarioPos);
 			if (jump.x == 0.0f && jump.y == 0.0f && jump.z == 0.0f)
 				jump.x = 1.0f;
 
-			MtxPtr mtx = amiNoko->getMActor()->getModel()->getBaseTRMtx();
+			mtx = amiNoko->getMActor()->getModel()->getBaseTRMtx();
 			jump.x     = mtx[0][1];
 			jump.y     = mtx[1][1];
 			jump.z     = mtx[2][1];
