@@ -214,7 +214,8 @@ void TPatternAnmControl::set(const TPatternAnmControl::TAnmChunk* chunks,
                              int num_chunks)
 {
 	mChunks.set(chunks, num_chunks);
-	hide();
+	for (const TAnmChunk* it = mChunks.begin(); it != mChunks.end(); ++it)
+		mScreen->search(it->mTag)->hide();
 }
 
 void TPatternAnmControl::setupAnm()
@@ -610,20 +611,7 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 	mSelectionBubble->stopAnm();
 
 	// These 3 are for the animation of a pianta (monte) vibing to the speakers.
-	// initMonoAnm() is UNUSED in the map and size-exact, but its body has to be
-	// written out here: behind the call TPatternAnmControl::hide() sits one
-	// level too deep and becomes a bl the ROM does not have.
-	TPatternAnmControl** ary = mMonoAnimations;
-
-	ary[0] = new TPatternAnmControl(mScreen);
-	ary[0]->set(cMonoMonteAnm, ARRAY_COUNT(cMonoMonteAnm));
-	ary[0]->setupAnm();
-
-	ary[1] = new TPatternAnmControl(mScreen);
-	ary[1]->set(cMonoSpeakerAnm, ARRAY_COUNT(cMonoSpeakerAnm));
-	ary[1]->setupAnm();
-
-	mMonteIcons[0].set(mMonoAnimations, ARRAY_COUNT(mMonoAnimations));
+	initMonoAnm();
 	initSteleoAnm();
 	initSurroundAnm();
 
