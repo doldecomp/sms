@@ -657,40 +657,43 @@ BOOL TMario::taken()
 }
 
 // Where this body is *inlined* -- wireWait, wireSWait, wireHanging and
-// wireRolling all inline it -- retail `bl`s JGVec3.hpp's copy constructor and
-// operator*=(f32) while inlining `scale` inside operator*='s own emitted
-// body -- i.e. the product sits at inline depth 5, two levels below
-// `operator+`, while a bare
-// `start + dir * mWirePosRatio` only reaches depth 4 (batch 146's budget
-// table: a one-statement weak body still expands at 4 and never at 5). The
-// emitted copy of this function, in contrast, `bl`s only `scale`, so the
-// level cannot be above the statement or above the function -- `add`/`sub`
-// would then go out of line here too, and a level above getOnWirePosAngle
-// pushes the whole 14-statement body past the depth-2 budget and refuses it
-// outright (wireSWait 90.3 -> 56.0, measured). It has to sit on the scaled
-// direction alone, which is what the forwarder below does: the four callers
-// gain the two `bl`s with the frame exact, and the emitted copy stays 99.5%.
-// A `const TVec3&` return costs the emitted copy 16 bytes of frame; by value
-// it is free.
-// TODO: retail's own name for this is unrecoverable (fully inlined). Under
-// the `: Vec(other)` copy constructor, reading `dir` directly in matan()
-// without `dirCopy` keeps the emitted copy at 99.5 (frame 0x150 against
-// 0x148, ours 0x158 with it) and wireWait/wireHanging +0.1, but wireRolling
-// loses its exact 0x1a0 frame (97.6 -> 97.5); fresh `TVec3(dir)` copies in
-// matan() cost every caller 2-4 points, and `dirCopy; dirCopy = dir;` 20+.
+// wireRolling all inline it -- retail `bl`s JGVec3.hpp's copy constructor
+// (off the one named `dir`) and operator*=(f32), while the emitted copy of
+// this function inlines both and `bl`s only `scale`. A level above the
+// statement or above getOnWirePosAngle pushes `add`/`sub` or the whole body
+// out of line, so the levels sit on the scaled direction alone: a forwarder
+// over a helper that copies and scales in its own body. Spelling the helper
+// as `dir * ratio` (operator*'s by-value parameter copies at the forwarder's
+// depth) keeps the copy constructor inline in the callers; the explicit copy
+// one level down is what sends it out with operator*= (wireSWait 93.1 ->
+// 99.7, wireWait 96.6 -> 99.8, wireHanging 95.9 -> 99.9, wireRolling 97.6
+// -> 99.5; the emitted copy stays 99.5). Keeping a separate `dirCopy` for
+// matan() under this shape costs every caller 2-3 points.
+// TODO: every instruction now matches in the four callers; only the stack
+// layout differs. Retail places the operator-/operator+ by-value temporaries
+// low (0x34/0x28 in wireSWait) and leaves a 12-byte hole between `start` and
+// `dir`; ours puts those temporaries above the named block and is 8 bytes
+// short (wireSWait 0x140 vs 0x148, emitted copy 0x150 vs 0x148).
+// Retail's own names for the two helper levels are unrecoverable (inlined).
 // fabricated
+static inline JGeometry::TVec3<f32>
+MarioWireScaledCopy(const JGeometry::TVec3<f32>& dir, f32 ratio)
+{
+	JGeometry::TVec3<f32> t(dir);
+	t *= ratio;
+	return t;
+}
+
 static inline JGeometry::TVec3<f32>
 MarioWireScaleDir(const JGeometry::TVec3<f32>& dir, f32 ratio)
 {
-	return dir * ratio;
+	return MarioWireScaledCopy(dir, ratio);
 }
 
 void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 {
-	JGeometry::TVec3<f32> start   = mWireStartPos;
-	JGeometry::TVec3<f32> dir     = mWireEndPos - start;
-
-	JGeometry::TVec3<f32> dirCopy = dir;
+	JGeometry::TVec3<f32> start = mWireStartPos;
+	JGeometry::TVec3<f32> dir   = mWireEndPos - start;
 
 	*outPos = start + MarioWireScaleDir(dir, mWirePosRatio);
 	outPos->y -= 160.0f;
@@ -711,7 +714,7 @@ void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 	outPos->y += sagVec.y;
 	outPos->z += sagVec.z;
 
-	*outAngle = matan(dirCopy.z, dirCopy.x);
+	*outAngle = matan(dir.z, dir.x);
 }
 
 // Retail calls this out of line from all four wire nerves, so the body has to
@@ -747,9 +750,8 @@ BOOL TMario::wireMove(f32 param_1)
 	return clean;
 }
 
-// TODO: the rest is the inlined getOnWirePosAngle: retail keeps one named
-// `dir` and `bl`s the copy constructor off it; see getOnWirePosAngle's TODO
-// for what dropping `dirCopy` does now.
+// TODO: the rest is the inlined getOnWirePosAngle's stack layout; see its
+// TODO.
 BOOL TMario::wireWait()
 {
 	s16 wireAngle;
