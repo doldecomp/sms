@@ -1934,16 +1934,23 @@ void TBossEel::invalidateAllCollision()
 	mAwaCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+// TODO: frame 0x20 short (0x100 vs 0x120; every slot shifts uniformly, so a
+// missing low-region inline level), and retail keeps distance.y/.z live in
+// f3/f4 from length() into dot() where ours reloads them. Inert: axis.dot,
+// distance -= center, penetration after the dot.
 void TBossEel::collideToMario()
 {
 	JGeometry::TVec3<f32> marioTarget = *gpMarioPos;
-	JGeometry::TVec3<f32> correction(0.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> correction;
+	correction.zero();
 
 	for (s32 i = 0; i < 2; ++i) {
 		MtxPtr collisionMtx
 		    = mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[i]);
-		JGeometry::TVec3<f32> center(collisionMtx[0][3], collisionMtx[1][3],
-		                             collisionMtx[2][3]);
+		JGeometry::TVec3<f32> center;
+		center.x = collisionMtx[0][3];
+		center.y = collisionMtx[1][3];
+		center.z = collisionMtx[2][3];
 		JGeometry::TVec3<f32> axis;
 		axis.x = collisionMtx[0][1];
 		axis.y = collisionMtx[1][1];
