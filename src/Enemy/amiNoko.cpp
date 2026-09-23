@@ -475,10 +475,11 @@ void TAmiNoko::calcRootMatrix()
 	emitEffects();
 
 	// TODO: the original keeps this pointer in r31 and `this` in r30; we get
-	// the opposite. The frame is 0x10 short in the low region, and the
-	// fallback cross product reloads front.x and up.y from the stack for z
-	// in the original. Inert: cross2 on the fallback, the root copy inlined
-	// into setBaseTRMtx, mtx declared first or per branch, else-branch first.
+	// the opposite. front is a plain Vec (frame exact, and the fallback
+	// cross product reloads it for z as retail does); retail also reloads
+	// up.x there, which `Vec up` reproduces at +0x10 frame. Inert: cross2 on
+	// the fallback, the root copy inlined into setBaseTRMtx, mtx declared
+	// first or per branch; else-branch first is worse.
 	MtxPtr mtx;
 	if (isBckAnm(AMINOKO_ANM_FLYING1_LOOP)) {
 		// While falling the orientation is frozen, only the position moves.
@@ -495,7 +496,7 @@ void TAmiNoko::calcRootMatrix()
 
 	JGeometry::TVec3<f32> side;
 	JGeometry::TVec3<f32> up;
-	JGeometry::TVec3<f32> front;
+	Vec front;
 	side.cross2(mUp, mFront);
 	if (side.isZero()) {
 		up    = mPrevUp;
