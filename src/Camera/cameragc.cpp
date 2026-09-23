@@ -66,7 +66,7 @@ static inline s32 CameragcDemoFrame(TMarDirector* d)
 
 CPolarSubCamera::CPolarSubCamera(const char* name)
     : JDrama::TLookAtCamera(CLBConstUpVec, CLBConstUpVec, CLBConstUpVec, 0.0f,
-                            0.0f, name)
+                            0.0f, name, 10.0f, 300000.0f)
     , mMode(CAMERA_MODE_INVALID)
     , mPrevMode(CAMERA_MODE_INVALID)
     , mSavedModeBeforeTalk(CAMERA_MODE_INVALID)

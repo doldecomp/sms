@@ -73,8 +73,8 @@ public:
 	TLookAtCamera(const JGeometry::TVec3<f32>& position,
 	              const JGeometry::TVec3<f32>& target,
 	              const JGeometry::TVec3<f32>& up, f32 fovy, f32 aspect,
-	              const char* name)
-	    : TCamera(50.0f, 10000.0f, name)
+	              const char* name, f32 near = 50.0f, f32 far = 10000.0f)
+	    : TCamera(near, far, name)
 	{
 		mUp       = up;
 		mTarget   = target;
