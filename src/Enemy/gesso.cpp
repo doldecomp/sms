@@ -1038,15 +1038,12 @@ void TGessoPolluteObj::set()
 
 		JGeometry::TVec3<f32> local_54 = getVelocity();
 
-		// TODO: awful things happening with the stack frame here: retail's
-		// velocity copy is a low-pool temporary at 0xc (ours a named slot
-		// at 0x4c). Tried (cc48): a const reference to a TVec3 temporary,
-		// a by-value TU-local velocity fork (named or direct), a by-value
-		// predicate helper, a const local, declare-then-assign; all worse
-		// or inert.
-		JGeometry::TVec3<f32> local_C = getVelocity();
-		if (JGeometry::TVec3<f32>(local_C).x != 0.0f
-		    || JGeometry::TVec3<f32>(local_C).z != 0.0f)
+		// Retail tests two fresh copies of the velocity (the same
+		// `TVec3(getVelocity())` shape as TMapObjBianco's wall test).
+		// TODO: frame 0x78 against retail's 0x70 (8 long); a named copy
+		// tested twice is 84.5%.
+		if (JGeometry::TVec3<f32>(getVelocity()).x != 0.0f
+		    || JGeometry::TVec3<f32>(getVelocity()).z != 0.0f)
 			MsVECNormalize(&local_54, &local_54);
 
 		mPosition.x = local_54.x * 100.0f + mtx[0][3];
