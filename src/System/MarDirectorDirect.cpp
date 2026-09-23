@@ -289,13 +289,6 @@ static inline void decideNextStageOfClear()
 	}
 }
 
-// TODO: belongs in MarDirector.hpp beside checkUnk4EFlag; retail reloads
-// unk50 after the test, as a bool-returning flag accessor does.
-static inline bool checkUnk50Flag(const TMarDirector* director, int flag)
-{
-	return director->unk50 & flag;
-}
-
 // TODO: frame 0xd0 vs retail 0x168 and `this` in r28 vs r31; the temporaries
 // shift non-uniformly (0x7c->0xf4, 0x40->0x90), so a case body is probably
 // a missing inline level (cf. decideNextStageOfClear).
@@ -477,7 +470,7 @@ int TMarDirector::changeState()
 
 	if (unk18[0]->isSomethingPushed()
 	    && gpCardManager->getLastStatus() != CARD_RESULT_BUSY
-	    && checkUnk4CFlag(0x4000) && !checkUnk50Flag(this, 0x10)) {
+	    && checkUnk4CFlag(0x4000) && !checkUnk50Flag(0x10)) {
 		nextState = STATE_UNK12;
 		unk50 |= 0x10;
 		unkE4 = 4;

@@ -145,6 +145,7 @@ public:
 	void onUnk4CFlag(int flag) { unk4C |= flag; }
 	void offUnk4CFlag(int flag) { unk4C &= ~flag; }
 	bool checkUnk4EFlag(int flag) const { return unk4E & flag; }
+	bool checkUnk50Flag(int flag) const { return unk50 & flag; }
 	void onUnk4EFlag(int flag) { unk4E |= flag; }
 	void offUnk4EFlag(int flag) { unk4E &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }

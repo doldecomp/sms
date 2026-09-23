@@ -55,8 +55,7 @@ public:
 	/* 0x25C */ TBoundPane* unk25C[7];
 	/* 0x278 */ TExPane* unk278[5];
 	/* 0x28C */ TExPane* unk28C[2];
-	/* 0x294 */ TExPane* unk294;
-	/* 0x298 */ TExPane* unk298;
+	/* 0x294 */ TExPane* mWipePanes[2];
 	/* 0x29C */ J2DTextBox* unk29C[2];
 	/* 0x2A4 */ u8 unk2A4;
 	/* 0x2A5 */ u8 unk2A5;

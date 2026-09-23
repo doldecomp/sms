@@ -93,8 +93,8 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 		unk29C[i]->setFont(gpSystemFont);
 	}
 
-	unk294 = new TExPane(unk14, 'wp_l');
-	unk298 = new TExPane(unk14, 'wp_r');
+	mWipePanes[0] = new TExPane(unk14, 'wp_l');
+	mWipePanes[1] = new TExPane(unk14, 'wp_r');
 
 	u32 uVar1        = SMS_getShineStage(SMSGetMarDirector()->getCurrentMap());
 	TFlagManager* fm = TFlagManager::getInstance();
@@ -169,7 +169,7 @@ static inline void drawGoTrail(TConsoleStr* self, int i)
 // the load are missing (bool/else/continue/pointer/raw spellings inert; only a
 // raw test and raw .y with pt.x scores higher); frame 0x2e8 vs 0x300, the trail
 // block sitting below the J2DOrthoGraph instead of above it.
-// The wipe loop's (&unk294)[i] says the header's unk294/unk298 are one array.
+// The wipe loop indexes mWipePanes, so the two wipe panes are one array.
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -241,12 +241,12 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 			} else if (unk2B8 == 5) {
 				bool uVar13 = true;
 				for (int i = 0; i < 2; ++i)
-					uVar13 &= (&unk294)[i]->update();
+					uVar13 &= mWipePanes[i]->update();
 				if (uVar13) {
 					unk2B8 = 6;
 					bVar6  = true;
-					unk294->getPane()->hide();
-					unk298->getPane()->hide();
+					mWipePanes[0]->getPane()->hide();
+					mWipePanes[1]->getPane()->hide();
 				}
 			} else if (unk2B8 == 3) {
 				unk18 += 1.0f;
@@ -772,15 +772,15 @@ void TConsoleStr::startOpenWipe()
 	unk2A4 = 0;
 	unk2B8 = 5;
 	unk28C[0]->mPane->hide();
-	unk294->mPane->show();
+	mWipePanes[0]->mPane->show();
 	unk28C[1]->getPane()->hide();
-	unk298->getPane()->show();
+	mWipePanes[1]->getPane()->show();
 
-	JUTRect local_3c = unk294->getPane()->getBounds();
-	unk294->setPaneOffset(0x1E, -local_3c.getWidth(), 0, 0, 0);
-	unk294->setPaneAlpha(30, 100, 255);
+	JUTRect local_3c = mWipePanes[0]->getPane()->getBounds();
+	mWipePanes[0]->setPaneOffset(0x1E, -local_3c.getWidth(), 0, 0, 0);
+	mWipePanes[0]->setPaneAlpha(30, 100, 255);
 
-	local_3c = unk298->getPane()->getBounds();
-	unk298->setPaneOffset(0x1E, local_3c.getWidth(), 0, 0, 0);
-	unk298->setPaneAlpha(30, 100, 255);
+	local_3c = mWipePanes[1]->getPane()->getBounds();
+	mWipePanes[1]->setPaneOffset(0x1E, local_3c.getWidth(), 0, 0, 0);
+	mWipePanes[1]->setPaneAlpha(30, 100, 255);
 }
