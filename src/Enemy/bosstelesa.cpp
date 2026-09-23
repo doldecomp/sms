@@ -356,6 +356,9 @@ BOOL TNerveBubbleLive::execute(TSpineBase<TLiveActor>* spine) const
 	// (0xb8) where retail has it in the low region (0x8c), pushing the zero
 	// velocity temp and the setGoalPathMario node down. Inert: a const
 	// reference, `damped = ...`, a set() over a TVec3 temporary.
+	// Closest shape: `damped.set(TVec3<f32>(getVelocity()))` plus a named
+	// `zero` for the reset reproduces the ROM's named block order (damped
+	// then zero, copy unnamed) but is 8 short (0xf0) and still 0xc low.
 	f32 addPosBase = bubble->mParams->mSLAddPosBase.get();
 	if (!bubble->mIsSplit) {
 		if (bubble->mFloatHeight < addPosBase)
@@ -1815,7 +1818,10 @@ const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
 // its inline level is what the frame needed at the first makeOneEnemyAppear.
 // TODO: every instruction matches; `chance` sits at 0x54 instead of 0x58, so
 // some 4-byte slot is still missing (speed, item, bubble, declaration-order
-// moves and `!p`/`p == nullptr` forks are inert).
+// moves and `!p`/`p == nullptr` forks are inert). Naming the first roll
+// (`f32 roll = chance.rand();`, the lever that closed rouletteStart) puts
+// chance at 0x58 but lifts mtx/velocity 4 (0x64/0x94); no pair with the
+// param `.value`, getMActor(), getPosition() or a named second roll fixes both.
 void TBossTelesa::genAttacker()
 {
 	if (unk150) {
