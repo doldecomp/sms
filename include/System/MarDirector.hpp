@@ -172,7 +172,8 @@ public:
 	{
 		s64 ticks = OSCheckStopwatch(&unkE8);
 		int time  = OSTicksToMilliseconds(ticks) / 10;
-		return unk120 - time;
+		int rest  = unk120 - time;
+		return rest;
 	}
 
 	void startTimer() { unkC8 = OSCheckStopwatch(&unkE8); }
