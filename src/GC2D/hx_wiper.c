@@ -687,14 +687,21 @@ static void Hx_Circle(void)
 	}
 }
 
+/// One vertex of a line: position, then colour.
+// The circles' vertex writes go through this level: an inline's own nested
+// expansions get their stack slots after every first-level one, which is
+// what puts retail's sqrtf slots directly under the named locals.
+static inline void Hx_LineVtx(Vec* v, u32 color)
+{
+	GXPosition3f32(v->x, v->y, v->z);
+	GXColor1u32(color);
+}
+
 /// The black field outside the iris, drawn as a stack of horizontal lines.
-// TODO: frame only (0x150 vs 0x168). Retail's named block is 0x18 larger,
-// with the sqrtf slot at 0xa4 unchanged; p[4] or a spare Vec[2] fits it, but
-// neither is used, and a real bottom-row array costs +0x28.
-// An inline read of hx.centerY in a compare adds 8 (the Hx_Door lever), not 0x18.
-// Note retail's sqrtf slot is 0xa4 with 0x28 above it and 0x9c below; ours is
-// at 0x68 (0x4c above, 0x60 below). Vec d[2] gives +0x10, and with the
-// compare accessor still +0x10.
+// TODO: only the sqrtf slot differs (retail 0xa4, ours 0xa8): retail has one
+// more 4-byte first-level temporary or named slot above it. Moving dy to
+// function scope, testing dy in the compare, a u8 colour parameter, a
+// two-vertex helper and the declaration order are all inert.
 static void Hxs1_Circle(f32 r)
 {
 	u32 y;
@@ -718,58 +725,40 @@ static void Hxs1_Circle(f32 r)
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
 			p[0].x = 0.0f;
 			p[1].x = hx.width;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(0xFF);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(0xFF);
+			Hx_LineVtx(&p[0], 0xFF);
+			Hx_LineVtx(&p[1], 0xFF);
 			p[0].y = hx.height - y;
 			p[1].y = hx.height - y;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(0xFF);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(0xFF);
+			Hx_LineVtx(&p[0], 0xFF);
+			Hx_LineVtx(&p[1], 0xFF);
 		} else {
 			d.x = sqrtf(rr - (dy * dy));
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
 			p[0].x = 0.0f;
 			p[1].x = hx.centerX - d.x;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(0xFF);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(0xFF);
+			Hx_LineVtx(&p[0], 0xFF);
+			Hx_LineVtx(&p[1], 0xFF);
 			p[0].x = hx.centerX + d.x;
 			p[1].x = hx.width;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(0xFF);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(0xFF);
+			Hx_LineVtx(&p[0], 0xFF);
+			Hx_LineVtx(&p[1], 0xFF);
 			p[0].y = hx.height - y;
 			p[1].y = hx.height - y;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(0xFF);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(0xFF);
+			Hx_LineVtx(&p[0], 0xFF);
+			Hx_LineVtx(&p[1], 0xFF);
 			p[0].x = 0.0f;
 			p[1].x = hx.centerX - d.x;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(0xFF);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(0xFF);
+			Hx_LineVtx(&p[0], 0xFF);
+			Hx_LineVtx(&p[1], 0xFF);
 		}
 	}
 }
 
 /// One translucent ring of the iris.
-// TODO: GPR colouring (retail: colour r28, &centerX r27, &centerY r26) and
-// the sqrtf slots (retail 0xb0/0xac, adjacent) differ; instructions are
-// otherwise exact. Passing alpha straight to GXColor1u32 gets r28 but sinks
-// the clrlwi past the loop setup; color as s32/int/u8, or declared or
-// assigned elsewhere, is inert.
-// Retail's two sqrtf slots are adjacent just under the named block (as in
-// Hxs1_Circle), so no inline's slots are reserved between the two
-// expansions; ours has the if-branch GX inlines' 0x2c between them. A
-// block-scoped color, the y/color order, and `static const` or block-scoped
-// temporaries in math.h's sqrtf are all inert.
+// TODO: GPR colouring (retail: colour r28, &centerY r26, &centerX r27; ours
+// colour r26); instructions and stack slots are otherwise exact. Passing
+// alpha (or a u8 colour) to Hx_LineVtx gets r28 but sinks the clrlwi past
+// the loop setup and moves alpha to r27; the colour/ri2 order is inert.
 static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out)
 {
 	u32 color;
@@ -777,7 +766,8 @@ static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out)
 	f32 ri2;
 	f32 ro2;
 	Vec p[2];
-	Vec d[2];
+	f32 d0;
+	f32 d1;
 
 	Hx_CameraInit();
 	Hx_GxInit(0, 1);
@@ -789,7 +779,7 @@ static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out)
 	for (y = hx.centerY - r_out; y <= hx.centerY; y++) {
 		f32 dy = hx.centerY - y;
 
-		d[0].x = sqrtf(ro2 - dy * dy);
+		d0 = sqrtf(ro2 - dy * dy);
 		p[0].z = 1.0f;
 		p[1].z = 1.0f;
 		p[0].y = y;
@@ -797,45 +787,33 @@ static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out)
 
 		if (dy >= r_in) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
-			p[0].x = hx.centerX - d[0].x;
-			p[1].x = hx.centerX + d[0].x;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(color);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(color);
+			p[0].x = hx.centerX - d0;
+			p[1].x = hx.centerX + d0;
+			Hx_LineVtx(&p[0], color);
+			Hx_LineVtx(&p[1], color);
 			p[0].y = hx.height - y;
 			p[1].y = hx.height - y;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(color);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(color);
+			Hx_LineVtx(&p[0], color);
+			Hx_LineVtx(&p[1], color);
 		} else {
-			d[1].x = sqrtf(ri2 - dy * dy);
+			d1 = sqrtf(ri2 - dy * dy);
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
-			p[0].x = hx.centerX - d[0].x;
-			p[1].x = hx.centerX - d[1].x;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(color);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(color);
-			p[0].x = hx.centerX + d[1].x;
-			p[1].x = hx.centerX + d[0].x;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(color);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(color);
+			p[0].x = hx.centerX - d0;
+			p[1].x = hx.centerX - d1;
+			Hx_LineVtx(&p[0], color);
+			Hx_LineVtx(&p[1], color);
+			p[0].x = hx.centerX + d1;
+			p[1].x = hx.centerX + d0;
+			Hx_LineVtx(&p[0], color);
+			Hx_LineVtx(&p[1], color);
 			p[0].y = hx.height - y;
 			p[1].y = hx.height - y;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(color);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(color);
-			p[0].x = hx.centerX - d[0].x;
-			p[1].x = hx.centerX - d[1].x;
-			GXPosition3f32(p[0].x, p[0].y, p[0].z);
-			GXColor1u32(color);
-			GXPosition3f32(p[1].x, p[1].y, p[1].z);
-			GXColor1u32(color);
+			Hx_LineVtx(&p[0], color);
+			Hx_LineVtx(&p[1], color);
+			p[0].x = hx.centerX - d0;
+			p[1].x = hx.centerX - d1;
+			Hx_LineVtx(&p[0], color);
+			Hx_LineVtx(&p[1], color);
 		}
 	}
 }
