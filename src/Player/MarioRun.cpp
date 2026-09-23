@@ -1722,6 +1722,9 @@ BOOL TMario::broadJumpSlip()
 }
 
 // TODO: instructions match; frame 0x48 against retail's 0x60.
+// TODO: lever-search closes this only by wrapping running()/rotating()/turnning()
+// in one-use binders (+8 frame each, 0x18 total): the same class as
+// jumpMain's state-handler gap (MarioJump.cpp); refused, needs one real cause.
 BOOL TMario::moveMain()
 {
 	BOOL ret = 0;
