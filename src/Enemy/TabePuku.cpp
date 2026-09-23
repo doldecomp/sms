@@ -778,7 +778,7 @@ DEFINE_NERVE(TNerveTabePukuDrag, TLiveActor)
 
 		JGeometry::TQuat4<f32> spin;
 		spin.setEulerY(MsRandF() * 6.2831855f);
-		spin.rotate(puku->mDragDir, puku->mDragDir);
+		spin.rotate(puku->mDragDir);
 
 		puku->setGoalPath(puku->mPosition);
 		puku->mMarchSpeed = puku->getSaveParams()->getDiveSpeed();

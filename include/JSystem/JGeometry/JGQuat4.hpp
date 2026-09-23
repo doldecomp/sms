@@ -161,51 +161,56 @@ public:
 		setRotate(a, b, 1.0f);
 	}
 
-	// Assumes unit quaternion. These were renamed to "transform" in SMG.
+	// Assumes unit quaternion. These were renamed to "transform" in SMG, where
+	// the in-place transform(TVec3&) has its own body rather than forwarding
+	// to transform(const TVec3&, TVec3&). Modelled the same way here:
 	//
-	// The body below reproduces the retail instruction stream exactly: the map
-	// emits this function out of line and weak in Kumokun.cpp (0x80117d08, size
-	// 0x98) and that copy is a leaf with *no stack frame at all*, which our
-	// build matches instruction-for-instruction (only float register numbering
-	// differs, hence the "Incollect regalloc" note below).
+	// The in-place rotate goes through two inline levels. Retail's in-place
+	// deep sites (execWalk, fireWanwan's FindMario/RecoverGraph nerves,
+	// TabePuku Drag) `bl` the empty TVec4<f>::TVec4() for the first product
+	// and TVec3<f>::set<f> for the result; with the TQuat4 temporary and the
+	// set in rotateQ, two levels below rotate(rDest), both fall past the
+	// inliner's depth limit exactly there. rotateQ reads the vector through
+	// its reference: by-value vector components give the deep sites stack
+	// homes retail does not have (TabePuku Drag 0xc0 -> 0x110).
 	//
-	// TODO: the local set is still wrong, and it is wrong in the *inlined*
-	// direction. Every inline site is too big, because an inlined callee's
-	// locals keep their stack homes even when the values live in registers:
+	// The two-argument rotate keeps the one-level body: its weak copy in
+	// Kumokun.o is a leaf whose schedule only the vx/vy/vz locals reproduce
+	// (90.4; the rotateQ form is 83.0 under every local, parameter and operand
+	// order tried), and Kazekun, BathtubKiller::makeQuat, bindBody, Bird
+	// doLanding and rotateGoalDirToLocal all prefer it.
 	//
-	//   caller                          target  ours   sites
-	//   TYumbo::shotSeeds               0x158   0x1a0    2
-	//   TBathtubKiller::makeQuat        0x1e0   0x218    ?
-	//   TCoasterEnemy::moveCoaster      0x208   0x258    ?
-	//   TAnimalBase::execWalk            0xf0   0x118    1
-	//   TKumokun::rotateGoalDirToLocal    0x60    0x88    1
-	//   TFireWanwan::bindBody           0x1e8   0x1f8    1
-	//   TBathtubData::getGravityDir       0xd0    0xd8    1
-	//
-	// Measured cost of the locals per expansion: the two TQuat4 temporaries are
-	// worth 32 bytes, vx/vy/vz only 4 (just one of the three gets a home), and
-	// w/z/y/x none. Dropping both temporaries (q/q2 written as seven f32 locals,
-	// rDest.set(rx, ry, rz)) makes shotSeeds' frame *exactly* 0x158 and takes it
-	// 95.69% -> 96.67%, and cuts the summed frame error of the table above from
-	// 312 to 136 bytes -- but it renumbers the float registers at the other six
-	// inline sites, so changes_all reports 1 improvement against 6 regressions
-	// (Kumokun's out-of-line copy 90.39 -> 84.21, makeQuat 90.54 -> 87.73,
-	// getGravityDir 82.76 -> 82.37, moveCoaster 82.42 -> 82.22, bindBody
-	// 99.40 -> 99.26, rotateGoalDirToLocal 93.59 -> 93.47). Left in place for
-	// that reason. Note the remaining gaps are not a common multiple of any
-	// object count, so several of those callers have frame problems of their own
-	// and cannot be used as evidence here.
-	//
-	// Ruled out: reading this->x/y/z/w directly instead of through the four
-	// locals (shotSeeds 95.69 -> 90.6, Kumokun's copy 90.39 -> 50.3), and
-	// dropping only vx/vy/vz (frame moves 8 bytes, Kumokun's copy -> 83.9).
-	//
-	// The residual shotSeeds difference is not the frame: retail merges the
-	// axis.z load inside the inlined MsGetRotFromZaxisY with this function's
-	// v.z read and parks it in f31 across matan/sinf/cosf, while we load v.z
-	// again afterwards. See the "const on an inline's pointer parameter also
-	// defeats CSE" rule in docs/AGENT_MATCHING_TIPS.md -- the suspect is
-	// MsGetRotFromZaxisY's const reference parameter, not this header.
+	// TODO: the two-argument deep sites (Bird doWalk/WalkOnGround at 484,
+	// shotSeeds, makeKillerVelocity, moveCoaster, calcBathtubData) score higher
+	// with the two-argument rotate also forwarding to rotateQ (+0.4 to +6.5
+	// each), so they too call a two-level body in retail; the second TQuat4
+	// here is probably not real. Moving them to the in-place rotate goes one
+	// level too deep. The body that serves both them and the weak copy is not
+	// found yet.
+	void rotateQ(const TVec3<T>& v, T w, T z, T y, T x, TVec3<T>& rDest) const
+	{
+		// clang-format off
+		TQuat4 q;
+		q.x =  w *  0 + y * v.z - z * v.y + w * v.x;
+		q.y = -x * v.z + y *  0 + z * v.x + w * v.y;
+		q.z =  x * v.y - y * v.x + z *  0 + w * v.z;
+		q.w = -x * v.x - y * v.y - z * v.z + w *  0;
+
+		rDest.set( q.x *  w + q.y * -z - q.z * -y + q.w * -x,
+		          -q.x * -z + q.y *  w + q.z * -x + q.w * -y,
+		           q.x * -y - q.y * -x + q.z *  w + q.w * -z);
+		// clang-format on
+	}
+
+	void rotateInPlace(const TVec3<T>& v, TVec3<T>& rDest) const
+	{
+		T x = this->x;
+		T y = this->y;
+		T z = this->z;
+		T w = this->w;
+		rotateQ(v, w, z, y, x, rDest);
+	}
+
 	void rotate(const TVec3<T>& v, TVec3<T>& rDest) const
 	{
 		// Incollect regalloc
@@ -231,11 +236,10 @@ public:
 		q2.z =  q.x * -y - q.y * -x + q.z *  w + q.w * -z;
 		// clang-format on
 
-		// This set wasn't inlined in SMG, so should be real?
 		rDest.set(q2.x, q2.y, q2.z);
 	}
 
-	void rotate(TVec3<T>& rDest) const { rotate(rDest, rDest); }
+	void rotate(TVec3<T>& rDest) const { rotateInPlace(rDest, rDest); }
 
 	void slerp(const TQuat4<T>& a1, const TQuat4<T>& a2, T a3)
 	{

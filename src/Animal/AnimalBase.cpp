@@ -285,47 +285,16 @@ void TAnimalBase::getRotationFlyToDir(JGeometry::TVec3<f32>* current_rot,
 // UNUSED (Size: 0x4a0 in MAP)
 void TAnimalBase::flyToCurPathNode(f32 a1, f32 a2) { }
 
-// Shared-header need, parked here: execWalk's rotation is TQuat4::rotate done
-// in place on the velocity, with ONE TQuat4 temporary (retail's out-of-line
-// TVec4() call) and the result written straight back through v.set() (the
-// out-of-line set<f>), not JGQuat4.hpp's two-temporary rotate(v, rDest). The
-// header form is left alone because its seven other callers measure against it.
-static inline void QuatRotateInPlace(const JGeometry::TQuat4<f32>& q,
-                                     JGeometry::TVec3<f32>& v)
-{
-	f32 vx = v.x;
-	f32 vy = v.y;
-	f32 vz = v.z;
-
-	f32 w = q.w;
-	f32 z = q.z;
-	f32 y = q.y;
-	f32 x = q.x;
-
-	JGeometry::TQuat4<f32> r;
-	r.x = y * vz - z * vy + w * vx;
-	r.y = -x * vz + z * vx + w * vy;
-	r.z = x * vy - y * vx + w * vz;
-	r.w = -x * vx - y * vy - z * vz;
-
-	v.set(r.x * w + r.y * -z - r.z * -y + r.w * -x,
-	      -r.x * -z + r.y * w + r.z * -x + r.w * -y,
-	      r.x * -y - r.y * -x + r.z * w + r.w * -z);
-}
-
-// TODO: validate-symbol-order fails on this TU with four MISSING symbols, and
-// all four are the *same* fact about this function. Retail's execWalk calls
-// set<f>__Q29JGeometry8TVec3<f>Ffff (0x10), __ct__Q29JGeometry8TVec4<f>Fv
-// (0x4), MsClamp<f>__Ffff (0x20) and MsWrap<f>__Ffff (0x48) out of line; our
-// execWalk expands the first three and only MsWrap survives as a symbol. The
-// map's position for that block is the oracle: MWCC emits a local template
-// instantiation immediately after the first function in *emission* order that
-// needs its out-of-line body, and for MsWrap ours lands in exactly the map's
-// slot (between execWalk and flyToCurPathNode) -- so the three that are
-// missing are missing only because this one call site inlines them.
-// Three unrelated inlines flipping together at one site is the caller-size
-// family (docs/catalog/codegen-tells.md); MathUtil.hpp's MsClamp comment
-// already records that no declaration form there moves it. The fourth,
+// TODO: validate-symbol-order fails on this TU with two MISSING symbols.
+// Retail's execWalk calls set<f>__Q29JGeometry8TVec3<f>Ffff (0x10),
+// __ct__Q29JGeometry8TVec4<f>Fv (0x4), MsClamp<f>__Ffff (0x20) and
+// MsWrap<f>__Ffff (0x48) out of line. The first two now come out of the
+// header's in-place TQuat4::rotate (two inline levels, see JGQuat4.hpp); MWCC
+// emits a local template instantiation right after the first function in
+// emission order that needs its body, and all three present ones land in the
+// map's slot. MsClamp is still expanded here: that is the caller-size family
+// (docs/catalog/codegen-tells.md), and MathUtil.hpp's MsClamp comment
+// already records that no declaration form there moves it. The other,
 // set<f>__Q29JGeometry8TVec4<f>Fffff, is UNUSED and sits right after
 // flyToCurPathNode, i.e. it belongs to that 0x4a0 dead body, which is a stub
 // here.
@@ -380,7 +349,7 @@ void TAnimalBase::execWalk(bool moving)
 	// in MathUtil.hpp's MsClamp note). The frame is also 0x10 short: retail
 	// copies the quaternion once more (0xb8 -> 0x9c) before the rotate, but
 	// spelling that copy (a by-value or copied q) scores 81.6.
-	QuatRotateInPlace(quat, velocity);
+	quat.rotate(velocity);
 	mLinearVelocity = velocity;
 }
 

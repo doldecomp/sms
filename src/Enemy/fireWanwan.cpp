@@ -2130,7 +2130,7 @@ DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 
 	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
 
-	local_70.rotate(local_60, local_60);
+	local_70.rotate(local_60);
 
 	f32 rot = MsGetRotFromZaxisY(local_60);
 
@@ -2217,7 +2217,7 @@ DEFINE_NERVE(TNerveFireWanwanRecoverGraph, TLiveActor)
 
 		JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
 
-		local_70.rotate(local_60, local_60);
+		local_70.rotate(local_60);
 
 		f32 rot = MsGetRotFromZaxisY(local_60);
 
