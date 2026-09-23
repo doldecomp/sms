@@ -300,10 +300,10 @@ static void Hx_SetVFilter(f32 rate)
 	u32 i;
 	u8 num;
 
+	num = 64.0f * rate;
 	for (i = 0; i < 7; i++)
 		vtable[i] = vtable_org[i];
 
-	num = 64.0f * rate;
 	for (i = 0; i < num; i++) {
 		vtable[dec_step[i & 3]]--;
 		vtable[inc_step[i % 3]]++;
