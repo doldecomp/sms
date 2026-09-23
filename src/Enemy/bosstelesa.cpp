@@ -1790,6 +1790,9 @@ static inline TConductor* BossTelesaGenAttackerConductor()
 	return conductor;
 }
 
+// TODO: every instruction matches; `chance` sits at 0x54 instead of 0x58, so
+// some 4-byte named slot above it is still missing (speed, item, bubble and
+// declaration-order moves are inert).
 void TBossTelesa::genAttacker()
 {
 	if (unk150) {
@@ -1801,10 +1804,12 @@ void TBossTelesa::genAttacker()
 		return;
 	}
 
-	int num         = mParams->mSLNumGenBubble.get();
+	JGeometry::TVec3<f32> velocity;
+	Mtx mtx;
 	MtxPtr mouthMtx = getMActor()->getModel()->getAnmMtx(5);
+	int num         = mParams->mSLNumGenBubble.get();
 	f32 step        = 180.0f / (f32)num;
-	f32 halfSpread  = step * (f32)num * 0.5f;
+	f32 halfSpread  = step * (f32)num / 2.0f;
 
 	for (int i = 0; i < num; ++i) {
 		TBubble* bubble = (TBubble*)gpConductor->makeOneEnemyAppear(
@@ -1812,8 +1817,7 @@ void TBossTelesa::genAttacker()
 		if (!bubble)
 			return;
 
-		JGeometry::TVec3<f32> velocity(0.0f, 0.0f, -50.0f);
-		Mtx mtx;
+		velocity.set(0.0f, 0.0f, -50.0f);
 		MsMtxSetRotRPH(mtx, mRotation.x,
 		               (step * (f32)i) + (mRotation.y - halfSpread),
 		               mRotation.z);
@@ -1951,6 +1955,12 @@ bool TBossTelesa::checkSlotResult()
 	return false;
 }
 
+// TODO: frame 0x2a8 vs 0x2c0 and one callee-saved FPR short (retail saves
+// f16: the i == 0 pepper block takes f17/f16 for its rand ranges, ours reuses
+// f18/f17). Both fruit-count clamps load into r0 and `mr` into the saved
+// register; retail loads straight into it. The retail `li r3, 1` on both arms of
+// the lastManager choice matches with a `firstManager = 1` set in each arm,
+// which the source has no reason for, so it is left out.
 void TBossTelesa::generateSlotItem()
 {
 	static const char* manNameTable[] = {
@@ -1969,7 +1979,7 @@ void TBossTelesa::generateSlotItem()
 	int result      = unk1A8;
 	MtxPtr mouthMtx = getMActor()->getModel()->getAnmMtx(5);
 	f32 step        = 120.0f / (f32)itemNum;
-	f32 halfSpread  = step * (f32)itemNum * 0.5f;
+	f32 halfSpread  = step * (f32)itemNum / 2.0f;
 
 	if (result == 2) {
 		int num = mParams->mSLSlotFruitNum.get();
@@ -2004,16 +2014,17 @@ void TBossTelesa::generateSlotItem()
 				mPeppers[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 				f32 speedZ = direction.z * speedRange.rand();
-				mPeppers[i]->mVelocity.set(
-				    direction.x * speedRange.rand(), -2.0f, speedZ);
-				mPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				f32 speedX = direction.x * speedRange.rand();
+				TMapObjBase* pepper = mPeppers[i];
+				pepper->mVelocity.set(speedX, -2.0f, speedZ);
+				pepper->offLiveFlag(LIVE_FLAG_UNK10);
 
 				if (i == 0) {
 					f32 fastZ = 2.0f * (direction.z * speedRange.rand());
-					mPeppers[i]->mVelocity.set(
-					    2.0f * (direction.x * speedRange.rand()), -2.0f,
-					    fastZ);
-					mPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+					f32 fastX = 2.0f * (direction.x * speedRange.rand());
+					TMapObjBase* pepper = mPeppers[i];
+					pepper->mVelocity.set(fastX, -2.0f, fastZ);
+					pepper->offLiveFlag(LIVE_FLAG_UNK10);
 				}
 
 				mPeppers[i]->mRotation.set(0.0f, 90.0f, 0.0f);
@@ -2023,9 +2034,10 @@ void TBossTelesa::generateSlotItem()
 				mFruits[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 
 				f32 speedZ = direction.z * speedRange.rand();
-				mFruits[i]->mVelocity.set(
-				    direction.x * speedRange.rand(), -2.0f, speedZ);
-				mFruits[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				f32 speedX = direction.x * speedRange.rand();
+				TMapObjBase* fruit = mFruits[i];
+				fruit->mVelocity.set(speedX, -2.0f, speedZ);
+				fruit->offLiveFlag(LIVE_FLAG_UNK10);
 
 				mSlotItems[mSlotItemNum] = mFruits[i];
 			}
@@ -2048,7 +2060,7 @@ void TBossTelesa::generateSlotItem()
 			num = 10;
 
 		f32 coinStep       = 120.0f / (f32)num;
-		f32 coinHalfSpread = coinStep * (f32)num * 0.5f;
+		f32 coinHalfSpread = coinStep * (f32)num / 2.0f;
 
 		if (unk370)
 			unk370 -= 1;
