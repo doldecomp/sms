@@ -73,3 +73,14 @@ REPRODUCE (in the worktree only):
   git apply nonmatching-link-configure.patch
   /usr/bin/python3 configure.py --version GMSE01 --non-matching [--map]
   build/venv/bin/ninja -j2
+
+UPDATE (2026-09-23, after c-hyg landed):
+  Fixed in source (faithful to retail): killer_bastable now static in killer/coasterkiller;
+  gpMapWireManager extern in MapWireManager.hpp, defined once in MapWireManager.cpp;
+  cCameraBckName* extern in MarDirectorEvent (cameragc owns them); Kumokun no longer
+  includes MSSetSound.hpp/MSoundBGM.hpp, so __sinit_Kumokun_cpp is gone (.ctors/.bss = retail).
+  Kept on purpose (retail's original header definitions; retail keeps a string copy per TU):
+  cSunVolumeName, cSunsetVolumeName (SunModel.hpp, 5 TUs) and cNpcPartsNameRootJoint
+  (NpcAnm + NpcParts). A PC build must give these internal or weak linkage.
+  Full-source link after the fixes: .text 1152 B short of retail (the removed initializer
+  had masked 768 B), .data 160 B short; no other duplicate strong definitions.
