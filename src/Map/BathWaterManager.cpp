@@ -532,17 +532,15 @@ static void initScreen2D(s16 w, s16 h)
 static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 {
 	static f32 delta = 2.0f * 3.1415927f / 30.0f;
-	// angle before r matches the out-of-line copy (100). Swapping them
-	// lands render's inlined f21/f20 (99.8 -> 99.9) but drops this
-	// standalone body 100 -> 99.4; the inline FPR pair stays.
-	f32 angle;
-	f32 r;
-
-	r     = radius / cosf(0.5f * delta);
-	angle = 0.0f;
+	// The radius is divided in place (the out-of-line copy keeps it in the
+	// parameter's register with no `fmr`): as a parameter it is allocated
+	// before angle at every inlined site, which a separate `r` local was not.
+	radius /= cosf(0.5f * delta);
+	f32 angle = 0.0f;
 	GXBegin(GX_TRIANGLEFAN, GX_VTXFMT0, 30);
 	for (int i = 0; i < 30; i++) {
-		GXPosition3f32(r * cosf(angle) + pos.x, pos.y, r * sinf(angle) + pos.z);
+		GXPosition3f32(radius * cosf(angle) + pos.x, pos.y,
+		               radius * sinf(angle) + pos.z);
 		GXTexCoord2u8(0x40, 0x40);
 		angle += delta;
 	}
@@ -964,10 +962,8 @@ public:
 			                                    - data.unk44 * data.unk44));
 		}
 
-		// TODO: frame 0x1e8 against the ROM's 0x258. Instruction stream is
-		// identical except drawCap's inlined f21/f20 (r vs angle); swapping
-		// those locals here lands render 99.9 but drops the out-of-line
-		// drawCap 100 -> 99.4. The 112 bytes missing are one Mtx plus one
+		// TODO: frame 0x1e0 against the ROM's 0x258; the instruction stream
+		// is identical. The 112 bytes missing are one Mtx plus one
 		// Mtx44 -- the pair initScreen2D now owns -- and declaring a dead
 		// pair here does give 0x258, but the named locals then sit 0x5c
 		// low and the inlined matrices 0x34 low. The ROM's named region
@@ -1100,9 +1096,12 @@ public:
 	void calcCoord();
 	void clearHeightMap();
 
-	// TODO: frame is 0x50 short (retail -0x380): retail leaves 0x5c unused
+	// TODO: frame is 0x38 short (retail -0x380): retail leaves 0x5c unused
 	// between the look-dir vector (0x158) and up (0x1c0) and 0x38 between the
-	// drop position (0x23c) and proj (0x280); moving the drop matrices is inert.
+	// drop position (0x23c) and proj (0x280); moving the drop matrices (the
+	// folded `local` before pos, or both at the top of the loop body) and
+	// declaring proj first are inert or worse, and binding the getThing()
+	// results by reference or copy-init shrinks the frame further.
 	// The drop loop's param loads (0xcc/0x90/0xf4) schedule around the
 	// position copy differently; naming the scale or moving `pos` is inert.
 	virtual void prerender(JDrama::TGraphics* graphics,
@@ -1550,9 +1549,11 @@ public:
 		JGeometry::TVec3<f32> v3;
 		v3.set(data.getThing());
 
-		JGeometry::TVec3<f32> dir(v3.x - v2.x, (v3.y + negR) - ey, v3.z - v2.z);
-		JGeometry::TVec3<f32> up(0.0f, 0.0f, -1.0f);
-		unk80020.setLookDir(dir, up);
+		// Both vectors are argument temporaries: the ROM builds `up` first
+		// (right-to-left), which named locals in either order do not give.
+		unk80020.setLookDir(
+		    JGeometry::TVec3<f32>(v3.x - v2.x, (v3.y + negR) - ey, v3.z - v2.z),
+		    JGeometry::TVec3<f32>(0.0f, 0.0f, -1.0f));
 
 		unk80020.ref(0, 3) = -unk80020.at(0, 0) * v2.x - unk80020.at(0, 1) * ey
 		                     - unk80020.at(0, 2) * v2.z;
