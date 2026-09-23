@@ -485,7 +485,10 @@ void TLimitKoopa::moveStop() { }
 // sqrt(squared()), sqrt(dot()), setLength(1.0f), setLength(200.0f),
 // normalize(velocity), setLength(v, 1.0f), a named gravity, a named sq. The
 // low region is 8 short; lever-search reaches it only with a fabricated
-// ground-height binder.
+// ground-height binder. Also inert (c-lkoopa): sq named and passed to an
+// explicit zero/inv_sqrt body (inv_sqrt then expands where retail calls it,
+// 89-90%), `if (length() > 200)` unnamed, speedY/len declared uninitialised at
+// the top. Retail keeps 8 codeless bytes above velocity (0xac-0xb4).
 void TLimitKoopa::startHipDrop()
 {
 	// One local carries the jump: first the straight-up launch speed, then the
@@ -642,7 +645,11 @@ void TLimitKoopa::breathFlame()
 // Left: the loop's FPR assignment (retail gives the 0.0f constant f31 and
 // spread f27; ours f27 and f28) and the head's x/z load order. Inert: an else
 // arm for spread, along folded into the offset, a zero-initialised offset,
-// headPos through set() or a temporary.
+// headPos through set() or a temporary; also (c-lkoopa) the -200 folded into
+// headPos's constructor, headRadius read first or passed unnamed, spread as
+// the left factor or `along *= spread`, radius read before height, pos built
+// through set() or per-member stores (either order), named row vectors, and
+// row.dot(offset) (88%).
 void TLimitKoopa::setUpHitActors()
 {
 	MtxPtr headMtx = getMActor()->getModel()->getAnmMtx(mHeadJntIndex);
