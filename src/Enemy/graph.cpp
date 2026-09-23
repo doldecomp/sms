@@ -892,6 +892,8 @@ void TGraphGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 	// r4/r5/r6), i.e. the `graphics` parameter stays live past the first
 	// temporary; the loop is fully elided otherwise. A named bound (-9pp), a
 	// getGraph(i) accessor (inert) and a named TGraphWeb* (worse) refuted.
+	// Also inert: unnamed callee params, a hoisted graphs array, a while loop,
+	// an outer-declared i or TGraphWeb*, pointer arithmetic; u32 i is worse.
 	for (int i = 0; i < unk4; ++i)
 		unk8[i]->perform(cue, graphics);
 }
@@ -1010,6 +1012,8 @@ BOOL TGraphTracer::traceSpline(f32 param_1)
 	// getNthT(unk8), offsets 0x68/0xa8; the old mPrevIdx spelling scored
 	// 99.42 but read the wrong nodes). Left: an r4/r5 swap of unk0 and its
 	// rail; rail locals, accessor sites and operand order are inert.
+	// Also inert: `== nullptr`, getSplineRail() in the guard, a named isLoop
+	// BOOL (+8 frame), getNodeNum() for unk8.
 	BOOL result;
 	if ((param_1 >= 0.0f && dVar8 <= dVar10 && dVar10 <= dVar9)
 	    || (param_1 < 0.0f && dVar9 <= dVar10 && dVar10 <= dVar8)) {
