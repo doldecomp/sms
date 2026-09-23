@@ -2524,7 +2524,8 @@ void TMario::gunExec()
 {
 	// TODO: retail materialises onYoshi() as a bool in its own saved register
 	// before this test (`bool y = false; if (onYoshi()) y = true;` reproduces
-	// it, +1.5%, refused as a nonsensical temporary).
+	// it, +1.5%, refused as a nonsensical temporary). Inert: `== FALSE`,
+	// `== false`, `!(bool)`, an empty-then `if/else`; `!= TRUE` is +0.2.
 	if (!onYoshi())
 		gpModelWaterManager->unk5D5F = 0;
 
