@@ -381,7 +381,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 digit0 = hundreds;
 		coinDigits[0]->changeTexture(mCoinNumTex[digit0]->getTexInfo(), 0);
 
-		s32 digit1 = 0.1f * (numCoins - 100 * (s32)(hundreds));
+		numCoins -= 100 * (s32)(hundreds);
+		s32 digit1 = 0.1f * numCoins;
 		coinDigits[1]->changeTexture(mCoinNumTex[digit1]->getTexInfo(), 0);
 
 		s32 digit2 = numCoins % 10;
@@ -516,10 +517,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 i = 0;
 		if ((mNumUnlockedShines & 1) == 1) {
 			// Odd number of shines.
-			s32 firstSlot = (7 - mNumUnlockedShines) / 2;
-			s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
+			s32 slot = (7 - mNumUnlockedShines) / 2;
+			s32 lastSlot = slot + mNumUnlockedShines - 1;
 
-			for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+			for (; slot <= lastSlot; slot++) {
 				mShineMarks[i]
 				    = (J2DPicture*)mMenuScreen->search('i_o0' + slot);
 				mShineMarks[i]->show();
@@ -535,10 +536,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 			}
 		} else {
 			// Even number of shines.
-			s32 firstSlot = (8 - mNumUnlockedShines) / 2;
-			s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
+			s32 slot = (8 - mNumUnlockedShines) / 2;
+			s32 lastSlot = slot + mNumUnlockedShines - 1;
 
-			for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+			for (; slot <= lastSlot; slot++) {
 				mShineMarks[i]
 				    = (J2DPicture*)mMenuScreen->search('i_e0' + slot);
 				mShineMarks[i]->mVisible = true;
