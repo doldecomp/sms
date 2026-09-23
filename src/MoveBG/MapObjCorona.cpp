@@ -223,7 +223,10 @@ void TBathtubGrip::startBreak(int animation, int delay, f32 speed)
 	startAnim(animation);
 }
 
-// TODO: Match once the bathtub quake, hipdrop, and demo routines are recovered.
+// TODO: 91.5%, call set exact. Retail's frame is 0x150 against our 0x90 with
+// no stack use in the body (a dead aggregate from some inlined callee), and
+// each count arm of the inner switch loads its breakCount before the
+// animSpeed and branches to one shared tail, where ours reloads unk16C.
 BOOL TBathtubGrip::receiveMessage(THitActor* sender, u32 message)
 {
 	switch (message) {
