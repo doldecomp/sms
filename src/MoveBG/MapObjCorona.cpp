@@ -1031,7 +1031,12 @@ f32 TBathtub::getNearJuncture(const JGeometry::TVec3<f32>& pos) const
 	return unk13C[index];
 }
 
-// TODO: Match the matrix projection helpers and local stack layout.
+// TODO: 99.9%, frame exact. Retail converts dir into a volatile and lands
+// only the product `k * dir` in angle's f28; `angle *= k` converts straight
+// into f28. Every product spelling (`k * dir`, `dir * k`, `angle = angle * k`,
+// `k * angle`, an unnamed getDir, an f32 dir) gets that shape but numbers the
+// magic double, constant and conversion f1/f2/f0 against retail's f2/f0/f1
+// (5 differences), so the compound spelling stays.
 bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 tolerance,
                           f32* gripAngle) const
 {

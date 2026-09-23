@@ -46,6 +46,11 @@ public:
 	// Retail reaches this from behaveToWater, which expands whole into
 	// TGorogoro::behaveToWater; the split is what keeps that expansion inside
 	// MWCC's depth-1 statement budget while this stays inside the depth-2 one.
+	// TODO: in TGorogoro::behaveToWater retail keeps attackRadius /
+	// attackHeight / damageRadius in f29 / f30 / f31 (ours f31 / f30 / f29).
+	// Inert: C-style top declarations in reverse, ratio declared first;
+	// setHitParams(...) with calcEntryRadius dropped from the caller grows
+	// the frame by 0x10-0x18.
 	void calcHitScale()
 	{
 		f32 attackRadius = getSaveParams()->getSLAttackRadius();
