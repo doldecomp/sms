@@ -1638,7 +1638,7 @@ static void Hx_Test2(void)
 
 	case 1:
 		r = Hx_MotionUpdate(&hx.motion);
-		Hxs1_Test2(r, 1, hx.centerX, 300.0f, 900.0f, 650.0f);
+		Hxs1_Test2(r, 1, hx.width + 200, 300.0f, 900.0f, 650.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.timer = 11;
@@ -1647,9 +1647,9 @@ static void Hx_Test2(void)
 		return;
 
 	case 2:
-		Hxs1_Test2(600, 0, hx.centerX, 300.0f, 900.0f, 650.0f);
+		Hxs1_Test2(600, 0, hx.width + 200, 300.0f, 900.0f, 650.0f);
 		r = Hx_MotionUpdate(&hx.motion);
-		Hxs1_Test2(r, 0, hx.centerX, 150.0f, 700.0f, 450.0f);
+		Hxs1_Test2(r, 0, hx.width + 200, 150.0f, 700.0f, 450.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.timer = 10;
@@ -1658,10 +1658,10 @@ static void Hx_Test2(void)
 		break;
 
 	case 3:
-		Hxs1_Test2(600, 0, hx.centerX, 300.0f, 900.0f, 650.0f);
-		Hxs1_Test2(600, 0, hx.centerX, 150.0f, 700.0f, 450.0f);
+		Hxs1_Test2(600, 0, hx.width + 200, 300.0f, 900.0f, 650.0f);
+		Hxs1_Test2(600, 0, hx.width + 200, 150.0f, 700.0f, 450.0f);
 		r = Hx_MotionUpdate(&hx.motion);
-		Hxs1_Test2(r, 1, hx.width, 370.0f, 650.0f, 400.0f);
+		Hxs1_Test2(r, 1, hx.width + 250, 370.0f, 650.0f, 400.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.timer = 12;
@@ -1670,11 +1670,11 @@ static void Hx_Test2(void)
 		break;
 
 	case 4:
-		Hxs1_Test2(600, 0, hx.centerX, 300.0f, 900.0f, 650.0f);
-		Hxs1_Test2(600, 0, hx.centerX, 150.0f, 700.0f, 450.0f);
-		Hxs1_Test2(600, 1, hx.width, 370.0f, 650.0f, 400.0f);
+		Hxs1_Test2(600, 0, hx.width + 200, 300.0f, 900.0f, 650.0f);
+		Hxs1_Test2(600, 0, hx.width + 200, 150.0f, 700.0f, 450.0f);
+		Hxs1_Test2(600, 1, hx.width + 250, 370.0f, 650.0f, 400.0f);
 		r = Hx_MotionUpdate(&hx.motion);
-		Hxs1_Test2(r, 0, hx.width, 300.0f, 420.0f, 200.0f);
+		Hxs1_Test2(r, 0, hx.width + 250, 300.0f, 420.0f, 200.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.state = 3;
@@ -1701,11 +1701,12 @@ static void Hx_Test2R(void)
 		/* fall through */
 
 	case 1:
-		Hxs1_Test2(600, 0, hx.centerX, 150.0f, 700.0f, 450.0f);
-		Hxs1_Test2(600, 1, hx.width, 370.0f, 650.0f, 400.0f);
-		Hxs1_Test2(600, 0, hx.width, 300.0f, 420.0f, 200.0f);
-		r = 500.0f - Hx_MotionUpdate(&hx.motion);
-		Hxs1_Test2(r, 0, hx.centerX, 300.0f, 900.0f, 650.0f);
+		Hxs1_Test2(600, 0, hx.width + 200, 150.0f, 700.0f, 450.0f);
+		Hxs1_Test2(600, 1, hx.width + 250, 370.0f, 650.0f, 400.0f);
+		Hxs1_Test2(600, 0, hx.width + 250, 300.0f, 420.0f, 200.0f);
+		r = Hx_MotionUpdate(&hx.motion);
+		r = 500.0f - r;
+		Hxs1_Test2(r, 0, hx.width + 200, 300.0f, 900.0f, 650.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.timer = 11;
@@ -1714,10 +1715,11 @@ static void Hx_Test2R(void)
 		return;
 
 	case 2:
-		Hxs1_Test2(600, 1, hx.width, 370.0f, 650.0f, 400.0f);
-		Hxs1_Test2(600, 0, hx.width, 300.0f, 420.0f, 200.0f);
-		r = 500.0f - Hx_MotionUpdate(&hx.motion);
-		Hxs1_Test2(r, 1, hx.centerX, 150.0f, 700.0f, 450.0f);
+		Hxs1_Test2(600, 1, hx.width + 250, 370.0f, 650.0f, 400.0f);
+		Hxs1_Test2(600, 0, hx.width + 250, 300.0f, 420.0f, 200.0f);
+		r = Hx_MotionUpdate(&hx.motion);
+		r = 500.0f - r;
+		Hxs1_Test2(r, 1, hx.width + 200, 150.0f, 700.0f, 450.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.timer = 10;
@@ -1726,9 +1728,10 @@ static void Hx_Test2R(void)
 		break;
 
 	case 3:
-		Hxs1_Test2(600, 0, hx.width, 300.0f, 420.0f, 200.0f);
-		r = 500.0f - Hx_MotionUpdate(&hx.motion);
-		Hxs1_Test2(r, 0, hx.width, 370.0f, 650.0f, 400.0f);
+		Hxs1_Test2(600, 0, hx.width + 250, 300.0f, 420.0f, 200.0f);
+		r = Hx_MotionUpdate(&hx.motion);
+		r = 500.0f - r;
+		Hxs1_Test2(r, 0, hx.width + 250, 370.0f, 650.0f, 400.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.timer = 12;
@@ -1737,8 +1740,9 @@ static void Hx_Test2R(void)
 		break;
 
 	case 4:
-		r = 500.0f - Hx_MotionUpdate(&hx.motion);
-		Hxs1_Test2(r, 1, hx.width, 300.0f, 420.0f, 200.0f);
+		r = Hx_MotionUpdate(&hx.motion);
+		r = 500.0f - r;
+		Hxs1_Test2(r, 1, hx.width + 250, 300.0f, 420.0f, 200.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.state = 3;
