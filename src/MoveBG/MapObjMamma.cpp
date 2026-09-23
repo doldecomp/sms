@@ -1425,6 +1425,7 @@ void TMammaYacht::initMapObj()
 	mFlag->init("MammaYacht00");
 }
 
+// TODO: every instruction matches; the frame is 0x30 short (0x78 retail).
 void TSandBird::control()
 {
 	TJointCoin::control();
@@ -1434,20 +1435,16 @@ void TSandBird::control()
 	gpMSound->startSoundSystemSE(MSD_SE_ENV_SANDBIRD_WIND, 0, nullptr, 0);
 
 	for (int i = 0; i < unk13C; i++) {
-		TMapObjBase* obj = unk140[i];
-		if (obj->isActorType(0x2000000E) || obj->isActorType(0x40000023)) {
-			gpMarioParticleManager->emitAndBindToPosPtr(0x159, &obj->mPosition,
-			                                            1, obj);
+		if (unk140[i]->isActorType(0x2000000E)
+		    || unk140[i]->isActorType(0x40000023)) {
+			gpMarioParticleManager->emitAndBindToPosPtr(
+			    0x159, &unk140[i]->mPosition, 1, unk140[i]);
 			gpMarioParticleManager->emitAndBindToPosPtr(
 			    0x15A, &unk140[i]->mPosition, 1, unk140[i]);
 		}
 	}
 
-	bool demo = true;
-	if (!SMSGetCamera()->isSimpleDemoCamera() && SMSGetCamera()->mMode != 0x49)
-		demo = false;
-
-	if (!demo && !mHelpShown) {
+	if (!gpCamera->isDemoCamera() && !mHelpShown) {
 		const TLiveActor* actor = (*gpMarioGroundPlane)->getActor();
 		if (actor) {
 			if (actor->isActorType(0x400002C9)) {
