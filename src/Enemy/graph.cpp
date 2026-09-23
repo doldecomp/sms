@@ -758,14 +758,11 @@ BOOL TGraphWeb::isDummy() const
 	return false;
 }
 
-// TODO: retail keeps param_1's three components and point2's y/z in
-// registers across the stores to `thing` (f30/f31 are saved to make room),
-// where we reload param_1 for `thing.sub` and point2 for the scaleAdd; it
-// also forms &nodes[i] with an `add` before loading the rail node. Neither
-// `thing -= param_1`, a by-value getPoint(), a named node pointer nor
-// hoisting `nodes` out of the loop reproduces that; neither do a bool
-// flag, named dot products or reordering the three top declarations.
-// Retail's frame is 8 bytes smaller (local_48 sits 0xc lower).
+// TODO: instructions match; only stack offsets differ. Retail has 4 more
+// bytes above local_48 (0x58 vs our 0x5c), 8 more between `point` and
+// point2 (0x38 vs 0x40), and an 8-byte smaller low region (thing 0x2c vs
+// 0x34). Reordering the top declarations, a hoisted `point`, a point2
+// constructor and dropping `nodes` are inert or worse.
 JGeometry::TVec3<f32>
 TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 {
@@ -773,25 +770,23 @@ TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 
 	JGeometry::TVec3<f32> local_48(param_1);
 	f32 min;
-	int nodeNum = unk8;
-	for (int i = 0; i < nodeNum; ++i) {
-		const TGraphNode* nodes = unk0;
-		const TGraphNode& node  = nodes[i];
+	for (int i = 0; i < unk8; ++i) {
 		JGeometry::TVec3<f32> point;
-		node.getPoint(&point);
-		const TRailNode* railNode = node.getRailNode();
+		unk0[i].getPoint(&point);
+		const TGraphNode* nodes = unk0;
+		const TRailNode* railNode = getGraphNode(i).getRailNode();
 		int connNum               = railNode->mConnectionNum;
 		for (int i = 0; i < connNum; ++i) {
 			const TRailNode* connNode
-			    = nodes[railNode->mConnections[i]].getRailNode();
+			    = nodes[railNode->mConnections[i]].unk0;
 			JGeometry::TVec3<f32> point2;
 			point2.x = connNode->mPosition.x;
 			point2.y = connNode->mPosition.y;
 			point2.z = connNode->mPosition.z;
 			point2 -= point;
 
-			f32 fVar4 = (param_1.dot(point2) - point.dot(point2))
-			            / point2.squared();
+			f32 fVar4 = (param_1.dot(point2) - point.dot(point2));
+			fVar4 /= point2.squared();
 			if (fVar4 < 0.0f)
 				fVar4 = 0.0f;
 			else if (fVar4 > 1.0f)
