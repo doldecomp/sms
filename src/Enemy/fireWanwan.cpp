@@ -2077,6 +2077,15 @@ DEFINE_NERVE(TNerveFireWanwanTurn, TLiveActor)
 	return false;
 }
 
+// Retail `bl`s TVec4<f32>::dot and TVec4<f32>::scale out of the quaternion
+// normalize in both doAdjustTarget expansions, one inline level deeper than
+// a direct normalize() reaches. The header forwarder costs seven other
+// quaternion sites, so the level lives here.
+static inline void FireWanwanNormalizeQuat(JGeometry::TQuat4<f32>& q)
+{
+	q.normalize();
+}
+
 DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 {
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
@@ -2089,16 +2098,10 @@ DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 	// depth 1 TQuat4<f32>::rotate's in-class body has no statement limit and
 	// expands as retail does, while behind the call it sits at depth 2 where the
 	// 9-statement allowance refuses it and MWCC emits the bl we used to have.
-	// TODO: retail also `bl`s TVec4<f32>::dot and TVec4<f32>::scale out of the
-	// normalize() below, which needs one more inline level than
-	// `setLength(*this, one())` gives - i.e. normalize() spelled as the
-	// one-argument `setLength(one())` forwarder. Measured in JGVec4.hpp and
-	// again as a TQuat4-only override: both take this nerve 72.4 -> 85.4 and
-	// TNerveFireWanwanRecoverGraph 75.7 -> 86.5, but both cost seven other
-	// quaternion sites (TNerveKazekunAttack 98.9 -> 90.4, TNerveAmenboTurn 98.9
-	// -> 90.3, TBathtubKiller::makeQuat, TBeeHive::doWait, TTabePuku::swimTo,
-	// TCoasterEnemy::moveCoaster, TBathtub::updatePosture_), so the level is
-	// per site and belongs on the caller, not in the header.
+	// TODO: retail also `bl`s TVec4<f32>::TVec4() for rotate's first TQuat4
+	// and TVec3<f32>::set<f32> at its end, and keeps q in memory (0x40): rotate
+	// expands one level deeper than here, but behind any wrapper (doAdjustTarget,
+	// a TU-local forwarder, the one-argument rotate) MWCC emits `bl rotate`.
 	J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
 	f32 fVar8 = JGeometry::TUtil<f32>::clamp(ctrl->getFrame() / ctrl->getEnd(),
@@ -2106,7 +2109,7 @@ DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 
 	JGeometry::TQuat4<f32> local_70;
 	local_70.slerp(self->unk1BC, self->unk1CC, fVar8);
-	local_70.normalize();
+	FireWanwanNormalizeQuat(local_70);
 
 	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
 
@@ -2193,7 +2196,7 @@ DEFINE_NERVE(TNerveFireWanwanRecoverGraph, TLiveActor)
 
 		JGeometry::TQuat4<f32> local_70;
 		local_70.slerp(self->unk1BC, self->unk1CC, fVar8);
-		local_70.normalize();
+		FireWanwanNormalizeQuat(local_70);
 
 		JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
 
