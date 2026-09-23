@@ -798,6 +798,9 @@ void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 	unk1CC = 0.0f;
 }
 
+// TODO: inlined into TNerveKumokunSearch, retail multiplies MsRandF()'s scale
+// into f30 before the axis temporary's set<f> call and adds 0.5f after it (the
+// TAmenbo::decideTarget residue). Inert: a named r; a named axis stops inlining.
 void TKumokun::decideTargetAtRandom()
 {
 	JGeometry::TQuat4<f32> q = getQuat();

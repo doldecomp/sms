@@ -644,7 +644,9 @@ DEFINE_NERVE(TNerveAmenboWalk, TLiveActor)
 // TODO: callee-saved GPRs rotate (retail: string base r31, self r30,
 // spine r29; ours spine r31) and the frame is 0x58 vs 0x70. Inert or worse
 // (cc48): a getBody() binder or fork, TVec3 zero spellings, .value for
-// mHitWaterTimer, self->getSpine() at any of the three spine uses.
+// mHitWaterTimer, self->getSpine() at any of the three spine uses, raw
+// mMActor, a named zero vector, an empty-then-else start arm. The same 0x18
+// low-region gap appears in TNerveAmenboSearch::execute.
 DEFINE_NERVE(TNerveAmenboHitWater, TLiveActor)
 {
 	TAmenbo* self = (TAmenbo*)spine->getBody();
