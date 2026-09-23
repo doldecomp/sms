@@ -790,8 +790,12 @@ void CPolarSubCamera::calcPosAndAt_()
 							f32 dz = gpMarioPos->z - mCurrentTarget.unk18.z;
 							f32 d  = MsSqrtf(dx * dx + dz * dz);
 							f32 minD = mSaveEx->mSLMinCushionXZ.get();
-							f32 mD2
-							    = minD < dist * cushion ? dist * cushion : minD;
+							// The cushion radius is the smaller of the two (retail keeps
+							// dist * cushion when it is not above minD).
+							// TODO: retail compares minD against dist * cushion
+							// (fcmpo minD, dc; bge), this form compares dc first.
+							f32 dc  = dist * cushion;
+							f32 mD2 = dc > minD ? minD : dc;
 							if (d < mD2) {
 								f32 add = mD2 - d;
 								mCurrentTarget.unk18.x += sY * add;
