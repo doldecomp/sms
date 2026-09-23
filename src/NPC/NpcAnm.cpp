@@ -21,7 +21,8 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// TODO: should be in a header and violate ODR
+// The map puts the only definition here; NpcParts.cpp and NpcInitData.cpp
+// refer to it as an extern.
 const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 
 f32 CalcJumpVelocityY(f32 height, f32 gravity)
