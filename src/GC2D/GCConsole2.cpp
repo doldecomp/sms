@@ -1987,7 +1987,8 @@ void TGCConsole2::loadAfter()
 		if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
 			++spentBlueCoins;
 
-	int blueCoinValue = unk168 - spentBlueCoins * 10;
+	int blueCoinValue = unk168;
+	blueCoinValue -= spentBlueCoins * 10;
 	if (blueCoinValue < 0)
 		blueCoinValue = 0;
 	setBlueCoinDigits(unk154, unkE0, blueCoinValue);
@@ -3782,6 +3783,9 @@ bool TGCConsole2::processAppearStar(int param_1)
 		if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
 			++blueCoins;
 
+	// TODO: retail computes this straight into the flag counter's register
+	// (`subf. r25`); the countBlueCoin/loadAfter `-=` spelling and reusing
+	// blueCoins for the result were both slightly worse here.
 	int blueCoinValue = unk168 - blueCoins * 10;
 	if (blueCoinValue < 0)
 		blueCoinValue = 0;
