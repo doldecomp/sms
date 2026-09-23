@@ -204,6 +204,9 @@ void TRideCloud::control()
 
 	unk160        = MsClamp<f32>(unk160 + fVar8, 1.0f, 3.0f);
 	unk168        = MsClamp<f32>(unk168 + fVar8, 1.0f, 3.0f);
+	// TODO: f1/f2 swap here (retail holds 300.0f in f2 and unk160 in f1, then
+	// `prod * unk160`). Inert or worse: operand orders, named sx/scale/product,
+	// raw mScaling.x, `*=` split, a TU-local multiply helper, chained unk160.
 	mDamageRadius = getScaling().x * 300.0f * unk160;
 	mDamageHeight = 50.0f;
 	calcEntryRadius();
