@@ -223,10 +223,11 @@ void TBathtubGrip::startBreak(int animation, int delay, f32 speed)
 	startAnim(animation);
 }
 
-// TODO: 91.5%, call set exact. Retail's frame is 0x150 against our 0x90 with
-// no stack use in the body (a dead aggregate from some inlined callee), and
-// each count arm of the inner switch loads its breakCount before the
-// animSpeed and branches to one shared tail, where ours reloads unk16C.
+// TODO: 98.9%. The count arms read their params through raw `.value` (each
+// `.get()` reserved a reference temporary and reordered the loads). Left:
+// retail's frame is 0x150 against our 0x30 with no stack use in the body (a
+// dead aggregate from some inlined callee), and the inlined trample()'s
+// &trampleRelease pointer (see the TODO on trample()).
 BOOL TBathtubGrip::receiveMessage(THitActor* sender, u32 message)
 {
 	switch (message) {
@@ -249,24 +250,24 @@ BOOL TBathtubGrip::receiveMessage(THitActor* sender, u32 message)
 		f32 speed;
 		switch (count) {
 		case 1:
-			delay = mBathtub->unk16C->breakCount0.get();
-			speed = mBathtub->unk16C->animSpeed1.get();
+			delay = mBathtub->unk16C->breakCount0.value;
+			speed = mBathtub->unk16C->animSpeed1.value;
 			break;
 		case 2:
-			delay = mBathtub->unk16C->breakCount1.get();
-			speed = mBathtub->unk16C->animSpeed2.get();
+			delay = mBathtub->unk16C->breakCount1.value;
+			speed = mBathtub->unk16C->animSpeed2.value;
 			break;
 		case 3:
-			delay = mBathtub->unk16C->breakCount2.get();
-			speed = mBathtub->unk16C->animSpeed3.get();
+			delay = mBathtub->unk16C->breakCount2.value;
+			speed = mBathtub->unk16C->animSpeed3.value;
 			break;
 		case 4:
-			delay = mBathtub->unk16C->breakCount3.get();
-			speed = mBathtub->unk16C->animSpeed4.get();
+			delay = mBathtub->unk16C->breakCount3.value;
+			speed = mBathtub->unk16C->animSpeed4.value;
 			break;
 		default:
-			delay = mBathtub->unk16C->breakCount0.get();
-			speed = mBathtub->unk16C->animSpeed0.get();
+			delay = mBathtub->unk16C->breakCount0.value;
+			speed = mBathtub->unk16C->animSpeed0.value;
 			break;
 		}
 		startBreak(count, delay, speed);
@@ -811,6 +812,13 @@ void TBathtub::calcBathtubData()
 	unk1F4 = mBathtubData.getThing();
 }
 
+// TODO: 95.0%. The second loop continues the first loop's counter (retail
+// enters it through the condition and keeps it in the same register). Left:
+// the frame is 0x1d0 against 0x188 -- the concat result sits at 0xa8 against
+// retail's 0x74, so 0x34 of our low region and 0x14 above it have no retail
+// counterpart -- and the scheduling of the two opening dot products. Inert:
+// the order of d/xDir/zDir, d.dot(dir), the local/mtx declaration site, the
+// constant-first spellings of the slot and angle products.
 void TBathtub::setupCollisions_()
 {
 	JGeometry::TVec3<f32> xDir, zDir, d;
@@ -834,7 +842,8 @@ void TBathtub::setupCollisions_()
 	if (slot < 0.0f)
 		slot += 30.0f;
 	int base = ((int)(0.5f + slot - 1.0f) + 30) % 30;
-	for (int i = 0; i < 2; ++i) {
+	int i;
+	for (i = 0; i < 2; ++i) {
 		int index = (i + base) % 30;
 		JGeometry::TPosition3<TMtx34f> local;
 		local.setEularY((f32)(index + 1) * 6.2831855f / 30.0f - 3.1415927f);
@@ -844,7 +853,7 @@ void TBathtub::setupCollisions_()
 		unk164[index]->moveMtx(mtx);
 		unk164[index]->setUp();
 	}
-	for (int i = 2; i < 30; ++i)
+	for (; i < 30; ++i)
 		unk164[(i + base) % 30]->remove();
 	for (int i = 0; i < 5; ++i)
 		unk168[i]->unk24B = 0;
