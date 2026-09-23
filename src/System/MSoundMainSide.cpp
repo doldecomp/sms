@@ -68,13 +68,9 @@ bool MSMainProc::getGateKeeperBGMStopFlag()
 	return true;
 }
 
-// Binding level over a raw member read, worth +8 of low region in
-// MSMainProc::getMonteVillageActorArea (batch 127).
-static inline u8 MSoundMainSideUnkCD(const MSound* p)
-{
-	u8 vCD = p->unkCD;
-	return vCD;
-}
+// Direct-return level over a raw member read: retail's u8 result is an
+// inline temporary of MSMainProc::getMonteVillageActorArea, not a named slot.
+static inline u8 MSoundMainSideUnkCD(const MSound* p) { return p->unkCD; }
 
 static inline Vec MSGetEarPos(const Vec& p)
 {
