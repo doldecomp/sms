@@ -979,6 +979,10 @@ void TBossTelesa::init(TLiveManager* live_manager)
 	mMarioHP = SMS_GetMarioHP();
 }
 
+// TODO: 99.85%, every instruction but the prologue's `addi r31, r3, 0`
+// (ours `mr`). The frame is 0x38 short of retail's 0x370, a uniform shift
+// below the default-argument TVec3 blocks: a low-region deficit with no
+// legal carrier found (a search binder per site would be a fabricated one).
 void TBossTelesa::loadAfter()
 {
 	if (gpMapObjManager->getObjNumWithActorType(0x4000019A)) {
