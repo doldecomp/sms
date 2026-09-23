@@ -49,8 +49,29 @@ static inline f32 CameraNoticeSquaredDist(const JGeometry::TVec3<f32>& a,
 	f32 sqY = dy * dy;
 	f32 sqZ = dz * dz;
 
-	f32 sum = sqX + sqY + sqZ;
+	// Two statements: one expression is forwarded past the caller's
+	// CLBSquared call. Retail adds sqZ first into the final sum.
+	f32 sum = sqX + sqY;
+	sum = sqZ + sum;
 	return sum;
+}
+
+// Both notice sites run the same clip test; retail inlines it at each.
+static inline bool CameraNoticeIsInClip(const JGeometry::TVec2<f32>& clipPos,
+                                        f32 clipMax)
+{
+	f32 clipMin = -clipMax;
+	bool inClipX = false, overClipMinY = false, inClipY = false;
+	if (clipMin <= clipPos.x && clipPos.x <= clipMax)
+		inClipX = true;
+
+	if (inClipX && clipMin <= clipPos.y)
+		overClipMinY = true;
+
+	if (overClipMinY && clipPos.y <= clipMax)
+		inClipY = true;
+
+	return inClipY ? true : false;
 }
 
 void CPolarSubCamera::setNoticeInfo()
@@ -73,36 +94,22 @@ void CPolarSubCamera::setNoticeInfo()
 	unk2A8 = JDrama::TNameRefGen::search<TLiveActor>(bossGesoViewObjName);
 }
 
-// TODO (closure batch 152): 92.7%, up from 79.7%, frame now exact (0xf0).
-// Restored here: the clip range is [-ratio, +ratio] (retail's `fneg` off the
-// single param read, hoisted above CLBCalc2DFPos), and **both** clip tests are
-// the same three-bool ladder whose result is normalised again
-// (`inClipY ? true : false`) -- the loop's ladder had been written as two
-// bools, which was six of the eight missing instructions. Also restored: the
-// loop's distance guard is `!(dist2 < closestDist2)` (a single `bge`; `>=`
-// compiles to `cror eq,gt,eq; beq`), the identity test is
-// `mNoticeActor == unk2A0[i]` in that operand order, the squared-distance
-// helper names its sum (`f32 sum = sqX + sqY + sqZ; return sum;`), which alone
-// landed the frame from 0xe8 to 0xf0, and the loop's two matrices go through
-// `getUnk16C()`/`getUnk1EC()`, which makes MWCC hoist *both* `this + 0x16c`
-// and `this + 0x1ec` as loop-invariant base temps in r31/r30 at exactly
-// retail's position. Named `MtxPtr` locals also hoist both but materialise the
-// two `addi`s at the declaration instead of just above the loop; declared
-// before `noticeActor` they get retail's register numbers, declared after they
-// get retail's placement, and no order gives both.
-// What is left (all in the first, pre-loop site plus two rotations):
-//   - r31/r30 are swapped against retail (retail r31 = 0x16c, ours r31 =
-//     0x1ec). Base temps are allocated in the opposite order to ours here;
-//     `unk16C, getUnk1EC()` and `getUnk16C(), unk1EC` are both inert on it.
-//   - at the first site MWCC still schedules our `bl CLBSquared` before the
-//     three `fmuls`, so the three differences live in f31/f30/f29 across the
-//     call where retail keeps only the sum (f28). Consequence: every
-//     callee-saved FPR is rotated by one (retail loop dist2 = f27, clipMax =
-//     f28; ours f28/f27). Rejected: un-naming `noticeDist2` (inert), naming
-//     the CLBSquared result as well (costs an instruction).
-//   - the three ladder bools: retail materialises one zero (`li r3,0`) and
-//     copies it (`addi r4,r3,0`, `addi r0,r3,0`); we emit three `li`, one of
-//     them late. A comma declaration is inert.
+// TODO: 97.1% (was 92.7%); every instruction is right, frame 0xe8 vs 0xf0.
+// Restored: the clip range is [-ratio, +ratio] and both clip tests are one
+// TU-local inline (CameraNoticeIsInClip: the three-bool ladder whose result
+// is normalised again); the loop's distance guard is `!(dist2 <
+// closestDist2)`; the identity test is `mNoticeActor == unk2A0[i]`; the
+// loop's matrices go through `getUnk16C()`/`getUnk1EC()` (hoisted base temps);
+// the squared-distance sum is two statements, so it is computed before the
+// `bl CLBSquared` as in retail.
+// What is left, registers and slots only:
+//   - r31/r30 hold 0x1ec/0x16c where retail has 0x16c/0x1ec; the distance sum
+//     and clipMax take each other's callee-saved FPR (retail sum f28/f27,
+//     clipMax f29/f28). Un-naming noticeDist2 is inert.
+//   - retail places clipPos at 0x84 and 0x6c with gaps above each, ours
+//     0x8c and 0x84; the ladder's zero copies are `addi rX,r3,0` in retail,
+//     `mr` off r0 here. A by-value TVec2 or (x, y) parameter helper and a
+//     helper that also calls CLBCalc2DFPos are all worse (89.8-96.7%).
 TLiveActor* CPolarSubCamera::getNoticeActor_()
 {
 	if (mNoticeActor != nullptr && !mNoticeActor->checkLiveFlag(LIVE_FLAG_DEAD)
@@ -117,19 +124,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, mNoticeActor->mPosition,
 			              nullptr, false);
 
-			// TODO: inline
-			f32 clipMin = -clipMax;
-			bool inClipX = false, overClipMinY = false, inClipY = false;
-			if (clipMin <= clipPos.x && clipPos.x <= clipMax)
-				inClipX = true;
-
-			if (inClipX && clipMin <= clipPos.y)
-				overClipMinY = true;
-
-			if (overClipMinY && clipPos.y <= clipMax)
-				inClipY = true;
-
-			if (inClipY ? true : false)
+			if (CameraNoticeIsInClip(clipPos, clipMax))
 				return mNoticeActor;
 		}
 	}
@@ -157,19 +152,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		              unk2A0[i]->getPosition(),
 		              nullptr, false);
 
-		// TODO: inline
-		f32 clipMin = -clipMax;
-		bool inClipX = false, overClipMinY = false, inClipY = false;
-		if (clipMin <= clipPos.x && clipPos.x <= clipMax)
-			inClipX = true;
-
-		if (inClipX && clipMin <= clipPos.y)
-			overClipMinY = true;
-
-		if (overClipMinY && clipPos.y <= clipMax)
-			inClipY = true;
-
-		if (!(inClipY ? true : false))
+		if (!CameraNoticeIsInClip(clipPos, clipMax))
 			continue;
 
 		if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(*gpMarioAngleY),
