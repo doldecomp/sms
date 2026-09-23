@@ -640,8 +640,10 @@ void TBaseNPC::npcWetIn()
 	resetToTurn_();
 }
 
-// TODO: GMSE01 frame is 0x178 instead of 0x160; remaining register differences
-// are the sunflower predicate (r29/r28) and final animation switch (r4/r3).
+// TODO: GMSE01 frame is 0x160 retail, 0x100 here; remaining register differences
+// are the sunflower predicate (r29/r28) and the 0x4000016 animation switch
+// (kind r4/r3). A named int kind, a named sunflowerReviving() result, the
+// reversed requestNpcAnm_ compare and switch (getActorTypeID()) are inert.
 bool TBaseNPC::npcWetting()
 {
 	bool result = false;

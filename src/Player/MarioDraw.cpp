@@ -1164,6 +1164,13 @@ void TMario::loadAnmTexPattern(J3DAnmTexPattern** param_1, char* param_2,
 	(*param_1)->searchUpdateMaterialID(param_3);
 }
 
+// TODO: frame 0x5c0 retail, 0x4f0 here (the named Mtx sits above transformInfo
+// in retail, plus 0xdc more low temporaries). Every non-stack difference is
+// one allocation: retail colours anmTransform r22 (below the texture-loop
+// temporaries and sharing r22 with eyeIdxL), ours r27, which shifts the loop,
+// frameCtrl and marioCommon registers by one. Top declarations of
+// anmTransform or i, unnamed trans, u32/i++ loop spellings and a named file
+// name are all inert.
 void TMario::initModel()
 {
 	unk394         = new J3DDrawBuffer(0x20);
