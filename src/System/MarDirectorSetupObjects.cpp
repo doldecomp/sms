@@ -141,7 +141,9 @@ void TMarDirector::decideMarioPosIdx()
 	}
 }
 
-// TODO: 98.0%. The residue is one repeated shape, six sites: the ROM
+// TODO: 98.0%. The final heap virtual call is getTotalFreeSize() (slot
+// 0x28); the earlier call is freeTail() (slot 0x18). The remaining residue
+// is one repeated shape, six sites: the ROM
 // materialises `<list> + 0x10` into a callee-saved register before each
 // `JGadget::TList<void*>::end()` (`addi r21, r27, 0x10`, `addi r20, r28,
 // 0x10`) where we pass a different base plus 0xc recomputed inline, so its
@@ -521,7 +523,7 @@ bool TMarDirector::setupObjects()
 	mPerformListGXPost->push_back(drawInit, CUE_DRAW_STAGE_END);
 	preEntry(unk34);
 	setup2();
-	JKRHeap::getCurrentHeap()->freeTail();
+	JKRHeap::getCurrentHeap()->getTotalFreeSize();
 
 	return 0;
 }
