@@ -2198,8 +2198,21 @@ void TBossTelesa::generateSlotItem()
 	}
 }
 
-// TODO: incorrect size. Map records 136 bytes.
-void TBossTelesa::fruitCollisionOn() { }
+// TODO: 140 bytes out of line, the map records 136; the inlined copy in
+// TNerveBossTelesaSpitSlotItem matches.
+void TBossTelesa::fruitCollisionOn()
+{
+	unk368 = 0;
+
+	for (int i = 0; i < mSlotItemNum; ++i) {
+		if (!mSlotItems[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			if (!mSlotItems[i]->isActorType(0x2000000E)) {
+				if (!mSlotItems[i]->isActorType(0x20000002))
+					mSlotItems[i]->offHitFlag(HIT_FLAG_NO_COLLISION);
+			}
+		}
+	}
+}
 
 // TODO: incorrect size. Map records 212 bytes.
 void TBossTelesa::checkSlot() { }
@@ -2629,12 +2642,6 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 	return FALSE;
 }
 
-static inline TLiveActor* BosstelesaGetSlotItem(TBossTelesa* p, int index)
-{
-	TLiveActor* item = p->mSlotItems[index];
-	return item;
-}
-
 DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
@@ -2644,20 +2651,7 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 		boss->setBckAnm(14);
 	} else if (boss->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() > 600) {
 		spine->pushAfterCurrent(&TNerveBossTelesaPrepareSlot::theNerve());
-		// TODO: one instruction left -- the ROM shares the zero it stores in
-		// unk368 with the loop's byte offset (`mr r3, r4`, ours `li r6, 0`);
-		// `i = 0` spelt as the stored value and `i++` are inert.
-		boss->unk368 = 0;
-
-		for (int i = 0; i < boss->mSlotItemNum; ++i) {
-			TLiveActor* item = BosstelesaGetSlotItem(boss, i);
-			if (!item->checkLiveFlag(LIVE_FLAG_DEAD)) {
-				if (!item->isActorType(0x2000000E)) {
-					if (!item->isActorType(0x20000002))
-						item->offHitFlag(HIT_FLAG_NO_COLLISION);
-				}
-			}
-		}
+		boss->fruitCollisionOn();
 
 		return TRUE;
 	} else if (spine->getTime() > 200) {
