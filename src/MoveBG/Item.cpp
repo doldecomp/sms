@@ -985,15 +985,14 @@ TShine::TShine(const char* name)
 	unk1A8.zero();
 }
 
-// TODO: every instruction matches; frame 0x28 against retail's 0x68. The
-// rand() conversion buffers sit at 0x10/0x18 where retail has 0x50/0x58, so
-// retail has 0x40 more dead low pool below them; a named gpMarDirector fork is
-// 0 (ladder 2026-09). No source story for 0x40 bytes yet.
+// TODO: every instruction matches; frame 0x48 against retail's 0x68. The
+// director and map/stage accessors bring 0x20 of the low pool; the rand()
+// conversion buffers still sit 0x20 below retail's 0x50/0x58.
 void TEggYoshi::decideRandomLoveFruit()
 {
-	u8 map = gpMarDirector->mMap;
+	u8 map = SMSGetMarDirector()->getCurrentMap();
 
-	if (map == 7 && gpMarDirector->unk7D == 1) {
+	if (map == 7 && SMSGetMarDirector()->getCurrentStage() == 1) {
 		unk14C = 0x40000392;
 		return;
 	}

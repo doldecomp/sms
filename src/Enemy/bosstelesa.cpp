@@ -2583,7 +2583,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 	    && boss->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(40.0f)) {
 		// mCamShakeNameSave[0x22] is "/Camera/shakeBTelesaAppear.prm".
 		gpCameraShake->startShake((EnumCamShakeMode)0x22, 1.0f);
-		gpMSound->startSoundActor(MSD_SE_BS_TELESA_SLT_LAND, &boss->mPosition,
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_SLT_LAND, &boss->mPosition,
 		                          0, nullptr, 0, 4);
 	}
 
