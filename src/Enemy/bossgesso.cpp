@@ -829,7 +829,15 @@ BOOL TBossGesso::inSightAngle(f32 a)
 	return FALSE;
 }
 
-// TODO: this inline is 99% incorrect, need to try harder =(
+// TODO: map 0x17c, ours 0x184. Naming the lower bound
+// (`f32 lo = dVar9 - 180.0f;` passed to MsWrap) gives exactly 0x17c but costs
+// doAttackSingle 93.29 -> 93.22, so it stays out. No spelling of this body
+// (operator-, sub/set/assign/direct-init, SMS_DistanceFromMarioVec, a
+// temporary `TVec3(...) -= mPosition`, MsAngleDiff, extra named floats; ~30
+// variants, 2026-09-23) nor of inSightAngle (bare `return <`, ternary,
+// inverted, BOOL local) expands MsGetRotFromZaxisY at depth 2: every caller
+// still `bl`s it, so the shoot site and inSightAngle's 0x16c stay open on the
+// shared header (see MathUtil.hpp).
 f32 TBossGesso::inSight()
 {
 	JGeometry::TVec3<f32> local_90 = SMS_GetMarioPos();
