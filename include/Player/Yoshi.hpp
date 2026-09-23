@@ -58,7 +58,7 @@ public:
 	void thinkHoldOut();
 	void thinkEat();
 	void thinkUpper();
-	void thinkJumpEnd(u16, u16*);
+	BOOL thinkJumpEnd(u16, u16*);
 	void viewCalc();
 	void emitTongue();
 	void startVoice(u32);

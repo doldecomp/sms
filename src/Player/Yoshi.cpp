@@ -534,9 +534,19 @@ void TYoshi::getOff(bool param_1)
 	mTongue->mState = TYoshiTongue::STATE_IDLE;
 }
 
-void TYoshi::thinkJumpEnd(u16, u16*) { }
+BOOL TYoshi::thinkJumpEnd(u16 curIdx, u16* newIdx)
+{
+	if (curIdx == 12) {
+		*newIdx = 11;
+		return true;
+	}
+	return false;
+}
 
-// TODO: tons of missing inlines
+// TODO: frame 0x60 against retail's 0x140 (named block matches; the low
+// region is 0xe0 short), and the final setRate loads nextFrame before
+// `lwz r3, mActor; li r4, 0` instead of after. Naming oldAnm early, naming the
+// frame ctrl, and TYoshi::getFrameCtrl() at either site are inert.
 void TYoshi::thinkAnimation()
 {
 	f32 nextFrame = mMario->getMotionFrameCtrl().getRate();
@@ -545,15 +555,7 @@ void TYoshi::thinkAnimation()
 	u32 status    = mMario->mStatus;
 
 	if (status & MARIO_STATUS_FLAG_RUNNING) {
-		BOOL tmp;
-		if (curIdx == 12) {
-			newIdx = 11;
-			tmp    = true;
-		} else {
-			tmp = false;
-		}
-
-		if (!tmp) {
+		if (!thinkJumpEnd(curIdx, &newIdx)) {
 			newIdx = 15;
 			if (status == MARIO_STATUS_CATCH || status == MARIO_STATUS_OIL_SLIP
 			    || status == MARIO_STATUS_OIL_SLOPE
