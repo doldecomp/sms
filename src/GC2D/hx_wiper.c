@@ -667,19 +667,19 @@ static void Hx_Circle(void)
 	Hxs1_Circle(r);
 
 	if (r > 22.0f) {
-		Hxs2_Circle(a1 >> 8, r - 20.0f, (r - 20.0f) + p1);
+		Hxs2_Circle(a1 >> 8, (r - 20.0f) + p1, r);
 		p1 += 0.05f;
 		if (a1 < 0xFF00)
 			a1 += 0x180;
 	}
 	if (r > 42.0f) {
-		Hxs2_Circle(a2 >> 8, r - 40.0f, (r - 40.0f) + p2);
+		Hxs2_Circle(a2 >> 8, (r - 40.0f) + p2, (r - 20.0f) + p1);
 		p2 += 0.12f;
 		if (a2 < 0xFF00)
 			a2 += 0xC0;
 	}
 	if (r > 62.0f) {
-		Hxs2_Circle(a3 >> 8, r - 60.0f, (r - 60.0f) + p3);
+		Hxs2_Circle(a3 >> 8, (r - 60.0f) + p3, (r - 40.0f) + p2);
 		p3 += 0.25f;
 		if (a3 < 0xFF00)
 			a3 += 0x80;
