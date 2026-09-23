@@ -1110,6 +1110,17 @@ bool TKoopa::getShowered()
 	return true;
 }
 
+// One inline level over pushNerve: where TKoopaHead and TKoopaBody's
+// receiveMessage inline stagger, the chain's budget runs out here and retail
+// `bl`s pushNerve, while stagger's own copy still expands it.
+// TODO: both receiveMessage frames are 8 short, with the pool base and the
+// owner swapped between r30 and r31.
+static inline void KoopaPushNerve(TKoopa* koopa,
+                                  const TNerveBase<TLiveActor>* nerve)
+{
+	koopa->getSpine()->pushNerve(nerve);
+}
+
 // TODO: only the nerve guard objects' .bss offsets differ (TU static order).
 void TKoopa::stagger(bool force)
 {
@@ -1126,7 +1137,7 @@ void TKoopa::stagger(bool force)
 		return;
 	if (&TNerveKoopaGetShowered::theNerve() == mSpine->getCurrentNerve())
 		return;
-	getSpine()->pushNerve(&TNerveKoopaStagger::theNerve());
+	KoopaPushNerve(this, &TNerveKoopaStagger::theNerve());
 }
 
 // UNUSED (0xec): TKoopa::perform inlines it, which is what makes the
