@@ -572,13 +572,19 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
+static inline TMario* MarioDrawCallBackMario()
+{
+	TMario* r = gpMarioForCallBack;
+	return r;
+}
+
 static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 
 		if (CheckMarioFootPosCtrl()) {
 
-			MtxPtr footMtx = gpMarioForCallBack->getM3UModel()->getModel()->getAnmMtx(
+			MtxPtr footMtx = MarioDrawCallBackMario()->getM3UModel()->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdFootR);
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
@@ -672,12 +678,6 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 		}
 	}
 	return 1;
-}
-
-static inline TMario* MarioDrawCallBackMario()
-{
-	TMario* r = gpMarioForCallBack;
-	return r;
 }
 
 static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
