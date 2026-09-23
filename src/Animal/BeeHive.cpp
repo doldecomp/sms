@@ -444,19 +444,19 @@ void TBeeHive::controlSound()
 	gpMSound->startBeeSe(mBeeCenter, alive);
 }
 
-// TODO: 75.5%. Both products are the *two-argument* mul(a, b) written in
+// TODO: 81.2%. Both products are the *two-argument* mul(a, b) written in
 // place: the standalone `fmuls` MWCC leaves for the second source term is
 // `this->w * other.x` here, and per the overload tell in
-// docs/catalog/codegen-tells.md that is mul(quat, other); the one-argument
-// overload would have given `this->x * other.w`. What is left is the frame,
-// 0xc8 against the ROM's 0xa0 -- we hold 40 bytes of locals the ROM does not,
-// which is the SetSQT stand-in below plus the `swing` quaternion the ROM
-// scalarises away.
+// docs/catalog/codegen-tells.md that is mul(quat, other). The copy goes
+// through J3DModel::setBaseTRMtx, which is why the ROM holds &rot in r31
+// across getModel(). What is left is the frame, 0xc0 against the ROM's 0xa0:
+// the named block (swing, quat, rot) now sits where the ROM has it relative to
+// the top, but the dead inline-temporary region below rot is 0x50 against
+// 0x30. setSQ+setTrans, one-argument mul and rot.mMtx indexing are all worse.
 void TBeeHive::calcRootMatrix()
 {
-	JGeometry::TQuat4<f32> quat = mBaseRotation;
-
 	JGeometry::TQuat4<f32> swing;
+	JGeometry::TQuat4<f32> quat = mBaseRotation;
 	swing.setEulerX(mSwingAngle);
 
 	quat.mul(quat, mRotation168);
@@ -466,7 +466,7 @@ void TBeeHive::calcRootMatrix()
 	rot.setSQT(mScaling, quat, mPosition);
 	rot.ref(1, 3) += 120.0f;
 
-	MTXCopy(rot, getModel()->getBaseTRMtx());
+	getModel()->setBaseTRMtx(rot);
 }
 
 void TBeeHive::prepareWait()
