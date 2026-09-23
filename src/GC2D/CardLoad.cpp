@@ -1548,12 +1548,12 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 				} else {
 					unk500->show();
 					unk510->hide();
-					unk514[0]->changeTexture(unkC8[score / 100]->getTexInfo(),
+					unk504[0]->changeTexture(unkC8[score / 100]->getTexInfo(),
 					                         0);
 					score -= int(score * 0.01f) * 100;
 					unk504[1]->changeTexture(unkC8[score / 10]->getTexInfo(),
 					                         0);
-					unk514[2]->changeTexture(unkC8[score % 10]->getTexInfo(),
+					unk504[2]->changeTexture(unkC8[score % 10]->getTexInfo(),
 					                         0);
 				}
 			}
