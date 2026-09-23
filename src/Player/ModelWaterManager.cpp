@@ -486,9 +486,11 @@ void TModelWaterManager::move()
 			f32 horLen = std::sqrtf(horVelSq);
 
 			mParticleVelocitySOA[i].x
-			    *= (mParticleSizeSOA[i] - 0.1f) * (1.0f / horLen);
+			    = (mParticleSizeSOA[i] - 0.1f)
+			      * (mParticleVelocitySOA[i].x * (1.0f / horLen));
 			mParticleVelocitySOA[i].z
-			    *= (mParticleSizeSOA[i] - 0.1f) * (1.0f / horLen);
+			    = (mParticleSizeSOA[i] - 0.1f)
+			      * (mParticleVelocitySOA[i].z * (1.0f / horLen));
 		}
 
 		switch (mParticleFlagSOA[i] & 0xf) {
