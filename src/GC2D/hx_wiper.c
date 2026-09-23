@@ -156,6 +156,8 @@ static void* gmover_tex_buffer = hx_buffer;
 
 /* ------------------------------------------------------------------------- */
 
+static inline u32 Hx_HalfWidth(void) { return hx.width / 2; }
+
 static void Hx_CameraInit(void)
 {
 	static f32 camLoc[3] = { 320.0f, 240.0f, -30.0f };
@@ -911,8 +913,8 @@ static void Hxs_FrBufferMorf2B(f32 x)
 	Frb2_RendBox(0xFF, right, 0.0f, hx.width, hx.height);
 }
 
-// TODO: every instruction matches, but retail's frame is 8 bytes larger in
-// the low region (conversion slots 8 higher), the same gap Hx_Logo shows.
+// The end-of-travel tests go through an inline: its expansion is what gives
+// retail's frame the extra 8 bytes below the conversion slots.
 static void Hx_Door(void)
 {
 	s32 x;
@@ -926,7 +928,7 @@ static void Hx_Door(void)
 	case 1:
 		x = Hx_MotionUpdate(&hx.motion);
 		Hxs_FrBufferMorf2(x);
-		if ((u32)x >= hx.width / 2) {
+		if ((u32)x >= Hx_HalfWidth()) {
 			hx.step++;
 			Hx_MotionSet(&hx.motion, hx.width / 2, 5.0f, 6.0f, 5.0f);
 		}
@@ -936,7 +938,7 @@ static void Hx_Door(void)
 		Hxs_FrBufferMorf2(hx.width / 2);
 		x = Hx_MotionUpdate(&hx.motion);
 		Hxs_FrBufferMorf2B(x);
-		if ((u32)x >= hx.width / 2)
+		if ((u32)x >= Hx_HalfWidth())
 			hx.step++;
 		break;
 
@@ -1345,8 +1347,8 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 	}
 }
 
-// TODO: frame is right; the sx/sy quotients and the 0.5f / int-to-float
-// constants still take different volatile FPRs and load slots.
+// TODO: frame is right; the 0.5f load is scheduled ahead of sx * mag_scale and
+// cx takes f3 where retail takes f5 (x1/y1 swap f3/f4 in turn).
 static void Hxs_Logo_MagDraw(f32 mag_scale, f32 wd, f32 ht)
 {
 	f32 sx;
@@ -1364,10 +1366,8 @@ static void Hxs_Logo_MagDraw(f32 mag_scale, f32 wd, f32 ht)
 	sy = ht / 1.924138f;
 	cx = hx.width >> 1;
 	cy = hx.height >> 1;
-	hw = sx * mag_scale;
-	hh = sy * mag_scale;
-	hw *= 0.5f;
-	hh *= 0.5f;
+	hw = sx * mag_scale * 0.5f;
+	hh = sy * mag_scale * 0.5f;
 	x1 = cx - hw;
 	y1 = cy - hh;
 	u1 = x1 / (x1 - (cx + hw));
@@ -1431,9 +1431,12 @@ static void Hxs_PenDraw(f32 x, f32 y, u32 num, const HxDrawPath* dp)
 	}
 }
 
-// TODO: retail's frame is 8 bytes larger in the low region (the MagDraw
-// conversion slots sit at 0x10, ours at 0x08) and case 2 keeps dp in r6
-// where ours uses r5; a ternary or later `timg` load is worse.
+static inline u32 Hx_GetTimer(void) { return hx.timer; }
+
+// The fade-in test reads the timer through an inline, which gives the frame
+// retail's extra 8 bytes (as in Hx_Door).
+// TODO: case 2 keeps dp in r6 where ours uses r5 (r4 is never used there);
+// statement order, `else if` and a named copy of dp are inert.
 static void Hx_Logo(void)
 {
 	static HxDrawPath* dp;
@@ -1463,7 +1466,7 @@ static void Hx_Logo(void)
 		break;
 
 	case 1:
-		if (hx.timer <= 0xC0)
+		if (Hx_GetTimer() <= 0xC0)
 			Hxs_Logo_ExtraDraw(0xFF);
 		else
 			Hxs_Logo_ExtraDraw(((0x100 - hx.timer) * 4) & 0xFC);
@@ -1874,9 +1877,8 @@ static void Hxs1_Test2(u32 num, u32 dir, f32 cx, f32 cy, f32 r_out, f32 r_in)
 /* ------------------------------------------------------------------------- */
 /* Spiral wipe. */
 
-// TODO: retail's frame is 8 bytes larger in the low region (its conversion
-// slots start at 0x10, the gap Hx_Door shows), and it carries a dead `b` to
-// the epilogue ahead of case 0; `default` first or last does not produce it.
+// The finished step 2 is an explicit empty case: it is what leaves retail's
+// second `b` to the epilogue ahead of case 0.
 static void Hx_Test4(void)
 {
 	static f32 thin;
@@ -1884,14 +1886,18 @@ static void Hx_Test4(void)
 	static f32 thin_d;
 	static f32 rstep_d;
 
-	f32 r;
-	f32 ro;
-	f32 ri;
 	f32 a;
 	f32 x1;
 	f32 y1;
 	f32 x2;
 	f32 y2;
+	f32 nx1;
+	f32 ny1;
+	f32 nx2;
+	f32 ny2;
+	f32 r;
+	f32 ro;
+	f32 ri;
 	u32 i;
 
 	switch (hx.step) {
@@ -1918,7 +1924,7 @@ static void Hx_Test4(void)
 		rstep += rstep_d;
 		thin += thin_d;
 
-		r  = (hx.width >> 1) + 200;
+		r  = Hx_HalfWidth() + 200;
 		a  = 0.0f;
 		ro = r + thin;
 		x1 = (ro * sinf(a)) + hx.centerX;
@@ -1932,11 +1938,6 @@ static void Hx_Test4(void)
 		Hx_GxInit(0, 1);
 
 		for (i = 0; i < rstep; i++) {
-			f32 nx1;
-			f32 ny1;
-			f32 nx2;
-			f32 ny2;
-
 			r -= 2.4f;
 			ro = r + thin;
 			if (r < thin)
@@ -1971,6 +1972,8 @@ static void Hx_Test4(void)
 			hx.step++;
 		}
 		return;
+	case 2:
+		break;
 	}
 }
 
