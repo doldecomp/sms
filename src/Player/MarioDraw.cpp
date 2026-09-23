@@ -398,6 +398,11 @@ BOOL TMarioAnimeData::isPumpOK() const
 	return TRUE;
 }
 
+// TODO: 99.0%, frame 0x60 short. The default branch's head-rot block,
+// moved into a TMario member (`f32 headRot` picked by fabricatedIsPumping,
+// `-unkFC[2] * headRot`) and called here, closes every instruction (99.6),
+// but getHeadRot must stay 0x7c per the map and that body is 0xbc, so the
+// inlined helper is some other TMario member not yet identified.
 static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 {
 	// volatile u32 padding[34];
@@ -970,8 +975,7 @@ void TMario::changeHand(int idx)
 	flagOnAllShapes(mRHand4ndModel->getModelData(), J3DShpFlag_Visible);
 }
 
-// UNUSED (0x90 -- changeHandByRate). Dead: `calcAnim` carries the same block
-// written out.
+// UNUSED (0x90 -- changeHandByRate); `calcAnim` inlines it.
 void TMario::changeHandByRate(f32 rate)
 {
 	if (rate < 0.3f) {
@@ -2140,16 +2144,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (mStatus == MARIO_STATUS_RUN && mAnimationId != ANIM_SSTEP) {
-		f32 blendRatio = unk414.z;
-		if (blendRatio < 0.3f) {
-			changeHand(2);
-		}
-		if (0.3f <= blendRatio && blendRatio <= 0.7f) {
-			changeHand(1);
-		}
-		if (0.7f < blendRatio) {
-			changeHand(0);
-		}
+		changeHandByRate(unk414.z);
 	}
 
 	if (mAnimationId == ANIM_DEMO_GATE_OUT_GET2) {
