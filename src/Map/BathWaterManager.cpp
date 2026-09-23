@@ -1100,8 +1100,9 @@ public:
 
 	// TODO: frame is 0x50 short (retail -0x380): retail leaves 0x5c unused
 	// between the look-dir vector (0x158) and up (0x1c0) and 0x38 between the
-	// drop position (0x23c) and proj (0x280), and holds `this` in r27, not r26
-	// (one callee-saved GPR fewer in use); moving the drop matrices is inert.
+	// drop position (0x23c) and proj (0x280); moving the drop matrices is inert.
+	// The drop loop's param loads (0xcc/0x90/0xf4) schedule around the
+	// position copy differently; naming the scale or moving `pos` is inert.
 	virtual void prerender(JDrama::TGraphics* graphics,
 	                       const TBathtubData& data, TBathWater** waters,
 	                       TBathWaterParams** params, int num)
@@ -1196,9 +1197,8 @@ public:
 				for (u16 s = 0; s < dropModel->getShapeNum(); s++) {
 					J3DShape* shape = dropModel->getShapeNodePointer(s);
 					for (u16 mg = 0; mg < shape->getMtxGroupNum(); mg++) {
-						J3DShapeDraw* sd = shape->getShapeDraw(mg);
-						if (sd)
-							sd->draw();
+						if (shape->getShapeDraw(mg))
+							shape->getShapeDraw(mg)->draw();
 					}
 				}
 			}
