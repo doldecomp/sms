@@ -1,5 +1,7 @@
 # Agent Guide for Super Mario Sunshine (SMS) Decompilation
 
+For parallel Claude and Codex orchestrators, follow `docs/CODEX_INTEGRATION.md` and claim work before creating a unit worktree.
+
 This document describes the structure, conventions and workflows of this repository to help AI agents contribute effectively. The project is a matching decompilation of **Super Mario Sunshine** (GameCube, MWCC 1.2.5 C++ compiler, PowerPC Gekko target).
 
 Important preliminary note: always prefer putting sentences in `.md` files on different lines to reduce the diff shown in git when rewording just one sentence — the lines still get collapsed into a single paragraph as per `.md` formatting rules.

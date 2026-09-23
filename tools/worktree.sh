@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Manage build-capable git worktrees for parallel agents.
 #
-#   tools/worktree.sh add <name> [base-ref]   create ../sms-wt/<name> on branch wt/<name>,
+#   tools/worktree.sh add <name> <unit> [base-ref]  create ../sms-wt/<name> on branch wt/<name>,
+#   tools/worktree.sh add <name> --no-claim [base-ref]  research/infrastructure escape
 #                                             wire it to the shared toolchain, build it and
 #                                             take a baseline
 #   tools/worktree.sh merge <name>            rebase wt/<name> onto the current branch and
@@ -10,6 +11,7 @@
 #                                             and symbol order for each unit; exit 1 if red
 #   tools/worktree.sh remove <name>           remove the worktree and its branch
 #   tools/worktree.sh list
+#   tools/worktree.sh locked <cmd...>      run a main-checkout operation under the land lock
 #
 # Everything under build/ and orig/ is untracked, so a bare `git worktree add`
 # cannot build. Each worktree gets symlinks to the shared, read-only pieces
@@ -22,6 +24,9 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 WT_ROOT=${SMS_WORKTREES:-$ROOT/../sms-wt}
 VERSION=GMSE01
+COMMON_DIR=$(git -C "$ROOT" rev-parse --git-common-dir)
+COMMON_DIR=$(cd "$ROOT" && cd "$COMMON_DIR" && pwd)
+LAND_LOCK=$COMMON_DIR/sms-land.lock
 
 usage() { sed -n '2,12p' "$0"; exit 2; }
 
@@ -31,7 +36,17 @@ cmd=${1:-}; name=${2:-}
 case "$cmd" in
 add)
 	[ -n "$name" ] || usage
-	base=${3:-HEAD}
+	unit=${3:-}
+	[ -n "$unit" ] || { echo "add requires a claimed unit or --no-claim" >&2; exit 2; }
+	if [ "$unit" != --no-claim ]; then
+		[[ "$unit" == unit:* ]] || unit="unit:$unit"
+		owner=codex
+		[[ "$name" == c-* ]] && owner=claude
+		python3 "$ROOT/tools/claim.py" who "$unit" --worktree "$name" --owner "$owner" >/dev/null || {
+			echo "add refused: $name does not hold $unit" >&2; exit 1;
+		}
+	fi
+	base=${4:-HEAD}
 	path=$WT_ROOT/$name
 	[ ! -e "$path" ] || { echo "$path already exists" >&2; exit 1; }
 	mkdir -p "$WT_ROOT"
@@ -81,6 +96,11 @@ merge)
 	echo "merged wt/$name into $target; now run ninja changes_all and the DOL SHA-1 check here"
 	;;
 land)
+	[ -n "$name" ] || usage
+	shift 2
+	exec flock -x "$LAND_LOCK" "$0" _land_unlocked "$name" "$@"
+	;;
+_land_unlocked)
 	# land <name> <unit>...: merge, then verify in the main checkout and print
 	# a compact report. Exit 1 on any regression or a DOL mismatch.
 	[ -n "$name" ] || usage
@@ -103,6 +123,11 @@ land)
 		/->/ { split($3, a, "->"); gsub(/[ %]/, "", a[1]); gsub(/[ %]/, "", a[2]); n++
 		       if (a[2] + 0 < a[1] + 0) { r++; print "REGRESSION:", $0 } }
 		END { printf "== changes_all: %d changed lines, %d regressions\n", n, r + 0; exit (r + 0) > 0 }' || rc=1
+	if [ "$rc" -ne 0 ]; then
+		git reset -q --hard "$pre"
+		echo "!! LAND REVERTED: changes_all regression; wt/$name keeps its commits"
+		exit 1
+	fi
 	sha=$(sha1sum build/GMSE01/mario.dol | cut -d' ' -f1)
 	if [ "$sha" = "$(cat config/$VERSION/build.sha1 | cut -d' ' -f1)" ]; then
 		echo "== DOL sha1 OK"
@@ -134,6 +159,11 @@ remove)
 	;;
 list)
 	git -C "$ROOT" worktree list
+	;;
+locked)
+	shift
+	[ "$#" -gt 0 ] || usage
+	exec flock -x "$LAND_LOCK" "$@"
 	;;
 *)
 	usage

@@ -1,5 +1,12 @@
 # Orchestration guide
 
+## Parallel orchestrators
+
+Codex and Claude coordinate unit and header ownership through `tools/claim.py` and serialize landing with `tools/worktree.sh land` or `tools/worktree.sh locked`.
+Read [CODEX_INTEGRATION.md](CODEX_INTEGRATION.md) for the shared protocol.
+Codex takes functions below 95% fuzzy and those with real instruction differences; Claude takes near-exact residue and link work.
+Either may cross the split after claiming the unit.
+
 Read by the orchestrating session only; agents do not need it. `docs/HANDOFF.md` carries the previous orchestrator's judgement, yields per batch type and open leads; append to its state log when you stop.
 `STRATEGY.md` is the work order, `PROGRESS.md` the numbers, `docs/TIMELINE.md` the history.
 
