@@ -60,3 +60,11 @@ Record binary-backed findings from Codex unit work here before promoting reusabl
 - `Map/MapWire`: Naming x in `getPointPosDefault` improved `getPointPosOnWire` but regressed `move`; naming x/z changed the frame. Source restored.
 - `Player/MarioDraw`: The paired waist pitch/roll loads follow right-to-left argument evaluation. Swapping source arguments would rotate the wrong axes; `calcBaseMtx` retains documented frame residue. No edit.
 - `Camera/CameraBGCheck`: `calcInHouseNo_` has a documented deep search of its far-vector pointer and loop layout. No justified change from the isolated store offset.
+
+## 2026-09-23 operand scan continuation
+
+- `GC2D/CardLoad`: Retail loads 1.5f for both dimensions of the middle choice pane in `TCardLoad::waitForChoiceBM`; source used 0.5f. Correcting both factors removed one operand mismatch marker (`~253` to `~252`). Frame remains 0x468 retail versus 0x3f8 source, so the function and unit remain nonexact. Landed as 1d645406.
+- `Player/MarioAutodemo`: Retail multiplies normalized x/z movement by 50.0f before 2.0f in `TMario::readBillboard`; source had the float operations reversed. Correcting the order improved 99.8% (`~15` markers) to 99.9% (`~13` markers) with the same 520-byte body. Its 0x70 versus 0x30 frame gap remains. Landed as bd64a8fa.
+- `Enemy/conductor`: `TConductor::isBossDefeated` dispatches every map except 3 to the hinokuri arm in retail. The source only spells cases 2 and 3; its TODO already records failed switch/default variants. The unit was Claude-claimed when found, so Codex made no edit.
+- `Enemy/bosswanwan`, `Enemy/feetinv`, `Enemy/beam`, `Enemy/Kumokun::initAttachPlane`, and `Player/WaterGun`: Follow-up operand candidates were explained by equivalent Boolean order, commutative matrix sums, constant-label aliases, instruction scheduling, or diff alignment. No edits.
+- Across 93 sub-95% game functions and 358 functions at 95–99.5% fuzzy, a virtual-call slot scan found no further aligned slot error. Branch/call scans of 69 sub-95% functions found no other binary-backed semantic correction.
