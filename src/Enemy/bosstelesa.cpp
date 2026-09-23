@@ -263,8 +263,21 @@ const TNerveBubbleLive& TNerveBubbleLive::theNerve()
 	return instance;
 }
 
-// TODO: incorrect size. Map records 216 bytes.
-void TBubble::appendItem() { }
+void TBubble::appendItem()
+{
+	mEnemyInside = nullptr;
+
+	TItem* item = (TItem*)gpItemManager->makeObjAppear(
+	    mPosition.x, mPosition.y, mPosition.z, 0x20000008, true);
+	if (item && item->receiveMessage(this, HIT_MESSAGE_TAKE)) {
+		item->appear();
+		item->mPosition = mPosition;
+		item->mVelocity.set(0.0f, 15.0f, 0.0f);
+		item->offLiveFlag(LIVE_FLAG_UNK10);
+		mHeldObject  = item;
+		mEnemyInside = item;
+	}
+}
 
 // TODO: +0x10 of named block above the TMsRange (TVec3 call temp already
 // sits at 0x10). A conductor binder lands the 0x50 frame from the pool
@@ -1802,21 +1815,15 @@ void TBossTelesa::offAllCollision()
 
 const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
 
-// The ROM's frame needs one inline level at the first makeOneEnemyAppear and
-// none at the second: the binder is +8 there and +0x10 at both sites.
-static inline TConductor* BossTelesaGenAttackerConductor()
-{
-	TConductor* conductor = gpConductor;
-	return conductor;
-}
-
+// The item branch is the map's UNUSED TBubble::appendItem (0xd8), inlined;
+// its inline level is what the frame needed at the first makeOneEnemyAppear.
 // TODO: every instruction matches; `chance` sits at 0x54 instead of 0x58, so
-// some 4-byte named slot above it is still missing (speed, item, bubble and
-// declaration-order moves are inert).
+// some 4-byte slot is still missing (speed, item, bubble, declaration-order
+// moves and `!p`/`p == nullptr` forks are inert).
 void TBossTelesa::genAttacker()
 {
 	if (unk150) {
-		TTelesa* telesa = (TTelesa*)BossTelesaGenAttackerConductor()->makeOneEnemyAppear(
+		TTelesa* telesa = (TTelesa*)gpConductor->makeOneEnemyAppear(
 		    mPosition, "テレサマネージャー", 1);
 		if (telesa)
 			telesa->initAttacker(this);
@@ -1857,19 +1864,7 @@ void TBossTelesa::genAttacker()
 
 		TMsRange<f32> chance(0.0f, 1.0f);
 		if (chance.rand() < mItemGenRate) {
-			bubble->mEnemyInside = nullptr;
-
-			TItem* item = (TItem*)gpItemManager->makeObjAppear(
-			    bubble->mPosition.x, bubble->mPosition.y, bubble->mPosition.z,
-			    0x20000008, true);
-			if (item && item->receiveMessage(bubble, HIT_MESSAGE_TAKE)) {
-				item->appear();
-				item->mPosition = bubble->mPosition;
-				item->mVelocity.set(0.0f, 15.0f, 0.0f);
-				item->offLiveFlag(LIVE_FLAG_UNK10);
-				bubble->mHeldObject  = item;
-				bubble->mEnemyInside = item;
-			}
+			bubble->appendItem();
 		} else if (chance.rand() < mEnemyGenRate) {
 			bubble->appendEnemy();
 		}
