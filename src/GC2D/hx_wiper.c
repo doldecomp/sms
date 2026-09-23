@@ -754,53 +754,74 @@ static void Hxs1_Circle(f32 r)
 }
 
 /// One translucent ring of the iris.
+// TODO: GPR colouring (retail: colour r28, y r25) and the sqrtf slots
+// (retail 0xb0/0xac, adjacent) differ; instructions are otherwise exact.
 static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out)
 {
+	u32 color;
 	u32 y;
+	f32 ri2;
+	f32 ro2;
+	Vec p[2];
+	Vec d[2];
 
 	Hx_CameraInit();
 	Hx_GxInit(0, 1);
 
+	ri2 = r_in * r_in;
+	color = alpha;
+	ro2 = r_out * r_out;
+
 	for (y = hx.centerY - r_out; y <= hx.centerY; y++) {
 		f32 dy = hx.centerY - y;
-		f32 sq = dy * dy;
-		f32 dx_out = (r_out * r_out) - sq;
 
-		if (dx_out > 0.0f)
-			dx_out = sqrtf(dx_out);
+		d[0].x = sqrtf(ro2 - dy * dy);
+		p[0].z = 1.0f;
+		p[1].z = 1.0f;
+		p[0].y = y;
+		p[1].y = y;
 
 		if (dy >= r_in) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
-			GXPosition3f32(hx.centerX - dx_out, y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX + dx_out, y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX - dx_out, hx.height - y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX + dx_out, hx.height - y, 1.0f);
-			GXColor1u32(alpha);
+			p[0].x = hx.centerX - d[0].x;
+			p[1].x = hx.centerX + d[0].x;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
+			GXColor1u32(color);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
+			GXColor1u32(color);
+			p[0].y = hx.height - y;
+			p[1].y = hx.height - y;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
+			GXColor1u32(color);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
+			GXColor1u32(color);
 		} else {
-			f32 dx_in = (r_in * r_in) - sq;
-			if (dx_in > 0.0f)
-				dx_in = sqrtf(dx_in);
-
+			d[1].x = sqrtf(ri2 - dy * dy);
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
-			GXPosition3f32(hx.centerX - dx_out, y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX - dx_in, y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX + dx_in, y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX + dx_out, y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX + dx_in, hx.height - y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX + dx_out, hx.height - y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX - dx_out, hx.height - y, 1.0f);
-			GXColor1u32(alpha);
-			GXPosition3f32(hx.centerX - dx_in, hx.height - y, 1.0f);
-			GXColor1u32(alpha);
+			p[0].x = hx.centerX - d[0].x;
+			p[1].x = hx.centerX - d[1].x;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
+			GXColor1u32(color);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
+			GXColor1u32(color);
+			p[0].x = hx.centerX + d[1].x;
+			p[1].x = hx.centerX + d[0].x;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
+			GXColor1u32(color);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
+			GXColor1u32(color);
+			p[0].y = hx.height - y;
+			p[1].y = hx.height - y;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
+			GXColor1u32(color);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
+			GXColor1u32(color);
+			p[0].x = hx.centerX - d[0].x;
+			p[1].x = hx.centerX - d[1].x;
+			GXPosition3f32(p[0].x, p[0].y, p[0].z);
+			GXColor1u32(color);
+			GXPosition3f32(p[1].x, p[1].y, p[1].z);
+			GXColor1u32(color);
 		}
 	}
 }
