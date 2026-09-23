@@ -55,11 +55,12 @@ void TRailMapObj::initGraphTracer(TGraphWeb* graph)
 		}
 
 		TGraphNode& node    = graph->getGraphNode(unk138->getCurGraphIndex());
-		TRailNode* railNode = node.getRailNode();
+		TRailNode* railNode = node.unk0;
 		if (railNode->mFlags & 0x80)
 			onRailFlag(2);
 
-		resetStep(unk144);
+		f32 step = getUnk144();
+		resetStep(step);
 	}
 }
 

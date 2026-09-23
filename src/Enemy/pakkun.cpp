@@ -520,7 +520,7 @@ void TPakkun::seedPollute(JGeometry::TVec3<f32>& pos)
 // along the direction so the plant keeps facing the shot.
 void TPakkun::onShootLiner(JGeometry::TVec3<f32>& dir)
 {
-	JGeometry::TVec3<f32> goal(mPosition);
+	JGeometry::TVec3<f32> goal(getPosition());
 	goal.x += 200.0f * dir.x;
 	goal.z += 200.0f * dir.z;
 	setGoalPath(TPathNode(goal));
@@ -534,7 +534,7 @@ void TPakkun::onShootLiner(JGeometry::TVec3<f32>& dir)
 	// TODO: frame is exact now, but every stack temporary still sits 4 bytes
 	// low (goal at 0x28 against retail's 0x2c) -- 4 more bytes of low pool
 	// are missing; a named TPathNode and a const f32& binding both fail.
-	f32 speed = getSaveLoadParam()->mSLSeedSpeedS.value;
+	f32 speed = mSaveParams->mSLSeedSpeedS.value;
 	dir.x *= speed;
 	dir.y = -5.0f;
 	dir.z *= speed;

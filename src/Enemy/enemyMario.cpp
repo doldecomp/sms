@@ -736,20 +736,20 @@ void TEnemyMario::emRunAway()
 // TODO: frame only -- retail reserves 0x20 more stack (0x50 against 0x30).
 void TEnemyMario::emJumping()
 {
-	if (mStatus & MARIO_STATUS_FLAG_JUMPING) {
-		if (mStatus != MARIO_STATUS_WALL_SLIDE || mStatusTimer >= 10) {
+	if (getStatus() & MARIO_STATUS_FLAG_JUMPING) {
+		if (getStatus() != MARIO_STATUS_WALL_SLIDE || mStatusTimer >= 10) {
 			setStickToAngle(mFaceAngle.y, 1.0f);
 			unk108->mInput |= TMarioControllerWork::A;
 			if (-1.0f < mVel.y && mVel.y < 1.0f && rand() < 0xFFF) {
 				unk108->mInput |= TMarioControllerWork::B;
 			}
 		}
-	} else if (mStatus == MARIO_STATUS_HANGING) {
+	} else if (getStatus() == MARIO_STATUS_HANGING) {
 		if (mStatusTimer >= 10) {
 			unk108->mInput |= TMarioControllerWork::A;
 		}
-	} else if (mStatus & 0x600) {
-		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 384.0f);
+	} else if (getStatus() & 0x600) {
+		gpPollution->pollute(getPosition().x, getPosition().y, getPosition().z, 384.0f);
 		changeEMDoing(EM_DOING_WAITING);
 	}
 }
