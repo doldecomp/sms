@@ -1353,10 +1353,26 @@ void TKoopa::reset()
 	mWaitTimer = 600;
 }
 
-// TODO: 88.8%. The ROM keeps flameScale in memory and `bl`s TVec3::set for
-// the last four emitters while inlining it for the first; ours keeps the
-// scale in f31 and inlines all five. A one-level helper over setGlobalScale
-// at those four sites is inert.
+// The last four flames go through two helper levels, which is what leaves
+// TVec3::set a call inside their setGlobalScale while the first flame's
+// expands.
+static inline void KoopaScaleFlame(JPABaseEmitter* emitter,
+                                   const JGeometry::TVec3<f32>& scale)
+{
+	emitter->setGlobalScale(scale);
+}
+
+static inline void KoopaEmitFlame(TKoopa* koopa, s32 id,
+                                  const JGeometry::TVec3<f32>& scale)
+{
+	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+	    id, koopa->getHeadMtx(), 1, koopa);
+	if (emitter)
+		KoopaScaleFlame(emitter, scale);
+}
+
+// TODO: frame 0x50 short (0x48 in the low region, 8 above flameScale);
+// every instruction matches.
 void TKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -1396,25 +1412,13 @@ void TKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (emitter)
 				emitter->setGlobalScale(flameScale);
 
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    KOOPA_JPA_MS_KP_FIRE_D, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
+			KoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_D, flameScale);
 
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    KOOPA_JPA_MS_KP_FIRE_C, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
+			KoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_C, flameScale);
 
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    KOOPA_JPA_MS_KP_FIRE_B, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
+			KoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_B, flameScale);
 
-			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-			    KOOPA_JPA_MS_KP_FIRE_A, getHeadMtx(), 1, this);
-			if (emitter)
-				emitter->setGlobalScale(flameScale);
+			KoopaEmitFlame(this, KOOPA_JPA_MS_KP_FIRE_A, flameScale);
 		}
 	}
 }
