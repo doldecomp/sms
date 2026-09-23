@@ -315,9 +315,16 @@ BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
 // subtracts in place, then copies the difference into a by-value length
 // level that squares it and calls TUtil<f32>::sqrt out of line (the same
 // shape as TYoshiTongue::movement's grab-range test).
+// Retail keeps the three squares apart (three `fmuls`, two `fadds`), so the
+// level names them as CameraNoticeSquaredDist does; `v.squared()` contracts
+// into an `fmadds`, which shifts the @3054 jump table's targets by one word.
+// TODO: retail squares x into f1 and y into f0; ours swaps the two.
 static inline f32 ModelGateLength(JGeometry::TVec3<f32> v)
 {
-	return JGeometry::TUtil<f32>::sqrt(v.squared());
+	f32 sqX = v.x * v.x;
+	f32 sqY = v.y * v.y;
+	f32 sqZ = v.z * v.z;
+	return JGeometry::TUtil<f32>::sqrt(sqX + sqY + sqZ);
 }
 
 static inline f32 ModelGateDist(JGeometry::TVec3<f32> a,
