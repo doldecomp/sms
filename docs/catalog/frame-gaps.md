@@ -1938,3 +1938,13 @@ Nothing was committed.
   - `TMirrorActor` wants +16/+8/+0; `SDLModel` wants +12 on its lower pool words and +8 on its upper ones.
   - Each is a different set of eliminated binding temporaries, set by the site's own receiver and argument expressions.
   - Treat these as per-site closures (which caller expressions are "unsafe" and bound), not a header round.
+
+## Research r1 (2026-09-22): shared causes among the 49 frame-only functions
+
+- Census: a map-versus-`nm -S` size comparison over all 41 units in the frame-only list finds no UNUSED helper off its map size and none missing; the misspelled-helper class is invisible to size checks here.
+- Only bosseel has three or more members sharing an inlined helper (`TBossEel::setBckAnm`, UNUSED 0xf8, inlined into every nerve); hinokuri2 and fruitsboat's graph-wander nerves share nothing structural.
+- `setBckAnm` spelled as `docs/progress/lever-search/bosseel_setbckanm_248.patch` but with `getBossEelParams()` kept at `ExecSpinNerve_Sub`'s accel read: 125 exact (HEAD 125). OutWait closes; FirstSpin goes +8 (0x90 against 0x88).
+- Dropping the patch's `ratio` local fixes FirstSpin but reopens OutWait, WaitAppear and SleepOnBottom (122). With `!spine->getTime()` in FirstSpin the frame lands but `spinSpeed` sits at 0x68 against retail 0x6c, under the 0x70 conversion temp: the inlined `ratio` holds a named-block slot, so retail's per-site +4 lives in the low region, not in a named local.
+- Inert or worse on that base: an `int prev` for `getCurAnmIdx`, `ratio` declared first, a named `oldAnm` (+4 size), `rate` declared after `ctrl` (schedule breaks), a named `basName` (+4 size), a TU-local blend-ratio setter, a `getFrameCtrl` fork, and in FirstSpin `SMSGetMSound()`, a raw accel read, and a `gpMSound` roll sound.
+- Eat and Die stay 0x28 short on that base (Die uniform low region; Eat has an extra 8 bytes between the `TFlagT` and `canEatMario`'s vector). They are inert to `getMActor()` at all `mMActor` sites (Die -8) and to `getSpine()` or `!= nullptr` in the inlined `setBubble`/`generateBubble`.
+- Open: the low-region +4 per `setBckAnm` expansion that retail has and that no named local can supply.

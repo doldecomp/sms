@@ -343,6 +343,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - Before diffing a ranked target, skip functions whose TODO already records a deep search: most misses in the byte-ranked run were re-diffing explored residues.
 - A zero-initialised aggregate feeding only a member copy, moved into an inlined helper, drops from the named block to the low region; give each caller its own helper, since a shared one merges `.rodata` literals (MtxUtil `calcLocalXY`).
 - `TParamRT::get()` behind `getSaveParams()` costs 0x10 pool per site; mix raw and plain-cast reads (Kukku `updateRotation`).
+- Size-exact is not frame-exact: every UNUSED helper in the 41 units of the 49 frame-only functions (2026-09-22 census) already has its map size, so a map-size check cannot find these gaps; they come from how the helper spells its locals and levels, which only the callers' frames show (frame-gaps.md: "Research r1").
+- A named scalar local inside an inlined helper (`f32 ratio = 1.0f;` in bosseel `setBckAnm`) gets a slot in the caller's **named** block, ahead of later expansions' named locals; it cannot stand in for a +4 that retail keeps in the low region (FirstSpin's `spinSpeed` lands 4 below retail under the 0x70 conversion temp) (frame-gaps.md: "Research r1").
+- bosseel `setBckAnm` respelling (patch 248, `getBossEelParams()` kept at `ExecSpinNerve_Sub`'s accel read) is a pure swap at 125 exact functions: OutWait, SecondSpin, WaitAppear and SleepOnBottom exact, FirstSpin +8; Eat/Die stay 0x28 short, uniform low region, and are inert to `getMActor()` at every `mMActor` site and to `getSpine()` in the inlined `setBubble` (frame-gaps.md: "Research r1").
 
 ## Register and scheduling residues
 
