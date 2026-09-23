@@ -656,17 +656,14 @@ namespace {
 // TKoopa::getNeckFocus() scales, and while he is breathing fire it first
 // swings the head sideways and down by getFlameDirRate().
 //
-// TODO: 88.4%. Every statement is in place and in the ROM's order; what is
-// left is register colouring and scheduling. We save f14 as well (retail
-// stops at f15), which renumbers the saved registers through the two
-// hand-expanded Ry/Rz concatenations, and the frame is 0x2c0 against
-// 0x2d0 (retail has 0x38 bytes of named locals above `focus` and 0x30
-// between it and `quat`, and no gap between `quat` and `twist`).
-// `getFlameDirRate() *
-// 2pi` also multiplies with the operands swapped (inert when respelled).
-// The single `rot` matrix is shared by all three products: separate
-// matrices for Ry and Rz cost 0x60 of frame. Moving either rotation into a
-// helper pushes its set() out of line and loses the literal 0/1 products.
+// The two flame rotations are TRotation3's setEularY/setEularZ; only the
+// first clears the translation column, which setEularZ then leaves alone.
+//
+// TODO: 92.4%. Frame and statement order match; we save f14 as well
+// (retail stops at f15), which renumbers registers through the Ry product,
+// and that product keeps 1.0f in a saved register where retail reloads it
+// into a volatile one. `getFlameDirRate() * 2pi` also multiplies with the
+// operands swapped (inert when respelled, as are yaw/angle respellings).
 static inline f32 KoopaAngleBetween(const JGeometry::TVec3<f32>& a,
                                      const JGeometry::TVec3<f32>& b)
 {
@@ -703,16 +700,11 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 		if (koopa->mTurnsLeft)
 			yaw = -yaw;
 
-		f32 sinYaw = sinf(yaw);
-		f32 cosYaw = cosf(yaw);
-		rot.set(cosYaw, 0.0f, sinYaw, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, -sinYaw,
-		         0.0f, cosYaw, 0.0f);
+		rot.setEularY(yaw);
+		rot.setTrans(0.0f, 0.0f, 0.0f);
 		mtx->concat(rot, *mtx);
 
-		f32 sinPitch = sinf(pitch);
-		f32 cosPitch = cosf(pitch);
-		rot.set(cosPitch, -sinPitch, 0.0f, 0.0f, sinPitch, cosPitch, 0.0f,
-		         0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+		rot.setEularZ(pitch);
 		mtx->concat(*mtx, rot);
 	}
 
