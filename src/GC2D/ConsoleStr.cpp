@@ -402,11 +402,11 @@ bool TConsoleStr::processReady(int param_1)
 			unk278[i]->getPane()->setAlpha(0);
 		} else if (param_1 < i * 10 + 30) {
 			unk278[i]->update();
-			J2DPane* pane = unk278[i]->getPane();
-			u16 alpha     = pane->getAlpha() + 9;
+			u16 alpha = unk278[i]->getPane()->getAlpha();
+			alpha += 9;
 			if (alpha > 0xFF)
 				alpha = 0xFF;
-			pane->setAlpha(alpha);
+			unk278[i]->getPane()->setAlpha(alpha);
 		} else if (param_1 >= i * 10 + 130) {
 			if (param_1 == i * 10 + 130) {
 				JUTRect rect = unk278[i]->getPane()->getBounds();
@@ -415,11 +415,12 @@ bool TConsoleStr::processReady(int param_1)
 				unk278[i]->setCenteredSize(0x1E, w - 20, h - 20, w, h);
 			} else if (param_1 < i * 10 + 160) {
 				unk278[i]->update();
-				s16 alpha = unk278[i]->getPane()->getAlpha();
+				J2DPane* pane = unk278[i]->getPane();
+				s16 alpha     = pane->getAlpha();
 				alpha -= 9;
 				if (alpha < 0)
 					alpha = 0;
-				unk278[i]->getPane()->setAlpha(alpha);
+				pane->setAlpha(alpha);
 			} else if (i == 4) {
 				result = true;
 			}

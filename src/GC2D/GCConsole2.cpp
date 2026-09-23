@@ -2868,6 +2868,9 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	return true;
 }
 
+// TODO: retail adds unk26A + offset (add r0, r26A, rneg) where we emit the
+// operands swapped; the pauseOut expansion also swaps r25/r26 on the unk160
+// pane. Inert: named/unnamed sum, +=, s16/int casts, raw unk26A, ~y2, -y2-1.
 void TGCConsole2::startDisappearStar()
 {
 	int offset = -(getUnk140()->mInitialBounds.y2 + 1);
@@ -2882,6 +2885,8 @@ void TGCConsole2::startDisappearStar()
 	unk5A = 1;
 }
 
+// TODO: the unk108 updatePaneOffset takes r29/r27 for getCurrentY/X where
+// retail reuses r30/r29; inert: raw mVisible, named pane, explicit setPaneOffset.
 void TGCConsole2::startAppearStar()
 {
 	if (unk34 || unk140->isInterpolatorAtZero())
