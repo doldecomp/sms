@@ -1475,6 +1475,12 @@ void TBossGesso::doAttackRoll()
 	changeAttackMode(ASTATE_SINGLE);
 }
 
+// TODO: 97.8%, frame 0xe0 against 0xe8. At the ASTATE_GUARD expansion retail
+// calls SMS_GetMarioPos out of line (its only bl in the TU, hence the weak
+// copy) and multiplies 0.5f * sightAngle after inSight() returns: the
+// inSightAngle -> inSight chain has one more inline level in retail (the map
+// sizes agree: inSightAngle 0x16c vs our 0xc4, inSight 0x17c vs 0x184).
+// Dropping the sightAngle local or wrapping the guard body were inert.
 void TBossGesso::moveObject()
 {
 	TLiveActor::moveObject();
