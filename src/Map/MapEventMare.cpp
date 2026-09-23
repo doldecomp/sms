@@ -367,7 +367,12 @@ void TMareEventDepressWall::rising()
 	unk44 = 2;
 }
 
-void TMareEventDepressWall::startToRise() { }
+void TMareEventDepressWall::startToRise()
+{
+	unk28[unk48].setUp();
+	unk24[unk48].remove();
+	unk44 = 3;
+}
 
 void TMareEventDepressWall::emitEffect(int idx)
 {
@@ -478,9 +483,7 @@ void TMareEventDepressWall::perform(u32 cue, JDrama::TGraphics* graphics)
 		case 2:
 			if (!TMapObjBase::isDemo()) {
 				if (unk4C == 0) {
-					unk28[unk48].setUp();
-					unk24[unk48].remove();
-					unk44 = 3;
+					startToRise();
 					return;
 				}
 				unk4C -= 1;
