@@ -765,6 +765,11 @@ static void Hxs1_Circle(f32 r)
 // otherwise exact. Passing alpha straight to GXColor1u32 gets r28 but sinks
 // the clrlwi past the loop setup; color as s32/int/u8, or declared or
 // assigned elsewhere, is inert.
+// Retail's two sqrtf slots are adjacent just under the named block (as in
+// Hxs1_Circle), so no inline's slots are reserved between the two
+// expansions; ours has the if-branch GX inlines' 0x2c between them. A
+// block-scoped color, the y/color order, and `static const` or block-scoped
+// temporaries in math.h's sqrtf are all inert.
 static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out)
 {
 	u32 color;
@@ -969,6 +974,12 @@ static void Hx_Door(void)
 // -0xc) but hoists the initialiser to the top; C89 forbids declaring it at
 // its use, a nested block sends it low, and a static const source changes
 // the pool and the sqrtf colouring.
+// Slot map (retail): rotMtx 0x58, a 0x18 hole 0x88-0xa0, axis 0xa0,
+// fadeColor 0xac, 0x30 reserved for st (never stored) 0xb0, obj 0xe0; the
+// low sqrtf slots sit 0xc higher than ours. A static inline fade helper,
+// field-wise assignment of an uninitialised fadeColor, a block reaching to
+// the end of the function (with or without the other locals inside) and a
+// non-constant initialiser at function scope are inert or worse.
 static void Hxs_GameOver(u8 fade_alpha, f32 scale, f32 rotation)
 {
 	GXTexObj obj;
@@ -1310,6 +1321,10 @@ static void Hxs_Logo_TexSetup(u8 alpha_in, u8 fade_in, const ResTIMG* timg)
 // d earlier. Declaration order (C-style, any of five orders), dx..py in the
 // if block, and dividing x1..y2 and wd/ht in place are all inert here;
 // dividing x1..y2 in place does get ox/oy into f29/f28.
+// With x1..y2 divided in place, the named f32 locals take f31 down in
+// declaration order and the parameters follow in reverse, except dx, which
+// lands in f22 wherever it is declared (30 orders tried); dx's colouring is
+// the blocker, together with the d.y reload retail hoists above GXBegin.
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 {
 	Vec d;
@@ -1461,6 +1476,9 @@ static inline u32 Hx_GetTimer(void) { return hx.timer; }
 // retail's extra 8 bytes (as in Hx_Door).
 // TODO: case 2 keeps dp in r6 where ours uses r5 (r4 is never used there);
 // statement order, `else if` and a named copy of dp are inert.
+// Retail's case 2 skips r4 (dp r6, dp+1 r5): an extra short-lived value
+// there. count = count + 1, ++/+= spellings, dp = &dp[1], (dp++)->y,
+// !dp->wait, and count++ first are inert or worse.
 static void Hx_Logo(void)
 {
 	static HxDrawPath* dp;
