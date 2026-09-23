@@ -1721,8 +1721,14 @@ void TFireWanwan::bind()
 
 	mVelocity *= getSaveParam2()->mAirFric.get();
 
-	JGeometry::TVec3<f32> vel     = mVelocity;
-	JGeometry::TVec3<f32> velStep = mLinearVelocity;
+	// TODO: every instruction matches; the frame is 0x10 short (0x148 vs
+	// 0x158). Retail keeps velStep at 0x114 with a 4-byte hole below it and
+	// the mLinearVelocity copy at 0xdc, under the loop's two vectors; ours
+	// names it between velStep and totalNormal. `mVelocity +
+	// mLinearVelocity` lands the frame but calls `add` out of line; an
+	// explicit TVec3 temporary is identical to the named copy.
+	JGeometry::TVec3<f32> velStep = mVelocity;
+	JGeometry::TVec3<f32> vel     = mLinearVelocity;
 	velStep += vel;
 
 	int stepCount = int(velStep.length() / 25.0f) + 1;
@@ -1734,9 +1740,9 @@ void TFireWanwan::bind()
 	for (int i = 0; i < stepCount; ++i) {
 		JGeometry::TVec3<f32> boundStep;
 		JGeometry::TVec3<f32> stepNormal;
-		iVar12 += bindBody(&boundStep, &stepNormal, velStep);
-
-		bVar2 &= checkLiveFlag2(LIVE_FLAG_AIRBORNE);
+		int hit = bindBody(&boundStep, &stepNormal, velStep);
+		bVar2 &= isAirborne();
+		iVar12 += hit;
 
 		mPosition += boundStep;
 		totalNormal += stepNormal;
