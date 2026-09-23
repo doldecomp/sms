@@ -1601,10 +1601,10 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 			ctrl->setRate(SMSGetAnmFrameRate());
 		}
 		boss->getMActor()->setBtpFromIndex(0);
-		J3DFrameCtrl* btk
-		    = boss->getMActor()->getFrameCtrl(ANM_TYPE_BTK);
-		btk->setFrame(0.0f);
-		btk->setRate(0.0f);
+		J3DFrameCtrl* btp
+		    = boss->getMActor()->getFrameCtrl(ANM_TYPE_BTP);
+		btp->setFrame(0.0f);
+		btp->setRate(0.0f);
 	}
 
 	// Cooled down: switch from the angry walk to the calm one.
@@ -1622,9 +1622,8 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		const TGraphWeb* graph = tracer->getGraph();
 		int prev               = tracer->getPrevIndex();
 
-		Vec point;
-		graph->getGraphNode(prev).getPoint(&point);
-		JGeometry::TVec3<f32> toNode(point.x, point.y, point.z);
+		JGeometry::TVec3<f32> toNode;
+		graph->getGraphNode(prev).getPoint(&toNode);
 		toNode -= boss->getPosition();
 
 		if (VECMag(toNode) < 400.0f && prev == graph->unk10) {
