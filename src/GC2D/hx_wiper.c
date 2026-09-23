@@ -126,7 +126,7 @@ static void Hx_Door(void);
 static void Hxs_GameOver(s8 fade, f32 mag, f32 rot);
 static void InitWipe(void);
 static void Hx_GameOver(void);
-static void Hxs_Logo_ExtraDraw(u8 alpha, const ResTIMG* timg);
+static void Hxs_Logo_ExtraDraw();
 static void Hxs_Logo_TexSetup(u8 alpha, u8 fade, const ResTIMG* timg);
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht);
 static void Hxs_Logo_MagDraw(f32 mag, f32 wd, f32 ht);
@@ -504,15 +504,15 @@ void Hx_StartWipe(int wipe_no, int param)
 
 static void dummy_handler(void) { }
 
-/// Which half of the transition each wipe number plays: 0 closes, 1 opens.
-static u8 handle_type[15] = {
-	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0,
-};
-
 static void (*handle_table[15])(void) = {
 	dummy_handler, Hx_Circle, Hx_Circle,  Hx_Test1, Hx_Test1,
 	Hx_Test5,      Hx_Test5,  Hx_Test4,   Hx_Test4, Hx_Test2R,
 	Hx_Test2,      Hx_Door,   Hx_Logo,    Hx_GameOver, dummy_handler,
+};
+
+/// Which half of the transition each wipe number plays: 0 closes, 1 opens.
+static u8 handle_type[15] = {
+	0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0,
 };
 
 int Hx_GetWipeType(int wipe_no) { return handle_type[wipe_no]; }
@@ -1129,7 +1129,12 @@ static HxDrawPath drawpath_table[] = {
 static int hxs_logo_resetflag;
 static int hxs_logodraw_resetflag;
 
-static void Hxs_Logo_ExtraDraw(u8 alpha_in, const ResTIMG* timg)
+/// Defined without a prototype: every call in Hx_Logo passes only the alpha
+/// (retail never loads r4 before the `bl`), yet the body reads `timg` from
+/// r4, so the original call sites dropped the texture argument.
+static void Hxs_Logo_ExtraDraw(alpha_in, timg)
+u8 alpha_in;
+const ResTIMG* timg;
 {
 	GXTexObj obj;
 
@@ -1342,9 +1347,9 @@ static void Hx_Logo(void)
 
 	case 1:
 		if (hx.timer <= 0xC0)
-			Hxs_Logo_ExtraDraw(((0x100 - hx.timer) * 4) & 0xFC, timg);
+			Hxs_Logo_ExtraDraw(0xFF);
 		else
-			Hxs_Logo_ExtraDraw(0xFF, timg);
+			Hxs_Logo_ExtraDraw(((0x100 - hx.timer) * 4) & 0xFC);
 
 		Hx_TimerCountDown();
 		Hx_TimerCountDown();
@@ -1369,7 +1374,7 @@ static void Hx_Logo(void)
 		/* fall through */
 
 	case 3:
-		Hxs_Logo_ExtraDraw(0xFF, timg);
+		Hxs_Logo_ExtraDraw(0xFF);
 		Hxs_Logo_TexSetup(0xFF, 0xFF, timg);
 		Hxs_PenDraw(count, dp, bx, by);
 		if (Hx_TimerCountDown() == 0) {
@@ -1388,7 +1393,7 @@ static void Hx_Logo(void)
 		/* fall through */
 
 	case 5:
-		Hxs_Logo_ExtraDraw(0xFF, timg);
+		Hxs_Logo_ExtraDraw(0xFF);
 		Hxs_Logo_TexSetup(0xFF, 0xFF, timg);
 		Hxs_PenDraw(count, dp, bx, by);
 		if (Hx_TimerCountDown() == 0) {
@@ -1401,7 +1406,7 @@ static void Hx_Logo(void)
 		int i;
 
 		if (hx.timer >= 0xC0) {
-			Hxs_Logo_ExtraDraw(0xFF, timg);
+			Hxs_Logo_ExtraDraw(0xFF);
 			Hxs_Logo_TexSetup(hx.timer, hx.timer, timg);
 			if (hx.timer > 0xF8)
 				Hxs_PenDraw(count, dp, bx, by);
