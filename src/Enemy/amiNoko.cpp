@@ -292,9 +292,12 @@ bool TAmiNoko::isHitValid(u32 message)
 	return message == HIT_MESSAGE_UNKB ? true : false;
 }
 
-// TODO: three loads left: `found = plane` re-reads the (address-taken) local
-// instead of reusing the register, and the wall loop reloads it once. The frame
-// is also 0x70 short: the original reserves far more compiler temporaries here.
+// TODO: 99.5%, every instruction in place. The named block is laid out as
+// retail's but the whole frame sits 0x78 low (a uniform shift: the original
+// reserves 0x78 more compiler temporaries below it), and the three plane
+// distances keep the dot product in f1 where retail uses f2, plus one FPR
+// swap in the side cross product. Inert on the FPRs: a shared distance helper,
+// `dist += mPlaneDistance` as its own statement, fabsf on a named dist.
 void TAmiNoko::calcDirection()
 {
 	JGeometry::TVec3<f32> toGoal = getUnkF4().getPoint();
@@ -306,17 +309,16 @@ void TAmiNoko::calcDirection()
 
 	// Find the surface we are crawling on: the nearest wall around us, the
 	// ground under us or the roof above us, whichever is closest.
-	const TBGCheckData* plane;
-
 	TBGWallCheckRecord record(mPosition.x, mPosition.y, mPosition.z, 10.0f, 4,
 	                          0);
+	const TBGCheckData* plane;
 	int wallNum    = gpMap->isTouchedWallsAndMoveXZ(&record);
 	f32 nearest    = -1.0f;
 	int nearestIdx = -1;
 	for (int i = 0; i < wallNum; ++i) {
 		plane    = record.mResultWalls[i];
-		f32 dist = fabsf(plane->getNormal().dot(mPosition)
-		                 + plane->mPlaneDistance);
+		f32 dist = fabsf(record.mResultWalls[i]->getNormal().dot(mPosition)
+		                 + record.mResultWalls[i]->mPlaneDistance);
 		if (nearestIdx < 0 || nearest > dist || nearest < 0.0f) {
 			mFenceKind = AMINOKO_SURFACE_WALL;
 			nearest    = dist;
@@ -333,9 +335,9 @@ void TAmiNoko::calcDirection()
 		f32 dist = plane->getNormal().dot(mPosition) + plane->mPlaneDistance;
 		if (dist >= 0.0f) {
 			if (nearest > dist || nearest < 0.0f) {
+				found      = plane;
 				mFenceKind = AMINOKO_SURFACE_GROUND;
 				nearest    = dist;
-				found      = plane;
 			}
 		}
 	}
@@ -345,8 +347,8 @@ void TAmiNoko::calcDirection()
 		f32 dist = plane->getNormal().dot(mPosition) + plane->mPlaneDistance;
 		if (dist >= 0.0f) {
 			if (nearest > dist || nearest < 0.0f) {
-				mFenceKind = AMINOKO_SURFACE_ROOF;
 				found      = plane;
+				mFenceKind = AMINOKO_SURFACE_ROOF;
 			}
 		}
 	}
@@ -380,7 +382,7 @@ void TAmiNoko::calcDirection()
 		                                           : mUp.z + rotSpeed)
 		            : (mUp.z - rotSpeed > normal.z ? mUp.z - rotSpeed
 		                                           : normal.z);
-		VECNormalize(mUp, mUp);
+		VECNormalize(&mUp, &mUp);
 	}
 
 	// Creep the facing direction towards the goal. Going straight backwards
@@ -411,7 +413,7 @@ void TAmiNoko::calcDirection()
 	               : (mFront.z - rotSpeed > toGoal.z
 	                      ? mFront.z - rotSpeed
 	                      : toGoal.z);
-	VECNormalize(mFront, mFront);
+	VECNormalize(&mFront, &mFront);
 
 	// Re-orthogonalise: remember the last frame that had a valid frame, then
 	// rebuild the facing direction from the side vector and the up vector.
