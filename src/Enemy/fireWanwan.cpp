@@ -216,7 +216,6 @@ void TTailRubber::restrict()
 		for (Node *e = unk0.begin() - 1, *it = unk0.end() - 2; it != e; --it) {
 			JGeometry::TVec3<f32> diff = (it + 1)->mPos;
 			diff -= it->mPos;
-			diff.y = 0.0f;
 			if (avgHorLen < diff.length()) {
 				diff.setLength(diff.length() - avgHorLen);
 				it->mPos += diff;
