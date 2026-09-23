@@ -879,29 +879,29 @@ static void Hx_Door(void)
 	switch (hx.step) {
 	case 0:
 		hx.step++;
-		Hx_MotionSet(&hx.motion, hx.centerX, 5.0f, 6.0f, 5.0f);
+		Hx_MotionSet(&hx.motion, hx.width / 2, 5.0f, 6.0f, 5.0f);
 		break;
 
 	case 1:
 		x = Hx_MotionUpdate(&hx.motion);
 		Hxs_FrBufferMorf2(x);
-		if ((u32)x >= hx.centerX) {
+		if ((u32)x >= hx.width / 2) {
 			hx.step++;
-			Hx_MotionSet(&hx.motion, hx.centerX, 5.0f, 6.0f, 5.0f);
+			Hx_MotionSet(&hx.motion, hx.width / 2, 5.0f, 6.0f, 5.0f);
 		}
 		break;
 
 	case 2:
-		Hxs_FrBufferMorf2(hx.centerX);
+		Hxs_FrBufferMorf2(hx.width / 2);
 		x = Hx_MotionUpdate(&hx.motion);
 		Hxs_FrBufferMorf2B(x);
-		if ((u32)x >= hx.centerX)
+		if ((u32)x >= hx.width / 2)
 			hx.step++;
 		break;
 
 	case 3:
-		Hxs_FrBufferMorf2(hx.centerX);
-		Hxs_FrBufferMorf2B(hx.centerX);
+		Hxs_FrBufferMorf2(hx.width / 2);
+		Hxs_FrBufferMorf2B(hx.width / 2);
 		hx.state = 3;
 		break;
 	}
