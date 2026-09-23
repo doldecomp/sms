@@ -512,6 +512,9 @@ void TTalk2D2::openTalkWindow(TBaseNPC* npc)
 // int-to-float conversions). Also open: the child link null check is
 // scheduled before the parent tree address, and the dead
 // `>= 0x80` arm's register below.
+// The FPR colouring of the rotation block (retail rotX/rotY in f17/f18,
+// ours f24/f25) is unmoved by C-style top declarations of curX/curY,
+// rotX/rotY or cos/sin.
 void TTalk2D2::makeBoxLine(s8 line, char* text)
 {
 	JUTPoint start(mBezierStart[line]->getBounds().x1,
