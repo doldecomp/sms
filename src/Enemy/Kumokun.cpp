@@ -787,6 +787,10 @@ static bool is_antiparallel(const JGeometry::TVec3<f32>& v1,
 // setRotate overload and a named forward only in the antiparallel test are
 // inert or worse. The two-argument mul (as decideTargetAtRandom spells it)
 // fixed the quaternion product order; only scheduling from the shift remains.
+// Since the no-locals mul(a, b) header (0e49c384) the frame is 0x10 short
+// (0xf0 vs 0x100): the old four-local body filled it exactly, as it did in
+// TKukku::calcRootMatrix; the one-argument local_b4.mul(local_A4) fills the
+// frame but orders the products differently (95.4). Header question.
 void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> local_C4 = param_1;

@@ -575,11 +575,14 @@ void TKukku::shotBall()
 	                          4);
 }
 
-// TODO: 80.7%. Retail keeps both quaternions scalar-replaced in FPRs (only
-// sinf/cosf pairs survive of setEulerY/X) and calls TVec3::set<f>(f, f, f)
-// out of line for `forward` (the unit's missing weak set<f>, depth 4), so
-// its frame is 0x158 against our 0x1e8. Inert or worse: one-argument
-// rotate(), rotating `forward` straight into `velocity`, `forward.set(...)`.
+// The rotates are rotateQ(), the one-level member-read body JGQuat4.hpp's
+// TODO proposes for rotate(v, rDest): frame 0x1f0 -> 0x168 (retail 0x158),
+// 86.4 -> 86.5. Spell them rotate() again once that header change lands.
+// TODO: retail calls TVec3::set<f>(f, f, f) out of line for `forward` (the
+// unit's missing weak set<f>, depth 4). Inert or worse: one-argument
+// rotate(), rotating `forward` straight into `velocity`, `forward.set(...)`,
+// a named `angle = mRotation.y` before dropSpeed (frame exact, 85.4),
+// getDropSpeed() read at each product (80.6).
 // Retail also loads mRotation.y into f26 before the dropSpeed getSaveParams()
 // call and looks up the cosine before the sine (the out-of-line set's
 // right-to-left arguments), so `forward` is built one inline level down.
@@ -624,8 +627,8 @@ void TKukku::dropCoins()
 	                              dropSpeed * JMACos(mRotation.y));
 
 	JGeometry::TVec3<f32> velocity(forward);
-	pitch.rotate(velocity, velocity);
-	spin.rotate(velocity, velocity);
+	pitch.rotateQ(velocity, velocity);
+	spin.rotateQ(velocity, velocity);
 
 	for (int i = 0; i < coinNum; i++) {
 		TMapObjBase* coin = gpItemManager->makeObjAppear(0x2000000E);
@@ -640,7 +643,7 @@ void TKukku::dropCoins()
 		if (++mDroppedCoins == 10)
 			break;
 
-		spin.rotate(velocity, velocity);
+		spin.rotateQ(velocity, velocity);
 	}
 }
 
