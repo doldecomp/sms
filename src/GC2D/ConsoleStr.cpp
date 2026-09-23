@@ -68,7 +68,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 
 	for (int i = 0; i < 3; ++i) {
 		unk28[i] = new TBoundPane(unk10, 'go00' + i);
-		unk28[i]->unk0->hide();
+		unk28[i]->getPane()->hide();
 	}
 
 	for (int i = 0; i < 6; ++i) {
@@ -96,13 +96,13 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	unk294 = new TExPane(unk14, 'wp_l');
 	unk298 = new TExPane(unk14, 'wp_r');
 
-	u32 uVar1        = SMS_getShineStage(gpMarDirector->mMap);
+	u32 uVar1        = SMS_getShineStage(SMSGetMarDirector()->getCurrentMap());
 	TFlagManager* fm = TFlagManager::getInstance();
 	u32 uVar9        = fm->getFlag(0x40003);
 	void* pvVar10    = JKRGetResource("/common/2d/stagename.bmg");
 	unk29C[0]->setString(SMSGetMessageData(pvVar10, uVar1));
 
-	if (gpMarDirector->mMap != 15) {
+	if (SMSGetMarDirector()->getCurrentMap() != 15) {
 		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
 
 		s16 uVar2 = ConsoleStrGetShineID(uVar1, uVar9);

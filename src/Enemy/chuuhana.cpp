@@ -1197,7 +1197,8 @@ DEFINE_NERVE(TNerveChuuHanaStick, TLiveActor)
 		// A fresh stick, or one whose animation was taken over: head for
 		// Mario.
 		hana->setBckAnm(4);
-		TPathNode goal(SMS_GetMarioPos());
+		JGeometry::TVec3<f32>& marioPos = SMS_GetMarioPos();
+		TPathNode goal(marioPos);
 		hana->unkF4  = goal;
 		hana->unk104 = goal;
 		hana->unk114.clear();

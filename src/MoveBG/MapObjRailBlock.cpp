@@ -72,7 +72,7 @@ void TRailMapObj::resetStep(float param_1)
 
 BOOL TRailMapObj::moveToNextNode(float param_1)
 {
-	TGraphWeb* web = unk138->getGraph();
+	TGraphWeb* web = getTracer()->getGraph();
 	if (!web || web->isDummy())
 		return false;
 

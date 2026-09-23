@@ -493,7 +493,7 @@ bool TPopo::checkTrigger()
 
 void TPopo::behaveToWater(THitActor* param_1)
 {
-	if (mSpine->getCurrentNerve() == &TNervePopoFly::theNerve()
+	if (getSpine()->getCurrentNerve() == &TNervePopoFly::theNerve()
 	    || mSpine->getCurrentNerve() == &TNervePopoExplosion::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
 		return;
@@ -1125,7 +1125,7 @@ DEFINE_NERVE(TNervePopoFly, TLiveActor)
 {
 	TPopo* popo = PopoFlyBody(spine);
 
-	if (spine->getTime() == 0) {
+	if (!spine->getTime()) {
 		popo->setBckAnm(2);
 		MtxPtr emitMtx = PopoFlyGun()->getEmitMtx(0);
 		f32 speed      = PopoFlyParams(popo)->getSLReleaseSpeed();

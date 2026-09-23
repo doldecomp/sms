@@ -2229,7 +2229,7 @@ void TBossTelesa::forceAllItemKill()
 	for (int i = 0; i < mSlotItemNum; ++i) {
 		TLiveActor** slot = &mSlotItems[i];
 
-		THitActor* holder = (*slot)->mHolder;
+		THitActor* holder = (*slot)->getHolder();
 		if (holder != nullptr) {
 			SMS_SendMessageToMario(*slot, HIT_MESSAGE_UNK8);
 			(*slot)->mHolder = nullptr;

@@ -630,6 +630,12 @@ bool TTalk2D2::openBoardWindow()
 	return done;
 }
 
+static inline MSound* Talk2D2MSound()
+{
+	MSound* r = gpMSound;
+	return r;
+}
+
 bool TTalk2D2::openNormalWindow()
 {
 	bool done = false;
@@ -655,7 +661,7 @@ bool TTalk2D2::openNormalWindow()
 			mLineProgress[i] = 1.0f;
 
 		if (mCharCursor[i] == 0 && mLineProgress[i] < mLineDelay) {
-			gpMSound->startSoundSystemSE(MSD_SE_SY_TALK_OBI, 0, nullptr, 0);
+			Talk2D2MSound()->startSoundSystemSE(MSD_SE_SY_TALK_OBI, 0, nullptr, 0);
 			mCharCursor[i] = 1;
 			mCharBox[i * LINE_LENGTH]->show();
 		}

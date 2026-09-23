@@ -730,7 +730,8 @@ void TWireBell::control()
 	Mtx mtx;
 	MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 	            mRotation.y, mRotation.z, mScaling.x, mScaling.y, mScaling.z);
-	MTXCopy(mtx, getModel()->getAnmMtx(0));
+	J3DModel* model = getModel();
+	MTXCopy(mtx, model->getAnmMtx(0));
 }
 
 void TWireBell::loadAfter()

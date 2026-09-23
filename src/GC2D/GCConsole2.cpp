@@ -3675,7 +3675,7 @@ int TGCConsole2::getFinishedTime() { return unk4FC; }
 
 bool TGCConsole2::processAppearLife(int param_1)
 {
-	if (gpMarioOriginal->getHealth() == 0 || gpMarioOriginal->getAir() == 0)
+	if (gpMarioOriginal->getHealth() == 0 || !gpMarioOriginal->getAir())
 		return true;
 
 	bool isFinished = true;
