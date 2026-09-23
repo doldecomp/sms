@@ -92,7 +92,8 @@ bool CPolarSubCamera::isNeedGroundCheck_()
 		// This split `*=`/`-=` spelling fixed the rest (99.3 -> 99.8). Tried:
 		// sine first with `a = d * a` / `a *= d`, `a = a * s`, by-value
 		// product/sine/mDistMin levels, distY or a declared first, an
-		// NgMax-style helper, `(a > b ? a : b)`, JMASin over the s16.
+		// NgMax-style helper, `(a > b ? a : b)`, JMASin over the s16, a named
+		// sine, b declared first or split, a params local.
 		f32 a = mCurrentParams->mDistMin;
 		a *= JMASSin(mCurrentParams->mXAngleMin);
 		f32 b = mCurrentParams->mDistMax * JMASSin(mCurrentParams->mXAngleMax);

@@ -1012,14 +1012,12 @@ void TBossWanwan::shakeCamera(int mode)
 	if (power < 0.0f)
 		return;
 
-	// TODO: retail divides into range's FPR (`fdivs f1, f3, f1`) and
-	// clamps there; every assign-back / `/=` / unnamed leftover still
-	// colours the quotient f0.
 	power /= range;
 	if (power > 1.0f)
 		power = 1.0f;
 
-	gpCameraShake->startShake((EnumCamShakeMode)mode, power * heat);
+	power *= heat;
+	gpCameraShake->startShake((EnumCamShakeMode)mode, power);
 	SMSRumbleMgr->start(8, &mPosition);
 }
 

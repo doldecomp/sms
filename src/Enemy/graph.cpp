@@ -999,6 +999,10 @@ BOOL TGraphTracer::traceSpline(f32 param_1)
 	// mPrevIdx/unk8 pair r3/r6 where we give r3/r6 the other way round, and
 	// reads mPrevIdx into r0 at the second test. getPrevIndex()/
 	// getCurGraphIndex() (-1pp, +0x18) and getNodeNum() (+0x18) refuted.
+	// The two special-case indices are also wrong, not only coloured: retail
+	// reads getNthT(unk0->unk8 + 1) and getNthT(unk0->unk8) (0x68, 0xa8).
+	// Spelling them so leaves a pure r4/r5 swap of unk0 and its rail (15
+	// markers, 99.1%); rail locals, accessor sites and operand order inert.
 	BOOL result;
 	if ((param_1 >= 0.0f && dVar8 <= dVar10 && dVar10 <= dVar9)
 	    || (param_1 < 0.0f && dVar9 <= dVar10 && dVar10 <= dVar8)) {
