@@ -129,6 +129,9 @@ void J3DDeformer::deform(J3DModel* model, u16 idx)
 // fresh one per step; the `rlwinm 20`/`rlwinm 21` pair is a pure schedule
 // swap -- both sides put the y index in r7 and the z index in r6, only the
 // two slots are exchanged.
+// Closure c1 (2026-09-22), all inert (18) or worse: `u16`/`s32` `flag` in
+// either loop, `keys + j`, `*(weightList + j)`, `Vec` hoisted, `src` before
+// `flag` (21), a named `f32 w` (43), `int` loop counters (51+), `u16` counts.
 void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 {
 	if (checkFlag(2) && model->getModelData()->isDeformableVertexFormat()) {
@@ -492,6 +495,9 @@ void J3DSkinDeform::initMtxIndexArray(J3DModelData* modelData)
 					// so no honest source reaches it; the single-expression
 					// spelling below (1 marker, the add's operand order) is
 					// the closest form and is kept.
+					// Closure c1 (2026-09-22): `dl - -(...)`, `(u32)`/`(s32)` index casts
+					// are identical; `3 + k * vtxSize` also flips the `mullw`; every
+					// `(dl + 3) + ...`/`3 + dl + ...` reorder is 248 instructions.
 					u8* vtx     = &dl[3 + vtxSize * k];
 					u8 pnmtxIdx = ((u32)(*(u8*)&vtx[pnmtxIdxOffs])) / 3;
 					u16 posIdx  = *(u16*)&vtx[posOffs];
