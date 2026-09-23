@@ -65,10 +65,9 @@ void TMonumentShine::initMapObj()
 
 void TMonumentShine::hitByWater(THitActor* actor)
 {
+	JGeometry::TVec3<f32> waterDir = actor->getPosition();
 
-	JGeometry::TVec3<f32> waterDir = actor->mPosition;
-
-	waterDir.sub(getPosition());
+	waterDir.sub(mPosition);
 	waterDir.y = 0.0f;
 
 	if (waterDir.squared() <= JGeometry::TUtil<f32>::epsilon())
@@ -83,28 +82,16 @@ void TMonumentShine::hitByWater(THitActor* actor)
 
 	static JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 
-	// TODO: 5 instructions from exact, all reloads: retail keeps
-	// getPosition().x/y/z in f7-f9 across both subtractions and waterDir.y/z in
-	// f5/f6 from the first squared() into the dot, where our build reloads
-	// all five. The frame is exact (the named `side` below is the missing 8
-	// bytes), so the local set is right; what differs is only which values
-	// the allocator keeps live. Ruled out: sub() for -= , getPosition() for
-	// getPosition() (lands the frame but hoists the address into a register),
-	// isZero() for the spelled-out epsilon test (identical output), cross2()
-	// for cross(). Closure batch 152 also ruled out making the two
-	// subtractions agree: raw `mPosition` at both sites is 91.0% (~38 -> ~53)
-	// and `getPosition()` at both is 89.8% and breaks the frame, so the
-	// asymmetry -- `getPosition()` for waterDir, the raw member for marioDir --
-	// is itself evidence about retail's source. The five extra instructions are
-	// three reloads of mPosition plus two of waterDir.y/z; every one of them is
-	// a CSE the allocator declined, with the local set and the frame already
-	// right.
+	// TODO: 98.4%, instructions and slots exact; only the FPR colouring
+	// differs (retail keeps mPosition.x in f7 and waterDir.y/z in f5/f6, ours
+	// puts x in f5). Raw `mPosition` at both subtractions shares the loads; the
+	// pair `actor->getPosition()` (+8) with the dot unnamed (-8) lands the
+	// slots. Inert on the colouring: `waterDir.dot(cross)`, `-=`, isZero(),
+	// cross2(), the three-argument sub() (worse).
 	JGeometry::TVec3<f32> cross;
 	cross.cross(up, marioDir);
 
-	f32 side = cross.dot(waterDir);
-
-	if (side > 0.0f) {
+	if (cross.dot(waterDir) > 0.0f) {
 		unk140 += 0.004f;
 	} else {
 		unk140 -= 0.004f;

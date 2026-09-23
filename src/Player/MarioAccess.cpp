@@ -249,6 +249,9 @@ void SMS_IsMarioSpeedZero() { gpMarioOriginal->isSpeedZero(); }
 // Batch cc22, all inert or worse: a `TTakeActor**` to the member (19
 // instructions), a `(u32)` null test, a ternary (82.4), two nested ifs with a
 // false default (76.1), and a named `TMario*` receiver (identical).
+// Batch c-link4, all 17 instructions: TU-local levels over the mario
+// pointer for the null test or the type test (`const TMario*`/`TTakeActor*`,
+// getHolder() inside), BOOL-valued `!= nullptr` tests, and `== TRUE` isTaken().
 bool SMS_IsMarioOnWire()
 {
 	bool ret;
