@@ -61,6 +61,29 @@ inline f32 MsAtan2(f32 y, f32 x)
 	return abs(matan(y, x) * (360.0f / 65536.0f));
 }
 
+// TODO: retail expands this at depth 2 inside TBossGesso::inSight (the
+// doAttackSingle shoot site and the UNUSED inSightAngle body) but calls it at
+// depth 3. Our body never inlines there, and the reason is not its cost.
+// Header round 2026-09-23, measured in a scratch harness that reproduces
+// bossgesso: a member function holding a local TVec3, inlined at depth 1 into
+// a caller that uses its result (not `return w1();`).
+// - With an `if` or `else` anywhere in the body (early-return `if` + ternary,
+//   `if`-assign-return, the current nested form, Bth: `if` ternary / `if`
+//   return / named `theta`), it stays out of line at depth 2 with 0..11
+//   filler statements. It is blocked outright, not over budget. The same
+//   bodies do inline in a free-function harness (A costs ternary+2, B/Bel
+//   +6, Bth +7), and when the depth-1 call is a bare `return w1();`.
+// - An expression-only body (one `?:` return) has a flat cost. Expression
+//   size, the number of `?:` and calls, and inlined helper levels (their
+//   statements are free to the host) cost nothing. So it inlines even at
+//   depth 3 (doAttackDouble 76.3, moveObject 87.7).
+//   Only statements count: each named initialised local is +1 (z, x, the
+//   360/65536 scale and the result give at most +4), and the depth-2/depth-3
+//   window needs +7..+9.
+// A real spelling in that window was not found. A TU-local copy with 7..9
+// `(void)0;` fillers reaches doAttackSingle 99.5, but that is refused.
+// Retail calls MsWrap<f> out of line at the same depth, which fits the same
+// block on control-flow bodies.
 inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 {
 	if (axis.z == 0.0f) {
