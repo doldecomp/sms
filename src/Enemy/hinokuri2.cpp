@@ -337,6 +337,10 @@ static inline THino2Params* Hino2Params(THinokuri2* self)
 	return params;
 }
 
+// TODO: retail keeps calcAnim and the unk4C base in r26, ours in r27; every
+// other instruction and the frame match. Inert or worse: calcAnim as int or
+// BOOL, afStack_88 declared first, no transMtx alias, raw unk4C at either
+// concat.
 void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk4 == 0)
@@ -1323,7 +1327,10 @@ DEFINE_NERVE(TNerveHino2Fly, TLiveActor)
 }
 
 // TODO: the node test swaps r3/r4 (retail loads the owner into r4) and the
-// frame is 0x50, retail 0x68; every other instruction matches.
+// frame is 0x50, retail 0x68; every other instruction matches. Retail's
+// velocity temp sits at 0x34 (ours 0x28). Worse: getPoint() or
+// Hino2NodePoint() as the argument, a by-value point copy, a named velocity,
+// mVelocity.set(...).
 DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 {
 	const JGeometry::TVec3<f32>* p;
