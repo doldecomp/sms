@@ -1282,6 +1282,8 @@ void TMario::thinkHeight()
 		unk370 = 0.0f;
 }
 
+// TODO: every instruction is exact; the frame is 0x50 short (0x50 against
+// retail's 0xa0), a low region with no carrier found yet.
 void TMario::checkSink()
 {
 	if (isInvincible())
@@ -1299,11 +1301,11 @@ void TMario::checkSink()
 		if (checkFlag(MARIO_FLAG_DIRTY)) {
 			mSinkTimer += 1.0f;
 			mFootPrintTimer = mDeParams.mFootPrintTimerMax.get();
-			if (mHealth > 0
-			    && mSinkTimer > mGraffitoParams.mSinkTime.get()
-			                        * mGraffitoParams.mSinkDmgDepth.get()) {
-				mSinkTimer = mGraffitoParams.mSinkTime.get()
-				             * mGraffitoParams.mSinkDmgDepth.get();
+			if (mHealth > 0) {
+				f32 maxSink = mGraffitoParams.mSinkTime.get()
+				              * mGraffitoParams.mSinkDmgDepth.get();
+				if (mSinkTimer > maxSink)
+					mSinkTimer = maxSink;
 			}
 
 			if (gpMarDirector->unk58 % mGraffitoParams.mSinkDmgTime.get()
