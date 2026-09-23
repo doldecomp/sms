@@ -391,6 +391,8 @@ void TBeeHive::bind()
 // TODO: 89.6%. Retail keeps the dead wrap of `index` alive (`addi r29, r29, 1;
 // cmpw r30, r29` with no branch, costing r28); a trailing `(void)index;` gives
 // 98.6% but is a discarded statement, so the real consumer is still missing.
+// Also inert (89.4-89.6): reusing `index` for the second wrap, `++index`
+// in the test, reusing `bee`, and a TU-local wrap helper at all three sites.
 void TBeeHive::controlCollision()
 {
 	int index = mCheckBeeIndex;
@@ -447,23 +449,37 @@ void TBeeHive::controlSound()
 	gpMSound->startBeeSe(mBeeCenter, alive);
 }
 
-// TODO: 81.5%. The first product is the *two-argument* mul(a, b) written in
-// place, per the overload tell in docs/catalog/codegen-tells.md; the swing
-// product measures better as the one-argument mul(swing) (both one-argument
-// is worse). The copy goes
-// through J3DModel::setBaseTRMtx, which is why the ROM holds &rot in r31
-// across getModel(). What is left is the frame, 0xc0 against the ROM's 0xa0:
-// the named block (swing, quat, rot) now sits where the ROM has it relative to
-// the top, but the dead inline-temporary region below rot is 0x50 against
-// 0x30. setSQ+setTrans, one-argument mul and rot.mMtx indexing are all worse.
+// TQuat4::mul(a, b) with the four components computed inside the set() call
+// rather than through named locals. The ROM's calcRootMatrix frame (0xa0)
+// and product order need exactly this: the header's named _x.._w locals
+// reserve 0x10-0x18 of dead frame per expansion, and the one-argument mul
+// reads its products in w-first order where the ROM reads x-first.
+// TODO: this is a parked header need (JGQuat4.hpp's two-argument mul); it
+// stays TU-local until a header round measures the body tree-wide.
+static inline void mulQuat(JGeometry::TQuat4<f32>& q,
+                           const JGeometry::TQuat4<f32>& a,
+                           const JGeometry::TQuat4<f32>& b)
+{
+	// clang-format off
+	q.set(a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y,
+	      a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z,
+	      a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x,
+	      a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z);
+	// clang-format on
+}
+
+// Both products are the two-argument form written in place; setSQT is the
+// level that keeps setSQ a `bl` here (see JGPosition3.hpp), and the copy goes
+// through J3DModel::setBaseTRMtx, which is why &rot sits in r31 across
+// getModel().
 void TBeeHive::calcRootMatrix()
 {
 	JGeometry::TQuat4<f32> swing;
 	JGeometry::TQuat4<f32> quat = mBaseRotation;
 	swing.setEulerX(mSwingAngle);
 
-	quat.mul(quat, mRotation168);
-	quat.mul(swing);
+	mulQuat(quat, quat, mRotation168);
+	mulQuat(quat, quat, swing);
 
 	TBeeHiveMtx rot;
 	rot.setSQT(mScaling, quat, mPosition);
@@ -718,6 +734,9 @@ void TBeeHive::setShakePower(const JGeometry::TVec3<f32>& to_mario)
 // Vec-base one, inert: `+=`, `add(center, p)`, `*=`, `div(num)`, `zero()`,
 // `center = TVec3(0)`, `return center * k` (worse); an extra
 // `ret = center; return ret;` reaches 90.7% but is invented.
+// Also inert (85.9, frame 0x50): a while loop, the (0,0,0) constructor,
+// declaring center before the num test, an if/else split, a named
+// `const TVec3& pos` in the loop, `scale(k, center)`.
 JGeometry::TVec3<f32> TBeeHive::getCenterOfGravity() const
 {
 	int num = mBeeNum;
