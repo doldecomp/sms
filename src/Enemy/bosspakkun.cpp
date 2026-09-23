@@ -1387,8 +1387,8 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
-// TODO: frame is 0x48 short (0x130 vs retail 0x178) with every instruction
-// right, and the JumpReact push swaps r5/r6 between theNerve and mSpine.
+// TODO: frame is 0x40 short (0x138 vs retail 0x178) with every instruction
+// and register right: a missing inline level or helper, not a lever.
 void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mPolDrop)
@@ -1440,7 +1440,7 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mState == BOSSPAKU_STATE_BELLY_UP && checkMarioRiding()) {
 			if (getLatestNerve() != &TNerveBPJumpReact::theNerve())
-				mSpine->pushNerve(&TNerveBPJumpReact::theNerve());
+				getSpine()->pushNerve(&TNerveBPJumpReact::theNerve());
 		}
 	}
 
