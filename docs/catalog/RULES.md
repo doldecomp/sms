@@ -147,6 +147,10 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 
 - The inline budget adds up along the whole inline chain: a helper's statements count together with its callee's, so a callee that inlines everywhere can be pushed out of line at chosen sites by moving those call sites one level deeper into a shared TU-local helper (plus one named result in the callee to tip it); Koopa `getTargetDir`: init still inlines it, the Wait/Flame nerves `bl` it as retail does (2026-09-23).
 
+- **An `(f32)` cast on an inlined call assigned straight to a variable reserves its own 4-byte temporary above the callee's slot.**
+  `d.x = (f32)sqrtf(...)` moved sqrtf's slot from 0xa8 to retail's 0xa4 in `Hxs1_Circle`.
+  Inside a larger expression (`scale * (f32)sqrtf(...)`) the cast is inert.
+
 ## Frame-size gaps
 
 - Validate with `volatile char trash[N]` in the caller's own body only: inside an inlined callee a trivial POD prices 0, so probe a callee with a `struct S { ~S() {} u32 a; }` local (frame-gaps.md: "Research batch 233").
