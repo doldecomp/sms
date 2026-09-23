@@ -359,11 +359,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 	if (strcmp(name, "TalkCursor") == 0)
 		return new TTalkCursor;
 
-	// TODO: retail's inlined TTargetArrow ctor passes "?" (sdata2 @4703)
-	// to TViewObj; ours uses the TViewObj default "<TViewObj>". Shared
-	// header: TTargetArrow(const char* name = "?") : TViewObj(name).
-	// The rest of getNameRef is ~-only (every spill 4 bytes low at an
-	// exact 0x178 frame) — the open "every temp 4 bytes low" class.
+	// TODO: two inline `this` slots remain 4 bytes low at an exact 0x178
+	// frame: TSMSSmplChara (0x154 vs 0x158) and TSplashManager (0x144 vs
+	// 0x148); retail has one more dead word between the Splash slot and
+	// TSmplFader's TColor temp. Named-local, ctor-param and ref variants
+	// did not move it.
 	if (strcmp(name, "TargetArrow") == 0)
 		return gpTargetArrow = new TTargetArrow;
 
