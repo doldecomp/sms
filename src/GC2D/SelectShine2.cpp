@@ -330,6 +330,8 @@ TSelectShine::TSelectShine(J3DModelData* model_data, J3DAnmColor* anm_color,
 	}
 }
 
+// TODO: the inlined middle product multiplies 0.9f first (retail: the
+// height first, four sites) and the frame is 0x140, retail 0x158.
 void TSelectShine::move()
 {
 	f32 newY;
@@ -420,5 +422,5 @@ void TSelectShine::move()
 f32 TSelectShine::makeNewPosition(f32 t, f32 start, f32 middle, f32 end)
 {
 	f32 s = 1.0f - t;
-	return middle * (2.0f * s * t) + start * (s * s) + end * (t * t);
+	return start * (s * s) + middle * (2.0f * s * t) + end * (t * t);
 }
