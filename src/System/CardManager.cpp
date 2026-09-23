@@ -573,8 +573,13 @@ static inline void* CardManagerSector(const TCardManager* p)
 
 // TODO: retail keeps the inlined TCardSector::read's CARDRead result in its
 // own register (r30) and copies it into result with `mr.`; ours coalesces the
-// two. Swapping read's writeCount/data declarations fixes this function but
-// costs readBlock_ the same registers.
+// two. Declaring read's writeCount and data before errc (`s32 writeCount;
+// const void* data; s32 errc = CARDRead(...);`, assigned inside the if)
+// closes this function and lifts filledInitData_ 96.4 -> 97.2 and cmdLoop
+// 96.7 -> 96.9, and readBlock_'s first expansion matches, but its second and
+// third expansions then stop coalescing errc into result (99.2 -> 98.4).
+// Inert under that spelling: fusing readBlock_'s second guard, naming the
+// sector index, `&a[i]` vs `a + i`. All 24 C-style declaration orders scored.
 s32 TCardManager::getBookmarkInfos_()
 {
 	s32 result = mount_(true);
@@ -681,6 +686,10 @@ s32 TCardManager::readOptionBlock_()
 	return result;
 }
 
+// TODO: frame 0x58, retail 0x70 (CARDFileInfo at 0x2c, retail 0x40): every
+// instruction matches. The CardManagerSector binder on the sector read gives
+// +0x10 only; a fork nested in it, a typed binder and a binder per use of
+// sector do not reach +0x18 without moving registers.
 s32 TCardManager::writeBlock_(u32 index)
 {
 	s32 crit_idx = index * 2 + 1;
