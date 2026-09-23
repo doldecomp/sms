@@ -3420,7 +3420,8 @@ void TGCConsole2::changeNum(TBlendPane* pane, int digit, int frames)
 {
 	pane->setPaneBlend(frames, unkE0[digit], nullptr);
 
-	JUTRect bounds(pane->getPane()->mGlobalBounds);
+	J2DPane* p = pane->getPane();
+	JUTRect bounds(p->mGlobalBounds);
 	JGeometry::TVec3<f32> position(bounds.x1 + bounds.getWidth() * 0.5f,
 	                               bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
@@ -3501,9 +3502,9 @@ void TGCConsole2::setTimer(s32 param_1)
 	unk4FC = timerValue;
 }
 
-// TODO: 128 bytes of frame short (0x228 vs 0x2a8): the ROM's changeNum()
-// sites are 0x20 apart (0x1c here), its hole under the dead JUTRect is 0x50
-// (0x38 here) and the rest is low region. Inside each changeNum() expansion
+// TODO: 0x68 bytes of frame short (0x240 vs 0x2a8): naming the pane in
+// changeNum() matches the ROM's 0x20/0x28 site spacing, but its hole under the
+// dead JUTRect is 0x50 (0x38 here) and the rest is low region. Inside each changeNum() expansion
 // the emitter position's int-to-float temps also take r5-r7 where we use
 // r3/r5-r9; the rect and position spellings tried there are inert.
 // `value` is s32 (long): as int, the `value % 10` test is kept in a saved
