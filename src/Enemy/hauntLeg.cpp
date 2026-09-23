@@ -34,10 +34,13 @@ static THauntLeg* gpCurHauntLeg;
 
 // The leg's own joint callback: while it is haunting, the possessed joint (and
 // the matrix J3D is currently building with) get an extra spin about Z.
+// TODO: 93.9%. Retail keeps &spin in r30 (node in r31) and loads the 0.0f/1.0f
+// literals at their stores. A named MtxPtr gets the register but lands it in
+// r31 (92.5); declaration order of the pointer, the Mtx and the joint is inert.
 static int HauntLegCallback(J3DNode* node, int param)
 {
-	if (param == 0 && gpCurHauntLeg != nullptr) {
-		if (!gpCurHauntLeg->isUseCallBack())
+	if (param == 0) {
+		if (gpCurHauntLeg == nullptr || !gpCurHauntLeg->isUseCallBack())
 			return 1;
 		MtxPtr jointMtx = gpCurHauntLeg->getMActor()->getModel()->getAnmMtx(
 		    ((J3DJoint*)node)->getJntNo());
