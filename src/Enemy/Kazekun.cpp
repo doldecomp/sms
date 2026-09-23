@@ -242,15 +242,15 @@ void TKazekun::setDeadAnm()
 	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 }
 
-// TODO: 93.5%. No structural differences left; the residual is a 0x30 frame
-// overshoot and the instruction scheduling inside the inlined TQuat4::mul that
-// follows from it. Rewriting JGeometry::TQuat4<f32>::rotate with scalar locals
-// (see the TODO in JGQuat4.hpp) does not close it here and regresses six other
-// callers, so it is left alone.
+// TODO: 93.6%. Reading the three params through raw .value (here and in the
+// inlined getAroundRate) closes the 0x28 frame overshoot. Left: FPR
+// allocation and scheduling inside the inlined TQuat4::mul/rotate (f27-f30
+// rotated by one); rewriting JGeometry::TQuat4<f32>::rotate with scalar
+// locals (see the TODO in JGQuat4.hpp) regresses six other callers.
 void TKazekun::flyAroundMario()
 {
 	JGeometry::TVec3<f32> toMario(*gpMarioPos);
-	toMario.y += getSaveParams()->getTurnOffsetY();
+	toMario.y += getSaveParams()->mTurnOffsetY.value;
 	toMario.sub(mPosition);
 
 	f32 f31 = (toMario.y < -400.0f
@@ -268,7 +268,7 @@ void TKazekun::flyAroundMario()
 	quat.rotate(vel, vel);
 	vel.y = f31;
 	vel.scale(1.0f + fabsf(f31));
-	vel.scale(getSaveParams()->getAroundSpeed());
+	vel.scale(getSaveParams()->mAroundSpeed.value);
 	mLinearVelocity = vel;
 }
 
@@ -281,7 +281,7 @@ void TKazekun::flyAroundMario()
 f32 TKazekun::getAroundRate(const JGeometry::TVec3<f32>& dir) const
 {
 	TKazekunParams* params = getSaveParams();
-	f32 rate               = dir.length() / params->mAroundDist.get();
+	f32 rate               = dir.length() / params->mAroundDist.value;
 	return rate < 0.0f ? 0.0f : (rate > 2.0f ? 2.0f : rate);
 }
 
