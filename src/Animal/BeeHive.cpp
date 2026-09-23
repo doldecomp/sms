@@ -447,10 +447,10 @@ void TBeeHive::controlSound()
 	gpMSound->startBeeSe(mBeeCenter, alive);
 }
 
-// TODO: 81.2%. Both products are the *two-argument* mul(a, b) written in
-// place: the standalone `fmuls` MWCC leaves for the second source term is
-// `this->w * other.x` here, and per the overload tell in
-// docs/catalog/codegen-tells.md that is mul(quat, other). The copy goes
+// TODO: 81.5%. The first product is the *two-argument* mul(a, b) written in
+// place, per the overload tell in docs/catalog/codegen-tells.md; the swing
+// product measures better as the one-argument mul(swing) (both one-argument
+// is worse). The copy goes
 // through J3DModel::setBaseTRMtx, which is why the ROM holds &rot in r31
 // across getModel(). What is left is the frame, 0xc0 against the ROM's 0xa0:
 // the named block (swing, quat, rot) now sits where the ROM has it relative to
@@ -463,7 +463,7 @@ void TBeeHive::calcRootMatrix()
 	swing.setEulerX(mSwingAngle);
 
 	quat.mul(quat, mRotation168);
-	quat.mul(quat, swing);
+	quat.mul(swing);
 
 	TBeeHiveMtx rot;
 	rot.setSQT(mScaling, quat, mPosition);
