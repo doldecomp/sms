@@ -1689,9 +1689,17 @@ static void Hxs1_Test2(u32 num, u32 dir, f32 cx, f32 cy, f32 r_out, f32 r_in)
 	s32 i;
 	s32 step;
 	s32 end;
+	f32 ro2;
+	f32 ri2;
 
 	Hx_CameraInit();
 	Hx_GxInit(0, 1);
+
+	// TODO: frame 0xc0 against retail's 0x108 (its sqrt temporaries sit at
+	// 0x44/0x48, the int->float slot at 0x70), and our x1/x2 joins cost five
+	// `fmr` and a duplicated `ble`. Top-declaring the loop's locals is inert.
+	ro2 = r_out * r_out;
+	ri2 = r_in * r_in;
 
 	if (dir == 0) {
 		step = 1;
@@ -1716,11 +1724,11 @@ static void Hxs1_Test2(u32 num, u32 dir, f32 cx, f32 cy, f32 r_out, f32 r_in)
 			break;
 		num--;
 
-		dx_out = (r_out * r_out) - (f32)(i * i);
+		dx_out = ro2 - (f32)(i * i);
 		if (dx_out > 0.0f)
 			dx_out = sqrtf(dx_out);
 
-		dx_in = (r_in * r_in) - (f32)(i * i);
+		dx_in = ri2 - (f32)(i * i);
 		if (dx_in > 0.0f)
 			dx_in = sqrtf(dx_in);
 
