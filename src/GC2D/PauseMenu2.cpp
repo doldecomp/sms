@@ -347,6 +347,12 @@ inline void TPauseMenu2::disappearWindow()
 static inline void PauseAppear(TPauseMenu2* m) { m->appearWindow(); }
 static inline void PauseDisappear(TPauseMenu2* m) { m->disappearWindow(); }
 
+// TODO: frame 0x568 vs retail 0x5f8; the only instruction difference is the
+// createEmitter id's `li` scheduled earlier. Retail's four draw orthographs
+// sit 0xf4 apart and ascend within each draw switch, with the saving branch's
+// pair above the MENU_OPEN temps; ours are 0xf0 apart and descend, and retail's
+// dead low region is 0xa4 larger. Named vec / set() / named x,y spellings of
+// the emitter position are inert or worse.
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK5) {

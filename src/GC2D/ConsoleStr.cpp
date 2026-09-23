@@ -622,9 +622,11 @@ bool TConsoleStr::processShineGet(int param_1)
 	return result;
 }
 
-// TODO: frame 0x190 vs 0x1a0 (low temps 0xc short, 4-byte hole below the
-// emitter vec) and the bounds conversions schedule x1 before the width;
-// named/set/ref/div2 vec spellings and alpha/rotation spellings inert.
+// TODO: frame 0x198 vs 0x1a0. The unnamed emitter vec gives retail's
+// conversion slots; retail still computes the vec address before the id and
+// sits the rect/vec pair above the first call's points. A TU-local
+// `PaneCentre(JUTRect)` returning the vec lands the frame (95.4) but not the
+// slots; named/set/ref/div2 vec spellings and alpha/rotation spellings inert.
 bool TConsoleStr::processMiss(int param_1)
 {
 	bool result = true;
@@ -638,11 +640,11 @@ bool TConsoleStr::processMiss(int param_1)
 
 		if (param_1 == i * 10 + 1) {
 			JUTRect local_9c = unk25C[i]->getPane()->getBounds();
-			JGeometry::TVec3<f32> local_a8(
-			    local_9c.x1 + local_9c.getWidth() * 0.5f,
-			    local_9c.y1 + local_9c.getHeight() * 0.5f, 0.0f);
-			gpEmitterManager4D2->createEmitter(local_a8, 0x1F9, nullptr,
-			                                   nullptr);
+			gpEmitterManager4D2->createEmitter(
+			    JGeometry::TVec3<f32>(local_9c.x1 + local_9c.getWidth() * 0.5f,
+			                          local_9c.y1 + local_9c.getHeight() * 0.5f,
+			                          0.0f),
+			    0x1F9, nullptr, nullptr);
 		}
 
 		if (param_1 == i * 10 + 60) {
@@ -718,7 +720,9 @@ bool TConsoleStr::processScenario(int)
 
 // TODO: retail's frame is 0x40 larger (low region, plus a 4-byte gap between
 // the two branches' rects), and it adds 224 to a run-time 465 - y1 where this
-// spelling folds 224 + 465 into one subfic.
+// spelling folds 224 + 465 into one subfic. `centerY + (465 - y1)` and
+// `465 - y1 + centerY` emit the addi but reschedule (97.8); a shared named
+// `465 - y1` local for the offset and size is worse (95.1).
 void TConsoleStr::startCloseWipe(bool param_1)
 {
 	if (param_1) {
