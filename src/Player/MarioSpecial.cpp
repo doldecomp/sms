@@ -1056,6 +1056,9 @@ s16 TMario::getNozzleEmitVX()
 	return speed;
 }
 
+// TODO: frame 0x198 against 0x1a0, and retail materialises noHold's zero in
+// r28 before the mFaceAngle.x/unkF6 stores (ours `li r0`); declaring noHold
+// earlier (block, function scope) was inert.
 BOOL TMario::wireRolling()
 {
 	s16 initialAngle = mFaceAngle.x;
@@ -1174,9 +1177,9 @@ BOOL TMario::wireRolling()
 			unkF6          = 0;
 			mWireBounceVel = 0.0f;
 			mWireSag       = 0.0f;
-			BOOL noHold    = FALSE;
+			bool noHold    = false;
 			if (mHeldObject == nullptr && !onYoshi())
-				noHold = TRUE;
+				noHold = true;
 			if (noHold)
 				return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
 			return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
