@@ -553,7 +553,8 @@ void TMareEventDepressWall::initCommon()
 	// and the frame is 8 long (the char buffer 4 high). Tried:
 	// `skipCount = unk14 + skipCount` (98.3), the whole count named first,
 	// u32/s32/s16/u16 counters (u32 lands the frame, 93%), down-counting
-	// and offset-start loops, count/sum levels.
+	// and offset-start loops, count/sum levels, a shared function-scope `i`.
+	// Dropping the named sum lands the frame but loses the unrolled loop.
 	int skipCount = unk10 - 1;
 	skipCount += unk14;
 	for (int i = 0; i < 0x43 - skipCount; ++i)

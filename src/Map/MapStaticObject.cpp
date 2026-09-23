@@ -343,6 +343,13 @@ void TMapStaticObj::initUnique()
 		                                                            &mPosition);
 }
 
+// Retail calls TMapCollisionBase::setMtx out of line from init, one inline
+// level deeper than setUpUnk8TRS reaches from initMapCollision alone.
+static inline void setUpCollision(TMapCollisionManager* m, TMapStaticObj* o)
+{
+	m->setUpUnk8TRS(o->mPosition, o->mRotation, o->mScaling);
+}
+
 void TMapStaticObj::initMapCollision(const char* name)
 {
 	if ((mActorData->mFlags & TActorData::FLAG_UNK2) != 0)
@@ -350,7 +357,7 @@ void TMapStaticObj::initMapCollision(const char* name)
 	else
 		mCollisionManager = new TMapCollisionManager(1, "/map/map", nullptr);
 	mCollisionManager->init(name, 0, nullptr);
-	mCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+	setUpCollision(mCollisionManager, this);
 }
 
 // Retail calls this from init: the named `actor` is the fifteenth statement
@@ -384,6 +391,10 @@ void TMapStaticObj::initModel(const char* name)
 	TMapObjBase::startAllAnim(actor, name);
 }
 
+// TODO: 99.9%. The setUpUnk8TRS scratch Mtx sits at 0x94 and the insert
+// iterator pool at 0xd8 (retail 0xb0 and 0xa4), and the SMS_LoadParticle
+// flag pointer takes r31 (retail r29). Inert: naming the searched group or
+// the collision manager, forwarding `this` instead of the manager.
 void TMapStaticObj::init(const char* name)
 {
 	mActorName = name;

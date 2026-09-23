@@ -677,6 +677,9 @@ static inline BOOL KumokunIsTaken(const TKumokun* p)
 	return taken;
 }
 
+// TODO: 99.98%. The plane-normal temp of the outer isOnRoof() sits at 0xd0,
+// retail 0xd4: a 4-byte allocation-order hole. Inert: offset spelled
+// (0,0,0)/set(), a named isOnWall() result, a named normal.
 void TKumokun::calcRootMatrix()
 {
 	if (KumokunIsTaken(this)) {
@@ -686,8 +689,10 @@ void TKumokun::calcRootMatrix()
 
 	JGeometry::TVec3<f32> offset(0.0f);
 
-	if (isOnWall() || isOnRoof())
-		offset.scale(-30.0f, getPlaneNormal());
+	if (isOnWall() || isOnRoof()) {
+		offset.set(getPlaneNormal());
+		offset.scale(-30.0f);
+	}
 
 	JGeometry::TVec3<f32> pos = mPosition;
 	pos += offset;
