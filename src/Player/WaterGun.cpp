@@ -746,7 +746,7 @@ void TNozzleTrigger::emit(int param_1)
 		if (emittedWater != 0) {
 			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
 
-			if ((mFludd->mCurrentNozzle == TWaterGun::Hover)
+			if ((mFludd->getCurrentNozzleIndex() == TWaterGun::Hover)
 			    && ((gpMarDirector->unk58 & 0x7u) == 0u)) {
 				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
 			}
@@ -757,24 +757,16 @@ void TNozzleTrigger::emit(int param_1)
 			f32 reaction
 			    = pressure * (reactionPow - reactionPowMin) + reactionPowMin;
 
-			// TODO: retail reads mFaceAngle.y with `lhz` and re-derives the
-			// sin/cos table index twice, i.e. no named s16 angle and no CSE.
-			// Spelling it that way (as in TNozzleBase::emit) costs 0x20 of
-			// frame here and nets -2%, so the named locals stay.
-			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
-			f32 dirX           = emitInfo->mDir.get().x;
-			f32 dirZ           = emitInfo->mDir.get().z;
-			f32 cosAngle       = JMASCos(faceAngleY);
-			f32 sinAngle       = JMASSin(faceAngleY);
-			f32 directionScale = (-dirX * sinAngle - cosAngle * dirZ);
-
-			f32 velocity = reaction;
-			velocity *= directionScale;
-			velocity *= refEmitPow;
-
-			mFludd->mMario->addVelocity(velocity);
-
+			// TODO: frame 0xd8 against retail's 0x178; retail re-derives the
+			// sin/cos table index twice (two `sraw`, no CSE), holds emitInfo
+			// in r30 and the pow reference in r31, and depleteWater indexes
+			// the nozzle list through `add` rather than `lwzx`.
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
+			mFludd->mMario->addVelocity(
+			    (-dirVec.x * JMASSin(mFludd->mMario->mFaceAngle.y)
+			     - dirVec.z * JMASCos(mFludd->mMario->mFaceAngle.y))
+			    * (reaction * refEmitPow));
+
 			f32 accelY = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
 			mFludd->mMario->mVel.y += accelY;
 		}
@@ -1045,10 +1037,10 @@ void TNozzleDeform::emit(int param_1)
 			f32 reaction
 			    = localUnk378 * (reactionPow - reactionPowMin) + reactionPowMin;
 
-			// TODO: retail reads mFaceAngle.y with `lhz` and re-derives the
-			// sin/cos table index twice, i.e. no named s16 angle and no CSE.
-			// Spelling it that way (as in TNozzleBase::emit) costs 0x20 of
-			// frame here and nets -2%, so the named locals stay.
+			// TODO: frame 0xd8 against retail's 0x178; retail re-derives the
+			// sin/cos table index twice (two `sraw`, no CSE), holds emitInfo
+			// in r30 and the pow reference in r31, and depleteWater indexes
+			// the nozzle list through `add` rather than `lwzx`.
 			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
 			f32 dirX           = emitInfo->mDir.get().x;
 			f32 dirZ           = emitInfo->mDir.get().z;
