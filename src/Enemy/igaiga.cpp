@@ -377,12 +377,10 @@ bool TRollEnemy::isReachedToGoalXZ()
 	return false;
 }
 
-// TODO: 94.3%. Two residues. The amplitude arm's u32 -> f32 magic-double
-// slots: retail converts `rmax - rmin` after JMASin's fctiwz (slot 0x80),
-// ours first (0x98); inert: operand swap, a named `f32 amp`, `(f32)` casts,
-// `int` params, MsSin, `mBodyScale * (...) + rmin`. And stampGround's
-// arguments: retail computes z, then `32.0f * range`, then x, with range in
-// f4; named z/x locals before the call are +0.5% only, `range * 32.0f`,
+// TODO: 95.4%. Naming the sine (`f32 s = JMASin(...)`) puts the amplitude
+// arm's magic-double slots in retail's order. Left: stampGround's arguments:
+// retail computes z, then `32.0f * range`, then x, with range in f4; named
+// z/x locals before the call are +0.6% only (~4 left), `range * 32.0f`,
 // `range *= 32.0f`, a TVec3 stamp and position-first sums are inert/worse.
 void TRollEnemy::setBehavior()
 {
@@ -408,10 +406,8 @@ void TRollEnemy::setBehavior()
 			s32 rmin  = getSaveParams()->mSLPolluteRMin.get();
 			s32 rmax  = getSaveParams()->mSLPolluteRMax.get();
 			s32 cycle = getSaveParams()->mSLPolluteCycle.get();
-			range     = rmin
-			    + mBodyScale
-			        * (JMASin(180.0f * (mSpine->getTime() % cycle) / cycle)
-			           * (rmax - rmin));
+			f32 s     = JMASin(180.0f * (mSpine->getTime() % cycle) / cycle);
+			range     = rmin + mBodyScale * (s * (rmax - rmin));
 		}
 	}
 
@@ -491,11 +487,11 @@ void TIgaigaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 // Rolls the body joint about Z by the accumulated roll angle, and lifts it
 // by mTransYOffset.
-// TODO: 92%. The joint number and the roll matrix's address take each other's
-// callee-saved register, and our roll matrix sits 0xc low: retail packs it at
-// 0x2c with nothing above it but the int-to-float buffer, ours leaves a
-// 12-byte hole there. Inert (bb29): the header MsMtxSetRotX with or without
-// the rollMtx pointer, an f32 angle local, and dropping the pointer (81.9).
+// TODO: 92.5%. The header MsMtxSetRotX (weak in the map) through the rollMtx
+// pointer puts the roll matrix at retail's 0x2c. Left: the joint number and
+// rollMtx swap r30/r31, and ours hoists the 1.0/0.0/mTransYOffset loads above
+// the fctiwz where retail loads each just before use. Inert: rollMtx or the
+// Mtx declared above the joint, a named joint number, concats on `roll`.
 // A binding level over the file-scope current-roller pointer.
 static inline TRollEnemy* IgaigaCurRoller()
 {
@@ -513,27 +509,9 @@ static int RollEnemyBodyCallback(J3DNode* node, int param)
 		MtxPtr anmMtx
 		    = gpCurRollEnemy->getModel()->getAnmMtx(joint->getJntNo());
 
-		s16 angle = DEG2SHORTANGLE(gpCurRollEnemy->mRollAngle);
-		f32 s     = JMASSin(angle);
-		f32 c     = JMASCos(angle);
-
 		Mtx roll;
 		MtxPtr rollMtx = roll;
-		roll[0][0]     = 1.0f;
-		roll[0][1] = 0.0f;
-		roll[0][2] = 0.0f;
-		roll[0][3] = 0.0f;
-
-		roll[1][0] = 0.0f;
-		roll[1][1] = c;
-		roll[1][2] = -s;
-		roll[1][3] = 0.0f;
-
-		roll[2][0] = 0.0f;
-		roll[2][1] = s;
-		roll[2][2] = c;
-		roll[2][3] = 0.0f;
-
+		MsMtxSetRotX(rollMtx, gpCurRollEnemy->mRollAngle);
 		anmMtx[1][3] += TRollEnemy::mTransYOffset;
 		MTXConcat(anmMtx, rollMtx, anmMtx);
 		MTXConcat(J3DSys::mCurrentMtx, rollMtx, J3DSys::mCurrentMtx);
@@ -1288,6 +1266,9 @@ void TGorogoro::forceKill()
 }
 
 // duplicating it to find out would be a fakematch, so it stays a call.
+// TODO: 99.6%. The inlined calcHitScale's attack-radius and damage-radius
+// conversions take f31/f29 where retail has f29/f31. Inert: unnamed params,
+// ratio first, `ratio * x` products, C-style declarations in reverse order.
 void TGorogoro::behaveToWater(THitActor* param_1)
 {
 	TRollEnemy::behaveToWater(param_1);
