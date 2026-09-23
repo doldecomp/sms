@@ -349,7 +349,8 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
-// TODO: frames now exact via TU-local binders (mode/selected int result,
+// evGetTalkMode matches with a direct-return fork and a named int result.
+// TODO: frames now exact via TU-local binders (selected int result,
 // director for getTalkNPC). Residue is load order: retail
 // stores the slice type word, then the inlined member. A helper that
 // both names the pointer and pushes made TSpcStack::push a `bl` (38%).
@@ -357,14 +358,14 @@ static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 // is frame-exact with the slice 4 low.
 static inline u32 EventWatcherTalkMode()
 {
-	u32 mode = gpTalk2D->getTalkMode();
-	return mode;
+	return gpTalk2D->getTalkMode();
 }
 
 static void evGetTalkMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	interp->push((int)EventWatcherTalkMode());
+	int mode = EventWatcherTalkMode();
+	interp->push(mode);
 }
 
 static inline int EventWatcherSelectedValue()
