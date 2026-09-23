@@ -445,6 +445,9 @@ static void evPushNerve4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// TODO: 99.8%, instruction-exact at retail's 0xb0; every getNameRefPtr and
+// push temporary sits 4 low. Inert: `result` or `liveActor` declared early,
+// u32 flag, early return, `!= nullptr`; slice copies change the code.
 static void evIsOnLiveActorFlag(TSpcTypedInterp<TEventWatcher>* interp,
                                 u32 arg_num)
 {
@@ -536,6 +539,8 @@ static void evSetTimeLimit(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 // retail 0x70 with every slot 0x10 low. The dead getDataInt still reserves
 // slots: TSpcSlice(interp->pop()) as in evSetTimeLimit is +8, a bare pop()
 // or a named slice is smaller; getDataFloat, operator int are inert or worse.
+// Also measured: an f32/u32/u8 local, a const reference to the slice, a
+// double TSpcSlice copy (0x68 but +14 instructions), getDataString, push(0).
 static void evSetAttentionTime(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
@@ -775,6 +780,12 @@ static void evForceCloseTalk(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
+// TODO: 99.9%, instruction-exact at retail's 0xa0; the popped slices sit 4
+// low and the pushed one 8 low. All 216 combinations of accessor, raw member,
+// raw global and both director binders over the three sites, times the two
+// nil-push spellings, stay at >=17 markers (the best, 0xa8, puts the pops in
+// place and the push 4 low). Inert or worse: a switch, a named console,
+// TSpcSlice pops, C-style declarations.
 static void evInsertTimer(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
@@ -1090,12 +1101,16 @@ static void evIsInsideCube(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int cubeId = interp->pop().getDataInt();
+	// Declared ahead of `pos`: the named result takes the slot above it, which
+	// puts `pos` and every temporary below at retail's offsets.
+	int result;
 
 	// TODO: getPos10cmAbove or something like that?
 	JGeometry::TVec3<f32> pos = gpMarioOriginal->mPosition;
 	pos.y += 10.0f;
 
-	interp->push(gpCubeArea->isInCube(pos, cubeId) ? 1 : 0);
+	result = gpCubeArea->isInCube(pos, cubeId) ? 1 : 0;
+	interp->push(result);
 }
 
 static void evSetMarioWaiting(TSpcTypedInterp<TEventWatcher>* interp,
@@ -1550,7 +1565,10 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 
 // TODO: 99.9%, every instruction matching, slice 4 high (0x18 vs 0x14) at
 // retail's 0x28 frame. A TU-local push wrapper refuses TSpcStack::push
-// (`bl`); raw gpMSound is -8 of frame and slice.
+// (`bl`); raw gpMSound is -8 of frame and slice. The raw-global binder
+// named as in evAppearMushroom1up lands the slice at 0x18 but the frame at
+// 0x30; chained it is 0x30/0x1c. Inert: push(TSpcSlice()), push(0), direct
+// and reference-returning forks, gateCheck spelled out, a named SE id.
 static void evStartMontemanBGM(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
