@@ -467,7 +467,15 @@ void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 	unk12C = 0.0f;
 }
 
-void TSpineEnemy::updateStayCount(f32) { }
+void TSpineEnemy::updateStayCount(f32 dist)
+{
+	if (abs(dist - unk12C) < 100.0f) {
+		unk128 += 1;
+	} else {
+		unk128 = 0;
+		unk12C = dist;
+	}
+}
 
 BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 {
@@ -532,17 +540,14 @@ void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
 	vel += polarXZ(mRotation.y, march_speed);
 	mLinearVelocity = vel;
 
-	if (abs(fVar7 - unk12C) < 100.0f) {
-		unk128 += 1;
-	} else {
-		unk128 = 0;
-		unk12C = fVar7;
-	}
+	updateStayCount(fVar7);
 }
 
 // TODO: 95.9%. Retail keeps march_speed in f31 and computes `dVar13 * cycle`
 // unfused after getPhaseShift(); its frame is 0x18 larger. Spelling the
 // product/phase sum other ways is inert or fuses into an fmadds.
+// Routing the stay-count tail through the UNUSED updateStayCount (0x38, as
+// the map has it) is inert here and in walkToCurPathNode.
 void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
                                       f32 cycle, f32 angle)
 {
@@ -585,12 +590,7 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 	vel += polarXZ(mRotation.y, march_speed);
 	mLinearVelocity = vel;
 
-	if (abs(dVar9 - unk12C) < 100.0f) {
-		unk128 += 1;
-	} else {
-		unk128 = 0;
-		unk12C = dVar9;
-	}
+	updateStayCount(dVar9);
 }
 
 // PathNode.hpp's getPoint() reaches the node's actor through getPosition();

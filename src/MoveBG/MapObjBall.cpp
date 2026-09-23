@@ -420,6 +420,19 @@ void TMapObjBall::touchActor(THitActor* param_1)
 	boundByActor(param_1);
 }
 
+// Horizontal speed: the two components go in as arguments, one copy of the
+// velocity each, and the sum of squares fuses the x product only.
+static inline f32 MapObjBallSqXZ(f32 x, f32 z) { return x * x + z * z; }
+
+static inline f32 MapObjBallXZSpeed(const JGeometry::TVec3<f32>& v)
+{
+	return JGeometry::TUtil<f32>::sqrt(MapObjBallSqXZ(
+	    JGeometry::TVec3<f32>(v).x, JGeometry::TVec3<f32>(v).z));
+}
+
+// TODO: every instruction matches; the frame is 0x48 short. Retail leaves
+// 0x10 between `axis` and `cur` and its low-region temporaries (the setRotate
+// axis copy) sit 0x24 higher; f5-f7 in the setRotate expansion are permuted.
 void TMapObjBall::calcCurrentMtx()
 {
 	TPosition3f rot;
@@ -447,14 +460,7 @@ void TMapObjBall::calcCurrentMtx()
 		    mPosition.x + JGeometry::TVec3<f32>(mVelocity).x,
 		    mPosition.z + JGeometry::TVec3<f32>(mVelocity).z, &axis);
 
-		JGeometry::TVec3<f32> vel(mVelocity);
-		f32 rolled = 2.0f
-		    * (JGeometry::TUtil<f32>::sqrt(
-		           JGeometry::TVec3<f32>(vel).x * JGeometry::TVec3<f32>(vel).x
-		           + JGeometry::TVec3<f32>(vel).z
-		               * JGeometry::TVec3<f32>(vel).z)
-		       / mBodyRadius);
-
+		f32 rolled = 2.0f * (MapObjBallXZSpeed(mVelocity) / mBodyRadius);
 		rot.setRotate(axis, rolled);
 	}
 
@@ -475,7 +481,7 @@ void TMapObjBall::calcCurrentMtx()
 	if (isActorType(0x40000392))
 		rot.ref(1, 3) = -(10.0f * (1.0f - rot.at(1, 1)) - rot.at(1, 3));
 
-	MTXCopy(rot, getModel()->getAnmMtx(0));
+	getModel()->setAnmMtx(0, rot);
 }
 
 // Binding level over the physical-parameter chain, sizing
