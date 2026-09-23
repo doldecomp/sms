@@ -220,6 +220,11 @@ void TMarDirector::movement()
 // int/u16 copy of param_1, a conversion helper (by reference, pointer or
 // value), direct `mNextArea = next`/`set`, a pointer-returning application
 // accessor, by-value setNextArea/operator=, const-reference set() flag.
+// A reference binder (`TApplication& app = gpApplication; return app;`) at
+// the setNextArea site reaches 0x50 at 99.9 but puts the extra 8 bytes
+// among the flag temporaries (0x28/0x34) rather than retail's hole at
+// 0x30-0x37 under `next`; refused as an alias (decideNextStage: same
+// frame, same misplacement, no gain).
 // Reference-returning accessor: retail folds the TGameSequence stores onto
 // the &gpApplication base (0x12/0x13/0x14) instead of binding &mNextArea.
 static inline TApplication& MDEApp() { return gpApplication; }
