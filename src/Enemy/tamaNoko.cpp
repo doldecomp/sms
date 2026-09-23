@@ -135,10 +135,9 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (cue & CUE_CALC_VIEW)
 			unk18->viewCalc();
 
-		if (cue & CUE_ENTRY) {
+		if (cue & CUE_ENTRY)
 			unk18->entry();
-			return;
-		}
+		return;
 	}
 
 	unk18->perform(cue, graphics);
