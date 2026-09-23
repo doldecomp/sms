@@ -604,6 +604,8 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 	return 1;
 }
 
+// TODO: 94.5%. Retail keeps &m of the coin loop in r25 across iterations and
+// its frame is 0x18 larger; Mtx scope and `off` placement are inert.
 void TItemSlotDrum::generateItem()
 {
 	if (getSlotResult() == 0) {
@@ -615,22 +617,8 @@ void TItemSlotDrum::generateItem()
 		TTelesa* item = (TTelesa*)gpConductor->makeOneEnemyAppear(
 		    getPosition(), "テレサマネージャー", 1);
 		if (item != nullptr) {
-			s16 ang = (s16)DEG2SHORTANGLE(mRotation.y);
-			f32 s   = JMASSin(ang);
-			f32 c   = JMASCos(ang);
 			Mtx m;
-			m[0][0] = c;
-			m[0][1] = 0.0f;
-			m[0][2] = s;
-			m[0][3] = 0.0f;
-			m[1][0] = 0.0f;
-			m[1][1] = 1.0f;
-			m[1][2] = 0.0f;
-			m[1][3] = 0.0f;
-			m[2][0] = -s;
-			m[2][1] = 0.0f;
-			m[2][2] = c;
-			m[2][3] = 0.0f;
+			MsMtxSetRotY(m, mRotation.y);
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 300.0f);
 			MTXMultVec(m, &off, &off);
 			item->mPosition += off;
@@ -646,34 +634,19 @@ void TItemSlotDrum::generateItem()
 			spread = 20.0f;
 		}
 		for (int i = 0; i < count; ++i) {
-			s16 ang = (s16)DEG2SHORTANGLE(spread * ((f32)i - 1.0f)
-			                              + (mRotation.y - spread));
-			f32 s   = JMASSin(ang);
-			f32 c   = JMASCos(ang);
 			Mtx m;
-			m[0][0] = c;
-			m[0][1] = 0.0f;
-			m[0][2] = s;
-			m[0][3] = 0.0f;
-			m[1][0] = 0.0f;
-			m[1][1] = 1.0f;
-			m[1][2] = 0.0f;
-			m[1][3] = 0.0f;
-			m[2][0] = -s;
-			m[2][1] = 0.0f;
-			m[2][2] = c;
-			m[2][3] = 0.0f;
+			MsMtxSetRotY(m, spread * (f32)i + (mRotation.y - spread));
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 200.0f);
 			MTXMultVec(m, &off, &off);
 			TMapObjBase* item = gpItemManager->makeObjAppear(
-			    getPosition().x + off.x, getPosition().y,
-			    getPosition().z + off.z, 0x2000000E, false);
+			    mPosition.x + off.x, mPosition.y, mPosition.z + off.z,
+			    0x2000000E, false);
 			if (item != nullptr) {
 				item->mPosition += off;
 				MsVECNormalize(&off, &off);
-				item->mVelocity.x = 12.0f * off.x;
-				item->mVelocity.y = TMsRange<f32>(5.0f, 10.0f).rand();
-				item->mVelocity.z = 12.0f * off.z;
+				item->mVelocity.set(12.0f * off.x,
+				                    TMsRange<f32>(5.0f, 10.0f).rand(),
+				                    12.0f * off.z);
 				item->offLiveFlag(LIVE_FLAG_UNK10);
 			}
 		}
