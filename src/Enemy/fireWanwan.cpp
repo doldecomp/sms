@@ -981,6 +981,36 @@ bool TFireWanwan::doAttack()
 	return isMissMario();
 }
 
+// doAdjustTarget's quaternion rotate, parked here from JGQuat4.hpp. Retail
+// inlines doAdjustTarget into both nerves and `bl`s TVec4<f32>::TVec4() and
+// TVec3<f32>::set<f32> from this body, which is two levels below it; it reads
+// the quaternion's members after constructing the product (no x/y/z/w
+// locals) and has no `* 0` terms, unlike TQuat4::rotateQ. Whether the header
+// rotate should take this body is untested outside this unit.
+static inline void FireWanwanRotateQ(const JGeometry::TQuat4<f32>& r,
+                                     const JGeometry::TVec3<f32>& v,
+                                     JGeometry::TVec3<f32>& rDest)
+{
+	// clang-format off
+	JGeometry::TQuat4<f32> q;
+	q.x =  r.y * v.z - r.z * v.y + r.w * v.x;
+	q.y = -r.x * v.z + r.z * v.x + r.w * v.y;
+	q.z =  r.x * v.y - r.y * v.x + r.w * v.z;
+	q.w = -r.x * v.x - r.y * v.y - r.z * v.z;
+
+	rDest.set( q.x *  r.w + q.y * -r.z - q.z * -r.y + q.w * -r.x,
+	          -q.x * -r.z + q.y *  r.w + q.z * -r.x + q.w * -r.y,
+	           q.x * -r.y - q.y * -r.x + q.z *  r.w + q.w * -r.z);
+	// clang-format on
+}
+
+static inline void FireWanwanRotateInPlace(const JGeometry::TQuat4<f32>& r,
+                                           const JGeometry::TVec3<f32>& v,
+                                           JGeometry::TVec3<f32>& rDest)
+{
+	FireWanwanRotateQ(r, v, rDest);
+}
+
 static bool is_antiparallel(const JGeometry::TVec3<f32>& v1,
                             const JGeometry::TVec3<f32>& v2)
 {
@@ -991,26 +1021,39 @@ static bool is_antiparallel(const JGeometry::TVec3<f32>& v1,
 
 void TFireWanwan::decideTarget(const JGeometry::TVec3<f32>& param_1)
 {
-	JGeometry::TVec3<f32> local_54 = param_1;
-	local_54 -= mPosition;
+	JGeometry::TVec3<f32> diff = param_1;
+	diff -= mPosition;
 
-	JGeometry::TVec3<f32> local_2C = local_54;
+	JGeometry::TVec3<f32> dir = diff;
 
-	local_54.y = 0.0f;
+	dir.y = 0.0f;
 
-	local_54.normalize();
+	dir.normalize();
 
-	if (is_antiparallel(local_2C, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f))) {
+	if (is_antiparallel(diff, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f))) {
 		unk1CC.setEulerY(JGeometry::TUtil<f32>::PI());
 	} else {
-		unk1CC.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f), local_54,
-		                 1.0f);
+		unk1CC.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f), dir, 1.0f);
 	}
 
 	// The map's factor is 0x3c8efa36, the single-precision product
 	// pi * (1/180); DEG_TO_RAD folds its division in double and gives
 	// 0x3c8efa35 instead.
 	unk1BC.setEulerY(0.017453294f * mRotation.y);
+}
+
+// MathUtil.hpp's MsGetRotFromZaxisY with the axis.z == 0 branch as one
+// conditional return, parked here: the header's nested if/else is one
+// statement too many for the inliner inside doAdjustTarget (depth 2), where
+// retail expands it. Untested as a header change.
+static inline f32 FireWanwanRotFromZ(const JGeometry::TVec3<f32>& axis)
+{
+	if (axis.z == 0.0f)
+		return axis.x >= 0.0f ? 90.0f : -90.0f;
+	if (axis.z >= 0.0f)
+		return (360.0f / 65536.0f) * matan(axis.z, axis.x);
+	f32 theta = matan(-axis.z, axis.x) * (360.0f / 65536.0f);
+	return 180.0f - theta;
 }
 
 void TFireWanwan::doAdjustTarget()
@@ -1026,9 +1069,9 @@ void TFireWanwan::doAdjustTarget()
 
 	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
 
-	local_70.rotate(local_60, local_60);
+	FireWanwanRotateInPlace(local_70, local_60, local_60);
 
-	f32 rot = MsGetRotFromZaxisY(local_60);
+	f32 rot = FireWanwanRotFromZ(local_60);
 
 	mRotation.y = MsAngleWrap(rot);
 }
@@ -2102,15 +2145,12 @@ DEFINE_NERVE(TNerveFireWanwanTurn, TLiveActor)
 	return false;
 }
 
-// Retail `bl`s TVec4<f32>::dot and TVec4<f32>::scale out of the quaternion
-// normalize in both doAdjustTarget expansions, one inline level deeper than
-// a direct normalize() reaches. The header forwarder costs seven other
-// quaternion sites, so the level lives here.
-static inline void FireWanwanNormalizeQuat(JGeometry::TQuat4<f32>& q)
-{
-	q.normalize();
-}
 
+
+// TODO: instruction-exact, frame 0xe0 against 0xe8. Retail puts decideTarget's
+// diff above its other temporaries (0xbc, dir at 0x94) and doAdjustTarget's
+// block 0x10 higher; declaring dir before diff, dir = diff, and ctor spellings
+// are inert. RecoverGraph has the same 8-byte deficit.
 DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 {
 	TFireWanwan* self = (TFireWanwan*)spine->getBody();
@@ -2119,30 +2159,7 @@ DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 		self->decideTarget(SMS_GetMarioPos());
 	}
 
-	// doAdjustTarget's body (UNUSED 0x298 in the map) written out here: at
-	// depth 1 TQuat4<f32>::rotate's in-class body has no statement limit and
-	// expands as retail does, while behind the call it sits at depth 2 where the
-	// 9-statement allowance refuses it and MWCC emits the bl we used to have.
-	// TODO: retail also `bl`s TVec4<f32>::TVec4() for rotate's first TQuat4
-	// and TVec3<f32>::set<f32> at its end, and keeps q in memory (0x40): rotate
-	// expands one level deeper than here, but behind any wrapper (doAdjustTarget,
-	// a TU-local forwarder, the one-argument rotate) MWCC emits `bl rotate`.
-	J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
-
-	f32 fVar8 = JGeometry::TUtil<f32>::clamp(ctrl->getFrame() / ctrl->getEnd(),
-	                                         0.0f, 1.0f);
-
-	JGeometry::TQuat4<f32> local_70;
-	local_70.slerp(self->unk1BC, self->unk1CC, fVar8);
-	FireWanwanNormalizeQuat(local_70);
-
-	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
-
-	local_70.rotate(local_60);
-
-	f32 rot = MsGetRotFromZaxisY(local_60);
-
-	self->mRotation.y = MsAngleWrap(rot);
+	self->doAdjustTarget();
 
 	if (self->checkCurAnmEnd(0)) {
 		spine->pushAfterCurrent(&TNerveFireWanwanAttack::theNerve());
@@ -2213,23 +2230,7 @@ DEFINE_NERVE(TNerveFireWanwanRecoverGraph, TLiveActor)
 	// TODO: inline?
 	bool b = self->getMActor()->checkCurBckFromIndex(7);
 	if (b) {
-		// doAdjustTarget's body written out; see TNerveFireWanwanFindMario.
-		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
-
-		f32 fVar8 = JGeometry::TUtil<f32>::clamp(
-		    ctrl->getFrame() / ctrl->getEnd(), 0.0f, 1.0f);
-
-		JGeometry::TQuat4<f32> local_70;
-		local_70.slerp(self->unk1BC, self->unk1CC, fVar8);
-		FireWanwanNormalizeQuat(local_70);
-
-		JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
-
-		local_70.rotate(local_60);
-
-		f32 rot = MsGetRotFromZaxisY(local_60);
-
-		self->mRotation.y = MsAngleWrap(rot);
+		self->doAdjustTarget();
 		if (self->checkCurAnmEnd(0)) {
 			// removed code?
 		}
