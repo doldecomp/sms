@@ -508,10 +508,10 @@ void TTalk2D2::openTalkWindow(TBaseNPC* npc)
 	SMSRumbleMgr->startPause();
 }
 
-// TODO: literal-pool order. The target asks for -0.5f (@4525) before 0.5f
-// (@4526) inside this function; ours reverses the pair. Values and count
-// are otherwise identical, so it is a spelling/order question in the
-// bezier maths, not a wrong constant.
+// TODO: frame 0x1e8 vs retail 0x288 (retail spills more of the hoisted
+// int-to-float conversions). Also open: the child link null check is
+// scheduled before the parent tree address, and the dead
+// `>= 0x80` arm's register below.
 void TTalk2D2::makeBoxLine(s8 line, char* text)
 {
 	JUTPoint start(mBezierStart[line]->getBounds().x1,
@@ -569,30 +569,29 @@ void TTalk2D2::makeBoxLine(s8 line, char* text)
 		if (curX > 0.0f)
 			angle *= -1.0f;
 
-		// TODO: retail computes negHalfX/negHalfY before cosf and keeps
-		// them in callee-saved FPRs, i.e. they are not forwarded into their
-		// single use as they are here (an inline parameter would do that);
-		// the extra register pressure is retail's larger spill area.
 		// Rotate the glyph's anchor about the midpoint of the segment it
-		// sits on.  The -0.5f and +0.5f terms cancel in exact arithmetic
-		// but retail emits both, so they were written out.
-		f32 sumX     = prevX + curX;
-		f32 sumY     = prevY + curY;
-		f32 negHalfX = -0.5f * sumX;
-		f32 negHalfY = -0.5f * sumY;
-		f32 halfX    = 0.5f * sumX;
-		f32 halfY    = 0.5f * sumY;
-		f32 cos      = cosf(angle);
-		f32 sin      = sinf(angle);
-		f32 rotX     = negHalfX + (prevX * cos + prevY * -sin) + halfX;
-		f32 rotY     = negHalfY + (prevX * sin + prevY * cos) + halfY;
+		// sits on: translate by -mid, rotate, translate back.  The -0.5f and
+		// +0.5f terms cancel in exact arithmetic but retail emits both, and
+		// accumulating into rotX/rotY is what keeps -mid computed ahead of
+		// cosf.
+		f32 sumX = prevX + curX;
+		f32 sumY = prevY + curY;
+		f32 rotX = -0.5f * sumX;
+		f32 rotY = -0.5f * sumY;
+		f32 cos  = cosf(angle);
+		f32 sin  = sinf(angle);
+		f32 halfX = 0.5f * sumX;
+		f32 halfY = 0.5f * sumY;
+		rotX += (prevX * cos + prevY * -sin) + halfX;
+		rotY += (prevX * sin + prevY * cos) + halfY;
 
 		s16 x = rotX + (rotX > 0.0f ? 0.5f : -0.5f);
 		s16 y = rotY + (rotY > 0.0f ? 0.5f : -0.5f);
 		mCharBox[idx]->move(x, -40 - y);
 		mCharBox[idx]->setBasePosition(J2DBasePosition_4);
 		mCharBox[idx]->mRotation = 180.0f * angle / 3.1415927f;
-		mLinePane[line]->mPaneTree.appendChild(&mCharBox[idx]->mPaneTree);
+		JSUTree<J2DPane>* tree = &mCharBox[idx]->mPaneTree;
+		mLinePane[line]->mPaneTree.append(tree);
 
 		if (t > 1.05f) {
 			if (mLineLength[line] > col)
