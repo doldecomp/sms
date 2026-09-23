@@ -48,10 +48,32 @@ void TMario::checkJumpingThrowStart()
 			changePlayerStatus(MARIO_STATUS_JUMP_THROW, 0, 0);
 }
 
-// TODO: UNUSED, 0x180 in the map. Fully inlined; its body is still unknown.
+// UNUSED (0x180 in the map): slipFalling's air control, which it inlines.
 // Placed here because the map emits it between checkJumpingThrowStart and
 // doSpinJumping, i.e. after them in source order under -inline deferred.
-void TMario::doSlipJumping() { }
+void TMario::doSlipJumping()
+{
+	mForwardVel *= mJumpParams.mJumpSpeedBrake.get();
+	if (mInput & 1) {
+		u16 angleDiff    = mIntendedYaw - mFaceAngle.y;
+		f32 velIncrement = 0.03125f * getIntendedMag();
+
+		mForwardVel
+		    += velIncrement * JMASCos(angleDiff) * getJumpAccelControl();
+
+		mFaceAngle.y
+		    += velIncrement * JMASSin(angleDiff) * getJumpSlideControl();
+	}
+
+	if (mForwardVel > 32.0f)
+		mForwardVel -= 0.2f;
+
+	if (mForwardVel < -16.0f)
+		mForwardVel += 0.4f;
+
+	mVel.x = mSlideVelX = mForwardVel * JMASSin(mFaceAngle.y);
+	mVel.z = mSlideVelZ = mForwardVel * JMASCos(mFaceAngle.y);
+}
 
 // TODO: UNUSED, 0x148 in the map. Fully inlined; body still unknown.
 void TMario::doSpinJumping() { }
@@ -666,40 +688,18 @@ BOOL TMario::catchStop()
 	return 0;
 }
 
-// TODO: retail keeps velIncrement in f31 and the table value in f30; ours
-// swaps them. Inert: declaration order, getIntendedMag(), operand order,
-// parenthesised product, a compound velIncrement.
 BOOL TMario::slipFalling()
 {
 	mStatusTimer += 1;
 	if (getStatusTimer() > 120 && mPosition.y - mFloorPosition.y > 500.0f)
 		return changePlayerStatus(MARIO_STATUS_LANDING, 1, false);
 
-	mForwardVel *= mJumpParams.mJumpSpeedBrake.get();
-	if (mInput & 1) {
-		u16 angleDiff    = mIntendedYaw - mFaceAngle.y;
-		f32 velIncrement = 0.03125f * mIntendedMag;
-
-		mForwardVel
-		    += velIncrement * JMASCos(angleDiff) * getJumpAccelControl();
-
-		mFaceAngle.y
-		    += velIncrement * JMASSin(angleDiff) * getJumpSlideControl();
-	}
-
-	if (mForwardVel > 32.0f)
-		mForwardVel -= 0.2f;
-
-	if (mForwardVel < -16.0f)
-		mForwardVel += 0.4f;
-
-	mVel.x = mSlideVelX = mForwardVel * JMASSin(mFaceAngle.y);
-	mVel.z = mSlideVelZ = mForwardVel * JMASCos(mFaceAngle.y);
+	doSlipJumping();
 
 	switch (jumpProcess(0)) {
 	case 1:
 		if (mStatusState == 0 && getVel().y < 0.0f
-		    && mGroundPlane->getNormal().y >= 0.9848077f) {
+		    && mGroundPlane->mNormal.y >= 0.9848077f) {
 			mVel.y       = -getVel().y / 2.0f;
 			mStatusState = 1;
 		} else {
