@@ -47,7 +47,6 @@ public:
 	/* 0x4 */ // vt
 public:
 	JAIBasic();
-	~JAIBasic();
 
 	virtual void initStream();
 	virtual JAISound* makeSound(u32 count);

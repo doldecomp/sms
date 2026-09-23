@@ -488,14 +488,9 @@ f32 MSound::getDistPowFromCamera(const Vec& pos)
 }
 #endif
 
-// TODO: retail keeps `this` in r31 all the way (8 saved GPRs, frame 0x88);
-// ours spills it to 8(r1) and gives r31 to the string base (frame 0x80).
-// aramSize/loop-type/receiver/new-temp spellings inert.
-// TODO: 86.9%. The `this` spill to 8(r1) (retail keeps it in r31 and saves
-// r24-r31) is EH cleanup for the JAIBasic base: JAIBasic.hpp declares
-// `~JAIBasic()`, which retail never defines (no __dt__8JAIBasic in the map).
-// Dropping that shared-header declaration gives 99.78% with every instruction
-// right and no regression tree-wide (parked, c-msnd). What is then left is an
+// TODO: 99.78%, every instruction right since JAIBasic.hpp stopped declaring
+// `~JAIBasic()` (retail never defines it: no __dt__8JAIBasic in the map; the
+// declaration made the ctor spill `this` for EH cleanup). What is left is an
 // 8-byte low region (fctiwz temps at 0x48/0x50 vs 0x40/0x48); inert with the
 // header fix: unnamed min<u8> result, unnamed unk4 read, both, and dropping
 // or moving the aramSize copy.
