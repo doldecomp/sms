@@ -1291,8 +1291,10 @@ void TKoopa::loadAfter()
 	mBody = new TKoopaBody(this);
 }
 
-// TODO: 95.8%. Frame 0x38 short (retail 0x150) in the inlined getTargetDir
-// temporaries; a few loads are scheduled differently.
+// TODO: 99.5%. Frame 0x30 short (retail 0x150), the same dead space above
+// the named vectors that out-of-line getTargetDir lacks (0x28 there); the
+// changeAnm pool base and the TNerve zero swap r29/r30, and getTargetDir's
+// origin/xDir/zDir y and z loads swap f1/f2.
 void TKoopa::init(TLiveManager* manager)
 {
 	mBodyRadius = 800.0f;
@@ -1306,9 +1308,8 @@ void TKoopa::init(TLiveManager* manager)
 	changeAnm(KOOPA_ANM_WAIT, 1, 2.0f);
 	changeAnm(KOOPA_ANM_FIRST, 0, 2.0f);
 
-	MActorAnmBck* bck = getMActor()->getAnmBck();
-	if (bck)
-		bck->initSimpleMotionBlend(0x10);
+	if (getMActor()->getAnmBck())
+		getMActor()->getAnmBck()->initSimpleMotionBlend(0x10);
 
 	mTargetDir = getTargetDir(SMS_GetMarioPos());
 
@@ -1317,14 +1318,14 @@ void TKoopa::init(TLiveManager* manager)
 
 	JUTNameTab* joints = getModel()->getModelData()->getJointName();
 	// TODO: the ROM walks every joint name here and does nothing with them.
-	for (u16 i = 0; i < joints->getResNameTable()->mEntryNum; i++) { }
+	for (u16 i = 0; i < joints->getNameNum(); i++) { }
 
 	mAgoJntIndex  = joints->getIndex("ago");
 	mHeadJntIndex = joints->getIndex("head");
 	mNeckJntIndex = joints->getIndex("neck");
 
-	J3DJoint* head
-	    = getModel()->getModelData()->getJointNodePointer(mHeadJntIndex);
+	J3DModelData* modelData = getModel()->getModelData();
+	J3DJoint* head          = modelData->getJointNodePointer(mHeadJntIndex);
 	head->setCallBack(&KoopaNeckCallBack);
 	head->setCallBackUserData(this);
 
