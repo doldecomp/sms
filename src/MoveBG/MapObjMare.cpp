@@ -807,6 +807,8 @@ void TMapObjPuncher::load(JSUMemoryInputStream& stream)
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
+// TODO: retail keeps dir.x/dir.z in f31/f30 and push in f29 (ours push first),
+// frame 8 larger; named dir components, heading/dot helpers and push placement were inert.
 void TMuddyBoat::moveByWater()
 {
 	if (SMS_GetMarioWaterGun()->isEmitWater() == 0)
