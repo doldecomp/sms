@@ -4662,15 +4662,17 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		updateCounterState(this);
 
 		if (gpMarioOriginal->mStatus == 0xC400201
-		    && gpMarDirector->mState != TMarDirector::STATE_UNK5 && !unk50
-		    && !unk140->isInterpolatorAtZero()) {
-			++unk30;
-			if (unk30 > 0xc8) {
-				startAppearStar();
-				startAppearMario(false);
-				unk70 = 0xffff;
-				unk59 = 0;
-				unk30 = 0;
+		    && gpMarDirector->mState != TMarDirector::STATE_UNK5 && !unk50) {
+			// Retail leaves the counter alone while the meter is hidden.
+			if (!unk140->isInterpolatorAtZero()) {
+				++unk30;
+				if (unk30 > 0xc8) {
+					startAppearStar();
+					startAppearMario(false);
+					unk70 = 0xffff;
+					unk59 = 0;
+					unk30 = 0;
+				}
 			}
 		} else {
 			unk30 = 0;
