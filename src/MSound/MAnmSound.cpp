@@ -197,6 +197,12 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 				// ternary or if/else, `const`, a named sound pointer, a
 				// `const Vec&` Mario, a named sum, `x + (y + z)`, and a
 				// helper taking the position (-0x10 of frame).
+				// Also inert (c-link3): getDistFromMario with named pow
+				// results (+0x10), a `const Vec&` Mario, an early return
+				// or a result local; declaring the distance after the
+				// volume or in the `if`. A TU-local volume helper taking
+				// (actor, ptr, index) fixes r27/r29 but hoists the
+				// mDataCounter read and keeps the volume in f29.
 				f32 dVar10 = 1.0f;
 
 				f32 fVar11 = MarioDistance(actor);

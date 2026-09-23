@@ -123,6 +123,11 @@ void TBathtubBinder::bind(TLiveActor* actor)
 // helper in both temp orders (116 markers, +8 frame). Retail's **load** order
 // is reachable for free by naming or assigning z first (`lfs 0x104` before
 // `lfs 0xe4`), but it buys no marker on its own.
+// c-link3: constrain_ names dx before dz, which gives retail's f3/f4 for the
+// two differences at every site (86 -> 76 markers). Inert since: every
+// single and pair of member accessors (getFrontMargin/getBackMargin/
+// getHeightOffset/getBackRatio/getFrontDist/getBackDist/getWater, and
+// getPosition() at each actor read), and dir via set() or with a y store.
 void TBathtubBinder::float_(TLiveActor* actor)
 {
 	if (mWater == nullptr)
@@ -186,8 +191,8 @@ void TBathtubBinder::constrain_(JGeometry::TVec3<f32>& pos, f32 margin)
 	JGeometry::TVec3<f32> center = data.getThing();
 	f32 radius                   = BathtubRadius(data) - margin;
 	f32 cz                       = center.z;
-	f32 dz                       = pos.z - cz;
 	f32 dx                       = pos.x - center.x;
+	f32 dz                       = pos.z - cz;
 	f32 lsq                      = dx * dx + dz * dz;
 	if (lsq > radius * radius) {
 		f32 scale = radius * JGeometry::TUtil<f32>::inv_sqrt(lsq);
