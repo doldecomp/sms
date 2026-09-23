@@ -186,13 +186,16 @@ int TMarDirector::direct()
 	return desiredAppState;
 }
 
-// TODO: the copy constructor calls and the inlined parameter copy now match
-// (by-value TFlagT::operator=, header round). Two differences remain: retail's
-// frame is 8 bytes larger (one more stack temporary, the same open class as
-// TApplication::TApplication's +0x10), and it holds &gpApplication in r31 for
-// setNextArea's stores where ours holds &mNextArea in r30. Spelling the copy as
-// `gpApplication.mNextArea = local_3C` or a direct three-argument `set` is
-// worse (84%) and breaks the expanded copies in changeState/updateGameMode.
+// Reference-returning accessor, as MarDirectorEvent's MDEApp(): retail folds
+// setNextArea's stores onto the &gpApplication base (0x12/0x13/0x14) in r31
+// instead of binding &mNextArea.
+static inline TApplication& MDDApp() { return gpApplication; }
+
+// TODO: 99.6%, instruction-exact; retail's frame is 8 bytes larger (one more
+// stack temporary, the same open class as TApplication::TApplication's
+// +0x10). Spelling the copy as `gpApplication.mNextArea = local_3C` or a
+// direct three-argument `set` is worse (84%) and breaks the expanded copies
+// in changeState/updateGameMode.
 static void decideNextStage()
 {
 	TGameSequence local_3C;
@@ -208,7 +211,7 @@ static void decideNextStage()
 		local_3C.set(1, 0xff, JDrama::TFlagT<u16>());
 		break;
 	}
-	gpApplication.setNextArea(local_3C);
+	MDDApp().setNextArea(local_3C);
 }
 
 // UNUSED, 0x10c.
