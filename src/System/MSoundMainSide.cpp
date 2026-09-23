@@ -786,9 +786,11 @@ void MSStageDistFade::proc()
 		gpMSound->unk9C->xFadeBgm(fVar1);
 	}
 
-	// TODO: inline?
-	u32 r29 = unk14;
+	// TODO: inline? Retail's frame is 0x40 larger (every low-region temporary
+	// sits 0x40 higher, nothing referenced below them), and calcPan's result
+	// goes straight to f30 where ours passes through f0.
 	u32 r30 = unk4;
+	u32 r29 = unk14;
 
 	Vec local_68 = gpMSound->mAudioCameras->toCamSpace(*unk10);
 
