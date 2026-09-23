@@ -2681,12 +2681,10 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 	if (boss->checkSlotResult())
 		timeLimit = (int)((f32)timeLimit / 2.0f);
 
-	// TODO: one instruction left -- the ROM holds unk368 in r3 and emits the
-	// receiver `addi r3, r31, 0` after the subtraction; we load it into r4 and
-	// the receiver floats above the subf. Frame and everything else are exact.
-	// Named `elapsed` is inert.
-	if (boss->unk368 > timeLimit - 120)
-		boss->flashItem(timeLimit - boss->unk368);
+	if (boss->unk368 > timeLimit - 120) {
+		int remaining = timeLimit - boss->unk368;
+		boss->flashItem(remaining);
+	}
 
 	if (BosstelesaGetMActor(boss)->checkCurBckFromIndex(15)) {
 		if (boss->checkAllItemDead() || boss->unk368 > timeLimit) {

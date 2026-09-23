@@ -189,6 +189,8 @@ void TBossHanachan::copyFrameFromOldAnmToNewAnm_()
 // in retail's r29 (10 -> 6 markers). Inert on the rest: the head block in its
 // own `{}` scope or a TU-local helper; worse: one `actor` reused by the loop
 // (12), the head actor unnamed (frame -8), a named nerve (+8).
+// Also inert: the head actor or a shared loop `int i` declared C-style at
+// the top of the function.
 void TBossHanachan::changeAnmRateAndFrameUpdate_()
 {
 	bool changeRate = true;
