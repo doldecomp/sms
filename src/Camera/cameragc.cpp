@@ -960,20 +960,13 @@ void CPolarSubCamera::calcExternalData_()
 // short. SMS_GetMarioPos() is +4 of low region and throws the named-local
 // slots. getCamMode() at isTalkCameraSpecifyMode adds an instruction.
 //
-// The map also lists this and calcSlopeAngleX_ as **weak** symbols of this TU
-// while every other CPolarSubCamera method here is global, so both were
-// declared inline somewhere -- but `inline` is not the mechanism. Measured:
-// adding `inline` to either declaration in Camera.hpp makes MWCC expand the
-// 0x468 body into perform (perform and calcPosAndAt_ drop to 0% and 75.5%,
-// unit 95.3 -> 70.0), which is exactly what the depth-1 no-limit rule
-// predicts. So whatever gives these two weak linkage also suppresses
-// inlining. Batch 133 narrowed it: `__declspec(weak)` does reproduce weak plus
-// out-of-line (measured on TPauseMenu2::appearWindow, ~1 KB), so the linkage is
-// reachable without the inline keyword, but it is an MSL/SDK crutch and not
-// what belongs here. The remaining candidate is the call site: an `inline` body
-// has no size limit at depth 1 and is refused deeper, so retail's perform_ most
-// likely reaches both through one more inlined level than ours does. Leaving
-// them global costs only the BINDING check, not instructions.
+// The map lists this and calcSlopeAngleX_ as **weak**: both are `inline`
+// bodies that retail reaches one inlined level below their callers, where
+// they are too big to expand. For this one the level is ctrlCamera_ (see
+// perform). TODO: calcSlopeAngleX_ still needs its level; `inline` on it
+// alone expands it into calcPosAndAt_ (96.3 -> 78.1). The missing level is a
+// helper around its call site in calcPosAndAt_'s non-fixed-mode branch, and
+// may carry part of that function's 0x108 frame deficit.
 // TODO: instruction-exact; `param` sits at 0x40 vs retail 0x38 (retail has 8
 // more above it). Inert or worse: `param` declared at the top (any order),
 // yOffset initialised, marPos assigned later, named camera-mario/director
