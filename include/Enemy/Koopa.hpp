@@ -192,6 +192,14 @@ public:
 	/* 0x94 */ f32 mHeight;
 };
 
+// The wrap in TKoopa::turnBody, the TUtil<f32>::mod twin of KoopaNerve.hpp's
+// KoopaWrapDirection: this level is what makes the Turn nerves `bl` the weak
+// mod copy the map records for Koopa.cpp instead of expanding it.
+static inline f32 KoopaModDirection(f32 t, f32 l, f32 r)
+{
+	return l + JGeometry::TUtil<f32>::mod((r - l) + (t - l), r - l);
+}
+
 class TKoopa : public TSpineEnemy {
 public:
 	TKoopa(const char* name = "クッパ");
@@ -247,6 +255,11 @@ public:
 	// TNerveKoopaTurnL and TNerveKoopaTurnR both expand this: the redundant
 	// second `delta > 0` test in each of them is the inlined body's own.
 	// It has no map symbol of its own, so it was a header inline.
+	// TODO: the ROM also `bl`s TEnemyManager::getSaveParam() for both
+	// turnAnim reads here and for the Turn nerves' clamped-argument
+	// turnSpeed read (the condition's read stays inline), and its frame is
+	// 0x1a8 against our 0xd0; named locals in getParam or in the wrap only
+	// grow the frame, and another level above turnBody takes it out of line.
 	bool turnBody(f32 delta)
 	{
 		if (delta > 0.0f)
@@ -254,10 +267,7 @@ public:
 		else
 			changeAnm(KOOPA_ANM_TURN_L, 0,
 			          -delta * getParam()->turnAnim.get());
-		mRotation.y
-		    = -180.0f
-		      + JGeometry::TUtil<f32>::mod(
-		          360.0f + ((mRotation.y + delta) - -180.0f), 360.0f);
+		mRotation.y = KoopaModDirection(mRotation.y + delta, -180.0f, 180.0f);
 		return true;
 	}
 
