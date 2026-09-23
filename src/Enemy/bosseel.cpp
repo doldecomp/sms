@@ -301,7 +301,8 @@ TBEelTears::TBEelTears(const char* name)
 
 static inline TMActorKeeper* BEelTearsKeeper(const TBEelTears* tears)
 {
-	return tears->mMActorKeeper;
+	TMActorKeeper* r = tears->mMActorKeeper;
+	return r;
 }
 
 void TBEelTears::init(TLiveManager* manager)

@@ -311,7 +311,8 @@ void TRollEnemy::attackToMario() { SMS_SendMessageToMario(this, HIT_MESSAGE_ATTA
 // rather than in the shared header.
 static inline f32 IgaigaTraceSpeed(const TGraphTracer* tracer)
 {
-	return tracer->unkC;
+	f32 r = tracer->unkC;
+	return r;
 }
 
 // Binding level over the raw tracer member, unique to TRollEnemy::flagJump
