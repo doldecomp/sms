@@ -1690,7 +1690,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		toBoss -= gpMarioOriginal->getPosition();
 		VECNormalize(toBoss, toBoss);
 
-		f32 pull = (f32)((f64)(gpMarioOriginal->mIntendedMag * 0.03125f) * 0.75)
+		f32 pull = (f32)((f64)(gpMarioOriginal->mIntendedMag / 32.0f) * 0.75)
 		           * -toBoss.dot(marioDir);
 		f32 rate = 1.0f - pull;
 		if (rate < 0.0f)
