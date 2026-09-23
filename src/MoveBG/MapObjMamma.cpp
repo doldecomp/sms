@@ -1225,6 +1225,9 @@ void TShiningStone::perform(u32 cue, JDrama::TGraphics* graphics)
 	mTop->perform(cue, graphics);
 }
 
+// TODO: frame exact; retail hoists &mtx into r30 before MsMtxSetXYZRPH and
+// reuses it for the loop's copy (mTop's copy recomputes it), one more saved
+// GPR. Inert: Mtx declared first, u32 counter, split mirrorActor, s16 args.
 void TShiningStone::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TActor::load(stream);
@@ -1244,7 +1247,7 @@ void TShiningStone::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < MIRROR_NUM; i++) {
 		mMirrors[i] = SMS_MakeMActorWithAnmData(
 		    bmdNames[i], gpMapObjManager->getMActorAnmData(), 3, 0x10020000);
-		MTXCopy(mtx, mMirrors[i]->getModel()->getBaseTRMtx());
+		mMirrors[i]->getModel()->setBaseTRMtx(mtx);
 
 		TMirrorActor* mirrorActor = new TMirrorActor("太陽石in鏡");
 		mirrorActor->init(mMirrors[i]->getModel(), 0x1A);
