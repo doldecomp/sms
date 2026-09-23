@@ -1291,30 +1291,41 @@ static void Hxs_Logo_TexSetup(u8 alpha_in, u8 fade_in, const ResTIMG* timg)
 	               GX_LO_CLEAR);
 }
 
-// TODO: retail's frame is 8 bytes larger (its Vec sits at 0x38, ours at
-// 0x30) and its callee-saved FPRs are coloured differently (dx/dy in f31/f30,
-// u1..v2 in f22..f25); declaration order is inert.
-// TODO: frame is right; the saved-FPR colouring differs (retail: d.x/d.y
-// f31/f30, ox/oy f29/f28, u/v f22-f25) and the second vertex reloads d
-// earlier. Declaration and statement order are inert. Dividing x1..y2 in
-// place gets ox/oy and the u/v order right but leaves sx/sy above dx/dy.
+// Declaring d first puts it at retail's 0x38, and halving by 2.0f gives the
+// fnmsubs retail's operand order.
+// TODO: the saved-FPR colouring differs (retail: dx/dy f31/f30, ox/oy
+// f29/f28, sy/sx f27/f26, v2/u2/v1/u1 f25-f22) and the second vertex reloads
+// d earlier. Declaration order (C-style, any of five orders), dx..py in the
+// if block, and dividing x1..y2 and wd/ht in place are all inert here;
+// dividing x1..y2 in place does get ox/oy into f29/f28.
 static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 {
-	f32 sy = ht / 1.924138f;
-	f32 sx = wd / 1.9230769f;
-	f32 v1 = y1 / sy;
-	f32 v2 = y2 / sy;
-	f32 u1 = x1 / sx;
-	f32 u2 = x2 / sx;
-	f32 cx = hx.width >> 1;
-	f32 cy = hx.height >> 1;
-	f32 ox = cx - (sx * 0.5f);
-	f32 oy = (cy - (sy * 0.5f)) - 32.0f;
 	Vec d;
+	f32 sy;
+	f32 sx;
+	f32 v1;
+	f32 v2;
+	f32 u1;
+	f32 u2;
+	f32 cx;
+	f32 cy;
+	f32 ox;
+	f32 oy;
 	f32 dx;
 	f32 dy;
 	f32 px;
 	f32 py;
+
+	sy = ht / 1.924138f;
+	sx = wd / 1.9230769f;
+	v1 = y1 / sy;
+	v2 = y2 / sy;
+	u1 = x1 / sx;
+	u2 = x2 / sx;
+	cx = hx.width >> 1;
+	cy = hx.height >> 1;
+	ox = cx - (sx / 2.0f);
+	oy = (cy - (sy / 2.0f)) - 32.0f;
 
 	// The pen stroke is a quad two units wide around the segment, so the
 	// offset is the segment's normal: (-dv, du).
