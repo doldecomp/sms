@@ -16,11 +16,13 @@ static inline bool BHSIsLegalData(const TBGCheckData* ground)
 	return BHSIsIllegalData(ground) == true ? false : true;
 }
 
-// TODO: 99.0%: frame 0x80 against 0xa0 plus one r3/r4 swap in the |angle|
-// step. `TVec3 firstDelta = first - middle` (and the same for secondDelta)
-// lands the 0xa0 frame but costs the operator- copies (67.5): the known-open
-// `a = b - c` class. Tried for the abs: named `int` with in-place negate,
-// by-value s16/int abs levels (97-98.4).
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
+
+// The |angle| step is a macro abs over the s16 cast (the camera units' ABS);
+// a named s16 local costs an extra `mr`.
+// TODO: frame 0x80 against 0xa0. `TVec3 firstDelta = first - middle` (and the
+// same for secondDelta) lands the 0xa0 frame but costs the operator- copies
+// (67.5): the known-open `a = b - c` class.
 f32 BHSCalcCentrifugalForce(const JGeometry::TVec3<f32>& first,
                           const JGeometry::TVec3<f32>& middle,
                           const JGeometry::TVec3<f32>& last, f32 degreeY)
@@ -42,9 +44,7 @@ f32 BHSCalcCentrifugalForce(const JGeometry::TVec3<f32>& first,
 		return 0.0f;
 
 	int difference = firstAngle - secondAngle;
-	s16 wrappedDifference = difference;
-	int magnitude
-	    = wrappedDifference >= 0 ? wrappedDifference : -wrappedDifference;
+	int magnitude = ABS((s16)difference);
 	f32 ratio = (1.0f / 32768.0f) * magnitude;
 	if (ratio >= 0.5f)
 		return 0.0f;
