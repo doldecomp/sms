@@ -1545,7 +1545,7 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 		goro->onHitFlag(HIT_FLAG_NO_COLLISION);
 
 		// Dying over water splashes; dying on land stamps goop.
-		BOOL onWater = goro->mGroundPlane->isWaterSurface();
+		BOOL onWater = goro->getGroundPlane()->isWaterSurface();
 		if (onWater && !goro->isAirborne())
 			goro->generateEffectColumWater();
 
@@ -1557,9 +1557,7 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 			goro->setDeadAnm();
 			goro->setDeadEffect();
 		}
-	}
-
-	if (goro->checkCurAnmEnd(0) || spine->getTime() > 360) {
+	} else if (goro->checkCurAnmEnd(0) || spine->getTime() > 360) {
 		goro->onHitFlag(HIT_FLAG_NO_COLLISION);
 		goro->onLiveFlag(LIVE_FLAG_DEAD);
 		goro->onLiveFlag(LIVE_FLAG_UNK8);
@@ -1571,7 +1569,7 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 		spine->setNext(&TNerveSmallEnemyDie::theNerve());
 		spine->pushAfterCurrent(spine->getDefault());
 		goro->genRandomItem();
-		return FALSE;
+		return TRUE;
 	}
 
 	if (goro->checkLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH))
