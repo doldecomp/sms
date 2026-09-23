@@ -51,6 +51,9 @@ MSRandVol::MSRandVol(u32 param)
 
 u32 MSRandVol::getRandomVolume(u32 param_1, u32 param_2) { }
 
+// TODO: instructions exact but for scheduling; retail computes the CSlope
+// index before the PSlope one (and swaps their registers). Named u32 indices,
+// named slope locals, parenthesised or pre-masked indices are inert.
 f32 MSRandVol::getRandVol(u32 param_1)
 {
 	f32 d = JALCalc::getRandom(

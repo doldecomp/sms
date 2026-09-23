@@ -256,8 +256,9 @@ void TBEelTearsManager::createEnemies(int count)
 {
 	TEnemyManager::createEnemies(count);
 
+	SDLModelData* modelData;
 	void* resource = JKRGetResource("/scene/bossEelTears/tears_drop.bmd");
-	SDLModelData* modelData
+	modelData
 	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x11240000));
 	TBEelTears* owner = static_cast<TBEelTears*>(TLiveManager::getObj(0));
 	for (int i = 0; i < 30; ++i)

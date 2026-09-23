@@ -242,7 +242,9 @@ f32 TSpineEnemy::calcTurnSpeedToReach(f32 march_speed, f32 param_2) const
 
 	f32 fVar32 = -(dVar11 * dVar11 - 1.0f);
 
-	// TODO: THitActor::calcEntryRadius has same problem
+	// TODO: THitActor::calcEntryRadius has same problem. Frame 8 short and the
+	// fnmsubs/frsqrte pair swaps f0/f1; a HitActor-style TU-local sqrt inline
+	// (volatile-first, double guess, inline argument) is inert.
 	volatile f32 f = fVar32 * __frsqrte(fVar32);
 	f32 tmp        = matan(f, dVar11) * (360.0f / 65536.0f);
 	return 90.0f - tmp;

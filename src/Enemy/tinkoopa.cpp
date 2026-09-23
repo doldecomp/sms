@@ -1458,6 +1458,10 @@ void TTinKoopaManager::load(JSUMemoryInputStream& stream)
 	unk38 = new TTinKoopaParams("/enemy/tinkoopa.prm");
 }
 
+// TODO: registers only: retail masks each loop's particle id into r5 and
+// passes that to JPAResourceManager::load, we pass the unmasked sum in r5 and
+// index with the masked copy. Inert: `(u16)` or `i + base` at the call, TU-local
+// SMS_LoadParticle forks with int/u16-copy parameters or `== false`.
 void TTinKoopaManager::loadAfter()
 {
 	static const char* onetimeFilenames[7] = {

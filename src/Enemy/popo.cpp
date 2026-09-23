@@ -973,11 +973,10 @@ static inline MActor* PopoPossessedActor(TPopo* popo)
 	return actor;
 }
 
-// TODO: frame and every instruction but one are exact; retail copies `this`
-// with `mr r31, r3` where we emit `addi r31, r3, 0`.
 void TPopo::possessedIn()
 {
-	mMActor = mMActorKeeper->getMActor("popoH.bmd");
+	TMActorKeeper* keeper = mMActorKeeper;
+	mMActor               = keeper->getMActor("popoH.bmd");
 	setBckAnm(3);
 	PopoPossessedActor(this)->setBtpFromIndex(0);
 	getMActor()->setFrameRate(0.0f, ANM_TYPE_BTP);

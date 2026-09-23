@@ -295,6 +295,9 @@ static inline MActor* SandBombMActor(const TLiveActor* p)
 	return actor;
 }
 
+// TODO: frame and instructions exact; retail puts `speed` in f31 and the
+// inlined getFrame() in f30, we swap them (open class, RULES "FPR order sweep
+// 364"); a named frame, `speed +=` and a named frame ctrl are inert.
 void TSandBombBase::expanded()
 {
 	TSandBomb* trigger = mTrigger;
