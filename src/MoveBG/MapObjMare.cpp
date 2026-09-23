@@ -916,12 +916,11 @@ static inline f32 MapObjMareGetHeightOffset(const TMapObjBase* object)
 void TMuddyBoat::touchWall(JGeometry::TVec3<f32>* pos,
                            const TBGWallCheckRecord& record)
 {
-	mEffectPos.set(-(record.mResultWalls[0]->mNormal.x
-	                     * (50.0f + record.mRadius)
+	const TBGCheckData* wall = record.mResultWalls[0];
+	mEffectPos.set(-(wall->mNormal.x * (50.0f + record.mRadius)
 	                 - record.mCenter.x),
 	    100.0f + (mPosition.y - MapObjMareGetHeightOffset(this)),
-	    -(record.mResultWalls[0]->mNormal.z * (50.0f + record.mRadius)
-	      - record.mCenter.z));
+	    -(wall->mNormal.z * (50.0f + record.mRadius) - record.mCenter.z));
 
 	*pos = mPosition;
 	kill();
@@ -948,6 +947,8 @@ bool TMuddyBoat::bindToWall(const JGeometry::TVec3<f32>& probe, f32 radius,
 // TODO: retail's frame is 0x110 larger: each inlined bindToWall() record sits
 // 0x38 apart (0x2c here), the TVec3::sub temporary sits below the records, and
 // the probe reuses one mFrontOffset/mBackOffset load for both components.
+// touchWall()'s `100.0f +` for the effect height schedules after the x store
+// in retail and before it here.
 void TMuddyBoat::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
