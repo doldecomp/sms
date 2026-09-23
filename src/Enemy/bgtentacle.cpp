@@ -963,12 +963,12 @@ void TBGTentacle::moveNode()
 		break;
 	case 3:
 		local_88.x = JMASin(unk40) * 1.0f * fVar2;
-		local_88.y = JMASin(unk40) * 0.8f * fVar2;
+		local_88.y = JMASin(unk44) * 0.8f * fVar2;
 		local_88.z = JMACos(unk44) * 1.1f * fVar2;
 		break;
 	default:
 		local_88.x = JMASin(unk40) * 1.9f * fVar2;
-		local_88.y = JMASin(unk44) * 1.0f * fVar2;
+		local_88.y = JMASin(unk40) * 1.0f * fVar2;
 		local_88.z = JMACos(unk44) * 1.8f * fVar2;
 		break;
 	}
