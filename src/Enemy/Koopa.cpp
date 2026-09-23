@@ -218,8 +218,9 @@ BOOL TNerveKoopaFall::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
-// TODO: 98.5%. Frame 0x148 short (retail 0x368), a few register swaps and a
-// handful of missing/extra instructions remain.
+// TODO: 99.8%. Frame 0x148 short (retail 0x368), nerve-static .bss order,
+// and diff/focusRange swap f1/f2 at both side tests (top declarations,
+// .value, and operand order are inert).
 BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 {
 	TKoopa* koopa = (TKoopa*)spine->getBody();
@@ -282,15 +283,15 @@ BOOL TNerveKoopaFlame::execute(TSpineBase<TLiveActor>* spine) const
 
 	case KOOPA_ANM_FIRE_LOOP: {
 		int time = spine->getTime();
-		if (time >= koopa->getParam()->flameFocusEndStep.get()) {
+		if (time >= koopa->getParam()->flameCount.get()) {
 			if (!(time & 7)) {
 				TBathtub* bathtub
 				    = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
 				u8 onGrip = KoopaFindGrip(koopa, bathtub);
 
-				TKoopaParams* params = koopa->getParam();
 				f32 diff = KOOPA_WRAP_DEGREES(koopa->mTargetDir
 				                              - koopa->mRotation.y);
+				TKoopaParams* params = koopa->getParam();
 				f32 focusRange = params->focusRange.get();
 				int side;
 				if (diff < -focusRange)
