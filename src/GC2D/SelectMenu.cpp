@@ -856,6 +856,18 @@ inline void TSelectMenu::animateArrows()
 // and JUTPoint temporaries out ascending in source order; ours descend.
 // Inert (frame byte-identical): the three banner blocks as TU-local inline
 // helpers, whole or only the first.
+// Retail's layout is ours mirrored: the J2DOrthoGraph lowest (0x45c), then
+// every case's bounds (0x54c, 0x564, 0x57c, 0x594) and the emitter position
+// ascending, then all JUTPoint temporaries, then fadeLetterBox's TColors.
+// That is one inlined callee's block (named locals first, temporaries after,
+// both ascending) holding the whole switch, with an inlined draw block
+// expanded after it below: perform = `if (flags & 1) update(); if (flags &
+// 8) draw(gfx);`. Measured: a draw inline alone moves the graph lowest; an
+// update inline over the switch is inlined, but then animateArrows,
+// selectPrev and selectNext (depth 2) go out of line (19.7%); inline members
+// per banner case make each case's block ascending, but the case blocks
+// still descend from each other. The missing piece is whatever lets retail
+// expand those three at depth 2.
 void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x1) {
