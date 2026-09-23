@@ -103,7 +103,7 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	}
 
 	for (int i = 0; i < 13; ++i) {
-		u32 tag           = ((i / 10) << 8) + (i % 10 + '00');
+		u32 tag           = ((i / 10) << 8) + i % 10 + '00';
 		mStagePanes[i]    = mScreen->search(tag);
 		mPanelsA[i]       = new TExPane(mScreen, (tag << 16) + '_0');
 		mPanelRects[i]    = mPanelsA[i]->getPane()->mBounds;
@@ -456,8 +456,8 @@ void TGuide::startMoveCursor2()
 	changeBotStatus(-1);
 }
 
-// TODO: frame 0xd8 against 0x140; retail loads the stick x before 3.2f and
-// keeps x in r30 directly (ours copies it out of r5).
+// TODO: frame 0xd8 against 0x140; retail loads the stick x before 3.2f
+// (the operand order, a named stick value and `* 3.2f` are inert).
 void TGuide::linkSelect()
 {
 	mGamePad->onFlag(TMarioGamePad::PAD_FLAG_0x80);
@@ -466,9 +466,10 @@ void TGuide::linkSelect()
 		mState = STATE_CLOSE;
 
 	J2DPane* cursor = mCursors[0]->getPane();
-	int x           = cursor->mBounds.x1
-	        + (s16)(3.2f * mGamePad->mCompSPos[8]);
-	int y = cursor->mBounds.y1 + (s16)(-3.2f * mGamePad->mCompSPos[9]);
+	int x = cursor->mBounds.x1;
+	int y = cursor->mBounds.y1;
+	x += (s16)(3.2f * mGamePad->mCompSPos[8]);
+	y += (s16)(-3.2f * mGamePad->mCompSPos[9]);
 	if (x > 568)
 		x = 568;
 	if (x < 0)
