@@ -1963,3 +1963,20 @@ Nothing committed.
 - Inert or worse on the four functions (frame / slot distance): `!=`/`==` as members, by `const&` (either or both, mixed), `!operator==(...)`, a named `bool`, `(a == b) == false`, a copied `fst`, swapped operands, deleting the derived `==` (the base one then binds, +2 live slots, same frame), `==` through `operator->`, `(Base)` value casts (+0x18 to +0x1c per loop), derived `++` direct / cast / `void` / named reference, base `++` by value or `void`, `operator*` through the base `operator*`, `begin`/`end` via `TList<void*>` or named.
   Site spellings on `entryGroup`: unnamed receiver, pointer receiver, `it++` (+0x30), `end` in the for-init, direct init, `it` first, declare-then-assign: none adds the word.
 
+
+## Research rvo1 (2026-09-23): no compiler build or plausible header spelling elides into retail's slot; the class stays a cc23 migration
+
+Model `TCoasterEnemy::bind` (retail 55 instructions, frame 0x40, `bl sub` temp 0x10), compiled from the real `coasterkiller.cpp` with an overlay `JGVec3.hpp` and the game flags; about 60 header variants times 19 GC compiler builds, byte-compared per function against `build/GMSE01/obj`.
+
+- **There is no return-value switch in 1.2.5.** `mwcceppc -help all` and the binary's pragma strings have nothing like RVO/NRVO; `opt_classresults` first appears in 3.0a5.2.
+- **1.2.5 elides the return copy by itself, gated on the copy members (reconfirms cc23, sharpened).**
+  The +6 disappears iff the copy constructor is base-init or implicit **and** `operator=(const TVec3&)` is uncast (`*(Vec*)this = other;`) or implicit.
+  The current cast `operator=` alone keeps the +6 even with no user copy constructor; a statement-body copy constructor keeps it even with an uncast `operator=`.
+- **With the copy elided, every plausible spelling lands (0, 12) at frame 0x38, temp 0xc, 55 instructions** (by-value left operand, `TVec3 r(fst)`, `r = fst`, raw `Vec` copy, member `operator-` forms).
+  `return TVec3(fst) -= snd` is frame 0x48; a named `const Vec* p = &fst` is temp 0x14; component constructors and `r.sub(fst, snd)` lose the `bl sub`.
+  Only cc23's `friend TVec3 operator-(const Vec* fst, const TVec3& snd)` is byte-exact, with or without implicit copy members.
+- **No other compiler build helps; retail's game code is 1.2.5 (or behaves identically).**
+  1.1 and 1.2.5n give 1.2.5's `bind` exactly; 1.3 through 3.0a5.2 inline `sub` and never emit the `bl`.
+  Spot check on exact units `Enemy/spline`, `Player/MarioAction`, `NPC/NpcTrample` (9 functions): 1.2.5 9/9, 1.1 9/9, 1.2.5n 6/9, 1.1p1 5/9, 1.0 5/9, 1.3+ 0/9.
+  1.3-2.7 crash on the precompiled-header prefix under wibo; the text `SMS.pch` prefix shifts some offsets, so compare versions under the same prefix mode.
+- Consequence: the 130-site class needs the cc23 migration (copy members that allow the elision, plus an honest source for the 4-byte left-operand pointer temporary). Do not look for it in compiler versions or return-value flags.
