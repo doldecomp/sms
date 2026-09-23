@@ -81,8 +81,9 @@ void JPADrawExecGenPrjTexMtx::exec(const JPADrawContext* dc)
 	Mtx mtx;
 
 	f32 tick   = dc->mBaseEmitter->getFrame();
-	f32 transX = tick * dc->mBaseShape->getTexScrollTransX()
-	             + dc->mBaseShape->getTexStaticTransX();
+	f32 scrollX = dc->mBaseShape->getTexScrollTransX();
+	f32 staticX = dc->mBaseShape->getTexStaticTransX();
+	f32 transX = tick * scrollX + staticX;
 	f32 transY = tick * dc->mBaseShape->getTexScrollTransY()
 	             + dc->mBaseShape->getTexStaticTransY();
 	f32 scaleX = tick * dc->mBaseShape->getTexScrollScaleX()

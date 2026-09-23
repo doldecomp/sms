@@ -305,6 +305,7 @@ static inline TMapCheckGroundPlane* MapCheckGroundPlane(const TMapCollisionData*
 f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
                                    const TBGCheckData** result) const
 {
+	TMapCheckGroundPlane* groundPlane;
 	if (x < -mGridExtentX || mGridExtentX <= x || z < -mGridExtentY
 	    || mGridExtentY <= z) {
 		*result = &mIllegalCheckData;
@@ -314,9 +315,10 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 	int gridX = (x + mGridExtentX) * (1.0f / 1024);
 	int gridZ = (z + mGridExtentY) * (1.0f / 1024);
 
+	const TBGCheckListRoot& gridRoot = getGridRoot18(gridX, gridZ);
 	const TBGCheckData* local_60;
 	f32 dVar5 = checkGroundList(
-	    x, y, z, flags, MapCheckGroundList(getGridRoot18(gridX, gridZ)),
+	    x, y, z, flags, MapCheckGroundList(gridRoot),
 	    &local_60);
 
 	const TBGCheckData* local_64;
@@ -324,7 +326,8 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 	    x, y, z, flags, MapCheckGroundList(getGridRoot14(gridX, gridZ)),
 	    &local_64);
 
-	if (MapCheckGroundPlane(this) != nullptr) {
+	groundPlane = MapCheckGroundPlane(this);
+	if (groundPlane != nullptr) {
 		const TBGCheckData* local_68;
 		f32 dVar7 = MapCheckGroundPlane(this)->checkPlaneGround(x, y, z, &local_68);
 		if (dVar7 > dVar6) {

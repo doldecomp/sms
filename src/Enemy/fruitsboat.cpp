@@ -339,7 +339,7 @@ void TFruitsBoat::setGroundCollision()
 
 	model = getModel();
 	mtx   = model->getAnmMtx(0);
-	if (mMapCollisionManager->getUnk8())
+	if (mMapCollisionManager->unk8)
 		mMapCollisionManager->getUnk8()->moveMtx(mtx);
 }
 

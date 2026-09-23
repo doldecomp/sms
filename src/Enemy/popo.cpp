@@ -1079,7 +1079,7 @@ DEFINE_NERVE(TNervePopoAttack, TLiveActor)
 		popo->setGoalPathMario();
 
 	if (!popo->isAirborne()) {
-		if (!((TPopoManager*)popo->mManager)->mIsNozzleFree)
+		if (!((TPopoManager*)popo->getManager())->mIsNozzleFree)
 			return TRUE;
 		if (gpMarioOriginal->checkFlag(MARIO_FLAG_VISIBLE))
 			return TRUE;
