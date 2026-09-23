@@ -953,6 +953,8 @@ void TChannel::updateEffectorParam()
 	// them there, where we read the variables' homes f31/f30 (5 operands).
 	// Rejected: computing `volume` after the three clamps (moves the temps to
 	// f0/f1), and a Clamp01 written with a named result (adds fmr pairs).
+	// Also worse: clamps in reverse order, unk98 before the clamps, volume
+	// after unk98, and the branch inverted (updateAutoMixer first).
 	f32 volume = unkA4 * (unk54 * unk90);
 
 	pan   = Driver::Clamp01(pan);

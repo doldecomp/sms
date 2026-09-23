@@ -1158,6 +1158,13 @@ static JSULink<JPABaseParticle>* stripeGetPrev(JSULink<JPABaseParticle>* link)
 {
 	return link->getPrev();
 }
+// TODO: 98.0%, instruction-exact; frame 0x1e0 vs 0x1f8 and a callee-saved FPR
+// permutation (retail puts the hoisted 0.0f/1.0f constants in f29-f31 and
+// fVar2/fVar9 in f22/f20). Spelling both rotations `mtx.mult(v, v)` (TWW's
+// forwarding form) gives the exact frame but leaves local_BC at 0x100 (retail
+// 0x108) and the same FPR permutation (97.6%). Inert: function-scope pt0 /
+// local_BC / v1 / v2, pt0 first, f29_f30_f31 before local_BC, cross2 on the
+// first cross product.
 void JPADrawExecStripe::exec(const JPADrawContext* dc)
 {
 	u32 elems = dc->unk18->getNumLinks();
@@ -1233,6 +1240,10 @@ void JPADrawExecStripe::exec(const JPADrawContext* dc)
 	GXEnd();
 }
 
+// TODO: 97.0%, instruction-exact with the right frame; the residue is the same
+// callee-saved FPR permutation as JPADrawExecStripe (retail ranks the hoisted
+// constants highest). `mult(v, v)` grows the frame here; cross2 on the first
+// cross product, or cross on the second, is worse.
 void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 {
 

@@ -88,6 +88,13 @@ void JPABaseEmitter::deleteAllParticle()
 	}
 }
 
+// TODO: 98.9%, instruction-exact; frame 0x238 vs 0x258 (local_c0 at 0x178,
+// retail 0x198) and `particle` in r24 where retail has r28, above sweepShape.
+// Inert: function-scope particle pointers (any position), fVel before
+// baseVel, a function-scope rotMtx, a split vec; worse: one pointer without
+// the cast local, copy-constructed parent vectors, parent copies after
+// ignoreFields. A 0x20 deficit with every instruction right points at a
+// missing inline level (no UNUSED candidate in the map).
 void JPABaseEmitter::createChildParticle(JPABaseParticle* parent)
 {
 	JGeometry::TVec3<f32> local_c0(0.0f, 0.0f, 0.0f);
