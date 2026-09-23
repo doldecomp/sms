@@ -541,8 +541,8 @@ bool TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
 	if (mCurrentAnm != anm) {
 		mPreviousAnm = mCurrentAnm;
 		mCurrentAnm = anm;
-		if (sHeadBckIndex[anm] != mMActor->getCurAnmIdx(ANM_TYPE_BCK)) {
-			mMActor->setBckFromIndex(sHeadBckIndex[anm]);
+		if (sHeadBckIndex[anm] != getMActor()->getCurAnmIdx(ANM_TYPE_BCK)) {
+			getMActor()->setBckFromIndex(sHeadBckIndex[anm]);
 			changed = true;
 			if (blend == BOSS_HANACHAN_STOP_MOTION_BLEND_ON)
 				mInbetween->startMotionBlend();
@@ -550,13 +550,13 @@ bool TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
 				mInbetween->stopMotionBlend();
 			setCurAnmSound();
 		}
-		if (sHeadBtpIndex[anm] != mMActor->getCurAnmIdx(ANM_TYPE_BTP))
-			mMActor->setBtpFromIndex(sHeadBtpIndex[anm]);
-		if (sHeadBtkIndex[anm] != mMActor->getCurAnmIdx(ANM_TYPE_BTK))
-			mMActor->setBtkFromIndex(sHeadBtkIndex[anm]);
+		if (sHeadBtpIndex[anm] != getMActor()->getCurAnmIdx(ANM_TYPE_BTP))
+			getMActor()->setBtpFromIndex(sHeadBtpIndex[anm]);
+		if (sHeadBtkIndex[anm] != getMActor()->getCurAnmIdx(ANM_TYPE_BTK))
+			getMActor()->setBtkFromIndex(sHeadBtkIndex[anm]);
 		if (anm == BOSS_HANACHAN_ANM_UNK15) {
-			mMActor->setBrkFromIndex(1);
-			mMActor->getFrameCtrl(ANM_TYPE_BRK)->setAttribute(J3DFrameCtrl::ATTR_ONCE);
+			getMActor()->setBrkFromIndex(1);
+			getMActor()->getFrameCtrl(ANM_TYPE_BRK)->setAttribute(J3DFrameCtrl::ATTR_ONCE);
 		}
 	}
 	return changed;

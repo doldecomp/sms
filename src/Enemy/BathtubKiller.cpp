@@ -638,7 +638,7 @@ BOOL TBathtubKiller::receiveMessage(THitActor* sender, u32 message)
 
 void TBathtubKiller::attackToMario()
 {
-	if (!BKIsDying(this) && gpMarioPos->y < mPosition.y) {
+	if (!BKIsDying(this) && gpMarioPos->y < getPosition().y) {
 		mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 60.0f);

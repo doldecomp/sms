@@ -723,7 +723,7 @@ void TGraphWeb::isOnePath() const { }
 BOOL TGraphWeb::startIsEnd() const
 {
 	if (getFirstGraphNode().unk0->mConnectionNum > 2
-	    || (getFirstGraphNode().unk0->mConnections[0] != getNodeNum() - 1
+	    || (getFirstGraphNode().getRailNode()->mConnections[0] != getNodeNum() - 1
 	        && getFirstGraphNode().unk0->mConnections[1] != getNodeNum() - 1))
 		return false;
 

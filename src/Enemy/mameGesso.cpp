@@ -352,7 +352,8 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 	TMameGesso* self = (TMameGesso*)spine->getBody();
 
 	if (!spine->getTime()) {
-		if (self->getGroundPlane()->isWaterSurface())
+		const TBGCheckData* groundPlane = self->getGroundPlane();
+		if (groundPlane->isWaterSurface())
 			self->setBckAnm(12);
 		else
 			self->setBckAnm(11);

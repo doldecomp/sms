@@ -1157,14 +1157,14 @@ void TGorogoro::init(TLiveManager* manager)
 	if (timg) {
 		SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(), "M_dummy",
 		                     *timg);
-		SMS_ChangeTextureAll(mirror->unk14->getModelData(), "M_dummy", *timg);
+		SMS_ChangeTextureAll(mirror->getUnk14()->getModelData(), "M_dummy", *timg);
 	}
 
 	for (u16 i = 0;
 	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); ++i) {
 		SMS_InitPacket_OneTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
 		                            &mTevKColor);
-		SMS_InitPacket_OneTevKColor(mirror->unk14, i, GX_KCOLOR0,
+		SMS_InitPacket_OneTevKColor(mirror->getUnk14(), i, GX_KCOLOR0,
 		                            &mTevKColor);
 	}
 
