@@ -263,8 +263,16 @@ public:
 
 	// TNerveKoopaTurnL and TNerveKoopaTurnR both expand this: the redundant
 	// second `delta > 0` test in each of them is the inlined body's own.
-	// TODO: code matches, but retail's Turn nerve frames are 0x1a8/0x1a0
-	// against our 0x90 (a named diff local in the nerve is inert).
+	// The named `dir` is what makes TurnL's frame 8 above TurnR's, as in
+	// retail (0x1a8 vs 0x1a0); without it both are equal.
+	// TODO: code matches, but the frames are 0xa0/0x98 against retail's
+	// 0x1a8/0x1a0. Neither nerve touches the stack, so the 0x108 has no
+	// slot evidence, and nothing codeless in the map fits: every UNUSED
+	// TKoopa member expands to code. Named results in the wrap, mod and
+	// getTurnStep levels add only 8 each; a TVec3 copy of mRotation adds
+	// code. Wait (0x88 short), Flame (0x148), Tumble (0x10), perform
+	// (0x50), init (0x30) and getTargetDir (0x28) are short too, so the
+	// cause is likely one unit-wide inline shape, not a turn helper.
 	bool turnBody(f32 delta)
 	{
 		if (delta > 0.0f)
@@ -272,7 +280,8 @@ public:
 		else
 			changeAnm(KOOPA_ANM_TURN_L, 0,
 			          -delta * getTurnAnim());
-		mRotation.y = KoopaModDirection(mRotation.y + delta, -180.0f, 180.0f);
+		f32 dir = mRotation.y + delta;
+		mRotation.y = KoopaModDirection(dir, -180.0f, 180.0f);
 		return true;
 	}
 
