@@ -616,6 +616,7 @@ TMario::TSurfingParams* TMario::getSurfingParamsGround()
 // inline level, not the accel/params spelling (both tried).
 void TMario::doSurfing()
 {
+	f32 t;
 	const TBGCheckData* below;
 	gpMap->checkGround(mPosition.x, mPosition.y - mVel.y, mPosition.z, &below);
 
@@ -637,7 +638,7 @@ void TMario::doSurfing()
 		powMax = getSurfingParamsGround()->mPowMax.get();
 	}
 
-	want = 2.0f * mIntendedMag;
+	want = 2.0f * getIntendedMag();
 	if (want > powMax)
 		want = powMax;
 	if (want < powMin)
@@ -652,14 +653,14 @@ void TMario::doSurfing()
 		else
 			accel = getSurfingParamsGround()->mAccel.get();
 		mForwardVel += 1.1f - (mForwardVel / accel);
-	} else if (mGroundPlane->mNormal.y >= 0.95f) {
+	} else if (mGroundPlane->getNormal().y >= 0.95f) {
 		mForwardVel -= 1.0f;
 	}
 
 	if (mForwardVel > powMax)
 		mForwardVel = powMax;
 
-	f32 t = (want - powMin) / (powMax - powMin);
+	t = (want - powMin) / (powMax - powMin);
 	s16 rotSp = t * (rotMax - rotMin) + rotMin;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
