@@ -418,7 +418,7 @@ BOOL TMario::doSliding(f32 stopThreshold)
 
 	f32 slipFr;
 	if (mStatus == MARIO_STATUS_OIL_SLIP) {
-		slipFr = mSlipParamsOil.mSlipFriction.get();
+		slipFr = mSlipParamsOil.mSlipFriction.value;
 	} else if (isForceSlip()) {
 		slipFr = mSlipParamsAll.mSlipFriction.get();
 	} else if (mGroundPlane->isSlider()) {

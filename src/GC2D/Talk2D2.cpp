@@ -301,19 +301,12 @@ void TTalk2D2::loadAfter()
 	}
 }
 
-// Binding level over gpMarDirector: loads the talking NPC straight into its
-// saved register and supplies the 0x10 of low frame in setMessageID.
-static inline TMarDirector* Talk2D2GetMarDirector()
-{
-	TMarDirector* director = gpMarDirector;
-	return director;
-}
-
 void TTalk2D2::setMessageID(u32 message_id, u32 flags)
 {
-	TBaseNPC* npc = Talk2D2GetMarDirector()->getTalkingNPC();
+	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 
-	if (npc->checkActionFlag(0x200)) {
+	bool actionFlag = npc->checkActionFlag(0x200);
+	if (actionFlag) {
 		if (npc->isMonte()) {
 			if (npc->isNormalMonteW() || npc->isSpecialMonteW()) {
 				if (npc->isChild())
