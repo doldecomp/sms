@@ -110,7 +110,9 @@ void TMario::getCoinBlue()
 // Mtxs plus TVec3s but is a `bl` from this TU and cannot be the source: it
 // would replace the matched `sub`+`matan` sequence. No map-UNUSED helper in
 // this TU is left to host those objects. Parked for a named use, not a
-// second padding pass.
+// second padding pass. Rechecked 2026-09-22: wireMove, changeWireHanging,
+// getTipPoints and getPosInWire are all out-of-line in the map (bl), so none
+// of the wire-arm callees can host the missing Mtx/TVec3/TVec2 objects.
 BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
