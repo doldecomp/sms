@@ -211,12 +211,15 @@ void TMarDirector::movement()
 	}
 }
 
-// TODO: 97.7%. Instructions match but for one scheduling pair (retail loads
-// next.unk0 before forming &gpApplication); the frame is 0x10 short with
-// `next` 0xc low and the flag temporaries 4 low. Inert or worse: `curr` or a
-// split `cur` declared at the top, an int/u16 copy of param_1, a conversion
-// helper (by reference, pointer or value), direct `mNextArea = next`/`set`,
-// a pointer-returning application accessor.
+// TODO: 99.7%, instruction-exact since TFlagT::operator= returns void; the
+// frame is 0x40 against retail's 0x50 (`next` 0xc low, the four flag
+// temporaries 4 low). MDEApp().setMovie(6) is +8 and an identity fork over
+// param_2 the other +8 (100% together, refused as a fabricated level);
+// `curr` declared inside the else arm lands `next` on 0x38 but renumbers
+// r29/r30. Inert or worse: `curr` or a split `cur` declared at the top, an
+// int/u16 copy of param_1, a conversion helper (by reference, pointer or
+// value), direct `mNextArea = next`/`set`, a pointer-returning application
+// accessor, by-value setNextArea/operator=, const-reference set() flag.
 // Reference-returning accessor: retail folds the TGameSequence stores onto
 // the &gpApplication base (0x12/0x13/0x14) instead of binding &mNextArea.
 static inline TApplication& MDEApp() { return gpApplication; }
