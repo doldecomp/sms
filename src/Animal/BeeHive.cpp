@@ -388,6 +388,9 @@ void TBeeHive::bind()
 
 // Only one bee is collision-checked per frame; the rest have their collision
 // switched off so Mario cannot be hit by the whole swarm at once.
+// TODO: 89.6%. Retail keeps the dead wrap of `index` alive (`addi r29, r29, 1;
+// cmpw r30, r29` with no branch, costing r28); a trailing `(void)index;` gives
+// 98.6% but is a discarded statement, so the real consumer is still missing.
 void TBeeHive::controlCollision()
 {
 	int index = mCheckBeeIndex;
