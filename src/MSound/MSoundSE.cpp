@@ -187,12 +187,13 @@ void MSRandPlay::randPlay(u32 vec_idx)
 	}
 }
 
-MSoundSE::MSoundSE() { }
-
-// TODO: construct is instruction-exact and the frame matches through the
-// named `new` factories; the inlined MSSetSoundGrp ctor's homed `this` sits
-// at 0x4c vs retail 0x50. Inert: grp declared at top or unnamed-block,
-// named MSSetSoundMember locals (+0x20), `se` declaration order.
+// TODO: construct is instruction-exact; the inlined MSSetSoundGrp ctor's
+// homed `this` sits at 0x4c vs retail 0x50. Retail has no `se` slot (frame
+// 0x98 without it) and one more inline temporary below that `this` (twelve
+// vs our eleven: two from the grp chain, one per member from getUnk4).
+// Inert: grp declared at top or unnamed-block, named MSSetSoundMember
+// locals (+0x20), `se` declaration order, explicit JALListGrp/JALListD
+// ctors, grp ctor param types, raw setUnk14 (raw getUnk4 is -0x24).
 void MSoundSE::construct()
 {
 	MSoundSE* se = new MSoundSE;
