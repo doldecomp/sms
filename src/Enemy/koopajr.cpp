@@ -915,11 +915,14 @@ void TKoopaJrSubmarine::calcRootMatrix()
 
 		JGeometry::TQuat4<f32> q;
 		q.mul(yaw, swing);
-		// TODO: 95.2%. The frame and every slot match; the second product's
-		// loads come out w, y, x, z where the ROM reads w, x, y, z, and the
-		// ROM loads mWavePhase before saving the first cosf. Inert: the
-		// one-argument mul(wave), any declaration order of the quaternions,
-		// a second quaternion for the product (frame 0x10 too long).
+		// TODO: 98.5%. Since the no-locals TQuat4::mul(a, b) both products
+		// load in retail's order; left are the frame (0x1c8 against 0x1e0:
+		// 4 more above q, 0x14 more below mtx) and the ROM loading
+		// mWavePhase before saving the first cosf. Inert or worse
+		// (2026-09-23): a second quaternion for the product (frame exact,
+		// 88.5), named angles, one-argument mul(wave), q = yaw then
+		// mul(swing), every declaration order of the three quaternions,
+		// raw centerZ.
 		q.mul(q, wave);
 
 		JGeometry::TVec3<f32> center(0.0f, 0.0f,

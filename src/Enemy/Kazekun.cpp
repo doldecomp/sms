@@ -252,6 +252,11 @@ void TKazekun::setDeadAnm()
 // toMario only), 0.0025f first, / 400.0f, quat/vel/f31 declared up front,
 // named scale, speed and rate locals, and a named angle in getAroundQuat
 // (drops the Attack nerve to 68%).
+// After the TQuat4::mul rewrite (97.3%) the frame is 0x10 short (0x130
+// against 0x140): retail has 8 more bytes below getAroundQuat's mtx and 8
+// between vel and its up vector. mAroundDist through get() in getAroundRate
+// gives 0x138 with toMario at retail's offset from the top; the other get()
+// subsets overshoot or are inert (2026-09-23).
 void TKazekun::flyAroundMario()
 {
 	JGeometry::TVec3<f32> toMario(*gpMarioPos);
