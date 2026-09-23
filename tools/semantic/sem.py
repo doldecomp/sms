@@ -3,7 +3,9 @@
 calls, non-stack memory offsets, immediates and resolved literals."""
 import re, subprocess, sys, struct, collections, os
 
-ROOT = os.environ.get('SMS_ROOT', os.getcwd())
+HERE = os.path.dirname(os.path.abspath(__file__))
+# Worktree root: $SMS_ROOT, else the cwd when it holds a build, else the checkout holding this script.
+ROOT = os.environ.get('SMS_ROOT') or (os.getcwd() if os.path.isdir('build/GMSE01') else os.path.dirname(os.path.dirname(HERE)))
 OBJDUMP = ROOT + '/build/binutils/powerpc-eabi-objdump'
 TSV = ROOT + '/docs/progress/nonmatching-link/functions-below-95-fuzzy.tsv'
 
@@ -44,6 +46,37 @@ def section(path, sec):
     _seccache[key] = bytes(data)
     return _seccache[key]
 
+def resolve(path, target):
+    """(section, offset, symbol size) of a relocation target, or None."""
+    m = re.match(r'^(.*?)(?:([+-])0x([0-9a-f]+))?$', target)
+    name, sign, add = m.group(1), m.group(2), m.group(3)
+    addend = int(add, 16) * (-1 if sign == '-' else 1) if add else 0
+    st = symtab(path)
+    if name.startswith('.') and name not in st:
+        return name, addend, 0, name
+    if name in st:
+        sec, val, size, _ = st[name]
+        return sec, val + addend, size, name
+    return None
+
+READONLY = ('.rodata', '.sdata2')
+
+def bytes_at(path, target, extra, n):
+    """n bytes at target+extra when they are constant: read-only sections, or compiler-generated
+    (anonymous, '...data.N' / '@N') objects in .data; None for anything that may be written."""
+    r = resolve(path, target)
+    if r is None:
+        return None
+    sec, off, size, name = r
+    anon = name.startswith('@') or name.startswith('...') or name.startswith('.')
+    if sec not in READONLY and not (sec in ('.data', '.sdata') and anon and '$' not in name):
+        return None
+    data = section(path, sec)
+    off += extra
+    if off < 0 or off + n > len(data):
+        return None
+    return data[off:off + n]
+
 def canon(path, target):
     """Canonicalise a relocation target into a value-based token."""
     m = re.match(r'^(.*?)(?:([+-])0x([0-9a-f]+))?$', target)
@@ -54,6 +87,10 @@ def canon(path, target):
     if not anon:
         return 'sym:' + name + (('+%x' % addend) if addend else '')
     if name.startswith('.') and name not in st:
+        # a local object reached through its section symbol: use its own name when it has one
+        for nm, (sec2, val2, size2, fl) in st.items():
+            if sec2 == name and val2 == addend and size2 and not (nm.startswith('@') or nm.startswith('.')):
+                return 'sym:' + nm
         sec, val, size = name, 0, 0
     elif name in st:
         sec, val, size, _ = st[name]
@@ -64,11 +101,18 @@ def canon(path, target):
     data = section(path, sec)
     off = val + addend
     if sec == '.bss' or sec == '.sbss' or not data:
-        return 'bss:%s+%x' % (name if not name.startswith('@') else sec, addend)
+        # compiler-named statics ('@123', '...bss.0', '.bss') differ between builds for the same object
+        return 'bss:%s+%x' % (name if not (name.startswith('@') or name.startswith('.')) else 'anon', addend)
+    # an all-zero object (empty string, 0.0f, zero vector) pools under different sizes per build
+    if off < len(data) and not any(data[off:off + max(4, size - addend if size > addend else 4)]):
+        return 'zero'
     # string?
     end = data.find(b'\0', off)
     if end > off + 1 and all(32 <= c < 127 or c in (9, 10) for c in data[off:end]) and (size == 0 or size >= end - off):
         return 'str:' + repr(data[off:end].decode())[:60]
+    if sec in ('.data', '.sdata'):
+        # compiler-pooled .data objects: name by content, not by the pool symbol's size
+        return 'data:%s:%s' % (sec, data[off:off + 16].hex())
     if size == 8 or (sec == '.sdata2' and size == 0 and (off % 8 == 0) and False):
         return 'f64:%r' % struct.unpack('>d', data[off:off + 8])[0]
     if size in (0, 4) or sec in ('.sdata2',):
@@ -143,15 +187,48 @@ def sig(path, sym):
             continue
     return c, len(insns)
 
-def main():
-    rows = [l.rstrip('\n').split('\t') for l in open(TSV)][1:]
-    only = set(sys.argv[1:])
+def band_rows(lo, hi, report=None):
+    """Functions with lo <= fuzzy < hi from report.json, lowest first, in the TSV's column layout."""
+    import json
+    r = json.load(open(report or ROOT + '/build/GMSE01/report.json'))
+    rows = []
+    for u in r['units']:
+        cat = ((u.get('metadata') or {}).get('progress_categories') or ['?'])[0]
+        for f in u.get('functions', []):
+            fz = f.get('fuzzy_match_percent', 0.0)
+            if lo <= fz < hi:
+                md = f.get('metadata') or {}
+                rows.append([cat, u['name'], '%.2f' % fz, f.get('size', '0'), md.get('demangled_name', f['name']), f['name'], md.get('virtual_address', '0')])
+    rows.sort(key=lambda x: float(x[2]))
+    return rows
+
+def load_rows(argv):
+    """Options: --band LO HI (report.json, lowest first) or --tsv PATH (default: the below-95 TSV).
+    Returns (rows, remaining filter words); a filter matches the demangled name, the symbol or the unit."""
+    args = list(argv)
+    if '--band' in args:
+        k = args.index('--band')
+        rows = band_rows(float(args[k + 1]), float(args[k + 2]))
+        del args[k:k + 3]
+    else:
+        path = TSV
+        if '--tsv' in args:
+            k = args.index('--tsv'); path = args[k + 1]; del args[k:k + 2]
+        rows = [l.rstrip('\n').split('\t') for l in open(path)][1:]
+    return rows, args
+
+def selected(rows, only):
     for cat, unit, fz, size, dem, sym, vaddr in rows:
         if float(fz) == 0.0:
             continue
         u = unit.split('/', 1)[1]
-        if only and not any(o in dem or o in u for o in only):
+        if only and not any(o in dem or o in u or o == sym for o in only):
             continue
+        yield unit, u, fz, dem, sym
+
+def main():
+    rows, only = load_rows(sys.argv[1:])
+    for unit, u, fz, dem, sym in selected(rows, only):
         ret = '%s/build/GMSE01/obj/%s.o' % (ROOT, u)
         our = '%s/build/GMSE01/src/%s.o' % (ROOT, u)
         a, na = sig(ret, sym)
@@ -170,4 +247,5 @@ def main():
         if ops:
             print('   ~ counts:      ' + '; '.join(ops))
 
-main()
+if __name__ == '__main__':
+    main()

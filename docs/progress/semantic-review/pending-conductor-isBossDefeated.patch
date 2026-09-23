@@ -1,0 +1,12 @@
+diff --git a/src/Enemy/conductor.cpp b/src/Enemy/conductor.cpp
+index bb4cfc6a..5d420789 100644
+--- a/src/Enemy/conductor.cpp
++++ b/src/Enemy/conductor.cpp
+@@ -178,6 +178,7 @@ BOOL TConductor::isBossDefeated()
+ 	// The hinokuri body after the switch (`case 2: break;` or no case 2)
+ 	// relays the arms out entirely (~29%).
+ 	switch (gpMarDirector->mMap) {
++	default:
+ 	case 2: {
+ 		TLiveManager* mgr = getManagerByName("ヒノクリ２マネージャー");
+ 		if (!mgr)
