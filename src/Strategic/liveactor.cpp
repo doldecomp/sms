@@ -472,7 +472,10 @@ static inline MAnmSound* LiveactorAnmSound(const TLiveActor* p)
 // at either `new` (+0 or frame +8/+0x10), naming/forking the `new`
 // (inlining breaks), a `u32` wrapper over checkActorType (+4 -> 0x28, the
 // only buffer-moving rung found), bool/nested/binder wrappers over it,
-// a nested fork over LiveactorAnmSound (frame +8).
+// a nested fork over LiveactorAnmSound (frame +8). Header-side (c-strat):
+// MAnmSoundNPC ctor assigning unk98 in the body, via a named u8, get_uint8
+// with a named f32 are inert (also in init); get_uint8 through get_ufloat
+// is too deep to inline. JAISound::setSeDistancePitch pins get_uint8's body.
 void TLiveActor::initAnmSound()
 {
 	if (LiveactorAnmSound(this))

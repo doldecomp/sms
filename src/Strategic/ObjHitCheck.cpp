@@ -98,9 +98,13 @@ TObjHitCheck::checkWaterWithActorsInList(const JGeometry::TVec3<f32>& pos,
 // over the depth-1 budget, and the named `hit` result is the fifteenth.
 // TODO: frame 8 short and saved GPRs rotated: retail gives pos r30 above
 // particlePositions r29, particleHitActors r28 and i r27, as if pos were a
-// base temp. Pointer/unnamed pos, i/e/pos declaration order were inert.
+// base temp. The C-style top pointer puts i in r27 (99.3 -> 99.5); ours
+// still has particlePositions r30, particleHitActors r29, pos r28. Inert on
+// top of it: swapping the two pointers, pos declared after them, all three
+// or also i declared at the top, fVar2 moved below them; unnamed pos -0x8.
 void TObjHitCheck::checkWater()
 {
+	const JGeometry::TVec3<f32>* pos;
 	f32 fVar2 = TModelWaterManager::mStaticHitActor.getEntryRadius();
 
 	const JGeometry::TVec3<f32>* particlePositions
@@ -111,15 +115,15 @@ void TObjHitCheck::checkWater()
 		if (!gpModelWaterManager->checkFlagBottom4Bits(i, 0x1))
 			continue;
 
-		const JGeometry::TVec3<f32>& pos = particlePositions[i];
+		pos = &particlePositions[i];
 
 		u32 e;
-		u32 j = getTableIndex(pos, fVar2, &e);
+		u32 j = getTableIndex(*pos, fVar2, &e);
 
 		TObjCheckList& list = unk0[j];
 
 		if (j != e) {
-			THitActor* hit = checkWaterWithActorsInList(pos, list.unk0);
+			THitActor* hit = checkWaterWithActorsInList(*pos, list.unk0);
 			particleHitActors[i] = hit;
 		}
 	}

@@ -233,7 +233,8 @@ void TSpcInterp::execdec()
 // push(TSpcSlice(..)), mProcessStack.push, named slice or int, pushInt forks,
 // operator int casts, pop() over mProcessStack.pop(), raw mType tests (-4
 // each), function-scope result, raw float stores, typeof() in the header
-// getters, push(int) body spellings.
+// getters, push(int) body spellings; float arm as push(f32), push(TSpcSlice(f)),
+// `TSpcSlice result(f)` or push(result) (c-strat, all inert or worse).
 void TSpcInterp::execadd()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
