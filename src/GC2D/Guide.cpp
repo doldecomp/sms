@@ -44,6 +44,9 @@ TGuide::TGuide(const char* name)
 {
 }
 
+// TODO: frame 0x30 short (0x160 vs 0x190); each of the five decoration
+// JUTTexture constructions keeps `this` in a second register (r25) in retail;
+// naming the texture or the ResTIMG was inert or worse.
 void TGuide::load(JSUMemoryInputStream& stream)
 {
 	unkC5 = 0;
@@ -160,14 +163,15 @@ void TGuide::load(JSUMemoryInputStream& stream)
 
 	void* bmg = JKRGetResource("/guide/guidemess.bmg");
 	for (int i = 0; i < 13; ++i) {
-		u32 tag = (((i / 10) << 24) + ('00' << 16)) + ((i % 10) << 16);
+		// The ROM keeps `tag` biased by '_0' and adds 3 and 5 for the panes.
+		u32 tag = (((i / 10) << 24) + ('00' << 16)) + ((i % 10) << 16) + '_0';
 
-		J2DTextBox* title = (J2DTextBox*)mScreen->search(tag + '_3');
+		J2DTextBox* title = (J2DTextBox*)mScreen->search(tag + 3);
 		SMSMakeTextBuffer(title, 30);
 		title->setFont((JUTFont*)gpSystemFont);
 		strncpy(title->getStringPtr(), SMSGetMessageData(bmg, i + 13), 30);
 
-		J2DTextBox* body = (J2DTextBox*)mScreen->search(tag + '_5');
+		J2DTextBox* body = (J2DTextBox*)mScreen->search(tag + 5);
 		SMSMakeTextBuffer(body, 512);
 		body->setFont((JUTFont*)gpSystemFont);
 		strncpy(body->getStringPtr(), SMSGetMessageData(bmg, i), 512);
