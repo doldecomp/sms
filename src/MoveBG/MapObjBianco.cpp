@@ -545,7 +545,8 @@ void TLeafBoat::touchWall(JGeometry::TVec3<f32>* pos,
 }
 
 // TODO: frame is retail's 0xe8; `next` is 4 low and the getVelocity()
-// copies sit 0x44 high. marioY/deckY still swap f4/f5.
+// copies sit 0x44 high. marioY/deckY still swap f4/f5. The sub() call's
+// swapped r3/r4 setup is the known-open `a = b - c` allocation order.
 void TLeafBoat::bind()
 {
 	JGeometry::TVec3<f32> next(getPosition());
