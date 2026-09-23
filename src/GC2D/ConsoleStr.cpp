@@ -698,6 +698,9 @@ bool TConsoleStr::processScenario(int)
 	return false;
 }
 
+// TODO: retail's frame is 0x40 larger (low region, plus a 4-byte gap between
+// the two branches' rects), and it adds 224 to a run-time 465 - y1 where this
+// spelling folds 224 + 465 into one subfic.
 void TConsoleStr::startCloseWipe(bool param_1)
 {
 	if (param_1) {
@@ -706,11 +709,11 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		unk29C[0]->hide();
 		unk29C[1]->hide();
 
-		// centerY has to be a local: the ROM converts it to float at run time
-		// rather than folding a 224.0f constant, and the other branch computes
-		// 464 - centerY instead of folding to 240.
-		int centerY  = 224;
+		// centerY has to be a local declared after the bounds copy: the ROM
+		// converts it to float at run time rather than folding a 224.0f
+		// constant, and the other branch computes 464 - centerY.
 		JUTRect rect = unk28C[0]->getPane()->getBounds();
+		int centerY  = 224;
 		unk28C[0]->setPaneSize(0x2D, rect.getWidth(), centerY, rect.getWidth(),
 		                       0);
 		unk28C[0]->setPaneAlpha(0x2D, 255, 0);
@@ -720,7 +723,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		                         465 - unk28C[1]->getInitialBounds().y1);
 		unk28C[1]->setPaneSize(
 		    0x2D, rect.getWidth(),
-		    465 - unk28C[1]->getInitialBounds().y1 + centerY, rect.getWidth(),
+		    centerY + 465 - unk28C[1]->getInitialBounds().y1, rect.getWidth(),
 		    0);
 		unk28C[1]->setPaneAlpha(0x2D, 255, 0);
 
@@ -732,8 +735,8 @@ void TConsoleStr::startCloseWipe(bool param_1)
 	} else {
 		unk2B8 = 2;
 
-		int centerY  = 224;
 		JUTRect rect = unk28C[0]->getPane()->getBounds();
+		int centerY  = 224;
 		unk28C[0]->setPaneSize(0x2D, rect.getWidth(), centerY,
 		                       rect.getWidth(), rect.getHeight());
 		unk28C[0]->setPaneAlpha(0x2D, 255, unk28C[0]->getPane()->getAlpha());
