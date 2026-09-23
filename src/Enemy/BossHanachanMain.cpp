@@ -121,6 +121,8 @@ void TBossHanachan::setRandomWeakBodyIndex()
 	mWeakBodyIndex = 8.0f * rand;
 }
 
+// TODO: every instruction matches; the frame is 0x130 against the ROM's
+// 0x188, with every stack slot lower (likely a missing inline level).
 void TBossHanachan::init(TLiveManager* manager)
 {
 	mManager = manager;
@@ -153,8 +155,10 @@ void TBossHanachan::init(TLiveManager* manager)
 	JGeometry::TVec3<f32> bodyPosition = mCollisionPosition;
 	s16 angle = DEG2SHORTANGLE(mRotation.y);
 	const f32& headLength = mCommonParams->mSLHeadLength.get();
-	bodyPosition.x -= JMASSin(angle) * headLength;
-	bodyPosition.z -= JMASCos(angle) * headLength;
+	f32 sine = JMASSin(angle);
+	bodyPosition.x -= sine * headLength;
+	f32 cosine = JMASCos(angle);
+	bodyPosition.z -= cosine * headLength;
 	unk178 = new TSphereLink(8,
 	    JGeometry::TVec3<f32>(bodyPosition.x, bodyPosition.y, bodyPosition.z),
 	    mCommonParams->mSLBodyLength.get(), mCommonParams->mSLBodyAttackRadius.get(),
