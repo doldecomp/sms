@@ -901,50 +901,43 @@ void TBathtub::removeCollisions_()
 		unk164[i]->remove();
 }
 
-// TODO: Match the local-space position helpers and their stack layout.
+// TODO: instructions match; retail's frame is 0x10 larger (0x88) in the low
+// inline-temporary region below getLocalPos's return temporary.
 bool TBathtub::allowsTumble() const
 {
-	JGeometry::TVec3<f32> pos = *gpMarioPos;
+	JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
 	f32 angle;
 	if (getNearGrip(pos, 18.0f, &angle)) {
-		JGeometry::TVec3<f32> xDir, yDir, zDir, relative;
-		mBathtubData.unk18.getXDir(xDir);
-		mBathtubData.unk18.getYDir(yDir);
-		mBathtubData.unk18.getZDir(zDir);
-		relative.sub(pos, mBathtubData.mPos);
-		// TODO: retail calls the local TVec3<f>::set<f> here and we still
-		// expand it; same open per-call-site problem as MapObjBall.
-		JGeometry::TVec3<f32> local;
-		local = JGeometry::TVec3<f32>(
-		    xDir.dot(relative), yDir.dot(relative), zDir.dot(relative));
+		JGeometry::TVec3<f32> local = mBathtubData.getLocalPos(pos);
 		local.y = 0.0f;
 		f32 distance = local.length();
 		if (distance < 4200.0f)
 			return false;
-		if (4700.0f >= distance)
-			return true;
-		if (mBathtubData.unk18.at(1, 1) <= 0.99f)
+		if (distance > 4700.0f) {
+			if (mBathtubData.unk18.at(1, 1) > 0.99f) {
+				TBathtubKillerManager* manager
+				    = JDrama::TNameRefGen::search<TBathtubKillerManager>(
+			        "バスタブキラーマネージャー");
+				u32 status = SMS_GetMarioStatus();
+				if (status == MARIO_STATUS_HIP_DROP)
+					return false;
+				if (status == MARIO_STATUS_ROCKET)
+					return false;
+				if (status == MARIO_STATUS_ROCKET_LANDING)
+					return false;
+				const TWaterGun* gun = gpMarioOriginal->mWaterGun;
+				if (gun) {
+					TNozzleTrigger* nozzle
+					    = (TNozzleTrigger*)gun->getCurrentNozzle();
+					if (nozzle && nozzle->getNozzleKind() == 1
+					    && nozzle->unk388 > 0.0f)
+						return false;
+				}
+				return manager->countActiveKillers() == 0;
+			}
 			return false;
-
-		TBathtubKillerManager* manager
-		    = JDrama::TNameRefGen::search<TBathtubKillerManager>(
-	        "バスタブキラーマネージャー");
-		u32 status = SMS_GetMarioStatus();
-		if (status == MARIO_STATUS_HIP_DROP)
-			return false;
-		if (status == MARIO_STATUS_ROCKET)
-			return false;
-		if (status == MARIO_STATUS_ROCKET_LANDING)
-			return false;
-		const TWaterGun* gun = gpMarioOriginal->mWaterGun;
-		if (gun) {
-			TNozzleTrigger* nozzle
-			    = (TNozzleTrigger*)gun->getCurrentNozzle();
-			if (nozzle && nozzle->getNozzleKind() == 1
-			    && nozzle->unk388 > 0.0f)
-				return false;
 		}
-		return manager->countActiveKillers() == 0;
+		return true;
 	}
 	return false;
 }
