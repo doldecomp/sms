@@ -384,7 +384,7 @@ bool TKumokun::checkOnMovingFloor(JGeometry::TVec3<f32>* param_1,
 			uVar7 = true;
 			local_8C.set(local_98);
 		} else {
-			local_8C.y = yTmp;
+			local_8C.y = dVar10;
 		}
 	} else {
 		uVar7 = true;
