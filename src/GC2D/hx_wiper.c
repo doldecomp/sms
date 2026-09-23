@@ -256,16 +256,18 @@ static void Hgx_DrawCircle(f32 cx, f32 cy, f32 r, u32 color)
 
 static void Hgx_init_tobj_resource(GXTexObj* obj, const ResTIMG* timg)
 {
-	u8 minFilter = timg->minFilter;
-	u8 magFilter = timg->magFilter;
+	GXTexFmt format = (GXTexFmt)timg->format;
+	GXTexWrapMode wrapS = (GXTexWrapMode)timg->wrapS;
+	GXTexWrapMode wrapT = (GXTexWrapMode)timg->wrapT;
+	u8* data = (u8*)timg + timg->imageDataOffset;
+	GXTexFilter minFilter = (GXTexFilter)timg->minFilter;
+	GXTexFilter magFilter = (GXTexFilter)timg->magFilter;
 
 	img_wx = timg->width;
 	img_wy = timg->height;
 
-	GXInitTexObj(obj, (u8*)timg + timg->imageDataOffset, img_wx, img_wy,
-	             (GXTexFmt)timg->format, (GXTexWrapMode)timg->wrapS,
-	             (GXTexWrapMode)timg->wrapT, GX_FALSE);
-	GXInitTexObjLOD(obj, (GXTexFilter)minFilter, (GXTexFilter)magFilter, 0.0f,
+	GXInitTexObj(obj, data, img_wx, img_wy, format, wrapS, wrapT, GX_FALSE);
+	GXInitTexObjLOD(obj, minFilter, magFilter, 0.0f,
 	                0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
 }
 
@@ -273,13 +275,14 @@ static void Hgx_ReadTexture(char* path, void* buffer)
 {
 	DVDFileInfo fileInfo;
 
-	if (hx.hasResource != 0)
-		return;
-
-	if (DVDOpen(path, &fileInfo)) {
-		s32 read = DVDReadPrio(&fileInfo, buffer, fileInfo.length, 0, 2);
-		DVDClose(&fileInfo);
-		DCStoreRange(buffer, read);
+	switch (hx.hasResource) {
+	case 0:
+		if (DVDOpen(path, &fileInfo)) {
+			s32 read = DVDReadPrio(&fileInfo, buffer, fileInfo.length, 0, 2);
+			DVDClose(&fileInfo);
+			DCStoreRange(buffer, read);
+		}
+		break;
 	}
 }
 
