@@ -1016,7 +1016,11 @@ u32 TBellWatermill::touchWater(THitActor* water)
 // every setMtxRotZ/Y expansion where ours loads them once, as if the stores
 // went through a pointer MWCC could not resolve to the stack. MsClamp for
 // the spin speed removed the clamp's extra fmr (cc48); the if/else-if and
-// a named max are worse.
+// a named max are worse. Retail also holds &spin in a register (r4 before
+// the first rotation, r28 before the translation stores). Inert (bb15): the
+// MathUtil MsMtxSetRotZ/Y helpers, setAnmMtx/setModelMtx for the copy, a
+// pointer to the whole matrix; only an MtxPtr alias over the tail (97.0%)
+// moved it, and that is an alias, not source.
 void TBellWatermill::control()
 {
 	TMapObjBase::control();

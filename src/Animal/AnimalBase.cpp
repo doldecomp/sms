@@ -157,6 +157,9 @@ BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg) { return FALSE; }
 // TODO: 92.5%. Retail's frame is 0x30 larger: save 0xd8, world 0xa8, local
 // 0x78, srcArrays 0x6c and an unreferenced Mtx-sized block below; the
 // swapAllMtx expansion also schedules differently. Declaration order inert.
+// Retail rematerialises `addi r3,r1,world` in the loop and loads
+// getDrawMtxNum before swapAllMtx. Inert (bb15): save/world/local order,
+// j3dSys.mViewMtx as the loop's left operand (92.6%, frame unchanged).
 void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {

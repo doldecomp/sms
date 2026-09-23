@@ -190,6 +190,11 @@ void TMovieDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	OSResumeThread(&gSetupThread);
 }
 
+// TODO: the tail wants TTHPRender's 0x10/0x18 fields as two
+// JGeometry::TVec2<u32> members, each assigned from a TVec2 temporary
+// (thpRender->pos = TVec2<u32>((W - xSize) / 2, (H - ySize) / 2); then the
+// size likewise). Measured through a temporary cast: 97.4 -> 99.7%, every
+// instruction right, frame 8 low. Needs a THPRender.hpp member change.
 int TMovieDirector::rsetup()
 {
 	void* subtitleArcBlob
@@ -288,8 +293,8 @@ int TMovieDirector::rsetup()
 	THPPlayerGetVideoInfo(&videoInfo);
 
 	JGeometry::TBox2<u32> videoRect(
-	    SMSGetGameRenderWidth() - videoInfo.xSize / 2,
-	    SMSGetGameRenderHeight() - videoInfo.ySize / 2, videoInfo.xSize,
+	    (SMSGetGameRenderWidth() - videoInfo.xSize) / 2,
+	    (SMSGetGameRenderHeight() - videoInfo.ySize) / 2, videoInfo.xSize,
 	    videoInfo.ySize);
 	thpRender->setParams(videoRect.i.x, videoRect.i.y, videoRect.f.x,
 	                     videoRect.f.y);
