@@ -723,11 +723,15 @@ void TChuuHana::bind()
 // Newton step of TUtil<f32>::sqrt are both gone, which is what a discarded
 // length() leaves.  One nesting level is 0xb0 and leaves TVec3::dot a `bl`;
 // two is 0xc8 and still calls dot.  The two-term shape says the vector whose
-// length is taken had a statically zero y.
+// length is taken had a statically zero y.  With TVec3's `: Vec(other)`
+// copy constructor the low-region copy only stays in memory when it is
+// assigned (`speed`); a nested unnamed copy of mVelocity elides (0xb0).
 void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& push)
 {
 	JGeometry::TVec3<f32> vel(mVelocity);
-	JGeometry::TVec3<f32>(JGeometry::TVec3<f32>(mVelocity)).length();
+	JGeometry::TVec3<f32> speed;
+	speed = mVelocity;
+	JGeometry::TVec3<f32>(speed).length();
 	VECAdd(&vel, &push, &vel);
 	vel.y     = 0.0f;
 	mVelocity = vel;
