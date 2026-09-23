@@ -1094,6 +1094,9 @@ BOOL TMario::pullJumping()
 	return 0;
 }
 
+// TODO: frame is 0x58, retail 0xa0; every instruction matches. The int
+// conversion slot sits 0x48 low, so retail reserves 0x48 of inline temporaries
+// this body lacks (not the collision loop's distance spelling: tried).
 BOOL TMario::hipAttacking()
 {
 	for (int i = 0; i < mColCount; i++) {
@@ -1120,7 +1123,7 @@ BOOL TMario::hipAttacking()
 			f32 lift = (f32)(0x28 - mStatusTimer);
 			lift *= 0.5f;
 			if (160.0f + (mPosition.y + lift) < mFloorPosition.x) {
-				mPosition.y = lift * 0.25f + mPosition.y;
+				mPosition.y += lift / 4.0f;
 				unk104      = mPosition.y;
 			}
 		}
