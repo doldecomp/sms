@@ -375,7 +375,8 @@ void TCardSave::init(int param_1)
 
 // TODO: 98.3%, graphics/cue swap r30/r31 (retail keeps graphics in r31 and
 // reuses r30 for the scissor rect). Inert (k5): nested `if (!unk2DF)`, raw
-// mScissorRect/mViewportRect, a scissor pointer local.
+// mScissorRect/mViewportRect, a scissor pointer local, `if (!(cue & CUE_DRAW))
+// return;`, execIssueGX_ without the graph scope (breaks), a cast pointer.
 void TCardSave::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk2DF)
@@ -475,10 +476,13 @@ void TCardSave::setMessageC(J2DTextBox* text_box, s32 message_id, u32 size)
 	}
 }
 
-// TODO: 98.2%. Frame 0x1b0 vs 0x1a8 (low pool 8 bytes long; the fourth
-// Wr site saturates) and a whole-function register rotation: retail colours
-// `this` r26 and `result` r27 below the shared constants (1 in r31, 0x4330 in
-// r30), we give them r30/r31. Case-body helpers do not move it.
+// TODO: 98.5%, frame exact. Case 0 spells its two opening sites like
+// waitForAnyKey (raw `mPane->show()`, the header's setCenteredSize); either
+// half alone is 8 off the other way. Left: a whole-function register
+// rotation: retail colours `this` r26 and `result` r27 below the shared
+// constants (1 in r31, 0x4330 in r30), we give them r30/r31. Inert:
+// case-body helpers, one shared top-level `done` (either order), `bool done`,
+// a separate `result = -1;` assignment.
 s8 TCardSave::waitForStop(TEProgress param_1)
 {
 	s8 result = -1;
@@ -491,13 +495,13 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 		setMessage(unkDC, 0x200, 1);
 
 		unkA4->hide();
-		unk48->getPane()->show();
-		setCenteredSizeWr(unk48, 20, unk4C.getWidth(), unk4C.getHeight(), 0,
-		                  0);
+		unk48->mPane->show();
+		unk48->setCenteredSize(20, unk4C.getWidth(), unk4C.getHeight(), 0,
+		                        0);
 
 		unkDC->hide();
-		setCenteredSizeWr(unkC4, 20, unkC8.getWidth(), unkC8.getHeight(), 0,
-		                  0);
+		unkC4->setCenteredSize(20, unkC8.getWidth(), unkC8.getHeight(), 0,
+		                        0);
 
 		if (unk310 == PROGRESS_UNK4 || unk310 == PROGRESS_UNK3
 		    || unk310 == PROGRESS_UNK5 || unk310 == PROGRESS_UNKC
@@ -696,6 +700,10 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 				// TVec3 pos (set/ctor/members) hoists li and fixes the layout but
 				// recolours x1/y1 (r7/r9, -0.3%); f32 locals, aggregate init, an id
 				// local and a (bounds, id) helper are inert. Same tell at all 1FA sites.
+				// Also inert (frame goes 8-0x10 further from 0x428): an in-call
+				// TVec3<f32>(x, y, 0) temporary, with or without named f32s, or
+				// with the width spelled x2 - x1. The 0x18 frame gap is below
+				// every accessed slot (dead low region).
 				Vec pos;
 				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
 				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
@@ -1661,7 +1669,10 @@ void TCardSave::changePattern(J2DPicture*, s16, u32) { }
 // vs r5 at every `getLastSaveTime()` compare). Wrapping whole case bodies
 // (0x13, the repeated save block of 0x2A/0x2B/0x33) or the score display of
 // case 2 in TU-local inline helpers moves neither the frame nor the colours,
-// and the compare's operand order is canonicalised away.
+// and the compare's operand order is canonicalised away. In saveBookmark, a
+// named `TFlagManager* flags = TFlagManager::getInstance();` adds 0x10 of
+// frame at no instruction change (stream blocks then +8 off, not +0xc);
+// naming gpCardManager instead costs instructions.
 void TCardSave::execMovement_()
 {
 
