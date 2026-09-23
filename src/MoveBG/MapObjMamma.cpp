@@ -1088,6 +1088,9 @@ void TLeanMirror::initMapObj()
 // TODO: frame 0xa0 against retail's 0xd0 with every instruction right.
 // readF32() for size (+8) and a chained `>>` for mMarioMovePos (+0x10) reach
 // only 0xb8; the remaining 0x18 needs another inline level.
+// TODO: every instruction matches; the frame is 8 short (0xc8 vs 0xd0). The
+// chained position read and the director accessors each bought theirs; the
+// ctor spelling, readString's length and a JSUInputStream& alias are inert.
 void TLeanMirror::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
@@ -1097,12 +1100,10 @@ void TLeanMirror::load(JSUMemoryInputStream& stream)
 	mSize        = 100.0f * size / 2.0f;
 	mDefaultSize = mSize;
 
-	if (gpMarDirector->unk7D == 1) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1) {
 		char demoName[0x40];
 		stream.readString(demoName, sizeof(demoName));
-		stream >> mMarioMovePos.x;
-		stream >> mMarioMovePos.y;
-		stream >> mMarioMovePos.z;
+		stream >> mMarioMovePos.x >> mMarioMovePos.y >> mMarioMovePos.z;
 	}
 
 	TMirrorModelObj* mirror = new TMirrorModelObj;
@@ -1111,7 +1112,7 @@ void TLeanMirror::load(JSUMemoryInputStream& stream)
 	mirror->init(path);
 	mirror->unk28 = getModel();
 
-	if (gpMarDirector->unk7D != 1)
+	if (SMSGetMarDirector()->getCurrentStage() != 1)
 		mState = STATE_DONE;
 }
 
