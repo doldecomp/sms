@@ -535,12 +535,13 @@ void TAnimalBird::doWalk()
 	mLinearVelocity = velocity;
 }
 
-// TODO: 88.8%, frame exact with the final rotate through BirdRotate. The take-off velocity is rotated in
+// TODO: 93.4%, frame 0x160 against 0x158. The take-off velocity is rotated in
 // place and rebuilt flat, which lets MWCC drop the rotated y as retail does.
-// Left: (1) `velocity.length()` expands TUtil<f32>::sqrt here while retail
-// calls it -- the same per-call-site inconsistency the catalog records for
-// MapObjBall and amiNoko; a named speed local changes nothing. (2) MsAngleDiff
-// loads mRotation.y before mHomeRotation.y; retail the other way round.
+// The speed is the length of an explicit copy of mVelocity: retail copies it
+// to the stack and calls TUtil<f32>::sqrt, which the named-local spelling
+// expands. Left: MsAngleDiff loads mRotation.y before mHomeRotation.y
+// (retail the other way round; a named home local is inert) and the
+// take-off quaternion's register numbering.
 bool TAnimalBird::doLanding(bool takeoff)
 {
 	if (takeoff) {
@@ -575,9 +576,8 @@ bool TAnimalBird::doLanding(bool takeoff)
 
 	mLinearVelocity = acceleration;
 
-	JGeometry::TVec3<f32> velocity;
-	velocity = mVelocity;
-	JGeometry::TVec3<f32> forward(0.0f, 0.0f, velocity.length());
+	JGeometry::TVec3<f32> forward(0.0f, 0.0f,
+	                              JGeometry::TVec3<f32>(mVelocity).length());
 	forward.scale(getSaveParams()->mLandingFric.get());
 	BirdRotate(SMS_Eular2Quat(mRotation), forward, forward);
 	mVelocity = forward;
