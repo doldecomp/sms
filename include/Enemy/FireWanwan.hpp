@@ -165,8 +165,8 @@ public:
 	void movementBody(const JGeometry::TVec3<f32>&);
 	void bindBody();
 	JGeometry::TVec3<f32> getBodyNthPos(int) const;
-	f32 getBodyTailPow() const;
-	f32 getBodyHeadPow() const;
+	JGeometry::TVec3<f32> getBodyTailPow() const;
+	JGeometry::TVec3<f32> getBodyHeadPow() const;
 	f32 calcApartPow();
 	void onFireEffect();
 	void offFireEffect();

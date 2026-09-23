@@ -598,14 +598,10 @@ void TFireWanwanTailHit::init()
 	mIsOnFire = false;
 }
 
-// TODO: 96.3%. The ROM keeps getNode's idx * 0.25f * 4.0f as a runtime
-// fctiwz of 4.0f; a literal argument folds it to a constant 0x60 offset, and a
-// named `int idx = 4` reproduces it (98.6%) but is a forcing temporary, so the
-// real argument source is unknown. Also: the ROM calls the weak
-// *const* ArrayWrapper<Node>::size() and operator[] out of line for local_48
-// (reloading unkA4 for each), where ours inlines back(); TU-local const
-// helpers over the wrapper, the rubber or `this`, one or two levels deep, all
-// still inline both. The frame is also 0x30 short.
+// TODO: 99.0%. The ROM's inlined bindBody -> getBodyTailPow calls the weak
+// *const* ArrayWrapper<Node>::operator[] out of line; ours picks the
+// non-const one (unkA4 is non-const), and a const binder or a const accessor
+// on TTailRubber was worse. The frame is also 0x30 short.
 void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	THitActor::perform(cue, graphics);
@@ -632,20 +628,12 @@ void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		unkBC->update();
 
 	if (mHolder != nullptr) {
-		JGeometry::TVec3<f32> local_3c = unkA4->getNode(4)->mPos;
+		JGeometry::TVec3<f32> local_3c = getBodyNthPos(4);
 		local_3c -= mOwner->mPosition;
 		SMS_CalcToDirMatrix(unk74, local_3c,
 		                    JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 
-		JGeometry::TVec3<f32> local_48 = unkA4->unk0.back().mVel;
-		f32 fVar1 = mOwner->getSaveParam2()->mTailEndPowRate.get();
-		local_48 *= fVar1;
-		local_48.y = 0.0f;
-		mPosition += local_48;
-
-		JGeometry::TVec3<f32> holderPos = mPosition;
-		holderPos.y = mHolder->mPosition.y;
-		mHolder->moveRequest(holderPos);
+		bindBody();
 
 		unk74.setTrans(mPosition);
 
@@ -666,7 +654,7 @@ void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 {
 	for (int i = 0; i < 5; ++i) {
-		JGeometry::TVec3<f32> local_68 = unkA4->getNode(i)->mPos;
+		JGeometry::TVec3<f32> local_68 = getBodyNthPos(i);
 		JGeometry::TVec3<f32> local_74;
 		if (i == 4) {
 			local_74.set(0.0f, 0.0f, 1.0f);
@@ -723,13 +711,37 @@ void TFireWanwanTailHit::movementBody(const JGeometry::TVec3<f32>& param_1)
 	unkA4->movement();
 }
 
-void TFireWanwanTailHit::bindBody() { }
+void TFireWanwanTailHit::bindBody()
+{
+	JGeometry::TVec3<f32> local_48 = getBodyTailPow();
+	f32 fVar1 = mOwner->getSaveParam2()->mTailEndPowRate.get();
+	local_48 *= fVar1;
+	local_48.y = 0.0f;
+	mPosition += local_48;
 
-JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyNthPos(int i) const { }
+	JGeometry::TVec3<f32> holderPos = mPosition;
+	holderPos.y = mHolder->mPosition.y;
+	mHolder->moveRequest(holderPos);
+}
 
-f32 TFireWanwanTailHit::getBodyTailPow() const { }
+// TODO: 0x6c against the map's 0x54. The named rate is what keeps perform's
+// inlined getBodyNthPos(4) as a runtime fctiwz of 4.0f, as in the ROM, but the
+// real index expression is still unknown.
+JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyNthPos(int i) const
+{
+	f32 rate = i / 4.0f;
+	return unkA4->unk0[rate * 4.0f].mPos;
+}
 
-f32 TFireWanwanTailHit::getBodyHeadPow() const { }
+JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyTailPow() const
+{
+	return unkA4->unk0[unkA4->unk0.size() - 1].mVel;
+}
+
+JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyHeadPow() const
+{
+	return unkA4->unk0[0].mVel;
+}
 
 f32 TFireWanwanTailHit::calcApartPow()
 {
