@@ -84,7 +84,9 @@ void TMario::thinkAloha()
 // test (+5), a block around startTimer, and in TimeRec.hpp: colour declared
 // before `inst`, `toUInt32()`, an unnamed TColor (+0x10 frame), copy-init
 // (+4), dropping `col`, a u32-built colour, a TU-local level around the call
-// (+3 instructions).
+// (+3 instructions). Our dead word at 0x138 is exactly retail's colour slot and
+// survives raw `mWaterGun` (frame 0x108), a union colour, and dropping
+// `timeArray`/`tick`/`col` or declaring the colour first (pairs too).
 //
 // The 104 bytes of dead low region the frame needed were measured in closure
 // batch 120: the parked MarioMainGetFludd binding level below is +16 of low
