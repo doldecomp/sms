@@ -2185,6 +2185,9 @@ void TGCConsole2::startCameraDemo()
 // pane set or the timings, so it stays a stub rather than a guess.
 void TGCConsole2::resetMoveTank() { }
 
+// TODO: frame 0xa0, retail 0xc0; retail stacks the three JUTPoint temps
+// top-down (4th argument highest), the TColor stride class of startInsertLife.
+// Named JUTPoint locals in either order are inert.
 void TGCConsole2::endCameraDemo()
 {
 	if (unk39 || !unk50)

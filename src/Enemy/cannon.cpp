@@ -1008,7 +1008,10 @@ static inline TCannon* CannonBody(TSpineBase<TLiveActor>* spine)
 	return cannon;
 }
 
-// TODO: frame 0x58, retail 0x60; every instruction matches.
+// TODO: frame 0x58, retail 0x60; every instruction matches. Inert: getChorobei()
+// at either site, `!getTime()` (-8), a named nerve pointer, a named MActor in
+// isUpEnd; re-reading CannonBody(spine) for checkCurAnmEnd lands 0x60 but
+// reloads the body where retail reuses r29.
 DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
 {
 	TCannon* cannon = CannonBody(spine);

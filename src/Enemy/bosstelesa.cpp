@@ -269,6 +269,8 @@ void TBubble::appendItem() { }
 // TODO: +0x10 of named block above the TMsRange (TVec3 call temp already
 // sits at 0x10). A conductor binder lands the 0x50 frame from the pool
 // and pushes that temp; a named gpConductor local hoists the load.
+// Also inert: getPosition() at 1/2/4 sites, an unnamed TMsRange, roll or
+// enemy declared first.
 void TBubble::appendEnemy()
 {
 	mEnemyInside = nullptr;

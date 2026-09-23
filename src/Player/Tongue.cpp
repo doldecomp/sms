@@ -90,6 +90,8 @@ TongueScaled(JGeometry::TVec3<f32> v, f32 k)
 	return v;
 }
 
+// TODO: frame 0x58, retail 0x60; retail keeps the vel*0.5f result above the
+// scaled dir copy. A named `half` (early or late, via TongueScaled) is 0x68.
 void TYoshiTongue::emit(const JGeometry::TVec3<f32>& src,
                         const JGeometry::TVec3<f32>& dir,
                         const JGeometry::TVec3<f32>& vel)
