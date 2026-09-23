@@ -20,6 +20,11 @@ static inline f32 NpcWalkTurnSquaredXZ(const JGeometry::TVec3<f32>& a,
 	return JGeometry::TVec3<f32>(a.x - b.x, 0.0f, a.z - b.z).squared();
 }
 
+// TODO: in execWalk's inlined copy retail puts the point copy at 0x90 and
+// the unnamed vector at 0x9c; ours has the vector at 0x90 and `target` at
+// 0xa8. Passing getPoint() straight to a by-value helper parameter, an
+// explicit temporary, getUnkF4(), and a set()-built vector were all inert or
+// worse (95.8-97.8).
 bool TBaseNPC::isCanWalk() const
 {
 	bool result = true;
