@@ -95,14 +95,14 @@ void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
 		Mtx44Ptr projMtx = graphics->mProjMtx.mMtx;
-		f32 fovy = gpCamera->mFovy;
-		f32 far = gpCamera->mFar;
-		f32 near = gpCamera->mNear;
-		f32 aspect = gpCamera->mAspect;
+		f32 fovy = SMSGetCamera()->getFovy();
+		f32 far = SMSGetCamera()->getFar();
+		f32 near = SMSGetCamera()->getNear();
+		f32 aspect = SMSGetCamera()->mAspect;
 		C_MTXPerspective(projMtx, unk80 * fovy, aspect, near, far);
 		MTXCopy(unk30, graphics->mViewMtx);
-		graphics->mNearPlane = gpCamera->mNear;
-		graphics->mFarPlane  = gpCamera->mFar;
+		graphics->mNearPlane = SMSGetCamera()->mNear;
+		graphics->mFarPlane  = SMSGetCamera()->getFar();
 		if (cue & CUE_SET_PROJECTION)
 			GXSetProjection(projMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
@@ -331,7 +331,7 @@ TMirrorModel::TMirrorModel()
 // family).
 void TMirrorModelObj::setPlane()
 {
-	MtxPtr mtx = unk4->getModel()->getAnmMtx(0);
+	MtxPtr mtx = getUnk4()->mModel->getAnmMtx(0);
 	Vec* v     = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 
 	JGeometry::TVec3<f32> local_18;

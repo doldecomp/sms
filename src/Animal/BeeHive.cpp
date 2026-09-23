@@ -104,7 +104,7 @@ BOOL TBee::receiveMessage(THitActor* sender, u32 message)
 {
 	switch (message) {
 	case HIT_MESSAGE_TAKE:
-		if (mHolder == nullptr) {
+		if (getHolder() == nullptr) {
 			TTakeActor* holder = (TTakeActor*)sender;
 			mHolder            = holder;
 			SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &mPosition, nullptr,
