@@ -938,10 +938,7 @@ BOOL TElecCarapace::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
-// TODO: 99.6%, frame size exact. Retail holds axisX/axisZ/away.x in f4/f5/f6
-// (ours f6/f5/f4), and its TPathNode temporary sits 8 bytes lower (0x1c).
-// Inert: axis declaration orders, explicit/named TPathNode, a named goal ref;
-// raw mPosition drops 0x10 of frame.
+// The snap axis is a vector whose dot with `away` gives the bounce speed.
 void TElecCarapace::reflect(THitActor* other)
 {
 	if (mReflector == other)
@@ -959,21 +956,19 @@ void TElecCarapace::reflect(THitActor* other)
 	MsVECNormalize((Vec*)&away, (Vec*)&away);
 
 	// Snap the bounce onto whichever world axis the hit came from.
-	f32 axisZ = 0.0f;
-	f32 axisY = 0.0f;
-	f32 axisX = 0.0f;
+	JGeometry::TVec3<f32> axis(0.0f, 0.0f, 0.0f);
 	if (fabsf(away.z / away.x) > 1.0f) {
 		if (other->mPosition.z > mPosition.z)
-			axisZ = 1.0f;
+			axis.z = 1.0f;
 		else
-			axisZ = -1.0f;
+			axis.z = -1.0f;
 	} else if (other->mPosition.x > mPosition.x) {
-		axisX = 1.0f;
+		axis.x = 1.0f;
 	} else {
-		axisX = -1.0f;
+		axis.x = -1.0f;
 	}
 
-	f32 along = -7.0f * (away.x * axisX + away.y * axisY + away.z * axisZ);
+	f32 along = -7.0f * (away.x * axis.x + away.y * axis.y + away.z * axis.z);
 	mVelocity.x = away.x * along;
 	mVelocity.y = 2.0f;
 	mVelocity.z = away.z * along;
@@ -984,7 +979,7 @@ void TElecCarapace::reflect(THitActor* other)
 	    || (mVelocity.x < 0.0f && mVelocity.z < 0.0f))
 		mSpinReverse = true;
 
-	setGoalPath(mNokonoko->getPosition());
+	setGoalPath(mNokonoko->mPosition);
 }
 
 // UNUSED, 0x94 in the map: the shell's own step, which the move nerve does
@@ -1247,12 +1242,10 @@ DEFINE_NERVE(TNerveElecCarapaceMove, TLiveActor)
 		    * carapace->getNokonoko()->mSaveParams->mSLCarapaceSpeed.value;
 		if (ElecSubDist(carapace->unk104.getPoint(), carapace->mPosition)
 		    < catchRange) {
-			// TODO: retail loads the koopa pointer before this theNerve()
-			// guard and reloads it for `nokonoko` after (the guard's call
-			// clobbers it); ours loads it once after. Inert or worse (cc48):
-			// a raw != test, a named spine, raw mNokonoko, getSpine(), a
-			// koopa-taking predicate.
-			if (!ElecIsNerve(carapace->getNokonoko()->mSpine,
+			// The koopa is named ahead of the theNerve() guard, so retail
+			// reloads it for `nokonoko` once the guard's call has run.
+			TElecNokonoko* koopa = carapace->getNokonoko();
+			if (!ElecIsNerve(koopa->getSpine(),
 			                 &TNerveElecNokonokoCollect::theNerve())) {
 				TElecNokonoko* nokonoko = carapace->getNokonoko();
 				if (nokonoko->mSpine->getCurrentNerve()
