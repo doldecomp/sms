@@ -1340,10 +1340,10 @@ static void evSetCollision(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 static void evWarpMario(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(4, &arg_num);
-	int arg1 = interp->pop().getDataInt();
-	int z    = interp->pop().getDataInt();
-	int y    = interp->pop().getDataInt();
-	int x    = interp->pop().getDataInt();
+	s32 arg1 = interp->pop().getDataInt();
+	s32 z    = interp->pop().getDataInt();
+	s32 y    = interp->pop().getDataInt();
+	s32 x    = interp->pop().getDataInt();
 	SMS_MarioWarpRequest(JGeometry::TVec3<f32>(x, y, z), arg1);
 	interp->push();
 }

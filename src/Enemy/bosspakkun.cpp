@@ -2230,14 +2230,16 @@ DEFINE_NERVE(TNerveBPFlyPivot, TLiveActor)
 
 DEFINE_NERVE(TNerveBPHover, TLiveActor)
 {
-	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
+	TSpineEnemy* body = spine->getBody();
+	TBossPakkun* boss = (TBossPakkun*)body;
 
 	if (spine->getTime() == 0) {
 		boss->changeBck(BOSSPAKU_BCK_HOVERING);
 		boss->mState = BOSSPAKU_STATE_FLYING;
 	}
 
-	f32 range = BosspakkunParams(boss)->mSLPollBallRange.get();
+	TBossPakkunParams* params = BosspakkunParams(boss);
+	f32 range = params->mSLPollBallRange.value;
 
 	if (boss->inArea(*gpMarioPos)
 	    && boss->mDistToMarioSquared < range * range) {
