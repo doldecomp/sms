@@ -305,12 +305,16 @@ void TKukku::control()
 	TLiveActor::control();
 }
 
-// TODO: 96.0%, frame exact. Residue is FPR colouring of up (retail y/x/z in
-// f27/f25/f28) and the tilt.mul(yaw) expansion, where retail leaves one
-// product unfused (TQuat4::mul, shared header); the setRotate respelling in
-// JGQuat4.hpp cost 0.1 here. Inert: MTXCopy spellings, `up = normal`, a
-// named yaw angle, a named from-axis; `1.0f` for one() and the two-argument
-// setRotate are worse.
+// TODO: 96.5%, frame exact. The product is the two-argument
+// tilt.mul(tilt, yaw) (retail's CSE of the zero-component products and its
+// in-place store at 0xe0); what is left there is instruction scheduling
+// only. The copy out is really getModel()->setBaseTRMtx(mtx): that spelling
+// makes everything after setQuat byte-exact (the `mr r4, r3` and &mtx in
+// r30), but objdiff's alignment then scores 95.8% because of the up-vector
+// FPR colouring (retail x/y/z loaded into f25/f27/f28, ours f29/f28/f27)
+// earlier on, so the MtxPtr/model spelling is kept until that is fixed.
+// Inert for up: `up = normal`, set(n.x, n.y, n.z), normalize(normal) and
+// setLength(normal, 1) (worse), else-first, a (0,1,0) initialiser (worse).
 void TKukku::calcRootMatrix()
 {
 	if (mSpine->getLatestNerve() == &TNerveSmallEnemyDie::theNerve()) {
@@ -332,7 +336,7 @@ void TKukku::calcRootMatrix()
 		JGeometry::TQuat4<f32> tilt;
 		tilt.setRotate(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), up,
 		               JGeometry::TUtil<f32>::one());
-		tilt.mul(yaw);
+		tilt.mul(tilt, yaw);
 
 		JGeometry::TPosition3<
 		    JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > >

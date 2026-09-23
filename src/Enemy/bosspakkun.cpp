@@ -722,6 +722,10 @@ void TBossPakkunMtxCalc::calcBellyScale(u16 joint)
 	MTXCopy(jointMtx, J3DSys::mCurrentMtx);
 }
 
+// TODO: 96.9%. Frame 0xd0 against retail's 0x120 with the named block
+// shifted (toMario 0xdc, rot 0xa0 in retail), and retail loads the head axis
+// before the mHeadYaw owner load. Inert: yaw read after the axis, the axis
+// declared first, a named jointPos/marioPos, ternary step clamps (worse).
 void TBossPakkunMtxCalc::calcHeadDir(u16 joint)
 {
 	if (joint != 0x12)
@@ -751,12 +755,9 @@ void TBossPakkunMtxCalc::calcHeadDir(u16 joint)
 
 	f32 turn;
 	if (diff > 0.0f) {
-		if (diff > limit)
-			diff = limit;
-		turn = diff;
+		turn = std::min(diff, limit);
 	} else {
-		diff = diff > -limit ? diff : -limit;
-		turn = diff;
+		turn = std::max(diff, -limit);
 	}
 
 	f32 step = MsAngleDiff(turn, yaw);
