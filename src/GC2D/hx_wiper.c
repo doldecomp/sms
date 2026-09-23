@@ -1341,19 +1341,33 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 wd, f32 ht)
 	}
 }
 
-// TODO: retail's frame is 8 bytes larger in the low region (every conversion
-// slot sits 8 higher), and the hw/hh products schedule differently; unnaming
-// cx/cy is worse.
+// TODO: frame is right; the sx/sy quotients and the 0.5f / int-to-float
+// constants still take different volatile FPRs and load slots.
 static void Hxs_Logo_MagDraw(f32 mag_scale, f32 wd, f32 ht)
 {
-	f32 hw = (wd / 1.9230769f) * mag_scale * 0.5f;
-	f32 hh = (ht / 1.924138f) * mag_scale * 0.5f;
-	f32 cx = hx.width >> 1;
-	f32 cy = hx.height >> 1;
-	f32 x1 = cx - hw;
-	f32 y1 = cy - hh;
-	f32 u1 = x1 / (x1 - (cx + hw));
-	f32 v1 = y1 / (y1 - (cy + hh));
+	f32 sx;
+	f32 sy;
+	f32 hw;
+	f32 hh;
+	f32 cx;
+	f32 cy;
+	f32 x1;
+	f32 y1;
+	f32 u1;
+	f32 v1;
+
+	sx = wd / 1.9230769f;
+	sy = ht / 1.924138f;
+	cx = hx.width >> 1;
+	cy = hx.height >> 1;
+	hw = sx * mag_scale;
+	hh = sy * mag_scale;
+	hw *= 0.5f;
+	hh *= 0.5f;
+	x1 = cx - hw;
+	y1 = cy - hh;
+	u1 = x1 / (x1 - (cx + hw));
+	v1 = y1 / (y1 - (cy + hh));
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(0.0f, -32.0f, 0.0f);
