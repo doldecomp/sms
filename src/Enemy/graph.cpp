@@ -453,6 +453,8 @@ int TGraphWeb::getRandomButDirLimited(int param_1, int param_2,
 	}
 
 	JGeometry::TVec3<f32> local_cc = param_3;
+	JGeometry::TVec3<f32> local_d8;
+	JGeometry::TVec3<f32> local_e4;
 	MsVECNormalize(&local_cc, &local_cc);
 
 	int result;
@@ -463,15 +465,14 @@ int TGraphWeb::getRandomButDirLimited(int param_1, int param_2,
 		if (param_2 == railNode->mConnections[i])
 			continue;
 
-		JGeometry::TVec3<f32> local_d8;
 		getGraphNode(railNode->mConnections[i]).getPoint(&local_d8);
 		local_d8 -= param_4;
 		MsVECNormalize(&local_d8, &local_d8);
 
-		// TODO: retail's cross-product vector sits 0x10 below this loop's
-		// block and the second loop's point vector 0xc above it, i.e. the
-		// two loop blocks stack the other way round; the raw node pointer
-		// (inert here) and declaring the cross vector first are refuted.
+		// TODO: retail's cross vector sits at 0x44, 4 below ours, with a
+		// 4-byte hole under local_e4. A TU-local angle helper with an f32&
+		// out-param lands it at 0x44 but grows the named block by 8; a
+		// nested scope, top-level cross/angle/maxCos and value helpers are inert.
 		JGeometry::TVec3<f32> local_f4;
 		local_f4.cross(local_cc, local_d8);
 		f32 angle = abs(matan(local_cc.dot(local_d8), MsVECMag2(&local_f4))
@@ -487,7 +488,7 @@ int TGraphWeb::getRandomButDirLimited(int param_1, int param_2,
 		}
 	}
 
-	if (result > 0)
+	if (iVar13 > 0)
 		return result;
 
 	result     = -1;
@@ -496,7 +497,6 @@ int TGraphWeb::getRandomButDirLimited(int param_1, int param_2,
 		if (param_2 == railNode->mConnections[i])
 			continue;
 
-		JGeometry::TVec3<f32> local_e4;
 		unk0[railNode->mConnections[i]].getPoint(&local_e4);
 		local_e4.sub(param_4);
 		MsVECNormalize(&local_e4, &local_e4);
@@ -542,6 +542,8 @@ int TGraphWeb::getEscapeDirLimited(int param_1, int param_2,
 
 	JGeometry::TVec3<f32> local_c0 = param_3;
 	JGeometry::TVec3<f32> local_cc = SMS_GetMarioPos();
+	JGeometry::TVec3<f32> local_d8;
+	JGeometry::TVec3<f32> local_e4;
 	MsVECNormalize(&local_c0, &local_c0);
 	local_cc -= param_4;
 	MsVECNormalize(&local_cc, &local_cc);
@@ -554,11 +556,13 @@ int TGraphWeb::getEscapeDirLimited(int param_1, int param_2,
 		if (param_2 == railNode->mConnections[i])
 			continue;
 
-		JGeometry::TVec3<f32> local_d8;
 		getGraphNode(railNode->mConnections[i]).getPoint(&local_d8);
 		local_d8 -= param_4;
 		MsVECNormalize(&local_d8, &local_d8);
 
+		// TODO: retail has a 4-byte hole between local_d8 and local_e4 and
+		// this cross vector 0xc lower (0x4c); same residue as
+		// getRandomButDirLimited.
 		JGeometry::TVec3<f32> local_f4;
 		local_f4.cross(local_c0, local_d8);
 		f32 angle = abs(matan(local_c0.dot(local_d8), MsVECMag2(&local_f4))
@@ -585,12 +589,11 @@ int TGraphWeb::getEscapeDirLimited(int param_1, int param_2,
 		if (param_2 == railNode->mConnections[i])
 			continue;
 
-		JGeometry::TVec3<f32> local_e4;
 		unk0[railNode->mConnections[i]].getPoint(&local_e4);
 		local_e4.sub(param_4);
 		MsVECNormalize(&local_e4, &local_e4);
 
-		f32 cos = local_e4.dot(local_c0);
+		f32 cos = local_e4.dot(local_cc);
 		if (result < 0 || cos < unaff_f29) {
 			unaff_f29 = cos;
 			result    = railNode->mConnections[i];
