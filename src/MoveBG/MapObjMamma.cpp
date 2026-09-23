@@ -794,26 +794,32 @@ void TLeanMirror::calcCurrentMtx(Mtx mtx)
 	concatOnlyRotFromLeft(rot, mtx, mtx);
 }
 
+// The angle between two vectors: atan2(|a x b|, a . b). Retail calls
+// TUtil<f32>::sqrt out of line here, so the length sits one inline level
+// below release(). TODO: the helper's real name and owner are unknown.
+static inline f32 LeanMirrorAngle(const JGeometry::TVec3<f32>& a,
+                                  const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> c;
+	c.cross(a, b);
+	f32 len = c.length();
+	return atan2f(len, a.dot(b));
+}
+
+// TODO: frame is 0x28 short (the low region below the demo-camera flags),
+// r30/r31 hold this and the rodata base swapped, and the cross products'
+// volatile registers are swapped (the TQuat4::setRotate cross family). A
+// by-value parameter, a helper returning the cross by value, set() or three
+// member stores into `up`, and a temporary `up` are all worse or inert.
 void TLeanMirror::release()
 {
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	f32 f31    = mtx[0][1];
-	f32 f30    = mtx[1][1];
-	f32 f29    = mtx[2][1];
-
-	mRotAxis.x = f30 * mToStone.z - f29 * mToStone.y;
-	mRotAxis.y = f29 * mToStone.x - f31 * mToStone.z;
-	mRotAxis.z = f31 * mToStone.y - f30 * mToStone.x;
-
-	f32 cx = f30 * mToStone.z - f29 * mToStone.y;
-	f32 cy = f29 * mToStone.x - f31 * mToStone.z;
-	f32 cz = f31 * mToStone.y - f30 * mToStone.x;
-	JGeometry::TUtil<f32>::sqrt(cx * cx + cy * cy + cz * cz);
-
-	mRotSpeed = fabsf(atan2f(f31 * mToStone.x + f30 * mToStone.y
-	                             + f29 * mToStone.z,
-	                         mToStone.z))
-	    / mGoTargetTime;
+	f32 x = mtx[0][1];
+	f32 y = mtx[1][1];
+	f32 z = mtx[2][1];
+	JGeometry::TVec3<f32> up(x, y, z);
+	mRotAxis.cross(up, mToStone);
+	mRotSpeed = fabsf(LeanMirrorAngle(up, mToStone)) / mGoTargetTime;
 	mStateTimer = mGoTargetTime;
 	mState      = STATE_GO_TARGET;
 	offMapObjFlag(MAP_OBJ_FLAG_UNK2);
