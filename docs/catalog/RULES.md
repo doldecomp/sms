@@ -145,6 +145,8 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 
 - In a member wrapper that copies into a local `TVec3` (`V3 v = mPos; return R(v);`), MWCC never inlines a callee body containing an `if` at any depth, whatever its cost; a pure ternary body inlines by statement count only (each initialised named local = 1, helper levels and expression size free); a caller-side `f32 t = s->w(); return t < k;` also blocks it where a bare `return s->w();` does not (MathUtil round, 2026-09-23: `MsGetRotFromZaxisY` in bossgesso `inSightAngle`).
 
+- The inline budget adds up along the whole inline chain: a helper's statements count together with its callee's, so a callee that inlines everywhere can be pushed out of line at chosen sites by moving those call sites one level deeper into a shared TU-local helper (plus one named result in the callee to tip it); Koopa `getTargetDir`: init still inlines it, the Wait/Flame nerves `bl` it as retail does (2026-09-23).
+
 ## Frame-size gaps
 
 - Validate with `volatile char trash[N]` in the caller's own body only: inside an inlined callee a trivial POD prices 0, so probe a callee with a `struct S { ~S() {} u32 a; }` local (frame-gaps.md: "Research batch 233").
