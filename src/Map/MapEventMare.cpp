@@ -205,11 +205,11 @@ void TMareWallRock::initEffect()
 	}
 }
 
-// TODO: 99.6%. Frame 0x128 against retail's 0x170: the path buffer sits at
-// 0x64 in retail (0x20 here), so 0x44 of pool is missing below it, and the
-// centre computation reads max.x before min.x through an `lfsu` on min.
-// Tried: Vec / TVec3 copies of min and max (declared or assigned), the two
-// references swapped, pointer locals.
+// TODO: 99.91%. Instruction-exact; frame 0x148 against retail's 0x170 (the
+// path buffer sits at 0x64 in retail, 0x40 here): 0x24 of low-region
+// temporaries are still missing below it. Dropping the joint local for
+// two getJoint() reads fixed the max/min `lfsu` order. Inert: raw mJoint
+// at any subset of the three sites.
 void TMareWallRock::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
@@ -223,14 +223,13 @@ void TMareWallRock::loadAfter()
 	unk10C[1]->init(buf, 0, this);
 	unk104          = TMapObjBase::getBuildingJointObj(unkF8 + 1);
 	unk108          = unkF8;
-	J3DJoint* joint = unk104->getJoint();
-	const Vec& min  = joint->getMin();
-	const Vec& max  = joint->getMax();
+	const Vec& max  = unk104->getJoint()->getMax();
+	const Vec& min  = unk104->getJoint()->getMin();
 	mPosition.x     = (max.x + min.x) / 2.0f;
 	mPosition.y     = (max.y + min.y) / 2.0f;
 	mPosition.z     = (max.z + min.z) / 2.0f;
 	unkFC           = 100.0f + (max.z - min.z);
-	TMapObjBase::moveJoint(unk104->mJoint, 0.0f, 0.0f, unkFC);
+	TMapObjBase::moveJoint(unk104->getJoint(), 0.0f, 0.0f, unkFC);
 	unk104->sleep();
 	initHitActor(0x4000022C, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 	initEffect();
@@ -301,81 +300,34 @@ void TMareEventDepressWall::setJointPosX(f32 x, int idx)
 	unk28[idx].moveTrans(t);
 }
 
-// Binding level over a raw member read: a register lever in
-// TMareEventDepressWall::rising at an unchanged frame (batch 127).
-static inline f32* MapEventMareUnk40(const TMareEventDepressWall* p)
-{
-	f32* v40 = p->unk40;
-	return v40;
-}
-
-// TODO: 99.7%. Frame 0x80 against retail's 0x90 and the emitter block's
-// index/offset pair swaps r29/r30. The UNUSED emitEffect, setJointPosX and
-// finishEvent bodies (map-size exact) are this function's pieces, but
-// calling them instead of spelling them out is inert or worse (emitEffect
-// keeps the emitter in a saved register, 94.9%).
+// TODO: 99.88%. Instruction- and register-exact; frame 0x88 against retail's
+// 0x90. Every temporary slot sits 8 high (low region 8 too tall) and the
+// named block above them is 0x10 short. Inert: if/else vs early-return
+// spelling, `setJointPosX(x - mRiseSpeed, ...)`, a named index for
+// emitEffect, gpMSound raw, TVec3 temporaries inside the helpers.
 void TMareEventDepressWall::rising()
 {
 	f32 x = TMapObjBase::getJointTransX(unk30[unk48]);
 	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &unk34[unk48], 0, nullptr,
 	                                0, 4);
 
-	{
-		int idx = unk48;
-		if (JPABaseEmitter* em = gpMarioParticleManager->emit(
-		        MAP_MAP_MS_MARE_BLOCKUP, &unk34[idx], 1, &unk34[idx])) {
-			em->setGlobalScale(unk38[idx]);
-			em->setRate(unk3C[idx]);
-			em->setGlobalParticleScale(
-			    JGeometry::TVec3<f32>(unk40[idx], unk40[idx], MapEventMareUnk40(this)[idx]));
-		}
-	}
+	emitEffect(unk48);
 
 	if (unk1C[unk48]) {
 		if (x > 0.0f) {
 			x -= mRiseSpeed;
-			int idx = unk48;
-			TMapObjBase::setJointTransX(unk30[idx], x);
-			JGeometry::TVec3<f32> t(x, 0.0f, 0.0f);
-			unk28[idx].moveTrans(t);
-			return;
+			setJointPosX(x, unk48);
+		} else {
+			finishEvent();
 		}
-		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
-		unk28[unk48].remove();
-		unk24[unk48].setUpTrans(zero);
-		TMapObjBase::setJointTransX(unk30[unk48], 0.0f);
-		SMSRumbleMgr->stop(0x13);
-		unk48 += 1;
-		if (unk48 == unk10) {
-			unk44 = 4;
-			unk4C = mWaitTimeToWatch;
-			return;
+	} else {
+		if (x < 0.0f) {
+			x += mRiseSpeed;
+			setJointPosX(x, unk48);
+		} else {
+			finishEvent();
 		}
-		unk4C = unk18[unk48];
-		unk44 = 2;
-		return;
 	}
-	if (x < 0.0f) {
-		x += mRiseSpeed;
-		int idx = unk48;
-		TMapObjBase::setJointTransX(unk30[idx], x);
-		JGeometry::TVec3<f32> t(x, 0.0f, 0.0f);
-		unk28[idx].moveTrans(t);
-		return;
-	}
-	JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
-	unk28[unk48].remove();
-	unk24[unk48].setUpTrans(zero);
-	TMapObjBase::setJointTransX(unk30[unk48], 0.0f);
-	SMSRumbleMgr->stop(0x13);
-	unk48 += 1;
-	if (unk48 == unk10) {
-		unk44 = 4;
-		unk4C = mWaitTimeToWatch;
-		return;
-	}
-	unk4C = unk18[unk48];
-	unk44 = 2;
 }
 
 void TMareEventDepressWall::startToRise()
@@ -391,8 +343,8 @@ void TMareEventDepressWall::emitEffect(int idx)
 	        MAP_MAP_MS_MARE_BLOCKUP, &unk34[idx], 1, &unk34[idx])) {
 		em->setGlobalScale(unk38[idx]);
 		em->setRate(unk3C[idx]);
-		em->setGlobalParticleScale(
-		    JGeometry::TVec3<f32>(unk40[idx], unk40[idx], unk40[idx]));
+		JGeometry::TVec3<f32> scale(unk40[idx], unk40[idx], unk40[idx]);
+		em->setGlobalParticleScale(scale);
 	}
 }
 
