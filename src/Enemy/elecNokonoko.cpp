@@ -1261,8 +1261,12 @@ DEFINE_NERVE(TNerveElecCarapaceMove, TLiveActor)
 		}
 	}
 
+	// TODO: frame size exact through getPosition() here; the slot order is
+	// not: retail puts ElecSubDist's by-value copy lowest (0xd4) and the
+	// setGoalPath TPathNode above it (0xe8), we the reverse. operator-,
+	// a const& fork and an explicit temporary copy were inert or worse.
 	JGeometry::TVec3<f32> toGoal(carapace->getUnk104().getPoint());
-	toGoal.sub(carapace->mPosition);
+	toGoal.sub(carapace->getPosition());
 	toGoal.y = 0.0f;
 
 	if (!carapace->mFlying && MsVECMag2((Vec*)&toGoal) < 100.0f) {

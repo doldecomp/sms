@@ -175,6 +175,8 @@ BOOL TConductor::isBossDefeated()
 	// to `case 2:` and an empty `case 4:` both fold the tree and cost ~3%;
 	// so do `default: ;`, `case 1:`/`case 0:` labels, an int switch operand,
 	// and `case 3:` first with `case 2: default:` after it.
+	// The hinokuri body after the switch (`case 2: break;` or no case 2)
+	// relays the arms out entirely (~29%).
 	switch (gpMarDirector->mMap) {
 	case 2: {
 		TLiveManager* mgr = getManagerByName("ヒノクリ２マネージャー");
