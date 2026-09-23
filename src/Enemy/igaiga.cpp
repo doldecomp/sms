@@ -993,6 +993,11 @@ static inline TGraphTracer* IgaigaInitTracer(TGorogoro* g)
 	return t;
 }
 
+// TODO: 99.3%, every instruction matching. Declaring `point` first puts it
+// at retail's 0x34. Left: the new manager's `this` temporary sits 8 low (0x1c
+// vs 0x24), and `web`/`goro` swap r27/r29. Inert or worse: `goro` declared
+// first, late or at function scope, `web` at function scope, the raw member
+// for either binder, a named `new` result, the `continue` as an if block.
 void TGorogoroManager::initSetEnemies()
 {
 	unk6C = new TGorogoroPolluteModelManager("ゴロゴロモデル汚染");
@@ -1002,6 +1007,7 @@ void TGorogoroManager::initSetEnemies()
 
 	// Alternate the two graphs; fall back to the first if one is missing.
 	for (int i = 0; i < mObjNum; ++i) {
+		JGeometry::TVec3<f32> point;
 		TGraphWeb* web = gpConductor->getGraphByName(graphlist[i % 2]);
 		if (web->isDummy())
 			web = gpConductor->getGraphByName(graphlist[0]);
@@ -1009,7 +1015,6 @@ void TGorogoroManager::initSetEnemies()
 			continue;
 
 		TGorogoro* goro = IgaigaGoroAt(this, i);
-		JGeometry::TVec3<f32> point;
 		web->unk0[0].getPoint((Vec*)&point);
 		IgaigaInitTracer(goro)->setGraph(web);
 		goro->mPosition         = point;

@@ -143,6 +143,11 @@ void TTailRubber::bind()
 		bindOne(*it);
 }
 
+// TODO: 99.3%, every instruction matching. Retail adds the 20.0f as
+// `20.0f + fVar1` into fVar1's own register (f3); `fVar1 = 20.0f + fVar1`
+// fixes the operand order but not the register, so it is left as `+=`. Also
+// the `next - node.mPos` temporary sits 0xc high (0x20 vs 0x14). Inert:
+// the sum on one line, `+ 1.0f` on the call, a second local, a named limit.
 void TTailRubber::bindOne(Node& node)
 {
 	JGeometry::TVec3<f32> next = node.mPos;
@@ -1550,6 +1555,8 @@ void TFireWanwan::initEscapeNextGraphNode()
 	p1 -= mPosition;
 	// TODO: the two dot products differ only in which FPR holds p1.x and
 	// p1.z (retail f6/f5, ours f5/f6); swapping the receivers is worse.
+	// Also worse: the dots written out, dot2 first, both dots inline in the
+	// test, p1 subtracted first; p1 assigned after its declaration is inert.
 
 	f32 dot1 = p1.dot(p2);
 	f32 dot2 = p1.dot(p3);

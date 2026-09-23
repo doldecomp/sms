@@ -1529,13 +1529,15 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 	// pool), which is what `squared()`'s y term folds to. Spelling the test
 	// as `dx * dx + dz * dz` instead gives an `fmuls` and a 0x48 frame
 	// against retail's 0x68.
-	// TODO: 99.4%, every instruction matching. The residue is float register
-	// numbering (retail keeps -4660.0f in f3 and the x component in f1, we
-	// use f1/f0) and 8 bytes of low-region temporaries below the pushed
-	// slice; declaring `diff` before `result` changes neither.
+	// Naming the two differences before building `diff` gives retail's float
+	// registers.
+	// TODO: 100% of instructions; the pushed slice sits 8 bytes high (0x34
+	// vs retail's 0x2c). Inert: `result` declared after `diff`, a named
+	// dist, `dot(diff)`, a named slice, the pop through an int local.
 	int result = 0;
-	JGeometry::TVec3<f32> diff(-4660.0f - melon->mPosition.x, 0.0f,
-	                           12000.0f - melon->mPosition.z);
+	f32 dx = -4660.0f - melon->mPosition.x;
+	f32 dz = 12000.0f - melon->mPosition.z;
+	JGeometry::TVec3<f32> diff(dx, 0.0f, dz);
 	if (diff.squared() <= 90000.0f)
 		result = 1;
 

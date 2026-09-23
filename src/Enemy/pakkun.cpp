@@ -957,8 +957,9 @@ bool TStayPakkun::isHitValid(u32 message)
 	    && mSpine->getCurrentNerve() != &TNerveStayPakkunHide::theNerve()) {
 		mSpine->setNext(&TNerveStayPakkunHide::theNerve());
 		mDamageHiding = 1;
+		f32 range = getSaveParams()->getSLPolluteRange();
 		gpPollution->clean(mPosition.x, mGroundHeight, mPosition.z,
-		                   32.0f * getSaveParams()->getSLPolluteRange());
+		                   32.0f * range);
 		if (mSeed->isUnk150Zero())
 			mSeed->kill();
 		setBckAnm(PAKKUN_ANM_CRUSH_TO_HIDE);
