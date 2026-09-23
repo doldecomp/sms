@@ -310,27 +310,30 @@ void SMSCalcJumpVelocityXZ(const JGeometry::TVec3<f32>&,
 void MsVECNormalize(Vec*, Vec*);
 f32 MsVECMag2(Vec*);
 
+// Only bosswanwan.o emits it out of line (weak); MapWire, MapWireManager and
+// MapStaticObject inline it and are unchanged by the body below.
+// TODO: 96.1%: every instruction right but retail spills the hidden return
+// pointer to 8(r1) (the only leaf in the game that does), keeps t in f2 and
+// has a frame 0x18 larger (0x58). `return param_1 + diff`, `diff *= t`, a
+// named numerator and an `operator-` diff were all worse or inert.
 inline JGeometry::TVec3<f32>
 MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
                        const JGeometry::TVec3<f32>& param_2,
                        const JGeometry::TVec3<f32>& param_3)
 {
-	// TODO: floats are the worst, doesn't match at all...
 	JGeometry::TVec3<f32> diff = param_2;
 	diff -= param_1;
-	f32 fVar1 = (param_3.dot(diff) - param_1.dot(diff)) / diff.squared();
+	f32 t = (param_3.dot(diff) - param_1.dot(diff)) / diff.squared();
 
-	if (fVar1 < 0.0f)
-		fVar1 = 0.0f;
-	else if (fVar1 > 1.0f)
-		fVar1 = 1.0f;
+	if (t < 0.0f)
+		t = 0.0f;
+	else if (t > 1.0f)
+		t = 1.0f;
 
-	JGeometry::TVec3<f32> thing;
-	thing.scale(fVar1, diff);
-
-	JGeometry::TVec3<f32> copy = thing;
-	thing += param_1;
-	return thing;
+	diff.scale(t);
+	JGeometry::TVec3<f32> foot = param_1;
+	foot += diff;
+	return JGeometry::TVec3<f32>(foot);
 }
 
 inline f32 MsSqrtf(f32 x)

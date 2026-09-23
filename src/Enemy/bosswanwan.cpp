@@ -34,7 +34,7 @@
 //
 // TODO: one shared-header gap holds this unit back and it cannot be fixed from
 // here:
-//   * MsPerpendicFootToLineR in MarioUtil/MathUtil.hpp is 73% against its
+//   * MsPerpendicFootToLineR in MarioUtil/MathUtil.hpp is 96% against its
 //     retail body; TBWBinder::bind is its only caller here.
 
 // rogue includes needed for matching sinit & bss
