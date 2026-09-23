@@ -152,7 +152,7 @@ int TMarDirector::direct()
 			if (checkUnk4EFlag(1))
 				mShinePfLstMov->perform(uVar4, &local_140);
 			else
-				mShinePfLstMov->perform(uVar4, &local_140);
+				mPerformListMovement->perform(uVar4, &local_140);
 
 			u32 uVar44 = 0;
 			if (!checkUnk4CFlag(0x4000))

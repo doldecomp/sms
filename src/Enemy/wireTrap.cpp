@@ -518,7 +518,10 @@ void TWireTrap::checkHitActors()
 			JGeometry::TVec3<f32> hisMomentum = WireTrapMomentum(trap);
 
 			behaveHitWireTrap(trap, myMomentum, hisMomentum);
-			trap->behaveHitWireTrap(this, hisMomentum, myMomentum);
+			// Retail passes the partner trap itself here, not `this`: the
+			// second call reacts on `trap` twice (both WireTrapReaction
+			// expansions take r27).
+			trap->behaveHitWireTrap(trap, hisMomentum, myMomentum);
 			break;
 		}
 		}

@@ -126,7 +126,7 @@ static inline f32 CNBackRatio(const CPolarSubCamera* cam, s16 angle)
 	switch (cam->mMode) {
 	case CAMERA_MODE_DIVING:
 	case CAMERA_MODE_HOVERING:
-		return CLBAbs(angle - cam->unk258) * (2.0f / 65536.0f);
+		return CLBAbs<int>((s16)(angle - cam->unk258)) * (2.0f / 65536.0f);
 	default:
 		return (1.0f - JMASCos((angle - cam->unk258) * 2)) * 0.5f;
 	}
