@@ -12,7 +12,7 @@ void CPolarSubCamera::calcInHouseNoSub_()
 {
 	if (unk2CA != -1) {
 		unk2C8 = unk2CA;
-		if ((f32)mSaveEx->mInHouseMinFrame.get() < (f32)unk2CC)
+		if ((f32)unk2CC < (f32)mSaveEx->mInHouseMinFrame.get())
 			unk2CC += 1;
 	} else if (unk2C8 != -1) {
 		if ((f32)unk2CC < (f32)mSaveEx->mInHouseMinFrame.get()) {
@@ -37,15 +37,18 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 			return;
 		}
 
-		JGeometry::TVec3<f32> local_120[18];
+		JGeometry::TVec3<f32> local_120[2][9];
 		S16Vec SStack_134[9];
 
-		CLBCalcNearNinePos(local_120, SStack_134, unk124, unk148,
+		CLBCalcNearNinePos(local_120[0], SStack_134, unk124, unk148,
 		                   getFinalAngleZ(), mNear, mFovy, mAspect);
 
+		// TODO: retail unrolls this loop three times (ctr 3) where ours
+		// unrolls it fully; frame 0x1c0 vs 0x200. Inert: unk2C4 read in the
+		// body, near/far pointers, a named far reference, a flat [18] array.
 		f32 fVar1 = unk2C4;
 		for (int i = 0; i < 9; ++i) {
-			local_120[9 + i].scaleAdd(fVar1, unk25C, local_120[i]);
+			local_120[1][i].scaleAdd(fVar1, unk25C, local_120[0][i]);
 		}
 
 		f32 tmp = unk2C0;
@@ -53,10 +56,10 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 			for (int j = 0; j < 2; ++j) {
 				f32 fVar2 = 0.0f;
 				for (int k = 0; k < 2; ++k) {
-					JGeometry::TVec3<f32> local_12C(local_120[j * 9 + i].x,
-					                                local_120[j * 9 + i].y
+					JGeometry::TVec3<f32> local_12C(local_120[j][i].x,
+					                                local_120[j][i].y
 					                                    - fVar2 + -78.0f,
-					                                local_120[j * 9 + i].z);
+					                                local_120[j][i].z);
 					const TBGCheckData* local_138;
 					gpMap->checkGroundIgnoreWaterSurface(local_12C, &local_138);
 					if (local_138 && local_138->isOob()) {
@@ -69,9 +72,10 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 				}
 			}
 		}
+
+		unk2CA = -1;
 	}
 
-	unk2CA = -1;
 	calcInHouseNoSub_();
 }
 
