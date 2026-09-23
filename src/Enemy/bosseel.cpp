@@ -703,6 +703,9 @@ void TOilBall::reset()
 	mHighPoly = false;
 }
 
+// TODO: 92.5%. Only the setHitParams prologue differs: retail loads the
+// scale first and parks the four int->float conversions 0x10 higher. Tried:
+// no named ints (0xf8), named f32 products (0xe0), `.value` reads (0xd0).
 void TOilBall::moveObject()
 {
 	f32 scale                        = mScaling.x;

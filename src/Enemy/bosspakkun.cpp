@@ -1668,6 +1668,10 @@ DEFINE_NERVE(TNerveBPCannon, TLiveActor)
 	return FALSE;
 }
 
+// TODO: 92.8%. Retail `bl`s TVec3::set<f> for `dir` (its only caller in the
+// map) with MsSin/MsCos still expanded in the arguments, and the frame is 8
+// smaller. A helper level over the set (by value, by reference, or taking
+// the boss) sends MsSin/MsCos out of line instead: 82-85%.
 DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
