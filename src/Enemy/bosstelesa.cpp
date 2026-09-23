@@ -2548,6 +2548,18 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 	return FALSE;
 }
 
+// The ROM `bl`s randomReset() from TNerveBossTelesaAppear (its only call
+// site in the object) while inlining it in TTelesaSlot::initMapObj: the call
+// sits one inline level down here, where its body is over the budget.
+//
+// TODO: TNerveBossTelesaAppear is instruction-exact but its frame is 0x58
+// against the ROM's 0x80; moving the scaling reset or the whole first arm into
+// this level, or naming the slot, leaves the frame where it is.
+static inline void BosstelesaResetSlot(TBossTelesa* boss)
+{
+	boss->mSlot->randomReset();
+}
+
 DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
@@ -2562,13 +2574,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		}
 
 		boss->mSlot->mScaling.set(1.0f, 1.0f, 1.0f);
-		// TODO: the ROM `bl`s randomReset() here (its only call site in the
-		// object) while inlining it in TTelesaSlot::initMapObj, which matches.
-		// The out-of-line body is byte-exact at 0xec, so the body is right and
-		// the site is over budget: eight more statements would be needed at
-		// depth 1, which no honest spelling supplies. 46 of this function's
-		// instructions are the expanded loop.
-		boss->mSlot->randomReset();
+		BosstelesaResetSlot(boss);
 
 		boss->offAllCollision();
 	} else if (boss->checkCurAnmEnd(ANM_TYPE_BCK)
@@ -2593,6 +2599,8 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		    == 1)
 			boss->setBckAnm(14);
 	}
+
+	boss->unk364 *= 0.9f;
 
 	return FALSE;
 }

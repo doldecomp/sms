@@ -884,6 +884,9 @@ void TModelWaterManager::calcDrawVtx(MtxPtr viewMtx)
 	unk5D30->setEnd();
 }
 
+// TODO: 72.7%, register allocation only: the ROM keeps just b (f30) and the
+// row's [3] (f31) in saved FPRs where we save four. Reordering the eight
+// setup locals and inlining the negations were measured inert or worse.
 void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
                                          const JGeometry::TVec3<f32>& param_3,
                                          const JGeometry::TVec3<f32>& param_4,
