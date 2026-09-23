@@ -420,13 +420,16 @@ void TKoopaJr::reset()
 void TKoopaJr::resetKoopaJr()
 {
 	mSpine->reset();
-	mDamageTimer     = 0;
-	mLaunchTimer     = 0;
-	mFastLaunchTimer = 0;
-	mLaunchTimer     = KoopaJrGetParams(this)->mSLLaunchKillerPeriod.get();
-	mFastLaunchTimer = 0;
+	mTimers[KOOPAJR_TIMER_DAMAGE]      = 0;
+	mTimers[KOOPAJR_TIMER_LAUNCH]      = 0;
+	mTimers[KOOPAJR_TIMER_FAST_LAUNCH] = 0;
+	mTimers[KOOPAJR_TIMER_LAUNCH]
+	    = KoopaJrGetParams(this)->mSLLaunchKillerPeriod.get();
+	mTimers[KOOPAJR_TIMER_FAST_LAUNCH] = 0;
 }
 
+// TODO: 99.9%. The timers now match; the frame is 0x18 short of retail's
+// 0x150, which shifts every stack slot of the inlined nerve checks.
 void TKoopaJr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mSubmarine == nullptr) {
@@ -486,18 +489,13 @@ void TKoopaJr::setAnimationIndex(int index)
 	setAnmSound(table == nullptr ? nullptr : table[index]);
 }
 
-// UNUSED, 0x4c in the map.
+// UNUSED, 0x4c in the map. The timers are an array: MWCC's unrolled indexed
+// loop is what materialises each element's address for the store.
 void TKoopaJr::updateTimers()
 {
-	// TODO: perform()'s expansion materialises each timer's address
-	// (addi r4, this, 0x150) before the store, and its frame is 0x18 longer;
-	// a by-reference TU-local countdown helper does not reproduce it.
-	if (mDamageTimer > 0)
-		--mDamageTimer;
-	if (mLaunchTimer > 0)
-		--mLaunchTimer;
-	if (mFastLaunchTimer > 0)
-		--mFastLaunchTimer;
+	for (int i = 0; i < KOOPAJR_TIMER_NUM; ++i)
+		if (mTimers[i] > 0)
+			mTimers[i]--;
 }
 
 const char** TKoopaJr::getBasNameTable() const { return koopajr_bastable; }
@@ -524,7 +522,7 @@ BOOL TKoopaJr::receiveMessage(THitActor* sender, u32 message)
 // UNUSED, 0x240 in the map.
 void TKoopaJr::damageKoopaJr()
 {
-	mDamageTimer = getSaveParams()->mSLDamagePeriod.get();
+	mTimers[KOOPAJR_TIMER_DAMAGE] = getSaveParams()->mSLDamagePeriod.get();
 	startDamageNerve();
 }
 
@@ -537,7 +535,7 @@ void TKoopaJr::checkSubmarineSwing()
 	// The damage is written out rather than through damageKoopaJr(): the ROM
 	// expands startDamageNerve() one level shallower here than a call to
 	// damageKoopaJr() would put it.
-	mDamageTimer = getSaveParams()->mSLDamagePeriod.get();
+	mTimers[KOOPAJR_TIMER_DAMAGE] = getSaveParams()->mSLDamagePeriod.get();
 	startDamageNerve();
 }
 
@@ -573,7 +571,7 @@ void TKoopaJr::checkNerve()
 
 void TKoopaJr::checkNerveKillerLaunchNormal()
 {
-	if (mLaunchTimer > 0)
+	if (mTimers[KOOPAJR_TIMER_LAUNCH] > 0)
 		return;
 	int num = mBathtub->getNumKillerLaunchable();
 	if (num == 0)
@@ -588,7 +586,7 @@ void TKoopaJr::checkNerveKillerLaunchNormal()
 
 void TKoopaJr::checkNerveKillerLaunchFast()
 {
-	if (mFastLaunchTimer > 0)
+	if (mTimers[KOOPAJR_TIMER_FAST_LAUNCH] > 0)
 		return;
 	int num = mBathtub->getNumKillerBurstable();
 	if (num == 0)
@@ -627,9 +625,9 @@ DEFINE_NERVE(TNerveKoopaJrWait, TLiveActor)
 	TKoopaJr* koopaJr = (TKoopaJr*)spine->getBody();
 	if (spine->getTime() == 0) {
 		koopaJr->setAnimationIndex(2);
-		koopaJr->mLaunchTimer
+		koopaJr->mTimers[KOOPAJR_TIMER_LAUNCH]
 		    = koopaJr->getSaveParams()->mSLLaunchKillerPeriod.get();
-		koopaJr->mFastLaunchTimer
+		koopaJr->mTimers[KOOPAJR_TIMER_FAST_LAUNCH]
 		    = koopaJr->getSaveParams()->mSLLaunchKillerPeriodFast.get();
 	}
 	return false;
@@ -640,7 +638,7 @@ DEFINE_NERVE(TNerveKoopaJrDamage, TLiveActor)
 	TKoopaJr* koopaJr = (TKoopaJr*)spine->getBody();
 	if (spine->getTime() == 0)
 		koopaJr->setAnimationIndex(0);
-	if (koopaJr->mDamageTimer <= 0
+	if (koopaJr->mTimers[KOOPAJR_TIMER_DAMAGE] <= 0
 	    && koopaJr->getMActor()->isCurAnmAlreadyEnd(0))
 		return true;
 	return false;
@@ -779,7 +777,7 @@ static inline TBathtubBinder* KoopajrBathtubBinder(const TKoopaJrSubmarine* p)
 void TKoopaJrSubmarine::resetKoopaJrSubmarine()
 {
 	mSpine->reset();
-	mKillerTimer = 0;
+	mTimers[KOOPAJR_SUBMARINE_TIMER_KILLER] = 0;
 	setAnimationIndex(0);
 	mAnmRate     = getMActor()->getFrameCtrl(0)->getRate();
 	mKillerIndex = 0;
@@ -1033,14 +1031,17 @@ bool TKoopaJrSubmarine::checkKillerLaunch()
 {
 	if (mSpine->getCurrentNerve()
 	        == &TNerveKoopaJrSubmarineLaunchKiller::theNerve()
-	    && mKillerIndex < mKillerNum && mKillerTimer <= 0) {
+	    && mKillerIndex < mKillerNum
+	    && mTimers[KOOPAJR_SUBMARINE_TIMER_KILLER] <= 0) {
 		launchKiller();
 		// The signed compare is what says the type went through an int.
 		int type = mKillerTypes[mKillerIndex];
 		if (type == 2)
-			mKillerTimer = getSaveParams()->mSLKillerIntervalFast.get();
+			mTimers[KOOPAJR_SUBMARINE_TIMER_KILLER]
+			    = getSaveParams()->mSLKillerIntervalFast.get();
 		else
-			mKillerTimer = getSaveParams()->mSLKillerInterval.get();
+			mTimers[KOOPAJR_SUBMARINE_TIMER_KILLER]
+			    = getSaveParams()->mSLKillerInterval.get();
 		++mKillerIndex;
 		return true;
 	}
@@ -1148,14 +1149,13 @@ void TKoopaJrSubmarine::makeKillerVelocity(TBathtubKiller* killer,
 // UNUSED, 0x4 in the map.
 void TKoopaJrSubmarine::emitKoopaJrSubmarineEffects() { }
 
-// UNUSED, 0x1c in the map.
+// UNUSED, 0x1c in the map. A one-element timer array: the unrolled indexed
+// loop is what materialises the timer's address for the store in perform().
 void TKoopaJrSubmarine::updateTimers()
 {
-	// TODO: perform()'s inlined copy materialises the timer's address
-	// (addi r4, this, 0x150) before the store; an int& local reproduces
-	// that but adds a stack round trip, and a pointer local folds back.
-	if (mKillerTimer > 0)
-		--mKillerTimer;
+	for (int i = 0; i < KOOPAJR_SUBMARINE_TIMER_NUM; ++i)
+		if (mTimers[i] > 0)
+			mTimers[i]--;
 }
 
 // UNUSED, 0x8 in the map.
@@ -1323,7 +1323,7 @@ DEFINE_NERVE(TNerveKoopaJrSubmarineLaunchKiller, TLiveActor)
 {
 	TKoopaJrSubmarine* submarine = (TKoopaJrSubmarine*)spine->getBody();
 	if (submarine->getKillerIndex() == submarine->getKillerNum()
-	    && submarine->mKillerTimer <= 0) {
+	    && submarine->mTimers[KOOPAJR_SUBMARINE_TIMER_KILLER] <= 0) {
 		J3DFrameCtrl* ctrl = submarine->getMActor()->getFrameCtrl(0);
 		ctrl->setRate(submarine->mAnmRate);
 		return true;

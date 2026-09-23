@@ -95,6 +95,11 @@ public:
 	/* 0x134 */ TParamRT<s32> mSLLaunchKillerPeriodFast;
 };
 
+enum {
+	KOOPAJR_SUBMARINE_TIMER_KILLER, // until the next Bullet Bill launch
+	KOOPAJR_SUBMARINE_TIMER_NUM,
+};
+
 class TKoopaJrSubmarine : public TSpineEnemy {
 public:
 	TKoopaJrSubmarine(const char* name = "クッパジュニアサブマリン");
@@ -135,7 +140,9 @@ public:
 		return (TKoopaJrSubmarineParams*)getSaveParam();
 	}
 
-	/* 0x150 */ s32 mKillerTimer;
+	// A one-element timer array: updateTimers()' unrolled indexed loop is the
+	// evidence (perform's per-store address materialisation).
+	/* 0x150 */ s32 mTimers[KOOPAJR_SUBMARINE_TIMER_NUM];
 	/* 0x154 */ f32 unk154;
 	/* 0x158 */ f32 unk158;
 	/* 0x15C */ f32 unk15C;
@@ -154,7 +161,10 @@ public:
 	// fabricated
 	s32 getKillerIndex() const { return mKillerIndex; }
 	s32 getKillerNum() const { return mKillerNum; }
-	s32 getKillerTimer() const { return mKillerTimer; }
+	s32 getKillerTimer() const
+	{
+		return mTimers[KOOPAJR_SUBMARINE_TIMER_KILLER];
+	}
 	f32 getSwingAmplitude() const { return mSwingAmplitude; }
 	f32 getWaveAmplitude() const { return mWaveAmplitude; }
 
@@ -166,6 +176,13 @@ public:
 	/* 0x1A0 */ TKoopaJr* mKoopaJr;
 	/* 0x1A4 */ TCallbackHitActor* mRearBody;
 	/* 0x1A8 */ TCallbackHitActor* mFrontBody;
+};
+
+enum {
+	KOOPAJR_TIMER_DAMAGE,
+	KOOPAJR_TIMER_LAUNCH,
+	KOOPAJR_TIMER_FAST_LAUNCH,
+	KOOPAJR_TIMER_NUM,
 };
 
 class TKoopaJr : public TSpineEnemy {
@@ -200,9 +217,9 @@ public:
 		return (TKoopaJrParams*)getSaveParam();
 	}
 
-	/* 0x150 */ s32 mDamageTimer;
-	/* 0x154 */ s32 mLaunchTimer;
-	/* 0x158 */ s32 mFastLaunchTimer;
+	// Countdowns decremented together by updateTimers(); the ROM's unrolled
+	// indexed loop there is the evidence for the array.
+	/* 0x150 */ s32 mTimers[KOOPAJR_TIMER_NUM]; // KOOPAJR_TIMER_*
 	/* 0x15C */ TBathtub* mBathtub;
 	/* 0x160 */ TKoopa* mKoopa;
 	/* 0x164 */ TKoopaJrSubmarine* mSubmarine;
