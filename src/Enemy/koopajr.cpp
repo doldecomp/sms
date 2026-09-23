@@ -111,7 +111,9 @@ f32 TDirectionCalc::calcNearerDirection(f32 dir)
 	// there, and WrapRadianF's single statement drops it under the depth-1
 	// budget: makeRelativeAngle 95.02% -> 26.09%). The cost is that std::fmodf
 	// expands here instead of being called (97.33%); the missing level above it
-	// is still unidentified.
+	// is still unidentified. With WrapRadianF this body is 99.8%, but none of
+	// named or split diff/other locals, per-branch returns or a named wrapped
+	// value lifts it back over the budget (makeRelativeAngle stays ~30%).
 	f32 lo     = 0.0f;
 	f32 hi     = TWO_PI;
 	f32 range  = hi - lo;
