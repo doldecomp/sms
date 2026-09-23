@@ -1,0 +1,83 @@
+diff --git a/src/Animal/AnimalBase.cpp b/src/Animal/AnimalBase.cpp
+index 9d4f80ed..b9e6a373 100644
+--- a/src/Animal/AnimalBase.cpp
++++ b/src/Animal/AnimalBase.cpp
+@@ -282,34 +282,6 @@ void TAnimalBase::getRotationFlyToDir(JGeometry::TVec3<f32>* current_rot,
+ // UNUSED (Size: 0x4a0 in MAP)
+ void TAnimalBase::flyToCurPathNode(f32 a1, f32 a2) { }
+ 
+-// Shared-header need, parked here: execWalk's rotation is TQuat4::rotate done
+-// in place on the velocity, with ONE TQuat4 temporary (retail's out-of-line
+-// TVec4() call) and the result written straight back through v.set() (the
+-// out-of-line set<f>), not JGQuat4.hpp's two-temporary rotate(v, rDest). The
+-// header form is left alone because its seven other callers measure against it.
+-static inline void QuatRotateInPlace(const JGeometry::TQuat4<f32>& q,
+-                                     JGeometry::TVec3<f32>& v)
+-{
+-	f32 vx = v.x;
+-	f32 vy = v.y;
+-	f32 vz = v.z;
+-
+-	f32 w = q.w;
+-	f32 z = q.z;
+-	f32 y = q.y;
+-	f32 x = q.x;
+-
+-	JGeometry::TQuat4<f32> r;
+-	r.x = y * vz - z * vy + w * vx;
+-	r.y = -x * vz + z * vx + w * vy;
+-	r.z = x * vy - y * vx + w * vz;
+-	r.w = -x * vx - y * vy - z * vz;
+-
+-	v.set(r.x * w + r.y * -z - r.z * -y + r.w * -x,
+-	      -r.x * -z + r.y * w + r.z * -x + r.w * -y,
+-	      r.x * -y - r.y * -x + r.z * w + r.w * -z);
+-}
+-
+ // TODO: validate-symbol-order fails on this TU with four MISSING symbols, and
+ // all four are the *same* fact about this function. Retail's execWalk calls
+ // set<f>__Q29JGeometry8TVec3<f>Ffff (0x10), __ct__Q29JGeometry8TVec4<f>Fv
+@@ -377,7 +349,7 @@ void TAnimalBase::execWalk(bool moving)
+ 	// in MathUtil.hpp's MsClamp note). The frame is also 0x10 short: retail
+ 	// copies the quaternion once more (0xb8 -> 0x9c) before the rotate, but
+ 	// spelling that copy (a by-value or copied q) scores 81.6.
+-	QuatRotateInPlace(quat, velocity);
++	quat.rotate(velocity);
+ 	mLinearVelocity = velocity;
+ }
+ 
+diff --git a/src/Enemy/TabePuku.cpp b/src/Enemy/TabePuku.cpp
+index d7fa0018..89f8f906 100644
+--- a/src/Enemy/TabePuku.cpp
++++ b/src/Enemy/TabePuku.cpp
+@@ -781,7 +781,7 @@ DEFINE_NERVE(TNerveTabePukuDrag, TLiveActor)
+ 
+ 		JGeometry::TQuat4<f32> spin;
+ 		spin.setEulerY(MsRandF() * 6.2831855f);
+-		spin.rotate(puku->mDragDir, puku->mDragDir);
++		spin.rotate(puku->mDragDir);
+ 
+ 		puku->setGoalPath(puku->mPosition);
+ 		puku->mMarchSpeed = puku->getSaveParams()->getDiveSpeed();
+diff --git a/src/Enemy/fireWanwan.cpp b/src/Enemy/fireWanwan.cpp
+index e7218de7..2292d087 100644
+--- a/src/Enemy/fireWanwan.cpp
++++ b/src/Enemy/fireWanwan.cpp
+@@ -2113,7 +2113,7 @@ DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
+ 
+ 	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
+ 
+-	local_70.rotate(local_60, local_60);
++	local_70.rotate(local_60);
+ 
+ 	f32 rot = MsGetRotFromZaxisY(local_60);
+ 
+@@ -2200,7 +2200,7 @@ DEFINE_NERVE(TNerveFireWanwanRecoverGraph, TLiveActor)
+ 
+ 		JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
+ 
+-		local_70.rotate(local_60, local_60);
++		local_70.rotate(local_60);
+ 
+ 		f32 rot = MsGetRotFromZaxisY(local_60);
+ 
