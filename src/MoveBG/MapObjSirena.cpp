@@ -609,9 +609,9 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 // Every named slot (both `m`s, both `off`s, the TMsRange) sits 0x14 higher in
 // retail, so the missing 20 bytes are inline temporaries below 0x54, plus the
 // r25 save; the instruction stream is otherwise right.
-// Both MsMtxSetRotY expansions also load their 0.0f/1.0f/300.0f literals only
-// after the preceding stores in retail (ours hoists them); HauntLegCallback
-// and PopoRollCallback show the same tells, see the note there.
+// Both rotations go through a named MtxPtr for MsMtxSetRotY and MTXMultVec
+// (94.5 -> 96.0); either site alone is 95.6/94.9, and a TMtx34f or passing
+// the array to MTXMultVec is inert.
 // Separately, the UNUSED getSlotResult below compiles to 0xe4 against the
 // map's 0x8c: ours inlines getResultFromAng through getDrumResult and unrolls
 // the loop; a `result = -1; break;` spelling is 0xe8.
@@ -627,9 +627,10 @@ void TItemSlotDrum::generateItem()
 		    getPosition(), "テレサマネージャー", 1);
 		if (item != nullptr) {
 			Mtx m;
-			MsMtxSetRotY(m, mRotation.y);
+			MtxPtr mp = m;
+			MsMtxSetRotY(mp, mRotation.y);
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 300.0f);
-			MTXMultVec(m, &off, &off);
+			MTXMultVec(mp, &off, &off);
 			item->mPosition += off;
 			item->initItemAttacker(this);
 		}
@@ -644,9 +645,10 @@ void TItemSlotDrum::generateItem()
 		}
 		for (int i = 0; i < count; ++i) {
 			Mtx m;
-			MsMtxSetRotY(m, spread * (f32)i + (mRotation.y - spread));
+			MtxPtr mp = m;
+			MsMtxSetRotY(mp, spread * (f32)i + (mRotation.y - spread));
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 200.0f);
-			MTXMultVec(m, &off, &off);
+			MTXMultVec(mp, &off, &off);
 			TMapObjBase* item = gpItemManager->makeObjAppear(
 			    mPosition.x + off.x, mPosition.y, mPosition.z + off.z,
 			    0x2000000E, false);
