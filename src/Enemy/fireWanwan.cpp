@@ -105,6 +105,10 @@ void TTailRubber::reset(const JGeometry::TVec3<f32>& param_1,
 	}
 }
 
+// TODO: the map sizes (0x20, 0x30) leave no room for mVel.zero(): both are
+// the position store alone. Dropping the zero needs reset to zero the end
+// velocities itself, and every spelling tried stops reset inlining into
+// TFireWanwanTailHit::init (78%) or leaves it 0x144 (map 0x118).
 void TTailRubber::setHeadPos(const JGeometry::TVec3<f32>& param_1)
 {
 	Node& node = unk0.front();
@@ -399,6 +403,10 @@ void TFireWanwanManager::checkShineAppear()
 
 void TFireWanwanManager::receiveMessageFromTail(int) { }
 
+// TODO: 0x20 against the map's 0xac. A second case holding Die's kill
+// bookkeeping (last killer, recover count -1, ++killed == active -> balloon
+// 0x19, console through a director binder) is exactly 0xac and keeps Die at
+// 100%, but its dead inline temporaries add 0x30-0x40 to Recover's frame.
 void TFireWanwanManager::receiveMessageFromBody(const TFireWanwan* wanwan,
                                                 BodyMsgType msg)
 {
@@ -815,7 +823,7 @@ void TFireWanwanTailHit::changeBodyToSilver(f32 param_1)
 	unkBC->init(cBodyColorOnSilver, unkBC->getCurrent(), param_1);
 }
 
-f32 TFireWanwanTailHit::getTailLength() const { }
+f32 TFireWanwanTailHit::getTailLength() const { return unkA4->getLength(); }
 
 const JGeometry::TVec3<f32>& TFireWanwanTailHit::getHostPos() const
 {
