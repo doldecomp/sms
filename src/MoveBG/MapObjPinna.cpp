@@ -418,6 +418,8 @@ BOOL TPinnaShell::receiveMessage(THitActor* sender, u32 message)
 // Mtx at function scope (+4 Mtx), the two-argument startSoundActor (+8), a
 // TU-local rate helper around MsRandF (+4), a shared `s16` angle in the
 // MsMtxSetRotX header (+0x10 but breaks its weak copy; not made).
+// Also inert (pinna1): a TU-local level for the position set, the Mtx at
+// the top, TMsRange<f32>(0.5f, 1.0f).rand() (+0x18 but stores the range).
 void TPinnaShell::control()
 {
 	if (mTimer > 0)
@@ -586,6 +588,8 @@ void TShellCup::perform(u32 cue, JDrama::TGraphics* graphics)
 		// level (+8/+0x10 frame), u32/pre-increment counters, a per-shell
 		// level, named rot/joint/getter steps in calcJointMtx,
 		// SMSGetMarDirector() at either test, the two tests as one `&&`.
+		// Also inert (pinna1): `if (cue & 2) calcAfter()` (not inlined, bl), a
+		// shell pointer declared above the loop, the loop body spelled inline.
 		TMapObjBase* blueCoin = mBlueCoin;
 		if (!blueCoin->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			blueCoin->mPosition.x = getShell(0)->mPosition.x;
@@ -934,6 +938,8 @@ static inline bool MapObjPinnaIsGateBroken(TMapObjGeneral* gate)
 // startSoundActor +8 of pool; a named splash scale TVec3 moves only the
 // vector; raw gpMarDirector and getModel() for getMActor()->getModel() are
 // negative or break instructions.
+// Also (pinna1): the wake-up branch as a TU-local level is inert; the
+// water-landing branch as one adds ten instructions.
 void TAmiKing::moveObject()
 {
 	TLiveActor::moveObject();
