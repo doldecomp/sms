@@ -1437,9 +1437,13 @@ f32 TMario::getLRLevel(u8 level)
 	return out;
 }
 
-// TODO: the frame is 0xd8 short (0x118 against 0x1f0) with ~150 slot and
-// register markers; the UNUSED getLRLevel, getDizzyAngle and getDizzyPower
-// bodies (all at map size) closed 0x18 of it and +0.7.
+// TODO: every instruction is present; the frame is 0xd0 short (0x120 against
+// 0x1f0), so every slot and a few FPR tie-breaks differ. The UNUSED
+// getLRLevel, getDizzyAngle and getDizzyPower bodies (all at map size), a
+// single MsSqrtf (it carries its own `> 0` test), the camera's getUnk258()
+// and an `int` (not `long`) jitter closed the instruction diffs. Retail
+// stores the turbo prop rotation at nozzle+0x714 (sizeof(TNozzleDeform)),
+// past any TNozzleTrigger member, so the cast in the source is still wrong.
 void TMario::checkController(JDrama::TGraphics*)
 {
 	unk108->mStickHS16 = (s16)(128.0f * mGamePad->mCompSPos[0]);
@@ -1505,13 +1509,8 @@ void TMario::checkController(JDrama::TGraphics*)
 		unk108->mStickV = (f32)(unk108->mStickVS16 - 6);
 
 	// Stick distance, then mLengthMult^mLengthMultTimes (unrolled in 8s)
-	f32 sq = (unk108->mStickH * unk108->mStickH)
-	         + (unk108->mStickV * unk108->mStickV);
-	f32 dist = sq;
-	if (sq > 0.0f)
-		dist = MsSqrtf(sq);
-
-	f32 len = dist;
+	f32 len = MsSqrtf((unk108->mStickH * unk108->mStickH)
+	                  + (unk108->mStickV * unk108->mStickV));
 	for (int i = 0; i < mControllerParams.mLengthMultTimes.get(); ++i)
 		len *= mControllerParams.mLengthMult.get();
 
@@ -1531,7 +1530,7 @@ void TMario::checkController(JDrama::TGraphics*)
 	if (mDizzyTimer > 0)
 		mDizzyTimer -= 1;
 
-	s32 yawJitter = 0;
+	int yawJitter = 0;
 	if (mDizzyTimer > 0) {
 		yawJitter = getDizzyAngle();
 		mIntendedMag += getDizzyPower();
@@ -1540,10 +1539,8 @@ void TMario::checkController(JDrama::TGraphics*)
 	}
 
 	if (mIntendedMag > 0.0f) {
-		// TODO: retail adds the camera yaw to the jitter before matan's
-		// result (no extsh); ours reassociates matan + jitter first.
 		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH)
-		               + (gpCamera->unk258 + yawJitter);
+		               + (gpCamera->getUnk258() + yawJitter);
 	} else {
 		mIntendedYaw = mFaceAngle.y;
 	}
