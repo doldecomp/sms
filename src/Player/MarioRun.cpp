@@ -1569,9 +1569,10 @@ BOOL TMario::loserDown()
 	return 0;
 }
 
-// `inline`: the six UNUSED *JumpSlip handlers in the map (0x130/0x148/0x15c)
-// are these handlers with this body expanded; moveMain still calls it (depth 2).
-inline BOOL TMario::jumpSlipCommon(s16 anim, u32 status)
+// TODO: the six UNUSED *JumpSlip handlers reach their map sizes (0x130/0x148/
+// 0x15c) only with this expanded (`inline`), but the map binds this as a global
+// function and `inline` breaks symbol order; the real expansion route is open.
+BOOL TMario::jumpSlipCommon(s16 anim, u32 status)
 {
 	if (mInput & 0x1) {
 		slopeProcess();
