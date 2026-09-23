@@ -245,10 +245,15 @@ void TAnimalBird::calcRootMatrix()
 	getModel()->getBaseTRMtx()[1][3] += 35.0f;
 }
 
+// TODO: retail reloads mWaterHitTimer after the > 0 test, branches straight
+// out of the inlined isChangeToItem() (we materialise its bool), and has a
+// frame 0x18 larger.  Spelling the condition in checkChangeToItem gives that
+// function its 0x110 map size but inlines getLatestNerve() here; the if/return
+// and ==false spellings of isChangeToItem are inert or worse.
 void TAnimalBird::moveObject()
 {
 	if (mWaterHitTimer > 0)
-		mWaterHitTimer -= 1;
+		mWaterHitTimer = mWaterHitTimer - 1;
 
 	checkFalling();
 	checkChangeToItem();
