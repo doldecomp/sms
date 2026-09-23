@@ -363,14 +363,9 @@ void TApplication::initialize_bootAfter()
 // TODO: instructions and frame size match; the option stream sits 4 low
 // (0x50 vs 0x54) and the name-ref stream's ctor temp at 0x48 vs 0x4c, with
 // a 4-byte hole between the two streams that retail does not have. Tried:
-// status/outputMode hoisted, lVar3 inlined, fork/binder over gpCardManager at
-// every subset of its three sites, a default-ctor stream spelled (nullptr, 0).
-static inline TCardManager* ApplicationCardManager()
-{
-	TCardManager* p = gpCardManager;
-	return p;
-}
-
+// status/outputMode hoisted, lVar3 inlined, a default-ctor stream spelled
+// an identity binder over gpCardManager in the status loop gives the missing
+// 8 bytes of frame but is a fabricated level (refused) (nullptr, 0).
 void TApplication::initialize_nlogoAfter()
 {
 	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("nintendo");
@@ -409,7 +404,7 @@ void TApplication::initialize_nlogoAfter()
 	    = (ResTIMG*)piVar2->getResource("/card/mariobnr.bti") + 1;
 
 	int status;
-	while ((status = ApplicationCardManager()->getLastStatus()) == -1)
+	while ((status = gpCardManager->getLastStatus()) == -1)
 		OSYieldThread();
 
 	if (status == 0) {
