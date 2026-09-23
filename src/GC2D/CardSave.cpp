@@ -691,6 +691,11 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			                              selectedRect.getHeight());
 			if (!unk18) {
 				JUTRect bounds = selectedPane->getPane()->mGlobalBounds;
+				// TODO: retail hoists `li r5, 0x1FA` above the centre conversion (its
+				// xoris temps take r7/r6) and keeps pos right below bounds. A named
+				// TVec3 pos (set/ctor/members) hoists li and fixes the layout but
+				// recolours x1/y1 (r7/r9, -0.3%); f32 locals, aggregate init, an id
+				// local and a (bounds, id) helper are inert. Same tell at all 1FA sites.
 				Vec pos;
 				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
 				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
@@ -915,6 +920,7 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			                              selectedRect.getHeight());
 			if (!unk18) {
 				JUTRect bounds = selectedPane->getPane()->getGlobalBounds();
+				// TODO: same li r5 / pos-layout tell as the first 0x1FA site.
 				Vec pos;
 				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
 				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
