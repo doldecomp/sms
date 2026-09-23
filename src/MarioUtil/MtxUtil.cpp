@@ -147,7 +147,9 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		MtxToQuat(rot, &tmp);
 		// TODO: the scalarised quaternion takes f5/f4/f6/f0 where retail has
 		// f3-f6 ascending. Tried (cc50): copy-init or assigned newQuat, dot as
-		// a helper either way round, swapped dot operands.
+		// a helper either way round, swapped dot operands; also (f2) dot over
+		// tmp before/after newQuat, reversed copy order, parenthesised pairs,
+		// and an unnamed dot (frame -8).
 
 		Quaternion newQuat;
 		newQuat.x = tmp.x;

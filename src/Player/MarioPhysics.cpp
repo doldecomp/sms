@@ -343,6 +343,20 @@ BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
 	return true;
 }
 
+// fabricated: the hang test as retail's two expansions spell it. The wall
+// site compares the returned bool against 1 as an int; the roof site's copy
+// keeps a named bool, whose slot is the 8 bytes below `pos`.
+static inline bool MarioCanHang(TMario* mario)
+{
+	return mario->mHeldObject == nullptr && !mario->onYoshi();
+}
+
+static inline bool MarioCanHangOnRoof(TMario* mario)
+{
+	bool canHang = mario->mHeldObject == nullptr && !mario->onYoshi();
+	return canHang;
+}
+
 int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 {
 	Vec pos             = target;
@@ -404,13 +418,11 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 				if (checkFlag(MARIO_FLAG_VISIBLE))
 					onFlag(MARIO_FLAG_UNK200);
 
-				if (param_2 & 0x2) {
-					BOOL canHang = (mHeldObject == nullptr && !onYoshi());
-					if (canHang && mRoofPlane->isFence())
-						roofCode = 4;
-					else
-						roofCode = 0;
-				}
+				if ((param_2 & 0x2) && MarioCanHangOnRoof(this)
+				    && mRoofPlane->isFence())
+					roofCode = 4;
+				else
+					roofCode = 0;
 			}
 		}
 	}
@@ -432,15 +444,13 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 		wall2Passable = true;
 	}
 
-	if ((param_2 & 0x1) && wall1Passable == 1 && wall2Passable == 0) {
-		BOOL canHang = (mHeldObject == nullptr && !onYoshi());
-		if (canHang == 1) {
-			mWallPlane = wall2;
-			if (hangonCheck(wall2, target, pos))
-				wallCode = 3;
-			else
-				wallCode = 0;
-		}
+	if ((param_2 & 0x1) && wall1Passable == 1 && wall2Passable == 0
+	    && (int)MarioCanHang(this) == 1) {
+		mWallPlane = wall2;
+		if (hangonCheck(wall2, target, pos))
+			wallCode = 3;
+		else
+			wallCode = 0;
 	} else if (wall1Passable == 0 || wall2Passable == 0) {
 		mWallPlane = wall1 != nullptr ? wall1 : wall2;
 		s16 diff   = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)

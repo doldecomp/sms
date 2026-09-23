@@ -170,6 +170,9 @@ TTalk2D2::TTalk2D2(const char* name)
 	}
 }
 
+// TODO: retail copies the `new JUTTexture` result into r28 for storeTIMG's
+// this (`addi r28, r25, 0`); ours reuses r25. Same open pattern as
+// TSelectMenu::initData's sc_mark textures.
 void TTalk2D2::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
@@ -188,7 +191,7 @@ void TTalk2D2::load(JSUMemoryInputStream& stream)
 		mCursorOn[i]    = mScreen->search('cs_1' + i);
 	}
 
-	mBackTexture = new JUTTexture((ResTIMG*)JKRFileLoader::getGlbResource(
+	mBackTexture = new JUTTexture((ResTIMG*)JKRGetResource(
 	    "/game_6/timg/message_back_1.bti"));
 
 	mBasePane = mScreen->search('me_0');

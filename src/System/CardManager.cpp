@@ -561,6 +561,10 @@ s32 TCardManager::open_(CARDFileInfo* file)
 	return result;
 }
 
+// TODO: retail keeps the inlined TCardSector::read's CARDRead result in its
+// own register (r30) and copies it into result with `mr.`; ours coalesces the
+// two. Swapping read's writeCount/data declarations fixes this function but
+// costs readBlock_ the same registers.
 s32 TCardManager::getBookmarkInfos_()
 {
 	s32 result = mount_(true);
@@ -585,8 +589,8 @@ s32 TCardManager::getBookmarkInfos_()
 					    != TCriteria::STATE_UNREAD)
 						continue;
 
-					result = ((TCardSector*)mSector)
-					             ->read(&info, i, &mSectorCriteria[i]);
+					TCardSector* sector = (TCardSector*)mSector;
+					result = sector->read(&info, i, &mSectorCriteria[i]);
 					if (result != CARD_RESULT_READY)
 						break;
 				}
