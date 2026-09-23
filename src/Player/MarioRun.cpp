@@ -128,7 +128,8 @@ BOOL TMario::doRunningAnimation()
 	// TODO: frame 0x88 against retail's 0xd8 (0x50 short, every register
 	// right); retail compares the soft-step copy of `sp` after the fmr and
 	// schedules the loop's second `addi` before the `bgt`. Inert: reusing
-	// `rate`, a C-style `rate2`, and a while loop with the increment in the body.
+	// `rate`, a C-style `rate2`, and a while loop with the increment in the body;
+	// also `++i >= 5`, `4 < ++i`, a separate `i++`, and `loop = false`.
 	BOOL loop = true;
 
 	f32 rate;

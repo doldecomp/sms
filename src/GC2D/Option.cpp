@@ -188,7 +188,8 @@ void TPaneScalingControl::stopAnm()
 
 // TODO: at every inlined site (rumble/subtitle/sound update) retail colours
 // the progress FPRs frame f2, pool f0, end f1 (fmuls progress first); ours
-// is f1/f2/f0. Inert: named angle/deg, TAU first, /=, folded 360.
+// is f1/f2/f0. Inert: named angle/deg, TAU first, /=, folded 360, `*=`
+// TAU, named frame or end, sin result named, MsSin, unnamed progress.
 void TPaneScalingControl::update()
 {
 	int iVar10 = mInitialBounds.getWidth();
@@ -1135,7 +1136,8 @@ void TOptionControl::writeValue()
 bool TOptionControl::isChangedSetting() const
 {
 	// TODO: retail `mr r29, r31` copies result into soundResult; MWCC
-	// folds `bool soundResult = result` to a second `li r29, 1`.
+	// folds `bool soundResult = result` to a second `li r29, 1`; chained
+	// assignments and a separate `soundResult = result` fold the same way.
 	bool result      = true;
 	bool soundResult = result;
 	if (mInitialRumbleValue == getRumbleOption()->mSelectionText->getNumber()
