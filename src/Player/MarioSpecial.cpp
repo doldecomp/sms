@@ -1380,19 +1380,20 @@ BOOL TMario::fenceMove()
 		if (mInput & 0x1) {
 			JGeometry::TVec3<f32> newPos = mPosition;
 			f32 fenceSp = mJumpParams.mFenceSpeed.get();
-			newPos.y += 0.015625f * unk108->mStickV * fenceSp;
+			TMarioControllerWork* work = unk108;
+			newPos.y += 0.015625f * work->mStickV * fenceSp;
 
 			s16 camDelta = mFaceAngle.y - SMSGetCamera()->unk258;
 			f32 normX, normZ;
 			if (camDelta > -0x4000 && camDelta < 0x4000) {
-				normZ = -wall->mNormal.z;
-				normX = wall->mNormal.x;
+				normX = -wall->mNormal.z;
+				normZ = wall->mNormal.x;
 			} else {
-				normX = -wall->mNormal.x;
-				normZ = wall->mNormal.z;
+				normZ = -wall->mNormal.x;
+				normX = wall->mNormal.z;
 			}
 
-			f32 stickH = 0.015625f * unk108->mStickH;
+			f32 stickH = 0.015625f * work->mStickH;
 			newPos.x += normX * stickH * fenceSp;
 			newPos.z += normZ * stickH * fenceSp;
 
@@ -1473,22 +1474,28 @@ BOOL TMario::fenceMove()
 				// the ROM, and the cosine is the factor on diff.x: the two
 				// were swapped here (and declared the other way round)
 				// before structural pass 168.
-				// TODO: retail still builds the three components of a
-				// rotated unit vector before dotting it with diff -- the
-				// surviving `0.0f * sin`, `0.0f * cos` and `1.0f * cos`
-				// products prove an inline boundary this spelling does not
-				// have, which is also where part of the 0x78 frame gap
-				// lives. Fixing the direction costs 0.5 objdiff points
-				// (95.8 -> 95.3) because the class is invisible to scoring.
+				// The sideways component is diff dotted with up x facing:
+				// retail's surviving `0.0f * sin`, `0.0f * cos` and
+				// `1.0f * cos` products are TVec3::cross's constant-folded
+				// terms.
+				// TODO: every instruction matches; the frame is 0x28 short
+				// (0x190 vs 0x1b8) with the named block uniformly low and
+				// `diff` 0xc low, so retail has an inline level (likely
+				// around the cross product) whose temporaries this
+				// spelling does not reserve.
 				f32 cosY = JMASCos(mFaceAngle.y);
 				f32 sinY = JMASSin(mFaceAngle.y);
 
 				JGeometry::TVec3<f32> diff = mPosition - mPrevPosition;
 
-				hDot = cosY * diff.x - sinY * diff.z;
+				JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+				JGeometry::TVec3<f32> face(sinY, 0.0f, cosY);
+				JGeometry::TVec3<f32> side;
+				side.cross(up, face);
+				hDot = side.dot(diff);
 				dist = diff.length();
 			} else {
-				vDiff = unk300.y - unk2F4.y;
+				vDiff = unk2F4.y - unk300.y;
 				hDot  = unk2F4.x - unk300.x;
 				if ((s16)((182.04445f * unk30C) - (f32)mFaceAngle.y) != 0)
 					hDot = -hDot;
