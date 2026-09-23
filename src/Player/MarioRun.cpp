@@ -586,11 +586,15 @@ TMario::TSurfingParams* TMario::getSurfingParamsGround()
 	}
 }
 
+// TODO: frame is 0xa0, retail 0xb0; every instruction matches. `below` sits
+// 0xc low and the fctiwz slot 0x10 low: a missing low-region temporary or
+// inline level, not the accel/params spelling (both tried).
 void TMario::doSurfing()
 {
 	const TBGCheckData* below;
 	gpMap->checkGround(mPosition.x, mPosition.y - mVel.y, mPosition.z, &below);
 
+	f32 want;
 	f32 rotMin;
 	f32 rotMax;
 	f32 powMin;
@@ -608,7 +612,7 @@ void TMario::doSurfing()
 		powMax = getSurfingParamsGround()->mPowMax.get();
 	}
 
-	f32 want = 2.0f * mIntendedMag;
+	want = 2.0f * mIntendedMag;
 	if (want > powMax)
 		want = powMax;
 	if (want < powMin)
@@ -630,8 +634,8 @@ void TMario::doSurfing()
 	if (mForwardVel > powMax)
 		mForwardVel = powMax;
 
-	s16 rotSp
-	    = (((want - powMin) / (powMax - powMin)) * (rotMax - rotMin)) + rotMin;
+	f32 t = (want - powMin) / (powMax - powMin);
+	s16 rotSp = t * (rotMax - rotMin) + rotMin;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 	slopeProcess();
