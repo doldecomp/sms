@@ -43,14 +43,17 @@ public:
 		// converts angle's i first (the int-to-float temporaries at
 		// 0x30/0x38/0x40 hold j, i, i).
 		// TODO: the ROM converts angle's i into a volatile register and only
-		// lands the product in angle's; `angle *= k` puts the conversion in
-		// angle's register directly (99.9), `angle = (f32)i * k` and the
-		// commuted product both swap the two volatiles instead (99.8).
+		// lands the product in angle's. `angle = angle * k` gets that (the
+		// `angle *= k` spelling converted straight into angle's register),
+		// but the one fmuls still has its operands commuted: retail is
+		// (conversion, constant), ours (constant, conversion) whichever side
+		// the constant is written on, and moving the multiply after t or amp
+		// is worse (93.8).
 		f32 t;
 		f32 angle;
 		f32 amp;
 		angle = (f32)i;
-		angle *= 0.31415927f;
+		angle = angle * 0.31415927f;
 		t     = (f32)i / (f32)j;
 		amp   = t * (unk3C - h);
 
