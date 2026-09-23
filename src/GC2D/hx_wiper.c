@@ -123,7 +123,7 @@ static void Hxs2_Circle(u8 alpha, f32 r_in, f32 r_out);
 static void Hxs_FrBufferMorf2(f32 x);
 static void Hxs_FrBufferMorf2B(f32 x);
 static void Hx_Door(void);
-static void Hxs_GameOver(s8 fade, f32 mag, f32 rot);
+static void Hxs_GameOver(u8 fade, f32 mag, f32 rot);
 static void InitWipe(void);
 static void Hx_GameOver(void);
 static void Hxs_Logo_ExtraDraw();
@@ -927,7 +927,7 @@ static void Hx_Door(void)
 // TODO: every instruction matches, but retail's frame is 0x68 bytes larger
 // (obj at 0xe0, axis at 0xa0, the colour at 0xac, and holes at 0x88, 0xb0 and
 // 0x100), which also costs it one more saved FPR.
-static void Hxs_GameOver(s8 fade_alpha, f32 scale, f32 rotation)
+static void Hxs_GameOver(u8 fade_alpha, f32 scale, f32 rotation)
 {
 	GXTexObj obj;
 	Mtx rotMtx;
@@ -1029,6 +1029,9 @@ static void Hxs_GameOver(s8 fade_alpha, f32 scale, f32 rotation)
 // TODO: dead code; the map says 0xc bytes, i.e. a single store.
 static void InitWipe(void) { hx.state = 0; }
 
+// TODO: volatile FPRs are numbered the other way round in case 0 (0.0f/0.3f)
+// and in the final Hxs_GameOver call (2.0f/fade); store order, a shared
+// `fade = rot = 0.0f` and a cast on fade are inert.
 static void Hx_GameOver(void)
 {
 	static f32 mag = 1.0f;
@@ -1061,9 +1064,9 @@ static void Hx_GameOver(void)
 			hx.step++;
 			hx.timer = 10;
 		}
-		mag += 0.074f;
+		mag = mag + 0.074f;
 		rot = Hx_MotionUpdate(&hx.motion);
-		fade += 5.1f;
+		fade = fade + 5.1f;
 		break;
 
 	case 2:
@@ -1106,9 +1109,9 @@ static void Hx_GameOver(void)
 		alpha += 8;
 		Hx_CameraInit();
 		Hx_GxInit(0, 1);
+		color = alpha | 0xFF000000;
 		y2 = hx.height - 100;
 		x2 = hx.width - 100;
-		color = alpha | 0xFF000000;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(100.0f, 100.0f, 0.0f);
@@ -1122,25 +1125,31 @@ static void Hx_GameOver(void)
 		break;
 	}
 
-	case 5:
+	case 5: {
+		f32 x2;
+		f32 y2;
+
 		Hx_CameraInit();
 		Hx_GxInit(0, 1);
+		y2 = hx.height - 100;
+		x2 = hx.width - 100;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(100.0f, 100.0f, 0.0f);
-		GXColor1u32(0xFF000000);
-		GXPosition3f32(hx.width - 100, 100.0f, 0.0f);
-		GXColor1u32(0xFF000000);
-		GXPosition3f32(hx.width - 100, hx.height - 100, 0.0f);
-		GXColor1u32(0xFF000000);
-		GXPosition3f32(100.0f, hx.height - 100, 0.0f);
-		GXColor1u32(0xFF000000);
+		GXColor1u32(0xFF0000FF);
+		GXPosition3f32(x2, 100.0f, 0.0f);
+		GXColor1u32(0xFF0000FF);
+		GXPosition3f32(x2, y2, 0.0f);
+		GXColor1u32(0xFF0000FF);
+		GXPosition3f32(100.0f, y2, 0.0f);
+		GXColor1u32(0xFF0000FF);
 
 		if (Hx_TimerCountDown() == 0) {
 			hx.step++;
 			hx.state = 3;
 		}
 		break;
+	}
 
 	default:
 		hx.state = 3;
