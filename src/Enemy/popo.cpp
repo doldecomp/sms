@@ -940,7 +940,7 @@ void TPopo::explosion()
 	TPopoManager* manager = PopoExplosionManager(this);
 	JGeometry::TVec3<f32> pos(mPosition);
 	pos.y += 100.0f;
-	if (mSpine->getTime() % 2 == 0) {
+	if (getSpine()->getTime() % 2 == 0) {
 		JGeometry::TVec3<f32>& dirValue
 		    = PopoExplosionWater(manager)->mDir.value;
 		JGeometry::TVec3<f32> dir(dirValue);

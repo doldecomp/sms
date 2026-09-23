@@ -982,7 +982,8 @@ KoopajrGetSaveParams(const TKoopaJrSubmarine* p)
 bool TKoopaJrSubmarine::appearShineKiller(int)
 {
 	f32 probability;
-	if (SMS_GetMarioWaterGun()->getCurrentWater() == 0) {
+	s32 currentWater = SMS_GetMarioWaterGun()->getCurrentWater();
+	if (currentWater == 0) {
 		probability = 0.5f;
 	} else if (((TBathtubKillerManager*)mKoopaJr->mKillerManager)
 	               ->mInitialLives
@@ -991,7 +992,7 @@ bool TKoopaJrSubmarine::appearShineKiller(int)
 	} else {
 		const TWaterGun* gun = SMS_GetMarioWaterGun();
 		s32 maxWater = gun->getCurrentNozzle()->mEmitParams.mAmountMax.get();
-		s32 curWater = SMS_GetMarioWaterGun()->getCurrentWater();
+		s32 curWater = SMS_GetMarioWaterGun()->mCurrentWater;
 		f32 p0
 		    = KoopajrGetSaveParams(this)->shineKillerProbability0.get();
 		probability  = ((f32)curWater / (f32)maxWater)

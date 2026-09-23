@@ -1669,8 +1669,9 @@ void TEnemyMario::checkReturn()
 	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
 		return;
 
+	TGraphTracer* tracer = mEMario->getTracer();
 	int startIndex
-	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
+	    = tracer->getGraph()->findNearestNodeIndex(mPosition, -1);
 	int nodeNum = mEMario->getTracer()->getGraph()->getNodeNum();
 	for (int i = 0; i < nodeNum; i++) {
 		JGeometry::TVec3<f32> point;

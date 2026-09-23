@@ -4319,7 +4319,7 @@ bool TGCConsole2::processDisappearBalloon()
 	int height     = bounds.getHeight();
 
 	JUTRect contents  = unk3B0->getContentsBounds();
-	int contentHeight = contents.getHeight();
+	s32 contentHeight = contents.getHeight();
 
 	if (contentHeight > 0) {
 		int nextHeight = height - unk3CC;
