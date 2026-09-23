@@ -516,16 +516,14 @@ void TTabePuku::prepareDrag()
 // UNUSED, 0x12c in the map.
 bool TTabePuku::doDrag()
 {
-	if (!mTouchedWall && isAirborne()) {
-		// Written inverted because retail branches on a bare `bge`; the
-		// direct `length() <= getDragLength()` adds a cror.
-		if (!(getSaveParams()->getDragLength()
-		      < TabePukuLength(unk104.getPoint() - mPosition)))
-			return false;
+	if (mTouchedWall || !isAirborne()
+	    || getSaveParams()->getDragLength()
+	           < TabePukuLength(unk104.getPoint() - mPosition)) {
+		detach();
+		return true;
 	}
 
-	detach();
-	return true;
+	return false;
 }
 
 // TODO: 94.0%, and all of it is a 0x80 frame gap plus the float register
@@ -764,11 +762,13 @@ DEFINE_NERVE(TNerveTabePukuDive, TLiveActor)
 	return FALSE;
 }
 
-// TODO: 62.2%. Retail's inlined TQuat4::rotate() gives its first TQuat4
+// TODO: 77.5%. Retail's inlined TQuat4::rotate() gives its first TQuat4
 // temporary a stack home and calls the empty JGeometry::TVec4<f32>::TVec4()
 // out of line (the map emits it weak in this object); our build scalarises
 // both temporaries and never emits that constructor, which is a shared-header
-// question about JGVec4.hpp, not about this nerve.
+// question about JGVec4.hpp, not about this nerve. Calling prepareDrag(), a
+// TU-local forwarder or the one-argument rotate all turn rotate into a `bl`
+// (the same residue as fireWanwan's doAdjustTarget sites).
 DEFINE_NERVE(TNerveTabePukuDrag, TLiveActor)
 {
 	TTabePuku* puku = (TTabePuku*)spine->getBody();
