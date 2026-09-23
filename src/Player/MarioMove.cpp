@@ -261,6 +261,11 @@ void TMario::setPlayerVelocity(f32 velocity)
 	mVel.z      = mSlideVelZ;
 }
 
+// TODO: instructions exact, frame 0x88 vs retail 0x78. The dot(*pos) against
+// a Vec costs 0x20 of low region; spelling the dot out over a named
+// `const TVec3& n = wall->getNormal()` is frame-only at 0x68 (0x10 under),
+// raw mNormal/mPlaneDistance and per-component getNormal() mixes land
+// 0x60-0x80 with register swaps. Record set() and declaration order inert.
 TBGCheckData* TMario::checkWallPlane(Vec* pos, f32 yOff, f32 radius)
 {
 	TBGCheckData* result = nullptr;

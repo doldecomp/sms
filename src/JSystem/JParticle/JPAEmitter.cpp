@@ -66,6 +66,9 @@ void JPABaseEmitter::deleteBaseParticle(JPABaseParticle* particle,
 
 void JPABaseEmitter::deleteParticle(JPABaseParticle* particle) { }
 
+// TODO: instructions exact, frame 0x48 vs retail 0x40 (8 more low region).
+// Either loop shape for both lists, a named object or next in either loop,
+// declaration order and initialised declarations are inert.
 void JPABaseEmitter::deleteAllParticle()
 {
 	JSUList<JPABaseParticle>* list;

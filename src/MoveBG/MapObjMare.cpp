@@ -155,6 +155,11 @@ TCogwheelScale::TCogwheelScale(const char* name)
 {
 }
 
+// TODO: instructions exact, frame 0x88 vs retail 0x80 (also TWireBell):
+// an unused 8-byte slot sits above the texture. Block-scoping the color or
+// the texture, a const color, and passing color without TColor are inert or
+// worse; a named TColor lands the frame but moves the copy into the named
+// block (see TSwingBoard::initDraw in MapObjMonte).
 void TCogwheel::initDraw() const
 {
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);

@@ -304,6 +304,10 @@ f32 TMario::getChangeAngleSpeed()
 	return 0.03125f * (angSp * mForwardVel);
 }
 
+// TODO: frame 0x30 vs retail 0x48, instructions exact. getGroundPlane() on
+// the isUnk2 test (as in getSlopeSlideAccele) is the +8; on isSlider it
+// breaks the code. A named result with else-if arms, .value reads and
+// dropping the fillers are inert.
 f32 TMario::getSlideStickMult()
 {
 	(void)0;
@@ -324,7 +328,7 @@ f32 TMario::getSlideStickMult()
 	if (mGroundPlane->isSlider())
 		return mSlipParamsAllSlider.mStickSlideMult.get();
 
-	if (mGroundPlane->isUnk2())
+	if (getGroundPlane()->isUnk2())
 		return mSlipParams45.mStickSlideMult.get();
 
 	return mSlipParamsNormal.mStickSlideMult.get();
