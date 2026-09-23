@@ -47,11 +47,11 @@ BOOL TMario::winDemo()
 
 BOOL TMario::readBillboard()
 {
-	// TODO: frame 0x28 against retail's 0x70: every slot sits 0x40 low (the
-	// inlined sqrt temporary is 0x4c there), and retail loads the NPC into r5
-	// and copies it to r30, reading case 0's positions through r5.
+	// TODO: instruction-exact; frame 0x30 against retail's 0x70, every slot
+	// 0x40 low (the inlined sqrt temporary is 0x4c there). getPosition() on
+	// the NPC's four reads adds 8 each but forms a +0x18 pointer for .z.
 
-	TBaseNPC* talkingNpc = gpMarDirector->unkA0;
+	TBaseNPC* talkingNpc = gpMarDirector->getTalkingNPC();
 	switch (mStatusState) {
 	case 0: {
 		f32 dx = mPosition.x - talkingNpc->mPosition.x;
