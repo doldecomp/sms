@@ -463,8 +463,10 @@ void TAnimalBird::doDropCoin()
 // temporary (the `bl TVec4<f>::TVec4()`), reads the quaternion's members
 // directly after that call, has no `* 0` terms, and ends in the
 // TVec3<f>::set<f> that goes out of line one level deeper (WalkOnGround's
-// weak set<f>). Move this into the header's rotate(v, dest) once the header
-// round lands.
+// weak set<f>). This is now exactly JGQuat4.hpp's rotateInPlace/rotateQ,
+// but calling that instead (header round 2026-09-23) moves doLanding
+// 93.40 -> 92.38 (take-off quaternion registers, doLanding itself unchanged),
+// so the fork stays until that is understood.
 static inline void BirdRotateQ(const JGeometry::TQuat4<f32>& r,
                                const JGeometry::TVec3<f32>& v,
                                JGeometry::TVec3<f32>& rDest)

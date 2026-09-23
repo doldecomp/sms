@@ -172,43 +172,45 @@ public:
 	// set in rotateQ, two levels below rotate(rDest), both fall past the
 	// inliner's depth limit exactly there. rotateQ reads the vector through
 	// its reference: by-value vector components give the deep sites stack
-	// homes retail does not have (TabePuku Drag 0xc0 -> 0x110).
+	// homes retail does not have (TabePuku Drag 0xc0 -> 0x110). It reads the
+	// quaternion's members after declaring the product and has no `* 0`
+	// terms (fireWanwan's doAdjustTarget fork, header round 2026-09-23:
+	// execWalk 86.78 -> 89.89, fireWanwan's nerves unchanged without the
+	// fork, nothing else moves; the old x/y/z/w-parameter form is gone).
 	//
-	// The two-argument rotate keeps the one-level body: its weak copy in
-	// Kumokun.o is a leaf whose schedule only the vx/vy/vz locals reproduce
-	// (90.4; the rotateQ form is 83.0 under every local, parameter and operand
-	// order tried), and Kazekun, BathtubKiller::makeQuat, bindBody, Bird
-	// doLanding and rotateGoalDirToLocal all prefer it.
-	//
-	// TODO: the two-argument deep sites (Bird doWalk/WalkOnGround at 484,
-	// shotSeeds, makeKillerVelocity, moveCoaster, calcBathtubData) score higher
-	// with the two-argument rotate also forwarding to rotateQ (+0.4 to +6.5
-	// each), so they too call a two-level body in retail; the second TQuat4
-	// here is probably not real. Moving them to the in-place rotate goes one
-	// level too deep. The body that serves both them and the weak copy is not
-	// found yet.
-	void rotateQ(const TVec3<T>& v, T w, T z, T y, T x, TVec3<T>& rDest) const
+	// The two-argument rotate keeps the one-level vx/vy/vz body.
+	// TODO: measured tree-wide on 2026-09-23, the two-argument rotate as a
+	// one-level copy of rotateQ's body (member reads, no `* 0`, no second
+	// TQuat4) makes Kumokun's weak rotate 90.39 -> 100 and gains
+	// rotateGoalDirToLocal 97.73 -> 100, makeKillerVelocity +2.32,
+	// calcBathtubData +2.22, getGravityDir +1.05, shotSeeds +0.91,
+	// moveCoaster +0.62, flyAroundMario +0.59, dropCoins +0.07,
+	// doFlyToCurPathNode +0.02, but costs doAttackPose 78.94 -> 75.69,
+	// makeQuat 92.61 -> 90.40 and fireWanwan bindBody 99.53 -> 98.39 (frame
+	// 0x1b0 vs retail 0x1e8; rotateInPlace or rotate(v) there is worse).
+	// Kazekun's three doAttackPose rotates are inert to rotateInPlace. As a
+	// two-level forwarder to rotateQ it gains the same sites (and Bird's weak
+	// set<f>) but inlines at Kumokun's Wait nerve, where retail `bl`s rotate,
+	// so the weak copy vanishes (90.39 -> 0). The one-level member-read body
+	// is very likely retail's; the three losing sites are what blocks it.
+	void rotateQ(const TVec3<T>& v, TVec3<T>& rDest) const
 	{
 		// clang-format off
 		TQuat4 q;
-		q.x =  w *  0 + y * v.z - z * v.y + w * v.x;
-		q.y = -x * v.z + y *  0 + z * v.x + w * v.y;
-		q.z =  x * v.y - y * v.x + z *  0 + w * v.z;
-		q.w = -x * v.x - y * v.y - z * v.z + w *  0;
+		q.x =  this->y * v.z - this->z * v.y + this->w * v.x;
+		q.y = -this->x * v.z + this->z * v.x + this->w * v.y;
+		q.z =  this->x * v.y - this->y * v.x + this->w * v.z;
+		q.w = -this->x * v.x - this->y * v.y - this->z * v.z;
 
-		rDest.set( q.x *  w + q.y * -z - q.z * -y + q.w * -x,
-		          -q.x * -z + q.y *  w + q.z * -x + q.w * -y,
-		           q.x * -y - q.y * -x + q.z *  w + q.w * -z);
+		rDest.set( q.x *  this->w + q.y * -this->z - q.z * -this->y + q.w * -this->x,
+		          -q.x * -this->z + q.y *  this->w + q.z * -this->x + q.w * -this->y,
+		           q.x * -this->y - q.y * -this->x + q.z *  this->w + q.w * -this->z);
 		// clang-format on
 	}
 
 	void rotateInPlace(const TVec3<T>& v, TVec3<T>& rDest) const
 	{
-		T x = this->x;
-		T y = this->y;
-		T z = this->z;
-		T w = this->w;
-		rotateQ(v, w, z, y, x, rDest);
+		rotateQ(v, rDest);
 	}
 
 	void rotate(const TVec3<T>& v, TVec3<T>& rDest) const

@@ -989,36 +989,6 @@ bool TFireWanwan::doAttack()
 	return isMissMario();
 }
 
-// doAdjustTarget's quaternion rotate, parked here from JGQuat4.hpp. Retail
-// inlines doAdjustTarget into both nerves and `bl`s TVec4<f32>::TVec4() and
-// TVec3<f32>::set<f32> from this body, which is two levels below it; it reads
-// the quaternion's members after constructing the product (no x/y/z/w
-// locals) and has no `* 0` terms, unlike TQuat4::rotateQ. Whether the header
-// rotate should take this body is untested outside this unit.
-static inline void FireWanwanRotateQ(const JGeometry::TQuat4<f32>& r,
-                                     const JGeometry::TVec3<f32>& v,
-                                     JGeometry::TVec3<f32>& rDest)
-{
-	// clang-format off
-	JGeometry::TQuat4<f32> q;
-	q.x =  r.y * v.z - r.z * v.y + r.w * v.x;
-	q.y = -r.x * v.z + r.z * v.x + r.w * v.y;
-	q.z =  r.x * v.y - r.y * v.x + r.w * v.z;
-	q.w = -r.x * v.x - r.y * v.y - r.z * v.z;
-
-	rDest.set( q.x *  r.w + q.y * -r.z - q.z * -r.y + q.w * -r.x,
-	          -q.x * -r.z + q.y *  r.w + q.z * -r.x + q.w * -r.y,
-	           q.x * -r.y - q.y * -r.x + q.z *  r.w + q.w * -r.z);
-	// clang-format on
-}
-
-static inline void FireWanwanRotateInPlace(const JGeometry::TQuat4<f32>& r,
-                                           const JGeometry::TVec3<f32>& v,
-                                           JGeometry::TVec3<f32>& rDest)
-{
-	FireWanwanRotateQ(r, v, rDest);
-}
-
 static bool is_antiparallel(const JGeometry::TVec3<f32>& v1,
                             const JGeometry::TVec3<f32>& v2)
 {
@@ -1053,7 +1023,8 @@ void TFireWanwan::decideTarget(const JGeometry::TVec3<f32>& param_1)
 // MathUtil.hpp's MsGetRotFromZaxisY with the axis.z == 0 branch as one
 // conditional return, parked here: the header's nested if/else is one
 // statement too many for the inliner inside doAdjustTarget (depth 2), where
-// retail expands it. Untested as a header change.
+// retail expands it. As a header change it costs MsIsInSight,
+// TBGKMtxCalc::calc and walkToCurPathNode (see MathUtil.hpp).
 static inline f32 FireWanwanRotFromZ(const JGeometry::TVec3<f32>& axis)
 {
 	if (axis.z == 0.0f)
@@ -1077,7 +1048,7 @@ void TFireWanwan::doAdjustTarget()
 
 	JGeometry::TVec3<f32> local_60(0.0f, 0.0f, 1.0f);
 
-	FireWanwanRotateInPlace(local_70, local_60, local_60);
+	local_70.rotateInPlace(local_60, local_60);
 
 	f32 rot = FireWanwanRotFromZ(local_60);
 

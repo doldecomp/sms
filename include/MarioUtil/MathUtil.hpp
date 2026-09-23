@@ -84,6 +84,17 @@ inline f32 MsAtan2(f32 y, f32 x)
 // `(void)0;` fillers reaches doAttackSingle 99.5, but that is refused.
 // Retail calls MsWrap<f> out of line at the same depth, which fits the same
 // block on control-flow bodies.
+// Header round 2026-09-23: fireWanwan's doAdjustTarget (nerve, depth 2)
+// does inline the z == 0 branch spelt as one conditional return
+// (`return axis.x >= 0.0f ? 90.0f : -90.0f;`, flat tail, named theta), so
+// `if` bodies are not blocked everywhere. Moved here it gains nothing
+// outside fireWanwan (bossgesso and igaiga unchanged) and costs
+// MsIsInSight 100 -> 99.95 (the ternary's arm branches to a `b` instead of
+// straight to the join; a split if/else call site does not fix it),
+// TBGKMtxCalc::calc 100 -> 99.60 (result in f30 not f31) and
+// walkToCurPathNode 99.10 -> 98.85 (calcBoids +0.02). Keeping the nested
+// `if`/`else` for axis.x or dropping the else keeps fireWanwan out of line
+// (85.95/87.98); dropping theta costs about 40 functions.
 inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 {
 	if (axis.z == 0.0f) {
