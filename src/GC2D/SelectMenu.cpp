@@ -379,6 +379,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		coinDigits[2]->changeTexture(mCoinNumTex[digit2]->getTexInfo(), 0);
 
 		coinDigits[0]->hide();
+		goto sharedShineSetup;
 	} else {
 		f32 hundreds = numCoins * 0.01f;
 
@@ -396,6 +397,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 			mMenuScreen->search('sc_s')->show();
 		}
 
+	}
+
+sharedShineSetup:
+	{
 		s8 count = 0;
 		for (s32 i = 1; i < 3; i++) {
 			if (TFlagManager::getInstance()->getShineFlag(stages[mStage][i])) {
