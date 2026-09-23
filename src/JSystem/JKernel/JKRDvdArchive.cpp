@@ -9,7 +9,7 @@
 #include <dolphin/os.h>
 
 JKRDvdArchive::JKRDvdArchive()
-    : JKRArchive(0, MOUNT_DVD)
+    : JKRArchive((s32)0, MOUNT_DVD)
 {
 	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }

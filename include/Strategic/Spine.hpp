@@ -9,10 +9,11 @@ class TSpineEnemy;
 template <class T> class TNerveBase;
 
 template <class T> class TSpineBase {
-private:
+public:
 	// fabricated but they probably had a global typedef for it
 	typedef const TNerveBase<T>* Nerve;
 
+private:
 	/* 0x0 */ TSpineEnemy* mBody; // whoever we are the spine of
 	/* 0x4 */ TSolidStack<Nerve> mVertebrae;
 	/* 0x14 */ Nerve mCurrent;

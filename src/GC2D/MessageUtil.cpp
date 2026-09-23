@@ -1,4 +1,4 @@
-#include <GC2d/MessageUtil.hpp>
+#include <GC2D/MessageUtil.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 

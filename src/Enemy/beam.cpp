@@ -1,4 +1,4 @@
-#include <Enemy/beam.hpp>
+#include <Enemy/Beam.hpp>
 #include <dolphin/gx.h>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JMath.hpp>

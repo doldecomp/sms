@@ -51,7 +51,7 @@
 #include <Enemy/WalkerEnemy.hpp>
 #include <Enemy/WireTrap.hpp>
 #include <Enemy/Yunbo.hpp>
-#include <Enemy/beam.hpp>
+#include <Enemy/Beam.hpp>
 #include <System/MarNameRefGen.hpp>
 
 // TODO: these two marker managers are weak in MarNameRefGen_Enemy.o and

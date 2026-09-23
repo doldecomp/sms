@@ -284,7 +284,7 @@ template <typename T, int I> struct TLinkList : public TNodeLinkList {
 		}
 		const T& operator*() const
 		{
-			T* p = operator->();
+			const T* p = operator->();
 			JUT_ASSERT(p != nullptr);
 			return *p;
 		}

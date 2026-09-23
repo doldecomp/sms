@@ -46,7 +46,7 @@ public:
 		T _w = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
 		// clang-format on
 
-		set(_x, _y, _z, _w);
+		this->set(_x, _y, _z, _w);
 	}
 
 	// Both products go straight into set() with no _x.._w locals (BeeHive's
@@ -59,10 +59,10 @@ public:
 	void mul(const TQuat4& a, const TQuat4& b)
 	{
 		// clang-format off
-		set(a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y,
-		    a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z,
-		    a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x,
-		    a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z);
+		this->set(a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y,
+		          a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z,
+		          a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x,
+		          a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z);
 		// clang-format on
 	}
 

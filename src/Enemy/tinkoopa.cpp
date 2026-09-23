@@ -1101,12 +1101,12 @@ void TTinKoopa::hitParts()
 
 	int hitPoints = mPartsHitPoints;
 	if (hitPoints <= 0) {
-		TNerveBase<TLiveActor>* nerve = &TNerveTinKoopaBreak::theNerve();
+		const TNerveBase<TLiveActor>* nerve = &TNerveTinKoopaBreak::theNerve();
 		mSpine->pushNerve(nerve);
 		return;
 	}
 
-	TNerveBase<TLiveActor>* nerve = &TNerveTinKoopaDamage::theNerve();
+	const TNerveBase<TLiveActor>* nerve = &TNerveTinKoopaDamage::theNerve();
 	mSpine->pushNerve(nerve);
 }
 

@@ -18,7 +18,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
-#include <PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h>
+#include <string.h>
 #include <stdio.h>
 
 // rogue includes needed for matching sinit & bss

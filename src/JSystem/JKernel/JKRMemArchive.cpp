@@ -38,7 +38,7 @@ JKRMemArchive::JKRMemArchive(void* buffer, u32 bufferSize,
 }
 
 JKRMemArchive::JKRMemArchive(const char* path, EMountDirection mountDirection)
-    : JKRArchive(0, MOUNT_MEM)
+    : JKRArchive((s32)0, MOUNT_MEM)
 {
 	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }

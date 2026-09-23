@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <stdint.h>
 #include <types.h>
-#include <JSystem/J3d/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DTexGenBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DColorBlocks.hpp>
