@@ -558,7 +558,7 @@ void TPopo::behaveToFindMario()
 	    && (s32)PopoWaterGun()->mCurrentNozzle == 0
 	    && !gpMarioOriginal->onYoshi()) {
 		setGoalPathMario();
-		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+		getSpine()->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNervePopoAttack::theNerve());
 	} else {
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
