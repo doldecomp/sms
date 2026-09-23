@@ -1265,6 +1265,7 @@ void TBossWanwan::slideToCurPathNode(f32 march_speed, f32 turn_speed)
 {
 	JGeometry::TVec3<f32> toGoal = BosswanwanGoalNode(this).getPoint();
 	toGoal -= mPosition;
+	JGeometry::TVec3<f32> velocity;
 
 	f32 dist = VECMag(toGoal);
 
@@ -1279,11 +1280,9 @@ void TBossWanwan::slideToCurPathNode(f32 march_speed, f32 turn_speed)
 		diff = diff > -turn_speed ? diff : -turn_speed;
 		turn = diff;
 	}
-	// TODO: velocity sits 4 bytes low (0x40 vs retail 0x44); the getRotation()
-	// accessor, a velocity copy-ctor, and += / *= spellings were inert.
 	mRotation.y = MsWrap(mRotation.y + turn, 0.0f, 360.0f);
 
-	JGeometry::TVec3<f32> velocity = mLinearVelocity;
+	velocity = mLinearVelocity;
 	if (dist > 0.0f)
 		toGoal.scale(march_speed / dist);
 	velocity.add(toGoal);
