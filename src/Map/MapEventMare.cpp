@@ -241,10 +241,21 @@ void TMareWallRock::load(JSUMemoryInputStream& stream)
 	JDrama::TActor::load(stream);
 }
 
-TMareWallRock::TMareWallRock(const char*) { }
-// NOTE: m2c shows TMareWallRock has no-arg ctor (TMareWallRock()); a const
-// char* overload appears in source but is UNUSED (eliminated). Keeping the
-// stub.
+// UNUSED (0x84 in the map): the named twin of the inline default
+// constructor TMareEventWallRock::load's array new expands.
+TMareWallRock::TMareWallRock(const char* name)
+    : TLiveActor(name)
+{
+	unkF4  = 0;
+	unkF8  = 0;
+	unk100 = 0;
+	unk104 = nullptr;
+	unk108 = 0;
+	unk10C = nullptr;
+	unk128 = 0.0f;
+	unk110.set(1.0f, 1.0f, 1.0f);
+	unk11C.zero();
+}
 
 void TMareEventWallRock::load(JSUMemoryInputStream& stream)
 {
