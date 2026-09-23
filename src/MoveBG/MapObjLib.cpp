@@ -931,6 +931,11 @@ void TMapObjBase::emitColumnWater()
 		eff->generate(mPosition, mScaling);
 }
 
+// TODO: 95.9%, frame 0x48 vs 0x50. Retail's three fctiwz slots sit at
+// 0x28 (x), 0x38 (y), 0x30 (z) above an unused 0x20; ours are 0x20/0x28/0x30.
+// emitAndRotateScale shows the same x, z, y slot order. Inert: the
+// setRotation(const TVec3&) overload, a TU-local inline taking f32s or the
+// vector, unk16C.set<f32> directly.
 void TMapObjBase::emitAndSRT(s32 param_1, u8 param_2,
                              const JGeometry::TVec3<f32>* param_3,
                              const JGeometry::TVec3<f32>& param_4,
