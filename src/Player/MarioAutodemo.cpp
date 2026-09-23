@@ -161,9 +161,8 @@ BOOL TMario::downLoser()
 
 BOOL TMario::warpIn()
 {
-	// TODO: frame exact once the warp target is copied into a named local
-	// before the subtraction; the named block still sits 4 high (holder
-	// offset 0xd4 vs 0xd0) and the low temporaries are placed differently.
+	// TODO: frame 8 bytes short (0xf0 vs 0xf8); retail places the
+	// operator+ argument copy at 0x98, 0x18 above the low temporaries.
 	mStatusTimer += 1;
 	const JGeometry::TVec3<f32>& gatePosOffset = ((TModelGate*)mHolder)->unkAC;
 	JGeometry::TVec3<f32> holderPosOffset(((TModelGate*)mHolder)->unkAC);
@@ -203,8 +202,7 @@ BOOL TMario::warpIn()
 		frameCtrl.setRate(0.0f);
 
 		// Possibly TVec3 inaccuracies?
-		JGeometry::TVec3<f32> warpTarget = holderPosOffset;
-		JGeometry::TVec3<f32> marioDist  = warpTarget - mPosition;
+		JGeometry::TVec3<f32> marioDist = holderPosOffset - mPosition;
 		mPosition = mPosition + marioDist * 0.02f;
 
 		f32 dist
