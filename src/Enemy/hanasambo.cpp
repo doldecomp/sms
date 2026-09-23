@@ -175,8 +175,8 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 				MsVECNormalize(&offset, &offset);
 				++k;
 				TSamboFlowerSaveLoadParams* params = mFlowers[i]->mSaveParams;
-				f32 velXZ = params->mSLCoinVelocityXZ.get();
 				f32 velY  = params->mSLCoinVelocityY.get();
+				f32 velXZ = params->mSLCoinVelocityXZ.get();
 				coin->mVelocity.set(offset.x * velXZ, 8.0f * rate + velY,
 				                    offset.z * velXZ);
 				coin->offLiveFlag(LIVE_FLAG_UNK10);
@@ -208,7 +208,8 @@ TSamboLeaf::TSamboLeaf(TSamboFlowerManager* manager, SDLModelData* data,
 // against 0x9c) with 4 less below it, and the 1.0f/0.0f roll literals are
 // hoisted above the sine lookups where retail loads them at their stores.
 // Inert or worse: dropping either MtxPtr alias, declaring roll before the
-// sine lookups, cos before sin, a named groundY.
+// sine lookups, cos before sin, a named groundY, `.get()` for the gravity,
+// a named MsGetRotFromZaxis result, ground hoisted to function scope.
 void TSamboLeaf::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!mIsActive)
@@ -516,7 +517,7 @@ void TSamboFlower::moveObject()
 			if (mBloomTimer > mSaveParams->mSLBloomTimer.get()) {
 				if (getMActor()->checkCurAnm("flower_fwait", 0)) {
 					hide();
-				} else if (isBloomEnd()) {
+				} else if (getMActor()->getFrameCtrl(0)->getFrame() < 1.0f) {
 					mBloomTimer = 0;
 					getMActor()->setBck("flower_wait");
 				}
@@ -557,10 +558,13 @@ void TSamboFlower::bloom()
 	}
 }
 
-// UNUSED, 0x44 in the map: inlined into moveObject.
+// UNUSED, 0x44 in the map. moveObject spells the frame test out: inlining
+// this if/return form adds five instructions there.
 bool TSamboFlower::isBloomEnd()
 {
-	return getMActor()->getFrameCtrl(0)->getFrame() < 1.0f;
+	if (getMActor()->getFrameCtrl(0)->getFrame() < 1.0f)
+		return true;
+	return false;
 }
 
 // UNUSED, 0x50 in the map: inlined into moveObject.
@@ -1085,6 +1089,8 @@ static inline f32 SamboProject(const JGeometry::TVec3<f32>& a,
 // TODO: every instruction present; mRollAngle loads early (retail reads it
 // between the colZ length and the column loads), which renumbers the FPRs,
 // and localAxis sits at 0xa0 (retail 0xac).
+// Inert or worse: moving the angle read (six spots), building the columns
+// with set() or member stores. Retail loads colX/colY forward, ours reversed.
 static int SamboHeadRollCallback(J3DNode* node, int param)
 {
 	if (param == 0) {
