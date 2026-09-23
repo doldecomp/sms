@@ -1394,13 +1394,50 @@ BOOL TKoopa::receiveMessage(THitActor* sender, u32 message)
 	return TSpineEnemy::receiveMessage(sender, message);
 }
 
+// r = a * b for a bare MtxPtr on the left: the twelve terms of
+// JGeometry::TMatrix34<T>::concat(a, b), whose const T& operand the bathtub's
+// joint matrix cannot bind to. The extra level is what keeps retail's
+// SMatrix34C<f32>::set a call in calcRootMatrix.
+static inline void KoopaConcat(JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> >& r,
+                               MtxPtr a, const JGeometry::SMatrix34C<f32>& b)
+{
+	r.set(a[0][0] * b.at(0, 0) + a[0][1] * b.at(1, 0)
+	            + a[0][2] * b.at(2, 0),
+	        a[0][0] * b.at(0, 1) + a[0][1] * b.at(1, 1)
+	            + a[0][2] * b.at(2, 1),
+	        a[0][0] * b.at(0, 2) + a[0][1] * b.at(1, 2)
+	            + a[0][2] * b.at(2, 2),
+	        a[0][3]
+	            + (a[0][0] * b.at(0, 3) + a[0][1] * b.at(1, 3)
+	               + a[0][2] * b.at(2, 3)),
+
+	        a[1][0] * b.at(0, 0) + a[1][1] * b.at(1, 0)
+	            + a[1][2] * b.at(2, 0),
+	        a[1][0] * b.at(0, 1) + a[1][1] * b.at(1, 1)
+	            + a[1][2] * b.at(2, 1),
+	        a[1][0] * b.at(0, 2) + a[1][1] * b.at(1, 2)
+	            + a[1][2] * b.at(2, 2),
+	        a[1][3]
+	            + (a[1][0] * b.at(0, 3) + a[1][1] * b.at(1, 3)
+	               + a[1][2] * b.at(2, 3)),
+
+	        a[2][0] * b.at(0, 0) + a[2][1] * b.at(1, 0)
+	            + a[2][2] * b.at(2, 0),
+	        a[2][0] * b.at(0, 1) + a[2][1] * b.at(1, 1)
+	            + a[2][2] * b.at(2, 1),
+	        a[2][0] * b.at(0, 2) + a[2][1] * b.at(1, 2)
+	            + a[2][2] * b.at(2, 2),
+	        a[2][3]
+	            + (a[2][0] * b.at(0, 3) + a[2][1] * b.at(1, 3)
+	               + a[2][2] * b.at(2, 3)));
+
+}
+
 // Bowser rides the bathtub: his world matrix is the tub's matrix times his own
 // Y rotation, with the origin pushed 1500 units down the tub's up axis.
 //
-// JGeometry::TMatrix34<T>::concat(a, b) now carries exactly these twelve terms,
-// but it takes both operands as const T&, and here the left one is the
-// bathtub's joint matrix, an MtxPtr with no JGeometry wrapper to bind to. Hence
-// the terms stay written out; nothing but a cast would let the call be used.
+// TODO: 79%. The frame is 0x30 short (0x110 against 0x140), retail saves f15
+// as well, and the product scheduling around the set() arguments differs.
 void TKoopa::calcRootMatrix()
 {
 	TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search2("バスタブ");
@@ -1415,35 +1452,7 @@ void TKoopa::calcRootMatrix()
 	mtx.ref(1, 3) = 0.0f;
 	mtx.ref(2, 3) = 0.0f;
 
-	mtx.set(tub[0][0] * mtx.at(0, 0) + tub[0][1] * mtx.at(1, 0)
-	            + tub[0][2] * mtx.at(2, 0),
-	        tub[0][0] * mtx.at(0, 1) + tub[0][1] * mtx.at(1, 1)
-	            + tub[0][2] * mtx.at(2, 1),
-	        tub[0][0] * mtx.at(0, 2) + tub[0][1] * mtx.at(1, 2)
-	            + tub[0][2] * mtx.at(2, 2),
-	        tub[0][3]
-	            + (tub[0][0] * mtx.at(0, 3) + tub[0][1] * mtx.at(1, 3)
-	               + tub[0][2] * mtx.at(2, 3)),
-
-	        tub[1][0] * mtx.at(0, 0) + tub[1][1] * mtx.at(1, 0)
-	            + tub[1][2] * mtx.at(2, 0),
-	        tub[1][0] * mtx.at(0, 1) + tub[1][1] * mtx.at(1, 1)
-	            + tub[1][2] * mtx.at(2, 1),
-	        tub[1][0] * mtx.at(0, 2) + tub[1][1] * mtx.at(1, 2)
-	            + tub[1][2] * mtx.at(2, 2),
-	        tub[1][3]
-	            + (tub[1][0] * mtx.at(0, 3) + tub[1][1] * mtx.at(1, 3)
-	               + tub[1][2] * mtx.at(2, 3)),
-
-	        tub[2][0] * mtx.at(0, 0) + tub[2][1] * mtx.at(1, 0)
-	            + tub[2][2] * mtx.at(2, 0),
-	        tub[2][0] * mtx.at(0, 1) + tub[2][1] * mtx.at(1, 1)
-	            + tub[2][2] * mtx.at(2, 1),
-	        tub[2][0] * mtx.at(0, 2) + tub[2][1] * mtx.at(1, 2)
-	            + tub[2][2] * mtx.at(2, 2),
-	        tub[2][3]
-	            + (tub[2][0] * mtx.at(0, 3) + tub[2][1] * mtx.at(1, 3)
-	               + tub[2][2] * mtx.at(2, 3)));
+	KoopaConcat(mtx, tub, mtx);
 
 	mPosition.x = mtx.at(0, 3);
 	mPosition.y = mtx.at(1, 3);
