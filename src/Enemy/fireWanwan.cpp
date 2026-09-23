@@ -811,7 +811,7 @@ void TFireWanwan::init(TLiveManager* manager)
 	TPosition3f mtx;
 	mtx.translation(mPosition);
 	getModel()->setBaseTRMtx(mtx);
-	getModel()->setBaseScale(getScaling());
+	getModel()->setBaseScale(mScaling);
 	getModel()->calc();
 
 	unk194 = new TFireWanwanTailHit(*this);
@@ -827,7 +827,7 @@ void TFireWanwan::init(TLiveManager* manager)
 	    = getModel()->getModelData()->getJointName()->getIndex("jnt_head");
 	int idx
 	    = getModel()->getModelData()->getMaterialName()->getIndex("_mat_body");
-	SMS_InitPacket_OneTevColor(mMActor->getModel(), idx, GX_TEVREG0,
+	SMS_InitPacket_OneTevColor(getMActor()->getModel(), idx, GX_TEVREG0,
 	                           &unk238->getCurrent());
 	reset();
 }

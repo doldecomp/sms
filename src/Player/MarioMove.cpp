@@ -1882,6 +1882,7 @@ static inline const TLiveActor* MarioMoveRideActor(const TMario* p)
 
 void TMario::checkRideMovement()
 {
+	const TLiveActor* groundActor;
 	const TLiveActor* actor = nullptr;
 
 	JGeometry::TVec3<f32> pos = mPosition;
@@ -1891,7 +1892,7 @@ void TMario::checkRideMovement()
 
 	TBGCheckData* wall = checkWallPlane(&pos, 50.0f, unk15C);
 
-	const TLiveActor* groundActor = mGroundPlane->getActor();
+	groundActor = mGroundPlane->getActor();
 
 	if (groundActor != nullptr
 	    && !MarioMoveStatusType(this, MARIO_STATUS_FLAG_JUMPING)
@@ -1922,7 +1923,8 @@ void TMario::checkRideMovement()
 			// neither an f32 nor an s16 `diff` here keeps the schedule.
 			mFaceAngle.y
 			    += (s16)((unk2C0->mRotation.y - unk30C) * 32768.0f / 180.0f);
-			unk30C = MarioMoveRideActor(this)->mRotation.y;
+			const TLiveActor* rideActor = MarioMoveRideActor(this);
+			unk30C = rideActor->mRotation.y;
 		}
 	} else {
 		unk2C0 = nullptr;
