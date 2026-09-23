@@ -205,7 +205,9 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 	// indirect-texture particle exactly when the enemy was invisible. The
 	// joint is 4, not 1 (`addi r29, r8, 0xc0`).
 	if (!mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		MtxPtr mA = mOwner->getMActor()->getModel()->getAnmMtx(4);
+		J3DModel* model = mOwner->getMActor()->getModel();
+		MtxPtr m0       = model->getAnmMtx(0);
+		MtxPtr mA       = model->getAnmMtx(4);
 
 		f32 s = JMASin(mOwner->unk1AC);
 		f32 c = JMACos(mOwner->unk1AC);
@@ -244,7 +246,7 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 		JGeometry::TVec3<f32> tmp3(mA[0][2], mA[1][2], mA[2][2]);
 		local_7c.x = tmp3.length();
 
-		param_1->setGlobalRTMatrix(mA);
+		param_1->setGlobalRTMatrix(m0);
 
 		if (mOwner->unk1A8) {
 			param_1->setGlobalScale(mOwner->mScaling);
