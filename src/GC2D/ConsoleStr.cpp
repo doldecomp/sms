@@ -435,6 +435,9 @@ bool TConsoleStr::processReady(int param_1)
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+// TODO: the frame is 0x30 short, all in the dead low region below the
+// setPanePosition points; the 95.0f branch also swaps r28/r29 (the 0x4330
+// conversion constant and the unk34 row base).
 bool TConsoleStr::processGo(f32 param_1)
 {
 	bool result = false;
@@ -479,8 +482,7 @@ bool TConsoleStr::processGo(f32 param_1)
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 16; ++j) {
 					JUTRect global = unk28[i]->getPane()->getGlobalBounds();
-					unk34[i][j].x  = global.x1;
-					unk34[i][j].y  = global.y1;
+					unk34[i][j].set(global.x1, global.y1);
 				}
 
 				JUTRect rect = unk28[i]->getPane()->getBounds();
@@ -497,7 +499,7 @@ bool TConsoleStr::processGo(f32 param_1)
 			int frame = param_1;
 
 			for (int i = 0; i < 3; ++i) {
-				s32 alpha = unk28[i]->getPane()->getAlpha() - 4;
+				int alpha = unk28[i]->getPane()->getAlpha() - 4;
 				if (alpha < 0)
 					alpha = 0;
 
@@ -506,9 +508,10 @@ bool TConsoleStr::processGo(f32 param_1)
 				unk28[i]->getPane()->resize(global.getWidth() + 2,
 				                            global.getHeight() + 2);
 
-				unk2A8[i]->setGlobalTranslation(
-				    global.x1 + global.getWidth() * 0.5f,
-				    global.y1 + global.getHeight() * 0.5f, 0.0f);
+				JGeometry::TVec3<f32> pos(global.x1 + global.getWidth() * 0.5f,
+				                          global.y1 + global.getHeight() * 0.5f,
+				                          0.0f);
+				unk2A8[i]->setGlobalTranslation(pos);
 
 				unk28[i]->update();
 
@@ -516,8 +519,7 @@ bool TConsoleStr::processGo(f32 param_1)
 					for (int j = 14; j >= 0; --j)
 						unk34[i][j + 1] = unk34[i][j];
 
-					unk34[i][0].x = global.x1;
-					unk34[i][0].y = global.y1;
+					unk34[i][0].set(global.x1, global.y1);
 				}
 			}
 		} else if (param_1 == 175.0f) {
@@ -527,15 +529,11 @@ bool TConsoleStr::processGo(f32 param_1)
 				                            rect.getHeight() - 80);
 			}
 		} else {
-			unk28[0]->getPane()->hide();
-			if (unk2A8[0])
-				unk2A8[0]->stopCreateParticle();
-			unk28[1]->getPane()->hide();
-			if (unk2A8[1])
-				unk2A8[1]->stopCreateParticle();
-			unk28[2]->getPane()->hide();
-			if (unk2A8[2])
-				unk2A8[2]->stopCreateParticle();
+			for (int i = 0; i < 3; ++i) {
+				unk28[i]->getPane()->hide();
+				if (unk2A8[i])
+					unk2A8[i]->stopCreateParticle();
+			}
 
 			result = true;
 		}
