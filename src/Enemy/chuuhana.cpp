@@ -222,8 +222,7 @@ static inline int ChuuHanaSafeNodeNum(const TChuuHana* p)
 
 static inline TGraphNode* ChuuHanaSafeNode(const TChuuHana* p, int i)
 {
-	TGraphNode* node = ChuuHanaGraphNode(ChuuHanaGraphOf(p), i);
-	return node;
+	return ChuuHanaGraphNode(ChuuHanaGraphOf(p), i);
 }
 
 static int ChuuHanaBodyCallback(J3DNode* node, int param)
@@ -268,13 +267,16 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param)
 		f32 rollDeg = gpCurChuuHana->unk210;
 
 		// Project the world axis onto the joint's own column vectors.
-		// TODO: retail's local sits at 0x78, ours at 0x60: we reserve 0x18
-		// more between it and the three direction vectors (0x84..0xa8).
-		// A projection helper, if/else arms, ctor-argument ternaries and
-		// C-style len declarations are all inert or worse.
+		// Declaring the result ahead of the six scalars puts it at retail's
+		// 0x78, right under the three direction vectors (0x84..0xa8).
+		// TODO: retail loads the x and y columns top to bottom; the ctor
+		// evaluates its arguments right to left. Component stores and a
+		// by-reference column helper load in order but drop the vectors'
+		// 0x24 of slots (frame 0x118).
 		JGeometry::TVec3<f32> zDir(anmMtx[0][2], anmMtx[1][2], anmMtx[2][2]);
 		JGeometry::TVec3<f32> xDir(anmMtx[0][0], anmMtx[1][0], anmMtx[2][0]);
 		JGeometry::TVec3<f32> yDir(anmMtx[0][1], anmMtx[1][1], anmMtx[2][1]);
+		JGeometry::TVec3<f32> local;
 
 		f32 lenZ = zDir.squared();
 		f32 localZ = lenZ == 0.0f ? 0.0f : side.dot(zDir) / lenZ;
@@ -282,7 +284,7 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param)
 		f32 localY = lenY == 0.0f ? 0.0f : side.dot(yDir) / lenY;
 		f32 lenX = xDir.squared();
 		f32 localX = lenX == 0.0f ? 0.0f : side.dot(xDir) / lenX;
-		JGeometry::TVec3<f32> local(localX, localY, localZ);
+		local.set(localX, localY, localZ);
 
 		MTXRotAxisRad(roll, &local, (3.1415927f / 180.0f) * rollDeg);
 		MTXConcat(anmMtx, roll, anmMtx);
@@ -922,14 +924,17 @@ void TChuuHana::setGoal()
 // instruction-identically with the same +0x18 (retail likely does this).
 // Temporary TMsRange via ChuuHanaSafeNode/NodeNum closes KeepBalance but costs
 // ForceJumped; the raw GraphNode/GraphOf spellings fix reset and cost -0x18
-// in the other four.
+// in the other four. The named rand() index (+8) paired with the direct-return
+// ChuuHanaSafeNode (-8) closes ForceJumped and leaves the other three as they
+// were.
 void TChuuHana::setSafeGoal()
 {
 	unk1A4 = mCheckOnPanelTime;
 
 	TMsRange<int> range(0, ChuuHanaSafeNodeNum(this));
+	int index = range.rand();
 	JGeometry::TVec3<f32> point;
-	ChuuHanaSafeNode(this, range.rand())->getPoint((Vec*)&point);
+	ChuuHanaSafeNode(this, index)->getPoint((Vec*)&point);
 
 	TPathNode goal(point);
 	unkF4  = goal;
