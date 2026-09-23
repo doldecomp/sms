@@ -1592,6 +1592,8 @@ void TBossPakkunManager::load(JSUMemoryInputStream& stream)
 		initJParticle();
 }
 
+// TODO: instruction-exact; the frame is 0x38 short (0x180 vs 0x1b8), every
+// named slot uniformly low.
 DEFINE_NERVE(TNerveBPWait, TLiveActor)
 {
 	TBossPakkun* boss = (TBossPakkun*)spine->getBody();
@@ -1620,7 +1622,6 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 		spine->pushAfterCurrent(&TNerveBPVomit::theNerve());
 
 		TPathNode node(*gpMarioPos);
-		node.unk4.y = 0.0f;
 		boss->unk114.push(boss->unkF4);
 		boss->unkF4 = node;
 
