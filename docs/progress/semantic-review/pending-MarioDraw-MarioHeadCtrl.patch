@@ -1,0 +1,14 @@
+diff --git a/src/Player/MarioDraw.cpp b/src/Player/MarioDraw.cpp
+index 4987494d..367115ad 100644
+--- a/src/Player/MarioDraw.cpp
++++ b/src/Player/MarioDraw.cpp
+@@ -437,7 +437,8 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
+ 			s16 headAngle
+ 			    = gpMarioForCallBack->mUpperBodyParams.mFeelDeepHeadAngle.get();
+ 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
+-		} else if (gpMarioForCallBack->isWallInFront()) {
++		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_WAIT
++		           && gpMarioForCallBack->isWallInFront()) {
+ 
+ 			s16 headAngle = gpMarioForCallBack->mUpperBodyParams
+ 			                    .mFrontWallHeadAngle.get();

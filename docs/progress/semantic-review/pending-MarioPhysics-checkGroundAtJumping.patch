@@ -1,0 +1,48 @@
+diff --git a/src/Player/MarioPhysics.cpp b/src/Player/MarioPhysics.cpp
+index 3e8c9ac3..c6c5d7f1 100644
+--- a/src/Player/MarioPhysics.cpp
++++ b/src/Player/MarioPhysics.cpp
+@@ -414,13 +414,12 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
+ 				if (checkFlag(MARIO_FLAG_VISIBLE))
+ 					onFlag(MARIO_FLAG_UNK200);
+ 
+-				if (param_2 & 0x2) {
+-					BOOL canHang = (mHeldObject == nullptr && !onYoshi());
+-					if (canHang && mRoofPlane->isFence())
+-						roofCode = 4;
+-					else
+-						roofCode = 0;
+-				}
++				// Retail clears the roof code even without the hang flag.
++				if ((param_2 & 0x2) && (mHeldObject == nullptr && !onYoshi())
++				    && mRoofPlane->isFence())
++					roofCode = 4;
++				else
++					roofCode = 0;
+ 			}
+ 		}
+ 	}
+@@ -442,15 +441,14 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
+ 		wall2Passable = true;
+ 	}
+ 
+-	if ((param_2 & 0x1) && wall1Passable == 1 && wall2Passable == 0) {
+-		BOOL canHang = (mHeldObject == nullptr && !onYoshi());
+-		if (canHang == 1) {
+-			mWallPlane = wall2;
+-			if (hangonCheck(wall2, target, pos))
+-				wallCode = 3;
+-			else
+-				wallCode = 0;
+-		}
++	// A Mario who cannot hang falls through to the clash-angle test.
++	if ((param_2 & 0x1) && wall1Passable == 1 && wall2Passable == 0
++	    && (mHeldObject == nullptr && !onYoshi()) == 1) {
++		mWallPlane = wall2;
++		if (hangonCheck(wall2, target, pos))
++			wallCode = 3;
++		else
++			wallCode = 0;
+ 	} else if (wall1Passable == 0 || wall2Passable == 0) {
+ 		mWallPlane = wall1 != nullptr ? wall1 : wall2;
+ 		s16 diff   = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
