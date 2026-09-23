@@ -1814,6 +1814,9 @@ void init_sphere_glist()
 	sphere_pos_t   = (u8*)sphere_glist_p + 0x760;
 }
 
+// TODO: frame 8 short (0x130 vs 0x138): retail has an unused 8-byte named
+// slot between shinePos and local_2C (every named local sits 4 low here, the
+// low temps 4 low); the li order of the second quad's constants follows it.
 void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 {
 
@@ -1827,7 +1830,8 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 
 		Vec shinePos = (Vec) { 0.0f, 3600.0f, -7458.0f };
 
-		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(unk5E44 - 1));
+		int r31 = unk5E44;
+		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(r31 - 1));
 		f32 f31 = unk5E0C;
 
 		GXColor local_2C;
@@ -1835,6 +1839,7 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 
 		ReInitializeGX();
 
+		Mtx afStack_98;
 		Mtx local_c8;
 		Mtx afStack_f8;
 		MTXIdentity(afStack_f8);
@@ -1887,21 +1892,18 @@ void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 		GXPosition3s16(-1000, -1000, -200);
 		GXEnd();
 
-		GXColor local_28;
-		int r31    = unk5E44;
-		local_28.a = f32(0xff - unk5E45) / unk5E44 + 0.5f;
-		GXSetTevColor(GX_TEVREG0, local_28);
-		GXSetZMode(GX_TRUE, GX_GREATER, GX_TRUE);
+		local_2C.a = f32(0xff - r27) / r31 + 0.5f;
+		GXSetTevColor(GX_TEVREG0, local_2C);
+		GXSetZMode(GX_TRUE, GX_GREATER, GX_FALSE);
 		GXClearVtxDesc();
 		GXSetVtxDesc(GX_VA_POS, GX_INDEX16);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_RGBA4, 15);
 		GXSetArray(GX_VA_POS, sphere_pos_t, 6);
 		int iVar5 = 0;
 		do {
-			local_c8[0][0] = iVar5 * f30 + f31;
-			local_c8[1][1] = iVar5 * f30 + f31;
 			local_c8[2][2] = iVar5 * f30 + f31;
-			Mtx afStack_98;
+			local_c8[1][1] = iVar5 * f30 + f31;
+			local_c8[0][0] = iVar5 * f30 + f31;
 			MTXConcat(param_1, local_c8, afStack_98);
 			GXLoadPosMtxImm(afStack_98, GX_PNMTX0);
 			GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
