@@ -177,6 +177,21 @@ int TMapCollisionData::checkWalls(TBGWallCheckRecord* param_1) const
 	return iVar6;
 }
 
+// Edge test shared by the roof and ground lists. The four named corner
+// components give retail's 0x70 roof frame; declaring the z components first
+// gives its FPR pairing.
+// TODO: retail still loads a.x into f31 and evaluates (ax - x) first, and
+// keeps the list entry in r3 (flags in r6/r7); ground's frame is 8 short.
+static inline f32 MapCheckEdge(const JGeometry::TVec3<f32>& a,
+                               const JGeometry::TVec3<f32>& b, f32 x, f32 z)
+{
+	f32 az = a.z;
+	f32 ax = a.x;
+	f32 bz = b.z;
+	f32 bx = b.x;
+	return (az - z) * (bx - ax) - (ax - x) * (bz - az);
+}
+
 f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
                                      const TBGCheckList* head,
                                      const TBGCheckData** result)
@@ -188,19 +203,13 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
 		if (param_4 & 0x4 && data->isWaterThrough())
 			continue;
 
-		if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-		        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
-		    > 1.0f)
+		if (MapCheckEdge(data->mPoint1, data->mPoint2, x, z) > 1.0f)
 			continue;
 
-		if ((data->mPoint2.z - z) * (data->mPoint3.x - data->mPoint2.x)
-		        - (data->mPoint2.x - x) * (data->mPoint3.z - data->mPoint2.z)
-		    > 1.0f)
+		if (MapCheckEdge(data->mPoint2, data->mPoint3, x, z) > 1.0f)
 			continue;
 
-		if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-		        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
-		    > 1.0f)
+		if (MapCheckEdge(data->mPoint3, data->mPoint1, x, z) > 1.0f)
 			continue;
 
 		f32 tmp = (x * data->mNormal.x) + (z * data->mNormal.z)
@@ -265,19 +274,13 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 		if ((flags & IGNORE_WATER_SURFACE) && data->isWaterSurface())
 			continue;
 
-		if ((data->mPoint1.z - z) * (data->mPoint2.x - data->mPoint1.x)
-		        - (data->mPoint1.x - x) * (data->mPoint2.z - data->mPoint1.z)
-		    < -1.0f)
+		if (MapCheckEdge(data->mPoint1, data->mPoint2, x, z) < -1.0f)
 			continue;
 
-		if ((data->mPoint2.z - z) * (data->mPoint3.x - data->mPoint2.x)
-		        - (data->mPoint2.x - x) * (data->mPoint3.z - data->mPoint2.z)
-		    < -1.0f)
+		if (MapCheckEdge(data->mPoint2, data->mPoint3, x, z) < -1.0f)
 			continue;
 
-		if ((data->mPoint3.z - z) * (data->mPoint1.x - data->mPoint3.x)
-		        - (data->mPoint3.x - x) * (data->mPoint1.z - data->mPoint3.z)
-		    < -1.0f)
+		if (MapCheckEdge(data->mPoint3, data->mPoint1, x, z) < -1.0f)
 			continue;
 
 		f32 tmp
@@ -368,6 +371,8 @@ static f32 angle_between(const JGeometry::TVec3<f32>& a,
 // a.dot(b) in angle_between gave 0x10). Retail's named block is 0x24 taller
 // (a/b/c reserve slots) -- early declarations, by-value angle_between
 // parameters and `a = p - hit` are all worse. The rest is FPR scheduling.
+// Also inert: a/b/c declared after dir or before hit; angle_between with
+// fewer named results or marked inline.
 static bool bgIntersectLine(const TBGCheckData* data,
                             const JGeometry::TVec3<f32>& start,
                             const JGeometry::TVec3<f32>& end, bool front_only,
@@ -470,7 +475,8 @@ static bool LineInLineXZ(const JGeometry::TVec2<f32>& a0,
 // the bounds above the parameters (declaring the loop counters first, or the
 // bounds as named ints, changes nothing). Retail converts start.x/end.x twice
 // (once for the swap test) but start.z/end.z once, which the int swap below
-// reproduces.
+// reproduces. Grid bounds built by a TVec2<int>-returning helper give the
+// exact 0x510 frame but 96.3% (slot pairs and the same register swap).
 const TBGCheckData* TMapCollisionData::intersectLine(
     const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
     bool front_only, JGeometry::TVec3<f32>* hit_pos) const
