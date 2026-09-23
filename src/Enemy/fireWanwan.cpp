@@ -594,9 +594,10 @@ void TFireWanwanTailHit::init()
 	mIsOnFire = false;
 }
 
-// TODO: 98.6%. The node index for local_3c is a named int so getNode's
-// idx * 0.25f * 4.0f stays a runtime fctiwz of 4.0f as in the ROM (a literal
-// argument folds it to a constant 0x60 offset). Left: the ROM calls the weak
+// TODO: 96.3%. The ROM keeps getNode's idx * 0.25f * 4.0f as a runtime
+// fctiwz of 4.0f; a literal argument folds it to a constant 0x60 offset, and a
+// named `int idx = 4` reproduces it (98.6%) but is a forcing temporary, so the
+// real argument source is unknown. Also: the ROM calls the weak
 // *const* ArrayWrapper<Node>::size() and operator[] out of line for local_48
 // (reloading unkA4 for each), where ours inlines back(); TU-local const
 // helpers over the wrapper, the rubber or `this`, one or two levels deep, all
@@ -627,8 +628,7 @@ void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		unkBC->update();
 
 	if (mHolder != nullptr) {
-		int idx = 4;
-		JGeometry::TVec3<f32> local_3c = unkA4->getNode(idx)->mPos;
+		JGeometry::TVec3<f32> local_3c = unkA4->getNode(4)->mPos;
 		local_3c -= mOwner->mPosition;
 		SMS_CalcToDirMatrix(unk74, local_3c,
 		                    JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
