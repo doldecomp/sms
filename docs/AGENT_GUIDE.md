@@ -186,6 +186,31 @@ here, so run it yourself on each changed unit as part of the checklist below.
 `tools/check-weak-defined.py` is the whole-tree companion: it lists every `(func,weak)`/`(object,weak)` symbol in the map's closure section that no object under `build/GMSE01/src/` defines, split into `NOBODY` (no body in our tree at all — the link hazard that externalises a class's vtable) and `INLINED` (body exists in a header, retail kept an out-of-line copy — a caller inline-refusal lead).
 Same overrides: `NM=build/binutils/powerpc-eabi-nm build/venv/bin/python3 tools/check-weak-defined.py`.
 
+### Using `lever-search.py` (automatic lever search for near-exact functions)
+
+`tools/lever-search.py` closes near-exact functions (frame, slot or register residue with the instructions mostly right) by trying catalogue levers mechanically.
+It lexes the target function body, generates per-site rewrites (accessor/raw member and global forks, `!p`/`== nullptr`, int-type swaps, un-naming a single-use local, naming a call or receiver, declaration split/hoist/swap, TU-local direct-return forks and binders, parameter forks, compound assignment, split sums, `.set(x)`/`= x`), builds every single rewrite, then beam-combines the ones that move the object and re-roots on the best variant.
+Each variant is compiled with the unit's own `build.ninja` command inside a private shadow tree (symlinks with only the `.cpp` replaced), so the object is byte-identical to ninja's and **the worktree is never written**.
+Scores come from `objdiff-cli` against the retail object: fuzzy %, structural mismatches, slot mismatches, frame and slot-offset distance.
+An exact variant is re-checked against every other symbol and section of the unit and is saved as a patch only if nothing else regresses; nothing is applied.
+
+```sh
+# one function (exit 0 when an exact, regression-free patch was written)
+python3 tools/lever-search.py -u Enemy/rocket -f bind__7TRocketFv --out /tmp/ls
+# score an alternative copy of the unit instead of the tree's .cpp
+python3 tools/lever-search.py -u Enemy/rocket -f bind__7TRocketFv --source my_rocket.cpp
+# just list the generated candidates
+python3 tools/lever-search.py -u Enemy/rocket -f bind__7TRocketFv --list-cands
+# unattended over a TSV of (size, fuzzy, unit, function); resumable
+python3 tools/lever-search.py --list ranked.tsv --budget 90 --out /tmp/ls
+```
+
+Batch mode appends to `<out>/results.tsv` (unit, function, fuzzy before/after, distance, exact, status, builds, seconds, patch, levers) and skips rows already in it.
+Patches are `git apply`-able; review each one for plausibility before applying, and read the whole diff rather than the lever summary, which lists every step of the search chain including steps later undone.
+Useful knobs: `--budget` (seconds per function), `-j` (parallel shadow builds, default 3), `--levers acc->raw,raw->acc,...` to restrict the rewrite families, `--rounds` and `--depth` for the search, `--save-improved` to also keep the best non-exact variant.
+Throughput is about 4-9 builds per second on this machine with `-j 3`; a typical exact hit on a slot or frame residue costs 7-30 builds.
+It does not edit headers, does not invent code the body lacks (missing statements, inline temporaries of callees), and cannot fix control-flow or instruction-selection residues; the patch still needs the usual `ninja changes_all` and DOL-hash verification before committing.
+
 ### Always prefer using `m2c` for from-scratch decompilation
 
 [`m2c`](https://github.com/matt-kempster/m2c) produces a rough C-style draft decompilation of a function or an entire translation unit, and is the right starting point for new functions (as opposed to matching ones that are already very close).
