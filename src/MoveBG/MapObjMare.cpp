@@ -1036,13 +1036,18 @@ static inline MtxPtr MapObjMareGetAnmMtx0(const TMapObjBase* object)
 	return mtx;
 }
 
+// TODO: 99.8%, instructions exact; the C-style declaration order lands the
+// saved FPRs. Retail's `scale` sits 8 bytes lower (0x64) at equal frame.
+// Inert or frame-changing: raw getModel() at any binder site, raw mScaling in
+// the wake scale, wakeScale/scale declared at the top.
 void TMuddyBoat::calc()
 {
-	f32 z = mPosition.z;
-	f32 y = mPosition.y - getObjCollisionHeightOffset();
-	f32 waveY = y + gpMapObjWave->getWaveHeight(mPosition.x, z);
-	f32 yaw   = mRotation.y;
-	f32 x     = mPosition.x;
+	f32 x, waveY, yaw, y, z;
+	z     = mPosition.z;
+	y     = mPosition.y - getObjCollisionHeightOffset();
+	waveY = y + gpMapObjWave->getWaveHeight(mPosition.x, z);
+	yaw   = mRotation.y;
+	x     = mPosition.x;
 	MsMtxSetXYZRPH(MapObjMareGetAnmMtx0(this), x, waveY, z, 0,
 	               (s16)(182.04445f * yaw), 0);
 

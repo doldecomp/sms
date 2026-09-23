@@ -1180,6 +1180,10 @@ void TTinKoopa::checkTinKoopaMessage()
 	checkTinKoopaFirstFlameMessage();
 }
 
+// TODO: 99.8%, frame size exact. Retail's `pos` copy sits 8 bytes lower
+// (0x5c), compares the node in r28 rather than r3, and adds the wrap sum as
+// `f1 + f31`. Inert: swapped or `+=` sum, `from <= to`, a named limit;
+// SMS_GetMarioPos(), a named bool, or killer node first cost frame.
 void TTinKoopa::checkTinKoopaKillerApproachingMessage()
 {
 	for (int i = 0; i < mKillerManager->getActiveObjNum(); i++) {

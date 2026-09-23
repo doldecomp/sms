@@ -1059,6 +1059,10 @@ bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 tolerance,
 	return false;
 }
 
+// TODO: 99.5%, frame exact. Retail computes the z dot (0xbc block) before the
+// x dot inside the inlined getDir, and converts dir into f1 before scaling
+// into f28 (getNextGrip too). Inert: named dz/dx (breaks inlining), x/z
+// declaration and getter order, relative.dot(v), `k * dir`.
 f32 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>& pos,
                               const JGeometry::TVec3<f32>& offset) const
 {

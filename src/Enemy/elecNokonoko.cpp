@@ -930,6 +930,10 @@ BOOL TElecCarapace::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+// TODO: 99.6%, frame size exact. Retail holds axisX/axisZ/away.x in f4/f5/f6
+// (ours f6/f5/f4), and its TPathNode temporary sits 8 bytes lower (0x1c).
+// Inert: axis declaration orders, explicit/named TPathNode, a named goal ref;
+// raw mPosition drops 0x10 of frame.
 void TElecCarapace::reflect(THitActor* other)
 {
 	if (mReflector == other)
@@ -947,9 +951,9 @@ void TElecCarapace::reflect(THitActor* other)
 	MsVECNormalize((Vec*)&away, (Vec*)&away);
 
 	// Snap the bounce onto whichever world axis the hit came from.
-	f32 axisX = 0.0f;
-	f32 axisY = 0.0f;
 	f32 axisZ = 0.0f;
+	f32 axisY = 0.0f;
+	f32 axisX = 0.0f;
 	if (fabsf(away.z / away.x) > 1.0f) {
 		if (other->mPosition.z > mPosition.z)
 			axisZ = 1.0f;
