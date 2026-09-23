@@ -698,10 +698,8 @@ static inline void Hx_LineVtx(Vec* v, u32 color)
 }
 
 /// The black field outside the iris, drawn as a stack of horizontal lines.
-// TODO: only the sqrtf slot differs (retail 0xa4, ours 0xa8): retail has one
-// more 4-byte first-level temporary or named slot above it. Moving dy to
-// function scope, testing dy in the compare, a u8 colour parameter, a
-// two-vertex helper and the declaration order are all inert.
+// The (f32) cast on sqrtf's result gives it its own 4-byte temporary above
+// the sqrtf slot, which is what puts that slot at retail's 0xa4.
 static void Hxs1_Circle(f32 r)
 {
 	u32 y;
@@ -732,7 +730,7 @@ static void Hxs1_Circle(f32 r)
 			Hx_LineVtx(&p[0], 0xFF);
 			Hx_LineVtx(&p[1], 0xFF);
 		} else {
-			d.x = sqrtf(rr - (dy * dy));
+			d.x = (f32)sqrtf(rr - (dy * dy));
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
 			p[0].x = 0.0f;
 			p[1].x = hx.centerX - d.x;
