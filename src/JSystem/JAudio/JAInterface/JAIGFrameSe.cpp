@@ -25,6 +25,10 @@
 // declaration orders (reverse, all eleven rotations, twelve random) and eight
 // relocations of subsets into the `for (i...)` body, all 129 markers.
 // See docs/catalog/frame-gaps.md, "batch 145".
+// Pass c-jai (2026-09-23), ternary and named-sub-value levers: a ternary
+// `fVar3` (136 markers), a ternary `fVar1` over a named `scale` (151), both
+// (170, frame +8), and a named `s16 adjust` for getAdjustPriority (128): the
+// rotation does not move.
 void JAIBasic::checkNextFrameSe()
 {
 	JAISound sound;

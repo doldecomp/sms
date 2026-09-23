@@ -203,6 +203,15 @@ void JAIBasic::checkEntriedSeq()
 // loop with `sud->mTrackUpdate[j] = 0` inside it (939); hoisting `u32& r30`
 // above the `mPauseMode` test (242 markers); and `sud` as a
 // `JAISeqUpdateData&` with `sud.` at every use (two opcode diffs).
+//
+// Pass c-jai (2026-09-23): the instruction residue is in the 0x1000 block, not
+// the frame. Retail computes `seqParam + (u8)j * 32` into r23 before the
+// `mTrackPortUpdate` test and reads the port as `lhzx r23, (k * 2 + 0x1354)`;
+// our `u16* ports` folds 0x1354 into r23 instead. Inert or worse: `ports` as
+// an array reference, a row pointer, `&...[j][0]`, `[0] + j * 16`, a u16* cast,
+// declared inside the `if`, no `ports` (base computed after the `if`), a named
+// `bit`, and a `dataUpdate` pointer. Also inert: `portFlags` from `unk0->`,
+// swapped `seqParam`/`portFlags`, split `portFlags` declaration, named `dist`.
 void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 {
 	JAISeqUpdateData* sud = &unk0->mSeqTrackInfo[trackID];
