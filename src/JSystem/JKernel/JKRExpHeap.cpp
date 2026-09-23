@@ -219,6 +219,11 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 // Lib pass 2026-09-23, all no better: C-style top declarations (0x40 frame),
 // `int foundSize` (98.5), the `ALIGN_PREV(align - 1 + content, align)` offset
 // spelling (0x30 frame or 186 instructions), and `u32`/`u8*` content (184).
+// Unit pass c-jdr 2026-09-23, 28 more spellings, none better: C-style top
+// declarations crossed with u32/int foundSize and five offset spellings
+// (ALIGN_PREV with/without named content, one-line ALIGN_NEXT) are 94.6-96.4%,
+// and `(u32)align`, int aligned/offset, `~mask & (...)` and hand-spelled
+// rounding are 94.3-98.8% with the `nor` still in the pre-`stwu` slot.
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
 	size                    = ALIGN_NEXT(size, 4);

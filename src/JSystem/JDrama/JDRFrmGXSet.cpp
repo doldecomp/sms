@@ -56,6 +56,11 @@ using namespace JDrama;
 // far does that.
 // Lib pass 2026-09-23: two chained named copies with the early-return guard
 // still leave the 84 low operands (frame 0x138); a named `TDisplay*` is 86.6.
+// Unit pass c-jdr 2026-09-23, diagnostic only (not committable): appending an
+// empty `if (cue & 0x10) {}` after the block gives all 84 operands retail's
+// registers (100% code, only the 0xc0/0x130 frame left), so retail really has
+// a later read of `cue` that MWCC removes after colouring. Splitting the body
+// into two or three `if (cue & CUE_DRAW)` blocks is not it (88.9-93.9%).
 void TFrmGXSet::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {

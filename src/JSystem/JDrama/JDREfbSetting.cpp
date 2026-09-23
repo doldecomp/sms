@@ -100,6 +100,9 @@ bool JDrama::IssueGXSetCopyClear(JUtility::TColor clear_color, u32 clear_z,
 // `(int)flags`, `1 << 5` and `(flags >> 5) & 1` (99.0) for the third argument,
 // a named `const GXRenderModeObj*`, and a TU-local inline level above the call
 // taking the render mode, the flags, or all four arguments.
+// Unit pass c-jdr 2026-09-23: `&sample_pattern[0]`/`&vfilter[0]`,
+// `(bool)(flags & 0x20)` and `(GXBool)render_mode.aa` are identical; ternaries
+// into bool (77-94.5%) and `aa == GX_TRUE` (97.0%) are worse.
 void JDrama::IssueGXCopyDisp(void* param_1, const TRect& src_rect,
                              const GXRenderModeObj& render_mode,
                              JUtility::TColor clear_color, u32 clear_z,
