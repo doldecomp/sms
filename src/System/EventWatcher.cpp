@@ -527,6 +527,10 @@ static void evSetTimeLimit(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->push();
 }
 
+// TODO (also evSetPollutionIncreaseCount): instruction-exact, frame 0x58 vs
+// retail 0x70 with every slot 0x10 low. The dead getDataInt still reserves
+// slots: TSpcSlice(interp->pop()) as in evSetTimeLimit is +8, a bare pop()
+// or a named slice is smaller; getDataFloat, operator int are inert or worse.
 static void evSetAttentionTime(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
