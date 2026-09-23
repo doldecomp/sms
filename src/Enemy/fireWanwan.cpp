@@ -591,6 +591,13 @@ void TFireWanwanTailHit::init()
 	mIsOnFire = false;
 }
 
+// TODO: 96.3%. Two residues. The ROM indexes the node for local_3c with a
+// runtime fctiwz of 4.0f (idx * 0.25f * 4.0f left unfolded), where ours folds
+// getNode(4) to a constant 0x60 offset. And it calls the weak *const*
+// ArrayWrapper<Node>::size() and operator[] out of line for local_48 (reloading
+// unkA4 for each), where ours inlines back(); a TU-local const accessor
+// returning unk0[unk0.size() - 1] still inlines both, so the const context the
+// ROM had is unknown.
 void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	THitActor::perform(cue, graphics);
@@ -628,7 +635,9 @@ void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		local_48.y = 0.0f;
 		mPosition += local_48;
 
-		moveRequest(mPosition);
+		JGeometry::TVec3<f32> holderPos = mPosition;
+		holderPos.y = mHolder->mPosition.y;
+		mHolder->moveRequest(holderPos);
 
 		unk74.setTrans(mPosition);
 
