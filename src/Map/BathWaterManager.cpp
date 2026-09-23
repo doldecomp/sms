@@ -1892,7 +1892,10 @@ void TBathWaterManager::throwMario(f32 param_1)
 	SMS_ThrowMario(vel, vel.length());
 }
 
-// TODO: needs more matching
+// TODO: needs more matching. Retail starts a sqrt of the squared axis length
+// and discards it (a compare against 0.0f with no branch); a discarded
+// `TUtil<f32>::sqrt(sq);` reproduces it (perform 98.06 -> 98.41) but is not
+// applied as a statement with no effect.
 static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
                                JGeometry::TVec3<f32>* out)
 {
