@@ -111,8 +111,9 @@ inline void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 //      and re-reading the global in the default arm are all worse.
 //      The f29/f30 pair (item 2 and the two block locals) is inert to
 //      declaration order, C-style declarations and initialised declarations.
-// The residue left is 4 bytes: `ctrlTowerCamera_`'s `Vec v` sits at 0x74 here
-// against retail's 0x70, i.e. 4 bytes of pool too many below it.
+// The 4-byte `Vec v` slot (0x74 vs retail's 0x70) is CLOSED by reading the
+// camera Mario through SMSGetCameraMario() and the held object raw; items 2
+// and 3 above are what is left.
 static inline TCameraKindParam* CNParams(const CPolarSubCamera* p)
 {
 	TCameraKindParam* v = p->mCurrentParams;
@@ -139,7 +140,7 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 	unk250 = 0.0f;
 
 	if (mTargetFreezeFrames == 0)
-		mCurrentTarget.mTarget.set(gpCameraMario->unk0);
+		mCurrentTarget.mTarget.set(SMSGetCameraMario()->unk0);
 
 	if (mPosFreezeFrames == 0) {
 		if (unk64 & CAMERA_FLAG_UNK4) {
@@ -161,7 +162,7 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 		} else if (mMode == CAMERA_MODE_CANCAN) {
 			if (isChangeToCancanCamera_())
 				calcNoticeTargetYrot_(
-				    ((TFireWanwanTailHit*)gpMarioOriginal->getHeldObject())
+				    ((TFireWanwanTailHit*)gpMarioOriginal->mHeldObject)
 				        ->getHostPos());
 		} else {
 			if (!SMS_IsMarioTouchGround4cm()) {
@@ -224,7 +225,7 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 						fVar4 = 100.0f;
 						break;
 					default:
-						fVar4 = gpCameraMario->mFrameMoveDistHorizontal;
+						fVar4 = SMSGetCameraMario()->mFrameMoveDistHorizontal;
 						break;
 					}
 					f32 kek = unk250 * f30 * f29 * fVar4 * unk288;
