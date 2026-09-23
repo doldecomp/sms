@@ -2537,9 +2537,27 @@ void TMario::checkWet()
 	MarioMoveWaterManager()->emitRequest(*unk158);
 }
 
-// TODO: the frame is 0x10 short; updateUnk1C88's inline takes
-// &mNozzleList[0]->...mAmountMax before calling getCurrentNozzle (a
-// WaterGun.hpp shape), and retail reuses the sin index for JMASCos.
+// TWaterGun::updateUnk1C88 as retail expands it here: the decrement rate is
+// read inside the one expression rather than into a named `decRate`, so
+// &mNozzleList[0]->mAmountMax is taken before the getCurrentNozzle call
+// (+2.6 in gunExec). Parked here because WaterGun.hpp is shared: the header
+// copy should lose its `decRate` local once its other callers are measured.
+static inline void MarioMoveUpdateUnk1C88(TWaterGun* gun, u8 emittedWater)
+{
+	gun->mIsEmitWater = emittedWater;
+	gun->unk1C88
+	    += 10.0f
+	       * ((f32)emittedWater
+	          * (f32)((const TWaterGun*)gun)
+	                ->getCurrentNozzle()
+	                ->mEmitParams.mDecRate.get()
+	          / gun->mNozzleList[0]->mEmitParams.mAmountMax.get());
+}
+
+// TODO: the frame is 0x18 short. The Spray loop's temporaries sit 0x14-0x2c
+// low (retail: operator* copy 0x78, operator+ copy 0x84, scaled 0xbc,
+// local_90 0xc8, local_34 0xd4, with a codeless 0x2c gap at 0x90); naming
+// the scaled vector or declaring local_90 early shrinks the frame instead.
 void TMario::gunExec()
 {
 	// TODO: retail materialises onYoshi() as a bool in its own saved register
@@ -2552,7 +2570,7 @@ void TMario::gunExec()
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD) && !onYoshi())
 		return;
 
-	mWaterGun->updateUnk1C88(0);
+	MarioMoveUpdateUnk1C88(mWaterGun, 0);
 	mWaterGun->triggerPressureMovement(*unk108);
 
 	offFlag(MARIO_FLAG_UNK_80);
