@@ -4541,12 +4541,11 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 
 	JUTRect bounds = unk2A0[0]->getBounds();
 	f32 hidden     = 47.0f * (1.0f - unk2B8) - 0.5f;
-	int y          = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden;
-	// TODO: retail computes y + 1 into one register and clamps a copy of it
-	// (`addic.; addi r5, r3, 0`); a one-statement `+ 1` or a clamped ternary
-	// argument are both worse. The frame is also 0x50 short.
-	y += 1;
-	if (y < 0)
+	int top        = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden;
+	// TODO: instruction-exact; the frame is 0x50 short (0x1c8 against 0x218).
+	top += 1;
+	int y = top;
+	if (top < 0)
 		y = 0;
 
 	JUTTexture* texture = unk2A0[0]->mTextures[0];
