@@ -190,11 +190,9 @@ void TMovieDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	OSResumeThread(&gSetupThread);
 }
 
-// TODO: the tail wants TTHPRender's 0x10/0x18 fields as two
-// JGeometry::TVec2<u32> members, each assigned from a TVec2 temporary
-// (thpRender->pos = TVec2<u32>((W - xSize) / 2, (H - ySize) / 2); then the
-// size likewise). Measured through a temporary cast: 97.4 -> 99.7%, every
-// instruction right, frame 8 low. Needs a THPRender.hpp member change.
+// TODO: frame 0x310 against retail 0x318; every instruction is right and
+// only stack slots differ (8 bytes missing below the THP locals). Naming
+// the pos/size temporaries or keeping a TBox2 is worse (98.1-98.6%).
 int TMovieDirector::rsetup()
 {
 	void* subtitleArcBlob
@@ -292,12 +290,10 @@ int TMovieDirector::rsetup()
 	THPVideoInfo videoInfo;
 	THPPlayerGetVideoInfo(&videoInfo);
 
-	JGeometry::TBox2<u32> videoRect(
+	thpRender->mPos = JGeometry::TVec2<u32>(
 	    (SMSGetGameRenderWidth() - videoInfo.xSize) / 2,
-	    (SMSGetGameRenderHeight() - videoInfo.ySize) / 2, videoInfo.xSize,
-	    videoInfo.ySize);
-	thpRender->setParams(videoRect.i.x, videoRect.i.y, videoRect.f.x,
-	                     videoRect.f.y);
+	    (SMSGetGameRenderHeight() - videoInfo.ySize) / 2);
+	thpRender->mSize = JGeometry::TVec2<u32>(videoInfo.xSize, videoInfo.ySize);
 
 	DVDChangeDir("/");
 

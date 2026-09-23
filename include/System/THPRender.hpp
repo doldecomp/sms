@@ -4,6 +4,7 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JDrama/JDRGraphics.hpp>
 #include <dolphin/gx/GXTransform.h>
+#include <JSystem/JGeometry/JGVec2.hpp>
 
 #include <MarioUtil/DrawUtil.hpp>
 #include <THPPlayer/THPPlayer.h>
@@ -16,19 +17,9 @@ public:
 
 	s32 getFrameNumber() const { return frameNumber; }
 
-	void setParams(u32 a, u32 b, u32 c, u32 d)
-	{
-		x     = a;
-		y     = b;
-		polyW = c;
-		polyH = d;
-	}
-
 public:
-	/* 0x10 */ u32 x;
-	/* 0x14 */ u32 y;
-	/* 0x18 */ u32 polyW;
-	/* 0x1c */ u32 polyH;
+	/* 0x10 */ JGeometry::TVec2<u32> mPos;
+	/* 0x18 */ JGeometry::TVec2<u32> mSize;
 	/* 0x20 */ s32 frameNumber;
 };
 
