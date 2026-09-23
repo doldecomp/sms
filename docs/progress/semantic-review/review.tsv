@@ -72,7 +72,7 @@ mario/Enemy/BossHanachanSub	BHSCalcRevisionDistXZByRotateZ(float, float, float, 
 mario/GC2D/SelectShine2	TSelectShineManager::perform(unsigned long, JDrama::TGraphics*)	94.07	EQUIVALENT	cCenter referenced through a section symbol; same object
 mario/Enemy/bossgesso	TBossGesso::changeAllTentacleState(int)	94.12	EQUIVALENT	x==3||x==4 compiled as unsigned range (x-3)<=1
 mario/Player/WaterGun	TNozzleBase::emit(int)	94.15	EQUIVALENT	array element formed as base+0x1c68+i*4 either way; JMA sin/cos shift CSE; stores identical
-mario/NPC/NpcParts	TNpcParts::TNpcParts(unsigned long, const J3DGXColorS10*, TBaseNPC*)	94.19	BUG	motion blend for case 0x4000010 tested (i==0 && j==9), never true; retail tests j==0 then i==9. Fixed; fuzzy 94.19 -> 94.17 (the old cmpwi r22,0 matched retail text while testing the wrong variable)
+mario/NPC/NpcParts	TNpcParts::TNpcParts(unsigned long, const J3DGXColorS10*, TBaseNPC*)	94.19	BUG	motion blend for case 0x4000010 tested (i==0 && j==9), never true; retail tests j==0 then i==9. Fix PENDING (docs/progress/semantic-review/pending-npcparts-fix.patch): fuzzy 94.19 -> 94.17 conflicts with the no-regression rule; awaiting a decision
 mario/Enemy/Koopa	TKoopaFlame::control()	94.33	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
 mario/Enemy/koopajr	TKoopaJrSubmarine::init(TLiveManager*)	94.44	EQUIVALENT	joint name/index tables reached through their own symbols vs retail blob+offset; same nerve dtor-chain object
 mario/MoveBG/MapObjMamma	TLeanMirror::controlShake()	94.44	EQUIVALENT	empty SMatrix34C ctor call omitted
