@@ -59,23 +59,29 @@ DECLARE_KOOPA_NERVE(TNerveKoopaWait, TNerveKoopaTurn)
 // These two nerves' execute symbols are weak, so the bodies were written in
 // the class. They need the complete TKoopa, which is why the whole nerve set
 // lives in this header rather than in Koopa.hpp.
-// rather than in KoopaNerve.hpp with the other nine.
+static inline bool KoopaTurnL(TKoopa* koopa, f32 diff)
+{
+	if (diff < -koopa->getTurnSpeed())
+		return koopa->turnBody(-koopa->getTurnStep());
+	else if (diff < 0.0f)
+		return koopa->turnBody(diff);
+	return false;
+}
+static inline bool KoopaTurnR(TKoopa* koopa, f32 diff)
+{
+	if (diff > koopa->getTurnSpeed())
+		return koopa->turnBody(koopa->getTurnStep());
+	else if (diff > 0.0f)
+		return koopa->turnBody(diff);
+	return false;
+}
 class TNerveKoopaTurnR : public TNerveKoopaTurn {
 public:
 	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const
 	{
 		TKoopa* koopa = (TKoopa*)spine->getBody();
-		f32 diff
-		    = KoopaWrapDegrees(koopa->mTargetDir - koopa->mRotation.y);
-		bool turned;
-		if (diff > koopa->getParam()->turnSpeed.get())
-			turned = koopa->turnBody(koopa->getParam()->turnSpeed.get());
-		else if (diff > 0.0f)
-			turned = koopa->turnBody(diff);
-		else
-			turned = false;
-
-		if (turned)
+		if (KoopaTurnR(koopa,
+		               KoopaWrapDegrees(koopa->mTargetDir - koopa->mRotation.y)))
 			return FALSE;
 		return TRUE;
 	}
@@ -92,17 +98,8 @@ public:
 	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const
 	{
 		TKoopa* koopa = (TKoopa*)spine->getBody();
-		f32 diff
-		    = KoopaWrapDegrees(koopa->mTargetDir - koopa->mRotation.y);
-		bool turned;
-		if (diff < -koopa->getParam()->turnSpeed.get())
-			turned = koopa->turnBody(-koopa->getParam()->turnSpeed.get());
-		else if (diff < 0.0f)
-			turned = koopa->turnBody(diff);
-		else
-			turned = false;
-
-		if (turned)
+		if (KoopaTurnL(koopa,
+		               KoopaWrapDegrees(koopa->mTargetDir - koopa->mRotation.y)))
 			return FALSE;
 		return TRUE;
 	}

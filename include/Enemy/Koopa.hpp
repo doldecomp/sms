@@ -252,21 +252,26 @@ public:
 	// UNUSED, 0xc in the map, so it lives in the .cpp.
 	TKoopaParams* getParam() const;
 
+	// No map symbols: header inlines. The Turn nerves reach turnBody through
+	// KoopaTurnL/KoopaTurnR, so getTurnAnim puts
+	// TEnemyManager::getSaveParam() at depth 5 there, where retail `bl`s it;
+	// the clamped turnBody argument needs the extra getTurnStep level for the
+	// same, while the condition's getTurnSpeed read stays inline at depth 4.
+	f32 getTurnAnim() const { return getParam()->turnAnim.get(); }
+	f32 getTurnSpeed() const { return getParam()->turnSpeed.get(); }
+	f32 getTurnStep() const { return getTurnSpeed(); }
+
 	// TNerveKoopaTurnL and TNerveKoopaTurnR both expand this: the redundant
 	// second `delta > 0` test in each of them is the inlined body's own.
-	// It has no map symbol of its own, so it was a header inline.
-	// TODO: the ROM also `bl`s TEnemyManager::getSaveParam() for both
-	// turnAnim reads here and for the Turn nerves' clamped-argument
-	// turnSpeed read (the condition's read stays inline), and its frame is
-	// 0x1a8 against our 0xd0; named locals in getParam or in the wrap only
-	// grow the frame, and another level above turnBody takes it out of line.
+	// TODO: code matches, but retail's Turn nerve frames are 0x1a8/0x1a0
+	// against our 0x90 (a named diff local in the nerve is inert).
 	bool turnBody(f32 delta)
 	{
 		if (delta > 0.0f)
-			changeAnm(KOOPA_ANM_TURN_R, 0, delta * getParam()->turnAnim.get());
+			changeAnm(KOOPA_ANM_TURN_R, 0, delta * getTurnAnim());
 		else
 			changeAnm(KOOPA_ANM_TURN_L, 0,
-			          -delta * getParam()->turnAnim.get());
+			          -delta * getTurnAnim());
 		mRotation.y = KoopaModDirection(mRotation.y + delta, -180.0f, 180.0f);
 		return true;
 	}
