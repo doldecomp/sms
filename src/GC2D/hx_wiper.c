@@ -1079,6 +1079,8 @@ static void Hx_GameOver(void)
 
 	case 4: {
 		u32 color;
+		f32 x2;
+		f32 y2;
 
 		if (Hx_TimerCountDown() == 0) {
 			hx.timer = 100;
@@ -1088,16 +1090,18 @@ static void Hx_GameOver(void)
 		alpha += 8;
 		Hx_CameraInit();
 		Hx_GxInit(0, 1);
+		y2 = hx.height - 100;
+		x2 = hx.width - 100;
 		color = alpha | 0xFF000000;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(100.0f, 100.0f, 0.0f);
 		GXColor1u32(color);
-		GXPosition3f32(hx.width - 100, 100.0f, 0.0f);
+		GXPosition3f32(x2, 100.0f, 0.0f);
 		GXColor1u32(color);
-		GXPosition3f32(hx.width - 100, hx.height - 100, 0.0f);
+		GXPosition3f32(x2, y2, 0.0f);
 		GXColor1u32(color);
-		GXPosition3f32(100.0f, hx.height - 100, 0.0f);
+		GXPosition3f32(100.0f, y2, 0.0f);
 		GXColor1u32(color);
 		break;
 	}
