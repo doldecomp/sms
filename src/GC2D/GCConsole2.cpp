@@ -2185,9 +2185,10 @@ void TGCConsole2::startCameraDemo()
 // pane set or the timings, so it stays a stub rather than a guess.
 void TGCConsole2::resetMoveTank() { }
 
-// TODO: frame 0xa0, retail 0xc0; retail stacks the three JUTPoint temps
-// top-down (4th argument highest), the TColor stride class of startInsertLife.
-// Named JUTPoint locals in either order are inert.
+// TODO: frame 0xa8, retail 0xc0; the tank block is startAppearTank() inlined
+// (identical code), but retail stacks its three JUTPoint temps top-down with
+// 0x14 more low region below them, where the standalone startAppearTank stacks
+// them bottom-up. Named JUTPoint locals in either order are inert.
 void TGCConsole2::endCameraDemo()
 {
 	if (unk39 || !unk50)
@@ -2200,18 +2201,8 @@ void TGCConsole2::endCameraDemo()
 
 	unk50 = 0;
 
-	if (!unk2F8->isInterpolatorAtZero() && !unk45
-	    && !TFlagManager::smInstance->getBool(0x30002)) {
-		unk45 = 1;
-		unk59 = 1;
-		unk7C = 0;
-		unk2F8->getPane()->show();
-		unk2F8->setPaneOffset(unk98, 0, 0, 0, 465 - unk2F8->mInitialBounds.y1);
-		unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
-		                        JUTPoint(0, -30));
-		unk274->getPane()->hide();
-		unk29C->getPane()->hide();
-	}
+	if (!unk2F8->isInterpolatorAtZero())
+		startAppearTank();
 
 	unk40 = 1;
 	unk41 = 0;
@@ -2556,7 +2547,8 @@ void TGCConsole2::startAppearTelop(bool param_1)
 		// TODO: the index/base registers are swapped, and the frame is 0x30
 		// short (0xf0 retail; J2DPrint sits at 0x5c, ours 0x3c): a missing
 		// inline level, not a lever. Entry-pointer, named-index, named-loader
-		// and `data + offset` spellings were inert or worse.
+		// and `data + offset` spellings were inert or worse, as were raw
+		// unk4, a (u16) index, and naming the text offset first.
 		const u8* messageText
 		    = &unk530->getMessageData()[unk530->unk8[unk570[unk558] & 0xffff]
 		                                    .mTextOffset];
@@ -2804,9 +2796,11 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	if (unk10 != 0) {
 		if (unk3F4 == 0xffffffff) {
 			unk3F4 = messageID;
-			// TODO: the ROM compares unk3E0 with itself here (`cmplw r4, r4`),
-			// so the middle term is always true; a literal self-compare is
-			// folded away, so the original spelled it some other way.
+			// TODO: the ROM compares unk3E0 with itself here (`cmplw r4, r4`):
+			// this is an inlined `startDisappearBalloon(unk3E0, false)` (its
+			// param_1 != unk3E0 test). Calling it with the dont_inline pragma
+			// removed takes this to 99.8% (frame 0x18 short only), but pauseIn
+			// and perform then inline it too where retail keeps a `bl`.
 			if (unk3F4 != 0xffffffff || (unk3E0 == unk3E0 && unk3E4 == 0)) {
 				unk3B8->hide();
 				unk48 = 0;
@@ -2866,7 +2860,9 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 
 // TODO: retail adds unk26A + offset (add r0, r26A, rneg) where we emit the
 // operands swapped; the pauseOut expansion also swaps r25/r26 on the unk160
-// pane. Inert: named/unnamed sum, +=, s16/int casts, raw unk26A, ~y2, -y2-1.
+// pane. Inert: named/unnamed sum, +=, s16/int casts, raw unk26A, ~y2, -y2-1,
+// a named s16 unk26A local, a TExPane hide-offset helper (+8 frame), and
+// `getUnk26A() - (y2 + 1)` (emits subf).
 void TGCConsole2::startDisappearStar()
 {
 	int offset = -(getUnk140()->mInitialBounds.y2 + 1);
@@ -3609,7 +3605,11 @@ void TGCConsole2::countShine()
 // r31, the 0x4330 conversion word in r30). The shift is uniform, so it is low
 // region. Inert: no blueTotal local, one shared flag counter, the emitters
 // moved into a TU-local inline helper, a const-reference digit value; the
-// per-site emitCounterParticle helper rebuilds the rect and costs 20 points.
+// per-site emitCounterParticle helper rebuilds the rect and costs 20 points;
+// a fresh JUTRect and/or TVec3 for the second emitter (-4..-20 points), a
+// shared loop counter, a ternary clamp. The `-=` keeps blueCoins in the loop
+// counter's register as retail does; the second emitter's `subf` width still
+// lands after the x1 conversion store where retail has it before.
 void TGCConsole2::countBlueCoin()
 {
 	int blueTotal = TFlagManager::getInstance()->getFlag(0x40001);
@@ -3626,7 +3626,8 @@ void TGCConsole2::countBlueCoin()
 			if (TFlagManager::smInstance->getFlag(0x10000 + flag) != 0)
 				++spentBlueCoins;
 
-		int blueCoins = unk168 - spentBlueCoins * 10;
+		int blueCoins = unk168;
+		blueCoins -= spentBlueCoins * 10;
 		if (blueCoins < 0)
 			blueCoins = 0;
 
