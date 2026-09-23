@@ -1438,30 +1438,32 @@ void TMammaYacht::initMapObj()
 	mFlag->init("MammaYacht00");
 }
 
-// TODO: every instruction matches; the frame is 0x30 short (0x78 retail).
+// TODO: every instruction matches; the frame is 8 short (0x70 vs 0x78). Each
+// accessor site below is +8; startStateTimer(), a null test on the ground
+// actor and single-site subsets are inert or -8.
 void TSandBird::control()
 {
 	TJointCoin::control();
 
-	gpMSound->startSoundActor(MSD_SE_EN_SANDBIRD_CRY, &mPosition, 0, nullptr,
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_SANDBIRD_CRY, &mPosition, 0, nullptr,
 	                          0, 4);
-	gpMSound->startSoundSystemSE(MSD_SE_ENV_SANDBIRD_WIND, 0, nullptr, 0);
+	SMSGetMSound()->startSoundSystemSE(MSD_SE_ENV_SANDBIRD_WIND, 0, nullptr, 0);
 
-	for (int i = 0; i < unk13C; i++) {
+	for (int i = 0; i < getObjNum(); i++) {
 		if (unk140[i]->isActorType(0x2000000E)
 		    || unk140[i]->isActorType(0x40000023)) {
 			gpMarioParticleManager->emitAndBindToPosPtr(
-			    0x159, &unk140[i]->mPosition, 1, unk140[i]);
+			    0x159, &unk140[i]->getPosition(), 1, unk140[i]);
 			gpMarioParticleManager->emitAndBindToPosPtr(
-			    0x15A, &unk140[i]->mPosition, 1, unk140[i]);
+			    0x15A, &unk140[i]->getPosition(), 1, unk140[i]);
 		}
 	}
 
 	if (!gpCamera->isDemoCamera() && !mHelpShown) {
-		const TLiveActor* actor = (*gpMarioGroundPlane)->getActor();
+		const TLiveActor* actor = SMS_GetMarioGroundPlane()->getActor();
 		if (actor) {
 			if (actor->isActorType(0x400002C9)) {
-				gpMarDirector->getConsole()->startAppearBalloon(0x2C, false);
+				SMSGetMarDirector()->getConsole()->startAppearBalloon(0x2C, false);
 				mStateTimer = 2400;
 				mHelpShown  = true;
 			}
@@ -1470,7 +1472,7 @@ void TSandBird::control()
 
 	if (!mHelpHidden && mHelpShown) {
 		if (!isStateTimerEngaged()) {
-			gpMarDirector->getConsole()->startDisappearBalloon(0x2C, false);
+			SMSGetMarDirector()->getConsole()->startDisappearBalloon(0x2C, false);
 			mHelpHidden = true;
 		}
 	}
