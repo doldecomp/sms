@@ -1394,7 +1394,8 @@ ShadowUtilRequestPos(const TCircleShadowRequest& request)
 void TMBindShadowManager::forceRequest(const TCircleShadowRequest& param_1,
                                        u32 param_2)
 {
-	JGeometry::TVec3<f32> delta = ShadowUtilRequestPos(param_1);
+	JGeometry::TVec3<f32> delta;
+	delta = ShadowUtilRequestPos(param_1);
 	delta -= gpCamera->getUnk124();
 	f32 dist = delta.squared();
 
@@ -1518,7 +1519,8 @@ void TMBindShadowManager::calcVtx()
 			scale.z    = 1.0f;
 
 			if (oldPos.x >= pos.x && !(oldPos.z < pos.z)) {
-				JGeometry::TVec3<f32> base = oldPos;
+				JGeometry::TVec3<f32> base;
+				base = oldPos;
 				done                       = true;
 
 				f32 dx = pos.x;

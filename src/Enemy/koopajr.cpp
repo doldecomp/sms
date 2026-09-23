@@ -909,7 +909,8 @@ void TKoopaJrSubmarine::calcRootMatrix()
 		TPosition3f offset;
 		offset.translation(center);
 
-		JGeometry::TVec3<f32> trans(center);
+		JGeometry::TVec3<f32> trans;
+		trans = center;
 		trans.negate();
 		trans.add(mPosition);
 

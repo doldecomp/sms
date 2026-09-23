@@ -283,7 +283,8 @@ void TKumokun::bind()
 		local_11C += local_15C;
 		local_11C += local_150;
 
-		JGeometry::TVec3<f32> local_110 = local_11C;
+		JGeometry::TVec3<f32> local_110;
+		local_110 = local_11C;
 		bVar7 |= unk1E8->checkWalls(&local_110, mWallRadius);
 
 		JGeometry::TVec3<f32> local_f8 = local_110 - mPosition;

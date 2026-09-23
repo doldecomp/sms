@@ -381,7 +381,8 @@ void TMapObjBall::boundByActor(THitActor* param_1)
 	// A falling ball that lands on Mario's head bounces off him.
 	if (param_1->isActorType(0x80000001)
 	    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
-		JGeometry::TVec3<f32> vel(mVelocity);
+		JGeometry::TVec3<f32> vel;
+		vel = mVelocity;
 		if (JGeometry::TVec3<f32>(vel).y < 0.0f
 		    && 130.0f + SMS_GetMarioPos().y < mPosition.y + mBodyRadius) {
 			mVelocity.y = unk160 * -JGeometry::TVec3<f32>(vel).y;
@@ -1336,7 +1337,8 @@ void TResetFruit::control()
 		}
 
 		{
-			JGeometry::TVec3<f32> vel(mVelocity);
+			JGeometry::TVec3<f32> vel;
+			vel = mVelocity;
 			if (!vel.isZero() || mGroundPlane->getActor())
 				calcCurrentMtx();
 		}

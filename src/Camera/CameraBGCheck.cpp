@@ -167,7 +167,8 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 			for (int i = 0; i < n; ++i) {
 				TBGCheckData* wall = record.mResultWalls[i];
 				if (should_clip_fabricated(wall)) {
-					JGeometry::TVec3<f32> posArg = mCurrentTarget.mPosition;
+					JGeometry::TVec3<f32> posArg;
+					posArg = mCurrentTarget.mPosition;
 					JGeometry::TVec3<f32> posCam = posArg;
 					f32 planeDist = wall->getPlaneDistance();
 					f32 sd        = posCam.dot(wall->mNormal) + planeDist;

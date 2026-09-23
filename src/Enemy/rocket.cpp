@@ -321,7 +321,8 @@ void TRocket::setDeadAnm()
 	// TODO: the ROM reads mDir.value here and throws it away, exactly like
 	// the dead half of TPopo::explosion's direction flip. Reconstructed as
 	// the leftover copy; the flip itself is gone.
-	JGeometry::TVec3<f32> dir(manager->mExplosionWater->mDir.value);
+	JGeometry::TVec3<f32> dir;
+	dir = manager->mExplosionWater->mDir.value;
 	manager->mExplosionWater->mPos.value = pos;
 	gpModelWaterManager->emitRequest(*manager->mExplosionWater);
 

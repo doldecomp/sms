@@ -865,7 +865,8 @@ bool TBaseNPC::npcMadding()
 			// of this body.
 			JGeometry::TVec3<f32> axis = SMS_GetMarioPos();
 			axis -= getPosition();
-			JGeometry::TVec3<f32> copy  = axis;
+			JGeometry::TVec3<f32> copy;
+			copy = axis;
 			JGeometry::TVec3<f32> copy2 = copy;
 			JGeometry::TVec3<f32> copy3;
 			copy3.set(copy2);

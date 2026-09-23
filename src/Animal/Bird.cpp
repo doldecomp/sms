@@ -537,7 +537,8 @@ bool TAnimalBird::doLanding(bool takeoff)
 
 	mLinearVelocity = acceleration;
 
-	JGeometry::TVec3<f32> velocity = mVelocity;
+	JGeometry::TVec3<f32> velocity;
+	velocity = mVelocity;
 	JGeometry::TVec3<f32> forward(0.0f, 0.0f, velocity.length());
 	forward.scale(getSaveParams()->mLandingFric.get());
 	SMS_Eular2Quat(mRotation).rotate(forward, forward);

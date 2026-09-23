@@ -611,7 +611,8 @@ void TPopo::walkBehavior(int param_1, f32 param_2)
 			mPosition.y += 0.2f * mVelocity.y;
 	}
 
-	JGeometry::TVec3<f32> vel(mVelocity);
+	JGeometry::TVec3<f32> vel;
+	vel = mVelocity;
 	mRollAngle += 1.0f;
 	if (mSpine->getCurrentNerve() == &TNervePopoAttack::theNerve())
 		mRollAngle += 2.0f;

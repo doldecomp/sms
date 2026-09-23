@@ -1351,17 +1351,20 @@ void TBGTentacle::calcAttackGuideAnm()
 	if (mState != 1 && mState != 8 && mState != 10)
 		return;
 
-	JGeometry::TVec3<f32> local_30 = getFirstNode()->getPosition();
+	JGeometry::TVec3<f32> local_30;
+	local_30 = getFirstNode()->getPosition();
 	// Naming the two components retail keeps in f30/f31 across the two calls
 	// below; see the TODO above MsMtxSetTRS.
 	f32 f31 = local_30.z;
 	f32 f30 = local_30.y;
 
-	JGeometry::TVec3<f32> local_3c = unk84;
+	JGeometry::TVec3<f32> local_3c;
+	local_3c = unk84;
 	local_3c.x -= local_30.x;
 	local_3c.y -= f30;
 	local_3c.z -= f31;
-	JGeometry::TVec3<f32> local_b4 = MsGetRotFromZaxis(local_3c);
+	JGeometry::TVec3<f32> local_b4;
+	local_b4 = MsGetRotFromZaxis(local_3c);
 
 	f32 guideScale;
 	if (mState == 10) {

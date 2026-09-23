@@ -152,7 +152,8 @@ void TBossHanachan::init(TLiveManager* manager)
 	mHead = new TBossHanachanPartsHead(this, "ボスハナチャンの頭");
 	mMActor = mHead->mMActor;
 	mCollisionPosition = mPosition;
-	JGeometry::TVec3<f32> bodyPosition = mCollisionPosition;
+	JGeometry::TVec3<f32> bodyPosition;
+	bodyPosition = mCollisionPosition;
 	s16 angle = DEG2SHORTANGLE(mRotation.y);
 	const f32& headLength = mCommonParams->mSLHeadLength.get();
 	f32 sine = JMASSin(angle);
@@ -307,7 +308,8 @@ void TBossHanachan::bind()
 	BossHanachanMainGetMap()->isTouchedOneWallAndMoveXZ(&mCollisionPosition.x,
 	    mCollisionPosition.y + mHeadHeight, &mCollisionPosition.z, mBodyRadius);
 	JGeometry::TVec3<f32> correction = mCollisionPosition - beforeCollision;
-	JGeometry::TVec3<f32> displacement = nextPosition - mPosition;
+	JGeometry::TVec3<f32> displacement;
+	displacement = nextPosition - mPosition;
 	mLinearVelocity = displacement + correction;
 }
 
@@ -438,7 +440,8 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 					const TLiveActor* sand = body->getSandActor_();
 					if (sand) {
 						JGeometry::TVec3<f32> delta = sand->mPosition - mPosition;
-						JGeometry::TVec3<f32> direction = delta;
+						JGeometry::TVec3<f32> direction;
+						direction = delta;
 						if (direction.x * direction.x + direction.z * direction.z
 						    <= CLBSquared(50.0f)) {
 							body->unk120 = 0.0f;

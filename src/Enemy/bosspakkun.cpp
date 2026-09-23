@@ -551,7 +551,8 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 	if (message != HIT_MESSAGE_SPRAYED_BY_WATER)
 		return TRUE;
 
-	JGeometry::TVec3<f32> toMario = *gpMarioPos;
+	JGeometry::TVec3<f32> toMario;
+	toMario = *gpMarioPos;
 	toMario.x -= mPosition.x;
 	toMario.y -= mPosition.y;
 	toMario.z -= mPosition.z;
@@ -1187,7 +1188,8 @@ void TBossPakkun::launchPolDrop()
 	JGeometry::TVec3<f32> front;
 	front.set(reach * MsSin(marioYaw), 0.0f, reach * MsCos(marioYaw));
 
-	JGeometry::TVec3<f32> goal = front;
+	JGeometry::TVec3<f32> goal;
+	goal = front;
 	goal.x += gpMarioPos->x;
 	goal.y += gpMarioPos->y;
 	goal.z += gpMarioPos->z;

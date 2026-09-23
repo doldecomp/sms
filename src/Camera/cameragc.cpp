@@ -505,7 +505,8 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 
 				JGeometry::TVec3<f32> sample = SMS_GetMarioPos();
 				sample += norm;
-				JGeometry::TVec3<f32> p2 = sample;
+				JGeometry::TVec3<f32> p2;
+				p2 = sample;
 				JGeometry::TVec3<f32> p3 = p2;
 
 				const TBGCheckData* ground;

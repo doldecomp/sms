@@ -1830,7 +1830,8 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 
 		collisionNum += checkRecord.mResultWallsNum;
 	}
-	JGeometry::TVec3<f32> totalCorrection = currPos - mPosition;
+	JGeometry::TVec3<f32> totalCorrection;
+	totalCorrection = currPos - mPosition;
 
 	*bound_step = totalCorrection + step;
 

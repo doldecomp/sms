@@ -604,7 +604,8 @@ void TMapObjGeneral::bind()
 	}
 
 	calcVelocity();
-	JGeometry::TVec3<f32> vec = getPosition();
+	JGeometry::TVec3<f32> vec;
+	vec = getPosition();
 	vec.add(mLinearVelocity);
 	vec.add(mVelocity);
 	checkGroundCollision(&vec);
@@ -612,7 +613,8 @@ void TMapObjGeneral::bind()
 		checkWallCollision(&vec);
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_ENABLE_ROOF_COLLISION)) {
-		JGeometry::TVec3<f32> vel = mVelocity;
+		JGeometry::TVec3<f32> vel;
+		vel = mVelocity;
 		if (vel.y > 0.0f)
 			checkRoofCollision(&vec);
 	}
@@ -623,12 +625,16 @@ void TMapObjGeneral::bind()
 	}
 
 	if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
-		JGeometry::TVec3<f32> vel     = mVelocity;
-		JGeometry::TVec3<f32> velCopy = vel;
+		JGeometry::TVec3<f32> vel;
+		vel = mVelocity;
+		JGeometry::TVec3<f32> velCopy;
+		velCopy = vel;
 		if (velCopy.x == 0.0f) {
-			JGeometry::TVec3<f32> velCopy2 = vel;
+			JGeometry::TVec3<f32> velCopy2;
+			velCopy2 = vel;
 			if (velCopy2.y == 0.0f) {
-				JGeometry::TVec3<f32> velCopy3 = vel;
+				JGeometry::TVec3<f32> velCopy3;
+				velCopy3 = vel;
 				if (velCopy3.z == 0.0f) {
 					onLiveFlag(LIVE_FLAG_UNK10);
 				}
