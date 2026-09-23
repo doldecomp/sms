@@ -100,7 +100,7 @@ public:
 	void polluteBehavior();
 	void setPolluteGoal();
 	void pollute();
-	void isUseBodyCallBack() const;
+	bool isUseBodyCallBack() const;
 	void rollCheck();
 	void rollEnd();
 	void modifyRotate();

@@ -190,7 +190,7 @@ void TGessoManager::requestPolluteModel(JGeometry::TVec3<float>& position,
 static int GessoBodyCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
-		if (gpCurGesso == nullptr || !gpCurGesso->isNotWandering())
+		if (gpCurGesso == nullptr || !gpCurGesso->isUseBodyCallBack())
 			return true;
 
 		J3DJoint* joint = (J3DJoint*)param_1;
@@ -248,6 +248,8 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		// mtx off 0x44. Also inert or worse (cc48): both matrices declared
 		// at the top in either order, rotMtx declared first and assigned
 		// later, .value, JMASSin/JMASCos over a named s16, cos before sin.
+		// Also inert (c-mix3): MsMtxSetRotX for the rotation (97.4, same
+		// 0x10), raw mBodyScale (-0x10, 0xb0), .value (-8), both (0xb0).
 		MtxPtr rotMtx = local_74;
 		MTXConcat(anmMtx, rotMtx, anmMtx);
 		MTXConcat(anmMtx, local_44, anmMtx);
@@ -599,7 +601,12 @@ void TGesso::pollute()
 	mPolluteObj->mPosition.z = mtx[2][3] + local_2c.z;
 }
 
-void TGesso::isUseBodyCallBack() const { }
+bool TGesso::isUseBodyCallBack() const
+{
+	if (mState == STATE_WANDERING)
+		return false;
+	return true;
+}
 
 void TGesso::setAfterDeadEffect()
 {

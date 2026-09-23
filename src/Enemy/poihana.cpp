@@ -746,15 +746,15 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				// TODO: frame 8 short, the ranges/local_48 sit 0xc low and the
-				// operator- temporaries 0x24 high; MinSpY loads before MinSpXZ.
-				// Tried: a named params pointer (-0x20), raw mPosition/
-				// mGroundPlane/*gpMarioPos (each shrinks the frame), local_48
-				// at the top, declaration orders of the four floats.
-				f32 minXZ = self->unk19C->mSLTrapJumpMinSpXZ.get();
+				// Naming the three rand() results lands retail's frame and every
+				// named slot (99.7 -> 99.9); maxXZ first gives retail's load order.
+				// TODO: the two operator- temporaries sit 0x24 high (0xf4/0xe8
+				// against 0xd0/0xc4) and MinY/MaxY swap f2/f3. Inert: every order
+				// of the four floats with maxXZ first, naming only one rand().
 				f32 maxXZ = self->unk19C->mSLTrapJumpMaxSpXZ.get();
 				f32 minY = self->unk19C->mSLTrapJumpMinSpY.get();
 				f32 maxY = self->unk19C->mSLTrapJumpMaxSpY.get();
+				f32 minXZ = self->unk19C->mSLTrapJumpMinSpXZ.get();
 				TMsRange<f32> trapJumpSpXZ(minXZ, maxXZ);
 				TMsRange<f32> trapJumpSpY(minY, maxY);
 
@@ -774,9 +774,12 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
-				local_48.x *= trapJumpSpXZ.rand();
-				local_48.y = trapJumpSpY.rand();
-				local_48.z *= trapJumpSpXZ.rand();
+				f32 x = trapJumpSpXZ.rand();
+				local_48.x *= x;
+				f32 y = trapJumpSpY.rand();
+				local_48.y = y;
+				f32 z = trapJumpSpXZ.rand();
+				local_48.z *= z;
 
 				self->mVelocity             = local_48;
 				self->mCurrentFlungVelocity = local_48;
