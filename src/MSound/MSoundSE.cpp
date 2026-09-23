@@ -639,6 +639,10 @@ static u32 get_thing(u32 param_1)
 	return 0xffffffff;
 }
 
+// TODO: instruction-exact; frame is 0x50 vs retail 0x58 (8 bytes of
+// inline temporaries, no stack traffic). Inert: get_thing inline/named
+// call result, uVar3 at top, unkCD local, && condition merge; a result
+// local in get_thing is +0x10 (one slot per expansion).
 JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
                                          JAIActor* actor, u32 fade,
                                          u8 camera_idx)
@@ -740,22 +744,23 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
 	}
 }
 
-u32 MSoundSE::getNewIDByGroundCode(u32 id, JAIActor* actor)
+inline u32 MSoundSE::getNewIDByGroundCode(u32 id, JAIActor* actor)
 {
 	u32 ground = actor->mGroundNumber;
 	if (ground & 0xf00)
 		return id;
 
+	u32 result = id;
 	switch (id) {
 	case MSD_SE_MA_WALK_STONE_L_HEEL:
 	case MSD_SE_MA_WALK_STONE_L_TIP:
 	case MSD_SE_MA_WALK_STONE_R_HEEL:
 	case MSD_SE_MA_WALK_STONE_R_TIP:
-		id += ground << 3 & 0x7f8;
+		result += ground << 3 & 0x7f8;
 		break;
 	}
 
-	return id;
+	return result;
 }
 
 u32 MSoundSE::getNewIDBySurfaceCode(u32 id, JAIActor* actor)
