@@ -146,6 +146,8 @@ BOOL TMario::doRunningAnimation()
 	// schedules the loop's second `addi` before the `bgt`. Inert: reusing
 	// `rate`, a C-style `rate2`, and a while loop with the increment in the body;
 	// also `++i >= 5`, `4 < ++i`, a separate `i++`, and `loop = false`.
+	// The soft-step compare on the copy is inert to a C-style `rate2`, a
+	// ternary, testing `sp`, and a named multiplier.
 	BOOL loop = true;
 
 	f32 rate;
@@ -758,6 +760,9 @@ void TMario::doPushingAnimation(const Vec& vec)
 // TODO: frame 0x58 against retail's 0x90, and retail keeps `pushed`'s zero in
 // r30 and stores it to mStatusState (ours `li r0`). bool/int/BOOL/u8/u16 for
 // `pushed`, `mStatusState = pushed`, and every declaration order were inert.
+// The squat exit through UNUSED changePlayerPower(0.0f, SQUAT, 0) (a
+// setPlayerVelocity + changePlayerStatus body, 0x58 of the map's 0x60) is
+// inert on the frame.
 BOOL TMario::running()
 {
 	mStatusTimer++;
@@ -1579,6 +1584,10 @@ BOOL TMario::loserDown()
 // TODO: the six UNUSED *JumpSlip handlers reach their map sizes (0x130/0x148/
 // 0x15c) only with this expanded (`inline`), but the map binds this as a global
 // function and `inline` breaks symbol order; the real expansion route is open.
+// Auto-inlining never takes it here, even as a one-statement body, with one
+// caller, with an int `anim`, or defined after the handlers; doBraking and
+// clashStandard auto-inline into braking at the same depth. Both this and
+// jumpSlipEvents are 0x138, so either could be retail's expanded callee.
 BOOL TMario::jumpSlipCommon(s16 anim, u32 status)
 {
 	if (mInput & 0x1) {
