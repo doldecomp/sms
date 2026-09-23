@@ -389,6 +389,10 @@ void TBathtubKiller::bind()
 	mLinearVelocity = nextPos - mPosition;
 }
 
+// TODO: 96.6%. Besides updateTimers' per-timer address registers (see its
+// TODO), ours holds &mPosition in r29 across the distance and the sound call
+// where retail rematerialises it; raw mPosition at either or both sites is
+// inert or shrinks the frame by 8/0x10.
 void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSmallEnemy::perform(cue, graphics);
