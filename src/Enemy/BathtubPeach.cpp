@@ -101,28 +101,37 @@ static inline f32 WrapDegreesF(f32 angle)
 // Paddles around the rim of the bathtub so as to stay `angle` degrees away
 // from Mario, always facing him.
 //
-// TODO: 94.2%. The remaining instruction differences all come from one shared
-// header, and they were measured rather than guessed:
-// include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h -- the ROM calls
-// fmodf__3stdFff (0x5c, emitted weak from wireTrap.cpp) at all six sites in
-// this function. Our std::fmodf is an `inline` wrapper around ::fmod, so every
-// site expands to `bl fmod` plus an `frsp` and an extra `lfd` of the double
-// 360.0. That accounts for the whole residual, including the float-register
-// renumbering and the frame gap.
+// TODO: 99.1%. Every instruction matches except one register/schedule swap in
+// the marioAngle product (retail loads the double bias into f4 before the
+// 360/65536 literal; ours into f5 after), and the frame is 0x190 against the
+// ROM's 0x270. Relative to the saved-register block, marioPos sits 0xc lower
+// in the ROM, goTo's `dir` 0x28 lower and 0xd0 more lies below it: a dead
+// low region of inline temporaries with no carrier found yet. A TVec3 tubPos
+// copied from the root matrix (+0x18, marioPos lands 4 short) and a
+// matan-angle helper (+8) were measured and not kept.
 //
-// The spelling of std::fmodf is not the blocker -- the header's TODO has the
-// measured table. MWCC refuses a 0x5c body only from inline depth four down,
-// and this nerve reaches it at depth two (nerve -> faceTo -> std::fmodf), so
-// two inline wrappers are missing above it. The ROM computes
-// `l + std::fmodf((r - l) + (t - l), r - l)` at each of the three sites below,
-// so the pair is a wrap-into-[l,r) helper plus whatever faceTo called to get
-// the [-180,180) range; neither is MathUtil.hpp's loop-based MsWrap<f>.
+// The escape-angle choice goes through CalcEscapeAngle: with the comparison
+// wrap one level shallower (written in the nerve), MWCC expanded that one
+// std::fmodf instead of calling it (93.9%; 97.8% with only the comparison
+// moved into a helper, 98.4% with the whole choice).
 //
 // The TVec2::setLength forwarders this nerve also needed are in place now (see
 // JGVec2.hpp): that level of nesting is what puts TVec2::dot at inline depth
 // five inside goTo() and makes MWCC emit the weak
 // dot__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f> the map lists for this
 // TU, which in turn keeps `dir` on the stack the way the ROM has it.
+
+// Picks the rim angle `angle` degrees to either side of Mario, on the side the
+// peach already is.
+static inline f32 CalcEscapeAngle(TBathtubPeach* peach, f32 marioAngle,
+                                  f32 peachAngle)
+{
+	if (WrapDegreesF(peachAngle - marioAngle) < 0.0f)
+		return WrapDegreesF(marioAngle - peach->getParam()->angle.get());
+	else
+		return WrapDegreesF(marioAngle + peach->getParam()->angle.get());
+}
+
 class TNervePeachEscape : public TNerveBase<TLiveActor> {
 public:
 	static const TNervePeachEscape& theNerve()
@@ -165,17 +174,7 @@ public:
 		                 * matan(peach->getPosition().z - tubZ,
 		                         peach->getPosition().x - tubX);
 
-		// These three sites sit one inline level higher than faceTo's, so
-		// MWCC still expands std::fmodf here where the ROM calls it; the
-		// helper pair is nevertheless the better spelling (93.9% against
-		// 88.9% with the wrap written out).
-		f32 goalAngle;
-		if (WrapDegreesF(peachAngle - marioAngle) < 0.0f)
-			goalAngle
-			    = WrapDegreesF(marioAngle - peach->getParam()->angle.get());
-		else
-			goalAngle
-			    = WrapDegreesF(marioAngle + peach->getParam()->angle.get());
+		f32 goalAngle = CalcEscapeAngle(peach, marioAngle, peachAngle);
 
 		f32 radius = peach->getParam()->radius.get();
 
@@ -209,7 +208,10 @@ TBathtubPeach::TBathtubPeach(const char* name)
 // getSaveParam__13TEnemyManagerCFv the map lists as a duplicate in this TU
 // (93.6 -> 94.2 on the nerve). getSpeed() itself leaves no symbol, as the map
 // requires. A getSpeed() on TBathtubPeachParams instead is worth nothing: the
-// level has to sit above getParam(), not below it.
+// level has to sit above getParam(), not below it. The comparison reads
+// the param twice rather than through a named `speed`: the named local
+// scheduled the param load ahead of the first square (98.4 -> 99.1 on the
+// nerve).
 //
 // TODO: 0xc0 here against the map's 0xc4. In the standalone copy goTo is the
 // emitted function, so getSaveParam lands two levels shallower and MWCC merges
@@ -218,8 +220,7 @@ void TBathtubPeach::goTo(const JGeometry::TVec3<f32>& goal)
 {
 	JGeometry::TVec2<f32> dir(goal.x - mPosition.x, goal.z - mPosition.z);
 
-	f32 speed = getParam()->speed.get();
-	if (dir.squared() >= speed * speed)
+	if (dir.squared() >= getParam()->speed.get() * getParam()->speed.get())
 		dir.setLength(getSpeed());
 
 	mPosition.x += dir.x;
@@ -233,9 +234,7 @@ void TBathtubPeach::goTo(const JGeometry::TVec3<f32>& goal)
 // writing (360.0f / 65536.0f) * matan(dz, dx) - 90.0f contracts them into one
 // fmsubs (see docs/catalog/codegen-tells.md, fp_contract).
 //
-// TODO: 0x144 here against the map's 0x12c. The 0x18 of surplus is exactly the
-// six instructions our three inlined std::fmodf expansions add (an `frsp` plus
-// an extra `lfd` of the double 360.0 each); see the note on the escape nerve.
+// Compiles to the map's 0x12c.
 void TBathtubPeach::faceTo(const JGeometry::TVec3<f32>& target, f32 turn_speed)
 {
 	f32 dz = target.z - mPosition.z;
