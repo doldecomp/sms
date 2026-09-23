@@ -791,6 +791,10 @@ void TTalk2D2::checkBoardControler()
 	}
 }
 
+// TODO: frame 0x38 vs 0x40 and a register rotation in the character loop.
+// Naming the clamped alpha (int/u8) fixes the frame but materialises &mAlpha;
+// inert: a by-value box, casts on the ternary, a named cursor, idx after the
+// continues.
 void TTalk2D2::moveTalkWindow()
 {
 	for (int i = 0; i < LINE_NUM; i++) {

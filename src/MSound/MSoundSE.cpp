@@ -137,6 +137,8 @@ MSRandPlay::MSRandPlay(u32 sound_id, s32 wait_min, s32 wait_max,
 {
 }
 
+// TODO: `actor` sits at 0x18 vs retail 0x14. Inert: fVar3 at function scope
+// (either order), a braced default arm, a named s32 wait, an s32 fVar3.
 void MSRandPlay::randPlay(u32 vec_idx)
 {
 	MSRandPlayVec* vec = &mRandPlayVecs[vec_idx];

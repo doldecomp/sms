@@ -152,6 +152,9 @@ u32 TObjHitCheck::getTableIndex(const JGeometry::TVec3<f32>& pos,
 	return i & 0xff;
 }
 
+// TODO: the iterator temporaries sit 0x14 high and two checkDistance
+// argument registers swap. Inert: a named children reference (frame -8),
+// getEntryRadius() (+8), raw/accessor positions in checkActorsInList.
 void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 {
 	TIdxGroupObj::iterator end = group->getChildren().end();

@@ -217,6 +217,8 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
 	return 9999999.0f;
 }
 
+// TODO: local_4c/local_50 sit at 0x48/0x44 vs retail 0x44/0x40. Inert: raw
+// mGridExtentX at every subset of sites, local_4c declared at the top.
 f32 TMapCollisionData::checkRoof(f32 x, f32 y, f32 z, u8 flags,
                                  const TBGCheckData** result) const
 {

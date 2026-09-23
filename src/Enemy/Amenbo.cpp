@@ -90,6 +90,9 @@ void TAmenbo::initParticle()
 	SMS_LoadParticle("/scene/amenbo/jpa/ms_ame_hamon.jpa", 0x18E);
 }
 
+// TODO: the `local_14 - mPosition` temporary sits at 0x28 vs retail 0x10 (the
+// open `a = b - c` class). Inert: getPosition() at either site, .set(),
+// operator-=, a named position copy.
 void TAmenbo::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))

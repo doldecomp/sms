@@ -666,6 +666,9 @@ BOOL TMario::catchStop()
 	return 0;
 }
 
+// TODO: retail keeps velIncrement in f31 and the table value in f30; ours
+// swaps them. Inert: declaration order, getIntendedMag(), operand order,
+// parenthesised product, a compound velIncrement.
 BOOL TMario::slipFalling()
 {
 	mStatusTimer += 1;

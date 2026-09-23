@@ -1004,6 +1004,8 @@ void TResetFruit::touchWaterSurface()
 	makeObjWaitingToAppear();
 }
 
+// TODO: loads drag before flow.x, as in TMapObjBall::touchWater. Also inert:
+// `flow.x * drag + pushed.x`, `drag * flow.x`, raw unk17C, drag first.
 u32 TResetFruit::touchWater(THitActor* param_1)
 {
 	if (!isState(STATE_HOLDING) && !isState(STATE_APPEARING)) {

@@ -279,6 +279,9 @@ void TSpcInterp::execmul()
 	}
 }
 
+// TODO: the int arm's push(int) temporary sits at 0x20 vs retail 0x24 (same
+// in execmul). Inert: mProcessStack.push(TSpcSlice(..)), a named int or
+// slice result, setDataInt, operator int/float casts, a named f32 quotient.
 void TSpcInterp::execdiv()
 {
 	TSpcSlice arg2 = mProcessStack.pop();
