@@ -1022,14 +1022,9 @@ bool TOptionControl::movementOption2Card()
 	return false;
 }
 
-// Binding level over a raw member read, worth +8 of low region and the
-// volatile-register rotation in isChangedSetting.
-static inline TOptionRumbleUnit* OptionRumbleUnit(const TOptionControl* p)
-{
-	TOptionRumbleUnit* unit = p->mRumbleOption;
-	return unit;
-}
-
+// Binding levels over raw member reads: with the rumble unit read through
+// its header accessor they land isChangedSetting's frame and its expansion
+// into movementOption2Card together.
 static inline TOptionSoundUnit* OptionSoundOption(const TOptionControl* p)
 {
 	TOptionSoundUnit* unit = p->mSoundOption;
@@ -1141,19 +1136,15 @@ bool TOptionControl::isChangedSetting() const
 {
 	// TODO: retail `mr r29, r31` copies result into soundResult; MWCC
 	// folds `bool soundResult = result` to a second `li r29, 1`.
-	bool result                = true;
-	bool soundResult           = result;
-	int initialRumble          = mInitialRumbleValue;
-	TToggleControl* rumbleText = OptionRumbleUnit(this)->mSelectionText;
-	if (initialRumble == rumbleText->getNumber()
+	bool result      = true;
+	bool soundResult = result;
+	if (mInitialRumbleValue == getRumbleOption()->mSelectionText->getNumber()
 	    && mInitialSoundValue == OptionSoundOption(this)->getValue())
 		soundResult = false;
 
 	if (!soundResult) {
-		int initialSubtitle = mInitialSubtitleValue;
-		TToggleControl* subtitleText
-		    = OptionSubtitleOption(this)->mSelectionText;
-		if (initialSubtitle == subtitleText->getNumber())
+		if (mInitialSubtitleValue
+		    == OptionSubtitleOption(this)->mSelectionText->getNumber())
 			result = false;
 	}
 
