@@ -1681,7 +1681,8 @@ void TEnemyMario::checkReturn()
 // four callee-saved registers are permuted (retail this=r29, nodeNum=r28;
 // ours this=r28, nodeNum=r30). Declaring `i` before `nodeNum` changes neither.
 
-// fabricated: two-local address binder over unk108->mStickH, +0x10
+// fabricated: two-local address binder over unk108->mStickH; at the
+// clamp site it places its +0x10 below the second sqrtf temporary.
 static inline f32* EnemyMarioGetStickHPtr(TEnemyMario* p)
 {
 	TMarioControllerWork* work = p->unk108;
@@ -1705,7 +1706,7 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	unk108->mAnalogLU8  = 0;
 	consider();
 
-	*EnemyMarioGetStickHPtr(this) = 0.0f;
+	unk108->mStickH = 0.0f;
 	unk108->mStickV              = 0.0f;
 	if (unk108->mStickHS16 < -7)
 		unk108->mStickH = unk108->mStickHS16 + 6;
@@ -1722,16 +1723,14 @@ void TEnemyMario::checkController(JDrama::TGraphics*)
 	unk108->mStickDist = std::sqrtf(unk108->mStickH * unk108->mStickH
 	                                + unk108->mStickV * unk108->mStickV);
 	if (unk108->mStickDist > 64.0f) {
-		unk108->mStickH *= 64.0f / unk108->mStickDist;
+		*EnemyMarioGetStickHPtr(this) *= 64.0f / unk108->mStickDist;
 		unk108->mStickV *= 64.0f / unk108->mStickDist;
 		unk108->mStickDist = 64.0f;
 	}
 	unk108->mFrameInput = unk108->mInput & (unk108->mInput ^ previousInput);
 
-	f32 stickRatio = unk108->mStickDist;
-	stickRatio *= (1.0f / 64.0f);
-	stickRatio *= stickRatio;
-	mIntendedMag = 64.0f * stickRatio * 0.5f;
+	f32 stickRatio = unk108->mStickDist / 64.0f;
+	mIntendedMag = 64.0f * (stickRatio * stickRatio) / 2.0f;
 	if (mIntendedMag > 0.0f)
 		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH);
 	else
