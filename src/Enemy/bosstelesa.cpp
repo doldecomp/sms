@@ -1173,20 +1173,22 @@ void TBossTelesa::reset()
 	                                         nullptr, 0);
 }
 
-// TODO: the ROM `bl`s JGeometry::TVec3<float>::set(const Vec&) at both
-// gpCamera->unk124 reads below (the only two such calls in this object), which
-// needs the site at inline depth 4; as plain statements they expand. lensflare
-// reaches depth 4 for the same callee through three nested wrappers, so the
-// two camera-distance blocks here are probably one inlined helper as well.
+// Returning the camera's `Vec` as a TVec3 by value is what leaves the ROM's
+// out-of-line TVec3::set(const Vec&) at both camera reads.
+static inline JGeometry::TVec3<f32> BossTelesaGetCameraPos()
+{
+	return gpCamera->getUnk124Vec();
+}
+
+// TODO: 99.9%; every instruction matches but the frame is 0x40 short (0x190
+// vs 0x1d0): retail puts operator-'s by-value copy of Mario's position in the
+// low region (0xec/0xd0) instead of the named block beside the camera temps.
 void TBossTelesa::moveObject()
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	JGeometry::TVec3<f32> cameraPos;
-	cameraPos.set(gpCamera->unk124);
-
-	JGeometry::TVec3<f32> toCamera = *gpMarioPos - cameraPos;
+	JGeometry::TVec3<f32> toCamera = SMS_GetMarioPos() - BossTelesaGetCameraPos();
 	if (toCamera.length() < mCameraMoveLimit) {
 		unk360 += mCameraMoveSp * (gpMarioPos->y - gpCamera->unk148.y);
 		gpCamera->unk290 = unk360;
@@ -1230,9 +1232,8 @@ void TBossTelesa::moveObject()
 
 	int spinning = 0;
 
-	JGeometry::TVec3<f32> soundCameraPos;
-	soundCameraPos.set(gpCamera->unk124);
-	JGeometry::TVec3<f32> soundToCamera = *gpMarioPos - soundCameraPos;
+	JGeometry::TVec3<f32> soundToCamera
+	    = SMS_GetMarioPos() - BossTelesaGetCameraPos();
 
 	mSoundPos = mRoulettes[0]->mPosition;
 	mSoundPos.x += 0.67f * soundToCamera.x;
