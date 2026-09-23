@@ -869,14 +869,6 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-// Binding level worth +16 of low region, landing TCardLoad::titleDraw's
-// frame at 0x270 (batch 124).
-static inline J2DPane* CardLoadGetPane(const TExPane* p)
-{
-	J2DPane* pane = p->getPane();
-	return pane;
-}
-
 // Binding level over a raw member read: a register lever in
 // TCardLoad::titleDraw at an unchanged frame (batch 130).
 static inline int CardLoadUnk18(const TCardLoad* p)
@@ -885,10 +877,21 @@ static inline int CardLoadUnk18(const TCardLoad* p)
 	return v18;
 }
 
-// TODO: opcode-exact, 5 slot-offset markers. Retail's first JUTRect sits
-// four bytes lower (0x16c vs 0x170). `u16 r = col.r; r += 7;` and the same
-// split on alpha are the clamp shape. CardLoadUnk18 must stay: dropping it
-// moves later rects and adds markers.
+// By-value black-colour accessors (J2DPicture has none in its header): the
+// getter's return copy and the setter's parameter are the two low-region
+// TColor temporaries retail keeps eight bytes apart in TCardLoad::titleDraw.
+static inline JUtility::TColor CardLoadBlack(const J2DPicture* p)
+{
+	return p->mBlack;
+}
+
+static inline void CardLoadSetBlack(J2DPicture* p, JUtility::TColor c)
+{
+	p->mBlack = c;
+}
+
+// `u16 r = ...; r += 7;` and the same split on alpha are the clamp shape.
+// CardLoadUnk18 must stay: dropping it shrinks the frame by 8.
 bool TCardLoad::titleDraw()
 {
 	switch (CardLoadUnk18(this)) {
@@ -934,15 +937,13 @@ bool TCardLoad::titleDraw()
 			bool any = true;
 			for (int i = 0; i < TITLE_PANE_COUNT; ++i) {
 				any &= unk1D4[i]->update();
-				JUtility::TColor col
-				    = ((J2DPicture*)unk1D4[i]->getPane())->mBlack;
-				u16 r = col.r;
+				u16 r = CardLoadBlack((J2DPicture*)unk1D4[i]->getPane()).r;
 				r += 7;
 				if (r > 255)
 					r = 255;
 
-				((J2DPicture*)unk1D4[i]->getPane())->mBlack
-				    = (r << 24) + 0xFFFF00;
+				CardLoadSetBlack((J2DPicture*)unk1D4[i]->getPane(),
+				                 (r << 24) + 0xFFFF00);
 			}
 
 			if (any) {
@@ -956,7 +957,7 @@ bool TCardLoad::titleDraw()
 		break;
 
 	case 2: {
-		u16 alpha = CardLoadGetPane(unkF0)->getAlpha();
+		u16 alpha = unkF0->getPane()->getAlpha();
 		alpha += 1;
 		if (alpha > 255) {
 			bool any = true;
@@ -968,8 +969,8 @@ bool TCardLoad::titleDraw()
 				unk18 = 4;
 			}
 		}
-		CardLoadGetPane(unkF0)->setAlpha(alpha);
-		CardLoadGetPane(unkF4)->setAlpha(alpha);
+		unkF0->getPane()->setAlpha(alpha);
+		unkF4->getPane()->setAlpha(alpha);
 	} break;
 
 	case 4: {
