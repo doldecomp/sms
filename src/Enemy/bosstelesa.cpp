@@ -339,17 +339,19 @@ BOOL TNerveBubbleLive::execute(TSpineBase<TLiveActor>* spine) const
 		bubble->setBckAnm(10);
 	}
 
-	// TODO: the ROM hoists the mParams load and the mSLAddPosBase read above
-	// the mIsSplit branch and loads mFloatHeight second; we load mFloatHeight
-	// first. Four bytes of pool below the setGoalPathMario block are the only
-	// other residue (frame 0xf8 exact).
+	// TODO: frame 0xf8 exact; the getVelocity() copy sits in the named block
+	// (0xb8) where retail has it in the low region (0x8c), pushing the zero
+	// velocity temp and the setGoalPathMario node down. Inert: a const
+	// reference, `damped = ...`, a set() over a TVec3 temporary.
+	f32 addPosBase = bubble->mParams->mSLAddPosBase.get();
 	if (!bubble->mIsSplit) {
-		if (bubble->mFloatHeight < bubble->mParams->mSLAddPosBase.get())
+		if (bubble->mFloatHeight < addPosBase)
 			bubble->mFloatHeight += 2.0f;
 	} else {
 		if (spine->getTime() > 40 && bubble->mHasInitialVelocity) {
+			JGeometry::TVec3<f32> damped;
 			JGeometry::TVec3<f32> velocity = bubble->getVelocity();
-			JGeometry::TVec3<f32> damped(velocity.x, velocity.y, velocity.z);
+			damped.set(velocity.x, velocity.y, velocity.z);
 			damped.scale(0.98f);
 			bubble->setVelocity(damped);
 		} else
