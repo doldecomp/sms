@@ -810,9 +810,8 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 	if (console->unk68 <= 0)
 		return;
 
+	bool incrementing = true;
 	if (console->unk68 == 1) {
-		bool incrementing = true;
-
 		if (console->unk20 >= console->unk6C)
 			++console->unk6C;
 		if (console->unk20 < console->unk6C) {
@@ -1252,7 +1251,7 @@ static inline void updateTelopState(TGCConsole2* console)
 
 	if (console->unk44 && console->unk520->getPane()->isVisible()) {
 		if (console->processDrawTelop(console->unk80++)) {
-			JUTRect bounds(console->unk524->getPane()->mBounds);
+			JUTRect bounds(console->unk524->getPane()->mGlobalBounds);
 			console->unk568 = console->unk544.x2;
 			console->unk534.add(console->mTelopTextWidth + bounds.x2, 0);
 
@@ -1267,9 +1266,8 @@ static inline void updateTelopState(TGCConsole2* console)
 	}
 
 	s16 telopWait = console->unk56C ? console->unk562 : console->unk560;
-	TMessageLoader* telopMessages = console->unk530;
 	if (!console->unk44 && !console->unk42 && !console->unk43
-	    && telopMessages->unk4 != nullptr
+	    && console->unk530->unk4 != nullptr
 	    && console->unk55C >= (u32)((s16)telopWait * 120)
 	    && gpMarioOriginal->mStatus == 0xC400201) {
 		if (console->unk56C)
@@ -4619,9 +4617,9 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 			if (unkB4 == 0) {
 				startAppearCoin();
 				startAppearMario(false);
-				unkB0->search('ROOT')->mAlpha = 0;
+				unkB0->search('ROOT')->setAlpha(0);
 			} else {
-				unkB0->search('ROOT')->mAlpha = 0xff;
+				unkB0->search('ROOT')->setAlpha(0xff);
 			}
 
 			++unkB4;
@@ -4762,7 +4760,7 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 	}
 
 	if (flags & 8) {
-		J2DOrthoGraph graph(graphics->mViewportRect);
+		J2DOrthoGraph graph(graphics->getViewport());
 		graph.setup2D();
 
 		if (unk46 || unk45)
