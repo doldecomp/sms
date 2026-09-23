@@ -1061,7 +1061,10 @@ static inline TCubeGeneralInfo* getSoundCube(s32 id)
 //
 // TODO: every caller's frame is still short of the ROM's (setBgmVolumeForce
 // 0x90 vs 0xa0, the procs 0x80-0xc0 short), and setBgmVolumeForce's result
-// `fmr` sits inside the ratio branch instead of after the join.
+// `fmr` sits inside the ratio branch instead of after the join (retail keeps
+// the result in f0 for all callers; a result flag, a ternary, the inverted
+// test or an early `ratio` declaration all leave it in f1). The named dx/dz
+// give retail's x-before-z fabs order.
 f32 MSStageCubeFade::calcParamRatioInCube(s32 id)
 {
 	f32 ratioX = 0.0f;
@@ -1074,11 +1077,16 @@ f32 MSStageCubeFade::calcParamRatioInCube(s32 id)
 	gpCubeSoundChange->calcPointInCubeRatio(local_68, id, &ratioX,
 	                                        &ratioY, &ratioZ);
 
-	f32 fVar2 = std::max(std::fabs(ratioX - 0.5f), std::fabs(ratioZ - 0.5f));
+	f32 dx    = std::fabs(ratioX - 0.5f);
+	f32 dz    = std::fabs(ratioZ - 0.5f);
+	f32 fVar2 = std::max(dx, dz);
 
+	f32 ratio;
 	if (fVar2 < unkC)
-		return 1.0f;
-	return (0.5f - fVar2) / (0.5f - unkC);
+		ratio = 1.0f;
+	else
+		ratio = (0.5f - fVar2) / (0.5f - unkC);
+	return ratio;
 }
 
 void MSStageCubeSwitch::proc()

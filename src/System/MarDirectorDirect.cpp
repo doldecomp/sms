@@ -240,39 +240,35 @@ static bool checkDefeatShadowMarioAll()
 	return true;
 }
 
-// TODO: 97.6%, frame 0x18 vs retail 0x30 (a dead 0x18 low region) and
-// retail hoists `li r3, 0` above the first beq. Inert (k5): `return scenario`
-// first, an uncast compare, one nested `if (param_1 == 1)` with else-ifs.
+// TODO: 98.7%, frame 0x18 vs retail 0x30 (a dead 0x18 low region) and
+// retail hoists `li r3, 0` above the first beq. The switch gives retail's
+// shared `return 0` tail; inert (k5, c-sys1): `return scenario` first, an
+// uncast compare, nested ifs with else-ifs, a `default:` arm, a `for` loop
+// or result flag in checkDefeatShadowMarioAll, getInstance() reads.
 static int decideNextScenario(u8 param_1)
 {
-	int scenario = 0;
-	if ((int)param_1 != 1)
-		return 0;
-
-	if (TFlagManager::smInstance->getBool(0x103AE))
-		return 2;
-
-	if (checkDefeatShadowMarioAll())
-		return 9;
-
-	if (TFlagManager::smInstance->getBool(0x10389))
-		return 8;
-
-	if (TFlagManager::smInstance->getBool(0x10386)
-	    && TFlagManager::smInstance->getBool(0x10387)) {
-		if (TFlagManager::smInstance->getFlag(0x40000) >= 10)
-			return 7;
-		else
-			return 6;
+	switch (param_1) {
+	case 1:
+		if (TFlagManager::smInstance->getBool(0x103AE))
+			return 2;
+		if (checkDefeatShadowMarioAll())
+			return 9;
+		if (TFlagManager::smInstance->getBool(0x10389))
+			return 8;
+		if (TFlagManager::smInstance->getBool(0x10386)
+		    && TFlagManager::smInstance->getBool(0x10387)) {
+			if (TFlagManager::smInstance->getFlag(0x40000) >= 10)
+				return 7;
+			else
+				return 6;
+		}
+		if (TFlagManager::smInstance->getBool(0x10385))
+			return 5;
+		if (TFlagManager::smInstance->getBool(0x10384))
+			return 1;
+		break;
 	}
-
-	if (TFlagManager::smInstance->getBool(0x10385))
-		return 5;
-
-	if (TFlagManager::smInstance->getBool(0x10384))
-		return 1;
-
-	return scenario;
+	return 0;
 }
 
 // fabricated: retail forms &gpApplication.mNextArea as a pointer before the
@@ -1091,6 +1087,9 @@ u8 TMarDirector::updateGameMode()
 	return r29;
 }
 
+// TODO: 98.6%, frame 0x48 vs retail 0x70: the three TColor temporaries sit
+// 0x24 higher (a dead low region) and `this` is r31 vs r29. Inert (c-sys1):
+// no nextArea binding, a pointer binding, declaring it first, MDDApp().
 void TMarDirector::moveStage()
 {
 	unkB4 = TApplication::APP_STATE_GAMEPLAY;
