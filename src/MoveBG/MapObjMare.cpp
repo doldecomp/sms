@@ -552,6 +552,13 @@ void TMapObjGrowTree::updateHeight()
 	}
 }
 
+// TODO: control() and touchWater() are instruction-exact except that retail
+// calls getMActor() out of line in updateHeight()'s interpolated
+// setDamageHeight() argument, and both frames are larger (0xf8/0xe8 vs 0x90).
+// Probes show a small inline is refused only at depth 5 from the caller, so
+// retail reaches that site through two more inline levels; a TU-local frame
+// helper (1-3 levels, all or some sites), a named argument and raw mMActor in
+// getGrowHeightFromRate() were inert or worse.
 u32 TMapObjGrowTree::touchWater(THitActor* water)
 {
 	if (water->mPosition.y > mPosition.y + mInitialHeight)
