@@ -259,6 +259,9 @@ void JPABaseEmitter::calcEmitterGlobalParams()
 	}
 }
 
+// TODO: lever-search closes this only by routing `block` through an identity
+// inline at both mRawData reads (a frame-only level, refused); the real
+// missing level is unknown (2026-09-22).
 void JPABaseEmitter::loadBaseEmitterBlock(JPADataBlock* block)
 {
 	s16 fix;

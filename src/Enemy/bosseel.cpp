@@ -2371,7 +2371,7 @@ DEFINE_NERVE(TNerveBossEelFirstSpin, TLiveActor)
 DEFINE_NERVE(TNerveBossEelSecondSpin, TLiveActor)
 {
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
-	if (spine->getTime() == 0) {
+	if (!spine->getTime()) {
 		eel->setBckAnm(10);
 		JGeometry::TVec2<s32>* spinTimer = eel->mSpinTimer;
 		spinTimer->x                     = 0;
