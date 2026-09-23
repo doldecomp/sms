@@ -1190,9 +1190,10 @@ static void evSetTransScale(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	TMapObjBase* obj = (TMapObjBase*)getNameRefPtr(interp->pop());
 
 	obj->makeObjAppeared();
-	obj->changeObjSRT(JGeometry::TVec3<f32>(sx, sy, sz),
-	                  JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-	                  JGeometry::TVec3<f32>(tx, ty, tz));
+	JGeometry::TVec3<f32> scale(sx, sy, sz);
+	JGeometry::TVec3<f32> rot(0.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> trans(tx, ty, tz);
+	obj->changeObjSRT(scale, rot, trans);
 
 	interp->push();
 }
