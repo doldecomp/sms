@@ -358,7 +358,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 			unk584[i].unk30[j]->hide();
 		}
 
-		unk584[i].unk38 = unk2C->search('sh0k' + i);
+		unk584[i].unk38 = unk2C->search('sh0k' + i * 0x100);
 		unk584[i].unk38->hide();
 	}
 
