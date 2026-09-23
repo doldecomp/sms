@@ -1136,10 +1136,11 @@ void TYoshi::entry()
 
 	bool bVar1 = true;
 	if (mState == STATE_UNMOUNTED || mState == STATE_MOUNTED) {
-		if (unkC >= 360 && unkC < 600 && !(unkC & 0x10))
+		int timer = unkC;
+		if (timer >= 360 && timer < 600 && !(timer & 0x10))
 			bVar1 = false;
 
-		if (unkC < 360 && !(unkC & 0x8))
+		if (unkC < 360 && !(timer & 0x8))
 			bVar1 = false;
 	}
 
@@ -1159,10 +1160,10 @@ void TYoshi::entry()
 	if (bVar1 != true)
 		return;
 
-	// TODO: every named object sits 0x10 below retail's (tev colours 0xc4
-	// vs 0xd4, shadow request 0xcc vs 0xdc) at an equal frame, and retail
-	// re-reads unkC for the `< 360` compare while testing bit 3 on the first
-	// read.
+	// TODO: the frame is 0x10 too tall: ours leaves 0x20 between the shadow
+	// request and the fctiwz slots where retail leaves 0x10. Every object
+	// below is at its retail offset. Spelling the demo test as
+	// isDemoModeNow() or raw unk124 compares, and int r/g/b, are worse.
 	J3DModelData* modelData = mActor->getModel()->getModelData();
 	s16 r = (s16)unk84.x;
 	s16 g = (s16)unk84.y;
@@ -1205,19 +1206,17 @@ void TYoshi::entry()
 	}
 
 	mActor->entry();
-	// TODO: retail loads gpLightManager into r3 and the light id chain into
-	// r4 directly; ours routes the set through r5. A named set local, the raw
-	// mLightSets[1] and MActor.cpp's binder shape are all inert.
-	gpLightManager->getLightSet(1)->changeLightDrawBuffer(mActor->mLightId);
+	int id = mActor->mLightId;
+	gpLightManager->getLightSet(1)->changeLightDrawBuffer(id);
 	mMirrorModels[0]->entry();
 	mMirrorModels[1]->entry();
 	mTongue->entry();
 	gpLightManager->getLightSet(1)->resetLightDrawBuffer();
 
 	TCircleShadowRequest shadowRequest;
-	shadowRequest.mPosition = mTranslation;
+	shadowRequest.mPosition = getTranslation();
 	shadowRequest.mRadiusX = shadowRequest.mRadiusZ = unk114;
 
 	gpBindShadowManager->request(shadowRequest, 0);
-	gpQuestionManager->request(mTranslation, unk114);
+	gpQuestionManager->request(getTranslation(), unk114);
 }

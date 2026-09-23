@@ -268,6 +268,10 @@ static int ChuuHanaBodyCallback(J3DNode* node, int param)
 		f32 rollDeg = gpCurChuuHana->unk210;
 
 		// Project the world axis onto the joint's own column vectors.
+		// TODO: retail's local sits at 0x78, ours at 0x60: we reserve 0x18
+		// more between it and the three direction vectors (0x84..0xa8).
+		// A projection helper, if/else arms, ctor-argument ternaries and
+		// C-style len declarations are all inert or worse.
 		JGeometry::TVec3<f32> zDir(anmMtx[0][2], anmMtx[1][2], anmMtx[2][2]);
 		JGeometry::TVec3<f32> xDir(anmMtx[0][0], anmMtx[1][0], anmMtx[2][0]);
 		JGeometry::TVec3<f32> yDir(anmMtx[0][1], anmMtx[1][1], anmMtx[2][1]);
