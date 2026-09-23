@@ -27,6 +27,11 @@ TSeal::TSeal(const char* name)
 }
 
 // TODO: every instruction and the frame (0xc0) are exact. Two residues remain.
+// Update: residue (1), the r30/r31 rotation, is CLOSED by reading the manager
+// through `getManager()` at both sites (99.9%, 6 markers: the group binding
+// and the Mtx slot below). On that base the unnamed `search(...)->push_back`
+// brings the rotation back (43), and `getChildren()`/`insert`/named list
+// references all go to frame 0xc8 or 192 instructions.
 //
 // (1) A two-register rotation: retail keeps the .rodata string base in r31 and
 // the `this` reloads in r30 where we do the reverse. Measured, all with the
@@ -111,9 +116,9 @@ TSeal::TSeal(const char* name)
 void TSeal::init(TLiveManager* manager)
 {
 	mManager = manager;
-	mManager->manageActor(this);
+	getManager()->manageActor(this);
 
-	mMActorKeeper = new TMActorKeeper(mManager, 2);
+	mMActorKeeper = new TMActorKeeper(getManager(), 2);
 	mMActor       = mMActorKeeper->createMActor("gene_orange_model1.bmd", 0);
 	mMActor->offMakeDL();
 
