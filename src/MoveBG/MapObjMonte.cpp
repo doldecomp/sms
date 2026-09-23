@@ -535,6 +535,12 @@ void THangingBridge::initMonte()
 	mRopeOffset     = 315.0f;
 }
 
+// TODO: every instruction matches but the frame is 0x2a8 against our 0x208,
+// and the board-fixup loop counter lands in r25 where retail uses r27.
+// Retail puts the two unit-scale temporaries at 0x208/0x214 just under
+// `rot`, leaves 0x18 above the board table (0xa0) and 0x94 below it; ours
+// put the scale temporaries low at 0x1c/0x28. A named scale, rot declared
+// first, and inlining initMonte() all fail. Likely a structural frame gap.
 void THangingBridge::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
@@ -650,8 +656,8 @@ void THangingBridge::loadAfter()
 	}
 
 	mRopeSag  = new f32[mPointNumBetweenBoards];
-	f32 t     = 0.0f;
 	f32 tStep = 1.0f / mPointNumBetweenBoards;
+	f32 t     = 0.0f;
 	for (int i = 0; i < mPointNumBetweenBoards; i++) {
 		mRopeSag[i] = 50.0f * sinf(3.14f * t);
 		t += tStep;

@@ -309,6 +309,12 @@ static inline MSound* MapObjBallBoundSound()
 	return sound;
 }
 
+// TODO: two residues. The first Mario-speed test holds fabs in f1 and the
+// minimum in f0 where retail has them swapped (const, fork, raw pointer,
+// fabsf, reversed compare all inert). Retail keeps both mVelocity copies
+// (`vel`) in the low region at 0x1c/0x10 with the TVec3 temporaries from
+// 0xfc down; ours name them in the high block. By-value helpers, reference
+// binds and copy-initialisation all add instructions.
 void TMapObjBall::boundByActor(THitActor* param_1)
 {
 	JGeometry::TVec3<f32> away;
