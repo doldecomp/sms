@@ -1642,7 +1642,9 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 		if (head->isBckAnm(6)) {
 			// TODO: retail loads the setBckAnm vtable ahead of the
 			// params read; naming rate first keeps f31 but the opposite
-			// load order, and swapping the statements drops f31.
+			// load order, and swapping the statements drops f31. Raw
+			// .value, direct mSaveParams, a named params pointer and
+			// by-value f32 forks are inert or move the frame.
 			f32 rate = SamboHeadWaterParams(head)->mSLHitJumpSpRateXZ.get();
 			head->setBckAnm(6);
 			head->mHitVelocity.x *= rate;
