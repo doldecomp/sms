@@ -824,10 +824,9 @@ TKumokun::rotateGoalDirToLocal(const JGeometry::TVec3<f32>& param_1) const
 	JGeometry::TQuat4<f32> inv = getQuat();
 	inv.conjugate();
 
-	JGeometry::TVec3<f32> result;
-	inv.rotate(diff, result);
+	inv.rotate(diff, diff);
 
-	return result;
+	return diff;
 }
 
 bool TKumokun::doAdjustTarget()
@@ -1149,6 +1148,9 @@ DEFINE_NERVE(TNerveKumokunSearch, TLiveActor)
 	return false;
 }
 
+// TODO: only the saved-GPR colouring differs: retail keeps spine in r31, the
+// pool base in r30 and self in r29; ours puts the pool base first. Inert:
+// !getTime(), naming getBody(), dummy first, merged ifs, a named time local.
 DEFINE_NERVE(TNerveKumokunWait, TLiveActor)
 {
 	TKumokun* self = (TKumokun*)spine->getBody();
