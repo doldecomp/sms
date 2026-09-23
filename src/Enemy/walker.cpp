@@ -82,7 +82,7 @@ void TWalker::reset()
 	unk4.clear();
 }
 
-// TODO: 97.6%. Every instruction but 15 matches; frame 0x330 vs 0x360.
+// TODO: 98.0%. Every instruction but 12 matches; frame 0x330 vs 0x360.
 // (1) Both TPathNode blocks: retail copies the `operator-` result through its
 //     own return slot before the `+` receiver copy (the `<` runs at 0xa8c and
 //     0xc04), the batch-119 by-value-return geometry of JGVec3.hpp. A

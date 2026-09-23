@@ -196,8 +196,9 @@ void TTailRubber::adjustOne(Node& curr, const Node& prev, const Node& next)
 	curr.mVel *= mDecay;
 }
 
-// TODO: retail reuses diff.length() from registers; blocked by the TVec3 user
-// copy constructor (dropping it from JGVec3.hpp gives 98.1).
+// TODO: 98.1% since TVec3's copy constructor became `: Vec(other)`; frame
+// 0xb8 against 0xa8 (ours also parks f31 at 0x70) and one `add` scheduled
+// late. Naming the length (`f32 len = diff.length()`) is worse (86.8-92.8).
 void TTailRubber::restrict()
 {
 	f32 avgHorLen = getLength();

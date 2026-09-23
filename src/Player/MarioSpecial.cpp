@@ -672,9 +672,12 @@ BOOL TMario::taken()
 // gain the two `bl`s with the frame exact, and the emitted copy stays 99.5%.
 // A `const TVec3&` return costs the emitted copy 16 bytes of frame; by value
 // it is free.
-// TODO: retail's own name for this is unrecoverable (fully inlined); dropping
-// `dirCopy` takes the callers another point but costs the emitted copy 4
-// (99.5 -> 95.3), and declaring `dirCopy` after the assignment is worse still.
+// TODO: retail's own name for this is unrecoverable (fully inlined). Under
+// the `: Vec(other)` copy constructor, reading `dir` directly in matan()
+// without `dirCopy` keeps the emitted copy at 99.5 (frame 0x150 against
+// 0x148, ours 0x158 with it) and wireWait/wireHanging +0.1, but wireRolling
+// loses its exact 0x1a0 frame (97.6 -> 97.5); fresh `TVec3(dir)` copies in
+// matan() cost every caller 2-4 points, and `dirCopy; dirCopy = dir;` 20+.
 // fabricated
 static inline JGeometry::TVec3<f32>
 MarioWireScaleDir(const JGeometry::TVec3<f32>& dir, f32 ratio)
@@ -745,8 +748,8 @@ BOOL TMario::wireMove(f32 param_1)
 }
 
 // TODO: the rest is the inlined getOnWirePosAngle: retail keeps one named
-// `dir` and `bl`s the copy constructor off it; dropping `dirCopy` gets the
-// four wire callers ~1 point each but costs the emitted copy 99.5 -> 95.3.
+// `dir` and `bl`s the copy constructor off it; see getOnWirePosAngle's TODO
+// for what dropping `dirCopy` does now.
 BOOL TMario::wireWait()
 {
 	s16 wireAngle;
