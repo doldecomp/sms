@@ -378,6 +378,12 @@ void TMareEventDepressWall::emitEffect(int idx)
 	}
 }
 
+// TODO: frame 0xc0 vs retail 0xe8; the four TVec3(x, 0, 0) slots are out of
+// retail's order. Calling the UNUSED setJointPosX for both branches and the
+// UNUSED emitEffect (with its particle scale as a named `scale` local, which
+// keeps TVec3::set inlined) reproduces retail's slot order and 12-byte gaps
+// at frame 0xd8, every slot 0xc low; it scores 99.91 against 99.94 so is not
+// committed. A 12-byte low-region temporary is still missing there.
 void TMareEventDepressWall::depressing()
 {
 	int doneCount = 0;
