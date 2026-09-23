@@ -672,6 +672,23 @@ inline f32 TBaseNPC::getAnmOffDistSquared_()
 	return CLBSquared(getAnmOffDist_());
 }
 
+// Retail squares the camera distance unfused (three fmuls, two fadds), the
+// shape of CameraNotice.cpp's helper; parked TU-local.
+static inline f32 NpcSquaredDist(const JGeometry::TVec3<f32>& a,
+                                  const JGeometry::TVec3<f32>& b)
+{
+	f32 dx = a.x - b.x;
+	f32 dy = a.y - b.y;
+	f32 dz = a.z - b.z;
+
+	f32 sqX = dx * dx;
+	f32 sqY = dy * dy;
+	f32 sqZ = dz * dz;
+
+	f32 sum = sqX + sqY + sqZ;
+	return sum;
+}
+
 // Retail calls execMotionBlend_ and isPartsAnmNpc from perform but inlines
 // execMotionBlend_ into calcRootMatrix: the animation-skip block sits one
 // inline level below perform. The name is ours.
@@ -701,9 +718,7 @@ inline bool TBaseNPC::calcAnmOff_()
 		if (!isAirborne() && !belongToGround()
 		    && (isNerveMaybeDontCalcAnim0()
 		        || isNerveMaybeDontCalcAnim1())) {
-			JGeometry::TVec3<f32> diff;
-			diff.sub(mPosition, gpCamera->unk124);
-			if (getAnmOffDistSquared_() < diff.squared() && !bVar6
+			if (getAnmOffDistSquared_() < NpcSquaredDist(mPosition, gpCamera->unk124) && !bVar6
 			    && mSpine->getTime() > 2) {
 				r31 = true;
 				execMotionBlend_();
@@ -846,17 +861,13 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
-	// TODO: retail computes both camera distances here and in calcAnmOff_
-	// unfused and before CLBSquared, reading mPosition and the camera
-	// directly (no stack TVec3), from a frame 0xb0 larger than ours: a
-	// squared-distance inline level is missing. Named locals, the
-	// TVec3::squared(other) overload and a TU-local summed-squares helper
-	// were measured and are inert or worse.
+	// TODO: the squared distances (here and in calcAnmOff_) now take
+	// retail's unfused shape via NpcSquaredDist, but retail sums them
+	// before the CLBSquared call where ours calls it first; a named result
+	// local is worse. The frame is still 0xa0 short of retail's.
 	if (cue & CUE_ENTRY) {
 		offLiveFlag(LIVE_FLAG_UNK1000000);
-		JGeometry::TVec3<f32> diff;
-		diff.sub(mPosition, gpCamera->unk124);
-		if (diff.squared() > CLBSquared(mIndividualParams->mAllDLLockDist.get())
+		if (NpcSquaredDist(mPosition, gpCamera->unk124) > CLBSquared(mIndividualParams->mAllDLLockDist.get())
 		    && !isSunflower()) {
 			getModel()->lock();
 		} else {
