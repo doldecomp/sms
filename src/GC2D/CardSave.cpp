@@ -1959,7 +1959,12 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK15: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_READY) {
+#if defined(VERSION_GMSE01)
+			// US passes 0 as the third argument here (li r6, 0).
+			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1, 0);
+#else
 			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1, 1);
+#endif
 			gpCardManager->probe();
 			if (r == 0) {
 				TCardBookmarkInfo& bm = getBookmarkInfo();
@@ -2168,7 +2173,12 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK33: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_READY) {
+#if defined(VERSION_GMSE01)
+			// US passes 0 as the third argument here (li r6, 0).
+			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1, 0);
+#else
 			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1, 1);
+#endif
 			gpCardManager->probe();
 			if (r == 0) {
 				TCardBookmarkInfo& bm = getBookmarkInfo();
