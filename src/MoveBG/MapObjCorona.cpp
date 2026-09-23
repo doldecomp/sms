@@ -929,7 +929,7 @@ bool TBathtub::allowsTumble() const
 		f32 distance = local.length();
 		if (distance < 4200.0f)
 			return false;
-		if (distance > 4700.0f) {
+		if (4700.0f < distance) {
 			if (mBathtubData.unk18.at(1, 1) > 0.99f) {
 				TBathtubKillerManager* manager
 				    = JDrama::TNameRefGen::search<TBathtubKillerManager>(
