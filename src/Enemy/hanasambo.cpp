@@ -1271,6 +1271,8 @@ static inline TSpineBase<TLiveActor>* SamboHeadAtkSpine(const TSamboHead* p)
 
 // TODO: retail reserves 0x10 above `away` (its slot is exact here); the
 // missing block is an inlined callee's own class object, not caller pool.
+// A named `const TVec3& marioPos = *gpMarioPos` is +8 above away (not +0x10);
+// two named refs are also +8; getPosition() at both sites +0x10 of low region.
 void TSamboHead::attackToMario()
 {
 	sendAttackMsgToMario();
@@ -1377,11 +1379,16 @@ void TSamboHead::calcRootMatrix()
 }
 
 // A crashed head scatters three coins in an arc in front of it.
+// TODO: only `range` is off: retail's low region is 0xc larger (range at
+// 0x24, ours 0x18), a 12-byte temporary expanded before range.rand(). Inert:
+// range as a temporary, PSMTXMultVec, s/c/angle hoisted, coin initialised;
+// accessor sites (getPosition/getRotation) each cost +8 and overflow.
 void TSamboHead::genEventCoin()
 {
 	if (isBckAnm(1)) {
 		Mtx rot;
 		MtxPtr mtx = rot;
+		JGeometry::TVec3<f32> offset;
 		for (int i = 0; i < 3; ++i) {
 			s16 angle
 			    = DEG2SHORTANGLE(60.0f * (f32)i + (mRotation.y - 60.0f));
@@ -1399,7 +1406,7 @@ void TSamboHead::genEventCoin()
 			mtx[2][1] = 0.0f;
 			mtx[2][2] = c;
 			mtx[2][3] = 0.0f;
-			JGeometry::TVec3<f32> offset(0.0f, 0.0f, 100.0f);
+			offset.set(0.0f, 0.0f, 100.0f);
 			MTXMultVec(mtx, &offset, &offset);
 
 			TMapObjBase* coin;
