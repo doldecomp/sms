@@ -471,7 +471,17 @@ void SMSCalcJumpVelocityXZ(const JGeometry::TVec3<f32>& param_1,
 	result->z = resZ;
 }
 
-asm f32 MsVECMag2(register Vec* v)
+// Whole-function Gekko assembly is only meaningful to MWCC; other compilers
+// get an ordinary function with the portable body in the #else.
+#ifdef __MWERKS__
+#define ASM asm
+#else
+#define ASM
+#endif
+
+// Despite the name this returns the length, not its square: the squared
+// length times its reciprocal square root, with zero mapped to zero.
+ASM f32 MsVECMag2(register Vec* v)
 {
 #ifdef __MWERKS__ // clang-format off
   psq_l   f3, Vec.x(v), 0, qr0
@@ -485,10 +495,15 @@ asm f32 MsVECMag2(register Vec* v)
   fneg    f1, f2
   fsel    f0, f1, f2, f0
   fmuls   f1, f2, f0
+#else
+	f32 mag2  = v->x * v->x + v->z * v->z + v->y * v->y;
+	f32 rsqrt = -mag2 >= 0.0f ? mag2 : 1.0f / std::sqrt(mag2);
+	return mag2 * rsqrt;
 #endif // clang-format on
 }
 
-asm void MsVECNormalize(register Vec* v1, register Vec* v2)
+// v2 = v1 / |v1|, with no guard against a zero vector.
+ASM void MsVECNormalize(register Vec* v1, register Vec* v2)
 {
 #ifdef __MWERKS__ // clang-format off
   psq_l   f6, Vec.x(v1), 0, qr0
@@ -505,5 +520,11 @@ asm void MsVECNormalize(register Vec* v1, register Vec* v2)
   psq_st f6, Vec.x(v2), 0, qr0
   fmuls  f4, f4, f0
   stfs   f4, Vec.z(v2)
+#else
+	f32 rsqrt
+	    = 1.0f / std::sqrt(v1->x * v1->x + v1->z * v1->z + v1->y * v1->y);
+	v2->x = v1->x * rsqrt;
+	v2->y = v1->y * rsqrt;
+	v2->z = v1->z * rsqrt;
 #endif // clang-format on
 }
