@@ -245,7 +245,8 @@ DEFINE_NERVE(TNerveNPCTurnToMario, TLiveActor)
 				JGeometry::TVec3<f32> axis = SMS_GetMarioPos();
 				axis -= self->mPosition;
 				JGeometry::TVec3<f32> toMario  = axis;
-				JGeometry::TVec3<f32> toMario2 = toMario;
+				JGeometry::TVec3<f32> toMario2;
+				toMario2 = toMario;
 				JGeometry::TVec3<f32> toMario3;
 				toMario3.set(toMario2);
 
