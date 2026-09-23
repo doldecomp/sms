@@ -1814,18 +1814,21 @@ void TMario::checkCurrentPlane()
 			if (record.mResultWalls[i]->isThing5())
 				damageExec(&mFloorHitActor, record.mResultWalls[i]->getData());
 
-		// TODO: do we have to use a TPartition here after all?
+		// TODO: 99.2%. Frame 0x2b0 vs 0x290, and the wall normals' addresses
+		// are hoisted into registers (addi +0x34) where retail folds them into
+		// the loads. The two by-value position copies reproduce retail's 0xc
+		// temporary copied twice; a single shared copy or dot(mPosition) is worse.
 		if (record.mResultWallsNum == 2
-		    && record.mResultWalls[0]->getNormal().squared() < -0.9f) {
+		    && record.mResultWalls[0]->mNormal.dot(
+		           record.mResultWalls[1]->mNormal)
+		           < -0.9f) {
 
-			JGeometry::TVec3<f32> normal1 = record.mResultWalls[0]->getNormal();
-			JGeometry::TVec3<f32> normal2 = record.mResultWalls[1]->getNormal();
-
-			f32 planeDist1 = record.mResultWalls[0]->getPlaneDistance();
-			f32 planeDist2 = record.mResultWalls[1]->getPlaneDistance();
-
-			f32 dist1 = normal1.dot(mPosition) + planeDist1;
-			f32 dist2 = normal2.dot(mPosition) + planeDist2;
+			JGeometry::TVec3<f32> pos1 = mPosition;
+			f32 dist1 = record.mResultWalls[0]->mNormal.dot(pos1)
+			            + record.mResultWalls[0]->mPlaneDistance;
+			JGeometry::TVec3<f32> pos2 = mPosition;
+			f32 dist2 = record.mResultWalls[1]->mNormal.dot(pos2)
+			            + record.mResultWalls[1]->mPlaneDistance;
 
 			if ((record.mResultWalls[0]->getActor() != nullptr
 			     && record.mResultWalls[0]->getActor()->getActorType()
