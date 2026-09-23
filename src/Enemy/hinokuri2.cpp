@@ -406,7 +406,8 @@ void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 // from 0x5c; ours leaves an 8-byte hole above local_74 and a smaller low
 // region. Every other spelling of the sin/cos pair shrinks the frame further:
 // MsMtxSetRotY (either or both branches), MsSin/MsCos (inert), a named angle,
-// JMASSin(DEG2SHORTANGLE(...)).
+// JMASSin(DEG2SHORTANGLE(...)). Naming the joint number or the joint is
+// inert; naming the model is worse (bb19).
 static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {

@@ -130,6 +130,8 @@ void TMapObjGeneral::put()
 // frame is 0x38 short (every temporary 0x38 low). Inert or worse: the raw
 // s16 argument, TU-local sin/cos table readers (by argument or reading the
 // global), per-component helpers, and a TVec3 temporary assigned whole.
+// Also worse: `power * (sin * unk2C)` grouping, named speed/sin/cos f32
+// locals, and a TVec3 dir(sin, 0, cos) local (bb19).
 void TMapObjGeneral::thrown()
 {
 	mPosition.set(gpMarioPos->x, gpMarioPos->y, gpMarioPos->z);
