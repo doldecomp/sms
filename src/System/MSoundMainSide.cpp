@@ -816,6 +816,25 @@ MSStageDistFadeMonte::MSStageDistFadeMonte(const Vec* param_1, f32 param_2,
 {
 }
 
+// TU-local: retail inlines the pan/dolby tail as its own level (calcPan's
+// result goes straight to a saved FPR, with no copy through f0).
+// TODO: f30/f31 are swapped between the distance and the fade ratio, and
+// retail's frame is 0x68 larger; declaration-order and in-place pan spellings
+// were inert.
+static inline void setMontePanDolby(const Vec* pos, f32 dist, u32 cur, u32 max)
+{
+	Vec local_88 = gpMSound->mAudioCameras->toCamSpace(*pos);
+	f32 dVar10   = MSHandle::calcPan(local_88, dist, 10000.0f);
+	f32 dVar11   = MSHandle::calcDolby(local_88, dist);
+	if (cur < max) {
+		dVar10 = (dVar10 - 0.5f) * cur / max;
+		dVar10 += 0.5f;
+		dVar11 = dVar11 * cur / max;
+	}
+	MSBgm::setPan(1, dVar10, 1, 0);
+	MSBgm::setDolby(1, dVar11, 1, 0);
+}
+
 void MSStageDistFadeMonte::proc()
 {
 	JAISound* sound1 = MSBgm::getHandle(1);
@@ -864,19 +883,7 @@ void MSStageDistFadeMonte::proc()
 			gpMSound->unk9C->xFadeBgm(fVar2);
 		}
 
-		// TODO: inline?
-		u32 uVar4 = unk14;
-		u32 uVar8 = unk4;
-
-		Vec local_88 = gpMSound->mAudioCameras->toCamSpace(*unk10);
-		f32 dVar10   = MSHandle::calcPan(local_88, fVar12, 10000.0f);
-		f32 dVar11   = MSHandle::calcDolby(local_88, fVar12);
-		if (uVar8 < uVar4) {
-			dVar10 = 0.5f + (dVar10 - 0.5f) * uVar8 / uVar4;
-			dVar11 = dVar11 * uVar8 / uVar4;
-		}
-		MSBgm::setPan(1, dVar10, 1, 0);
-		MSBgm::setDolby(1, dVar11, 1, 0);
+		setMontePanDolby(unk10, fVar12, unk4, unk14);
 	}
 	unk20 = unk1C;
 	unk4 += 1;
