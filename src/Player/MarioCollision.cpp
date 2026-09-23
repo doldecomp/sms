@@ -372,10 +372,13 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		return;
 	}
 
-	u32 animOffset1 = checkStatusType(MARIO_STATUS_FLAG_JUMPING) ? 1 : 0;
-	if (onYoshi()) {
-		animOffset1 = true;
-	}
+	u32 animOffset1;
+	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING))
+		animOffset1 = 1;
+	else
+		animOffset1 = 0;
+	if (onYoshi())
+		animOffset1 = 1;
 
 	if (damageAnimType == 3) {
 		if (mStatus == MARIO_STATUS_RUN || mStatus == MARIO_STATUS_OIL_RUN) {
