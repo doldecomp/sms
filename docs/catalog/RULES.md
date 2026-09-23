@@ -159,6 +159,9 @@ Per site unless stated; a "not:" clause is disproved — do not retry it.
 - **`TQuat4::rotate` (rs3/rs5, 2026-09-23):** retail's deep sites `bl TVec4()` and `set<f>` once each, which a two-level rotate (quaternion into locals, helper `TQuat4 q;` + four assignments + `rDest.set`) reproduces: +9 functions (TabePukuDrag 77.5 -> 99.8) against 7 shallow-site register regressions that no split fixes (288 local and 288 parameter orders inert).
   The shallow losses come from dropping HEAD's `q2`, which retail's deep sites prove absent, so the fix is per-site at makeQuat/doAttackPose/bindBody. Header and call sites: `docs/progress/research/rotate_two_level_JGQuat4.hpp`, `rotate_callsites.patch`.
 
+- **Section-base addressing (rs6):** MWCC switches a section to `...data.0`/`...bss.0` base+offset addressing only when the function has 3 or more live references to TU-local objects in that section (counted per section, after dead-code removal); fewer are addressed by symbol.
+  A retail function using the base with 2 visible references had a third live reference the optimizer later merged (tinkoopa/koopajr `init`, open).
+
 ## Frame-size gaps
 
 - Validate with `volatile char trash[N]` in the caller's own body only: inside an inlined callee a trivial POD prices 0, so probe a callee with a `struct S { ~S() {} u32 a; }` local (frame-gaps.md: "Research batch 233").
