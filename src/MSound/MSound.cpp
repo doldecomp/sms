@@ -132,6 +132,10 @@ void MSSeCallBack::setWaterCameraFir(bool enabled)
 
 void MSSeCallBack::setWaterFilter(u16 param_1) { }
 
+// c-msnd: case 20's loops as a TU-local `static inline` taking the track put
+// param_1 in retail's r31 and grow the frame by 0x10 (0x58 -> 0x68) but reorder
+// the loop body (98.3%); an inner-loop helper and a per-grandchild helper are
+// 98.3/98.7, C-style i/j declarations inert.
 // TODO: 98.8%. Retail loads the grandchild track straight into r3 (ours via
 // r0 + `mr r3, r0`; split getChild, raw mChildren, assign-in-test inert) and
 // has a dead 0x30 low frame region, likely a missing inline level.
@@ -374,6 +378,9 @@ static inline JAISound* MSoundUnkC4(const MSound* p)
 // (cc41): named cameras (block and function scope), a camera loop, a
 // `const JAICamera&` null-camera accessor, a `&unkAC[i]` pointer accessor
 // per site, and raw/fork/binder unkC4 at each site.
+// TODO: 99.9%. The second JAICamera() temp sits 4 bytes low (retail 0x1c,
+// ours 0x20; the first is exact at 0x2c). A `for (i < 2)` loop over unkAC
+// (int/s32/u32/u8 counters) unrolls to one shared temp: 97.3%.
 void MSound::exitStage()
 {
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat)
@@ -484,6 +491,14 @@ f32 MSound::getDistPowFromCamera(const Vec& pos)
 // TODO: retail keeps `this` in r31 all the way (8 saved GPRs, frame 0x88);
 // ours spills it to 8(r1) and gives r31 to the string base (frame 0x80).
 // aramSize/loop-type/receiver/new-temp spellings inert.
+// TODO: 86.9%. The `this` spill to 8(r1) (retail keeps it in r31 and saves
+// r24-r31) is EH cleanup for the JAIBasic base: JAIBasic.hpp declares
+// `~JAIBasic()`, which retail never defines (no __dt__8JAIBasic in the map).
+// Dropping that shared-header declaration gives 99.78% with every instruction
+// right and no regression tree-wide (parked, c-msnd). What is then left is an
+// 8-byte low region (fctiwz temps at 0x48/0x50 vs 0x40/0x48); inert with the
+// header fix: unnamed min<u8> result, unnamed unk4 read, both, and dropping
+// or moving the aramSize copy.
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
                u8* param_5, u32 param_6)
 {
