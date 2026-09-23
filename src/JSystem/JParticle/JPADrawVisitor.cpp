@@ -1333,7 +1333,7 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		JGeometry::TVec3<f32> f29_f30_f31;
 		f29_f30_f31.cross(params->unk0, local_BC);
 		if (f29_f30_f31.isZero())
-			f29_f30_f31.set(0.0f, 1.0f, 0.0f);
+			f29_f30_f31.set(1.0f, 0.0f, 0.0f);
 		else
 			f29_f30_f31.normalize();
 
@@ -1382,7 +1382,7 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		JGeometry::TVec3<f32> f29_f30_f31;
 		f29_f30_f31.cross(params->unk0, local_BC);
 		if (f29_f30_f31.isZero())
-			f29_f30_f31.set(0.0f, 1.0f, 0.0f);
+			f29_f30_f31.set(1.0f, 0.0f, 0.0f);
 		else
 			f29_f30_f31.normalize();
 
