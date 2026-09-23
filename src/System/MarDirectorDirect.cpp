@@ -1196,8 +1196,13 @@ void TMarDirector::moveStage()
 		case 5:
 		case 6:
 		case 8:
+#if defined(VERSION_GMSE01)
+			unkE4 = 8;
+			unkB4 = TApplication::APP_STATE_TITLE;
+#else
 			unkE4 = 2;
 			unkB4 = TApplication::APP_STATE_BOOT;
+#endif
 			break;
 
 		case 9:
