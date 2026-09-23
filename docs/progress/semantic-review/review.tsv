@@ -1,0 +1,89 @@
+unit	function	fuzzy	verdict	evidence
+mario/Enemy/koopajr	TKoopaJrSubmarineManager::createEnemyInstance()	3.89	EQUIVALENT	ours inlines the TKoopaJrSubmarine ctor retail calls; retail ctor body has the same stores (vtables, 0x164/0x16c/0x188=0, 0x1a0=0, 0xf0 bit clears)
+mario/Enemy/Koopa	TKoopaFlame::attack_(THitActor*)	18.43	EQUIVALENT	ours expands TKoopa::changeAnm(3, 0, rate) which retail calls; expansion equals retail changeAnm body with the same args
+mario/System/MarNameRefGen	JGadget::TVector<TCameraMapTool, JGadget::TAllocator<TCameraMapTool>>::InsertRaw(TCameraMapTool*, unsigned long)	60.22	EQUIVALENT	ours calls the implicit TCameraMapTool::operator= in the copy_backward loop; retail inlines the same member copy (offsets 4..47, unrolled x4) over the same range
+mario/Enemy/koopajr	TDirectionCalc::calcNearerDirection(float)	69.88	EQUIVALENT	MSL std::fmodf inlined (body identical to retail weak copy in wireTrap.o); same args (2pi + (dir - c), 2pi)
+mario/Enemy/pakkun	TStayPakkun::load(JSUMemoryInputStream&)	80.09	EQUIVALENT	weak TVec3::set<f> call inlined
+mario/Player/MarioParticle	TWarpInCallBack::execute(JPABaseEmitter*, JPABaseParticle*)	80.23	EQUIVALENT	by-value TVec3 copy temporaries elided; effects identical
+mario/Enemy/Koopa	TKoopa::calcRootMatrix()	81.67	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Animal/BeeHive	TBeeHive::getCenterOfGravity() const	85.90	EQUIVALENT	array base loaded once per unrolled iteration instead of per element; effects identical
+mario/Map/MapWire	TMapWire::getPosInWire(const JGeometry::TVec3<float>&) const	85.94	EQUIVALENT	struct-copy temporaries elided; same sqrt args and quotient
+mario/Enemy/Kukku	TKukku::dropCoins()	86.49	EQUIVALENT	weak TVec3::set<f> inlined (jmaSin/Cos velocity); stores to the coin identical
+mario/Enemy/BathtubKiller	TNerveBathtubKillerStraight::execute(TSpineBase<TLiveActor>*) const	86.98	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/MoveBG/MapObjInit	TMapObjBase::initMActor(const char*, const char*, unsigned long)	87.09	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/Kazekun	TKazekun::doAttackPose(bool)	87.64	BUG	spin axis was mQuat.rotate((0,-1,0)); retail rotates (-1,0,0) (the -1.0 literal multiplies vx terms). Fixed; effects now identical, 87.64 -> 89.50
+mario/MoveBG/MapObjCorona	TBathtub::calcRootMatrix()	87.82	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/BathtubKiller	TBathtubKiller::setMActorAndKeeper()	88.09	EQUIVALENT	string pool reached through a differently named base symbol; same offsets and args
+mario/System/EventWatcher	evIsNearActors(TSpcTypedInterp<TEventWatcher>*, unsigned long)	88.54	EQUIVALENT	TUtil::sqrt inlined; stack-arg index spelled (top-1)-(argc-1) vs top-argc
+mario/MoveBG/MapObjPollution	TMapObjRevivalPollution::loadAfter()	88.84	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/THPPlayer/THPAudioDecode	AudioDecoderForOnMemory(void*)	89.27	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/MoveBG/MapObjMamma	TSandBomb::touchWater(THitActor*)	89.41	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Animal/BeeHive	TBeeHive::controlCollision()	89.58	EQUIVALENT	retail has a dead compare (idx+1 vs count) overwritten before the branch; stores identical
+mario/Animal/AnimalBase	TAnimalBase::execWalk(bool)	90.25	EQUIVALENT	weak MsClamp<f> inlined
+mario/Enemy/igaiga	TGorogoroManager::perform(unsigned long, JDrama::TGraphics*)	90.34	EQUIVALENT	MsWrap<f> inlined; unk64 re-tested at a join and a dead else-value (TRUE vs 0) behind a non-null test; effects identical
+mario/Enemy/Kumokun	JGeometry::TQuat4<float>::rotate(const JGeometry::TVec3<float>&, JGeometry::TVec3<float>&) const	90.39	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/MoveBG/MapObjMamma	TSandCastle::expanded()	90.56	EQUIVALENT	getMActor() accessor call vs direct read of +0x74
+mario/Enemy/effectObj	TEffectObjBase::perform(unsigned long, JDrama::TGraphics*)	90.77	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/MoveBG/MapObjMamma	TMammaMirrorMapOperator::perform(unsigned long, JDrama::TGraphics*)	90.88	EQUIVALENT	squared distance summed y,x,z with fmadds (fp-contract rounding only); same addresses
+mario/Animal/BeeHive	JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>::setSQ(const JGeometry::TVec3<float>&, const JGeometry::TQuat4<float>&)	91.05	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Map/MapCheck	bgIntersectLine(const TBGCheckData*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, bool, JGeometry::TVec3<float>*)	91.14	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Player/MarioMove	TMario::moveRequest(const JGeometry::TVec3<float>&)	91.17	EQUIVALENT	effects identical; only the dead f1 at return of a void function differs
+mario/Enemy/bosswanwan	TBossWanwanMtxCalc::calc(unsigned short)	91.26	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/GC2D/ConsoleStr	TConsoleStr::processShineGet(int)	91.29	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Map/MapMirror	TMirrorModelManager::perform(unsigned long, JDrama::TGraphics*)	91.33	EQUIVALENT	empty TVec3() ctor called out of line twice; gpCamera re-read instead of caching &camera->0x124
+mario/Enemy/limitkoopa	TLimitKoopa::startHipDrop()	91.55	EQUIVALENT	normalize() recomputes |v|^2 that retail reused from length() (CSE)
+mario/Enemy/rocket	TRocket::setDeadAnm()	91.71	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/BossHanachanSub	TSphereLink::moveHead(const JGeometry::TVec3<float>&)	91.80	EQUIVALENT	TVec3::operator-= vs weak TVec3::sub(const TVec3&), both in-place subtract with the same operands
+mario/MoveBG/MapObjMare	TMuddyBoat::bind()	91.83	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/effectObj	TEffectColumWater::generate(JGeometry::TVec3<float>&, JGeometry::TVec3<float>&)	91.95	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Camera/cameralib	CLBCalcNearNinePos(JGeometry::TVec3<float>*, S16Vec*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, short, float, const JGeometry::TVec2<float>&)	91.98	BUG	CLBRotateVecByEulerAndRoll multiplied by mtxT (rows); retail reads columns (m00,m10,m20...) = transpose, i.e. the opposite roll. Fixed; effects now identical
+mario/GC2D/GCConsole2	TGCConsole2::countShine()	92.11	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Map/MapMakeData	TMapCollisionBase::setCheckData(const float*, const short*, TBGCheckData*, int)	92.11	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/hinokuri2	Hino2HeadCallback(J3DNode*, int)	92.35	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Map/MapWire	TMapWire::setFootPointsAtHanged(float(*)[4])	92.43	EQUIVALENT	TVec3::sub result read through its returned reference vs the stack slot; same values
+mario/Enemy/igaiga	RollEnemyBodyCallback(J3DNode*, int)	92.50	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/Kumokun	TKumokun::initAttachPlane()	92.52	BUG	setRotate(getPlaneNormal(), up, 0.0f) at both sites; retail axis is cross(up, n) and amount 1.0 (0x5288/0x54b8), ours built an identity quat. Fixed to setRotate(up, n, 1.0f): 92.52 -> 96.51
+mario/Animal/AnimalBase	TAnimalBase::perform(unsigned long, JDrama::TGraphics*)	92.54	EQUIVALENT	PSMTXConcat source indexes a stack Mtx array at a different frame offset; same element
+mario/Enemy/BathtubKiller	TBathtubKiller::makeQuat(JGeometry::TVec3<float>, float, float)	92.61	BUG	mQuat.mul(steer) computes mQuat*steer; retail stores steer*mQuat at both sites. Fixed to mQuat.mul(steer, mQuat): 92.61 -> 97.27
+mario/MarioUtil/MtxUtil	TMultiMtxEffect::setup(J3DModel*, const char*)	92.71	EQUIVALENT	TVec3 copy ctor called out of line vs inline copy; same TParamT args (0.7)
+mario/Player/ModelWaterManager	TWaterEmitInfo::TWaterEmitInfo(const char*)	92.71	EQUIVALENT	string pool base symbol named differently; calcKeyCode args same offsets
+mario/NPC/NpcEvent	ev__ForceStartTalkExceptNpc__FP32TSpcTypedInterp<13TEventWatcher>Ul	92.75	EQUIVALENT	TSpcSlice copied to the stack before reading .value vs direct read at +4; pop identical
+mario/MoveBG/MapObjPlane	TMapObjPlane::calcNrm(int, int)	92.77	EQUIVALENT	symbolic effects identical; 0-y difference reused across adjacent cross products (CSE)
+mario/Enemy/TabePuku	TTPHitActor::updateTerrainCollsion()	93.04	EQUIVALENT	bool temp (0/1) tested as int (cmpwi) vs byte (clrlwi.)
+mario/GC2D/Menu	TMenuPlane::TMenuPlane(const TMarioGamePad*, J2DPane*, unsigned long, unsigned long)	93.07	EQUIVALENT	retail reloads +0x28 through a stack-held pointer after the local-array store; ours keeps it in a register
+mario/Enemy/BossHanachanParts	TBossHanachanPartsBody::setAnm_(EnumBossHanachanAnmKind, EnumBossHanachanStopMotionBlendOnOff)	93.10	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Animal/Bird	TNerveAnimalBirdWalkOnGround::execute(TSpineBase<TLiveActor>*) const	93.12	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Map/MapMakeList	TMapCollisionData::addCheckDataToGrid(TBGCheckData*, int)	93.14	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/pakkun	PakkunSeedCallback(J3DNode*, int)	93.24	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/bossgesso	TBossGesso::doAttackSingle()	93.29	EQUIVALENT	retail inlines MsGetRotFromZaxisY (matan, +-90 at z==0, 180-... for z<0) at one site; ours calls it
+mario/System/EventWatcher	evIsNearSameActors(TSpcTypedInterp<TEventWatcher>*, unsigned long)	93.31	EQUIVALENT	sqrt inlined, gpMapObjManager hoisted and CTR loop; match counter and stack push compares identical
+mario/Animal/Bird	TAnimalBird::doLanding(bool)	93.40	EQUIVALENT	quaternion rotate of the velocity identical instruction for instruction modulo registers; symbolic diff was a stack-slot naming artifact
+mario/Enemy/TabePuku	TTabePuku::getTakingMtx()	93.45	EQUIVALENT	stores identical; returns MtxPtr, only the dead f1 differs
+mario/MarioUtil/MtxUtil	TRope::moveHead(const JGeometry::TVec3<float>&)	93.60	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/Koopa	@unnamed@::KoopaNeckCallBack(J3DNode*, int)	93.72	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Player/MarioAccess	SMS_IsMarioOnWire()	93.83	EQUIVALENT	mario->0x68 kept in a register instead of reloaded
+mario/Camera/CameraNotice	CPolarSubCamera::calcNoticeTargetYrot_(const Vec&)	93.88	EQUIVALENT	CLBCalcRatio args identical after f28/f29 renaming; extsh of an already sign-extended s16
+mario/System/CardManager	TCardManager::decideUseSector(TCardManager::TCriteria*)	93.93	EQUIVALENT	returns 0/1 directly (duplicated blr) instead of through r0
+mario/Player/WaterGun	TNozzleDeform::emit(int)	93.93	BUG	size lerp was (min-p)/(max-p); retail computes (p-min)/(max-min) (fsubs f31-f0, f4-f0). Fixed; effects now identical
+mario/Animal/BeeHive	TNerveBeeHiveBreak::execute(TSpineBase<TLiveActor>*) const	93.99	EQUIVALENT	weak TVec3::set<f>(0,0,0) inlined; base+offset addressing
+mario/MarioUtil/DrawUtil	TTrembleModelEffect::clash(float)	94.00	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/hauntLeg	HauntLegCallback(J3DNode*, int)	94.01	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/BossHanachanSub	BHSCalcRevisionDistXZByRotateZ(float, float, float, float*, float*)	94.03	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/GC2D/SelectShine2	TSelectShineManager::perform(unsigned long, JDrama::TGraphics*)	94.07	EQUIVALENT	cCenter referenced through a section symbol; same object
+mario/Enemy/bossgesso	TBossGesso::changeAllTentacleState(int)	94.12	EQUIVALENT	x==3||x==4 compiled as unsigned range (x-3)<=1
+mario/Player/WaterGun	TNozzleBase::emit(int)	94.15	EQUIVALENT	array element formed as base+0x1c68+i*4 either way; JMA sin/cos shift CSE; stores identical
+mario/NPC/NpcParts	TNpcParts::TNpcParts(unsigned long, const J3DGXColorS10*, TBaseNPC*)	94.19	BUG	motion blend for case 0x4000010 tested (i==0 && j==9), never true; retail tests j==0 then i==9. Fixed; fuzzy 94.19 -> 94.17 (the old cmpwi r22,0 matched retail text while testing the wrong variable)
+mario/Enemy/Koopa	TKoopaFlame::control()	94.33	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/koopajr	TKoopaJrSubmarine::init(TLiveManager*)	94.44	EQUIVALENT	joint name/index tables reached through their own symbols vs retail blob+offset; same nerve dtor-chain object
+mario/MoveBG/MapObjMamma	TLeanMirror::controlShake()	94.44	EQUIVALENT	empty SMatrix34C ctor call omitted
+mario/Map/BathWaterManager	TBathWaterMeshRenderer::prerender(JDrama::TGraphics*, const TBathtubData&, TBathWater**, TBathWaterParams**, int)	94.49	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Animal/BeeHive	TNerveBeeHiveMarioWaterIn::execute(TSpineBase<TLiveActor>*) const	94.50	EQUIVALENT	weak TVec3::set<f>(0,0,0) inlined
+mario/MoveBG/MapObjPlane	TMapObjPlane::makeMountain()	94.52	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/Kukku	TNerveKukkuGraphWander::execute(TSpineBase<TLiveActor>*) const	94.57	EQUIVALENT	ours calls TKukku::calcMomentum(marchSpeed) which retail inlines here (Eular2Quat, TVec4 copy, set, rotate); same argument
+mario/Player/WaterGun	TNozzleTrigger::emit(int)	94.64	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/MoveBG/MapObjFlag	TMapObjFlagManager::perform(unsigned long, JDrama::TGraphics*)	94.67	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Camera/lensflare	TLensFlare::perform(unsigned long, JDrama::TGraphics*)	94.83	EQUIVALENT	effects identical; only the dead f1 at return of a void function differs
+mario/Enemy/limitkoopa	TLimitKoopa::setUpHitActors()	94.90	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/Enemy/tinkoopa	TTinKoopa::init(TLiveManager*)	94.97	EQUIVALENT	joint/name tables via own symbols (function-local static) vs retail blob+offset; same data
+mario/MoveBG/MapObjCorona	TBathtub::setupCollisions_()	94.98	EQUIVALENT	symbolic effects identical (non-stack stores, call args, compares, returns); residue is regalloc/scheduling/stack layout
+mario/JSystem/JParticle/JPAMath	JPAVecToRotaMtx(float(*)[4], JGeometry::TVec3<float>, JGeometry::TVec3<float>)	62.31	EQUIVALENT	axis kept in registers instead of a stack TVec3; all nine elements checked, symbolic effects identical
