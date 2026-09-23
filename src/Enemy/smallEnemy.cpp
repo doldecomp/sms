@@ -547,7 +547,9 @@ void TSmallEnemy::updateAnmSound() { TSpineEnemy::updateAnmSound(); }
 // TODO: frame 0x58 vs ours 0x28 with no stack reference in the body. Inert
 // (cc48): SMSGetMSound(), SMSGetMarioParticleManager(), getPosition() on
 // either emitter argument (the frame never moves); isActorType() for the
-// punch test is structurally worse.
+// punch test is structurally worse. The same region is 0x20 in
+// TTamaNoko/TDangoHamuKuri (see TTamaNoko::receiveMessage for the probes); accessor
+// levels there land in existing slack and never move the frame.
 BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 {
 	if (isEatenByYosshi() && message == HIT_MESSAGE_TAKE && !mHolder) {

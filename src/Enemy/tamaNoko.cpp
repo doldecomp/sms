@@ -369,6 +369,12 @@ void TTamaNoko::behaveToRelease()
 		mSpine->pushNerve(&TNerveTamaNokoThrown::theNerve());
 }
 
+// TODO: instruction-exact; frame 0x40 vs ours 0x20, no stack reference.
+// Same dead region as TSmallEnemy/TDangoHamuKuri::receiveMessage. -inline
+// off shows only onLiveFlag/onHitFlag expand here; the map lists no UNUSED
+// helper. Inert (frame never moves): every subset of getPosition() on both
+// emitter arguments and SMSGetMSound(), a TU-local inline level with
+// parameters over each of the four blocks, and deleting any one block.
 BOOL TTamaNoko::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP) {
