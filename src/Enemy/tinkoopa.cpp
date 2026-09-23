@@ -371,7 +371,7 @@ BOOL TTinKoopaFlame::receiveMessage(THitActor* sender, u32 message)
 
 void TTinKoopaFlame::hitWater()
 {
-	if (mTinKoopa->mFlameStopTimer > 0)
+	if (mTinKoopa->mTimers[TINKOOPA_TIMER_FLAME_STOP] > 0)
 		return;
 
 	if (mHitPoints > 0)
@@ -380,7 +380,7 @@ void TTinKoopaFlame::hitWater()
 	if (mHitPoints <= 0) {
 		mHitPoints
 		    = (s16)mTinKoopa->getSaveParams()->mSLFlameHP.get();
-		mTinKoopa->mFlameStopTimer
+		mTinKoopa->mTimers[TINKOOPA_TIMER_FLAME_STOP]
 		    = (s16)mTinKoopa->getSaveParams()->mSLFlameRevivalTime.get();
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
@@ -408,7 +408,7 @@ void TTinKoopaFlame::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		emitFlameEffects();
 
-		if (mTinKoopa->mFlameStopTimer <= 0)
+		if (mTinKoopa->mTimers[TINKOOPA_TIMER_FLAME_STOP] <= 0)
 			offHitFlag(HIT_FLAG_NO_COLLISION);
 
 		mSprayed = false;
@@ -417,7 +417,7 @@ void TTinKoopaFlame::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TTinKoopaFlame::checkMario()
 {
-	if (mTinKoopa->mFlameStopTimer > 0)
+	if (mTinKoopa->mTimers[TINKOOPA_TIMER_FLAME_STOP] > 0)
 		return;
 
 	if (mTinKoopa->mDamageStage == 4)
@@ -453,7 +453,7 @@ void TTinKoopaFlame::emitFlameEffects()
 	if (isHighPosition())
 		height = 1.6f;
 
-	if (mTinKoopa->mFlameStopTimer > 0) {
+	if (mTinKoopa->mTimers[TINKOOPA_TIMER_FLAME_STOP] > 0) {
 		mScale -= 0.05f;
 		if (mScale < 0.3f)
 			mScale = 0.3f;
@@ -466,7 +466,7 @@ void TTinKoopaFlame::emitFlameEffects()
 	f32 scaleY;
 	f32 scale;
 	scaleY = scale = mScale * height;
-	if (mTinKoopa->mFlameStopTimer > 0)
+	if (mTinKoopa->mTimers[TINKOOPA_TIMER_FLAME_STOP] > 0)
 		scaleY *= 0.5f;
 
 	JGeometry::TVec3<f32> flameScale(scale, scaleY, scale);
@@ -915,10 +915,10 @@ void TTinKoopa::resetTinKoopa()
 	for (int i = 0; i < 4; i++)
 		mKillerDirs[i] = 0;
 
-	mKillerIntervalTimer = 0;
-	mFlameStopTimer      = 0;
-	mDefeatWaitTimer     = 0;
-	mKillerIntervalTimer = 0;
+	mTimers[TINKOOPA_TIMER_KILLER]      = 0;
+	mTimers[TINKOOPA_TIMER_FLAME_STOP]  = 0;
+	mTimers[TINKOOPA_TIMER_DEFEAT_WAIT] = 0;
+	mTimers[TINKOOPA_TIMER_KILLER]      = 0;
 
 	unk1B4 = 0.0f;
 	unk1B8 = 30.0f;
@@ -959,7 +959,7 @@ void TTinKoopa::makeKillerQueue(int num, s8 direction)
 	for (int i = 0; i < mKillerNum; i++)
 		mKillerDirs[i] = direction;
 
-	mKillerIntervalTimer = 0;
+	mTimers[TINKOOPA_TIMER_KILLER] = 0;
 }
 
 // UNUSED, 0x8c in the map: inlined into perform.
@@ -997,10 +997,6 @@ bool TTinKoopa::checkTruckAnimationPass(int frame)
 // TODO: incorrect size.
 static void printTinKoopaDebugInfo(TTinKoopa* tin_koopa) { }
 
-// TODO: 96.5%. The ROM decrements each updateTimers counter through its
-// address (`addi r4, r29, 0x178` then `stw r0, 0(r4)`; 0x4c matches that
-// shape); a TU-local by-reference or by-pointer decrement helper, a template
-// and a named value are inert -- MWCC folds the address back in.
 void TTinKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & 2) {
@@ -1059,23 +1055,13 @@ void TTinKoopa::makeEyeBeamEffect()
 }
 
 // UNUSED, 0x4c in the map: the three countdowns of perform's movement cue.
-// TODO: the retail object takes the address of each timer before storing it
-// back (`addi r4, this, 0x178` then `stw r0, 0(r4)`), which is what an inlined
-// helper taking a pointer looks like; writing one (`countDownTimer(int*)`,
-// inline so it leaves no symbol) gives byte-identical code to the plain form,
-// so the address-of has another cause.  A pointer local reassigned across the
-// three countdowns (`s32* timer = &m; if (*timer > 0) (*timer)--;`) also folds
-// straight back to base+displacement, load and store alike.
+// The timers are an array: MWCC's unrolled indexed loop is what materialises
+// each element's address for the store (`addi r4, this, 0x178`).
 void TTinKoopa::updateTimers()
 {
-	if (mKillerIntervalTimer > 0)
-		mKillerIntervalTimer--;
-
-	if (mFlameStopTimer > 0)
-		mFlameStopTimer--;
-
-	if (mDefeatWaitTimer > 0)
-		mDefeatWaitTimer--;
+	for (int i = 0; i < TINKOOPA_TIMER_NUM; ++i)
+		if (mTimers[i] > 0)
+			mTimers[i]--;
 }
 
 const char** TTinKoopa::getBasNameTable() const { return tinkoopa_bastable; }
@@ -1174,12 +1160,12 @@ void TTinKoopa::checkKillerLaunch()
 	if (mKillerIndex >= mKillerNum)
 		return;
 
-	if (mKillerIntervalTimer > 0)
+	if (mTimers[TINKOOPA_TIMER_KILLER] > 0)
 		return;
 
 	launchKiller(mKillerDirs[mKillerIndex]);
 	mKillerIndex++;
-	mKillerIntervalTimer = getSaveParams()->getSLKillerInterval();
+	mTimers[TINKOOPA_TIMER_KILLER] = getSaveParams()->getSLKillerInterval();
 }
 
 // UNUSED, 0x1e0 in the map: the three message checks of perform's movement
@@ -1532,11 +1518,12 @@ DEFINE_NERVE(TNerveTinKoopaWait, TLiveActor)
 	if (spine->getTime() == 0) {
 		tinKoopa->changeBck(
 		    TTinKoopa_getWaitAnimationIndex(tinKoopa->mDamageStage));
-		tinKoopa->mDefeatWaitTimer
+		tinKoopa->mTimers[TINKOOPA_TIMER_DEFEAT_WAIT]
 		    = tinKoopa->getSaveParams()->getSLDefeatWaitTime();
 	}
 
-	if (tinKoopa->mDamageStage == 4 && tinKoopa->mDefeatWaitTimer <= 0)
+	if (tinKoopa->mDamageStage == 4
+	    && tinKoopa->mTimers[TINKOOPA_TIMER_DEFEAT_WAIT] <= 0)
 		TFlagManager::smInstance->setBool(true, 0x5000A);
 
 	return FALSE;

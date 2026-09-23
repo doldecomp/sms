@@ -175,6 +175,13 @@ public:
 	/* 0x8 */ TTinKoopaLaunchOrder** mOrders;
 };
 
+enum {
+	TINKOOPA_TIMER_KILLER,      // until the next Bullet Bill may launch
+	TINKOOPA_TIMER_FLAME_STOP,  // flame breath held off
+	TINKOOPA_TIMER_DEFEAT_WAIT, // wait after the last hit
+	TINKOOPA_TIMER_NUM,
+};
+
 // Mecha-Bowser (ニセクッパ), the Pinna Park boss. It rides the roller coaster
 // track with Mario, so almost everything it does is timed off the coaster's
 // own animation (gpMarioOriginal->mKoopaRail) rather than off its own spine.
@@ -242,9 +249,9 @@ public:
 	/* 0x169 */ s8 mKillerDirs[4];
 	/* 0x170 */ int mKillerNum;
 	/* 0x174 */ int mKillerIndex;
-	/* 0x178 */ int mKillerIntervalTimer;
-	/* 0x17C */ int mFlameStopTimer;
-	/* 0x180 */ int mDefeatWaitTimer;
+	// Countdowns decremented together by updateTimers(); the ROM's unrolled
+	// indexed loop there is the evidence for the array.
+	/* 0x178 */ int mTimers[TINKOOPA_TIMER_NUM]; // TINKOOPA_TIMER_*
 	/* 0x184 */ JGeometry::TVec3<f32> mHeadPos;
 	/* 0x190 */ JGeometry::TVec3<f32> mBreastPos;
 	/* 0x19C */ JGeometry::TVec3<f32> mRightArmPos;
