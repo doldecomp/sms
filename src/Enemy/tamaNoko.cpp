@@ -702,6 +702,8 @@ DEFINE_NERVE(TNerveTamaNokoSleep, TLiveActor)
 }
 
 // 3 in 1: chase mario & try to initiate & land a jump attack
+// TODO: retail places the two velocity copies (local_48, local_54) below the
+// inline temporaries, as if they were by-value temporaries themselves.
 DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 {
 	TTamaNoko* self = (TTamaNoko*)spine->getBody();
@@ -767,8 +769,9 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 				self->setBckAnm(9);
 			} else if (self->isBckAnm(9)) {
 				self->updateSquareToMario();
-				f32 searchLen = self->getSaveParams2()->mSLSearchLength.get();
-				if (searchLen * searchLen < self->getDistToMarioSquared()) {
+				f32 searchLen = self->getSaveParams2()->mSLSearchLength.value;
+				searchLen *= searchLen;
+				if (self->getDistToMarioSquared() > searchLen) {
 					self->unk1B8 = true;
 					self->setBckAnm(8);
 				} else {
