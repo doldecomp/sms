@@ -655,27 +655,24 @@ namespace {
 // TKoopa::getNeckFocus() scales, and while he is breathing fire it first
 // swings the head sideways and down by getFlameDirRate().
 //
-// TODO: only the head of the function is reconstructed. What is missing, in
-// the ROM's order:
-//   * inside the isFlaming() guard, two hand-written 3x4 concatenations,
-//     `mtx = Ry(yaw) * mtx` and then `mtx = mtx * Rz(pitch)`, both spelled
-//     out with literal 0.0f/1.0f factors (which is why those products
-//     survive);
-//   * the aim itself: the up axis is column 1 of mtx, `focus` is projected
-//     onto the plane through it and normalised, and if the dot product with
-//     column 0 is below 0.5 the focus factor is scaled by
-//     (1 + dot) / 1.5;
-//   * a quaternion from the axis/angle between column 0 and that direction,
-//     scaled by the focus factor with a refinement-free sqrt, multiplied by
-//     a second quaternion around the up axis when not flaming, and finally
-//     turned into a rotation matrix concatenated onto mtx;
-//   * PSMTXCopy(mtx, J3DSys::mCurrentMtx).
+// TODO: 88.4%. Every statement is in place and in the ROM's order; what is
+// left is register colouring and scheduling. We save f14 as well (retail
+// stops at f15), which renumbers the saved registers through the two
+// hand-expanded Ry/Rz concatenations, and the frame is 0x2c0 against
+// 0x2d0 (retail has 0x38 bytes of named locals above `focus` and 0x30
+// between it and `quat`, and no gap between `quat` and `twist`).
+// `getFlameDirRate() *
+// 2pi` also multiplies with the operands swapped (inert when respelled).
+// The single `rot` matrix is shared by all three products: separate
+// matrices for Ry and Rz cost 0x60 of frame. Moving either rotation into a
+// helper pushes its set() out of line and loses the literal 0/1 products.
 static inline f32 KoopaAngleBetween(const JGeometry::TVec3<f32>& a,
                                      const JGeometry::TVec3<f32>& b)
 {
 	JGeometry::TVec3<f32> c;
 	c.cross(a, b);
-	return atan2f(c.length(), a.dot(b));
+	f32 len = c.length();
+	return atan2f(len, a.dot(b));
 }
 
 int KoopaNeckCallBack(J3DNode* node, int flag)
@@ -683,6 +680,7 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 	if (flag != 0)
 		return 1;
 
+	TPosition3f rot;
 	TKoopa* koopa = (TKoopa*)node->getCallBackUserData();
 	TPosition3f* mtx = (TPosition3f*)j3dSys.getModel()->getAnmMtx(
 	    ((J3DJoint*)node)->getJntNo());
@@ -691,15 +689,14 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 	// lwz/stw before the first component is touched.
 	JGeometry::TVec3<f32> focus = SMS_GetMarioPos();
 	focus.y += 85.0f;
-	focus.x -= mtx->at(0, 3);
-	focus.y -= mtx->at(1, 3);
-	focus.z -= mtx->at(2, 3);
+	focus.sub(JGeometry::TVec3<f32>(mtx->at(0, 3), mtx->at(1, 3), mtx->at(2, 3)));
 
 	if (koopa->isFlaming()) {
-		f32 yaw = (koopa->getFlameDirRate() * 6.2831855f
+		f32 angle = (koopa->getFlameDirRate() * 6.2831855f
 		           * koopa->getParam()->flameNeckRange.get())
 		          / 360.0f;
-		f32 pitch = yaw * koopa->getParam()->flameNeckDownRate.get();
+		f32 pitch = angle * koopa->getParam()->flameNeckDownRate.get();
+		f32 yaw = angle;
 		if (pitch > 0.0f)
 			pitch = -pitch;
 		if (koopa->mTurnsLeft)
@@ -707,32 +704,29 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 
 		f32 sinYaw = sinf(yaw);
 		f32 cosYaw = cosf(yaw);
-		TMtx34f rotY;
-		rotY.set(cosYaw, 0.0f, sinYaw, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, -sinYaw,
+		rot.set(cosYaw, 0.0f, sinYaw, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, -sinYaw,
 		         0.0f, cosYaw, 0.0f);
-		mtx->concat(rotY, *mtx);
+		mtx->concat(rot, *mtx);
 
 		f32 sinPitch = sinf(pitch);
 		f32 cosPitch = cosf(pitch);
-		TMtx34f rotZ;
-		rotZ.set(cosPitch, -sinPitch, 0.0f, 0.0f, sinPitch, cosPitch, 0.0f,
+		rot.set(cosPitch, -sinPitch, 0.0f, 0.0f, sinPitch, cosPitch, 0.0f,
 		         0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-		mtx->concat(*mtx, rotZ);
+		mtx->concat(*mtx, rot);
 	}
 
 	f32 neckFocus = koopa->getNeckFocus();
 
 	JGeometry::TVec3<f32> up(mtx->at(0, 1), mtx->at(1, 1), mtx->at(2, 1));
+	JGeometry::TVec3<f32> front(mtx->at(0, 0), mtx->at(1, 0), mtx->at(2, 0));
 	JGeometry::TVec3<f32> flat;
 	flat.scaleAdd(-up.dot(focus), up, focus);
 	flat.normalize();
 	focus.normalize();
 
-	JGeometry::TVec3<f32> front(mtx->at(0, 0), mtx->at(1, 0), mtx->at(2, 0));
 	// The ROM's threshold is a `double` literal, so the comparison promotes.
-	f32 frontDot = front.dot(flat);
-	if (frontDot < 0.5)
-		neckFocus *= (1.0f + frontDot) / 1.5f;
+	if (flat.dot(front) < 0.5)
+		neckFocus *= (1.0f + flat.dot(front)) / 1.5f;
 
 	JGeometry::TQuat4<f32> quat;
 	quat.setRotate(front, flat, neckFocus);
@@ -751,7 +745,6 @@ int KoopaNeckCallBack(J3DNode* node, int flag)
 		quat.mul(twist, quat);
 	}
 
-	TPosition3f rot;
 	rot.setQuat(quat);
 	rot.setTrans(0.0f, 0.0f, 0.0f);
 	mtx->concat(*mtx, rot);
