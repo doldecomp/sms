@@ -902,7 +902,7 @@ config.libs = [
             PCHObject(NonMatching, "Strategic/objmanager.cpp"),
             PCHObject(NonMatching, "Strategic/ObjModel.cpp"),
             Object(NonMatching, "Strategic/spcinterp.cpp"),
-            PCHObject(NonMatching, "Strategic/Strategy.cpp"),
+            PCHObject(Matching, "Strategic/Strategy.cpp"),
             PCHObject(NonMatching, "Strategic/question.cpp"),
             PCHObject(Matching, "Strategic/smplcharacter.cpp"),
             PCHObject(NonMatching, "Strategic/HitActor.cpp"),
