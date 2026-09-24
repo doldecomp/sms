@@ -627,7 +627,7 @@ void J3DVtxColorCalc::calc(J3DModel* model)
 			J3DAnmVtxColorIndexData* r28
 			    = mpVtxColor->getAnmVtxColorIndexData(0, i);
 			for (u32 j = 0; j < r28->mNum; j++) {
-				colorArray[((u16*)r28->mpData)[j]] = color;
+				colorArray[((u16*)(void*)r28->mpData)[j]] = color;
 			}
 		}
 		DCStoreRange(colorArray,
