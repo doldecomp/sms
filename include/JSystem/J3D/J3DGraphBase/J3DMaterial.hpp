@@ -114,16 +114,17 @@ public:
 		return (mMaterialMode & 3) ? GX_TRUE : GX_FALSE;
 	}
 
-	uintptr_t getMaterialID() const { return unk18 & ~DIFF_FLAG; }
-	void setMaterialID(uintptr_t id) { unk18 = id; }
+	u32 getMaterialID() const { return unk18 & ~DIFF_FLAG; }
+	void setMaterialID(u32 id) { unk18 = id; }
 
 	BOOL getSomeFlag() { return unk1C & 1 ? TRUE : FALSE; }
 	void setSomeFlag() { unk1C |= 1; }
 
 private:
 	enum {
-		DIFF_FLAG   = 1 << (sizeof(uintptr_t) * CHAR_BIT - 1),
-		UNIQUE_FLAG = 1 << (sizeof(uintptr_t) * CHAR_BIT - 2),
+		// the top two bits of the 32-bit material ID word
+		DIFF_FLAG   = 1 << 31,
+		UNIQUE_FLAG = 1 << 30,
 	};
 
 	/* 0x0 */ J3DMaterial* mNext;
@@ -132,7 +133,7 @@ private:
 	/* 0xC */ u16 mIndex;
 	/* 0x10 */ u32 mInvalid;
 	/* 0x14 */ char unk14[4];
-	/* 0x18 */ uintptr_t unk18;
+	/* 0x18 */ u32 unk18;
 	/* 0x1C */ u32 unk1C;
 	/* 0x20 */ J3DColorBlock* mColorBlock;
 	/* 0x24 */ J3DTexGenBlock* mTexGenBlock;

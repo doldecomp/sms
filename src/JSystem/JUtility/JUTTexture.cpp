@@ -54,10 +54,10 @@ void JUTTexture::storeTIMG(ResTIMG const* param_0)
 {
 	if (param_0) {
 		mTexInfo = param_0;
-		mTexData = (void*)((int)mTexInfo + mTexInfo->imageDataOffset);
+		mTexData = (void*)((u32)mTexInfo + mTexInfo->imageDataOffset);
 
 		if (mTexInfo->imageDataOffset == 0) {
-			mTexData = (void*)((int)mTexInfo + 0x20);
+			mTexData = (void*)((u32)mTexInfo + 0x20);
 		}
 
 		if (mEmbPalette)

@@ -16,7 +16,7 @@ J3DMaterialFactory::J3DMaterialFactory(const J3DMaterialBlock& block)
 	mpMaterialID = JSUConvertOffsetToPtr<u16>(&block, block.mpMaterialID);
 
 	if (block.mpIndInitData != nullptr
-	    && ((u32)block.mpIndInitData - (u32)block.mpNameTable) > 4)
+	    && ((u32)(void*)block.mpIndInitData - (u32)(void*)block.mpNameTable) > 4)
 		mpIndInitData = JSUConvertOffsetToPtr<J3DIndInitData>(
 		    &block, block.mpIndInitData);
 	else

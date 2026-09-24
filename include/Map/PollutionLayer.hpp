@@ -44,7 +44,7 @@ struct TPollutionLayerInfo {
 	/* 0x20 */ u16 mLog2Width;
 	/* 0x22 */ u16 mLog2Height;
 	/* 0x24 */ u32 unk24;
-	/* 0x28 */ u8* mHeightMap;
+	/* 0x28 */ PTR32(u8) mHeightMap;
 };
 
 /**

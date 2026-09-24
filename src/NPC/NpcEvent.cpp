@@ -37,7 +37,7 @@ static void IsNpcFlagOn_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
                          u32 flag)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
+	TBaseNPC* npc = (TBaseNPC*)(u32)interp->pop().getDataInt();
 	int result    = 0;
 	if (npc->checkLiveFlag(flag))
 		result = 1;
@@ -70,7 +70,7 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 {
 	interp->verifyArgNum(2, &arg_num);
 	int nerveId   = interp->pop().getDataInt();
-	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
+	TBaseNPC* npc = (TBaseNPC*)(u32)interp->pop().getDataInt();
 	int result = 0;
 
 	const TNerveBase<TLiveActor>* expected = NerveGetByIndex(nerveId);
@@ -149,7 +149,7 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 	if (!NpcEventGetMarDirector()->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 
-		NpcEventGetMarDirector()->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
+		NpcEventGetMarDirector()->unkA0  = (TBaseNPC*)(u32)interp->pop().getDataInt();
 		NpcEventGetMarDirector()->unk126 = 1;
 
 		result = 1;
@@ -212,7 +212,7 @@ static void evConnectDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	TBaseNPC* dummyNpc = (TBaseNPC*)JDrama::TNameRefGen::search2("ダミーＮＰＣ");
 	if (dummyNpc != nullptr) {
 		const JDrama::TActor* actor
-		    = (const JDrama::TActor*)interp->pop().getDataInt();
+		    = (const JDrama::TActor*)(u32)interp->pop().getDataInt();
 		dummyNpc->setDummyConnectActor(actor);
 		result = 1;
 	} else {
@@ -242,7 +242,7 @@ static void evSetNpcBalloonMessage(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(3, &arg_num);
 	int fVar1     = interp->pop().getDataInt();
 	int fVar2     = interp->pop().getDataInt();
-	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
+	TBaseNPC* npc = (TBaseNPC*)(u32)interp->pop().getDataInt();
 	npc->setBalloonMessage(fVar2, fVar1);
 	interp->push();
 }
@@ -252,7 +252,7 @@ static void evSetNpcTalkForbidCount(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(2, &arg_num);
 	u16 count             = interp->pop().getDataInt();
-	TBaseNPC* npc         = (TBaseNPC*)interp->pop().getDataInt();
+	TBaseNPC* npc         = (TBaseNPC*)(u32)interp->pop().getDataInt();
 	npc->mTalkForbidCount = count;
 	interp->push();
 }
@@ -260,7 +260,7 @@ static void evSetNpcTalkForbidCount(TSpcTypedInterp<TEventWatcher>* interp,
 static void evNpcDanceOn(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
+	TBaseNPC* npc = (TBaseNPC*)(u32)interp->pop().getDataInt();
 	npc->npcDanceIn();
 	interp->push();
 }
@@ -269,7 +269,7 @@ static void evNpcDanceOffHappyOn(TSpcTypedInterp<TEventWatcher>* interp,
                                  u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
+	TBaseNPC* npc = (TBaseNPC*)(u32)interp->pop().getDataInt();
 	npc->offActionFlag(TBaseNPC::NPC_ACTION_DANCE);
 	npc->npcHappyIn(2);
 	interp->push();
@@ -278,7 +278,7 @@ static void evNpcDanceOffHappyOn(TSpcTypedInterp<TEventWatcher>* interp,
 static void evResetFruitNum(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TFruitBasketEvent* basket = (TFruitBasketEvent*)interp->pop().getDataInt();
+	TFruitBasketEvent* basket = (TFruitBasketEvent*)(u32)interp->pop().getDataInt();
 	basket->reset();
 	interp->push();
 }
@@ -290,7 +290,7 @@ static void evGetFruitNum(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	// costs a 4-byte named slot below the float-to-int conversion buffer (+8
 	// of frame); `u32` also lands it.
 	s32 fVar4                 = interp->pop().getDataInt();
-	TFruitBasketEvent* basket = (TFruitBasketEvent*)interp->pop().getDataInt();
+	TFruitBasketEvent* basket = (TFruitBasketEvent*)(u32)interp->pop().getDataInt();
 
 	int iVar3 = 0;
 	switch (fVar4) {
@@ -320,7 +320,7 @@ static void evSetFruitType(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	interp->verifyArgNum(3, &arg_num);
 	s32 fVar5                 = interp->pop().getDataInt();
 	s32 fVar4                 = interp->pop().getDataInt();
-	TFruitBasketEvent* basket = (TFruitBasketEvent*)interp->pop().getDataInt();
+	TFruitBasketEvent* basket = (TFruitBasketEvent*)(u32)interp->pop().getDataInt();
 
 	if (fVar5 != 0) {
 		int r28;

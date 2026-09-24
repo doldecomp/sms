@@ -23,9 +23,9 @@ struct J3DJointBlock {
 	/* 0x08 */ u16 mJointNum;
 	/* 0x0A */ u16 _pad;
 
-	/* 0x0C */ J3DJointInitData* mpJointInitData;
-	/* 0x10 */ u16* mpIndexTable;
-	/* 0x14 */ ResNTAB* mpNameTable;
+	/* 0x0C */ PTR32(J3DJointInitData) mpJointInitData;
+	/* 0x10 */ PTR32(u16) mpIndexTable;
+	/* 0x14 */ PTR32(ResNTAB) mpNameTable;
 }; // Size: 0x18
 
 class J3DJointFactory {

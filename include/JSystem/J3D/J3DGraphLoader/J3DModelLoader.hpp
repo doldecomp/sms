@@ -10,30 +10,30 @@ struct J3DModelInfoBlock : public JUTDataBlockHeader {
 	/* 0x08 */ u16 mFlags;
 	/* 0x0C */ u32 mPacketNum;
 	/* 0x10 */ u32 mVtxNum;
-	/* 0x14 */ void* mpHierarchy;
+	/* 0x14 */ PTR32(void) mpHierarchy;
 }; // Size: 0x18
 
 struct J3DVertexBlock : public JUTDataBlockHeader {
-	/* 0x08 */ void* mpVtxAttrFmtList;
-	/* 0x0C */ void* mpVtxPosArray;
-	/* 0x10 */ void* mpVtxNrmArray;
-	/* 0x14 */ void* mpVtxNBTArray;
-	/* 0x18 */ void* mpVtxColorArray[2];
-	/* 0x20 */ void* mpVtxTexCoordArray[8];
+	/* 0x08 */ PTR32(void) mpVtxAttrFmtList;
+	/* 0x0C */ PTR32(void) mpVtxPosArray;
+	/* 0x10 */ PTR32(void) mpVtxNrmArray;
+	/* 0x14 */ PTR32(void) mpVtxNBTArray;
+	/* 0x18 */ PTR32(void) mpVtxColorArray[2];
+	/* 0x20 */ PTR32(void) mpVtxTexCoordArray[8];
 }; // Size: 0x40
 
 struct J3DEnvelopBlock : public JUTDataBlockHeader {
 	/* 0x08 */ u16 mWEvlpMtxNum;
-	/* 0x0C */ void* mpWEvlpMixMtxNum;
-	/* 0x10 */ void* mpWEvlpMixMtxIndex;
-	/* 0x14 */ void* mpWEvlpMixWeight;
-	/* 0x18 */ void* mpInvJointMtx;
+	/* 0x0C */ PTR32(void) mpWEvlpMixMtxNum;
+	/* 0x10 */ PTR32(void) mpWEvlpMixMtxIndex;
+	/* 0x14 */ PTR32(void) mpWEvlpMixWeight;
+	/* 0x18 */ PTR32(void) mpInvJointMtx;
 }; // Size: 0x1C
 
 struct J3DDrawBlock : public JUTDataBlockHeader {
 	/* 0x08 */ u16 mMtxNum;
-	/* 0x0C */ void* mpDrawMtxFlag;
-	/* 0x10 */ void* mpDrawMtxIndex;
+	/* 0x0C */ PTR32(void) mpDrawMtxFlag;
+	/* 0x10 */ PTR32(void) mpDrawMtxIndex;
 }; // Size: 0x14
 
 struct J3DJointBlock;
@@ -42,12 +42,12 @@ struct J3DMaterialBlock_v21;
 
 struct J3DMaterialDLBlock : public JUTDataBlockHeader {
 	/* 0x08 */ u16 mMaterialNum;
-	/* 0x0C */ void* mpDisplayListInit;
-	/* 0x10 */ void* mpPatchingInfo;
-	/* 0x14 */ void* mpCurrentMtxInfo;
-	/* 0x18 */ void* field_0x18;
-	/* 0x1C */ void* field_0x1c;
-	/* 0x20 */ void* mpNameTable;
+	/* 0x0C */ PTR32(void) mpDisplayListInit;
+	/* 0x10 */ PTR32(void) mpPatchingInfo;
+	/* 0x14 */ PTR32(void) mpCurrentMtxInfo;
+	/* 0x18 */ PTR32(void) field_0x18;
+	/* 0x1C */ PTR32(void) field_0x1c;
+	/* 0x20 */ PTR32(void) mpNameTable;
 	/* more */
 };
 
@@ -55,8 +55,8 @@ struct J3DShapeBlock;
 
 struct J3DTextureBlock : public JUTDataBlockHeader {
 	/* 0x08 */ u16 mTextureNum;
-	/* 0x0C */ void* mpTextureRes;
-	/* 0x10 */ void* mpNameTable;
+	/* 0x0C */ PTR32(void) mpTextureRes;
+	/* 0x10 */ PTR32(void) mpNameTable;
 };
 
 class J3DModelLoaderDataBase {

@@ -10,7 +10,8 @@ class TTrack;
 namespace Kernel {
 
 	struct TPortArgs {
-		/* 0x00 */ TTrack* mTrack;
+		// a word, like the rest: JAIPlayerParameter indexes these by word
+		/* 0x00 */ PTR32(TTrack) mTrack;
 		/* 0x04 */ u32 mFlags;
 		/* 0x08 */ f32 mTrackVolume;
 		/* 0x0C */ f32 mTrackPitch;

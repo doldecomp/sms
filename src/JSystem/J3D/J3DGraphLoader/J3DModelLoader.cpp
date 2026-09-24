@@ -148,10 +148,10 @@ void J3DModelLoader::setupBBoardInfo()
 
 		u32 shapeIndex  = mesh->getShape()->getIndex();
 		u16* indexTable = JSUConvertOffsetToPtr<u16>(
-		    mpShapeBlock, (u32)mpShapeBlock->mpIndexTable);
+		    mpShapeBlock, (u32)(void*)mpShapeBlock->mpIndexTable);
 		J3DShapeInitData* shapeInitDatas
 		    = JSUConvertOffsetToPtr<J3DShapeInitData>(
-		        mpShapeBlock, (u32)mpShapeBlock->mpShapeInitData);
+		        mpShapeBlock, (u32)(void*)mpShapeBlock->mpShapeInitData);
 
 		J3DShapeInitData* shapeInitData
 		    = &shapeInitDatas[indexTable[shapeIndex]];
@@ -243,7 +243,7 @@ void J3DModelLoader::readVertex(const J3DVertexBlock* i_block)
 		    = ((u32)nrm_end - (u32)vertex_data.mVtxNormArray) / 12 + 1;
 	} else {
 		vertex_data.mNrmNum
-		    = (i_block->mSize - (u32)i_block->mpVtxNrmArray) / 12 + 1;
+		    = (i_block->mSize - (u32)(void*)i_block->mpVtxNrmArray) / 12 + 1;
 	}
 
 	void* color0_end = NULL;
@@ -260,7 +260,7 @@ void J3DModelLoader::readVertex(const J3DVertexBlock* i_block)
 		    = ((u32)color0_end - (u32)vertex_data.mVtxColorArray[0]) / 4 + 1;
 	} else {
 		vertex_data.mColNum
-		    = (i_block->mSize - (u32)i_block->mpVtxColorArray[0]) / 4 + 1;
+		    = (i_block->mSize - (u32)(void*)i_block->mpVtxColorArray[0]) / 4 + 1;
 	}
 }
 

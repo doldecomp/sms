@@ -83,7 +83,7 @@ static void evGetNameRefName(TSpcTypedInterp<TEventWatcher>* interp,
 
 	const char* name;
 	if (ref)
-		name = ((JDrama::TNameRef*)ref)->getName();
+		name = ((JDrama::TNameRef*)(u32)ref)->getName();
 	else
 		name = "";
 
@@ -105,7 +105,7 @@ static JDrama::TNameRef* getNameRefPtr(TSpcSlice slice)
 	}
 
 	case TSpcSlice::TYPE_INT:
-		result = (JDrama::TNameRef*)slice.getDataInt();
+		result = (JDrama::TNameRef*)(u32)slice.getDataInt();
 		break;
 	}
 
@@ -1499,7 +1499,7 @@ static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TLiveActor* actor = (TLiveActor*)interp->pop().getDataInt();
+	TLiveActor* actor = (TLiveActor*)(u32)interp->pop().getDataInt();
 
 	s16 angleY = SMS_GetMarioAngleY();
 
@@ -1541,7 +1541,7 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
                                     u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-	TBigWatermelon* melon = (TBigWatermelon*)interp->pop().getDataInt();
+	TBigWatermelon* melon = (TBigWatermelon*)(u32)interp->pop().getDataInt();
 
 	// The zero y component is real: retail starts the sum of squares from a
 	// 0.0f literal (`fmadds f1, f3, f3, f1` with f1 loaded from the float

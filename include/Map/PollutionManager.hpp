@@ -17,7 +17,7 @@ class TPollutionManager : public TJointModelManager {
 public:
 	struct TPollutionInfo {
 		/* 0x0 */ u16 mLayerCount;
-		/* 0x4 */ TPollutionLayerInfo* mLayerInfos;
+		/* 0x4 */ PTR32(TPollutionLayerInfo) mLayerInfos;
 	};
 
 	TPollutionManager(const char* name = "落書き管理");

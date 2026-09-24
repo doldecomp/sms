@@ -151,7 +151,8 @@ void TPollutionManager::setDataAddress(TPollutionManager::TPollutionInfo* info)
 	(void)0;
 	// pointer patching ewwww
 	info->mLayerInfos
-	    = (TPollutionLayerInfo*)((u8*)info->mLayerInfos + (u32)info);
+	    = (TPollutionLayerInfo*)((u8*)(TPollutionLayerInfo*)info->mLayerInfos
+	                            + (u32)info);
 	mLayerInfos = info->mLayerInfos;
 	for (int i = 0; i < mJointModelNum; ++i)
 		mLayerInfos[i].mHeightMap += (u32)info;

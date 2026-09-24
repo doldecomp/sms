@@ -80,15 +80,15 @@ void TMapCollisionBase::init(const char* path, u16 param_2,
 	if (!(mCollisionGroups->mFlags & WAS_PATCHED)) {
 		for (s16 i = 0; i < mCollisionGroupNum; ++i) {
 			mCollisionGroups[i].mIndices
-			    = (s16*)((int)mCollisionGroups[i].mIndices + (u8*)hdr);
+			    = (s16*)((int)(void*)mCollisionGroups[i].mIndices + (u8*)hdr);
 			mCollisionGroups[i].unkC
-			    = (u8*)((int)mCollisionGroups[i].unkC + (u8*)hdr);
+			    = (u8*)((int)(void*)mCollisionGroups[i].unkC + (u8*)hdr);
 			mCollisionGroups[i].unk10
-			    = (u8*)((int)mCollisionGroups[i].unk10 + (u8*)hdr);
+			    = (u8*)((int)(void*)mCollisionGroups[i].unk10 + (u8*)hdr);
 
 			if (mCollisionGroups[i].mAdditionalDatas)
 				mCollisionGroups[i].mAdditionalDatas
-				    = (s16*)((int)mCollisionGroups[i].mAdditionalDatas
+				    = (s16*)((int)(void*)mCollisionGroups[i].mAdditionalDatas
 				             + (u8*)hdr);
 
 			mCollisionGroups[i].mFlags |= WAS_PATCHED;

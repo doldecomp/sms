@@ -11,7 +11,7 @@ struct JAIPlayerParameter {
 	union {
 		/* 0x4 */ JASystem::Kernel::TPortArgs mArgs;
 		/* 0x4 */ f32 mArgsAsF32[10];
-		/* 0x4 */ s16* mArgsAsPS16[10];
+		/* 0x4 */ PTR32(s16) mArgsAsPS16[10];
 		/* 0x4 */ u32 mArgsAsU32[10];
 	};
 	/* 0x2C */ JASystem::Kernel::TPortCmd mCmd;

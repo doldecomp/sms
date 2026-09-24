@@ -39,14 +39,14 @@ struct J3DShapeBlock {
 	/* 0x08 */ u16 mShapeNum;
 	/* 0x0A */ u16 _pad;
 
-	/* 0x0C */ J3DShapeInitData* mpShapeInitData;
-	/* 0x10 */ u16* mpIndexTable;
-	/* 0x14 */ ResNTAB* mpNameTable;
-	/* 0x18 */ GXVtxDescList* mpVtxDescList;
-	/* 0x1C */ u16* mpMtxTable;
-	/* 0x20 */ u8* mpDisplayListData;
-	/* 0x24 */ J3DShapeMtxInitData* mpMtxInitData;
-	/* 0x28 */ J3DShapeDrawInitData* mpDrawInitData;
+	/* 0x0C */ PTR32(J3DShapeInitData) mpShapeInitData;
+	/* 0x10 */ PTR32(u16) mpIndexTable;
+	/* 0x14 */ PTR32(ResNTAB) mpNameTable;
+	/* 0x18 */ PTR32(GXVtxDescList) mpVtxDescList;
+	/* 0x1C */ PTR32(u16) mpMtxTable;
+	/* 0x20 */ PTR32(u8) mpDisplayListData;
+	/* 0x24 */ PTR32(J3DShapeMtxInitData) mpMtxInitData;
+	/* 0x28 */ PTR32(J3DShapeDrawInitData) mpDrawInitData;
 }; // Size: 0x2C
 
 enum J3DMdlDataFlag {

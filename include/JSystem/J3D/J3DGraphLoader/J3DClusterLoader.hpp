@@ -15,13 +15,13 @@ struct J3DClusterBlock : public JUTDataBlockHeader {
 	/* 0x0C */ u16 mClusterVertexNum;
 	/* 0x0E */ u16 mVtxPosNum;
 	/* 0x10 */ u16 mVtxNrmNum;
-	/* 0x14 */ void* mpClusterName;
-	/* 0x18 */ void* mpClusterKeyName;
-	/* 0x1C */ void* mpCluster;
-	/* 0x20 */ void* mpClusterKey;
-	/* 0x24 */ void* mpClusterVertex;
-	/* 0x28 */ void* mpVtxPos;
-	/* 0x2C */ void* mpVtxNrm;
+	/* 0x14 */ PTR32(void) mpClusterName;
+	/* 0x18 */ PTR32(void) mpClusterKeyName;
+	/* 0x1C */ PTR32(void) mpCluster;
+	/* 0x20 */ PTR32(void) mpClusterKey;
+	/* 0x24 */ PTR32(void) mpClusterVertex;
+	/* 0x28 */ PTR32(void) mpVtxPos;
+	/* 0x2C */ PTR32(void) mpVtxNrm;
 }; // Size: 0x30
 
 class J3DClusterLoaderDataBase {

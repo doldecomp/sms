@@ -112,11 +112,11 @@ bool JKRDvdArchive::open(s32 entryNum)
 	                JKRDvdRipper::ALLOC_DIRECTION_FORWARD, sizeof(SArcHeader),
 	                nullptr);
 
-	mDirectories = (SDIDirEntry*)((int)&mArcInfoBlock->num_nodes
+	mDirectories = (SDIDirEntry*)((u32)&mArcInfoBlock->num_nodes
 	                              + mArcInfoBlock->node_offset);
-	mFileEntries = (SDIFileEntry*)((int)&mArcInfoBlock->num_nodes
+	mFileEntries = (SDIFileEntry*)((u32)&mArcInfoBlock->num_nodes
 	                               + mArcInfoBlock->file_entry_offset);
-	mStrTable    = (char*)((int)&mArcInfoBlock->num_nodes
+	mStrTable    = (char*)((u32)&mArcInfoBlock->num_nodes
                         + mArcInfoBlock->string_table_offset);
 
 	mDataOffset = arcHeader->header_length + arcHeader->file_data_offset;

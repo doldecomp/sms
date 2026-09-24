@@ -101,10 +101,10 @@ public:
 		/* 0x0 */ u16 mBGType;
 		/* 0x2 */ s16 mTriangleNum;
 		/* 0x4 */ u16 mFlags;
-		/* 0x8 */ s16* mIndices;
-		/* 0xC */ u8* unkC;
-		/* 0x10 */ u8* unk10;
-		/* 0x14 */ s16* mAdditionalDatas;
+		/* 0x8 */ PTR32(s16) mIndices;
+		/* 0xC */ PTR32(u8) unkC;
+		/* 0x10 */ PTR32(u8) unk10;
+		/* 0x14 */ PTR32(s16) mAdditionalDatas;
 	};
 
 	/* 0x18 */ u32 mCollisionGroupNum;
