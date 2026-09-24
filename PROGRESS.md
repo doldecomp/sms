@@ -1,22 +1,22 @@
 # Progress
 
-Target: North American `GMSE01` rev 0, branch `local/decomp-progress`, forked from upstream `ab00c3c9`.
+Target: North American `GMSE01` rev 0 on this fork's `main` branch, forked from upstream `ab00c3c9`.
 The decompilation is **not complete**.
 Keep this file to the current state only: overwrite the numbers and the in-progress list each batch; do not append a history entry.
 Per-batch history through batch 69 is archived in [docs/progress/history.md](docs/progress/history.md); later history is `git log`.
 
 ## Current numbers
 
-Measured from `build/GMSE01/report.json` on 2026-09-16 on 2026-09-17 during the second parallel run.
+Measured from `build/GMSE01/report.json` on 2026-09-23.
 
-| | Matched code | Source-linked code | Linked units |
-| --- | ---: | ---: | ---: |
-| Game | 63.90% | 16.98% | 193 / 385 |
-| JSystem | 93.15% | 81.22% | 186 / 198 |
-| SDK | 99.71% | 99.54% | 148 / 149 |
-| All | 70.49% | 31.73% | 527 / 732 |
+| | Fuzzy match | Perfect match | Fully linked | Linked units |
+| --- | ---: | ---: | ---: | ---: |
+| Game | 99.36% | 64.00% | 16.98% | 193 / 385 |
+| JSystem | 99.89% | 93.15% | 81.22% | 186 / 198 |
+| SDK | 100.00% | 99.71% | 99.54% | 148 / 149 |
+| All | 99.48% | 70.57% | 31.73% | 527 / 732 |
 
-11,872 of 12,904 functions match. DOL byte-identical. No gameplay test has been performed.
+11,876 of 12,904 functions match. The rebuilt DOL remains byte-identical to the original.
 
 ## What recent batches have done
 

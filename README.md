@@ -1,17 +1,29 @@
-Super Mario Sunshine
-[![Build Status]][actions] [![Code Progress]][progress] [![Discord Badge]][discord]
-=============
-[<img src="https://decomp.dev/doldecomp/sms.svg?w=512&h=256" width="512" height="256">][Progress]
-=============
+# Super Mario Sunshine — North American decompilation
 
-[Build Status]: https://github.com/doldecomp/sms/actions/workflows/build.yml/badge.svg
-[actions]: https://github.com/doldecomp/sms/actions/workflows/build.yml
-[Code Progress]: https://decomp.dev/doldecomp/sms.svg?mode=shield&measure=code&label=Code
-[progress]: https://decomp.dev/doldecomp/sms
-[Discord Badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
-[discord]: https://discord.gg/hKx3FJJgrV
+This is a hobby fork of [doldecomp/sms](https://github.com/doldecomp/sms) focused on `GMSE01` (USA Rev 0).
+The fork began from the upstream project when its Japanese decompilation was around 38% matched code.
+AI has been used extensively to help reconstruct and match the North American game code; the resulting source is checked against the original binary.
 
-A work-in-progress decompilation of Super Mario Sunshine.
+## GMSE01 progress
+
+As of 2026-09-23, the local `GMSE01` build report measures:
+
+| Code | Fuzzy match | Perfect match | Fully linked |
+| --- | ---: | ---: | ---: |
+| Game | 99.36% | 64.00% | 16.98% |
+| JSystem | 99.89% | 93.15% | 81.22% |
+| SDK | 100.00% | 99.71% | 99.54% |
+| **Total** | **99.48%** | **70.57%** | **31.73%** |
+
+Fuzzy match measures approximate code similarity; perfect match counts bytes identical to the original; fully linked counts code built from matching source.
+11,876 of 12,904 functions match exactly, and 527 of 732 object files are linked from source.
+The rebuilt `mario.dol` is byte-identical to the original; unfinished objects still use code extracted from the user's own disc.
+These USA figures are measured separately from the Japanese starting point.
+See [current progress and open work](PROGRESS.md) and the [North American build notes](config/GMSE01/README.md).
+
+The [native PC port](https://github.com/chasem-dev/sms-pc-port) uses this fork as its decompilation submodule.
+
+## Versions and assets
 
 This repository does **not** contain any game assets or assembly whatsoever. An existing copy of the game is required.
 
@@ -19,7 +31,7 @@ Supported versions:
 
 - `GMSJ01`: Rev 0 (JPN)
 - ~~`GMSP01`: Rev 0 (PAL)~~ slightly broken, feel free to fix
-- `GMSE01`: Rev 0 (USA), local experimental support; see
+- `GMSE01`: Rev 0 (USA), the main target of this fork; see
   [North American build notes](config/GMSE01/README.md).
 
 Dependencies
@@ -70,20 +82,21 @@ Building
 - Clone the repository:
 
   ```sh
-  git clone https://github.com/doldecomp/sms.git
+  git clone https://github.com/chasem-dev/sms-english.git
   ```
 
-- Copy your game's disc image to `orig/GMSJ01`. (Or the appropriate version folder.)
+- Copy your North American Rev 0 disc image to `orig/GMSE01`.
   - Supported formats: ISO (GCM), RVZ, WIA, WBFS, CISO, NFS, GCZ, TGC
   - After the initial build, the disc image can be deleted to save space.
 
 - Configure:
 
   ```sh
-  python configure.py
+  python3 configure.py --version GMSE01
   ```
 
-  To use a version other than `GMSJ01` (JPN), specify it with `--version`.
+  On Windows, use `python` instead of `python3`.
+  To build another version, change the `--version` value and provide that version's disc image.
 
 - Build:
 
