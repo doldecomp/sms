@@ -269,7 +269,7 @@ int TMovieDirector::rsetup()
 	stageDisp->getEfbCtrlDisp()->TEfbCtrl::setSrcRect(rect);
 
 	JDrama::TOrthoProj* camera = new JDrama::TOrthoProj(
-	    -1.0f, 1.0f, 0.0f, 0.0f, rect.getWidth(), rect.getHeight());
+	    -1.0f, 1.0f, 0.0f, 0.0f, rect.getHeight(), rect.getWidth());
 	group2d->getChildren().push_back(camera);
 
 	JDrama::TScreen* screen = new JDrama::TScreen(rect, "Screen 2D");

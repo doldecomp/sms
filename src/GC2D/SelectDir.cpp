@@ -205,7 +205,7 @@ int TSelectDir::rsetup()
 	stageDisp->getEfbCtrlDisp()->TEfbCtrl::setSrcRect(rect);
 
 	JDrama::TOrthoProj* gradCamera
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 464.0f, 600.0f);
 	groupGrad->getChildren().push_back(gradCamera);
 
 	JDrama::TScreen* gradScreen = new JDrama::TScreen(rect, "Screen Grad");
@@ -214,7 +214,7 @@ int TSelectDir::rsetup()
 	gradScreen->assignViewObj(groupGrad);
 
 	JDrama::TOrthoProj* screen2DCamera
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 464.0f, 600.0f);
 	group2D->getChildren().push_back(screen2DCamera);
 
 	JDrama::TScreen* screen2D = new JDrama::TScreen(rect, "Screen 2D");
@@ -236,7 +236,7 @@ int TSelectDir::rsetup()
 	screen3D->assignViewObj(group3D);
 
 	JDrama::TOrthoProj* screen2DCamera2
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 464.0f, 600.0f);
 	group2D->getChildren().push_back(screen2DCamera2);
 
 	JDrama::TScreen* screen2D2 = new JDrama::TScreen(rect, "Screen 2D");
@@ -246,7 +246,7 @@ int TSelectDir::rsetup()
 	unk44 = screen2D2;
 
 	JDrama::TOrthoProj* particleCamera
-	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 0.0f, 16.0f, 464.0f, 600.0f);
 	group2DParticle->getChildren().push_back(particleCamera);
 
 	JDrama::TScreen* particleScreen = new JDrama::TScreen(rect, "Screen Grad");

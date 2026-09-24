@@ -111,14 +111,20 @@ public:
 
 class TOrthoProj : public TCamera {
 public:
-	TOrthoProj(f32 near, f32 far, f32 a, f32 b, f32 c, f32 d,
+	// The edges come as (left, top, bottom, right) while mField is stored
+	// {left, top, right, bottom} (perform() passes mField[1], [3], [0], [2]
+	// to C_MTXOrtho as top, bottom, left, right). MWCC evaluates the call's
+	// arguments right to left, so retail's render-size cameras, which call
+	// SMSGetGameRenderWidth() before SMSGetGameRenderHeight() and store the
+	// width in mField[2], pass (..., height, width).
+	TOrthoProj(f32 near, f32 far, f32 left, f32 top, f32 bottom, f32 right,
 	           const char* name = "<TOrthoProj>")
 	    : TCamera(near, far, name)
 	{
-		mField[0] = a;
-		mField[1] = b;
-		mField[2] = c;
-		mField[3] = d;
+		mField[0] = left;
+		mField[1] = top;
+		mField[2] = right;
+		mField[3] = bottom;
 	}
 
 	virtual ~TOrthoProj() { }

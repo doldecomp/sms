@@ -78,7 +78,7 @@ void TMarDirector::initECTGft(
 		const ResTIMG* img = gpPollution->getLayer(i)->getPollutionImage();
 
 		efbTex->setImgPtr((u8*)img + img->imageDataOffset);
-		JDrama::TSize size(img->width, img->height);
+		JDrama::TSize size(img->height, img->width);
 		efbTex->setDstSize(size);
 		efbTex->setTexFmt(GX_CTF_R8);
 		JDrama::TRect rect;
@@ -88,7 +88,7 @@ void TMarDirector::initECTGft(
 		param_2->push_back(efbTex, CUE_DRAW_INIT);
 		param_2->push_back(new JDrama::TViewport(rect, "graffito"), CUE_DRAW);
 		param_2->push_back(new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 0.0f,
-		                                          img->width, img->height),
+		                                          img->height, img->width),
 		                   CUE_SET_PROJECTION);
 		param_2->push_back(drawInit, CUE_DRAW);
 		param_2->push_back(graffitiGroup, (i << CUE_OFFSET_POLLUTION_LAYER)
@@ -205,7 +205,7 @@ void TMarDirector::initECDisp(
 	if (specularSheen || lensFlare || lensGlow) {
 		f32 w = (u16)SMSGetGameRenderWidth() / 2;
 		f32 h = (u16)SMSGetGameRenderHeight() / 2;
-		ortho = new JDrama::TOrthoProj(-1.0f, 1.0f, -w, h, w, -h);
+		ortho = new JDrama::TOrthoProj(-1.0f, 1.0f, -w, h, -h, w);
 	}
 
 	JDrama::TOrthoProj* ortho2 = new JDrama::TOrthoProj(
@@ -275,7 +275,7 @@ void TMarDirector::initECDisp(
 	param_1->push_back(group2D2, CUE_DRAW);
 
 	JDrama::TOrthoProj* ortho4
-	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 0.0f, 16.0f, 464.0f, 600.0f);
 	param_1->push_back(ortho4, CUE_SET_PROJECTION);
 
 	JDrama::TViewObj* group2D
