@@ -53,6 +53,9 @@ public:
 	/* 0x14 */ J2DSetScreen* mScreen;
 	/* 0x18 */ J2DPane* mBackground;
 	/* 0x1C */ J2DPane* mMenuPane;
+#ifdef VERSION_GMSP01
+	/* 0x20 */ J2DPane* unk20;
+#endif
 
 	// "Pause" letters.
 	/* 0x20 */ J2DPicture* mPauseLetters[5];

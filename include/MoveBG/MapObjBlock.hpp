@@ -111,6 +111,9 @@ public:
 	virtual void kill();
 	virtual void moveObject();
 	virtual void initMapObj();
+#ifdef VERSION_GMSP01
+	virtual void touchActor(THitActor*);
+#endif
 
 	JGeometry::TVec3<f32>& getUnk140() { return unk140; }
 

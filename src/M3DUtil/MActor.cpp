@@ -350,9 +350,19 @@ void MActor::setLightData(const TBGCheckData* param_1,
 		return;
 
 	mLightId = 0;
+#ifdef VERSION_GMSP01
+	if (param_1->isShadow()) {
+		f32 tmp = param_2.x * param_1->mNormal.x
+		          + param_2.z * param_1->mNormal.z + param_1->mPlaneDistance;
+		f32 groundY = -tmp / param_1->mNormal.y;
+		if (groundY + 200.0f > param_2.y)
+			setLightID(param_1->getData());
+	}
+#else
 	if (param_1->isShadow()) {
 		setLightID(param_1->getData());
 	}
+#endif
 }
 
 void MActor::setLightType(int light_type)

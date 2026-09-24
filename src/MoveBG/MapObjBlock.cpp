@@ -335,6 +335,15 @@ void TJuiceBlock::kill()
 	makeObjDead();
 }
 
+#ifdef VERSION_GMSP01
+void TJuiceBlock::touchActor(THitActor* actor)
+{
+	if (actor->checkActorType(ACTOR_TYPE_UNK40000000)
+	    && !actor->isActorType(0x400002C6))
+		kill();
+}
+#endif
+
 void TTelesaBlock::initMapObj() { TMapObjBase::initMapObj(); }
 
 void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
