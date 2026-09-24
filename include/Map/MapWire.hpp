@@ -30,12 +30,14 @@ class TMapWire {
 public:
 	enum { IDLE = 0, HANGING = 1, RELEASED = 2 };
 
+	TMapWire();
+
 	void drawLower() const;
 	void drawUpper() const;
 	f32 getPointPowerAtReleased(f32) const;
 	void getPointPosAtReleased(f32, JGeometry::TVec3<f32>*) const;
 	void updatePointAtReleased(int);
-	void updateMovePointAtReleased();
+	bool updateMovePointAtReleased();
 	void initPointAtJustReleased(f32, TMapWirePoint*);
 	void release();
 	void getPointPosAtHanged(f32, JGeometry::TVec3<f32>*) const;
@@ -44,12 +46,27 @@ public:
 	void calcViewAndDBEntry();
 	void move();
 	f32 getPosInWire(const JGeometry::TVec3<f32>&) const;
+
+	/**
+	 * @brief Gets a position on the straight line connecting the wire's
+	 * endpoints.
+	 *
+	 * @param pos the relative position on the wire (0 to 1)
+	 * @param out the output vector
+	 */
 	void getPointPosOnLine(f32, JGeometry::TVec3<f32>*) const;
 	void getPointPosOnWire(f32, JGeometry::TVec3<f32>*) const;
+
+	/**
+	 * @brief The "default" position of a point on this wire after accounting
+	 * for its sag factor.
+	 *
+	 * @param pos the relative position on the wire (0 to 1)
+	 * @param out the output vector
+	 */
 	void getPointPosDefault(f32, JGeometry::TVec3<f32>*) const;
 	void initTipPoints(const TCubeGeneralInfo*);
 	void init(const TCubeGeneralInfo*);
-	TMapWire();
 
 	static f32 mMoveTimerSpeed;
 	static f32 mDownRateMax;
