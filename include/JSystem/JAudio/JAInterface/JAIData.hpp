@@ -172,7 +172,7 @@ public:
 	};
 
 	/* 0x0 */ FabricatedSeTrackParameter* unk0;
-	/* 0x4 */ JAICategoryInfo** mCategoryInfoTable;
+	/* 0x4 */ PTR32(JAICategoryInfo)* mCategoryInfoTable;
 
 	struct FabricatedSeTrack {
 		/* 0x0 */ u32 unk0;
@@ -212,7 +212,7 @@ public:
 	struct FabricatedStreamEntry {
 		/* 0x0 */ char unk0[0x10];
 		/* 0x10 */ char mFileName[0x10];
-		/* 0x20 */ void* unk20;
+		/* 0x20 */ PTR32(void) unk20;
 		/* 0x24 */ char unk24[0xC];
 	};
 

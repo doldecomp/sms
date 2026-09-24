@@ -29,7 +29,8 @@ namespace Dvd {
 	static volatile u32 bufferFull = false;
 	static volatile u32 bufferFull2;
 
-	typedef u8 FabricatedCallstack[0x40];
+	// the task function, then its TDvdCall (0x40 bytes with 4-byte pointers)
+	typedef u8 FabricatedCallstack[sizeof(void*) + sizeof(TDvdCall) + 4];
 	static FabricatedCallstack* callStackArray = 0;
 	static void** msgBuf                       = 0;
 	static u32 curQ                            = 0;
@@ -119,7 +120,7 @@ void* Dvd::dvdProc(void* param)
 	buf = (u8*)Kernel::allocFromSysDram(dvdBufSize * 2);
 	OSInitThreadQueue(&dvdtSleep);
 	while (true) {
-		u32 message;
+		OSMessage message;
 		OSReceiveMessage(&mq, &message, 1);
 		cs = (void*)message;
 		updateBuffer();
@@ -129,7 +130,7 @@ void* Dvd::dvdProc(void* param)
 		if (cs == 0)
 			continue;
 
-		(*(s32(**)(void*))cs)(((u8*)cs) + 4);
+		(*(s32(**)(void*))cs)((void**)cs + 1);
 	}
 }
 
@@ -183,7 +184,7 @@ s32 Dvd::loadToDramDvdT(u32 param1, char* path, void* buffer, u32 size,
 	call->unk28 = size;
 	call->unk2C = param5;
 
-	addTask(&loadToDramDvdTMain, call, 0x38);
+	addTask(&loadToDramDvdTMain, call, sizeof(TDvdCall));
 
 	return 0;
 }
@@ -274,7 +275,7 @@ s32 Dvd::loadToAramDvdT(u32 param1, char* path, void* buffer, u32 size,
 	call->unk28 = size;
 	call->unk2C = param5;
 
-	addTask(&loadToAramDvdTMain, call, 0x38);
+	addTask(&loadToAramDvdTMain, call, sizeof(TDvdCall));
 
 	return 0;
 }
@@ -327,7 +328,7 @@ s32 Dvd::aramToDramDvdT(u32 param1, void* dest, void* src, u32 size,
 	call->unk28 = (u32)src;
 	call->unk2C = size;
 
-	addTaskHigh(&aramToDramDvdTMain, call, 0x38);
+	addTaskHigh(&aramToDramDvdTMain, call, sizeof(TDvdCall));
 
 	return 0;
 }
@@ -348,7 +349,7 @@ s32 Dvd::dramToAramDvdT(u32 param1, void* dest, void* src, u32 size,
 	call->unk28 = (u32)src;
 	call->unk2C = size;
 
-	addTaskHigh(&dramToAramDvdTMain, call, 0x38);
+	addTaskHigh(&dramToAramDvdTMain, call, sizeof(TDvdCall));
 
 	return 0;
 }
@@ -392,7 +393,7 @@ s32 Dvd::checkPassDvdT(u32 scene_set_id, u32* param2, void (*callback)(u32))
 	callData.unk30 = param2;
 	callData.unk34 = callback;
 
-	addTask(&dvdThreadCheckBack, call, 0x38);
+	addTask(&dvdThreadCheckBack, call, sizeof(TDvdCall));
 	return 0;
 }
 s32 Dvd::checkFile(char* path)

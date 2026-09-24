@@ -35,4 +35,9 @@ typedef int BOOL;
 #define NULL ((void*)0)
 #endif
 
+// A pointer field of a struct laid over file data, whose 4-byte slot holds a
+// file offset until it is relocated in place. It is exactly T* here; a build
+// with 8-byte pointers (the PC port's 64-bit build) keeps the field 4 bytes.
+#define PTR32(T) T*
+
 #endif

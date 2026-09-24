@@ -233,7 +233,7 @@ public:
 	/* 0x4C */ u8* mInitDataPointer;
 
 	struct FabricatedBankEntry {
-		/* 0x0 */ void* mBankData;
+		/* 0x0 */ PTR32(void) mBankData;
 		/* 0x4 */ char unk4[0x4];
 		/* 0x8 */ int mWaveBankNumber;
 	};
@@ -247,7 +247,7 @@ public:
 	};
 
 	struct FabricatedWaveBankEntry {
-		/* 0x0 */ void* mWaveBankData;
+		/* 0x0 */ PTR32(void) mWaveBankData;
 		/* 0x4 */ u32 unk4;
 		/* 0x8 */ u32 mLoadTiming;
 	};
@@ -255,14 +255,14 @@ public:
 	/* 0x54 */ FabricatedWaveBankEntry* mWaveBankList;
 
 	struct FabricatedSeqArchiveHeader {
-		/* 0x0 */ u8* mData;
+		/* 0x0 */ PTR32(u8) mData;
 		/* 0x4 */ u32 mSize;
 	};
 
 	/* 0x58 */ FabricatedSeqArchiveHeader* mSeqArchiveHeader;
 
 	struct FabricatedStreamListHeader {
-		/* 0x0 */ JAIData::FabricatedStreamEntry* mData;
+		/* 0x0 */ PTR32(JAIData::FabricatedStreamEntry) mData;
 		/* 0x4 */ u32 mSize;
 	};
 
@@ -279,11 +279,11 @@ public:
 
 	struct FabricatedSoundSceneTable {
 		/* 0x0 */ u32 mSceneMax;
-		/* 0x4 */ JAICategoryInfo* mSceneData[];
+		/* 0x4 */ PTR32(JAICategoryInfo) mSceneData[];
 	};
 
 	// Points at FabricatedSoundSceneTable::mSceneData.
-	/* 0x68 */ JAICategoryInfo** mSoundSceneList;
+	/* 0x68 */ PTR32(JAICategoryInfo)* mSoundSceneList;
 
 	struct FabricatedFxSceneTable {
 		/* 0x0 */ u32 mSceneMax;

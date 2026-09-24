@@ -12,7 +12,7 @@ namespace Vload {
 	struct VLArc {
 		/* 0x0 */ u32 unk0;
 		/* 0x4 */ u32 unk4;
-		/* 0x8 */ u8* unk8;
+		/* 0x8 */ PTR32(u8) unk8;
 		/* 0xC */ u32 unkC;
 		/* 0x10 */ char unk10[0x10];
 	};

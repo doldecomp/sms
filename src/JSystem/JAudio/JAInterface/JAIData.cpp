@@ -628,7 +628,7 @@ void JAIData::initData()
 	if (unk1F4->mSoundSceneList) {
 		mCategoryInfoTable = unk1F4->mSoundSceneList;
 	} else {
-		mCategoryInfoTable = (JAICategoryInfo**)unk1F4->allocHeap(
+		mCategoryInfoTable = (PTR32(JAICategoryInfo)*)unk1F4->allocHeap(
 		    JAIGlobalParameter::soundSceneMax * 4);
 		for (int i = 0; i < JAIGlobalParameter::soundSceneMax; ++i)
 			mCategoryInfoTable[i] = JAIConst::sCInfos_0;

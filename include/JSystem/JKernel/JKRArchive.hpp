@@ -62,7 +62,7 @@ public:
 		/* 0x04 */ u32 mFlagsAndNameOffset;
 		/* 0x08 */ u32 mDataOffset;
 		/* 0x0C */ u32 mSize;
-		/* 0x10 */ void* mData;
+		/* 0x10 */ PTR32(void) mData;
 	};
 
 	struct SDirEntry {

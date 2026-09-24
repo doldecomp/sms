@@ -126,7 +126,7 @@ TDrawSyncManager::TDrawSyncManager(u32 param_1, u32 param_2, s32 param_3)
 	u8* stack = new u8[0x1000];
 	OSCreateThread(&mProcessingThread, &threadFunc, this, stack + 0x1000, 0x1000,
 	               param_3, 0);
-	u8* buffer = new u8[0x50];
+	u8* buffer = new u8[0x14 * sizeof(OSMessage)];
 	OSInitMessageQueue(&mMessageQueue, buffer, 0x14);
 	mFifo = new TFifo(param_2);
 	OSResumeThread(&mProcessingThread);

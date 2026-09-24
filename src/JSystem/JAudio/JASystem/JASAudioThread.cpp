@@ -30,7 +30,7 @@ namespace AudioThread {
 	static u32 dvd_pri           = 0;
 
 	static OSMessageQueue audioproc_mq;
-	static u8 msgbuf[0x40];
+	static u8 msgbuf[0x10 * sizeof(OSMessage)];
 
 	void setDSPSyncCount(u32 count) { intcount = count; }
 

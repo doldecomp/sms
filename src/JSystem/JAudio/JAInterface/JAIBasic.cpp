@@ -334,7 +334,7 @@ void JAIBasic::checkInitDataOnMemory()
 			while (((u32*)mInitDataPointer)[i] != 0) {
 				mBankList[j].mBankData
 				    = (void*)(mInitDataPointer
-				              + (uintptr_t)mBankList[j].mBankData);
+				              + (uintptr_t)(void*)mBankList[j].mBankData);
 				++j;
 				i += 3;
 			}
@@ -356,7 +356,7 @@ void JAIBasic::checkInitDataOnMemory()
 			while (((u32*)mInitDataPointer)[i] != 0) {
 				mWaveBankList[j].mWaveBankData
 				    = (void*)(mInitDataPointer
-				              + (uintptr_t)mWaveBankList[j].mWaveBankData);
+				              + (uintptr_t)(void*)mWaveBankList[j].mWaveBankData);
 				++j;
 				i += 3;
 			}
@@ -401,7 +401,7 @@ void JAIBasic::checkInitDataOnMemory()
 			mSoundSceneList                   = table->mSceneData;
 			for (u32 scene = 0; scene < JAIGlobalParameter::soundSceneMax;
 			     ++scene)
-				((u8**)mSoundSceneList)[scene] += (uintptr_t)table;
+				((PTR32(u8)*)mSoundSceneList)[scene] += (uintptr_t)table;
 			i += 3;
 			break;
 		}
