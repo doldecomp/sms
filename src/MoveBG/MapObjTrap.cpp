@@ -76,7 +76,7 @@ void TLampTrapSpike::loadAfter()
 
 BOOL TLampTrapSpike::receiveMessage(THitActor* sender, u32 message)
 {
-	TMapObjBase::receiveMessage(sender, message);
+	return TMapObjBase::receiveMessage(sender, message);
 }
 
 // TODO (closure batch 152): 99.5%, instruction-exact, frame exact (0x60). The

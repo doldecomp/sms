@@ -471,13 +471,8 @@ s32 Dvd::openDvd(char* path, DVDFileInfo* fileInfo)
 {
 	s32 entryNum = registerFastOpen(path);
 	if (entryNum == -1)
-		DVDOpen(path, fileInfo);
-	else
-		DVDFastOpen(entryNum, fileInfo);
-	// TODO: is this a bug that they forgot to return entryNum
-	// but the assembly HAPPENS to work out in such a way that
-	// r3 still contains entryNum?
-	// Or is this a fakematch?
+		return DVDOpen(path, fileInfo);
+	return DVDFastOpen(entryNum, fileInfo);
 }
 
 static void* Dvd::getCallStack()

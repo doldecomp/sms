@@ -33,7 +33,7 @@ void DSPBuf::updateDSP()
 	Kernel::probeFinish(3);
 }
 
-s16* DSPBuf::mixDSP(s32 param) { process(DSPBUF_EVENTS_UNK2); }
+s16* DSPBuf::mixDSP(s32 param) { return process(DSPBUF_EVENTS_UNK2); }
 
 void DSPBuf::finishDSPFrame() { process(DSPBUF_EVENTS_UNK1); }
 
