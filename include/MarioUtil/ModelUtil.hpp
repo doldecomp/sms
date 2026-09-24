@@ -22,7 +22,7 @@ struct TMultiBtk {
 };
 
 SDLModel* SMS_CreateMinimumSDLModel(const char*);
-J3DModel* SMS_CreatePartsModel(char*, unsigned long);
+J3DModel* SMS_CreatePartsModel(char*, u32);
 void SMS_RideMoveCalcLocalPos(TRidingInfo*, const JGeometry::TVec3<float>&);
 void SMS_RideMoveByGroundActor(TRidingInfo*, JGeometry::TVec3<float>*, float*);
 void SMS_DumpJ3DModel(J3DModel*);
