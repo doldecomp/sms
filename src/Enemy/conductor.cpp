@@ -176,7 +176,10 @@ BOOL TConductor::isBossDefeated()
 	// so do `default: ;`, `case 1:`/`case 0:` labels, an int switch operand,
 	// and `case 3:` first with `case 2: default:` after it.
 	// The hinokuri body after the switch (`case 2: break;` or no case 2)
-	// relays the arms out entirely (~29%).
+	// relays the arms out entirely (~29%). `default: goto` a label inside
+	// case 2 and `default:` above `case 2:` also fold (95.6%), and an
+	// if/else on map 3 is 95.0%. The PC port carries the missing default
+	// arm as decomp-patches/ret-01 until a matching spelling is found.
 	switch (gpMarDirector->mMap) {
 	case 2: {
 		TLiveManager* mgr = getManagerByName("ヒノクリ２マネージャー");
