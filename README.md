@@ -104,6 +104,24 @@ Building
   ninja
   ```
 
+### Build and play on Windows
+
+Use PowerShell for the decompilation build.
+After installing native Windows Python and Ninja as described above, run from the `sms-english` directory:
+
+```powershell
+Copy-Item -LiteralPath 'Super Mario Sunshine (2002)(Nintendo)(US).iso' -Destination 'orig/GMSE01/'
+python configure.py --version GMSE01
+ninja
+```
+
+If Ninja was installed through MSYS2 and PowerShell cannot find `ninja`, use
+`C:\msys64\mingw32\bin\ninja.exe` for the last command.
+The build produces `build/GMSE01/mario.dol` and verifies it against the extracted original DOL.
+To play the GameCube version, open the original disc image in Dolphin on Windows.
+The disc image supplies the game files; the built DOL alone does not contain them.
+For the native Windows PC port, see its [MSYS2 build and play instructions](https://github.com/chasem-dev/sms-pc-port/blob/main/BUILD.md#windows-msys2-mingw32).
+
 Diffing
 =======
 

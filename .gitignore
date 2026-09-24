@@ -13,6 +13,7 @@ __pycache__
 # Original files
 orig/*/*
 !orig/*/.gitkeep
+/*.iso
 *.dol
 *.rel
 *.elf
