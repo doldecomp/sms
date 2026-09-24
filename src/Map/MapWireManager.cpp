@@ -15,7 +15,22 @@
 f32 TMapWireActor::mCommonAttackRadius = 200.0f;
 f32 TMapWireActor::mCommonAttackHeight = 200.0f;
 
-void TMapWireActor::checkTakingActor() { }
+void TMapWireActor::checkTakingActor()
+{
+	if (mHeldObject != nullptr && mHeldObject->mHolder != this) {
+		mHeldObject = nullptr;
+		unk70      = 1;
+	}
+
+	if (unk74->unk7C != nullptr) {
+		for (int i = 0; i < mColCount; ++i) {
+			THitActor* col = mCollisions[i];
+			if (col->isActorType(0x80000001)
+			    && col->receiveMessage(this, HIT_MESSAGE_TAKE))
+				mHeldObject = (TTakeActor*)mCollisions[i];
+		}
+	}
+}
 
 f32 TMapWireActor::getPosInWire() const
 {
@@ -105,19 +120,7 @@ void TMapWireActorManager::doActorToWire()
 	else
 		unk7C = nullptr;
 
-	if (unk4.mHeldObject != nullptr && unk4.mHeldObject->mHolder != &unk4) {
-		unk4.mHeldObject = nullptr;
-		unk4.unk70       = 1;
-	}
-
-	if (unk0->mHeldObject != nullptr) {
-		for (int i = 0; i < unk4.mColCount; ++i) {
-			THitActor* col = unk4.mCollisions[i];
-			if (col->isActorType(0x80000001)
-			    && col->receiveMessage(&unk4, HIT_MESSAGE_TAKE))
-				unk4.mHeldObject = (TTakeActor*)unk4.mCollisions[i];
-		}
-	}
+	unk4.checkTakingActor();
 
 	if (previousWire != nullptr) {
 		if (unk7C != nullptr && unk7C != previousWire)
@@ -166,8 +169,8 @@ void TMapWireManager::getPointPosInNthWire(int param_1,
                                            const JGeometry::TVec3<f32>& param_2,
                                            JGeometry::TVec3<f32>* param_3) const
 {
-	getWire(param_1)->getPointPosOnWire(getWire(param_1)->getPosInWire(param_2),
-	                                    param_3);
+	f32 pos = getWire(param_1)->getPosInWire(param_2);
+	getWire(param_1)->getPointPosOnWire(pos, param_3);
 }
 
 void TMapWireManager::getPointPosInWire(const JGeometry::TVec3<f32>&,
