@@ -14,14 +14,15 @@ TStrategy::TStrategy(const char* name)
     : JDrama::TViewObj(name)
     , unk50(0)
 {
-	for (int i = 0; i < ARRAY_COUNT(unk10); ++i)
+	for (s32 i = 0; i < ARRAY_COUNT(unk10); ++i)
 		unk10[i] = nullptr;
 }
 
 void TStrategy::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	new TObjHitCheck();
+
+	TObjHitCheck* hitCheck = new TObjHitCheck();
 
 	int count = stream.readU32();
 	for (int i = 0; i < count; ++i) {
@@ -79,8 +80,8 @@ void TStrategy::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk10[4] != (TIdxGroupObj*)0x0)
 			unk10[4]->testPerform(cue, graphics);
 
-		if (unk10[0xb] != (TIdxGroupObj*)0x0)
-			unk10[0xb]->testPerform(cue, graphics);
+		if (unk10[11] != (TIdxGroupObj*)0x0)
+			unk10[11]->testPerform(cue, graphics);
 
 		if (unk10[6] != (TIdxGroupObj*)0x0)
 			unk10[6]->testPerform(cue, graphics);
@@ -102,8 +103,8 @@ void TStrategy::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk10[5] != (TIdxGroupObj*)0x0)
 			unk10[5]->testPerform(cue, graphics);
 
-		if (unk10[0xb] != (TIdxGroupObj*)0x0)
-			unk10[0xb]->testPerform(cue, graphics);
+		if (unk10[11] != (TIdxGroupObj*)0x0)
+			unk10[11]->testPerform(cue, graphics);
 
 		if (unk10[6] != (TIdxGroupObj*)0x0)
 			unk10[6]->testPerform(cue, graphics);
