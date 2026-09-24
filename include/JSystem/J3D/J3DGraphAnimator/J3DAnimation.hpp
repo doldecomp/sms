@@ -122,7 +122,7 @@ struct J3DAnmClusterKeyTable {
 class J3DAnmVtxColorIndexData {
 public:
 	/* 0x00 */ u16 mNum;
-	/* 0x04 */ void* mpData;
+	/* 0x04 */ PTR32(void) mpData;
 };
 
 struct J3DAnmColorFullTable {
