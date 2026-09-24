@@ -517,8 +517,7 @@ int TMovieDirector::direct()
 			THPPlayerStop();
 			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
 			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
-			SMSGetApplication()->getFader()->startWipe(
-			    VERSION_SELECT(GMSJ01(15), GMSP01(14)), 0.3f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(14, 0.3f, 0.0f);
 			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0, 0, 0, 255));
 			unk24->init(SMSGetApplication()->getMovie() == 17 ? 8 : 0);
@@ -544,8 +543,7 @@ int TMovieDirector::direct()
 			}
 
 			if (SMSGetApplication()->getMovie() == 9) {
-				MSound* sound = gpMSound;
-				sound->fadeOutAllSound(SMSGetVSyncTimesPerSec());
+				SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec());
 			}
 			THPPlayerSetVolume(0, 1000);
 			break;
