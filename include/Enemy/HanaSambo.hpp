@@ -200,7 +200,18 @@ public:
 
 class TSamboFlower : public TSpineEnemy {
 public:
-	TSamboFlower(const char* name = "サンボフラワー");
+	TSamboFlower(const char* name = "サンボフラワー")
+	    : TSpineEnemy(name)
+	    , unk150(0)
+	    , unk154(0)
+	    , unk158(-1)
+	    , unk15C(-1)
+	    , unk160(0)
+	    , unk164(nullptr)
+	    , unk168(nullptr)
+	{
+	}
+
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor*, u32);
