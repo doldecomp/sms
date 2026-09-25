@@ -1,7 +1,7 @@
 #include <dolphin.h>
 #include <dolphin/os.h>
 
-void OSInitStopwatch(struct OSStopwatch* sw, char* name)
+void OSInitStopwatch(OSStopwatch* sw, char* name)
 {
 	sw->name  = name;
 	sw->total = 0;
@@ -10,20 +10,20 @@ void OSInitStopwatch(struct OSStopwatch* sw, char* name)
 	sw->max   = 0;
 }
 
-void OSStartStopwatch(struct OSStopwatch* sw)
+void OSStartStopwatch(OSStopwatch* sw)
 {
-	sw->running = 1;
+	sw->running = TRUE;
 	sw->last    = OSGetTime();
 }
 
-void OSStopStopwatch(struct OSStopwatch* sw)
+void OSStopStopwatch(OSStopwatch* sw)
 {
-	long long interval;
+	OSTime interval;
 
-	if (sw->running != 0) {
+	if (sw->running) {
 		interval = OSGetTime() - sw->last;
 		sw->total += interval;
-		sw->running = 0;
+		sw->running = FALSE;
 		sw->hits++;
 		if (sw->max < interval) {
 			sw->max = interval;
@@ -34,15 +34,15 @@ void OSStopStopwatch(struct OSStopwatch* sw)
 	}
 }
 
-long long OSCheckStopwatch(struct OSStopwatch* sw)
+OSTime OSCheckStopwatch(OSStopwatch* sw)
 {
-	long long currTotal;
+	OSTime currTotal;
 
 	currTotal = sw->total;
-	if (sw->running != 0) {
+	if (sw->running) {
 		currTotal += OSGetTime() - sw->last;
 	}
 	return currTotal;
 }
 
-void OSResetStopwatch(struct OSStopwatch* sw) { OSInitStopwatch(sw, sw->name); }
+void OSResetStopwatch(OSStopwatch* sw) { OSInitStopwatch(sw, sw->name); }

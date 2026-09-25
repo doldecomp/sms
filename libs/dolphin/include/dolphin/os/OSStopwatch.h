@@ -1,26 +1,29 @@
 #ifndef _DOLPHIN_OSSTOPWATCH_H_
 #define _DOLPHIN_OSSTOPWATCH_H_
 
+#include <dolphin/types.h>
+#include <dolphin/os/OSTime.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct OSStopwatch {
+typedef struct OSStopwatch {
 	char* name;
-	long long total;
-	unsigned long hits;
-	long long min;
-	long long max;
-	long long last;
-	int running;
-};
+	OSTime total;
+	u32 hits;
+	OSTime min;
+	OSTime max;
+	OSTime last;
+	BOOL running;
+} OSStopwatch;
 
-void OSInitStopwatch(struct OSStopwatch* sw, char* name);
-void OSStartStopwatch(struct OSStopwatch* sw);
-void OSStopStopwatch(struct OSStopwatch* sw);
-long long OSCheckStopwatch(struct OSStopwatch* sw);
-void OSResetStopwatch(struct OSStopwatch* sw);
-void OSDumpStopwatch(struct OSStopwatch* sw);
+void OSInitStopwatch(OSStopwatch* sw, char* name);
+void OSStartStopwatch(OSStopwatch* sw);
+void OSStopStopwatch(OSStopwatch* sw);
+OSTime OSCheckStopwatch(OSStopwatch* sw);
+void OSResetStopwatch(OSStopwatch* sw);
+void OSDumpStopwatch(OSStopwatch* sw);
 
 #ifdef __cplusplus
 }
