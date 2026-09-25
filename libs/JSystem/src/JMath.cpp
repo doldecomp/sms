@@ -1,7 +1,7 @@
 #include <JSystem/JMath.hpp>
 #include <dolphin/mtx.h>
 #include <dolphin/types.h>
-#include <PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h>
+#include <math.h>
 
 u16 jmaSinTableSize;
 u32 jmaSinShift;

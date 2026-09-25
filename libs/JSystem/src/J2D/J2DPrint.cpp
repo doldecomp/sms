@@ -1,7 +1,7 @@
 #include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <dolphin/gx.h>
-#include <printf.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 OSMutex J2DPrint::mMutex;
