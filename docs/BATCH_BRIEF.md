@@ -6,8 +6,8 @@ Read it once, then the documents it points to, then start.
 
 ## Where you work
 
-Only inside your worktree under `/home/netflix/sms-wt/<name>` (branch `wt/<name>`).
-Never touch `/home/netflix/sms` or another worktree.
+Only inside your worktree `sms-wt/<name>` beside the main checkout (branch `wt/<name>`).
+Never touch the main checkout or another worktree.
 `cd` there first; every path below is relative to it.
 Every command in `docs/AGENT_GUIDE.md` works unchanged inside the worktree (`build/venv/bin/ninja`, `python3 tools/decomp-diff.py`, `tools/validate-symbol-order.py` with the `NM=` and `--map` overrides).
 
@@ -24,7 +24,7 @@ Every command in `docs/AGENT_GUIDE.md` works unchanged inside the worktree (`bui
 1. **Inventory** every symbol the map lists for the TU: `grep '<Lib>.a <file>.cpp' orig/GMSE01/files/marioUS.MAP`, reading the `.text section layout` lines, the UNUSED entries and the closure section (weak symbols, vtables, `.data`/`.rodata`/`.sdata2` objects, `@NNNN` literals).
    Every class, method, nerve, UNUSED helper, vtable, static and data object must be declared and defined.
 2. **Layout** before bodies: vtable order per class via the awk one-liner in `tu-reconstruction.md` (declare virtuals in that order, with the base's return types); param names and defaults from `.rodata` in `build/GMSE01/asm/<path>.s`; animation indices from the `.bas` table rule; the string-pool prefix includes (`InfectiousStrings`, `MapCollisionManager`, the MSound pair for `__sinit`).
-3. **Draft** each function with m2c: `build/venv/bin/python3 /home/netflix/m2c/m2c.py -t ppc -f <mangled> --globals=used build/GMSE01/asm/<path>.s`, then rewrite with real fields, inlines and enums (GX constants checked against the asm immediates). Nerves use `DEFINE_NERVE`.
+3. **Draft** each function with m2c: `build/venv/bin/python3 "$M2C" -t ppc -f <mangled> --globals=used build/GMSE01/asm/<path>.s`, then rewrite with real fields, inlines and enums (GX constants checked against the asm immediates). Nerves use `DEFINE_NERVE`.
 4. **Order**: definitions in the map's order reversed (`-inline deferred`); `tools/validate-symbol-order.py` checks it. UNUSED bodies go in the `.cpp` and should compile to their map sizes.
 5. **Write the whole TU first, verify, commit.** Only then polish, and budget it: at most **five minutes** per function below 99%, and **skip any function over 2 KB that is below 95%** unless the difference is structural (a missing call, block or branch, not frame size, scheduling or register numbering); note it in the report and move on. Re-reading a 4 KB diff several times is the single most expensive thing a batch does: start every function with `decomp-diff.py -d <fn> --clusters` (mismatch runs only), read the full `--no-collapse` diff at most once per function, and after each trial re-run `--clusters` or check the match percentage, never the whole diff. Apply the catalog rules in this order: structure (calls, control flow, load/store order); inlining; then frame-gap causes (param `.get()` vs wrapper, accessor reads, uninitialised locals, named results).
    The inlining rule that decides most call-vs-expand differences is measured, not guessed: MWCC inlines a plain callee only up to **14 statements at depth 1, 9 at depth 2, 6 at depth 3, 2 at depth 4, never at 5**, and an `inline`/in-class body has **no limit at depth 1**. Definition order in the TU changes nothing. So a plain method retail *calls* at depth 1 had 15+ statements (a hard lower bound on its reconstruction), a helper retail expands at depth 1 despite being large was declared `inline`, and one statement added or removed (a named fetch, a ternary for an if/else, a wrapper) flips a decision. Count statements, then depth, before trying anything else.

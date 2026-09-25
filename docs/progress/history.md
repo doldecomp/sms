@@ -302,7 +302,7 @@ No new exact functions or source-linked files: game **25.033045% matched / 3.254
 Baseline at `f1c2fc62`; full build, changes_all, all 12,904 function comparisons and per-unit data checks show zero regressions; map checks pass with existing UNUSED-size warnings (12 MarioSpecial, one beam).
 DOL byte comparison and SHA-1 `a6782903ef79d4196c8489ecb1b57decb5b3728f` pass; no gameplay test performed.
 Refreshed `build/GMSE01-near-matching.txt`: 1,266 authorized functions / 733,184 bytes; next reviewed target is loadParticleMario, with TMario callers grouped when shared evidence applies.
-A local Git bundle is saved under `/home/netflix/sms-backups/`; no fork remote is configured, so an off-machine backup remains pending.
+A local Git bundle is saved outside the repository; no fork remote is configured, so an off-machine backup remains pending.
 
 ## Verified checkpoint: batch 39 — closure trials, no file completed
 
@@ -1427,7 +1427,7 @@ Japanese and PAL binary regression checks are unavailable because their inputs h
 - Full comparison reports: `build/GMSE01/baseline.json` and `report.json`.
 - Build and regression logs: `build/GMSE01-build.log` and `build/GMSE01-changes-batch1.log`.
 - Incremental promotion results and logs: `build/GMSE01/promotion-results.json` and `promotion-logs/`.
-- `m2c`: `/home/netflix/m2c`, commit `e07f7e1c1d1d52f33ab3f7fedbe74b634404b943`, installed in `build/venv`.
+- `m2c`: commit `e07f7e1c1d1d52f33ab3f7fedbe74b634404b943`, installed in `build/venv`.
 
 Build artifacts and original game data are kept locally and excluded from Git.
 Source, configuration, progress snapshots, and notes are versioned locally.

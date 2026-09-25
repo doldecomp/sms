@@ -14,7 +14,11 @@ from datetime import datetime
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--since", default=None)
-ap.add_argument("--projects", default=os.path.expanduser("~/.claude/projects/-home-netflix-sms"))
+# Claude Code names a project's directory after its path, with every other
+# character replaced by "-".
+here = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True).stdout.strip()
+ap.add_argument("--projects", default=os.path.expanduser(
+    "~/.claude/projects/" + re.sub(r"[^A-Za-z0-9]", "-", here or os.getcwd())))
 a = ap.parse_args()
 since = datetime.strptime(a.since, "%Y-%m-%d %H:%M") if a.since else None
 

@@ -1,6 +1,6 @@
 import json, os, re, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
-os.chdir('/home/netflix/sms-wt/c-unused')
+os.chdir(os.environ.get('SMS_ROOT') or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..')))
 rep = json.load(open('build/GMSE01/report.json'))
 env = dict(os.environ, NM='build/binutils/powerpc-eabi-nm')
 units = [u for u in rep['units'] if u['name'].startswith('mario/')]

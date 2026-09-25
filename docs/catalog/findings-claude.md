@@ -56,7 +56,7 @@ Record binary-backed findings from Claude unit work here before promoting reusab
   An empty in-class destructor is inert: MWCC treats it like an implicit one for EH cleanup.
   Only a destructor that is declared but not defined inline (a call that might throw) makes derived constructors spill `this`.
   The reverse check, a non-inline declaration whose map symbol is only weak, finds no live case either: the fishoid and TMap hits are comments that already record the implicit destructor.
-  The scanner is at /home/netflix/sms-wt/c-dtor-scratch/scan.py (scratch, not committed).
+  The scanner was a scratch script in a separate worktree and is not committed.
 - **A 0.0f chain storing (2,3),(1,3),(0,3),(1,2),(0,2),(2,1),(0,1),(2,0),(1,0) then 1.0f at (2,2),(1,1),(0,0) is `TMatrix34::identity()`.**
   `TBiancoMiniWindmill::calc` closed 89.7 -> 100 as `TMtx34f spin; spin.identity(); MtxPtr spinPtr = spin;` with the Z rotation and the translation written through `spinPtr`: the row pointer is what lets MWCC interleave the literal and sin-table loads into the identity stores.
   Calling `MsMtxSetRotZ(spinPtr, a)` instead of writing the rows loses 8 bytes of frame (99.6).

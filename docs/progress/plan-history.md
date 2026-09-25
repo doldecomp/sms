@@ -4,7 +4,7 @@ Archived 2026-09-16. Stale: PAL milestones, the missing-map note (the US disc sh
 
 ## Current state
 
-- Workspace: `/home/netflix/sms`.
+- Workspace: the main checkout.
 - Local branch: `local/decomp-progress`.
 - Upstream: `https://github.com/doldecomp/sms`, commit `ab00c3c9a466152f6e6bc5b9c28aca959d1a8454`.
 - The user has authorized implementation and ongoing progress checks for the local North American ISO.
@@ -84,7 +84,7 @@ Estimate effort only after the baseline and first representative batches establi
 ## Milestone 4: Reconstruct and verify in batches
 
 1. Read `docs/AGENT_MATCHING_TIPS.md` before matching work.
-2. Use the installed `m2c` at `/home/netflix/m2c/m2c.py` for from-scratch reconstruction.
+2. Use the installed `m2c` (`$M2C`) for from-scratch reconstruction.
 3. Follow `docs/PROGRAM_STRUCTURE_REVVING.md` for new translation units, accounting explicitly for unavailable regional map information.
 4. Reconstruct readable C++98 using the selected regional assembly as ground truth.
 5. Inventory shared patterns and batch equivalent fixes supported by the original instructions.

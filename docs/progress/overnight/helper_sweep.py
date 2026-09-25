@@ -2,7 +2,7 @@
 # direct return -> named result, TVec3 const& <-> by value params.
 import sys, os, re, json, importlib.util, subprocess
 from concurrent.futures import ThreadPoolExecutor
-ROOT="/home/netflix/sms-wt/bb66"
+ROOT=os.environ.get('SMS_ROOT') or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..'))
 sys.path.insert(0, ROOT+"/tools")
 spec=importlib.util.spec_from_file_location("ls", ROOT+"/tools/lever-search.py")
 ls=importlib.util.module_from_spec(spec); sys.argv=[sys.argv[0]]; spec.loader.exec_module(ls)

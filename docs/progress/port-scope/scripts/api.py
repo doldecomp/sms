@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Count SDK/hardware API uses in game + JSystem + THPPlayer sources."""
 import os, re, glob, collections
-ROOT = '/home/netflix/sms-wt/c-pcscope'
+ROOT = os.environ.get('SMS_ROOT') or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..'))
 SCR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT)
 def strip_comments(t):

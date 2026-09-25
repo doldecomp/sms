@@ -18,7 +18,7 @@ Read this section before running any command below.
 | Platform | Windows (`.exe` suffixes) | **Linux**, no `.exe` suffix |
 | Ninja | `ninja` on `PATH` | **`build/venv/bin/ninja`** |
 | Python | `python` | **`python3`** for repo tools; **`build/venv/bin/python3`** when venv packages are needed |
-| `m2c` | ask the user for a path | **`/home/netflix/m2c/m2c.py`**, installed in `build/venv` |
+| `m2c` | ask the user for a path | **`$M2C`** (the user's `m2c.py`; ask if unset), run with `build/venv/bin/python3` |
 
 The `GMSJ01` and `GMSP01` configs still exist in the tree but have no input image here, so they cannot be built or regression-tested.
 

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Runtime-risk lists from the matching build's objdiff report (main checkout, 6e4228e3)."""
-import json, collections
-R = '/home/netflix/sms-wt/c-nm-scratch/report-matching-main-6e4228e3.json'
-OUT = '/home/netflix/sms-wt/c-nm-scratch/'
+import json, collections, sys
+if len(sys.argv) < 2:
+    sys.exit('usage: analyze_report.py REPORT.json [OUT_DIR]')
+R = sys.argv[1]
+OUT = (sys.argv[2] if len(sys.argv) > 2 else '.') + '/'
 r = json.load(open(R))
 m = r['measures']
 def f(x, k, d=0): return float(x.get(k, d))

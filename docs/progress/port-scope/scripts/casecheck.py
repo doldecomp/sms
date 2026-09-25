@@ -1,5 +1,5 @@
 import os, re, glob, sys
-ROOT = '/home/netflix/sms-wt/c-pcscope'; os.chdir(ROOT)
+ROOT = os.environ.get('SMS_ROOT') or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..')); os.chdir(ROOT)
 SCR = os.path.dirname(os.path.abspath(__file__))
 INC = ['include', 'include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common', 'include/PowerPC_EABI_Support/Msl/MSL_C++/MSL_Common', 'build/GMSE01/include']
 files = [l.strip() for l in open(SCR + '/files.txt') if l.strip()]

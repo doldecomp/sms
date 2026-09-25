@@ -217,13 +217,13 @@ It does not edit headers, does not invent code the body lacks (missing statement
 Cleaning up that draft to use proper fields and inline helpers available on relevant types usually already gets the function very close to matching.
 The tool accepts plaintext assembly, which for this repository are the dtk-generated assembly files under `build/GMSE01/asm/<path>.s`.
 
-In this clone m2c is already installed: **`/home/netflix/m2c/m2c.py`**, commit `e07f7e1c`, runnable through `build/venv/bin/python3`.
-There is no need to ask the user for a path.
+Set **`M2C`** to your m2c checkout's `m2c.py` (tested at commit `e07f7e1c`) and run it through `build/venv/bin/python3`.
+If `M2C` is unset, ask the user for the path.
 
 Tested example:
 
 ```bash
-build/venv/bin/python3 /home/netflix/m2c/m2c.py -t ppc -f __dt__22TNerveFireWanwanEscapeFv \
+build/venv/bin/python3 "$M2C" -t ppc -f __dt__22TNerveFireWanwanEscapeFv \
     --globals=used build/GMSE01/asm/Enemy/fireWanwan.s
 ```
 
@@ -231,7 +231,7 @@ That command decompiles the function named by the `.fn` symbol in the asm file a
 For larger functions, the same pattern works with the mangled symbol name, for example:
 
 ```bash
-build/venv/bin/python3 /home/netflix/m2c/m2c.py -t ppc \
+build/venv/bin/python3 "$M2C" -t ppc \
     -f "execute__22TNerveFireWanwanEscapeCFP24TSpineBase<10TLiveActor>" \
     --globals=used build/GMSE01/asm/Enemy/fireWanwan.s
 ```

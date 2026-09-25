@@ -2,7 +2,7 @@
 """Syntax-check every in-scope unit with g++/gcc for one pass configuration."""
 import os, re, sys, subprocess, json, time
 from concurrent.futures import ThreadPoolExecutor
-ROOT = '/home/netflix/sms-wt/c-pcscope'
+ROOT = os.environ.get('SMS_ROOT') or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..'))
 SCR = os.path.dirname(os.path.abspath(__file__))
 PASSES = {
     # name: (m32, permissive, gekko, msl_includes, u32_is_int, compat_shim)

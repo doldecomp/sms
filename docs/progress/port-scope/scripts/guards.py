@@ -1,5 +1,5 @@
 import os, re, glob, collections
-ROOT = '/home/netflix/sms-wt/c-pcscope'; os.chdir(ROOT)
+ROOT = os.environ.get('SMS_ROOT') or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..')); os.chdir(ROOT)
 SCR = os.path.dirname(os.path.abspath(__file__))
 src = [l.strip() for l in open(SCR + '/files.txt') if l.strip()]
 hdr = [h for h in glob.glob('include/**/*', recursive=True) if os.path.isfile(h) and not h.startswith(('include/PowerPC_EABI_Support', 'include/TRK_MINNOW_DOLPHIN'))]

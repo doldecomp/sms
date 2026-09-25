@@ -2,7 +2,7 @@
 [2/377] MWCC build/GMSE01/src/Animal/boid.o
 [3/377] MWCC build/GMSE01/src/Animal/AnimalManager.o
 [4/377] MWCC build/GMSE01/src/Animal/AnimalNerve.o
-sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Animal\AnimalNerve.cpp contains Shift JIS encoding errors
+sjiswrap: File src\Animal\AnimalNerve.cpp contains Shift JIS encoding errors
 ### mwcceppc.exe Compiler:
 #      In: include\JSystem\JGadget\std-list.hpp
 #    From: src\Animal\AnimalNerve.cpp
@@ -399,7 +399,7 @@ sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Animal\AnimalNerve.cpp contains Sh
 #    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
 #   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
 [58/377] MWCC build/GMSE01/src/Enemy/enemyMario.o
-sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Enemy\enemyMario.cpp contains Shift JIS encoding errors
+sjiswrap: File src\Enemy\enemyMario.cpp contains Shift JIS encoding errors
 ### mwcceppc.exe Compiler:
 #      In: include\JSystem\JGadget\std-list.hpp
 #    From: src\Enemy\enemyMario.cpp
@@ -1173,7 +1173,7 @@ sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Enemy\enemyMario.cpp contains Shif
 #   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
 [135/377] MWCC build/GMSE01/src/GC2D/HelpActor.o
 [136/377] MWCC build/GMSE01/src/GC2D/PauseMenu2.o
-sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\GC2D\PauseMenu2.cpp contains Shift JIS encoding errors
+sjiswrap: File src\GC2D\PauseMenu2.cpp contains Shift JIS encoding errors
 [137/377] MWCC build/GMSE01/src/GC2D/Talk2D2.o
 [138/377] MWCC build/GMSE01/src/GC2D/ConsoleStr.o
 [139/377] MWCC build/GMSE01/src/GC2D/SelectDir.o
@@ -1363,7 +1363,7 @@ sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\GC2D\PauseMenu2.cpp contains Shift
 #    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
 #   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
 [170/377] MWCC build/GMSE01/src/Map/MapWireManager.o
-sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Map\MapWireManager.cpp contains Shift JIS encoding errors
+sjiswrap: File src\Map\MapWireManager.cpp contains Shift JIS encoding errors
 ### mwcceppc.exe Compiler:
 #      In: include\JSystem\JGadget\std-list.hpp
 #    From: src\Map\MapWireManager.cpp
@@ -2068,7 +2068,7 @@ sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Map\MapWireManager.cpp contains Sh
 [265/377] MWCC build/GMSE01/src/MarioUtil/LightUtil.o
 [266/377] MWCC build/GMSE01/src/MarioUtil/EffectUtil.o
 [267/377] MWCC build/GMSE01/src/MarioUtil/ScreenUtil.o
-sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\MarioUtil\ScreenUtil.cpp contains Shift JIS encoding errors
+sjiswrap: File src\MarioUtil\ScreenUtil.cpp contains Shift JIS encoding errors
 [268/377] MWCC build/GMSE01/src/MarioUtil/MtxUtil.o
 ### mwcceppc.exe Compiler:
 #      In: include\JSystem\JGadget\std-list.hpp
@@ -2252,7 +2252,7 @@ sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\MarioUtil\ScreenUtil.cpp contains 
 #    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
 #   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
 [290/377] MWCC build/GMSE01/src/Player/MarioMove.o
-sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Player\MarioMove.cpp contains Shift JIS encoding errors
+sjiswrap: File src\Player\MarioMove.cpp contains Shift JIS encoding errors
 ### mwcceppc.exe Compiler:
 #      In: include\JSystem\JGadget\std-list.hpp
 #    From: src\Player\MarioMove.cpp
@@ -2494,7 +2494,7 @@ sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\Player\MarioMove.cpp contains Shif
 #    (instantiating: 'JGadget::TList<MActorSubAnmInfo, 
 #   JGadget::TAllocator<MActorSubAnmInfo>>::Confirm()')
 [316/377] MWCC build/GMSE01/src/System/EventWatcher.o
-sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\System\EventWatcher.cpp contains Shift JIS encoding errors
+sjiswrap: File src\System\EventWatcher.cpp contains Shift JIS encoding errors
 ### mwcceppc.exe Compiler:
 #      In: include\JSystem\JGadget\std-list.hpp
 #    From: src\System\EventWatcher.cpp
@@ -2507,7 +2507,7 @@ sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\System\EventWatcher.cpp contains S
 [317/377] MWCC build/GMSE01/src/System/ParamInst.o
 [318/377] MWCC build/GMSE01/src/System/PerformList.o
 [319/377] MWCC build/GMSE01/src/System/MenuDir.o
-sjiswrap: File Z:\home\netflix\sms-wt\rs1\src\System\MenuDir.cpp contains Shift JIS encoding errors
+sjiswrap: File src\System\MenuDir.cpp contains Shift JIS encoding errors
 ### mwcceppc.exe Compiler:
 #    File: src\System\MenuDir.cpp
 # -------------------------------

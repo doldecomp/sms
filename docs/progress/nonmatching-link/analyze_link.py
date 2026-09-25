@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Compare the from-source (--non-matching) link map against the retail US map."""
-import re, struct, sys, collections, json
-ORIG_MAP = '/home/netflix/sms-wt/c-nm/orig/GMSE01/files/marioUS.MAP'
-NEW_MAP = '/home/netflix/sms-wt/c-nm/build/GMSE01/mario.elf.MAP'
-ORIG_DOL = '/home/netflix/sms-wt/c-nm/orig/GMSE01/sys/main.dol'
-OUT = '/home/netflix/sms-wt/c-nm-scratch/'
+import os, re, struct, sys, collections, json
+ROOT = os.environ.get('SMS_ROOT') or os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..'))
+ORIG_MAP = ROOT + '/orig/GMSE01/files/marioUS.MAP'
+NEW_MAP = ROOT + '/build/GMSE01/mario.elf.MAP'
+ORIG_DOL = ROOT + '/orig/GMSE01/sys/main.dol'
+OUT = os.environ.get('OUT', 'nonmatching-link-out') + '/'
 LIVE = re.compile(r'^\s+([0-9a-f]{8}) ([0-9a-f]{6,8}) ([0-9a-f]{8})(?: ([0-9a-f]{8}))?\s+(\d+) (\S+) \t(.*)$')
 UNUSED = re.compile(r'^\s+UNUSED\s+([0-9a-f]{6,8}) \.{8} (\S+) (.*)$')
 HDR = re.compile(r'^(\S+) section layout')
