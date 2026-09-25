@@ -6,6 +6,7 @@
 #include <dolphin/types.h>
 #include <dolphin/gd.h>
 #include <dolphin/mtx.h>
+#include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>
 #include <JSystem/J3D/J3DAssert.hpp>
 

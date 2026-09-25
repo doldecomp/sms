@@ -10,6 +10,7 @@
 #include <JSystem/J3D/J3DAssert.hpp>
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/mtx.h>
+#include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 
 class J3DAnmColor;
 class J3DAnmTexPattern;
