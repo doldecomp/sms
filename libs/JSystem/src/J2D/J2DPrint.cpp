@@ -306,7 +306,7 @@ float J2DPrint::parse(const u8* param_1, int param_2, int param_3, u16* param_4,
 			r18 = true;
 		}
 
-		if (r27 == 0 || ((u32)param_1 - (u32)local_c) > param_2) {
+		if (r27 == 0 || ((uintptr_t)param_1 - (uintptr_t)local_c) > param_2) {
 			if (param_7 == 0 && param_4 != nullptr) {
 				param_4[r21] = 0.5f + f24;
 			}
@@ -354,7 +354,7 @@ float J2DPrint::parse(const u8* param_1, int param_2, int param_3, u16* param_4,
 					r19 = false;
 				}
 			}
-		} else if (r18 && ((u32)param_1 - (u32)local_c > (u32)param_2)) {
+		} else if (r18 && ((uintptr_t)param_1 - (uintptr_t)local_c > (u32)param_2)) {
 			if ((!param_7) && (param_4 != nullptr)) {
 				param_4[r21] = 0.5f + f24;
 			}
@@ -633,8 +633,8 @@ int J2DPrint::getNumber(const u8** param_1, s32 param_2, s32 param_3, int base)
 		uVar2 = strtol((char*)*param_1, &local_28, base);
 	} else if (base == 16) {
 		uVar2 = strtoul((char*)*param_1, &local_28, base);
-		if ((u32)local_28 - (u32)*param_1 != 8) {
-			if ((u32)local_28 - (u32)*param_1 == 6) {
+		if ((uintptr_t)local_28 - (uintptr_t)*param_1 != 8) {
+			if ((uintptr_t)local_28 - (uintptr_t)*param_1 == 6) {
 				uVar2 = (uVar2 << 8) | 0xff;
 			} else {
 				*param_1 = puVar1;

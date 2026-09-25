@@ -106,7 +106,7 @@ public:
 	};
 
 	JKRArchive();
-	JKRArchive(s32, EMountMode);
+	JKRArchive(intptr_t, EMountMode);
 
 	virtual bool becomeCurrent(const char*);
 	virtual void* getResource(const char* path);
@@ -160,8 +160,8 @@ public:
 	                            JKRArchive* archive);
 
 	JKRArchive(const char* p1, EMountMode mountMode);
-	static JKRArchive* check_mount_already(s32);
-	static JKRArchive* check_mount_already(s32, JKRHeap*);
+	static JKRArchive* check_mount_already(intptr_t);
+	static JKRArchive* check_mount_already(intptr_t, JKRHeap*);
 	SDIDirEntry* findResType(u32) const;
 	SDIFileEntry* findTypeResource(u32, u32) const;
 
@@ -186,7 +186,7 @@ public:
 protected:
 	/* 0x38 */ JKRHeap* mHeap;
 	/* 0x3C */ u8 mMountMode;
-	/* 0x40 */ s32 mEntryNum;
+	/* 0x40 */ intptr_t mEntryNum;
 	/* 0x44 */ SArcDataInfo* mArcInfoBlock;
 	/* 0x48 */ SDIDirEntry* mDirectories;
 	/* 0x4C */ SDIFileEntry* mFileEntries;
