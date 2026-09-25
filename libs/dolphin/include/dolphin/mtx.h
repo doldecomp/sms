@@ -20,7 +20,6 @@ typedef struct {
 } Quaternion, *QuaternionPtr, Qtrn, *QtrnPtr;
 
 typedef f32 Mtx[3][4];
-typedef f32 Mtx33[3][3];
 typedef f32 Mtx44[4][4];
 
 typedef f32 (*MtxPtr)[4];

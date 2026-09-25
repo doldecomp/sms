@@ -3,6 +3,7 @@
 
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
+#include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 
 enum J3DErrType {
 	J3DErrType_Success     = 0,

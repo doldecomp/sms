@@ -4,6 +4,7 @@
 #include <JSystem/J3D/J3DAssert.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DVertex.hpp>
 #include <dolphin/mtx.h>
+#include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <dolphin/gx.h>
 
 class J3DMaterial;

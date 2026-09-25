@@ -3,6 +3,8 @@
 
 #include <dolphin/mtx.h>
 
+typedef f32 Mtx33[3][3];
+
 struct J3DTextureSRTInfo;
 
 struct J3DTransformInfo {
