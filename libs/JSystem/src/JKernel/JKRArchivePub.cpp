@@ -8,7 +8,7 @@
 #include <JSystem/JUtility/JUTAssert.hpp>
 #include <dolphin/dvd.h>
 
-JKRArchive* JKRArchive::check_mount_already(s32 entryNum)
+JKRArchive* JKRArchive::check_mount_already(intptr_t entryNum)
 {
 	for (JSUListIterator<JKRFileLoader> iterator = getVolumeList().getFirst();
 	     iterator != getVolumeList().getEnd(); ++iterator) {

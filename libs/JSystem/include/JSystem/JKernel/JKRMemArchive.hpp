@@ -21,7 +21,7 @@ public:
 	bool open(void*, u32, JKRMemBreakFlag);
 	static u32 fetchResource_subroutine(u8*, u32, u8*, u32, int);
 
-	void fixedInit(s32);
+	void fixedInit(intptr_t);
 	void mountFixed(s32, EMountDirection);
 	void mountFixed(const char*, EMountDirection);
 	bool mountFixed(void*, JKRMemBreakFlag);

@@ -31,7 +31,8 @@ JKRThread::JKRThread(OSThread* threadRecord, int msgCount)
 {
 	mHeap         = nullptr;
 	mThreadRecord = threadRecord;
-	mStackSize    = (u32)threadRecord->stackEnd - (u32)threadRecord->stackBase;
+	mStackSize    = (uintptr_t)threadRecord->stackEnd
+	              - (uintptr_t)threadRecord->stackBase;
 	mStackMemory  = threadRecord->stackBase;
 	mMesgCount    = msgCount;
 	mMesgBuffer   = (OSMessage*)JKRHeap::sSystemHeap->alloc(

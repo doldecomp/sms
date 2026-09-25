@@ -332,7 +332,7 @@ namespace Kernel {
 		} else {
 			mStart = (u8*)ALIGN_NEXT((uintptr_t)mem_start, 0x20);
 			mEnd   = mStart;
-			mSize  = mem_size - ((u32)mem_start & 0x1F);
+			mSize  = mem_size - ((uintptr_t)mem_start & 0x1F);
 			unk10  = 0;
 		}
 	}
