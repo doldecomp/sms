@@ -410,8 +410,8 @@ BOOL TSamboFlower::receiveMessage(THitActor* param_1, u32 param_2)
 			                             0, nullptr);
 			mMActor->setBck("flower_hit");
 			if (unk160 && unk164) {
-				*unk164 = *unk164 - 1;
-				u32 id  = MSD_SE_OBJ_FLOWER_OPEN_0 + *unk164;
+				*unk164 -= 1;
+				u32 id = MSD_SE_OBJ_FLOWER_OPEN_0 + *unk164;
 				SMSGetMSound()->startSoundActor(id, &mPosition, 0, nullptr, 0,
 				                                4);
 			}
@@ -445,7 +445,7 @@ void TSamboFlower::moveObject()
 				if (getMActor()->checkCurAnm("flower_fwait", 0)) {
 					unk150 = false;
 					if (unk164)
-						*unk164 = *unk164 + 1;
+						*unk164 += 1;
 
 					getMActor()->setBck("flower_hit");
 					getMActor()
@@ -489,8 +489,8 @@ void TSamboFlower::bloom()
 	                             nullptr);
 	mMActor->setBck("flower_hit");
 	if (unk160 && unk164) {
-		*unk164 = *unk164 - 1;
-		u32 id  = MSD_SE_OBJ_FLOWER_OPEN_0 + *unk164;
+		*unk164 -= 1;
+		u32 id = MSD_SE_OBJ_FLOWER_OPEN_0 + *unk164;
 		SMSGetMSound()->startSoundActor(id, &mPosition, 0, nullptr, 0, 4);
 	}
 }
@@ -606,7 +606,7 @@ void THanaSambo::init(TLiveManager* param_1)
 		     ++i) { }
 	}
 
-	unk194 = new THanaSamboHead();
+	unk194 = new THanaSamboHead;
 	((TIdxGroupObj*)JDrama::TNameRefGen::search("敵グループ"))->add(unk194);
 	unk194->initHitActor(0x1000001B, 2, 0x80000000,
 	                     unk198->mSLHeadAttackRadius.get() * mBodyScale,
@@ -1481,8 +1481,8 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 		f32 rate = ((TSamboHeadSaveLoadParams*)self->unk194)
 		               ->mSLHitJumpSpRateXZ.get();
 		self->setBckAnm(6);
-		self->unk1A0.x = self->unk1A0.x * rate;
-		self->unk1A0.z = self->unk1A0.z * rate;
+		self->unk1A0.x *= rate;
+		self->unk1A0.z *= rate;
 		self->unk1A0.y = 0.0f;
 		self->setVelocity(self->unk1A0);
 		self->mPosition.y = self->mGroundHeight;
