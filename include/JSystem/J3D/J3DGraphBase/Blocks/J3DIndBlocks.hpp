@@ -1,7 +1,7 @@
 #ifndef J3D_IND_BLOCKS_HPP
 #define J3D_IND_BLOCKS_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DIndTexOrder.hpp>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DIndTexMtx.hpp>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DIndTexCoordScale.hpp>

@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DTevBlocks.hpp>

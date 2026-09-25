@@ -2,7 +2,7 @@
 #define JALCALC_HPP
 
 #include <dolphin/mtx.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JALCalc {
 

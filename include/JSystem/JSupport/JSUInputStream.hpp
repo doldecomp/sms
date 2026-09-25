@@ -1,7 +1,7 @@
 #ifndef JSU_INPUT_STREAM_H
 #define JSU_INPUT_STREAM_H
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JSupport/JSUIosBase.hpp>
 
 class JSUInputStream : public JSUIosBase {

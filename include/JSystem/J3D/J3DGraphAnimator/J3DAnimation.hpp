@@ -1,7 +1,7 @@
 #ifndef J3D_ANIMATION_HPP
 #define J3D_ANIMATION_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <JSystem/J3D/J3DAssert.hpp>
 #include <dolphin/gx.h>

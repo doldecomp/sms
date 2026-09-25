@@ -1,7 +1,7 @@
 #ifndef J3D_TEV_BLOCKS_HPP
 #define J3D_TEV_BLOCKS_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DTevOrder.hpp>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DGXColorS10.hpp>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DGXColor.hpp>

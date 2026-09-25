@@ -3,7 +3,7 @@
 
 #include <Strategic/SolidStack.hpp>
 #include <dolphin/os.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 class TSpineEnemy;
 template <class T> class TNerveBase;

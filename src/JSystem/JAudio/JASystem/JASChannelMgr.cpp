@@ -2,7 +2,7 @@
 #include <JSystem/JAudio/JASystem/JASChGlobal.hpp>
 #include <JSystem/JAudio/JASystem/JASDSPChannel.hpp>
 #include <JSystem/JAudio/JASystem/JASChAllocQueue.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

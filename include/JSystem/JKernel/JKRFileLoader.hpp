@@ -1,6 +1,7 @@
 #ifndef JKR_FILELOADER_HPP
 #define JKR_FILELOADER_HPP
 
+#include <stddef.h>
 #include <JSystem/JKernel/JKREnum.hpp>
 #include <JSystem/JKernel/JKRDisposer.hpp>
 #include <JSystem/JSupport/JSUList.hpp>

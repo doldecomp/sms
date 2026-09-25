@@ -1,7 +1,7 @@
 #ifndef J_SUPPORT_HPP
 #define J_SUPPORT_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 template <typename T> T* JSUConvertOffsetToPtr(const void* ptr, u32 offset)
 {

@@ -1,7 +1,7 @@
 #ifndef J3D_MODEL_LOADER_HPP
 #define J3D_MODEL_LOADER_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <JSystem/JUtility/JUTDataHeader.hpp>

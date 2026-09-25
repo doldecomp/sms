@@ -1,7 +1,7 @@
 #ifndef GCCONSOLE2_HPP
 #define GCCONSOLE2_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
 #include <JSystem/JUtility/JUTPoint.hpp>

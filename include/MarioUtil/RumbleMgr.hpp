@@ -3,7 +3,7 @@
 
 #include <dolphin/mtx.h>
 #include <dolphin/pad.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 #define RUMBLE_CHANNELS_PER_CONTROLLER 32
 

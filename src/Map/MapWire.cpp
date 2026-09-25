@@ -3,7 +3,7 @@
 #include <dolphin/mtx.h>
 #include <dolphin/gx.h>
 #include <fake_tgmath.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>

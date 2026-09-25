@@ -1,7 +1,7 @@
 #ifndef JDR_NAME_REF_HPP
 #define JDR_NAME_REF_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 

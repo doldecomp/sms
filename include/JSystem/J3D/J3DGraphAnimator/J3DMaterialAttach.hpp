@@ -1,7 +1,7 @@
 #ifndef J3D_MATERIAL_ATTACH_HPP
 #define J3D_MATERIAL_ATTACH_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/J3D/J3DAssert.hpp>
 
 class J3DMaterial;

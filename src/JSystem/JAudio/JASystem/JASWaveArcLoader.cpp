@@ -2,7 +2,7 @@
 #include <JSystem/JAudio/JASystem/JASHeapCtrl.hpp>
 #include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
 #include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 #include <string.h>
 
 namespace JASystem {

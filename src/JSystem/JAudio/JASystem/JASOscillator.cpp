@@ -2,7 +2,7 @@
 #include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/JAudio/JASystem/JASRate.hpp>
 #include <math.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

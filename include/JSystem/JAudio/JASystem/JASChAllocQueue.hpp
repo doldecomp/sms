@@ -2,7 +2,7 @@
 #define JASCHALLOCQUEUE_HPP
 
 #include <JSystem/JAudio/JASystem/JASChannel.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

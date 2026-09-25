@@ -1,4 +1,4 @@
-#include "types.h"
+#include <dolphin/types.h>
 #include <JSystem/JUtility/JUTGamePad.hpp>
 #include <math.h>
 

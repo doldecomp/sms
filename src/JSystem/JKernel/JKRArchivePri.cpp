@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>

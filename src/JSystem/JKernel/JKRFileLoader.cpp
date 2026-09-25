@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
 #include <ctype.h>

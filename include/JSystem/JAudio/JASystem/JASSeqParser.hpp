@@ -1,7 +1,7 @@
 #ifndef JASSEQPARSER_HPP
 #define JASSEQPARSER_HPP
 
-#include "types.h"
+#include <dolphin/types.h>
 
 namespace JASystem {
 

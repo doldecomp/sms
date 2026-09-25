@@ -1,6 +1,6 @@
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
 #include <JSystem/JAudio/JASystem/JASChannel.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

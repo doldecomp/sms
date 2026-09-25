@@ -1,7 +1,7 @@
 #ifndef JSU_RANDOM_INPUT_STREAM_H
 #define JSU_RANDOM_INPUT_STREAM_H
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JSupport/JSUInputStream.hpp>
 
 class JSURandomInputStream : public JSUInputStream {

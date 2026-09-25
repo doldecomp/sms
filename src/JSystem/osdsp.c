@@ -1,5 +1,5 @@
 #include <dolphin/dsp.h>
-#include "types.h"
+#include <dolphin/types.h>
 
 DSPTaskInfo* __DSP_tmp_task;
 

@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/JParticle/JPADataBlock.hpp>
 #include <dolphin/os.h>
 #include <macros.h>

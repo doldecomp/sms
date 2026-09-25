@@ -2,7 +2,7 @@
 #define JUT_VIDEO_HPP
 
 #include <dolphin/gx.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 class JUTVideo {
 public:

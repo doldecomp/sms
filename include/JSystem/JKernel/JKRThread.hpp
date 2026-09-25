@@ -1,7 +1,7 @@
 #ifndef JKR_THREAD_H
 #define JKR_THREAD_H
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <dolphin/os/OSMessage.h>
 #include <JSystem/JSupport/JSUList.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>

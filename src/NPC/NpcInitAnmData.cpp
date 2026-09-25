@@ -1,5 +1,5 @@
 #include <NPC/NpcInitAnmData.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 static const char dummy3[] = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char dummy4[] = "メモリが足りません\n";

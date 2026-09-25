@@ -2,7 +2,7 @@
 #include <JSystem/JAudio/JASystem/JASBank.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
 #include <JSystem/JAudio/JASystem/JASInstEffect.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

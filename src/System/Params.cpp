@@ -1,3 +1,4 @@
+#include <string.h>
 #include <System/Params.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 

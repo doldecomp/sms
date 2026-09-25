@@ -1,7 +1,7 @@
 #ifndef JUT_NAMETAB_HPP
 #define JUT_NAMETAB_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 struct ResNTAB {
 	u16 mEntryNum;

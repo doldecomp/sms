@@ -1,7 +1,7 @@
 #ifndef CAMERA_CAMERA_MULTI_PLAYER_HPP
 #define CAMERA_CAMERA_MULTI_PLAYER_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JGeometry/JGVec3.hpp>
 
 class TMultiPlayerData {

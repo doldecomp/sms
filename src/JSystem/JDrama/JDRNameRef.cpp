@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/JDrama/JDRNameRef.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 

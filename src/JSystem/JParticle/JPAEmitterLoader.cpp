@@ -5,7 +5,7 @@
 #include <JSystem/JParticle/JPASweepShape.hpp>
 #include <JSystem/JParticle/JPAExTexShape.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 JPAEmitterData* JPAEmitterLoaderDataBase::load(const u8* param_1,
                                                JKRHeap* param_2,

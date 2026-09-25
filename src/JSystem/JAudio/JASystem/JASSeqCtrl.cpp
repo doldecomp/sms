@@ -1,5 +1,5 @@
 #include <JSystem/JAudio/JASystem/JASSeqCtrl.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

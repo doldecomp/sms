@@ -1,7 +1,7 @@
 #ifndef JGADGET_SINGLELINKLIST_HPP
 #define JGADGET_SINGLELINKLIST_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JGadget {
 

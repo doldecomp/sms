@@ -1,7 +1,7 @@
 #ifndef JSU_LIST_H
 #define JSU_LIST_H
 
-#include <types.h>
+#include <dolphin/types.h>
 
 class JSUPtrLink;
 

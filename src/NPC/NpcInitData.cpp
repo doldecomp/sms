@@ -1,5 +1,5 @@
 #include <NPC/NpcInitData.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 // pch issues
 static const char dummy3[] = "\0\0\0\0\0\0\0\0\0\0\0";

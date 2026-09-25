@@ -4,7 +4,7 @@
 #include <JSystem/ResTIMG.hpp>
 #include <dolphin/gx/GXEnum.h>
 #include <dolphin/gx/GXStruct.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 class JUTPalette;
 

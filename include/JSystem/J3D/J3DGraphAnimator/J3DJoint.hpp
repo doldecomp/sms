@@ -1,7 +1,7 @@
 #ifndef J3D_JOINT_HPP
 #define J3D_JOINT_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/J3D/J3DGraphAnimator/J3DNode.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>

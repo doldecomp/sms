@@ -1,7 +1,7 @@
 #ifndef JAIGLOBALPARAMETER_HPP
 #define JAIGLOBALPARAMETER_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 class JAIGlobalParameter {
 public:

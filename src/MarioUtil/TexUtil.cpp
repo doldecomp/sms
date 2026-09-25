@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>

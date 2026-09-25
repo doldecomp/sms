@@ -1,5 +1,5 @@
 #include "JSystem/JGeometry/JGVec3.hpp"
-#include "types.h"
+#include <dolphin/types.h>
 #include <Player/Tongue.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>

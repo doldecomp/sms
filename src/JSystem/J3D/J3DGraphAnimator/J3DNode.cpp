@@ -1,5 +1,5 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DNode.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 J3DNode::J3DNode()
 {

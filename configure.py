@@ -200,6 +200,7 @@ cflags_base_base = [
     "-i include/PowerPC_EABI_Support/Msl/MSL_C++/MSL_Common",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
+    "-Dnullptr=0",
     f"-DVERSION_{config.version}",
 ]
 

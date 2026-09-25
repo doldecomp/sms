@@ -1,3 +1,4 @@
+#include <string.h>
 #include <MSound/MSound.hpp>
 #include <MSound/MSRandVol.hpp>
 #include <MSound/MSHandle.hpp>

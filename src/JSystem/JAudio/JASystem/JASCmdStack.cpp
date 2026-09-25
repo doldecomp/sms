@@ -1,7 +1,7 @@
 #include <JSystem/JAudio/JASystem/JASCmdStack.hpp>
 #include <JSystem/JAudio/JASystem/JASCallback.hpp>
 #include <dolphin/os.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 static JASystem::Kernel::TPortHead cmd_once;
 static JASystem::Kernel::TPortHead cmd_stay;
