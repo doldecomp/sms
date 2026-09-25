@@ -46,7 +46,7 @@ DECLARE_NERVE(TNerveSamboHeadAppear, TLiveActor);
 
 class TSamboHead : public TWalkerEnemy {
 public:
-	TSamboHead(const char*);
+	TSamboHead(const char* name = "サンボヘッド");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void init(TLiveManager*);
@@ -78,7 +78,7 @@ public:
 
 class TSamboHeadManager : public TSmallEnemyManager {
 public:
-	TSamboHeadManager(const char*);
+	TSamboHeadManager(const char* name = "サンボヘッドマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -118,7 +118,7 @@ DECLARE_NERVE(TNerveHanaSamboWait, TLiveActor);
 
 class THanaSambo : public TSmallEnemy {
 public:
-	THanaSambo(const char*);
+	THanaSambo(const char* name = "ハナサンボ");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -175,7 +175,7 @@ public:
 
 class THanaSamboManager : public TSmallEnemyManager {
 public:
-	THanaSamboManager(const char*);
+	THanaSamboManager(const char* name = "ハナサンボマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -276,7 +276,8 @@ public:
 
 class TSamboLeaf : public JDrama::TViewObj {
 public:
-	TSamboLeaf(TSamboFlowerManager*, SDLModelData*, const char*);
+	TSamboLeaf(TSamboFlowerManager*, SDLModelData*,
+	           const char* name = "サンボリーフ");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 

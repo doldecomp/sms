@@ -231,7 +231,7 @@ void TSamboFlowerManager::createModelData()
 
 TSpineEnemy* TSamboFlowerManager::createEnemyInstance()
 {
-	return new TSamboFlower("サンボフラワー");
+	return new TSamboFlower;
 }
 
 void TSamboFlowerManager::loadAfter()
@@ -243,7 +243,7 @@ void TSamboFlowerManager::loadAfter()
 
 	unk60 = new TSamboLeaf*[0x12];
 	for (int i = 0; i < 0x12; i++)
-		unk60[i] = new TSamboLeaf(this, leafData, "サンボリーフ");
+		unk60[i] = new TSamboLeaf(this, leafData);
 
 	unk58 = 0;
 	for (int i = 0; i < gpItemManager->getObjNum(); i++) {
@@ -536,10 +536,7 @@ void THanaSamboManager::load(JSUMemoryInputStream& param_1)
 	unk38 = new THanaSamboSaveLoadParams("/enemy/hanasambo.prm");
 }
 
-TSpineEnemy* THanaSamboManager::createEnemyInstance()
-{
-	return new THanaSambo("ハナサンボ");
-}
+TSpineEnemy* THanaSamboManager::createEnemyInstance() { return new THanaSambo; }
 
 void THanaSamboManager::createModelData()
 {
@@ -1066,10 +1063,7 @@ void TSamboHeadManager::createModelData()
 	createModelDataArray(entry);
 }
 
-TSpineEnemy* TSamboHeadManager::createEnemyInstance()
-{
-	return new TSamboHead("サンボヘッド");
-}
+TSpineEnemy* TSamboHeadManager::createEnemyInstance() { return new TSamboHead; }
 
 TSamboHead::TSamboHead(const char* param_1)
     : TWalkerEnemy(param_1)
