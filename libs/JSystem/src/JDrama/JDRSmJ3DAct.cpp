@@ -6,6 +6,7 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <math.h>
+#include <macros.h>
 
 using namespace JDrama;
 

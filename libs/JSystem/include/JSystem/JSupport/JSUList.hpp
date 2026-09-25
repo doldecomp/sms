@@ -177,12 +177,12 @@ public:
 	}
 	~JSUTree() { }
 
-	bool appendChild(JSUTree<T>* child) { return append(child); }
-	bool prependChild(JSUTree<T>* child) { return prepend(child); }
-	bool removeChild(JSUTree<T>* child) { return remove(child); }
+	bool appendChild(JSUTree<T>* child) { return this->append(child); }
+	bool prependChild(JSUTree<T>* child) { return this->prepend(child); }
+	bool removeChild(JSUTree<T>* child) { return this->remove(child); }
 	bool insertChild(JSUTree<T>* before, JSUTree<T>* child)
 	{
-		return insert(before, child);
+		return this->insert(before, child);
 	}
 
 	JSUTree<T>* getEndChild() const { return nullptr; }

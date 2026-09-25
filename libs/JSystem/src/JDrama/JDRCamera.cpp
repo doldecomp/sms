@@ -1,6 +1,7 @@
 #include <JSystem/JDrama/JDRCamera.hpp>
 #include <dolphin/mtx.h>
 #include <dolphin/gx.h>
+#include <macros.h>
 
 using namespace JDrama;
 
