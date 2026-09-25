@@ -1232,39 +1232,35 @@ void TSamboHead::calcRootMatrix()
 void TSamboHead::genEventCoin()
 {
 	if (isBckAnm(1)) {
+		Mtx mtx;
+		MtxPtr matrix = mtx;
 		for (int i = 0; i < 3; ++i) {
-			Mtx local_38;
-			Vec local_2c;
-			f32 angle = 60.0f * i + (mRotation.y - 60.0f);
-			MsMtxSetRotY(local_38, angle);
+			MsMtxSetRotY(matrix, mRotation.y - 60.0f + 60.0f * i);
+			JGeometry::TVec3<f32> offset(0.0f, 0.0f, 100.0f);
+			MTXMultVec(matrix, &offset, &offset);
 
-			local_2c.x = 0.0f;
-			local_2c.y = 0.0f;
-			local_2c.z = 100.0f;
-			MTXMultVec(local_38, &local_2c, &local_2c);
-
-			TCoin* coin;
+			TMapObjBase* coin;
 			if (i == 1 && mCoin) {
 				coin = mCoin;
 				if (coin->isActorType(0x2000000E))
-					coin = (TCoin*)gpItemManager->makeObjAppear(0x2000000E);
+					coin = gpItemManager->makeObjAppear(0x2000000E);
 
 				if (coin) {
 					coin->appear();
 					coin->mPosition = mPosition;
 				}
 			} else {
-				coin = (TCoin*)gpItemManager->makeObjAppear(
-				    mPosition.x + local_2c.x, mPosition.y,
-				    mPosition.z + local_2c.z, 0x2000000E, true);
+				coin = gpItemManager->makeObjAppear(
+				    mPosition.x + offset.x, mPosition.y, mPosition.z + offset.z,
+				    0x2000000E, true);
 			}
 
 			if (coin) {
 				coin->mPosition.y = mPosition.y;
-				MsVECNormalize(&local_2c, &local_2c);
-				coin->mVelocity.set(local_2c.x * 4,
+				MsVECNormalize(&offset, &offset);
+				coin->mVelocity.set(offset.x * 4.0f,
 				                    TMsRange<f32>(8.0f, 16.0f).rand(),
-				                    local_2c.z * 4);
+				                    offset.z * 4.0f);
 				coin->offLiveFlag(LIVE_FLAG_UNK10);
 			}
 		}
