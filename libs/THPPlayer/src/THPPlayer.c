@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <THPPlayer/THPPlayer.h>
 
 #include <THPPlayer/THPDraw.h>
@@ -331,7 +332,7 @@ static BOOL WaitUntilPrepare()
 
 	OSReceiveMessage(&PrepareReadyQueue, &msg, OS_MESSAGE_BLOCK);
 
-	if ((BOOL)msg) {
+	if ((BOOL)(intptr_t)msg) {
 		return TRUE;
 	} else {
 		return FALSE;
@@ -340,7 +341,7 @@ static BOOL WaitUntilPrepare()
 
 void PrepareReady(BOOL msg)
 {
-	OSSendMessage(&PrepareReadyQueue, (OSMessage)msg, OS_MESSAGE_BLOCK);
+	OSSendMessage(&PrepareReadyQueue, (OSMessage)(intptr_t)msg, OS_MESSAGE_BLOCK);
 }
 
 BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)

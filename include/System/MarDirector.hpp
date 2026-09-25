@@ -70,8 +70,8 @@ public:
 		/* 0x8 */ u32 unk8;
 		/* 0xC */ f32 unkC;
 		/* 0x10 */ bool unk10;
-		/* 0x14 */ s32 (*unk14)(u32, u32);
-		/* 0x18 */ u32 unk18;
+		/* 0x14 */ s32 (*unk14)(uintptr_t, u32);
+		/* 0x18 */ uintptr_t unk18;
 		/* 0x1C */ JDrama::TActor* unk1C;
 		/* 0x20 */ JDrama::TFlagT<u16> unk20;
 	};
@@ -89,7 +89,8 @@ public:
 	void fireStreamingMovie(u8);
 	void fireEndDemoCamera();
 	void fireStartDemoCamera(const char*, const JGeometry::TVec3<f32>*, s32,
-	                         f32, bool, s32 (*)(u32, u32), u32, JDrama::TActor*,
+	                         f32, bool, s32 (*)(uintptr_t, u32), uintptr_t,
+	                         JDrama::TActor*,
 	                         JDrama::TFlagT<u16>);
 	void fireStageEvent(TMapObjBase*);
 	void setNextStage(u16, JDrama::TActor*);

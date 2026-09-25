@@ -1,6 +1,7 @@
 #ifndef JKR_DVD_ARAM_RIPPER_HPP
 #define JKR_DVD_ARAM_RIPPER_HPP
 
+#include <stdint.h>
 #include <JSystem/JKernel/JKRDvdRipper.hpp>
 
 class JKRAramBlock;
@@ -24,7 +25,7 @@ public:
 	/* 0x34 */ int field_0x34;
 	/* 0x38 */ int field_0x38;
 	/* 0x3C */ int field_0x3c;
-	/* 0x40 */ void (*mCallback)(u32);
+	/* 0x40 */ void (*mCallback)(uintptr_t);
 	/* 0x44 */ bool field_0x48;
 	/* 0x48 */ JKRAramStreamCommand* mStreamCommand;
 };
@@ -37,11 +38,11 @@ public:
 	static JKRAramBlock* loadToAram(JKRDvdFile*, u32, JKRExpandSwitch, u32,
 	                                u32);
 	static JKRADCommand* loadToAram_Async(char*, u32, JKRExpandSwitch,
-	                                      void (*)(u32), u32, u32);
+	                                      void (*)(uintptr_t), u32, u32);
 	static JKRADCommand* loadToAram_Async(s32, u32, JKRExpandSwitch,
-	                                      void (*)(u32), u32, u32);
+	                                      void (*)(uintptr_t), u32, u32);
 	static JKRADCommand* loadToAram_Async(JKRDvdFile*, u32, JKRExpandSwitch,
-	                                      void (*)(u32), u32, u32);
+	                                      void (*)(uintptr_t), u32, u32);
 	static bool syncAramAll(int);
 	static void countLeftSync();
 	static void afterAramAsync(JKRADCommand*);

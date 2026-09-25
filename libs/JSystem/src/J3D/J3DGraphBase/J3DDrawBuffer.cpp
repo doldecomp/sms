@@ -58,12 +58,12 @@ bool J3DDrawBuffer::entryMatSort(J3DMatPacket* packet)
 	packet->getShapePacket()->drawClear();
 
 	J3DTexture* texture = j3dSys.getTexture();
-	u32 hash;
+	uintptr_t hash;
 	u16 texNo = packet->getMaterial()->getTexNo(0);
 	if (texNo == 0xFFFF) {
 		hash = 0;
 	} else {
-		hash = (u32)texture->getResTIMG(texNo);
+		hash = (uintptr_t)texture->getResTIMG(texNo);
 	}
 
 	if (packet->isChanged()) {

@@ -148,7 +148,7 @@ bool JKRMemArchive::open(s32 entryNum,
 		mStrTable    = (char*)((u8*)&mArcInfoBlock->num_nodes
                             + mArcInfoBlock->string_table_offset);
 
-		mArchiveData = (u8*)((u32)mArcHeader + mArcHeader->header_length
+		mArchiveData = (u8*)((uintptr_t)mArcHeader + mArcHeader->header_length
 		                     + mArcHeader->file_data_offset);
 		mIsOpen      = true;
 	}

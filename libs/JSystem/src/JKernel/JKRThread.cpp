@@ -17,7 +17,7 @@ JKRThread::JKRThread(u32 stackSize, int msgCount, int threadPrio)
 	mStackMemory  = JKRAllocFromHeap(mHeap, mStackSize, 32);
 	mThreadRecord = (OSThread*)JKRAllocFromHeap(mHeap, sizeof(OSThread), 32);
 	OSCreateThread(mThreadRecord, &JKRThread::start, this,
-	               (void*)((u32)mStackMemory + mStackSize), mStackSize,
+	               (void*)((uintptr_t)mStackMemory + mStackSize), mStackSize,
 	               threadPrio, OS_THREAD_ATTR_DETACH);
 	mMesgCount  = msgCount;
 	mMesgBuffer = (OSMessage*)JKRAllocFromHeap(

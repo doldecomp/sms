@@ -615,8 +615,8 @@ void JUTException::createFB()
 	u32 size  = (u16)ALIGN_NEXT((u16)renderMode->fbWidth, 16)
 	           * renderMode->xfbHeight * 2;
 
-	void* begin  = (void*)ALIGN_PREV((u32)end - size, 32);
-	void* object = (void*)ALIGN_PREV((s32)begin - sizeof(JUTExternalFB), 32);
+	void* begin  = (void*)ALIGN_PREV((uintptr_t)end - size, 32);
+	void* object = (void*)ALIGN_PREV((intptr_t)begin - sizeof(JUTExternalFB), 32);
 	new ((JUTExternalFB*)object)
 	    JUTExternalFB(renderMode, GX_GM_1_7, begin, size);
 

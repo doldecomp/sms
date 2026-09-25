@@ -49,12 +49,12 @@ s32 JKRSolidHeap::adjustSize()
 	}
 
 	lock();
-	u32 headerSize = (u32)mStart - (u32)this;
-	u32 newSize    = ALIGN_NEXT((u32)mCurStart - (u32)mStart, 0x20);
+	u32 headerSize = (uintptr_t)mStart - (uintptr_t)this;
+	u32 newSize    = ALIGN_NEXT((uintptr_t)mCurStart - (uintptr_t)mStart, 0x20);
 	if (parent->resize(this, headerSize + newSize) != -1) {
 		mFreeSize = 0;
 		mSize     = newSize;
-		mEnd      = (void*)((u32)mStart + mSize);
+		mEnd      = (void*)((uintptr_t)mStart + mSize);
 		mCurStart = mEnd;
 		mCurEnd   = mEnd;
 	}
@@ -86,7 +86,7 @@ void* JKRSolidHeap::allocFromHead(u32 size, int align)
 
 	void* ret = nullptr;
 
-	char* alignedStart = (char*)ALIGN_NEXT((u32)mCurStart, align);
+	char* alignedStart = (char*)ALIGN_NEXT((uintptr_t)mCurStart, align);
 	u32 requiredSize   = (alignedStart - (char*)mCurStart) + size;
 	if (requiredSize <= mFreeSize) {
 		mCurStart = (char*)mCurStart + requiredSize;
@@ -108,7 +108,7 @@ void* JKRSolidHeap::allocFromTail(u32 size, int align)
 
 	void* ret = nullptr;
 
-	char* alignedEnd = (char*)ALIGN_PREV((u32)mCurEnd - size, align);
+	char* alignedEnd = (char*)ALIGN_PREV((uintptr_t)mCurEnd - size, align);
 	u32 requiredSize = (char*)mCurEnd - alignedEnd;
 	if (requiredSize <= mFreeSize) {
 		mCurEnd = (char*)mCurEnd - requiredSize;
