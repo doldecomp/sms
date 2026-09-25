@@ -189,8 +189,8 @@ public:
 public:
 	/* 0x2D4 */ TParamRT<f32> mSLAttackDist;
 	/* 0x2E8 */ TParamRT<s32> mSLAttackInterval;
-	/* 0x2FC */ TParamRT<f32> mSLHideDist;
-	/* 0x310 */ TParamRT<f32> mSLAppearDist;
+	/* 0x2FC */ TParamRT<f32> mSLAppearDist;
+	/* 0x310 */ TParamRT<f32> mSLHideDist;
 	/* 0x324 */ TParamRT<s32> mSLAttackingTime;
 	/* 0x338 */ TParamRT<f32> mSLHeadAttackRadius;
 	/* 0x34C */ TParamRT<f32> mSLHeadAttackHeight;

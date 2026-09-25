@@ -21,6 +21,7 @@
 #include <JSystem/JStage/JSGObject.hpp>
 #include <JSystem/JSupport/JSUInputStream.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
@@ -506,8 +507,8 @@ THanaSamboSaveLoadParams::THanaSamboSaveLoadParams(const char* param_1)
     : TSmallEnemyParams(param_1)
     , PARAM_INIT(mSLAttackDist, 200.0f)
     , PARAM_INIT(mSLAttackInterval, 200)
-    , PARAM_INIT(mSLHideDist, 800.0f)
-    , PARAM_INIT(mSLAppearDist, 1000.0f)
+    , PARAM_INIT(mSLAppearDist, 800.0f)
+    , PARAM_INIT(mSLHideDist, 1000.0f)
     , PARAM_INIT(mSLAttackingTime, 30)
     , PARAM_INIT(mSLHeadAttackRadius, 60.0f)
     , PARAM_INIT(mSLHeadAttackHeight, 20.0f)
@@ -838,8 +839,8 @@ DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 	}
 
 	self->updateSquareToMario();
-	if (self->mDistToMarioSquared > self->unk198->mSLAppearDist.get()
-	                                    * self->unk198->mSLAppearDist.get()) {
+	if (self->mDistToMarioSquared
+	    > self->unk198->mSLHideDist.get() * self->unk198->mSLHideDist.get()) {
 		spine->pushAfterCurrent(&TNerveHanaSamboHide::theNerve());
 		return true;
 	}
@@ -900,8 +901,8 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 	}
 
 	self->updateSquareToMario();
-	if (self->mDistToMarioSquared
-	    < self->unk198->mSLHideDist.get() * self->unk198->mSLHideDist.get()) {
+	if (self->mDistToMarioSquared < self->unk198->mSLAppearDist.get()
+	                                    * self->unk198->mSLAppearDist.get()) {
 		spine->pushAfterCurrent(&TNerveHanaSamboAppear::theNerve());
 		return true;
 	}
