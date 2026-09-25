@@ -215,7 +215,8 @@ void TMarDirector::fireStageEvent(TMapObjBase*) { }
 void TMarDirector::fireStartDemoCamera(const char* param_1,
                                        const JGeometry::TVec3<f32>* param_2,
                                        s32 param_3, f32 param_4, bool param_5,
-                                       s32 (*param_6)(u32, u32), u32 param_7,
+                                       s32 (*param_6)(uintptr_t, u32),
+                                       uintptr_t param_7,
                                        JDrama::TActor* param_8,
                                        JDrama::TFlagT<u16> param_9)
 {

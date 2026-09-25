@@ -397,7 +397,7 @@ void TWarpInCallBack::execute(JPABaseEmitter* emitter,
 	f32 timer = (f32)gpMarioOriginal->mStatusTimer;
 	f32 tmp   = gpMarioOriginal->unk468;
 
-	f32 factor = ((((int)particle >> 2) & 0x3F) / 16.0f + 1.0f);
+	f32 factor = ((((intptr_t)particle >> 2) & 0x3F) / 16.0f + 1.0f);
 
 	JGeometry::TVec3<f32> v = *vel;
 

@@ -1,6 +1,7 @@
 #include <JSystem/JAudio/JASystem/JASHeapCtrl.hpp>
 #include <macros.h>
 #include <dolphin/types.h>
+#include <stdint.h>
 
 namespace JASystem {
 
@@ -329,7 +330,7 @@ namespace Kernel {
 			mEnd  = 0;
 			unk10 = 0;
 		} else {
-			mStart = (u8*)ALIGN_NEXT((u32)mem_start, 0x20);
+			mStart = (u8*)ALIGN_NEXT((uintptr_t)mem_start, 0x20);
 			mEnd   = mStart;
 			mSize  = mem_size - ((u32)mem_start & 0x1F);
 			unk10  = 0;

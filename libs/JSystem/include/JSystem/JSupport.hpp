@@ -2,13 +2,14 @@
 #define J_SUPPORT_HPP
 
 #include <dolphin/types.h>
+#include <stdint.h>
 
 template <typename T> T* JSUConvertOffsetToPtr(const void* ptr, u32 offset)
 {
 	if (offset == nullptr) {
 		return nullptr;
 	} else {
-		return (T*)((s32)ptr + offset);
+		return (T*)((intptr_t)ptr + offset);
 	}
 }
 
@@ -18,7 +19,7 @@ T* JSUConvertOffsetToPtr(const void* ptr, const void* offset)
 	if (offset == nullptr) {
 		return nullptr;
 	} else {
-		return (T*)((s32)ptr + (s32)offset);
+		return (T*)((intptr_t)ptr + (s32)offset);
 	}
 }
 

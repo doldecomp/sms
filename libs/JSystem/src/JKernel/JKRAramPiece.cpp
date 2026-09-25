@@ -9,7 +9,8 @@ JKRAramPiece::JKRAramPiece() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 
 JKRAramPiece::~JKRAramPiece() { }
 
-JKRAMCommand* JKRAramPiece::prepareCommand(int direction, u32 src, u32 dst,
+JKRAMCommand* JKRAramPiece::prepareCommand(int direction, uintptr_t src,
+                                           uintptr_t dst,
                                            u32 length, JKRAramBlock* block,
                                            JKRAMCommand::AsyncCallback callback)
 {
@@ -28,8 +29,8 @@ void JKRAramPiece::sendCommand(JKRAMCommand* command) { startDMA(command); }
 JSUList<JKRAMCommand> JKRAramPiece::sAramPieceCommandList;
 OSMutex JKRAramPiece::mMutex;
 
-JKRAMCommand* JKRAramPiece::orderAsync(int direction, u32 source,
-                                       u32 destination, u32 length,
+JKRAMCommand* JKRAramPiece::orderAsync(int direction, uintptr_t source,
+                                       uintptr_t destination, u32 length,
                                        JKRAramBlock* block,
                                        JKRAMCommand::AsyncCallback callback)
 {
@@ -86,7 +87,8 @@ void JKRAramPiece::syncAll(int is_non_blocking)
 	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 }
 
-bool JKRAramPiece::orderSync(int direction, u32 source, u32 destination,
+bool JKRAramPiece::orderSync(int direction, uintptr_t source,
+                             uintptr_t destination,
                              u32 length, JKRAramBlock* block)
 {
 	lock();
@@ -129,7 +131,7 @@ void JKRAramPiece::doneDMA(u32 requestAddress)
 	}
 
 	if (command->mCallback) {
-		(*command->mCallback)((u32)command);
+		(*command->mCallback)((uintptr_t)command);
 	} else if (command->field_0x5C) {
 		OSSendMessage(command->field_0x5C, command, OS_MESSAGE_NOBLOCK);
 	} else {
@@ -164,7 +166,7 @@ JKRAMCommand::~JKRAMCommand()
 	}
 }
 
-u32 JKRAMCommand::getDestination()
+uintptr_t JKRAMCommand::getDestination()
 {
 	JUT_ASSERT_F(false, "UNIMPLEMENTED");
 	return 0;

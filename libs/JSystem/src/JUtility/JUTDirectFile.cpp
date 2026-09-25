@@ -2,6 +2,7 @@
 #include <dolphin/os.h>
 #include <dolphin/dvd.h>
 #include <dolphin/types.h>
+#include <stdint.h>
 #include <macros.h>
 
 int JUTDirectFile::fetch32byte()
@@ -33,7 +34,7 @@ JUTDirectFile::JUTDirectFile()
 	mLength      = 0;
 	mPos         = 0;
 	mToRead      = 0;
-	mSectorStart = (u8*)ALIGN_NEXT((u32)mBuffer, DVD_MIN_TRANSFER_SIZE);
+	mSectorStart = (u8*)ALIGN_NEXT((uintptr_t)mBuffer, DVD_MIN_TRANSFER_SIZE);
 	mIsOpen      = false;
 }
 

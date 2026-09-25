@@ -120,9 +120,9 @@ void* Dvd::dvdProc(void* param)
 	buf = (u8*)Kernel::allocFromSysDram(dvdBufSize * 2);
 	OSInitThreadQueue(&dvdtSleep);
 	while (true) {
-		u32 message;
+		OSMessage message;
 		OSReceiveMessage(&mq, &message, 1);
-		cs = (void*)message;
+		cs = message;
 		updateBuffer();
 		if (buffersize == 0)
 			writeBufferSize(buf, 2, dvdBufSize);
