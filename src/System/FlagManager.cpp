@@ -96,7 +96,7 @@ s32 TFlagManager::getFlag(u32 flag) const
 		}
 		break;
 	case 7:
-		if (flag < 0x70002) {
+		if (flag < FLAG_SAVED_OPTION_BOOL_END) {
 			return mSavedOptionBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
@@ -106,7 +106,7 @@ s32 TFlagManager::getFlag(u32 flag) const
 		}
 		break;
 	case 9:
-		if (flag < 0x90001) {
+		if (flag < FLAG_OPTION_BOOL_END) {
 			return mOptionBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
@@ -157,7 +157,7 @@ void TFlagManager::setFlag(u32 flag, s32 value)
 		}
 		break;
 	case 7:
-		if (flag < 0x70002) {
+		if (flag < FLAG_SAVED_OPTION_BOOL_END) {
 			mSavedOptionBools[low >> 3] &= ~(1 << (low & 7));
 			mSavedOptionBools[low >> 3] |= (value & 1) << (low & 7);
 		}
@@ -168,7 +168,7 @@ void TFlagManager::setFlag(u32 flag, s32 value)
 		}
 		break;
 	case 9:
-		if (flag < 0x90001) {
+		if (flag < FLAG_OPTION_BOOL_END) {
 			mOptionBools[low >> 3] &= ~(1 << (low & 7));
 			mOptionBools[low >> 3] |= (value & 1) << (low & 7);
 		}
@@ -200,12 +200,12 @@ bool TFlagManager::getBool(u32 flag) const
 		}
 		break;
 	case 7:
-		if (flag < 0x70002) {
+		if (flag < FLAG_SAVED_OPTION_BOOL_END) {
 			return getFlag(flag) != 0;
 		}
 		break;
 	case 9:
-		if (flag < 0x90001) {
+		if (flag < FLAG_OPTION_BOOL_END) {
 			return getFlag(flag) != 0;
 		}
 		break;
@@ -238,14 +238,14 @@ void TFlagManager::setBool(bool value, u32 flag)
 	case 6:
 		break;
 	case 7:
-		if (flag < 0x70002) {
+		if (flag < FLAG_SAVED_OPTION_BOOL_END) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 8:
 		break;
 	case 9:
-		if (flag < 0x90001) {
+		if (flag < FLAG_OPTION_BOOL_END) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
@@ -544,7 +544,21 @@ void TFlagManager::correctOptFlag()
 		setFlag(0xA0000, getBool(0x70001) ? 2 : 1);
 	}
 
+#ifdef VERSION_GMSP01
+	s32 language = getFlag(0x80000);
+	if (language == 0) {
+		u8 osLanguage = OSGetLanguage();
+		if (osLanguage >= 5)
+			osLanguage = 0;
+		setFlag(0xA0001, osLanguage);
+	} else {
+		setFlag(0xA0001, language - 1);
+	}
+
+	setBool(!getBool(0x70002), 0x90001);
+#else
 	setFlag(0xA0001, 0x100);
+#endif
 }
 
 void TFlagManager::loadOption(JSUMemoryInputStream& in)
@@ -579,7 +593,12 @@ void TFlagManager::saveOption(JSUMemoryOutputStream& out)
 		OSSetSoundMode(1);
 		setBool(true, 0x70001);
 	}
+#ifdef VERSION_GMSP01
+	setFlag(0x80000, getFlag(0xA0001) + 1);
+	setBool(!getBool(0x90001), 0x70002);
+#else
 	setFlag(0x80000, 0);
+#endif
 	out.write(mSavedOptionBools, sizeof(mSavedOptionBools));
 	out.write(mSavedOptionInts, sizeof(mSavedOptionInts));
 }

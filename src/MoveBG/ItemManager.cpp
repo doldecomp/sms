@@ -31,8 +31,10 @@ void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 				emitter->setGlobalScale(
 				    JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 
+#ifndef VERSION_GMSP01
 			SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT,
 			                                &box->mPosition, 0, nullptr, 0, 4);
+#endif
 		}
 		box->makeModelValid();
 	}

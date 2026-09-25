@@ -14,6 +14,10 @@
 #include <MSound/MSoundBGM.hpp>
 
 MSStage* MSStage::smMSStage;
+#ifdef VERSION_GMSP01
+MSStageCubeFade* MSStageCubeFade::smInstance             = nullptr;
+MSStageCubeFadeDouble* MSStageCubeFadeDouble::smInstance = nullptr;
+#endif
 
 namespace MSMainProc {
 
@@ -40,15 +44,50 @@ namespace MSStageInfo {
 
 } // namespace MSMainProc
 
+#ifdef VERSION_GMSP01
+void MSMainProc::setGateKeeperBGMPlayFlag(u32 param_1, bool param_2)
+{
+	MSStageCubeFadeDouble* stage = MSStageCubeFadeDouble::smInstance;
+	if (stage == nullptr)
+		return;
+
+	if (param_1 == 3)
+		stage->mPlayFlag[0] = param_2;
+	else if (param_1 == 4)
+		stage->mPlayFlag[1] = param_2;
+}
+
+bool MSMainProc::getGateKeeperBGMStopFlag()
+{
+	MSStageCubeFadeDouble* stage = MSStageCubeFadeDouble::smInstance;
+	if (stage != nullptr) {
+		for (u8 i = 0; i < 2; ++i) {
+			if (stage->mPlayFlag[i])
+				return false;
+		}
+	}
+	return true;
+}
+#endif
+
+inline Vec getCubeCheckPos(const Vec& pos)
+{
+	Vec result = pos;
+	result.y += 75.0f;
+	return result;
+}
+
+// TODO: fake and wrong, figure this out
+inline TCubeGeneralInfo* getSoundCubeInfo(s32 no)
+{
+	return gpCubeSoundChange->getCubeInfo(no);
+}
+
 int MSMainProc::getMonteVillageActorArea(const Vec& param_1)
 {
 	int result = 4;
 	if (MSGMSound->unkCD == 8) {
-		// inline?
-		Vec local_10 = param_1;
-		local_10.y += 75.0f;
-		Vec copy = local_10;
-		switch (gpCubeFastC->getInCubeNo(copy)) {
+		switch (gpCubeFastC->getInCubeNo(getCubeCheckPos(param_1))) {
 		case 0:
 			result = 2;
 			break;
@@ -585,9 +624,13 @@ void MSMainProc::startStageBGM(u8, u8)
 	}
 }
 
-MSStage* MSStage::init(u8 param_1, u8)
+MSStage* MSStage::init(u8 param_1, u8 param_2)
 {
 	smMSStage = nullptr;
+#ifdef VERSION_GMSP01
+	MSStageCubeFade::smInstance       = nullptr;
+	MSStageCubeFadeDouble::smInstance = nullptr;
+#endif
 
 	gpMSound->unk9C->unk0 = 0.0f;
 
@@ -622,6 +665,10 @@ MSStage* MSStage::init(u8 param_1, u8)
 		if (gpCubeSoundChange->unk10 != 0) {
 			if (param_1 == 8)
 				smMSStage = new MSStageCubeFadeMonte;
+#ifdef VERSION_GMSP01
+			else if (param_1 == 1 && param_2 == 5)
+				smMSStage = new MSStageCubeFadeDouble;
+#endif
 			else
 				smMSStage = new MSStageCubeFade;
 		}
@@ -629,7 +676,7 @@ MSStage* MSStage::init(u8 param_1, u8)
 
 	case 3:
 		if (gpCubeSoundChange->unk10 == 1)
-			smMSStage = new MSStageCubeSwitch(param_1);
+			smMSStage = new MSStageCubeSwitch;
 		break;
 	}
 
@@ -645,7 +692,22 @@ MSStage* MSStage::init(u8 param_1, u8)
 
 void MSStage::stageLoop() { proc(); }
 
-void MSStageProc::setBgmPosition(const Vec&, f32, bool, u32, u32) { }
+void MSStageProc::setBgmPosition(const Vec& pos, f32 dist, bool fade, u32 frame,
+                                 u32 fadeFrame)
+{
+	Vec camPos = gpMSound->mAudioCameras->toCamSpace(pos);
+
+	f32 pan   = MSHandle::calcPan(camPos, dist, 10000.0f);
+	f32 dolby = MSHandle::calcDolby(camPos, dist);
+	if (fade && frame < fadeFrame) {
+		pan = (pan - 0.5f) * frame / fadeFrame;
+		pan += 0.5f;
+		dolby = dolby * frame / fadeFrame;
+	}
+
+	MSBgm::setPan(1, pan, 1, 0);
+	MSBgm::setDolby(1, dolby, 1, 0);
+}
 
 MSStageDistFade::MSStageDistFade(const Vec* param_1, f32 param_2, f32 param_3,
                                  u32 param_4, bool param_5)
@@ -661,7 +723,8 @@ MSStageDistFade::MSStageDistFade(const Vec* param_1, f32 param_2, f32 param_3,
 	(void)0;
 }
 
-static f32 vec_dist(const Vec& a, const Vec& b)
+// TODO: fake and wrong
+inline f32 vec_dist(const Vec& a, const Vec& b)
 {
 	return std::sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)
 	                  + (a.z - b.z) * (a.z - b.z));
@@ -697,22 +760,7 @@ void MSStageDistFade::proc()
 		gpMSound->unk9C->xFadeBgm(fVar1);
 	}
 
-	// TODO: inline?
-	u32 r29 = unk14;
-	u32 r30 = unk4;
-
-	Vec local_68 = gpMSound->mAudioCameras->toCamSpace(*unk10);
-
-	f32 dVar6 = MSHandle::calcPan(local_68, fVar8, 10000.0f);
-	f32 dVar7 = MSHandle::calcDolby(local_68, fVar8);
-	if (r29 < r30) {
-		dVar6 = (dVar6 - 0.5f) * r30 / r29;
-		dVar6 += 0.5f;
-		dVar7 = dVar7 * r30 / r29;
-	}
-
-	MSBgm::setPan(1, dVar6, 1, 0);
-	MSBgm::setDolby(1, dVar7, 1, 0);
+	MSStageProc::setBgmPosition(*unk10, fVar8, true, unk4, unk14);
 	unk4 += 1;
 }
 
@@ -732,11 +780,8 @@ void MSStageDistFadeMonte::proc()
 	if (sound1 == nullptr || sound2 == nullptr)
 		return;
 
-	Vec marioPos = SMS_GetMarioPos();
-	marioPos.y += 75.0f;
-	Vec marioPos2 = marioPos;
-	f32 fVar12    = vec_dist(*unk10, marioPos2);
-	f32 fVar2     = 0.0f;
+	f32 fVar12 = vec_dist(*unk10, getCubeCheckPos(SMS_GetMarioPos()));
+	f32 fVar2  = 0.0f;
 	if (fVar12 < unkC) {
 		fVar2 = 1.0f;
 	} else if (fVar12 < unk8) {
@@ -772,19 +817,7 @@ void MSStageDistFadeMonte::proc()
 			gpMSound->unk9C->xFadeBgm(fVar2);
 		}
 
-		// TODO: inline?
-		u32 uVar4 = unk14;
-		u32 uVar8 = unk4;
-
-		Vec local_88 = gpMSound->mAudioCameras->toCamSpace(*unk10);
-		f32 dVar10   = MSHandle::calcPan(local_88, fVar12, 10000.0f);
-		f32 dVar11   = MSHandle::calcDolby(local_88, fVar12);
-		if (uVar8 < uVar4) {
-			dVar10 = 0.5f + (dVar10 - 0.5f) * uVar8 / uVar4;
-			dVar11 = dVar11 * uVar8 / uVar4;
-		}
-		MSBgm::setPan(1, dVar10, 1, 0);
-		MSBgm::setDolby(1, dVar11, 1, 0);
+		MSStageProc::setBgmPosition(*unk10, fVar12, true, unk4, unk14);
 	}
 	unk20 = unk1C;
 	unk4 += 1;
@@ -795,6 +828,9 @@ MSStageCubeFade::MSStageCubeFade()
     , unk8(-1)
     , unkC(MSMainProc::MSStageInfo::cubeFadeRatio)
 {
+#ifdef VERSION_GMSP01
+	smInstance = this;
+#endif
 }
 
 void MSStageCubeFade::proc()
@@ -805,7 +841,7 @@ void MSStageCubeFade::proc()
 		return;
 
 	Vec local_2c = SMS_GetMarioPos();
-	local_2c.y   = gpCubeSoundChange->unk14->begin()[0]->unkC.y + 75.0f;
+	local_2c.y   = getSoundCubeInfo(0)->unkC.y + 75.0f;
 
 	unk4 = gpCubeSoundChange->getInCubeNo(local_2c);
 	if (unk4 == -1) {
@@ -813,47 +849,74 @@ void MSStageCubeFade::proc()
 			gpMSound->unk9C->unk0 = 0.0f;
 		}
 	} else {
-		Vec local_74;
-		local_74.x = 0.0f;
-		local_74.y = 0.0f;
-		local_74.z = 0.0f;
-
-		Vec local_68 = SMS_GetMarioPos();
-		local_68.y   = gpCubeSoundChange->unk14->begin()[unk4]->unkC.y + 65.0f;
-
-		gpCubeSoundChange->calcPointInCubeRatio(local_68, unk4, &local_74.x,
-		                                        &local_74.y, &local_74.z);
-
-		f32 local_ac = local_74.x - 0.5f;
-		f32 local_b0 = local_74.z - 0.5f;
-		local_ac     = std::fabs(local_ac);
-		local_b0     = std::fabs(local_b0);
-		f32 fVar2    = local_ac > local_b0 ? local_ac : local_b0;
-
-		f32 fVar1;
-		if (fVar2 < unkC)
-			fVar1 = 1.0f;
-		else
-			fVar1 = (0.5f - fVar2) / (0.5f - unkC);
-
-		gpMSound->unk9C->xFadeBgm(fVar1);
+		f32 ratio = calcParamRatioInCube(unk4);
+		gpMSound->unk9C->xFadeBgm(ratio);
 		if (MSMainProc::MSStageInfo::cubeFadeUsePan != 0) {
-			TCubeGeneralInfo* info = gpCubeSoundChange->unk14->begin()[unk4];
-
-			Vec local_d0 = info->getUnkC();
+			Vec cubePos  = getSoundCubeInfo(unk4)->unkC;
 			Vec marioPos = SMS_GetMarioPos();
-
-			f32 d = vec_dist(local_d0, marioPos);
-
-			Vec local_98 = gpMSound->mAudioCameras->toCamSpace(local_2c);
-			f32 dVar6    = MSHandle::calcPan(local_98, d, 10000.0f);
-			f32 dVar7    = MSHandle::calcDolby(local_98, d);
-			MSBgm::setPan(1, dVar6, 1, 0);
-			MSBgm::setDolby(1, dVar7, 1, 0);
+			cubePos.y    = marioPos.y;
+			f32 dist     = vec_dist(cubePos, marioPos);
+			MSStageProc::setBgmPosition(cubePos, dist, false, 0, 0);
 		}
 	}
 	unk8 = unk4;
 }
+
+#ifdef VERSION_GMSP01
+void MSStageCubeFade::setBgmVolumeForce()
+{
+	s32 cubeNo
+	    = gpCubeSoundChange->getInCubeNo(getCubeCheckPos(SMS_GetMarioPos()));
+	f32 ratio;
+	if (cubeNo != -1)
+		ratio = calcParamRatioInCube(cubeNo);
+	else
+		ratio = 0.0f;
+
+	gpMSound->unk9C->xFadeBgmForce(ratio);
+}
+
+MSStageCubeFadeDouble::MSStageCubeFadeDouble()
+{
+	mPlayFlag[0] = false;
+	mPlayFlag[1] = false;
+	smInstance   = this;
+}
+
+void MSStageCubeFadeDouble::proc()
+{
+	JAISound* sound1 = MSBgm::getHandle(1);
+	JAISound* sound0 = MSBgm::getHandle(0);
+	if (sound1 == nullptr)
+		return;
+
+	Vec local_2c = SMS_GetMarioPos();
+	local_2c.y   = getSoundCubeInfo(0)->unkC.y + 75.0f;
+
+	unk4 = gpCubeSoundChange->getInCubeNo(local_2c);
+
+	bool play = false;
+	if ((unk4 == 0 || unk4 == 1) && mPlayFlag[unk4])
+		play = true;
+
+	if (!play) {
+		if (unk8 != -1) {
+			gpMSound->unk9C->unk0 = 0.0f;
+			gpMSound->unk9C->xFadeBgmForce(0.0f);
+		}
+	} else {
+		gpMSound->unk9C->xFadeBgm(calcParamRatioInCube(unk4));
+		if (MSMainProc::MSStageInfo::cubeFadeUsePan != 0) {
+			Vec cubePos  = getSoundCubeInfo(unk4)->unkC;
+			Vec marioPos = SMS_GetMarioPos();
+			cubePos.y    = marioPos.y;
+			f32 dist     = vec_dist(cubePos, marioPos);
+			MSStageProc::setBgmPosition(cubePos, dist, false, 0, 0);
+		}
+	}
+	unk8 = unk4;
+}
+#endif
 
 MSStageCubeFadeMonte::MSStageCubeFadeMonte()
     : unk10(3)
@@ -869,40 +932,12 @@ void MSStageCubeFadeMonte::proc()
 		return;
 
 	Vec local_2c = SMS_GetMarioPos();
-	local_2c.y   = gpCubeSoundChange->unk14->begin()[0]->unkC.y + 75.0f;
+	local_2c.y   = getSoundCubeInfo(0)->unkC.y + 75.0f;
 
 	unk4  = gpCubeSoundChange->getInCubeNo(local_2c);
 	unk10 = SMS_GetMonteVillageAreaInMario();
 
-	f32 fVar2;
-	if (unk4 != -1) {
-
-		// TODO: this is probably calcParamRatioInCube?
-		Vec local_74;
-		local_74.x = 0.0f;
-		local_74.y = 0.0f;
-		local_74.z = 0.0f;
-
-		Vec local_68 = SMS_GetMarioPos();
-		local_68.y   = gpCubeSoundChange->unk14->begin()[unk4]->unkC.y + 65.0f;
-
-		gpCubeSoundChange->calcPointInCubeRatio(local_68, unk4, &local_74.x,
-		                                        &local_74.y, &local_74.z);
-
-		f32 local_ac = local_74.x - 0.5f;
-		f32 local_b0 = local_74.z - 0.5f;
-		local_ac     = std::fabs(local_ac);
-		local_b0     = std::fabs(local_b0);
-		f32 fVar3    = local_ac > local_b0 ? local_ac : local_b0;
-
-		if (fVar3 < unkC)
-			fVar2 = 1.0f;
-		else
-			fVar2 = (0.5f - fVar3) / (0.5f - unkC);
-
-	} else {
-		fVar2 = 0.0f;
-	}
+	f32 fVar2 = unk4 != -1 ? calcParamRatioInCube(unk4) : 0.0f;
 
 	if (unk10 == 0) {
 		MSoundSESystem::MSoundSE::startSoundSystemSE(
@@ -936,20 +971,11 @@ void MSStageCubeFadeMonte::proc()
 		}
 
 		if (unk4 != -1 && MSMainProc::MSStageInfo::cubeFadeUsePan) {
-
-			Vec local_e8           = SMS_GetMarioPos();
-			TCubeGeneralInfo* info = gpCubeSoundChange->unk14->begin()[unk4];
-
-			Vec local_d0        = info->getUnkC();
-			const Vec& marioPos = SMS_GetMarioPos();
-
-			f32 d        = vec_dist(local_d0, marioPos);
-			Vec local_a4 = gpMSound->mAudioCameras->toCamSpace(local_e8);
-
-			f32 dVar6 = MSHandle::calcPan(local_a4, d, 10000.0f);
-			f32 dVar7 = MSHandle::calcDolby(local_a4, d);
-			MSBgm::setPan(1, dVar6, 1, 0);
-			MSBgm::setDolby(1, dVar7, 1, 0);
+			Vec cubePos  = getSoundCubeInfo(unk4)->unkC;
+			Vec marioPos = SMS_GetMarioPos();
+			cubePos.y    = marioPos.y;
+			f32 dist     = vec_dist(cubePos, marioPos);
+			MSStageProc::setBgmPosition(cubePos, dist, false, 0, 0);
 		}
 	}
 
@@ -957,15 +983,27 @@ void MSStageCubeFadeMonte::proc()
 	unk14 = unk10;
 }
 
-f32 MSStageCubeFade::calcParamRatioInCube(s32 id) { }
+f32 MSStageCubeFade::calcParamRatioInCube(s32 id)
+{
+	f32 x = 0.0f;
+	f32 y = 0.0f;
+	f32 z = 0.0f;
+
+	Vec pos = SMS_GetMarioPos();
+	pos.y   = getSoundCubeInfo(id)->unkC.y + 75.0f;
+
+	gpCubeSoundChange->calcPointInCubeRatio(pos, id, &x, &y, &z);
+
+	f32 dx = std::fabs(x - 0.5f);
+	f32 dz = std::fabs(z - 0.5f);
+	f32 d  = dx > dz ? dx : dz;
+
+	return d < unkC ? 1.0f : (0.5f - d) / (0.5f - unkC);
+}
 
 void MSStageCubeSwitch::proc()
 {
-	Vec tmp = SMS_GetMarioPos();
-	tmp.y += 75.0f;
-	Vec local_18 = tmp;
-
-	unk4 = gpCubeSoundChange->getInCubeNo(local_18);
+	unk4 = gpCubeSoundChange->getInCubeNo(getCubeCheckPos(SMS_GetMarioPos()));
 
 	switch (unk4) {
 	case -1:
@@ -1022,4 +1060,8 @@ void MSSTageSimpleEnvironment::proc()
 		MSoundSESystem::MSoundSE::startSoundSystemSE(unk4, 0, nullptr, 0);
 }
 
-void MSSTageSimpleEnvironmentMonte::proc() { }
+void MSSTageSimpleEnvironmentMonte::proc()
+{
+	if (unk4 != 0xffffffff)
+		MSoundSESystem::MSoundSE::startSoundSystemSE(unk4, 0, nullptr, 0);
+}

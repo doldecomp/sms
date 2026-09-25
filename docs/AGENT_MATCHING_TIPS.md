@@ -305,6 +305,82 @@ So when the target shows an `init$NNN` byte that is loaded with `lbz` + `extsb.`
 
 Aggregate-initialized PODs (`static Vec pos = { 1.0f, 2.0f, 3.0f };`) and zero-initialized statics (`static Vec pos;`) do NOT produce a guard — they sit in `.data` / `.bss` with no first-call check. The `init$NNN` pattern only appears when MWCC needs to run constructor code at first entry.
 
+## A zero-argument call of a constructor with default arguments costs one inline pass
+
+MWCC expands inline calls in passes, and each pass permits a smaller callee
+(pass 0: no limit, pass 1: 10 statements, pass 2: 7, pass 3: 3, pass 4: none).
+A constructor written with default arguments adds one pass to that count when
+it is called with **no** arguments:
+
+```cpp
+class TGameSequence {
+	TGameSequence(u8 stage = 0, u8 scenario = 0, JDrama::TFlagT<u16> flag = 0)
+	{
+		set(stage, scenario, flag);
+	}
+};
+
+TGameSequence local;          // synthesized __ct__13TGameSequenceFv, 1 statement,
+                              // then the real ctor one pass deeper
+TGameSequence local(a, b);    // the real ctor directly, no wrapper
+```
+
+The same rule applies to a member of such a type that the enclosing
+constructor default-initialises, for example `TFlagT<u16> unkC;` in
+`JDrama::TViewObj`. The wrapper has no symbol of its own; it is always
+expanded.
+
+How to recognise it: the calls inside a constructor body stay `bl` although
+the ladder says they fit, while the same callees are expanded at that depth
+elsewhere. `TApplication::TApplication()` keeps `bl TFlagT::TFlagT(const
+TFlagT&)` and `bl TFlagT::set(u16)` for each `TGameSequence` member; with a
+plain `TGameSequence() { set(0, 0, 0); }` both are expanded and the function
+is at 36%. The default-argument form gives 100%. `inline_trace.py` shows the
+wrapper as `__ct__XFv [1 stmt]` one pass above the real constructor.
+
+## A member function called on a bare global substitutes `this`; called through an accessor it binds it
+
+When an inline member function is called on a global object written by name,
+`gpApplication.setNextArea(x)`, MWCC substitutes `this` with the constant
+address, folds the member offsets, and then CSEs `gpApplication + 0x12` into a
+callee-saved register:
+
+```
+addi r30, r5, 0x12       ; &gpApplication.mNextArea
+stb  r0, 0x12(r5)
+...
+addi r3, r30, 2          ; &mNextArea.unk2
+```
+
+When the receiver is an expression that MWCC will not repeat (an inline
+accessor call, a local pointer, or a local reference), `this` is bound to a
+temporary that holds `&gpApplication` itself, and every offset folds from it:
+
+```
+addi r31, r4, gpApplication@l
+stb  r0, 0x12(r31)
+stb  r0, 0x13(r31)
+addi r3, r31, 0x14
+```
+
+The second shape, with the global's own address kept across the call, is the
+sign that the original went through an accessor such as `SMSGetMSound()` or
+`SMSGetMarDirector()`. Nine functions of `System/` show it for
+`gpApplication`, and every other `gpApplication` site in the tree compiles to
+the same bytes through `SMSGetApplication()`, so the accessor is used
+everywhere. Expect the same of the other `SMSGet*` accessors: the bare global
+and the accessor differ only where the result feeds another inline call.
+
+The same test tells a getter from a raw field read. A getter such as
+`u8 getStage() const { return unk0; }` reads through `this`, so its return
+value is force-loaded into a compiler temporary. Two visible effects: the
+temporary keeps a 4-byte slot (a frame 4 bytes short per call is the
+symptom), and when two such calls are the arguments of one `bl`, MWCC
+evaluates them in the reverse order. `TMarDirector::currentStateFinalize`
+loads `mCurrArea.unk1` before `unk0` for `endStageEntranceDemo`, which only
+the getters reproduce. An accessor that returns a reference leaves no trace
+at all, so it can neither be proved nor disproved this way.
+
 ## Default arguments vs. spelling them out changes inlining
 
 When a base/member constructor is invoked with a value that happens to be that

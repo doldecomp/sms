@@ -62,6 +62,10 @@ public:
 	}
 	bool operator!=(const JUTTexture& other) { return !operator==(other); }
 
+	// TODO: maybe they inherited GXTexObj?
+	// fabricated
+	GXTexObj getTexObj() const { return mTexObj; }
+
 public:
 	/* 0x00 */ GXTexObj mTexObj;
 	/* 0x20 */ const ResTIMG* mTexInfo;

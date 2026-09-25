@@ -40,8 +40,10 @@ f32 TMapWire::mDrawHeight     = 6.0f;
 
 void TMapWire::drawLower() const
 {
-	f32 xOffset = mDrawAxes.x * mDrawWidth;
-	f32 zOffset = mDrawAxes.y * mDrawWidth;
+	f32 xOffset = mDrawAxes.x;
+	f32 zOffset = mDrawAxes.y;
+	xOffset *= mDrawWidth;
+	zOffset *= mDrawWidth;
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
@@ -69,13 +71,11 @@ void TMapWire::drawLower() const
 	GXPosition3f32(mStartPoint.x + xOffset, mStartPoint.y,
 	               mStartPoint.z + zOffset);
 
+	const JGeometry::TVec3<f32>* point;
 	for (int i = 0; i < mNumActiveMapWirePoints; i++) {
-		GXPosition3f32(mMapWirePoints[i].mPosition.x,
-		               mMapWirePoints[i].mPosition.y - mDrawHeight,
-		               mMapWirePoints[i].mPosition.z);
-		GXPosition3f32(mMapWirePoints[i].mPosition.x + xOffset,
-		               mMapWirePoints[i].mPosition.y,
-		               mMapWirePoints[i].mPosition.z + zOffset);
+		point = &mMapWirePoints[i].mPosition;
+		GXPosition3f32(point->x, point->y - mDrawHeight, point->z);
+		GXPosition3f32(point->x + xOffset, point->y, point->z + zOffset);
 	}
 
 	GXPosition3f32(mEndPoint.x, mEndPoint.y - mDrawHeight, mEndPoint.z);
@@ -86,8 +86,10 @@ void TMapWire::drawLower() const
 
 void TMapWire::drawUpper() const
 {
-	f32 xOffset = mDrawAxes.x * mDrawWidth;
-	f32 zOffset = mDrawAxes.y * mDrawWidth;
+	f32 xOffset = mDrawAxes.x;
+	f32 zOffset = mDrawAxes.y;
+	xOffset *= mDrawWidth;
+	zOffset *= mDrawWidth;
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, (mNumActiveMapWirePoints + 2) * 2);
 
@@ -96,13 +98,11 @@ void TMapWire::drawUpper() const
 	GXPosition3f32(mStartPoint.x - xOffset, mStartPoint.y,
 	               mStartPoint.z - zOffset);
 
+	const JGeometry::TVec3<f32>* point;
 	for (int index = 0; index < mNumActiveMapWirePoints; index++) {
-		GXPosition3f32(mMapWirePoints[index].mPosition.x + xOffset,
-		               mMapWirePoints[index].mPosition.y,
-		               mMapWirePoints[index].mPosition.z + zOffset);
-		GXPosition3f32(mMapWirePoints[index].mPosition.x - xOffset,
-		               mMapWirePoints[index].mPosition.y,
-		               mMapWirePoints[index].mPosition.z - zOffset);
+		point = &mMapWirePoints[index].mPosition;
+		GXPosition3f32(point->x + xOffset, point->y, point->z + zOffset);
+		GXPosition3f32(point->x - xOffset, point->y, point->z - zOffset);
 	}
 
 	GXPosition3f32(mEndPoint.x + xOffset, mEndPoint.y, mEndPoint.z + zOffset);
@@ -111,24 +111,18 @@ void TMapWire::drawUpper() const
 	GXEnd();
 }
 
-// very fake, but it helps fix some inlining issues.
-// see TODO in getPointPosAtReleased
-static f32 fake_getPointPowerAtReleased(const TMapWire* wire, f32 pos)
-{
-	return wire->getPointPowerAtReleased(pos);
-}
-
 f32 TMapWire::getPointPowerAtReleased(f32 pos) const
 {
 	// 1 = default height, 0 = stretched all the way down
 	f32 relativeHeightAtPos;
-	if (pos >= mHangPos) {
+	if (pos >= mHangPos)
 		relativeHeightAtPos = (pos - mHangPos) / (1.0f - mHangPos);
-	} else {
+	else
 		relativeHeightAtPos = 1.0f - pos / mHangPos;
-	}
 
-	return 1.0f - relativeHeightAtPos * relativeHeightAtPos;
+	f32 power = 1.0f - relativeHeightAtPos * relativeHeightAtPos;
+
+	return power;
 }
 
 void TMapWire::getPointPosAtReleased(f32 pos, JGeometry::TVec3<f32>* out) const
@@ -139,15 +133,13 @@ void TMapWire::getPointPosAtReleased(f32 pos, JGeometry::TVec3<f32>* out) const
 	JGeometry::TVec3<f32> defaultPoint;
 	getPointPosDefault(pos, &defaultPoint);
 
-	// TODO: fix this inlining issue
-	f32 power = fake_getPointPowerAtReleased(this, pos);
-	// TODO: Regswaps for these calculations?
-	f32 yAdjusted
-	    = linePoint.y
-	      + (1.0f - mBounceRemainingPower) * (defaultPoint.y - linePoint.y)
-	      + power * mHangOrBouncePoint.y;
-
-	out->set(linePoint.x, yAdjusted, linePoint.z);
+	f32 power = getPointPowerAtReleased(pos);
+	out->set(linePoint.x,
+	         linePoint.y
+	             + (1.0f - mBounceRemainingPower)
+	                   * (defaultPoint.y - linePoint.y)
+	             + power * mHangOrBouncePoint.y,
+	         linePoint.z);
 }
 
 void TMapWire::updatePointAtReleased(int index)
@@ -163,8 +155,23 @@ void TMapWire::updatePointAtReleased(int index)
 	getPointPosAtReleased(pos, &mapWirePoint->mPosition);
 }
 
-// TODO: Unused, but exists in .map file. What is this?
-void TMapWire::updateMovePointAtReleased() { }
+bool TMapWire::updateMovePointAtReleased()
+{
+	mBounceRemainingPower -= mBounceDecayRate;
+
+	if (mBounceRemainingPower < TMapWire::mEndRate)
+		return true;
+
+	mMoveTimer += TMapWire::mMoveTimerSpeed;
+	if (mMoveTimer >= 2.0f) {
+		mMoveTimer -= 2.0f;
+	}
+
+	f32 cosine           = JMASCos(mMoveTimer * 32768.0f);
+	mHangOrBouncePoint.y = cosine * mBounceAmplitude * mBounceRemainingPower;
+
+	return false;
+}
 
 void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
 {
@@ -173,7 +180,6 @@ void TMapWire::initPointAtJustReleased(f32 pos, TMapWirePoint* point)
 	point->mPosReturnRate = (point->mDefaultPosOnWire - pos) / 1000.0f;
 }
 
-// TODO: Needs work, but otherwise mathematically equivalent
 void TMapWire::release()
 {
 	if (mState == TMapWire::RELEASED)
@@ -198,25 +204,26 @@ void TMapWire::release()
 		}
 	}
 
-	if (mNumMapWirePoints - halfNumPoints != 0) {
+	if (mNumActiveMapWirePoints - halfNumPoints != 0) {
 		f32 posAdvancePerPoint
 		    = (1.0f - mHangPos) / (mNumActiveMapWirePoints - halfNumPoints);
 
 		for (int i = halfNumPoints; i < mNumActiveMapWirePoints; i++) {
-			TMapWirePoint* mapWirePoint = &mMapWirePoints[i];
-			mapWirePoint->reset();
+			mMapWirePoints[i].reset();
 
 			initPointAtJustReleased(posAdvancePerPoint * (i - halfNumPoints + 1)
 			                            + mHangPos,
-			                        mapWirePoint);
+			                        &mMapWirePoints[i]);
 		}
 	}
 
 	f32 stretchRatio = mStretchRate * abs(mHangPos - 0.5f);
 
 	if (*gpMarioSpeedY > 0) {
-		JGeometry::TVec3<f32> marioVel(*gpMarioSpeedX, *gpMarioSpeedY,
-		                               *gpMarioSpeedZ);
+		JGeometry::TVec3<f32> marioVel;
+		marioVel.x       = *gpMarioSpeedX;
+		marioVel.y       = *gpMarioSpeedY;
+		marioVel.z       = *gpMarioSpeedZ;
 		mBounceAmplitude = mHeightRate * marioVel.length();
 	} else {
 		mBounceAmplitude = mReleaseHeight;
@@ -307,21 +314,7 @@ void TMapWire::move()
 		break;
 
 	case RELEASED:
-		mBounceRemainingPower -= mBounceDecayRate;
-
-		if (mBounceRemainingPower < TMapWire::mEndRate) {
-			bounceFinished = true;
-		} else {
-			mMoveTimer += TMapWire::mMoveTimerSpeed;
-			if (mMoveTimer >= 2.0f) {
-				mMoveTimer -= 2.0f;
-			}
-			bounceFinished = false;
-
-			mHangOrBouncePoint.y = mBounceAmplitude
-			                       * JMASCos(mMoveTimer * 32768.0f)
-			                       * mBounceRemainingPower;
-		}
+		bounceFinished = updateMovePointAtReleased();
 
 		if (bounceFinished) {
 			TMapWirePoint* mapWirePoint;
@@ -333,9 +326,8 @@ void TMapWire::move()
 
 			mState = TMapWire::IDLE;
 		} else {
-			for (int i = 0; i < mNumActiveMapWirePoints; i++) {
+			for (int i = 0; i < mNumActiveMapWirePoints; i++)
 				updatePointAtReleased(i);
-			}
 		}
 	}
 }
@@ -353,22 +345,16 @@ f32 TMapWire::getPosInWire(const JGeometry::TVec3<f32>& point) const
 	JGeometry::TVec3<f32> perpPoint
 	    = MsPerpendicFootToLineR(flatStart, flatEnd, point);
 
-	f32 totalLength   = (flatEnd - flatStart).length();
-	f32 partialLength = (perpPoint - flatStart).length();
+	f32 totalLength   = JGeometry::TVec3<f32>(flatEnd - flatStart).length();
+	f32 partialLength = JGeometry::TVec3<f32>(perpPoint - flatStart).length();
 	return partialLength / totalLength;
 }
 
-/**
- * @brief Gets a position on the straight line connecting the wire's endpoints.
- *
- * @param pos the relative position on the wire (0 to 1)
- * @param out the output vector
- */
 void TMapWire::getPointPosOnLine(f32 pos, JGeometry::TVec3<f32>* out) const
 {
-	out->x = mStartPoint.x + pos * mWireSpan.x;
-	out->y = mStartPoint.y + pos * mWireSpan.y;
-	out->z = mStartPoint.z + pos * mWireSpan.z;
+	out->set(mStartPoint.x + mWireSpan.x * pos,
+	         mStartPoint.y + mWireSpan.y * pos,
+	         mStartPoint.z + mWireSpan.z * pos);
 }
 
 void TMapWire::getPointPosOnWire(f32 pos, JGeometry::TVec3<f32>* out) const
@@ -383,24 +369,32 @@ void TMapWire::getPointPosOnWire(f32 pos, JGeometry::TVec3<f32>* out) const
 	if (mState == TMapWire::HANGING) {
 		getPointPosAtHanged(pos, out);
 	} else {
-		getPointPosAtReleased(pos, out);
+		JGeometry::TVec3<f32> linePoint;
+		linePoint.x = mStartPoint.x + mWireSpan.x * pos;
+		linePoint.y = mStartPoint.y + mWireSpan.y * pos;
+		linePoint.z = mStartPoint.z + mWireSpan.z * pos;
+
+		JGeometry::TVec3<f32> defaultPoint;
+		getPointPosDefault(pos, &defaultPoint);
+
+		f32 lineX = linePoint.x;
+		f32 lineZ = linePoint.z;
+		f32 power = getPointPowerAtReleased(pos);
+		out->x    = lineX;
+		out->y
+		    = linePoint.y
+		      + (1.0f - mBounceRemainingPower) * (defaultPoint.y - linePoint.y)
+		      + power * mHangOrBouncePoint.y;
+		out->z = lineZ;
 	}
 }
 
-/**
- * @brief The "default" position of a point on this wire after accounting for
- * its sag factor.
- *
- * @param pos the relative position on the wire (0 to 1)
- * @param out the output vector
- */
 void TMapWire::getPointPosDefault(f32 pos, JGeometry::TVec3<f32>* out) const
 {
-	JGeometry::TVec3<f32> basePoint;
-	getPointPosOnLine(pos, &basePoint);
-
-	out->set(basePoint.x, basePoint.y - mWireSag * JMASSin(pos * 32768.0f),
-	         basePoint.z);
+	out->set(mStartPoint.x + mWireSpan.x * pos,
+	         mStartPoint.y + mWireSpan.y * pos
+	             - mWireSag * JMASSin(pos * 32768.0f),
+	         mStartPoint.z + mWireSpan.z * pos);
 }
 
 void TMapWire::initTipPoints(const TCubeGeneralInfo* cubeInfo)
@@ -440,15 +434,15 @@ void TMapWire::init(const TCubeGeneralInfo* cubeInfo)
 
 	mWireSag = cubeInfo->getUnk24().y * 0.5f;
 
+	TMapWirePoint* point2;
 	for (int i = 0; i < mNumMapWirePoints; i++) {
-		// Inline suspect
 		{
-			f32 pos              = (f32)(i + 1) / (f32)(mNumMapWirePoints);
 			TMapWirePoint* point = &mMapWirePoints[i];
+			f32 pos              = (f32)(i + 1) / (f32)(mNumMapWirePoints);
 			point->mPosOnWire = point->mDefaultPosOnWire = pos;
 		}
 
-		TMapWirePoint* point2 = &mMapWirePoints[i];
+		point2 = &mMapWirePoints[i];
 		getPointPosDefault(point2->mPosOnWire, &point2->mDefaultPosition);
 
 		point2->reset();

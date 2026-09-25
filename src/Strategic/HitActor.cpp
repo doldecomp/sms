@@ -1,7 +1,7 @@
 #include <Strategic/HitActor.hpp>
 #include <math.h>
 
-f32 THitActor::calcEntryRadius()
+void THitActor::calcEntryRadius()
 {
 	f32 rad;
 	if (mAttackRadius > mDamageRadius)
@@ -15,18 +15,14 @@ f32 THitActor::calcEntryRadius()
 	else
 		height = mDamageHeight;
 
-	f32 height2 = height * height;
-	f32 rad2    = rad * rad + height2;
-
-	if (rad2 > 0.0f) {
-		// TODO: some kind of a fast sqrt function?
-		volatile f32 f = rad2 * __frsqrte(rad2);
-		mEntryRadius   = 1.4142135f * f;
+	f32 dist = rad * rad + height * height;
+	if (dist > 0.0f) {
+		volatile f32 y = dist * __frsqrte(dist);
+		dist           = y;
+		mEntryRadius   = 1.4142135f * dist;
 	} else {
 		mEntryRadius = 0.0f;
 	}
-
-	return height2;
 }
 
 void THitActor::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -34,9 +30,9 @@ void THitActor::perform(u32 cue, JDrama::TGraphics* graphics)
 	JDrama::TActor::perform(cue, graphics);
 }
 
-f32 THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
-                            f32 attack_radius, f32 attack_height,
-                            f32 damage_radius, f32 damage_height)
+void THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
+                             f32 attack_radius, f32 attack_height,
+                             f32 damage_radius, f32 damage_height)
 {
 	mActorType   = actor_type;
 	mColCapacity = max_collisions;
@@ -52,7 +48,7 @@ f32 THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
 	mDamageRadius = damage_radius;
 	mDamageHeight = damage_height;
 
-	return calcEntryRadius();
+	calcEntryRadius();
 }
 
 THitActor::THitActor(const char* name)

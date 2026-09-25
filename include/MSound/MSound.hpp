@@ -38,6 +38,13 @@ enum MSBgmSwBit {
 	MSBgmSwBit_YoshiPercussion = 0x10000000,
 };
 
+enum MSSeGate {
+	MSSeGate_None       = 0,
+	MSSeGate_Continuous = 1 << 0,
+	MSSeGate_OneShot    = 1 << 1,
+	MSSeGate_All        = MSSeGate_Continuous | MSSeGate_OneShot,
+};
+
 class MSSeCallBack {
 public:
 	static u16 setParameterSeqSync(JASystem::TTrack*, u16);
@@ -71,6 +78,9 @@ public:
 
 	void initSound();
 	void mainLoop();
+#ifdef VERSION_GMSP01
+	f32 getDistPowFromCamera(const Vec& pos);
+#endif
 	void exitStage();
 	void enterStage(MS_SCENE_WAVE, u8, u8);
 	void loadWave(MS_SCENE_WAVE);
@@ -181,14 +191,24 @@ public:
 			startSoundActor(id, position, 0, nullptr, 0, 4);
 	}
 
-	bool checkUnkA8(u32 flag) { return !(unkA8 & flag) ? false : true; }
+	bool checkSeGate(MSSeGate gate)
+	{
+		return !(mSeGateMask & gate) ? false : true;
+	}
 
 public:
+#ifdef VERSION_GMSP01
+	/* 0x94 */ s32 unk94;
+	/* 0x98 */ bool mWaterFirEnabled;
+	/* 0x9A */ u16 mTimerSyncValue;
+#else
+	/* 0x94 */ u16 mTimerSyncValue;
+#endif
 	/* 0x98 */ MSModBgm* unk98;
 	/* 0x9C */ MSBgmXFade* unk9C;
 	/* 0xA0 */ u32 unkA0;
 	/* 0xA4 */ u32 unkA4;
-	/* 0xA8 */ u8 unkA8;
+	/* 0xA8 */ u8 mSeGateMask;
 	/* 0xAC */ JAICamera unkAC[2];
 	/* 0xC4 */ JAISound* unkC4;
 	/* 0xC8 */ u8 unkC8[5];
@@ -197,9 +217,6 @@ public:
 	/* 0xCF */ u8 unkCF;
 	/* 0xD0 */ u8 unkD0;
 	/* 0xD1 */ u8 unkD1;
-	/* 0xD2 */ char unkD2[0x304 - 0xD2];
-	/* 0x304 */ JASystem::TTrack::TOuterParam* unk304;
-	/* 0x308 */ char unk308[0x4];
 };
 
 extern MSound* MSGMSound;

@@ -12,8 +12,7 @@ public:
 	{
 	}
 
-	// fabricated
-	TFlagT& operator=(const TFlagT<T>& other)
+	TFlagT& operator=(TFlagT<T> other)
 	{
 		set(other.mValue);
 		return *this;

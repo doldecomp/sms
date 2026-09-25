@@ -25,6 +25,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 extern OSThread gSetupThread;
 extern u8* gpSetupThreadStack;
@@ -135,7 +136,7 @@ int TSelectDir::rsetup()
 	TEmitterViewObj* emitterView3D = new TEmitterViewObj(unk34);
 	group2DParticle->getChildren().push_back(emitterView3D);
 
-	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp;
+	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp("<DStageDisp>");
 	unk14->getChildren().push_back(stageDisp);
 
 	JDrama::TRect rect(0, 0, SMSGetTitleRenderWidth(),
@@ -143,7 +144,7 @@ int TSelectDir::rsetup()
 	stageDisp->getEfbCtrlDisp()->TEfbCtrl::setSrcRect(rect);
 
 	JDrama::TOrthoProj* gradCamera
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 16.0f, 464.0f, 0.0f, 600.0f);
 	groupGrad->getChildren().push_back(gradCamera);
 
 	JDrama::TScreen* gradScreen = new JDrama::TScreen(rect, "Screen Grad");
@@ -152,7 +153,7 @@ int TSelectDir::rsetup()
 	gradScreen->assignViewObj(groupGrad);
 
 	JDrama::TOrthoProj* screen2DCamera
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 16.0f, 464.0f, 0.0f, 600.0f);
 	group2D->getChildren().push_back(screen2DCamera);
 
 	JDrama::TScreen* screen2D = new JDrama::TScreen(rect, "Screen 2D");
@@ -174,7 +175,7 @@ int TSelectDir::rsetup()
 	screen3D->assignViewObj(group3D);
 
 	JDrama::TOrthoProj* screen2DCamera2
-	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-100.0f, 100.0f, 16.0f, 464.0f, 0.0f, 600.0f);
 	group2D->getChildren().push_back(screen2DCamera2);
 
 	JDrama::TScreen* screen2D2 = new JDrama::TScreen(rect, "Screen 2D");
@@ -184,7 +185,7 @@ int TSelectDir::rsetup()
 	unk44 = screen2D2;
 
 	JDrama::TOrthoProj* particleCamera
-	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-500.0f, 500.0f, 16.0f, 464.0f, 0.0f, 600.0f);
 	group2DParticle->getChildren().push_back(particleCamera);
 
 	JDrama::TScreen* particleScreen = new JDrama::TScreen(rect, "Screen Grad");
@@ -220,8 +221,8 @@ int TSelectDir::direct()
 		unk20->startMove();
 		unk20->startOpenWindow();
 
-		gpApplication.mFader->startWipe(0xe, 0.4f, 0.0f);
-		gpApplication.mFader->setColor(
+		SMSGetApplication()->getFader()->startWipe(0xe, 0.4f, 0.0f);
+		SMSGetApplication()->getFader()->setColor(
 		    unk40 == 9 ? JUtility::TColor(0xff, 0xff, 0xff, 0xff)
 		               : JUtility::TColor(0, 0, 0, 0xff));
 		gpMSound->initSound();
@@ -230,17 +231,17 @@ int TSelectDir::direct()
 
 	JDrama::TDirector::direct();
 
-	switch (gpApplication.mFader->mFadeStatus) {
+	switch (SMSGetApplication()->getFader()->mFadeStatus) {
 	case TSMSFader::FADE_STATUS_FULLY_FADED_IN:
 	case TSMSFader::FADE_STATUS_FADING_IN:
 		if (unk20->unk14B)
 			return TApplication::APP_STATE_DONE;
 
 		if (unk20->mCloseMenu) {
-			gpApplication.mNextArea.unk1 = unk20->mSelectedShine;
+			SMSGetApplication()->mNextArea.unk1 = unk20->mSelectedShine;
 			TFlagManager::smInstance->setFlag(0x40003, unk20->mSelectedShine);
-			gpApplication.mFader->startWipe(0xf, 1.0f, 0.0f);
-			gpApplication.mFader->setColor(
+			SMSGetApplication()->getFader()->startWipe(0xf, 1.0f, 0.0f);
+			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0xff, 0xff, 0xff, 0xff));
 			SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec());
 		}
@@ -249,12 +250,12 @@ int TSelectDir::direct()
 
 	if (unk18->isSomethingPushed() && !unk4C) {
 		unk4C = true;
-		gpApplication.mFader->startWipe(4, 1.0f, 0.0f);
+		SMSGetApplication()->getFader()->startWipe(4, 1.0f, 0.0f);
 		SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec() * 0.4f);
 		unk10->unkC.on(CUE_MOVE | CUE_CALC_ANIM);
 	}
 
-	if (gpApplication.mFader->mFadeStatus
+	if (SMSGetApplication()->getFader()->mFadeStatus
 	    == TSMSFader::FADE_STATUS_FULLY_FADED_OUT) {
 		gpMSound->stopAllSound();
 		if (unk18->isSomethingPushed())

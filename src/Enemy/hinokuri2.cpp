@@ -870,11 +870,6 @@ BOOL THinokuri2::receiveMessage(THitActor* sender, u32 message)
 	return 0;
 }
 
-template <class T> static inline T symmetric_clamp(T v, T r)
-{
-	return v > 0 ? (v > r ? v : r) : (v > -r ? -r : v);
-}
-
 void THinokuri2::moveObject()
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -885,11 +880,13 @@ void THinokuri2::moveObject()
 
 	if (mLevel == 1) {
 		f32 dhp    = calcHitPoints() - mHitPoints;
-		f32 fVar12 = (getSaveParam()->getSLDamageHeadScale() - 1.0f)
-		                 * (1.0f + dhp / calcHitPoints())
+		f32 fVar12 = 1.0f
+		             + (getSaveParam()->getSLDamageHeadScale() - 1.0f)
+		                   * (dhp / calcHitPoints())
 		             - unk194;
 
-		unk194 += symmetric_clamp(fVar12, 0.004f);
+		unk194
+		    += fVar12 > 0.0f ? MsMin(fVar12, 0.004f) : MsMax(fVar12, -0.004f);
 	} else {
 		unk194 = 1.0f;
 	}
@@ -1166,11 +1163,16 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 		self->changeBck(0x15);
 	}
 
-	f32 fVar3 = symmetric_clamp(angleDiff, self->mTurnSpeed);
+	f32 turnSpeed = self->mTurnSpeed;
+	f32 turn;
+	if (angleDiff > 0.0f)
+		turn = MsMin(angleDiff, turnSpeed);
+	else
+		turn = MsMax(angleDiff, -turnSpeed);
 
-	self->mRotation.y = MsWrap(self->mRotation.y + fVar3, 0.0f, 360.0f);
+	self->mRotation.y = MsWrap(self->mRotation.y + turn, 0.0f, 360.0f);
 
-	if (fabsf(fVar3) < self->mTurnSpeed * 0.5f)
+	if (fabsf(turn) < self->mTurnSpeed * 0.5f)
 		return true;
 
 	return false;

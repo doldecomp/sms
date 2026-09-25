@@ -15,7 +15,11 @@
 
 extern void InitMetroTRK();
 
+#ifdef VERSION_GMSP01
+__declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
+#else
 __declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x80424008);
+#endif
 __declspec(section ".init") extern char _SDA_BASE_[];
 __declspec(section ".init") extern char _SDA2_BASE_[];
 

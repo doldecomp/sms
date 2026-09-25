@@ -7,6 +7,12 @@
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/Particles.hpp>
+#include <Enemy/BossHanachan.hpp>
+#ifdef VERSION_GMSP01
+#include <dolphin/vi.h>
+#include <dolphin/dvd.h>
+#endif
+#include <version.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -66,8 +72,8 @@ int TMarDirector::loadResource()
 	gpResourceManager = new JPAResourceManager(0x201, 0x800, nullptr);
 	gpMarioParticleManager->unk3B8 = new JPAEmitterManager(
 	    gpResourceManager, particleNum, emitterNum, emitterNum * 2, nullptr);
-	gpEmitterManager4D2
-	    = new JPAEmitterManager(nullptr, 200, 0x20, 0x40, nullptr);
+	gpEmitterManager4D2 = new JPAEmitterManager(
+	    nullptr, VERSION_SELECT(GMSJ01(200), GMSP01(270)), 0x20, 0x40, nullptr);
 	loadParticle();
 
 	void* rawArch = SMSLoadArchive("/data/yoshi.arc", nullptr, 0, nullptr);
@@ -96,17 +102,20 @@ int TMarDirector::loadResource()
 	if (!paramsArch->mountFixed(paramsBlob, MBF_0))
 		return 1;
 
-	unkB8 = gpApplication.mountStageArchive();
+	unkB8 = SMSGetApplication()->mountStageArchive();
 	if (!unkB8)
 		return 1;
 
-	if (gpApplication.mCurrArea.unk0 == 15) {
+	if (SMSGetApplication()->mCurrArea.getStage() == 15) {
 		void* optionBlob          = SMSLoadArchive("/data/option.arc", 0, 0, 0);
 		JKRMemArchive* optionArch = new JKRMemArchive;
 		if (!optionArch->mountFixed(optionBlob, MBF_0))
 			return 1;
 	}
 
+#ifdef VERSION_GMSP01
+	load2DResource2Aram();
+#endif
 	unkD4 = new (0x20) char[0x64000];
 	unkD8 = new JKRMemArchive;
 
@@ -125,9 +134,9 @@ void TMarDirector::initLoadParticle()
 
 void TMarDirector::loadParticle()
 {
-	void* pvVar1 = new (0x20) char[0x200000];
+	void* pvVar1 = new (-0x20) char[0x200000];
 	SMSLoadArchive("/data/particle.arc", pvVar1, 0x200000, nullptr);
-	JKRMemArchive* this_00 = new (0x20) JKRMemArchive;
+	JKRMemArchive* this_00 = new (-0x20) JKRMemArchive;
 	this_00->mountFixed(pvVar1, MBF_0);
 	this_00->becomeCurrent("/");
 	loadParticleMario();
@@ -267,8 +276,7 @@ void TMarDirector::loadParticle()
 		                                       pvVar1, 0x200000, nullptr);
 		this_00->mountFixed(hanachanJpaArch, MBF_0);
 		this_00->becomeCurrent("/");
-		// TODO:
-		// TBossHanachan::staticLoadParticle();
+		TBossHanachan::staticLoadParticle();
 		this_00->unmountFixed();
 	}
 	JKRHeap::getCurrentHeap()->freeTail();
@@ -398,12 +406,31 @@ int TMarDirector::thpInit()
 {
 	if (mMap == 1) {
 		THPPlayerInit(0);
+#ifdef VERSION_GMSP01
+		const char* path = "/data/ex128x144_q0.thp";
+		if (VIGetTvFormat() == VI_PAL) {
+			char palPath[] = "/data/ex128x144_q0_pal.thp";
+			if (DVDConvertPathToEntrynum(palPath) != -1)
+				path = palPath;
+		}
+		if (!THPPlayerOpen(path, FALSE))
+			return 1;
+#else
 		if (!THPPlayerOpen("/data/ex128x144_q0.thp", FALSE))
 			return 1;
+#endif
 		u32 sz = THPPlayerCalcNeedMemory();
 		THPPlayerSetBuffer(new (0x20) u8[sz]);
 		if (!THPPlayerPrepare(0, 1, 0))
 			return 1;
+#ifdef VERSION_GMSP01
+		s32 start = OSGetTick();
+		while (true) {
+			if (0.5f <= (f32)(s32)(OSGetTick() - start) / (f32)OS_TIMER_CLOCK)
+				break;
+			OSYieldThread();
+		}
+#endif
 	}
 
 	return 0;

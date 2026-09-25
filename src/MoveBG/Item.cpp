@@ -196,7 +196,7 @@ TItem::TItem(const char* name)
 
 void TCoin::taken(THitActor* param_1)
 {
-	u8 thing = gpApplication.mCurrArea.unk0;
+	u8 thing = SMSGetApplication()->mCurrArea.getStage();
 	TFlagManager::getInstance()->incGoldCoinFlag(SMS_getShineStage(thing), 1);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN, &mPosition, 0, nullptr, 0,
@@ -713,9 +713,11 @@ s32 TShine::appearWithTimeCallback(u32 param_1, u32 param_2)
 	TShine* shine = (TShine*)param_1;
 	if (param_2 == 0) {
 		shine->appearWithTime(shine->unk18C, -1, -1, -1);
-		gpMarDirector->unk4E |= 1;
+		gpMarDirector->onDemoFlag(
+		    TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
 	} else if (param_2 == 1) {
-		gpMarDirector->unk4E &= ~1;
+		gpMarDirector->offDemoFlag(
+		    TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
 	}
 	return 0;
 }

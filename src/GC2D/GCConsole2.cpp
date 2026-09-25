@@ -2109,7 +2109,8 @@ void TGCConsole2::startCameraDemo()
 	if (TFlagManager::smInstance->getBool(0x30002)) {
 		unk108->getPane()->hide();
 		startAppearMario(true);
-	} else if (gpMarDirector->checkUnk4CFlag(0x8000)) {
+	} else if (gpMarDirector->checkFlag(
+	               TMarDirector::DIRECTOR_FLAG_SHINE_TAKEN)) {
 		startAppearStar();
 	} else {
 		startDisappearStar();
@@ -2171,7 +2172,7 @@ void TGCConsole2::endCameraDemo()
 		unk426 = 0;
 	}
 
-	if (!gpMarDirector->checkUnk4CFlag(0x8000)
+	if (!gpMarDirector->checkFlag(TMarDirector::DIRECTOR_FLAG_SHINE_TAKEN)
 	    && !unk108->getPane()->isVisible())
 		startAppearCoin();
 }

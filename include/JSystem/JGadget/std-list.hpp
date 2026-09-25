@@ -275,7 +275,7 @@ public:
 
 	iterator insert(iterator where, const T& what)
 	{
-		return Base::insert(where, what);
+		return iterator(Base::insert(where, what));
 	}
 
 	void push_front(const T& what) { insert(begin(), what); }

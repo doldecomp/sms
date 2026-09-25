@@ -120,6 +120,10 @@ void MSSeCallBack::setWaterCameraFir(bool enabled)
 		smWaterFilter = 0x78;
 	else
 		smWaterFilter = 0;
+#ifdef VERSION_GMSP01
+	if (MSGMSound->mWaterFirEnabled == true)
+		smWaterFilter = 0x78;
+#endif
 }
 
 void MSSeCallBack::setWaterFilter(u16 param_1) { }
@@ -133,7 +137,7 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 
 	switch (param_2) {
 	case 15:
-		return MSGMSound->unk94;
+		return MSGMSound->mTimerSyncValue;
 
 	case 20:
 		for (u16 i = 0; i < 2; ++i) {
@@ -431,6 +435,17 @@ f32 MSound::getDistFromCamera(Vec* pos)
 	return JALCalc::getDist(pos, mAudioCameras->mPosition);
 }
 
+#ifdef VERSION_GMSP01
+f32 MSound::getDistPowFromCamera(const Vec& pos)
+{
+	const Vec* cam = mAudioCameras->mPosition;
+	f32 dy         = std::powf(pos.y - cam->y, 2.0f);
+	f32 dx         = std::powf(pos.x - cam->x, 2.0f);
+	f32 dz         = std::powf(pos.z - cam->z, 2.0f);
+	return dx + dy + dz;
+}
+#endif
+
 MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
                u8* param_5, u32 param_6)
 {
@@ -479,9 +494,9 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	JAIGlobalParameter::setParamDistanceMax(fVar1);
 	JAIGlobalParameter::setParamMinDistanceVolume(0.0f);
 	JAIGlobalParameter::setParamMaxVolumeDistance(1200.0f);
-	unkA8     = 0x1 | 0x2;
-	MSGBasic  = JAIBasic::getInterface();
-	MSGMSound = this;
+	mSeGateMask = MSSeGate_All;
+	MSGBasic    = JAIBasic::getInterface();
+	MSGMSound   = this;
 	JALSystem::init();
 	MSoundSESystem::MSoundSE::construct();
 	MSBgm::init();
@@ -491,6 +506,11 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 
 	unk7C = 0;
 	unk80 = 0;
+#ifdef VERSION_GMSP01
+	unk94            = -1;
+	mWaterFirEnabled = false;
+	MSSeCallBack::setWaterCameraFir(false);
+#endif
 
 	for (int i = 0; i < 5; ++i)
 		unkC8[i] = 0;
@@ -498,11 +518,11 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	unkAC[0] = JAInullCamera;
 	unkAC[1] = JAInullCamera;
 
-	unk84    = 0;
-	unk94    = 0;
-	unk8C[0] = 0;
-	unk8C[1] = 0;
-	unkC4    = 0;
+	unk84           = 0;
+	mTimerSyncValue = 0;
+	unk8C[0]        = 0;
+	unk8C[1]        = 0;
+	unkC4           = 0;
 
 	unkCF = 1;
 	unkD0 = 1;
@@ -517,13 +537,15 @@ void MSound::requestShineAppearFanfare() { }
 
 void MSound::mainLoop()
 {
-	if (unkCF == 0 && unkA8 == 0)
+	if (unkCF == 0 && mSeGateMask == MSSeGate_None)
 		return;
 
+#ifndef VERSION_GMSP01
 	if (unkD1 == 1) {
 		MSBgm::startBGM(MSD_BGM_KUPPA);
 		unkD1 = 0;
 	}
+#endif
 
 	if (unkC8[1] != 0) {
 		MSMainProc::entranceDemoLoop(unkA4);
@@ -562,7 +584,7 @@ void MSound::startSoundSetGrp(u32 param_1, const Vec* param_2, u32 param_3,
 
 void MSound::initSound()
 {
-	unkA8 |= 0x2;
+	mSeGateMask |= MSSeGate_OneShot;
 	for (u8 cat = 0; cat < 16; ++cat) {
 		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0
 		    && JAIBasic::getInterface() != nullptr) {
@@ -585,7 +607,7 @@ void MSound::initSound()
 void MSound::pauseOn(bool param_1)
 {
 	if (param_1)
-		if (checkUnkA8(2))
+		if (checkSeGate(MSSeGate_OneShot))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_ON, 0,
 			                                             nullptr, 0);
 
@@ -603,7 +625,7 @@ void MSound::pauseOff(u8 param_1)
 {
 	switch (param_1) {
 	case 0:
-		if (checkUnkA8(2))
+		if (checkSeGate(MSSeGate_OneShot))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_PAUSE_OFF, 0,
 			                                             nullptr, 0);
 		// FALLTHROUGH!!!
@@ -621,7 +643,7 @@ void MSound::pauseOff(u8 param_1)
 		break;
 
 	case 1:
-		if (checkUnkA8(2))
+		if (checkSeGate(MSSeGate_OneShot))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(
 			    MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
 
@@ -663,7 +685,7 @@ void MSound::demoModeOut(bool param_1)
 
 void MSound::talkModeIn(bool param_1)
 {
-	if (param_1 && checkUnkA8(2)) {
+	if (param_1 && checkSeGate(MSSeGate_OneShot)) {
 		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_IN, 0,
 		                                             nullptr, 0);
 	}
@@ -677,7 +699,7 @@ void MSound::talkModeIn(bool param_1)
 
 void MSound::talkModeOut()
 {
-	if (checkUnkA8(2)) {
+	if (checkSeGate(MSSeGate_OneShot)) {
 		MSoundSESystem::MSoundSE::startSoundSystemSE(MSD_SE_SY_TALK_MODE_OUT, 0,
 		                                             nullptr, 0);
 	}
@@ -723,8 +745,8 @@ bool MSound::resetAudioAll(u16 param_1)
 	if (dVar2 <= 0.002f) {
 		JASystem::Driver::setMixerLevel(0.802f, 0.0f);
 		JASystem::AudioThread::stop();
-		unkA8 = 0;
-		unkD0 = 0;
+		mSeGateMask = MSSeGate_None;
+		unkD0       = 0;
 		return true;
 	}
 
@@ -746,7 +768,7 @@ void MSound::setCategoryAllVolume(u8 category, f32 volume, u32 param_3,
 
 void MSound::fadeOutAllSound(u32 fadeout)
 {
-	unkA8 &= 1;
+	mSeGateMask &= MSSeGate_Continuous;
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
 		if (unk0->mSeTable.mSoundMax[cat] != 0 && cat != 4) {
@@ -792,41 +814,41 @@ void MSound::setSeExtParameter(JAISound* sound)
 
 void MSound::playTimer(u32 time)
 {
-	if (checkUnkA8(1)) {
+	if (checkSeGate(MSSeGate_Continuous)) {
 		MSoundSESystem::MSoundSE::startSoundActorInner(
 		    MSD_SE_SY_TIMER, nullptr, (JAIActor*)0xffffffff, 0, 4);
 
 		if (time > 0x7530) {
-			unk94 = 0x6e;
+			mTimerSyncValue = 0x6e;
 			return;
 		}
 
 		if (time > 0x3A98) {
-			unk94 = 0x32;
+			mTimerSyncValue = 0x32;
 			return;
 		}
 
 		if (time > 0x2710) {
-			unk94 = 0x23;
+			mTimerSyncValue = 0x23;
 			return;
 		}
 
 		if (time > 0x1388) {
-			unk94 = 0x19;
+			mTimerSyncValue = 0x19;
 			return;
 		}
 
 		if (time > 0x7D0) {
-			unk94 = 10;
+			mTimerSyncValue = 10;
 			return;
 		}
 
 		if (time > 0x3E8) {
-			unk94 = 3;
+			mTimerSyncValue = 3;
 			return;
 		}
 
-		unk94 = 0;
+		mTimerSyncValue = 0;
 	}
 }
 
@@ -923,7 +945,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 		break;
 
 	case MSD_SE_MV10A_CRY_SHORT_01:
-		if (checkUnkA8(2))
+		if (checkSeGate(MSSeGate_OneShot))
 			MSoundSESystem::MSRandPlay::startSeRandPlay(
 			    MSD_SE_MV10A_CRY_SHORT_01, 0);
 		if (unk8C[0] != nullptr)
@@ -1091,7 +1113,7 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 {
 	if (param_2 > 3) {
 		JAISound* sound
-		    = !checkUnkA8(1)
+		    = !checkSeGate(MSSeGate_Continuous)
 		          ? nullptr
 		          : MSoundSESystem::MSoundSE::startSoundActor(
 		                MSD_SE_EN_BEE_GROUP, param_1, 0, nullptr, 0, 4);
@@ -1103,15 +1125,15 @@ void MSound::startBeeSe(Vec* param_1, u32 param_2)
 	}
 
 	if (param_2 > 2) {
-		if (checkUnkA8(1))
+		if (checkSeGate(MSSeGate_Continuous))
 			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_3, param_1,
 			                                          0, nullptr, 0, 4);
 	} else if (param_2 == 2) {
-		if (checkUnkA8(1))
+		if (checkSeGate(MSSeGate_Continuous))
 			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_2, param_1,
 			                                          0, nullptr, 0, 4);
 	} else if (param_2 == 1) {
-		if (checkUnkA8(1))
+		if (checkSeGate(MSSeGate_Continuous))
 			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_BEE_1, param_1,
 			                                          0, nullptr, 0, 4);
 	}
@@ -1160,13 +1182,13 @@ bool MSound::cameraLooksAtMario()
 
 bool MSound::gateCheck(u32 id)
 {
-	if (!(unkA8 & 1)) {
+	if (!(mSeGateMask & MSSeGate_Continuous)) {
 		u8 tmp = (id >> 11 & 1) | (id >> 24 & 0xC0);
 		if (tmp == 0)
 			return false;
 	}
 
-	if (!(unkA8 & 2)) {
+	if (!(mSeGateMask & MSSeGate_OneShot)) {
 		u8 tmp = (id >> 11 & 1) | (id >> 24 & 0xC0);
 		if (tmp == 1)
 			return false;

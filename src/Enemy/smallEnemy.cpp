@@ -205,7 +205,7 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	if (!unk124->getGraph() || unk124->getGraph()->isDummy())
 		unk124->init(gpConductor->getGraphByName("main"));
 
-	setGoalPathMario();
+	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	initAnmSound();
 }
 
@@ -842,9 +842,8 @@ void TSmallEnemy::generateEffectColumWater()
 void TSmallEnemy::setBckAnm(int index)
 {
 	mCurrentBckAnm = index;
-	getMActor()->setBckFromIndex(index);
-	const char** table = getBasNameTable();
-	setAnmSound(!table ? nullptr : table[index]);
+	mMActor->setBckFromIndex(index);
+	setAnmSound(getBas(index));
 }
 
 void TSmallEnemy::expandCollision()
@@ -1052,7 +1051,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->checkLiveFlag2(0x8000)
+		if (self->checkLiveFlag2(LIVE_FLAG_UNK8000)
 		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
 			return true;
 

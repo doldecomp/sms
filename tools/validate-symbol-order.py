@@ -41,6 +41,9 @@ hatch should a genuinely reversed unit ever turn up.
 Usage:
   python tools/validate-symbol-order.py -u mario/MarioUtil/MathUtil
   python tools/validate-symbol-order.py -u mario/Enemy/areacylinder --map orig/GMSE01/files/marioUS.MAP
+
+The map defaults to the one named by `map:` in config/<version>/config.yml,
+for the version objdiff.json is currently configured for (configure.py -v).
 """
 
 import argparse
@@ -54,7 +57,31 @@ from typing import Dict, List, Optional, Tuple
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))
 
-DEFAULT_MAP = os.path.join(root_dir, "orig", "GMSJ01", "files", "mario.MAP")
+_RE_BUILD_VERSION = re.compile(r"^build[\\/]([^\\/]+)[\\/]")
+_RE_CONFIG_MAP = re.compile(r"^\s*#?\s*map:\s*(\S+)")
+
+
+def default_map_for_unit(unit: Dict) -> str:
+    """The linker map of the version the unit was built for.
+
+    objdiff.json follows the last `configure.py --version`, so the unit's
+    base_path names the version (build/<VERSION>/...). The map path is read
+    from config/<VERSION>/config.yml, where dtk keeps it as a `# map:` line.
+    Guessing a fixed map would validate PAL objects against the JP map."""
+    m = _RE_BUILD_VERSION.match(unit.get("base_path", ""))
+    if not m:
+        die(f"Cannot tell the game version from base_path "
+            f"'{unit.get('base_path')}'; pass --map explicitly.")
+    version = m.group(1)
+    config = os.path.join(root_dir, "config", version, "config.yml")
+    if not os.path.exists(config):
+        die(f"No {config} for version {version}; pass --map explicitly.")
+    with open(config, encoding="utf-8") as f:
+        for line in f:
+            m = _RE_CONFIG_MAP.match(line)
+            if m:
+                return os.path.join(root_dir, m.group(1))
+    die(f"No 'map:' line in {config}; pass --map explicitly.")
 NM = os.environ.get("NM", os.path.join(root_dir, "build", "binutils", "powerpc-eabi-nm.exe"))
 OBJDIFF_JSON = os.path.join(root_dir, "objdiff.json")
 
@@ -310,8 +337,10 @@ def main() -> None:
     )
     ap.add_argument("-u", "--unit", required=True,
                     help="objdiff unit name, e.g. mario/MarioUtil/MathUtil")
-    ap.add_argument("--map", default=DEFAULT_MAP,
-                    help=f"path to the linker map (default: {DEFAULT_MAP})")
+    ap.add_argument("--map",
+                    help="path to the linker map (default: the map named in "
+                         "config/<version>/config.yml for the version the unit "
+                         "was built for)")
     ap.add_argument("--map-tu",
                     help="override the map .text-layout TU identifier")
     ap.add_argument("--reverse", action="store_true",
@@ -331,6 +360,8 @@ def main() -> None:
     source_path = meta.get("source_path", "")
     base_path = os.path.join(root_dir, unit["base_path"])
     reverse_fn = bool(meta.get("reverse_fn_order"))
+    if not args.map:
+        args.map = default_map_for_unit(unit)
 
     tus = parse_text_layout(args.map)
     tu_id = find_map_tu(tus, source_path, args.map_tu)
@@ -361,6 +392,7 @@ def main() -> None:
     print(f"Unit        : {unit['name']}")
     print(f"Source      : {source_path}")
     print(f"Object      : {os.path.relpath(base_path, root_dir)}")
+    print(f"Map         : {os.path.relpath(args.map, root_dir)}")
     print(f"Map TU      : {tu_id}")
     print(f"Map symbols : {len(map_names)} ({len(unused_names)} UNUSED)   "
           f"Object .text symbols: {len(obj_names)}")

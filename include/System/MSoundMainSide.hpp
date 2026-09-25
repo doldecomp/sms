@@ -18,11 +18,6 @@ public:
 	static MSStage* smMSStage;
 };
 
-class MSSTageSimpleEnvironmentMonte {
-public:
-	void proc();
-};
-
 class MSSTageSimpleEnvironment : public MSStage {
 public:
 	MSSTageSimpleEnvironment()
@@ -36,6 +31,14 @@ public:
 	/* 0x4 */ u32 unk4;
 };
 
+class MSSTageSimpleEnvironmentMonte : public MSStage {
+public:
+	virtual void proc();
+
+public:
+	/* 0x4 */ u32 unk4;
+};
+
 class MSStageCubeFade : public MSStage {
 public:
 	MSStageCubeFade();
@@ -43,6 +46,11 @@ public:
 	virtual void proc();
 
 	f32 calcParamRatioInCube(s32);
+#ifdef VERSION_GMSP01
+	void setBgmVolumeForce();
+
+	static MSStageCubeFade* smInstance;
+#endif
 
 public:
 	/* 0x4 */ int unk4;
@@ -50,10 +58,24 @@ public:
 	/* 0xC */ f32 unkC;
 };
 
+#ifdef VERSION_GMSP01
+class MSStageCubeFadeDouble : public MSStageCubeFade {
+public:
+	MSStageCubeFadeDouble();
+
+	virtual void proc();
+
+	static MSStageCubeFadeDouble* smInstance;
+
+public:
+	/* 0x10 */ bool mPlayFlag[2];
+};
+#endif
+
 class MSStageCubeSwitch : public MSStageCubeFade {
 public:
-	MSStageCubeSwitch(u8 param_1)
-	    : unk10(param_1)
+	MSStageCubeSwitch()
+	    : unk10(0)
 	{
 	}
 
@@ -104,10 +126,11 @@ public:
 	/* 0x20 */ int unk20;
 };
 
-class MSStageProc {
-public:
-	void setBgmPosition(const Vec&, f32, bool, u32, u32);
-};
+namespace MSStageProc {
+
+void setBgmPosition(const Vec&, f32, bool, u32, u32);
+
+} // namespace MSStageProc
 
 namespace MSMainProc {
 
@@ -130,6 +153,10 @@ void startStageEntranceDemo(u8, u8);
 void entranceDemoLoop(u32);
 void endStageEntranceDemo(u8, u8);
 void startStageBGM(u8, u8);
+#ifdef VERSION_GMSP01
+bool getGateKeeperBGMStopFlag();
+void setGateKeeperBGMPlayFlag(u32, bool);
+#endif
 
 } // namespace MSMainProc
 

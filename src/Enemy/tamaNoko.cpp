@@ -139,8 +139,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 void TTamaNokoFlower::setBckAnm(int idx)
 {
 	getMActor()->setBckFromIndex(0);
-	const char** basTable = unk10->getBasNameTable();
-	unk30                 = !basTable ? nullptr : basTable[idx];
+	unk30 = unk10->getBas(idx);
 	if (unk30 != nullptr) {
 		unk2C->initAnmSound(JKRGetResource(unk30), 1, 0.0f);
 	} else {
@@ -314,9 +313,9 @@ void TTamaNoko::walkBehavior(int param_1, f32 param_2)
 
 	f32 fVar3;
 	if (diff > 0.0f) {
-		fVar3 = diff > mTurnSpeed * param_2 ? mTurnSpeed * param_2 : diff;
+		fVar3 = MsMin(diff, mTurnSpeed * param_2);
 	} else {
-		fVar3 = diff > -mTurnSpeed * param_2 ? diff : -mTurnSpeed * param_2;
+		fVar3 = MsMax(diff, -mTurnSpeed * param_2);
 	}
 
 	mRotation.y = MsWrap(mRotation.y + fVar3, 0.0f, 360.0f);
@@ -662,7 +661,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 		if (!self->isBckAnm(9))
 			self->setBckAnm(10);
 
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	}
 
 	JGeometry::TVec3<f32> local_48 = self->getVelocity();

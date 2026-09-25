@@ -70,8 +70,13 @@
 	} while (0);
 
 // which header should these go in?
-extern unsigned char _stack_end[] AT_ADDRESS(0x80414004);
+#ifdef VERSION_GMSP01
+extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
+extern unsigned char _stack_end[] AT_ADDRESS(0x8040ED44);
+#else
 extern char _stack_addr[] AT_ADDRESS(0x80424008);
+extern unsigned char _stack_end[] AT_ADDRESS(0x80414004);
+#endif
 
 // .bss
 static OSThreadQueue RunQueue[32];

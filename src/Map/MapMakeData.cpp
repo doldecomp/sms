@@ -1,19 +1,11 @@
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapData.hpp>
+#include <MarioUtil/MathUtil.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-
-template <class T> static inline T max(const T& a, const T& b)
-{
-	return a > b ? a : b;
-}
-template <class T> static inline T min(const T& a, const T& b)
-{
-	return b > a ? a : b;
-}
 
 void TBGCheckData::setVertex(const JGeometry::TVec3<f32>& point1,
                              const JGeometry::TVec3<f32>& point2,
@@ -35,8 +27,8 @@ void TBGCheckData::setVertex(const JGeometry::TVec3<f32>& point1,
 		mPlaneDistance = -(mNormal.x * mPoint1.x + mNormal.y * mPoint1.y
 		                   + mNormal.z * mPoint1.z);
 
-		mMinY = min(min(mPoint3.y, mPoint2.y), mPoint1.y);
-		mMaxY = max(mPoint1.y, max(mPoint2.y, mPoint3.y));
+		mMinY = MsMin(mPoint1.y, MsMin(mPoint2.y, mPoint3.y));
+		mMaxY = MsMax(mPoint1.y, MsMax(mPoint2.y, mPoint3.y));
 	}
 }
 

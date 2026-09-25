@@ -28,8 +28,8 @@ bool SMS_isExMap(u8 stage) { return stage > 0x14 && stage < 0x35; }
 
 bool SMS_isExMap()
 {
-	return (gpApplication.mCurrArea.unk0 > 0x14
-	        && gpApplication.mCurrArea.unk0 < 0x35);
+	return (SMSGetApplication()->mCurrArea.getStage() > 0x14
+	        && SMSGetApplication()->mCurrArea.getStage() < 0x35);
 }
 
 bool SMS_isMultiPlayerMap()

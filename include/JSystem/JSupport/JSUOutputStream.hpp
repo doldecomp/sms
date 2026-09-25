@@ -10,6 +10,12 @@ public:
 	int write(const void* buf, s32 size);
 	virtual int skip(s32 amount, s8 val);
 	virtual int writeData(const void* buf, s32 size) = 0;
+
+	JSUOutputStream& operator<<(u8 p)
+	{
+		write(&p, sizeof(u8));
+		return *this;
+	}
 };
 
 #endif

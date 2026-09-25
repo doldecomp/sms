@@ -361,7 +361,7 @@ void TBossManta::startWalkAnim()
 	getMActor()->setBckFromIndex(3);
 
 	J3DAnmTransform* oldAnm
-	    = getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(4);
+	    = getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(4);
 	getMActor()->setBckOldMotionBlendAnmPtr(oldAnm);
 	getMActor()->setMotionBlendRatioForBck(0.5f);
 
@@ -879,7 +879,7 @@ TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 {
 	unkC = nullptr;
 	for (int i = 0; i < 3; ++i)
-		unk0[i] = new TBossMantaAdditionalCollision("マンタ追加コリジョン");
+		unk0[i] = new TBossMantaAdditionalCollision;
 }
 
 void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
@@ -960,9 +960,9 @@ TBossMantaAdditionalCollision::TBossMantaAdditionalCollision(const char* name)
 	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 
-	static_cast<TIdxGroupObj*>(
-	    JDrama::TNameRefGen::search("オブジェクトグループ"))
-	    ->insert(this);
+	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"));
+	group->getChildren().push_back(this);
 }
 
 BOOL TBossMantaAdditionalCollision::receiveMessage(THitActor* sender,

@@ -24,7 +24,7 @@ void TMario::soundMovement()
 	bool hasShineHolder = true;
 	u32 curStatus       = mStatus;
 
-	if (SMSGetMSound()->unkA8 & 1)
+	if (SMSGetMSound()->mSeGateMask & MSSeGate_Continuous)
 		mSoundValues.unk18 = 0;
 	else
 		mSoundValues.unk18 = 1;
@@ -483,7 +483,7 @@ void TMario::soundMovement()
 			}
 		} else if (curStatus == MARIO_STATUS_FORCE_JUMP
 		           && mSoundValues.unk00 != MARIO_STATUS_FORCE_JUMP
-		           && gpApplication.mCurrArea.getStage() == 2) {
+		           && SMSGetApplication()->mCurrArea.getStage() == 2) {
 			SMSGetMSound()->startSoundActor(MSD_SE_MA_ROPE_JUMP_C, &mPosition,
 			                                0, nullptr, 0, 4);
 			if (mHealth > 2) {

@@ -422,14 +422,14 @@ void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 
 void TSpineEnemy::updateStayCount(f32) { }
 
-bool TSpineEnemy::turnToCurPathNode(f32 param_1)
+BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 {
 	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
 	tmp -= mPosition;
 
 	f32 rot = MsAngleDiff(MsGetRotFromZaxisY(tmp), mRotation.y);
 
-	bool uVar2 = false;
+	BOOL uVar2 = false;
 	if (rot > 0.0f) {
 		if (rot < param_1) {
 			uVar2 = true;
@@ -475,17 +475,17 @@ void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
 	f32 fVar5 = fVar2;
 	if (fVar7 > fVar3 * 2.0f) {
 		if (fVar2 > 0.0f) {
-			fVar5 = fVar2 > turn_speed ? fVar2 : turn_speed;
+			fVar5 = MsMin(fVar2, turn_speed);
 		} else {
-			fVar5 = fVar2 > -turn_speed ? fVar2 : -turn_speed;
+			fVar5 = MsMax(fVar2, -turn_speed);
 		}
 	} else {
 		f32 fVar3 = calcTurnSpeedToReach(march_speed, fVar7 * 0.5f);
 
 		if (fVar2 > 0.0f) {
-			fVar5 = fVar2 > fVar3 ? fVar2 : fVar3;
+			fVar5 = MsMin(fVar2, fVar3);
 		} else {
-			fVar5 = fVar2 > -fVar3 ? fVar2 : -fVar3;
+			fVar5 = MsMax(fVar2, -fVar3);
 		}
 	}
 
@@ -543,9 +543,9 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 	f32 fVar2;
 	if (dVar9 > fVar3 * 2.0f) {
 		if (fVar1 > 0.0f) {
-			fVar2 = fVar1 > turn_speed ? fVar1 : turn_speed;
+			fVar2 = MsMin(fVar1, turn_speed);
 		} else {
-			fVar2 = fVar1 > -turn_speed ? fVar1 : -turn_speed;
+			fVar2 = MsMax(fVar1, -turn_speed);
 		}
 	}
 

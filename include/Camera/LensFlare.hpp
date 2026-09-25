@@ -8,7 +8,7 @@ class J3DModel;
 
 class TLensFlare : public JDrama::TViewObj {
 public:
-	TLensFlare(const char*);
+	TLensFlare(const char* name);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:

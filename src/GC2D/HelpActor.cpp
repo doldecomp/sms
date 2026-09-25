@@ -4,6 +4,7 @@
 #include <Strategic/LiveActor.hpp>
 #include <MoveBG/MapObjBase.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <version.h>
 
 THelpActor::THelpActor(const char* name)
     : THitActor(name)
@@ -24,7 +25,7 @@ void THelpActor::load(JSUMemoryInputStream& stream)
 	unk6C = stream.readString();
 	initHitActor(0x40000320, 1, -0x80000000, mScaling.x * 100.0f,
 	             mScaling.y * 100.0f, 1.0f, 1.0f);
-	unk68 = local_10 + 0xE0030;
+	unk68 = local_10 + VERSION_SELECT(GMSJ01(0xE0030), GMSP01(0x33));
 }
 
 void THelpActor::loadAfter()

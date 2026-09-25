@@ -5,6 +5,11 @@
 
 class TLiveActor;
 
+class TBossHanachan {
+public:
+	static void staticLoadParticle();
+};
+
 DECLARE_NERVE(TNerveSBH_Fall, TLiveActor);
 DECLARE_NERVE(TNerveSBH_SleepContinue, TLiveActor);
 DECLARE_NERVE(TNerveBossHanachanDead, TLiveActor);
