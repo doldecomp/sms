@@ -5,6 +5,7 @@
 #include <dolphin/gx/GXCull.h>
 #include <dolphin/gx/GXGeometry.h>
 #include <math.h>
+#include <macros.h>
 
 J2DPane::J2DPane()
     : mBounds()
