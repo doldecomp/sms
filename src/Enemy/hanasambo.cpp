@@ -563,7 +563,7 @@ void THanaSamboHead::checkHit()
 	}
 }
 
-void THanaSamboHead::kill() { }
+void THanaSamboHead::kill() { onHitFlag(HIT_FLAG_NO_COLLISION); }
 
 THanaSambo::THanaSambo(const char* param_1)
     : TSmallEnemy(param_1)
@@ -662,7 +662,7 @@ void THanaSambo::kill()
 		mSpine->pushAfterCurrent(&TNerveHanaSamboDie::theNerve());
 	}
 
-	unk194->onHitFlag(HIT_FLAG_NO_COLLISION);
+	unk194->kill();
 	onLiveFlag(LIVE_FLAG_UNK40);
 }
 
@@ -687,7 +687,7 @@ void THanaSambo::setDeadAnm()
 	else
 		setBckAnm(0);
 
-	unk194->onHitFlag(HIT_FLAG_NO_COLLISION);
+	unk194->kill();
 	unk1B0 = 0;
 	onLiveFlag(LIVE_FLAG_UNK8);
 }
