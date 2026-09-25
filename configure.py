@@ -150,6 +150,16 @@ config.objdiff_tag = "v3.8.1"
 config.sjiswrap_tag = "v1.2.2"
 config.wibo_tag = "1.1.0"
 
+middleware_libs = [
+    "dolphin",
+    "JSystem",
+    "THPPlayer",
+    "PowerPC_EABI_Support",
+    "TRK_MINNOW_DOLPHIN",
+    "OdemuExi2",
+]
+msl_include = "libs/PowerPC_EABI_Support/include/PowerPC_EABI_Support/Msl"
+
 # Project
 config.config_path = Path("config") / config.version / "config.yml"
 config.check_sha_path = Path("config") / config.version / "build.sha1"
@@ -157,8 +167,9 @@ config.asflags = [
     "-mgekko",
     "--strip-local-absolute",
     "-I include",
-    "-I include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common",
-    "-I include/PowerPC_EABI_Support/Msl/MSL_C++/MSL_Common",
+    *[f"-I libs/{lib}/include" for lib in middleware_libs],
+    f"-I {msl_include}/MSL_C/MSL_Common",
+    f"-I {msl_include}/MSL_C++/MSL_Common",
     f"-I build/{config.version}/include",
     f"--defsym BUILD_VERSION={version_num}",
 ]
@@ -196,8 +207,9 @@ cflags_base_base = [
     "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
     "-cwd source",
     "-i include",
-    "-i include/PowerPC_EABI_Support/Msl/MSL_C/MSL_Common",
-    "-i include/PowerPC_EABI_Support/Msl/MSL_C++/MSL_Common",
+    *[f"-i libs/{lib}/include" for lib in middleware_libs],
+    f"-i {msl_include}/MSL_C/MSL_Common",
+    f"-i {msl_include}/MSL_C++/MSL_Common",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     "-Dnullptr=0",
@@ -1279,6 +1291,13 @@ config.libs = [
         ],
     },
 ]
+
+for lib in config.libs:
+    for obj in lib["objects"]:
+        top, _, rest = obj.name.partition("/")
+        if top in middleware_libs:
+            obj.options["src_dir"] = f"libs/{top}/src"
+            obj.options["source"] = rest
 
 # Optional extra categories for progress tracking
 # Adjust as desired for your project

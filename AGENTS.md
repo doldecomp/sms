@@ -27,8 +27,10 @@ config/GMSJ01/
   splits.txt          — per-TU section address ranges
   build.sha1          — SHA1 hash of the target DOL
 
-src/                  — decompiled C/C++ source files
-include/              — headers (class declarations, inline functions)
+src/                  — decompiled game source files
+include/              — game headers (class declarations, inline functions)
+libs/<name>/src/      — middleware source files (dolphin, JSystem, THPPlayer, PowerPC_EABI_Support, TRK_MINNOW_DOLPHIN, OdemuExi2)
+libs/<name>/include/  — middleware headers
 orig/GMSJ01/          — original game disc image (not committed)
 build/GMSJ01/         — build artifacts, compiled objects
   obj/                — target (original) object files extracted by dtk
@@ -226,7 +228,9 @@ Do the rescan yourself for relevant classes and TUs using relevant regular expre
 
 ## Source Organization
 
-Each `.o` file maps 1:1 to a `.cpp` file. The path is listed in `configure.py` under `config.libs`. Each object has a status:
+Each `.o` file maps 1:1 to a `.cpp` file. The path is listed in `configure.py` under `config.libs`.
+For a middleware object, the first path component is the library: the object `JSystem/JKernel/JKRHeap.cpp` has its source in `libs/JSystem/src/JKernel/JKRHeap.cpp`.
+Each object has a status:
 
 - `Matching` — our code compiles to byte-identical output. Linked into the final DOL.
 - `NonMatching` — work in progress. Not linked.
@@ -236,9 +240,12 @@ Each `.o` file maps 1:1 to a `.cpp` file. The path is listed in `configure.py` u
 
 | Directory | Description |
 |-----------|-------------|
-| `src/JSystem/` | Nintendo's JSystem middleware (J3D, JParticle, JDrama, JAudio, etc.) |
-| `src/dolphin/` | Dolphin SDK (OS, GX, DVD, PAD, etc.) |
-| `src/PowerPC_EABI_Support/` | Metrowerks runtime & MSL |
+| `libs/JSystem/` | Nintendo's JSystem middleware (J3D, JParticle, JDrama, JAudio, etc.) |
+| `libs/dolphin/` | Dolphin SDK (OS, GX, DVD, PAD, etc.) |
+| `libs/PowerPC_EABI_Support/` | Metrowerks runtime & MSL |
+| `libs/THPPlayer/` | THP movie player |
+| `libs/TRK_MINNOW_DOLPHIN/` | MetroTRK debugger |
+| `libs/OdemuExi2/` | Debugger EXI driver |
 | `src/System/` | Game system framework (directors, params, events) |
 | `src/Strategic/` | Core game object hierarchy (actors, hit detection, spine/nerve AI) |
 | `src/Player/` | Mario player code |
