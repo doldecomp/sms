@@ -68,7 +68,7 @@ public:
 	static u8 mBodyJntIndex;
 
 public:
-	/* 0x194 */ void* unk194;
+	/* 0x194 */ TSamboHeadSaveLoadParams* unk194;
 	/* 0x198 */ TSamboFlower* unk198;
 	/* 0x19C */ s32 unk19C;
 	/* 0x1A0 */ JGeometry::TVec3<f32> unk1A0;
@@ -225,7 +225,7 @@ public:
 	/* 0x161 */ char unk161[0x3];
 	/* 0x164 */ s32* unk164;
 	/* 0x168 */ class TMapObjBase* unk168;
-	/* 0x16C */ TSpineEnemyParams* unk16C;
+	/* 0x16C */ TSamboFlowerSaveLoadParams* unk16C;
 };
 
 class TSamboFlowerManager : public TEnemyManager {

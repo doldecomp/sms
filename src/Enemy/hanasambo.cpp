@@ -105,10 +105,8 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 
 			f32 rate = (f32)spawned / (f32)total;
 
-			JGeometry::TVec3<f32> offset(
-			    0.0f, 0.0f,
-			    ((TSamboFlowerSaveLoadParams*)unk0[i]->unk16C)
-			        ->mSLCoinCircleR.get());
+			JGeometry::TVec3<f32> offset(0.0f, 0.0f,
+			                             unk0[i]->unk16C->mSLCoinCircleR.get());
 
 			MsMtxSetRotY(mtx, 360.0f * rate);
 			MTXMultVec(mtx, &offset, &offset);
@@ -126,8 +124,7 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 
 				MsVECNormalize(&offset, &offset);
 
-				TSamboFlowerSaveLoadParams* prm
-				    = (TSamboFlowerSaveLoadParams*)unk0[i]->unk16C;
+				TSamboFlowerSaveLoadParams* prm = unk0[i]->unk16C;
 				coin->mVelocity.set(offset.x * prm->mSLCoinVelocityXZ.get(),
 				                    8.0f * rate + prm->mSLCoinVelocityY.get(),
 				                    offset.z * prm->mSLCoinVelocityXZ.get());
@@ -373,7 +370,7 @@ void TSamboFlower::init(TLiveManager* param_1)
 	param_1->manageActor(this);
 	setMActorAndKeeper();
 	unk130 = 1;
-	unk16C = getSaveParam();
+	unk16C = (TSamboFlowerSaveLoadParams*)getSaveParam();
 	if (unk16C) {
 		mBodyRadius       = unk16C->mSLBodyRadius.get();
 		mWallRadius       = unk16C->mSLWallRadius.get();
@@ -433,8 +430,7 @@ void TSamboFlower::moveObject()
 
 		if (unk160) {
 			unk154++;
-			if (unk154
-			    > ((TSamboFlowerSaveLoadParams*)unk16C)->mSLBloomTimer.get()) {
+			if (unk154 > unk16C->mSLBloomTimer.get()) {
 				if (getMActor()->checkCurAnm("flower_fwait", 0)) {
 					unk150 = false;
 					if (unk164)
@@ -1011,10 +1007,10 @@ static int SamboHeadRollCallback(J3DNode* param_1, int param_2)
 
 		JGeometry::TVec3<f32> axis(rateX, rateY, rateZ);
 
-		Mtx local_100;
-		MTXRotAxisRad(local_100, &axis, 0.017453292f * gpCurSamboHead->unk1AC);
-		MTXConcat(anmMtx, local_100, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, local_100, J3DSys::mCurrentMtx);
+		Mtx rotMtx;
+		MTXRotAxisRad(rotMtx, &axis, 0.017453292f * gpCurSamboHead->unk1AC);
+		MTXConcat(anmMtx, rotMtx, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, rotMtx, J3DSys::mCurrentMtx);
 	}
 	return true;
 }
@@ -1082,7 +1078,7 @@ void TSamboHead::init(TLiveManager* param_1)
 	TWalkerEnemy::init(param_1);
 	mActorType = 0x1000001B;
 	unk150     = 0x11;
-	unk194     = getSaveParam();
+	unk194     = (TSamboHeadSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveSamboHeadHide::theNerve());
 	setGoalPathMario();
 	mMActor->setJointCallback(mBodyJntIndex, SamboHeadRollCallback);
@@ -1134,8 +1130,8 @@ void TSamboHead::behaveToWater(THitActor* param_1)
 	JGeometry::TVec3<f32> jump(mPosition.x - gpMarioPos->x, 0.0f,
 	                           mPosition.z - gpMarioPos->z);
 	MsVECNormalize(&jump, &jump);
-	jump.scale(((TSamboHeadSaveLoadParams*)unk194)->mSLHitJumpSpXZ.get());
-	jump.y = ((TSamboHeadSaveLoadParams*)unk194)->mSLHitJumpSpY.get();
+	jump.scale(unk194->mSLHitJumpSpXZ.get());
+	jump.y = unk194->mSLHitJumpSpY.get();
 
 	if (mSpine->getCurrentNerve() != &TNerveSamboHeadHitWater::theNerve())
 		mSpine->pushNerve(&TNerveSamboHeadHitWater::theNerve());
@@ -1168,10 +1164,10 @@ f32 TSamboHead::getGravityY() const
 	f32 gravity = mGravity;
 
 	if (mSpine->getCurrentNerve() == &TNerveSamboHeadAttack::theNerve())
-		gravity = ((TSamboHeadSaveLoadParams*)unk194)->mSLMoveGravity.get();
+		gravity = unk194->mSLMoveGravity.get();
 
 	if (mSpine->getCurrentNerve() == &TNerveSamboHeadHitWater::theNerve())
-		gravity = ((TSamboHeadSaveLoadParams*)unk194)->mSLHitJumpGravity.get();
+		gravity = unk194->mSLHitJumpGravity.get();
 
 	return gravity;
 }
@@ -1336,8 +1332,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 	TSamboHead* self = (TSamboHead*)spine->getBody();
 
 	if (!self->isAirborne()) {
-		if (self->unk19C > ((TSamboHeadSaveLoadParams*)self->unk194)
-		                       ->mSLJumpPrepareTime.get()
+		if (self->unk19C > self->unk194->mSLJumpPrepareTime.get()
 		    && self->checkCurAnmEnd(0)) {
 			self->unk19C = 0;
 			self->updateSquareToMario();
@@ -1350,14 +1345,12 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 
 			MsVECNormalize(&goal, &goal);
 
-			f32 moveDist
-			    = ((TSamboHeadSaveLoadParams*)self->unk194)->mSLMoveDist.get();
-			goal.x = goal.x * moveDist + self->mPosition.x;
-			goal.z = goal.z * moveDist + self->mPosition.z;
-			goal.y = self->mPosition.y;
+			f32 moveDist = self->unk194->mSLMoveDist.get();
+			goal.x       = goal.x * moveDist + self->mPosition.x;
+			goal.z       = goal.z * moveDist + self->mPosition.z;
+			goal.y       = self->mPosition.y;
 
-			f32 jumpSp
-			    = ((TSamboHeadSaveLoadParams*)self->unk194)->mSLJumpSp.get();
+			f32 jumpSp = self->unk194->mSLJumpSp.get();
 			self->setVelocity(
 			    self->calcVelocityToJumpToY(goal, jumpSp, self->getGravityY()));
 			self->mPosition.y += 2.0f;
@@ -1380,8 +1373,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 	}
 
 	if (self->mPosition.y > 30.0f + self->mGroundHeight) {
-		f32 limit
-		    = ((TSamboHeadSaveLoadParams*)self->unk194)->mSLJumpAngY.get();
+		f32 limit                      = self->unk194->mSLJumpAngY.get();
 		JGeometry::TVec3<f32> velocity = self->mLinearVelocity;
 		self->unk1AC = MsClamp(MsGetRotFromZaxis(velocity).x, -limit, limit);
 	} else {
@@ -1414,9 +1406,8 @@ DEFINE_NERVE(TNerveSamboHeadHide, TLiveActor)
 	} else if (self->isFindMario(1.0f)) {
 		self->updateSquareToMario();
 		if (self->mDistToMarioSquared
-		    < ((TSamboHeadSaveLoadParams*)self->unk194)->mSLAppearDist.get()
-		          * ((TSamboHeadSaveLoadParams*)self->unk194)
-		                ->mSLAppearDist.get()) {
+		    < self->unk194->mSLAppearDist.get()
+		          * self->unk194->mSLAppearDist.get()) {
 			spine->pushAfterCurrent(&TNerveSamboHeadAppear::theNerve());
 			return true;
 		}
@@ -1446,7 +1437,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 		return true;
 	}
 
-	f32 limit = ((TSamboHeadSaveLoadParams*)self->unk194)->mSLJumpAngY.get();
+	f32 limit = self->unk194->mSLJumpAngY.get();
 	if (self->isBckAnm(6)) {
 		if (spine->getTime() < 100)
 			self->unk1AC = MsClamp(self->unk1AC - 3.0f, -limit, limit);
@@ -1469,8 +1460,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 		self->setBckAnm(6);
 
 	if (self->checkCurAnmEnd(0) && self->isBckAnm(6)) {
-		f32 rate = ((TSamboHeadSaveLoadParams*)self->unk194)
-		               ->mSLHitJumpSpRateXZ.get();
+		f32 rate = self->unk194->mSLHitJumpSpRateXZ.get();
 		self->setBckAnm(6);
 		self->unk1A0.x *= rate;
 		self->unk1A0.z *= rate;
