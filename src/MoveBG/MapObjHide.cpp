@@ -1,6 +1,6 @@
 #include <MoveBG/MapObjHide.hpp>
 
-#include <printf.h>
+#include <stdio.h>
 
 #include <MoveBG/Item.hpp>
 #include <MoveBG/ItemManager.hpp>
