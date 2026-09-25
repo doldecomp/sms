@@ -7,7 +7,7 @@
 class JSUIosBase {
 public:
 	inline JSUIosBase()
-	    : mState(GOOD)
+	    : mState(EIoState_GOOD)
 	{
 	}
 

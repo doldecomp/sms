@@ -8,7 +8,7 @@ u32 JSUInputStream::read(void* buf, s32 size)
 {
 	int len = readData(buf, size);
 	if (len != size) {
-		setState(EOF);
+		setState(EIoState_EOF);
 	}
 	return len;
 }
@@ -18,14 +18,14 @@ char* JSUInputStream::read(char* str)
 	u16 sp8;
 	if (readData(&sp8, sizeof(sp8)) != sizeof(sp8)) {
 		str[0] = '\0';
-		setState(EOF);
+		setState(EIoState_EOF);
 		return nullptr;
 	}
 
 	s32 len  = readData(str, sp8);
 	str[len] = '\0';
 	if (len != sp8) {
-		setState(EOF);
+		setState(EIoState_EOF);
 	}
 	return str;
 }
@@ -34,7 +34,7 @@ char* JSUInputStream::readString()
 {
 	u16 strLen;
 	if (readData(&strLen, sizeof(strLen)) != sizeof(strLen)) {
-		setState(EOF);
+		setState(EIoState_EOF);
 		return nullptr;
 	}
 
@@ -49,7 +49,7 @@ char* JSUInputStream::readString()
 	}
 
 	if (r != strLen) {
-		setState(EOF);
+		setState(EIoState_EOF);
 	}
 	return buf;
 }
@@ -59,7 +59,7 @@ char* JSUInputStream::readString(char* buf, u16 len)
 	u16 strLen;
 	if (readData(&strLen, sizeof(strLen)) != sizeof(strLen)) {
 		buf[0] = '\0';
-		setState(EOF);
+		setState(EIoState_EOF);
 		return nullptr;
 	}
 
@@ -74,7 +74,7 @@ char* JSUInputStream::readString(char* buf, u16 len)
 	}
 
 	if (r != strLen) {
-		setState(EOF);
+		setState(EIoState_EOF);
 	}
 
 	return buf;
@@ -87,7 +87,7 @@ int JSUInputStream::skip(s32 amount)
 
 	for (i = 0; i < amount; i++) {
 		if (readData(&_p, sizeof(_p)) != sizeof(_p)) {
-			setState(EOF);
+			setState(EIoState_EOF);
 			break;
 		}
 	}
@@ -104,7 +104,7 @@ int JSURandomInputStream::align(s32 alignment)
 	if ((change = aligned - pos) != 0) {
 		int s = seekPos(aligned, JSUStreamSeekFrom_SET);
 		if (s != change) {
-			setState(EOF);
+			setState(EIoState_EOF);
 		}
 	}
 
@@ -115,7 +115,7 @@ int JSURandomInputStream::skip(s32 amount)
 {
 	int s = seekPos(amount, JSUStreamSeekFrom_CUR);
 	if (s != amount) {
-		setState(EOF);
+		setState(EIoState_EOF);
 	}
 	return s;
 }
@@ -128,7 +128,7 @@ u32 JSURandomInputStream::peek(void* buf, s32 len)
 	// actually copy-pasted in the original?
 	r = readData(buf, len);
 	if (r != len) {
-		setState(EOF);
+		setState(EIoState_EOF);
 	}
 	if (r != 0) {
 		seekPos(pos, JSUStreamSeekFrom_SET);
@@ -140,6 +140,6 @@ u32 JSURandomInputStream::peek(void* buf, s32 len)
 int JSURandomInputStream::seek(s32 offset, JSUStreamSeekFrom from)
 {
 	int s = seekPos(offset, from);
-	clrState(EOF);
+	clrState(EIoState_EOF);
 	return s;
 }

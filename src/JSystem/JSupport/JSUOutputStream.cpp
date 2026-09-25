@@ -7,7 +7,7 @@ int JSUOutputStream::write(const void* buf, s32 size)
 {
 	int len = writeData(buf, size);
 	if (len != size) {
-		setState(EOF);
+		setState(EIoState_EOF);
 	}
 	return len;
 }
@@ -18,7 +18,7 @@ int JSUOutputStream::skip(s32 amount, s8 val)
 	for (i = 0; i < amount; ++i) {
 		u32 r = writeData(&val, 1);
 		if (r != 1) {
-			setState(EOF);
+			setState(EIoState_EOF);
 			break;
 		}
 	}
@@ -28,5 +28,5 @@ int JSUOutputStream::skip(s32 amount, s8 val)
 void JSURandomOutputStream::seek(s32 offset, JSUStreamSeekFrom from)
 {
 	seekPos(offset, from);
-	clrState(EOF);
+	clrState(EIoState_EOF);
 }
