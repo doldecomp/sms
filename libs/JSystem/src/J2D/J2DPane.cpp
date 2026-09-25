@@ -2,6 +2,7 @@
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <JSystem/JSupport/JSURandomInputStream.hpp>
 #include <JSystem/JUtility/JUTResource.hpp>
+#include <dolphin/gx/GXCull.h>
 #include <dolphin/gx/GXGeometry.h>
 #include <math.h>
 
