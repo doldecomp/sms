@@ -191,7 +191,12 @@ void TSamboLeaf::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk10->entry();
 }
 
-void TSamboLeaf::generate(JGeometry::TVec3<f32>& param_1) { }
+void TSamboLeaf::generate(JGeometry::TVec3<f32>& param_1)
+{
+	unk14 = param_1;
+	unk14.y += 10.0f;
+	unk44 = true;
+}
 
 TSamboFlowerSaveLoadParams::TSamboFlowerSaveLoadParams(const char* param_1)
     : TSpineEnemyParams(param_1)
@@ -314,9 +319,7 @@ void TSamboFlowerManager::dropLeaf(JGeometry::TVec3<f32>& param_1,
 	for (int i = 0; i < 0x12; i++) {
 		TSamboLeaf* leaf = unk60[i];
 		if (!leaf->unk44) {
-			leaf->unk14 = param_1;
-			leaf->unk14.y += 10.0f;
-			leaf->unk44 = true;
+			leaf->generate(param_1);
 
 			TSamboFlowerSaveLoadParams* prm
 			    = (TSamboFlowerSaveLoadParams*)unk38;
@@ -403,19 +406,8 @@ void TSamboFlower::setMActorAndKeeper()
 BOOL TSamboFlower::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		if (!unk150) {
-			unk150 = true;
-			unk154 = 0;
-			gpMarioParticleManager->emit(PARTICLE_MS_SMB_KAFUN_OW, &mPosition,
-			                             0, nullptr);
-			mMActor->setBck("flower_hit");
-			if (unk160 && unk164) {
-				*unk164 -= 1;
-				u32 id = MSD_SE_OBJ_FLOWER_OPEN_0 + *unk164;
-				SMSGetMSound()->startSoundActor(id, &mPosition, 0, nullptr, 0,
-				                                4);
-			}
-		}
+		if (!unk150)
+			bloom();
 		return 1;
 	}
 
@@ -563,7 +555,13 @@ BOOL THanaSamboHead::receiveMessage(THitActor* param_1, u32 param_2)
 	return 0;
 }
 
-bool THanaSamboHead::checkHit() { return false; }
+void THanaSamboHead::checkHit()
+{
+	for (int i = 0; i < mColCount; ++i) {
+		if (mCollisions[i]->isActorType(0x80000001))
+			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
+	}
+}
 
 void THanaSamboHead::kill() { }
 
@@ -636,11 +634,7 @@ void THanaSambo::moveObject()
 		unk194->mPosition.z = mtx[2][3];
 	}
 
-	THitActor* head = unk194;
-	for (int i = 0; i < head->getColNum(); ++i) {
-		if (head->getCollision(i)->isActorType(0x80000001))
-			SMS_SendMessageToMario(head, HIT_MESSAGE_ATTACK);
-	}
+	unk194->checkHit();
 
 	mPosition.x = unk19C.x;
 	mPosition.z = unk19C.z;
@@ -1220,7 +1214,13 @@ void TSamboHead::setAfterDeadEffect()
 	                                nullptr, 0, 4);
 }
 
-void TSamboHead::setCrashAnm() { }
+void TSamboHead::setCrashAnm()
+{
+	if (unk198->unk150)
+		unk198->bloom();
+
+	setBckAnm(10);
+}
 
 void TSamboHead::calcRootMatrix()
 {

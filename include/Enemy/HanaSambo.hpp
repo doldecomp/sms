@@ -167,7 +167,7 @@ public:
 	virtual BOOL receiveMessage(THitActor*, u32);
 
 	void kill();
-	bool checkHit();
+	void checkHit();
 
 public:
 	/* 0x68 */ THanaSambo* unk68;
