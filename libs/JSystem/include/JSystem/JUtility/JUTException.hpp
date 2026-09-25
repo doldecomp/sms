@@ -5,9 +5,9 @@
 #include <JSystem/JUtility/JUTGamePad.hpp>
 #include <stdarg.h>
 #include <dolphin/gx/GXEnum.h>
+#include <dolphin/gx/GXStruct.h>
 #include <dolphin/os/OSError.h>
 
-typedef struct _GXRenderModeObj GXRenderModeObj;
 typedef struct OSContext OSContext;
 class JUTDirectPrint;
 
@@ -16,7 +16,7 @@ public:
 	JUTExternalFB(GXRenderModeObj*, GXGamma, void*, u32);
 
 private:
-	/* 0x00 */ _GXRenderModeObj* mRenderMode;
+	/* 0x00 */ GXRenderModeObj* mRenderMode;
 	/* 0x04 */ u32 mSize;
 	/* 0x08 */ u32 field_0x08;
 	/* 0x0C */ u16 field_0x0C;

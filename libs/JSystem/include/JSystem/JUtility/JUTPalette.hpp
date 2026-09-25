@@ -21,7 +21,7 @@ public:
 	}
 
 	void storeTLUT(GXTlut, ResTLUT*);
-	void storeTLUT(_GXTlut, _GXTlutFmt, JUTTransparency, u16, void*);
+	void storeTLUT(GXTlut, GXTlutFmt, JUTTransparency, u16, void*);
 	bool load();
 
 	u32 getTlutName() const { return mTlutName; }
