@@ -2,7 +2,7 @@
 #define JASAUDIOTHREAD_HPP
 
 #include <dolphin/os.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 class JKRSolidHeap;
 

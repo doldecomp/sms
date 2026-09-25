@@ -1,7 +1,7 @@
 #ifndef JGADGET_LINKLIST_HPP
 #define JGADGET_LINKLIST_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JUtility/JUTAssert.hpp>
 
 namespace JGadget {

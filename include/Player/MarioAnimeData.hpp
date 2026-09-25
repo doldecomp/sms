@@ -1,7 +1,7 @@
 #ifndef PLAYER_MARIO_ANIME_DATA_HPP
 #define PLAYER_MARIO_ANIME_DATA_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 struct TMarioAnimeData {
 public:

@@ -3,7 +3,8 @@
 
 #include <JSystem/JGadget/std-memory.hpp>
 #include <JSystem/JGadget/define.h>
-#include <types.h>
+#include <dolphin/types.h>
+#include <string.h>
 
 namespace JGadget {
 

@@ -1,7 +1,7 @@
 #ifndef JAIENTRYSE_HPP
 #define JAIENTRYSE_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JAudio/JAInterface/JAIEntry.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 

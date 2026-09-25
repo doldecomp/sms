@@ -2,7 +2,7 @@
 #define JASINST_HPP
 
 #include <JSystem/JAudio/JASystem/JASOscillator.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

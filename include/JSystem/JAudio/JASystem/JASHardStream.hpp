@@ -3,7 +3,7 @@
 
 #include <dolphin/dvd.h>
 #include <dolphin/types.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

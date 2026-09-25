@@ -1,7 +1,7 @@
 #ifndef JAIINTER_HPP
 #define JAIINTER_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <dolphin/dvd.h>
 #include <JSystem/JAudio/JASystem/JASDSPInterface.hpp>
 #include <JSystem/JAudio/JASystem/JASDSPChannel.hpp>

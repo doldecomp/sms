@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/JAudio/JASystem/JASBasicWaveBank.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
 

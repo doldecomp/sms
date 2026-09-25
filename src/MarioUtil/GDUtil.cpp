@@ -1,3 +1,4 @@
+#include <string.h>
 #include <MarioUtil/GDUtil.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <macros.h>

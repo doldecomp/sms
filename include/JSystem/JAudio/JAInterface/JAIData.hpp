@@ -5,7 +5,7 @@
 #include <JSystem/JAudio/JAInterface/JAIEntrySe.hpp>
 #include <JSystem/JAudio/JAInterface/JAIEntryStream.hpp>
 #include <JSystem/JAudio/JASystem/JASDSPInterface.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 class JAIBasic;
 class JAISound;

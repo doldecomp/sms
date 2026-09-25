@@ -5,7 +5,7 @@
 #include <Map/MapData.hpp>
 #include <Map/Map.hpp>
 #include <stdlib.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>

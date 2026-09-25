@@ -4,7 +4,7 @@
 #include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
 #include <JSystem/JAudio/JASystem/JASWaveBank.hpp>
 #include <dolphin/types.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

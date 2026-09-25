@@ -1,7 +1,7 @@
 #ifndef J3D_PE_BLOCKS_HPP
 #define J3D_PE_BLOCKS_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DFog.hpp>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DAlphaComp.hpp>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DBlend.hpp>

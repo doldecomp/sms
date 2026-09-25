@@ -1,7 +1,7 @@
 #ifndef JAIPARAMETERS_HPP
 #define JAIPARAMETERS_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 struct JAIMoveParaSet {
 	/* 0x0 */ f32 mTargetValue;

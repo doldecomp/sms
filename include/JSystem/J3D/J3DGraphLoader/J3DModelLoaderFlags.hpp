@@ -1,7 +1,7 @@
 #ifndef J3D_MODEL_LOADER_FLAGS_HPP
 #define J3D_MODEL_LOADER_FLAGS_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 enum J3DModelLoaderFlag {
 	J3DMLF_None = 0x00000000,

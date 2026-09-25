@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JAInterface/JAIInter.hpp>
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>

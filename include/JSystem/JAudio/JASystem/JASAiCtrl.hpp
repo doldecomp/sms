@@ -1,7 +1,7 @@
 #ifndef JASAICTRL_HPP
 #define JASAICTRL_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 namespace Kernel {

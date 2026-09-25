@@ -1,7 +1,7 @@
 #ifndef SYSTEM_STAGE_UTIL_HPP
 #define SYSTEM_STAGE_UTIL_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <System/FlagManager.hpp>
 
 u8 SMS_getShineIDofExStage(u8);

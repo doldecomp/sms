@@ -3,7 +3,7 @@
 
 #include <limits.h>
 #include <stdint.h>
-#include <types.h>
+#include <dolphin/types.h>
 #include <dolphin/gd.h>
 #include <dolphin/mtx.h>
 #include <JSystem/J3D/J3DGraphBase/J3DDrawBuffer.hpp>

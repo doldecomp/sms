@@ -1,7 +1,7 @@
 #ifndef JSU_IOS_BASE_H
 #define JSU_IOS_BASE_H
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JSupport/JSUStreamEnum.hpp>
 
 class JSUIosBase {

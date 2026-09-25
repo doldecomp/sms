@@ -2,7 +2,7 @@
 #define JASTRACKMGR_HPP
 
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

@@ -1,7 +1,7 @@
 #include <System/Application.hpp>
 #include <stdio.h>
 #include <stdlib.h>
-#include <types.h>
+#include <dolphin/types.h>
 #include <dolphin/os.h>
 #include <dolphin/vi.h>
 #include <dolphin/gx.h>

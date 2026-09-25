@@ -2,7 +2,7 @@
 #define JASBASICINST_HPP
 
 #include <JSystem/JAudio/JASystem/JASInst.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

@@ -2,7 +2,7 @@
 #include <JSystem/JDrama/JDRRenderMode.hpp>
 #include <dolphin/vi.h>
 #include <dolphin/os.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 using namespace JDrama;
 

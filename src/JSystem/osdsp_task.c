@@ -2,7 +2,7 @@
 #include <JSystem/dspproc.h>
 #include <dolphin/dsp.h>
 #include <dolphin/os.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 static u32 sync_stack[3];
 static volatile u8 DSP_prior_yield;

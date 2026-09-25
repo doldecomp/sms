@@ -1,7 +1,7 @@
 #ifndef J3D_COLOR_BLOCKS_HPP
 #define J3D_COLOR_BLOCKS_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DGXColor.hpp>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DColorChan.hpp>
 #include <JSystem/J3D/J3DGraphBase/Components/J3DLightObj.hpp>

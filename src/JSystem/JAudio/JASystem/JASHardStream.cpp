@@ -1,3 +1,4 @@
+#include <string.h>
 #include <JSystem/JAudio/JASystem/JASHardStream.hpp>
 #include <dolphin/ai.h>
 #include <dolphin/dvd.h>

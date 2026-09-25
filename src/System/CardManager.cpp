@@ -1,3 +1,4 @@
+#include <string.h>
 #include <System/CardManager.hpp>
 #include <macros.h>
 #include <stdio.h>

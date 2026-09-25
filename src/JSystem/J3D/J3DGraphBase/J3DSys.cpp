@@ -2,7 +2,7 @@
 #include <JSystem/JRenderer.hpp>
 #include <dolphin/os.h>
 #include <macros.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 J3DSys j3dSys;
 

@@ -1,6 +1,6 @@
 #include <JSystem/JAudio/JASystem/JASPlayer_impl.hpp>
 #include <JSystem/JAudio/JASystem/JASDriverTables.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

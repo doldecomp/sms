@@ -1,7 +1,7 @@
 #ifndef J3D_VERTEX_HPP
 #define J3D_VERTEX_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <dolphin/gx.h>
 
 class J3DVertexData {

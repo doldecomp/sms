@@ -2,7 +2,7 @@
 #include <System/DrawSyncManager.hpp>
 #include <dolphin/gx/GXManage.h>
 #include <dolphin/os.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 TTimeRec* TTimeRec::_instance;
 

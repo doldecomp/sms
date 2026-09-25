@@ -2,7 +2,7 @@
 #include <JSystem/osdsp_task.h>
 #include <JSystem/osdsp.h>
 #include <dolphin/dsp.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 static void DspInitWork();
 

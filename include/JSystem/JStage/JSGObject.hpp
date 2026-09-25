@@ -1,7 +1,7 @@
 #ifndef JSG_OBJECT_HPP
 #define JSG_OBJECT_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JStage {
 

@@ -1,6 +1,6 @@
 #include <JSystem/JAudio/JASystem/JASHeapCtrl.hpp>
 #include <macros.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

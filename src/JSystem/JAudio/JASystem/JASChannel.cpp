@@ -8,7 +8,7 @@
 #include <JSystem/JAudio/JASystem/JASDriverTables.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

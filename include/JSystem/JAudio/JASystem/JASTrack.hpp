@@ -6,7 +6,7 @@
 #include <JSystem/JAudio/JASystem/JASSeqCtrl.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackInterrupt.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackPort.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

@@ -1,6 +1,6 @@
 #ifndef MARIO_UTIL_TOOL_DATA_HPP
 #define MARIO_UTIL_TOOL_DATA_HPP
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace Koga {
 /**

@@ -1,7 +1,7 @@
 #include <JSystem/JUtility/JUTResFont.hpp>
 #include <JSystem/JUtility/JUTConsole.hpp>
 #include <dolphin/gx.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 IsLeadByte_func const JUTResFont::saoAboutEncoding_[3] = {
 	isLeadByte_1Byte,

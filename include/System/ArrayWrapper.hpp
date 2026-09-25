@@ -2,7 +2,7 @@
 #define SYSTEM_ARRAY_WRAPPER_HPP
 
 #include <dolphin/types.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 // They did a dum-dum here, anon namespace should never be used in headers.
 namespace {

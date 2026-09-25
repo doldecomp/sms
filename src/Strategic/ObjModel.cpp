@@ -7,7 +7,7 @@
 #include <M3DUtil/MActorData.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <stdio.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 bool TModelDataNode::isSameName(const char* name, u16 key) const
 {

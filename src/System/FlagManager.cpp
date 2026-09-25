@@ -1,3 +1,4 @@
+#include <string.h>
 #include <System/FlagManager.hpp>
 #include <System/StageUtil.hpp>
 #include <dolphin/os.h>

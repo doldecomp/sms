@@ -1,7 +1,7 @@
 #include <JSystem/JUtility/JUTDirectFile.hpp>
 #include <dolphin/os.h>
 #include <dolphin/dvd.h>
-#include <types.h>
+#include <dolphin/types.h>
 #include <macros.h>
 
 int JUTDirectFile::fetch32byte()

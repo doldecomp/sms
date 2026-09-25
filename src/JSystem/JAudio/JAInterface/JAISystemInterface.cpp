@@ -4,7 +4,7 @@
 #include <JSystem/JAudio/JAInterface/JAIParameters.hpp>
 #include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 JASystem::Kernel::TPortCmd JAISystemInterface::systemPortCmd;
 

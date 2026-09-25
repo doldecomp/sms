@@ -3,7 +3,7 @@
 
 #include <dolphin/types.h>
 #include <string.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 // Tracing is compiled out of the release build, so the body is empty. The map
 // records the symbol as weak in several translation units, which is why it

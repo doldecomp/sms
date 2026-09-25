@@ -1,7 +1,7 @@
 #ifndef JKR_HEAP_H
 #define JKR_HEAP_H
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <dolphin/os/OSMutex.h>
 #include <JSystem/JKernel/JKRDisposer.hpp>
 #include <new>

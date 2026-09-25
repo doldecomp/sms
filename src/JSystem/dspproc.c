@@ -1,6 +1,6 @@
 #include <JSystem/dspproc.h>
 #include <JSystem/dsptask.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 extern u64 DSP_CreateMap();
 

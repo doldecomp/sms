@@ -1,6 +1,7 @@
 #include <JSystem/JAudio/JASystem/JASSimpleWaveBank.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
-#include <types.h>
+#include <dolphin/types.h>
+#include <string.h>
 
 namespace JASystem {
 

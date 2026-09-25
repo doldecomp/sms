@@ -2,7 +2,7 @@
 #include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <dolphin/os.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 

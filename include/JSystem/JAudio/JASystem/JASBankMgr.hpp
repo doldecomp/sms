@@ -2,7 +2,7 @@
 #define JASBANKMGR_HPP
 
 #include <JSystem/JAudio/JASystem/JASBank.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 namespace JASystem {
 
