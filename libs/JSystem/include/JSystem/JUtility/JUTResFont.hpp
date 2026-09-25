@@ -43,7 +43,7 @@ public:
 public:
 	/* 0x1C */ int mWidth;
 	/* 0x20 */ int mHeight;
-	/* 0x24 */ _GXTexObj mTexObj;
+	/* 0x24 */ GXTexObj mTexObj;
 	/* 0x44 */ int mTexPageIdx;
 	/* 0x48 */ const ResFONT* mResFont;
 	/* 0x4C */ ResFONT::INF1* mInfoBlock;
