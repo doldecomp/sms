@@ -1169,7 +1169,7 @@ bool TTrack::closeTrack()
 
 	if (mConnected) {
 		TrackMgr::unRegistTrack(this);
-		mConnected = nullptr;
+		mConnected = 0;
 	}
 
 	return false;
