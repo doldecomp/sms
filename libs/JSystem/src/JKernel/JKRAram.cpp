@@ -5,7 +5,7 @@
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <JSystem/JKernel/JKRDvdRipper.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include <dolphin/ar.h>
+#include <dolphin/arq.h>
 #include <dolphin/os.h>
 #include "string.h"
 #include "macros.h"
