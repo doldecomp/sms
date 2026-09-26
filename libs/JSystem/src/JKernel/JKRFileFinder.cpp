@@ -2,7 +2,7 @@
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include <dolphin/dvd.h>
 
-JKRArcFinder::JKRArcFinder(JKRArchive* archive, long startindex, long entries)
+JKRArcFinder::JKRArcFinder(JKRArchive* archive, s32 startindex, s32 entries)
     : JKRFileFinder()
 {
 	mArchive = archive;

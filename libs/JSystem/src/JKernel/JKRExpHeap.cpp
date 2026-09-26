@@ -971,9 +971,8 @@ JKRExpHeap::CMemBlock* JKRExpHeap::CMemBlock::allocFore(u32 size, u8 groupId1,
 }
 
 JKRExpHeap::CMemBlock*
-JKRExpHeap::CMemBlock::allocBack(unsigned long size, unsigned char groupID,
-                                 unsigned char p3, unsigned char allocGroupID,
-                                 unsigned char p5)
+JKRExpHeap::CMemBlock::allocBack(u32 size, u8 groupID, u8 p3, u8 allocGroupID,
+                                 u8 p5)
 {
 	CMemBlock* newBlock = nullptr;
 	if (mAllocatedSpace >= size + sizeof(CMemBlock)) {
