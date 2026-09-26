@@ -34,8 +34,8 @@ MSound* MSGMSound  = 0;
 JAIBasic* MSGBasic = 0;
 
 u16 MSSeCallBack::smTrackCategory[32] = {
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	(u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1,
+	(u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1,
 };
 
 u8 MSSeCallBack::smPolifonic[16] = {
@@ -1031,7 +1031,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 			param_1 = MSD_SE_MV46A_OPEN_DOOR_T_01;
 		break;
 
-	case -2:
+	case (u32)-2:
 		if (param_2 <= 2)
 			param_1 = MSD_SE_MV46B_NEXT_STG_T_01;
 		else
