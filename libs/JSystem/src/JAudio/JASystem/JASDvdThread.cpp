@@ -55,8 +55,8 @@ namespace Dvd {
 	static void allocDvdBuffer();
 	static void writeBufferSize(u8*, u32, u32);
 	static void updateBuffer();
-	static void aramDmaFinish(u32);
-	static void aramDmaFinish2(u32);
+	static void aramDmaFinish(uintptr_t);
+	static void aramDmaFinish2(uintptr_t);
 } // namespace Dvd
 
 void Dvd::init()
@@ -242,8 +242,8 @@ s32 Dvd::loadToAramDvdTMain(void* param)
 			call->unk28 += buffersize;
 			call->unk2C -= buffersize;
 		}
-		ARQPostRequest(&req[arq_index], 0x12345678, 0, 1, (u32)buf,
-		               (u32)call->unk24, batchSize, &aramDmaFinish);
+		ARQPostRequest(&req[arq_index], 0x12345678, 0, 1, (uintptr_t)buf,
+		               (uintptr_t)call->unk24, batchSize, &aramDmaFinish);
 		++bufferFull;
 		++arq_index;
 		arq_index %= 4;
@@ -288,8 +288,9 @@ s32 Dvd::aramToDramDvdTMain(void* param)
 	TDvdCall* call = (TDvdCall*)param;
 
 	++bufferFull2;
-	ARQPostRequest(&req, (u32)call, ARQ_TYPE_ARAM_TO_MRAM, ARQ_PRIORITY_HIGH,
-	               call->unk28, (u32)call->unk24, call->unk2C, &aramDmaFinish2);
+	ARQPostRequest(&req, (u32)(uintptr_t)call, ARQ_TYPE_ARAM_TO_MRAM,
+	               ARQ_PRIORITY_HIGH, call->unk28, (uintptr_t)call->unk24,
+	               call->unk2C, &aramDmaFinish2);
 	while (bufferFull2 != 0)
 		;
 
@@ -303,8 +304,9 @@ s32 Dvd::dramToAramDvdTMain(void* param)
 	TDvdCall* call = (TDvdCall*)param;
 
 	++bufferFull2;
-	ARQPostRequest(&req, (u32)call, ARQ_TYPE_MRAM_TO_ARAM, ARQ_PRIORITY_HIGH,
-	               (u32)call->unk24, call->unk28, call->unk2C, &aramDmaFinish2);
+	ARQPostRequest(&req, (u32)(uintptr_t)call, ARQ_TYPE_MRAM_TO_ARAM,
+	               ARQ_PRIORITY_HIGH, (uintptr_t)call->unk24, call->unk28,
+	               call->unk2C, &aramDmaFinish2);
 	while (bufferFull2 != 0)
 		;
 
@@ -325,7 +327,7 @@ s32 Dvd::aramToDramDvdT(u32 param1, void* dest, void* src, u32 size,
 		*param5 = 0;
 
 	call->unk34 = callback;
-	call->unk28 = (u32)src;
+	call->unk28 = (u32)(uintptr_t)src;
 	call->unk2C = size;
 
 	addTaskHigh(&aramToDramDvdTMain, call, 0x38);
@@ -346,7 +348,7 @@ s32 Dvd::dramToAramDvdT(u32 param1, void* dest, void* src, u32 size,
 		*param5 = 0;
 
 	call->unk34 = callback;
-	call->unk28 = (u32)src;
+	call->unk28 = (u32)(uintptr_t)src;
 	call->unk2C = size;
 
 	addTaskHigh(&dramToAramDvdTMain, call, 0x38);
@@ -571,7 +573,7 @@ static void Dvd::updateBuffer()
 	}
 }
 
-static void Dvd::aramDmaFinish(u32 param) { --bufferFull; }
-static void Dvd::aramDmaFinish2(u32 param) { --bufferFull2; }
+static void Dvd::aramDmaFinish(uintptr_t param) { --bufferFull; }
+static void Dvd::aramDmaFinish2(uintptr_t param) { --bufferFull2; }
 
 } // namespace JASystem
