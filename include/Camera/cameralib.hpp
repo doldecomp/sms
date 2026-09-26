@@ -81,6 +81,9 @@ BOOL CLBChaseGeneralConstantSpecifySpeed(T* value, T desired, T speed)
 	return true;
 }
 
+template <class T>
+T CLBTwoDegreeGeneralInbetween(T param_1, T param_2, f32 param_3, f32 param_4);
+
 template <class T> T CLBEaseInInbetween(T param_1, T param_2, f32 param_3)
 {
 	return CLBTwoDegreeGeneralInbetween(param_1, param_2, param_3,
