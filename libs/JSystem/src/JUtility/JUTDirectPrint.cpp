@@ -1,4 +1,5 @@
 #include <JSystem/JUtility/JUTDirectPrint.hpp>
+#include <stdarg.h>
 #include <dolphin/os/OSCache.h>
 #include <stdio.h>
 #include <macros.h>
