@@ -477,22 +477,22 @@ TSpineEnemy* TBossDangoHamuKuriManager::createEnemyInstance()
 }
 
 static const GXColorS10 mFireHamNoseColorStart = { 0x1F4, 0xC8, 0x78, 0xFF };
-static const GXColorS10 mFireHamNoseColorEnd = { 0xFFEC, 0xFFA6, 0xFF74, 0xFF };
+static const GXColorS10 mFireHamNoseColorEnd = { -20, -90, -140, 0xFF };
 static const GXColorS10 mFireHamOtherColorStart
-    = { 0x1F4, 0xFFD8, 0xFFBA, 0xFF };
-static const GXColorS10 mFireHamOtherColorEnd = { 0x50, 0x5, 0xFFCE, 0xFF };
+    = { 0x1F4, -40, -70, 0xFF };
+static const GXColorS10 mFireHamOtherColorEnd = { 0x50, 0x5, -50, 0xFF };
 
 static GXColorS10 mFireHamNoseColorDiff = {
-	mFireHamNoseColorEnd.r - mFireHamNoseColorStart.r,
-	mFireHamNoseColorEnd.g - mFireHamNoseColorStart.g,
-	mFireHamNoseColorEnd.b - mFireHamNoseColorStart.b,
-	mFireHamNoseColorEnd.a - mFireHamNoseColorStart.a,
+	(s16)(mFireHamNoseColorEnd.r - mFireHamNoseColorStart.r),
+	(s16)(mFireHamNoseColorEnd.g - mFireHamNoseColorStart.g),
+	(s16)(mFireHamNoseColorEnd.b - mFireHamNoseColorStart.b),
+	(s16)(mFireHamNoseColorEnd.a - mFireHamNoseColorStart.a),
 };
 static GXColorS10 mFireHamOtherColorDiff = {
-	mFireHamOtherColorEnd.r - mFireHamOtherColorStart.r,
-	mFireHamOtherColorEnd.g - mFireHamOtherColorStart.g,
-	mFireHamOtherColorEnd.b - mFireHamOtherColorStart.b,
-	mFireHamOtherColorEnd.a - mFireHamOtherColorStart.a,
+	(s16)(mFireHamOtherColorEnd.r - mFireHamOtherColorStart.r),
+	(s16)(mFireHamOtherColorEnd.g - mFireHamOtherColorStart.g),
+	(s16)(mFireHamOtherColorEnd.b - mFireHamOtherColorStart.b),
+	(s16)(mFireHamOtherColorEnd.a - mFireHamOtherColorStart.a),
 };
 
 TFireHamuKuriManager::TFireHamuKuriManager(const char* name)

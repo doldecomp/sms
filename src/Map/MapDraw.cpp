@@ -51,7 +51,7 @@ void TMapDrawWall::perform(u32 cue, JDrama::TGraphics* graphics)
 	GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
 	GXSetChanMatColor(GX_COLOR0A0,
-	                  (GXColor) { unk14.r, unk14.g, unk14.b, unk18 });
+	                  (GXColor) { unk14.r, unk14.g, unk14.b, (u8)unk18 });
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
 	JUTTexture texture(unk10);

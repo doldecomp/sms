@@ -119,7 +119,7 @@ void THPGXYuv2RgbSetup(GXRenderModeObj* rmode)
 	GXSetTevKColorSel(GX_TEVSTAGE3, GX_TEV_KCSEL_K2);
 
 	// i've no idea what these values represent
-	GXSetTevColorS10(GX_TEVREG0, (GXColorS10) { 65446, 0, 65422, 135 });
+	GXSetTevColorS10(GX_TEVREG0, (GXColorS10) { -90, 0, -114, 135 });
 	GXSetTevKColor(GX_KCOLOR0, (GXColor) { 00, 00, 226, 88 });
 	GXSetTevKColor(GX_KCOLOR1, (GXColor) { 179, 0, 0, 182 });
 	GXSetTevKColor(GX_KCOLOR2, (GXColor) { 255, 0, 255, 128 });
