@@ -64,7 +64,7 @@ public:
 				mAnimations[i] = J3DAnmLoaderDataBase::load(res);
 		}
 
-		sortByFileNameRaw(mAnimations);
+		sortByFileNameRaw((void**)mAnimations);
 	}
 
 	T* getAnmPtr(int idx) const
