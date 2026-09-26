@@ -78,7 +78,7 @@ int OSCreateThread(OSThread* thread, void* (*func)(void*), void* param,
                    void* stack, u32 stackSize, s32 priority, u16 attr);
 void OSExitThread(OSThread* thread);
 void OSCancelThread(OSThread*);
-int OSJoinThread(OSThread* thread, void* val);
+int OSJoinThread(OSThread* thread, void** val);
 void OSDetachThread(OSThread* thread);
 long OSResumeThread(OSThread* thread);
 s32 OSSuspendThread(OSThread* thread);

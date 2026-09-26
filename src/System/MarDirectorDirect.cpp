@@ -47,7 +47,7 @@ int TMarDirector::direct()
 		if (!OSIsThreadTerminated(&gSetupThread))
 			return 0;
 
-		u32 local_40;
+		void* local_40;
 		OSJoinThread(&gSetupThread, &local_40);
 		if (local_40)
 			return 4;
