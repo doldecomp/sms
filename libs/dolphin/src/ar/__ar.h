@@ -1,7 +1,7 @@
 #ifndef _DOLPHIN_AR_INTERNAL_H_
 #define _DOLPHIN_AR_INTERNAL_H_
 
-#include <dolphin/ar.h>
+#include <dolphin/arq.h>
 
 void __ARQPopTaskQueueHi(void);
 void __ARQServiceQueueLo(void);

@@ -5,7 +5,7 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <dolphin/os.h>
 #include <dolphin/dvd.h>
-#include <dolphin/ar.h>
+#include <dolphin/arq.h>
 #include <macros.h>
 
 namespace JASystem {

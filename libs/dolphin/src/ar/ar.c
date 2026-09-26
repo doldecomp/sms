@@ -23,9 +23,9 @@ static void __ARWriteDMA(u32 mmem_addr, u32 aram_addr, u32 length);
 static void __ARReadDMA(u32 mmem_addr, u32 aram_addr, u32 length);
 static void __ARChecksize(void);
 
-ARQCallback ARRegisterDMACallback(ARQCallback callback)
+ARCallback ARRegisterDMACallback(ARCallback callback)
 {
-	ARQCallback old_callback;
+	ARCallback old_callback;
 	int old;
 
 	old_callback  = __AR_Callback;

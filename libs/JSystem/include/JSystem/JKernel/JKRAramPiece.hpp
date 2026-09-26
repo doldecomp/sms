@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <JSystem/JSupport/JSUList.hpp>
-#include <dolphin/ar.h>
+#include <dolphin/arq.h>
 #include <dolphin/os/OSMessage.h>
 #include <dolphin/os/OSMutex.h>
 
