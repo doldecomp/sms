@@ -115,7 +115,7 @@ void JKRAramPiece::startDMA(JKRAMCommand* command)
 	               JKRAramPiece::doneDMA);
 }
 
-void JKRAramPiece::doneDMA(u32 requestAddress)
+void JKRAramPiece::doneDMA(uintptr_t requestAddress)
 {
 	JKRAMCommand* command = (JKRAMCommand*)requestAddress;
 

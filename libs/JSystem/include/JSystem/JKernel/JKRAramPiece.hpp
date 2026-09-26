@@ -68,7 +68,7 @@ public:
 	static void syncAll(int);
 	static bool orderSync(int, uintptr_t, uintptr_t, u32, JKRAramBlock*);
 	static void startDMA(JKRAMCommand*);
-	static void doneDMA(u32);
+	static void doneDMA(uintptr_t);
 
 private:
 	static void lock() { OSLockMutex(&mMutex); }
