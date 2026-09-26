@@ -8,7 +8,11 @@ extern "C" {
 typedef unsigned long size_t;
 typedef long ptrdiff_t;
 
+#ifdef __clang__
+#define offsetof(type, member) __builtin_offsetof(type, member)
+#else
 #define offsetof(type, member) ((size_t)&(((type*)0)->member))
+#endif
 
 #ifndef NULL
 #define NULL 0
