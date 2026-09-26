@@ -727,7 +727,7 @@ BOOL TMario::wireWait()
 		}
 	}
 
-	if (mInput & 0x10000) {
+	if (mInput & 0x8000) {
 		mWireBounceVel = 5.0f;
 		return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_HANG, 0, false);
 	}
