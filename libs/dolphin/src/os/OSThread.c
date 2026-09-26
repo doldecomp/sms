@@ -514,7 +514,7 @@ void OSCancelThread(OSThread* thread)
 	OSRestoreInterrupts(enabled);
 }
 
-int OSJoinThread(OSThread* thread, void* val)
+int OSJoinThread(OSThread* thread, void** val)
 {
 	int enabled = OSDisableInterrupts();
 
@@ -531,7 +531,7 @@ int OSJoinThread(OSThread* thread, void* val)
 	}
 	if (thread->state == 8) {
 		if (val) {
-			*(s32*)val = (s32)thread->val;
+			*val = thread->val;
 		}
 		DEQUEUE_THREAD(thread, &__OSActiveThreadQueue, linkActive);
 		thread->state = 0;
