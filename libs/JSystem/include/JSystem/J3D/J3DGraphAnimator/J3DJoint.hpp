@@ -8,7 +8,7 @@
 #include <dolphin/mtx.h>
 
 class J3DAnmTransform;
-class J3DTransformInfo;
+struct J3DTransformInfo;
 class J3DMaterial;
 
 /**

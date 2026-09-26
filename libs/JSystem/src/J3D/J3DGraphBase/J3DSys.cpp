@@ -1,4 +1,5 @@
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DTevs.hpp>
 #include <JSystem/JRenderer.hpp>
 #include <dolphin/os.h>
 #include <macros.h>
@@ -103,20 +104,6 @@ void J3DSys::setTexCacheRegion(GXTexCacheSize size)
 	}
 }
 
-extern u8 j3dDefaultColorChanNum;
-extern GXColor j3dDefaultColInfo;
-extern GXColor j3dDefaultTevKColor;
-extern GXColorS10 j3dDefaultTevColor;
-
-struct TexCoordInfo {
-	u8 genType;
-	u8 genSrc;
-	u8 mtx;
-	u8 padding;
-};
-
-extern TexCoordInfo j3dDefaultTexCoordInfo[8];
-
 void J3DSys::drawInit()
 {
 	GXSetMisc(GX_MT_DL_SAVE_CONTEXT, 0);
@@ -207,9 +194,9 @@ void J3DSys::drawInit()
 	}
 
 	for (i = 0; i < 8; ++i) {
-		u32 mtx              = j3dDefaultTexCoordInfo[i].mtx;
-		GXTexGenSrc genSrc   = (GXTexGenSrc)j3dDefaultTexCoordInfo[i].genSrc;
-		GXTexGenType genType = (GXTexGenType)j3dDefaultTexCoordInfo[i].genType;
+		u32 mtx              = j3dDefaultTexCoordInfo[i].mTexGenMtx;
+		GXTexGenSrc genSrc   = (GXTexGenSrc)j3dDefaultTexCoordInfo[i].mTexGenSrc;
+		GXTexGenType genType = (GXTexGenType)j3dDefaultTexCoordInfo[i].mTexGenType;
 		GXSetTexCoordGen2((GXTexCoordID)i, genType, genSrc, mtx, GX_FALSE,
 		                  0x7d);
 	}

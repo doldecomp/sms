@@ -7,7 +7,7 @@
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 
-class J3DTransformInfo;
+struct J3DTransformInfo;
 class J3DTextureSRTInfo;
 class J3DModelData;
 
