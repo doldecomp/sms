@@ -13,7 +13,7 @@ BOOL ToolData::Attach(const void* jmapData)
 	return TRUE;
 }
 
-BOOL ToolData::GetValue(int entryIndex, const char* key, long& pValueOut) const
+BOOL ToolData::GetValue(int entryIndex, const char* key, s32& pValueOut) const
 {
 	s32 itemIndex = searchItemInfo(key);
 	if (itemIndex < 0) {

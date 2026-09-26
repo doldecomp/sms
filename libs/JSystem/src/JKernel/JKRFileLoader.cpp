@@ -176,7 +176,7 @@ JKRFileFinder* JKRFileLoader::findFirstFile(const char* volumeName)
 	return ret;
 }
 
-const char* JKRFileLoader::fetchVolumeName(char* buffer, long bufferSize,
+const char* JKRFileLoader::fetchVolumeName(char* buffer, s32 bufferSize,
                                            const char* path)
 {
 	static char rootPath[] = "/";

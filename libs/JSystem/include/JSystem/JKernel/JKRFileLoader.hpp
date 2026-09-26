@@ -51,7 +51,7 @@ public:
 	static u32 countFileGlb(const char*);
 	static JKRFileLoader* findVolume(const char**);
 	static JKRFileFinder* findFirstFile(const char*);
-	static const char* fetchVolumeName(char*, long, const char*);
+	static const char* fetchVolumeName(char*, s32, const char*);
 
 	static JKRFileLoader* getCurrentVolume() { return sCurrentVolume; }
 	static void setCurrentVolume(JKRFileLoader* fileLoader)

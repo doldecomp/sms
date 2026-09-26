@@ -130,7 +130,7 @@ private:
 
 struct JUTWarn {
 	JUTWarn& operator<<(const char*) { return *this; }
-	JUTWarn& operator<<(long) { return *this; }
+	JUTWarn& operator<<(s32) { return *this; }
 };
 
 #endif
