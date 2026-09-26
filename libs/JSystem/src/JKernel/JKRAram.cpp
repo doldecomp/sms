@@ -59,7 +59,7 @@ JKRAram::JKRAram(u32 audio_buffer_size, u32 audio_graph_size, s32 priority)
 	if (mAramMemorySize) {
 		mAramMemoryPtr = ARAlloc(mAramMemorySize);
 	} else {
-		mAramMemoryPtr = nullptr;
+		mAramMemoryPtr = 0;
 	}
 
 	mAramHeap = new (JKRHeap::getSystemHeap(), 0)

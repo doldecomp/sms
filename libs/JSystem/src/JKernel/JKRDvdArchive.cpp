@@ -76,7 +76,7 @@ bool JKRDvdArchive::open(s32 entryNum)
 	SDIFileEntry* fileEntry;
 
 	mArcInfoBlock = nullptr;
-	mDataOffset   = nullptr;
+	mDataOffset   = 0;
 	mDirectories  = nullptr;
 	mFileEntries  = nullptr;
 	mStrTable     = nullptr;

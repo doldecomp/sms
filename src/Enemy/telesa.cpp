@@ -491,7 +491,7 @@ void TTelesa::bind()
 		    = gpMap->checkGround(nextPos.x, nextPos.y + mHeadHeight + 200.0f,
 		                         nextPos.z, &mGroundPlane);
 
-		if (unk184 == nullptr
+		if (unk184 == 0
 		    && mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
 			if (unk124->getGraph() && !unk124->getGraph()->isDummy()) {
 				JGeometry::TVec3<f32> VStack_24;

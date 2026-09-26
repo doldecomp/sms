@@ -141,7 +141,7 @@ void JUTConsole::doDraw(JUTConsole::EConsoleType consoleType) const
 				linePtr = getLinePtr(curLine);
 
 				u8 c = (u8)linePtr[-1];
-				if (c == nullptr)
+				if (c == 0)
 					break;
 
 				if (consoleType != CONSOLE_TYPE_2) {
