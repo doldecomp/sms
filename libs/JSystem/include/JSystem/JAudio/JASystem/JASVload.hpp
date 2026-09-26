@@ -9,7 +9,7 @@ namespace Vload {
 	struct VLArcEntry;
 
 	void initVloadBuffers();
-	void setMaxArcs(long);
+	void setMaxArcs(s32);
 	BOOL initHeader(char*);
 	BOOL initHeaderM(char*, u8*, u8*);
 	u32 getArchiveHandle(char*);

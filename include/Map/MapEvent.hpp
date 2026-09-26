@@ -10,7 +10,7 @@ public:
 	TMapEvent();
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(unsigned long cue, JDrama::TGraphics* graphics);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual bool isFinishedAll() const;
 	virtual bool watch() = 0;
 	virtual void startControl() { unk18 = 2; }

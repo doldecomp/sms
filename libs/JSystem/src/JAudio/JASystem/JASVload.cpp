@@ -38,7 +38,7 @@ namespace Vload {
 	u32 vlCurrentArcs = 0;
 } // namespace Vload
 
-void Vload::setMaxArcs(long param) { }
+void Vload::setMaxArcs(s32 param) { }
 
 BOOL Vload::initHeader(char* param) { return initHeaderM(param, 0, 0); }
 

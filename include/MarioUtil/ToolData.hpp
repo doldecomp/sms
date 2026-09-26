@@ -17,7 +17,7 @@ public:
 	virtual ~ToolData(); // if not explicitly defined its not generated ok
 	BOOL Attach(const void* bcsvFileData);
 	// returns TRUE if the value was found, otherwise FALSE
-	BOOL GetValue(int entryIndex, const char* key, long& pValueOut) const;
+	BOOL GetValue(int entryIndex, const char* key, s32& pValueOut) const;
 	// returns TRUE if the value was found, otherwise FALSE
 	BOOL GetValue(int entryIndex, const char* key,
 	              const char*& pValueOut) const;

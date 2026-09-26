@@ -20,18 +20,18 @@ public:
 	void startMoveCursor();
 	void startMoveCursor2();
 	void linkSelect();
-	void changePattern(J2DPicture*, short, unsigned long);
-	void mirrorPattern(J2DPicture*, short, unsigned long);
-	void rotatePattern(J2DPicture*, short, unsigned long, short);
-	void shinePattern(TBoundPane*, short, unsigned long);
-	void mmarkPattern(TExPane*, short, unsigned long);
+	void changePattern(J2DPicture*, short, u32);
+	void mirrorPattern(J2DPicture*, short, u32);
+	void rotatePattern(J2DPicture*, short, u32, short);
+	void shinePattern(TBoundPane*, short, u32);
+	void mmarkPattern(TExPane*, short, u32);
 	void searchNearPoint(short*, short*, short, short);
 	void checkPoint(int, int);
 	void changeBotStatus(int);
 	void placeMario();
 	void appearGuidePane(int);
 	void disappearGuidePane(int);
-	void perform(unsigned long, JDrama::TGraphics*);
+	void perform(u32, JDrama::TGraphics*);
 
 public:
 	/* 0x10 */ char unk10[0xC0 - 0x10];

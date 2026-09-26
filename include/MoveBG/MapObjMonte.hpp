@@ -14,7 +14,7 @@ public:
 
 class TJumpMushroom : public TMapObjBase {
 public:
-	BOOL receiveMessage(THitActor*, unsigned long);
+	BOOL receiveMessage(THitActor*, u32);
 	void load(JSUMemoryInputStream&);
 	TJumpMushroom(const char* name = "ジャンプきのこ");
 };
@@ -45,7 +45,7 @@ public:
 	void setDrawPos(int, f32, JGeometry::TVec3<f32>*) const;
 	void drawRopeBetweenBoards(f32, int) const;
 	void initDraw() const;
-	void perform(unsigned long, JDrama::TGraphics*);
+	void perform(u32, JDrama::TGraphics*);
 	void initMonte();
 	void loadAfter();
 	THangingBridge(const char* name = "つり橋");
