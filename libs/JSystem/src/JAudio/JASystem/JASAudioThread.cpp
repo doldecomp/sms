@@ -1,4 +1,5 @@
 #include <JSystem/JAudio/JASystem/JASAudioThread.hpp>
+#include <stdint.h>
 #include <JSystem/JAudio/JASystem/JASProbe.hpp>
 #include <JSystem/JAudio/JASystem/JASAiCtrl.hpp>
 #include <JSystem/JAudio/JASystem/JASRate.hpp>
@@ -30,7 +31,7 @@ namespace AudioThread {
 	static u32 dvd_pri           = 0;
 
 	static OSMessageQueue audioproc_mq;
-	static u8 msgbuf[0x40];
+	static OSMessage msgbuf[0x10];
 
 	void setDSPSyncCount(u32 count) { intcount = count; }
 
@@ -56,7 +57,7 @@ namespace AudioThread {
 	{
 		OSInitFastCast();
 
-		OSInitMessageQueue(&audioproc_mq, &msgbuf, 0x10);
+		OSInitMessageQueue(&audioproc_mq, msgbuf, 0x10);
 		audioproc_mq_init = 1;
 		Kernel::init();
 		if (!isDSPBoot) {
@@ -68,11 +69,11 @@ namespace AudioThread {
 		AIRegisterDMACallback(syncAudio);
 		AIStartDMA();
 		for (;;) {
-			int msg;
+			OSMessage msg;
 
 			OSReceiveMessage(&audioproc_mq, &msg, 1);
 
-			switch (msg) {
+			switch ((uintptr_t)msg) {
 			case 0:
 				Kernel::updateDac();
 				break;
