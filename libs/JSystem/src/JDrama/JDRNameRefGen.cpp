@@ -18,8 +18,10 @@ static void dummy() { (void)(Vec) { 0.0f, 0.0f, 0.0f }; }
 
 using namespace JDrama;
 
+namespace JDrama {
 template class TViewObjPtrListT<TViewObj, TViewObj>;
 template class TNameRefPtrListT<TNameRef, TNameRef>;
+}
 
 TNameRefGen* TNameRefGen::instance;
 
