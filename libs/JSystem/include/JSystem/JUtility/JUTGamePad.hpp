@@ -98,7 +98,7 @@ public:
 
 	void initList();
 	static BOOL init();
-	static u32 read();
+	static void read();
 	void assign();
 	void checkResetCallback(OSTime holdTime);
 	void update();

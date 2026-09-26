@@ -72,7 +72,7 @@ JUTGamePad::CStick JUTGamePad::mPadSStick[4];
 
 JUTGamePad::EStickMode JUTGamePad::mStickMode = EStickMode1;
 
-u32 JUTGamePad::read()
+void JUTGamePad::read()
 {
 	PADRead(mPadStatus);
 	PADClamp(mPadStatus);
