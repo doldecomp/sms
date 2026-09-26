@@ -151,13 +151,8 @@ public:
 
 	static JUTConsoleManager* sManager;
 
-#ifdef __MWERKS__
-	typedef JGadget::TLinkList<JUTConsole, -offsetof(JUTConsole, mLinkNode)>
+	typedef JGadget::TLinkList<JUTConsole, -(int)offsetof(JUTConsole, mLinkNode)>
 	    ConsoleList;
-#else
-	// clangd does not support offsetof in template arguments.
-	typedef JGadget::TLinkList<JUTConsole, -sizeof(JKRDisposer)> ConsoleList;
-#endif
 
 private:
 	/* 0x00 */ ConsoleList soLink_;
