@@ -727,51 +727,123 @@ void TModelWaterManager::move()
 void TModelWaterManager::calcWorldMinMax()
 {
 	if (mParticleCount == 0) {
-		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-
-		unk5D70.x = marioPos.x;
-		unk5D70.y = marioPos.y;
-		unk5D70.z = marioPos.z;
-
-		unk5D7C.x = marioPos.x;
-		unk5D7C.y = marioPos.y;
-		unk5D7C.z = marioPos.z;
-
+		unk5D70 = SMS_GetMarioPos();
+		unk5D7C = SMS_GetMarioPos();
 		unk5D70.x -= 1.0f;
 		unk5D70.y -= 1.0f;
 		unk5D70.z -= 1.0f;
-
 		unk5D7C.x += 1.0f;
 		unk5D7C.y += 1.0f;
 		unk5D7C.z += 1.0f;
 		return;
 	}
 
-	JGeometry::TVec3<f32> fVar789 = mParticlePositionSOA[0];
-	fVar789.x -= 1.0f;
-	fVar789.y -= 1.0f;
-	fVar789.z -= 1.0f;
-	JGeometry::TVec3<f32> fVar123 = mParticlePositionSOA[0];
-	fVar789.x += 1.0f;
-	fVar789.y += 1.0f;
-	fVar789.z += 1.0f;
-	for (int i = 0; i < mParticleCount; ++i) {
-		fVar789.setMax(mParticlePositionSOA[i]);
-		fVar123.setMin(mParticlePositionSOA[i]);
+	JGeometry::TVec3<f32> min;
+	JGeometry::TVec3<f32> max;
+	min.x = mParticlePositionSOA[0].x - 1.0f;
+	min.y = mParticlePositionSOA[0].y - 1.0f;
+	min.z = mParticlePositionSOA[0].z - 1.0f;
+	max.x = 1.0f + mParticlePositionSOA[0].x;
+	max.y = 1.0f + mParticlePositionSOA[0].y;
+	max.z = 1.0f + mParticlePositionSOA[0].z;
+
+	for (int i = 1; i < mParticleCount; ++i) {
+		if (min.x > mParticlePositionSOA[i].x)
+			min.x = mParticlePositionSOA[i].x;
+		if (min.y > mParticlePositionSOA[i].y)
+			min.y = mParticlePositionSOA[i].y;
+		if (min.z > mParticlePositionSOA[i].z)
+			min.z = mParticlePositionSOA[i].z;
+
+		if (max.x < mParticlePositionSOA[i].x)
+			max.x = mParticlePositionSOA[i].x;
+		if (max.y < mParticlePositionSOA[i].y)
+			max.y = mParticlePositionSOA[i].y;
+		if (max.z < mParticlePositionSOA[i].z)
+			max.z = mParticlePositionSOA[i].z;
 	}
 
-	unk5D70.x = fVar789.x - 200.0f;
-	unk5D70.y = fVar789.y - 200.0f;
-	unk5D70.z = fVar789.z - 200.0f;
-
-	unk5D7C.x = fVar123.x + 200.0f;
-	unk5D7C.y = fVar123.y + 200.0f;
-	unk5D7C.z = fVar123.z + 200.0f;
+	unk5D70.x = min.x - 200.0f;
+	unk5D70.y = min.y - 200.0f;
+	unk5D70.z = min.z - 200.0f;
+	unk5D7C.x = 200.0f + max.x;
+	unk5D7C.y = 200.0f + max.y;
+	unk5D7C.z = 200.0f + max.z;
 }
 
-#pragma dont_inline on
-void TModelWaterManager::calcDrawVtx(MtxPtr) { }
-#pragma dont_inline off
+void TModelWaterManager::calcDrawVtx(MtxPtr viewMtx)
+{
+	unk5D30->reset();
+
+	for (int i = 0; i < mParticleCount; ++i) {
+		if ((mParticleFlagSOA[i] & 0xf) != 1)
+			continue;
+
+		if (mParticleLifetimeSOA[i]
+		    < mWaterParticleTypes[mParticleTypeSOA[i]]->mAlive.get()
+		          - unk5D88[7]) {
+			JGeometry::TVec3<f32> viewPos;
+			MTXMultVec(viewMtx, &mParticlePositionSOA[i], &viewPos);
+
+			if (!(viewPos.z > 0.0f) && !(viewPos.z < -unk5D28)) {
+				JGeometry::TVec3<f32> viewVel;
+				MTXMultVecSR(viewMtx, &mParticleVelocitySOA[i], &viewVel);
+
+				viewVel *= mWaterParticleTypes[mParticleTypeSOA[i]]
+				               ->mExtension.get();
+
+				f32 lenSq = viewVel.x * viewVel.x + viewVel.y * viewVel.y;
+				f32 size  = 1.414f * (0.5f * mParticleSizeSOA[i]);
+
+				JGeometry::TVec3<f32> vtx[4];
+
+				if (lenSq > 1.0f) {
+					f32 len    = MsSqrtf(lenSq);
+					f32 scale  = (1.0f / len) * size;
+					f32 nx     = viewVel.x * scale;
+					f32 ny     = viewVel.y * scale;
+					f32 neg_nx = -nx;
+
+					vtx[0].x = viewVel.x * unk5D18 + (viewPos.x + nx);
+					vtx[0].y = viewVel.y * unk5D18 + (viewPos.y + ny);
+					vtx[0].z = viewPos.z;
+
+					vtx[1].x = viewPos.x + ny;
+					vtx[1].y = viewPos.y + neg_nx;
+					vtx[1].z = viewPos.z;
+
+					vtx[2].x = (viewPos.x - nx) - viewVel.x * unk5D18;
+					vtx[2].y = (viewPos.y - ny) - viewVel.y * unk5D18;
+					vtx[2].z = viewPos.z;
+
+					vtx[3].x = viewPos.x - ny;
+					vtx[3].y = viewPos.y - neg_nx;
+					vtx[3].z = viewPos.z;
+				} else {
+					vtx[0].x = viewPos.x - size;
+					vtx[0].y = viewPos.y + size;
+					vtx[0].z = viewPos.z;
+
+					vtx[1].x = viewPos.x + size;
+					vtx[1].y = viewPos.y + size;
+					vtx[1].z = viewPos.z;
+
+					vtx[2].x = viewPos.x + size;
+					vtx[2].y = viewPos.y - size;
+					vtx[2].z = viewPos.z;
+
+					vtx[3].x = viewPos.x - size;
+					vtx[3].y = viewPos.y - size;
+					vtx[3].z = viewPos.z;
+				}
+
+				unk5D30->request(vtx);
+			}
+		}
+	}
+
+	unk5D30->setEnd();
+}
 
 void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
                                          const JGeometry::TVec3<f32>& param_3,
@@ -782,12 +854,12 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 
 	f32 fVar6  = param_2 * param_4.x;
 	f32 fVar7  = param_2 * param_4.y;
-	f32 fVar11 = param_4.y * 2.0 + param_3.y;
+	f32 fVar11 = param_4.y * 2.0f + param_3.y;
 	f32 fVar12 = -fVar6;
 
-	f32 fVar10 = param_4.x * 2.0 + param_3.x;
+	f32 fVar10 = param_4.x * 2.0f + param_3.x;
 	f32 fVar8  = param_2 * param_4.z;
-	f32 fVar9  = param_4.z * 2.0 + param_3.z;
+	f32 fVar9  = param_4.z * 2.0f + param_3.z;
 	f32 fVar13 = -fVar8;
 
 	{
@@ -798,7 +870,7 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 		param_5[0][0] = fVar4 * fVar7 + fVar2 * fVar12;
 		param_5[0][1] = fVar1 * fVar8 + fVar4 * fVar6 + fVar2 * fVar7;
 		param_5[0][2] = fVar2 * fVar13 + fVar1 * fVar7;
-		param_5[0][3] = fVar5 + fVar1 * fVar9 + fVar4 * fVar10 + fVar2 * fVar11;
+		param_5[0][3] = fVar1 * fVar9 + fVar4 * fVar10 + fVar2 * fVar11 + fVar5;
 	}
 
 	{
@@ -809,7 +881,7 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 		param_5[1][0] = fVar3 * fVar7 + fVar1 * fVar12;
 		param_5[1][1] = fVar2 * fVar8 + fVar3 * fVar6 + fVar1 * fVar7;
 		param_5[1][2] = fVar1 * fVar13 + fVar2 * fVar7;
-		param_5[1][3] = fVar4 + fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11;
+		param_5[1][3] = fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11 + fVar4;
 	}
 
 	{
@@ -820,7 +892,7 @@ void TModelWaterManager::calcVMMtxGround(MtxPtr param_1, f32 param_2,
 		param_5[2][0] = fVar3 * fVar7 + fVar1 * fVar12;
 		param_5[2][1] = fVar2 * fVar8 + fVar3 * fVar6 + fVar1 * fVar7;
 		param_5[2][2] = fVar1 * fVar13 + fVar2 * fVar7;
-		param_5[2][3] = fVar4 + fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11;
+		param_5[2][3] = fVar2 * fVar9 + fVar3 * fVar10 + fVar1 * fVar11 + fVar4;
 	}
 }
 
@@ -835,8 +907,8 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 	f32 fVar4  = param_3.y;
 	f32 fVar8  = scale * param_4.z;
 	f32 fVar11 = -fVar7;
-	f32 fVar10 = param_4.x * 2.0 + param_3.x;
-	f32 fVar9  = param_4.z * 2.0 + param_3.z;
+	f32 fVar10 = param_4.x * 2.0f + param_3.x;
+	f32 fVar9  = param_4.z * 2.0f + param_3.z;
 
 	{
 		f32 fVar3     = param_1[0][1];
@@ -846,7 +918,7 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 		(*param_5)[0] = fVar6 * fVar8 + fVar5 * fVar11;
 		(*param_5)[1] = fVar3 * scale;
 		(*param_5)[2] = fVar6 * fVar7 + fVar5 * fVar8;
-		(*param_5)[3] = fVar1 + fVar5 * fVar9 + fVar6 * fVar10 + fVar3 * fVar4;
+		(*param_5)[3] = fVar5 * fVar9 + fVar6 * fVar10 + fVar3 * fVar4 + fVar1;
 	}
 	{
 		f32 fVar1     = param_1[1][2];
@@ -856,7 +928,7 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 		param_5[1][0] = fVar3 * fVar8 + fVar1 * fVar11;
 		param_5[1][1] = fVar2 * scale;
 		param_5[1][2] = fVar3 * fVar7 + fVar1 * fVar8;
-		param_5[1][3] = fVar5 + fVar1 * fVar9 + fVar3 * fVar10 + fVar2 * fVar4;
+		param_5[1][3] = fVar1 * fVar9 + fVar3 * fVar10 + fVar2 * fVar4 + fVar5;
 	}
 	{
 		f32 fVar1     = param_1[2][2];
@@ -866,7 +938,7 @@ void TModelWaterManager::calcVMMtxWall(MtxPtr param_1, f32 scale,
 		param_5[2][0] = fVar3 * fVar8 + fVar1 * fVar11;
 		param_5[2][1] = fVar2 * scale;
 		param_5[2][2] = fVar3 * fVar7 + fVar1 * fVar8;
-		param_5[2][3] = fVar5 + fVar1 * fVar9 + fVar3 * fVar10 + fVar2 * fVar4;
+		param_5[2][3] = fVar1 * fVar9 + fVar3 * fVar10 + fVar2 * fVar4 + fVar5;
 	}
 }
 
@@ -997,9 +1069,9 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 	GXSetAlphaUpdate(GX_TRUE);
 	GXSetDstAlpha(GX_TRUE, 0);
 	GXColor local_60 = gpSilhouetteManager->unk12;
-	GXSetChanMatColor(
-	    GX_COLOR0A0,
-	    (GXColor) { local_60.r, local_60.g, local_60.b, (u8)(unk5D5D * local_60.a) });
+	GXSetChanMatColor(GX_COLOR0A0,
+	                  (GXColor) { local_60.r, local_60.g, local_60.b,
+	                              (u8)(unk5D5D * local_60.a) });
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA, GX_LO_NOOP);
 	SMS_DrawCube(unk5D70, unk5D7C);
 }
