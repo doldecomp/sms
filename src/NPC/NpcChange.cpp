@@ -65,6 +65,7 @@ bool TBaseNPC::isNerveMaybeDontCalcAnim1() const
 	return result;
 }
 
+#pragma dont_inline on
 bool TBaseNPC::isNerveCanGoToTalk() const
 {
 	bool result                         = false;
@@ -85,6 +86,7 @@ bool TBaseNPC::isNerveCanGoToTalk() const
 	}
 	return result;
 }
+#pragma dont_inline off
 
 bool TBaseNPC::isNerveCanGoToWet() const
 {
@@ -464,15 +466,15 @@ void TBaseNPC::changeNerveProc_()
 		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
-			if (isSunflowerReviving() && isNerveCanGoToTalk()
+			if (!isSunflowerReviving() && isNerveCanGoToTalk()
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
 				if (gpMarDirector->mMap == 7) {
 					JGeometry::TVec3<f32> local_58 = mPosition;
 					local_58.y += 75.0f;
-					if (SMS_IsInSameCameraCube(local_58))
-						bVar5 = true;
+					if (!SMS_IsInSameCameraCube(local_58))
+						goto L_skipTalk;
 				}
 
 				f32 fVar1;
@@ -507,9 +509,11 @@ void TBaseNPC::changeNerveProc_()
 			}
 		}
 
+	L_skipTalk:
 		if (bVar5) {
 			onLiveFlag(LIVE_FLAG_UNK20000);
 			if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
+				bVar4 = true;
 				offLiveFlag(LIVE_FLAG_UNK40000);
 				const TNerveBase<TLiveActor>* current
 				    = mSpine->getCurrentNerve();
@@ -550,7 +554,7 @@ void TBaseNPC::changeNerveProc_()
 	unk15C->unk0 = 0;
 
 	if (latestNerve == &TNerveNPCSink::theNerve()) {
-		if (gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z))
+		if (gpPollution->isPolluted(mPosition.x, unk1C4, mPosition.z))
 			return;
 
 		mSpine->setNext(&TNerveNPCRecoverFromSink::theNerve());
