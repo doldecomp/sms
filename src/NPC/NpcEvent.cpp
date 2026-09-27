@@ -281,7 +281,8 @@ static void evFireStartDemoCamera(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	const char* cameraName = interp->pop().getDataString();
-	gpMarDirector->fireStartDemoCamera(cameraName, nullptr, -1, 0.0f, true,
+	TMarDirector* director = gpMarDirector;
+	director->fireStartDemoCamera(cameraName, nullptr, -1, 0.0f, true,
 	                                   nullptr, 0, nullptr,
 	                                   JDrama::TFlagT<u16>());
 	interp->push();
