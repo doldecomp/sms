@@ -244,12 +244,11 @@ private:
 	f32 getAnmOffDist_()
 	{
 		bool useDanceDistance = false;
-		f32 distance = gpCamera->mFar;
-		int animationKind = unkD0->getCurrentAnmKind();
-		f32 danceDistance = mPtrSaveNormal->mSLDanceAnmOffDist.get();
+		f32 distance          = gpCamera->mFar;
+		int animationKind     = unkD0->getCurrentAnmKind();
+		f32 danceDistance     = mPtrSaveNormal->mSLDanceAnmOffDist.get();
 		if (checkActionFlag(NPC_ACTION_HAPPY | NPC_ACTION_DANCE)
-		    || mActorType == 0x400000D
-		    || animationKind == NPC_ANM_KIND_MAD
+		    || mActorType == 0x400000D || animationKind == NPC_ANM_KIND_MAD
 		    || animationKind == NPC_ANM_KIND_UNK17) {
 			useDanceDistance = true;
 		}
