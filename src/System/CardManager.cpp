@@ -666,11 +666,11 @@ s32 TCardManager::readOptionBlock_()
 			sector->clearData();
 			sector->setCheckSum(0);
 		} else {
-			result = sector->read(&info, 0, &mSectorCriteria[0]);
+			result   = sector->read(&info, 0, &mSectorCriteria[0]);
+			s32 errc = CARDClose(&info);
+			if (result == CARD_RESULT_READY)
+				result = errc;
 		}
-		s32 errc = CARDClose(&info);
-		if (result == CARD_RESULT_READY)
-			result = errc;
 	}
 
 	return result;
