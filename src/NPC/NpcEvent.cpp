@@ -377,20 +377,21 @@ void TNpcEvent::reviveOneSunflower()
 		TBaseNPC* npc
 		    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(acStack_50));
 		--mDownSunflowerNum;
+		JGeometry::TVec3<f32>* position = &npc->unk1B8;
 
 		static const char* sCameraNames[] = {
 			"ひまわりカメラ0", "ひまわりカメラ1", "ひまわりカメラ2",
 			"ひまわりカメラ3", "ひまわりカメラ4",
 		};
 
-		gpMarDirector->fireStartDemoCamera(sCameraNames[idx], &npc->unk1B8, -1,
+		gpMarDirector->fireStartDemoCamera(sCameraNames[idx], position, -1,
 		                                   0.0f, true, &ReviveSunflowerCallBack,
 		                                   (uintptr_t)npc, nullptr, 0);
 
 		if (mDownSunflowerNum == 0) {
 			gpItemManager->makeShineAppearWithDemo(
-			    "ひまわり用シャイン", "ひまわりシャインカメラ", npc->unk1B8.x,
-			    npc->unk1B8.y + 500.0f, npc->unk1B8.z);
+			    "ひまわり用シャイン", "ひまわりシャインカメラ", position->x,
+			    position->y + 500.0f, position->z);
 			TFlagManager::getInstance()->setBool(false, 0x50003);
 		}
 	}
