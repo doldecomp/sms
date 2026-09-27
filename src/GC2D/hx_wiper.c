@@ -1,6 +1,7 @@
 
 #include <GC2D/hx_wiper.h>
 #include <JSystem/ResTIMG.hpp>
+#include <MarioUtil/ReinitGX.hpp>
 #include <dolphin/dvd.h>
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
@@ -50,8 +51,6 @@ typedef struct HxDrawPath {
 	f32 y;
 	s32 type;
 } HxDrawPath;
-
-void ReInitializeGX();
 
 static void Hx_SetVFilter(f32);
 static void __Hx_FrBufferMorf(u32, u32);
