@@ -65,7 +65,6 @@ bool TBaseNPC::isNerveMaybeDontCalcAnim1() const
 	return result;
 }
 
-#pragma dont_inline on
 bool TBaseNPC::isNerveCanGoToTalk() const
 {
 	bool result                         = false;
@@ -86,7 +85,6 @@ bool TBaseNPC::isNerveCanGoToTalk() const
 	}
 	return result;
 }
-#pragma dont_inline off
 
 bool TBaseNPC::isNerveCanGoToWet() const
 {
@@ -470,46 +468,48 @@ void TBaseNPC::changeNerveProc_()
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
+				bool inCameraCube = true;
 				if (gpMarDirector->mMap == 7) {
 					JGeometry::TVec3<f32> local_58 = mPosition;
 					local_58.y += 75.0f;
-					if (!SMS_IsInSameCameraCube(local_58))
-						goto L_skipTalk;
+					inCameraCube = SMS_IsInSameCameraCube(local_58);
 				}
 
-				f32 fVar1;
-				f32 fVar2;
-				if (mThrowCtrl != nullptr) {
-					fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
-					fVar2 = mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
-				} else {
-					if (mActorType == 0x400001A) {
-						fVar2 = mPtrSaveNormal->mSLSunflowerLTalkDist.get();
+				if (inCameraCube) {
+					f32 fVar1;
+					f32 fVar2;
+					if (mThrowCtrl != nullptr) {
+						fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
+						fVar2 = mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
 					} else {
-						fVar2 = mPtrSaveNormal->mTalkAcceptDist.get();
+						if (mActorType == 0x400001A) {
+							fVar2 = mPtrSaveNormal->mSLSunflowerLTalkDist.get();
+						} else {
+							fVar2 = mPtrSaveNormal->mTalkAcceptDist.get();
+						}
+						fVar1 = mPtrSaveNormal->mTalkAcceptHeight.get();
 					}
-					fVar1 = mPtrSaveNormal->mTalkAcceptHeight.get();
-				}
 
-				f32 fVar3;
-				if ((checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
-				    || isSunflower() || mActorType == 0x400001D) {
-					fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
-				} else {
-					fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
-				}
+					f32 fVar3;
+					if ((checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
+					    || isSunflower() || mActorType == 0x400001D) {
+						fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
+					} else {
+						fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
+					}
 
-				if (abs(SMS_GetMarioPos().y - mPosition.y) < fVar1
-				    && isInSight(SMS_GetMarioPos(), fVar2, fVar3, -1.0f)
-				    && MsIsInSight(
-				        SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
-				        mPosition, fVar2,
-				        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(), 0.0f))
-					bVar5 = true;
+					if (abs(SMS_GetMarioPos().y - mPosition.y) < fVar1
+					    && isInSight(SMS_GetMarioPos(), fVar2, fVar3, -1.0f)
+					    && MsIsInSight(
+					        SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
+					        mPosition, fVar2,
+					        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(),
+					        0.0f))
+						bVar5 = true;
+				}
 			}
 		}
 
-	L_skipTalk:
 		if (bVar5) {
 			onLiveFlag(LIVE_FLAG_UNK20000);
 			if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
