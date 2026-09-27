@@ -341,7 +341,8 @@ static BOOL WaitUntilPrepare()
 
 void PrepareReady(BOOL msg)
 {
-	OSSendMessage(&PrepareReadyQueue, (OSMessage)(intptr_t)msg, OS_MESSAGE_BLOCK);
+	OSSendMessage(&PrepareReadyQueue, (OSMessage)(intptr_t)msg,
+	              OS_MESSAGE_BLOCK);
 }
 
 BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)

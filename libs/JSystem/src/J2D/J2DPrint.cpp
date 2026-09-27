@@ -354,7 +354,9 @@ float J2DPrint::parse(const u8* param_1, int param_2, int param_3, u16* param_4,
 					r19 = false;
 				}
 			}
-		} else if (r18 && ((uintptr_t)param_1 - (uintptr_t)local_c > (u32)param_2)) {
+		} else if (r18
+		           && ((uintptr_t)param_1 - (uintptr_t)local_c
+		               > (u32)param_2)) {
 			if ((!param_7) && (param_4 != nullptr)) {
 				param_4[r21] = 0.5f + f24;
 			}

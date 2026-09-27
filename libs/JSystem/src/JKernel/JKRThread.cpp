@@ -32,10 +32,10 @@ JKRThread::JKRThread(OSThread* threadRecord, int msgCount)
 	mHeap         = nullptr;
 	mThreadRecord = threadRecord;
 	mStackSize    = (uintptr_t)threadRecord->stackEnd
-	              - (uintptr_t)threadRecord->stackBase;
-	mStackMemory  = threadRecord->stackBase;
-	mMesgCount    = msgCount;
-	mMesgBuffer   = (OSMessage*)JKRHeap::sSystemHeap->alloc(
+	             - (uintptr_t)threadRecord->stackBase;
+	mStackMemory = threadRecord->stackBase;
+	mMesgCount   = msgCount;
+	mMesgBuffer  = (OSMessage*)JKRHeap::sSystemHeap->alloc(
         mMesgCount * sizeof(OSMessage), 4);
 	OSInitMessageQueue(&mMesgQueue, mMesgBuffer, mMesgCount);
 	JKRThread::sThreadList.append(&mLink);

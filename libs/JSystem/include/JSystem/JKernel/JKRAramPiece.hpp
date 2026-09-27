@@ -62,8 +62,7 @@ public:
 	static void sendCommand(JKRAMCommand*);
 
 	static JKRAMCommand* orderAsync(int, uintptr_t, uintptr_t, u32,
-	                                JKRAramBlock*,
-	                                JKRAMCommand::AsyncCallback);
+	                                JKRAramBlock*, JKRAMCommand::AsyncCallback);
 	static bool sync(JKRAMCommand*, int);
 	static void syncAll(int);
 	static bool orderSync(int, uintptr_t, uintptr_t, u32, JKRAramBlock*);
@@ -76,8 +75,7 @@ private:
 };
 
 inline bool JKRAramPcs(int direction, uintptr_t source, uintptr_t destination,
-                       u32 length,
-                       JKRAramBlock* block)
+                       u32 length, JKRAramBlock* block)
 {
 	return JKRAramPiece::orderSync(direction, source, destination, length,
 	                               block);

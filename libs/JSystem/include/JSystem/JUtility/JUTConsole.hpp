@@ -151,7 +151,8 @@ public:
 
 	static JUTConsoleManager* sManager;
 
-	typedef JGadget::TLinkList<JUTConsole, -(int)offsetof(JUTConsole, mLinkNode)>
+	typedef JGadget::TLinkList<JUTConsole,
+	                           -(int)offsetof(JUTConsole, mLinkNode)>
 	    ConsoleList;
 
 private:

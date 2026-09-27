@@ -10,8 +10,8 @@ JKRAramPiece::JKRAramPiece() { JUT_ASSERT_F(false, "UNIMPLEMENTED"); }
 JKRAramPiece::~JKRAramPiece() { }
 
 JKRAMCommand* JKRAramPiece::prepareCommand(int direction, uintptr_t src,
-                                           uintptr_t dst,
-                                           u32 length, JKRAramBlock* block,
+                                           uintptr_t dst, u32 length,
+                                           JKRAramBlock* block,
                                            JKRAMCommand::AsyncCallback callback)
 {
 	JKRAMCommand* command = new (JKRHeap::getSystemHeap(), -4) JKRAMCommand();
@@ -88,8 +88,8 @@ void JKRAramPiece::syncAll(int is_non_blocking)
 }
 
 bool JKRAramPiece::orderSync(int direction, uintptr_t source,
-                             uintptr_t destination,
-                             u32 length, JKRAramBlock* block)
+                             uintptr_t destination, u32 length,
+                             JKRAramBlock* block)
 {
 	lock();
 

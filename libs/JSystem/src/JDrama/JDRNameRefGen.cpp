@@ -21,7 +21,7 @@ using namespace JDrama;
 namespace JDrama {
 template class TViewObjPtrListT<TViewObj, TViewObj>;
 template class TNameRefPtrListT<TNameRef, TNameRef>;
-}
+} // namespace JDrama
 
 TNameRefGen* TNameRefGen::instance;
 

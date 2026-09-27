@@ -21,7 +21,7 @@ void TMapWireActor::checkTakingActor()
 {
 	if (mHeldObject != nullptr && mHeldObject->mHolder != this) {
 		mHeldObject = nullptr;
-		unk70      = 1;
+		unk70       = 1;
 	}
 
 	if (unk74->unk7C != nullptr) {

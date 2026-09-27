@@ -6,8 +6,10 @@
 #define ARAM_DIR_MRAM_TO_ARAM 0x00
 #define ARAM_DIR_ARAM_TO_MRAM 0x01
 
-#define ARStartDMARead(mmem, aram, len)                                        	ARStartDMA(ARAM_DIR_ARAM_TO_MRAM, mmem, aram, len)
-#define ARStartDMAWrite(mmem, aram, len)                                       	ARStartDMA(ARAM_DIR_MRAM_TO_ARAM, mmem, aram, len)
+#define ARStartDMARead(mmem, aram, len)                                        \
+	ARStartDMA(ARAM_DIR_ARAM_TO_MRAM, mmem, aram, len)
+#define ARStartDMAWrite(mmem, aram, len)                                       \
+	ARStartDMA(ARAM_DIR_MRAM_TO_ARAM, mmem, aram, len)
 
 #ifdef __cplusplus
 extern "C" {

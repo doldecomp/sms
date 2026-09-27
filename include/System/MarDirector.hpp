@@ -90,8 +90,7 @@ public:
 	void fireEndDemoCamera();
 	void fireStartDemoCamera(const char*, const JGeometry::TVec3<f32>*, s32,
 	                         f32, bool, s32 (*)(uintptr_t, u32), uintptr_t,
-	                         JDrama::TActor*,
-	                         JDrama::TFlagT<u16>);
+	                         JDrama::TActor*, JDrama::TFlagT<u16>);
 	void fireStageEvent(TMapObjBase*);
 	void setNextStage(u16, JDrama::TActor*);
 	void movement();

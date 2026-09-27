@@ -1998,8 +1998,8 @@ void TBossEel::startMoguCamera()
 		gpMarDirector->getConsole()->startAppearBalloon(0xE0015, true);
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "meoto_mogu_camera", &mPosition, -1, 0.0f, false,
-		    &hoseiDiveCameraCallback, reinterpret_cast<uintptr_t>(this), nullptr,
-		    JDrama::TFlagT<u16>(0));
+		    &hoseiDiveCameraCallback, reinterpret_cast<uintptr_t>(this),
+		    nullptr, JDrama::TFlagT<u16>(0));
 		mMoguCameraActive = true;
 	}
 }

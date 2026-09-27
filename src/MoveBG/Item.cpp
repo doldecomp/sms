@@ -751,8 +751,8 @@ void TShine::appearWithDemo(const char* param_1)
 	unk18C = static_cast<TCameraMapTool*>(JDrama::TNameRefGen::search(param_1))
 	             ->mDemoLengthFrames;
 	SMSGetMarDirector()->fireStartDemoCamera(
-	    param_1, &mPosition, -1, 0.0f, true, appearWithTimeCallback, (uintptr_t)this,
-	    nullptr, JDrama::TFlagT<u16>());
+	    param_1, &mPosition, -1, 0.0f, true, appearWithTimeCallback,
+	    (uintptr_t)this, nullptr, JDrama::TFlagT<u16>());
 }
 
 void TShine::kill()

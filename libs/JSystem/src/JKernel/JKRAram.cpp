@@ -491,8 +491,8 @@ static u8* firstSrcData()
 	u32 size   = szpEnd - buffer;
 	u32 length = transLeft < size ? transLeft : size;
 
-	JKRAramPcs(1, srcAddress + srcOffset, (uintptr_t)buffer, ALIGN_NEXT(length, 0x20),
-	           nullptr);
+	JKRAramPcs(1, srcAddress + srcOffset, (uintptr_t)buffer,
+	           ALIGN_NEXT(length, 0x20), nullptr);
 
 	srcOffset += length;
 	transLeft -= length;

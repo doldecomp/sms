@@ -997,9 +997,9 @@ void TModelWaterManager::drawSilhouette(MtxPtr param_1)
 	GXSetAlphaUpdate(GX_TRUE);
 	GXSetDstAlpha(GX_TRUE, 0);
 	GXColor local_60 = gpSilhouetteManager->unk12;
-	GXSetChanMatColor(
-	    GX_COLOR0A0,
-	    (GXColor) { local_60.r, local_60.g, local_60.b, (u8)(unk5D5D * local_60.a) });
+	GXSetChanMatColor(GX_COLOR0A0,
+	                  (GXColor) { local_60.r, local_60.g, local_60.b,
+	                              (u8)(unk5D5D * local_60.a) });
 	GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA, GX_LO_NOOP);
 	SMS_DrawCube(unk5D70, unk5D7C);
 }

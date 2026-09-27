@@ -194,9 +194,10 @@ void J3DSys::drawInit()
 	}
 
 	for (i = 0; i < 8; ++i) {
-		u32 mtx              = j3dDefaultTexCoordInfo[i].mTexGenMtx;
-		GXTexGenSrc genSrc   = (GXTexGenSrc)j3dDefaultTexCoordInfo[i].mTexGenSrc;
-		GXTexGenType genType = (GXTexGenType)j3dDefaultTexCoordInfo[i].mTexGenType;
+		u32 mtx            = j3dDefaultTexCoordInfo[i].mTexGenMtx;
+		GXTexGenSrc genSrc = (GXTexGenSrc)j3dDefaultTexCoordInfo[i].mTexGenSrc;
+		GXTexGenType genType
+		    = (GXTexGenType)j3dDefaultTexCoordInfo[i].mTexGenType;
 		GXSetTexCoordGen2((GXTexCoordID)i, genType, genSrc, mtx, GX_FALSE,
 		                  0x7d);
 	}

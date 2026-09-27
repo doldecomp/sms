@@ -12,8 +12,7 @@ JKRArchive::JKRArchive()
 	mMountDirection = MOUNT_DIRECTION_HEAD;
 }
 
-JKRArchive::JKRArchive(intptr_t entryNumber,
-                       JKRArchive::EMountMode mountMode)
+JKRArchive::JKRArchive(intptr_t entryNumber, JKRArchive::EMountMode mountMode)
 {
 	mIsMounted  = false;
 	mMountMode  = mountMode;

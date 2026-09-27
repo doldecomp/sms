@@ -180,7 +180,7 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 	for (CMemBlock* block = mHead; block; block = block->mNext) {
 		// this bastard is the problem
 		void* content = block->getContent();
-		u32 offset    = ALIGN_NEXT((uintptr_t)content, align) - (uintptr_t)content;
+		u32 offset = ALIGN_NEXT((uintptr_t)content, align) - (uintptr_t)content;
 
 		if (block->mAllocatedSpace < size + offset) {
 			continue;
@@ -331,9 +331,11 @@ void* JKRExpHeap::allocFromTail(u32 size, int align)
 	uintptr_t start;
 
 	for (CMemBlock* block = mTail; block; block = block->mPrev) {
-		start = ALIGN_PREV(
-		    (uintptr_t)block->getContent() + block->mAllocatedSpace - size, align);
-		usedSize = (uintptr_t)block->getContent() + block->mAllocatedSpace - start;
+		start = ALIGN_PREV((uintptr_t)block->getContent()
+		                       + block->mAllocatedSpace - size,
+		                   align);
+		usedSize
+		    = (uintptr_t)block->getContent() + block->mAllocatedSpace - start;
 		if (block->mAllocatedSpace >= usedSize) {
 			foundBlock = block;
 			offset     = block->mAllocatedSpace - usedSize;
@@ -793,8 +795,8 @@ void JKRExpHeap::recycleFreeBlock(JKRExpHeap::CMemBlock* block)
 
 void JKRExpHeap::joinTwoBlocks(CMemBlock* block)
 {
-	uintptr_t endAddr = (uintptr_t)(block + 1) + block->mAllocatedSpace;
-	CMemBlock* next = block->mNext;
+	uintptr_t endAddr  = (uintptr_t)(block + 1) + block->mAllocatedSpace;
+	CMemBlock* next    = block->mNext;
 	uintptr_t nextAddr = (uintptr_t)next - (next->mFlags & 0x7f);
 	if (endAddr > nextAddr) {
 		JUTWarningConsole_f(":::Heap may be broken. (block = %x)", block);
@@ -970,9 +972,9 @@ JKRExpHeap::CMemBlock* JKRExpHeap::CMemBlock::allocFore(u32 size, u8 groupId1,
 	return block;
 }
 
-JKRExpHeap::CMemBlock*
-JKRExpHeap::CMemBlock::allocBack(u32 size, u8 groupID, u8 p3, u8 allocGroupID,
-                                 u8 p5)
+JKRExpHeap::CMemBlock* JKRExpHeap::CMemBlock::allocBack(u32 size, u8 groupID,
+                                                        u8 p3, u8 allocGroupID,
+                                                        u8 p5)
 {
 	CMemBlock* newBlock = nullptr;
 	if (mAllocatedSpace >= size + sizeof(CMemBlock)) {
