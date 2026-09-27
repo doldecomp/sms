@@ -191,10 +191,10 @@ static void Hgx_init_tobj_resource(GXTexObj* texObj, struct ResTIMG* resource)
 
 	img_wx = resource->width;
 	img_wy = resource->height;
-	GXInitTexObj(texObj, imageData, img_wx, img_wy, format, wrapS, wrapT,
-	             GX_FALSE);
-	GXInitTexObjLOD(texObj, minFilter, magFilter, 0.0f, 0.0f, 0.0f, GX_DISABLE,
-	                GX_DISABLE, GX_ANISO_1);
+	GXInitTexObj(texObj, imageData, img_wx, img_wy, (GXTexFmt)format,
+	             (GXTexWrapMode)wrapS, (GXTexWrapMode)wrapT, GX_FALSE);
+	GXInitTexObjLOD(texObj, (GXTexFilter)minFilter, (GXTexFilter)magFilter,
+	                0.0f, 0.0f, 0.0f, GX_DISABLE, GX_DISABLE, GX_ANISO_1);
 }
 
 static void Hgx_ReadTexture(const char* path, void* destination)
