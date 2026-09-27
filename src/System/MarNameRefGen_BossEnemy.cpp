@@ -4,6 +4,7 @@
 #include <Enemy/Emario.hpp>
 #include <Enemy/BossEel.hpp>
 #include <Enemy/BossManta.hpp>
+#include <Enemy/BossPakkun.hpp>
 #include <Enemy/Hinokuri2.hpp>
 #include <System/MarNameRefGen.hpp>
 
@@ -130,21 +131,17 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if ( strcmp( name, "BossWanwanManager" ) == 0 )
 	//     return new TBossWanwanManager("ボスワンワンマネージャ");
 
-	// TODO:
-	// if ( strcmp( name, "BossPakkun" ) == 0 )
-	//     return new TBossPakkun("ボスパックン改");
+	if (strcmp(name, "BossPakkun") == 0)
+		return new TBossPakkun("ボスパックン改");
 
-	// TODO:
-	// if ( strcmp( name, "KBossPakkun" ) == 0 )
-	//     return new TBossPakkun("ボスパックン軽");
+	if (strcmp(name, "KBossPakkun") == 0)
+		return new TBossPakkun("ボスパックン軽");
 
-	// TODO:
-	// if ( strcmp( name, "BossPakkunManager" ) == 0 )
-	//     return new TBossPakkunManager("ボスパックンマネージャー", 0);
+	if (strcmp(name, "BossPakkunManager") == 0)
+		return new TBossPakkunManager("ボスパックンマネージャー", 0);
 
-	// TODO:
-	// if ( strcmp( name, "KBossPakkunManager" ) == 0 )
-	//     return new TBossPakkunManager("ボスパックン軽マネージャ", 1);
+	if (strcmp(name, "KBossPakkunManager") == 0)
+		return new TBossPakkunManager("ボスパックン軽マネージャ", 1);
 
 	// TODO:
 	// if ( strcmp( name, "BossTelesa" ) == 0 )
