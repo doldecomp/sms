@@ -136,7 +136,7 @@ public:
 
 	JGeometry::TVec3<f32> getCursorPos() const;
 	void setDummyConnectActor(const JDrama::TActor*);
-	void setBalloonMessage(u32, long);
+	void setBalloonMessage(u32, s32);
 	const GXColor* getPtrInitPollutionColor() const;
 	void isNowMotionBlend() const;
 	void offStopMotionBlend();

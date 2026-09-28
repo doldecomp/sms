@@ -282,7 +282,7 @@ class MActorAnmBck : public MActorAnmEach<J3DAnmTransformKey> {
 public:
 	MActorAnmBck()
 	{
-		unk28 = nullptr;
+		unk28 = 0;
 		unk2A = MACTOR_MTX_CALC_SOFTIMAGE;
 		unk2C = nullptr;
 		unk30 = nullptr;

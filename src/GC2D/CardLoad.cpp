@@ -195,7 +195,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		unk32C[i] = (J2DPicture*)unk28->search('cra1' + i * 0x100);
 
 		unk32C[i]->insert(pJVar5, unk32C[i]->mTextureNum, 0.0f);
-		unk28->search('cra2' + i)->hide();
+		unk28->search('cra2' + i * 0x100)->hide();
 	}
 
 	unk2B0 = unk2A4[0]->getPane()->getBounds();
@@ -294,39 +294,39 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	int local_90[] = { 2, 3, 4, 5, 6, 8, 7 };
 
 	for (int i = 0; i < 7; ++i) {
-		unk584[i].unk0 = (J2DPicture*)unk28->search('st_0' + i);
+		unk584[i].unk0 = (J2DPicture*)unk2C->search('st_0' + i);
 		for (int j = 0; j < 3; ++j)
 			unk584[i].unk4[j]
-			    = (J2DPicture*)unk28->search('n_0a' + i * 0x100 + j);
+			    = (J2DPicture*)unk2C->search('n_0a' + i * 0x100 + j);
 
 		int tmp = local_90[i];
 
 		for (int j = 0; j < 8; ++j) {
-			unk584[i].unk10[j] = unk28->search('sh0a' + i * 0x100 + j);
+			unk584[i].unk10[j] = unk2C->search('sh0a' + i * 0x100 + j);
 
 			if (!SMS_isGetShine(tmp, j, false))
 				unk584[i].unk10[j]->hide();
 		}
 
 		for (int j = 0; j < 2; ++j) {
-			unk584[i].unk30[j] = unk28->search('sh0i' + i * 0x100 + j);
+			unk584[i].unk30[j] = unk2C->search('sh0i' + i * 0x100 + j);
 			unk584[i].unk30[j]->hide();
 		}
 
-		unk584[i].unk38 = unk28->search('sh0k' + i);
+		unk584[i].unk38 = unk2C->search('sh0k' + i * 0x100);
 		unk584[i].unk38->hide();
 	}
 
 	for (int i = 0; i < 3; ++i) {
-		unk728[i] = unk28->search('\0t_1' + i);
+		unk728[i] = unk2C->search('\0t_1' + i);
 		unk728[i]->hide();
 	}
 
-	unk740 = unk28->search('\0t_p');
-	unk744 = unk28->search('s_tl');
-	unk748 = (J2DPicture*)unk28->search('\0n_a');
-	unk74C = (J2DPicture*)unk28->search('\0n_b');
-	unk750 = (J2DPicture*)unk28->search('\0n_c');
+	unk740 = unk2C->search('\0t_p');
+	unk744 = unk2C->search('s_tl');
+	unk748 = (J2DPicture*)unk2C->search('\0n_a');
+	unk74C = (J2DPicture*)unk2C->search('\0n_b');
+	unk750 = (J2DPicture*)unk2C->search('\0n_c');
 }
 
 void TCardLoad::setupTitleScreen() { }
@@ -867,7 +867,7 @@ bool TCardLoad::titleDraw()
 	} break;
 
 	case 4: {
-		for (int i = 0; i < 13; ++i) {
+		for (int i = 0; i < 11; ++i) {
 			switch (unk222[i]) {
 			case 0:
 				if (unkF8[i]->update()) {

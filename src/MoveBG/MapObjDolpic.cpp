@@ -26,6 +26,7 @@
 
 // rogue includes needed for matching sinit & rodata
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <macros.h>
 
 // TMonumentShine
 

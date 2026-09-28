@@ -1,6 +1,6 @@
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 static u8 NullTexData[16] __attribute__((aligned(0x20))) = { 0 };
 static Mtx IdentityMtx                                   = {

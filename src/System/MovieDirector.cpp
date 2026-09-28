@@ -365,7 +365,7 @@ int TMovieDirector::direct()
 		if (!OSIsThreadTerminated(&gSetupThread))
 			return 0;
 
-		u32 errc;
+		void* errc;
 		OSJoinThread(&gSetupThread, &errc);
 		if (errc)
 			return 5;
@@ -406,22 +406,22 @@ int TMovieDirector::direct()
 
 	if (unk1C == STATE_SAVE_TO_TITLE || unk1C == STATE_SAVE_AND_CONTINUE) {
 		JDrama::TGraphics graphics;
-		graphics.unk2 = 1;
+		graphics.unk0 = 1;
 		unk10->testPerform(CUE_MOVE, &graphics);
 #ifdef VERSION_GMSP01
 		if (VIGetTvFormat() != VI_PAL) {
-			graphics.unk2 = 0;
+			graphics.unk0 = 0;
 			unk10->testPerform(CUE_MOVE, &graphics);
-			graphics.unk2 = 0;
+			graphics.unk0 = 0;
 			unk10->testPerform(CUE_MOVE, &graphics);
 		}
 #else
-		graphics.unk2 = 0;
+		graphics.unk0 = 0;
 		unk10->testPerform(CUE_MOVE, &graphics);
-		graphics.unk2 = 0;
+		graphics.unk0 = 0;
 		unk10->testPerform(CUE_MOVE, &graphics);
 #endif
-		graphics.unk2 = 0;
+		graphics.unk0 = 0;
 		unk10->testPerform(CUE_MOVE | CUE_CALC_ANIM, &graphics);
 		unk14->testPerform(CUE_DRAW, &graphics);
 	} else {

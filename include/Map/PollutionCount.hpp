@@ -2,7 +2,7 @@
 #define MAP_POLLUTION_COUNT_HPP
 
 #include <System/DrawSyncCallback.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 class TPollutionObj;
 class TPollutionLayer;

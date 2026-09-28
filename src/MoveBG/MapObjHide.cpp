@@ -1,6 +1,6 @@
 #include <MoveBG/MapObjHide.hpp>
 
-#include <printf.h>
+#include <stdio.h>
 
 #include <MoveBG/Item.hpp>
 #include <MoveBG/ItemManager.hpp>
@@ -582,7 +582,7 @@ void THideObjPictureTwin::afterFinishedAnim()
 void THideObjPictureTwin::loadAfter()
 {
 	TWaterHitPictureHideObj::loadAfter();
-	char* wrapName = strstr(mName, "ふたご落書きＡ");
+	const char* wrapName = strstr(mName, "ふたご落書きＡ");
 	if (wrapName != nullptr) {
 		size_t len = strlen("ふたご落書きＡ");
 		char buffer[4];

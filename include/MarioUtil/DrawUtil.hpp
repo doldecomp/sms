@@ -1,7 +1,7 @@
 #ifndef DRAW_UTIL_HPP
 #define DRAW_UTIL_HPP
 
-#include <types.h>
+#include <dolphin/types.h>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JGeometry.hpp>
 

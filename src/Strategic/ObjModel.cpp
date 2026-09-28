@@ -7,7 +7,7 @@
 #include <M3DUtil/MActorData.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <stdio.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 bool TModelDataNode::isSameName(const char* name, u16 key) const
 {
@@ -159,7 +159,7 @@ MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 	return createMActorFromNthData(index, flags);
 }
 
-MActor* TMActorKeeper::createMActorFromAllBmd(u32 flags)
+void TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
 	int num = mModelDataKeeper->getModelDataNum();
 	for (int i = 0; i < num; ++i)

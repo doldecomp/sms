@@ -348,7 +348,7 @@ void TNpcEvent::initDownSunflowerNum()
 		mDownSunflowerNum = 0;
 }
 
-static s32 ReviveSunflowerCallBack(u32 param_1, u32 param_2)
+static s32 ReviveSunflowerCallBack(uintptr_t param_1, u32 param_2)
 {
 	if (param_2 == 0) {
 		TBaseNPC* sunflower = (TBaseNPC*)param_1;
@@ -385,7 +385,7 @@ void TNpcEvent::reviveOneSunflower()
 
 		gpMarDirector->fireStartDemoCamera(sCameraNames[idx], &npc->unk1B8, -1,
 		                                   0.0f, true, &ReviveSunflowerCallBack,
-		                                   (u32)npc, nullptr, 0);
+		                                   (uintptr_t)npc, nullptr, 0);
 
 		if (mDownSunflowerNum == 0) {
 			gpItemManager->makeShineAppearWithDemo(

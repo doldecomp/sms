@@ -4,7 +4,7 @@
 #include <JSystem/JGadget/std-list.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DAnmLoader.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
-#include <printf.h>
+#include <stdio.h>
 
 class J3DModelData;
 class J3DAnmTransformKey;
@@ -64,7 +64,7 @@ public:
 				mAnimations[i] = J3DAnmLoaderDataBase::load(res);
 		}
 
-		sortByFileNameRaw(mAnimations);
+		sortByFileNameRaw((void**)mAnimations);
 	}
 
 	T* getAnmPtr(int idx) const

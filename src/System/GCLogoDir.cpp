@@ -117,7 +117,7 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	JDrama::TScreen* screen = new JDrama::TScreen(logoRendArea, "Screen 2D");
 	stageDisp->getUnk14()->getChildren().push_back(screen);
 	screen->assignCamera(proj);
-	screen->assignViewObj(stageDisp);
+	screen->assignViewObj(group2d);
 
 	SMSGetApplication()->getFader()->setColor(JUtility::TColor(0, 0, 0, 0));
 	SMSGetApplication()->getFader()->startWipe(14, 0.4f, 0.0f);

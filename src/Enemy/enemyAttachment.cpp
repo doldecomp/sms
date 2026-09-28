@@ -160,7 +160,7 @@ void TEnemyAttachment::calcRootMatrix()
 
 void TEnemyAttachment::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk150 == nullptr) {
+	if (unk150 == 0) {
 		if (cue & CUE_CALC_ANIM)
 			kill();
 		return;

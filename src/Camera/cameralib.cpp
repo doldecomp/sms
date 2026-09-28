@@ -1,4 +1,4 @@
-#include <types.h>
+#include <dolphin/types.h>
 #include <Camera/cameralib.hpp>
 #include <JSystem/JMath.hpp>
 #include <MarioUtil/MathUtil.hpp>

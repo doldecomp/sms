@@ -1,3 +1,4 @@
+#include <string.h>
 #include <MSound/MSound.hpp>
 #include <MSound/MSRandVol.hpp>
 #include <MSound/MSHandle.hpp>
@@ -33,8 +34,10 @@ MSound* MSGMSound  = 0;
 JAIBasic* MSGBasic = 0;
 
 u16 MSSeCallBack::smTrackCategory[32] = {
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	(u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1,
+	(u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1,
+	(u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1,
+	(u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1, (u16)-1,
 };
 
 u8 MSSeCallBack::smPolifonic[16] = {
@@ -478,7 +481,7 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	if (param_5 != nullptr)
 		JAInter::TAsnData::asnData = param_5;
 
-	MSSeCallBack::smWaterFilter = nullptr;
+	MSSeCallBack::smWaterFilter = 0;
 	initDriver(heap, aramSize, 1);
 	initInterface(1);
 	f32 fVar1 = 0.0f;
@@ -1030,7 +1033,7 @@ u32 MSound::startMarioVoice(u32 param_1, s16 param_2, u8 param_3)
 			param_1 = MSD_SE_MV46A_OPEN_DOOR_T_01;
 		break;
 
-	case -2:
+	case (u32)-2:
 		if (param_2 <= 2)
 			param_1 = MSD_SE_MV46B_NEXT_STG_T_01;
 		else

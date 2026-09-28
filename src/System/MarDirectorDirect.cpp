@@ -47,7 +47,7 @@ int TMarDirector::direct()
 		if (!OSIsThreadTerminated(&gSetupThread))
 			return 0;
 
-		u32 local_40;
+		void* local_40;
 		OSJoinThread(&gSetupThread, &local_40);
 		if (local_40)
 			return 4;
@@ -120,7 +120,7 @@ int TMarDirector::direct()
 				tmp |= 1;
 			if (checkFlag(DIRECTOR_FLAG_LAST_SIMULATION_TICK))
 				tmp |= 2;
-			local_140.unk2 = tmp;
+			local_140.unk0 = tmp;
 
 			// inline
 			bool bVar1 = true;
@@ -156,12 +156,12 @@ int TMarDirector::direct()
 			}
 
 			if (checkFlag(DIRECTOR_FLAG_LAST_SIMULATION_TICK)) {
-				local_140.unk2 = 0;
+				local_140.unk0 = 0;
 				unk34->perform(CUE_ALL, &local_140);
 				break;
 			}
 		} else {
-			local_140.unk2 = 0;
+			local_140.unk0 = 0;
 			unk40->perform(CUE_ALL, &local_140);
 			unk38->perform(CUE_ALL, &local_140);
 			unk3C->perform(CUE_ALL, &local_140);

@@ -661,7 +661,7 @@ f32 TMapObjBase::getDistance(const JGeometry::TVec3<f32>& param_1) const
 
 int TMapObjBase::getWaterID(THitActor* actor)
 {
-	return (int)((TTakeActor*)actor)->mHolder;
+	return (intptr_t)((TTakeActor*)actor)->mHolder;
 }
 
 const TBGCheckData* TMapObjBase::getWaterPlane(THitActor* actor)

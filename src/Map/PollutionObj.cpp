@@ -3,7 +3,7 @@
 #include <Map/Map.hpp>
 #include <Map/MapEventSink.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
-#include <types.h>
+#include <dolphin/types.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

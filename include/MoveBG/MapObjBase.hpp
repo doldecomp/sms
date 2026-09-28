@@ -37,7 +37,7 @@ struct TMapObjHitDataTable {
 // fabricated
 struct TMapObjHitInfo {
 	/* 0x0 */ int unk0;
-	/* 0x4 */ int unk4;
+	/* 0x4 */ u32 unk4;
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ const TMapObjHitDataTable* unkC;
 };

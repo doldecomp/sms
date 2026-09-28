@@ -1,0 +1,21 @@
+#ifndef JSU_OUTPUT_STREAM_HPP
+#define JSU_OUTPUT_STREAM_HPP
+
+#include <dolphin/types.h>
+#include <JSystem/JSupport/JSUIosBase.hpp>
+
+class JSUOutputStream : public JSUIosBase {
+public:
+	virtual ~JSUOutputStream();
+	int write(const void* buf, s32 size);
+	virtual int skip(s32 amount, s8 val);
+	virtual int writeData(const void* buf, s32 size) = 0;
+
+	JSUOutputStream& operator<<(u8 p)
+	{
+		write(&p, sizeof(u8));
+		return *this;
+	}
+};
+
+#endif

@@ -10,6 +10,11 @@
 #define IS_ALIGNED(X, N)     (((X) & ((N) - 1)) == 0)
 #define IS_NOT_ALIGNED(X, N) (((X) & ((N) - 1)) != 0)
 
+#define DEG_TO_RAD(degrees) (degrees * (M_PI / 180.0f))
+#define RAD_TO_DEG(radians)                                                    \
+	(radians                                                                   \
+	 * (180.0f / M_PI + 0.000005f)) // the 0.000005f is probably a fakematch
+
 #define READU32_BE(ptr, offset)                                                \
 	(((u32)ptr[offset] << 24) | ((u32)ptr[offset + 1] << 16)                   \
 	 | ((u32)ptr[offset + 2] << 8) | (u32)ptr[offset + 3]);

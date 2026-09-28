@@ -423,7 +423,7 @@ bool TMarDirector::setupObjects()
 
 		{
 			JSUMemoryInputStream stream(data, size);
-			JSUMemoryInputStream leftoversStream(nullptr, nullptr);
+			JSUMemoryInputStream leftoversStream(nullptr, 0);
 			JDrama::TViewObj* performLists
 			    = (JDrama::TViewObj*)JDrama::TNameRef::genObject(
 			        stream, leftoversStream);
