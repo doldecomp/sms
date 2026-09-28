@@ -18,6 +18,14 @@ public:
 	virtual void stateLaunch();
 };
 
+class THamuKuriLauncherManager : public TLauncherManager {
+public:
+	THamuKuriLauncherManager(const char* name)
+	    : TLauncherManager(name)
+	{
+	}
+};
+
 // ============= params =============
 
 class THamuKuriSaveLoadParams : public TWalkerEnemyParams {

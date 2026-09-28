@@ -135,22 +135,8 @@ s32 TCardManager::decideUseSector(TCardManager::TCriteria* criteria)
 }
 #pragma dont_inline off
 
-s32 TCardManager::getLoadIndex(TCardManager::TCriteria* criteria)
-{
-	s32 index  = -1;
-	int sector = decideUseSector(criteria);
-	switch (sector) {
-	case 0:
-		index = 0;
-		break;
-	case 1:
-		index = 1;
-		break;
-	default:
-		break;
-	}
-	return index;
-}
+// TODO: what is this?
+s32 TCardManager::getLoadIndex(TCardManager::TCriteria* criteria) { }
 
 s32 TCardManager::getWriteCount(TCardManager::TCriteria* criteria)
 {

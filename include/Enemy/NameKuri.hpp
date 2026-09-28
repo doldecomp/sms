@@ -19,6 +19,14 @@ public:
 	virtual void stateLaunch();
 };
 
+class TNameKuriLauncherManager : public TLauncherManager {
+public:
+	TNameKuriLauncherManager(const char* name)
+	    : TLauncherManager(name)
+	{
+	}
+};
+
 class TNameKuriSaveLoadParams : public TWalkerEnemyParams {
 public:
 	TNameKuriSaveLoadParams(const char* path);

@@ -29,22 +29,6 @@
 #include <Animal/Butterfly.hpp>
 #include <Animal/fishoid.hpp>
 
-class THamuKuriLauncherManager : public TLauncherManager {
-public:
-	THamuKuriLauncherManager(const char* name)
-	    : TLauncherManager(name)
-	{
-	}
-};
-
-class TNameKuriLauncherManager : public TLauncherManager {
-public:
-	TNameKuriLauncherManager(const char* name)
-	    : TLauncherManager(name)
-	{
-	}
-};
-
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {
 
