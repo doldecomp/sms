@@ -2,9 +2,12 @@
 #define ENEMY_BOSS_WANWAN_HPP
 
 #include <Strategic/Nerve.hpp>
+#include <Strategic/HitActor.hpp>
+#include <Strategic/TakeActor.hpp>
 #include <Strategic/Spine.hpp>
-#include <Strategic/LiveManager.hpp>
 #include <Strategic/Binder.hpp>
+#include <Strategic/LiveManager.hpp>
+#include <M3DUtil/M3UJoint.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Enemy.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
@@ -25,16 +28,22 @@ public:
 	void moveRequest(const JGeometry::TVec3<float>&);
 
 private:
-	TBossWanwan* mOwner;
-	u32 mJointIndex;
+	/* 0x68 */ TBossWanwan* mOwner;
+	/* 0x6C */ s32 mJointIndex;
 };
 
 class TBWPicket : public THitActor {
 public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	void getTakingMtx();
-	void moveRequest(const JGeometry::TVec3<float>&);
+	virtual MtxPtr getTakingMtx();
+	virtual BOOL moveRequest(const JGeometry::TVec3<float>&);
+
+private:
+	/* 0x68 */ TBWHit* mHit;
+	/* 0x6C */ u32 unk6C;
+	/* 0x70 */ TBossWanwan* mOwner;
+	/* 0x74 */ TMtx34f unk74;
 };
 
 class TBWBinder : public TBinder {
@@ -103,6 +112,16 @@ public:
 	/* 0x1E8 */ TParamRT<f32> mSLShakeLengthMaxHP0;
 };
 
+class TBossWanwanMtxCalc : public M3UMtxCalcSIAnmBlendQuat {
+public:
+	TBossWanwanMtxCalc(TBossWanwan*);
+
+	virtual void calc(u16);
+
+public:
+	/* 0x64 */ TBossWanwan* mOwner;
+};
+
 // TBossWanwan size: 0x1b8
 class TBossWanwan : public TSpineEnemy {
 public:
@@ -118,14 +137,16 @@ public:
 	void emitEffects();
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 
+	f32 getUnk168() const { return unk168; }
+
 private:
 	/* 0x150 */ TBWLeash* mLeash;
 	/* 0x154 */ TBWPicket* mPicket;
 	/* 0x158 */ TBWLeashNode* mChainRoot;
-	/* 0x15C */ u16 unk15C;
+	/* 0x15C */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x160 */ u32 unk160;
 	/* 0x164 */ u32 unk164;
-	/* 0x168 */ u32 unk168;
+	/* 0x168 */ f32 unk168;
 	/* 0x16C */ u32 unk16C;
 	/* 0x170 */ u32 unk170;
 	/* 0x174 */ u32 unk174;
@@ -134,23 +155,15 @@ private:
 	/* 0x180 */ u32 unk180;
 	/* 0x184 */ u32 unk184;
 	/* 0x188 */ u32 unk188;
-	/* 0x18C */ u32 unk18C;
+	/* 0x18C */ u8 msInvincible;
 	/* 0x190 */ u16 unk190;
+	/* 0x194 */ u16 unk194;
+	/* 0x198 */ u32 unk198;
+	/* 0x19C */ u32 unk19C;
 	/* 0x1A0 */ BOOL unk1a0;
 	/* 0x1A8 */ u32 mWaterHitCount;
-	/* 0x1AC */ u32 mDistToMarioSquared;
+	/* 0x1AC */ f32 mDistToMarioSquared;
 	/* 0x1B0 */ TBWParams* mParams;
-	/* 0x18C */ u8 msInvincible;
-};
-
-class TBossWanwanMtxCalc : public J3DMtxCalcSoftimageAnm {
-public:
-	TBossWanwanMtxCalc(TBossWanwan*);
-
-	virtual void calc(u16);
-
-public:
-	TBossWanwan mOwner;
 };
 
 class TBossWanwanManager : public TEnemyManager {

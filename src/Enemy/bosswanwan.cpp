@@ -13,6 +13,9 @@
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
 #include <Strategic/ObjManager.hpp>
+#include <Strategic/Spine.hpp>
+#include <Strategic/ObjModel.hpp>
+#include <Strategic/Strategy.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
@@ -22,17 +25,8 @@
 #include <System/BaseParam.hpp>
 #include <System/ParamInst.hpp>
 #include <JSystem/JGeometry/JGUtil.hpp>
-
-/*
-Need to setup global position like:
-
-- BW_BATH_POS: Target coordinates for the hot spring/bath (Vec / TVec3<float>).
-- BW_PICKET_START: Starting position for the leash chain stake (Vec /
-    TVec3<float>).
-- BW_HEAD_START: Starting spawn coordinates for the chain chomp head (Vec /
-    TVec3<float>).
-*/
-// Maybe they are just declared here, but filled on runtime
+#include <MarioUtil/MathUtil.hpp>
+#include <M3DUtil/M3UJoint.hpp>
 
 static const char* bwanwan_bastable[] = {
 	"/scene/bwanwan/bas/bwanwan_bark.bas",
@@ -66,6 +60,18 @@ TBWParams::TBWParams(const char* path)
     , PARAM_INIT(mSLHeadGap, 150.0f)
 {
 	TParams::load(mPrmPath);
+}
+
+TBossWanwan::TBossWanwan(const char* name)
+    : TSpineEnemy(name)
+    , mPicket(nullptr)
+    , mChainRoot(nullptr)
+    , mLeash(nullptr)
+    , mWaterHitCount(0)
+    , unk190(0)
+    , unk1a0(false)
+{
+	// various settings
 }
 
 void TBossWanwan::kill() { return; }
@@ -284,6 +290,11 @@ void TBossWanwan::emitEffects()
 	}
 }
 
+TBossWanwanManager::TBossWanwanManager(const char* name)
+    : TEnemyManager(name)
+{
+}
+
 TSpineEnemy* TBossWanwanManager::createEnemyInstance()
 {
 	return new TBossWanwan;
@@ -314,7 +325,62 @@ void TBossWanwanManager::load(JSUMemoryInputStream& stream)
 	SMS_LoadParticle("/scene/bwanwan/jpa/ms_bwan_kira.jpa", 0x168);
 }
 
-void TBossWanwanMtxCalc::calc(u16 index) { }
+void TBossWanwanMtxCalc::calc(u16 index)
+{
+	J3DTransformInfo info;
+	Mtx rotMtx;
+	MtxPtr pRotMtx = rotMtx;
+
+	if (index == 0 && this->mOwner->isAirborne()) {
+		j3dSys.setCurrentMtxCalc(this);
+
+		if (mNewAnm != nullptr) {
+			mNewAnm->getTransform(index, &info);
+		} else {
+			J3DJoint* joint
+			    = j3dSys.getModel()->getModelData()->getJointNodePointer(index);
+			info = joint->getTransformInfo();
+		}
+
+		info.mTranslate.x = 0.0f;
+		info.mTranslate.y = 0.0f;
+		info.mTranslate.z = 0.0f;
+
+		calcTransform(index, info);
+	} else {
+		M3UMtxCalcSIAnmBlendQuat::calc(index);
+
+		if (index == 1) {
+
+			rotMtx[2][3] = 0.0f;
+			rotMtx[1][3] = 0.0f;
+			rotMtx[0][3] = 0.0f;
+
+			rotMtx[2][2] = 0.0f;
+			rotMtx[1][2] = 0.0f;
+			rotMtx[0][2] = 0.0f;
+
+			rotMtx[2][1] = 0.0f;
+			rotMtx[1][1] = 0.0f;
+			rotMtx[0][1] = 0.0f;
+
+			rotMtx[2][0] = 0.0f;
+			rotMtx[1][0] = 0.0f;
+			rotMtx[0][0] = 0.0f;
+
+			MsMtxSetRotX(pRotMtx, mOwner->getUnk168());
+
+			MtxPtr jointMtx = mOwner->getModel()->getAnmMtx(index);
+			PSMTXConcat(jointMtx, pRotMtx, jointMtx);
+			PSMTXCopy(jointMtx, J3DSys::mCurrentMtx);
+		}
+	}
+}
+
+TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
+    : mNodes(nullptr)
+{
+}
 
 void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
@@ -362,21 +428,38 @@ void TBWLeashNode::calcMatrix()
 	*/
 }
 
+TBWHit::TBWHit(TBossWanwan* owner, int joint_index, const char* name)
+    : THitActor(name)
+    , mOwner(owner)
+    , mJointIndex(joint_index)
+{
+	// initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
+}
+
 void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
-void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	// stack frame shenanigans
+	if (cue & 1) {
+		if (mJointIndex >= 0) {
+			mOwner->getJointTransByIndex(mJointIndex, &mPosition);
+		}
+		for (int i = 0; i < mColCount; i++) {
+			THitActor* elem = mCollisions[i];
+			if (mOwner->mHitPoints != 0 && elem->mActorType == -0x7fffffff) {
+				elem->receiveMessage(mOwner, HIT_MESSAGE_UNKA);
+			}
+		}
+	}
 
-/*
+	THitActor::perform(cue, graphics);
+}
 
-    virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-    virtual BOOL receiveMessage(THitActor* sender, u32 message);
-    void getTakingMtx();
-    void moveRequest(const JGeometry::TVec3<float>&);
-
-
-*/
-
-BOOL TBWHit::receiveMessage(THitActor* sender, u32 message) { }
+BOOL TBWHit::receiveMessage(THitActor* sender, u32 message)
+{
+	return mOwner->receiveMessage(sender, message);
+}
 
 void TBWHit::moveRequest(const JGeometry::TVec3<float>& pos) { }
 
@@ -386,9 +469,9 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message) { }
 
-void TBWPicket::getTakingMtx() { }
+MtxPtr TBWPicket::getTakingMtx() { return unk74; }
 
-void TBWPicket::moveRequest(const JGeometry::TVec3<float>& pos) { }
+BOOL TBWPicket::moveRequest(const JGeometry::TVec3<float>& pos) { }
 
 DEFINE_NERVE(TNerveBWGraphWander, TLiveActor) { }
 DEFINE_NERVE(TNerveBWRoll, TLiveActor) { }
