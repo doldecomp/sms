@@ -53,6 +53,36 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static const char* sambo_bastable[] = {
+	"/scene/sambo/bas/sambo_down.bas",
+	0,
+	0,
+	0,
+	"/scene/sambo/bas/sambo_Fhide.bas",
+	0,
+	"/scene/sambo/bas/sambo_Fset.bas",
+	"/scene/sambo/bas/sambo_Fwait.bas",
+	"/scene/sambo/bas/sambo_hit.bas",
+	0,
+	"/scene/sambo/bas/sambo_Ydown.bas",
+};
+
+static const char* sambohead_bastable[] = {
+	"/scene/sambohead/bas/flower_shoot.bas",
+	"/scene/sambohead/bas/samboHead_crash.bas",
+	"/scene/sambohead/bas/samboHead_dance.bas",
+	"/scene/sambohead/bas/samboHead_down.bas",
+	"/scene/sambohead/bas/samboHead_Fhide.bas",
+	"/scene/sambohead/bas/samboHead_hit.bas",
+	"/scene/sambohead/bas/samboHead_hit_end.bas",
+	"/scene/sambohead/bas/samboHead_jump_end.bas",
+	"/scene/sambohead/bas/samboHead_jump_start.bas",
+	0,
+	"/scene/sambohead/bas/samboHead_set.bas",
+	"/scene/sambohead/bas/samboHead_turn.bas",
+	0,
+};
+
 TSamboFlowerCoinUnit::TSamboFlowerCoinUnit(int param_1)
     : unk0(nullptr)
     , unk10(0)
@@ -708,20 +738,6 @@ void THanaSambo::waterDamage()
 	mSpine->pushNerve(&TNerveHanaSamboFreeze::theNerve());
 }
 
-static const char* sambo_bastable[] = {
-	"/scene/sambo/bas/sambo_down.bas",
-	0,
-	0,
-	0,
-	"/scene/sambo/bas/sambo_Fhide.bas",
-	0,
-	"/scene/sambo/bas/sambo_Fset.bas",
-	"/scene/sambo/bas/sambo_Fwait.bas",
-	"/scene/sambo/bas/sambo_hit.bas",
-	0,
-	"/scene/sambo/bas/sambo_Ydown.bas",
-};
-
 const char** THanaSambo::getBasNameTable() const { return sambo_bastable; }
 
 void THanaSambo::perform(u32 param_1, JDrama::TGraphics* param_2)
@@ -1275,22 +1291,6 @@ bool TSamboHead::isUseCallBack()
 
 	return false;
 }
-
-static const char* sambohead_bastable[] = {
-	"/scene/sambohead/bas/flower_shoot.bas",
-	"/scene/sambohead/bas/samboHead_crash.bas",
-	"/scene/sambohead/bas/samboHead_dance.bas",
-	"/scene/sambohead/bas/samboHead_down.bas",
-	"/scene/sambohead/bas/samboHead_Fhide.bas",
-	"/scene/sambohead/bas/samboHead_hit.bas",
-	"/scene/sambohead/bas/samboHead_hit_end.bas",
-	"/scene/sambohead/bas/samboHead_jump_end.bas",
-	"/scene/sambohead/bas/samboHead_jump_start.bas",
-	0,
-	"/scene/sambohead/bas/samboHead_set.bas",
-	"/scene/sambohead/bas/samboHead_turn.bas",
-	0,
-};
 
 const char** TSamboHead::getBasNameTable() const { return sambohead_bastable; }
 
