@@ -63,8 +63,8 @@ JGadget::TNodeLinkList::Insert(iterator it, TLinkListNode* p)
 
 	TLinkListNode* pItPrev = pIt->mPrev;
 	JGADGET_ASSERT(pItPrev != 0);
-	JGADGET_ASSERT(p->pNext_ == NULL);
-	JGADGET_ASSERT(p->pPrev_ == NULL);
+	JGADGET_ASSERT(p->mNext == NULL);
+	JGADGET_ASSERT(p->mPrev == NULL);
 
 	p->mNext       = pIt;
 	p->mPrev       = pItPrev;
@@ -78,7 +78,7 @@ JGadget::TNodeLinkList::iterator JGadget::TNodeLinkList::Erase(TLinkListNode* p)
 {
 	JGADGET_ASSERT(!empty());
 	JGADGET_ASSERT(p != 0);
-	JGADGET_ASSERT(p != &oNode_);
+	JGADGET_ASSERT(p != &ocObject_);
 
 	TLinkListNode* pNext = p->mNext;
 	JGADGET_ASSERT(pNext != 0);

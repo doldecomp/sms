@@ -752,7 +752,7 @@ public:
 
 	u16 getUpdateMaterialID(u16 idx) const
 	{
-		J3D_ASSERT_RANGE(idx < mUpdateMaterialNum / 3 && idx >= 0);
+		J3D_ASSERT_RANGE(idx < mUpdateMaterialNum);
 		return mUpdateMaterialID[idx];
 	}
 	u16 getUpdateMaterialNum() const { return mUpdateMaterialNum; }

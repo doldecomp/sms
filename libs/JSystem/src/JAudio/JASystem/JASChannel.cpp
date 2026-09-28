@@ -544,7 +544,7 @@ void TChannel::init()
 		unk58[2] = unk4->unk62[2];
 	}
 	for (u32 i = 0; i < 4; i++) {
-		JUT_ASSERT(osc[i]);
+		JUT_ASSERT(unk38[i]);
 		unk38[i]->setOsc(nullptr);
 		unk38[i]->init();
 	}

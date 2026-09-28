@@ -409,7 +409,7 @@ void JKRExpHeap::free(void* ptr)
 			block->free(this);
 		}
 	} else {
-		JUT_WARNING_F("free: memblock %x not in heap %x", memblock, this);
+		JUT_WARNING_F2("free: memblock %x not in heap %x", ptr, this);
 	}
 	unlock();
 }
