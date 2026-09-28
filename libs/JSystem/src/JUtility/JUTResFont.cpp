@@ -272,6 +272,8 @@ f32 JUTResFont::drawChar_scale(f32 posX, f32 posY, f32 scaleX, f32 scaleY,
 	GXColor1u32(mColor3);
 	GXTexCoord2u16(u1, v2);
 
+	GXEnd();
+
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_S16, 0);
 
 	return retval;
