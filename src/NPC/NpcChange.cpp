@@ -464,52 +464,56 @@ void TBaseNPC::changeNerveProc_()
 		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
-			if (isSunflowerReviving() && isNerveCanGoToTalk()
+			if (!isSunflowerReviving() && isNerveCanGoToTalk()
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
+				bool inCameraCube = true;
 				if (gpMarDirector->mMap == 7) {
 					JGeometry::TVec3<f32> local_58 = mPosition;
 					local_58.y += 75.0f;
-					if (SMS_IsInSameCameraCube(local_58))
+					inCameraCube = SMS_IsInSameCameraCube(local_58);
+				}
+
+				if (inCameraCube) {
+					f32 fVar1;
+					f32 fVar2;
+					if (mThrowCtrl != nullptr) {
+						fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
+						fVar2 = mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
+					} else {
+						if (mActorType == 0x400001A) {
+							fVar2 = mPtrSaveNormal->mSLSunflowerLTalkDist.get();
+						} else {
+							fVar2 = mPtrSaveNormal->mTalkAcceptDist.get();
+						}
+						fVar1 = mPtrSaveNormal->mTalkAcceptHeight.get();
+					}
+
+					f32 fVar3;
+					if ((checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
+					    || isSunflower() || mActorType == 0x400001D) {
+						fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
+					} else {
+						fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
+					}
+
+					if (abs(SMS_GetMarioPos().y - mPosition.y) < fVar1
+					    && isInSight(SMS_GetMarioPos(), fVar2, fVar3, -1.0f)
+					    && MsIsInSight(
+					        SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
+					        mPosition, fVar2,
+					        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(),
+					        0.0f))
 						bVar5 = true;
 				}
-
-				f32 fVar1;
-				f32 fVar2;
-				if (mThrowCtrl != nullptr) {
-					fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
-					fVar2 = mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
-				} else {
-					if (mActorType == 0x400001A) {
-						fVar2 = mPtrSaveNormal->mSLSunflowerLTalkDist.get();
-					} else {
-						fVar2 = mPtrSaveNormal->mTalkAcceptDist.get();
-					}
-					fVar1 = mPtrSaveNormal->mTalkAcceptHeight.get();
-				}
-
-				f32 fVar3;
-				if ((checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
-				    || isSunflower() || mActorType == 0x400001D) {
-					fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
-				} else {
-					fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
-				}
-
-				if (abs(SMS_GetMarioPos().y - mPosition.y) < fVar1
-				    && isInSight(SMS_GetMarioPos(), fVar2, fVar3, -1.0f)
-				    && MsIsInSight(
-				        SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
-				        mPosition, fVar2,
-				        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(), 0.0f))
-					bVar5 = true;
 			}
 		}
 
 		if (bVar5) {
 			onLiveFlag(LIVE_FLAG_UNK20000);
 			if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
+				bVar4 = true;
 				offLiveFlag(LIVE_FLAG_UNK40000);
 				const TNerveBase<TLiveActor>* current
 				    = mSpine->getCurrentNerve();
@@ -550,7 +554,7 @@ void TBaseNPC::changeNerveProc_()
 	unk15C->unk0 = 0;
 
 	if (latestNerve == &TNerveNPCSink::theNerve()) {
-		if (gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z))
+		if (gpPollution->isPolluted(mPosition.x, unk1C4, mPosition.z))
 			return;
 
 		mSpine->setNext(&TNerveNPCRecoverFromSink::theNerve());

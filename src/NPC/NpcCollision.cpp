@@ -97,11 +97,11 @@ void TBaseNPC::execNpcObjCollision_()
 void TBaseNPC::setVariableDamageRadius_()
 {
 	const TNpcInitInfo* initInfo = SMSGetNpcInitData(mActorType - 0x4000001);
-	f32 fVar6                    = mScaling.x * initInfo->mDamageRadius;
+	f32 fVar6                    = initInfo->mDamageRadius * mScaling.x;
 	if (isBeTrampledNpc() && !SMS_IsMarioTouchGround4cm()
 	    && SMS_GetMarioPos().y > mPosition.y) {
 		JGeometry::TVec3<f32> diff;
-		diff.sub(mPosition, SMS_GetMarioPos());
+		diff.sub(SMS_GetMarioPos(), mPosition);
 		diff.y = 0.0f;
 		if (diff.squared() < CLBSquared(fVar6 * 3.0f))
 			fVar6 = mIndividualParams->mSLDamageRadiusSmall.get();
