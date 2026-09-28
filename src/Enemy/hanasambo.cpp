@@ -1229,10 +1229,21 @@ void TSamboHead::setAfterDeadEffect()
 
 void TSamboHead::setCrashAnm()
 {
-	if (unk198->unk150)
-		unk198->bloom();
+	setBckAnm(1);
 
-	setBckAnm(10);
+	JGeometry::TVec3<f32> scale(1.5f);
+
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
+	        PARTICLE_MS_ENM_WALLHIT, &mPosition, 0, DEG2SHORTANGLE(mRotation.y),
+	        0, 0, nullptr))
+		emitter->setGlobalScale(scale);
+
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
+	        PARTICLE_MS_ENM_WALLHIT_O, &mPosition, 0,
+	        DEG2SHORTANGLE(mRotation.y), 0, 0, nullptr)) {
+		emitter->setGlobalScale(scale);
+		SMSSetEmitterPolColor(emitter, 6);
+	}
 }
 
 void TSamboHead::calcRootMatrix()
@@ -1494,22 +1505,8 @@ DEFINE_NERVE(TNerveSamboHeadHitWall, TLiveActor)
 {
 	TSamboHead* self = (TSamboHead*)spine->getBody();
 
-	if (spine->getTime() == 0) {
-		self->setBckAnm(1);
-
-		JGeometry::TVec3<f32> scale(1.5f);
-		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
-		        PARTICLE_MS_ENM_WALLHIT, &self->mPosition, 0,
-		        DEG2SHORTANGLE(self->mRotation.y), 0, 0, nullptr))
-			emitter->setGlobalScale(scale);
-
-		if (JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
-		        PARTICLE_MS_ENM_WALLHIT_O, &self->mPosition, 0,
-		        DEG2SHORTANGLE(self->mRotation.y), 0, 0, nullptr)) {
-			emitter->setGlobalScale(scale);
-			SMSSetEmitterPolColor(emitter, 6);
-		}
-	}
+	if (spine->getTime() == 0)
+		self->setCrashAnm();
 
 	int waitTime = ((TSmallEnemyManager*)self->getManager())->unk5C;
 	if (self->checkCurAnmEnd(0)
