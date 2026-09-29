@@ -20,7 +20,7 @@ inline f32 getAngleBetween(const JGeometry::TVec3<f32>& a,
 // fabricated
 inline f32 MsAsin(f32 x)
 {
-    if (x == 1.0f) {
+	if (x == 1.0f) {
 		return 90.0f;
 	} else if (x == -1.0f) {
 		return -90.0f;

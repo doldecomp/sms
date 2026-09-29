@@ -21,7 +21,3 @@ public:
 void FeetInvCalc(J3DModel*, u16, u16, u16, f32);
 
 #endif
-
-
-
-
