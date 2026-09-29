@@ -24,6 +24,7 @@ enum THitMessageType {
 	HIT_MESSAGE_PUT              = 0x6,
 	HIT_MESSAGE_THROWN           = 0x7,
 	HIT_MESSAGE_UNK8             = 0x8,
+	HIT_MESSAGE_UNK9             = 0x9,
 	HIT_MESSAGE_UNKA             = 0xA, // burn?
 	HIT_MESSAGE_UNKB             = 0xB,
 	HIT_MESSAGE_PUNCH            = 0xC,
