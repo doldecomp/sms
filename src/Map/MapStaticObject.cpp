@@ -216,7 +216,7 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_CALC_VIEW)
 	    && (mActorData->mFlags & TActorData::FLAG_IS_INDIRECT)) {
-		Mtx afStack_7c;
+		Mtx44 afStack_7c;
 		SMS_GetLightPerspectiveForEffectMtx(afStack_7c);
 
 		getModelData()

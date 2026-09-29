@@ -436,7 +436,7 @@ void TTelesa::calcRootMatrix()
 	if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
 		for (u16 i = 0;
 		     i < mMActor->getModel()->getModelData()->getMaterialNum(); ++i) {
-			Mtx afStack_94;
+			Mtx44 afStack_94;
 			SMS_GetLightPerspectiveForEffectMtx(afStack_94);
 			mMActor->getModel()
 			    ->getModelData()

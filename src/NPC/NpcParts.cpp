@@ -268,7 +268,7 @@ void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 		if (param_1 & 2) {
 			if (unk60->isJellyFishMare() && i == 11) {
 				MActor* mactor = (*it)->getMActor();
-				Mtx mtx;
+				Mtx44 mtx;
 				SMS_GetLightPerspectiveForEffectMtx(mtx);
 				J3DModelData* data = mactor->getModel()->getModelData();
 				int starglowMatIdx

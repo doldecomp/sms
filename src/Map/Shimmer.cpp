@@ -45,7 +45,7 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 			mPosition.set(0.0f, 0.0f, 0.0f);
 		}
 
-		Mtx effectMtx;
+		Mtx44 effectMtx;
 		SMS_GetLightPerspectiveForEffectMtx(effectMtx);
 
 		unk48->getModelData()
