@@ -11,8 +11,7 @@
  */
 class M3UMtxCalcSIAnmBlendQuat : public J3DMtxCalcSoftimage {
 public:
-	M3UMtxCalcSIAnmBlendQuat();
-	M3UMtxCalcSIAnmBlendQuat(bool basic);
+	M3UMtxCalcSIAnmBlendQuat(bool basic = false);
 
 	virtual void init(const Vec&, const Mtx&);
 	virtual void calcTransform(u16, const J3DTransformInfo&);
