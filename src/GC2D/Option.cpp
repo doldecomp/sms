@@ -863,8 +863,6 @@ bool TOptionControl::movementOption()
 	return false;
 }
 
-static inline void fake(TOptionSoundUnit* unit) { int v = unit->getValue(); }
-
 // mario walks back from the options screen to the card select screen
 bool TOptionControl::movementOption2Card()
 {
@@ -873,8 +871,7 @@ bool TOptionControl::movementOption2Card()
 		mScreen->search('oya1')->hide();
 		mScreen->search('oya2')->hide();
 
-		if (mInitialRumbleValue == mRumbleOption->getValue())
-			fake(mSoundOption);
+		isChangedSetting();
 
 		return true;
 	}
