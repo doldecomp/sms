@@ -92,6 +92,7 @@ static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
 	GXTexCoord2f32(1.0f, bottomTex);
 	GXPosition2f32((f32)rect.x1, (f32)bottom);
 	GXTexCoord2f32(0.0f, bottomTex);
+	GXEnd();
 }
 
 // fabricated
@@ -3723,6 +3724,7 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 	GXTexCoord2s8(1, 1);
 	GXPosition2f32((f32)bounds.x1, (f32)bounds.y2);
 	GXTexCoord2s8(0, 1);
+	GXEnd();
 
 	graph.setup2D();
 
@@ -3819,6 +3821,7 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		GXTexCoord2s8(1, 1);
 		GXPosition2f32((f32)left, (f32)bottom);
 		GXTexCoord2s8(0, 1);
+		GXEnd();
 	}
 
 	graph.setup2D();

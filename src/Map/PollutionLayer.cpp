@@ -82,6 +82,7 @@ void TPollutionLayerWave::draw() const
 			GXPosition3f32(x, h2 - 10.0f, zNext);
 			GXTexCoord2f32(invXSize * (x - mMinX), invZSize * (zNext - mMinZ));
 		}
+		GXEnd();
 	}
 }
 
