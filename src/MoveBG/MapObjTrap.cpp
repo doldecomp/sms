@@ -75,7 +75,7 @@ void TLampTrapSpike::loadAfter()
 
 BOOL TLampTrapSpike::receiveMessage(THitActor* sender, u32 message)
 {
-	TMapObjBase::receiveMessage(sender, message);
+	return TMapObjBase::receiveMessage(sender, message);
 }
 
 void TLampTrapSpike::control()
