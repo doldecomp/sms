@@ -122,7 +122,7 @@ extern "C" void __DSPHandler(int interrupt, OSContext* context)
 	}
 }
 
-void DsyncFrame2(u32 param_1, u32 param_2, u32 param_3)
+void DsyncFrame2(u32 param_1, uintptr_t param_2, uintptr_t param_3)
 {
 	if (DSP_prior_yield != 1) {
 		Console_printf("Yield中です\n");

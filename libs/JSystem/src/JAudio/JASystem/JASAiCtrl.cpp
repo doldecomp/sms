@@ -10,6 +10,7 @@
 #include <JSystem/JAudio/JASystem/JASHardStream.hpp>
 #include <JSystem/JAudio/JASystem/JASProbe.hpp>
 #include <dolphin/ai.h>
+#include <stdint.h>
 
 namespace JASystem {
 namespace Kernel {
@@ -43,7 +44,7 @@ namespace Kernel {
 			DCStoreRange(dac[i], getDacSize() * 2);
 		}
 		AIInit(nullptr);
-		AIInitDMA(u32(dac[2]), getDacSize() * 2);
+		AIInitDMA(uintptr_t(dac[2]), getDacSize() * 2);
 		Vload::initVloadBuffers();
 	}
 
@@ -114,7 +115,7 @@ namespace Kernel {
 		}
 
 		if (useRspMadep) {
-			AIInitDMA((u32)useRspMadep, getDacSize() * 2);
+			AIInitDMA((uintptr_t)useRspMadep, getDacSize() * 2);
 			useRspMadep = nullptr;
 		} else {
 			JASUniversalDacCounter++;
