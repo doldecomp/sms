@@ -300,11 +300,11 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 
 	const TBGCheckData* local_60;
 	f32 dVar5 = checkGroundList(
-	    x, y, z, flags, getGridRoot18(gridX, gridZ).getRoofList(), &local_60);
+	    x, y, z, flags, getGridRoot18(gridX, gridZ).getGroundList(), &local_60);
 
 	const TBGCheckData* local_64;
 	f32 dVar6 = checkGroundList(
-	    x, y, z, flags, getGridRoot14(gridX, gridZ).getRoofList(), &local_64);
+	    x, y, z, flags, getGridRoot14(gridX, gridZ).getGroundList(), &local_64);
 
 	if (mGroundPlane != nullptr) {
 		const TBGCheckData* local_68;
