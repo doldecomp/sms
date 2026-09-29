@@ -15,7 +15,7 @@ void ReadThreadCancel(void);
 void* PopReadedBuffer(void);
 void* PopFreeReadBuffer(void);
 void* PopReadedBuffer2(void);
-void* PushReadedBuffer(void* buffer);
+void PushReadedBuffer(void* buffer);
 void PushFreeReadBuffer(void* buffer);
 void PushReadedBuffer2(void* buffer);
 

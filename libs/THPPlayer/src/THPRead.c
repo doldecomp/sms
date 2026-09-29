@@ -97,7 +97,7 @@ void* PopReadedBuffer(void)
 	return buffer;
 }
 
-void* PushReadedBuffer(void* buffer)
+void PushReadedBuffer(void* buffer)
 {
 	OSSendMessage(&ReadedBufferQueue, buffer, 1);
 }
