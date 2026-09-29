@@ -7,6 +7,8 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+Vec _posByCamera[256];
+
 MSSceneSE::MSSceneSE(u32 param_1)
 {
 	for (int i = 0; i < ARRAY_COUNT(mTrans); ++i)
@@ -79,11 +81,8 @@ void MSSceneSE::frameLoop(u32 sound_id, Vec* trans, u8 trans_num)
 		for (u8 i = 0; i < DIRECTION_NUM; ++i) {
 			if (mMaxTrans[i][0] != nullptr) {
 				if (!mUseRandPlay) {
-					u32 id = sound_id + i;
-					if (MSGMSound->gateCheck(id)) {
-						MSoundSESystem::MSoundSE::startSoundActor(
-						    id, &mAvgTrans[i], 0, nullptr, 0, 4);
-					}
+					MSGMSound->startSoundActor(sound_id + i, &mAvgTrans[i], 0,
+					                           nullptr, 0, 4);
 				} else {
 					MSoundSESystem::MSRandPlay::startSeRandPlay(sound_id, i);
 				}
