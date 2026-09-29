@@ -2491,7 +2491,7 @@ void TGCConsole2::startAppearTelop(bool param_1)
 	unk56D = 1;
 	unk520->getPane()->show();
 
-	unk520->setPaneOffset(80, 0, 0, 0, 465 - unk520->mInitialBounds.y1);
+	unk520->setPaneOffset(80, 0, 0, 0, 465 - unk520->getInitialBounds().y1);
 
 	if (param_1) {
 		// TODO: needs regswapping
@@ -2518,7 +2518,7 @@ void TGCConsole2::startDisappearTelop()
 	unk43 = 1;
 	unk5A = 1;
 
-	unk520->updatePaneOffset(80, 0, 465 - unk520->mInitialBounds.y1);
+	unk520->updatePaneOffset(80, 0, 465 - unk520->getInitialBounds().y1);
 }
 
 void TGCConsole2::startDisappearTimer()
@@ -2575,7 +2575,7 @@ void TGCConsole2::startInsertTimer()
 	unk59 = 1;
 
 	unk44C->getPane()->show();
-	unk44C->setPaneOffset(40, 0, 0, 0, 465 - unk44C->mInitialBounds.y1);
+	unk44C->setPaneOffset(40, 0, 0, 0, 465 - unk44C->getInitialBounds().y1);
 
 	unk450->getPane()->show();
 	unk450->setPanePosition(50, cUpTopPoint, cUpMidPoint, cUpMidPoint);
@@ -2917,7 +2917,7 @@ void TGCConsole2::startDisappearMario()
 	if (!unk3A8->getPane()->isVisible() || unk3B)
 		return;
 
-	unk3A8->updatePaneOffset(50, 0, -(unk3A8->mInitialBounds.y2 + 1));
+	unk3A8->updatePaneOffset(50, 0, -(unk3A8->getInitialBounds().y2 + 1));
 	unk3B = 1;
 }
 
@@ -2927,7 +2927,7 @@ void TGCConsole2::startAppearMario(bool param_1)
 		return;
 
 	unk3A8->getPane()->show();
-	unk3A8->setPaneOffset(50, 0, 0, 0, -(unk3A8->mInitialBounds.y2 + 1));
+	unk3A8->setPaneOffset(50, 0, 0, 0, -(unk3A8->getInitialBounds().y2 + 1));
 
 	unk38C->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
