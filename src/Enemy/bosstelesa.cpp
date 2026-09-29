@@ -262,14 +262,8 @@ MtxPtr TBubble::getTakingMtx() { return mMActor->getModel()->getBaseTRMtx(); }
 
 const char** TBubble::getBasNameTable() const { return btelesa_bastable; }
 
-// Hand-written instead of DEFINE_NERVE: the map places theNerve and execute
-// apart (appendItem and appendEnemy sit between them), so the two halves
-// cannot be adjacent. Converting to the macro breaks symbol order.
-const TNerveBubbleLive& TNerveBubbleLive::theNerve()
-{
-	static TNerveBubbleLive instance;
-	return instance;
-}
+// The map places appendItem and appendEnemy between the two nerve definitions.
+DEFINE_NERVE_INSTANCE(TNerveBubbleLive)
 
 void TBubble::appendItem()
 {
@@ -330,7 +324,7 @@ void TBubble::appendEnemy()
 	}
 }
 
-BOOL TNerveBubbleLive::execute(TSpineBase<TLiveActor>* spine) const
+DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 {
 	TBubble* bubble = getBubble(spine);
 	if (spine->getTime() == 0) {
