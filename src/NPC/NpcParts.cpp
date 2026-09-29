@@ -37,41 +37,42 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(unk60->getActorType() - 0x4000001);
 
-	for (int i = 0; i < 2; ++i)
-		for (int j = 0; j < 12; ++j)
-			unk0[i][j] = nullptr;
+	for (int i = 0; i < 12; ++i)
+		for (int j = 0; j < 2; ++j)
+			unk0[j][i] = nullptr;
 
 	for (int i = 0; i < 12; ++i) {
-		const TNpcModelData* iVar10 = initInfo->unk4[i];
-		if (iVar10 == nullptr || !(param_1 & (1 << i)))
+		if (initInfo->unk4[i] == nullptr || !(param_1 & (1 << i)))
 			continue;
 
-		u32 param3 = (&param_2->color.r)[iVar10->unk28];
+		u32 param3 = (&param_2->color.r)[initInfo->unk4[i]->unk28];
 
 		const GXColor* param4 = nullptr;
-		if (iVar10->unk2A)
+		if (initInfo->unk4[i]->unk2A)
 			param4 = unk60->getPtrInitPollutionColor();
 
 		for (int j = 0; j < 2; ++j) {
 			if (j >= unk60->getManager()->unk28)
 				break;
 
-			const char* puVar3 = iVar10->unk8[j];
+			const char* puVar3 = initInfo->unk4[i]->unk8[j];
 			if (puVar3 == nullptr)
 				continue;
 
-			int iVar6 = strcmp(iVar10->unk0[j], cNpcPartsNameRootJoint) == 0
-			                ? -1
-			                : unk60->mMActorKeeper->getMActor(j)
-			                      ->getModel()
-			                      ->getModelData()
-			                      ->getJointName()
-			                      ->getIndex(iVar10->unk0[j]);
+			int iVar6
+			    = strcmp(initInfo->unk4[i]->unk0[j], cNpcPartsNameRootJoint)
+			              == 0
+			          ? -1
+			          : unk60->mMActorKeeper->getMActor(j)
+			                ->getModel()
+			                ->getModelData()
+			                ->getJointName()
+			                ->getIndex(initInfo->unk4[i]->unk0[j]);
 
 			TNPCManager* manager    = (TNPCManager*)unk60->getManager();
 			SDLModelData* modelData = manager->getPartsSDLModelData(puVar3);
 			unk0[j][i] = new TSharedParts(unk60, iVar6, modelData, 3);
-			if (iVar10->unk2B)
+			if (initInfo->unk4[i]->unk2B)
 				SMS_UnifyMaterial(unk0[j][i]->getMActor()->getModel());
 
 			switch (unk60->getActorType()) {
@@ -123,7 +124,8 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 			}
 
 			for (int k = 0; k < 3; ++k) {
-				const TColorChangeInfo* ccInfo = iVar10->unk10[k].unk0[j];
+				const TColorChangeInfo* ccInfo
+				    = initInfo->unk4[i]->unk10[k].unk0[j];
 				if (ccInfo != nullptr)
 					SMS_InitChangeNpcColor(unk0[j][i]->getMActor(), ccInfo,
 					                       param3, param4);
