@@ -199,6 +199,7 @@ private:
 	bool Confirm()
 	{
 		// TODO
+		return true;
 	}
 
 	/* 0x0 */ TAllocator<T> mAllocator;
