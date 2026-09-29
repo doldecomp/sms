@@ -5,7 +5,7 @@
 
 class TPollutionTest : public JDrama::TViewObj {
 public:
-	TPollutionTest(const char* name)
+	TPollutionTest(const char* name = "落書きテスト")
 	    : JDrama::TViewObj(name)
 	{
 	}

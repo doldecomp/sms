@@ -5,11 +5,6 @@
 
 class TStickyStainManager : public JDrama::TViewObj {
 public:
-	TStickyStainManager(const char* name)
-	    : JDrama::TViewObj(name)
-	{
-	}
-
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
