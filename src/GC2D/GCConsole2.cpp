@@ -752,6 +752,16 @@ static inline void emitCounterParticle(TBoundPane* pane)
 }
 
 // fabricated
+static inline void emitAtPaneCenter(TBoundPane* pane, JUTRect& bounds)
+{
+	bounds = pane->getPane()->mGlobalBounds;
+	JGeometry::TVec3<f32> position;
+	position.set(bounds.x1 + bounds.getWidth() * 0.5f,
+	             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
+}
+
+// fabricated
 static inline void setBlendDigit(TBlendPane* pane, JUTTexture** textures,
                                  int digit)
 {
@@ -789,41 +799,80 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 
 	if ((s8)console->unk68 == 1) {
 		bool incrementing = true;
-		int target        = (int)console->unk20;
-		int display       = (int)console->unk6C;
-
-		if (target >= display)
-			++display;
-		if (target < display) {
-			--display;
+		if (console->unk20 >= console->unk6C)
+			++console->unk6C;
+		if (console->unk20 < console->unk6C) {
+			--console->unk6C;
 			incrementing = false;
 		}
 
-		if (display > 999) {
-			display        = 999;
-			target         = 999;
-			console->unk20 = target;
-		}
-		if (display < 0) {
-			display        = 0;
-			target         = 0;
-			console->unk20 = target;
-		}
-
-		console->unk6C = display;
-		setCounterDigits(console->unkD4, console->unkE0, display);
+		if (console->unk6C > 999)
+			console->unk20 = console->unk6C = 999;
+		if (console->unk6C < 0)
+			console->unk20 = console->unk6C = 0;
 
 		if (incrementing) {
-			if (display >= 100) {
-				if (display % 100 == 0)
-					emitCounterParticle(console->unkD4[0]);
-				if (display % 10 == 0)
-					emitCounterParticle(console->unkD4[1]);
-				emitCounterParticle(console->unkD4[2]);
+			// Only the digits that rolled over change, and each one that
+			// changes gets a sparkle.
+			JUTRect bounds;
+			if (console->unk6C >= 100) {
+				if (console->unk6C % 100 == 0) {
+					setDigitPane(console->unkD4[0], console->unkE0,
+					             console->unk6C / 100);
+					emitAtPaneCenter(console->unkD4[0], bounds);
+				}
+
+				int remainder
+				    = console->unk6C - (int)(console->unk6C * 0.01f) * 100;
+				if (remainder % 10 == 0) {
+					setDigitPane(console->unkD4[1], console->unkE0,
+					             remainder / 10);
+					emitAtPaneCenter(console->unkD4[1], bounds);
+				}
+
+				if (!console->unkD4[2]->getPane()->isVisible())
+					console->unkD4[2]->getPane()->show();
+				setDigitPane(console->unkD4[2], console->unkE0, remainder % 10);
+				emitAtPaneCenter(console->unkD4[2], bounds);
 			} else {
-				if (display % 10 == 0)
-					emitCounterParticle(console->unkD4[0]);
-				emitCounterParticle(console->unkD4[1]);
+				if (console->unk6C % 10 == 0) {
+					setDigitPane(console->unkD4[0], console->unkE0,
+					             console->unk6C / 10);
+					emitAtPaneCenter(console->unkD4[0], bounds);
+				}
+
+				setDigitPane(console->unkD4[1], console->unkE0,
+				             console->unk6C % 10);
+				emitAtPaneCenter(console->unkD4[1], bounds);
+
+				if (console->unkD4[2]->getPane()->isVisible())
+					console->unkD4[2]->getPane()->hide();
+			}
+		} else {
+			if (console->unk6C >= 100) {
+				if (console->unk6C % 100 == 99)
+					setDigitPane(console->unkD4[0], console->unkE0,
+					             console->unk6C / 100);
+
+				int remainder
+				    = console->unk6C - (int)(console->unk6C * 0.01f) * 100;
+				if (remainder % 10 == 9)
+					setDigitPane(console->unkD4[1], console->unkE0,
+					             remainder / 10);
+
+				if (!console->unkD4[2]->getPane()->isVisible())
+					console->unkD4[2]->getPane()->show();
+				setDigitPane(console->unkD4[2], console->unkE0, remainder % 10);
+			} else {
+				if (console->unk6C % 10 == 9)
+					setDigitPane(console->unkD4[0], console->unkE0,
+					             console->unk6C / 10);
+
+				setDigitPane(console->unkD4[1], console->unkE0,
+				             console->unk6C % 10);
+
+				if (console->unkD4[2]->getPane()->isVisible())
+					console->unkD4[2]->getPane()->hide();
 			}
 		}
 		++console->unk68;
