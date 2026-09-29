@@ -172,9 +172,9 @@ int TMenuDirector::direct()
 		void* res;
 		OSJoinThread(&gSetupThread, &res);
 		SMSGetApplication()->getFader()->startFadeinT(0.25f);
-		if (TFlagManager::getInstance()->getBool(0x30007)) {
+		if (!TFlagManager::getInstance()->getBool(0x30007)) {
 			TFlagManager::getInstance()->setBool(true, 0x30007);
-			gpMSound->loadWave(MS_WAVE_UNK128);
+			SMSGetMSound()->loadWave(MS_WAVE_DEFAULT);
 		}
 		unk50 = true;
 	}
@@ -331,7 +331,7 @@ int TMenuDirector::direct()
 
 	case 2:
 		if (SMSGetApplication()->getFader()->isFullyFadedOut()
-		    && gpMSound->checkWaveOnAram(MS_WAVE_UNK128)) {
+		    && SMSGetMSound()->checkWaveOnAram(MS_WAVE_DEFAULT)) {
 			if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12)
 				uVar13 = TApplication::APP_STATE_MOVIE;
 			else

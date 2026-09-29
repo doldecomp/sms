@@ -220,7 +220,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TMapObjTree;
 
 	if (strcmp(name, "PalmNatume") == 0)
-		return new TMapObjTree("地形オブジェ基底");
+		return new TMapObjTree;
 
 	if (strcmp(name, "FruitTree") == 0)
 		return new TMapObjBase;

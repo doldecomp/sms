@@ -97,23 +97,21 @@ s32 TCardSector::read(CARDFileInfo* file, s32 index,
 void TCardManager::TCriteria::set(TCardManager::TCriteria::TEBlockStat state,
                                   u32 write_count, const void* sector_data)
 {
-	(void)0;
-	(void)0;
 	mState = state;
 	if (mState == STATE_VALID) {
 		mWriteCount = write_count;
 		memcpy(&mPreviewBytes, sector_data, sizeof(mPreviewBytes));
-	} else {
-		setEmpty();
+	} else if (mState == STATE_EMPTY) {
+		mWriteCount = 0;
+		memset(mPreviewBytes, 0, sizeof(mPreviewBytes));
 	}
 }
 
 void TCardManager::TCriteria::setEmpty()
 {
-	if (mState == STATE_EMPTY) {
-		mWriteCount = 0;
-		memset(mPreviewBytes, 0, sizeof(mPreviewBytes));
-	}
+	mState      = STATE_EMPTY;
+	mWriteCount = 0;
+	memset(mPreviewBytes, 0, sizeof(mPreviewBytes));
 }
 
 #pragma dont_inline on
@@ -650,7 +648,6 @@ s32 TCardManager::readOptionBlock_()
 	s32 result = open_(&info);
 	if (result == CARD_RESULT_READY) {
 		TCardSector* sector = (TCardSector*)mSector;
-
 		if (mSectorCriteria[0].mState == TCriteria::STATE_EMPTY) {
 			sector->clearData();
 			sector->setCheckSum(0);
@@ -734,9 +731,7 @@ s32 TCardManager::writeCardSector_(CARDFileInfo* file, s32 index,
 	if (errc != CARD_RESULT_READY)
 		return errc;
 
-	errc = sector->read(file, index, criteria);
-
-	return errc;
+	return sector->read(file, index, criteria);
 }
 
 s32 TCardManager::cmdLoop()
