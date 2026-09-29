@@ -724,7 +724,10 @@ void TBossGesso::changeBck(int param_1)
 }
 
 // TODO: this inline is 99% incorrect, need to try harder =(
-bool TBossGesso::inSightAngle(f32 a) { return inSight() < a ? TRUE : FALSE; }
+bool TBossGesso::inSightAngle(f32 a)
+{
+	return inSight() < a * 0.5f ? TRUE : FALSE;
+}
 
 // TODO: this inline is 99% incorrect, need to try harder =(
 f32 TBossGesso::inSight()
@@ -949,7 +952,7 @@ void TBossGesso::doAttackSingle()
 		static const int idxarray[] = { 2, 3, 5, 6 };
 		TBGTentacle* tentacle       = mTentacles[idxarray[i]];
 
-		if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
+		if (inSightAngle(getSaveParam()->mSLSightAngle.get())
 		    && tentacle->mState == 0) {
 			JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 			delta -= mPosition;
@@ -987,10 +990,10 @@ void TBossGesso::doAttackDouble()
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 	delta -= mPosition;
 
-	f32 doubleAttackLen2 = getSaveParam()->mSLUnisonAttackLen.value;
+	f32 doubleAttackLen2 = getSaveParam()->mSLDoubleAttackLen.value;
 	doubleAttackLen2 *= doubleAttackLen2;
 
-	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get())
 	    && delta.squared() < doubleAttackLen2) {
 
 		for (int i = 0; i < 2; ++i) {
@@ -1021,7 +1024,7 @@ void TBossGesso::doAttackSkipRope()
 		return;
 	}
 
-	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)) {
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get())) {
 		for (int i = 0; i < 2; ++i) {
 			static const int idxarray[] = { 0, 2 };
 			TBGTentacle* tentacle       = mTentacles[idxarray[i]];
@@ -1046,7 +1049,7 @@ void TBossGesso::doAttackUnison()
 	f32 unisonAttackLen2 = getSaveParam()->mSLUnisonAttackLen.value;
 	unisonAttackLen2 *= unisonAttackLen2;
 
-	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get())
 	    && gpMarioOriginal->isTouchGround4cm()
 	    && delta.squared() < unisonAttackLen2) {
 
@@ -1089,7 +1092,7 @@ void TBossGesso::doAttackShoot()
 		return;
 	}
 
-	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)) {
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get())) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 		delta -= mPosition;
 
@@ -1109,7 +1112,7 @@ void TBossGesso::doAttackGuard()
 	}
 
 	// TODO: inSight inline is definitely wrong...
-	if (inSightAngle(getSaveParam()->mSLSightAngle.get() * 0.5f)) {
+	if (inSightAngle(getSaveParam()->mSLSightAngle.get())) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 		delta -= mPosition;
 
