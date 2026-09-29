@@ -1751,8 +1751,8 @@ void TWaterGun::rotateProp(f32 rotation)
 	if (mCurrentNozzle == 5) {
 		unk1CD2 += rotation * mWatergunParams.mNozzleAngleYSpeed.get();
 		unk1CD2 *= mWatergunParams.mNozzleAngleYBrake.get();
-		if (mWatergunParams.mHoverRotMax.get() < unk1CD2) {
-			unk1CD2 = mWatergunParams.mHoverRotMax.get();
+		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
+			unk1CD2 = mWatergunParams.mNozzleAngleYSpeedMax.get();
 		}
 		unk1CD0 = unk1CD0 + unk1CD2;
 	} else {

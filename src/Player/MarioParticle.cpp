@@ -126,8 +126,9 @@ void TMario::emitGetEffect()
 
 void TMario::emitGetWaterEffect()
 {
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, &unk160,
-	                                            0, nullptr);
+	JGeometry::TVec3<f32>* pos = &unk160;
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, pos, 0,
+	                                            nullptr);
 }
 
 void TMario::emitGetCoinEffect(JGeometry::TVec3<f32>* pos)
@@ -755,7 +756,7 @@ void TMario::kickFruitEffect()
 		emitter->setGlobalScale(scale);
 		JGeometry::TVec3<f32> pos = mPosition;
 		pos.y += 30.0f;
-		emitter->setEmitterTranslation(pos);
+		emitter->setGlobalTranslation(pos);
 	}
 }
 
